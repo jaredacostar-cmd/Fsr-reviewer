@@ -20,10 +20,17 @@
     const ok = a.checks.every(c => c.value === 0);
     $('#audit-status').textContent = ok ? 'All checks pass' : 'Check failed';
     const line = (label, v, sign = '−') => `<tr><td>${sign} ${esc(label)}</td><td>${fmtNum(Math.round(v))}</td></tr>`;
-    const pairs = a.possible.slice(0, 12).map((x, i) => `<li>
+    // Address points (loaded on first use) sort the pairs: same land first, neighbours last.
+    const AD = root.PeelAddr, haveAddr = !!(AD && App().state.addressPoints);
+    if (AD && !haveAddr) AD.loadPoints().then(d => { if (d) renderAudit(); });
+    const cls = haveAddr ? PeelAudit.classifyPairs(a.possible, p => AD.idsOf(p.records)) : null;
+    const list = cls ? cls.pairs : a.possible;
+    a.shown = list;
+    const ADDR = { same: '<span class="fr-b fr-due">same address point</span>', different: '<span class="fr-b fr-ok">different addresses</span>', unknown: '' };
+    const pairs = list.slice(0, 12).map((x, i) => `<li>
         <button type="button" class="btn small link" data-ap="${i}|0">${esc(x.projects[0].title)}</button> (${fmtNum(x.projects[0].units)})
         ↔ <button type="button" class="btn small link" data-ap="${i}|1">${esc(x.projects[1].title)}</button> (${fmtNum(x.projects[1].units)})
-        <span class="muted">· ${Math.round(x.metres)} m${x.sameUnits ? ' · same units' : ''}</span></li>`).join('');
+        <span class="muted">· ${Math.round(x.metres)} m${x.sameUnits ? ' · same units' : ''}</span>${x.addr ? ` ${ADDR[x.addr]}` : ''}</li>`).join('');
     $('#audit-body').innerHTML = `
       <p class="small">${fmtNum(r.raw)} records from ${fmtNum(r.bySource.length)} layers → <strong>${fmtNum(r.copiesMerged)}</strong> copies of the same file merged
         (${fmtNum(r.mergedGroups)} files listed in more than one layer or spelling) → ${fmtNum(r.unique)} unique files → ${fmtNum(r.projects)} projects.</p>
@@ -40,13 +47,13 @@
       </tbody></table>
       <p class="small muted">Units counted equals the demand panel's “All units” with every filter off (all years, all phases).</p>
       <h3 class="label sub-label">Possible duplicates left: ${fmtNum(a.possible.length)}</h3>
-      <p class="small muted">Separate developments of 20+ units within 60 m of each other${a.possibleSameUnits ? `, ${fmtNum(a.possibleSameUnits)} with the same unit count` : ' (none with the same unit count)'}. Usually neighbouring buildings; tap to check.</p>
+      <p class="small muted">Separate developments of 20+ units within 60 m of each other${a.possibleSameUnits ? `, ${fmtNum(a.possibleSameUnits)} with the same unit count` : ' (none with the same unit count)'}. Usually neighbouring buildings; tap to check.${cls ? ` By the Region's address points: <strong>${fmtNum(cls.same)}</strong> share an address point (the same land: check these first), ${fmtNum(cls.different)} are on different addresses (neighbours), ${fmtNum(cls.unknown)} could not be matched.` : ''}</p>
       ${pairs ? `<ol class="audit-pairs small">${pairs}</ol>` : ''}
       <div class="row btns"><button type="button" class="btn small" id="audit-csv" title="Every file, the development it is counted in, and its units">Download audit CSV</button></div>`;
   }
   $('#audit-body').addEventListener('click', e => {
     const b = e.target.closest('[data-ap]');
-    if (b) { const [i, j] = b.dataset.ap.split('|').map(Number); DevTab().focusProject(App().state.audit.possible[i].projects[j]); return; }
+    if (b) { const [i, j] = b.dataset.ap.split('|').map(Number); DevTab().focusProject((App().state.audit.shown || App().state.audit.possible)[i].projects[j]); return; }
     if (e.target.closest('#audit-csv')) {
       const cell = v => /[",\n]/.test(String(v ?? '')) ? `"${String(v).replace(/"/g, '""')}"` : String(v ?? '');
       const { cols, rows } = DD().recordAuditRows();

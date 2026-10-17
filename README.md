@@ -1277,6 +1277,31 @@ These sources are fetched on GitHub Actions, because the sandbox can't reach the
 - **Effluent compliance.** `data/compliance.json` is built by `scripts/build-compliance.py` from
   MECP Environmental Compliance Reports (municipal and private sewage, 2020–2024). It lists
   exceedances at G.E. Booth, Clarkson and Inglewood, shown in **Wastewater → Plants**.
+- **Measured plant flow.** `data/plant-flows.json` is built by `scripts/build-plant-flows.py` from
+  MECP's Municipal Treated Wastewater Effluent data (monthly total flow, 2008 on) for G.E. Booth,
+  Clarkson and Inglewood. Each plant's scope panel shows the trend against rated capacity and the
+  90% trigger; Settings → Data quality checks it against the Region's annual reports (within 0.2%).
+  The March 2025 G.E. Booth → Clarkson diversion breaks either plant's trend alone, not the two
+  together. Rebuild with **Probe data sources**, mode `plant-flows` (once a year).
+- **Address points.** `data/address-points.json` is the Region of Peel address point (open data,
+  about 504,000 points) for each address on a file: `scripts/fetch-addresses.js` pages the layer and
+  `scripts/build-addresses.js` matches it with the same keys the app uses (`js/address-key.js`:
+  multi-address strings split, number 0 and intersections skipped). 81% of application addresses
+  and 88% of permit addresses match. Records › Data checks sorts the possible duplicates by it
+  (same address point first, neighbours last), and a file in Records says whether its address
+  matches and how far the map point is from it. Rebuilt every Monday after the snapshot.
+- **Plan area and implied density.** `scripts/build-areas.js` keeps Brampton's published plan size
+  (`EST_SIZE_HC`) and any appeal from Schedule 10, and the mapped area of every plan. Growth → Plans
+  against their targets adds **Target per ha** (people + jobs, or units, over the plan's area) to set
+  beside a stated density; ⚠ where the published size and the boundary disagree by more than 25%
+  (Heritage Heights: 864 ha published, 1,562 ha mapped).
+- **Overflows and spills.** `data/ww-events.json` holds Table 7 of the Region's Wastewater
+  Collection System annual reports (2024: 18 events; 2025: 12) and the station roster in
+  Appendix A, transcribed by hand because the table's layout does not parse;
+  `scripts/check-ww-events.js` checks every Spills Action Centre number, the stated total and the
+  roster against the report text (run in **Probe data sources**, mode `peel-reports`). Station and
+  plant scope panels list their events; Servicing → Capacity folds a yearly summary; Data quality
+  sets the GIS stations against the roster.
 - **2026 Census.** The first release is February 10, 2027. Run `scripts/build-areas.js` with
   `CENSUS_2026_CSV` (Statistics Canada's DA counts CSV, joined to the 2021 DA geometry) or
   `CENSUS_2026_URL`, plus `CENSUS_2026_PEEL` to check the total. 2026 then becomes the baseline

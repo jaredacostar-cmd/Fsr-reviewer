@@ -21,7 +21,9 @@ const P = require('../js/phases.js');
 const LAYERS = {
   secondaryPlans: [
     { municipality: 'Brampton', url: 'https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Brampton_Plan_Schedule_10_Secondary_Planning_Areas/FeatureServer/0',
-      name: a => a.LABEL || `${a.SPA_NUMBER}: ${a.SPA_NAME}`, source: 'Brampton Plan Schedule 10 – Secondary Planning Areas' },
+      name: a => a.LABEL || `${a.SPA_NUMBER}: ${a.SPA_NAME}`, source: 'Brampton Plan Schedule 10 – Secondary Planning Areas',
+      // The plan's published size (EST_SIZE_HC, hectares) and any appeal (DATASETS.md §3).
+      props: a => ({ areaHa: a.EST_SIZE_HC > 0 ? a.EST_SIZE_HC : null, appeals: String(a.APPEALS || '').trim() || null }) },
     { municipality: 'Caledon', url: 'https://services3.arcgis.com/AbUjpCl3KckkXVBh/arcgis/rest/services/Secondary_Plan_Areas/FeatureServer/0',
       name: a => a.Name, source: 'Town of Caledon – Secondary Plan Areas (in effect)' },
     { municipality: 'Mississauga', url: 'https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/MOP_CharacterAreaCityStructure/FeatureServer/0',
@@ -94,7 +96,8 @@ async function areas(defs, kind) {
       const name = String(d.name(f.properties || {}) || '').replace(/\s+/g, ' ').trim();
       const rings = ringsOf(f.geometry).map(r => r.map(([x, y]) => [round(x), round(y)]));
       if (!name || !rings.length) continue;
-      out.push({ id: `${kind}:${d.municipality}:${name}`.toLowerCase().replace(/[^a-z0-9:]+/g, '-'), name, municipality: d.municipality, rings });
+      const extra = d.props ? Object.fromEntries(Object.entries(d.props(f.properties || {})).filter(([, v]) => v != null)) : {};
+      out.push({ id: `${kind}:${d.municipality}:${name}`.toLowerCase().replace(/[^a-z0-9:]+/g, '-'), name, municipality: d.municipality, rings, ...extra });
     }
     console.log(`${kind}: ${d.municipality} ${feats.length} from ${d.source}`);
   }
@@ -102,9 +105,24 @@ async function areas(defs, kind) {
   const byId = new Map();
   for (const a of out) {
     const prev = byId.get(a.id);
-    if (prev) prev.rings.push(...a.rings); else byId.set(a.id, a);
+    if (prev) { prev.rings.push(...a.rings); if (a.areaHa) prev.areaHa = (prev.areaHa || 0) + a.areaHa; if (a.appeals && !prev.appeals) prev.appeals = a.appeals; } else byId.set(a.id, a);
   }
+  for (const a of byId.values()) a.mappedHa = Math.round(ringsHa(a.rings));
   return [...byId.values()].sort((a, b) => a.municipality.localeCompare(b.municipality) || a.name.localeCompare(b.name, 'en', { numeric: true }));
+}
+
+// Area of rings (lng/lat, holes wound either way are not subtracted: plan boundaries have none that
+// matter here) in hectares, by the shoelace formula on a local equirectangular projection.
+function ringsHa(rings) {
+  let t = 0;
+  for (const r of rings) {
+    if (r.length < 3) continue;
+    const k = Math.cos(r[0][1] * Math.PI / 180) * 111320, m = 111320;
+    let s = 0;
+    for (let i = 0, j = r.length - 1; i < r.length; j = i++) s += (r[j][0] * k) * (r[i][1] * m) - (r[i][0] * k) * (r[j][1] * m);
+    t += Math.abs(s) / 2;
+  }
+  return t / 1e4;
 }
 
 // A point inside the DA (centroid if it falls inside, else the middle of the longest
@@ -283,4 +301,4 @@ async function main() {
 }
 
 if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
-module.exports = { insidePoint, simplify };
+module.exports = { insidePoint, simplify, ringsHa };

@@ -179,21 +179,44 @@
     if (t.kind === 'allocation') return '<span class="muted small">Region of Peel 2051 allocation</span>';
     return t.url ? `<a href="${esc(t.url)}" target="_blank" rel="noopener" title="${esc(t.quote || '')}">${esc(t.source || 'source')}</a>${t.page ? ` <span class="muted small">${esc(t.page)}</span>` : ''}` : esc(t.source || '');
   }
+  // A plan's area for the implied density (DATASETS.md §3): the published size (Brampton's
+  // EST_SIZE_HC) when it is within 25% of the mapped boundary, else the mapped area, and why.
+  function planHa(ids) {
+    const all = (App().state.areas && App().state.areas.secondaryPlans) || [];
+    let ha = 0, pub = 0, map = 0, off = [];
+    for (const id of ids) {
+      const a = all.find(x => x.id === id); if (!a || !a.mappedHa) return null;
+      const ok = a.areaHa && Math.abs(a.areaHa - a.mappedHa) / a.mappedHa <= 0.25;
+      ha += ok ? a.areaHa : a.mappedHa; pub += a.areaHa || 0; map += a.mappedHa;
+      if (a.areaHa && !ok) off.push(`${a.name}: published ${fmtNum(a.areaHa)} ha, mapped ${fmtNum(a.mappedHa)} ha (mapped used)`);
+    }
+    return ha ? { ha, pub, map, off } : null;
+  }
+  function densityCell(x) {
+    const t = x.target; if (x.node.kind === 'municipality') return '<td class="num muted">–</td>';
+    const h = planHa(t.covers || [x.node.areaId]); if (!h) return '<td class="num muted">–</td>';
+    const pj = (t.population || 0) + (t.jobs || 0);
+    const [v, u] = pj ? [pj / h.ha, 'people + jobs / ha'] : t.units ? [t.units / h.ha, 'units / ha'] : [null, ''];
+    if (v == null) return `<td class="num muted" title="${fmtNum(Math.round(h.ha))} ha">–</td>`;
+    const tip = `${pj ? `${fmtNum(t.population || 0)} people + ${fmtNum(t.jobs || 0)} jobs` : `${fmtNum(t.units)} units`} over ${fmtNum(Math.round(h.ha))} ha${h.off.length ? ` · ${h.off.join('; ')}` : ''}${t.scope === 'total' ? ' · the target counts everyone at build-out' : ''}`;
+    return `<td class="num" title="${esc(tip)}">${fmtNum(Math.round(v))}<div class="small muted">${u}${h.off.length ? ' ⚠' : ''}</div></td>`;
+  }
   function targetHTML(r) {
     loadTargets();
     const v = R().vsTarget(r, targets && targets.targets, munisAlloc());
     if (!v.rows.length) return `<section class="pt-tg"><h3 class="sub-title">Plans against their targets</h3><p class="small muted">${targets ? 'No published targets for the areas shown.' : 'Loading the targets…'}</p></section>`;
     const rows = v.rows.map(x => {
       const t = x.target, isM = x.node.kind === 'municipality';
-      const flags = `${t.scope === 'total' ? ' <span class="muted small" title="The target counts every home at build-out, existing ones included; the pipeline counts new proposals only">total</span>' : ''}${t.checked === false ? ' <span class="tag" title="' + esc((targets && targets.checkNote) || 'Not yet checked against the document') + '">unchecked</span>' : ''}`;
+      const ar = !isM && App().state.areas ? (App().state.areas.secondaryPlans || []).find(a => a.id === x.node.areaId) : null;
+      const flags = `${ar && ar.appeals ? ` <span class="tag" title="${esc(`Brampton Plan Schedule 10: ${ar.appeals}`)}">appealed</span>` : ''}${t.scope === 'total' ? ' <span class="muted small" title="The target counts every home at build-out, existing ones included; the pipeline counts new proposals only">total</span>' : ''}${t.checked === false ? ' <span class="tag" title="' + esc((targets && targets.checkNote) || 'Not yet checked against the document') + '">unchecked</span>' : ''}`;
       const pctTot = x.pctTotal != null ? `<strong>${pct(x.pctTotal)}</strong>` : x.pctPeople != null ? `<span class="muted" title="People against a people target: indicative only, since targets use household persons per unit and the pipeline Peel design criteria">${pct(x.pctPeople)} of people†</span>` : '–';
       return `<tr class="pt-${isM ? 'municipality' : 'plan'}"><th scope="row"${isM ? '' : ' style="padding-left:14px"'}>${esc(x.name)}${flags}</th>
-        <td${t.note ? ` title="${esc(t.note)}"` : ''}>${targetText(t)}${t.note ? ' <span class="muted" aria-hidden="true">ⓘ</span>' : ''}</td><td${c()}>${n0(x.committed)}</td><td class="num">${n0(x.total)}${x.pctPeople != null ? `<div class="small muted">${n0(x.people)} people</div>` : ''}</td><td${c()}>${pct(x.pctCommitted)}</td><td class="num">${pctTot}</td><td${c()}>${x.gap == null ? '<span class="muted">' + esc(x.compared === 'people' ? '–' : x.compared) + '</span>' : n0(x.gap)}</td><td class="small">${srcLink(t)}</td></tr>`;
+        <td${t.note ? ` title="${esc(t.note)}"` : ''}>${targetText(t)}${t.note ? ' <span class="muted" aria-hidden="true">ⓘ</span>' : ''}</td><td${c()}>${n0(x.committed)}</td><td class="num">${n0(x.total)}${x.pctPeople != null ? `<div class="small muted">${n0(x.people)} people</div>` : ''}</td><td${c()}>${pct(x.pctCommitted)}</td><td class="num">${pctTot}</td><td${c()}>${x.gap == null ? '<span class="muted">' + esc(x.compared === 'people' ? '–' : x.compared) + '</span>' : n0(x.gap)}</td>${densityCell(x)}<td class="small">${srcLink(t)}</td></tr>`;
     }).join('');
     return `<section class="pt-tg"><h3 class="sub-title">Plans against their targets</h3>
       <p class="small">Each municipality against the Region's 2051 allocation of growth, and each plan against its published target, compared on <strong>units</strong>: committed (D-5-1) and all proposed. Where a target states only people, pipeline people are shown beside it (†, indicative only: targets use household persons per unit, the pipeline Peel design criteria). "unchecked" marks a figure not yet checked against its document. "total" marks a target that counts every home at build-out, existing ones included, so the pipeline (new proposals only) reads low there.</p>
-      <div class="tbl-scroll"><table class="dt pt-table pt-target"><thead><tr><th scope="col">Area</th><th scope="col">Target</th><th scope="col"${c()}>Approved units</th><th scope="col" class="num">Proposed units</th><th scope="col"${c()}>% committed</th><th scope="col" class="num">% of target</th><th scope="col"${c()} title="Target minus all proposed">Gap</th><th scope="col">Source</th></tr></thead><tbody>${rows}</tbody></table></div>
-      <p class="small muted">${fmtNum(v.noTarget)} plan${v.noTarget === 1 ? '' : 's'} shown here have no published target (none is 0; they're left out). Targets: data/plan-targets.json${targets && targets.checked ? `, checked ${esc(targets.checked)}` : ''}; hover a source for its wording, ⓘ for a note. All columns adds committed units, % committed and the gap.</p></section>`;
+      <div class="tbl-scroll"><table class="dt pt-table pt-target"><thead><tr><th scope="col">Area</th><th scope="col">Target</th><th scope="col"${c()}>Approved units</th><th scope="col" class="num">Proposed units</th><th scope="col"${c()}>% committed</th><th scope="col" class="num">% of target</th><th scope="col"${c()} title="Target minus all proposed">Gap</th><th scope="col" class="num" title="The target over the plan's area: published size (Brampton EST_SIZE_HC) when it agrees with the mapped boundary within 25%, else the mapped area (⚠)">Target per ha</th><th scope="col">Source</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <p class="small muted">${fmtNum(v.noTarget)} plan${v.noTarget === 1 ? '' : 's'} shown here have no published target (none is 0; they're left out). Targets: data/plan-targets.json${targets && targets.checked ? `, checked ${esc(targets.checked)}` : ''}; hover a source for its wording, ⓘ for a note. Target per ha: the target over the plan's area, to set beside a stated density (⚠: the published size and the mapped boundary disagree; the mapped area is used). All columns adds committed units, % committed and the gap.</p></section>`;
   }
 
   // CSV: one row per area (and per development at the leaves), with its path for pivot tables.

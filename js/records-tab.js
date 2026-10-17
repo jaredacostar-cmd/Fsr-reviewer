@@ -35,7 +35,7 @@
   function fileHTML(r, p) {
     return `<div class="head"><h3>${esc(r.ref || r.address || 'Record')}</h3><div class="m">${esc(r.kind === 'permit' ? 'Building permit' : r.type || 'Planning application')} · ${esc(r.municipality)}${p ? ` · in ${esc(p.title)}` : ''}</div></div>
       <h2 class="section-title">Source</h2>${DD().recordProvHTML(r)}
-      <table class="rec-table">${DD().recordRows(r)}</table>`;
+      <table class="rec-table">${DD().recordRows(r)}</table>${root.PeelAddr ? root.PeelAddr.noteHTML(r) : ''}`;
   }
 
   // The development's Files & history view lives in Records: its node moves between the Overview

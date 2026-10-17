@@ -123,7 +123,24 @@
     ].join('\n');
   }
 
-  const api = { audit, toMarkdown };
+  /**
+   * Sort the possible duplicates by the Region's address points (DATASETS.md §9): a pair whose
+   * developments share an address point is the same land (review it); a pair on different address
+   * points is usually neighbouring buildings. idsOf(project) → Set of address point ids.
+   * Returns { pairs: [{ ...pair, addr: 'same' | 'different' | 'unknown' }], same, different, unknown }.
+   */
+  function classifyPairs(possible, idsOf) {
+    const rank = { same: 0, unknown: 1, different: 2 };
+    const pairs = possible.map(x => {
+      const [a, b] = x.projects.map(idsOf);
+      const addr = !a.size || !b.size ? 'unknown' : [...a].some(id => b.has(id)) ? 'same' : 'different';
+      return { ...x, addr };
+    }).sort((p, q) => (rank[p.addr] - rank[q.addr]) || (q.sameUnits - p.sameUnits) || (q.units - p.units));
+    const n = k => pairs.filter(p => p.addr === k).length;
+    return { pairs, same: n('same'), different: n('different'), unknown: n('unknown') };
+  }
+
+  const api = { audit, toMarkdown, classifyPairs };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelAudit = api;
 })(typeof window !== 'undefined' ? window : globalThis);

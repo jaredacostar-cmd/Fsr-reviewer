@@ -83,11 +83,21 @@ jobs:
           node scripts/build-eas.js --out data --capital data/capital.json
           node --test tests/ea-data.test.js tests/ea-tab.test.js tests/capital-ea-ui.test.js > /tmp/eas-test.log 2>&1 || { grep -A30 '^not ok' /tmp/eas-test.log | head -80; git checkout -- data/eas.json data/eas-review.csv; echo "::warning::eas.json rebuild failed its checks; kept the previous files"; }
 
+      # Region of Peel address points (open data, about 504,000 points, 1 minute) matched to every
+      # file's address (data/address-points.json): the duplicate check and a file's address line.
+      # The build refuses to write when it matches far fewer addresses than last week.
+      - name: Address points
+        continue-on-error: true
+        timeout-minutes: 10
+        run: |
+          node scripts/fetch-addresses.js --out /tmp/ext-raw
+          node scripts/build-addresses.js /tmp/ext-raw data/snapshot.json data/address-points.json
+
       - name: Commit if changed
         run: |
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/snapshot.json data/history.json data/areas.json data/council.json data/council-decisions.json data/fsr.json data/tree-counts.json data/capital.json data/capital-links-audit.json data/eas.json data/eas-review.csv
+          git add data/snapshot.json data/history.json data/areas.json data/council.json data/council-decisions.json data/fsr.json data/tree-counts.json data/capital.json data/capital-links-audit.json data/eas.json data/eas-review.csv data/address-points.json
           if git diff --cached --quiet; then
             echo "No changes."
           else

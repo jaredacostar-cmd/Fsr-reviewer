@@ -10,7 +10,9 @@
  *   - MTO IDF curve lookup: landing page and scripts (to find its lookup endpoint)
  *   - MTO IDF coefficients (i = a·t^b, mm/h, t in hours) at each wastewater block's label point,
  *     from the lookup's 30-second grid files (data_xml/<lat>.xml)
- * Usage: node scripts/fetch-external.js --out ext-raw [--only mto]
+ *   - MECP Municipal Treated Wastewater Effluent: one XLSX per year (2008 on), saved as
+ *     municipal-treated-wastewater-effluent/<year>.xlsx for scripts/build-plant-flows.py
+ * Usage: node scripts/fetch-external.js --out ext-raw [--only mto|cmhc|mwd]
  */
 'use strict';
 const fs = require('fs');
@@ -47,7 +49,24 @@ async function ckan(host, id, keep, maxMb = 80) {
     if (!/\.(csv|xlsx?|json)(\?|$)/i.test(r.url || '') && !/csv|xlsx/i.test(r.format || '')) continue;
     if (keep && !keep.test(name)) { note('skip', id, r.name); continue; }
     if (r.size && r.size > maxMb * 1e6) { note('skip (size)', id, r.name, r.size); continue; }
-    await save(r.url, `${id}/${safe(r.name || path.basename(r.url))}${path.extname(r.url.split('?')[0]) || '.csv'}`, { timeout: 300000 });
+    await save(fixUrl(r.url), `${id}/${safe(r.name || path.basename(r.url))}${path.extname(r.url.split('?')[0]) || '.csv'}`, { timeout: 300000 });
+  }
+}
+
+// Some catalogue entries carry 'https:///host/...' (three slashes); fetch() rejects them.
+const fixUrl = u => String(u || '').replace(/^(https?:)\/{3,}/i, '$1//');
+
+// MECP Municipal Treated Wastewater Effluent: monthly flow and effluent quality for every municipal
+// plant. Saved by year (the resource names are the year) so the build can read the series in order.
+async function mwd() {
+  const id = 'municipal-treated-wastewater-effluent';
+  let pkg;
+  try { pkg = JSON.parse(await get(`https://data.ontario.ca/api/3/action/package_show?id=${id}`, { asText: true })).result; } catch (e) { note('FAIL ckan', id, e.message); return; }
+  fs.writeFileSync(path.join(out, `ckan-${id}.json`), JSON.stringify(pkg, null, 1));
+  for (const r of pkg.resources || []) {
+    const y = (`${r.name || ''} ${r.url || ''}`.match(/(20\d\d)/) || [])[1];
+    if (!y || !/xlsx/i.test(`${r.format || ''} ${r.url || ''}`)) { note('skip', id, r.name); continue; }
+    await save(fixUrl(r.url), `${id}/${y}.xlsx`, { timeout: 300000 });
   }
 }
 
@@ -158,13 +177,16 @@ async function cmhc() {
 (async () => {
   const only = process.argv.includes('--only') ? process.argv[process.argv.indexOf('--only') + 1] : null;
   if (only === 'cmhc') { await cmhc(); fs.writeFileSync(path.join(out, 'fetch-log-cmhc.txt'), log.join('\n') + '\n'); return; }
-  if (only) { await mtoIdf(); fs.writeFileSync(path.join(out, 'fetch-log-mto.txt'), log.join('\n') + '\n'); return; }
+  if (only === 'mwd') { await mwd(); fs.writeFileSync(path.join(out, 'fetch-log-mwd.txt'), log.join('\n') + '\n'); return; }
+  if (only === 'mto') { await mtoIdf(); fs.writeFileSync(path.join(out, 'fetch-log-mto.txt'), log.join('\n') + '\n'); return; }
+  if (only) { note('unknown --only part:', only, '(mto, cmhc, mwd)'); process.exitCode = 1; return; }
   // Ontario Data Catalogue
   for (const host of ['data.ontario.ca']) {
     await ckan(host, 'ontario-s-housing-supply-progress');
     await ckan(host, 'population-projections', /census div|division|49|CD/i);
     await ckan(host, 'environmental-compliance-reports', /sewage|wastewater|municipal/i, 200);
   }
+  await mwd();
   // CMHC starts / completions through Statistics Canada (several candidate tables; rows for Peel kept).
   for (const pid of ['34100148', '34100149', '34100154', '34100156', '34100135', '34100143']) await statcan(pid);
   await eccIdf();

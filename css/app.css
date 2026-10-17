@@ -1741,6 +1741,9 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .dca-key .k-cap0 { background: repeating-linear-gradient(90deg, var(--text-muted) 0 4px, transparent 4px 7px); }
 .dca-key .k-cap1 { background: var(--cap-room); }
 .dca-key .k-div { background: var(--hue-blue); opacity: .5; height: 8px; }
+.pf-chart .pf-avg { fill: var(--text-primary); }
+.pf-chart .pf-wet { fill: var(--hue-blue); fill-opacity: .55; }
+.dca-key .k-wet { background: var(--hue-blue); opacity: .6; width: 7px; height: 7px; border-radius: 50%; }
 .dca-key .k-uns { background: var(--cap-over); opacity: .3; height: 8px; }
 .dca-yr select { margin-left: var(--space-1); padding: var(--space-1) var(--space-1); border: 1px solid var(--border); border-radius: 4px; background: var(--surface-1); color: var(--text-primary); }
 /* Layers: one switch per layer (map panel). */

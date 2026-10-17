@@ -266,6 +266,7 @@
     const tone = k ? PN.toneOf(k.pctBuildout) : null;
     const LB = window.PeelLayerBar;
     const dev = r => ({ tone: null, attrs: { 'data-pnl-dev': r.p.key }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${dot(r.p.phase)} ${esc(r.p.title)}</span><span class="pnl-r-fig">${uLs(r.peak)}<small>${water ? 'max day' : 'peak wet'}</small></span></div><small class="pnl-r-line">${esc(MM().LAYER_NAME[r.lay])} · ${esc(r.p.municipality)} · ${fmtNum(roundPop(r.e.population + r.e.employment.jobs))} people + jobs</small>` });
+    const WE = window.PeelWwEvents, ev = WE && App().state.wwEvents ? (s.kind === 'ps' ? WE.forStation(s.a) : s.kind === 'plant' ? WE.forPlant(s.pl) : []) : [];
     const relief = c && c.relief.length ? c.relief.map(r => ({ html: `<div class="pnl-kv"><span>${esc(r.text)}</span></div>`, kv: true })) : [];
     return {
       calc: true, fullTitle: `${s.title} · every development loading it, the ladder and the planned works`,
@@ -278,8 +279,12 @@
       lists: [
         ...(relief.length ? [{ title: 'Relief', rows: relief, total: relief.length }] : []),
         { title: 'What is driving it', rows: rows.slice(0, 5).map(dev), total: rows.length, seeAll: { 'data-full-table': 'overview' } },
+        ...(ev.length ? [{ title: s.kind === 'plant' ? 'Station overflows and spills reported (collection system reports)' : 'Overflows and spills reported (collection system reports)', rows: WE.rowsFor(ev).slice(0, 5), total: ev.length }] : []),
       ],
-      folds: [{ title: 'Servicing ladder', html: ladder(s).replace(/^<section[^>]*>|<\/section>$/g, '') }],
+      folds: [
+        ...(s.kind === 'plant' && window.PeelPlantFlows && window.PeelPlantFlows.chartHTML(s.pl) ? [{ title: 'Measured flow since 2008', html: window.PeelPlantFlows.chartHTML(s.pl) }] : []),
+        { title: 'Servicing ladder', html: ladder(s).replace(/^<section[^>]*>|<\/section>$/g, '') },
+      ],
       method: `${esc(SvcTab().scenarioText())}. Developments built since the census, committed and proposed; existing development is in the census flow. ${k ? (s.kind === 'ps' ? 'Peak wet weather against firm capacity (2020 Master Plan, Vol. 4, s. 2.3.2).' : 'Against rated capacity; the 2020 Master Plan expands a plant when 90% of rated is projected to be reached.') : ''}`,
       sources: 'Region of Peel 2025 annual reports; 2020 Water and Wastewater Master Plan; the sewer network and blocks (data/servicing.json, data/blocks.json); the applications and permits on the map at Peel design criteria.',
       foot: { primary: { label: 'Show on the map', attrs: s.a ? { 'data-pnl-focus': s.a.id } : { 'data-ss-fit': s.ref }, title: s.a ? 'Zoom to it, with everything upstream' : 'Zoom to the area it serves' }, secondary: [{ label: 'Area report', attrs: { 'data-ss-report': '' } }] },

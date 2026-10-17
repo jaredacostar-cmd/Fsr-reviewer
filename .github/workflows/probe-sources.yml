@@ -21,6 +21,7 @@ name: Probe data sources
 #  mode=dragonfly: the Region's I&I story map, its web maps and the 40 wastewater Blocks (Dragonfly, WEFTEC 2024), pushed to the dragonfly-raw branch
 #  mode=fsr: latest functional servicing reports on the application pages (data/fsr.json, committed to this branch)
 #  mode=external: housing supply progress, MoF projections, compliance reports, CMHC tables (StatCan), IDF files (ext-raw branch)
+#  mode=plant-flows: MECP Municipal Treated Wastewater Effluent (one XLSX per year) → data/plant-flows.json (measured flow at G.E. Booth, Clarkson, Inglewood), committed to this branch; refuses to shorten the history
 #  mode=constraints: gas pipelines, hydro lines, watercourses and conservation authority regulation limits covering Peel (log only)
 #  mode=peel-open: Region of Peel housing construction activity and building permit statistics (data/peel-housing.json, committed to this branch); scripts/probe-peel-open.js lists the Region's other layers
 #  mode=tree-audit: how applications nest into developments — a live pull of every source, then scripts/audit-tree.js (data/tree-audit.json, committed to this branch; report only)
@@ -42,11 +43,11 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, fsr, external, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw, sewer-build, capital, capital-probe, ea-maps, ea-trace or eas'
+        description: 'all, fsr, external, plant-flows, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw, sewer-build, capital, capital-probe, ea-maps, ea-trace or eas'
         default: 'all'
         required: false
       only:
-        description: 'mode=external: one part only (mto, cmhc); mode=capital: commit; mode=eas: with-capital; mode=tiles-3d: terrain or buildings'
+        description: 'mode=external: one part only (mto, cmhc, mwd); mode=capital: commit; mode=eas: with-capital; mode=tiles-3d: terrain or buildings'
         default: ''
         required: false
 
@@ -216,6 +217,17 @@ jobs:
           git add -f ext-raw
           git commit -m "External open data (raw)"
           git push -f origin ext-raw
+      - name: Measured plant flow (MECP effluent data → data/plant-flows.json, committed to this branch)
+        if: inputs.mode == 'plant-flows'
+        timeout-minutes: 20
+        run: |
+          node scripts/fetch-external.js --out ext-raw --only mwd
+          ls -la ext-raw/municipal-treated-wastewater-effluent
+          python3 scripts/build-plant-flows.py ext-raw data/plant-flows.json data/peel-reports.json
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/plant-flows.json
+          git diff --cached --quiet || { git commit -m "Measured plant flow (MECP effluent data)"; git pull --rebase origin "${GITHUB_REF_NAME}"; git push; }
       - name: Site constraint layers (gas, hydro, watercourses, regulation limits; log only)
         if: inputs.mode == 'constraints'
         timeout-minutes: 20
@@ -256,6 +268,15 @@ jobs:
         run: |
           node scripts/fetch-peel-reports.js --out peel-reports
           du -sh peel-reports; ls -la peel-reports | head -200
+          # The collection system report's spills table against data/ww-events.json (hand-transcribed):
+          # a warning, not a failure, so a new year's table gets transcribed.
+          sudo apt-get install -y -qq poppler-utils >/dev/null 2>&1 || true
+          for f in peel-reports/*[Cc]ollection*.pdf; do
+            [ -f "$f" ] || continue
+            pdftotext -layout "$f" /tmp/cs.txt || continue
+            y=$(grep -o 'annual report | 20[0-9][0-9]' /tmp/cs.txt | head -1 | grep -o '20[0-9][0-9]')
+            [ -n "$y" ] && { node scripts/check-ww-events.js /tmp/cs.txt "$y" || echo "::warning::$f: data/ww-events.json needs the $y spills (Table 7)"; }
+          done
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -B peel-reports
