@@ -32,32 +32,43 @@
     return pts[pts.length - 1];
   }
   // The rules checked on a design (Linear Wastewater Standards): [{ t, pass, val }], for the panel and
-  // the print sheet.
-  function checks(d, route, conn) {
-    const f2 = v => (+v).toFixed(2), n0 = v => Math.round(v).toLocaleString('en-CA');
-    const deepest = Math.max(...d.mhs.map(m => m.depth)), vmin = Math.min(...d.reaches.map(r => r.v)), vmax = Math.max(...d.reaches.map(r => r.vFull)), qr = Math.max(...d.reaches.map(r => r.qRatio));
-    const last = d.mhs[d.mhs.length - 1], Lmax = Math.max(...d.reaches.map(r => r.L)), sp = d.dmm >= 600 ? 190 : 200;
-    const minCover = Math.min(...[...route.nodes, ...route.samples].map(pt => { const r = d.reaches.find(x => route.nodes[x.from].x <= pt.x + 1e-9 && pt.x <= route.nodes[x.to].x + 1e-9); return pt.g - (r.inv_up - r.S * (pt.x - route.nodes[r.from].x)) - d.dmm / 1000; }));
+  // the print sheet. d: PeelSewerDesign.designNet()'s result; net: its network (lineNet() for a single
+  // line); conn: the existing sewer.
+  function checks(d, net, conn) {
+    const f2 = v => (+v).toFixed(2), n0 = v => Math.round(v).toLocaleString('en-CA'), R = d.reaches, NR = net.reaches;
+    const deepest = Math.max(...d.mhs.map(m => m.depth)), vmin = Math.min(...R.map(r => r.v)), vmax = Math.max(...R.map(r => r.vFull)), qr = Math.max(...R.map(r => r.qRatio));
+    const dm = r => (r.dmm || d.dmm) / 1000, into = n => R.filter(r => r.to === n), first = R.filter(r => !into(r.from).length);
+    const sizes = [...new Set(R.map(r => r.dmm || d.dmm))].sort((a, b) => a - b), rootIns = d.mhs[d.root].ins;
+    const minCover = Math.min(...R.map((r, i) => Math.min(...[{ d: 0, g: net.nodes[r.from].g }, ...NR[i].pts, { d: NR[i].L, g: net.nodes[r.to].g }].map(p => p.g - (r.inv_up - r.S * p.d) - dm(r)))));
+    const Lmax = Math.max(...R.map(r => r.L)), spOK = R.every(r => r.L <= ((r.dmm || d.dmm) >= 600 ? 190 : 200));
+    const sp = sizes[sizes.length - 1] >= 600 ? (sizes[0] >= 600 ? '190' : '200 (190 from 600 mm)') : '200';
+    // Each pipe into each maintenance hole: its drop (at least the size difference where the pipe out
+    // is larger; the velocity head rule from 375 mm), or a drop structure.
+    const drops = d.mhs.flatMap((m, n) => n === d.root ? [] : m.ins.map(x => { const out = R.find(r => r.from === n), rin = R[x.reach]; return { ...x, grow: Math.max(0, dm(out) - dm(rin)), hv: (rin.dmm || d.dmm) > 300 ? 0.5 * rin.v * rin.v / (2 * 9.81) : 0 }; }));
+    const dropOK = drops.every(x => x.structure ? x.drop >= 0.9 - 1e-6 : x.drop >= Math.max(0.03, x.grow) - 1e-6 && x.drop <= Math.max(0.2, x.grow, x.hv) + 1e-6);
+    const connOK = rootIns.every(x => x.inv + dm(R[x.reach]) >= conn.invert + conn.dmm / 1000 - 1e-6), c0 = rootIns[0];
+    const grows = R.every(r => into(r.from).every(x => (x.dmm || d.dmm) <= (r.dmm || d.dmm)));
+    const sizeTxt = sizes.length > 1 ? `${sizes[0]}–${sizes[sizes.length - 1]} mm, into ${conn.dmm} mm` : `${sizes[0]} mm into ${conn.dmm} mm`;
     const c = (t, pass, val) => ({ t, pass, val });
     return [
-      c('Pipe size (200 mm minimum, no larger than the existing sewer)', d.dmm >= 200 && d.dmm <= conn.dmm, `${d.dmm} mm into ${conn.dmm} mm`),
+      c(`Pipe size (200 mm minimum, no larger than the existing sewer${R.length > 1 && sizes.length > 1 ? ', never a larger pipe into a smaller one' : ''})`, sizes[0] >= 200 && sizes[sizes.length - 1] <= conn.dmm && grows, sizeTxt),
       c('Velocity at the design flow (0.75 m/s or more)', vmin >= 0.75 - 1e-6, `${f2(vmin)} m/s at the slowest`),
       c('Velocity flowing full (3.0 m/s or less)', vmax <= 3.0 + 1e-6, `${f2(vmax)} m/s at the fastest`),
       c('Flow ratio, design flow to full flow (0.7 or less)', qr <= 0.7 + 1e-6, qr.toFixed(2)),
-      c('The last leg, at the upstream end (1.00% or more)', d.reaches[0].S >= 0.01 - 1e-9, `${f2(d.reaches[0].S * 100)}%`),
+      c(`The last leg, at the upstream end${first.length > 1 ? ' of each branch' : ''} (1.00% or more)`, first.every(r => r.S >= 0.01 - 1e-9), `${f2(Math.min(...first.map(r => r.S)) * 100)}%${first.length > 1 ? ' at the least' : ''}`),
       c(`Cover over the pipe (${d.cover} m or more)`, minCover >= d.cover - 0.01, `${f2(minCover)} m at the least`),
       c('Trench (8.0 m or less)', deepest + 0.15 <= 8.0 + 1e-6, `${f2(deepest + 0.15)} m at the deepest`),
-      c(`Maintenance holes (${sp} m apart or less)`, Lmax <= sp, `${n0(Lmax)} m at the longest`),
-      c('Drops through the maintenance holes (0.03–0.20 m, or a drop structure from 0.9 m)', d.mhs.slice(1, -1).every(m => m.structure ? m.drop >= 0.9 - 1e-6 : m.drop >= 0.03 - 1e-6 && m.drop <= 0.2 + 1e-6), `${d.structures} drop structure${d.structures === 1 ? '' : 's'}`),
-      c('Connection (the new obvert at or above the existing one)', last.inv_in + d.dmm / 1000 >= conn.invert + conn.dmm / 1000 - 1e-6, last.drop ? `${f2(last.drop)} m drop${last.structure ? ' (drop structure)' : ''}` : 'obverts matched'),
+      c(`Maintenance holes (${sp} m apart or less)`, spOK, `${n0(Lmax)} m at the longest`),
+      c('Drops through the maintenance holes (0.03–0.20 m, obverts matched where the size grows, or a drop structure from 0.9 m)', dropOK, `${d.structures} drop structure${d.structures === 1 ? '' : 's'}`),
+      c('Connection (the new obvert at or above the existing one)', connOK, c0.drop ? `${f2(c0.drop)} m drop${c0.structure ? ' (drop structure)' : ''}` : 'obverts matched'),
     ];
   }
   // The design as CSV: the maintenance holes, then the reaches.
   function csv(d) {
-    const f2 = v => (v == null ? '' : (+v).toFixed(2)), lines = ['Maintenance hole,Chainage (m),Ground (m),Invert in (m),Invert out (m),Depth to invert (m),Drop (m),Drop structure'];
-    d.mhs.forEach((m, i) => lines.push([`MH ${i + 1}${i === d.mhs.length - 1 ? ' (connection)' : ''}`, f2(m.x), f2(m.g), f2(m.inv_in), f2(m.inv_out), f2(m.depth), f2(m.drop), m.structure ? 'yes' : ''].join(',')));
-    lines.push('', 'Reach,Diameter (mm),Length (m),Slope (%),Invert up (m),Invert down (m),Full-flow capacity (L/s),Flow ratio,Velocity at design flow (m/s),Velocity full (m/s),Depth ratio,Froude');
-    d.reaches.forEach(r => lines.push([`MH ${r.from + 1} to MH ${r.to + 1}`, d.dmm, f2(r.L), (r.S * 100).toFixed(3), f2(r.inv_up), f2(r.inv_dn), f2(r.qFull), r.qRatio.toFixed(2), f2(r.v), f2(r.vFull), r.depthRatio.toFixed(2), r.froude.toFixed(2)].join(',')));
+    const f2 = v => (v == null ? '' : (+v).toFixed(2)), lines = ['Maintenance hole,Chainage (m),Ground (m),Invert in (m),Invert out (m),Depth to invert (m),Drop (m),Drop structure,On'];
+    d.mhs.forEach((m, i) => lines.push([m.label || `MH ${i + 1}${i === d.mhs.length - 1 ? ' (connection)' : ''}`, f2(m.x), f2(m.g), m.ins && m.ins.length > 1 ? `"${m.ins.map(x => f2(x.inv)).join(' / ')}"` : f2(m.inv_in), f2(m.inv_out), f2(m.depth), f2(m.drop), m.structure ? 'yes' : '', m.run ? `branch ${m.run + 1}` : 'main line'].join(',')));
+    lines.push('', 'Reach,Diameter (mm),Length (m),Slope (%),Invert up (m),Invert down (m),Full-flow capacity (L/s),Flow ratio,Velocity at design flow (m/s),Velocity full (m/s),Depth ratio,Froude,Design flow (L/s)');
+    d.reaches.forEach(r => lines.push([`MH ${r.from + 1} to MH ${r.to + 1}`, r.dmm || d.dmm, f2(r.L), (r.S * 100).toFixed(3), f2(r.inv_up), f2(r.inv_dn), f2(r.qFull), r.qRatio.toFixed(2), f2(r.v), f2(r.vFull), r.depthRatio.toFixed(2), r.froude.toFixed(2), f2(r.q != null ? r.q : d.q)].join(',')));
     lines.push('', `Design flow (L/s),${f2(d.q)}`, `Cover over the pipe (m),${d.cover}`, `Rules,"${d.source}"`, '"General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results."');
     return lines.join('\n');
   }
@@ -71,31 +82,41 @@
   const fmt1 = n => (Math.round(n * 10) / 10).toLocaleString('en-CA', { minimumFractionDigits: 1, maximumFractionDigits: 1 }), fmt2 = n => (+n).toFixed(2);
   const SW = () => root.PeelSewerDesign, FM = () => root.PeelForcemain, MS = () => root.PeelMeasure, EL = () => root.PeelElevation, T = () => root.PeelTools, L = root.L;
   const NOTE = () => (root.PeelPanel && root.PeelPanel.NOTE) || 'General screening results only. Peel\'s W&amp;WW Infrastructure Planning team must validate or confirm all results.';
-  const S = { pts: [], conn: null, route: null, d: null, busy: false, msg: '', form: { q: '', pop: '', jobs: '', ha: '', ici: false, avoid: false, spacing: 190, mode: 'gravity', vfd: false, ww: '' } };
+  // The main line (pts, xs, ground) runs from the site to the connection; each branch ({ pts, xs,
+  // ground, join: { to (the line it joins), x }, form }) runs from its own start to a point on the main line or an
+  // earlier branch. drawing: 0 while the main line is drawn, k while branch k is.
+  const S = { pts: [], conn: null, net: null, d: null, busy: false, msg: '', branches: [], drawing: 0, view: 0, form: { q: '', pop: '', jobs: '', ha: '', ici: false, avoid: false, spacing: 190, mode: 'gravity', vfd: false, ww: '' } };
+  const cur = () => (S.drawing ? S.branches[S.drawing - 1].pts : S.pts);
+  const narrow = () => !!(root.PeelDataTab && root.PeelDataTab.shellNarrow && root.PeelDataTab.shellNarrow());
+  const done = () => S.branches.filter(b => b.done);
+  const runs = () => [S, ...done()];
   let layer = null;
   const map = () => root.PeelMapCore && root.PeelMapCore.map;
   const token = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
   function lay() { if (!layer) layer = L.layerGroup().addTo(map()); return layer; }
   function drawLine() {
     const g = lay(); g.clearLayers(); if (!S.pts.length) return;
-    const c = token('--pipe-sanitary'), ink = token('--text-primary');
+    const c = token('--pipe-sanitary'), ink = token('--text-primary'), ok = S.d && S.d.ok;
     const ll = S.pts.map(p => [p.lat, p.lng]);
-    if (S.conn) ll.push([S.conn.lat, S.conn.lng]);
+    if (S.conn && !S.drawing) ll.push([S.conn.lat, S.conn.lng]);
     const fmOk = S.fm && S.fm.ok;
-    L.polyline(ll, { color: c, weight: (S.d && S.d.ok) || fmOk ? 5 : 3, dashArray: S.d && S.d.ok ? null : fmOk ? '9 5' : '6 5', interactive: false }).addTo(g);
-    S.pts.forEach((p, i) => L.circleMarker([p.lat, p.lng], { radius: 4, color: ink, weight: 2, fill: true, fillColor: c, fillOpacity: 1, interactive: false }).addTo(g).bindTooltip(i ? `${i + 1}` : 'start', { permanent: !S.d && !S.fm, direction: 'top', className: 'pt', offset: [0, -4] }));
+    L.polyline(ll, { color: c, weight: ok || fmOk ? 5 : 3, dashArray: ok ? null : fmOk ? '9 5' : '6 5', interactive: false }).addTo(g);
+    S.branches.forEach(b => { if (b.pts.length) L.polyline(b.pts.map(p => [p.lat, p.lng]), { color: c, weight: ok ? 4 : 2.5, dashArray: ok ? null : '6 5', interactive: false }).addTo(g); });
+    const dot = (p, label) => L.circleMarker([p.lat, p.lng], { radius: 4, color: ink, weight: 2, fill: true, fillColor: c, fillOpacity: 1, interactive: false }).addTo(g).bindTooltip(label, { permanent: !S.d && !S.fm, direction: 'top', className: 'pt', offset: [0, -4] });
+    S.pts.forEach((p, i) => dot(p, i ? `${i + 1}` : 'start'));
+    S.branches.forEach((b, k) => b.pts.forEach((p, i) => { if (!i || !b.done || i < b.pts.length - 1) dot(p, i ? `${i + 1}` : `branch ${k + 2}`); }));
     if (S.conn) L.circleMarker([S.conn.lat, S.conn.lng], { radius: 7, color: ink, weight: 2, fill: true, fillColor: c, fillOpacity: 1, interactive: false }).addTo(g).bindTooltip(`Connection: ${S.conn.dmm} mm sewer${S.conn.id ? ` ${esc(S.conn.id)}` : ''} (${S.conn.existingMH ? 'existing maintenance hole' : 'new maintenance hole'})`, { direction: 'top', className: 'pt' });
     if (S.fm) drawForcemain(g, c, ink);
     // The designed maintenance holes, numbered, with their reach labels.
-    if (S.d && S.d.ok && S.route) {
-      S.route.nodes.forEach((nd, i) => {
-        const p = nd.ll, m = S.d.mhs[i];
+    if (ok && S.net) {
+      S.d.mhs.forEach((m, i) => {
+        const p = m.ll, ins = m.ins.length > 1 ? `inverts in ${m.ins.map(x => fmt2(x.inv)).join(' / ')}` : m.ins.length ? `invert in ${fmt2(m.ins[0].inv)}` : '';
         L.circleMarker([p.lat, p.lng], { radius: 6, color: c, weight: 3, fill: true, fillColor: token('--surface-1'), fillOpacity: 1 }).addTo(g)
-          .bindTooltip(`<strong>MH ${i + 1}${i === S.route.nodes.length - 1 ? ' (connection)' : ''}</strong><br>ground ${fmt2(m.g)} m · invert ${fmt2(i ? m.inv_in : m.inv_out)} m · depth ${fmt2(m.depth)} m${m.drop ? ` · drop ${fmt2(m.drop)} m${m.structure ? ' (drop structure)' : ''}` : ''}`, { direction: 'top', className: 'pt' });
+          .bindTooltip(`<strong>${esc(m.label)}</strong><br>ground ${fmt2(m.g)} m${ins ? ` · ${ins}` : ''}${m.inv_out != null ? ` · out ${fmt2(m.inv_out)}` : ''} · depth ${fmt2(m.depth)} m${m.drop ? ` · drop ${fmt2(m.drop)} m${m.structure ? ' (drop structure)' : ''}` : ''}`, { direction: 'top', className: 'pt' });
       });
       S.d.reaches.forEach(r => {
-        const a = S.route.nodes[r.from].ll, b = S.route.nodes[r.to].ll;
-        L.marker([(a.lat + b.lat) / 2, (a.lng + b.lng) / 2], { interactive: false, keyboard: false, icon: L.divIcon({ className: 'sd-lbl', html: `<span>${S.d.dmm} mm @ ${(r.S * 100).toFixed(2)}%</span>`, iconSize: null }) }).addTo(g);
+        const a = S.d.mhs[r.from].ll, b = S.d.mhs[r.to].ll;
+        L.marker([(a.lat + b.lat) / 2, (a.lng + b.lng) / 2], { interactive: false, keyboard: false, icon: L.divIcon({ className: 'sd-lbl', html: `<span>${r.dmm} mm @ ${(r.S * 100).toFixed(2)}%</span>`, iconSize: null }) }).addTo(g);
       });
     }
   }
@@ -110,9 +131,13 @@
     if (S.conn) L.circleMarker([S.conn.lat, S.conn.lng], { radius: 6, color: c, weight: 3, fill: true, fillColor: token('--surface-1'), fillOpacity: 1 }).addTo(g).bindTooltip(`<strong>Discharge maintenance hole</strong><br>outlet invert ${fmt2(f.outletInv)} m, ${fmt2(f.outletInv - S.conn.invert)} m above the flow line`, { direction: 'top', className: 'pt' });
     if (f.ok) { const m = at(S.xs[S.xs.length - 1] / 2); L.marker([m.lat, m.lng], { interactive: false, keyboard: false, icon: L.divIcon({ className: 'sd-lbl', html: `<span>${f.dmm} mm forcemain</span>`, iconSize: null }) }).addTo(g); }
   }
-  const bannerHTML = () => S.busy ? '<strong>Sewer designer</strong> <span class="muted">Reading the sewer and the ground…</span>'
-    : `<strong>Sewer designer</strong> <span class="muted">${S.msg ? esc(S.msg) : S.pts.length < 2 ? 'Tap from the site to an existing sanitary sewer; the last tap snaps to it' : `${S.pts.length} points · ${fmtNum(Math.round(chainage(S.pts).pop()))} m · Finish snaps the end to the sewer`}</span>`
-      + ` <span class="tb-acts">${S.pts.length ? '<button type="button" class="btn small" data-ptool-act="sd-undo">Undo</button>' : ''}${S.pts.length >= 2 ? '<button type="button" class="btn small primary" data-ptool-act="sd-finish">Finish</button>' : ''}${S.pts.length ? '<button type="button" class="btn small link" data-ptool-act="sd-clear">Clear</button>' : ''}</span>`;
+  const bannerHTML = () => {
+    if (S.busy) return '<strong>Sewer designer</strong> <span class="muted">Reading the sewer and the ground…</span>';
+    const P = cur(), br = S.drawing, len = P.length >= 2 ? fmtNum(Math.round(chainage(P).pop())) : 0;
+    const text = S.msg ? esc(S.msg) : br ? (P.length < 2 ? `Branch ${br + 1}: tap from its start to the sewer you drew; the last tap joins it` : `Branch ${br + 1} · ${P.length} points · ${len} m · Finish joins it to the sewer you drew`)
+      : P.length < 2 ? 'Tap from the site to an existing sanitary sewer; the last tap snaps to it' : `${P.length} points · ${len} m · Finish snaps the end to the sewer`;
+    return `<strong>Sewer designer</strong> <span class="muted">${text}</span> <span class="tb-acts">${P.length ? '<button type="button" class="btn small" data-ptool-act="sd-undo">Undo</button>' : ''}${P.length >= 2 ? '<button type="button" class="btn small primary" data-ptool-act="sd-finish">Finish</button>' : ''}${br ? '<button type="button" class="btn small link" data-ptool-act="sd-cancel">Cancel the branch</button>' : P.length ? '<button type="button" class="btn small link" data-ptool-act="sd-clear">Clear</button>' : ''}</span>`;
+  };
   const banner = () => { if (T().active() === 'sewer') T().banner(bannerHTML()); };
 
   // Finish: snap the end to the nearest gravity sewer with published inverts (within 40 m), sample
@@ -131,42 +156,143 @@
       S.conn = { lat: at.lat, lng: at.lng, invert: m.up + (m.dn - m.up) * t, dmm: m.d, id: m.id, existingMH: atUp || atDn, g: m.g };
       // The drawn end moves onto the sewer.
       S.pts[S.pts.length - 1] = { lat: S.conn.lat, lng: S.conn.lng };
-      await sample();
+      await sampleRun(S);
       S.d = null; S.fm = null;
       openResult();
     } catch (e) { S.msg = `Couldn't read the sewer or the ground (${e && e.message ? e.message : 'no data'})`; }
     finally { S.busy = false; banner(); drawLine(); }
   }
-  // The ground every 10 m along the line and at each vertex (lidar, else the terrain tiles).
-  async function sample() {
-    const xs = chainage(S.pts), Lt = xs[xs.length - 1], N = Math.max(2, Math.ceil(Lt / 10)), at = [];
+  // A branch: its last tap joins the nearest line already drawn (within 30 m), at a vertex within
+  // 10 m, else at a new vertex there (a junction maintenance hole).
+  async function finishBranch() {
+    const b = S.branches[S.drawing - 1]; if (!b || b.pts.length < 2 || S.busy) return;
+    S.busy = true; S.msg = ''; banner();
+    try {
+      const end = b.pts[b.pts.length - 1], rs = runs();
+      let best = null;
+      rs.forEach((run, ri) => { const n = MS().nearOn([end.lng, end.lat], run.pts.map(p => [p.lng, p.lat])); if (n.m <= 30 && (!best || n.m < best.m)) best = { ri, m: n.m, t: n.t }; });
+      if (!best) { S.msg = 'End the branch on the sewer you drew (within 30 m of it)'; return; }
+      const run = rs[best.ri]; let x = best.t * run.xs[run.xs.length - 1];
+      const vi = run.xs.findIndex(v => Math.abs(v - x) <= 10);
+      if (vi >= 0) x = run.xs[vi]; else insertVertex(run, x);
+      const at = pointAt(run.pts, run.xs, x);
+      b.pts[b.pts.length - 1] = { lat: at.lat, lng: at.lng };
+      b.join = { to: run, x };
+      await sampleRun(b);
+      b.done = true; S.drawing = 0; S.d = null; S.fm = null;
+      openResult();
+      if (narrow() && root.PeelApp && root.PeelApp.setAnalysisSnap) root.PeelApp.setAnalysisSnap('half', false);
+    } catch (e) { S.msg = `Couldn't read the ground along the branch (${e && e.message ? e.message : 'no data'})`; }
+    finally { S.busy = false; banner(); drawLine(); }
+  }
+  // A vertex on a line at chainage x (the chainage of everything else on it stays the same).
+  function insertVertex(run, x) {
+    const i = run.xs.findIndex((v, k) => k && v > x); if (i < 1) return;
+    const p = pointAt(run.pts, run.xs, x);
+    run.pts.splice(i, 0, p); run.xs = chainage(run.pts);
+    if (run.ground && !run.ground.some(s => Math.abs(s.x - x) < 0.5)) { run.ground.push({ x, g: gAtRun(run, x), ll: p }); run.ground.sort((a, b2) => a.x - b2.x); }
+  }
+  // The ground every 10 m along a line and at each vertex (lidar, else the terrain tiles).
+  async function sampleRun(run) {
+    const xs = chainage(run.pts), Lt = xs[xs.length - 1], N = Math.max(2, Math.ceil(Lt / 10)), at = [];
     for (let k = 0; k <= N; k++) at.push(Lt * k / N);
     for (const x of xs) if (!at.some(a => Math.abs(a - x) < 0.5)) at.push(x);
     at.sort((a, b) => a - b);
-    const lls = at.map(x => pointAt(S.pts, xs, x)), gs = await EL().getGroundMany(lls);
+    const lls = at.map(x => pointAt(run.pts, xs, x)), gs = await EL().getGroundMany(lls);
     if (gs.some(r => !r || r.z == null)) throw new Error('no ground elevation along part of the line');
-    S.ground = at.map((x, i) => ({ x, g: gs[i].z, ll: lls[i] }));
-    S.groundLabel = gs[0].label || '';
-    S.xs = xs;
+    run.ground = at.map((x, i) => ({ x, g: gs[i].z, ll: lls[i] }));
+    if (run === S) S.groundLabel = gs[0].label || '';
+    run.xs = xs;
   }
-  const gAt = x => { const G = S.ground; for (let i = 1; i < G.length; i++) if (x <= G[i].x + 1e-9) { const t = (x - G[i - 1].x) / ((G[i].x - G[i - 1].x) || 1); return G[i - 1].g + (G[i].g - G[i - 1].g) * t; } return G[G.length - 1].g; };
+  const gAtRun = (run, x) => { const G = run.ground; for (let i = 1; i < G.length; i++) if (x <= G[i].x + 1e-9) { const t = (x - G[i - 1].x) / ((G[i].x - G[i - 1].x) || 1); return G[i - 1].g + (G[i].g - G[i - 1].g) * t; } return G[G.length - 1].g; };
+  const flowOf = f => ({ q: +f.q > 0 ? +f.q : 0, pop: +f.pop || 0, jobs: +f.jobs || 0, ha: +f.ha || 0 });
+  // The design flow from a set of lines: what was typed as flows, added, plus Peel's criteria on the
+  // population, jobs and area of the rest together (peaking on the whole).
+  function flowSum(list) {
+    const typed = list.filter(f => f.q > 0), rest = list.filter(f => !(f.q > 0)), pop = rest.reduce((t, f) => t + f.pop, 0), jobs = rest.reduce((t, f) => t + f.jobs, 0), ha = rest.reduce((t, f) => t + f.ha, 0);
+    const pf = pop + jobs + ha > 0 ? SW().flowFrom({ pop, jobs, ha }) : { q: 0 };
+    return { ...pf, q: typed.reduce((t, f) => t + f.q, 0) + pf.q, typed: !rest.length, peak: pf.peak, ii: pf.ii };
+  }
+  // The network: maintenance holes along each line (at its vertices and at most the spacing apart),
+  // each branch's last one shared with the line it joins; a reach between consecutive ones; the flow
+  // in each reach from every line upstream of it.
+  function buildNet(spacing) {
+    const rs = runs(), nodes = [], meta = [], reaches = [], rmeta = [], at = rs.map(() => []), start = [];
+    rs.forEach((run, ri) => {
+      const bnd = bends(run.pts), mhX = SW().placeMHs(run.xs, spacing); run.mhX = mhX;
+      mhX.forEach((x, k) => {
+        if (ri && k === mhX.length - 1) return;
+        const vi = run.xs.findIndex(v => Math.abs(v - x) < 0.01);
+        nodes.push({ g: gAtRun(run, x), bend: vi >= 0 ? bnd[vi] : 0 }); meta.push({ run: ri, x, ll: pointAt(run.pts, run.xs, x), start: !k });
+        at[ri].push({ x, n: nodes.length - 1 });
+      });
+      start[ri] = at[ri][0].n;
+    });
+    const nodeOn = (ri, x) => at[ri].reduce((b, e) => (Math.abs(e.x - x) < Math.abs(b.x - x) ? e : b), at[ri][0]).n;
+    rs.forEach((run, ri) => {
+      const mhX = run.mhX;
+      for (let k = 0; k < mhX.length - 1; k++) {
+        const from = nodeOn(ri, mhX[k]), to = ri && k + 1 === mhX.length - 1 ? nodeOn(rs.indexOf(run.join.to), run.join.x) : nodeOn(ri, mhX[k + 1]);
+        reaches.push({ from, to, L: mhX[k + 1] - mhX[k], pts: run.ground.filter(s => s.x > mhX[k] + 0.01 && s.x < mhX[k + 1] - 0.01).map(s => ({ d: s.x - mhX[k], g: s.g })) });
+        rmeta.push({ run: ri });
+      }
+    });
+    // The deflection into each maintenance hole, pipe in to pipe out.
+    const outOf = nodes.map(() => -1); reaches.forEach((r, i) => { outOf[r.from] = i; });
+    const brg = (a, b) => Math.atan2((b.lng - a.lng) * Math.cos(a.lat * Math.PI / 180), b.lat - a.lat) * 180 / Math.PI;
+    reaches.forEach(r => { const o = outOf[r.to]; if (o < 0) return; let dd = Math.abs(brg(meta[r.from].ll, meta[r.to].ll) - brg(meta[r.to].ll, meta[reaches[o].to].ll)) % 360; if (dd > 180) dd = 360 - dd; r.bend = Math.round(dd); });
+    // Flows: the lines upstream of a reach are its own and every branch joining at or above it.
+    const flows = rs.map(run => flowOf(run === S ? S.form : run.form));
+    const ups = (ri, x0) => [ri, ...rs.flatMap((b, j) => (j && b.join.to === rs[ri] && b.join.x <= x0 + 0.01 ? ups(j, Infinity) : []))];
+    reaches.forEach((r, i) => { const ri = rmeta[i].run, x0 = meta[r.from].x, list = ups(ri, x0).map(j => flows[j]); r.q = flowSum(list).q; });
+    return { net: { nodes, reaches }, meta, rmeta, start, outOf, flows, root: nodeOn(0, S.mhX[S.mhX.length - 1]) };
+  }
+  // A line's path to the connection as a single line (its own reaches, then on down the lines it
+  // joins): the profile's view, laid out like a single-line design.
+  function lineView(ri) {
+    const nb = S.net, d = S.d, path = [];
+    let n = nb.start[ri];
+    while (n != null) { path.push(n); const o = nb.outOf[n]; n = o >= 0 ? nb.net.reaches[o].to : null; }
+    const cum = [0], rIdx = [];
+    for (let k = 0; k < path.length - 1; k++) { const o = nb.outOf[path[k]]; rIdx.push(o); cum.push(cum[k] + nb.net.reaches[o].L); }
+    const nodes = path.map((m, k) => ({ x: cum[k], g: nb.net.nodes[m].g, ll: d.mhs[m].ll, n: m }));
+    const ground = [{ x: 0, g: nodes[0].g }];
+    rIdx.forEach((o, k) => { nb.net.reaches[o].pts.forEach(p => ground.push({ x: cum[k] + p.d, g: p.g })); ground.push({ x: cum[k + 1], g: nodes[k + 1].g }); });
+    const reaches = rIdx.map((o, k) => ({ ...d.reaches[o], from: k, to: k + 1 }));
+    const mhs = path.map((m, k) => { const M = d.mhs[m], inE = k ? M.ins.find(x => x.reach === rIdx[k - 1]) : null; return { x: cum[k], g: M.g, inv_in: inE ? inE.inv : null, inv_out: M.inv_out, drop: inE ? inE.drop : 0, structure: !!(inE && inE.structure), depth: M.depth, num: m + 1, label: M.label }; });
+    return { nodes, ground, reaches, mhs, cover: d.cover, dmm: Math.max(...reaches.map(r => r.dmm)), q: reaches[reaches.length - 1].q, label: ri ? `Branch ${ri + 1}` : 'Main line', structures: mhs.filter(m => m.structure).length, ok: true };
+  }
   function run() {
-    const f = S.form, flow = SW().flowFrom({ q: f.q, pop: +f.pop || 0, jobs: +f.jobs || 0, ha: +f.ha || 0 });
-    if (!(flow.q > 0)) { S.d = null; S.formMsg = 'Type a design flow, or the population, jobs and area it serves.'; return openResult(); }
+    const f = S.form;
     S.formMsg = '';
-    S.flow = flow;
     if (f.mode === 'pumped') {
-      S.d = null;
+      S.d = null; S.net = null;
+      if (done().length) { S.fm = null; S.formMsg = 'The pumped option takes the main line alone: remove the branches to use it.'; return openResult(); }
+      const flow = SW().flowFrom({ q: f.q, pop: +f.pop || 0, jobs: +f.jobs || 0, ha: +f.ha || 0 });
+      if (!(flow.q > 0)) { S.fm = null; S.formMsg = 'Type a design flow, or the population, jobs and area it serves.'; return openResult(); }
+      S.flow = flow;
       S.fm = FM().design(S.ground.map(({ x, g }) => ({ x, g })), S.conn, flow.q, { vfd: f.vfd, ici: f.ici, wwDepth: +f.ww || 0 });
       openResult(); drawLine(); return;
     }
     S.fm = null;
-    const spacing = Math.min(200, Math.max(20, +f.spacing || 190)), bnd = bends(S.pts);
-    const mhX = SW().placeMHs(S.xs, spacing);
-    const nodes = mhX.map(x => { const vi = S.xs.findIndex(v => Math.abs(v - x) < 0.01); return { x, g: gAt(x), bend: vi >= 0 ? bnd[vi] : 0, ll: pointAt(S.pts, S.xs, x) }; });
-    S.route = { nodes, samples: S.ground.filter(s => !mhX.some(x => Math.abs(x - s.x) < 0.01)).map(({ x, g }) => ({ x, g })) };
-    S.d = SW().design(S.route, S.conn, flow.q, { ici: f.ici, avoidStructures: f.avoid });
-    S.flow = flow;
+    const rs = runs(), flows = rs.map(r => flowOf(r === S ? S.form : r.form));
+    const missing = flows.findIndex(x => !(x.q > 0 || x.pop + x.jobs + x.ha > 0));
+    if (missing >= 0) { S.d = null; S.formMsg = missing ? `Type a flow, or the population, jobs and area, for branch ${missing + 1}.` : 'Type a design flow, or the population, jobs and area it serves.'; return openResult(); }
+    S.flow = flowSum(flows);
+    const spacing = Math.min(200, Math.max(20, +f.spacing || 190));
+    S.net = buildNet(spacing);
+    S.d = SW().designNet(S.net.net, S.conn, { ici: f.ici, avoidStructures: f.avoid });
+    if (S.d.ok) {
+      const nb = S.net, d = S.d, rootN = d.root;
+      d.mhs.forEach((m, i) => {
+        const me = nb.meta[i]; m.x = me.x; m.run = me.run; m.ll = me.ll;
+        const role = i === rootN ? 'connection' : me.start ? (me.run ? `branch ${me.run + 1} start` : 'start') : m.ins.length > 1 ? 'junction' : '';
+        m.label = `MH ${i + 1}${role ? ` (${role})` : ''}`;
+      });
+      d.reaches.forEach((r, i) => { r.run = nb.rmeta[i].run; });
+      d.q = d.mhs[rootN].ins.reduce((t, x) => t + d.reaches[x.reach].q, 0);
+      S.view = Math.min(S.view, rs.length - 1);
+    }
     openResult(); drawLine();
   }
 
@@ -176,10 +302,15 @@
   }
   function formHTML() {
     const f = S.form, v = k => esc(f[k] == null ? '' : f[k]);
+    const flowRow = (attr, F) => `<div class="sd-row"><label class="field"><span class="label">Flow (L/s)</span><input type="number" min="0" step="0.1" ${attr('q')} value="${esc(F.q || '')}"></label><span class="muted small">or</span>
+      <label class="field"><span class="label">Population</span><input type="number" min="0" step="1" ${attr('pop')} value="${esc(F.pop || '')}"></label><label class="field"><span class="label">Jobs</span><input type="number" min="0" step="1" ${attr('jobs')} value="${esc(F.jobs || '')}"></label><label class="field"><span class="label">Area (ha)</span><input type="number" min="0" step="0.1" ${attr('ha')} value="${esc(F.ha || '')}"></label></div>`;
+    const bs = done(), gravity = f.mode !== 'pumped';
+    const branches = gravity ? `<div class="sd-branches">${bs.map((b, k) => `<div class="sd-branch"><p class="small"><strong>Branch ${k + 2}</strong> <span class="muted">— ${fmtNum(Math.round(b.xs[b.xs.length - 1]))} m, joining ${b.join.to === S ? 'the main line' : `branch ${runs().indexOf(b.join.to) + 1}`} at ${fmtNum(Math.round(b.join.x))} m; what it serves:</span> <button type="button" class="btn small link" data-sd-act="rm-branch" data-sd-branch="${S.branches.indexOf(b)}">Remove</button></p>${flowRow(k2 => `data-sb="${S.branches.indexOf(b)}" data-sb-k="${k2}"`, b.form)}</div>`).join('')}
+      <p><button type="button" class="btn small" data-sd-act="branch">Add a branch</button> <span class="muted small">Draw a sewer that joins this one: its flow adds from where it joins.</span></p></div>` : '';
     return `<form class="sd-form" data-sd-form onsubmit="return false">
-      <p class="small"><strong>Design flow</strong> <span class="muted">— type the peak wet weather flow, or what the sewer serves (Peel criteria: 290 L/cap/d, 270 L/job/d, Harmon 2–4, I&amp;I 0.26 L/s/ha)</span></p>
-      <div class="sd-row"><label class="field"><span class="label">Flow (L/s)</span><input type="number" min="0" step="0.1" data-sd="q" value="${v('q')}"></label><span class="muted small">or</span>
-      <label class="field"><span class="label">Population</span><input type="number" min="0" step="1" data-sd="pop" value="${v('pop')}"></label><label class="field"><span class="label">Jobs</span><input type="number" min="0" step="1" data-sd="jobs" value="${v('jobs')}"></label><label class="field"><span class="label">Area (ha)</span><input type="number" min="0" step="0.1" data-sd="ha" value="${v('ha')}"></label></div>
+      <p class="small"><strong>Design flow${bs.length && gravity ? ' — the main line' : ''}</strong> <span class="muted">— type the peak wet weather flow, or what the sewer serves (Peel criteria: 290 L/cap/d, 270 L/job/d, Harmon 2–4, I&amp;I 0.26 L/s/ha)</span></p>
+      ${flowRow(k => `data-sd="${k}"`, f)}
+      ${branches}
       <fieldset class="sd-mode"><legend class="label">Design</legend><label class="chk"><input type="radio" name="sd-mode" data-sd="mode" value="gravity"${f.mode !== 'pumped' ? ' checked' : ''}> Gravity sewer</label><label class="chk"><input type="radio" name="sd-mode" data-sd="mode" value="pumped"${f.mode === 'pumped' ? ' checked' : ''}> Pumped: a station at the start, a forcemain to the sewer</label></fieldset>
       ${f.mode === 'pumped' ? `<div class="sd-row"><label class="field"><span class="label">Wet well low level (m below ground)</span><input type="number" min="0" step="0.1" data-sd="ww" value="${v('ww')}" placeholder="the incoming sewer"></label>
       <label class="chk"><input type="checkbox" data-sd="vfd"${f.vfd ? ' checked' : ''}> Variable speed pumps (0.8 m/s, with 1.0 m/s flushing weekly)</label><label class="chk"><input type="checkbox" data-sd="ici"${f.ici ? ' checked' : ''}> Industrial / commercial (3.5 m of cover, else 2.5 m)</label></div>` : `<div class="sd-row"><label class="field"><span class="label">Maintenance holes at most (m apart)</span><input type="number" min="20" max="200" step="5" data-sd="spacing" value="${v('spacing')}"></label>
@@ -189,44 +320,47 @@
       ${S.formMsg ? `<p class="small t-tight">${esc(S.formMsg)}</p>` : ''}</form>`;
   }
   function resultHTML() {
-    const c = S.conn, Lt = S.xs ? S.xs[S.xs.length - 1] : 0;
-    const head = `<p class="small">From the drawn start to the <strong>${fmtNum(c.dmm)} mm sanitary sewer${c.id ? ` ${esc(c.id)}` : ''}</strong> (invert ${fmt2(c.invert)} m; ${c.existingMH ? 'its existing maintenance hole' : 'a new maintenance hole on the pipe'}) · <strong>${fmtNum(Math.round(Lt))} m</strong> along the drawn route · ground ${fmt1(Math.max(...S.ground.map(s => s.g)))}–${fmt1(Math.min(...S.ground.map(s => s.g)))} m.</p>`;
+    const c = S.conn, Lt = S.xs ? S.xs[S.xs.length - 1] : 0, bs = done();
+    const head = `<p class="small">From the drawn start to the <strong>${fmtNum(c.dmm)} mm sanitary sewer${c.id ? ` ${esc(c.id)}` : ''}</strong> (invert ${fmt2(c.invert)} m; ${c.existingMH ? 'its existing maintenance hole' : 'a new maintenance hole on the pipe'}) · <strong>${fmtNum(Math.round(Lt))} m</strong> along the drawn route${bs.length ? ` and ${bs.length} branch${bs.length === 1 ? '' : 'es'} (${fmtNum(Math.round(bs.reduce((t, b) => t + b.xs[b.xs.length - 1], 0)))} m)` : ''} · ground ${fmt1(Math.max(...S.ground.map(s => s.g)))}–${fmt1(Math.min(...S.ground.map(s => s.g)))} m.</p>`;
     let body = '';
     if (S.fm) body = fmHTML(S.fm);
     else if (S.d && S.d.ok) body = designHTML(S.d);
-    else if (S.d) body = `<p><span class="pnl-chip t-over">No gravity design</span> ${esc(S.d.why)}.</p><p><button type="button" class="btn small" data-sd-act="pumped">Try a pumped option</button></p>${profileSVG(null)}`;
+    else if (S.d) body = `<p><span class="pnl-chip t-over">No gravity design</span> ${esc(S.d.why)}.</p>${bs.length ? '' : '<p><button type="button" class="btn small" data-sd-act="pumped">Try a pumped option</button></p>'}${profileSVG(null)}`;
     else body = profileSVG(null);
     return `<div class="sd-res">${head}${formHTML()}${body}<p class="small muted">A preliminary design for screening: the route as drawn, the ground from ${esc(S.groundLabel || 'the terrain model')} (not a survey), the existing sewer as the Region publishes it. Rules: ${esc(S.fm ? FM().SOURCE : SW().SOURCE)}. Utilities, other services, soils and groundwater are not considered.</p><p class="pnl-note small">${NOTE()}</p></div>`;
   }
   function designHTML(d) {
-    const deepest = Math.max(...d.mhs.map(m => m.depth)), s = d.reaches.map(r => r.S * 100);
+    const deepest = Math.max(...d.mhs.map(m => m.depth)), s = d.reaches.map(r => r.S * 100), sizes = [...new Set(d.reaches.map(r => r.dmm))].sort((a, b) => a - b), nRuns = runs().length;
     const ok = c => `<li class="${c.pass ? 'sd-ok' : 'sd-no'}"><span aria-hidden="true">${c.pass ? '✓' : '✗'}</span> ${esc(c.t)}: <strong>${esc(c.val)}</strong></li>`;
-    const checkList = checks(d, S.route, S.conn).map(ok);
+    const checkList = checks(d, S.net.net, S.conn).map(ok);
     const froudeHi = d.reaches.filter(r => r.froude >= 1).length;
-    const mhRows = d.mhs.map((m, i) => `<tr><th scope="row">MH ${i + 1}${i === d.mhs.length - 1 ? ' <small>connection</small>' : i === 0 ? ' <small>start</small>' : ''}</th><td class="n">${fmtNum(Math.round(m.x))}</td><td class="n">${fmt2(m.g)}</td><td class="n">${m.inv_in == null ? '–' : fmt2(m.inv_in)}</td><td class="n">${m.inv_out == null ? '–' : fmt2(m.inv_out)}</td><td class="n">${fmt2(m.depth)}</td><td class="n">${m.drop ? `${fmt2(m.drop)}${m.structure ? ' <small>structure</small>' : ''}` : '–'}</td></tr>`).join('');
-    const rRows = d.reaches.map(r => `<tr><th scope="row">${r.from + 1} → ${r.to + 1}</th><td class="n">${fmt1(r.L)}</td><td class="n">${(r.S * 100).toFixed(2)}</td><td class="n">${fmt1(r.qFull)}</td><td class="n">${r.qRatio.toFixed(2)}</td><td class="n">${fmt2(r.v)}</td><td class="n">${fmt2(r.vFull)}</td><td class="n">${r.froude.toFixed(2)}</td></tr>`).join('');
-    return `<p><span class="pnl-chip t-room">Gravity design</span> A <strong>${fmtNum(d.dmm)} mm</strong> sewer at ${fmt2(Math.min(...s))}–${fmt2(Math.max(...s))}%, ${fmtNum(d.mhs.length)} maintenance holes, ${fmt1(d.mhs[0].depth)} m deep at the start and ${fmt1(deepest)} m at the deepest, for ${fmt1(d.q)} L/s${S.flow && !S.flow.typed ? ` (${fmt1(S.flow.peak)} L/s peak dry + ${fmt1(S.flow.ii)} L/s I&amp;I)` : ''}. The least excavation the rules allow.</p>
-      <h4 class="sd-h">Profile</h4>${profileSVG(d)}
+    const where = m => (m.run ? `branch ${m.run + 1}` : 'main');
+    const mhRows = d.mhs.map(m => `<tr><th scope="row">${esc(m.label.replace(/ \((.+)\)$/, ''))}${/\(/.test(m.label) ? ` <small>${esc(/\((.+)\)$/.exec(m.label)[1])}</small>` : ''}</th><td>${where(m)} ${fmtNum(Math.round(m.x))} m</td><td class="n">${fmt2(m.g)}</td><td class="n">${m.ins.length ? m.ins.map(x => fmt2(x.inv)).join(' / ') : '–'}</td><td class="n">${m.inv_out == null ? '–' : fmt2(m.inv_out)}</td><td class="n">${fmt2(m.depth)}</td><td class="n">${m.ins.some(x => x.drop) ? m.ins.map(x => `${fmt2(x.drop)}${x.structure ? ' <small>structure</small>' : ''}`).join(' / ') : '–'}</td></tr>`).join('');
+    const rRows = d.reaches.map(r => `<tr><th scope="row">${r.from + 1} → ${r.to + 1}</th><td class="n">${r.dmm}</td><td class="n">${fmt1(r.q)}</td><td class="n">${fmt1(r.L)}</td><td class="n">${(r.S * 100).toFixed(2)}</td><td class="n">${fmt1(r.qFull)}</td><td class="n">${r.qRatio.toFixed(2)}</td><td class="n">${fmt2(r.v)}</td><td class="n">${fmt2(r.vFull)}</td><td class="n">${r.froude.toFixed(2)}</td></tr>`).join('');
+    const sizeTxt = sizes.length > 1 ? `${fmtNum(sizes[0])}–${fmtNum(sizes[sizes.length - 1])} mm` : `${fmtNum(sizes[0])} mm`;
+    const views = nRuns > 1 ? `<p class="sd-views" role="group" aria-label="Profile of">${runs().map((_, ri) => `<button type="button" class="btn small${ri === S.view ? ' on' : ''}" data-sd-view="${ri}" aria-pressed="${ri === S.view}">${ri ? `Branch ${ri + 1}` : 'Main line'}</button>`).join('')}</p>` : '';
+    return `<p><span class="pnl-chip t-room">Gravity design</span> A <strong>${sizeTxt}</strong> sewer${nRuns > 1 ? ` (the main line and ${nRuns - 1} branch${nRuns === 2 ? '' : 'es'})` : ''} at ${fmt2(Math.min(...s))}–${fmt2(Math.max(...s))}%, ${fmtNum(d.mhs.length)} maintenance holes, ${fmt1(d.mhs[0].depth)} m deep at the start and ${fmt1(deepest)} m at the deepest, for ${fmt1(d.q)} L/s${nRuns > 1 ? ' at the connection' : ''}${S.flow && !S.flow.typed && S.flow.peak != null && nRuns === 1 ? ` (${fmt1(S.flow.peak)} L/s peak dry + ${fmt1(S.flow.ii)} L/s I&amp;I)` : ''}. The least excavation the rules allow.</p>
+      <h4 class="sd-h">Profile${nRuns > 1 ? ` · ${S.view ? `branch ${S.view + 1} to the connection` : 'the main line'}` : ''}</h4>${views}${profileSVG(lineView(S.view))}
       <h4 class="sd-h">Rules checked</h4><ul class="sd-checks small">${checkList.join('')}</ul>${froudeHi ? `<p class="small t-tight">${froudeHi} reach${froudeHi === 1 ? '' : 'es'} with supercritical flow (Froude 1 or more): the standard asks for subcritical flow where possible (s. 2.9.1).</p>` : ''}
-      <h4 class="sd-h">Maintenance holes</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">MH</th><th scope="col" class="n">Chainage (m)</th><th scope="col" class="n">Ground (m)</th><th scope="col" class="n">Invert in</th><th scope="col" class="n">Invert out</th><th scope="col" class="n">Depth</th><th scope="col" class="n">Drop</th></tr></thead><tbody>${mhRows}</tbody></table></div>
-      <h4 class="sd-h">Reaches · ${fmtNum(d.dmm)} mm</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">Reach</th><th scope="col" class="n">Length (m)</th><th scope="col" class="n">Slope (%)</th><th scope="col" class="n">Full flow (L/s)</th><th scope="col" class="n">Flow ratio</th><th scope="col" class="n">V design (m/s)</th><th scope="col" class="n">V full (m/s)</th><th scope="col" class="n">Froude</th></tr></thead><tbody>${rRows}</tbody></table></div>
+      <h4 class="sd-h">Maintenance holes</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">MH</th><th scope="col">On</th><th scope="col" class="n">Ground (m)</th><th scope="col" class="n">Invert in</th><th scope="col" class="n">Invert out</th><th scope="col" class="n">Depth</th><th scope="col" class="n">Drop</th></tr></thead><tbody>${mhRows}</tbody></table></div>
+      <h4 class="sd-h">Reaches · ${sizeTxt}</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">Reach</th><th scope="col" class="n">Size (mm)</th><th scope="col" class="n">Flow (L/s)</th><th scope="col" class="n">Length (m)</th><th scope="col" class="n">Slope (%)</th><th scope="col" class="n">Full flow (L/s)</th><th scope="col" class="n">Flow ratio</th><th scope="col" class="n">V design (m/s)</th><th scope="col" class="n">V full (m/s)</th><th scope="col" class="n">Froude</th></tr></thead><tbody>${rRows}</tbody></table></div>
       <p><button type="button" class="btn small" data-sd-act="print">Print plan and profile (11×17)</button> <button type="button" class="btn small" data-sd-act="csv">Download the design (CSV)</button></p>`;
   }
-  // The profile: the ground, the cover line, the pipe (obvert and invert), the maintenance holes,
-  // the existing sewer at the connection; chainage along the bottom, elevations up the side.
-  function profileSVG(d) {
-    const W = 640, H = 260, pl = 46, pr = 10, pt = 14, pb = 30, G = S.ground, Lt = G[G.length - 1].x || 1;
-    const lows = d ? d.mhs.flatMap(m => [m.inv_in, m.inv_out]).filter(x => x != null) : [S.conn.invert];
+  // The profile of a line view (lineView()): the ground, the cover line, the pipe (obvert and
+  // invert), the maintenance holes, the existing sewer at the connection; or the main line's ground
+  // alone (v null). Chainage along the bottom, elevations up the side.
+  function profileSVG(v) {
+    const W = 640, H = 260, pl = 46, pr = 10, pt = 14, pb = 30, G = v ? v.ground : S.ground, Lt = G[G.length - 1].x || 1;
+    const lows = v ? v.mhs.flatMap(m => [m.inv_in, m.inv_out]).filter(x => x != null) : [S.conn.invert];
     const zmin = Math.floor(Math.min(...lows, ...G.map(s => s.g)) - 0.5), zmax = Math.ceil(Math.max(...G.map(s => s.g)) + 0.5);
     const X = x => pl + (W - pl - pr) * x / Lt, Y = z => pt + (H - pt - pb) * (zmax - z) / ((zmax - zmin) || 1);
     const path = arr => arr.map(([x, z], i) => `${i ? 'L' : 'M'}${X(x).toFixed(1)},${Y(z).toFixed(1)}`).join('');
     const ground = path(G.map(s => [s.x, s.g]));
-    const cover = d ? path(G.map(s => [s.x, s.g - d.cover])) : '';
+    const cover = v ? path(G.map(s => [s.x, s.g - v.cover])) : '';
     let pipe = '';
-    if (d) {
-      const D = d.dmm / 1000;
-      pipe = d.reaches.map(r => { const a = S.route.nodes[r.from].x, b = S.route.nodes[r.to].x; return `<path d="M${X(a).toFixed(1)},${Y(r.inv_up + D).toFixed(1)}L${X(b).toFixed(1)},${Y(r.inv_dn + D).toFixed(1)}L${X(b).toFixed(1)},${Y(r.inv_dn).toFixed(1)}L${X(a).toFixed(1)},${Y(r.inv_up).toFixed(1)}Z" class="sp-pipe"/>`; }).join('');
-      pipe += d.mhs.map((m, i) => { const top = Y(m.g), bot = Y(Math.min(...[m.inv_in, m.inv_out].filter(v => v != null))); return `<line x1="${X(m.x).toFixed(1)}" x2="${X(m.x).toFixed(1)}" y1="${top.toFixed(1)}" y2="${bot.toFixed(1)}" class="sp-mh${m.structure ? ' sp-drop' : ''}"/><text x="${X(m.x).toFixed(1)}" y="${(top - 4).toFixed(1)}" class="sp-lbl" text-anchor="middle">${i + 1}</text>`; }).join('');
+    if (v) {
+      pipe = v.reaches.map(r => { const a = v.nodes[r.from].x, b = v.nodes[r.to].x, D = r.dmm / 1000; return `<path d="M${X(a).toFixed(1)},${Y(r.inv_up + D).toFixed(1)}L${X(b).toFixed(1)},${Y(r.inv_dn + D).toFixed(1)}L${X(b).toFixed(1)},${Y(r.inv_dn).toFixed(1)}L${X(a).toFixed(1)},${Y(r.inv_up).toFixed(1)}Z" class="sp-pipe"/>`; }).join('');
+      pipe += v.mhs.map(m => { const top = Y(m.g), bot = Y(Math.min(...[m.inv_in, m.inv_out].filter(z => z != null))); return `<line x1="${X(m.x).toFixed(1)}" x2="${X(m.x).toFixed(1)}" y1="${top.toFixed(1)}" y2="${bot.toFixed(1)}" class="sp-mh${m.structure ? ' sp-drop' : ''}"/><text x="${X(m.x).toFixed(1)}" y="${(top - 4).toFixed(1)}" class="sp-lbl" text-anchor="middle">${m.num}</text>`; }).join('');
     }
     const ex = `<circle cx="${X(Lt).toFixed(1)}" cy="${Y(S.conn.invert + S.conn.dmm / 2000).toFixed(1)}" r="${Math.max(3, (H - pt - pb) * (S.conn.dmm / 1000) / ((zmax - zmin) || 1) / 2).toFixed(1)}" class="sp-ex"/>`;
     // Axes: elevations every 1, 2 or 5 m; chainage every 50, 100 or 200 m.
@@ -234,8 +368,9 @@
     let axes = '';
     for (let z = Math.ceil(zmin / zs) * zs; z <= zmax; z += zs) axes += `<line x1="${pl}" x2="${W - pr}" y1="${Y(z).toFixed(1)}" y2="${Y(z).toFixed(1)}" class="sp-grid"/><text x="${pl - 4}" y="${(Y(z) + 3).toFixed(1)}" class="sp-ax" text-anchor="end">${z}</text>`;
     for (let x = 0; x <= Lt + 1e-6; x += xsStep) axes += `<text x="${X(x).toFixed(1)}" y="${H - pb + 14}" class="sp-ax" text-anchor="middle">${x}</text>`;
+    const sizes = v ? [...new Set(v.reaches.map(r => r.dmm))].sort((a, b) => a - b) : [];
     return `<svg class="sd-prof" viewBox="0 0 ${W} ${H}" role="img" aria-label="Profile of the sewer: ground, minimum cover, the pipe and the maintenance holes, from the start (left) to the connection (right)">${axes}<path d="${ground}" class="sp-ground"/>${cover ? `<path d="${cover}" class="sp-cover"/>` : ''}${pipe}${ex}<text x="${pl}" y="${H - 4}" class="sp-ax">chainage (m) from the start · elevations (m, CGVD2013)</text></svg>
-      <p class="small muted sd-key"><span class="lp-k lp-k-g"></span>ground${d ? ` <span class="lp-k sd-k-c"></span>${d.cover} m cover line <span class="lp-k lp-k-p"></span>the pipe (${d.dmm} mm) and its maintenance holes` : ''} <span class="lp-k sd-k-e"></span>the existing sewer</p>`;
+      <p class="small muted sd-key"><span class="lp-k lp-k-g"></span>ground${v ? ` <span class="lp-k sd-k-c"></span>${v.cover} m cover line <span class="lp-k lp-k-p"></span>the pipe (${sizes.length > 1 ? `${sizes[0]}–${sizes[sizes.length - 1]}` : sizes[0]} mm) and its maintenance holes` : ''} <span class="lp-k sd-k-e"></span>the existing sewer</p>`;
   }
   // ---- The pumped option: the forcemain, its profile and the pump duty point ------------------------
   function fmHTML(f) {
@@ -302,9 +437,10 @@
   }
   // The 11×17 sheet: the Region's sanitary sewers around the route for the plan (the connected one
   // alone when they can't be read), the development open in the panel or the start's coordinates.
+  // The plan shows every line; the profile is the main line's.
   async function printSheet() {
     const P = root.PeelSewerPrint; if (!S.d || !S.d.ok || !P) return;
-    const lls = S.route.nodes.map(n => n.ll), lat = lls.reduce((t, p) => t + p.lat, 0) / lls.length, lng = lls.reduce((t, p) => t + p.lng, 0) / lls.length;
+    const lls = S.d.mhs.map(m => m.ll), lat = lls.reduce((t, p) => t + p.lat, 0) / lls.length, lng = lls.reduce((t, p) => t + p.lng, 0) / lls.length;
     const r = Math.min(1500, Math.max(...lls.map(p => metres({ lat, lng }, p))) + 120);
     let mains = [];
     try { mains = (await MS().mainsNear(lat, lng, r)).filter(m => !m.fm).map(m => ({ g: m.g, d: m.d, id: m.id })); } catch (e) { mains = []; }
@@ -312,46 +448,72 @@
     mains.forEach(m => { if (key(m.g) === ck) m.conn = true; });
     if (S.conn.g && !mains.some(m => m.conn)) mains.push({ g: S.conn.g, d: S.conn.dmm, id: S.conn.id, conn: true });
     const dev = root.DevScope && root.DevScope.current && root.DevScope.current(), st = S.pts[0];
-    const RP = root.PeelReports, Ut = root.PeelUtil || {};
+    const RP = root.PeelReports, Ut = root.PeelUtil || {}, v = lineView(0);
     P.open({
-      d: S.d, nodes: S.route.nodes, ground: S.ground, pts: S.pts, conn: S.conn, mains, flow: S.flow, groundLabel: S.groundLabel,
-      checks: checks(S.d, S.route, S.conn), froudeHi: S.d.reaches.filter(x => x.froude >= 1).length,
+      d: S.d, view: v, nodes: v.nodes, ground: v.ground, pts: [...S.pts, ...done().flatMap(b => b.pts)], conn: S.conn, mains, flow: S.flow, groundLabel: S.groundLabel,
+      plan: { lls, reaches: S.d.reaches, labels: S.d.mhs.map((m, i) => `MH ${i + 1}`), start: S.pts[0], branches: done().map(b => b.pts[0]) },
+      checks: checks(S.d, S.net.net, S.conn), froudeHi: S.d.reaches.filter(x => x.froude >= 1).length,
       where: dev && dev.title ? `From ${dev.title}` : `From ${st.lat.toFixed(5)}, ${st.lng.toFixed(5)}`,
       date: new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }),
       version: RP && RP.appVersion ? RP.appVersion() : 'dev', unofficial: Ut.UNOFFICIAL || 'Unofficial prototype · public data only · not a Region of Peel product',
       source: SW().SOURCE, note: Ut.SCREEN_LINE || 'General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results.',
     });
   }
-  function clearAll() { S.pts = []; S.conn = null; S.route = null; S.d = null; S.fm = null; S.msg = ''; if (layer) layer.clearLayers(); }
+  function clearAll() { S.pts = []; S.conn = null; S.net = null; S.d = null; S.fm = null; S.msg = ''; S.branches = []; S.drawing = 0; S.view = 0; if (layer) layer.clearLayers(); }
+  const reset = () => { S.d = null; S.fm = null; S.net = null; };
 
   // The form and its buttons (in the result panel).
-  document.addEventListener('input', e => { const i = e.target.closest && e.target.closest('[data-sd]'); if (i) S.form[i.dataset.sd] = i.type === 'checkbox' ? i.checked : i.value; });
-  document.addEventListener('change', e => { const i = e.target.closest && e.target.closest('[data-sd]'); if (!i) return; S.form[i.dataset.sd] = i.type === 'checkbox' ? i.checked : i.value; if (i.dataset.sd === 'mode') { S.d = null; S.fm = null; openResult(); drawLine(); } });
+  const setField = i => {
+    if (i.dataset.sb != null) { const b = S.branches[+i.dataset.sb]; if (b) b.form[i.dataset.sbK] = i.value; return; }
+    S.form[i.dataset.sd] = i.type === 'checkbox' ? i.checked : i.value;
+  };
+  document.addEventListener('input', e => { const i = e.target.closest && e.target.closest('[data-sd], [data-sb]'); if (i) setField(i); });
+  document.addEventListener('change', e => { const i = e.target.closest && e.target.closest('[data-sd], [data-sb]'); if (!i) return; setField(i); if (i.dataset.sd === 'mode') { reset(); openResult(); drawLine(); } });
   document.addEventListener('click', e => {
+    const vb = e.target.closest && e.target.closest('[data-sd-view]');
+    if (vb) { S.view = +vb.dataset.sdView; openResult(); return; }
     const b = e.target.closest && e.target.closest('[data-sd-act]'); if (!b) return;
-    const act = b.dataset.sdAct;
+    const act = b.dataset.sdAct, A = root.PeelApp && root.PeelApp.scope;
     if (act === 'design') run();
     else if (act === 'csv') downloadCSV();
     else if (act === 'print') printSheet();
     else if (act === 'pumped') { S.form.mode = 'pumped'; run(); }
     else if (act === 'fm-csv') downloadFmCSV();
-    else if (act === 'edit') { S.d = null; S.fm = null; S.conn = null; const A = root.PeelApp && root.PeelApp.scope; if (T().active() !== 'sewer' && A && A.setTool) A.setTool('sewer'); drawLine(); banner(); }
+    else if (act === 'branch') {
+      // Draw a branch: the tool on again, without losing the main line.
+      reset(); S.branches.push({ pts: [], form: { q: '', pop: '', jobs: '', ha: '' }, done: false }); S.drawing = S.branches.length; S.keep = true;
+      // (on a phone the panel drops to its peek, so the map takes the taps)
+      if (narrow() && root.PeelApp && root.PeelApp.setAnalysisSnap) root.PeelApp.setAnalysisSnap('peek', false);
+      if (T().active() !== 'sewer' && A && A.setTool) A.setTool('sewer'); else { S.keep = false; banner(); }
+      drawLine();
+    } else if (act === 'rm-branch') {
+      const k = +b.dataset.sdBranch, rmd = new Set([k]);
+      // (and the branches that join it)
+      let grew = true; while (grew) { grew = false; S.branches.forEach((x, j) => { const parent = x.join ? S.branches.indexOf(x.join.to) : -1; if (!rmd.has(j) && rmd.has(parent)) { rmd.add(j); grew = true; } }); }
+      S.branches = S.branches.filter((_, j) => !rmd.has(j)); reset(); openResult(); drawLine();
+    } else if (act === 'edit') { reset(); S.conn = null; S.branches = []; S.drawing = 0; if (T().active() !== 'sewer' && A && A.setTool) A.setTool('sewer'); drawLine(); banner(); }
     else if (act === 'clear') { clearAll(); T().closeResult(); }
   });
-  document.addEventListener('peel:tool-closed', () => { if (T().active() !== 'sewer') clearAll(); });
+  document.addEventListener('peel:tool-closed', () => { if (T().active() !== 'sewer') { if (S.drawing) { S.branches.splice(S.drawing - 1, 1); S.drawing = 0; } if (!(T().hasResult() && T().resultTitle() === 'Sewer design')) clearAll(); } });
   document.addEventListener('peel:result-opened', e => { if (e.detail && e.detail.ref !== 'tool:sewer-design' && T().active() !== 'sewer') clearAll(); });
 
   T().register('sewer', {
     title: 'Sewer designer', icon: 'sewer', hint: 'tap from the site to an existing sanitary sewer',
     bannerHTML,
-    onActivate() { if (S.d || S.fm) { S.d = null; S.fm = null; S.conn = null; } S.msg = ''; drawLine(); banner(); },
-    onDeactivate() { if (!(T().hasResult() && T().resultTitle() === 'Sewer design')) clearAll(); },
-    onClick(ll) { if (S.busy) return; if (S.conn) { S.conn = null; S.d = null; S.fm = null; } S.pts.push({ lat: ll.lat, lng: ll.lng }); S.msg = ''; drawLine(); banner(); },
+    onActivate() { if (S.keep) { S.keep = false; drawLine(); banner(); return; } if (S.d || S.fm) { reset(); S.conn = null; S.branches = []; S.drawing = 0; } S.msg = ''; drawLine(); banner(); },
+    onDeactivate() { if (S.drawing) { S.branches.splice(S.drawing - 1, 1); S.drawing = 0; } if (!(T().hasResult() && T().resultTitle() === 'Sewer design')) clearAll(); },
+    onClick(ll) {
+      if (S.busy) return;
+      if (S.drawing) { cur().push({ lat: ll.lat, lng: ll.lng }); S.msg = ''; drawLine(); banner(); return; }
+      if (S.conn) { S.conn = null; reset(); S.branches = []; }
+      S.pts.push({ lat: ll.lat, lng: ll.lng }); S.msg = ''; drawLine(); banner();
+    },
     onBannerAct(act) {
-      if (act === 'sd-undo') { S.pts.pop(); S.conn = null; S.d = null; S.fm = null; drawLine(); banner(); }
+      if (act === 'sd-undo') { cur().pop(); if (!S.drawing) { S.conn = null; S.branches = []; } reset(); drawLine(); banner(); }
       if (act === 'sd-clear') { clearAll(); banner(); }
-      if (act === 'sd-finish') finish();
+      if (act === 'sd-cancel') { S.branches.splice(S.drawing - 1, 1); S.drawing = 0; S.msg = ''; drawLine(); banner(); if (S.conn) openResult(); }
+      if (act === 'sd-finish') { if (S.drawing) finishBranch(); else finish(); }
     },
   });
-  root.PeelSewerDesigner = { state: () => S, finish, run, clearAll, printSheet, downloadFmCSV, chainage, bends, checks, csv };
+  root.PeelSewerDesigner = { state: () => S, finish, finishBranch, run, clearAll, printSheet, downloadFmCSV, lineView, chainage, bends, checks, csv };
 })(typeof window !== 'undefined' ? window : globalThis);
