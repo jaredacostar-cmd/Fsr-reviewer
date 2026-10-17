@@ -2924,6 +2924,9 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .stg-track { position: relative; height: 16px; background: var(--surface-2); border-radius: 3px; overflow: hidden; }
 .stg-fill, .stg-est { position: absolute; left: 0; top: 0; bottom: 0; }
 .stg-est { background: var(--ly-hatch); pointer-events: none; }
+/* The part of each stage in developments that haven't moved since 2020: outlined at the end of the bar. */
+.stg-nm { position: absolute; top: 1px; bottom: 1px; border: 1.5px dashed var(--text-primary); border-radius: 2px; background: transparent; pointer-events: auto; }
+.stg-nm-key { display: inline-block; width: 14px; height: 9px; border: 1.5px dashed var(--text-primary); border-radius: 2px; vertical-align: -1px; }
 .stg-approved { background: color-mix(in srgb, var(--ly-committed) 60%, var(--surface-2)); }
 .stg-permitted { background: var(--ly-committed); }
 .stg-v { text-align: right; }

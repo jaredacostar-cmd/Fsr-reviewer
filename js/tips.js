@@ -71,7 +71,7 @@
     { ch: 'Map', el: () => document.querySelector('.map-opts'), t: 'Layers', b: 'One switch per group: developments, capacity, the existing network, the capital program, constraints, planning context and the base map. The legend is its own card on the map, with Colour sites by (stage, counted as, plant, data quality or timing).' },
     { ch: 'Map', el: () => vis('.map-opts .mo-adv', '.map-opts'), t: 'More settings', b: 'How developments are sized, labels, capacity shading, pipe kinds, DC works and the background map.' },
     { ch: 'Map', el: () => vis('#filter-panel', '#toggle-sidebar'), t: 'Find: Where, What, When', b: 'Municipality, plant, secondary plans, MTSAs, pressure zones and wastewater blocks (Where); size, dwelling type, land use and record type (What); the milestone (When). Every list takes several picks; the totals follow, and Reset clears them.' },
-    { ch: 'Map', el: () => $('#timebar'), t: 'Timeline', b: 'The timeline keeps developments with activity in the chosen years (2021–2026 to start; All years shows every one). The year demand and capacity are worked out for is in the Scenario control in the top bar.' },
+    { ch: 'Map', el: () => $('#timebar'), t: 'Timeline', b: 'The timeline keeps developments with activity in the chosen years (all years to start, so every live development counts; pick years to narrow it). The year demand and capacity are worked out for is in the Scenario control in the top bar.' },
     // Phase 3b: one home per tool — the rail order is select, measure, trace, test a
     // site, inspect, corridor, units-fit (worker A); results open in the Tool
     // result tab (trail: Peel › …), never as pop-ups.

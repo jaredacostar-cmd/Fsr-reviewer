@@ -2761,3 +2761,15 @@ Now:
   - the page states no count;
   - the page could not be opened.
 - **Counts with no link** are read from the file's own description.
+
+## The pipeline headline (for management)
+
+The app opens on **all years**, so the headline is the whole pipeline: every live development, the tree total (3,929 developments · 257,647 units on the 2026-10-12 data). 2021–2026 is a tap away on the timeline. The census baseline stays the 2021 Census.
+
+- **Headline** (Overview, Home and the executive briefing PDF), rounded to the nearest thousand: "About 258,000 homes are in the planning pipeline: 242,000 have moved since 2021 and 16,000 haven't moved since 2020. About 230,000 are not yet built."
+- **Moved since 2021:** a development with a dated event in 2021 or later (`PeelLayers.movedSince`). One with no dated event counts as not moved.
+- **Not yet built:** the total less every completed unit, before and after the census.
+- **Stage bar** (Growth in an area):
+  - The part of each stage in developments that haven't moved since 2020 is outlined.
+  - The footnote adds the units completed before the 2021 Census, so the bars reconcile to the headline (253,265 + 4,382 = 257,647).
+- **Code:** `js/layers.js` (`pipeline`, `headlineText`, `roundHeadline`); tests in `tests/pipeline-headline.test.js`.

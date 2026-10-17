@@ -5,8 +5,10 @@
   const App = () => root.PeelApp;
   // ---- Timeline slider -------------------------------------------------------------
   const tFrom = $('#t-from'), tTo = $('#t-to');
-  // Default year range on load and after "Reset all".
-  const DEFAULT_YEARS = [2021, 2026];
+  // Default year range on load and after "Reset all": all years, so the headline is the whole pipeline
+  // (every live development, the tree total). Developments that haven't moved since 2020 are shown and
+  // counted apart (js/layers.js movedSince). 2021–2026 is a tap away on the timeline.
+  const DEFAULT_YEARS = null;
   let yearsInit = false;
   function updateYearBounds() {
     let lo = Infinity, hi = -Infinity;
