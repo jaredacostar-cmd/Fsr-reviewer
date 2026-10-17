@@ -354,7 +354,10 @@
   }
   // fitLegend: the legend now lives in the Layers panel, so this is a cheap no-op-safe refresh
   // hook (kept for the existing call sites and the resize observer).
-  const fitLegend = () => requestAnimationFrame(() => { try { layoutMapBoxes(); } catch (e) { /* map not ready */ } });
+  // (one layout per frame however many observers ask: each one reads and writes the layout, a forced
+  // reflow every time, and opening a site asked a dozen times in one frame)
+  let fitF = 0;
+  const fitLegend = () => { if (fitF) return; fitF = requestAnimationFrame(() => { fitF = 0; try { layoutMapBoxes(); } catch (e) { /* map not ready */ } }); };
   if (window.ResizeObserver) { const ro = new ResizeObserver(() => fitLegend()); [document.querySelector('.map-opts'), document.querySelector('.ww-loads'), timebarEl].forEach(e => e && ro.observe(e)); }
   map.on('resize', fitLegend);
   // The year the map's capacity results are worked out for now lives in the Scenario control

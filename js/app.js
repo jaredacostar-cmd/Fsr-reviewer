@@ -372,6 +372,8 @@
     if (!ANALYSIS_SNAPS.includes(name)) name = 'peek';
     analysisSnap = name;
     analysisEl.style.setProperty('--analysis-h', `${analysisSnapPx(name)}px`);
+    // (the page knows the sheet's height too: on a phone the map's way back sits just above it)
+    document.documentElement.style.setProperty('--sheet-h', `${analysisSnapPx(name)}px`);
     analysisEl.dataset.snap = name;
     if (save) store.set('analysisSnap', name);
     window.PeelDataTab && PeelDataTab.fixMap();
@@ -379,7 +381,7 @@
   setAnalysisSnap(analysisSnap, false);
   PeelDataTab.dragResize($('#analysis-grip'), {
     get: () => analysisEl.getBoundingClientRect().height,
-    set: h => analysisEl.style.setProperty('--analysis-h', `${Math.max(72, Math.min(window.innerHeight, Math.round(h)))}px`),
+    set: h => { const v = `${Math.max(72, Math.min(window.innerHeight, Math.round(h)))}px`; analysisEl.style.setProperty('--analysis-h', v); document.documentElement.style.setProperty('--sheet-h', v); },
     done: moved => {
       if (!PeelDataTab.shellNarrow()) return;
       const cur = analysisEl.getBoundingClientRect().height;

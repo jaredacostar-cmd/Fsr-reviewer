@@ -121,6 +121,30 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(groups >= 4, 'the menu opens grouped');
   });
 
+  await check('phone: the full map\'s way back sits above the bottom sheet and takes a tap', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
+    await page.locator('[data-ws-full]:visible').first().click(); await wait(2000);
+    for (const snap of ['peek', 'half']) {
+      await ev(s => PeelApp.setAnalysisSnap(s), snap); await wait(800);
+      const r = await ev(() => { const b = document.querySelector('#back-bar [data-ws-back]').getBoundingClientRect(), a = document.getElementById('analysis').getBoundingClientRect(), hit = document.elementFromPoint(b.left + 20, b.top + b.height / 2); return { bottom: b.bottom, sheet: a.top, hit: !!(hit && hit.closest('#back-bar')) }; });
+      expect(r.bottom <= r.sheet && r.hit, `${snap}: "Back to Home" above the sheet, not under it`);
+    }
+    await page.click('#back-bar [data-ws-back]'); await wait(1500);
+    expect(await ev(() => PeelWorkspaces.mode()) === 'home', 'the tap goes back to Home');
+  });
+
+  // A filter change paints the map and the view in sight, and leaves the rest for when the page is
+  // free: no single freeze of several seconds (it was 5-6 s, the servicing model rebuilt twice).
+  await check('a filter change: no long freeze, and the Growth views it put off are there when opened', browser, {}, async ({ page, ev }, expect) => {
+    await page.locator('[data-ws-full]:visible').first().click(); await wait(2000);
+    await ev(() => PeelAnalysisTabs.showFootTab('overview')); await wait(1000);
+    const t = await ev(() => new Promise(done => { const lt = []; const o = new PerformanceObserver(l => { for (const e of l.getEntries()) lt.push(e.duration); }); o.observe({ type: 'longtask' }); PeelApp.state.muni = 'Brampton'; PeelApp.applyFilters(); setTimeout(() => { o.disconnect(); done(Math.max(0, ...lt)); }, 4000); }));
+    expect(t < 2500, `the longest freeze ${Math.round(t)} ms`);
+    expect(await ev(() => PeelUtil.laterPending()) === 0, 'nothing left waiting once the page is free');
+    await ev(() => PeelAnalysisTabs.showFootTab('growth', 'areas')); await wait(800);
+    expect(await ev(() => /Since the 2021 Census, Brampton has added/.test(document.querySelector('#growth-census-body').innerText)), 'Growth › Areas is for the new filter');
+    await ev(() => { PeelApp.state.muni = ''; PeelApp.applyFilters(); });
+  });
+
   await browser.close(); srv.close();
   for (const r of results) console.log(`${r.ok ? 'ok  ' : 'FAIL'} ${r.name} (${(r.ms / 1000).toFixed(1)} s)${r.ok ? '' : `\n       - ${r.fails.join('\n       - ')}`}`);
   const bad = results.filter(r => !r.ok).length;

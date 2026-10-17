@@ -128,8 +128,9 @@ test('layoutMapBoxes simplified; fitLegend is a no-op-safe hook', () => {
   for (const gone of ['.area-box', '.more-box', 'legend.getContainer', 'lg-squeezed', 'ab.style', 'more.style']) {
     assert.ok(!body.includes(gone), `layoutMapBoxes still references ${gone}`);
   }
-  assert.ok(APP.includes('const fitLegend = () => requestAnimationFrame('), 'fitLegend not a rAF hook');
-  assert.ok(/const fitLegend = \(\) => requestAnimationFrame\(\(\) => \{ try \{/.test(APP), 'fitLegend not no-op-safe');
+  // (one layout per frame: a request while one waits is the same layout)
+  assert.ok(APP.includes('const fitLegend = () => { if (fitF) return; fitF = requestAnimationFrame('), 'fitLegend not a rAF hook, once per frame');
+  assert.ok(/fitF = requestAnimationFrame\(\(\) => \{ fitF = 0; try \{ layoutMapBoxes\(\); \} catch/.test(APP), 'fitLegend not no-op-safe');
 });
 
 test('tour no longer points at removed boxes', () => {
