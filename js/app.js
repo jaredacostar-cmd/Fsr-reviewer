@@ -87,7 +87,7 @@
   // Employment parsed once per project (the focus chip counts call it for every project).
   // m²/job comes from the editable criteria; clearEmp() drops the cache when it changes.
   const empOf = p => (p._emp !== undefined ? p._emp : (p._emp = window.PeelEmployment ? PeelEmployment.employmentOf(p, state.criteria.m2PerJob) : null));
-  const clearEmp = () => { for (const p of state.projects) { delete p._emp; delete p._psover; delete p._psoverM; } };
+  const clearEmp = () => { for (const p of state.projects) { delete p._emp; delete p._psover; delete p._psoverM; } state.empGen = (state.empGen || 0) + 1; };
   // Employment space moves with the project phase (no per-unit permits for it).
   const EMP_DONE = { permitted: new Set(['permit', 'construction', 'completed']), completed: new Set(['completed']) };
   const jobsOf = p => { const e = p.records ? empOf(p) : null; return e ? e.jobs : 0; };
@@ -196,6 +196,9 @@
     // Phase 6: while the startup index is serving first paint, stray rebuilds
     // (e.g. a source refresh racing the full snapshot) must not wipe it.
     if (indexPainted && !fullLoaded) return;
+    // (one waiting from scheduleRebuild is this one: applySnapshot schedules one and loadFullSnapshot
+    // then rebuilds at once, which built every development twice at start-up)
+    clearTimeout(rebuildTimer);
     const raw = state.sources.filter(s => s.enabled).flatMap(s => s.records);
     applyUserUnits(raw);
     if (typeof PeelDevNav !== 'undefined') PeelDevNav.SUBS.clear();
@@ -217,11 +220,14 @@
     state.munis = Array.from(new Set(state.projects.map(p => p.municipality))).sort();
     PeelSearchFilter.renderMuniChips();
     PeelTimeline.updateYearBounds();
-    applyFilters();
+    // (the map and the list first; Growth, the Overview and the servicing model in the next task, so
+    // the page paints between the two halves of a rebuild instead of freezing for both)
+    applyFilters.deferGrowth = true;
+    try { applyFilters(); } finally { applyFilters.deferGrowth = false; }
     // The servicing model follows the developments: rebuilt with them (it used to wait for the Water /
     // Wastewater tab, so the Overview, the DC tab and the scope cards read a model of the first-paint
     // data — Inglewood 398% vs 42%, SPEC 1.4).
-    if (state.servicing && window.PeelSvcTab) { clearTimeout(rebuild.svcT); rebuild.svcT = setTimeout(() => window.PeelSvcTab.renderSvcTab(), 0); }
+    if (state.servicing && window.PeelSvcTab) { clearTimeout(rebuild.svcT); rebuild.svcT = setTimeout(() => window.PeelSvcTab.ensureSvcModel(), 0); }
   }
 
   // Years in which the project hit the selected milestone (or any milestone).
@@ -300,7 +306,8 @@
     PeelRenderList.renderMarkers();
     PeelRenderList.setListPage(0); PeelRenderList.renderList();   // filters changed: back to the first page
     PeelTimeline.renderTimeline();
-    PeelGrowthUI.renderGrowth();
+    if (applyFilters.deferGrowth && window.PeelUtil && PeelUtil.later) PeelUtil.later('growth', () => PeelGrowthUI.renderGrowth());
+    else { if (window.PeelUtil && PeelUtil.cancelLater) PeelUtil.cancelLater('growth'); PeelGrowthUI.renderGrowth(); }
     PeelFilterUI.renderFilterUI();
     PeelMapMarkers.renderSiteLayer();
     if (PeelMapMarkers.mstyle.color === 'phase') PeelMapAnalysis.renderLegend();   // the phase legend lists the shown phases
@@ -365,6 +372,8 @@
     if (!ANALYSIS_SNAPS.includes(name)) name = 'peek';
     analysisSnap = name;
     analysisEl.style.setProperty('--analysis-h', `${analysisSnapPx(name)}px`);
+    // (the page knows the sheet's height too: on a phone the map's way back sits just above it)
+    document.documentElement.style.setProperty('--sheet-h', `${analysisSnapPx(name)}px`);
     analysisEl.dataset.snap = name;
     if (save) store.set('analysisSnap', name);
     window.PeelDataTab && PeelDataTab.fixMap();
@@ -372,7 +381,7 @@
   setAnalysisSnap(analysisSnap, false);
   PeelDataTab.dragResize($('#analysis-grip'), {
     get: () => analysisEl.getBoundingClientRect().height,
-    set: h => analysisEl.style.setProperty('--analysis-h', `${Math.max(72, Math.min(window.innerHeight, Math.round(h)))}px`),
+    set: h => { const v = `${Math.max(72, Math.min(window.innerHeight, Math.round(h)))}px`; analysisEl.style.setProperty('--analysis-h', v); document.documentElement.style.setProperty('--sheet-h', v); },
     done: moved => {
       if (!PeelDataTab.shellNarrow()) return;
       const cur = analysisEl.getBoundingClientRect().height;
@@ -547,6 +556,7 @@
         await loadAll();
         finishFull();
       } else {
+        await Promise.race([treeCountsLoad, new Promise(r => setTimeout(r, 3000))]);
         finishFull();
         applySnapshot(snap);
         if (window.PeelOffline) PeelOffline.setCachedAt(Date.now());
@@ -569,10 +579,14 @@
   // after first paint, the developments take them and every view refreshes.
   // Step B2: the developments become the trees once the data is in; a switch in Settings ›
   // Counting regroups (Tree) or puts today's grouping back (Previous).
+  // (the full snapshot waits for both, a few seconds at most, so the developments are built once:
+  // each one arriving after it rebuilt everything again, a 4 s freeze at start-up)
+  let treeCountsLoad = Promise.resolve();
   function loadTreeCounts() {
-    if (window.PeelCouncilDecisions) PeelCouncilDecisions.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); });
-    if (!window.PeelTreeCounts) return;
-    PeelTreeCounts.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); });
+    const ps = [];
+    if (window.PeelCouncilDecisions) ps.push(PeelCouncilDecisions.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); }));
+    if (window.PeelTreeCounts) ps.push(PeelTreeCounts.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); }));
+    treeCountsLoad = Promise.all(ps.map(x => x.catch(() => {})));
   }
   function recount() {
     if (!window.PeelTreeCounts || !state.projects) return;
@@ -796,7 +810,7 @@
         const t = window.PeelAnalysisTabs.getFootPref();
         if (t === 'overview') window.PeelOverviewTab.renderOverview();
         else if (t === 'growth') window.PeelGrowthUI.renderGrowth();
-        else if (t === 'svc' || t === 'water' || t === 'ww') window.PeelSvcTab.renderSvcTab();
+        else if (t === 'svc' || t === 'water' || t === 'ww') window.PeelSvcTab.ensureSvcModel({ rescope: true });   // (a site swaps its bodies in; the model is rebuilt only if its inputs changed)
         else if (t === 'dca') window.PeelDcaTab.renderDca();
       },
       isWatched: k => watch.has(k),

@@ -160,7 +160,8 @@
     // (Stage 4: Home reads the Peel Overview panel's figures from here, so they are the map's.)
     if (typeof document !== 'undefined' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('pnl:set', { detail: { key, scope: scopeId() } }));
   }
-  const get = key => STORE.get(key) || null;
+  // (views waiting to render out of sight render first: their panels are read here)
+  const get = key => { if (root.PeelUtil && root.PeelUtil.flushLater) root.PeelUtil.flushLater(); return STORE.get(key) || null; };
   const clear = key => { STORE.delete(key); if (key === keyNow()) sync(); };
   function sync() {
     if (typeof document === 'undefined') return;

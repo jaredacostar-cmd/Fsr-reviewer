@@ -199,6 +199,7 @@
   // Tables from analysis tab bodies for the workbook: a section-header row
   // naming each panel, then each visible table's rows (the tableRows helper).
   function panelTableRows(panels) {
+    if (window.PeelUtil && window.PeelUtil.flushLater) window.PeelUtil.flushLater();   // (views waiting to render out of sight)
     const out = [];
     for (const [label, sel] of panels) {
       const body = $(sel); if (!body) continue;

@@ -81,7 +81,7 @@
   // by renderGrowthPipeline above.
   function renderGrowthCensus() {
     const body = $('#growth-census-body'); if (!body) return;
-    SvcTab().renderSvcTab();
+    SvcTab().ensureSvcModel();   // (built once per change of what it is built from, not on every filter change)
     // Area-only content: not shown at development scope (design audit, Group 6).
     if (window.DevScope && window.DevScope.current()) { body.innerHTML = window.PeelUtil.AREA_ONLY_NOTE; return; }
     const bc = CA().baselineCensus();
@@ -90,8 +90,10 @@
     // there is no census data, mirroring the old tab's show/hide.
     // (Stage 2: it is part of Growth › Areas, under the plan tables.)
     const gcPane = $('#pane-growth-census');
-    if (gcPane) gcPane.dataset.off = has ? '' : '1';
-    AT().showFootTab(AT().getFootPref());
+    // (the tab again only when the pane came or went: this view can render later than a tab change,
+    // e.g. closing a site, and must not send the panel back to the remembered tab)
+    const off = has ? '' : '1';
+    if (gcPane && gcPane.dataset.off !== off) { gcPane.dataset.off = off; AT().showFootTab(AT().getFootPref()); }
     CA().syncDaYear();
     if (!has) { body.innerHTML = `<p class="small muted">Census data is still loading.</p>`; return; }
     const Y = bc.year;
