@@ -592,9 +592,12 @@
         // Building permits (Step B0 rule): no file states a count, but the permits placed in the
         // tree carry units, so the homes are permitted or built. Never for a replacement or model
         // house, which adds no growth.
+        // Counted as the build-out counts them (js/phases.js permitUnits): only permits that add homes
+        // (not a demolition), each building once by its canonical permit number.
         if (!(units > 0) && growth.kind !== 'no new homes') {
-          const seen = new Set(); let pu = 0;
-          for (const i of live) for (const { r } of (built.permitOf && built.permitOf.get(i)) || []) { const k = r.ref || r.uid; if (r.units > 0 && !seen.has(k)) { seen.add(k); pu += r.units; } }
+          const placed = [];
+          for (const i of live) for (const { r } of (built.permitOf && built.permitOf.get(i)) || []) if (r.units > 0) placed.push(r);
+          const pu = P.permitUnits(placed);
           if (pu > 0) { units = pu; basis = `building permits: ${pu} units permitted (no file states a count)`; growth = { ...growth, kind: 'permits', units: pu }; parts = [[null, pu, 'permits', null]]; }
         }
       }

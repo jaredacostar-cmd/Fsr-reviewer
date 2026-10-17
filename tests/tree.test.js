@@ -396,6 +396,19 @@ test('no stated count: the permits placed in the tree count; a replacement house
   assert.equal(T.countTree(b2.trees[0], b2).units, 0, 'a replacement house adds no growth');
 });
 
+test('no stated count: the permits fallback counts as the build-out does — no demolition, one building per permit number', () => {
+  const recs = [app({ ref: 'SUB-2', poly: box(20, 20, 24, 24), description: 'Draft plan of subdivision to permit townhouse dwellings' })];
+  const permit = (ref, units, extra = {}) => ({ uid: `q-${ref}`, kind: 'permit', municipality: 'Brampton', ref, fileKey: require('../js/phases.js').canonRef(ref), units, lat: Y + 21 * K, lng: X + 21 * K, address: '', type: 'Residential', events: ev('2023-01-01'), ...extra });
+  const permits = [
+    permit('BP 23-100', 12), permit('BP 23-100 CON', 12, { uid: 'q-con' }),   // one building: conditional and full permit
+    permit('DEMO 23-5', 3, { type: 'Demolition', description: 'demolish 3 dwellings' }),
+  ];
+  const nodes = T.fileNodes(recs), b = T.buildTrees(nodes, { permits });
+  const c = T.countTree(b.trees[0], b);
+  assert.equal(c.units, 12, 'the demolition adds no homes; the two spellings of one permit count once');
+  assert.match(c.basis, /building permits: 12 units permitted/);
+});
+
 // Chronology rules (proposed; off unless chrono names them — the counts today don't change).
 test('chronology r1: the year in a file number dates an undated file', () => {
   for (const [ref, y] of [['SP 25-5', 2025], ['OZ/OPA 22-10', 2022], ['OZS-2026-0009', 2026], ['SP18-113.000', 2018], ['21T-M 21-4', 2021], ['SPM 19/091', 2019], ['SP81-015.000', 1981], ['2021-0011', 2021], ['C05W12.005', null], ['', null]]) assert.equal(T.yearOf(ref), y, ref);
