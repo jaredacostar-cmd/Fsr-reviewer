@@ -27,6 +27,24 @@ test('PMTiles: written archive reads back, identical tiles stored once', () => {
   assert.deepEqual(r.header.bounds, [-80, 43, -79, 44]);
 });
 
+test('PMTiles: an archive too big for one directory gets leaf directories, and every tile reads back', () => {
+  const tiles = [];
+  // (scattered tiles of scattered sizes, as real buildings tiles are: the directory does not compress away)
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  for (let x = 4500; x < 4800; x++) for (let y = 5900; y < 6100; y++) if (rnd() < 0.6) tiles.push({ z: 14, x, y, data: Buffer.from(`t${x},${y}:${'x'.repeat(Math.floor(rnd() * 3000))}`) });
+  const buf = PMT.write(tiles, { type: 'mvt', tileCompression: 'none', bounds: [-80.2, 43.4, -79.4, 44.1], metadata: {} });
+  const r = PMT.read(buf);
+  assert.ok(r.header.leafLength > 0, 'leaf directories');
+  assert.ok(r.header.rootLength <= 16384 - 127, 'the root fits in the first 16 KiB');
+  assert.ok(r.entries.every(e => e.runLength === 0), 'the root points at leaves');
+  assert.equal(r.allEntries().length, tiles.length);
+  for (const t of [tiles[0], tiles[777], tiles[20000], tiles[tiles.length - 1]].concat(tiles.filter((_, i) => i % 997 === 0))) assert.equal(r.get(t.z, t.x, t.y).toString(), t.data.toString());
+  assert.equal(r.get(14, 4499, 5900), null);
+  const missing = []; for (let x = 4500; x < 4800 && missing.length < 5; x++) for (let y = 5900; y < 6100 && missing.length < 5; y++) if (!tiles.some(t => t.x === x && t.y === y)) missing.push([x, y]);
+  for (const [x, y] of missing) assert.equal(r.get(14, x, y), null);
+  assert.equal(r.get(13, 2250, 2950), null);
+});
+
 test('PNG encoder round-trips through the decoder (terrarium heights survive)', () => {
   const w = 16, h = 16, d = Buffer.alloc(w * h * 3);
   for (let i = 0; i < w * h; i++) { const [r, g, b] = M.terrariumEncode(180 + i * 0.13, 0.1); d.set([r, g, b], i * 3); }

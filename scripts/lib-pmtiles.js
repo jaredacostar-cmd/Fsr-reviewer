@@ -1,7 +1,8 @@
 'use strict';
 // A minimal PMTiles v3 writer and reader (https://github.com/protomaps/PMTiles/blob/main/spec/v3/spec.md)
-// for the 3D view's pilot tiles: one root directory (no leaf directories, so up to a few thousand
-// tiles), gzip-compressed directory and metadata, identical tiles stored once. No dependencies.
+// for the 3D view's tiles: a root directory, and leaf directories once there are too many tiles for
+// the root (the spec's 16 KiB header + root), gzip-compressed directories and metadata, identical
+// tiles stored once. No dependencies.
 const zlib = require('zlib');
 
 const TYPE = { mvt: 1, png: 2, jpg: 3, webp: 4 };
@@ -56,28 +57,42 @@ function write(tiles, opts) {
     if (prev && prev.tileId + prev.runLength === t.tileId && prev.offset === at && prev.length === t.data.length) prev.runLength++;
     else entries.push({ tileId: t.tileId, offset: at, length: t.data.length, runLength: 1 });
   }
-  const root = zlib.gzipSync(encodeDirectory(entries)), meta = zlib.gzipSync(Buffer.from(JSON.stringify(opts.metadata || {})));
-  if (root.length > 16384 - 127) throw new Error('root directory too large for a single-directory archive');
+  const meta = zlib.gzipSync(Buffer.from(JSON.stringify(opts.metadata || {})));
+  // The root alone while it fits; else leaf directories of `per` entries each, the root pointing at
+  // them (an entry with run length 0), doubling `per` until the root fits.
+  let root = zlib.gzipSync(encodeDirectory(entries)), leaves = Buffer.alloc(0);
+  if (root.length > 16384 - 127) {
+    for (let per = 4096; ; per *= 2) {
+      const parts = [], rootEntries = []; let lo = 0;
+      for (let i = 0; i < entries.length; i += per) {
+        const leaf = zlib.gzipSync(encodeDirectory(entries.slice(i, i + per)));
+        rootEntries.push({ tileId: entries[i].tileId, offset: lo, length: leaf.length, runLength: 0 });
+        parts.push(leaf); lo += leaf.length;
+      }
+      root = zlib.gzipSync(encodeDirectory(rootEntries)); leaves = Buffer.concat(parts);
+      if (root.length <= 16384 - 127) break;
+    }
+  }
   const data = Buffer.concat(chunks), h = Buffer.alloc(127);
   const zs = byId.map(t => t.z), [w, s, e, n] = opts.bounds;
   h.write('PMTiles', 0, 'ascii'); h[7] = 3;
   u64(h, 8, 127); u64(h, 16, root.length);
   u64(h, 24, 127 + root.length); u64(h, 32, meta.length);
-  u64(h, 40, 127 + root.length + meta.length); u64(h, 48, 0);
-  u64(h, 56, 127 + root.length + meta.length); u64(h, 64, data.length);
+  u64(h, 40, 127 + root.length + meta.length); u64(h, 48, leaves.length);
+  u64(h, 56, 127 + root.length + meta.length + leaves.length); u64(h, 64, data.length);
   u64(h, 72, byId.length); u64(h, 80, entries.length); u64(h, 88, seen.size);
   h[96] = 1; h[97] = COMPRESSION.gzip; h[98] = COMPRESSION[opts.tileCompression || 'none']; h[99] = TYPE[opts.type];
   h[100] = Math.min(...zs); h[101] = Math.max(...zs);
   h.writeInt32LE(e7(w), 102); h.writeInt32LE(e7(s), 106); h.writeInt32LE(e7(e), 110); h.writeInt32LE(e7(n), 114);
   h[118] = Math.max(...zs); h.writeInt32LE(e7((w + e) / 2), 119); h.writeInt32LE(e7((s + n) / 2), 123);
-  return Buffer.concat([h, root, meta, data]);
+  return Buffer.concat([h, root, meta, leaves, data]);
 }
 
 // Reader (tests and checks): { header, metadata, get(z, x, y) → Buffer | null }.
 function read(buf) {
   if (buf.toString('ascii', 0, 7) !== 'PMTiles' || buf[7] !== 3) throw new Error('not a PMTiles v3 archive');
   const header = {
-    rootOffset: r64(buf, 8), rootLength: r64(buf, 16), metaOffset: r64(buf, 24), metaLength: r64(buf, 32),
+    rootOffset: r64(buf, 8), rootLength: r64(buf, 16), metaOffset: r64(buf, 24), metaLength: r64(buf, 32), leafOffset: r64(buf, 40), leafLength: r64(buf, 48),
     dataOffset: r64(buf, 56), dataLength: r64(buf, 64), addressed: r64(buf, 72), entries: r64(buf, 80), contents: r64(buf, 88),
     internalCompression: buf[97], tileCompression: buf[98], tileType: buf[99], minZoom: buf[100], maxZoom: buf[101],
     bounds: [buf.readInt32LE(102) / 1e7, buf.readInt32LE(106) / 1e7, buf.readInt32LE(110) / 1e7, buf.readInt32LE(114) / 1e7],
@@ -85,12 +100,23 @@ function read(buf) {
   const un = b => header.internalCompression === COMPRESSION.gzip ? zlib.gunzipSync(b) : b;
   const dir = decodeDirectory(un(buf.subarray(header.rootOffset, header.rootOffset + header.rootLength)));
   const metadata = JSON.parse(un(buf.subarray(header.metaOffset, header.metaOffset + header.metaLength)).toString('utf8') || '{}');
+  // (a leaf: the last root entry at or before the id with run length 0)
+  const leafCache = new Map();
+  const leaf = e => { if (!leafCache.has(e.offset)) leafCache.set(e.offset, decodeDirectory(un(buf.subarray(header.leafOffset + e.offset, header.leafOffset + e.offset + e.length)))); return leafCache.get(e.offset); };
+  function find(d, id) {
+    let lo = 0, hi = d.length - 1, at = -1;
+    while (lo <= hi) { const m = (lo + hi) >> 1; if (d[m].tileId <= id) { at = m; lo = m + 1; } else hi = m - 1; }
+    if (at < 0) return null;
+    const e = d[at];
+    if (e.runLength === 0) return find(leaf(e), id);
+    return id < e.tileId + e.runLength ? e : null;
+  }
   function get(z, x, y) {
-    const id = zxyToTileId(z, x, y);
-    const e = dir.find(d => id >= d.tileId && id < d.tileId + d.runLength);
+    const e = find(dir, zxyToTileId(z, x, y));
     return e ? buf.subarray(header.dataOffset + e.offset, header.dataOffset + e.offset + e.length) : null;
   }
-  return { header, metadata, entries: dir, get };
+  const allEntries = () => dir.flatMap(e => (e.runLength === 0 ? leaf(e) : [e]));
+  return { header, metadata, entries: dir, allEntries, get };
 }
 
 module.exports = { zxyToTileId, encodeDirectory, decodeDirectory, write, read, TYPE, COMPRESSION };

@@ -11,9 +11,11 @@
  *     only; a tile with no lidar is left out, so the app uses the terrain tiles there (CGVD28,
  *     about 0.4 m apart, and the legend says so). Five pixels per zoom are checked against the
  *     service's own getSamples.
- *  2. Buildings: OpenStreetMap buildings and building parts in the pilot box (Overpass), with
- *     the height rule of js/massing-core.js (height tag → levels × 3.2 m → 2 storeys, estimated),
- *     as vector tiles z13–16 in data/3d/buildings-pilot.pmtiles (layer "buildings").
+ *  2. Buildings: OpenStreetMap buildings and building parts across the Region of Peel (Overpass,
+ *     cell by cell, each building once, kept where it starts inside Peel's outline from
+ *     data/munis.json), with the height rule of js/massing-core.js (height tag → levels × 3.2 m →
+ *     2 storeys, estimated), as vector tiles z14–16 in data/3d/buildings-peel.pmtiles (layer
+ *     "buildings"; leaf directories past a few thousand tiles: scripts/lib-pmtiles.js).
  *  3. data/3d/manifest.json: the box, the sources, datums, dates, counts and attribution.
  *
  * Needs geojson-vt and vt-pbf (npm install --no-save, in the workflow).
@@ -28,9 +30,11 @@ const PMT = require('./lib-pmtiles.js');
 
 const OUT = path.join(__dirname, '../data/3d');
 const PILOT = { name: 'North Brampton pilot', bbox: [-79.830, 43.700, -79.760, 43.740] };
+// The buildings cover the Region: its outline's box, queried in cells of CELL degrees.
+const PEEL = { name: 'Region of Peel', bbox: [-80.16, 43.47, -79.48, 44.00] }, CELL = 0.04;
 const DTM = 'https://ws.geoservices.lrc.gov.on.ca/arcgis5/rest/services/Elevation/Ontario_DTM_LidarDerived/ImageServer';
 const OVERPASS = ['https://overpass-api.de/api/interpreter', 'https://overpass.kumi.systems/api/interpreter', 'https://overpass.private.coffee/api/interpreter'];
-const TERRAIN_Z = [12, 16], BUILD_Z = [13, 16], QUANTUM = 0.1, SIZE = 256;
+const TERRAIN_Z = [12, 16], BUILD_Z = [14, 16], QUANTUM = 0.1, SIZE = 256;
 const UA = { 'User-Agent': 'peel-growth-pipeline (github.com/jaredacostar-cmd/Fsr-reviewer)' };
 const q = o => Object.entries(o).map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&');
 const sleep = ms => new Promise(r => setTimeout(r, ms));
@@ -151,11 +155,38 @@ function polygonsOf(el) {
   }
   return [];
 }
+// Peel's outline (data/munis.json) and a point-in-polygon test (even-odd).
+function peelOutline() {
+  const d = JSON.parse(fs.readFileSync(path.join(__dirname, '../data/munis.json'), 'utf8'));
+  const rings = d.peel.rings;
+  const test = ([x, y]) => { let inside = false; for (const r of rings) for (let i = 0, j = r.length - 1; i < r.length; j = i++) { const [xi, yi] = r[i], [xj, yj] = r[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside; } return inside; };
+  test.rings = rings;
+  return test;
+}
 async function buildBuildings() {
   // geojson-vt 4 is an ES module; vt-pbf is CommonJS.
   const gv = await import('geojson-vt'), geojsonvt = gv.default || gv, vtpbf = require('vt-pbf');
-  const [w, s, e, n] = PILOT.bbox, b = `${s},${w},${n},${e}`;
-  const j = await overpass(`[out:json][timeout:200];(way["building"](${b});relation["building"]["type"="multipolygon"](${b});way["building:part"](${b}););out geom;`);
+  const inPeel = peelOutline(), [W, S, E, N] = PEEL.bbox, seen = new Set(), elements = [];
+  let stamp = null, cells = 0;
+  for (let y = S; y < N - 1e-9; y += CELL) for (let x = W; x < E - 1e-9; x += CELL) {
+    const s = +y.toFixed(4), w = +x.toFixed(4), n = +Math.min(N, y + CELL).toFixed(4), e = +Math.min(E, x + CELL).toFixed(4);
+    // (a cell with no part of Peel is skipped: none of a 5 × 5 sample inside, no outline vertex in it)
+    const pts = []; for (let i = 0; i < 5; i++) for (let k = 0; k < 5; k++) pts.push([w + (e - w) * (i + 0.5) / 5, s + (n - s) * (k + 0.5) / 5]);
+    if (!pts.some(inPeel) && !inPeel.rings.some(r => r.some(([px, py]) => px >= w && px <= e && py >= s && py <= n))) continue;
+    const b = `${s},${w},${n},${e}`, ql = `[out:json][timeout:180];(way["building"](${b});relation["building"]["type"="multipolygon"](${b});way["building:part"](${b}););out geom;`;
+    // (a cell that fails is tried twice more, after a pause: the servers are busy at times)
+    let j = null;
+    for (let t = 0; t < 3 && !j; t++) { try { j = await overpass(ql); } catch (err) { console.log(`  cell ${b}: ${err.message}`); await sleep(15000 * (t + 1)); } }
+    if (!j) throw new Error(`Overpass did not answer for cell ${b}`);
+    stamp = (j.osm3s && j.osm3s.timestamp_osm_base) || stamp; cells++;
+    for (const el of j.elements || []) { const k = `${el.type}/${el.id}`; if (seen.has(k)) continue; seen.add(k); elements.push(el); }
+    if (cells % 10 === 0) console.log(`  ${cells} cells, ${elements.length.toLocaleString()} OSM elements`);
+    await sleep(1500);
+  }
+  // Kept where the building starts inside Peel.
+  const first = el => { if (el.geometry && el.geometry[0]) return el.geometry[0]; const m = (el.members || []).find(x => x.geometry && x.geometry[0]); return m ? m.geometry[0] : null; };
+  const j = { elements: elements.filter(el => { const p = first(el); return p && inPeel([p.lon, p.lat]); }), osm3s: { timestamp_osm_base: stamp } };
+  console.log(`buildings: ${cells} cells, ${elements.length.toLocaleString()} elements, ${j.elements.length.toLocaleString()} in Peel`);
   const features = [], byBasis = { height: 0, levels: 0, default: 0 };
   const hasParts = new Set();   // buildings drawn by their parts: the outline is not extruded too
   const parts = (j.elements || []).filter(el => el.tags && el.tags['building:part']);
@@ -174,14 +205,15 @@ async function buildBuildings() {
   }
   const index = geojsonvt({ type: 'FeatureCollection', features }, { maxZoom: BUILD_Z[1], indexMaxZoom: BUILD_Z[1], tolerance: 2, extent: 4096, buffer: 64 });
   const tiles = [];
-  for (let z = BUILD_Z[0]; z <= BUILD_Z[1]; z++) for (const t of M.tilesInBbox(PILOT.bbox, z)) {
+  for (let z = BUILD_Z[0]; z <= BUILD_Z[1]; z++) for (const t of M.tilesInBbox(PEEL.bbox, z)) {
     const vt = index.getTile(z, t.x, t.y); if (!vt || !vt.features.length) continue;
     tiles.push({ z, x: t.x, y: t.y, data: zlib.gzipSync(Buffer.from(vtpbf.fromGeojsonVt({ buildings: vt }, { version: 2 }))) });
   }
   const attribution = '© OpenStreetMap contributors, ODbL';
-  const file = 'buildings-pilot.pmtiles';
-  fs.writeFileSync(path.join(OUT, file), PMT.write(tiles, { type: 'mvt', tileCompression: 'gzip', bounds: PILOT.bbox, metadata: { name: 'OSM buildings, North Brampton pilot', attribution, vector_layers: [{ id: 'buildings', fields: { h: 'Number', b: 'Number', e: 'Number', s: 'String' }, minzoom: BUILD_Z[0], maxzoom: BUILD_Z[1] }], heightRule: `height tag → building:levels × ${M.STOREY_M} m → ${M.DEFAULT_STOREYS} storeys (estimated)` } }));
-  return { file, layer: 'buildings', minzoom: BUILD_Z[0], maxzoom: BUILD_Z[1], tiles: tiles.length, count: Object.values(byBasis).reduce((a, v) => a + v, 0), parts: parts.length, outlinesDrawnByParts: hasParts.size, byBasis, osmTimestamp: (j.osm3s && j.osm3s.timestamp_osm_base) || null, heightRule: `height tag → building:levels × ${M.STOREY_M} m → ${M.DEFAULT_STOREYS} storeys (estimated)`, attribution, bytes: fs.statSync(path.join(OUT, file)).size };
+  const file = 'buildings-peel.pmtiles';
+  fs.writeFileSync(path.join(OUT, file), PMT.write(tiles, { type: 'mvt', tileCompression: 'gzip', bounds: PEEL.bbox, metadata: { name: 'OSM buildings, Region of Peel', attribution, vector_layers: [{ id: 'buildings', fields: { h: 'Number', b: 'Number', e: 'Number', s: 'String' }, minzoom: BUILD_Z[0], maxzoom: BUILD_Z[1] }], heightRule: `height tag → building:levels × ${M.STOREY_M} m → ${M.DEFAULT_STOREYS} storeys (estimated)` } }));
+  const old = path.join(OUT, 'buildings-pilot.pmtiles'); if (fs.existsSync(old)) fs.unlinkSync(old);
+  return { file, area: PEEL.name, bbox: PEEL.bbox, layer: 'buildings', minzoom: BUILD_Z[0], maxzoom: BUILD_Z[1], tiles: tiles.length, count: Object.values(byBasis).reduce((a, v) => a + v, 0), parts: parts.length, outlinesDrawnByParts: hasParts.size, byBasis, osmTimestamp: (j.osm3s && j.osm3s.timestamp_osm_base) || null, heightRule: `height tag → building:levels × ${M.STOREY_M} m → ${M.DEFAULT_STOREYS} storeys (estimated)`, attribution, bytes: fs.statSync(path.join(OUT, file)).size };
 }
 
 // --only=terrain | --only=buildings rebuilds one part and keeps the other from the last manifest.
@@ -189,7 +221,7 @@ const ONLY = (process.argv.find(a => a.startsWith('--only=')) || '').slice(7);
 (async () => {
   fs.mkdirSync(OUT, { recursive: true });
   const prev = (() => { try { return JSON.parse(fs.readFileSync(path.join(OUT, 'manifest.json'), 'utf8')); } catch (e) { return {}; } })();
-  const manifest = { generatedAt: new Date().toISOString(), name: PILOT.name, bbox: PILOT.bbox, note: 'Indicative 3D context for the pilot box only; outside it the 3D view uses the terrain tiles and shows no buildings. Rebuilt by scripts/build-3d-tiles.js (Probe data sources, mode=tiles-3d).' };
+  const manifest = { generatedAt: new Date().toISOString(), name: PILOT.name, bbox: PILOT.bbox, note: 'Indicative 3D context. Lidar terrain in the pilot box (elsewhere the 3D view uses the terrain tiles); OpenStreetMap buildings across the Region of Peel. Rebuilt by scripts/build-3d-tiles.js (Probe data sources, mode=tiles-3d).' };
   if (ONLY === 'buildings') manifest.terrain = prev.terrain || null;
   else { try { manifest.terrain = await buildTerrain(); } catch (e) { console.log(`terrain: ${e.message}`); manifest.terrain = null; manifest.terrainError = e.message; } }
   if (ONLY === 'terrain') manifest.buildings = prev.buildings || null;
