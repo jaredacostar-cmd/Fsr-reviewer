@@ -14,9 +14,15 @@
   // A tree keeps the key of the development that held its root file; a second tree of the same
   // development becomes "<key>~<root file>". keyMap (old key → new keys) resolves keys saved before
   // (watchlist, allocations, share links, saved views, weekly changes, phase history).
-  let data = null, idx = null, keyMap = new Map(), devOfKey = new Map();
+  // aliases (js/phases.js keyAliases, set by the app after each build, computed when first needed):
+  // an address key that is no development's key now → the developments holding its records.
+  let data = null, idx = null, keyMap = new Map(), devOfKey = new Map(), aliasOf = () => null, aliasMap = null;
+  function setAliases(src) { aliasMap = null; aliasOf = typeof src === 'function' ? k => (aliasMap || (aliasMap = src() || new Map())).get(k) : src instanceof Map ? k => src.get(k) : () => null; }
 
-  const fileKey = (r, canonRef) => `${r.municipality}|${r.fileKey || canonRef(r.ref) || r.uid}`;
+  // A planning file's key, as the tree build wrote it (js/phases.js fileId: a Caledon number with its type).
+  const phases = () => root.PeelPhases || (typeof require === 'function' ? require('./phases.js') : null);
+  const fileIdOf = (r, canonRef) => { const P = phases(); return P && P.fileId ? P.fileId(r, canonRef) : r.fileKey || canonRef(r.ref); };
+  const fileKey = (r, canonRef) => `${r.municipality}|${fileIdOf(r, canonRef) || r.uid}`;
 
   function setData(d) {
     data = d && d.version >= 2 && Array.isArray(d.devs) ? d : null;
@@ -70,36 +76,45 @@
   // An old key (saved before the trees) → the development(s) it became; the first is the one that
   // kept the most of it. A key that still exists resolves to itself. "<key>#<file>" (a branch)
   // resolves its base and keeps the file when that file is in the new development.
-  function resolveAll(k, exists = () => false) {
+  // An address key saved before an address fix resolves through the aliases; opts.aliasesOnly
+  // (the trees off) resolves nothing else.
+  function resolveAll(k, exists = () => false, opts = {}) {
     if (!k) return [];
     if (exists(k)) return [k];
     const h = String(k).lastIndexOf('#');
-    if (h > 0 && !keyMap.has(k)) {
+    if (h > 0 && !keyMap.has(k) && !aliasOf(k)) {
       const base = k.slice(0, h), ref = k.slice(h + 1);
-      return resolveAll(base, exists).map(b => `${b}#${ref}`);
+      return resolveAll(base, exists, opts).map(b => `${b}#${ref}`);
     }
     const t = String(k).indexOf('~');
-    const s = keyMap.get(k);
+    const s = opts.aliasesOnly ? null : keyMap.get(k);
     if (s && s.size) return [...s];
-    if (t > 0 && exists(k.slice(0, t))) return [k.slice(0, t)];   // a tree key, with the trees off
+    const al = aliasOf(k);
+    if (al && al.length) { const out = [...new Set(al.filter(x => x !== k).flatMap(x => (exists(x) ? [x] : opts.aliasesOnly ? [] : resolveAll(x, exists, opts))))]; if (out.length) return out; }
+    if (t > 0) {
+      const base = k.slice(0, t), rest = k.slice(t);
+      if (!opts.aliasesOnly && exists(base)) return [base];   // a tree key, with the trees off
+      const nb = (aliasOf(base) || []).find(exists);
+      if (nb) return exists(nb + rest) ? [nb + rest] : opts.aliasesOnly ? [] : [nb];
+    }
     return [];
   }
-  const resolve = (k, exists) => resolveAll(k, exists)[0] || null;
+  const resolve = (k, exists, opts) => resolveAll(k, exists, opts)[0] || null;
 
-  // Saved keys rewritten once the developments are the trees. Nothing is dropped: a key that
-  // resolves to nothing is kept as it was.
-  function migrateKeys(keys, exists) {
+  // Saved keys rewritten once the developments are the trees (or, the trees off, an address key
+  // to today's key). Nothing is dropped: a key that resolves to nothing is kept as it was.
+  function migrateKeys(keys, exists, opts) {
     const out = new Set();
-    for (const k of keys) { const r = resolveAll(k, exists); if (r.length) r.forEach(x => out.add(x)); else out.add(k); }
+    for (const k of keys) { const r = resolveAll(k, exists, opts); if (r.length) r.forEach(x => out.add(x)); else out.add(k); }
     return [...out];
   }
   // Allocations (one record per development): a split's allocation goes to the part with the most
   // units, noting where it came from.
-  function migrateAllocations(all, exists, unitsOf) {
+  function migrateAllocations(all, exists, unitsOf, opts) {
     const out = {}; let moved = 0;
     for (const [k, a] of Object.entries(all || {})) {
       if (exists(k)) { out[k] = a; continue; }
-      const r = resolveAll(k, exists).sort((x, y) => (unitsOf(y) || 0) - (unitsOf(x) || 0));
+      const r = resolveAll(k, exists, opts).sort((x, y) => (unitsOf(y) || 0) - (unitsOf(x) || 0));
       if (!r.length) { out[k] = a; continue; }
       const to = r[0];
       out[to] = out[to] ? out[to] : { ...a, movedFrom: k };
@@ -108,14 +123,14 @@
     return { all: out, moved };
   }
   // Weekly changes and phase history, saved by the old keys: copied to the new keys as well.
-  function translateHistory(hist, exists) {
+  function translateHistory(hist, exists, opts) {
     if (!hist || !hist.projects) return hist;
-    for (const [k, list] of Object.entries(hist.projects)) for (const n of resolveAll(k, exists)) if (n !== k && !hist.projects[n]) hist.projects[n] = list;
+    for (const [k, list] of Object.entries(hist.projects)) for (const n of resolveAll(k, exists, opts)) if (n !== k && !hist.projects[n]) hist.projects[n] = list;
     return hist;
   }
-  function translateChanges(c, exists) {
+  function translateChanges(c, exists, opts) {
     if (!c) return c;
-    for (const x of [...(c.moved || []), ...(c.added || [])]) { const n = resolve(x.key, exists); if (n && n !== x.key) { x.oldKey = x.oldKey || x.key; x.key = n; } }
+    for (const x of [...(c.moved || []), ...(c.added || [])]) { const n = resolve(x.key, exists, opts); if (n && n !== x.key) { x.oldKey = x.oldKey || x.key; x.key = n; } }
     return c;
   }
 
@@ -127,7 +142,7 @@
     const d = devOf(p.key); if (!d || !d.n) return null;
     const canonRef = (root.PeelPhases && root.PeelPhases.canonRef) || (x => x);
     const recsOf = new Map();
-    for (const r of p.records) if (r.kind === 'application') { const k = r.fileKey || canonRef(r.ref) || r.uid; (recsOf.get(k) || recsOf.set(k, []).get(k)).push(r); }
+    for (const r of p.records) if (r.kind === 'application') { const k = fileIdOf(r, canonRef) || r.uid; (recsOf.get(k) || recsOf.set(k, []).get(k)).push(r); }
     const rules = (data.codes && data.codes.rules) || [], roles = (data.codes && data.codes.roles) || [];
     const nodes = d.n.map(([ref, role, parent, rule, conf, overlap, units, cancelled, fk]) => ({ ref, role: roles[role] || role, parent, rule: rule >= 0 ? rules[rule] : '', conf: CONF[conf] || '', overlap, units, cancelled: !!cancelled, recs: recsOf.get(fk || ref) || recsOf.get(canonRef(ref)) || [] }));
     const kids = nodes.map(() => []);
@@ -155,7 +170,7 @@
   const indent = t => (t && t.depth ? ` style="margin-left:${Math.min(t.depth, 4) * 14}px"` : '');
   const FILES_NOTE = 'Files in tree order: each sits under the file whose land holds it, with the rule that linked them and its confidence; files on the same land sit side by side. The development counts its units once, from the tree (Settings › Counting). Open a file to see its branch on its own.';
 
-  const api = { linkHTML, indent, FILES_NOTE, setData, ready, regroup, devOf, resolve, resolveAll, migrateKeys, migrateAllocations, translateHistory, translateChanges, fileRows, fileKey, get keyMap() { return keyMap; }, get data() { return data; } };
+  const api = { linkHTML, indent, FILES_NOTE, setData, setAliases, ready, regroup, devOf, resolve, resolveAll, migrateKeys, migrateAllocations, translateHistory, translateChanges, fileRows, fileKey, get keyMap() { return keyMap; }, get data() { return data; } };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTreeGroups = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -19,10 +19,13 @@
   function mode() { const s = store(); const v = s ? s.get(STORE_KEY, 'tree') : 'tree'; return v === 'previous' ? 'previous' : 'tree'; }
   function setMode(v) { const s = store(); if (s) s.set(STORE_KEY, v === 'previous' ? 'previous' : 'tree'); }
 
-  // The development's planning files, as the tree build saw them: "Municipality|file key".
+  // The development's planning files, as the tree build saw them: "Municipality|file key"
+  // (js/phases.js fileId: a Caledon number with its type).
+  const phases = () => root.PeelPhases || (typeof require === 'function' ? require('./phases.js') : null);
   function fileKeysOf(p, canonRef) {
-    const set = new Set();
-    for (const r of p.records || []) if (r.kind === 'application') set.add(`${r.municipality}|${r.fileKey || canonRef(r.ref) || r.uid}`);
+    const set = new Set(), P = phases();
+    const id = r => (P && P.fileId ? P.fileId(r, canonRef) : r.fileKey || canonRef(r.ref));
+    for (const r of p.records || []) if (r.kind === 'application') set.add(`${r.municipality}|${id(r) || r.uid}`);
     return [...set].sort();
   }
   // A short, stable signature of those files (djb2, base 36).

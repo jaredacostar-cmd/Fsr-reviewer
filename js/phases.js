@@ -311,6 +311,18 @@
     t = t.map(x => (/^O\d+$/.test(x) ? '0' + x.slice(1) : x));
     return t.map(x => (/^\d+$/.test(x) ? String(Number(x)) : x)).join('|');
   }
+  // One planning file's identity, wherever files are keyed (merging records, the trees, a
+  // development's files). Caledon numbers its files "YYYY-NNNN" separately for each application
+  // type: official plan amendment 2022-0006, zoning by-law amendment 2022-0006 and site plan
+  // 2022-0006 are three files on different land. A bare Caledon number carries its type, as the
+  // Town's notices and agendas write it (POPA / RZ / SPA 2022-0006, scripts/council-parse.js); a
+  // type with no such prefix carries its stage. Every other file is its canonical number.
+  const CALEDON_TYPE = { 'official plan amendment': 'POPA', 'zoning by-law amendment': 'RZ', 'site plan': 'SPA' };
+  function fileId(r, canon = canonRef) {
+    const fk = r.fileKey || canon(r.ref);
+    if (!fk || r.municipality !== 'Caledon' || r.kind !== 'application' || !/^\d{4}\|\d+$/.test(fk)) return fk;
+    return `${CALEDON_TYPE[String(r.type || '').trim().toLowerCase()] || String(r.stage || stageOf(r)).toUpperCase()}|${fk}`;
+  }
 
   // Approval stage of a planning file. Files of different stages on one site describe the
   // same proposal; separate files of the same stage (site plan / condo) are separate phases.
@@ -391,7 +403,7 @@
       if (isDemolition(r)) {
         const t = `${r.type || ''} ${r.description || ''}`;
         const n = r.units > 0 && !NOT_HOME.test(r.description || '') ? r.units : lostHomesInText(t, false);
-        if (n > 0) { const k = r.fileKey || canonRef(r.ref) || r.uid; demo.set(k, Math.max(demo.get(k) || 0, n)); }
+        if (n > 0) { const k = fileId(r) || r.uid; demo.set(k, Math.max(demo.get(k) || 0, n)); }
         continue;
       }
       const newHouse = r.kind === 'permit' && permitAddsUnits(r) && r.units <= 2;
@@ -632,6 +644,38 @@
     if (civic(a)) return `${rec.municipality}|${a}`;
     if (rec.lat != null) return `${rec.municipality}|@${rec.lat.toFixed(4)},${rec.lng.toFixed(4)}`;
     return `${rec.municipality}|#${rec.uid}`;
+  }
+
+  // Keys saved before (the watchlist, allocations, share links, the phase history, the weekly
+  // changes) name a development by its address as normalizeAddress read it until 2026-10-17
+  // (legacyNormalizeAddress). Where that reading differs from today's, the old key — when no
+  // development has it now — resolves to the development(s) holding the records at that address,
+  // the one with the most of them first (js/tree-groups.js resolveAll).
+  function legacyNormalizeAddress(addr) {
+    let s = str(addr).toUpperCase();
+    if (!s) return '';
+    s = s.replace(/,.*$/, '')
+         .replace(/\b(UNIT|SUITE|STE|APT|BLDG|BUILDING|LOT|BLK|BLOCK)\s*[#\w-]+/g, '')
+         .replace(/#\s*\w+/g, '')
+         .replace(/^\s*\w+\s*-\s*(?=\d)/, '')
+         .replace(/[.']/g, '')
+         .replace(/\s+/g, ' ');
+    for (const [re, rep] of STREET_ABBR) s = s.replace(re, rep);
+    return s.trim();
+  }
+  function keyAliases(projects) {
+    const keys = new Set(projects.map(p => p.key)), by = new Map();
+    for (const p of projects) for (const r of p.records) {
+      if (!r.address) continue;
+      const a = legacyNormalizeAddress(r.address);
+      if (!civic(a) || a === normalizeAddress(r.address)) continue;
+      const k = `${r.municipality}|${a}`; if (keys.has(k)) continue;
+      let m = by.get(k); if (!m) by.set(k, m = new Map());
+      m.set(p.key, (m.get(p.key) || 0) + (r.kind === 'application' ? 10 : 1));   // (a planning file outweighs a permit)
+    }
+    const out = new Map();
+    for (const [k, m] of by) out.set(k, [...m].sort((a, b) => b[1] - a[1] || (a[0] < b[0] ? -1 : 1)).map(x => x[0]));
+    return out;
   }
 
   // Every civic address named in a multi-address application:
@@ -1016,7 +1060,7 @@
       if (r.kind !== 'application' || r.phase === 'cancelled' || r.minor || !(r.units > 0)) continue;
       const stage = r.stage || stageOf(r);
       if (stage === 'precon') continue;
-      const k = `${stage}|${r.fileKey || canonRef(r.ref) || r.uid}`;
+      const k = `${stage}|${fileId(r) || r.uid}`;
       const prev = files.get(k);
       if (!prev || r.units > prev.units) files.set(k, { rec: r, stage, units: r.units });
     }
@@ -1178,7 +1222,7 @@
     const byFile = new Map();
     for (const r of recs) {
       if (r.kind !== 'application') continue;
-      const k = r.fileKey || canonRef(r.ref) || r.uid;
+      const k = fileId(r) || r.uid;
       (byFile.get(k) || byFile.set(k, []).get(k)).push(r);
     }
     const permitsOf = new Map();
@@ -1509,11 +1553,11 @@
   }
 
   // The same file can come from two layers (e.g. "all permits" and "growth" permits):
-  // merge by municipality + kind + file number, keeping the furthest phase.
+  // merge by municipality + kind + file (fileId: a Caledon number with its type), keeping the furthest phase.
   function dedupeRecords(records) {
     const byRef = new Map(); const out = [];
     for (const r of records) {
-      const fk = r.fileKey || canonRef(r.ref);
+      const fk = fileId(r);
       if (!fk) { out.push(r); continue; }
       const k = `${r.municipality}|${r.kind}|${fk}`;
       const prev = byRef.get(k);
@@ -1541,7 +1585,7 @@
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY, SMALL_SITE_UNITS, isHolding,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
     representativePoint, buildProjects, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
-    canonRef, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, isNewBuild,
+    canonRef, fileId, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, keyAliases, legacyNormalizeAddress, isNewBuild,
     PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf, lastActivityOf, proposedStateOf,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
