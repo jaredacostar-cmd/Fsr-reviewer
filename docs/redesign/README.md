@@ -7,6 +7,7 @@ agent can work from the repo alone.
 |---|---|
 | `SPEC.md` | The build spec, ordered: data fixes → layer function → click destinations → shell → panels. Read this first. |
 | `KICKOFF.md` | A prompt to paste into Claude Code to start the work. |
+| `DATASETS.md` | New open datasets, in four waves: what each adds, how to fetch and build it, where it shows, its test. |
 | `boards/` | The design boards as self-contained HTML (one per panel / scope); `canvas.json` is their layout. Open any in a browser. |
 | `captures/*.png` | Contact sheets of the current app: desktop panels per tab, three site types, zoom levels, the four lenses and feature clicks, the site tools. |
 | `captures/text/` | The rendered text of every panel captured (`peel/` nothing selected, `site/` 9763 Heritage Rd, `types/` the other three sites, `shell/` left panel, menus, features, tools). Diff against these after changes. |
