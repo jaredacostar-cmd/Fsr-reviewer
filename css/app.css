@@ -3421,3 +3421,10 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .sd-duty dt { color: var(--text-secondary); } .sd-duty dd { margin: 0; }
 .sd-ps { border-left: 3px solid var(--cap-tight); padding: var(--space-1) var(--space-2); margin: var(--space-2) 0; background: var(--surface-2); border-radius: 4px; }
 .sd-t tr.on th, .sd-t tr.on td { font-weight: 600; }
+/* Crossings: on the map (numbered), in the profile (a watermain at its assumed depth, a storm mark). */
+.sd-x span { display: inline-block; transform: translate(-50%, -50%); min-width: 16px; padding: 0 3px; border-radius: 8px; font-size: var(--fs-1); font-weight: 700; text-align: center; color: var(--on-accent); border: 1px solid var(--text-primary); }
+.sd-x-water span { background: var(--pipe-water); } .sd-x-storm span { background: var(--pipe-storm); } .sd-x-bad span { outline: 2px solid var(--cap-over); }
+.sd-prof .sp-wm { fill: none; stroke: var(--pipe-water); stroke-width: 2; } .sd-prof .sp-wm.sp-bad { stroke: var(--cap-over); }
+.sd-prof .sp-st { stroke: var(--pipe-storm); stroke-width: 2; }
+.sd-key .sd-k-w { width: 9px; height: 9px; border: 2px solid var(--pipe-water); border-radius: 50%; }
+.sd-t tr.t-over td { color: var(--cap-over-t); }
