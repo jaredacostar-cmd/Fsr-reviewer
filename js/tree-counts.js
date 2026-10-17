@@ -37,12 +37,19 @@
   }
   const sigOf = (p, canonRef) => signature(fileKeysOf(p, canonRef));
 
+  // 'loading' → 'ok' or 'failed': the count shown says so when the tree counts didn't arrive, rather
+  // than quietly showing the previous count (a different total from the same data).
+  let status = 'idle';
   function load() {
-    if (!loading) loading = fetch('data/tree-counts.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(d => { setData(d); return data; });
+    if (!loading) {
+      status = 'loading';
+      loading = fetch('data/tree-counts.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).catch(() => null)
+        .then(d => { setData(d); status = data ? 'ok' : 'failed'; return data; });
+    }
     return loading;
   }
   const usable = d => !!(d && (d.devs || d.projects));
-  function setData(d) { data = usable(d) ? d : null; loading = Promise.resolve(data); if (root.PeelTreeGroups) root.PeelTreeGroups.setData(data); }
+  function setData(d) { data = usable(d) ? d : null; if (data) status = 'ok'; loading = Promise.resolve(data); if (root.PeelTreeGroups) root.PeelTreeGroups.setData(data); }
   // Each development's entry: version 2 lists the trees as developments (devs), version 1 the
   // counts inside today's developments (projects).
   const entries = new WeakMap();
@@ -140,7 +147,7 @@
   }
   const label = () => (mode() === 'tree' ? 'tree count' : 'previous count');
 
-  const api = { MODES, mode, setMode, load, setData, apply, sigOf, signature, fileKeysOf, noteHTML, partsHTML, estimatedUnits, PART_KIND, settingsHTML, label, get data() { return data; } };
+  const api = { MODES, mode, setMode, load, setData, apply, sigOf, signature, fileKeysOf, noteHTML, partsHTML, estimatedUnits, PART_KIND, settingsHTML, label, get data() { return data; }, get status() { return status; } };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTreeCounts = api;
 })(typeof window !== 'undefined' ? window : globalThis);

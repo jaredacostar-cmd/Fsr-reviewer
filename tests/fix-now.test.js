@@ -34,7 +34,7 @@ test('the Study area page\'s selection buttons work on the page; Copy share link
   assert.match(a, /\$\('#scope-body'\)\.addEventListener\('click', selClick\);/);
   assert.match(a, /h\.addEventListener\('click', e => \{ if \(e\.target\.closest\('\[data-page-map\], \.page-sel'\)\) selClick\(e\); \}\)/);
   assert.match(src('js/share.js'), /window\.PeelUtil\.toast\('Link copied: it opens this view, with its filters and scenario'\)/);
-  assert.match(src('js/util.js'), /function toast\(text\) \{[^]*?setAttribute\('role', 'status'\)/);
+  assert.match(src('js/util.js'), /function toast\(text, ms = 2600\) \{[^]*?setAttribute\('role', 'status'\)/);
 });
 
 test('the Help guides point at the right places', () => {

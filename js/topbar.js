@@ -129,12 +129,17 @@
     const devU = scoped && window.Growth ? window.Growth.pipelineTotals([scoped]).planned : 0;
     const count = scoped ? `<span class="tb-count" title="This development's planned homes">· ${fmtNum(Math.round(devU))} home${Math.round(devU) === 1 ? '' : 's'} planned</span>`
       : `<span class="tb-count" title="Developments in scope and their planned units">· ${fmtNum(set.length)} development${set.length === 1 ? '' : 's'}${units > 0 ? ` · ${fmtNum(Math.round(units))} units` : ''}</span>`;
+    // The tree counts didn't load: the units are the previous count, so the total differs. Say so.
+    const TC = window.PeelTreeCounts;
+    const warn = TC && TC.mode() === 'tree' && TC.status === 'failed'
+      ? ' <span class="tb-count-warn" role="status" title="The tree counts (data/tree-counts.json) did not load, so each development shows its previous count and the total differs from the usual one.">· previous counts: tree counts didn\u2019t load <button type="button" class="btn small link" data-tb-reload>Reload</button></span>' : '';
     el.innerHTML = steps.map((s, i) => `${i ? '<span class="tb-sep" aria-hidden="true">›</span>' : ''}<button type="button" class="tb-step" data-i="${i}" title="${esc(s.title)}">${esc(s.label)}</button>`).join('')
-      + count;
+      + count + warn;
     el._steps = steps;
     if (window.PeelSvcScope) window.PeelSvcScope.peelWideNote();
   }
   $('#trail').addEventListener('click', e => {
+    if (e.target.closest('[data-tb-reload]')) { location.reload(); return; }
     const b = e.target.closest('[data-i]'); if (!b) return;
     const s = ($('#trail')._steps || [])[+b.dataset.i]; if (s) s.go();
   });

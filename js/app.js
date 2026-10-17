@@ -565,7 +565,11 @@
         await loadAll();
         finishFull();
       } else {
-        await Promise.race([treeCountsLoad, new Promise(r => setTimeout(r, 3000))]);
+        // The developments are built once the tree counts are in. Waiting only 3 s used to build them
+        // with the previous count on a slow connection, then again when the counts arrived: two
+        // different totals from the same data. 20 s is only the guard for a request that never ends;
+        // a failed load says so in the count (js/topbar.js).
+        await Promise.race([treeCountsLoad, new Promise(r => setTimeout(r, 20000))]);
         finishFull();
         applySnapshot(snap);
         if (window.PeelOffline) PeelOffline.setCachedAt(Date.now());
