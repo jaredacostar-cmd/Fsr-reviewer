@@ -107,6 +107,7 @@ const SHELL_ASSETS = [
   'js/forcemain.js',
   'js/sewer-print.js',
   'js/road-net.js',
+  'js/corridor-finder.js',
   'js/sewer-designer.js',
   'js/offline.js',
   'js/overview-tab.js',
