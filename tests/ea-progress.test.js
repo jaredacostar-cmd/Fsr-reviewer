@@ -41,7 +41,7 @@ test('an EA under way: only construction due after the expected report is its ou
   assert.equal(M.classifyLink(d, { start: Date.UTC(2024, 3, 1), startActual: true, strength: 2 }), 'other');
 });
 
-test('buckets: waiting, near the 10-year limit, built, date unknown, under way', () => {
+test('buckets: waiting, waiting 9+ years, built, date unknown, under way', () => {
   const caps = [rec('done', { startActual: '2018-01-01', substantialActual: '2019-06-01', status: 'complete' })];
   const list = M.eaProgress([
     ea('wait', { completedYear: 2022 }),
@@ -87,4 +87,31 @@ test('Home pages: EA to construction (Capital) and Forecast (Planning), reachabl
   const body = s.slice(s.indexOf('function eaflow'), s.indexOf('// ---- This week'));
   assert.doesNotMatch(body, /#[0-9a-f]{3,6}\b/i);
   assert.doesNotMatch(src('css/app.css').split('/* EA to construction')[1] || 'x', /#[0-9a-f]{3,6}\b/i);
+});
+
+test('possible links: current work near a past EA, same system and municipality, after it, not yet linked', () => {
+  // A line EA along Main Street (Brampton), completed 2015.
+  const g = { type: 'LineString', coordinates: [[-79.70, 43.70], [-79.68, 43.70]] };
+  const e = ea('P', { system: 'water', geometry: g, geomConfidence: 'medium', name: 'Main Street watermain', completedYear: 2015, related: { capitalProjects: [link('linked')] } });
+  const line = dy => ({ type: 'LineString', coordinates: [[-79.695, 43.70 + dy], [-79.690, 43.70 + dy]] });
+  const caps = [
+    rec('near', { system: 'water', workType: 'WM', street: 'MAIN ST', municipality: 'BRAMPTON', startTarget: '2027-05-01', geometry: line(0.001) }),       // ≈110 m
+    rec('far', { system: 'water', workType: 'WM', municipality: 'BRAMPTON', startTarget: '2027-05-01', geometry: line(0.01) }),                          // ≈1.1 km
+    rec('sewer', { system: 'wastewater', workType: 'SAN', municipality: 'BRAMPTON', startTarget: '2027-05-01', geometry: line(0) }),                    // other system
+    rec('reline', { system: 'water', workType: 'WM-RELINING', municipality: 'BRAMPTON', startTarget: '2027-05-01', geometry: line(0) }),                // a repair
+    rec('before', { system: 'water', workType: 'WM', municipality: 'BRAMPTON', startActual: '2012-05-01', status: 'under construction', geometry: line(0) }), // before the EA
+    rec('mis', { system: 'water', workType: 'WM', municipality: 'MISSISSAUGA', startTarget: '2027-05-01', geometry: line(0) }),                         // other municipality
+    rec('done', { system: 'water', workType: 'WM', municipality: 'BRAMPTON', status: 'complete', startActual: '2018-05-01', geometry: line(0) }),         // finished
+    rec('linked', { system: 'water', workType: 'WM', municipality: 'BRAMPTON', startTarget: '2027-05-01', geometry: line(0) }),                         // already linked
+  ];
+  const L = M.possibleLinks([e], caps, TODAY);
+  assert.deepEqual(L.map(x => x.c.key), ['near']);
+  assert.equal(L[0].street, true);
+  assert.equal(L[0].dateChecked, true);
+  assert.ok(L[0].metres > 80 && L[0].metres < 140, `${L[0].metres} m`);
+  // A study area placed with low confidence needs the street named in the EA too; Region-wide studies never match.
+  assert.equal(M.possibleLinks([{ ...e, geomConfidence: 'low', name: 'Some study' }], caps, TODAY).length, 0);
+  assert.equal(M.possibleLinks([{ ...e, municipality: 'Region-wide' }], caps, TODAY).length, 0);
+  assert.equal(M.sameStreetAs('50 HY', 'Highway 50 drainage improvements'), true);
+  assert.equal(M.metresTo([-79.69, 43.70], { type: 'Polygon', coordinates: [[[-79.7, 43.69], [-79.68, 43.69], [-79.68, 43.71], [-79.7, 43.71], [-79.7, 43.69]]] }), 0);
 });

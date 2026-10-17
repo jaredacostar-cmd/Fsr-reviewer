@@ -2806,9 +2806,10 @@ Two pages added to Home's sidebar, so they are no longer only on the full map:
   a link to *How the forecast is timed*. Same figures as the full map (`growth:timing`).
 - **Capital › EA to construction** (`eaflow`): each Region Class EA and the construction that
   followed it, as a timeline (EA study, public information centres, completion, then the
-  construction bars, with today marked), and lists: complete and waiting (oldest first, those 9+
-  years old flagged as near the 10-year limit), construction that followed, EAs under way by
-  expected report.
+  construction bars, with today marked), and lists: complete and waiting (oldest first, those
+  10+ years old flagged: the Class EA must be reviewed before construction), construction that
+  followed (flagged when it starts 10+ years after its EA), **possible links to check** (below),
+  EAs under way by expected report (report dates already past marked as due).
 
 Both are also linked from Home's *Start here* line.
 
@@ -2824,3 +2825,12 @@ completion, the report filing / review-end date, the page's wording, the report'
 pages of the PDF), the report's file name. The year must fall between the EA's commencement (or
 first PIC) and today. Each EA carries `completedYear` and `completedBasis`. Completed EAs with no
 year stay *date unknown* and their construction is not ordered against them.
+
+**Possible links (`possibleLinks`)**: current construction near a past EA that the weekly build
+has not linked: planned, tendered, awarded or under-construction contracts of the same system
+(roads EAs: road work; storm EAs: storm sewers) and municipality, at least half within 250 m of a
+completed EA's study area (500 m of a facility), starting after the EA was complete. Left out:
+repairs and renewals (relining, trenchless rehabilitation, inlet repair, resurfacing, noise walls),
+developer-built works, Region-wide studies (master plans: everything lies near them), and, for a
+study area placed with low confidence, anything not on a street named in the EA. They are listed
+with the reasons and never count as following the EA.
