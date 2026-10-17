@@ -87,7 +87,7 @@
   // Employment parsed once per project (the focus chip counts call it for every project).
   // m²/job comes from the editable criteria; clearEmp() drops the cache when it changes.
   const empOf = p => (p._emp !== undefined ? p._emp : (p._emp = window.PeelEmployment ? PeelEmployment.employmentOf(p, state.criteria.m2PerJob) : null));
-  const clearEmp = () => { for (const p of state.projects) { delete p._emp; delete p._psover; delete p._psoverM; } };
+  const clearEmp = () => { for (const p of state.projects) { delete p._emp; delete p._psover; delete p._psoverM; } state.empGen = (state.empGen || 0) + 1; };
   // Employment space moves with the project phase (no per-unit permits for it).
   const EMP_DONE = { permitted: new Set(['permit', 'construction', 'completed']), completed: new Set(['completed']) };
   const jobsOf = p => { const e = p.records ? empOf(p) : null; return e ? e.jobs : 0; };
@@ -221,7 +221,7 @@
     // The servicing model follows the developments: rebuilt with them (it used to wait for the Water /
     // Wastewater tab, so the Overview, the DC tab and the scope cards read a model of the first-paint
     // data — Inglewood 398% vs 42%, SPEC 1.4).
-    if (state.servicing && window.PeelSvcTab) { clearTimeout(rebuild.svcT); rebuild.svcT = setTimeout(() => window.PeelSvcTab.renderSvcTab(), 0); }
+    if (state.servicing && window.PeelSvcTab) { clearTimeout(rebuild.svcT); rebuild.svcT = setTimeout(() => window.PeelSvcTab.ensureSvcModel(), 0); }
   }
 
   // Years in which the project hit the selected milestone (or any milestone).
@@ -796,7 +796,7 @@
         const t = window.PeelAnalysisTabs.getFootPref();
         if (t === 'overview') window.PeelOverviewTab.renderOverview();
         else if (t === 'growth') window.PeelGrowthUI.renderGrowth();
-        else if (t === 'svc' || t === 'water' || t === 'ww') window.PeelSvcTab.renderSvcTab();
+        else if (t === 'svc' || t === 'water' || t === 'ww') window.PeelSvcTab.ensureSvcModel({ rescope: true });   // (a site swaps its bodies in; the model is rebuilt only if its inputs changed)
         else if (t === 'dca') window.PeelDcaTab.renderDca();
       },
       isWatched: k => watch.has(k),

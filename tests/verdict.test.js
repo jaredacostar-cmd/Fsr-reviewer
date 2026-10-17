@@ -104,7 +104,9 @@ test('verdictMilestone: withdrawn, done, appeal, stalled, next', () => {
 test('scope wiring: every scoped analysis tab render checks the development scope first', () => {
   // Phase 4: the Growth tab is scope-free by design (a site's units live on the
   // Development tab), so renderGrowth is not in this list.
-  for (const fn of ['renderOverview', 'renderSvcTab', 'renderDca']) {
+  // (the Servicing tab's body is buildSvcTab, which renderSvcTab runs with the developments indexed)
+  assert.match(APP, /function renderSvcTab\(\) \{[\s\S]*?buildSvcTab\(bc\)/);
+  for (const fn of ['renderOverview', 'buildSvcTab', 'renderDca']) {
     const m = new RegExp(`function ${fn}\\([\\s\\S]*?\\n  \\}`).exec(APP);
     assert.ok(m, `function ${fn} not found`);
     const iScope = m[0].indexOf('scopedDev()');

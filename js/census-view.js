@@ -81,7 +81,7 @@
   // by renderGrowthPipeline above.
   function renderGrowthCensus() {
     const body = $('#growth-census-body'); if (!body) return;
-    SvcTab().renderSvcTab();
+    SvcTab().ensureSvcModel();   // (built once per change of what it is built from, not on every filter change)
     // Area-only content: not shown at development scope (design audit, Group 6).
     if (window.DevScope && window.DevScope.current()) { body.innerHTML = window.PeelUtil.AREA_ONLY_NOTE; return; }
     const bc = CA().baselineCensus();
