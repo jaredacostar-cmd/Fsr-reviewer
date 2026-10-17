@@ -274,18 +274,64 @@ for linked cases weekly into `data/olt.json`.
 
 ## Wave 4: data quality
 
-### 9. Statistics Canada Open Database of Addresses
+### 9. Address points: Peel's live layer first, the ODA as a fallback
 
-**What it adds.** One normalised key per civic address, to merge the "possible duplicates" in
-Records › Data checks (40 today, e.g. "10194 HEART LAKE RD (200) ↔ 10194 HEART LAKE RD (200)") and to
-help the tree when files spell one site differently.
+**Tested 2026-10-17.** The StatCan Open Database of Addresses (ODA) Ontario file (v1.0, collected
+Jan–Apr 2021, 162 MB zip, 691 MB CSV) has 603,515 rows for Peel. They come from Peel Region's own
+address points and Brampton's GeoHub; Brampton appears twice (both providers). Matching every
+record in `data/snapshot.json` on number + street name + type + direction + municipality:
 
-**Source.** StatCan ODA, Ontario file. Filter to Peel's three municipalities in the fetch step.
+| | Records with an address | Exact | Loose | Not found | No number |
+|---|---|---|---|---|---|
+| Planning applications | 5,241 | 70.7% | 1.8% | 21.7% | 5.8% |
+| Building permits | 46,194 | 64.5% | 0.2% | 35.3% | 0.0% |
 
-**Build.** `scripts/build-addresses.js` → `data/address-index.json` (normalised street + number →
-point). The snapshot build uses it to add `addrKey` to records.
+Most misses are addresses created after 2021: 14,777 of the 16,296 unmatched permits first appear in
+2021 or later (e.g. 46 Bermondsey Way, 2022). The ODA is a frozen snapshot.
 
-**App.** No new panel. The duplicate count should fall; the tree audit reports matches by address.
+**Use Peel's live layer instead.** `services6.arcgis.com/ONZht79c8QWuX759/.../Address_Points/FeatureServer/0`,
+503,923 points, last edited 2025-10-21. Fields: `STREETNUM, STREETNAME, STREETTYPE,
+STREETDIRECTION, UNIT_IDENTIFIER, MUNICIPALITY, ROPADRID` (a stable address ID), `WARD`, `LANDUSE`
+(Residential, Commercial, Industrial, Institutional, Agricultural/Rural, Parks/Greenspace,
+Airport), `HOUSESTYLE` (Detached, Townhouse, Apartment…), `LATITUDE, LONGITUDE`. It finds
+addresses the ODA misses (46 Bermondsey Way; 2 Erskine Rd, which replaced 151 City Centre Dr) and
+still lags the newest streets (8 Cuttlefish St, 2026). Keep the ODA only for retired addresses.
+
+**What it adds.**
+- One key per site: `ROPADRID`. Files on the same land share it even when their map points sit
+  37–243 m apart (10625 Mississauga Rd: OZS-2021-0002, SP16-088.000, C04W14.009 → one point).
+- A "same address" signal for the duplicate check. 10194 Heart Lake Rd: SPA-2026-0045,
+  DPC-2025-0007 and PRE-2021-0193 resolve to one point. The check can then say "same land, a site
+  plan and its condo" instead of "possible duplicate".
+- A test for tree links. In the Heritage / Bovaird block the three draft plans are three separate
+  properties (9763 Heritage, 2055 Bovaird W 1.5 km away, 9752 Mississauga 1.1 km away), and the
+  permit that set the phase, 59 Dairymaid Rd, is a detached house 1.0 km away. A permit whose
+  address point is outside the planning file's boundary should not set its phase (SPEC 1.1).
+- Dwelling type from `HOUSESTYLE` for permits that lack one, and `LANDUSE` as a second opinion on
+  employment sites.
+- A pointer to a moved record: when a record's map point is far from its address point
+  (287 applications over 250 m), show the address point and say the record's point was off.
+
+**Rules.** Ignore street number 0 (a placeholder used for unaddressed land; "0 HERITAGE RD" has 23
+points). Split multi-address strings before matching ("1580 and 1650 Dundas St E" → two keys).
+Strip "formerly known as …" and keep the old address as an alias. Intersections ("North East
+Corner of Embleton and Heritage Road") get no key; they keep their own point.
+
+**Build.** Probe mode `addresses`: page the layer (2,000 per request, about 250 requests) into
+`ext-raw/addresses/peel.json`. `scripts/build-addresses.js` writes `data/address-index.json`
+(`key → [ROPADRID, lat, lng, houseStyle, landUse]`, about 15 MB; ship gzipped or as per-municipality
+shards loaded by the snapshot build only). The snapshot build adds `addrId` and `addrDistM` to each
+record. The browser never loads the full index.
+
+**App.**
+- Records › Data checks: duplicates split into "same address, different roles" (expected) and
+  "same address, same role" (real duplicates).
+- Records › a file: "Address point 185 m from the file's map point" when over 100 m.
+- Tree audit: a link between files with different `addrId`s more than 500 m apart needs a stronger
+  rule than "inside the block plan".
+
+**Test.** `tests/addresses.test.js`: the three 10625 Mississauga Rd files share an `addrId`;
+"1580 and 1650 Dundas St E" yields two keys; number 0 yields none.
 
 **Effort.** Small to medium. 1–2 days.
 
@@ -308,7 +354,7 @@ point). The snapshot build uses it to add `addrKey` to records.
 | 1 | 1 MECP flows · 2 observed ppu · 3 OP area and designation | yes: trigger year, population, target % | 4–6 days |
 | 2 | 4 overflows and roster · 5 ECA capacities · 6 compliance flags | yes: station capacity; adds events | 2–3 days + manual lookup |
 | 3 | 7 zoning · 8 OLT | adds status and flags | 4–7 days |
-| 4 | 9 addresses | fewer duplicates | 1–2 days |
+| 4 | 9 address points (Peel live layer) | fewer duplicates, tree checks, dwelling type for permits | 1–2 days |
 
 Done when, for each item: the build script runs in *Probe data sources*, the JSON has a source and
 date, the app shows the source line wherever the figure appears, `npm test` covers the parser, and
