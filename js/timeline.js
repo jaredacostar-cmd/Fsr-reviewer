@@ -102,8 +102,14 @@
     const pad = `(${50 / (span + 1)}% - 8px)`;
     for (const el of [tFrom, tTo]) { el.style.left = `calc${pad}`; el.style.width = `calc(100% - 2 * ${pad})`; }
   }
-  tFrom.oninput = () => { if (+tFrom.value > +tTo.value) tTo.value = tFrom.value; setYears(+tFrom.value, +tTo.value); };
-  tTo.oninput = () => { if (+tTo.value < +tFrom.value) tFrom.value = tTo.value; setYears(+tFrom.value, +tTo.value); };
+  // A drag applies the years when it pauses or lets go: each step re-filters every development (a
+  // six-year drag froze the page for 7 s). The thumbs move at once; the keys and a release apply now.
+  let dragT = null;
+  const applyDrag = () => { clearTimeout(dragT); dragT = null; setYears(+tFrom.value, +tTo.value); };
+  const dragTo = () => { clearTimeout(dragT); dragT = setTimeout(applyDrag, 120); };
+  tFrom.oninput = () => { if (+tFrom.value > +tTo.value) tTo.value = tFrom.value; dragTo(); };
+  tTo.oninput = () => { if (+tTo.value < +tFrom.value) tFrom.value = tTo.value; dragTo(); };
+  tFrom.onchange = tTo.onchange = () => { if (dragT) applyDrag(); };
   $('#t-reset').onclick = () => { if (atDefaultYears()) setYears(App().state.yearMin, App().state.yearMax); else { setDefaultYears(); App().applyFilters(); } };
   $('#t-mode').onchange = e => { App().state.yearMode = e.target.value; const fm = $('#f-milestone'); if (fm) fm.value = App().state.yearMode; App().applyFilters(); };
   // Click a year bar to isolate it; shift-click to extend the range.

@@ -291,8 +291,11 @@
       if (el.dataset.g === 'wastewater' && el.dataset.k === 'infiltration') { App().state.iiBase = v; Sett().applyWet(); }
       else App().state.criteria[el.dataset.g][el.dataset.k] = v;
       Sett().saveCriteria();
-      Sett().refreshCriteria(el.dataset.g === 'm2PerJob' && v > 0);
-      if (el.dataset.g === 'wastewater' && el.dataset.k === 'infiltration') Sett().wetChanged();
+      // (the figures follow once the typing stops, or at once on Enter / leaving the field: each
+      // recount takes a second or two, and "300" typed key by key recounted for 3, 30 and 300)
+      critPending.jobs = critPending.jobs || (el.dataset.g === 'm2PerJob' && v > 0);
+      critPending.wet = critPending.wet || (el.dataset.g === 'wastewater' && el.dataset.k === 'infiltration');
+      clearTimeout(critPending.t); critPending.t = setTimeout(applyCrit, 350);
       // Update the row's modified marker without re-rendering (keeps focus in the input).
       const tr = el.closest('tr');
       if (tr) {
@@ -304,13 +307,22 @@
       }
       TB().renderTbScen(); syncScenCrit();
     });
+    mountEl.addEventListener('change', e => { if (e.target.dataset && e.target.dataset.g && critPending.t) applyCrit(); });
     mountEl.addEventListener('click', e => {
       if (!e.target.closest('[data-scen-crit-reset]')) return;
+      clearTimeout(critPending.t); critPending.t = null; critPending.jobs = critPending.wet = false;
       Sett().resetCriteriaToPeel();
       renderScenarioCriteria(mountEl);
       GUI().renderCriteria(); Sett().refreshCriteria(true);
       TB().renderTbScen(); syncScenCrit();
     });
+  }
+  const critPending = { t: null, jobs: false, wet: false };
+  function applyCrit() {
+    const { jobs, wet } = critPending;
+    clearTimeout(critPending.t); critPending.t = null; critPending.jobs = critPending.wet = false;
+    Sett().refreshCriteria(jobs);
+    if (wet) Sett().wetChanged();
   }
   window.renderScenarioCriteria = renderScenarioCriteria;
   // The scenario bar's one-line criteria note, kept in sync when the mount edits values.
