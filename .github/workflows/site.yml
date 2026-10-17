@@ -18,11 +18,17 @@ concurrency:
 
 jobs:
   snapshot:
-    if: github.event_name != 'push'
+    # Weekly data is committed to main only (a manual run from another branch does nothing).
+    if: github.event_name != 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
       contents: write
+    # Shared with the Probe data sources workflow, which commits data to the branch it runs on:
+    # one data commit at a time per branch.
+    concurrency:
+      group: data-commit-${{ github.ref_name }}
+      cancel-in-progress: false
     steps:
       - uses: actions/checkout@v4
 
@@ -74,7 +80,7 @@ jobs:
         run: |
           node scripts/build-capital.js --out data
           # Rebuilt data that fails its checks is not committed (the last good file stays).
-          node --test tests/capital-ea-ui.test.js > /tmp/cap-test.log 2>&1 || { grep -A30 '^not ok' /tmp/cap-test.log | head -80; git checkout -- data/capital.json; echo "::warning::capital.json rebuild failed its checks; kept the previous file"; }
+          node --test tests/capital-ea-ui.test.js > /tmp/cap-test.log 2>&1 || { grep -A30 '^not ok' /tmp/cap-test.log | head -80; git checkout -- data/capital.json data/capital-links-audit.json; echo "::warning::capital.json rebuild failed its checks; kept the previous file"; }
       - name: Environmental assessments
         continue-on-error: true
         timeout-minutes: 40
@@ -97,18 +103,19 @@ jobs:
         run: |
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/snapshot.json data/history.json data/areas.json data/council.json data/council-decisions.json data/fsr.json data/tree-counts.json data/capital.json data/capital-links-audit.json data/eas.json data/eas-review.csv data/address-points.json
+          git add data/snapshot.json data/history.json data/areas.json data/das.json data/das-2016.json data/council.json data/council-decisions.json data/fsr.json data/tree-counts.json data/capital.json data/capital-links-audit.json data/eas.json data/eas-review.csv data/address-points.json
           if git diff --cached --quiet; then
             echo "No changes."
           else
             git commit -m "Weekly data snapshot $(date -u +%Y-%m-%d)"
-            git push
+            bash scripts/push-data.sh
           fi
 
   deploy:
     needs: snapshot
-    # Deploy even if the snapshot was skipped (push) or failed (the site still works live).
-    if: always() && needs.snapshot.result != 'cancelled'
+    # Deploy even if the snapshot was skipped (push) or failed (the site still works live);
+    # only main is deployed.
+    if: always() && needs.snapshot.result != 'cancelled' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     permissions:
       contents: read
