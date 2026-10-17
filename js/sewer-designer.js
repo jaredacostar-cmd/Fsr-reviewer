@@ -118,7 +118,7 @@
   // The main line (pts, xs, ground) runs from the site to the connection; each branch ({ pts, xs,
   // ground, join: { to (the line it joins), x }, form }) runs from its own start to a point on the main line or an
   // earlier branch. drawing: 0 while the main line is drawn, k while branch k is.
-  const S = { pts: [], legs: [], roads: false, roadsUsed: false, conn: null, net: null, d: null, busy: false, msg: '', branches: [], drawing: 0, view: 0, form: { q: '', pop: '', jobs: '', ha: '', ici: false, avoid: false, spacing: 190, mode: 'gravity', vfd: false, ww: '' } };
+  const S = { pts: [], legs: [], roads: false, roadsUsed: false, findMode: false, corridor: null, cw: null, conn: null, net: null, d: null, busy: false, msg: '', branches: [], drawing: 0, view: 0, form: { q: '', pop: '', jobs: '', ha: '', ici: false, avoid: false, spacing: 190, mode: 'gravity', vfd: false, ww: '' } };
   const cur = () => (S.drawing ? S.branches[S.drawing - 1].pts : S.pts);
   const curRun = () => (S.drawing ? S.branches[S.drawing - 1] : S);
   const narrow = () => !!(root.PeelDataTab && root.PeelDataTab.shellNarrow && root.PeelDataTab.shellNarrow());
@@ -184,12 +184,29 @@
     } catch (e) { run.pts.push(ll); run.legs.push(1); S.msg = 'The road network did not answer: drawn straight'; }
     finally { S.busy = false; drawLine(); banner(); }
   }
+  // Find a route (js/corridor-finder.js): from the start to the tapped end, along the roads, around the
+  // constraint layers where it can and not climbing where it can help it; then Finish snaps the end
+  // to the sewer as usual. Find again re-runs it with other weights.
+  async function findRoute(a, b) {
+    const C = root.PeelCorridorFinder; if (!C || S.busy) return;
+    S.findMode = false; S.busy = 'find'; S.msg = ''; banner();
+    let res = null;
+    try { res = await C.find(a, b, S.cw || C.WEIGHTS); } catch (e) { res = null; }
+    S.busy = false;
+    if (!res) { S.msg = 'No way along the roads between these points (or the road network did not answer): draw the route instead'; banner(); drawLine(); return; }
+    const pts = res.pts.filter((p, i) => i || metres(p, a) > 1);
+    S.pts = [a, ...pts]; S.legs = [1, pts.length]; S.roadsUsed = true; S.corridor = { a, b, res };
+    S.conn = null; reset(); S.branches = [];
+    drawLine(); banner();
+    await finish();
+  }
   const bannerHTML = () => {
-    if (S.busy) return `<strong>Sewer designer</strong> <span class="muted">${S.busy === 'roads' ? 'Following the roads…' : 'Reading the sewer and the ground…'}</span>`;
+    if (S.busy) return `<strong>Sewer designer</strong> <span class="muted">${S.busy === 'roads' ? 'Following the roads…' : S.busy === 'find' ? 'Finding a route: the roads, the constraint layers and the ground…' : 'Reading the sewer and the ground…'}</span>`;
+    if (S.findMode) return '<strong>Sewer designer</strong> <span class="muted">Find a route: tap the end, next to the existing sewer</span> <span class="tb-acts"><button type="button" class="btn small link" data-ptool-act="sd-find">Cancel</button></span>';
     const P = cur(), br = S.drawing, len = P.length >= 2 ? fmtNum(Math.round(chainage(P).pop())) : 0;
     const text = S.msg ? esc(S.msg) : br ? (P.length < 2 ? `Branch ${br + 1}: tap from its start to the sewer you drew; the last tap joins it` : `Branch ${br + 1} · ${P.length} points · ${len} m · Finish joins it to the sewer you drew`)
       : P.length < 2 ? 'Tap from the site to an existing sanitary sewer; the last tap snaps to it' : `${P.length} points · ${len} m · Finish snaps the end to the sewer`;
-    return `<strong>Sewer designer</strong> <span class="muted">${text}</span> <span class="tb-acts"><button type="button" class="btn small${S.roads ? ' on' : ''}" data-ptool-act="sd-roads" aria-pressed="${S.roads}" title="Each tap follows the road centrelines (Ontario Road Network) from the last point">Follow roads${S.roads ? ': on' : ''}</button>${P.length ? '<button type="button" class="btn small" data-ptool-act="sd-undo">Undo</button>' : ''}${P.length >= 2 ? '<button type="button" class="btn small primary" data-ptool-act="sd-finish">Finish</button>' : ''}${br ? '<button type="button" class="btn small link" data-ptool-act="sd-cancel">Cancel the branch</button>' : P.length ? '<button type="button" class="btn small link" data-ptool-act="sd-clear">Clear</button>' : ''}</span>`;
+    return `<strong>Sewer designer</strong> <span class="muted">${text}</span> <span class="tb-acts"><button type="button" class="btn small${S.roads ? ' on' : ''}" data-ptool-act="sd-roads" aria-pressed="${S.roads}" title="Each tap follows the road centrelines (Ontario Road Network) from the last point">Follow roads${S.roads ? ': on' : ''}</button>${!br && P.length === 1 && root.PeelCorridorFinder ? '<button type="button" class="btn small" data-ptool-act="sd-find" title="The way along the roads that keeps out of the constraint layers where it can and keeps the sewer from climbing">Find a route</button>' : ''}${P.length ? '<button type="button" class="btn small" data-ptool-act="sd-undo">Undo</button>' : ''}${P.length >= 2 ? '<button type="button" class="btn small primary" data-ptool-act="sd-finish">Finish</button>' : ''}${br ? '<button type="button" class="btn small link" data-ptool-act="sd-cancel">Cancel the branch</button>' : P.length ? '<button type="button" class="btn small link" data-ptool-act="sd-clear">Clear</button>' : ''}</span>`;
   };
   const banner = () => { if (T().active() === 'sewer') T().banner(bannerHTML()); };
 
@@ -420,6 +437,18 @@
       <p><button type="button" class="btn small primary" data-sd-act="design">Design</button> <button type="button" class="btn small" data-sd-act="edit">Edit the route</button> <button type="button" class="btn small link" data-sd-act="clear">Clear</button></p>
       ${S.formMsg ? `<p class="small t-tight">${esc(S.formMsg)}</p>` : ''}</form>`;
   }
+  function corridorHTML() {
+    const C = root.PeelCorridorFinder, K = S.corridor, r = K.res, s2 = r.sum, W = S.cw || C.WEIGHTS, v = k => esc(W[k]);
+    const ins = Object.entries(C.KINDS).filter(([k]) => s2.in[k] > 1).map(([k, d]) => `${fmtNum(Math.round(s2.in[k]))} m in ${esc(d.label)}`);
+    const plain = r.plain ? ` The shortest way along the roads is ${fmtNum(Math.round(r.plain.L))} m${r.plain.L < r.L - 1 ? `${r.plain.sum.water.length > s2.water.length ? `, crossing ${r.plain.sum.water.length} watercourse${r.plain.sum.water.length === 1 ? '' : 's'}` : ''}${Object.keys(C.KINDS).some(k => r.plain.sum.in[k] > s2.in[k] + 1) ? ', through more of the constraint areas' : ''}${r.plain.sum.up > s2.up + 0.1 ? `, climbing ${fmt1(r.plain.sum.up)} m` : ''}` : ' (this one)'}.` : '';
+    const field = (k, t, unit) => `<label class="field"><span class="label">${t}</span><input type="number" min="0" step="1" data-sc="${k}" value="${v(k)}"><span class="muted small">${unit}</span></label>`;
+    return `<div class="sd-corr"><p class="small"><strong>Route found</strong> along the roads: <strong>${fmtNum(Math.round(r.L))} m</strong> (a straight line is ${fmtNum(Math.round(r.straight))} m).${plain}
+      ${ins.length ? ` It runs ${ins.join(', ')}.` : ' It keeps out of the constraint areas.'}
+      ${s2.water.length ? ` It crosses ${s2.water.map(n => esc(n || 'a watercourse')).join(', ')}: each crossing needs the conservation authority's permit and 2.0 m from the bed to the top of the pipe (s. 3.4.2.2).` : ' It crosses no mapped watercourse.'}
+      ${s2.up > 0.1 ? ` It climbs ${fmt1(s2.up)} m in the direction of flow.` : ''}${r.missing ? ' Some constraint layers did not load: they are not counted.' : ''}</p>
+      <details class="sd-cw"><summary class="small">Route weights (the tool's, not Peel's)</summary><div class="sd-row">${field('flood', 'Floodplain', '× per m inside')}${field('natural', 'Wetland / ANSI', '× per m')}${field('reg', 'Regulation limit', '× per m')}${field('nhs', 'Natural Heritage System', '× per m')}${field('plan', 'Provincial plan area', '× per m')}${field('water', 'Watercourse crossing', 'm each')}${field('up', 'Climb in the flow direction', 'm per m')}</div>
+      <p class="small muted">A road's cost is its length, plus that many extra metres for each metre inside an area, each crossing, and each metre the ground rises in the direction of flow. Screening layers only: the owners confirm.</p><p><button type="button" class="btn small" data-sd-act="refind">Find again</button></p></details></div>`;
+  }
   function resultHTML() {
     const c = S.conn, Lt = S.xs ? S.xs[S.xs.length - 1] : 0, bs = done();
     const head = `<p class="small">From the drawn start to the <strong>${fmtNum(c.dmm)} mm sanitary sewer${c.id ? ` ${esc(c.id)}` : ''}</strong> (invert ${fmt2(c.invert)} m; ${c.existingMH ? 'its existing maintenance hole' : 'a new maintenance hole on the pipe'}) · <strong>${fmtNum(Math.round(Lt))} m</strong> along the drawn route${bs.length ? ` and ${bs.length} branch${bs.length === 1 ? '' : 'es'} (${fmtNum(Math.round(bs.reduce((t, b) => t + b.xs[b.xs.length - 1], 0)))} m)` : ''} · ground ${fmt1(Math.max(...S.ground.map(s => s.g)))}–${fmt1(Math.min(...S.ground.map(s => s.g)))} m.</p>`;
@@ -428,7 +457,7 @@
     else if (S.d && S.d.ok) body = designHTML(S.d);
     else if (S.d) body = `<p><span class="pnl-chip t-over">No gravity design</span> ${esc(S.d.why)}.</p>${bs.length ? '' : '<p><button type="button" class="btn small" data-sd-act="pumped">Try a pumped option</button></p>'}${profileSVG(null)}`;
     else body = profileSVG(null);
-    return `<div class="sd-res">${head}${formHTML()}${body}<p class="small muted">A preliminary design for screening: the route as drawn${S.roadsUsed ? ` (along the road centrelines where it follows them: ${esc(root.PeelRoadNet ? root.PeelRoadNet.SOURCE : 'Ontario Road Network')}, so the cover there is from the centreline, as s. 3.4.1.1 measures it)` : ''}, the ground from ${esc(S.groundLabel || 'the terrain model')} (not a survey), the existing sewer as the Region publishes it. Rules: ${esc(S.fm ? FM().SOURCE : SW().SOURCE)}. Utilities, other services, soils and groundwater are not considered.</p><p class="pnl-note small">${NOTE()}</p></div>`;
+    return `<div class="sd-res">${head}${S.corridor && root.PeelCorridorFinder ? corridorHTML() : ''}${formHTML()}${body}<p class="small muted">A preliminary design for screening: the route as drawn${S.roadsUsed ? ` (along the road centrelines where it follows them: ${esc(root.PeelRoadNet ? root.PeelRoadNet.SOURCE : 'Ontario Road Network')}, so the cover there is from the centreline, as s. 3.4.1.1 measures it)` : ''}, the ground from ${esc(S.groundLabel || 'the terrain model')} (not a survey), the existing sewer as the Region publishes it. Rules: ${esc(S.fm ? FM().SOURCE : SW().SOURCE)}. Utilities, other services, soils and groundwater are not considered.</p><p class="pnl-note small">${NOTE()}</p></div>`;
   }
   function designHTML(d) {
     const deepest = Math.max(...d.mhs.map(m => m.depth)), s = d.reaches.map(r => r.S * 100), sizes = [...new Set(d.reaches.map(r => r.dmm))].sort((a, b) => a - b), nRuns = runs().length;
@@ -565,16 +594,17 @@
       source: SW().SOURCE, note: Ut.SCREEN_LINE || 'General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results.',
     });
   }
-  function clearAll() { xSeq++; S.xings = null; S.legs = []; S.roadsUsed = false; S.pts = []; S.conn = null; S.net = null; S.d = null; S.fm = null; S.msg = ''; S.branches = []; S.drawing = 0; S.view = 0; if (layer) layer.clearLayers(); }
+  function clearAll() { xSeq++; S.xings = null; S.legs = []; S.roadsUsed = false; S.findMode = false; S.corridor = null; S.pts = []; S.conn = null; S.net = null; S.d = null; S.fm = null; S.msg = ''; S.branches = []; S.drawing = 0; S.view = 0; if (layer) layer.clearLayers(); }
   const reset = () => { S.d = null; S.fm = null; S.net = null; S.xings = null; S.xingsErr = ''; S.xingsBusy = false; xSeq++; };
 
   // The form and its buttons (in the result panel).
   const setField = i => {
+    if (i.dataset.sc != null) { S.cw = { ...(S.cw || root.PeelCorridorFinder.WEIGHTS), [i.dataset.sc]: Math.max(0, +i.value || 0) }; return; }
     if (i.dataset.sb != null) { const b = S.branches[+i.dataset.sb]; if (b) b.form[i.dataset.sbK] = i.value; return; }
     S.form[i.dataset.sd] = i.type === 'checkbox' ? i.checked : i.value;
   };
-  document.addEventListener('input', e => { const i = e.target.closest && e.target.closest('[data-sd], [data-sb]'); if (i) setField(i); });
-  document.addEventListener('change', e => { const i = e.target.closest && e.target.closest('[data-sd], [data-sb]'); if (!i) return; setField(i); if (i.dataset.sd === 'mode') { reset(); openResult(); drawLine(); } });
+  document.addEventListener('input', e => { const i = e.target.closest && e.target.closest('[data-sd], [data-sb], [data-sc]'); if (i) setField(i); });
+  document.addEventListener('change', e => { const i = e.target.closest && e.target.closest('[data-sd], [data-sb], [data-sc]'); if (!i) return; setField(i); if (i.dataset.sd === 'mode') { reset(); openResult(); drawLine(); } });
   document.addEventListener('click', e => {
     const vb = e.target.closest && e.target.closest('[data-sd-view]');
     if (vb) { S.view = +vb.dataset.sdView; openResult(); return; }
@@ -585,6 +615,7 @@
     else if (act === 'print') printSheet();
     else if (act === 'pumped') { S.form.mode = 'pumped'; run(); }
     else if (act === 'fm-csv') downloadFmCSV();
+    else if (act === 'refind' && S.corridor) findRoute(S.corridor.a, S.corridor.b);
     else if (act === 'branch') {
       // Draw a branch: the tool on again, without losing the main line.
       reset(); S.branches.push({ pts: [], legs: [], form: { q: '', pop: '', jobs: '', ha: '' }, done: false }); S.drawing = S.branches.length; S.keep = true;
@@ -597,7 +628,7 @@
       // (and the branches that join it)
       let grew = true; while (grew) { grew = false; S.branches.forEach((x, j) => { const parent = x.join ? S.branches.indexOf(x.join.to) : -1; if (!rmd.has(j) && rmd.has(parent)) { rmd.add(j); grew = true; } }); }
       S.branches = S.branches.filter((_, j) => !rmd.has(j)); reset(); openResult(); drawLine();
-    } else if (act === 'edit') { reset(); S.conn = null; S.branches = []; S.drawing = 0; if (T().active() !== 'sewer' && A && A.setTool) A.setTool('sewer'); drawLine(); banner(); }
+    } else if (act === 'edit') { reset(); S.conn = null; S.branches = []; S.drawing = 0; S.corridor = null; if (T().active() !== 'sewer' && A && A.setTool) A.setTool('sewer'); drawLine(); banner(); }
     else if (act === 'clear') { clearAll(); T().closeResult(); }
   });
   document.addEventListener('peel:tool-closed', () => { if (T().active() !== 'sewer') { if (S.drawing) { S.branches.splice(S.drawing - 1, 1); S.drawing = 0; } if (!(T().hasResult() && T().resultTitle() === 'Sewer design')) clearAll(); } });
@@ -610,12 +641,14 @@
     onDeactivate() { if (S.drawing) { S.branches.splice(S.drawing - 1, 1); S.drawing = 0; } if (!(T().hasResult() && T().resultTitle() === 'Sewer design')) clearAll(); },
     onClick(ll) {
       if (S.busy) return;
-      if (!S.drawing && S.conn) { S.conn = null; reset(); S.branches = []; S.pts = []; S.legs = []; S.roadsUsed = false; }
+      if (S.findMode) { findRoute(S.pts[0], { lat: ll.lat, lng: ll.lng }); return; }
+      if (!S.drawing && S.conn) { S.conn = null; reset(); S.branches = []; S.pts = []; S.legs = []; S.roadsUsed = false; S.corridor = null; }
       addPoint({ lat: ll.lat, lng: ll.lng });
     },
     onBannerAct(act) {
       if (act === 'sd-undo') { const run = curRun(), n = (run.legs && run.legs.pop()) || 1; for (let k = 0; k < n; k++) run.pts.pop(); if (!S.drawing) { S.conn = null; S.branches = []; } reset(); drawLine(); banner(); }
       if (act === 'sd-roads') { S.roads = !S.roads; S.msg = ''; banner(); }
+      if (act === 'sd-find') { S.findMode = !S.findMode; S.msg = ''; banner(); }
       if (act === 'sd-clear') { clearAll(); banner(); }
       if (act === 'sd-cancel') { S.branches.splice(S.drawing - 1, 1); S.drawing = 0; S.msg = ''; drawLine(); banner(); if (S.conn) openResult(); }
       if (act === 'sd-finish') { if (S.drawing) finishBranch(); else finish(); }

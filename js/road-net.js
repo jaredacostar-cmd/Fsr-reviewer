@@ -59,17 +59,18 @@
     return rev ? out.reverse() : out;
   }
   /** The shortest way along the roads from point a to point b (both snapped onto the nearest road):
-   * { pts: [[x, y]…], L, off: [m off the road at a, at b] }, or null when they don't connect. weight
-   * (optional) scales an edge's length (the corridor finder's costs). */
+   * { pts: [[x, y]…], L, off: [m off the road at a, at b], edges: [{ e, forward, frac }] }, or null
+   * when they don't connect. weight(edge, forward) (optional) scales an edge's length, by the
+   * direction it is run in (the corridor finder's costs: forward is a → b as the edge is stored). */
   function route(G, a, b, weight) {
     const sa = snap(G, a), sb = snap(G, b); if (!sa || !sb) return null;
-    const W = e => (weight ? weight(G.edges[e]) : 1);
-    if (sa.e === sb.e) { const pts = cut(G.edges[sa.e].pts, sa.along, sb.along); return { pts, L: len(pts), off: [sa.m, sb.m] }; }
+    const W = (e, fwd) => (weight ? weight(G.edges[e], fwd) : 1);
+    if (sa.e === sb.e) { const pts = cut(G.edges[sa.e].pts, sa.along, sb.along), L0 = G.edges[sa.e].L || 1; return { pts, L: len(pts), off: [sa.m, sb.m], edges: [{ e: sa.e, forward: sb.along >= sa.along, frac: Math.abs(sb.along - sa.along) / L0 }] }; }
     // Dijkstra from a's two ends of its edge to b's two ends.
     const ea = G.edges[sa.e], eb = G.edges[sb.e], dist0 = new Map(), prev = new Map(), done = new Set();
-    const start = [[ea.a, sa.along * W(sa.e)], [ea.b, (ea.L - sa.along) * W(sa.e)]];
+    const start = [[ea.a, sa.along * W(sa.e, false)], [ea.b, (ea.L - sa.along) * W(sa.e, true)]];
     for (const [id, c] of start) if (!dist0.has(id) || c < dist0.get(id)) { dist0.set(id, c); prev.set(id, { from: 'A' }); }
-    const goal = new Map([[eb.a, sb.along * W(sb.e)], [eb.b, (eb.L - sb.along) * W(sb.e)]]);
+    const goal = new Map([[eb.a, sb.along * W(sb.e, true)], [eb.b, (eb.L - sb.along) * W(sb.e, false)]]);
     let best = null;
     while (true) {
       let u = null, du = Infinity;
@@ -78,7 +79,7 @@
       done.add(u);
       if (goal.has(u) && (!best || du + goal.get(u) < best.c)) best = { c: du + goal.get(u), end: u };
       for (const o of G.nodes.get(u).out) {
-        const c = du + o.L * W(o.e);
+        const c = du + o.L * W(o.e, G.edges[o.e].a === u);
         if (!dist0.has(o.to) || c < dist0.get(o.to) - 1e-9) { dist0.set(o.to, c); prev.set(o.to, { from: u, e: o.e }); }
       }
     }
@@ -86,12 +87,12 @@
     // Back from b's end to a's: the edges in between, then the partial edges at each end.
     const chain = []; let n = best.end;
     while (prev.get(n).from !== 'A') { const pv = prev.get(n); chain.unshift({ e: pv.e, from: pv.from, to: n }); n = pv.from; }
-    const first = n, pts = [];
+    const first = n, pts = [], edges = [];
     const add = seg => { for (const p of seg) if (!pts.length || dist(pts[pts.length - 1], p) > 1e-6) pts.push(p); };
-    add(cut(ea.pts, sa.along, first === ea.a ? 0 : ea.L));
-    for (const c of chain) { const ed = G.edges[c.e]; add(c.from === ed.a ? ed.pts : ed.pts.slice().reverse()); }
-    add(cut(eb.pts, best.end === eb.a ? 0 : eb.L, sb.along));
-    return { pts, L: len(pts), off: [sa.m, sb.m] };
+    add(cut(ea.pts, sa.along, first === ea.a ? 0 : ea.L)); edges.push({ e: sa.e, forward: first !== ea.a, frac: (first === ea.a ? sa.along : ea.L - sa.along) / (ea.L || 1) });
+    for (const c of chain) { const ed = G.edges[c.e], fwd = c.from === ed.a; add(fwd ? ed.pts : ed.pts.slice().reverse()); edges.push({ e: c.e, forward: fwd, frac: 1 }); }
+    add(cut(eb.pts, best.end === eb.a ? 0 : eb.L, sb.along)); edges.push({ e: sb.e, forward: best.end === eb.a, frac: (best.end === eb.a ? sb.along : eb.L - sb.along) / (eb.L || 1) });
+    return { pts, L: len(pts), off: [sa.m, sb.m], edges: edges.filter(x => x.frac > 1e-9), cost: best.c };
   }
   /** Douglas-Peucker: the fewest straight runs within tol of the line (the runs between
    * maintenance holes, on a curved road). */
