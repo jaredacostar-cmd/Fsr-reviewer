@@ -228,6 +228,14 @@
   // Work for views out of sight: run when the main thread is free, one view per task (the page paints
   // and answers clicks in between), or at once when something reads them (flushLater: PeelPanel.get,
   // an export, opening the view). A later call with the same key replaces the waiting one.
+  // One CSV cell: quoted when it holds a quote, comma or line break (CR too), or always (always =
+  // true). Text from the sources that starts with = + - @, a tab or a CR gets a leading ' so a
+  // spreadsheet shows it rather than running it as a formula (numbers, "-12" included, are left alone).
+  function csvCell(v, always) {
+    let s = v == null ? '' : String(v);
+    if (typeof v === 'string' && /^[=+\-@\t\r]/.test(s) && !/^[-+]?\d+(\.\d+)?$/.test(s)) s = `'${s}`;
+    return always || /[",\r\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  }
   // A number per object, for cache keys that must change when the object is replaced (the
   // developments after a rebuild, the test sites after an edit) even when the count stays the same.
   const ids = new WeakMap(); let idN = 0;
@@ -246,7 +254,7 @@
   function flushLater() { while (LATER.size) runOne(); }
   const cancelLater = key => LATER.delete(key);
   const api = {
-    hoverCard, toast, later, flushLater, cancelLater, laterPending: () => LATER.size, idOf,
+    hoverCard, toast, later, flushLater, cancelLater, laterPending: () => LATER.size, idOf, csvCell,
     $, esc, fmtNum, fmtDate, dayText, sig3, skel, estTag, store,
     token, dot, readColors, phaseColor, glyphColor,
     get colors() { return colors; },

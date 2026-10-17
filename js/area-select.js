@@ -417,7 +417,7 @@
   function exportSelectionCSV() {
     const rows = Ex().exportRows([...selection.values()]); if (!rows.length) return;
     const cols = Object.keys(rows[0]);
-    const cell = v => /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
+    const cell = v => window.PeelUtil.csvCell(v);
     Ex().download('peel-selection.csv', CSV_DISCLAIMER + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
   }
   // The selection actions, in the selection scope (right panel) and on the Study area page.

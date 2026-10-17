@@ -434,7 +434,7 @@
     const list = oldList(); if (!list) return;
     const runs = pipeRuns(list, MM().SEW.data), Ex = root.PeelExports, WP = root.PeelWsPages;
     const cols = ['diameter_mm', 'material', 'install_year', 'age_years', 'risk', 'units_at_buildout', 'segments', 'length_m', 'plant', 'likelihood_band', 'consequence_band'];
-    const cell = v => (/[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v));
+    const cell = v => root.PeelUtil.csvCell(v);
     const rows = runs.map(r => [r.d, r.mat, r.year || '', r.age == null ? '' : r.age, r.risk, Math.round(r.units), r.n, Math.round(r.lengthM), r.plant || '', WP ? WP.likeOf(r) : '', WP ? WP.consOf(r) : ''].map(cell).join(','));
     if (Ex && Ex.download) Ex.download('peel-old-pipes.csv', (U.CSV_DISCLAIMER || '') + [cols.join(','), ...rows].join('\n'), 'text/csv');
   }

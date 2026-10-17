@@ -239,7 +239,7 @@
   function downloadCSV() {
     const rows = csvRows(compute()); if (!rows.length) return;
     const cols = Object.keys(rows[0]);
-    const cell = v => /[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v);
+    const cell = v => root.PeelUtil.csvCell(v);
     root.PeelExports.download('peel-by-plan.csv', CSV_DISCLAIMER + `# Basis: ${BASIS[DU().demandBasis()] || 'all units'}; grouping: ${App().state.treeGrouped ? 'tree' : 'previous'}\n` + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
   }
   // Workbook sheet "By plan": the same rows.

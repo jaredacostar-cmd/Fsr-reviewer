@@ -55,7 +55,7 @@
     const b = e.target.closest('[data-ap]');
     if (b) { const [i, j] = b.dataset.ap.split('|').map(Number); DevTab().focusProject((App().state.audit.shown || App().state.audit.possible)[i].projects[j]); return; }
     if (e.target.closest('#audit-csv')) {
-      const cell = v => /[",\n]/.test(String(v ?? '')) ? `"${String(v).replace(/"/g, '""')}"` : String(v ?? '');
+      const cell = v => window.PeelUtil.csvCell(v);
       const { cols, rows } = DD().recordAuditRows();
       Ex().download('peel-duplicate-audit.csv', CSV_DISCLAIMER + [cols.join(','), ...rows.map(r => r.map(cell).join(','))].join('\n'), 'text/csv');
     }

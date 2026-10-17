@@ -153,7 +153,7 @@
   $('#alloc-body').addEventListener('click', e => {
     if (e.target.closest('[data-alloc-all]')) { allocSeeAll = !allocSeeAll; renderAlloc(); return; }
     if (e.target.closest('[data-alloc-csv]')) {
-      const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+      const q = v => root.PeelUtil.csvCell(v, true);
       const lines = [['key', 'development', 'units', 'date', 'reference', 'plant', 'status'], ...allocRows().map(r => [r.key, r.p ? r.p.title : '', r.a.units, r.a.date || '', r.a.ref || '', SV().PLANT_SHORT[r.pl] || '', r.lay])];
       EX().download(`peel-servicing-allocations-${new Date().toISOString().slice(0, 10)}.csv`, root.PeelUtil.CSV_DISCLAIMER + lines.map(l => l.map(q).join(',')).join('\n'), 'text/csv');
     }
