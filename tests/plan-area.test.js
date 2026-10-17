@@ -12,8 +12,8 @@ test('secondary plans carry their mapped area; Brampton plans their published si
   assert.ok(b.some(p => p.appeals), 'an appeal is carried');
 });
 
-test('ringsHa: a 0.01° square near Brampton is about 80 ha', () => {
+test('ringsHa: a 0.01° square near Brampton is about 90 ha (805 m × 1,113 m)', () => {
   const r = [[[-79.76, 43.7], [-79.75, 43.7], [-79.75, 43.71], [-79.76, 43.71], [-79.76, 43.7]]];
   const ha = ringsHa(r);
-  assert.ok(ha > 78 && ha < 83, String(ha));
+  assert.ok(ha > 88 && ha < 91, String(ha));
 });
