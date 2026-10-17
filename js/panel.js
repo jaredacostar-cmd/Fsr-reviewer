@@ -53,7 +53,7 @@
     const out = [];
     out.push(`<header class="pnl-head" data-sec="header">
       <div class="pnl-head-top">${trail ? `<nav class="pnl-trail" aria-label="Scope">${trail}</nav>` : ''}${h.close ? `<button type="button" class="btn small pnl-x"${attrs(h.close)} aria-label="Close">×</button>` : ''}</div>
-      <div class="pnl-title"><h2 class="pnl-name">${esc(h.name || '')}</h2>${chip(h.status)}</div>
+      <div class="pnl-title"><h2 class="pnl-name">${esc(h.name || '')}</h2>${chip(h.status)}${h.badge || ''}</div>
       ${h.identity ? `<p class="pnl-id small muted">${h.identity}</p>` : ''}${h.extra || ''}
     </header>`);
     if (s.calc || s.scenario || calcIn(s)) out.push(`<div class="pnl-scen" data-sec="scenario">${s.scenario || scenarioChip()}</div>`);
@@ -118,7 +118,9 @@
       // One status line: the development's phase, with its zoning approval where that came first (the
       // site bar no longer shows a second, contradicting chip).
       status: { tone: 'stage', text: `${PH && PH.PHASE_BY_KEY[p.phase] ? PH.PHASE_BY_KEY[p.phase].label : p.phase}${p.zoningApproved && PH && PH.PHASE_BY_KEY.approved && p.rank < PH.PHASE_BY_KEY.approved.rank ? ' · zoning approved' : ''}${p.smallSite ? ' · no site plan needed' : ''}` },
-      identity: [ls && ls.ref ? `<strong class="pnl-file">${esc(ls.ref)}</strong>` : '', types ? esc(types) : '', ls && ls.date ? `latest submission ${esc(day(ls.date))}` : ''].filter(Boolean).join(' · ') || esc(p.municipality) };
+      identity: [ls && ls.ref ? `<strong class="pnl-file">${esc(ls.ref)}</strong>` : '', types ? esc(types) : '', ls && ls.date ? `latest submission ${esc(day(ls.date))}` : ''].filter(Boolean).join(' · ') || esc(p.municipality),
+      // Beside the stage, what the latest aerial photo shows; pressed, the check opens under the header.
+      ...(root.PeelAerialChip ? { badge: root.PeelAerialChip.chipHTML(p), extra: root.PeelAerialChip.boxHTML(p) } : {}) };
   }
   // ---- Panels in the right-hand column ---------------------------------------------------------
   // Each tab has one panel slot (#pnl-<tab>, above its sub-views' panes). A renderer hands over the

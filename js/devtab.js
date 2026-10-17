@@ -654,12 +654,24 @@
     const canvases = [a.before && a.before.canvas, a.latest.canvas].filter(Boolean);
     canvases.forEach((c, i) => slots[i] && slots[i].appendChild(c));
   }
+  // One aerial check per development, shared by the Site view and the header's aerial chip
+  // (js/aerial-chip.js): the promise is kept, so the photos are fetched once.
+  const aerialRuns = new Map();
+  const aerialAvailable = p => { const cfg = CFG(); return !!(Aerial() && cfg && cfg.imagery && cfg.imagery[p.municipality] && p.lat != null); };
+  function aerialRun(p) {
+    if (!p || !aerialAvailable(p)) return null;
+    if (!aerialRuns.has(p.key)) {
+      const run = Aerial().check(p, CFG(), { phaseLabel: P().PHASE_BY_KEY[p.phase].label }).then(r => { aerialCache.set(p.key, r); return r; });
+      run.catch(() => {});
+      aerialRuns.set(p.key, run);
+    }
+    return aerialRuns.get(p.key);
+  }
   function devAerial(p) {
     if (!hasDOM()) return;
     const box = byIdShown('devtab-aerial');
     if (!box) return;
-    const Ae = Aerial(), cfg = CFG();
-    if (!Ae || !cfg || !cfg.imagery || !cfg.imagery[p.municipality] || p.lat == null) {
+    if (!aerialAvailable(p)) {
       box.innerHTML = '<p class="small muted">No aerial imagery is set up for this location.</p>';
       return;
     }
@@ -667,8 +679,8 @@
     const show = r => { if (liveKey === key) { const b = byIdShown('devtab-aerial'); if (b) renderAerialInto(b, r); } };
     if (aerialCache.has(key)) { show(aerialCache.get(key)); return; }
     box.innerHTML = '<p class="small muted">Comparing aerial photos…</p>';
-    Ae.check(p, cfg, { phaseLabel: P().PHASE_BY_KEY[p.phase].label })
-      .then(r => { aerialCache.set(key, r); show(r); })
+    aerialRun(p)
+      .then(show)
       .catch(e => { if (liveKey === key) { const b = byIdShown('devtab-aerial'); if (b) b.innerHTML = `<p class="small muted">Aerial check unavailable: ${esc(e.message)}.</p>`; } });
   }
 
@@ -1067,7 +1079,7 @@
     if (parts.includes('ground') && p.lat != null) { devAerial(p); fillGround(p); }
   }
   // ---- Public contract ------------------------------------------------------------------
-  const api = { render, setSub, partHTML, fillParts };
+  const api = { render, setSub, partHTML, fillParts, aerialRun, aerialAvailable, renderAerialInto };
   if (typeof module !== 'undefined' && module.exports) module.exports = { ...api, currentSub, recGroup, REC_GROUPS, groupRecords, statusOf, phaseBasis, scopeProjectForTest: () => scopeProject() };
   else root.DevTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);
