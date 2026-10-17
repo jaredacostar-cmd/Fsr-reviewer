@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-15T14:42:11.837Z",
+ "generatedAt": "2026-10-17T05:33:25.629Z",
  "name": "North Brampton pilot",
  "bbox": [
   -79.83,
@@ -7,7 +7,7 @@
   -79.76,
   43.74
  ],
- "note": "Indicative 3D context for the pilot box only; outside it the 3D view uses the terrain tiles and shows no buildings. Rebuilt by scripts/build-3d-tiles.js (Probe data sources, mode=tiles-3d).",
+ "note": "Indicative 3D context. Lidar terrain in the pilot box (elsewhere the 3D view uses the terrain tiles); OpenStreetMap buildings across the Region of Peel. Rebuilt by scripts/build-3d-tiles.js (Probe data sources, mode=tiles-3d).",
  "terrain": {
   "file": "lidar-pilot.pmtiles",
   "encoding": "terrarium",
@@ -30,22 +30,29 @@
   "bytes": 8046546
  },
  "buildings": {
-  "file": "buildings-pilot.pmtiles",
+  "file": "buildings-peel.pmtiles",
+  "area": "Region of Peel",
+  "bbox": [
+   -80.16,
+   43.47,
+   -79.48,
+   44
+  ],
   "layer": "buildings",
-  "minzoom": 13,
+  "minzoom": 14,
   "maxzoom": 16,
-  "tiles": 231,
-  "count": 19001,
-  "parts": 0,
-  "outlinesDrawnByParts": 0,
+  "tiles": 5622,
+  "count": 196225,
+  "parts": 436,
+  "outlinesDrawnByParts": 132,
   "byBasis": {
-   "height": 0,
-   "levels": 55,
-   "default": 18946
+   "height": 37,
+   "levels": 6996,
+   "default": 189192
   },
-  "osmTimestamp": "2026-10-15T14:36:11Z",
+  "osmTimestamp": "2026-10-17T06:27:06Z",
   "heightRule": "height tag → building:levels × 3.2 m → 2 storeys (estimated)",
   "attribution": "© OpenStreetMap contributors, ODbL",
-  "bytes": 1613744
+  "bytes": 13455422
  }
 }
