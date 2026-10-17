@@ -1,7 +1,7 @@
 (function (root) {
   'use strict';
   // Reference rewrites per SPLIT_MAP.md §0 rule 4.
-  const { $, esc, dot } = window.PeelUtil;
+  const { $, esc, dot, fmtNum } = window.PeelUtil;
   const P = window.PeelPhases;
   const CFG = window.PEEL_CONFIG;
   const map = window.PeelMapCore.map;
@@ -46,8 +46,9 @@
     togglePhase(b.dataset.phase, e.ctrlKey || e.metaKey);
   };
 
-  let searchTimer;
-  $('#f-search').oninput = e => { clearTimeout(searchTimer); searchTimer = setTimeout(() => { App().state.search = e.target.value.trim().toLowerCase(); App().applyFilters(); }, 200); };
+  // Typing finds; it no longer filters the whole app. The list is filtered by the text only when you
+  // choose "Filter the list by …" (the last suggestion), which shows as a filter chip.
+  const filterBy = q => { App().state.search = String(q || '').trim().toLowerCase(); $('#f-search').value = ''; App().applyFilters(); };
   // Address search: as you type, developments whose address matches and street addresses from a
   // geocoder (Esri World Geocoder, else OpenStreetMap Nominatim), limited to Peel; picking one pans
   // and zooms the map there (a development also opens). Enter takes the first suggestion.
@@ -72,9 +73,24 @@
     geoCache.set(q, out);
     return out;
   }
+  // What tells two developments at the same address apart: units, the main file number, the plan.
+  function devLine(p, ql) {
+    const ML = window.PeelMapLabels, ls = ML && ML.latestSub ? ML.latestSub(p) : null;
+    const hit = ql && p.records.find(r => r.ref && r.ref.toLowerCase().startsWith(ql));
+    const ref = (hit && hit.ref) || (ls && ls.ref) || '';
+    const A = App().state.areas, sp = A && (p.sp || []).length ? (A.secondaryPlans.find(a => a.id === p.sp[0]) || {}).name : '';
+    return [p.municipality, P.PHASE_BY_KEY[p.phase].label, p.units ? `${fmtNum(p.units)} units` : '', ref, sp].filter(Boolean).map(esc).join(' · ');
+  }
   function renderSug() {
     sugEl.hidden = !sugItems.length;
-    sugEl.innerHTML = sugItems.map((x, i) => `<li role="option" data-i="${i}" class="${i === sugSel ? 'on' : ''}" aria-selected="${i === sugSel}">${x.p ? dot(x.p.phase) : '<span class="sug-pin" aria-hidden="true"></span>'}<span>${esc(x.label)}<small>${x.p ? `${esc(x.p.municipality)} · ${esc(P.PHASE_BY_KEY[x.p.phase].label)}` : x.place ? esc(x.place.kind) : x.loading ? 'searching addresses…' : x.kind || 'Go to address'}</small></span></li>`).join('');
+    const ql = $('#f-search').value.trim().toLowerCase();
+    let placed = false;
+    sugEl.innerHTML = sugItems.map((x, i) => {
+      // (places and facilities in their own group, under the developments)
+      const head = !placed && (x.place || x.g) && i > 0 ? (placed = true, '<li class="sug-h" role="presentation">Places and facilities</li>') : '';
+      if (x.place || x.g) placed = true;
+      return `${head}<li role="option" data-i="${i}" class="${i === sugSel ? 'on' : ''}${x.filter ? ' sug-filter' : ''}" aria-selected="${i === sugSel}">${x.p ? dot(x.p.phase) : x.filter ? '<span class="sug-fl" aria-hidden="true">⌕</span>' : '<span class="sug-pin" aria-hidden="true"></span>'}<span>${esc(x.label)}<small>${x.p ? devLine(x.p, ql) : x.filter ? 'the developments, the map and every tab, until you remove the chip' : x.place ? esc(x.place.kind) : x.loading ? 'searching addresses…' : x.kind || 'Go to address'}</small></span></li>`;
+    }).join('');
   }
   async function updateSug(q) {
     const seq = ++sugSeq;
@@ -83,12 +99,13 @@
     const devs = App().state.projects.filter(p => p.lat != null && (p.title.toLowerCase().includes(ql) || p.records.some(r => (r.address || '').toLowerCase().includes(ql) || (ql.length >= 5 && /\d/.test(ql) && (r.ref || '').toLowerCase().startsWith(ql)))))
       .sort((a, b) => (b.title.toLowerCase().startsWith(ql) - a.title.toLowerCase().startsWith(ql)) || (b.units || 0) - (a.units || 0)).slice(0, 4);
     const places = placeMatches(ql);
-    sugItems = [...devs.map(p => ({ label: p.title, p })), ...places, ...(/\d/.test(q) || q.length > 4 ? [{ label: q, loading: true }] : [])];
+    const filterItem = { label: `Filter the list by “${q}”`, filter: q };
+    sugItems = [...devs.map(p => ({ label: p.title, p })), ...places, ...(/\d/.test(q) || q.length > 4 ? [{ label: q, loading: true }] : []), filterItem];
     sugSel = -1; renderSug();
     if (!sugItems.some(x => x.loading)) return;
     const geo = await geocode(q);
     if (seq !== sugSeq) return;
-    sugItems = [...devs.map(p => ({ label: p.title, p })), ...places, ...geo.map(g => ({ label: g.label, g, kind: /&| and /i.test(q) ? 'Go to intersection' : null }))];
+    sugItems = [...devs.map(p => ({ label: p.title, p })), ...places, ...geo.map(g => ({ label: g.label, g, kind: /&| and /i.test(q) ? 'Go to intersection' : null })), filterItem];
     renderSug();
   }
   // Places in the search: secondary plans / character areas, MTSAs, pressure zones, catchments and
@@ -123,12 +140,14 @@
   function goSug(x) {
     if (!x || x.loading) return;
     sugItems = []; renderSug();
+    if (x.filter) { filterBy(x.filter); return; }
+    // Picking opens it: the box empties and nothing is left filtered.
+    $('#f-search').value = '';
     // On a phone the search sits in the list view: switch to the map to show the place.
     if (innerWidth <= 760 && $('#sidebar').classList.contains('open')) { DT().toggleSidebar(false); setTimeout(() => map.invalidateSize(), 50); }
     if (x.p) { Nav().showDetail(x.p); return; }
-    if (x.place) { clearTimeout(searchTimer); $('#f-search').value = ''; if (App().state.search) { App().state.search = ''; App().applyFilters(); } return x.place.go(); }
-    // An address: pan and zoom there with a pin; the text filter is cleared so nothing is hidden.
-    clearTimeout(searchTimer); $('#f-search').value = ''; if (App().state.search) { App().state.search = ''; App().applyFilters(); }
+    if (x.place) return x.place.go();
+    // An address: pan and zoom there with a pin.
     pinLayer.clearLayers();
     L.marker([x.g.lat, x.g.lng], { icon: L.divIcon({ className: 'addr-pin', html: '<span></span>', iconSize: [22, 22], iconAnchor: [11, 22] }), keyboard: false })
       .bindTooltip(`<strong>${esc(x.g.label)}</strong><br><span class="muted">Tap to remove</span>`, { className: 'pt', direction: 'top', offset: [0, -20], permanent: true })
@@ -145,7 +164,7 @@
       e.preventDefault();
       const q = e.target.value.trim(); if (q.length < 3) return;
       if (sugSel >= 0) return goSug(sugItems[sugSel]);
-      const ready = sugItems.find(x => !x.loading);
+      const ready = sugItems.find(x => !x.loading && !x.filter);
       if (ready) return goSug(ready);
       const geo = await geocode(q); if (geo.length) goSug({ label: geo[0].label, g: geo[0] });
     } else if (e.key === 'Escape') { sugItems = []; renderSug(); }

@@ -50,7 +50,7 @@
     if (m.chart) out.push(`<div class="pnl-chart page-chart" data-psec="chart">${m.chart}</div>`);
     if (m.mid) out.push(m.mid);
     const lists = (m.lists || []).filter(l => l && l.rows && l.rows.length), first = lists[0];
-    const mapSec = m.map && (m.map.svg || m.map.html || m.map.attrs) ? `<section class="home-map" data-psec="map"><div class="pnl-list-h"><h3>${esc(m.map.title || 'Where')}</h3>${m.map.attrs ? `<button type="button" class="btn small link"${attrs(m.map.attrs)}>Open the map →</button>` : ''}</div>${m.map.html || `<button type="button" class="home-map-btn"${attrs(m.map.attrs)} aria-label="${esc(m.map.label || 'Open the map')}">${m.map.svg || '<span class="home-map-empty small muted">Open the map</span>'}</button>`}${m.map.caption ? `<p class="small muted">${m.map.caption}</p>` : ''}</section>` : '';
+    const mapSec = m.map && (m.map.svg || m.map.html || m.map.attrs) ? `<section class="home-map" data-psec="map"><div class="pnl-list-h"><h3>${esc(m.map.title || 'Where')}</h3>${m.map.attrs ? `<button type="button" class="btn small link"${attrs(m.map.attrs)}>${esc(m.map.link || 'Open the map')} →</button>` : ''}</div>${m.map.html || `<button type="button" class="home-map-btn"${attrs(m.map.attrs)} aria-label="${esc(m.map.label || 'Open the map')}">${m.map.svg || '<span class="home-map-empty small muted">Open the map</span>'}</button>`}${m.map.caption ? `<p class="small muted">${m.map.caption}</p>` : ''}</section>` : '';
     if (first || mapSec) out.push(`<div class="home-cols">${first ? listHTML(first) : '<div></div>'}${mapSec}</div>`);
     for (const l of lists.slice(1)) out.push(listHTML(l));
     for (const f of (m.folds || []).filter(x => x && x.html)) out.push(`<details class="pnl-fold" data-psec="fold"${f.open ? ' open' : ''}${f.id ? ` id="${esc(f.id)}"` : ''}><summary>${esc(f.title)}</summary><div>${f.html}</div></details>`);
@@ -329,7 +329,7 @@
       top: '<p class="home-start small"><strong>Start here:</strong> Servicing capacity for what is over, DC projects for whether relief comes in time, This week for what changed. <button type="button" class="btn small link" data-ws-page="growth">Growth in an area →</button> <button type="button" class="btn small link" data-ws-page="help">Help, by role →</button></p>',
       figures: homeFigures(rows, ready, week),
       lists: [ready ? toPage('tight', needs) : needs, toPage('week', week)],
-      map: { svg: capacityMap(rows), attrs: { 'data-ws-page': 'tight' }, label: 'Open Servicing capacity', caption: !ready ? '<span class="muted">Checking servicing capacity…</span>' : '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out (catchments, zones and plants)' },
+      map: { svg: capacityMap(rows), attrs: { 'data-ws-page': 'tight' }, link: 'Servicing capacity', label: 'Open Servicing capacity', caption: !ready ? '<span class="muted">Checking servicing capacity…</span>' : '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out (catchments, zones and plants)' },
       actions: [{ label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' }, primary: true }, { label: 'Full map (all tools)', attrs: { 'data-ws-full': '' } }] };
   }
 
