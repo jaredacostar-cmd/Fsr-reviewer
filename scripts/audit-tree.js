@@ -54,7 +54,10 @@ function audit({ records, generatedAt, sources, misTyped = [] }, { live = false,
   const built = T.buildTrees(nodes, { permits, log, chrono });
   // Counts found online for files that state none (curated, with the page they came from).
   const lk = readJSON(path.join(DATA, 'unit-lookups.json'));
-  built.lookups = new Map(Object.entries((lk && lk.files) || {}));
+  // A count checked against its page (scripts/probe-unit-lookups.js) says how it was confirmed, in
+  // the source the development panel shows beside it.
+  const checked = e => !e.verified ? e : { ...e, source: `${e.source} (checked ${e.verified.on}: ${e.verified.by === 'municipal' ? 'the municipal notice for this file states it' : 'stated on this page, which does not name the file'})` };
+  built.lookups = new Map(Object.entries((lk && lk.files) || {}).map(([k, e]) => [k, checked(e)]));
   const { links, trees, flags, permitOf } = built;
   const counts = trees.map(t => ({ t, c: T.countTree(t, built) }));
   const treeOfNode = new Map(); counts.forEach(({ t }, k) => t.nodes.forEach(i => treeOfNode.set(i, k)));

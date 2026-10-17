@@ -110,5 +110,5 @@ test('Overview "would add": units and people completed before census day (Existi
 test('old links (no ph) open with the active phases, as before Completed was shown by default', () => {
   const s = src('js/share.js');
   assert.match(s, /\n {6}set\('ph', \[\.\.\.App\(\)\.state\.phases\]\.join\(','\)\);/, 'every link names its phases');
-  assert.match(s, /else App\(\)\.state\.phases = new Set\(App\(\)\.ACTIVE_PHASES\);/);
+  assert.match(s, /else \{\n {8}App\(\)\.state\.phases = new Set\(App\(\)\.ACTIVE_PHASES\);/);
 });
