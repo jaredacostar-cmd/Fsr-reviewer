@@ -3373,3 +3373,12 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .kb-card { position: absolute; left: 50%; bottom: 36px; transform: translateX(-50%); z-index: var(--z-map-banner); max-width: calc(100% - 24px); background: var(--surface-1); color: var(--text-primary); border: 2px solid var(--focus); border-radius: 8px; padding: var(--space-1) var(--space-3); font-size: var(--fs-2); box-shadow: var(--shadow); pointer-events: none; }
 .kb-card[hidden] { display: none; }
 .kb-card .kb-keys { color: var(--text-muted); margin-left: var(--space-2); white-space: nowrap; }
+
+/* Labs: the Gravity check's profile (js/lab-checks.js) and the Sewer designer's. */
+.lab-prof { display: block; width: 100%; max-width: 420px; height: auto; margin: var(--space-2) 0 var(--space-1); background: var(--surface-2); border-radius: 6px; }
+.lab-prof .lp-ground { fill: none; stroke: var(--text-secondary); stroke-width: 1.5; }
+.lab-prof .lp-pipe { fill: none; stroke: var(--pipe-sanitary); stroke-width: 3; stroke-linecap: round; }
+.lab-prof .lp-mh { stroke: var(--text-muted); stroke-width: 1; }
+.lab-prof .lp-ex { fill: var(--pipe-sanitary); stroke: var(--surface-1); stroke-width: 1; }
+.lab-prof-k .lp-k { display: inline-block; width: 14px; height: 3px; vertical-align: middle; margin: 0 4px 0 var(--space-2); }
+.lab-prof-k .lp-k-g { background: var(--text-secondary); } .lab-prof-k .lp-k-p { background: var(--pipe-sanitary); height: 4px; }

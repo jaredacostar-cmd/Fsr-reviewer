@@ -454,7 +454,7 @@
   function setTraceDir(d) { traceDir = d; }
 
   // ---- Public contract ------------------------------------------------------------------
-  const api = { politeFetch, sewerWalk, tool, setTool, hasTools, metres, fmtDist, elevAt, elevProfile, setSelectSub, openSelectionResult, bufferSelect, nearestShownDev, getSelectSub, getTraceDir, setTraceDir };
+  const api = { politeFetch, sewerWalk, mainsNear, nearOn, tool, setTool, hasTools, metres, fmtDist, elevAt, elevProfile, setSelectSub, openSelectionResult, bufferSelect, nearestShownDev, getSelectSub, getTraceDir, setTraceDir };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelMeasure = api;
 })(typeof window !== 'undefined' ? window : globalThis);
