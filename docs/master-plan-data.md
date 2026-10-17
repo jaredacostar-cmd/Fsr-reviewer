@@ -42,3 +42,38 @@ Label anything built on it **"2020 Master Plan basis"**. Peel started a Master P
    Report the gap on screen rather than hiding it.
 4. **Relief dates.** Use `mains[].inService` as the relief year for the capacity runway view.
 5. Keep the South Peel plant check pooled, but show the Table 9 split by plant beside it.
+
+---
+
+# Master Plan wastewater data (2020, Volume 4)
+
+`data/master-plan-wastewater.json`, checked by `tests/master-plan-wastewater.test.js`. Sewage pumping
+stations from Vol 4 Table 6 were already in `data/peel-reports.json` (`masterPlan.sps`), so they aren't repeated.
+
+| Key | What | Source |
+|---|---|---|
+| `designCriteria` | Plant and collection flow rates, Harmon limits, I&I, BOD loading, design storms and upgrade triggers | Tables 1–4, pp.7–15 |
+| `trunks` | 34 trunk sewers in the West, East and McVean systems, with diameter ranges | Table 5, s.3.1.2, pp.18–30 |
+| `flowForecast` | Average daily flow by trunk system plus York and Toronto, 2019–2041 | Table 7, p.38 |
+| `plantHydraulic` | G.E. Booth and Clarkson rated capacity vs flow | Table 8, p.39 |
+| `plantLoading` | BOD capacity vs loading, with the process that governs | Table 9, p.41 |
+| `plannedUpgrades` | East-to-West Diversion trunk and plant expansions, with year and cost | s.5, Table 13 |
+| `interRegional` | Where flow crosses between Peel and Toronto | Table 12, p.74 |
+
+## Key facts
+
+- **G.E. Booth is over capacity on its natural catchment from 2019** (−1 ML/d) to 2041 (−142 ML/d).
+  Clarkson has room (+25 ML/d in 2041). The East-to-West Diversion (2025) moves flow from Booth to Clarkson.
+- **BOD loading is the tighter limit.** Booth's secondary clarifiers are short by about 26,000 kg/d in 2019.
+  Clarkson's digesters run out around 2036.
+- Booth's rated 518 ML/d was only reachable after the 40 ML/d capacity restoration (2027).
+- The app's collection criteria (290 L/cap/d, 270 L/emp/d, Harmon 2–4, 0.26 L/s/ha) match the plan; a test now holds that.
+- The app's water criteria (270 L/cap/d, max day 1.8) come from Peel's 2024 modelling demand table, not the
+  2020 plan's 280 L/cap/d and 2.0. Both are sourced. Say which one a screen uses.
+
+## Wiring it in
+
+1. Show Booth and Clarkson as separate plant checks, with and without the diversion.
+2. Add BOD loading as a second plant check beside hydraulic flow.
+3. Use `plannedUpgrades` years as relief dates in the capacity runway view.
+4. Tag each sewershed with its trunk id from `trunks` so a pipe screen can name the trunk it drains to.
