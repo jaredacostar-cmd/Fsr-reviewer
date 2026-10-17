@@ -49,15 +49,21 @@
   }
   // (kept per pipe: the nearest-pipe search reads the same pipes for every development)
   const coordsOf = new WeakMap();
+  const boxOf = new WeakMap();
+  const pipeBox = p => { let b = boxOf.get(p); if (b) return b; const c = p[10]; b = [Infinity, Infinity, -Infinity, -Infinity]; for (let k = 0; k < c.length; k += 2) { if (c[k] < b[0]) b[0] = c[k]; if (c[k + 1] < b[1]) b[1] = c[k + 1]; if (c[k] > b[2]) b[2] = c[k]; if (c[k + 1] > b[3]) b[3] = c[k + 1]; } boxOf.set(p, b); return b; };
   const pipeCoords = p => { let out = coordsOf.get(p); if (out) return out; const c = p[10]; out = []; for (let k = 0; k < c.length; k += 2) out.push([c[k], c[k + 1]]); coordsOf.set(p, out); return out; };
   // Nearest pipe (index) to a point within r metres (of at least minD mm).
   function nearestPipe(lng, lat, r = 400, minD = 0) {
     if (!MM().SEW.grid) return -1;
     const gx = Math.floor(lng / 0.004), gy = Math.floor(lat / 0.003), R = Math.ceil(r / 300);
     let best = -1, bd = Infinity;
-    const seen = new Set();
+    const seen = new Set(), kx = 111320 * Math.cos(lat * Math.PI / 180), ky = 111320;
     for (let i = -R; i <= R; i++) for (let j = -R; j <= R; j++) for (const k of MM().SEW.grid.get(`${gx + i},${gy + j}`) || []) {
       if (seen.has(k) || MM().SEW.data.pipes[k][0] < minD) continue; seen.add(k);
+      // (a pipe whose box is already farther than the nearest so far can't be nearer: dcDist uses the
+      // same flat scale, so the box distance is a lower bound)
+      const b = pipeBox(MM().SEW.data.pipes[k]);
+      if (Math.hypot(Math.max(b[0] - lng, 0, lng - b[2]) * kx, Math.max(b[1] - lat, 0, lat - b[3]) * ky) > bd + 1e-6) continue;
       const d = DI().dcDist([lng, lat], pipeCoords(MM().SEW.data.pipes[k]));
       if (d < bd) { bd = d; best = k; }
     }

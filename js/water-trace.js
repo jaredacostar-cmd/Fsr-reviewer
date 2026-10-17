@@ -172,7 +172,18 @@
     return `<p class="small est-line">Outside the mapped pressure zones: assigned to <strong>${zn}</strong> (${why})${r && e.how !== 'above' ? ` <span class="muted">— serves ${r[1]}–${r[2]} m, grade line ${r[0]} m (2020 Master Plan, Vol. 3, Table 3)</span>` : ''}${fits}${e.via && (e.via.ln || e.via.via) ? ` (${esc(DI().dcLineText(e.via.ln || { y: e.via.via.y, d: e.via.via.d, k: e.via.via.k, p: e.via.via.p }))})` : ''}.</p>`;
   }
   const dist2 = (a, b) => { const dx = (a[0] - b[0]) * Math.cos(a[1] * Math.PI / 180), dy = a[1] - b[1]; return dx * dx + dy * dy; };
+  // (with the zone given, kept per development for the facilities file and servicing data it was
+  // traced on: each model rebuild asks for every development's route again)
+  const traced = new WeakMap();
   function waterTrace(p, zidIn) {
+    if (!zidIn) return waterTraceOf(p, zidIn);
+    const c = traced.get(p);
+    if (c && c.zid === zidIn && c.wf === WF.data && c.sv === App().state.servicing && c.lng === p.lng && c.lat === p.lat) return c.v;
+    const v = waterTraceOf(p, zidIn);
+    traced.set(p, { zid: zidIn, wf: WF.data, sv: App().state.servicing, lng: p.lng, lat: p.lat, v });
+    return v;
+  }
+  function waterTraceOf(p, zidIn) {
     if (!WF.data || p.lat == null || !App().state.servicing) return null;
     const pt = [p.lng, p.lat], zid = zidIn || (p.pz && p.pz[0]) || Areas().locate(App().state.servicing.zones, p.lng, p.lat)[0], est = !zid && zoneEst.get(p), z = zid ? SD().svcById.get(zid) : est && est.z;
     if (!z) return null;

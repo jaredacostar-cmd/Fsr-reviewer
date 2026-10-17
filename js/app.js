@@ -196,6 +196,9 @@
     // Phase 6: while the startup index is serving first paint, stray rebuilds
     // (e.g. a source refresh racing the full snapshot) must not wipe it.
     if (indexPainted && !fullLoaded) return;
+    // (one waiting from scheduleRebuild is this one: applySnapshot schedules one and loadFullSnapshot
+    // then rebuilds at once, which built every development twice at start-up)
+    clearTimeout(rebuildTimer);
     const raw = state.sources.filter(s => s.enabled).flatMap(s => s.records);
     applyUserUnits(raw);
     if (typeof PeelDevNav !== 'undefined') PeelDevNav.SUBS.clear();
@@ -217,7 +220,10 @@
     state.munis = Array.from(new Set(state.projects.map(p => p.municipality))).sort();
     PeelSearchFilter.renderMuniChips();
     PeelTimeline.updateYearBounds();
-    applyFilters();
+    // (the map and the list first; Growth, the Overview and the servicing model in the next task, so
+    // the page paints between the two halves of a rebuild instead of freezing for both)
+    applyFilters.deferGrowth = true;
+    try { applyFilters(); } finally { applyFilters.deferGrowth = false; }
     // The servicing model follows the developments: rebuilt with them (it used to wait for the Water /
     // Wastewater tab, so the Overview, the DC tab and the scope cards read a model of the first-paint
     // data — Inglewood 398% vs 42%, SPEC 1.4).
@@ -300,7 +306,8 @@
     PeelRenderList.renderMarkers();
     PeelRenderList.setListPage(0); PeelRenderList.renderList();   // filters changed: back to the first page
     PeelTimeline.renderTimeline();
-    PeelGrowthUI.renderGrowth();
+    if (applyFilters.deferGrowth && window.PeelUtil && PeelUtil.later) PeelUtil.later('growth', () => PeelGrowthUI.renderGrowth());
+    else { if (window.PeelUtil && PeelUtil.cancelLater) PeelUtil.cancelLater('growth'); PeelGrowthUI.renderGrowth(); }
     PeelFilterUI.renderFilterUI();
     PeelMapMarkers.renderSiteLayer();
     if (PeelMapMarkers.mstyle.color === 'phase') PeelMapAnalysis.renderLegend();   // the phase legend lists the shown phases
@@ -547,6 +554,7 @@
         await loadAll();
         finishFull();
       } else {
+        await Promise.race([treeCountsLoad, new Promise(r => setTimeout(r, 3000))]);
         finishFull();
         applySnapshot(snap);
         if (window.PeelOffline) PeelOffline.setCachedAt(Date.now());
@@ -569,10 +577,14 @@
   // after first paint, the developments take them and every view refreshes.
   // Step B2: the developments become the trees once the data is in; a switch in Settings ›
   // Counting regroups (Tree) or puts today's grouping back (Previous).
+  // (the full snapshot waits for both, a few seconds at most, so the developments are built once:
+  // each one arriving after it rebuilt everything again, a 4 s freeze at start-up)
+  let treeCountsLoad = Promise.resolve();
   function loadTreeCounts() {
-    if (window.PeelCouncilDecisions) PeelCouncilDecisions.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); });
-    if (!window.PeelTreeCounts) return;
-    PeelTreeCounts.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); });
+    const ps = [];
+    if (window.PeelCouncilDecisions) ps.push(PeelCouncilDecisions.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); }));
+    if (window.PeelTreeCounts) ps.push(PeelTreeCounts.load().then(d => { if (d && fullLoaded && state.projects && state.projects.length) recount(); }));
+    treeCountsLoad = Promise.all(ps.map(x => x.catch(() => {})));
   }
   function recount() {
     if (!window.PeelTreeCounts || !state.projects) return;

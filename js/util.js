@@ -240,8 +240,9 @@
   }
   function runLater() { laterT = null; if (LATER.size) runOne(); if (LATER.size) laterT = setTimeout(runLater, 0); }
   function flushLater() { while (LATER.size) runOne(); }
+  const cancelLater = key => LATER.delete(key);
   const api = {
-    hoverCard, toast, later, flushLater, laterPending: () => LATER.size,
+    hoverCard, toast, later, flushLater, cancelLater, laterPending: () => LATER.size,
     $, esc, fmtNum, fmtDate, dayText, sig3, skel, estTag, store,
     token, dot, readColors, phaseColor, glyphColor,
     get colors() { return colors; },
