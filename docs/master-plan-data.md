@@ -82,9 +82,31 @@ stations from Vol 4 Table 6 were already in `data/peel-reports.json` (`masterPla
 - The app's water criteria (270 L/cap/d, max day 1.8) come from Peel's 2024 modelling demand table, not the
   2020 plan's 280 L/cap/d and 2.0. Both are sourced. Say which one a screen uses.
 
-## Wiring it in
+## Wiring status
 
-1. Show Booth and Clarkson as separate plant checks, with and without the diversion.
-2. Add BOD loading as a second plant check beside hydraulic flow.
-3. Use `plannedUpgrades` years as relief dates in the capacity runway view.
-4. Tag each sewershed with its trunk id from `trunks` so a pipe screen can name the trunk it drains to.
+**Done (plant checks).**
+
+- **Flow, both ways.** `plantCons()` treats the 70 ML/d diversion as a step at its start year, so each
+  plant shows its run-out year with the scenario's setting and with the other one. Numbers match the
+  model for both settings.
+- **BOD loading.** `bodCons()` checks G.E. Booth and Clarkson against their governing capacity (Booth
+  secondary clarifiers 96,695 kg/d; Clarkson digestion 58,790 kg/d). Loading = the plan's 2021 figure +
+  growth since the census at 75 g/person and 37.5 g/job + the plan's high-strength increase (500 kg/d a
+  year, split by 2019 loadings). The diversion moves loading at Booth's 2021 strength (≈262 kg/ML).
+- Both appear in DC timing and each development's needs, beside the flow check.
+
+**Caveats**
+
+- Booth's BOD reads about 50% over today. The plan found it over in 2019 too. But the governing capacity is
+  2020's: New Plant 1 (2024) may have changed it, and the annual reports' BOD figures aren't in the app yet.
+- Clarkson's 2023 digester expansion should have raised its governing capacity; the plan's figure may be low.
+- The app adds 40 ML/d to Booth in 2028 (558 ML/d, "council-approved February 2024"). The plan describes the
+  same 40 ML/d as a capacity *restoration* back to 518 ML/d (WW-TR-182). One of the two is wrong. Check before
+  relying on Booth's 2028 step.
+- Booth's measured 2025 flow (428 ML/d) is well below the plan's 2026 forecast (514). Flow growth has run
+  slower than the plan.
+
+**Still to do**
+
+1. Add measured BOD loadings from the annual reports so today's loading is metered, not forecast.
+2. Tag each sewershed with its trunk id from `trunks`.
