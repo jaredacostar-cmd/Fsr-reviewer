@@ -131,6 +131,7 @@ const SHELL_ASSETS = [
   'js/svc-scope.js',
   'js/plant-flows.js',
   'js/address-key.js',
+  'js/ww-events.js',
   'js/tools-batch.js',
   'js/tools-compare.js',
   'js/tools-corridor.js',

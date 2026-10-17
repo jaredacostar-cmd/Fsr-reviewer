@@ -1295,6 +1295,13 @@ These sources are fetched on GitHub Actions, because the sandbox can't reach the
   against their targets adds **Target per ha** (people + jobs, or units, over the plan's area) to set
   beside a stated density; ⚠ where the published size and the boundary disagree by more than 25%
   (Heritage Heights: 864 ha published, 1,562 ha mapped).
+- **Overflows and spills.** `data/ww-events.json` holds Table 7 of the Region's Wastewater
+  Collection System annual reports (2024: 18 events; 2025: 12) and the station roster in
+  Appendix A, transcribed by hand because the table's layout does not parse;
+  `scripts/check-ww-events.js` checks every Spills Action Centre number, the stated total and the
+  roster against the report text (run in **Probe data sources**, mode `peel-reports`). Station and
+  plant scope panels list their events; Servicing → Capacity folds a yearly summary; Data quality
+  sets the GIS stations against the roster.
 - **2026 Census.** The first release is February 10, 2027. Run `scripts/build-areas.js` with
   `CENSUS_2026_CSV` (Statistics Canada's DA counts CSV, joined to the 2021 DA geometry) or
   `CENSUS_2026_URL`, plus `CENSUS_2026_PEEL` to check the total. 2026 then becomes the baseline

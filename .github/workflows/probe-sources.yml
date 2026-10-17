@@ -259,6 +259,15 @@ jobs:
         run: |
           node scripts/fetch-peel-reports.js --out peel-reports
           du -sh peel-reports; ls -la peel-reports | head -200
+          # The collection system report's spills table against data/ww-events.json (hand-transcribed):
+          # a warning, not a failure, so a new year's table gets transcribed.
+          sudo apt-get install -y -qq poppler-utils >/dev/null 2>&1 || true
+          for f in peel-reports/*[Cc]ollection*.pdf; do
+            [ -f "$f" ] || continue
+            pdftotext -layout "$f" /tmp/cs.txt || continue
+            y=$(grep -o 'annual report | 20[0-9][0-9]' /tmp/cs.txt | head -1 | grep -o '20[0-9][0-9]')
+            [ -n "$y" ] && { node scripts/check-ww-events.js /tmp/cs.txt "$y" || echo "::warning::$f: data/ww-events.json needs the $y spills (Table 7)"; }
+          done
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git checkout -B peel-reports

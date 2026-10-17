@@ -84,6 +84,8 @@
       mergePeelHousing(App().state.housing, await opt('data/peel-housing.json'));
       // Measured plant flow by month, 2008 on (MECP): the plant's scope panel draws its trend.
       opt('data/plant-flows.json').then(p => { App().state.plantFlows = p; });
+      // Overflows and spills from the collection system reports (Table 7), and its station roster.
+      opt('data/ww-events.json').then(w => { App().state.wwEvents = w; });
       opt('data/compliance.json').then(c => { App().state.compliance = c; if (c && AT().getFootTab() === 'svc') SvcTab().renderSvcTab(); });
       if (Sett().IDF.data) { Sett().applyWet(); const f = $('#wet-box'); if (f) f.outerHTML = Sett().wetBoxHTML(); }
       App().state.dcInfra = DI().prepDc(dc);

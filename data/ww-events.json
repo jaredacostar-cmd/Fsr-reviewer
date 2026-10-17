@@ -1,0 +1,402 @@
+{
+ "version": 1,
+ "source": "Region of Peel Wastewater Collection System annual reports (CLI-ECA 009-W601), Table 7 (spills) and Appendix A (facilities); transcribed and checked with scripts/check-ww-events.js",
+ "reports": {
+  "2025": {
+   "url": "https://peelregion.ca/sites/default/files/2026-03/2025%20Wastewater%20Collection%20System.pdf",
+   "pages": "20–22",
+   "stated": "a total of 12 spills, including overflows, were reported with 11 spills originating from the collection system and one from a sewage transfer station",
+   "total": 12
+  },
+  "2024": {
+   "url": null,
+   "pages": "20–21",
+   "stated": "There were 18 spills including overflows in 2024. Of those, 13 happened during the July 16 extreme weather event",
+   "total": 18
+  }
+ },
+ "note": "Overflow: a discharge from a designed location (a station or system overflow) when wet weather flow exceeds the system; spill: any other unplanned discharge. Volumes are the Region's estimates; some events give a duration instead. Locations are given only for street addresses and stations.",
+ "years": {
+  "2024": [
+   {
+    "date": "2024-04-19",
+    "place": "1677 Missenden Crescent, Mississauga",
+    "kind": "spill",
+    "volumeM3": null,
+    "cause": "construction",
+    "sacRef": "1-5YN4RM",
+    "lnglat": [
+     -79.615959,
+     43.514885
+    ],
+    "action": "Cleaned up",
+    "note": "Leak found during excavation work"
+   },
+   {
+    "date": "2024-04-23",
+    "place": "110 East Drive, Brampton",
+    "kind": "spill",
+    "volumeM3": null,
+    "cause": "blockage",
+    "sacRef": "1-63ESS8",
+    "lnglat": [
+     -79.693221,
+     43.709654
+    ],
+    "action": "Blockage removed",
+    "note": "Minor leak from a maintenance hole"
+   },
+   {
+    "date": "2024-07-16",
+    "place": "Shardawn Mews SPS",
+    "kind": "overflow",
+    "volumeM3": 175,
+    "cause": "wet weather",
+    "sacRef": "1-90RAXE",
+    "station": "Shardawn Mews",
+    "note": "July 16 extreme wet weather event"
+   },
+   {
+    "date": "2024-07-16",
+    "place": "Hiawatha SPS",
+    "kind": "overflow",
+    "volumeM3": 168,
+    "cause": "wet weather",
+    "sacRef": "1-90RAS5",
+    "station": "Hiawatha",
+    "note": "July 16 extreme wet weather event"
+   },
+   {
+    "date": "2024-07-16",
+    "place": "Ben Machree SPS",
+    "kind": "overflow",
+    "volumeM3": 542,
+    "cause": "wet weather",
+    "sacRef": "1-90RB3G",
+    "station": "Ben Machree",
+    "note": "July 16 extreme wet weather event"
+   },
+   {
+    "date": "2024-07-16",
+    "place": "Watersedge SPS",
+    "kind": "overflow",
+    "volumeM3": 645,
+    "cause": "wet weather",
+    "sacRef": "1-90RB35",
+    "station": "Watersedge",
+    "note": "July 16 extreme wet weather event"
+   },
+   {
+    "date": "2024-07-16",
+    "place": "East trunk offline storage",
+    "kind": "overflow",
+    "volumeM3": null,
+    "cause": "wet weather",
+    "sacRef": "1-90U03J",
+    "delayedReport": true,
+    "note": "July 16 extreme wet weather event; possible mixing of sanitary and storm flows during work to connect a new offline storage facility"
+   },
+   {
+    "date": "2024-07-16",
+    "place": "Richards Memorial SPS",
+    "kind": "overflow",
+    "volumeM3": 243,
+    "cause": "wet weather",
+    "sacRef": "1-AODVJ5",
+    "station": "Richards Memorial",
+    "delayedReport": true,
+    "note": "July 16 extreme wet weather event"
+   },
+   {
+    "date": "2024-07-16",
+    "place": "Indian Road SPS",
+    "kind": "overflow",
+    "volumeM3": 42,
+    "cause": "wet weather",
+    "sacRef": "1-AODV1J",
+    "station": "Indian Road",
+    "delayedReport": true,
+    "note": "July 16 extreme wet weather event"
+   },
+   {
+    "date": "2024-07-16",
+    "place": "Meadowvale SPS",
+    "kind": "overflow",
+    "volumeM3": null,
+    "cause": "wet weather",
+    "sacRef": "1-AODV5J",
+    "duration": "3 hours",
+    "station": "Meadowvale",
+    "delayedReport": true,
+    "note": "July 16 extreme wet weather event"
+   },
+   {
+    "date": "2024-07-16",
+    "place": "Rosemere SPS",
+    "kind": "overflow",
+    "volumeM3": null,
+    "cause": "wet weather",
+    "sacRef": "1-AODVHV",
+    "duration": "4 hours",
+    "station": "Rosemere",
+    "delayedReport": true,
+    "note": "July 16 extreme wet weather event"
+   },
+   {
+    "date": "2024-07-16",
+    "place": "Credit Woodland overflow",
+    "kind": "overflow",
+    "volumeM3": null,
+    "cause": "wet weather",
+    "sacRef": "1-AODVK2",
+    "duration": "5.5 hours",
+    "delayedReport": true,
+    "note": "July 16 extreme wet weather event"
+   },
+   {
+    "date": "2024-07-16",
+    "place": "Overflow at Sir Richard's Road and Courier Lane",
+    "kind": "overflow",
+    "volumeM3": null,
+    "cause": "wet weather",
+    "sacRef": "1-AOHB23",
+    "duration": "4 hours",
+    "lnglat": [
+     -79.6213,
+     43.5588
+    ],
+    "delayedReport": true,
+    "note": "July 16 extreme wet weather event"
+   },
+   {
+    "date": "2024-07-16",
+    "place": "Clarkson GO overflow",
+    "kind": "overflow",
+    "volumeM3": 10300,
+    "cause": "wet weather",
+    "sacRef": "1-9BTRFK",
+    "delayedReport": true,
+    "note": "July 16 extreme wet weather event"
+   },
+   {
+    "date": "2024-07-16",
+    "place": "3 maintenance holes on Culham Trail",
+    "kind": "spill",
+    "volumeM3": null,
+    "cause": "wet weather",
+    "sacRef": "1-94MFDD",
+    "delayedReport": true,
+    "note": "July 16 extreme wet weather event"
+   },
+   {
+    "date": "2024-08-18",
+    "place": "Hewick Meadows Park",
+    "kind": "spill",
+    "volumeM3": null,
+    "cause": "wet weather",
+    "sacRef": "1-9YH3Y9",
+    "delayedReport": true,
+    "note": "Spill from a maintenance hole due to high flows"
+   },
+   {
+    "date": "2024-11-07",
+    "place": "6750 Mississauga Road",
+    "kind": "spill",
+    "volumeM3": null,
+    "cause": "blockage",
+    "sacRef": "1-D4JZAX",
+    "lnglat": [
+     -79.742087,
+     43.602036
+    ],
+    "action": "Blockage removed",
+    "note": "Spill from a maintenance hole"
+   },
+   {
+    "date": "2024-11-20",
+    "place": "Overflow at Sir Richard's Road and Courier Lane",
+    "kind": "overflow",
+    "volumeM3": 80,
+    "cause": "blockage",
+    "sacRef": "1-DSWIJV",
+    "lnglat": [
+     -79.6213,
+     43.5588
+    ],
+    "delayedReport": true,
+    "action": "Blockage removed",
+    "note": "Overflow from sanitary to storm"
+   }
+  ],
+  "2025": [
+   {
+    "date": "2025-02-05",
+    "place": "3615 Morning Star Drive, Mississauga",
+    "kind": "spill",
+    "volumeM3": null,
+    "cause": "blockage",
+    "sacRef": "1-H1EWD5",
+    "lnglat": [
+     -79.636767,
+     43.725496
+    ],
+    "action": "Blockage released and flushed",
+    "note": "Spill from a maintenance hole"
+   },
+   {
+    "date": "2025-02-18",
+    "place": "Hurontario Street, north of Fairview Road West",
+    "kind": "spill",
+    "volumeM3": null,
+    "cause": "blockage",
+    "sacRef": "1-HKN8KB",
+    "action": "Blockage released and flushed",
+    "note": "Spill from a maintenance hole"
+   },
+   {
+    "date": "2025-04-02",
+    "place": "Cavendish Creek",
+    "kind": "overflow",
+    "volumeM3": 62.1,
+    "cause": "wet weather",
+    "sacRef": "1-N9P6VB",
+    "action": "No sanitary debris discovered"
+   },
+   {
+    "date": "2025-04-02",
+    "place": "Clarkson GO weir overflow",
+    "kind": "overflow",
+    "volumeM3": 944,
+    "cause": "wet weather",
+    "sacRef": "1-N9IN7T",
+    "action": "No sanitary debris discovered"
+   },
+   {
+    "date": "2025-04-02",
+    "place": "The Credit Woodlands overflow",
+    "kind": "overflow",
+    "volumeM3": 27.3,
+    "cause": "wet weather",
+    "sacRef": "1-NEW9Q0"
+   },
+   {
+    "date": "2025-04-02",
+    "place": "Stavebank overflow",
+    "kind": "overflow",
+    "volumeM3": 0.004,
+    "cause": "wet weather",
+    "sacRef": "1-NEW9VI"
+   },
+   {
+    "date": "2025-04-02",
+    "place": "Hewick Meadows Park",
+    "kind": "spill",
+    "volumeM3": null,
+    "cause": "wet weather",
+    "sacRef": "1-N84EK2",
+    "action": "Maintenance hole cover replaced and secured",
+    "note": "Maintenance hole cover carried off by surcharge"
+   },
+   {
+    "date": "2025-09-04",
+    "place": "Sir Richard's Road and Courrier Lane",
+    "kind": "spill",
+    "volumeM3": 0.175,
+    "cause": "wet weather",
+    "sacRef": "1-PGLBJI",
+    "lnglat": [
+     -79.6213,
+     43.5588
+    ],
+    "action": "Sewer path flushed",
+    "note": "Spill from a maintenance hole due to heavy rain"
+   },
+   {
+    "date": "2025-10-09",
+    "place": "McVean SPS",
+    "kind": "spill",
+    "volumeM3": 0.168,
+    "cause": "equipment",
+    "sacRef": "1-PM5EEV",
+    "station": "McVean",
+    "action": "Flows redirected to reduce stress on the forcemain; impacted soils excavated",
+    "note": "Small leak from a newly installed forcemain"
+   },
+   {
+    "date": "2025-10-17",
+    "place": "Torbram septage receiving station",
+    "kind": "spill",
+    "volumeM3": 0.1,
+    "cause": "other",
+    "sacRef": "1-PN9Z6P",
+    "station": "Torbram",
+    "action": "Cleaned up",
+    "note": "Septic hauler spill while discharging (under 0.1 m³); a sewage transfer station, not a collection system spill"
+   },
+   {
+    "date": "2025-12-28",
+    "place": "Clarkson GO overflow",
+    "kind": "overflow",
+    "volumeM3": 280.6,
+    "cause": "wet weather",
+    "sacRef": "1-PZ3JOF",
+    "delayedReport": true,
+    "action": "Inspected; no sanitary debris discovered"
+   },
+   {
+    "date": "2025-12-28",
+    "place": "Stavebank overflow",
+    "kind": "overflow",
+    "volumeM3": 16.9,
+    "cause": "wet weather",
+    "sacRef": "1-PZ3JOF",
+    "delayedReport": true,
+    "action": "Inspected; no sanitary debris discovered"
+   }
+  ]
+ },
+ "stations": {
+  "southPeel": [
+   "Beach Street",
+   "Beechwood",
+   "Ben Machree",
+   "Bolton North Hill",
+   "Bolton",
+   "Caledon East",
+   "Castlemore",
+   "Clarkson",
+   "Dougall",
+   "Elmwood",
+   "Fifeshire",
+   "Front Street",
+   "Gore Road",
+   "Harvestview",
+   "Hiawatha",
+   "Indian Road",
+   "Intermodal",
+   "Jack Darling Memorial Park 1",
+   "Jack Darling Memorial Park 2",
+   "Lakelands",
+   "Mayfield",
+   "McVean",
+   "Meadowvale",
+   "Mullet Creek",
+   "O'Neil",
+   "Pinetree",
+   "Richards Memorial",
+   "Rosemere",
+   "Shardawn Mews",
+   "Silver Birch Trail",
+   "Stonehaven",
+   "Watersedge"
+  ],
+  "inglewood": [
+   "Inglewood"
+  ],
+  "other": [
+   "Torbram septage receiving station",
+   "Mullet Creek septage receiving station",
+   "York-Peel odour control facility"
+  ]
+ }
+}
