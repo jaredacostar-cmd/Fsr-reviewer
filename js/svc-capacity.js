@@ -416,6 +416,8 @@
         { title: 'Site: aerial check and ground', html: DT && DT.partHTML ? DT.partHTML(p, 'ground') : '' },
         // Tools › Record allocation opens this (js/app.js showAllocSub).
         { title: 'Servicing allocation', id: 'pnl-alloc', html: root.PeelDemandUI && root.PeelDemandUI.allocBoxHTML ? root.PeelDemandUI.allocBoxHTML(p) : '' },
+        // (Labs: the Gravity check and the Pressure check, js/lab-checks.js)
+        ...(root.PeelLabChecks ? root.PeelLabChecks.folds(p) : []),
       ],
       method: 'Flows at Peel design criteria. The path: the pressure zone the site sits in (or the nearest), the pumping stations on its traced sewer path and the plant it drains to; the plant reserve is the uncommitted reserve (MECP D-5-1), to 100% of rated after committed.',
       sources: 'Pressure zones and the sewer network (Region of Peel); 2025 plant flows; 2026 DC capital maps (draft); the lidar terrain model and aerial photos (each names its source).',

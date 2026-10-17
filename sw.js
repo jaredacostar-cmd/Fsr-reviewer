@@ -96,6 +96,8 @@ const SHELL_ASSETS = [
   'js/map-labels.js',
   'js/map-markers.js',
   'js/map-keys.js',
+  'js/sewer-design.js',
+  'js/lab-checks.js',
   'js/masterplan.js',
   'js/measure.js',
   'js/massing-core.js',
