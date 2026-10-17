@@ -429,11 +429,13 @@
   const openPeriods = (list, today) => upcoming(list, today, 60).filter(x => !x.monthOnly && (x.m.type === 'commentEnd' || x.m.type === 'reviewEnd'));
   // iCalendar text for dated milestones (all-day events). Month-only dates are left out: no day to put them on.
   function eaICS(items, stamp) {
-    const escT = s => String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
-    const fold = l => { const out = []; let s = l; while (s.length > 73) { out.push(s.slice(0, 73)); s = ` ${s.slice(73)}`; } out.push(s); return out.join('\r\n'); };
+    const escT = s => String(s || '').replace(/\\/g, '\\\\').replace(/;/g, '\\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+    // (RFC 5545: 75 octets a line, continued with a space; split between characters, never inside one)
+    const octets = ch => { const c = ch.codePointAt(0); return c < 0x80 ? 1 : c < 0x800 ? 2 : c < 0x10000 ? 3 : 4; };
+    const fold = l => { const out = []; let cur = '', n = 0; for (const ch of l) { const b = octets(ch); if (n + b > (out.length ? 74 : 75)) { out.push(cur); cur = ''; n = 0; } cur += ch; n += b; } out.push(cur); return out.join('\r\n '); };
     const day = d => d.replace(/-/g, ''), next = d => new Date(Date.parse(`${d}T00:00:00Z`) + 864e5).toISOString().slice(0, 10).replace(/-/g, '');
     const ts = String(stamp || new Date().toISOString()).replace(/[-:]/g, '').replace(/\.\d+/, '').slice(0, 15) + 'Z';
-    const ev = items.filter(x => !x.monthOnly).map(({ e, m }) => ['BEGIN:VEVENT', `UID:${e.id}-${m.type}-${m.date}@peel-growth-pipeline`, `DTSTAMP:${ts}`, `DTSTART;VALUE=DATE:${day(m.date)}`, `DTEND;VALUE=DATE:${next(m.date)}`, `SUMMARY:${escT(`${MS_LABEL[m.type] || m.type}: ${e.name}`)}`, `DESCRIPTION:${escT(`Region of Peel environmental assessment (${EA_STATUS[e.status] || ''}). Times, places and how to comment are on the project page. Unofficial: check with the Region.`)}`, ...(e.links && e.links.page ? [`URL:${e.links.page}`] : []), 'TRANSP:TRANSPARENT', 'END:VEVENT']);
+    const ev = items.filter(x => !x.monthOnly).map(({ e, m }) => ['BEGIN:VEVENT', `UID:${e.id}-${m.type}-${m.date}@peel-growth-pipeline`, `DTSTAMP:${ts}`, `DTSTART;VALUE=DATE:${day(m.date)}`, `DTEND;VALUE=DATE:${next(m.date)}`, `SUMMARY:${escT(`${MS_LABEL[m.type] || m.type}: ${e.name}`)}`, `DESCRIPTION:${escT(`Region of Peel environmental assessment (${EA_STATUS[e.status] || ''}). Times, places and how to comment are on the project page. Unofficial: check with the Region. General screening results only. Peel's W&WW Infrastructure Planning team must validate or confirm all results.`)}`, ...(e.links && e.links.page ? [`URL:${e.links.page}`] : []), 'TRANSP:TRANSPARENT', 'END:VEVENT']);
     return ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//peel-growth-pipeline//EA milestones//EN', 'CALSCALE:GREGORIAN', 'X-WR-CALNAME:Peel EA milestones', ...ev.flat(), 'END:VCALENDAR'].map(fold).join('\r\n') + '\r\n';
   }
   const LOC_NOTE = e => (eaUnplaced(e) ? 'not on the map yet' : eaDashed(e) ? 'approximate location' : '');

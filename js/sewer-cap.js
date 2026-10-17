@@ -74,7 +74,10 @@
   // developments draining through each pipe (Stage 4's Old pipes list; a count, not a load).
   function sewerGrowth() {
     if (!MM().SEW.data) return null;
-    const key = `${JSON.stringify(App().state.criteria)}|${App().state.projects.length}|${(App().state.whatifs || []).length}`;
+    // (the developments and test sites themselves, not their count: a unit edit or a moved test site
+    // keeps the count; and the census the Built layer is counted from, and the jobs settings)
+    const U = root.PeelUtil, bc = root.PeelCensusAreas && root.PeelCensusAreas.baselineCensus();
+    const key = `${JSON.stringify(App().state.criteria)}|${U.idOf(App().state.projects)}|${App().state.projects.length}|${U.idOf(App().state.whatifs)}|${(App().state.whatifs || []).length}|${bc ? bc.date : ''}|${App().state.empGen || 0}`;
     if (MM().SEW.growth && MM().SEW.key === key) return MM().SEW.growth;
     const n = MM().SEW.data.pipes.length, L = ['built', 'approved', 'proposed'];
     const g = Object.fromEntries(L.map(k => [k, { pop: new Float64Array(n), jobs: new Float64Array(n), ha: new Float64Array(n), units: new Float64Array(n) }]));

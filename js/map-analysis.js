@@ -161,7 +161,7 @@
   function builtShare(y) {
     if (y == null || y >= MM().THIS_YEAR) return 1;
     const bc = CA().baselineCensus(); if (!bc) return 1;
-    const k = `${bc.date}|${App().state.projects.length}`;
+    const k = `${bc.date}|${window.PeelUtil.idOf(App().state.projects)}|${App().state.projects.length}`;   // (the developments themselves: a unit edit keeps their count)
     if (builtShare.k !== k) {
       const by = new Map(); let tot = 0;
       for (const p of App().state.projects) if (MM().svcLayerOf(p) === 'built') { const u = p.units || 1, yr = new Date(+p.milestones.completed).getUTCFullYear(); by.set(yr, (by.get(yr) || 0) + u); tot += u; }

@@ -88,7 +88,9 @@
     if (!badge) return;
     const st = store();
     const seenAt = st ? st.get('alertsSeen', null) : null;
-    const fresh = unseen(feed, seenAt).length;
+    // (what the panel lists: the watched developments and the capacity items, not the whole feed)
+    const shown = { items: [...devItems(feed, st ? st.get('watch', []) || [] : []), ...infraItems(feed)] };
+    const fresh = unseen(shown, seenAt).length;
     badge.hidden = !fresh;
     badge.textContent = fresh > 99 ? '99+' : String(fresh);
     badge.title = fresh ? `${fresh} new alert${fresh === 1 ? '' : 's'} since you last checked` : '';

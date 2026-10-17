@@ -90,7 +90,7 @@
     const G = root.Growth, lags = G ? G.approvalLags(App().state.projects.filter(q => q.municipality === p.municipality)) : [];
     const med = lags.length && G.median ? G.median(lags.map(x => x.months)) : null;
     const approved = P.PHASE_BY_KEY[p.phase].rank >= P.PHASE_BY_KEY.approved.rank;
-    const est = ls && ls.date && med != null && !approved && p.phase !== 'cancelled' ? new Date(+new Date(ls.date) + med * 30.44 * 864e5).getFullYear() : null;
+    const est = ls && ls.date && med != null && !approved && p.phase !== 'cancelled' ? new Date(+new Date(ls.date) + med * 30.44 * 864e5).getUTCFullYear() : null;
     const timing = [
       PN.kv('Latest submission', ls ? `${esc(fmtDay(ls.date))}${ls.ref ? ` · ${esc(ls.ref)}` : ''}` : '–'),
       ...(med != null ? [PN.kv(`Typical time to approval, ${esc(p.municipality)}`, `${Math.round(med)} months · n=${fmtNum(lags.length)}`)] : []),

@@ -32,7 +32,7 @@
     const y = Math.max(...full(A.Mississauga)); if (!isFinite(y)) return null;
     const avg = (o, f) => { const ys = full(o).filter(k => k > y - 5 && k <= y); return ys.length ? ys.reduce((t, k) => t + f(o[k]), 0) / ys.length : null; };
     // Counted the app's way: once per building (its conditional, foundation and full permits share a number).
-    const appPermits = m => P0().permitUnits(App().state.projects.filter(p => p.municipality === m).flatMap(p => p.records.filter(r => r.kind === 'permit' && r.phase !== 'cancelled' && r.events.some(e => e.phase === 'permit' && e.date.getFullYear() === y))));
+    const appPermits = m => P0().permitUnits(App().state.projects.filter(p => p.municipality === m).flatMap(p => p.records.filter(r => r.kind === 'permit' && r.phase !== 'cancelled' && r.events.some(e => e.phase === 'permit' && e.date.getUTCFullYear() === y))));
     const rows = ['Mississauga', 'Brampton', 'Caledon', 'Peel'].filter(m => A[m] && A[m][y]).map(m => ({
       m, starts: A[m][y].starts.all, completions: A[m][y].completions.all, absorbed: A[m][y].absorbed.all,
       permits: B[m] && B[m][y] ? B[m][y].units.all : null, value: B[m] && B[m][y] ? B[m][y].value.total : null,

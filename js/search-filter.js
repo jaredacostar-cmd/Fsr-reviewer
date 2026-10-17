@@ -53,7 +53,7 @@
   // geocoder (Esri World Geocoder, else OpenStreetMap Nominatim), limited to Peel; picking one pans
   // and zooms the map there (a development also opens). Enter takes the first suggestion.
   const sugEl = $('#search-sug'), geoCache = new Map();
-  let sugItems = [], sugSel = -1, sugTimer, sugSeq = 0;
+  let sugItems = [], sugSel = -1, sugTimer, sugSeq = 0, sugFor = null;   // (sugFor: the query the suggestions are for)
   const PEEL_EXT = `${CFG.bbox.xmin},${CFG.bbox.ymin},${CFG.bbox.xmax},${CFG.bbox.ymax}`;
   async function geocode(q) {
     if (geoCache.has(q)) return geoCache.get(q);
@@ -93,7 +93,7 @@
     }).join('');
   }
   async function updateSug(q) {
-    const seq = ++sugSeq;
+    const seq = ++sugSeq; sugFor = q;
     if (q.length < 3) { sugItems = []; renderSug(); return; }
     const ql = q.toLowerCase();
     const devs = App().state.projects.filter(p => p.lat != null && (p.title.toLowerCase().includes(ql) || p.records.some(r => (r.address || '').toLowerCase().includes(ql) || (ql.length >= 5 && /\d/.test(ql) && (r.ref || '').toLowerCase().startsWith(ql)))))
@@ -139,6 +139,9 @@
   const pinLayer = L.layerGroup().addTo(map);
   function goSug(x) {
     if (!x || x.loading) return;
+    // (a pick ends the typing: a suggestion update still waiting, or an address lookup still out, must
+    // not bring the list back under the emptied box)
+    clearTimeout(sugTimer); sugSeq++; sugFor = null;
     sugItems = []; renderSug();
     if (x.filter) { filterBy(x.filter); return; }
     // Picking opens it: the box empties and nothing is left filtered.
@@ -163,6 +166,8 @@
     } else if (e.key === 'Enter') {
       e.preventDefault();
       const q = e.target.value.trim(); if (q.length < 3) return;
+      // (typed on since the list last updated: the list for what is in the box now, not the old one)
+      if (sugFor !== q) { clearTimeout(sugTimer); updateSug(q); }
       if (sugSel >= 0) return goSug(sugItems[sugSel]);
       const ready = sugItems.find(x => !x.loading && !x.filter);
       if (ready) return goSug(ready);

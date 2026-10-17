@@ -69,6 +69,10 @@
   function clear(map) { cur = null; if (ring && map.hasLayer(ring)) map.removeLayer(ring); if (live) live.textContent = ''; if (cardDiv) cardDiv.hidden = true; }
   function onKey(e) {
     const map = MC() && MC().map; if (!map || e.altKey || e.ctrlKey || e.metaKey) return;
+    // (keys typed in the map's own controls are theirs: the Layers panel's selects and sliders, the
+    // Time Box handle; the map and its markers keep the arrows)
+    const t = e.target;
+    if (t && t !== e.currentTarget && t.closest && t.closest('input, select, textarea, button, [contenteditable="true"], [role="slider"], .leaflet-control')) return;
     if (e.key === 'Escape' && cur) { clear(map); e.stopPropagation(); return; }
     if (e.key === 'Enter' && cur) { e.preventDefault(); e.stopPropagation(); const p = cur, N = root.PeelDevNav; clear(map); if (N && N.showDetail) N.showDetail(p); return; }
     const d = DIRS[e.key]; if (!d || e.shiftKey) return;   // (Shift + arrows: Leaflet pans)
