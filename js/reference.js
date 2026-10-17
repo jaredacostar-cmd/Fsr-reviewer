@@ -29,10 +29,11 @@
     ['fsrguide', 'What an FSR should cover', 'What should a functional servicing report cover?', 'The Region’s requirements, and what the app can check'],
     ['capital', 'How a capital project gets built', 'How does a capital project get built?', 'Master Plan, DC study, Class EA, design, tender, construction'],
     ['targets', 'Growth targets and forecasts', 'How much growth is planned, and by when?', 'Housing targets, the 2051 forecast and the pipeline'],
+    ['forecast', 'How the forecast is timed', 'When will the pipeline be built?', 'Time in stage, the population pace and the completions record'],
   ];
   const IDS = GUIDES.map(g => g[0]);
   const G = id => GUIDES.find(g => g[0] === id);
-  const INDEX = { id: 'guides', label: 'How it works', what: 'Eight guides: approvals, flows, capacity, capital…' };
+  const INDEX = { id: 'guides', label: 'How it works', what: 'Nine guides: approvals, flows, capacity, capital, the forecast…' };
   const NOTE_TAIL = 'A general guide for screening: confirm the current rules and figures with the Region of Peel.';
 
   // ---- Shared pieces ------------------------------------------------------------------------------
@@ -356,6 +357,99 @@
     });
   }
 
+  // ---- 9 · How the forecast is timed ----------------------------------------------------------------
+  // x: { homes (PeelTiming.homesNeeded), F (the 2051 allocation), activity (the Region's completions
+  // by municipality and year), times ([{ stage, size, n, median, left5 }] from the time-in-stage
+  // curves), fc ({ by2031, by2041, low2031, high2031, after, endYear, perYear: [[year, likely]] }, Peel),
+  // oldThisYear (the old method's homes in the first year) }. Every part is optional (Node, loading).
+  const STAGE_WORD = { inception: 'Pre-application', review: 'In review', approved: 'Approved, no permit yet', permit: 'Permit issued', construction: 'Under construction' };
+  const SIZE_WORD = { S: 'Under 10 units', M: '10–99 units', L: '100+ units' };
+  function completionsRecord(activity, from = 2016, to = 2025) {
+    const A = activity || {}, rows = [];
+    for (let y = from; y <= to; y++) {
+      const v = m => { const r = A[m] && A[m][y]; return r && r.completions && (!r.quarters || r.quarters === 4) ? r.completions.all : null; };
+      const ms = MUNIS.map(v);
+      if (ms.every(x => x == null)) continue;
+      rows.push({ year: y, munis: ms, peel: ms.reduce((t, x) => t + (x || 0), 0) });
+    }
+    const avg = rows.length ? rows.reduce((t, r) => t + r.peel, 0) / rows.length : null;
+    const best = rows.reduce((b, r) => (!b || r.peel > b.peel ? r : b), null);
+    return { rows, avg, best };
+  }
+  function forecast(x = {}) {
+    const homes = x.homes || null, F = x.F || null, fc = x.fc || null;
+    const rec = completionsRecord(x.activity);
+    const ap = F ? Object.values(F).reduce((t, v) => t + Math.max(0, (v.units2051 || 0) - (v.units2021 || 0)), 0) / 30 : null;
+    const steps = flowHTML([
+      ['1 · Time in stage', 'How long the site has already waited, against similar sites that waited as long'],
+      ['2 · Beyond the history', 'Sites that have waited longer than similar sites ever have: paced by the homes the projected population needs'],
+      ['3 · Building out', 'Under construction always finishes; a site of 100+ units finishes about 250 units a year'],
+    ], 'The three steps of the forecast');
+    const why = `<p>The forecast used to add the <strong>average time</strong> each remaining stage takes to the date the site entered its stage. For most of the pipeline that finish date was already in the past, so it was moved to this year${x.oldThisYear ? `: about <strong>${num(kRound(x.oldThisYear))}</strong> homes in ${esc(fc && fc.perYear && fc.perYear[0] ? fc.perYear[0][0] : 'the first year')}` : ''}, against ${rec.avg ? `about <strong>${num(kRound(rec.avg))}</strong>` : 'a few thousand'} completed in a typical year. The averages were also too short: they come mostly from houses, which finish quickly, and they only count the sites that finished, so the slow ones were missing.</p>`;
+    const timesRows = (x.times || []).filter(r => r.n > 0).map(r => [STAGE_WORD[r.stage] || r.stage, SIZE_WORD[r.size] || r.size, num(r.n), r.median == null ? 'more than half not finished yet' : `${num(r.median)} months`, r.left5 == null ? '–' : `${Math.round(r.left5 * 100)}%`]);
+    const stage = `<p>Every unbuilt site is compared with the sites of the same <strong>stage</strong> and <strong>size</strong> (under 10, 10–99, 100+ units) that entered that stage since 2016. For a site that has already waited, say, three years in review, only the sites that were <em>still</em> in review after three years count, and the question is how much longer they took. This is a survival table (Kaplan–Meier): sites still waiting today count too, as "not finished yet", so the slow ones are not lost.</p>
+      <ul class="rf-ul"><li><strong>Likely</strong>: the time by which half of those similar sites had finished.</li><li><strong>High</strong> (fast): a quarter had finished. <strong>Low</strong> (slow): three quarters.</li><li>The share of sites approved and the share of permits completed (2016–2019 files) still scale each site's units, as before.</li><li>Review uses the pre-application table and construction the permit table where a stage has too few dated entries (fewer than 30).</li></ul>
+      ${timesRows.length ? tableHTML(['Stage', 'Size', 'Sites', 'Half finished after', 'Still unfinished after 5 years'], timesRows, 'From entering a stage to the first completion') : ''}`;
+    const hy = homes ? [2026, 2027, 2028, 2029, 2031, 2036, 2041, 2051].filter(y => y <= (homes.lastYear || 2051)) : [];
+    const homesTable = homes ? tableHTML(['Year', 'Peel', ...MUNIS], hy.map(y => [String(y), num(homes(null, y)), ...MUNIS.map(m => num(homes(m, y)))]), 'Homes the projected population growth needs, by year') : '';
+    const beyond = `<p>Some sites have waited longer than most similar sites ever have, so the history cannot say when they will finish. They are timed by <strong>demand</strong> instead: each year they fill up to the homes the Ministry of Finance population projection needs.</p>
+      <ul class="rf-ul"><li><strong>Homes needed</strong> = the year's population growth ÷ ${homes ? `<strong>${two(homes.ppu)}</strong>` : 'the'} people per new home in the Region's 2051 allocation. A year in which the population falls needs none.</li>
+      <li>Each municipality gets its share of the allocation's new homes${homes && homes.share ? ` (${MUNIS.map(m => `${esc(m)} ${Math.round((homes.share[m] || 0) * 100)}%`).join(', ')})` : ''}.</li>
+      <li><strong>Furthest along first</strong>, then the one waiting longest: under construction, permit, approved, review, pre-application.</li>
+      <li>Every site in a municipality queues for the same homes whatever the map shows, so a filtered view shows its own sites' part of that one schedule.</li>
+      <li>What is still waiting at the end of the forecast is reported, not dropped${fc && fc.after >= 0.5 ? `: about <strong>${num(kRound(fc.after))}</strong> units in Peel after ${esc(fc.endYear)}` : ''}.</li></ul>
+      ${homesTable}
+      <p class="small muted">The projection has Peel's population falling from 2025 to 2028, so those years need no new homes and sites still in review wait until growth returns. Population and completions do not move together year to year (people share homes when supply is short), which is why the history, not the population, times every site it can.</p>`;
+    const build = `<ul class="rf-ul"><li><strong>Under construction always finishes.</strong> A site under construction that has waited longer than the history can time finishes from next year, whatever the population does.</li>
+      <li><strong>Large sites in phases.</strong> A site of 100+ units finishes about <strong>250 units a year</strong> from its first completion: a 2,000-unit site takes about eight years.</li>
+      <li>Each year's homes are spread a little around the expected year (a year before to two after), so one date does not carry a whole site.</li></ul>`;
+    const chart = `<ul class="rf-ul"><li><strong>The line</strong>: homes expected to be built from this year, adding up (likely); <strong>the band</strong>: the low–high range.</li>
+      <li><strong>The dashed level line</strong>: the unbuilt pipeline, for comparison. Not all of it is expected: some applications are refused or withdrawn.</li>
+      <li><strong>The dotted line</strong>: the homes the projected population needs, adding up.</li>
+      <li><strong>The dash-dot line</strong>: the Region's 2051 forecast pace${ap ? ` (about ${num(kRound(ap))} homes a year for Peel)` : ''}. The two reference lines show only for all of Peel or a whole municipality, not for a plan or MTSA.</li></ul>`;
+    const recTable = rec.rows.length ? tableHTML(['Year', ...MUNIS, 'Peel'], rec.rows.map(r => [String(r.year), ...r.munis.map(num), num(r.peel)]), 'Homes completed by year (CMHC, as the Region publishes it)') : '';
+    const pace = fc && fc.perYear && fc.perYear.length ? fc.perYear.filter(([y]) => y > fc.perYear[0][0] && y <= fc.perYear[0][0] + 10) : [];
+    const lo = pace.length ? Math.min(...pace.map(p => p[1])) : null, hi = pace.length ? Math.max(...pace.map(p => p[1])) : null;
+    const history = `<p>The completions record is the check: ${rec.avg ? `from ${esc(rec.rows[0].year)} to ${esc(rec.rows[rec.rows.length - 1].year)} Peel completed about <strong>${num(kRound(rec.avg))}</strong> homes a year (the most, ${num(rec.best.peel)}, in ${esc(rec.best.year)})` : 'the homes completed each year'}${lo != null ? `; the forecast's next ten years run at <strong>${num(kRound(lo))}–${num(kRound(hi))}</strong> a year` : ''}.</p>${recTable}`;
+    const cmhc = `<p>Two tables count completions, and they once disagreed: the Region's housing activity table (CMHC's survey as Peel publishes it) and CMHC's own portal. The portal's <strong>completions</strong> and <strong>under-construction</strong> tables had been saved under each other's names, so the stored "completions" were the homes under construction (Mississauga 2022: 11,743 instead of 1,161). Read by their own titles, the two now agree in every year but <strong>2018</strong>, where CMHC's zone table is higher (Brampton 3,622 against 2,390); the app uses the Region's table there.</p>`;
+    const limits = `<ul class="rf-ul"><li>It times the pipeline as a whole; it is <strong>not a prediction for any one site</strong>.</li>
+      <li>"Finished" is a site's <strong>first</strong> completed permit; dated completions are sparse outside Mississauga, so many finishes are read from a permit's status instead.</li>
+      <li>Sites not yet applied for are not in it, and the Region's 2051 forecast is a plan, not a measure.</li>
+      <li>Plant and pumping trigger years still phase each facility's approved and proposed flow over the calibrated lags (Growth › Forecast says so).</li></ul>`;
+    return wrap('forecast', {
+      answer: `The forecast times the unbuilt pipeline in three steps: how long each site has <strong>already waited in its stage</strong>, against similar sites that waited as long; for sites that have waited longer than the history can tell, the <strong>homes the projected population needs</strong>; and large sites finishing about <strong>250 units a year</strong>. ${fc ? `For every development in Peel's pipeline that is about <strong>${num(kRound(fc.by2031))}</strong> homes built by 2031 and <strong>${num(kRound(fc.by2041))}</strong> by 2041 (Growth › Forecast shows the developments on the map, so its figures follow the filters).` : ''} A screening estimate of the whole pipeline, not a prediction for any one site.`,
+      figures: [
+        fc ? { v: num(kRound(fc.by2031)), u: 'homes', label: 'built by 2031, all of Peel’s pipeline (likely)', ctx: `range ${num(kRound(fc.low2031))}–${num(kRound(fc.high2031))}` } : null,
+        fc ? { v: num(kRound(fc.by2041)), u: 'homes', label: 'built by 2041, all of Peel’s pipeline (likely)', ctx: fc.after >= 0.5 ? `≈${num(kRound(fc.after))} more after ${esc(fc.endYear)}` : '' } : null,
+        rec.avg ? { v: num(kRound(rec.avg)), u: 'a year', label: `completed, ${esc(rec.rows[0].year)}–${esc(rec.rows[rec.rows.length - 1].year)}`, ctx: 'CMHC, as the Region publishes it' } : null,
+        homes ? { v: two(homes.ppu), u: 'people', label: 'per new home', ctx: 'the Region’s 2051 allocation' } : null,
+      ],
+      mid: sec('steps', 'The three steps', steps) + sec('why', 'Why not the average time per stage', why) + sec('stage', 'Step 1 · Time already in the stage', stage)
+        + sec('beyond', 'Step 2 · When the history runs out', beyond) + sec('build', 'Step 3 · Building out', build) + sec('chart', 'Reading the forecast chart', chart)
+        + sec('record', 'Checked against what was built', history) + sec('cmhc', 'Which completions count', cmhc) + sec('limits', 'What it does not know', limits),
+      method: `Time in stage: Kaplan–Meier tables by stage and size from the dated application and permit events since 2016 (to a site's first completion); approval and completion rates from the 2016–2019 files. Beyond the history: the Ministry of Finance projection for Peel (July 1 population) over the people per new home in the Region's 2051 allocation, split by its new homes. Decided with the app's owner on 2026-10-17. ${NOTE_TAIL}`,
+      sources: 'The application and permit records on the map (Mississauga, Brampton, Caledon); Ontario Ministry of Finance population projections 2025–2051; Region of Peel, Land Needs Assessment Report Update, appendices (August 2024, draft); Region of Peel housing construction activity (CMHC Starts and Completions Survey); CMHC Housing Market Information Portal.',
+      actions: [{ label: 'Growth in an area', attrs: { 'data-ws-page': 'growth' }, primary: true }, { label: 'Growth targets and forecasts', attrs: { 'data-ws-page': 'targets' } }],
+    });
+  }
+  // The guide's figures from the loaded app: the forecast model (js/timing.js) and the record.
+  function forecastInputs(s) {
+    const T = root.PeelTiming, M = T && T.forecastModel ? T.forecastModel() : null;
+    const x = { F: s.reports && s.reports.forecast2051 && s.reports.forecast2051.municipalities, activity: s.housing && s.housing.peel && s.housing.peel.activity && s.housing.peel.activity.muni };
+    if (!M) return x;
+    x.homes = M.homes;
+    x.times = [];
+    for (const st of ['inception', 'approved', 'permit']) for (const z of ['S', 'M', 'L']) {
+      const c = M.curves[`${st}|${z}`]; if (!c || c.n < T.MIN_CURVE_N) continue;
+      x.times.push({ stage: st, size: z, n: c.n, median: T.remainingMonths(c, 0, 0.5), left5: T.survivalAt(c, 60) });
+    }
+    const all = T.pipelineItems(s.projects || []), fc = T.bandsFromSchedules(all, M.ss);
+    const to = (y, b) => fc.years.filter(r => r.year <= y).reduce((t, r) => t + r[b], 0);
+    x.fc = { by2031: to(2031, 'likely'), by2041: to(2041, 'likely'), low2031: to(2031, 'low'), high2031: to(2031, 'high'), after: fc.after.likely, endYear: M.ss.endYear, perYear: fc.years.map(r => [r.year, r.likely]) };
+    try { x.oldThisYear = T.forecastBands(all, M.cal, {}).years[0].likely; } catch (e) { x.oldThisYear = null; }
+    return x;
+  }
+
   // ---- Browser: each page from the loaded state ----------------------------------------------------
   const App = () => root.PeelApp;
   function flowsExample() {
@@ -398,10 +492,11 @@
     if (id === 'fsrguide') return fsrguide(root.PeelWsPages ? root.PeelWsPages.COVERAGE : null);
     if (id === 'capital') return capital(s.eas && s.eas.eas, s.capital && s.capital.records);
     if (id === 'targets') return targets(s.housing, s.reports && s.reports.forecast2051, pipeline());
+    if (id === 'forecast') return forecast(forecastInputs(s));
     return indexPage();
   }
 
-  const api = { GUIDES, IDS, INDEX, ROLES, TESTS, LAYERS, FSR_PARTS, CAP_STEPS, SCHEDULES, EXAMPLE, navHTML, wrap, indexPage, roles, approvals, flowSteps, flowsHTML, flows, networkFacts, network, capacity, capacityHTML, fsrguide, capital, targetRows, targets, page };
+  const api = { GUIDES, IDS, INDEX, ROLES, TESTS, LAYERS, FSR_PARTS, CAP_STEPS, SCHEDULES, EXAMPLE, navHTML, wrap, indexPage, roles, approvals, flowSteps, flowsHTML, flows, networkFacts, network, capacity, capacityHTML, fsrguide, capital, targetRows, targets, completionsRecord, forecast, page };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelReference = api;
 })(typeof window !== 'undefined' ? window : globalThis);

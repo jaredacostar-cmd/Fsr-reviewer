@@ -622,6 +622,24 @@
       ${LB.legendHTML(ks.map(k => ({ layer: k, text: `${LB.LABEL[k]} ${fmtNum(Math.round(to(k, 2031)))} → ${fmtNum(Math.round(to(k, 2041)))} of ${fmtNum(Math.round(unb(k)))}` })))}`;
   }
 
+  // ---- Browser: the forecast over every site --------------------------------------------
+  // Time in stage over every site (the stalled ones queue for the same homes): the same for every
+  // filter, so built once per developments list, population data and day. The Forecast view shows a
+  // set's share; How the forecast is timed (js/reference.js) explains it with these figures.
+  function forecastModel() {
+    const app = App(); if (!app || !app.state || !(app.state.projects || []).length) return null;
+    const now = Date.now(), H = app.state.housing, F = app.state.reports && app.state.reports.forecast2051;
+    const key = [window.PeelUtil.idOf ? window.PeelUtil.idOf(app.state.projects) : 0, app.state.projects.reduce((t, p) => t + (p.units || 0), 0), H ? 1 : 0, F ? 1 : 0, new Date(now).toISOString().slice(0, 10)].join('|');
+    if (forecastModel.key !== key) {
+      const cal = calibrate(observationsFromProjects(app.state.projects));
+      const curves = stageCurves(curveObservations(app.state.projects, now));
+      const homes = homesNeeded(H && H.mof && H.mof.peel, F && F.municipalities);
+      const ss = stageSchedules(pipelineItems(app.state.projects), cal, { curves, homes, now });
+      forecastModel.key = key; forecastModel.m = { cal, curves, homes, ss, F, now };
+    }
+    return forecastModel.m;
+  }
+
   // ---- Browser: the Growth › Timing sub-view ---------------------------------------
   function renderTiming() {
     const body = $('#timing-body'); if (!body) return;
@@ -630,16 +648,9 @@
     if (!app.state.projects.length) { body.innerHTML = skel('Forecast'); return; }
     // Area-only content: not shown at development scope (design audit, Group 6).
     if (window.DevScope && window.DevScope.current()) { body.innerHTML = window.PeelUtil.AREA_ONLY_NOTE; return; }
-    const cal = calibrate(observationsFromProjects(app.state.projects));
     const set = DU().demandSet();
     const items = pipelineItems(set);
-    // Time in stage over every site (the stalled ones queue for the same homes), the set's shown.
-    const now = Date.now(), H = app.state.housing, F = app.state.reports && app.state.reports.forecast2051;
-    const homes = homesNeeded(H && H.mof && H.mof.peel, F && F.municipalities);
-    // (the same for every filter: built once per developments list, population data and day)
-    const ssKey = [window.PeelUtil.idOf ? window.PeelUtil.idOf(app.state.projects) : 0, app.state.projects.reduce((t, p) => t + (p.units || 0), 0), H ? 1 : 0, F ? 1 : 0, new Date(now).toISOString().slice(0, 10)].join('|');
-    if (renderTiming.ssKey !== ssKey) { renderTiming.ssKey = ssKey; renderTiming.ss = stageSchedules(pipelineItems(app.state.projects), cal, { curves: stageCurves(curveObservations(app.state.projects, now)), homes, now }); }
-    const ss = renderTiming.ss;
+    const { cal, homes, ss, F } = forecastModel();
     const fc = bandsFromSchedules(items, ss);
     // Homes needed and the Region's allocation pace, for the whole of Peel or a municipality only.
     const whole = !(app.state.sp && app.state.sp.length) && !(app.state.mtsa && app.state.mtsa.length) && !app.state.daCtx;
@@ -746,7 +757,7 @@
         ],
         method: `A statistical screening estimate of when the pipeline builds out, not a prediction for any one site. Each site's finish comes from how long it has already waited in its stage: among sites of the same stage and size that were still unfinished after that long, how much longer they took (likely: half had finished; high: a quarter; low: three quarters). Sites waiting longer than most similar sites ever have fill each year up to the homes the Ministry of Finance population growth needs (${homes ? `${homes.ppu.toFixed(1)} people per new home, ` : ''}split by the Region's 2051 allocation), furthest along and oldest first; one under construction finishes from next year. A site of 100+ units finishes about ${PHASE_UNITS} units a year. Approval and completion rates by municipality and building type; trigger years phase each plant\u2019s approved and proposed flow in over the calibrated lags (not the plant horizon assumptions).`,
         sources: 'The dated file events of the applications and permits on the map (since 2016; rates from the 2016–2019 cohorts); Ontario Ministry of Finance population projections (Peel); the Region of Peel Land Needs Assessment 2051 allocation (draft, August 2024); the plants\u2019 2025 flows and rated capacity (2025 annual reports).',
-        foot: { primary: { label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' } } },
+        foot: { primary: { label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' } }, secondary: [{ label: 'How the forecast is timed', attrs: { 'data-ws-page': 'forecast' } }] },
       });
     }
     body.innerHTML = `
@@ -765,7 +776,8 @@
     BANDS, COHORT_YEARS, MIN_N, FORECAST_YEARS,
     btypeOf, wilson, quantiles, calibrate, rowFor,
     projectSchedule, forecastBands, facilityBands, triggerRangeText,
-    survival, remainingMonths, curveObservations, stageCurves, curveFor, homesNeeded, allocationPace, stageSchedules, bandsFromSchedules,
+    survival, survivalAt, remainingMonths, curveObservations, stageCurves, curveFor, homesNeeded, allocationPace, stageSchedules, bandsFromSchedules, forecastModel,
+    PHASE_UNITS, MIN_CURVE_N, SIZE_LABEL, QUEUE_ORDER, CURVE_STAGES,
     observationsFromProjects, pipelineItems, renderTiming, cumulative, yearTicks,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

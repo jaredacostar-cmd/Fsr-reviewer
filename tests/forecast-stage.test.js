@@ -112,7 +112,9 @@ test('stageSchedules: a large site finishes about 250 units a year; what the hom
 
 test('wired: the view times every site, shows the set, and draws the homes-needed and allocation lines', () => {
   const s = src('js/timing.js');
-  assert.match(s, /renderTiming\.ss = stageSchedules\(pipelineItems\(app\.state\.projects\), cal, \{ curves: stageCurves\(curveObservations\(app\.state\.projects, now\)\), homes, now \}\); \}\n    const ss = renderTiming\.ss;\n    const fc = bandsFromSchedules\(items, ss\);/);
+  assert.match(s, /const ss = stageSchedules\(pipelineItems\(app\.state\.projects\), cal, \{ curves, homes, now \}\);/);
+  assert.match(s, /const \{ cal, homes, ss, F \} = forecastModel\(\);\n    const fc = bandsFromSchedules\(items, ss\);/);
+  assert.match(s, /secondary: \[\{ label: 'How the forecast is timed', attrs: \{ 'data-ws-page': 'forecast' \} \}\]/, 'the panel links its guide');
   assert.match(s, /homesNeeded\(H && H\.mof && H\.mof\.peel, F && F\.municipalities\)/);
   assert.match(s, /if \(whole && homes\) refs\.push\(\{ cls: 'tband-ref-mof'/);
   assert.match(s, /paceByLayerHTML\(items, ss\)/);

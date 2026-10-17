@@ -49,9 +49,9 @@
     ['Asset Management', ['pipes']],
   ];
   // Reference pages (Home's layout, no map, not a workspace): listed last in Home's sidebar.
-  const REF = { help: { label: 'Help', what: 'Start here, guides, the tour, what’s new' }, guides: { label: 'How it works', what: 'Eight guides: approvals, flows, capacity…' }, glossary: { label: 'Glossary', what: 'The terms in plain words' } };
+  const REF = { help: { label: 'Help', what: 'Start here, guides, the tour, what’s new' }, guides: { label: 'How it works', what: 'Nine guides: approvals, flows, capacity, the forecast…' }, glossary: { label: 'Glossary', what: 'The terms in plain words' } };
   // The guides (js/reference.js): pages of their own, listed on How it works, not in the sidebar.
-  for (const [id, label] of [['roles', 'Who decides what'], ['approvals', 'How approvals work'], ['flows', 'From homes to flows'], ['network', 'How sewage and water travel'], ['capacity', 'How capacity is checked'], ['fsrguide', 'What an FSR should cover'], ['capital', 'How a capital project gets built'], ['targets', 'Growth targets and forecasts']]) REF[id] = { label, guide: true };
+  for (const [id, label] of [['roles', 'Who decides what'], ['approvals', 'How approvals work'], ['flows', 'From homes to flows'], ['network', 'How sewage and water travel'], ['capacity', 'How capacity is checked'], ['fsrguide', 'What an FSR should cover'], ['capital', 'How a capital project gets built'], ['targets', 'Growth targets and forecasts'], ['forecast', 'How the forecast is timed']]) REF[id] = { label, guide: true };
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Servicing › Model checks / Records › Data checks,
   // Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.
