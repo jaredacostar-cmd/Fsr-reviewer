@@ -71,14 +71,19 @@
    *   conn:    { invert, dmm }: the receiving gravity sewer at the discharge maintenance hole
    *   qLs:     the design flow (L/s; the peak the station pumps)
    *   opts:    { vfd, ici, wwDepth (the wet well's low water level, m below the ground at the station;
-   *              else the incoming sewer's invert, 2.5 m of cover over a 200 mm pipe) }
+   *              else the incoming sewer's invert: the cover (2.5 m, or 3.5 m industrial / commercial)
+   *              over a 200 mm pipe; wwNote says which) }
    */
   function design(samples, conn, qLs, opts = {}, r = RULES) {
     if (!(qLs > 0)) return { ok: false, why: 'Type a design flow' };
     const G0 = [...samples].sort((a, b) => a.x - b.x), L = G0[G0.length - 1].x;
     const sz = size(qLs, opts, r), reasons = [];
-    const pick = sz.pick || sz.all.reduce((b, c) => (c.v <= r.vMax ? c : b), sz.all[0]);
-    if (!sz.pick) reasons.push(sz.all[0].v < sz.vMin ? `the flow is too small for ${sz.vMin.toFixed(1)} m/s in the 100 mm minimum (${sz.all[0].v.toFixed(2)} m/s): it needs variable speed pumps or a flushing cycle` : `the flow needs more than 3.0 m/s in the largest size`);
+    // No size within the velocity range: every size too slow (the velocity falls as the size grows,
+    // so the smallest, 100 mm, comes closest), or every size too fast (the largest comes closest).
+    const big = sz.all[sz.all.length - 1], under = !sz.pick && sz.all[0].v < sz.vMin;
+    const pick = sz.pick || (under ? sz.all[0] : big);
+    if (!sz.pick) reasons.push(under ? `the flow is too small for ${sz.vMin.toFixed(1)} m/s in the 100 mm minimum (${sz.all[0].v.toFixed(2)} m/s): it needs variable speed pumps or a flushing cycle; shown at 100 mm, the closest`
+      : `the flow needs more than 3.0 m/s in the largest size (${big.dmm} mm, ${big.v.toFixed(2)} m/s); shown at ${big.dmm} mm, the closest`);
     const D = pick.dmm / 1000, Q = qLs / 1000, cover = opts.ici ? r.coverIci : r.coverRes;
     // The shallowest pipe with its cover, smoothed over the window (the lowest within ±SMOOTH/2).
     const top = G0.map(s => ({ x: s.x, z: s.g - cover - D }));
@@ -95,6 +100,7 @@
     // discharge, or over a high point that stands above the hydraulic grade line.
     const hfTot = hf(Q, D, L, r.C), sPer = hfTot / (L || 1);
     const ww = G0[0].g - (opts.wwDepth > 0 ? +opts.wwDepth : cover + 0.2), wwAssumed = !(opts.wwDepth > 0);
+    const wwNote = wwAssumed ? `the incoming sewer: ${cover} m of cover over a 200 mm pipe` : '';
     const outEl = outletInv + D;   // the obvert at the outlet: the forcemain runs full to there
     const lift = outEl - ww; let over = null;
     for (const p of prof) { const need = p.inv + D + sPer * p.x - (outEl + hfTot); if (need > 1e-6 && (!over || need > over.need)) over = { x: p.x, z: p.inv + D, need }; }
@@ -114,7 +120,7 @@
     ];
     return {
       ok: !reasons.length, why: reasons[0] || '', reasons, dmm: pick.dmm, material: pick.dmm >= 600 ? 'concrete pressure pipe or PVC / HDPE at 600 mm' : 'PVC or HDPE',
-      q: qLs, v, L, hf: hfTot, hfPerKm: sPer * 1000, lift, over, tdh, ww, wwAssumed, outletInv, outEl, cover, prof, highs, lows,
+      q: qLs, v, L, hf: hfTot, hfPerKm: sPer * 1000, lift, over, tdh, ww, wwAssumed, wwNote, outletInv, outEl, cover, prof, highs, lows,
       power: 1000 * G * Q * tdh / 1000, sizes: sz.all, vMin: sz.vMin, checks, source: SOURCE,
       // The system curve: head at a fraction of the design flow (static plus friction).
       curve: f => lift + (over ? over.need : 0) + hf(Q * f, D, L, r.C),
