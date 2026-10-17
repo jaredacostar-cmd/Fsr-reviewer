@@ -65,7 +65,7 @@
     // development; tap-select only adds developments near, but not under, the pointer.
     map.getContainer().classList.toggle('tool-select', tool.mode === 'select');
     if (tool.mode && AS().getLassoOn()) AS().setLasso(false);
-    if (tool.mode && innerWidth <= 760) AC().closeDetail();
+    if (tool.mode && innerWidth <= 700) AC().closeDetail();
     if (typeof PeelTools !== 'undefined') PeelTools.sync(tool.mode);
   }
   const hasTools = () => typeof PeelTools !== 'undefined';

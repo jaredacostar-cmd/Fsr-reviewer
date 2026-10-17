@@ -48,7 +48,7 @@
     lassoOn = on;
     lassoSvg.classList.toggle('on', on);
     syncToolsBtn();
-    if (on) { map.dragging.disable(); if (innerWidth <= 760) AC().closeDetail({ keepSelection: true }); }
+    if (on) { map.dragging.disable(); if (innerWidth <= 700) AC().closeDetail({ keepSelection: true }); }
     else map.dragging.enable();
     if (typeof syncClearBtn === 'function') syncClearBtn();
     lassoSvg.querySelector('path').setAttribute('d', '');

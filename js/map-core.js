@@ -51,8 +51,7 @@ const Aerial = () => root.PeelAerial;
     ...(canRotate ? { rotate: true, bearing: orientation === 'grid' ? GRID_BEARING : 0, rotateControl: false, touchRotate: false, shiftKeyRotate: false } : {}),
   }).setView(CFG.center, CFG.zoom);
   map.getContainer().addEventListener('mouseleave', e => { for (const r of map._cvs || []) r._handleMouseOut(e); });
-  const dark = () => document.documentElement.dataset.theme === 'dark' ||
-    (document.documentElement.dataset.theme !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches);
+  const dark = () => document.documentElement.dataset.theme !== 'light';
   // Basemaps: Esri World Imagery (aerial), optionally with Esri reference
   // overlays for roads and place names, or a plain CARTO street map.
   const DATA_ATTR = 'Data: Mississauga, Brampton, Caledon, Peel open data';

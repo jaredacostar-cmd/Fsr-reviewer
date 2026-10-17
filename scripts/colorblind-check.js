@@ -3,7 +3,11 @@
  * Colour-blindness + contrast check for the Peel Development Tracker palette.
  *
  * Parses the design tokens in css/app.css (dark = :root default, light =
- * :root[data-theme="light"]) and verifies:
+ * :root[data-theme="light"], the one light copy: "Follow device" resolves in js/design.js) and
+ * verifies:
+ *   0. The two themes define the same colours: every colour the dark :root block sets has a light
+ *      value, and every light token exists in dark (the drift that left six constraint colours in
+ *      their dark values on the light theme).
  *   1. Every pair of the 7 phase colours (--ph-*) is distinguishable under
  *      simulated protanopia AND deuteranopia (Machado et al. 2009 matrices),
  *      in both themes. Metric: CIE76 Delta-E on the simulated colours;
@@ -11,10 +15,15 @@
  *      difference, sized for small map symbols).
  *   2. WCAG AA for text: --text-primary/--text-secondary/--text-muted reach
  *      4.5:1 against the dark surfaces (--surface-0, --surface-1).
- *   3. Map symbols: every --ph-* phase colour, --cap-over/--cap-tight/--cap-room
- *      and --select reach 3:1 against their theme's --surface-0 (proxy for the
- *      theme-matched street basemap; symbols also carry a thin --sym-outline
- *      stroke so they read on aerial imagery).
+ *   3. Map symbols: the phase colours, capacity, selection, servicing timing, the constraint
+ *      layers and the existing pipes reach 3:1 against their theme's --surface-0 (proxy for the
+ *      theme-matched street basemap; symbols also carry a thin --sym-outline stroke so they read
+ *      on aerial imagery).
+ *   4. Text in a state colour (--cap-over-t / -tight-t / -room-t, --pnl-room, --pnl-stage) reaches
+ *      4.5:1 on every surface, in both themes.
+ *   5. Within each group a colour-blind reader tells apart (capacity + selection, the constraint
+ *      layers, the pipes) every pair stays ΔE ≥ 10 under protanopia, deuteranopia and normal
+ *      vision; the timing steps (a sequential ramp) stay ΔE ≥ 8 from their neighbours.
  *
  * Exit code is non-zero on any failure; on success a readable report is printed.
  * The simulation + colour maths are exported (UMD) so tests/tokens.test.js can
@@ -32,6 +41,15 @@
   const DE_MIN_PAIR = 10;      // CIE76 Delta-E floor for simulated phase pairs
   const TEXT_RATIO = 4.5;      // WCAG AA normal text
   const SYMBOL_RATIO = 3;      // WCAG AA non-text (map symbols)
+  const DE_MIN_RAMP = 8;       // neighbouring steps of a sequential ramp
+  const GROUPS = {
+    capacity: ['--cap-over', '--cap-tight', '--cap-room', '--select'],
+    constraints: ['--cx-water', '--cx-reg', '--cx-flood', '--cx-greenbelt', '--cx-orm', '--cx-nep', '--cx-natural', '--cx-nhs'],
+    pipes: ['--pipe-water', '--pipe-sanitary', '--pipe-storm'],
+  };
+  const RAMPS = { timing: ['--time-1', '--time-2', '--time-3', '--time-4', '--time-far'] };
+  const STATE_TEXT = ['--cap-over-t', '--cap-tight-t', '--cap-room-t', '--pnl-room', '--pnl-stage'];
+  const SURFACES = ['--surface-0', '--surface-1', '--surface-2'];
 
   // ---- colour maths -----------------------------------------------------------
   function hexToRgb(hex) {
@@ -76,22 +94,23 @@
   }
 
   // ---- token parsing ----------------------------------------------------------
-  // Returns { dark: {name: '#hex'}, light: {...} } for single-hex tokens.
+  // Returns { dark, light } ({name: '#hex'}, single-hex tokens): dark = every top-level :root block
+  // (the first holds the theme colours: darkMain), light = every :root[data-theme="light"] block.
+  // all* keep every token (any value), for the parity check.
   function parseTokens(css) {
-    const block = (re) => {
-      const m = re.exec(css);
-      if (!m) throw new Error(`token block not found: ${re}`);
+    const read = (body, hexOnly) => {
       const vars = {};
-      for (const [, name, val] of m[1].matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) {
+      for (const [, name, val] of body.matchAll(/(--[\w-]+)\s*:\s*([^;]+);/g)) {
         const hex = val.trim().match(/^#[0-9a-fA-F]{6}$/);
-        if (hex) vars[name] = hex[0].toLowerCase();
+        if (hex) vars[name] = hex[0].toLowerCase(); else if (!hexOnly) vars[name] = val.trim();
       }
       return vars;
     };
-    const dark = block(/^:root\s*{([^}]*)}/m);
-    const lightAttr = block(/:root\[data-theme="light"\]\s*{([^}]*)}/);
-    const lightMedia = block(/@media\s*\(prefers-color-scheme:\s*light\)\s*{\s*:root:not\(\[data-theme\]\)\s*{([^}]*)}/);
-    return { dark, light: lightAttr, lightMedia };
+    const blocks = re => [...css.matchAll(re)].map(m => m[1]);
+    const darkBlocks = blocks(/^:root\s*{([^}]*)}/gm), lightBlocks = blocks(/^:root\[data-theme="light"\]\s*{([^}]*)}/gm);
+    if (!darkBlocks.length || !lightBlocks.length) throw new Error('token blocks not found');
+    const merge = (bs, hexOnly) => Object.assign({}, ...bs.map(b => read(b, hexOnly)));
+    return { dark: merge(darkBlocks, true), light: { ...merge(darkBlocks, true), ...merge(lightBlocks, true) }, darkMain: read(darkBlocks[0], true), lightMain: read(lightBlocks[0], false), allDark: merge(darkBlocks, false), allLight: merge(lightBlocks, false) };
   }
 
   // ---- checks -----------------------------------------------------------------
@@ -126,7 +145,7 @@
   }
   function checkSymbolContrast(tokens) {
     const failures = [];
-    const names = PHASES.map(p => `--ph-${p}`).concat(['--cap-over', '--cap-tight', '--cap-room', '--select']);
+    const names = PHASES.map(p => `--ph-${p}`).concat(GROUPS.capacity, RAMPS.timing, GROUPS.constraints, GROUPS.pipes);
     for (const theme of ['dark', 'light']) {
       const bg = hexToRgb(tokens[theme]['--surface-0']);
       for (const name of names) {
@@ -137,21 +156,53 @@
     return failures;
   }
 
+  // 0. One light copy, the same colours as dark.
+  function checkParity(tokens, css) {
+    const failures = [];
+    if (/prefers-color-scheme/.test(css.replace(/\/\*[\s\S]*?\*\//g, ''))) failures.push('the stylesheet reads prefers-color-scheme: "Follow device" resolves in js/design.js');
+    for (const k of Object.keys(tokens.darkMain)) if (!(k in tokens.lightMain)) failures.push(`${k} has no light value`);
+    for (const k of Object.keys(tokens.allLight)) if (!(k in tokens.allDark)) failures.push(`${k} is set for light only`);
+    return failures;
+  }
+  const minDE = (a, b) => Math.min(...[protanopia, deuteranopia, x => x].map(sim => deltaE76(sim(hexToRgb(a)), sim(hexToRgb(b)))));
+  // 4. State colours as text: 4.5:1 on every surface.
+  function checkStateText(tokens) {
+    const failures = [];
+    for (const theme of ['dark', 'light']) for (const name of STATE_TEXT) for (const bg of SURFACES) {
+      const r = contrast(hexToRgb(tokens[theme][name]), hexToRgb(tokens[theme][bg]));
+      if (r < TEXT_RATIO) failures.push(`${name} on ${bg} [${theme}]: ${r.toFixed(2)}:1 < ${TEXT_RATIO}:1`);
+    }
+    return failures;
+  }
+  // 5. Groups and ramps under colour blindness.
+  function checkGroups(tokens) {
+    const failures = [];
+    for (const theme of ['dark', 'light']) {
+      for (const [g, names] of Object.entries(GROUPS)) for (let i = 0; i < names.length; i++) for (let j = i + 1; j < names.length; j++) {
+        const de = minDE(tokens[theme][names[i]], tokens[theme][names[j]]);
+        if (de < DE_MIN_PAIR) failures.push(`${g}: ${names[i]} vs ${names[j]} [${theme}]: ΔE=${de.toFixed(1)} < ${DE_MIN_PAIR}`);
+      }
+      for (const [g, names] of Object.entries(RAMPS)) for (let i = 0; i + 1 < names.length; i++) {
+        const de = minDE(tokens[theme][names[i]], tokens[theme][names[i + 1]]);
+        if (de < DE_MIN_RAMP) failures.push(`${g}: ${names[i]} vs ${names[i + 1]} [${theme}]: ΔE=${de.toFixed(1)} < ${DE_MIN_RAMP}`);
+      }
+    }
+    return failures;
+  }
+
   function run(cssPath = CSS_PATH) {
     const css = fs.readFileSync(cssPath, 'utf8');
     const tokens = parseTokens(css);
     const report = { failures: [] };
-    // The follow-device media block must carry the same light values as the
-    // explicit data-theme="light" block.
-    for (const [k, v] of Object.entries(tokens.light)) {
-      if (tokens.lightMedia[k] !== v) report.failures.push(`light mismatch: ${k} media=${tokens.lightMedia[k]} attr=${v}`);
-    }
+    report.failures.push(...checkParity(tokens, css));
     for (const p of PHASES) for (const th of ['dark', 'light'])
       if (!tokens[th][`--ph-${p}`]) report.failures.push(`missing token --ph-${p} [${th}]`);
     const pairs = checkPhasePairs(tokens);
     report.failures.push(...pairs.failures);
     report.failures.push(...checkTextContrast(tokens));
     report.failures.push(...checkSymbolContrast(tokens));
+    report.failures.push(...checkStateText(tokens));
+    report.failures.push(...checkGroups(tokens));
     report.worstPair = pairs.worst;
     report.ok = report.failures.length === 0;
     return report;
@@ -165,7 +216,9 @@
     if (report.ok) {
       console.log('  text 4.5:1 on dark surfaces: PASS');
       console.log('  symbols 3:1 on theme surfaces: PASS');
-      console.log('  light media-query block matches data-theme="light": PASS');
+      console.log('  one light copy, the same colours as dark: PASS');
+      console.log('  state colours as text 4.5:1 on every surface: PASS');
+      console.log('  capacity, constraint, pipe and timing colours apart under colour blindness: PASS');
       console.log('ALL CHECKS PASSED');
     } else {
       console.log('FAILURES:');
@@ -175,9 +228,9 @@
   }
 
   const api = {
-    PHASES, MERGED, DE_MIN_PAIR, TEXT_RATIO, SYMBOL_RATIO,
+    PHASES, MERGED, DE_MIN_PAIR, DE_MIN_RAMP, TEXT_RATIO, SYMBOL_RATIO, GROUPS, RAMPS, STATE_TEXT,
     hexToRgb, rgbToLab, deltaE76, protanopia, deuteranopia, contrast,
-    parseTokens, checkPhasePairs, checkTextContrast, checkSymbolContrast, run,
+    parseTokens, checkParity, checkPhasePairs, checkTextContrast, checkSymbolContrast, checkStateText, checkGroups, run,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.ColorblindCheck = api;

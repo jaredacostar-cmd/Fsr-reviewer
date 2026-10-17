@@ -9,9 +9,8 @@
  * Grounding:
  * - Theme storage key `peel-dev:theme` matches the `peel-dev:<k>` convention of the
  *   store helper in js/app.js. Values: 'dark' (default), 'light', 'device'.
- *   css/app.css holds dark values on :root, light values on
- *   :root[data-theme="light"], and follow-device on
- *   `@media (prefers-color-scheme: light) { :root:not([data-theme]) { ... } }`.
+ *   css/app.css holds dark values on :root and light values on :root[data-theme="light"]
+ *   (one copy: "Follow device" resolves to dark or light here, not in the stylesheet).
  *   A tiny inline <head> script in index.html mirrors resolveTheme so the theme
  *   applies before first paint (no dark/light flash); app.js re-applies it with
  *   validation for live changes.
@@ -28,22 +27,20 @@
   'use strict';
 
   // ---- Theme ---------------------------------------------------------------
-  // stored: 'dark' | 'light' | 'device' | null/undefined/garbage.
-  // Returns the data-theme value to set, or null to remove the attribute and let
-  // the follow-device media query decide. prefersLight is accepted for symmetry
-  // with the inline head script (which uses matchMedia); 'device' always defers
-  // to the media query, so it is unused here.
+  // stored: 'dark' | 'light' | 'device' | null/undefined/garbage. Returns the data-theme value
+  // to set: always 'dark' or 'light', so the stylesheet holds one copy of each theme ('device'
+  // follows the system setting, read here and in the inline head script).
   function resolveTheme(stored, prefersLight) {
     if (stored === 'light') return 'light';
-    if (stored === 'device') return null;
+    if (stored === 'device') return prefersLight ? 'light' : 'dark';
     return 'dark'; // 'dark', unset, or anything unrecognised: dark is the default.
   }
+  const systemLight = () => typeof matchMedia === 'function' && matchMedia('(prefers-color-scheme: light)').matches;
 
   function applyTheme(stored) {
-    if (typeof document === 'undefined') return resolveTheme(stored);
-    var t = resolveTheme(stored);
-    if (t) document.documentElement.setAttribute('data-theme', t);
-    else document.documentElement.removeAttribute('data-theme');
+    if (typeof document === 'undefined') return resolveTheme(stored, false);
+    var t = resolveTheme(stored, systemLight());
+    document.documentElement.setAttribute('data-theme', t);
     return t;
   }
 
@@ -52,7 +49,7 @@
   // narrow window when matchMedia is unavailable) default to comfortable.
   function densityDefault() {
     if (typeof matchMedia === 'function' && matchMedia('(pointer: coarse)').matches) return 'comfortable';
-    if (typeof innerWidth === 'number' && innerWidth <= 760) return 'comfortable';
+    if (typeof innerWidth === 'number' && innerWidth <= 700) return 'comfortable';
     return 'compact';
   }
 

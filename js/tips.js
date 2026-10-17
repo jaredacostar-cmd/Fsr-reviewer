@@ -18,7 +18,7 @@
   const App = () => window.PeelApp;
 
   // ---- Tips: a short tour, shown once (the topbar Help button shows it again) ----------------------------
-  const phoneUI = () => innerWidth <= 760;
+  const phoneUI = () => innerWidth <= 700;
   // Tour: a guided walk through the app in chapters. Steps can set the app up (open a development,
   // run a trace, open a tab) so each one shows the real thing; the tour tidies up when it ends.
   const tourDev = () => pickDev();
