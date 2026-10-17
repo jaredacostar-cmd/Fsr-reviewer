@@ -363,6 +363,18 @@
     return { nodes: n.map(({ g, bend }) => ({ g, bend: bend || 0 })), reaches: n.slice(1).map((b, k) => ({ from: k, to: k + 1, L: b.x - n[k].x, q, pts: route.samples.filter(s => s.x > n[k].x && s.x < b.x).map(s => ({ d: s.x - n[k].x, g: s.g })) })) };
   }
 
+  // The deepest the pipe runs (m from the ground to its invert) at every maintenance hole and every
+  // ground sample along every reach, as the cover check reads them, and the trench there (with the
+  // 0.15 m bedding). d: design() or designNet() (ok); net: its network (lineNet(route, q) for design()).
+  function deepest(d, net, r = d.rules || RULES) {
+    let depth = Math.max(...d.mhs.map(m => m.depth));
+    d.reaches.forEach((rc, i) => {
+      const NR = net.reaches[i];
+      for (const p of [{ d: 0, g: net.nodes[rc.from].g }, ...NR.pts, { d: NR.L, g: net.nodes[rc.to].g }]) depth = Math.max(depth, p.g - (rc.inv_up - rc.S * p.d));
+    });
+    return { depth, trench: depth + r.bedding };
+  }
+
   // ---- Helpers for the tools -----------------------------------------------------------------------
   // Maintenance holes along a drawn line: at each vertex (a change of direction) and between them so
   // none is more than the spacing apart. pts: [{ x }] chainages of the vertices.
@@ -384,7 +396,7 @@
     return { q: peak + ii, avg: res + emp, peak, ii, typed: false };
   }
 
-  const api = { RULES, SIZES, SOURCE, qFull, vFull, partAt, partFor, minSlope, maxSlope, dropRange, design, designNet, lineNet, placeMHs, flowFrom };
+  const api = { RULES, SIZES, SOURCE, qFull, vFull, partAt, partFor, minSlope, maxSlope, dropRange, design, designNet, lineNet, deepest, placeMHs, flowFrom };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSewerDesign = api;
 })(typeof window !== 'undefined' ? window : globalThis);

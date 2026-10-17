@@ -110,3 +110,24 @@ test('wired: crossings looked up after each design, Follow roads on the banner, 
   assert.ok(html.indexOf('js/road-net.js') > 0 && html.indexOf('js/road-net.js') < html.indexOf('js/sewer-designer.js'));
   assert.match(src('sw.js'), /'js\/road-net\.js',/);
 });
+
+test('the trench at the deepest is read along every reach, not only at the maintenance holes', () => {
+  // 300 m of ground falling gently with a 4 m hump at 200 m, between maintenance holes at 100 and 300 m
+  const gf = x => 200 - 0.01 * x + 4 * Math.exp(-(((x - 200) / 25) ** 2));
+  const nodes = [0, 100, 300].map(x => ({ x, g: gf(x), bend: 0 })), samples = Array.from({ length: 30 }, (_, k) => ({ x: k * 10 + 5, g: gf(k * 10 + 5) }));
+  const conn = { invert: gf(300) - 4, dmm: 375 }, net = SD.lineNet({ nodes, samples }, 10), d = SD.designNet(net, conn);
+  assert.ok(d.ok, d.why);
+  let worst = 0;
+  d.reaches.forEach((r, i) => { for (const p of [{ d: 0, g: net.nodes[r.from].g }, ...net.reaches[i].pts, { d: r.L, g: net.nodes[r.to].g }]) worst = Math.max(worst, p.g - (r.inv_up - r.S * p.d) + 0.15); });
+  const dp = SD.deepest(d, net);
+  assert.ok(near(dp.trench, worst, 1e-6) && near(dp.trench, dp.depth + 0.15, 1e-9));
+  assert.ok(dp.depth > Math.max(...d.mhs.map(m => m.depth)) + 3, 'under the hump, well below the maintenance holes');
+  const c = SDR.checks(d, net, conn).find(x => /^Trench/.test(x.t));
+  // was 2.89 m (the deepest maintenance hole + 0.15)
+  assert.equal(c.val, `${worst.toFixed(2)} m at the deepest`);
+  assert.equal(c.val, '6.71 m at the deepest');
+  // the panel's and the print sheet's "deepest" follow it
+  const s = src('js/sewer-designer.js');
+  assert.match(s, /const deepest = SW\(\)\.deepest\(d, S\.net\.net\)\.depth/);
+  assert.match(s, /deepest: SW\(\)\.deepest\(S\.d, S\.net\.net\),/);
+});

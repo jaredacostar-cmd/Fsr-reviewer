@@ -13,6 +13,7 @@
  */
 (function (root) {
   'use strict';
+  const SWD = typeof module !== 'undefined' && module.exports ? require('./sewer-design.js') : root.PeelSewerDesign;
   const R = 6371008.8, rad = d => d * Math.PI / 180;
   const metres = (a, b) => { const dLat = rad(b.lat - a.lat), dLng = rad(b.lng - a.lng), h = Math.sin(dLat / 2) ** 2 + Math.cos(rad(a.lat)) * Math.cos(rad(b.lat)) * Math.sin(dLng / 2) ** 2; return 2 * R * Math.asin(Math.sqrt(h)); };
   // Chainage (m) of each vertex along the line.
@@ -36,7 +37,7 @@
   // line); conn: the existing sewer.
   function checks(d, net, conn) {
     const f2 = v => (+v).toFixed(2), n0 = v => Math.round(v).toLocaleString('en-CA'), R = d.reaches, NR = net.reaches;
-    const deepest = Math.max(...d.mhs.map(m => m.depth)), vmin = Math.min(...R.map(r => r.v)), vmax = Math.max(...R.map(r => r.vFull)), qr = Math.max(...R.map(r => r.qRatio));
+    const trench = SWD.deepest(d, net).trench, vmin = Math.min(...R.map(r => r.v)), vmax = Math.max(...R.map(r => r.vFull)), qr = Math.max(...R.map(r => r.qRatio));
     const dm = r => (r.dmm || d.dmm) / 1000, into = n => R.filter(r => r.to === n), first = R.filter(r => !into(r.from).length);
     const sizes = [...new Set(R.map(r => r.dmm || d.dmm))].sort((a, b) => a - b), rootIns = d.mhs[d.root].ins;
     const minCover = Math.min(...R.map((r, i) => Math.min(...[{ d: 0, g: net.nodes[r.from].g }, ...NR[i].pts, { d: NR[i].L, g: net.nodes[r.to].g }].map(p => p.g - (r.inv_up - r.S * p.d) - dm(r)))));
@@ -57,7 +58,7 @@
       c('Flow ratio, design flow to full flow (0.7 or less)', qr <= 0.7 + 1e-6, qr.toFixed(2)),
       c(`The last leg, at the upstream end${first.length > 1 ? ' of each branch' : ''} (1.00% or more)`, first.every(r => r.S >= 0.01 - 1e-9), `${f2(Math.min(...first.map(r => r.S)) * 100)}%${first.length > 1 ? ' at the least' : ''}`),
       c(`Cover over the pipe (${d.cover} m or more)`, minCover >= d.cover - 0.01, `${f2(minCover)} m at the least`),
-      c('Trench (8.0 m or less)', deepest + 0.15 <= 8.0 + 1e-6, `${f2(deepest + 0.15)} m at the deepest`),
+      c('Trench (8.0 m or less)', trench <= 8.0 + 1e-6, `${f2(trench)} m at the deepest`),
       c(`Maintenance holes (${sp} m apart or less)`, spOK, `${n0(Lmax)} m at the longest`),
       c('Drops through the maintenance holes (0.03–0.20 m, obverts matched where the size grows, or a drop structure from 0.9 m)', dropOK, `${d.structures} drop structure${d.structures === 1 ? '' : 's'}`),
       c('Connection (the new obvert at or above the existing one)', connOK, c0.drop ? `${f2(c0.drop)} m drop${c0.structure ? ' (drop structure)' : ''}` : 'obverts matched'),
@@ -460,7 +461,7 @@
     return `<div class="sd-res">${head}${S.corridor && root.PeelCorridorFinder ? corridorHTML() : ''}${formHTML()}${body}<p class="small muted">A preliminary design for screening: the route as drawn${S.roadsUsed ? ` (along the road centrelines where it follows them: ${esc(root.PeelRoadNet ? root.PeelRoadNet.SOURCE : 'Ontario Road Network')}, so the cover there is from the centreline, as s. 3.4.1.1 measures it)` : ''}, the ground from ${esc(S.groundLabel || 'the terrain model')} (not a survey), the existing sewer as the Region publishes it. Rules: ${esc(S.fm ? FM().SOURCE : SW().SOURCE)}. Utilities, other services, soils and groundwater are not considered.</p><p class="pnl-note small">${NOTE()}</p></div>`;
   }
   function designHTML(d) {
-    const deepest = Math.max(...d.mhs.map(m => m.depth)), s = d.reaches.map(r => r.S * 100), sizes = [...new Set(d.reaches.map(r => r.dmm))].sort((a, b) => a - b), nRuns = runs().length;
+    const deepest = SW().deepest(d, S.net.net).depth, s = d.reaches.map(r => r.S * 100), sizes = [...new Set(d.reaches.map(r => r.dmm))].sort((a, b) => a - b), nRuns = runs().length;
     const ok = c => `<li class="${c.pass ? 'sd-ok' : 'sd-no'}"><span aria-hidden="true">${c.pass ? '✓' : '✗'}</span> ${esc(c.t)}: <strong>${esc(c.val)}</strong></li>`;
     const checkList = checks(d, S.net.net, S.conn).map(ok);
     const froudeHi = d.reaches.filter(r => r.froude >= 1).length;
@@ -587,7 +588,7 @@
     P.open({
       d: S.d, view: v, nodes: v.nodes, ground: v.ground, pts: [...S.pts, ...done().flatMap(b => b.pts)], conn: S.conn, mains, flow: S.flow, groundLabel: S.groundLabel,
       plan: { lls, reaches: S.d.reaches, labels: S.d.mhs.map((m, i) => `MH ${i + 1}`), start: S.pts[0], branches: done().map(b => b.pts[0]) },
-      xings: S.xings || null, checks: checks(S.d, S.net.net, S.conn), froudeHi: S.d.reaches.filter(x => x.froude >= 1).length,
+      xings: S.xings || null, checks: checks(S.d, S.net.net, S.conn), deepest: SW().deepest(S.d, S.net.net), froudeHi: S.d.reaches.filter(x => x.froude >= 1).length,
       where: dev && dev.title ? `From ${dev.title}` : `From ${st.lat.toFixed(5)}, ${st.lng.toFixed(5)}`,
       date: new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }),
       version: RP && RP.appVersion ? RP.appVersion() : 'dev', unofficial: Ut.UNOFFICIAL || 'Unofficial prototype · public data only · not a Region of Peel product',

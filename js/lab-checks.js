@@ -40,17 +40,22 @@
     return { zone: String(zone), z, hgl: Z.hgl, head, kpa, psi, band, serv: Z.serv, storeys, tone,
       verdict: psi < PRESSURE.min ? 'Below 40 psi at ground' : psi > PRESSURE.max ? 'Above 100 psi at ground' : 'Within 40–100 psi' };
   }
-  // The gravity check's answer from a design (js/sewer-design.js) and the connection.
-  function gravityVerdict(d) {
+  const SWD = () => (typeof module !== 'undefined' && module.exports ? require('./sewer-design.js') : root.PeelSewerDesign);
+  // The deepest the designed pipe runs below the ground (m to the invert): along every reach's ground
+  // samples when the route is given (PeelSewerDesign.deepest()), else at the maintenance holes.
+  const deepestOf = (d, route) => (route ? SWD().deepest(d, SWD().lineNet(route, d.q || 0)).depth : Math.max(...d.mhs.map(m => m.depth)));
+  // The gravity check's answer from a design (js/sewer-design.js) and the connection; route: the
+  // design's { nodes, samples }.
+  function gravityVerdict(d, route) {
     if (!d) return { tone: null, text: 'Not assessed' };
     if (!d.ok) return /below the existing obvert/.test(d.why || '') ? { tone: 'over', text: 'Likely needs pumping' } : { tone: 'tight', text: 'Not by this straight line' };
-    const deep = Math.max(...d.mhs.map(m => m.depth)) > 6 || d.structures > 0;
+    const deep = deepestOf(d, route) > 6 || d.structures > 0;
     return deep ? { tone: 'tight', text: 'By gravity, deep or with a drop structure' } : { tone: 'room', text: 'Likely by gravity' };
   }
 
   // ---- Browser ---------------------------------------------------------------------------------
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
-    if (typeof module !== 'undefined' && module.exports) module.exports = { ZONES, ZONE_SRC, PRESSURE, pressureAt, gravityVerdict };
+    if (typeof module !== 'undefined' && module.exports) module.exports = { ZONES, ZONE_SRC, PRESSURE, pressureAt, gravityVerdict, deepestOf };
     return;
   }
   const U = root.PeelUtil || {}, esc = U.esc || (s => String(s)), fmtNum = U.fmtNum || (n => String(n));
@@ -147,11 +152,11 @@
     return g[g.length - 1];
   }
   function gravityHTML(p, d, conn, L, q, route, g0) {
-    const v = gravityVerdict(d), chip = `<span class="pnl-chip t-${v.tone}">${esc(v.text)}</span>`;
+    const v = gravityVerdict(d, route), chip = `<span class="pnl-chip t-${v.tone}">${esc(v.text)}</span>`;
     const where = `${fmtNum(conn.dmm)} mm sanitary sewer${conn.id ? ` ${esc(conn.id)}` : ''}, invert ${fmt2(conn.invert)} m, about ${fmtNum(r0(L))} m away in a straight line (${conn.existingMH ? 'at its existing maintenance hole' : 'a new maintenance hole on the pipe'})`;
     let body;
     if (d.ok) {
-      const deepest = Math.max(...d.mhs.map(mh => mh.depth)), s = d.reaches.map(x => x.S * 100), vmin = Math.min(...d.reaches.map(x => x.v)), qr = Math.max(...d.reaches.map(x => x.qRatio));
+      const deepest = deepestOf(d, route), s = d.reaches.map(x => x.S * 100), vmin = Math.min(...d.reaches.map(x => x.v)), qr = Math.max(...d.reaches.map(x => x.qRatio));
       body = `<p>${chip} A <strong>${fmtNum(d.dmm)} mm</strong> sewer at ${fmt2(Math.min(...s))}–${fmt2(Math.max(...s))}% reaches the ${where}.</p>
         <ul class="b-lines small">
           <li>Depth to invert at the site <strong>${fmt1(d.mhs[0].depth)} m</strong>; deepest <strong>${fmt1(deepest)} m</strong> (${d.cover} m of cover over the pipe, an 8 m trench at most); ${fmtNum(d.mhs.length)} maintenance holes${d.structures ? `; <strong>${d.structures} drop structure${d.structures === 1 ? '' : 's'}</strong>` : ''}.</li>

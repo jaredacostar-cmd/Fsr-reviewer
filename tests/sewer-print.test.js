@@ -86,3 +86,11 @@ test('wired: the designer\'s print button, the report window takes the sheet\'s 
   assert.ok(html.indexOf('js/sewer-print.js') > 0 && html.indexOf('js/sewer-print.js') < html.indexOf('js/sewer-designer.js'));
   assert.match(src('sw.js'), /'js\/sewer-print\.js',/);
 });
+
+test('the sheet\'s "at the deepest" is the deepest along the reaches the designer passes in', () => {
+  const dp = SD.deepest(d, net);
+  assert.ok(dp.depth >= Math.max(...d.mhs.map(m => m.depth)) - 1e-9);
+  const html = SP.sheetHTML({ ...dt, deepest: { depth: 7.26, trench: 7.41 } }).body;
+  assert.match(html, /7\.3 m at the deepest/);
+  assert.equal((html.match(/7\.3 m at the deepest/g) || []).length, 2, 'the title block and the summary');
+});

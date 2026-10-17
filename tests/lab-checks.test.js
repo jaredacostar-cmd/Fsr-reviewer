@@ -48,3 +48,19 @@ test('wired: two Labs switches; the folds sit in a development\'s Servicing pane
   for (const f of ['js/sewer-design.js', 'js/lab-checks.js']) { assert.ok(src('index.html').includes(`<script src="${f}?v=__BUILD__"></script>`), f); assert.ok(src('sw.js').includes(`'${f}',`), f); }
   assert.match(src('js/measure.js'), /const api = \{ politeFetch, sewerWalk, mainsNear, nearOn,/);
 });
+
+test('the gravity verdict reads the depth along the line, not only at the maintenance holes', () => {
+  const SD = require('../js/sewer-design.js');
+  // a 4 m ridge halfway between two maintenance holes 150 m apart
+  const gf = x => 200 - 0.01 * x + 4 * Math.exp(-(((x - 75) / 25) ** 2));
+  const route = { nodes: [0, 150].map(x => ({ x, g: gf(x), bend: 0 })), samples: Array.from({ length: 15 }, (_, k) => ({ x: k * 10 + 5, g: gf(k * 10 + 5) })) };
+  const d = SD.design(route, { invert: gf(150) - 3, dmm: 375 }, 8);
+  assert.ok(d.ok, d.why);
+  assert.equal(d.structures, 0);
+  assert.ok(Math.max(...d.mhs.map(m => m.depth)) < 6, 'shallow at both maintenance holes');
+  assert.ok(Math.abs(LC.deepestOf(d, route) - 6.7) < 1e-6, `${LC.deepestOf(d, route)}`);   // was 2.7 m (the maintenance holes)
+  // the maintenance holes alone (as before), then along the line
+  assert.equal(LC.gravityVerdict(d).text, 'Likely by gravity');
+  assert.equal(LC.gravityVerdict(d, route).text, 'By gravity, deep or with a drop structure');
+  assert.match(src('js/lab-checks.js'), /const v = gravityVerdict\(d, route\)/);
+});
