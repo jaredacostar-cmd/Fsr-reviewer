@@ -49,3 +49,17 @@ test('the app’s collection criteria match the plan (290 L/cap/d, Harmon 2–4,
   assert.equal(K.wastewater.peakMax, C.peakMax);
   assert.equal(K.employment.wastewater, C.employmentADWF_Lpd);
 });
+
+test('plant checks: BOD loading from the plan, and the diversion as a step both ways', () => {
+  const src = require('fs').readFileSync(require('path').join(__dirname, '..', 'js', 'masterplan.js'), 'utf8');
+  const body = name => { const i = src.indexOf(`function ${name}(`); return src.slice(i, src.indexOf('\n  }\n', i)); };
+  assert.match(body('bodCons'), /governingKgd/, 'BOD capacity is the governing capacity');
+  assert.match(body('bodCons'), /residential_gpd/, 'BOD growth uses the plan criteria');
+  assert.match(body('plantCons'), /qWith\(!di\.on\)/, 'flow check computes the other diversion case');
+  assert.match(body('devNeeds'), /bodCons\(/);
+  assert.match(body('allNeeds'), /bodCons\(/);
+  // The plan's own BOD strength gives the loading the diversion moves: ~262 kg per ML at G.E. Booth.
+  const L = D.plantLoading, F = D.flowForecast, booth = L.rows[0];
+  const kgPerMl = booth.demandKgd[L.years.indexOf(2021)] / F.eastSubtotal[F.years.indexOf(2021)];
+  near(kgPerMl, 262, 1, 'Booth kg/ML 2021');
+});
