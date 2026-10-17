@@ -262,8 +262,8 @@
     for (const t of p.timeline) {
       const r = byUid.get(t.record), type = r && r.kind === 'permit' ? 'permit' : 'file';
       const k = `${fmtDate(t.date)}|${t.text}|${type}`;
-      if (!groups.has(k)) { const g = { date: t.date, type, phase: t.phase, text: t.text, tags: [] }; groups.set(k, g); ev.push(g); }
-      const g = groups.get(k); if (!g.tags.includes(t.tag)) g.tags.push(t.tag);
+      if (!groups.has(k)) { const g = { date: t.date, type, phase: t.phase, text: t.text, tags: [], uids: [] }; groups.set(k, g); ev.push(g); }
+      const g = groups.get(k); if (!g.tags.includes(t.tag)) { g.tags.push(t.tag); g.uids.push(t.record); }
     }
     const h = (st && st.history && st.history.projects && st.history.projects[p.key]) || [];
     h.forEach(([d, ph, tag], i) => {
@@ -279,17 +279,28 @@
     for (const x of all) {
       if (x.type !== 'permit') { out.push(x); continue; }
       const y = fmtDate(x.date).slice(0, 4);
-      if (!years.has(y)) { const s = { date: x.date, type: 'permits', byPhase: new Map(), tags: new Set() }; years.set(y, s); out.push(s); }
+      if (!years.has(y)) { const s = { date: x.date, type: 'permits', byPhase: new Map(), tags: new Set(), uidOf: new Map() }; years.set(y, s); out.push(s); }
       const s = years.get(y);
       if (!s.byPhase.has(x.phase)) s.byPhase.set(x.phase, new Set());
-      for (const t of x.tags) { s.byPhase.get(x.phase).add(t); s.tags.add(t); }
+      x.tags.forEach((t, i) => { s.byPhase.get(x.phase).add(t); s.tags.add(t); if (x.uids && x.uids[i]) s.uidOf.set(t, x.uids[i]); });
     }
     return out;
   }
   const TL_TYPE = { council: 'Council', phase: 'Stage', file: 'File', permit: 'Permit', permits: 'Permits' };
+  // The event types as filters: a type label shows only that type ("Council" → the council items).
+  const TL_FILTER = { council: 'council', phase: 'phase', file: 'file', permit: 'permit', permits: 'permit' };
+  // A file or permit named in History opens its source record in place: provenance and every field.
+  let evRecs = null;   // uid → record, for the development being drawn
+  function recInline(uid, tag) {
+    const r = evRecs && evRecs.get(uid); if (!r) return `<span class="tl-ref-t">${esc(tag)}</span>`;
+    return `<details class="tl-rec" data-rec-uid="${esc(r.uid)}" data-rec-ref="${esc(r.ref || tag)}"><summary><span class="tl-ref">${esc(tag)}</span></summary><div class="tl-rec-b">
+      <p class="small"><strong>${esc(r.kind === 'permit' ? 'Building permit' : 'Application')} ${esc(r.ref || '')}</strong>${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · municipal status: <em>${esc(r.statusRaw)}</em>` : ''}</p>
+      ${r.description ? `<p class="small">${esc(r.description)}</p>` : ''}${recordProvHTML(r)}<table class="rec-t">${recordRows(r)}</table></div></details>`;
+  }
   function evHTML(x) {
-    const tags = list => list.length <= 3 ? esc(list.join(', '))
-      : `${esc(list.slice(0, 2).join(', '))} <details class="tl-more"><summary>+${list.length - 2} more</summary>${esc(list.slice(2).join(', '))}</details>`;
+    const one = (t, i, uids) => (uids && uids[i] ? recInline(uids[i], t) : `<span class="tl-ref-t">${esc(t)}</span>`);
+    const tags = (list, uids) => list.length <= 3 ? list.map((t, i) => one(t, i, uids)).join(' ')
+      : `${list.slice(0, 2).map((t, i) => one(t, i, uids)).join(' ')} <details class="tl-more"><summary>+${list.length - 2} more</summary>${list.slice(2).map((t, i) => one(t, i + 2, uids)).join(' ')}</details>`;
     let body;
     if (x.type === 'council') {
       const { m, it, s } = x.c;
@@ -301,14 +312,14 @@
         ${it.text ? `<details class="c-text"><summary>${m.passed ? 'Minutes: discussion, motion and vote' : 'Agenda text'}</summary><p class="small">${esc(it.text)}</p></details>` : ''}
       </details>`;
     } else if (x.type === 'phase') {
-      body = `${dot(x.phase)}<span><strong>${esc(x.text)}</strong>${x.why ? ` <span class="muted">— ${esc(x.why.text.replace(/^[^·]*· /, ''))} on ${esc(x.why.tag)} (${fmtDate(x.why.date)})</span>` : ''}</span>`;
+      body = `${dot(x.phase)}<span><strong>${esc(x.text)}</strong>${x.why ? ` <span class="muted">— ${esc(x.why.text.replace(/^[^·]*· /, ''))} on ${recInline(x.why.record, x.why.tag)} (${fmtDate(x.why.date)})</span>` : ''}</span>`;
     } else if (x.type === 'permits') {
       const ph = P().PHASES.map(q => q.key).concat('cancelled').filter(k => x.byPhase.has(k)).reverse();
-      body = `${dot(ph[0] || 'permit')}<span>${fmtNum(x.tags.size)} building permit${x.tags.size === 1 ? '' : 's'} with dates this year: ${ph.map(k => `${esc(P().PHASE_BY_KEY[k].label.toLowerCase())} ${fmtNum(x.byPhase.get(k).size)}`).join(' · ')} <span class="muted">— each under All dated events</span></span>`;
+      body = `${dot(ph[0] || 'permit')}<span>${fmtNum(x.tags.size)} building permit${x.tags.size === 1 ? '' : 's'} with dates this year: ${ph.map(k => `${esc(P().PHASE_BY_KEY[k].label.toLowerCase())} ${fmtNum(x.byPhase.get(k).size)}`).join(' · ')} <span class="muted">— ${tags([...x.tags], [...x.tags].map(t => x.uidOf.get(t)))}</span></span>`;
     } else {
-      body = `${dot(x.phase)}<span>${esc(x.text)}${x.tags.length > 1 ? ` <span class="tl-n">×${x.tags.length}</span>` : ''} <span class="muted">— ${tags(x.tags)}</span></span>`;
+      body = `${dot(x.phase)}<span>${esc(x.text)}${x.tags.length > 1 ? ` <span class="tl-n">×${x.tags.length}</span>` : ''} <span class="muted">— ${tags(x.tags, x.uids)}</span></span>`;
     }
-    return `<li class="t-${x.type}"><span class="d">${fmtDate(x.date).slice(5)}</span><span class="tl-type">${TL_TYPE[x.type]}</span><div class="tl-body">${body}</div></li>`;
+    return `<li class="t-${x.type}" data-tl-k="${TL_FILTER[x.type]}"><span class="d">${fmtDate(x.date).slice(5)}</span><button type="button" class="tl-type" data-tl-type="${TL_FILTER[x.type]}" title="Show only ${esc(TL_TYPE[x.type].toLowerCase())} events">${TL_TYPE[x.type]}</button><div class="tl-body">${body}</div></li>`;
   }
   function evListHTML(list) {
     if (!list.length) return '<p class="muted small">No dated events in the source data.</p>';
@@ -320,21 +331,35 @@
       return `<details class="tl-year"${i < 2 ? ' open' : ''}><summary><strong>${y}</strong> <span class="muted small">${sum}</span></summary><ol class="tl2">${xs.map(evHTML).join('')}</ol></details>`;
     }).join('');
   }
+  // History: the stages reached, then every dated event. A file or permit number in an event opens
+  // its source record in place; "By file" lists the source records by type (the old Source records
+  // section); a type label (Council, File, Permit, Stage) shows only that type.
   function devHistoryHTML(p, st) {
     const cancelled = p.phase === 'cancelled';
     const steps = P().PHASES.map(s => {
       const reached = !cancelled && s.rank <= p.rank, when = p.milestones[s.key];
       return `<li class="${s.key === p.phase ? 'current done' : reached ? 'done' : 'todo'}">${dot(s.key)}<span class="lbl">${esc(s.label)}</span><span class="when">${when ? fmtDate(when) : reached ? 'reached' : ''}</span></li>`;
     }).join('');
+    evRecs = new Map(p.records.map(r => [r.uid, r]));
     const all = devEvents(p), key = keyEvents(all);
     const nC = all.filter(x => x.type === 'council').length;
-    const st2 = state();
-    return `<details class="sect" id="devtab-hist" open><summary><h2 class="section-title" data-info="dev-history">History</h2><span class="muted small sect-sum">${p.first ? `since ${fmtDate(p.first).slice(0, 4)}` : ''}${nC ? ` · ${nC} council` : ''}</span></summary>
+    const st2 = state(), byRef = new Map(p.records.map(r => [r.ref, r]));
+    const fileLink = f => (byRef.has(f) ? `<button type="button" class="tr-ref" data-dev-file="${esc(f)}">${esc(f)}</button>` : esc(f));
+    const groups = groupRecords(p.records);
+    const byFile = groups.map(g => `<details class="rec-group"><summary><strong>${esc(g.label)}</strong> <span class="n">${fmtNum(g.list.length)}</span><span class="muted small">${g.span}${g.units ? ` · ${fmtNum(g.units)} units` : ''}</span></summary>
+        ${g.shown.map(recHTML).join('')}
+        ${g.more ? `<p class="small muted">+ ${fmtNum(g.more)} more (export CSV for the full list)</p>` : ''}
+      </details>`).join('');
+    const html = `<details class="sect dev-hist" id="devtab-hist" open><summary><h2 class="section-title" data-info="dev-history">History</h2><span class="muted small sect-sum">${p.first ? `since ${fmtDate(p.first).slice(0, 4)}` : ''}${nC ? ` · ${nC} council` : ''} · ${fmtNum(p.records.length)} source records</span></summary>
       <ol class="stepper compact">${steps}</ol>
-      ${st.sig.length ? `<ul class="why-list" data-info="status-why">${st.sig.map(x => `<li class="why-${x.kind}"><span>${esc(x.text)}</span><small>${esc(x.files.slice(0, 3).join('; '))}${x.files.length > 3 ? ` +${x.files.length - 3} more` : ''}</small></li>`).join('')}</ul>` : ''}
-      <div class="seg tl-toggle" role="group" aria-label="Events shown"><button type="button" class="btn small on" data-dt-tl="key">Key events</button><button type="button" class="btn small" data-dt-tl="all">All dated events (${fmtNum(all.length)})</button></div>
+      ${st.sig.length ? `<ul class="why-list" data-info="status-why">${st.sig.map(x => `<li class="why-${x.kind}"><span>${esc(x.text)}</span><small>${x.files.slice(0, 3).map(fileLink).join('; ')}${x.files.length > 3 ? ` +${x.files.length - 3} more` : ''}</small></li>`).join('')}</ul>` : ''}
+      <div class="seg tl-toggle" role="group" aria-label="Events shown"><button type="button" class="btn small on" data-dt-tl="key">Key events</button><button type="button" class="btn small" data-dt-tl="all">All dated events (${fmtNum(all.length)})</button><button type="button" class="btn small" data-dt-tl="file">By file (${fmtNum(p.records.length)})</button></div>
+      <p class="tl-only small" hidden>Only <b data-tl-only-name></b> events · <button type="button" class="btn small link" data-tl-type="">Show all</button></p>
       <div data-dt-tlv="key">${evListHTML(key)}</div><div data-dt-tlv="all" hidden>${evListHTML(all)}</div>
-      <p class="small muted">Phase changes from the weekly check; council and committee items that name the files (${st2 && st2.council ? 'agendas and minutes since 2019' : 'loading'}); file and permit dates from the municipal records. Open a council item for its motion, reports and minutes.</p></details>`;
+      <div data-dt-tlv="file" id="devtab-recs" hidden><p class="small muted">Each municipal file combined into this development, by type, oldest first: every field as published, with its source.</p>${byFile}</div>
+      <p class="small muted">Press a file or permit number for its source record. Phase changes from the weekly check; council and committee items that name the files (${st2 && st2.council ? 'agendas and minutes since 2019' : 'loading'}); file and permit dates from the municipal records. Open a council item for its motion, reports and minutes.</p></details>`;
+    evRecs = null;
+    return html;
   }
 
   // ---- Council items + latest decision (copied from js/app.js) ---------------------
@@ -386,9 +411,10 @@
     const top = B().latestDecisive(list), { m, it, s } = top;
     const newer = list[0] !== top ? list[0] : null;
     const all = B().across(list);
-    const chips = (xs, withN) => xs.map(x => chip(`${esc(x.label)}${withN && x.n > 1 ? ` ×${x.n}` : ''}`, x.infra ? 'infra' : '')).join('');
+    // (each opens History's council items, where the requirement or issue was raised)
+    const chips = (xs, withN) => xs.map(x => `<button type="button" class="chip chip-link${x.infra ? ' infra' : ''}" data-dev-hist="council" title="Where it was raised: the council items in History">${esc(x.label)}${withN && x.n > 1 ? ` ×${x.n}` : ''}</button>`).join('');
     return `<div class="c-brief">
-        <div class="c-head small"><span class="d">${esc(m.date)}</span> · ${esc(m.name)} · <span class="c-kind">${esc(s.kind)}</span> ${outBadge(it, s)}</div>
+        <div class="c-head small"><span class="d">${esc(m.date)}</span> · ${esc(m.name)} · <button type="button" class="c-kind" data-dev-hist="council" title="The council items in History">${esc(s.kind)}</button> ${outBadge(it, s)}</div>
         <p class="c-verdict">${s.verdict ? `<strong>${esc(s.verdict)}</strong>` : ''}${s.verdict && s.verdict.startsWith(it.title) ? '' : `${s.verdict ? ' — ' : ''}${esc(it.title)}`}</p>
         ${s.decision ? `<p class="small c-motion">${esc(s.decision)}</p>` : ''}
         ${newer ? `<p class="small">Since then: <span class="d">${esc(newer.m.date)}</span> · ${esc(newer.s.kind)}${newer.s.verdict ? ` — ${esc(newer.s.verdict)}` : ''} · <span class="muted">${esc(newer.it.title)}</span></p>` : ''}
@@ -617,20 +643,12 @@
   }
   const recReceived = r => r.events.length ? Math.min(...r.events.map(e => +e.date)) : Infinity;
   const recHTML = r => `
-      <details class="rec"><summary>${dot(r.phase)} ${isFinite(recReceived(r)) ? `<span class="rec-date">${fmtDate(new Date(recReceived(r)))}</span> ` : ''}<strong>${esc(r.kind === 'permit' ? 'Building permit' : 'Application')} ${esc(r.ref)}</strong>
+      <details class="rec" data-rec-uid="${esc(r.uid)}" data-rec-ref="${esc(r.ref || '')}"><summary>${dot(r.phase)} ${isFinite(recReceived(r)) ? `<span class="rec-date">${fmtDate(new Date(recReceived(r)))}</span> ` : ''}<strong>${esc(r.kind === 'permit' ? 'Building permit' : 'Application')} ${esc(r.ref)}</strong>
         ${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · <em>${esc(r.statusRaw)}</em>` : ''}</summary>
         ${r.description ? `<p>${esc(r.description)}</p>` : ''}
         ${recordProvHTML(r)}
         <table>${recordRows(r)}</table>
       </details>`;
-  function sourceRecordsHTML(p) {
-    const groups = groupRecords(p.records);
-    return `<details class="sect" id="devtab-recs"><summary><h2 class="section-title" data-info="source-records">Source records</h2><span class="muted small sect-sum">${fmtNum(p.records.length)} files by type</span></summary>
-      ${groups.map(g => `<details class="rec-group"><summary><strong>${esc(g.label)}</strong> <span class="n">${fmtNum(g.list.length)}</span><span class="muted small">${g.span}${g.units ? ` · ${fmtNum(g.units)} units` : ''}</span></summary>
-        ${g.shown.map(recHTML).join('')}
-        ${g.more ? `<p class="small muted">+ ${fmtNum(g.more)} more (export CSV for the full list)</p>` : ''}
-      </details>`).join('')}</details>`;
-  }
 
   // ---- Site: aerial check (rendering copied from js/app.js; check() is public) ----
   const aerialCache = new Map();
@@ -914,8 +932,7 @@
       ${statusBlockHTML(p, st)}
       ${filesHTML(p)}
       ${phaseBasisHTML(p)}
-      ${devHistoryHTML(p, st)}
-      ${sourceRecordsHTML(p)}`;
+      ${devHistoryHTML(p, st)}`;
   }
   // Site: the constraint checklist (screening) first, then aerial check, ground elevation, storm
   // sewers, stormwater ponds. (Ground/storm/ponds moved here from the old Wastewater tab.)
@@ -1018,8 +1035,68 @@
     setTimeout(() => {
       if (PN && PN.openFull) PN.openFull();
       if (currentSub() !== 'files') setSub('files');
-      const d = byIdShown(id); if (d) { d.open = true; d.scrollIntoView({ block: 'start' }); }
+      // (the old Source records section is History's By file view now)
+      const d = byIdShown(id === 'devtab-recs' ? 'devtab-hist' : id); if (d) { d.open = true; if (id === 'devtab-recs') histView(d, 'file'); d.scrollIntoView({ block: 'start' }); }
     }, 250);
+  }
+
+  // History's views (Key events · All dated events · By file) and its type filter, per History.
+  function histView(box, v) {
+    if (!box) return;
+    box.querySelectorAll('[data-dt-tl]').forEach(x => x.classList.toggle('on', x.dataset.dtTl === v));
+    box.querySelectorAll('[data-dt-tlv]').forEach(x => { x.hidden = x.dataset.dtTlv !== v; });
+  }
+  function histOnly(box, k) {
+    if (!box) return;
+    const on = k && box.dataset.only !== k ? k : '';
+    if (on) box.dataset.only = on; else delete box.dataset.only;
+    if (on && box.querySelector('[data-dt-tl="file"].on')) histView(box, 'all');
+    const line = box.querySelector('.tl-only'), name = box.querySelector('[data-tl-only-name]');
+    if (line) line.hidden = !on;
+    if (name) name.textContent = { council: 'council', file: 'file', permit: 'permit', phase: 'stage' }[on] || '';
+  }
+  // The History shown beside the element (the same panel or page), else the development's Overview.
+  function historyNear(el) {
+    const host = (el && el.closest('#home, #analysis')) || document;
+    const vis = x => x && x.getClientRects().length;
+    const all = [...host.querySelectorAll('.dev-hist')];
+    return all.find(vis) || all[0] || null;
+  }
+  function revealHistory(el, then) {
+    let h = historyNear(el);
+    const show = x => { for (let d = x; d; d = d.parentElement && d.parentElement.closest('details')) d.open = true; then(x); };
+    if (h) return show(h);
+    // (no History here: the development's Overview has it, in a fold)
+    const AT = root.PeelAnalysisTabs;
+    if (AT && AT.openTab) AT.openTab('overview', '');
+    setTimeout(() => { h = historyNear(document.getElementById('analysis')); if (h) show(h); }, 300);
+  }
+  function flash(x) { x.classList.add('rec-flash'); setTimeout(() => x.classList.remove('rec-flash'), 1600); }
+  /** A file number: its source record, open in History's By file view. */
+  function openFile(ref, el) {
+    // (a file of another development, from Growth in an area: that development first, on its page)
+    const key = el && el.dataset && el.dataset.devKey, N = root.PeelDevNav, cur = root.DevScope && root.DevScope.current();
+    if (key && N && (!cur || cur.key !== key)) {
+      const q = N.projectByKey(key); if (!q) return;
+      N.showDetail(q);
+      const W = root.PeelWorkspaces; if (hasDOM() && document.documentElement.classList.contains('home-on') && W && W.openPage) W.openPage('site');
+      setTimeout(() => openFile(ref, null), 700); return;
+    }
+    revealHistory(el, h => {
+      histOnly(h, ''); histView(h, 'file');
+      const r = [...h.querySelectorAll('[data-dt-tlv="file"] [data-rec-ref]')].find(x => x.dataset.recRef === ref);
+      if (!r) { h.scrollIntoView({ block: 'start' }); return; }
+      for (let d = r; d; d = d.parentElement && d.parentElement.closest('details')) d.open = true;
+      r.scrollIntoView({ block: 'center' }); flash(r);
+    });
+  }
+  /** History, at a view or a type: "" / "key", "all", "file", or a type ("council", "permit"). */
+  function openHistory(el, which) {
+    revealHistory(el, h => {
+      if (['council', 'permit', 'file-ev', 'phase'].includes(which)) { histView(h, 'all'); histOnly(h, which === 'file-ev' ? 'file' : which); }
+      else { histOnly(h, ''); histView(h, which || 'key'); }
+      h.scrollIntoView({ block: 'start' }); flash(h);
+    });
   }
 
   // ---- Delegated clicks ----------------------------------------------------------------
@@ -1030,18 +1107,22 @@
     const ds = e.target.closest('[data-devsub]');
     if (ds) { setSub(ds.dataset.devsub); return; }
     const body = document.getElementById('pane-dev-body');
+    // A file number anywhere opens its source record in History; "history" links open History.
+    const df = e.target.closest('[data-dev-file]');
+    if (df) { e.preventDefault(); e.stopPropagation(); openFile(df.dataset.devFile, df); return; }
+    const dh = e.target.closest('[data-dev-hist]');
+    if (dh) { e.preventDefault(); e.stopPropagation(); openHistory(dh, dh.dataset.devHist); return; }
     // A link to a section from outside the development's views (the Overview's About fold, a page):
     // Records › Files, in the full table, at that section.
     const out = e.target.closest('[data-dt-open]');
     if (out && !(body && body.contains(out))) { openSection(out.dataset.dtOpen); return; }
-    if (!body || !body.contains(e.target)) return;
+    // (the rest work wherever the development's views are shown: the full table, the panel's folds, a page)
     const p = scopeProject();
     const tl = e.target.closest('[data-dt-tl]');
-    if (tl) {
-      body.querySelectorAll('[data-dt-tl]').forEach(x => x.classList.toggle('on', x === tl));
-      body.querySelectorAll('[data-dt-tlv]').forEach(x => { x.hidden = x.dataset.dtTlv !== tl.dataset.dtTl; });
-      return;
-    }
+    if (tl) { histView(tl.closest('.dev-hist') || body, tl.dataset.dtTl); return; }
+    const ty = e.target.closest('[data-tl-type]');
+    if (ty) { e.stopPropagation(); histOnly(ty.closest('.dev-hist'), ty.dataset.tlType); return; }
+    if (!(body && body.contains(e.target)) && !e.target.closest('.dev-hist, .pnl-fold, .home-main')) return;
     const o = e.target.closest('[data-dt-open]');
     if (o) {
       const id = o.dataset.dtOpen;
@@ -1088,17 +1169,31 @@
     if (part === 'about') return aboutHTML(p).replace(drillBackHTML(p), '');
     if (part === 'site') return `<div class="brief">${has ? row('Constraints', 'devtab-cx', 'Checking the mapped constraint layers…') + row('Storm sewers', 'devtab-exist-storm', 'Looking up the nearest storm sewers…') + row('Stormwater', 'devtab-storm', 'Looking up stormwater ponds…', 'fire-storm') : '<p class="small muted">Not checked: this development has no map location.</p>'}</div>`;
     if (part === 'ground') return `<div class="brief">${brow('Aerial check', '<div class="aerial" id="devtab-aerial"><p class="small muted">Comparing aerial photos…</p></div>')}${has ? row('Ground', 'devtab-ground', 'Looking up ground elevation…', 'ground') : ''}</div>`;
+    if (part === 'files') return filesTreeHTML(p);
+    if (part === 'history') return devHistoryHTML(p, statusOf(p));
+    // (How the stage was set, without its section wrapper: the stage chip opens it under the header)
+    if (part === 'stage') return phaseBasisHTML(p).replace(/^\s*<details[^>]*>\s*<summary>[^]*?<\/summary>/, '').replace(/<\/details>\s*$/, '');
     return '';
+  }
+  // The files as a tree (js/file-tree.js), each file number opening its record in History; the
+  // newest files under it. Where the development has no tree entry, the files newest first.
+  function filesTreeHTML(p) {
+    const FT = root.PeelFileTree, d = FT && !p.parent ? FT.of(p) : null, files = p.records.filter(r => r.kind === 'application');
+    const newest = files.slice().sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)));
+    const row = r => `<li class="pnl-kv"><span><button type="button" class="tr-ref" data-dev-file="${esc(r.ref || '')}">${esc(r.ref || 'file')}</button>${r.type ? ` <small class="muted">${esc(r.type)}</small>` : ''}</span><span>${r.units ? `${fmtNum(r.units)} units · ` : ''}${esc((P().PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}</span></li>`;
+    const tree = d ? FT.treeHTML(d, FT.recLookup(p), { dot: k => dot(k), latest: newest[0] && newest[0].ref }) : '';
+    return `${tree || `<ul class="pnl-files">${newest.slice(0, 8).map(row).join('')}</ul>`}
+      <p class="small"><button type="button" class="btn small link" data-dev-hist="file">All ${fmtNum(p.records.length)} source records, by file →</button></p>`;
   }
   function fillParts(p, parts) {
     if (!hasDOM() || !p) return;
     liveKey = p.key;
-    if (parts.includes('about')) ensureCouncil(p);
+    if (parts.includes('about') || parts.includes('history')) ensureCouncil(p);
     if (parts.includes('site') && p.lat != null) { fillConstraints(p); fillStormMains(p); }
     if (parts.includes('ground') && p.lat != null) { devAerial(p); fillGround(p); }
   }
   // ---- Public contract ------------------------------------------------------------------
-  const api = { render, setSub, partHTML, fillParts, aerialRun, aerialAvailable, renderAerialInto, openSection };
+  const api = { render, setSub, partHTML, fillParts, aerialRun, aerialAvailable, renderAerialInto, openSection, openFile, openHistory };
   if (typeof module !== 'undefined' && module.exports) module.exports = { ...api, currentSub, recGroup, REC_GROUPS, groupRecords, statusOf, phaseBasis, scopeProjectForTest: () => scopeProject() };
   else root.DevTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);

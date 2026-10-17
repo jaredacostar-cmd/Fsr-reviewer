@@ -189,7 +189,7 @@
       const q = h ? h.qualityOf(p) : 'ok';
       if (q && q !== 'ok' && h.QUALITY && h.QUALITY[q]) {
         const [col, txt] = h.QUALITY[q];
-        flags.push(`<span class="chip" title="Data quality"><span class="q-dot" style="background:${col}" aria-hidden="true"></span>${esc(txt)}</span>`);
+        flags.push(`<button type="button" class="chip chip-link" data-at="records:files" title="Data quality: the files and how the homes were counted, in Records › Files"><span class="q-dot" style="background:${col}" aria-hidden="true"></span>${esc(txt)} <span class="aer-car" aria-hidden="true">▸</span></button>`);
       }
 
       const watched = h ? !!h.isWatched(p.key) : false;

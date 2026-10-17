@@ -408,27 +408,29 @@
   const psName = a => SV().drName(a).replace(/^[^·]+· /, '');
   const trigger = () => (App().state.reports && App().state.reports.masterPlan && App().state.reports.masterPlan.plantTriggerPct) || 90;
   const chip = (html, cls = '') => `<span class="chip${cls ? ` ${cls}` : ''}">${html}</span>`;
+  // A flag that opens its answer: a button with ▸ (the History event, the facility, the DC work).
+  const chipGo = (html, cls, at, title) => `<button type="button" class="chip chip-link${cls ? ` ${cls}` : ''}" ${Object.entries(at).map(([k, v]) => `${k}="${esc(v)}"`).join(' ')}${title ? ` title="${esc(title)}"` : ''}>${html} <span class="aer-car" aria-hidden="true">▸</span></button>`;
   const outBadge = (it, s) => it.outcome || s.vote ? `<span class="c-out c-${String(it.outcome || s.vote).toLowerCase().replace(/\s.*$/, '')}">${esc(s.vote || OUTCOME_LABEL[it.outcome] || it.outcome)}</span>` : '';
   const pctOf = (a, b) => b > 0 ? `${(a / b * 100) < 1 ? (a / b * 100).toFixed(2) : Math.round(a / b * 100)}%` : '–';
 
   // Flags for the header: what an infrastructure planner should look at first.
   function devFlags(p, st, f) {
     const out = [];
-    if (st.sig.some(x => x.kind === 'appeal')) out.push(chip('Under appeal (OLT)', 'warn'));
+    if (st.sig.some(x => x.kind === 'appeal')) out.push(chipGo('Under appeal (OLT)', 'warn', { 'data-dev-hist': 'council' }, 'The appeal in History, with its council items'));
     // (zoning approved is in the header's status line; the by-law that passed it stays here)
-    if (p.zoningApproved && p.rank < P.PHASE_BY_KEY.approved.rank && p.zoningApproved.bylaws.length) out.push(chip(`Zoning by-law ${esc(p.zoningApproved.bylaws[0])}`));
+    if (p.zoningApproved && p.rank < P.PHASE_BY_KEY.approved.rank && p.zoningApproved.bylaws.length) out.push(chipGo(`Zoning by-law ${esc(p.zoningApproved.bylaws[0])}`, '', { 'data-dev-hist': 'council' }, 'The by-law in History'));
     // Bundle 6: the holding (H) symbol, from an application to lift it.
-    if (p.holding) out.push(chip(p.holding.open ? `Holding (H): removal in review (${esc(p.holding.refs[0] || 'file')})` : `Holding (H) lifted (${esc(p.holding.refs[0] || 'file')})`, p.holding.open ? 'warn' : '').replace('<span class="chip', `<span title="${p.holding.open ? 'The zoning is in place but held (the H symbol) until a condition is met, often servicing: an application to lift it is in review' : 'The holding (H) symbol on its zoning was lifted'}" class="chip`));
+    if (p.holding) out.push(chipGo(p.holding.open ? `Holding (H): removal in review (${esc(p.holding.refs[0] || 'file')})` : `Holding (H) lifted (${esc(p.holding.refs[0] || 'file')})`, p.holding.open ? 'warn' : '', p.holding.refs[0] ? { 'data-dev-file': p.holding.refs[0] } : { 'data-dev-hist': 'file' }, 'H (holding symbol): zoning that needs a condition met, often servicing, before building. Opens the file in History'));
     // Bundle 6: links in its file tree made by overlap only (low confidence): one tap to the tree.
     { const FT = root.PeelFileTree, d = FT && FT.of(p), n = d ? FT.summary(d).check : 0;
       if (n) out.push(`<button type="button" class="chip chip-link" data-tree-check title="Files linked to this development by overlap only: check them in Records › Files">${n} link${n === 1 ? '' : 's'} to check</button>`); }
-    if (st.stalled) out.push(chip(`Stalled ${st.years.toFixed(1)} yrs`, 'warn'));
-    if (st.works && st.works.gap) out.push(chip(`Needs planned main ${st.works.needBy}`, 'warn'));
+    if (st.stalled) out.push(chipGo(`Stalled ${st.years.toFixed(1)} yrs`, 'warn', { 'data-dev-hist': '' }, 'History: the last activity'));
+    if (st.works && st.works.gap) out.push(chipGo(`Needs planned main ${st.works.needBy}`, 'warn', { 'data-at': 'dca:timing' }, 'The DC work and its timing, in Capital'));
     if (f) {
-      for (const s of f.sps) if (s.wet >= s.firm) out.push(chip(`${esc(psName(s.a))} ${Math.round(s.wet / s.firm * 100)}% of firm`, 'warn'));
+      for (const s of f.sps) if (s.wet >= s.firm) out.push(chipGo(`${esc(psName(s.a))} ${Math.round(s.wet / s.firm * 100)}% of firm`, 'warn', { 'data-ss': s.a.id }, 'The pumping station: what loads it, and relief'));
       if (f.cap) {
-        if (f.reserve <= 0) out.push(chip(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} over rated capacity`, 'warn'));
-        else if (f.cap.committed / f.cap.rated >= trigger() / 100) out.push(chip(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} ≥${trigger()}% with approved`, 'warn'));
+        if (f.reserve <= 0) out.push(chipGo(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} over rated capacity`, 'warn', { 'data-ss': `plant:${f.pl}` }, 'The plant: its limit and relief'));
+        else if (f.cap.committed / f.cap.rated >= trigger() / 100) out.push(chipGo(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} ≥${trigger()}% with approved`, 'warn', { 'data-ss': `plant:${f.pl}` }, 'The plant: its limit and relief'));
       }
     }
     return out;
@@ -472,9 +474,10 @@
     const top = B.latestDecisive(list), { m, it, s } = top;
     const newer = list[0] !== top ? list[0] : null;
     const all = B.across(list);
-    const chips = (xs, withN) => xs.map(x => chip(`${esc(x.label)}${withN && x.n > 1 ? ` ×${x.n}` : ''}`, x.infra ? 'infra' : '')).join('');
+    // (each opens History's council items, where the requirement or issue was raised)
+    const chips = (xs, withN) => xs.map(x => `<button type="button" class="chip chip-link${x.infra ? ' infra' : ''}" data-dev-hist="council" title="Where it was raised: the council items in History">${esc(x.label)}${withN && x.n > 1 ? ` ×${x.n}` : ''}</button>`).join('');
     return `<div class="c-brief">
-        <div class="c-head small"><span class="d">${esc(m.date)}</span> · ${esc(m.name)} · <span class="c-kind">${esc(s.kind)}</span> ${outBadge(it, s)}</div>
+        <div class="c-head small"><span class="d">${esc(m.date)}</span> · ${esc(m.name)} · <button type="button" class="c-kind" data-dev-hist="council" title="The council items in History">${esc(s.kind)}</button> ${outBadge(it, s)}</div>
         <p class="c-verdict">${s.verdict ? `<strong>${esc(s.verdict)}</strong>` : ''}${s.verdict && s.verdict.startsWith(it.title) ? '' : `${s.verdict ? ' — ' : ''}${esc(it.title)}`}</p>
         ${s.decision ? `<p class="small c-motion">${esc(s.decision)}</p>` : ''}
         ${newer ? `<p class="small">Since then: <span class="d">${esc(newer.m.date)}</span> · ${esc(newer.s.kind)}${newer.s.verdict ? ` — ${esc(newer.s.verdict)}` : ''} · <span class="muted">${esc(newer.it.title)}</span></p>` : ''}

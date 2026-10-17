@@ -97,7 +97,7 @@ test('at a development: the site first, its census area labelled, one status lin
   const h = win.PeelPanel.siteHead({ title: '0 HERITAGE RD', municipality: 'Brampton', phase: 'review', rank: 2, zoningApproved: { bylaws: ['2024-101'] }, records: [] });
   assert.equal(h.status.text, 'In review · zoning approved');
   assert.equal(win.PeelPanel.siteHead({ title: 'x', municipality: 'Brampton', phase: 'review', rank: 2, records: [] }).status.text, 'In review');
-  assert.match(src('js/dev-detail.js'), /out\.push\(chip\(`Zoning by-law \$\{esc\(p\.zoningApproved\.bylaws\[0\]\)\}`\)\)/);
+  assert.match(src('js/dev-detail.js'), /out\.push\(chipGo\(`Zoning by-law \$\{esc\(p\.zoningApproved\.bylaws\[0\]\)\}`, '', \{ 'data-dev-hist': 'council' \}/);
 });
 
 test('small shares read "<1%", plurals agree', () => {
