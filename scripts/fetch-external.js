@@ -159,7 +159,8 @@ const out_dir = () => out;
 // zones are the municipalities: Mississauga, Brampton, Caledon). Probes the table and its export.
 async function cmhc() {
   const T = 'https://www03.cmhc-schl.gc.ca/hmip-pimh/en/TableMapChart';
-  const tables = { '1.1.1.8': 'starts', '1.1.2.8': 'under-construction', '1.1.3.8': 'completions', '1.1.1.9': 'starts-9', '1.1.3.9': 'completions-9' };
+  // (1.1.2 is completions and 1.1.3 the under-construction inventory; the build reads each file's title)
+  const tables = { '1.1.1.8': 'starts', '1.1.2.8': 'completions', '1.1.3.8': 'under-construction', '1.1.1.9': 'starts-9', '1.1.3.9': 'under-construction-9' };
   for (const [id, nm] of Object.entries(tables)) {
     await save(`${T}/Table?TableId=${id}&GeographyId=2270&GeographyTypeId=3&DisplayAs=Table&GeograghyName=Toronto`, `cmhc/${nm}-table.html`, { asText: true });
     for (const y of [2016, 2017, 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025]) {
