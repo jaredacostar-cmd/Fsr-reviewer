@@ -93,6 +93,9 @@
     if (al && al.length) { const out = [...new Set(al.filter(x => x !== k).flatMap(x => (exists(x) ? [x] : opts.aliasesOnly ? [] : resolveAll(x, exists, opts))))]; if (out.length) return out; }
     if (t > 0) {
       const base = k.slice(0, t), rest = k.slice(t);
+      // A tree whose root file changed: the tree of that development now holding the file.
+      const held = !opts.aliasesOnly && data && data.devs.find(x => (x.k === base || x.k.startsWith(`${base}~`)) && (x.n || []).some(n => n[0] === rest.slice(1)) && exists(x.k));
+      if (held) return [held.k];
       if (!opts.aliasesOnly && exists(base)) return [base];   // a tree key, with the trees off
       const nb = (aliasOf(base) || []).find(exists);
       if (nb) return exists(nb + rest) ? [nb + rest] : opts.aliasesOnly ? [] : [nb];

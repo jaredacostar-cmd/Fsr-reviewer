@@ -65,3 +65,40 @@ test('lookupOf: a count found online goes to the file of its type, never to each
   const b = T.fileNodes([{ kind: 'application', municipality: 'Brampton', ref: 'OZS-2023-0040', fileKey: 'OZS|2023|40', uid: 'q', events: [] }])[0];
   assert.equal(T.lookupOf(b, new Map([['Brampton|OZS-2023-0040', { units: 5 }]])).units, 5, 'other municipalities as before');
 });
+
+test('normalizeAddress: a unit / suite / lot / block word is cut only as a whole word', () => {
+  assert.equal(P.normalizeAddress('137 Steeles Ave W'), '137 STEELES AVE W');
+  assert.equal(P.normalizeAddress('21 Steelwell Rd'), '21 STEELWELL RD');
+  assert.notEqual(P.normalizeAddress('21 Steelwell Rd'), P.normalizeAddress('21 Stewardship Rd'), 'two streets, two sites');
+  for (const a of ['45 Lotus Crt', '12 Unity Dr', '7 Blockhouse Rd', '8 Apted Cres']) assert.equal(P.normalizeAddress(a), a.toUpperCase(), a);
+  assert.equal(P.normalizeAddress('55 Main St Unit 4'), '55 MAIN ST');
+  assert.equal(P.normalizeAddress('100 Queen St Ste 200'), '100 QUEEN ST');
+  assert.equal(P.normalizeAddress('100 Queen St Suite #12'), '100 QUEEN ST');
+  assert.equal(P.normalizeAddress('1203-55 Main St'), '55 MAIN ST');
+  assert.equal(P.normalizeAddress('9 Mill St Apt 3'), '9 MILL ST');
+});
+
+test('saved keys: an old address key resolves to the development now holding its records (both modes)', () => {
+  // Synthetic: the old reading of "9 STEEPLE RD" cut the street ("9 RD"); today's key is the full address.
+  const recs = [{ uid: 'a1', kind: 'application', municipality: 'Brampton', ref: 'SPA-1', fileKey: 'SPA|1', address: '9 STEEPLE RD', phase: 'review', events: [ev('2024-01-01')], type: 'Site plan', description: '' }];
+  const ps = P.buildProjects(recs);
+  const aliases = P.keyAliases(ps);
+  const keys = new Set(ps.map(p => p.key)), exists = k => keys.has(k);
+  const now = ps[0].key, old = `Brampton|${P.legacyNormalizeAddress('9 STEEPLE RD')}`;
+  assert.equal(now, 'Brampton|9 STEEPLE RD'); assert.equal(old, 'Brampton|9 RD');
+  TG.setData(null); TG.setAliases(aliases);
+  assert.equal(TG.resolve(old, exists, { aliasesOnly: true }), now, 'Previous: the old key opens the development');
+  assert.equal(TG.resolve(old, exists), now);
+  assert.equal(TG.resolve(`${old}~SPA-1`, exists), now, 'an old tree key: its base');
+  assert.equal(TG.resolve('Brampton|1 NOWHERE ST', exists, { aliasesOnly: true }), null, 'an unknown key stays unresolved');
+  assert.deepEqual(TG.migrateKeys([old, 'Brampton|1 NOWHERE ST'], exists, { aliasesOnly: true }), [now, 'Brampton|1 NOWHERE ST'], 'nothing saved is dropped');
+  const hist = { projects: { [old]: [['2024-01-01', 'review']] } };
+  TG.translateHistory(hist, exists, { aliasesOnly: true });
+  assert.deepEqual(hist.projects[now], [['2024-01-01', 'review']], 'the phase history follows');
+  const ch = { moved: [{ key: old }] }; TG.translateChanges(ch, exists, { aliasesOnly: true });
+  assert.equal(ch.moved[0].key, now); assert.equal(ch.moved[0].oldKey, old);
+  TG.setAliases(() => P.keyAliases(ps));
+  assert.equal(TG.resolve(old, exists), now, 'aliases worked out when first needed');
+  TG.setAliases(null);
+  assert.equal(TG.resolve(old, exists, { aliasesOnly: true }), null);
+});

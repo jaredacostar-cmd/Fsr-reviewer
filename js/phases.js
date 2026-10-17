@@ -175,7 +175,8 @@
     let s = str(addr).toUpperCase();
     if (!s) return '';
     s = s.replace(/,.*$/, '')                       // drop city / postal suffix
-         .replace(/\b(UNIT|SUITE|STE|APT|BLDG|BUILDING|LOT|BLK|BLOCK)\s*[#\w-]+/g, '')
+         // a unit, suite, lot or block number — a whole word, so "STEELES", "STEWARDSHIP", "LOTUS" stay
+         .replace(/\b(UNIT|SUITE|STE|APT|BLDG|BUILDING|LOT|BLK|BLOCK)\b\s*[#\w-]+/g, '')
          .replace(/#\s*\w+/g, '')
          .replace(/^\s*\w+\s*-\s*(?=\d)/, '')          // Canadian unit-civic "1203-55 Main St" -> "55 Main St"
          .replace(/[.']/g, '')
@@ -653,8 +654,9 @@
   // Keys saved before (the watchlist, allocations, share links, the phase history, the weekly
   // changes) name a development by its address as normalizeAddress read it until 2026-10-17
   // (legacyNormalizeAddress). Where that reading differs from today's, the old key — when no
-  // development has it now — resolves to the development(s) holding the records at that address,
-  // the one with the most of them first (js/tree-groups.js resolveAll).
+  // development has it now — resolves to the same address read today when that is a development's
+  // key, else to the development(s) holding the records at that address, the one with the most of
+  // them first (js/tree-groups.js resolveAll).
   function legacyNormalizeAddress(addr) {
     let s = str(addr).toUpperCase();
     if (!s) return '';
@@ -667,14 +669,19 @@
     for (const [re, rep] of STREET_ABBR) s = s.replace(re, rep);
     return s.trim();
   }
+  // (Only addresses the two readings can differ on: a unit / suite / lot / block word run into the
+  // next word, a town and province, a postal code.)
+  const LEGACY_DIFF = /^[^,]*?(?:\b(?:UNIT|SUITE|STE|APT|BLDG|BUILDING|LOT|BLK|BLOCK)\w|\sON\b|[A-Z]\d[A-Z]\s?\d[A-Z]\d)/i;
   function keyAliases(projects) {
     const keys = new Set(projects.map(p => p.key)), by = new Map();
     for (const p of projects) for (const r of p.records) {
-      if (!r.address) continue;
-      const a = legacyNormalizeAddress(r.address);
-      if (!civic(a) || a === normalizeAddress(r.address)) continue;
+      if (!r.address || !LEGACY_DIFF.test(r.address)) continue;
+      const a = legacyNormalizeAddress(r.address), today = normalizeAddress(r.address);
+      if (!civic(a) || a === today) continue;
       const k = `${r.municipality}|${a}`; if (keys.has(k)) continue;
       let m = by.get(k); if (!m) by.set(k, m = new Map());
+      const same = `${r.municipality}|${today}`;
+      if (keys.has(same)) m.set(same, Infinity);
       m.set(p.key, (m.get(p.key) || 0) + (r.kind === 'application' ? 10 : 1));   // (a planning file outweighs a permit)
     }
     const out = new Map();
