@@ -42,7 +42,10 @@
   async function load() {
     const opt = async f => { try { const r = await fetch(f, { cache: 'no-cache' }); return r.ok ? await r.json() : null; } catch (e) { return null; } };
     const [cap, eas] = await Promise.all([opt('data/capital.json'), opt('data/eas.json')]);
-    setData(cap, eas);
+    // (once every script has run: setting the data redraws the legend and the views, which read the
+    // app's state from js/app.js, the last script; the files can arrive first)
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setData(cap, eas), { once: true });
+    else setData(cap, eas);
   }
   function setData(cap, eas) {
     data.capital = cap; data.eas = eas;

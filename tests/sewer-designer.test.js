@@ -7,6 +7,7 @@ const path = require('node:path');
 const SDR = require('../js/sewer-designer.js');
 const SD = require('../js/sewer-design.js');
 const src = f => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
+const near = (a, b, tol) => Math.abs(a - b) <= tol;
 
 test('chainage along the drawn line, and the bend at each vertex', () => {
   const k = 1 / (111320 * Math.cos(43.7 * Math.PI / 180));
@@ -39,8 +40,73 @@ test('wired: a Labs switch, a tool on the rail (hidden while off), the last tap 
   assert.match(s, /T\(\)\.register\('sewer', \{/);
   assert.match(s, /\(await MS\(\)\.mainsNear\(end\.lat, end\.lng, 40\)\)\.filter\(m => !m\.fm && m\.up > 0 && m\.dn > 0 && m\.d > 0\)/);
   assert.match(s, /const atUp = along <= 15, atDn = glen - along <= 15/);
-  assert.match(s, /SW\(\)\.design\(S\.route, S\.conn, flow\.q, \{ ici: f\.ici, avoidStructures: f\.avoid \}\)/);
-  // (the flow is typed: nothing is designed until it is)
-  assert.match(s, /if \(!\(flow\.q > 0\)\) \{ S\.d = null; S\.formMsg = 'Type a design flow/);
+  assert.match(s, /SW\(\)\.designNet\(S\.net\.net, S\.conn, \{ ici: f\.ici, avoidStructures: f\.avoid \}\)/);
+  // (the flow is typed: nothing is designed until it is, for the main line and every branch)
+  assert.match(s, /S\.formMsg = missing \? `Type a flow, or the population, jobs and area, for branch \$\{missing \+ 1\}\.` : 'Type a design flow/);
   for (const f of ['js/sewer-designer.js']) { assert.ok(src('index.html').includes(`<script src="${f}?v=__BUILD__"></script>`)); assert.ok(src('sw.js').includes(`'${f}',`)); }
+});
+
+test('a network: the rules checked over every reach and junction, the CSV with sizes, flows and the line each hole is on', () => {
+  // the trunk 0 → 1 → 2 → 3 (the connection), a branch 4 → 2
+  const gf = (x, y) => 200 - x * 0.012 + y * 0.01, xy = [[0, 0], [150, 0], [300, 0], [420, 0], [300, 160]];
+  const seg = (from, to, q) => { const [x0, y0] = xy[from], [x1, y1] = xy[to], L = Math.hypot(x1 - x0, y1 - y0); return { from, to, L, q, pts: Array.from({ length: Math.floor(L / 10) }, (_, k) => { const t = (k * 10 + 5) / L; return { d: k * 10 + 5, g: gf(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t) }; }) }; };
+  const net = { nodes: xy.map(([x, y]) => ({ g: gf(x, y), bend: 0 })), reaches: [seg(0, 1, 20), seg(1, 2, 20), seg(4, 2, 30), seg(2, 3, 50)] };
+  const conn = { invert: 189, dmm: 450 }, d = SD.designNet(net, conn);
+  assert.ok(d.ok, d.why);
+  const c = SDR.checks(d, net, conn);
+  assert.equal(c.length, 10);
+  assert.deepEqual(c.filter(x => !x.pass).map(x => x.t), []);
+  if (new Set(d.reaches.map(r => r.dmm)).size > 1) assert.match(c[0].t, /never a larger pipe into a smaller one/);
+  assert.match(c[4].t, /of each branch/);
+  // labelled as the designer labels them
+  d.mhs.forEach((m, i) => { m.x = i; m.run = i === 4 ? 1 : 0; m.label = `MH ${i + 1}${i === d.root ? ' (connection)' : ''}`; });
+  const csv = SDR.csv(d);
+  assert.match(csv, /,On$/m);
+  assert.match(csv, /MH 4 \(connection\),.*,main line/);
+  assert.match(csv, /MH 5,.*,branch 2/);
+  assert.match(csv, /Froude,Design flow \(L\/s\)/);
+  assert.match(csv, /MH 3 to MH 4,\d+,120\.00,.*,50\.00$/m);
+  assert.match(csv, /"\d+\.\d\d \/ \d+\.\d\d"/, 'both inverts in at the junction');
+});
+
+test('wired: branches drawn and joined to the sewer drawn, flows per branch, a profile for each line', () => {
+  const s = src('js/sewer-designer.js');
+  assert.match(s, /data-sd-act="branch">Add a branch/);
+  assert.match(s, /if \(n\.m <= 30 && \(!best \|\| n\.m < best\.m\)\) best = \{ ri, m: n\.m, t: n\.t \}/);
+  assert.match(s, /const vi = run\.xs\.findIndex\(v => Math\.abs\(v - x\) <= 10\);/);
+  assert.match(s, /data-sd-view="\$\{ri\}"/);
+  assert.match(s, /The pumped option takes the main line alone: remove the branches to use it\./);
+});
+
+test('crossings: a watermain at its assumed depth checked for 0.5 m, a storm sewer listed to check on site', () => {
+  // a 250 mm reach east along y = 0 from x 0 to 100, invert 225.0 falling 1%, ground 230
+  const reach = { a: [0, 0], b: [100, 0], inv_up: 225, S: 0.01, L: 100, dmm: 250, gUp: 230, gDn: 230 };
+  const pipes = [
+    { kind: 'water', d: 300, src: 'Region of Peel', paths: [[[30, -50], [30, 50]]] },      // top 228.3, bottom 228.0
+    { kind: 'storm', d: 600, src: 'City of Brampton', paths: [[[70, -50], [70, 50]]] },
+    { kind: 'water', d: 150, src: 'Region of Peel', paths: [[[150, -50], [150, 50]]] },     // beyond the reach
+  ];
+  const x = SDR.crossings([reach], pipes);
+  assert.equal(x.length, 2);
+  const w = x[0];
+  assert.equal(w.kind, 'water'); assert.ok(near(w.along, 30, 1e-9));
+  assert.ok(near(w.obvert, 225 - 0.3 + 0.25, 1e-9));
+  assert.ok(near(w.otherTop, 230 - 1.7, 1e-9) && near(w.otherBottom, 228.0, 1e-9));
+  assert.ok(near(w.clear, 228.0 - 224.95, 1e-9)); assert.equal(w.ok, true);
+  assert.equal(x[1].kind, 'storm'); assert.equal(x[1].ok, null);
+  // a sewer too close under the watermain: 0.4 m
+  const tight = SDR.crossings([{ ...reach, inv_up: 227.35, S: 0 }], [pipes[0]])[0];
+  assert.ok(near(tight.clear, 0.4, 1e-9)); assert.equal(tight.ok, false);
+  assert.deepEqual(SDR.CROSS, { clearance: 0.5, wmCover: 1.7 });
+});
+
+test('wired: crossings looked up after each design, Follow roads on the banner, the road network loaded before the designer', () => {
+  const s = src('js/sewer-designer.js');
+  assert.match(s, /findCrossings\(\);\n    \}\n    openResult\(\); drawLine\(\);/);
+  assert.match(s, /for \(const kind of \['water', 'storm'\]\) for \(const src of EP\.EXIST\[kind\]\)/);
+  assert.match(s, /data-ptool-act="sd-roads"/);
+  assert.match(s, /const r = await RN\.routeBetween\(last, ll\);/);
+  const html = src('index.html');
+  assert.ok(html.indexOf('js/road-net.js') > 0 && html.indexOf('js/road-net.js') < html.indexOf('js/sewer-designer.js'));
+  assert.match(src('sw.js'), /'js\/road-net\.js',/);
 });

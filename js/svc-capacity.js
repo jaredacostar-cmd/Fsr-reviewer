@@ -316,7 +316,7 @@
     const plants = ['Lakeview', 'Clarkson', 'Inglewood'].map(pl => ({ pl, c: M.plantCap(pl) })).filter(x => x.c);
     const sp = R && R.water && R.water.southPeel;
     const ft = { 'data-full-table': 'svc' };
-    const check = (t, what) => ({ attrs: ft, html: `<div class="pnl-r-top"><span class="pnl-r-name">${t}</span></div><small class="pnl-r-line">${what}</small>` });
+    const check = (t, what, go) => ({ attrs: { ...ft, 'data-ft-go': go || t }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${t}</span></div><small class="pnl-r-line">${what}</small>` });
     const labs = root.PeelLabs && root.PeelLabs.on('hydro');
     PN.set('svc:checks', {
       calc: true, fullTitle: 'Servicing › Model checks · the model against the 2020 Master Plan and the 2025 reports',
@@ -327,9 +327,9 @@
       lists: [{ title: 'Checks in the full table', rows: [
         check('2020 Master Plan vs this tracker', 'Wastewater plants (average day) and water (maximum day): build-out here against the Master Plan forecast, and the year the Master Plan expected that flow.'),
         check('2025 annual reports vs the model', 'Each plant: rated capacity, reported average and highest day, the model today and the calibration factor.'),
-        check('2025 water production', 'South Peel (A.P. Kennedy, Lorne Park) and the Caledon groundwater systems: rated, average and maximum day, per person.'),
-        check('Existing water facilities', 'Every reservoir, tank and pumping station with its firm capacity, and the ones the Master Plan finds short by 2041.'),
-        ...(labs ? [check('Hydraulic check (beta, Labs)', 'An experimental EPANET check of the large mains feeding each upper pressure zone.')] : []),
+        check('2025 water production', 'South Peel (A.P. Kennedy, Lorne Park) and the Caledon groundwater systems: rated, average and maximum day, per person.', 'Reported 2025 production'),
+        check('Existing water facilities', 'Every reservoir, tank and pumping station with its firm capacity, and the ones the Master Plan finds short by 2041.', 'Existing water facilities'),
+        ...(labs ? [check('Hydraulic check (beta, Labs)', 'An experimental EPANET check of the large mains feeding each upper pressure zone.', 'Hydraulic')] : []),
       ], total: labs ? 5 : 4, seeAll: ft }],
       method: 'The calibration factor = (reported − external inflows) ÷ the model today (census + built since, residential + development jobs); it is applied in the capacity check mode, I&amp;I is not scaled. Data checks (freshness, duplicates, permit counts) are in Records › Data checks.',
       sources: 'Region of Peel 2025 annual reports (G.E. Booth, Clarkson, Inglewood; drinking water systems); 2020 Water and Wastewater Master Plan (Vol. 3 and 4); the Wastewater Collection System report (York and Toronto inflows).',
@@ -379,9 +379,9 @@
         { v: fmtNum(zones.length), u: 'zones', label: 'pressure zones', ctx: zg ? `most growth: ${esc(zg.z.name)}` : '' },
       ].filter(Boolean),
       lists: [
-        { title: 'Pumping stations (tightest)', rows: SC_sort(ps).slice(0, 5).map(stRow), total: ps.length, seeAll: { 'data-full-table': 'svc' } },
-        { title: 'Blocks carrying the most flow', rows: blocks.slice(0, 5).map(b => ({ html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(SD().drName(b.a))}<small>to ${esc(SD().plantLabel(b.a.plant))}</small></span><span class="pnl-r-fig">${fmt1(b.bo)} ML/d<small>+${fmt1(b.bo - b.now)} ML/d from growth</small></span></div>${netActs(b.a.id, true)}` })), total: blocks.length, seeAll: { 'data-full-table': 'svc' } },
-        { title: 'Pressure zones growing most', rows: zones.slice(0, 5).map(z => ({ html: `<div class="pnl-r-top"><span class="pnl-r-name">💧 ${esc(z.z.name)}</span><span class="pnl-r-fig">${fmt1(z.bo)} ML/d<small>+${fmt1(z.bo - z.now)} ML/d from growth, maximum day</small></span></div>${netActs(z.z.id, false)}` })), total: zones.length, seeAll: { 'data-full-table': 'svc' } },
+        { title: 'Pumping stations (tightest)', rows: SC_sort(ps).slice(0, 5).map(stRow), total: ps.length, seeAll: { 'data-full-table': 'svc', 'data-ft-go': 'Pumping stations' } },
+        { title: 'Blocks carrying the most flow', rows: blocks.slice(0, 5).map(b => ({ html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(SD().drName(b.a))}<small>to ${esc(SD().plantLabel(b.a.plant))}</small></span><span class="pnl-r-fig">${fmt1(b.bo)} ML/d<small>+${fmt1(b.bo - b.now)} ML/d from growth</small></span></div>${netActs(b.a.id, true)}` })), total: blocks.length, seeAll: { 'data-full-table': 'svc', 'data-ft-go': 'Wastewater by block' } },
+        { title: 'Pressure zones growing most', rows: zones.slice(0, 5).map(z => ({ html: `<div class="pnl-r-top"><span class="pnl-r-name">💧 ${esc(z.z.name)}</span><span class="pnl-r-fig">${fmt1(z.bo)} ML/d<small>+${fmt1(z.bo - z.now)} ML/d from growth, maximum day</small></span></div>${netActs(z.z.id, false)}` })), total: zones.length, seeAll: { 'data-full-table': 'svc', 'data-ft-go': 'Water by pressure zone' } },
       ],
       method: 'Each block\u2019s own flow plus everything upstream of it along the traced flow path, building up to the plant on the lake (average dry weather at design criteria, calibrated to the 2025 plant flows in Capacity check mode). Pumping stations: peak wet weather against firm capacity (2020 Master Plan). Zones: maximum day at Peel design criteria. "What loads this?" opens it as a scope with the developments loading it; "Show upstream" shows it on the map with everything that drains into it.',
       sources: 'The Region\u2019s 40 I&amp;I sewersheds (blocks) and the traced sewer network; 2020 Water and Wastewater Master Plan (firm capacity); pressure zones (Region of Peel); the applications on the map.',

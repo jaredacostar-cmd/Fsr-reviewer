@@ -745,6 +745,8 @@
     plantCons: pl => window.PeelMasterPlan.plantCons(pl),
     waterPlantCons: z => window.PeelMasterPlan.waterPlantCons(z),
     supplyCons: b => window.PeelMasterPlan.supplyCons(b),
+    trunkNeeds: (p, zid) => window.PeelMasterPlan.trunkNeeds(p, zid),
+    loadMpWater: () => window.PeelMasterPlan.loadMpWater(),
     storageCons: () => window.PeelMasterPlan.storageCons(),
     nearestPipe: (lng, lat, r, minD) => window.PeelSewerCap.nearestPipe(lng, lat, r, minD),
     upgBump: k => { window.PeelMasterPlan.setSewUpgKey(k || ''); },

@@ -47,9 +47,10 @@
     td.n,th.n{text-align:right;font-variant-numeric:tabular-nums}.gap{color:var(--cap-over);font-weight:600}.ok{color:var(--cap-room)}.chk{color:var(--cap-tight)}.muted{color:var(--text-muted)}
     ul{margin:2px 0 6px;padding-left:16px}li{margin:1px 0}.sk{border:1px solid var(--border);border-radius:6px}.note{font-size:9.5px;color:var(--text-muted);margin-top:10px}
     .noprint{margin:8px 0}@media print{.noprint{display:none}body{padding:0}@page{margin:12mm}}`;
-  function openReport(title, body) {
+  // opts.css: a stylesheet in place of the report's own (the Sewer designer's 11×17 sheet).
+  function openReport(title, body, opts = {}) {
     const appCss = new URL('css/app.css', location.href).href;
-    const html = `<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(title)}</title><link rel="stylesheet" href="${appCss}"><style>${REPORT_CSS}</style></head>
+    const html = `<!doctype html><html lang="en" data-theme="light"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>${esc(title)}</title><link rel="stylesheet" href="${appCss}"><style>${opts.css || REPORT_CSS}</style></head>
       <body><p class="noprint"><button onclick="print()">Print / Save as PDF</button></p>${body}<script>addEventListener('load', () => setTimeout(() => print(), 500));<\/script></body></html>`;
     const url = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
     const w = window.open(url, '_blank');

@@ -197,21 +197,85 @@
     const e = STORE.get(keyNow()), A = AT(), t = A ? A.getFootTab() : '';
     const tabName = (document.querySelector(`.f-tab[data-tab="${t}"]`) || {}).textContent || '';
     const subName = (document.querySelector(`.f-subtabs[data-pane="${t}"] .btn.on`) || {}).textContent || '';
-    bar.innerHTML = `<div class="ft-t"><h2>${esc((e && e.title) || [tabName, subName].filter(Boolean).join(' › '))}</h2><p class="small muted">Full table · Engineering columns · same scope, filters and scenario</p></div><div class="ft-scen">${scenarioChip()}</div><button type="button" class="btn small" data-full-close>Close <kbd>Esc</kbd></button>`;
+    bar.innerHTML = `<div class="ft-t"><h2>${esc((e && e.title) || [tabName, subName].filter(Boolean).join(' › '))}</h2><p class="small muted">Full table · Engineering columns · same scope, filters and scenario</p></div><div class="ft-scen">${scenarioChip()}</div><button type="button" class="btn small" data-full-close>Close <kbd>Esc</kbd></button><nav class="ft-jump" aria-label="Tables in this view" hidden></nav>`;
+    renderJumps();
   }
-  function openFull() {
+  // ---- Finding a table in the full table --------------------------------------------------------
+  // A full table can run to ten screens (Growth › Areas). Its bar lists the tables the open sub-view
+  // holds, each a jump. A "See all" fold of up to 60 rows opens with it: asking for the full table
+  // asked for every row. A longer one (the 526 forecast developments) stays folded and is in the list,
+  // so it doesn't push the tables below it out of reach. A panel row about one table
+  // (data-ft-go="its title") opens the full table at that table.
+  const SEE_ALL = 'details.see-all, details.dcn-more, details.svc-more', SEE_ALL_ROWS = 60;
+  const HEADS = 'h2, h3, h4, .tb-head, summary';
+  const shown = el => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
+  const label = el => { const c = el.cloneNode(true); c.querySelectorAll('small, .muted, button, [aria-hidden="true"]').forEach(x => x.remove()); return c.textContent.replace(/\s+/g, ' ').trim(); };
+  let jumps = [], watch = null, queued = false;
+  // The tables on screen, in order: { name, at } (at: where the jump scrolls to). A table is named
+  // by its caption, else by the heading above it; tables under one heading are one stop.
+  function tablesNow() {
+    const panes = document.getElementById('analysis-panes'); if (!panes) return [];
+    const out = [], seen = new Set(); let head = null;
+    for (const el of panes.querySelectorAll(`${HEADS}, table, ${SEE_ALL}`)) {
+      // (a heading inside a table, or a "See all" fold's own line, names nothing)
+      if (el.matches(HEADS)) { if (shown(el) && !el.closest('table') && !(el.tagName === 'SUMMARY' && el.parentElement.matches(SEE_ALL))) head = el; continue; }
+      let name, at;
+      if (el.tagName === 'DETAILS') { if (el.open || !shown(el)) continue; const s = el.querySelector('summary'); name = s && label(s); at = el; }
+      else {
+        // (a table nested in another, or the rest of one in its "See all" fold, is not a stop of its own)
+        if (!shown(el) || el.parentElement.closest('table') || el.closest(SEE_ALL)) continue;
+        const cap = el.querySelector('caption');
+        name = cap ? label(cap) : head && label(head); at = cap ? el : head;
+      }
+      if (!name || seen.has(name)) continue;
+      seen.add(name); out.push({ name, at });
+    }
+    return out;
+  }
+  function renderJumps() {
+    const nav = document.querySelector('#ft-bar .ft-jump'); if (!nav) return;
+    jumps = tablesNow();
+    nav.hidden = jumps.length < 3;
+    nav.innerHTML = nav.hidden ? '' : `<span class="small muted">Tables:</span>${jumps.map((j, i) => `<button type="button" class="btn small link" data-ft-jump="${i}" title="${esc(j.name)}">${esc(j.name.length > 48 ? `${j.name.slice(0, 46)}…` : j.name)}</button>`).join('')}`;
+  }
+  function autoOpen() {
+    const panes = document.getElementById('analysis-panes'); if (!panes) return;
+    for (const d of panes.querySelectorAll(SEE_ALL)) {
+      if (d.dataset.ftAuto) continue;   // once per fold: one the person closed stays closed
+      d.dataset.ftAuto = '1';
+      if (!d.open && d.querySelectorAll('tbody tr').length <= SEE_ALL_ROWS) d.open = true;
+    }
+  }
+  function jumpTo(at) {
+    if (!at) return;
+    const d = at.closest('details'); if (d && !d.open) d.open = true;
+    if (at.tagName === 'DETAILS') at.open = true;
+    at.scrollIntoView({ block: 'start' });
+  }
+  // The panes re-render (a filter, the scenario, another sub-view): open the new folds, relist the tables.
+  const refresh = () => { queued = false; if (!isFull()) return; autoOpen(); renderJumps(); };
+  function openFull(go) {
     const an = typeof document !== 'undefined' && document.getElementById('analysis'); if (!an) return false;
-    if (an.classList.contains('ft-on')) return true;   // already open: keep the state to restore on close
+    if (an.classList.contains('ft-on')) { if (go) goTo(go); return true; }   // already open: keep the state to restore on close
     lastFocus = document.activeElement;
     techBefore = an.classList.contains('show-tech');
     const tb = document.getElementById('topbar'); an.style.setProperty('--ft-top', `${tb ? Math.round(tb.getBoundingClientRect().bottom) : 0}px`);
     an.classList.add('ft-on', 'show-tech'); document.documentElement.classList.add('full-table-open');
+    autoOpen();
     const bar = document.getElementById('ft-bar'); if (bar) { bar.hidden = false; fullBar(); const c = bar.querySelector('[data-full-close]'); if (c) c.focus(); }
     const sc = document.getElementById('analysis-panes'); if (sc) sc.scrollTop = 0;
+    if (sc && typeof MutationObserver === 'function') {
+      watch = watch || new MutationObserver(() => { if (!queued) { queued = true; requestAnimationFrame(refresh); } });
+      watch.observe(sc, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden'] });
+    }
+    if (go) goTo(go);
     return true;
   }
+  // (on the next frame, once a sub-view the click opened has drawn)
+  const goTo = go => requestAnimationFrame(() => { refresh(); const g = String(go).toLowerCase(), j = jumps.find(x => x.name.toLowerCase().includes(g)) || tablesNow().find(x => x.name.toLowerCase().includes(g)); if (j) jumpTo(j.at); });
   function closeFull() {
     const an = typeof document !== 'undefined' && document.getElementById('analysis'); if (!an || !an.classList.contains('ft-on')) return false;
+    if (watch) watch.disconnect();
     an.classList.remove('ft-on'); if (!techBefore) an.classList.remove('show-tech'); document.documentElement.classList.remove('full-table-open');
     const bar = document.getElementById('ft-bar'); if (bar) bar.hidden = true;
     if (lastFocus && lastFocus.focus && document.contains(lastFocus)) try { lastFocus.focus(); } catch (e) { /* gone */ }
@@ -221,7 +285,8 @@
   if (typeof document !== 'undefined') {
     document.addEventListener('click', e => {
       if (!e.target.closest) return;
-      if (e.target.closest('[data-full-table]')) { openFull(); return; }
+      const ft = e.target.closest('[data-full-table]'); if (ft) { openFull(ft.dataset.ftGo); return; }
+      const jp = e.target.closest('[data-ft-jump]'); if (jp) { const j = jumps[+jp.dataset.ftJump]; if (j) jumpTo(j.at); return; }
       if (e.target.closest('[data-full-close]')) { closeFull(); return; }
       if (e.target.closest('[data-pnl-scen]')) { const T = root.PeelTopbar; if (T && T.openScenPop) T.openScenPop(); return; }
       // (a phone, where the timeline hides under the panel: Find › When, which has the years there)
