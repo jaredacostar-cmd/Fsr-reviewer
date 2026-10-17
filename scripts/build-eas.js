@@ -18,6 +18,7 @@ const path = require('path');
 const E = require('./ea-lib.js');
 const C = require('./capital-lib.js');
 const F = require('./facilities-lib.js');
+const PV = require('../js/privacy.js');
 
 const LIST_URL = 'https://peelregion.ca/construction/environmental-assessments/list-of-environment-assessments';
 const SEEDS = [
@@ -258,6 +259,8 @@ async function main() {
     eas: final,
   };
   for (const e of final) for (const k of ['purpose', 'nextStep', 'decision']) { const v = typeof e[k] === 'object' && e[k] ? e[k].text : e[k]; if (v && E.CONTACT.test(v)) e[k] = null; }
+  // Contact and mailing lists name people: never published, whichever way they came in (js/privacy.js).
+  for (const e of final) if (e.links && e.links.appendices) e.links.appendices = e.links.appendices.filter(a => !PV.isContactList(a.label));
   fs.mkdirSync(outDir, { recursive: true });
   fs.writeFileSync(path.join(outDir, 'eas.json'), JSON.stringify(out, null, 1));
   fs.writeFileSync(path.join(outDir, 'eas-review.csv'), E.reviewCsv(final));

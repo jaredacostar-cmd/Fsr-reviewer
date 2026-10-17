@@ -21,6 +21,7 @@ const CFG = require('../js/config.js');
 const P = require('../js/phases.js');
 const L = require('../js/loader.js');
 const { buildIndex, countUnitsFromText } = require('./build-snapshot-index.js');
+const PV = require('../js/privacy.js');
 
 const SNAPSHOT_MAX_PER_LAYER = 150000;
 const CHANGE_LIST_MAX = 500;
@@ -35,7 +36,9 @@ const KEEP = ['uid', 'sourceId', 'municipality', 'kind', 'ref', 'address', 'type
 function encodeRecord(r) {
   const o = {};
   for (const k of KEEP) {
-    const v = r[k];
+    // No one's name, contact or staff note in a description (js/privacy.js; js/phases.js
+    // normalizeRecord already scrubbed it once every count was read from it).
+    const v = k === 'description' ? PV.scrubDescription(r[k], r) : r[k];
     if (v == null || v === '' || v === false) continue;
     // Permit descriptions are only shown in the detail panel; keep them short to keep the file small.
     const max = r.kind === 'permit' ? 160 : 600;
