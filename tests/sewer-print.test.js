@@ -107,3 +107,16 @@ test('the design flow on the sheet: the peak dry + I&I breakdown only for a sing
   assert.match(two, /30\.0 L\/s at the connection/);
   assert.doesNotMatch(two, /\(typed\)/);
 });
+
+test('chainage rounds before it splits into kilometres and metres', () => {
+  assert.equal(SP.chain(999.96), '1+000.0');   // was 0+1000.0
+  assert.equal(SP.chain(999.94), '0+999.9');
+  assert.equal(SP.chain(1999.95), '2+000.0');
+  assert.equal(SP.chain(0.04), '0+000.0');
+});
+
+test('the sheet fits its page box: 17 × 11 in less the 10 mm margins', () => {
+  assert.ok(Math.abs(SP.SHEET.w - (17 * 25.4 - 20)) < 1e-9, `${SP.SHEET.w}`);   // was 412 (0.2 mm over)
+  assert.ok(Math.abs(SP.SHEET.h - (11 * 25.4 - 20)) < 1e-9, `${SP.SHEET.h}`);   // was 259 (0.4 mm short)
+  assert.match(SP.sheetHTML(dt).css, /@page\{size:17in 11in;margin:10mm\}/);
+});

@@ -13,8 +13,8 @@
   // Drawing scales (1:n): plan and profile horizontal, profile vertical.
   const SCALES = [200, 250, 500, 1000, 1250, 2000, 2500, 5000, 10000, 20000];
   const VSCALES = [50, 100, 200, 250, 500, 1000];
-  // The sheet: 17 × 11 in less 10 mm margins, in mm.
-  const SHEET = { w: 412, h: 259 };
+  // The sheet: 17 × 11 in less 10 mm margins, in mm (431.8 × 279.4 less 20: the page box exactly).
+  const SHEET = { w: 411.8, h: 259.4 };
   const e = s => String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   const f1 = n => (+n).toFixed(1), f2 = n => (+n).toFixed(2), n0 = n => Math.round(n).toLocaleString('en-CA');
   const r1 = n => Math.round(n * 10) / 10;
@@ -22,7 +22,8 @@
   // The smallest scale (largest drawing) at which `metres` fits in `mm` of paper.
   const pickScale = (metres, mm, list = SCALES) => list.find(s => metres * 1000 / s <= mm) || list[list.length - 1];
   // Chainage the way a profile labels it: 0+190.0.
-  const chain = x => { const k = Math.floor(x / 1000 + 1e-9), m = x - k * 1000; return `${k}+${m.toFixed(1).padStart(5, '0')}`; };
+  // (rounded to the 0.1 m shown first, so 999.96 m is 1+000.0, not 0+1000.0)
+  const chain = x => { const r = Math.round(x * 10) / 10, k = Math.floor(r / 1000 + 1e-9), m = r - k * 1000; return `${k}+${m.toFixed(1).padStart(5, '0')}`; };
   // A scale bar of a round length about 40–60 mm long on paper.
   const barLength = scale => [5, 10, 20, 25, 50, 100, 200, 250, 500, 1000, 2000].find(m => m * 1000 / scale >= 40) || 2000;
 
@@ -132,8 +133,8 @@
 
   /** Both sheets as the report body, and the stylesheet that goes with them. */
   function sheetHTML(dt) {
-    const d = dt.d, left = 300, gap = 5, right = SHEET.w - left - gap;
-    const plan = planSVG(dt, left, 138), prof = profileSVG(dt, left, SHEET.h - 138 - gap);
+    const d = dt.d, left = 300, gap = 5, right = r1(SHEET.w - left - gap);
+    const plan = planSVG(dt, left, 138), prof = profileSVG(dt, left, r1(SHEET.h - 138 - gap));
     // (the deepest along the reaches, not only at the maintenance holes: PeelSewerDesign.deepest())
     const deepest = dt.deepest ? dt.deepest.depth : Math.max(...d.mhs.map(m => m.depth)), sl = d.reaches.map(r => r.S * 100), sz = sizeText(d.reaches.map(r => r.dmm || d.dmm)), Ltot = d.reaches.reduce((t, r) => t + r.L, 0), nb = dt.plan ? dt.plan.branches.length : 0;
     const checks = (dt.checks || []).map(c => `<li class="${c.pass ? 'ok' : 'no'}"><b>${c.pass ? '✓' : '✗'}</b> ${e(c.t)}: ${e(c.val)}</li>`).join('');
