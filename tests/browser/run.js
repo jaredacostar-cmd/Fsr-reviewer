@@ -14,8 +14,10 @@ const PORT = +(process.env.PORT || 8790);
 const CDN = process.env.CDN_DIR;
 const results = [];
 
-async function open(browser, { w = 1440, h = 900, fresh = false } = {}) {
+async function open(browser, { w = 1440, h = 900, fresh = false, slowApp = 0 } = {}) {
   const ctx = await browser.newContext({ viewport: { width: w, height: h }, isMobile: w < 500, hasTouch: w < 500 });
+  // (js/app.js held back: the data files and the map arrive first, as on a slow connection)
+  if (slowApp) await ctx.route(/\/js\/app\.js/, async route => { await wait(slowApp); route.continue(); });
   if (CDN) await ctx.route('https://unpkg.com/**', route => { const m = /unpkg\.com\/([^@]+)@([^/]+)\/(.+)$/.exec(route.request().url()); const f = m && `${CDN}/${m[1]}-${m[2]}/package/${m[3]}`; if (f && fs.existsSync(f)) route.fulfill({ path: f, contentType: f.endsWith('.css') ? 'text/css' : 'application/javascript' }); else route.abort(); });
   const page = await ctx.newPage(); const errors = [];
   page.on('pageerror', e => errors.push(e.message));
@@ -51,6 +53,10 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     for (let i = 0; i < 8 && await page.$('.tour-card'); i++) { await page.click('.tour-card [data-tour-next], .tour-card [data-tour-help]'); await wait(500); }
     expect(!(await page.$('.tour-card')), 'the tour ends');
     expect(await ev(() => !(window.DevScope && DevScope.current())), 'no development left open');
+  });
+
+  await check('a slow start: js/app.js arriving after the data and the map throws nothing', browser, { slowApp: 3000 }, async ({ ev }, expect) => {
+    expect(await ev(() => document.querySelectorAll('.leaflet-marker-icon, .leaflet-interactive').length > 0), 'the map draws');
   });
 
   await check('Check a site: search, pick, the stage chip opens how the stage was set', browser, {}, async ({ page, ev }, expect) => {
