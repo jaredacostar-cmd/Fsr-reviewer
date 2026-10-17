@@ -78,6 +78,24 @@ test('normalizeAddress: a unit / suite / lot / block word is cut only as a whole
   assert.equal(P.normalizeAddress('9 Mill St Apt 3'), '9 MILL ST');
 });
 
+test('normalizeAddress: a town, province and postal code without commas go too (Caledon planning files)', () => {
+  const permit = P.normalizeAddress('48 Sample Road, Caledon, ON, L7C 0A0');
+  assert.equal(P.normalizeAddress('48 SAMPLE ROAD CALEDON ON L7C 0A0'), permit, 'an application and a permit at one address meet');
+  assert.equal(P.normalizeAddress('1 SAMPLE DRIVE CALEDON ON'), '1 SAMPLE DR');
+  assert.equal(P.normalizeAddress('2 SAMPLE STREET CALEDON EAST ON L7K 0A0'), '2 SAMPLE ST');
+  assert.equal(P.normalizeAddress('3 SAMPLE WAY UNIT 4 CALEDON ON L7C 0A0'), '3 SAMPLE WAY');
+  assert.equal(P.normalizeAddress('4 SAMPLE ST L7E 0A0'), '4 SAMPLE ST', 'a trailing postal code');
+  assert.equal(P.normalizeAddress('18000 MISSISSAUGA ROAD CALEDON ON L7K 0A0'), '18000 MISSISSAUGA RD', 'Mississauga Road is a street');
+  assert.equal(P.normalizeAddress('5 MAIN ST BRAMPTON ON L6X 0A0'), '5 MAIN ST');
+  // The old key of such a development still opens it.
+  const recs = [{ uid: 'c1', kind: 'application', municipality: 'Caledon', ref: '2024-0001', fileKey: '2024|1', type: 'Site plan', stage: 'siteplan', address: '48 SAMPLE ROAD CALEDON ON L7C 0A0', phase: 'review', events: [ev('2024-01-01')], description: '' }];
+  const ps = P.buildProjects(recs), keys = new Set(ps.map(p => p.key));
+  assert.equal(ps[0].key, 'Caledon|48 SAMPLE RD');
+  TG.setData(null); TG.setAliases(P.keyAliases(ps));
+  assert.equal(TG.resolve('Caledon|48 SAMPLE RD CALEDON ON L7C 0A0', k => keys.has(k), { aliasesOnly: true }), 'Caledon|48 SAMPLE RD');
+  TG.setAliases(null);
+});
+
 test('saved keys: an old address key resolves to the development now holding its records (both modes)', () => {
   // Synthetic: the old reading of "9 STEEPLE RD" cut the street ("9 RD"); today's key is the full address.
   const recs = [{ uid: 'a1', kind: 'application', municipality: 'Brampton', ref: 'SPA-1', fileKey: 'SPA|1', address: '9 STEEPLE RD', phase: 'review', events: [ev('2024-01-01')], type: 'Site plan', description: '' }];

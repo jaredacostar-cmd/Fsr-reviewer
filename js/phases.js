@@ -175,6 +175,9 @@
     let s = str(addr).toUpperCase();
     if (!s) return '';
     s = s.replace(/,.*$/, '')                       // drop city / postal suffix
+         // … also without a comma (Caledon's planning files: "12 MAIN ST CALEDON ON L7C 3B7")
+         .replace(/\s+(CALEDON( EAST)?|BRAMPTON|MISSISSAUGA)\s+ON\b.*$/, '')
+         .replace(/\s+[A-Z]\d[A-Z]\s?\d[A-Z]\d\s*$/, '')
          // a unit, suite, lot or block number — a whole word, so "STEELES", "STEWARDSHIP", "LOTUS" stay
          .replace(/\b(UNIT|SUITE|STE|APT|BLDG|BUILDING|LOT|BLK|BLOCK)\b\s*[#\w-]+/g, '')
          .replace(/#\s*\w+/g, '')
