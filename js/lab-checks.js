@@ -53,9 +53,19 @@
     return deep ? { tone: 'tight', text: 'By gravity, deep or with a drop structure' } : { tone: 'room', text: 'Likely by gravity' };
   }
 
+  // The point a fraction t of the way along a polyline g ([[lng, lat]…]), by length in metres (as
+  // PeelMeasure.nearOn() gives t), not in degrees.
+  function pointAt(g, t) {
+    const seg = []; let tot = 0;
+    for (let i = 1; i < g.length; i++) { const kx = Math.cos((g[i][1] + g[i - 1][1]) / 2 * Math.PI / 180), l = Math.hypot((g[i][0] - g[i - 1][0]) * kx, g[i][1] - g[i - 1][1]); seg.push(l); tot += l; }
+    let want = t * tot;
+    for (let i = 1; i < g.length; i++) { if (want <= seg[i - 1]) { const k = seg[i - 1] ? want / seg[i - 1] : 0; return [g[i - 1][0] + (g[i][0] - g[i - 1][0]) * k, g[i - 1][1] + (g[i][1] - g[i - 1][1]) * k]; } want -= seg[i - 1]; }
+    return g[g.length - 1];
+  }
+
   // ---- Browser ---------------------------------------------------------------------------------
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
-    if (typeof module !== 'undefined' && module.exports) module.exports = { ZONES, ZONE_SRC, PRESSURE, pressureAt, gravityVerdict, deepestOf };
+    if (typeof module !== 'undefined' && module.exports) module.exports = { ZONES, ZONE_SRC, PRESSURE, pressureAt, gravityVerdict, deepestOf, pointAt };
     return;
   }
   const U = root.PeelUtil || {}, esc = U.esc || (s => String(s)), fmtNum = U.fmtNum || (n => String(n));
@@ -143,13 +153,6 @@
     const ici = !(p.units > 0);
     const d = SW().design(route, conn, q, { ici });
     return gravityHTML(p, d, conn, L, q, route, gs[0]);
-  }
-  function pointAt(g, t) {
-    const seg = []; let tot = 0;
-    for (let i = 1; i < g.length; i++) { const l = Math.hypot(g[i][0] - g[i - 1][0], g[i][1] - g[i - 1][1]); seg.push(l); tot += l; }
-    let want = t * tot;
-    for (let i = 1; i < g.length; i++) { if (want <= seg[i - 1]) { const k = seg[i - 1] ? want / seg[i - 1] : 0; return [g[i - 1][0] + (g[i][0] - g[i - 1][0]) * k, g[i - 1][1] + (g[i][1] - g[i - 1][1]) * k]; } want -= seg[i - 1]; }
-    return g[g.length - 1];
   }
   function gravityHTML(p, d, conn, L, q, route, g0) {
     const v = gravityVerdict(d, route), chip = `<span class="pnl-chip t-${v.tone}">${esc(v.text)}</span>`;

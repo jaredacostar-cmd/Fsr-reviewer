@@ -64,3 +64,15 @@ test('the gravity verdict reads the depth along the line, not only at the mainte
   assert.equal(LC.gravityVerdict(d, route).text, 'By gravity, deep or with a drop structure');
   assert.match(src('js/lab-checks.js'), /const v = gravityVerdict\(d, route\)/);
 });
+
+test('the connection point on the pipe: t is a fraction of the length in metres, not in degrees', () => {
+  const lat0 = 43.7, kx = 111320 * Math.cos(lat0 * Math.PI / 180), ky = 111320;
+  // a pipe 100 m east, then 100 m north: halfway along is the corner
+  const g = [[-79.7, lat0], [-79.7 + 100 / kx, lat0], [-79.7 + 100 / kx, lat0 + 100 / ky]];
+  const p = LC.pointAt(g, 0.5), off = Math.hypot((p[0] - g[1][0]) * kx, (p[1] - g[1][1]) * ky);
+  assert.ok(off < 0.05, `${off.toFixed(2)} m from the corner`);   // was 13.9 m
+  const q = LC.pointAt(g, 0.25);
+  assert.ok(Math.abs((q[0] - g[0][0]) * kx - 50) < 0.05 && Math.abs(q[1] - lat0) < 1e-12);
+  assert.deepEqual(LC.pointAt(g, 1), g[2]);
+  assert.deepEqual(LC.pointAt(g, 0), g[0]);
+});
