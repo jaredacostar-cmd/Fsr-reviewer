@@ -87,7 +87,9 @@
   }
   function navigate(p, backTo) {
     if (!p) return;
-    const S = root.DevScope;
+    const S = root.DevScope, N = root.PeelDevNav;
+    // (the file's own development, as a click on its boundary opens it: header, site bar and tabs follow)
+    if (N && N.showDetail) { drill = null; N.showDetail(p); return; }
     if (S && typeof S.set === 'function') { drill = null; S.set(p); }
     else {
       const scope = S && typeof S.current === 'function' ? S.current() : null;
@@ -1007,6 +1009,19 @@
     map.fitBounds(root.L.latLngBounds(ll.flat()), { maxZoom: 18, padding: [40, 40] });
   }
 
+  // A development's section (History, Source records…), from anywhere: on a page the full map comes
+  // first; then Records › Files, the full table, the section open and in view.
+  function openSection(id) {
+    const W = root.PeelWorkspaces, AT = root.PeelAnalysisTabs, PN = root.PeelPanel;
+    if (hasDOM() && document.documentElement.classList.contains('home-on') && W && W.setMode) W.setMode('full');
+    if (AT && AT.openTab) AT.openTab('records', 'files');
+    setTimeout(() => {
+      if (PN && PN.openFull) PN.openFull();
+      if (currentSub() !== 'files') setSub('files');
+      const d = byIdShown(id); if (d) { d.open = true; d.scrollIntoView({ block: 'start' }); }
+    }, 250);
+  }
+
   // ---- Delegated clicks ----------------------------------------------------------------
   // All interactive attributes use a data-dt-* prefix so the document-level
   // handlers in js/app.js never see them (and vice versa).
@@ -1015,6 +1030,10 @@
     const ds = e.target.closest('[data-devsub]');
     if (ds) { setSub(ds.dataset.devsub); return; }
     const body = document.getElementById('pane-dev-body');
+    // A link to a section from outside the development's views (the Overview's About fold, a page):
+    // Records › Files, in the full table, at that section.
+    const out = e.target.closest('[data-dt-open]');
+    if (out && !(body && body.contains(out))) { openSection(out.dataset.dtOpen); return; }
     if (!body || !body.contains(e.target)) return;
     const p = scopeProject();
     const tl = e.target.closest('[data-dt-tl]');
@@ -1079,7 +1098,7 @@
     if (parts.includes('ground') && p.lat != null) { devAerial(p); fillGround(p); }
   }
   // ---- Public contract ------------------------------------------------------------------
-  const api = { render, setSub, partHTML, fillParts, aerialRun, aerialAvailable, renderAerialInto };
+  const api = { render, setSub, partHTML, fillParts, aerialRun, aerialAvailable, renderAerialInto, openSection };
   if (typeof module !== 'undefined' && module.exports) module.exports = { ...api, currentSub, recGroup, REC_GROUPS, groupRecords, statusOf, phaseBasis, scopeProjectForTest: () => scopeProject() };
   else root.DevTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -781,7 +781,13 @@
       QUALITY: window.PeelMapMarkers.QUALITY,
       setDaContext: (...a) => window.PeelCensusAreas.setDaContext(...a),
       ensureCouncil: () => window.PeelDevDetail.loadCouncil(),
-      showAllocSub: () => { window.PeelAnalysisTabs.showFootTab('svc', 'alloc'); window.PeelShare.viewLink.write(); },
+      // At a development the allocation form is a fold of its Servicing panel (Allocations is Peel-wide).
+      showAllocSub: () => {
+        if (window.PeelWorkspaces && document.documentElement.classList.contains('home-on')) window.PeelWorkspaces.setMode('full');
+        window.PeelAnalysisTabs.openTab('svc', 'network');
+        setTimeout(() => { const d = document.getElementById('pnl-alloc'); if (d) { d.open = true; d.scrollIntoView({ block: 'nearest' }); const u = d.querySelector('[data-alloc-f="units"]'); if (u) u.focus(); } }, 300);
+        window.PeelShare.viewLink.write();
+      },
       writeLink: () => window.PeelShare.viewLink.write(),
       estimate: p => D.estimate([p], state.criteria, 'all', jobsOf),
       renderScopeTab: () => {

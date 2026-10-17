@@ -74,6 +74,8 @@ const trim = (s, n) => (s.length <= n ? s : `${s.slice(0, Math.round(n * 0.7))} 
     }
   });
   for (const k of Object.keys(out.files)) out.files[k] = [...new Map(out.files[k].map(x => [x.join('#'), x])).values()];
+  // No one's name is kept: staff, councillors, residents, delegations, letter writers (js/privacy.js).
+  require('../js/privacy.js').scrubCouncil(out);
   fs.writeFileSync(path.join(OUT, 'council.json'), JSON.stringify(out));
   // The decisions that move a file's phase (zoning by-laws passed, draft plans approved): a small
   // index the app loads with the developments (js/council-decisions.js, SPEC 1.2).

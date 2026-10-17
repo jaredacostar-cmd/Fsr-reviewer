@@ -102,7 +102,7 @@
       <div class="alloc-h"><strong>Servicing allocation</strong> ${a ? `<span class="fr-b fr-ok">${fmtNum(a.units)} units allocated${a.date ? ` · ${esc(a.date)}` : ''}</span>` : '<span class="fr-b fr-ref">Not recorded</span>'}</div>
       <div class="alloc-f"><label>Units <input type="number" min="0" step="1" data-alloc-f="units" value="${a ? a.units : def}"></label><label>Date <input type="date" data-alloc-f="date" value="${esc(a ? a.date || '' : new Date().toISOString().slice(0, 10))}"></label><label>Reference <input type="text" data-alloc-f="ref" value="${esc(a ? a.ref || '' : '')}" placeholder="report / agreement no."></label>
         <button type="button" class="btn small" data-alloc-save="${esc(p.key)}">${a ? 'Update' : 'Record allocation'}</button>${a ? `<button type="button" class="btn small link" data-alloc-del="${esc(p.key)}">Remove</button>` : ''}</div>
-      <small class="muted">Kept in this browser; share the list from Wastewater → Allocations (CSV).</small></div>`;
+      <small class="muted">Kept in this browser; share the list from Servicing › Allocations (CSV), at Peel.</small></div>`;
   }
   document.addEventListener('click', e => {
     const sv = e.target.closest('[data-alloc-save]');
@@ -303,7 +303,7 @@
   // anything out: every stage ('all') and build-out ('buildout'); approved only ('committed') and left
   // to build ('remaining') count none.
   const preCensus = (t, basis) => (t && (basis === 'all' || basis === 'buildout') ? { units: (t.units && t.units.existing) || 0, people: (t.people && t.people.existing) || 0 } : { units: 0, people: 0 });
-  const api = { preCensus, MUNIS, freshness, validationRows, freshnessHTML, checksHTML, renderQuality, sourcesPageHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, wwTile, miniBar, wwInfoLine, numberConventionsHTML, modelSectionsHTML };
+  const api = { allocBoxHTML, preCensus, MUNIS, freshness, validationRows, freshnessHTML, checksHTML, renderQuality, sourcesPageHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, wwTile, miniBar, wwInfoLine, numberConventionsHTML, modelSectionsHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemandUI = api;
 })(typeof window !== 'undefined' ? window : globalThis);

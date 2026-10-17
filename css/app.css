@@ -3416,3 +3416,7 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .aer-box .aerial-pair canvas { background: var(--surface-1); }
 .aer-foot { margin: var(--space-1) 0 0; }
 .home-h .aer-chip { vertical-align: middle; }
+/* A short confirmation ("Link copied"), js/util.js toast */
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 12px); z-index: 3000; background: var(--text-primary); color: var(--surface-0); padding: 8px 14px; border-radius: 6px; font-size: var(--fs-2); opacity: 0; pointer-events: none; transition: opacity .18s, transform .18s; max-width: calc(100vw - 32px); }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+@media (prefers-reduced-motion: reduce) { .toast { transition: none; } }
