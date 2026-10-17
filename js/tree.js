@@ -90,16 +90,38 @@
   // ---- 2. Geometry (sampling: deterministic, a few per cent of accuracy) ----------------------------
   const bboxOf = rings => { let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity; for (const g of rings) for (const [x, y] of g) { if (x < x0) x0 = x; if (y < y0) y0 = y; if (x > x1) x1 = x; if (y > y1) y1 = y; } return [x0, y0, x1, y1]; };
   const boxesMeet = (a, b) => a[0] <= b[2] && b[0] <= a[2] && a[1] <= b[3] && b[1] <= a[3];
+  // Point in polygon, each ring's box first (an area-wide file can have a hundred rings); the same
+  // answer as P.pointInRings, kept per ring list.
+  const ringBoxes = new WeakMap();
+  function inRings(x, y, rings) {
+    let bs = ringBoxes.get(rings); if (!bs) ringBoxes.set(rings, bs = rings.map(r => bboxOf([r])));
+    for (let i = 0; i < rings.length; i++) { const q = bs[i]; if (x >= q[0] && x <= q[2] && y >= q[1] && y <= q[3] && P.pointInRings(x, y, [rings[i]])) return true; }
+    return false;
+  }
+  // Which of a polygon's N × N box samples lie inside it, kept per ring list (a file meets many others).
+  const sampleMasks = new WeakMap();
+  function samplesOf(rings, ba, N) {
+    let m = sampleMasks.get(rings); if (!m) sampleMasks.set(rings, m = new Map());
+    const key = `${N}|${ba.join(',')}`;
+    let v = m.get(key);
+    if (!v) {
+      v = new Uint8Array(N * N);
+      for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) v[i * N + j] = inRings(ba[0] + (ba[2] - ba[0]) * (i + 0.5) / N, ba[1] + (ba[3] - ba[1]) * (j + 0.5) / N, rings) ? 1 : 0;
+      m.set(key, v);
+    }
+    return v;
+  }
   // Share of polygon a's area lying inside polygon b (0–1), on an N × N sample of a's box.
   function shareInside(a, b, N = 24) {
     const ba = a.bbox || bboxOf(a.rings), bb = b.bbox || bboxOf(b.rings);
     if (!boxesMeet(ba, bb)) return 0;
+    const mask = samplesOf(a.rings, ba, N);
     let n = 0, k = 0;
     for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) {
+      if (!mask[i * N + j]) continue;
       const x = ba[0] + (ba[2] - ba[0]) * (i + 0.5) / N, y = ba[1] + (ba[3] - ba[1]) * (j + 0.5) / N;
-      if (!P.pointInRings(x, y, a.rings)) continue;
       n++;
-      if (x >= bb[0] && x <= bb[2] && y >= bb[1] && y <= bb[3] && P.pointInRings(x, y, b.rings)) k++;
+      if (x >= bb[0] && x <= bb[2] && y >= bb[1] && y <= bb[3] && inRings(x, y, b.rings)) k++;
     }
     return n ? k / n : 0;
   }

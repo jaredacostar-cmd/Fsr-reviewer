@@ -396,6 +396,21 @@ test('no stated count: the permits placed in the tree count; a replacement house
   assert.equal(T.countTree(b2.trees[0], b2).units, 0, 'a replacement house adds no growth');
 });
 
+test('shareInside: the same share on a many-ring polygon, asked twice (ring boxes and samples kept)', () => {
+  const P = require('../js/phases.js');
+  const many = Array.from({ length: 30 }, (_, i) => box(i * 2, 0, i * 2 + 1, 1)[0]);
+  const a = { rings: box(0, 0, 10, 1) }, b = { rings: many };
+  const naive = (p, q, N = 24) => {
+    const [x0, y0, x1, y1] = T.bboxOf(p.rings); let n = 0, k = 0;
+    for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) { const x = x0 + (x1 - x0) * (i + 0.5) / N, y = y0 + (y1 - y0) * (j + 0.5) / N; if (!P.pointInRings(x, y, p.rings)) continue; n++; if (P.pointInRings(x, y, q.rings)) k++; }
+    return n ? k / n : 0;
+  };
+  assert.equal(T.shareInside(a, b), naive(a, b));
+  assert.equal(T.shareInside(a, b), naive(a, b), 'asked again');
+  assert.equal(T.shareInside(b, a), naive(b, a));
+  assert.ok(T.shareInside(a, b) > 0.4 && T.shareInside(a, b) < 0.6);
+});
+
 test('no stated count: the permits fallback counts as the build-out does — no demolition, one building per permit number', () => {
   const recs = [app({ ref: 'SUB-2', poly: box(20, 20, 24, 24), description: 'Draft plan of subdivision to permit townhouse dwellings' })];
   const permit = (ref, units, extra = {}) => ({ uid: `q-${ref}`, kind: 'permit', municipality: 'Brampton', ref, fileKey: require('../js/phases.js').canonRef(ref), units, lat: Y + 21 * K, lng: X + 21 * K, address: '', type: 'Residential', events: ev('2023-01-01'), ...extra });
