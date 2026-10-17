@@ -118,3 +118,15 @@ test('validation stats and the accuracy label come from the table, never hard-co
   assert.match(C.accuracyLabel(table, 43.9, -79.9, 'lidar').text, /No validation against Peel manholes for this area/);
   assert.match(C.accuracyLabel({ areas: { c: { name: 'C', bbox: [-80, 43, -79, 44], rows: {} } } }, 43.5, -79.5, 'lidar').text, /No validation .* the lidar in C/);
 });
+
+test('grade labels follow each leg\'s own points when a short leg has no sample', () => {
+  // A → B → C → D, the leg B → C too short for a sample of its own
+  const prof = [{ d: 0, z: 100, leg: 0 }, { d: 100, z: 99, leg: 0 }, { d: 104, z: 99, leg: 2 }, { d: 204, z: 101, leg: 2 }];
+  const marks = [{ d: 0, l: 'A' }, { d: 100, l: 'B' }, { d: 103, l: 'C' }, { d: 204, l: 'D' }];
+  const g = C.legLabels(C.legGrades(prof), marks);
+  assert.deepEqual(g.map(x => `${x.a}→${x.b}`), ['A→B', 'C→D']);   // was A→B, B→C
+  near(g[1].grade, 0.02);
+  assert.deepEqual(C.legLabels(C.legGrades(prof)).map(x => x.a + x.b), ['', '']);
+  const v = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'js/profile-view.js'), 'utf8');
+  assert.match(v, /PC\.legLabels\(PC\.legGrades\(model\.prof\), model\.marks \|\| \[\]\)/);
+});
