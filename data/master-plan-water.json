@@ -10,7 +10,8 @@
   "The lake-based system has three trunk systems: West (Lorne Park WTP), Central (A.P. Kennedy WTP) and East (fed from Central via the Beckett Sproule transfer). Vol 3, p.14.",
   "Each lake-based pressure zone is split into W, C and E sub-zones (1W, 1C, ... 7E); Bolton is 6B. The plan gives demand by sub-zone but does not publish sub-zone boundary maps (\"approximate service area boundaries\", p.34).",
   "West and Central/East are interconnected, so water can be moved between them to optimize capacity (p.35). Treat sub-zone checks as per-system screening, not hard limits.",
-  "Actual capacity uses roughness from the calibrated hydraulic model; theoretical uses new-pipe roughness. Both at a 1 m/km head-loss gradient (pp.19, 134)."
+  "Actual capacity uses roughness from the calibrated hydraulic model; theoretical uses new-pipe roughness. Both at a 1 m/km head-loss gradient (pp.19, 134).",
+  "York Region supply is treated at A.P. Kennedy, pumped north through the Central system (A.P. Kennedy–Hanlan, CT2H; Hanlan–Beckett Sproule, CT3) and transferred east at Beckett Sproule to Airport Road (p.64). Those two trunks carry \"carriesYork\": true; their flow includes the York agreement amounts in systemDemand.york."
  ],
  "years": [
   2021,
@@ -654,7 +655,8 @@
      "actualMLd": 657,
      "cFactor": 130
     }
-   ]
+   ],
+   "carriesYork": true
   },
   {
    "id": "CT2H",
@@ -710,7 +712,8 @@
      "actualMLd": 934,
      "cFactor": 130
     }
-   ]
+   ],
+   "carriesYork": true
   },
   {
    "id": "CT2",

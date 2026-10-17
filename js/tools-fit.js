@@ -87,16 +87,6 @@
 
   // ---- Data gathering (browser only) -----------------------------------------
 
-  let supplyJson = null; // cached fetch of data/water-supply.json (same source app.js uses)
-  async function loadSupply() {
-    if (supplyJson !== null) return supplyJson;
-    try {
-      const r = await fetch('data/water-supply.json', { cache: 'no-cache' });
-      supplyJson = r.ok ? await r.json() : false;
-    } catch (e) { supplyJson = false; }
-    return supplyJson;
-  }
-
   // Build the constraint list for a point. Returns { rows, missing }.
   async function evaluate(latlng) {
     const app = P(), rows = [], missing = [];
@@ -167,13 +157,12 @@
       const L = zLevel(zone.zone);
       const well = /^(AV13|CE9)/.test(zone.zone || '');
       if (L != null && !well) {
-        const sup = await loadSupply();
-        const bounds = sup && sup.boundaries ? sup.boundaries.filter(b => zLevel(b.upper) <= L) : [];
-        for (const b of bounds) {
-          const cons = app.supplyCons(b);
-          push(`sup:${b.lower}|${b.upper}`, cons ? `${cons.name} — supply mains` : 'Zone supply', cons && cons.sub, cons);
-        }
-        if (!bounds.length) missing.push({ id: 'supply', label: 'Zone supply mains — no boundary capacity data for this level' });
+        // Trunk mains on this point's supply route (2020 Master Plan actual capacity), the tightest
+        // on each trunk system it draws from.
+        await Promise.all([app.loadMpWater && app.loadMpWater(), window.PeelWaterTrace && window.PeelWaterTrace.loadWaterFacilities()]);
+        const trunks = app.trunkNeeds ? app.trunkNeeds({ lat, lng, pz: [zone.id], key: `fit:${lat},${lng}` }, zone.id) : [];
+        for (const c of trunks) push(c.id, `${c.name} — trunk main`, c.sub, c);
+        if (!trunks.length) missing.push({ id: 'supply', label: 'Trunk mains — no supply route found to a Master Plan trunk main for this point' });
       }
     } else {
       missing.push({ id: 'water', label: 'Water supply — outside the mapped pressure zones and no estimate available' });
