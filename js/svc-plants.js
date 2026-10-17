@@ -409,6 +409,7 @@
         ...(tileRows.length > 1 && allRated > 0 ? [DUI().wwTile('All Peel plants', String(Math.round(allBo / allRated * 100)), '%', 'of rated at build-out', 'plant-capacity')] : []),
       ].join('')}</div>
       ${chart}
+      ${MP().diversionChartHTML ? MP().diversionChartHTML() : ''}
       <div id="tight-pipes">${tightestPipesHTML()}</div>
       <details class="svc-more"><summary class="svc-sub">Plant inflow by growth layer <span class="muted small">(the build-up behind the bars: table)</span></summary>
       <table class="dt svc-table plants-table" data-info="tab-plants"><caption>Wastewater treatment plant inflow · ML/d; each layer is what it adds, the running total below${SvcTab().svcOpt.ww === 'calibrated' ? ' · capacity check (calibrated to 2025 flows)' : ''}</caption>

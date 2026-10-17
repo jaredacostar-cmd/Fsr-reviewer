@@ -382,6 +382,43 @@
       sub: `governing ${fmtNum(cap)} kg/d (${row.governedBy}; 2020 Master Plan, Vol. 4, Table 9) · plan 2021 loading + growth at 75 g/person, 37.5 g/job + high-strength users${di ? ` · ${di.on ? 'with' : 'without'} the diversion; ${alt.on ? 'with' : 'without'} it, capacity is reached ${yTxt(alt.out)}` : ''}`,
       cap, unit: 'kg/d', util: { today: q('today') / cap, com: com / cap, bo: q(null) / cap }, room, people: room / perPerson, out: runOut(q, () => cap), relief, q, alt, devSet: new Set(g.devs) };
   }
+  // The diversion trade-off (Wastewater → Plants): for each plant's flow and BOD check, the year it
+  // runs out without and with the diversion. Dumbbell rows on one year axis; hollow grey = without,
+  // filled blue = with. Flow is the 90% trigger before planned expansions, as in DC timing.
+  function diversionChartHTML() {
+    // The BOD rows need the Master Plan tables: render without them, then fill in once they load.
+    if (DCN.mpw === null) loadMpWater().then(() => { const el = document.getElementById('divx'); if (el) el.outerHTML = diversionChartHTML(); });
+    const rows = [];
+    for (const pl of ['Lakeview', 'Clarkson']) {
+      const di = divInfo(pl); if (!di) continue;
+      for (const [c, what] of [[cached(`plant:${pl}`, () => plantCons(pl)), 'Flow · 90% trigger'], [BOD_PLANT[pl] && cached(`bod:${pl}`, () => bodCons(pl)), 'BOD loading']]) {
+        if (!c || !c.alt) continue;
+        rows.push({ plant: (SD().PLANT_SHORT && SD().PLANT_SHORT[pl]) || SD().plantLabel(pl), what, without: di.on ? c.alt.out : c.out, with: di.on ? c.out : c.alt.out });
+      }
+    }
+    if (!rows.length) return '<div id="divx"></div>';
+    const Y0 = MM().THIS_YEAR, Y1 = SP().hz.end, dv = divInfo('Lakeview') || divInfo('Clarkson');
+    const W = 720, L = 150, R = 590, top = 26, rh = 40, H = top + rows.length * rh + 8;
+    const X = y => L + (Math.min(Math.max(y, Y0), Y1 + 1) - Y0) / (Y1 + 1 - Y0) * (R - L);
+    const pos = o => (o === 'today' ? Y0 : o == null ? Y1 + 1 : o);
+    const lab = o => (o === 'today' ? 'already' : o == null ? `after ${Y1}` : String(o));
+    const ticks = []; for (let y = Math.ceil(Y0 / 5) * 5; y <= Y1 - 3; y += 5) ticks.push(y);
+    const body = rows.map((r, i) => {
+      const cy = top + i * rh + rh / 2, a = X(pos(r.without)), b = X(pos(r.with));
+      const tip = `${r.plant} ${r.what}: ${lab(r.without)} without the diversion, ${lab(r.with)} with it`;
+      return `<g><title>${esc(tip)}</title><rect class="hit" x="0" y="${cy - rh / 2}" width="${W}" height="${rh}"></rect>
+        <text class="rl" x="0" y="${cy - 3}">${esc(r.plant)}</text><text class="rs" x="0" y="${cy + 12}">${esc(r.what)}</text>
+        ${Math.abs(a - b) > 1 ? `<line class="seg" x1="${a}" y1="${cy}" x2="${b}" y2="${cy}"></line>` : ''}
+        <circle class="wo" cx="${a}" cy="${cy}" r="5"></circle><circle class="wi" cx="${b}" cy="${cy}" r="${Math.abs(a - b) > 1 ? 5 : 3.5}"></circle>
+        <text class="dl" x="${R + 12}" y="${cy + 4}">${esc(lab(r.without))} → ${esc(lab(r.with))}</text></g>`;
+    }).join('');
+    const axis = `<line class="ax" x1="${L}" y1="${top - 6}" x2="${R}" y2="${top - 6}"></line>${ticks.map(y => `<text class="tk" x="${X(y)}" y="${top - 10}" text-anchor="middle">${y}</text>`).join('')}<text class="tk" x="${R}" y="${top - 10}" text-anchor="end">${Y1}+</text>`;
+    const table = `<table class="dt"><caption>Year each check runs out</caption><thead><tr><th>Plant</th><th>Check</th><th>Without diversion</th><th>With diversion</th></tr></thead><tbody>${rows.map(r => `<tr><td>${esc(r.plant)}</td><td>${esc(r.what)}</td><td>${esc(lab(r.without))}</td><td>${esc(lab(r.with))}</td></tr>`).join('')}</tbody></table>`;
+    return `<div class="divx" id="divx"><h3 class="svc-sub">What the ${fmt1(Math.abs(dv.mld))} ML/d diversion changes <span class="muted small">run-out year from ${dv.year}, without → with</span></h3>
+      <div class="lg"><span><i class="wo"></i>Without the diversion</span><span><i class="wi"></i>With the diversion</span></div>
+      <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Run-out year of each plant check without and with the diversion">${axis}${body}</svg>
+      <details class="svc-more"><summary class="small">Table</summary>${table}<p class="small muted">Flow: annual average against the 90% expansion trigger, before planned expansions. BOD: the 2020 Master Plan's governing capacity (Vol. 4, Table 9). The diversion moves flow, and loading at G.E. Booth's 2021 strength, from its start year. Screening estimates.</p></details></div>`;
+  }
   // Water: max day of a set of zones by year (ML/d).
   function zonesMax(ids, y) {
     const M = App().state.svcModel; let t = 0;
@@ -861,6 +898,7 @@
     loadMpWater,
     trunkCons,
     bodCons,
+    diversionChartHTML,
     divInfo,
     trunkNeeds,
     mpTrunks,

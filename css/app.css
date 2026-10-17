@@ -23,7 +23,8 @@
    outline for point symbols. --flow: sewer flow-direction arrows.
    --hl-find: find-highlight yellow. --swatch-ink/--swatch-paper: glyph colours
    on light/dark fills. --growth-1..5: capacity-growth sequential ramp.
-   --report-brand/--report-brand-deep: print-document branding (always light). */
+   --report-brand/--report-brand-deep: print-document branding (always light).
+   --div-without/--div-with: the diversion trade-off chart (hollow grey = without, filled blue = with). */
 :root {
   color-scheme: dark;
   --surface-0: #121211;
@@ -47,6 +48,7 @@
   --hue-blue: #9cc0fa;
   --hue-teal: #147989;
   --hue-grey: #9ca3af;
+  --div-without: #6b7280; --div-with: #6da7ec;
   --b3d-known: #d3d7de; --b3d-est: #8d94a1; --hill-shadow: #000000; --hill-light: #ffffff;
   --cap-over: #f0665f;
   --cap-tight: #ffa94d;
@@ -141,6 +143,7 @@
   --hue-blue: #3b82f6;
   --hue-teal: #116a78;
   --hue-grey: #7f868f;
+  --div-without: #7f868f; --div-with: #2269c0;
   --b3d-known: #c3c8d0; --b3d-est: #7d8592; --hill-shadow: #3a3a3a; --hill-light: #ffffff;
   --cap-over: #e03131;
   --cap-tight: #e8590c;
@@ -3407,3 +3410,20 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .sd-checks .sd-ok span { color: var(--cap-room-t); } .sd-checks .sd-no span { color: var(--cap-over-t); }
 .sd-t td.n, .sd-t th.n { text-align: right; font-variant-numeric: tabular-nums; }
 .sd-lbl span { display: inline-block; transform: translate(-50%, -50%); white-space: nowrap; font-size: var(--fs-1); font-weight: 600; color: var(--map-label); text-shadow: 0 0 3px var(--map-halo), 0 0 2px var(--map-halo); }
+
+/* Diversion trade-off chart (Wastewater → Plants) */
+.divx { margin: 10px 0 14px; }
+.divx svg { width: 100%; height: auto; display: block; }
+.divx .lg { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--text-secondary); margin: 4px 0 2px; }
+.divx .lg i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.divx .lg .wo { border: 2px solid var(--div-without); width: 8px; height: 8px; box-sizing: border-box; }
+.divx .lg .wi { background: var(--div-with); }
+.divx .ax { stroke: var(--border); stroke-width: 1; }
+.divx .tk { fill: var(--text-muted); font-size: 11px; }
+.divx .rl { fill: var(--text-primary); font-size: 12px; }
+.divx .rs { fill: var(--text-muted); font-size: 11px; }
+.divx .dl { fill: var(--text-secondary); font-size: 12px; }
+.divx .seg { stroke: var(--text-muted); stroke-width: 2; }
+.divx .wo { fill: var(--surface-1); stroke: var(--div-without); stroke-width: 2; }
+.divx .wi { fill: var(--div-with); stroke: var(--surface-1); stroke-width: 2; }
+.divx .hit { fill: transparent; }

@@ -63,3 +63,15 @@ test('plant checks: BOD loading from the plan, and the diversion as a step both 
   const kgPerMl = booth.demandKgd[L.years.indexOf(2021)] / F.eastSubtotal[F.years.indexOf(2021)];
   near(kgPerMl, 262, 1, 'Booth kg/ML 2021');
 });
+
+test('diversion chart: in the plants view, both cases per check, with a table view', () => {
+  const fs = require('fs'), path = require('path');
+  const mp = fs.readFileSync(path.join(__dirname, '..', 'js', 'masterplan.js'), 'utf8');
+  const i = mp.indexOf('function diversionChartHTML('), body = mp.slice(i, mp.indexOf('\n  }\n', i));
+  assert.match(body, /without: di\.on \? c\.alt\.out : c\.out/);
+  assert.match(body, /<table class="dt">/, 'a table view exists');
+  assert.match(body, /role="img"/);
+  assert.match(fs.readFileSync(path.join(__dirname, '..', 'js', 'svc-plants.js'), 'utf8'), /diversionChartHTML\(\)/);
+  const css = fs.readFileSync(path.join(__dirname, '..', 'css', 'app.css'), 'utf8');
+  assert.equal((css.match(/--div-with: #/g) || []).length, 2, 'colour defined for dark and light');
+});
