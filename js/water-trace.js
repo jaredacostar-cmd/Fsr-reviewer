@@ -113,13 +113,16 @@
   }
   // Pump groups between zones: source level (the site's reservoir zone, 0 at a plant), target
   // level (the zone number in LLPnX / HLPnX), capacity (actual firm where modelled, else firm).
+  // (kept per facilities file: a supply route asks for it at every step of every development)
   function wfPumps() {
+    if (wfPumps.of === WF.data && wfPumps.list) return wfPumps.list;
     const out = [];
     for (const f of (WF.data && WF.data.facilities) || []) for (const p of f.pumps || []) {
       const t = /^[LH]LP(\d)([WCE])$/.exec(p.zone); if (!t) continue;
       const src = f.kind === 'plant' ? 0 : f.storageZone ? +f.storageZone.replace(/\D/g, '') : null; if (src == null) continue;
       out.push({ f, src, tgt: +t[1], sys: t[2], cap: p.actualFirm ?? p.firm, zone: p.zone, label: `${f.name} ${p.zone}` });
     }
+    wfPumps.of = WF.data; wfPumps.list = out;
     return out;
   }
   // Where a development's water comes from: from its pressure zone, the nearest pump group that

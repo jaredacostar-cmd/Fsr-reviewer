@@ -225,8 +225,23 @@
     el.textContent = text; el.classList.add('on');
     clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('on'), 2600);
   }
+  // Work for views out of sight: run when the main thread is free, one view per task (the page paints
+  // and answers clicks in between), or at once when something reads them (flushLater: PeelPanel.get,
+  // an export, opening the view). A later call with the same key replaces the waiting one.
+  const LATER = new Map();
+  let laterT = null;
+  function later(key, fn) {
+    LATER.set(key, fn);
+    if (!laterT && typeof setTimeout === 'function') laterT = setTimeout(runLater, 0);
+  }
+  function runOne() {
+    const [k, fn] = LATER.entries().next().value; LATER.delete(k);
+    try { fn(); } catch (e) { if (typeof console !== 'undefined') console.error(e); }
+  }
+  function runLater() { laterT = null; if (LATER.size) runOne(); if (LATER.size) laterT = setTimeout(runLater, 0); }
+  function flushLater() { while (LATER.size) runOne(); }
   const api = {
-    hoverCard, toast,
+    hoverCard, toast, later, flushLater, laterPending: () => LATER.size,
     $, esc, fmtNum, fmtDate, dayText, sig3, skel, estTag, store,
     token, dot, readColors, phaseColor, glyphColor,
     get colors() { return colors; },

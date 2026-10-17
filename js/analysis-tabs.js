@@ -80,6 +80,7 @@
   const areaPick = {};
   function showFootTab(key, sub) {
     if (key === 'dev' || key === 'developments' || key === 'tool') key = 'overview';   // the development's views live in the Overview
+    if (key === 'growth' && root.PeelUtil && root.PeelUtil.flushLater) root.PeelUtil.flushLater();   // (its views, if they wait to render)
     if (key === 'ww' || key === 'water') { if (!sub) sub = svcSub === 'capacity' || svcSub === 'network' ? svcSub : 'network'; key = 'svc'; }
     if (sub && TABSUBS[key] && TABSUBS[key].valid.includes(sub)) { delete areaPick[key]; TABSUBS[key].set(sub); store.set(TABSUBS[key].store, sub); }
     if (!document.querySelector(`.f-tab[data-tab="${key}"]:not([hidden])`)) key = 'overview';

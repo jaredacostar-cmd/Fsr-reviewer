@@ -47,7 +47,9 @@
     }).catch(() => null);
     return MM().SEW.loading;
   }
-  const pipeCoords = p => { const c = p[10], out = []; for (let k = 0; k < c.length; k += 2) out.push([c[k], c[k + 1]]); return out; };
+  // (kept per pipe: the nearest-pipe search reads the same pipes for every development)
+  const coordsOf = new WeakMap();
+  const pipeCoords = p => { let out = coordsOf.get(p); if (out) return out; const c = p[10]; out = []; for (let k = 0; k < c.length; k += 2) out.push([c[k], c[k + 1]]); coordsOf.set(p, out); return out; };
   // Nearest pipe (index) to a point within r metres (of at least minD mm).
   function nearestPipe(lng, lat, r = 400, minD = 0) {
     if (!MM().SEW.grid) return -1;

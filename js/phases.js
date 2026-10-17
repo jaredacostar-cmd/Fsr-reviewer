@@ -171,7 +171,15 @@
   ];
 
   /** Canonical form used to link applications and permits on the same site. */
+  // (kept per address string: every rebuild normalises the same 50,000 addresses, several times)
+  const normed = new Map();
   function normalizeAddress(addr) {
+    const key = str(addr);
+    let v = normed.get(key);
+    if (v === undefined) { v = normalizeAddressOf(key); if (normed.size > 200000) normed.clear(); normed.set(key, v); }
+    return v;
+  }
+  function normalizeAddressOf(addr) {
     let s = str(addr).toUpperCase();
     if (!s) return '';
     s = s.replace(/,.*$/, '')                       // drop city / postal suffix
@@ -581,7 +589,11 @@
     }
     return inside;
   }
-  const pointInRings = (x, y, rings) => rings.some(r => pointInRing(x, y, r));
+  // (each ring's bounding box first, kept per ring: a point outside it is outside the ring, and most
+  // tests are against lands and files nowhere near the point)
+  const ringBox = new WeakMap();
+  const boxOf = r => { let b = ringBox.get(r); if (!b) { b = ringsBBox([r]); ringBox.set(r, b); } return b; };
+  const pointInRings = (x, y, rings) => rings.some(r => { const b = boxOf(r); return x >= b[0] && x <= b[2] && y >= b[1] && y <= b[3] && pointInRing(x, y, r); });
   // Area in m² (equirectangular approximation; fine at site scale).
   function ringsArea(rings) {
     let total = 0;

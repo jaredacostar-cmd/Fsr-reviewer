@@ -31,10 +31,16 @@
     completions: { completedAt: PeelAreas.completedAt, permitUnits: rs => P.permitUnits(rs) },
   });
   function renderGrowth() {
-    renderGrowthPipeline();
-    TL().renderTiming();
-    if (root.PeelPlanTables) root.PeelPlanTables.render();
-    CV().renderGrowthCensus();
+    // The Growth view in sight renders now; the others when the main thread is free (PeelUtil.later,
+    // read at once by anything that needs them), so a filter change paints what is in sight first.
+    // The servicing model first, as before: the Overview below reads it.
+    if (root.PeelSvcTab && root.PeelSvcTab.ensureSvcModel && App().state.servicing) root.PeelSvcTab.ensureSvcModel();
+    const AT = root.PeelAnalysisTabs, U = root.PeelUtil, on = AT && AT.getFootTab() === 'growth' ? AT.getGSub() : null;
+    const run = (key, sub, fn) => (on === sub || !(U && U.later) ? fn() : U.later(key, fn));
+    run('growth:pipeline', 'pipeline', renderGrowthPipeline);
+    run('growth:timing', 'timing', () => TL().renderTiming());
+    run('growth:plans', 'areas', () => { if (root.PeelPlanTables) root.PeelPlanTables.render(); });
+    run('growth:census', 'areas', () => CV().renderGrowthCensus());
     const set = DU().demandSet(), basis = DU().demandBasis();
     // The footer summary line (was filled by the old Demand tab).
     const fs = $('#f-sum');
