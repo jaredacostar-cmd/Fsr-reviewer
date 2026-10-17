@@ -121,7 +121,7 @@ test('wired in: the sidebar shows Help, How it works and the Glossary; every gui
   for (const id of R.IDS) assert.ok(new RegExp(`\\['${id}', '[^']+'\\]`).test(w), `${id} in REF`);
   assert.match(w, /const isOn = id => page === id \|\| \(id === 'guides' && !!\(REF\[page\] && REF\[page\]\.guide\)\);/, 'a guide lights How it works');
   assert.match(s, /const ref = id => \(\) => \(root\.PeelReference \? root\.PeelReference\.page\(id\)/);
-  assert.match(s, /const GUIDE_OF = \{ site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capital', pipes: 'network' \};/);
+  assert.match(s, /const GUIDE_OF = \{ site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capital', eaflow: 'capital', pipes: 'network' \};/);
   assert.match(src('js/tips.js'), /data-ws-page="guides">How it works: the guides<\/button>/);
   assert.match(src('index.html'), /<script src="js\/reference\.js\?v=__BUILD__"><\/script>/);
   assert.match(src('sw.js'), /'js\/reference\.js',/);

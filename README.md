@@ -2796,3 +2796,31 @@ Decided 2026-10-17, after testing against the committed snapshot.
   - **Why a roll-forward:** CMHC archived its under-construction inventory by municipality after 2022. The check rolls it forward with CMHC starts and completions (Region of Peel Housing Construction Activity): inventory(Y) = inventory(Y − 1) + starts(Y) − completions(Y), which reproduces CMHC's own 2017–2022 figures.
   - **Against the app:** compared with homes permitted and not completed on planning applications, by municipality, refreshed with each weekly data update.
   - **Known gaps:** Mississauga (large permits signed off within two years of issue, to confirm with the City) and Caledon (no completion dates).
+
+## Home: EA to construction, and the Forecast
+
+Two pages added to Home's sidebar, so they are no longer only on the full map:
+
+- **Planning › Forecast** (`outlook`): Growth › Forecast on a page. Units expected by 2031 and 2041
+  with their ranges, the plants' 90% trigger years at the forecast pace, the largest contributors, and
+  a link to *How the forecast is timed*. Same figures as the full map (`growth:timing`).
+- **Capital › EA to construction** (`eaflow`): each Region Class EA and the construction that
+  followed it, as a timeline (EA study, public information centres, completion, then the
+  construction bars, with today marked), and lists: complete and waiting (oldest first, those 9+
+  years old flagged as near the 10-year limit), construction that followed, EAs under way by
+  expected report.
+
+Both are also linked from Home's *Start here* line.
+
+**The rule (`js/capital-ea-model.js` `eaProgress`)**: a capital contract linked to an EA counts as
+the EA's outcome only when it starts **on or after the EA was complete** (by year where only the year
+is known). For an EA still under way, only construction due after its expected report counts.
+Earlier work in the study area is shown as *other work*, never as following the EA. When the
+project's own page links the work to the EA but it started earlier, it is listed as a *date conflict
+to check*. A start date is the actual start where recorded, else the target start.
+
+**Completion years (`scripts/ea-lib.js` `completionOf`)**, best evidence first: the notice of
+completion, the report filing / review-end date, the page's wording, the report's cover (first
+pages of the PDF), the report's file name. The year must fall between the EA's commencement (or
+first PIC) and today. Each EA carries `completedYear` and `completedBasis`. Completed EAs with no
+year stay *date unknown* and their construction is not ordered against them.

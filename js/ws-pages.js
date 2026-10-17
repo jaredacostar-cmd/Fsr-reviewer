@@ -336,7 +336,7 @@
     return { id: 'home', eyebrow: esc(a.head && a.head.identity ? a.head.identity : 'Peel'), name: `${(App() && App().state.muni) || 'Peel'}: what needs attention`, status: a.head && a.head.status, scen: scen(), answer: a.answer, caveats: caveats(),
       // Bundle 6: Home's figures are the other pages' answers, each opening its page (the pipeline's
       // totals stay in the answer, with Growth in an area a tap away).
-      top: '<p class="home-start small"><strong>Start here:</strong> Servicing capacity for what is over, DC projects for whether relief comes in time, This week for what changed. <button type="button" class="btn small link" data-ws-page="growth">Growth in an area →</button> <button type="button" class="btn small link" data-ws-page="help">Help, by role →</button></p>',
+      top: '<p class="home-start small"><strong>Start here:</strong> Servicing capacity for what is over, DC projects for whether relief comes in time, This week for what changed. <button type="button" class="btn small link" data-ws-page="growth">Growth in an area →</button> <button type="button" class="btn small link" data-ws-page="outlook">Forecast →</button> <button type="button" class="btn small link" data-ws-page="eaflow">EA to construction →</button> <button type="button" class="btn small link" data-ws-page="help">Help, by role →</button></p>',
       figures: homeFigures(rows, ready, week),
       // The units the answer adds, by stage: Built since 2021 beside what is approved and in review.
       chart: a.stageStrip || '',
@@ -556,6 +556,91 @@
       actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'projects' }, primary: true }, { label: 'Full table', attrs: { 'data-ws-go': 'projects', 'data-ws-fulltable': 'dca:timing' } }] };
   }
 
+  // ---- Forecast: when the pipeline's homes and people arrive (Growth › Forecast, on a page) ----------
+  function outlook() {
+    const t = specOf('growth:timing', areaScope); if (!t) return loading('outlook', 'Timing the pipeline…');
+    return { id: 'outlook', eyebrow: eyebrow('outlook'), name: 'When do the homes and people arrive?', status: t.head.status, identity: t.head.identity, scen: scen(), answer: t.answer,
+      figures: t.figures, chart: t.chart,
+      lists: (t.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('outlook', r)) })),
+      map: { svg: devsMap((App() && App().state.filtered) || []), attrs: { 'data-ws-go': 'outlook' }, label: 'Open Forecast on the map', caption: '<span class="hm-key hm-key-dev"></span> developments of 50+ units' },
+      method: t.method, sources: t.sources,
+      actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'How the forecast is timed ›', attrs: { 'data-ws-page': 'forecast' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'outlook' } }] };
+  }
+
+  // ---- EA to construction: each Region EA and the construction that followed it ---------------------
+  // Construction counts as the EA's outcome only when it starts on or after the EA's completion (the
+  // year, where only the year is known); earlier work in the study area is listed as other work, never
+  // as following the EA (js/capital-ea-model.js eaProgress).
+  const CM = () => root.PeelCapitalEAModel, CE = () => root.PeelCapitalEA;
+  const yrOf = v => (v == null ? '' : String(new Date(v).getUTCFullYear()));
+  const eaOpen = x => ({ 'data-ws-go': 'eaflow', 'data-ws-ce': `ea:${x.e.id}`, title: 'Open the EA on the map' });
+  const workLine = c => `${esc(c.work || 'Construction')}${c.street ? ` · ${esc(c.street)}` : ''} <small>${esc(c.status)}${c.start != null ? `, ${c.startActual ? 'started' : 'starts'} ${yrOf(c.start)}` : ''}</small>`;
+  function eaTimelineHTML(rows, today = Date.now()) {
+    if (!rows.length) return '';
+    const y0 = Math.max(2008, Math.min(...rows.map(x => x.d.start).filter(v => v != null).map(v => new Date(v).getUTCFullYear()), new Date(today).getUTCFullYear() - 10));
+    const y1 = new Date(today).getUTCFullYear() + 6, from = Date.UTC(y0, 0, 1), to = Date.UTC(y1, 0, 1);
+    const pct = v => `${(v * 100).toFixed(2)}%`, M = CM();
+    const ticks = []; for (let y = Math.ceil(y0 / 5) * 5; y < y1; y += 5) ticks.push(`<span class="eat-tick" style="left:${pct((Date.UTC(y, 0, 1) - from) / (to - from))}">${y}</span>`);
+    const nowAt = pct((today - from) / (to - from));
+    const line = x => {
+      const t = M.timelineRow(x, from, to), parts = [];
+      if (t.ea) parts.push(`<span class="eat-ea${t.ea.open ? ' open' : ''}" style="left:${pct(t.ea.a)};width:${pct(Math.max(0.004, t.ea.b - t.ea.a))}"></span>`);
+      for (const p of t.pics) parts.push(`<span class="eat-pic" style="left:${pct(p)}" title="Public information centre"></span>`);
+      if (t.done != null) parts.push(`<span class="eat-done" style="left:${pct(t.done)}" title="EA complete ${esc(String(x.d.completion.year))}"></span>`);
+      else if (t.expected != null) parts.push(`<span class="eat-exp" style="left:${pct(t.expected)}" title="Report expected ${esc(String(x.d.expected.year))}"></span>`);
+      for (const w of t.works) parts.push(`<span class="eat-w eat-w-${esc(w.status.replace(/\s+/g, '-'))}${w.planned ? ' planned' : ''}" style="left:${pct(w.a)};width:${pct(Math.max(0.006, w.b - w.a))}"></span>`);
+      return `<li class="eat-row" ${Object.entries(eaOpen(x)).map(([k, v]) => `${k}="${esc(v)}"`).join(' ')} tabindex="0" role="button"><span class="eat-nm">${esc(x.e.name)}<small>${esc(x.e.municipality || 'Peel')} · ${esc((M.BUCKETS.find(b => b[0] === x.bucket) || [])[1] || '')}</small></span><span class="eat-track">${parts.join('')}<span class="eat-now" style="left:${nowAt}"></span></span></li>`;
+    };
+    return `<h3 class="pnl-chart-t">Each EA and the construction after it <span class="pnl-chart-u">(${y0}–${y1})</span></h3>
+      <div class="eat-axis" aria-hidden="true"><span class="eat-nm"></span><span class="eat-track">${ticks.join('')}</span></div>
+      <ul class="eat" aria-label="EA timelines">${rows.map(line).join('')}</ul>
+      <p class="small muted eat-key"><span class="eat-k eat-ea"></span> EA study <span class="eat-k eat-pic"></span> public information centre <span class="eat-k eat-done"></span> EA complete <span class="eat-k eat-exp"></span> report expected <span class="eat-k eat-w eat-w-under-construction"></span> construction <span class="eat-k eat-w planned"></span> planned <span class="eat-k eat-now"></span> today</p>`;
+  }
+  function eaflow() {
+    const ce = CE(), M = CM();
+    if (!ce || !M || !M.eaProgress || !ce.data.loaded) return loading('eaflow', 'Loading the EAs and capital projects…');
+    if (!ce.data.eas || !ce.data.capital) return { id: 'eaflow', eyebrow: eyebrow('eaflow'), name: 'Which EAs have led to construction?', answer: '<span class="muted">The EA or capital project list did not load. Reload the page to try again.</span>' };
+    const muni = App() && App().state.muni;
+    const all = M.eaProgress(ce.data.eas.eas || [], ce.data.capital.records || []).filter(x => !muni || !x.e.municipality || x.e.municipality === 'Region-wide' || x.e.municipality.split(' / ').includes(muni));
+    const by = k => all.filter(x => x.bucket === k), n = k => by(k).length;
+    const followed = all.filter(x => ['planned', 'building', 'built'].includes(x.bucket));
+    const waiting = [...by('limit'), ...by('waiting')].sort((a, b) => a.d.completion.at - b.d.completion.at);
+    const current = by('current').sort((a, b) => (a.d.expected ? a.d.expected.at : 9e15) - (b.d.expected ? b.d.expected.at : 9e15));
+    const conflicts = all.filter(x => x.conflict.length);
+    // (a report date already past on an EA still under way: the page has not been updated, or the EA is late)
+    const now0 = Date.now(), nextRep = current.find(x => x.d.expected && x.d.expected.at >= now0), pastDue = current.filter(x => x.d.expected && x.d.expected.at < now0).length;
+    const done = all.length - n('current');
+    const answer = !all.length ? 'No Region EAs in this area.'
+      : `Of <strong>${fmtNum(done)}</strong> completed EA${done === 1 ? '' : 's'}, <strong>${fmtNum(followed.length)}</strong> ${followed.length === 1 ? 'has' : 'have'} construction that started after the EA was complete, <strong>${fmtNum(waiting.length)}</strong> ${waiting.length === 1 ? 'is' : 'are'} waiting for construction${n('limit') ? ` (${fmtNum(n('limit'))} near the 10-year limit)` : ''}, and <strong>${fmtNum(n('nodate'))}</strong> ${n('nodate') === 1 ? 'has' : 'have'} no completion date yet. <strong>${fmtNum(n('current'))}</strong> ${n('current') === 1 ? 'is' : 'are'} under way.`;
+    const row = (x, right) => ({ attrs: eaOpen(x), html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.e.name)}<small>${esc(x.e.municipality || 'Peel')}</small></span><span class="pnl-r-fig">${right}</span></div>` });
+    const chartRows = [...followed, ...waiting].sort((a, b) => (a.d.completion ? a.d.completion.at : 9e15) - (b.d.completion ? b.d.completion.at : 9e15));
+    const others = all.filter(x => x.other.length);
+    const unknown = by('nodate');
+    return { id: 'eaflow', eyebrow: eyebrow('eaflow'), name: 'Which EAs have led to construction?', status: { tone: 'stage', text: 'From public pages' },
+      identity: `${esc(muni || 'Peel')} · ${fmtNum(all.length)} Region EAs · ${fmtNum(ce.data.capital.records.length)} capital project records`, scen: scen(), answer,
+      figures: [
+        { v: fmtNum(followed.length), u: 'EAs', label: 'construction followed', ctx: `${fmtNum(n('building'))} under construction · ${fmtNum(n('planned'))} planned · ${fmtNum(n('built'))} built` },
+        { v: fmtNum(waiting.length), u: 'EAs', label: 'complete, no construction yet', ctx: waiting.length ? `oldest completed ${esc(String(waiting[0].d.completion.year))}` : '', tone: n('limit') ? 'tight' : null },
+        { v: fmtNum(n('current')), u: 'EAs', label: 'under way', ctx: nextRep ? `next report expected ${esc(String(nextRep.d.expected.year))}${pastDue ? ` · ${fmtNum(pastDue)} past their report date` : ''}` : pastDue ? `${fmtNum(pastDue)} past their report date` : '' },
+        { v: fmtNum(n('nodate')), u: 'EAs', label: 'completion date unknown', ctx: 'construction can’t be ordered against them yet' },
+      ],
+      chart: eaTimelineHTML(chartRows),
+      lists: [
+        { title: 'Complete, waiting for construction (oldest first)', rows: waiting.map(x => row(x, `${esc(String(x.d.completion.year))}<small>${x.bucket === 'limit' ? 'near the 10-year limit' : `${fmtNum(x.yearsSince)} year${x.yearsSince === 1 ? '' : 's'} ago`}</small>`)), total: waiting.length, all: true },
+        { title: 'Construction that followed an EA', rows: followed.flatMap(x => x.outcome.map(c => ({ attrs: eaOpen(x), html: `<div class="pnl-r-top"><span class="pnl-r-name">${workLine(c)}<small>after ${esc(x.e.name)} (complete ${esc(String(x.d.completion ? x.d.completion.year : '?'))})</small></span></div>` }))), total: followed.length, all: true },
+        { title: 'EAs under way (by expected report)', rows: current.map(x => row(x, x.d.expected ? `${esc(String(x.d.expected.year))}<small>${x.d.expected.at < now0 ? 'report was due' : 'report expected'}</small>` : '<small>no report date yet</small>')), total: current.length },
+      ],
+      folds: [
+        others.length ? { title: `Other work in the study areas (${fmtNum(others.reduce((t, x) => t + x.other.length, 0))}): started before the EA was complete, so not counted as following it`, html: `<ul class="small">${others.map(x => `<li><strong>${esc(x.e.name)}</strong>${x.d.completion ? ` (EA complete ${esc(String(x.d.completion.year))})` : x.d.expected ? ` (report expected ${esc(String(x.d.expected.year))})` : ''}: ${x.other.map(workLine).join('; ')}</li>`).join('')}</ul>` } : null,
+        unknown.length ? { title: `Completion date unknown (${fmtNum(unknown.length)})`, html: `<p class="small muted">The EA’s page, notice and report don’t give a completion year yet, so linked construction can’t be ordered against it.</p><ul class="small">${unknown.map(x => `<li>${esc(x.e.name)} <span class="muted">· ${esc(x.e.municipality || 'Peel')}${x.contracts.length ? ` · ${fmtNum(x.contracts.length)} linked contract${x.contracts.length === 1 ? '' : 's'}` : ''}</span></li>`).join('')}</ul>` } : null,
+        conflicts.length ? { title: `Date conflicts to check (${fmtNum(conflicts.length)})`, open: true, html: `<p class="small muted">The project’s own page links this construction to the EA, but it started before the EA was complete. One of the dates may be wrong.</p><ul class="small">${conflicts.map(x => `<li><strong>${esc(x.e.name)}</strong> (EA complete ${esc(String(x.d.completion ? x.d.completion.year : x.d.expected ? x.d.expected.year : '?'))}): ${x.conflict.map(workLine).join('; ')}</li>`).join('')}</ul>` } : null,
+      ],
+      map: { svg: worksMap(), attrs: { 'data-ws-go': 'eaflow' }, label: 'Open EA to construction on the map', caption: 'Opens the map with the EA study areas and the Region’s construction' },
+      method: 'Each Region Class EA (Water, Wastewater and Roads) from its project page, with the capital projects linked to it (by the project’s own page, inside the study area, or by street inside the study area). Construction counts as following the EA only when it starts on or after the EA was complete; where only the year is known, a start in the same year counts. For an EA under way, only construction due after the expected report counts. Earlier work in the study area is listed as other work. The completion year comes from, in order: the notice of completion, the report filing date, the page’s wording, the report’s cover, the report’s file name. A completed EA with no construction for close to 10 years may need a review before construction (Municipal Class EA). The start date is the actual start where recorded, else the target start.',
+      sources: 'Region of Peel EA project pages and their notices and reports (weekly build, scripts/build-eas.js); Region of Peel capital project and construction pages (data/capital.json).',
+      actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'eaflow' }, primary: true }, { label: 'Full EA table', attrs: { 'data-ws-go': 'eaflow', 'data-ws-fulltable': 'dca:eas' } }] };
+  }
+
   // ---- This week -----------------------------------------------------------------------------------
   function week() {
     const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; if (!a) return loading('week', 'Loading the changes…');
@@ -649,9 +734,9 @@
   const [guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast] = ['guides', 'roles', 'approvals', 'flows', 'network', 'capacity', 'fsrguide', 'capital', 'targets', 'forecast'].map(ref);
   const glossary = () => (root.PeelGlossary ? root.PeelGlossary.page() : loading('glossary', 'Loading…'));
   const help = () => (root.PeelTips && root.PeelTips.helpPage ? root.PeelTips.helpPage() : loading('help', 'Loading…'));
-  const BUILD = { home, tight, site, growth, projects, week, fsr, pipes, study, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, help };
+  const BUILD = { home, tight, site, growth, outlook, projects, eaflow, week, fsr, pipes, study, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, help };
   // Each workspace's guide (How it works), a button in its footer.
-  const GUIDE_OF = { site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capital', pipes: 'network' };
+  const GUIDE_OF = { site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capital', eaflow: 'capital', pipes: 'network' };
   // A page's header count opens its workspace's full table (as the map panels' do).
   const FULL_OF = { home: 'tight', tight: 'tight', projects: 'projects', pipes: 'pipes' };
   function build(id) {
@@ -664,6 +749,6 @@
     if (g && m.actions) m.actions = [...m.actions, { label: `${g[1]} ›`, attrs: { 'data-ws-page': g[0] }, title: `How it works: ${g[2]}` }];
     return m;
   }
-  Object.assign(api, { build, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame });
+  Object.assign(api, { build, eaTimelineHTML, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame });
   root.PeelWsPages = api;
 })(typeof window !== 'undefined' ? window : globalThis);
