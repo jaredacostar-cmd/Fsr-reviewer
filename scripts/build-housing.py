@@ -4,8 +4,11 @@ Ministry of Finance population projection for Peel.
 
 Inputs: the ext-raw folder from scripts/fetch-external.js (probe-sources mode=external, ext-raw branch).
   - Ontario's housing supply progress (Ontario Data Catalogue), one CSV per year
-  - CMHC Housing Market Information Portal: starts / completions by dwelling type by census
-    subdivision, Toronto CMA (tables 1.1.1.9 and 1.1.3.9), one CSV per year
+  - CMHC Housing Market Information Portal, Toronto CMA, one CSV per table and year: starts by
+    census subdivision (1.1.1.9), completions by zone (1.1.2.8; Peel's zones add up to its
+    municipalities) and the under-construction inventory by census subdivision (1.1.3.9). Each
+    file is read by its own title line, not its name (the 1.1.2 / 1.1.3 tables were once saved
+    under each other's names, so the under-construction inventory was read as completions).
   - Ontario Ministry of Finance population projections, 49 census divisions, 2025-2051
 Usage: python3 scripts/build-housing.py <ext-raw> data/housing.json
 """
@@ -26,18 +29,31 @@ for f in sorted(glob.glob(os.path.join(raw, 'ontario-s-housing-supply-progress',
             targets[r[0]] = num(r[1])
             progress.setdefault(r[0], {})[y] = {'sinceStart': num(r[2]), 'target': num(r[3]), 'progress': num(r[4])}
 
-def cmhc(kind):
-    by = {}
-    for f in sorted(glob.glob(os.path.join(raw, 'cmhc', f'{kind}-9-20*.csv'))):
-        y = int(re.search(r'(20\d\d)\.csv$', f).group(1))
+TYPES = ('single', 'semi', 'row', 'apartment', 'all')
+KINDS = (('Under Construction', 'underConstruction'), ('Completions', 'completions'), ('Starts', 'starts'))
+def cmhc_tables():
+    """{(kind, geography): {muni: {year: by type}}}; geography 'csd' or 'zone' (zones added up)."""
+    out = {}
+    for f in sorted(glob.glob(os.path.join(raw, 'cmhc', '*-20*.csv'))):
         rows = list(csv.reader(io.StringIO(open(f, 'rb').read().decode('utf-8', errors='replace'))))
+        head = ' '.join(c for r in rows[:4] for c in r)
+        kind = next((k for t, k in KINDS if t in head), None)
+        geo = 'csd' if 'Census Subdivision' in head else 'zone' if 'by Zone' in head else None
+        y = re.search(r'\b(20\d\d)\b', head) or re.search(r'(20\d\d)\.csv$', f)
+        if not kind or not geo or not y:
+            print('SKIP (title not recognised):', os.path.basename(f)); continue
+        by = out.setdefault((kind, geo), {})
         for r in rows:
-            m = re.match(r'(Mississauga|Brampton|Caledon) \(', r[0]) if r else None
-            if m and len(r) >= 6:
-                by.setdefault(m.group(1), {})[y] = {'single': num(r[1]), 'semi': num(r[2]), 'row': num(r[3]), 'apartment': num(r[4]), 'all': num(r[5])}
-    return by
+            m = re.match(r'(Mississauga|Brampton|Caledon)(?: \(|,|$)', r[0].strip()) if r else None
+            if not m or len(r) < 6: continue
+            v = by.setdefault(m.group(1), {}).setdefault(int(y.group(1)), dict.fromkeys(TYPES, 0))
+            for t, c in zip(TYPES, r[1:6]): v[t] += num(c)
+    return out
 
-starts, completions = cmhc('starts'), cmhc('completions')
+T = cmhc_tables()
+# Census subdivision tables where there are any; completions by zone (added up per municipality).
+pick = lambda k: T.get((k, 'csd')) or T.get((k, 'zone')) or {}
+starts, completions, under = pick('starts'), pick('completions'), pick('underConstruction')
 
 wb = openpyxl.load_workbook(os.path.join(raw, 'population-projections', '49_Census_Divisions_MOF_Population_Projections.xlsx'), read_only=True)
 mof = {}
@@ -58,9 +74,9 @@ out = {
         'asOf': modified('ontario-s-housing-supply-progress'), 'by': '2031', 'muni': {m: {'target': targets.get(m), 'years': progress.get(m, {})} for m in MUNI},
     },
     'cmhc': {
-        'source': 'CMHC Starts and Completions Survey, Housing Market Information Portal: starts and completions by dwelling type by census subdivision (Toronto CMA). Completions by census subdivision are archived after 2022.',
+        'source': 'CMHC Starts and Completions Survey, Housing Market Information Portal (Toronto CMA): starts and the under-construction inventory by dwelling type by census subdivision, completions by zone (Peel\'s zones added up to each municipality).',
         'url': 'https://www03.cmhc-schl.gc.ca/hmip-pimh/en/TableMapChart/Table?TableId=1.1.1.9&GeographyId=2270&GeographyTypeId=3&DisplayAs=Table&GeograghyName=Toronto',
-        'asOf': f"{max(max(v) for v in starts.values())}-12-31" if starts else None, 'starts': starts, 'completions': completions,
+        'asOf': f"{max(max(v) for v in starts.values())}-12-31" if starts else None, 'starts': starts, 'completions': completions, 'underConstruction': under,
     },
     'mof': {
         'source': 'Ontario Ministry of Finance population projections 2025-2051, Peel census division (summer 2026 update; July 1 population, reference scenario)',
@@ -70,5 +86,5 @@ out = {
 }
 json.dump(out, open(out_p, 'w'), indent=1)
 print('targets', targets); print('progress', progress)
-print('starts', {m: sorted(v) for m, v in starts.items()}); print('completions', {m: sorted(v) for m, v in completions.items()})
+for k, v in (('starts', starts), ('completions', completions), ('underConstruction', under)): print(k, {m: sorted(x) for m, x in v.items()})
 print('mof', {y: mof[y] for y in (2025, 2031, 2041, 2051) if y in mof})

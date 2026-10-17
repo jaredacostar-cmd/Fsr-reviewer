@@ -1,6 +1,6 @@
 {
  "version": 1,
- "fetched": "2026-10-10",
+ "fetched": "2026-10-17",
  "targets": {
   "source": "Ontario's housing supply progress (Ontario Data Catalogue): municipal housing targets to 2031 and annual progress (CMHC starts plus additional residential units, long-term care, retirement and student beds)",
   "url": "https://data.ontario.ca/dataset/ontario-s-housing-supply-progress",
@@ -55,7 +55,7 @@
   }
  },
  "cmhc": {
-  "source": "CMHC Starts and Completions Survey, Housing Market Information Portal: starts and completions by dwelling type by census subdivision (Toronto CMA). Completions by census subdivision are archived after 2022.",
+  "source": "CMHC Starts and Completions Survey, Housing Market Information Portal (Toronto CMA): starts and the under-construction inventory by dwelling type by census subdivision, completions by zone (Peel's zones added up to each municipality).",
   "url": "https://www03.cmhc-schl.gc.ca/hmip-pimh/en/TableMapChart/Table?TableId=1.1.1.9&GeographyId=2270&GeographyTypeId=3&DisplayAs=Table&GeograghyName=Toronto",
   "asOf": "2025-12-31",
   "starts": {
@@ -277,6 +277,161 @@
    }
   },
   "completions": {
+   "Mississauga": {
+    "2016": {
+     "single": 160,
+     "semi": 66,
+     "row": 245,
+     "apartment": 266,
+     "all": 737
+    },
+    "2017": {
+     "single": 152,
+     "semi": 36,
+     "row": 140,
+     "apartment": 2643,
+     "all": 2971
+    },
+    "2018": {
+     "single": 160,
+     "semi": 70,
+     "row": 30,
+     "apartment": 234,
+     "all": 494
+    },
+    "2019": {
+     "single": 183,
+     "semi": 30,
+     "row": 0,
+     "apartment": 1312,
+     "all": 1525
+    },
+    "2020": {
+     "single": 145,
+     "semi": 42,
+     "row": 0,
+     "apartment": 54,
+     "all": 241
+    },
+    "2021": {
+     "single": 122,
+     "semi": 38,
+     "row": 258,
+     "apartment": 2950,
+     "all": 3368
+    },
+    "2022": {
+     "single": 83,
+     "semi": 10,
+     "row": 46,
+     "apartment": 1022,
+     "all": 1161
+    }
+   },
+   "Brampton": {
+    "2016": {
+     "single": 2103,
+     "semi": 434,
+     "row": 1288,
+     "apartment": 617,
+     "all": 4442
+    },
+    "2017": {
+     "single": 3804,
+     "semi": 638,
+     "row": 1287,
+     "apartment": 564,
+     "all": 6293
+    },
+    "2018": {
+     "single": 1621,
+     "semi": 344,
+     "row": 1120,
+     "apartment": 537,
+     "all": 3622
+    },
+    "2019": {
+     "single": 777,
+     "semi": 136,
+     "row": 549,
+     "apartment": 16,
+     "all": 1478
+    },
+    "2020": {
+     "single": 593,
+     "semi": 316,
+     "row": 690,
+     "apartment": 0,
+     "all": 1599
+    },
+    "2021": {
+     "single": 717,
+     "semi": 74,
+     "row": 375,
+     "apartment": 432,
+     "all": 1598
+    },
+    "2022": {
+     "single": 834,
+     "semi": 110,
+     "row": 603,
+     "apartment": 704,
+     "all": 2251
+    }
+   },
+   "Caledon": {
+    "2016": {
+     "single": 503,
+     "semi": 90,
+     "row": 62,
+     "apartment": 0,
+     "all": 655
+    },
+    "2017": {
+     "single": 419,
+     "semi": 24,
+     "row": 247,
+     "apartment": 0,
+     "all": 690
+    },
+    "2018": {
+     "single": 210,
+     "semi": 20,
+     "row": 238,
+     "apartment": 0,
+     "all": 468
+    },
+    "2019": {
+     "single": 405,
+     "semi": 18,
+     "row": 128,
+     "apartment": 0,
+     "all": 551
+    },
+    "2020": {
+     "single": 192,
+     "semi": 0,
+     "row": 118,
+     "apartment": 204,
+     "all": 514
+    },
+    "2021": {
+     "single": 216,
+     "semi": 2,
+     "row": 119,
+     "apartment": 72,
+     "all": 409
+    },
+    "2022": {
+     "single": 547,
+     "semi": 30,
+     "row": 63,
+     "apartment": 0,
+     "all": 640
+    }
+   }
+  },
+  "underConstruction": {
    "Brampton": {
     "2016": {
      "single": 2872,
