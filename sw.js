@@ -106,6 +106,7 @@ const SHELL_ASSETS = [
   'js/time-box.js',
   'js/forcemain.js',
   'js/sewer-print.js',
+  'js/road-net.js',
   'js/sewer-designer.js',
   'js/offline.js',
   'js/overview-tab.js',

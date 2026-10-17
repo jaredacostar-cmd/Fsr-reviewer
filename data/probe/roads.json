@@ -1,0 +1,1782 @@
+{
+ "generatedAt": "2026-10-17T04:55:05.129Z",
+ "origin": "https://jaredacostar-cmd.github.io",
+ "box": {
+  "xmin": -79.768,
+  "ymin": 43.682,
+  "xmax": -79.752,
+  "ymax": 43.69
+ },
+ "services": [
+  {
+   "name": "LIO_Open01",
+   "type": "MapServer",
+   "layers": [
+    {
+     "id": 33,
+     "name": "Building As Symbol"
+    },
+    {
+     "id": 28,
+     "name": "Spot Height"
+    },
+    {
+     "id": 27,
+     "name": "Bathymetry Point"
+    },
+    {
+     "id": 6,
+     "name": "OHN Hydrographic Point"
+    },
+    {
+     "id": 30,
+     "name": "Bathymetry Line"
+    },
+    {
+     "id": 29,
+     "name": "Contour"
+    },
+    {
+     "id": 9,
+     "name": "OHN Hydrographic Line"
+    },
+    {
+     "id": 7,
+     "name": "Constructed Drain"
+    },
+    {
+     "id": 14,
+     "name": "OHN Shoreline"
+    },
+    {
+     "id": 26,
+     "name": "OHN Watercourse"
+    },
+    {
+     "id": 35,
+     "name": "Built Up Area"
+    },
+    {
+     "id": 34,
+     "name": "Building To Scale"
+    },
+    {
+     "id": 31,
+     "name": "Bathymetry Index"
+    },
+    {
+     "id": 10,
+     "name": "OHN Hydrographic Poly"
+    },
+    {
+     "id": 11,
+     "name": "Tile Drainage Area"
+    },
+    {
+     "id": 15,
+     "name": "Wetland With Significance"
+    },
+    {
+     "id": 25,
+     "name": "OHN Waterbody"
+    }
+   ]
+  },
+  {
+   "name": "LIO_Open02",
+   "type": "MapServer",
+   "layers": [
+    {
+     "id": 1,
+     "name": "OHN 10M Shoreline"
+    },
+    {
+     "id": 2,
+     "name": "OHN 1M Shoreline"
+    },
+    {
+     "id": 4,
+     "name": "OHN 2M Shoreline"
+    },
+    {
+     "id": 6,
+     "name": "OHN 5M Shoreline"
+    },
+    {
+     "id": 5,
+     "name": "OHN 500K Shoreline"
+    },
+    {
+     "id": 3,
+     "name": "OHN 200K Shoreline"
+    },
+    {
+     "id": 0,
+     "name": "OHN 100K Shoreline"
+    },
+    {
+     "id": 15,
+     "name": "OHN 10M Watercourse"
+    },
+    {
+     "id": 16,
+     "name": "OHN 5M Watercourse"
+    },
+    {
+     "id": 17,
+     "name": "OHN 2M Watercourse"
+    },
+    {
+     "id": 18,
+     "name": "OHN 1M Watercourse"
+    },
+    {
+     "id": 19,
+     "name": "OHN 500K Watercourse"
+    },
+    {
+     "id": 20,
+     "name": "OHN 200K Watercourse"
+    },
+    {
+     "id": 21,
+     "name": "OHN 100K Watercourse"
+    },
+    {
+     "id": 8,
+     "name": "OHN 10M Waterbody"
+    },
+    {
+     "id": 9,
+     "name": "OHN 5M Waterbody"
+    },
+    {
+     "id": 10,
+     "name": "OHN 2M Waterbody"
+    },
+    {
+     "id": 11,
+     "name": "OHN 1M Waterbody"
+    },
+    {
+     "id": 12,
+     "name": "OHN 500K Waterbody"
+    },
+    {
+     "id": 13,
+     "name": "OHN 200K Waterbody"
+    },
+    {
+     "id": 14,
+     "name": "OHN 100K Waterbody"
+    }
+   ]
+  },
+  {
+   "name": "LIO_Open03",
+   "type": "MapServer",
+   "layers": [
+    {
+     "id": 2,
+     "name": "Conservation Reserve Regulated"
+    },
+    {
+     "id": 11,
+     "name": "Conservation Authority Admin Area"
+    },
+    {
+     "id": 15,
+     "name": "Ecodistrict"
+    },
+    {
+     "id": 16,
+     "name": "Ecoregion"
+    },
+    {
+     "id": 17,
+     "name": "Ecozone"
+    },
+    {
+     "id": 10,
+     "name": "Federal Protected Area"
+    },
+    {
+     "id": 12,
+     "name": "Indian Reserve"
+    },
+    {
+     "id": 1,
+     "name": "Landform Conservation Area"
+    },
+    {
+     "id": 6,
+     "name": "MNR District"
+    },
+    {
+     "id": 7,
+     "name": "MNR Region"
+    },
+    {
+     "id": 3,
+     "name": "Municipal Park"
+    },
+    {
+     "id": 14,
+     "name": "Municipal Bnd Lower And Single"
+    },
+    {
+     "id": 13,
+     "name": "Municipal Bnd Upper And Dist"
+    },
+    {
+     "id": 9,
+     "name": "National Wildlife Area"
+    },
+    {
+     "id": 8,
+     "name": "OPS Region"
+    },
+    {
+     "id": 5,
+     "name": "Provincial Park Admin Zone"
+    },
+    {
+     "id": 4,
+     "name": "Provincial Park Regulated"
+    },
+    {
+     "id": 0,
+     "name": "Province"
+    },
+    {
+     "id": 18,
+     "name": "Site District"
+    },
+    {
+     "id": 19,
+     "name": "Site Region"
+    }
+   ]
+  },
+  {
+   "name": "LIO_Open04",
+   "type": "MapServer",
+   "layers": [
+    {
+     "id": 5,
+     "name": "Drain Connection"
+    },
+    {
+     "id": 0,
+     "name": "Ontario Dam Inventory"
+    },
+    {
+     "id": 16,
+     "name": "ORWN Structure Point"
+    },
+    {
+     "id": 15,
+     "name": "ORWN Station"
+    },
+    {
+     "id": 14,
+     "name": "ORWN Marker Post"
+    },
+    {
+     "id": 13,
+     "name": "ORWN Junction"
+    },
+    {
+     "id": 12,
+     "name": "ORWN Crossing"
+    },
+    {
+     "id": 20,
+     "name": "OTN Access Point"
+    },
+    {
+     "id": 18,
+     "name": "ORWN Track"
+    },
+    {
+     "id": 17,
+     "name": "ORWN Structure Line"
+    },
+    {
+     "id": 19,
+     "name": "OTN Trail Segment"
+    },
+    {
+     "id": 7,
+     "name": "Ont Elevation Data Index"
+    },
+    {
+     "id": 11,
+     "name": "UTM 100km Grid"
+    },
+    {
+     "id": 10,
+     "name": "UTM 10km Grid"
+    },
+    {
+     "id": 9,
+     "name": "UTM 5km Grid"
+    },
+    {
+     "id": 8,
+     "name": "UTM 1km Grid"
+    },
+    {
+     "id": 4,
+     "name": "OWB Primary Watersheds – Diverted Flow"
+    },
+    {
+     "id": 3,
+     "name": "OWB Secondary Watersheds"
+    },
+    {
+     "id": 2,
+     "name": "OWB Tertiary Watersheds"
+    },
+    {
+     "id": 1,
+     "name": "OWB Quaternary Watersheds"
+    },
+    {
+     "id": 27,
+     "name": "OWB Main – All Watershed Units"
+    }
+   ]
+  },
+  {
+   "name": "LIO_Open05",
+   "type": "MapServer",
+   "layers": [
+    {
+     "id": 20,
+     "name": "Emergency Management Historical Event"
+    },
+    {
+     "id": 21,
+     "name": "Fire Aviation and Emergency Facility Point"
+    },
+    {
+     "id": 10,
+     "name": "Utility Site"
+    },
+    {
+     "id": 11,
+     "name": "Utility Line"
+    },
+    {
+     "id": 19,
+     "name": "Aggregate Designated Area"
+    },
+    {
+     "id": 18,
+     "name": "Aggregate Inspector Jurisdiction"
+    },
+    {
+     "id": 17,
+     "name": "Aggregate Site Authorized Active"
+    },
+    {
+     "id": 16,
+     "name": "Aggregate Site Authorized Inactive"
+    },
+    {
+     "id": 23,
+     "name": "Aggregate Site Authorized Partial Surrender"
+    },
+    {
+     "id": 24,
+     "name": "Aggregate Extraction Area"
+    },
+    {
+     "id": 25,
+     "name": "Aggregate Site Unrehabilitated"
+    },
+    {
+     "id": 0,
+     "name": "Airport Official"
+    },
+    {
+     "id": 1,
+     "name": "Airport Other"
+    },
+    {
+     "id": 3,
+     "name": "ANSI"
+    },
+    {
+     "id": 15,
+     "name": "Cadastral Location"
+    },
+    {
+     "id": 8,
+     "name": "Caribou Range Boundary"
+    },
+    {
+     "id": 7,
+     "name": "Crown Game Preserve"
+    },
+    {
+     "id": 14,
+     "name": "Designated Gas Storage Area"
+    },
+    {
+     "id": 13,
+     "name": "Fire Management Agreement Area"
+    },
+    {
+     "id": 9,
+     "name": "Soil Survey Complex"
+    },
+    {
+     "id": 2,
+     "name": "Source Protection Area Generalized"
+    },
+    {
+     "id": 5,
+     "name": "Wildlife Management Unit"
+    }
+   ]
+  },
+  {
+   "name": "LIO_Open06",
+   "type": "MapServer",
+   "layers": [
+    {
+     "id": 16,
+     "name": "Greenbelt Hamlet"
+    },
+    {
+     "id": 18,
+     "name": "Greenbelt River Valley Connection"
+    },
+    {
+     "id": 4,
+     "name": "CLUPA Overlay"
+    },
+    {
+     "id": 5,
+     "name": "CLUPA Provincial"
+    },
+    {
+     "id": 0,
+     "name": "Federal Land Other"
+    },
+    {
+     "id": 20,
+     "name": "Greenbelt Towns Villages"
+    },
+    {
+     "id": 19,
+     "name": "Greenbelt Specialty Crop"
+    },
+    {
+     "id": 17,
+     "name": "Greenbelt Outer Boundary"
+    },
+    {
+     "id": 15,
+     "name": "Greenbelt Designation"
+    },
+    {
+     "id": 1,
+     "name": "Geographic Township Improved"
+    },
+    {
+     "id": 21,
+     "name": "Lake Simcoe PAW Boundary"
+    },
+    {
+     "id": 2,
+     "name": "Lot Fabric Improved"
+    },
+    {
+     "id": 22,
+     "name": "Natural Heritage System Area"
+    },
+    {
+     "id": 23,
+     "name": "NGO Nature Reserve"
+    },
+    {
+     "id": 27,
+     "name": "Niagara Escarpment Policy Area"
+    },
+    {
+     "id": 24,
+     "name": "Niagara Escarpment Minor Urban Centre"
+    },
+    {
+     "id": 25,
+     "name": "Niagara Escarpment Plan Boundary"
+    },
+    {
+     "id": 26,
+     "name": "Niagara Escarpment Plan Designation"
+    },
+    {
+     "id": 29,
+     "name": "ORM Planning Area"
+    },
+    {
+     "id": 28,
+     "name": "ORM Land Use Designation"
+    },
+    {
+     "id": 30,
+     "name": "Land Use Plan Area, MNR"
+    }
+   ]
+  },
+  {
+   "name": "LIO_Open07",
+   "type": "MapServer",
+   "layers": [
+    {
+     "id": 22,
+     "name": "Forest Processing Facility"
+    },
+    {
+     "id": 0,
+     "name": "Aquatic Resource Area Survey Point"
+    },
+    {
+     "id": 15,
+     "name": "Fishing Access Point"
+    },
+    {
+     "id": 1,
+     "name": "ARA Water Line Segment"
+    },
+    {
+     "id": 13,
+     "name": "Fish Pathogen Boundary Source"
+    },
+    {
+     "id": 10,
+     "name": "Fish Culture Operation MNR"
+    },
+    {
+     "id": 33,
+     "name": "Fish Culture Operation Areas of Impact"
+    },
+    {
+     "id": 3,
+     "name": "Bait Harvest Area"
+    },
+    {
+     "id": 2,
+     "name": "ARA Water Poly Segment"
+    },
+    {
+     "id": 12,
+     "name": "Fish Pathogen Management Zone"
+    },
+    {
+     "id": 14,
+     "name": "Fisheries Management Zone"
+    },
+    {
+     "id": 31,
+     "name": "Fish Activity Area"
+    },
+    {
+     "id": 16,
+     "name": "Forest Abiotic Damage Event"
+    },
+    {
+     "id": 17,
+     "name": "Forest Disease Damage Event"
+    },
+    {
+     "id": 18,
+     "name": "Forest Genetics Zone"
+    },
+    {
+     "id": 19,
+     "name": "Forest Insect Damage Event"
+    },
+    {
+     "id": 20,
+     "name": "Forest Management Unit"
+    },
+    {
+     "id": 21,
+     "name": "Forest Misc Damage Event"
+    },
+    {
+     "id": 23,
+     "name": "Forest Resource Inventory Status"
+    },
+    {
+     "id": 25,
+     "name": "Provincially Tracked Species 1km Grid"
+    },
+    {
+     "id": 29,
+     "name": "Wooded Area"
+    },
+    {
+     "id": 35,
+     "name": "Moose Survey Plot Grid"
+    }
+   ]
+  },
+  {
+   "name": "LIO_Open08",
+   "type": "MapServer",
+   "layers": [
+    {
+     "id": 22,
+     "name": "Petroleum Well"
+    },
+    {
+     "id": 20,
+     "name": "Petroleum Crown Lake Grid"
+    },
+    {
+     "id": 21,
+     "name": "Petroleum Historical Oil Field"
+    },
+    {
+     "id": 23,
+     "name": "Petroleum Pool"
+    },
+    {
+     "id": 28,
+     "name": "Restricted Fire Zone"
+    },
+    {
+     "id": 9,
+     "name": "Waste Management Site"
+    },
+    {
+     "id": 10,
+     "name": "Waste Management Attenuation Zone"
+    },
+    {
+     "id": 17,
+     "name": "Ontario Waterbody Location Identifier"
+    },
+    {
+     "id": 30,
+     "name": "Monitoring Station Point"
+    },
+    {
+     "id": 31,
+     "name": "Snow Survey Measurement Location"
+    },
+    {
+     "id": 32,
+     "name": "Crown Land – MNR Acquisitions"
+    },
+    {
+     "id": 33,
+     "name": "Crown Land – MNR Non-Freehold Dispositions"
+    },
+    {
+     "id": 34,
+     "name": "Crown Land – MNR Unpatented Land"
+    },
+    {
+     "id": 35,
+     "name": "Patent Land External"
+    },
+    {
+     "id": 36,
+     "name": "Research Auxiliary Point"
+    },
+    {
+     "id": 37,
+     "name": "Research Point"
+    },
+    {
+     "id": 38,
+     "name": "Research Line"
+    },
+    {
+     "id": 39,
+     "name": "Research Polygon"
+    },
+    {
+     "id": 40,
+     "name": "Research Plot Postdisturbance Notification"
+    },
+    {
+     "id": 41,
+     "name": "Research Plot Predisturbance Notification"
+    },
+    {
+     "id": 42,
+     "name": "Research Plot Protected"
+    }
+   ]
+  },
+  {
+   "name": "LIO_Open09",
+   "type": "MapServer",
+   "layers": [
+    {
+     "id": 30,
+     "name": "Fire Disturbance Point"
+    },
+    {
+     "id": 26,
+     "name": "MOH Service Location"
+    },
+    {
+     "id": 44,
+     "name": "MOH Public Health Unit Boundary"
+    },
+    {
+     "id": 52,
+     "name": "Ontario Health Region"
+    },
+    {
+     "id": 22,
+     "name": "MNR Road Barrier"
+    },
+    {
+     "id": 21,
+     "name": "MNR Sign Site"
+    },
+    {
+     "id": 18,
+     "name": "MNRF Road Segment"
+    },
+    {
+     "id": 42,
+     "name": "MNRF Road Crossing Water-Bridge"
+    },
+    {
+     "id": 38,
+     "name": "MNRF Road Crossing Water-Non-Bridge"
+    },
+    {
+     "id": 46,
+     "name": "MNRF Road Crossing Railway"
+    },
+    {
+     "id": 48,
+     "name": "MNRF Road Condition Inspection Point"
+    },
+    {
+     "id": 49,
+     "name": "MNRF Road Condition Inspection Line"
+    },
+    {
+     "id": 0,
+     "name": "ORN Road Net Element"
+    },
+    {
+     "id": 34,
+     "name": "Restricted Fire Zone"
+    },
+    {
+     "id": 33,
+     "name": "Fire Response Plan Area"
+    },
+    {
+     "id": 32,
+     "name": "Fire Management Zone"
+    },
+    {
+     "id": 31,
+     "name": "Fire Weather Sector"
+    },
+    {
+     "id": 28,
+     "name": "Fire Disturbance Area"
+    },
+    {
+     "id": 50,
+     "name": "Forest Fire Danger Rating"
+    },
+    {
+     "id": 51,
+     "name": "In-year Fire Perimeters"
+    },
+    {
+     "id": 53,
+     "name": "Fire Management Headquarters Area"
+    },
+    {
+     "id": 54,
+     "name": "Fire Response Sector"
+    },
+    {
+     "id": 36,
+     "name": "Geographic Names Ontario"
+    }
+   ]
+  },
+  {
+   "name": "LIO_Open10",
+   "type": "MapServer",
+   "layers": [
+    {
+     "id": 4,
+     "name": "Wildlife Values Site"
+    },
+    {
+     "id": 10,
+     "name": "Wildlife Values Area"
+    },
+    {
+     "id": 12,
+     "name": "Fishing and Hunting Licence Issuer Location"
+    },
+    {
+     "id": 14,
+     "name": "Tower"
+    },
+    {
+     "id": 21,
+     "name": "Natural Area Derived"
+    },
+    {
+     "id": 23,
+     "name": "Bear Management Area"
+    },
+    {
+     "id": 24,
+     "name": "Trapline Area"
+    },
+    {
+     "id": 19,
+     "name": "Wildland Fire Opportunities"
+    }
+   ]
+  }
+ ],
+ "candidates": [
+  {
+   "service": "LIO_Open04",
+   "type": "MapServer",
+   "id": 19,
+   "name": "OTN Trail Segment",
+   "url": "https://ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA/LIO_Open04/MapServer/19",
+   "cors": "https://jaredacostar-cmd.github.io",
+   "status": 200,
+   "geometryType": "esriGeometryPolyline",
+   "maxRecordCount": 2000,
+   "formats": "JSON, geoJSON, PBF",
+   "fields": [
+    "OGF_ID:Double",
+    "TRAIL_NAME:String",
+    "TRAIL_ASSOCIATION:String",
+    "TRAIL_ASSOCIATION_WEBSITE:String",
+    "PERMITTED_USES:String",
+    "DESCRIPTION:String",
+    "ON_ROAD_FLG:String",
+    "TRAIL_LENGTH_KM:Single",
+    "LOCATION_ACCURACY:String",
+    "EFFECTIVE_DATETIME:Date",
+    "SYSTEM_DATETIME:Date",
+    "SHAPE:Geometry",
+    "OBJECTID:OID",
+    "SHAPE.LEN:Double"
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "countInBox": 7,
+   "queryCors": "https://jaredacostar-cmd.github.io",
+   "queryStatus": 200,
+   "sample": [
+    {
+     "attributes": {
+      "OGF_ID": 143659320,
+      "TRAIL_NAME": "City of Brampton Marked On Road Bicycle Routes",
+      "TRAIL_ASSOCIATION": "Region of Peel",
+      "TRAIL_ASSOCIATION_WEBSITE": "www.walkandrollpeel.ca",
+      "PERMITTED_USES": "Cycling",
+      "DESCRIPTION": null,
+      "ON_ROAD_FLG": "Yes",
+      "TRAIL_LENGTH_KM": 13.5,
+      "LOCATION_ACCURACY": "Within 10 metres",
+      "EFFECTIVE_DATETIME": 1652872723000,
+      "SYSTEM_DATETIME": 1652913565000
+     },
+     "points": 130
+    },
+    {
+     "attributes": {
+      "OGF_ID": 143662699,
+      "TRAIL_NAME": "Rosalea Park Trail",
+      "TRAIL_ASSOCIATION": "Region of Peel",
+      "TRAIL_ASSOCIATION_WEBSITE": "www.walkandrollpeel.ca",
+      "PERMITTED_USES": "Hiking or Walking, Cycling",
+      "DESCRIPTION": null,
+      "ON_ROAD_FLG": "No",
+      "TRAIL_LENGTH_KM": 6,
+      "LOCATION_ACCURACY": "Within 10 metres",
+      "EFFECTIVE_DATETIME": 1701246567000,
+      "SYSTEM_DATETIME": 1701297020000
+     },
+     "points": 69
+    }
+   ]
+  },
+  {
+   "service": "LIO_Open07",
+   "type": "MapServer",
+   "id": 1,
+   "name": "ARA Water Line Segment",
+   "url": "https://ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA/LIO_Open07/MapServer/1",
+   "cors": "https://jaredacostar-cmd.github.io",
+   "status": 200,
+   "geometryType": "esriGeometryPolyline",
+   "maxRecordCount": 2000,
+   "formats": "JSON, geoJSON, PBF",
+   "fields": [
+    "OGF_ID:Double",
+    "ARA_IDENT:String",
+    "WATERBODY_LID:String",
+    "CORPORATE_WATERBODY_NAME:String",
+    "OFFICIAL_WATERBODY_NAME:String",
+    "WATERBODY_ALIAS_NAME1:String",
+    "WATERBODY_ALIAS_NAME2:String",
+    "FISHERIES_MANAGEMENT_ZONE_ID:SmallInteger",
+    "FISH_SPECIES_SUMMARY:String",
+    "CONDUCTIVITY:Single",
+    "SECCHI_DEPTH:Single",
+    "COMMENTS:String",
+    "GEOMETRY_UPDATE_DATETIME:Date",
+    "EFFECTIVE_DATETIME:Date",
+    "SHAPE:Geometry",
+    "OBJECTID:OID",
+    "OFFICIAL_NAME_LABEL:String",
+    "ARA_SUMMARY_ID:Double",
+    "WATERBODY_TYPE:String",
+    "WATERBODY_TYPE_COMBINATION:String",
+    "THERMAL_REGIME:String",
+    "THERMAL_REGIME_REASON:String",
+    "SURFACE_AREA:Double",
+    "MAXIMUM_DEPTH:Single",
+    "MEAN_DEPTH:Single",
+    "MORPHOEDAPHIC_INDEX:Double",
+    "AT_DEVELOPMENT_CAPACITY_IND:String",
+    "AT_DEVELOPMENT_CAPACITY_REASON:String",
+    "COLDWATER_REHAB_POTENTIAL_IND:String",
+    "SPLIT_FEATURE_IND:String",
+    "SPATIAL_VERIFICATION_FLG:String",
+    "SHAPE.LEN:Double"
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "countInBox": 2,
+   "queryCors": "https://jaredacostar-cmd.github.io",
+   "queryStatus": 200,
+   "sample": [
+    {
+     "attributes": {
+      "OGF_ID": 127168387,
+      "ARA_IDENT": "AU-0006-ETO",
+      "WATERBODY_LID": "17-6171-48265",
+      "CORPORATE_WATERBODY_NAME": "Etobicoke Creek",
+      "OFFICIAL_WATERBODY_NAME": "Etobicoke Creek",
+      "WATERBODY_ALIAS_NAME1": null,
+      "WATERBODY_ALIAS_NAME2": null,
+      "FISHERIES_MANAGEMENT_ZONE_ID": 16,
+      "FISH_SPECIES_SUMMARY": "Blacknose Dace,Blacknose Shiner,Bluntnose Minnow,Brook Stickleback,Brown Bullhead,Central Stoneroller,Common Carp,Common Shiner,Creek Chub,Emerald Shiner,Fantail Darter,Fathead Minnow,Golden Shiner,Green Sunfish,Johnny Darter,Johnny Darter x Tesselated Darter,Longnose Dace,Northern Hog Sucker,Pumpkinseed,Rainbow Darter,Rock Bass,Spottail Shiner,Unidentifiable,White Sucker",
+      "CONDUCTIVITY": null,
+      "SECCHI_DEPTH": null,
+      "COMMENTS": null,
+      "GEOMETRY_UPDATE_DATETIME": 1569847819000,
+      "EFFECTIVE_DATETIME": 1569832629000
+     },
+     "points": 394
+    },
+    {
+     "attributes": {
+      "OGF_ID": 127168283,
+      "ARA_IDENT": "AU-0006-ETO",
+      "WATERBODY_LID": "17-6171-48265",
+      "CORPORATE_WATERBODY_NAME": "Etobicoke Creek",
+      "OFFICIAL_WATERBODY_NAME": "Etobicoke Creek",
+      "WATERBODY_ALIAS_NAME1": null,
+      "WATERBODY_ALIAS_NAME2": null,
+      "FISHERIES_MANAGEMENT_ZONE_ID": 16,
+      "FISH_SPECIES_SUMMARY": "Blacknose Dace,Blacknose Shiner,Bluntnose Minnow,Brook Stickleback,Brown Bullhead,Central Stoneroller,Common Carp,Common Shiner,Creek Chub,Emerald Shiner,Fantail Darter,Fathead Minnow,Golden Shiner,Green Sunfish,Johnny Darter,Johnny Darter x Tesselated Darter,Longnose Dace,Northern Hog Sucker,Pumpkinseed,Rainbow Darter,Rock Bass,Spottail Shiner,Unidentifiable,White Sucker",
+      "CONDUCTIVITY": null,
+      "SECCHI_DEPTH": null,
+      "COMMENTS": null,
+      "GEOMETRY_UPDATE_DATETIME": 1569847863000,
+      "EFFECTIVE_DATETIME": 1569832612000
+     },
+     "points": 8
+    }
+   ]
+  },
+  {
+   "service": "LIO_Open07",
+   "type": "MapServer",
+   "id": 2,
+   "name": "ARA Water Poly Segment",
+   "url": "https://ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA/LIO_Open07/MapServer/2",
+   "cors": "https://jaredacostar-cmd.github.io",
+   "status": 200,
+   "geometryType": "esriGeometryPolygon",
+   "maxRecordCount": 2000,
+   "formats": "JSON, geoJSON, PBF",
+   "fields": [
+    "OGF_ID:Double",
+    "ARA_SUMMARY_ID:Double",
+    "ARA_IDENT:String",
+    "WATERBODY_TYPE:String",
+    "WATERBODY_TYPE_COMBINATION:String",
+    "WATERBODY_LID:String",
+    "CORPORATE_WATERBODY_NAME:String",
+    "OFFICIAL_WATERBODY_NAME:String",
+    "WATERBODY_ALIAS_NAME1:String",
+    "WATERBODY_ALIAS_NAME2:String",
+    "FISHERIES_MANAGEMENT_ZONE_ID:SmallInteger",
+    "THERMAL_REGIME:String",
+    "THERMAL_REGIME_REASON:String",
+    "FISH_SPECIES_SUMMARY:String",
+    "SURFACE_AREA:Double",
+    "MAXIMUM_DEPTH:Single",
+    "MEAN_DEPTH:Single",
+    "SECCHI_DEPTH:Single",
+    "CONDUCTIVITY:Single",
+    "MORPHOEDAPHIC_INDEX:Double",
+    "AT_DEVELOPMENT_CAPACITY_IND:String",
+    "AT_DEVELOPMENT_CAPACITY_REASON:String",
+    "COLDWATER_REHAB_POTENTIAL_IND:String",
+    "COMMENTS:String",
+    "SPLIT_FEATURE_IND:String",
+    "SPATIAL_VERIFICATION_FLG:String",
+    "EFFECTIVE_DATETIME:Date",
+    "SHAPE:Geometry",
+    "OBJECTID:OID",
+    "SHAPE.AREA:Double",
+    "SHAPE.LEN:Double"
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "countInBox": 0,
+   "queryCors": "https://jaredacostar-cmd.github.io",
+   "queryStatus": 200,
+   "sample": []
+  },
+  {
+   "service": "LIO_Open09",
+   "type": "MapServer",
+   "id": 22,
+   "name": "MNR Road Barrier",
+   "url": "https://ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA/LIO_Open09/MapServer/22",
+   "cors": "https://jaredacostar-cmd.github.io",
+   "status": 200,
+   "geometryType": "esriGeometryPoint",
+   "maxRecordCount": 2000,
+   "formats": "JSON, geoJSON, PBF",
+   "fields": [
+    "OGF_ID:Double",
+    "BARRIER_IDENT:String",
+    "LEGACY_IDENT:String",
+    "PRIORITY_ROAD_IND:String",
+    "BARRIER_YEAR:String",
+    "RESPONSIBILITY_CLASS:String",
+    "RESPONSIBILITY_DETAIL:String",
+    "INSPECTOR_NAME:String",
+    "DATE_INSPECTED:Date",
+    "SIGN_IND:String",
+    "BERM_IND:String",
+    "DITCH_IND:String",
+    "FENCE_IND:String",
+    "GATE_IND:String",
+    "BOULDER_IND:String",
+    "JERSEY_IND:String",
+    "SLASH_IND:String",
+    "WATER_CROSSING_IND:String",
+    "ROAD_SURF_TREAT_IND:String",
+    "BARRIER_OTHER_IND:String",
+    "OBSTACLE_TYPE:String",
+    "BARRIER_COMPLIANCE_IND:String",
+    "NON_COMPLIANCE_TYPE:String",
+    "UNSAFE_IND:String",
+    "UNSAFE_CONCERN:String",
+    "MAINTENANCE_REQUIRED:String",
+    "MAINTENANCE_PRIORITY_RANKING:String",
+    "RECOMMENDED_WORK_TIMING:String",
+    "MAINTENANCE_DATE:Date",
+    "MAINTENANCE_COMMENT:String",
+    "GENERAL_COMMENTS:String",
+    "PHOTO_LINK:String",
+    "GEOMETRY_UPDATE_DATETIME:Date",
+    "EFFECTIVE_DATETIME:Date",
+    "SYSTEM_DATETIME:Date",
+    "SHAPE:Geometry",
+    "OBJECTID:OID"
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "countInBox": 0,
+   "queryCors": "https://jaredacostar-cmd.github.io",
+   "queryStatus": 200,
+   "sample": []
+  },
+  {
+   "service": "LIO_Open09",
+   "type": "MapServer",
+   "id": 18,
+   "name": "MNRF Road Segment",
+   "url": "https://ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA/LIO_Open09/MapServer/18",
+   "cors": "https://jaredacostar-cmd.github.io",
+   "status": 200,
+   "geometryType": "esriGeometryPolyline",
+   "maxRecordCount": 2000,
+   "formats": "JSON, geoJSON, PBF",
+   "fields": [
+    "OGF_ID:Double",
+    "ROAD_NETWORK_IDENTIFIER:String",
+    "PRIORITY_ROAD_IND:String",
+    "ROAD_AUTHORITY:String",
+    "OWNERSHIP_CLASS:String",
+    "RESPONSIBILITY_CLASS:String",
+    "RESPONSIBILITY_DETAIL:String",
+    "NATIONAL_ROAD_CLASS:String",
+    "GEOMETRIC_STANDARD_CLASS:String",
+    "FMP_ROAD_CLASS:String",
+    "ROAD_NAME:String",
+    "ALTERNATE_NAME:String",
+    "STATUS:String",
+    "CLOSURE_INTENT:String",
+    "CLOSED_STATE:String",
+    "TREATMENT_TYPE:String",
+    "ROAD_USE:String",
+    "ACTIVITY_RESTRICTION_IND:String",
+    "DESTINATION_RESTRICTION_IND:String",
+    "VEHICLE_TYPE_RESTRICTION_IND:String",
+    "OTHER_RESTRICTION_IND:String",
+    "DATE_RESTRICTION_IND:String",
+    "USE_RESTRICTION_DETAIL:String",
+    "FUTURE_USE_IND:String",
+    "REHABILITATION_YEAR:SmallInteger",
+    "ROAD_TRANSFER_YEAR:SmallInteger",
+    "ROAD_CLOSED_YEAR:SmallInteger",
+    "YEAR_CLOSED_MODIFIER:String",
+    "MAINTENANCE_LEVEL:String",
+    "PASSABLE_IND:String",
+    "BERM_IND:String",
+    "GATE_IND:String",
+    "ROADBED_PLANTED_IND:String",
+    "PRIVATE_ROAD_IND:String",
+    "ROADBED_DESTROYED_IND:String",
+    "SIGN_IND:String",
+    "SLASHPILE_IND:String",
+    "WATER_CROSSING_REMOVED_IND:String",
+    "SURFACE_TYPE:String",
+    "NUMBER_OF_LANES:String",
+    "YEAR_CONSTRUCTED:SmallInteger",
+    "YEAR_CONSTRUCTED_MODIFIER:String",
+    "SERVICE_YEAR:SmallInteger",
+    "DATE_LAST_MAINTAINED:Date",
+    "DATE_LAST_INSPECTED:Date",
+    "YEAR_DECOMMISSIONED:SmallInteger",
+    "YEAR_DECOMMISSIONED_MODIFIER:String",
+    "GENERAL_COMMENTS:String",
+    "GEOMETRY_UPDATE_DATETIME:Date",
+    "EFFECTIVE_DATETIME:Date",
+    "SYSTEM_DATETIME:Date",
+    "SHAPE:Geometry",
+    "OBJECTID:OID",
+    "SHAPE.LEN:Double"
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "countInBox": 0,
+   "queryCors": "https://jaredacostar-cmd.github.io",
+   "queryStatus": 200,
+   "sample": []
+  },
+  {
+   "service": "LIO_Open09",
+   "type": "MapServer",
+   "id": 42,
+   "name": "MNRF Road Crossing Water-Bridge",
+   "url": "https://ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA/LIO_Open09/MapServer/42",
+   "cors": "https://jaredacostar-cmd.github.io",
+   "status": 200,
+   "geometryType": "esriGeometryPoint",
+   "maxRecordCount": 2000,
+   "formats": "JSON, geoJSON, PBF",
+   "fields": [
+    "OGF_ID:Double",
+    "PRIORITY_ROAD_IND:String",
+    "RESPONSIBILITY_CLASS:String",
+    "RESPONSIBILITY_DETAIL:String",
+    "INSPECTOR_NAME:String",
+    "OTHER_PARTY_NAME:String",
+    "DATE_INSPECTED:Date",
+    "BRIDGE_IDENT:String",
+    "OLD_BRIDGE_ID:String",
+    "STRUCTURE_NAME:String",
+    "DECK_MATERIAL:String",
+    "DECK_MATERIAL_OTHER:String",
+    "DECK_WIDTH:Single",
+    "ABUTMENT_TYPE:String",
+    "ABUTMENT_TYPE_OTHER:String",
+    "PIER_TYPE:String",
+    "PIER_TYPE_OTHER:String",
+    "STRINGER_TYPE:String",
+    "STRINGER_TYPE_OTHER:String",
+    "OVERALL_LENGTH:Single",
+    "NUMBER_OF_SPANS:SmallInteger",
+    "LONGEST_SPAN:Single",
+    "BRIDGE_TYPE:String",
+    "RAILING_PRESENT_IND:String",
+    "CURB_PRESENT_IND:String",
+    "PANEL_TYPE:String",
+    "PANEL_TYPE_OTHER:String",
+    "PANEL_TYPE_REINFORCED_IND:String",
+    "TYPICAL_PANEL_LENGTH:Single",
+    "NUMBER_OF_PANELS:SmallInteger",
+    "NORMAL_CHANNEL_WIDTH:Single",
+    "HIGH_WATER_CHANNEL_WIDTH:Single",
+    "WATERSHED_DRAINAGE_AREA:Integer",
+    "STREAM_VELOCITY_NORMAL_FLOW:Single",
+    "Q25:Single",
+    "STREAMBED_MATERIAL:String",
+    "CLEAR_WIDTH_BETWEEN_ABUTMENTS:Single",
+    "BRIDGE_US_TO_HW_LEVEL:Single",
+    "BRIDGE_US_TO_STREAMBED_1QTR:Single",
+    "BRIDGE_US_TO_STREAMBED_HALF:Single",
+    "BRIDGE_US_TO_STREAMBED_3QTR:Single",
+    "PHOTO_LINK:String",
+    "YEAR_BUILT:SmallInteger",
+    "YEAR_LAST_INSPECTION:SmallInteger",
+    "YEAR_LAST_HYDROLOGY_REPORT:SmallInteger",
+    "YEAR_LAST_STRUCTURAL_EVAL:SmallInteger",
+    "LOAD_POSTING:Single",
+    "EQUIPMENT_USED:String",
+    "WEATHER:String",
+    "TEMPERATURE:SmallInteger",
+    "LEFT_HAZARD_SIGNS_FLG:String",
+    "RIGHT_HAZARD_SIGNS_FLG:String",
+    "NARROW_STRUCTURE_SIGNS_FLG:String",
+    "LOAD_POSTING_SIGNS_FLG:String",
+    "LOAD_POSTING_TYPE:String",
+    "LOAD_POSTING_VALUE_1:Integer",
+    "LOAD_POSTING_VALUE_2:Integer",
+    "LOAD_POSTING_VALUE_3:Integer",
+    "SIGNS_COMMENT:String",
+    "DECK_PROTECTION_SYSTEM:String",
+    "DECK_THICKNESS:Single",
+    "STRINGERS_TYPE_SIZE:String",
+    "STRINGERS_PROTECTION_SYSTEM:String",
+    "STRINGERS_LENGTH:Single",
+    "NO_OF_STRINGERS:SmallInteger",
+    "STRINGERS_SPACING:Single",
+    "ABUTMENT_MATERIAL:String",
+    "ABUTMENT_PROTECTION_SYSTEM:String",
+    "ABUTMENT_FILL_TYPE:String",
+    "ABUTMENT_HEIGHT:Single",
+    "ABUTMENT_WIDTH:Single",
+    "ABUTMENT_EXPOSED_LENGTH:Single",
+    "PIER_MATERIAL:String",
+    "PIER_PROTECTION_SYSTEM:String",
+    "PIER_FILL_TYPE:String",
+    "PIER_HEIGHT:Single",
+    "PIER_WIDTH:Single",
+    "PIER_LENGTH:Single",
+    "NUMBER_OF_PIERS:SmallInteger",
+    "OVERALL_RATING:SmallInteger",
+    "RECOMMENDED_WORK_FLG:String",
+    "RECOMMENDED_WORK_TIMING:String",
+    "RECOMMENDED_WORK_COMPLETE_DATE:Date",
+    "RECOMMENDED_INVESTIG_IND:String",
+    "RECOMMENDED_INVESTIG_DESCR:String",
+    "OVERALL_COMMENTS:String",
+    "GEOMETRY_UPDATE_DATETIME:Date",
+    "EFFECTIVE_DATETIME:Date",
+    "SYSTEM_DATETIME:Date",
+    "SHAPE:Geometry",
+    "OBJECTID:OID"
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "countInBox": 0,
+   "queryCors": "https://jaredacostar-cmd.github.io",
+   "queryStatus": 200,
+   "sample": []
+  },
+  {
+   "service": "LIO_Open09",
+   "type": "MapServer",
+   "id": 38,
+   "name": "MNRF Road Crossing Water-Non-Bridge",
+   "url": "https://ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA/LIO_Open09/MapServer/38",
+   "cors": "https://jaredacostar-cmd.github.io",
+   "status": 200,
+   "geometryType": "esriGeometryPoint",
+   "maxRecordCount": 2000,
+   "formats": "JSON, geoJSON, PBF",
+   "fields": [
+    "OGF_ID:Double",
+    "WATER_CROSSING_IDENT:String",
+    "LEGACY_IDENT:String",
+    "PRIORITY_ROAD_IND:String",
+    "RESPONSIBILITY_CLASS:String",
+    "RESPONSIBILITY_DETAIL:String",
+    "YEAR_CONSTRUCTED:SmallInteger",
+    "YEAR_CONSTRUCTED_MODIFIER:String",
+    "INSPECTOR_NAME:String",
+    "DATE_INSPECTED:Date",
+    "INSPECTION_STATUS:String",
+    "INSPECTION_INCOMPLETE_REASON:String",
+    "INSPECTION_INCOMPLETE_COMMENT:String",
+    "Q25:Single",
+    "WATERSHED_DRAINAGE_AREA:Single",
+    "PRIMARY_STRUCTURE_TYPE:String",
+    "NUMBER_OF_STRUCTURES:SmallInteger",
+    "DISTANCE_BETWEEN_STRUCTURES:String",
+    "PRIMARY_CULVERT_HEIGHT:SmallInteger",
+    "PRIMARY_CULVERT_WIDTH:SmallInteger",
+    "PRIMARY_CULVERT_LENGTH:SmallInteger",
+    "CULVERT_2_HEIGHT:SmallInteger",
+    "CULVERT_2_WIDTH:SmallInteger",
+    "CULVERT_2_LENGTH:SmallInteger",
+    "CULVERT_3_HEIGHT:SmallInteger",
+    "CULVERT_3_WIDTH:SmallInteger",
+    "CULVERT_3_LENGTH:SmallInteger",
+    "CULVERT_4_HEIGHT:SmallInteger",
+    "CULVERT_4_WIDTH:SmallInteger",
+    "CULVERT_4_LENGTH:SmallInteger",
+    "CULVERT_5_HEIGHT:SmallInteger",
+    "CULVERT_5_WIDTH:SmallInteger",
+    "CULVERT_5_LENGTH:SmallInteger",
+    "CULVERT_TOO_SHORT_IND:String",
+    "STRUCTURE_SHAPE_CONDITION:String",
+    "STRUCTURE_MATERIAL_CONDITION:String",
+    "STRUCTURAL_CONDITION_RATING:SmallInteger",
+    "STRUCTURAL_COND_RATING_COMMENT:String",
+    "ROAD_SURFACE_WIDTH:SmallInteger",
+    "ROAD_BED_MATERIAL:String",
+    "FLOW_UNDERMINING_IND:String",
+    "FLOW_OVERTOPPING_ROAD_IND:String",
+    "CULVERT_FILL_HEIGHT:SmallInteger",
+    "TOTAL_FILL_HEIGHT:SmallInteger",
+    "UPSTREAM_FILL_SLOPE_ANGLE:SmallInteger",
+    "DOWNSTREAM_FILL_SLOPE_ANGLE:SmallInteger",
+    "UPSTREAM_ARMOR:String",
+    "DOWNSTREAM_ARMOR:String",
+    "ARMOR_EFFECTIVE_UPSTREAM_IND:String",
+    "ARMOR_EFFECTIVE_DOWNSTREAM_IND:String",
+    "FILL_SLOPE_EROSION_CONDITION:String",
+    "EMBANKMENT_CONDITION_RATING:SmallInteger",
+    "EMBANKMENT_COND_RATING_COMMENT:String",
+    "INLET_BOWED_IND:String",
+    "INLET_INSTALLATION_IND:String",
+    "INLET_MECH_DAMAGE_IND:String",
+    "INLET_SCOUR_IND:String",
+    "INLET_UNSUITABLE_SITE_IND:String",
+    "INLET_CONDITION_RATING:String",
+    "OUTLET_BOWED_IND:String",
+    "OUTLET_INSTALLATION_IND:String",
+    "OUTLET_MECH_DAMAGE_IND:String",
+    "OUTLET_SCOUR_IND:String",
+    "OUTLET_UNSUITABLE_SITE_IND:String",
+    "OUTLET_CONDITION_RATING:String",
+    "HIGH_WATER_MARK:SmallInteger",
+    "WATER_HEIGHT_IN_CULVERT:SmallInteger",
+    "FLOW_BLOCKAGE_FLG:String",
+    "FLOW_CAPACITY_RATING:String",
+    "BEAVER_BLOCKAGE_IND:String",
+    "SEDIMENT_BLOCKAGE_IND:String",
+    "WOODY_DEBRIS_BLOCKAGE_IND:String",
+    "CHANNEL_ALIGNMENT_IND:String",
+    "DOWNSTREAM_IMPACT_IND:String",
+    "STREAM_CONDITION_RATING:SmallInteger",
+    "STREAM_COND_RATING_COMMENT:String",
+    "ENGINEERING_ASSESSMENT_REC_IND:String",
+    "ENGINEERING_ASSESSMENT_COMMENT:String",
+    "FISHERIES_ASSESSMENT_REC_IND:String",
+    "FISHERIES_ASSESSMENT_COMMENT:String",
+    "FISHERIES_IMPACT_RATING:SmallInteger",
+    "OVERALL_RATING:SmallInteger",
+    "RECOMMENDED_WORK_FLG:String",
+    "RECOMMENDED_WORK_DETAIL:String",
+    "RECOMMENDED_WORK_TIMING:String",
+    "RECOMMENDED_WORK_COMPLETE_DATE:Date",
+    "PHOTO_LINK:String",
+    "GEOMETRY_UPDATE_DATETIME:Date",
+    "EFFECTIVE_DATETIME:Date",
+    "SYSTEM_DATETIME:Date",
+    "SHAPE:Geometry",
+    "OBJECTID:OID"
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "countInBox": 0,
+   "queryCors": "https://jaredacostar-cmd.github.io",
+   "queryStatus": 200,
+   "sample": []
+  },
+  {
+   "service": "LIO_Open09",
+   "type": "MapServer",
+   "id": 46,
+   "name": "MNRF Road Crossing Railway",
+   "url": "https://ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA/LIO_Open09/MapServer/46",
+   "cors": "https://jaredacostar-cmd.github.io",
+   "status": 200,
+   "geometryType": "esriGeometryPoint",
+   "maxRecordCount": 2000,
+   "formats": "JSON, geoJSON, PBF",
+   "fields": [
+    "OGF_ID:Double",
+    "PRIORITY_ROAD_IND:String",
+    "DATE_INSPECTED:Date",
+    "INSPECTION_REASON:String",
+    "TRANSPORT_CANADA_CROSSING_NUM:Integer",
+    "RWY_CROSSING_IDENT:String",
+    "FUNCTIONAL_LOCATION_IDENT:String",
+    "RAILWAY_SUBDIVISION:String",
+    "SUBDIVISION_MILEAGE:Single",
+    "MILE_MARKER:SmallInteger",
+    "RAIL_AUTHORITY:String",
+    "RESPONSIBILITY_CLASS:String",
+    "RESPONSIBILITY_DETAIL:String",
+    "MAINTENANCE_AGREEMENT_PERCENT:SmallInteger",
+    "PHOTO_LINK:String",
+    "MAXIMUM_RAIL_SPEED:SmallInteger",
+    "ROAD_DESIGN_SPEED:SmallInteger",
+    "TRAINS_PER_DAY:SmallInteger",
+    "ROAD_DESIGN_VEHICLE:String",
+    "ROAD_DESIGN_VEHICLE_LENGTH:SmallInteger",
+    "TRAINS_PASS_IND:String",
+    "SURFACE_MATERIAL:String",
+    "NUMBER_OF_LANES:SmallInteger",
+    "NUMBER_OF_RAILWAY_TRACKS:String",
+    "INTERSECTING_ROAD_IND:String",
+    "PEDESTRIAN_IND:String",
+    "TRAFFIC_SIGNAL_IND:String",
+    "CROSSING_WIDTH_IND:String",
+    "DAILY_ROAD_TRAFFIC:String",
+    "ROAD_TYPICAL_USE:String",
+    "CROSSING_SMOOTH_IND:String",
+    "CROSSING_SURFACE_MATERIAL:String",
+    "BOTTOMING_OUT_IND:String",
+    "CROSSING_SURFACE_CONDITION:String",
+    "CROSSING_SURFACE_EXTENSION_IND:String",
+    "RWAY_CROSSING_AHEAD_SIGN_IND:String",
+    "RAILWAY_CROSSING_SIGN_IND:String",
+    "NUMBER_OF_TRACKS_SIGN_IND:String",
+    "EMERG_NOTIFICATION_SIGN_IND:String",
+    "SPEED_ADVISORY_SIGN_IND:String",
+    "RAILWAY_CROSSING_SYMBOLS_IND:String",
+    "STOP_SIGN_IND:String",
+    "STOP_AHEAD_SIGN_IND:String",
+    "STOP_LINES_IND:String",
+    "REFLECTIVE_STRIP_SIGNPOST_IND:String",
+    "REFLECTIVE_STRIP_SIGN_IND:String",
+    "OTHER_SIGNS_AND_MARKINGS:String",
+    "WARNING_SYSTEM_TYPE:String",
+    "WARNING_LIGHTS_VISIBLE_IND:String",
+    "STOPPING_SIGHT_DIST_NORTH:Single",
+    "STOPPING_SIGHT_DIST_SOUTH:Single",
+    "SSD_SIGHTLINE_NORTH_IND:String",
+    "SSD_SIGHTLINE_SOUTH_IND:String",
+    "STOPPED_SIGHTLINE_NORTH_IND:String",
+    "STOPPED_SIGHTLINE_SOUTH_IND:String",
+    "SIGHTLINE_OBSTRUCT_NORTHWEST:String",
+    "SIGHTLINE_OBSTRUCT_NORTHEAST:String",
+    "SIGHTLINE_OBSTRUCT_SOUTHEAST:String",
+    "SIGHTLINE_OBSTRUCT_SOUTHWEST:String",
+    "ROAD_RAIL_ANGLE:SmallInteger",
+    "WIDTH_OF_TRAVELED_WAY:Single",
+    "ROAD_WIDTH:Single",
+    "CLEARANCE_DIST:Single",
+    "ROAD_GRADE_NORTH_APPROACH_8M:SmallInteger",
+    "ROAD_GRADE_SOUTH_APPROACH_8M:SmallInteger",
+    "ROAD_GRADE_NORTH_APPROACH_18M:SmallInteger",
+    "ROAD_GRADE_SOUTH_APPROACH_18M:SmallInteger",
+    "ROAD_GRADE_NORTH_APPROACH_100M:SmallInteger",
+    "ROAD_GRADE_SOUTH_APPROACH_100M:SmallInteger",
+    "GRADE_OF_CROSSING_SURFACE:SmallInteger",
+    "SIGNPOST_TO_NEAREST_RAIL:Single",
+    "SIGNPOST_TO_TRAVELED_WAY:Single",
+    "TRAVEL_DIST:Single",
+    "ACCELERATION_TIME:SmallInteger",
+    "SIGHTLINE_DIST_ALONG_TRACK:SmallInteger",
+    "DEPARTURE_TIME_NORTH_APPROACH:SmallInteger",
+    "DEPARTURE_TIME_SOUTH_APPROACH:SmallInteger",
+    "DEPARTURE_TIME:SmallInteger",
+    "REQUIRED_SIGHTLINE_FROM_STOP:SmallInteger",
+    "SIGHTLINE_DIST_NORTH_APPROACH:Single",
+    "SIGHTLINE_DIST_SOUTH_APPROACH:Single",
+    "RECOMMENDATIONS_COMMENT:String",
+    "RECOMMENDED_WORK_FLG:String",
+    "RECOMMENDED_WORK_TIMING:String",
+    "RECOMMENDED_WORK_COMPLETE_DATE:Date",
+    "GEOMETRY_UPDATE_DATETIME:Date",
+    "EFFECTIVE_DATETIME:Date",
+    "SYSTEM_DATETIME:Date",
+    "SHAPE:Geometry",
+    "OBJECTID:OID"
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "countInBox": 0,
+   "queryCors": "https://jaredacostar-cmd.github.io",
+   "queryStatus": 200,
+   "sample": []
+  },
+  {
+   "service": "LIO_Open09",
+   "type": "MapServer",
+   "id": 48,
+   "name": "MNRF Road Condition Inspection Point",
+   "url": "https://ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA/LIO_Open09/MapServer/48",
+   "cors": "https://jaredacostar-cmd.github.io",
+   "status": 200,
+   "geometryType": "esriGeometryPoint",
+   "maxRecordCount": 2000,
+   "formats": "JSON, geoJSON, PBF",
+   "fields": [
+    "OGF_ID:Double",
+    "HAZARD_IDENT:String",
+    "PRIORITY_ROAD_IND:String",
+    "INSPECTOR_NAME:String",
+    "DATE_INSPECTED:Date",
+    "RESPONSIBILITY_CLASS:String",
+    "RESPONSIBILITY_DETAIL:String",
+    "SURFACE_DAMAGE:String",
+    "SURFACE_DAMAGE_LENGTH:SmallInteger",
+    "STEEP_GRADE_TYPE:String",
+    "BLIND_HILL_IND:String",
+    "STEEP_EMBANKMENT_TYPE:String",
+    "SHARP_CURVE_TYPE:String",
+    "CLEARANCE_TYPE:String",
+    "LANE_NARROWING_TYPE:String",
+    "INTERSECTION_TYPE:String",
+    "EROSION_TYPE:String",
+    "DRAINAGE_TYPE:String",
+    "BEAVER_ACTIVITY:String",
+    "CROSS_DITCH_TYPE:String",
+    "ENGINEERED_FORD_IND:String",
+    "DECOMMIS_WATER_CROSSING_IND:String",
+    "FAILED_WATER_CROSSING_IND:String",
+    "UNAUTHORIZED_MODIFICATION_IND:String",
+    "BLOCKED_FISH_PASSAGE_IND:String",
+    "EROSION_SEDIMENTATION_IND:String",
+    "OTHER_DEFECTS:String",
+    "CONDITION_CAUSE:String",
+    "CORRECTION_POTENTIAL_FLG:String",
+    "SAFETY_HAZARD_RANK:String",
+    "HAZARD_COMMENT:String",
+    "ENGINEERING_ASSESSMENT_REC_IND:String",
+    "ENGINEERING_ASSESSMENT_COMMENT:String",
+    "CONDITION_REPORTED_IND:String",
+    "FOLLOW_UP_REQUIRED_IND:String",
+    "OBSTRUCTON_REMOVED_IND:String",
+    "TEMP_BARRIER_ESTABLISHED_IND:String",
+    "TEMP_WARNING_ESTABLISHED_IND:String",
+    "INSPECTION_COMMENT:String",
+    "RECOMMENDED_NEW_SIGN_IND:String",
+    "RECOMMENDED_SIGN_NUMBER:String",
+    "RECOMMENDED_WORK:String",
+    "RECOMMENDED_WORK_DETAIL:String",
+    "RECOMMENDED_WORK_TIMING:String",
+    "RECOMMENDED_WORK_COMPLETE_DATE:Date",
+    "PHOTO_LINK:String",
+    "GEOMETRY_UPDATE_DATETIME:Date",
+    "EFFECTIVE_DATETIME:Date",
+    "SYSTEM_DATETIME:Date",
+    "SHAPE:Geometry",
+    "OBJECTID:OID"
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "countInBox": 0,
+   "queryCors": "https://jaredacostar-cmd.github.io",
+   "queryStatus": 200,
+   "sample": []
+  },
+  {
+   "service": "LIO_Open09",
+   "type": "MapServer",
+   "id": 49,
+   "name": "MNRF Road Condition Inspection Line",
+   "url": "https://ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA/LIO_Open09/MapServer/49",
+   "cors": "https://jaredacostar-cmd.github.io",
+   "status": 200,
+   "geometryType": "esriGeometryPolyline",
+   "maxRecordCount": 2000,
+   "formats": "JSON, geoJSON, PBF",
+   "fields": [
+    "OGF_ID:Double",
+    "PRIORITY_ROAD_IND:String",
+    "INSPECTOR_NAME:String",
+    "DATE_INSPECTED:Date",
+    "GEOMETRIC_STANDARD_CLASS:String",
+    "STATUS:String",
+    "SURFACE_TYPE:String",
+    "NUMBER_OF_LANES:String",
+    "AVERAGE_TRAVEL_SPEED:String",
+    "GENERAL_TOPOLOGY:String",
+    "RIGHT_OF_WAY:String",
+    "ROAD_CROWN_TYPE:String",
+    "SURFACE_DAMAGE:String",
+    "INSPECTION_COMMENT:String",
+    "SAFETY_HAZARD_RANK:String",
+    "RECOMMENDED_WORK:String",
+    "RECOMMENDED_WORK_TIMING:String",
+    "RECOMMENDED_WORK_COMPLETE_DATE:Date",
+    "PHOTO_LINK:String",
+    "GEOMETRY_UPDATE_DATETIME:Date",
+    "EFFECTIVE_DATETIME:Date",
+    "SYSTEM_DATETIME:Date",
+    "SHAPE:Geometry",
+    "OBJECTID:OID",
+    "SHAPE.LEN:Double"
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "countInBox": 0,
+   "queryCors": "https://jaredacostar-cmd.github.io",
+   "queryStatus": 200,
+   "sample": []
+  },
+  {
+   "service": "LIO_Open09",
+   "type": "MapServer",
+   "id": 0,
+   "name": "ORN Road Net Element",
+   "url": "https://ws.lioservices.lrc.gov.on.ca/arcgis2/rest/services/LIO_OPEN_DATA/LIO_Open09/MapServer/0",
+   "cors": "https://jaredacostar-cmd.github.io",
+   "status": 200,
+   "geometryType": "esriGeometryPolyline",
+   "maxRecordCount": 2000,
+   "formats": "JSON, geoJSON, PBF",
+   "fields": [
+    "OGF_ID:Double",
+    "FROM_JUNCTION_ID:Double",
+    "TO_JUNCTION_ID:Double",
+    "ROAD_ABSOLUTE_ACCURACY:Double",
+    "NATIONAL_UUID:String",
+    "LENGTH:Double",
+    "DIRECTION_OF_TRAFFIC_FLOW:String",
+    "EXIT_NUMBER:String",
+    "ROAD_ELEMENT_TYPE:String",
+    "TOLL_ROAD_IND:String",
+    "ACQUISITION_TECHNIQUE:String",
+    "CREATION_DATE:Date",
+    "REVISION_DATE:Date",
+    "GEOMETRY_UPDATE_DATETIME:Date",
+    "EFFECTIVE_DATETIME:Date",
+    "SYSTEM_DATETIME:Date",
+    "OBJECTID:OID",
+    "SHAPE:Geometry",
+    "SHAPE.LEN:Double"
+   ],
+   "minScale": 0,
+   "maxScale": 0,
+   "countInBox": 139,
+   "queryCors": "https://jaredacostar-cmd.github.io",
+   "queryStatus": 200,
+   "sample": [
+    {
+     "attributes": {
+      "OGF_ID": 1500632405,
+      "FROM_JUNCTION_ID": 5818909,
+      "TO_JUNCTION_ID": 5818908,
+      "ROAD_ABSOLUTE_ACCURACY": 3,
+      "NATIONAL_UUID": "c0f0bd27fd1843e7a2567a879e75d332",
+      "LENGTH": 193.443,
+      "DIRECTION_OF_TRAFFIC_FLOW": "Both",
+      "EXIT_NUMBER": null,
+      "ROAD_ELEMENT_TYPE": "ROAD ELEMENT",
+      "TOLL_ROAD_IND": "No",
+      "ACQUISITION_TECHNIQUE": "VECTOR DATA",
+      "CREATION_DATE": 1017619200000,
+      "REVISION_DATE": 1383231588000,
+      "GEOMETRY_UPDATE_DATETIME": 1017619200000
+     },
+     "points": 2
+    },
+    {
+     "attributes": {
+      "OGF_ID": 1500508176,
+      "FROM_JUNCTION_ID": 1500099135,
+      "TO_JUNCTION_ID": 5520440,
+      "ROAD_ABSOLUTE_ACCURACY": 3,
+      "NATIONAL_UUID": "ebade27a3a7d4c4bba9becb31f00ebbd",
+      "LENGTH": 102.5,
+      "DIRECTION_OF_TRAFFIC_FLOW": "Both",
+      "EXIT_NUMBER": null,
+      "ROAD_ELEMENT_TYPE": "ROAD ELEMENT",
+      "TOLL_ROAD_IND": "No",
+      "ACQUISITION_TECHNIQUE": "VECTOR DATA",
+      "CREATION_DATE": 1017619200000,
+      "REVISION_DATE": 1363018518000,
+      "GEOMETRY_UPDATE_DATETIME": 1017619200000
+     },
+     "points": 2
+    },
+    {
+     "attributes": {
+      "OGF_ID": 1500525604,
+      "FROM_JUNCTION_ID": 5818900,
+      "TO_JUNCTION_ID": 5818902,
+      "ROAD_ABSOLUTE_ACCURACY": 3,
+      "NATIONAL_UUID": "6439ff249e4c485baa26e5b9abde9392",
+      "LENGTH": 62.356,
+      "DIRECTION_OF_TRAFFIC_FLOW": "Both",
+      "EXIT_NUMBER": null,
+      "ROAD_ELEMENT_TYPE": "ROAD ELEMENT",
+      "TOLL_ROAD_IND": "No",
+      "ACQUISITION_TECHNIQUE": "VECTOR DATA",
+      "CREATION_DATE": 1017619200000,
+      "REVISION_DATE": 1383231530000,
+      "GEOMETRY_UPDATE_DATETIME": 1017619200000
+     },
+     "points": 2
+    },
+    {
+     "attributes": {
+      "OGF_ID": 1507311124,
+      "FROM_JUNCTION_ID": 4444922,
+      "TO_JUNCTION_ID": 8194571,
+      "ROAD_ABSOLUTE_ACCURACY": 3,
+      "NATIONAL_UUID": "e66a676f50404925830287d5d5c7705f",
+      "LENGTH": 158.641,
+      "DIRECTION_OF_TRAFFIC_FLOW": "Both",
+      "EXIT_NUMBER": null,
+      "ROAD_ELEMENT_TYPE": "ROAD ELEMENT",
+      "TOLL_ROAD_IND": "No",
+      "ACQUISITION_TECHNIQUE": "VECTOR DATA",
+      "CREATION_DATE": 1185926400000,
+      "REVISION_DATE": 1740133569000,
+      "GEOMETRY_UPDATE_DATETIME": 1185926400000
+     },
+     "points": 9
+    },
+    {
+     "attributes": {
+      "OGF_ID": 1500650987,
+      "FROM_JUNCTION_ID": 7185739,
+      "TO_JUNCTION_ID": 7185750,
+      "ROAD_ABSOLUTE_ACCURACY": 3,
+      "NATIONAL_UUID": "416e8e366a8b44ccb2ecf15d1ee71a17",
+      "LENGTH": 91.244,
+      "DIRECTION_OF_TRAFFIC_FLOW": "Both",
+      "EXIT_NUMBER": null,
+      "ROAD_ELEMENT_TYPE": "ROAD ELEMENT",
+      "TOLL_ROAD_IND": "No",
+      "ACQUISITION_TECHNIQUE": "VECTOR DATA",
+      "CREATION_DATE": 1017619200000,
+      "REVISION_DATE": 1546439064000,
+      "GEOMETRY_UPDATE_DATETIME": 1017619200000
+     },
+     "points": 2
+    }
+   ]
+  }
+ ]
+}

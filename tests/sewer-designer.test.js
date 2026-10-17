@@ -7,6 +7,7 @@ const path = require('node:path');
 const SDR = require('../js/sewer-designer.js');
 const SD = require('../js/sewer-design.js');
 const src = f => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
+const near = (a, b, tol) => Math.abs(a - b) <= tol;
 
 test('chainage along the drawn line, and the bend at each vertex', () => {
   const k = 1 / (111320 * Math.cos(43.7 * Math.PI / 180));
@@ -75,4 +76,37 @@ test('wired: branches drawn and joined to the sewer drawn, flows per branch, a p
   assert.match(s, /const vi = run\.xs\.findIndex\(v => Math\.abs\(v - x\) <= 10\);/);
   assert.match(s, /data-sd-view="\$\{ri\}"/);
   assert.match(s, /The pumped option takes the main line alone: remove the branches to use it\./);
+});
+
+test('crossings: a watermain at its assumed depth checked for 0.5 m, a storm sewer listed to check on site', () => {
+  // a 250 mm reach east along y = 0 from x 0 to 100, invert 225.0 falling 1%, ground 230
+  const reach = { a: [0, 0], b: [100, 0], inv_up: 225, S: 0.01, L: 100, dmm: 250, gUp: 230, gDn: 230 };
+  const pipes = [
+    { kind: 'water', d: 300, src: 'Region of Peel', paths: [[[30, -50], [30, 50]]] },      // top 228.3, bottom 228.0
+    { kind: 'storm', d: 600, src: 'City of Brampton', paths: [[[70, -50], [70, 50]]] },
+    { kind: 'water', d: 150, src: 'Region of Peel', paths: [[[150, -50], [150, 50]]] },     // beyond the reach
+  ];
+  const x = SDR.crossings([reach], pipes);
+  assert.equal(x.length, 2);
+  const w = x[0];
+  assert.equal(w.kind, 'water'); assert.ok(near(w.along, 30, 1e-9));
+  assert.ok(near(w.obvert, 225 - 0.3 + 0.25, 1e-9));
+  assert.ok(near(w.otherTop, 230 - 1.7, 1e-9) && near(w.otherBottom, 228.0, 1e-9));
+  assert.ok(near(w.clear, 228.0 - 224.95, 1e-9)); assert.equal(w.ok, true);
+  assert.equal(x[1].kind, 'storm'); assert.equal(x[1].ok, null);
+  // a sewer too close under the watermain: 0.4 m
+  const tight = SDR.crossings([{ ...reach, inv_up: 227.35, S: 0 }], [pipes[0]])[0];
+  assert.ok(near(tight.clear, 0.4, 1e-9)); assert.equal(tight.ok, false);
+  assert.deepEqual(SDR.CROSS, { clearance: 0.5, wmCover: 1.7 });
+});
+
+test('wired: crossings looked up after each design, Follow roads on the banner, the road network loaded before the designer', () => {
+  const s = src('js/sewer-designer.js');
+  assert.match(s, /findCrossings\(\);\n    \}\n    openResult\(\); drawLine\(\);/);
+  assert.match(s, /for \(const kind of \['water', 'storm'\]\) for \(const src of EP\.EXIST\[kind\]\)/);
+  assert.match(s, /data-ptool-act="sd-roads"/);
+  assert.match(s, /const r = await RN\.routeBetween\(last, ll\);/);
+  const html = src('index.html');
+  assert.ok(html.indexOf('js/road-net.js') > 0 && html.indexOf('js/road-net.js') < html.indexOf('js/sewer-designer.js'));
+  assert.match(src('sw.js'), /'js\/road-net\.js',/);
 });
