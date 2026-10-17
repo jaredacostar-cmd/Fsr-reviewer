@@ -11,11 +11,14 @@
  * the way the snapshot's fileKey is (letters and numbers, the ward left out), so the app can match
  * them to an application. The FSR is the newest document named functional servicing / servicing
  * report / servicing brief (by the date in its name, else the last one listed).
+ * Refuses to write (exit 1, the old file stays) when a municipality has fewer than 70% of the
+ * pages it had in the previous data/fsr.json.
  * Usage: node scripts/build-fsr.js --out data
  */
 'use strict';
 const fs = require('fs');
 const path = require('path');
+const { countBy, shrunkGroups } = require('./build-guards.js');
 
 const outDir = (() => { const i = process.argv.indexOf('--out'); return i > 0 ? process.argv[i + 1] : 'data'; })();
 const UA = { 'user-agent': 'peel-dev-tracker (+https://github.com/jaredacostar-cmd/peel-growth-pipeline)' };
@@ -167,6 +170,13 @@ async function caledon() {
     sources: { Mississauga: 'mississauga.ca development application pages (Project documents)', Caledon: 'caledon.ca development application pages', Brampton: 'not public: documents are on BramPlanOnline (sign-in)' },
     items };
   fs.mkdirSync(outDir, { recursive: true });
+  let prev = null;
+  try { prev = JSON.parse(fs.readFileSync(path.join(outDir, 'fsr.json'), 'utf8')); } catch (e) { if (e.code !== 'ENOENT') throw e; }
+  const short = prev ? shrunkGroups(countBy(items, 'muni'), countBy(prev.items, 'muni'), 0.7) : [];
+  if (short.length) {
+    console.error(`REFUSED: ${short.map(g => `${g.key} ${g.n} pages against ${g.prev}`).join('; ')} (under 70% of the previous fsr.json); kept ${path.join(outDir, 'fsr.json')}`);
+    process.exit(1);
+  }
   fs.writeFileSync(path.join(outDir, 'fsr.json'), JSON.stringify(doc));
   const n = m => items.filter(x => x.muni === m), f = m => n(m).filter(x => x.fsr).length;
   console.log(`fsr.json: Mississauga ${n('Mississauga').length} pages (${f('Mississauga')} with an FSR), Caledon ${n('Caledon').length} pages (${f('Caledon')} with an FSR)`);

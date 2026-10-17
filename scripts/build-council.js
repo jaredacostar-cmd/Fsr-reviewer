@@ -7,7 +7,9 @@
  * meeting has passed — and keeps the agenda items that name an application file number: the item
  * title, the reports and correspondence attached (links), the minutes text (discussion, motion,
  * vote) and the outcome. Meetings older than 120 days are kept from the previous file instead of
- * being fetched again.
+ * being fetched again. A calendar year or meeting page that can't be read this week keeps last
+ * week's meetings for it, and the build refuses to write (exit 1, the old files stay) when it holds
+ * fewer than 80% of last week's meetings.
  *
  *   node scripts/build-council.js [--out data] [--since 2019-01-01]
  */
@@ -15,6 +17,7 @@
 const fs = require('fs');
 const path = require('path');
 const C = require('./council-parse.js');
+const { shrank, carryMeetings } = require('./build-guards.js');
 
 const arg = k => { const i = process.argv.indexOf(k); return i > 0 ? process.argv[i + 1] : null; };
 const OUT = path.resolve(arg('--out') || path.join(__dirname, '..', 'data'));
@@ -43,14 +46,14 @@ const trim = (s, n) => (s.length <= n ? s : `${s.slice(0, Math.round(n * 0.7))} 
   const out = { version: 1, generatedAt: new Date().toISOString(), since: SINCE, portals: PORTALS.map(p => ({ muni: p.muni, url: `https://${p.host}/` })), meetings: {}, files: {} };
   const now = Date.now(), end = new Date(now + 60 * 864e5);
   for (const portal of PORTALS) {
-    const list = [];
+    const list = [], failedYears = new Set();
     for (let y = Number(SINCE.slice(0, 4)); y <= end.getFullYear(); y++) {
       const t = await get(`https://${portal.host}/MeetingsCalendarView.aspx/GetCalendarMeetings`, { method: 'POST', headers: { ...UA, 'content-type': 'application/json; charset=utf-8' }, body: JSON.stringify({ calendarStartDate: `${y}-01-01`, calendarEndDate: `${y}-12-31` }) });
-      try { list.push(...(JSON.parse(t).d || [])); } catch (e) { console.log(`  ${portal.muni} ${y}: calendar unavailable`); }
+      try { list.push(...(JSON.parse(t).d || [])); } catch (e) { failedYears.add(String(y)); console.log(`  ${portal.muni} ${y}: calendar unavailable`); }
     }
     const meetings = list.filter(m => portal.meetings.test(String(m.MeetingName).trim()) && m.HasAgenda !== false && new Date(m.StartDate) >= new Date(SINCE));
     console.log(`${portal.muni}: ${meetings.length} meetings`);
-    let fetched = 0, kept = 0;
+    let fetched = 0, kept = 0, carried = 0;
     for (const m of meetings) {
       const id = `${portal.muni}:${m.ID}`, date = new Date(m.StartDate);
       const old = prev.meetings && prev.meetings[id];
@@ -59,13 +62,21 @@ const trim = (s, n) => (s.length <= n ? s : `${s.slice(0, Math.round(n * 0.7))} 
       const url = `https://${portal.host}/Meeting.aspx?Id=${m.ID}&Agenda=${passed ? 'PostMinutes' : 'Agenda'}&lang=English`;
       const html = await get(url);
       fetched++;
-      if (!html) continue;
+      // Page unavailable this week: last week's copy of the meeting stays.
+      if (!html) { if (old) { out.meetings[id] = old; carried++; } continue; }
       const items = C.parseItems(html).map(it => ({ ...it, files: C.itemFiles(it) })).filter(it => it.files.length)
         .map(it => ({ n: it.counter, title: it.title, docs: it.docs.slice(0, 8).map(d => [d.id, d.name]), text: trim(it.body, 1400), outcome: it.outcome, files: it.files }));
       out.meetings[id] = { muni: portal.muni, name: String(m.MeetingName).trim(), date: m.StartDate.slice(0, 10).replace(/\//g, '-'), passed, url: `https://${portal.host}/Meeting.aspx?Id=${m.ID}&Agenda=${passed ? 'PostMinutes' : 'Agenda'}&lang=English`, host: portal.host, items };
       await sleep(250);
     }
-    console.log(`  fetched ${fetched}, kept ${kept} from last week`);
+    // A calendar year that could not be read: last week's meetings in that year stay.
+    carried += carryMeetings(prev.meetings, out.meetings, { muni: portal.muni, failedYears, since: SINCE });
+    console.log(`  fetched ${fetched}, kept ${kept} from last week${carried ? `, ${carried} carried over (not readable this week)` : ''}`);
+  }
+  const nPrev = Object.keys(prev.meetings || {}).length, nNow = Object.keys(out.meetings).length;
+  if (shrank(nNow, nPrev, 0.8)) {
+    console.error(`REFUSED: ${nNow} meetings against ${nPrev} last week (under 80%); kept data/council.json and data/council-decisions.json`);
+    process.exit(1);
   }
   // Index: file key → [meeting id, item index].
   for (const [id, m] of Object.entries(out.meetings)) m.items.forEach((it, i) => {

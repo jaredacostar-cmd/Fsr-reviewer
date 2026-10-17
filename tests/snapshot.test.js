@@ -91,3 +91,36 @@ test('weekly runs record new projects and phase changes; outages keep last week'
     global.fetch = realFetch;
   }
 });
+
+test('a source that loads with under half of last week\'s records keeps last week (stale)', async () => {
+  const realFetch = global.fetch;
+  const app = (id, units) => feat(id, { FILE_NO: `SP ${id}`, ADDRESS: `${id} Main St`, STATUS: 'Under Review', RECEIVED_DATE: Date.UTC(2024, 0, 1), UNITS: units });
+  const state = {
+    apps: [app(1, 10), app(2, 20), app(3, 30), app(4, 40)],
+    permits: [feat(1, { BP_NO: 'BP 9', ADDRESS: '9 King St', PERMIT_TYPE: 'New apartment building', STATUS: 'Issued', ISSUE_DATE: Date.UTC(2025, 0, 1) })],
+  };
+  global.fetch = mockServer(state);
+  const quiet = () => {};
+  try {
+    const w1 = await buildSnapshot({ cfg, now: new Date('2026-10-05T10:00:00Z'), log: quiet });
+    assert.equal(w1.snapshot.records.filter(r => r.kind === 'application').length, 4);
+
+    // Week 2: the service answers with 1 of its 4 applications.
+    state.apps = [app(1, 10)];
+    const w2 = await buildSnapshot({ cfg, previous: w1.snapshot, history: w1.history, now: new Date('2026-10-12T10:00:00Z'), log: quiet });
+    const as = w2.snapshot.sources.find(s => s.id === 'apps');
+    assert.equal(as.status, 'stale');
+    assert.match(as.error, /only 1 records against 4/);
+    assert.equal(as.updated, '2026-10-05');
+    assert.equal(w2.snapshot.records.filter(r => r.kind === 'application').length, 4, 'last week\'s records carried forward');
+    assert.equal(w2.snapshot.sources.find(s => s.id === 'permits').status, 'ok');
+
+    // Week 3: half of last week's (2 of 4) is accepted.
+    state.apps = [app(1, 10), app(2, 20)];
+    const w3 = await buildSnapshot({ cfg, previous: w2.snapshot, history: w2.history, now: new Date('2026-10-19T10:00:00Z'), log: quiet });
+    assert.equal(w3.snapshot.sources.find(s => s.id === 'apps').status, 'ok');
+    assert.equal(w3.snapshot.records.filter(r => r.kind === 'application').length, 2);
+  } finally {
+    global.fetch = realFetch;
+  }
+});
