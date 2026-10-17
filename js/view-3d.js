@@ -3,10 +3,11 @@
   // ---- 3D view (PeelView3D): Part 2 of the measure / 3D / Time Box brief ------------------------
   // A separate MapLibre map over the Leaflet map, opened from the map's 3D button at the same
   // place: pitch 60°, terrain from the elevation module's demTile (lidar in the pilot box, terrain
-  // tiles elsewhere) at ×1.2 with hillshade, OSM buildings in the pilot box, and the shown
-  // developments as indicative massing in their status colours. MapLibre and PMTiles load only
+  // tiles elsewhere) with hillshade, at ×1.2 or the height chosen (×1 to ×5: the ground only;
+  // buildings and proposals keep their true height above it), OSM buildings across Peel, and the
+  // shown developments as indicative massing in their status colours. MapLibre and PMTiles load only
   // when the view first opens. Everything drawn is indicative, not design.
-  const { $, esc, token } = root.PeelUtil;
+  const { $, esc, token, store } = root.PeelUtil;
   const MC = () => root.PeelMapCore, App = () => root.PeelApp, EL = () => root.PeelElevation;
   const MS = () => root.PeelMassingCore, PH = () => root.PeelPhases, DN = () => root.PeelDevNav;
   const LIBS = {
@@ -15,6 +16,9 @@
     pmtiles: 'https://unpkg.com/pmtiles@3.2.1/dist/pmtiles.js',
   };
   const PITCH = 60, EXAGGERATION = 1.2;
+  // The vertical exaggeration of the ground the user can pick (kept between visits).
+  const EXAGGERATIONS = [1, 1.2, 1.5, 2, 3, 5];
+  const exag = () => { const v = +(store && store.get('v3Exag')); return EXAGGERATIONS.includes(v) ? v : EXAGGERATION; };
   const ESRI = 'https://server.arcgisonline.com/ArcGIS/rest/services';
   const tok = name => token(name) || 'gray';
 
@@ -74,7 +78,7 @@
         { id: 'base', type: 'raster', source: 'base', paint: base.imagery ? { 'raster-opacity': 0.9 } : {} },
         { id: 'hill', type: 'hillshade', source: 'hill', paint: { 'hillshade-exaggeration': 0.35, 'hillshade-shadow-color': tok('--hill-shadow'), 'hillshade-highlight-color': tok('--hill-light') } },
       ],
-      terrain: { source: 'dem', exaggeration: EXAGGERATION },
+      terrain: { source: 'dem', exaggeration: exag() },
     };
     if (man) {
       const [w, so, e, n] = man.bbox;
@@ -83,7 +87,7 @@
     }
     if (buildings) {
       s.sources.buildings = { type: 'vector', url: `pmtiles://${new URL(`data/3d/${man.buildings.file}`, location.href).href}`, attribution: '© OpenStreetMap contributors, ODbL' };
-      s.layers.push({ id: 'buildings', type: 'fill-extrusion', source: 'buildings', 'source-layer': 'buildings', minzoom: 13,
+      s.layers.push({ id: 'buildings', type: 'fill-extrusion', source: 'buildings', 'source-layer': 'buildings', minzoom: man.buildings.minzoom || 13,
         paint: { 'fill-extrusion-color': ['case', ['==', ['get', 'e'], 1], tok('--b3d-est'), tok('--b3d-known')], 'fill-extrusion-height': ['get', 'h'], 'fill-extrusion-base': ['get', 'b'], 'fill-extrusion-opacity': 0.85 } });
     }
     s.layers.push({ id: 'massing', type: 'fill-extrusion', source: 'massing',
@@ -107,6 +111,7 @@
         <strong>3D view</strong><span class="muted small">indicative, not design</span>
         <label class="v3-chk"><input type="checkbox" data-v3="buildings" checked> Buildings</label>
         <label class="v3-chk"><input type="checkbox" data-v3="massing" checked> Proposals</label>
+        <label class="v3-chk" title="Vertical exaggeration of the ground: buildings and proposals keep their true height above it">Ground <select data-v3="exag" aria-label="Vertical exaggeration of the ground">${EXAGGERATIONS.map(v => `<option value="${v}"${v === exag() ? ' selected' : ''}>×${v}</option>`).join('')}</select></label>
         <button type="button" class="btn small" data-v3="pitch" title="Tilt or look straight down">Tilt</button>
       </div>
       <details class="v3-legend"><summary>Legend and notes</summary><div class="v3-legend-body"></div></details>
@@ -118,6 +123,8 @@
       if (b.dataset.v3 === 'pitch' && gl) gl.easeTo({ pitch: gl.getPitch() > 10 ? 0 : PITCH });
     });
     el.addEventListener('change', e => {
+      const sel = e.target.closest('select[data-v3="exag"]');
+      if (sel) { const v = +sel.value; if (store) store.set('v3Exag', v); if (gl) gl.setTerrain({ source: 'dem', exaggeration: v }); renderNote(); return; }
       const b = e.target.closest('input[data-v3]'); if (!b || !gl) return;
       const id = b.dataset.v3; if (gl.getLayer(id)) gl.setLayoutProperty(id, 'visibility', b.checked ? 'visible' : 'none');
     });
@@ -139,11 +146,11 @@
       <div class="v3-sec"><b>Proposals</b> <span class="muted">(shown in 2D, coloured by status)</span>
         <div class="v3-keys">${PHASE_KEYS.filter(k => counts[k]).map(k => `<span>${sw(tok(`--ph-${k}`))}${esc((ph[k] && ph[k].label) || k)} <span class="muted">${counts[k]}</span></span>`).join('') || '<span class="muted">None with a height to draw.</span>'}</div>
         <p class="muted small">Height: the stated height, else stated storeys × ${MS().STOREY_M} m, else (apartments only) units × ${MS().UNIT_GFA_M2} m² ÷ (footprint × ${Math.round(MS().FLOOR_EFFICIENCY * 100)}%). Footprint: ${Math.round(MS().SITE_COVERAGE * 100)}% of the application site about its centre, or a ${MS().SQUARE_M} m square at the address. ${lastMassing && lastMassing.hidden ? `${lastMassing.hidden.toLocaleString()} shown developments have no stated height and no units estimate: not drawn.` : ''} Tap a block for its basis.</p></div>
-      <div class="v3-sec"><b>Buildings</b> ${b ? `<span class="muted">(OpenStreetMap, ${esc(man.name)} only)</span>
+      <div class="v3-sec"><b>Buildings</b> ${b ? `<span class="muted">(OpenStreetMap, ${esc(b.area || `${man.name} only`)})</span>
         <div class="v3-keys"><span>${sw(tok('--b3d-known'))}height tagged</span><span>${sw(tok('--b3d-est'))}estimated (levels × ${MS().STOREY_M} m, else ${MS().DEFAULT_STOREYS} storeys)</span></div>
-        <p class="muted small">${b.count.toLocaleString()} buildings: ${b.byBasis.height.toLocaleString()} with a height, ${b.byBasis.levels.toLocaleString()} from levels, ${b.byBasis.default.toLocaleString()} assumed ${MS().DEFAULT_STOREYS} storeys. OSM data ${esc(String(b.osmTimestamp || '').slice(0, 10))}.</p>` : '<span class="muted">Not built yet: the pilot tiles are made in Actions (mode=tiles-3d).</span>'}</div>
-      <div class="v3-sec"><b>Ground</b> <span class="muted">×${EXAGGERATION} vertical, hillshaded</span>
-        <p class="muted small">${terr.length ? esc(terr.join('; ')) : 'Loading…'}.${man ? ` Dashed box: ${esc(man.name)}.` : ''}</p></div>`;
+        <p class="muted small">${b.count.toLocaleString()} buildings: ${b.byBasis.height.toLocaleString()} with a height, ${b.byBasis.levels.toLocaleString()} from levels, ${b.byBasis.default.toLocaleString()} assumed ${MS().DEFAULT_STOREYS} storeys. OSM data ${esc(String(b.osmTimestamp || '').slice(0, 10))}.</p>` : '<span class="muted">Not built yet: the tiles are made in Actions (mode=tiles-3d).</span>'}</div>
+      <div class="v3-sec"><b>Ground</b> <span class="muted">×${exag()} vertical${exag() > 1.2 ? ' (exaggerated: slopes look steeper than they are)' : ''}, hillshaded</span>
+        <p class="muted small">${terr.length ? esc(terr.join('; ')) : 'Loading…'}.${man ? ` Dashed box: the lidar terrain's ${esc(man.name)}.` : ''} Buildings and proposals stand at their true height on the ground, at any exaggeration.</p></div>`;
   }
   function message(text) { const m = el && el.querySelector('.v3-msg'); if (m) { m.hidden = !text; m.textContent = text || ''; } }
 
@@ -212,6 +219,6 @@
     new Ctl().addTo(MC().map);
   }
 
-  const api = { open, close, isOpen: () => !!(el && !el.hidden), LIBS, PITCH, EXAGGERATION };
+  const api = { open, close, isOpen: () => !!(el && !el.hidden), LIBS, PITCH, EXAGGERATION, EXAGGERATIONS, exag };
   root.PeelView3D = api;
 })(typeof window !== 'undefined' ? window : globalThis);
