@@ -187,7 +187,7 @@ async function main() {
     if (pageUrl) { const r = await get(pageUrl); if (r) page = E.parsePage(r.html, r.url, { today }); await sleep(250); }
     if (page) {
       if (page.statusInferred) ea.flags.push(`status ${page.statusInferred}`);
-      Object.assign(ea, { schedule: page.schedule, status: page.status, milestones: page.milestones, nextStep: page.nextStep, completedYear: page.completedYear, purpose: page.purpose, links: page.links, pageHash: page.pageHash, pageMatch: pageScore });
+      Object.assign(ea, { schedule: page.schedule, status: page.status, milestones: page.milestones, nextStep: page.nextStep, completedYear: page.completedYear, completedBasis: page.completedBasis, purpose: page.purpose, links: page.links, pageHash: page.pageHash, pageMatch: pageScore });
       ea.system = E.systemOf(it.name, page.bodyText);
       if (!ea.municipality) { const m = ['Brampton', 'Caledon', 'Mississauga'].filter(x => new RegExp(`\\b${x}\\b`).test(page.bodyText)); if (m.length) { ea.municipality = m.join(' / '); ea.municipalities = m; } }
       if (pageScore != null && pageScore < 0.75) ea.flags.push(`project page matched by name (${pageScore})`);
@@ -236,14 +236,22 @@ async function main() {
 
   // Decisions: for completed EAs, the preferred-solution passage of the report (an automatic extract,
   // labelled as one; data/eas-overrides.json can replace it). Needs pdftotext (poppler-utils).
-  let decided = 0;
+  // Completion years the page didn't give: the report's cover date, else a date in its file name.
+  let decided = 0, dated = 0;
   for (const ea of eas) {
-    if (!(ea.status === 'complete' || ea.status === 'addendum') || !ea.links?.report?.url || !/\.pdf(\?|$)/i.test(ea.links.report.url)) continue;
-    const txt = await pdfText(ea.links.report.url);
+    if (!(ea.status === 'complete' || ea.status === 'addendum')) continue;
+    const pdf = ea.links?.report?.url && /\.pdf(\?|$)/i.test(ea.links.report.url);
+    const txt = pdf ? await pdfText(ea.links.report.url) : null;
     const d = txt && E.extractDecision(txt);
     if (d) { ea.decision = { text: d, source: ea.links.report.url, method: 'extracted from the report (automatic; check the report)' }; decided++; }
+    if (!ea.completedYear) {
+      const c = E.completionOf({ milestones: ea.milestones || [], report: ea.links?.report || null, reportText: txt || '' });
+      if (c) { ea.completedYear = c.year; ea.completedBasis = c.basis; dated++; }
+    }
   }
-  console.log(`Decisions extracted from reports: ${decided}`);
+  console.log(`Decisions extracted from reports: ${decided}; completion years from the report: ${dated}`);
+  const undated = eas.filter(e => (e.status === 'complete' || e.status === 'addendum') && !e.completedYear);
+  console.log(`Completed EAs with no completion year: ${undated.length}${undated.length ? ` (${undated.map(e => e.name).slice(0, 8).join('; ')})` : ''}`);
 
   const final = E.applyOverrides(eas, overrides).map(({ municipalities, ...e }) => e);
   // A weekly rebuild must not replace good data with a partial read (the Region's site down).

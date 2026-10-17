@@ -16,10 +16,10 @@ const plain = o => JSON.parse(JSON.stringify(o));
 const W = (() => { const ctx = { module: { exports: {} }, URLSearchParams }; ctx.globalThis = ctx; vm.runInNewContext(src('js/workspaces.js'), ctx); return ctx.module.exports; })();
 
 test('1. the chips, in the brief\'s order, and Home\'s groups', () => {
-  assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Servicing capacity', 'Growth in an area', 'Review an FSR', 'Study area', 'DC projects', 'Old pipes', 'This week']);
+  assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Servicing capacity', 'Growth in an area', 'Review an FSR', 'Forecast', 'Study area', 'DC projects', 'EA to construction', 'Old pipes', 'This week']);
   // Home's sidebar: This week under Home (bundle 6), then Planning (Servicing capacity with it),
   // Capital, Asset Management; then Full map.
-  assert.deepEqual(plain(W.GROUPS), [['Planning', ['site', 'fsr', 'growth', 'study', 'tight']], ['Capital', ['projects']], ['Asset Management', ['pipes']]]);
+  assert.deepEqual(plain(W.GROUPS), [['Planning', ['site', 'fsr', 'growth', 'outlook', 'study', 'tight']], ['Capital', ['projects', 'eaflow']], ['Asset Management', ['pipes']]]);
   assert.match(fs.readFileSync(path.join(__dirname, '..', 'js', 'workspaces.js'), 'utf8'), /<ul>\$\{item\('home', 'The briefing'\)\}\$\{item\('week', BY_ID\.week\.what\)\}<\/ul>/);
   for (const w of W.WS) assert.ok(w.what.split(/\s+/).length <= 8, `${w.id}: 8 words or fewer`);
   const all = [...W.GROUPS.flatMap(g => g[1]), 'week'].sort();
@@ -30,7 +30,7 @@ test('1. each chip opens the stated tab and scope (and the layer preset)', () =>
   const want = {
     site: ['overview', '', 'find', 'planning'], tight: ['svc', 'capacity', 'area', 'wastewater'], growth: ['growth', 'areas', 'area', 'planning'],
     fsr: ['svc', 'network', 'find', 'wastewater'], study: ['overview', '', 'drawn', 'planning'], projects: ['dca', 'timing', 'area', 'dc'],
-    pipes: ['svc', 'network', 'area', 'wastewater'], week: ['overview', '', 'area', 'planning'],
+    pipes: ['svc', 'network', 'area', 'wastewater'], outlook: ['growth', 'timing', 'area', 'planning'], eaflow: ['dca', 'eas', 'area', 'dc'], week: ['overview', '', 'area', 'planning'],
   };
   for (const [id, [tab, sub, scope, view]] of Object.entries(want)) {
     const p = W.plan(id, { site: false });
@@ -194,7 +194,7 @@ test('picking a chip closes the map\u2019s Layers panel; the full map gets it ba
 
 test('each chip\u2019s map is lean (1–2 layers); the full map gets its own layers back, unsaved by the workspace', () => {
   // The decided sets: only what the task reads.
-  assert.deepEqual(plain(W.LAYERS), { site: ['devs', 'hov'], tight: ['cap', 'bk'], growth: ['devs', 'sp'], fsr: ['devs', 'ex-sanitary', 'ex-water'], study: ['devs'], projects: ['dcw', 'cons'], pipes: [], week: ['devs'] });
+  assert.deepEqual(plain(W.LAYERS), { site: ['devs', 'hov'], tight: ['cap', 'bk'], growth: ['devs', 'sp'], fsr: ['devs', 'ex-sanitary', 'ex-water'], study: ['devs'], outlook: ['devs'], projects: ['dcw', 'cons'], eaflow: ['ea', 'cons'], pipes: [], week: ['devs'] });
   for (const id of Object.keys(W.LAYERS)) assert.ok(W.LAYERS[id].length <= 3 && W.BY_ID[id], id);
   // Every key is a real layer switch.
   const lg = src('js/layer-groups.js');

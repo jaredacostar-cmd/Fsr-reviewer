@@ -373,6 +373,161 @@
     return `<p class="small pv-hide ce-review" data-internal="ea-review">Completed ${esc(e.completedYear)} (${r.years} years ago) with no linked construction under way: ${r.level === 'past' ? 'past' : 'approaching'} 10 years, so a review may be required. From January 1, 2027 the Municipal Class EA is replaced by the Municipal Project Assessment Process (O. Reg. 258/26).</p>`;
   }
 
+  // ---- EA to construction (Home › EA to construction) ---------------------------------------------
+  // Each EA, from commencement to the construction that follows it. A contract linked to an EA is its
+  // outcome only if it starts after the EA is complete (or, for an EA still under way, after its
+  // expected report): construction never starts before the EA that decides it. Work that started
+  // before or during the EA is other work in its study area (kept, shown apart). A strong link (the
+  // EA's own project page) that starts before the EA is a date conflict to check. With only the EA's
+  // completion year, the comparison is by year (the same year counts as following it).
+  const LINK_STRENGTH = { 'project website': 3, 'inside the study area': 2, 'street + study area': 1 };
+  const msOf = s => { if (!s) return null; const t = String(s); const v = Date.parse(t.length === 4 ? `${t}-07-01` : t.length === 7 ? `${t}-15` : t); return isFinite(v) ? v : null; };
+  const yearOfMs = v => (v == null ? null : new Date(v).getUTCFullYear());
+  function eaDates(e) {
+    const ms = (e.milestones || []).map(m => ({ type: m.type, at: msOf(m.date), date: m.date })).filter(m => m.at != null).sort((a, b) => a.at - b.at);
+    const start = ms[0] ? ms[0].at : null;
+    const done = ms.filter(m => m.type === 'completion').pop();
+    const complete = e.status === 'complete' || e.status === 'addendum';
+    // Completion: the notice of completion's date, else the year completed (read from the page).
+    const completion = complete ? (done ? { at: done.at, exact: String(done.date).length > 4, year: yearOfMs(done.at) } : e.completedYear ? { at: msOf(String(e.completedYear)), exact: false, year: +e.completedYear } : null) : null;
+    // An EA under way: the latest report, completion or review-end date ahead.
+    const ahead = complete ? null : ms.filter(m => ['report', 'completion', 'reviewEnd'].includes(m.type)).pop() || null;
+    return { start, pics: ms.filter(m => m.type === 'pic').map(m => m.at), completion, expected: ahead ? { at: ahead.at, year: yearOfMs(ahead.at) } : null, complete };
+  }
+  function contractSpans(links, byId) {
+    const by = new Map();
+    for (const l of links || []) {
+      const r = byId.get(l.id); if (!r) continue;
+      const k = r.contract || r.projectNumber || r.id;
+      if (!by.has(k)) by.set(k, { key: k, records: [], strength: 0, method: l.method });
+      const c = by.get(k); c.records.push(r);
+      if ((LINK_STRENGTH[l.method] || 0) > c.strength) { c.strength = LINK_STRENGTH[l.method] || 0; c.method = l.method; }
+    }
+    return [...by.values()].map(c => {
+      const act = c.records.map(r => msOf(r.startActual)).filter(v => v != null), tgt = c.records.map(r => msOf(r.startTarget)).filter(v => v != null);
+      const ends = c.records.map(r => msOf(r.substantialActual) || msOf(r.substantialTarget)).filter(v => v != null);
+      const lead = c.records.slice().sort((a, b) => RANK.indexOf(b.status) - RANK.indexOf(a.status))[0];
+      return { key: c.key, method: c.method, strength: c.strength, start: act.length ? Math.min(...act) : tgt.length ? Math.min(...tgt) : null, startActual: act.length > 0,
+        end: ends.length ? Math.max(...ends) : null, status: lead.status, work: workLabel(lead.workType), street: lead.street || '', projectNumbers: [...new Set(c.records.map(r => r.projectNumber).filter(Boolean))], website: lead.website || null };
+    });
+  }
+  // 'outcome' | 'other' | 'conflict' | 'unknown' (no start date, or a completed EA with no completion date).
+  function classifyLink(d, c) {
+    if (c.start == null) return 'unknown';
+    const before = ref => (ref.exact === false ? yearOfMs(c.start) < ref.year : c.start < ref.at);
+    if (d.complete) {
+      if (!d.completion) return 'unknown';
+      if (!before(d.completion)) return 'outcome';
+      return c.strength >= 3 ? 'conflict' : 'other';
+    }
+    // Under way: work already started (or due before the expected report) is not its outcome.
+    if (d.expected && !before({ at: d.expected.at, year: d.expected.year, exact: true })) return 'outcome';
+    if (!d.expected && !c.startActual) return 'unknown';
+    return c.strength >= 3 ? 'conflict' : 'other';
+  }
+  const BUCKETS = [
+    ['limit', 'Waiting 9+ years', 'completed 9 or more years ago with no construction: past 10 years, the Class EA must be reviewed before construction'],
+    ['waiting', 'Complete, waiting for construction', 'no construction has followed yet'],
+    ['planned', 'Construction planned', 'construction that follows it is scheduled'],
+    ['building', 'Under construction', 'construction that follows it is under way'],
+    ['built', 'Built', 'the construction that followed it is complete'],
+    ['current', 'EA under way', 'the study is still in progress'],
+    ['nodate', 'Complete, date unknown', 'no completion date, so construction can’t be ordered against it'],
+  ];
+  function eaProgress(eas, capital, today = Date.now()) {
+    const byId = new Map(((capital && capital.records) || capital || []).map(r => [r.id, r]));
+    const thisYear = new Date(today).getUTCFullYear();
+    return (eas || []).map(e => {
+      const d = eaDates(e), cs = contractSpans((e.related && e.related.capitalProjects) || [], byId);
+      for (const c of cs) c.cls = classifyLink(d, c);
+      const out = cs.filter(c => c.cls === 'outcome');
+      let bucket;
+      if (!d.complete) bucket = 'current';
+      else if (!d.completion) bucket = out.length ? 'planned' : 'nodate';
+      else if (out.some(c => BUILDING.has(c.status) || c.status === 'substantially complete')) bucket = 'building';
+      else if (out.length && out.every(c => c.status === 'complete' || c.status === 'substantially complete')) bucket = 'built';
+      else if (out.length) bucket = 'planned';
+      else { const yrs = thisYear - d.completion.year; bucket = yrs >= 9 ? 'limit' : 'waiting'; }
+      return { e, d, contracts: cs, outcome: out, other: cs.filter(c => c.cls === 'other'), conflict: cs.filter(c => c.cls === 'conflict'), unknown: cs.filter(c => c.cls === 'unknown'), bucket,
+        yearsSince: d.completion ? thisYear - d.completion.year : null };
+    });
+  }
+  // One row of the timeline: the EA's span and its outcomes, as fractions of [from, to].
+  function timelineRow(x, from, to) {
+    const f = v => Math.max(0, Math.min(1, (v - from) / (to - from)));
+    const eaEnd = x.d.completion ? x.d.completion.at : x.d.expected ? x.d.expected.at : null;
+    return { ea: x.d.start != null || eaEnd != null ? { a: f(x.d.start != null ? x.d.start : eaEnd), b: f(eaEnd != null ? eaEnd : Date.now()), open: eaEnd == null } : null,
+      pics: x.d.pics.map(f), done: x.d.completion ? f(x.d.completion.at) : null, expected: x.d.expected ? f(x.d.expected.at) : null,
+      works: x.outcome.filter(c => c.start != null).map(c => ({ a: f(c.start), b: f(c.end != null ? Math.max(c.end, c.start) : c.start + 365 * 864e5), status: c.status, planned: !c.startActual })) };
+  }
+
+  // ---- Possible links: current construction near a past EA, not yet linked to it ----------------------
+  // For each completed EA, planned or active capital contracts that may be its outcome: the same system,
+  // the same municipality, mostly within 250 m of the study area (500 m of a facility), starting after the
+  // EA was complete, and not linked by the weekly build. Region-wide studies (master plans) are left out:
+  // everything lies near them. A study area placed with low confidence needs the street named in the EA
+  // as well. Possible links are listed to check; they never count as the EA's outcome.
+  const STREET_SUFFIX = new Set(['ROAD', 'RD', 'STREET', 'ST', 'DRIVE', 'DR', 'AVENUE', 'AVE', 'AV', 'BOULEVARD', 'BLVD', 'LINE', 'SIDEROAD', 'SDRD', 'COURT', 'CRT', 'CT', 'CRESCENT', 'CRES', 'PARKWAY', 'PKWY', 'TRAIL', 'TRL', 'HIGHWAY', 'HWY', 'HY', 'WAY', 'LANE', 'GATE', 'PLACE', 'PL', 'N', 'S', 'E', 'W', 'NORTH', 'SOUTH', 'EAST', 'WEST', 'THE']);
+  const streetCore = s => String(s || '').toUpperCase().replace(/[^A-Z0-9 ]+/g, ' ').split(/\s+/).filter(t => t && !STREET_SUFFIX.has(t));
+  function sameStreetAs(street, text) { const a = streetCore(street); if (!a.length) return false; const b = new Set(streetCore(text)); return a.every(t => b.has(t)); }
+  const ptsOf = g => (!g ? [] : g.type === 'Point' ? [g.coordinates] : g.type === 'MultiPoint' || g.type === 'LineString' ? g.coordinates : g.type === 'MultiLineString' || g.type === 'Polygon' ? g.coordinates.flat() : g.type === 'MultiPolygon' ? g.coordinates.flat(2) : []);
+  function insideRing(x, y, ring) { let c = false; for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) { const [xi, yi] = ring[i], [xj, yj] = ring[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; }
+  // Metres from a point to a geometry (0 inside a polygon), on a local flat projection.
+  function metresTo(p, g) {
+    if (g.type === 'Polygon' && insideRing(p[0], p[1], g.coordinates[0])) return 0;
+    if (g.type === 'MultiPolygon' && g.coordinates.some(q => insideRing(p[0], p[1], q[0]))) return 0;
+    const kx = 111320 * Math.cos(p[1] * Math.PI / 180), ky = 110540;
+    const paths = g.type === 'LineString' ? [g.coordinates] : g.type === 'MultiLineString' || g.type === 'Polygon' ? g.coordinates : g.type === 'MultiPolygon' ? g.coordinates.flat() : ptsOf(g).map(q => [q]);
+    let best = Infinity;
+    for (const path of paths) for (let i = 0; i < path.length; i++) {
+      const ax = (path[i][0] - p[0]) * kx, ay = (path[i][1] - p[1]) * ky;
+      if (i === 0 || path.length === 1) { best = Math.min(best, Math.hypot(ax, ay)); if (path.length === 1) continue; }
+      if (i === 0) continue;
+      const bx = (path[i - 1][0] - p[0]) * kx, by = (path[i - 1][1] - p[1]) * ky, dx = ax - bx, dy = ay - by, L = dx * dx + dy * dy;
+      const t = L ? Math.max(0, Math.min(1, -(bx * dx + by * dy) / L)) : 0;
+      best = Math.min(best, Math.hypot(bx + t * dx, by + t * dy));
+    }
+    return best;
+  }
+  const ACTIVE_WORK = new Set(['planned', 'tendered', 'awarded', 'under construction']);
+  // Repairs and renewals (relining, trenchless rehabilitation, inlet repair, resurfacing, noise walls),
+  // developer-built works and EA studies are not what an EA leads to.
+  const NOT_EA_WORK = /RELINING|TRENCHLESS|INLET|RESURFAC|NOISEWALL|DEVELOPMENT|EA STUDY|MAINTENANCE/i;
+  const systemFits = (e, r) => (e.system === 'roads' ? r.system === 'roads' && !/STORM/i.test(r.workType || '') : e.system === 'storm' ? /STORM/i.test(r.workType || '')
+    : e.system === 'multi' ? r.system === 'water' || r.system === 'wastewater' : r.system === e.system);
+  function possibleLinks(eas, capital, today = Date.now()) {
+    const recs = (capital && capital.records) || capital || [], byId = new Map(recs.map(r => [r.id, r]));
+    const groups = new Map();
+    for (const r of recs) {
+      if (!ACTIVE_WORK.has(r.status) || !r.geometry || NOT_EA_WORK.test(r.workType || '') || NOT_EA_WORK.test(r.phase || '')) continue;
+      const k = r.contract || r.projectNumber || r.id; if (!groups.has(k)) groups.set(k, []); groups.get(k).push(r);
+    }
+    const out = [];
+    for (const e of eas || []) {
+      if (!(e.status === 'complete' || e.status === 'addendum') || !e.geometry || e.municipality === 'Region-wide') continue;
+      const d = eaDates(e), munis = String(e.municipality || '').toUpperCase().split(' / ').map(s => s.trim());
+      const linked = new Set(((e.related && e.related.capitalProjects) || []).map(l => { const r = byId.get(l.id); return r ? r.contract || r.projectNumber || r.id : null; }));
+      const tol = /Point/.test(e.geometry.type) ? 500 : 250;
+      for (const [k, all] of groups) {
+        const rs = all.filter(r => systemFits(e, r)), r0 = rs[0];
+        if (!r0 || linked.has(k)) continue;
+        if (r0.municipality && !String(r0.municipality).toUpperCase().split('/').some(m => munis.includes(m.trim()))) continue;
+        const street = rs.some(r => sameStreetAs(r.street, e.name));
+        if (e.geomConfidence === 'low' && !street) continue;
+        const pts = rs.flatMap(r => ptsOf(r.geometry)); if (!pts.length) continue;
+        const ds = pts.map(p => metresTo(p, e.geometry)), near = ds.filter(m => m <= tol).length;
+        if (near < pts.length / 2) continue;
+        const c = contractSpans(rs.map(r => ({ id: r.id, method: 'possible' })), byId)[0];
+        const cls = classifyLink(d, { ...c, strength: 0 });
+        if (cls === 'other') continue;                       // started before the EA was complete
+        const inside = ds.filter(m => m === 0).length >= pts.length / 2;
+        out.push({ e, d, c, street, inside, metres: Math.round(Math.min(...ds)), dateChecked: cls === 'outcome',
+          why: [street ? 'on a street named in the EA' : null, inside ? 'inside the study area' : `within ${tol} m of the study area`, `same system (${r0.system})`, cls === 'outcome' ? 'starts after the EA was complete' : 'EA completion date unknown: order not checked'].filter(Boolean) });
+      }
+    }
+    return out.sort((a, b) => (b.street - a.street) || (b.inside - a.inside) || a.e.name.localeCompare(b.e.name));
+  }
+
   // ---- EAs tab (Capital › EAs) ----------------------------------------------------------------------
   const EA_SYS = [['water', 'Water'], ['wastewater', 'Wastewater'], ['roads', 'Roads'], ['storm', 'Storm']];
   const EA_SORTS = [['next', 'Next step'], ['name', 'Name'], ['completed', 'Completed'], ['municipality', 'Municipality']];
@@ -544,7 +699,7 @@
     EA_STATUS, EA_CURRENT, eaBadge, eaShown, eaDashed, eaUnplaced, MS_LABEL,
     PRIORITY, rankHits, tolerance, hitDistance, pickHeading, sameSpot,
     EA_OUTLINE_ZOOM, eaStyle, labelPoint, pctLabel, SYS_CASING,
-    eaReview, capitalSheetRows, eaSheetRows, capitalGeoJSON, easGeoJSON, CAP_COLS, EA_COLS,
+    eaReview, eaDates, contractSpans, classifyLink, eaProgress, timelineRow, possibleLinks, sameStreetAs, metresTo, BUCKETS, LINK_STRENGTH, capitalSheetRows, eaSheetRows, capitalGeoJSON, easGeoJSON, CAP_COLS, EA_COLS,
     eaScopeHTML, capitalScopeHTML, capitalHover, eaHover, watchBtn,
     dcCapitalIndex, dcActualHTML, eaMatch, eaSort, geomDistM, easNear, easMayApply, upcoming, openPeriods, eaICS, eaTabHTML, EA_SYS, activeConstruction, currentEAs, recentEAs, RECENT_YEARS, listsHTML, easForDc, easForDcHTML, weekItems, weekHTML, watchRows, attentionItems,
   };

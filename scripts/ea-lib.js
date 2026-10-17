@@ -282,6 +282,29 @@ function docLinks(html, base) {
 }
 
 /** Everything read from one project page. */
+// When a completed EA was completed, with its basis, best evidence first: the dated notice of
+// completion; the report filed with it (a report or review-period milestone); the page's own words
+// ("completed in March 2017"); the report's cover date (its first pages); a date in the report's
+// file name or label ("Final-ESR-August-2011", "mayfield-rd-jun13-2016"). A year must fall between
+// the EA's commencement and today. Returns { year, basis } or null.
+const MON_RE = '(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|aug(?:ust)?|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)';
+function completionOf({ milestones = [], body = '', report = null, reportText = '', today = new Date() } = {}) {
+  const now = new Date(today).getFullYear(), dated = milestones.filter(m => m.date).map(m => ({ ...m, y: +String(m.date).slice(0, 4) }));
+  const start = dated.filter(m => m.type === 'commencement' || m.type === 'pic').map(m => m.y).sort((a, b) => a - b)[0];
+  const ok = y => y >= 1990 && y <= now && (start == null || y >= start);
+  const last = list => list.map(m => m.y).filter(ok).sort((a, b) => a - b).pop();
+  let y = last(dated.filter(m => m.type === 'completion')); if (y) return { year: y, basis: 'notice of completion' };
+  y = last(dated.filter(m => m.type === 'report' || m.type === 'reviewEnd')); if (y) return { year: y, basis: 'report filed' };
+  const words = [...String(body).matchAll(new RegExp(`(?:was |has been |been )?(?:completed|finali[sz]ed|notice of (?:study )?completion)[^.\\n|]{0,40}?\\b(?:${MON_RE}\\.?\\s+(?:\\d{1,2},?\\s+)?)?((?:19|20)\\d{2})\\b`, 'gi'))].map(m => +m[1]).filter(ok);
+  if (words.length) return { year: Math.max(...words), basis: 'page wording' };
+  const cover = [...String(reportText).slice(0, 6000).matchAll(new RegExp(`\\b${MON_RE}\\.?\\s+(?:\\d{1,2},?\\s+)?((?:19|20)\\d{2})\\b`, 'gi'))].map(m => +m[1]).filter(ok);
+  if (cover.length) return { year: Math.max(...cover), basis: 'report cover' };
+  const file = `${(report && report.label) || ''} ${decodeURIComponent(String((report && report.url) || '').split('/').pop() || '')}`;
+  const inName = [...file.matchAll(new RegExp(`(?:${MON_RE}[-_ .]?(?:\\d{1,2}[-_ ,.]*)?)((?:19|20)\\d{2})\\b`, 'gi'))].map(m => +m[1]).filter(ok);
+  if (inName.length) return { year: Math.max(...inName), basis: 'report file name' };
+  return null;
+}
+
 function parsePage(html, url, { today } = {}) {
   const h = mainHtml(html);
   const ls = lines(h);
@@ -299,7 +322,7 @@ function parsePage(html, url, { today } = {}) {
     status,
     statusInferred: status === 'commenced' && !ms.some(m => m.type === 'commencement') ? 'from page wording (no dated milestone)' : null,
     nextStep: status === 'complete' ? null : nextStepOf(ms, ls, today),
-    completedYear: status === 'complete' || status === 'addendum' ? (completion ? +completion.slice(0, 4) : null) : null,
+    ...(() => { const c = status === 'complete' || status === 'addendum' ? completionOf({ milestones: ms, body, report: docs.report, today }) : null; return { completedYear: c ? c.year : null, completedBasis: c ? c.basis : null }; })(),
     purpose: purposeDraft(ls),
     links: { page: url, report: docs.report, appendices: docs.appendices, notices: docs.notices },
     pageHash: pageHash(body),
@@ -657,7 +680,7 @@ function reviewCsv(eas) {
 module.exports = {
   SYSTEMS, SCHEDULES, STATUSES, GEOM_TYPES, CONTACT,
   text, lines, mainHtml, links, normName, slug, tokens, parseList, dedupe, findPage,
-  systemOf, scheduleOf, datesIn, milestonesOf, statusOf, nextStepOf, purposeDraft, docLinks, parsePage, pageHash,
+  systemOf, scheduleOf, datesIn, milestonesOf, statusOf, nextStepOf, purposeDraft, docLinks, parsePage, pageHash, completionOf,
   parseRoad, chain, roadBetween, pointInRing, distToGeom, resolveGeometry, linkDc, linkCapital,
   applyOverrides, changesSince, reviewCsv, linkCapitalInArea, extractDecision,
 };

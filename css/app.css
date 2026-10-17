@@ -3454,3 +3454,31 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .sd-cw .sd-row .field { width: 9.5rem; }
 /* Home: the units the answer adds, by stage (Built since 2021 first). */
 .home-stages .lybar { margin: 4px 0 6px; }
+
+/* EA to construction (Home › Capital): one row per EA; the EA's span, its public information
+   centres and completion, then the construction that started after it. Tokens only. */
+.eat { list-style: none; margin: 0; padding: 0; }
+.eat-row, .eat-axis { display: grid; grid-template-columns: minmax(120px, 32%) 1fr; gap: var(--space-2); align-items: center; }
+.eat-row { padding: 3px 0; border-top: 1px solid var(--border); cursor: pointer; }
+.eat-row:hover, .eat-row:focus-visible { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.eat-nm { font-size: .85em; line-height: 1.2; overflow-wrap: anywhere; }
+.eat-nm small { display: block; color: var(--text-muted); }
+.eat-track { position: relative; height: 18px; }
+.eat-axis .eat-track { height: 14px; }
+.eat-tick { position: absolute; top: 0; transform: translateX(-50%); font-size: 10px; color: var(--text-muted); }
+.eat-ea { position: absolute; top: 4px; height: 6px; border-radius: 3px; background: color-mix(in srgb, var(--ea-line) 45%, transparent); border: 1px solid var(--ea-line); }
+.eat-ea.open { border-right-style: dashed; }
+.eat-pic { position: absolute; top: 3px; width: 2px; height: 8px; margin-left: -1px; background: var(--ea-line); }
+.eat-done, .eat-exp { position: absolute; top: 2px; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%; background: var(--ea-line); border: 1.5px solid var(--surface-1); }
+.eat-exp { background: transparent; border: 1.5px dashed var(--ea-line); }
+.eat-w { position: absolute; top: 11px; height: 6px; border-radius: 2px; background: var(--accent); }
+.eat-w-complete, .eat-w-substantially-complete { background: var(--text-secondary); }
+.eat-w.planned { background: transparent; border: 1.5px dashed var(--accent); }
+.eat-now { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px solid var(--text-primary); }
+.eat-key .eat-k { position: relative; display: inline-block; vertical-align: -1px; margin: 0 2px 0 var(--space-2); top: auto; left: auto; }
+.eat-key .eat-k.eat-ea { width: 14px; height: 6px; }
+.eat-key .eat-k.eat-pic { width: 2px; height: 9px; margin-left: var(--space-2); }
+.eat-key .eat-k.eat-done, .eat-key .eat-k.eat-exp { margin-left: var(--space-2); }
+.eat-key .eat-k.eat-w { width: 14px; }
+.eat-key .eat-k.eat-now { height: 10px; }
+@media (max-width: 480px) { .eat-row, .eat-axis { grid-template-columns: 1fr; gap: 2px; } .eat-axis .eat-nm { display: none; } }

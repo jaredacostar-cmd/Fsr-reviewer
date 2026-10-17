@@ -24,8 +24,10 @@
     { id: 'tight', label: 'Servicing capacity', group: 'Planning', tab: 'svc', sub: 'capacity', scope: 'area', view: 'wastewater', what: 'Plants, pumping and storage near their limit' },
     { id: 'growth', label: 'Growth in an area', group: 'Planning', tab: 'growth', sub: 'areas', scope: 'area', view: 'planning', what: 'Planned homes and people, by area' },
     { id: 'fsr', label: 'Review an FSR', group: 'Planning', tab: 'svc', sub: 'network', scope: 'site', view: 'wastewater', fsr: true, what: 'A consultant’s FSR against the app’s figures' },
+    { id: 'outlook', label: 'Forecast', group: 'Planning', tab: 'growth', sub: 'timing', scope: 'area', view: 'planning', what: 'When homes and people arrive, by year' },
     { id: 'study', label: 'Study area', group: 'Planning', tab: 'overview', sub: '', scope: 'drawn', view: 'planning', what: 'Draw an area: its growth and servicing' },
     { id: 'projects', label: 'DC projects', group: 'Capital', tab: 'dca', sub: 'timing', scope: 'area', view: 'dc', what: 'Is each DC project in time?' },
+    { id: 'eaflow', label: 'EA to construction', group: 'Capital', tab: 'dca', sub: 'eas', scope: 'area', view: 'dc', what: 'Each EA and the construction after it' },
     { id: 'pipes', label: 'Old pipes', group: 'Asset Management', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Old sewers that carry the most growth' },
     { id: 'week', label: 'This week', group: 'Planning', tab: 'overview', sub: '', scope: 'area', view: 'planning', what: 'Files moved, new files, capital and EA dates' },
   ];
@@ -38,14 +40,16 @@
     growth: ['devs', 'sp'],                         // developments, secondary plans
     fsr: ['devs', 'ex-sanitary', 'ex-water'],       // developments, existing sewers and watermains (from zoom 15)
     study: ['devs'],
+    outlook: ['devs'],
     projects: ['dcw', 'cons'],                      // planned DC works, Region construction
+    eaflow: ['ea', 'cons'],                         // EA study areas, Region construction
     pipes: [],                                      // the old pipes only (drawn by this module)
     week: ['devs'],
   };
   // Home's sidebar: by team (Servicing capacity with Planning), then Full map.
   const GROUPS = [
-    ['Planning', ['site', 'fsr', 'growth', 'study', 'tight']],
-    ['Capital', ['projects']],
+    ['Planning', ['site', 'fsr', 'growth', 'outlook', 'study', 'tight']],
+    ['Capital', ['projects', 'eaflow']],
     ['Asset Management', ['pipes']],
   ];
   // Reference pages (Home's layout, no map, not a workspace): listed last in Home's sidebar.
