@@ -57,6 +57,7 @@ const SHELL_ASSETS = [
   'js/aerial.js',
   'js/analysis-tabs.js',
   'js/app.js',
+  'js/refresh-status.js',
   'js/approvals-guide.js',
   'js/reference.js',
   'js/glossary.js',
