@@ -874,6 +874,58 @@
     for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (const q of addrGrid.get(`${cx + dx},${cy + dy}`) || []) { const m = segM(at, [q[0], q[1]], [q[0], q[1]]).m; if (m < bd) { bd = m; best = q[2]; } }
     return best ? titleSt(best) : '';
   }
+  // The street a main runs along: the street named on the Region's capital projects (data/capital.json,
+  // every status: past works name the arterials) whose line it follows, within 25 m at most of its
+  // sample points. House addresses alone pick a side street on arterials (homes back onto them).
+  let capIdx = null;
+  // (a road named in a 2026 DC work's title: "Con 750-mm Water Main - Mayfield Road (…)")
+  const ROAD_WORD = '(Road|Rd|Drive|Dr|Street|St|Avenue|Ave|Parkway|Pkwy|Boulevard|Blvd|Line|Sideroad|Trail|Way|Highway|Hwy)';
+  const ABBR = { Road: 'Rd', Drive: 'Dr', Street: 'St', Avenue: 'Ave', Parkway: 'Pkwy', Boulevard: 'Blvd', Highway: 'Hwy' };
+  const shortRoad = t => String(t || '').replace(/\b(Road|Drive|Street|Avenue|Parkway|Boulevard|Highway)\b/g, w => ABBR[w]);
+  const dcRoad = t => { const m = new RegExp(`-\\s*([A-Z][A-Za-z.' ]*?\\b${ROAD_WORD})\\b`).exec(String(t || '')); return m ? shortRoad(m[1].replace(/\s+/g, ' ').trim()) : ''; };
+  const NOT_A_STREET = /\b(various|multiple|easement|several|region-?wide|n\/a)\b/i;
+  function capStreet(pts) {
+    const st = state(), recs = st && st.capital && st.capital.records; if (!pts.length) return '';
+    if (!capIdx) {
+      capIdx = new Map();
+      const add = (l, name) => { for (let i = 1; i < l.length; i++) for (const q of [l[i - 1], l[i]]) { const g = `${Math.floor(q[0] / 0.002)},${Math.floor(q[1] / 0.002)}`; (capIdx.get(g) || capIdx.set(g, []).get(g)).push([l[i - 1], l[i], name]); } };
+      for (const r of recs || []) {
+        if (!r.street || !r.geometry) continue;
+        const name = String(r.street).replace(/[-–].*$/, '').trim(); if (!name || NOT_A_STREET.test(name)) continue;
+        for (const l of r.geometry.type === 'LineString' ? [r.geometry.coordinates] : r.geometry.type === 'MultiLineString' ? r.geometry.coordinates : []) add(l, name);
+      }
+      for (const sys of ['water', 'wastewater']) for (const ln of (st && st.dcInfra && st.dcInfra[sys] && st.dcInfra[sys].lines) || []) { const nm = dcRoad(ln.n); if (nm) add(ln.g, nm); }
+    }
+    // The share of the pipe's length that runs along each named road: points every ~20 m along it,
+    // each counted for a road whose line is within 40 m and runs the same way (parallel within ~25°).
+    // The road with the highest share names the pipe, if it covers 70% of its length or more.
+    const kx = 111320 * Math.cos(pts[0][1] * Math.PI / 180), dir = (a, b) => { const x = (b[0] - a[0]) * kx, y = (b[1] - a[1]) * 110540, L = Math.hypot(x, y) || 1; return [x / L, y / L, L]; };
+    const share = new Map(); let total = 0;
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1], b = pts[i], u = dir(a, b), k = Math.max(1, Math.round(u[2] / 20)), w = u[2] / k;
+      for (let j = 0; j < k; j++) {
+        const t = (j + 0.5) / k, q = [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])], names = new Set(), cx = Math.floor(q[0] / 0.002), cy = Math.floor(q[1] / 0.002);
+        for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (const [c, d, nm] of capIdx.get(`${cx + dx},${cy + dy}`) || []) {
+          if (names.has(nm) || segM(q, c, d).m > 40) continue;
+          const v = dir(c, d); if (Math.abs(u[0] * v[0] + u[1] * v[1]) < 0.9) continue;
+          names.add(nm);
+        }
+        for (const nm of names) share.set(nm, (share.get(nm) || 0) + w);
+        total += w;
+      }
+    }
+    const best = [...share.entries()].sort((x, y) => y[1] - x[1])[0];
+    return best && total > 0 && best[1] / total >= 0.7 ? shortRoad(titleSt(best[0])) : '';
+  }
+  // The stretch of a long line near a point (within m of it), for naming a planned work where it passes.
+  function nearStretch(pts, at, m = 300) {
+    const out = []; for (const q of pts) if (segM(at, q, q).m <= m) out.push(q);
+    return out.length >= 2 ? out : pts;
+  }
+  // A large main (600 mm+) doesn't run down a crescent or court: a local street from the house
+  // addresses is left unnamed rather than named wrong.
+  const LOCAL_ST = /\b(Cres|Crt|Ct|Pl|Cir|Gate|Gt|Lane|Ln|Terr|Way|Mews|Path|Grove|Close|Gdns|Sq)\b/i;
+  const bigOk = (name, d) => (name && d >= 600 && LOCAL_ST.test(name) ? '' : name || '');
   function zoneAt(at) {
     const st = state(), A = Areas(); if (!st || !st.servicing || !A) return '';
     const id = A.locate(st.servicing.zones, at[0], at[1])[0], z = id && st.servicing.zones.find(x => x.id === id);
@@ -913,7 +965,7 @@
     for (const [x1, y1, x2, y2, d] of segs || []) {
       if (!box(x1, y1)) continue;
       const c = segM(pt, [x1, y1], [x2, y2]); if (c.m > r) continue;
-      const street = streetNear(c.at) || '', zone = zoneAt(c.at);
+      const street = capStreet([[x1, y1], [x2, y2]]) || bigOk(streetNear(c.at), d), zone = zoneAt(c.at);
       group('water', 'existing', `${d}|${street}|${zone}`, { m: c.m, at: c.at, d, street, zone, paths: [[[x1, y1], [x2, y2]]] });
     }
     // Existing sanitary sewers (300 mm+).
@@ -922,7 +974,7 @@
       const c0 = q[10]; if (!box(c0[0], c0[1])) return;
       const pts = []; for (let k = 0; k < c0.length; k += 2) pts.push([c0[k], c0[k + 1]]);
       const c = lineNear(pt, pts); if (!c || c.m > r) return;
-      const street = streetNear(c.at) || '';
+      const street = capStreet(pts) || bigOk(streetNear(c.at), q[0]);
       group('wastewater', 'existing', `${q[0]}|${q[7] || ''}|${street}`, { m: c.m, at: c.at, d: q[0], year: q[7], street, paths: [pts] });
     });
     // Planned: the 2026 DC works (one entry per project) and the Region's projects.
@@ -931,7 +983,7 @@
       for (const ln of (st && st.dcInfra && st.dcInfra[sys] && st.dcInfra[sys].lines) || []) {
         const c = lineNear(pt, ln.g); if (!c || c.m > r) continue;
         const kind = DI && DI.DC_KIND && DI.DC_KIND[ln.k] ? DI.DC_KIND[ln.k][0] : 'Planned main';
-        group(sys, 'dc', ln.p || ln.c || `${ln.n}|${ln.y}`, { m: c.m, at: c.at, d: ln.d, name: ln.n || kind, year: ln.y, status: ln.s, ref: ln.p || ln.c || '', street: streetNear(c.at) || '', zone: sys === 'water' ? zoneAt(c.at) : '', paths: [ln.g] });
+        group(sys, 'dc', ln.p || ln.c || `${ln.n}|${ln.y}`, { m: c.m, at: c.at, d: ln.d, name: ln.n || kind, year: ln.y, status: ln.s, ref: ln.p || ln.c || '', street: dcRoad(ln.n) || capStreet(nearStretch(ln.g, c.at)), zone: sys === 'water' ? zoneAt(c.at) : '', paths: [ln.g] });
       }
       for (const rec of (st && st.capital && st.capital.records) || []) {
         if (rec.system !== sys || !['planned', 'tendered', 'awarded', 'under construction'].includes(rec.status) || !rec.geometry) continue;
@@ -943,7 +995,8 @@
     }
     out.sort((a, b) => a.m - b.m).forEach((o, k) => { o.id = k; });
     // (no address point near: the live lookup, for the nearest dozen mains only)
-    out.filter(o => !o.street).slice(0, 12).forEach(o => { o.street = streetOf(o.at); });
+    // (planned DC works often cross land with no road yet: named only from a named line, never guessed)
+    out.filter(o => !o.street && o.kind !== 'dc').slice(0, 12).forEach(o => { o.street = bigOk(streetOf(o.at), o.d || 0); });
     return out;
   }
   function netRowHTML(o) {
@@ -978,7 +1031,7 @@
     };
     return `${rBtns}<div class="net-wrap"><div class="net-mapbox">${netMapSVG(p, items, netR)}<p class="small muted net-key"><i class="net-sw net-w net-existing"></i> watermain <i class="net-sw net-ww net-existing"></i> sanitary sewer <i class="net-sw net-storm"></i> storm sewer · solid existing, <i class="net-sw net-w net-dc"></i> dashed 2026 DC, <i class="net-sw net-w net-cap"></i> dotted Region project</p></div>
       <div class="net-lists">${part('water', '💧 Water')}${part('wastewater', '🚰 Wastewater')}</div></div>
-      <p class="small muted">Region mains of 300 mm+ (local mains are on the map from street zoom), measured from the development's point (not the connection point). Street: the nearest address point (else the address lookup online). Zone: the pressure zone the main runs in. Tap a row to highlight it on the small map.</p>`;
+      <p class="small muted">Region mains of 300 mm+ (local mains are on the map from street zoom), measured from the development's point (not the connection point). Street: the street named on the Region project whose line the main follows, else the nearest address point (else the address lookup online). Zone: the pressure zone the main runs in. Tap a row to highlight it on the small map.</p>`;
   }
   function fillNetworks(p) {
     if (!hasDOM() || p.lat == null || liveKey !== p.key) return;
