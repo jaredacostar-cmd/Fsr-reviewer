@@ -50,7 +50,7 @@
     if (m.chart) out.push(`<div class="pnl-chart page-chart" data-psec="chart">${m.chart}</div>`);
     if (m.mid) out.push(m.mid);
     const lists = (m.lists || []).filter(l => l && l.rows && l.rows.length), first = lists[0];
-    const mapSec = m.map && (m.map.svg || m.map.html || m.map.attrs) ? `<section class="home-map" data-psec="map"><div class="pnl-list-h"><h3>${esc(m.map.title || 'Where')}</h3>${m.map.attrs ? `<button type="button" class="btn small link"${attrs(m.map.attrs)}>${esc(m.map.link || 'Open the map')} →</button>` : ''}</div>${m.map.top || ''}${m.map.html || `<button type="button" class="home-map-btn"${attrs(m.map.attrs)} aria-label="${esc(m.map.label || 'Open the map')}">${m.map.svg || '<span class="home-map-empty small muted">Open the map</span>'}</button>`}${m.map.caption ? `<p class="small muted">${m.map.caption}</p>` : ''}</section>` : '';
+    const mapSec = m.map && (m.map.svg || m.map.html || m.map.attrs) ? `<section class="home-map" data-psec="map"><div class="pnl-list-h"><h3>${esc(m.map.title || 'Where')}</h3>${m.map.attrs ? `<button type="button" class="btn small link"${attrs(m.map.attrs)}>${esc(m.map.link || 'Open the map')} →</button>` : ''}</div>${m.map.html || `<button type="button" class="home-map-btn"${attrs(m.map.attrs)} aria-label="${esc(m.map.label || 'Open the map')}">${m.map.svg || '<span class="home-map-empty small muted">Open the map</span>'}</button>`}${m.map.caption ? `<p class="small muted">${m.map.caption}</p>` : ''}</section>` : '';
     if (first || mapSec) out.push(`<div class="home-cols">${first ? listHTML(first) : '<div></div>'}${mapSec}</div>`);
     for (const l of lists.slice(1)) out.push(listHTML(l));
     for (const f of (m.folds || []).filter(x => x && x.html)) out.push(`<details class="pnl-fold" data-psec="fold"${f.open ? ' open' : ''}${f.id ? ` id="${esc(f.id)}"` : ''}><summary>${esc(f.title)}</summary><div>${f.html}</div></details>`);
@@ -301,7 +301,7 @@
   function siteMap(p) {
     const r = R(); if (!r || !r.sketchSVG || p.lat == null) return '';
     const near = ((App() && App().state.filtered) || []).filter(q => q !== p && q.lat != null && Math.abs(q.lat - p.lat) < 0.02 && Math.abs(q.lng - p.lng) < 0.03);
-    try { return r.sketchSVG({ center: [p.lng, p.lat], halfM: 1500, points: near, site: [p.lng, p.lat], W: 360, H: 260, bearing: bearing(), infra: true, onLoad: () => W() && W().renderPage && W().renderPage(true) }).replace(/<div class="meta">[\s\S]*$/, '').replace('class="sk"', 'class="sk home-map-svg"'); } catch (e) { return ''; }
+    try { return r.sketchSVG({ center: [p.lng, p.lat], halfM: 1500, points: near, site: [p.lng, p.lat], W: 360, H: 260, bearing: bearing() }).replace(/<div class="meta">[\s\S]*$/, '').replace('class="sk"', 'class="sk home-map-svg"'); } catch (e) { return ''; }
   }
 
   // ---- Home --------------------------------------------------------------------------------------
@@ -417,9 +417,7 @@
     return { id: 'site', eyebrow: `${esc(label('site'))} · <span class="pnl-steps-i">✓ Find › <b>Result</b> › Output: Servicing memo</span>`, name: p.title, status: s.head.status, badge: s.head.badge, extra: s.head.extra, identity: s.head.identity, scen: scen(), answer: s.answer,
       caveats: [], figures: s.figures, chart: s.chart,
       lists: (s.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('site', r)) })),
-      map: { title: 'Site: water and wastewater', svg: siteMap(p), attrs: { 'data-ws-go': 'site' }, label: `Open ${p.title} on the map`,
-        top: '<div class="seg sk-sys" role="group" aria-label="Show"><button type="button" class="btn small on" data-sk-sys="both" aria-pressed="true">Both</button><button type="button" class="btn small" data-sk-sys="w" aria-pressed="false">Water</button><button type="button" class="btn small" data-sk-sys="ww" aria-pressed="false">Wastewater</button></div>',
-        caption: '<span class="sk-leg"><b>Water</b> <span class="sk-k sk-k-w"></span> existing main 300 mm+ <span class="sk-k sk-k-w dash"></span> planned (2026 DC) <span class="sk-k sk-k-w dot"></span> Region project (planned / under construction)</span><span class="sk-leg"><b>Wastewater</b> <span class="sk-k sk-k-ww0"></span> existing sewer 300 mm+ (<span class="sk-k sk-k-tight"></span> near, <span class="sk-k sk-k-over"></span> over full at build-out) <span class="sk-k sk-k-ww dash"></span> planned (2026 DC) <span class="sk-k sk-k-ww dot"></span> Region project</span><span class="sk-leg"><span class="hm-key hm-key-site"></span> the site <span class="hm-key hm-key-dev"></span> nearby developments</span>' },
+      map: { svg: siteMap(p), attrs: { 'data-ws-go': 'site' }, label: `Open ${p.title} on the map`, caption: '<span class="hm-key hm-key-site"></span> the site <span class="hm-key hm-key-dev"></span> nearby developments · sewers · 2026 DC works (dashed)' },
       folds: s.folds, method: s.method, sources: s.sources, onMount: s.onMount,
       actions: [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, { label: 'Review its FSR', attrs: { 'data-ws-page': 'fsr' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'site' } }] };
   }

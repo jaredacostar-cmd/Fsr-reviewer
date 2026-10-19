@@ -59,55 +59,24 @@
   // A small map sketch (no basemap): sewers coloured by load, DC works, the site or developments.
   // bearing: turn it like the live map (the workspace pages pass the road grid's; printed reports
   // stay north up).
-  // The Region's watermains of 300 mm+ (data/watermains.json, as the water trace): segments with their
-  // diameter, loaded once; until they arrive the sketch draws without them and asks the page to redraw.
-  const WMS = { segs: null, loading: null };
-  function watermainSegs(onLoad) {
-    if (WMS.segs || WMS.loading) return WMS.segs;
-    WMS.loading = fetch('data/watermains.json').then(r => (r.ok ? r.json() : null)).then(d => {
-      if (!d) return;
-      const xs = [], ys = []; for (let i = 0, x = 0, y = 0; i < d.xy.length; i += 2) { x += d.xy[i]; y += d.xy[i + 1]; xs.push(x / 1e5); ys.push(y / 1e5); }
-      const segs = []; for (let i = 0; i < d.e.length; i += 3) { const a = d.e[i], b = a + d.e[i + 1]; segs.push([xs[a], ys[a], xs[b], ys[b], d.e[i + 2]]); }
-      WMS.segs = segs; if (onLoad) onLoad();
-    }).catch(() => {});
-    return null;
-  }
-  const ACTIVE_CAP = new Set(['planned', 'tendered', 'awarded', 'under construction']);
-  function sketchSVG({ center, halfM = 1200, points = [], rings = [], site = null, W = 330, H = 250, bearing = 0, infra = false, onLoad = null }) {
+  function sketchSVG({ center, halfM = 1200, points = [], rings = [], site = null, W = 330, H = 250, bearing = 0 }) {
     const kx = 111320 * Math.cos(center[1] * Math.PI / 180), ky = 111320, s = Math.min(W, H) / (2 * halfM);
     const ang = bearing * Math.PI / 180, ca = Math.cos(ang), sa = Math.sin(ang);
     const pt = (lng, lat) => { const e = (lng - center[0]) * kx, sy = -(lat - center[1]) * ky; return [W / 2 + (e * ca - sy * sa) * s, H / 2 + (e * sa + sy * ca) * s]; };
     const X = (lng, lat) => pt(lng, lat)[0], Y = (lat, lng) => pt(lng, lat)[1];
     const inBox = (lng, lat) => Math.abs((lng - center[0]) * kx) < halfM * 1.3 && Math.abs((lat - center[1]) * ky) < halfM * 1.3;
     const path = pts => pts.map(([x, y], i) => `${i ? 'L' : 'M'}${X(x, y).toFixed(1)},${Y(y, x).toFixed(1)}`).join('');
-    const out = [], wat = [], ww = [];
-    // infra: water and wastewater, existing (solid) and planned (DC works dashed, Region capital
-    // projects dotted), each in its own group so the page can show one or both.
-    if (infra) {
-      for (const [x1, y1, x2, y2, d] of watermainSegs(onLoad) || []) {
-        if (!inBox(x1, y1) && !inBox(x2, y2)) continue;
-        wat.push(`<path d="M${X(x1, y1).toFixed(1)},${Y(y1, x1).toFixed(1)}L${X(x2, y2).toFixed(1)},${Y(y2, x2).toFixed(1)}" style="stroke:var(--pipe-water)" stroke-width="${Math.max(1, Math.min(4, d / 300))}" fill="none" opacity=".8"/>`);
-      }
-    }
+    const out = [];
     if (MM().SEW.data) MM().SEW.data.pipes.forEach((p, i) => {
       const c = p[10]; if (p[0] < (halfM > 4000 ? 900 : halfM > 2000 ? 600 : 0) || (!inBox(c[0], c[1]) && !inBox(c[c.length - 2], c[c.length - 1]))) return;
       const pts = []; for (let k = 0; k < c.length; k += 2) pts.push([c[k], c[k + 1]]);
       const r = p[2] ? SC().pipeFlow(i, null).q / p[2] : null;
-      // (with infra: sewers in the wastewater colour, amber / red where near or over full at build-out)
-      if (infra) { ww.push(`<path d="${path(pts)}" style="stroke:var(${r == null || r < 0.85 ? '--pipe-sanitary' : r < 1 ? '--cap-tight' : '--cap-over'})" stroke-width="${Math.max(1, Math.min(4, p[0] / 400))}" fill="none" opacity=".9"/>`); return; }
       out.push(`<path d="${path(pts)}" stroke="${root.PeelUtil.PIPE_RESULTS ? SC().pipeColour(r) : root.PeelUtil.token('--text-muted')}" stroke-width="${Math.max(1, Math.min(4, p[0] / 400))}" fill="none" opacity=".85"/>`);
     });
     if (App().state.dcInfra) for (const sys of ['wastewater', 'water']) for (const ln of App().state.dcInfra[sys].lines) {
       if (!ln.g.some(([x, y]) => inBox(x, y))) continue;
-      const line = `<path d="${path(ln.g)}" style="stroke:var(${infra ? (sys === 'water' ? '--dc-w-trans' : '--dc-ww-main') : DI().DC_KIND[ln.k][1]})" stroke-width="2.5" stroke-dasharray="6 3" fill="none"/>`;
-      (infra ? (sys === 'water' ? wat : ww) : out).push(line);
+      out.push(`<path d="${path(ln.g)}" style="stroke:var(${DI().DC_KIND[ln.k][1]})" stroke-width="2.5" stroke-dasharray="6 3" fill="none"/>`);
     }
-    if (infra && App().state.capital) for (const r of App().state.capital.records || []) {
-      if (!ACTIVE_CAP.has(r.status) || !r.geometry || (r.system !== 'water' && r.system !== 'wastewater')) continue;
-      const lines = r.geometry.type === 'LineString' ? [r.geometry.coordinates] : r.geometry.type === 'MultiLineString' ? r.geometry.coordinates : [];
-      for (const ln of lines) if (ln.some(([x, y]) => inBox(x, y))) (r.system === 'water' ? wat : ww).push(`<path d="${path(ln)}" style="stroke:var(${r.system === 'water' ? '--dc-w-trans' : '--dc-ww-main'})" stroke-width="2.5" stroke-dasharray="1.5 3" stroke-linecap="round" fill="none"><title>${esc(`${r.projectNumber || ''} ${r.street || ''}: ${r.status}`)}</title></path>`);
-    }
-    if (infra) out.unshift(`<g class="sk-ww">${ww.join('')}</g>`, `<g class="sk-w">${wat.join('')}</g>`);
     for (const r of rings) out.push(`<path d="${path(r)}Z" style="fill:color-mix(in srgb, var(--accent) 8%, transparent);stroke:var(--accent)" stroke-width="1.2"/>`);
     for (const p of points) if (p.lat != null && inBox(p.lng, p.lat)) out.push(`<circle cx="${X(p.lng, p.lat).toFixed(1)}" cy="${Y(p.lat, p.lng).toFixed(1)}" r="${Math.max(2.5, Math.min(7, Math.sqrt((p.units || 1)) / 3))}" style="fill:var(--ph-${p.phase},var(--ph-approved));stroke:var(--sym-outline)" stroke-width=".8"/>`);
     if (site) out.push(`<circle cx="${X(site[0], site[1])}" cy="${Y(site[1], site[0])}" r="7" style="fill:var(--select);stroke:var(--sym-outline)" stroke-width="2"/>`);
@@ -320,7 +289,7 @@
 
   // ---- Public contract ----
   // (sketchSVG and briefingMap also draw the workspace pages' small maps: js/ws-pages.js)
-  const api = { appVersion, briefingPDF, comparisonPDF, devMemo, areaReport, openReport, reportFooter, sketchSVG, briefingMap, watermainSegs };
+  const api = { appVersion, briefingPDF, comparisonPDF, devMemo, areaReport, openReport, reportFooter, sketchSVG, briefingMap };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelReports = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -835,6 +835,73 @@
     });
   }
 
+  // ---- Site: water and wastewater, existing and planned ----------------------------------------
+  // Existing: the nearest Region watermain of 300 mm+ (data/watermains.json) and the nearest sanitary
+  // sewer of the screen (data/sewers.json, with its build-out load). Planned within 1 km: the 2026 DC
+  // works and the Region's capital projects planned or under construction. Bundled data only.
+  const NET_R = 1000;
+  function segM(pt, a, b) {
+    const kx = 111320 * Math.cos(pt[1] * Math.PI / 180), ky = 110540;
+    const ax = (a[0] - pt[0]) * kx, ay = (a[1] - pt[1]) * ky, bx = (b[0] - pt[0]) * kx, by = (b[1] - pt[1]) * ky, dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy;
+    const t = L ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / L)) : 0;
+    return Math.hypot(ax + t * dx, ay + t * dy);
+  }
+  const lineM = (pt, pts) => { let m = Infinity; for (let i = 1; i < pts.length; i++) m = Math.min(m, segM(pt, pts[i - 1], pts[i])); return pts.length === 1 ? segM(pt, pts[0], pts[0]) : m; };
+  const mTxt = m => (m < 10 ? 'at the site' : `${fmtNum(Math.round(m / 5) * 5)} m away`);
+  function plannedNear(p, sys) {
+    const pt = [p.lng, p.lat], st = state(), out = [];
+    const DI = root.PeelDcInfra, CM = root.PeelCapitalEAModel;
+    const dcBest = new Map();   // one entry per DC project (a project can be several line pieces)
+    for (const ln of (st && st.dcInfra && st.dcInfra[sys] && st.dcInfra[sys].lines) || []) {
+      const m = lineM(pt, ln.g); if (m > NET_R) continue;
+      const k = ln.p || ln.c || ln; const o = dcBest.get(k); if (!o || m < o.m) dcBest.set(k, { m, ln });
+    }
+    for (const { m, ln } of dcBest.values()) {
+      const kind = DI && DI.DC_KIND && DI.DC_KIND[ln.k] ? DI.DC_KIND[ln.k][0] : 'Planned main';
+      out.push({ m, html: `${esc(ln.n || kind)}${ln.d ? ` · ${fmtNum(ln.d)} mm` : ''} · <b>${ln.y ? `in service ${ln.y}` : 'year not set'}</b> <small class="muted">${['2026 DC ' + (ln.s || ''), ln.p || ln.c, mTxt(m)].filter(Boolean).map(esc).join(' · ')}</small>` });
+    }
+    const seen = new Set();
+    for (const r of (st && st.capital && st.capital.records) || []) {
+      if (r.system !== sys || !['planned', 'tendered', 'awarded', 'under construction'].includes(r.status) || !r.geometry) continue;
+      const k = r.contract || r.projectNumber || r.id; if (seen.has(k)) continue;
+      const lines = r.geometry.type === 'LineString' ? [r.geometry.coordinates] : r.geometry.type === 'MultiLineString' ? r.geometry.coordinates : [];
+      const m = Math.min(...lines.map(l => lineM(pt, l))); if (!(m <= NET_R)) continue;
+      seen.add(k);
+      const yr = (r.startActual || r.startTarget || '').slice(0, 4);
+      out.push({ m, html: `${esc(CM && CM.workLabel ? CM.workLabel(r.workType) : r.workType || 'Capital project')}${r.street ? ` · ${esc(r.street)}` : ''} · <b>${esc(r.status)}${yr ? ` ${r.startActual ? 'since' : 'from'} ${yr}` : ''}</b> <small class="muted">Region project ${esc(r.projectNumber || '')} · ${mTxt(m)}</small>` });
+    }
+    return out.sort((a, b) => a.m - b.m);
+  }
+  function netHTML(p, sys) {
+    const pt = [p.lng, p.lat];
+    let ex = '';
+    if (sys === 'water') {
+      const segs = root.PeelReports && root.PeelReports.watermainSegs ? root.PeelReports.watermainSegs(() => fillNetworks(p)) : null;
+      if (!segs) ex = '<span class="muted">Loading the Region\u2019s watermains…</span>';
+      else {
+        let best = null; for (const [x1, y1, x2, y2, d] of segs) { if (Math.abs(x1 - pt[0]) > 0.02 || Math.abs(y1 - pt[1]) > 0.015) continue; const m = segM(pt, [x1, y1], [x2, y2]); if (!best || m < best.m) best = { m, d }; }
+        ex = best && best.m <= NET_R ? `Nearest main of 300 mm+: <b>${fmtNum(best.d)} mm</b>, ${mTxt(best.m)}` : 'No main of 300 mm+ within 1 km';
+      }
+    } else {
+      const S = root.PeelMapMarkers && root.PeelMapMarkers.SEW, SCp = root.PeelSewerCap;
+      if (!S || !S.data) ex = '<span class="muted">Loading the sanitary sewers…</span>';
+      else {
+        let best = null;
+        S.data.pipes.forEach((q, i) => { const c = q[10]; if (Math.abs(c[0] - pt[0]) > 0.02 || Math.abs(c[1] - pt[1]) > 0.015) return; const pts = []; for (let k = 0; k < c.length; k += 2) pts.push([c[k], c[k + 1]]); const m = lineM(pt, pts); if (!best || m < best.m) best = { m, q, i }; });
+        if (best && best.m <= NET_R) {
+          const r = best.q[2] && SCp && SCp.pipeFlow ? SCp.pipeFlow(best.i, null).q / best.q[2] : null;
+          ex = `Nearest sewer: <b>${fmtNum(best.q[0])} mm</b>${best.q[7] ? `, ${best.q[7]}` : ''}, ${mTxt(best.m)}${r != null ? ` · <b>${Math.round(r * 100)}%</b> of full at build-out` : ''}`;
+        } else ex = 'No mapped sewer within 1 km (septic area?)';
+      }
+    }
+    const pl = plannedNear(p, sys);
+    return `<div class="net-l"><span class="net-t">Existing</span><span>${ex}</span></div><div class="net-l"><span class="net-t">Planned</span> ${pl.length ? `<div><ul class="net-p">${pl.slice(0, 4).map(x => `<li>${x.html}</li>`).join('')}</ul>${pl.length > 4 ? `<small class="muted">and ${fmtNum(pl.length - 4)} more within 1 km</small>` : ''}</div>` : '<span class="muted">Nothing in the 2026 DC program or the Region\u2019s projects within 1 km</span>'}</div>`;
+  }
+  function fillNetworks(p) {
+    if (!hasDOM() || p.lat == null || liveKey !== p.key) return;
+    for (const [id, sys] of [['devtab-wnet', 'water'], ['devtab-wwnet', 'wastewater']]) { const el = document.getElementById(id); if (el) el.innerHTML = netHTML(p, sys); }
+  }
+
   // ---- Site: stormwater ponds (copied from js/app.js) --------------------------------
   const PONDS = [
     { url: 'https://maps1.brampton.ca/arcgis/rest/services/Stormwater/Stormwater_Asset_PRD/MapServer/3', f: 'NAME,POND_ID,CATEGORY,FEATURE_TYPE,WATERSHED,SUBSHED,QUAL_DESIGN,EROSN_DESIGN,FLOOD_DESIGN,RISK_GRADE', src: 'City of Brampton' },
@@ -978,7 +1045,7 @@
     const s = currentSub();
     body.innerHTML = s === 'about' ? aboutHTML(p) : s === 'files' ? filesViewHTML(p) : siteViewHTML(p);
     if (s === 'about' || s === 'files') ensureCouncil(p);
-    if (s === 'site' && p.lat != null) { fillConstraints(p); devAerial(p); fillGround(p); fillStormMains(p); }
+    if (s === 'site' && p.lat != null) { fillNetworks(p); fillConstraints(p); devAerial(p); fillGround(p); fillStormMains(p); }
   }
   // Re-render after async data (council, FSR) arrives, keeping open sections.
   function rerenderPreserve() {
@@ -1170,7 +1237,7 @@
   function partHTML(p, part) {
     const has = p.lat != null, row = (t, id, msg, info) => brow(t, `<div id="${id}"${info ? ` data-info="${info}"` : ''}><p class="small muted">${msg}</p></div>`);
     if (part === 'about') return aboutHTML(p).replace(drillBackHTML(p), '');
-    if (part === 'site') return `<div class="brief">${has ? row('Constraints', 'devtab-cx', 'Checking the mapped constraint layers…') + row('Storm sewers', 'devtab-exist-storm', 'Looking up the nearest storm sewers…') + row('Stormwater', 'devtab-storm', 'Looking up stormwater ponds…', 'fire-storm') : '<p class="small muted">Not checked: this development has no map location.</p>'}</div>`;
+    if (part === 'site') return `<div class="brief">${has ? row('💧 Water', 'devtab-wnet', 'Looking up the watermains…') + row('🚰 Wastewater', 'devtab-wwnet', 'Looking up the sanitary sewers…') + row('Constraints', 'devtab-cx', 'Checking the mapped constraint layers…') + row('Storm sewers', 'devtab-exist-storm', 'Looking up the nearest storm sewers…') + row('Stormwater', 'devtab-storm', 'Looking up stormwater ponds…', 'fire-storm') : '<p class="small muted">Not checked: this development has no map location.</p>'}</div>`;
     if (part === 'ground') return `<div class="brief">${brow('Aerial check', '<div class="aerial" id="devtab-aerial"><p class="small muted">Comparing aerial photos…</p></div>')}${has ? row('Ground', 'devtab-ground', 'Looking up ground elevation…', 'ground') : ''}</div>`;
     if (part === 'files') return filesTreeHTML(p);
     if (part === 'history') return devHistoryHTML(p, statusOf(p));
@@ -1192,7 +1259,7 @@
     if (!hasDOM() || !p) return;
     liveKey = p.key;
     if (parts.includes('about') || parts.includes('history')) ensureCouncil(p);
-    if (parts.includes('site') && p.lat != null) { fillConstraints(p); fillStormMains(p); }
+    if (parts.includes('site') && p.lat != null) { fillNetworks(p); fillConstraints(p); fillStormMains(p); }
     if (parts.includes('ground') && p.lat != null) { devAerial(p); fillGround(p); }
   }
   // ---- Public contract ------------------------------------------------------------------
