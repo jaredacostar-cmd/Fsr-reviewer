@@ -51,7 +51,7 @@ test('infill: homes on permits since census day with no planning application, ne
     { municipality: 'Caledon', kinds: ['application', 'permit'], phase: 'permit', records: [permit('22-2', 40, 'Residential', '2022-03-01')] },
   ]);
   assert.equal(out.units, 2); assert.equal(out.suites, 1); assert.equal(out.houses, 1); assert.equal(out.brampton, true);
-  assert.match(L.headlineText({ total: 1000, moved: 1000, notMoved: 0, notBuilt: 500 }, '', undefined, undefined, out), /Plus about 2 added by building permit alone since 2021 \(secondary suites and new houses on existing lots\); Brampton’s second units are not in its open data\./);
+  assert.match(L.headlineText({ total: 1000, moved: 1000, notMoved: 0, notBuilt: 500 }, '', undefined, undefined, out), /Plus about 2 added by building permit alone since 2021 \(secondary suites and new houses on existing lots\); Brampton’s second units are not counted\./);
 });
 
 test('CMHC under construction rolled forward from its last published year with starts and completions', () => {
@@ -63,16 +63,16 @@ test('CMHC under construction rolled forward from its last published year with s
   assert.deepEqual(pn, { Brampton: 676 });
 });
 
-test('a change of use to a two- or three-unit dwelling adds one (two) homes, as a suite, from no planning file', () => {
-  const at = { lat: 43.65, lng: -79.82, events: [{ date: new Date('2026-05-25T00:00:00Z'), phase: 'permit', label: 'Issue Date' }] };
+test('a change of use to a two- or three-unit dwelling: a second unit, shown for reference and never counted', () => {
+  const at = { municipality: 'Brampton', lat: 43.65, lng: -79.82, events: [{ date: new Date('2026-05-25T00:00:00Z'), phase: 'permit', label: 'Issue Date' }] };
   const two = { kind: 'permit', ref: '26-050190-P01-00', type: 'Two Unit Dwelling', description: 'Change of Use - Two Unit Dwelling', units: 2, newBuild: true, phase: 'permit', ...at };
-  const three = { kind: 'permit', ref: '26-000001-P01-00', type: 'Three Unit Dwelling', description: 'Change of Use - Three Unit Dwelling', units: 3, newBuild: true, phase: 'permit', ...at };
+  const three = { kind: 'permit', ref: '26-000001-P01-00', type: 'Three Unit Dwelling', description: 'Change of Use - Three Unit Dwelling', units: 3, newBuild: true, phase: 'completed', ...at };
   const house = { kind: 'permit', ref: '21-252012-000-00', type: 'Single Family Detached', description: 'New Complete Building', units: 1, newBuild: true, phase: 'permit', ...at };
   P.convertedUnits([two, three, house]);
-  assert.deepEqual([two.units, three.units, house.units], [1, 2, 1]);
-  assert.deepEqual([two.newBuild, two.conversion, house.conversion], [false, true, undefined]);
-  assert.equal(P.permitRole(two), 'suite');
-  assert.equal(P.permitRole(house), 'units');
-  // Run twice: no double reduction.
-  P.convertedUnits([two]); assert.equal(two.units, 1);
+  assert.deepEqual([two.units, three.units, house.units], [null, null, 1]);
+  assert.deepEqual([two.secondUnits, three.secondUnits], [1, 2]);
+  assert.deepEqual([P.permitAddsUnits(two), P.permitRole(two), P.permitAddsUnits(house)], [false, 'none', true]);
+  P.convertedUnits([two]); assert.equal(two.secondUnits, 1);
+  // The reference line: issued since census day.
+  assert.deepEqual(JSON.parse(JSON.stringify(L.secondUnits([two, three, house]))), { permits: 2, homes: 3, completed: 2, byMuni: { Brampton: 3 } });
 });

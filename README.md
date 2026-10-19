@@ -2835,14 +2835,16 @@ developer-built works, Region-wide studies (master plans: everything lies near t
 study area placed with low confidence, anything not on a street named in the EA. They are listed
 with the reasons and never count as following the EA.
 
-## Brampton second units (from the 2026-10-19 data)
+## Brampton second units (from the 2026-10-19 data): shown, not counted
 
 Brampton began publishing its second-unit permits (32,414 "Change of Use - Two Unit Dwelling"
-permits since 2016), each with 2 units. A change of use to a two- (three-) unit dwelling adds 1 (2)
-homes to a house already there, so `js/phases.js` `convertedUnits` (run first in `buildProjects`)
-counts it as a suite of 1 (2) added homes at the apartment rate, attributed to no planning file:
-infill, beside the headline, never in a subdivision's units left to permit. The note "Brampton's
-second units are not in its open data" is dropped once Brampton suites are present.
+permits since 2016, each with 2 units). The growth team doesn't count them, so `js/phases.js`
+`convertedUnits` marks a change of use to a two- (three-) unit dwelling as a second unit (1 or 2
+added homes, `secondUnits`) and `buildProjects` sets those permits aside before anything is grouped or
+counted: every figure (pipeline, infill, population, servicing, the tree counts) is the same as with
+the permits left out entirely. They appear only as a reference row in Sources & checks › Model checks
+(`js/layers.js` `secondUnits`: since census day, by municipality, completed). The headline note now
+reads "Brampton's second units are not counted".
 
 The snapshot build now scrubs a permit description again after shortening it: a staff note the full
 text needed could otherwise survive in the shortened copy.

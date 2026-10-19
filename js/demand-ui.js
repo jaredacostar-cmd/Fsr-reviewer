@@ -219,6 +219,9 @@
         const pn = Ly.permittedNotCompleted(App().state.projects);
         const why = { Mississauga: ' Known gap: some large Mississauga permits are signed off within two years of issue (likely partial permits; to confirm with the City), so their homes count as built.', Caledon: ' Caledon publishes no completion dates, so its permits stay open and the model is high.', Brampton: ' Brampton\u2019s apartment permits state no units: inferred from the site plan.' };
         for (const m of ['Mississauga', 'Brampton', 'Caledon']) if (cu.byMuni[m] > 0) out.push([`Under construction, ${m}`, pn[m] || 0, cu.byMuni[m], 'units', `CMHC under-construction inventory ${cu.base} (last published), rolled forward to ${cu.year} with CMHC starts and completions (Region of Peel). Model: homes permitted and not yet completed on planning applications.${why[m] || ''}`]);
+        // Second units (reference only, never counted): Brampton's change-of-use permits since census day.
+        const su = Ly.secondUnits ? Ly.secondUnits(root.PeelPhases && root.PeelPhases.secondUnitPermits ? root.PeelPhases.secondUnitPermits() : []) : null;
+        if (su && su.permits) out.push(['Second units since 2021 (reference, not counted)', su.homes, null, 'units', `${fmtNum(su.permits)} permits converting a house to a two- or three-unit dwelling (${Object.entries(su.byMuni).map(([k, v]) => `${k} ${fmtNum(v)}`).join(', ')}), ${fmtNum(su.completed)} completed. Shown for reference: not in the pipeline, infill, population or servicing figures.`, 'ref']);
       }
     }
     if (M && R) {
@@ -269,7 +272,8 @@
     const num = (v, u) => u === 'ML/d' ? `${fmt1(v)} ML/d` : u === 'units' ? `${fmtNum(Math.round(v))} units` : `${fmtNum(roundPop(v))}`;
     return `<h3 class="sub-title" data-info="validation">Model checks against published figures</h3>
       ${vr.length ? `<table class="dt fr-table"><thead><tr><th>Check</th><th>Model</th><th>Published</th><th>Difference</th><th>Result</th></tr></thead><tbody>
-        ${vr.map(([what, m, p, u, why, kind]) => { if (kind === 'share') { const sh = m / p * 100; return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>${num(p, u)}</td><td>${sh.toFixed(1)}% of Peel</td><td><span class="fr-b fr-ref">Coverage</span></td></tr>`; }
+        ${vr.map(([what, m, p, u, why, kind]) => { if (kind === 'ref') return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>–</td><td>–</td><td><span class="fr-b fr-ref">Reference</span></td></tr>`;
+          if (kind === 'share') { const sh = m / p * 100; return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>${num(p, u)}</td><td>${sh.toFixed(1)}% of Peel</td><td><span class="fr-b fr-ref">Coverage</span></td></tr>`; }
           const [d, cls, t] = st(m, p); return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>${num(p, u)}</td><td>${d >= 0 ? '+' : '−'}${Math.abs(d).toFixed(1)}%</td><td><span class="fr-b ${cls}">${t}</span></td></tr>`; }).join('')}
       </tbody></table>
       <p class="small muted">Within ±10%: matches; ±25%: close; beyond: differs (the note says why it is expected to). The wastewater capacity check uses each plant's measured flow, so the design-criteria difference does not carry into it.</p>` : skel('Loading the servicing model')}${root.PeelCensusView && root.PeelCensusView.permitCheckHTML ? root.PeelCensusView.permitCheckHTML() : ''}`;

@@ -197,8 +197,22 @@
       out.units += net; out.suites += Math.min(s, net); out.buildings += Math.min(big, oNet); out.houses += Math.max(0, oNet - Math.min(big, oNet)); out.sites++;
       out.completed += Math.min(net, P().permitUnits(adds.filter(r => r.phase === 'completed')));
       out.byMuni[p.municipality] = (out.byMuni[p.municipality] || 0) + net;
-      // (Brampton published no second-unit permits before 2026-10: the note stays until some arrive)
-      if (p.municipality === 'Brampton') { out.brampton = true; out.bramptonSuites = (out.bramptonSuites || 0) + Math.min(s, net); }
+      if (p.municipality === 'Brampton') out.brampton = true;
+    }
+    return out;
+  }
+
+  // ---- Second units (reference only) ------------------------------------------------------------------
+  // Permits converting a house to a two- or three-unit dwelling (js/phases.js convertedUnits): never
+  // counted; issued since census day, by municipality, with the homes they add and those completed.
+  function secondUnits(records, opts = {}) {
+    const since = censusMs(opts), out = { permits: 0, homes: 0, completed: 0, byMuni: {} };
+    for (const r of records || []) {
+      if (!r.conversion || r.phase === 'cancelled') continue;
+      const iss = (r.events || []).filter(e => e.phase === 'permit').map(e => +e.date);
+      if (!iss.length || Math.min(...iss) < since) continue;
+      out.permits++; out.homes += r.secondUnits || 1; if (r.phase === 'completed') out.completed += r.secondUnits || 1;
+      out.byMuni[r.municipality] = (out.byMuni[r.municipality] || 0) + (r.secondUnits || 1);
     }
     return out;
   }
@@ -240,11 +254,11 @@
     if (!pl || !(pl.total > 0)) return '';
     const r = v => fmt(roundHeadline(v));
     const split = pl.notMoved >= 0.5 ? `: ${r(pl.moved)} have moved since ${MOVED_SINCE} and ${r(pl.notMoved)} haven\u2019t moved since ${MOVED_SINCE - 1}` : '';
-    const plus = inf && inf.units >= 0.5 ? ` Plus about ${r(inf.units)} added by building permit alone since ${MOVED_SINCE} (secondary suites and new houses on existing lots)${inf.brampton && !(inf.bramptonSuites > 0) ? '; Brampton\u2019s second units are not in its open data' : ''}.` : '';
+    const plus = inf && inf.units >= 0.5 ? ` Plus about ${r(inf.units)} added by building permit alone since ${MOVED_SINCE} (secondary suites and new houses on existing lots)${inf.brampton ? '; Brampton\u2019s second units are not counted' : ''}.` : '';
     return `About ${strong(r(pl.total))} homes are in the planning pipeline${where}${split}. About ${r(pl.notBuilt)} are not yet built.${plus}`;
   }
 
-  const api = { LAYERS, LABEL, NOTE, PHASE_LAYER, CENSUS_DATE, layerOfPhase, layerOf, ofDev, ofFile, totals, byType, toTarget, confidenceOf, MOVED_SINCE, movedSince, pipeline, roundHeadline, headlineText, infill, cmhcUnderConstruction, permittedNotCompleted };
+  const api = { LAYERS, LABEL, NOTE, PHASE_LAYER, CENSUS_DATE, layerOfPhase, layerOf, ofDev, ofFile, totals, byType, toTarget, confidenceOf, MOVED_SINCE, movedSince, pipeline, roundHeadline, headlineText, infill, secondUnits, cmhcUnderConstruction, permittedNotCompleted };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLayers = api;
 })(typeof window !== 'undefined' ? window : globalThis);

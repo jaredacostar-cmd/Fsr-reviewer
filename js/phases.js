@@ -217,6 +217,7 @@
   const ROLE_NONRES = /commercial|industrial|public|institution|governmental|office|retail|business|assembly|warehouse|\b[ABDEF]\d?:|hotel|motel|convalescent|care\b|hospital|school|classroom|fire station|car wash|church|storage|plant\b|facility|building/i;
   function permitRole(r) {
     if (r.kind !== 'permit') return null;
+    if (r.conversion) return 'none';   // a second unit: reference only
     if (/DEMO/i.test(String(r.ref || '')) || /demoli/i.test(String(r.type || ''))) return 'none';
     if (permitAddsUnits(r)) return isAlteration(r) || /^SEC\s*UNIT/i.test(String(r.ref || '')) || (isSuite(r) && !/\dNEW\b/i.test(String(r.ref || '')) && !/\bnew\b[^—]*\b(storey|detached|semi|town ?house|single|apartment|building)\b|\bconstruct|\berect/i.test(r.description || '')) ? 'suite' : 'units';
     const t = `${r.type || ''} ${r.description || ''}`;
@@ -366,7 +367,7 @@
 
   // Permits whose unit count doesn't represent new homes (servicing, alterations, revisions).
   function permitAddsUnits(r) {
-    if (r.kind !== 'permit') return false;
+    if (r.kind !== 'permit' || r.conversion) return false;
     const ref = String(r.ref || '').toUpperCase();
     if (/^(DRAIN|PLUMB|HVAC|FIRE|SIGN|DEMO|SS|MECH)\b/.test(ref)) return false;
     // Demolition permits (Mississauga's HOUSDEMO) carry the units they remove, not new ones.
@@ -384,7 +385,7 @@
   const NO_HOMES_TYPE = /\bsign\b|\btent\b|temporary|sales (office|centre|center|pavilion|trailer)|model home|industrial|agricultur/i;
   const isAlteration = r => /\d?ALT\b|^MECH\b/i.test(String(r.ref || '')) || /alteration to existing|^\s*(interior )?alteration|^\s*(replace|repair)/i.test(`${r.scope || ''} ${r.description || ''}`);
   // A second (or third) unit in an existing house: real new homes, but not a site plan's building.
-  const isSuite = r => /^SEC\s*UNIT/i.test(String(r.ref || '')) || !!r.conversion || /second(ary)? (unit|suite|dwelling)|\b(2nd|3rd|scnd)\b.*unit|additional (residential |dwelling )?units?|\bsuite\b|basement (apartment|unit|dwelling)|\badu\b|\baru\b|apartment in (the )?(basement|bsmt)/i.test(r.description || '');
+  const isSuite = r => /^SEC\s*UNIT/i.test(String(r.ref || '')) || /second(ary)? (unit|suite|dwelling)|\b(2nd|3rd|scnd)\b.*unit|additional (residential |dwelling )?units?|\bsuite\b|basement (apartment|unit|dwelling)|\badu\b|\baru\b|apartment in (the )?(basement|bsmt)/i.test(r.description || '');
 
   // ---- Dwellings removed on the site (tear-down rebuilds count net) ---------------------------
   // "NEW (2) STOREY DETACHED DWELLING - DEMOLISH EXISTING DETACHED DWELLING", "Demolish/Construct
@@ -789,16 +790,16 @@
   // completed at issue + 12 months (houses) or + 30 months (20+ units), marked estimated, as Brampton's
   // and Caledon's undated completions are (js/areas.js completedAt).
   // A change of use to a two- or three-unit dwelling (Brampton's second-unit permits, published from
-  // 2026-10) adds the second (and third) unit to a house already there: one (two) added homes, a suite,
-  // not a new building of two (three). (Rule proposed 2026-10-19, pending approval.)
+  // 2026-10): a second (and third) unit added to a house already there. Shown for reference and never
+  // counted (decided 2026-10-19): no units, no planning file, not in infill. r.secondUnits keeps the
+  // homes it adds (1 or 2) for the reference line.
   const CONVERSION = /change of use\W+(two|three)[- ]unit dwelling/i;
   function convertedUnits(records) {
     for (const r of records) {
       if (r.kind !== 'permit' || r.conversion) continue;
       const m = CONVERSION.exec(`${r.description || ''} ${r.scope || ''}`); if (!m) continue;
-      const n = m[1].toLowerCase() === 'two' ? 2 : 3;
-      if (!(r.units > 0) || r.units >= n) r.units = n - 1;
-      r.newBuild = false; r.conversion = true;
+      r.secondUnits = m[1].toLowerCase() === 'two' ? 1 : 2;
+      r.units = null; r.newBuild = false; r.conversion = true;
     }
   }
   const STALE_OPEN_YEARS = 5, MONTH_MS = 30.4375 * 864e5;
@@ -818,9 +819,14 @@
     }
     return n;
   }
+  // The second-unit permits of the last build, set aside before anything is grouped or counted.
+  let lastSecondUnits = [];
+  const secondUnitPermits = () => lastSecondUnits;
   function buildProjects(records, opts = {}) {
     let groups = new Map();
     convertedUnits(records);
+    lastSecondUnits = records.filter(r => r.conversion);
+    if (lastSecondUnits.length) records = records.filter(r => !r.conversion);
     closeStalePermits(records, opts.asOf);
     for (const r of records) readTextUnits(r);
     for (const r of records) {
@@ -1446,7 +1452,7 @@
     if (containers.length) {
       for (const r of recs) {
         if (r.kind !== 'permit') continue;
-        // A second unit added to a house already there comes from no planning file: infill.
+        // A second unit added to a house already there: reference only, in no planning file.
         if (r.conversion) { r.prePlan = undefined; r.prePlanKept = undefined; r.outside = true; continue; }
         // The most specific file holding it that was already filed when it was issued (a site plan
         // revision filed later on part of the land is not where an earlier building came from).
@@ -1719,7 +1725,7 @@
     dedupeRecords,
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY, SMALL_SITE_UNITS, isHolding,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
-    representativePoint, buildProjects, convertedUnits, closeStalePermits, inferBlankPermits, isBlankPermit, buildingsListed, permitBase, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
+    representativePoint, buildProjects, convertedUnits, secondUnitPermits, closeStalePermits, inferBlankPermits, isBlankPermit, buildingsListed, permitBase, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
     canonRef, fileId, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, keyAliases, legacyNormalizeAddress, isNewBuild,
     PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf, lastActivityOf, proposedStateOf,
   };
