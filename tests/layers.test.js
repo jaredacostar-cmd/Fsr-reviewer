@@ -2,6 +2,7 @@
 // SPEC §2: the layer function (js/layers.js). Every development in exactly one layer; its units over
 // the layers add up to the Overview's Peel totals; the acceptance developments land where the spec says.
 const test = require('node:test');
+const { siteTest } = require('./helpers/site-check.js');
 const assert = require('node:assert/strict');
 const L = require('../js/layers.js');
 const D = require('../js/demand.js');
@@ -68,7 +69,7 @@ test('the sum over layers == the Peel totals on the Overview', { skip }, () => {
   assert.ok(Math.abs(people - e.population) < 1, `people ${Math.round(people)} vs ${Math.round(e.population)}`);
 });
 
-test('Brampton|2055 BOVAIRD DR W → Proposed; Embleton & Heritage (C05W06.007) → Committed with 343 left', { skip }, () => {
+siteTest('Brampton|2055 BOVAIRD DR W → Proposed; Embleton & Heritage (C05W06.007) → Committed with 343 left', { skip }, () => {
   const { byKey, projects } = H.realDevs();
   assert.equal(L.ofDev(byKey.get('Brampton|2055 BOVAIRD DR W')).layer, 'proposed');
   const e = projects.find(p => (p.records || []).some(r => r.ref === 'C05W06.007'));
@@ -79,7 +80,7 @@ test('Brampton|2055 BOVAIRD DR W → Proposed; Embleton & Heritage (C05W06.007) 
   assert.equal(x.parts.committed + x.parts.built + x.parts.existing, 537);
 });
 
-test('a file: its own layer and units (OZS-2025-0032: 592, Proposed)', { skip }, () => {
+siteTest('a file: its own layer and units (OZS-2025-0032: 592, Proposed)', { skip }, () => {
   const p = H.realDevs().byKey.get('Brampton|2055 BOVAIRD DR W');
   const r = p.records.find(x => x.ref === 'OZS-2025-0032');
   assert.deepEqual(L.ofFile(r, p), { layer: 'proposed', units: 592, confidence: 'stated' });
