@@ -47,3 +47,25 @@ test('wired: Overview and the area report pass the second units for the same sco
   assert.match(src('js/reports.js'), /infill\(OT\(\)\.infillScope\(\), \{ secondUnits: OT\(\)\.secondUnitScope \? OT\(\)\.secondUnitScope\(\) : \[\] \}\)/);
   assert.match(src('scripts/build-snapshot.js'), /k === 'description' \? PV\.scrubDescription\(v\.slice\(0, max\) \+ '…', r\)/, 'scrubbed again once cut');
 });
+
+test('in the servicing loads: one site per permit at the apartment rate, through every load the model builds', () => {
+  const A = require('../js/areas.js'), Dm = require('../js/demand.js');
+  const r = permit({ ref: '24-300000-P01-00' });
+  P.holdSecondUnits([r]);
+  const s = P.secondUnitSite(r);
+  assert.equal(P.secondUnitSite(r), s, 'one object per permit (its area tags stay)');
+  assert.deepEqual([s.phase, s.units, s.unitMix, s.kinds, s.secondUnit], ['completed', 1, { apartment: 1 }, ['permit'], true]);
+  // Built since census at the apartment rate, like a secondary suite.
+  const g = A.growthSince([s], {}, '2021-05-11', Dm.DEFAULT_CRITERIA);
+  assert.equal(g.built.units, 1);
+  const apt = Dm.estimate([{ key: 'x', units: 1, unitMix: { apartment: 1 }, phase: 'completed', records: [] }], Dm.DEFAULT_CRITERIA, 'all').population;
+  assert.ok(Math.abs(g.built.population - apt) < 1e-9, `${g.built.population} vs ${apt}`);
+  // Wired: one list of sites for every load (servicing tab, Master Plan comparisons, sewer pipes).
+  const sd = src('js/svc-data.js');
+  assert.match(sd, /const svcDevs = \(\) => App\(\)\.state\.projects\.concat\(App\(\)\.state\.whatifs \|\| \[\], suSitesOf\(\)\);/);
+  assert.match(sd, /for \(const p of suSitesOf\(\)\) tagAreas\(p\);/);
+  assert.match(src('js/svc-tab.js'), /const devs = SD\(\)\.svcDevs\(\)\.filter\(p => p\.phase !== 'cancelled'\), idx = /);
+  assert.equal((src('js/masterplan.js').match(/SD\(\)\.svcDevs\(\)/g) || []).length, 4);
+  assert.match(src('js/sewer-cap.js'), /for \(const p of SD\(\)\.svcDevs\(\)\)/);
+  assert.doesNotMatch(src('js/masterplan.js') + src('js/sewer-cap.js') + src('js/svc-tab.js'), /App\(\)\.state\.projects\.concat\(App\(\)\.state\.whatifs/);
+});

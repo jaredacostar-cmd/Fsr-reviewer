@@ -82,7 +82,7 @@
     const n = MM().SEW.data.pipes.length, L = ['built', 'approved', 'proposed'];
     const g = Object.fromEntries(L.map(k => [k, { pop: new Float64Array(n), jobs: new Float64Array(n), ha: new Float64Array(n), units: new Float64Array(n) }]));
     const devPipe = new Map();
-    for (const p of App().state.projects.concat(App().state.whatifs || [])) {
+    for (const p of SD().svcDevs()) {
       const lay = MM().svcLayerOf(p);
       if (!L.includes(lay) || p.lat == null) continue;
       const e = D.estimate([p], App().state.criteria, 'all', App().jobsOf);

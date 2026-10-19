@@ -10,6 +10,7 @@
   const { $, esc, fmtNum, estTag, roundPop, uML, uLs, token, store, SCREEN_NOTE, uCap } = window.PeelUtil;
   const map = window.PeelMapCore.map;
   const App = () => window.PeelApp;
+  const P = () => window.PeelPhases;
   const MM = () => window.PeelMapMarkers;
   const CA = () => window.PeelCensusAreas;
   const ST = () => window.PeelSewerTrace;
@@ -124,9 +125,14 @@
     const via = p.dr.length ? null : DI().dcVia(p, 'dr');
     p.drNear = p.dr.length ? null : (via && !lowServed(svcById.get(via.id)) ? via : null) || Areas().nearest(drainage.filter(a => !lowServed(a)), p.lng, p.lat, NEAR_M);
   }
+  // Every site the servicing loads count: the developments, the what-ifs, and Brampton's second units
+  // in existing houses (decided 2026-10-19: in the loads at the apartment rate, never developments).
+  const suSitesOf = () => ((App().state.projects && App().state.projects.secondUnits) || []).map(P().secondUnitSite);
+  const svcDevs = () => App().state.projects.concat(App().state.whatifs || [], suSitesOf());
   function tagServicing() {
     if (!App().state.servicing) return;
     for (const p of App().state.projects) tagAreas(p);
+    for (const p of suSitesOf()) tagAreas(p);
     App().state.whatifs = SProf().getWhatIfs().filter(w => w.include).map(SProf().whatIfProject);
   }
   const NEAR_M = 5000;
@@ -353,7 +359,7 @@
     PLANT_TOKEN, plantColor, PLANT_SHORT, PLANT_NAME, plantLabel, drName,
     svcFacts,
     svcLayers, svcById, flowRenderer, svcRenderer, loadServicing, tagAreas,
-    tagServicing, NEAR_M, svcIds, nearOf, zoneOf, kmText, nearText, renderSvcSelects,
+    tagServicing, svcDevs, NEAR_M, svcIds, nearOf, zoneOf, kmText, nearText, renderSvcSelects,
     showSvcArea, setDevsOn, setWwLay, syncWwLayers, syncPanelSum, syncAreaOn,
     clearAreaFilters, syncDevsOff, showAllDevs, devShown, setSvcLayer, spsKey,
     spsOf, spsNote, byZone, servicingCheckHTML, servicingLineHTML,
