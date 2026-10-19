@@ -470,6 +470,8 @@
     if (e.target.closest('[data-ws-focus]')) { const s = $('#f-search'); if (s) s.focus(); return; }
     if (e.target.closest('[data-ws-watch]')) { setMode('full'); if (root.PeelDataTab && root.PeelDataTab.showTab) root.PeelDataTab.showTab('week'); return; }
     // Study area: draw on the page's map; the page refreshes once the drawing ends.
+    const sk = e.target.closest('[data-sk-sys]');
+    if (sk) { const sec = sk.closest('.home-map'), v = sk.dataset.skSys; if (sec) { sec.dataset.sys = v; sec.querySelectorAll('[data-sk-sys]').forEach(b => { const on = b === sk; b.classList.toggle('on', on); b.setAttribute('aria-pressed', on); }); } return; }
     if (e.target.closest('[data-ws-draw]')) { const AS = root.PeelAreaSelect; if (AS) { AS.setLasso(true); const iv = setInterval(() => { if (!AS.getLassoOn()) { clearInterval(iv); renderPage(true); } }, 300); } return; }
     if (e.target.closest('[data-ws-clear]')) { const AS = root.PeelAreaSelect; if (AS && AS.clearSelection) AS.clearSelection(); renderPage(true); return; }
     // Review an FSR: the comparison as text for the review, or printed.

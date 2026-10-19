@@ -3482,3 +3482,15 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .eat-key .eat-k.eat-w { width: 14px; }
 .eat-key .eat-k.eat-now { height: 10px; }
 @media (max-width: 480px) { .eat-row, .eat-axis { grid-template-columns: 1fr; gap: 2px; } .eat-axis .eat-nm { display: none; } }
+
+/* Check a site: water and wastewater, existing and planned (js/reports.js sketchSVG infra). */
+.sk-sys { margin: 0 0 var(--space-2); }
+.home-map[data-sys="w"] .sk-ww, .home-map[data-sys="ww"] .sk-w { display: none; }
+.sk-leg { display: block; margin-top: 2px; }
+.sk-k { display: inline-block; width: 16px; height: 0; vertical-align: middle; margin: 0 2px 0 var(--space-2); border-top: 2.5px solid var(--text-muted); }
+.sk-k-w { border-top-color: var(--pipe-water); }
+.sk-k-w.dash, .sk-k-w.dot { border-top-color: var(--dc-w-trans); }
+.sk-k-ww0 { border-top-color: var(--pipe-sanitary); }
+.sk-k-ww { border-top-color: var(--dc-ww-main); }
+.sk-k-tight { border-top-color: var(--cap-tight); } .sk-k-over { border-top-color: var(--cap-over); }
+.sk-k.dash { border-top-style: dashed; } .sk-k.dot { border-top-style: dotted; }
