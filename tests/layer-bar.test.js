@@ -1,6 +1,7 @@
 'use strict';
 // SPEC §2: one stacked-bar component in the layer tokens; hatched = estimated, red hatch = beyond rated.
 const test = require('node:test');
+const { siteTest } = require('./helpers/site-check.js');
 const assert = require('node:assert/strict');
 const fs = require('fs');
 const path = require('path');
@@ -81,7 +82,7 @@ test('one scenario line: the chip in the top bar; no footer line, no in-tab copy
   assert.match(read('css/app.css'), /\.footer > \.scen-bar \{ display: none; \}/);
 });
 
-test('site badge: one stage pill (Bovaird → "2 · In review · zoning approved"; Embleton → "5 · Under construction · 343 left to permit")', { skip: !require('./helpers/real-devs.js').available() && 'snapshot not present' }, () => {
+siteTest('site badge: one stage pill (Bovaird → "2 · In review · zoning approved"; Embleton → "5 · Under construction · 343 left to permit")', { skip: !require('./helpers/real-devs.js').available() && 'snapshot not present' }, () => {
   const H = require('./helpers/real-devs.js');
   const { byKey, projects } = H.realDevs();
   const strip = h => h.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();

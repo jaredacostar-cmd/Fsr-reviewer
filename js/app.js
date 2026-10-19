@@ -477,7 +477,8 @@
     const d = state.snapshot ? ` · data ${state.snapshot.generatedAt.slice(0, 10)}` : '';
     $('#app-version').textContent = `App version ${APP_VERSION === '__BUILD__' ? 'dev' : APP_VERSION}${d}`;
     // The bottom bar's right end (SPEC §4): data date, version, change log.
-    const meta = v => { const el = $('#tb-meta'); if (el) el.innerHTML = `Data ${esc(state.snapshot && state.snapshot.generatedAt ? state.snapshot.generatedAt.slice(0, 10) : 'live')} · ${esc(v)} · <button type="button" class="btn small link" data-tbg-log>Change log</button>`; };
+    // (a held weekly update is said beside the date: js/refresh-status.js)
+    const meta = v => { const el = $('#tb-meta'); if (el) el.innerHTML = `Data ${esc(state.snapshot && state.snapshot.generatedAt ? state.snapshot.generatedAt.slice(0, 10) : 'live')}${window.PeelRefresh && window.PeelRefresh.held(state.refresh) ? ' (update held)' : ''} · ${esc(v)} · <button type="button" class="btn small link" data-tbg-log>Change log</button>`; };
     meta(APP_VERSION === '__BUILD__' ? 'dev' : APP_VERSION);
     PeelChangelog.loadChangelog().then(() => { const r = PeelChangelog.currentRelease(); if (r) { $('#app-version').textContent = `App version ${r.version} (build ${APP_VERSION === '__BUILD__' ? 'dev' : APP_VERSION})${d} · see the Change log tab`; meta(`v${r.version}`); } });
   }
@@ -572,6 +573,8 @@
         await Promise.race([treeCountsLoad, new Promise(r => setTimeout(r, 20000))]);
         finishFull();
         applySnapshot(snap);
+        // This week's update held for review: said under the banner and beside the data date.
+        if (window.PeelRefresh) PeelRefresh.load().then(st => { state.refresh = st; PeelRefresh.render(st, snap.generatedAt); if (PeelRefresh.held(st)) renderVersion(); });
         if (window.PeelOffline) PeelOffline.setCachedAt(Date.now());
         // User-added sources aren't in the snapshot: load those live.
         const missing = state.sources.filter(s => s.enabled && !s.fromSnapshot);

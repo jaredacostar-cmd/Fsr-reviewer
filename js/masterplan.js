@@ -87,7 +87,7 @@
     const M = App().state.svcModel, bc = CA().baselineCensus(); if (!M || !bc || !WT().WF.data || !App().state.servicing) return null;
     if (mpWaterGrowth.key === scenarioKey() + App().state.projects.length) return mpWaterGrowth.v;
     const groups = Object.fromEntries(MP2020.water.map(r => [r.key, []]));
-    for (const p of App().state.projects.concat(App().state.whatifs || [])) {
+    for (const p of SD().svcDevs()) {
       if (p.phase === 'cancelled' || p.lat == null || MM().svcLayerOf(p) === 'existing') continue;
       const zid = SD().svcIds(p, 'pz')[0]; if (!zid) continue;
       const t = WT().waterTrace(p, zid); if (!t || !t.steps.length) continue;
@@ -348,7 +348,7 @@
     const key = scenarioKey() + App().state.projects.length;
     if (!bodGrowth.v || bodGrowth.key !== key) { bodGrowth.v = {}; bodGrowth.key = key; }
     if (bodGrowth.v[pl]) return bodGrowth.v[pl];
-    const devs = App().state.projects.concat(App().state.whatifs || []).filter(p => {
+    const devs = SD().svcDevs().filter(p => {
       if (p.phase === 'cancelled' || p.lat == null || MM().svcLayerOf(p) === 'existing') return false;
       const d = SD().svcById.get(SD().svcIds(p, 'dr')[0]); return !!d && d.plant === pl;
     });
@@ -490,7 +490,7 @@
     const key = scenarioKey() + App().state.projects.length;
     if (mpSystemGrowth.key === key) return mpSystemGrowth.v;
     const groups = { W: [], C: [], E: [] }, level = new Map();
-    for (const p of App().state.projects.concat(App().state.whatifs || [])) {
+    for (const p of SD().svcDevs()) {
       if (p.phase === 'cancelled' || p.lat == null || MM().svcLayerOf(p) === 'existing') continue;
       const zid = SD().svcIds(p, 'pz')[0]; if (!zid) continue;
       const tr = WT().waterTrace(p, zid), s = traceSystem(tr); if (!s) continue;
@@ -634,7 +634,7 @@
     const members = c.kind === 'pipe' ? new Set(c.members || [c.i]) : null;
     const zones = c.devSet ? null : c.zones ? new Set(c.zones) : null;
     if (members) SC().sewerGrowth();
-    for (const p of App().state.projects.concat(App().state.whatifs || [])) {
+    for (const p of SD().svcDevs()) {
       const lay = MM().svcLayerOf(p); if (!['built', 'approved', 'proposed'].includes(lay)) continue;
       let hit = false;
       if (c.devSet) hit = c.devSet.has(p);

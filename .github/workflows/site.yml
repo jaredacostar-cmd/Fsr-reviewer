@@ -10,7 +10,12 @@ on:
   schedule:
     # Mondays 10:17 UTC (6:17 am Toronto in summer, 5:17 am in winter)
     - cron: '17 10 * * 1'
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      accept_data:
+        description: "Publish this week's data even though it moved more than usual (after a look at the review issue); failing tests still hold it"
+        type: boolean
+        default: false
 
 concurrency:
   group: site
@@ -24,6 +29,7 @@ jobs:
     timeout-minutes: 60
     permissions:
       contents: write
+      issues: write   # the review issue when this week's data is held
     # Shared with the Probe data sources workflow, which commits data to the branch it runs on:
     # one data commit at a time per branch.
     concurrency:
@@ -36,7 +42,10 @@ jobs:
         with:
           node-version: 22
 
+      # (tests pinned to one real site follow the data: reported, not fatal, tests/helpers/site-check.js)
       - name: Unit tests
+        env:
+          SITE_CHECKS: warn
         run: npm test
 
       - name: Build snapshot
@@ -99,11 +108,50 @@ jobs:
           node scripts/fetch-addresses.js --out /tmp/ext-raw
           node scripts/build-addresses.js /tmp/ext-raw data/snapshot.json data/address-points.json
 
-      - name: Commit if changed
+      # The review gate (scripts/data-check.js): the tests on this week's data, and this week against
+      # last week. A failing test, or a measure that moved more than usual, holds the update.
+      - name: Check this week's data
+        id: check
+        env:
+          SITE_CHECKS: warn
+          SITE_CHECKS_REPORT: /tmp/site-checks.jsonl
+          ACCEPT: ${{ inputs.accept_data }}
         run: |
+          mkdir -p /tmp/prev
+          git show HEAD:data/snapshot.json > /tmp/prev/snapshot.json
+          git show HEAD:data/tree-counts.json > /tmp/prev/tree-counts.json || true
+          : > "$SITE_CHECKS_REPORT"
+          if npm test > /tmp/test.log 2>&1; then failed=0; else failed="$(grep -c '^not ok' /tmp/test.log || true)"; [ "${failed:-0}" -gt 0 ] || failed=1; fi
+          accept=""; [ "$ACCEPT" = "true" ] && accept="--accept"
+          node scripts/data-check.js --prev /tmp/prev --data data --site-report "$SITE_CHECKS_REPORT" --tests-failed "${failed:-0}" --test-log /tmp/test.log $accept --out /tmp/check.json --md /tmp/check.md
+          cat /tmp/check.md >> "$GITHUB_STEP_SUMMARY"
+          echo "held=$(node -e "process.stdout.write(require('/tmp/check.json').held ? 'true' : 'false')")" >> "$GITHUB_OUTPUT"
+
+      # Held: last week's data stays, the app says so (data/refresh.json), and one open review issue
+      # (label data-held) gets the table: a new one, or a comment on the one still open.
+      - name: Hold this week's data for review
+        if: steps.check.outputs.held == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git checkout -- data/
+          gh label create data-held --color FBCA04 --description "Weekly data update held for review" --force
+          url="$(gh issue list --label data-held --state open --json url --jq '.[0].url')"
+          if [ -n "$url" ]; then gh issue comment "$url" --body-file /tmp/check.md; else url="$(gh issue create --title "Weekly data update held for review ($(date -u +%Y-%m-%d))" --body-file /tmp/check.md --label data-held)"; fi
+          node scripts/data-check.js --refresh-json data/refresh.json --check /tmp/check.json --issue "$url"
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/snapshot.json data/history.json data/areas.json data/das.json data/das-2016.json data/council.json data/council-decisions.json data/fsr.json data/tree-counts.json data/capital.json data/capital-links-audit.json data/eas.json data/eas-review.csv data/address-points.json
+          git add data/refresh.json
+          git diff --cached --quiet || { git commit -m "Weekly data update held for review $(date -u +%Y-%m-%d)"; bash scripts/push-data.sh; }
+          echo "::warning::This week's data update is held for review: $url"
+
+      - name: Commit if changed
+        if: steps.check.outputs.held != 'true'
+        run: |
+          node scripts/data-check.js --refresh-json data/refresh.json --check /tmp/check.json
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/snapshot.json data/history.json data/areas.json data/das.json data/das-2016.json data/council.json data/council-decisions.json data/fsr.json data/tree-counts.json data/capital.json data/capital-links-audit.json data/eas.json data/eas-review.csv data/address-points.json data/refresh.json
           if git diff --cached --quiet; then
             echo "No changes."
           else
@@ -137,8 +185,11 @@ jobs:
           node-version: 22
 
       # A broken build never goes live: the unit tests, and every script index.html loads
-      # checked for names that aren't defined in their module (eslint.config.mjs).
+      # checked for names that aren't defined in their module (eslint.config.mjs). Tests pinned to one
+      # real site follow the data and are reported, not fatal (the weekly check reviews them).
       - name: Unit tests
+        env:
+          SITE_CHECKS: warn
         run: npm test
 
       - name: Script check (undefined names)

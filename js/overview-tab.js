@@ -409,7 +409,7 @@
     // The management headline first (js/layers.js): the whole pipeline, rounded, and its split; then the
     // detail as before.
     const scopeW = scopeText(), pipeL = root.PeelLayers && root.PeelLayers.pipeline ? root.PeelLayers.pipeline(set) : null;
-    const infL = root.PeelLayers && root.PeelLayers.infill ? root.PeelLayers.infill(infillScope()) : null;
+    const infL = root.PeelLayers && root.PeelLayers.infill ? root.PeelLayers.infill(infillScope(), { secondUnits: secondUnitScope() }) : null;
     const mgmt = pipeL ? `<span class="ov-mgmt">${root.PeelLayers.headlineText(pipeL, /^all of peel$/i.test(scopeW) ? '' : ` (${esc(scopeW)})`, fmtNum, s => `<strong>${s}</strong>`, infL)}</span> ` : '';
     const hl = set.length ? `${mgmt}The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(Math.max(0, e.population - pre.people)))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(Math.max(0, unitsAll - pre.units)))} units${lyTiles.built >= 0.5 && (basis === 'all' || basis === 'buildout') ? `, <strong>${fmtNum(Math.round(lyTiles.built))}</strong> of them built since 2021` : ''}${pre.units >= 0.5 ? ` <span class="muted">(not counting ${fmtNum(Math.round(pre.units))} completed before the 2021 Census, already in it)</span>` : ''}.${tight ? ` <strong>${esc(SV().PLANT_SHORT[tight.pl])}</strong> ${SvcTab().trigText(tight)} (existing + built + committed ${SvcTab().pctRated(tight, 'com')}% of rated capacity → ${SvcTab().pctRated(tight, 'bo')}% at build-out).` : ''}` : 'No developments match the current filters.';
     // ⓘ line: method, criteria, data dates.
@@ -489,6 +489,11 @@
     const st = App().state; if ((st.sp && st.sp.length) || (st.mtsa && st.mtsa.length) || st.daCtx) return [];
     return (st.projects || []).filter(p => !(p.kinds || []).includes('application') && (!st.muni || p.municipality === st.muni));
   }
+  // The second units held aside by the developments build (js/phases.js), for the same scope.
+  function secondUnitScope() {
+    const st = App().state; if ((st.sp && st.sp.length) || (st.mtsa && st.mtsa.length) || st.daCtx) return [];
+    return ((st.projects && st.projects.secondUnits) || []).filter(r => !st.muni || r.municipality === st.muni);
+  }
   function scopeText() { return scopeLabel({ muni: App().state.muni, sp: App().state.sp.length ? PA().spSummary() : '', mtsa: App().state.mtsa.length ? 'MTSA filter' : '', svc: root.PeelSvcScope ? root.PeelSvcScope.label() : '' }); }
   // Units of the developments shown inside the filtered plans, and in their parts outside, when a
   // plan filter is on and some development straddles the boundary (else null: nothing to reconcile).
@@ -523,7 +528,7 @@
   });
 
   // ---- Public contract ----
-  const api = { renderOverview, renderVerdictCard, scopeText, scopeLabel, infillScope, capacityBarsHTML, lastAreaSpec: () => lastArea };
+  const api = { renderOverview, renderVerdictCard, scopeText, scopeLabel, infillScope, secondUnitScope, capacityBarsHTML, lastAreaSpec: () => lastArea };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelOverviewTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);

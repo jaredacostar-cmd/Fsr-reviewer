@@ -2,6 +2,7 @@
 // SPEC 1.3: the stalled clock uses every file event, permit and council item; a file under appeal is
 // under appeal, never stalled; stalled / active / appeal split Proposed (phase 2, under review).
 const test = require('node:test');
+const { siteTest } = require('./helpers/site-check.js');
 const assert = require('node:assert/strict');
 const P = require('../js/phases.js');
 const H = require('./helpers/real-devs.js');
@@ -20,7 +21,7 @@ test('proposedStateOf: active · stalled · appeal, only for proposals under rev
   assert.equal(P.proposedStateOf(proj({ phase: 'inception', last: new Date(now - 5 * Y), records: [app()] }), now), null);
 });
 
-test('acceptance: 1580 and 1650 Dundas St E is under appeal, not stalled; its council item counts as activity', { skip: !H.available() && 'snapshot not present' }, () => {
+siteTest('acceptance: 1580 and 1650 Dundas St E is under appeal, not stalled; its council item counts as activity', { skip: !H.available() && 'snapshot not present' }, () => {
   const p = H.realDevs().byKey.get('Mississauga|1580 AND 1650 DUNDAS ST E');
   assert.ok(p);
   const s = P.proposedStateOf(p);

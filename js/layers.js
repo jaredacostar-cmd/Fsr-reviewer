@@ -199,6 +199,21 @@
       out.byMuni[p.municipality] = (out.byMuni[p.municipality] || 0) + net;
       if (p.municipality === 'Brampton') out.brampton = true;
     }
+    // Second units in existing houses held aside by the developments build (js/phases.js
+    // isSecondUnitConversion): their new homes, once per permit.
+    const seen = new Set(); let bramptonSecond = false;
+    for (const r of opts.secondUnits || []) {
+      const k = `${r.municipality}|${r.ref || r.uid}`;
+      if (seen.has(k) || r.phase === 'cancelled' || !(r.units > 0)) continue;
+      const at = issuedAt(r); if (at == null || at < since) continue;
+      seen.add(k);
+      out.units += r.units; out.suites += r.units; out.sites++;
+      if (r.phase === 'completed') out.completed += r.units;
+      out.byMuni[r.municipality] = (out.byMuni[r.municipality] || 0) + r.units;
+      if (r.municipality === 'Brampton') bramptonSecond = true;
+    }
+    // (Brampton's second units were missing from its open data until October 2026)
+    if (bramptonSecond) out.brampton = false;
     return out;
   }
 

@@ -86,12 +86,12 @@
   // scan of every development for every area: about 3 million svcIds calls a render). Same order.
   let svcIdx = null;
   function indexSvc() {
-    const devs = App().state.projects.concat(App().state.whatifs || []).filter(p => p.phase !== 'cancelled'), idx = { pz: new Map(), dr: new Map() };
+    const devs = SD().svcDevs().filter(p => p.phase !== 'cancelled'), idx = { pz: new Map(), dr: new Map() };
     for (const key of ['pz', 'dr']) for (const p of devs) for (const id of new Set(SD().svcIds(p, key))) { const l = idx[key].get(id); if (l) l.push(p); else idx[key].set(id, [p]); }
     return idx;
   }
   function svcLayerTotals(key, a, bc) {
-    const devs = svcIdx ? svcIdx[key].get(a.id) || [] : App().state.projects.concat(App().state.whatifs || []).filter(p => p.phase !== 'cancelled' && SD().svcIds(p, key).includes(a.id));
+    const devs = svcIdx ? svcIdx[key].get(a.id) || [] : SD().svcDevs().filter(p => p.phase !== 'cancelled' && SD().svcIds(p, key).includes(a.id));
     const gr = Areas().growthSince(devs, {}, bc.date, App().state.criteria);
     return { census: svcCensusPop(bc).get(a.id) || 0, built: gr.built.population, approved: gr.approved.population, proposed: gr.proposed.population,
       ...svcJobs(devs, bc.date),

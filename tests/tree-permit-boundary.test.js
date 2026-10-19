@@ -2,6 +2,7 @@
 // SPEC 1.1 (a permit commits only the file whose boundary holds it) and 1.2 (council decisions
 // feed the phase): synthetic cases, then the acceptance case on the real data.
 const test = require('node:test');
+const { siteTest } = require('./helpers/site-check.js');
 const assert = require('node:assert/strict');
 const P = require('../js/phases.js');
 const C = require('../js/council-decisions.js');
@@ -109,7 +110,7 @@ test('1.2 a zoning by-law passed at council makes the file "Zoning approved", na
 });
 
 // ---- The acceptance case on the real data (data/snapshot.json, data/tree-counts.json, data/council-decisions.json).
-test('acceptance: Brampton|2055 BOVAIRD DR W is under review, zoning approved; its draft plans commit nothing; C05W07.006 does', { skip: !H.available() && 'snapshot not present' }, () => {
+siteTest('acceptance: Brampton|2055 BOVAIRD DR W is under review, zoning approved; its draft plans commit nothing; C05W07.006 does', { skip: !H.available() && 'snapshot not present' }, () => {
   const { byKey } = H.realDevs();
   const p = byKey.get('Brampton|2055 BOVAIRD DR W');
   assert.ok(p, 'the development exists');

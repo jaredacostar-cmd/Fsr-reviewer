@@ -289,6 +289,10 @@ body {
   overflow: hidden;
 }
 /* Unofficial prototype banner: slim always-visible strip at the very top. */
+/* The weekly data update held for review (js/refresh-status.js) */
+.refresh-held { flex: none; background: var(--surface-2); border-left: 3px solid var(--accent); color: var(--text-primary); font-size: var(--fs-2); padding: var(--space-1) var(--space-3); }
+.refresh-held[hidden] { display: none; }
+.refresh-held a { color: var(--accent); }
 .unofficial-banner {
   flex: none;
   background: var(--surface-2);
