@@ -828,11 +828,168 @@
       if (liveKey !== p.key) return;
       renderStormMains(p, res);
       fillPonds(p, res);
+      fillNetworks(p);
     }).catch(() => {
       if (liveKey !== p.key) return;
       const box = document.getElementById('devtab-exist-storm');
       if (box) box.innerHTML = '<p class="small muted ex-fail">Couldn\'t load the storm sewers from the municipal GIS · <button type="button" class="btn small link" data-dt-exr="' + exR + '">Retry</button></p>';
     });
+  }
+
+  // ---- Site: water and wastewater, existing and planned ----------------------------------------
+  // Within a radius of the development's point (100 m – 1 km, as the storm sewers): the Region's
+  // watermains and sanitary sewers of 300 mm+ (data/watermains.json, data/sewers.json, bundled), the
+  // 2026 DC works and the Region's capital projects planned or under construction. Each main with its
+  // street (the nearest Region address point, data/address-points.json) and, for water, its pressure
+  // zone (the zone it runs in). A small map shows them all; a row highlights its main and back.
+  const NET_RS = [100, 200, 400, 1000];
+  let netR = 400;
+  try { const v = +localStorage.getItem('peel-dev:dt-netr'); if (NET_RS.includes(v)) netR = v; } catch (e) { /* node */ }
+  function segM(pt, a, b) {
+    const kx = 111320 * Math.cos(pt[1] * Math.PI / 180), ky = 110540;
+    const ax = (a[0] - pt[0]) * kx, ay = (a[1] - pt[1]) * ky, bx = (b[0] - pt[0]) * kx, by = (b[1] - pt[1]) * ky, dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy;
+    const t = L ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / L)) : 0;
+    return { m: Math.hypot(ax + t * dx, ay + t * dy), at: [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])] };
+  }
+  function lineNear(pt, pts) {
+    if (pts.length === 1) return segM(pt, pts[0], pts[0]);
+    let best = null; for (let i = 1; i < pts.length; i++) { const c = segM(pt, pts[i - 1], pts[i]); if (!best || c.m < best.m) best = c; }
+    return best;
+  }
+  const mTxt = m => (m < 10 ? 'at the site' : `${fmtNum(Math.round(m / 5) * 5)} m`);
+  const titleSt = s => String(s || '').toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase()).replace(/\b(Dr|Rd|St|Ave|Blvd|Cres|Crt|Pkwy|Hwy|Sdrd|Trl|Ln|Pl|Cir|Ct|Gt|Terr)\b/g, w => w);
+  // Street: the nearest address point within 150 m (a grid over the Region's address points).
+  let addrGrid = null;
+  function streetNear(at) {
+    const D = state() && state().addressPoints;
+    if (!D) { if (root.PeelAddr && root.PeelAddr.loadPoints) root.PeelAddr.loadPoints().then(() => { addrGrid = null; if (netP) fillNetworks(netP); }); return null; }
+    if (!addrGrid) {
+      addrGrid = new Map();
+      for (const [k, v] of Object.entries(D.a || {})) {
+        const [, , name, type, dir] = k.split('|'), g = `${Math.floor(v[2] / 0.002)},${Math.floor(v[1] / 0.002)}`;
+        (addrGrid.get(g) || addrGrid.set(g, []).get(g)).push([v[2], v[1], [name, type, dir].filter(Boolean).join(' ')]);
+      }
+    }
+    const cx = Math.floor(at[0] / 0.002), cy = Math.floor(at[1] / 0.002); let best = null, bd = 150;
+    for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (const q of addrGrid.get(`${cx + dx},${cy + dy}`) || []) { const m = segM(at, [q[0], q[1]], [q[0], q[1]]).m; if (m < bd) { bd = m; best = q[2]; } }
+    return best ? titleSt(best) : '';
+  }
+  function zoneAt(at) {
+    const st = state(), A = Areas(); if (!st || !st.servicing || !A) return '';
+    const id = A.locate(st.servicing.zones, at[0], at[1])[0], z = id && st.servicing.zones.find(x => x.id === id);
+    return z ? `zone ${z.zone}` : '';
+  }
+  // The Region's watermains of 300 mm+ (data/watermains.json, as the water trace), as segments.
+  const WMS = { segs: null, loading: null };
+  function watermainSegs() {
+    if (WMS.segs || WMS.loading || !hasDOM()) return WMS.segs;
+    WMS.loading = fetch('data/watermains.json').then(r => (r.ok ? r.json() : null)).then(d => {
+      if (!d) return;
+      const xs = [], ys = []; for (let i = 0, x = 0, y = 0; i < d.xy.length; i += 2) { x += d.xy[i]; y += d.xy[i + 1]; xs.push(x / 1e5); ys.push(y / 1e5); }
+      const segs = []; for (let i = 0; i < d.e.length; i += 3) { const a = d.e[i], b = a + d.e[i + 1]; segs.push([xs[a], ys[a], xs[b], ys[b], d.e[i + 2]]); }
+      WMS.segs = segs; if (netP) fillNetworks(netP);
+    }).catch(() => {});
+    return null;
+  }
+  // Streets the address points can't give (no address within 150 m): the live reverse lookup the
+  // storm sewers use, filled in when it answers.
+  const liveStreet = new Map();
+  function streetOf(at) {
+    const s0 = streetNear(at); if (s0) return s0;
+    const k = `${at[1].toFixed(4)},${at[0].toFixed(4)}`;
+    if (liveStreet.has(k)) return liveStreet.get(k) || '';
+    liveStreet.set(k, '');
+    streetAt(at[1], at[0]).then(st => { if (st) { liveStreet.set(k, st); clearTimeout(streetRedraw); streetRedraw = setTimeout(() => netP && fillNetworks(netP), 300); } }).catch(() => {});
+    return '';
+  }
+  let streetRedraw = null;
+  // Everything within r: [{ id, sys, kind: existing|dc|cap, m, paths, html }], grouped into mains.
+  let netP = null, netItems = [];
+  function netItemsOf(p, r) {
+    const pt = [p.lng, p.lat], st = state(), out = [], box = (x, y) => Math.abs(x - pt[0]) < 0.02 && Math.abs(y - pt[1]) < 0.015;
+    const group = (sys, kind, key, it) => { const g = out.find(o => o.sys === sys && o.kind === kind && o.key === key); if (!g) out.push({ sys, kind, key, ...it, paths: [...it.paths] }); else { g.paths.push(...it.paths); if (it.m < g.m) { g.m = it.m; g.at = it.at; } } };
+    // Existing watermains (300 mm+).
+    const segs = watermainSegs();
+    for (const [x1, y1, x2, y2, d] of segs || []) {
+      if (!box(x1, y1)) continue;
+      const c = segM(pt, [x1, y1], [x2, y2]); if (c.m > r) continue;
+      const street = streetNear(c.at) || '', zone = zoneAt(c.at);
+      group('water', 'existing', `${d}|${street}|${zone}`, { m: c.m, at: c.at, d, street, zone, paths: [[[x1, y1], [x2, y2]]] });
+    }
+    // Existing sanitary sewers (300 mm+).
+    const S = root.PeelMapMarkers && root.PeelMapMarkers.SEW;
+    if (S && S.data) S.data.pipes.forEach(q => {
+      const c0 = q[10]; if (!box(c0[0], c0[1])) return;
+      const pts = []; for (let k = 0; k < c0.length; k += 2) pts.push([c0[k], c0[k + 1]]);
+      const c = lineNear(pt, pts); if (!c || c.m > r) return;
+      const street = streetNear(c.at) || '';
+      group('wastewater', 'existing', `${q[0]}|${q[7] || ''}|${street}`, { m: c.m, at: c.at, d: q[0], year: q[7], street, paths: [pts] });
+    });
+    // Planned: the 2026 DC works (one entry per project) and the Region's projects.
+    const DI = root.PeelDcInfra, CM = root.PeelCapitalEAModel;
+    for (const sys of ['water', 'wastewater']) {
+      for (const ln of (st && st.dcInfra && st.dcInfra[sys] && st.dcInfra[sys].lines) || []) {
+        const c = lineNear(pt, ln.g); if (!c || c.m > r) continue;
+        const kind = DI && DI.DC_KIND && DI.DC_KIND[ln.k] ? DI.DC_KIND[ln.k][0] : 'Planned main';
+        group(sys, 'dc', ln.p || ln.c || `${ln.n}|${ln.y}`, { m: c.m, at: c.at, d: ln.d, name: ln.n || kind, year: ln.y, status: ln.s, ref: ln.p || ln.c || '', street: streetNear(c.at) || '', zone: sys === 'water' ? zoneAt(c.at) : '', paths: [ln.g] });
+      }
+      for (const rec of (st && st.capital && st.capital.records) || []) {
+        if (rec.system !== sys || !['planned', 'tendered', 'awarded', 'under construction'].includes(rec.status) || !rec.geometry) continue;
+        const lines = rec.geometry.type === 'LineString' ? [rec.geometry.coordinates] : rec.geometry.type === 'MultiLineString' ? rec.geometry.coordinates : [];
+        const c = lines.map(l => lineNear(pt, l)).filter(Boolean).sort((a, b) => a.m - b.m)[0]; if (!c || c.m > r) continue;
+        const yr = (rec.startActual || rec.startTarget || '').slice(0, 4);
+        group(sys, 'cap', rec.contract || rec.projectNumber || rec.id, { m: c.m, at: c.at, name: CM && CM.workLabel ? CM.workLabel(rec.workType) : rec.workType, status: rec.status, year: yr, started: !!rec.startActual, ref: rec.projectNumber || '', street: rec.street ? titleSt(rec.street) : streetNear(c.at) || '', zone: sys === 'water' ? zoneAt(c.at) : '', paths: lines });
+      }
+    }
+    out.sort((a, b) => a.m - b.m).forEach((o, k) => { o.id = k; });
+    // (no address point near: the live lookup, for the nearest dozen mains only)
+    out.filter(o => !o.street).slice(0, 12).forEach(o => { o.street = streetOf(o.at); });
+    return out;
+  }
+  function netRowHTML(o) {
+    const where = [o.street ? `on <strong>${esc(o.street)}</strong>` : '', o.zone ? esc(o.zone) : '', mTxt(o.m)].filter(Boolean).join(' · ');
+    let what;
+    if (o.kind === 'existing') what = `${fmtNum(o.d)} mm${o.year ? `, ${o.year}` : ''}`;
+    else if (o.kind === 'dc') what = `${esc(o.name)}${o.d ? ` · ${fmtNum(o.d)} mm` : ''} · <b>${o.year ? `in service ${o.year}` : 'year not set'}</b> <small class="muted">${['2026 DC ' + (o.status || ''), o.ref].filter(Boolean).map(esc).join(' · ')}</small>`;
+    else what = `${esc(o.name || 'Capital project')} · <b>${esc(o.status)}${o.year ? ` ${o.started ? 'since' : 'from'} ${o.year}` : ''}</b> <small class="muted">Region project ${esc(o.ref)}</small>`;
+    return `<li><button type="button" class="net-row" data-net-hl="${o.id}" aria-pressed="false"><i class="net-sw net-${o.sys === 'water' ? 'w' : 'ww'} net-${o.kind}"></i><span>${what} <span class="muted">${where}</span></span></button></li>`;
+  }
+  function netMapSVG(p, items, r) {
+    const W = 340, H = 220, half = r * 1.25, kx = 111320 * Math.cos(p.lat * Math.PI / 180), ky = 110540, s = Math.min(W, H) / (2 * half);
+    const X = (x, y) => [(W / 2 + (x - p.lng) * kx * s).toFixed(1), (H / 2 - (y - p.lat) * ky * s).toFixed(1)];
+    const d = pts => pts.map((q, i) => `${i ? 'L' : 'M'}${X(q[0], q[1]).join(',')}`).join('');
+    const storm = (exGroups.storm && exGroups.storm.list) || [];
+    const lines = [
+      ...storm.flatMap(g => g.paths.map(pth => `<path d="${d(pth)}" class="net-l-storm"/>`)),
+      ...items.map(o => `<g class="net-g net-${o.sys === 'water' ? 'w' : 'ww'} net-${o.kind}" data-net-hl="${o.id}">${o.paths.map(pth => `<path d="${d(pth)}"/>`).join('')}</g>`),
+    ];
+    const rr = (r * kx * s / kx * 1).toFixed(1), bar = r >= 1000 ? 500 : r >= 400 ? 200 : 50;
+    const WP = root.PeelWsPages, deg = half * 1.5 / 111320, tiles = WP && WP.tilesSVG ? WP.tilesSVG((x, y) => X(x, y).map(Number), [p.lng - deg / Math.cos(p.lat * Math.PI / 180), p.lat - deg, p.lng + deg / Math.cos(p.lat * Math.PI / 180), p.lat + deg], W, H) : '';
+    return `<svg class="net-map" viewBox="0 0 ${W} ${H}" role="img" aria-label="Water and wastewater within ${r} m of the site">${tiles}<circle cx="${W / 2}" cy="${H / 2}" r="${(r * s).toFixed(1)}" class="net-ring"/>${lines.join('')}<circle cx="${W / 2}" cy="${H / 2}" r="5" class="net-site"/><g class="net-bar"><rect x="8" y="${H - 12}" width="${(bar * s).toFixed(1)}" height="3"/><text x="8" y="${H - 16}">${bar} m</text></g></svg>`;
+  }
+  function netBlockHTML(p) {
+    const items = netItemsOf(p, netR); netItems = items;
+    const loading = !WMS.segs || !(root.PeelMapMarkers && root.PeelMapMarkers.SEW && root.PeelMapMarkers.SEW.data);
+    const rBtns = `<div class="ex-r"><span class="muted small">Within</span> ${NET_RS.map(x => `<button type="button" class="btn small${x === netR ? ' on' : ''}" data-dt-netr="${x}">${x >= 1000 ? `${x / 1000} km` : `${x} m`}</button>`).join('')}</div>`;
+    const part = (sys, label) => {
+      const ex = items.filter(o => o.sys === sys && o.kind === 'existing'), pl = items.filter(o => o.sys === sys && o.kind !== 'existing');
+      const list = (xs, none) => (xs.length ? `<ul class="net-list">${xs.slice(0, 6).map(netRowHTML).join('')}</ul>${xs.length > 6 ? `<details class="ex-more"><summary class="small">${xs.length - 6} more</summary><ul class="net-list">${xs.slice(6).map(netRowHTML).join('')}</ul></details>` : ''}` : `<p class="small muted">${none}</p>`);
+      return `<div class="net-sys"><h5>${label}</h5><div class="net-sub">Existing</div>${list(ex, loading ? 'Loading…' : `None of 300 mm+ within ${netR >= 1000 ? '1 km' : `${netR} m`}`)}<div class="net-sub">Planned</div>${list(pl, `Nothing in the 2026 DC program or the Region’s projects within ${netR >= 1000 ? '1 km' : `${netR} m`}`)}</div>`;
+    };
+    return `${rBtns}<div class="net-wrap"><div class="net-mapbox">${netMapSVG(p, items, netR)}<p class="small muted net-key"><i class="net-sw net-w net-existing"></i> watermain <i class="net-sw net-ww net-existing"></i> sanitary sewer <i class="net-sw net-storm"></i> storm sewer · solid existing, <i class="net-sw net-w net-dc"></i> dashed 2026 DC, <i class="net-sw net-w net-cap"></i> dotted Region project</p></div>
+      <div class="net-lists">${part('water', '💧 Water')}${part('wastewater', '🚰 Wastewater')}</div></div>
+      <p class="small muted">Region mains of 300 mm+ (local mains are on the map from street zoom), measured from the development's point (not the connection point). Street: the nearest address point (else the address lookup online). Zone: the pressure zone the main runs in. Tap a row to highlight it on the small map.</p>`;
+  }
+  function fillNetworks(p) {
+    if (!hasDOM() || p.lat == null || liveKey !== p.key) return;
+    netP = p;
+    const el = document.getElementById('devtab-net'); if (el) el.innerHTML = netBlockHTML(p);
+  }
+  function netHighlight(id) {
+    const box = hasDOM() && document.getElementById('devtab-net'); if (!box) return;
+    const on = String(id);
+    box.classList.toggle('net-has-hl', true);
+    box.querySelectorAll('[data-net-hl]').forEach(el => { const hit = el.dataset.netHl === on; el.classList.toggle('hl', hit); if (el.tagName === 'BUTTON') el.setAttribute('aria-pressed', hit); });
   }
 
   // ---- Site: stormwater ponds (copied from js/app.js) --------------------------------
@@ -978,7 +1135,7 @@
     const s = currentSub();
     body.innerHTML = s === 'about' ? aboutHTML(p) : s === 'files' ? filesViewHTML(p) : siteViewHTML(p);
     if (s === 'about' || s === 'files') ensureCouncil(p);
-    if (s === 'site' && p.lat != null) { fillConstraints(p); devAerial(p); fillGround(p); fillStormMains(p); }
+    if (s === 'site' && p.lat != null) { fillNetworks(p); fillConstraints(p); devAerial(p); fillGround(p); fillStormMains(p); }
   }
   // Re-render after async data (council, FSR) arrives, keeping open sections.
   function rerenderPreserve() {
@@ -1141,6 +1298,8 @@
       if (rq) { const q = projectByKey(rq.dataset.dtRelq); if (q) navigate(q, p); return; }
       const rc = e.target.closest('[data-dt-rec]');
       if (rc) { const r = p.records.find(x => x.uid === rc.dataset.dtRec); if (r) showOnMap(r); return; }
+      const nr = e.target.closest('[data-dt-netr]');
+      if (nr) { netR = +nr.dataset.dtNetr; try { localStorage.setItem('peel-dev:dt-netr', String(netR)); } catch (err) { /* private mode */ } fillNetworks(p); return; }
       const xr = e.target.closest('[data-dt-exr]');
       if (xr) {
         exR = +xr.dataset.dtExr;
@@ -1151,6 +1310,8 @@
         return;
       }
     }
+    const nh = e.target.closest('[data-net-hl]');
+    if (nh) { netHighlight(nh.dataset.netHl); return; }
     const xh = e.target.closest('[data-dt-exhl]');
     if (xh) { highlightStormMain(xh.dataset.dtExhl.split('|')[1]); return; }
     const bb = e.target.closest('[data-dt-back]');
@@ -1170,7 +1331,7 @@
   function partHTML(p, part) {
     const has = p.lat != null, row = (t, id, msg, info) => brow(t, `<div id="${id}"${info ? ` data-info="${info}"` : ''}><p class="small muted">${msg}</p></div>`);
     if (part === 'about') return aboutHTML(p).replace(drillBackHTML(p), '');
-    if (part === 'site') return `<div class="brief">${has ? row('Constraints', 'devtab-cx', 'Checking the mapped constraint layers…') + row('Storm sewers', 'devtab-exist-storm', 'Looking up the nearest storm sewers…') + row('Stormwater', 'devtab-storm', 'Looking up stormwater ponds…', 'fire-storm') : '<p class="small muted">Not checked: this development has no map location.</p>'}</div>`;
+    if (part === 'site') return `<div class="brief">${has ? row('Water and wastewater', 'devtab-net', 'Looking up the watermains and sewers…') + row('Constraints', 'devtab-cx', 'Checking the mapped constraint layers…') + row('Storm sewers', 'devtab-exist-storm', 'Looking up the nearest storm sewers…') + row('Stormwater', 'devtab-storm', 'Looking up stormwater ponds…', 'fire-storm') : '<p class="small muted">Not checked: this development has no map location.</p>'}</div>`;
     if (part === 'ground') return `<div class="brief">${brow('Aerial check', '<div class="aerial" id="devtab-aerial"><p class="small muted">Comparing aerial photos…</p></div>')}${has ? row('Ground', 'devtab-ground', 'Looking up ground elevation…', 'ground') : ''}</div>`;
     if (part === 'files') return filesTreeHTML(p);
     if (part === 'history') return devHistoryHTML(p, statusOf(p));
@@ -1192,7 +1353,7 @@
     if (!hasDOM() || !p) return;
     liveKey = p.key;
     if (parts.includes('about') || parts.includes('history')) ensureCouncil(p);
-    if (parts.includes('site') && p.lat != null) { fillConstraints(p); fillStormMains(p); }
+    if (parts.includes('site') && p.lat != null) { fillNetworks(p); fillConstraints(p); fillStormMains(p); }
     if (parts.includes('ground') && p.lat != null) { devAerial(p); fillGround(p); }
   }
   // ---- Public contract ------------------------------------------------------------------

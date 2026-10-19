@@ -59,14 +59,54 @@
   // A small map sketch (no basemap): sewers coloured by load, DC works, the site or developments.
   // bearing: turn it like the live map (the workspace pages pass the road grid's; printed reports
   // stay north up).
-  function sketchSVG({ center, halfM = 1200, points = [], rings = [], site = null, W = 330, H = 250, bearing = 0 }) {
+  // Street names without a basemap: the Region's address points grouped by street, each street drawn
+  // as a faint line through its addresses (their main axis) with its name along it. Offline; streets
+  // with no addresses (new roads, highways) have no label.
+  let addrCache = null;
+  function streetLines(center, halfM, onLoad) {
+    const D = App() && App().state.addressPoints;
+    if (!D) { if (root.PeelAddr && root.PeelAddr.loadPoints && onLoad) root.PeelAddr.loadPoints().then(onLoad); return []; }
+    if (!addrCache) { addrCache = []; for (const [k, v] of Object.entries(D.a || {})) { const [, , name, type, dir] = k.split('|'); addrCache.push([v[2], v[1], [name, type, dir].filter(Boolean).join(' ')]); } }
+    const kx = 111320 * Math.cos(center[1] * Math.PI / 180), ky = 110540, by = new Map();
+    for (const [x, y, n] of addrCache) { const e = (x - center[0]) * kx, s = (y - center[1]) * ky; if (Math.abs(e) > halfM * 1.2 || Math.abs(s) > halfM * 1.2) continue; (by.get(n) || by.set(n, []).get(n)).push([e, s]); }
+    const out = [];
+    for (const [n, ps] of by) {
+      if (ps.length < 4) continue;
+      const mx = ps.reduce((t, q) => t + q[0], 0) / ps.length, my = ps.reduce((t, q) => t + q[1], 0) / ps.length;
+      let sxx = 0, syy = 0, sxy = 0; for (const [x, y] of ps) { sxx += (x - mx) ** 2; syy += (y - my) ** 2; sxy += (x - mx) * (y - my); }
+      const th = 0.5 * Math.atan2(2 * sxy, sxx - syy), ux = Math.cos(th), uy = Math.sin(th);
+      let lo = Infinity, hi = -Infinity, off = 0; for (const [x, y] of ps) { const t = (x - mx) * ux + (y - my) * uy; lo = Math.min(lo, t); hi = Math.max(hi, t); off = Math.max(off, Math.abs(-(x - mx) * uy + (y - my) * ux)); }
+      if (hi - lo < 120 || off > (hi - lo) * 0.45) continue;   // too short, or not one straight street (a crescent)
+      out.push({ n: n.toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase()), a: [mx + lo * ux, my + lo * uy], b: [mx + hi * ux, my + hi * uy], len: hi - lo, cnt: ps.length });
+    }
+    return out.sort((p, q) => q.cnt - p.cnt).slice(0, 18);
+  }
+  function sketchSVG({ center, halfM = 1200, points = [], rings = [], site = null, W = 330, H = 250, bearing = 0, streets = false, onLoad = null }) {
     const kx = 111320 * Math.cos(center[1] * Math.PI / 180), ky = 111320, s = Math.min(W, H) / (2 * halfM);
     const ang = bearing * Math.PI / 180, ca = Math.cos(ang), sa = Math.sin(ang);
     const pt = (lng, lat) => { const e = (lng - center[0]) * kx, sy = -(lat - center[1]) * ky; return [W / 2 + (e * ca - sy * sa) * s, H / 2 + (e * sa + sy * ca) * s]; };
     const X = (lng, lat) => pt(lng, lat)[0], Y = (lat, lng) => pt(lng, lat)[1];
     const inBox = (lng, lat) => Math.abs((lng - center[0]) * kx) < halfM * 1.3 && Math.abs((lat - center[1]) * ky) < halfM * 1.3;
     const path = pts => pts.map(([x, y], i) => `${i ? 'L' : 'M'}${X(x, y).toFixed(1)},${Y(y, x).toFixed(1)}`).join('');
-    const out = [];
+    const out = [], lbls = [];
+    // The street basemap under it (js/ws-pages.js tilesSVG); offline, street names from addresses.
+    const WP = root.PeelWsPages, deg = halfM * 1.5 / 111320;
+    const tl = WP && WP.tilesSVG ? WP.tilesSVG((lng, lat) => pt(lng, lat), [center[0] - deg / Math.cos(center[1] * Math.PI / 180), center[1] - deg, center[0] + deg / Math.cos(center[1] * Math.PI / 180), center[1] + deg], W, H) : '';
+    if (tl) { out.push(tl.replace('class="hm-tiles"', 'class="hm-tiles sk-tiles"')); streets = false; }
+    if (streets) {
+      // (local metres east / north, turned like the sketch)
+      const P2 = ([e, n]) => { const sy = -n; return [W / 2 + (e * ca - sy * sa) * s, H / 2 + (e * sa + sy * ca) * s]; };
+      const placed = [];
+      for (const st of streetLines(center, halfM, onLoad)) {
+        const [x1, y1] = P2(st.a), [x2, y2] = P2(st.b);
+        out.push(`<path d="M${x1.toFixed(1)},${y1.toFixed(1)}L${x2.toFixed(1)},${y2.toFixed(1)}" class="sk-st"/>`);
+        let ang = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI; if (ang > 90) ang -= 180; if (ang < -90) ang += 180;
+        const cx = (x1 + x2) / 2, cy = (y1 + y2) / 2, w = st.n.length * 4.6;
+        if (Math.hypot(x2 - x1, y2 - y1) < w * 0.9 || placed.some(q => Math.hypot(q[0] - cx, q[1] - cy) < 34)) continue;
+        placed.push([cx, cy]);
+        lbls.push(`<text x="${cx.toFixed(1)}" y="${cy.toFixed(1)}" transform="rotate(${ang.toFixed(1)} ${cx.toFixed(1)} ${cy.toFixed(1)})" class="sk-st-l" text-anchor="middle" dy="-2">${esc(st.n)}</text>`);
+      }
+    }
     if (MM().SEW.data) MM().SEW.data.pipes.forEach((p, i) => {
       const c = p[10]; if (p[0] < (halfM > 4000 ? 900 : halfM > 2000 ? 600 : 0) || (!inBox(c[0], c[1]) && !inBox(c[c.length - 2], c[c.length - 1]))) return;
       const pts = []; for (let k = 0; k < c.length; k += 2) pts.push([c[k], c[k + 1]]);
@@ -80,6 +120,7 @@
     for (const r of rings) out.push(`<path d="${path(r)}Z" style="fill:color-mix(in srgb, var(--accent) 8%, transparent);stroke:var(--accent)" stroke-width="1.2"/>`);
     for (const p of points) if (p.lat != null && inBox(p.lng, p.lat)) out.push(`<circle cx="${X(p.lng, p.lat).toFixed(1)}" cy="${Y(p.lat, p.lng).toFixed(1)}" r="${Math.max(2.5, Math.min(7, Math.sqrt((p.units || 1)) / 3))}" style="fill:var(--ph-${p.phase},var(--ph-approved));stroke:var(--sym-outline)" stroke-width=".8"/>`);
     if (site) out.push(`<circle cx="${X(site[0], site[1])}" cy="${Y(site[1], site[0])}" r="7" style="fill:var(--select);stroke:var(--sym-outline)" stroke-width="2"/>`);
+    out.push(...lbls);
     const bar = halfM > 2500 ? 1000 : 500, bw = bar * s;
     return `<svg class="sk" viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" xmlns="http://www.w3.org/2000/svg" style="background:var(--surface-1)">${out.join('')}
       <g font-size="9" style="fill:var(--text-primary)"><rect x="8" y="${H - 14}" width="${bw}" height="3"/><text x="8" y="${H - 18}">${bar >= 1000 ? `${bar / 1000} km` : `${bar} m`}</text>

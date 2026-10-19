@@ -115,7 +115,7 @@
         { title: `${confirm.length} thing${confirm.length === 1 ? '' : 's'} to confirm`, rows: confirm.map(c => ({ html: `<small class="pnl-r-line">${c}</small>` })), total: confirm.length, seeAll: { 'data-full-table': 'overview' } },
       ],
       folds: [
-        { title: 'Site: constraints, storm sewers and ponds', html: DT && DT.partHTML ? DT.partHTML(p, 'site') : '' },
+        { title: 'Site: water, wastewater, constraints, storm sewers and ponds', html: DT && DT.partHTML ? DT.partHTML(p, 'site') : '' },
         { title: 'About this proposal', html: DT && DT.partHTML ? DT.partHTML(p, 'about') : '' },
         // Your asks: the file tree and the History (with each file's source record) on the board itself,
         // the same on the map's panel and on the Check a site page.

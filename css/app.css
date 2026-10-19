@@ -3486,3 +3486,46 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .eat-key .eat-k.eat-w { width: 14px; }
 .eat-key .eat-k.eat-now { height: 10px; }
 @media (max-width: 480px) { .eat-row, .eat-axis { grid-template-columns: 1fr; gap: 2px; } .eat-axis .eat-nm { display: none; } }
+
+.net-wrap { display: grid; grid-template-columns: minmax(220px, 340px) 1fr; gap: var(--space-3); align-items: start; margin-top: var(--space-2); }
+@media (max-width: 700px) { .net-wrap { grid-template-columns: 1fr; } }
+.net-map { width: 100%; height: auto; background: var(--surface-2); border-radius: 6px; display: block; }
+.net-map path { fill: none; stroke-linecap: round; }
+.net-ring { fill: none; stroke: var(--text-muted); stroke-dasharray: 3 3; }
+.net-site { fill: var(--select); stroke: var(--sym-outline); stroke-width: 2; }
+.net-bar rect, .net-bar text { fill: var(--text-primary); } .net-bar text { font-size: 9px; }
+.net-l-storm { stroke: var(--pipe-storm); stroke-width: 1.5; opacity: .7; }
+.net-g path { stroke-width: 2.5; }
+.net-g.net-w path { stroke: var(--pipe-water); } .net-g.net-ww path { stroke: var(--pipe-sanitary); }
+.net-g.net-w.net-dc path, .net-g.net-w.net-cap path { stroke: var(--dc-w-trans); } .net-g.net-ww.net-dc path, .net-g.net-ww.net-cap path { stroke: var(--dc-ww-main); }
+.net-g.net-dc path { stroke-dasharray: 6 3; } .net-g.net-cap path { stroke-dasharray: 1 4; stroke-width: 3; }
+.net-g { cursor: pointer; }
+.net-has-hl .net-g:not(.hl) { opacity: .25; } .net-g.hl path { stroke-width: 5; }
+.net-sys h5 { margin: 0 0 2px; font-size: .9em; } .net-sys + .net-sys { margin-top: var(--space-2); }
+.net-sub { font-size: .8em; color: var(--text-muted); margin-top: 2px; }
+.net-list { list-style: none; margin: 0; padding: 0; }
+.net-row { display: flex; gap: var(--space-2); align-items: baseline; width: 100%; text-align: left; background: none; border: 0; border-radius: 4px; padding: 2px 4px; color: inherit; font: inherit; font-size: .85em; cursor: pointer; }
+.net-row:hover, .net-row:focus-visible, .net-row.hl { background: color-mix(in srgb, var(--accent) 14%, transparent); }
+.net-sw { display: inline-block; flex: none; width: 16px; height: 0; border-top: 3px solid var(--text-muted); vertical-align: middle; }
+.net-sw.net-w { border-top-color: var(--pipe-water); } .net-sw.net-ww { border-top-color: var(--pipe-sanitary); } .net-sw.net-storm { border-top-color: var(--pipe-storm); }
+.net-sw.net-w.net-dc, .net-sw.net-w.net-cap { border-top-color: var(--dc-w-trans); } .net-sw.net-ww.net-dc, .net-sw.net-ww.net-cap { border-top-color: var(--dc-ww-main); }
+.net-sw.net-dc { border-top-style: dashed; } .net-sw.net-cap { border-top-style: dotted; }
+.net-key { margin: 4px 0 0; }
+.sk-st { stroke: var(--text-muted); stroke-width: 3; opacity: .22; stroke-linecap: round; fill: none; }
+.sk-st-l { font-size: 9px; fill: var(--text-secondary); paint-order: stroke; stroke: var(--surface-1); stroke-width: 3px; stroke-linejoin: round; }
+/* Basemap under the small maps (js/ws-pages.js tilesSVG): muted so the overlays read. */
+.hm-tiles { opacity: .55; }
+.home-map-svg.has-tiles .hm-base { fill: transparent; }
+.hm-credit { margin: 2px 0 0; font-size: .75em; }
+.home-map-svg .hm-ea { fill: color-mix(in srgb, var(--ea-line) 14%, transparent); stroke: var(--ea-line); stroke-width: 1; }
+.home-map-svg .hm-ea.ln { fill: none; stroke-width: 2; }
+.home-map-svg .hm-ea-limit, .home-map-svg .hm-ea-waiting { fill: color-mix(in srgb, var(--cap-tight) 30%, transparent); stroke: var(--cap-tight); }
+.home-map-svg .hm-ea-limit.ln, .home-map-svg .hm-ea-waiting.ln { fill: none; }
+.home-map-svg .hm-ea-current { stroke-dasharray: 3 2; }
+.home-map-svg .hm-ea-nodate { opacity: .45; }
+.home-map-svg .hm-cons { fill: none; stroke: var(--accent); stroke-width: 2.2; }
+.home-map-svg .hm-dev-top { fill: var(--text-primary); }
+.hm-key.hm-key-ea-wait { background: color-mix(in srgb, var(--cap-tight) 45%, transparent); border: 1px solid var(--cap-tight); }
+.hm-key.hm-key-ea-follow { background: color-mix(in srgb, var(--ea-line) 25%, transparent); border: 1px solid var(--ea-line); }
+.hm-key.hm-key-ea-now { border: 1px dashed var(--ea-line); }
+.hm-key.hm-key-cons { height: 3px; background: var(--accent); }
