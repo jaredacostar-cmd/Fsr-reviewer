@@ -301,7 +301,7 @@
   function siteMap(p) {
     const r = R(); if (!r || !r.sketchSVG || p.lat == null) return '';
     const near = ((App() && App().state.filtered) || []).filter(q => q !== p && q.lat != null && Math.abs(q.lat - p.lat) < 0.02 && Math.abs(q.lng - p.lng) < 0.03);
-    try { return r.sketchSVG({ center: [p.lng, p.lat], halfM: 1500, points: near, site: [p.lng, p.lat], W: 360, H: 260, bearing: bearing() }).replace(/<div class="meta">[\s\S]*$/, '').replace('class="sk"', 'class="sk home-map-svg"'); } catch (e) { return ''; }
+    try { return r.sketchSVG({ center: [p.lng, p.lat], halfM: 1500, points: near, site: [p.lng, p.lat], W: 360, H: 260, bearing: bearing(), streets: true, onLoad: () => W() && W().renderPage && W().renderPage(true) }).replace(/<div class="meta">[\s\S]*$/, '').replace('class="sk"', 'class="sk home-map-svg"'); } catch (e) { return ''; }
   }
 
   // ---- Home --------------------------------------------------------------------------------------

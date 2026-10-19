@@ -3508,3 +3508,5 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .net-sw.net-dc { border-top-style: dashed; } .net-sw.net-cap { border-top-style: dotted; }
 .net-tight { color: var(--cap-tight-t, var(--cap-tight)); } .net-over { color: var(--cap-over-t, var(--cap-over)); }
 .net-key { margin: 4px 0 0; }
+.sk-st { stroke: var(--text-muted); stroke-width: 3; opacity: .22; stroke-linecap: round; fill: none; }
+.sk-st-l { font-size: 9px; fill: var(--text-secondary); paint-order: stroke; stroke: var(--surface-1); stroke-width: 3px; stroke-linejoin: round; }
