@@ -817,6 +817,19 @@
   }
   // Its new homes: the units it states less the house that was there; by its words when none is stated.
   const secondUnitNet = r => { const n = Number(r.unitsStated); return n >= 2 ? n - 1 : /\bthree\b|\b3\b/i.test(`${r.description || ''} ${r.type || ''}`) ? 2 : 1; };
+  // A held second unit as a servicing site (js/svc-data.js svcDevs): its permit and its new homes at
+  // the apartment rate, in the loads only; never a development on the map or in a list. One object per
+  // permit, kept with it, so the area tags the servicing data adds stay.
+  const suSites = new WeakMap();
+  function secondUnitSite(r) {
+    let s = suSites.get(r); if (s) return s;
+    const ms = {}; for (const e of r.events || []) if (!ms[e.phase] || e.date < ms[e.phase]) ms[e.phase] = e.date;
+    s = { key: `su:${r.uid || r.ref}`, title: r.address || r.ref, municipality: r.municipality, lat: r.lat, lng: r.lng,
+      phase: r.phase === 'completed' ? 'completed' : r.phase === 'cancelled' ? 'cancelled' : 'construction',
+      kinds: ['permit'], records: [r], milestones: ms, timeline: [], units: r.units, types: ['apartment'], unitMix: { apartment: 1 }, buildout: null, secondUnit: true };
+    suSites.set(r, s);
+    return s;
+  }
   function holdSecondUnits(records) {
     const held = [], rest = [];
     for (const r of records) (isSecondUnitConversion(r) ? held : rest).push(r);
@@ -1722,7 +1735,7 @@
   }
 
   const api = {
-    isSecondUnitConversion, holdSecondUnits,
+    isSecondUnitConversion, holdSecondUnits, secondUnitSite,
     dedupeRecords,
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY, SMALL_SITE_UNITS, isHolding,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,

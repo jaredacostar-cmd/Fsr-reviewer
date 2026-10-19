@@ -133,7 +133,8 @@
       });
       // Secondary and garden suites (and other units added to an existing house) at the apartment rate
       // (decided 2026-10-17): a suite on a "Detached Dwelling" permit is not a house.
-      const suites = done.filter(r => P.permitRole(r) === 'suite'), homes = done.filter(r => P.permitRole(r) !== 'suite');
+      const suite = r => P.permitRole(r) === 'suite' || (P.isSecondUnitConversion && P.isSecondUnitConversion(r));
+      const suites = done.filter(suite), homes = done.filter(r => !suite(r));
       let n = homes.length ? P.permitUnits(homes) : 0;
       const nSuite = suites.length ? P.permitUnits(suites) : 0;
       // Homes inferred from building permits that state no units (js/phases.js inferBlankPermits), in the
