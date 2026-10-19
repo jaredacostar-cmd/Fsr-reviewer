@@ -896,22 +896,31 @@
       }
       for (const sys of ['water', 'wastewater']) for (const ln of (st && st.dcInfra && st.dcInfra[sys] && st.dcInfra[sys].lines) || []) { const nm = dcRoad(ln.n); if (nm) add(ln.g, nm); }
     }
-    // Votes from sample points: a named line within 40 m running the same way (parallel within ~25°).
-    const n = Math.min(6, pts.length), sample = Array.from({ length: n }, (_, i) => pts[Math.round(i * (pts.length - 1) / Math.max(1, n - 1))]);
-    const kx = 111320 * Math.cos(pts[0][1] * Math.PI / 180), dir = (a, b) => { const x = (b[0] - a[0]) * kx, y = (b[1] - a[1]) * 110540, L = Math.hypot(x, y) || 1; return [x / L, y / L]; };
-    const segDir = k => (pts.length > 1 ? dir(pts[Math.max(0, Math.min(pts.length - 2, k))], pts[Math.max(1, Math.min(pts.length - 1, k + 1))]) : null);
-    const votes = new Map();
-    sample.forEach((q, si) => {
-      const u = segDir(Math.round(si * (pts.length - 1) / Math.max(1, n - 1))), names = new Set(), cx = Math.floor(q[0] / 0.002), cy = Math.floor(q[1] / 0.002);
-      for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (const [a, b, nm] of capIdx.get(`${cx + dx},${cy + dy}`) || []) {
-        if (names.has(nm) || segM(q, a, b).m > 40) continue;
-        const v = dir(a, b); if (u && Math.abs(u[0] * v[0] + u[1] * v[1]) < 0.9) continue;
-        names.add(nm);
+    // The share of the pipe's length that runs along each named road: points every ~20 m along it,
+    // each counted for a road whose line is within 40 m and runs the same way (parallel within ~25°).
+    // The road with the highest share names the pipe, if it covers 70% of its length or more.
+    const kx = 111320 * Math.cos(pts[0][1] * Math.PI / 180), dir = (a, b) => { const x = (b[0] - a[0]) * kx, y = (b[1] - a[1]) * 110540, L = Math.hypot(x, y) || 1; return [x / L, y / L, L]; };
+    const share = new Map(); let total = 0;
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1], b = pts[i], u = dir(a, b), k = Math.max(1, Math.round(u[2] / 20)), w = u[2] / k;
+      for (let j = 0; j < k; j++) {
+        const t = (j + 0.5) / k, q = [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])], names = new Set(), cx = Math.floor(q[0] / 0.002), cy = Math.floor(q[1] / 0.002);
+        for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (const [c, d, nm] of capIdx.get(`${cx + dx},${cy + dy}`) || []) {
+          if (names.has(nm) || segM(q, c, d).m > 40) continue;
+          const v = dir(c, d); if (Math.abs(u[0] * v[0] + u[1] * v[1]) < 0.9) continue;
+          names.add(nm);
+        }
+        for (const nm of names) share.set(nm, (share.get(nm) || 0) + w);
+        total += w;
       }
-      for (const nm of names) votes.set(nm, (votes.get(nm) || 0) + 1);
-    });
-    const best = [...votes.entries()].sort((x, y) => y[1] - x[1])[0];
-    return best && best[1] >= Math.ceil(n * 0.5) ? shortRoad(titleSt(best[0])) : '';
+    }
+    const best = [...share.entries()].sort((x, y) => y[1] - x[1])[0];
+    return best && total > 0 && best[1] / total >= 0.7 ? shortRoad(titleSt(best[0])) : '';
+  }
+  // The stretch of a long line near a point (within m of it), for naming a planned work where it passes.
+  function nearStretch(pts, at, m = 300) {
+    const out = []; for (const q of pts) if (segM(at, q, q).m <= m) out.push(q);
+    return out.length >= 2 ? out : pts;
   }
   // A large main (600 mm+) doesn't run down a crescent or court: a local street from the house
   // addresses is left unnamed rather than named wrong.
@@ -974,7 +983,7 @@
       for (const ln of (st && st.dcInfra && st.dcInfra[sys] && st.dcInfra[sys].lines) || []) {
         const c = lineNear(pt, ln.g); if (!c || c.m > r) continue;
         const kind = DI && DI.DC_KIND && DI.DC_KIND[ln.k] ? DI.DC_KIND[ln.k][0] : 'Planned main';
-        group(sys, 'dc', ln.p || ln.c || `${ln.n}|${ln.y}`, { m: c.m, at: c.at, d: ln.d, name: ln.n || kind, year: ln.y, status: ln.s, ref: ln.p || ln.c || '', street: dcRoad(ln.n) || capStreet(ln.g) || bigOk(streetNear(c.at), ln.d || 0), zone: sys === 'water' ? zoneAt(c.at) : '', paths: [ln.g] });
+        group(sys, 'dc', ln.p || ln.c || `${ln.n}|${ln.y}`, { m: c.m, at: c.at, d: ln.d, name: ln.n || kind, year: ln.y, status: ln.s, ref: ln.p || ln.c || '', street: dcRoad(ln.n) || capStreet(nearStretch(ln.g, c.at)), zone: sys === 'water' ? zoneAt(c.at) : '', paths: [ln.g] });
       }
       for (const rec of (st && st.capital && st.capital.records) || []) {
         if (rec.system !== sys || !['planned', 'tendered', 'awarded', 'under construction'].includes(rec.status) || !rec.geometry) continue;
@@ -986,7 +995,8 @@
     }
     out.sort((a, b) => a.m - b.m).forEach((o, k) => { o.id = k; });
     // (no address point near: the live lookup, for the nearest dozen mains only)
-    out.filter(o => !o.street).slice(0, 12).forEach(o => { o.street = bigOk(streetOf(o.at), o.d || 0); });
+    // (planned DC works often cross land with no road yet: named only from a named line, never guessed)
+    out.filter(o => !o.street && o.kind !== 'dc').slice(0, 12).forEach(o => { o.street = bigOk(streetOf(o.at), o.d || 0); });
     return out;
   }
   function netRowHTML(o) {

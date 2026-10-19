@@ -2848,7 +2848,8 @@ with the reasons and never count as following the EA.
   worst old pipes by street) only on a zoomed-in map: a map of all of Peel names only the municipalities.
 - **Check a site › Site › Water and wastewater** (`js/devtab.js`): within 100 m – 1 km (as the storm
   sewers), the Region's watermains and sanitary sewers of 300 mm+, the 2026 DC works and the Region's
-  projects planned or under construction, each with its street (the road named on the Region project or 2026 DC work it
-  runs along, parallel and within 40 m; else the nearest address point; a main of 600 mm+ is never
-  given a crescent or court from the addresses) and, for water, its pressure zone; a small map of them all, a row tapped
+  projects planned or under construction, each with its street: the road named on the Region projects or 2026 DC works that
+  covers the largest share of the pipe's length, running parallel within 40 m, if 70% or more; else
+  the nearest address point (a main of 600 mm+ never gets a crescent or court from the addresses);
+  a planned DC work is named only from its title or a named line near the site, never guessed and, for water, its pressure zone; a small map of them all, a row tapped
   highlights its main.
