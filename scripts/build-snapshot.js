@@ -45,7 +45,9 @@ function encodeRecord(r) {
     if (v == null || v === '' || v === false) continue;
     // Permit descriptions are only shown in the detail panel; keep them short to keep the file small.
     const max = r.kind === 'permit' ? 160 : 600;
-    o[k] = typeof v === 'string' && v.length > max ? v.slice(0, max) + '…' : v;
+    // (scrubbed again once cut: a note kept whole because removing it changed a reading can be
+    // removable from the shorter text, and the stored text must be a fixed point of the scrub)
+    o[k] = typeof v === 'string' && v.length > max ? (k === 'description' ? PV.scrubDescription(v.slice(0, max) + '…', r) : v.slice(0, max) + '…') : v;
   }
   o.lat = +r.lat.toFixed(6);
   o.lng = +r.lng.toFixed(6);
