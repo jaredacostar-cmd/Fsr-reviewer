@@ -197,7 +197,8 @@
       out.units += net; out.suites += Math.min(s, net); out.buildings += Math.min(big, oNet); out.houses += Math.max(0, oNet - Math.min(big, oNet)); out.sites++;
       out.completed += Math.min(net, P().permitUnits(adds.filter(r => r.phase === 'completed')));
       out.byMuni[p.municipality] = (out.byMuni[p.municipality] || 0) + net;
-      if (p.municipality === 'Brampton') out.brampton = true;
+      // (Brampton published no second-unit permits before 2026-10: the note stays until some arrive)
+      if (p.municipality === 'Brampton') { out.brampton = true; out.bramptonSuites = (out.bramptonSuites || 0) + Math.min(s, net); }
     }
     return out;
   }
@@ -239,7 +240,7 @@
     if (!pl || !(pl.total > 0)) return '';
     const r = v => fmt(roundHeadline(v));
     const split = pl.notMoved >= 0.5 ? `: ${r(pl.moved)} have moved since ${MOVED_SINCE} and ${r(pl.notMoved)} haven\u2019t moved since ${MOVED_SINCE - 1}` : '';
-    const plus = inf && inf.units >= 0.5 ? ` Plus about ${r(inf.units)} added by building permit alone since ${MOVED_SINCE} (secondary suites and new houses on existing lots)${inf.brampton ? '; Brampton\u2019s second units are not in its open data' : ''}.` : '';
+    const plus = inf && inf.units >= 0.5 ? ` Plus about ${r(inf.units)} added by building permit alone since ${MOVED_SINCE} (secondary suites and new houses on existing lots)${inf.brampton && !(inf.bramptonSuites > 0) ? '; Brampton\u2019s second units are not in its open data' : ''}.` : '';
     return `About ${strong(r(pl.total))} homes are in the planning pipeline${where}${split}. About ${r(pl.notBuilt)} are not yet built.${plus}`;
   }
 

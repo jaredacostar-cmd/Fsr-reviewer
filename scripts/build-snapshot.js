@@ -46,6 +46,9 @@ function encodeRecord(r) {
     // Permit descriptions are only shown in the detail panel; keep them short to keep the file small.
     const max = r.kind === 'permit' ? 160 : 600;
     o[k] = typeof v === 'string' && v.length > max ? v.slice(0, max) + '…' : v;
+    // Shortening can leave a note that only the full text needed (a staff name before a cut-off
+    // clause): the stored text is scrubbed again, so scrubbing it once more changes nothing.
+    if (k === 'description' && o[k] !== v) o[k] = PV.scrubDescription(o[k], r);
   }
   o.lat = +r.lat.toFixed(6);
   o.lng = +r.lng.toFixed(6);

@@ -62,3 +62,17 @@ test('CMHC under construction rolled forward from its last published year with s
   const pn = L.permittedNotCompleted([{ municipality: 'Brampton', phase: 'permit', kinds: ['application', 'permit'], buildout: { planned: 676, permitted: 676, completed: 0 } }, { municipality: 'Brampton', phase: 'permit', kinds: ['permit'], buildout: { planned: 5, permitted: 5, completed: 0 } }]);
   assert.deepEqual(pn, { Brampton: 676 });
 });
+
+test('a change of use to a two- or three-unit dwelling adds one (two) homes, as a suite, from no planning file', () => {
+  const at = { lat: 43.65, lng: -79.82, events: [{ date: new Date('2026-05-25T00:00:00Z'), phase: 'permit', label: 'Issue Date' }] };
+  const two = { kind: 'permit', ref: '26-050190-P01-00', type: 'Two Unit Dwelling', description: 'Change of Use - Two Unit Dwelling', units: 2, newBuild: true, phase: 'permit', ...at };
+  const three = { kind: 'permit', ref: '26-000001-P01-00', type: 'Three Unit Dwelling', description: 'Change of Use - Three Unit Dwelling', units: 3, newBuild: true, phase: 'permit', ...at };
+  const house = { kind: 'permit', ref: '21-252012-000-00', type: 'Single Family Detached', description: 'New Complete Building', units: 1, newBuild: true, phase: 'permit', ...at };
+  P.convertedUnits([two, three, house]);
+  assert.deepEqual([two.units, three.units, house.units], [1, 2, 1]);
+  assert.deepEqual([two.newBuild, two.conversion, house.conversion], [false, true, undefined]);
+  assert.equal(P.permitRole(two), 'suite');
+  assert.equal(P.permitRole(house), 'units');
+  // Run twice: no double reduction.
+  P.convertedUnits([two]); assert.equal(two.units, 1);
+});

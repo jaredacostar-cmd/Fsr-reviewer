@@ -2834,3 +2834,15 @@ repairs and renewals (relining, trenchless rehabilitation, inlet repair, resurfa
 developer-built works, Region-wide studies (master plans: everything lies near them), and, for a
 study area placed with low confidence, anything not on a street named in the EA. They are listed
 with the reasons and never count as following the EA.
+
+## Brampton second units (from the 2026-10-19 data)
+
+Brampton began publishing its second-unit permits (32,414 "Change of Use - Two Unit Dwelling"
+permits since 2016), each with 2 units. A change of use to a two- (three-) unit dwelling adds 1 (2)
+homes to a house already there, so `js/phases.js` `convertedUnits` (run first in `buildProjects`)
+counts it as a suite of 1 (2) added homes at the apartment rate, attributed to no planning file:
+infill, beside the headline, never in a subdivision's units left to permit. The note "Brampton's
+second units are not in its open data" is dropped once Brampton suites are present.
+
+The snapshot build now scrubs a permit description again after shortening it: a staff note the full
+text needed could otherwise survive in the shortened copy.
