@@ -3,6 +3,7 @@
 // build-out's planned figure; it reconciles to its files (stated counts plus labelled estimates);
 // Growth's "left to build" and Timing's "unbuilt" are one figure, planned − completed.
 const test = require('node:test');
+const { siteTest } = require('./helpers/site-check.js');
 const assert = require('node:assert/strict');
 const G = require('../js/growth.js');
 const T = require('../js/timing.js');
@@ -26,7 +27,7 @@ test('every development: its file counts plus labelled estimates, less homes dem
   assert.ok(checked > 500, `${checked} developments checked`);
 });
 
-test('Brampton|2055 BOVAIRD DR W reconciles: 6,289 + 592 + 52 stated, 2,929 found online (labelled), = 9,862', { skip }, () => {
+siteTest('Brampton|2055 BOVAIRD DR W reconciles: 6,289 + 592 + 52 stated, 2,929 found online (labelled), = 9,862', { skip }, () => {
   const p = H.realDevs().byKey.get('Brampton|2055 BOVAIRD DR W');
   assert.equal(p.units, 9862);
   const by = Object.fromEntries(p.count.parts.map(x => [x.ref, x]));
@@ -54,7 +55,7 @@ test('Growth › Pipeline "left" == Timing "unbuilt" == planned − completed', 
   assert.equal(unbuilt, t.left);
 });
 
-test('1.7 I&I follows the files counted: the Heritage block is its three draft plans and the old subdivision (≈165 ha)', { skip }, () => {
+siteTest('1.7 I&I follows the files counted: the Heritage block is its three draft plans and the old subdivision (≈165 ha)', { skip }, () => {
   const D = require('../js/demand.js');
   const p = H.realDevs().byKey.get('Brampton|2055 BOVAIRD DR W');
   assert.equal(p.siteAreaFrom, 'counted files');
