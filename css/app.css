@@ -3506,7 +3506,6 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .net-sw.net-w { border-top-color: var(--pipe-water); } .net-sw.net-ww { border-top-color: var(--pipe-sanitary); } .net-sw.net-storm { border-top-color: var(--pipe-storm); }
 .net-sw.net-w.net-dc, .net-sw.net-w.net-cap { border-top-color: var(--dc-w-trans); } .net-sw.net-ww.net-dc, .net-sw.net-ww.net-cap { border-top-color: var(--dc-ww-main); }
 .net-sw.net-dc { border-top-style: dashed; } .net-sw.net-cap { border-top-style: dotted; }
-.net-tight { color: var(--cap-tight-t); } .net-over { color: var(--cap-over-t); }
 .net-key { margin: 4px 0 0; }
 .sk-st { stroke: var(--text-muted); stroke-width: 3; opacity: .22; stroke-linecap: round; fill: none; }
 .sk-st-l { font-size: 9px; fill: var(--text-secondary); paint-order: stroke; stroke: var(--surface-1); stroke-width: 3px; stroke-linejoin: round; }

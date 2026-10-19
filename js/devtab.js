@@ -916,15 +916,14 @@
       const street = streetNear(c.at) || '', zone = zoneAt(c.at);
       group('water', 'existing', `${d}|${street}|${zone}`, { m: c.m, at: c.at, d, street, zone, paths: [[[x1, y1], [x2, y2]]] });
     }
-    // Existing sanitary sewers (300 mm+), with their build-out load.
-    const S = root.PeelMapMarkers && root.PeelMapMarkers.SEW, SCp = root.PeelSewerCap;
-    if (S && S.data) S.data.pipes.forEach((q, i) => {
+    // Existing sanitary sewers (300 mm+).
+    const S = root.PeelMapMarkers && root.PeelMapMarkers.SEW;
+    if (S && S.data) S.data.pipes.forEach(q => {
       const c0 = q[10]; if (!box(c0[0], c0[1])) return;
       const pts = []; for (let k = 0; k < c0.length; k += 2) pts.push([c0[k], c0[k + 1]]);
       const c = lineNear(pt, pts); if (!c || c.m > r) return;
-      const street = streetNear(c.at) || '', load = q[2] && SCp && SCp.pipeFlow ? SCp.pipeFlow(i, null).q / q[2] : null;
-      group('wastewater', 'existing', `${q[0]}|${q[7] || ''}|${street}`, { m: c.m, at: c.at, d: q[0], year: q[7], street, load, paths: [pts] });
-      const g = out.find(o => o.sys === 'wastewater' && o.key === `${q[0]}|${q[7] || ''}|${street}`); if (g && load != null) g.load = Math.max(g.load || 0, load);
+      const street = streetNear(c.at) || '';
+      group('wastewater', 'existing', `${q[0]}|${q[7] || ''}|${street}`, { m: c.m, at: c.at, d: q[0], year: q[7], street, paths: [pts] });
     });
     // Planned: the 2026 DC works (one entry per project) and the Region's projects.
     const DI = root.PeelDcInfra, CM = root.PeelCapitalEAModel;
@@ -950,7 +949,7 @@
   function netRowHTML(o) {
     const where = [o.street ? `on <strong>${esc(o.street)}</strong>` : '', o.zone ? esc(o.zone) : '', mTxt(o.m)].filter(Boolean).join(' · ');
     let what;
-    if (o.kind === 'existing') what = `${fmtNum(o.d)} mm${o.year ? `, ${o.year}` : ''}${o.load != null ? ` · <b class="${o.load >= 1 ? 'net-over' : o.load >= 0.85 ? 'net-tight' : ''}">${Math.round(o.load * 100)}% full at build-out</b>` : ''}`;
+    if (o.kind === 'existing') what = `${fmtNum(o.d)} mm${o.year ? `, ${o.year}` : ''}`;
     else if (o.kind === 'dc') what = `${esc(o.name)}${o.d ? ` · ${fmtNum(o.d)} mm` : ''} · <b>${o.year ? `in service ${o.year}` : 'year not set'}</b> <small class="muted">${['2026 DC ' + (o.status || ''), o.ref].filter(Boolean).map(esc).join(' · ')}</small>`;
     else what = `${esc(o.name || 'Capital project')} · <b>${esc(o.status)}${o.year ? ` ${o.started ? 'since' : 'from'} ${o.year}` : ''}</b> <small class="muted">Region project ${esc(o.ref)}</small>`;
     return `<li><button type="button" class="net-row" data-net-hl="${o.id}" aria-pressed="false"><i class="net-sw net-${o.sys === 'water' ? 'w' : 'ww'} net-${o.kind}"></i><span>${what} <span class="muted">${where}</span></span></button></li>`;

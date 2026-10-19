@@ -287,12 +287,14 @@
     // (the basemap helper sits outside this block; a frame built on its own draws without it)
     const tiles = () => (typeof tilesSVG === 'function' ? tilesSVG((x, y) => pt(x, y), [mnx - pad, mny - pad, mxx + pad, mxy + pad], Wd, H) : '');
     const svg = (inner, aria, labels = '') => `<svg viewBox="0 0 ${Wd} ${H}" class="home-map-svg${typeof TILES !== 'undefined' && TILES.ok ? ' has-tiles' : ''}" role="img" aria-label="${esc(aria)}">${tiles()}${base.map(d => `<path d="${path(d.rings)}" class="hm-base"/>`).join('')}${muniSvg()}${inner}${muniLbl()}${labels}${north()}</svg>`;
-    return { sv, base, pt, path, line, Wd, H, svg, bearing: bearing() };
+    return { sv, base, pt, path, line, Wd, H, svg, bearing: bearing(), peel: !bounds };
   }
   // A name short enough for a small map label: brackets dropped, cut at a word with an ellipsis.
   const shortName = (t, n = 30) => { const s0 = String(t || '').replace(/\s*\([^)]*\)?/g, '').replace(/\s+/g, ' ').trim(); return s0.length <= n ? s0 : `${s0.slice(0, n).replace(/\s+\S*$/, '')}…`; };
   // Labels on the top few items of a small map: name at the point, clear of the others.
+  // (none on a map of all of Peel: too many places for a few names to help; the municipalities are named)
   function mapLabels(f, items) {
+    if (f.peel) return '';
     const placed = [];
     return items.slice(0, 5).map(({ lng, lat, name }) => {
       const [x, y] = f.pt(lng, lat);
@@ -394,7 +396,7 @@
     const f = frame(), S = MM() && MM().SEW; if (!f || !S || !S.data) return '';
     const out = list.map(r => { const c = S.data.pipes[r.i][10], pts = []; for (let k = 0; k < c.length; k += 2) pts.push([c[k], c[k + 1]]); return `<path d="${f.line(pts)}" class="hm-pipe${r.risky ? ' risky' : ''}"/>`; });
     // (the three oldest and most loaded runs: size, year and the street, where an address is near)
-    const worst = list.slice().sort((a, b) => (likeOf(b) + consOf(b)) - (likeOf(a) + consOf(a)) || b.units - a.units).slice(0, 3);
+    const worst = f.peel ? [] : list.slice().sort((a, b) => (likeOf(b) + consOf(b)) - (likeOf(a) + consOf(a)) || b.units - a.units).slice(0, 3);
     const lbl = worst.map(r => { const c = S.data.pipes[r.i][10], k = Math.floor(c.length / 4) * 2, st = streetAtPt(c[k], c[k + 1]); return { lng: c[k], lat: c[k + 1], name: `${fmtNum(S.data.pipes[r.i][0])} mm${r.year ? `, ${r.year}` : ''}${st ? ` · ${st}` : ''}` }; });
     return f.svg(out.join(''), 'The old pipes on the list', mapLabels(f, lbl));
   }
@@ -744,7 +746,7 @@
         unknown.length ? { title: `Completion date unknown (${fmtNum(unknown.length)})`, html: `<p class="small muted">The EA’s page, notice and report don’t give a completion year yet, so linked construction can’t be ordered against it.</p><ul class="small">${unknown.map(x => `<li>${esc(x.e.name)} <span class="muted">· ${esc(x.e.municipality || 'Peel')}${x.contracts.length ? ` · ${fmtNum(x.contracts.length)} linked contract${x.contracts.length === 1 ? '' : 's'}` : ''}</span></li>`).join('')}</ul>` } : null,
         conflicts.length ? { title: `Date conflicts to check (${fmtNum(conflicts.length)})`, open: true, html: `<p class="small muted">The project’s own page links this construction to the EA, but it started before the EA was complete. One of the dates may be wrong.</p><ul class="small">${conflicts.map(x => `<li><strong>${esc(x.e.name)}</strong> (EA complete ${esc(String(x.d.completion ? x.d.completion.year : x.d.expected ? x.d.expected.year : '?'))}): ${x.conflict.map(workLine).join('; ')}</li>`).join('')}</ul>` } : null,
       ],
-      map: { svg: eaMap(all), attrs: { 'data-ws-go': 'eaflow' }, label: 'Open EA to construction on the map', caption: `<span class="hm-key hm-key-ea-wait"></span> complete, waiting <span class="hm-key hm-key-ea-follow"></span> construction followed <span class="hm-key hm-key-ea-now"></span> under way <span class="hm-key hm-key-cons"></span> construction after an EA · named: the three waiting longest (year complete)` },
+      map: { svg: eaMap(all), attrs: { 'data-ws-go': 'eaflow' }, label: 'Open EA to construction on the map', caption: `<span class="hm-key hm-key-ea-wait"></span> complete, waiting <span class="hm-key hm-key-ea-follow"></span> construction followed <span class="hm-key hm-key-ea-now"></span> under way <span class="hm-key hm-key-cons"></span> construction after an EA${muniBounds() ? ' · named: the three waiting longest (year complete)' : ''}` },
       method: 'Each Region Class EA (Water, Wastewater and Roads) from its project page, with the capital projects linked to it (by the project’s own page, inside the study area, or by street inside the study area). Construction counts as following the EA only when it starts on or after the EA was complete; where only the year is known, a start in the same year counts. For an EA under way, only construction due after the expected report counts. Earlier work in the study area is listed as other work. The completion year comes from, in order: the notice of completion, the report filing date, the page’s wording, the report’s cover, the report’s file name. Under the Municipal Class EA, when more than 10 years pass between the notice of completion and the start of construction, the EA must be reviewed (and an addendum filed if anything changed) before construction: waiting EAs past 10 years and construction starting 10 or more years after its EA are flagged to check; the app can’t see whether that review was done. Possible links: planned or active contracts of the same system and municipality, mostly within 250 m of a completed EA’s study area (500 m of a facility), starting after the EA was complete, that the weekly build has not linked; repairs, relining, resurfacing and developer-built works are left out, Region-wide studies are left out, and a study area placed with low confidence needs the street named in the EA as well. They are listed to check and never counted as following the EA. The start date is the actual start where recorded, else the target start.',
       sources: 'Region of Peel EA project pages and their notices and reports (weekly build, scripts/build-eas.js); Region of Peel capital project and construction pages (data/capital.json).',
       actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'eaflow' }, primary: true }, { label: 'Full EA table', attrs: { 'data-ws-go': 'eaflow', 'data-ws-fulltable': 'dca:eas' } }] };
