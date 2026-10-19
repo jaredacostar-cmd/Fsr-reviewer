@@ -805,7 +805,27 @@
     }
     return n;
   }
+  // Brampton's second units (decided 2026-10-19): a "Change of Use – Two / Three Unit Dwelling" permit
+  // makes room for a unit in an existing house. It adds the homes beyond the house (two-unit: 1,
+  // three-unit: 2), counts in the infill layer only (js/layers.js infill), and never joins a planning
+  // file or forms a development: buildProjects holds them aside on the list it returns (.secondUnits).
+  function isSecondUnitConversion(r) {
+    if (!r || r.kind !== 'permit') return false;
+    const d = String(r.description || ''), t = String(r.type || '');
+    return /^\s*change of use\b[^—]*?\b(two|three|2|3)\b[^—]*?\bunits?\s+dwell/i.test(d)
+      || (/^\s*(two|three)\s+unit\s+dwelling\b/i.test(t) && !/\bnew\b|\bconstruct|\berect/i.test(d));
+  }
+  // Its new homes: the units it states less the house that was there; by its words when none is stated.
+  const secondUnitNet = r => { const n = Number(r.unitsStated); return n >= 2 ? n - 1 : /\bthree\b|\b3\b/i.test(`${r.description || ''} ${r.type || ''}`) ? 2 : 1; };
+  function holdSecondUnits(records) {
+    const held = [], rest = [];
+    for (const r of records) (isSecondUnitConversion(r) ? held : rest).push(r);
+    for (const r of held) if (!('unitsStated' in r)) { r.unitsStated = r.units; r.units = secondUnitNet(r); }
+    return { held, rest };
+  }
   function buildProjects(records, opts = {}) {
+    const { held, rest } = holdSecondUnits(records);
+    records = rest;
     let groups = new Map();
     closeStalePermits(records, opts.asOf);
     for (const r of records) readTextUnits(r);
@@ -995,7 +1015,9 @@
     }
     for (const [key, recs] of loose) parts.push({ key, recs, site: {} });
     // Sites made only of permits that build nothing (signs, entrances, demolitions…) aren't developments.
-    return joinNearbyPermits(opts.regroup ? opts.regroup(parts) : parts).filter(p => !p.records.every(r => r.kind === 'permit' && permitRole(r) === 'none'));
+    const out = joinNearbyPermits(opts.regroup ? opts.regroup(parts) : parts).filter(p => !p.records.every(r => r.kind === 'permit' && permitRole(r) === 'none'));
+    Object.defineProperty(out, 'secondUnits', { value: held, enumerable: false });
+    return out;
   }
 
   // 1b. A multi-address application ("202 and 204 Main St", "65-71 Agnes St") joins the
@@ -1700,6 +1722,7 @@
   }
 
   const api = {
+    isSecondUnitConversion, holdSecondUnits,
     dedupeRecords,
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY, SMALL_SITE_UNITS, isHolding,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
