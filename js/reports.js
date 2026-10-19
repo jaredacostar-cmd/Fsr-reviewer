@@ -89,6 +89,10 @@
     const inBox = (lng, lat) => Math.abs((lng - center[0]) * kx) < halfM * 1.3 && Math.abs((lat - center[1]) * ky) < halfM * 1.3;
     const path = pts => pts.map(([x, y], i) => `${i ? 'L' : 'M'}${X(x, y).toFixed(1)},${Y(y, x).toFixed(1)}`).join('');
     const out = [], lbls = [];
+    // The street basemap under it (js/ws-pages.js tilesSVG); offline, street names from addresses.
+    const WP = root.PeelWsPages, deg = halfM * 1.5 / 111320;
+    const tl = WP && WP.tilesSVG ? WP.tilesSVG((lng, lat) => pt(lng, lat), [center[0] - deg / Math.cos(center[1] * Math.PI / 180), center[1] - deg, center[0] + deg / Math.cos(center[1] * Math.PI / 180), center[1] + deg], W, H) : '';
+    if (tl) { out.push(tl.replace('class="hm-tiles"', 'class="hm-tiles sk-tiles"')); streets = false; }
     if (streets) {
       // (local metres east / north, turned like the sketch)
       const P2 = ([e, n]) => { const sy = -n; return [W / 2 + (e * ca - sy * sa) * s, H / 2 + (e * sa + sy * ca) * s]; };

@@ -50,7 +50,7 @@
     if (m.chart) out.push(`<div class="pnl-chart page-chart" data-psec="chart">${m.chart}</div>`);
     if (m.mid) out.push(m.mid);
     const lists = (m.lists || []).filter(l => l && l.rows && l.rows.length), first = lists[0];
-    const mapSec = m.map && (m.map.svg || m.map.html || m.map.attrs) ? `<section class="home-map" data-psec="map"><div class="pnl-list-h"><h3>${esc(m.map.title || 'Where')}</h3>${m.map.attrs ? `<button type="button" class="btn small link"${attrs(m.map.attrs)}>${esc(m.map.link || 'Open the map')} →</button>` : ''}</div>${m.map.html || `<button type="button" class="home-map-btn"${attrs(m.map.attrs)} aria-label="${esc(m.map.label || 'Open the map')}">${m.map.svg || '<span class="home-map-empty small muted">Open the map</span>'}</button>`}${m.map.caption ? `<p class="small muted">${m.map.caption}</p>` : ''}</section>` : '';
+    const mapSec = m.map && (m.map.svg || m.map.html || m.map.attrs) ? `<section class="home-map" data-psec="map"><div class="pnl-list-h"><h3>${esc(m.map.title || 'Where')}</h3>${m.map.attrs ? `<button type="button" class="btn small link"${attrs(m.map.attrs)}>${esc(m.map.link || 'Open the map')} →</button>` : ''}</div>${m.map.html || `<button type="button" class="home-map-btn"${attrs(m.map.attrs)} aria-label="${esc(m.map.label || 'Open the map')}">${m.map.svg || '<span class="home-map-empty small muted">Open the map</span>'}</button>`}${m.map.caption ? `<p class="small muted">${m.map.caption}</p>` : ''}${m.map.svg && /hm-tiles|sk-tiles/.test(m.map.svg) ? '<p class="hm-credit small muted">Basemap: Esri, HERE, Garmin, © OpenStreetMap contributors</p>' : ''}</section>` : '';
     if (first || mapSec) out.push(`<div class="home-cols">${first ? listHTML(first) : '<div></div>'}${mapSec}</div>`);
     for (const l of lists.slice(1)) out.push(listHTML(l));
     for (const f of (m.folds || []).filter(x => x && x.html)) out.push(`<details class="pnl-fold" data-psec="fold"${f.open ? ' open' : ''}${f.id ? ` id="${esc(f.id)}"` : ''}><summary>${esc(f.title)}</summary><div>${f.html}</div></details>`);
@@ -217,6 +217,48 @@
   // One orientation everywhere: the small maps turn as the live map does (Peel's road grid by default,
   // north up as the option; js/map-core.js), with the municipal outlines and their names, and a north
   // arrow when turned.
+  // ---- Basemap under the small maps -----------------------------------------------------------------
+  // The full map's grey street map (Esri World Gray Canvas, base + reference labels, in the theme's
+  // shade) drawn as SVG images: each Web Mercator tile placed by its projected corners, so it turns
+  // with the page map. One probe tile says whether tiles load; when they don't (offline), the site
+  // maps name their streets from the Region's address points instead (js/reports.js streets).
+  const ESRI_TILE = (layer, z, x, y) => `https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_${layer}/MapServer/tile/${z}/${y}/${x}`;
+  const TILES = { ok: null, probing: false };
+  function probeTiles() {
+    if (TILES.ok !== null || TILES.probing || typeof Image === 'undefined') return;
+    TILES.probing = true;
+    const im = new Image(), done = ok => { TILES.ok = ok; TILES.probing = false; if (W() && W().renderPage) W().renderPage(true); };
+    im.onload = () => done(true); im.onerror = () => done(false);
+    im.src = ESRI_TILE('Light_Gray_Base', 10, 285, 373);
+  }
+  const tilesOk = () => { probeTiles(); return TILES.ok === true; };
+  // proj: (lng, lat) → [x, y] in the SVG; bb: [w, s, e, n] the ground to cover (with room for turning).
+  function tilesSVG(proj, bb, Wd, H) {
+    if (!tilesOk()) return '';
+    const dark = typeof document !== 'undefined' && document.documentElement.dataset.theme !== 'light', shade = dark ? 'Dark' : 'Light';
+    const cx = (bb[0] + bb[2]) / 2, cy = (bb[1] + bb[3]) / 2, d = (bb[2] - bb[0]) / 50 || 0.001;
+    const [x0, y0] = proj(cx, cy), [x1, y1] = proj(cx + d, cy), pxPerDeg = Math.hypot(x1 - x0, y1 - y0) / d;
+    const z = Math.max(8, Math.min(16, Math.round(Math.log2(pxPerDeg * 360 / 300))));
+    const n = 2 ** z, tx = lng => Math.floor((lng + 180) / 360 * n), ty = lat => { const r = lat * Math.PI / 180; return Math.floor((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * n); };
+    const lngOf = x => x / n * 360 - 180, latOf = y => { const t = Math.PI - 2 * Math.PI * y / n; return 180 / Math.PI * Math.atan(0.5 * (Math.exp(t) - Math.exp(-t))); };
+    const xa = tx(bb[0]), xb = tx(bb[2]), ya = ty(bb[3]), yb = ty(bb[1]);
+    if ((xb - xa + 1) * (yb - ya + 1) > 64) return '';
+    const out = [];
+    for (const layer of [`${shade}_Gray_Base`, `${shade}_Gray_Reference`]) for (let x = xa; x <= xb; x++) for (let y = ya; y <= yb; y++) {
+      const P0 = proj(lngOf(x), latOf(y)), P1 = proj(lngOf(x + 1), latOf(y)), P2 = proj(lngOf(x), latOf(y + 1));
+      const m = [P1[0] - P0[0], P1[1] - P0[1], P2[0] - P0[0], P2[1] - P0[1], P0[0], P0[1]].map(v => (+v).toFixed(2)).join(' ');
+      out.push(`<image href="${ESRI_TILE(layer, z, x, y)}" width="1.004" height="1.004" preserveAspectRatio="none" transform="matrix(${m})"/>`);
+    }
+    return `<g class="hm-tiles" aria-hidden="true">${out.join('')}</g>`;
+  }
+  const tileCredit = () => (tilesOk() ? '<span class="hm-credit">Basemap: Esri, HERE, Garmin, © OpenStreetMap contributors</span>' : '');
+  // A municipality's ground, to zoom a Peel map to the one chosen (null for all of Peel).
+  function muniBounds() {
+    const muni = App() && App().state.muni, M = root.PeelMapCore && root.PeelMapCore.getMunis && root.PeelMapCore.getMunis();
+    const m = muni && M && (M.munis || []).find(x => x.name === muni); if (!m) return null;
+    let a = 1e9, b = 1e9, c = -1e9, d = -1e9; for (const r of m.rings) for (const [x, y] of r) { a = Math.min(a, x); b = Math.min(b, y); c = Math.max(c, x); d = Math.max(d, y); }
+    return [a, b, c, d];
+  }
   const bearing = () => { const C = root.PeelMapCore; return C && C.getOrientation && C.getOrientation() === 'grid' && C.canRotate ? C.GRID_BEARING : 0; };
   function frame(Wd = 360, H = 300, bounds = null) {
     const sv = App() && App().state.servicing; if (!sv) return null;
@@ -240,14 +282,24 @@
     const muniSvg = () => (munis ? (munis.munis || []).map(m => `<path d="${path(m.rings)}" class="hm-muni"/>`).join('') : '');
     const muniLbl = () => (munis && !bounds ? (munis.munis || []).filter(m => m.label).map(m => { const [x, y] = pt(m.label[0], m.label[1]); return `<text x="${x}" y="${y}" class="hm-muni-l">${esc(m.name)}</text>`; }).join('') : '');
     const north = () => (a ? `<g class="hm-north" transform="translate(${Wd - 16},16) rotate(${bearing()})"><path d="M0 -10 4 3 0 0 -4 3z"/><text y="12">N</text></g>` : '');
-    const svg = (inner, aria, labels = '') => `<svg viewBox="0 0 ${Wd} ${H}" class="home-map-svg" role="img" aria-label="${esc(aria)}">${base.map(d => `<path d="${path(d.rings)}" class="hm-base"/>`).join('')}${muniSvg()}${inner}${muniLbl()}${labels}${north()}</svg>`;
+    // (the ground to cover with tiles: the box, widened for the turn)
+    const pad = Math.max(mxx - mnx, mxy - mny) * (a ? 0.45 : 0.08);
+    // (the basemap helper sits outside this block; a frame built on its own draws without it)
+    const tiles = () => (typeof tilesSVG === 'function' ? tilesSVG((x, y) => pt(x, y), [mnx - pad, mny - pad, mxx + pad, mxy + pad], Wd, H) : '');
+    const svg = (inner, aria, labels = '') => `<svg viewBox="0 0 ${Wd} ${H}" class="home-map-svg${typeof TILES !== 'undefined' && TILES.ok ? ' has-tiles' : ''}" role="img" aria-label="${esc(aria)}">${tiles()}${base.map(d => `<path d="${path(d.rings)}" class="hm-base"/>`).join('')}${muniSvg()}${inner}${muniLbl()}${labels}${north()}</svg>`;
     return { sv, base, pt, path, line, Wd, H, svg, bearing: bearing() };
   }
+  // A name short enough for a small map label: brackets dropped, cut at a word with an ellipsis.
+  const shortName = (t, n = 30) => { const s0 = String(t || '').replace(/\s*\([^)]*\)?/g, '').replace(/\s+/g, ' ').trim(); return s0.length <= n ? s0 : `${s0.slice(0, n).replace(/\s+\S*$/, '')}…`; };
   // Labels on the top few items of a small map: name at the point, clear of the others.
   function mapLabels(f, items) {
     const placed = [];
     return items.slice(0, 5).map(({ lng, lat, name }) => {
-      const [x, y] = f.pt(lng, lat), w = Math.min(140, String(name).length * 5.6), right = x + 7 + w < f.Wd;
+      const [x, y] = f.pt(lng, lat);
+      // (too long for either side: shortened to fit the wider one)
+      const room = Math.max(f.Wd - x - 8, x - 8);
+      if (String(name).length * 6.3 > room) { const keep = name.match(/\s\([^)]*\)$/); name = `${shortName(name.replace(/\s\([^)]*\)$/, ''), Math.max(8, Math.floor(room / 6.3) - (keep ? keep[0].length : 0) - 1))}${keep ? keep[0] : ''}`; }
+      const w = Math.min(200, String(name).length * 6.3), right = x + 7 + w < f.Wd;
       const box = { x: right ? x + 6 : x - 6 - w, y: y - 9, w, h: 12 };
       if (placed.some(o => o.x < box.x + box.w && box.x < o.x + o.w && o.y < box.y + box.h && box.y < o.y + o.h)) return '';
       placed.push(box);
@@ -271,31 +323,80 @@
       if (!pl.lnglat) continue;
       const r = rows.find(x => x.id === `plant:${pl.name}`), t = r ? tone(r) : null, [x, y] = f.pt(pl.lnglat[0], pl.lnglat[1]);
       out.push(`<rect x="${(x - 5).toFixed(1)}" y="${(y - 5).toFixed(1)}" width="10" height="10" class="hm-plant${t ? ` hm-${t}` : ''}"><title>${esc(r ? r.name : pl.name)}${r ? `: ${Math.round(r.pctBo)}% at build-out` : ''}</title></rect>`);
-      if (t) lbl.push({ lng: pl.lnglat[0], lat: pl.lnglat[1], name: r.name, pct: r.pctBo + 1000 });
+      lbl.push({ lng: pl.lnglat[0], lat: pl.lnglat[1], name: r ? r.name : pl.name, pct: t && r ? r.pctBo + 1000 : 500 });
     }
     return f.svg(out.join(''), 'Peel’s wastewater blocks, with the facilities over capacity or past the 90% trigger at build-out highlighted', mapLabels(f, lbl.sort((a, b) => b.pct - a.pct)));
   }
   // Developments as dots sized by units (Growth, This week), optional highlight set (labelled).
   function devsMap(set, hl) {
-    const f = frame(); if (!f) return '';
+    const bb = muniBounds(), f = frame(360, 300, bb); if (!f) return '';
+    if (bb) set = set.filter(p => p.lat != null && p.lng >= bb[0] && p.lng <= bb[2] && p.lat >= bb[1] && p.lat <= bb[3]);
     const out = [], dotAt = (p, r, cls, t = '') => { const [x, y] = f.pt(p.lng, p.lat); return `<circle cx="${x}" cy="${y}" r="${r}" class="${cls}">${t}</circle>`; };
     for (const p of set) if (p.lat != null && (p.units || 0) >= 50) out.push(dotAt(p, Math.max(1.4, Math.min(6, Math.sqrt(p.units) / 8)).toFixed(1), 'hm-dev'));
     const hs = (hl || []).filter(p => p.lat != null);
     for (const p of hs) out.push(dotAt(p, 4.5, 'hm-hl', `<title>${esc(p.title)}</title>`));
-    return f.svg(out.join(''), 'Peel’s wastewater blocks with the developments on the map', mapLabels(f, hs.slice(0, 3).map(p => ({ lng: p.lng, lat: p.lat, name: p.title }))));
+    // (nothing highlighted: the three largest named)
+    const named = hs.length ? hs : set.filter(p => p.lat != null && p.phase !== 'cancelled').sort((a, b) => (b.units || 0) - (a.units || 0)).slice(0, 3);
+    if (!hs.length) for (const p of named) out.push(dotAt(p, Math.max(1.4, Math.min(6, Math.sqrt(p.units) / 8)).toFixed(1), 'hm-dev hm-dev-top', `<title>${esc(p.title)}: ${fmtNum(p.units)} units</title>`));
+    return f.svg(out.join(''), 'Peel’s wastewater blocks with the developments on the map', mapLabels(f, named.slice(0, 3).map(p => ({ lng: p.lng, lat: p.lat, name: hs.length ? p.title : `${shortName(p.title)} (${fmtNum(p.units)})` }))));
   }
   // Projects: the 2026 DC works (wastewater, water).
   function worksMap() {
-    const f = frame(), di = App() && App().state.dcInfra; if (!f) return '';
-    const out = [];
-    if (di) for (const sys of ['wastewater', 'water']) for (const ln of (di[sys] && di[sys].lines) || []) out.push(`<path d="${f.line(ln.g)}" class="hm-dc hm-dc-${sys}"/>`);
-    return f.svg(out.join(''), 'The 2026 DC works (draft) on Peel’s wastewater blocks');
+    const bb = muniBounds(), f = frame(360, 300, bb), di = App() && App().state.dcInfra; if (!f) return '';
+    const out = [], inBB = ln => !bb || ln.g.some(([x, y]) => x >= bb[0] && x <= bb[2] && y >= bb[1] && y <= bb[3]), big = [];
+    if (di) for (const sys of ['wastewater', 'water']) for (const ln of (di[sys] && di[sys].lines) || []) {
+      if (!inBB(ln)) continue;
+      out.push(`<path d="${f.line(ln.g)}" class="hm-dc hm-dc-${sys}"><title>${esc(ln.n || '')}${ln.y ? ` · ${ln.y}` : ''}</title></path>`);
+      if (ln.n && ln.d) big.push(ln);
+    }
+    // (the three largest named works, at their middle)
+    const lbl = big.sort((a, b) => b.d - a.d).filter((ln, i, a) => a.findIndex(o => o.n === ln.n) === i).slice(0, 3).map(ln => { const m = ln.g[Math.floor(ln.g.length / 2)]; return { lng: m[0], lat: m[1], name: `${shortName(ln.n)}${ln.y ? ` (${ln.y})` : ''}` }; });
+    return f.svg(out.join(''), 'The 2026 DC works (draft) on Peel’s wastewater blocks', mapLabels(f, lbl));
+  }
+  // EA to construction: each Region EA's study area (by where it stands) and the construction after it.
+  function eaMap(rows) {
+    const bb = muniBounds(), f = frame(360, 300, bb); if (!f) return '';
+    const out = [], lbl = [];
+    const geo = (g, cls, t) => {
+      if (!g) return;
+      const tt = `<title>${esc(t)}</title>`;
+      if (g.type === 'Polygon') out.push(`<path d="${f.path(g.coordinates)}" class="${cls}">${tt}</path>`);
+      else if (g.type === 'MultiPolygon') out.push(`<path d="${g.coordinates.map(pg => f.path(pg)).join('')}" class="${cls}">${tt}</path>`);
+      else if (g.type === 'LineString') out.push(`<path d="${f.line(g.coordinates)}" class="${cls} ln">${tt}</path>`);
+      else if (g.type === 'MultiLineString') out.push(`<path d="${g.coordinates.map(l => f.line(l)).join('')}" class="${cls} ln">${tt}</path>`);
+      else if (g.type === 'Point' || g.type === 'MultiPoint') for (const c of g.type === 'Point' ? [g.coordinates] : g.coordinates) { const [x, y] = f.pt(c[0], c[1]); out.push(`<circle cx="${x}" cy="${y}" r="4" class="${cls}">${tt}</circle>`); }
+    };
+    const mid = g => { const ps = g.type === 'Point' ? [g.coordinates] : g.type === 'MultiPoint' || g.type === 'LineString' ? g.coordinates : g.type === 'Polygon' || g.type === 'MultiLineString' ? g.coordinates.flat() : g.coordinates.flat(2); const q = ps[Math.floor(ps.length / 2)]; return q || null; };
+    const RANK = { limit: 0, waiting: 1, current: 3, building: 2, planned: 2, built: 4, nodate: 5 };
+    for (const x of rows) {
+      geo(x.e.geometry, `hm-ea hm-ea-${x.bucket}`, `${x.e.name}`);
+      const recs = (App() && App().state.capital && App().state.capital.records) || [];
+      for (const c of x.outcome) for (const r of recs) if ((r.contract || r.projectNumber || r.id) === c.key) geo(r.geometry, 'hm-cons', `${c.work}${c.street ? ` · ${c.street}` : ''}`);
+    }
+    for (const x of rows.filter(x => x.e.geometry && (x.bucket === 'limit' || x.bucket === 'waiting')).sort((a, b) => RANK[a.bucket] - RANK[b.bucket] || (a.d.completion ? a.d.completion.at : 0) - (b.d.completion ? b.d.completion.at : 0)).slice(0, 3)) {
+      const m = mid(x.e.geometry); if (m) lbl.push({ lng: m[0], lat: m[1], name: `${shortName(x.e.name)} (${x.d.completion.year})` });
+    }
+    return f.svg(out.join(''), 'Region EA study areas and the construction that followed them', mapLabels(f, lbl));
+  }
+  // The street at a point: the nearest Region address point within 150 m (when they're loaded).
+  let addrIdx = null;
+  function streetAtPt(lng, lat) {
+    const D = App() && App().state.addressPoints;
+    if (!D) { if (root.PeelAddr && root.PeelAddr.loadPoints && !streetAtPt.asked) { streetAtPt.asked = true; root.PeelAddr.loadPoints().then(() => W() && W().renderPage && W().renderPage(true)); } return ''; }
+    if (!addrIdx) { addrIdx = new Map(); for (const [k, v] of Object.entries(D.a || {})) { const [, , nm, ty, dr] = k.split('|'), g = `${Math.floor(v[2] / 0.002)},${Math.floor(v[1] / 0.002)}`; (addrIdx.get(g) || addrIdx.set(g, []).get(g)).push([v[2], v[1], [nm, ty, dr].filter(Boolean).join(' ')]); } }
+    const kx = 111320 * Math.cos(lat * Math.PI / 180), cx = Math.floor(lng / 0.002), cy = Math.floor(lat / 0.002);
+    let best = '', bd = 150;
+    for (let a = -1; a <= 1; a++) for (let b = -1; b <= 1; b++) for (const q of addrIdx.get(`${cx + a},${cy + b}`) || []) { const m = Math.hypot((q[0] - lng) * kx, (q[1] - lat) * 110540); if (m < bd) { bd = m; best = q[2]; } }
+    return best.toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase());
   }
   // Old pipes: the runs on the list, heavier where moderate risk.
   function pipesMap(list) {
     const f = frame(), S = MM() && MM().SEW; if (!f || !S || !S.data) return '';
     const out = list.map(r => { const c = S.data.pipes[r.i][10], pts = []; for (let k = 0; k < c.length; k += 2) pts.push([c[k], c[k + 1]]); return `<path d="${f.line(pts)}" class="hm-pipe${r.risky ? ' risky' : ''}"/>`; });
-    return f.svg(out.join(''), 'The old pipes on the list');
+    // (the three oldest and most loaded runs: size, year and the street, where an address is near)
+    const worst = list.slice().sort((a, b) => (likeOf(b) + consOf(b)) - (likeOf(a) + consOf(a)) || b.units - a.units).slice(0, 3);
+    const lbl = worst.map(r => { const c = S.data.pipes[r.i][10], k = Math.floor(c.length / 4) * 2, st = streetAtPt(c[k], c[k + 1]); return { lng: c[k], lat: c[k + 1], name: `${fmtNum(S.data.pipes[r.i][0])} mm${r.year ? `, ${r.year}` : ''}${st ? ` · ${st}` : ''}` }; });
+    return f.svg(out.join(''), 'The old pipes on the list', mapLabels(f, lbl));
   }
   // A site: the Report's sketch (sewers, DC works, nearby developments, the site), its caption left out.
   function siteMap(p) {
@@ -643,7 +744,7 @@
         unknown.length ? { title: `Completion date unknown (${fmtNum(unknown.length)})`, html: `<p class="small muted">The EA’s page, notice and report don’t give a completion year yet, so linked construction can’t be ordered against it.</p><ul class="small">${unknown.map(x => `<li>${esc(x.e.name)} <span class="muted">· ${esc(x.e.municipality || 'Peel')}${x.contracts.length ? ` · ${fmtNum(x.contracts.length)} linked contract${x.contracts.length === 1 ? '' : 's'}` : ''}</span></li>`).join('')}</ul>` } : null,
         conflicts.length ? { title: `Date conflicts to check (${fmtNum(conflicts.length)})`, open: true, html: `<p class="small muted">The project’s own page links this construction to the EA, but it started before the EA was complete. One of the dates may be wrong.</p><ul class="small">${conflicts.map(x => `<li><strong>${esc(x.e.name)}</strong> (EA complete ${esc(String(x.d.completion ? x.d.completion.year : x.d.expected ? x.d.expected.year : '?'))}): ${x.conflict.map(workLine).join('; ')}</li>`).join('')}</ul>` } : null,
       ],
-      map: { svg: worksMap(), attrs: { 'data-ws-go': 'eaflow' }, label: 'Open EA to construction on the map', caption: 'Opens the map with the EA study areas and the Region’s construction' },
+      map: { svg: eaMap(all), attrs: { 'data-ws-go': 'eaflow' }, label: 'Open EA to construction on the map', caption: `<span class="hm-key hm-key-ea-wait"></span> complete, waiting <span class="hm-key hm-key-ea-follow"></span> construction followed <span class="hm-key hm-key-ea-now"></span> under way <span class="hm-key hm-key-cons"></span> construction after an EA · named: the three waiting longest (year complete)` },
       method: 'Each Region Class EA (Water, Wastewater and Roads) from its project page, with the capital projects linked to it (by the project’s own page, inside the study area, or by street inside the study area). Construction counts as following the EA only when it starts on or after the EA was complete; where only the year is known, a start in the same year counts. For an EA under way, only construction due after the expected report counts. Earlier work in the study area is listed as other work. The completion year comes from, in order: the notice of completion, the report filing date, the page’s wording, the report’s cover, the report’s file name. Under the Municipal Class EA, when more than 10 years pass between the notice of completion and the start of construction, the EA must be reviewed (and an addendum filed if anything changed) before construction: waiting EAs past 10 years and construction starting 10 or more years after its EA are flagged to check; the app can’t see whether that review was done. Possible links: planned or active contracts of the same system and municipality, mostly within 250 m of a completed EA’s study area (500 m of a facility), starting after the EA was complete, that the weekly build has not linked; repairs, relining, resurfacing and developer-built works are left out, Region-wide studies are left out, and a study area placed with low confidence needs the street named in the EA as well. They are listed to check and never counted as following the EA. The start date is the actual start where recorded, else the target start.',
       sources: 'Region of Peel EA project pages and their notices and reports (weekly build, scripts/build-eas.js); Region of Peel capital project and construction pages (data/capital.json).',
       actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'eaflow' }, primary: true }, { label: 'Full EA table', attrs: { 'data-ws-go': 'eaflow', 'data-ws-fulltable': 'dca:eas' } }] };
@@ -757,6 +858,6 @@
     if (g && m.actions) m.actions = [...m.actions, { label: `${g[1]} ›`, attrs: { 'data-ws-page': g[0] }, title: `How it works: ${g[2]}` }];
     return m;
   }
-  Object.assign(api, { build, eaTimelineHTML, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame });
+  Object.assign(api, { build, tilesSVG, tileCredit, tilesOk, eaMap, eaTimelineHTML, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame });
   root.PeelWsPages = api;
 })(typeof window !== 'undefined' ? window : globalThis);

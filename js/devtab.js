@@ -965,7 +965,8 @@
       ...items.map(o => `<g class="net-g net-${o.sys === 'water' ? 'w' : 'ww'} net-${o.kind}" data-net-hl="${o.id}">${o.paths.map(pth => `<path d="${d(pth)}"/>`).join('')}</g>`),
     ];
     const rr = (r * kx * s / kx * 1).toFixed(1), bar = r >= 1000 ? 500 : r >= 400 ? 200 : 50;
-    return `<svg class="net-map" viewBox="0 0 ${W} ${H}" role="img" aria-label="Water and wastewater within ${r} m of the site"><circle cx="${W / 2}" cy="${H / 2}" r="${(r * s).toFixed(1)}" class="net-ring"/>${lines.join('')}<circle cx="${W / 2}" cy="${H / 2}" r="5" class="net-site"/><g class="net-bar"><rect x="8" y="${H - 12}" width="${(bar * s).toFixed(1)}" height="3"/><text x="8" y="${H - 16}">${bar} m</text></g></svg>`;
+    const WP = root.PeelWsPages, deg = half * 1.5 / 111320, tiles = WP && WP.tilesSVG ? WP.tilesSVG((x, y) => X(x, y).map(Number), [p.lng - deg / Math.cos(p.lat * Math.PI / 180), p.lat - deg, p.lng + deg / Math.cos(p.lat * Math.PI / 180), p.lat + deg], W, H) : '';
+    return `<svg class="net-map" viewBox="0 0 ${W} ${H}" role="img" aria-label="Water and wastewater within ${r} m of the site">${tiles}<circle cx="${W / 2}" cy="${H / 2}" r="${(r * s).toFixed(1)}" class="net-ring"/>${lines.join('')}<circle cx="${W / 2}" cy="${H / 2}" r="5" class="net-site"/><g class="net-bar"><rect x="8" y="${H - 12}" width="${(bar * s).toFixed(1)}" height="3"/><text x="8" y="${H - 16}">${bar} m</text></g></svg>`;
   }
   function netBlockHTML(p) {
     const items = netItemsOf(p, netR); netItems = items;

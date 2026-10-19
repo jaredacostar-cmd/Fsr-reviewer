@@ -3484,7 +3484,7 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 @media (max-width: 480px) { .eat-row, .eat-axis { grid-template-columns: 1fr; gap: 2px; } .eat-axis .eat-nm { display: none; } }
 
 .net-wrap { display: grid; grid-template-columns: minmax(220px, 340px) 1fr; gap: var(--space-3); align-items: start; margin-top: var(--space-2); }
-@media (max-width: 720px) { .net-wrap { grid-template-columns: 1fr; } }
+@media (max-width: 700px) { .net-wrap { grid-template-columns: 1fr; } }
 .net-map { width: 100%; height: auto; background: var(--surface-2); border-radius: 6px; display: block; }
 .net-map path { fill: none; stroke-linecap: round; }
 .net-ring { fill: none; stroke: var(--text-muted); stroke-dasharray: 3 3; }
@@ -3506,7 +3506,23 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .net-sw.net-w { border-top-color: var(--pipe-water); } .net-sw.net-ww { border-top-color: var(--pipe-sanitary); } .net-sw.net-storm { border-top-color: var(--pipe-storm); }
 .net-sw.net-w.net-dc, .net-sw.net-w.net-cap { border-top-color: var(--dc-w-trans); } .net-sw.net-ww.net-dc, .net-sw.net-ww.net-cap { border-top-color: var(--dc-ww-main); }
 .net-sw.net-dc { border-top-style: dashed; } .net-sw.net-cap { border-top-style: dotted; }
-.net-tight { color: var(--cap-tight-t, var(--cap-tight)); } .net-over { color: var(--cap-over-t, var(--cap-over)); }
+.net-tight { color: var(--cap-tight-t); } .net-over { color: var(--cap-over-t); }
 .net-key { margin: 4px 0 0; }
 .sk-st { stroke: var(--text-muted); stroke-width: 3; opacity: .22; stroke-linecap: round; fill: none; }
 .sk-st-l { font-size: 9px; fill: var(--text-secondary); paint-order: stroke; stroke: var(--surface-1); stroke-width: 3px; stroke-linejoin: round; }
+/* Basemap under the small maps (js/ws-pages.js tilesSVG): muted so the overlays read. */
+.hm-tiles { opacity: .55; }
+.home-map-svg.has-tiles .hm-base { fill: transparent; }
+.hm-credit { margin: 2px 0 0; font-size: .75em; }
+.home-map-svg .hm-ea { fill: color-mix(in srgb, var(--ea-line) 14%, transparent); stroke: var(--ea-line); stroke-width: 1; }
+.home-map-svg .hm-ea.ln { fill: none; stroke-width: 2; }
+.home-map-svg .hm-ea-limit, .home-map-svg .hm-ea-waiting { fill: color-mix(in srgb, var(--cap-tight) 30%, transparent); stroke: var(--cap-tight); }
+.home-map-svg .hm-ea-limit.ln, .home-map-svg .hm-ea-waiting.ln { fill: none; }
+.home-map-svg .hm-ea-current { stroke-dasharray: 3 2; }
+.home-map-svg .hm-ea-nodate { opacity: .45; }
+.home-map-svg .hm-cons { fill: none; stroke: var(--accent); stroke-width: 2.2; }
+.home-map-svg .hm-dev-top { fill: var(--text-primary); }
+.hm-key.hm-key-ea-wait { background: color-mix(in srgb, var(--cap-tight) 45%, transparent); border: 1px solid var(--cap-tight); }
+.hm-key.hm-key-ea-follow { background: color-mix(in srgb, var(--ea-line) 25%, transparent); border: 1px solid var(--ea-line); }
+.hm-key.hm-key-ea-now { border: 1px dashed var(--ea-line); }
+.hm-key.hm-key-cons { height: 3px; background: var(--accent); }
