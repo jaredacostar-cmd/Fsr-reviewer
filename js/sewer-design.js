@@ -56,6 +56,22 @@
   }
   // The steepest slope with the full-flow velocity at 3.0 m/s.
   const maxSlope = (D, r = RULES) => Math.pow(r.vMaxFull * r.n / Math.pow(D / 4, 2 / 3), 2);
+  // The flattest slope meeting the flow ratio alone.
+  const capSlope = (D, Q, r = RULES) => Math.pow(Q * r.n / (r.qRatioMax * fullArea(D) * Math.pow(D / 4, 2 / 3)), 2);
+  // The slopes a reach may take: { lo, hi, sVel, held }, or null when the size can't carry the flow.
+  // Without a range, the standard's: the flattest meeting the flow ratio and 0.75 m/s, the steepest
+  // at 3.0 m/s full. Within a chosen range [lo, hi] (the Sewer designer's setting): the flow ratio
+  // and 3.0 m/s still hold; where 0.75 m/s at the design flow needs more than the steepest slope
+  // chosen, the reach is held at that steepest slope (held: the velocity check then fails, and says
+  // so). sVel: the flattest slope meeting 0.75 m/s (null: none does).
+  function slopeLimits(D, Q, r = RULES, range = null) {
+    const top = maxSlope(D, r), sVel = minSlope(D, Q, r);
+    if (!range) return sVel == null || sVel > top ? null : { lo: sVel, hi: top, sVel, held: false };
+    const hi = Math.min(top, range[1]), cap = capSlope(D, Q, r);
+    if (cap > hi) return null;
+    const held = sVel == null || sVel > hi, lo = Math.min(hi, Math.max(range[0], cap, held ? hi : sVel));
+    return { lo, hi, sVel, held };
+  }
   // Drops allowed through a maintenance hole for this pipe (m), given its velocity and the bend.
   function dropRange(dmm, V, bendDeg = 0, r = RULES) {
     if (dmm <= 300) return { min: r.dropSmall[0], max: r.dropSmall[1] };
@@ -197,9 +213,14 @@
   // (as design() goes up a size), until one fits or the pipe would be larger than the existing sewer.
   // At a junction each pipe in keeps its own drop rule; where the size grows the obverts are matched
   // (a drop of the size difference). On a single line with one flow this is design(), reach for
-  // reach.
+  // reach. opts.slopes: [lo, hi] (fractions: [0.003, 0.01] is 0.3–1%), every reach's slope within
+  // them (slopeLimits()); the last leg's 1.00% is then held to hi when hi is under it (the check
+  // fails and says so). An inlet invert is on the lattice of `step`, or, where no lattice invert
+  // fits a reach's slopes (a narrow range: the last leg at exactly 1.00% of 0.3–1%), the invert at
+  // the flattest slope it allows, to the millimetre.
   function designNet(net, conn, opts = {}) {
     const r = { ...RULES, ...(opts.rules || {}) }, nodes = net.nodes, R = net.reaches, N = nodes.length;
+    const range = opts.slopes && opts.slopes.length === 2 && opts.slopes.every(x => x > 0) ? [Math.min(...opts.slopes), Math.max(...opts.slopes)] : null;
     const cover = opts.ici ? r.coverIci : r.coverRes, pen = opts.avoidStructures ? Infinity : 30;
     const outOf = nodes.map(() => -1), into = nodes.map(() => []);
     R.forEach((rc, i) => { if (outOf[rc.from] >= 0) throw new Error('a maintenance hole with two pipes out'); outOf[rc.from] = i; into[rc.to].push(i); });
@@ -215,8 +236,8 @@
     const total = R.reduce((t, rc) => t + rc.L, 0), step = opts.step || (total > 800 ? 0.05 : 0.02);
     // The smallest size for each reach's flow, then never smaller than a reach upstream of it.
     const IDX = SIZES.map((d, k) => k).filter(k => SIZES[k] >= r.dMin);
-    const hmin = R.map(rc => { const k = IDX.find(k => { const D = SIZES[k] / 1000, sMin = minSlope(D, rc.q / 1000, r); return sMin != null && sMin <= maxSlope(D, r); }); return k == null ? null : k; });
-    if (hmin.some(k => k == null)) { const i = hmin.findIndex(k => k == null); return { ok: false, why: `${R[i].q.toFixed(1)} L/s is more than the largest pipe carries within 3.0 m/s full and the 0.7 flow ratio`, reasons: [], source: SOURCE }; }
+    const hmin = R.map(rc => { const k = IDX.find(k => slopeLimits(SIZES[k] / 1000, rc.q / 1000, r, range)); return k == null ? null : k; });
+    if (hmin.some(k => k == null)) { const i = hmin.findIndex(k => k == null); return { ok: false, why: `${R[i].q.toFixed(1)} L/s is more than the largest pipe carries within ${limitsText(range)}`, reasons: [], source: SOURCE, slopes: range }; }
     const reasons = [];
     for (let k = 0; k < SIZES.length; k++) {
       const idx = R.map((_, i) => Math.min(SIZES.length - 1, hmin[i] + k));
@@ -224,22 +245,24 @@
       const dmm = idx.map(x => SIZES[x]);
       const big = into[root].find(i => conn && conn.dmm && dmm[i] > conn.dmm);
       if (big != null) { reasons.push(`${dmm[big]} mm would be larger than the existing ${conn.dmm} mm sewer (a larger pipe may not flow into a smaller one)`); break; }
-      const res = netSizes(net, conn, dmm, order, outOf, into, root, cover, step, r, pen);
-      if (res.ok) return { ...res, cover, rules: r, source: SOURCE };
+      const res = netSizes(net, conn, dmm, order, outOf, into, root, cover, step, r, pen, range);
+      if (res.ok) return { ...res, cover, rules: r, source: SOURCE, slopes: range };
       reasons.push(res.why);
       if (res.stop || k > 0 && idx.every(x => x === SIZES.length - 1)) break;
     }
     const short = reasons.map(x => [x, +((/about ([\d.]+) m below/.exec(x) || [])[1])]).filter(([, m]) => m > 0).sort((a, b) => a[1] - b[1]);
     const why = (short[0] && short[0][0]) || reasons.find(x => !/can't carry/.test(x)) || reasons[0] || 'no size works';
-    return { ok: false, cover, why, reasons, source: SOURCE };
+    return { ok: false, cover, why, reasons, source: SOURCE, slopes: range };
   }
+  const limitsText = range => (range ? `the 0.7 flow ratio and 3.0 m/s full at ${(range[1] * 100).toFixed(2)}% or flatter` : '3.0 m/s full and the 0.7 flow ratio');
   // One set of sizes: dynamic programming from the leaves to the connection over each maintenance
   // hole's outlet invert (on a lattice of `step`).
-  function netSizes(net, conn, dmm, order, outOf, into, root, cover, step, r, pen) {
+  function netSizes(net, conn, dmm, order, outOf, into, root, cover, step, r, pen, range) {
     const nodes = net.nodes, R = net.reaches, E = k => +(k * step).toFixed(3);
     for (let i = 0; i < R.length; i++) if (R[i].L > r.mhSpacing(dmm[i]) + 0.01) return { ok: false, why: `maintenance holes more than ${r.mhSpacing(dmm[i])} m apart`, stop: true };
-    const D = dmm.map(x => x / 1000), sMin = R.map((rc, i) => minSlope(D[i], rc.q / 1000, r)), sMax = D.map(d => maxSlope(d, r));
-    for (let i = 0; i < R.length; i++) if (sMin[i] == null || sMin[i] > sMax[i]) return { ok: false, why: `${dmm[i]} mm can't carry ${R[i].q.toFixed(1)} L/s within 3.0 m/s full and the 0.7 flow ratio` };
+    const D = dmm.map(x => x / 1000), lim = R.map((rc, i) => slopeLimits(D[i], rc.q / 1000, r, range));
+    for (let i = 0; i < R.length; i++) if (!lim[i]) return { ok: false, why: `${dmm[i]} mm can't carry ${R[i].q.toFixed(1)} L/s within ${limitsText(range)}` };
+    const sMin = lim.map(x => x.lo), sMax = lim.map(x => x.hi);
     // Each maintenance hole's outlet range: the shallowest cover over the pipe out, the deepest trench.
     const hiK = (n, d) => Math.floor((nodes[n].g - cover - d) / step + 1e-9), loK = n => Math.ceil((nodes[n].g - r.trenchMax + r.bedding) / step - 1e-9);
     const V = (i, S) => (partFor(D[i], S, R[i].q / 1000, r.n) || { V: 0 }).V;
@@ -268,8 +291,14 @@
     const bendOf = i => (R[i].bend != null ? R[i].bend : nodes[R[i].to].bend || 0);
     const connOK = (d, dr) => !(d > dr.max + 1e-6) && !(d < dr.min - 1e-6 && d > 1e-6);
     const leafOf = n => !into[n].length;
+    // The flattest slope for reach i: the last leg's 1.00% at a branch's start (held to the steepest
+    // chosen when a range is under it).
+    const loOf = i => { if (!leafOf(R[i].from)) return sMin[i]; const s = Math.max(sMin[i], r.sLastLeg); return range ? Math.min(s, sMax[i]) : s; };
+    // Inlet inverts off the lattice (a narrow range): reach → Map(lattice index below → [keys]).
+    const inFrac = R.map(() => new Map());
+    const keysAt = (i, bk) => { const f = inFrac[i].get(bk); return f ? [bk, ...f] : [bk]; };
     const doReach = i => {
-      const rc = R[i], u = rc.from, first = leafOf(u), sLo = first ? Math.max(sMin[i], r.sLastLeg) : sMin[i];
+      const rc = R[i], u = rc.from, sLo = loOf(i);
       if (!outState[u]) { const m = new Map(); for (let k = hiK(u, D[i]); k >= loK(u); k--) m.set(k, { cost: 0, ins: [] }); outState[u] = m; }
       const out = new Map(), bHi = hiK(rc.to, D[i]), bLo = loK(rc.to), bend = bendOf(i), atConn = rc.to === root && !!conn;
       // (the drop range is the same for every slope up to 300 mm, or without a bend)
@@ -280,8 +309,20 @@
         const a = E(ak), sb = slopeBounds(i, a); if (!sb) continue;
         const s0 = Math.max(sLo - 1e-9, sb[0]), s1 = Math.min(sMax[i] + 1e-9, sb[1]); if (s0 > s1) continue;
         const top = Math.min(bHi, Math.floor((a - s0 * rc.L) / step + 1e-9)), bot = Math.max(bLo, Math.ceil((a - s1 * rc.L) / step - 1e-9));
-        for (let bk = top; bk >= bot; bk--) {
-          const S = (a - E(bk)) / rc.L; if (S < s0 - 1e-12 || S > s1 + 1e-12) continue;
+        const cands = [];
+        for (let bk = top; bk >= bot; bk--) cands.push(bk);
+        if (!cands.length && range) {
+          // No lattice invert fits: the flattest slope allowed, the invert rounded down to the
+          // millimetre (so the slope is never flatter; at most 1 mm over the reach steeper).
+          const bF = Math.floor((a - s0 * rc.L) * 1000 + 1e-6) / 1000, bk = bF / step;
+          if ((a - bF) / rc.L <= s1 + 0.0011 / rc.L) {
+            cands.push(bk);
+            const fl = Math.floor(bk + 1e-9), f = inFrac[i].get(fl); if (f) { if (!f.includes(bk)) f.push(bk); } else inFrac[i].set(fl, [bk]);
+          }
+        }
+        for (const bk of cands) {
+          const S = (a - E(bk)) / rc.L, frac = !Number.isInteger(bk);
+          if (frac ? S < s0 - 1e-9 || S > s1 + 0.0011 / rc.L : S < s0 - 1e-12 || S > s1 + 1e-12) continue;
           const c = st.cost + GINT[i] - a * rc.L + S * rc.L * rc.L / 2, b = E(bk);
           let list = out.get(bk);
           if (dr0) {   // one class
@@ -321,7 +362,8 @@
       // Through a maintenance hole: the lattice outlets within the allowed drop (as design() takes
       // them), or a drop structure at 0.9, 1.4 or 2.4 m; only the pipes-in that can reach outlet ok.
       const o = E(ok), grow = Math.max(0, dOut - D[i]), wide = Math.max(inWide[i], grow) + step;
-      for (let bk = ok + 1; bk <= Math.ceil((o + wide) / step); bk++) {
+      for (let bi = ok; bi <= Math.ceil((o + wide) / step); bi++) for (const bk of keysAt(i, bi)) {
+        if (bk <= ok) continue;
         const list = m.get(bk); if (!list) continue;
         const b = E(bk);
         for (const st of list) {
@@ -330,7 +372,7 @@
         }
       }
       if (pen < Infinity) for (const extra of [r.dropStructure, r.dropStructure + 0.5, r.dropStructure + 1.5]) {
-        for (let bk = Math.floor((o + extra) / step) - 1; bk <= Math.ceil((o + extra + step) / step) + 1; bk++) { const list = m.get(bk); if (!list) continue; const b = E(bk); if (Math.floor((b - extra) / step + 1e-9) === ok) for (const st of list) consider(st, bk, b - o, true); }
+        for (let bi = Math.floor((o + extra) / step) - 1; bi <= Math.ceil((o + extra + step) / step) + 1; bi++) for (const bk of keysAt(i, bi)) { const list = m.get(bk); if (!list) continue; const b = E(bk); if (Math.floor((b - extra) / step + 1e-9) === ok) for (const st of list) consider(st, bk, b - o, true); }
       }
       return best;
     };
@@ -350,12 +392,12 @@
       }
       if (!doReach(i)) {
         const last = R[i].to === root;
-        return { ok: false, why: whyNet(i, outState[u], net, conn, D[i], leafOf(u) ? Math.max(sMin[i], r.sLastLeg) : sMin[i], sMax[i], cover, r, last, step) };
+        return { ok: false, why: whyNet(i, outState[u], net, conn, D[i], loOf(i), sMax[i], cover, r, last, step) };
       }
     }
     // The connection.
     let rootCost = 0; const rootIns = [];
-    for (const j of into[root]) { const b = bestInto(j, null, 0, true); if (!b) { const i = j; return { ok: false, why: whyNet(i, outState[R[i].from], net, conn, D[i], leafOf(R[i].from) ? Math.max(sMin[i], r.sLastLeg) : sMin[i], sMax[i], cover, r, true, step) }; } rootCost += b.cost; rootIns.push({ reach: j, ...b }); }
+    for (const j of into[root]) { const b = bestInto(j, null, 0, true); if (!b) { const i = j; return { ok: false, why: whyNet(i, outState[R[i].from], net, conn, D[i], loOf(i), sMax[i], cover, r, true, step) }; } rootCost += b.cost; rootIns.push({ reach: j, ...b }); }
     // Back from the connection: each reach's inverts, each maintenance hole's outlet.
     const outK = nodes.map(() => null), insOf = nodes.map(() => []), inv = R.map(() => ({}));
     insOf[root] = rootIns;
@@ -368,7 +410,7 @@
     });
     const reaches = R.map((rc, i) => {
       const { up: a, dn: b, S } = inv[i], Q = rc.q / 1000, pf = partFor(D[i], S, Q, r.n) || {};
-      return { from: rc.from, to: rc.to, L: +rc.L.toFixed(1), S, dmm: dmm[i], q: rc.q, inv_up: a, inv_dn: b, qFull: qFull(D[i], S, r.n) * 1000, qRatio: Q / qFull(D[i], S, r.n), v: pf.V || 0, vFull: vFull(D[i], S, r.n), depthRatio: pf.y ? pf.y / D[i] : 0, froude: pf.F || 0, sMin: sMin[i], sMax: sMax[i] };
+      return { from: rc.from, to: rc.to, L: +rc.L.toFixed(1), S, dmm: dmm[i], q: rc.q, inv_up: a, inv_dn: b, qFull: qFull(D[i], S, r.n) * 1000, qRatio: Q / qFull(D[i], S, r.n), v: pf.V || 0, vFull: vFull(D[i], S, r.n), depthRatio: pf.y ? pf.y / D[i] : 0, froude: pf.F || 0, sMin: sMin[i], sMax: sMax[i], sVel: lim[i].sVel, held: lim[i].held && pf.V < r.vMin - 1e-6 };
     });
     const cost = rootCost;
     return { ok: true, dmm: Math.max(...dmm), dmms: dmm, reaches, mhs, cost, structures: mhs.reduce((t, m) => t + m.ins.filter(x => x.structure).length, 0), root };
@@ -421,7 +463,7 @@
     return { q: peak + ii, avg: res + emp, peak, ii, typed: false };
   }
 
-  const api = { RULES, SIZES, SOURCE, qFull, vFull, partAt, partFor, minSlope, maxSlope, dropRange, design, designNet, lineNet, deepest, placeMHs, flowFrom };
+  const api = { RULES, SIZES, SOURCE, qFull, vFull, partAt, partFor, minSlope, maxSlope, capSlope, slopeLimits, dropRange, design, designNet, lineNet, deepest, placeMHs, flowFrom };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSewerDesign = api;
 })(typeof window !== 'undefined' ? window : globalThis);

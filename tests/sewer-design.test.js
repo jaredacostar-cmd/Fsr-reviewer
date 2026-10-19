@@ -194,3 +194,76 @@ test('the audit\'s case: 734 m, 450 mm, bends of 30° and 60° (design() costs 2
   assert.ok(Math.abs(b.cost - 2960.83) < 0.005, `${b.cost}`);
   assert.ok(ms < 3000, `${ms} ms`);
 });
+
+// ---- A chosen slope range (the Sewer designer's setting, 0.3–1% by default) ------------------------
+const RANGE = [0.003, 0.01];
+const inRange = r => r.S >= RANGE[0] - 1e-9 && r.S <= RANGE[1] + 0.0011 / r.L;
+
+test('slopeLimits: the standard\'s without a range; within a range the flow ratio holds, and 0.75 m/s held to the steepest', () => {
+  // no range: the flattest meeting 0.75 m/s and the flow ratio, the steepest at 3.0 m/s full
+  assert.deepEqual(SD.slopeLimits(0.2, 0.008), { lo: SD.minSlope(0.2, 0.008), hi: SD.maxSlope(0.2), sVel: SD.minSlope(0.2, 0.008), held: false });
+  // 200 mm at 2 L/s needs about 2.1% for 0.75 m/s: held at 1%
+  const a = SD.slopeLimits(0.2, 0.002, SD.RULES, RANGE);
+  assert.ok(a.held && a.lo === 0.01 && a.hi === 0.01 && near(a.sVel, 0.0211, 0.0005));
+  // 300 mm at 50 L/s: 0.75 m/s at about 0.55%, within the range
+  const b = SD.slopeLimits(0.3, 0.05, SD.RULES, RANGE);
+  assert.ok(!b.held && near(b.lo, SD.minSlope(0.3, 0.05), 1e-12) && b.lo > 0.005 && b.hi === 0.01);
+  // 375 mm at 60 L/s: the standard allows 0.24%; the 0.3% floor binds
+  assert.ok(SD.minSlope(0.375, 0.06) < 0.003 && SD.slopeLimits(0.375, 0.06, SD.RULES, RANGE).lo === 0.003);
+  // the flow ratio is never given up: 200 mm can't carry 30 L/s at 1% or flatter (0.7 × 32.8)
+  assert.equal(SD.slopeLimits(0.2, 0.03, SD.RULES, RANGE), null);
+  assert.ok(near(0.7 * SD.qFull(0.2, SD.capSlope(0.2, 0.02)), 0.02, 1e-12));
+  // the steepest is never more than 3.0 m/s full (1200 mm: 0.76%)
+  assert.ok(near(SD.slopeLimits(1.2, 1.0, SD.RULES, RANGE).hi, SD.maxSlope(1.2), 1e-12));
+});
+
+test('designNet within 0.3–1%: every reach in the range, the last leg at exactly 1.00%, the other rules held', () => {
+  for (const [q, gf, conn] of [[12, x => 200 - x * 0.004, 1200], [60, x => 200 - x * 0.001, 1200], [400, x => 200 - x * 0.001, 1200]]) {
+    const rt = route(587, gf), net = SD.lineNet(rt, q), d = SD.designNet(net, { invert: gf(587) - 6, dmm: conn }, { slopes: RANGE });
+    assert.ok(d.ok, d.why);
+    assert.deepEqual(d.slopes, RANGE);
+    for (const r of d.reaches) {
+      assert.ok(inRange(r), `${q} L/s: ${(r.S * 100).toFixed(3)}%`);
+      assert.ok(r.qRatio <= 0.7 + 1e-6 && r.vFull <= 3.0 + 1e-6);
+      assert.ok(r.v >= 0.75 - 1e-6 && !r.held, 'these flows reach 0.75 m/s within 1%');
+    }
+    assert.ok(d.reaches[0].S >= 0.01 - 1e-9 && d.reaches[0].S <= 0.01 + 0.0011 / d.reaches[0].L, 'the last leg at 1.00%');
+    // the reach's inverts and slope agree, and the inverts are to the millimetre
+    for (const r of d.reaches) { assert.ok(near(r.inv_up - r.S * r.L, r.inv_dn, 1e-9)); assert.ok(near(r.inv_dn * 1000, Math.round(r.inv_dn * 1000), 1e-6)); }
+  }
+});
+
+test('designNet within 0.3–1%: a small flow on steep ground is held at 1% and flagged; the standard would go steeper', () => {
+  const gf = x => 200 - x * 0.03, net = SD.lineNet(route(587, gf), 3), conn = { invert: gf(587) - 6, dmm: 1200 };
+  const std = SD.designNet(net, conn), d = SD.designNet(net, conn, { slopes: RANGE });
+  assert.ok(std.ok && d.ok, d.why);
+  assert.ok(Math.max(...std.reaches.map(r => r.S)) > 0.02, 'the standard: about 3% for 0.75 m/s');
+  for (const r of d.reaches) {
+    assert.ok(inRange(r) && r.S >= 0.01 - 1e-9, 'held at the steepest chosen');
+    assert.ok(r.held && r.v < 0.75 && near(r.sVel, SD.minSlope(0.2, 0.003), 1e-12));
+  }
+  // steep ground under a 1% pipe: drop structures take it down
+  assert.ok(d.structures > 0);
+});
+
+test('designNet within a range: a branch network keeps every reach in it; a range under 1% holds the last leg to it', () => {
+  const gf = (x, y) => 200 - x * 0.006 + y * 0.004, net = netOf(gf, 20, 30), conn = { invert: 186.5, dmm: 450 };
+  const d = SD.designNet(net, conn, { slopes: RANGE });
+  assert.ok(d.ok, d.why);
+  for (const r of d.reaches) assert.ok(inRange(r), `${r.from}→${r.to} ${(r.S * 100).toFixed(3)}%`);
+  for (const k of [0, 4]) { const r = d.reaches.find(x => x.from === k); assert.ok(r.S >= 0.01 - 1e-9 && r.S <= 0.01 + 0.0011 / r.L, 'each branch\'s last leg at 1.00%'); }
+  const e = SD.designNet(net, conn, { slopes: [0.003, 0.008] });
+  assert.ok(e.ok, e.why);
+  for (const r of e.reaches) assert.ok(r.S <= 0.008 + 0.0011 / r.L, 'never over 0.8%');
+  // no range: the standard's design, as before
+  assert.equal(SD.designNet(net, conn).slopes, null);
+});
+
+test('designNet within a range: a flow too big for a size at the steepest chosen goes up a size, or says why', () => {
+  const rt = route(240, x => 200 - x * 0.01), conn = { invert: 193, dmm: 375 };
+  const d = SD.designNet(SD.lineNet(rt, 25), conn, { slopes: RANGE });
+  assert.ok(d.ok, d.why);
+  assert.ok(d.dmm >= 250, '200 mm carries 23 L/s at 1% (0.7 × 32.8): 25 L/s needs 250 mm');
+  const no = SD.designNet(SD.lineNet(rt, 5000), conn, { slopes: RANGE });
+  assert.ok(!no.ok && /more than the largest pipe carries within the 0\.7 flow ratio and 3\.0 m\/s full at 1\.00% or flatter/.test(no.why), no.why);
+});

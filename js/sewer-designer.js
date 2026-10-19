@@ -64,18 +64,34 @@
     const grows = R.every(r => into(r.from).every(x => (x.dmm || d.dmm) <= (r.dmm || d.dmm)));
     const sizeTxt = sizes.length > 1 ? `${sizes[0]}–${sizes[sizes.length - 1]} mm, into ${conn.dmm} mm` : `${sizes[0]} mm into ${conn.dmm} mm`;
     const c = (t, pass, val) => ({ t, pass, val });
+    // The chosen slopes (the designer's setting): every reach within them, the inlet invert to the
+    // millimetre (at most 1 mm over a reach steeper than the steepest).
+    const rg = d.slopes, held = R.filter(r => r.held), pct = s => `${f2(s * 100)}%`;
+    const inRange = rg && R.every(r => r.S >= rg[0] - 1e-9 && r.S <= rg[1] + 0.0011 / r.L);
+    const sMinR = Math.min(...R.map(r => r.S)), sMaxR = Math.max(...R.map(r => r.S));
+    const needs = held.map(r => r.sVel).filter(x => x != null);
     return [
+      ...(rg ? [c(`Slopes (${pct(rg[0])}–${pct(rg[1])}, the range chosen)`, inRange, pct(sMinR) === pct(sMaxR) ? pct(sMinR) : `${pct(sMinR)}–${pct(sMaxR)}`)] : []),
       c(`Pipe size (200 mm minimum, no larger than the existing sewer${R.length > 1 && sizes.length > 1 ? ', never a larger pipe into a smaller one' : ''})`, sizes[0] >= 200 && sizes[sizes.length - 1] <= conn.dmm && grows, sizeTxt),
-      c('Velocity at the design flow (0.75 m/s or more)', vmin >= 0.75 - 1e-6, `${f2(vmin)} m/s at the slowest`),
+      c('Velocity at the design flow (0.75 m/s or more)', vmin >= 0.75 - 1e-6, `${f2(vmin)} m/s at the slowest${held.length ? `; ${held.length} reach${held.length === 1 ? '' : 'es'} held at ${pct(rg[1])}, the steepest chosen${needs.length ? ` (0.75 m/s needs ${pct(Math.max(...needs))})` : ''}` : ''}`),
       c('Velocity flowing full (3.0 m/s or less)', vmax <= 3.0 + 1e-6, `${f2(vmax)} m/s at the fastest`),
       c('Flow ratio, design flow to full flow (0.7 or less)', qr <= 0.7 + 1e-6, qr.toFixed(2)),
-      c(`The last leg, at the upstream end${first.length > 1 ? ' of each branch' : ''} (1.00% or more)`, first.every(r => r.S >= 0.01 - 1e-9), `${f2(Math.min(...first.map(r => r.S)) * 100)}%${first.length > 1 ? ' at the least' : ''}`),
+      c(`The last leg, at the upstream end${first.length > 1 ? ' of each branch' : ''} (1.00% or more)`, first.every(r => r.S >= 0.01 - 1e-8), `${f2(Math.min(...first.map(r => r.S)) * 100)}%${first.length > 1 ? ' at the least' : ''}`),
       c(`Cover over the pipe (${d.cover} m or more)`, minCover >= d.cover - 0.01, `${f2(minCover)} m at the least`),
       c('Trench (8.0 m or less)', trench <= 8.0 + 1e-6, `${f2(trench)} m at the deepest`),
       c(`Maintenance holes (${sp} m apart or less)`, spOK, `${n0(Lmax)} m at the longest`),
       c('Drops through the maintenance holes (0.03–0.20 m, obverts matched where the size grows, or a drop structure from 0.9 m)', dropOK, `${d.structures} drop structure${d.structures === 1 ? '' : 's'}`),
       c('Connection (the new obvert at or above the existing one)', connOK, c0.drop ? `${f2(c0.drop)} m drop${c0.structure ? ' (drop structure)' : ''}` : 'obverts matched'),
     ];
+  }
+  // The slope range typed in the form (%): [lo, hi] as fractions, null (both blank: the standard's
+  // own limits), or { msg } when it can't be used.
+  function slopeRange(f) {
+    const blank = x => x == null || String(x).trim() === '', lo = +f.sLo, hi = +f.sHi;
+    if (blank(f.sLo) && blank(f.sHi)) return null;
+    if (blank(f.sLo) || blank(f.sHi) || !(lo > 0) || !(hi > 0)) return { msg: 'Type both slopes (%), or leave both blank for the standard\'s own limits.' };
+    if (lo > hi) return { msg: 'The flattest slope is more than the steepest: swap them.' };
+    return [lo / 100, hi / 100];
   }
   // ---- Crossings: where a new reach crosses an existing watermain or storm sewer ---------------------
   // Peel's Linear Wastewater Standards s. 3.4.2.1: 0.5 m vertical clearance, outside to outside. The
@@ -119,12 +135,12 @@
     d.mhs.forEach((m, i) => lines.push([m.label || `MH ${i + 1}${i === d.mhs.length - 1 ? ' (connection)' : ''}`, f2(m.x), f2(m.g), m.ins && m.ins.length > 1 ? `"${m.ins.map(x => f2(x.inv)).join(' / ')}"` : f2(m.inv_in), f2(m.inv_out), f2(m.depth), f2(m.drop), m.structure ? 'yes' : '', m.run ? `branch ${m.run + 1}` : 'main line'].join(',')));
     lines.push('', 'Reach,Diameter (mm),Length (m),Slope (%),Invert up (m),Invert down (m),Full-flow capacity (L/s),Flow ratio,Velocity at design flow (m/s),Velocity full (m/s),Depth ratio,Froude,Design flow (L/s)');
     d.reaches.forEach(r => lines.push([`MH ${r.from + 1} to MH ${r.to + 1}`, r.dmm || d.dmm, f2(r.L), (r.S * 100).toFixed(3), f2(r.inv_up), f2(r.inv_dn), f2(r.qFull), r.qRatio.toFixed(2), f2(r.v), f2(r.vFull), r.depthRatio.toFixed(2), r.froude.toFixed(2), f2(r.q != null ? r.q : d.q)].join(',')));
-    lines.push('', `Design flow (L/s),${f2(d.q)}`, `Cover over the pipe (m),${d.cover}`, `Rules,"${d.source}"`, '"General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results."');
+    lines.push('', `Design flow (L/s),${f2(d.q)}`, `Cover over the pipe (m),${d.cover}`, ...(d.slopes ? [`Slopes chosen (%),${f2(d.slopes[0] * 100)}–${f2(d.slopes[1] * 100)}`] : []), `Rules,"${d.source}"`, '"General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results."');
     return lines.join('\n');
   }
 
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
-    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, connBend, pointAt, checks, csv, crossings, CROSS };
+    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, connBend, pointAt, checks, csv, crossings, CROSS, slopeRange };
     return;
   }
   // ---- Browser ---------------------------------------------------------------------------------
@@ -135,7 +151,7 @@
   // The main line (pts, xs, ground) runs from the site to the connection; each branch ({ pts, xs,
   // ground, join: { to (the line it joins), x }, form }) runs from its own start to a point on the main line or an
   // earlier branch. drawing: 0 while the main line is drawn, k while branch k is.
-  const S = { pts: [], legs: [], roads: false, roadsUsed: false, findMode: false, corridor: null, cw: null, conn: null, net: null, d: null, busy: false, msg: '', branches: [], drawing: 0, view: 0, form: { q: '', pop: '', jobs: '', ha: '', ici: false, avoid: false, spacing: 190, mode: 'gravity', vfd: false, ww: '' } };
+  const S = { pts: [], legs: [], roads: false, roadsUsed: false, findMode: false, corridor: null, cw: null, conn: null, net: null, d: null, busy: false, msg: '', branches: [], drawing: 0, view: 0, form: { q: '', pop: '', jobs: '', ha: '', ici: false, avoid: false, spacing: 190, mode: 'gravity', vfd: false, ww: '', sLo: '0.3', sHi: '1.0' } };
   const cur = () => (S.drawing ? S.branches[S.drawing - 1].pts : S.pts);
   const curRun = () => (S.drawing ? S.branches[S.drawing - 1] : S);
   const narrow = () => !!(root.PeelDataTab && root.PeelDataTab.shellNarrow && root.PeelDataTab.shellNarrow());
@@ -372,8 +388,10 @@
     if (missing >= 0) { S.d = null; S.formMsg = missing ? `Type a flow, or the population, jobs and area, for branch ${missing + 1}.` : 'Type a design flow, or the population, jobs and area it serves.'; return openResult(); }
     S.flow = flowSum(flows);
     const spacing = Math.min(200, Math.max(20, +f.spacing || 190));
+    const sl = slopeRange(f);
+    if (sl && sl.msg) { S.d = null; S.formMsg = sl.msg; return openResult(); }
     S.net = buildNet(spacing);
-    S.d = SW().designNet(S.net.net, S.conn, { ici: f.ici, avoidStructures: f.avoid });
+    S.d = SW().designNet(S.net.net, S.conn, { ici: f.ici, avoidStructures: f.avoid, slopes: sl });
     if (S.d.ok) {
       const nb = S.net, d = S.d, rootN = d.root;
       d.mhs.forEach((m, i) => {
@@ -453,8 +471,10 @@
       <fieldset class="sd-mode"><legend class="label">Design</legend><label class="chk"><input type="radio" name="sd-mode" data-sd="mode" value="gravity"${f.mode !== 'pumped' ? ' checked' : ''}> Gravity sewer</label><label class="chk"><input type="radio" name="sd-mode" data-sd="mode" value="pumped"${f.mode === 'pumped' ? ' checked' : ''}> Pumped: a station at the start, a forcemain to the sewer</label></fieldset>
       ${f.mode === 'pumped' ? `<div class="sd-row"><label class="field"><span class="label">Wet well low level (m below ground)</span><input type="number" min="0" step="0.1" data-sd="ww" value="${v('ww')}" placeholder="the incoming sewer"></label>
       <label class="chk"><input type="checkbox" data-sd="vfd"${f.vfd ? ' checked' : ''}> Variable speed pumps (0.8 m/s, with 1.0 m/s flushing weekly)</label><label class="chk"><input type="checkbox" data-sd="ici"${f.ici ? ' checked' : ''}> Industrial / commercial (3.5 m of cover, else 2.5 m)</label></div>` : `<div class="sd-row"><label class="field"><span class="label">Maintenance holes at most (m apart)</span><input type="number" min="20" max="200" step="5" data-sd="spacing" value="${v('spacing')}"></label>
+      <label class="field"><span class="label">Slopes from (%)</span><input type="number" min="0.05" max="10" step="0.05" data-sd="sLo" value="${v('sLo')}" placeholder="the standard's"></label><label class="field"><span class="label">to (%)</span><input type="number" min="0.05" max="10" step="0.05" data-sd="sHi" value="${v('sHi')}" placeholder="the standard's"></label>
       <label class="chk"><input type="checkbox" data-sd="ici"${f.ici ? ' checked' : ''}> Industrial / commercial (3.5 m of cover, else 2.5 m)</label>
-      <label class="chk"><input type="checkbox" data-sd="avoid"${f.avoid ? ' checked' : ''}> Avoid drop structures</label></div>`}
+      <label class="chk"><input type="checkbox" data-sd="avoid"${f.avoid ? ' checked' : ''}> Avoid drop structures</label></div>
+      <p class="small muted">Every reach between these slopes (both blank: the standard's own limits, 0.75 m/s at the design flow to 3.0 m/s full). Where 0.75 m/s needs a steeper slope than the range, the reach is held at the steepest and the velocity check says so.</p>`}
       <p><button type="button" class="btn small primary" data-sd-act="design">Design</button> <button type="button" class="btn small" data-sd-act="edit">Edit the route</button> <button type="button" class="btn small link" data-sd-act="clear">Clear</button></p>
       ${S.formMsg ? `<p class="small t-tight">${esc(S.formMsg)}</p>` : ''}</form>`;
   }
@@ -484,13 +504,13 @@
     const deepest = SW().deepest(d, S.net.net).depth, s = d.reaches.map(r => r.S * 100), sizes = [...new Set(d.reaches.map(r => r.dmm))].sort((a, b) => a - b), nRuns = runs().length;
     const ok = c => `<li class="${c.pass ? 'sd-ok' : 'sd-no'}"><span aria-hidden="true">${c.pass ? '✓' : '✗'}</span> ${esc(c.t)}: <strong>${esc(c.val)}</strong></li>`;
     const checkList = checks(d, S.net.net, S.conn).map(ok);
-    const froudeHi = d.reaches.filter(r => r.froude >= 1).length;
+    const froudeHi = d.reaches.filter(r => r.froude >= 1).length, heldN = d.reaches.filter(r => r.held).length;
     const where = m => (m.run ? `branch ${m.run + 1}` : 'main');
     const mhRows = d.mhs.map(m => `<tr><th scope="row">${esc(m.label.replace(/ \((.+)\)$/, ''))}${/\(/.test(m.label) ? ` <small>${esc(/\((.+)\)$/.exec(m.label)[1])}</small>` : ''}</th><td>${where(m)} ${fmtNum(Math.round(m.x))} m</td><td class="n">${fmt2(m.g)}</td><td class="n">${m.ins.length ? m.ins.map(x => fmt2(x.inv)).join(' / ') : '–'}</td><td class="n">${m.inv_out == null ? '–' : fmt2(m.inv_out)}</td><td class="n">${fmt2(m.depth)}</td><td class="n">${m.ins.some(x => x.drop) ? m.ins.map(x => `${fmt2(x.drop)}${x.structure ? ' <small>structure</small>' : ''}`).join(' / ') : '–'}</td></tr>`).join('');
     const rRows = d.reaches.map(r => `<tr><th scope="row">${r.from + 1} → ${r.to + 1}</th><td class="n">${r.dmm}</td><td class="n">${fmt1(r.q)}</td><td class="n">${fmt1(r.L)}</td><td class="n">${(r.S * 100).toFixed(2)}</td><td class="n">${fmt1(r.qFull)}</td><td class="n">${r.qRatio.toFixed(2)}</td><td class="n">${fmt2(r.v)}</td><td class="n">${fmt2(r.vFull)}</td><td class="n">${r.froude.toFixed(2)}</td></tr>`).join('');
     const sizeTxt = sizes.length > 1 ? `${fmtNum(sizes[0])}–${fmtNum(sizes[sizes.length - 1])} mm` : `${fmtNum(sizes[0])} mm`;
     const views = nRuns > 1 ? `<p class="sd-views" role="group" aria-label="Profile of">${runs().map((_, ri) => `<button type="button" class="btn small${ri === S.view ? ' on' : ''}" data-sd-view="${ri}" aria-pressed="${ri === S.view}">${ri ? `Branch ${ri + 1}` : 'Main line'}</button>`).join('')}</p>` : '';
-    return `<p><span class="pnl-chip t-room">Gravity design</span> A <strong>${sizeTxt}</strong> sewer${nRuns > 1 ? ` (the main line and ${nRuns - 1} branch${nRuns === 2 ? '' : 'es'})` : ''} at ${fmt2(Math.min(...s))}–${fmt2(Math.max(...s))}%, ${fmtNum(d.mhs.length)} maintenance holes, ${fmt1(d.mhs[0].depth)} m deep at the start and ${fmt1(deepest)} m at the deepest, for ${fmt1(d.q)} L/s${nRuns > 1 ? ' at the connection' : ''}${S.flow && !S.flow.typed && S.flow.peak != null && nRuns === 1 ? ` (${fmt1(S.flow.peak)} L/s peak dry + ${fmt1(S.flow.ii)} L/s I&amp;I)` : ''}. The least excavation the rules allow.</p>
+    return `<p><span class="pnl-chip t-room">Gravity design</span> A <strong>${sizeTxt}</strong> sewer${nRuns > 1 ? ` (the main line and ${nRuns - 1} branch${nRuns === 2 ? '' : 'es'})` : ''} at ${fmt2(Math.min(...s)) === fmt2(Math.max(...s)) ? fmt2(s[0]) : `${fmt2(Math.min(...s))}–${fmt2(Math.max(...s))}`}%, ${fmtNum(d.mhs.length)} maintenance holes, ${fmt1(d.mhs[0].depth)} m deep at the start and ${fmt1(deepest)} m at the deepest, for ${fmt1(d.q)} L/s${nRuns > 1 ? ' at the connection' : ''}${S.flow && !S.flow.typed && S.flow.peak != null && nRuns === 1 ? ` (${fmt1(S.flow.peak)} L/s peak dry + ${fmt1(S.flow.ii)} L/s I&amp;I)` : ''}. The least excavation the rules allow${d.slopes ? ` within ${fmt2(d.slopes[0] * 100)}–${fmt2(d.slopes[1] * 100)}%` : ''}.${heldN ? ` <span class="pnl-chip t-tight">Under 0.75 m/s</span> ${heldN} reach${heldN === 1 ? '' : 'es'} at the steepest slope chosen, still under 0.75 m/s at the design flow (see the rules checked).` : ''}</p>
       <h4 class="sd-h">Profile${nRuns > 1 ? ` · ${S.view ? `branch ${S.view + 1} to the connection` : 'the main line'}` : ''}</h4>${views}<div data-sd-profile>${profileSVG(lineView(S.view))}</div>
       <h4 class="sd-h">Rules checked</h4><ul class="sd-checks small">${checkList.join('')}</ul>${froudeHi ? `<p class="small t-tight">${froudeHi} reach${froudeHi === 1 ? '' : 'es'} with supercritical flow (Froude 1 or more): the standard asks for subcritical flow where possible (s. 2.9.1).</p>` : ''}
       <h4 class="sd-h">Crossings</h4><div data-sd-xings>${xingsHTML()}</div>

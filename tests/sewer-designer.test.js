@@ -40,7 +40,7 @@ test('wired: a Labs switch, a tool on the rail (hidden while off), the last tap 
   assert.match(s, /T\(\)\.register\('sewer', \{/);
   assert.match(s, /\(await MS\(\)\.mainsNear\(end\.lat, end\.lng, 40\)\)\.filter\(m => !m\.fm && m\.up > 0 && m\.dn > 0 && m\.d > 0\)/);
   assert.match(s, /const atUp = along <= 15, atDn = glen - along <= 15/);
-  assert.match(s, /SW\(\)\.designNet\(S\.net\.net, S\.conn, \{ ici: f\.ici, avoidStructures: f\.avoid \}\)/);
+  assert.match(s, /SW\(\)\.designNet\(S\.net\.net, S\.conn, \{ ici: f\.ici, avoidStructures: f\.avoid, slopes: sl \}\)/);
   // (the flow is typed: nothing is designed until it is, for the main line and every branch)
   assert.match(s, /S\.formMsg = missing \? `Type a flow, or the population, jobs and area, for branch \$\{missing \+ 1\}\.` : 'Type a design flow/);
   for (const f of ['js/sewer-designer.js']) { assert.ok(src('index.html').includes(`<script src="${f}?v=__BUILD__"></script>`)); assert.ok(src('sw.js').includes(`'${f}',`)); }
@@ -178,4 +178,34 @@ test('a 90° bend into the existing sewer: the velocity head rule\'s least drop 
   assert.ok(bent.ok, bent.why);
   assert.ok(x.drop >= hv(bent.reaches[1]) - 1e-6, `${x.drop} vs ${hv(bent.reaches[1])}`);
   assert.ok(bent.cost > straight.cost);
+});
+
+test('the slope range typed in the form: 0.3–1% by default, both blank the standard\'s, else a message', () => {
+  assert.deepEqual(SDR.slopeRange({ sLo: '0.3', sHi: '1.0' }), [0.003, 0.01]);
+  assert.equal(SDR.slopeRange({ sLo: '', sHi: ' ' }), null);
+  assert.match(SDR.slopeRange({ sLo: '0.3', sHi: '' }).msg, /both slopes/);
+  assert.match(SDR.slopeRange({ sLo: '1', sHi: '0.5' }).msg, /swap/);
+  assert.match(SDR.slopeRange({ sLo: '-1', sHi: '1' }).msg, /both slopes/);
+  // the designer's form starts at 0.3–1% and passes it to the design
+  const s = src('js/sewer-designer.js');
+  assert.match(s, /sLo: '0\.3', sHi: '1\.0'/);
+  assert.match(s, /designNet\(S\.net\.net, S\.conn, \{ ici: f\.ici, avoidStructures: f\.avoid, slopes: sl \}\)/);
+  // the Gravity check (design()) keeps the standard's slopes
+  assert.doesNotMatch(src('js/lab-checks.js'), /slopes:/);
+});
+
+test('the rules checked within a range: the slopes row, and a reach held at the steepest flagged on velocity', () => {
+  const gf = x => 200 - x * 0.03, rt = { nodes: SD.placeMHs([0, 360], 120).map(x => ({ x, g: gf(x), bend: 0 })), samples: Array.from({ length: 36 }, (_, k) => ({ x: k * 10 + 5, g: gf(k * 10 + 5) })) };
+  const net = SD.lineNet(rt, 3), conn = { invert: gf(360) - 6, dmm: 600 }, d = SD.designNet(net, conn, { slopes: [0.003, 0.01] });
+  assert.ok(d.ok, d.why);
+  const c = SDR.checks(d, net, conn);
+  assert.equal(c.length, 11);
+  assert.match(c[0].t, /^Slopes \(0\.30%–1\.00%, the range chosen\)$/);
+  assert.ok(c[0].pass);
+  const v = c.find(x => /^Velocity at the design flow/.test(x.t));
+  assert.ok(!v.pass);
+  assert.match(v.val, /3 reaches held at 1\.00%, the steepest chosen \(0\.75 m\/s needs \d\.\d\d%\)/);
+  assert.match(SDR.csv(d), /Slopes chosen \(%\),0\.30–1\.00/);
+  // without a range: no slopes row (ten rules, as before)
+  assert.equal(SDR.checks(SD.designNet(net, conn), net, conn).length, 10);
 });
