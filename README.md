@@ -2834,3 +2834,20 @@ repairs and renewals (relining, trenchless rehabilitation, inlet repair, resurfa
 developer-built works, Region-wide studies (master plans: everything lies near them), and, for a
 study area placed with low confidence, anything not on a street named in the EA. They are listed
 with the reasons and never count as following the EA.
+
+## Home page maps: street context, zoom, labels; Site: water and wastewater
+
+- **Basemap** (`js/ws-pages.js` `tilesSVG`): every small map on the Home pages draws the full map's
+  grey street map (Esri World Gray Canvas, base + labels, in the theme's shade) under it, each tile
+  placed by its projected corners so it turns with the map (road grid). One probe tile decides; when
+  tiles don't load (offline), the Check a site map names its streets from the Region's address points
+  (`js/reports.js` `streetLines`).
+- **Zoom**: Forecast, This week, DC projects and EA to construction zoom to the municipality chosen.
+- **EA to construction** draws the EA study areas (by status) and the construction that followed.
+- **Labels** (the three largest developments, the largest named works, the EAs waiting longest, the
+  worst old pipes by street) only on a zoomed-in map: a map of all of Peel names only the municipalities.
+- **Check a site › Site › Water and wastewater** (`js/devtab.js`): within 100 m – 1 km (as the storm
+  sewers), the Region's watermains and sanitary sewers of 300 mm+, the 2026 DC works and the Region's
+  projects planned or under construction, each with its street (nearest address point, else the
+  online address lookup) and, for water, its pressure zone; a small map of them all, a row tapped
+  highlights its main.
