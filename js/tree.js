@@ -141,6 +141,13 @@
   const CHRONO_ALL = { r1: true, r2: true, r3: true, r4: true };
   const RANK = { precon: 0, block_plan: 1, use: 1, land_division: 1, site_plan: 2, condo: 3, other: 9 };
   const HISTORY_YEARS = 3, PERMIT_EARLY_YEARS = 2;
+  // A permit's units against a file's: the same building (within 3%). Only for buildings of 20+ units:
+  // a house's 1 unit fits every infill lot next door.
+  const BLOCK_UNITS = 20;
+  const unitsFit = (a, b) => a > 0 && b > 0 && Math.abs(a - b) <= 0.03 * Math.max(a, b);
+  // The point itself and 8 points 40 m around it (degrees of latitude; longitude scaled by latitude).
+  const NEAR_DEG = 40 / 110574;
+  const NEAR_STEPS = [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [0.7, 0.7], [-0.7, 0.7], [0.7, -0.7], [-0.7, -0.7]];
   function yearOf(ref) {
     const s = String(ref || '');
     let m = s.match(/(?:^|\D)(19[89]\d|20\d\d)(?:\D|$)/);
@@ -496,6 +503,16 @@
         for (const i of appGrid.get(cellOf(r.lng, r.lat)) || []) { const n = nodes[i]; if (n.municipality === r.municipality && P.pointInRings(r.lng, r.lat, n.rings) && (best < 0 || n.area < nodes[best].area)) best = i; }
         let how = 'point in boundary';
         if (best < 0) { const a = P.normalizeAddress(r.address); const hit = a && byAddr.get(a); if (hit) { best = hit.find(i => nodes[i].municipality === r.municipality && !nodes[i].cancelled) ?? -1; how = 'same address'; } }
+        // One address point can serve a block of towers: 151 and 157 City Centre Dr share a point inside
+        // SP 20/113 (437 units), at the edge of SP 19/056 (856). A permit whose units don't fit the file
+        // holding its point goes to the one site / condo plan within 40 m whose units do.
+        if (best >= 0 && r.units >= BLOCK_UNITS && !unitsFit(nodes[best].units, r.units)) {
+          const near = new Set();
+          for (const [dx, dy] of NEAR_STEPS) for (const i of appGrid.get(cellOf(r.lng + dx * NEAR_DEG / Math.cos(r.lat * Math.PI / 180), r.lat + dy * NEAR_DEG)) || []) near.add(i);
+          const fit = [...near].filter(i => i !== best && nodes[i].municipality === r.municipality && ['site_plan', 'condo'].includes(nodes[i].role) &&
+            unitsFit(nodes[i].units, r.units) && NEAR_STEPS.some(([dx, dy]) => P.pointInRings(r.lng + dx * NEAR_DEG / Math.cos(r.lat * Math.PI / 180), r.lat + dy * NEAR_DEG, nodes[i].rings)));
+          if (fit.length === 1) { best = fit[0]; how = 'units match the plan next door'; }
+        }
         if (best >= 0 && chrono.r4 && nodes[best].date0 != null) {
           const d = Math.min(...(r.events || []).map(e => +e.date));
           if (isFinite(d) && d <= nodes[best].date0 - PERMIT_EARLY_YEARS * YEAR) { flags.permitsEarly.push({ permit: r.ref || r.uid, units: r.units || 0, issued: iso(d), file: nodes[best].refs[0], fileFiled: iso(nodes[best].date0), how }); continue; }
