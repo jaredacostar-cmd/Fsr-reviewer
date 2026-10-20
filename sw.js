@@ -53,6 +53,8 @@ const SHELL_ASSETS = [
   'icons/icon-512.png',
   'js/aerial-check.js',
   'js/aerial-chip.js',
+  'js/servicing-permits.js',
+  'js/phase-estimate.js',
   'js/dc-gate.js',
   'js/stage-chip.js',
   'js/aerial.js',

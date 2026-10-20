@@ -73,7 +73,7 @@
         const r = opts.recOf(n);
         if (r && used.has(r)) continue;
         if (r) used.add(r);
-        const tag = { depth: n.depth, why: n.why, check: n.check, counted: n.counted, latest: opts.latest && opts.latest === n.ref };
+        const tag = { node: n, depth: n.depth, why: n.why, check: n.check, counted: n.counted, latest: opts.latest && opts.latest === n.ref };
         rows.push(r ? fileRow(r, now, { ...tag, label: n.ref }) : { kind: 'file', ref: n.ref, label: n.ref, sub: n.type, phase: null, status: '', ev: [], segs: [], ...tag });
       }
     }

@@ -374,16 +374,23 @@
     </section>`;
     const FT = root.PeelFileTree, d = FT && FT.flat && !p.parent ? FT.of(p) : null;
     const newest = p.records.filter(r => r.kind === 'application').sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)))[0];
+    // The permits under each planning file (its site servicing permits, its building permits as one
+    // group: js/dc-gate.js treeOpts), in the file's row; those filed before the files, after the chart.
+    const tOpts = d && root.PeelDcGate && root.PeelDcGate.treeOpts ? root.PeelDcGate.treeOpts(p, d) : {};
+    const after = r => {
+      const h = r.node && tOpts.after ? tOpts.after(r.node.n) : '';
+      return h ? `<div class="tr gt-after"><p class="small"><strong>Permits under ${esc(r.ref)}</strong></p>${h}</div>` : '';
+    };
     const body = r => r.kind === 'stage' ? `<ol class="stepper compact">${steps}</ol>`
       : r.kind === 'council' ? `<ol class="tl2">${council.map(evHTML).join('')}</ol>`
       : r.kind === 'group' ? r.recs.map(recHTML).join('')
-      : r.kind === 'file' && r.rec ? fileBodyHTML(r.rec) : '';
+      : r.kind === 'file' ? `${r.rec ? fileBodyHTML(r.rec) : ''}${after(r)}` : '';
     const chart = root.PeelDevGantt ? root.PeelDevGantt.html(p, { council: st2 && st2.council ? councilBriefs(p) : [], tree: d ? FT.flat(d) : null, recOf: fileRecOf(p), latest: newest && newest.ref, dot, body }) : '';
     const events = `<details class="gt-events"><summary class="small"><strong>All dated events, newest first</strong> <span class="muted">${fmtNum(all.length)}${council.length ? ` · ${fmtNum(council.length)} council` : ''}</span></summary>
       <div class="seg tl-toggle" role="group" aria-label="Events shown"><button type="button" class="btn small on" data-dt-tl="key">Key events</button><button type="button" class="btn small" data-dt-tl="all">All dated events (${fmtNum(all.length)})</button></div>
       <p class="tl-only small" hidden>Only <b data-tl-only-name></b> events · <button type="button" class="btn small link" data-tl-type="">Show all</button></p>
       <div data-dt-tlv="key">${evListHTML(key)}</div><div data-dt-tlv="all" hidden>${evListHTML(all)}</div></details>`;
-    const inner = `${about}<div id="devtab-recs">${chart}</div>${events}
+    const inner = `${about}<div id="devtab-recs">${chart}${tOpts.foot ? `<div class="tr">${tOpts.foot}</div>` : ''}</div>${events}
       <p class="small muted">Stage changes from the weekly check; council and committee items that name the files (${st2 && st2.council ? 'agendas and minutes since 2019' : 'loading'}); file and permit dates and every field from the municipal records.</p>`;
     evRecs = null;
     return wrap
@@ -1439,7 +1446,7 @@
     const FT = root.PeelFileTree, d = FT && !p.parent ? FT.of(p) : null, files = p.records.filter(r => r.kind === 'application');
     const newest = files.slice().sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)));
     const row = r => `<li class="pnl-kv"><span><button type="button" class="tr-ref" data-dev-file="${esc(r.ref || '')}">${esc(r.ref || 'file')}</button>${r.type ? ` <small class="muted">${esc(r.type)}</small>` : ''}</span><span>${r.units ? `${fmtNum(r.units)} units · ` : ''}${esc((P().PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}</span></li>`;
-    const tree = d ? FT.treeHTML(d, FT.recLookup(p), { dot: k => dot(k), latest: newest[0] && newest[0].ref }) : '';
+    const tree = d ? FT.treeHTML(d, FT.recLookup(p), { dot: k => dot(k), latest: newest[0] && newest[0].ref, ...(root.PeelDcGate ? root.PeelDcGate.treeOpts(p, d) : {}) }) : '';
     return `${tree || `<ul class="pnl-files">${newest.slice(0, 8).map(row).join('')}</ul>`}
       <p class="small"><button type="button" class="btn small link" data-dev-hist="file">All ${fmtNum(p.records.length)} source records, by file →</button></p>`;
   }

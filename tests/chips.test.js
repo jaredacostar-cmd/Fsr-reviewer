@@ -42,8 +42,9 @@ test('the board (map panel and Check a site page): one section for the files, ev
   assert.match(ov, /\{ title: 'Files, events and proposal', id: 'pnl-hist', open: true, html: DT && DT\.partHTML \? DT\.partHTML\(p, 'story'\) : '' \}/);
   assert.doesNotMatch(ov, /title: 'About this proposal'|id: 'pnl-files'|title: 'History and source records'/, 'no separate About, Files or History folds');
   const dt = src('js/devtab.js');
-  assert.match(dt, /<div id="devtab-recs">\$\{chart\}<\/div>/, 'the old Source records id, so old links land');
-  assert.match(dt, /r\.kind === 'file' && r\.rec \? fileBodyHTML\(r\.rec\)/, 'a file row opens to its events and source record');
+  assert.match(dt, /<div id="devtab-recs">\$\{chart\}/, 'the old Source records id, so old links land');
+  assert.match(dt, /tOpts\.after\(r\.node\.n\)/, "a planning file's row holds its permits (js/dc-gate.js treeOpts)");
+  assert.match(dt, /r\.kind === 'file' \? `\$\{r\.rec \? fileBodyHTML\(r\.rec\) : ''\}/, 'a file row opens to its events and source record');
   assert.match(dt, /<details class="tl-rec" data-rec-uid="\$\{esc\(r\.uid\)\}" data-rec-ref="\$\{esc\(r\.ref \|\| tag\)\}">/, 'a file number in an event opens its record');
   assert.match(dt, /data-tl-type="\$\{TL_FILTER\[x\.type\]\}" title="Show only/, 'the type labels filter');
   assert.doesNotMatch(dt.slice(dt.indexOf('function filesViewHTML')), /sourceRecordsHTML\(p\)/, 'no separate Source records section');

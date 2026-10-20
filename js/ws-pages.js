@@ -114,7 +114,11 @@
   // nm: the units of developments that haven't moved since 2020 (js/layers.js movedSince), per stage;
   // existing: units completed before the 2021 Census (in the census, so not a stage here) — the bars
   // plus existing are the headline total.
-  function stageRows(devs, ofDev, movedOf = (root.PeelLayers && root.PeelLayers.movedSince) || (() => true)) {
+  // sspOf(p): the development has a site servicing permit (water / wastewater) applied for or issued
+  // (js/dc-gate.js): its units in each stage are also counted in ssp, drawn as a band on the bar. The
+  // stages themselves stay on building permits.
+  function stageRows(devs, ofDev, movedOf = (root.PeelLayers && root.PeelLayers.movedSince) || (() => true), sspOf = null) {
+    const ssp = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 };
     const u = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 }, est = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 }, nm = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 };
     let existing = 0, nmExisting = 0;
     for (const it of devs) {
@@ -125,6 +129,10 @@
       const c = L.parts.committed || 0, noPermit = Math.min(c, Math.max(0, L.toPermit || 0));
       u.approved += noPermit * sh; u.permitted += (c - noPermit) * sh;
       existing += (L.parts.existing || 0) * sh;
+      if (sspOf && sspOf(p)) {
+        ssp.built += (L.parts.built || 0) * sh; ssp.proposed += (L.parts.proposed || 0) * sh; ssp.anticipated += (L.parts.anticipated || 0) * sh;
+        ssp.approved += noPermit * sh; ssp.permitted += (c - noPermit) * sh;
+      }
       if (!movedOf(p)) {
         nm.built += (L.parts.built || 0) * sh; nm.proposed += (L.parts.proposed || 0) * sh; nm.anticipated += (L.parts.anticipated || 0) * sh;
         nm.approved += noPermit * sh; nm.permitted += (c - noPermit) * sh; nmExisting += (L.parts.existing || 0) * sh;
@@ -133,7 +141,7 @@
     }
     const total = Object.values(u).reduce((a, b) => a + b, 0);
     const notMoved = Object.values(nm).reduce((a, b) => a + b, 0);
-    return { rows: STAGES.map(([key, label, note]) => ({ key, label, note, units: u[key], est: est[key], nm: nm[key], pct: total > 0 ? u[key] / total * 100 : 0 })), total, existing, notMoved, nmExisting };
+    return { rows: STAGES.map(([key, label, note]) => ({ key, label, note, units: u[key], est: est[key], nm: nm[key], ssp: ssp[key], pct: total > 0 ? u[key] / total * 100 : 0 })), total, existing, notMoved, nmExisting, ssp: sspOf ? Object.values(ssp).reduce((a, b) => a + b, 0) : null };
   }
   // A development's stage on this chart (its layer; an approved one by whether most of it is permitted).
   function stageOf(L) {
@@ -175,8 +183,8 @@
     const max = Math.max(1, ...st.rows.map(r => r.units)), cls = { anticipated: 'ly-anticipated', proposed: 'ly-proposed', approved: 'stg-approved', permitted: 'stg-permitted', built: 'ly-built' };
     return `<div class="stg" role="table" aria-label="The pipeline by stage, in the order a file moves">
       <p class="stg-h small pnl-chart-t"><strong>The pipeline by stage, in the order a file moves</strong> <span class="pnl-chart-u">(dwellings)</span></p>
-      ${st.rows.map(r => `<div class="stg-row${st.on === r.key ? ' on' : ''}" role="row" title="${esc(r.label)}: ${esc(r.note)}"${st.click && r.units >= 0.5 ? ` data-ws-stage="${r.key}" tabindex="0"` : ''}><span class="stg-l" role="cell">${esc(r.label)}</span><span class="stg-track" role="cell"><i class="stg-fill ${cls[r.key]}" style="width:${(r.units / max * 100).toFixed(1)}%"></i>${r.est > 0 ? `<i class="stg-est" style="width:${(Math.min(r.est, r.units) / max * 100).toFixed(1)}%"></i>` : ''}${r.nm >= 0.5 ? `<i class="stg-nm" style="left:${(Math.max(0, r.units - r.nm) / max * 100).toFixed(1)}%;width:${(Math.min(r.nm, r.units) / max * 100).toFixed(1)}%" title="${fmtNum(Math.round(r.nm))} haven\u2019t moved since 2020"></i>` : ''}</span><b class="stg-v" role="cell">${fmtNum(Math.round(r.units))}</b><span class="stg-p muted" role="cell">${r.units > 0 && r.pct < 0.5 ? '&lt;1' : Math.round(r.pct)}%</span></div>`).join('')}
-      <p class="stg-foot small muted">${fmtNum(Math.round(st.total))} dwellings in the pipeline${census > 0 ? ` would add about <strong>${Math.round(st.total / census * 100)}%</strong> to the ${fmtNum(Math.round(census))} dwellings on the system (2021 census)` : ''}.${st.existing >= 0.5 ? ` With the ${fmtNum(Math.round(st.existing))} completed before the 2021 Census (already in it), <strong>${fmtNum(Math.round(st.total + st.existing))}</strong> in all.` : ''}${st.rows.some(r => r.est > 0) ? ' Hatched: counts estimated from the application (no unit count stated).' : ''}${st.notMoved >= 0.5 ? ` <span class="stg-nm-key" aria-hidden="true"></span> Outlined: ${fmtNum(Math.round(st.notMoved + (st.nmExisting || 0)))} in developments that haven\u2019t moved since 2020.` : ''}</p>
+      ${st.rows.map(r => `<div class="stg-row${st.on === r.key ? ' on' : ''}" role="row" title="${esc(r.label)}: ${esc(r.note)}"${st.click && r.units >= 0.5 ? ` data-ws-stage="${r.key}" tabindex="0"` : ''}><span class="stg-l" role="cell">${esc(r.label)}${st.ssp != null && r.ssp >= 0.5 && r.key !== 'built' ? `<small class="stg-ssp-t">${fmtNum(Math.round(r.ssp))} with a site servicing permit</small>` : ''}</span><span class="stg-track" role="cell"><i class="stg-fill ${cls[r.key]}" style="width:${(r.units / max * 100).toFixed(1)}%"></i>${st.ssp != null && r.ssp >= 0.5 && r.key !== 'built' ? `<i class="stg-ssp" style="width:${(Math.min(r.ssp, r.units) / max * 100).toFixed(1)}%" title="${fmtNum(Math.round(r.ssp))} of ${fmtNum(Math.round(r.units))} in developments with a site servicing permit applied for or issued"></i>` : ''}${r.est > 0 ? `<i class="stg-est" style="width:${(Math.min(r.est, r.units) / max * 100).toFixed(1)}%"></i>` : ''}${r.nm >= 0.5 ? `<i class="stg-nm" style="left:${(Math.max(0, r.units - r.nm) / max * 100).toFixed(1)}%;width:${(Math.min(r.nm, r.units) / max * 100).toFixed(1)}%" title="${fmtNum(Math.round(r.nm))} haven\u2019t moved since 2020"></i>` : ''}</span><b class="stg-v" role="cell">${fmtNum(Math.round(r.units))}</b><span class="stg-p muted" role="cell">${r.units > 0 && r.pct < 0.5 ? '&lt;1' : Math.round(r.pct)}%</span></div>`).join('')}
+      <p class="stg-foot small muted">${fmtNum(Math.round(st.total))} dwellings in the pipeline${census > 0 ? ` would add about <strong>${Math.round(st.total / census * 100)}%</strong> to the ${fmtNum(Math.round(census))} dwellings on the system (2021 census)` : ''}.${st.existing >= 0.5 ? ` With the ${fmtNum(Math.round(st.existing))} completed before the 2021 Census (already in it), <strong>${fmtNum(Math.round(st.total + st.existing))}</strong> in all.` : ''}${st.rows.some(r => r.est > 0) ? ' Hatched: counts estimated from the application (no unit count stated).' : ''}${st.ssp != null && st.ssp >= 0.5 ? ` <span class="stg-ssp-key" aria-hidden="true"></span> Green band: units in developments with a site servicing permit (water or wastewater) applied for or issued; the stage is still set by the building permit.` : ''}${st.notMoved >= 0.5 ? ` <span class="stg-nm-key" aria-hidden="true"></span> Outlined: ${fmtNum(Math.round(st.notMoved + (st.nmExisting || 0)))} in developments that haven\u2019t moved since 2020.` : ''}</p>
     </div>`;
   }
   // Review an FSR: what an FSR covers (Region of Peel, Functional Servicing Report Requirements, 2009)
@@ -551,7 +559,8 @@
     const trail = []; for (let x = n; x; x = x.parent ? r.nodes.get(x.parent) : null) trail.unshift(x);
     const crumbs = trail.map((x, i) => (i < trail.length - 1 ? `<button type="button" class="btn small link" data-ws-drill="${esc(x.id)}">${esc(x.name)}</button>` : `<strong>${esc(x.name)}</strong>`)).join(' <span aria-hidden="true">›</span> ');
     // The stages, for this area.
-    const stage = Ly && Ly.ofDev ? stageRows(items, q => Ly.ofDev(q)) : null;
+    const DGs = root.PeelDcGate, sspOf = DGs && DGs.loaded() ? q => { const g = DGs.rowOf(q); return !!g && g.bucket === 'counted'; } : null;
+    const stage = Ly && Ly.ofDev ? stageRows(items, q => Ly.ofDev(q), undefined, sspOf) : null;
     if (stage) { stage.click = true; stage.on = gStage; }
     const CAr = root.PeelCensusAreas, bc = atPeel && CAr && CAr.baselineCensus ? CAr.baselineCensus() : null;
     // (the area the developments are filtered to: a municipality filter at the Peel node is not all of Peel)
@@ -579,7 +588,7 @@
     const stageLine = x => { const a = STG[x.st] || '', b = Ph && Ph.PHASE_BY_KEY[x.p.phase] ? Ph.PHASE_BY_KEY[x.p.phase].label : x.p.phase; return [a, b].filter((v, i, arr) => v && arr.findIndex(w => String(w).toLowerCase() === String(v).toLowerCase()) === i).map(esc).join(' · '); };
     const treeBits = p => { const d = FT ? FT.of(p) : null; if (!d) return { sum: '', tog: '', open: '' }; const n = (d.n || []).length, on = gOpen.has(p.key), recOf = FT.recLookup(p);
       return { sum: `<small class="tr-sum">${FT.summaryHTML(d, recOf)}</small>`, tog: n > 1 ? `<button type="button" class="tr-tog" data-tr-tog="${esc(p.key)}" aria-expanded="${on}" title="Show how its files fit together">${on ? '▾' : '▸'}</button>` : '',
-        open: on && n > 1 ? `<div class="tr-open">${FT.treeHTML(d, recOf, { limit: 4, key: false, devKey: p.key, dot: k => (root.PeelUtil && root.PeelUtil.dot ? root.PeelUtil.dot(k) : '') })}<button type="button" class="btn small link" data-ws-pick="${esc(p.key)}" data-ws-as="site" data-ws-tree="1">Its full tree →</button></div>` : '' }; };
+        open: on && n > 1 ? `<div class="tr-open">${FT.treeHTML(d, recOf, { limit: 4, key: false, devKey: p.key, dot: k => (root.PeelUtil && root.PeelUtil.dot ? root.PeelUtil.dot(k) : ''), ...(root.PeelDcGate ? root.PeelDcGate.treeOpts(p, d) : {}) })}<button type="button" class="btn small link" data-ws-pick="${esc(p.key)}" data-ws-as="site" data-ws-tree="1">Its full tree →</button></div>` : '' }; };
     const fileRow = x => { const tb = treeBits(x.p); return { attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${tb.tog}${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.p.units * x.share)} units</span></div><small class="pnl-r-line">${stageLine(x)} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}${svcTag(x.p)}</small>${tb.sum}${tb.open}` }; };
     // Estimated counts in this area (at the chosen stage): how much of the pipeline is not stated on a file.
     const es = Ly && Ly.ofDev ? estimateRows(items.filter(({ p }) => gStage === 'all' || stageOf(Ly.ofDev(p)) === gStage), q => Ly.ofDev(q)) : null;
