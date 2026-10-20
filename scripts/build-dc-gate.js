@@ -142,8 +142,10 @@ function gate(projects, permits) {
       // A septic permit on a larger development: probably the existing house; check before relying on it.
       septicReview: (septic.length || ownSeptic) && bucket !== 'private' ? true : undefined,
       predated: [...hits.keys()].filter(predates).length || undefined,
-      evidence: live.map(([s, how]) => ({
-        ref: s.ref, kind: s.kind, status: s.status, applied: s.applied, issued: s.issued,
+      // Regional (water / wastewater) permits first, newest first; then the rest.
+      evidence: live.sort(([a], [b]) => (b.regional && !b.existing) - (a.regional && !a.existing) || String(b.applied || '').localeCompare(String(a.applied || ''))).map(([s, how]) => ({
+        ref: s.ref, src: s.source || undefined, kind: s.kind, status: s.status, applied: s.applied, issued: s.issued,
+        lat: s.lat, lng: s.lng, address: s.address || undefined, description: s.description || undefined,
         services: [s.water && 'water', s.wastewater && 'wastewater', s.storm && 'storm', s.unspecified && 'not stated'].filter(Boolean),
         existing: s.existing || undefined, match: how,
       })).concat(ownSeptic && !septic.length ? [{ kind: 'septic', match: 'own permit text' }] : []),

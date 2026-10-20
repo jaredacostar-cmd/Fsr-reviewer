@@ -133,6 +133,7 @@
   function fromRow(row) {
     const o = {};
     COLUMNS.forEach((k, i) => { o[k] = row[i]; });
+    if (row.length > COLUMNS.length) o.source = row[COLUMNS.length];
     const f = parseFlags(o.flags);
     Object.assign(o, f);
     o.regional = o.kind === 'site' && (f.water || f.wastewater || f.unspecified);

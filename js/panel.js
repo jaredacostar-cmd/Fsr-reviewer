@@ -128,7 +128,7 @@
     const day = d => new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
     const types = typesText(p.types);
     const SC = root.PeelStageChip, AC = root.PeelAerialChip, nRec = (p.records || []).length;
-    return { trail: [{ label: 'Peel', attrs: { 'data-pnl-dev-close': '' } }, { label: p.municipality }, { label: p.title }], close: { 'data-pnl-dev-close': '' }, name: p.title,
+    const h = { trail: [{ label: 'Peel', attrs: { 'data-pnl-dev-close': '' } }, { label: p.municipality }, { label: p.title }], close: { 'data-pnl-dev-close': '' }, name: p.title,
       // One status line: the development's phase, with its zoning approval where that came first (the
       // site bar no longer shows a second, contradicting chip).
       status: { tone: 'stage', text: `${PH && PH.PHASE_BY_KEY[p.phase] ? PH.PHASE_BY_KEY[p.phase].label : p.phase}${p.zoningApproved && PH && PH.PHASE_BY_KEY.approved && p.rank < PH.PHASE_BY_KEY.approved.rank ? ' · zoning approved' : ''}${p.smallSite ? ' · no site plan needed' : ''}`,
@@ -138,6 +138,10 @@
         nRec ? `<button type="button" class="btn small link" data-dev-hist="" title="History, with each file's source record">${nRec} file${nRec === 1 ? '' : 's'} · history ›</button>` : ''].filter(Boolean).join(' · ') || esc(p.municipality),
       // Beside the stage, what the latest aerial photo shows; pressed, the check opens under the header.
       badge: AC ? AC.chipHTML(p) : '', extra: `${SC ? SC.boxHTML(p) : ''}${AC ? AC.boxHTML(p) : ''}` };
+    // And, for a development in the DC pipeline, whether it counts (js/dc-gate.js).
+    const DG = root.PeelDcGate;
+    if (DG) { h.badge += DG.chipHTML(p); h.extra += DG.boxHTML(p); }
+    return h;
   }
   // ---- Panels in the right-hand column ---------------------------------------------------------
   // Each tab has one panel slot (#pnl-<tab>, above its sub-views' panes). A renderer hands over the
