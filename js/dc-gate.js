@@ -116,11 +116,20 @@
   function boxInner(row) {
     if (!row) return '';
     const b = BUCKETS[row.bucket], ev = row.evidence || [];
-    const extra = [row.septicReview ? 'A septic permit is on this site too. On a development this size it is usually the house already on the land.' : '',
-      row.predated ? `${row.predated} older servicing permit${row.predated === 1 ? '' : 's'} on the land (applied more than a year before the first planning file) ${row.predated === 1 ? 'was' : 'were'} left out: ${row.predated === 1 ? 'it is' : 'they are'} for what stood there before.` : ''].filter(Boolean);
+    const extra = [row.septicReview ? 'A septic permit is on this site too. On a development this size it is usually the house already on the land.' : ''].filter(Boolean);
+    // The development's steps in date order, the linked site servicing permit in its place.
+    const steps = (row.steps || []).length ? `<ol class="dcg-steps small">${row.steps.map(s => `<li class="${s.k === 'ssp' ? 'dcg-step-ssp' : ''}"><span class="dcg-d">${esc(s.d)}</span> ${esc(s.label)}${s.ref ? ` <b>${esc(s.ref)}</b>` : ''}${s.type ? ` <span class="muted">${esc(s.type)}</span>` : ''}</li>`).join('')}</ol>` : '';
+    const ooo = row.outOfOrder || [];
+    const oooHTML = ooo.length ? `<p class="small"><strong>Not linked: out of order</strong> (a site servicing permit comes after the formal application)</p><ul class="dcg-list">${ooo.map((o, i) => `<li class="dcg-ev dcg-ooo" data-dcg-ev="o${i}">
+        <div><strong>${esc(o.ref)}</strong> <span class="dcg-k">${esc(termOf(row.municipality))} permit</span></div>
+        <div class="small dcg-warn">${esc(o.reason)}</div>
+        <div class="dcg-act small">${o.lat != null ? `<button type="button" class="btn small link" data-dcg-pin="${esc(row.key)}|o${i}">Show on map</button>` : ''}${o.src && SOURCES[o.src] ? ` · <button type="button" class="btn small link" data-dcg-rec="${esc(row.key)}|o${i}">Check the city record</button>` : ''}</div>
+        <div class="dcg-rec" hidden></div></li>`).join('')}</ul>` : '';
     return `<p class="small"><strong>Site servicing permit: ${esc(b.label.toLowerCase())}.</strong> ${esc(b.why)}</p>
       ${extra.map(t => `<p class="small muted">${esc(t)}</p>`).join('')}
-      ${ev.length ? `<ul class="dcg-list">${ev.map((e, i) => evidenceHTML(e, i, row.key, row.municipality)).join('')}</ul>` : '<p class="small muted">No site servicing or septic permit matched to this site.</p>'}
+      ${steps}
+      ${ev.length ? `<ul class="dcg-list">${ev.map((e, i) => evidenceHTML(e, i, row.key, row.municipality)).join('')}</ul>` : '<p class="small muted">No site servicing or septic permit linked to this site.</p>'}
+      ${oooHTML}
       <p class="small muted dcg-note">From the city building permit feeds. A site servicing permit is a local Building Code permit for the private-side pipes: it shows servicing is underway, not the Region's own servicing application.</p>
       <p class="aer-foot small"><button type="button" class="btn small link" data-dcg-close>Close</button></p>`;
   }
@@ -184,7 +193,7 @@
     if (p && p.key === key) for (const b of byKey('data-dcg-chip', key)) b.outerHTML = chipHTML(p);
   }
   // (development keys hold '|' themselves: "Mississauga|30 BRISTOL RD E"; the index is after the last one)
-  const evOf = v => { const s = String(v), at = s.lastIndexOf('|'), key = s.slice(0, at), i = s.slice(at + 1); const row = G.by && G.by.get(key); return row && row.evidence ? row.evidence[+i] : null; };
+  const evOf = v => { const s = String(v), at = s.lastIndexOf('|'), key = s.slice(0, at), i = s.slice(at + 1); const row = G.by && G.by.get(key); if (!row) return null; return i[0] === 'o' ? (row.outOfOrder || [])[+i.slice(1)] || null : row.evidence ? row.evidence[+i] : null; };
   if (typeof document !== 'undefined' && document.addEventListener) {
     document.addEventListener('click', e => {
       const t = e.target.closest ? e.target : null; if (!t) return;

@@ -3556,3 +3556,10 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .stg-ssp { position: absolute; left: 0; bottom: 0; height: 5px; background: var(--pnl-room); pointer-events: auto; }
 .stg-ssp-t { display: block; font-size: var(--fs-1); color: var(--pnl-room); line-height: 1.2; }
 .stg-ssp-key { display: inline-block; width: 14px; height: 5px; background: var(--pnl-room); vertical-align: 1px; }
+.dcg-steps { list-style: none; margin: var(--space-2) 0; padding: 0 0 0 10px; border-left: 2px solid var(--border); display: grid; gap: 2px; }
+.dcg-steps li { position: relative; }
+.dcg-steps li::before { content: ''; position: absolute; left: -15px; top: 0.5em; width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); }
+.dcg-steps .dcg-step-ssp { color: var(--pnl-room); }
+.dcg-steps .dcg-step-ssp::before { background: var(--pnl-room); }
+.dcg-d { font-variant-numeric: tabular-nums; color: var(--text-secondary); }
+.dcg-ooo { border-style: dashed; }

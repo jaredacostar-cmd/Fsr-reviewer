@@ -31,9 +31,49 @@ const MATCH_M = 60;
 // A septic permit marks a site privately serviced only when the site is small (a house or a few):
 // on a larger development it is usually the house already on the land, so it is listed for review.
 const PRIVATE_MAX_UNITS = 10;
-// A servicing permit applied for more than this long before the development's first file is for
-// what stood on the land before, not for this development.
-const PREDATES_DAYS = 365;
+// The order a file moves: pre-consultation → formal application (official plan / zoning, subdivision,
+// site plan) → site servicing permit → building permit → condominium. A site servicing permit links to
+// a development only in that order: applied no earlier than GRACE_DAYS before its first formal
+// application (a consultant can file it while the site plan is being circulated). Without a formal
+// application in the data (approved before 2016, or lots in a registered plan), no earlier than
+// PERMIT_LEAD_DAYS before its first building permit. A site with only a pre-consultation links none.
+const GRACE_DAYS = 90;
+const PERMIT_LEAD_DAYS = 730;
+const day = d => (d ? new Date(d).toISOString().slice(0, 10) : null);
+const minus = (d, n) => new Date(Date.parse(d) - n * 864e5).toISOString().slice(0, 10);
+const STEP_LABEL = { precon: 'Pre-consultation', formal: 'Formal application', approved: 'Planning approval', ssp: 'Site servicing permit applied', bp: 'Building permit', condo: 'Condominium file' };
+
+/** The development's steps, each with its first date and file: { precon, formal, approved, bp, condo }. */
+function stepsOf(p) {
+  const out = {};
+  const put = (k, d, ref, extra) => { const x = day(d); if (x && (!out[k] || x < out[k].d)) out[k] = { k, d: x, ref: ref || '', ...extra }; };
+  for (const r of p.records) {
+    if (r.phase === 'cancelled') continue;
+    const first = (r.events || []).slice().sort((a, b) => a.date - b.date)[0];
+    if (r.kind === 'application') {
+      const st = r.stage || P.stageOf(r);
+      // (a minor, express or revision file tweaks what is already there: it doesn't start the development)
+      if (st !== 'precon' && st !== 'condo' && P.isMinorFile(r)) continue;
+      const k = st === 'precon' ? 'precon' : st === 'condo' ? 'condo' : 'formal';
+      if (first) put(k, first.date, r.ref, k === 'formal' ? { type: r.type || '' } : undefined);
+      for (const e of r.events || []) if (e.phase === 'approved' && k === 'formal') put('approved', e.date, r.ref);
+    } else if (r.kind === 'permit' && !SP.classify(r)) {
+      const iss = (r.events || []).find(e => e.phase === 'permit') || first;
+      if (iss) put('bp', iss.date, r.ref);
+    }
+  }
+  return out;
+}
+
+/** Does a site servicing permit fit the development's order? → null (fits) or the reason it doesn't. */
+function orderCheck(s, steps) {
+  if (!s.applied) return null;
+  if (steps.formal) return s.applied >= minus(steps.formal.d, GRACE_DAYS) ? null : `applied ${s.applied}, before the first formal application (${steps.formal.ref} ${steps.formal.d}): for what was on the land before`;
+  if (steps.bp) return s.applied >= minus(steps.bp.d, PERMIT_LEAD_DAYS) ? null : `applied ${s.applied}, more than 2 years before the first building permit (${steps.bp.ref} ${steps.bp.d})`;
+  if (steps.condo) return null;
+  if (steps.precon) return `applied ${s.applied}, but the site has only a pre-consultation (${steps.precon.ref} ${steps.precon.d}): no formal application yet`;
+  return null;
+}
 const BUCKETS = ['counted', 'existingOnly', 'private', 'permitNoSvc', 'none'];
 const IN_SCOPE = new Set(['inception', 'review', 'approved', 'permit', 'construction']);
 
@@ -121,10 +161,10 @@ function gate(projects, permits) {
     // The development's own records can say "with septic" (a new home permit in Caledon).
     const ownSeptic = p.records.some(r => { const c = SP.classify(r); return c && c.kind === 'septic'; });
 
-    const firstDay = p.first ? new Date(p.first).toISOString().slice(0, 10) : null;
-    const cutoff = firstDay ? new Date(Date.parse(firstDay) - PREDATES_DAYS * 864e5).toISOString().slice(0, 10) : null;
-    const predates = s => !!(cutoff && s.applied && s.applied < cutoff);
-    const live = [...hits.entries()].filter(([s]) => s.status !== 'cancelled' && !predates(s));
+    const steps = stepsOf(p);
+    // (septic permits are not held to the order: a house on septic can come at any point)
+    const why = new Map([...hits.keys()].map(s => [s, s.kind === 'site' && s.status !== 'cancelled' ? orderCheck(s, steps) : null]));
+    const live = [...hits.entries()].filter(([s]) => s.status !== 'cancelled' && !why.get(s));
     const regional = live.filter(([s]) => s.regional);
     const septic = live.filter(([s]) => s.kind === 'septic');
     let bucket;
@@ -141,7 +181,11 @@ function gate(projects, permits) {
       bucket, servicingApplied: first,
       // A septic permit on a larger development: probably the existing house; check before relying on it.
       septicReview: (septic.length || ownSeptic) && bucket !== 'private' ? true : undefined,
-      predated: [...hits.keys()].filter(predates).length || undefined,
+      // The development's steps in date order, with the linked site servicing permit in its place.
+      steps: [...Object.values(steps), ...(first ? [{ k: 'ssp', d: first, ref: (regional.find(([s]) => s.applied === first) || [{}])[0].ref || '' }] : [])]
+        .sort((a, b) => a.d.localeCompare(b.d)).map(x => ({ ...x, label: STEP_LABEL[x.k] })),
+      // Permits on the site that don't fit the order, and why (not linked).
+      outOfOrder: [...why.entries()].filter(([, w]) => w).map(([s, w]) => ({ ref: s.ref, src: s.source || undefined, applied: s.applied, issued: s.issued, lat: s.lat, lng: s.lng, reason: w })),
       // Regional (water / wastewater) permits first, newest first; then the rest.
       evidence: live.sort(([a], [b]) => (b.regional && !b.existing) - (a.regional && !a.existing) || String(b.applied || '').localeCompare(String(a.applied || ''))).map(([s, how]) => ({
         ref: s.ref, src: s.source || undefined, kind: s.kind, status: s.status, applied: s.applied, issued: s.issued,
@@ -184,7 +228,8 @@ function build(snapshot, servicing, now = new Date()) {
       scope: 'Developments in the pipeline (pre-application to under construction) adding homes or floor area.',
       matchMetres: MATCH_M,
       privateMaxUnits: PRIVATE_MAX_UNITS,
-      predatesDays: PREDATES_DAYS,
+      graceDays: GRACE_DAYS,
+      permitLeadDays: PERMIT_LEAD_DAYS,
       buckets: {
         counted: 'Water / wastewater site servicing permit applied for or issued',
         existingOnly: 'Servicing permits only for existing buildings: not counted, review',
@@ -215,4 +260,4 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { gate, summarise, build, inScope, metres, BUCKETS, MATCH_M, PRIVATE_MAX_UNITS, PREDATES_DAYS };
+module.exports = { gate, summarise, build, inScope, metres, stepsOf, orderCheck, BUCKETS, MATCH_M, PRIVATE_MAX_UNITS, GRACE_DAYS, PERMIT_LEAD_DAYS };
