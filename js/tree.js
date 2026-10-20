@@ -141,6 +141,13 @@
   const CHRONO_ALL = { r1: true, r2: true, r3: true, r4: true };
   const RANK = { precon: 0, block_plan: 1, use: 1, land_division: 1, site_plan: 2, condo: 3, other: 9 };
   const HISTORY_YEARS = 3, PERMIT_EARLY_YEARS = 2;
+  // A permit's units against a file's: the same building (within 3%). Only for buildings of 20+ units:
+  // a house's 1 unit fits every infill lot next door.
+  const BLOCK_UNITS = 20;
+  const unitsFit = (a, b) => a > 0 && b > 0 && Math.abs(a - b) <= 0.03 * Math.max(a, b);
+  // The point itself and 8 points 40 m around it (degrees of latitude; longitude scaled by latitude).
+  const NEAR_DEG = 40 / 110574;
+  const NEAR_STEPS = [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [0.7, 0.7], [-0.7, 0.7], [0.7, -0.7], [-0.7, -0.7]];
   function yearOf(ref) {
     const s = String(ref || '');
     let m = s.match(/(?:^|\D)(19[89]\d|20\d\d)(?:\D|$)/);
@@ -172,7 +179,7 @@
       // A pre-consultation's own figure, kept aside by the app (and not read at all when the file
       // describes a block or precinct plan): the tree counts it only when no other file states one,
       // flagged as an estimate (decision B-a, 2026-10-15).
-      const precUnits = Math.max(0, ...live.map(r => r.precUnits || (best.role === 'precon' || (r.stage || '') === 'precon' || /^bra-precon\b/.test(String(r.sourceId || '')) ? P.unitsFromText(r.description) || 0 : 0)));
+      const precUnits = Math.max(0, ...live.filter(r => !r.conversion).map(r => r.precUnits || (best.role === 'precon' || (r.stage || '') === 'precon' || /^bra-precon\b/.test(String(r.sourceId || '')) ? P.unitsFromText(r.description) || 0 : 0)));
       const pt = recs.find(r => r.lat != null);
       nodes.push({
         id, municipality: recs[0].municipality, refs: [...new Set(recs.map(r => r.ref).filter(Boolean))], records: recs,
@@ -496,6 +503,16 @@
         for (const i of appGrid.get(cellOf(r.lng, r.lat)) || []) { const n = nodes[i]; if (n.municipality === r.municipality && P.pointInRings(r.lng, r.lat, n.rings) && (best < 0 || n.area < nodes[best].area)) best = i; }
         let how = 'point in boundary';
         if (best < 0) { const a = P.normalizeAddress(r.address); const hit = a && byAddr.get(a); if (hit) { best = hit.find(i => nodes[i].municipality === r.municipality && !nodes[i].cancelled) ?? -1; how = 'same address'; } }
+        // One address point can serve a block of towers: 151 and 157 City Centre Dr share a point inside
+        // SP 20/113 (437 units), at the edge of SP 19/056 (856). A permit whose units don't fit the file
+        // holding its point goes to the one site / condo plan within 40 m whose units do.
+        if (best >= 0 && r.units >= BLOCK_UNITS && !unitsFit(nodes[best].units, r.units)) {
+          const near = new Set();
+          for (const [dx, dy] of NEAR_STEPS) for (const i of appGrid.get(cellOf(r.lng + dx * NEAR_DEG / Math.cos(r.lat * Math.PI / 180), r.lat + dy * NEAR_DEG)) || []) near.add(i);
+          const fit = [...near].filter(i => i !== best && nodes[i].municipality === r.municipality && ['site_plan', 'condo'].includes(nodes[i].role) &&
+            unitsFit(nodes[i].units, r.units) && NEAR_STEPS.some(([dx, dy]) => P.pointInRings(r.lng + dx * NEAR_DEG / Math.cos(r.lat * Math.PI / 180), r.lat + dy * NEAR_DEG, nodes[i].rings)));
+          if (fit.length === 1) { best = fit[0]; how = 'units match the plan next door'; }
+        }
         if (best >= 0 && chrono.r4 && nodes[best].date0 != null) {
           const d = Math.min(...(r.events || []).map(e => +e.date));
           if (isFinite(d) && d <= nodes[best].date0 - PERMIT_EARLY_YEARS * YEAR) { flags.permitsEarly.push({ permit: r.ref || r.uid, units: r.units || 0, issued: iso(d), file: nodes[best].refs[0], fileFiled: iso(nodes[best].date0), how }); continue; }
@@ -601,9 +618,9 @@
     let growth = null;
     if (!(units > 0)) {
       // A minor file's own stated count, else its wording (Step B0: a stated count was being missed).
-      const minorText = Math.max(0, ...live.filter(i => nodes[i].minor).map(i => Math.max(0, ...nodes[i].records.map(r => (r.units > 0 ? r.units : 0) || P.unitsFromText(r.description) || 0))));
+      const minorText = Math.max(0, ...live.filter(i => nodes[i].minor).map(i => Math.max(0, ...nodes[i].records.map(r => (r.units > 0 ? r.units : 0) || (r.conversion ? 0 : P.unitsFromText(r.description)) || 0))));
       const found = built.lookups && built.lookups.size ? live.map(i => lookupOf(nodes[i], built.lookups)).filter(Boolean).sort((a, b) => b.units - a.units)[0] : null;
-      const minorOf = i => Math.max(0, ...nodes[i].records.map(r => (r.units > 0 ? r.units : 0) || P.unitsFromText(r.description) || 0));
+      const minorOf = i => Math.max(0, ...nodes[i].records.map(r => (r.units > 0 ? r.units : 0) || (r.conversion ? 0 : P.unitsFromText(r.description)) || 0));
       if (minorText > 0) { units = minorText; basis = 'a minor file states the count'; parts = [[argmax(live.filter(i => nodes[i].minor), minorOf), minorText, 'minor', null]]; }
       else if (found && found.units > 0) { units = found.units; basis = `found online: ${found.source}`; growth = { kind: 'found online', units: found.units, url: found.url }; parts = [[live.find(i => lookupOf(nodes[i], built.lookups) === found), found.units, 'online', found.source]]; }
       else if (found && found.units === 0) { basis = `no new homes (checked: ${found.source})`; growth = { kind: 'non-residential', units: null, why: found.note || 'checked online: no new homes', url: found.url }; }

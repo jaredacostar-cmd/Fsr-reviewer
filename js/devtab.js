@@ -230,6 +230,10 @@
     const cu = recs.filter(r => r.closedUnconfirmed);
     if (cu.length) flags.push(['warn', `${cu.map(r => r.ref).join(', ')} only ${cu.length === 1 ? 'reads' : 'read'} “Closed”, with no approval date and no building permit since: the outcome isn’t published, so ${cu.length === 1 ? 'it is' : 'they are'} not counted as an approval.`]);
     if (heldBack) flags.push(['info', `${setter && setter.ref ? setter.ref : 'A permit'} reads completed, but ${p.buildout ? fmtNum(p.buildout.remaining) : 'some'} planned unit${p.buildout && p.buildout.remaining === 1 ? '' : 's'} have no building permit yet, so the site is shown as under construction rather than completed.`]);
+    const cb = p.buildout && p.buildout.condoBuilt;
+    if (cb) flags.push(['info', `Condominium ${cb.refs.join(', ')} ${cb.refs.length === 1 ? 'is' : 'are'} registered: a condominium is registered once its building stands, so ${fmtNum(cb.units)} home${cb.units === 1 ? ' is' : 's are'} counted as built${p.phase === 'completed' ? '' : ' and the site as under construction at least'}, whatever the building permits in the open data say.`]);
+    const conv = recs.filter(r => r.conversion && r.phase !== 'cancelled');
+    if (conv.length) flags.push(['info', `${conv.slice(0, 2).map(r => r.ref).join(', ')}${conv.length > 2 ? ` +${conv.length - 2}` : ''} ${conv.length === 1 ? 'converts' : 'convert'} an existing building to condominium tenure: no new homes, so ${conv.length === 1 ? 'its' : 'their'} units are not counted.`]);
     const appeal = live.filter(r => r.kind === 'application' && STATUS_SIGNALS[0][0].test(r.statusRaw || ''));
     if (appeal.length) flags.push(['warn', `Under appeal at the Ontario Land Tribunal (${appeal.map(r => `${r.ref || 'no number'}: “${r.statusRaw}”`).join('; ')}): ${appeal.some(r => r.phase === 'approved') ? 'the status is read as approved, but the decision is not final until the Tribunal rules' : 'the Tribunal, not council, will decide'}.`]);
     const demos = recs.filter(r => P().isDemolition(r) && r.phase !== 'cancelled');

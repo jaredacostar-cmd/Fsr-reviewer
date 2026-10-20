@@ -157,10 +157,12 @@
     const now = ev.now, before = ev.before, ch = ev.change;
     const x = v => `×${v.toFixed(1)}`;
     const building = !['completed', 'cancelled'].includes(p.phase);
+    let changed = false;   // the photos show the site changing: never "Not visibly started"
     if (now && now.coverage >= 0.3 && before && before.coverage >= 0.3) {
       const r = before.structure > 0 ? now.structure / before.structure : 1;
       const moved = ch && ch.ratio != null && ch.ratio >= 1.4 && ch.site >= 0.5;
       const span = `${ev.beforeYear} → ${ev.latestYear}`;
+      changed = w === 1 && (r >= 1.4 || moved);
       if (r >= 1.4) { L += (moved ? 1.6 : 1.2) * w; add(`More building edges on the site ${span} (structure ${x(r)})${moved ? `, changed ${x(ch.ratio)} more than its surroundings` : ''}`, 1); }
       else if (r <= 0.75) { L -= 0.9 * w; add(`Fewer building edges ${span} (structure ${x(r)}): cleared or graded, construction under way`, -1); }
       else if (moved) { L += 0.3 * w; add(`Site changed ${x(ch.ratio)} more than its surroundings ${span}`, 0.5); }
@@ -190,7 +192,7 @@
     if (probability >= 0.7) status = 'Likely completed';
     else if (p.phase === 'completed') status = 'Completed in the records; not confirmed on the aerial';
     else if (signals.some(x => x.effect < 0 && /cleared or graded/.test(x.text)) || ['permit', 'construction'].includes(p.phase) ||
-      (ev.fpNow != null && ev.fpBefore != null && ev.fpNow - ev.fpBefore >= 0.05)) status = 'Likely under construction';
+      (ev.fpNow != null && ev.fpBefore != null && ev.fpNow - ev.fpBefore >= 0.05) || changed) status = 'Likely under construction';
     else status = 'Not visibly started';
     return { probability, status, signals };
   }

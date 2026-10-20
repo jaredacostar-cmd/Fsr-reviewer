@@ -120,3 +120,16 @@ test('saved keys: an old address key resolves to the development now holding its
   TG.setAliases(null);
   assert.equal(TG.resolve(old, exists, { aliasesOnly: true }), null);
 });
+
+test('dedupeRecords: one Mississauga permit in both permit feeds is one permit (ARU / SU suffix), with the larger unit count', () => {
+  const mp = (ref, units, sourceId, fileKey = P.canonRef(ref)) => ({ uid: `${sourceId}:${ref}:${units}`, kind: 'permit', municipality: 'Mississauga', ref, fileKey, units,
+    sourceId, sourceName: sourceId, address: '5907 SAIGON ST', phase: 'permit', statusRaw: 'ISSUED PERMIT', events: [ev('2024-10-31', 'permit')] });
+  assert.equal(P.canonRef('SEC UNIT 24-3708 ARU'), P.canonRef('SEC UNIT 24 3708'));
+  assert.equal(P.canonRef('SEC UNIT 23-5463 SU'), P.canonRef('SEC UNIT 23 5463'));
+  // A snapshot built before the suffix rule keeps "…|ARU" in its stored fileKey: still one permit.
+  const out = P.dedupeRecords([mp('BP 9NEW 24 4075', 2, 'mis-gm-permits/0'), mp('BP 9NEW 24 4075', 8, 'mis-gm-permits/0'), mp('BP 9NEW 24-4075 ARU', 10, 'mis-permits/0', 'BP|9NEW|24|4075|ARU')]);
+  assert.equal(out.length, 1);
+  assert.equal(out[0].units, 10, 'the feed that states the whole permit wins, whichever loaded first');
+  const su = P.dedupeRecords([mp('SEC UNIT 23-5463 SU', 1, 'mis-permits/0', 'SEC|UNIT|23|5463|SU'), mp('SEC UNIT 23 5463', 1, 'mis-gm-permits/0')]);
+  assert.deepEqual(su.map(r => r.units), [1]);
+});
