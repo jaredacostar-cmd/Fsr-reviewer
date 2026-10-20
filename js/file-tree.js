@@ -98,6 +98,21 @@
     const same = t.same.length ? `<details class="tr-same"><summary>+ ${t.sameCount} earlier file${t.sameCount === 1 ? '' : 's'} on the same land${sameYears.length ? ` (${sameYears[0]}${sameYears.length > 1 && sameYears[sameYears.length - 1] !== sameYears[0] ? `–${sameYears[sameYears.length - 1]}` : ''})` : ''}: the site's history, not counted</summary><div class="tr-kids">${t.same.map(n => row(n, '') + kidsHTML(n, 1)).join('')}</div></details>` : '';
     return `<div class="tr">${row(t.root, '')}${aft(t.root)}${under}${same}${opts.foot || ''}${opts.key === false ? '' : '<p class="tr-key">Indented: on its land · <span class="tr-check">check</span> linked by overlap only (low confidence) · the homes are counted once, on the file that says “counted here”.</p>'}</div>`;
   }
+  /** The tree in reading order, for a row per file (the development's Gantt chart): the root, the
+   *  files on its land under it (depth first), then the earlier files on the same land (same: true).
+   *  Each: { n (the build node), ref, key, role, depth, why, check, counted: { units, kind } | null, same }. */
+  function flat(d) {
+    const t = build(d); if (!t.root) return [];
+    const counts = countsOf(d), out = [];
+    const why = n => (n.role === PRECON ? 'its pre-consultation' : 'on its land');
+    const walk = (n, depth, same, w) => {
+      out.push({ n, ref: n.ref, key: n.key, role: n.role, type: ROLE[n.role] || 'file', depth, why: w, check: isCheck(n), counted: counts.get(n.ref) || null, same });
+      if (depth < 5) for (const k of n.kids) walk(k, depth + 1, same, why(k));
+    };
+    walk(t.root, 0, false, '');
+    for (const n of t.same) walk(n, 0, true, '');
+    return out;
+  }
   // ---- Browser: a file's record, by the tree's file key --------------------------------------
   /** A lookup from a tree node to the development's own record of that file. */
   function recLookup(p) {
@@ -124,7 +139,7 @@
     const AT = root.PeelAnalysisTabs; if (AT && AT.openTab) AT.openTab('records', 'files');
   });
 
-  const api = { ROLE, PRECON, of, build, summary, countsOf, nodeOf, estimateOf, summaryHTML, treeHTML, recLookup, isCheck };
+  const api = { ROLE, PRECON, of, build, flat, summary, countsOf, nodeOf, estimateOf, summaryHTML, treeHTML, recLookup, isCheck };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelFileTree = api;
 })(typeof window !== 'undefined' ? window : globalThis);
