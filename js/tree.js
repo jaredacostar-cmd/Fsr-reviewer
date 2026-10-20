@@ -179,7 +179,7 @@
       // A pre-consultation's own figure, kept aside by the app (and not read at all when the file
       // describes a block or precinct plan): the tree counts it only when no other file states one,
       // flagged as an estimate (decision B-a, 2026-10-15).
-      const precUnits = Math.max(0, ...live.map(r => r.precUnits || (best.role === 'precon' || (r.stage || '') === 'precon' || /^bra-precon\b/.test(String(r.sourceId || '')) ? P.unitsFromText(r.description) || 0 : 0)));
+      const precUnits = Math.max(0, ...live.filter(r => !r.conversion).map(r => r.precUnits || (best.role === 'precon' || (r.stage || '') === 'precon' || /^bra-precon\b/.test(String(r.sourceId || '')) ? P.unitsFromText(r.description) || 0 : 0)));
       const pt = recs.find(r => r.lat != null);
       nodes.push({
         id, municipality: recs[0].municipality, refs: [...new Set(recs.map(r => r.ref).filter(Boolean))], records: recs,
@@ -618,9 +618,9 @@
     let growth = null;
     if (!(units > 0)) {
       // A minor file's own stated count, else its wording (Step B0: a stated count was being missed).
-      const minorText = Math.max(0, ...live.filter(i => nodes[i].minor).map(i => Math.max(0, ...nodes[i].records.map(r => (r.units > 0 ? r.units : 0) || P.unitsFromText(r.description) || 0))));
+      const minorText = Math.max(0, ...live.filter(i => nodes[i].minor).map(i => Math.max(0, ...nodes[i].records.map(r => (r.units > 0 ? r.units : 0) || (r.conversion ? 0 : P.unitsFromText(r.description)) || 0))));
       const found = built.lookups && built.lookups.size ? live.map(i => lookupOf(nodes[i], built.lookups)).filter(Boolean).sort((a, b) => b.units - a.units)[0] : null;
-      const minorOf = i => Math.max(0, ...nodes[i].records.map(r => (r.units > 0 ? r.units : 0) || P.unitsFromText(r.description) || 0));
+      const minorOf = i => Math.max(0, ...nodes[i].records.map(r => (r.units > 0 ? r.units : 0) || (r.conversion ? 0 : P.unitsFromText(r.description)) || 0));
       if (minorText > 0) { units = minorText; basis = 'a minor file states the count'; parts = [[argmax(live.filter(i => nodes[i].minor), minorOf), minorText, 'minor', null]]; }
       else if (found && found.units > 0) { units = found.units; basis = `found online: ${found.source}`; growth = { kind: 'found online', units: found.units, url: found.url }; parts = [[live.find(i => lookupOf(nodes[i], built.lookups) === found), found.units, 'online', found.source]]; }
       else if (found && found.units === 0) { basis = `no new homes (checked: ${found.source})`; growth = { kind: 'non-residential', units: null, why: found.note || 'checked online: no new homes', url: found.url }; }

@@ -359,6 +359,20 @@
     if (/site plan/.test(t)) return 'siteplan';
     return 'other';
   }
+  // A condominium conversion changes an existing building's tenure (a rental apartment building, an
+  // industrial complex sold as units) and adds no homes: "Proposal to convert the existing 6 storey,
+  // 72 unit rental apartment building into a standard condominium" (C01W06.079). The site plan and
+  // pre-consultation filed for it say so too ("Existing 45-unit industrial complex to be converted to
+  // a condominium"). A condominium file's own conversion wording is enough; another file must name the
+  // condominium (converting an office building to apartments adds homes). Converting a proposed
+  // development's tenure is a new build.
+  const CONVERSION = /\bconver(?:t|ts|ted|ting|sion)\b|no development is proposed|change (?:of |in )?(?:the )?(?:current )?tenure|from rental to/i;
+  const CONDO_CONVERSION = /condo(?:minium)?\s+conver|conver(?:t|ts|ted|ting|sion)\b[^.]{0,120}?\b(?:to|into)\s+(?:an?\s+)?(?:standard\s+|common[- ]elements?\s+|industrial\s+)?condo|ownership conversion/i;
+  const isCondoConversion = r => r.kind === 'application' && !/\bconvert the proposed\b/i.test(r.description || '') &&
+    ((r.stage || stageOf(r)) === 'condo' ? CONVERSION : CONDO_CONVERSION).test(r.description || '');
+  // A registered plan of condominium: registered once the building stands ("REGISTERED",
+  // "Registered", "Plan of Condo Registered"; Brampton's "Registration" is the step before).
+  const isRegisteredCondo = r => r.kind === 'application' && (r.stage || stageOf(r)) === 'condo' && r.phase !== 'cancelled' && /\bregistered\b/i.test(r.statusRaw || '');
   // Minor / express / revision files repeat or tweak an earlier plan: they add no units.
   function isMinorFile(r) {
     const ref = String(r.ref || '').toUpperCase();
@@ -774,7 +788,7 @@
   // the weekly snapshot were read with an earlier parser): a pre-consultation's is kept aside.
   const AREA_PLAN_TEXT = /precinct plan|block plan|secondary plan area|tertiary plan|master plan for the (?:block|precinct)/i;
   function readTextUnits(r) {
-    if (r.kind !== 'application' || r.units != null && !r.unitsFromText || r.unitMix || !r.description) return;
+    if (r.kind !== 'application' || r.units != null && !r.unitsFromText || r.unitMix || !r.description || r.conversion) return;
     const t = unitsFromText(r.description);
     if ((r.stage || stageOf(r)) === 'precon') {
       // An area-wide plan's figure (a precinct or block plan) covers subdivisions filed as sites of their own.
@@ -1566,8 +1580,14 @@
     // permits): the homes of the file that holds them are permitted, inferred and labelled.
     const inf = inferBlankPermits(recs, livePermits, grossPlanned > 0 ? grossPlanned - permitUnits(livePermits) : 0);
     const grossPermitted = permitUnits(livePermits) + inf.units;
-    const permitted = net(grossPermitted);
-    const completed = net(permitUnits(livePermits.filter(r => r.phase === 'completed')) + inf.completed);
+    // A registered condominium is the last step, taken once its building stands, so its homes are
+    // built (and were permitted) whatever the permits in the open data say: its own unit count, else
+    // the site's planned homes, up to the plan (decided 2026-10-20). Not a conversion (no new homes).
+    // 151 City Centre Dr: condominium 21CDM-M 24-1 registered 2024; the permit states 855 of 856.
+    const regCondos = live.filter(r => isRegisteredCondo(r) && !r.conversion);
+    const condoBuilt = planned > 0 && regCondos.length ? Math.min(planned, regCondos.some(r => !(r.units > 0)) ? planned : regCondos.reduce((t, r) => t + r.units, 0)) : 0;
+    const completed = Math.max(condoBuilt, net(permitUnits(livePermits.filter(r => r.phase === 'completed')) + inf.completed));
+    const permitted = Math.max(completed, net(grossPermitted));
     const buildout = planned > 0 ? {
       planned,
       permitted,
@@ -1580,10 +1600,13 @@
       basis: plan.basis,
       phases: phaseBreakdown(plan.phases, livePermits, plan.basis),
       ...(inf.units > 0 ? { inferred: inf } : {}),
+      ...(condoBuilt > 0 ? { condoBuilt: { units: condoBuilt, refs: regCondos.map(r => r.ref).filter(Boolean) } } : {}),
     } : null;
     if (buildout && buildout.phases && inf.units > 0) for (const o of buildout.phases) { const f = inf.files.find(x => x.ref === o.ref); if (f) { o.permitted = (o.permitted || 0) + f.units; o.completed = (o.completed || 0) + f.completed; o.inferred = f.units; } }
     // A plan with units still to permit isn't finished even if every permit so far is.
     if (buildout && buildout.remaining > 0 && phase === 'completed') phase = 'construction';
+    // Registered condominiums covering every planned home: built; covering some: building under way.
+    if (condoBuilt > 0) phase = buildout.unbuilt === 0 ? 'completed' : PHASE_BY_KEY[phase].rank < PHASE_BY_KEY.construction.rank ? 'construction' : phase;
     // Bill 23 (2022): site plan control no longer applies to residential developments of 10 units or
     // fewer, so for them an approved zoning is the last planning approval: the site is Approved, no
     // permit yet (decided 2026-10-16). Not where a site plan was filed anyway and is still open.
@@ -1739,11 +1762,13 @@
       prev.newBuild = prev.newBuild || r.newBuild;
       prev.alsoIn = (prev.alsoIn || []).concat(r.sourceName);
     }
+    // A condominium conversion's units stand already: kept as unitsStated, not counted as growth.
+    for (const r of out) if (isCondoConversion(r)) { r.conversion = true; if (!('unitsStated' in r)) { r.unitsStated = r.units; r.units = null; } }
     return out;
   }
 
   const api = {
-    isSecondUnitConversion, holdSecondUnits, secondUnitSite,
+    isSecondUnitConversion, holdSecondUnits, secondUnitSite, isCondoConversion, isRegisteredCondo,
     dedupeRecords,
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY, SMALL_SITE_UNITS, isHolding,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
