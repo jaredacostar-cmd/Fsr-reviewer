@@ -54,10 +54,32 @@ test('model: many permits in a group share one row', () => {
   assert.equal(m.rows[0].segs[0].open, false);
 });
 
-test('html: file numbers open their record; nothing dated says so; text is escaped', () => {
+test('model: with the file tree, the planning files follow it (indented), then the rest by type', () => {
+  const FT = require('../js/file-tree.js');
+  const d = { root: 'OZ 1', u: 50, n: [['OZ 1', 1, -1, '', 'h', 0, 50, 0, 'k1'], ['SP 2', 2, 0, '', 'l', 0, 0, 0, 'k2'], ['OLD 3', 2, -1, '', 'h', 0, 0, 0, 'k3']], c: [['OZ 1', 50, 'stated']] };
+  const recs = [rec({ uid: 'a', ref: 'OZ 1', events: [ev('2020-01-01', 'review')] }), rec({ uid: 'b', ref: 'SP 2', stage: 'siteplan', events: [ev('2022-01-01', 'review')] }),
+    rec({ uid: 'c', ref: 'OLD 3', stage: 'siteplan', phase: 'completed', events: [ev('2005-01-01', 'approved')] }), rec({ uid: 'e', ref: 'X 9', stage: 'condo', events: [ev('2023-01-01', 'review')] })];
+  const by = new Map(recs.map(r => [r.ref, r]));
+  const m = G.model(project({ records: recs }), { now: NOW, tree: FT.flat(d), recOf: n => by.get(n.ref) || null, latest: 'X 9' });
+  const files = m.rows.filter(r => r.kind === 'file');
+  assert.deepEqual(files.map(r => [r.ref, r.depth || 0]), [['OZ 1', 0], ['SP 2', 1], ['OLD 3', 0], ['X 9', 0]]);
+  assert.equal(files[0].counted.units, 50);
+  assert.ok(files[1].check, 'linked by overlap only');
+  assert.ok(files[3].latest);
+  assert.deepEqual(m.rows.filter(r => r.kind === 'head').map(r => r.label), ['Planning files', 'Earlier files on the same land', 'Other condominium files']);
+});
+
+test('html: a row with a body opens to it, and carries its record for the file links', () => {
+  const p = project({ records: [rec({ events: [ev('2022-01-01', 'review')] })] });
+  const h = G.html(p, { now: NOW, body: r => (r.kind === 'file' ? 'THE RECORD' : '') });
+  assert.match(h, /<details class="gt-d gt-file" data-rec-uid="u1" data-rec-ref="OZ 22-001"><summary class="gt-row">/);
+  assert.match(h, /<div class="gt-body"[^>]*>THE RECORD<\/div><\/details>/);
+});
+
+test('html: text is escaped; nothing to show says so', () => {
   const p = project({ records: [rec({ ref: 'OZ <1>', events: [ev('2022-01-01', 'review')] })] });
   const h = G.html(p, { now: NOW });
-  assert.match(h, /data-dev-file="OZ &lt;1&gt;"/);
+  assert.match(h, /OZ &lt;1&gt;/);
   assert.match(h, /var\(--ph-review\)/);
-  assert.match(G.html(project(), { now: NOW }), /No dated events/);
+  assert.match(G.html(project(), { now: NOW }), /No files or dated events/);
 });

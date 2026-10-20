@@ -96,7 +96,7 @@
       ...(med != null ? [PN.kv(`Typical time to approval, ${esc(p.municipality)}`, `${Math.round(med)} months · n=${fmtNum(lags.length)}`)] : []),
       ...(est ? [PN.kv('Expected approval (estimate)', `≈${est}`)] : []),
     ];
-    const DT = root.DevTab, files = (p.records || []).filter(r => r.kind === 'application');
+    const DT = root.DevTab;
     const types = (p.types || []).slice(0, 3).join(' / ');
     return {
       calc: true, fullTitle: `${p.title} · Overview: every figure, the flows and the things to confirm`,
@@ -115,20 +115,17 @@
         { title: `${confirm.length} thing${confirm.length === 1 ? '' : 's'} to confirm`, rows: confirm.map(c => ({ html: `<small class="pnl-r-line">${c}</small>` })), total: confirm.length, seeAll: { 'data-full-table': 'overview' } },
       ],
       folds: [
-        // The applications and events over time, open when the development opens.
-        { title: 'Applications and events (Gantt chart)', id: 'pnl-gantt', open: true, html: DT && DT.partHTML ? DT.partHTML(p, 'gantt') : '' },
+        // One section for the files, their events and the proposal (it used to be four folds: the Gantt
+        // chart, About, Files and History): open when the development opens, the same on the map's panel
+        // and on the Check a site page.
+        { title: 'Files, events and proposal', id: 'pnl-hist', open: true, html: DT && DT.partHTML ? DT.partHTML(p, 'story') : '' },
         { title: 'Site: water, wastewater, constraints, storm sewers and ponds', html: DT && DT.partHTML ? DT.partHTML(p, 'site') : '' },
-        { title: 'About this proposal', html: DT && DT.partHTML ? DT.partHTML(p, 'about') : '' },
-        // Your asks: the file tree and the History (with each file's source record) on the board itself,
-        // the same on the map's panel and on the Check a site page.
-        { title: `Files (${files.length})`, id: 'pnl-files', html: DT && DT.partHTML ? DT.partHTML(p, 'files') : '' },
-        { title: 'History and source records', id: 'pnl-hist', html: DT && DT.partHTML ? DT.partHTML(p, 'history') : '' },
       ],
       method: `Flows at Peel design criteria, as in a functional servicing report${pe.employment.jobs > 0 ? `; jobs from the floor area the applications state (${fmtNum(App().state.criteria.employment.water)} L/job/d water)` : ''}. The servicing rows read the same results as Servicing and Capital for this site. Typical time to approval: the median from first submission to approval of the ${esc(p.municipality)} files with both dates; the expected year adds it to the latest submission (an estimate, not a forecast for this file).`,
       sources: `The ${esc(p.municipality)} applications and building permits on the map (Records › Files for this site); Peel design criteria; the servicing model; the mapped constraint layers and storm sewers (each check names its source).`,
       // (the site's tools — trace, Check FSR — are in its Tools menu, once)
       foot: { primary: { label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, title: 'One-page servicing memo to print or save as PDF' } },
-      onMount: () => { if (DT && DT.fillParts) DT.fillParts(p, ['about', 'site', 'history']); },
+      onMount: () => { if (DT && DT.fillParts) DT.fillParts(p, ['story', 'site']); },
     };
   }
   function renderVerdictCard(p) {

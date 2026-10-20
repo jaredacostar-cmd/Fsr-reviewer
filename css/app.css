@@ -1008,10 +1008,6 @@ details.sect > summary::after { content: '▸'; margin-left: auto; color: var(--
 details.sect[open] > summary::after { transform: rotate(90deg); }
 details.sect > summary .section-title { margin: var(--space-3) 0 var(--space-2); }
 .sub-title { font-size: var(--fs-2); color: var(--text-secondary); margin: var(--space-3) 0 var(--space-2); }
-details.rec-group { border-radius: var(--radius-panel); margin: var(--space-2) 0; padding: 0 var(--space-2); }
-details.rec-group > summary { cursor: pointer; padding: var(--space-2) 0; display: flex; gap: var(--space-2); align-items: baseline; flex-wrap: wrap; }
-details.rec-group > summary .n { font-size: var(--fs-2); background: var(--surface-2); border-radius: 999px; padding: 0 var(--space-2); font-variant-numeric: tabular-nums; }
-details.rec-group[open] > summary { margin-bottom: var(--space-1); }
 @media (max-width: 480px) { .sum-tiles { grid-template-columns: 1fr 1fr; } }
 
 /* Sidebar: search on top, compact collapsible filter sections, list of projects on the map */
@@ -3554,10 +3550,34 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .dcg-tag { color: var(--pnl-room); font-weight: 600; }
 
 /* ---- Applications and events: the development's Gantt chart (js/dev-gantt.js) ---- */
-.gantt { --gt-l: 9.5rem; display: grid; gap: 2px; font-size: var(--fs-1); margin: var(--space-2) 0; }
-.gt-row { display: grid; grid-template-columns: var(--gt-l) minmax(0, 1fr); gap: var(--space-2); align-items: center; min-height: 18px; }
-.gt-l { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-secondary); }
-.gt-l small { font-size: var(--fs-1); }
+.gantt { container-type: inline-size; --gt-l: 12rem; display: grid; gap: 2px; font-size: var(--fs-1); margin: var(--space-2) 0; }
+.gt-row { display: grid; grid-template-columns: var(--gt-l) minmax(0, 1fr); gap: var(--space-2); align-items: center; min-height: 18px; padding: 1px 0; }
+.gt-l { min-width: 0; color: var(--text-secondary); padding-left: calc(var(--d, 0) * 12px); }
+.gt-l1, .gt-l2 { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gt-l1 .dot { width: 11px; height: 11px; font-size: 0; margin-right: 4px; vertical-align: middle; position: relative; top: -1px; box-shadow: none; }
+.gt-l1 .tr-new, .gt-l1 .tr-check { margin-left: 4px; }
+.gt-l2 { font-size: var(--fs-1); color: var(--text-muted); }
+.gt-ref { font-weight: 600; color: var(--text-primary); font-variant-numeric: tabular-nums; }
+.gt-homes { font-weight: 600; color: var(--text-primary); }
+.gt-kid .gt-l { background: linear-gradient(var(--border), var(--border)) no-repeat calc(var(--d) * 12px - 7px) 0 / 2px 100%; }
+/* A row that opens: its summary is the row; it opens to the file's events and source record */
+.gt-d > summary { list-style: none; cursor: pointer; border-radius: 3px; }
+.gt-d > summary::-webkit-details-marker { display: none; }
+.gt-d > summary .gt-l1::before { content: '▸'; display: inline-block; width: 10px; color: var(--text-muted); font-size: 9px; }
+.gt-d[open] > summary .gt-l1::before { content: '▾'; }
+.gt-d > summary:hover, .gt-d > summary:focus-visible { background: var(--surface-2); outline: none; }
+.gt-d[open] > summary { background: var(--surface-2); }
+.gt-body { margin: 2px 0 var(--space-2) calc(var(--d, 0) * 12px + 10px); padding: var(--space-2) var(--space-3); border-left: 2px solid var(--accent); background: var(--surface-1); font-size: var(--fs-2); }
+.gt-body p { margin: 0 0 var(--space-1); }
+.gt-body .stepper { margin: 0; }
+.gt-evs { list-style: none; margin: var(--space-1) 0; padding: 0; }
+.gt-evs li { display: grid; grid-template-columns: 6.5em 14px 1fr; gap: var(--space-2); align-items: center; padding: 1px 0; }
+.gt-evs .d { color: var(--text-muted); font-variant-numeric: tabular-nums; }
+.gt-evs .dot { width: 10px; height: 10px; font-size: 0; box-shadow: none; }
+.gt-fields summary { cursor: pointer; color: var(--text-secondary); }
+.gt-events { margin: var(--space-2) 0; border-top: 1px solid var(--border); padding-top: var(--space-2); }
+.gt-events > summary { cursor: pointer; }
+.dev-hist > .brief { margin-bottom: var(--space-2); }
 .gt-t { position: relative; height: 14px; background: var(--surface-2); border-radius: 3px; }
 .gt-axis .gt-t { background: none; height: 16px; }
 .gt-yr { position: absolute; top: 0; transform: translateX(-50%); color: var(--text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -3580,4 +3600,5 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .gt-sw-cm { width: 8px; height: 8px; border-radius: 0; background: var(--text-primary); transform: rotate(45deg); }
 .gt-sw-tk { width: 2px; height: 12px; background: var(--text-primary); opacity: .7; }
 .gt-sw-now { width: 0; height: 12px; border-left: 1.5px dashed var(--text-secondary); background: none; }
-@media (max-width: 480px) { .gantt { --gt-l: 6.5rem; } }
+/* In a narrow panel (the map's side panel, a phone): a narrower label column, every other year */
+@container (max-width: 560px) { .gt-row { grid-template-columns: 9.5rem minmax(0, 1fr); } .gt-yr:nth-child(even) { display: none; } .gt-body { margin-left: 0; } }
