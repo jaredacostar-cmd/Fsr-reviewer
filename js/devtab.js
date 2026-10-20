@@ -882,7 +882,7 @@
   const ROAD_WORD = '(Road|Rd|Drive|Dr|Street|St|Avenue|Ave|Parkway|Pkwy|Boulevard|Blvd|Line|Sideroad|Trail|Way|Highway|Hwy)';
   const ABBR = { Road: 'Rd', Drive: 'Dr', Street: 'St', Avenue: 'Ave', Parkway: 'Pkwy', Boulevard: 'Blvd', Highway: 'Hwy' };
   const shortRoad = t => String(t || '').replace(/\b(Road|Drive|Street|Avenue|Parkway|Boulevard|Highway)\b/g, w => ABBR[w]);
-  const dcRoad = t => { const m = new RegExp(`-\\s*([A-Z][A-Za-z.' ]*?\\b${ROAD_WORD})\\b`).exec(String(t || '')); return m ? shortRoad(m[1].replace(/\s+/g, ' ').trim()) : ''; };
+  const dcRoad = t => { const m = new RegExp(`-\\s*([A-Z][A-Za-z.' ]*?\\b${ROAD_WORD})\\b`).exec(String(t || '')); return m ? shortRoad(m[1].replace(/\b[A-Za-z]\b\s*/g, '').replace(/\s+/g, ' ').trim()) : ''; };
   const NOT_A_STREET = /\b(various|multiple|easement|several|region-?wide|n\/a)\b/i;
   function capStreet(pts) {
     const st = state(), recs = st && st.capital && st.capital.records; if (!pts.length) return '';
@@ -926,11 +926,7 @@
   // addresses is left unnamed rather than named wrong.
   const LOCAL_ST = /\b(Cres|Crt|Ct|Pl|Cir|Gate|Gt|Lane|Ln|Terr|Way|Mews|Path|Grove|Close|Gdns|Sq)\b/i;
   const bigOk = (name, d) => (name && d >= 600 && LOCAL_ST.test(name) ? '' : name || '');
-  function zoneAt(at) {
-    const st = state(), A = Areas(); if (!st || !st.servicing || !A) return '';
-    const id = A.locate(st.servicing.zones, at[0], at[1])[0], z = id && st.servicing.zones.find(x => x.id === id);
-    return z ? `zone ${z.zone}` : '';
-  }
+
   // The Region's watermains of 300 mm+ (data/watermains.json, as the water trace), as segments.
   const WMS = { segs: null, loading: null };
   function watermainSegs() {
@@ -957,16 +953,33 @@
   let streetRedraw = null;
   // Everything within r: [{ id, sys, kind: existing|dc|cap, m, paths, html }], grouped into mains.
   let netP = null, netItems = [];
+  // (DC titles come from the DC map PDFs, often clipped: "Con 750-mm Water Main - Mayfield Road (Mount M
+  // Pleasant West) M" → "750-mm Water Main - Mayfield Road")
+  // DC titles come from the DC map PDFs, clipped and run together ("Con 750-mm Water Main - Mayfield
+  // Road (Mount M Pleasant West) M"): the kind of pipe from "<size>-mm <kind>", the road shown apart
+  // ("along …"); otherwise the title without its clipped bits. The title's size wins over the map's size
+  // field, which disagrees with the title and its description on 17 of 98 works.
+  const DC_PROPER = /[A-Z][\w-]*(?:\s+[A-Z][\w-]*)*?\s+(?:Sub-Transmission Main|Transmission Main|Sanitary Trunk Sewer|Trunk Sewer|Sanitary Trunk|Force Main)(?:\s+(?:Twinning|Extension))?/g;
+  const dcName = t => {
+    const s0 = String(t || ''), m = /(\d{3,4})-mm\s+((?:[A-Za-z-]+\s+){0,3}?(?:Main|Sewer|Forcemain))\b/i.exec(s0);
+    if (m) return { name: m[2].replace(/\s+/g, ' ').replace(/^./, c => c.toUpperCase()), d: +m[1] };
+    const proper = [...s0.replace(/\s*\(.*$/, '').matchAll(DC_PROPER)].map(x => x[0]).pop();
+    return { name: (proper || s0.replace(/\s*\(.*$/, '').replace(/(\s+[A-Za-z]{1,3})+\s*$/, '')).replace(/^(?:(?:C|Cl|Co|Con|Cons|Const|Mc)\s+|Anticipat\w*\s+)+/, '').replace(/\s+/g, ' ').trim(), d: null };
+  };
+  const RENEWAL = /RELINING|TRENCHLESS|REHAB/i;
   function netItemsOf(p, r) {
     const pt = [p.lng, p.lat], st = state(), out = [], box = (x, y) => Math.abs(x - pt[0]) < 0.02 && Math.abs(y - pt[1]) < 0.015;
     const group = (sys, kind, key, it) => { const g = out.find(o => o.sys === sys && o.kind === kind && o.key === key); if (!g) out.push({ sys, kind, key, ...it, paths: [...it.paths] }); else { g.paths.push(...it.paths); if (it.m < g.m) { g.m = it.m; g.at = it.at; } } };
+    // A street: 'along' when the pipe follows a named Region project or DC line, 'near' when it is
+    // only the nearest house address (a guess).
+    const named = (pts, d, at) => { const a = capStreet(pts); if (a) return [a, 'along']; const n = bigOk(streetNear(at), d); return n ? [n, 'near'] : ['', '']; };
     // Existing watermains (300 mm+).
     const segs = watermainSegs();
     for (const [x1, y1, x2, y2, d] of segs || []) {
       if (!box(x1, y1)) continue;
       const c = segM(pt, [x1, y1], [x2, y2]); if (c.m > r) continue;
-      const street = capStreet([[x1, y1], [x2, y2]]) || bigOk(streetNear(c.at), d), zone = zoneAt(c.at);
-      group('water', 'existing', `${d}|${street}|${zone}`, { m: c.m, at: c.at, d, street, zone, paths: [[[x1, y1], [x2, y2]]] });
+      const [street, how] = named([[x1, y1], [x2, y2]], d, c.at);
+      group('water', 'existing', `${d}|${street}`, { m: c.m, at: c.at, d, street, how, paths: [[[x1, y1], [x2, y2]]] });
     }
     // Existing sanitary sewers (300 mm+).
     const S = root.PeelMapMarkers && root.PeelMapMarkers.SEW;
@@ -974,37 +987,43 @@
       const c0 = q[10]; if (!box(c0[0], c0[1])) return;
       const pts = []; for (let k = 0; k < c0.length; k += 2) pts.push([c0[k], c0[k + 1]]);
       const c = lineNear(pt, pts); if (!c || c.m > r) return;
-      const street = capStreet(pts) || bigOk(streetNear(c.at), q[0]);
-      group('wastewater', 'existing', `${q[0]}|${q[7] || ''}|${street}`, { m: c.m, at: c.at, d: q[0], year: q[7], street, paths: [pts] });
+      const [street, how] = named(pts, q[0], c.at);
+      group('wastewater', 'existing', `${q[0]}|${q[7] || ''}|${street}`, { m: c.m, at: c.at, d: q[0], year: q[7], street, how, paths: [pts] });
     });
-    // Planned: the 2026 DC works (one entry per project) and the Region's projects.
+    // Planned: the 2026 DC works (one entry per project) and the Region's projects; a Region project
+    // that builds a DC work joins its row.
     const DI = root.PeelDcInfra, CM = root.PeelCapitalEAModel;
     for (const sys of ['water', 'wastewater']) {
       for (const ln of (st && st.dcInfra && st.dcInfra[sys] && st.dcInfra[sys].lines) || []) {
         const c = lineNear(pt, ln.g); if (!c || c.m > r) continue;
         const kind = DI && DI.DC_KIND && DI.DC_KIND[ln.k] ? DI.DC_KIND[ln.k][0] : 'Planned main';
-        group(sys, 'dc', ln.p || ln.c || `${ln.n}|${ln.y}`, { m: c.m, at: c.at, d: ln.d, name: ln.n || kind, year: ln.y, status: ln.s, ref: ln.p || ln.c || '', street: dcRoad(ln.n) || capStreet(nearStretch(ln.g, c.at)), zone: sys === 'water' ? zoneAt(c.at) : '', paths: [ln.g] });
+        const road = dcRoad(ln.n) || capStreet(nearStretch(ln.g, c.at)), dn = dcName(ln.n);
+        group(sys, 'dc', ln.p || ln.c || `${ln.n}|${ln.y}`, { m: c.m, at: c.at, d: dn.d || ln.d, name: dn.name || kind, year: ln.y, status: ln.s, ref: ln.p || ln.c || '', street: road, how: road ? 'along' : '', paths: [ln.g] });
       }
       for (const rec of (st && st.capital && st.capital.records) || []) {
         if (rec.system !== sys || !['planned', 'tendered', 'awarded', 'under construction'].includes(rec.status) || !rec.geometry) continue;
         const lines = rec.geometry.type === 'LineString' ? [rec.geometry.coordinates] : rec.geometry.type === 'MultiLineString' ? rec.geometry.coordinates : [];
         const c = lines.map(l => lineNear(pt, l)).filter(Boolean).sort((a, b) => a.m - b.m)[0]; if (!c || c.m > r) continue;
         const yr = (rec.startActual || rec.startTarget || '').slice(0, 4);
-        group(sys, 'cap', rec.contract || rec.projectNumber || rec.id, { m: c.m, at: c.at, name: CM && CM.workLabel ? CM.workLabel(rec.workType) : rec.workType, status: rec.status, year: yr, started: !!rec.startActual, ref: rec.projectNumber || '', street: rec.street ? titleSt(rec.street) : streetNear(c.at) || '', zone: sys === 'water' ? zoneAt(c.at) : '', paths: lines });
+        const dc = rec.projectNumber && out.find(o => o.kind === 'dc' && o.sys === sys && o.ref === rec.projectNumber);
+        if (dc) { if (!dc.cap) dc.cap = { status: rec.status, year: yr, started: !!rec.startActual }; continue; }
+        group(sys, 'cap', rec.contract || rec.projectNumber || rec.id, { m: c.m, at: c.at, name: CM && CM.workLabel ? CM.workLabel(rec.workType) : rec.workType, renewal: RENEWAL.test(rec.workType || ''), status: rec.status, year: yr, started: !!rec.startActual, ref: rec.projectNumber || '', street: rec.street && !NOT_A_STREET.test(rec.street) ? shortRoad(titleSt(String(rec.street).replace(/[-–].*$/, ''))) : '', how: rec.street ? 'along' : '', paths: lines });
       }
     }
     out.sort((a, b) => a.m - b.m).forEach((o, k) => { o.id = k; });
-    // (no address point near: the live lookup, for the nearest dozen mains only)
+    // (no address point near: the live lookup, for the nearest dozen mains only, a guess like an address)
     // (planned DC works often cross land with no road yet: named only from a named line, never guessed)
-    out.filter(o => !o.street && o.kind !== 'dc').slice(0, 12).forEach(o => { o.street = bigOk(streetOf(o.at), o.d || 0); });
+    out.filter(o => !o.street && o.kind !== 'dc').slice(0, 12).forEach(o => { o.street = bigOk(streetOf(o.at), o.d || 0); if (o.street) o.how = 'near'; });
     return out;
   }
+  // Construction dates of a Region project: started (actual) or due to start (target).
+  const capWhen = c => `${c.status}${c.year ? (c.started ? ` since ${c.year}` : `, construction from ${c.year}`) : ''}`;
   function netRowHTML(o) {
-    const where = [o.street ? `on <strong>${esc(o.street)}</strong>` : '', o.zone ? esc(o.zone) : '', mTxt(o.m)].filter(Boolean).join(' · ');
+    const where = [o.street ? `${o.how === 'near' ? 'near' : 'along'} <strong>${esc(o.street)}</strong>` : '', mTxt(o.m)].filter(Boolean).join(' · ');
     let what;
     if (o.kind === 'existing') what = `${fmtNum(o.d)} mm${o.year ? `, ${o.year}` : ''}`;
-    else if (o.kind === 'dc') what = `${esc(o.name)}${o.d ? ` · ${fmtNum(o.d)} mm` : ''} · <b>${o.year ? `in service ${o.year}` : 'year not set'}</b> <small class="muted">${['2026 DC ' + (o.status || ''), o.ref].filter(Boolean).map(esc).join(' · ')}</small>`;
-    else what = `${esc(o.name || 'Capital project')} · <b>${esc(o.status)}${o.year ? ` ${o.started ? 'since' : 'from'} ${o.year}` : ''}</b> <small class="muted">Region project ${esc(o.ref)}</small>`;
+    else if (o.kind === 'dc') what = `${esc(o.name)}${o.d ? ` · ${fmtNum(o.d)} mm` : ''} · <b>${o.year ? `in service ${o.year}` : 'in-service year not set'}</b> <small class="muted">${esc(['2026 DC program' + (o.status ? ` (${o.status})` : ''), o.ref].filter(Boolean).join(' · '))}${o.cap ? ` · Region project ${esc(capWhen(o.cap))}` : ''}</small>`;
+    else what = `${esc(o.name || 'Capital project')}${o.renewal ? ' <span class="net-renew">renewal</span>' : ''} · <b>${esc(capWhen(o))}</b> <small class="muted">Region project ${esc(o.ref)}</small>`;
     return `<li><button type="button" class="net-row" data-net-hl="${o.id}" aria-pressed="false"><i class="net-sw net-${o.sys === 'water' ? 'w' : 'ww'} net-${o.kind}"></i><span>${what} <span class="muted">${where}</span></span></button></li>`;
   }
   function netMapSVG(p, items, r) {
@@ -1027,11 +1046,11 @@
     const part = (sys, label) => {
       const ex = items.filter(o => o.sys === sys && o.kind === 'existing'), pl = items.filter(o => o.sys === sys && o.kind !== 'existing');
       const list = (xs, none) => (xs.length ? `<ul class="net-list">${xs.slice(0, 6).map(netRowHTML).join('')}</ul>${xs.length > 6 ? `<details class="ex-more"><summary class="small">${xs.length - 6} more</summary><ul class="net-list">${xs.slice(6).map(netRowHTML).join('')}</ul></details>` : ''}` : `<p class="small muted">${none}</p>`);
-      return `<div class="net-sys"><h5>${label}</h5><div class="net-sub">Existing</div>${list(ex, loading ? 'Loading…' : `None of 300 mm+ within ${netR >= 1000 ? '1 km' : `${netR} m`}`)}<div class="net-sub">Planned</div>${list(pl, `Nothing in the 2026 DC program or the Region’s projects within ${netR >= 1000 ? '1 km' : `${netR} m`}`)}</div>`;
+      return `<div class="net-sys"><h5>${label}</h5><div class="net-sub">Existing</div>${list(ex, loading ? 'Loading…' : `No Region main of 300 mm+ within ${netR >= 1000 ? '1 km' : `${netR} m`} (smaller local mains aren\u2019t listed)`)}<div class="net-sub">Planned</div>${list(pl, `Nothing in the 2026 DC program or the Region’s projects within ${netR >= 1000 ? '1 km' : `${netR} m`}`)}</div>`;
     };
     return `${rBtns}<div class="net-wrap"><div class="net-mapbox">${netMapSVG(p, items, netR)}<p class="small muted net-key"><i class="net-sw net-w net-existing"></i> watermain <i class="net-sw net-ww net-existing"></i> sanitary sewer <i class="net-sw net-storm"></i> storm sewer · solid existing, <i class="net-sw net-w net-dc"></i> dashed 2026 DC, <i class="net-sw net-w net-cap"></i> dotted Region project</p></div>
       <div class="net-lists">${part('water', '💧 Water')}${part('wastewater', '🚰 Wastewater')}</div></div>
-      <p class="small muted">Region mains of 300 mm+ (local mains are on the map from street zoom), measured from the development's point (not the connection point). Street: the street named on the Region project whose line the main follows, else the nearest address point (else the address lookup online). Zone: the pressure zone the main runs in. Tap a row to highlight it on the small map.</p>`;
+      <p class="small muted">Region mains of 300 mm+ only (smaller local mains are on the full map from street zoom), measured from the development\u2019s point, not its connection point. <b>Along</b> a street: the pipe follows a Region project or DC work named with it; <b>near</b>: only the nearest house address, a guess. In-service years are the 2026 DC program\u2019s; construction dates are the Region\u2019s project schedule. Tap a row to highlight it on the small map.</p>`;
   }
   function fillNetworks(p) {
     if (!hasDOM() || p.lat == null || liveKey !== p.key) return;

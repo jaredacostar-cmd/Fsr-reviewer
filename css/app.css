@@ -3529,3 +3529,4 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .hm-key.hm-key-ea-follow { background: color-mix(in srgb, var(--ea-line) 25%, transparent); border: 1px solid var(--ea-line); }
 .hm-key.hm-key-ea-now { border: 1px dashed var(--ea-line); }
 .hm-key.hm-key-cons { height: 3px; background: var(--accent); }
+.net-renew { font-size: .8em; padding: 0 4px; border-radius: 3px; border: 1px solid var(--border); color: var(--text-muted); }
