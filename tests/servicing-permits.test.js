@@ -177,3 +177,16 @@ test('order: in a block of plans, a permit is held to the plan it sits in', () =
   assert.equal(r.bucket, 'none', 'in the 2024 plan: before it');
   assert.match(r.outOfOrder[0].reason, /before the plan it sits in \(SP 24-15 2024-05-06\)/);
 });
+
+test('steps end at built: closed or final permits, dated where the city dates them', () => {
+  const done = (ref, iss, fin) => ({ ...bp(ref, iss), phase: 'completed', events: [ev(iss, 'permit'), ...(fin ? [ev(fin, 'completed')] : [])] });
+  const p = withFiles(app('SP 21-1', 'Site plan', '2021-01-01'), done('BP 1', '2022-06-01', '2024-04-24'), done('BP 2', '2022-07-01', '2024-05-01'), bp('BP 3', '2023-01-01'));
+  const [r] = G.gate([p], [svc({ applied: '2021-06-01' })]);
+  const b = r.steps.find(s => s.k === 'built');
+  assert.equal(b.label, 'Built: 2 of 3 building permits closed or final (first)');
+  assert.equal(b.d, '2024-04-24');
+  const q = withFiles(app('SP 21-2', 'Site plan', '2021-01-01'), done('BP 4', '2022-06-01'));
+  const [s] = G.gate([q], [svc({ applied: '2021-06-01' })]);
+  assert.equal(s.steps[s.steps.length - 1].k, 'built', 'undated: last');
+  assert.equal(s.steps[s.steps.length - 1].d, '');
+});

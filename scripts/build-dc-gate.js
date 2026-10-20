@@ -41,11 +41,11 @@ const GRACE_DAYS = 90;
 const PERMIT_LEAD_DAYS = 730;
 const day = d => (d ? new Date(d).toISOString().slice(0, 10) : null);
 const minus = (d, n) => new Date(Date.parse(d) - n * 864e5).toISOString().slice(0, 10);
-const STEP_LABEL = { precon: 'Pre-consultation', formal: 'Formal application', approved: 'Planning approval', ssp: 'Site servicing permit applied', bp: 'Building permit', condo: 'Condominium file' };
+const STEP_LABEL = { precon: 'Pre-consultation', formal: 'Formal application', approved: 'Planning approval', ssp: 'Site servicing permit applied', bp: 'Building permit', condo: 'Condominium file', built: 'Built' };
 
 /** The development's steps, each with its first date and file: { precon, formal, approved, bp, condo }. */
 function stepsOf(p) {
-  const out = {};
+  const out = {}, bp = { n: 0, done: 0, first: null, last: null };
   const put = (k, d, ref, extra) => { const x = day(d); if (x && (!out[k] || x < out[k].d)) out[k] = { k, d: x, ref: ref || '', ...extra }; };
   for (const r of p.records) {
     if (r.phase === 'cancelled') continue;
@@ -62,8 +62,14 @@ function stepsOf(p) {
     } else if (r.kind === 'permit' && !SP.classify(r)) {
       const iss = (r.events || []).find(e => e.phase === 'permit') || first;
       if (iss) put('bp', iss.date, r.ref);
+      // Built: the permit closed or final (occupancy). Mississauga dates it; Brampton and Caledon only
+      // say it in the status.
+      bp.n++;
+      if (r.phase === 'completed') { bp.done++; const c = (r.events || []).find(e => e.phase === 'completed'); if (c) { const x = day(c.date); if (!bp.first || x < bp.first) bp.first = x; if (!bp.last || x > bp.last) bp.last = x; } }
     }
   }
+  if (bp.done) out.built = { k: 'built', d: (bp.done === bp.n ? bp.last : bp.first) || '', ref: '', done: bp.done, of: bp.n,
+    label: bp.done === bp.n ? `Built: all ${bp.n} building permit${bp.n === 1 ? '' : 's'} closed or final` : `Built: ${bp.done} of ${bp.n} building permits closed or final${bp.first ? ' (first)' : ''}` };
   return out;
 }
 
@@ -189,7 +195,8 @@ function gate(projects, permits) {
       septicReview: (septic.length || ownSeptic) && bucket !== 'private' ? true : undefined,
       // The development's steps in date order, with the linked site servicing permit in its place.
       steps: [...Object.values(steps).filter(x => x && x.k), ...(first ? [{ k: 'ssp', d: first, ref: (regional.find(([s]) => s.applied === first) || [{}])[0].ref || '' }] : [])]
-        .sort((a, b) => a.d.localeCompare(b.d)).map(x => ({ ...x, label: STEP_LABEL[x.k] })),
+        // (built without a date, Brampton and Caledon: last)
+        .sort((a, b) => (!a.d) - (!b.d) || a.d.localeCompare(b.d)).map(x => ({ ...x, label: x.label || STEP_LABEL[x.k] })),
       // Permits on the site that don't fit the order, and why (not linked).
       outOfOrder: [...why.entries()].filter(([, w]) => w).map(([s, w]) => ({ ref: s.ref, src: s.source || undefined, applied: s.applied, issued: s.issued, lat: s.lat, lng: s.lng, reason: w })),
       // Regional (water / wastewater) permits first, newest first; then the rest.

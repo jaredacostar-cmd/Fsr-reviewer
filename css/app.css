@@ -3577,3 +3577,6 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .tr-bp { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: baseline; }
 .tr-bp .tr-ref { font-weight: 500; text-decoration: none; cursor: default; }
 .tr-bpr { color: var(--text-secondary); white-space: nowrap; }
+.tr-built { color: var(--hue-teal); }
+.dcg-steps .dcg-step-built { font-weight: 600; }
+.dcg-steps .dcg-step-built::before { background: var(--hue-teal); }

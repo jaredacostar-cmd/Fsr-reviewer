@@ -118,7 +118,7 @@
     const b = BUCKETS[row.bucket], ev = row.evidence || [];
     const extra = [row.septicReview ? 'A septic permit is on this site too. On a development this size it is usually the house already on the land.' : ''].filter(Boolean);
     // The development's steps in date order, the linked site servicing permit in its place.
-    const steps = (row.steps || []).length ? `<ol class="dcg-steps small">${row.steps.map(s => `<li class="${s.k === 'ssp' ? 'dcg-step-ssp' : ''}"><span class="dcg-d">${esc(s.d)}</span> ${esc(s.label)}${s.ref ? ` <b>${esc(s.ref)}</b>` : ''}${s.type ? ` <span class="muted">${esc(s.type)}</span>` : ''}</li>`).join('')}</ol>` : '';
+    const steps = (row.steps || []).length ? `<ol class="dcg-steps small">${row.steps.map(s => `<li class="${s.k === 'ssp' ? 'dcg-step-ssp' : s.k === 'built' ? 'dcg-step-built' : ''}"><span class="dcg-d">${esc(s.d || 'no date')}</span> ${esc(s.label)}${s.ref ? ` <b>${esc(s.ref)}</b>` : ''}${s.type ? ` <span class="muted">${esc(s.type)}</span>` : ''}</li>`).join('')}</ol>` : '';
     const ooo = row.outOfOrder || [];
     const oooHTML = ooo.length ? `<p class="small"><strong>Not linked: out of order</strong> (a site servicing permit comes after the formal application)</p><ul class="dcg-list">${ooo.map((o, i) => `<li class="dcg-ev dcg-ooo" data-dcg-ev="o${i}">
         <div><strong>${esc(o.ref)}</strong> <span class="dcg-k">${esc(termOf(row.municipality))} permit</span></div>
@@ -215,8 +215,14 @@
     const bpGroup = list => {
       list.sort((a, b) => a.t - b.t);
       const units = list.reduce((s, x) => s + (x.r.units > 0 ? x.r.units : 0), 0), first = ymd(list[0].t), last = ymd(list[list.length - 1].t);
-      const rows = list.slice(0, 40).map(x => `<div class="tr-bp"><span class="tr-ref">${esc(x.r.ref || 'permit')}</span><span class="tr-type">${esc(x.r.type || '')}</span><span class="tr-bpr">${x.r.units > 0 ? `${x.r.units} unit${x.r.units === 1 ? '' : 's'} · ` : ''}${x.issued ? 'issued' : 'applied'} ${esc(ymd(x.t))}</span></div>`).join('');
-      return `<details class="tr-row tr-bps"><summary><span class="dcg-bdot" aria-hidden="true"></span><span><b>${list.length}</b> building permit${list.length === 1 ? '' : 's'}${units ? ` · ${units.toLocaleString('en-CA')} units` : ''}</span><span class="tr-r">${first === last ? esc(first) : `${esc(first)} to ${esc(last)}`}</span></summary><div class="tr-bpl">${rows}${list.length > 40 ? `<p class="small muted">+ ${list.length - 40} more in History › Permits</p>` : ''}</div></details>`;
+      // By year (issued, else applied), and built: closed or final in the city record (Mississauga dates it).
+      const years = new Map(); for (const x of list) { const y = ymd(x.t).slice(0, 4); years.set(y, (years.get(y) || 0) + 1); }
+      const doneAt = x => { const c = (x.r.events || []).find(e => e.phase === 'completed'); return c ? ymd(+new Date(c.date)) : ''; };
+      const done = list.filter(x => x.r.phase === 'completed'), doneDates = done.map(doneAt).filter(Boolean).sort();
+      const yearLine = years.size > 1 ? `<span class="tr-why">${[...years].map(([y, n]) => `${esc(y)}: ${n}`).join(' · ')}</span>` : '';
+      const builtLine = `<span class="tr-why ${done.length ? 'tr-built' : ''}">${done.length === list.length ? `Built: all ${list.length} closed or final` : done.length ? `Built: ${done.length} of ${list.length} closed or final` : 'None closed or final yet'}${doneDates.length ? ` · ${doneDates.length === done.length && done.length === list.length ? 'last' : 'latest'} ${esc(doneDates[doneDates.length - 1])}` : done.length ? ' (no date in the city record)' : ''}</span>`;
+      const rows = list.slice(0, 40).map(x => `<div class="tr-bp"><span class="tr-ref">${esc(x.r.ref || 'permit')}</span><span class="tr-type">${esc(x.r.type || '')}</span><span class="tr-bpr">${x.r.units > 0 ? `${x.r.units} unit${x.r.units === 1 ? '' : 's'} · ` : ''}${x.issued ? 'issued' : 'applied'} ${esc(ymd(x.t))}${x.r.phase === 'completed' ? ` · <span class="tr-built">built${doneAt(x) ? ` ${esc(doneAt(x))}` : ''}</span>` : ''}</span></div>`).join('');
+      return `<details class="tr-row tr-bps"><summary><span class="dcg-bdot" aria-hidden="true"></span><span><b>${list.length}</b> building permit${list.length === 1 ? '' : 's'}${units ? ` · ${units.toLocaleString('en-CA')} units` : ''}${yearLine}${builtLine}</span><span class="tr-r">${first === last ? esc(first) : `${esc(first)} to ${esc(last)}`}</span></summary><div class="tr-bpl">${rows}${list.length > 40 ? `<p class="small muted">+ ${list.length - 40} more in History › Permits</p>` : ''}</div></details>`;
     };
     const after = n => {
       const items = (at.get(n.ref) || []).slice().sort((a, b) => a.t - b.t);
