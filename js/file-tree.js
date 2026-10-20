@@ -74,7 +74,9 @@
   }
   /** The tree. recOf(node) → the file's record (type, municipal status, stage, latest date) or null;
    *  opts.limit: the files shown under the root before "+ n more" (all when omitted); opts.dot: the
-   *  stage dot for a stage key; opts.devKey: the development, where it is not the one open. */
+   *  stage dot for a stage key; opts.devKey: the development, where it is not the one open;
+   *  opts.after(node): HTML placed under a file (its site servicing permits, js/dc-gate.js);
+   *  opts.foot: HTML after the tree's history (permits left out). */
   function treeHTML(d, recOf, opts = {}) {
     const t = build(d); if (!t.root) return '';
     const dot = opts.dot || (() => ''), latest = opts.latest || null, counts = countsOf(d);
@@ -87,13 +89,14 @@
       return `<div class="tr-row">${dot(r && r.stage || 'review')}<div><button type="button" class="tr-ref" data-dev-file="${esc(n.ref)}"${opts.devKey ? ` data-dev-key="${esc(opts.devKey)}"` : ''} title="Its source record, in History">${esc(n.ref)}</button><span class="tr-type">${esc(typeOf(n, r))}</span>${latest && latest === n.ref ? ` <button type="button" class="tr-new" data-dev-file="${esc(n.ref)}"${opts.devKey ? ` data-dev-key="${esc(opts.devKey)}"` : ''} title="The latest file: its source record">latest</button>` : ''}${isCheck(n) ? ` <button type="button" class="tr-check" data-dev-file="${esc(n.ref)}"${opts.devKey ? ` data-dev-key="${esc(opts.devKey)}"` : ''} title="Linked by overlap only (low confidence): check its record. A wrong link can be reported from the record">check</button>` : ''}${r && r.statusRaw ? `<span class="tr-ms">municipal status: <em>${esc(r.statusRaw)}</em></span>` : ''}${why ? `<span class="tr-why">${esc(why)}</span>` : ''}</div><div class="tr-r">${right}</div></div>`;
     };
     const why = n => (n.role === PRECON ? 'its pre-consultation' : 'on its land');
-    const kidsHTML = (n, depth) => (n.kids.length ? `<div class="tr-kids">${n.kids.map(k => row(k, why(k)) + (depth < 4 ? kidsHTML(k, depth + 1) : '')).join('')}</div>` : '');
+    const aft = n => (opts.after ? opts.after(n) : '');
+    const kidsHTML = (n, depth) => (n.kids.length ? `<div class="tr-kids">${n.kids.map(k => row(k, why(k)) + aft(k) + (depth < 4 ? kidsHTML(k, depth + 1) : '')).join('')}</div>` : '');
     const kids = t.root.kids, lim = opts.limit != null ? opts.limit : kids.length;
     const shown = kids.slice(0, lim), more = kids.length - shown.length;
-    const under = shown.length ? `<div class="tr-kids">${shown.map(k => row(k, why(k)) + kidsHTML(k, 1)).join('')}${more > 0 ? `<p class="tr-more small">+ ${more} more on its land</p>` : ''}</div>` : '';
+    const under = shown.length ? `<div class="tr-kids">${shown.map(k => row(k, why(k)) + aft(k) + kidsHTML(k, 1)).join('')}${more > 0 ? `<p class="tr-more small">+ ${more} more on its land</p>` : ''}</div>` : '';
     const sameYears = t.same.map(n => recOf ? yr(recOf(n)) : '').filter(Boolean).sort();
     const same = t.same.length ? `<details class="tr-same"><summary>+ ${t.sameCount} earlier file${t.sameCount === 1 ? '' : 's'} on the same land${sameYears.length ? ` (${sameYears[0]}${sameYears.length > 1 && sameYears[sameYears.length - 1] !== sameYears[0] ? `–${sameYears[sameYears.length - 1]}` : ''})` : ''}: the site's history, not counted</summary><div class="tr-kids">${t.same.map(n => row(n, '') + kidsHTML(n, 1)).join('')}</div></details>` : '';
-    return `<div class="tr">${row(t.root, '')}${under}${same}${opts.key === false ? '' : '<p class="tr-key">Indented: on its land · <span class="tr-check">check</span> linked by overlap only (low confidence) · the homes are counted once, on the file that says “counted here”.</p>'}</div>`;
+    return `<div class="tr">${row(t.root, '')}${aft(t.root)}${under}${same}${opts.foot || ''}${opts.key === false ? '' : '<p class="tr-key">Indented: on its land · <span class="tr-check">check</span> linked by overlap only (low confidence) · the homes are counted once, on the file that says “counted here”.</p>'}</div>`;
   }
   // ---- Browser: a file's record, by the tree's file key --------------------------------------
   /** A lookup from a tree node to the development's own record of that file. */

@@ -65,3 +65,14 @@ test('stage bars: site servicing permit units per stage, stages unchanged', () =
   assert.match(html, /100 with a site servicing permit/);
   assert.match(html, /class="stg-ssp"/);
 });
+
+test('file tree: site servicing permits go under the file they follow, the rest after the history', () => {
+  const FT = require('../js/file-tree.js');
+  const d = { root: 'SP 24-15', u: 100, n: [['SP 24-15', 2, -1, '', 'h', 1, 100, 0, 'k1'], ['PRE-1', 5, 0, '', 'h', 1, 0, 0, 'k2']], c: [['SP 24-15', 100, 'stated']] };
+  const html = FT.treeHTML(d, null, { after: n => (n.ref === 'SP 24-15' ? '<i id="ssp-here"></i>' : ''), foot: '<i id="ssp-foot"></i>' });
+  assert.ok(html.indexOf('ssp-here') > html.indexOf('SP 24-15') && html.indexOf('ssp-here') < html.indexOf('PRE-1'), 'right under its file');
+  assert.ok(html.indexOf('ssp-foot') > html.indexOf('PRE-1'), 'after the tree');
+  assert.match(src('js/devtab.js'), /PeelDcGate\.treeOpts\(p, d\)/);
+  assert.match(src('js/records-tab.js'), /PeelDcGate\.treeOpts\(p, d\)/);
+  assert.match(src('js/ws-pages.js'), /PeelDcGate\.treeOpts\(p, d\)/);
+});

@@ -171,6 +171,45 @@
     MC.map.setView([e.lat, e.lng], Math.max(MC.map.getZoom(), 17));
   }
 
+  // ---- In the development's file tree (js/file-tree.js) -----------------------------------------
+  // Each linked site servicing permit sits under the planning file it follows: the latest site plan
+  // (else any formal file) filed no later than GRACE_DAYS after the permit, else the root file. The
+  // permits left out (filed before the files) go after the tree, with the site's history.
+  const GRACE_MS = 90 * 864e5;
+  function treeOpts(p, d) {
+    const row = rowOf(p), FT = root.PeelFileTree;
+    if (!row || !d || !FT) return {};
+    const PH = root.PeelPhases, canon = PH && PH.canonRef ? PH.canonRef : (x => x);
+    const firstOf = new Map();
+    for (const r of p.records || []) {
+      if (r.kind !== 'application' || !r.events || !r.events.length) continue;
+      const t = Math.min(...r.events.map(e => +new Date(e.date)));
+      for (const k of [r.ref, canon(r.ref)]) if (k && !(firstOf.get(k) <= t)) firstOf.set(k, t);
+    }
+    const nodes = FT.build(d).all, FORMAL = new Set([0, 1, 2, 4]);   // subdivision, OPA / zoning, site plan, block plan
+    const placeOf = e => {
+      const t = Date.parse(`${e.applied}T00:00:00Z`) + GRACE_MS;
+      const ok = nodes.filter(n => FORMAL.has(n.role) && firstOf.has(n.ref) && firstOf.get(n.ref) <= t);
+      const pick = list => list.sort((a, b) => firstOf.get(b.ref) - firstOf.get(a.ref))[0];
+      return (pick(ok.filter(n => n.role === 2)) || pick(ok) || nodes[0] || {}).ref;
+    };
+    const at = new Map();
+    for (const e of (row.evidence || []).filter(x => x.kind === 'site' && x.applied)) { const r = placeOf(e); (at.get(r) || at.set(r, []).get(r)).push(e); }
+    const SVC = { water: 'water', wastewater: 'wastewater', storm: 'storm only', 'not stated': 'pipes not stated' };
+    const term = `${termOf(p.municipality)} permit`;
+    const line = (e, cls, note) => `<div class="tr-row tr-ssp ${cls}"><span class="dcg-tdot" aria-hidden="true"></span><div><span class="tr-ref">${esc(e.ref)}</span><span class="tr-type">${esc(term)}${e.services && e.services.length ? ` · ${esc(e.services.map(s => SVC[s] || s).join(' + '))}` : ''}</span>${note ? `<span class="tr-why">${note}</span>` : ''}</div><div class="tr-r">${esc(e.applied || '')}${e.issued ? `<small class="tr-why">issued ${esc(e.issued)}</small>` : ''}</div></div>`;
+    const after = n => {
+      const list = (at.get(n.ref) || []).slice().sort((a, b) => String(a.applied).localeCompare(String(b.applied)));
+      const f0 = firstOf.get(n.ref), day0 = f0 ? new Date(f0).toISOString().slice(0, 10) : '';
+      // (filed before this file: linked through an earlier file of the development; say so, in order)
+      const before = e => (day0 && e.applied < day0 ? ` · filed before ${esc(n.ref)} (${day0})` : '');
+      return list.length ? `<div class="tr-kids">${list.map(e => line(e, e.existing || (e.services || []).every(s => s === 'storm') ? 'tr-ssp-off' : '', (e.existing ? 'for a building already there: not counted' : (e.services || []).every(s => s === 'storm') ? 'storm only: local servicing, not counted' : 'site servicing applied: counts toward the DC analysis') + before(e))).join('')}</div>` : '';
+    };
+    const ooo = row.outOfOrder || [];
+    const foot = ooo.length ? `<details class="tr-same"><summary>+ ${ooo.length} ${esc(term)}${ooo.length === 1 ? '' : 's'} filed before the files: for what was on the land, not linked</summary><div class="tr-kids">${ooo.slice().sort((a, b) => String(a.applied).localeCompare(String(b.applied))).map(o => line(o, 'tr-ssp-off', esc(o.reason))).join('')}</div></details>` : '';
+    return { after, foot };
+  }
+
   // ---- Wiring -------------------------------------------------------------------------------------
   const byKey = (attr, key) => [...document.querySelectorAll(`[${attr}]`)].filter(x => x.getAttribute(attr) === key);
   function refreshAll() {
@@ -219,7 +258,7 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else setTimeout(go, 0);
   }
 
-  const api = { TERM, termOf, BUCKETS, FILTER, FILTER_KEYS, filterLabel, chipText, tone, passes, recordQuery, SOURCES, load, loaded, rowOf, chipHTML, boxHTML, boxInner };
+  const api = { treeOpts, TERM, termOf, BUCKETS, FILTER, FILTER_KEYS, filterLabel, chipText, tone, passes, recordQuery, SOURCES, load, loaded, rowOf, chipHTML, boxHTML, boxInner };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDcGate = api;
 })(typeof window !== 'undefined' ? window : globalThis);

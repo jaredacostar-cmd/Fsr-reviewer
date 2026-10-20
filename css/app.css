@@ -3563,3 +3563,8 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .dcg-steps .dcg-step-ssp::before { background: var(--pnl-room); }
 .dcg-d { font-variant-numeric: tabular-nums; color: var(--text-secondary); }
 .dcg-ooo { border-style: dashed; }
+/* Site servicing permits in the file tree (js/dc-gate.js treeOpts) */
+.tr-ssp .tr-ref { color: var(--pnl-room); text-decoration: none; cursor: default; }
+.tr-ssp-off .tr-ref { color: var(--text-secondary); }
+.dcg-tdot { width: 10px; height: 10px; border-radius: 2px; background: var(--pnl-room); align-self: start; margin: 4px 0 0 3px; transform: rotate(45deg); }
+.tr-ssp-off .dcg-tdot { background: transparent; border: 1.5px solid var(--text-muted); }
