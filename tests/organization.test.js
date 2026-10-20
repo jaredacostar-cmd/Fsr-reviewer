@@ -15,12 +15,13 @@ const dev = k => TREE.devs.find(d => d.k === k);
 test('file tree: one root, the files on its land under it, earlier files on the same land folded, links to check', () => {
   const d = dev('Brampton|295 QUEEN ST E');
   const s = T.summary(d);
-  assert.deepEqual([s.files, s.root, s.units, s.check, s.onLand, s.sameLand], [11, 'OZS-2025-0022', 7641, 2, 4, 6]);
+  // (12 files since SPA-2021-0162 names SPA-2019-0029, "previously envisioned for the site": js/tree.js 4·)
+  assert.deepEqual([s.files, s.root, s.units, s.check, s.onLand, s.sameLand], [12, 'OZS-2025-0022', 7641, 2, 4, 7]);
   const h = T.treeHTML(d, null, { dot: k => `<i class="dot" data-k="${k}"></i>` });
   assert.match(h, /<button type="button" class="tr-ref" data-dev-file="OZS-2025-0022" title="Its source record, in History">OZS-2025-0022<\/button>[\s\S]*?<b>7,641<\/b>homes · counted here/);
   assert.equal((h.match(/<button type="button" class="tr-check"/g) || []).length, 2, "two links to check, each opening its record"); assert.equal((h.match(/<span class="tr-check"/g) || []).length, 1, "and the key line");
-  assert.match(h, /<details class="tr-same"><summary>\+ 6 earlier files on the same land: the site's history, not counted<\/summary>/);
-  assert.match(T.summaryHTML(d), /^<b>11<\/b> files · homes counted on <b>OZS-2025-0022<\/b> \(official plan \/ zoning\)|^<b>11<\/b> files · homes counted on <b>OZS-2025-0022<\/b>/);
+  assert.match(h, /<details class="tr-same"><summary>\+ 7 earlier files on the same land: the site's history, not counted<\/summary>/);
+  assert.match(T.summaryHTML(d), /^<b>12<\/b> files · homes counted on <b>OZS-2025-0022<\/b> \(official plan \/ zoning\)|^<b>12<\/b> files · homes counted on <b>OZS-2025-0022<\/b>/);
   assert.match(T.summaryHTML(d), /<span class="tr-check"[^>]*>check<\/span> 2 links$/);
 });
 
