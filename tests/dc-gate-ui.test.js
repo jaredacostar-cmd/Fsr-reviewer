@@ -7,10 +7,12 @@ const path = require('node:path');
 const G = require('../js/dc-gate.js');
 const src = f => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
 
-test('chip words by bucket', () => {
-  assert.equal(G.chipText({ bucket: 'counted', servicingApplied: '2025-05-01' }), 'DC: counted · servicing applied 2025-05-01');
-  assert.equal(G.chipText({ bucket: 'private' }), 'DC: private (septic)');
-  assert.equal(G.chipText({ bucket: 'none', septicReview: true }), 'DC: not counted · septic on site, check');
+test('chip words: each city\'s own name for the permit', () => {
+  assert.equal(G.chipText({ bucket: 'counted', municipality: 'Mississauga', servicingApplied: '2025-05-01' }), 'Site Servicing permit · applied 2025-05-01');
+  assert.equal(G.chipText({ bucket: 'counted', municipality: 'Brampton' }), 'Site Service permit');
+  assert.equal(G.chipText({ bucket: 'none', municipality: 'Caledon' }), 'No Site Services permit');
+  assert.equal(G.chipText({ bucket: 'private', municipality: 'Caledon' }), 'Septic permit: private servicing');
+  assert.equal(G.chipText({ bucket: 'none', municipality: 'Brampton', septicReview: true }), 'No Site Service permit · septic on site, check');
   assert.equal(G.chipText(null), '');
 });
 

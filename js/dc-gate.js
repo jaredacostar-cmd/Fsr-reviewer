@@ -16,15 +16,18 @@
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   // Bucket key → short chip words, filter label, long explanation, tone.
+  // Each city's own name for the permit, as its permit records write it.
+  const TERM = { Mississauga: 'Site Servicing', Brampton: 'Site Service', Caledon: 'Site Services' };
+  const termOf = muni => TERM[muni] || 'Site servicing';
   const BUCKETS = {
-    counted:      { chip: 'DC: counted',               label: 'Counted: servicing applied',               tone: 'room',  why: 'A water or wastewater site servicing permit has been applied for or issued on this site, so it counts toward the DC analysis.' },
-    existingOnly: { chip: 'DC: existing building only', label: 'Servicing for existing buildings only',    tone: 'tight', why: 'The only servicing permits on this site are for buildings already there (a replacement main, a fire line). Not counted: check by hand.' },
-    private:      { chip: 'DC: private (septic)',       label: 'Privately serviced (septic)',              tone: 'aer',   why: 'Privately serviced (septic): outside the Regional DC count.' },
-    permitNoSvc:  { chip: 'DC: not counted',            label: 'Building permit, no servicing permit',     tone: 'wait',  why: 'A building permit but no site servicing permit. Often serviced through a subdivision agreement or an existing connection. Not counted under the servicing rule.' },
-    none:         { chip: 'DC: not counted',            label: 'No servicing evidence yet',                tone: 'wait',  why: 'No site servicing permit yet. Not counted.' },
+    counted:      { chip: m => `${termOf(m)} permit`,                label: 'Applied for or issued',               tone: 'room',  why: 'A water or wastewater site servicing permit has been applied for or issued on this site, so it counts toward the DC analysis.' },
+    existingOnly: { chip: m => `${termOf(m)} permit: existing building`, label: 'For existing buildings only',     tone: 'tight', why: 'The only site servicing permits here are for buildings already there (a replacement main, a fire line). Not counted: check by hand.' },
+    private:      { chip: () => 'Septic permit: private servicing',  label: 'Septic (private servicing)',           tone: 'aer',   why: 'Privately serviced (septic): outside the Regional DC count.' },
+    permitNoSvc:  { chip: m => `No ${termOf(m)} permit`,             label: 'Building permit, none applied for',    tone: 'wait',  why: 'A building permit but no site servicing permit. Often serviced through a subdivision agreement or an existing connection. Not counted under the servicing rule.' },
+    none:         { chip: m => `No ${termOf(m)} permit`,             label: 'None applied for yet',                 tone: 'wait',  why: 'No site servicing permit yet. Not counted.' },
   };
   // Filter values (state.dcgate): a bucket, or 'notcounted' for every bucket but counted.
-  const FILTER = [['', 'Any'], ['counted', BUCKETS.counted.label], ['notcounted', 'Not counted (all others)'],
+  const FILTER = [['', 'Any'], ['counted', BUCKETS.counted.label], ['notcounted', 'Not applied for (all others)'],
     ['permitNoSvc', BUCKETS.permitNoSvc.label], ['none', BUCKETS.none.label], ['existingOnly', BUCKETS.existingOnly.label], ['private', BUCKETS.private.label]];
   const FILTER_KEYS = new Set(FILTER.map(([k]) => k));
   const filterLabel = k => (FILTER.find(([v]) => v === k) || [k, k])[1];
@@ -32,9 +35,10 @@
   function chipText(row) {
     if (!row) return '';
     const b = BUCKETS[row.bucket]; if (!b) return '';
-    if (row.bucket === 'counted' && row.servicingApplied) return `${b.chip} · servicing applied ${row.servicingApplied}`;
-    if (row.septicReview) return `${b.chip} · septic on site, check`;
-    return b.chip;
+    const c = b.chip(row.municipality);
+    if (row.bucket === 'counted' && row.servicingApplied) return `${c} · applied ${row.servicingApplied}`;
+    if (row.septicReview) return `${c} · septic on site, check`;
+    return c;
   }
   const tone = row => (row && BUCKETS[row.bucket] ? BUCKETS[row.bucket].tone : 'wait');
   /** Does a gate row pass the filter value? */
@@ -74,6 +78,8 @@
       G.loading = null;
       refreshAll();
       const A = root.PeelApp; if (A && A.state && A.state.dcgate && A.applyFilters) A.applyFilters();
+      // (a Home page drawn before the permits loaded: drawn again with them)
+      const W = root.PeelWorkspaces; if (W && W.mode && W.mode() === 'home' && W.renderPage) W.renderPage(true);
       return G.data;
     });
     return G.loading;
@@ -92,9 +98,9 @@
   const boxHTML = p => (p && rowOf(p) ? `<div class="dcg-box" data-dcg-box="${esc(p.key)}"${openKey === p.key ? '' : ' hidden'}>${openKey === p.key ? boxInner(rowOf(p)) : ''}</div>` : '');
 
   const SVC_WORDS = { water: 'water', wastewater: 'wastewater', storm: 'storm only', 'not stated': 'pipes not stated' };
-  function evidenceHTML(e, i, key) {
+  function evidenceHTML(e, i, key, muni) {
     if (!e.ref) return `<li class="dcg-ev"><span class="dcg-k">Septic</span> named in this development's own permit text</li>`;
-    const kind = e.kind === 'septic' ? 'Septic permit' : 'Site servicing permit';
+    const kind = e.kind === 'septic' ? 'Septic permit' : `${termOf(muni)} permit`;
     const svc = e.kind === 'site' ? (e.services || []).map(s => SVC_WORDS[s] || s).join(' + ') : '';
     const dates = [e.applied ? `applied ${e.applied}` : '', e.issued ? `issued ${e.issued}` : 'not issued yet'].filter(Boolean).join(' · ');
     const how = e.match === 'boundary' ? 'inside the site boundary' : e.match === 'address' ? 'same address' : e.match ? `${e.match} of the site point` : '';
@@ -112,9 +118,9 @@
     const b = BUCKETS[row.bucket], ev = row.evidence || [];
     const extra = [row.septicReview ? 'A septic permit is on this site too. On a development this size it is usually the house already on the land.' : '',
       row.predated ? `${row.predated} older servicing permit${row.predated === 1 ? '' : 's'} on the land (applied more than a year before the first planning file) ${row.predated === 1 ? 'was' : 'were'} left out: ${row.predated === 1 ? 'it is' : 'they are'} for what stood there before.` : ''].filter(Boolean);
-    return `<p class="small"><strong>${esc(b.label)}.</strong> ${esc(b.why)}</p>
+    return `<p class="small"><strong>Site servicing permit: ${esc(b.label.toLowerCase())}.</strong> ${esc(b.why)}</p>
       ${extra.map(t => `<p class="small muted">${esc(t)}</p>`).join('')}
-      ${ev.length ? `<ul class="dcg-list">${ev.map((e, i) => evidenceHTML(e, i, row.key)).join('')}</ul>` : '<p class="small muted">No site servicing or septic permit matched to this site.</p>'}
+      ${ev.length ? `<ul class="dcg-list">${ev.map((e, i) => evidenceHTML(e, i, row.key, row.municipality)).join('')}</ul>` : '<p class="small muted">No site servicing or septic permit matched to this site.</p>'}
       <p class="small muted dcg-note">From the city building permit feeds. A site servicing permit is a local Building Code permit for the private-side pipes: it shows servicing is underway, not the Region's own servicing application.</p>
       <p class="aer-foot small"><button type="button" class="btn small link" data-dcg-close>Close</button></p>`;
   }
@@ -184,6 +190,15 @@
       const t = e.target.closest ? e.target : null; if (!t) return;
       const c = t.closest('[data-dcg-chip]'); if (c) { e.preventDefault(); toggle(c.getAttribute('data-dcg-chip')); return; }
       if (t.closest('[data-dcg-close]')) { const b = t.closest('[data-dcg-box]'); if (b) toggle(b.getAttribute('data-dcg-box')); return; }
+      // Growth in an area › Site servicing permits: a bucket opens the map filtered to it.
+      const fb = t.closest('[data-dcg-filter]');
+      if (fb) {
+        const A = root.PeelApp, W = root.PeelWorkspaces; e.preventDefault(); e.stopPropagation();
+        if (A && A.state) { A.state.dcgate = fb.getAttribute('data-dcg-filter'); const sel = document.getElementById('f-dcgate'); if (sel) sel.value = A.state.dcgate; }
+        if (W && W.setMode) W.setMode('full');
+        if (A && A.applyFilters) A.applyFilters();
+        return;
+      }
       const pb = t.closest('[data-dcg-pin]'); if (pb) { const ev = evOf(pb.getAttribute('data-dcg-pin')); if (ev) pin(ev); return; }
       const rb = t.closest('[data-dcg-rec]');
       if (rb) {
@@ -195,7 +210,7 @@
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go); else setTimeout(go, 0);
   }
 
-  const api = { BUCKETS, FILTER, FILTER_KEYS, filterLabel, chipText, tone, passes, recordQuery, SOURCES, load, loaded, rowOf, chipHTML, boxHTML, boxInner };
+  const api = { TERM, termOf, BUCKETS, FILTER, FILTER_KEYS, filterLabel, chipText, tone, passes, recordQuery, SOURCES, load, loaded, rowOf, chipHTML, boxHTML, boxInner };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDcGate = api;
 })(typeof window !== 'undefined' ? window : globalThis);

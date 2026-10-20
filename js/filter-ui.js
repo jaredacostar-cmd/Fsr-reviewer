@@ -106,7 +106,7 @@
     if (App().state.plant) out.push({ label: SD().PLANT_SHORT[App().state.plant] || App().state.plant, clear: () => { App().state.plant = ''; setVal('#f-plant', ''); } });
     if (App().state.dwelling) out.push({ label: dwellingLabel[App().state.dwelling] || App().state.dwelling, clear: () => { App().state.dwelling = ''; setVal('#f-dwelling', ''); } });
     if (App().state.landuse !== App().DEFAULT_LANDUSE) out.push({ label: landuseLabel[App().state.landuse] || App().state.landuse, clear: () => { App().state.landuse = App().DEFAULT_LANDUSE; setVal('#f-landuse', App().DEFAULT_LANDUSE); } });
-    if (App().state.dcgate) out.push({ label: `DC: ${window.PeelDcGate ? window.PeelDcGate.filterLabel(App().state.dcgate) : App().state.dcgate}`, clear: () => { App().state.dcgate = ''; setVal('#f-dcgate', ''); } });
+    if (App().state.dcgate) out.push({ label: `Site servicing permit: ${(window.PeelDcGate ? window.PeelDcGate.filterLabel(App().state.dcgate) : App().state.dcgate).toLowerCase()}`, clear: () => { App().state.dcgate = ''; setVal('#f-dcgate', ''); } });
     for (const [k, label] of PF.FLAG_META) if (App().state.flags[k]) out.push({ label, clear: () => { App().state.flags[k] = false; } });
     if (phaseFilterActive()) {
       const names = P.ALL_PHASES.filter(p => App().state.phases.has(p.key)).map(p => p.label);
@@ -141,7 +141,7 @@
     const areas = Object.keys(MM().AREA_F).map(k => PA().multiSummary(k, true)).filter(Boolean);
     set('#fv-where', [S.muni || 'All of Peel', S.plant ? (SD().PLANT_SHORT[S.plant] || S.plant) : 'any plant', areas.length ? areas.join(', ') : 'any plan'].join(' · '));
     const kindT = { '': 'all records', permit: 'building permits', both: 'application + permits' };
-    set('#fv-what', [S.minUnits ? sel('#f-size') : 'any size', S.dwelling ? sel('#f-dwelling') : 'any dwelling', S.landuse !== App().DEFAULT_LANDUSE ? sel('#f-landuse') : 'any land use', S.dcgate ? `DC: ${sel('#f-dcgate')}` : '', S.kind !== App().DEFAULT_KIND ? kindT[S.kind] || '' : '', S.newOnly ? '' : 'incl. alterations'].filter(Boolean).join(' · ').replace(/^./, c => c.toUpperCase()));
+    set('#fv-what', [S.minUnits ? sel('#f-size') : 'any size', S.dwelling ? sel('#f-dwelling') : 'any dwelling', S.landuse !== App().DEFAULT_LANDUSE ? sel('#f-landuse') : 'any land use', S.dcgate ? `site servicing permit: ${sel('#f-dcgate')}` : '', S.kind !== App().DEFAULT_KIND ? kindT[S.kind] || '' : '', S.newOnly ? '' : 'incl. alterations'].filter(Boolean).join(' · ').replace(/^./, c => c.toUpperCase()));
     const from = S.yearFrom ?? S.yearMin, to = S.yearTo ?? S.yearMax;
     set('#fv-when', `${App().timeActive() ? (from === to ? `${from}` : `${from}–${to}`) : 'All years'} · ${S.yearMode === 'any' ? 'any milestone' : sel('#f-milestone')}`);
     set('#fv-counts', S.lyr ? [...S.lyr].map(k => (window.PeelLayerBar ? window.PeelLayerBar.LABEL[k] : k)).join(' + ') : 'Every stage');

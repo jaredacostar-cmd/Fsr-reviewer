@@ -3551,3 +3551,4 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .dcg-tab tr + tr th, .dcg-tab tr + tr td { border-top: 1px solid var(--border); }
 .dcg-note { margin-bottom: 0; }
 .dcg-pin { filter: drop-shadow(0 0 2px rgba(0,0,0,.4)); }
+.dcg-tag { color: var(--pnl-room); font-weight: 600; }

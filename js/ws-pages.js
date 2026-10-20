@@ -580,7 +580,7 @@
     const treeBits = p => { const d = FT ? FT.of(p) : null; if (!d) return { sum: '', tog: '', open: '' }; const n = (d.n || []).length, on = gOpen.has(p.key), recOf = FT.recLookup(p);
       return { sum: `<small class="tr-sum">${FT.summaryHTML(d, recOf)}</small>`, tog: n > 1 ? `<button type="button" class="tr-tog" data-tr-tog="${esc(p.key)}" aria-expanded="${on}" title="Show how its files fit together">${on ? '▾' : '▸'}</button>` : '',
         open: on && n > 1 ? `<div class="tr-open">${FT.treeHTML(d, recOf, { limit: 4, key: false, devKey: p.key, dot: k => (root.PeelUtil && root.PeelUtil.dot ? root.PeelUtil.dot(k) : '') })}<button type="button" class="btn small link" data-ws-pick="${esc(p.key)}" data-ws-as="site" data-ws-tree="1">Its full tree →</button></div>` : '' }; };
-    const fileRow = x => { const tb = treeBits(x.p); return { attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${tb.tog}${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.p.units * x.share)} units</span></div><small class="pnl-r-line">${stageLine(x)} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}</small>${tb.sum}${tb.open}` }; };
+    const fileRow = x => { const tb = treeBits(x.p); return { attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${tb.tog}${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.p.units * x.share)} units</span></div><small class="pnl-r-line">${stageLine(x)} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}${svcTag(x.p)}</small>${tb.sum}${tb.open}` }; };
     // Estimated counts in this area (at the chosen stage): how much of the pipeline is not stated on a file.
     const es = Ly && Ly.ofDev ? estimateRows(items.filter(({ p }) => gStage === 'all' || stageOf(Ly.ofDev(p)) === gStage), q => Ly.ofDev(q)) : null;
     const pipeU = stage ? (gStage === 'all' ? stage.total : (stage.rows.find(x => x.key === gStage) || {}).units || 0) : 0;
@@ -588,6 +588,27 @@
       { kv: true, html: `<span><strong>${n0(es.units)}</strong> of ${n0(pipeU)} dwellings${pipeU > 0 ? ` (${Math.round(es.units / pipeU * 100)}%)` : ''} are estimated, in ${fmtNum(es.files.length)} ${es.files.length === 1 ? 'file' : 'files'} with no unit count stated: ${Object.entries(es.byKind).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${n0(v)} ${esc(EST_KINDS[k])}`).join(', ')}. ${es.files.some(x => Object.keys(x.kinds).length > 1) ? ' A file with more than one kind of estimate is split between them in proportion to their units.' : ''} Confirm these counts with the municipality.</span>` },
       ...es.files.map(x => ({ attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.est)} est.</span></div><small class="pnl-r-line">${Object.keys(x.kinds).length > 1 ? `${esc(Object.entries(x.kinds).map(([k, v]) => `${n0(v)} ${EST_KINDS[k]}`).join(' + '))} (split in proportion)` : esc(EST_KINDS[Object.keys(x.kinds)[0]] || '')} · ${esc(STG[stageOf(Ly.ofDev(x.p))] || '')} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}</small>${estFileHTML(x.p)}` })),
     ] : [];
+    // Site servicing permits (js/dc-gate.js, data/dc-gate.json): the area's pipeline units by whether a
+    // site servicing permit (each city's own name for it) has been applied for. The DC count's rule.
+    const DG = root.PeelDcGate;
+    const svcTag = q => { const g = DG && DG.rowOf(q); return g && g.bucket === 'counted' ? ` · <span class="dcg-tag">${esc(DG.termOf(q.municipality))} permit applied${g.servicingApplied ? ` ${esc(g.servicingApplied)}` : ''}</span>` : ''; };
+    let svcRows = [], svcLine = '';
+    if (DG && !DG.loaded()) { DG.load(); svcRows = [{ kv: true, html: '<span class="muted">Loading the site servicing permits…</span>' }]; }
+    else if (DG) {
+      const sums = {};
+      for (const { p, share } of items) { const g = DG.rowOf(p); if (!g) continue; const u = (p.units || 0) * share; const s = sums[g.bucket] || (sums[g.bucket] = { u: 0, n: 0 }); s.u += u; s.n++; }
+      const inGate = Object.values(sums).reduce((t, s) => t + s.u, 0);
+      if (inGate > 0) {
+        const pct = v => (inGate > 0 ? ` (${Math.round(v / inGate * 100)}%)` : '');
+        const ORDER = ['counted', 'permitNoSvc', 'none', 'existingOnly', 'private'];
+        const terms = [...new Set(items.map(({ p }) => DG.termOf(p.municipality)))].join(' / ');
+        svcLine = ` <strong>${n0((sums.counted || { u: 0 }).u)}</strong> of ${n0(inGate)} pipeline units have a site servicing permit applied for or issued.`;
+        svcRows = [
+          { kv: true, html: `<span><strong>${n0((sums.counted || { u: 0 }).u)}</strong> of ${n0(inGate)} pipeline units${pct((sums.counted || { u: 0 }).u)} have a ${esc(terms)} permit (water or wastewater) applied for or issued.</span>` },
+          ...ORDER.filter(k => sums[k] && sums[k].n).map(k => ({ attrs: { 'data-dcg-filter': k, title: 'Show these developments on the map' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(DG.BUCKETS[k].label)}</span><span class="pnl-r-year">${n0(sums[k].u)} units</span></div><small class="pnl-r-line">${fmtNum(sums[k].n)} developments${pct(sums[k].u)}</small>` })),
+        ];
+      }
+    }
     const empRows = emp.planned >= 1 ? [
       { kv: true, html: `<div class="pnl-kv"><span>Floor area planned</span><span>${n0(emp.planned)} m² · ≈${p0(emp.jobs)} jobs</span></div>` },
       { kv: true, html: `<div class="pnl-kv"><span>Permitted</span><span>${n0(emp.permitted)} m²</span></div>` },
@@ -607,8 +628,8 @@
     const subRings = n.children.map(c => (c.areaId ? allAreas.find(x => x.id === c.areaId) : null)).filter(x => x && x.rings);
     const mapSvg = f ? f.svg(`${ring && ring.rings ? `<path d="${f.path(ring.rings)}" class="hm-area"/>` : ''}${subRings.map(x => `<path d="${f.path(x.rings)}" class="hm-sub"><title>${esc(x.name)}</title></path>`).join('')}${devPts.filter(p => p.lat != null && (p.units || 0) >= (atPeel ? 50 : 1)).map(p => { const [x, y] = f.pt(p.lng, p.lat); return `<circle cx="${x}" cy="${y}" r="${Math.max(1.4, Math.min(6, Math.sqrt(p.units) / 8)).toFixed(1)}" class="hm-dev"/>`; }).join('')}`, `${n.name}: its developments${ring ? ' and its outline' : ''}`) : '';
     const answer = atPeel
-      ? `${pl.answer}${f2031 ? ` About <strong>${f2031.v}</strong> units are expected by 2031 (${f2031.ctx}).` : ''}`
-      : `<strong>${esc(n.name)}</strong> ${trail[1] && trail[1] !== n ? ` (${esc(trail[1].name)})` : ''} holds <strong>${n0(m.planned)}</strong> planned units, ${p0(m.people)} people${m.jobs >= 0.5 ? ` and ${p0(m.jobs)} jobs` : ''} at build-out; ${n0(anb)} approved, not yet built, ${n0(m.left)} left to build.`;
+      ? `${pl.answer}${f2031 ? ` About <strong>${f2031.v}</strong> units are expected by 2031 (${f2031.ctx}).` : ''}${svcLine}`
+      : `<strong>${esc(n.name)}</strong> ${trail[1] && trail[1] !== n ? ` (${esc(trail[1].name)})` : ''} holds <strong>${n0(m.planned)}</strong> planned units, ${p0(m.people)} people${m.jobs >= 0.5 ? ` and ${p0(m.jobs)} jobs` : ''} at build-out; ${n0(anb)} approved, not yet built, ${n0(m.left)} left to build.${svcLine}`;
     return { id: 'growth', eyebrow: `${esc(label('growth'))} · ${crumbs}${atPeel ? '' : ` <span class="page-kind">${esc(kind(n))}</span>`}`, name: atPeel ? 'How much is coming, where, and how fast?' : n.name, status: null, identity: atPeel ? esc(`${App().state.muni || 'Peel'} · ${fmtNum(plans.length)} plans with planned units`) : esc(`${fmtNum(dm.size)} developments${trail.length > 2 ? ` · in ${trail[trail.length - 2].name}` : ''}`), scen: scen(), answer,
       figures: [
         { v: n0(m.planned), u: 'units', label: 'planned', ctx: `${n0(m.left)} left to build` },
@@ -619,6 +640,7 @@
       chart: stage ? stageChartHTML(stage, census) : pl.chart,
       lists: [
         kids.length ? { title: atPeel ? 'By municipality' : n.kind === 'municipality' ? 'Plans (secondary plans, character areas) and the rest' : 'Precincts and sub-areas', rows: kids.map(kidRow), total: kids.length, see: kids.length > 5 ? { 'data-ws-drillall': n.id } : null, all: gAll } : null,
+        svcRows.length ? { title: 'Site servicing permits', rows: svcRows, total: svcRows.length } : null,
         atPeel ? { title: 'Plans with the most planned units', rows: plans.map(kidRow), total: plans.length, see: { 'data-ws-go': 'growth', 'data-ws-fulltable': 'growth:areas' } } : null,
         { title: gStage === 'all' ? `Developments in ${n.name}` : `${STG[gStage]}: developments in ${n.name}`, tools, rows: files.length ? files.map(fileRow) : [{ kv: true, html: `<span class="muted">No files ${gStage === 'all' ? 'with planned units' : `at ${esc((STG[gStage] || '').toLowerCase())}`} in ${esc(n.name)}.</span>` }], total: files.length, see: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } },
         estRows.length ? { title: gStage === 'all' ? 'Estimated counts: files to confirm' : `${STG[gStage]}: estimated counts`, rows: estRows, total: estRows.length, seeN: es.files.length, see: estRows.length > 5 ? { 'data-ws-estall': '1' } : null, all: gEst } : null,
