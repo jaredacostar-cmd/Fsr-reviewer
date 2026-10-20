@@ -1725,6 +1725,21 @@
     return { state: appeal ? 'appeal' : last && now - last > 2 * YEAR_MS ? 'stalled' : 'active', last, years };
   }
 
+  // Dormant (decided 2026-10-20): no activity (lastActivityOf: a file event, a permit or a council
+  // item naming the file) for longer than a development at its stage usually waits: approved with no
+  // building permit, 3 years (a draft approval lapses after 3 unless extended); in review, 5 years;
+  // pre-application, 3 years. Not while under appeal (the Tribunal sets the pace). The app holds dormant
+  // developments out of every count unless they are shown (js/app.js rebuild).
+  const DORMANT_YEARS = { approved: 3, review: 5, inception: 3 };
+  function dormantOf(p, now = Date.now()) {
+    const limit = p && DORMANT_YEARS[p.phase]; if (!limit) return null;
+    if (p.records.some(r => r.kind === 'application' && r.phase !== 'cancelled' && APPEAL_TEXT.test(r.statusRaw || ''))) return null;
+    if (p.records.some(r => r.kind === 'permit' && r.phase !== 'cancelled' && !r.prePlan && !r.outside && ['units', 'res', 'nonres'].includes(permitRole(r)))) return null;
+    const last = lastActivityOf(p); if (!last) return null;
+    const years = (now - last) / YEAR_MS;
+    return years > limit ? { years, last, limit } : null;
+  }
+
   // Units not yet built (SPEC 1.6): the development's count less its completed units, one definition
   // for Growth › Pipeline "left to build" and Timing "unbuilt".
   function unbuiltOf(p) {
@@ -1774,7 +1789,7 @@
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
     representativePoint, buildProjects, closeStalePermits, inferBlankPermits, isBlankPermit, buildingsListed, permitBase, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
     canonRef, fileId, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, keyAliases, legacyNormalizeAddress, isNewBuild,
-    PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf, lastActivityOf, proposedStateOf,
+    PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf, lastActivityOf, proposedStateOf, dormantOf, DORMANT_YEARS,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPhases = api;

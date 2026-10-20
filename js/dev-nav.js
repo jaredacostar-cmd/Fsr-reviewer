@@ -99,7 +99,7 @@
     if (!k) return null;
     if (SUBS.has(k)) return SUBS.get(k);
     const i = String(k).lastIndexOf('#'), base = i > 0 ? k.slice(0, i) : k;
-    const p = App().state.projects.find(x => x.key === base);
+    const p = App().state.projects.find(x => x.key === base) || (App().state.projects.dormant || []).find(x => x.key === base);
     if (!p) {
       // A key saved before the trees became the developments (Step B2): resolve it.
       const TG = window.PeelTreeGroups, list = App().state.projects;

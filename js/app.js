@@ -55,6 +55,7 @@
     muni: '', kind: DEFAULT_KIND, search: '', newOnly: true,
     sp: [], mtsa: [], pz: [], dr: [], ss: null,   // pz / dr: water pressure zone and wastewater drainage area ids (data/servicing.json)   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
     minUnits: 0,   // unit growth filter: 0 = any, otherwise at least this many new units
+    showDormant: false,   // dormant developments (js/phases.js dormantOf) counted and shown, or held aside
     flags: DEFAULT_FLAGS(),   // flag filters, multi-select (see FLAG_TESTS)
     plant: '',                // receiving wastewater plant: '' | 'Lakeview' | 'Clarkson' | 'Inglewood'
     dwelling: '',             // dwelling type: '' | 'single' | 'town' | 'apartment'
@@ -197,6 +198,19 @@
     const p = state.projects.find(x => x.records.some(q => q.ref === r.ref && q.municipality === r.municipality)) || PeelDevNav.projectByKey(key);
     if (p) PeelDevNav.showDetail(p);
   }
+  // Dormant developments (js/phases.js dormantOf) are held aside, out of every count (the header and
+  // Growth totals, the layers and stage strip, the servicing demand all read state.projects), unless
+  // shown; their pages still open (PeelDevNav.projectByKey) and Find says how many are left out. The
+  // full build and the first-paint index both pass through here, so they agree.
+  function holdDormant() {
+    const all = state.projects, now = Date.now(), dorm = all.filter(p => P.dormantOf(p, now));
+    if (!state.showDormant && dorm.length) {
+      const out = new Set(dorm), keep = all.filter(p => !out.has(p));
+      Object.defineProperty(keep, 'secondUnits', { value: all.secondUnits, enumerable: false });
+      state.projects = keep;
+    }
+    Object.defineProperty(state.projects, 'dormant', { value: dorm, enumerable: false, configurable: true });
+  }
   function rebuild() {
     // Phase 6: while the startup index is serving first paint, stray rebuilds
     // (e.g. a source refresh racing the full snapshot) must not wipe it.
@@ -217,6 +231,7 @@
     state.projects = P.buildProjects(records, grouped ? { regroup: parts => TG.regroup(parts) } : {});
     state.treeGrouped = grouped;
     if (TC) TC.apply(state.projects);
+    holdDormant();
     // Old address keys → today's developments (js/phases.js keyAliases), worked out when first needed.
     if (TG && TG.setAliases) { const list = state.projects; TG.setAliases(() => P.keyAliases(list)); }
     migrateSavedKeys(grouped);
@@ -541,6 +556,7 @@
     indexPainted = true;
     if (typeof PeelDevNav !== 'undefined') PeelDevNav.SUBS.clear();
     state.projects = idx.projects.map(e => window.PeelSnapshotIndex.hydrate(e, idx));
+    holdDormant();
     PeelPlanAreas.tagProjects();
     state.auditInput = null;
     state.audit = null;

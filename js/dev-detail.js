@@ -428,7 +428,9 @@
     // Bundle 6: links in its file tree made by overlap only (low confidence): one tap to the tree.
     { const FT = root.PeelFileTree, d = FT && FT.of(p), n = d ? FT.summary(d).check : 0;
       if (n) out.push(`<button type="button" class="chip chip-link" data-tree-check title="Files linked to this development by overlap only: check them in Records › Files">${n} link${n === 1 ? '' : 's'} to check</button>`); }
-    if (st.stalled) out.push(chipGo(`Stalled ${st.years.toFixed(1)} yrs`, 'warn', { 'data-dev-hist': '' }, 'History: the last activity'));
+    const dm = P.dormantOf(p);
+    if (dm) out.push(chipGo(`Dormant ${dm.years.toFixed(1)} yrs`, 'warn', { 'data-dev-hist': '' }, `No activity for over ${dm.limit} years: ${App().state.showDormant ? 'included in the counts because dormant developments are shown' : 'left out of the counts (Find › include dormant)'}`));
+    else if (st.stalled) out.push(chipGo(`Stalled ${st.years.toFixed(1)} yrs`, 'warn', { 'data-dev-hist': '' }, 'History: the last activity'));
     if (st.works && st.works.gap) out.push(chipGo(`Needs planned main ${st.works.needBy}`, 'warn', { 'data-at': 'dca:timing' }, 'The DC work and its timing, in Capital'));
     if (f) {
       for (const s of f.sps) if (s.wet >= s.firm) out.push(chipGo(`${esc(psName(s.a))} ${Math.round(s.wet / s.firm * 100)}% of firm`, 'warn', { 'data-ss': s.a.id }, 'The pumping station: what loads it, and relief'));
@@ -525,7 +527,8 @@
   function devBriefHTML(p, st, f, part = 'overview', opts = {}) {
     const row = (k, body) => `<div class="b-row"><div class="b-k">${k}</div><div class="b-v">${body}</div></div>`;
     const status = `<p class="small">${st.why}</p>
-      ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no file event, permit or council item since ${fmtDate(new Date(st.lastAt))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}
+      ${(dm => dm ? `<p class="small why-stall"><strong>Dormant:</strong> no file event, permit or council item since ${fmtDate(new Date(dm.last))} (${dm.years.toFixed(1)} years, over the ${dm.limit} a development at this stage usually waits), so its homes are ${App().state.showDormant ? 'counted only because dormant developments are shown' : 'left out of every count unless dormant developments are included'}.</p>` : '')(P.dormantOf(p))}
+      ${st.stalled && !P.dormantOf(p) ? `<p class="small why-stall"><strong>Stalled:</strong> no file event, permit or council item since ${fmtDate(new Date(st.lastAt))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}
       ${(x => x && x.kind !== 'info' ? `<p class="small why-${x.kind}-t">${esc(x.text)} <span class="muted">· ${esc(x.files[0])}</span></p>` : '')(st.sig.find(x => x.main))}
       ${p.phase === 'cancelled' ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}`;
     if (part === 'overview') return `<section class="brief" data-info="dev-brief">

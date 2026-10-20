@@ -148,6 +148,15 @@
   // The point itself and 8 points 40 m around it (degrees of latitude; longitude scaled by latitude).
   const NEAR_DEG = 40 / 110574;
   const NEAR_STEPS = [[0, 0], [1, 0], [-1, 0], [0, 1], [0, -1], [0.7, 0.7], [-0.7, 0.7], [0.7, -0.7], [-0.7, -0.7]];
+  // A file number written in another file's description ("Further to the approval of SPA-2024-0144",
+  // "Revision to SP 19/140", "PAC file PRE-2022-0022", "Related file No. OZS-2020-0004"): the
+  // municipalities' own prefixes, then the number as each writes it.
+  const FILE_NO = /\b(?:SPA|SPM|SPI|SPR|SP|OZS|OZ\/OPA|OZ|OPA|PRE|DPC|DPS|21T-M|21T|21CDM-M|21CDM|CDM|RZ|POPA|C\d{2}[EW]\d{2}|T\d{2}[EW]\d{2}|CI)[\s\-\/]*\d[\d\s\-\/.]{1,14}/gi;
+  // What the words around the number say about the two files (checked on the 130 references in the
+  // 2026-10-19 data: docs/redesign design note, "Files that name another file").
+  const REF_MAX_M = 600;
+  const REF_OTHER = /similar to|adjacent|neighbou?r|supports?\b|expansion|phase\s*\d|separate application|other site/i;
+  const REF_REPLACES = /previous (?:site plan )?application|replac\w* (?:the )?(?:previous|earlier|original|former|expired) (?:site plan |spa |application|file)|new (?:spa|application) is required|same proposal|expired|re-?submi|supersed|previously known as|previous files/i;
   function yearOf(ref) {
     const s = String(ref || '');
     let m = s.match(/(?:^|\D)(19[89]\d|20\d\d)(?:\D|$)/);
@@ -397,13 +406,53 @@
       if (a.municipality !== b.municipality) { if (best >= T.CONTAIN) flags.crossMuni.push({ a: a.refs[0], b: b.refs[0], overlap: +best.toFixed(2) }); continue; }
       ev.push({ i, j, a, b, ...o, addr, best });
     }
+    // 4·. Files that name another file by number (applied after 4c, below): read before the land
+    // links so a file placed by its own words is never joined to another proposal by overlap.
+    flags.references = [];
+    const idIx = new Map(nodes.map((n, i) => [n.id, i]));
+    const refParent = new Map(), refReplaces = [];   // child → { pi, rule, revises } · [newer, the earlier it replaces]
+    nodes.forEach((n, ci) => {
+      if (n.cancelled || n.policy) return;
+      const seen = new Set();
+      for (const r of n.records) {
+        const d = String(r.description || '');
+        for (const m of d.matchAll(FILE_NO)) {
+          const t = P.canonRef(m[0].replace(/[\s.\-\/]+$/, '')).split('|');
+          let ti = -1;
+          for (let k = t.length; k >= 2 && ti < 0; k--) { const j = idIx.get(`${n.municipality}|${t.slice(0, k).join('|')}`); if (j != null && j !== ci) ti = j; }
+          if (ti < 0 || seen.has(ti) || nodes[ti].policy) continue;
+          seen.add(ti);
+          // Only files on one site: SP18-041.000 was "converted from PRE18.024" for its fee, a
+          // pre-consultation 12 km away.
+          if (nodes[ti].lat != null && n.lat != null && Math.hypot((nodes[ti].lng - n.lng) * 111320 * Math.cos(n.lat * Math.PI / 180), (nodes[ti].lat - n.lat) * 110574) > REF_MAX_M) { flags.references.push({ file: n.refs[0], names: nodes[ti].refs[0], kind: 'too far apart' }); continue; }
+          const o = nodes[ti], near = d.slice(Math.max(0, m.index - 80), m.index + m[0].length + 40);
+          const kind = REF_OTHER.test(near) ? 'other' : n.role === 'precon' || o.role === 'precon' ? 'precon' : REF_REPLACES.test(near) ? 'replaces' : 'revises';
+          flags.references.push({ file: n.refs[0], names: o.refs[0], kind });
+          if (kind === 'other') continue;
+          if (kind === 'precon') { const [c, p] = n.role === 'precon' ? [ci, ti] : [ti, ci]; if (nodes[p].role !== 'precon' && !refParent.has(c)) refParent.set(c, { pi: p, rule: 'names its pre-consultation' }); continue; }
+          if (kind === 'replaces') {
+            // The earlier file is history: superseded, in this one's tree, not counted.
+            if (!(o.date0 != null && n.date0 != null && o.date0 > n.date0)) refReplaces.push([ci, ti]);
+            continue;
+          }
+          // A revision names an earlier file (a later one it names is another proposal); a condominium
+          // names its site plan; a site plan names its rezoning. A rezoning naming a site plan doesn't
+          // sit under it.
+          if (o.date0 != null && n.date0 != null && o.date0 > n.date0 + YEAR && n.role !== 'condo') continue;
+          if (LEVEL[n.role] < LEVEL[o.role] || refParent.has(ci)) continue;
+          refParent.set(ci, { pi: ti, rule: 'names the file it revises', revises: n.role === o.role });
+        }
+      }
+    });
     // 4a. Same land: use + land division (the brief), use + site plan with no draft plan (assumption),
     // and two site plans on the same land with the same count or "revision" wording (the app's
     // current merge rule, kept so a resubmission isn't counted twice).
     const parent = new Array(nodes.length).fill(-1), same = new Map();
     const uf = nodes.map((_, i) => i), find = x => (uf[x] === x ? x : (uf[x] = find(uf[x]))), join = (x, y) => { uf[find(x)] = find(y); };
     const REVISES = /revis|minor|previously approved|amend\w* (to )?(the )?(approved|existing)|re-?submi|update[sd]? to/i;
+    const revisionPairs = [];   // [minor revision, the full site plan it revises] on the same land
     for (const e of ev) {
+      if (refParent.has(e.i) || refParent.has(e.j)) continue;
       const { a, b } = e, roles = new Set([a.role, b.role]);
       const mutual = e.point ? 1 : Math.min(e.ab, e.ba);
       let rule = null;
@@ -414,7 +463,7 @@
       else if (mutual >= T.SAME && a.role === b.role && (a.role === 'use' || a.role === 'land_division')) rule = 'same land: two files of the same kind';
       else if (a.role === 'site_plan' && b.role === 'site_plan' && mutual >= T.SAME) {
         const rev = (a.units && a.units === b.units) || a.minor || b.minor || a.records.concat(b.records).some(r => REVISES.test(r.description || ''));
-        if (rev) rule = 'same land: site plan revision';
+        if (rev) { rule = 'same land: site plan revision'; if (a.minor !== b.minor) revisionPairs.push(a.minor ? [e.i, e.j] : [e.j, e.i]); }
         else {
           // Different counts on the same land: phases, a resubmission, or a rebuild of an old site?
           const v = sameLandVerdict(a, b);
@@ -488,10 +537,49 @@
     });
     function rootOf(i) { const seen = new Set(); let k = i; while (parent[k] >= 0 && !seen.has(k)) { seen.add(k); k = parent[k]; } return find(k); }
 
+    // 4c'. A file that names another file by number is tied to it as its words say, ahead of land
+    // overlap: a revision or amendment sits under the file it names (and repeats its count, never adds
+    // to it); a file that replaces an earlier application supersedes it (the earlier one is history,
+    // not counted, in the same development); a pre-consultation sits under its formal file; "similar
+    // to", "adjacent", "Phase 1" tie nothing. Then a minor / limited site plan on the same land as a
+    // full one sits under it (10194 Heart Lake Rd: limited SPA-2026-0045 under full SPA-2024-0144).
+    const ancestorOf = (a, b) => { const seen = new Set(); for (let k = parent[b]; k >= 0 && !seen.has(k); k = parent[k]) { if (k === a) return true; seen.add(k); } return false; };
+    const reparent = (ci, pi, rule) => {
+      if (ci === pi || ancestorOf(ci, pi)) return false;
+      const c = nodes[ci], p = nodes[pi];
+      for (let k = links.length - 1; k >= 0; k--) if (links[k].type === 'parent' && links[k].child === c.id) links.splice(k, 1);
+      parent[ci] = pi;
+      links.push({ type: 'parent', rule, child: c.id, parent: p.id, overlap: null, point: false, addr: false, order: dateOrder(c, p), confidence: 'high' });
+      return true;
+    };
+    for (const [ci, x] of refParent) if (reparent(ci, x.pi, x.rule) && x.revises) nodes[ci].revises = x.pi;
+    for (const [ci, ti] of refReplaces) {
+      const n = nodes[ci], o = nodes[ti];
+      o.superseded = o.superseded || 'replaced'; join(ti, ci);
+      links.push({ type: 'sibling', rule: 'names the earlier application it replaces', a: n.id, b: o.id, overlap: null, point: false, addr: false, order: 'n/a', confidence: 'high' });
+    }
+    for (const [mi, fi] of revisionPairs) {
+      const m = nodes[mi], f = nodes[fi];
+      if (parent[mi] >= 0 || m.revises != null || f.cancelled || (m.date0 != null && f.date0 != null && m.date0 < f.date0)) continue;
+      if (reparent(mi, fi, 'minor site plan revising the full one on its land')) m.revises = fi;
+    }
+
     // 4d. Trees: siblings join, parents join; the root is the top of the containment.
     nodes.forEach((n, i) => { if (parent[i] >= 0) join(i, parent[i]); });
     const trees = new Map();
     nodes.forEach((n, i) => { const r = find(i); if (!trees.has(r)) trees.set(r, { id: n.id, nodes: [] }); trees.get(r).nodes.push(i); });
+    // The main file (each tree's first node): when it is a minor, cancelled or superseded file or a
+    // revision, the best top-level file instead: a full plan, then approved, then the larger count,
+    // then the earlier. Otherwise kept as it was, so developments keep their keys.
+    const weak = n => n.cancelled || !!n.superseded || n.minor || n.revises != null;
+    for (const t of trees.values()) {
+      const tops = t.nodes.filter(i => !(parent[i] >= 0));
+      const first = t.nodes[0];
+      if (!tops.length || !weak(nodes[first])) continue;
+      const best = tops.slice().sort((a, b) => weak(nodes[a]) - weak(nodes[b]) || approvedNode(nodes[b]) - approvedNode(nodes[a]) || (nodes[b].units || 0) - (nodes[a].units || 0) || (nodes[a].date0 || 0) - (nodes[b].date0 || 0))[0];
+      if (best === first) continue;
+      t.nodes.splice(t.nodes.indexOf(best), 1); t.nodes.unshift(best); t.id = nodes[best].id;
+    }
     // Permits: progress only — under the smallest file whose boundary holds the point, else the same address.
     const permitOf = new Map();
     if (permits.length) {
@@ -550,7 +638,11 @@
     function count(i, depth = 0) {
       if (depth > 12) return { units: own(i), basis: 'depth limit', parts: ownPart(i) };
       const n = nodes[i];
-      const ch = (kids.get(i) || []).filter(k => nodes[k].role !== 'condo' && nodes[k].role !== 'precon' && !nodes[k].cancelled);
+      // A revision repeats the count of the file it revises: never added to it (two revisions of a
+      // 200-home plan are 200 homes), taken only when the file itself states none.
+      const revs = (kids.get(i) || []).filter(k => nodes[k].revises === i && !nodes[k].cancelled);
+      const ch = (kids.get(i) || []).filter(k => nodes[k].role !== 'condo' && nodes[k].role !== 'precon' && !nodes[k].cancelled && nodes[k].revises !== i);
+      if (!ch.length && revs.length && !(own(i) > 0)) { const k = revs.slice().sort((a, b) => own(b) - own(a))[0]; if (own(k) > 0) return { units: own(k), basis: `the revision ${nodes[k].refs[0]} (the file it revises states no count)`, parts: ownPart(k) }; }
       const ownBasis = n.units > 0 || !looked(n) || !(looked(n).units > 0) ? 'own count' : `found online: ${looked(n).source}`;
       if (!ch.length) return { units: own(i), basis: ownBasis, parts: ownPart(i) };
       const sub = ch.map(k => ({ k, ...count(k, depth + 1) }));
