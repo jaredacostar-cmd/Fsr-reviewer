@@ -51,6 +51,13 @@ jobs:
       - name: Build snapshot
         run: node scripts/build-snapshot.js --out data
 
+      # DC servicing gate: which developments have applied for water / wastewater servicing
+      # (site servicing permits, data/servicing-permits.json). A failure keeps last week's file.
+      - name: DC servicing gate
+        continue-on-error: true
+        timeout-minutes: 5
+        run: node scripts/build-dc-gate.js --data data
+
       # Secondary plans, MTSAs and the 2021 Census baseline change rarely; a failure keeps
       # last week's file.
       - name: Build areas and census baseline
@@ -151,7 +158,7 @@ jobs:
           node scripts/data-check.js --refresh-json data/refresh.json --check /tmp/check.json
           git config user.name "peel-snapshot-bot"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/snapshot.json data/history.json data/areas.json data/das.json data/das-2016.json data/council.json data/council-decisions.json data/fsr.json data/tree-counts.json data/capital.json data/capital-links-audit.json data/eas.json data/eas-review.csv data/address-points.json data/refresh.json
+          git add data/snapshot.json data/history.json data/servicing-permits.json data/dc-gate.json data/areas.json data/das.json data/das-2016.json data/council.json data/council-decisions.json data/fsr.json data/tree-counts.json data/capital.json data/capital-links-audit.json data/eas.json data/eas-review.csv data/address-points.json data/refresh.json
           if git diff --cached --quiet; then
             echo "No changes."
           else
