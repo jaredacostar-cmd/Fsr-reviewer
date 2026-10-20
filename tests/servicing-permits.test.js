@@ -164,3 +164,16 @@ test('order: a minor site plan for what is already there does not start the cloc
   assert.equal(r.bucket, 'none');
   assert.match(r.outOfOrder[0].reason, /OZ 23\/001/);
 });
+
+test('order: in a block of plans, a permit is held to the plan it sits in', () => {
+  const sq = (x0, y0) => [[[x0, y0], [x0 + 0.001, y0], [x0 + 0.001, y0 + 0.001], [x0, y0 + 0.001], [x0, y0]]];
+  const a = { ...app('21T-19001', 'Draft plan of subdivision', '2019-03-01'), poly: sq(-79.701, 43.699) };
+  const b = { ...app('SP 24-15', 'Site plan', '2024-05-06'), poly: sq(-79.6995, 43.699) };
+  const p = project({ siteRings: [[[-79.702, 43.698], [-79.698, 43.698], [-79.698, 43.701], [-79.702, 43.701], [-79.702, 43.698]]], records: [a, b] });
+  const inA = svc({ applied: '2022-06-20', lat: 43.6995, lng: -79.7005 });
+  const inB = svc({ applied: '2022-06-20', lat: 43.6995, lng: -79.699 });
+  assert.equal(G.gate([p], [inA])[0].bucket, 'counted', 'in the 2019 plan: in order');
+  const [r] = G.gate([p], [inB]);
+  assert.equal(r.bucket, 'none', 'in the 2024 plan: before it');
+  assert.match(r.outOfOrder[0].reason, /before the plan it sits in \(SP 24-15 2024-05-06\)/);
+});

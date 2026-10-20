@@ -172,40 +172,63 @@
   }
 
   // ---- In the development's file tree (js/file-tree.js) -----------------------------------------
-  // Each linked site servicing permit sits under the planning file it follows: the latest site plan
-  // (else any formal file) filed no later than GRACE_DAYS after the permit, else the root file. The
-  // permits left out (filed before the files) go after the tree, with the site's history.
+  // The permits under the planning file they follow, in date order: each linked site servicing permit,
+  // then the building permits as one group per file. A permit goes under the file whose land holds it
+  // and was filed by then (GRACE_DAYS for a site servicing permit, which can come with the site plan);
+  // without a boundary, the latest site plan (else formal file) filed by then; else the root file.
+  // Permits left out (filed before the files) follow the tree's history.
   const GRACE_MS = 90 * 864e5;
+  const pip = (x, y, rings) => { let inside = false; for (const r of rings || []) for (let i = 0, j = r.length - 1; i < r.length; j = i++) { const [xi, yi] = r[i], [xj, yj] = r[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside; } return inside; };
+  const isSvcPermit = r => { const SPm = root.PeelServicingPermits; return SPm ? !!SPm.classify(r) : /^(DRAIN|PLUM)/i.test(String(r.ref || '')) || /site serv|septic|private sewage/i.test(`${r.type} ${r.description}`); };
   function treeOpts(p, d) {
     const row = rowOf(p), FT = root.PeelFileTree;
-    if (!row || !d || !FT) return {};
+    if (!d || !FT || !p) return {};
     const PH = root.PeelPhases, canon = PH && PH.canonRef ? PH.canonRef : (x => x);
-    const firstOf = new Map();
+    const recOf = new Map();
     for (const r of p.records || []) {
       if (r.kind !== 'application' || !r.events || !r.events.length) continue;
       const t = Math.min(...r.events.map(e => +new Date(e.date)));
-      for (const k of [r.ref, canon(r.ref)]) if (k && !(firstOf.get(k) <= t)) firstOf.set(k, t);
+      for (const k of [r.ref, canon(r.ref)]) if (k && !(recOf.has(k) && recOf.get(k).t <= t)) recOf.set(k, { t, poly: r.poly || null });
     }
     const nodes = FT.build(d).all, FORMAL = new Set([0, 1, 2, 4]);   // subdivision, OPA / zoning, site plan, block plan
-    const placeOf = e => {
-      const t = Date.parse(`${e.applied}T00:00:00Z`) + GRACE_MS;
-      const ok = nodes.filter(n => FORMAL.has(n.role) && firstOf.has(n.ref) && firstOf.get(n.ref) <= t);
-      const pick = list => list.sort((a, b) => firstOf.get(b.ref) - firstOf.get(a.ref))[0];
-      return (pick(ok.filter(n => n.role === 2)) || pick(ok) || nodes[0] || {}).ref;
+    const placeOf = (lat, lng, t) => {
+      const ok = nodes.filter(n => FORMAL.has(n.role) && recOf.has(n.ref) && recOf.get(n.ref).t <= t);
+      const latest = list => list.sort((a, b) => recOf.get(b.ref).t - recOf.get(a.ref).t)[0];
+      const holds = lat != null ? ok.filter(n => recOf.get(n.ref).poly && pip(lng, lat, recOf.get(n.ref).poly)) : [];
+      return (latest(holds.filter(n => n.role === 2)) || latest(holds) || latest(ok.filter(n => n.role === 2)) || latest(ok) || nodes[0] || {}).ref;
     };
-    const at = new Map();
-    for (const e of (row.evidence || []).filter(x => x.kind === 'site' && x.applied)) { const r = placeOf(e); (at.get(r) || at.set(r, []).get(r)).push(e); }
+    const at = new Map(), put = (ref, item) => (at.get(ref) || at.set(ref, []).get(ref)).push(item);
+    const tOf = s => Date.parse(`${s}T00:00:00Z`);
+    for (const e of ((row && row.evidence) || []).filter(x => x.kind === 'site' && x.applied)) put(placeOf(e.lat, e.lng, tOf(e.applied) + GRACE_MS), { kind: 'ssp', t: tOf(e.applied), e });
+    // Building permits (not the servicing ones): issued, else applied.
+    const bpsAt = new Map();
+    for (const r of p.records || []) {
+      if (r.kind !== 'permit' || r.phase === 'cancelled' || isSvcPermit(r) || !r.events || !r.events.length) continue;
+      const ev = r.events.find(e => e.phase === 'permit') || r.events[0], t = +new Date(ev.date);
+      const ref = placeOf(r.lat, r.lng, t); (bpsAt.get(ref) || bpsAt.set(ref, []).get(ref)).push({ r, t, issued: ev.phase === 'permit' });
+    }
+    for (const [ref, list] of bpsAt) put(ref, { kind: 'bp', t: Math.min(...list.map(x => x.t)), list });
     const SVC = { water: 'water', wastewater: 'wastewater', storm: 'storm only', 'not stated': 'pipes not stated' };
     const term = `${termOf(p.municipality)} permit`;
+    const ymd = t => new Date(t).toISOString().slice(0, 10);
     const line = (e, cls, note) => `<div class="tr-row tr-ssp ${cls}"><span class="dcg-tdot" aria-hidden="true"></span><div><span class="tr-ref">${esc(e.ref)}</span><span class="tr-type">${esc(term)}${e.services && e.services.length ? ` · ${esc(e.services.map(s => SVC[s] || s).join(' + '))}` : ''}</span>${note ? `<span class="tr-why">${note}</span>` : ''}</div><div class="tr-r">${esc(e.applied || '')}${e.issued ? `<small class="tr-why">issued ${esc(e.issued)}</small>` : ''}</div></div>`;
-    const after = n => {
-      const list = (at.get(n.ref) || []).slice().sort((a, b) => String(a.applied).localeCompare(String(b.applied)));
-      const f0 = firstOf.get(n.ref), day0 = f0 ? new Date(f0).toISOString().slice(0, 10) : '';
-      // (filed before this file: linked through an earlier file of the development; say so, in order)
-      const before = e => (day0 && e.applied < day0 ? ` · filed before ${esc(n.ref)} (${day0})` : '');
-      return list.length ? `<div class="tr-kids">${list.map(e => line(e, e.existing || (e.services || []).every(s => s === 'storm') ? 'tr-ssp-off' : '', (e.existing ? 'for a building already there: not counted' : (e.services || []).every(s => s === 'storm') ? 'storm only: local servicing, not counted' : 'site servicing applied: counts toward the DC analysis') + before(e))).join('')}</div>` : '';
+    const bpGroup = list => {
+      list.sort((a, b) => a.t - b.t);
+      const units = list.reduce((s, x) => s + (x.r.units > 0 ? x.r.units : 0), 0), first = ymd(list[0].t), last = ymd(list[list.length - 1].t);
+      const rows = list.slice(0, 40).map(x => `<div class="tr-bp"><span class="tr-ref">${esc(x.r.ref || 'permit')}</span><span class="tr-type">${esc(x.r.type || '')}</span><span class="tr-bpr">${x.r.units > 0 ? `${x.r.units} unit${x.r.units === 1 ? '' : 's'} · ` : ''}${x.issued ? 'issued' : 'applied'} ${esc(ymd(x.t))}</span></div>`).join('');
+      return `<details class="tr-row tr-bps"><summary><span class="dcg-bdot" aria-hidden="true"></span><span><b>${list.length}</b> building permit${list.length === 1 ? '' : 's'}${units ? ` · ${units.toLocaleString('en-CA')} units` : ''}</span><span class="tr-r">${first === last ? esc(first) : `${esc(first)} to ${esc(last)}`}</span></summary><div class="tr-bpl">${rows}${list.length > 40 ? `<p class="small muted">+ ${list.length - 40} more in History › Permits</p>` : ''}</div></details>`;
     };
-    const ooo = row.outOfOrder || [];
+    const after = n => {
+      const items = (at.get(n.ref) || []).slice().sort((a, b) => a.t - b.t);
+      if (!items.length) return '';
+      const f0 = recOf.has(n.ref) ? ymd(recOf.get(n.ref).t) : '';
+      const sspHTML = e => line(e, e.existing || (e.services || []).every(s => s === 'storm') ? 'tr-ssp-off' : '',
+        (e.existing ? 'for a building already there: not counted' : (e.services || []).every(s => s === 'storm') ? 'storm only: local servicing, not counted' : 'site servicing applied: counts toward the DC analysis')
+        // (within the grace: filed alongside this file; earlier: linked through an earlier file of the development)
+        + (f0 && e.applied < f0 ? (tOf(e.applied) + GRACE_MS >= tOf(f0) ? ` · filed with ${esc(n.ref)} (${f0})` : ` · filed before ${esc(n.ref)} (${f0}); linked through an earlier plan of this development`) : ''));
+      return `<div class="tr-kids">${items.map(x => (x.kind === 'ssp' ? sspHTML(x.e) : bpGroup(x.list))).join('')}</div>`;
+    };
+    const ooo = (row && row.outOfOrder) || [];
     const foot = ooo.length ? `<details class="tr-same"><summary>+ ${ooo.length} ${esc(term)}${ooo.length === 1 ? '' : 's'} filed before the files: for what was on the land, not linked</summary><div class="tr-kids">${ooo.slice().sort((a, b) => String(a.applied).localeCompare(String(b.applied))).map(o => line(o, 'tr-ssp-off', esc(o.reason))).join('')}</div></details>` : '';
     return { after, foot };
   }

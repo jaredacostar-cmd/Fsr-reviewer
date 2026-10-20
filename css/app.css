@@ -3568,3 +3568,12 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .tr-ssp-off .tr-ref { color: var(--text-secondary); }
 .dcg-tdot { width: 10px; height: 10px; border-radius: 2px; background: var(--pnl-room); align-self: start; margin: 4px 0 0 3px; transform: rotate(45deg); }
 .tr-ssp-off .dcg-tdot { background: transparent; border: 1.5px solid var(--text-muted); }
+/* Building permits in the file tree, one group per file (js/dc-gate.js treeOpts) */
+.tr-bps { display: block; }
+.tr-bps > summary { display: grid; grid-template-columns: 18px 1fr auto; column-gap: var(--space-2); align-items: baseline; cursor: pointer; list-style: none; }
+.tr-bps > summary::-webkit-details-marker { display: none; }
+.dcg-bdot { width: 10px; height: 10px; border-radius: 2px; border: 1.5px solid var(--pnl-stage); background: color-mix(in srgb, var(--pnl-stage) 35%, transparent); align-self: start; margin: 4px 0 0 3px; }
+.tr-bpl { margin: 4px 0 0 26px; display: grid; gap: 2px; font-size: var(--fs-1); max-height: 260px; overflow-y: auto; }
+.tr-bp { display: grid; grid-template-columns: auto 1fr auto; gap: 8px; align-items: baseline; }
+.tr-bp .tr-ref { font-weight: 500; text-decoration: none; cursor: default; }
+.tr-bpr { color: var(--text-secondary); white-space: nowrap; }

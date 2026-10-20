@@ -56,6 +56,8 @@ function stepsOf(p) {
       if (st !== 'precon' && st !== 'condo' && P.isMinorFile(r)) continue;
       const k = st === 'precon' ? 'precon' : st === 'condo' ? 'condo' : 'formal';
       if (first) put(k, first.date, r.ref, k === 'formal' ? { type: r.type || '' } : undefined);
+      // Each formal file with its land, so a permit is held to the plan it sits in (a block has several).
+      if (first && k === 'formal' && r.poly) (out.formals || (out.formals = [])).push({ ref: r.ref, d: day(first.date), poly: r.poly });
       for (const e of r.events || []) if (e.phase === 'approved' && k === 'formal') put('approved', e.date, r.ref);
     } else if (r.kind === 'permit' && !SP.classify(r)) {
       const iss = (r.events || []).find(e => e.phase === 'permit') || first;
@@ -68,6 +70,10 @@ function stepsOf(p) {
 /** Does a site servicing permit fit the development's order? → null (fits) or the reason it doesn't. */
 function orderCheck(s, steps) {
   if (!s.applied) return null;
+  // The plan the permit sits in: the formal files whose land holds it (the earliest of them). A block
+  // of several plans holds each permit to its own plan, not to the block's earliest file.
+  const here = (steps.formals || []).filter(f => s.lat != null && P.pointInRings(s.lng, s.lat, f.poly)).sort((a, b) => a.d.localeCompare(b.d))[0];
+  if (here) return s.applied >= minus(here.d, GRACE_DAYS) ? null : `applied ${s.applied}, before the plan it sits in (${here.ref} ${here.d}): for what was on the land before`;
   if (steps.formal) return s.applied >= minus(steps.formal.d, GRACE_DAYS) ? null : `applied ${s.applied}, before the first formal application (${steps.formal.ref} ${steps.formal.d}): for what was on the land before`;
   if (steps.bp) return s.applied >= minus(steps.bp.d, PERMIT_LEAD_DAYS) ? null : `applied ${s.applied}, more than 2 years before the first building permit (${steps.bp.ref} ${steps.bp.d})`;
   if (steps.condo) return null;
@@ -182,7 +188,7 @@ function gate(projects, permits) {
       // A septic permit on a larger development: probably the existing house; check before relying on it.
       septicReview: (septic.length || ownSeptic) && bucket !== 'private' ? true : undefined,
       // The development's steps in date order, with the linked site servicing permit in its place.
-      steps: [...Object.values(steps), ...(first ? [{ k: 'ssp', d: first, ref: (regional.find(([s]) => s.applied === first) || [{}])[0].ref || '' }] : [])]
+      steps: [...Object.values(steps).filter(x => x && x.k), ...(first ? [{ k: 'ssp', d: first, ref: (regional.find(([s]) => s.applied === first) || [{}])[0].ref || '' }] : [])]
         .sort((a, b) => a.d.localeCompare(b.d)).map(x => ({ ...x, label: STEP_LABEL[x.k] })),
       // Permits on the site that don't fit the order, and why (not linked).
       outOfOrder: [...why.entries()].filter(([, w]) => w).map(([s, w]) => ({ ref: s.ref, src: s.source || undefined, applied: s.applied, issued: s.issued, lat: s.lat, lng: s.lng, reason: w })),
