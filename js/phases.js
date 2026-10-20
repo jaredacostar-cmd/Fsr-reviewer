@@ -318,8 +318,11 @@
   // ---- File numbers -----------------------------------------------------------
   // One file appears under several spellings: "SP 22-60", "SP 22 60", "SP 22/060 W9";
   // permits carry stage suffixes: "BP 3NEW 17-9012 CON / CR1 / FTR / COM".
+  // Mississauga's issued-permit feed also adds a unit suffix that its growth-management feed
+  // leaves off: "SEC UNIT 24-3708 ARU" there is "SEC UNIT 24 3708" here (one permit; ARU / SU an
+  // additional or second unit, SUP a partial superstructure permit).
   // The canonical key drops separators, leading zeros, ward and stage suffixes.
-  const REF_SUFFIX = /^(CON|COM|FTR|FDN|CR\d*|R\d+|REV\d*|SS|W\d{1,2})$/;
+  const REF_SUFFIX = /^(CON|COM|FTR|FDN|CR\d*|R\d+|REV\d*|SS|W\d{1,2}|ARU|SU|SUP)$/;
   function canonRef(ref) {
     let t = String(ref || '').toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean);
     if (!t.length) return '';
@@ -338,7 +341,8 @@
   // type with no such prefix carries its stage. Every other file is its canonical number.
   const CALEDON_TYPE = { 'official plan amendment': 'POPA', 'zoning by-law amendment': 'RZ', 'site plan': 'SPA' };
   function fileId(r, canon = canonRef) {
-    const fk = r.fileKey || canon(r.ref);
+    // (A stored fileKey is canonical again: snapshots built before a suffix was added keep it.)
+    const fk = canon(r.fileKey || r.ref);
     if (!fk || r.municipality !== 'Caledon' || r.kind !== 'application' || !/^\d{4}\|\d+$/.test(fk)) return fk;
     return `${CALEDON_TYPE[String(r.type || '').trim().toLowerCase()] || String(r.stage || stageOf(r)).toUpperCase()}|${fk}`;
   }
@@ -1726,6 +1730,10 @@
       for (const f of ['address', 'type', 'description', 'units', 'gfa', 'statusRaw', 'unitMix', 'poly', 'scope', 'stage']) if (!prev[f] && r[f]) { prev[f] = r[f]; if (f === 'units') prev.unitsFromText = !!r.unitsFromText; }   // (a count read from the text stays marked as one)
       // A unit count from a data field beats one read from text.
       if (prev.unitsFromText && r.units > 0 && !r.unitsFromText) { prev.units = r.units; prev.unitsFromText = false; }
+      // The same permit in two feeds (Mississauga's issued and growth-management permits): the larger
+      // stated count, whichever feed loaded first ("BP 9NEW 24-4075 ARU" 10 units; the other feed
+      // splits it into rows of 2 and 8).
+      else if (r.sourceId !== prev.sourceId && r.units > prev.units && !r.unitsFromText && !prev.unitsFromText) prev.units = r.units;
       if (prev.minor && !r.minor) prev.minor = false;
       prev.props = { ...(r.props || {}), ...(prev.props || {}) };
       prev.newBuild = prev.newBuild || r.newBuild;
