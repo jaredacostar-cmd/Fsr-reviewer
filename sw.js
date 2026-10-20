@@ -91,6 +91,7 @@ const SHELL_ASSETS = [
   'js/dev-verdict.js',
   'js/developments-tab.js',
   'js/devscope.js',
+  'js/dev-gantt.js',
   'js/devtab.js',
   'js/profile-core.js',
   'js/elevation.js',

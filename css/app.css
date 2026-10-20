@@ -3552,3 +3552,32 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .dcg-note { margin-bottom: 0; }
 .dcg-pin { filter: drop-shadow(0 0 2px rgba(0,0,0,.4)); }
 .dcg-tag { color: var(--pnl-room); font-weight: 600; }
+
+/* ---- Applications and events: the development's Gantt chart (js/dev-gantt.js) ---- */
+.gantt { --gt-l: 9.5rem; display: grid; gap: 2px; font-size: var(--fs-1); margin: var(--space-2) 0; }
+.gt-row { display: grid; grid-template-columns: var(--gt-l) minmax(0, 1fr); gap: var(--space-2); align-items: center; min-height: 18px; }
+.gt-l { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-secondary); }
+.gt-l small { font-size: var(--fs-1); }
+.gt-t { position: relative; height: 14px; background: var(--surface-2); border-radius: 3px; }
+.gt-axis .gt-t { background: none; height: 16px; }
+.gt-yr { position: absolute; top: 0; transform: translateX(-50%); color: var(--text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.gt-yr:first-child { transform: none; }
+.gt-head { margin-top: var(--space-2); }
+.gt-head .gt-l { color: var(--text-primary); font-weight: 500; overflow: visible; }
+.gt-head .gt-t { background: none; height: 2px; }
+.gt-stage .gt-t, .gt-council .gt-t { height: 16px; }
+.gt-grid { position: absolute; top: 0; bottom: 0; width: 1px; background: var(--border); opacity: .6; }
+.gt-bar { position: absolute; top: 2px; bottom: 2px; background: var(--c); border-radius: 2px; }
+.gt-bar.open { opacity: .45; }
+.gt-tk { position: absolute; top: 0; bottom: 0; width: 2px; margin-left: -1px; background: var(--text-primary); opacity: .7; }
+.gt-group .gt-tk { width: 1px; margin-left: 0; opacity: .3; }
+.gt-cm { position: absolute; top: 50%; width: 10px; height: 10px; margin: -5px 0 0 -5px; padding: 0; border: 1.5px solid var(--surface-1); background: var(--text-primary); transform: rotate(45deg); cursor: pointer; }
+.gt-cm:hover, .gt-cm:focus-visible { background: var(--accent); outline: none; }
+.gt-now { position: absolute; top: -2px; bottom: -2px; width: 0; border-left: 1.5px dashed var(--text-secondary); z-index: 1; pointer-events: none; }
+.gt-legend { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); color: var(--text-secondary); margin: var(--space-1) 0; }
+.gt-legend span { display: inline-flex; align-items: center; gap: var(--space-1); }
+.gt-sw { display: inline-block; width: 14px; height: 10px; border-radius: 2px; background: var(--c); }
+.gt-sw-cm { width: 8px; height: 8px; border-radius: 0; background: var(--text-primary); transform: rotate(45deg); }
+.gt-sw-tk { width: 2px; height: 12px; background: var(--text-primary); opacity: .7; }
+.gt-sw-now { width: 0; height: 12px; border-left: 1.5px dashed var(--text-secondary); background: none; }
+@media (max-width: 480px) { .gantt { --gt-l: 6.5rem; } }

@@ -1164,6 +1164,7 @@
       ${statusBlockHTML(p, st)}
       ${filesHTML(p)}
       ${phaseBasisHTML(p)}
+      ${root.PeelDevGantt ? `<details class="sect" id="devtab-gantt" open><summary><h2 class="section-title" data-info="dev-gantt">Applications and events</h2><span class="muted small sect-sum">Gantt chart</span></summary>${partHTML(p, 'gantt')}</details>` : ''}
       ${devHistoryHTML(p, st)}`;
   }
   // Site: the constraint checklist (screening) first, then aerial check, ground elevation, storm
@@ -1407,6 +1408,7 @@
     if (part === 'ground') return `<div class="brief">${brow('Aerial check', '<div class="aerial" id="devtab-aerial"><p class="small muted">Comparing aerial photos…</p></div>')}${has ? row('Ground', 'devtab-ground', 'Looking up ground elevation…', 'ground') : ''}</div>`;
     if (part === 'files') return filesTreeHTML(p);
     if (part === 'history') return devHistoryHTML(p, statusOf(p));
+    if (part === 'gantt') return root.PeelDevGantt ? root.PeelDevGantt.html(p, { council: state() && state().council ? councilBriefs(p) : [] }) : '';
     // (How the stage was set, without its section wrapper: the stage chip opens it under the header)
     if (part === 'stage') return phaseBasisHTML(p).replace(/^\s*<details[^>]*>\s*<summary>[^]*?<\/summary>/, '').replace(/<\/details>\s*$/, '');
     return '';
@@ -1424,7 +1426,7 @@
   function fillParts(p, parts) {
     if (!hasDOM() || !p) return;
     liveKey = p.key;
-    if (parts.includes('about') || parts.includes('history')) ensureCouncil(p);
+    if (parts.includes('about') || parts.includes('history') || parts.includes('gantt')) ensureCouncil(p);
     if (parts.includes('site') && p.lat != null) { fillNetworks(p); fillConstraints(p); fillStormMains(p); }
     if (parts.includes('ground') && p.lat != null) { devAerial(p); fillGround(p); }
   }
