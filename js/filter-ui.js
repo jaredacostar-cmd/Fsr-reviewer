@@ -156,8 +156,16 @@
     const years = App().timeActive() ? (() => { const a = App().state.yearFrom ?? App().state.yearMin, b = App().state.yearTo ?? App().state.yearMax; return a === b ? `in ${a}` : `${a}–${b}`; })() : 'all years';
     const extra = activeFilters().length - (phaseFilterActive() ? 1 : 0) - (yearsFilterActive() ? 1 : 0) - (App().state.muni ? 1 : 0) - (App().state.search ? 1 : 0);
     // The result count first (SPEC §4), then what it is.
-    $('#f-showing').innerHTML = `<span class="find-count"><b>${fmtNum(App().state.filtered.length)}</b> developments</span> <span class="muted">${esc(what)} · ${esc(years)} · ${esc(App().state.muni || 'all of Peel')}${App().state.search ? ` · matching “${esc(App().state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''}</span> · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>`;
+    // Dormant developments held aside (js/phases.js dormantOf): how many, their homes, and the switch.
+    const dorm = App().state.projects.dormant || [], dHomes = dorm.reduce((t, p) => t + (p.units || 0), 0);
+    const dormLine = dorm.length ? ` · <button type="button" class="btn small link" data-dormant title="No file event, permit or council item for 3 years (approved, no building permit; pre-application) or 5 years (in review)">${App().state.showDormant ? `Including ${fmtNum(dorm.length)} dormant (${fmtNum(dHomes)} homes) · leave them out` : `${fmtNum(dorm.length)} dormant left out (${fmtNum(dHomes)} homes) · include`}</button>` : '';
+    $('#f-showing').innerHTML = `<span class="find-count"><b>${fmtNum(App().state.filtered.length)}</b> developments</span> <span class="muted">${esc(what)} · ${esc(years)} · ${esc(App().state.muni || 'all of Peel')}${App().state.search ? ` · matching “${esc(App().state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''}</span> · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>${dormLine}`;
   }
+  $('#f-showing').addEventListener('click', e => {
+    if (!e.target.closest('[data-dormant]')) return;
+    App().state.showDormant = !App().state.showDormant;
+    App().rebuild();   // (rebuild → applyFilters updates the share link)
+  });
   function renderFilterUI() {
     renderSectionSummaries();
     renderShowing();

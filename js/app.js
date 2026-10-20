@@ -55,6 +55,7 @@
     muni: '', kind: DEFAULT_KIND, search: '', newOnly: true,
     sp: [], mtsa: [], pz: [], dr: [], ss: null,   // pz / dr: water pressure zone and wastewater drainage area ids (data/servicing.json)   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
     minUnits: 0,   // unit growth filter: 0 = any, otherwise at least this many new units
+    showDormant: false,   // dormant developments (js/phases.js dormantOf) counted and shown, or held aside
     flags: DEFAULT_FLAGS(),   // flag filters, multi-select (see FLAG_TESTS)
     plant: '',                // receiving wastewater plant: '' | 'Lakeview' | 'Clarkson' | 'Inglewood'
     dwelling: '',             // dwelling type: '' | 'single' | 'town' | 'apartment'
@@ -217,6 +218,17 @@
     state.projects = P.buildProjects(records, grouped ? { regroup: parts => TG.regroup(parts) } : {});
     state.treeGrouped = grouped;
     if (TC) TC.apply(state.projects);
+    // Dormant developments (js/phases.js dormantOf) are held aside, out of every count, unless shown;
+    // their pages still open (PeelDevNav.projectByKey) and the filters say how many are left out.
+    {
+      const all = state.projects, now = Date.now(), dorm = all.filter(p => P.dormantOf(p, now));
+      if (!state.showDormant && dorm.length) {
+        const out = new Set(dorm), keep = all.filter(p => !out.has(p));
+        Object.defineProperty(keep, 'secondUnits', { value: all.secondUnits, enumerable: false });
+        state.projects = keep;
+      }
+      Object.defineProperty(state.projects, 'dormant', { value: dorm, enumerable: false, configurable: true });
+    }
     // Old address keys → today's developments (js/phases.js keyAliases), worked out when first needed.
     if (TG && TG.setAliases) { const list = state.projects; TG.setAliases(() => P.keyAliases(list)); }
     migrateSavedKeys(grouped);
