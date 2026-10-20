@@ -84,9 +84,41 @@ test('gate: a water / wastewater site permit inside the boundary counts', () => 
 test('gate: storm-only, cancelled and predating permits do not count', () => {
   assert.equal(G.gate([project()], [svc({ water: false, storm: true, regional: false })])[0].bucket, 'none');
   assert.equal(G.gate([project()], [svc({ status: 'cancelled' })])[0].bucket, 'none');
-  const [old] = G.gate([project()], [svc({ applied: '2020-01-01' })]);
-  assert.equal(old.bucket, 'none');
-  assert.equal(old.predated, 1);
+});
+
+// The order a file moves: pre-consultation → formal application → site servicing permit → building permit.
+const ev = (d, phase) => ({ date: new Date(`${d}T00:00:00Z`), phase });
+const withFiles = (...recs) => project({ records: recs });
+const app = (ref, type, d, more = []) => ({ kind: 'application', ref, type, address: '10 Main St', phase: 'review', events: [ev(d, 'inception'), ...more] });
+const bp = (ref, d) => ({ kind: 'permit', ref, type: 'Single Family Detached', address: '10 Main St', phase: 'permit', events: [ev(d, 'permit')] });
+
+test('order: a site servicing permit filed before the formal application is not linked', () => {
+  const p = withFiles(app('PRE-2022-0001', 'Pre-consultation', '2022-08-16'), app('OZS-2024-0001', 'Zoning by-law amendment', '2024-03-21'));
+  const [r] = G.gate([p], [svc({ applied: '2023-08-10' })]);
+  assert.equal(r.bucket, 'none');
+  assert.equal(r.outOfOrder.length, 1);
+  assert.match(r.outOfOrder[0].reason, /before the first formal application \(OZS-2024-0001 2024-03-21\)/);
+});
+
+test('order: filed with the site plan (within 90 days before) or after it, linked; steps in date order', () => {
+  const p = withFiles(app('SP 24-30', 'Site plan', '2024-03-01', [ev('2025-01-10', 'approved')]), bp('26-1', '2026-02-01'));
+  const [a] = G.gate([p], [svc({ applied: '2024-01-15' })]);
+  assert.equal(a.bucket, 'counted');
+  assert.deepEqual(a.steps.map(x => x.k), ['ssp', 'formal', 'approved', 'bp']);
+  const [b] = G.gate([p], [svc({ applied: '2023-09-01' })]);
+  assert.equal(b.bucket, 'permitNoSvc', '6 months before the site plan: not linked');
+});
+
+test('order: only a pre-consultation links no site servicing permit', () => {
+  const [r] = G.gate([withFiles(app('PRE-2016-0001', 'Pre-consultation', '2016-07-05'))], [svc({ applied: '2018-09-05' })]);
+  assert.equal(r.bucket, 'none');
+  assert.match(r.outOfOrder[0].reason, /only a pre-consultation/);
+});
+
+test('order: lots in a registered plan (building permits only) link a permit up to 2 years ahead', () => {
+  const p = withFiles(bp('26-2', '2025-06-01'));
+  assert.equal(G.gate([p], [svc({ applied: '2024-01-01' })])[0].bucket, 'counted');
+  assert.equal(G.gate([p], [svc({ applied: '2022-01-01' })])[0].bucket, 'permitNoSvc');
 });
 
 test('gate: existing-building servicing is listed for review, not counted', () => {
@@ -124,4 +156,37 @@ test('summary totals add up by bucket', () => {
   assert.equal(s.total.counted.units, 100);
   assert.equal(s.total.none.units, 5);
   assert.equal(s.byMunicipality.Brampton.counted.developments, 1);
+});
+
+test('order: a minor site plan for what is already there does not start the clock', () => {
+  const p = withFiles(app('SPM 19/091', 'Site plan minor', '2019-07-09'), app('OZ 23/001', 'Zoning by-law amendment', '2023-05-01'));
+  const [r] = G.gate([p], [svc({ applied: '2019-06-06' })]);
+  assert.equal(r.bucket, 'none');
+  assert.match(r.outOfOrder[0].reason, /OZ 23\/001/);
+});
+
+test('order: in a block of plans, a permit is held to the plan it sits in', () => {
+  const sq = (x0, y0) => [[[x0, y0], [x0 + 0.001, y0], [x0 + 0.001, y0 + 0.001], [x0, y0 + 0.001], [x0, y0]]];
+  const a = { ...app('21T-19001', 'Draft plan of subdivision', '2019-03-01'), poly: sq(-79.701, 43.699) };
+  const b = { ...app('SP 24-15', 'Site plan', '2024-05-06'), poly: sq(-79.6995, 43.699) };
+  const p = project({ siteRings: [[[-79.702, 43.698], [-79.698, 43.698], [-79.698, 43.701], [-79.702, 43.701], [-79.702, 43.698]]], records: [a, b] });
+  const inA = svc({ applied: '2022-06-20', lat: 43.6995, lng: -79.7005 });
+  const inB = svc({ applied: '2022-06-20', lat: 43.6995, lng: -79.699 });
+  assert.equal(G.gate([p], [inA])[0].bucket, 'counted', 'in the 2019 plan: in order');
+  const [r] = G.gate([p], [inB]);
+  assert.equal(r.bucket, 'none', 'in the 2024 plan: before it');
+  assert.match(r.outOfOrder[0].reason, /before the plan it sits in \(SP 24-15 2024-05-06\)/);
+});
+
+test('steps end at built: closed or final permits, dated where the city dates them', () => {
+  const done = (ref, iss, fin) => ({ ...bp(ref, iss), phase: 'completed', events: [ev(iss, 'permit'), ...(fin ? [ev(fin, 'completed')] : [])] });
+  const p = withFiles(app('SP 21-1', 'Site plan', '2021-01-01'), done('BP 1', '2022-06-01', '2024-04-24'), done('BP 2', '2022-07-01', '2024-05-01'), bp('BP 3', '2023-01-01'));
+  const [r] = G.gate([p], [svc({ applied: '2021-06-01' })]);
+  const b = r.steps.find(s => s.k === 'built');
+  assert.equal(b.label, 'Built: 2 of 3 building permits closed or final (first)');
+  assert.equal(b.d, '2024-04-24');
+  const q = withFiles(app('SP 21-2', 'Site plan', '2021-01-01'), done('BP 4', '2022-06-01'));
+  const [s] = G.gate([q], [svc({ applied: '2021-06-01' })]);
+  assert.equal(s.steps[s.steps.length - 1].k, 'built', 'undated: last');
+  assert.equal(s.steps[s.steps.length - 1].d, '');
 });

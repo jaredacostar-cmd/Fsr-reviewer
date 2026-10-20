@@ -46,3 +46,33 @@ test('wired in: header chip, filter select, share link, offline shell', () => {
   assert.match(src('js/share.js'), /set\('dg', App\(\)\.state\.dcgate\)/);
   assert.match(src('sw.js'), /'js\/dc-gate\.js',/);
 });
+
+test('stage bars: site servicing permit units per stage, stages unchanged', () => {
+  const WP = require('../js/ws-pages.js');
+  const devs = [{ key: 'a' }, { key: 'b' }, { p: { key: 'c' }, share: 0.5 }];
+  const L = { a: { layer: 'committed', parts: { committed: 100 }, toPermit: 100 }, b: { layer: 'proposed', parts: { proposed: 40 } }, c: { layer: 'committed', parts: { committed: 60 }, toPermit: 0 } };
+  const ofDev = p => L[p.key], moved = () => true;
+  const without = WP.stageRows(devs, ofDev, moved);
+  const withSsp = WP.stageRows(devs, ofDev, moved, p => p.key !== 'b');
+  assert.deepEqual(withSsp.rows.map(r => r.units), without.rows.map(r => r.units), 'the stages stay on building permits');
+  const by = k => withSsp.rows.find(r => r.key === k).ssp;
+  assert.equal(by('approved'), 100);
+  assert.equal(by('permitted'), 30, 'a split site counts its share');
+  assert.equal(by('proposed'), 0);
+  assert.equal(withSsp.ssp, 130);
+  assert.equal(without.ssp, null, 'no band when the permits are not loaded');
+  const html = WP.stageChartHTML({ ...withSsp, click: false }, 0);
+  assert.match(html, /100 with a site servicing permit/);
+  assert.match(html, /class="stg-ssp"/);
+});
+
+test('file tree: site servicing permits go under the file they follow, the rest after the history', () => {
+  const FT = require('../js/file-tree.js');
+  const d = { root: 'SP 24-15', u: 100, n: [['SP 24-15', 2, -1, '', 'h', 1, 100, 0, 'k1'], ['PRE-1', 5, 0, '', 'h', 1, 0, 0, 'k2']], c: [['SP 24-15', 100, 'stated']] };
+  const html = FT.treeHTML(d, null, { after: n => (n.ref === 'SP 24-15' ? '<i id="ssp-here"></i>' : ''), foot: '<i id="ssp-foot"></i>' });
+  assert.ok(html.indexOf('ssp-here') > html.indexOf('SP 24-15') && html.indexOf('ssp-here') < html.indexOf('PRE-1'), 'right under its file');
+  assert.ok(html.indexOf('ssp-foot') > html.indexOf('PRE-1'), 'after the tree');
+  assert.match(src('js/devtab.js'), /PeelDcGate\.treeOpts\(p, d\)/);
+  assert.match(src('js/records-tab.js'), /PeelDcGate\.treeOpts\(p, d\)/);
+  assert.match(src('js/ws-pages.js'), /PeelDcGate\.treeOpts\(p, d\)/);
+});

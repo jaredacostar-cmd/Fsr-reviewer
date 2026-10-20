@@ -1417,7 +1417,7 @@
     const FT = root.PeelFileTree, d = FT && !p.parent ? FT.of(p) : null, files = p.records.filter(r => r.kind === 'application');
     const newest = files.slice().sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)));
     const row = r => `<li class="pnl-kv"><span><button type="button" class="tr-ref" data-dev-file="${esc(r.ref || '')}">${esc(r.ref || 'file')}</button>${r.type ? ` <small class="muted">${esc(r.type)}</small>` : ''}</span><span>${r.units ? `${fmtNum(r.units)} units · ` : ''}${esc((P().PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}</span></li>`;
-    const tree = d ? FT.treeHTML(d, FT.recLookup(p), { dot: k => dot(k), latest: newest[0] && newest[0].ref }) : '';
+    const tree = d ? FT.treeHTML(d, FT.recLookup(p), { dot: k => dot(k), latest: newest[0] && newest[0].ref, ...(root.PeelDcGate ? root.PeelDcGate.treeOpts(p, d) : {}) }) : '';
     return `${tree || `<ul class="pnl-files">${newest.slice(0, 8).map(row).join('')}</ul>`}
       <p class="small"><button type="button" class="btn small link" data-dev-hist="file">All ${fmtNum(p.records.length)} source records, by file →</button></p>`;
   }
