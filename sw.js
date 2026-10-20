@@ -54,6 +54,7 @@ const SHELL_ASSETS = [
   'js/aerial-check.js',
   'js/aerial-chip.js',
   'js/servicing-permits.js',
+  'js/phase-estimate.js',
   'js/dc-gate.js',
   'js/stage-chip.js',
   'js/aerial.js',
