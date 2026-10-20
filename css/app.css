@@ -3530,3 +3530,25 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .hm-key.hm-key-ea-now { border: 1px dashed var(--ea-line); }
 .hm-key.hm-key-cons { height: 3px; background: var(--accent); }
 .net-renew { font-size: .8em; padding: 0 4px; border-radius: 3px; border: 1px solid var(--border); color: var(--text-muted); }
+/* DC servicing gate (js/dc-gate.js): a chip beside the stage; pressed, the permits that set it */
+.dcg-chip { flex: none; max-width: 100%; white-space: normal; text-align: left; cursor: pointer; background: transparent; font-family: inherit; margin-left: 6px; display: inline-flex; align-items: center; gap: 5px; }
+.dcg-chip.t-room { color: var(--pnl-room); }
+.dcg-chip.t-tight { color: var(--cap-tight-t); }
+.dcg-chip.t-aer { color: var(--hue-teal); }
+.dcg-chip.t-wait { color: var(--text-muted); border-style: dashed; font-weight: 500; }
+.dcg-chip:hover, .dcg-chip:focus-visible { background: var(--surface-2); }
+.dcg-box { margin: var(--space-2) 0 0; padding: var(--space-2) var(--space-3); background: var(--surface-2); border-radius: var(--radius-panel); max-width: 720px; }
+.dcg-box p:first-child { margin-top: 0; }
+.dcg-list { list-style: none; margin: var(--space-2) 0; padding: 0; display: grid; gap: var(--space-2); }
+.dcg-ev { padding: var(--space-2); background: var(--surface-1); border: 1px solid var(--border); border-radius: 6px; display: grid; gap: 2px; }
+.dcg-k { font-size: var(--fs-1); color: var(--text-secondary); }
+.dcg-warn { color: var(--cap-tight-t); }
+.dcg-act { margin-top: 2px; }
+.dcg-rec { margin-top: var(--space-1); }
+.dcg-tab { border-collapse: collapse; width: 100%; margin-top: 4px; }
+.dcg-tab th { text-align: left; font-weight: 500; color: var(--text-secondary); padding: 2px 8px 2px 0; width: 38%; vertical-align: top; }
+.dcg-tab td { padding: 2px 0; overflow-wrap: anywhere; }
+.dcg-tab tr + tr th, .dcg-tab tr + tr td { border-top: 1px solid var(--border); }
+.dcg-note { margin-bottom: 0; }
+.dcg-pin { filter: drop-shadow(0 0 2px rgba(0,0,0,.4)); }
+.dcg-tag { color: var(--pnl-room); font-weight: 600; }

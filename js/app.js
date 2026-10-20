@@ -59,6 +59,7 @@
     plant: '',                // receiving wastewater plant: '' | 'Lakeview' | 'Clarkson' | 'Inglewood'
     dwelling: '',             // dwelling type: '' | 'single' | 'town' | 'apartment'
     landuse: DEFAULT_LANDUSE,
+    dcgate: '',               // DC servicing gate (js/dc-gate.js): '' | a bucket | 'notcounted'
     basis: ['all', 'buildout', 'committed', 'remaining'].includes(store.get('svcBasis')) ? store.get('svcBasis') : DEFAULT_BASIS,   // counting basis (Scenario)
     // Timeline: inclusive year range (null = open-ended) on the chosen milestone.
     yearMode: 'any', yearFrom: null, yearTo: null, yearMin: null, yearMax: null,
@@ -295,6 +296,7 @@
     if (state.plant && PeelMapMarkers.plantOfDev(p) !== state.plant) return false;
     if (state.dwelling && !(D.unitSplit(p)[state.dwelling] > 0)) return false;
     if (!LANDUSE_TEST[state.landuse || DEFAULT_LANDUSE](p)) return false;
+    if (state.dcgate && window.PeelDcGate && !window.PeelDcGate.passes(window.PeelDcGate.rowOf(p), state.dcgate)) return false;
     if (state.search) {
       const q = state.search;
       const hay = p._hay || (p._hay = [p.title, p.description, ...p.types, ...p.records.map(r => `${r.ref} ${r.statusRaw} ${r.address}`)].join(' ').toLowerCase());
