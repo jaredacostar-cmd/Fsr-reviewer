@@ -20,6 +20,7 @@ name: Probe data sources
 #  mode=sewer-build: rebuild data/sewers.json (sewer pipe capacity screen), data/water-supply.json (large mains across zone boundaries) and data/watermains.json (300 mm+ network for the water trace) from the Region's mains, committed to this branch
 #  mode=dragonfly: the Region's I&I story map, its web maps and the 40 wastewater Blocks (Dragonfly, WEFTEC 2024), pushed to the dragonfly-raw branch
 #  mode=fsr: latest functional servicing reports on the application pages (data/fsr.json, committed to this branch)
+#  mode=bramplan: BramPlanOnline (Brampton's public planning portal): a search by file number, the file's page and its documents, saved to the bramplan-raw branch (no data committed)
 #  mode=external: housing supply progress, MoF projections, compliance reports, CMHC tables (StatCan), IDF files (ext-raw branch)
 #  mode=plant-flows: MECP Municipal Treated Wastewater Effluent (one XLSX per year) → data/plant-flows.json (measured flow at G.E. Booth, Clarkson, Inglewood), committed to this branch; refuses to shorten the history
 #  mode=constraints: gas pipelines, hydro lines, watercourses and conservation authority regulation limits covering Peel (log only)
@@ -44,7 +45,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, fsr, external, plant-flows, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw, sewer-build, capital, capital-probe, ea-maps, ea-trace or eas'
+        description: 'all, fsr, bramplan, external, plant-flows, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw, sewer-build, capital, capital-probe, ea-maps, ea-trace or eas'
         default: 'all'
         required: false
       only:
@@ -223,6 +224,16 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/fsr.json
           git diff --cached --quiet || { git commit -m "Functional servicing report links"; bash scripts/push-data.sh; }
+      - name: BramPlanOnline pages (pushed to the bramplan-raw branch)
+        if: inputs.mode == 'bramplan'
+        run: |
+          node scripts/probe-bramplan.js --out bramplan-raw
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B bramplan-raw
+          git add -f bramplan-raw
+          git commit -m "BramPlanOnline pages (raw)"
+          git push -f origin bramplan-raw
       - name: External open data (pushed to the ext-raw branch)
         if: inputs.mode == 'external'
         run: |
