@@ -2877,6 +2877,12 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .page-sec:hover { color: var(--text-primary); }
 .page-sec.on { color: var(--text-primary); border-bottom-color: var(--accent); }
 /* Explore: the one search and where you are, at the top of each of its pages. */
+/* Explore's five views, a row at the top of each (js/workspaces.js viewsHTML); one line that scrolls on a phone. */
+.page-views { display: flex; gap: var(--space-1); margin: 0 0 var(--space-2); overflow-x: auto; scrollbar-width: none; }
+.page-views::-webkit-scrollbar { display: none; }
+.page-views .btn { flex: none; white-space: nowrap; }
+/* The Explore view you are on, named in its sidebar entry. */
+.home-ws-cur { font-weight: 400; color: var(--text-secondary); }
 .page-explore { display: flex; flex-direction: column; gap: var(--space-1); margin: var(--space-2) 0 0; }
 .page-explore .page-search { max-width: 640px; }
 .ex-where { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); color: var(--text-secondary); }

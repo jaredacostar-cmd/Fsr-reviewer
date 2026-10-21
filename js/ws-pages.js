@@ -43,6 +43,7 @@
     // (a zero is never coloured; n/a is never a figure)
     const figs = (m.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4).map(f => (String(f.v) === '0' && f.tone ? { ...f, tone: null } : f));
     const out = [];
+    if (m.views) out.push(m.views);
     out.push(`<header class="home-h" data-psec="header"><p class="page-eyebrow small">${m.eyebrow || ''}</p><h1>${esc(m.name || '')}</h1>${chipHTML(m.status)}${m.badge || ''}${m.identity ? `<p class="small muted page-id">${m.identity}</p>` : ''}${m.extra || ''}</header>`);
     if (m.filters) out.push(m.filters);
     if (m.scen) out.push(`<div class="pnl-scen" data-psec="scenario">${m.scen}</div>`);
@@ -492,7 +493,7 @@
     let tightFiles = null; try { const wk = week && ready ? BUILD.week() : null; tightFiles = wk && (wk.figures || []).find(f => f && /tight plant/.test(f.label)); } catch (e) { tightFiles = null; }
     const go = page => ({ 'data-ws-page': page });
     const groups = [
-      { title: 'Growth', link: { label: 'Explore', attrs: go('growth') }, figures: [
+      { title: 'Growth', link: { label: 'Growth in an area', attrs: go('growth') }, figures: [
         G ? { v: fmtNum(Math.round(G.planned)), u: 'homes', label: 'planned', ctx: `${fmtNum(set.length)} developments`, attrs: go('growth') } : null,
         G ? { v: fmtNum(Math.round(G.left)), u: 'homes', label: 'left to build', ctx: `${fmtNum(Math.round(G.completed))} completed`, attrs: go('growth') } : null,
         people ? { v: people.v, u: 'people', label: 'at build-out', ctx: 'Peel design criteria', attrs: go('growth') } : null,
