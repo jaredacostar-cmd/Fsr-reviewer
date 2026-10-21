@@ -319,7 +319,7 @@
   // ---- Stage 3: the area Overview (Peel, a municipality, a plan) as the standard panel -----------------
   let ovSort = store.get('ovSort', 'limit');
   // The last area Overview panel (Peel or the municipality filter): Home shows its figures (Stage 4).
-  let lastArea = null;
+  let lastArea = null, lastAreaN = 0;   // (and how many developments it was worked out for)
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ov-sort]'); if (b) { ovSort = b.dataset.ovSort; store.set('ovSort', ovSort); renderOverview(); } });
   function areaPanelSpec(o) {
     const PN = root.PeelPanel, SC = root.PeelSvcCapacity, { set, e, basis, pipe, unitsAll, unitsWord, inPlan, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr } = o, pre = o.pre || { units: 0, people: 0 };
@@ -432,7 +432,7 @@
     const permitCaveat = root.PeelCensusView && root.PeelCensusView.permitCaveatHTML ? root.PeelCensusView.permitCaveatHTML() : '';
     // Stage 3: the standard panel. The cards below (every tile, the capacity bars, Needs attention by
     // group, the largest unbuilt, the constraint card) are its full table.
-    lastArea = areaPanelSpec({ set, e, basis, pipe, unitsAll, unitsWord, inPlan, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue, pre });
+    lastArea = areaPanelSpec({ set, e, basis, pipe, unitsAll, unitsWord, inPlan, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue, pre }); lastAreaN = set.length;
     if (root.PeelPanel) root.PeelPanel.set('overview:', lastArea);
     el.innerHTML = `<div class="ov-top">${hlP(hl)}${permitCaveat}<button type="button" class="btn small link ov-brief" data-ov-tool="brief" title="A one-page summary to print or save as PDF (also in Export)">Executive briefing (PDF)</button></div>
       <div class="ov-grid">
@@ -541,7 +541,7 @@
   });
 
   // ---- Public contract ----
-  const api = { renderOverview, renderVerdictCard, scopeText, scopeLabel, infillScope, secondUnitScope, capacityBarsHTML, lastAreaSpec: () => lastArea, weekChanges };
+  const api = { renderOverview, renderVerdictCard, scopeText, scopeLabel, infillScope, secondUnitScope, capacityBarsHTML, lastAreaSpec: () => lastArea, lastAreaCount: () => lastAreaN, weekChanges };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelOverviewTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);
