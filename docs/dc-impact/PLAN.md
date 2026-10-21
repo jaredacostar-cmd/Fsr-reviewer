@@ -195,7 +195,7 @@ pipesUpstream(memberPipes, pipes)   // pure: Uint8Array marking every pipe whose
   path.
 - **Same sewershed:** `{dcTarget(ln)} ∪ upstreamOf(...)` catchments → `SD().svcIds(p, 'dr')`.
   Exclude developments already counted in groups 1 and 2.
-- **Which developments count:** the same filter as `dcConnectors`, `svcLayerOf(p)` in built /
+- **Which developments count:** approved / proposed (built since 2021 as a context line, see Prototype findings); the base filter is `dcConnectors`', `svcLayerOf(p)` in built /
   approved / proposed, with a non-zero estimate. Use `D.estimate` for units, people and peak wet.
 - **Cache** on `MP().scenarioKey()` like `dcAnalysis`, so a scenario change recomputes.
 - **List counts** for every project at once: build the per-project marks lazily, then cache. If
@@ -245,6 +245,30 @@ Exports needed: `pipeReliefOf` and `dcConnectors` from `js/masterplan.js` (add t
 - `data-info="dc-impact"` method text: how each group is found and why group 3 is lower
   confidence.
 - Add a changelog entry (`data/changelog.json`).
+
+## Prototype findings (October 2026 data)
+
+I ran a throwaway version of the model in the app against the October 19 data, with all 173
+projects. These numbers are behind the mock-up.
+
+- **Speed:** about 2 s for every project in one pass. That includes matching each pipe to its
+  DC main, routing the 818 off-network sites along the DC mains, and walking upstream. The list
+  counts can be computed when the sub-view opens.
+- **Built developments:** count only approved and proposed developments. Built-since-2021
+  developments swamp the counts. For example, 6,653 built developments drain through
+  **26-2242**, against 1,035 that are approved or proposed. Show built as a context line, not in
+  the groups.
+- **Coverage:** 71 of the 173 projects have pipeline developments relying on them. 38 of those
+  have developments expected before the project is finished.
+- **Funding screen:** only 26 projects are in it today. 45 projects with developments relying on
+  them are not, and they carry 1,720 unique developments (≈146,000 units). That is the gap the
+  "Affects" column and the ranking lens are meant to show.
+- **Totals across projects:** a development upstream of a trunk is also upstream of the trunks
+  below it. Totals across several projects must count unique developments, never sum the
+  per-project counts.
+- **DC coverage:** wastewater DCs from the developments relying on a project are often several
+  times its DC cost. **28-2139**, for example, is $14 M against ≈$118 M, or 8.6×. Show coverage
+  as "×" and keep the "Region-wide reserves" wording so no one reads it as a funding source.
 
 ## Suggested order (small PRs)
 
