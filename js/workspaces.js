@@ -46,9 +46,15 @@
     pipes: [],                                      // the old pipes only (drawn by this module)
     week: ['devs'],
   };
+  // Explore (step 3 of the page plan): Growth in an area, Check a site, Review an FSR, Forecast and
+  // Study area are the views of one workspace, one entry in Home's sidebar. A site picked from an area
+  // view opens on Check a site; a step up its trail opens Growth in an area there. Their map-view
+  // chips, links and share links keep their own ids.
+  const EXPLORE = ['growth', 'site', 'fsr', 'outlook', 'study'];
+  const SIDE = { explore: { label: 'Explore', what: 'A site, a plan or an area you draw: growth, servicing, capital, files, FSR' } };
   // Home's sidebar: by team (Servicing capacity with Planning), then Full map.
   const GROUPS = [
-    ['Planning', ['site', 'fsr', 'growth', 'outlook', 'study', 'tight']],
+    ['Planning', ['explore', 'tight']],
     ['Capital', ['projects', 'eaflow']],
     ['Asset Management', ['pipes']],
   ];
@@ -117,7 +123,7 @@
   const defaultWs = last => (BY_ID[last] ? last : 'tight');
 
   // ---- Browser ----------------------------------------------------------------------------------
-  const api = { WS, GROUPS, BY_ID, LAYERS, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen, defaultWs };
+  const api = { WS, GROUPS, EXPLORE, SIDE, BY_ID, LAYERS, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen, defaultWs };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -376,6 +382,8 @@
   // leave a site; Check a site and Review an FSR keep it. The page's tab and sub-view open behind it, so
   // their panels are worked out for the same scope.
   function openPage(id, o = {}) {
+    // Explore: the site open, else the last of its views, else Growth in an area.
+    if (id === 'explore') id = root.DevScope && root.DevScope.current && root.DevScope.current() ? 'site' : (EXPLORE.includes(store.get('lastWs', '')) ? store.get('lastWs', '') : 'growth');
     if (id !== 'home' && !BY_ID[id] && !REF[id]) id = 'home';
     const w = BY_ID[id];
     if (w && w.scope === 'area') {
@@ -388,16 +396,16 @@
     if (!o.keepScroll) { const el = $('#home'); if (el) el.scrollTop = 0; }
   }
   let lastHTML = '', timer = null, menuOpen = false;
-  const pageName = id => (id === 'home' ? 'Home' : BY_ID[id] ? BY_ID[id].label : REF[id] ? REF[id].label : id);
+  const pageName = id => (id === 'home' ? 'Home' : SIDE[id] ? SIDE[id].label : BY_ID[id] ? BY_ID[id].label : REF[id] ? REF[id].label : id);
   function sideHTML() {
     const nW = weekRows().length, pref = store.get('startScreen', 'home');
     // (a guide's page lights How it works)
-    const isOn = id => page === id || (id === 'guides' && !!(REF[page] && REF[page].guide));
+    const isOn = id => page === id || (id === 'guides' && !!(REF[page] && REF[page].guide)) || (id === 'explore' && EXPLORE.includes(page));
     const item = (id, sub) => `<li><button type="button" class="home-ws${isOn(id) ? ' on' : ''}" data-ws-page="${id}"${isOn(id) ? ' aria-current="page"' : ''}><strong>${esc(pageName(id))}${id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</strong>${sub ? `<small>${esc(sub)}</small>` : ''}</button></li>`;
     // (This week covers capital and EA dates too: it sits under Home, not Planning)
     // (a phone: the list folds behind one button naming the page you are on; it opens grouped)
     return `<nav class="home-side${menuOpen ? ' open' : ''}" aria-label="Workspaces"><button type="button" class="home-menu-btn" data-home-menu aria-expanded="${menuOpen}"><span aria-hidden="true">☰</span> ${esc(pageName(page))} <span class="muted small">· all pages</span> <span aria-hidden="true">${menuOpen ? '▴' : '▾'}</span></button><ul>${item('home', 'The briefing')}${item('week', BY_ID.week.what)}</ul>
-      ${GROUPS.map(([g, ids]) => `<h2 class="home-g">${esc(g)}</h2><ul>${ids.map(id => item(id, BY_ID[id].what)).join('')}</ul>`).join('')}
+      ${GROUPS.map(([g, ids]) => `<h2 class="home-g">${esc(g)}</h2><ul>${ids.map(id => item(id, (SIDE[id] || BY_ID[id]).what)).join('')}</ul>`).join('')}
       <h2 class="home-g">Reference</h2><ul>${Object.keys(REF).filter(id => !REF[id].guide).map(id => item(id, REF[id].what)).join('')}</ul>
       <button type="button" class="home-ws home-full" data-ws-full><strong>Full map</strong><small>Every layer, filter and tool</small></button>
       <label class="home-pref small">Start screen <select data-ws-start>${START.map(([k, t]) => `<option value="${k}"${pref === k ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
@@ -491,7 +499,12 @@
   document.addEventListener('keydown', e => { if (!e.defaultPrevented && (e.key === 'Enter' || e.key === ' ') && e.target.closest && (e.target.closest('#home [role="button"]') || e.target.closest('#home [data-ws-stage]'))) { e.preventDefault(); e.target.click(); } });
   // The page and the chips follow the panels (their figures, This week's count): a page rebuilds when what
   // it shows has changed.
+  let exploreDev = null;
   document.addEventListener('pnl:set', e => {
+    // Explore: a site picked (the search, the map) while an area view is open opens its page.
+    const sc = e.detail && e.detail.scope;
+    if (sc && sc.startsWith('dev:') && sc !== exploreDev && mode === 'home' && ['growth', 'outlook', 'study'].includes(page)) { exploreDev = sc; setTimeout(() => openPage('site'), 0); }
+    else if (sc && !sc.startsWith('dev:')) exploreDev = null;
     if (e.detail && e.detail.key === 'overview:' && e.detail.scope === 'area') renderChips();
     if (mode === 'ws' && cur === 'pipes' && e.detail && e.detail.key === 'svc:network') pipesLayer(true);
     schedule();

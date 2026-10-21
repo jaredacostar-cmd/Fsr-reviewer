@@ -5,7 +5,9 @@
  * nothing is only in the map and a page never computes a figure of its own. A section whose tab
  * builds its panel only when opened (Capital, Records) is built here on demand, for the scope.
  *
- *   SITE                 the sections of one development, in the order of the map's tabs
+ *   SITE                 the sections of one development, in the order of the map's tabs, then its
+ *                        FSR review (a page of its own: the Servicing panel with the cross-check)
+ *   AREA                 the sections of an area (Peel, a municipality, a plan): Growth, Forecast
  *   specFor(sec, p)      its panel spec for development p (null while its data loads)
  *
  * A section with more than one key takes its answer and figures from the first and adds the
@@ -21,6 +23,12 @@
     { id: 'servicing', title: 'Servicing', tab: 'svc', keys: ['svc:network'] },
     { id: 'capital', title: 'Capital', tab: 'dca', keys: ['dca:timing', 'dca:eas'] },
     { id: 'files', title: 'Files', tab: 'records', keys: ['records:files'] },
+    { id: 'fsr', title: 'FSR review', tab: 'svc', keys: ['svc:network'], page: 'fsr' },
+  ];
+  // An area's sections are pages of their own (Growth in an area's drill-down; the Forecast).
+  const AREA = [
+    { id: 'growth', title: 'Growth', page: 'growth' },
+    { id: 'outlook', title: 'Forecast', page: 'outlook' },
   ];
   const BY_ID = Object.fromEntries(SITE.map(s => [s.id, s]));
 
@@ -50,7 +58,7 @@
     return { ...first, lists, folds, onMount: mounts.length ? host => { for (const f of mounts) try { f(host); } catch (err) { /* that part stays empty */ } } : null };
   }
 
-  const api = { SITE, BY_ID, specFor };
+  const api = { SITE, AREA, BY_ID, specFor };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSections = api;
 })(typeof window !== 'undefined' ? window : globalThis);

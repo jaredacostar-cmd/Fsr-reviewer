@@ -544,7 +544,23 @@
   // time under a section bar; Summary first. A new development opens on Summary.
   let siteSec = 'summary', siteSecDev = null;
   function sectionBar(secs, on) {
-    return `<nav class="page-secs" aria-label="Sections" data-psec="sections">${secs.map(s => `<button type="button" class="page-sec${s.id === on ? ' on' : ''}" data-ws-sec="${esc(s.id)}" aria-pressed="${s.id === on}">${esc(s.title)}</button>`).join('')}</nav>`;
+    return `<nav class="page-secs" aria-label="Sections" data-psec="sections">${secs.map(s => `<button type="button" class="page-sec${s.id === on ? ' on' : ''}" ${s.page ? `data-ws-page="${esc(s.page)}"` : `data-ws-sec="${esc(s.id)}"`} aria-pressed="${s.id === on}">${esc(s.title)}</button>`).join('')}</nav>`;
+  }
+  // Explore (Check a site, Review an FSR, Growth in an area, Forecast, Study area: one workspace): the
+  // one search, where you are (Peel › municipality › plan › site, each a step back up), and Draw an area.
+  function exploreBar(trail) {
+    return `<div class="page-explore" data-psec="explore"><div class="page-search" id="page-search"></div><p class="ex-where small">${trail || ''}<button type="button" class="btn small link" data-ws-page="study">Draw an area →</button></p></div>`;
+  }
+  // A development's place in the plan tree: Peel › its municipality › its plan › … (its deepest area).
+  function siteTrail(p) {
+    const PT = root.PeelPlanTables; let r = null;
+    try { r = PT && PT.compute ? PT.compute() : null; } catch (e) { r = null; }
+    const ids = PT && PT.areaIdsOf ? [...PT.areaIdsOf(p)] : [];
+    const depth = n => { let d = 0; for (let x = n; x && x.parent; x = r.nodes.get(x.parent)) d++; return d; };
+    const leaf = r ? ids.map(id => r.nodes.get(`a:${id}`)).filter(Boolean).sort((a, b) => depth(b) - depth(a))[0] || r.nodes.get(`m:${p.municipality}`) : null;
+    const trail = []; for (let x = leaf; x; x = x.parent ? r.nodes.get(x.parent) : null) trail.unshift(x);
+    const crumb = n => `<button type="button" class="btn small link" data-ws-explore="${esc(n.id)}">${esc(n.name)}</button>`;
+    return `${(trail.length ? trail : [{ id: 'peel', name: 'Peel' }]).map(crumb).join(' <span aria-hidden="true">›</span> ')} <span aria-hidden="true">›</span> <strong>${esc(p.title)}</strong> · `;
   }
   function site() {
     const p = devNow(); if (!p) return find('site');
@@ -555,7 +571,7 @@
     const waiting = SE && siteSec !== 'summary' && !sec;
     const b = sec || s;
     return { id: 'site', eyebrow: `${esc(label('site'))} · <span class="pnl-steps-i">✓ Find › <b>Result</b> › Output: Servicing memo</span>`, name: p.title, status: s.head.status, badge: s.head.badge, extra: s.head.extra, identity: s.head.identity, scen: scen(),
-      top: SE ? sectionBar(SE.SITE, waiting ? siteSec : on) : '',
+      top: `${exploreBar(siteTrail(p))}${SE ? sectionBar(SE.SITE, waiting ? siteSec : on) : ''}`,
       answer: waiting ? `<span class="muted">Loading ${esc((SE.BY_ID[siteSec] || {}).title || '')} for ${esc(p.title)} (the servicing model and the DC program)…</span>` : b.answer,
       caveats: [], figures: waiting ? [] : b.figures, chart: waiting ? '' : b.chart,
       lists: waiting ? [] : (b.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('site', r)) })),
@@ -672,6 +688,7 @@
       ? `${pl.answer}${f2031 ? ` About <strong>${f2031.v}</strong> units are expected by 2031 (${f2031.ctx}).` : ''}${svcLine}`
       : `<strong>${esc(n.name)}</strong> ${trail[1] && trail[1] !== n ? ` (${esc(trail[1].name)})` : ''} holds <strong>${n0(m.planned)}</strong> planned units, ${p0(m.people)} people${m.jobs >= 0.5 ? ` and ${p0(m.jobs)} jobs` : ''} at build-out; ${n0(anb)} approved, not yet built, ${n0(m.left)} left to build.${svcLine}`;
     return { id: 'growth', eyebrow: `${esc(label('growth'))} · ${crumbs}${atPeel ? '' : ` <span class="page-kind">${esc(kind(n))}</span>`}`, name: atPeel ? 'How much is coming, where, and how fast?' : n.name, status: null, identity: atPeel ? esc(`${App().state.muni || 'Peel'} · ${fmtNum(plans.length)} plans with planned units`) : esc(`${fmtNum(dm.size)} developments${trail.length > 2 ? ` · in ${trail[trail.length - 2].name}` : ''}`), scen: scen(), answer,
+      top: `${exploreBar('')}${root.PeelSections ? sectionBar(root.PeelSections.AREA, 'growth') : ''}`,
       figures: [
         // (units and jobs at the Scenario's counting basis, as the people and the Overview: one basis)
         basis === 'all' ? { v: n0(m.planned), u: 'units', label: 'planned', ctx: `${n0(m.left)} left to build` } : { v: n0(m.counted), u: 'units', label: G.basisUnits(basis), ctx: `of ${n0(m.planned)} planned` },
@@ -698,8 +715,12 @@
   // The developments whose file tree is open (▸ on their row).
   const gOpen = new Set();
   document.addEventListener('click', e => {
-    const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall],[data-tr-tog],[data-ws-sec]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
+    const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall],[data-tr-tog],[data-ws-sec],[data-ws-explore]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
     e.preventDefault(); e.stopPropagation();
+    // A site's section from its FSR review: back on the site's page, at that section.
+    if (t.dataset.wsSec && W() && W().page && W().page() !== 'site') { siteSec = t.dataset.wsSec; W().openPage('site', { keepScroll: true }); return; }
+    // A step up the trail from a site: Growth in an area at that level (the site closes).
+    if (t.dataset.wsExplore) { gAt = t.dataset.wsExplore; gStage = 'all'; gAll = false; gEst = false; if (W() && W().openPage) W().openPage('growth'); return; }
     if (t.dataset.wsSec) siteSec = t.dataset.wsSec;
     else if (t.dataset.trTog) { const k = t.dataset.trTog; if (gOpen.has(k)) gOpen.delete(k); else gOpen.add(k); }
     else if (t.dataset.wsDrill) { gAt = t.dataset.wsDrill; gStage = 'all'; gAll = false; gEst = false; const h = document.getElementById('home'); if (h) h.scrollTop = 0; }
@@ -727,7 +748,9 @@
   // ---- Forecast: when the pipeline's homes and people arrive (Growth › Forecast, on a page) ----------
   function outlook() {
     const t = specOf('growth:timing', areaScope); if (!t) return loading('outlook', 'Timing the pipeline…');
+    const SE = root.PeelSections;
     return { id: 'outlook', eyebrow: eyebrow('outlook'), name: 'When do the homes and people arrive?', status: t.head.status, identity: t.head.identity, scen: scen(), answer: t.answer,
+      top: `${exploreBar('')}${SE ? sectionBar(SE.AREA, 'outlook') : ''}`,
       figures: t.figures, chart: t.chart,
       lists: (t.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('outlook', r)) })),
       map: { svg: devsMap((App() && App().state.filtered) || []), attrs: { 'data-ws-go': 'outlook' }, label: 'Open Forecast on the map', caption: '<span class="hm-key hm-key-dev"></span> developments of 50+ units' },
@@ -855,8 +878,9 @@
   function fsr() {
     const p = devNow(); if (!p) return find('fsr');
     const s = specOf('svc:network', `dev:${p.key}`); if (!s) return loading('fsr', `Loading ${p.title}…`);
-    const F = root.PeelFsrCheck, WD = { app: ['room', 'Compared here'], part: ['tight', 'Facilities only'], eye: ['over', 'By an engineer'] };
+    const F = root.PeelFsrCheck, WD = { app: ['room', 'Compared here'], part: ['tight', 'Facilities only'], eye: ['over', 'By an engineer'] }, SE = root.PeelSections;
     return { id: 'fsr', eyebrow: `${esc(label('fsr'))} · <span class="pnl-steps-i">✓ Find › <b>Result</b> › Output: notes for the review</span>`, name: p.title, status: s.head.status, badge: s.head.badge, extra: s.head.extra, identity: s.head.identity, scen: scen(), answer: s.answer,
+      top: `${exploreBar(siteTrail(p))}${SE ? sectionBar(SE.SITE, 'fsr') : ''}`,
       figures: s.figures,
       mid: '<section class="page-fsr" data-psec="fsr"><h3>FSR cross-check: the consultant’s figures vs this app’s</h3><div class="fsr-box" data-pnl-fsrbox></div></section>',
       lists: [
@@ -899,7 +923,7 @@
     const has = sel.length > 0 || (AS && AS.selAreas && AS.selAreas.length);
     return { id: 'study', eyebrow: eyebrow('study'), name: 'What does this area add, and what servicing does it lean on?', scen: scen(),
       answer: has ? `The drawn area holds <strong>${fmtNum(sel.length)}</strong> development${sel.length === 1 ? '' : 's'}. Its growth and the servicing it needs are below.` : 'Draw an area on the map: press <strong>Draw an area</strong>, then drag around the developments.',
-      top: `<section class="page-livemap" data-psec="livemap"><div class="page-map-slot" id="page-map-slot"></div><div class="pnl-acts"><button type="button" class="btn small pnl-primary" data-ws-draw>${has ? 'Add an area' : 'Draw an area'}</button>${has ? '<button type="button" class="btn small" data-ws-clear>Clear</button>' : ''}</div></section>`,
+      top: `${exploreBar('')}<section class="page-livemap" data-psec="livemap"><div class="page-map-slot" id="page-map-slot"></div><div class="pnl-acts"><button type="button" class="btn small pnl-primary" data-ws-draw>${has ? 'Add an area' : 'Draw an area'}</button>${has ? '<button type="button" class="btn small" data-ws-clear>Clear</button>' : ''}</div></section>`,
       mid: has && AS ? `<section class="page-sel" data-psec="selection">${AS.selectionSummaryHTML(sel)}</section>` : '',
       method: 'The developments shown on the map inside the drawn area(s): units by type and stage, people and jobs at Peel design criteria, and the water and wastewater demand they add (the same estimate as each development’s panel).',
       actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'study' }, primary: !has }, has ? { label: 'Area report (PDF)', attrs: { 'data-area-report': 'sel' }, primary: true } : null] };
