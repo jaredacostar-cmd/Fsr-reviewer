@@ -190,3 +190,29 @@ test('steps end at built: closed or final permits, dated where the city dates th
   assert.equal(s.steps[s.steps.length - 1].k, 'built', 'undated: last');
   assert.equal(s.steps[s.steps.length - 1].d, '');
 });
+
+test('gate: a permit at another development\'s address never joins a site by distance', () => {
+  const p = project({ siteRings: null });
+  const other = project({ key: 'other', phase: 'completed', lat: 43.7005, records: [{ kind: 'application', address: '30 Main St' }] });
+  const theirs = svc({ lat: 43.7 + 40 / 111195, address: '30 Main St' });
+  const nobody = svc({ ref: 'S2', lat: 43.7 + 50 / 111195, address: '99 Side St' });
+  assert.equal(G.gate([p, other], [theirs])[0].bucket, 'none', 'the neighbour\'s permit stays the neighbour\'s');
+  const [r] = G.gate([p, other], [theirs, nobody]);
+  assert.equal(r.bucket, 'counted');
+  assert.equal(r.evidence[0].ref, 'S2', 'the nearest permit no other site claims');
+});
+
+// The rows are keyed by the developments the app shows (scripts/app-devs.js), so every development
+// in the DC pipeline finds its row (js/dc-gate.js rowOf): split trees ("…~SP 19/61") included.
+const H = require('./helpers/real-devs.js');
+test('real data: every development in the DC pipeline has a gate row', { skip: !H.available() && 'snapshot not present' }, () => {
+  const fs = require('fs'), path = require('path');
+  const DATA = path.join(__dirname, '..', 'data'), read = f => JSON.parse(fs.readFileSync(path.join(DATA, f), 'utf8'));
+  const has = f => fs.existsSync(path.join(DATA, f));
+  const out = G.build(read('snapshot.json'), has('servicing-permits.json') ? read('servicing-permits.json') : null, new Date(),
+    { tree: read('tree-counts.json'), council: has('council-decisions.json') ? read('council-decisions.json') : null });
+  const keys = new Set(out.developments.map(r => r.key));
+  const missing = H.realDevs().projects.filter(G.inScope).filter(p => !keys.has(p.key));
+  assert.deepEqual(missing.map(p => p.key).slice(0, 10), [], `${missing.length} developments in the pipeline have no gate row`);
+  assert.ok(out.developments.some(r => r.key.includes('~')), 'split trees have rows of their own');
+});

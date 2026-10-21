@@ -1452,7 +1452,8 @@
     // On a residential site (its planning files describe homes) only permits that build homes
     // count; a non-residential building counts where the plans aren't for homes (offices,
     // industry, a hospice or long-term care home).
-    const homes = live.some(r => r.kind === 'application' && r.units > 0 && /residential|dwelling|apartment|town ?house|condominium|stacked|semi|single|detached|mixed[- ]use/i.test(`${r.type} ${r.description}`)) ||
+    // (a source that doesn't count units, the Brampton pre-consultations, keeps its homes in precUnits)
+    const homes = live.some(r => r.kind === 'application' && (r.units > 0 || r.precUnits > 0) && /residential|dwelling|apartment|town ?house|condominium|stacked|semi|single|detached|mixed[- ]use/i.test(`${r.type} ${r.description}`)) ||
       live.some(r => ['units', 'res'].includes(permitRole(r)));
     const builds = r => r.kind === 'permit' ? ['units', 'res'].includes(permitRole(r)) || (!homes && permitRole(r) === 'nonres') : !((r.stage || stageOf(r)) === 'siteplan' && isMinorFile(r));
     // Building permits follow the planning approval: a permit issued before the site's first
