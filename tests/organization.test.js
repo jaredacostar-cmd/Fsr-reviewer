@@ -45,7 +45,7 @@ test('file tree: a block plan that states no count adds up its draft plans, and 
 test('Records › Files: the tree, then the latest activity; Growth: the developments table’s rows open the site; estimate rows name their file', () => {
   const r = src('js/records-tab.js');
   assert.match(r, /chart: `<h3 class="sub-title pnl-chart-t">How the files fit together <span class="pnl-chart-u">\(each under the file whose land holds it\)<\/span><\/h3>\$\{FT\.treeHTML\(d, recOf,/);
-  assert.match(r, /lists: \[\{ title: 'Latest activity', rows: latest,/);
+  assert.match(r, /lists: \[\.\.\.siteList, \{ title: 'Latest activity', rows: latest,/);
   assert.match(r, /label: 'to check', ctx: 'linked by overlap only'/);
   const w = src('js/ws-pages.js');
   assert.match(w, /title: gStage === 'all' \? `Developments in \$\{n\.name\}` : `\$\{STG\[gStage\]\}: developments in \$\{n\.name\}`/);
