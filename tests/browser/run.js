@@ -265,14 +265,14 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(ea.page === 'eaflow' && ea.on === 'EA to construction' && ea.lit && ea.lit.wsPage === 'capital', `EA to construction is a section of Capital (${ea.page}, ${ea.on})`);
   });
 
-  // Reference and This week (step 5): one Reference entry (Help, How it works, the Glossary, the data
+  // Reference and This week (step 5): one Reference entry (Help, How it works, the Glossary, How the app decides, the data
   // sources and checks that were map-only); This week carries the watch list.
   await check('Reference: one entry, the data sources and checks on pages; This week: the watch list', browser, {}, async ({ page, ev }, expect) => {
     const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
     expect(side.includes('reference') && !side.some(id => ['help', 'guides', 'glossary'].includes(id)), `the sidebar: ${side.join()}`);
     await page.click('#home .home-side [data-ws-page="reference"]'); await wait(1500);
     const bar = await ev(() => ({ page: PeelWorkspaces.page(), secs: [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent), lit: (document.querySelector('#home .home-ws.on') || {}).dataset }));
-    expect(bar.page === 'help' && bar.secs.join() === 'Help,How it works,Glossary,Data sources,Data checks' && bar.lit && bar.lit.wsPage === 'reference', `Reference (${bar.page}: ${bar.secs.join()})`);
+    expect(bar.page === 'help' && bar.secs.join() === 'Help,How it works,Glossary,How the app decides,Data sources,Data checks' && bar.lit && bar.lit.wsPage === 'reference', `Reference (${bar.page}: ${bar.secs.join()})`);
     const st = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
     await page.click('#home .page-sec[data-ws-page="data"]'); await wait(2000);
     const ds = await ev(() => ({ page: PeelWorkspaces.page(), a: document.querySelector('#home .home-answer').innerHTML, m: PeelSections.areaPanel('records:sources').answer }));
