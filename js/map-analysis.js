@@ -277,7 +277,7 @@
   // Legend: marker colours and sizes, and the capacity layer's classes. Phase 2: folded into the
   // Layers panel (#mo-legend, rendered by renderLegend below) instead of its own map box.
   // Collapsed on phones until opened (remembered).
-  const phoneMap = matchMedia('(max-width: 700px)').matches;
+  const phoneMap = matchMedia('(max-width: 700px)').matches, roomyMap = matchMedia('(min-width: 1600px)').matches;
   // Year slider on the map (above the legend): the year the capacity colours, pipe loads and
   // station loads are worked out for, from the census to build-out; opens on this year.
   const yearText = () => capYear == null ? 'Build-out' : capYear <= censusYr() ? `${capYear} (census)` : String(capYear);
@@ -293,12 +293,13 @@
     el.hidden = !MM().isWW();
     return el;
   } });
-  // The legend: its own card in the corner (folded on phones), so it stays in sight while Layers is closed.
+  // The legend: its own card in the corner, so it stays in sight while Layers is closed. It opens folded
+  // below 1600px (a phone, or a desk screen where the side panels leave the map narrow); the choice is remembered.
   const LegendCard = L.Control.extend({ options: { position: 'bottomleft' }, onAdd() {
     const el = L.DomUtil.create('div', 'mo-legend lg-card'); el.id = 'mo-legend'; el.hidden = true;
     el.innerHTML = '<details><summary>Legend</summary><div class="lg-body"></div></details>';
     L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
-    const d = el.querySelector('details'); d.open = store.get('legendOpen', !phoneMap); d.addEventListener('toggle', () => store.set('legendOpen', d.open));
+    const d = el.querySelector('details'); d.open = store.get('legendOpen', roomyMap); d.addEventListener('toggle', () => store.set('legendOpen', d.open));
     return el;
   } });
   new LegendCard().addTo(map);
