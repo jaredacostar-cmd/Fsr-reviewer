@@ -16,9 +16,11 @@
   //   nameHTML(layer)    the layer's name with its swatch (list rows, "Developments loading it")
   // Pure strings.
   // Plain names (the technical term in brackets where engineers use it: committed is MECP D-5-1's).
-  const LABEL = { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Approved, not yet built (committed)', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
+  // committed is MECP D-5-1's (the capacity checks); commitPeel and approved split the units still to
+  // build under the Peel rule (the Overview and the briefing: js/layers.js toPeel).
+  const LABEL = { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Approved, not yet built (committed, MECP D-5-1)', commitPeel: 'Committed (building or site servicing permit)', approved: 'Approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
   // Short names for table headings and tight rows.
-  const SHORT = { existing: 'On the system', built: 'Built since 2021', committed: 'Approved, not yet built', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
+  const SHORT = { existing: 'On the system', built: 'Built since 2021', committed: 'Approved, not yet built', commitPeel: 'Committed', approved: 'Approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const num = v => Math.round(v).toLocaleString('en-CA');
   const pc = v => `${Math.max(0, Math.min(100, v)).toFixed(2)}%`;
@@ -58,7 +60,7 @@
     }).join('')}</div>`;
   }
 
-  const PILL = { existing: 'var(--ly-existing)', built: 'var(--ly-built)', committed: 'var(--ly-committed)', proposed: 'var(--ly-proposed)', anticipated: 'var(--ly-anticipated)', to2051: 'var(--ly-to2051)' };
+  const PILL = { existing: 'var(--ly-existing)', built: 'var(--ly-built)', committed: 'var(--ly-committed)', commitPeel: 'var(--ly-committed)', approved: 'var(--ly-approved)', proposed: 'var(--ly-proposed)', anticipated: 'var(--ly-anticipated)', to2051: 'var(--ly-to2051)' };
   /** Phase and layer together: "3 · zoning approved → counts as In review" (SPEC §2.7; the short name). */
   function badgeHTML(phaseText, L, o = {}) {
     if (!L || !L.layer) return `<span class="ly-badge"><span class="ly-pill" style="background:var(--surface-2);color:var(--text-secondary)">${esc(phaseText)}</span></span>`;

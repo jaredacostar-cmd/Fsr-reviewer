@@ -103,7 +103,8 @@ test('Overview "would add": units and people completed before census day (Existi
   assert.match(o, /const pre = DU\(\)\.preCensus\(lyT, basis\);/);
   assert.match(o, /e\.population - pre\.people/);
   assert.match(o, /unitsAll - pre\.units/);
-  assert.match(o, /\['existing', 'built', 'committed', 'proposed', 'anticipated'\]/, 'the tile parts include Existing, so they add up');
+  assert.match(o, /ks = root\.PeelLayers\.KEYS\.peel\.filter/, 'the tile parts: the Peel rule\'s stages');
+  assert.deepEqual([...require('../js/layers.js').KEYS.peel], ['existing', 'built', 'commitPeel', 'approved', 'proposed', 'anticipated'], 'the tile parts include Existing, so they add up');
   assert.match(src('js/reports.js'), /e\.population - pre\.people/, 'the briefing says the same');
 });
 

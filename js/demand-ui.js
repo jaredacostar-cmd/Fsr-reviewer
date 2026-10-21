@@ -33,6 +33,15 @@
   const demandSet = () => App().state.filtered.filter(p => p.phase !== 'cancelled' && (!App().state.daCtx || App().state.daCtx.keys.has(p.key)));
   // Overview and briefing: everything shown on the map (an open development's surroundings don't narrow it).
   const overviewSet = () => App().state.filtered.filter(p => p.phase !== 'cancelled');
+  // The default "committed" of the Overview and the briefing: the Peel rule (D1, settled 2026-10-21;
+  // js/layers.js commit 'peel'), with each development's DC gate row once data/dc-gate.json is in (until
+  // then building permits only) and the snapshot's date for the lapse clock. The capacity checks keep
+  // MECP D-5-1.
+  function commitOpts() {
+    const G = root.PeelDcGate, on = !!(G && G.loaded && G.loaded()), snap = App().state.snapshot;
+    if (G && !on && G.load) G.load();
+    return { commit: 'peel', gateOf: on ? p => G.rowOf(p) : null, asOf: snap && snap.generatedAt ? Date.parse(snap.generatedAt) : Date.now() };
+  }
   const BASIS_LABEL = { all: 'all units', committed: 'committed units only (approved, not yet built)', remaining: 'units left to build only (not yet completed)' };
   const demandBasis = () => App().state.basis;
   // What the demand covers: the phases picked in the filter panel, then any other filters.
@@ -314,7 +323,7 @@
   // anything out: every stage ('all') and build-out ('buildout'); approved only ('committed') and left
   // to build ('remaining') count none.
   const preCensus = (t, basis) => (t && (basis === 'all' || basis === 'buildout') ? { units: (t.units && t.units.existing) || 0, people: (t.people && t.people.existing) || 0 } : { units: 0, people: 0 });
-  const api = { allocBoxHTML, preCensus, MUNIS, freshness, validationRows, freshnessHTML, checksHTML, renderQuality, sourcesPageHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, wwTile, miniBar, wwInfoLine, numberConventionsHTML, modelSectionsHTML };
+  const api = { allocBoxHTML, commitOpts, preCensus, MUNIS, freshness, validationRows, freshnessHTML, checksHTML, renderQuality, sourcesPageHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, wwTile, miniBar, wwInfoLine, numberConventionsHTML, modelSectionsHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemandUI = api;
 })(typeof window !== 'undefined' ? window : globalThis);

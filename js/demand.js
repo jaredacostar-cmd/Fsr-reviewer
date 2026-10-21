@@ -135,8 +135,10 @@
     const P = Ph();
     return (project.records || []).filter(r => r.kind === 'permit' && r.phase !== 'cancelled' && !r.prePlan && !r.outside && BP_ROLES.has(P.permitRole(r)));
   }
+  // (a completed development is committed only for what is left on its open permits: committedPeelUnits)
   function isCommittedPeel(project, gate = null) {
-    if (!project || project.phase === 'cancelled' || project.phase === 'completed') return false;
+    if (!project || project.phase === 'cancelled') return false;
+    if (project.phase === 'completed' && !(Ph().unbuiltOf(project) > 0)) return false;
     if (gate && gate.bucket === 'private') return false;
     if (gate && gate.bucket === 'counted') return true;
     return buildingPermitsOf(project).length > 0;

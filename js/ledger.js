@@ -16,8 +16,8 @@
   //
   // Possibly lapsed (settled): no city publishes an expiry date. A site servicing permit issued 3 or
   // more years ago with no building permit filed since, or one the city marks cancelled (Brampton,
-  // Caledon: data/dc-gate.json `cancelled`), is flagged. A flagged commitment drops one step (to
-  // approved, not committed); the view can hide the flagged rows.
+  // Caledon: data/dc-gate.json `cancelled`), is flagged. A flagged commitment drops back to the
+  // development's planning stage (one step for an approved site); the view can hide the flagged rows.
   const STAGES = ['committed', 'approved', 'review', 'early'];
   const STAGE_LABEL = { committed: 'Committed', approved: 'Approved, not committed', review: 'In review', early: 'Early' };
   // Cut-offs: each includes the stages before it.
@@ -111,8 +111,9 @@
       const lapsed = lapseOf(gate, bps, asOf);
       const units = Object.fromEntries(STAGES.map(s => [s, 0]));
       const rest = planStage(p, D);
-      // A lapsed servicing permit's commitment drops one step: committed → approved, not committed.
-      if (lapsed && lapsed.why === 'old' && c.by === 'servicing') units.approved += c.units;
+      // A lapsed servicing permit's commitment drops back to the development's planning stage: one step,
+      // to approved, not committed, for an approved site; in review for one still in review.
+      if (lapsed && lapsed.why === 'old' && c.by === 'servicing') units[rest] += c.units;
       else units.committed += c.units;
       units[rest] += left - c.units;
       const people = opts.people ? opts.people(p) || 0 : 0;

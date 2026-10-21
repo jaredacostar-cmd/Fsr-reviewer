@@ -40,37 +40,46 @@ switch shows the people figure, with every parent row equal to the sum of its ro
 
 Rule (D1, settled Oct 21, 2026): committed = a site servicing permit (dc-gate bucket "counted",
 filed or issued), which commits the whole development, or a building permit, which commits only the
-units it covers, not yet built. Septic sites never count.
+units it covers, not yet built. Septic sites never count. Since Oct 21 this is the default
+"committed" in the ledger, the Overview and the briefing; the capacity checks keep MECP D-5-1.
 
 | Units left to build | Peel | Mississauga | Brampton | Caledon |
 |---|---:|---:|---:|---:|
 | Committed, D-5-1 (baseline) | 35,367 | 6,892 | 18,780 | 9,695 |
-| Committed, Peel rule | **14,339** | 7,574 | 5,928 | 837 |
+| Committed, Peel rule | **15,128** | 7,658 | 6,223 | 1,247 |
 | of which by site servicing permit | 12,221 | 7,104 | 4,940 | 177 |
-| of which by building permits | 2,118 | 470 | 988 | 660 |
-| Change | **−21,028 (−59%)** | +682 | −12,852 | −8,858 |
-| Developments committed | 429 → 245 | 136 → 115 | 265 → 100 | 28 → 30 |
+| of which by building permits | 2,907 | 554 | 1,283 | 1,070 |
+| Change | **−20,239 (−57%)** | +766 | −12,557 | −8,448 |
+| Developments committed | 429 → 251 | 136 → 116 | 265 → 101 | 28 → 34 |
 
-Why it drops, at Peel (the parts add up: 35,367 − 20,052 − 3,385 + 2,409 = 14,339):
+Why it drops, at Peel (the parts add up: 35,367 − 20,052 − 1,440 − 3,385 + 3,849 + 789 = 15,128):
 
 - **−20,052 units: approved, no permit yet.** Draft or site plan approval with no building permit and
   no site servicing permit. D-5-1 counts them; the Peel rule makes them "approved, not committed".
   The drop is largest in Brampton (11,175) and Caledon (7,204), where subdivision homes rarely get a
   site servicing permit (as the plan's coverage figures foresaw).
-- **−3,385 units: permitted only in part.** A D-5-1 development with some building permits: only the
-  units those permits cover are committed (Caledon 1,833, Brampton 1,117, Mississauga 435).
-- **+2,409 units: committed before approval.** Developments still in review under D-5-1 that already
-  have a site servicing permit (filed) or a building permit. This is why Mississauga goes up: its
-  towers file servicing permits early.
+- **−1,440 units: permits that cover no homes still to build.** Approved developments with building
+  permits whose permitted units are none, or already built (almost all in Brampton, 1,437). They count
+  as committed developments, but commit 0 units.
+- **−3,385 units: permitted only in part.** Only the units the building permits cover are committed
+  (Caledon 1,833, Brampton 1,117, Mississauga 435).
+- **+3,849 units: committed before approval.** Developments still in review or pre-application that
+  already filed a site servicing or building permit, mostly in Mississauga (2,793). This is why
+  Mississauga goes up.
+- **+789 units: still building on completed developments.** Units on open building permits of
+  developments whose stage is Built; D-5-1 counts a completed development as not committed.
 
-People committed: 116,077 under D-5-1, 40,741 under the Peel rule as the ledger shows it.
+As the Overview, the briefing and the ledger show it: **14,759** units committed (15,128 less the
+369 units on possibly lapsed servicing permits, below) and 25,144 approved, not committed. People
+committed: 116,077 under D-5-1, 43,372 under the Peel rule.
 
 Flags on the same set:
 
 - **Possibly lapsed: 8 developments, 369 units.** A site servicing permit issued 3 or more years ago
-  with no building permit filed since. The ledger moves them to "approved, not committed", so the
-  ledger's committed figure is 13,970 (14,339 − 369). None is flagged "cancelled by the city" yet:
-  `data/dc-gate.json` lists cancelled permits only from the next weekly build (see below).
+  with no building permit filed since. Their commitment drops back to the development's planning
+  stage (approved, not committed, for an approved site; in review for one still in review). None is
+  flagged "cancelled by the city" yet: `data/dc-gate.json` lists cancelled permits only from the next
+  weekly build (see below).
 - **Permit units estimated: 9 developments.** A residential building permit states no units (and the
   build-out could not infer them): the development's units are split evenly across its permits.
 - **54 developments with units left to build have no dc-gate row** (the gate was built a day before

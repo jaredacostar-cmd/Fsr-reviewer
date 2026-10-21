@@ -79,3 +79,42 @@ test('D-5-1 stays a named option; the layer bar still uses it', () => {
   assert.equal(D.COMMIT_RULES.d51, 'MECP D-5-1');
   assert.match(fs.readFileSync(path.join(__dirname, '..', 'js', 'layers.js'), 'utf8'), /approved: 'committed', permit: 'committed', construction: 'committed'/);
 });
+
+// The default "committed" of the Overview and the briefing (js/layers.js commit 'peel').
+const LY = require('../js/layers.js');
+const LG = require('../js/ledger.js');
+const withLayers = (p, completed = 0) => ({ ...p, milestones: {}, types: [], description: '', buildout: { ...p.buildout, completed, unbuilt: p.units - completed } });
+
+test('layers, Peel rule: committed is what the permits cover; the rest of D-5-1 is approved, not committed', () => {
+  const p = withLayers(dev('permit', 300, [bp('BP 24-100', 120)]));
+  const d51 = LY.ofDev(p), peel = LY.ofDev(p, { commit: 'peel' });
+  assert.equal(d51.layer, 'committed'); assert.equal(d51.parts.committed, 300, 'D-5-1 stays the default');
+  assert.equal(peel.layer, 'commitPeel');
+  assert.deepEqual([peel.parts.commitPeel, peel.parts.approved, peel.parts.committed], [120, 180, 0]);
+  // A servicing permit on a site still in review: committed before approval.
+  const r = withLayers(dev('review', 80));
+  const pr = LY.ofDev(r, { commit: 'peel', gateOf: () => counted });
+  assert.deepEqual([pr.layer, pr.parts.commitPeel, pr.parts.proposed], ['commitPeel', 80, 0]);
+  // Approved, no permit: approved, not committed.
+  const a = LY.ofDev(withLayers(dev('approved', 50)), { commit: 'peel' });
+  assert.deepEqual([a.layer, a.parts.approved, a.parts.commitPeel], ['approved', 50, 0]);
+  // A servicing permit issued 3+ years ago, no building permit since: possibly lapsed, not committed.
+  const old = { ...counted, evidence: [{ ...counted.evidence[0], issued: '2021-02-01' }] };
+  const l = LY.ofDev(withLayers(dev('approved', 50)), { commit: 'peel', gateOf: () => old, asOf: Date.parse('2026-10-21') });
+  assert.deepEqual([l.layer, l.parts.approved], ['approved', 50]);
+  // Totals carry every stage under the rule, and add up to the units.
+  const t = LY.totals([p, r], { commit: 'peel', gateOf: q => (q === r ? counted : null) });
+  assert.deepEqual(Object.keys(t.units), ['existing', 'built', 'committed', 'commitPeel', 'approved', 'proposed', 'anticipated']);
+  assert.equal(Object.values(t.units).reduce((s, v) => s + v, 0), 380);
+});
+
+test('real data: the Overview\'s committed (Peel rule) equals the ledger\'s', { skip: !require('./helpers/real-devs.js').available() }, () => {
+  const { projects } = require('./helpers/real-devs.js').realDevs();
+  const gate = require('../data/dc-gate.json'), by = new Map(gate.developments.map(r => [r.key, r]));
+  const set = projects.filter(p => p.phase !== 'cancelled' && p.records.some(r => r.kind === 'application'));
+  const asOf = Date.parse('2026-10-21T00:00:00Z'), gateOf = p => by.get(p.key);
+  const t = LY.totals(set, { commit: 'peel', gateOf, asOf });
+  const led = LG.totals(LG.rows(set, { gateOf, asOf }));
+  assert.ok(Math.abs(t.units.commitPeel - led.units.committed) < 1e-6, `${t.units.commitPeel} vs ${led.units.committed}`);
+  assert.ok(Math.abs(t.units.approved - led.units.approved) < 1e-6, `approved ${t.units.approved} vs ${led.units.approved}`);
+});

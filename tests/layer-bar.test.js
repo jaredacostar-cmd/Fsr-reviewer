@@ -12,7 +12,7 @@ const widths = html => [...html.matchAll(/class="ly-seg ly-(\w+)" style="left:([
 test('segments stack in order, proportional to value', () => {
   const h = B.barHTML({ segments: [{ layer: 'existing', value: 50 }, { layer: 'committed', value: 25 }, { layer: 'proposed', value: 25 }], max: 100 });
   assert.deepEqual(widths(h), [['existing', 0, 50], ['committed', 50, 25], ['proposed', 75, 25]]);
-  assert.match(h, /role="img" aria-label="On the system \(2021 census\) 50, Approved, not yet built \(committed\) 25, In review 25"/);
+  assert.match(h, /role="img" aria-label="On the system \(2021 census\) 50, Approved, not yet built \(committed, MECP D-5-1\) 25, In review 25"/);
 });
 
 test('rated: grey tick at 100%, white tick at the trigger, red hatch only beyond rated', () => {
