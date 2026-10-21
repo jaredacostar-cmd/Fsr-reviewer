@@ -33,12 +33,13 @@ test('a panel the tab set for this development is used as is; one for another sc
 test('Capital and Files are built on demand; Capital adds the EAs’ lists under the timing', () => {
   const S = load({}, {
     dca: q => ({ answer: `relies on 5 (${q.title})`, figures: [{ v: 5 }], lists: [{ title: 'The projects it relies on', rows: [] }] }),
-    eas: () => ({ answer: 'EAs', lists: [{ title: 'Near the site', rows: [] }] }),
+    eas: () => ({ answer: 'EAs', lists: [{ title: 'Near the site', rows: [] }], foot: { primary: { label: 'Show EAs' }, secondary: [{ label: 'Copy for review comments', attrs: { 'data-ce-copy-brief': '' } }] } }),
     files: () => ({ answer: '9 files', lists: [] }),
   });
   const cap = S.specFor('capital', p);
   assert.equal(cap.answer, 'relies on 5 (1 Main St)');
   assert.deepEqual(cap.lists.map(l => l.title), ['The projects it relies on', 'Near the site']);
+  assert.deepEqual(cap.foot.secondary.map(b => b.label), ['Copy for review comments'], 'the EAs panel\u2019s action reaches the footer');
   assert.equal(S.specFor('files', p).answer, '9 files');
 });
 

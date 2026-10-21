@@ -106,7 +106,11 @@
     const lists = [...(first.lists || [])], folds = [...(first.folds || [])];
     for (const m of more.filter(Boolean)) { lists.push(...(m.lists || [])); folds.push(...(m.folds || [])); }
     const mounts = [first, ...more].filter(m => m && typeof m.onMount === 'function').map(m => m.onMount);
-    return { ...first, lists, folds, onMount: mounts.length ? host => { for (const f of mounts) try { f(host); } catch (err) { /* that part stays empty */ } } : null };
+    // (the footer's one secondary action: the first's, else the first another panel offers, as the
+    // site's Capital: "Copy for review comments" from its EAs panel)
+    const second = [first, ...more].filter(Boolean).map(m => m.foot && m.foot.secondary).find(x => x && x.length);
+    const foot = second && !((first.foot || {}).secondary || []).length ? { ...(first.foot || {}), secondary: second } : first.foot;
+    return { ...first, foot, lists, folds, onMount: mounts.length ? host => { for (const f of mounts) try { f(host); } catch (err) { /* that part stays empty */ } } : null };
   }
 
   const api = { SITE, AREA, WORKSPACES, BY_ID, specFor, areaSpecFor, wsSpecFor, areaPanel };

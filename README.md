@@ -2966,6 +2966,64 @@ Decided 2026-10-17, after testing against the committed snapshot.
   - **Against the app:** compared with homes permitted and not completed on planning applications, by municipality, refreshed with each weekly data update.
   - **Known gaps:** Mississauga (large permits signed off within two years of issue, to confirm with the City) and Caledon (no completion dates).
 
+## Capital and EA outputs: the site brief, To check, and one row per contract
+
+Each output answers one person's question, says why each item is listed, and says how far to trust it.
+Wording stays screening wording: what the records show and what to check, never what the Region
+should do.
+
+- **Site brief (for the servicing review).** On a development's **Capital** section, and in its
+  **Servicing memo**: each EA within 1 km of the site boundary and each Region capital contract that is
+  planned, tendered, awarded or under construction within 1 km, nearest first.
+  - An EA line gives its status, schedule, distance, next step or completion year, "no milestone
+    since …" when it has been idle 18 months, and the report's preferred-solution sentence when there
+    is one.
+  - A contract line gives its status, % built and the year it is in service.
+    - **% built:** the Region's figure, else estimated from the start and target dates (and labelled
+      so).
+    - **Flags:** a completion target that has passed with no completion date, and a record with no
+      update in a year.
+  - **Copy for review comments** (the site page's action row) puts the whole brief on the clipboard
+    as plain text, one line per item with its project page and the sources' dates. If the browser
+    blocks the clipboard, it is saved as a text file.
+- **To check (for the planner).** At the top of Capital › Projects, and in the map's Construction
+  view, worst first:
+  1. EAs complete 9+ years with no construction following them.
+  2. Contracts past their completion target with no completion date (how long past).
+  3. EAs marked current with nothing dated ahead and no milestone in 18 months, or none published.
+  4. Open contracts not updated in the year before the layer's latest update, or never dated.
+
+  Each item says why it is listed and what to check. It follows the map's municipality. **CSV of this
+  list**, and a **Capital to check** sheet in the workbook.
+- **CSV: every contract** (Capital › Projects, and the Construction view). One row per contract (a
+  project page and its segments), flagged ones first.
+  - **Columns added:**
+    - the municipality the work is in, from its ward (the published field often names all three);
+    - the system and the year it is in service;
+    - the % built and whether it was reported or estimated;
+    - days past the completion target, the last update and months since;
+    - what to check;
+    - the EA it came from and how that link was made;
+    - the DC program link and how sure it is;
+    - the layer's "as of" date.
+  - The workbook's **Capital** sheet is the same table.
+- **EA placement fix.** A sewer or watermain EA is placed on DC mains that share two words with its
+  name.
+  - **The bug:** street words ("Drive", "Road") counted towards those two words, and so did the
+    long description text read from the DC map's PDF. The Fair Birch Drive / Lorne Park Road EA
+    (Mississauga) was laid on 27 mains across Peel, and showed beside Brampton sites.
+  - **Now:** matching uses the main's name only and ignores street words. A match spread over more
+    than 15 km is refused. The street-name fallback keeps only capital records in the EA's own
+    municipality, by ward.
+  - **The data:** that EA's line and links were rebuilt in `data/eas.json` with the new rules. The
+    weekly build does the same for every EA.
+- **Code.**
+  - `js/capital-ea-model.js`: `siteBrief`, `siteBriefText`, `siteBriefHTML`, `watchList`,
+    `contractCheck`, `eaCheck` and `capitalSheetRows`, tested in `tests/capital-outputs.test.js`.
+  - `js/capital-ea.js`: wiring.
+  - `js/sections.js`: a merged section keeps a secondary action.
+  - `scripts/ea-lib.js`: placement, tested in `tests/ea-data.test.js`.
+
 ## Home: EA to construction, and the Forecast
 
 Two pages added to Home's sidebar, so they are no longer only on the full map:
