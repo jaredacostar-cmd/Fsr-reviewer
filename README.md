@@ -2874,6 +2874,42 @@ Every figure in the app can be checked against where it came from:
 - **Not yet.** Links straight to one file's page (`applicationPageUrl`) are not built for any of
   the three municipalities: no stable address pattern has been checked.
 
+## How is this worked out? (every figure)
+
+Every figure in a panel or on a page has a **?** in its corner. It opens the figure's working under
+the figures:
+- the rule;
+- the inputs, each with its value and a link to where it comes from: a file's record, the section of
+  the design criteria document, or the document a data file was read from;
+- the design criteria in use;
+- the data files the figure reads, each with its receipt (source link, date, *Copy citation*).
+
+*Copy the working* puts all of it on the clipboard as text. `js/how.js` holds the working; `js/panel.js`
+and `js/ws-pages.js` add the buttons.
+
+**Exact working, line by line:**
+
+| Figure | Working |
+|---|---|
+| A development's **units** | The rule that picked the count (largest rezoning figure, site plan phases added up, condo phases, permits when they're higher, net of demolitions), and each file stating a count with its record |
+| **People** | Units of each type × persons per unit = people, with Linear Wastewater Standards Tables 2-1 / 2-2 |
+| **Jobs**, floor area | Floor area of each use ÷ floor space per job |
+| **Water**, maximum day | People × 270 L/cap/d ÷ 86,400, × 1.8 (and jobs at the non-residential rates), with the Modelling Demand Table |
+| **Wastewater**, peak wet weather | Average dry weather × Harmon peaking (2–4) + I&I on the site area, with sections 2.2, 2.4 and 2.5 |
+| **Servicing › Capacity**, over / tight | Each facility counted: flow at build-out ÷ its capacity, with where the capacity comes from (annual report, Master Plan table, sewer network) |
+| **Servicing › Capacity**, soonest limit and largest impact | The facility's existing, built, committed and proposed flow against its capacity |
+
+**Every other figure** opens its panel's method and sources and the data files its panel reads
+(`FILES` in `js/how.js`).
+
+**Kept that way:** `tests/how.test.js` fails the build in any of these cases:
+- a panel the app sets, or a page it builds, has no `FILES` entry;
+- a file named there has no receipt;
+- the arithmetic shown doesn't give the figure (people, water, wastewater, capacity).
+
+A figure's button has a fixed id (panel key and position), so a re-render is unchanged. If its panel
+re-renders (Home while its figures load, a filter, the scenario), the open box comes back.
+
 ## Counts that hold still, and counts found online checked
 
 **Loading.** The same data used to show different totals depending on how the app loaded:

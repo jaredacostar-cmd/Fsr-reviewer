@@ -67,6 +67,7 @@ const SHELL_ASSETS = [
   'js/reference.js',
   'js/glossary.js',
   'js/sources.js',
+  'js/how.js',
   'js/file-tree.js',
   'js/arcgis.js',
   'js/area-select.js',

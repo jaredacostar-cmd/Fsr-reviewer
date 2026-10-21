@@ -36,8 +36,9 @@
       <ul>${l.rows.slice(0, l.all ? l.rows.length : 5).map(r => `<li class="pnl-row${r.kv ? ' kv' : ''}${r.tone ? ` t-${esc(r.tone)}` : ''}"${r.attrs ? `${attrs(r.attrs)} tabindex="0" role="button"` : ''}>${r.html}</li>`).join('')}</ul></section>`;
   }
   // One figure card (a page's figures, Home's groups).
-  function figHTML(f, gl = x => x) {
-    return `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"${f.attrs ? `${attrs(f.attrs)} role="button" tabindex="0"` : ''}><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}</div>`;
+  // (its "?" opens how the figure is worked out, js/how.js; m: the page, or Home's group)
+  function figHTML(f, gl = x => x, m = null, i = 0) {
+    return `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"${f.attrs ? `${attrs(f.attrs)} role="button" tabindex="0"` : ''}><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}${m && root.PeelHow ? root.PeelHow.button(f, m, i) : ''}</div>`;
   }
   function pageHTML(m, note) {
     // (a zero is never coloured; n/a is never a figure)
@@ -51,11 +52,11 @@
     const seen = new Set(), gl = h => (root.PeelGlossary && m.id !== 'glossary' ? root.PeelGlossary.mark(h, seen) : h);
     out.push(`<p class="home-answer" data-psec="answer">${gl(m.answer || '')}</p>`);
     for (const c of m.caveats || []) out.push(`<p class="home-caveat small" role="note" data-psec="caveat">⚠ ${esc(c.text)}${c.at ? ` <button type="button" class="btn small link" data-ws-full data-at="${esc(c.at)}">Review →</button>` : ''}</p>`);
-    if (figs.length) out.push(`<div class="pnl-figs" data-psec="figures">${figs.map(f => figHTML(f, gl)).join('')}</div>`);
+    if (figs.length) out.push(`<div class="pnl-figs" data-psec="figures">${figs.map((f, i) => figHTML(f, gl, { key: `page:${m.id}`, files: root.PeelHow && root.PeelHow.filesFor(m.id), method: m.method, sources: m.sources }, i)).join('')}</div>`);
     // Home (step 6): the figures in groups (Growth, Servicing, Capital, Change), each with its page.
     for (const g of m.groups || []) {
       const gf = (g.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v)));
-      if (gf.length) out.push(`<section class="home-grp" data-psec="group"><div class="home-grp-h"><h2>${esc(g.title)}</h2>${g.link ? `<button type="button" class="btn small link"${attrs(g.link.attrs)}>${esc(g.link.label)} →</button>` : ''}</div><div class="pnl-figs">${gf.map(f => figHTML(f, gl)).join('')}</div></section>`);
+      if (gf.length) out.push(`<section class="home-grp" data-psec="group"><div class="home-grp-h"><h2>${esc(g.title)}</h2>${g.link ? `<button type="button" class="btn small link"${attrs(g.link.attrs)}>${esc(g.link.label)} →</button>` : ''}</div><div class="pnl-figs">${gf.map((f, i) => figHTML(f, gl, { key: `page:${m.id}:${g.title}`, files: root.PeelHow && root.PeelHow.filesFor(m.id) }, i)).join('')}</div></section>`);
     }
     if (m.chart) out.push(`<div class="pnl-chart page-chart" data-psec="chart">${m.chart}</div>`);
     if (m.mid) out.push(m.mid);

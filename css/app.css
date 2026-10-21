@@ -2710,6 +2710,22 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .pnl-fig .pnl-l { display: block; font-size: var(--fs-1); color: var(--text-secondary); }
 .pnl-fig small { display: block; font-size: var(--fs-1); color: var(--text-muted); }
 .pnl-fig.t-over { border-left-color: var(--pnl-over); } .pnl-fig.t-tight { border-left-color: var(--pnl-tight); } .pnl-fig.t-room { border-left-color: var(--pnl-room); } .pnl-fig.t-stage { border-left-color: var(--pnl-stage); }
+/* How is this worked out? (js/how.js): a "?" in each figure's corner opens its working under the figures. */
+.pnl-fig { position: relative; padding-right: 32px; }
+.fig-how { position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); font: 600 var(--fs-1)/1 inherit; cursor: pointer; padding: 0; }
+.fig-how:hover, .fig-how[aria-expanded="true"] { color: var(--accent); border-color: var(--accent); }
+.fig-how:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.how-box { margin: var(--space-2) 0; padding: var(--space-2) var(--space-3); background: var(--surface-2); border-left: 3px solid var(--accent); border-radius: 6px; }
+.how-box p { margin: 0 0 var(--space-1); }
+.how-k { display: block; font-size: var(--fs-1); font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .03em; }
+.how-in { width: 100%; border-collapse: collapse; margin: var(--space-1) 0 var(--space-2); }
+.how-in th, .how-in td { text-align: left; vertical-align: top; padding: 3px var(--space-2) 3px 0; border-bottom: 1px solid var(--border); font-weight: normal; }
+.how-in th { color: var(--text-secondary); }
+.how-in td:nth-child(2) { font-variant-numeric: tabular-nums; }
+.how-files ul { margin: 2px 0 var(--space-1); padding-left: 1.1em; }
+.how-files li { margin-bottom: 2px; }
+.how-acts { margin-top: var(--space-2) !important; }
+@media (max-width: 700px) { .how-in tr, .how-in th, .how-in td { display: block; border: 0; padding: 1px 0; } .how-in tr { padding: 4px 0; border-bottom: 1px solid var(--border); } }
 .pnl-chart-t { margin: 0 0 4px; }
 .pnl-list-h { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; }
 .pnl-list-h h3 { margin: 0; font-size: var(--fs-2); }

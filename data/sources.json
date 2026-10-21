@@ -300,12 +300,12 @@
       "publisher": "Region of Peel",
       "links": [
         {
-          "label": "water_infrastructure layers (locations)",
-          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/water_infrastructure/FeatureServer"
-        },
-        {
           "label": "2020 Master Plan, Volume 3: Tables 4–7 (pp. 26–29), 9, 11, 12 (capacities)",
           "url": "https://peelregion.ca/sites/default/files/2024-07/ea-peel-2020-master-plan-volume-3.pdf"
+        },
+        {
+          "label": "water_infrastructure layers (locations)",
+          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/water_infrastructure/FeatureServer"
         }
       ],
       "published": "2020-06",
@@ -505,14 +505,13 @@
       "title": "Functional servicing reports",
       "kind": "document",
       "publisher": "City of Mississauga, Town of Caledon, City of Brampton",
-      "links": [],
-      "itemLinks": "Each report links its document on the Mississauga or Caledon application page.",
       "links": [
         {
           "label": "BramPlanOnline (Brampton planning files, search by file number)",
           "url": "https://planning.brampton.ca/CitizenAccess/Cap/CapHome.aspx?module=Planning&TabName=Planning"
         }
       ],
+      "itemLinks": "Each report links its document on the Mississauga or Caledon application page.",
       "dateField": "generatedAt",
       "script": "scripts/build-fsr.js",
       "refresh": "weekly",
