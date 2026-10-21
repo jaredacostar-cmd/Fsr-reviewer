@@ -21,8 +21,8 @@
     let pending = location.hash.length > 1 ? new URLSearchParams(location.hash.slice(1)) : null, applied = !pending, timer;
     const encode = () => {
       const q = new URLSearchParams(), set = (k, v) => { if (v !== '' && v != null) q.set(k, v); };
-      // (always written: links made before Completed was shown by default carry no ph and open with the
-      // active phases, as they did)
+      // (always written, so a link opens with the stages it was made with; one with no ph opens at the
+      // default, Completed (Built since 2021) on)
       set('ph', [...App().state.phases].join(','));
       const fl = PF.encodeFlagParam(App().state.flags); if (fl) set('fl', fl);
       set('pl', App().state.plant); set('dw', App().state.dwelling);
@@ -80,11 +80,7 @@
       App().state.basis = App().DEFAULT_BASIS;
       for (const [k, o, d] of [['wm', 'ww', 'calibrated'], ['md', 'md', 'design'], ['dv', 'div', 'off'], ['nr', 'nr', 'on']]) SVCT().svcOpt[o] = q.get(k) || d;
       if (q.get('ph')) App().state.phases = new Set(q.get('ph').split(',').filter(k => P.PHASE_BY_KEY[k]));
-      else {
-        App().state.phases = new Set(App().ACTIVE_PHASES);   // an older link: the default then (no Completed)
-        // Say so: the same data then shows fewer developments and units than a fresh open.
-        if (window.PeelUtil && window.PeelUtil.toast) setTimeout(() => window.PeelUtil.toast('This link is from before Completed was shown by default, so Completed is hidden and the totals are lower than a fresh open. Turn Completed on under Stage to include it.', 9000), 1200);
-      }
+      else App().state.phases = App().DEFAULT_PHASES();   // no stage in the link: the default (Completed on)
       if (q.has('fo')) {
         // Pre-Phase-1 focus link: migrate onto the new state (growth / none drop to the defaults).
         const mig = PF.migrateLegacyFocus(q.get('fo'));

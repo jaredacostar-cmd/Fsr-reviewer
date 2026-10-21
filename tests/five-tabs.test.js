@@ -107,8 +107,9 @@ test('Overview "would add": units and people completed before census day (Existi
   assert.match(src('js/reports.js'), /e\.population - pre\.people/, 'the briefing says the same');
 });
 
-test('old links (no ph) open with the active phases, as before Completed was shown by default', () => {
+test('links with no ph open at the default phases: Completed (Built since 2021) on', () => {
   const s = src('js/share.js');
   assert.match(s, /\n {6}set\('ph', \[\.\.\.App\(\)\.state\.phases\]\.join\(','\)\);/, 'every link names its phases');
-  assert.match(s, /else \{\n {8}App\(\)\.state\.phases = new Set\(App\(\)\.ACTIVE_PHASES\);/);
+  assert.match(s, /else App\(\)\.state\.phases = App\(\)\.DEFAULT_PHASES\(\);/);
+  assert.doesNotMatch(s, /new Set\(App\(\)\.ACTIVE_PHASES\)/, 'never the active phases alone (Completed hidden)');
 });

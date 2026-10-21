@@ -27,7 +27,6 @@ test('the tree counts are waited for, not dropped after 3 s; a failed load is sh
   const TC = require('../js/tree-counts.js');
   assert.equal(TC.status, 'idle');
   assert.match(src('js/topbar.js'), /TC\.status === 'failed'[\s\S]*tb-count-warn[\s\S]*data-tb-reload/);
-  assert.match(src('js/share.js'), /from before Completed was shown by default/);
 });
 
 test('counts found online: each with a link was checked against its page; unconfirmed ones are not used', () => {
