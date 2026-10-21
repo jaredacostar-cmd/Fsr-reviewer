@@ -7,7 +7,7 @@
   "note": "Gross capital cost estimate and the potential DC-recoverable cost (after post-period benefit, benefit to existing and grants), by component, in 2020 dollars. Matched to the 2026 DC capital maps by component number; components added since 2020 have no published cost."
  },
  "componentsIn2020": 554,
- "componentsOnMaps": 506,
+ "componentsOnMaps": 515,
  "components": {
   "20735": {
    "gross": 1402800,
@@ -1847,13 +1847,13 @@
  },
  "unitCost": {
   "wastewater": {
-   "a": 7515,
-   "b": 1.557,
+   "a": 7163,
+   "b": 1.489,
    "n": 42
   },
   "water": {
-   "a": 5729,
-   "b": 1.161,
+   "a": 5560,
+   "b": 1.125,
    "n": 73
   }
  },

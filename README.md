@@ -466,7 +466,10 @@ from street zoom (14), up to 3,000 in view.
   `scripts/build-dc-infra.py` from the Region's water and wastewater Development Charges capital
   maps (geospatial PDFs fetched by the probe workflow, `mode=dc-maps`). Proposed (2027–2051) and
   approved (2026) mains with construction year, component and project numbers and diameter, inset
-  maps placed through their extent boxes and georeferenced from the PDF (a few metres); facility
+  maps placed through their extent boxes and georeferenced from the PDF (a few metres). Inside an
+  extent box the inset's mains replace the main map's only where the inset redraws them (a main
+  running on past the box, or a trunk the inset leaves out, is kept); the legend box is never taken
+  for an inset. Checked against every pipe stroke in both PDFs: under 50 m of mains not carried; facility
   schedules (EA / property / design / construction) transcribed in `scripts/dc-facilities.json`;
   route descriptions joined from the 2020 DC Background Study by component number. Used for:
   - a **Planned works** map layer (water, wastewater or both; tap a facility for its schedule;
