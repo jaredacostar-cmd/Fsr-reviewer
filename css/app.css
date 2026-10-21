@@ -3664,7 +3664,7 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .gt-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
 .gt { width: 100%; min-width: 460px; border-collapse: collapse; font-size: 13px; }
 .gt th, .gt td { padding: 6px 10px; text-align: left; border-bottom: 1px solid var(--surface-2); vertical-align: middle; }
-.gt thead th { white-space: nowrap; font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); font-weight: 600; background: var(--surface-1); }
+.gt thead th { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); font-weight: 600; background: var(--surface-1); }
 .gt .num { text-align: right; font-variant-numeric: tabular-nums; }
 .gt-sort { background: none; border: 0; padding: 4px 0; color: inherit; font: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; }
 .gt-sort:hover { color: var(--text-primary); }
@@ -3672,7 +3672,7 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .gt-gh-in { display: flex; align-items: center; gap: var(--space-2); padding: 4px 10px; }
 .gt-tog { display: flex; align-items: center; gap: 8px; flex: 1 1 auto; min-width: 0; min-height: 40px; background: none; border: 0; padding: 0; color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
 .gt-gn { display: flex; flex-direction: column; min-width: 0; }
-.gt-gn b { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gt-gn b { overflow-wrap: anywhere; }
 .gt-car { width: 12px; color: var(--text-muted); }
 .gt-bar { display: flex; flex: 0 1 120px; min-width: 40px; height: 8px; border-radius: 4px; overflow: hidden; background: var(--surface-1); }
 .gt-bar i { display: block; height: 100%; }
