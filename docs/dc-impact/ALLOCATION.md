@@ -64,12 +64,54 @@ Example: **26-2117** (a local main, no diameter) and **26-2128** (a 450 mm local
 and 26-2117 alone made 2034 the gating year for 600 developments. These are local sewers near
 the trunk, not relief for it.
 
-Rule to adopt:
-- a match needs the DC main to be at least **half the existing pipe's diameter**, a primary or
-  force main, or described as a twin, relief, replacement or upsizing (`ln.n` / `ln.t`);
-- a local main with no diameter never counts as relieving a trunk;
-- keep the 150 m buffer for twins, which do run parallel at an offset, but **require the same
-  flow direction** (the DC main's downstream end nearer the pipe's downstream end).
+**Rule (tested, version 2).** A DC main relieves an existing pipe only when, in addition to
+today's test (within 150 m along at least half the pipe):
+- **Size:** the DC main is at least **half the pipe's diameter**. With no diameter on the map,
+  it must be a primary or force main, or the pipe must be 600 mm or smaller. A description
+  saying twin, relief, replacement, upsizing or parallel (`ln.n` / `ln.t`) always passes.
+- **Offset:** a **local** main must be on the same street, with a median offset of **30 m** or
+  less along the pipe. A trunk or force main may be up to **150 m** away, since twins run in a
+  parallel corridor.
+
+I dropped the same-flow-direction check I first proposed. The DC lines are traced from PDFs
+and have no flow direction, so the check would need direction inferred from where each main
+meets the network. That's a later refinement.
+
+**Results** (wastewater, 1,724 linked developments):
+
+| | Before | Size only (v1) | Size + offset (v2, adopted) |
+|---|---|---|---|
+| Development–project links | 6,670 | 4,992 | **4,849** |
+| DC projects matched to existing pipes | 47 | 38 | 40 |
+| Projects with developments relying on them | 71 | 63 | **62** |
+| Projects with a timing gap | 38 | 35 | 34 |
+| Developments expected before their gate year | 840 | 530 | **530** |
+| Gate year 2034 (the 26-2117 artifact) | 600 developments | 0 | **0** |
+| Developments gated in 2028 | 997 | 1,458 | 1,464 |
+| Not in the funding screen, with developments relying on them | 45 projects | 37 | **36** |
+
+What changed:
+- **Removed (wrong):**
+  - 26-2117 (663 developments → 0) and 26-2128 (663 → 0), small local mains beside a 2 m trunk;
+  - 24-2104, 26-2179 and 26-2221, each down to 0;
+  - 25-2158, a 750 mm local on a parallel street (242 → 15).
+- **Kept or restored (right):**
+  - 15-2153, a local main with no diameter on 300–675 mm pipes (back with 125 developments);
+  - 28-2137, which sits 3 m from its pipe;
+  - every trunk twin. For example, 25-2219, the Lower West Sanitary Trunk Sewer Twinning,
+    keeps its 653 developments.
+- **Gating projects now:**
+  - 22-2255: 709 developments, 2028;
+  - 25-2219: 630, 2028;
+  - 26-2242: 125, 2028;
+  - 25-2266: 70, 2029;
+  - 29-2271: 66, 2031.
+- **Unchanged:** the 1,720 developments relying on unscreened projects. Those come from the
+  big trunks, which the rule keeps.
+
+Still to check: 22-2255 now gates the most developments, and its matched pipes run a median
+114 m from the trunk. That's plausible for a twin corridor, but it's the first case to confirm
+with the Region and the FSRs (below).
 
 The 2020 study's text can't do this alone: 64 of the 96 wastewater projects have no 2020
 description.
@@ -79,9 +121,9 @@ description.
 Its timing gap is its forecast occupancy year (`PeelTiming` schedules) falling before the gate
 year. B2 never gates.
 
-In the prototype, before the step 3 fix, most gates were 2028 (997 developments) or 2034 (600).
-The 2034 group is the 26-2117 artifact, which is why step 3 comes before any timing figure is
-shown.
+Before the step 3 fix, most gates were 2028 (997 developments) or 2034 (600). The 2034 group
+was the 26-2117 artifact. With the fix, 1,464 developments are gated in 2028, and 530 are
+expected before their gate year.
 
 ### 5. Apportion money, without double counting
 A development can sit on up to 9 DC projects in series (prototype: 359 on one project, 468 on
@@ -96,8 +138,8 @@ development many times. So for money:
 
 ## How we'll know it's right
 
-1. **Rerun after the step 3 fix.** Report what moved: 26-2117 and 26-2128 should drop out, and
-   the 2034 gate should mostly go.
+1. **Rerun after the step 3 fix.** Done (see step 3): 26-2117 and 26-2128 dropped out and the
+   2034 gate went.
 2. **FSRs as ground truth.** `data/fsr.json` links 66 functional servicing reports. Read a sample
    of about 30 for the stated sanitary outlet (for example, "connect to the existing 525 mm on
    Creditview Road" or "to the future Mayfield West trunk"). Compare it with the model's

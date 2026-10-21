@@ -261,9 +261,10 @@ projects. These numbers are behind the mock-up.
   developments swamp the counts. For example, 6,653 built developments drain through
   **26-2242**, against 1,035 that are approved or proposed. Show built as a context line, not in
   the groups.
-- **Coverage:** 71 of the 173 projects have pipeline developments relying on them. 38 of those
-  have developments expected before the project is finished.
-- **Funding screen:** only 26 projects are in it today. 45 projects with developments relying on
+- **Coverage:** 62 of the 173 projects have pipeline developments relying on them. 34 of those
+  have developments expected before the project is finished. These figures use the corrected
+  relief matching from ALLOCATION.md step 3; before the fix they were 71 and 38.
+- **Funding screen:** only 26 projects are in it today. 36 projects with developments relying on
   them are not, and they carry 1,720 unique developments (≈146,000 units). That is the gap the
   "Affects" column and the ranking lens are meant to show.
 - **Totals across projects:** a development upstream of a trunk is also upstream of the trunks
