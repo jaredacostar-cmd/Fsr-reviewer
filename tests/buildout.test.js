@@ -103,7 +103,7 @@ test('demand basis: left to build, not yet completed, completed', () => {
   const projects = P.buildProjects([sub, ...hs]);
   assert.equal(projects.length, 1);
   assert.equal(D.estimate(projects, D.DEFAULT_CRITERIA, 'all').totalUnits, 100);
-  assert.equal(D.estimate(projects, D.DEFAULT_CRITERIA, 'remaining').totalUnits, 60);
+  assert.equal(D.estimate(projects, D.DEFAULT_CRITERIA, 'remaining').totalUnits, 80, 'left to build: not yet completed, as Growth');
   assert.equal(D.estimate(projects, D.DEFAULT_CRITERIA, 'unbuilt').totalUnits, 80);
   assert.equal(D.estimate(projects, D.DEFAULT_CRITERIA, 'completed').totalUnits, 20);
 });

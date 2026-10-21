@@ -121,7 +121,7 @@
   // ---- Scenario chip (SPEC §2): the basis is a set of layers ----------------------------------
   // Existing + Built always count; Committed alone = the D-5-1 capacity check; + Proposed = build-out;
   // + Anticipated = the stress test. Mapped onto the counting basis: committed | buildout | all
-  // ('remaining', units left to permit, is picked in the Scenario panel).
+  // ('remaining', units not yet completed: Growth's left to build, is picked in the Scenario panel).
   const BASIS_LAYERS = { committed: ['committed'], buildout: ['committed', 'proposed'], all: ['committed', 'proposed', 'anticipated'], remaining: ['committed', 'proposed', 'anticipated'] };
   const ROLE = { committed: 'D-5-1 check', proposed: 'build-out', anticipated: 'stress test' };
   const layersOf = basis => ['existing', 'built', ...(BASIS_LAYERS[basis] || BASIS_LAYERS.all)];
