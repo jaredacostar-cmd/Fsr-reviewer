@@ -138,6 +138,23 @@ function applicationPageUrl(/* record */) {
   return null;
 }
 
+// Brampton's planning files and their documents on BramPlanOnline (Accela Citizen Access): public,
+// no sign-in, searched by file number. The search page is linked; a link to one file needs the
+// portal's internal record ids, which the open data doesn't carry.
+const BRAMPLAN = 'https://planning.brampton.ca/CitizenAccess/Cap/CapHome.aspx?module=Planning&TabName=Planning';
+
+/**
+ * Where to look a planning file up by its number, when the municipality's
+ * portal can't be linked per file.
+ * @param {object} record a normalised record
+ * @returns {{url: string, portal: string, ref: string}|null} Brampton
+ *   planning applications only (building permits are another module)
+ */
+function applicationSearch(record) {
+  if (!record || record.municipality !== 'Brampton' || record.kind !== 'application' || !record.ref) return null;
+  return { url: BRAMPLAN, portal: 'BramPlanOnline', ref: String(record.ref) };
+}
+
 function dateOnly(v) {
   if (v == null) return null;
   const s = v instanceof Date && !isNaN(v) ? v.toISOString() : String(v);
@@ -168,7 +185,7 @@ function retrievedAt(record, snapshotMeta) {
   return dateOnly(meta);
 }
 
-const api = { PORTALS, portalFor, recordSourceUrl, applicationPageUrl, retrievedAt };
+const api = { PORTALS, BRAMPLAN, portalFor, recordSourceUrl, applicationPageUrl, applicationSearch, retrievedAt };
 if (typeof module !== 'undefined' && module.exports) module.exports = api;
 else root.PeelProvenance = api;
 })(typeof window !== 'undefined' ? window : globalThis);

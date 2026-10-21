@@ -571,7 +571,7 @@
       : [{ title: 'Recently active', rows: recent.map(devRow), total: recent.length }, { title: 'Large files under review', rows: big.map(devRow), total: big.length }];
     return { id, eyebrow: `${esc(label(id))} · step 1 of 3`, name: id === 'fsr' ? 'Do the consultant’s figures match Peel’s criteria?' : 'Can this development be serviced, and when?',
       top: `<div class="page-search" id="page-search"></div>${stepper}`,
-      answer: id === 'fsr' ? `Find the development: search an address or file number, or pick one with an FSR posted${fsrRows ? ` (${fmtNum(fsrRows.length)} in Mississauga and Caledon; Brampton’s are behind a sign-in)` : ''}.` : 'Find the development: search an address or file number, or pick one below.',
+      answer: id === 'fsr' ? `Find the development: search an address or file number, or pick one with an FSR posted${fsrRows ? ` (${fmtNum(fsrRows.length)} in Mississauga and Caledon; Brampton’s are on BramPlanOnline, searched by file number)` : ''}.` : 'Find the development: search an address or file number, or pick one below.',
       lists,
       map: { svg: devsMap(((App() && App().state.filtered) || []), recent), attrs: { 'data-ws-go': id }, label: 'Pick a development on the map', caption: '<span class="hm-key hm-key-hl"></span> recently active <span class="hm-key hm-key-dev"></span> developments of 50+ units (sized by units); click to pick one on the map' },
       actions: [{ label: 'Pick on the map', attrs: { 'data-ws-go': id }, primary: true }] };

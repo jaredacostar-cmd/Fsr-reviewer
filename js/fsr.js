@@ -48,7 +48,7 @@
     const withF = items.filter(i => i.fsr).sort((a, b) => (b.fsr.date || '').localeCompare(a.fsr.date || ''));
     return { items, best: withF[0] || null };
   }
-  const FSR_HOME = { Brampton: ['BramPlanOnline', 'https://www.brampton.ca/EN/Business/planning-development/Pages/applications.aspx'], Mississauga: ['Mississauga development applications', 'https://www.mississauga.ca/services-and-programs/planning-and-development/development-applications/active-development-applications/'], Caledon: ['Caledon development applications', 'https://www.caledon.ca/en/town-services/development-applications.aspx'] };
+  const FSR_HOME = { Brampton: ['BramPlanOnline', 'https://planning.brampton.ca/CitizenAccess/Cap/CapHome.aspx?module=Planning&TabName=Planning'], Mississauga: ['Mississauga development applications', 'https://www.mississauga.ca/services-and-programs/planning-and-development/development-applications/active-development-applications/'], Caledon: ['Caledon development applications', 'https://www.caledon.ca/en/town-services/development-applications.aspx'] };
   function fsrInnerHTML(p) {
     if (!FSR.by) { loadFsr().then(() => { if (DN().getCurrentProject() === p) { const b = $('#dev-fsr'); if (b) b.innerHTML = fsrInnerHTML(p); } }); return '<span class="muted small">Looking for a servicing report…</span>'; }
     const r = fsrFor(p), home = FSR_HOME[p.municipality];
@@ -57,7 +57,7 @@
     const bp = r && r.items.find(i => i.browserPage);
     if (bp) return `<strong>Servicing documents</strong> ${ext(bp.page, 'City application page')}<small>Look under Project documents for the latest Functional Servicing Report (the City's page builds that list in the browser, so it can't be linked directly).</small>`;
     if (r && r.items.length) return `<span class="muted">No FSR posted yet</span> · ${ext(r.items[0].page, 'application documents')}`;
-    if (p.municipality === 'Brampton') return `<span class="muted">Brampton's documents are on BramPlanOnline (sign-in)</span> · ${ext(home[1], 'Brampton applications')}`;
+    if (p.municipality === 'Brampton') { const f = (p.records || []).filter(x => x.kind === 'application' && x.ref).sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)))[0]; return `<strong>Servicing documents</strong> ${ext(home[1], 'BramPlanOnline')}<small>${f ? `Search ${esc(f.ref)}` : 'Search the file number'} and open its documents for the latest Functional Servicing Report. Public, no sign-in; the app can't link a Brampton file directly.</small>`; }
     return `<span class="muted">No public application page found</span>${home ? ` · ${ext(home[1], esc(home[0]))}` : ''}`;
   }
   const fsrBoxHTML = p => p.records.some(r => r.kind === 'application') ? `<div class="fsr-box small" id="dev-fsr" data-info="fsr">${fsrInnerHTML(p)}</div>` : '';
@@ -372,7 +372,7 @@
       const unitsCell = a.units > 0
         ? `${fmtNum(a.units)}${a.unitsUser ? ` <span class="user-units" title="Your figure, kept in this browser">your figure <button type="button" class="btn small link" data-uu-clear="${esc(a.ref)}" aria-label="Remove your figure">×</button></span>` : ''}`
         : !canAdd ? '–' : `<span class="uu-entry"><input type="number" min="1" step="1" inputmode="numeric" placeholder="units" data-uu="${esc(a.ref)}" aria-label="Units for ${esc(a.ref)}"><button type="button" class="btn small" data-uu-set="${esc(a.ref)}">Add</button></span>`;
-      return `<tr><td><button type="button" class="btn small link" data-sub="${esc(a.ref)}" title="Open this application on its own">${esc(a.ref)}</button><small>${esc(a.type || '')}${a.statusRaw ? ` · ${esc(a.statusRaw)}` : ''}</small>${att ? `<small class="att-note">Units are in the file's attachments (cover letter / planning justification)${p.municipality === 'Brampton' ? ' on BramPlanOnline (sign-in)' : ''}: enter them here.</small>` : ''}</td>
+      return `<tr><td><button type="button" class="btn small link" data-sub="${esc(a.ref)}" title="Open this application on its own">${esc(a.ref)}</button><small>${esc(a.type || '')}${a.statusRaw ? ` · ${esc(a.statusRaw)}` : ''}</small>${att ? `<small class="att-note">Units are in the file's attachments (cover letter / planning justification)${p.municipality === 'Brampton' ? ` on <a href="https://planning.brampton.ca/CitizenAccess/Cap/CapHome.aspx?module=Planning&amp;TabName=Planning" target="_blank" rel="noopener">BramPlanOnline ↗</a> (search ${esc(a.ref)})` : ''}: enter them here.</small>` : ''}</td>
         <td class="num">${unitsCell}${role(a) ? `<small>${esc(role(a))}</small>` : ''}</td><td class="num">${ps.length ? fmtNum(perm) : '–'}</td><td class="num">${ps.length ? fmtNum(done) : '–'}</td><td class="num">${a.units > 0 && counted.has(a) ? fmtNum(Math.max(0, a.units - perm)) : '–'}</td></tr>`;
     };
     const op = outside.length ? P.permitUnits(outside) : 0;

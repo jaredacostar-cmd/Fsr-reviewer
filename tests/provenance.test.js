@@ -102,3 +102,17 @@ test('retrievedAt: null when nothing is known; tolerant of Date objects', () => 
   assert.equal(P.retrievedAt(liveRec({ retrievedAt: new Date('2026-10-14T08:00:00Z') }), null), '2026-10-14');
   assert.equal(P.retrievedAt(null, { generatedAt: '2026-10-13' }), '2026-10-13');
 });
+
+test('applicationSearch: a Brampton planning file looks itself up on BramPlanOnline (public, no sign-in)', () => {
+  const bra = liveRec();
+  assert.deepEqual(P.applicationSearch(bra), { url: 'https://planning.brampton.ca/CitizenAccess/Cap/CapHome.aspx?module=Planning&TabName=Planning', portal: 'BramPlanOnline', ref: 'OZS-2024-0001' });
+  assert.equal(P.applicationSearch({ ...bra, kind: 'permit' }), null, 'permits are another module');
+  assert.equal(P.applicationSearch({ ...bra, municipality: 'Mississauga' }), null);
+  assert.equal(P.applicationSearch({ ...bra, ref: '' }), null);
+  assert.equal(P.applicationSearch(null), null);
+  const fs = require('fs'), path = require('path'), src = f => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
+  for (const f of ['js/dev-detail.js', 'js/devtab.js']) assert.match(src(f), /applicationSearch\(r\)[\s\S]*Find \$\{esc\(look\.ref\)\} on \$\{esc\(look\.portal\)\} ↗/, f);
+  // No page says Brampton's documents need a sign-in.
+  for (const f of ['js/fsr.js', 'js/devtab.js', 'js/ws-pages.js', 'js/info.js', 'scripts/build-fsr.js', 'data/fsr.json', 'data/sources.json']) assert.doesNotMatch(src(f), /BramPlanOnline \(sign-in\)|behind a sign-in/, f);
+  for (const f of ['js/fsr.js', 'js/devtab.js']) assert.match(src(f), /Brampton: \['BramPlanOnline', 'https:\/\/planning\.brampton\.ca\/CitizenAccess\/Cap\/CapHome\.aspx\?module=Planning&TabName=Planning'\]/, f);
+});

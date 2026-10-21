@@ -850,8 +850,8 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
     phases add up; for an official plan / zoning / subdivision file the largest counts.
   - Tap a file to open it on its own.
 - **Units only in the attachments**: some descriptions say "refer to the attached cover letter /
-  PJR" and give no unit count. About 76 files, nearly all in Brampton, whose documents are on
-  BramPlanOnline behind a sign-in, so they can't be read automatically.
+  PJR" and give no unit count. About 76 files, nearly all in Brampton. Their documents are public on
+  BramPlanOnline, but they are found by searching the file number and are not read automatically.
   - Those rows are flagged, and the unit count from the cover letter can be entered. Entry is also
     offered where the development has no count at all.
   - The figure is kept in this browser, marked *your figure* (× removes it), and counted like a
@@ -1051,8 +1051,11 @@ year whose forecast matches the tracker's build-out.
   public page.
 - **Caledon:** its application pages, with each application type's own numbering (direct PDF links;
   64 pages carry an FSR).
-- **Brampton:** documents are on BramPlanOnline, which needs a sign-in, so the tab links there
-  instead.
+- **Brampton:** documents are public on
+  [BramPlanOnline](https://planning.brampton.ca/CitizenAccess/Cap/CapHome.aspx?module=Planning&TabName=Planning),
+  with no sign-in. A file is found by searching its number: the portal's pages need its internal
+  record ids, which the open data doesn't carry. So the tab links the search and names the newest
+  file to look up. Brampton's reports aren't read automatically yet.
 - A link to all of the application's documents comes with it.
 
 **Supply route.** The Servicing tab's **Water** section shows where the water comes from, like
@@ -2860,8 +2863,12 @@ Every figure in the app can be checked against where it came from:
 
   One plan target, Mayfield West Phase 2 (Caledon), cites a news release with no date. It is the
   only known undated target, and any other undated target fails the test.
-- **Not yet.** The municipalities' own application pages (`applicationPageUrl`) are still not
-  linked: no stable address pattern has been checked for any of the three.
+- **Brampton planning files on BramPlanOnline.** Each Brampton planning file's source line also has
+  *Find <file> on BramPlanOnline ↗*. It opens the portal's public search (no sign-in), where the
+  file number finds the file and its documents (`applicationSearch` in `js/provenance.js`). Building
+  permits are a different part of the portal and are not linked.
+- **Not yet.** Links straight to one file's page (`applicationPageUrl`) are not built for any of
+  the three municipalities: no stable address pattern has been checked.
 
 ## Counts that hold still, and counts found online checked
 
