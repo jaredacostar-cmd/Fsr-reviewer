@@ -118,6 +118,62 @@
     if (!project || project.phase === 'cancelled' || project.phase === 'completed') return false;
     return COMMITTED_PHASES.has(project.phase);
   }
+  // The rules by name: the Peel rule (below) is the pipeline ledger's "committed"; MECP D-5-1 stays
+  // for the layers, the layer bar and the capacity screens.
+  const COMMIT_RULES = { peel: 'Peel rule (building or site servicing permit)', d51: 'MECP D-5-1' };
+
+  // ---- Committed: the Peel rule (D1, settled 2026-10-21; docs/pipeline-ledger-plan.md) ------------
+  // A development is committed once it has a building permit or a water / wastewater site servicing
+  // permit (data/dc-gate.json bucket "counted"), filed or issued. A site servicing permit commits the
+  // whole development; a building permit commits only the units it covers (the build-out's permitted
+  // units, one figure per building). Where a development's residential permits state no units and the
+  // build-out could not infer them, its units are split evenly across its building permits, and the
+  // result says so (estimated). Septic (private) sites are outside the Regional system: never committed.
+  // gate: the development's dc-gate row (null: no servicing evidence known).
+  const BP_ROLES = new Set(['units', 'res', 'nonres', 'suite']);
+  function buildingPermitsOf(project) {
+    const P = Ph();
+    return (project.records || []).filter(r => r.kind === 'permit' && r.phase !== 'cancelled' && !r.prePlan && !r.outside && BP_ROLES.has(P.permitRole(r)));
+  }
+  function isCommittedPeel(project, gate = null) {
+    if (!project || project.phase === 'cancelled' || project.phase === 'completed') return false;
+    if (gate && gate.bucket === 'private') return false;
+    if (gate && gate.bucket === 'counted') return true;
+    return buildingPermitsOf(project).length > 0;
+  }
+  /**
+   * Units left to build that the Peel rule commits, and on what: { units, left, by: 'servicing' |
+   * 'permits' | null, estimated, permits, blank }. left: the development's units left to build
+   * (PeelPhases.unbuiltOf, as Growth). permits: building permits (one per building); blank: those
+   * stating no units.
+   */
+  function committedPeelUnits(project, gate = null) {
+    const P = Ph(), left = project ? P.unbuiltOf(project) : 0;
+    const out = { units: 0, left, by: null, estimated: false, permits: 0, blank: 0 };
+    if (!isCommittedPeel(project, gate)) return out;
+    const bps = buildingPermitsOf(project);
+    const bldg = r => r.fileKey || P.permitBase(r) || r.uid;   // (a building's conditional, full and revised permits are one)
+    const buildings = new Set(bps.map(bldg));
+    const stated = new Set(bps.filter(r => P.permitAddsUnits(r)).map(bldg));
+    const blank = new Set(bps.filter(r => P.permitRole(r) === 'res' && !P.permitAddsUnits(r)).map(bldg));
+    for (const k of stated) blank.delete(k);
+    out.permits = buildings.size; out.blank = blank.size;
+    if (gate && gate.bucket === 'counted') { out.units = left; out.by = 'servicing'; return out; }
+    if (!bps.length) return out;
+    const b = project.buildout;
+    // Permitted, not yet built: the units the permits cover and still to come.
+    let units = b ? Math.max(0, (b.permitted || 0) - (b.completed || 0)) : left;
+    // Residential permits stating no units, none inferred by the build-out: the development's units
+    // split evenly across its building permits (flagged).
+    if (b && blank.size && !b.inferred) {
+      units += (project.units || 0) * blank.size / Math.max(1, buildings.size);
+      out.estimated = true;
+    }
+    if (b && b.inferred) out.estimated = true;
+    out.units = Math.min(left, units);
+    out.by = out.units > 0 ? 'permits' : null;
+    return out;
+  }
 
   /** How many of a project's units count, by basis. */
   function unitsFor(project, basis = 'all') {
@@ -436,7 +492,7 @@
     return `includes ${f1(ii)} L/s of rain and groundwater (I&I: ${f1(ha)} ha at ${rate} L/s/ha)`;
   }
   const api = {
-    iiText, iiPlain, UNIT_TYPES, DEFAULT_CRITERIA, CRIT_SOURCES, CRIT_UNITS, sourceOf, sourceText, COMMITTED_PHASES, isCommitted, draftApproved, isSubdivisionFile, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, residentialPeaking, APT_DENSITY, estimate, toMLd, jobsFor, employmentPeaking, employmentDemand, mixFromText, typeBuildout, apportion };
+    iiText, iiPlain, UNIT_TYPES, DEFAULT_CRITERIA, CRIT_SOURCES, CRIT_UNITS, sourceOf, sourceText, COMMITTED_PHASES, isCommitted, COMMIT_RULES, isCommittedPeel, committedPeelUnits, buildingPermitsOf, draftApproved, isSubdivisionFile, AREA_PER_UNIT, areaFor, unitTypeOf, unitSplit, unitsFor, harmon, residentialPeaking, APT_DENSITY, estimate, toMLd, jobsFor, employmentPeaking, employmentDemand, mixFromText, typeBuildout, apportion };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemand = api;
 })(typeof window !== 'undefined' ? window : globalThis);
