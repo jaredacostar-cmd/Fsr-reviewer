@@ -1418,6 +1418,92 @@ St”, “65-71 Agnes St”, “… (formerly …)”) joins the records at each
 permit-only project of 20+ units within 60 m of an application with exactly the same unit count
 joins that application.
 
+## One set of numbers: pages and the full map agree
+
+Home, the workspace pages and the full map's panels show the same figure for the same thing.
+Browser checks (`npm run browser`) compare them for Peel and each municipality at every counting
+basis, and for every plan, sub-area and precinct.
+
+| Figure | One rule |
+|---|---|
+| Built / left to build | A development marked completed with permits still open: the homes on open permits are left to build ("permit issued, not built" on the stage chart), not built. The stage chart's "not yet built" equals Growth's left to build. |
+| The units figure under the Scenario | Says what it counts: *planned* (every stage), *applied for (no pre-application)*, *approved, not yet built*, or *left to build*, with "of N planned" beside it. Growth in an area follows the Scenario for units, people and jobs, as the Overview does. |
+| Capacity and the DC program on Home | Region-wide (a plant serves more than one municipality): with a municipality picked, those figures say "Peel-wide". |
+| First 90% trigger | The first treatment plant (wastewater or water) to reach its 90% expansion trigger, then the most loaded: the same plant on Home, Servicing capacity and the Overview's headline. A facility's own *limit* (firm capacity, full pipe) is named as a limit, not a trigger. |
+| This week | One list of changes for Home, the Overview, the badge and the This week page, in the municipality picked; none on the first (baseline) update. |
+| Dormant developments | Held out of every count (`PeelPhases.dormantOf`); the stage charts on Home and Growth in an area say how many homes are left out. |
+| Plan areas | A plan filter on the map (and "Show on the map" from Growth in an area) holds the developments Growth in an area counts there, by the same placement (`PeelPlanTables.areaIdsOf`): a straddling development by its share, precincts and sub-areas included. The Overview and the header count the part inside the plan (units, people, jobs), with what the straddling developments hold outside it named beside. A precinct filed under the plan holding most of it can't pull a development out of the plan it sits in (Bram West 40 (d) was counted at half). |
+
+## Sections: a page shows every map tab for its scope
+
+Each full-map tab's panel (Overview, Growth, Servicing, Capital, Records) is a **section**
+(`js/sections.js`). **Check a site** shows all of a development's sections under one bar:
+Summary, Growth, Servicing, Capital (the DC projects it relies on, then the EAs near it) and Files.
+Each is the map tab's own panel, so the page and the map read the same answer and figures; a
+section whose tab builds its panel only when opened (Capital, Records) is built for the page on
+demand. Nothing about a site is only in the full map.
+
+## Explore: one workspace for a site, a plan or an area you draw
+
+Home's sidebar has one **Explore** entry for what were five: Growth in an area, Check a site,
+Review an FSR, Forecast and Study area are its views.
+- Each view opens with the one search (an address, a file number, a description) and **Draw an
+  area**. A site picked from an area view (the search, a list row, the map) opens on its page.
+- A site shows where it sits, **Peel › municipality › plan › site** (the plan tree's placement, as
+  the plan filter); each step opens Growth in an area at that level.
+- A site's sections: Summary, Growth, Servicing, Capital, Files and **FSR review** (the cross-check
+  and what an FSR should cover). An area's: Growth (the drill-down) and Forecast.
+- The views keep their own ids (`site`, `fsr`, `growth`, `outlook`, `study`), so links, share links and
+  the map-view chips still work; Explore opens the site in scope, else the last view used.
+- A site's page has the **live map** beside its sections, at the site, with the infrastructure around
+  it: existing water, sanitary and storm mains (from street zoom), the 2026 DC works, Region
+  construction and the EA study areas, and the developments; each layer is a chip under the map.
+  The full map gets its own layers back when you open it.
+- An area's sections also include **Servicing** and **Capital**: the map's Servicing › Capacity and
+  Capital › DC timing panels. They are Region-wide (the plants and the DC program serve more than one
+  municipality), and say so inside a municipality or a plan.
+- An area's developments are **one table** (js/dev-table.js), in place of the lists of plans, site
+  servicing permits and developments. Group it by the next level down (municipality, plan or
+  sub-area: each group opens its level), by stage, by site servicing permit (each group shows its
+  developments on the map) or not at all; sort by name, units, left to build or last activity. Each
+  group heading carries its totals and a bar of its homes left to build by stage; ten rows a group,
+  then **Show all**. A row opens the site. The stage buttons filter the table, the treemap and the chart.
+- Under the map, a **treemap** of the same: a box per area, sized by homes left to build (homes built,
+  under Built since 2021), a tile per development coloured by its stage (the 30 largest a box, the
+  rest as one tile). A tile opens the site, a box's name opens its level. Hovering a tile or a table
+  row rings the development on the map; hovering a box rings its developments and outlines its area.
+
+## Servicing and Capital: one page each, the map's sub-views as sections
+
+- **Servicing capacity**: Capacity (its own page: limits, the 90% trigger, the uncommitted reserve,
+  no relief in time) and the map's **Network**, **Allocations** and **Model checks** as sections.
+- **Capital** (one sidebar entry for what were DC projects and EA to construction): **DC timing**,
+  **EA to construction** (its own page) and the map's **Projects** and **EAs** as sections.
+- Each section is the map's own panel (`js/sections.js` `WORKSPACES`), built on demand when its
+  tab hasn't been opened, so the page and the map read the same.
+
+## Reference and This week
+
+- **Reference** is one sidebar entry: **Help**, **How it works** (and each guide), the **Glossary**,
+  **Data sources** and **Data checks**. The last two are the map's Records › Sources and Data checks
+  (the old Data tab), until now only in the full map.
+- **This week** carries **Your watch list** (the developments starred ☆ Watch, each with its stage
+  and whether it changed this week, changed ones first) and the week's **capacity alerts** from the
+  weekly feed, both of which were only in the full map's Watch tab.
+
+## Home: the briefing
+
+- **The scope first**: Peel, Mississauga, Brampton or Caledon (the map's municipality filter). Every
+  figure follows it; one that is Region-wide (capacity, the DC program) says so.
+- **Four groups of figures**, each the answer of its page and opening it: **Growth** (homes planned,
+  left to build, people at build-out, expected by 2031), **Servicing** (over capacity at build-out,
+  the first 90% trigger), **Capital** (DC projects late, facilities with no relief in time) and
+  **Change** (this week's changes, files on a tight plant).
+- The stage chart (with the homes dormant developments leave out), **Needs attention** beside the
+  capacity map, **Largest left to build**, **Plans furthest behind their target** and **This week**.
+- Home's sidebar has seven entries: Home, This week, Explore, Servicing capacity, Capital, Old pipes
+  and Reference, then Full map.
+
 ## Build-out: planned vs permitted vs left to build
 
 For each project with a unit count on its planning applications:
@@ -1427,8 +1513,8 @@ For each project with a unit count on its planning applications:
 | Planned | Units on the planning applications. Files on the same land repeat one proposal, so the largest figure is used. Parts nested inside a larger application are summed, unless the parent's own figure is larger. |
 | Permitted | Units on building permits on the land. Permits at one address (foundation, full, revisions) count once. |
 | Completed | Units on permits marked closed, finaled or occupied. |
-| **Left to build** | Planned − permitted: units with no building permit yet. |
-| Not yet completed | Planned − completed. |
+| **Left to build** | Planned − completed: units not yet built, permit issued or not. One figure on Growth, the Overview, Timing, the stage chart ("not yet built") and the Scenario's **Units: left to build**. |
+| Left to permit | Planned − permitted: units with no building permit yet. |
 | **Committed capacity** | Growth only (units planned on a planning application), not yet completed, on projects that are approved, permitted or under construction. Applications still in pre-consultation or review are proposed, not committed; permits with no planning application are not growth. |
 
 ### Multi-phase developments (towers, blocks, condo phases)
@@ -1455,7 +1541,7 @@ together. A plan with units still left to permit shows as "Under construction", 
 
 In the app, the project panel shows a build-out bar, and the project list shows "planned / left"
 on each row. The **Unit growth** filter has an option for **Units left to build**. The demand
-panel can be based on all units, units left to build, units not yet completed, or completed
+panel can be based on all units, units left to build (not yet completed), or completed
 units. The CSV export includes every build-out figure.
 
 Run the tests with `npm test`.
@@ -1833,7 +1919,7 @@ these definitions. In the app they're in the **Definitions** card (Overview ⓘ 
 | Proposed | Pre-consultation, inception and review, not committed |
 | Allocated | Only the allocations you record. Peel publishes no allocation list. |
 | Planned units | Each development's units counted once (the larger of planned and permitted), net of homes demolished |
-| Permitted / left to build | Units with a building permit / planned units with no permit yet |
+| Permitted / left to build | Units with a building permit / planned units not yet completed |
 | Uncommitted reserve (D-5-1) | Rated capacity − (existing + built + committed), to **100%** of rated |
 | Room to the trigger | **90%** of rated (2020 Master Plan expansion trigger) − (existing + built + committed) |
 
@@ -2834,3 +2920,25 @@ repairs and renewals (relining, trenchless rehabilitation, inlet repair, resurfa
 developer-built works, Region-wide studies (master plans: everything lies near them), and, for a
 study area placed with low confidence, anything not on a street named in the EA. They are listed
 with the reasons and never count as following the EA.
+
+## Home page maps: street context, zoom, labels; Site: water and wastewater
+
+- **Basemap** (`js/ws-pages.js` `tilesSVG`): every small map on the Home pages draws the full map's
+  grey street map (Esri World Gray Canvas, base + labels, in the theme's shade) under it, each tile
+  placed by its projected corners so it turns with the map (road grid). One probe tile decides; when
+  tiles don't load (offline), the Check a site map names its streets from the Region's address points
+  (`js/reports.js` `streetLines`).
+- **Zoom**: Forecast, This week, DC projects and EA to construction zoom to the municipality chosen.
+- **EA to construction** draws the EA study areas (by status) and the construction that followed.
+- **Labels** (the three largest developments, the largest named works, the EAs waiting longest, the
+  worst old pipes by street) only on a zoomed-in map: a map of all of Peel names only the municipalities.
+- **Check a site › Site › Water and wastewater** (`js/devtab.js`): within 100 m – 1 km (as the storm
+  sewers), the Region's watermains and sanitary sewers of 300 mm+, the 2026 DC works and the Region's
+  projects planned or under construction; a small map of them all, a row tapped highlights its main.
+  No pressure zone: the open watermain layers carry none, and the zone a main runs through isn't the
+  zone it serves. Street: **along** a road when the road's Region project or DC line covers 70%+ of the
+  pipe's length (parallel, within 40 m); **near** a road when only the nearest house address gives it
+  (a guess; a main of 600 mm+ never gets a crescent or court). DC works are named from their title
+  (kind and size; the title's size wins over the map's size field, which disagrees on 17 of 98);
+  a Region project that builds a DC work joins its row; relining and trenchless works are tagged
+  renewal; in-service years are the DC program's, construction dates the Region's schedule.

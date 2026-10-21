@@ -96,3 +96,13 @@ test('score: a completed record the aerial does not confirm says so', () => {
   assert.ok(s.probability < 0.7, s.probability);
   assert.equal(s.status, 'Completed in the records; not confirmed on the aerial');
 });
+
+test('score: a site that changed far more than its surroundings is never "Not visibly started"', () => {
+  // 151 City Centre Dr (SP 19/056): records still at approved, but the site changed ×2.1 more than
+  // its surroundings 2018 → 2024 while the two towers went up.
+  const s = A.score({ phase: 'approved', buildout: null }, {
+    latestYear: 2024, beforeYear: 2018, now: photo(1.1), before: photo(1.0), change: { site: 0.9, around: 0.43, ratio: 2.1 },
+    fpNow: 0.35, fpYearNow: 'unknown', siteArea: 9000 });
+  assert.ok(s.probability < 0.7, s.probability);
+  assert.equal(s.status, 'Likely under construction');
+});

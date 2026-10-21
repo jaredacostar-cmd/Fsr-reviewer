@@ -118,7 +118,9 @@
     [/registered|registration|m-plan/i, 'ok', 'Plan registered or being registered'],
     [/agreement/i, 'ok', 'Agreement being prepared or executed'],
     [/\bmzo\b/i, 'ok', "Approved by Minister's Zoning Order"],
-    [/withheld/i, 'info', 'Status withheld in the municipal data'],
+    // Mississauga lists "Withheld" among its active statuses (City Planning Data Hub): an open
+    // file with no decision yet, never in its approved layer.
+    [/withheld/i, 'info', 'Active application, no decision yet'],
   ];
   function planApprovedNote(p) {
     // Zoning approved (a zoning file approved, or a zoning by-law passed at council) with no draft or
@@ -230,6 +232,10 @@
     const cu = recs.filter(r => r.closedUnconfirmed);
     if (cu.length) flags.push(['warn', `${cu.map(r => r.ref).join(', ')} only ${cu.length === 1 ? 'reads' : 'read'} “Closed”, with no approval date and no building permit since: the outcome isn’t published, so ${cu.length === 1 ? 'it is' : 'they are'} not counted as an approval.`]);
     if (heldBack) flags.push(['info', `${setter && setter.ref ? setter.ref : 'A permit'} reads completed, but ${p.buildout ? fmtNum(p.buildout.remaining) : 'some'} planned unit${p.buildout && p.buildout.remaining === 1 ? '' : 's'} have no building permit yet, so the site is shown as under construction rather than completed.`]);
+    const cb = p.buildout && p.buildout.condoBuilt;
+    if (cb) flags.push(['info', `Condominium ${cb.refs.join(', ')} ${cb.refs.length === 1 ? 'is' : 'are'} registered: a condominium is registered once its building stands, so ${fmtNum(cb.units)} home${cb.units === 1 ? ' is' : 's are'} counted as built${p.phase === 'completed' ? '' : ' and the site as under construction at least'}, whatever the building permits in the open data say.`]);
+    const conv = recs.filter(r => r.conversion && r.phase !== 'cancelled');
+    if (conv.length) flags.push(['info', `${conv.slice(0, 2).map(r => r.ref).join(', ')}${conv.length > 2 ? ` +${conv.length - 2}` : ''} ${conv.length === 1 ? 'converts' : 'convert'} an existing building to condominium tenure: no new homes, so ${conv.length === 1 ? 'its' : 'their'} units are not counted.`]);
     const appeal = live.filter(r => r.kind === 'application' && STATUS_SIGNALS[0][0].test(r.statusRaw || ''));
     if (appeal.length) flags.push(['warn', `Under appeal at the Ontario Land Tribunal (${appeal.map(r => `${r.ref || 'no number'}: “${r.statusRaw}”`).join('; ')}): ${appeal.some(r => r.phase === 'approved') ? 'the status is read as approved, but the decision is not final until the Tribunal rules' : 'the Tribunal, not council, will decide'}.`]);
     const demos = recs.filter(r => P().isDemolition(r) && r.phase !== 'cancelled');
@@ -331,36 +337,73 @@
       return `<details class="tl-year"${i < 2 ? ' open' : ''}><summary><strong>${y}</strong> <span class="muted small">${sum}</span></summary><ol class="tl2">${xs.map(evHTML).join('')}</ol></details>`;
     }).join('');
   }
-  // History: the stages reached, then every dated event. A file or permit number in an event opens
-  // its source record in place; "By file" lists the source records by type (the old Source records
-  // section); a type label (Council, File, Permit, Stage) shows only that type.
-  function devHistoryHTML(p, st) {
+  // Files, events and proposal: one section for what the Files tree, History (with the source records)
+  // and About used to show apart. The proposal and its status first; then the Gantt chart
+  // (js/dev-gantt.js), its planning files in the file tree's order, each row opening to the file's
+  // dated events and source record (the stage row to the stages reached, the council row to the
+  // council items, a permit group to its permits); then every dated event in date order, folded.
+  function fileRecOf(p) {
+    const by = new Map();
+    for (const r of p.records) if (r.kind === 'application') {
+      const k = P().fileId ? P().fileId(r) : r.fileKey || r.ref;
+      if (k && !by.has(k)) by.set(k, r);
+      if (r.ref && !by.has(`ref:${r.ref}`)) by.set(`ref:${r.ref}`, r);
+    }
+    return n => (n.key && by.get(n.key)) || by.get(`ref:${n.ref}`) || null;
+  }
+  function fileBodyHTML(r) {
+    const ev = (r.events || []).slice().sort((a, b) => a.date - b.date);
+    return `<p class="small"><strong>${esc(r.kind === 'permit' ? 'Building permit' : 'Application')} ${esc(r.ref || '')}</strong>${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · municipal status: <em>${esc(r.statusRaw)}</em>` : ''}${r.units > 0 ? ` · ${fmtNum(r.units)} units` : ''}</p>
+      ${r.description ? `<p class="small">${esc(r.description)}</p>` : ''}
+      ${ev.length ? `<ol class="gt-evs small">${ev.map(e => `<li><span class="d">${fmtDate(e.date)}</span>${dot(e.phase)}<span>${esc(P().humanizeField(e.label || ''))}</span></li>`).join('')}</ol>` : '<p class="small muted">No dated events on this file.</p>'}
+      ${recordProvHTML(r)}<details class="gt-fields"><summary class="small">Every field as published</summary><table class="rec-t">${recordRows(r)}</table></details>`;
+  }
+  function storyHTML(p, st, wrap = false) {
     const cancelled = p.phase === 'cancelled';
     const steps = P().PHASES.map(s => {
       const reached = !cancelled && s.rank <= p.rank, when = p.milestones[s.key];
       return `<li class="${s.key === p.phase ? 'current done' : reached ? 'done' : 'todo'}">${dot(s.key)}<span class="lbl">${esc(s.label)}</span><span class="when">${when ? fmtDate(when) : reached ? 'reached' : ''}</span></li>`;
     }).join('');
     evRecs = new Map(p.records.map(r => [r.uid, r]));
-    const all = devEvents(p), key = keyEvents(all);
-    const nC = all.filter(x => x.type === 'council').length;
+    const all = devEvents(p), key = keyEvents(all), council = all.filter(x => x.type === 'council');
     const st2 = state(), byRef = new Map(p.records.map(r => [r.ref, r]));
     const fileLink = f => (byRef.has(f) ? `<button type="button" class="tr-ref" data-dev-file="${esc(f)}">${esc(f)}</button>` : esc(f));
-    const groups = groupRecords(p.records);
-    const byFile = groups.map(g => `<details class="rec-group"><summary><strong>${esc(g.label)}</strong> <span class="n">${fmtNum(g.list.length)}</span><span class="muted small">${g.span}${g.units ? ` · ${fmtNum(g.units)} units` : ''}</span></summary>
-        ${g.shown.map(recHTML).join('')}
-        ${g.more ? `<p class="small muted">+ ${fmtNum(g.more)} more (export CSV for the full list)</p>` : ''}
-      </details>`).join('');
-    const html = `<details class="sect dev-hist" id="devtab-hist" open><summary><h2 class="section-title" data-info="dev-history">History</h2><span class="muted small sect-sum">${p.first ? `since ${fmtDate(p.first).slice(0, 4)}` : ''}${nC ? ` · ${nC} council` : ''} · ${fmtNum(p.records.length)} source records</span></summary>
-      <ol class="stepper compact">${steps}</ol>
-      ${st.sig.length ? `<ul class="why-list" data-info="status-why">${st.sig.map(x => `<li class="why-${x.kind}"><span>${esc(x.text)}</span><small>${x.files.slice(0, 3).map(fileLink).join('; ')}${x.files.length > 3 ? ` +${x.files.length - 3} more` : ''}</small></li>`).join('')}</ul>` : ''}
-      <div class="seg tl-toggle" role="group" aria-label="Events shown"><button type="button" class="btn small on" data-dt-tl="key">Key events</button><button type="button" class="btn small" data-dt-tl="all">All dated events (${fmtNum(all.length)})</button><button type="button" class="btn small" data-dt-tl="file">By file (${fmtNum(p.records.length)})</button></div>
+    // The proposal and its status (what the About fold held), the reasons under the status.
+    const about = `<section class="brief" data-info="dev-brief">
+      ${brow('Status', `<p class="small">${dot(p.phase)} <strong>${esc(P().PHASE_BY_KEY[p.phase].label)}</strong>${p.last ? ` · latest activity ${fmtDate(new Date(p.last))}` : ''}</p>
+        ${st.why ? `<p class="small muted">${st.why}</p>` : ''}
+        ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no file event, permit or council item since ${fmtDate(new Date(st.lastAt))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}
+        ${st.sig.length ? `<ul class="why-list" data-info="status-why">${st.sig.map(x => `<li class="why-${x.kind}"><span>${esc(x.text)}</span><small>${x.files.slice(0, 3).map(fileLink).join('; ')}${x.files.length > 3 ? ` +${x.files.length - 3} more` : ''}</small></li>`).join('')}</ul>` : ''}`)}
+      ${brow('Latest decision', latestDecisionHTML(p, st))}
+      ${p.records.some(r => r.kind === 'application') ? brow('Servicing report', fsrBoxHTML(p)) : ''}
+      ${p.description ? brow('Proposal', `<p class="desc-clamp small">${esc(p.description)}</p>`) : ''}
+    </section>`;
+    const FT = root.PeelFileTree, d = FT && FT.flat && !p.parent ? FT.of(p) : null;
+    const newest = p.records.filter(r => r.kind === 'application').sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)))[0];
+    // The permits under each planning file (its site servicing permits, its building permits as one
+    // group: js/dc-gate.js treeOpts), in the file's row; those filed before the files, after the chart.
+    const tOpts = d && root.PeelDcGate && root.PeelDcGate.treeOpts ? root.PeelDcGate.treeOpts(p, d) : {};
+    const after = r => {
+      const h = r.node && tOpts.after ? tOpts.after(r.node.n) : '';
+      return h ? `<div class="tr gt-after"><p class="small"><strong>Permits under ${esc(r.ref)}</strong></p>${h}</div>` : '';
+    };
+    const body = r => r.kind === 'stage' ? `<ol class="stepper compact">${steps}</ol>`
+      : r.kind === 'council' ? `<ol class="tl2">${council.map(evHTML).join('')}</ol>`
+      : r.kind === 'group' ? r.recs.map(recHTML).join('')
+      : r.kind === 'file' ? `${r.rec ? fileBodyHTML(r.rec) : ''}${after(r)}` : '';
+    const chart = root.PeelDevGantt ? root.PeelDevGantt.html(p, { council: st2 && st2.council ? councilBriefs(p) : [], tree: d ? FT.flat(d) : null, recOf: fileRecOf(p), latest: newest && newest.ref, dot, body }) : '';
+    const events = `<details class="gt-events"><summary class="small"><strong>All dated events, newest first</strong> <span class="muted">${fmtNum(all.length)}${council.length ? ` · ${fmtNum(council.length)} council` : ''}</span></summary>
+      <div class="seg tl-toggle" role="group" aria-label="Events shown"><button type="button" class="btn small on" data-dt-tl="key">Key events</button><button type="button" class="btn small" data-dt-tl="all">All dated events (${fmtNum(all.length)})</button></div>
       <p class="tl-only small" hidden>Only <b data-tl-only-name></b> events · <button type="button" class="btn small link" data-tl-type="">Show all</button></p>
-      <div data-dt-tlv="key">${evListHTML(key)}</div><div data-dt-tlv="all" hidden>${evListHTML(all)}</div>
-      <div data-dt-tlv="file" id="devtab-recs" hidden><p class="small muted">Each municipal file combined into this development, by type, oldest first: every field as published, with its source.</p>${byFile}</div>
-      <p class="small muted">Press a file or permit number for its source record. Phase changes from the weekly check; council and committee items that name the files (${st2 && st2.council ? 'agendas and minutes since 2019' : 'loading'}); file and permit dates from the municipal records. Open a council item for its motion, reports and minutes.</p></details>`;
+      <div data-dt-tlv="key">${evListHTML(key)}</div><div data-dt-tlv="all" hidden>${evListHTML(all)}</div></details>`;
+    const inner = `${about}<div id="devtab-recs">${chart}${tOpts.foot ? `<div class="tr">${tOpts.foot}</div>` : ''}</div>${events}
+      <p class="small muted">Stage changes from the weekly check; council and committee items that name the files (${st2 && st2.council ? 'agendas and minutes since 2019' : 'loading'}); file and permit dates and every field from the municipal records.</p>`;
     evRecs = null;
-    return html;
+    return wrap
+      ? `<details class="sect dev-hist" id="devtab-hist" open><summary><h2 class="section-title" data-info="dev-history">Files, events and proposal</h2><span class="muted small sect-sum">${p.first ? `since ${fmtDate(p.first).slice(0, 4)}` : ''}${council.length ? ` · ${council.length} council` : ''} · ${fmtNum(p.records.length)} source records</span></summary>${inner}</details>`
+      : `<div class="dev-hist">${inner}</div>`;
   }
+  const devHistoryHTML = (p, st) => storyHTML(p, st, true);
 
   // ---- Council items + latest decision (copied from js/app.js) ---------------------
   function councilItems(p) {
@@ -494,7 +537,8 @@
     const st = state(); if (!st || !k) return null;
     if (SUBS.has(k)) return SUBS.get(k);
     const i = String(k).lastIndexOf('#'), base = i > 0 ? k.slice(0, i) : k;
-    const p = st.projects.find(x => x.key === base);
+    // (every development built, the ones held aside too: site activity, dormant)
+    const p = (st.projects.all || st.projects).find(x => x.key === base);
     if (!p) {
       // A key saved before the trees became the developments (Step B2): resolve it.
       const TG = window.PeelTreeGroups, list = st.projects;
@@ -532,7 +576,10 @@
   const fileLine = r => `${esc(r.ref || 'File')}${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · <em>${esc(r.statusRaw)}</em>` : ''}`;
   function filesHTML(p) {
     const tree = p.parent ? [] : fileTree(p), formal = tree.filter(t => isFormal(t.a));
-    const rel = relatedProjects(p).slice(0, 12);
+    // Step 2 (js/sites.js): the other proposals and the site activity on this development's land.
+    const TGs = window.PeelTreeGroups, site = TGs && TGs.siteParts ? TGs.siteParts(p, (l => l && (l.all || l))((state() || {}).projects)) : [];
+    const onSite = new Set(site.map(q => q.key));
+    const rel = relatedProjects(p).filter(x => !onSite.has(x.q.key)).slice(0, 12);
     let html = '';
     const TG = window.PeelTreeGroups, treeRows = tree.length && tree[0].branch;
     if (formal.length > 1 || (formal.length && tree.length > formal.length) || (treeRows && tree.length > 1)) {
@@ -543,6 +590,15 @@
         ${treeRows ? `<p class="small muted">${esc(TG.FILES_NOTE)}</p></details>` : `<p class="small muted">Each file is listed once; pre-consultations sit under the application on the same land. The development counts its units once${counted ? ` (${fmtNum(p.buildout.planned)} planned, from the ${esc({ master: 'official plan / zoning / subdivision', siteplan: 'site plan', condo: 'condominium', other: 'planning' }[counted] || counted)} files)` : ''}; pre-consultation units are never added, since the formal application repeats them.</p></details>`}`;
     }
     if (p.areaPlan) html += `<p class="small area-note"><strong>Area plan:</strong> ${fmtNum(p.areaPlan.drafts)} draft plan${p.areaPlan.drafts === 1 ? '' : 's'} inside this ${esc(/precinct/i.test(p.description) ? 'precinct' : /block plan/i.test(p.description) ? 'block' : 'area')} ${p.areaPlan.drafts === 1 ? 'is its own development' : 'are their own developments'} (below, under Related applications)${p.areaPlan.covered ? `, carrying ${fmtNum(p.areaPlan.covered)} units` : ''}. ${p.areaPlan.covered ? `This plan counts only the units they don't already carry${p.units ? ` (${fmtNum(p.units)})` : ' (none left)'}, so nothing is counted twice.` : 'Their units are counted there, not here.'}</p>`;
+    if (site.length) {
+      const props = site.filter(q => !q.siteActivity), acts = site.filter(q => q.siteActivity);
+      const li = q => `<li>${dot(q.phase)}<div><button type="button" class="btn small link" data-dt-relq="${esc(q.key)}"><strong>${esc(q.title)}</strong></button>${q.units > 0 ? ` · ${fmtNum(q.units)} units` : ''} <span class="muted">· ${esc(P().PHASE_BY_KEY[q.phase].label)}</span>
+        <div class="small muted">${(q.records || []).filter(r => r.kind === 'application').slice(0, 3).map(fileLine).join('<br>')}</div></div></li>`;
+      html += `<details class="sect" id="devtab-site" open><summary><h2 class="section-title" data-info="dev-site">On this site</h2><span class="muted small sect-sum">${props.length ? `${fmtNum(props.length)} other proposal${props.length === 1 ? '' : 's'}` : ''}${props.length && acts.length ? ' · ' : ''}${acts.length ? 'other activity' : ''}</span></summary>
+        ${props.length ? `<h3 class="sub-title">Other proposals here</h3><ul class="file-tree">${props.map(li).join('')}</ul>` : ''}
+        ${acts.length ? `<h3 class="sub-title">Other activity on this site</h3><ul class="file-tree">${acts.map(li).join('')}</ul>` : ''}
+        <p class="small muted">${p.siteActivity ? 'These files only alter what stands on the site (no homes, no new building): they set no development\'s stage and are left out of the counts unless site activity is included (Find).' : 'Each proposal on this land has its own count and stage. Other activity (a patio, a fit-out, a new door) alters what stands: it sets no proposal\'s stage and adds no homes.'}</p></details>`;
+    }
     if (rel.length) html += `<details class="sect" id="devtab-related"${p.records.every(isPrecon) || p.areaPlan ? ' open' : ''}><summary><h2 class="section-title" data-info="dev-related">Related applications</h2><span class="muted small sect-sum">${fmtNum(rel.length)} development${rel.length === 1 ? '' : 's'} on overlapping land</span></summary>
       <ul class="file-tree">${rel.map(({ q, hits }) => `<li>${dot(q.phase)}<div><button type="button" class="btn small link" data-dt-relq="${esc(q.key)}"><strong>${esc(q.title)}</strong></button>${q.units > 0 ? ` · ${fmtNum(q.units)} units` : ''} <span class="muted">· ${esc(P().PHASE_BY_KEY[q.phase].label)}</span>
         <div class="small muted">${hits.slice(0, 4).map(h => `${fileLine(h.r)} <span class="rel-how">${esc({ 'same address': 'same address as', 'covers it': 'covers', 'within it': 'within', 'overlapping land': 'overlaps' }[h.how])} ${esc(h.m.ref)}</span>`).join('<br>')}${hits.length > 4 ? `<br>+ ${hits.length - 4} more` : ''}</div></div></li>`).join('')}</ul>
@@ -828,11 +884,240 @@
       if (liveKey !== p.key) return;
       renderStormMains(p, res);
       fillPonds(p, res);
+      fillNetworks(p);
     }).catch(() => {
       if (liveKey !== p.key) return;
       const box = document.getElementById('devtab-exist-storm');
       if (box) box.innerHTML = '<p class="small muted ex-fail">Couldn\'t load the storm sewers from the municipal GIS · <button type="button" class="btn small link" data-dt-exr="' + exR + '">Retry</button></p>';
     });
+  }
+
+  // ---- Site: water and wastewater, existing and planned ----------------------------------------
+  // Within a radius of the development's point (100 m – 1 km, as the storm sewers): the Region's
+  // watermains and sanitary sewers of 300 mm+ (data/watermains.json, data/sewers.json, bundled), the
+  // 2026 DC works and the Region's capital projects planned or under construction. Each main with its
+  // street (the nearest Region address point, data/address-points.json) and, for water, its pressure
+  // zone (the zone it runs in). A small map shows them all; a row highlights its main and back.
+  const NET_RS = [100, 200, 400, 1000];
+  let netR = 400;
+  try { const v = +localStorage.getItem('peel-dev:dt-netr'); if (NET_RS.includes(v)) netR = v; } catch (e) { /* node */ }
+  function segM(pt, a, b) {
+    const kx = 111320 * Math.cos(pt[1] * Math.PI / 180), ky = 110540;
+    const ax = (a[0] - pt[0]) * kx, ay = (a[1] - pt[1]) * ky, bx = (b[0] - pt[0]) * kx, by = (b[1] - pt[1]) * ky, dx = bx - ax, dy = by - ay, L = dx * dx + dy * dy;
+    const t = L ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / L)) : 0;
+    return { m: Math.hypot(ax + t * dx, ay + t * dy), at: [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])] };
+  }
+  function lineNear(pt, pts) {
+    if (pts.length === 1) return segM(pt, pts[0], pts[0]);
+    let best = null; for (let i = 1; i < pts.length; i++) { const c = segM(pt, pts[i - 1], pts[i]); if (!best || c.m < best.m) best = c; }
+    return best;
+  }
+  const mTxt = m => (m < 10 ? 'at the site' : `${fmtNum(Math.round(m / 5) * 5)} m`);
+  const titleSt = s => String(s || '').toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase()).replace(/\b(Dr|Rd|St|Ave|Blvd|Cres|Crt|Pkwy|Hwy|Sdrd|Trl|Ln|Pl|Cir|Ct|Gt|Terr)\b/g, w => w);
+  // Street: the nearest address point within 150 m (a grid over the Region's address points).
+  let addrGrid = null;
+  function streetNear(at) {
+    const D = state() && state().addressPoints;
+    if (!D) { if (root.PeelAddr && root.PeelAddr.loadPoints) root.PeelAddr.loadPoints().then(() => { addrGrid = null; if (netP) fillNetworks(netP); }); return null; }
+    if (!addrGrid) {
+      addrGrid = new Map();
+      for (const [k, v] of Object.entries(D.a || {})) {
+        const [, , name, type, dir] = k.split('|'), g = `${Math.floor(v[2] / 0.002)},${Math.floor(v[1] / 0.002)}`;
+        (addrGrid.get(g) || addrGrid.set(g, []).get(g)).push([v[2], v[1], [name, type, dir].filter(Boolean).join(' ')]);
+      }
+    }
+    const cx = Math.floor(at[0] / 0.002), cy = Math.floor(at[1] / 0.002); let best = null, bd = 150;
+    for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (const q of addrGrid.get(`${cx + dx},${cy + dy}`) || []) { const m = segM(at, [q[0], q[1]], [q[0], q[1]]).m; if (m < bd) { bd = m; best = q[2]; } }
+    return best ? titleSt(best) : '';
+  }
+  // The street a main runs along: the street named on the Region's capital projects (data/capital.json,
+  // every status: past works name the arterials) whose line it follows, within 25 m at most of its
+  // sample points. House addresses alone pick a side street on arterials (homes back onto them).
+  let capIdx = null;
+  // (a road named in a 2026 DC work's title: "Con 750-mm Water Main - Mayfield Road (…)")
+  const ROAD_WORD = '(Road|Rd|Drive|Dr|Street|St|Avenue|Ave|Parkway|Pkwy|Boulevard|Blvd|Line|Sideroad|Trail|Way|Highway|Hwy)';
+  const ABBR = { Road: 'Rd', Drive: 'Dr', Street: 'St', Avenue: 'Ave', Parkway: 'Pkwy', Boulevard: 'Blvd', Highway: 'Hwy' };
+  const shortRoad = t => String(t || '').replace(/\b(Road|Drive|Street|Avenue|Parkway|Boulevard|Highway)\b/g, w => ABBR[w]);
+  const dcRoad = t => { const m = new RegExp(`-\\s*([A-Z][A-Za-z.' ]*?\\b${ROAD_WORD})\\b`).exec(String(t || '')); return m ? shortRoad(m[1].replace(/\b[A-Za-z]\b\s*/g, '').replace(/\s+/g, ' ').trim()) : ''; };
+  const NOT_A_STREET = /\b(various|multiple|easement|several|region-?wide|n\/a)\b/i;
+  function capStreet(pts) {
+    const st = state(), recs = st && st.capital && st.capital.records; if (!pts.length) return '';
+    if (!capIdx) {
+      capIdx = new Map();
+      const add = (l, name) => { for (let i = 1; i < l.length; i++) for (const q of [l[i - 1], l[i]]) { const g = `${Math.floor(q[0] / 0.002)},${Math.floor(q[1] / 0.002)}`; (capIdx.get(g) || capIdx.set(g, []).get(g)).push([l[i - 1], l[i], name]); } };
+      for (const r of recs || []) {
+        if (!r.street || !r.geometry) continue;
+        const name = String(r.street).replace(/[-–].*$/, '').trim(); if (!name || NOT_A_STREET.test(name)) continue;
+        for (const l of r.geometry.type === 'LineString' ? [r.geometry.coordinates] : r.geometry.type === 'MultiLineString' ? r.geometry.coordinates : []) add(l, name);
+      }
+      for (const sys of ['water', 'wastewater']) for (const ln of (st && st.dcInfra && st.dcInfra[sys] && st.dcInfra[sys].lines) || []) { const nm = dcRoad(ln.n); if (nm) add(ln.g, nm); }
+    }
+    // The share of the pipe's length that runs along each named road: points every ~20 m along it,
+    // each counted for a road whose line is within 40 m and runs the same way (parallel within ~25°).
+    // The road with the highest share names the pipe, if it covers 70% of its length or more.
+    const kx = 111320 * Math.cos(pts[0][1] * Math.PI / 180), dir = (a, b) => { const x = (b[0] - a[0]) * kx, y = (b[1] - a[1]) * 110540, L = Math.hypot(x, y) || 1; return [x / L, y / L, L]; };
+    const share = new Map(); let total = 0;
+    for (let i = 1; i < pts.length; i++) {
+      const a = pts[i - 1], b = pts[i], u = dir(a, b), k = Math.max(1, Math.round(u[2] / 20)), w = u[2] / k;
+      for (let j = 0; j < k; j++) {
+        const t = (j + 0.5) / k, q = [a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])], names = new Set(), cx = Math.floor(q[0] / 0.002), cy = Math.floor(q[1] / 0.002);
+        for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) for (const [c, d, nm] of capIdx.get(`${cx + dx},${cy + dy}`) || []) {
+          if (names.has(nm) || segM(q, c, d).m > 40) continue;
+          const v = dir(c, d); if (Math.abs(u[0] * v[0] + u[1] * v[1]) < 0.9) continue;
+          names.add(nm);
+        }
+        for (const nm of names) share.set(nm, (share.get(nm) || 0) + w);
+        total += w;
+      }
+    }
+    const best = [...share.entries()].sort((x, y) => y[1] - x[1])[0];
+    return best && total > 0 && best[1] / total >= 0.7 ? shortRoad(titleSt(best[0])) : '';
+  }
+  // The stretch of a long line near a point (within m of it), for naming a planned work where it passes.
+  function nearStretch(pts, at, m = 300) {
+    const out = []; for (const q of pts) if (segM(at, q, q).m <= m) out.push(q);
+    return out.length >= 2 ? out : pts;
+  }
+  // A large main (600 mm+) doesn't run down a crescent or court: a local street from the house
+  // addresses is left unnamed rather than named wrong.
+  const LOCAL_ST = /\b(Cres|Crt|Ct|Pl|Cir|Gate|Gt|Lane|Ln|Terr|Way|Mews|Path|Grove|Close|Gdns|Sq)\b/i;
+  const bigOk = (name, d) => (name && d >= 600 && LOCAL_ST.test(name) ? '' : name || '');
+
+  // The Region's watermains of 300 mm+ (data/watermains.json, as the water trace), as segments.
+  const WMS = { segs: null, loading: null };
+  function watermainSegs() {
+    if (WMS.segs || WMS.loading || !hasDOM()) return WMS.segs;
+    WMS.loading = fetch('data/watermains.json').then(r => (r.ok ? r.json() : null)).then(d => {
+      if (!d) return;
+      const xs = [], ys = []; for (let i = 0, x = 0, y = 0; i < d.xy.length; i += 2) { x += d.xy[i]; y += d.xy[i + 1]; xs.push(x / 1e5); ys.push(y / 1e5); }
+      const segs = []; for (let i = 0; i < d.e.length; i += 3) { const a = d.e[i], b = a + d.e[i + 1]; segs.push([xs[a], ys[a], xs[b], ys[b], d.e[i + 2]]); }
+      WMS.segs = segs; if (netP) fillNetworks(netP);
+    }).catch(() => {});
+    return null;
+  }
+  // Streets the address points can't give (no address within 150 m): the live reverse lookup the
+  // storm sewers use, filled in when it answers.
+  const liveStreet = new Map();
+  function streetOf(at) {
+    const s0 = streetNear(at); if (s0) return s0;
+    const k = `${at[1].toFixed(4)},${at[0].toFixed(4)}`;
+    if (liveStreet.has(k)) return liveStreet.get(k) || '';
+    liveStreet.set(k, '');
+    streetAt(at[1], at[0]).then(st => { if (st) { liveStreet.set(k, st); clearTimeout(streetRedraw); streetRedraw = setTimeout(() => netP && fillNetworks(netP), 300); } }).catch(() => {});
+    return '';
+  }
+  let streetRedraw = null;
+  // Everything within r: [{ id, sys, kind: existing|dc|cap, m, paths, html }], grouped into mains.
+  let netP = null, netItems = [];
+  // (DC titles come from the DC map PDFs, often clipped: "Con 750-mm Water Main - Mayfield Road (Mount M
+  // Pleasant West) M" → "750-mm Water Main - Mayfield Road")
+  // DC titles come from the DC map PDFs, clipped and run together ("Con 750-mm Water Main - Mayfield
+  // Road (Mount M Pleasant West) M"): the kind of pipe from "<size>-mm <kind>", the road shown apart
+  // ("along …"); otherwise the title without its clipped bits. The title's size wins over the map's size
+  // field, which disagrees with the title and its description on 17 of 98 works.
+  const DC_PROPER = /[A-Z][\w-]*(?:\s+[A-Z][\w-]*)*?\s+(?:Sub-Transmission Main|Transmission Main|Sanitary Trunk Sewer|Trunk Sewer|Sanitary Trunk|Force Main)(?:\s+(?:Twinning|Extension))?/g;
+  const dcName = t => {
+    const s0 = String(t || ''), m = /(\d{3,4})-mm\s+((?:[A-Za-z-]+\s+){0,3}?(?:Main|Sewer|Forcemain))\b/i.exec(s0);
+    if (m) return { name: m[2].replace(/\s+/g, ' ').replace(/^./, c => c.toUpperCase()), d: +m[1] };
+    const proper = [...s0.replace(/\s*\(.*$/, '').matchAll(DC_PROPER)].map(x => x[0]).pop();
+    return { name: (proper || s0.replace(/\s*\(.*$/, '').replace(/(\s+[A-Za-z]{1,3})+\s*$/, '')).replace(/^(?:(?:C|Cl|Co|Con|Cons|Const|Mc)\s+|Anticipat\w*\s+)+/, '').replace(/\s+/g, ' ').trim(), d: null };
+  };
+  const RENEWAL = /RELINING|TRENCHLESS|REHAB/i;
+  function netItemsOf(p, r) {
+    const pt = [p.lng, p.lat], st = state(), out = [], box = (x, y) => Math.abs(x - pt[0]) < 0.02 && Math.abs(y - pt[1]) < 0.015;
+    const group = (sys, kind, key, it) => { const g = out.find(o => o.sys === sys && o.kind === kind && o.key === key); if (!g) out.push({ sys, kind, key, ...it, paths: [...it.paths] }); else { g.paths.push(...it.paths); if (it.m < g.m) { g.m = it.m; g.at = it.at; } } };
+    // A street: 'along' when the pipe follows a named Region project or DC line, 'near' when it is
+    // only the nearest house address (a guess).
+    const named = (pts, d, at) => { const a = capStreet(pts); if (a) return [a, 'along']; const n = bigOk(streetNear(at), d); return n ? [n, 'near'] : ['', '']; };
+    // Existing watermains (300 mm+).
+    const segs = watermainSegs();
+    for (const [x1, y1, x2, y2, d] of segs || []) {
+      if (!box(x1, y1)) continue;
+      const c = segM(pt, [x1, y1], [x2, y2]); if (c.m > r) continue;
+      const [street, how] = named([[x1, y1], [x2, y2]], d, c.at);
+      group('water', 'existing', `${d}|${street}`, { m: c.m, at: c.at, d, street, how, paths: [[[x1, y1], [x2, y2]]] });
+    }
+    // Existing sanitary sewers (300 mm+).
+    const S = root.PeelMapMarkers && root.PeelMapMarkers.SEW;
+    if (S && S.data) S.data.pipes.forEach(q => {
+      const c0 = q[10]; if (!box(c0[0], c0[1])) return;
+      const pts = []; for (let k = 0; k < c0.length; k += 2) pts.push([c0[k], c0[k + 1]]);
+      const c = lineNear(pt, pts); if (!c || c.m > r) return;
+      const [street, how] = named(pts, q[0], c.at);
+      group('wastewater', 'existing', `${q[0]}|${q[7] || ''}|${street}`, { m: c.m, at: c.at, d: q[0], year: q[7], street, how, paths: [pts] });
+    });
+    // Planned: the 2026 DC works (one entry per project) and the Region's projects; a Region project
+    // that builds a DC work joins its row.
+    const DI = root.PeelDcInfra, CM = root.PeelCapitalEAModel;
+    for (const sys of ['water', 'wastewater']) {
+      for (const ln of (st && st.dcInfra && st.dcInfra[sys] && st.dcInfra[sys].lines) || []) {
+        const c = lineNear(pt, ln.g); if (!c || c.m > r) continue;
+        const kind = DI && DI.DC_KIND && DI.DC_KIND[ln.k] ? DI.DC_KIND[ln.k][0] : 'Planned main';
+        const road = dcRoad(ln.n) || capStreet(nearStretch(ln.g, c.at)), dn = dcName(ln.n);
+        group(sys, 'dc', ln.p || ln.c || `${ln.n}|${ln.y}`, { m: c.m, at: c.at, d: dn.d || ln.d, name: dn.name || kind, year: ln.y, status: ln.s, ref: ln.p || ln.c || '', street: road, how: road ? 'along' : '', paths: [ln.g] });
+      }
+      for (const rec of (st && st.capital && st.capital.records) || []) {
+        if (rec.system !== sys || !['planned', 'tendered', 'awarded', 'under construction'].includes(rec.status) || !rec.geometry) continue;
+        const lines = rec.geometry.type === 'LineString' ? [rec.geometry.coordinates] : rec.geometry.type === 'MultiLineString' ? rec.geometry.coordinates : [];
+        const c = lines.map(l => lineNear(pt, l)).filter(Boolean).sort((a, b) => a.m - b.m)[0]; if (!c || c.m > r) continue;
+        const yr = (rec.startActual || rec.startTarget || '').slice(0, 4);
+        const dc = rec.projectNumber && out.find(o => o.kind === 'dc' && o.sys === sys && o.ref === rec.projectNumber);
+        if (dc) { if (!dc.cap) dc.cap = { status: rec.status, year: yr, started: !!rec.startActual }; continue; }
+        group(sys, 'cap', rec.contract || rec.projectNumber || rec.id, { m: c.m, at: c.at, name: CM && CM.workLabel ? CM.workLabel(rec.workType) : rec.workType, renewal: RENEWAL.test(rec.workType || ''), status: rec.status, year: yr, started: !!rec.startActual, ref: rec.projectNumber || '', street: rec.street && !NOT_A_STREET.test(rec.street) ? shortRoad(titleSt(String(rec.street).replace(/[-–].*$/, ''))) : '', how: rec.street ? 'along' : '', paths: lines });
+      }
+    }
+    out.sort((a, b) => a.m - b.m).forEach((o, k) => { o.id = k; });
+    // (no address point near: the live lookup, for the nearest dozen mains only, a guess like an address)
+    // (planned DC works often cross land with no road yet: named only from a named line, never guessed)
+    out.filter(o => !o.street && o.kind !== 'dc').slice(0, 12).forEach(o => { o.street = bigOk(streetOf(o.at), o.d || 0); if (o.street) o.how = 'near'; });
+    return out;
+  }
+  // Construction dates of a Region project: started (actual) or due to start (target).
+  const capWhen = c => `${c.status}${c.year ? (c.started ? ` since ${c.year}` : `, construction from ${c.year}`) : ''}`;
+  function netRowHTML(o) {
+    const where = [o.street ? `${o.how === 'near' ? 'near' : 'along'} <strong>${esc(o.street)}</strong>` : '', mTxt(o.m)].filter(Boolean).join(' · ');
+    let what;
+    if (o.kind === 'existing') what = `${fmtNum(o.d)} mm${o.year ? `, ${o.year}` : ''}`;
+    else if (o.kind === 'dc') what = `${esc(o.name)}${o.d ? ` · ${fmtNum(o.d)} mm` : ''} · <b>${o.year ? `in service ${o.year}` : 'in-service year not set'}</b> <small class="muted">${esc(['2026 DC program' + (o.status ? ` (${o.status})` : ''), o.ref].filter(Boolean).join(' · '))}${o.cap ? ` · Region project ${esc(capWhen(o.cap))}` : ''}</small>`;
+    else what = `${esc(o.name || 'Capital project')}${o.renewal ? ' <span class="net-renew">renewal</span>' : ''} · <b>${esc(capWhen(o))}</b> <small class="muted">Region project ${esc(o.ref)}</small>`;
+    return `<li><button type="button" class="net-row" data-net-hl="${o.id}" aria-pressed="false"><i class="net-sw net-${o.sys === 'water' ? 'w' : 'ww'} net-${o.kind}"></i><span>${what} <span class="muted">${where}</span></span></button></li>`;
+  }
+  function netMapSVG(p, items, r) {
+    const W = 340, H = 220, half = r * 1.25, kx = 111320 * Math.cos(p.lat * Math.PI / 180), ky = 110540, s = Math.min(W, H) / (2 * half);
+    const X = (x, y) => [(W / 2 + (x - p.lng) * kx * s).toFixed(1), (H / 2 - (y - p.lat) * ky * s).toFixed(1)];
+    const d = pts => pts.map((q, i) => `${i ? 'L' : 'M'}${X(q[0], q[1]).join(',')}`).join('');
+    const storm = (exGroups.storm && exGroups.storm.list) || [];
+    const lines = [
+      ...storm.flatMap(g => g.paths.map(pth => `<path d="${d(pth)}" class="net-l-storm"/>`)),
+      ...items.map(o => `<g class="net-g net-${o.sys === 'water' ? 'w' : 'ww'} net-${o.kind}" data-net-hl="${o.id}">${o.paths.map(pth => `<path d="${d(pth)}"/>`).join('')}</g>`),
+    ];
+    const rr = (r * kx * s / kx * 1).toFixed(1), bar = r >= 1000 ? 500 : r >= 400 ? 200 : 50;
+    const WP = root.PeelWsPages, deg = half * 1.5 / 111320, tiles = WP && WP.tilesSVG ? WP.tilesSVG((x, y) => X(x, y).map(Number), [p.lng - deg / Math.cos(p.lat * Math.PI / 180), p.lat - deg, p.lng + deg / Math.cos(p.lat * Math.PI / 180), p.lat + deg], W, H) : '';
+    return `<svg class="net-map" viewBox="0 0 ${W} ${H}" role="img" aria-label="Water and wastewater within ${r} m of the site">${tiles}<circle cx="${W / 2}" cy="${H / 2}" r="${(r * s).toFixed(1)}" class="net-ring"/>${lines.join('')}<circle cx="${W / 2}" cy="${H / 2}" r="5" class="net-site"/><g class="net-bar"><rect x="8" y="${H - 12}" width="${(bar * s).toFixed(1)}" height="3"/><text x="8" y="${H - 16}">${bar} m</text></g></svg>`;
+  }
+  function netBlockHTML(p) {
+    const items = netItemsOf(p, netR); netItems = items;
+    const loading = !WMS.segs || !(root.PeelMapMarkers && root.PeelMapMarkers.SEW && root.PeelMapMarkers.SEW.data);
+    const rBtns = `<div class="ex-r"><span class="muted small">Within</span> ${NET_RS.map(x => `<button type="button" class="btn small${x === netR ? ' on' : ''}" data-dt-netr="${x}">${x >= 1000 ? `${x / 1000} km` : `${x} m`}</button>`).join('')}</div>`;
+    const part = (sys, label) => {
+      const ex = items.filter(o => o.sys === sys && o.kind === 'existing'), pl = items.filter(o => o.sys === sys && o.kind !== 'existing');
+      const list = (xs, none) => (xs.length ? `<ul class="net-list">${xs.slice(0, 6).map(netRowHTML).join('')}</ul>${xs.length > 6 ? `<details class="ex-more"><summary class="small">${xs.length - 6} more</summary><ul class="net-list">${xs.slice(6).map(netRowHTML).join('')}</ul></details>` : ''}` : `<p class="small muted">${none}</p>`);
+      return `<div class="net-sys"><h5>${label}</h5><div class="net-sub">Existing</div>${list(ex, loading ? 'Loading…' : `No Region main of 300 mm+ within ${netR >= 1000 ? '1 km' : `${netR} m`} (smaller local mains aren\u2019t listed)`)}<div class="net-sub">Planned</div>${list(pl, `Nothing in the 2026 DC program or the Region’s projects within ${netR >= 1000 ? '1 km' : `${netR} m`}`)}</div>`;
+    };
+    return `${rBtns}<div class="net-wrap"><div class="net-mapbox">${netMapSVG(p, items, netR)}<p class="small muted net-key"><i class="net-sw net-w net-existing"></i> watermain <i class="net-sw net-ww net-existing"></i> sanitary sewer <i class="net-sw net-storm"></i> storm sewer · solid existing, <i class="net-sw net-w net-dc"></i> dashed 2026 DC, <i class="net-sw net-w net-cap"></i> dotted Region project</p></div>
+      <div class="net-lists">${part('water', '💧 Water')}${part('wastewater', '🚰 Wastewater')}</div></div>
+      <p class="small muted">Region mains of 300 mm+ only (smaller local mains are on the full map from street zoom), measured from the development\u2019s point, not its connection point. <b>Along</b> a street: the pipe follows a Region project or DC work named with it; <b>near</b>: only the nearest house address, a guess. In-service years are the 2026 DC program\u2019s; construction dates are the Region\u2019s project schedule. Tap a row to highlight it on the small map.</p>`;
+  }
+  function fillNetworks(p) {
+    if (!hasDOM() || p.lat == null || liveKey !== p.key) return;
+    netP = p;
+    const el = document.getElementById('devtab-net'); if (el) el.innerHTML = netBlockHTML(p);
+  }
+  function netHighlight(id) {
+    const box = hasDOM() && document.getElementById('devtab-net'); if (!box) return;
+    const on = String(id);
+    box.classList.toggle('net-has-hl', true);
+    box.querySelectorAll('[data-net-hl]').forEach(el => { const hit = el.dataset.netHl === on; el.classList.toggle('hl', hit); if (el.tagName === 'BUTTON') el.setAttribute('aria-pressed', hit); });
   }
 
   // ---- Site: stormwater ponds (copied from js/app.js) --------------------------------
@@ -902,7 +1187,7 @@
   }
   // About: proposal, a concise status line (phase badge + latest activity +
   // stalled note), the latest council/committee decision, and the FSR link.
-  // The full raw status block lives in Files & history.
+  // The status in full, with the files and events, is in Files & history.
   function aboutHTML(p) {
     const st = statusOf(p);
     return `${drillBackHTML(p)}${p.parent ? subHeadHTML(p) : ''}
@@ -914,28 +1199,15 @@
       ${p.description ? brow('Proposal', `<p class="desc-clamp small">${esc(p.description)}</p>`) : ''}
     </section>`;
   }
-  // The full raw status block (devBriefHTML's Status row): this is its home.
-  function statusBlockHTML(p, st) {
-    const main = st.sig.find(x => x.main);
-    return `<details class="sect" id="devtab-status" open><summary><h2 class="section-title" data-info="dev-status">Status</h2><span class="muted small sect-sum">${esc(P().PHASE_BY_KEY[p.phase].label)}</span></summary>
-      <div class="brief">
-        ${brow('Stage', `<p class="small">${dot(p.phase)} <strong>${esc(P().PHASE_BY_KEY[p.phase].label)}</strong></p>`)}
-        ${brow('Status', `<p class="small">${st.why}</p>
-          ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no file event, permit or council item since ${fmtDate(new Date(st.lastAt))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}
-          ${main && main.kind !== 'info' ? `<p class="small why-${main.kind}-t">${esc(main.text)} <span class="muted">· ${esc(main.files[0])}</span></p>` : ''}
-          ${p.phase === 'cancelled' ? `<p class="small">${dot('cancelled')} All files on this site are withdrawn, refused or cancelled.</p>` : ''}`)}
-      </div></details>`;
-  }
-  // Files & history: applications in the development, related applications, the
-  // raw status block, how the phase was set, the dated history, and the source
-  // records with provenance.
+  // Files & history: the files, events and proposal in one section (the status, the Gantt chart
+  // with each file's events and source record, the dated events), then the applications to open
+  // on their own, related applications and how the phase was set.
   function filesViewHTML(p) {
     const st = statusOf(p);
     return `${drillBackHTML(p)}${p.parent ? subHeadHTML(p) : ''}
-      ${statusBlockHTML(p, st)}
+      ${devHistoryHTML(p, st)}
       ${filesHTML(p)}
-      ${phaseBasisHTML(p)}
-      ${devHistoryHTML(p, st)}`;
+      ${phaseBasisHTML(p)}`;
   }
   // Site: the constraint checklist (screening) first, then aerial check, ground elevation, storm
   // sewers, stormwater ponds. (Ground/storm/ponds moved here from the old Wastewater tab.)
@@ -978,7 +1250,7 @@
     const s = currentSub();
     body.innerHTML = s === 'about' ? aboutHTML(p) : s === 'files' ? filesViewHTML(p) : siteViewHTML(p);
     if (s === 'about' || s === 'files') ensureCouncil(p);
-    if (s === 'site' && p.lat != null) { fillConstraints(p); devAerial(p); fillGround(p); fillStormMains(p); }
+    if (s === 'site' && p.lat != null) { fillNetworks(p); fillConstraints(p); devAerial(p); fillGround(p); fillStormMains(p); }
   }
   // Re-render after async data (council, FSR) arrives, keeping open sections.
   function rerenderPreserve() {
@@ -1038,8 +1310,8 @@
     setTimeout(() => {
       if (PN && PN.openFull) PN.openFull();
       if (currentSub() !== 'files') setSub('files');
-      // (the old Source records section is History's By file view now)
-      const d = byIdShown(id === 'devtab-recs' ? 'devtab-hist' : id); if (d) { d.open = true; if (id === 'devtab-recs') histView(d, 'file'); d.scrollIntoView({ block: 'start' }); }
+      // (the old Source records section is the story's Gantt rows now)
+      const d = byIdShown(id === 'devtab-recs' ? 'devtab-hist' : id); if (d) { d.open = true; d.scrollIntoView({ block: 'start' }); }
     }, 250);
   }
 
@@ -1086,8 +1358,8 @@
       setTimeout(() => openFile(ref, null), 700); return;
     }
     revealHistory(el, h => {
-      histOnly(h, ''); histView(h, 'file');
-      const r = [...h.querySelectorAll('[data-dt-tlv="file"] [data-rec-ref]')].find(x => x.dataset.recRef === ref);
+      // (its row in the Gantt chart, else the record inside a permit group or an event)
+      const r = [...h.querySelectorAll('.gantt [data-rec-ref]')].find(x => x.dataset.recRef === ref) || [...h.querySelectorAll('[data-rec-ref]')].find(x => x.dataset.recRef === ref);
       if (!r) { h.scrollIntoView({ block: 'start' }); return; }
       for (let d = r; d; d = d.parentElement && d.parentElement.closest('details')) d.open = true;
       r.scrollIntoView({ block: 'center' }); flash(r);
@@ -1096,9 +1368,13 @@
   /** History, at a view or a type: "" / "key", "all", "file", or a type ("council", "permit"). */
   function openHistory(el, which) {
     revealHistory(el, h => {
-      if (['council', 'permit', 'file-ev', 'phase'].includes(which)) { histView(h, 'all'); histOnly(h, which === 'file-ev' ? 'file' : which); }
-      else { histOnly(h, ''); histView(h, which || 'key'); }
-      h.scrollIntoView({ block: 'start' }); flash(h);
+      // Council: its row in the Gantt chart, open. A type or a view: the dated events, unfolded.
+      const c = which === 'council' && h.querySelector('[data-gt-council]');
+      if (c) { c.open = true; c.scrollIntoView({ block: 'start' }); flash(c); return; }
+      const ev = h.querySelector('.gt-events');
+      if (['council', 'permit', 'file-ev', 'phase', 'all'].includes(which)) { if (ev) ev.open = true; histView(h, 'all'); histOnly(h, which === 'file-ev' ? 'file' : which === 'all' ? '' : which); }
+      else { histOnly(h, ''); histView(h, 'key'); }
+      (ev && ev.open ? ev : h).scrollIntoView({ block: 'start' }); flash(h);
     });
   }
 
@@ -1141,6 +1417,8 @@
       if (rq) { const q = projectByKey(rq.dataset.dtRelq); if (q) navigate(q, p); return; }
       const rc = e.target.closest('[data-dt-rec]');
       if (rc) { const r = p.records.find(x => x.uid === rc.dataset.dtRec); if (r) showOnMap(r); return; }
+      const nr = e.target.closest('[data-dt-netr]');
+      if (nr) { netR = +nr.dataset.dtNetr; try { localStorage.setItem('peel-dev:dt-netr', String(netR)); } catch (err) { /* private mode */ } fillNetworks(p); return; }
       const xr = e.target.closest('[data-dt-exr]');
       if (xr) {
         exR = +xr.dataset.dtExr;
@@ -1151,6 +1429,8 @@
         return;
       }
     }
+    const nh = e.target.closest('[data-net-hl]');
+    if (nh) { netHighlight(nh.dataset.netHl); return; }
     const xh = e.target.closest('[data-dt-exhl]');
     if (xh) { highlightStormMain(xh.dataset.dtExhl.split('|')[1]); return; }
     const bb = e.target.closest('[data-dt-back]');
@@ -1170,10 +1450,11 @@
   function partHTML(p, part) {
     const has = p.lat != null, row = (t, id, msg, info) => brow(t, `<div id="${id}"${info ? ` data-info="${info}"` : ''}><p class="small muted">${msg}</p></div>`);
     if (part === 'about') return aboutHTML(p).replace(drillBackHTML(p), '');
-    if (part === 'site') return `<div class="brief">${has ? row('Constraints', 'devtab-cx', 'Checking the mapped constraint layers…') + row('Storm sewers', 'devtab-exist-storm', 'Looking up the nearest storm sewers…') + row('Stormwater', 'devtab-storm', 'Looking up stormwater ponds…', 'fire-storm') : '<p class="small muted">Not checked: this development has no map location.</p>'}</div>`;
+    if (part === 'site') return `<div class="brief">${has ? row('Water and wastewater', 'devtab-net', 'Looking up the watermains and sewers…') + row('Constraints', 'devtab-cx', 'Checking the mapped constraint layers…') + row('Storm sewers', 'devtab-exist-storm', 'Looking up the nearest storm sewers…') + row('Stormwater', 'devtab-storm', 'Looking up stormwater ponds…', 'fire-storm') : '<p class="small muted">Not checked: this development has no map location.</p>'}</div>`;
     if (part === 'ground') return `<div class="brief">${brow('Aerial check', '<div class="aerial" id="devtab-aerial"><p class="small muted">Comparing aerial photos…</p></div>')}${has ? row('Ground', 'devtab-ground', 'Looking up ground elevation…', 'ground') : ''}</div>`;
     if (part === 'files') return filesTreeHTML(p);
-    if (part === 'history') return devHistoryHTML(p, statusOf(p));
+    // (Files, History and About are one section now: the story, with the Gantt chart at its heart)
+    if (part === 'story' || part === 'history' || part === 'gantt') return storyHTML(p, statusOf(p));
     // (How the stage was set, without its section wrapper: the stage chip opens it under the header)
     if (part === 'stage') return phaseBasisHTML(p).replace(/^\s*<details[^>]*>\s*<summary>[^]*?<\/summary>/, '').replace(/<\/details>\s*$/, '');
     return '';
@@ -1184,15 +1465,15 @@
     const FT = root.PeelFileTree, d = FT && !p.parent ? FT.of(p) : null, files = p.records.filter(r => r.kind === 'application');
     const newest = files.slice().sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)));
     const row = r => `<li class="pnl-kv"><span><button type="button" class="tr-ref" data-dev-file="${esc(r.ref || '')}">${esc(r.ref || 'file')}</button>${r.type ? ` <small class="muted">${esc(r.type)}</small>` : ''}</span><span>${r.units ? `${fmtNum(r.units)} units · ` : ''}${esc((P().PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}</span></li>`;
-    const tree = d ? FT.treeHTML(d, FT.recLookup(p), { dot: k => dot(k), latest: newest[0] && newest[0].ref }) : '';
+    const tree = d ? FT.treeHTML(d, FT.recLookup(p), { dot: k => dot(k), latest: newest[0] && newest[0].ref, ...(root.PeelDcGate ? root.PeelDcGate.treeOpts(p, d) : {}) }) : '';
     return `${tree || `<ul class="pnl-files">${newest.slice(0, 8).map(row).join('')}</ul>`}
       <p class="small"><button type="button" class="btn small link" data-dev-hist="file">All ${fmtNum(p.records.length)} source records, by file →</button></p>`;
   }
   function fillParts(p, parts) {
     if (!hasDOM() || !p) return;
     liveKey = p.key;
-    if (parts.includes('about') || parts.includes('history')) ensureCouncil(p);
-    if (parts.includes('site') && p.lat != null) { fillConstraints(p); fillStormMains(p); }
+    if (['about', 'history', 'gantt', 'story'].some(x => parts.includes(x))) ensureCouncil(p);
+    if (parts.includes('site') && p.lat != null) { fillNetworks(p); fillConstraints(p); fillStormMains(p); }
     if (parts.includes('ground') && p.lat != null) { devAerial(p); fillGround(p); }
   }
   // ---- Public contract ------------------------------------------------------------------

@@ -15,13 +15,18 @@ const dev = k => TREE.devs.find(d => d.k === k);
 test('file tree: one root, the files on its land under it, earlier files on the same land folded, links to check', () => {
   const d = dev('Brampton|295 QUEEN ST E');
   const s = T.summary(d);
-  assert.deepEqual([s.files, s.root, s.units, s.check, s.onLand, s.sameLand], [11, 'OZS-2025-0022', 7641, 2, 4, 6]);
+  // (SPA-2021-0162 names SPA-2019-0029, "previously envisioned for the site": js/tree.js 4·. The
+  // plaza's façade, patio and elevation plans and its 1980 site plan are the site's other activity,
+  // a development of their own beside this one: js/sites.js, step 2.)
+  assert.deepEqual([s.files, s.root, s.units, s.check, s.onLand, s.sameLand], [7, 'OZS-2025-0022', 7641, 1, 2, 4]);
   const h = T.treeHTML(d, null, { dot: k => `<i class="dot" data-k="${k}"></i>` });
   assert.match(h, /<button type="button" class="tr-ref" data-dev-file="OZS-2025-0022" title="Its source record, in History">OZS-2025-0022<\/button>[\s\S]*?<b>7,641<\/b>homes · counted here/);
-  assert.equal((h.match(/<button type="button" class="tr-check"/g) || []).length, 2, "two links to check, each opening its record"); assert.equal((h.match(/<span class="tr-check"/g) || []).length, 1, "and the key line");
-  assert.match(h, /<details class="tr-same"><summary>\+ 6 earlier files on the same land: the site's history, not counted<\/summary>/);
-  assert.match(T.summaryHTML(d), /^<b>11<\/b> files · homes counted on <b>OZS-2025-0022<\/b> \(official plan \/ zoning\)|^<b>11<\/b> files · homes counted on <b>OZS-2025-0022<\/b>/);
-  assert.match(T.summaryHTML(d), /<span class="tr-check"[^>]*>check<\/span> 2 links$/);
+  assert.equal((h.match(/<button type="button" class="tr-check"/g) || []).length, 1, "one link to check, opening its record"); assert.equal((h.match(/<span class="tr-check"/g) || []).length, 1, "and the key line");
+  assert.match(h, /<details class="tr-same"><summary>\+ 4 earlier files on the same land: the site's history, not counted<\/summary>/);
+  assert.match(T.summaryHTML(d), /^<b>7<\/b> files · homes counted on <b>OZS-2025-0022<\/b>/);
+  assert.match(T.summaryHTML(d), /<span class="tr-check"[^>]*>check<\/span> 1 link$/);
+  const site = TREE.devs.find(x => x.st === 'Brampton|295 QUEEN ST E' && x.sa);
+  assert.ok(site && site.n.some(n => n[0] === 'SPA-2026-0003'), 'the Dollarama façade is the site\'s other activity');
 });
 
 test('file tree: a block plan that states no count adds up its draft plans, and they come first', () => {
@@ -37,7 +42,7 @@ test('file tree: a block plan that states no count adds up its draft plans, and 
   assert.deepEqual(T.estimateOf(d), { ref: 'OZS-2024-0051', units: 2929, kind: 'online', source: 'Brampton PDC agenda / recommendation report, 2025-10-06 (checked 2026-10-17: the municipal notice for this file states it)' });
 });
 
-test('Records › Files: the tree, then the latest activity; Growth rows: one stage, the files line, ▸ the tree; estimate rows name their file', () => {
+test('Records › Files: the tree, then the latest activity; Growth: the developments table’s rows open the site; estimate rows name their file', () => {
   const r = src('js/records-tab.js');
   assert.match(r, /chart: `<h3 class="sub-title pnl-chart-t">How the files fit together <span class="pnl-chart-u">\(each under the file whose land holds it\)<\/span><\/h3>\$\{FT\.treeHTML\(d, recOf,/);
   assert.match(r, /lists: \[\{ title: 'Latest activity', rows: latest,/);
@@ -45,12 +50,8 @@ test('Records › Files: the tree, then the latest activity; Growth rows: one st
   const w = src('js/ws-pages.js');
   assert.match(w, /title: gStage === 'all' \? `Developments in \$\{n\.name\}` : `\$\{STG\[gStage\]\}: developments in \$\{n\.name\}`/);
   assert.doesNotMatch(w, /`Files in \$\{n\.name\}`/);
-  // "In review · In review": the stage once.
-  const body = w.slice(w.indexOf('    const stageLine = x =>'), w.indexOf('    const treeBits = p =>'));
-  const stageLine = new Function('STG', 'Ph', 'esc', `${body}; return stageLine;`)({ review: 'In review', permitted: 'Permit issued / building' }, { PHASE_BY_KEY: { review: { label: 'In review' }, construction: { label: 'Under construction' } } }, s => s);
-  assert.equal(stageLine({ st: 'review', p: { phase: 'review' } }), 'In review');
-  assert.equal(stageLine({ st: 'permitted', p: { phase: 'construction' } }), 'Permit issued / building · Under construction');
-  assert.match(w, /data-tr-tog="\$\{esc\(p\.key\)\}" aria-expanded="\$\{on\}"/);
+  // A row of the developments table opens the site (js/dev-table.js).
+  assert.match(src('js/dev-table.js'), /<tr class="gt-r" data-ws-pick="\$\{esc\(r\.key\)\}" data-ws-as="site"/);
   assert.match(w, /<small class="tr-sum">the estimate is on <b>\$\{esc\(e\.ref\)\}<\/b>/);
   assert.match(w, /const had = files\.find\(f => f\.p === p\);/, 'one estimate row per development');
   assert.match(src('js/workspaces.js'), /if \(pk && pk\.dataset\.wsTree\) \{ e\.preventDefault\(\); setMode\('full'\); pickDev\(pk\.dataset\.wsPick\); setTimeout\(\(\) => \{ const AT = root\.PeelAnalysisTabs; if \(AT && AT\.openTab\) AT\.openTab\('records', 'files'\);/);

@@ -145,6 +145,205 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     await ev(() => { PeelApp.state.muni = ''; PeelApp.applyFilters(); });
   });
 
+  // One set of numbers: Home, the workspace pages and the full map's panels show the same figure for
+  // the same thing, for Peel and each municipality and at every counting basis (Scenario).
+  await check('pages and the full map agree: units, left to build, people, jobs, the first trigger, this week', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
+    for (const muni of ['', 'Mississauga', 'Brampton', 'Caledon']) for (const basis of ['all', 'buildout', 'committed', 'remaining']) {
+      await ev(([m, b]) => { PeelApp.state.muni = m; PeelApp.state.sp = []; PeelApp.state.mtsa = []; PeelApp.state.basis = b; PeelApp.applyFilters(); }, [muni, basis]);
+      await wait(2500);
+      const r = await ev(() => {
+        const num = s => +String(s == null ? '' : s).replace(/<[^>]+>/g, '').replace(/[^\d.]/g, '');
+        const figs = s => [...(s && s.figures || []), ...((s && s.groups) || []).flatMap(g => g.figures || [])].filter(Boolean);
+        const find = (s, re) => figs(s).find(f => re.test(`${f.u} ${f.label}`));
+        const ov = PeelOverviewTab.lastAreaSpec(), gr = PeelWsPages.build('growth'), home = PeelWsPages.build('home'), tight = PeelWsPages.build('tight'), week = PeelWsPages.build('week');
+        const set = PeelApp.state.filtered, G = Growth.pipelineTotals(set), L = PeelLayers.pipeline(set);
+        const trig = s => { const f = figs(s).find(x => /first 90% trigger/.test(x.label)); return f ? `${f.v} ${String(f.ctx).replace(/<[^>]+>/g, '').match(/(?:Peel-wide · )?([^·]+?)(?: reaches| ·|$)/)[1].trim()}` : null; };
+        return {
+          ovUnits: num(find(ov, /^units /).v), grUnits: num(find(gr, /^units /).v),
+          ovPeople: num(find(ov, /^people /).v), grPeople: num(find(gr, /^people /).v),
+          ovJobs: num(find(ov, /^jobs /).v), grJobs: num(find(gr, /^jobs /).v),
+          left: Math.round(G.left), notBuilt: Math.round(L.notBuilt),
+          homeTrig: trig(home), tightTrig: trig(tight),
+          homeWeek: num(find(home, /this week/).v), weekPage: num((week.answer.match(/<strong>([\d,]+)<\/strong> change/) || [])[1] || 0),
+        };
+      });
+      const at = `${muni || 'Peel'}, ${basis}`;
+      expect(r.ovUnits === r.grUnits, `${at}: units ${r.ovUnits} on the map, ${r.grUnits} on Growth in an area`);
+      expect(r.ovPeople === r.grPeople, `${at}: people ${r.ovPeople} on the map, ${r.grPeople} on Growth in an area`);
+      expect(r.ovJobs === r.grJobs, `${at}: jobs ${r.ovJobs} on the map, ${r.grJobs} on Growth in an area`);
+      expect(r.left === r.notBuilt, `${at}: left to build ${r.left} (Growth), not yet built ${r.notBuilt} (the stage chart)`);
+      expect(r.homeTrig === r.tightTrig, `${at}: first trigger ${r.homeTrig} on Home, ${r.tightTrig} on Servicing capacity`);
+      expect(r.homeWeek === r.weekPage, `${at}: ${r.homeWeek} changes on Home, ${r.weekPage} on This week`);
+    }
+    await ev(() => { PeelApp.state.muni = ''; PeelApp.state.basis = 'all'; PeelApp.applyFilters(); });
+  });
+
+  // A site's sections: Check a site shows every map tab's panel for the development (Summary,
+  // Growth, Servicing, Capital, Files), each the map's own answer.
+  await check('Check a site: every map tab is a section of the page, with the map’s own answer', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
+    await ev(() => { const p = PeelApp.state.projects.find(q => q.phase === 'approved' && q.units > 300); PeelDevNav.showDetail(p); });
+    await wait(2500);
+    await ev(() => PeelWorkspaces.openPage('site')); await wait(2000);
+    const secs = await ev(() => [...document.querySelectorAll('#home [data-ws-sec]')].map(b => b.dataset.wsSec));
+    expect(secs.join() === 'summary,growth,servicing,capital,files', `the sections: ${secs.join()}`);
+    for (const id of secs) {
+      await page.click(`#home [data-ws-sec="${id}"]`); await wait(2500);
+      const r = await ev(id => {
+        const p = DevScope.current(), s = PeelSections.specFor(id, p) || (id === 'summary' ? PeelPanel.get('overview:').spec : null);
+        const ans = document.querySelector('#home .home-answer'), strip = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+        return { on: (document.querySelector('#home .page-sec.on') || {}).dataset ? document.querySelector('#home .page-sec.on').dataset.wsSec : null, page: strip(ans && ans.innerHTML), map: strip(s && s.answer) };
+      }, id);
+      expect(r.on === id, `${id}: the section bar shows ${r.on}`);
+      expect(r.map && r.page === r.map, `${id}: the page's answer is the map panel's ("${r.page.slice(0, 60)}" / "${String(r.map).slice(0, 60)}")`);
+    }
+  });
+
+  // Explore: one sidebar entry for Growth in an area, Check a site, Review an FSR, Forecast and Study
+  // area; the one search at the top of each; a site picked opens its page; its trail steps back up; the
+  // FSR review is one of its sections.
+  await check('Explore: one entry, the search on every view, a site and back up its trail, its FSR review', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
+    const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
+    expect(side.includes('explore') && !side.some(id => ['site', 'fsr', 'growth', 'outlook', 'study'].includes(id)), `the sidebar: ${side.join()}`);
+    await page.click('#home .home-side [data-ws-page="explore"]'); await wait(2000);
+    const a = await ev(() => ({ page: PeelWorkspaces.page(), search: !!document.querySelector('#home #page-search #search-box'), on: (document.querySelector('#home .home-ws.on') || {}).dataset, secs: [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent) }));
+    expect(a.page === 'growth', `Explore opens on Growth in an area (${a.page})`);
+    expect(a.search, 'the search box is at the top of the page');
+    expect(a.on && a.on.wsPage === 'explore', 'Explore is lit in the sidebar');
+    expect(a.secs.join() === 'Growth,Forecast,Servicing,Capital', `the area's sections: ${a.secs.join()}`);
+    // The area's Servicing: the map's own Servicing › Capacity answer; back to Growth.
+    await page.click('#home .page-sec[data-ws-asec="servicing"]'); await wait(2000);
+    const sv = await ev(() => { const st = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(); return { on: (document.querySelector('#home .page-sec.on') || {}).textContent, page: st(document.querySelector('#home .home-answer').innerHTML), map: st(PeelPanel.get('svc:capacity').spec.answer) }; });
+    expect(sv.on === 'Servicing' && sv.page.includes(sv.map), `the area's Servicing is the map's ("${sv.page.slice(0, 50)}")`);
+    await page.click('#home .page-sec[data-ws-page="growth"]'); await wait(1500);
+    // A municipality, then a development from its list: its page, with its trail.
+    await page.click('#home [data-ws-drill="m:Brampton"]'); await wait(1500);
+    await page.locator('#home [data-ws-pick][data-ws-as="site"]').first().click(); await wait(3500);
+    const s = await ev(() => ({ page: PeelWorkspaces.page(), dev: !!DevScope.current(), trail: [...document.querySelectorAll('#home [data-ws-explore]')].map(b => b.textContent), secs: [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent), search: !!document.querySelector('#home #page-search #search-box') }));
+    expect(s.page === 'site' && s.dev, `a development opens its page (${s.page})`);
+    expect(s.trail[0] === 'Peel' && s.trail.includes('Brampton'), `its trail: ${s.trail.join(' › ')}`);
+    expect(s.secs.join() === 'Summary,Growth,Servicing,Capital,Files,FSR review', `its sections: ${s.secs.join()}`);
+    expect(s.search, 'the search stays at the top');
+    const lm = await ev(() => ({ inPage: !!document.querySelector('#home #page-map-slot #map'), chips: [...document.querySelectorAll('#home [data-ws-layer]')].map(b => b.dataset.wsLayer) }));
+    expect(lm.inPage, 'the live map is on the site\u2019s page');
+    expect(lm.chips.join() === 'devs,ex-water,ex-sanitary,ex-storm,dcw,cons,ea', `its layer chips: ${lm.chips.join()}`);
+    // Its FSR review, then back to a section of the site.
+    await page.click('#home .page-sec[data-ws-page="fsr"]'); await wait(2500);
+    const f = await ev(() => ({ page: PeelWorkspaces.page(), box: !!document.querySelector('#home [data-pnl-fsrbox]'), on: (document.querySelector('#home .page-sec.on') || {}).textContent }));
+    expect(f.page === 'fsr' && f.box && f.on === 'FSR review', `the FSR review (${f.page}, ${f.on})`);
+    await page.click('#home .page-sec[data-ws-sec="growth"]'); await wait(2500);
+    const g = await ev(() => ({ page: PeelWorkspaces.page(), on: (document.querySelector('#home .page-sec.on') || {}).textContent }));
+    expect(g.page === 'site' && g.on === 'Growth', `back on the site at Growth (${g.page}, ${g.on})`);
+    // A step up the trail: Growth in an area at Brampton, the site closed.
+    await page.locator('#home [data-ws-explore="m:Brampton"]').first().click(); await wait(2500);
+    const u = await ev(() => ({ page: PeelWorkspaces.page(), dev: !!DevScope.current(), name: (document.querySelector('#home h1') || {}).textContent }));
+    expect(u.page === 'growth' && !u.dev && /Brampton/.test(u.name), `up the trail to Brampton (${u.page}, ${u.name})`);
+  });
+
+  // Servicing and Capital: one entry each; the map's other sub-views of the tab are sections of the page,
+  // each the map panel's own answer.
+  await check('Servicing and Capital: the map\u2019s sub-views are sections of their page, with the map\u2019s answers', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
+    const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
+    expect(side.includes('capital') && !side.includes('projects') && !side.includes('eaflow'), `the sidebar: ${side.join()}`);
+    const st = 'h => String(h || "").replace(/<[^>]+>/g, "").replace(/\\s+/g, " ").trim()';
+    for (const [entry, ws, secs] of [['tight', 'servicing', ['network', 'alloc', 'checks']], ['capital', 'capital', ['projects', 'eas']]]) {
+      await page.click(`#home .home-side [data-ws-page="${entry}"]`); await wait(3000);
+      const bar = await ev(() => [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent));
+      expect(bar.length === 4, `${ws}: its sections ${bar.join()}`);
+      for (const id of secs) {
+        await page.click(`#home .page-sec[data-ws-wsec="${ws}:${id}"]`); await wait(3000);
+        const r = await ev(([ws, id, st]) => { const f = eval(st), s = PeelSections.wsSpecFor(ws, id); return { on: (document.querySelector('#home .page-sec.on') || {}).dataset, page: f(document.querySelector('#home .home-answer').innerHTML), map: s ? f(s.answer) : null }; }, [ws, id, st]);
+        expect(r.on && r.on.wsWsec === `${ws}:${id}`, `${ws} › ${id}: the bar`);
+        expect(r.map && r.page === r.map, `${ws} › ${id}: the page's answer is the map panel's ("${String(r.page).slice(0, 50)}" / "${String(r.map).slice(0, 50)}")`);
+      }
+    }
+    await page.click('#home .page-sec[data-ws-page="eaflow"]'); await wait(2500);
+    const ea = await ev(() => ({ page: PeelWorkspaces.page(), on: (document.querySelector('#home .page-sec.on') || {}).textContent, lit: (document.querySelector('#home .home-ws.on') || {}).dataset }));
+    expect(ea.page === 'eaflow' && ea.on === 'EA to construction' && ea.lit && ea.lit.wsPage === 'capital', `EA to construction is a section of Capital (${ea.page}, ${ea.on})`);
+  });
+
+  // Reference and This week (step 5): one Reference entry (Help, How it works, the Glossary, the data
+  // sources and checks that were map-only); This week carries the watch list.
+  await check('Reference: one entry, the data sources and checks on pages; This week: the watch list', browser, {}, async ({ page, ev }, expect) => {
+    const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
+    expect(side.includes('reference') && !side.some(id => ['help', 'guides', 'glossary'].includes(id)), `the sidebar: ${side.join()}`);
+    await page.click('#home .home-side [data-ws-page="reference"]'); await wait(1500);
+    const bar = await ev(() => ({ page: PeelWorkspaces.page(), secs: [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent), lit: (document.querySelector('#home .home-ws.on') || {}).dataset }));
+    expect(bar.page === 'help' && bar.secs.join() === 'Help,How it works,Glossary,Data sources,Data checks' && bar.lit && bar.lit.wsPage === 'reference', `Reference (${bar.page}: ${bar.secs.join()})`);
+    const st = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+    await page.click('#home .page-sec[data-ws-page="data"]'); await wait(2000);
+    const ds = await ev(() => ({ page: PeelWorkspaces.page(), a: document.querySelector('#home .home-answer').innerHTML, m: PeelSections.areaPanel('records:sources').answer }));
+    expect(ds.page === 'data' && st(ds.a) === st(ds.m), `Data sources is the map's Records › Sources ("${st(ds.a).slice(0, 50)}")`);
+    await page.click('#home .page-sec[data-ws-wsec="reference:checks"]'); await wait(2000);
+    const dc = await ev(() => ({ a: document.querySelector('#home .home-answer').innerHTML, m: (PeelSections.wsSpecFor('reference', 'checks') || {}).answer }));
+    expect(dc.m && st(dc.a) === st(dc.m), `Data checks is the map's Records › Data checks ("${st(dc.a).slice(0, 50)}")`);
+    // A watched development is on This week's page.
+    const w = await ev(() => { const p = PeelApp.state.projects.find(q => q.units > 100 && q.phase === 'review'); PeelUtil.store.set('watch', [p.key]); PeelWorkspaces.openPage('week'); return p.title; });
+    await wait(2000);
+    const wl = await ev(() => [...document.querySelectorAll('#home .pnl-list-h h3, #home h3')].map(h => h.textContent).join('|') + '#' + document.querySelector('#home').innerText.includes('Your watch list'));
+    const has = await ev(t => document.querySelector('#home').innerText.includes(t), w);
+    expect(/true$/.test(wl) && has, `This week lists the watch list with ${w}`);
+    await ev(() => PeelUtil.store.set('watch', []));
+  });
+
+  // Home (step 6): the scope picker sets the municipality; the four groups; the new lists; the figures
+  // are the pages' own.
+  await check('Home: the municipality picker, four groups of figures, the largest left to build', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
+    await page.waitForFunction(() => document.querySelectorAll('#home .home-grp-h h2').length >= 4, null, { timeout: 30000 }).catch(() => {});
+    const g = await ev(() => [...document.querySelectorAll('#home .home-grp-h h2')].map(h => h.textContent));
+    expect(g.join() === 'Growth,Servicing,Capital,Change', `the groups: ${g.join()}`);
+    await page.click('#home [data-ws-muni="Caledon"]'); await wait(3000);
+    const c = await ev(() => ({ muni: PeelApp.state.muni, name: document.querySelector('#home h1').textContent, planned: (document.querySelector('#home .home-grp .pnl-fig b') || {}).textContent, g: Math.round(Growth.pipelineTotals(PeelApp.state.filtered).planned).toLocaleString('en-CA'), list: document.querySelector('#home').innerText.includes('Largest left to build') }));
+    expect(c.muni === 'Caledon' && /^Caledon/.test(c.name), `Caledon picked (${c.name})`);
+    expect(c.planned === c.g, `Home's homes planned ${c.planned} = Growth's ${c.g} for Caledon`);
+    expect(c.list, 'Largest left to build is listed');
+    await page.click('#home [data-ws-muni=""]'); await wait(2000);
+    expect(await ev(() => PeelApp.state.muni === ''), 'back to Peel');
+  });
+
+  // Plan areas: Growth in an area and the map's plan filter ("Show on the map") count the same
+  // developments the same way (a straddling one by its share), for every plan, sub-area and precinct.
+  // The developments table and its treemap (js/dev-table.js): grouped by plan, by stage; a tile or a
+  // row under the pointer is ringed on the map; a row opens the site.
+  await check('Growth in an area: the developments table, its treemap under the map, a row opens the site', browser, {}, async ({ page, ev }, expect) => {
+    await ev(() => PeelWorkspaces.openPage('growth')); await wait(2000);
+    await page.click('#home [data-ws-drill="m:Caledon"]'); await wait(3000);
+    const t = await ev(() => ({ groups: [...document.querySelectorAll('#home .gt-gn b')].map(b => b.textContent), rows: document.querySelectorAll('#home .gt-r').length, tiles: document.querySelectorAll('#home .home-map .gtm-t[data-ws-pick]').length, over: document.querySelector('#home .gt').scrollWidth - document.querySelector('#home .gt-scroll').clientWidth }));
+    expect(t.groups.includes('Caledon Station') && t.groups.includes('Not in a plan'), `grouped by plan (${t.groups.slice(0, 4).join()})`);
+    expect(t.rows > 0 && t.tiles > 0, `${t.rows} rows, ${t.tiles} tiles`);
+    expect(t.over <= 1, `the table fits its column (${t.over}px over)`);
+    await page.locator('#home .gtm-t[data-hx]').first().hover(); await wait(300);
+    expect(await ev(() => document.querySelectorAll('#home .home-map-svg .hm-ring').length === 1), 'a tile under the pointer is ringed on the map');
+    await page.click('#home [data-gt-by="stage"]'); await wait(1500);
+    const st = await ev(() => [...document.querySelectorAll('#home .gt-gn b')].map(b => b.textContent));
+    expect(st[0] === 'In review', `grouped by stage (${st.join()})`);
+    const key = await ev(() => document.querySelector('#home .gt-r').dataset.wsPick);
+    await page.locator('#home .gt-r').first().click(); await wait(3000);
+    const s = await ev(() => ({ page: PeelWorkspaces.page(), dev: (DevScope.current() || {}).key }));
+    expect(s.page === 'site' && s.dev === key, `a row opens its site (${s.page}, ${s.dev})`);
+  });
+
+  await check('plan areas: Growth in an area and the map’s plan filter agree, precincts included', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
+    const nodes = await ev(() => [...PeelPlanTables.compute().nodes.values()].filter(n => n.areaId).map(n => ({ id: n.areaId, name: n.name, units: Math.round(n.m.planned), people: PeelUtil.roundPop(n.m.people) })));
+    expect(nodes.length > 100, `${nodes.length} plan areas`);
+    expect(nodes.some(n => /^Precinct /.test(n.name)), 'precincts are in the tree');
+    for (const n of nodes) {
+      const got = await ev(async id => {
+        PeelApp.state.sp = [id]; PeelApp.applyFilters(); await new Promise(res => setTimeout(res, 500));
+        const num = s => +String(s).replace(/<[^>]+>/g, '').replace(/[^\d.]/g, ''), f = (PeelOverviewTab.lastAreaSpec().figures || []).filter(Boolean);
+        return { units: num(f.find(x => x.u === 'units').v), people: num(f.find(x => x.u === 'people').v) };
+      }, n.id);
+      expect(got.units === n.units, `${n.name}: ${n.units} units on Growth in an area, ${got.units} with the map's plan filter`);
+      expect(got.people === n.people, `${n.name}: ${n.people} people on Growth in an area, ${got.people} with the map's plan filter`);
+    }
+    await ev(() => { PeelApp.state.sp = []; PeelApp.applyFilters(); });
+  });
+
   await browser.close(); srv.close();
   for (const r of results) console.log(`${r.ok ? 'ok  ' : 'FAIL'} ${r.name} (${(r.ms / 1000).toFixed(1)} s)${r.ok ? '' : `\n       - ${r.fails.join('\n       - ')}`}`);
   const bad = results.filter(r => !r.ok).length;

@@ -195,6 +195,7 @@
   panelChange('#f-plant', e => { App().state.plant = e.target.value; App().applyFilters(); });
   panelChange('#f-dwelling', e => { App().state.dwelling = e.target.value; App().applyFilters(); });
   panelChange('#f-landuse', e => { App().state.landuse = e.target.value || App().DEFAULT_LANDUSE; App().applyFilters(); });
+  panelChange('#f-dcgate', e => { App().state.dcgate = e.target.value || ''; if (window.PeelDcGate) window.PeelDcGate.load(); App().applyFilters(); });
   panelChange('#f-milestone', e => { App().state.yearMode = e.target.value; const tm = $('#t-mode'); if (tm) tm.value = App().state.yearMode; App().applyFilters(); });
   panelChange('#f-yfrom', syncPanelYears); panelChange('#f-yto', syncPanelYears);
   panelClick('#f-when-12m', () => TL().setLast12Months());
@@ -224,7 +225,7 @@
     setV('#f-search', App().state.search);
     setV('#f-kind', App().state.kind); setC('#f-new', App().state.newOnly);
     setV('#f-size', String(App().state.minUnits));
-    setV('#f-plant', App().state.plant); setV('#f-dwelling', App().state.dwelling); setV('#f-landuse', App().state.landuse);
+    setV('#f-plant', App().state.plant); setV('#f-dwelling', App().state.dwelling); setV('#f-landuse', App().state.landuse); setV('#f-dcgate', App().state.dcgate || '');
     setV('#f-milestone', App().state.yearMode); setV('#t-mode', App().state.yearMode);
     const yf = $('#f-yfrom'); if (yf) yf.value = App().state.yearFrom == null ? '' : App().state.yearFrom;
     const yt = $('#f-yto'); if (yt) yt.value = App().state.yearTo == null ? '' : App().state.yearTo;

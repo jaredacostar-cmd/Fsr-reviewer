@@ -97,8 +97,13 @@
     out.estimatedDates = s.estimatedDates;
     parts.existing = s.existing; parts.built = s.built;
     const rest = Math.max(0, units - s.existing - s.built);
+    // A completed development's units not on a completed permit: with a build-out, they are on
+    // permits still open (every unit is permitted, or the phase would be construction), so they are
+    // committed, not built, the same as Growth's left to build (P.unbuiltOf). 0 McLaughlin Rd: 397
+    // planned, 260 on closed permits, 137 still building.
     if (layer !== 'built' && layer !== 'existing') parts[layer] += rest;
-    else parts[layer] += rest;   // a completed development's units not on a dated permit
+    else if (p.buildout) parts.committed += rest;
+    else parts[layer] += rest;
     out.units = units;
     out.unbuilt = rest;
     out.toPermit = p.buildout ? p.buildout.remaining || 0 : (layer === 'built' || layer === 'existing' ? 0 : rest);

@@ -124,6 +124,7 @@
             <summary><h2 class="label" data-info="filter-what">What</h2><span class="fr-val" id="fv-what"></span></summary>
             <div class="row two"><label class="field"><span class="label">Size</span><select id="f-size" autocomplete="off"><option value="0">Any size</option><option value="1">Adds units or jobs</option><option value="10">10+ units</option><option value="50">50+ units</option><option value="100">100+ units</option><option value="500">500+ units</option></select></label><label class="field"><span class="label">Dwelling type</span><select id="f-dwelling" autocomplete="off"><option value="">Any dwelling type</option><option value="single">Single / semi-detached</option><option value="town">Townhouse</option><option value="apartment">Apartment</option></select></label></div>
             <label class="field"><span class="label">Land use</span><select id="f-landuse" autocomplete="off"><option value="all" selected>Any land use</option><option value="growth">Adds units or jobs</option><option value="residential">Residential</option><option value="mixed">Mixed</option><option value="employment">Employment</option></select></label>
+            <label class="field" data-info="filter-dcgate"><span class="label">Site servicing permit</span><select id="f-dcgate" autocomplete="off" title="Has the development applied for a site servicing permit for water / wastewater (Mississauga: Site Servicing; Brampton: Site Service; Caledon: Site Services)? Pipeline developments adding homes or floor area."><option value="" selected>Any</option><option value="counted">Applied for or issued</option><option value="notcounted">Not applied for (all others)</option><option value="permitNoSvc">Building permit, none applied for</option><option value="none">None applied for yet</option><option value="existingOnly">For existing buildings only</option><option value="private">Septic (private servicing)</option></select></label>
             <div class="row two"><label class="field" data-info="record-type"><span class="label">Record type</span><select autocomplete="off" id="f-kind"><option value="application" selected>Planning applications + their permits</option><option value="">All records (incl. permits with no application)</option><option value="permit">Building permits</option><option value="both">Application + permits</option></select></label></div>
             <label class="switch" data-info="new-only"><input type="checkbox" autocomplete="off" id="f-new" checked><span class="track" aria-hidden="true"></span><span>New buildings only <span class="muted small">(hide alterations, signs, pools…)</span></span></label>
           </details>
@@ -418,6 +419,8 @@
   <script src="js/util.js?v=__BUILD__"></script>
   <script src="js/labs.js?v=__BUILD__"></script>
   <script src="js/panel.js?v=__BUILD__"></script>
+  <script src="js/sections.js?v=__BUILD__"></script>
+  <script src="js/dev-table.js?v=__BUILD__"></script>
   <script src="js/approvals-guide.js?v=__BUILD__"></script>
   <script src="js/reference.js?v=__BUILD__"></script>
   <script src="js/glossary.js?v=__BUILD__"></script>
@@ -450,6 +453,7 @@
   <script src="js/snapshot-index.js?v=__BUILD__"></script>
   <script src="js/design.js?v=__BUILD__"></script>
   <script src="js/devscope.js?v=__BUILD__"></script>
+  <script src="js/dev-gantt.js?v=__BUILD__"></script>
   <script src="js/devtab.js?v=__BUILD__"></script>
   <script src="js/tools.js?v=__BUILD__"></script>
   <script src="js/upstream.js?v=__BUILD__"></script>
@@ -492,7 +496,10 @@
   <script src="js/fsr-check.js?v=__BUILD__"></script>
   <script src="js/dev-nav.js?v=__BUILD__"></script>
   <script src="js/aerial-check.js?v=__BUILD__"></script>
+  <script src="js/phase-estimate.js?v=__BUILD__"></script>
   <script src="js/aerial-chip.js?v=__BUILD__"></script>
+  <script src="js/servicing-permits.js?v=__BUILD__"></script>
+  <script src="js/dc-gate.js?v=__BUILD__"></script>
   <script src="js/stage-chip.js?v=__BUILD__"></script>
   <script src="js/exports.js?v=__BUILD__"></script>
   <script src="js/sewer-profile.js?v=__BUILD__"></script>

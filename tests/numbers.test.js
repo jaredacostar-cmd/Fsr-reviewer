@@ -43,7 +43,7 @@ test('the sentence and the figure beside it agree, or each names its basis', () 
   assert.match(ov, /const since = \(v, d, f\) => \(d >= 0\.5 \? `\$\{f\(Math\.max\(0, v - d\)\)\} added since the 2021 census` : ''\);/);
   assert.match(ov, /since\(e\.population, pre\.people, x => fmtNum\(roundPop\(x\)\)\)/);
   assert.match(ov, /since\(unitsAll, pre\.units, x => fmtNum\(Math\.round\(x\)\)\)/);
-  assert.match(ov, /areaPanelSpec\(\{ set, e, basis, pipe, unitsAll, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue, pre \}\)/);
+  assert.match(ov, /areaPanelSpec\(\{ set, e, basis, pipe, unitsAll, unitsWord, inPlan, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue, pre \}\)/);
   // Capital › Timing: the total held back and one project's share are both named.
   const dca = src('js/dca-tab.js');
   assert.match(dca, /With every project as scheduled, <strong>≈\$\{pp\(R\.baseBo\)\} people<\/strong> are still constrained at build-out/);
@@ -78,7 +78,7 @@ test('people and jobs round the same way on every page; units stay exact', () =>
 test('Home keeps Needs attention in its place while the servicing model loads, and redraws when it has', () => {
   const w = src('js/ws-pages.js');
   assert.match(w, /const wait = \{ title: 'Needs attention', rows: \[\{ kv: true, html: '<span class="muted">Checking servicing capacity…<\/span>' \}\], total: 1 \};/);
-  assert.match(w, /lists: \[ready \? toPage\('tight', needs\) : needs, toPage\('week', week\)\]/);
+  assert.match(w, /lists: \[ready \? toPage\('tight', needs\) : needs, unbuilt, tgt, toPage\('week', week\)\]/);
   assert.match(w, /caption: !ready \? '<span class="muted">Checking servicing capacity…<\/span>'/);
   assert.match(src('js/svc-tab.js'), /if \(AT\(\)\.getFootTab\(\) === 'overview' \|\| \(root\.PeelWorkspaces && root\.PeelWorkspaces\.mode\(\) !== 'full'\)\) OV\(\)\.renderOverview\(\);/);
 });

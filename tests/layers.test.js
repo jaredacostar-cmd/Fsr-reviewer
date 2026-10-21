@@ -7,6 +7,7 @@ const assert = require('node:assert/strict');
 const L = require('../js/layers.js');
 const D = require('../js/demand.js');
 const G = require('../js/growth.js');
+const P = require('../js/phases.js');
 const H = require('./helpers/real-devs.js');
 const skip = !H.available() && 'snapshot not present';
 
@@ -34,6 +35,23 @@ test('a development part-built: the built part is Built, the rest its own layer'
   assert.equal(x.layer, 'committed');
   assert.deepEqual(x.parts, { existing: 0, built: 40, committed: 60, proposed: 0, anticipated: 0 });
   assert.equal(x.toPermit, 60);
+});
+
+test('a completed development with permits still open: the open part is committed, not built', () => {
+  const p = { key: 'o', phase: 'completed', units: 100, records: [permit({ units: 60, events: [at('2022-01-01', 'permit'), at('2023-06-01', 'completed')] }), permit({ ref: 'BP 2', units: 40, phase: 'construction', events: [at('2022-01-01', 'permit')] })], buildout: { planned: 100, permitted: 100, completed: 60, remaining: 0, unbuilt: 40 } };
+  const x = L.ofDev(p);
+  assert.equal(x.layer, 'built');
+  assert.deepEqual(x.parts, { existing: 0, built: 60, committed: 40, proposed: 0, anticipated: 0 });
+  assert.equal(x.unbuilt, P.unbuiltOf(p), 'the same as Growth’s left to build');
+});
+
+test('every development: Layers and Growth agree on what is built', { skip }, () => {
+  const { projects } = H.realDevs();
+  for (const p of projects) {
+    if (p.phase === 'cancelled' || !(p.units > 0)) continue;
+    const x = L.ofDev(p);
+    assert.equal(x.unbuilt, P.unbuiltOf(p), `${p.key}: Layers unbuilt ${x.unbuilt} ≠ Growth left ${P.unbuiltOf(p)}`);
+  }
 });
 
 test('withdrawn: no layer, no units', () => {

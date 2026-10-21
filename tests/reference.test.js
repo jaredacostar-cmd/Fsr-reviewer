@@ -119,7 +119,7 @@ test('wired in: the sidebar shows Help, How it works and the Glossary; every gui
   const w = src('js/workspaces.js'), s = src('js/ws-pages.js');
   assert.match(w, /guides: \{ label: 'How it works'/);
   for (const id of R.IDS) assert.ok(new RegExp(`\\['${id}', '[^']+'\\]`).test(w), `${id} in REF`);
-  assert.match(w, /const isOn = id => page === id \|\| \(id === 'guides' && !!\(REF\[page\] && REF\[page\]\.guide\)\);/, 'a guide lights How it works');
+  assert.match(w, /const isOn = id => page === id \|\| \(id === 'guides' && !!\(REF\[page\] && REF\[page\]\.guide\)\) \|\| \(id === 'explore' && EXPLORE\.includes\(page\)\) \|\| \(id === 'capital' && CAPITAL\.includes\(page\)\) \|\| \(id === 'reference' && !!REF\[page\]\);/, 'a guide lights How it works; an Explore view lights Explore');
   assert.match(s, /const ref = id => \(\) => \(root\.PeelReference \? root\.PeelReference\.page\(id\)/);
   assert.match(s, /const GUIDE_OF = \{ site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capital', eaflow: 'capital', pipes: 'network' \};/);
   assert.match(src('js/tips.js'), /data-ws-page="guides">How it works: the guides<\/button>/);

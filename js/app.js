@@ -55,10 +55,13 @@
     muni: '', kind: DEFAULT_KIND, search: '', newOnly: true,
     sp: [], mtsa: [], pz: [], dr: [], ss: null,   // pz / dr: water pressure zone and wastewater drainage area ids (data/servicing.json)   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
     minUnits: 0,   // unit growth filter: 0 = any, otherwise at least this many new units
+    showDormant: false,   // dormant developments (js/phases.js dormantOf) counted and shown, or held aside
+    showSiteActivity: false,   // site activity (js/sites.js: a patio, a fit-out on a site) shown, or held aside
     flags: DEFAULT_FLAGS(),   // flag filters, multi-select (see FLAG_TESTS)
     plant: '',                // receiving wastewater plant: '' | 'Lakeview' | 'Clarkson' | 'Inglewood'
     dwelling: '',             // dwelling type: '' | 'single' | 'town' | 'apartment'
     landuse: DEFAULT_LANDUSE,
+    dcgate: '',               // DC servicing gate (js/dc-gate.js): '' | a bucket | 'notcounted'
     basis: ['all', 'buildout', 'committed', 'remaining'].includes(store.get('svcBasis')) ? store.get('svcBasis') : DEFAULT_BASIS,   // counting basis (Scenario)
     // Timeline: inclusive year range (null = open-ended) on the chosen milestone.
     yearMode: 'any', yearFrom: null, yearTo: null, yearMin: null, yearMax: null,
@@ -196,6 +199,24 @@
     const p = state.projects.find(x => x.records.some(q => q.ref === r.ref && q.municipality === r.municipality)) || PeelDevNav.projectByKey(key);
     if (p) PeelDevNav.showDetail(p);
   }
+  // Dormant developments (js/phases.js dormantOf) are held aside, out of every count (the header and
+  // Growth totals, the layers and stage strip, the servicing demand all read state.projects), unless
+  // shown; their pages still open (PeelDevNav.projectByKey) and Find says how many are left out. The
+  // full build and the first-paint index both pass through here, so they agree.
+  // Site activity (js/sites.js, step 2: files that only alter what stands on a site, such as a patio
+  // or a unit fit-out, with no proposal of their own) is held aside the same way, with its own switch.
+  function holdDormant() {
+    const all = state.projects, now = Date.now(), dorm = all.filter(p => !p.siteActivity && P.dormantOf(p, now)), site = all.filter(p => p.siteActivity);
+    const out = new Set([...(state.showDormant ? [] : dorm), ...(state.showSiteActivity ? [] : site)]);
+    if (out.size) {
+      const keep = all.filter(p => !out.has(p));
+      Object.defineProperty(keep, 'secondUnits', { value: all.secondUnits, enumerable: false });
+      state.projects = keep;
+    }
+    Object.defineProperty(state.projects, 'dormant', { value: dorm, enumerable: false, configurable: true });
+    Object.defineProperty(state.projects, 'siteActivity', { value: site, enumerable: false, configurable: true });
+    Object.defineProperty(state.projects, 'all', { value: all, enumerable: false, configurable: true });
+  }
   function rebuild() {
     // Phase 6: while the startup index is serving first paint, stray rebuilds
     // (e.g. a source refresh racing the full snapshot) must not wipe it.
@@ -216,6 +237,7 @@
     state.projects = P.buildProjects(records, grouped ? { regroup: parts => TG.regroup(parts) } : {});
     state.treeGrouped = grouped;
     if (TC) TC.apply(state.projects);
+    holdDormant();
     // Old address keys → today's developments (js/phases.js keyAliases), worked out when first needed.
     if (TG && TG.setAliases) { const list = state.projects; TG.setAliases(() => P.keyAliases(list)); }
     migrateSavedKeys(grouped);
@@ -282,7 +304,8 @@
     if (!ignorePhase && !state.phases.has(p.phase)) return false;
     if (!ignoreTime && !inYears(p)) return false;
     if (state.muni && p.municipality !== state.muni) return false;
-    if (state.sp.length && !state.sp.some(id => (p.sp || []).includes(id))) return false;
+    // A plan, sub-area or precinct: the developments Growth in an area counts there (by share), else by point.
+    if (state.sp.length) { const PT = window.PeelPlanTables, ids = PT && PT.areaIdsOf ? PT.areaIdsOf(p) : new Set(p.sp || []); if (!state.sp.some(id => ids.has(id))) return false; }
     if (state.mtsa.length && !state.mtsa.some(id => (p.mtsa || []).includes(id))) return false;
     if (state.pz.length && !PeelSvcData.svcIds(p, 'pz').some(id => state.pz.includes(id))) return false;
     if (state.dr.length && !PeelSvcData.svcIds(p, 'dr').some(id => state.dr.includes(id))) return false;
@@ -295,6 +318,7 @@
     if (state.plant && PeelMapMarkers.plantOfDev(p) !== state.plant) return false;
     if (state.dwelling && !(D.unitSplit(p)[state.dwelling] > 0)) return false;
     if (!LANDUSE_TEST[state.landuse || DEFAULT_LANDUSE](p)) return false;
+    if (state.dcgate && window.PeelDcGate && !window.PeelDcGate.passes(window.PeelDcGate.rowOf(p), state.dcgate)) return false;
     if (state.search) {
       const q = state.search;
       const hay = p._hay || (p._hay = [p.title, p.description, ...p.types, ...p.records.map(r => `${r.ref} ${r.statusRaw} ${r.address}`)].join(' ').toLowerCase());
@@ -539,6 +563,7 @@
     indexPainted = true;
     if (typeof PeelDevNav !== 'undefined') PeelDevNav.SUBS.clear();
     state.projects = idx.projects.map(e => window.PeelSnapshotIndex.hydrate(e, idx));
+    holdDormant();
     PeelPlanAreas.tagProjects();
     state.auditInput = null;
     state.audit = null;

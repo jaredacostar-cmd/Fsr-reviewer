@@ -16,7 +16,7 @@
   // left to build), committed by D-5-1, people and jobs from PeelDemand.estimate at the chosen
   // basis. Each development is measured once and its shares multiply it, so Peel equals the
   // Overview.
-  const KEYS = ['planned', 'committed', 'proposed', 'permitted', 'completed', 'left', 'people', 'jobs', 'built', 'anticipated', 'existing'];
+  const KEYS = ['planned', 'counted', 'committed', 'proposed', 'permitted', 'completed', 'left', 'people', 'jobs', 'built', 'anticipated', 'existing'];
   const zero = () => Object.fromEntries(KEYS.map(k => [k, 0]));
   const addInto = (t, m, f) => { for (const k of KEYS) t[k] += (m[k] || 0) * f; };
 
@@ -29,6 +29,14 @@
     // holding a share means its parent holds at least that much).
     const s = new Map();
     for (const [id, sh] of raw) { const a = areaOf(id); if (a && a.municipality === muni && sh > 0) s.set(id, Math.max(s.get(id) || 0, Math.min(1, sh))); }
+    // A precinct filed under the plan holding most of it can reach across into a neighbouring plan:
+    // a development in that other plan is not in the precinct's plan, so the precinct can't pull it in
+    // there (Bram West: Precinct 40-3 sits in 40 (c), partly over 40 (d); its developments in 40 (d)
+    // were split half to each). Where the development has a plan of its own, a precinct whose plan is
+    // not one of them is dropped.
+    const top = id => { let a = areaOf(id); while (a && a.parent && areaOf(a.parent)) a = areaOf(a.parent); return a ? a.id : id; };
+    const own = new Set([...s.keys()].filter(id => areaOf(id).kind !== 'precinct').map(top));
+    if (own.size) for (const id of [...s.keys()]) if (areaOf(id).kind === 'precinct' && !own.has(top(id))) s.delete(id);
     for (const id of [...s.keys()]) { let a = areaOf(id); while (a && a.parent) { const up = areaOf(a.parent); if (!up) break; s.set(up.id, Math.max(s.get(up.id) || 0, s.get(a.id))); a = up; } }
     const kids = new Map();
     for (const id of s.keys()) { const a = areaOf(id); const par = a.parent && s.has(a.parent) ? a.parent : null; (kids.get(par) || kids.set(par, []).get(par)).push(id); }
@@ -182,7 +190,7 @@
       if (sh > 0) devs.add(p); if (sh > 0 && sh < 1 - 1e-9) part.add(p);
     }
     const total = zero(); for (const { m: x } of r.placed) addInto(total, x, 1);
-    return { found, planned: m.planned, people: m.people, outside: total.planned - m.planned, outsidePeople: total.people - m.people, straddling: part.size, devs: devs.size };
+    return { found, planned: m.planned, counted: m.counted, people: m.people, jobs: m.jobs, outside: total.planned - m.planned, outsidePeople: total.people - m.people, straddling: part.size, devs: devs.size };
   }
 
   const api = { KEYS, placement, build, matrix, vsTarget, within };

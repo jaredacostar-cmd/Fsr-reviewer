@@ -46,14 +46,32 @@
     pipes: [],                                      // the old pipes only (drawn by this module)
     week: ['devs'],
   };
+  // Explore (step 3 of the page plan): Growth in an area, Check a site, Review an FSR, Forecast and
+  // Study area are the views of one workspace, one entry in Home's sidebar. A site picked from an area
+  // view opens on Check a site; a step up its trail opens Growth in an area there. Their map-view
+  // chips, links and share links keep their own ids.
+  const EXPLORE = ['growth', 'site', 'fsr', 'outlook', 'study'];
+  // Capital (step 4): DC projects and EA to construction, one entry; the map's Projects and EAs are
+  // sections of DC projects' page (js/sections.js WORKSPACES).
+  const CAPITAL = ['projects', 'eaflow'];
+  const SIDE = {
+    explore: { label: 'Explore', what: 'A site, a plan or an area you draw: growth, servicing, capital, files, FSR' },
+    capital: { label: 'Capital', what: 'DC timing, EA to construction, projects, EAs' },
+    // Reference (step 5): Help, How it works, the Glossary and Data sources, one entry.
+    reference: { label: 'Reference', what: 'Help, how it works, the glossary, data sources and checks' },
+  };
+  // A site's page: the live map beside its sections, at the site, with what is around it: existing
+  // water, sanitary and storm mains (from street zoom), the 2026 DC works, Region construction and the
+  // EA study areas, and the developments; each a chip on the page.
+  const SITE_MAP = ['devs', 'ex-water', 'ex-sanitary', 'ex-storm', 'dcw', 'cons', 'ea'];
   // Home's sidebar: by team (Servicing capacity with Planning), then Full map.
   const GROUPS = [
-    ['Planning', ['site', 'fsr', 'growth', 'outlook', 'study', 'tight']],
-    ['Capital', ['projects', 'eaflow']],
+    ['Planning', ['explore', 'tight']],
+    ['Capital', ['capital']],
     ['Asset Management', ['pipes']],
   ];
   // Reference pages (Home's layout, no map, not a workspace): listed last in Home's sidebar.
-  const REF = { help: { label: 'Help', what: 'Start here, guides, the tour, what’s new' }, guides: { label: 'How it works', what: 'Nine guides: approvals, flows, capacity, the forecast…' }, glossary: { label: 'Glossary', what: 'The terms in plain words' } };
+  const REF = { help: { label: 'Help', what: 'Start here, guides, the tour, what’s new' }, guides: { label: 'How it works', what: 'Nine guides: approvals, flows, capacity, the forecast…' }, glossary: { label: 'Glossary', what: 'The terms in plain words' }, data: { label: 'Data sources', what: 'Every source, its date, and the data checks' } };
   // The guides (js/reference.js): pages of their own, listed on How it works, not in the sidebar.
   for (const [id, label] of [['roles', 'Who decides what'], ['approvals', 'How approvals work'], ['flows', 'From homes to flows'], ['network', 'How sewage and water travel'], ['capacity', 'How capacity is checked'], ['fsrguide', 'What an FSR should cover'], ['capital', 'How a capital project gets built'], ['targets', 'Growth targets and forecasts'], ['forecast', 'How the forecast is timed']]) REF[id] = { label, guide: true };
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
@@ -117,7 +135,7 @@
   const defaultWs = last => (BY_ID[last] ? last : 'tight');
 
   // ---- Browser ----------------------------------------------------------------------------------
-  const api = { WS, GROUPS, BY_ID, LAYERS, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen, defaultWs };
+  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SITE_MAP, BY_ID, LAYERS, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen, defaultWs };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -180,7 +198,17 @@
   }
   function placeMap() {
     const m = $('#map'), slot = $('#page-map-slot');
-    if (slot && m) { if (m.parentElement !== slot) { slot.appendChild(m); invalidate(); fitPeel(); } } else putMapBack();
+    if (slot && m) { if (m.parentElement !== slot) { slot.appendChild(m); invalidate(); if (slot.dataset.site) fitSite(); else fitPeel(); } } else putMapBack();
+  }
+  // A site's page map: the infrastructure layers on, at the site (street zoom: the existing mains show).
+  let siteMapFor = null;
+  function fitSite() {
+    const p = root.DevScope && root.DevScope.current && root.DevScope.current(), map = root.PeelMapCore && root.PeelMapCore.map;
+    if (!p || !map || p.lat == null) return;
+    // (once per site: a page rebuilt while it loads keeps where the user has panned)
+    if (siteMapFor === p.key) return;
+    siteMapFor = p.key; lean('wastewater', SITE_MAP);
+    setTimeout(() => map.setView([p.lat, p.lng], 16), 60);
   }
   // Study area with nothing drawn yet: the page's map opens on all of Peel (the wastewater blocks).
   function fitPeel() {
@@ -201,14 +229,7 @@
       if (SS() && SS().current && SS().current()) SS().close();
     }
     // The chip's view from its preset (nothing saved), then its lean layers.
-    const MA = root.PeelMapAnalysis, LG = root.PeelLayerGroups;
-    if (MA && MA.showView) {
-      // (the full map's own settings are remembered once; a flag kept in the browser says the lean
-      // layers are on, so a later visit neither remembers them as the view's nor opens the full map lean)
-      if (!viewKept) { if (!store.get('wsLean', null)) MA.rememberCurrent(); viewKept = true; store.set('wsLean', true); }
-      MA.showView(pl.view);
-      if (LG && LG.apply) LG.apply(new Set(LAYERS[id] || []));
-    }
+    lean(pl.view, LAYERS[id] || []);
     const A = AT(); if (A) { if (pl.sub && A.setSub) A.setSub(pl.tab, pl.sub); if (A.setFootPref) A.setFootPref(pl.tab); A.showFootTab(pl.tab); }
     foldLayers();
     pipesLayer(id === 'pipes');
@@ -226,12 +247,24 @@
   // The map's Layers panel closes when a chip is picked (the chip has set the layers); the full map gets
   // it back as it was before the workspace.
   let layersWasOpen = null, viewKept = false, booted = false;
+  // A view preset and only these layers (a chip's map, a site page's map); the full map's own settings
+  // come back with it (restoreView).
+  function lean(view, layers) {
+    const MA = root.PeelMapAnalysis, LG = root.PeelLayerGroups;
+    if (!MA || !MA.showView) return;
+    // (the full map's own settings are remembered once; a flag kept in the browser says the lean
+    // layers are on, so a later visit neither remembers them as the view's nor opens the full map lean)
+    if (!viewKept) { if (!store.get('wsLean', null)) MA.rememberCurrent(); viewKept = true; store.set('wsLean', true); }
+    MA.showView(view);
+    if (LG && LG.apply) LG.apply(new Set(layers));
+  }
+
   // Back in the full map: the open view with its own remembered layers (not the chip's).
   function restoreView() {
     const MA = root.PeelMapAnalysis;
     if (!viewKept && !booted) return;   // (before the data and the link: bootRestore does it)
     if ((viewKept || store.get('wsLean', null)) && MA && MA.showView && MA.currentView) MA.showView(MA.currentView(), { remembered: true });
-    viewKept = false; store.set('wsLean', null);
+    viewKept = false; store.set('wsLean', null); siteMapFor = null;
   }
   // At boot, before a link is applied: a workspace's lean layers left on from an earlier visit give way
   // to the view's remembered settings unless the app opens on a workspace map (once; app.js).
@@ -376,6 +409,10 @@
   // leave a site; Check a site and Review an FSR keep it. The page's tab and sub-view open behind it, so
   // their panels are worked out for the same scope.
   function openPage(id, o = {}) {
+    // Explore: the site open, else the last of its views, else Growth in an area.
+    if (id === 'explore') id = root.DevScope && root.DevScope.current && root.DevScope.current() ? 'site' : (EXPLORE.includes(store.get('lastWs', '')) ? store.get('lastWs', '') : 'growth');
+    if (id === 'capital') id = CAPITAL.includes(store.get('lastWs', '')) ? store.get('lastWs', '') : 'projects';
+    if (id === 'reference') id = 'help';
     if (id !== 'home' && !BY_ID[id] && !REF[id]) id = 'home';
     const w = BY_ID[id];
     if (w && w.scope === 'area') {
@@ -388,17 +425,17 @@
     if (!o.keepScroll) { const el = $('#home'); if (el) el.scrollTop = 0; }
   }
   let lastHTML = '', timer = null, menuOpen = false;
-  const pageName = id => (id === 'home' ? 'Home' : BY_ID[id] ? BY_ID[id].label : REF[id] ? REF[id].label : id);
+  const pageName = id => (id === 'home' ? 'Home' : SIDE[id] ? SIDE[id].label : BY_ID[id] ? BY_ID[id].label : REF[id] ? REF[id].label : id);
   function sideHTML() {
     const nW = weekRows().length, pref = store.get('startScreen', 'home');
     // (a guide's page lights How it works)
-    const isOn = id => page === id || (id === 'guides' && !!(REF[page] && REF[page].guide));
+    const isOn = id => page === id || (id === 'guides' && !!(REF[page] && REF[page].guide)) || (id === 'explore' && EXPLORE.includes(page)) || (id === 'capital' && CAPITAL.includes(page)) || (id === 'reference' && !!REF[page]);
     const item = (id, sub) => `<li><button type="button" class="home-ws${isOn(id) ? ' on' : ''}" data-ws-page="${id}"${isOn(id) ? ' aria-current="page"' : ''}><strong>${esc(pageName(id))}${id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</strong>${sub ? `<small>${esc(sub)}</small>` : ''}</button></li>`;
     // (This week covers capital and EA dates too: it sits under Home, not Planning)
     // (a phone: the list folds behind one button naming the page you are on; it opens grouped)
     return `<nav class="home-side${menuOpen ? ' open' : ''}" aria-label="Workspaces"><button type="button" class="home-menu-btn" data-home-menu aria-expanded="${menuOpen}"><span aria-hidden="true">☰</span> ${esc(pageName(page))} <span class="muted small">· all pages</span> <span aria-hidden="true">${menuOpen ? '▴' : '▾'}</span></button><ul>${item('home', 'The briefing')}${item('week', BY_ID.week.what)}</ul>
-      ${GROUPS.map(([g, ids]) => `<h2 class="home-g">${esc(g)}</h2><ul>${ids.map(id => item(id, BY_ID[id].what)).join('')}</ul>`).join('')}
-      <h2 class="home-g">Reference</h2><ul>${Object.keys(REF).filter(id => !REF[id].guide).map(id => item(id, REF[id].what)).join('')}</ul>
+      ${GROUPS.map(([g, ids]) => `<h2 class="home-g">${esc(g)}</h2><ul>${ids.map(id => item(id, (SIDE[id] || BY_ID[id]).what)).join('')}</ul>`).join('')}
+      <h2 class="home-g">Reference</h2><ul>${item('reference', SIDE.reference.what)}</ul>
       <button type="button" class="home-ws home-full" data-ws-full><strong>Full map</strong><small>Every layer, filter and tool</small></button>
       <label class="home-pref small">Start screen <select data-ws-start>${START.map(([k, t]) => `<option value="${k}"${pref === k ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
     </nav>`;
@@ -420,6 +457,9 @@
     if (!force) el.scrollTop = y;
     placeSearch(); placeMap();
     if (typeof m.onMount === 'function') try { m.onMount(el.querySelector('.page-main')); } catch (e) { /* the page stays without its async parts */ }
+
+    // A page still waiting on data that sets no panel when it lands (Home's servicing figures) tries again.
+    if (m.pending) { clearTimeout(timer); timer = setTimeout(() => renderPage(false), 1000); }
   }
   const schedule = () => { if (mode !== 'home') return; clearTimeout(timer); timer = setTimeout(() => renderPage(false), 200); };
   // Kept for the tests and older callers: Home is the page 'home'.
@@ -465,6 +505,19 @@
     if (e.target.closest('[data-ws-backpage]')) { openPage(cur || page || 'home'); return; }
     if (e.target.closest('[data-ws-back]')) { const b = backTo; if (b && b.ws) { setMode('ws'); go(b.ws, { quiet: true, noDraw: true }); } else openPage((b && b.page) || 'home', { keepScroll: true }); return; }
     if (e.target.closest('[data-ws-back-x]')) { backTo = null; renderBack(); return; }
+    // Home's scope (step 6): Peel or a municipality, the same filter as the map's (a plan or MTSA in
+    // another municipality no longer applies).
+    const mu = e.target.closest('[data-ws-muni]');
+    if (mu && App()) {
+      const m = mu.dataset.wsMuni, PA = root.PeelPlanAreas, keep = id => !m || ((PA && PA.areaById && PA.areaById.get(id)) || {}).municipality === m;
+      App().state.muni = m; App().state.sp = App().state.sp.filter(keep); App().state.mtsa = App().state.mtsa.filter(keep);
+      if (root.PeelSearchFilter && root.PeelSearchFilter.renderMuniChips) root.PeelSearchFilter.renderMuniChips();
+      if (PA && PA.renderAreaSelects) PA.renderAreaSelects();
+      App().applyFilters(); renderPage(true); return;
+    }
+    // A layer chip under a site page's map: that layer on or off.
+    const lc = e.target.closest('[data-ws-layer]');
+    if (lc) { const LG = root.PeelLayerGroups, A = LG && LG.ADAPT && LG.ADAPT[lc.dataset.wsLayer]; if (A) { let on = false; try { on = !A.get(); A.set(on); } catch (er) { /* the layer is not loaded */ } lc.classList.toggle('on', on); lc.setAttribute('aria-pressed', String(on)); } return; }
     if (e.target.closest('[data-ws-full]')) { setMode('full'); return; }
     if (e.target.closest('[data-ws-home]')) { openPage('home'); return; }
     if (e.target.closest('[data-ws-focus]')) { const s = $('#f-search'); if (s) s.focus(); return; }
@@ -491,7 +544,12 @@
   document.addEventListener('keydown', e => { if (!e.defaultPrevented && (e.key === 'Enter' || e.key === ' ') && e.target.closest && (e.target.closest('#home [role="button"]') || e.target.closest('#home [data-ws-stage]'))) { e.preventDefault(); e.target.click(); } });
   // The page and the chips follow the panels (their figures, This week's count): a page rebuilds when what
   // it shows has changed.
+  let exploreDev = null;
   document.addEventListener('pnl:set', e => {
+    // Explore: a site picked (the search, the map) while an area view is open opens its page.
+    const sc = e.detail && e.detail.scope;
+    if (sc && sc.startsWith('dev:') && sc !== exploreDev && mode === 'home' && ['growth', 'outlook', 'study'].includes(page)) { exploreDev = sc; setTimeout(() => openPage('site'), 0); }
+    else if (sc && !sc.startsWith('dev:')) exploreDev = null;
     if (e.detail && e.detail.key === 'overview:' && e.detail.scope === 'area') renderChips();
     if (mode === 'ws' && cur === 'pipes' && e.detail && e.detail.key === 'svc:network') pipesLayer(true);
     schedule();

@@ -106,6 +106,7 @@
     if (App().state.plant) out.push({ label: SD().PLANT_SHORT[App().state.plant] || App().state.plant, clear: () => { App().state.plant = ''; setVal('#f-plant', ''); } });
     if (App().state.dwelling) out.push({ label: dwellingLabel[App().state.dwelling] || App().state.dwelling, clear: () => { App().state.dwelling = ''; setVal('#f-dwelling', ''); } });
     if (App().state.landuse !== App().DEFAULT_LANDUSE) out.push({ label: landuseLabel[App().state.landuse] || App().state.landuse, clear: () => { App().state.landuse = App().DEFAULT_LANDUSE; setVal('#f-landuse', App().DEFAULT_LANDUSE); } });
+    if (App().state.dcgate) out.push({ label: `Site servicing permit: ${(window.PeelDcGate ? window.PeelDcGate.filterLabel(App().state.dcgate) : App().state.dcgate).toLowerCase()}`, clear: () => { App().state.dcgate = ''; setVal('#f-dcgate', ''); } });
     for (const [k, label] of PF.FLAG_META) if (App().state.flags[k]) out.push({ label, clear: () => { App().state.flags[k] = false; } });
     if (phaseFilterActive()) {
       const names = P.ALL_PHASES.filter(p => App().state.phases.has(p.key)).map(p => p.label);
@@ -140,13 +141,13 @@
     const areas = Object.keys(MM().AREA_F).map(k => PA().multiSummary(k, true)).filter(Boolean);
     set('#fv-where', [S.muni || 'All of Peel', S.plant ? (SD().PLANT_SHORT[S.plant] || S.plant) : 'any plant', areas.length ? areas.join(', ') : 'any plan'].join(' · '));
     const kindT = { '': 'all records', permit: 'building permits', both: 'application + permits' };
-    set('#fv-what', [S.minUnits ? sel('#f-size') : 'any size', S.dwelling ? sel('#f-dwelling') : 'any dwelling', S.landuse !== App().DEFAULT_LANDUSE ? sel('#f-landuse') : 'any land use', S.kind !== App().DEFAULT_KIND ? kindT[S.kind] || '' : '', S.newOnly ? '' : 'incl. alterations'].filter(Boolean).join(' · ').replace(/^./, c => c.toUpperCase()));
+    set('#fv-what', [S.minUnits ? sel('#f-size') : 'any size', S.dwelling ? sel('#f-dwelling') : 'any dwelling', S.landuse !== App().DEFAULT_LANDUSE ? sel('#f-landuse') : 'any land use', S.dcgate ? `site servicing permit: ${sel('#f-dcgate')}` : '', S.kind !== App().DEFAULT_KIND ? kindT[S.kind] || '' : '', S.newOnly ? '' : 'incl. alterations'].filter(Boolean).join(' · ').replace(/^./, c => c.toUpperCase()));
     const from = S.yearFrom ?? S.yearMin, to = S.yearTo ?? S.yearMax;
     set('#fv-when', `${App().timeActive() ? (from === to ? `${from}` : `${from}–${to}`) : 'All years'} · ${S.yearMode === 'any' ? 'any milestone' : sel('#f-milestone')}`);
     set('#fv-counts', S.lyr ? [...S.lyr].map(k => (window.PeelLayerBar ? window.PeelLayerBar.LABEL[k] : k)).join(' + ') : 'Every stage');
     const fl = PF.FLAG_META.filter(([k]) => S.flags[k]).map(([, l]) => l);
     set('#fv-flags', fl.length ? fl.join(', ') : 'None');
-    for (const [id, on] of [['#fr-where', S.muni || S.plant || areas.length], ['#fr-what', S.minUnits || S.dwelling || S.landuse !== App().DEFAULT_LANDUSE || S.kind !== App().DEFAULT_KIND || !S.newOnly], ['#fr-when', App().timeActive() || S.yearMode !== 'any'], ['#fr-counts', !!S.lyr], ['#fr-flags', fl.length]]) { const el = $(id); if (el) el.classList.toggle('active', !!on); }
+    for (const [id, on] of [['#fr-where', S.muni || S.plant || areas.length], ['#fr-what', S.minUnits || S.dwelling || S.landuse !== App().DEFAULT_LANDUSE || S.dcgate || S.kind !== App().DEFAULT_KIND || !S.newOnly], ['#fr-when', App().timeActive() || S.yearMode !== 'any'], ['#fr-counts', !!S.lyr], ['#fr-flags', fl.length]]) { const el = $(id); if (el) el.classList.toggle('active', !!on); }
   }
   // One line saying what the map shows and why.
   function renderShowing() {
@@ -155,8 +156,20 @@
     const years = App().timeActive() ? (() => { const a = App().state.yearFrom ?? App().state.yearMin, b = App().state.yearTo ?? App().state.yearMax; return a === b ? `in ${a}` : `${a}–${b}`; })() : 'all years';
     const extra = activeFilters().length - (phaseFilterActive() ? 1 : 0) - (yearsFilterActive() ? 1 : 0) - (App().state.muni ? 1 : 0) - (App().state.search ? 1 : 0);
     // The result count first (SPEC §4), then what it is.
-    $('#f-showing').innerHTML = `<span class="find-count"><b>${fmtNum(App().state.filtered.length)}</b> developments</span> <span class="muted">${esc(what)} · ${esc(years)} · ${esc(App().state.muni || 'all of Peel')}${App().state.search ? ` · matching “${esc(App().state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''}</span> · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>`;
+    // Dormant developments held aside (js/phases.js dormantOf): how many, their homes, and the switch.
+    const dorm = App().state.projects.dormant || [], dHomes = dorm.reduce((t, p) => t + (p.units || 0), 0);
+    const dormLine = dorm.length ? ` · <button type="button" class="btn small link" data-dormant title="No file event, permit or council item for 3 years (approved, no building permit; pre-application) or 5 years (in review)">${App().state.showDormant ? `Including ${fmtNum(dorm.length)} dormant (${fmtNum(dHomes)} homes) · leave them out` : `${fmtNum(dorm.length)} dormant left out (${fmtNum(dHomes)} homes) · include`}</button>` : '';
+    // Site activity held aside (js/sites.js): files that only alter what stands on a site.
+    const sx = App().state.projects.siteActivity || [];
+    const siteLine = sx.length ? ` · <button type="button" class="btn small link" data-site-activity title="Files that only alter what stands on a site (a patio, a unit fit-out, a new door), with no proposal of their own: each development's page lists them under On this site">${App().state.showSiteActivity ? `Including ${fmtNum(sx.length)} site activity · leave it out` : `${fmtNum(sx.length)} site activity left out · include`}</button>` : '';
+    $('#f-showing').innerHTML = `<span class="find-count"><b>${fmtNum(App().state.filtered.length)}</b> developments</span> <span class="muted">${esc(what)} · ${esc(years)} · ${esc(App().state.muni || 'all of Peel')}${App().state.search ? ` · matching “${esc(App().state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''}</span> · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>${dormLine}${siteLine}`;
   }
+  $('#f-showing').addEventListener('click', e => {
+    if (e.target.closest('[data-site-activity]')) { App().state.showSiteActivity = !App().state.showSiteActivity; App().rebuild(); return; }
+    if (!e.target.closest('[data-dormant]')) return;
+    App().state.showDormant = !App().state.showDormant;
+    App().rebuild();   // (rebuild → applyFilters updates the share link)
+  });
   function renderFilterUI() {
     renderSectionSummaries();
     renderShowing();
@@ -171,7 +184,7 @@
   // Reset every filter to its default (the default years among them). Shared by the "Reset" chip and
   // the top bar's Start over. The capacity year and the scenario are not filters: they stay.
   function resetAllFilters() {
-    Object.assign(App().state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], ss: null, lyr: null, kind: App().DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: App().DEFAULT_PHASES(), flags: App().DEFAULT_FLAGS(), plant: '', dwelling: '', landuse: App().DEFAULT_LANDUSE, yearMode: 'any' });
+    Object.assign(App().state, { muni: '', sp: [], mtsa: [], pz: [], dr: [], ss: null, lyr: null, kind: App().DEFAULT_KIND, search: '', minUnits: 0, newOnly: true, phases: App().DEFAULT_PHASES(), flags: App().DEFAULT_FLAGS(), plant: '', dwelling: '', landuse: App().DEFAULT_LANDUSE, dcgate: '', yearMode: 'any' });
     SF().syncFilterControls();
     SF().renderMuniChips();
     TL().setDefaultYears();

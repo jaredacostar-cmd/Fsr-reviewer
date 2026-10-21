@@ -125,7 +125,9 @@
     if (tc) steps.push(...[].concat(tc));
     // The trail carries its count (SPEC §4), and owns it (bundle 6): at a development, that site's
     // homes (the map's 1,956 belong to Peel, not to the site); else the developments in scope.
-    const set = App().state.filtered || [], units = window.Growth ? window.Growth.pipelineTotals(set).planned : 0;
+    // (a plan filter: the units inside it, by share, as the Overview and Growth in an area count them)
+    const set = App().state.filtered || [], ins = App().state.sp.length && window.PeelPlanTables && window.PeelPlanTables.inside ? window.PeelPlanTables.inside() : null;
+    const units = ins && ins.found ? ins.planned : window.Growth ? window.Growth.pipelineTotals(set).planned : 0;
     const devU = scoped && window.Growth ? window.Growth.pipelineTotals([scoped]).planned : 0;
     const count = scoped ? `<span class="tb-count" title="This development's planned homes">· ${fmtNum(Math.round(devU))} home${Math.round(devU) === 1 ? '' : 's'} planned</span>`
       : `<span class="tb-count" title="Developments in scope and their planned units">· ${fmtNum(set.length)} development${set.length === 1 ? '' : 's'}${units > 0 ? ` · ${fmtNum(Math.round(units))} units` : ''}</span>`;

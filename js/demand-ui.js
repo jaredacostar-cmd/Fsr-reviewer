@@ -33,7 +33,7 @@
   const demandSet = () => App().state.filtered.filter(p => p.phase !== 'cancelled' && (!App().state.daCtx || App().state.daCtx.keys.has(p.key)));
   // Overview and briefing: everything shown on the map (an open development's surroundings don't narrow it).
   const overviewSet = () => App().state.filtered.filter(p => p.phase !== 'cancelled');
-  const BASIS_LABEL = { all: 'all units', committed: 'committed units only (approved, not yet built)', remaining: 'units with no permit yet only' };
+  const BASIS_LABEL = { all: 'all units', committed: 'committed units only (approved, not yet built)', remaining: 'units left to build only (not yet completed)' };
   const demandBasis = () => App().state.basis;
   // What the demand covers: the phases picked in the filter panel, then any other filters.
   // (Stage 2: pumping stations are part of Servicing › Network — #pane-pumpstations in index.html.)

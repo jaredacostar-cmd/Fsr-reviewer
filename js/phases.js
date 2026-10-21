@@ -318,8 +318,11 @@
   // ---- File numbers -----------------------------------------------------------
   // One file appears under several spellings: "SP 22-60", "SP 22 60", "SP 22/060 W9";
   // permits carry stage suffixes: "BP 3NEW 17-9012 CON / CR1 / FTR / COM".
+  // Mississauga's issued-permit feed also adds a unit suffix that its growth-management feed
+  // leaves off: "SEC UNIT 24-3708 ARU" there is "SEC UNIT 24 3708" here (one permit; ARU / SU an
+  // additional or second unit, SUP a partial superstructure permit).
   // The canonical key drops separators, leading zeros, ward and stage suffixes.
-  const REF_SUFFIX = /^(CON|COM|FTR|FDN|CR\d*|R\d+|REV\d*|SS|W\d{1,2})$/;
+  const REF_SUFFIX = /^(CON|COM|FTR|FDN|CR\d*|R\d+|REV\d*|SS|W\d{1,2}|ARU|SU|SUP)$/;
   function canonRef(ref) {
     let t = String(ref || '').toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean);
     if (!t.length) return '';
@@ -338,7 +341,8 @@
   // type with no such prefix carries its stage. Every other file is its canonical number.
   const CALEDON_TYPE = { 'official plan amendment': 'POPA', 'zoning by-law amendment': 'RZ', 'site plan': 'SPA' };
   function fileId(r, canon = canonRef) {
-    const fk = r.fileKey || canon(r.ref);
+    // (A stored fileKey is canonical again: snapshots built before a suffix was added keep it.)
+    const fk = canon(r.fileKey || r.ref);
     if (!fk || r.municipality !== 'Caledon' || r.kind !== 'application' || !/^\d{4}\|\d+$/.test(fk)) return fk;
     return `${CALEDON_TYPE[String(r.type || '').trim().toLowerCase()] || String(r.stage || stageOf(r)).toUpperCase()}|${fk}`;
   }
@@ -355,6 +359,20 @@
     if (/site plan/.test(t)) return 'siteplan';
     return 'other';
   }
+  // A condominium conversion changes an existing building's tenure (a rental apartment building, an
+  // industrial complex sold as units) and adds no homes: "Proposal to convert the existing 6 storey,
+  // 72 unit rental apartment building into a standard condominium" (C01W06.079). The site plan and
+  // pre-consultation filed for it say so too ("Existing 45-unit industrial complex to be converted to
+  // a condominium"). A condominium file's own conversion wording is enough; another file must name the
+  // condominium (converting an office building to apartments adds homes). Converting a proposed
+  // development's tenure is a new build.
+  const CONVERSION = /\bconver(?:t|ts|ted|ting|sion)\b|no development is proposed|change (?:of |in )?(?:the )?(?:current )?tenure|from rental to/i;
+  const CONDO_CONVERSION = /condo(?:minium)?\s+conver|conver(?:t|ts|ted|ting|sion)\b[^.]{0,120}?\b(?:to|into)\s+(?:an?\s+)?(?:standard\s+|common[- ]elements?\s+|industrial\s+)?condo|ownership conversion/i;
+  const isCondoConversion = r => r.kind === 'application' && !/\bconvert the proposed\b/i.test(r.description || '') &&
+    ((r.stage || stageOf(r)) === 'condo' ? CONVERSION : CONDO_CONVERSION).test(r.description || '');
+  // A registered plan of condominium: registered once the building stands ("REGISTERED",
+  // "Registered", "Plan of Condo Registered"; Brampton's "Registration" is the step before).
+  const isRegisteredCondo = r => r.kind === 'application' && (r.stage || stageOf(r)) === 'condo' && r.phase !== 'cancelled' && /\bregistered\b/i.test(r.statusRaw || '');
   // Minor / express / revision files repeat or tweak an earlier plan: they add no units.
   function isMinorFile(r) {
     const ref = String(r.ref || '').toUpperCase();
@@ -770,7 +788,7 @@
   // the weekly snapshot were read with an earlier parser): a pre-consultation's is kept aside.
   const AREA_PLAN_TEXT = /precinct plan|block plan|secondary plan area|tertiary plan|master plan for the (?:block|precinct)/i;
   function readTextUnits(r) {
-    if (r.kind !== 'application' || r.units != null && !r.unitsFromText || r.unitMix || !r.description) return;
+    if (r.kind !== 'application' || r.units != null && !r.unitsFromText || r.unitMix || !r.description || r.conversion) return;
     const t = unitsFromText(r.description);
     if ((r.stage || stageOf(r)) === 'precon') {
       // An area-wide plan's figure (a precinct or block plan) covers subdivisions filed as sites of their own.
@@ -1434,7 +1452,8 @@
     // On a residential site (its planning files describe homes) only permits that build homes
     // count; a non-residential building counts where the plans aren't for homes (offices,
     // industry, a hospice or long-term care home).
-    const homes = live.some(r => r.kind === 'application' && r.units > 0 && /residential|dwelling|apartment|town ?house|condominium|stacked|semi|single|detached|mixed[- ]use/i.test(`${r.type} ${r.description}`)) ||
+    // (a source that doesn't count units, the Brampton pre-consultations, keeps its homes in precUnits)
+    const homes = live.some(r => r.kind === 'application' && (r.units > 0 || r.precUnits > 0) && /residential|dwelling|apartment|town ?house|condominium|stacked|semi|single|detached|mixed[- ]use/i.test(`${r.type} ${r.description}`)) ||
       live.some(r => ['units', 'res'].includes(permitRole(r)));
     const builds = r => r.kind === 'permit' ? ['units', 'res'].includes(permitRole(r)) || (!homes && permitRole(r) === 'nonres') : !((r.stage || stageOf(r)) === 'siteplan' && isMinorFile(r));
     // Building permits follow the planning approval: a permit issued before the site's first
@@ -1494,6 +1513,9 @@
     if (live.some(r => !r.prePlan && !r.outside)) live = live.filter(r => !r.prePlan && !r.outside);
     const main = live.filter(builds);
     if (main.some(r => r.kind === 'permit' || (r.stage || stageOf(r)) !== 'precon')) live = main;
+    // A pre-consultation for homes is still a pre-consultation beside a limited site plan (a patio)
+    // and a shop's fit-out permit: they don't move it on.
+    else if (homes && main.length) live = main;
     else if (live.some(r => r.kind !== 'permit' || ['units', 'res', 'nonres', 'suite'].includes(permitRole(r))))
       live = live.filter(r => r.kind !== 'permit' || ['units', 'res', 'nonres', 'suite'].includes(permitRole(r)));
     // A site plan that only reads "Closed" (no approval date) is taken as approved only when a
@@ -1562,8 +1584,14 @@
     // permits): the homes of the file that holds them are permitted, inferred and labelled.
     const inf = inferBlankPermits(recs, livePermits, grossPlanned > 0 ? grossPlanned - permitUnits(livePermits) : 0);
     const grossPermitted = permitUnits(livePermits) + inf.units;
-    const permitted = net(grossPermitted);
-    const completed = net(permitUnits(livePermits.filter(r => r.phase === 'completed')) + inf.completed);
+    // A registered condominium is the last step, taken once its building stands, so its homes are
+    // built (and were permitted) whatever the permits in the open data say: its own unit count, else
+    // the site's planned homes, up to the plan (decided 2026-10-20). Not a conversion (no new homes).
+    // 151 City Centre Dr: condominium 21CDM-M 24-1 registered 2024; the permit states 855 of 856.
+    const regCondos = live.filter(r => isRegisteredCondo(r) && !r.conversion);
+    const condoBuilt = planned > 0 && regCondos.length ? Math.min(planned, regCondos.some(r => !(r.units > 0)) ? planned : regCondos.reduce((t, r) => t + r.units, 0)) : 0;
+    const completed = Math.max(condoBuilt, net(permitUnits(livePermits.filter(r => r.phase === 'completed')) + inf.completed));
+    const permitted = Math.max(completed, net(grossPermitted));
     const buildout = planned > 0 ? {
       planned,
       permitted,
@@ -1576,10 +1604,13 @@
       basis: plan.basis,
       phases: phaseBreakdown(plan.phases, livePermits, plan.basis),
       ...(inf.units > 0 ? { inferred: inf } : {}),
+      ...(condoBuilt > 0 ? { condoBuilt: { units: condoBuilt, refs: regCondos.map(r => r.ref).filter(Boolean) } } : {}),
     } : null;
     if (buildout && buildout.phases && inf.units > 0) for (const o of buildout.phases) { const f = inf.files.find(x => x.ref === o.ref); if (f) { o.permitted = (o.permitted || 0) + f.units; o.completed = (o.completed || 0) + f.completed; o.inferred = f.units; } }
     // A plan with units still to permit isn't finished even if every permit so far is.
     if (buildout && buildout.remaining > 0 && phase === 'completed') phase = 'construction';
+    // Registered condominiums covering every planned home: built; covering some: building under way.
+    if (condoBuilt > 0) phase = buildout.unbuilt === 0 ? 'completed' : PHASE_BY_KEY[phase].rank < PHASE_BY_KEY.construction.rank ? 'construction' : phase;
     // Bill 23 (2022): site plan control no longer applies to residential developments of 10 units or
     // fewer, so for them an approved zoning is the last planning approval: the site is Approved, no
     // permit yet (decided 2026-10-16). Not where a site plan was filed anyway and is still open.
@@ -1698,6 +1729,21 @@
     return { state: appeal ? 'appeal' : last && now - last > 2 * YEAR_MS ? 'stalled' : 'active', last, years };
   }
 
+  // Dormant (decided 2026-10-20): no activity (lastActivityOf: a file event, a permit or a council
+  // item naming the file) for longer than a development at its stage usually waits: approved with no
+  // building permit, 3 years (a draft approval lapses after 3 unless extended); in review, 5 years;
+  // pre-application, 3 years. Not while under appeal (the Tribunal sets the pace). The app holds dormant
+  // developments out of every count unless they are shown (js/app.js rebuild).
+  const DORMANT_YEARS = { approved: 3, review: 5, inception: 3 };
+  function dormantOf(p, now = Date.now()) {
+    const limit = p && DORMANT_YEARS[p.phase]; if (!limit) return null;
+    if (p.records.some(r => r.kind === 'application' && r.phase !== 'cancelled' && APPEAL_TEXT.test(r.statusRaw || ''))) return null;
+    if (p.records.some(r => r.kind === 'permit' && r.phase !== 'cancelled' && !r.prePlan && !r.outside && ['units', 'res', 'nonres'].includes(permitRole(r)))) return null;
+    const last = lastActivityOf(p); if (!last) return null;
+    const years = (now - last) / YEAR_MS;
+    return years > limit ? { years, last, limit } : null;
+  }
+
   // Units not yet built (SPEC 1.6): the development's count less its completed units, one definition
   // for Growth › Pipeline "left to build" and Timing "unbuilt".
   function unbuiltOf(p) {
@@ -1726,22 +1772,28 @@
       for (const f of ['address', 'type', 'description', 'units', 'gfa', 'statusRaw', 'unitMix', 'poly', 'scope', 'stage']) if (!prev[f] && r[f]) { prev[f] = r[f]; if (f === 'units') prev.unitsFromText = !!r.unitsFromText; }   // (a count read from the text stays marked as one)
       // A unit count from a data field beats one read from text.
       if (prev.unitsFromText && r.units > 0 && !r.unitsFromText) { prev.units = r.units; prev.unitsFromText = false; }
+      // The same permit in two feeds (Mississauga's issued and growth-management permits): the larger
+      // stated count, whichever feed loaded first ("BP 9NEW 24-4075 ARU" 10 units; the other feed
+      // splits it into rows of 2 and 8).
+      else if (r.sourceId !== prev.sourceId && r.units > prev.units && !r.unitsFromText && !prev.unitsFromText) prev.units = r.units;
       if (prev.minor && !r.minor) prev.minor = false;
       prev.props = { ...(r.props || {}), ...(prev.props || {}) };
       prev.newBuild = prev.newBuild || r.newBuild;
       prev.alsoIn = (prev.alsoIn || []).concat(r.sourceName);
     }
+    // A condominium conversion's units stand already: kept as unitsStated, not counted as growth.
+    for (const r of out) if (isCondoConversion(r)) { r.conversion = true; if (!('unitsStated' in r)) { r.unitsStated = r.units; r.units = null; } }
     return out;
   }
 
   const api = {
-    isSecondUnitConversion, holdSecondUnits, secondUnitSite,
+    isSecondUnitConversion, holdSecondUnits, secondUnitSite, isCondoConversion, isRegisteredCondo,
     dedupeRecords,
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY, SMALL_SITE_UNITS, isHolding,
     phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
     representativePoint, buildProjects, closeStalePermits, inferBlankPermits, isBlankPermit, buildingsListed, permitBase, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
     canonRef, fileId, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, keyAliases, legacyNormalizeAddress, isNewBuild,
-    PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf, lastActivityOf, proposedStateOf,
+    PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf, lastActivityOf, proposedStateOf, dormantOf, DORMANT_YEARS,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPhases = api;

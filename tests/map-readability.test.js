@@ -176,8 +176,8 @@ test('small page maps turn like the live map (road grid by default), with outlin
   assert.ok(Math.abs(north(make('north')())) < 0.5, 'and straight up when north up');
   assert.match(make('grid')().svg('', 'x'), /class="hm-north"/);
   assert.doesNotMatch(make('north')().svg('', 'x'), /class="hm-north"/);
-  assert.match(ws, /bearing: bearing\(\) \}\)/, 'the site sketch turns too');
-  assert.match(src('js/reports.js'), /function sketchSVG\(\{ center, halfM = 1200, points = \[\], rings = \[\], site = null, W = 330, H = 250, bearing = 0 \}\)/, 'printed reports stay north up');
+  assert.match(ws, /bearing: bearing\(\), streets: true/, 'the site sketch turns too (and names its streets offline)');
+  assert.match(src('js/reports.js'), /function sketchSVG\(\{ center, halfM = 1200, points = \[\], rings = \[\], site = null, W = 330, H = 250, bearing = 0, streets = false, onLoad = null \}\)/, 'printed reports stay north up');
   // A key line under every map, the same symbols everywhere; highlights are not the selection colour.
   for (const k of ['hm-key-hl', 'hm-key-dev', 'hm-key-site', 'hm-key-pipe']) assert.ok(ws.includes(k), k);
   assert.match(CSS, /\.home-map-svg \.hm-hl \{ fill: var\(--text-primary\);/);

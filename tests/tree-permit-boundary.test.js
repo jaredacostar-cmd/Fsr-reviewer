@@ -128,3 +128,15 @@ siteTest('acceptance: Brampton|2055 BOVAIRD DR W is under review, zoning approve
   const stray = p.records.find(r => r.ref === '22-234447-000-00');
   assert.ok(stray && stray.outside && !stray.fileOf, 'the 2022 house at 9362 Heritage Rd belongs to no draft plan');
 });
+
+test('a tower permit on a shared address point goes to the next-door plan whose units it matches (151 City Centre Dr)', { skip: !H.available() }, () => {
+  const { projects } = H.realDevs();
+  const holding = ref => projects.find(p => p.records.some(r => r.ref === ref));
+  const a = holding('SP 19/056'), b = holding('SP 20/113');
+  assert.ok(a && b && a !== b);
+  assert.ok(a.records.some(r => r.ref === 'BP 3NEW 20-3988 CR4'), 'the 855-unit permit sits with the 856-unit plan, not the 437-unit plan its point falls in');
+  assert.ok(!b.records.some(r => r.ref === 'BP 3NEW 20-3988 CR4'));
+  assert.ok(b.records.some(r => r.ref === 'BP 3NEW 21-9639 CR4'), 'the 437-unit permit stays with SP 20/113');
+  assert.notEqual(a.phase, 'approved', 'its building permit moves SP 19/056 past "Approved, no permit yet"');
+  assert.ok(b.buildout.permitted <= b.buildout.planned + 5, 'SP 20/113 no longer counts both towers');
+});

@@ -12,7 +12,7 @@ test('the first run on Home: "What\'s your role?", then a short tour of Home tha
   const n = (home.match(/\{ ch: '/g) || []).length;
   assert.ok(n >= 5 && n <= 6, `the Home tour is short (${n} steps)`);
   assert.match(home, /roles: true, t: 'Welcome', b: '[^\n]*What\\'s your role\?/);
-  for (const sel of ['#home .page-main', "homeMenu('ul')", 'data-ws-page="site"', ".home-full'", '#tb-restart']) assert.ok(home.includes(sel), `the Home tour points at ${sel}`);
+  for (const sel of ['#home .page-main', "homeMenu('ul')", 'data-ws-page="explore"', ".home-full'", '#tb-restart']) assert.ok(home.includes(sel), `the Home tour points at ${sel}`);
   // (it never points at the map's controls, hidden behind Home)
   for (const sel of ['#f-search', '#pipeline', '.map-opts', '.tool-rail', '#analysis']) assert.ok(!home.includes(sel), `not at ${sel}`);
   // five roles, the pages to start with

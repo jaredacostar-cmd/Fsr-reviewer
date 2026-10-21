@@ -280,7 +280,22 @@
   }
 
 
+  // Capital › Timing for a development, built on demand (a page's Capital section, js/sections.js):
+  // null until the servicing model, the DC program and the sewers are loaded.
+  function siteSpec(p) {
+    if (!p || !App().state.svcModel || !App().state.dcInfra || !MM().SEW.data) return null;
+    const st = DD().statusOf(p), f = SD().svcFacts(p);
+    st.works = st.works || DI().devWorks(p, f);
+    return siteTimingSpec(p, st, f);
+  }
+  // Capital › DC timing for the area (Peel), built on demand (an area's Capital section).
+  function areaSpec() {
+    if (!App().state.svcModel || !App().state.dcInfra || !MM().SEW.data) return null;
+    return timingSpec(DC().dcAnalysis());
+  }
   const api = {
+    siteSpec,
+    areaSpec,
     renderDca,
     renderDcaTiming,
     renderDcaRec,

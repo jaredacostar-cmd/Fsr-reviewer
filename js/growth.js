@@ -159,7 +159,12 @@
     return [...byM.entries()].map(([m, ms]) => ({ m, medianMonths: median(ms), n: ms.length }));
   }
 
-  const api = { pipelineTotals, aggregateTypes, completionStats, approvalLags, median, medianApprovalByMuni };
+  // What the units figure counts under each counting basis (the Scenario's Count / Units settings),
+  // so a figure never says "planned" for a count that is not every planned unit.
+  const BASIS_UNITS = { all: 'planned', buildout: 'applied for (no pre-application)', committed: 'approved, not yet built', remaining: 'left to build' };
+  const basisUnits = basis => BASIS_UNITS[basis] || BASIS_UNITS.all;
+
+  const api = { pipelineTotals, basisUnits, BASIS_UNITS, aggregateTypes, completionStats, approvalLags, median, medianApprovalByMuni };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.Growth = api;
 })(typeof self !== 'undefined' ? self : this);

@@ -124,7 +124,7 @@
     });
   }
 
-  const api = { devItems, infraItems, unseen, kindLabel, init, render, load };
+  const api = { devItems, infraItems, unseen, kindLabel, init, render, load, last: () => lastFeed };
 
   if (typeof document !== 'undefined') {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);

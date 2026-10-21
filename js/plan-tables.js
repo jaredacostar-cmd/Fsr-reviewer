@@ -44,6 +44,28 @@
     if (A && A.precincts && root.PeelAreas) out.push(...root.PeelAreas.locate(A.precincts, p.lng, p.lat, p.municipality));
     return out;
   }
+  // The plans, sub-areas and precincts a development counts in (any share): the same placement as the
+  // plan tree, so a plan filter on the map holds exactly the developments Growth in an area counts
+  // there (a straddling one included, by its share).
+  let idsCache = new WeakMap(), idsKey = null;
+  function areaIdsOf(p) {
+    const list = areas(), k = `${list.length}#${App().state.treeGrouped}#${!!(TG() && TG().data)}`;
+    if (k !== idsKey) { idsCache = new WeakMap(); idsKey = k; }
+    let ids = idsCache.get(p);
+    if (!ids) {
+      const byId = new Map(list.map(a => [a.id, a])), raw = sharesOf(p) || pointOf(p).map(id => [id, 1]);
+      ids = new Set([...R().placement(p, raw, id => byId.get(id) || null).entries()].filter(([id, sh]) => id.startsWith('a:') && sh > 0).map(([id]) => id.slice(2)));
+      idsCache.set(p, ids);
+    }
+    return ids;
+  }
+  // The part of the developments shown that is inside the plans filtered to (state.sp): units,
+  // people and jobs by share, as Growth in an area counts them; null with no plan filter.
+  function inside(ids = App().state.sp) {
+    if (!ids || !ids.length) return null;
+    let r; try { r = compute(); } catch (e) { return null; }
+    return R().within(r, ids);
+  }
   function inMtsa(p) { const d = App() && App().state.treeGrouped && TG() && TG().devOf(p.key); return d && d.mt ? d.mt.length > 0 : !!(p.mtsa && p.mtsa.length); }
 
   function compute() {
@@ -59,7 +81,7 @@
       measure: p => {
         const t = G().pipelineTotals([p]), e = D().estimate([p], crit, basis, App().jobsOf), L = root.PeelLayers.ofDev(p).parts;
         const prop = t.planned > 0 ? L.proposed + L.anticipated : 0;
-        return { planned: t.planned, committed: t.planned - prop, proposed: prop, permitted: t.permitted, completed: t.completed, left: t.left, people: e.population, jobs: e.employment ? e.employment.jobs : 0,
+        return { planned: t.planned, counted: e.totalUnits, committed: t.planned - prop, proposed: prop, permitted: t.permitted, completed: t.completed, left: t.left, people: e.population, jobs: e.employment ? e.employment.jobs : 0,
           built: t.planned > 0 ? L.existing + L.built : 0, anticipated: t.planned > 0 ? L.anticipated : 0, existing: t.planned > 0 ? L.existing : 0 };
       },
     });
@@ -204,6 +226,15 @@
     const tip = `${pj ? `${fmtNum(t.population || 0)} people + ${fmtNum(t.jobs || 0)} jobs` : `${fmtNum(t.units)} units`} over ${fmtNum(Math.round(h.ha))} ha${h.off.length ? ` · ${h.off.join('; ')}` : ''}${t.scope === 'total' ? ' · the target counts everyone at build-out' : ''}`;
     return `<td class="num" title="${esc(tip)}">${fmtNum(Math.round(v))}<div class="small muted">${u}${h.off.length ? ' ⚠' : ''}</div></td>`;
   }
+  // The plans furthest behind their published unit target (Home, step 6): the share of the target the
+  // pipeline reaches, lowest first; null while the targets load.
+  function behindTarget(n = 5) {
+    loadTargets(); if (!targets) return null;
+    let r; try { r = compute(); } catch (e) { return null; }
+    return R().vsTarget(r, targets.targets, munisAlloc()).rows
+      .filter(x => x.node.kind !== 'municipality' && x.compared === 'units' && x.pctTotal != null && x.pctTotal < 1)
+      .sort((a, b) => a.pctTotal - b.pctTotal).slice(0, n);
+  }
   function targetHTML(r) {
     loadTargets();
     const v = R().vsTarget(r, targets && targets.targets, munisAlloc());
@@ -341,7 +372,7 @@
     App().applyFilters();
   });
 
-  const api = { loadTargets, setTargets: d => { targets = d; }, targetHTML, render, compute, csvRows, sheetRows, planOf, downloadCSV, areas, matrixHTML, matrixSheetRows, matrixData };
+  const api = { loadTargets, setTargets: d => { targets = d; }, targetHTML, behindTarget, render, compute, areaIdsOf, inside, csvRows, sheetRows, planOf, downloadCSV, areas, matrixHTML, matrixSheetRows, matrixData };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPlanTables = api;
 })(typeof window !== 'undefined' ? window : globalThis);

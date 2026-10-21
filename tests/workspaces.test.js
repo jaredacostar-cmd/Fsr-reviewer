@@ -19,10 +19,13 @@ test('1. the chips, in the brief\'s order, and Home\'s groups', () => {
   assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Servicing capacity', 'Growth in an area', 'Review an FSR', 'Forecast', 'Study area', 'DC projects', 'EA to construction', 'Old pipes', 'This week']);
   // Home's sidebar: This week under Home (bundle 6), then Planning (Servicing capacity with it),
   // Capital, Asset Management; then Full map.
-  assert.deepEqual(plain(W.GROUPS), [['Planning', ['site', 'fsr', 'growth', 'outlook', 'study', 'tight']], ['Capital', ['projects', 'eaflow']], ['Asset Management', ['pipes']]]);
+  // Explore (step 3): Growth in an area, Check a site, Review an FSR, Forecast and Study area are one entry.
+  assert.deepEqual(plain(W.GROUPS), [['Planning', ['explore', 'tight']], ['Capital', ['capital']], ['Asset Management', ['pipes']]]);
+  assert.deepEqual(plain(W.CAPITAL), ['projects', 'eaflow']);
+  assert.deepEqual(plain(W.EXPLORE), ['growth', 'site', 'fsr', 'outlook', 'study']);
   assert.match(fs.readFileSync(path.join(__dirname, '..', 'js', 'workspaces.js'), 'utf8'), /<ul>\$\{item\('home', 'The briefing'\)\}\$\{item\('week', BY_ID\.week\.what\)\}<\/ul>/);
   for (const w of W.WS) assert.ok(w.what.split(/\s+/).length <= 8, `${w.id}: 8 words or fewer`);
-  const all = [...W.GROUPS.flatMap(g => g[1]), 'week'].sort();
+  const all = [...W.GROUPS.flatMap(g => g[1]).flatMap(id => (id === 'explore' ? W.EXPLORE : id === 'capital' ? W.CAPITAL : [id])), 'week'].sort();
   assert.deepEqual(plain(all), plain(W.WS.map(w => w.id).sort()), 'every workspace listed once');
 });
 
@@ -50,7 +53,8 @@ test('1. each chip opens the stated tab and scope (and the layer preset)', () =>
   // The browser does what the plan says (go()), and every panel in a workspace carries Open full map.
   const s = src('js/workspaces.js');
   assert.match(s, /if \(pl\.closeScopes\) \{\s*if \(site\) root\.DevScope\.close\(\);\s*if \(SS\(\) && SS\(\)\.current && SS\(\)\.current\(\)\) SS\(\)\.close\(\);/);
-  assert.match(s, /MA\.showView\(pl\.view\);\s*if \(LG && LG\.apply\) LG\.apply\(new Set\(LAYERS\[id\] \|\| \[\]\)\);/);
+  assert.match(s, /lean\(pl\.view, LAYERS\[id\] \|\| \[\]\);/);
+  assert.match(s, /MA\.showView\(view\);\s*if \(LG && LG\.apply\) LG\.apply\(new Set\(layers\)\);/);
   assert.match(s, /if \(pl\.sub && A\.setSub\) A\.setSub\(pl\.tab, pl\.sub\); if \(A\.setFootPref\) A\.setFootPref\(pl\.tab\); A\.showFootTab\(pl\.tab\);/);
   assert.match(s, /data-ws-full title="The same scope, filters and scenario with every tool">Full map →/);
   assert.match(src('js/panel.js'), /e\.html\.replace\(HEAD, `\$\{HEAD\}\$\{W\.srcLine\(key\)\}`\)/);
@@ -133,7 +137,9 @@ test('2. workspace figures equal full-map figures (Home and This week read the P
   assert.ok(h.includes(AREA.answer), 'the headline sentence');
   assert.match(h, /<div class="pnl-fig" data-ws-page="week" title="This week" role="button" tabindex="0"><b>2<\/b><span class="pnl-u">changes<\/span><span class="pnl-l">this week<\/span>/, 'This week: the same rows as its page');
   assert.match(h, /data-ws-page="tight" title="Servicing capacity" role="button" tabindex="0"><b>/);
-  assert.match(h, /<p class="home-start small"><strong>Start here:<\/strong>/);
+  // Step 6: the scope first (Peel or a municipality), then the figures in groups.
+  assert.match(h, /<div class="home-scope"><div class="seg" role="group" aria-label="Municipality"><button type="button" class="btn small on" data-ws-muni="" aria-pressed="true">Peel<\/button>/);
+  for (const g of ['Growth', 'Servicing', 'Capital', 'Change']) assert.match(h, new RegExp(`<div class="home-grp-h"><h2>${g}</h2>`), g);
   assert.match(h, /9 over/);
   // This week in its workspace: the Overview's own rows, every one.
   B.go('week');
@@ -231,7 +237,9 @@ test('3. Home links open the matching chip', () => {
   // The workspace list: one button per chip, then Full map.
   // Home itself first (current), then one button per workspace page, then Full map.
   assert.match(h, /<button type="button" class="home-ws on" data-ws-page="home" aria-current="page"><strong>Home<\/strong>/);
-  for (const w of B.WS) assert.match(h, new RegExp(`<button type="button" class="home-ws" data-ws-page="${w.id}"><strong>${w.label}`), w.id);
+  for (const w of B.WS.filter(x => !B.EXPLORE.includes(x.id) && !B.CAPITAL.includes(x.id))) assert.match(h, new RegExp(`<button type="button" class="home-ws" data-ws-page="${w.id}"><strong>${w.label}`), w.id);
+  assert.match(h, /<button type="button" class="home-ws" data-ws-page="explore"><strong>Explore/, 'Explore: one entry for its five views');
+  assert.match(h, /<button type="button" class="home-ws" data-ws-page="capital"><strong>Capital/, 'Capital: one entry for DC projects and EA to construction');
   assert.match(h, /class="home-ws home-full" data-ws-full>/);
   // Needs attention → the Servicing capacity page; This week → the This week page; the figures → their
   // pages (bundle 6); the map → Servicing capacity.
@@ -241,7 +249,7 @@ test('3. Home links open the matching chip', () => {
   assert.match(h, /data-ws-page="tight">See all \(9\) →/);
   assert.doesNotMatch(h, /See all \(2\)/, 'no See all when every row is shown');
   assert.match(h, /<div class="pnl-fig" data-ws-page="tight"/);
-  assert.match(h, /data-ws-page="growth">Growth in an area →<\/button>/);
+  assert.match(h, /<h2>Growth<\/h2><button type="button" class="btn small link" data-ws-page="growth">Explore →<\/button>/);
   assert.match(h, /<button type="button" class="home-map-btn" data-ws-page="tight"/);
   // The start screen choice, and the screening note.
   assert.match(h, /<select data-ws-start><option value="home" selected>Home<\/option><option value="last">Last workspace<\/option><option value="full">Full map<\/option>/);

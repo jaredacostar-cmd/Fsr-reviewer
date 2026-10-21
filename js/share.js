@@ -27,7 +27,10 @@
       const fl = PF.encodeFlagParam(App().state.flags); if (fl) set('fl', fl);
       set('pl', App().state.plant); set('dw', App().state.dwelling);
       if (App().state.landuse !== App().DEFAULT_LANDUSE) set('lu', App().state.landuse);
+      if (App().state.dcgate) set('dg', App().state.dcgate);
       if (App().state.basis !== App().DEFAULT_BASIS) set('basis', App().state.basis);
+      if (App().state.showDormant) set('dm', '1');
+      if (App().state.showSiteActivity) set('sx', '1');
       if (MA().getCapYear() !== MM().THIS_YEAR) set('cy', MA().getCapYear() == null ? 'bo' : String(MA().getCapYear()));
       set('mu', App().state.muni); if (App().state.kind !== App().DEFAULT_KIND) set('k', App().state.kind); set('q', App().state.search);
       if (App().state.sp.length) set('sp', App().state.sp.join(',')); set('mt', App().state.mtsa.join(',')); set('pz', App().state.pz.join(',')); set('dr', App().state.dr.join(','));
@@ -96,7 +99,12 @@
       if (q.get('pl') && SD().PLANT_SHORT[q.get('pl')]) App().state.plant = q.get('pl');
       if (q.get('dw') && ['single', 'town', 'apartment'].includes(q.get('dw'))) App().state.dwelling = q.get('dw');
       if (q.get('lu') && ['all', 'growth', 'residential', 'mixed', 'employment'].includes(q.get('lu'))) App().state.landuse = q.get('lu');
+      if (q.get('dg') && window.PeelDcGate && window.PeelDcGate.FILTER_KEYS.has(q.get('dg'))) { App().state.dcgate = q.get('dg'); window.PeelDcGate.load(); }
       if (q.get('basis') && ['all', 'buildout', 'committed', 'remaining'].includes(q.get('basis'))) App().state.basis = q.get('basis');
+      // Dormant developments shown (they are held aside when the developments are built: rebuild).
+      if ((q.get('dm') === '1') !== !!App().state.showDormant) { App().state.showDormant = q.get('dm') === '1'; if (App().state.projects.length) App().rebuild(); }
+      // Site activity shown (held aside like the dormant ones).
+      if ((q.get('sx') === '1') !== !!App().state.showSiteActivity) { App().state.showSiteActivity = q.get('sx') === '1'; if (App().state.projects.length) App().rebuild(); }
       { const ly = (q.get('ly') || '').split(',').filter(k => ['existing', 'built', 'committed', 'proposed', 'anticipated'].includes(k)); App().state.lyr = ly.length ? new Set(ly) : null; }
       if (q.get('cy')) MA().setCapYear(q.get('cy') === 'bo' ? null : (+q.get('cy') || MM().THIS_YEAR));
       App().state.muni = q.get('mu') || ''; App().state.kind = q.get('k') || App().DEFAULT_KIND; App().state.search = q.get('q') || '';
@@ -141,7 +149,7 @@
     map.on('moveend', write);
     // Apply a saved view's link: back to the defaults, then its filters.
     const apply = h => {
-      App().state.phases = App().DEFAULT_PHASES(); App().state.flags = App().DEFAULT_FLAGS(); App().state.plant = ''; App().state.ss = null; App().state.dwelling = ''; App().state.landuse = App().DEFAULT_LANDUSE; App().state.basis = App().DEFAULT_BASIS; MA().setCapYear(MM().THIS_YEAR); App().state.yearMode = 'any'; $('#t-mode').value = 'any';
+      App().state.phases = App().DEFAULT_PHASES(); App().state.flags = App().DEFAULT_FLAGS(); App().state.plant = ''; App().state.ss = null; App().state.dwelling = ''; App().state.landuse = App().DEFAULT_LANDUSE; App().state.dcgate = ''; App().state.basis = App().DEFAULT_BASIS; MA().setCapYear(MM().THIS_YEAR); App().state.yearMode = 'any'; $('#t-mode').value = 'any';
       if (App().state.yearMin != null) TL().setYearsSilently(App().state.yearMin, App().state.yearMax);
       pending = new URLSearchParams(h); applied = false; ready();
     };
