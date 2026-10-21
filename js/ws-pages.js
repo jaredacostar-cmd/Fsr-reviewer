@@ -1080,7 +1080,9 @@
       lists: s.lists || [], folds: s.folds, method: s.method, sources: s.sources,
       actions: [{ label: 'Refresh and manage sources', attrs: { 'data-ws-full': '', 'data-at': 'records:sources' }, primary: true }] });
   }
-  const BUILD = { home, tight, site, growth, outlook, projects, eaflow, week, fsr, pipes, study, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, help, data };
+  // Labs › Sewer designer: its page is the tool's own (js/sewer-designer.js page()).
+  const sewer = () => (root.PeelSewerDesigner && root.PeelSewerDesigner.page ? root.PeelSewerDesigner.page() : { id: 'sewer', eyebrow: 'Labs', name: 'Sewer designer', answer: '<span class="muted">Loading…</span>' });
+  const BUILD = { home, tight, site, growth, outlook, projects, eaflow, week, fsr, pipes, study, sewer, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, help, data };
   // Each workspace's guide (How it works), a button in its footer.
   const GUIDE_OF = { site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capital', eaflow: 'capital', pipes: 'network' };
   // A page's header count opens its workspace's full table (as the map panels' do).

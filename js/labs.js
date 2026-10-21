@@ -34,6 +34,10 @@
     // A Labs sub-view that went away falls back to the tab's first sub-view.
     const AT = root.PeelAnalysisTabs;
     if (AT && AT.getFootTab) AT.showFootTab(AT.getFootTab());
+    // Home's sidebar lists a switch's page while it is on (Labs › Sewer designer); its page, open as the
+    // switch goes off, gives way to Home.
+    const W = root.PeelWorkspaces;
+    if (W && W.mode && W.mode() === 'home') { if (!v && W.LAB_PAGES && W.LAB_PAGES[W.page()] && W.LAB_PAGES[W.page()].lab === id) W.openPage('home'); else W.renderPage(true); }
   }
   const pageHTML = () => `<div class="gear-page labs-page"><h3>Labs</h3>
     <p class="small muted">Extra tools, off by default. Your choice is kept in this browser.</p>

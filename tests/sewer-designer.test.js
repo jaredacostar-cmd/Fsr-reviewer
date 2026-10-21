@@ -179,3 +179,35 @@ test('a 90° bend into the existing sewer: the velocity head rule\'s least drop 
   assert.ok(x.drop >= hv(bent.reaches[1]) - 1e-6, `${x.drop} vs ${hv(bent.reaches[1])}`);
   assert.ok(bent.cost > straight.cost);
 });
+
+test('Labs › Sewer designer: a page of its own in Home’s sidebar while its switch is on', () => {
+  const W = require('../js/workspaces.js');
+  assert.equal(W.LAB_PAGES.sewer.lab, 'sewer');
+  assert.ok(require('../js/labs.js').IDS.includes(W.LAB_PAGES.sewer.lab));
+  // a link to the page opens it (the page itself falls back to Home while the switch is off)
+  assert.deepEqual(JSON.parse(JSON.stringify(W.startScreen({ hash: '#w=p:sewer' }))), { mode: 'home', page: 'sewer' });
+  const ws = src('js/workspaces.js');
+  assert.match(ws, /labIds\.length \? `<h2 class="home-g">Labs<\/h2>/);
+  assert.match(ws, /if \(id !== 'home' && !BY_ID\[id\] && !REF\[id\] && !labPageOn\(id\)\) id = 'home';/);
+  assert.match(ws, /else if \(slot\.dataset\.sewer != null\) sewerMap\(\);/);
+  assert.match(ws, /new CustomEvent\('peel:page'/);
+  // (the switch going off takes its page away, and the sidebar entry with it)
+  assert.match(src('js/labs.js'), /W\.LAB_PAGES\[W\.page\(\)\]\.lab === id\) W\.openPage\('home'\); else W\.renderPage\(true\);/);
+  assert.match(src('js/ws-pages.js'), /root\.PeelSewerDesigner\.page\(\)/);
+});
+
+test('the page: the map on it with the drawing controls, the design under it, not in the right panel', () => {
+  const s = src('js/sewer-designer.js');
+  assert.match(s, /data-sd-pbar-host/);
+  assert.match(s, /id="page-map-slot" data-sewer/);
+  assert.match(s, /data-psec="design" data-sd-phost/);
+  // the result renders on the page while it is open, else in the right panel as before
+  assert.match(s, /if \(onPage\(\)\) \{ renderPage\(\); return; \}\n {4}T\(\)\.openResult\(/);
+  // the tool is on while the page is open; the design stays with the page when you leave it
+  assert.match(s, /if \(d\.page === 'sewer'\) \{ S\.home = true; if \(T\(\)\.active\(\) !== 'sewer'\) \{ S\.keep = true; toolOn\(true\); \}/);
+  assert.match(s, /if \(S\.home\) \{ if \(onPage\(\)\) \{ drawLine\(\); setTimeout\(renderPage, 0\); \} else if \(layer\) layer\.clearLayers\(\); return; \}/);
+  // the page's buttons are the banner's
+  assert.match(s, /#home \[data-sd-pbar-host\] \[data-ptool-act\]/);
+  for (const t of ['Draw the route', 'What it serves', 'The design', 'Rules met', 'Maintenance holes', 'Pump duty']) assert.ok(s.includes(`'${t}'`), t);
+  assert.match(src('css/app.css'), /\.page-map-slot\.sd-map-slot \{ height: min\(560px, 62vh\); \}/);
+});

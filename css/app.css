@@ -3506,6 +3506,37 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 /* The corridor finder's summary and its weights. */
 .sd-corr { border-left: 3px solid var(--accent); padding: var(--space-1) var(--space-2); margin: var(--space-2) 0; background: var(--surface-2); border-radius: 4px; }
 .sd-cw .sd-row .field { width: 9.5rem; }
+/* Labs › Sewer designer page (Home's sidebar): the steps and the drawing controls over the page's map,
+   the design under it. */
+.sd-page-map { gap: var(--space-2); }
+.sd-steps { list-style: none; display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); margin: 0 0 var(--space-2); padding: 0; }
+.sd-step { display: inline-flex; align-items: center; gap: var(--space-1); color: var(--text-secondary); }
+.sd-step.on { color: var(--text-primary); font-weight: 600; }
+.sd-step.on .pnl-step-n { border-color: var(--pnl-stage); color: var(--pnl-stage); }
+.sd-step.done .pnl-step-n { border-color: var(--cap-room); color: var(--cap-room-t); }
+.sd-pbar { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-2); align-items: center; padding: var(--space-2) var(--space-3); border: 1px solid var(--border); border-radius: var(--radius-panel); background: var(--surface-1); font-size: var(--fs-2); }
+.sd-pbar .tb-acts { display: inline-flex; flex-wrap: wrap; gap: var(--space-1); margin-left: auto; }
+.sd-pbar .btn.small.on { background: var(--accent); color: var(--on-accent); }
+.sd-zoom { margin: var(--space-1) 0 0; }
+.page-map-slot.sd-map-slot { height: min(560px, 62vh); }
+.sd-page { display: flex; flex-direction: column; gap: var(--space-2); }
+.home-main .sd-figs { cursor: default; }
+.sd-page .sd-res > p:first-child { margin-top: 0; }
+.sd-page .sd-form { background: var(--surface-1); }
+.sd-page .sd-row .field { width: 10rem; }
+.sd-page .sd-prof { max-width: 960px; }
+/* (the page's footer carries the screening note) */
+.sd-page .sd-res > .pnl-note { display: none; }
+.sd-intro { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: var(--space-3); }
+.sd-intro > div { background: var(--surface-2); border-radius: 6px; padding: var(--space-3); }
+.sd-intro h3 { margin: 0 0 var(--space-2); font-size: var(--fs-3); }
+.sd-intro ol, .sd-intro ul { margin: 0; padding-left: 1.2em; display: grid; gap: var(--space-2); }
+@media (max-width: 700px) {
+  .sd-intro { grid-template-columns: 1fr; }
+  .sd-pbar .tb-acts { margin-left: 0; }
+  .page-map-slot.sd-map-slot { height: 56vh; }
+  .sd-page .sd-row .field { width: calc(50% - var(--space-2)); }
+}
 /* Home: the units the answer adds, by stage (Built since 2021 first). */
 .home-stages .lybar { margin: 4px 0 6px; }
 
