@@ -65,7 +65,7 @@
   };
   const SITE_HIDDEN = HIDDEN.site;
   // Sub-views that are empty at a site are hidden too: EAs with none near the site.
-  const EMPTY_AT_SITE = { 'dca:eas': () => !!(root.PeelCapitalEA && root.PeelCapitalEA.siteEaCount && root.PeelCapitalEA.siteEaCount() === 0) };
+  const EMPTY_AT_SITE = { 'dca:eas': () => !!(root.PeelCapitalEA && root.PeelCapitalEA.siteBriefCount && root.PeelCapitalEA.siteBriefCount() === 0) };
   // Capital › Funding: only while its Labs switch is on, and never in the public version.
   const isPublic = () => !!(root.PeelUtil && root.PeelUtil.isPublic && root.PeelUtil.isPublic());
   const hiddenAt = (scope, tab, sub) => !!((HIDDEN[scope] || {})[tab] && HIDDEN[scope][tab].includes(sub)) || (tab === 'dca' && sub === 'funding' && (!labOn('funding') || isPublic()))

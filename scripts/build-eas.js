@@ -173,7 +173,9 @@ async function main() {
   }
 
   const facPts = facilityPoints();
-  const dcLines = ['water', 'wastewater'].flatMap(sys => (dcInfra[sys]?.lines || []).filter(l => l.n).map(l => ({ name: `${l.n} ${l.t || ''}`, paths: [l.g] })));
+  // (matched by the main's name: its description, read from the map's PDF, names the streets it
+  // crosses and is often garbled, so a word from it ties unrelated EAs to the main)
+  const dcLines = ['water', 'wastewater'].flatMap(sys => (dcInfra[sys]?.lines || []).filter(l => l.n).map(l => ({ name: l.n, paths: [l.g] })));
   const areas = [...(areasJ.secondaryPlans || []), ...(areasJ.precincts || [])];
   const facNameToPt = Object.fromEntries(facPts.flatMap(f => [[f.name, f.lnglat], ...(f.dcName ? [[f.dcName, f.lnglat]] : [])]));
 
