@@ -51,13 +51,6 @@ jobs:
       - name: Build snapshot
         run: node scripts/build-snapshot.js --out data
 
-      # DC servicing gate: which developments have applied for water / wastewater servicing
-      # (site servicing permits, data/servicing-permits.json). A failure keeps last week's file.
-      - name: DC servicing gate
-        continue-on-error: true
-        timeout-minutes: 5
-        run: node scripts/build-dc-gate.js --data data
-
       # Secondary plans, MTSAs and the 2021 Census baseline change rarely; a failure keeps
       # last week's file.
       - name: Build areas and census baseline
@@ -86,6 +79,15 @@ jobs:
         continue-on-error: true
         timeout-minutes: 10
         run: node scripts/build-tree-counts.js --out data
+
+      # DC servicing gate: which developments have applied for water / wastewater servicing
+      # (site servicing permits, data/servicing-permits.json). After the council items and the tree
+      # counts: its rows are keyed by the app's developments (scripts/app-devs.js). A failure keeps
+      # last week's file.
+      - name: DC servicing gate
+        continue-on-error: true
+        timeout-minutes: 5
+        run: node scripts/build-dc-gate.js --data data
 
       # Region capital projects (construction progress) and environmental assessments (status, next
       # steps, report decisions, links to the capital projects). Each refuses to write when it reads
@@ -212,6 +214,11 @@ jobs:
       - name: Duplicate audit
         continue-on-error: true
         run: node scripts/audit-snapshot.js data/snapshot.json
+
+      # Every data file's receipt: its date (read from the file), size and SHA-256, so the Sources
+      # table matches the files published with it (data/sources-index.json, js/sources.js).
+      - name: Data file dates and fingerprints
+        run: node scripts/build-sources-index.js --data data
 
       - name: Stamp version (cache-busting for scripts and styles)
         run: |
