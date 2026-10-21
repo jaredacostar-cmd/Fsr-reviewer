@@ -114,7 +114,9 @@
       }
       return { S, dig, L };
     };
-    const V = (S) => (partFor(D, S, Q, r.n) || { V: 0 }).V;
+    // (kept per slope: grid inverts repeat the same few slopes per reach, and each is a 60-step bisection)
+    const vAt = new Map();
+    const V = (S) => { let v = vAt.get(S); if (v === undefined) { v = (partFor(D, S, Q, r.n) || { V: 0 }).V; vAt.set(S, v); } return v; };
     // Dynamic programming, upstream → downstream. State: the outlet invert at node i.
     let layer = new Map(grid(0).map(e => [e, { cost: 0, path: [{ out: e }] }]));
     for (let i = 0; i < N - 1; i++) {

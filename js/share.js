@@ -102,9 +102,9 @@
       if (q.get('dg') && window.PeelDcGate && window.PeelDcGate.FILTER_KEYS.has(q.get('dg'))) { App().state.dcgate = q.get('dg'); window.PeelDcGate.load(); }
       if (q.get('basis') && ['all', 'buildout', 'committed', 'remaining'].includes(q.get('basis'))) App().state.basis = q.get('basis');
       // Dormant developments shown (they are held aside when the developments are built: rebuild).
-      if ((q.get('dm') === '1') !== !!App().state.showDormant) { App().state.showDormant = q.get('dm') === '1'; if (App().state.projects.length) App().rebuild(); }
+      if ((q.get('dm') === '1') !== !!App().state.showDormant) { App().state.showDormant = q.get('dm') === '1'; if (App().state.projects.length) App().rehold(); }
       // Site activity shown (held aside like the dormant ones).
-      if ((q.get('sx') === '1') !== !!App().state.showSiteActivity) { App().state.showSiteActivity = q.get('sx') === '1'; if (App().state.projects.length) App().rebuild(); }
+      if ((q.get('sx') === '1') !== !!App().state.showSiteActivity) { App().state.showSiteActivity = q.get('sx') === '1'; if (App().state.projects.length) App().rehold(); }
       { const ly = (q.get('ly') || '').split(',').filter(k => ['existing', 'built', 'committed', 'proposed', 'anticipated'].includes(k)); App().state.lyr = ly.length ? new Set(ly) : null; }
       if (q.get('cy')) MA().setCapYear(q.get('cy') === 'bo' ? null : (+q.get('cy') || MM().THIS_YEAR));
       App().state.muni = q.get('mu') || ''; App().state.kind = q.get('k') || App().DEFAULT_KIND; App().state.search = q.get('q') || '';

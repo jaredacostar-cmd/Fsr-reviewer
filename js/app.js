@@ -238,11 +238,25 @@
     state.treeGrouped = grouped;
     if (TC) TC.apply(state.projects);
     holdDormant();
+    state.auditInput = { raw, records };
+    afterBuild();
+  }
+  // The dormant / site-activity switches only change what holdDormant sets aside: re-hold the built
+  // developments and run the tail, instead of building every development again (seconds).
+  function rehold() {
+    if (indexPainted && !fullLoaded) return;
+    if (!state.projects.all) { rebuild(); return; }
+    state.projects = state.projects.all;
+    holdDormant();
+    afterBuild();
+  }
+  // Everything after the developments are built and held: the keys, tags, chips and filters.
+  function afterBuild() {
+    const TG = window.PeelTreeGroups, grouped = state.treeGrouped;
     // Old address keys → today's developments (js/phases.js keyAliases), worked out when first needed.
     if (TG && TG.setAliases) { const list = state.projects; TG.setAliases(() => P.keyAliases(list)); }
     migrateSavedKeys(grouped);
     PeelPlanAreas.tagProjects();
-    state.auditInput = { raw, records };
     state.audit = null;
     { const c = $('#rec-data-checks'); if (c && !c.hidden) PeelDataTab.renderAudit(); }   // (the duplicate check is under Records › Data checks since bundle 6)
     state.munis = Array.from(new Set(state.projects.map(p => p.municipality))).sort();
@@ -767,7 +781,7 @@
   // Phase 6: PeelApp bridge — core-owned values are direct references; module-owned
   // functions are lazy arrow wrappers (app.js loads last, so all modules exist).
   window.PeelApp = {
-    state, rebuild, loadAll, discover,
+    state, rebuild, rehold, loadAll, discover,
     map: window.PeelMapCore.map,
     showDetail: (...a) => window.PeelDevNav.showDetail(...a),
     // ---- newly exposed core internals (used cross-module) ----
