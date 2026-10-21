@@ -661,7 +661,8 @@
       lists: waiting ? [] : (b.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('site', r)) })),
       map: siteLiveMap(p),
       folds: waiting ? [] : b.folds, method: waiting ? '' : b.method, sources: waiting ? '' : b.sources, onMount: waiting ? null : b.onMount,
-      actions: [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, { label: 'Review its FSR', attrs: { 'data-ws-page': 'fsr' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'site' } }] };
+      // (a section's own secondary action after the memo: Capital's "Copy for review comments")
+      actions: [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, ...(sec && !waiting && sec.foot && sec.foot.secondary ? sec.foot.secondary : []), { label: 'Review its FSR', attrs: { 'data-ws-page': 'fsr' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'site' } }] };
   }
 
   // ---- Growth in an area: drill down Peel → municipality → plan → precinct / sub-area → its files ----

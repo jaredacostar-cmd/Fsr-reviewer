@@ -266,6 +266,8 @@
       <ul>${f.path.length ? `<li>Sewer path: ${esc(f.path.slice(0, 6).map(a => a.kind === 'plant' ? SD().plantLabel(a.plant) : SD().drName(a).replace(/^[^·]+· /, '')).join(' → '))}${f.path.length > 6 ? ' …' : ''}</li>` : ''}
       ${f.sps.length ? `<li>Pumping stations: ${esc(f.sps.map(x => `${SD().drName(x.a).replace(/^[^·]+· /, '')} ${Math.round(x.wet / x.firm * 100)}% of firm at build-out`).join('; '))}</li>` : ''}
       ${f.cap ? `<li>${esc(f.cap.name)}: ${window.PeelUtil.reserveWords(f.reserve, f.cap.rated)}; this development ${window.PeelUtil.capTxt(f.use, f.cap.rated)} (${esc(f.useNote)})${f.reserve > 0 ? ` = ${DD().pctOf(f.use, f.reserve)} of the reserve` : ' — the screen shows the plant over rated capacity'}</li>` : ''}</ul>` : '<p class="muted">No units or jobs stated — flows not estimated.</p>';
+    // The reviewer's site brief (js/capital-ea.js): each EA and capital work near the site, as text.
+    const brief = root.PeelCapitalEA && root.PeelCapitalEA.siteBriefHTML ? root.PeelCapitalEA.siteBriefHTML(p, { links: false }) : '';
     const ctx = [['Existing mains', domText('dev-exist')], ['Fire flow', domText('dev-fire')], ['Stormwater', domText('dev-storm')]].filter(([, t]) => t && !/^Looking up/.test(t));
     const body = `<h1>${esc(p.title)}</h1><p class="sub">${esc(p.municipality)} · ${esc(P.PHASE_BY_KEY[p.phase].label)}${files ? ` · ${esc(files)}` : ''}</p>
       <p class="meta">Servicing memo · prepared ${esc(new Date().toLocaleDateString('en-CA', { dateStyle: 'medium' }))} · Peel Growth Pipeline (unofficial)</p>
@@ -280,6 +282,7 @@
       <h2>Servicing (Peel design criteria)</h2>${svc}
       ${needs.length ? `<h2>DC needs: existing capacity vs the 2026 DC program</h2>${root.PeelUtil.pauseNote()}<table>${needHead()}${shown.map(c => needRow(c, ppu)).join('')}</table>${okN ? `<p class="muted">${okN} more with room to build-out.</p>` : ''}` : ''}
       ${st.works ? `<h2>Planned works nearby</h2><p>${esc(textOf(DI().devWorksHTML(st.works)))}</p>` : ''}
+      ${brief ? `<h2>EAs and Region capital works within 1 km</h2>${brief}` : ''}
       ${ctx.length ? `<h2>Site context (live GIS)</h2><ul>${ctx.map(([k, t]) => `<li><strong>${esc(k)}:</strong> ${esc(t)}</li>`).join('')}</ul>` : ''}
       ${reportFooter()}`;
     openReport(`Servicing memo – ${p.title}`, body);

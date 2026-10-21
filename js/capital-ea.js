@@ -351,7 +351,7 @@
   }
 
   // ---- Capital tab lists, DC timing status, This week, Needs attention, watchlist ----------------------------
-  let dcIdx = null, dcIdxFor = null, allCap = false;
+  let dcIdx = null, dcIdxFor = null, allCap = false, allWatch = false;
   function dcIndex() {
     const dc = App() && App().state.dcInfra;
     if (!dcIdx || dcIdxFor !== `${!!dc}|${data.capital ? data.capital.generatedAt : ''}`) { dcIdx = M.dcCapitalIndex(data.capital, dc); dcIdxFor = `${!!dc}|${data.capital ? data.capital.generatedAt : ''}`; }
@@ -361,7 +361,10 @@
   const metres = (a, b) => Math.hypot((a[0] - b[0]) * 111320 * Math.cos(a[1] * Math.PI / 180), (a[1] - b[1]) * 110574);
   const easForDcHTML = fc => (data.eas ? M.easForDcHTML(M.easForDc(fc, data.eas.eas, metres)) : '');
   const muni = () => (App() && App().state.muni) || null;
-  const listsHTML = () => (data.loaded ? M.listsHTML({ contracts: data.contracts, eas: data.eas && data.eas.eas, muni: muni(), thisYear: new Date().getFullYear(), hasCapital: !!data.capital, capitalAsOf: data.capital && data.capital.source && data.capital.source.latestLastUpdate, screenNote: U.SCREEN_NOTE_SHORT, allCap }) : U.skel ? U.skel('Loading capital projects and EAs') : '');
+  const capAsOf = () => (data.capital && data.capital.source && data.capital.source.latestLastUpdate) || '';
+  // The watch list (Capital › Construction › To check), at the map's municipality.
+  const watchList = () => (data.loaded ? M.watchList({ capital: data.capital, eas: (data.eas && data.eas.eas) || [], contracts: data.contracts, today: new Date().toISOString().slice(0, 10), asOf: capAsOf(), muni: muni() }) : []);
+  const listsHTML = () => (data.loaded ? M.listsHTML({ contracts: data.contracts, eas: data.eas && data.eas.eas, muni: muni(), thisYear: new Date().getFullYear(), hasCapital: !!data.capital, capitalAsOf: capAsOf(), screenNote: U.SCREEN_NOTE_SHORT, allCap, watch: watchList(), allWatch }) : U.skel ? U.skel('Loading capital projects and EAs') : '');
   const attention = () => (data.loaded ? M.attentionItems(data.capital, data.eas, new Date().toISOString().slice(0, 10)) : []);
   const watchRows = watch => (data.loaded ? M.watchRows(watch, data.capital, data.eas) : []);
   function renderWeek() {
@@ -383,7 +386,14 @@
     const o = e.target.closest('[data-ce-open]');
     if (o) { const [k, ...rest] = o.dataset.ceOpen.split(':'), id = rest.join(':'); if (k === 'ea') openEA(id); else if (k === 'cap') openCapital(id); return; }
     if (e.target.closest('[data-ce-allcap]')) { allCap = true; const bb = document.querySelector('#dca-build-body'); if (bb) bb.innerHTML = listsHTML(); }
+    if (e.target.closest('[data-ce-allwatch]')) { allWatch = true; const bb = document.querySelector('#dca-build-body'); if (bb) bb.innerHTML = listsHTML(); }
+    const csv = (name, { cols, rows }) => { if (window.PeelExports) window.PeelExports.download(`${name}-${(muni() || 'peel').toLowerCase()}-${new Date().toISOString().slice(0, 10)}.csv`, (U.CSV_DISCLAIMER || '') + [cols, ...rows].map(r => r.map(v => U.csvCell(v, true)).join(',')).join('\n'), 'text/csv'); };
+    if (e.target.closest('[data-ce-watch-csv]')) csv('peel-capital-to-check', M.watchSheetRows(watchList(), capAsOf()));
+    if (e.target.closest('[data-ce-cap-csv]')) csv('peel-capital-contracts', capitalRows(muni()));
+    if (e.target.closest('[data-ce-copy-brief]')) copyBrief();
   });
+  // Every contract, one row each (the Construction CSV and the workbook's Capital sheet).
+  const capitalRows = m => M.capitalSheetRows(data.contracts, { today: new Date().toISOString().slice(0, 10), asOf: capAsOf(), eas: (data.eas && data.eas.eas) || [], links: (data.capital && data.capital.links) || [], muni: m });
 
   // ---- Capital › EAs ----------------------------------------------------------------------------------
   const eaTab = Object.assign({ f: { q: '', show: 'current', sys: {} }, sort: 'next' }, store.get('eaTab', null) || {});
@@ -393,8 +403,8 @@
   // A development in scope: the EAs within 1 km of its site, measured from the site's boundary (the
   // outlines of its applications; its point where it has none), and the unmapped EAs naming its
   // municipality or the whole Region.
-  function nearScope() {
-    const p = window.PeelDevVerdict && window.PeelDevVerdict.scopedDev && window.PeelDevVerdict.scopedDev();
+  const nearScope = () => nearOf(window.PeelDevVerdict && window.PeelDevVerdict.scopedDev && window.PeelDevVerdict.scopedDev());
+  function nearOf(p) {
     if (!p || p.lat == null) return null;
     const pts = [];
     for (const a of p.records || []) if (a.kind === 'application' && a.poly && a.phase !== 'cancelled') for (const ring of a.poly) for (const [x, y] of ring) pts.push([y, x]);
@@ -418,15 +428,17 @@
   function projectsPanelSpec() {
     const PN = root.PeelPanel, act = data.loaded ? M.activeConstruction(data.contracts || new Map(), muni()) : [];
     const n = st => act.filter(c => c.status === st).length, asOf = data.capital && data.capital.source && data.capital.source.latestLastUpdate;
+    const watch = data.capital ? watchList() : [];
     return {
       fullTitle: `Capital › Projects · ${muni() || 'Peel'}: active Region capital projects`,
       head: PN.areaHead('Capital › Projects', 'What is being built?', null, `${U.esc(muni() || 'Peel')}${asOf ? ` · capital projects as of ${U.esc(M.fmtDate(asOf))}` : ''}`),
       answer: !data.capital ? 'Capital projects are not published yet (waiting on Peel GIS).' : act.length ? `<strong>${act.length}</strong> Region capital project${act.length === 1 ? ' is' : 's are'} active${muni() ? ` in ${U.esc(muni())}` : ''}: ${n('under construction')} under construction, ${n('awarded')} awarded and ${n('tendered')} tendered.` : `No active construction${muni() ? ` in ${U.esc(muni())}` : ''}.`,
       figures: data.capital ? [{ v: act.length, u: 'active', label: 'capital projects', ctx: 'tendered, awarded or under construction' }, { v: n('under construction'), u: '', label: 'under construction', ctx: '' }, { v: n('awarded'), u: '', label: 'awarded', ctx: '' }, { v: n('tendered'), u: '', label: 'tendered', ctx: '' }] : [],
-      lists: [{ title: 'Furthest along', rows: act.slice(0, 5).map(c => ({ attrs: { 'data-ce-open': `cap:${c.key}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${U.esc(M.workLabel(c.lead.workType))}${c.lead.street ? `<small>${U.esc(M.titleCase(c.lead.street))}${c.lead.municipality ? ` · ${U.esc(M.titleCase(c.lead.municipality))}` : ''}</small>` : ''}</span><span class="pnl-r-fig">${c.percent != null ? `${Math.round(c.percent)}%` : ''}<small>${U.esc(M.statusLabel(c.status))}</small></span></div>` })), total: act.length, seeAll: { 'data-full-table': 'dca' } }],
-      method: 'Region capital projects that are tendered, awarded or under construction, furthest along first. Screening wording: the capital program and its status are the Region\u2019s; nothing here is a Region decision.',
+      lists: [...(watch.length ? [{ title: 'To check', rows: watch.slice(0, 5).map(x => ({ attrs: { 'data-ce-open': x.key }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${U.esc(x.label)}<small>${U.esc(M.WATCH_KINDS.find(k => k[0] === x.kind)[1])}${x.where ? ` · ${U.esc(x.where)}` : ''}</small></span></div><small class="pnl-r-line">${U.esc(x.why)}. To check: ${U.esc(x.check)}.</small>` })), total: watch.length, seeAll: { 'data-full-table': 'dca' } }] : []),
+        { title: 'Furthest along', rows: act.slice(0, 5).map(c => ({ attrs: { 'data-ce-open': `cap:${c.key}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${U.esc(M.workLabel(c.lead.workType))}${c.lead.street ? `<small>${U.esc(M.titleCase(c.lead.street))}${c.lead.municipality ? ` · ${U.esc(M.titleCase(c.lead.municipality))}` : ''}</small>` : ''}</span><span class="pnl-r-fig">${c.percent != null ? `${Math.round(c.percent)}%` : ''}<small>${U.esc(M.statusLabel(c.status))}</small></span></div>` })), total: act.length, seeAll: { 'data-full-table': 'dca' } }],
+      method: 'To check: contracts past their completion target with no completion date, open work not updated in the year before the layer\u2019s latest update, EAs marked current with nothing ahead and no milestone in 18 months, and EAs complete 9+ years with no construction following. Furthest along: Region capital projects that are tendered, awarded or under construction. Screening wording: the capital program and its status are the Region\u2019s; nothing here is a Region decision.',
       sources: 'Region of Peel capital projects (Peel GIS)' + (asOf ? `, as of ${U.esc(M.fmtDate(asOf))}` : '') + '.',
-      foot: { primary: { label: 'Show them on the map', attrs: { 'data-pnl-ce-map': 'cons' } } },
+      foot: { primary: { label: 'Show them on the map', attrs: { 'data-pnl-ce-map': 'cons' } }, ...(data.capital ? { secondary: [{ label: 'CSV: every contract', attrs: { 'data-ce-cap-csv': '' } }] } : {}) },
     };
   }
   function easPanelSpec() {
@@ -435,27 +447,49 @@
     const cur = M.eaSort(scoped.filter(e => M.EA_CURRENT.has(e.status)), 'next'), up = M.upcoming(scoped, t, 90), open = M.openPeriods(scoped, t);
     const recent = scoped.filter(e => e.status === 'complete' && e.completedYear && e.completedYear >= y - M.RECENT_YEARS);
     const may = near ? M.easMayApply(all, near.muni) : [], p = near && root.PeelDevVerdict ? root.PeelDevVerdict.scopedDev() : null;
+    const works = near ? (siteBriefFor() || { works: [] }).works : [];
+    const workRow = x => { const [head, tail] = M.briefWorkLine(x); return { attrs: { 'data-ce-open': `cap:${x.c.key}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${U.esc(head)}</span>${M.statusBadge(x.c.status)}</div><small class="pnl-r-line">${U.esc(tail.replace(/^[^;,]+[;,] ?/, ''))}</small>` }; };
     const eaRow = e => ({ attrs: { 'data-ce-open': `ea:${e.id}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${U.esc(e.name)}<small>${U.esc(M.titleCase(e.system))}${e._d != null ? ` · ${e._d < 1 ? 'on the site' : `${Math.round(e._d)} m away`}` : ''}</small></span>${M.eaBadge(e.status)}</div><small class="pnl-r-line">${e.nextStep ? `next: ${U.esc(e.nextStep.text)}${e.nextStep.date ? ` · ${U.esc(M.fmtDate(e.nextStep.date))}` : ''}` : e.completedYear ? `completed ${e.completedYear}` : 'no next step published'}</small>` });
     return {
       fullTitle: `Capital › EAs · ${p ? p.title : muni() || 'Peel'}: every environmental assessment, with filters`,
       head: p ? PN.siteHead(p) : PN.areaHead('Capital › EAs', 'What is being studied?', open.length ? { tone: 'tight', text: `${open.length} open for comment` } : null, `${U.esc(muni() || 'Peel')} · ${scoped.length} EAs`),
-      answer: near ? `${scoped.length ? `<strong>${scoped.length}</strong> EA${scoped.length === 1 ? '' : 's'} within 1 km of the site boundary (${cur.length} current)` : 'No EA mapped within 1 km of the site boundary'}${may.length ? `; <strong>${may.length}</strong> more may apply (not on the map yet)` : ''}.`
+      answer: near ? `${scoped.length ? `<strong>${scoped.length}</strong> EA${scoped.length === 1 ? '' : 's'} within 1 km of the site boundary (${cur.length} current)` : 'No EA mapped within 1 km of the site boundary'}${may.length ? `; <strong>${may.length}</strong> more may apply (not on the map yet)` : ''}; <strong>${works.length}</strong> capital work${works.length === 1 ? '' : 's'} planned or under way within 1 km${works.filter(x => x.check.overdue).length ? ` (${works.filter(x => x.check.overdue).length} past ${works.filter(x => x.check.overdue).length === 1 ? 'its' : 'their'} completion target)` : ''}.`
         : `<strong>${cur.length}</strong> current EA${cur.length === 1 ? '' : 's'}${muni() ? ` in ${U.esc(muni())}` : ''}; ${up.length} milestone${up.length === 1 ? '' : 's'} in the next 90 days${open.length ? `, <strong>${open.length}</strong> open for comment now` : ''}.`,
       figures: [{ v: cur.length, u: 'current', label: 'EAs under way', ctx: 'commenced, consultation, review or addendum' }, { v: up.length, u: '', label: 'milestones, next 90 days', ctx: '', attrs: { 'data-full-table': 'dca' } }, { v: open.length, u: '', label: 'open for comment now', ctx: '', tone: open.length ? 'tight' : null, attrs: open.length === 1 ? { 'data-ce-open': `ea:${open[0].e.id}` } : { 'data-full-table': 'dca' } }, { v: recent.length, u: '', label: `completed ${y - M.RECENT_YEARS} or later`, ctx: '' }],
       lists: [
         ...(up.length ? [{ title: 'Coming up (90 days)', rows: up.slice(0, 5).map(x => ({ attrs: { 'data-ce-open': `ea:${x.e.id}` }, html: `<div class="pnl-kv"><span>${U.esc(M.MS_LABEL[x.m.type] || x.m.type)}: ${U.esc(x.e.name)}</span><span>${U.esc(M.fmtDate(x.m.date))}</span></div>` })), total: up.length, seeAll: { 'data-full-table': 'dca' } }] : []),
         { title: near ? 'Near the site' : 'Current EAs', rows: (near ? M.eaSort(scoped, 'next') : cur).slice(0, 5).map(eaRow), total: near ? scoped.length : cur.length, seeAll: { 'data-full-table': 'dca' } },
         ...(may.length ? [{ title: 'May apply (not on the map yet)', rows: may.slice(0, 5).map(eaRow), total: may.length, seeAll: { 'data-full-table': 'dca' } }] : []),
+        ...(near ? [{ title: 'Capital works planned or under way near the site', rows: works.slice(0, 5).map(workRow), total: works.length, seeAll: { 'data-full-table': 'dca' } }] : []),
       ],
-      method: near ? 'EAs whose mapped study area is within 1 km of the site boundary (0 inside it); "may apply" lists EAs with no mapped study area that name the site\u2019s municipality or the whole Region.' : 'Region of Peel environmental assessments: current ones (commenced, in consultation, under review or in addendum), their dated milestones and open comment periods. Screening wording only.',
+      method: near ? 'EAs whose mapped study area is within 1 km of the site boundary (0 inside it); "may apply" lists EAs with no mapped study area that name the site\u2019s municipality or the whole Region. Capital works: planned, tendered, awarded or under construction contracts with a segment within 1 km; % built is the Region\u2019s figure, else estimated from the start and target dates; a target passed with no completion date, or a record not updated in a year, is said. Copy for review comments gives all of it as plain text with each project page.' : 'Region of Peel environmental assessments: current ones (commenced, in consultation, under review or in addendum), their dated milestones and open comment periods. Screening wording only.',
       sources: `Region of Peel EA project pages${data.eas && data.eas.generatedAt ? `, checked ${U.esc(M.fmtDate(data.eas.generatedAt.slice(0, 10)))}` : ''}.`,
-      foot: { primary: { label: 'Show EAs on the map', attrs: { 'data-pnl-ce-map': 'ea' } } },
+      foot: { primary: { label: 'Show EAs on the map', attrs: { 'data-pnl-ce-map': 'ea' } }, ...(near ? { secondary: [{ label: 'Copy for review comments', attrs: { 'data-ce-copy-brief': '' } }] } : {}) },
     };
   }
   if (typeof document !== 'undefined') document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-pnl-ce-map]'); if (b) setOn({ [b.dataset.pnlCeMap]: true }); });
   // EAs within the site's radius (null when no site is scoped): an empty Capital › EAs is hidden.
   // (Any status: a site with only completed EAs nearby still lists them under its filter.)
   const siteEaCount = () => { const near = nearScope(); return near && data.eas ? M.easNear(data.eas.eas || [], near.lat, near.lng, near.m, near.pts).length + M.easMayApply(data.eas.eas || [], near.muni).length : null; };
+  // The site brief (a reviewer's): the EAs and the planned or active capital work within 1 km of a
+  // development (p; else the one in scope). null before the data loads or with no site.
+  function siteBriefFor(p) {
+    const near = p ? nearOf(p) : nearScope();
+    if (!near || !data.loaded) return null;
+    return M.siteBrief({ eas: (data.eas && data.eas.eas) || [], contracts: data.contracts, lat: near.lat, lng: near.lng, pts: near.pts, muni: near.muni, m: near.m, today: today(), asOf: capAsOf() });
+  }
+  const briefSources = () => ({ asOf: capAsOf(), easChecked: data.eas && data.eas.generatedAt ? data.eas.generatedAt.slice(0, 10) : '' });
+  const siteBriefText = p => { const b = siteBriefFor(p), q = p || (window.PeelDevVerdict && window.PeelDevVerdict.scopedDev()); return b ? M.siteBriefText(b, { title: q && q.title, ...briefSources() }) : ''; };
+  const siteBriefHTML = (p, o = {}) => { const b = siteBriefFor(p); return b ? M.siteBriefHTML(b, o) : ''; };
+  // EAs and works near the site in scope (null when none is scoped): an empty Capital › EAs is hidden.
+  const siteBriefCount = () => { const b = siteBriefFor(); return b ? b.eas.length + b.may.length + b.works.length : null; };
+  async function copyBrief() {
+    const t = siteBriefText(); if (!t) return;
+    let ok = false;
+    try { await navigator.clipboard.writeText(t); ok = true; } catch (err) { ok = false; }
+    if (!ok && window.PeelExports) window.PeelExports.download(`site-brief-${today()}.txt`, t, 'text/plain');
+    if (U.toast) U.toast(ok ? 'Copied: the EAs and capital works near the site, ready to paste into review comments' : 'Copy was blocked, so the brief was saved as a text file');
+  }
   const filteredEAs = () => {
     const near = nearScope(), all = (data.eas && data.eas.eas) || [];
     const scoped = near ? M.easNear(all, near.lat, near.lng, near.m, near.pts).map(h => h.e) : muni() ? all.filter(e => String(e.municipality || '').toUpperCase().includes(String(muni()).toUpperCase()) || /region-wide/i.test(e.municipality || '')) : all;
@@ -511,7 +545,7 @@
     window.PeelExports.download('peel-environmental-assessments.geojson', JSON.stringify(M.easGeoJSON(data.eas.eas, { ...exportProps(), asOf: data.eas.generatedAt })), 'application/geo+json');
   }
   const workbookSheets = () => [
-    ...(data.capital ? [['Capital', M.capitalSheetRows(data.contracts)]] : []),
+    ...(data.capital ? [['Capital', capitalRows(null)], ['Capital to check', M.watchSheetRows(M.watchList({ capital: data.capital, eas: (data.eas && data.eas.eas) || [], contracts: data.contracts, today: today(), asOf: capAsOf() }), capAsOf())]] : []),
     ...(data.eas ? [['EAs', M.eaSheetRows(data.eas.eas)]] : []),
   ];
 
@@ -524,6 +558,6 @@
 
   // Stage 1 #9: a DC project's status in the capital records (null when it has no record).
   const dcStatusOf = proj => (proj && data.capital ? dcIndex().get(proj) || null : null);
-  const api = { projectsPanelSpec, easPanelSpec, siteEaCount, dcStatusOf, statusText: s => M.statusLabel(s), renderEaTab, eaTabHTML, renderIfChanged, exportConsGeoJSON, exportEasGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
+  const api = { projectsPanelSpec, easPanelSpec, siteEaCount, siteBriefCount, siteBriefFor, siteBriefText, siteBriefHTML, watchList, dcStatusOf, statusText: s => M.statusLabel(s), renderEaTab, eaTabHTML, renderIfChanged, exportConsGeoJSON, exportEasGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
   root.PeelCapitalEA = api;
 })(typeof window !== 'undefined' ? window : globalThis);
