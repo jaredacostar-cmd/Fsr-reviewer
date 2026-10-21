@@ -102,3 +102,10 @@ test('step 2: the app holds site activity aside, and a development page lists th
   assert.match(src('js/share.js'), /set\('sx', '1'\)/);
   for (const f of ['js/dev-nav.js', 'js/devtab.js']) assert.match(src(f), /<h2 class="section-title" data-info="dev-site">On this site<\/h2>/, f);
 });
+
+test('step 2: Records › Files, the panel a development opens to, lists On this site', () => {
+  const src = require('fs').readFileSync(require('path').join(__dirname, '..', 'js', 'records-tab.js'), 'utf8');
+  assert.match(src, /const site = TG && TG\.siteParts \? TG\.siteParts\(p, all && \(all\.all \|\| all\)\) : \[\];/);
+  assert.match(src, /data-pnl-dev="\$\{esc\(q\.key\)\}"/);
+  assert.match(src, /lists: \[\.\.\.siteList, \{ title: 'Latest activity'/);
+});
