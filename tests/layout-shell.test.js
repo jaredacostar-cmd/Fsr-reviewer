@@ -50,8 +50,7 @@ test('legend: its own card on the map (#mo-legend), in sight while Layers is clo
   assert.match(ma, /const LegendCard = L\.Control\.extend\(\{ options: \{ position: 'bottomleft' \}/);
   assert.match(ma, /el\.id = 'mo-legend'/);
   assert.ok(APP.includes("document.getElementById('mo-legend')"), 'renderLegend does not target #mo-legend');
-  assert.match(ma, /d\.open = store\.get\('legendOpen', roomyMap\)/, 'open state remembered, folded below 1600px');
-  assert.match(ma, /roomyMap = matchMedia\('\(min-width: 1600px\)'\)\.matches/);
+  assert.match(ma, /d\.open = store\.get\('legendOpen', !phoneMap && map\.getSize\(\)\.x >= 900\)/, 'open state remembered, folded on phones and a narrow map');
   assert.ok(!mm.includes('id="mo-legend"'), 'no longer inside the Layers panel');
   assert.ok(CSS.includes('.mo-legend.lg-card'), 'CSS has the card');
   assert.ok(!APP.includes('WwLoads().addTo(map); const legend'), 'legend control block not removed');
