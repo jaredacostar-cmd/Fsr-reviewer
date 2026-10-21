@@ -16,8 +16,10 @@ const p = { key: 'B|1 MAIN ST', title: '1 Main St' };
 
 test('the site sections follow the map tabs, Summary first', () => {
   const S = load({});
-  assert.deepEqual(S.SITE.map(s => s.title), ['Summary', 'Growth', 'Servicing', 'Capital', 'Files']);
-  assert.deepEqual(S.SITE.map(s => s.tab), ['overview', 'growth', 'svc', 'dca', 'records']);
+  assert.deepEqual(S.SITE.map(s => s.title), ['Summary', 'Growth', 'Servicing', 'Capital', 'Files', 'FSR review']);
+  assert.deepEqual(S.SITE.map(s => s.tab), ['overview', 'growth', 'svc', 'dca', 'records', 'svc']);
+  assert.equal(S.BY_ID.fsr.page, 'fsr', 'the FSR review is a page of its own');
+  assert.deepEqual(S.AREA.map(s => [s.title, s.page]), [['Growth', 'growth'], ['Forecast', 'outlook']]);
 });
 
 test('a panel the tab set for this development is used as is; one for another scope is not', () => {

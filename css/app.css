@@ -2871,6 +2871,10 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
   cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; min-height: 44px; }
 .page-sec:hover { color: var(--text-primary); }
 .page-sec.on { color: var(--text-primary); border-bottom-color: var(--accent); }
+/* Explore: the one search and where you are, at the top of each of its pages. */
+.page-explore { display: flex; flex-direction: column; gap: var(--space-1); margin: var(--space-2) 0 0; }
+.page-explore .page-search { max-width: 640px; }
+.ex-where { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); color: var(--text-secondary); }
 .page-id { flex-basis: 100%; margin: 0; }
 .page-search { max-width: 520px; position: relative; }
 .page-search .field { margin: 0; }

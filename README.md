@@ -1443,6 +1443,19 @@ Each is the map tab's own panel, so the page and the map read the same answer an
 section whose tab builds its panel only when opened (Capital, Records) is built for the page on
 demand. Nothing about a site is only in the full map.
 
+## Explore: one workspace for a site, a plan or an area you draw
+
+Home's sidebar has one **Explore** entry for what were five: Growth in an area, Check a site,
+Review an FSR, Forecast and Study area are its views.
+- Each view opens with the one search (an address, a file number, a description) and **Draw an
+  area**. A site picked from an area view (the search, a list row, the map) opens on its page.
+- A site shows where it sits, **Peel › municipality › plan › site** (the plan tree's placement, as
+  the plan filter); each step opens Growth in an area at that level.
+- A site's sections: Summary, Growth, Servicing, Capital, Files and **FSR review** (the cross-check
+  and what an FSR should cover). An area's: Growth (the drill-down) and Forecast.
+- The views keep their own ids (`site`, `fsr`, `growth`, `outlook`, `study`), so links, share links and
+  the map-view chips still work; Explore opens the site in scope, else the last view used.
+
 ## Build-out: planned vs permitted vs left to build
 
 For each project with a unit count on its planning applications:

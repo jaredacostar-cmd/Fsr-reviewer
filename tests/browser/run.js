@@ -200,6 +200,40 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     }
   });
 
+  // Explore: one sidebar entry for Growth in an area, Check a site, Review an FSR, Forecast and Study
+  // area; the one search at the top of each; a site picked opens its page; its trail steps back up; the
+  // FSR review is one of its sections.
+  await check('Explore: one entry, the search on every view, a site and back up its trail, its FSR review', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
+    const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
+    expect(side.includes('explore') && !side.some(id => ['site', 'fsr', 'growth', 'outlook', 'study'].includes(id)), `the sidebar: ${side.join()}`);
+    await page.click('#home .home-side [data-ws-page="explore"]'); await wait(2000);
+    const a = await ev(() => ({ page: PeelWorkspaces.page(), search: !!document.querySelector('#home #page-search #search-box'), on: (document.querySelector('#home .home-ws.on') || {}).dataset, secs: [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent) }));
+    expect(a.page === 'growth', `Explore opens on Growth in an area (${a.page})`);
+    expect(a.search, 'the search box is at the top of the page');
+    expect(a.on && a.on.wsPage === 'explore', 'Explore is lit in the sidebar');
+    expect(a.secs.join() === 'Growth,Forecast', `the area's sections: ${a.secs.join()}`);
+    // A municipality, then a development from its list: its page, with its trail.
+    await page.click('#home [data-ws-drill="m:Brampton"]'); await wait(1500);
+    await page.locator('#home [data-ws-pick][data-ws-as="site"]').first().click(); await wait(3500);
+    const s = await ev(() => ({ page: PeelWorkspaces.page(), dev: !!DevScope.current(), trail: [...document.querySelectorAll('#home [data-ws-explore]')].map(b => b.textContent), secs: [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent), search: !!document.querySelector('#home #page-search #search-box') }));
+    expect(s.page === 'site' && s.dev, `a development opens its page (${s.page})`);
+    expect(s.trail[0] === 'Peel' && s.trail.includes('Brampton'), `its trail: ${s.trail.join(' › ')}`);
+    expect(s.secs.join() === 'Summary,Growth,Servicing,Capital,Files,FSR review', `its sections: ${s.secs.join()}`);
+    expect(s.search, 'the search stays at the top');
+    // Its FSR review, then back to a section of the site.
+    await page.click('#home .page-sec[data-ws-page="fsr"]'); await wait(2500);
+    const f = await ev(() => ({ page: PeelWorkspaces.page(), box: !!document.querySelector('#home [data-pnl-fsrbox]'), on: (document.querySelector('#home .page-sec.on') || {}).textContent }));
+    expect(f.page === 'fsr' && f.box && f.on === 'FSR review', `the FSR review (${f.page}, ${f.on})`);
+    await page.click('#home .page-sec[data-ws-sec="growth"]'); await wait(2500);
+    const g = await ev(() => ({ page: PeelWorkspaces.page(), on: (document.querySelector('#home .page-sec.on') || {}).textContent }));
+    expect(g.page === 'site' && g.on === 'Growth', `back on the site at Growth (${g.page}, ${g.on})`);
+    // A step up the trail: Growth in an area at Brampton, the site closed.
+    await page.locator('#home [data-ws-explore="m:Brampton"]').first().click(); await wait(2500);
+    const u = await ev(() => ({ page: PeelWorkspaces.page(), dev: !!DevScope.current(), name: (document.querySelector('#home h1') || {}).textContent }));
+    expect(u.page === 'growth' && !u.dev && /Brampton/.test(u.name), `up the trail to Brampton (${u.page}, ${u.name})`);
+  });
+
   // Plan areas: Growth in an area and the map's plan filter ("Show on the map") count the same
   // developments the same way (a straddling one by its share), for every plan, sub-area and precinct.
   await check('plan areas: Growth in an area and the map’s plan filter agree, precincts included', browser, {}, async ({ page, ev }, expect) => {
