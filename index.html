@@ -248,7 +248,7 @@
         <div id="ov-dev" class="ov-dev" hidden><div class="dev-subtabs" role="tablist" aria-label="Development views"><button type="button" data-devsub="about" aria-selected="true">About</button><button type="button" data-devsub="files" aria-selected="false">Files &amp; history</button><button type="button" data-devsub="site" aria-selected="false">Site</button></div><div id="pane-dev-body"></div></div>
       </section>
 
-      <div class="f-pane f-subtabs" data-pane="growth" hidden role="group" aria-label="Growth view"><button type="button" class="btn small" data-gsub="pipeline">Pipeline</button><button type="button" class="btn small" data-gsub="areas">Areas</button><button type="button" class="btn small" data-gsub="timing">Forecast</button></div>
+      <div class="f-pane f-subtabs" data-pane="growth" hidden role="group" aria-label="Growth view"><button type="button" class="btn small" data-gsub="pipeline">Pipeline</button><button type="button" class="btn small" data-gsub="areas">Areas</button><button type="button" class="btn small" data-gsub="timing">Forecast</button><button type="button" class="btn small" data-gsub="ledger">Ledger</button></div>
       <section class="f-pane pnl-host" id="pnl-growth" data-pane="growth" aria-labelledby="ftab-growth" hidden></section>
       <section class="f-pane" id="pane-growth-pipeline" data-pane="growth" data-sub="pipeline" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="growth-pipeline-body"></div></section>
       <!-- Areas: one drill-down, Peel → municipality → plan (the plan tables), then the 2051 comparison,
@@ -256,6 +256,7 @@
       <section class="f-pane" id="pane-growth-byplan" data-pane="growth" data-sub="areas" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="byplan-body"></div></section>
       <section class="f-pane" id="pane-growth-census" data-pane="growth" data-sub="areas" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="growth-census-body"></div></section>
       <section class="f-pane" id="pane-growth-timing" data-pane="growth" data-sub="timing" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="timing-body"></div></section>
+      <section class="f-pane" id="pane-growth-ledger" data-pane="growth" data-sub="ledger" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="ledger-body"></div></section>
 
       <div class="f-pane f-subtabs svc-subtabs" data-pane="svc" hidden role="group" aria-label="Servicing view">
         <button type="button" class="btn small" data-svcsub="capacity">Capacity</button>
@@ -442,6 +443,8 @@
   <script src="js/aerial.js?v=__BUILD__"></script>
   <script src="js/areas.js?v=__BUILD__"></script>
   <script src="js/growth.js?v=__BUILD__"></script>
+  <script src="js/ledger.js?v=__BUILD__"></script>
+  <script src="js/ledger-ui.js?v=__BUILD__"></script>
   <script src="js/employment.js?v=__BUILD__"></script>
   <script src="js/brief.js?v=__BUILD__"></script>
   <script src="js/info.js?v=__BUILD__"></script>

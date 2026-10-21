@@ -3811,3 +3811,32 @@ button.gtm-h { cursor: pointer; }
 .home-map-svg .hm-ring { fill: none; stroke: var(--select); stroke-width: 2.5; pointer-events: none; }
 .home-map-svg .hm-ring-s { stroke-width: 1.5; }
 .home-map-svg .hm-sub.on { fill: color-mix(in srgb, var(--select) 12%, transparent); stroke: var(--select); stroke-width: 2; stroke-dasharray: none; opacity: 1; }
+
+/* ---- Growth › Ledger (the pipeline ledger, js/ledger-ui.js) ------------------------------------ */
+.ldg-ctl { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; margin: var(--space-2) 0; }
+.ldg-grp { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.ldg-grp .btn.on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.ldg-lapse { display: inline-flex; gap: var(--space-1); align-items: center; color: var(--text-secondary); }
+.ldg-key { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); margin: 0 0 var(--space-1); color: var(--text-secondary); }
+.ldg-k { display: inline-flex; gap: var(--space-1); align-items: center; }
+.ldg-sw { display: inline-block; width: 12px; height: 12px; border-radius: 2px; border: 1px solid var(--border); }
+.ldg-bar { display: flex; height: 4px; margin-top: 2px; border-radius: 2px; overflow: hidden; background: var(--ly-track); }
+.ldg-seg { display: block; height: 100%; }
+.ldg-table td { vertical-align: top; }
+.ldg-table .ldg-peel th, .ldg-table .ldg-peel td { border-top: 2px solid var(--border); font-weight: 600; }
+.ldg-disc { color: var(--text-muted); font-style: italic; margin: var(--space-1) 0 var(--space-2); }
+.ldg-notes { margin: var(--space-1) 0 var(--space-2); padding-left: var(--space-3); }
+.ldg-list td { vertical-align: top; }
+.ldg-list td:first-child { white-space: normal; min-width: 180px; }
+.ldg-list td small, .ldg-list th small { display: block; color: var(--text-muted); }
+.ldg-list th .btn.link { padding: 0; font: inherit; color: inherit; }
+.ldg-row { cursor: pointer; }
+.ldg-row:hover td, .ldg-row:focus-visible td { background: var(--surface-2); }
+.ldg-list td small.ldg-flag { color: var(--cap-tight-t); }
+.ldg-list td small.ldg-st-sm { display: none; }
+@media (max-width: 480px) {
+  .ldg-table th, .ldg-table td, .ldg-list th, .ldg-list td { padding: var(--space-1); }
+  .ldg-list td:first-child { min-width: 0; }
+  .ldg-list .ldg-st { display: none; }
+  .ldg-list td small.ldg-st-sm { display: block; }
+}

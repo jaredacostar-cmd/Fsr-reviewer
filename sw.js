@@ -34,6 +34,8 @@ const SHELL_ASSETS = [
   'js/labs.js',
   'js/panel.js',
   'js/plan-rollup.js',
+  'js/ledger.js',
+  'js/ledger-ui.js',
   'js/plan-tables.js',
   'js/snapshot-index.js',
   'js/svc-capacity.js',
