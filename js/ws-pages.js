@@ -179,12 +179,16 @@
   }
   // One bar per stage, labelled directly; the scale is the largest stage. census: dwellings on the
   // system (2021) for the context line.
+  // The dormant developments a chart leaves out (st.dormant: { n, units } from dormantFor).
+  function dormantNote(d) {
+    return d && d.n ? ` Not counted: <strong>${fmtNum(Math.round(d.units))}</strong> homes in ${fmtNum(d.n)} dormant development${d.n === 1 ? '' : 's'} (no activity for 3+ years; 5 in review), included with the Find switch.` : '';
+  }
   function stageChartHTML(st, census) {
     const max = Math.max(1, ...st.rows.map(r => r.units)), cls = { anticipated: 'ly-anticipated', proposed: 'ly-proposed', approved: 'stg-approved', permitted: 'stg-permitted', built: 'ly-built' };
     return `<div class="stg" role="table" aria-label="The pipeline by stage, in the order a file moves">
       <p class="stg-h small pnl-chart-t"><strong>The pipeline by stage, in the order a file moves</strong> <span class="pnl-chart-u">(dwellings)</span></p>
       ${st.rows.map(r => `<div class="stg-row${st.on === r.key ? ' on' : ''}" role="row" title="${esc(r.label)}: ${esc(r.note)}"${st.click && r.units >= 0.5 ? ` data-ws-stage="${r.key}" tabindex="0"` : ''}><span class="stg-l" role="cell">${esc(r.label)}${st.ssp != null && r.ssp >= 0.5 && r.key !== 'built' ? `<small class="stg-ssp-t">${fmtNum(Math.round(r.ssp))} with a site servicing permit</small>` : ''}</span><span class="stg-track" role="cell"><i class="stg-fill ${cls[r.key]}" style="width:${(r.units / max * 100).toFixed(1)}%"></i>${st.ssp != null && r.ssp >= 0.5 && r.key !== 'built' ? `<i class="stg-ssp" style="width:${(Math.min(r.ssp, r.units) / max * 100).toFixed(1)}%" title="${fmtNum(Math.round(r.ssp))} of ${fmtNum(Math.round(r.units))} in developments with a site servicing permit applied for or issued"></i>` : ''}${r.est > 0 ? `<i class="stg-est" style="width:${(Math.min(r.est, r.units) / max * 100).toFixed(1)}%"></i>` : ''}${r.nm >= 0.5 ? `<i class="stg-nm" style="left:${(Math.max(0, r.units - r.nm) / max * 100).toFixed(1)}%;width:${(Math.min(r.nm, r.units) / max * 100).toFixed(1)}%" title="${fmtNum(Math.round(r.nm))} haven\u2019t moved since 2020"></i>` : ''}</span><b class="stg-v" role="cell">${fmtNum(Math.round(r.units))}</b><span class="stg-p muted" role="cell">${r.units > 0 && r.pct < 0.5 ? '&lt;1' : Math.round(r.pct)}%</span></div>`).join('')}
-      <p class="stg-foot small muted">${fmtNum(Math.round(st.total))} dwellings in the pipeline${census > 0 ? ` would add about <strong>${Math.round(st.total / census * 100)}%</strong> to the ${fmtNum(Math.round(census))} dwellings on the system (2021 census)` : ''}.${st.existing >= 0.5 ? ` With the ${fmtNum(Math.round(st.existing))} completed before the 2021 Census (already in it), <strong>${fmtNum(Math.round(st.total + st.existing))}</strong> in all.` : ''}${st.rows.some(r => r.est > 0) ? ' Hatched: counts estimated from the application (no unit count stated).' : ''}${st.ssp != null && st.ssp >= 0.5 ? ` <span class="stg-ssp-key" aria-hidden="true"></span> Green band: units in developments with a site servicing permit (water or wastewater) applied for or issued; the stage is still set by the building permit.` : ''}${st.notMoved >= 0.5 ? ` <span class="stg-nm-key" aria-hidden="true"></span> Outlined: ${fmtNum(Math.round(st.notMoved + (st.nmExisting || 0)))} in developments that haven\u2019t moved since 2020.` : ''}</p>
+      <p class="stg-foot small muted">${fmtNum(Math.round(st.total))} dwellings in the pipeline${census > 0 ? ` would add about <strong>${Math.round(st.total / census * 100)}%</strong> to the ${fmtNum(Math.round(census))} dwellings on the system (2021 census)` : ''}.${st.existing >= 0.5 ? ` With the ${fmtNum(Math.round(st.existing))} completed before the 2021 Census (already in it), <strong>${fmtNum(Math.round(st.total + st.existing))}</strong> in all.` : ''}${st.rows.some(r => r.est > 0) ? ' Hatched: counts estimated from the application (no unit count stated).' : ''}${st.ssp != null && st.ssp >= 0.5 ? ` <span class="stg-ssp-key" aria-hidden="true"></span> Green band: units in developments with a site servicing permit (water or wastewater) applied for or issued; the stage is still set by the building permit.` : ''}${dormantNote(st.dormant)}${st.notMoved >= 0.5 ? ` <span class="stg-nm-key" aria-hidden="true"></span> Outlined: ${fmtNum(Math.round(st.notMoved + (st.nmExisting || 0)))} in developments that haven\u2019t moved since 2020.` : ''}</p>
     </div>`;
   }
   // Review an FSR: what an FSR covers (Region of Peel, Functional Servicing Report Requirements, 2009)
@@ -415,11 +419,26 @@
     try { return r.sketchSVG({ center: [p.lng, p.lat], halfM: 1500, points: near, site: [p.lng, p.lat], W: 360, H: 260, bearing: bearing(), streets: true, onLoad: () => W() && W().renderPage && W().renderPage(true) }).replace(/<div class="meta">[\s\S]*$/, '').replace('class="sk"', 'class="sk home-map-svg"'); } catch (e) { return ''; }
   }
 
+  // Dormant developments (js/phases.js dormantOf), held out of every count: how many and their homes,
+  // in a municipality (or all of Peel), so a stage chart says what it leaves out (dormantNote).
+  function dormantFor(muni) {
+    const d = ((App() && App().state.projects && App().state.projects.dormant) || []).filter(p => !muni || p.municipality === muni);
+    return { n: d.length, units: d.reduce((t, p) => t + (p.units > 0 ? p.units : 0), 0) };
+  }
+
   // ---- Home --------------------------------------------------------------------------------------
-  function homeFigures(rows, ready, week) {
-    const over = rows.filter(r => r.pctBo >= 100);
+  // The first treatment plant (wastewater or water) to reach its 90% expansion trigger: one rule for
+  // Home, Servicing capacity and the Overview's headline.
+  function firstTrigger(rows) {
     const yr = r => (r.limit.y === 'today' ? 0 : r.limit.y);
-    const trig = rows.filter(r => r.kind === 'plant' && r.limit && r.limit.y != null).sort((x, y) => yr(x) - yr(y))[0];
+    return rows.filter(r => (r.kind === 'plant' || r.kind === 'wplant') && r.limit && r.limit.y != null).sort((x, y) => yr(x) - yr(y) || y.pctBo - x.pctBo)[0] || null;
+  }
+  function homeFigures(rows, ready, week) {
+    // Capacity and the DC program are Region-wide (a plant serves more than one municipality): with a
+    // municipality picked, those figures say so.
+    const peelWide = App() && App().state.muni ? 'Peel-wide · ' : '';
+    const over = rows.filter(r => r.pctBo >= 100);
+    const trig = firstTrigger(rows);
     // (the DC panel builds when Capital opens; until then the same analysis, cached, gives the count)
     const dc = specOf('dca:timing', areaScope);
     let late = dc && (dc.figures || []).find(f => f && f.label === 'late');
@@ -427,9 +446,9 @@
     const nW = week && week.rows ? week.rows.length : 0;
     const go = (page, title) => ({ 'data-ws-page': page, title });
     return [
-      ready ? { v: fmtNum(over.length), u: 'over', label: 'over capacity at build-out', ctx: `of ${fmtNum(rows.length)} facilities · Servicing capacity →`, tone: over.length ? 'over' : null, attrs: go('tight', 'Servicing capacity') } : { v: '…', u: '', label: 'over capacity at build-out', ctx: 'checking servicing capacity', attrs: go('tight', 'Servicing capacity') },
-      trig ? { v: trig.limit.y === 'today' ? 'Now' : `≈${trig.limit.y}`, u: '', label: 'first treatment trigger', ctx: `${esc(trig.name)} reaches its 90% expansion trigger · Servicing capacity →`, tone: 'tight', attrs: go('tight', 'Servicing capacity') } : null,
-      late ? { v: late.v, u: '', label: 'DC projects late', ctx: 'in service after the capacity runs out · DC projects →', tone: +late.v ? 'over' : null, attrs: go('projects', 'DC projects') } : null,
+      ready ? { v: fmtNum(over.length), u: 'over', label: 'over capacity at build-out', ctx: `${peelWide}of ${fmtNum(rows.length)} facilities · Servicing capacity →`, tone: over.length ? 'over' : null, attrs: go('tight', 'Servicing capacity') } : { v: '…', u: '', label: 'over capacity at build-out', ctx: 'checking servicing capacity', attrs: go('tight', 'Servicing capacity') },
+      trig ? { v: trig.limit.y === 'today' ? 'Now' : `≈${trig.limit.y}`, u: '', label: 'first 90% trigger', ctx: `${peelWide}${esc(trig.name)} reaches its 90% expansion trigger · Servicing capacity →`, tone: 'tight', attrs: go('tight', 'Servicing capacity') } : null,
+      late ? { v: late.v, u: '', label: 'DC projects late', ctx: `${peelWide}in service after the capacity runs out · DC projects →`, tone: +late.v ? 'over' : null, attrs: go('projects', 'DC projects') } : null,
       { v: fmtNum(nW), u: nW === 1 ? 'change' : 'changes', label: 'this week', ctx: 'files moved, new files, capital and EA dates · This week →', attrs: go('week', 'This week') },
     ].filter(Boolean);
   }
@@ -450,7 +469,7 @@
       top: '<p class="home-start small"><strong>Start here:</strong> Servicing capacity for what is over, DC projects for whether relief comes in time, This week for what changed. <button type="button" class="btn small link" data-ws-page="growth">Growth in an area →</button> <button type="button" class="btn small link" data-ws-page="outlook">Forecast →</button> <button type="button" class="btn small link" data-ws-page="eaflow">EA to construction →</button> <button type="button" class="btn small link" data-ws-page="help">Help, by role →</button></p>',
       figures: homeFigures(rows, ready, week),
       // The units the answer adds, by stage: Built since 2021 beside what is approved and in review.
-      chart: a.stageStrip || '',
+      chart: a.stageStrip ? `${a.stageStrip}${(d => (d.n ? `<p class="small muted">${dormantNote(d).trim()}</p>` : ''))(dormantFor(App().state.muni))}` : '',
       lists: [ready ? toPage('tight', needs) : needs, toPage('week', week)],
       map: { svg: capacityMap(rows), attrs: { 'data-ws-page': 'tight' }, link: 'Servicing capacity', label: 'Open Servicing capacity', caption: !ready ? '<span class="muted">Checking servicing capacity…</span>' : '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out (catchments, zones and plants)' },
       actions: [{ label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' }, primary: true }, { label: 'Full map', attrs: { 'data-ws-full': '' } }] };
@@ -463,8 +482,7 @@
     const crit = App().state.criteria, psPlant = Object.fromEntries(((App().state.servicing && App().state.servicing.psAreas) || []).map(a => [`ps:${a.id}`, a.plant]));
     const res = reserveRows(rows, crit, psPlant), late = rows.filter(r => r.relief === 'gap' && r.limit.y != null).sort((a, b) => (a.limit.y === 'today' ? 0 : a.limit.y || 1e4) - (b.limit.y === 'today' ? 0 : b.limit.y || 1e4));
     const over = rows.filter(r => r.pctBo >= 100);
-    const plants = rows.filter(r => (r.kind === 'plant' || r.kind === 'wplant') && r.limit.y != null).sort((a, b) => (a.limit.y === 'today' ? 0 : a.limit.y) - (b.limit.y === 'today' ? 0 : b.limit.y));
-    const first = plants[0], low = res[0], end = (root.PeelSvcPlants && root.PeelSvcPlants.hz.end) || 2051;
+    const first = firstTrigger(rows), low = res[0], end = (root.PeelSvcPlants && root.PeelSvcPlants.hz.end) || 2051;
     const yTxt = y => (y === 'today' ? 'now' : y == null ? `after ${end}` : `≈${y}`);
     const q = r => (r.unit === 'L/s' ? `${fmtNum(Math.round(r.v))} L/s` : `${fmt1(r.v)} ${r.unit}`);
     const resRow = r => ({ tone: r.pct < 0 ? 'over' : r.pct < 10 ? 'tight' : null, attrs: r.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': r.ss, title: `Open ${r.name} on the map` } : { 'data-ws-go': 'tight', 'data-ws-fulltable': '1', title: `${r.name}: in the full table` },
@@ -478,7 +496,7 @@
       figures: [
         s.figures[0],
         { v: fmtNum(late.length), u: late.length === 1 ? 'facility' : 'facilities', label: 'no relief in time', ctx: `${fmtNum(late.filter(r => r.reliefY).length)} relief after the limit · ${fmtNum(late.filter(r => !r.reliefY).length)} none listed`, tone: late.length ? 'over' : 'room', attrs: { 'data-ws-go': 'tight', 'data-ws-fulltable': '1' } },
-        first ? { v: yTxt(first.limit.y), u: '', label: 'first treatment trigger', ctx: `${esc(first.name)} · ${esc(first.limit.what)}`, tone: 'tight', attrs: first.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': first.ss } : null } : null,
+        first ? { v: yTxt(first.limit.y), u: '', label: 'first 90% trigger', ctx: `${esc(first.name)} · ${esc(first.limit.what)}`, tone: 'tight', attrs: first.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': first.ss } : null } : null,
         low ? { v: low.reserve < 0 ? 'none' : fmt1(low.reserve), u: low.reserve < 0 ? '' : 'ML/d', label: 'uncommitted reserve, lowest', ctx: `${esc(low.name)}${low.reserve > 0 ? ` · ≈${fmtNum(Math.round(low.people / 100) * 100)} people` : ''}`, tone: low.pct < 10 ? 'tight' : 'room', attrs: low.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': low.ss } : null } : null,
       ],
       chart: area && area.chart ? area.chart : '',
@@ -550,7 +568,7 @@
     const r = PT && PT.compute ? (() => { try { return PT.compute(); } catch (e) { return null; } })() : null;
     if (!r || !pl) return loading('growth', 'Loading the pipeline…');
     let n = r.nodes.get(gAt); if (!n) { gAt = 'peel'; n = r.root; }
-    const G = root.Growth, Ph = P(), Ly = root.PeelLayers;
+    const G = root.Growth, Ph = P(), Ly = root.PeelLayers, basis = App() ? App().state.basis || 'all' : 'all';
     const dm = nodeDevs(n), items = [...dm].map(([p, share]) => ({ p, share: Math.min(1, share) }));
     const atPeel = n.kind === 'peel';
     const muniOf = x => { for (let y = x; y; y = y.parent ? r.nodes.get(y.parent) : null) if (y.kind === 'municipality') return y.name; return ''; };
@@ -561,7 +579,7 @@
     // The stages, for this area.
     const DGs = root.PeelDcGate, sspOf = DGs && DGs.loaded() ? q => { const g = DGs.rowOf(q); return !!g && g.bucket === 'counted'; } : null;
     const stage = Ly && Ly.ofDev ? stageRows(items, q => Ly.ofDev(q), undefined, sspOf) : null;
-    if (stage) { stage.click = true; stage.on = gStage; }
+    if (stage) { stage.click = true; stage.on = gStage; if (atPeel || n.kind === 'municipality') stage.dormant = dormantFor(atPeel ? App().state.muni : n.name); }
     const CAr = root.PeelCensusAreas, bc = atPeel && CAr && CAr.baselineCensus ? CAr.baselineCensus() : null;
     // (the area the developments are filtered to: a municipality filter at the Peel node is not all of Peel)
     const census = bc && root.PeelAreas && root.PeelAreas.censusTotals ? root.PeelAreas.censusTotals(bc.das, { muni: App() ? App().state.muni : '', sp: App() ? App().state.sp : [], mtsa: App() ? App().state.mtsa : [] }).dwellings : 0;
@@ -641,10 +659,11 @@
       : `<strong>${esc(n.name)}</strong> ${trail[1] && trail[1] !== n ? ` (${esc(trail[1].name)})` : ''} holds <strong>${n0(m.planned)}</strong> planned units, ${p0(m.people)} people${m.jobs >= 0.5 ? ` and ${p0(m.jobs)} jobs` : ''} at build-out; ${n0(anb)} approved, not yet built, ${n0(m.left)} left to build.${svcLine}`;
     return { id: 'growth', eyebrow: `${esc(label('growth'))} · ${crumbs}${atPeel ? '' : ` <span class="page-kind">${esc(kind(n))}</span>`}`, name: atPeel ? 'How much is coming, where, and how fast?' : n.name, status: null, identity: atPeel ? esc(`${App().state.muni || 'Peel'} · ${fmtNum(plans.length)} plans with planned units`) : esc(`${fmtNum(dm.size)} developments${trail.length > 2 ? ` · in ${trail[trail.length - 2].name}` : ''}`), scen: scen(), answer,
       figures: [
-        { v: n0(m.planned), u: 'units', label: 'planned', ctx: `${n0(m.left)} left to build` },
+        // (units and jobs at the Scenario's counting basis, as the people and the Overview: one basis)
+        basis === 'all' ? { v: n0(m.planned), u: 'units', label: 'planned', ctx: `${n0(m.left)} left to build` } : { v: n0(m.counted), u: 'units', label: G.basisUnits(basis), ctx: `of ${n0(m.planned)} planned` },
         { v: n0(anb), u: 'units', label: 'approved, not yet built', ctx: 'past their first planning approval' },
         { v: p0(m.people), u: 'people', label: 'at build-out', ctx: 'Peel design criteria' },
-        { v: p0(emp.jobs >= 0.5 ? emp.jobs : m.jobs), u: 'jobs', label: 'employment', ctx: emp.planned >= 1 ? `${n0(emp.planned)} m² of floor area` : 'no employment floor area stated' },
+        basis === 'all' ? { v: p0(emp.jobs >= 0.5 ? emp.jobs : m.jobs), u: 'jobs', label: 'employment', ctx: emp.planned >= 1 ? `${n0(emp.planned)} m² of floor area` : 'no employment floor area stated' } : { v: p0(m.jobs), u: 'jobs', label: 'employment', ctx: G.basisUnits(basis) },
       ],
       chart: stage ? stageChartHTML(stage, census) : pl.chart,
       lists: [
@@ -786,9 +805,10 @@
   // ---- This week -----------------------------------------------------------------------------------
   function week() {
     const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; if (!a) return loading('week', 'Loading the changes…');
-    const ch = (App().state.snapshot && App().state.snapshot.changes) || {}, ce = root.PeelCapitalEA ? root.PeelCapitalEA.attention() : [];
+    const ce = root.PeelCapitalEA ? root.PeelCapitalEA.attention() : [];
     const byKey = new Map(App().state.projects.map(p => [p.key, p]));
-    const moved = (ch.moved || []), added = (ch.added || []).filter(x => x.phase !== 'completed');
+    // (the Overview's own changes: the same files, the same municipality, the same baseline rule)
+    const { moved, added } = OT().weekChanges();
     // Does it matter: a change on a development whose plant is over or tight at build-out.
     const rows = Cap() && Cap().collect ? Cap().collect() || [] : [], hot = new Set(rows.filter(r => r.kind === 'plant' && r.pctBo >= 90).map(r => r.id.replace(/^plant:/, '')));
     const plantOf = k => { const p = byKey.get(k); return p && MM() && MM().plantOfDev ? MM().plantOfDev(p) : null; };

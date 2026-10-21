@@ -79,7 +79,7 @@ test('a development\'s Overview opens with "n things to confirm", computed per s
 
 test('Peel Overview: tiles with layer sub-labels; Needs attention grouped and counted', () => {
   const o = src('js/overview-tab.js');
-  assert.match(o, /tile\(fmtNum\(Math\.round\(unitsAll\)\), 'units', 'planned', \[lyTiles\.units,/);
+  assert.match(o, /tile\(fmtNum\(Math\.round\(unitsAll\)\), 'units', unitsWord, \[lyTiles\.units,/);
   assert.match(o, /tile\(fmtNum\(roundPop\(e\.population\)\), 'people', 'at build-out', lyTiles\.people\)/);
   const dv = src('js/dev-verdict.js');
   const na = new Function(`${dv.match(/const needsAttention = \(d\) => \{[\s\S]*?\n  \};/)[0]}\n${dv.match(/const needsGroups = \(d\) => \{[\s\S]*?\n  \};/)[0]}\nreturn needsGroups;`)();

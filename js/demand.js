@@ -126,7 +126,9 @@
       if (!b || !isCommitted(project)) return 0;
       return b.unbuilt;
     }
-    if (basis === 'remaining') return b ? b.remaining : 0;   // planned, no building permit yet
+    // Left to build: planned, not yet completed (permit issued or not), the same figure as Growth's
+    // left to build (PeelPhases.unbuiltOf).
+    if (basis === 'remaining') return project.phase === 'cancelled' || !(project.units > 0) ? 0 : b ? Math.max(0, project.units - (b.completed || 0)) : (project.phase === 'completed' ? 0 : project.units);
     // Build-out without the Anticipated layer (SPEC §2 scenario chip): pre-consultation and block
     // plans with no formal file are left out.
     if (basis === 'buildout') return project.phase === 'inception' || project.phase === 'cancelled' ? 0 : project.units || 0;
@@ -186,15 +188,13 @@
 
   // Jobs a project counts for a basis. Employment space has no unit-level build-out, so the
   // project's phase decides: committed = approved / permitted / under construction, left to
-  // build = not yet permitted, completed = completed.
-  const NOT_PERMITTED = new Set(['inception', 'review', 'approved']);
+  // build = not yet completed, completed = completed.
   function jobsFor(project, jobs, basis = 'all') {
     if (!(jobs > 0)) return 0;
     const ph = project.phase;
     if (ph === 'cancelled') return 0;
     if (basis === 'committed') return isCommitted(project) ? jobs : 0;
-    if (basis === 'remaining') return NOT_PERMITTED.has(ph) ? jobs : 0;
-    if (basis === 'unbuilt') return ph !== 'completed' ? jobs : 0;
+    if (basis === 'remaining' || basis === 'unbuilt') return ph !== 'completed' ? jobs : 0;
     if (basis === 'completed') return ph === 'completed' ? jobs : 0;
     return jobs;
   }

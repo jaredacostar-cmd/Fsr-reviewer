@@ -1418,6 +1418,21 @@ St”, “65-71 Agnes St”, “… (formerly …)”) joins the records at each
 permit-only project of 20+ units within 60 m of an application with exactly the same unit count
 joins that application.
 
+## One set of numbers: pages and the full map agree
+
+Home, the workspace pages and the full map's panels show the same figure for the same thing.
+A browser check (`npm run browser`, "pages and the full map agree") compares them for Peel and
+each municipality at every counting basis.
+
+| Figure | One rule |
+|---|---|
+| Built / left to build | A development marked completed with permits still open: the homes on open permits are left to build ("permit issued, not built" on the stage chart), not built. The stage chart's "not yet built" equals Growth's left to build. |
+| The units figure under the Scenario | Says what it counts: *planned* (every stage), *applied for (no pre-application)*, *approved, not yet built*, or *left to build*, with "of N planned" beside it. Growth in an area follows the Scenario for units, people and jobs, as the Overview does. |
+| Capacity and the DC program on Home | Region-wide (a plant serves more than one municipality): with a municipality picked, those figures say "Peel-wide". |
+| First 90% trigger | The first treatment plant (wastewater or water) to reach its 90% expansion trigger, then the most loaded: the same plant on Home, Servicing capacity and the Overview's headline. A facility's own *limit* (firm capacity, full pipe) is named as a limit, not a trigger. |
+| This week | One list of changes for Home, the Overview, the badge and the This week page, in the municipality picked; none on the first (baseline) update. |
+| Dormant developments | Held out of every count (`PeelPhases.dormantOf`); the stage charts on Home and Growth in an area say how many homes are left out. |
+
 ## Build-out: planned vs permitted vs left to build
 
 For each project with a unit count on its planning applications:
@@ -1427,8 +1442,8 @@ For each project with a unit count on its planning applications:
 | Planned | Units on the planning applications. Files on the same land repeat one proposal, so the largest figure is used. Parts nested inside a larger application are summed, unless the parent's own figure is larger. |
 | Permitted | Units on building permits on the land. Permits at one address (foundation, full, revisions) count once. |
 | Completed | Units on permits marked closed, finaled or occupied. |
-| **Left to build** | Planned − permitted: units with no building permit yet. |
-| Not yet completed | Planned − completed. |
+| **Left to build** | Planned − completed: units not yet built, permit issued or not. One figure on Growth, the Overview, Timing, the stage chart ("not yet built") and the Scenario's **Units: left to build**. |
+| Left to permit | Planned − permitted: units with no building permit yet. |
 | **Committed capacity** | Growth only (units planned on a planning application), not yet completed, on projects that are approved, permitted or under construction. Applications still in pre-consultation or review are proposed, not committed; permits with no planning application are not growth. |
 
 ### Multi-phase developments (towers, blocks, condo phases)
@@ -1455,7 +1470,7 @@ together. A plan with units still left to permit shows as "Under construction", 
 
 In the app, the project panel shows a build-out bar, and the project list shows "planned / left"
 on each row. The **Unit growth** filter has an option for **Units left to build**. The demand
-panel can be based on all units, units left to build, units not yet completed, or completed
+panel can be based on all units, units left to build (not yet completed), or completed
 units. The CSV export includes every build-out figure.
 
 Run the tests with `npm test`.
@@ -1833,7 +1848,7 @@ these definitions. In the app they're in the **Definitions** card (Overview ⓘ 
 | Proposed | Pre-consultation, inception and review, not committed |
 | Allocated | Only the allocations you record. Peel publishes no allocation list. |
 | Planned units | Each development's units counted once (the larger of planned and permitted), net of homes demolished |
-| Permitted / left to build | Units with a building permit / planned units with no permit yet |
+| Permitted / left to build | Units with a building permit / planned units not yet completed |
 | Uncommitted reserve (D-5-1) | Rated capacity − (existing + built + committed), to **100%** of rated |
 | Room to the trigger | **90%** of rated (2020 Master Plan expansion trigger) − (existing + built + committed) |
 

@@ -31,5 +31,5 @@ test('duplicate controls removed: Layers-card view switch, map Present, Measure 
 });
 
 test('Needs attention drops newly listed files that are already completed', () => {
-  assert.match(src('js/overview-tab.js'), /\(ch\.added \|\| \[\]\)\.filter\(a => a\.phase !== 'completed'\)/);
+  assert.match(src('js/overview-tab.js'), /\(ch\.added \|\| \[\]\)\.filter\(a => a\.phase !== 'completed' && inMuni\(a\)\)/);
 });

@@ -247,6 +247,15 @@
   }
   // Plain-data input for the pure needsAttention: reuses the DCA results, the stalled flags,
   // the 90% trigger years and the weekly snapshot change log.
+  // This week's changes, one source for Home, the Overview and the This week page: files that moved
+  // stage and newly listed files (not those already completed: old news) since the last data update,
+  // none on the first (baseline) snapshot, in the municipality picked (Peel: all).
+  function weekChanges() {
+    const ch = App().state.snapshot && App().state.snapshot.changes;
+    if (!ch || ch.baseline) return { moved: [], added: [] };
+    const muni = App().state.muni, inMuni = x => !muni || (x.municipality || String(x.key || '').split('|')[0]) === muni;
+    return { moved: (ch.moved || []).filter(inMuni), added: (ch.added || []).filter(a => a.phase !== 'completed' && inMuni(a)) };
+  }
   function needsAttentionData(set, capList) {
     const R = MP().DCA.res && MP().DCA.key === MP().scenarioKey() ? MP().DCA.res : null;
     const adv = R ? R.list.filter(r => r.rec === 'advance').map(r => ({ name: r.name })) : [];
@@ -261,11 +270,10 @@
       const u = FI().appUnits(p);
       stalled.push({ key: p.key, title: p.title, muni: p.municipality, units: u, unitsTxt: fmtNum(Math.round(u)), years: `${st.years.toFixed(1)} yrs` });
     }
-    const ch = App().state.snapshot && App().state.snapshot.changes;
-    const changes = (!ch || ch.baseline) ? [] : [
-      ...(ch.moved || []).map(m => ({ key: m.key, text: `${m.title}: ${P.PHASE_BY_KEY[m.from].label} → ${P.PHASE_BY_KEY[m.to].label}` })),
-      // A newly listed file that is already completed is old news, not a Peel-level concern: This week has it.
-      ...(ch.added || []).filter(a => a.phase !== 'completed').map(a => ({ key: a.key, text: `New: ${a.title} (${P.PHASE_BY_KEY[a.phase].label}, ${a.municipality})` })),
+    const wc = weekChanges();
+    const changes = [
+      ...wc.moved.map(m => ({ key: m.key, text: `${m.title}: ${P.PHASE_BY_KEY[m.from].label} → ${P.PHASE_BY_KEY[m.to].label}` })),
+      ...wc.added.map(a => ({ key: a.key, text: `New: ${a.title} (${P.PHASE_BY_KEY[a.phase].label}, ${a.municipality})` })),
     ];
     // Capital projects and EAs (Peel / area scope): review periods closing, DC-matched dates moved later.
     const ce = window.PeelCapitalEA ? window.PeelCapitalEA.attention() : [];
@@ -314,7 +322,7 @@
   let lastArea = null;
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ov-sort]'); if (b) { ovSort = b.dataset.ovSort; store.set('ovSort', ovSort); renderOverview(); } });
   function areaPanelSpec(o) {
-    const PN = root.PeelPanel, SC = root.PeelSvcCapacity, { set, e, pipe, unitsAll, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr } = o, pre = o.pre || { units: 0, people: 0 };
+    const PN = root.PeelPanel, SC = root.PeelSvcCapacity, { set, e, basis, pipe, unitsAll, unitsWord, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr } = o, pre = o.pre || { units: 0, people: 0 };
     // The figures carry the answer's own number ("added since the 2021 census") beside the build-out
     // total, so the sentence and the figure never read as two answers to one question.
     const since = (v, d, f) => (d >= 0.5 ? `${f(Math.max(0, v - d))} added since the 2021 census` : '');
@@ -333,7 +341,7 @@
       answer: hl, stageStrip: lyTiles.strip || '',
       figures: [
         { v: fmtNum(set.length), u: 'developments', label: 'shown on the map', ctx: esc(scopeText()) },
-        { v: fmtNum(Math.round(unitsAll)), u: 'units', label: 'planned', ctx: [since(unitsAll, pre.units, x => fmtNum(Math.round(x))), n ? `${fmtNum(left)} left to build` : (lyTiles.units || '')].filter(Boolean).join(' · ') },
+        { v: fmtNum(Math.round(unitsAll)), u: 'units', label: unitsWord, ctx: [since(unitsAll, pre.units, x => fmtNum(Math.round(x))), basis === 'all' ? (n ? `${fmtNum(left)} left to build` : (lyTiles.units || '')) : pipe ? `of ${fmtNum(Math.round(pipe.planned))} planned` : ''].filter(Boolean).join(' · ') },
         { v: fmtNum(roundPop(e.population)), u: 'people', label: 'at build-out', ctx: `${since(e.population, pre.people, x => fmtNum(roundPop(x)))}${lyTiles.peopleBar || (lyTiles.people ? ` · ${lyTiles.people}` : '')}` },
         { v: fmtNum(roundPop(e.employment.jobs)), u: 'jobs', label: 'on development sites', ctx: '' },
       ],
@@ -368,6 +376,7 @@
     const pipe = root.Growth ? root.Growth.pipelineTotals(set) : null;
     const left = pipe ? Math.round(pipe.left) : 0, n = pipe ? pipe.n : 0;
     const unitsAll = basis === 'all' && pipe ? pipe.planned : e.totalUnits;
+    const unitsWord = root.Growth && root.Growth.basisUnits ? root.Growth.basisUnits(basis) : 'planned';
     // A plan filter shows whole developments; By plan counts the part inside the plan. Both are
     // shown, reconciled: inside + outside = the units planned (SPEC 1.9).
     const inPlan = planSplit(set);
@@ -395,7 +404,10 @@
     const capList = capacityList();
     let cap = skel('Loading the servicing model'), tight = null;
     if (capList) {
-      tight = capList.filter(c => c.kind === 'plant').sort((a, b) => b.util.bo - a.util.bo)[0] || null;
+      // The plant that reaches its 90% expansion trigger first (then the most loaded): the same plant
+      // as Home's and Servicing capacity's "first 90% trigger" (js/ws-pages.js firstTrigger).
+      const outY = c => (c.out === 'today' ? 0 : c.out || 1e4);
+      tight = capList.filter(c => c.kind === 'plant').sort((a, b) => outY(a) - outY(b) || b.util.bo - a.util.bo)[0] || null;
       cap = capacityBarsHTML(capList);
     }
     // Needs attention: constraints that run out before relief, stalled large sites, sites
@@ -413,17 +425,17 @@
     const hl = set.length ? `${mgmt}The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(Math.max(0, e.population - pre.people)))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(Math.max(0, unitsAll - pre.units)))} units${lyTiles.built >= 0.5 && (basis === 'all' || basis === 'buildout') ? `, <strong>${fmtNum(Math.round(lyTiles.built))}</strong> of them built since 2021` : ''}${pre.units >= 0.5 ? ` <span class="muted">(not counting ${fmtNum(Math.round(pre.units))} completed before the 2021 Census, already in it)</span>` : ''}.${tight ? ` <strong>${esc(SV().PLANT_SHORT[tight.pl])}</strong> ${SvcTab().trigText(tight)} (existing + built + committed ${SvcTab().pctRated(tight, 'com')}% of rated capacity → ${SvcTab().pctRated(tight, 'bo')}% at build-out).` : ''}` : 'No developments match the current filters.';
     // ⓘ line: method, criteria, data dates.
     const fr = DU().freshness(), nDue = fr.filter(r => r.st === 'due' || r.st === 'stale').length;
-    const basisTxt = { all: 'every stage, pre-consultation to completed', committed: 'approved only (committed, D-5-1)', remaining: 'units left to build' }[basis] || 'every stage';
+    const basisTxt = { all: 'every stage, pre-consultation to completed', committed: 'approved only (committed, D-5-1)', buildout: 'every stage but pre-application', remaining: 'units left to build (not yet completed)' }[basis] || 'every stage';
     const info = `<p class="small muted ov-info"><button type="button" class="btn small link" data-info="definitions">Definitions</button> · ⓘ Servicing demand at Peel design criteria, as in a functional servicing report; capacity as % of rated (plants: ${SvcTab().wwFlowLabel('long')}; water: max day); black tick: the 90% expansion trigger. Scope: ${esc(basisTxt)}${App().state.muni ? ` · ${esc(App().state.muni)}` : ''}. Applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong> · ${nDue ? `<span class="fr-b fr-due">${nDue} source${nDue === 1 ? '' : 's'} due for a refresh</span>` : '<span class="fr-b fr-ok">all sources current</span>'} ${go('criteria', 'Data & checks')}</p>`;
     const permitCaveat = root.PeelCensusView && root.PeelCensusView.permitCaveatHTML ? root.PeelCensusView.permitCaveatHTML() : '';
     // Stage 3: the standard panel. The cards below (every tile, the capacity bars, Needs attention by
     // group, the largest unbuilt, the constraint card) are its full table.
-    lastArea = areaPanelSpec({ set, e, basis, pipe, unitsAll, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue, pre });
+    lastArea = areaPanelSpec({ set, e, basis, pipe, unitsAll, unitsWord, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue, pre });
     if (root.PeelPanel) root.PeelPanel.set('overview:', lastArea);
     el.innerHTML = `<div class="ov-top">${hlP(hl)}${permitCaveat}<button type="button" class="btn small link ov-brief" data-ov-tool="brief" title="A one-page summary to print or save as PDF (also in Export)">Executive briefing (PDF)</button></div>
       <div class="ov-grid">
         <section class="ov-card ov-growth"><div class="ov-h"><h3>Growth</h3>${go('growth', 'Growth')}</div>
-          <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(unitsAll)), 'units', 'planned', [lyTiles.units, n ? `${fmtNum(left)} left to build` : '', inPlan ? `${fmtNum(Math.round(inPlan.planned))} inside ${esc(inPlan.name)} (By plan) + ${fmtNum(Math.round(inPlan.outside))} in the parts of ${fmtNum(inPlan.straddling)} development${inPlan.straddling === 1 ? '' : 's'} outside it` : ''].filter(Boolean).join('<br>'))}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out', lyTiles.people)}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div>${lyTiles.anticipated ? `<p class="small muted ly-def">Pre-application: ${esc(root.PeelLayers.NOTE.anticipated)}.</p>` : ''}</section>
+          <div class="ov-tiles">${tile(fmtNum(set.length), 'developments', 'shown on the map', esc(scopeText()))}${tile(fmtNum(Math.round(unitsAll)), 'units', unitsWord, [lyTiles.units, basis === 'all' ? (n ? `${fmtNum(left)} left to build` : '') : pipe ? `of ${fmtNum(Math.round(pipe.planned))} planned` : '', inPlan ? `${fmtNum(Math.round(inPlan.planned))} inside ${esc(inPlan.name)} (By plan) + ${fmtNum(Math.round(inPlan.outside))} in the parts of ${fmtNum(inPlan.straddling)} development${inPlan.straddling === 1 ? '' : 's'} outside it` : ''].filter(Boolean).join('<br>'))}${tile(fmtNum(roundPop(e.population)), 'people', 'at build-out', lyTiles.people)}${tile(fmtNum(roundPop(em.jobs)), 'jobs', 'on development sites')}</div>${lyTiles.anticipated ? `<p class="small muted ly-def">Pre-application: ${esc(root.PeelLayers.NOTE.anticipated)}.</p>` : ''}</section>
         ${needs}
         <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Capacity</h3>${go('svc:capacity', 'Servicing › Capacity')}</div>${cap}</section>
         ${topDevsHTML(set, basis)}
@@ -527,7 +539,7 @@
   });
 
   // ---- Public contract ----
-  const api = { renderOverview, renderVerdictCard, scopeText, scopeLabel, infillScope, secondUnitScope, capacityBarsHTML, lastAreaSpec: () => lastArea };
+  const api = { renderOverview, renderVerdictCard, scopeText, scopeLabel, infillScope, secondUnitScope, capacityBarsHTML, lastAreaSpec: () => lastArea, weekChanges };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelOverviewTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);
