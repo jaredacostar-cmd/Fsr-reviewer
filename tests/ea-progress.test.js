@@ -80,7 +80,11 @@ test('Home pages: EA to construction (Capital) and Forecast (Planning), reachabl
   const s = src('js/ws-pages.js');
   assert.match(s, /function eaflow\(\) \{/);
   assert.match(s, /function outlook\(\) \{\s*const t = specOf\('growth:timing', areaScope\);/);
-  assert.match(s, /data-ws-page="outlook">Forecast →<\/button> <button type="button" class="btn small link" data-ws-page="eaflow">EA to construction →<\/button>/);
+  // (step 6: from Home's groups: the 2031 figure opens the Forecast; Capital opens DC projects, whose
+  // section bar holds EA to construction)
+  assert.match(s, /label: 'expected by 2031', ctx: f31\.ctx, attrs: go\('outlook'\)/);
+  assert.match(s, /\{ title: 'Capital', link: \{ label: 'Capital', attrs: go\('projects'\) \}/);
+  assert.match(s, /\{ id: 'eaflow', title: 'EA to construction', page: 'eaflow' \}/.test(src('js/sections.js')) ? /function eaflow/ : /never/);
   // The outcome list only holds construction the model calls the EA's outcome.
   assert.match(s, /followed\.flatMap\(x => x\.outcome\.map\(/);
   // No colours in the page code: tokens in css/app.css.

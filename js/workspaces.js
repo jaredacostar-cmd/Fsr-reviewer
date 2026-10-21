@@ -502,6 +502,16 @@
     if (e.target.closest('[data-ws-backpage]')) { openPage(cur || page || 'home'); return; }
     if (e.target.closest('[data-ws-back]')) { const b = backTo; if (b && b.ws) { setMode('ws'); go(b.ws, { quiet: true, noDraw: true }); } else openPage((b && b.page) || 'home', { keepScroll: true }); return; }
     if (e.target.closest('[data-ws-back-x]')) { backTo = null; renderBack(); return; }
+    // Home's scope (step 6): Peel or a municipality, the same filter as the map's (a plan or MTSA in
+    // another municipality no longer applies).
+    const mu = e.target.closest('[data-ws-muni]');
+    if (mu && App()) {
+      const m = mu.dataset.wsMuni, PA = root.PeelPlanAreas, keep = id => !m || ((PA && PA.areaById && PA.areaById.get(id)) || {}).municipality === m;
+      App().state.muni = m; App().state.sp = App().state.sp.filter(keep); App().state.mtsa = App().state.mtsa.filter(keep);
+      if (root.PeelSearchFilter && root.PeelSearchFilter.renderMuniChips) root.PeelSearchFilter.renderMuniChips();
+      if (PA && PA.renderAreaSelects) PA.renderAreaSelects();
+      App().applyFilters(); renderPage(true); return;
+    }
     // A layer chip under a site page's map: that layer on or off.
     const lc = e.target.closest('[data-ws-layer]');
     if (lc) { const LG = root.PeelLayerGroups, A = LG && LG.ADAPT && LG.ADAPT[lc.dataset.wsLayer]; if (A) { let on = false; try { on = !A.get(); A.set(on); } catch (er) { /* the layer is not loaded */ } lc.classList.toggle('on', on); lc.setAttribute('aria-pressed', String(on)); } return; }

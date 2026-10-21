@@ -1481,6 +1481,19 @@ Review an FSR, Forecast and Study area are its views.
   and whether it changed this week, changed ones first) and the week's **capacity alerts** from the
   weekly feed, both of which were only in the full map's Watch tab.
 
+## Home: the briefing
+
+- **The scope first**: Peel, Mississauga, Brampton or Caledon (the map's municipality filter). Every
+  figure follows it; one that is Region-wide (capacity, the DC program) says so.
+- **Four groups of figures**, each the answer of its page and opening it: **Growth** (homes planned,
+  left to build, people at build-out, expected by 2031), **Servicing** (over capacity at build-out,
+  the first 90% trigger), **Capital** (DC projects late, facilities with no relief in time) and
+  **Change** (this week's changes, files on a tight plant).
+- The stage chart (with the homes dormant developments leave out), **Needs attention** beside the
+  capacity map, **Largest left to build**, **Plans furthest behind their target** and **This week**.
+- Home's sidebar has seven entries: Home, This week, Explore, Servicing capacity, Capital, Old pipes
+  and Reference, then Full map.
+
 ## Build-out: planned vs permitted vs left to build
 
 For each project with a unit count on its planning applications:
