@@ -215,6 +215,11 @@ jobs:
         continue-on-error: true
         run: node scripts/audit-snapshot.js data/snapshot.json
 
+      # Every data file's receipt: its date (read from the file), size and SHA-256, so the Sources
+      # table matches the files published with it (data/sources-index.json, js/sources.js).
+      - name: Data file dates and fingerprints
+        run: node scripts/build-sources-index.js --data data
+
       - name: Stamp version (cache-busting for scripts and styles)
         run: |
           v="$(git rev-parse --short HEAD)"

@@ -850,8 +850,8 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
     phases add up; for an official plan / zoning / subdivision file the largest counts.
   - Tap a file to open it on its own.
 - **Units only in the attachments**: some descriptions say "refer to the attached cover letter /
-  PJR" and give no unit count. About 76 files, nearly all in Brampton, whose documents are on
-  BramPlanOnline behind a sign-in, so they can't be read automatically.
+  PJR" and give no unit count. About 76 files, nearly all in Brampton. Their documents are public on
+  BramPlanOnline, but they are found by searching the file number and are not read automatically.
   - Those rows are flagged, and the unit count from the cover letter can be entered. Entry is also
     offered where the development has no count at all.
   - The figure is kept in this browser, marked *your figure* (× removes it), and counted like a
@@ -1051,8 +1051,14 @@ year whose forecast matches the tracker's build-out.
   public page.
 - **Caledon:** its application pages, with each application type's own numbering (direct PDF links;
   64 pages carry an FSR).
-- **Brampton:** documents are on BramPlanOnline, which needs a sign-in, so the tab links there
-  instead.
+- **Brampton:** documents are public on
+  [BramPlanOnline](https://planning.brampton.ca/CitizenAccess/Cap/CapHome.aspx?module=Planning&TabName=Planning),
+  with no sign-in. A file is found by searching its number: the portal's pages need its internal
+  record ids, which the open data doesn't carry. So the tab links the search and names the newest
+  file to look up.
+  - Brampton's reports aren't read automatically. The portal is open to people, but its firewall
+    turns away automated requests: every page answered "Request Rejected" to an automated check on
+    2026-10-21. The app doesn't try to get around that. Reading them needs the City's agreement or a data feed from it.
 - A link to all of the application's documents comes with it.
 
 **Supply route.** The Servicing tab's **Water** section shows where the water comes from, like
@@ -2825,6 +2831,83 @@ scope (SPEC §0.4). The EA lists moved here from the old "Construction & EAs" vi
     is 0% or missing.
   - Any EA or construction label that overlaps a development label, cluster or marker is hidden,
     so development labels take priority.
+
+## Every data file has a receipt
+
+Every figure in the app can be checked against where it came from:
+
+- **Each data file's source.** `data/sources.json` lists every file and folder in `data/`. Each entry has:
+  - what the file is, and who published it;
+  - links to the service, report or page it was read from, with the tables and pages for figures
+    transcribed from a report;
+  - the files it is built from, for data the app builds itself;
+  - the field in the file that says when it was pulled or published, and the script that builds it.
+
+  Items that have their own source say so. Each plan target, each count found online and each EA
+  carries its own link.
+- **Readable record links.** Record ↗ on a planning file or permit opens the ArcGIS page for that
+  feature, with every published field (`?f=html`). The exports keep the machine-readable link
+  (`?f=pjson`). Mississauga's services are published as a service root, so the layer is taken from the
+  record's source (`mis-devapps/6` → `…/FeatureServer/6/22`). Before, these links queried the root,
+  which ArcGIS rejects.
+- **Where to see it.** The table is under Reference › Data sources › *Every data file*, and also on
+  the Settings › Sources page. Each row has the source links, the date, the first 12 characters of the
+  file's SHA-256 and the script that builds it. *Copy citation* gives one line to quote: publisher,
+  source, date, and the exact file the app holds with its full SHA-256.
+- **Dates and fingerprints at deploy.** `scripts/build-sources-index.js` reads each file's date from
+  the file itself and computes its size and SHA-256. It writes `data/sources-index.json` in the
+  deploy job, so the table always matches the files published with it. That file is not committed.
+- **Kept that way.** `tests/sources.test.js` fails the build in any of these cases:
+  - a data file has no entry;
+  - published data has no link, or built data names no source files;
+  - a link is not a full `https` address, or a named script doesn't exist;
+  - a date field doesn't read a date from the file;
+  - a plan target lacks its link, page or quote.
+
+  One plan target, Mayfield West Phase 2 (Caledon), cites a news release with no date. It is the
+  only known undated target, and any other undated target fails the test.
+- **Brampton planning files on BramPlanOnline.** Each Brampton planning file's source line also has
+  *Find <file> on BramPlanOnline ↗*. It opens the portal's public search (no sign-in), where the
+  file number finds the file and its documents (`applicationSearch` in `js/provenance.js`). Building
+  permits are a different part of the portal and are not linked.
+- **Not yet.** Links straight to one file's page (`applicationPageUrl`) are not built for any of
+  the three municipalities: no stable address pattern has been checked.
+
+## How is this worked out? (every figure)
+
+Every figure in a panel or on a page has a **?** in its corner. It opens the figure's working under
+the figures:
+- the rule;
+- the inputs, each with its value and a link to where it comes from: a file's record, the section of
+  the design criteria document, or the document a data file was read from;
+- the design criteria in use;
+- the data files the figure reads, each with its receipt (source link, date, *Copy citation*).
+
+*Copy the working* puts all of it on the clipboard as text. `js/how.js` holds the working; `js/panel.js`
+and `js/ws-pages.js` add the buttons.
+
+**Exact working, line by line:**
+
+| Figure | Working |
+|---|---|
+| A development's **units** | The rule that picked the count (largest rezoning figure, site plan phases added up, condo phases, permits when they're higher, net of demolitions), and each file stating a count with its record |
+| **People** | Units of each type × persons per unit = people, with Linear Wastewater Standards Tables 2-1 / 2-2 |
+| **Jobs**, floor area | Floor area of each use ÷ floor space per job |
+| **Water**, maximum day | People × 270 L/cap/d ÷ 86,400, × 1.8 (and jobs at the non-residential rates), with the Modelling Demand Table |
+| **Wastewater**, peak wet weather | Average dry weather × Harmon peaking (2–4) + I&I on the site area, with sections 2.2, 2.4 and 2.5 |
+| **Servicing › Capacity**, over / tight | Each facility counted: flow at build-out ÷ its capacity, with where the capacity comes from (annual report, Master Plan table, sewer network) |
+| **Servicing › Capacity**, soonest limit and largest impact | The facility's existing, built, committed and proposed flow against its capacity |
+
+**Every other figure** opens its panel's method and sources and the data files its panel reads
+(`FILES` in `js/how.js`).
+
+**Kept that way:** `tests/how.test.js` fails the build in any of these cases:
+- a panel the app sets, or a page it builds, has no `FILES` entry;
+- a file named there has no receipt;
+- the arithmetic shown doesn't give the figure (people, water, wastewater, capacity).
+
+A figure's button has a fixed id (panel key and position), so a re-render is unchanged. If its panel
+re-renders (Home while its figures load, a filter, the scenario), the open box comes back.
 
 ## Counts that hold still, and counts found online checked
 
