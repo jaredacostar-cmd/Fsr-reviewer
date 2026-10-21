@@ -106,13 +106,12 @@
     onAdd() {
       const el = L.DomUtil.create('div', 'map-opts');
       const opts = (o, cur) => Object.entries(o).map(([k, v]) => `<option value="${k}"${k === cur ? ' selected' : ''}>${esc(typeof v === 'string' ? v : v.label)}</option>`).join('');
-      const small = matchMedia('(max-width: 700px)').matches;
       // An on / off chip (a checkbox styled as a pill).
       const chip = (attrs, on, body, info) => `<label class="mo-chip"${info ? ` data-info="${info}"` : ''}><input type="checkbox" ${attrs}${on ? ' checked' : ''}><span>${body}</span></label>`;
       el.innerHTML = `
         <div class="mo-devs-off" id="mo-devs-off" hidden></div>
         <div class="mo-area-on" id="mo-area-on" hidden></div>
-        <details class="mo-panel"${store.get('moPanelOpen', !small) ? ' open' : ''}><summary class="mo-panel-h"><span>Layers</span><span class="mo-inview" id="mo-inview" role="button" tabindex="0" title="The developments in this part of the map: open the In view list (it follows the map)"></span><span class="mo-psum" id="mo-psum"></span></summary>
+        <details class="mo-panel"${store.get('moPanelOpen', false) ? ' open' : ''}><summary class="mo-panel-h"><span>Layers</span><span class="mo-inview" id="mo-inview" role="button" tabindex="0" title="The developments in this part of the map: open the In view list (it follows the map)"></span><span class="mo-psum" id="mo-psum"></span></summary>
         <div class="mo-layers lg-groups" role="group" aria-label="Map layers" data-info="map-layers">
           ${LG().panelHTML({ on: initialOn(), open: LG().getOpen(), inView: null, swatch: layerSwatch, view: (() => { const v = store.get('mapView', 'planning'); const m = MAP_VIEWS.find(x => x[0] === (v === 'servicing' ? 'water' : v)) || MAP_VIEWS[0]; return { key: m[0], label: m[1] }; })(), extra: {
             infra: '<div id="ce-settings"></div><small id="exist-note" data-info="existing-pipes"></small>',

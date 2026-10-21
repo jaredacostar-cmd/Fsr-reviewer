@@ -89,6 +89,9 @@
   }
   // The first planned relief year of a Master Plan constraint (null: none listed).
   const reliefYearOf = c => (c && c.relief ? c.relief.map(r => r.y).filter(Boolean).sort((a, b) => a - b)[0] || null : null);
+  // collect() leaves out the facilities whose data is still loading (pumping into the zones waits for the
+  // water facilities, the pumping stations for their stations): partial() says the last rows were short.
+  let lastPartial = false;
   function collect() {
     const A = App(); if (!A || !A.state.svcModel || !MP() || !Cap()) return null;
     const rows = [], wwB = SvcTab().wwBasis(), flowW = SvcTab().wwFlowLabel();
@@ -114,7 +117,8 @@
     // Pumping into each pressure zone: maximum day against firm pumping (the water tab's rows).
     const ph = { year0: SP().hz.year0, aStart: SP().hz.aStart, aYears: SP().hz.aYears, pStart: SP().hz.pStart, pYears: SP().hz.pYears, end: SP().hz.end };
     const pumps = WTab() && WTab().pumpRows ? WTab().pumpRows() : [];
-    if (!pumps.length && WT() && WT().WF && !WT().WF.data) WT().loadWaterFacilities().then(d => { if (d) render(); });
+    const pumpsLoading = !pumps.length && WT() && WT().WF && !WT().WF.data;
+    if (pumpsLoading) WT().loadWaterFacilities().then(d => { if (d) render(); });
     for (const r of pumps) {
       const v = r.v, rt = WTab().roomTrigger(r.rated, { today: v[0] + v[1], approved: v[2], proposed: v[3] }, ph);
       rows.push({ id: `pump:${r.name}`, sys: 'water', kind: 'pump', name: r.name, sub: 'pumping into the zone', compared: 'Maximum day vs firm pumping', basis: 'design', unit: 'ML/d', cap: r.rated, capWord: 'firm',
@@ -142,7 +146,8 @@
       }
     }
     // Wastewater pumping stations: peak wet weather flow against firm capacity (design criteria).
-    for (const a of A.state.servicing.psAreas || []) {
+    const nRows = rows.length, psAreas = A.state.servicing.psAreas || [];
+    for (const a of psAreas) {
       const k = Cap().of(`ps:${a.id}`), c = MP().cached(`ps:${a.id}`, () => MP().psCons(a)); if (!k || !c) continue;
       rows.push({ id: `ps:${a.id}`, ss: a.id, sys: 'ww', kind: 'ps', name: k.name.replace(/ pumping station$/i, ''), sub: 'pumping station', compared: 'Peak wet weather vs firm capacity', basis: 'design', unit: 'L/s', cap: k.cap, capWord: 'firm',
         existing: k.existing, built: k.built, committed: k.committed, buildout: k.buildout, limit: { y: c.out, what: '100% firm' }, horizon: hzFromQ(c.q, k.cap), relief: MP().consStatus(c), reliefY: reliefYearOf(c) });
@@ -157,6 +162,7 @@
           existing: c.q('today'), built: 0, committed: c.util.com * c.cap, buildout: c.util.bo * c.cap, limit: { y: c.out, what: '100% full pipe' }, horizon: hzFromQ(c.q, c.cap), relief: MP().consStatus(c), reliefY: reliefYearOf(c) });
       }
     }
+    lastPartial = !!pumpsLoading || (psAreas.length > 0 && !rows.slice(nRows).some(r => r.kind === 'ps'));
     return rows.map(derive);
   }
   // The stacked bar: existing, built, committed, proposed; marks at 90% and 100% of capacity.
@@ -436,7 +442,7 @@
     const f = e.target.closest('[data-cap-fold]'); if (f) { const id = f.dataset.capFold; if (st.open.has(id)) st.open.delete(id); else st.open.add(id); render(); return; }
     if (e.target.closest('[data-cap-detail]')) { detail = !detail; if (U.store) U.store.set('capDetail', detail); syncDetail(); if (detail) { const p = $('#pane-plants'); if (p) p.scrollIntoView({ block: 'start', behavior: 'smooth' }); } }
   });
-  const api = { SYSTEM, derive, impactOf, sortRows, listRow, renderNetworkPanel, renderSiteNetwork, yTxt, pctTxt, collect, tableHTML, panelSpec, fullTableHTML, reachText, numOnly, render, renderChecks, renderNetBar, renderAll, renderFor, syncDetail };
+  const api = { SYSTEM, derive, impactOf, sortRows, listRow, renderNetworkPanel, renderSiteNetwork, yTxt, pctTxt, collect, partial: () => lastPartial, tableHTML, panelSpec, fullTableHTML, reachText, numOnly, render, renderChecks, renderNetBar, renderAll, renderFor, syncDetail };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSvcCapacity = api;
 })(typeof window !== 'undefined' ? window : globalThis);
