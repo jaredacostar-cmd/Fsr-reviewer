@@ -644,8 +644,34 @@
     }
     return b;
   }
+  // A large ring's edges by horizontal band, built once per ring: a ray from the point crosses only edges
+  // that span its y, and those all sit in its band, so the test reads a few edges, not thousands (a
+  // first load locates every site and census area in the servicing zones and blocks: ~1 s before).
+  const ringBands = new WeakMap();
+  function bandsOf(ring) {
+    let B = ringBands.get(ring);
+    if (B) return B;
+    let y0 = Infinity, y1 = -Infinity;
+    for (const p of ring) { if (p[1] < y0) y0 = p[1]; if (p[1] > y1) y1 = p[1]; }
+    const n = Math.max(1, Math.round(Math.sqrt(ring.length))), h = (y1 - y0) / n || 1, bands = Array.from({ length: n }, () => []);
+    const at = y => Math.min(n - 1, Math.max(0, Math.floor((y - y0) / h)));
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const a = ring[i][1], b = ring[j][1];
+      for (let k = at(Math.min(a, b)), e = at(Math.max(a, b)); k <= e; k++) bands[k].push(i);
+    }
+    B = { bands, at }; ringBands.set(ring, B);
+    return B;
+  }
   function pointInRing(x, y, ring) {
     let inside = false;
+    if (ring.length > 64) {
+      const { bands, at } = bandsOf(ring);
+      for (const i of bands[at(y)]) {
+        const j = i ? i - 1 : ring.length - 1, [xi, yi] = ring[i], [xj, yj] = ring[j];
+        if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
+      }
+      return inside;
+    }
     for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
       const [xi, yi] = ring[i], [xj, yj] = ring[j];
       if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;

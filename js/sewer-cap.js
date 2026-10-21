@@ -69,6 +69,29 @@
     }
     return bd <= r ? best : -1;
   }
+  // The pipes in flow order, every pipe before the one it drains to (out: 1 where a pipe's path reaches an
+  // outfall; the few that end in a loop in the data are left out of the order). Kept per network.
+  const flowOrders = new WeakMap();
+  function flowOrder(data) {
+    let r = flowOrders.get(data);
+    if (r) return r;
+    const pipes = data.pipes, n = pipes.length, out = new Uint8Array(n), state = new Uint8Array(n);
+    // (state 1: on the path being followed, 2: settled)
+    for (let s = 0; s < n; s++) {
+      const path = [];
+      let i = s;
+      while (i >= 0 && !state[i]) { state[i] = 1; path.push(i); i = pipes[i][3]; }
+      const ok = i < 0 || (state[i] === 2 && out[i] === 1);
+      for (const k of path) { state[k] = 2; out[k] = ok ? 1 : 0; }
+    }
+    const indeg = new Int32Array(n);
+    for (let i = 0; i < n; i++) if (out[i] && pipes[i][3] >= 0) indeg[pipes[i][3]]++;
+    const order = [];
+    for (let i = 0; i < n; i++) if (out[i] && !indeg[i]) order.push(i);
+    for (let q = 0; q < order.length; q++) { const d = pipes[order[q]][3]; if (d >= 0 && --indeg[d] === 0) order.push(d); }
+    r = { order, out }; flowOrders.set(data, r);
+    return r;
+  }
   // Growth loads per pipe (built since the census, approved, proposed; test sites counted in the
   // totals included), recomputed when criteria or data change. units: the planned units of the
   // developments draining through each pipe (Stage 4's Old pipes list; a count, not a load).
@@ -81,7 +104,11 @@
     if (MM().SEW.growth && MM().SEW.key === key) return MM().SEW.growth;
     const n = MM().SEW.data.pipes.length, L = ['built', 'approved', 'proposed'];
     const g = Object.fromEntries(L.map(k => [k, { pop: new Float64Array(n), jobs: new Float64Array(n), ha: new Float64Array(n), units: new Float64Array(n) }]));
-    const devPipe = new Map();
+    const devPipe = new Map(), pipes = MM().SEW.data.pipes, { order, out } = flowOrder(MM().SEW.data);
+    // Each development's load goes in at its pipe, then one pass down the network (upstream first) carries
+    // it to the outfall, in place of a walk to the outfall per development. A pipe whose path never leaves
+    // a loop in the data keeps that walk (2,000 hops), as before.
+    const start = Object.fromEntries(L.map(k => [k, { pop: new Float64Array(n), jobs: new Float64Array(n), ha: new Float64Array(n), units: new Float64Array(n) }]));
     for (const p of SD().svcDevs()) {
       const lay = MM().svcLayerOf(p);
       if (!L.includes(lay) || p.lat == null) continue;
@@ -89,8 +116,13 @@
       if (!(e.population > 0 || e.employment.jobs > 0)) continue;
       const k = nearestPipe(p.lng, p.lat); if (k < 0) continue;
       devPipe.set(p, k);
-      const ha = e.area.ha + (e.employment.area ? e.employment.area.ha : 0);
-      for (let i = k, hop = 0; i >= 0 && hop < 2000; i = MM().SEW.data.pipes[i][3], hop++) { g[lay].pop[i] += e.population; g[lay].jobs[i] += e.employment.jobs; g[lay].ha[i] += ha; g[lay].units[i] += e.totalUnits || 0; }
+      const ha = e.area.ha + (e.employment.area ? e.employment.area.ha : 0), t = out[k] ? start[lay] : g[lay];
+      if (out[k]) { t.pop[k] += e.population; t.jobs[k] += e.employment.jobs; t.ha[k] += ha; t.units[k] += e.totalUnits || 0; continue; }
+      for (let i = k, hop = 0; i >= 0 && hop < 2000; i = pipes[i][3], hop++) { t.pop[i] += e.population; t.jobs[i] += e.employment.jobs; t.ha[i] += ha; t.units[i] += e.totalUnits || 0; }
+    }
+    for (const lay of L) for (const f of ['pop', 'jobs', 'ha', 'units']) {
+      const s = start[lay][f], a = g[lay][f];
+      for (const i of order) { if (!s[i]) continue; a[i] += s[i]; const d = pipes[i][3]; if (d >= 0) s[d] += s[i]; }
     }
     MM().SEW.growth = { ...g, devPipe }; MM().SEW.key = key;
     return MM().SEW.growth;

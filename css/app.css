@@ -2491,9 +2491,10 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
   .tb-scen .sc-what { display: none; }
   .tb-scen { max-width: 340px; }
 }
+/* (Home and its pages have no map view chips in the top bar: there the actions keep their names) */
 @media (max-width: 1600px) {
-  .tb-actions .tb-btn:not(.tb-icon) { font-size: 0; gap: 0; }
-  .tb-actions .tb-btn:not(.tb-icon) svg { width: 16px; height: 16px; }
+  :root:not(.home-on) .tb-actions .tb-btn:not(.tb-icon) { font-size: 0; gap: 0; }
+  :root:not(.home-on) .tb-actions .tb-btn:not(.tb-icon) svg { width: 16px; height: 16px; }
 }
 @media (max-width: 700px) {
   .topbar { gap: var(--space-1); padding: var(--space-1) var(--space-2); }
@@ -2862,6 +2863,10 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 }
 @media (max-width: 700px) {
   .home-main .pnl-figs { grid-template-columns: 1fr 1fr; }
+  /* Home on a phone: the figures first, under the page's scope; the briefing's paragraph after them
+     (the HTML order, and so a screen reader's, stays header, answer, figures). */
+  .page-main[data-page="home"] > .home-h, .page-main[data-page="home"] > .page-filters, .page-main[data-page="home"] > .pnl-scen, .page-main[data-page="home"] > .home-scope { order: -2; }
+  .page-main[data-page="home"] > .home-grp { order: -1; }
   .ws-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
   .ws-chip { flex: 0 0 auto; }
 }
