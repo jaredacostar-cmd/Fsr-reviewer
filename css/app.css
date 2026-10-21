@@ -3475,6 +3475,8 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .sd-prof .sp-st { stroke: var(--pipe-storm); stroke-width: 2; }
 .sd-key .sd-k-w { width: 9px; height: 9px; border: 2px solid var(--pipe-water); border-radius: 50%; }
 .sd-t tr.t-over td { color: var(--cap-over-t); }
+.sd-qty .sd-ind { display: inline-block; padding-left: var(--space-3); font-weight: 400; color: var(--text-secondary); }
+.sd-qty tr.sd-qty-key th, .sd-qty tr.sd-qty-key td { font-weight: 600; }
 /* The corridor finder's summary and its weights. */
 .sd-corr { border-left: 3px solid var(--accent); padding: var(--space-1) var(--space-2); margin: var(--space-2) 0; background: var(--surface-2); border-radius: 4px; }
 .sd-cw .sd-row .field { width: 9.5rem; }
