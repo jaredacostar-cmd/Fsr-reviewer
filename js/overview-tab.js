@@ -322,7 +322,7 @@
   let lastArea = null;
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ov-sort]'); if (b) { ovSort = b.dataset.ovSort; store.set('ovSort', ovSort); renderOverview(); } });
   function areaPanelSpec(o) {
-    const PN = root.PeelPanel, SC = root.PeelSvcCapacity, { set, e, basis, pipe, unitsAll, unitsWord, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr } = o, pre = o.pre || { units: 0, people: 0 };
+    const PN = root.PeelPanel, SC = root.PeelSvcCapacity, { set, e, basis, pipe, unitsAll, unitsWord, inPlan, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr } = o, pre = o.pre || { units: 0, people: 0 };
     // The figures carry the answer's own number ("added since the 2021 census") beside the build-out
     // total, so the sentence and the figure never read as two answers to one question.
     const since = (v, d, f) => (d >= 0.5 ? `${f(Math.max(0, v - d))} added since the 2021 census` : '');
@@ -341,9 +341,11 @@
       answer: hl, stageStrip: lyTiles.strip || '',
       figures: [
         { v: fmtNum(set.length), u: 'developments', label: 'shown on the map', ctx: esc(scopeText()) },
-        { v: fmtNum(Math.round(unitsAll)), u: 'units', label: unitsWord, ctx: [since(unitsAll, pre.units, x => fmtNum(Math.round(x))), basis === 'all' ? (n ? `${fmtNum(left)} left to build` : (lyTiles.units || '')) : pipe ? `of ${fmtNum(Math.round(pipe.planned))} planned` : ''].filter(Boolean).join(' · ') },
-        { v: fmtNum(roundPop(e.population)), u: 'people', label: 'at build-out', ctx: `${since(e.population, pre.people, x => fmtNum(roundPop(x)))}${lyTiles.peopleBar || (lyTiles.people ? ` · ${lyTiles.people}` : '')}` },
-        { v: fmtNum(roundPop(e.employment.jobs)), u: 'jobs', label: 'on development sites', ctx: '' },
+        // A plan filter: the part inside the plan, as Growth in an area counts it (a straddling
+        // development by its share), and what the developments shown hold outside it.
+        inPlan ? { v: fmtNum(Math.round(basis === 'all' ? inPlan.planned : inPlan.counted)), u: 'units', label: `${unitsWord} inside ${inPlan.name}`, ctx: `+ ${fmtNum(Math.round(inPlan.outside))} planned in the parts of ${fmtNum(inPlan.straddling)} development${inPlan.straddling === 1 ? '' : 's'} outside it` } : { v: fmtNum(Math.round(unitsAll)), u: 'units', label: unitsWord, ctx: [since(unitsAll, pre.units, x => fmtNum(Math.round(x))), basis === 'all' ? (n ? `${fmtNum(left)} left to build` : (lyTiles.units || '')) : pipe ? `of ${fmtNum(Math.round(pipe.planned))} planned` : ''].filter(Boolean).join(' · ') },
+        inPlan ? { v: fmtNum(roundPop(inPlan.people)), u: 'people', label: `at build-out, inside ${inPlan.name}`, ctx: lyTiles.peopleBar || '' } : { v: fmtNum(roundPop(e.population)), u: 'people', label: 'at build-out', ctx: `${since(e.population, pre.people, x => fmtNum(roundPop(x)))}${lyTiles.peopleBar || (lyTiles.people ? ` · ${lyTiles.people}` : '')}` },
+        { v: fmtNum(roundPop(inPlan ? inPlan.jobs : e.employment.jobs)), u: 'jobs', label: inPlan ? `on development sites, inside ${inPlan.name}` : 'on development sites', ctx: '' },
       ],
       chart: capList ? `<p class="small pnl-chart-t">Wastewater plants and South Peel water treatment: existing, built, committed and proposed flow <span class="pnl-chart-u">(% of rated capacity)</span></p>${capacityBarsHTML(capList)}` : '',
       lists: [
@@ -430,7 +432,7 @@
     const permitCaveat = root.PeelCensusView && root.PeelCensusView.permitCaveatHTML ? root.PeelCensusView.permitCaveatHTML() : '';
     // Stage 3: the standard panel. The cards below (every tile, the capacity bars, Needs attention by
     // group, the largest unbuilt, the constraint card) are its full table.
-    lastArea = areaPanelSpec({ set, e, basis, pipe, unitsAll, unitsWord, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue, pre });
+    lastArea = areaPanelSpec({ set, e, basis, pipe, unitsAll, unitsWord, inPlan, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue, pre });
     if (root.PeelPanel) root.PeelPanel.set('overview:', lastArea);
     el.innerHTML = `<div class="ov-top">${hlP(hl)}${permitCaveat}<button type="button" class="btn small link ov-brief" data-ov-tool="brief" title="A one-page summary to print or save as PDF (also in Export)">Executive briefing (PDF)</button></div>
       <div class="ov-grid">

@@ -44,6 +44,28 @@
     if (A && A.precincts && root.PeelAreas) out.push(...root.PeelAreas.locate(A.precincts, p.lng, p.lat, p.municipality));
     return out;
   }
+  // The plans, sub-areas and precincts a development counts in (any share): the same placement as the
+  // plan tree, so a plan filter on the map holds exactly the developments Growth in an area counts
+  // there (a straddling one included, by its share).
+  let idsCache = new WeakMap(), idsKey = null;
+  function areaIdsOf(p) {
+    const list = areas(), k = `${list.length}#${App().state.treeGrouped}#${!!(TG() && TG().data)}`;
+    if (k !== idsKey) { idsCache = new WeakMap(); idsKey = k; }
+    let ids = idsCache.get(p);
+    if (!ids) {
+      const byId = new Map(list.map(a => [a.id, a])), raw = sharesOf(p) || pointOf(p).map(id => [id, 1]);
+      ids = new Set([...R().placement(p, raw, id => byId.get(id) || null).entries()].filter(([id, sh]) => id.startsWith('a:') && sh > 0).map(([id]) => id.slice(2)));
+      idsCache.set(p, ids);
+    }
+    return ids;
+  }
+  // The part of the developments shown that is inside the plans filtered to (state.sp): units,
+  // people and jobs by share, as Growth in an area counts them; null with no plan filter.
+  function inside(ids = App().state.sp) {
+    if (!ids || !ids.length) return null;
+    let r; try { r = compute(); } catch (e) { return null; }
+    return R().within(r, ids);
+  }
   function inMtsa(p) { const d = App() && App().state.treeGrouped && TG() && TG().devOf(p.key); return d && d.mt ? d.mt.length > 0 : !!(p.mtsa && p.mtsa.length); }
 
   function compute() {
@@ -341,7 +363,7 @@
     App().applyFilters();
   });
 
-  const api = { loadTargets, setTargets: d => { targets = d; }, targetHTML, render, compute, csvRows, sheetRows, planOf, downloadCSV, areas, matrixHTML, matrixSheetRows, matrixData };
+  const api = { loadTargets, setTargets: d => { targets = d; }, targetHTML, render, compute, areaIdsOf, inside, csvRows, sheetRows, planOf, downloadCSV, areas, matrixHTML, matrixSheetRows, matrixData };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPlanTables = api;
 })(typeof window !== 'undefined' ? window : globalThis);

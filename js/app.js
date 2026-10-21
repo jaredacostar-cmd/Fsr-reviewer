@@ -298,7 +298,8 @@
     if (!ignorePhase && !state.phases.has(p.phase)) return false;
     if (!ignoreTime && !inYears(p)) return false;
     if (state.muni && p.municipality !== state.muni) return false;
-    if (state.sp.length && !state.sp.some(id => (p.sp || []).includes(id))) return false;
+    // A plan, sub-area or precinct: the developments Growth in an area counts there (by share), else by point.
+    if (state.sp.length) { const PT = window.PeelPlanTables, ids = PT && PT.areaIdsOf ? PT.areaIdsOf(p) : new Set(p.sp || []); if (!state.sp.some(id => ids.has(id))) return false; }
     if (state.mtsa.length && !state.mtsa.some(id => (p.mtsa || []).includes(id))) return false;
     if (state.pz.length && !PeelSvcData.svcIds(p, 'pz').some(id => state.pz.includes(id))) return false;
     if (state.dr.length && !PeelSvcData.svcIds(p, 'dr').some(id => state.dr.includes(id))) return false;
