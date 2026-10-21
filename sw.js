@@ -42,6 +42,7 @@ const SHELL_ASSETS = [
   'js/tree-groups.js',
   'js/usage.js',
   'js/workspaces.js',
+  'js/sections.js',
   'js/ws-pages.js',
   './',
   'index.html',

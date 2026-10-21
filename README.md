@@ -1434,6 +1434,28 @@ basis, and for every plan, sub-area and precinct.
 | Dormant developments | Held out of every count (`PeelPhases.dormantOf`); the stage charts on Home and Growth in an area say how many homes are left out. |
 | Plan areas | A plan filter on the map (and "Show on the map" from Growth in an area) holds the developments Growth in an area counts there, by the same placement (`PeelPlanTables.areaIdsOf`): a straddling development by its share, precincts and sub-areas included. The Overview and the header count the part inside the plan (units, people, jobs), with what the straddling developments hold outside it named beside. A precinct filed under the plan holding most of it can't pull a development out of the plan it sits in (Bram West 40 (d) was counted at half). |
 
+## Sections: a page shows every map tab for its scope
+
+Each full-map tab's panel (Overview, Growth, Servicing, Capital, Records) is a **section**
+(`js/sections.js`). **Check a site** shows all of a development's sections under one bar:
+Summary, Growth, Servicing, Capital (the DC projects it relies on, then the EAs near it) and Files.
+Each is the map tab's own panel, so the page and the map read the same answer and figures; a
+section whose tab builds its panel only when opened (Capital, Records) is built for the page on
+demand. Nothing about a site is only in the full map.
+
+## Explore: one workspace for a site, a plan or an area you draw
+
+Home's sidebar has one **Explore** entry for what were five: Growth in an area, Check a site,
+Review an FSR, Forecast and Study area are its views.
+- Each view opens with the one search (an address, a file number, a description) and **Draw an
+  area**. A site picked from an area view (the search, a list row, the map) opens on its page.
+- A site shows where it sits, **Peel › municipality › plan › site** (the plan tree's placement, as
+  the plan filter); each step opens Growth in an area at that level.
+- A site's sections: Summary, Growth, Servicing, Capital, Files and **FSR review** (the cross-check
+  and what an FSR should cover). An area's: Growth (the drill-down) and Forecast.
+- The views keep their own ids (`site`, `fsr`, `growth`, `outlook`, `study`), so links, share links and
+  the map-view chips still work; Explore opens the site in scope, else the last view used.
+
 ## Build-out: planned vs permitted vs left to build
 
 For each project with a unit count on its planning applications:

@@ -19,10 +19,12 @@ test('1. the chips, in the brief\'s order, and Home\'s groups', () => {
   assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Servicing capacity', 'Growth in an area', 'Review an FSR', 'Forecast', 'Study area', 'DC projects', 'EA to construction', 'Old pipes', 'This week']);
   // Home's sidebar: This week under Home (bundle 6), then Planning (Servicing capacity with it),
   // Capital, Asset Management; then Full map.
-  assert.deepEqual(plain(W.GROUPS), [['Planning', ['site', 'fsr', 'growth', 'outlook', 'study', 'tight']], ['Capital', ['projects', 'eaflow']], ['Asset Management', ['pipes']]]);
+  // Explore (step 3): Growth in an area, Check a site, Review an FSR, Forecast and Study area are one entry.
+  assert.deepEqual(plain(W.GROUPS), [['Planning', ['explore', 'tight']], ['Capital', ['projects', 'eaflow']], ['Asset Management', ['pipes']]]);
+  assert.deepEqual(plain(W.EXPLORE), ['growth', 'site', 'fsr', 'outlook', 'study']);
   assert.match(fs.readFileSync(path.join(__dirname, '..', 'js', 'workspaces.js'), 'utf8'), /<ul>\$\{item\('home', 'The briefing'\)\}\$\{item\('week', BY_ID\.week\.what\)\}<\/ul>/);
   for (const w of W.WS) assert.ok(w.what.split(/\s+/).length <= 8, `${w.id}: 8 words or fewer`);
-  const all = [...W.GROUPS.flatMap(g => g[1]), 'week'].sort();
+  const all = [...W.GROUPS.flatMap(g => g[1]).flatMap(id => (id === 'explore' ? W.EXPLORE : [id])), 'week'].sort();
   assert.deepEqual(plain(all), plain(W.WS.map(w => w.id).sort()), 'every workspace listed once');
 });
 
@@ -231,7 +233,8 @@ test('3. Home links open the matching chip', () => {
   // The workspace list: one button per chip, then Full map.
   // Home itself first (current), then one button per workspace page, then Full map.
   assert.match(h, /<button type="button" class="home-ws on" data-ws-page="home" aria-current="page"><strong>Home<\/strong>/);
-  for (const w of B.WS) assert.match(h, new RegExp(`<button type="button" class="home-ws" data-ws-page="${w.id}"><strong>${w.label}`), w.id);
+  for (const w of B.WS.filter(x => !B.EXPLORE.includes(x.id))) assert.match(h, new RegExp(`<button type="button" class="home-ws" data-ws-page="${w.id}"><strong>${w.label}`), w.id);
+  assert.match(h, /<button type="button" class="home-ws" data-ws-page="explore"><strong>Explore/, 'Explore: one entry for its five views');
   assert.match(h, /class="home-ws home-full" data-ws-full>/);
   // Needs attention → the Servicing capacity page; This week → the This week page; the figures → their
   // pages (bundle 6); the map → Servicing capacity.
