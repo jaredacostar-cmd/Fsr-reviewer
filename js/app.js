@@ -300,6 +300,7 @@
   // Every active flag must pass (multi-select). FLAG_TESTS holds the per-flag tests.
   const flagMatch = p => { for (const [k] of PF.FLAG_META) if (state.flags[k] && !PeelFilterUI.FLAG_TESTS[k](p)) return false; return true; };
 
+  const searchWords = { q: null, w: [] };   // the search box split into words, cached per query
   function matches(p, ignorePhase, ignoreTime, ignoreFlags) {
     if (!ignorePhase && !state.phases.has(p.phase)) return false;
     if (!ignoreTime && !inYears(p)) return false;
@@ -322,7 +323,8 @@
     if (state.search) {
       const q = state.search;
       const hay = p._hay || (p._hay = [p.title, p.description, ...p.types, ...p.records.map(r => `${r.ref} ${r.statusRaw} ${r.address}`)].join(' ').toLowerCase());
-      if (!q.split(/\s+/).every(w => hay.includes(w))) return false;
+      if (searchWords.q !== q) { searchWords.q = q; searchWords.w = q.split(/\s+/); }   // split once per query, not per development
+      if (!searchWords.w.every(w => hay.includes(w))) return false;
     }
     return true;
   }
