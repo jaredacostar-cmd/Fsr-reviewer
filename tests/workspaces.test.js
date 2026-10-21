@@ -78,7 +78,7 @@ test('Old pipes: 50+ years old or moderate risk, carrying 100+ units at build-ou
   const runs = W.pipeRuns(list, data);
   assert.deepEqual(plain(runs.map(r => [r.i, r.n, r.lengthM, r.units])), [[1, 2, 220, 5200], [2, 1, 80, 150], [6, 1, 90, 100]]);
   // The units carried come from the same per-pipe accumulation as the sewer loads (js/sewer-cap.js).
-  assert.match(src('js/sewer-cap.js'), /g\[lay\]\.units\[i\] \+= e\.totalUnits \|\| 0;/);
+  assert.match(src('js/sewer-cap.js'), /t\.units\[k\] \+= e\.totalUnits \|\| 0;/);
   assert.deepEqual(plain(W.OLD), { age: 50, minUnits: 100, risk: 'MODERATE' });
 });
 
@@ -274,7 +274,7 @@ test('3. Home links open the matching chip', () => {
   assert.match(h, /data-ws-page="tight">See all \(9\) →/);
   assert.doesNotMatch(h, /See all \(2\)/, 'no See all when every row is shown');
   assert.match(h, /<div class="pnl-fig" data-ws-page="tight"/);
-  assert.match(h, /<h2>Growth<\/h2><button type="button" class="btn small link" data-ws-page="growth">Explore →<\/button>/);
+  assert.match(h, /<h2>Growth<\/h2><button type="button" class="btn small link" data-ws-page="growth">Growth in an area →<\/button>/);
   assert.match(h, /<button type="button" class="home-map-btn" data-ws-page="tight"/);
   // The start screen choice, and the screening note.
   assert.match(h, /<select data-ws-start><option value="home" selected>Home<\/option><option value="last">Last workspace<\/option><option value="full">Full map<\/option>/);

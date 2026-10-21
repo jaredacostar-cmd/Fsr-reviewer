@@ -83,7 +83,7 @@
     const sinceC = set.length && root.PeelLayers ? root.PeelLayers.totals(set).units.built || 0 : 0;
     const head = set.length
       ? `The <strong>${fmtNum(set.length)}</strong> developments shown propose <strong>${fmtNum(Math.round(t.planned))}</strong> homes (planned units, net of homes demolished): <strong>${fmtNum(Math.round(t.permitted))}</strong> permitted, <strong>${fmtNum(Math.round(t.completed))}</strong> completed${sinceC >= 0.5 && Math.round(sinceC) !== Math.round(t.completed) ? ` (${fmtNum(Math.round(sinceC))} since the 2021 census)` : ''}, <strong>${fmtNum(Math.round(t.left))}</strong> left to build.`
-      : 'No developments match the current filters.';
+      : root.PeelApp && root.PeelApp.developmentsReady && !root.PeelApp.developmentsReady() ? 'Loading the developments…' : 'No developments match the current filters.';
     // Completions per year: a compact strip; the numbers by municipality below it.
     const cmax = Math.max(1, ...yrs.map(y => y.units));
     const strip = yrs.length ? `<div class="cc-strip" role="img" aria-label="Units completed per year, ${yr0} to ${yr1}">${yrs.map(y => `<div class="cc-bar" style="--h:${(y.units / cmax * 100).toFixed(1)}" title="${y.year}: ${fmtNum(Math.round(y.units))} units in ${fmtNum(y.projects)} development${y.projects === 1 ? '' : 's'}"><i></i><span>${String(y.year).slice(2)}</span></div>`).join('')}</div>` : '';

@@ -182,6 +182,16 @@
     if (v === undefined) { v = normalizeAddressOf(key); if (normed.size > 200000) normed.clear(); normed.set(key, v); }
     return v;
   }
+  /** An address as a development's title: the municipality, province and postal code the source appends
+   * are dropped ("14 Twilley Rd, Brampton, ON," → "14 Twilley Rd"); the site's municipality is shown beside it. */
+  function displayAddress(addr) {
+    const s = str(addr);
+    const t = s.replace(/(?:\s*,\s*|\s+)(?:(?:City of |Town of )?(?:Caledon(?: East)?|Brampton|Mississauga|Bolton)\s*,?\s*)?(?:ON|Ontario)\b\s*,?\s*(?:[A-Z]\d[A-Z]\s?\d[A-Z]\d)?[\s,]*$/i, '')
+      .replace(/[\s,]+[A-Z]\d[A-Z]\s?\d[A-Z]\d[\s,]*$/i, '')
+      .replace(/\s*,\s*(?:Caledon(?: East)?|Brampton|Mississauga|Bolton)[\s,]*$/i, '')
+      .replace(/[\s,]+$/, '');
+    return t || s;
+  }
   function normalizeAddressOf(addr) {
     let s = str(addr).toUpperCase();
     if (!s) return '';
@@ -645,8 +655,34 @@
     }
     return b;
   }
+  // A large ring's edges by horizontal band, built once per ring: a ray from the point crosses only edges
+  // that span its y, and those all sit in its band, so the test reads a few edges, not thousands (a
+  // first load locates every site and census area in the servicing zones and blocks: ~1 s before).
+  const ringBands = new WeakMap();
+  function bandsOf(ring) {
+    let B = ringBands.get(ring);
+    if (B) return B;
+    let y0 = Infinity, y1 = -Infinity;
+    for (const p of ring) { if (p[1] < y0) y0 = p[1]; if (p[1] > y1) y1 = p[1]; }
+    const n = Math.max(1, Math.round(Math.sqrt(ring.length))), h = (y1 - y0) / n || 1, bands = Array.from({ length: n }, () => []);
+    const at = y => Math.min(n - 1, Math.max(0, Math.floor((y - y0) / h)));
+    for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
+      const a = ring[i][1], b = ring[j][1];
+      for (let k = at(Math.min(a, b)), e = at(Math.max(a, b)); k <= e; k++) bands[k].push(i);
+    }
+    B = { bands, at }; ringBands.set(ring, B);
+    return B;
+  }
   function pointInRing(x, y, ring) {
     let inside = false;
+    if (ring.length > 64) {
+      const { bands, at } = bandsOf(ring);
+      for (const i of bands[at(y)]) {
+        const j = i ? i - 1 : ring.length - 1, [xi, yi] = ring[i], [xj, yj] = ring[j];
+        if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
+      }
+      return inside;
+    }
     for (let i = 0, j = ring.length - 1; i < ring.length; j = i++) {
       const [xi, yi] = ring[i], [xj, yj] = ring[j];
       if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
@@ -861,7 +897,7 @@
   function secondUnitSite(r) {
     let s = suSites.get(r); if (s) return s;
     const ms = {}; for (const e of r.events || []) if (!ms[e.phase] || e.date < ms[e.phase]) ms[e.phase] = e.date;
-    s = { key: `su:${r.uid || r.ref}`, title: r.address || r.ref, municipality: r.municipality, lat: r.lat, lng: r.lng,
+    s = { key: `su:${r.uid || r.ref}`, title: (r.address && displayAddress(r.address)) || r.ref, municipality: r.municipality, lat: r.lat, lng: r.lng,
       phase: r.phase === 'completed' ? 'completed' : r.phase === 'cancelled' ? 'cancelled' : 'construction',
       kinds: ['permit'], records: [r], milestones: ms, timeline: [], units: r.units, types: ['apartment'], unitMix: { apartment: 1 }, buildout: null, secondUnit: true };
     suSites.set(r, s);
@@ -1673,7 +1709,7 @@
     };
     // A block of separate proposals is titled as a block (SPEC 1.9): its streets and how many draft
     // / site plans it holds still to build — not one file's address.
-    let title = (hasAddr(best) && best.address) || best.ref || '(no address)';
+    let title = (hasAddr(best) && displayAddress(best.address)) || best.ref || '(no address)';
     if (fv.lands.length >= 2) {
       const open = fv.files.filter(f => f.live && f.land != null && ['draft', 'siteplan'].includes(f.kind) && f.phase !== 'completed');
       const streetOf = a => String(a || '').split(/\s+(?:&|and)\s+|[,;]/i)[0].replace(/^[\d\s&,-]+/, '').replace(/\b(rd|road|dr|drive|st|street|ave|avenue|blvd|boulevard|pkwy|parkway|cres|crescent|ln|lane|ct|court|way|trl|trail|sdrd|e|w|n|s|east|west|north|south)\b\.?/gi, ' ').replace(/\s+/g, ' ').trim()
@@ -1809,7 +1845,7 @@
     isSecondUnitConversion, holdSecondUnits, secondUnitSite, isCondoConversion, isRegisteredCondo,
     dedupeRecords,
     PHASES, CANCELLED, ALL_PHASES, PHASE_BY_KEY, SMALL_SITE_UNITS, isHolding,
-    phaseFromStatus, detectFields, parseDate, normalizeAddress, normalizeRecord,
+    phaseFromStatus, detectFields, parseDate, normalizeAddress, displayAddress, normalizeRecord,
     representativePoint, buildProjects, closeStalePermits, inferBlankPermits, isBlankPermit, buildingsListed, permitBase, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
     canonRef, fileId, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, keyAliases, legacyNormalizeAddress, isNewBuild,
     PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf, lastActivityOf, proposedStateOf, dormantOf, DORMANT_YEARS,

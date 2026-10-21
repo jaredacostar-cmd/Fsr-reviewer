@@ -733,7 +733,7 @@
     const ceRows = window.PeelCapitalEA ? window.PeelCapitalEA.watchRows(watch) : [];
     const nCh = list.filter(x => x.ch).length;
     $('#watch-head').textContent = watch.size ? `${fmtNum(watch.size)} watched${nCh ? ` · ${nCh} changed this week` : ''}` : '';
-    box.innerHTML = list.length || ceRows.length ? ceRows.join('') + list.map(({ p, ch }) => `<li><button type="button" data-watch-open="${esc(p.key)}">${dot(p.phase)}<span><span class="t">★ ${esc(p.title)}</span><span class="m">${ch ? `<strong class="watch-ch">${esc(ch)}</strong> · ` : ''}${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${p.units ? ` · ${fmtNum(p.units)} units` : ''}</span></span></button></li>`).join('')
+    box.innerHTML = list.length || ceRows.length ? ceRows.join('') + list.map(({ p, ch }) => `<li><button type="button" data-watch-open="${esc(p.key)}">${dot(p.phase)}<span><span class="t">★ ${esc(p.title)}</span><span class="m">${ch ? `<strong class="watch-ch">${esc(ch)}</strong> · ` : ''}${esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${p.units ? ` · ${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'}` : ''}</span></span></button></li>`).join('')
       : '<li class="muted small">Tap ☆ Watch on a development to follow it here.</li>';
     const wk = $('#week-watch-n'); if (wk) { wk.hidden = !nCh; wk.textContent = `★${nCh}`; }
   }
@@ -791,6 +791,9 @@
     // Phase 6: full-snapshot load state (startup index paints first; the detail
     // view awaits the full records).
     fullSnapshotReady: () => fullLoaded, whenFullSnapshot: () => loadFullSnapshot(),
+    // The developments are in (the index painted, or the full snapshot or live load finished): until then
+    // an empty list means loading, not "no developments match".
+    developmentsReady: () => indexPainted || fullLoaded,
     getAnalysisSnap: () => analysisSnap, setAnalysisSnap,
     watch, removed, disabled, renderWatch,
     inflight: () => inflight,

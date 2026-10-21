@@ -79,7 +79,7 @@
     const hit = ql && p.records.find(r => r.ref && r.ref.toLowerCase().startsWith(ql));
     const ref = (hit && hit.ref) || (ls && ls.ref) || '';
     const A = App().state.areas, sp = A && (p.sp || []).length ? (A.secondaryPlans.find(a => a.id === p.sp[0]) || {}).name : '';
-    return [p.municipality, P.PHASE_BY_KEY[p.phase].label, p.units ? `${fmtNum(p.units)} units` : '', ref, sp].filter(Boolean).map(esc).join(' · ');
+    return [p.municipality, P.PHASE_BY_KEY[p.phase].label, p.units ? `${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'}` : '', ref, sp].filter(Boolean).map(esc).join(' · ');
   }
   function renderSug() {
     sugEl.hidden = !sugItems.length;

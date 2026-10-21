@@ -383,7 +383,7 @@
   }
   function devUnitsHTML(p, open, opts = {}) {
     const b = p.buildout, e = App().empOf(p);
-    const sum = [b ? `${fmtNum(b.planned)} planned · ${fmtNum(b.remaining)} left` : p.units ? `${fmtNum(p.units)} units` : '', e && e.jobs ? `~${fmtNum(e.jobs)} jobs` : ''].filter(Boolean).join(' · ');
+    const sum = [b ? `${fmtNum(b.planned)} planned · ${fmtNum(b.remaining)} left` : p.units ? `${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'}` : '', e && e.jobs ? `~${fmtNum(e.jobs)} jobs` : ''].filter(Boolean).join(' · ');
     return `<details class="sect" id="dev-units"${open ? ' open' : ''}><summary><h2 class="section-title" data-info="buildout">Units, jobs &amp; build-out</h2><span class="muted small sect-sum">${sum}</span></summary>
       ${DD().summaryHTML(p)}
       ${appBuildoutHTML(p)}
