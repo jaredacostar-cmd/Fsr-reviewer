@@ -360,7 +360,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     const com = await ev(() => +document.querySelector('#ledger-body .ldg-peel td:last-child strong').textContent.replace(/[^\d]/g, ''));
     expect(com > 0 && com < a.left, `committed only: ${com} of ${a.left}`);
     await page.click('[data-ledger-measure="people"]'); await wait(800);
-    expect(await ev(() => /people/.test(document.querySelector('#ledger-body .ldg-table caption').textContent)), 'the people switch');
+    expect(await ev(() => /^People by/.test(document.querySelector('#ledger-body .ldg-table caption').textContent)), 'the people switch');
     await page.click('[data-ledger-cut="all"]'); await page.click('[data-ledger-measure="units"]'); await wait(800);
     const key = await ev(() => document.querySelector('#ledger-body tr.ldg-row').dataset.pnlDev);
     await page.locator('#ledger-body tr.ldg-row').first().click(); await wait(2500);
