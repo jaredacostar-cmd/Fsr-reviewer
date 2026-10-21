@@ -9,6 +9,7 @@
  *                        FSR review (a page of its own: the Servicing panel with the cross-check)
  *   AREA                 the sections of an area (Peel, a municipality, a plan): Growth, Forecast,
  *                        Servicing, Capital (areaSpecFor(id): the map's area panel)
+ *   WORKSPACES           Servicing and Capital: a page and the map's other sub-views of its tab
  *   specFor(sec, p)      its panel spec for development p (null while its data loads)
  *
  * A section with more than one key takes its answer and figures from the first and adds the
@@ -35,14 +36,39 @@
     { id: 'servicing', title: 'Servicing', tab: 'svc', keys: ['svc:capacity'], wide: true },
     { id: 'capital', title: 'Capital', tab: 'dca', keys: ['dca:timing'], wide: true },
   ];
-  const AREA_BUILD = { 'dca:timing': () => (root.PeelDcaTab && root.PeelDcaTab.areaSpec ? root.PeelDcaTab.areaSpec() : null) };
-  // An area section's panel: the one its tab set for the area, else built here (null while loading).
-  function areaSpecFor(id) {
-    const s = AREA.find(x => x.id === id); if (!s || !s.keys) return null;
-    const k = s.keys[0], e = PN() && PN().get(k);
+  // The Servicing and Capital workspaces (step 4): each a page with the map's other sub-views of its
+  // tab as sections. host: the page a panel section shows on.
+  const WORKSPACES = {
+    servicing: { host: 'tight', secs: [
+      { id: 'capacity', title: 'Capacity', page: 'tight' },
+      { id: 'network', title: 'Network', tab: 'svc', keys: ['svc:network'] },
+      { id: 'alloc', title: 'Allocations', tab: 'svc', keys: ['svc:alloc'] },
+      { id: 'checks', title: 'Model checks', tab: 'svc', keys: ['svc:checks'] },
+    ] },
+    capital: { host: 'projects', secs: [
+      { id: 'timing', title: 'DC timing', page: 'projects' },
+      { id: 'eaflow', title: 'EA to construction', page: 'eaflow' },
+      { id: 'projects', title: 'Projects', tab: 'dca', keys: ['dca:projects'] },
+      { id: 'eas', title: 'EAs', tab: 'dca', keys: ['dca:eas'] },
+    ] },
+  };
+  const AREA_BUILD = {
+    'dca:timing': () => (root.PeelDcaTab && root.PeelDcaTab.areaSpec ? root.PeelDcaTab.areaSpec() : null),
+    'dca:projects': () => (root.PeelCapitalEA && root.PeelCapitalEA.projectsPanelSpec ? root.PeelCapitalEA.projectsPanelSpec() : null),
+    'dca:eas': () => (root.PeelCapitalEA && root.PeelCapitalEA.easPanelSpec ? root.PeelCapitalEA.easPanelSpec() : null),
+    // (Allocations sets its own panel when it renders)
+    'svc:alloc': () => { if (root.PeelDemandUI && root.PeelDemandUI.renderAlloc) root.PeelDemandUI.renderAlloc(); const e = PN() && PN().get('svc:alloc'); return e && e.scope === 'area' ? e.spec : null; },
+  };
+  // An area panel (Peel, the municipality filter): the one its tab set, else built here (null while loading).
+  function areaPanel(k) {
+    const e = PN() && PN().get(k);
     if (e && e.spec && e.scope === 'area') return e.spec;
     try { return AREA_BUILD[k] ? AREA_BUILD[k]() || null : null; } catch (err) { return null; }
   }
+  // An area section's panel (Growth in an area's Servicing and Capital).
+  function areaSpecFor(id) { const s = AREA.find(x => x.id === id); return s && s.keys ? areaPanel(s.keys[0]) : null; }
+  // A workspace section's panel (Servicing › Network, Capital › EAs …).
+  function wsSpecFor(ws, id) { const w = WORKSPACES[ws], s = w && w.secs.find(x => x.id === id); return s && s.keys ? areaPanel(s.keys[0]) : null; }
   const BY_ID = Object.fromEntries(SITE.map(s => [s.id, s]));
 
   // A tab's panel for development p: the one its tab set for this scope, else built here.
@@ -71,7 +97,7 @@
     return { ...first, lists, folds, onMount: mounts.length ? host => { for (const f of mounts) try { f(host); } catch (err) { /* that part stays empty */ } } : null };
   }
 
-  const api = { SITE, AREA, BY_ID, specFor, areaSpecFor };
+  const api = { SITE, AREA, WORKSPACES, BY_ID, specFor, areaSpecFor, wsSpecFor };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSections = api;
 })(typeof window !== 'undefined' ? window : globalThis);

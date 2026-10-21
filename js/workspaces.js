@@ -51,7 +51,13 @@
   // view opens on Check a site; a step up its trail opens Growth in an area there. Their map-view
   // chips, links and share links keep their own ids.
   const EXPLORE = ['growth', 'site', 'fsr', 'outlook', 'study'];
-  const SIDE = { explore: { label: 'Explore', what: 'A site, a plan or an area you draw: growth, servicing, capital, files, FSR' } };
+  // Capital (step 4): DC projects and EA to construction, one entry; the map's Projects and EAs are
+  // sections of DC projects' page (js/sections.js WORKSPACES).
+  const CAPITAL = ['projects', 'eaflow'];
+  const SIDE = {
+    explore: { label: 'Explore', what: 'A site, a plan or an area you draw: growth, servicing, capital, files, FSR' },
+    capital: { label: 'Capital', what: 'DC timing, EA to construction, projects, EAs' },
+  };
   // A site's page: the live map beside its sections, at the site, with what is around it: existing
   // water, sanitary and storm mains (from street zoom), the 2026 DC works, Region construction and the
   // EA study areas, and the developments; each a chip on the page.
@@ -59,7 +65,7 @@
   // Home's sidebar: by team (Servicing capacity with Planning), then Full map.
   const GROUPS = [
     ['Planning', ['explore', 'tight']],
-    ['Capital', ['projects', 'eaflow']],
+    ['Capital', ['capital']],
     ['Asset Management', ['pipes']],
   ];
   // Reference pages (Home's layout, no map, not a workspace): listed last in Home's sidebar.
@@ -127,7 +133,7 @@
   const defaultWs = last => (BY_ID[last] ? last : 'tight');
 
   // ---- Browser ----------------------------------------------------------------------------------
-  const api = { WS, GROUPS, EXPLORE, SIDE, SITE_MAP, BY_ID, LAYERS, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen, defaultWs };
+  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SITE_MAP, BY_ID, LAYERS, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen, defaultWs };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -403,6 +409,7 @@
   function openPage(id, o = {}) {
     // Explore: the site open, else the last of its views, else Growth in an area.
     if (id === 'explore') id = root.DevScope && root.DevScope.current && root.DevScope.current() ? 'site' : (EXPLORE.includes(store.get('lastWs', '')) ? store.get('lastWs', '') : 'growth');
+    if (id === 'capital') id = CAPITAL.includes(store.get('lastWs', '')) ? store.get('lastWs', '') : 'projects';
     if (id !== 'home' && !BY_ID[id] && !REF[id]) id = 'home';
     const w = BY_ID[id];
     if (w && w.scope === 'area') {
@@ -419,7 +426,7 @@
   function sideHTML() {
     const nW = weekRows().length, pref = store.get('startScreen', 'home');
     // (a guide's page lights How it works)
-    const isOn = id => page === id || (id === 'guides' && !!(REF[page] && REF[page].guide)) || (id === 'explore' && EXPLORE.includes(page));
+    const isOn = id => page === id || (id === 'guides' && !!(REF[page] && REF[page].guide)) || (id === 'explore' && EXPLORE.includes(page)) || (id === 'capital' && CAPITAL.includes(page));
     const item = (id, sub) => `<li><button type="button" class="home-ws${isOn(id) ? ' on' : ''}" data-ws-page="${id}"${isOn(id) ? ' aria-current="page"' : ''}><strong>${esc(pageName(id))}${id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</strong>${sub ? `<small>${esc(sub)}</small>` : ''}</button></li>`;
     // (This week covers capital and EA dates too: it sits under Home, not Planning)
     // (a phone: the list folds behind one button naming the page you are on; it opens grouped)

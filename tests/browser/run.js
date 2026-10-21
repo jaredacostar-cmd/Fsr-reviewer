@@ -242,6 +242,29 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(u.page === 'growth' && !u.dev && /Brampton/.test(u.name), `up the trail to Brampton (${u.page}, ${u.name})`);
   });
 
+  // Servicing and Capital: one entry each; the map's other sub-views of the tab are sections of the page,
+  // each the map panel's own answer.
+  await check('Servicing and Capital: the map\u2019s sub-views are sections of their page, with the map\u2019s answers', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
+    const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
+    expect(side.includes('capital') && !side.includes('projects') && !side.includes('eaflow'), `the sidebar: ${side.join()}`);
+    const st = 'h => String(h || "").replace(/<[^>]+>/g, "").replace(/\\s+/g, " ").trim()';
+    for (const [entry, ws, secs] of [['tight', 'servicing', ['network', 'alloc', 'checks']], ['capital', 'capital', ['projects', 'eas']]]) {
+      await page.click(`#home .home-side [data-ws-page="${entry}"]`); await wait(3000);
+      const bar = await ev(() => [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent));
+      expect(bar.length === 4, `${ws}: its sections ${bar.join()}`);
+      for (const id of secs) {
+        await page.click(`#home .page-sec[data-ws-wsec="${ws}:${id}"]`); await wait(3000);
+        const r = await ev(([ws, id, st]) => { const f = eval(st), s = PeelSections.wsSpecFor(ws, id); return { on: (document.querySelector('#home .page-sec.on') || {}).dataset, page: f(document.querySelector('#home .home-answer').innerHTML), map: s ? f(s.answer) : null }; }, [ws, id, st]);
+        expect(r.on && r.on.wsWsec === `${ws}:${id}`, `${ws} › ${id}: the bar`);
+        expect(r.map && r.page === r.map, `${ws} › ${id}: the page's answer is the map panel's ("${String(r.page).slice(0, 50)}" / "${String(r.map).slice(0, 50)}")`);
+      }
+    }
+    await page.click('#home .page-sec[data-ws-page="eaflow"]'); await wait(2500);
+    const ea = await ev(() => ({ page: PeelWorkspaces.page(), on: (document.querySelector('#home .page-sec.on') || {}).textContent, lit: (document.querySelector('#home .home-ws.on') || {}).dataset }));
+    expect(ea.page === 'eaflow' && ea.on === 'EA to construction' && ea.lit && ea.lit.wsPage === 'capital', `EA to construction is a section of Capital (${ea.page}, ${ea.on})`);
+  });
+
   // Plan areas: Growth in an area and the map's plan filter ("Show on the map") count the same
   // developments the same way (a straddling one by its share), for every plan, sub-area and precinct.
   await check('plan areas: Growth in an area and the map’s plan filter agree, precincts included', browser, {}, async ({ page, ev }, expect) => {

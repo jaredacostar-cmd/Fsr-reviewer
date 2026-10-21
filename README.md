@@ -1463,6 +1463,15 @@ Review an FSR, Forecast and Study area are its views.
   Capital › DC timing panels. They are Region-wide (the plants and the DC program serve more than one
   municipality), and say so inside a municipality or a plan.
 
+## Servicing and Capital: one page each, the map's sub-views as sections
+
+- **Servicing capacity**: Capacity (its own page: limits, the 90% trigger, the uncommitted reserve,
+  no relief in time) and the map's **Network**, **Allocations** and **Model checks** as sections.
+- **Capital** (one sidebar entry for what were DC projects and EA to construction): **DC timing**,
+  **EA to construction** (its own page) and the map's **Projects** and **EAs** as sections.
+- Each section is the map's own panel (`js/sections.js` `WORKSPACES`), built on demand when its
+  tab hasn't been opened, so the page and the map read the same.
+
 ## Build-out: planned vs permitted vs left to build
 
 For each project with a unit count on its planning applications:
