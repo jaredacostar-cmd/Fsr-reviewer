@@ -216,10 +216,13 @@
     // The smallest size for each reach's flow, then never smaller than a reach upstream of it.
     const IDX = SIZES.map((d, k) => k).filter(k => SIZES[k] >= r.dMin);
     const hmin = R.map(rc => { const k = IDX.find(k => { const D = SIZES[k] / 1000, sMin = minSlope(D, rc.q / 1000, r); return sMin != null && sMin <= maxSlope(D, r); }); return k == null ? null : k; });
-    if (hmin.some(k => k == null)) { const i = hmin.findIndex(k => k == null); return { ok: false, why: `${R[i].q.toFixed(1)} L/s is more than the largest pipe carries within 3.0 m/s full and the 0.7 flow ratio`, reasons: [], source: SOURCE }; }
+    if (hmin.some(k => k == null) && !opts.dmm) { const i = hmin.findIndex(k => k == null); return { ok: false, why: `${R[i].q.toFixed(1)} L/s is more than the largest pipe carries within 3.0 m/s full and the 0.7 flow ratio`, reasons: [], source: SOURCE }; }
     const reasons = [];
+    // A size chosen (opts.dmm): every reach at that size, the one try (no going up a size).
+    const pickK = opts.dmm ? SIZES.indexOf(+opts.dmm) : -1;
+    if (opts.dmm && pickK < 0) return { ok: false, cover, why: `${opts.dmm} mm is not a standard size`, reasons: [], source: SOURCE };
     for (let k = 0; k < SIZES.length; k++) {
-      const idx = R.map((_, i) => Math.min(SIZES.length - 1, hmin[i] + k));
+      const idx = pickK >= 0 ? R.map(() => pickK) : R.map((_, i) => Math.min(SIZES.length - 1, hmin[i] + k));
       for (const i of order) for (const j of into[R[i].from]) idx[i] = Math.max(idx[i], idx[j]);
       const dmm = idx.map(x => SIZES[x]);
       const big = into[root].find(i => conn && conn.dmm && dmm[i] > conn.dmm);
@@ -227,7 +230,7 @@
       const res = netSizes(net, conn, dmm, order, outOf, into, root, cover, step, r, pen);
       if (res.ok) return { ...res, cover, rules: r, source: SOURCE };
       reasons.push(res.why);
-      if (res.stop || k > 0 && idx.every(x => x === SIZES.length - 1)) break;
+      if (pickK >= 0 || res.stop || k > 0 && idx.every(x => x === SIZES.length - 1)) break;
     }
     const short = reasons.map(x => [x, +((/about ([\d.]+) m below/.exec(x) || [])[1])]).filter(([, m]) => m > 0).sort((a, b) => a[1] - b[1]);
     const why = (short[0] && short[0][0]) || reasons.find(x => !/can't carry/.test(x)) || reasons[0] || 'no size works';
