@@ -1472,6 +1472,15 @@ Review an FSR, Forecast and Study area are its views.
 - Each section is the map's own panel (`js/sections.js` `WORKSPACES`), built on demand when its
   tab hasn't been opened, so the page and the map read the same.
 
+## Reference and This week
+
+- **Reference** is one sidebar entry: **Help**, **How it works** (and each guide), the **Glossary**,
+  **Data sources** and **Data checks**. The last two are the map's Records › Sources and Data checks
+  (the old Data tab), until now only in the full map.
+- **This week** carries **Your watch list** (the developments starred ☆ Watch, each with its stage
+  and whether it changed this week, changed ones first) and the week's **capacity alerts** from the
+  weekly feed, both of which were only in the full map's Watch tab.
+
 ## Build-out: planned vs permitted vs left to build
 
 For each project with a unit count on its planning applications:

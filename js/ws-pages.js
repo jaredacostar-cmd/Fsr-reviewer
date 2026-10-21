@@ -548,7 +548,7 @@
   }
   // The Servicing and Capital workspaces (js/sections.js WORKSPACES): their pages, and the map's other
   // sub-views of the tab shown on the host page (Servicing capacity, DC projects), header kept.
-  const wsSec = { servicing: null, capital: null };
+  const wsSec = { servicing: null, capital: null, reference: null };
   function wsBar(ws, on) { const W = root.PeelSections && root.PeelSections.WORKSPACES[ws]; return W ? sectionBar(W.secs, on, 'data-ws-wsec', `${ws}:`) : ''; }
   function wsSection(ws, m) {
     const SE = root.PeelSections, id = wsSec[ws], sec = SE && id && SE.WORKSPACES[ws].secs.find(x => x.id === id);
@@ -747,7 +747,7 @@
   document.addEventListener('click', e => {
     // (an area's Growth section is its own page: its own content again; the same for a workspace's pages)
     const gp = e.target.closest && e.target.closest('.page-secs [data-ws-page]');
-    if (gp) { if (gp.dataset.wsPage === 'growth') gSec = 'growth'; if (gp.dataset.wsPage === 'tight') wsSec.servicing = null; if (gp.dataset.wsPage === 'projects' || gp.dataset.wsPage === 'eaflow') wsSec.capital = null; }
+    if (gp) { if (gp.dataset.wsPage === 'growth') gSec = 'growth'; if (gp.dataset.wsPage === 'tight') wsSec.servicing = null; if (gp.dataset.wsPage === 'projects' || gp.dataset.wsPage === 'eaflow') wsSec.capital = null; if (['help', 'guides', 'glossary', 'data'].includes(gp.dataset.wsPage)) wsSec.reference = null; }
     const wb = e.target.closest && e.target.closest('[data-ws-wsec]');
     if (wb && document.getElementById('home') && document.getElementById('home').contains(wb)) {
       e.preventDefault(); e.stopPropagation();
@@ -897,6 +897,14 @@
     const devRow = (k, html) => ({ attrs: { 'data-ws-pick': k, 'data-ws-as': 'site' }, html });
     const W0 = (a.lists.find(l => l.title === 'This week') || { rows: [] }).rows;
     const pts = [...moved, ...added].map(x => byKey.get(x.key)).filter(Boolean);
+    // Step 5: the watch list (the full map's Watch tab) on the page: the developments starred ☆ Watch,
+    // each with its stage and whether it changed this week, then the week's capacity alerts.
+    const watchKeys = (U.store && U.store.get('watch', [])) || [], changed = new Map([...moved.map(m => [m.key, `${lab(m.from)} → ${lab(m.to)}`]), ...added.map(a => [a.key, 'new this week'])]);
+    const dorm = (App().state.projects && App().state.projects.dormant) || [], byKeyAll = k => byKey.get(k) || dorm.find(q => q.key === k);
+    const watched = watchKeys.map(byKeyAll).filter(Boolean).sort((a, b) => (changed.has(b.key) ? 1 : 0) - (changed.has(a.key) ? 1 : 0));
+    const AL = root.PeelAlerts, feed = AL && AL.last ? AL.last() : null;
+    if (!feed && AL && AL.load && !week.asked) { week.asked = true; AL.load().then(() => { if (W() && W().renderPage) W().renderPage(true); }); }
+    const infra = feed && AL.infraItems ? AL.infraItems(feed) : [];
     return { id: 'week', eyebrow: eyebrow('week'), name: 'What changed since the last update?', status: null, identity: a.head.identity,
       answer: W0.length ? `<strong>${fmtNum(W0.length)}</strong> change${W0.length === 1 ? '' : 's'} since the last data update: ${[moved.length && `${fmtNum(moved.length)} file${moved.length === 1 ? '' : 's'} moved stage`, added.length && `${fmtNum(added.length)} new file${added.length === 1 ? '' : 's'}`, ce.length && `${fmtNum(ce.length)} capital or EA date${ce.length === 1 ? '' : 's'}`].filter(Boolean).join(', ')}.` : 'Nothing changed since the last data update.',
       figures: [
@@ -909,6 +917,8 @@
         { title: 'Moved stage', rows: moved.map(m => devRow(m.key, `<div class="pnl-r-top"><span class="pnl-r-name">${esc(m.title)}</span><span class="pnl-r-year">${esc(lab(m.from))} → ${esc(lab(m.to))}</span></div>${flag(m.key) ? `<small class="pnl-r-line">${flag(m.key)}</small>` : ''}`)), total: moved.length },
         { title: 'New files', rows: added.map(m => devRow(m.key, `<div class="pnl-r-top"><span class="pnl-r-name">${esc(m.title)}</span><span class="pnl-r-year">${esc(lab(m.phase))}</span></div><small class="pnl-r-line">${esc(m.municipality || '')}${flag(m.key)}</small>`)), total: added.length },
         { title: 'Capital and EA dates', rows: ce.map(it => ({ attrs: { 'data-ws-go': 'week', 'data-ws-ce': it.ce }, html: `<small class="pnl-r-line">${esc(it.text)}</small>` })), total: ce.length },
+        { title: 'Your watch list', rows: watched.length ? watched.map(p => devRow(p.key, `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year${changed.has(p.key) ? ' t-tight' : ''}">${esc(changed.get(p.key) || lab(p.phase))}</span></div><small class="pnl-r-line">${esc(p.municipality || '')} · ${fmtNum(p.units || 0)} units${changed.has(p.key) ? ' · changed this week' : ''}</small>`)) : [{ kv: true, html: '<span class="muted small">Star a development with ☆ Watch (its page or the map) to follow it here.</span>' }], total: watched.length },
+        infra.length ? { title: 'Capacity alerts this week', rows: infra.map(it => ({ kv: true, html: `<small class="pnl-r-line"><strong>${esc(AL.kindLabel(it.kind))}</strong> · ${esc(it.text)}</small>` })), total: infra.length } : null,
       ],
       map: { svg: devsMap(((App() && App().state.filtered) || []), pts), attrs: { 'data-ws-go': 'week' }, label: 'Open This week on the map', caption: '<span class="hm-key hm-key-hl"></span> changed this week <span class="hm-key hm-key-dev"></span> developments of 50+ units' },
       method: 'Changes between the last two data updates: files whose stage moved, files listed for the first time (not those already completed), Region capital projects and EAs with a review period closing or a DC-matched date moved later. "On a tight plant": the file drains to a wastewater plant past its 90% trigger at build-out.',
@@ -977,7 +987,17 @@
   const [guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast] = ['guides', 'roles', 'approvals', 'flows', 'network', 'capacity', 'fsrguide', 'capital', 'targets', 'forecast'].map(ref);
   const glossary = () => (root.PeelGlossary ? root.PeelGlossary.page() : loading('glossary', 'Loading…'));
   const help = () => (root.PeelTips && root.PeelTips.helpPage ? root.PeelTips.helpPage() : loading('help', 'Loading…'));
-  const BUILD = { home, tight, site, growth, outlook, projects, eaflow, week, fsr, pipes, study, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, help };
+  // Data sources (Reference, step 5): the map's Records › Sources panel on a page (the old Data tab,
+  // map-only until now); Data checks is its section.
+  function data() {
+    const SE = root.PeelSections, s = SE ? SE.areaPanel('records:sources') : null;
+    if (!s) return loading('data', 'Loading the sources…');
+    const h = s.head || {};
+    return wsSection('reference', { id: 'data', eyebrow: 'Reference', name: h.name || 'Where does the data come from?', status: h.status, identity: h.identity, answer: s.answer, figures: s.figures, chart: s.chart,
+      lists: s.lists || [], folds: s.folds, method: s.method, sources: s.sources,
+      actions: [{ label: 'Refresh and manage sources', attrs: { 'data-ws-full': '', 'data-at': 'records:sources' }, primary: true }] });
+  }
+  const BUILD = { home, tight, site, growth, outlook, projects, eaflow, week, fsr, pipes, study, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, help, data };
   // Each workspace's guide (How it works), a button in its footer.
   const GUIDE_OF = { site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capital', eaflow: 'capital', pipes: 'network' };
   // A page's header count opens its workspace's full table (as the map panels' do).
@@ -990,6 +1010,10 @@
     const onPage = a => { if (!a || !ws) return a; if (a['data-full-table'] != null) return { 'data-ws-go': ws, 'data-ws-fulltable': '1' }; if (a['data-ss']) return { 'data-ws-go': ws, 'data-ws-ss': a['data-ss'] }; if (a['data-ce-open']) return { 'data-ws-go': ws, 'data-ws-ce': a['data-ce-open'] }; return a; };
     if (m.figures && ws) m.figures = m.figures.map(f => (f && f.attrs && !f.attrs['data-ws-go'] && !f.attrs['data-ws-page'] ? { ...f, attrs: onPage(f.attrs) } : f));
     if (g && m.actions) m.actions = [...m.actions, { label: `${g[1]} ›`, attrs: { 'data-ws-page': g[0] }, title: `How it works: ${g[2]}` }];
+    // Reference (step 5): Help, How it works (and each guide), the Glossary and Data sources share a bar.
+    const REFW = { help: 'help', guides: 'guides', glossary: 'glossary', data: 'sources' }, R = W() && W().REF;
+    const refOn = REFW[id] || (R && R[id] && R[id].guide ? 'guides' : null);
+    if (refOn && root.PeelSections) m.top = `${wsBar('reference', id === 'data' && wsSec.reference ? wsSec.reference : refOn)}${m.top || ''}`;
     return m;
   }
   Object.assign(api, { build, tilesSVG, tileCredit, tilesOk, eaMap, eaTimelineHTML, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame });

@@ -44,7 +44,8 @@ test('easy to reach: Home sidebar (Reference), the Stage block, a site’s stage
   const w = src('js/workspaces.js');
   // (a guide since the reference pages: listed on How it works, which the sidebar carries)
   assert.match(w, /\['approvals', 'How approvals work'\][^\n]*REF\[id\] = \{ label, guide: true \};/);
-  assert.match(w, /<h2 class="home-g">Reference<\/h2><ul>\$\{Object\.keys\(REF\)\.filter\(id => !REF\[id\]\.guide\)\.map\(id => item\(id, REF\[id\]\.what\)\)\.join\(''\)\}<\/ul>/);
+  // (step 5: one Reference entry; Help, How it works, the Glossary and Data sources share its bar)
+  assert.match(w, /<h2 class="home-g">Reference<\/h2><ul>\$\{item\('reference', SIDE\.reference\.what\)\}<\/ul>/);
   assert.match(w, /if \(id !== 'home' && !BY_ID\[id\] && !REF\[id\]\) id = 'home';/);
   assert.match(w, /\/\^p:\/\.test\(w\) && \(BY_ID\[w\.slice\(2\)\] \|\| REF\[w\.slice\(2\)\]\)/, 'a link to the page opens it');
   assert.match(src('index.html'), /<p class="small stage-how"><button type="button" class="btn small link" data-ws-page="approvals">How approvals map to these stages →<\/button><\/p>/);

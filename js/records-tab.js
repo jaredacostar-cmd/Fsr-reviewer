@@ -156,7 +156,7 @@
     };
   }
 
-  const api = { render, syncDevHome, peelHTML, sourcesHTML, checksHTML, fileHTML, caveats, filesPanelSpec };
+  const api = { render, syncDevHome, peelHTML, sourcesHTML, checksHTML, fileHTML, caveats, filesPanelSpec, sourcesPanelSpec, checksPanelSpec };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelRecordsTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);

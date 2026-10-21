@@ -57,6 +57,8 @@
   const SIDE = {
     explore: { label: 'Explore', what: 'A site, a plan or an area you draw: growth, servicing, capital, files, FSR' },
     capital: { label: 'Capital', what: 'DC timing, EA to construction, projects, EAs' },
+    // Reference (step 5): Help, How it works, the Glossary and Data sources, one entry.
+    reference: { label: 'Reference', what: 'Help, how it works, the glossary, data sources and checks' },
   };
   // A site's page: the live map beside its sections, at the site, with what is around it: existing
   // water, sanitary and storm mains (from street zoom), the 2026 DC works, Region construction and the
@@ -69,7 +71,7 @@
     ['Asset Management', ['pipes']],
   ];
   // Reference pages (Home's layout, no map, not a workspace): listed last in Home's sidebar.
-  const REF = { help: { label: 'Help', what: 'Start here, guides, the tour, what’s new' }, guides: { label: 'How it works', what: 'Nine guides: approvals, flows, capacity, the forecast…' }, glossary: { label: 'Glossary', what: 'The terms in plain words' } };
+  const REF = { help: { label: 'Help', what: 'Start here, guides, the tour, what’s new' }, guides: { label: 'How it works', what: 'Nine guides: approvals, flows, capacity, the forecast…' }, glossary: { label: 'Glossary', what: 'The terms in plain words' }, data: { label: 'Data sources', what: 'Every source, its date, and the data checks' } };
   // The guides (js/reference.js): pages of their own, listed on How it works, not in the sidebar.
   for (const [id, label] of [['roles', 'Who decides what'], ['approvals', 'How approvals work'], ['flows', 'From homes to flows'], ['network', 'How sewage and water travel'], ['capacity', 'How capacity is checked'], ['fsrguide', 'What an FSR should cover'], ['capital', 'How a capital project gets built'], ['targets', 'Growth targets and forecasts'], ['forecast', 'How the forecast is timed']]) REF[id] = { label, guide: true };
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
@@ -410,6 +412,7 @@
     // Explore: the site open, else the last of its views, else Growth in an area.
     if (id === 'explore') id = root.DevScope && root.DevScope.current && root.DevScope.current() ? 'site' : (EXPLORE.includes(store.get('lastWs', '')) ? store.get('lastWs', '') : 'growth');
     if (id === 'capital') id = CAPITAL.includes(store.get('lastWs', '')) ? store.get('lastWs', '') : 'projects';
+    if (id === 'reference') id = 'help';
     if (id !== 'home' && !BY_ID[id] && !REF[id]) id = 'home';
     const w = BY_ID[id];
     if (w && w.scope === 'area') {
@@ -426,13 +429,13 @@
   function sideHTML() {
     const nW = weekRows().length, pref = store.get('startScreen', 'home');
     // (a guide's page lights How it works)
-    const isOn = id => page === id || (id === 'guides' && !!(REF[page] && REF[page].guide)) || (id === 'explore' && EXPLORE.includes(page)) || (id === 'capital' && CAPITAL.includes(page));
+    const isOn = id => page === id || (id === 'guides' && !!(REF[page] && REF[page].guide)) || (id === 'explore' && EXPLORE.includes(page)) || (id === 'capital' && CAPITAL.includes(page)) || (id === 'reference' && !!REF[page]);
     const item = (id, sub) => `<li><button type="button" class="home-ws${isOn(id) ? ' on' : ''}" data-ws-page="${id}"${isOn(id) ? ' aria-current="page"' : ''}><strong>${esc(pageName(id))}${id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</strong>${sub ? `<small>${esc(sub)}</small>` : ''}</button></li>`;
     // (This week covers capital and EA dates too: it sits under Home, not Planning)
     // (a phone: the list folds behind one button naming the page you are on; it opens grouped)
     return `<nav class="home-side${menuOpen ? ' open' : ''}" aria-label="Workspaces"><button type="button" class="home-menu-btn" data-home-menu aria-expanded="${menuOpen}"><span aria-hidden="true">☰</span> ${esc(pageName(page))} <span class="muted small">· all pages</span> <span aria-hidden="true">${menuOpen ? '▴' : '▾'}</span></button><ul>${item('home', 'The briefing')}${item('week', BY_ID.week.what)}</ul>
       ${GROUPS.map(([g, ids]) => `<h2 class="home-g">${esc(g)}</h2><ul>${ids.map(id => item(id, (SIDE[id] || BY_ID[id]).what)).join('')}</ul>`).join('')}
-      <h2 class="home-g">Reference</h2><ul>${Object.keys(REF).filter(id => !REF[id].guide).map(id => item(id, REF[id].what)).join('')}</ul>
+      <h2 class="home-g">Reference</h2><ul>${item('reference', SIDE.reference.what)}</ul>
       <button type="button" class="home-ws home-full" data-ws-full><strong>Full map</strong><small>Every layer, filter and tool</small></button>
       <label class="home-pref small">Start screen <select data-ws-start>${START.map(([k, t]) => `<option value="${k}"${pref === k ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
     </nav>`;
