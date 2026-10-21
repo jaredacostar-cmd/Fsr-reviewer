@@ -155,8 +155,12 @@ test('Growth drill-down: Peel → municipality → plan → precinct / sub-area 
   assert.match(s, /\{ title: 'Employment', rows: empRows/);
   // Mississauga's plans are character areas.
   assert.match(s, /n\.kind === 'plan' && muni === 'Mississauga' \? 'character area'/);
-  // A stage with no files still shows the list (and its stage switch).
-  assert.match(s, /No files \$\{gStage === 'all' \? 'with planned units'/);
+  // A stage with no files still shows the table (and its stage switch).
+  assert.match(s, /empty: `No developments \$\{gStage === 'all' \? 'with planned units'/);
+  // The developments table: grouped by the next level down (each group opens its level), by stage or
+  // by site servicing permit; under the map, its treemap.
+  assert.match(s, /const groups = by === 'area' \? kidRows\.map\(\(\[c, rows\]\) => \(\{ key: c\.id, name: c\.name, sub: kind\(c\), drill: c\.id, rows \}\)\)/);
+  assert.match(s, /after: treemap \}/);
 });
 
 test('a development’s stage on the chart: its layer; an approved one by whether most of it is permitted', () => {

@@ -74,5 +74,4 @@ test('file tree: site servicing permits go under the file they follow, the rest 
   assert.ok(html.indexOf('ssp-foot') > html.indexOf('PRE-1'), 'after the tree');
   assert.match(src('js/devtab.js'), /PeelDcGate\.treeOpts\(p, d\)/);
   assert.match(src('js/records-tab.js'), /PeelDcGate\.treeOpts\(p, d\)/);
-  assert.match(src('js/ws-pages.js'), /PeelDcGate\.treeOpts\(p, d\)/);
 });
