@@ -195,8 +195,9 @@ pipesUpstream(memberPipes, pipes)   // pure: Uint8Array marking every pipe whose
   path.
 - **Same sewershed:** `{dcTarget(ln)} ∪ upstreamOf(...)` catchments → `SD().svcIds(p, 'dr')`.
   Exclude developments already counted in groups 1 and 2.
-- **Which developments count:** approved / proposed (built since 2021 as a context line, see Prototype findings); the base filter is `dcConnectors`', `svcLayerOf(p)` in built /
-  approved / proposed, with a non-zero estimate. Use `D.estimate` for units, people and peak wet.
+- **Which developments count:** `svcLayerOf(p)` approved or proposed, with a non-zero
+  estimate. Built since 2021 is shown as a context line (see Prototype findings). Use
+  `D.estimate` for units, people and peak wet.
 - **Cache** on `MP().scenarioKey()` like `dcAnalysis`, so a scenario change recomputes.
 - **List counts** for every project at once: build the per-project marks lazily, then cache. If
   computing all 95 wastewater projects up front is too slow on a phone, compute the list counts
@@ -285,8 +286,8 @@ projects. These numbers are behind the mock-up.
 
 1. **Rename the existing "Projects" sub-view to "Contracts"?** That avoids two "projects" chips.
    My recommendation: yes.
-2. **Which developments count?** My proposal is built + approved + proposed (the current
-   `dcConnectors` rule). Should pre-application be included too, or should built be excluded?
+2. **Which developments count?** After the prototype, I recommend approved + proposed in the
+   groups, with built since 2021 as a context line. Should pre-application be included too?
 3. **Group 3 (same sewershed):** show it folded, or leave it out at first? It is broad and can
    be large near the trunks.
 4. **Labs first?** Ship behind a Labs switch like Funding until the counts have been checked
