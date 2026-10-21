@@ -86,13 +86,22 @@ function objectIdOf(record) {
 function isObjId(v) { return (typeof v === 'number' || typeof v === 'string') && /^-?\d+$/.test(String(v).trim()); }
 
 /**
- * Link to the record inside its ArcGIS layer: a FeatureServer query by
- * object ID.
+ * Link to the record inside its ArcGIS layer.
  * @param {object} record a normalised record (js/phases.js ~425)
  * @param {string} serviceUrl the record's layer URL (resolved by the caller
  *   from state.sources / snapshot.sources[] by record.sourceId; see above)
+ * @param {object} [opts] `{ format: 'html' }` for the ArcGIS page a person
+ *   reads (every field as a table, in the browser); the default `pjson` is
+ *   the machine-readable record the exports carry
  * @returns {string|null} the URL, or null when the object ID or the layer
  *   URL is not available on the record
+ *
+ * A FeatureServer / MapServer root (Mississauga's services) is not a layer:
+ * a query on the root needs layerDefs and returns an error for objectIds
+ * alone, so the layer index is taken from the record's sourceId
+ * (`mis-devapps/6` -> layer 6). The feature page (`…/6/123`) shows every
+ * field; a root with no layer index on the record falls back to a query
+ * with every field (`outFields=*`).
  *
  * GAP: records do not store their layer URL, so the caller must join on
  * `record.sourceId` (root id, `sourceId.split('/')[0]`). Records also have no
@@ -100,16 +109,19 @@ function isObjId(v) { return (typeof v === 'number' || typeof v === 'string') &&
  * or parsed out of `record.uid` (snapshot records). uid's random-hex
  * fallback yields no link.
  */
-function recordSourceUrl(record, serviceUrl) {
+function recordSourceUrl(record, serviceUrl, opts) {
   if (!record || serviceUrl == null) return null;
   const id = objectIdOf(record);
   if (id == null) return null;
-  const base = String(serviceUrl).replace(/\/+$/, '');
+  let base = String(serviceUrl).replace(/\/+$/, '');
   if (!base) return null;
-  // Layer endpoints (…/FeatureServer/9, …/MapServer/0) address the feature
-  // directly; a FeatureServer root needs a query.
-  if (/\/\d+$/.test(base)) return `${base}/${id}?f=pjson`;
-  return `${base}/query?objectIds=${encodeURIComponent(id)}&f=pjson`;
+  const f = opts && opts.format === 'html' ? 'html' : 'pjson';
+  // A service root: the layer from the record's sourceId (`mis-devapps/6`).
+  const layer = /\/(FeatureServer|MapServer)$/i.test(base) && typeof record.sourceId === 'string' ? (/\/(\d+)$/.exec(record.sourceId) || [])[1] : null;
+  if (layer != null) base = `${base}/${layer}`;
+  // Layer endpoints (…/FeatureServer/9, …/MapServer/0) address the feature directly.
+  if (/\/\d+$/.test(base)) return `${base}/${id}?f=${f}`;
+  return `${base}/query?objectIds=${encodeURIComponent(id)}&outFields=*&f=${f}`;
 }
 
 /**

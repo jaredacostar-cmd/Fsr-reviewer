@@ -49,9 +49,24 @@ test('recordSourceUrl: layer URL (…/9) links the feature directly', () => {
   assert.equal(url, 'https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Planning_Land_Use_Development/FeatureServer/9/12345?f=pjson');
 });
 
-test('recordSourceUrl: FeatureServer root uses a query by object id', () => {
+test('recordSourceUrl: a FeatureServer root takes the layer from the sourceId (Mississauga)', () => {
+  // A root-level query needs layerDefs: objectIds alone is an error, so the layer is named.
+  const root = 'https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/DevApps_September2026_WFL1/FeatureServer';
+  assert.equal(P.recordSourceUrl(snapRec({ uid: 'mis-devapps/6:22', sourceId: 'mis-devapps/6' }), root), `${root}/6/22?f=pjson`);
+  assert.equal(P.recordSourceUrl(snapRec({ uid: 'mis-devapps/6:22', sourceId: 'mis-devapps/6' }), `${root}/`), `${root}/6/22?f=pjson`);
+});
+
+test('recordSourceUrl: a root with no layer on the record queries every field', () => {
   const url = P.recordSourceUrl(liveRec(), 'https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/DevApps_September2026_WFL1/FeatureServer');
-  assert.equal(url, 'https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/DevApps_September2026_WFL1/FeatureServer/query?objectIds=12345&f=pjson');
+  assert.equal(url, 'https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/DevApps_September2026_WFL1/FeatureServer/query?objectIds=12345&outFields=*&f=pjson');
+});
+
+test('recordSourceUrl: format html is the page a person reads; the app links it, exports keep pjson', () => {
+  const layer = 'https://maps1.brampton.ca/arcgis/rest/services/BuildingPermit/Building_Permits/MapServer/0';
+  assert.equal(P.recordSourceUrl(snapRec({ uid: 'bra-permits/0:77', sourceId: 'bra-permits/0' }), layer, { format: 'html' }), `${layer}/77?f=html`);
+  const fs = require('fs'), path = require('path'), src = f => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
+  for (const f of ['js/dev-detail.js', 'js/devtab.js', 'js/aerial-check.js']) assert.match(src(f), /recordSourceUrl\([^)]*\)?[^;]*\{ format: 'html' \}/, f);
+  assert.doesNotMatch(src('js/exports.js'), /format: 'html'/);
 });
 
 test('recordSourceUrl: snapshot records parse the object id from uid', () => {

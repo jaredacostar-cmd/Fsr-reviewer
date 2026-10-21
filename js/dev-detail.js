@@ -62,7 +62,7 @@
     const ri = root.PeelReportIssue;
     if (!PV) return `<p class="small muted">Source: ${esc(r.sourceName)}${also}${mapBtn}${ri ? ` · ${ri.reportLinkHTML(r, { portal: r.sourceName })}` : ''}</p>`;
     const portal = PV.portalFor(r.sourceName);
-    const url = PV.recordSourceUrl(r, sourceUrlFor(r));
+    const url = PV.recordSourceUrl(r, sourceUrlFor(r), { format: 'html' });
     const pulled = PV.retrievedAt(r, App().state.snapshot && { generatedAt: App().state.snapshot.generatedAt });
     const report = ri ? ` · ${ri.reportLinkHTML(r, { sourceUrl: url, portal, pulledOn: pulled })}` : '';
     return `<p class="small muted">Source: ${esc(portal)}${url ? ` · <a href="${esc(url)}" target="_blank" rel="noopener">Record ↗</a>` : ''}${pulled ? ` · pulled ${esc(pulled)}` : ''}${also}${mapBtn}${report}</p>`;

@@ -117,7 +117,7 @@
       <div class="pt-actions" role="group" aria-label="Actions">
         <button type="button" class="btn small" data-file-open-dev title="Open the whole development: ${esc(p.title)}">Open as a development</button>
         <button type="button" class="btn small" data-file-tree title="The development's tree of files">See its tree</button>
-        ${(() => { const PV = root.PeelProvenance, src = r.sourceId && (App().state.sources || []).find(x => String(x.id).split('/')[0] === String(r.sourceId).split('/')[0]), url = PV && PV.recordSourceUrl ? PV.recordSourceUrl(r, src && src.url) : null; return url ? `<a class="btn small" href="${esc(url)}" target="_blank" rel="noopener">City record ↗</a>` : ''; })()}
+        ${(() => { const PV = root.PeelProvenance, src = r.sourceId && (App().state.sources || []).find(x => String(x.id).split('/')[0] === String(r.sourceId).split('/')[0]), url = PV && PV.recordSourceUrl ? PV.recordSourceUrl(r, src && src.url, { format: 'html' }) : null; return url ? `<a class="btn small" href="${esc(url)}" target="_blank" rel="noopener">City record ↗</a>` : ''; })()}
       </div>
       <div class="ov-tiles">${tile(units > 0 ? fmtNum(units) : '–', 'units', lf && lf.confidence === 'estimated' ? 'this file · estimated' : 'this file alone')}${tile(ppl > 0 ? fmtNum(Math.round(ppl / 10) * 10) : '–', 'people', units > 0 && ppl > 0 ? `${(ppl / units).toFixed(2)} ppu` : 'at Peel criteria')}${tile(share != null ? `${share}%` : '–', '', `of the ${fmtNum(p.units || 0)}-unit development`)}</div>
       ${r.description ? `<h2 class="section-title">What was filed</h2><p>${esc(r.description)}</p>` : ''}

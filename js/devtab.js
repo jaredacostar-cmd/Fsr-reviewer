@@ -669,7 +669,7 @@
     const pv = PV();
     if (!pv) return `<p class="small muted">Source: ${esc(r.sourceName)}${also}${mapBtn}${ri ? ` · ${ri.reportLinkHTML(r, { portal: r.sourceName })}` : ''}</p>`;
     const portal = pv.portalFor(r.sourceName);
-    const url = pv.recordSourceUrl(r, sourceUrlFor(r));
+    const url = pv.recordSourceUrl(r, sourceUrlFor(r), { format: 'html' });
     const st = state(), meta = st && st.snapshot && { generatedAt: st.snapshot.generatedAt };
     const pulled = pv.retrievedAt(r, meta);
     const report = ri ? ` · ${ri.reportLinkHTML(r, { sourceUrl: url, portal, pulledOn: pulled })}` : '';

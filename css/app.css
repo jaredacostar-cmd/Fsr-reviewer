@@ -3281,6 +3281,13 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .rf-tab th, .rf-tab td { text-align: left; vertical-align: top; padding: 6px var(--space-2) 6px 0; border-bottom: 1px solid var(--border); }
 .rf-tab thead th { font-weight: 600; color: var(--text-secondary); font-size: var(--fs-1); }
 .rf-tab tbody th { font-weight: 600; min-width: 140px; }
+/* Every data file's receipt (js/sources.js): the source links wrap, the notes sit under the name. */
+.src-table td { font-size: var(--fs-2); }
+.src-table td:first-child { min-width: 260px; max-width: 420px; }
+.src-table td small { display: block; color: var(--text-muted); font-size: var(--fs-1); margin-top: 2px; }
+.src-table td:nth-child(2) { overflow-wrap: anywhere; min-width: 200px; width: 40%; }
+.src-table td:nth-child(2) a { display: inline-block; margin-bottom: 2px; }
+.src-table td:nth-child(3), .src-table td:nth-child(4) { white-space: nowrap; }
 .rf-ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
 .rf-calc { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
 .rf-calc li { display: grid; grid-template-columns: 26px 1fr auto; gap: var(--space-2); align-items: start; padding: 6px 0; border-bottom: 1px solid var(--border); }
@@ -3319,6 +3326,11 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
   .rf-nav { grid-template-columns: 1fr 1fr; }
   .rf-nav > .btn { grid-column: 1 / -1; grid-row: 2; justify-self: center; }
   .rf-tab tbody th { min-width: 100px; }
+  /* Each data file as a card: name, links, date, fingerprint, one under the other. */
+  .src-table thead { display: none; }
+  .src-table tr, .src-table td { display: block; width: auto; min-width: 0; max-width: none; white-space: normal; }
+  .src-table tr { padding: var(--space-2) 0; border-bottom: 1px solid var(--border); }
+  .src-table td { border: 0; padding: 2px 0; }
 }
 /* The aerial check as a header answer (js/aerial-chip.js): a chip beside the stage; pressed, the check
    opens under the header */

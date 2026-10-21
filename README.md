@@ -2826,6 +2826,43 @@ scope (SPEC §0.4). The EA lists moved here from the old "Construction & EAs" vi
   - Any EA or construction label that overlaps a development label, cluster or marker is hidden,
     so development labels take priority.
 
+## Every data file has a receipt
+
+Every figure in the app can be checked against where it came from:
+
+- **Each data file's source.** `data/sources.json` lists every file and folder in `data/`. Each entry has:
+  - what the file is, and who published it;
+  - links to the service, report or page it was read from, with the tables and pages for figures
+    transcribed from a report;
+  - the files it is built from, for data the app builds itself;
+  - the field in the file that says when it was pulled or published, and the script that builds it.
+
+  Items that have their own source say so. Each plan target, each count found online and each EA
+  carries its own link.
+- **Readable record links.** Record ↗ on a planning file or permit opens the ArcGIS page for that
+  feature, with every published field (`?f=html`). The exports keep the machine-readable link
+  (`?f=pjson`). Mississauga's services are published as a service root, so the layer is taken from the
+  record's source (`mis-devapps/6` → `…/FeatureServer/6/22`). Before, these links queried the root,
+  which ArcGIS rejects.
+- **Where to see it.** The table is under Reference › Data sources › *Every data file*, and also on
+  the Settings › Sources page. Each row has the source links, the date, the first 12 characters of the
+  file's SHA-256 and the script that builds it. *Copy citation* gives one line to quote: publisher,
+  source, date, and the exact file the app holds with its full SHA-256.
+- **Dates and fingerprints at deploy.** `scripts/build-sources-index.js` reads each file's date from
+  the file itself and computes its size and SHA-256. It writes `data/sources-index.json` in the
+  deploy job, so the table always matches the files published with it. That file is not committed.
+- **Kept that way.** `tests/sources.test.js` fails the build in any of these cases:
+  - a data file has no entry;
+  - published data has no link, or built data names no source files;
+  - a link is not a full `https` address, or a named script doesn't exist;
+  - a date field doesn't read a date from the file;
+  - a plan target lacks its link, page or quote.
+
+  One plan target, Mayfield West Phase 2 (Caledon), cites a news release with no date. It is the
+  only known undated target, and any other undated target fails the test.
+- **Not yet.** The municipalities' own application pages (`applicationPageUrl`) are still not
+  linked: no stable address pattern has been checked for any of the three.
+
 ## Counts that hold still, and counts found online checked
 
 **Loading.** The same data used to show different totals depending on how the app loaded:
