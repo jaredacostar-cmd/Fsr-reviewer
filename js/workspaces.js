@@ -283,8 +283,8 @@
     if (el && layersWasOpen) el.open = true;
     layersWasOpen = null;
   }
-  // This week's count (the chip's badge): the Peel Overview's own list.
-  function weekRows() { const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; const l = a && a.lists ? a.lists.find(x => x.title === 'This week') : null; return l ? l.rows : []; }
+  // This week's count (the chip's badge): the Peel Overview's own list (none while it is still loading).
+  function weekRows() { const WP = root.PeelWsPages, a = WP && WP.briefing ? WP.briefing() : OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; const l = a && a.lists ? a.lists.find(x => x.title === 'This week') : null; return l ? l.rows : []; }
   // Bundle 6: the filters that stay on while you are on a page or in a workspace, as chips with
   // Reset, so a filtered page never reads as the whole of Peel.
   function filterChipsHTML() {
