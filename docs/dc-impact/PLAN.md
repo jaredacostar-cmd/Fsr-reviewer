@@ -1,0 +1,206 @@
+# Capital › DC projects: which developments does each one affect?
+
+Draft plan, October 2026. Status: proposal, nothing built yet.
+
+## The ask
+
+In the Capital tab, list the DC projects. Click one and see which developments it could affect.
+For sanitary works that means the developments **upstream** of the project: the ones whose flow
+passes through it, or that need it in order to connect.
+
+## What we have today
+
+Most of the pieces exist. They are spread across the app and nothing shows them as a list.
+
+| Piece | Where | What it does today |
+|---|---|---|
+| DC program: 227 wastewater lines and 188 water lines (173 project numbers), 35 facilities with 77 scheduled items | `data/dc-infra.json`, `js/dc-infra.js` | Drawn on the map; tapping a line opens `showDcLine` |
+| Panel for a tapped DC main ("What it relieves" and "Developments relying on it") | `js/masterplan.js` `showDcLine` / `dcNeedsSection` | Lists developments only where the main relieves a **flagged** pipe constraint (hidden while `PIPE_RESULTS` is off), or where a greenfield site connects to it within 1 km |
+| Sewer network: 14,056 pipes of 300 mm+, each with a `next` (downstream) pointer | `data/sewers.json` | `showPipeLoads(i)` already walks each development's pipe downstream to find the ones that drain through pipe *i* |
+| Development → the pipe it joins | `js/sewer-cap.js` `sewerGrowth().devPipe` | |
+| Existing pipe → the DC main that runs along it (replacement, upsizing or twin) | `js/masterplan.js` `pipeReliefOf(i)` | Internal, not exported |
+| Greenfield route along the planned DC mains to the existing sewer | `js/sewer-trace.js` `dcSewerPath(p)` (exported) | Returns the DC lines it uses (`lines`) |
+| Greenfield sites that connect to a given main | `js/masterplan.js` `dcConnectors(ln)` | Internal |
+| Catchments upstream of a catchment | `js/svc-tab.js` `upstreamOf` | Used by "Show upstream" on Servicing › Network |
+| The other direction: development → works it relies on | `js/dc-infra.js` `devWorks` | Shown on the development brief |
+| Capital tab: DC timing · Projects · EAs · Funding (Labs) | `js/dca-tab.js`, `js/capital-ea.js` | DC timing lists only projects with a constraint or connectors (`dcAnalysis().list`), so most sanitary mains are missing while pipe results are hidden |
+
+What's missing is the project-first view: every DC project in a list, and an upstream set worked
+out for each project instead of only for a flagged constraint.
+
+## Where it goes
+
+Add a **DC projects** sub-view to the Capital tab:
+
+`DC timing · DC projects · Projects · EAs · Funding (Labs)`
+
+- **DC timing** keeps answering "what must be built first?"
+- **DC projects** (new) answers "what does this project affect?"
+- **Projects** is the Region's live capital contracts (`capital.json`). Two sub-views both called
+  "projects" will confuse people, so I'd rename this one **Contracts** (see open questions).
+
+## What to show
+
+### 1. The list (DC projects, nothing selected)
+
+Use the standard panel (`PeelPanel` spec), with the full table behind "Open full table".
+
+- **Head:** "Capital › DC projects · What does each project affect?" · Peel or the scoped
+  municipality · 2026 DC capital maps (draft, as of …)
+- **Answer:** "**N** DC projects; **M** have developments upstream or connecting. The most
+  affected is the **{project}** (≈X units)."
+- **Figures:** projects · wastewater / water · with developments relying on them · built after
+  the first relying development is expected (timing gap)
+- **Filters:** system (wastewater / water / both) · municipality (follows scope) · construction
+  year · status (approved 2026 / proposed / paused)
+- **Sort:** most developments affected (default) · soonest construction · project number
+- **Row:** `🟤 600 mm primary main · 22-2255` / `construction 2026–2027 · 3.4 km · approved` /
+  right side `41 devs · ≈6,200 units` / a red "gap" chip when developments arrive before it is built
+- Facilities (stations, plants) are listed as their own rows, one per facility, with their items
+  folded inside
+
+### 2. A selected project
+
+Clicking a row (or a DC main on the map) opens the project.
+
+**Panel**
+- **Head:** kind, diameter, project / component numbers, length, construction years,
+  approved / proposed, capital status (paused, in budget), and a link to its EA where
+  `easForDcHTML` finds one
+- **Answer:** "**41 developments** (≈6,200 units, ≈14,800 people + jobs, ≈95 L/s peak wet)
+  drain through or connect to this main. **12** are committed. **5** expect occupancy before
+  2027, when construction is scheduled to finish."
+- **Figures:** developments · units · people + jobs · added peak wet flow (L/s) · existing
+  population upstream (2021, from `censusPopUp`) for scale · timing-gap count
+- **Developments, in three groups** (each row: name, municipality, phase colour, units, peak
+  flow, how it is linked, and a timing chip):
+  1. **Needs it to connect.** Outside the existing network; its route to an existing sewer
+     uses this main (`dcSewerPath(p).lines` includes it, or `dcConnectors`). Strongest link: no
+     project, no servicing.
+  2. **Drains through it.** On the existing network, upstream of the existing pipes this main
+     replaces or twins (`pipeReliefOf`). Its flow passes through the project. It loses
+     capacity relief if the project slips.
+  3. **Same sewershed, upstream (broader).** In the catchment the main serves (`dcTarget`) or
+     any catchment upstream of it. Folded by default and labelled lower confidence.
+- **Timing chip** per development: "needed by 2026, built 2027". Compares the development's
+  expected completion from the Growth forecast's per-development schedule
+  (`js/timing.js` `stageSchedules` / `projectSchedule`, median band) with the project's last
+  construction year. Developments already under construction or built count as "needed now".
+- **Actions:** open a development (the existing `data-dev` rows, with Back to the project) ·
+  CSV of the affected developments · "Show on map" · jump to its DC timing row (people held back
+  if cancelled, where the project is in `dcAnalysis`)
+
+**Map**
+- The project's lines, glowing (`traceGlow`), zoomed to fit
+- Upstream existing pipes in a light tint; for group 3, upstream catchments shaded the way
+  "Show upstream" does it (`svc-focus-up`)
+- Affected developments stay at full strength and the rest fade (the `devKeys` mechanism
+  `showPipeLoads` already uses), coloured by group
+- Flow arrows toward the project's outlet
+
+### 3. Water and facilities
+
+Water has no "upstream," so for water use the area the project serves:
+- **Water main:** developments that connect to it (`dcConnectors`) plus developments in the
+  pressure zone it serves (`dcTarget`). The current `dcNeedsSection` already does this.
+- **Reservoir / tank / water station:** developments in its pressure zone.
+- **Wastewater pumping station:** developments upstream of the pipe arriving at the station
+  (`MA().stationPipe` → the same pipe walk).
+- **Treatment plant:** every development in the plant's sewershed (what
+  `showLoads(null, plant)` already lists). Plant rows can say "all of the {plant} sewershed"
+  and link there rather than list thousands.
+
+## How to build it
+
+### Step 1: an impact model (new `js/dc-impact.js`, `PeelDcImpact`)
+
+Pure where possible, so it can be tested in Node like `js/upstream.js`.
+
+```js
+projects()          // dcInfra lines grouped by project number (p || c), plus facilities:
+                    // { key, sys, kind, d, y0, y1, lenM, status, lines[], fac? }
+impactOf(key)       // { connect: rows[], drain: rows[], shed: rows[], pipes:Set, areas:Set, totals }
+pipesUpstream(memberPipes, pipes)   // pure: Uint8Array marking every pipe whose `next` chain
+                                    // reaches a member pipe (memoised, one pass, O(pipes))
+```
+
+- **Drains through it:** members = pipes where `pipeReliefOf(i)` belongs to the project. Run
+  `pipesUpstream` once per project, then for each `[dev, k]` in `sewerGrowth().devPipe`, the
+  development is upstream when `mark[k]` is set. This replaces `showPipeLoads`'s per-development
+  walk of up to 2,000 hops, which is too slow to run across 173 projects.
+- **Needs it to connect:** for developments outside the traced catchments, run `dcSewerPath(p)`
+  once per development, cache it, and index `lines → devs`. Add `dcConnectors` rows that have no
+  path.
+- **Same sewershed:** `{dcTarget(ln)} ∪ upstreamOf(...)` catchments → `SD().svcIds(p, 'dr')`.
+  Exclude developments already counted in groups 1 and 2.
+- **Which developments count:** the same filter as `dcConnectors`, `svcLayerOf(p)` in built /
+  approved / proposed, with a non-zero estimate. Use `D.estimate` for units, people and peak wet.
+- **Cache** on `MP().scenarioKey()` like `dcAnalysis`, so a scenario change recomputes.
+- **List counts** for every project at once: build the per-project marks lazily, then cache. If
+  computing all 95 wastewater projects up front is too slow on a phone, compute the list counts
+  in an idle callback and show "counting…" until they're ready.
+
+Exports needed: `pipeReliefOf` and `dcConnectors` from `js/masterplan.js` (add them to its
+`api`).
+
+### Step 2: the sub-view
+
+- `index.html`: add `<button data-dcasub="dcproj">DC projects</button>` and
+  `<section id="pane-dca-dcproj" data-sub="dcproj"><div id="dca-dcproj-body">`
+- `js/analysis-tabs.js`: add `'dcproj'` to `dca.valid`
+- `js/dca-tab.js` `renderDca()`: `PN.set('dca:dcproj', DCI().listSpec())`, with the full table
+  in `#dca-dcproj-body`
+- `js/usage.js`: nothing needed (`dcasub` is already mapped)
+
+### Step 3: selecting a project
+
+- Rows carry `data-dc-proj="{key}"`. One click handler (in `dc-impact.js`) sets the selection,
+  sets `PN.set('dca:dcproj', DCI().projectSpec(key))`, draws the map layer and stores
+  `TS().loadsOf = { dc: { proj: key } }` so opening a development offers Back.
+- **One panel for both entry points:** `showDcLine(ln)` and `showFacility(fc)` render the same
+  impact section, so the map tap and the list click never disagree. Replace the "Developments
+  relying on it" part of `dcNeedsSection` with `DCI().impactHTML(key)`, and keep "What it
+  relieves" as it is.
+- **DC timing rows:** add `data-dc-proj` so a timing row opens the same project.
+- **URL/state:** remember the selected project (`store`, like `dcaPnlSort`) so a reload keeps it.
+
+### Step 4: tests
+
+- `tests/dc-impact.test.js`, unit tests on `pipesUpstream`:
+  - a Y network
+  - a cycle (guard with `seen`, as in `upstreamIdsOf`)
+  - a pipe with `next = -1`
+  - a member pipe in the middle of a run
+- Grouping: a development counted in group 1 is not repeated in groups 2 or 3.
+- An e2e or browser check: open Capital › DC projects, click the first wastewater project, and
+  check that the map has a highlighted line and the panel has at least one group.
+- Run `npm test` and `npm run lint`.
+
+### Step 5: wording and caveats
+
+- Every screen carries `SCREEN_NOTE`: a screen for where to look, not the Region's hydraulic
+  model. The DC maps are a draft, not approved by Council.
+- `data-info="dc-impact"` method text: how each group is found and why group 3 is lower
+  confidence.
+- Add a changelog entry (`data/changelog.json`).
+
+## Suggested order (small PRs)
+
+1. `dc-impact.js` model, exports and unit tests (no UI)
+2. DC projects list sub-view (list, filters, sort)
+3. Selection: panel, map highlight, Back from a development
+4. Unify `showDcLine` / `showFacility` / DC timing rows onto it
+5. Water and facility rules, CSV, changelog
+
+## Open questions
+
+1. **Rename the existing "Projects" sub-view to "Contracts"?** That avoids two "projects" chips.
+   My recommendation: yes.
+2. **Which developments count?** My proposal is built + approved + proposed (the current
+   `dcConnectors` rule). Should pre-application be included too, or should built be excluded?
+3. **Group 3 (same sewershed):** show it folded, or leave it out at first? It is broad and can
+   be large near the trunks.
+4. **Labs first?** Ship behind a Labs switch like Funding until the counts have been checked
+   against the Region's own understanding of a couple of projects (e.g. 22-2255).
+5. **Timing gap:** is "expected occupancy before the last construction year" the right test, or
+   should it be the first construction year (when capacity starts to arrive)?
