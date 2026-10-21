@@ -474,6 +474,15 @@ from street zoom (14), up to 3,000 in view.
   route descriptions joined from the 2020 DC Background Study by component number. Used for:
   - a **Planned works** map layer (water, wastewater or both; tap a facility for its schedule;
     works after the results year are faded);
+  - a **DC joins** layer (Layers › Pipes and works): each planned main's end and what it joins, as
+    the sewer and water traces use it: green within 60 m as drawn, orange a bridged gap to 200 m,
+    red a longer one worth checking, grey an open end. A planned main joins an existing main of a
+    matching size (a sewer at least its size, a watermain at least half), and is bridged to another
+    planned main only where no such sewer is nearer. Tap an end to set its join by hand (Pick where
+    it joins, then tap the pipe or planned main; or Open end): reviewed joins are blue and the traces
+    follow them. Edits stay in the browser until exported (dc-joins.json) and committed to
+    `data/dc-joins.json`; they are matched to the main's end by position (5 m), so they survive a
+    rebuild of the DC data or the existing network (`js/dc-joins.js`);
   - the development brief: the planned main it would connect to, trunks and facilities on its sewer
     path / in its pressure zone, plant capacity steps, and a **timing flag** when a committed
     development outside the existing network relies on a main not built until later; a marker

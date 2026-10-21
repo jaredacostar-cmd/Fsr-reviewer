@@ -7,6 +7,7 @@
   const MA = () => window.PeelMapAnalysis;
   const ST = () => window.PeelSewerTrace;
   const DI = () => window.PeelDcInfra;
+  const DJ = () => window.PeelDcJoins;
   const SD = () => window.PeelSvcData;
   const MP = () => window.PeelMasterPlan;
   const AS = () => window.PeelAreaSelect;
@@ -250,7 +251,7 @@
     return WM.loading;
   }
   function wmGraph() {
-    const dcKey = App().state.dcInfra ? App().state.dcInfra.water.lines.length : 0;
+    const dcKey = `${App().state.dcInfra ? App().state.dcInfra.water.lines.length : 0}:${DJ() ? DJ().version() : 0}`;
     if (WM.g && WM.dcKey === dcKey) return WM.g;
     const d = WM.data, xs = [], ys = [], E = [];
     for (let i = 0, x = 0, y = 0; i < d.xy.length; i += 2) { x += d.xy[i]; y += d.xy[i + 1]; xs.push(x / 1e5); ys.push(y / 1e5); }
@@ -274,24 +275,42 @@
       return out;
     };
     // Planned DC water mains: their vertices join the network, their ends the nearest node of
-    // another main within 300 m.
-    const planned = [];
+    // another main within 300 m: of a main at least half their size when there is one, else any main
+    // within 60 m (a 1200 mm transmission main doesn't feed off a 300 mm local main). A reviewed join
+    // (js/dc-joins.js) replaces the automatic one: the main it was set onto, or none (an open end).
+    const planned = [], n0 = xs.length, dOf = new Float64Array(n0), lnOf = [];
+    for (const [a, b, dm] of E) { dOf[a] = Math.max(dOf[a], dm); dOf[b] = Math.max(dOf[b], dm); }
     if (App().state.dcInfra) for (const ln of App().state.dcInfra.water.lines) {
       const a = xs.length;
-      ln.g.forEach(([x, y], k) => { xs.push(x); ys.push(y); if (k) E.push([a + k - 1, a + k, ln.d || 0, ln]); });
+      ln.g.forEach(([x, y], k) => { xs.push(x); ys.push(y); lnOf.push(ln); if (k) E.push([a + k - 1, a + k, ln.d || 0, ln]); });
       planned.push([a, xs.length - 1, ln]);
     }
-    const n0 = d.nodes;
     // A planned main joins an existing one wherever it runs within 25 m of it (twinning, crossings).
     for (const [a, b, ln] of planned) for (let t = a; t <= b; t++) { const n = near([xs[t], ys[t]], 25, i => i >= n0); if (n) E.push([t, n.i, 0, ln]); }
     for (const [a, b] of planned) for (let i = a; i <= b; i++) put(i);
-    for (const [a, b, ln] of planned) for (const t of [a, b]) { const n = near([xs[t], ys[t]], 300, i => i >= a && i <= b); if (n) E.push([t, n.i, 0, ln]); }
+    const lineAt = i => (i < n0 ? null : lnOf[i - n0]);
+    const joins = [];
+    for (const [a, b, ln] of planned) for (const t of [a, b]) {
+      const pt = [xs[t], ys[t]], ov = DJ() ? DJ().override('water', pt) : null;
+      const own = i => i >= a && i <= b;
+      let n = null, auto = true;
+      if (ov) {
+        auto = false;
+        if (ov.to) n = near(ov.to, 15, own);
+      } else {
+        const need = (ln.d || 0) / 2;
+        n = near(pt, 300, i => own(i) || (i < n0 ? dOf[i] : (lineAt(i) || {}).d || 0) < need) || near(pt, 60, own);
+      }
+      if (n) E.push([t, n.i, 0, ln]);
+      const into = n ? (n.i < n0 ? { kind: 'watermain', d: dOf[n.i] } : { kind: 'dc', ln: lineAt(n.i) }) : null;
+      joins.push({ sys: 'water', ln, pt, to: n ? [xs[n.i], ys[n.i]] : null, m: n ? n.m : null, into, auto, ov });
+    }
     const adj = Array.from({ length: xs.length }, () => []);
     E.forEach(([a, b], k) => { adj[a].push(k); adj[b].push(k); });
     const len = E.map(([a, b]) => DI().dcM([xs[a], ys[a]], [xs[b], ys[b]]));
     // Cost: length, less on large mains, more on planned ones and on joins.
     const cost = E.map(([, , dm, ln], k) => len[k] * (dm >= 750 ? 0.7 : dm >= 400 ? 0.85 : dm ? 1 : 1.5) * (ln ? 1.2 : 1));
-    WM.g = { xs, ys, E, adj, len, cost, near, within }; WM.dcKey = dcKey;
+    WM.g = { xs, ys, E, adj, len, cost, near, within, joins, n0 }; WM.dcKey = dcKey;
     return WM.g;
   }
   // Shortest path from a point to a point: starting from any node near A (the distance to it counted
@@ -417,6 +436,8 @@
     waterTraceHTML,
     clearWaterTrace,
     traceWater,
+    loadWatermains,
+    wmGraph,
     waterTraceSummaryHTML,
     wfKinds,
     wfWorks,

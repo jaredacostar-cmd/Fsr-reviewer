@@ -85,6 +85,7 @@ const SHELL_ASSETS = [
   'js/data-tab.js',
   'js/dc-cost.js',
   'js/dc-infra.js',
+  'js/dc-joins.js',
   'js/capital-ea-model.js',
   'js/map-pick.js',
   'js/capital-ea.js',

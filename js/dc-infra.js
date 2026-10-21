@@ -150,6 +150,7 @@
   const dcLayer = L.layerGroup();
   function renderDcLayer() {
     dcLayer.clearLayers();
+    if (window.PeelDcJoins) window.PeelDcJoins.render();
     if (!MM().getDcOn().on || !App().state.dcInfra) { map.removeLayer(dcLayer); return; }
     dcLayer.addTo(map);
     const yr = MA().getCapYear();

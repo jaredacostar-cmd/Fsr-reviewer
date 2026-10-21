@@ -374,6 +374,20 @@
       "script": "scripts/build-dc-costs.py",
       "refresh": "each DC study"
     },
+    "dc-joins.json": {
+      "title": "Reviewed joins of the 2026 DC planned mains",
+      "kind": "derived",
+      "script": "js/dc-joins.js",
+      "refresh": "when a join is reviewed",
+      "dateNote": "Each join carries the date it was set (at).",
+      "method": "Exported from the DC joins map layer: a planned main's end and the point it joins (or none, an open end). The sewer and water traces follow these in place of the automatic join.",
+      "from": [
+        "dc-infra.json",
+        "sewers.json",
+        "watermains.json"
+      ],
+      "check": "Hand-set joins of planned DC mains onto the existing network; the automatic join applies elsewhere."
+    },
     "dc-infra.json": {
       "title": "2026 DC capital maps (draft)",
       "kind": "document",

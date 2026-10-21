@@ -135,6 +135,7 @@
         <div class="mo-sec"><div class="mo-h">Pipes and works</div>
           <div class="mo-chips">${chip('id="opt-pipelbl"', pipeLbl, '<b class="pl-sw">300</b>Size labels', 'pipe-labels')}</div>
           <div class="mo-row" data-info="dc-works"><span class="mo-k">DC works</span><div class="mo-chips">${[['water', 'Water', '--dc-w-feed'], ['wastewater', 'Wastewater', '--dc-ww-main']].map(([k, t, c]) => chip(`data-dcsys="${k}"`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k), `<i class="lg-line" style="background:var(${c})"></i>${t}`)).join('')}</div></div>
+          <div class="mo-chips">${chip('id="opt-dcjoins"', !!(window.PeelDcJoins && window.PeelDcJoins.isOn()), '<i class="lg-dot" style="background:var(--cap-tight)"></i>DC joins', 'dc-joins')}</div>
           <button type="button" class="btn small link mo-dct" data-info="dc-needs" id="opt-dctiming">DC timing: capacity vs DC projects →</button>
         </div>
         </details>
@@ -151,6 +152,7 @@
       el.querySelector('#opt-basemap').onchange = e => { MC().setBasemap(e.target.value); store.set('basemap', e.target.value); MC().setTiles(); CA().restyleDa(); };
       el.querySelector('#opt-labels').onchange = e => { ML().setLabelMode(e.target.value); store.set('labelMode', e.target.value); ML().updateLabels(); };
       el.querySelector('#opt-pipelbl').onchange = e => { pipeLbl = e.target.checked; store.set('pipeLabels', pipeLbl); EP().renderExisting(); if (mstyle.cap === 'pipes') MA().renderCapLayer(); };
+      el.querySelector('#opt-dcjoins').onchange = e => { if (window.PeelDcJoins) window.PeelDcJoins.setOn(e.target.checked); };
       el.querySelector('#opt-dctiming').onclick = () => { if (typeof MP().showDcTiming === 'function') { SC().loadSewers(); MP().showDcTiming(); } };
       el.querySelectorAll('[data-dcsys]').forEach(c => { c.onchange = () => {
         const on = k => document.querySelector(`[data-dcsys="${k}"]`).checked, w = on('water'), ww = on('wastewater');
