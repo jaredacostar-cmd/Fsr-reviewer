@@ -293,12 +293,12 @@
     el.hidden = !MM().isWW();
     return el;
   } });
-  // The legend: its own card in the corner (folded on phones), so it stays in sight while Layers is closed.
+  // The legend: its own card in the corner (folded on phones and on a narrow map), so it stays in sight while Layers is closed.
   const LegendCard = L.Control.extend({ options: { position: 'bottomleft' }, onAdd() {
     const el = L.DomUtil.create('div', 'mo-legend lg-card'); el.id = 'mo-legend'; el.hidden = true;
     el.innerHTML = '<details><summary>Legend</summary><div class="lg-body"></div></details>';
     L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
-    const d = el.querySelector('details'); d.open = store.get('legendOpen', !phoneMap); d.addEventListener('toggle', () => store.set('legendOpen', d.open));
+    const d = el.querySelector('details'); d.open = store.get('legendOpen', !phoneMap && map.getSize().x >= 900); d.addEventListener('toggle', () => store.set('legendOpen', d.open));
     return el;
   } });
   new LegendCard().addTo(map);
