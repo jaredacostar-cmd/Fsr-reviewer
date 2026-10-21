@@ -540,14 +540,27 @@
       actions: [{ label: 'Pick on the map', attrs: { 'data-ws-go': id }, primary: true }] };
   }
   // ---- Check a site, with a site -----------------------------------------------------------------------
+  // The site's sections (js/sections.js): every full-map tab's panel for this development, one at a
+  // time under a section bar; Summary first. A new development opens on Summary.
+  let siteSec = 'summary', siteSecDev = null;
+  function sectionBar(secs, on) {
+    return `<nav class="page-secs" aria-label="Sections" data-psec="sections">${secs.map(s => `<button type="button" class="page-sec${s.id === on ? ' on' : ''}" data-ws-sec="${esc(s.id)}" aria-pressed="${s.id === on}">${esc(s.title)}</button>`).join('')}</nav>`;
+  }
   function site() {
     const p = devNow(); if (!p) return find('site');
     const s = specOf('overview:', `dev:${p.key}`); if (!s) return loading('site', `Loading ${p.title}…`);
-    return { id: 'site', eyebrow: `${esc(label('site'))} · <span class="pnl-steps-i">✓ Find › <b>Result</b> › Output: Servicing memo</span>`, name: p.title, status: s.head.status, badge: s.head.badge, extra: s.head.extra, identity: s.head.identity, scen: scen(), answer: s.answer,
-      caveats: [], figures: s.figures, chart: s.chart,
-      lists: (s.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('site', r)) })),
+    const SE = root.PeelSections;
+    if (siteSecDev !== p.key) { siteSec = 'summary'; siteSecDev = p.key; }
+    const sec = SE && siteSec !== 'summary' ? SE.specFor(siteSec, p) : null, on = sec ? siteSec : 'summary';
+    const waiting = SE && siteSec !== 'summary' && !sec;
+    const b = sec || s;
+    return { id: 'site', eyebrow: `${esc(label('site'))} · <span class="pnl-steps-i">✓ Find › <b>Result</b> › Output: Servicing memo</span>`, name: p.title, status: s.head.status, badge: s.head.badge, extra: s.head.extra, identity: s.head.identity, scen: scen(),
+      top: SE ? sectionBar(SE.SITE, waiting ? siteSec : on) : '',
+      answer: waiting ? `<span class="muted">Loading ${esc((SE.BY_ID[siteSec] || {}).title || '')} for ${esc(p.title)} (the servicing model and the DC program)…</span>` : b.answer,
+      caveats: [], figures: waiting ? [] : b.figures, chart: waiting ? '' : b.chart,
+      lists: waiting ? [] : (b.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('site', r)) })),
       map: { svg: siteMap(p), attrs: { 'data-ws-go': 'site' }, label: `Open ${p.title} on the map`, caption: '<span class="hm-key hm-key-site"></span> the site <span class="hm-key hm-key-dev"></span> nearby developments · sewers · 2026 DC works (dashed)' },
-      folds: s.folds, method: s.method, sources: s.sources, onMount: s.onMount,
+      folds: waiting ? [] : b.folds, method: waiting ? '' : b.method, sources: waiting ? '' : b.sources, onMount: waiting ? null : b.onMount,
       actions: [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, { label: 'Review its FSR', attrs: { 'data-ws-page': 'fsr' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'site' } }] };
   }
 
@@ -685,9 +698,10 @@
   // The developments whose file tree is open (▸ on their row).
   const gOpen = new Set();
   document.addEventListener('click', e => {
-    const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall],[data-tr-tog]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
+    const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall],[data-tr-tog],[data-ws-sec]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
     e.preventDefault(); e.stopPropagation();
-    if (t.dataset.trTog) { const k = t.dataset.trTog; if (gOpen.has(k)) gOpen.delete(k); else gOpen.add(k); }
+    if (t.dataset.wsSec) siteSec = t.dataset.wsSec;
+    else if (t.dataset.trTog) { const k = t.dataset.trTog; if (gOpen.has(k)) gOpen.delete(k); else gOpen.add(k); }
     else if (t.dataset.wsDrill) { gAt = t.dataset.wsDrill; gStage = 'all'; gAll = false; gEst = false; const h = document.getElementById('home'); if (h) h.scrollTop = 0; }
     else if (t.dataset.wsStage) gStage = gStage === t.dataset.wsStage ? 'all' : t.dataset.wsStage;
     else if (t.dataset.wsDrillall) gAll = !gAll;

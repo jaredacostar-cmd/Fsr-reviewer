@@ -179,6 +179,27 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     await ev(() => { PeelApp.state.muni = ''; PeelApp.state.basis = 'all'; PeelApp.applyFilters(); });
   });
 
+  // A site's sections: Check a site shows every map tab's panel for the development (Summary,
+  // Growth, Servicing, Capital, Files), each the map's own answer.
+  await check('Check a site: every map tab is a section of the page, with the map’s own answer', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
+    await ev(() => { const p = PeelApp.state.projects.find(q => q.phase === 'approved' && q.units > 300); PeelDevNav.showDetail(p); });
+    await wait(2500);
+    await ev(() => PeelWorkspaces.openPage('site')); await wait(2000);
+    const secs = await ev(() => [...document.querySelectorAll('#home [data-ws-sec]')].map(b => b.dataset.wsSec));
+    expect(secs.join() === 'summary,growth,servicing,capital,files', `the sections: ${secs.join()}`);
+    for (const id of secs) {
+      await page.click(`#home [data-ws-sec="${id}"]`); await wait(2500);
+      const r = await ev(id => {
+        const p = DevScope.current(), s = PeelSections.specFor(id, p) || (id === 'summary' ? PeelPanel.get('overview:').spec : null);
+        const ans = document.querySelector('#home .home-answer'), strip = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+        return { on: (document.querySelector('#home .page-sec.on') || {}).dataset ? document.querySelector('#home .page-sec.on').dataset.wsSec : null, page: strip(ans && ans.innerHTML), map: strip(s && s.answer) };
+      }, id);
+      expect(r.on === id, `${id}: the section bar shows ${r.on}`);
+      expect(r.map && r.page === r.map, `${id}: the page's answer is the map panel's ("${r.page.slice(0, 60)}" / "${String(r.map).slice(0, 60)}")`);
+    }
+  });
+
   // Plan areas: Growth in an area and the map's plan filter ("Show on the map") count the same
   // developments the same way (a straddling one by its share), for every plan, sub-area and precinct.
   await check('plan areas: Growth in an area and the map’s plan filter agree, precincts included', browser, {}, async ({ page, ev }, expect) => {
