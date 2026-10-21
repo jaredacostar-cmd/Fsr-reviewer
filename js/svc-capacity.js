@@ -21,6 +21,7 @@
   //     c80, c90, c100 }, small, ss }
   // cap is the 100% capacity (rated, firm or available); committed and build-out are cumulative.
   const SYSTEM = { ww: 'Wastewater', water: 'Water' };
+  const H = () => root.PeelHow;
   const pctOf = (r, v) => (r.cap > 0 ? v / r.cap * 100 : null);
   const derive = r => { const d = { ...r, system: SYSTEM[r.sys], pctCom: pctOf(r, r.committed), pctBo: pctOf(r, r.buildout), room: r.cap - r.buildout }; d.impact = impactOf(d); return d; };
   // Impact (Stage 3), one line per row, in each facility's own 2020 Master Plan measure:
@@ -241,12 +242,13 @@
       head: { trail: [{ label: 'Peel' }, { label: 'Servicing › Capacity' }], name: 'Can the system take it?', status: over.length ? { tone: 'over', text: `${over.length} over` } : tight.length ? { tone: 'tight', text: `${tight.length} tight` } : { tone: 'room', text: 'Room' },
         identity: `Peel · ${sysWord}: ${[plural(n('plant'), 'plant', 'plants'), plural(n('wplant'), 'treatment system', 'treatment systems'), plural(n('pump'), 'pumping group', 'pumping groups'), plural(n('storage'), 'storage facility', 'storage facilities'), plural(n('ps'), 'pumping station', 'pumping stations')].filter(x => !/^0 /.test(x)).join(' · ')}` },
       answer: `<strong>${over.length}</strong> of ${rows.length} facilities are over capacity at build-out${tight.length ? ` and <strong>${tight.length}</strong> more are tight (90–100%)` : ''}.${soon && soon.limit.y != null ? ` <strong>${esc(soon.name)}</strong> is the first to reach its limit (${esc(limitWords(soon.limit.what))}: ${whenWords(soon.limit.y, end)})${big && big.impact.past > 0 ? big === soon ? ' and goes furthest past it at build-out' : `; <strong>${esc(big.name)}</strong> goes furthest past its limit at build-out` : ''}.` : big && big.impact.past > 0 ? ` <strong>${esc(big.name)}</strong> goes furthest past its limit at build-out.` : ''}`,
+      // (each figure's "?" lists the facilities it counts, or the one it names, with load ÷ capacity: js/how.js)
       figures: [
         // (a count opens the full table; a figure that names one facility opens it)
-        { v: over.length, u: 'over', label: 'over capacity at build-out', ctx: `of ${rows.length} facilities`, tone: over.length ? 'over' : 'room', attrs: { 'data-full-table': 'svc:capacity' } },
-        { v: tight.length, u: 'tight', label: '90–100% at build-out', ctx: 'past the 90% trigger, under 100%', tone: tight.length ? 'tight' : 'room', attrs: { 'data-full-table': 'svc:capacity' } },
-        soon ? { v: soon.limit.y === 'today' ? 'Now' : soon.limit.y == null ? `after ${end}` : `≈${soon.limit.y}`, u: '', label: soon.limit.y === 'today' ? 'soonest limit: already reached' : 'soonest limit', ctx: `${esc(soon.name)}: ${esc(limitWords(soon.limit.what))}`, tone: soon.limit.y != null ? 'over' : 'room', attrs: soon.ss || soon.id ? { 'data-ss': soon.ss || soon.id } : null } : null,
-        big ? { v: esc(big.impact.fig.v), u: big.impact.fig.u, label: 'largest impact', ctx: `${esc(big.name)}: ${esc(big.impact.fig.rest)}`, tone: P().toneOf(big.pctBo), attrs: big.ss || big.id ? { 'data-ss': big.ss || big.id } : null } : null,
+        { v: over.length, u: 'over', label: 'over capacity at build-out', ctx: `of ${rows.length} facilities`, tone: over.length ? 'over' : 'room', attrs: { 'data-full-table': 'svc:capacity' }, how: H() && H().capacityCount(rows, 100) },
+        { v: tight.length, u: 'tight', label: '90–100% at build-out', ctx: 'past the 90% trigger, under 100%', tone: tight.length ? 'tight' : 'room', attrs: { 'data-full-table': 'svc:capacity' }, how: H() && H().capacityCount(rows, 90, 100) },
+        soon ? { v: soon.limit.y === 'today' ? 'Now' : soon.limit.y == null ? `after ${end}` : `≈${soon.limit.y}`, u: '', label: soon.limit.y === 'today' ? 'soonest limit: already reached' : 'soonest limit', ctx: `${esc(soon.name)}: ${esc(limitWords(soon.limit.what))}`, tone: soon.limit.y != null ? 'over' : 'room', attrs: soon.ss || soon.id ? { 'data-ss': soon.ss || soon.id } : null, how: H() && H().capacityRow(soon) } : null,
+        big ? { v: esc(big.impact.fig.v), u: big.impact.fig.u, label: 'largest impact', ctx: `${esc(big.name)}: ${esc(big.impact.fig.rest)}`, tone: P().toneOf(big.pctBo), attrs: big.ss || big.id ? { 'data-ss': big.ss || big.id } : null, how: H() && H().capacityRow(big) } : null,
       ].filter(Boolean),
       chart: sorted[0] ? `<p class="small pnl-chart-t">${esc(sorted[0].name)}: existing, built, committed and proposed flow <span class="pnl-chart-u">(% of ${sorted[0].capWord} capacity)</span></p>${labelledBar(sorted[0])}${LB() ? LB().capLegendHTML() : ''}` : '',
       lists: [{ title: 'Facilities', tools, rows: sorted.slice(0, 5).map(listRow), total: rows.length, seeAll: { 'data-full-table': 'svc:capacity' } }],

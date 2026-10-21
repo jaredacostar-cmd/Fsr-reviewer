@@ -67,7 +67,8 @@
     out.push(`<p class="pnl-answer" data-sec="answer">${gl(s.answer || '')}</p>`);
     // A zero is never coloured ("0 tight" in green read as good news); n/a is never a figure (bundle 5).
     const figs = (s.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4).map(f => (String(f.v) === '0' && f.tone ? { ...f, tone: null } : f));
-    if (figs.length) out.push(`<div class="pnl-figs" data-sec="figures">${figs.map(f => `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"${f.attrs ? `${attrs(f.attrs)} role="button" tabindex="0"` : ''}><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}</div>`).join('')}</div>`);
+    // Each figure's "?" opens how it is worked out (js/how.js): its inputs, rule and data files.
+    if (figs.length) out.push(`<div class="pnl-figs" data-sec="figures">${figs.map((f, i) => `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"${f.attrs ? `${attrs(f.attrs)} role="button" tabindex="0"` : ''}><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}${root.PeelHow ? root.PeelHow.button(f, s, i) : ''}</div>`).join('')}</div>`);
     if (s.chart) out.push(`<div class="pnl-chart" data-sec="chart">${s.chart}</div>`);
     for (const l of (s.lists || []).filter(x => x && x.rows && x.rows.length)) {
       out.push(`<section class="pnl-list" data-sec="list">${l.title || l.tools ? `<div class="pnl-list-h">${l.title ? `<h3>${esc(l.title)}</h3>` : ''}${l.tools || ''}</div>` : ''}

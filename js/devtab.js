@@ -626,7 +626,7 @@
     const withF = items.filter(i => i.fsr).sort((a, b) => (b.fsr.date || '').localeCompare(a.fsr.date || ''));
     return { items, best: withF[0] || null };
   }
-  const FSR_HOME = { Brampton: ['BramPlanOnline', 'https://www.brampton.ca/EN/Business/planning-development/Pages/applications.aspx'], Mississauga: ['Mississauga development applications', 'https://www.mississauga.ca/services-and-programs/planning-and-development/development-applications/active-development-applications/'], Caledon: ['Caledon development applications', 'https://www.caledon.ca/en/town-services/development-applications.aspx'] };
+  const FSR_HOME = { Brampton: ['BramPlanOnline', 'https://planning.brampton.ca/CitizenAccess/Cap/CapHome.aspx?module=Planning&TabName=Planning'], Mississauga: ['Mississauga development applications', 'https://www.mississauga.ca/services-and-programs/planning-and-development/development-applications/active-development-applications/'], Caledon: ['Caledon development applications', 'https://www.caledon.ca/en/town-services/development-applications.aspx'] };
   function fsrInnerHTML(p) {
     if (!FSR.by) {
       if (hasDOM()) loadFsr().then(() => { if (liveKey === p.key) { const b = document.getElementById('devtab-fsr'); if (b) b.innerHTML = fsrInnerHTML(p); } });
@@ -638,7 +638,7 @@
     const bp = r && r.items.find(i => i.browserPage);
     if (bp) return `<strong>Servicing documents</strong> ${ext(bp.page, 'City application page')}<small>Look under Project documents for the latest Functional Servicing Report (the City's page builds that list in the browser, so it can't be linked directly).</small>`;
     if (r && r.items.length) return `<span class="muted">No FSR posted yet</span> · ${ext(r.items[0].page, 'application documents')}`;
-    if (p.municipality === 'Brampton') return `<span class="muted">Brampton's documents are on BramPlanOnline (sign-in)</span> · ${ext(home[1], 'Brampton applications')}`;
+    if (p.municipality === 'Brampton') { const f = (p.records || []).filter(x => x.kind === 'application' && x.ref).sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)))[0]; return `<strong>Servicing documents</strong> ${ext(home[1], 'BramPlanOnline')}<small>${f ? `Search ${esc(f.ref)}` : 'Search the file number'} and open its documents for the latest Functional Servicing Report. Public, no sign-in; the app can't link a Brampton file directly.</small>`; }
     return `<span class="muted">No public application page found</span>${home ? ` · ${ext(home[1], esc(home[0]))}` : ''}`;
   }
   const fsrBoxHTML = p => p.records.some(r => r.kind === 'application') ? `<div class="fsr-box small" id="devtab-fsr" data-info="fsr">${fsrInnerHTML(p)}</div>` : '';
@@ -671,11 +671,12 @@
     const pv = PV();
     if (!pv) return `<p class="small muted">Source: ${esc(r.sourceName)}${also}${mapBtn}${ri ? ` · ${ri.reportLinkHTML(r, { portal: r.sourceName })}` : ''}</p>`;
     const portal = pv.portalFor(r.sourceName);
-    const url = pv.recordSourceUrl(r, sourceUrlFor(r));
+    const url = pv.recordSourceUrl(r, sourceUrlFor(r), { format: 'html' });
     const st = state(), meta = st && st.snapshot && { generatedAt: st.snapshot.generatedAt };
     const pulled = pv.retrievedAt(r, meta);
     const report = ri ? ` · ${ri.reportLinkHTML(r, { sourceUrl: url, portal, pulledOn: pulled })}` : '';
-    return `<p class="small muted">Source: ${esc(portal)}${url ? ` · <a href="${esc(url)}" target="_blank" rel="noopener">Record ↗</a>` : ''}${pulled ? ` · pulled ${esc(pulled)}` : ''}${also}${mapBtn}${report}</p>`;
+    const look = pv.applicationSearch ? pv.applicationSearch(r) : null;
+    return `<p class="small muted">Source: ${esc(portal)}${url ? ` · <a href="${esc(url)}" target="_blank" rel="noopener">Record ↗</a>` : ''}${pulled ? ` · pulled ${esc(pulled)}` : ''}${look ? ` · <a href="${esc(look.url)}" target="_blank" rel="noopener" title="Search ${esc(look.ref)} by file number">Find ${esc(look.ref)} on ${esc(look.portal)} ↗</a>` : ''}${also}${mapBtn}${report}</p>`;
   }
   const REC_GROUPS = [
     ['master', 'Official plan / zoning / subdivision'], ['siteplan', 'Site plan'], ['condo', 'Condominium'],

@@ -259,7 +259,7 @@
       <h3 class="sub-title" data-info="data-freshness">Data freshness</h3>
       <table class="dt fr-table"><thead><tr><th>Source</th><th>As of</th><th>Updated</th><th>Status</th></tr></thead><tbody>
         ${fr.map(r => `<tr><td>${esc(r.name)}${r.note ? `<small>${esc(r.note)}</small>` : ''}</td><td>${r.date ? esc(r.date) : '–'}${r.a != null && r.st !== 'ref' ? `<small>${r.a === 0 ? 'today' : `${fmtNum(r.a)} day${r.a === 1 ? '' : 's'} ago`}</small>` : ''}</td><td>${esc(r.every)}</td><td><span class="fr-b ${FRESH[r.st][0]}">${FRESH[r.st][1]}</span></td></tr>`).join('')}
-      </tbody></table>`;
+      </tbody></table>${root.PeelSources ? `<h3 class="sub-title">Every data file and its source</h3>${root.PeelSources.slotHTML()}` : ''}`;
   }
   // Model checks against published figures (this module's own checks; other workers add
   // sections via window.ModelChecks).

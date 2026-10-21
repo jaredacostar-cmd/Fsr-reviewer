@@ -36,8 +36,9 @@
       <ul>${l.rows.slice(0, l.all ? l.rows.length : 5).map(r => `<li class="pnl-row${r.kv ? ' kv' : ''}${r.tone ? ` t-${esc(r.tone)}` : ''}"${r.attrs ? `${attrs(r.attrs)} tabindex="0" role="button"` : ''}>${r.html}</li>`).join('')}</ul></section>`;
   }
   // One figure card (a page's figures, Home's groups).
-  function figHTML(f, gl = x => x) {
-    return `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"${f.attrs ? `${attrs(f.attrs)} role="button" tabindex="0"` : ''}><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}</div>`;
+  // (its "?" opens how the figure is worked out, js/how.js; m: the page, or Home's group)
+  function figHTML(f, gl = x => x, m = null, i = 0) {
+    return `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"${f.attrs ? `${attrs(f.attrs)} role="button" tabindex="0"` : ''}><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}${m && root.PeelHow ? root.PeelHow.button(f, m, i) : ''}</div>`;
   }
   function pageHTML(m, note) {
     // (a zero is never coloured; n/a is never a figure)
@@ -51,14 +52,14 @@
     const seen = new Set(), gl = h => (root.PeelGlossary && m.id !== 'glossary' ? root.PeelGlossary.mark(h, seen) : h);
     out.push(`<p class="home-answer" data-psec="answer">${gl(m.answer || '')}</p>`);
     for (const c of m.caveats || []) out.push(`<p class="home-caveat small" role="note" data-psec="caveat">⚠ ${esc(c.text)}${c.at ? ` <button type="button" class="btn small link" data-ws-full data-at="${esc(c.at)}">Review →</button>` : ''}</p>`);
-    if (figs.length) out.push(`<div class="pnl-figs" data-psec="figures">${figs.map(f => figHTML(f, gl)).join('')}</div>`);
+    if (figs.length) out.push(`<div class="pnl-figs" data-psec="figures">${figs.map((f, i) => figHTML(f, gl, { key: `page:${m.id}`, files: root.PeelHow && root.PeelHow.filesFor(m.id), method: m.method, sources: m.sources }, i)).join('')}</div>`);
     // Home (step 6): the figures in groups (Growth, Servicing, Capital, Change), each with its page.
     // The groups share rows on a desk screen, each as wide as its figures (--n of 4 columns), so a
     // one- or two-figure group does not leave half a row empty.
     const grps = [];
     for (const g of m.groups || []) {
       const gf = (g.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4);
-      if (gf.length) grps.push(`<section class="home-grp" data-psec="group" style="--n:${gf.length}"><div class="home-grp-h"><h2>${esc(g.title)}</h2>${g.link ? `<button type="button" class="btn small link"${attrs(g.link.attrs)}>${esc(g.link.label)} →</button>` : ''}</div><div class="pnl-figs">${gf.map(f => figHTML(f, gl)).join('')}</div></section>`);
+      if (gf.length) grps.push(`<section class="home-grp" data-psec="group" style="--n:${gf.length}"><div class="home-grp-h"><h2>${esc(g.title)}</h2>${g.link ? `<button type="button" class="btn small link"${attrs(g.link.attrs)}>${esc(g.link.label)} →</button>` : ''}</div><div class="pnl-figs">${gf.map((f, i) => figHTML(f, gl, { key: `page:${m.id}:${g.title}`, files: root.PeelHow && root.PeelHow.filesFor(m.id) }, i)).join('')}</div></section>`);
     }
     if (grps.length) out.push(`<div class="home-grps">${grps.join('')}</div>`);
     if (m.chart) out.push(`<div class="pnl-chart page-chart" data-psec="chart">${m.chart}</div>`);
@@ -587,7 +588,7 @@
       : [{ title: 'Recently active', rows: recent.map(devRow), total: recent.length }, { title: 'Large files under review', rows: big.map(devRow), total: big.length }];
     return { id, eyebrow: `${esc(label(id))} · step 1 of 3`, name: id === 'fsr' ? 'Do the consultant’s figures match Peel’s criteria?' : 'Can this development be serviced, and when?',
       top: `<div class="page-search" id="page-search"></div>${stepper}`,
-      answer: id === 'fsr' ? `Find the development: search an address or file number, or pick one with an FSR posted${fsrRows ? ` (${fmtNum(fsrRows.length)} in Mississauga and Caledon; Brampton’s are behind a sign-in)` : ''}.` : 'Find the development: search an address or file number, or pick one below.',
+      answer: id === 'fsr' ? `Find the development: search an address or file number, or pick one with an FSR posted${fsrRows ? ` (${fmtNum(fsrRows.length)} in Mississauga and Caledon; Brampton’s are on BramPlanOnline, searched by file number)` : ''}.` : 'Find the development: search an address or file number, or pick one below.',
       lists,
       map: { svg: devsMap(((App() && App().state.filtered) || []), recent), attrs: { 'data-ws-go': id }, label: 'Pick a development on the map', caption: '<span class="hm-key hm-key-hl"></span> recently active <span class="hm-key hm-key-dev"></span> developments of 50+ units (sized by units); click to pick one on the map' },
       actions: [{ label: 'Pick on the map', attrs: { 'data-ws-go': id }, primary: true }] };
