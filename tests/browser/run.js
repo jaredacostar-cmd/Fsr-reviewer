@@ -293,7 +293,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   // are the pages' own.
   await check('Home: the municipality picker, four groups of figures, the largest left to build', browser, {}, async ({ page, ev }, expect) => {
     await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
-    await wait(1500);
+    await page.waitForFunction(() => document.querySelectorAll('#home .home-grp-h h2').length >= 4, null, { timeout: 30000 }).catch(() => {});
     const g = await ev(() => [...document.querySelectorAll('#home .home-grp-h h2')].map(h => h.textContent));
     expect(g.join() === 'Growth,Servicing,Capital,Change', `the groups: ${g.join()}`);
     await page.click('#home [data-ws-muni="Caledon"]'); await wait(3000);

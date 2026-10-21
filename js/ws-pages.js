@@ -500,7 +500,8 @@
     const unbuilt = { title: 'Largest left to build', rows: big.map(([p, u]) => ({ attrs: { 'data-ws-pick': p.key, 'data-ws-as': 'site', title: `Open ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${fmtNum(Math.round(u))} left</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${esc(lab(p.phase))}</small>` })), total: big.length };
     const PT = root.PeelPlanTables, behind = PT && PT.behindTarget ? PT.behindTarget(5) : null;
     const tgt = behind && behind.length ? { title: 'Plans furthest behind their target', rows: behind.map(x => ({ attrs: { 'data-ws-explore': x.node.id, title: `Open ${x.name} in Explore` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.name)}</span><span class="pnl-r-year">${Math.round(x.pctTotal * 100)}%</span></div><small class="pnl-r-line">${fmtNum(Math.round(x.total))} planned of a ${fmtNum(x.target.units)}-unit target${x.target.year ? ` (${x.target.year})` : ''}</small>` })), total: behind.length } : null;
-    return { id: 'home', eyebrow: esc(a.head && a.head.identity ? a.head.identity : 'Peel'), name: `${muni || 'Peel'}: what needs attention`, status: a.head && a.head.status, scen: scen(), answer: a.answer, caveats: caveats(),
+    // (pending: the servicing figures are still loading, and the page tries again until they are in)
+    return { id: 'home', pending: !ready || null, eyebrow: esc(a.head && a.head.identity ? a.head.identity : 'Peel'), name: `${muni || 'Peel'}: what needs attention`, status: a.head && a.head.status, scen: scen(), answer: a.answer, caveats: caveats(),
       top: scope,
       figures: [], groups,
       // The units the answer adds, by stage: Built since 2021 beside what is approved and in review.

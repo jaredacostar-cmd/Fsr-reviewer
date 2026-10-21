@@ -457,6 +457,9 @@
     if (!force) el.scrollTop = y;
     placeSearch(); placeMap();
     if (typeof m.onMount === 'function') try { m.onMount(el.querySelector('.page-main')); } catch (e) { /* the page stays without its async parts */ }
+
+    // A page still waiting on data that sets no panel when it lands (Home's servicing figures) tries again.
+    if (m.pending) { clearTimeout(timer); timer = setTimeout(() => renderPage(false), 1000); }
   }
   const schedule = () => { if (mode !== 'home') return; clearTimeout(timer); timer = setTimeout(() => renderPage(false), 200); };
   // Kept for the tests and older callers: Home is the page 'home'.
