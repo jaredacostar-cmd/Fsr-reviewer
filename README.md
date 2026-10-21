@@ -1421,8 +1421,8 @@ joins that application.
 ## One set of numbers: pages and the full map agree
 
 Home, the workspace pages and the full map's panels show the same figure for the same thing.
-A browser check (`npm run browser`, "pages and the full map agree") compares them for Peel and
-each municipality at every counting basis.
+Browser checks (`npm run browser`) compare them for Peel and each municipality at every counting
+basis, and for every plan, sub-area and precinct.
 
 | Figure | One rule |
 |---|---|
@@ -1432,6 +1432,7 @@ each municipality at every counting basis.
 | First 90% trigger | The first treatment plant (wastewater or water) to reach its 90% expansion trigger, then the most loaded: the same plant on Home, Servicing capacity and the Overview's headline. A facility's own *limit* (firm capacity, full pipe) is named as a limit, not a trigger. |
 | This week | One list of changes for Home, the Overview, the badge and the This week page, in the municipality picked; none on the first (baseline) update. |
 | Dormant developments | Held out of every count (`PeelPhases.dormantOf`); the stage charts on Home and Growth in an area say how many homes are left out. |
+| Plan areas | A plan filter on the map (and "Show on the map" from Growth in an area) holds the developments Growth in an area counts there, by the same placement (`PeelPlanTables.areaIdsOf`): a straddling development by its share, precincts and sub-areas included. The Overview and the header count the part inside the plan (units, people, jobs), with what the straddling developments hold outside it named beside. A precinct filed under the plan holding most of it can't pull a development out of the plan it sits in (Bram West 40 (d) was counted at half). |
 
 ## Build-out: planned vs permitted vs left to build
 

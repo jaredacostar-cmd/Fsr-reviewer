@@ -163,3 +163,13 @@ test('SPEC 1.9: the scope label says "all of Peel" only when nothing narrows it'
   assert.equal(scopeLabel({ muni: 'Caledon' }), 'Caledon');
   assert.equal(scopeLabel({ svc: 'G.E. Booth sewershed' }), 'G.E. Booth sewershed');
 });
+
+test('a precinct reaching into a neighbouring plan does not pull a development out of its own plan', () => {
+  // p1 is filed under Mayfield West; a development in Bolton whose point also falls in p1 stays in Bolton.
+  const set = [dev('b', 100, { pt: ['bolton', 'p1'] }), dev('m', 40, { pt: ['mayfield', 'p1'] }), dev('q', 10, { pt: ['p1'] })];
+  const r = R.build(set, { areas: AREAS, pointOf: p => p.pt, measure });
+  assert.equal(r.nodes.get('a:bolton').m.planned, 100, 'all of it in Bolton, not half');
+  assert.equal(r.nodes.get('a:mayfield').m.planned, 50, 'Mayfield West: its own development and the precinct-only one');
+  assert.equal(r.nodes.get('a:p1').m.planned, 50);
+  for (const n of r.nodes.values()) assert.equal(Math.round(n.check.planned * 1e6), 0, n.id);
+});

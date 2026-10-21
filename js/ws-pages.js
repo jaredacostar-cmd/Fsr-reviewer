@@ -644,8 +644,9 @@
     ] : [];
     // The area on the small map: its outline (a plan or precinct), its developments.
     // The map's plan filter takes secondary plans only: at a precinct or sub-area, its plan.
-    const spIds = new Set(((App().state.areas || {}).secondaryPlans || []).map(x => x.id));
-    const spId = (() => { for (let x = n; x; x = x.parent ? r.nodes.get(x.parent) : null) if (x.areaId && spIds.has(x.areaId)) return x.areaId; return null; })();
+    // Show on the map: this area itself (a plan, sub-area or precinct: the map's plan filter holds the
+    // same developments, js/plan-tables.js areaIdsOf); "Elsewhere in" / "Not in a plan" open the plan above.
+    const spId = (() => { for (let x = n; x; x = x.parent ? r.nodes.get(x.parent) : null) if (x.areaId) return x.areaId; return null; })();
     const A = App().state.areas, ring = n.areaId && A ? [...(A.secondaryPlans || []), ...(A.precincts || [])].find(x => x.id === n.areaId) : null;
     // (an area: the map zooms to its outline, with a margin)
     let bb = null;
