@@ -492,7 +492,7 @@
     const lateRow = r => ({ tone: 'over', attrs: r.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': r.ss, title: `Open ${r.name} on the map` } : null,
       html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}</span><span class="pnl-r-year t-over">limit ${yTxt(r.limit.y)}</span></div><small class="pnl-r-line">${esc(r.limit.what)} · ${Math.round(r.pctBo)}% at build-out · ${r.reliefY ? `relief ≈${r.reliefY}, after the limit` : 'no relief listed in the Master Plan'}</small>` });
     const area = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null;
-    return { id: 'tight', eyebrow: eyebrow('tight'), name: 'Can the system take it?', status: s.head.status, identity: s.head.identity, scen: scen(), answer: s.answer, caveats: caveats().filter(c => /source/i.test(c.text)),
+    return wsSection('servicing', { id: 'tight', top: wsBar('servicing', wsSec.servicing || 'capacity'), eyebrow: eyebrow('tight'), name: 'Can the system take it?', status: s.head.status, identity: s.head.identity, scen: scen(), answer: s.answer, caveats: caveats().filter(c => /source/i.test(c.text)),
       figures: [
         s.figures[0],
         { v: fmtNum(late.length), u: late.length === 1 ? 'facility' : 'facilities', label: 'no relief in time', ctx: `${fmtNum(late.filter(r => r.reliefY).length)} relief after the limit · ${fmtNum(late.filter(r => !r.reliefY).length)} none listed`, tone: late.length ? 'over' : 'room', attrs: { 'data-ws-go': 'tight', 'data-ws-fulltable': '1' } },
@@ -508,7 +508,7 @@
       map: { svg: capacityMap(rows), attrs: { 'data-ws-go': 'tight' }, label: 'Open Servicing capacity on the map', caption: '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out' },
       method: `${s.method} Uncommitted reserve (Ontario MECP Procedure D-5-1, treatment plants only): rated capacity less existing, built and committed flow, in ML/d and in people at Peel criteria (${fmtNum(crit.wastewater.avg)} L/person/day for wastewater; ${fmtNum(crit.water.avg)} L × ${crit.water.maxDay} maximum day for water). D-5-1 asks that collection and pumping limits be checked first: a pumping station (wastewater) or storage and zone pumping (South Peel water) over its limit is named beside the plant it limits. No relief in time: the facility reaches its limit and the 2020 Master Plan either lists no relief for it or plans the relief after that year (the same test as Capital › Timing).`,
       sources: s.sources,
-      actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'tight' }, primary: true }, { label: 'Full table', attrs: { 'data-ws-go': 'tight', 'data-ws-fulltable': 'svc:capacity' } }, { label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' } }] };
+      actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'tight' }, primary: true }, { label: 'Full table', attrs: { 'data-ws-go': 'tight', 'data-ws-fulltable': 'svc:capacity' } }, { label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' } }] });
   }
 
   // ---- Check a site / Review an FSR: the Find step ---------------------------------------------------
@@ -543,8 +543,19 @@
   // The site's sections (js/sections.js): every full-map tab's panel for this development, one at a
   // time under a section bar; Summary first. A new development opens on Summary.
   let siteSec = 'summary', siteSecDev = null;
-  function sectionBar(secs, on, attr = 'data-ws-sec') {
-    return `<nav class="page-secs" aria-label="Sections" data-psec="sections">${secs.map(s => `<button type="button" class="page-sec${s.id === on ? ' on' : ''}" ${s.page ? `data-ws-page="${esc(s.page)}"` : `${attr}="${esc(s.id)}"`} aria-pressed="${s.id === on}">${esc(s.title)}</button>`).join('')}</nav>`;
+  function sectionBar(secs, on, attr = 'data-ws-sec', prefix = '') {
+    return `<nav class="page-secs" aria-label="Sections" data-psec="sections">${secs.map(s => `<button type="button" class="page-sec${s.id === on ? ' on' : ''}" ${s.page ? `data-ws-page="${esc(s.page)}"` : `${attr}="${esc(prefix + s.id)}"`} aria-pressed="${s.id === on}">${esc(s.title)}</button>`).join('')}</nav>`;
+  }
+  // The Servicing and Capital workspaces (js/sections.js WORKSPACES): their pages, and the map's other
+  // sub-views of the tab shown on the host page (Servicing capacity, DC projects), header kept.
+  const wsSec = { servicing: null, capital: null };
+  function wsBar(ws, on) { const W = root.PeelSections && root.PeelSections.WORKSPACES[ws]; return W ? sectionBar(W.secs, on, 'data-ws-wsec', `${ws}:`) : ''; }
+  function wsSection(ws, m) {
+    const SE = root.PeelSections, id = wsSec[ws], sec = SE && id && SE.WORKSPACES[ws].secs.find(x => x.id === id);
+    if (!sec || sec.page) return m;
+    const s = SE.wsSpecFor(ws, id);
+    if (!s) return { ...m, answer: `<span class="muted">Loading ${esc(sec.title)}…</span>`, figures: [], chart: '', lists: [], folds: [], method: '', sources: '' };
+    return { ...m, status: s.head && s.head.status, identity: s.head && s.head.identity ? s.head.identity : m.identity, answer: s.answer, figures: s.figures, chart: s.chart, lists: (s.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap(m.id, r)) })), folds: s.folds, method: s.method, sources: s.sources, onMount: s.onMount };
   }
   // An area's section (Growth in an area's own drill-down, or the map's area panel for Servicing or
   // Capital: Region-wide, so a municipality or a plan says so). The header, the trail and the map stay.
@@ -734,8 +745,16 @@
   // The developments whose file tree is open (▸ on their row).
   const gOpen = new Set();
   document.addEventListener('click', e => {
-    // (an area's Growth section is its own page: its own content again)
-    const gp = e.target.closest && e.target.closest('.page-secs [data-ws-page="growth"]'); if (gp) gSec = 'growth';
+    // (an area's Growth section is its own page: its own content again; the same for a workspace's pages)
+    const gp = e.target.closest && e.target.closest('.page-secs [data-ws-page]');
+    if (gp) { if (gp.dataset.wsPage === 'growth') gSec = 'growth'; if (gp.dataset.wsPage === 'tight') wsSec.servicing = null; if (gp.dataset.wsPage === 'projects' || gp.dataset.wsPage === 'eaflow') wsSec.capital = null; }
+    const wb = e.target.closest && e.target.closest('[data-ws-wsec]');
+    if (wb && document.getElementById('home') && document.getElementById('home').contains(wb)) {
+      e.preventDefault(); e.stopPropagation();
+      const [ws, id] = wb.dataset.wsWsec.split(':'), host = root.PeelSections.WORKSPACES[ws].host; wsSec[ws] = id;
+      if (W() && W().page && W().page() !== host) W().openPage(host, { keepScroll: true }); else if (W() && W().renderPage) W().renderPage(true);
+      return;
+    }
     const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall],[data-tr-tog],[data-ws-sec],[data-ws-explore],[data-ws-asec]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
     e.preventDefault(); e.stopPropagation();
     // An area's Servicing or Capital: on Growth in an area's page (from the Forecast too).
@@ -756,7 +775,7 @@
   function projects() {
     const t = specOf('dca:timing', areaScope); if (!t) return loading('projects', 'Loading the DC program…');
     const pr = specOf('dca:projects', areaScope), ea = specOf('dca:eas', areaScope);
-    return { id: 'projects', eyebrow: eyebrow('projects'), name: 'Is the capital program arriving in time for growth?', status: t.head.status, identity: t.head.identity, scen: scen(), answer: t.answer,
+    return wsSection('capital', { id: 'projects', top: wsBar('capital', wsSec.capital || 'timing'), eyebrow: eyebrow('projects'), name: 'Is the capital program arriving in time for growth?', status: t.head.status, identity: t.head.identity, scen: scen(), answer: t.answer,
       figures: t.figures, chart: t.chart,
       lists: [
         ...(t.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('projects', r)) })).slice(0, 1),
@@ -765,7 +784,7 @@
       ],
       map: { svg: worksMap(), attrs: { 'data-ws-go': 'projects' }, label: 'Open Projects on the map', caption: '2026 DC works (draft): <span class="hm-key hm-dc-wastewater"></span> wastewater <span class="hm-key hm-dc-water"></span> water' },
       method: t.method, sources: t.sources,
-      actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'projects' }, primary: true }, { label: 'Full table', attrs: { 'data-ws-go': 'projects', 'data-ws-fulltable': 'dca:timing' } }] };
+      actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'projects' }, primary: true }, { label: 'Full table', attrs: { 'data-ws-go': 'projects', 'data-ws-fulltable': 'dca:timing' } }] });
   }
 
   // ---- Forecast: when the pipeline's homes and people arrive (Growth › Forecast, on a page) ----------
@@ -837,7 +856,7 @@
     const chartRows = [...followed, ...waiting].sort((a, b) => (a.d.completion ? a.d.completion.at : 9e15) - (b.d.completion ? b.d.completion.at : 9e15));
     const others = all.filter(x => x.other.length);
     const unknown = by('nodate');
-    return { id: 'eaflow', eyebrow: eyebrow('eaflow'), name: 'Which EAs have led to construction?', status: { tone: 'stage', text: 'From public pages' },
+    return { id: 'eaflow', top: wsBar('capital', 'eaflow'), eyebrow: eyebrow('eaflow'), name: 'Which EAs have led to construction?', status: { tone: 'stage', text: 'From public pages' },
       identity: `${esc(muni || 'Peel')} · ${fmtNum(all.length)} Region EAs · ${fmtNum(ce.data.capital.records.length)} capital project records`, scen: scen(), answer,
       figures: [
         { v: fmtNum(followed.length), u: 'EAs', label: 'construction followed', ctx: `${fmtNum(n('building'))} under construction · ${fmtNum(n('planned'))} planned · ${fmtNum(n('built'))} built` },

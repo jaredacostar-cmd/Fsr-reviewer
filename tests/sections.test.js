@@ -58,3 +58,14 @@ test('an area\u2019s Servicing and Capital: the map\u2019s area panels (Capital 
   S = load({ 'svc:capacity': { spec: cap, scope: 'dev:x' } });
   assert.equal(S.areaSpecFor('servicing'), null, 'a site\u2019s panel is not the area\u2019s');
 });
+
+test('Servicing and Capital: a page, and the map’s other sub-views of the tab as sections', () => {
+  const S = load({ 'svc:network': { spec: { answer: 'where it flows' }, scope: 'area' } });
+  assert.deepEqual(S.WORKSPACES.servicing.secs.map(s => s.title), ['Capacity', 'Network', 'Allocations', 'Model checks']);
+  assert.deepEqual(S.WORKSPACES.capital.secs.map(s => s.title), ['DC timing', 'EA to construction', 'Projects', 'EAs']);
+  assert.equal(S.WORKSPACES.servicing.host, 'tight'); assert.equal(S.WORKSPACES.capital.host, 'projects');
+  assert.equal(S.wsSpecFor('servicing', 'network').answer, 'where it flows');
+  assert.equal(S.wsSpecFor('servicing', 'capacity'), null, 'a page of its own, not a panel');
+  globalThis.PeelCapitalEA = { projectsPanelSpec: () => ({ answer: '12 under construction' }) };
+  assert.equal(S.wsSpecFor('capital', 'projects').answer, '12 under construction', 'built on demand');
+});
