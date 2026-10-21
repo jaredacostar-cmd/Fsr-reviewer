@@ -83,3 +83,13 @@ test('html: text is escaped; nothing to show says so', () => {
   assert.match(h, /var\(--ph-review\)/);
   assert.match(G.html(project(), { now: NOW }), /No files or dated events/);
 });
+
+test('model: with the file tree, files that began before their parent (its pre-consultations) lead it', () => {
+  const FT = require('../js/file-tree.js');
+  const d = { root: 'OZ 1', u: 50, n: [['OZ 1', 1, -1, '', 'h', 0, 50, 0, 'k1'], ['PRE 2', 2, 0, '', 'h', 0, 0, 0, 'k2'], ['PRE 3', 2, 0, '', 'h', 0, 0, 0, 'k3']], c: [['OZ 1', 50, 'stated']] };
+  const recs = [rec({ uid: 'a', ref: 'OZ 1', events: [ev('2022-01-01', 'review')] }), rec({ uid: 'b', ref: 'PRE 2', events: [ev('2021-03-01', 'review')] }),
+    rec({ uid: 'c', ref: 'PRE 3', events: [ev('2023-03-01', 'review')] })];
+  const by = new Map(recs.map(r => [r.ref, r]));
+  const m = G.model(project({ records: recs }), { now: NOW, tree: FT.flat(d), recOf: n => by.get(n.ref) || null });
+  assert.deepEqual(m.rows.filter(r => r.kind === 'file').map(r => r.ref), ['PRE 2', 'OZ 1', 'PRE 3']);
+});

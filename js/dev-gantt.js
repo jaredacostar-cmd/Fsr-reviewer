@@ -51,6 +51,28 @@
   const fileRow = (r, now, extra = {}) => ({ kind: 'file', group: groupOf(r), rec: r, ref: r.ref || '', uid: r.uid, label: r.ref || (r.kind === 'permit' ? 'Permit' : 'File'),
     sub: r.type || '', phase: r.phase, status: r.statusRaw || '', depth: 0, ...segments(r.events || [], r.phase, now), ...extra });
 
+  // Tree rows (depth first) in time order: under each file, its files by first event, and those
+  // that began before it (its pre-consultations, say) lead it rather than follow it.
+  function chrono(list) {
+    const start = r => Math.min(Infinity, ...(r.ev || []).map(e => +e.date));
+    const top = [], stack = [];
+    for (const r of list) {
+      const n = { r, kids: [] };
+      while (stack.length && stack[stack.length - 1].r.depth >= r.depth) stack.pop();
+      (stack.length ? stack[stack.length - 1].kids : top).push(n);
+      stack.push(n);
+    }
+    const out = [];
+    const emit = n => {
+      const kids = n.kids.slice().sort((a, b) => start(a.r) - start(b.r)), s = start(n.r);
+      kids.filter(k => start(k.r) < s).forEach(emit);
+      out.push(n.r);
+      kids.filter(k => !(start(k.r) < s)).forEach(emit);
+    };
+    top.forEach(emit);
+    return out;
+  }
+
   /** The chart's rows and span: { rows, from, to, now, more }. With opts.tree (PeelFileTree.flat) and
    *  opts.recOf(node) → record, the planning files follow the tree: each under the file whose land
    *  holds it (depth), the homes counted once (counted), a link to check (check), the earlier files
@@ -66,16 +88,16 @@
     // The planning files as the tree has them.
     const tree = opts.tree && opts.tree.length > 1 && opts.recOf ? opts.tree : null;
     if (tree) {
-      let sameHead = false;
-      rows.push({ kind: 'head', label: 'Planning files', n: tree.filter(n => !n.same).length, ev: [], segs: [] });
-      for (const n of tree) {
-        if (n.same && !sameHead) { sameHead = true; rows.push({ kind: 'head', label: 'Earlier files on the same land', note: "the site's history, not counted", n: tree.filter(x => x.same).length, ev: [], segs: [] }); }
+      const mk = n => {
         const r = opts.recOf(n);
-        if (r && used.has(r)) continue;
+        if (r && used.has(r)) return null;
         if (r) used.add(r);
         const tag = { node: n, depth: n.depth, why: n.why, check: n.check, counted: n.counted, latest: opts.latest && opts.latest === n.ref };
-        rows.push(r ? fileRow(r, now, { ...tag, label: n.ref }) : { kind: 'file', ref: n.ref, label: n.ref, sub: n.type, phase: null, status: '', ev: [], segs: [], ...tag });
-      }
+        return r ? fileRow(r, now, { ...tag, label: n.ref }) : { kind: 'file', ref: n.ref, label: n.ref, sub: n.type, phase: null, status: '', ev: [], segs: [], ...tag };
+      };
+      const main = chrono(tree.filter(n => !n.same).map(mk).filter(Boolean)), same = chrono(tree.filter(n => n.same).map(mk).filter(Boolean));
+      rows.push({ kind: 'head', label: 'Planning files', n: tree.filter(n => !n.same).length, ev: [], segs: [] }, ...main);
+      if (same.length) rows.push({ kind: 'head', label: 'Earlier files on the same land', note: "the site's history, not counted", n: tree.filter(x => x.same).length, ev: [], segs: [] }, ...same);
     }
     for (const [key, name] of GROUPS) {
       const list = (p.records || []).filter(r => !used.has(r) && groupOf(r) === key && (r.events || []).length);
