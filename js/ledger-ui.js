@@ -52,7 +52,7 @@
     const yr = yearsOfFn();
     // (the projection still loading: look again shortly, while the view is on screen)
     if ((!yr.timed || !yr.homes) && !compute.retry && typeof setTimeout === 'function') compute.retry = setTimeout(() => { compute.retry = null; if (isOn()) rerender(); }, 3000);
-    const key = [set.length, set.reduce((t, p) => t + (p.units || 0) + (p.lat || 0), 0), gateOn, yr.timed, JSON.stringify(A.state.criteria && A.state.criteria.ppu)].join('|');
+    const key = [set.length, set.reduce((t, p) => t + (p.units || 0) + (p.lat || 0), 0), gateOn, yr.timed, !!A.state.servicing, JSON.stringify(A.state.criteria && A.state.criteria.ppu)].join('|');
     if (cache.key === key) return cache;
     const crit = A.state.criteria, SD = root.PeelSvcData, MM = root.PeelMapMarkers;
     const asOf = A.state.snapshot && A.state.snapshot.generatedAt ? Date.parse(A.state.snapshot.generatedAt) : Date.now();
