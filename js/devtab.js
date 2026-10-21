@@ -1011,8 +1011,9 @@
   // Pleasant West) M" → "750-mm Water Main - Mayfield Road")
   // DC titles come from the DC map PDFs, clipped and run together ("Con 750-mm Water Main - Mayfield
   // Road (Mount M Pleasant West) M"): the kind of pipe from "<size>-mm <kind>", the road shown apart
-  // ("along …"); otherwise the title without its clipped bits. The title's size wins over the map's size
-  // field, which disagrees with the title and its description on 17 of 98 works.
+  // ("along …"); otherwise the title without its clipped bits. The size is the 2026 DC map's label; the
+  // title comes from the 2020 DC Background Study, and where its size differs (17 of 98 works, mostly
+  // larger on the 2026 map: upsized since) it is shown beside it.
   const DC_PROPER = /[A-Z][\w-]*(?:\s+[A-Z][\w-]*)*?\s+(?:Sub-Transmission Main|Transmission Main|Sanitary Trunk Sewer|Trunk Sewer|Sanitary Trunk|Force Main)(?:\s+(?:Twinning|Extension))?/g;
   const dcName = t => {
     const s0 = String(t || ''), m = /(\d{3,4})-mm\s+((?:[A-Za-z-]+\s+){0,3}?(?:Main|Sewer|Forcemain))\b/i.exec(s0);
@@ -1052,7 +1053,7 @@
         const c = lineNear(pt, ln.g); if (!c || c.m > r) continue;
         const kind = DI && DI.DC_KIND && DI.DC_KIND[ln.k] ? DI.DC_KIND[ln.k][0] : 'Planned main';
         const road = dcRoad(ln.n) || capStreet(nearStretch(ln.g, c.at)), dn = dcName(ln.n);
-        group(sys, 'dc', ln.p || ln.c || `${ln.n}|${ln.y}`, { m: c.m, at: c.at, d: dn.d || ln.d, name: dn.name || kind, year: ln.y, status: ln.s, ref: ln.p || ln.c || '', street: road, how: road ? 'along' : '', paths: [ln.g] });
+        group(sys, 'dc', ln.p || ln.c || `${ln.n}|${ln.y}`, { m: c.m, at: c.at, d: ln.d || dn.d, d2020: ln.d && dn.d && dn.d !== ln.d ? dn.d : null, name: dn.name || kind, year: ln.y, status: ln.s, ref: ln.p || ln.c || '', street: road, how: road ? 'along' : '', paths: [ln.g] });
       }
       for (const rec of (st && st.capital && st.capital.records) || []) {
         if (rec.system !== sys || !['planned', 'tendered', 'awarded', 'under construction'].includes(rec.status) || !rec.geometry) continue;
@@ -1076,7 +1077,7 @@
     const where = [o.street ? `${o.how === 'near' ? 'near' : 'along'} <strong>${esc(o.street)}</strong>` : '', mTxt(o.m)].filter(Boolean).join(' · ');
     let what;
     if (o.kind === 'existing') what = `${fmtNum(o.d)} mm${o.year ? `, ${o.year}` : ''}`;
-    else if (o.kind === 'dc') what = `${esc(o.name)}${o.d ? ` · ${fmtNum(o.d)} mm` : ''} · <b>${o.year ? `in service ${o.year}` : 'in-service year not set'}</b> <small class="muted">${esc(['2026 DC program' + (o.status ? ` (${o.status})` : ''), o.ref].filter(Boolean).join(' · '))}${o.cap ? ` · Region project ${esc(capWhen(o.cap))}` : ''}</small>`;
+    else if (o.kind === 'dc') what = `${esc(o.name)}${o.d ? ` · ${fmtNum(o.d)} mm${o.d2020 ? ` <small class="muted">(${fmtNum(o.d2020)} mm in the 2020 study)</small>` : ''}` : ''} · <b>${o.year ? `in service ${o.year}` : 'in-service year not set'}</b> <small class="muted">${esc(['2026 DC program' + (o.status ? ` (${o.status})` : ''), o.ref].filter(Boolean).join(' · '))}${o.cap ? ` · Region project ${esc(capWhen(o.cap))}` : ''}</small>`;
     else what = `${esc(o.name || 'Capital project')}${o.renewal ? ' <span class="net-renew">renewal</span>' : ''} · <b>${esc(capWhen(o))}</b> <small class="muted">Region project ${esc(o.ref)}</small>`;
     return `<li><button type="button" class="net-row" data-net-hl="${o.id}" aria-pressed="false"><i class="net-sw net-${o.sys === 'water' ? 'w' : 'ww'} net-${o.kind}"></i><span>${what} <span class="muted">${where}</span></span></button></li>`;
   }

@@ -2939,6 +2939,7 @@ with the reasons and never count as following the EA.
   zone it serves. Street: **along** a road when the road's Region project or DC line covers 70%+ of the
   pipe's length (parallel, within 40 m); **near** a road when only the nearest house address gives it
   (a guess; a main of 600 mm+ never gets a crescent or court). DC works are named from their title
-  (kind and size; the title's size wins over the map's size field, which disagrees on 17 of 98);
+  (kind; the size is the 2026 DC map's, with the 2020 DC Background Study's size beside it where it
+  differs: 17 of 98 works, mostly upsized since 2020);
   a Region project that builds a DC work joins its row; relining and trenchless works are tagged
   renewal; in-service years are the DC program's, construction dates the Region's schedule.
