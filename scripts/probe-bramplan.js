@@ -7,6 +7,11 @@
  * the real pages. Run in Actions (Probe data sources, mode=bramplan): the sandbox can't reach it.
  *
  *   node scripts/probe-bramplan.js --out bramplan-raw [--refs OZS-2026-0034,SPA-2026-0104]
+ *
+ * Result, 2026-10-21 (Actions run 39547684335): every request, the search page included, was
+ * answered "Request Rejected" by the portal's web application firewall. The portal is open to people
+ * in a browser but not to automated requests, so Brampton's documents are linked (js/provenance.js
+ * BRAMPLAN), not read. Not to be worked around (no browser disguise): ask the City for the data.
  */
 'use strict';
 const fs = require('fs');

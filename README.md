@@ -1055,7 +1055,11 @@ year whose forecast matches the tracker's build-out.
   [BramPlanOnline](https://planning.brampton.ca/CitizenAccess/Cap/CapHome.aspx?module=Planning&TabName=Planning),
   with no sign-in. A file is found by searching its number: the portal's pages need its internal
   record ids, which the open data doesn't carry. So the tab links the search and names the newest
-  file to look up. Brampton's reports aren't read automatically yet.
+  file to look up.
+  - Brampton's reports aren't read automatically. The portal is open to people, but its firewall
+    turns away automated requests: every page answered "Request Rejected" when
+    `scripts/probe-bramplan.js` ran on 2026-10-21 (Probe data sources, `mode=bramplan`). The app
+    doesn't try to get around that. Reading them needs the City's agreement or a data feed from it.
 - A link to all of the application's documents comes with it.
 
 **Supply route.** The Servicing tab's **Water** section shows where the water comes from, like
