@@ -54,10 +54,13 @@ test('the treemap: a box per area (it opens the level), a tile per development (
   assert.match(html, /class="gtm-t ly-proposed" style="[^"]+" data-ws-pick="Caledon\|1 A RD" data-ws-as="site" data-hx="10" data-hy="20"/);
   assert.match(html, /data-ws-pick="Caledon\|2 B RD" data-ws-as="site" title=/, 'no point: no ring');
   assert.match(html, /data-ws-drill="sp:a" title="Open Alloa">Alloa · 400/);
+  // The colour key: the stages shown, in the order a file moves.
+  assert.match(html, /<div class="gtm-key small" aria-label="Tile colours: the stage"><span class="gtm-k"><i class="gtm-sw ly-proposed" aria-hidden="true"><\/i>proposed<\/span><span class="gtm-k"><i class="gtm-sw stg-approved" aria-hidden="true"><\/i>approved<\/span><\/div>/);
   // Past the cap: the rest as one tile.
   const many = DT.treemapHTML([{ key: 'm', name: 'M', tiles: Array.from({ length: 5 }, (_, i) => row(`k${i}`, { v: 10 - i })) }], { cap: 3 });
   assert.equal((many.match(/data-ws-pick=/g) || []).length, 3);
   assert.match(many, /title="2 smaller developments · 13 left"/);
+  assert.match(many, /gtm-sw gtm-more" aria-hidden="true"><\/i>smaller developments, together/);
   assert.equal(DT.treemapHTML([{ key: 'z', name: 'Z', tiles: [] }]), '');
 });
 
