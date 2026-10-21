@@ -1,0 +1,85 @@
+{
+ "fetchedAt": "2026-10-21T05:07:18.439Z",
+ "home": "https://planning.brampton.ca/CitizenAccess/Cap/CapHome.aspx?module=Planning&TabName=Planning",
+ "refs": {
+  "OZS-2026-0034": {
+   "global": "02-OZS-2026-0034-global.html",
+   "globalLinks": [],
+   "globalOpened": false
+  },
+  "SPA-2026-0104": {
+   "global": "03-SPA-2026-0104-global.html",
+   "globalLinks": [],
+   "globalOpened": false
+  },
+  "DPC-2021-0004": {
+   "global": "04-DPC-2021-0004-global.html",
+   "globalLinks": [],
+   "globalOpened": false
+  },
+  "PRE-2023-0083": {
+   "global": "05-PRE-2023-0083-global.html",
+   "globalLinks": [],
+   "globalOpened": false
+  },
+  "T06W15.005": {
+   "global": "06-T06W15.005-global.html",
+   "globalLinks": [],
+   "globalOpened": false
+  }
+ },
+ "pages": [
+  {
+   "file": "01-home.html",
+   "label": "home",
+   "url": "https://planning.brampton.ca/CitizenAccess/Cap/CapHome.aspx?module=Planning&TabName=Planning",
+   "status": 200,
+   "bytes": 246,
+   "title": "Request Rejected"
+  },
+  {
+   "file": "02-OZS-2026-0034-global.html",
+   "label": "OZS-2026-0034-global",
+   "url": "https://planning.brampton.ca/CitizenAccess/Cap/GlobalSearchResults.aspx?QueryText=OZS-2026-0034",
+   "status": 200,
+   "bytes": 246,
+   "title": "Request Rejected"
+  },
+  {
+   "file": "03-SPA-2026-0104-global.html",
+   "label": "SPA-2026-0104-global",
+   "url": "https://planning.brampton.ca/CitizenAccess/Cap/GlobalSearchResults.aspx?QueryText=SPA-2026-0104",
+   "status": 200,
+   "bytes": 246,
+   "title": "Request Rejected"
+  },
+  {
+   "file": "04-DPC-2021-0004-global.html",
+   "label": "DPC-2021-0004-global",
+   "url": "https://planning.brampton.ca/CitizenAccess/Cap/GlobalSearchResults.aspx?QueryText=DPC-2021-0004",
+   "status": 200,
+   "bytes": 246,
+   "title": "Request Rejected"
+  },
+  {
+   "file": "05-PRE-2023-0083-global.html",
+   "label": "PRE-2023-0083-global",
+   "url": "https://planning.brampton.ca/CitizenAccess/Cap/GlobalSearchResults.aspx?QueryText=PRE-2023-0083",
+   "status": 200,
+   "bytes": 246,
+   "title": "Request Rejected"
+  },
+  {
+   "file": "06-T06W15.005-global.html",
+   "label": "T06W15.005-global",
+   "url": "https://planning.brampton.ca/CitizenAccess/Cap/GlobalSearchResults.aspx?QueryText=T06W15.005",
+   "status": 200,
+   "bytes": 246,
+   "title": "Request Rejected"
+  }
+ ],
+ "fields": [],
+ "postbacks": [],
+ "numField": null,
+ "searchBtn": null
+}
