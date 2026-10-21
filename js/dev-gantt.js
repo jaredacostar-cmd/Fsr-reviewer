@@ -52,9 +52,11 @@
     sub: r.type || '', phase: r.phase, status: r.statusRaw || '', depth: 0, ...segments(r.events || [], r.phase, now), ...extra });
 
   // Tree rows (depth first) in time order: under each file, its files by first event, and those
-  // that began before it (its pre-consultations, say) lead it rather than follow it.
+  // that began before it (its pre-consultations, say) lead it rather than follow it, out of its
+  // indent (they come before it, not under it). Then each file links to the next (wfFrom: where the
+  // one before began; wfOut: one follows), for the chart's waterfall.
+  const start = r => Math.min(Infinity, ...(r.ev || []).map(e => +e.date));
   function chrono(list) {
-    const start = r => Math.min(Infinity, ...(r.ev || []).map(e => +e.date));
     const top = [], stack = [];
     for (const r of list) {
       const n = { r, kids: [] };
@@ -63,13 +65,19 @@
       stack.push(n);
     }
     const out = [];
-    const emit = n => {
+    const emit = (n, lift) => {
       const kids = n.kids.slice().sort((a, b) => start(a.r) - start(b.r)), s = start(n.r);
-      kids.filter(k => start(k.r) < s).forEach(emit);
+      const before = kids.filter(k => start(k.r) < s);
+      n.r.depth = Math.max(0, (n.r.depth || 0) - lift);
+      before.forEach(k => emit(k, (k.r.depth || 0) - n.r.depth));
       out.push(n.r);
-      kids.filter(k => !(start(k.r) < s)).forEach(emit);
+      kids.filter(k => !before.includes(k)).forEach(k => emit(k, lift));
     };
-    top.forEach(emit);
+    top.forEach(n => emit(n, 0));
+    out.forEach((r, i) => {
+      const prev = out[i - 1];
+      if (prev && isFinite(start(prev)) && isFinite(start(r))) { r.wfFrom = start(prev); prev.wfOut = true; }
+    });
     return out;
   }
 
@@ -151,6 +159,13 @@
     };
     const bar = s => `<i class="gt-bar${s.open ? ' open' : ''}" style="left:${x(s.from)};width:${w(s.from, s.to)};--c:var(--ph-${esc(s.phase)})" title="${esc(`${label(s.phase)}: ${s.undated ? `status now (the date it changed isn't published); received ${day(s.from)}` : `${day(s.from)} – ${s.open ? 'today' : day(s.to)}`}`)}"></i>`;
     const track = r => `<div class="gt-t">${grid}${r.segs.map(bar).join('')}${r.ev.map(e => tick(e, r.ref)).join('')}${today}</div>`;
+    // The waterfall: a line down from where this file began to the next file, and across to where it began.
+    const wf = r => {
+      if (r.wfFrom == null && !r.wfOut) return '';
+      const s0 = start(r), a = Math.min(r.wfFrom, s0), b = Math.max(r.wfFrom, s0);
+      const into = r.wfFrom != null ? `<b class="gt-wf-in${r.wfFrom > s0 ? ' back' : ''}" style="left:${x(a)};width:calc(${x(b)} - ${x(a)})"></b>` : '';
+      return `<i class="gt-wf" aria-hidden="true">${into}${r.wfOut ? `<b class="gt-wf-dn" style="left:${x(s0)}"></b>` : ''}</i>`;
+    };
     const row = r => {
       if (r.kind === 'head') return `<div class="gt-row gt-head"><div class="gt-l">${esc(r.label)} <span class="muted">${num(r.n)}${r.note ? ` · ${esc(r.note)}` : ''}</span></div><div class="gt-t"></div></div>`;
       const chips = [r.latest ? '<span class="tr-new">latest</span>' : '', r.check ? '<span class="tr-check" title="Linked by overlap only (low confidence): check its record">check</span>' : ''].join('');
@@ -162,8 +177,8 @@
       const body = opts.body ? opts.body(r) : '';
       const ids = r.rec ? ` data-rec-uid="${esc(r.rec.uid)}" data-rec-ref="${esc(r.ref)}"` : '';
       return body
-        ? `<details class="gt-d gt-${r.kind}${r.depth ? ' gt-kid' : ''}"${ids}${r.kind === 'council' ? ' data-gt-council' : ''}><summary class="gt-row">${lab}${track(r)}</summary><div class="gt-body" style="--d:${r.depth || 0}">${body}</div></details>`
-        : `<div class="gt-row gt-${r.kind}${r.depth ? ' gt-kid' : ''}"${ids}>${lab}${track(r)}</div>`;
+        ? `<details class="gt-d gt-${r.kind}${r.depth ? ' gt-kid' : ''}"${ids}${r.kind === 'council' ? ' data-gt-council' : ''}><summary class="gt-row">${lab}${track(r)}${wf(r)}</summary><div class="gt-body" style="--d:${r.depth || 0}">${body}</div></details>`
+        : `<div class="gt-row gt-${r.kind}${r.depth ? ' gt-kid' : ''}"${ids}>${lab}${track(r)}${wf(r)}</div>`;
     };
     const used = [...new Set(m.rows.flatMap(r => r.segs.map(s => s.phase)))];
     const order = P() ? P().ALL_PHASES.map(q => q.key) : used;
@@ -174,7 +189,7 @@
       ${m.rows.map(row).join('')}
     </div>
     <p class="gt-legend small">${legend}</p>
-    <p class="small muted">Indented: on its land. Each bar runs from one dated event to the next, in the stage that event set; a file still open runs on to today (faded), in the stage of its current status when the date it changed isn't published. Press a row for its events and source record${m.more ? ` · ${num(m.more)} more files in the events list` : ''}.</p>`;
+    <p class="small muted">Indented: on its land; a file that began before the one it belongs to leads it, out of its indent. The lines step from each planning file to the next, in the order they began. Each bar runs from one dated event to the next, in the stage that event set; a file still open runs on to today (faded), in the stage of its current status when the date it changed isn't published. Press a row for its events and source record${m.more ? ` · ${num(m.more)} more files in the events list` : ''}.</p>`;
   }
 
   const api = { GROUPS, PERMIT_ROWS, segments, model, html };

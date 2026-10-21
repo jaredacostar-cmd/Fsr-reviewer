@@ -93,3 +93,18 @@ test('model: with the file tree, files that began before their parent (its pre-c
   const m = G.model(project({ records: recs }), { now: NOW, tree: FT.flat(d), recOf: n => by.get(n.ref) || null });
   assert.deepEqual(m.rows.filter(r => r.kind === 'file').map(r => r.ref), ['PRE 2', 'OZ 1', 'PRE 3']);
 });
+
+test('model: a file that leads the one it belongs to sheds its indent; each planning file links to the next', () => {
+  const FT = require('../js/file-tree.js');
+  const d = { root: 'OZ 1', u: 50, n: [['OZ 1', 1, -1, '', 'h', 0, 50, 0, 'k1'], ['PRE 2', 2, 0, '', 'h', 0, 0, 0, 'k2'], ['PRE 3', 2, 0, '', 'h', 0, 0, 0, 'k3']], c: [['OZ 1', 50, 'stated']] };
+  const recs = [rec({ uid: 'a', ref: 'OZ 1', events: [ev('2022-01-01', 'review')] }), rec({ uid: 'b', ref: 'PRE 2', events: [ev('2021-03-01', 'review')] }),
+    rec({ uid: 'c', ref: 'PRE 3', events: [ev('2023-03-01', 'review')] })];
+  const by = new Map(recs.map(r => [r.ref, r]));
+  const m = G.model(project({ records: recs }), { now: NOW, tree: FT.flat(d), recOf: n => by.get(n.ref) || null });
+  const files = m.rows.filter(r => r.kind === 'file');
+  assert.deepEqual(files.map(r => [r.ref, r.depth]), [['PRE 2', 0], ['OZ 1', 0], ['PRE 3', 1]]);
+  assert.deepEqual(files.map(r => [r.wfFrom || null, !!r.wfOut]), [[null, true], [+ev('2021-03-01').date, true], [+ev('2022-01-01').date, false]]);
+  const h = G.html(project({ records: recs }), { now: NOW, tree: FT.flat(d), recOf: n => by.get(n.ref) || null });
+  assert.equal((h.match(/class="gt-wf-in/g) || []).length, 2);
+  assert.equal((h.match(/class="gt-wf-dn/g) || []).length, 2);
+});
