@@ -6,7 +6,8 @@
  *     whose "Project documents" list the submissions (original and later ones).
  *   - Caledon: the application pages linked from town-services/development-applications.aspx,
  *     with the submissions' PDFs.
- *   - Brampton posts its documents on BramPlanOnline (sign-in), so it has no public links.
+ *   - Brampton posts its documents on BramPlanOnline (public, no sign-in), searched by file number;
+ *     its pages can't be linked per file, so the app links the search (js/provenance.js BRAMPLAN).
  * Each page's file numbers (OZ/OPA 22-32 W1, 21T-M 26-3, 21T-24009C, 2026-0016 …) are normalised
  * the way the snapshot's fileKey is (letters and numbers, the ward left out), so the app can match
  * them to an application. The FSR is the newest document named functional servicing / servicing
@@ -169,7 +170,7 @@ async function caledon() {
 (async () => {
   const items = [...await mississauga(), ...await caledon()];
   const doc = { version: 1, generatedAt: new Date().toISOString(),
-    sources: { Mississauga: 'mississauga.ca development application pages (Project documents)', Caledon: 'caledon.ca development application pages', Brampton: 'not public: documents are on BramPlanOnline (sign-in)' },
+    sources: { Mississauga: 'mississauga.ca development application pages (Project documents)', Caledon: 'caledon.ca development application pages', Brampton: 'BramPlanOnline (public, searched by file number; not linked per file): https://planning.brampton.ca/CitizenAccess/Cap/CapHome.aspx?module=Planning&TabName=Planning' },
     items };
   fs.mkdirSync(outDir, { recursive: true });
   let prev = null;

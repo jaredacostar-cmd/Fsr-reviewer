@@ -2711,6 +2711,22 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .pnl-fig .pnl-l { display: block; font-size: var(--fs-1); color: var(--text-secondary); }
 .pnl-fig small { display: block; font-size: var(--fs-1); color: var(--text-muted); }
 .pnl-fig.t-over { border-left-color: var(--pnl-over); } .pnl-fig.t-tight { border-left-color: var(--pnl-tight); } .pnl-fig.t-room { border-left-color: var(--pnl-room); } .pnl-fig.t-stage { border-left-color: var(--pnl-stage); }
+/* How is this worked out? (js/how.js): a "?" in each figure's corner opens its working under the figures. */
+.pnl-fig { position: relative; padding-right: 32px; }
+.fig-how { position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); font: 600 var(--fs-1)/1 inherit; cursor: pointer; padding: 0; }
+.fig-how:hover, .fig-how[aria-expanded="true"] { color: var(--accent); border-color: var(--accent); }
+.fig-how:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.how-box { margin: var(--space-2) 0; padding: var(--space-2) var(--space-3); background: var(--surface-2); border-left: 3px solid var(--accent); border-radius: 6px; }
+.how-box p { margin: 0 0 var(--space-1); }
+.how-k { display: block; font-size: var(--fs-1); font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .03em; }
+.how-in { width: 100%; border-collapse: collapse; margin: var(--space-1) 0 var(--space-2); }
+.how-in th, .how-in td { text-align: left; vertical-align: top; padding: 3px var(--space-2) 3px 0; border-bottom: 1px solid var(--border); font-weight: normal; }
+.how-in th { color: var(--text-secondary); }
+.how-in td:nth-child(2) { font-variant-numeric: tabular-nums; }
+.how-files ul { margin: 2px 0 var(--space-1); padding-left: 1.1em; }
+.how-files li { margin-bottom: 2px; }
+.how-acts { margin-top: var(--space-2) !important; }
+@media (max-width: 700px) { .how-in tr, .how-in th, .how-in td { display: block; border: 0; padding: 1px 0; } .how-in tr { padding: 4px 0; border-bottom: 1px solid var(--border); } }
 .pnl-chart-t { margin: 0 0 4px; }
 .pnl-list-h { display: flex; align-items: center; justify-content: space-between; gap: var(--space-2); flex-wrap: wrap; }
 .pnl-list-h h3 { margin: 0; font-size: var(--fs-2); }
@@ -2869,6 +2885,24 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
   .page-main[data-page="home"] > .home-grp { order: -1; }
   .ws-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
   .ws-chip { flex: 0 0 auto; }
+}
+/* Desk screens: the groups share rows (each spans its own figures of 4 columns), and Explore's search
+   sits beside where you are. */
+@media (min-width: 1200px) {
+  .home-grps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-3) var(--space-2); }
+  .home-grps > .home-grp { margin: 0; grid-column: span var(--n, 4); }
+  .home-grps > .home-grp .pnl-figs { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); }
+  .home-main .page-explore { flex-direction: row; align-items: center; gap: var(--space-3); }
+  .home-main .page-explore .page-search { flex: 0 1 420px; }
+  .home-main .page-explore .page-search input { height: 36px; }
+  .home-main .page-explore .ex-where { flex: 1 1 0; min-width: 0; }
+  /* (a page has room in the top bar for the action names the full map hides below 1600px) */
+  html.home-on .tb-actions .tb-btn:not(.tb-icon) { font-size: var(--fs-2); gap: 5px; }
+}
+/* Wide screens: the page uses the width rather than stopping at 1100px; the answer keeps a readable line. */
+@media (min-width: 1600px) {
+  .home-main { max-width: 1440px; }
+  .home-answer { max-width: 120ch; }
 }
 
 /* ---- Stage 4b: workspace pages (js/ws-pages.js) in Home's layout -------------------------------- */
@@ -3294,6 +3328,13 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .rf-tab th, .rf-tab td { text-align: left; vertical-align: top; padding: 6px var(--space-2) 6px 0; border-bottom: 1px solid var(--border); }
 .rf-tab thead th { font-weight: 600; color: var(--text-secondary); font-size: var(--fs-1); }
 .rf-tab tbody th { font-weight: 600; min-width: 140px; }
+/* Every data file's receipt (js/sources.js): the source links wrap, the notes sit under the name. */
+.src-table td { font-size: var(--fs-2); }
+.src-table td:first-child { min-width: 260px; max-width: 420px; }
+.src-table td small { display: block; color: var(--text-muted); font-size: var(--fs-1); margin-top: 2px; }
+.src-table td:nth-child(2) { overflow-wrap: anywhere; min-width: 200px; width: 40%; }
+.src-table td:nth-child(2) a { display: inline-block; margin-bottom: 2px; }
+.src-table td:nth-child(3), .src-table td:nth-child(4) { white-space: nowrap; }
 .rf-ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; }
 .rf-calc { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
 .rf-calc li { display: grid; grid-template-columns: 26px 1fr auto; gap: var(--space-2); align-items: start; padding: 6px 0; border-bottom: 1px solid var(--border); }
@@ -3332,6 +3373,11 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
   .rf-nav { grid-template-columns: 1fr 1fr; }
   .rf-nav > .btn { grid-column: 1 / -1; grid-row: 2; justify-self: center; }
   .rf-tab tbody th { min-width: 100px; }
+  /* Each data file as a card: name, links, date, fingerprint, one under the other. */
+  .src-table thead { display: none; }
+  .src-table tr, .src-table td { display: block; width: auto; min-width: 0; max-width: none; white-space: normal; }
+  .src-table tr { padding: var(--space-2) 0; border-bottom: 1px solid var(--border); }
+  .src-table td { border: 0; padding: 2px 0; }
 }
 /* The aerial check as a header answer (js/aerial-chip.js): a chip beside the stage; pressed, the check
    opens under the header */
@@ -3622,6 +3668,14 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .gt-yr { position: absolute; top: 0; transform: translateX(-50%); color: var(--text-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .gt-yr:first-child { transform: none; }
 .gt-head { margin-top: var(--space-2); }
+/* The waterfall: a line from where each planning file began, down and across to where the next began */
+.gt-row { position: relative; }
+.gt-wf { position: absolute; top: 0; bottom: 0; left: calc(var(--gt-l) + var(--space-2)); right: 0; pointer-events: none; z-index: 1; }
+.gt-wf b { position: absolute; border: 0 solid var(--text-muted); }
+.gt-wf .gt-wf-dn { top: 50%; bottom: 0; border-left-width: 1.5px; margin-left: -.75px; }
+.gt-wf .gt-wf-in { top: -2px; height: calc(50% + 2px); border-left-width: 1.5px; border-bottom-width: 1.5px; margin-left: -.75px; border-bottom-left-radius: 3px; }
+.gt-wf .gt-wf-in.back { border-left-width: 0; border-right-width: 1.5px; border-bottom-left-radius: 0; border-bottom-right-radius: 3px; }
+.gt-wf-in:not(.back)::after { content: ''; position: absolute; right: -1px; bottom: -4px; border: 3.5px solid transparent; border-left: 5px solid var(--text-muted); border-right-width: 0; }
 .gt-head .gt-l { color: var(--text-primary); font-weight: 500; overflow: visible; }
 .gt-head .gt-t { background: none; height: 2px; }
 .gt-stage .gt-t, .gt-council .gt-t { height: 16px; }
@@ -3640,7 +3694,7 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .gt-sw-tk { width: 2px; height: 12px; background: var(--text-primary); opacity: .7; }
 .gt-sw-now { width: 0; height: 12px; border-left: 1.5px dashed var(--text-secondary); background: none; }
 /* In a narrow panel (the map's side panel, a phone): a narrower label column, every other year */
-@container (max-width: 560px) { .gt-row { grid-template-columns: 9.5rem minmax(0, 1fr); } .gt-yr:nth-child(even) { display: none; } .gt-body { margin-left: 0; } }
+@container (max-width: 560px) { .gt-row { --gt-l: 9.5rem; } .gt-yr:nth-child(even) { display: none; } .gt-body { margin-left: 0; } }
 /* Site servicing permits on the stage bars (js/ws-pages.js stageChartHTML): a band along the bottom */
 .stg-ssp { position: absolute; left: 0; bottom: 0; height: 5px; background: var(--pnl-room); pointer-events: auto; }
 .stg-ssp-t { display: block; font-size: var(--fs-1); color: var(--pnl-room); line-height: 1.2; }

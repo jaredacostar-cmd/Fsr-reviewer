@@ -36,28 +36,33 @@
       <ul>${l.rows.slice(0, l.all ? l.rows.length : 5).map(r => `<li class="pnl-row${r.kv ? ' kv' : ''}${r.tone ? ` t-${esc(r.tone)}` : ''}"${r.attrs ? `${attrs(r.attrs)} tabindex="0" role="button"` : ''}>${r.html}</li>`).join('')}</ul></section>`;
   }
   // One figure card (a page's figures, Home's groups).
-  function figHTML(f, gl = x => x) {
-    return `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"${f.attrs ? `${attrs(f.attrs)} role="button" tabindex="0"` : ''}><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}</div>`;
+  // (its "?" opens how the figure is worked out, js/how.js; m: the page, or Home's group)
+  function figHTML(f, gl = x => x, m = null, i = 0) {
+    return `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"${f.attrs ? `${attrs(f.attrs)} role="button" tabindex="0"` : ''}><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}${m && root.PeelHow ? root.PeelHow.button(f, m, i) : ''}</div>`;
   }
   function pageHTML(m, note) {
     // (a zero is never coloured; n/a is never a figure)
     const figs = (m.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4).map(f => (String(f.v) === '0' && f.tone ? { ...f, tone: null } : f));
     const out = [];
     if (m.views) out.push(m.views);
-    out.push(`<header class="home-h" data-psec="header"><p class="page-eyebrow small">${m.eyebrow || ''}</p><h1>${esc(m.name || '')}</h1>${chipHTML(m.status)}${m.badge || ''}${m.identity ? `<p class="small muted page-id">${m.identity}</p>` : ''}${m.extra || ''}</header>`);
+    // (the scenario chip sits in the title row, beside the status: one row less above the answer)
+    out.push(`<header class="home-h" data-psec="header"><p class="page-eyebrow small">${m.eyebrow || ''}</p><h1>${esc(m.name || '')}</h1>${chipHTML(m.status)}${m.badge || ''}${m.scen ? `<div class="pnl-scen" data-psec="scenario">${m.scen}</div>` : ''}${m.identity ? `<p class="small muted page-id">${m.identity}</p>` : ''}${m.extra || ''}</header>`);
     if (m.filters) out.push(m.filters);
-    if (m.scen) out.push(`<div class="pnl-scen" data-psec="scenario">${m.scen}</div>`);
     if (m.top) out.push(m.top);
     // Bundle 5: terms underlined in the answer and figures (js/glossary.js).
     const seen = new Set(), gl = h => (root.PeelGlossary && m.id !== 'glossary' ? root.PeelGlossary.mark(h, seen) : h);
     out.push(`<p class="home-answer" data-psec="answer">${gl(m.answer || '')}</p>`);
     for (const c of m.caveats || []) out.push(`<p class="home-caveat small" role="note" data-psec="caveat">⚠ ${esc(c.text)}${c.at ? ` <button type="button" class="btn small link" data-ws-full data-at="${esc(c.at)}">Review →</button>` : ''}</p>`);
-    if (figs.length) out.push(`<div class="pnl-figs" data-psec="figures">${figs.map(f => figHTML(f, gl)).join('')}</div>`);
+    if (figs.length) out.push(`<div class="pnl-figs" data-psec="figures">${figs.map((f, i) => figHTML(f, gl, { key: `page:${m.id}`, files: root.PeelHow && root.PeelHow.filesFor(m.id), method: m.method, sources: m.sources }, i)).join('')}</div>`);
     // Home (step 6): the figures in groups (Growth, Servicing, Capital, Change), each with its page.
+    // The groups share rows on a desk screen, each as wide as its figures (--n of 4 columns), so a
+    // one- or two-figure group does not leave half a row empty.
+    const grps = [];
     for (const g of m.groups || []) {
-      const gf = (g.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v)));
-      if (gf.length) out.push(`<section class="home-grp" data-psec="group"><div class="home-grp-h"><h2>${esc(g.title)}</h2>${g.link ? `<button type="button" class="btn small link"${attrs(g.link.attrs)}>${esc(g.link.label)} →</button>` : ''}</div><div class="pnl-figs">${gf.map(f => figHTML(f, gl)).join('')}</div></section>`);
+      const gf = (g.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4);
+      if (gf.length) grps.push(`<section class="home-grp" data-psec="group" style="--n:${gf.length}"><div class="home-grp-h"><h2>${esc(g.title)}</h2>${g.link ? `<button type="button" class="btn small link"${attrs(g.link.attrs)}>${esc(g.link.label)} →</button>` : ''}</div><div class="pnl-figs">${gf.map((f, i) => figHTML(f, gl, { key: `page:${m.id}:${g.title}`, files: root.PeelHow && root.PeelHow.filesFor(m.id) }, i)).join('')}</div></section>`);
     }
+    if (grps.length) out.push(`<div class="home-grps">${grps.join('')}</div>`);
     if (m.chart) out.push(`<div class="pnl-chart page-chart" data-psec="chart">${m.chart}</div>`);
     if (m.mid) out.push(m.mid);
     const lists = (m.lists || []).filter(l => l && (l.html || (l.rows && l.rows.length)));
@@ -216,7 +221,7 @@
     ['Fire flow (Fire Underwriters Survey) and pressures', 'eye', 'Not modelled here'],
   ];
 
-  const api = { pageHTML, sectionsOf, listHTML, reserveRows, pipeGrid, likeOf, consOf, LIKE, CONS, approvedNotBuilt, COVERAGE, STAGES, stageRows, stageOf, stageChartHTML, EST_KINDS, estimateRows };
+  const api = { pageHTML, sectionsOf, briefing, listHTML, reserveRows, pipeGrid, likeOf, consOf, LIKE, CONS, approvedNotBuilt, COVERAGE, STAGES, stageRows, stageOf, stageChartHTML, EST_KINDS, estimateRows };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -236,6 +241,18 @@
   // A panel row that opened a scope opens it on the map from a page (the workspace's map view).
   const toMap = (ws, r) => { const a = r.attrs || {}, x = { 'data-ws-go': ws }; if (a['data-ss']) x['data-ws-ss'] = a['data-ss']; if (a['data-pnl-dev']) x['data-ws-dev'] = a['data-pnl-dev']; if (a['data-ce-open']) x['data-ws-ce'] = a['data-ce-open']; if (a['data-pipe'] != null) x['data-ws-pipe'] = a['data-pipe']; return { ...r, attrs: r.attrs ? { ...x, title: a.title } : null }; };
   const loading = (id, what) => ({ id, eyebrow: eyebrow(id), name: (W() && W().BY_ID[id] && W().BY_ID[id].question) || label(id), answer: `<span class="muted">${esc(what || 'Loading…')}</span>` });
+  // The Overview's area panel, once it is worked out for the developments loaded. Until the snapshot is in,
+  // and while the panel still holds the empty one drawn before it (the Growth render that redraws it waits
+  // its turn), it is null and the page says it is loading, never "No developments match" and zeros.
+  function briefing() {
+    const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null, A = App();
+    if (!a || !A) return null;
+    if (A.fullSnapshotReady && !A.fullSnapshotReady() && !(A.state.projects || []).length) return null;
+    if (OT().lastAreaCount && !OT().lastAreaCount() && (A.state.filtered || []).length) return null;
+    return a;
+  }
+  // A page waiting on the briefing: its place kept with the figures to come, and it tries again (pending).
+  const waitingFor = (id, what, groups) => ({ ...loading(id, what), pending: true, groups: (groups || []).map(([title, labels]) => ({ title, figures: labels.map(l => ({ v: '…', u: '', label: l, ctx: 'loading' })) })) });
 
   // ---- Small maps: a Peel frame from the wastewater blocks -------------------------------------------
   // bounds: [minLng, minLat, maxLng, maxLat] to zoom to (an area), else all of Peel's sewered blocks.
@@ -466,11 +483,7 @@
     ].filter(Boolean);
   }
   function home() {
-    const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; if (!a) return loading('home', 'Loading the briefing…');
-    // (before the developments are in, every figure would read 0 and the answer "No developments match";
-    // just after, the briefing can still be the one worked out from none)
-    const loaded = !(App() && App().developmentsReady && !App().developmentsReady()) && !(OT().lastAreaCount && !OT().lastAreaCount() && ((App() && App().state.filtered) || []).length);
-    if (!loaded) return { ...loading('home', 'Loading the developments…'), pending: true };
+    const a = briefing(); if (!a) return { ...waitingFor('home', 'Loading the developments and working out the briefing…', [['Growth', ['planned', 'left to build', 'at build-out', 'expected by 2031']], ['Servicing', ['over capacity at build-out', 'first 90% trigger']], ['Capital', ['DC projects late', 'with no relief in time']], ['Change', ['this week']]]), eyebrow: `Peel · ${esc((App() && App().state.muni) || 'all of Peel')}`, name: `${(App() && App().state.muni) || 'Peel'}: what needs attention`, scen: scen() };
     // The servicing model loads after the developments: until then Needs attention keeps its place with
     // a placeholder (never silently left out), and the map's key waits for the colours it explains. The
     // capacity figures wait for every facility (the pumps and pumping stations load last), so a count
@@ -508,8 +521,9 @@
     const unbuilt = { title: 'Largest left to build', rows: big.map(([p, u]) => ({ attrs: { 'data-ws-pick': p.key, 'data-ws-as': 'site', title: `Open ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${fmtNum(Math.round(u))} left</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${esc(lab(p.phase))}</small>` })), total: big.length };
     const PT = root.PeelPlanTables, behind = PT && PT.behindTarget ? PT.behindTarget(5) : null;
     const tgt = behind && behind.length ? { title: 'Plans furthest behind their target', rows: behind.map(x => ({ attrs: { 'data-ws-explore': x.node.id, title: `Open ${x.name} in Explore` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.name)}</span><span class="pnl-r-year">${Math.round(x.pctTotal * 100)}%</span></div><small class="pnl-r-line">${fmtNum(Math.round(x.total))} planned of a ${fmtNum(x.target.units)}-unit target${x.target.year ? ` (${x.target.year})` : ''}</small>` })), total: behind.length } : null;
-    // (pending: the servicing figures are still loading, and the page tries again until they are in)
-    return { id: 'home', pending: !ready || null, eyebrow: esc(a.head && a.head.identity ? a.head.identity : 'Peel'), name: `${muni || 'Peel'}: what needs attention`, status: a.head && a.head.status, scen: scen(), answer: a.answer, caveats: caveats(),
+    // (pending: the servicing figures are still loading, and the page tries again until they are in; the
+    // title's "N over" chip waits with them)
+    return { id: 'home', pending: !ready || null, eyebrow: esc(a.head && a.head.identity ? a.head.identity : 'Peel'), name: `${muni || 'Peel'}: what needs attention`, status: ready && a.head ? a.head.status : null, scen: scen(), answer: a.answer, caveats: caveats(),
       top: scope,
       figures: [], groups,
       // The units the answer adds, by stage: Built since 2021 beside what is approved and in review.
@@ -578,7 +592,7 @@
       : [{ title: 'Recently active', rows: recent.map(devRow), total: recent.length }, { title: 'Large files under review', rows: big.map(devRow), total: big.length }];
     return { id, eyebrow: `${esc(label(id))} · step 1 of 3`, name: id === 'fsr' ? 'Do the consultant’s figures match Peel’s criteria?' : 'Can this development be serviced, and when?',
       top: `<div class="page-search" id="page-search"></div>${stepper}`,
-      answer: id === 'fsr' ? `Find the development: search an address or file number, or pick one with an FSR posted${fsrRows ? ` (${fmtNum(fsrRows.length)} in Mississauga and Caledon; Brampton’s are behind a sign-in)` : ''}.` : 'Find the development: search an address or file number, or pick one below.',
+      answer: id === 'fsr' ? `Find the development: search an address or file number, or pick one with an FSR posted${fsrRows ? ` (${fmtNum(fsrRows.length)} in Mississauga and Caledon; Brampton’s are on BramPlanOnline, searched by file number)` : ''}.` : 'Find the development: search an address or file number, or pick one below.',
       lists,
       map: { svg: devsMap(((App() && App().state.filtered) || []), recent), attrs: { 'data-ws-go': id }, label: 'Pick a development on the map', caption: '<span class="hm-key hm-key-hl"></span> recently active <span class="hm-key hm-key-dev"></span> developments of 50+ units (sized by units); click to pick one on the map' },
       actions: [{ label: 'Pick on the map', attrs: { 'data-ws-go': id }, primary: true }] };
@@ -973,7 +987,7 @@
 
   // ---- This week -----------------------------------------------------------------------------------
   function week() {
-    const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; if (!a) return loading('week', 'Loading the changes…');
+    const a = briefing(); if (!a) return waitingFor('week', 'Loading the changes…');
     const ce = root.PeelCapitalEA ? root.PeelCapitalEA.attention() : [];
     const byKey = new Map(App().state.projects.map(p => [p.key, p]));
     // (the Overview's own changes: the same files, the same municipality, the same baseline rule)

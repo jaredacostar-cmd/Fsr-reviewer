@@ -111,7 +111,7 @@ function loadBrowser(areaSpec) {
   const store = new Map();
   const window = { document, PeelUtil: { esc: x => String(x == null ? '' : x).replace(/&/g, '&amp;').replace(/</g, '&lt;'), fmtNum: n => Math.round(n).toLocaleString('en-CA'), store: { get: (k, d) => (store.has(k) ? store.get(k) : d), set: (k, v) => store.set(k, v) } },
     PeelOverviewTab: { lastAreaSpec: () => areaSpec }, PeelMapMarkers: { THIS_YEAR: 2026 }, PeelSvcCapacity: { collect: () => [] }, PeelApp: { state: { muni: '', projects: [] } } };
-  const ctx = { window, document, location: { hash: '' }, setTimeout: f => f(), URLSearchParams, CustomEvent: function CustomEvent() {} }; ctx.globalThis = ctx;
+  const ctx = { window, document, location: { hash: '' }, setTimeout: f => f(), clearTimeout() {}, URLSearchParams, CustomEvent: function CustomEvent() {} }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/panel.js'), ctx);
   vm.runInNewContext(src('js/ws-pages.js'), ctx);
   vm.runInNewContext(src('js/workspaces.js'), ctx);
@@ -126,6 +126,31 @@ const AREA = {
     { title: 'This week', rows: [{ attrs: { 'data-pnl-dev': 'k1' }, html: '<small>New: 1 Main St</small>' }, { attrs: { 'data-ce-open': 'ea:7' }, html: '<small>EA comment period closes</small>' }], total: 2 },
   ],
 };
+
+test('Home while loading: never "No developments match" and zeros, its place kept with the figures to come', () => {
+  const EMPTY = { ...AREA, answer: 'No developments match the current filters.', figures: [], lists: [] };
+  // (the snapshot not in yet, and then the developments in while the briefing still holds the empty one drawn before)
+  for (const [snapshot, projects, filtered] of [[false, [], []], [true, [{}], [{}]]]) {
+    const { W: B, nodes, window } = loadBrowser(EMPTY);
+    Object.assign(window.PeelApp, { fullSnapshotReady: () => snapshot }); Object.assign(window.PeelApp.state, { projects, filtered });
+    window.PeelOverviewTab.lastAreaCount = () => 0;
+    B.setMode('home');
+    const h = nodes['#home'].innerHTML;
+    assert.ok(!h.includes('No developments match'), 'no empty-filter message while loading');
+    assert.match(h, /Loading the developments and working out the briefing…/);
+    assert.match(h, /<h1>Peel: what needs attention<\/h1>/);
+    assert.match(h, /<p class="page-eyebrow small">Peel · all of Peel<\/p>/);
+    for (const g of ['Growth', 'Servicing', 'Capital', 'Change']) assert.match(h, new RegExp(`<div class="home-grp-h"><h2>${g}</h2>`), g);
+    assert.match(h, /<b>…<\/b><span class="pnl-l">planned<\/span><small>loading<\/small>/);
+    assert.ok(!/<b>0<\/b>/.test(h), 'no zero figures');
+  }
+  // Worked out for the developments shown: the briefing as it is (a real empty filter still says so).
+  const { W: B, nodes, window } = loadBrowser(EMPTY);
+  Object.assign(window.PeelApp, { fullSnapshotReady: () => true }); Object.assign(window.PeelApp.state, { projects: [{}], filtered: [] });
+  window.PeelOverviewTab.lastAreaCount = () => 0;
+  B.setMode('home');
+  assert.ok(nodes['#home'].innerHTML.includes('No developments match'), 'a filter that matches nothing still says so');
+});
 
 test('2. workspace figures equal full-map figures (Home and This week read the Peel Overview panel)', () => {
   const { W: B, PN, nodes } = loadBrowser(AREA);

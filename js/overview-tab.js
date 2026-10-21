@@ -64,10 +64,12 @@
     const PN = root.PeelPanel, { st, f, cb, pe, kind, em, jobs, useTxt, wv, wwv, dcv, confirm, worst } = o;
     const TONE = { ok: 'room', warn: 'tight', bad: 'over' }, phl = P.PHASE_BY_KEY[p.phase].label;
     const ls = root.PeelMapLabels && root.PeelMapLabels.latestSub ? root.PeelMapLabels.latestSub(p) : null;
-    const fig = (v, u, label, ctx) => ({ v, u, label, ctx });
+    // (each figure carries its working: the "?" on it opens the inputs, the rule and the data, js/how.js)
+    const H = root.PeelHow, crit = App().state.criteria;
+    const fig = (v, u, label, ctx, how) => ({ v, u, label, ctx, how: H && how ? how() : null });
     const fmtDay = d => new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-    const who = kind === 'employment' ? [fig(fmtNum(roundPop(jobs)), 'jobs', 'on the site', ''), fig(em && em.totalM2 > 0 ? fmtNum(Math.round(em.totalM2)) : '–', 'm²', 'floor area', esc(useTxt))]
-      : [fig(fmtNum(Math.round(pe.totalUnits)), 'units', 'planned', p.unitsLost ? `net of ${fmtNum(p.unitsLost)} demolished` : kind === 'mixed' && jobs > 0 ? `and ≈${fmtNum(roundPop(jobs))} jobs` : ''), fig(fmtNum(roundPop(pe.population)), 'people', 'at build-out', pe.totalUnits > 0 ? `${(pe.population / pe.totalUnits).toFixed(2)} people per unit` : '')];
+    const who = kind === 'employment' ? [fig(fmtNum(roundPop(jobs)), 'jobs', 'on the site', '', () => H.jobs(em, crit)), fig(em && em.totalM2 > 0 ? fmtNum(Math.round(em.totalM2)) : '–', 'm²', 'floor area', esc(useTxt), () => H.jobs(em, crit))]
+      : [fig(fmtNum(Math.round(pe.totalUnits)), 'units', 'planned', p.unitsLost ? `net of ${fmtNum(p.unitsLost)} demolished` : kind === 'mixed' && jobs > 0 ? `and ≈${fmtNum(roundPop(jobs))} jobs` : '', () => H.units(p)), fig(fmtNum(roundPop(pe.population)), 'people', 'at build-out', pe.totalUnits > 0 ? `${(pe.population / pe.totalUnits).toFixed(2)} people per unit` : '', () => H.people(pe, crit))];
     const plant = f && f.pl ? (SV().PLANT_SHORT[f.pl] || f.pl) : null;
     // The servicing rows (the board's card): each opens the sub-view that holds it.
     const svcRow = (label, v, at) => ({ tone: TONE[v.tone], attrs: { 'data-at': at }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${label}</span>${PN.chip({ tone: TONE[v.tone], text: v.tone === 'ok' ? 'OK' : v.tone === 'warn' ? 'Check' : 'Short' })}</div><small class="pnl-r-line">${esc(v.text)}</small>` });
@@ -107,7 +109,7 @@
         if (gaps.length) return `${gaps.map(g => `<strong>${gapTxt(g)}</strong>`).join('; ')}${c}.`;
         return need.length ? `Check ${need.join(' and ')}: the screen finds a shortfall or an open question there${c}.` : `The screen finds no servicing shortfall for this site${c}.`;
       })(),
-      figures: [...who, fig(fmt1(cb.water.maxDay), 'L/s', 'water, maximum day', 'Peel design criteria'), fig(fmt1(cb.wastewater.wetPeak), 'L/s', 'wastewater, peak wet weather', cb.wastewater.infiltration > 0 ? esc(D.iiPlain(cb.wastewater.infiltration, App().state.criteria)) : 'peak dry + I&amp;I')],
+      figures: [...who, fig(fmt1(cb.water.maxDay), 'L/s', 'water, maximum day', 'Peel design criteria', () => H.water(pe, crit)), fig(fmt1(cb.wastewater.wetPeak), 'L/s', 'wastewater, peak wet weather', cb.wastewater.infiltration > 0 ? esc(D.iiPlain(cb.wastewater.infiltration, App().state.criteria)) : 'peak dry + I&amp;I', () => H.wastewater(pe, crit))],
       chart: (() => { const k = f && f.pl && root.PeelCapacity ? root.PeelCapacity.of(`plant:${f.pl}`) : null; return k && LB() ? `<p class="small pnl-chart-t">${esc(plant)}, the plant it drains to: existing, built, committed and proposed flow <span class="pnl-chart-u">(% of rated capacity)</span></p>${LB().capacityBarHTML(k, { small: true })}${LB().capLegendHTML()}` : ''; })(),
       lists: [
         { title: 'Servicing', rows, total: rows.length },
@@ -319,7 +321,7 @@
   // ---- Stage 3: the area Overview (Peel, a municipality, a plan) as the standard panel -----------------
   let ovSort = store.get('ovSort', 'limit');
   // The last area Overview panel (Peel or the municipality filter): Home shows its figures (Stage 4).
-  let lastArea = null, lastAreaN = 0;
+  let lastArea = null, lastAreaN = 0;   // (and how many developments it was worked out for)
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ov-sort]'); if (b) { ovSort = b.dataset.ovSort; store.set('ovSort', ovSort); renderOverview(); } });
   function areaPanelSpec(o) {
     const PN = root.PeelPanel, SC = root.PeelSvcCapacity, { set, e, basis, pipe, unitsAll, unitsWord, inPlan, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr } = o, pre = o.pre || { units: 0, people: 0 };
