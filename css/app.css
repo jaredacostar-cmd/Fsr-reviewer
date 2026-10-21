@@ -3701,6 +3701,9 @@ button.gtm-h { cursor: pointer; }
 .gtm-t.stg-approved, .gtm-t.ly-built { color: var(--swatch-paper); }
 .gtm-t b, .gtm-t small { display: block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .gtm-t:hover, .gtm-t:focus-visible { box-shadow: inset 0 0 0 2px var(--select); z-index: 2; }
+.gtm-key { display: flex; flex-wrap: wrap; gap: 4px var(--space-3); margin-top: 6px; color: var(--text-secondary); }
+.gtm-k { display: inline-flex; align-items: center; gap: 6px; }
+.gtm-sw { display: block; width: 12px; height: 12px; border-radius: 2px; flex: none; }
 .gtm-more { background: repeating-linear-gradient(135deg, var(--surface-2) 0 3px, var(--surface-1) 3px 6px); color: var(--text-muted); cursor: default; }
 /* The development (or area) under the pointer, ringed on the page's map */
 .home-map-svg .hm-ring { fill: none; stroke: var(--select); stroke-width: 2.5; pointer-events: none; }

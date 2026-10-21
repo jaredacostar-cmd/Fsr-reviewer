@@ -110,7 +110,12 @@
       return `<div class="gtm-box" style="${pct(b.x, b.y, b.w, b.h)}" data-tm-box="${esc(b.key)}"${b.area ? ` data-tm-area="${esc(b.area)}"` : ''}>`
         + `${label ? (b.drill ? `<button type="button" class="gtm-h" data-ws-drill="${esc(b.drill)}" title="Open ${esc(b.name)}">${esc(b.name)} · ${fmt(b.v)}</button>` : `<span class="gtm-h">${esc(b.name)} · ${fmt(b.v)}</span>`) : ''}<div class="gtm-in">${inner}</div></div>`;
     }).join('');
-    return `<div class="gtm" data-psec="treemap"><p class="small muted gtm-cap">${esc(o.caption || 'Homes left to build: a box per area, a tile per development (colour: stage). Hover to find it on the map.')}</p><div class="gtm-area">${html}</div></div>`;
+    // The colour key: the stages the tiles show, in the order a file moves (and the lumped smaller ones).
+    const shown = new Set(items.flatMap(b => b.tiles.filter(t => t.v >= 0.5).map(t => t.st)));
+    const lumped = items.some(b => b.tiles.filter(t => t.v >= 0.5).length > cap);
+    const key = Object.keys(STAGE_CLS).filter(k => shown.has(k)).map(k => `<span class="gtm-k"><i class="gtm-sw ${STAGE_CLS[k]}" aria-hidden="true"></i>${esc(o.stageLabel ? o.stageLabel(k) : k)}</span>`)
+      .concat(lumped ? ['<span class="gtm-k"><i class="gtm-sw gtm-more" aria-hidden="true"></i>smaller developments, together</span>'] : []).join('');
+    return `<div class="gtm" data-psec="treemap"><p class="small muted gtm-cap">${esc(o.caption || 'Homes left to build: a box per area, a tile per development (colour: stage). Hover to find it on the map.')}</p><div class="gtm-area">${html}</div><div class="gtm-key small" aria-label="Tile colours: the stage">${key}</div></div>`;
   }
 
   const api = { squarify, sortRows, short, tableHTML, treemapHTML, STAGE_CLS, ROWS };
