@@ -11,7 +11,10 @@
  *     online (found online), override, condo, precon, minor, estimate (the wording) or permits;
  *   - n: its files in tree order, each with the link that put it there (rule, overlap,
  *     confidence), for the Files view and the branch sub-developments;
- *   - s: a signature of its planning files.
+ *   - s: a signature of its planning files;
+ *   - sa: 1 when it is a site's activity (js/sites.js: files that alter what stands, no proposal),
+ *     held aside by the app unless included;
+ *   - st: the key of its site's main development, when its site holds more than one.
  * files maps each planning file ("Municipality|file key") to its development; permits lists only
  * the building permits the tree places somewhere other than the rest of their site. The app
  * regroups with these (js/tree-groups.js through buildProjects' regroup hook) and applies the
@@ -27,6 +30,7 @@ const TC = require('../js/tree-counts.js');
 const TG = require('../js/tree-groups.js');
 const P = require('../js/phases.js');
 const T = require('../js/tree.js');
+const S = require('../js/sites.js');
 
 const ROOT = path.join(__dirname, '..');
 const readJSON = f => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { return null; } };
@@ -67,9 +71,22 @@ function build(res, overridesFile, records, areasFile) {
     if (l.type === 'parent') linkOf.set(idOf.get(l.child), l);
     else for (const id of [l.b, l.a]) { const i = idOf.get(id); if (!linkOf.has(i)) linkOf.set(i, l); }
   }
+  // 0. Site → proposal → file (js/sites.js): a tree is a site; each proposal on it is a
+  // development, and the files that only alter what stands (a patio, a fit-out, a door), with
+  // history tied to no proposal, are one "site activity" development beside them (sa), which the
+  // app holds aside unless included. The parts of one site share its main development's key (st).
+  const pieces = [];
+  counts.forEach(({ t, c }, k) => {
+    const { proposals, site, scope } = S.proposalsOf(t, built);
+    // (A tree of cancelled files only is a cancelled development, as before.)
+    if ((proposals.length === 1 && !site.length) || (!proposals.length && site.every(x => scope.get(x.i).scope === 'admin'))) { pieces.push({ t, c, k }); return; }
+    const at = pieces.length, many = proposals.length + (site.length ? 1 : 0) > 1;
+    for (const x of proposals) { const tt = { id: nodes[x.root].id, nodes: x.nodes }; pieces.push({ t: tt, c: T.countTree(tt, built), k, site: many ? at : null }); }
+    if (site.length) { const tt = { id: nodes[site[0].i].id, nodes: site.map(s => s.i) }; pieces.push({ t: tt, c: T.countTree(tt, built), k, site: many ? at : null, sa: true }); }
+  });
   // 1. Each tree's count and owner (today's development holding its root file).
   let overridden = 0;
-  const trees = counts.map(({ t, c }) => {
+  const trees = pieces.map(({ t, c, k: tk, site, sa }) => {
     const rootI = t.nodes[0], root = nodes[rootI], rootRef = root.refs[0] || root.id;
     const share = p => t.nodes.filter(i => projsOfNode[i].has(p)).length;
     const holders = [...projsOfNode[rootI]].length ? [...projsOfNode[rootI]] : [...new Set(t.nodes.flatMap(i => [...projsOfNode[i]]))];
@@ -81,14 +98,35 @@ function build(res, overridesFile, records, areasFile) {
     // SPEC 1.6: the count as its parts, each file's units and how it is known.
     let parts = (c.parts || []).map(([i, u, kind, src]) => [i == null ? '' : (nodes[i].refs[0] || nodes[i].id), u, kind, src || null]);
     if (o && o.units != null) { units = o.units; basis = `your override (${o.decidedOn}): ${o.reason}`; flag = 'override'; overridden++; parts = [[rootRef, o.units, 'override', o.reason || null]]; }
-    return { t, rootRef, owner: holders[0] || null, units, basis, flag, parts, live: !t.nodes.every(i => nodes[i].cancelled) };
+    return { t, tk, site, sa: !!sa, rootRef, owner: holders[0] || null, units, basis, flag, parts, live: !t.nodes.every(i => nodes[i].cancelled) };
   });
   // 2. Keys: the owner's key for its largest tree, "<key>~<root>" for the others.
   const byOwner = new Map();
   for (const x of trees) { const k = x.owner ? x.owner.key : `${nodes[x.t.nodes[0]].municipality}|#${x.rootRef}`; (byOwner.get(k) || byOwner.set(k, []).get(k)).push(x); }
   for (const [k, list] of byOwner) {
-    list.sort((a, b) => (b.live - a.live) || b.units - a.units || b.t.nodes.length - a.t.nodes.length || a.rootRef.localeCompare(b.rootRef));
+    list.sort((a, b) => (a.sa - b.sa) || (b.live - a.live) || b.units - a.units || b.t.nodes.length - a.t.nodes.length || a.rootRef.localeCompare(b.rootRef));
     list.forEach((x, i) => { x.key = i ? `${k}~${x.rootRef}` : k; });
+  }
+  // 2·. Site activity filed as a tree of its own (the patio on 1-30 Gillingham Dr, beside the
+  // pre-consultations it isn't part of) joins the site of the live development whose land holds
+  // half of it or its point, the one with the most homes.
+  const siteKey = x => (x.site != null ? trees[x.site].key : x.stKey || null);
+  const props = trees.filter(x => !x.sa && x.live);
+  for (const x of trees) {
+    if (!x.sa || x.site != null) continue;
+    const a = nodes[x.t.nodes[0]], box = a.bbox || (a.lat != null ? [a.lng, a.lat, a.lng, a.lat] : null);
+    if (!box) continue;
+    let best = null;
+    for (const y of props) {
+      if (best && y.units < best.units) continue;
+      const holds = y.t.nodes.some(j => {
+        const b = nodes[j];
+        if (!b.rings || b.cancelled || b.municipality !== a.municipality || box[2] < b.bbox[0] || box[0] > b.bbox[2] || box[3] < b.bbox[1] || box[1] > b.bbox[3]) return false;
+        return a.rings ? T.shareInside(a, b) >= 0.5 : P.pointInRings(a.lng, a.lat, b.rings);
+      });
+      if (holds && (!best || y.units > best.units)) best = y;
+    }
+    if (best) { x.stKey = siteKey(best) || best.key; if (best.site == null) best.stKey = x.stKey; }
   }
   // 3. Developments: files in tree order (root, then each branch under its parent).
   const devs = [], files = {};
@@ -109,10 +147,11 @@ function build(res, overridesFile, records, areasFile) {
     const d = devs.length;
     // Step C1: the plans its root file's land lies in, by share of that land (a point: 1), and the
     // MTSAs it touches (an overlay, never added up).
-    const tg = tagsByTree && tagsByTree[k];
+    const tg = tagsByTree && tagsByTree[x.tk];
     const a = tg ? tg.tags.filter(g => areaIdx.has(g.id)).map(g => [areaIdx.get(g.id), +g.share.toFixed(3)]) : [];
     const mt = tg ? tg.tags.filter(g => g.kind === 'MTSA').map(g => g.id) : [];
-    devs.push({ k: x.key, root: x.rootRef, u: x.units, t: [[x.rootRef, x.units, x.basis, x.flag]], ...(x.parts.length ? { c: x.parts } : {}), n: order, ...(a.length ? { a } : {}), ...(mt.length ? { mt } : {}) });
+    devs.push({ k: x.key, root: x.rootRef, u: x.units, t: [[x.rootRef, x.units, x.basis, x.flag]], ...(x.parts.length ? { c: x.parts } : {}), n: order, ...(a.length ? { a } : {}), ...(mt.length ? { mt } : {}),
+      ...(x.sa ? { sa: 1 } : {}), ...(siteKey(x) ? { st: siteKey(x) } : {}) });
     for (const i of x.t.nodes) files[nodes[i].id] = d;
   }
   // 4. Permits: where the tree placed them, recorded only when that differs from where the rest of

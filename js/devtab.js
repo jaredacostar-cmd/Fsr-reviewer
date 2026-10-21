@@ -535,7 +535,8 @@
     const st = state(); if (!st || !k) return null;
     if (SUBS.has(k)) return SUBS.get(k);
     const i = String(k).lastIndexOf('#'), base = i > 0 ? k.slice(0, i) : k;
-    const p = st.projects.find(x => x.key === base);
+    // (every development built, the ones held aside too: site activity, dormant)
+    const p = (st.projects.all || st.projects).find(x => x.key === base);
     if (!p) {
       // A key saved before the trees became the developments (Step B2): resolve it.
       const TG = window.PeelTreeGroups, list = st.projects;
@@ -573,7 +574,10 @@
   const fileLine = r => `${esc(r.ref || 'File')}${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · <em>${esc(r.statusRaw)}</em>` : ''}`;
   function filesHTML(p) {
     const tree = p.parent ? [] : fileTree(p), formal = tree.filter(t => isFormal(t.a));
-    const rel = relatedProjects(p).slice(0, 12);
+    // Step 2 (js/sites.js): the other proposals and the site activity on this development's land.
+    const TGs = window.PeelTreeGroups, site = TGs && TGs.siteParts ? TGs.siteParts(p, (l => l && (l.all || l))((state() || {}).projects)) : [];
+    const onSite = new Set(site.map(q => q.key));
+    const rel = relatedProjects(p).filter(x => !onSite.has(x.q.key)).slice(0, 12);
     let html = '';
     const TG = window.PeelTreeGroups, treeRows = tree.length && tree[0].branch;
     if (formal.length > 1 || (formal.length && tree.length > formal.length) || (treeRows && tree.length > 1)) {
@@ -584,6 +588,15 @@
         ${treeRows ? `<p class="small muted">${esc(TG.FILES_NOTE)}</p></details>` : `<p class="small muted">Each file is listed once; pre-consultations sit under the application on the same land. The development counts its units once${counted ? ` (${fmtNum(p.buildout.planned)} planned, from the ${esc({ master: 'official plan / zoning / subdivision', siteplan: 'site plan', condo: 'condominium', other: 'planning' }[counted] || counted)} files)` : ''}; pre-consultation units are never added, since the formal application repeats them.</p></details>`}`;
     }
     if (p.areaPlan) html += `<p class="small area-note"><strong>Area plan:</strong> ${fmtNum(p.areaPlan.drafts)} draft plan${p.areaPlan.drafts === 1 ? '' : 's'} inside this ${esc(/precinct/i.test(p.description) ? 'precinct' : /block plan/i.test(p.description) ? 'block' : 'area')} ${p.areaPlan.drafts === 1 ? 'is its own development' : 'are their own developments'} (below, under Related applications)${p.areaPlan.covered ? `, carrying ${fmtNum(p.areaPlan.covered)} units` : ''}. ${p.areaPlan.covered ? `This plan counts only the units they don't already carry${p.units ? ` (${fmtNum(p.units)})` : ' (none left)'}, so nothing is counted twice.` : 'Their units are counted there, not here.'}</p>`;
+    if (site.length) {
+      const props = site.filter(q => !q.siteActivity), acts = site.filter(q => q.siteActivity);
+      const li = q => `<li>${dot(q.phase)}<div><button type="button" class="btn small link" data-dt-relq="${esc(q.key)}"><strong>${esc(q.title)}</strong></button>${q.units > 0 ? ` · ${fmtNum(q.units)} units` : ''} <span class="muted">· ${esc(P().PHASE_BY_KEY[q.phase].label)}</span>
+        <div class="small muted">${(q.records || []).filter(r => r.kind === 'application').slice(0, 3).map(fileLine).join('<br>')}</div></div></li>`;
+      html += `<details class="sect" id="devtab-site" open><summary><h2 class="section-title" data-info="dev-site">On this site</h2><span class="muted small sect-sum">${props.length ? `${fmtNum(props.length)} other proposal${props.length === 1 ? '' : 's'}` : ''}${props.length && acts.length ? ' · ' : ''}${acts.length ? 'other activity' : ''}</span></summary>
+        ${props.length ? `<h3 class="sub-title">Other proposals here</h3><ul class="file-tree">${props.map(li).join('')}</ul>` : ''}
+        ${acts.length ? `<h3 class="sub-title">Other activity on this site</h3><ul class="file-tree">${acts.map(li).join('')}</ul>` : ''}
+        <p class="small muted">${p.siteActivity ? 'These files only alter what stands on the site (no homes, no new building): they set no development\'s stage and are left out of the counts unless site activity is included (Find).' : 'Each proposal on this land has its own count and stage. Other activity (a patio, a fit-out, a new door) alters what stands: it sets no proposal\'s stage and adds no homes.'}</p></details>`;
+    }
     if (rel.length) html += `<details class="sect" id="devtab-related"${p.records.every(isPrecon) || p.areaPlan ? ' open' : ''}><summary><h2 class="section-title" data-info="dev-related">Related applications</h2><span class="muted small sect-sum">${fmtNum(rel.length)} development${rel.length === 1 ? '' : 's'} on overlapping land</span></summary>
       <ul class="file-tree">${rel.map(({ q, hits }) => `<li>${dot(q.phase)}<div><button type="button" class="btn small link" data-dt-relq="${esc(q.key)}"><strong>${esc(q.title)}</strong></button>${q.units > 0 ? ` · ${fmtNum(q.units)} units` : ''} <span class="muted">· ${esc(P().PHASE_BY_KEY[q.phase].label)}</span>
         <div class="small muted">${hits.slice(0, 4).map(h => `${fileLine(h.r)} <span class="rel-how">${esc({ 'same address': 'same address as', 'covers it': 'covers', 'within it': 'within', 'overlapping land': 'overlaps' }[h.how])} ${esc(h.m.ref)}</span>`).join('<br>')}${hits.length > 4 ? `<br>+ ${hits.length - 4} more` : ''}</div></div></li>`).join('')}</ul>

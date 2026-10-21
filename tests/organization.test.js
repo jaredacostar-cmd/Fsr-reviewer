@@ -15,14 +15,18 @@ const dev = k => TREE.devs.find(d => d.k === k);
 test('file tree: one root, the files on its land under it, earlier files on the same land folded, links to check', () => {
   const d = dev('Brampton|295 QUEEN ST E');
   const s = T.summary(d);
-  // (12 files since SPA-2021-0162 names SPA-2019-0029, "previously envisioned for the site": js/tree.js 4·)
-  assert.deepEqual([s.files, s.root, s.units, s.check, s.onLand, s.sameLand], [12, 'OZS-2025-0022', 7641, 2, 4, 7]);
+  // (SPA-2021-0162 names SPA-2019-0029, "previously envisioned for the site": js/tree.js 4·. The
+  // plaza's façade, patio and elevation plans and its 1980 site plan are the site's other activity,
+  // a development of their own beside this one: js/sites.js, step 2.)
+  assert.deepEqual([s.files, s.root, s.units, s.check, s.onLand, s.sameLand], [7, 'OZS-2025-0022', 7641, 1, 2, 4]);
   const h = T.treeHTML(d, null, { dot: k => `<i class="dot" data-k="${k}"></i>` });
   assert.match(h, /<button type="button" class="tr-ref" data-dev-file="OZS-2025-0022" title="Its source record, in History">OZS-2025-0022<\/button>[\s\S]*?<b>7,641<\/b>homes · counted here/);
-  assert.equal((h.match(/<button type="button" class="tr-check"/g) || []).length, 2, "two links to check, each opening its record"); assert.equal((h.match(/<span class="tr-check"/g) || []).length, 1, "and the key line");
-  assert.match(h, /<details class="tr-same"><summary>\+ 7 earlier files on the same land: the site's history, not counted<\/summary>/);
-  assert.match(T.summaryHTML(d), /^<b>12<\/b> files · homes counted on <b>OZS-2025-0022<\/b> \(official plan \/ zoning\)|^<b>12<\/b> files · homes counted on <b>OZS-2025-0022<\/b>/);
-  assert.match(T.summaryHTML(d), /<span class="tr-check"[^>]*>check<\/span> 2 links$/);
+  assert.equal((h.match(/<button type="button" class="tr-check"/g) || []).length, 1, "one link to check, opening its record"); assert.equal((h.match(/<span class="tr-check"/g) || []).length, 1, "and the key line");
+  assert.match(h, /<details class="tr-same"><summary>\+ 4 earlier files on the same land: the site's history, not counted<\/summary>/);
+  assert.match(T.summaryHTML(d), /^<b>7<\/b> files · homes counted on <b>OZS-2025-0022<\/b>/);
+  assert.match(T.summaryHTML(d), /<span class="tr-check"[^>]*>check<\/span> 1 link$/);
+  const site = TREE.devs.find(x => x.st === 'Brampton|295 QUEEN ST E' && x.sa);
+  assert.ok(site && site.n.some(n => n[0] === 'SPA-2026-0003'), 'the Dollarama façade is the site\'s other activity');
 });
 
 test('file tree: a block plan that states no count adds up its draft plans, and they come first', () => {

@@ -517,12 +517,17 @@
       links.push({ type: 'parent', rule: top.rule, child: c.id, parent: p.id, overlap: top.share == null ? null : +top.share.toFixed(2), point: top.point, addr: top.addr, order, confidence: conf });
     });
     // 4c. Pre-consultations: to the one formal file they overlap most (≥ 50%), never bridging two.
+    // A minor / limited site plan is not the formal file of a pre-consultation for homes or a rezoning:
+    // the patio on 1-30 Gillingham Dr (SPA-2022-0214) is not the 1,753-home master plan
+    // (PRE-2019-0043) nor its follow-up redevelopment pre-consultation (PRE-2021-0038).
+    const PRECON_BIG = /official plan|zoning|secondary plan|subdivision|residential|dwelling|redevelop/i;
     nodes.forEach((c, ci) => {
       if (c.role !== 'precon' || c.cancelled) return;
+      const homes = c.units > 0 || c.precUnits > 0 || c.records.some(r => PRECON_BIG.test(r.description || ''));
       const opts = [];
       for (const e of ev) {
         if (e.i !== ci && e.j !== ci) continue;
-        const oi = e.i === ci ? e.j : e.i, o = nodes[oi]; if (o.role === 'precon') continue;
+        const oi = e.i === ci ? e.j : e.i, o = nodes[oi]; if (o.role === 'precon' || (homes && o.minor)) continue;
         const s = e.i === ci ? e.ab : e.ba;
         if (((s != null && s >= T.PRECON) || (e.point && e.addr)) && isHistory(o, c)) { history(o, c, 'pre-consultation → the formal file it overlaps most'); continue; }
         if ((s != null && s >= T.PRECON) || (e.point && e.addr)) opts.push({ oi, s: s == null ? 0.5 : s, point: e.point, addr: e.addr });

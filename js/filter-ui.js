@@ -159,9 +159,13 @@
     // Dormant developments held aside (js/phases.js dormantOf): how many, their homes, and the switch.
     const dorm = App().state.projects.dormant || [], dHomes = dorm.reduce((t, p) => t + (p.units || 0), 0);
     const dormLine = dorm.length ? ` · <button type="button" class="btn small link" data-dormant title="No file event, permit or council item for 3 years (approved, no building permit; pre-application) or 5 years (in review)">${App().state.showDormant ? `Including ${fmtNum(dorm.length)} dormant (${fmtNum(dHomes)} homes) · leave them out` : `${fmtNum(dorm.length)} dormant left out (${fmtNum(dHomes)} homes) · include`}</button>` : '';
-    $('#f-showing').innerHTML = `<span class="find-count"><b>${fmtNum(App().state.filtered.length)}</b> developments</span> <span class="muted">${esc(what)} · ${esc(years)} · ${esc(App().state.muni || 'all of Peel')}${App().state.search ? ` · matching “${esc(App().state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''}</span> · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>${dormLine}`;
+    // Site activity held aside (js/sites.js): files that only alter what stands on a site.
+    const sx = App().state.projects.siteActivity || [];
+    const siteLine = sx.length ? ` · <button type="button" class="btn small link" data-site-activity title="Files that only alter what stands on a site (a patio, a unit fit-out, a new door), with no proposal of their own: each development's page lists them under On this site">${App().state.showSiteActivity ? `Including ${fmtNum(sx.length)} site activity · leave it out` : `${fmtNum(sx.length)} site activity left out · include`}</button>` : '';
+    $('#f-showing').innerHTML = `<span class="find-count"><b>${fmtNum(App().state.filtered.length)}</b> developments</span> <span class="muted">${esc(what)} · ${esc(years)} · ${esc(App().state.muni || 'all of Peel')}${App().state.search ? ` · matching “${esc(App().state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''}</span> · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>${dormLine}${siteLine}`;
   }
   $('#f-showing').addEventListener('click', e => {
+    if (e.target.closest('[data-site-activity]')) { App().state.showSiteActivity = !App().state.showSiteActivity; App().rebuild(); return; }
     if (!e.target.closest('[data-dormant]')) return;
     App().state.showDormant = !App().state.showDormant;
     App().rebuild();   // (rebuild → applyFilters updates the share link)
