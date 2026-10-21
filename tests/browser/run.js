@@ -212,7 +212,12 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(a.page === 'growth', `Explore opens on Growth in an area (${a.page})`);
     expect(a.search, 'the search box is at the top of the page');
     expect(a.on && a.on.wsPage === 'explore', 'Explore is lit in the sidebar');
-    expect(a.secs.join() === 'Growth,Forecast', `the area's sections: ${a.secs.join()}`);
+    expect(a.secs.join() === 'Growth,Forecast,Servicing,Capital', `the area's sections: ${a.secs.join()}`);
+    // The area's Servicing: the map's own Servicing › Capacity answer; back to Growth.
+    await page.click('#home .page-sec[data-ws-asec="servicing"]'); await wait(2000);
+    const sv = await ev(() => { const st = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(); return { on: (document.querySelector('#home .page-sec.on') || {}).textContent, page: st(document.querySelector('#home .home-answer').innerHTML), map: st(PeelPanel.get('svc:capacity').spec.answer) }; });
+    expect(sv.on === 'Servicing' && sv.page.includes(sv.map), `the area's Servicing is the map's ("${sv.page.slice(0, 50)}")`);
+    await page.click('#home .page-sec[data-ws-page="growth"]'); await wait(1500);
     // A municipality, then a development from its list: its page, with its trail.
     await page.click('#home [data-ws-drill="m:Brampton"]'); await wait(1500);
     await page.locator('#home [data-ws-pick][data-ws-as="site"]').first().click(); await wait(3500);
@@ -221,6 +226,9 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(s.trail[0] === 'Peel' && s.trail.includes('Brampton'), `its trail: ${s.trail.join(' › ')}`);
     expect(s.secs.join() === 'Summary,Growth,Servicing,Capital,Files,FSR review', `its sections: ${s.secs.join()}`);
     expect(s.search, 'the search stays at the top');
+    const lm = await ev(() => ({ inPage: !!document.querySelector('#home #page-map-slot #map'), chips: [...document.querySelectorAll('#home [data-ws-layer]')].map(b => b.dataset.wsLayer) }));
+    expect(lm.inPage, 'the live map is on the site\u2019s page');
+    expect(lm.chips.join() === 'devs,ex-water,ex-sanitary,ex-storm,dcw,cons,ea', `its layer chips: ${lm.chips.join()}`);
     // Its FSR review, then back to a section of the site.
     await page.click('#home .page-sec[data-ws-page="fsr"]'); await wait(2500);
     const f = await ev(() => ({ page: PeelWorkspaces.page(), box: !!document.querySelector('#home [data-pnl-fsrbox]'), on: (document.querySelector('#home .page-sec.on') || {}).textContent }));

@@ -1455,6 +1455,13 @@ Review an FSR, Forecast and Study area are its views.
   and what an FSR should cover). An area's: Growth (the drill-down) and Forecast.
 - The views keep their own ids (`site`, `fsr`, `growth`, `outlook`, `study`), so links, share links and
   the map-view chips still work; Explore opens the site in scope, else the last view used.
+- A site's page has the **live map** beside its sections, at the site, with the infrastructure around
+  it: existing water, sanitary and storm mains (from street zoom), the 2026 DC works, Region
+  construction and the EA study areas, and the developments; each layer is a chip under the map.
+  The full map gets its own layers back when you open it.
+- An area's sections also include **Servicing** and **Capital**: the map's Servicing › Capacity and
+  Capital › DC timing panels. They are Region-wide (the plants and the DC program serve more than one
+  municipality), and say so inside a municipality or a plan.
 
 ## Build-out: planned vs permitted vs left to build
 

@@ -19,7 +19,7 @@ test('the site sections follow the map tabs, Summary first', () => {
   assert.deepEqual(S.SITE.map(s => s.title), ['Summary', 'Growth', 'Servicing', 'Capital', 'Files', 'FSR review']);
   assert.deepEqual(S.SITE.map(s => s.tab), ['overview', 'growth', 'svc', 'dca', 'records', 'svc']);
   assert.equal(S.BY_ID.fsr.page, 'fsr', 'the FSR review is a page of its own');
-  assert.deepEqual(S.AREA.map(s => [s.title, s.page]), [['Growth', 'growth'], ['Forecast', 'outlook']]);
+  assert.deepEqual(S.AREA.map(s => [s.title, s.page || s.keys[0]]), [['Growth', 'growth'], ['Forecast', 'outlook'], ['Servicing', 'svc:capacity'], ['Capital', 'dca:timing']]);
 });
 
 test('a panel the tab set for this development is used as is; one for another scope is not', () => {
@@ -46,4 +46,15 @@ test('a section whose data is still loading is null (the page says it is loading
   const S = load({}, { dca: () => null, eas: () => ({ lists: [] }) });
   assert.equal(S.specFor('capital', p), null);
   assert.equal(S.specFor('nope', p), null);
+});
+
+test('an area\u2019s Servicing and Capital: the map\u2019s area panels (Capital built on demand)', () => {
+  const cap = { answer: 'Peel capacity' };
+  let S = load({ 'svc:capacity': { spec: cap, scope: 'area' } });
+  assert.equal(S.areaSpecFor('servicing'), cap);
+  assert.equal(S.areaSpecFor('capital'), null, 'Capital: not built yet, no builder');
+  globalThis.PeelDcaTab = { areaSpec: () => ({ answer: '1 late' }) };
+  assert.equal(S.areaSpecFor('capital').answer, '1 late');
+  S = load({ 'svc:capacity': { spec: cap, scope: 'dev:x' } });
+  assert.equal(S.areaSpecFor('servicing'), null, 'a site\u2019s panel is not the area\u2019s');
 });
