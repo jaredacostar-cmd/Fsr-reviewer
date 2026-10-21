@@ -52,6 +52,10 @@
   // chips, links and share links keep their own ids.
   const EXPLORE = ['growth', 'site', 'fsr', 'outlook', 'study'];
   const SIDE = { explore: { label: 'Explore', what: 'A site, a plan or an area you draw: growth, servicing, capital, files, FSR' } };
+  // A site's page: the live map beside its sections, at the site, with what is around it: existing
+  // water, sanitary and storm mains (from street zoom), the 2026 DC works, Region construction and the
+  // EA study areas, and the developments; each a chip on the page.
+  const SITE_MAP = ['devs', 'ex-water', 'ex-sanitary', 'ex-storm', 'dcw', 'cons', 'ea'];
   // Home's sidebar: by team (Servicing capacity with Planning), then Full map.
   const GROUPS = [
     ['Planning', ['explore', 'tight']],
@@ -123,7 +127,7 @@
   const defaultWs = last => (BY_ID[last] ? last : 'tight');
 
   // ---- Browser ----------------------------------------------------------------------------------
-  const api = { WS, GROUPS, EXPLORE, SIDE, BY_ID, LAYERS, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen, defaultWs };
+  const api = { WS, GROUPS, EXPLORE, SIDE, SITE_MAP, BY_ID, LAYERS, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen, defaultWs };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -186,7 +190,17 @@
   }
   function placeMap() {
     const m = $('#map'), slot = $('#page-map-slot');
-    if (slot && m) { if (m.parentElement !== slot) { slot.appendChild(m); invalidate(); fitPeel(); } } else putMapBack();
+    if (slot && m) { if (m.parentElement !== slot) { slot.appendChild(m); invalidate(); if (slot.dataset.site) fitSite(); else fitPeel(); } } else putMapBack();
+  }
+  // A site's page map: the infrastructure layers on, at the site (street zoom: the existing mains show).
+  let siteMapFor = null;
+  function fitSite() {
+    const p = root.DevScope && root.DevScope.current && root.DevScope.current(), map = root.PeelMapCore && root.PeelMapCore.map;
+    if (!p || !map || p.lat == null) return;
+    // (once per site: a page rebuilt while it loads keeps where the user has panned)
+    if (siteMapFor === p.key) return;
+    siteMapFor = p.key; lean('wastewater', SITE_MAP);
+    setTimeout(() => map.setView([p.lat, p.lng], 16), 60);
   }
   // Study area with nothing drawn yet: the page's map opens on all of Peel (the wastewater blocks).
   function fitPeel() {
@@ -207,14 +221,7 @@
       if (SS() && SS().current && SS().current()) SS().close();
     }
     // The chip's view from its preset (nothing saved), then its lean layers.
-    const MA = root.PeelMapAnalysis, LG = root.PeelLayerGroups;
-    if (MA && MA.showView) {
-      // (the full map's own settings are remembered once; a flag kept in the browser says the lean
-      // layers are on, so a later visit neither remembers them as the view's nor opens the full map lean)
-      if (!viewKept) { if (!store.get('wsLean', null)) MA.rememberCurrent(); viewKept = true; store.set('wsLean', true); }
-      MA.showView(pl.view);
-      if (LG && LG.apply) LG.apply(new Set(LAYERS[id] || []));
-    }
+    lean(pl.view, LAYERS[id] || []);
     const A = AT(); if (A) { if (pl.sub && A.setSub) A.setSub(pl.tab, pl.sub); if (A.setFootPref) A.setFootPref(pl.tab); A.showFootTab(pl.tab); }
     foldLayers();
     pipesLayer(id === 'pipes');
@@ -232,12 +239,24 @@
   // The map's Layers panel closes when a chip is picked (the chip has set the layers); the full map gets
   // it back as it was before the workspace.
   let layersWasOpen = null, viewKept = false, booted = false;
+  // A view preset and only these layers (a chip's map, a site page's map); the full map's own settings
+  // come back with it (restoreView).
+  function lean(view, layers) {
+    const MA = root.PeelMapAnalysis, LG = root.PeelLayerGroups;
+    if (!MA || !MA.showView) return;
+    // (the full map's own settings are remembered once; a flag kept in the browser says the lean
+    // layers are on, so a later visit neither remembers them as the view's nor opens the full map lean)
+    if (!viewKept) { if (!store.get('wsLean', null)) MA.rememberCurrent(); viewKept = true; store.set('wsLean', true); }
+    MA.showView(view);
+    if (LG && LG.apply) LG.apply(new Set(layers));
+  }
+
   // Back in the full map: the open view with its own remembered layers (not the chip's).
   function restoreView() {
     const MA = root.PeelMapAnalysis;
     if (!viewKept && !booted) return;   // (before the data and the link: bootRestore does it)
     if ((viewKept || store.get('wsLean', null)) && MA && MA.showView && MA.currentView) MA.showView(MA.currentView(), { remembered: true });
-    viewKept = false; store.set('wsLean', null);
+    viewKept = false; store.set('wsLean', null); siteMapFor = null;
   }
   // At boot, before a link is applied: a workspace's lean layers left on from an earlier visit give way
   // to the view's remembered settings unless the app opens on a workspace map (once; app.js).
@@ -473,6 +492,9 @@
     if (e.target.closest('[data-ws-backpage]')) { openPage(cur || page || 'home'); return; }
     if (e.target.closest('[data-ws-back]')) { const b = backTo; if (b && b.ws) { setMode('ws'); go(b.ws, { quiet: true, noDraw: true }); } else openPage((b && b.page) || 'home', { keepScroll: true }); return; }
     if (e.target.closest('[data-ws-back-x]')) { backTo = null; renderBack(); return; }
+    // A layer chip under a site page's map: that layer on or off.
+    const lc = e.target.closest('[data-ws-layer]');
+    if (lc) { const LG = root.PeelLayerGroups, A = LG && LG.ADAPT && LG.ADAPT[lc.dataset.wsLayer]; if (A) { let on = false; try { on = !A.get(); A.set(on); } catch (er) { /* the layer is not loaded */ } lc.classList.toggle('on', on); lc.setAttribute('aria-pressed', String(on)); } return; }
     if (e.target.closest('[data-ws-full]')) { setMode('full'); return; }
     if (e.target.closest('[data-ws-home]')) { openPage('home'); return; }
     if (e.target.closest('[data-ws-focus]')) { const s = $('#f-search'); if (s) s.focus(); return; }

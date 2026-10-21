@@ -52,7 +52,8 @@ test('1. each chip opens the stated tab and scope (and the layer preset)', () =>
   // The browser does what the plan says (go()), and every panel in a workspace carries Open full map.
   const s = src('js/workspaces.js');
   assert.match(s, /if \(pl\.closeScopes\) \{\s*if \(site\) root\.DevScope\.close\(\);\s*if \(SS\(\) && SS\(\)\.current && SS\(\)\.current\(\)\) SS\(\)\.close\(\);/);
-  assert.match(s, /MA\.showView\(pl\.view\);\s*if \(LG && LG\.apply\) LG\.apply\(new Set\(LAYERS\[id\] \|\| \[\]\)\);/);
+  assert.match(s, /lean\(pl\.view, LAYERS\[id\] \|\| \[\]\);/);
+  assert.match(s, /MA\.showView\(view\);\s*if \(LG && LG\.apply\) LG\.apply\(new Set\(layers\)\);/);
   assert.match(s, /if \(pl\.sub && A\.setSub\) A\.setSub\(pl\.tab, pl\.sub\); if \(A\.setFootPref\) A\.setFootPref\(pl\.tab\); A\.showFootTab\(pl\.tab\);/);
   assert.match(s, /data-ws-full title="The same scope, filters and scenario with every tool">Full map →/);
   assert.match(src('js/panel.js'), /e\.html\.replace\(HEAD, `\$\{HEAD\}\$\{W\.srcLine\(key\)\}`\)/);

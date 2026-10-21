@@ -2905,7 +2905,11 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .page-livemap { display: flex; flex-direction: column; gap: var(--space-2); }
 .page-map-slot { height: min(440px, 60vh); border: 1px solid var(--border); border-radius: var(--radius-panel); overflow: hidden; position: relative; }
 .page-map-slot #map { width: 100%; height: 100%; }
-.page-map-slot .leaflet-control.tool-rail, .page-map-slot .map-opts, .page-map-slot .ww-loads, .page-map-slot .leaflet-control-attribution { display: none !important; }
+.page-map-site { height: min(520px, 62vh); }
+.page-layers { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-top: var(--space-2); }
+.page-layer { min-height: 36px; }
+.page-layer.on { border-color: var(--accent); color: var(--text-primary); }
+.page-map-slot .leaflet-control.tool-rail, .page-map-slot .map-opts, .page-map-slot .ww-loads, .page-map-slot .leaflet-control-attribution, .page-map-slot .mo-legend { display: none !important; }
 /* The pages' small maps. */
 .home-map-svg .hm-dev { fill: color-mix(in srgb, var(--text-secondary) 55%, transparent); }
 .home-map-svg .hm-hl { fill: var(--text-primary); stroke: var(--surface-1); stroke-width: 1.5; }
