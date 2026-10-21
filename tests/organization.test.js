@@ -127,7 +127,7 @@ test('the trail owns the scope’s count; filters on show on pages; Review an FS
   assert.match(src('js/topbar.js'), /const count = scoped \? `<span class="tb-count" title="This development's planned homes">· \$\{fmtNum\(Math\.round\(devU\)\)\} home/);
   const w = src('js/workspaces.js');
   assert.match(w, /<div class="page-filters small" role="group" aria-label="Filters on"><span class="muted">Filters on:<\/span>/);
-  assert.match(w, /if \(!REF\[page\]\) m\.filters = filterChipsHTML\(\);/);
+  assert.match(w, /if \(!REF\[page\] && !LAB_PAGES\[page\]\) m\.filters = filterChipsHTML\(\);/);
   assert.match(src('js/ws-pages.js'), /if \(m\.filters\) out\.push\(m\.filters\);/);
   assert.match(src('index.html'), /<div class="ws-filters" id="ws-filters"><\/div>/);
   const p = src('js/ws-pages.js');

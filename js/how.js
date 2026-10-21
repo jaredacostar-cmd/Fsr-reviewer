@@ -59,6 +59,8 @@
     fsr: ['fsr.json', ...DEV, ...SVC],
     pipes: ['sewers.json', 'servicing.json', 'snapshot.json'],
     study: [...DEV, ...SVC],
+    // (Labs › Sewer designer: the Region's mains, the terrain and the roads, read live)
+    sewer: [],
     data: [],
     guides: [], roles: [], approvals: [], glossary: [], help: [],
     flows: ['peel-reports.json'], network: ['servicing.json', 'peel-reports.json', 'water-facilities.json', 'ww-facilities.json'],

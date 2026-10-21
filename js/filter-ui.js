@@ -165,10 +165,10 @@
     $('#f-showing').innerHTML = `<span class="find-count"><b>${fmtNum(App().state.filtered.length)}</b> developments</span> <span class="muted">${esc(what)} · ${esc(years)} · ${esc(App().state.muni || 'all of Peel')}${App().state.search ? ` · matching “${esc(App().state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''}</span> · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>${dormLine}${siteLine}`;
   }
   $('#f-showing').addEventListener('click', e => {
-    if (e.target.closest('[data-site-activity]')) { App().state.showSiteActivity = !App().state.showSiteActivity; App().rebuild(); return; }
+    if (e.target.closest('[data-site-activity]')) { App().state.showSiteActivity = !App().state.showSiteActivity; App().rehold(); return; }
     if (!e.target.closest('[data-dormant]')) return;
     App().state.showDormant = !App().state.showDormant;
-    App().rebuild();   // (rebuild → applyFilters updates the share link)
+    App().rehold();   // (rehold → applyFilters updates the share link)
   });
   function renderFilterUI() {
     renderSectionSummaries();

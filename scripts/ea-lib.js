@@ -497,9 +497,13 @@ function resolveGeometry(ea, ctx) {
   // 3. sewer / watermain on a named street
   if (/sewer|sanitary|water ?main|feedermain|trunk|forcemain|transmission main|servicing/i.test(name)) {
     const dc = (ctx.dcLines || []).filter(l => l.name && overlapTokens(name, l.name) >= 2);
-    if (dc.length) return { geometry: multi(dc.flatMap(l => l.paths)), geomType: 'linear', geomMethod: 'DC capital map mains named like the EA', geomConfidence: 'medium' };
-    const cap = (ctx.capital || []).filter(r => r.geometry && r.street && (r.system === 'water' || r.system === 'wastewater') && C.sameStreet(r.street, name));
-    if (cap.length) return { geometry: multi(cap.flatMap(r => r.geometry.type === 'LineString' ? [r.geometry.coordinates] : r.geometry.coordinates)), geomType: 'linear', geomMethod: 'capital project lines on the named street', geomConfidence: 'medium' };
+    // Mains matched by name that spread over more than 15 km are not one study's mains.
+    if (dc.length && spanKm(dc.flatMap(l => l.paths.flat())) <= 15) return { geometry: multi(dc.flatMap(l => l.paths)), geomType: 'linear', geomMethod: 'DC capital map mains named like the EA', geomConfidence: 'medium' };
+    // (in the EA's municipality, by the record's ward: "Queen Victoria Avenue" in Mississauga is not
+    // Brampton's Queen Street)
+    const wardOk = r => { const m = { M: 'mississauga', B: 'brampton', C: 'caledon' }[String(r.ward || '').charAt(0).toUpperCase()]; const ms = (ea.municipalities || []).map(x => String(x).toLowerCase()); return !m || !ms.length || ms.some(x => x.includes(m)); };
+    const cap = (ctx.capital || []).filter(r => r.geometry && r.street && (r.system === 'water' || r.system === 'wastewater') && C.sameStreet(r.street, name) && wardOk(r));
+    if (cap.length && spanKm(cap.flatMap(r => (r.geometry.type === 'LineString' ? r.geometry.coordinates : r.geometry.coordinates.flat()))) <= 15) return { geometry: multi(cap.flatMap(r => r.geometry.type === 'LineString' ? [r.geometry.coordinates] : r.geometry.coordinates)), geomType: 'linear', geomMethod: 'capital project lines on the named street', geomConfidence: 'medium' };
   }
   // 4. area study
   const areaOk = !rd && (systemOf(name) !== 'roads' || /secondary plan|\barea\b/i.test(name));
@@ -514,9 +518,12 @@ function resolveGeometry(ea, ctx) {
   if (mu && MC[mu]) return { geometry: { type: 'Point', coordinates: MC[mu] }, geomType: 'approx', geomMethod: `municipality centre: ${mu}`, geomConfidence: 'low' };
   return { geometry: null, geomType: 'approx', geomMethod: 'none', geomConfidence: 'low' };
 }
+const spanKm = pts => { if (!pts.length) return 0; const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]), kx = 111.32 * Math.cos(ys[0] * Math.PI / 180); return Math.hypot((Math.max(...xs) - Math.min(...xs)) * kx, (Math.max(...ys) - Math.min(...ys)) * 110.57); };
 const multi = paths => (paths.length === 1 ? { type: 'LineString', coordinates: paths[0] } : { type: 'MultiLineString', coordinates: paths });
+// (street types name no particular street: "Fair Birch Drive ... Lorne Park Road" and "Dixie Road
+// ... Drive" share no main)
 function overlapTokens(a, b) {
-  const A = new Set(tokens(a).filter(t => !/^(sanitary|sewer|water|main|watermain|trunk|mm|\d+)$/.test(t)));
+  const A = new Set(tokens(a).filter(t => !/^(sanitary|sewer|water|main|watermain|trunk|mm|\d+|road|rd|drive|dr|avenue|ave|av|street|st|boulevard|blvd|bv|crescent|cres|court|crt|lane|way|line|parkway|pkwy|trail|place|gate|improvements?|replacement)$/.test(t)));
   let n = 0; for (const t of new Set(tokens(b))) if (A.has(t)) n++;
   return n;
 }

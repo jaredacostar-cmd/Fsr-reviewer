@@ -262,9 +262,12 @@
   const NUM_WORD = { one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7, eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13, fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18, nineteen: 19, twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60, seventy: 70, eighty: 80, ninety: 90 };
   const NUM_WORDS = Object.keys(NUM_WORD).join('|');
   const HOME_NOUN = '(?:units?|dwellings?|townhouses?|townhomes?|town ?houses?|homes|houses|lots|singles|semis)';
+  // (compiled once: numberWords runs for every record's text)
+  const NUM_PAREN_RE = new RegExp(`\\b(?:(?:${NUM_WORDS}|hundred|thousand)(?:[- ]|\\s+and\\s+|\\s+)?)+\\s*\\((\\d{1,5})\\)`, 'gi');
+  const NUM_HOME_RE = new RegExp(`\\b(${NUM_WORDS})\\b(?=\\s+(?:[a-z-]+\\s+){0,3}?${HOME_NOUN}\\b)`, 'gi');
   function numberWords(s) {
-    s = s.replace(new RegExp(`\\b(?:(?:${NUM_WORDS}|hundred|thousand)(?:[- ]|\\s+and\\s+|\\s+)?)+\\s*\\((\\d{1,5})\\)`, 'gi'), '$1');
-    return s.replace(new RegExp(`\\b(${NUM_WORDS})\\b(?=\\s+(?:[a-z-]+\\s+){0,3}?${HOME_NOUN}\\b)`, 'gi'), w => String(NUM_WORD[w.toLowerCase()]));
+    s = s.replace(NUM_PAREN_RE, '$1');
+    return s.replace(NUM_HOME_RE, w => String(NUM_WORD[w.toLowerCase()]));
   }
   // "9 units" in a retail plaza, an industrial building, a hotel or a care home aren't homes.
   const NOT_HOME_UNITS = /retail|commercial|industrial|plaza|hotel|motel|office|warehouse|storage|employment|nursing|long[- ]term care|retirement|care home|demising/i;
@@ -333,8 +336,16 @@
   // additional or second unit, SUP a partial superstructure permit).
   // The canonical key drops separators, leading zeros, ward and stage suffixes.
   const REF_SUFFIX = /^(CON|COM|FTR|FDN|CR\d*|R\d+|REV\d*|SS|W\d{1,2}|ARU|SU|SUP)$/;
+  // (kept per ref string: every rebuild canonicalises the same refs ~90,000 times)
+  const canoned = new Map();
   function canonRef(ref) {
-    let t = String(ref || '').toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean);
+    const key = String(ref || '');
+    let v = canoned.get(key);
+    if (v === undefined) { v = canonRefOf(key); if (canoned.size > 200000) canoned.clear(); canoned.set(key, v); }
+    return v;
+  }
+  function canonRefOf(ref) {
+    let t = ref.toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean);
     if (!t.length) return '';
     while (t.length > 2 && REF_SUFFIX.test(t[t.length - 1])) t.pop();
     // Brampton AMANDA permits "00-100302-000-00": the last two parts are revision numbers.
@@ -718,8 +729,16 @@
   }
 
   /** "ISSUE_DATE" -> "Issue date" for display. */
+  // (a handful of distinct field names, humanised once per event on every rebuild)
+  const humanized = new Map();
   function humanizeField(name) {
-    const s = String(name || '').replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[_]+/g, ' ').trim().toLowerCase()
+    const key = String(name || '');
+    let v = humanized.get(key);
+    if (v === undefined) { v = humanizeFieldOf(key); if (humanized.size > 10000) humanized.clear(); humanized.set(key, v); }
+    return v;
+  }
+  function humanizeFieldOf(name) {
+    const s = name.replace(/([a-z])([A-Z])/g, '$1 $2').replace(/[_]+/g, ' ').trim().toLowerCase()
       .replace(/([a-z])(date|number|desc)$/, '$1 $2').replace(/^in date$/, 'received date').replace(/^final date$/, 'final inspection date');
     return s.charAt(0).toUpperCase() + s.slice(1);
   }

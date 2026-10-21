@@ -81,8 +81,10 @@
     // No size within the velocity range: every size too slow (the velocity falls as the size grows,
     // so the smallest, 100 mm, comes closest), or every size too fast (the largest comes closest).
     const big = sz.all[sz.all.length - 1], under = !sz.pick && sz.all[0].v < sz.vMin;
-    const pick = sz.pick || (under ? sz.all[0] : big);
-    if (!sz.pick) reasons.push(under ? `the flow is too small for ${sz.vMin.toFixed(1)} m/s in the 100 mm minimum (${sz.all[0].v.toFixed(2)} m/s): it needs variable speed pumps or a flushing cycle; shown at 100 mm, the closest`
+    // A size chosen (opts.dmm): that size, its velocity checked like any other.
+    const chosen = opts.dmm ? sz.all.find(c => c.dmm === +opts.dmm) : null;
+    const pick = chosen || sz.pick || (under ? sz.all[0] : big);
+    if (!sz.pick && !chosen) reasons.push(under ? `the flow is too small for ${sz.vMin.toFixed(1)} m/s in the 100 mm minimum (${sz.all[0].v.toFixed(2)} m/s): it needs variable speed pumps or a flushing cycle; shown at 100 mm, the closest`
       : `the flow needs more than 3.0 m/s in the largest size (${big.dmm} mm, ${big.v.toFixed(2)} m/s); shown at ${big.dmm} mm, the closest`);
     const D = pick.dmm / 1000, Q = qLs / 1000, cover = opts.ici ? r.coverIci : r.coverRes;
     // The shallowest pipe with its cover, smoothed over the window (the lowest within ±SMOOTH/2).
@@ -109,7 +111,8 @@
     const highs = t.filter(p => p.kind === 'high'), lows = t.filter(p => p.kind === 'low');
     const v = vel(Q, D);
     const checks = [
-      { t: `Size (${r.dMin} mm minimum; the largest that reaches the minimum velocity, for the least head loss)`, pass: !!sz.pick, val: `${pick.dmm} mm` },
+      chosen ? { t: `Size (${r.dMin} mm minimum, as chosen; within the velocity range)`, pass: chosen.ok, val: `${pick.dmm} mm${sz.pick && sz.pick.dmm !== pick.dmm ? ` (the tool's pick: ${sz.pick.dmm} mm)` : ''}` }
+        : { t: `Size (${r.dMin} mm minimum; the largest that reaches the minimum velocity, for the least head loss)`, pass: !!sz.pick, val: `${pick.dmm} mm` },
       { t: `Velocity at the design flow (${sz.vMin.toFixed(1)} m/s or more${opts.vfd ? ', variable speed pumps with weekly 1.0 m/s flushing' : ''})`, pass: v >= sz.vMin - 1e-9, val: `${v.toFixed(2)} m/s` },
       { t: 'Velocity (3.0 m/s or less)', pass: v <= r.vMax + 1e-9, val: `${v.toFixed(2)} m/s` },
       { t: `Cover over the pipe (${cover} m or more)`, pass: minCover >= cover - 0.01, val: `${minCover.toFixed(2)} m at the least` },
@@ -119,7 +122,7 @@
       { t: 'High and low points (avoid where practical; air release at highs, drains at lows)', pass: true, val: `${highs.length} high, ${lows.length} low` },
     ];
     return {
-      ok: !reasons.length, why: reasons[0] || '', reasons, dmm: pick.dmm, material: pick.dmm >= 600 ? 'concrete pressure pipe or PVC / HDPE at 600 mm' : 'PVC or HDPE',
+      ok: !reasons.length, why: reasons[0] || '', reasons, dmm: pick.dmm, chosen: !!chosen, material: pick.dmm >= 600 ? 'concrete pressure pipe or PVC / HDPE at 600 mm' : 'PVC or HDPE',
       q: qLs, v, L, hf: hfTot, hfPerKm: sPer * 1000, lift, over, tdh, ww, wwAssumed, wwNote, outletInv, outEl, cover, prof, highs, lows,
       power: 1000 * G * Q * tdh / 1000, sizes: sz.all, vMin: sz.vMin, checks, source: SOURCE,
       // The system curve: head at a fraction of the design flow (static plus friction).

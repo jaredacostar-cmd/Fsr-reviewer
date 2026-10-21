@@ -22,7 +22,7 @@ function loadTabs({ labs = [], site = false, publicView = false, siteEas = 3 } =
   const window = { PeelUtil: { store, isPublic: () => publicView }, document,
     PeelLabs: { on: id => labs.includes(id) },
     DevScope: { current: () => (site ? { key: 'x' } : null) },
-    PeelCapitalEA: { siteEaCount: () => (site ? siteEas : null) } };
+    PeelCapitalEA: { siteBriefCount: () => (site ? siteEas : null) } };
   const ctx = { window, document, setTimeout: () => 0, module: { exports: {} } };
   ctx.globalThis = ctx;
   vm.runInNewContext(src('js/analysis-tabs.js'), ctx);
