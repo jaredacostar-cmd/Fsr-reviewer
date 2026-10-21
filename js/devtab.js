@@ -535,7 +535,8 @@
     const st = state(); if (!st || !k) return null;
     if (SUBS.has(k)) return SUBS.get(k);
     const i = String(k).lastIndexOf('#'), base = i > 0 ? k.slice(0, i) : k;
-    const p = st.projects.find(x => x.key === base);
+    // (every development built, the ones held aside too: site activity, dormant)
+    const p = (st.projects.all || st.projects).find(x => x.key === base);
     if (!p) {
       // A key saved before the trees became the developments (Step B2): resolve it.
       const TG = window.PeelTreeGroups, list = st.projects;
