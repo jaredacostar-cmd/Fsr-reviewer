@@ -323,7 +323,9 @@
     [/registered|registration|m-plan/i, 'ok', 'Plan registered or being registered'],
     [/agreement/i, 'ok', 'Agreement being prepared or executed'],
     [/\bmzo\b/i, 'ok', "Approved by Minister's Zoning Order"],
-    [/withheld/i, 'info', 'Status withheld in the municipal data'],
+    // Mississauga lists "Withheld" among its active statuses (City Planning Data Hub): an open
+    // file with no decision yet, never in its approved layer.
+    [/withheld/i, 'info', 'Active application, no decision yet'],
   ];
   // Council and committee items naming the development's files (data/council.json, loaded on
   // first use): date, meeting, item, outcome, the reports and correspondence attached, and the

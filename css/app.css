@@ -2964,6 +2964,8 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .stg-nm-key { display: inline-block; width: 14px; height: 9px; border: 1.5px dashed var(--text-primary); border-radius: 2px; vertical-align: -1px; }
 .stg-approved { background: color-mix(in srgb, var(--ly-committed) 60%, var(--surface-2)); }
 .stg-permitted { background: var(--ly-committed); }
+/* (Built since 2021 in the completed grey: told apart from Approved, no permit yet at a glance) */
+.stg-built { background: var(--ph-completed); }
 .stg-v { text-align: right; }
 .stg-p { text-align: right; font-size: var(--fs-1); }
 .stg-foot { margin: 4px 0 0; }
@@ -3726,7 +3728,7 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 button.gtm-h { cursor: pointer; }
 .gtm-in { position: relative; flex: 1 1 auto; }
 .gtm-t { position: absolute; box-sizing: border-box; display: flex; flex-direction: column; align-items: flex-start; margin: 0; padding: 2px 4px; border: 0; box-shadow: inset 0 0 0 1px var(--surface-0); overflow: hidden; color: var(--ly-ink); font: inherit; font-size: 10px; line-height: 12px; text-align: left; cursor: pointer; }
-.gtm-t.stg-approved, .gtm-t.ly-built { color: var(--swatch-paper); }
+.gtm-t.stg-approved { color: var(--swatch-paper); }
 .gtm-t b, .gtm-t small { display: block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .gtm-t:hover, .gtm-t:focus-visible { box-shadow: inset 0 0 0 2px var(--select); z-index: 2; }
 .gtm-key { display: flex; flex-wrap: wrap; gap: 4px var(--space-3); margin-top: 6px; color: var(--text-secondary); }
