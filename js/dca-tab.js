@@ -288,8 +288,14 @@
     st.works = st.works || DI().devWorks(p, f);
     return siteTimingSpec(p, st, f);
   }
+  // Capital › DC timing for the area (Peel), built on demand (an area's Capital section).
+  function areaSpec() {
+    if (!App().state.svcModel || !App().state.dcInfra || !MM().SEW.data) return null;
+    return timingSpec(DC().dcAnalysis());
+  }
   const api = {
     siteSpec,
+    areaSpec,
     renderDca,
     renderDcaTiming,
     renderDcaRec,

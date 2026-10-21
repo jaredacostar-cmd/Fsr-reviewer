@@ -543,8 +543,27 @@
   // The site's sections (js/sections.js): every full-map tab's panel for this development, one at a
   // time under a section bar; Summary first. A new development opens on Summary.
   let siteSec = 'summary', siteSecDev = null;
-  function sectionBar(secs, on) {
-    return `<nav class="page-secs" aria-label="Sections" data-psec="sections">${secs.map(s => `<button type="button" class="page-sec${s.id === on ? ' on' : ''}" ${s.page ? `data-ws-page="${esc(s.page)}"` : `data-ws-sec="${esc(s.id)}"`} aria-pressed="${s.id === on}">${esc(s.title)}</button>`).join('')}</nav>`;
+  function sectionBar(secs, on, attr = 'data-ws-sec') {
+    return `<nav class="page-secs" aria-label="Sections" data-psec="sections">${secs.map(s => `<button type="button" class="page-sec${s.id === on ? ' on' : ''}" ${s.page ? `data-ws-page="${esc(s.page)}"` : `${attr}="${esc(s.id)}"`} aria-pressed="${s.id === on}">${esc(s.title)}</button>`).join('')}</nav>`;
+  }
+  // An area's section (Growth in an area's own drill-down, or the map's area panel for Servicing or
+  // Capital: Region-wide, so a municipality or a plan says so). The header, the trail and the map stay.
+  let gSec = 'growth';
+  function areaSection(where, m) {
+    const SE = root.PeelSections; if (gSec === 'growth' || !SE) return m;
+    const s = SE.areaSpecFor(gSec), t = (SE.AREA.find(x => x.id === gSec) || {}).title || '';
+    if (!s) return { ...m, answer: `<span class="muted">Loading ${esc(t)} (the servicing model and the DC program)…</span>`, figures: [], chart: '', lists: [], folds: [], method: '', sources: '' };
+    const wide = where ? `<span class="muted small">Peel-wide: the plants and the DC program serve more than ${esc(where)}.</span> ` : '';
+    return { ...m, status: s.head && s.head.status, answer: `${wide}${s.answer || ''}`, figures: s.figures, chart: s.chart, lists: (s.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap(gSec === 'servicing' ? 'tight' : 'projects', r)) })), folds: s.folds, method: s.method, sources: s.sources, onMount: s.onMount };
+  }
+  // A site page's live map (js/workspaces.js placeMap → fitSite): the map itself, at the site, with the
+  // infrastructure around it, each layer a chip under it.
+  const SITE_LAYERS = [['devs', 'Developments'], ['ex-water', 'Existing water'], ['ex-sanitary', 'Existing sewers'], ['ex-storm', 'Storm'], ['dcw', '2026 DC works'], ['cons', 'Region construction'], ['ea', 'EA study areas']];
+  function siteLiveMap(p) {
+    const LG = root.PeelLayerGroups, on = k => { try { return !!(LG && LG.ADAPT && LG.ADAPT[k] && LG.ADAPT[k].get()); } catch (e) { return false; } };
+    const chips = SITE_LAYERS.map(([k, t]) => `<button type="button" class="btn small page-layer${on(k) ? ' on' : ''}" data-ws-layer="${k}" aria-pressed="${on(k)}">${esc(t)}</button>`).join('');
+    return { title: 'Where: the site and the infrastructure around it', attrs: { 'data-ws-go': 'site' }, link: 'Open the map', html: `<div class="page-map-slot page-map-site" id="page-map-slot" data-site="${esc(p.key)}"></div><div class="page-layers" role="group" aria-label="Layers on this map">${chips}</div>`,
+      caption: '<span class="hm-key hm-key-site"></span> the site (outlined) · existing mains show from street zoom; dashed: the 2026 DC program; the Region\u2019s construction and EA study areas. The same layers as the full map.' };
   }
   // Explore (Check a site, Review an FSR, Growth in an area, Forecast, Study area: one workspace): the
   // one search, where you are (Peel › municipality › plan › site, each a step back up), and Draw an area.
@@ -575,7 +594,7 @@
       answer: waiting ? `<span class="muted">Loading ${esc((SE.BY_ID[siteSec] || {}).title || '')} for ${esc(p.title)} (the servicing model and the DC program)…</span>` : b.answer,
       caveats: [], figures: waiting ? [] : b.figures, chart: waiting ? '' : b.chart,
       lists: waiting ? [] : (b.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('site', r)) })),
-      map: { svg: siteMap(p), attrs: { 'data-ws-go': 'site' }, label: `Open ${p.title} on the map`, caption: '<span class="hm-key hm-key-site"></span> the site <span class="hm-key hm-key-dev"></span> nearby developments · sewers · 2026 DC works (dashed)' },
+      map: siteLiveMap(p),
       folds: waiting ? [] : b.folds, method: waiting ? '' : b.method, sources: waiting ? '' : b.sources, onMount: waiting ? null : b.onMount,
       actions: [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, { label: 'Review its FSR', attrs: { 'data-ws-page': 'fsr' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'site' } }] };
   }
@@ -687,8 +706,8 @@
     const answer = atPeel
       ? `${pl.answer}${f2031 ? ` About <strong>${f2031.v}</strong> units are expected by 2031 (${f2031.ctx}).` : ''}${svcLine}`
       : `<strong>${esc(n.name)}</strong> ${trail[1] && trail[1] !== n ? ` (${esc(trail[1].name)})` : ''} holds <strong>${n0(m.planned)}</strong> planned units, ${p0(m.people)} people${m.jobs >= 0.5 ? ` and ${p0(m.jobs)} jobs` : ''} at build-out; ${n0(anb)} approved, not yet built, ${n0(m.left)} left to build.${svcLine}`;
-    return { id: 'growth', eyebrow: `${esc(label('growth'))} · ${crumbs}${atPeel ? '' : ` <span class="page-kind">${esc(kind(n))}</span>`}`, name: atPeel ? 'How much is coming, where, and how fast?' : n.name, status: null, identity: atPeel ? esc(`${App().state.muni || 'Peel'} · ${fmtNum(plans.length)} plans with planned units`) : esc(`${fmtNum(dm.size)} developments${trail.length > 2 ? ` · in ${trail[trail.length - 2].name}` : ''}`), scen: scen(), answer,
-      top: `${exploreBar('')}${root.PeelSections ? sectionBar(root.PeelSections.AREA, 'growth') : ''}`,
+    return areaSection(atPeel ? (App().state.muni || '') : n.name, { id: 'growth', eyebrow: `${esc(label('growth'))} · ${crumbs}${atPeel ? '' : ` <span class="page-kind">${esc(kind(n))}</span>`}`, name: atPeel ? 'How much is coming, where, and how fast?' : n.name, status: null, identity: atPeel ? esc(`${App().state.muni || 'Peel'} · ${fmtNum(plans.length)} plans with planned units`) : esc(`${fmtNum(dm.size)} developments${trail.length > 2 ? ` · in ${trail[trail.length - 2].name}` : ''}`), scen: scen(), answer,
+      top: `${exploreBar('')}${root.PeelSections ? sectionBar(root.PeelSections.AREA, gSec, 'data-ws-asec') : ''}`,
       figures: [
         // (units and jobs at the Scenario's counting basis, as the people and the Overview: one basis)
         basis === 'all' ? { v: n0(m.planned), u: 'units', label: 'planned', ctx: `${n0(m.left)} left to build` } : { v: n0(m.counted), u: 'units', label: G.basisUnits(basis), ctx: `of ${n0(m.planned)} planned` },
@@ -709,14 +728,18 @@
       map: { svg: mapSvg, attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' }, label: `Show ${n.name} on the map`, caption: ring ? `<span class="hm-key hm-key-area"></span> ${esc(n.name)} <span class="hm-key hm-key-dev"></span> its developments (sized by units)` : '<span class="hm-key hm-key-dev"></span> developments of 50+ units (sized by units) · municipal outlines' },
       method: `${pl.method} Drill-down: Growth › Areas' plan tree (Peel, municipality, secondary plan or character area, precinct or sub-area, then "not in a plan" and "elsewhere in the plan"); every level equals the sum of the levels under it, and a site split between plans counts its share. The stages follow a file: pre-application (pre-consultation, block or precinct plan), in review, approved (draft or site plan approved; split on whether its building permits are issued), built since the 2021 census. Estimated counts: a file's units left to build that are not stated on it (found online, a pre-consultation estimate, an estimate from the wording, or counted from building permits), the hatching on the stage bars. A file with more than one kind of estimate has its estimate split between the kinds in proportion to their units. Employment: the floor area the applications state and the jobs it holds at Peel's floor space per job.${tm && atPeel ? ` ${tm.method}` : ''}`,
       sources: pl.sources,
-      actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'Show on the map', attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } }, !atPeel ? { label: '↑ Up a level', attrs: { 'data-ws-drill': n.parent || 'peel' } } : null] };
+      actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'Show on the map', attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } }, !atPeel ? { label: '↑ Up a level', attrs: { 'data-ws-drill': n.parent || 'peel' } } : null] });
   }
   let gAll = false, gEst = false;
   // The developments whose file tree is open (▸ on their row).
   const gOpen = new Set();
   document.addEventListener('click', e => {
-    const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall],[data-tr-tog],[data-ws-sec],[data-ws-explore]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
+    // (an area's Growth section is its own page: its own content again)
+    const gp = e.target.closest && e.target.closest('.page-secs [data-ws-page="growth"]'); if (gp) gSec = 'growth';
+    const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall],[data-tr-tog],[data-ws-sec],[data-ws-explore],[data-ws-asec]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
     e.preventDefault(); e.stopPropagation();
+    // An area's Servicing or Capital: on Growth in an area's page (from the Forecast too).
+    if (t.dataset.wsAsec) { gSec = t.dataset.wsAsec; if (W() && W().page && W().page() !== 'growth') { W().openPage('growth', { keepScroll: true }); return; } if (W() && W().renderPage) W().renderPage(true); return; }
     // A site's section from its FSR review: back on the site's page, at that section.
     if (t.dataset.wsSec && W() && W().page && W().page() !== 'site') { siteSec = t.dataset.wsSec; W().openPage('site', { keepScroll: true }); return; }
     // A step up the trail from a site: Growth in an area at that level (the site closes).
@@ -750,7 +773,7 @@
     const t = specOf('growth:timing', areaScope); if (!t) return loading('outlook', 'Timing the pipeline…');
     const SE = root.PeelSections;
     return { id: 'outlook', eyebrow: eyebrow('outlook'), name: 'When do the homes and people arrive?', status: t.head.status, identity: t.head.identity, scen: scen(), answer: t.answer,
-      top: `${exploreBar('')}${SE ? sectionBar(SE.AREA, 'outlook') : ''}`,
+      top: `${exploreBar('')}${SE ? sectionBar(SE.AREA, 'outlook', 'data-ws-asec') : ''}`,
       figures: t.figures, chart: t.chart,
       lists: (t.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('outlook', r)) })),
       map: { svg: devsMap((App() && App().state.filtered) || []), attrs: { 'data-ws-go': 'outlook' }, label: 'Open Forecast on the map', caption: '<span class="hm-key hm-key-dev"></span> developments of 50+ units' },
@@ -887,7 +910,7 @@
         { title: 'What the FSR should cover', rows: COVERAGE.map(([t, k, d]) => ({ kv: true, html: `<div class="pnl-kv"><span>${esc(t)}<small class="muted"> · ${esc(d)}</small></span><span class="t-${WD[k][0]}">${WD[k][1]}</span></div>` })), total: COVERAGE.length },
         ...(s.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('fsr', r)) })),
       ],
-      map: { svg: siteMap(p), attrs: { 'data-ws-go': 'fsr' }, label: `Open ${p.title} on the map`, caption: '<span class="hm-key hm-key-site"></span> the site · sewers · 2026 DC works nearby (dashed)' },
+      map: siteLiveMap(p),
       folds: s.folds, method: `${s.method || ''} What the FSR should cover: Region of Peel, Functional Servicing Report Requirements (November 2009); confirm the current version with the Region.`, sources: s.sources,
       onMount: host => { if (typeof s.onMount === 'function') try { s.onMount(host); } catch (e) { /* the async parts */ } const b = host.querySelector('[data-pnl-fsrbox]'); if (b && F && F.mount) F.mount(b, p); },
       actions: [{ label: 'Copy the comparison', attrs: { 'data-ws-fsrcopy': '' }, primary: true }, { label: 'Print / PDF', attrs: { 'data-ws-fsrprint': '' } }, { label: 'Check the site', attrs: { 'data-ws-page': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'fsr' } }] };
