@@ -22,7 +22,7 @@
   //          total, see: attrs }], map: { svg, caption, attrs, html }, folds: [{ title, html, open }],
   //          method, sources, actions: [{ label, attrs, primary }], note, chip, scen, top (before the answer:
   //          a search box, a live map), mid (after the figures: a form, a grid, a summary) }
-  // The first list sits beside the map; the others follow. Sections with nothing are left out.
+  // The lists and folds sit beside the map (held in view); Method and Sources below. Sections with nothing are left out.
   const attrs = a => Object.entries(a || {}).map(([k, v]) => (v === true ? ` ${k}` : v == null || v === false ? '' : ` ${k}="${esc(v)}"`)).join('');
   const TONE_WORD = { over: 'Over', tight: 'Tight', room: 'Room', stage: '' };
   // (a chip that opens its answer: a button with ▸, as on the panels)
@@ -58,11 +58,13 @@
     }
     if (m.chart) out.push(`<div class="pnl-chart page-chart" data-psec="chart">${m.chart}</div>`);
     if (m.mid) out.push(m.mid);
-    const lists = (m.lists || []).filter(l => l && l.rows && l.rows.length), first = lists[0];
+    const lists = (m.lists || []).filter(l => l && l.rows && l.rows.length);
     const mapSec = m.map && (m.map.svg || m.map.html || m.map.attrs) ? `<section class="home-map" data-psec="map"><div class="pnl-list-h"><h3>${esc(m.map.title || 'Where')}</h3>${m.map.attrs ? `<button type="button" class="btn small link"${attrs(m.map.attrs)}>${esc(m.map.link || 'Open the map')} →</button>` : ''}</div>${m.map.html || `<button type="button" class="home-map-btn"${attrs(m.map.attrs)} aria-label="${esc(m.map.label || 'Open the map')}">${m.map.svg || '<span class="home-map-empty small muted">Open the map</span>'}</button>`}${m.map.caption ? `<p class="small muted">${m.map.caption}</p>` : ''}${m.map.svg && /hm-tiles|sk-tiles/.test(m.map.svg) ? '<p class="hm-credit small muted">Basemap: Esri, HERE, Garmin, © OpenStreetMap contributors</p>' : ''}</section>` : '';
-    if (first || mapSec) out.push(`<div class="home-cols">${first ? listHTML(first) : '<div></div>'}${mapSec}</div>`);
-    for (const l of lists.slice(1)) out.push(listHTML(l));
-    for (const f of (m.folds || []).filter(x => x && x.html)) out.push(`<details class="pnl-fold" data-psec="fold"${f.open ? ' open' : ''}${f.id ? ` id="${esc(f.id)}"` : ''}><summary>${esc(f.title)}</summary><div>${f.html}</div></details>`);
+    // Every list and fold in the column beside the map, the map held in view as they scroll (no empty
+    // space beside a tall map under a short first list); Method and Sources run full width below.
+    const body = [...lists.map(l => listHTML(l)), ...(m.folds || []).filter(x => x && x.html).map(f => `<details class="pnl-fold" data-psec="fold"${f.open ? ' open' : ''}${f.id ? ` id="${esc(f.id)}"` : ''}><summary>${esc(f.title)}</summary><div>${f.html}</div></details>`)].join('');
+    if (mapSec) out.push(`<div class="home-cols"><div class="home-col-main">${body}</div>${mapSec}</div>`);
+    else if (body) out.push(body);
     if (m.method) out.push(`<details class="pnl-fold" data-psec="method"><summary>Method and basis</summary><div class="small muted">${m.method}</div></details>`);
     if (m.sources) out.push(`<details class="pnl-fold" data-psec="sources"><summary>Sources</summary><div class="small muted">${m.sources}</div></details>`);
     const acts = (m.actions || []).filter(Boolean);
@@ -498,7 +500,8 @@
     const unbuilt = { title: 'Largest left to build', rows: big.map(([p, u]) => ({ attrs: { 'data-ws-pick': p.key, 'data-ws-as': 'site', title: `Open ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${fmtNum(Math.round(u))} left</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${esc(lab(p.phase))}</small>` })), total: big.length };
     const PT = root.PeelPlanTables, behind = PT && PT.behindTarget ? PT.behindTarget(5) : null;
     const tgt = behind && behind.length ? { title: 'Plans furthest behind their target', rows: behind.map(x => ({ attrs: { 'data-ws-explore': x.node.id, title: `Open ${x.name} in Explore` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.name)}</span><span class="pnl-r-year">${Math.round(x.pctTotal * 100)}%</span></div><small class="pnl-r-line">${fmtNum(Math.round(x.total))} planned of a ${fmtNum(x.target.units)}-unit target${x.target.year ? ` (${x.target.year})` : ''}</small>` })), total: behind.length } : null;
-    return { id: 'home', eyebrow: esc(a.head && a.head.identity ? a.head.identity : 'Peel'), name: `${muni || 'Peel'}: what needs attention`, status: a.head && a.head.status, scen: scen(), answer: a.answer, caveats: caveats(),
+    // (pending: the servicing figures are still loading, and the page tries again until they are in)
+    return { id: 'home', pending: !ready || null, eyebrow: esc(a.head && a.head.identity ? a.head.identity : 'Peel'), name: `${muni || 'Peel'}: what needs attention`, status: a.head && a.head.status, scen: scen(), answer: a.answer, caveats: caveats(),
       top: scope,
       figures: [], groups,
       // The units the answer adds, by stage: Built since 2021 beside what is approved and in review.

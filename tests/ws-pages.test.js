@@ -24,12 +24,13 @@ test('the page template: Home’s layout, sections in order, empty ones left out
     actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'tight' }, primary: true }, { label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' } }],
   };
   const h = WP.pageHTML(m, NOTE);
-  assert.deepEqual(plain(WP.sectionsOf(h)), ['header', 'scenario', 'answer', 'caveat', 'figures', 'chart', 'list', 'map', 'list', 'fold', 'method', 'sources', 'footer']);
+  // (every list and fold in the column beside the map, then the map)
+  assert.deepEqual(plain(WP.sectionsOf(h)), ['header', 'scenario', 'answer', 'caveat', 'figures', 'chart', 'list', 'list', 'fold', 'map', 'method', 'sources', 'footer']);
   assert.equal((h.match(/class="pnl-fig[ "]/g) || []).length, 4, 'at most four figures');
   assert.equal((h.match(/<li class="pnl-row/g) || []).length, 6, 'five rows of the first list, one of the second');
   assert.match(h, /<h3>Soonest limits<\/h3><button type="button" class="btn small link" data-ws-go="tight">See all \(6\) →<\/button>/);
-  // The first list sits beside the map (Home's two columns); the map opens the workspace's map view.
-  assert.match(h, /<div class="home-cols"><section class="pnl-list page-list" data-psec="list">[\s\S]*?<section class="home-map" data-psec="map">[\s\S]*?<button type="button" class="home-map-btn" data-ws-go="tight"/);
+  // The lists sit beside the map (Home's two columns); the map opens the workspace's map view.
+  assert.match(h, /<div class="home-cols"><div class="home-col-main"><section class="pnl-list page-list" data-psec="list">[\s\S]*?<section class="home-map" data-psec="map">[\s\S]*?<button type="button" class="home-map-btn" data-ws-go="tight"/);
   assert.match(h, /⚠ 1 data source is due for a refresh\. <button type="button" class="btn small link" data-ws-full data-at="records:sources">Review →<\/button>/);
   assert.match(h, /<footer class="page-foot" data-psec="footer"><div class="pnl-acts"><button type="button" class="btn small pnl-primary" data-ws-go="tight">Open the map<\/button><button type="button" class="btn small pnl-sec" data-pnl-brief="">Briefing PDF<\/button><\/div><p class="pnl-note small">General screening results only/);
   // A bare page: header, answer and footer (with the screening note).
