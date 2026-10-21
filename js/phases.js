@@ -1512,6 +1512,9 @@
     if (live.some(r => !r.prePlan && !r.outside)) live = live.filter(r => !r.prePlan && !r.outside);
     const main = live.filter(builds);
     if (main.some(r => r.kind === 'permit' || (r.stage || stageOf(r)) !== 'precon')) live = main;
+    // A pre-consultation for homes is still a pre-consultation beside a limited site plan (a patio)
+    // and a shop's fit-out permit: they don't move it on.
+    else if (homes && main.length) live = main;
     else if (live.some(r => r.kind !== 'permit' || ['units', 'res', 'nonres', 'suite'].includes(permitRole(r))))
       live = live.filter(r => r.kind !== 'permit' || ['units', 'res', 'nonres', 'suite'].includes(permitRole(r)));
     // A site plan that only reads "Closed" (no approval date) is taken as approved only when a

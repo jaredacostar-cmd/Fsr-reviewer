@@ -33,6 +33,21 @@ test('a reference to a file far away is ignored (SP18-041.000 "converted from PR
   assert.notEqual(of('SP18-041.000'), of('PRE18.024'));
 });
 
+test('1-30 Gillingham Dr: a limited site plan for a patio is not the formal file of the 1,753-home pre-consultation', { skip: !H.available() }, () => {
+  const { projects } = H.realDevs();
+  const of = ref => projects.find(x => x.records.some(r => r.ref === ref));
+  const pre = of('PRE-2019-0043'), patio = of('SPA-2022-0214');
+  assert.notEqual(pre, patio, 'two developments');
+  assert.equal(of('PRE-2021-0038'), pre, 'the follow-up redevelopment pre-consultation stays with it');
+  assert.equal(pre.units, 1753);
+  assert.equal(pre.phase, 'inception', 'still a pre-consultation, not under construction');
+  assert.match(pre.description, /redevelopment/i);
+  assert.ok(!(patio.units > 0), 'the patio adds no homes');
+  // Even in one development, the patio plan and a shop's fit-out permit don't move the homes on.
+  const recs = [pre.records, patio.records].flat().map(r => ({ ...r }));
+  assert.equal(P.mergeProject('k', recs).phase, 'inception');
+});
+
 test('dormantOf: approved with no permit 3 years, in review 5, pre-application 3; never under appeal or with a building permit', () => {
   const now = Date.parse('2026-10-20T00:00:00Z'), at = y => new Date(Date.UTC(y, 0, 1));
   const dev = (phase, lastYear, extra = []) => ({ phase, last: at(lastYear), records: [{ kind: 'application', phase: 'approved', statusRaw: 'Approved' }, ...extra] });
