@@ -51,6 +51,7 @@
       { id: 'help', title: 'Help', page: 'help' },
       { id: 'guides', title: 'How it works', page: 'guides' },
       { id: 'glossary', title: 'Glossary', page: 'glossary' },
+      { id: 'logic', title: 'How the app decides', page: 'logic' },
       { id: 'sources', title: 'Data sources', page: 'data' },
       { id: 'checks', title: 'Data checks', tab: 'records', keys: ['records:checks'] },
     ] },

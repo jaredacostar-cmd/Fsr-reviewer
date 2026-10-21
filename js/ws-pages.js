@@ -803,7 +803,7 @@
   document.addEventListener('click', e => {
     // (an area's Growth section is its own page: its own content again; the same for a workspace's pages)
     const gp = e.target.closest && e.target.closest('.page-secs [data-ws-page]');
-    if (gp) { if (gp.dataset.wsPage === 'growth') gSec = 'growth'; if (gp.dataset.wsPage === 'tight') wsSec.servicing = null; if (gp.dataset.wsPage === 'projects' || gp.dataset.wsPage === 'eaflow') wsSec.capital = null; if (['help', 'guides', 'glossary', 'data'].includes(gp.dataset.wsPage)) wsSec.reference = null; }
+    if (gp) { if (gp.dataset.wsPage === 'growth') gSec = 'growth'; if (gp.dataset.wsPage === 'tight') wsSec.servicing = null; if (gp.dataset.wsPage === 'projects' || gp.dataset.wsPage === 'eaflow') wsSec.capital = null; if (['help', 'guides', 'glossary', 'logic', 'data'].includes(gp.dataset.wsPage)) wsSec.reference = null; }
     const wb = e.target.closest && e.target.closest('[data-ws-wsec]');
     if (wb && document.getElementById('home') && document.getElementById('home').contains(wb)) {
       e.preventDefault(); e.stopPropagation();
@@ -1069,6 +1069,8 @@
   const ref = id => () => (root.PeelReference ? root.PeelReference.page(id) : id === 'approvals' && root.PeelApprovalsGuide ? root.PeelApprovalsGuide.page() : loading(id, 'Loading…'));
   const [guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast] = ['guides', 'roles', 'approvals', 'flows', 'network', 'capacity', 'fsrguide', 'capital', 'targets', 'forecast'].map(ref);
   const glossary = () => (root.PeelGlossary ? root.PeelGlossary.page() : loading('glossary', 'Loading…'));
+  // How the app decides (js/logic.js): the data rules, gates and back-end decisions, read from the code.
+  const logic = () => (root.PeelLogic ? root.PeelLogic.page() : loading('logic', 'Loading…'));
   const help = () => (root.PeelTips && root.PeelTips.helpPage ? root.PeelTips.helpPage() : loading('help', 'Loading…'));
   // Data sources (Reference, step 5): the map's Records › Sources panel on a page (the old Data tab,
   // map-only until now); Data checks is its section.
@@ -1080,7 +1082,7 @@
       lists: s.lists || [], folds: s.folds, method: s.method, sources: s.sources,
       actions: [{ label: 'Refresh and manage sources', attrs: { 'data-ws-full': '', 'data-at': 'records:sources' }, primary: true }] });
   }
-  const BUILD = { home, tight, site, growth, outlook, projects, eaflow, week, fsr, pipes, study, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, help, data };
+  const BUILD = { home, tight, site, growth, outlook, projects, eaflow, week, fsr, pipes, study, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, logic, help, data };
   // Each workspace's guide (How it works), a button in its footer.
   const GUIDE_OF = { site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capital', eaflow: 'capital', pipes: 'network' };
   // A page's header count opens its workspace's full table (as the map panels' do).
@@ -1094,7 +1096,7 @@
     if (m.figures && ws) m.figures = m.figures.map(f => (f && f.attrs && !f.attrs['data-ws-go'] && !f.attrs['data-ws-page'] ? { ...f, attrs: onPage(f.attrs) } : f));
     if (g && m.actions) m.actions = [...m.actions, { label: `${g[1]} ›`, attrs: { 'data-ws-page': g[0] }, title: `How it works: ${g[2]}` }];
     // Reference (step 5): Help, How it works (and each guide), the Glossary and Data sources share a bar.
-    const REFW = { help: 'help', guides: 'guides', glossary: 'glossary', data: 'sources' }, R = W() && W().REF;
+    const REFW = { help: 'help', guides: 'guides', glossary: 'glossary', logic: 'logic', data: 'sources' }, R = W() && W().REF;
     const refOn = REFW[id] || (R && R[id] && R[id].guide ? 'guides' : null);
     if (refOn && root.PeelSections) m.top = `${wsBar('reference', id === 'data' && wsSec.reference ? wsSec.reference : refOn)}${m.top || ''}`;
     return m;

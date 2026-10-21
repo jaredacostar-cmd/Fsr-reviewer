@@ -1794,6 +1794,8 @@
     representativePoint, buildProjects, closeStalePermits, inferBlankPermits, isBlankPermit, buildingsListed, permitBase, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
     canonRef, fileId, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, keyAliases, legacyNormalizeAddress, isNewBuild,
     PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf, lastActivityOf, proposedStateOf, dormantOf, DORMANT_YEARS,
+    // The joining and stage rules' numbers, for Reference › How the app decides (js/logic.js).
+    MAX_SITE_AREA_M2, DATE_SLACK_MS, STALE_OPEN_YEARS, NEAR_PERMIT_M, NEAR_PERMIT_MIN_UNITS, CONTAINER_NEAR_M: NEAR_M,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPhases = api;
