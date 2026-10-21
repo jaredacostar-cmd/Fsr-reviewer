@@ -15,17 +15,21 @@
  *
  * A permit joins a development when it sits inside the site boundary, shares a normalised address,
  * or (site permits only) lies within MATCH_M metres of the development point. Septic permits join
- * on boundary or address only, so a neighbour's septic never marks a site private.
+ * on boundary or address only, so a neighbour's septic never marks a site private. A permit whose
+ * address is another development's never joins by distance: it is that site's.
+ *
+ * The developments are the app's (scripts/app-devs.js: trees, tree counts, council decisions), so
+ * each row's key is a development the app shows.
  *
  * Usage: node scripts/build-dc-gate.js [--data data] [--out data/dc-gate.json]
+ * (reads snapshot.json, servicing-permits.json, tree-counts.json and council-decisions.json)
  */
 'use strict';
 const fs = require('fs');
 const path = require('path');
 const P = require('../js/phases.js');
 const SP = require('../js/servicing-permits.js');
-const { decodeRecord } = require('./build-snapshot.js');
-const { countUnitsFromText } = require('./build-snapshot-index.js');
+const { buildAppDevs } = require('./app-devs.js');
 
 const MATCH_M = 60;
 // A septic permit marks a site privately serviced only when the site is small (a house or a few):
@@ -132,6 +136,16 @@ function inScope(p) {
  * @param {object[]} permits   SP.fromRow rows
  */
 function gate(projects, permits) {
+  // Which developments each civic address belongs to (any phase): a permit at one of them is that site's.
+  const addrDevs = new Map();
+  for (const p of projects) for (const r of p.records || []) {
+    const a = P.normalizeAddress(r.address);
+    if (!a || !/\d/.test(a)) continue;
+    const k = `${p.municipality}|${a}`;
+    if (!addrDevs.has(k)) addrDevs.set(k, new Set());
+    addrDevs.get(k).add(p.key);
+  }
+  const othersAddress = (s, p) => { const a = P.normalizeAddress(s.address), d = a && addrDevs.get(`${s.municipality}|${a}`); return !!d && !d.has(p.key); };
   const byAddr = new Map();
   for (const s of permits) {
     const a = P.normalizeAddress(s.address);
@@ -164,7 +178,7 @@ function gate(projects, permits) {
     if (p.lat != null && ![...hits.keys()].some(s => s.kind === 'site')) {
       let best = null, bestD = Infinity;
       for (const s of grid.near(p.lat, p.lng)) {
-        if (s.municipality !== p.municipality) continue;
+        if (s.municipality !== p.municipality || othersAddress(s, p)) continue;
         const d = metres(p.lat, p.lng, s.lat, s.lng);
         if (d < bestD) { best = s; bestD = d; }
       }
@@ -225,10 +239,9 @@ function summarise(rows) {
   return { total, byMunicipality };
 }
 
-function build(snapshot, servicing, now = new Date()) {
-  const recs = snapshot.records.map(o => decodeRecord(o, ''));
-  countUnitsFromText(recs);
-  const projects = P.buildProjects(P.dedupeRecords(recs));
+/** opts.tree: data/tree-counts.json, opts.council: data/council-decisions.json (scripts/app-devs.js). */
+function build(snapshot, servicing, now = new Date(), opts = {}) {
+  const { projects } = buildAppDevs(snapshot, opts);
   const permits = ((servicing && servicing.rows) || []).map(SP.fromRow);
   const rows = gate(projects, permits);
   return {
@@ -264,9 +277,9 @@ function main() {
   const dataDir = path.resolve(arg('--data', path.join(__dirname, '..', 'data')));
   const outFile = path.resolve(arg('--out', path.join(dataDir, 'dc-gate.json')));
   const read = f => JSON.parse(fs.readFileSync(path.join(dataDir, f), 'utf8'));
-  let servicing = null;
-  try { servicing = read('servicing-permits.json'); } catch (e) { if (e.code !== 'ENOENT') throw e; }
-  const result = build(read('snapshot.json'), servicing);
+  const optional = f => { try { return read(f); } catch (e) { if (e.code !== 'ENOENT') throw e; return null; } };
+  const result = build(read('snapshot.json'), optional('servicing-permits.json'), new Date(),
+    { tree: optional('tree-counts.json'), council: optional('council-decisions.json') });
   fs.writeFileSync(outFile, JSON.stringify(result));
   const t = result.summary.total;
   console.log(`dc-gate: ${result.permits.total} servicing permits; ` + BUCKETS.map(b => `${b} ${t[b].developments} (${t[b].units} units)`).join(', '));
