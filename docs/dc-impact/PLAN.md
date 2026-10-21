@@ -172,6 +172,8 @@ the same rule that gates the Funding sub-view (`hiddenAt` in `js/analysis-tabs.j
 - Cache on `MP().scenarioKey()` + `DCB.budget` + `DCB.years`, so moving the budget updates the
   chips.
 
+> **Allocation method:** how a development is allocated to DC projects (tiers, the relief-match fix, gate year, cost apportioning) is in [ALLOCATION.md](ALLOCATION.md). The groups above map to its tiers: "needs it to connect" = A, "drains through it" = B1 + B2, "same sewershed" = C.
+
 ## How to build it
 
 ### Step 1: an impact model (new `js/dc-impact.js`, `PeelDcImpact`)
