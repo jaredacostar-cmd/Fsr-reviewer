@@ -75,10 +75,14 @@
       p.buildout = p.buildoutPrevious;
       p.siteAreaHa = p.siteAreaHaPrevious; p.siteAreaFrom = undefined;
       p.count = { mode: 'previous', previous: p.unitsPrevious };
+      p.siteActivity = undefined; p.siteKey = undefined;
       if (m !== 'tree') continue;
       if (!d) { p.count.why = 'tree counts not loaded'; continue; }
       const e = entryOf(d, p.key);
       if (!e) { p.count.why = 'no tree for this development (no planning file the tree counts)'; kept++; continue; }
+      // Step 2 (js/sites.js): a site's activity, held aside by the app; the site it belongs to.
+      if (e.sa) p.siteActivity = true;
+      if (e.st) p.siteKey = e.st;
       const full = p.records && p.records.length;
       if (full && (p.records || []).some(r => r.unitsUser)) { p.count.why = 'you entered a count for one of its files'; kept++; continue; }
       if (full && e.s && sigOf(p, canonRef) !== e.s) { p.count.why = `its files differ from the tree build of ${(d.snapshotAt || '').slice(0, 10)}`; kept++; continue; }

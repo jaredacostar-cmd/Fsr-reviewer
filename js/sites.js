@@ -19,7 +19,8 @@
  * or successive pre-consultations, or the next step of the planning process), except a
  * redevelopment of a plan built long ago, which is a second proposal on the site. A minor file (a patio, a fit-out, a gate) stays with a
  * proposal only when it names one of its files or reads as a revision of it; otherwise it is site
- * activity. Cancelled and superseded files are the site's history.
+ * activity. Cancelled and superseded files are history: with the proposal they tie to, else the
+ * site's.
  *
  * Pure functions (no DOM): used by scripts/audit-sites.js and tests/sites.test.js.
  */
@@ -84,7 +85,7 @@
     const ends = l => (l.type === 'parent' ? [l.child, l.parent] : [l.a, l.b]).map(id => idx.get(id));
     for (const i of tree.nodes) {
       const s = scope.get(i);
-      if (s.scope === 'admin') { site.push({ i, why: s.why }); continue; }
+      if (s.scope === 'admin') continue;
       if (s.scope === 'major') { inProposal.add(i); continue; }
       const revises = (linksIn.get(i) || []).some(l => set.has(ends(l).find(j => j !== i)) && (evidenceOf(l) === 'reference' || (l.confidence !== 'low' && REVISION_TEXT.test(textOf(nodes[i])))));
       if (revises) inProposal.add(i); else site.push({ i, why: `${s.why}: alters what stands, adds no homes` });
@@ -105,11 +106,19 @@
     }
     const groups = new Map();
     for (const i of tree.nodes) if (inProposal.has(i)) { const r = find(i); if (!groups.has(r)) groups.set(r, []); groups.get(r).push(i); }
-    // Each proposal's main file: the tree's root when it holds it, else its first top-level file.
+    // History stays with the proposal it ties to (SPA-2022-0101 with SPA-2024-0144, which replaces
+    // it); history tied to none is the site's.
+    for (const i of tree.nodes) {
+      if (scope.get(i).scope !== 'admin') continue;
+      const g = groups.get(find(i));
+      if (g) g.push(i); else site.push({ i, why: scope.get(i).why });
+    }
+    // Each proposal's main file: the tree's root when it holds it, else its first top-level file
+    // that isn't history.
     const proposals = [...groups.values()].map(list => {
-      const own = new Set(list), tops = list.filter(i => !(built.parent[i] >= 0 && own.has(built.parent[i])));
-      const rootI = own.has(tree.nodes[0]) ? tree.nodes[0] : tops[0];
-      return { nodes: [rootI, ...list.filter(i => i !== rootI)], root: rootI };
+      const own = new Set(list), tops = list.filter(i => !(built.parent[i] >= 0 && own.has(built.parent[i])) && inProposal.has(i));
+      const rootI = own.has(tree.nodes[0]) && inProposal.has(tree.nodes[0]) ? tree.nodes[0] : tops[0] || list.find(i => inProposal.has(i));
+      return { nodes: [rootI, ...tree.nodes.filter(i => own.has(i) && i !== rootI)], root: rootI };
     });
     return { proposals, site, scope };
   }

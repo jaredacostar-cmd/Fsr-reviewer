@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-21T01:38:29.459Z",
+ "generatedAt": "2026-10-21T01:49:40.137Z",
  "snapshotAt": "2026-10-19T10:45:08.495Z",
  "note": "Step 1 of site → proposal → file (js/sites.js): report only. Counts are countTree before your overrides on both sides.",
  "files": {
@@ -22,8 +22,8 @@
   }
  },
  "developments": {
-  "unchanged": 3155,
-  "siteSetAside": 312,
+  "unchanged": 3166,
+  "siteSetAside": 301,
   "split": 50,
   "noProposal": 407,
   "total": 3924
@@ -34,11 +34,11 @@
   "change": -9
  },
  "stageChanges": {
-  "total": 98,
+  "total": 97,
   "byChange": {
    "approved → review": 8,
    "completed → review": 3,
-   "completed → approved": 6,
+   "completed → approved": 5,
    "review → inception": 6,
    "approved → completed": 47,
    "approved → inception": 18,
@@ -185,17 +185,6 @@
     "root": "PRE-2025-0062",
     "site": [
      "SPA-2026-0065"
-    ]
-   },
-   {
-    "k": "Brampton|8301 WINSTON CHURCHILL BLVD",
-    "units": 0,
-    "today": "completed",
-    "proposal": "approved",
-    "root": "SPA-2026-0048",
-    "site": [
-     "SPA-2019-0071",
-     "SP04-072.002"
     ]
    },
    {
@@ -552,8 +541,8 @@
     "root": "PRE-2024-0018",
     "site": [
      "SPA-2024-0079",
-     "SP92-039.000",
-     "PRE-2020-0162"
+     "PRE-2020-0162",
+     "SP92-039.000"
     ]
    },
    {
@@ -1065,8 +1054,8 @@
     "root": "PRE-2024-0058",
     "site": [
      "DPS-2019-0004",
-     "SP83-017.000",
-     "DPS-2025-0002"
+     "DPS-2025-0002",
+     "SP83-017.000"
     ]
    },
    {
@@ -1075,9 +1064,7 @@
     "today": "inception",
     "proposal": "completed",
     "root": "SP88-055.000",
-    "site": [
-     "SP80-048.000"
-    ]
+    "site": []
    }
   ]
  },
@@ -1748,19 +1735,15 @@
     {
      "root": "DPC-2025-0006",
      "files": [
-      "DPC-2025-0006"
+      "DPC-2025-0006",
+      "SP81-015.000"
      ],
      "units": 0,
      "permits": 0,
      "phase": "review"
     }
    ],
-   "site": [
-    {
-     "file": "SP81-015.000",
-     "why": "superseded (redevelopment)"
-    }
-   ]
+   "site": []
   },
   {
    "k": "Brampton|286 RUTHERFORD RD S",
@@ -2011,6 +1994,10 @@
      "why": "\"trailer\": alters what stands, adds no homes"
     },
     {
+     "file": "PRE-2024-0049",
+     "why": "\"trailer\": alters what stands, adds no homes"
+    },
+    {
      "file": "SP92-002.000",
      "why": "superseded (redevelopment)"
     },
@@ -2021,10 +2008,6 @@
     {
      "file": "SP91-024.000",
      "why": "superseded (redevelopment)"
-    },
-    {
-     "file": "PRE-2024-0049",
-     "why": "\"trailer\": alters what stands, adds no homes"
     }
    ]
   },
@@ -2080,19 +2063,15 @@
     {
      "root": "DPC-2024-0006",
      "files": [
-      "DPC-2024-0006"
+      "DPC-2024-0006",
+      "SP87-011.000"
      ],
      "units": 0,
      "permits": 0,
      "phase": "review"
     }
    ],
-   "site": [
-    {
-     "file": "SP87-011.000",
-     "why": "superseded (redevelopment)"
-    }
-   ]
+   "site": []
   },
   {
    "k": "Brampton|@43.6797,-79.7216",
@@ -2980,19 +2959,15 @@
     {
      "root": "PRE-2019-0069",
      "files": [
-      "PRE-2019-0069"
+      "PRE-2019-0069",
+      "SP80-048.000"
      ],
      "units": 0,
      "permits": 0,
      "phase": "inception"
     }
    ],
-   "site": [
-    {
-     "file": "SP80-048.000",
-     "why": "superseded (redevelopment)"
-    }
-   ]
+   "site": []
   }
  ],
  "noProposal": [
@@ -4693,12 +4668,12 @@
      "why": "minor / limited / express site plan: alters what stands, adds no homes"
     },
     {
-     "file": "SP94-041.000",
-     "why": "superseded (redevelopment)"
-    },
-    {
      "file": "PRE-2020-0095",
      "why": "\"drive-thru\": alters what stands, adds no homes"
+    },
+    {
+     "file": "SP94-041.000",
+     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -4778,12 +4753,12 @@
      "why": "\"car wash\": alters what stands, adds no homes"
     },
     {
-     "file": "SP89-122.000",
-     "why": "superseded (redevelopment)"
-    },
-    {
      "file": "PRE-2024-0004",
      "why": "\"car wash\": alters what stands, adds no homes"
+    },
+    {
+     "file": "SP89-122.000",
+     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -4959,12 +4934,12 @@
      "why": "\"fence\": alters what stands, adds no homes"
     },
     {
-     "file": "SP92-030.000",
-     "why": "superseded (redevelopment)"
-    },
-    {
      "file": "PRE-2024-0098",
      "why": "\"fence\": alters what stands, adds no homes"
+    },
+    {
+     "file": "SP92-030.000",
+     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -6092,12 +6067,12 @@
      "why": "\"FENCE\": alters what stands, adds no homes"
     },
     {
-     "file": "SP85-063.000",
-     "why": "superseded (redevelopment)"
-    },
-    {
      "file": "PRE-2021-0087",
      "why": "\"Fence\": alters what stands, adds no homes"
+    },
+    {
+     "file": "SP85-063.000",
+     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -6704,12 +6679,12 @@
      "why": "\"loading\": alters what stands, adds no homes"
     },
     {
-     "file": "SP88-063.000",
-     "why": "superseded (redevelopment)"
-    },
-    {
      "file": "PRE-2020-0072",
      "why": "\"loading\": alters what stands, adds no homes"
+    },
+    {
+     "file": "SP88-063.000",
+     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -6907,12 +6882,12 @@
      "why": "\"parking lot\": alters what stands, adds no homes"
     },
     {
-     "file": "SP86-108.000",
-     "why": "superseded (redevelopment)"
-    },
-    {
      "file": "PRE-2020-0008",
      "why": "\"trailer\": alters what stands, adds no homes"
+    },
+    {
+     "file": "SP86-108.000",
+     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -8660,6 +8635,7 @@
       "OZS-2025-0022",
       "SPA-2022-0206",
       "SPA-2021-0162",
+      "SPA-2019-0029",
       "PRE-2024-0012",
       "PRE-2022-0107",
       "PRE-2020-0057"
@@ -8685,10 +8661,6 @@
     {
      "file": "SPA-2020-0109",
      "why": "minor / limited / express site plan: alters what stands, adds no homes"
-    },
-    {
-     "file": "SPA-2019-0029",
-     "why": "cancelled or withdrawn"
     },
     {
      "file": "SP80-060.000",
@@ -9001,33 +8973,6 @@
    ]
   },
   {
-   "k": "Caledon|@43.7293,-79.8489~2025-0021",
-   "municipality": "Caledon",
-   "phase": "completed",
-   "units": 397,
-   "proposals": [
-    {
-     "root": "2025-0021",
-     "files": [
-      "2025-0021",
-      "21CDM-24003C",
-      "21CDM-24002C",
-      "2022-0052",
-      "21T-20005C"
-     ],
-     "units": 397,
-     "permits": 539,
-     "phase": "completed"
-    }
-   ],
-   "site": [
-    {
-     "file": "2022-0051",
-     "why": "superseded (resubmission)"
-    }
-   ]
-  },
-  {
    "k": "Brampton|9485 WINSTON CHURCHILL BLVD",
    "municipality": "Brampton",
    "phase": "approved",
@@ -9206,33 +9151,6 @@
     {
      "file": "SP89-149.000",
      "why": "superseded (redevelopment)"
-    }
-   ]
-  },
-  {
-   "k": "Brampton|10194 HEART LAKE RD",
-   "municipality": "Brampton",
-   "phase": "permit",
-   "units": 200,
-   "proposals": [
-    {
-     "root": "SPA-2024-0144",
-     "files": [
-      "SPA-2024-0144",
-      "SPA-2026-0045",
-      "DPC-2025-0007",
-      "PRE-2021-0193",
-      "PRE17.100"
-     ],
-     "units": 200,
-     "permits": 89,
-     "phase": "permit"
-    }
-   ],
-   "site": [
-    {
-     "file": "SPA-2022-0101",
-     "why": "superseded (replaced)"
     }
    ]
   },
@@ -9508,30 +9426,6 @@
    ]
   },
   {
-   "k": "Brampton|@43.7373,-79.8289",
-   "municipality": "Brampton",
-   "phase": "approved",
-   "units": 33,
-   "proposals": [
-    {
-     "root": "SPA-2019-0005",
-     "files": [
-      "SPA-2019-0005",
-      "PRE17.112"
-     ],
-     "units": 33,
-     "permits": 0,
-     "phase": "approved"
-    }
-   ],
-   "site": [
-    {
-     "file": "SP19-005.000",
-     "why": "superseded (replaced)"
-    }
-   ]
-  },
-  {
    "k": "Brampton|@43.6760,-79.7615",
    "municipality": "Brampton",
    "phase": "approved",
@@ -9607,16 +9501,16 @@
      "why": "minor / limited / express site plan: alters what stands, adds no homes"
     },
     {
+     "file": "PRE17.076",
+     "why": "\"parking lot\": alters what stands, adds no homes"
+    },
+    {
      "file": "SP86-030.000",
      "why": "superseded (redevelopment)"
     },
     {
      "file": "SP82-021.000",
      "why": "superseded (redevelopment)"
-    },
-    {
-     "file": "PRE17.076",
-     "why": "\"parking lot\": alters what stands, adds no homes"
     }
    ]
   },
@@ -10570,7 +10464,8 @@
      "root": "SP97-027.000",
      "files": [
       "SP97-027.000",
-      "SPA-2021-0137"
+      "SPA-2021-0137",
+      "SP86-076.000"
      ],
      "units": 0,
      "permits": 2,
@@ -10581,10 +10476,6 @@
     {
      "file": "SPA-2026-0079",
      "why": "minor / limited / express site plan: alters what stands, adds no homes"
-    },
-    {
-     "file": "SP86-076.000",
-     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -10799,23 +10690,20 @@
       "SPA-2026-0048",
       "SPA-2021-0221",
       "SPA-2020-0023",
+      "SP04-072.002",
       "PRE-2025-0072",
       "PRE-2019-0075",
       "SP04-072.004"
      ],
      "units": 0,
-     "permits": 0,
-     "phase": "approved"
+     "permits": 1,
+     "phase": "completed"
     }
    ],
    "site": [
     {
      "file": "SPA-2019-0071",
      "why": "minor / limited / express site plan: alters what stands, adds no homes"
-    },
-    {
-     "file": "SP04-072.002",
-     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -11055,12 +10943,12 @@
    ],
    "site": [
     {
-     "file": "SP86-100.000",
-     "why": "superseded (redevelopment)"
-    },
-    {
      "file": "PRE-2025-0026",
      "why": "\"addition of 3\": alters what stands, adds no homes"
+    },
+    {
+     "file": "SP86-100.000",
+     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -11492,6 +11380,10 @@
      "why": "minor / limited / express site plan: alters what stands, adds no homes"
     },
     {
+     "file": "PRE-2024-0085",
+     "why": "\"Drive Thru\": alters what stands, adds no homes"
+    },
+    {
      "file": "SP86-144.000",
      "why": "superseded (redevelopment)"
     },
@@ -11502,10 +11394,6 @@
     {
      "file": "SP86-052.000",
      "why": "superseded (redevelopment)"
-    },
-    {
-     "file": "PRE-2024-0085",
-     "why": "\"Drive Thru\": alters what stands, adds no homes"
     }
    ]
   },
@@ -11604,30 +11492,6 @@
     {
      "file": "SPA-2025-0068",
      "why": "minor / limited / express site plan: alters what stands, adds no homes"
-    }
-   ]
-  },
-  {
-   "k": "Brampton|@43.6797,-79.7216~SPA-2024-0148",
-   "municipality": "Brampton",
-   "phase": "completed",
-   "units": 0,
-   "proposals": [
-    {
-     "root": "SPA-2024-0148",
-     "files": [
-      "SPA-2024-0148",
-      "SPA-2025-0066"
-     ],
-     "units": 0,
-     "permits": 2,
-     "phase": "completed"
-    }
-   ],
-   "site": [
-    {
-     "file": "SP16-051.000",
-     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -11887,35 +11751,12 @@
    ],
    "site": [
     {
-     "file": "SP89-083.000",
-     "why": "superseded (redevelopment)"
-    },
-    {
      "file": "PRE-2023-0113",
      "why": "\"Car Wash\": alters what stands, adds no homes"
-    }
-   ]
-  },
-  {
-   "k": "Brampton|8850 MCLAUGHLIN RD S~SPA-2025-0028",
-   "municipality": "Brampton",
-   "phase": "approved",
-   "units": 0,
-   "proposals": [
+    },
     {
-     "root": "SPA-2025-0028",
-     "files": [
-      "SPA-2025-0028"
-     ],
-     "units": 0,
-     "permits": 0,
-     "phase": "approved"
-    }
-   ],
-   "site": [
-    {
-     "file": "PRE-2023-0151",
-     "why": "cancelled or withdrawn"
+     "file": "SP89-083.000",
+     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -12100,36 +11941,12 @@
      "why": "\"parking lot\": alters what stands, adds no homes"
     },
     {
-     "file": "SP95-056.000",
-     "why": "superseded (redevelopment)"
-    },
-    {
      "file": "PRE-2022-0143",
      "why": "\"interior\": alters what stands, adds no homes"
-    }
-   ]
-  },
-  {
-   "k": "Brampton|8586 MISSISSAUGA RD",
-   "municipality": "Brampton",
-   "phase": "approved",
-   "units": 0,
-   "proposals": [
+    },
     {
-     "root": "SPA-2024-0170",
-     "files": [
-      "SPA-2024-0170",
-      "PRE-2021-0226"
-     ],
-     "units": 0,
-     "permits": 0,
-     "phase": "approved"
-    }
-   ],
-   "site": [
-    {
-     "file": "SPA-2022-0034",
-     "why": "superseded (replaced)"
+     "file": "SP95-056.000",
+     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -12155,34 +11972,6 @@
     {
      "file": "SPA-2024-0164",
      "why": "minor / limited / express site plan: alters what stands, adds no homes"
-    }
-   ]
-  },
-  {
-   "k": "Brampton|13 GURU NANAK ST",
-   "municipality": "Brampton",
-   "phase": "approved",
-   "units": 0,
-   "proposals": [
-    {
-     "root": "SPA-2024-0163",
-     "files": [
-      "SPA-2024-0163",
-      "SPA-2023-0077",
-      "SPA-2022-0075",
-      "SPA-2022-0006",
-      "PRE-2023-0109",
-      "PRE-2021-0161"
-     ],
-     "units": 0,
-     "permits": 0,
-     "phase": "approved"
-    }
-   ],
-   "site": [
-    {
-     "file": "SP02-035.000",
-     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -12356,6 +12145,7 @@
       "SPA-2024-0114",
       "SPA-2021-0270",
       "SP14-046.001",
+      "SP86-089.000",
       "PRE-2024-0040"
      ],
      "units": 0,
@@ -12364,10 +12154,6 @@
     }
    ],
    "site": [
-    {
-     "file": "SP86-089.000",
-     "why": "superseded (redevelopment)"
-    },
     {
      "file": "PRE-2020-0017",
      "why": "\"parking lot\": alters what stands, adds no homes"
@@ -12513,12 +12299,12 @@
      "why": "\"parking lot\": alters what stands, adds no homes"
     },
     {
-     "file": "SP92-039.000",
-     "why": "superseded (redevelopment)"
-    },
-    {
      "file": "PRE-2020-0162",
      "why": "\"Renovat\": alters what stands, adds no homes"
+    },
+    {
+     "file": "SP92-039.000",
+     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -12836,31 +12622,6 @@
     {
      "file": "SPA-2023-0116",
      "why": "minor / limited / express site plan: alters what stands, adds no homes"
-    }
-   ]
-  },
-  {
-   "k": "Brampton|220 CHRYSLER DR",
-   "municipality": "Brampton",
-   "phase": "approved",
-   "units": 0,
-   "proposals": [
-    {
-     "root": "SP18-088.000",
-     "files": [
-      "SP18-088.000",
-      "SPA-2023-0102",
-      "PRE17.031"
-     ],
-     "units": 0,
-     "permits": 0,
-     "phase": "approved"
-    }
-   ],
-   "site": [
-    {
-     "file": "SP93-026.000",
-     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -13215,30 +12976,6 @@
    ]
   },
   {
-   "k": "Brampton|@43.7490,-79.7116",
-   "municipality": "Brampton",
-   "phase": "completed",
-   "units": 0,
-   "proposals": [
-    {
-     "root": "SPA-2022-0222",
-     "files": [
-      "SPA-2022-0222",
-      "SP11-016.002"
-     ],
-     "units": 0,
-     "permits": 2,
-     "phase": "completed"
-    }
-   ],
-   "site": [
-    {
-     "file": "SP89-123.000",
-     "why": "superseded (redevelopment)"
-    }
-   ]
-  },
-  {
    "k": "Brampton|30 RAMBLER DR",
    "municipality": "Brampton",
    "phase": "approved",
@@ -13499,16 +13236,16 @@
    ],
    "site": [
     {
+     "file": "PRE-2021-0238",
+     "why": "\"shed\": alters what stands, adds no homes"
+    },
+    {
      "file": "SP83-025.000",
      "why": "superseded (redevelopment)"
     },
     {
      "file": "SP94-029.000",
      "why": "superseded (redevelopment)"
-    },
-    {
-     "file": "PRE-2021-0238",
-     "why": "\"shed\": alters what stands, adds no homes"
     }
    ]
   },
@@ -14253,31 +13990,6 @@
    ]
   },
   {
-   "k": "Brampton|2300 N PARK DR",
-   "municipality": "Brampton",
-   "phase": "completed",
-   "units": 0,
-   "proposals": [
-    {
-     "root": "SP18-111.000",
-     "files": [
-      "SP18-111.000",
-      "SPA-2021-0080",
-      "SPA-2021-0005"
-     ],
-     "units": 0,
-     "permits": 1,
-     "phase": "completed"
-    }
-   ],
-   "site": [
-    {
-     "file": "SP92-007.000",
-     "why": "superseded (redevelopment)"
-    }
-   ]
-  },
-  {
    "k": "Brampton|73 SUN PAC BLVD",
    "municipality": "Brampton",
    "phase": "approved",
@@ -14347,29 +14059,6 @@
     {
      "file": "SPA-2021-0039",
      "why": "minor / limited / express site plan: alters what stands, adds no homes"
-    }
-   ]
-  },
-  {
-   "k": "Brampton|1 GATEWAY BLVD",
-   "municipality": "Brampton",
-   "phase": "approved",
-   "units": 0,
-   "proposals": [
-    {
-     "root": "SPA-2021-0010",
-     "files": [
-      "SPA-2021-0010"
-     ],
-     "units": 0,
-     "permits": 0,
-     "phase": "approved"
-    }
-   ],
-   "site": [
-    {
-     "file": "SP17-043.000",
-     "why": "cancelled or withdrawn"
     }
    ]
   },
@@ -14571,12 +14260,12 @@
      "why": "minor / limited / express site plan: alters what stands, adds no homes"
     },
     {
-     "file": "SP04-075.000",
-     "why": "superseded (redevelopment)"
-    },
-    {
      "file": "PRE-2020-0156",
      "why": "\"trailer\": alters what stands, adds no homes"
+    },
+    {
+     "file": "SP04-075.000",
+     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -15072,12 +14761,12 @@
    ],
    "site": [
     {
-     "file": "SP89-026.000",
-     "why": "superseded (redevelopment)"
-    },
-    {
      "file": "PRE17.073",
      "why": "\"play area\": alters what stands, adds no homes"
+    },
+    {
+     "file": "SP89-026.000",
+     "why": "superseded (redevelopment)"
     }
    ]
   },
@@ -16233,12 +15922,12 @@
      "why": "\"Change of use\": alters what stands, adds no homes"
     },
     {
-     "file": "SP83-017.000",
-     "why": "superseded (redevelopment)"
-    },
-    {
      "file": "DPS-2025-0002",
      "why": "\"Interior\": alters what stands, adds no homes"
+    },
+    {
+     "file": "SP83-017.000",
+     "why": "superseded (redevelopment)"
     }
    ]
   },

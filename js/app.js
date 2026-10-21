@@ -56,6 +56,7 @@
     sp: [], mtsa: [], pz: [], dr: [], ss: null,   // pz / dr: water pressure zone and wastewater drainage area ids (data/servicing.json)   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
     minUnits: 0,   // unit growth filter: 0 = any, otherwise at least this many new units
     showDormant: false,   // dormant developments (js/phases.js dormantOf) counted and shown, or held aside
+    showSiteActivity: false,   // site activity (js/sites.js: a patio, a fit-out on a site) shown, or held aside
     flags: DEFAULT_FLAGS(),   // flag filters, multi-select (see FLAG_TESTS)
     plant: '',                // receiving wastewater plant: '' | 'Lakeview' | 'Clarkson' | 'Inglewood'
     dwelling: '',             // dwelling type: '' | 'single' | 'town' | 'apartment'
@@ -202,14 +203,19 @@
   // Growth totals, the layers and stage strip, the servicing demand all read state.projects), unless
   // shown; their pages still open (PeelDevNav.projectByKey) and Find says how many are left out. The
   // full build and the first-paint index both pass through here, so they agree.
+  // Site activity (js/sites.js, step 2: files that only alter what stands on a site, such as a patio
+  // or a unit fit-out, with no proposal of their own) is held aside the same way, with its own switch.
   function holdDormant() {
-    const all = state.projects, now = Date.now(), dorm = all.filter(p => P.dormantOf(p, now));
-    if (!state.showDormant && dorm.length) {
-      const out = new Set(dorm), keep = all.filter(p => !out.has(p));
+    const all = state.projects, now = Date.now(), dorm = all.filter(p => !p.siteActivity && P.dormantOf(p, now)), site = all.filter(p => p.siteActivity);
+    const out = new Set([...(state.showDormant ? [] : dorm), ...(state.showSiteActivity ? [] : site)]);
+    if (out.size) {
+      const keep = all.filter(p => !out.has(p));
       Object.defineProperty(keep, 'secondUnits', { value: all.secondUnits, enumerable: false });
       state.projects = keep;
     }
     Object.defineProperty(state.projects, 'dormant', { value: dorm, enumerable: false, configurable: true });
+    Object.defineProperty(state.projects, 'siteActivity', { value: site, enumerable: false, configurable: true });
+    Object.defineProperty(state.projects, 'all', { value: all, enumerable: false, configurable: true });
   }
   function rebuild() {
     // Phase 6: while the startup index is serving first paint, stray rebuilds

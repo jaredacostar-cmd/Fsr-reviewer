@@ -41,7 +41,7 @@ test('proposalsOf: a patio under a redevelopment is site activity; the redevelop
   assert.deepEqual(site.map(s => nodes[s.i].refs[0]), ['SPA-2022-0214']);
 });
 
-test('proposalsOf: a minor file that names the plan it revises stays with it; a redevelopment of a long-built plan is a second proposal', () => {
+test('proposalsOf: a minor file that names the plan it revises stays with it; a redevelopment of a long-built plan is a second proposal, with its history', () => {
   const nodes = [
     node('SPA-2024-0144', { units: 200 }),
     node('SPA-2026-0045', { minor: true, description: 'Limited Site Plan — Further to the approval of SPA-2024-0144' }),
@@ -50,16 +50,18 @@ test('proposalsOf: a minor file that names the plan it revises stays with it; a 
   ];
   const built = builtOf(nodes, [link('SPA-2026-0045', 'SPA-2024-0144', 'names the file it revises'), sib('SPA-2024-0144', 'SP89-001.000', 'same land: redevelopment (the earlier site plan was built long ago)'), sib('SP89-001.000', 'SP90-052.000', 'same land: site plan revision')]);
   const { proposals, site } = S.proposalsOf({ nodes: [0, 1, 2, 3] }, built);
-  assert.deepEqual(proposals.map(p => p.nodes.map(i => nodes[i].refs[0])), [['SPA-2024-0144', 'SPA-2026-0045'], ['SP89-001.000']]);
-  assert.deepEqual(site.map(s => nodes[s.i].refs[0]), ['SP90-052.000']);
+  assert.deepEqual(proposals.map(p => p.nodes.map(i => nodes[i].refs[0])), [['SPA-2024-0144', 'SPA-2026-0045'], ['SP89-001.000', 'SP90-052.000']], 'the old plan keeps its own history');
+  assert.deepEqual(site, []);
 });
 
-test('proposalsOf: a superseded file still ties the files filed before and after it (10194 Heart Lake Rd)', () => {
+test('proposalsOf: a superseded file ties the files filed before and after it, and stays with them (10194 Heart Lake Rd)', () => {
   const nodes = [node('SPA-2024-0144', { units: 200 }), node('SPA-2022-0101', { superseded: 'replaced', units: 200 }), node('PRE17.100', { role: 'precon', precUnits: 204 })];
   const built = builtOf(nodes, [sib('SPA-2024-0144', 'SPA-2022-0101', 'names the earlier application it replaces'), link('PRE17.100', 'SPA-2022-0101', 'pre-consultation → the formal file it overlaps most')]);
   const { proposals } = S.proposalsOf({ nodes: [0, 1, 2] }, built);
   assert.equal(proposals.length, 1);
-  assert.deepEqual(proposals[0].nodes.map(i => nodes[i].refs[0]), ['SPA-2024-0144', 'PRE17.100']);
+  assert.deepEqual(proposals[0].nodes.map(i => nodes[i].refs[0]), ['SPA-2024-0144', 'SPA-2022-0101', 'PRE17.100'], 'the file it replaces stays with it, as history');
+  const lone = S.proposalsOf({ nodes: [1] }, builtOf([node('A'), node('SPA-2022-0101', { cancelled: true })], []));
+  assert.equal(lone.proposals.length, 0, 'history tied to no proposal is the site\'s');
 });
 
 test('the step 1 report on the real data: homes agree, site activity no longer sets a stage', { skip: !H.available() }, () => {
@@ -68,4 +70,35 @@ test('the step 1 report on the real data: homes agree, site activity no longer s
   const q = a.stageChanges.list.find(r => r.k === 'Brampton|263 QUEEN ST E');
   assert.ok(q && q.today === 'review' && q.proposal === 'inception', 'a day care fit-out no longer puts the 2,810-home pre-consultation in review');
   assert.ok(q.site.includes('SPA-2026-0058'));
+});
+
+test('step 2: the trees as written: each proposal a development, the site activity one more, the parts of a site linked', { skip: !H.available() }, () => {
+  const TREE = require('../data/tree-counts.json'), dev = k => TREE.devs.find(d => d.k === k);
+  const main = dev('Brampton|47 BOVAIRD DR W');
+  assert.deepEqual(main.n.map(n => n[0]).sort(), ['PRE-2019-0043', 'PRE-2021-0038']);
+  assert.equal(main.u, 1753); assert.ok(!main.sa);
+  const patio = TREE.devs.find(d => d.n.some(n => n[0] === 'SPA-2022-0214'));
+  assert.equal(patio.sa, 1, 'the patio is site activity');
+  assert.equal(patio.st, 'Brampton|47 BOVAIRD DR W', 'on the site of the 1,753-home proposal');
+  assert.ok(!TREE.devs.some(d => d.sa && d.u > 10), 'site activity carries no proposal\'s homes');
+  assert.equal(dev('Brampton|10194 HEART LAKE RD').n.some(n => n[0] === 'SPA-2022-0101'), true, 'history stays with the proposal that replaces it');
+});
+
+test('step 2: the app holds site activity aside, and a development page lists the other parts of its site', { skip: !H.available() }, () => {
+  const { projects, byKey } = H.realDevs();
+  const TG = require('../js/tree-groups.js');
+  const p = byKey.get('Brampton|47 BOVAIRD DR W');
+  assert.equal(p.phase, 'inception'); assert.equal(p.units, 1753); assert.ok(!p.siteActivity);
+  const parts = TG.siteParts(p, projects);
+  assert.ok(parts.length && parts.every(q => q.siteActivity), 'its other activity');
+  assert.ok(parts.some(q => q.records.some(r => r.ref === 'SPA-2022-0214')));
+  const patio = parts.find(q => q.records.some(r => r.ref === 'SPA-2022-0214'));
+  assert.ok(TG.siteParts(patio, projects).includes(p), 'and the patio\'s page lists the proposal');
+  const held = projects.filter(q => q.siteActivity);
+  assert.ok(held.reduce((t, q) => t + (q.units || 0), 0) < 20, 'holding it aside moves almost no homes');
+  const fs = require('fs'), src = f => fs.readFileSync(require('path').join(__dirname, '..', f), 'utf8');
+  assert.match(src('js/app.js'), /const out = new Set\(\[\.\.\.\(state\.showDormant \? \[\] : dorm\), \.\.\.\(state\.showSiteActivity \? \[\] : site\)\]\);/);
+  assert.match(src('js/filter-ui.js'), /site activity left out · include/);
+  assert.match(src('js/share.js'), /set\('sx', '1'\)/);
+  for (const f of ['js/dev-nav.js', 'js/devtab.js']) assert.match(src(f), /<h2 class="section-title" data-info="dev-site">On this site<\/h2>/, f);
 });

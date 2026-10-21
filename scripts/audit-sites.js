@@ -10,6 +10,10 @@
  *
  *   node scripts/audit-sites.js [--out data/site-audit.json]
  *
+ * data/site-audit.json is the step 1 report (the developments before step 2 split them, with the
+ * tree build of 2026-10-21). Run against a tree build that already splits them (step 2), "today"
+ * is already the proposals and the report shows what is left to move.
+ *
  * Counts on both sides are countTree's (js/tree.js) before data/tree-overrides.json, so the two
  * sides compare like for like.
  */

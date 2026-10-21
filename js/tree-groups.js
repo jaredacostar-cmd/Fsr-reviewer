@@ -173,7 +173,15 @@
   const indent = t => (t && t.depth ? ` style="margin-left:${Math.min(t.depth, 4) * 14}px"` : '');
   const FILES_NOTE = 'Files in tree order: each sits under the file whose land holds it, with the rule that linked them and its confidence; files on the same land sit side by side. The development counts its units once, from the tree (Settings › Counting). Open a file to see its branch on its own.';
 
-  const api = { linkHTML, indent, FILES_NOTE, setData, setAliases, ready, regroup, devOf, resolve, resolveAll, migrateKeys, migrateAllocations, translateHistory, translateChanges, fileRows, fileKey, get keyMap() { return keyMap; }, get data() { return data; } };
+  // Step 2 (js/sites.js): the other developments on this one's site, proposals first (most homes),
+  // then its site activity (a patio, a fit-out), from every development built, held aside or not.
+  function siteParts(p, list) {
+    const k = p && p.siteKey; if (!k) return [];
+    return (list || []).filter(q => q !== p && q.key !== p.key && (q.key === k || q.siteKey === k))
+      .sort((a, b) => (!!a.siteActivity - !!b.siteActivity) || (b.units || 0) - (a.units || 0) || String(a.key).localeCompare(String(b.key)));
+  }
+
+  const api = { siteParts, linkHTML, indent, FILES_NOTE, setData, setAliases, ready, regroup, devOf, resolve, resolveAll, migrateKeys, migrateAllocations, translateHistory, translateChanges, fileRows, fileKey, get keyMap() { return keyMap; }, get data() { return data; } };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTreeGroups = api;
 })(typeof window !== 'undefined' ? window : globalThis);
