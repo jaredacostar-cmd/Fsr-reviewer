@@ -349,7 +349,7 @@
       answer: 'Find the development: search an address or file number above, or click it on the map.',
       lists: [
         { title: 'Steps', rows: steps.map(([t, d], i) => ({ kv: true, html: `<div class="pnl-step${i === 0 ? ' on' : ''}"><span class="pnl-step-n" aria-hidden="true">${i + 1}</span><span><strong>${t}</strong> ${esc(d)}</span></div>` })), total: 3 },
-        { title: 'Recently active', rows: recent.map(p => ({ attrs: { 'data-pnl-dev': p.key, title: `Open ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${esc(P && P.PHASE_BY_KEY[p.phase] ? P.PHASE_BY_KEY[p.phase].label : p.phase)}</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${fmtNum(p.units)} units</small>` })), total: recent.length },
+        { title: 'Recently active', rows: recent.map(p => ({ attrs: { 'data-pnl-dev': p.key, title: `Open ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${esc(P && P.PHASE_BY_KEY[p.phase] ? P.PHASE_BY_KEY[p.phase].label : p.phase)}</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'}</small>` })), total: recent.length },
       ],
       foot: { primary: { label: 'Search', attrs: { 'data-ws-focus': '' } } },
     };
@@ -445,10 +445,12 @@
     const nW = weekRows().length, pref = store.get('startScreen', 'home'), labIds = Object.keys(LAB_PAGES).filter(labPageOn);
     // (a guide's page lights How it works)
     const isOn = id => page === id || (id === 'guides' && !!(REF[page] && REF[page].guide)) || (id === 'explore' && EXPLORE.includes(page)) || (id === 'capital' && CAPITAL.includes(page)) || (id === 'reference' && !!REF[page]);
-    const item = (id, sub) => `<li><button type="button" class="home-ws${isOn(id) ? ' on' : ''}" data-ws-page="${id}"${isOn(id) ? ' aria-current="page"' : ''}><strong>${esc(pageName(id))}${id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</strong>${sub ? `<small>${esc(sub)}</small>` : ''}</button></li>`;
+    // (Explore is one entry for its five views: the view you are on is named in it, "Explore › Check a site")
+    const cur = id => (id === 'explore' && EXPLORE.includes(page) ? ` <span class="home-ws-cur">› ${esc(BY_ID[page].label)}</span>` : '');
+    const item = (id, sub) => `<li><button type="button" class="home-ws${isOn(id) ? ' on' : ''}" data-ws-page="${id}"${isOn(id) ? ' aria-current="page"' : ''}><strong>${esc(pageName(id))}${cur(id)}${id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</strong>${sub ? `<small>${esc(sub)}</small>` : ''}</button></li>`;
     // (This week covers capital and EA dates too: it sits under Home, not Planning)
     // (a phone: the list folds behind one button naming the page you are on; it opens grouped)
-    return `<nav class="home-side${menuOpen ? ' open' : ''}" aria-label="Workspaces"><button type="button" class="home-menu-btn" data-home-menu aria-expanded="${menuOpen}"><span aria-hidden="true">☰</span> ${esc(pageName(page))} <span class="muted small">· all pages</span> <span aria-hidden="true">${menuOpen ? '▴' : '▾'}</span></button><ul>${item('home', 'The briefing')}${item('week', BY_ID.week.what)}</ul>
+    return `<nav class="home-side${menuOpen ? ' open' : ''}" aria-label="Workspaces"><button type="button" class="home-menu-btn" data-home-menu aria-expanded="${menuOpen}"><span aria-hidden="true">☰</span> ${EXPLORE.includes(page) ? `Explore › ${esc(pageName(page))}` : esc(pageName(page))} <span class="muted small">· all pages</span> <span aria-hidden="true">${menuOpen ? '▴' : '▾'}</span></button><ul>${item('home', 'The briefing')}${item('week', BY_ID.week.what)}</ul>
       ${GROUPS.map(([g, ids]) => `<h2 class="home-g">${esc(g)}</h2><ul>${ids.map(id => item(id, (SIDE[id] || BY_ID[id]).what)).join('')}</ul>`).join('')}
       ${labIds.length ? `<h2 class="home-g">Labs</h2><ul>${labIds.map(id => item(id, LAB_PAGES[id].what)).join('')}</ul>` : ''}
       <h2 class="home-g">Reference</h2><ul>${item('reference', SIDE.reference.what)}</ul>
@@ -456,11 +458,14 @@
       <label class="home-pref small">Start screen <select data-ws-start>${START.map(([k, t]) => `<option value="${k}"${pref === k ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
     </nav>`;
   }
+  // Explore's five views in a row at the top of each of them: where you are, and the others one click away.
+  const viewsHTML = () => `<nav class="page-views" aria-label="Explore">${EXPLORE.map(id => `<button type="button" class="btn small${id === page ? ' on' : ''}" data-ws-page="${id}"${id === page ? ' aria-current="page"' : ''} title="${esc(BY_ID[id].what)}">${esc(BY_ID[id].label)}</button>`).join('')}</nav>`;
   // force: rebuild even when the page HTML is unchanged (a mode switch).
   function renderPage(force) {
     const el = $('#home'), WP = root.PeelWsPages; if (!el || el.hidden || !WP) return;
     const m = WP.build(page);
     if (!REF[page] && !LAB_PAGES[page]) m.filters = filterChipsHTML();
+    if (EXPLORE.includes(page)) m.views = viewsHTML();
     const main = WP.pageHTML(m, PN() ? PN().NOTE : '');
     const html = `<div class="home-grid">${sideHTML()}${main}</div>`;
     if (!force && html === lastHTML) return;

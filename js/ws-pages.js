@@ -44,6 +44,7 @@
     // (a zero is never coloured; n/a is never a figure)
     const figs = (m.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4).map(f => (String(f.v) === '0' && f.tone ? { ...f, tone: null } : f));
     const out = [];
+    if (m.views) out.push(m.views);
     // (the scenario chip sits in the title row, beside the status: one row less above the answer)
     out.push(`<header class="home-h" data-psec="header"><p class="page-eyebrow small">${m.eyebrow || ''}</p><h1>${esc(m.name || '')}</h1>${chipHTML(m.status)}${m.badge || ''}${m.scen ? `<div class="pnl-scen" data-psec="scenario">${m.scen}</div>` : ''}${m.identity ? `<p class="small muted page-id">${m.identity}</p>` : ''}${m.extra || ''}</header>`);
     if (m.filters) out.push(m.filters);
@@ -380,7 +381,7 @@
     for (const p of hs) out.push(dotAt(p, 4.5, 'hm-hl', `<title>${esc(p.title)}</title>`));
     // (nothing highlighted: the three largest named)
     const named = hs.length ? hs : set.filter(p => p.lat != null && p.phase !== 'cancelled').sort((a, b) => (b.units || 0) - (a.units || 0)).slice(0, 3);
-    if (!hs.length) for (const p of named) out.push(dotAt(p, Math.max(1.4, Math.min(6, Math.sqrt(p.units) / 8)).toFixed(1), 'hm-dev hm-dev-top', `<title>${esc(p.title)}: ${fmtNum(p.units)} units</title>`));
+    if (!hs.length) for (const p of named) out.push(dotAt(p, Math.max(1.4, Math.min(6, Math.sqrt(p.units) / 8)).toFixed(1), 'hm-dev hm-dev-top', `<title>${esc(p.title)}: ${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'}</title>`));
     return f.svg(out.join(''), 'Peel’s wastewater blocks with the developments on the map', mapLabels(f, named.slice(0, 3).map(p => ({ lng: p.lng, lat: p.lat, name: hs.length ? p.title : `${shortName(p.title)} (${fmtNum(p.units)})` }))));
   }
   // Projects: the 2026 DC works (wastewater, water).
@@ -484,8 +485,10 @@
   function home() {
     const a = briefing(); if (!a) return { ...waitingFor('home', 'Loading the developments and working out the briefing…', [['Growth', ['planned', 'left to build', 'at build-out', 'expected by 2031']], ['Servicing', ['over capacity at build-out', 'first 90% trigger']], ['Capital', ['DC projects late', 'with no relief in time']], ['Change', ['this week']]]), eyebrow: `Peel · ${esc((App() && App().state.muni) || 'all of Peel')}`, name: `${(App() && App().state.muni) || 'Peel'}: what needs attention`, scen: scen() };
     // The servicing model loads after the developments: until then Needs attention keeps its place with
-    // a placeholder (never silently left out), and the map's key waits for the colours it explains.
-    const cap = Cap() && Cap().collect ? Cap().collect() : null, ready = !!cap, rows = cap || [];
+    // a placeholder (never silently left out), and the map's key waits for the colours it explains. The
+    // capacity figures wait for every facility (the pumps and pumping stations load last), so a count
+    // such as "3 over of 10 facilities" is never shown on its way to "8 over of 32".
+    const cap = Cap() && Cap().collect ? Cap().collect() : null, ready = !!cap && !(Cap().partial && Cap().partial()), rows = ready ? cap : [];
     const wait = { title: 'Needs attention', rows: [{ kv: true, html: '<span class="muted">Checking servicing capacity…</span>' }], total: 1 };
     const nl = a.lists.find(l => l.title === 'Needs attention');
     const needs = ready ? (nl && nl.rows.length ? nl : null) || { title: 'Needs attention', rows: [{ kv: true, html: '<span class="muted">Nothing reaches a limit or the 90% trigger at build-out.</span>' }], total: 1 } : wait;
@@ -503,7 +506,7 @@
     let tightFiles = null; try { const wk = week && ready ? BUILD.week() : null; tightFiles = wk && (wk.figures || []).find(f => f && /tight plant/.test(f.label)); } catch (e) { tightFiles = null; }
     const go = page => ({ 'data-ws-page': page });
     const groups = [
-      { title: 'Growth', link: { label: 'Explore', attrs: go('growth') }, figures: [
+      { title: 'Growth', link: { label: 'Growth in an area', attrs: go('growth') }, figures: [
         G ? { v: fmtNum(Math.round(G.planned)), u: 'homes', label: 'planned', ctx: `${fmtNum(set.length)} developments`, attrs: go('growth') } : null,
         G ? { v: fmtNum(Math.round(G.left)), u: 'homes', label: 'left to build', ctx: `${fmtNum(Math.round(G.completed))} completed`, attrs: go('growth') } : null,
         people ? { v: people.v, u: 'people', label: 'at build-out', ctx: 'Peel design criteria', attrs: go('growth') } : null,
@@ -518,8 +521,9 @@
     const unbuilt = { title: 'Largest left to build', rows: big.map(([p, u]) => ({ attrs: { 'data-ws-pick': p.key, 'data-ws-as': 'site', title: `Open ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${fmtNum(Math.round(u))} left</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${esc(lab(p.phase))}</small>` })), total: big.length };
     const PT = root.PeelPlanTables, behind = PT && PT.behindTarget ? PT.behindTarget(5) : null;
     const tgt = behind && behind.length ? { title: 'Plans furthest behind their target', rows: behind.map(x => ({ attrs: { 'data-ws-explore': x.node.id, title: `Open ${x.name} in Explore` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.name)}</span><span class="pnl-r-year">${Math.round(x.pctTotal * 100)}%</span></div><small class="pnl-r-line">${fmtNum(Math.round(x.total))} planned of a ${fmtNum(x.target.units)}-unit target${x.target.year ? ` (${x.target.year})` : ''}</small>` })), total: behind.length } : null;
-    // (pending: the servicing figures are still loading, and the page tries again until they are in)
-    return { id: 'home', pending: !ready || null, eyebrow: esc(a.head && a.head.identity ? a.head.identity : 'Peel'), name: `${muni || 'Peel'}: what needs attention`, status: a.head && a.head.status, scen: scen(), answer: a.answer, caveats: caveats(),
+    // (pending: the servicing figures are still loading, and the page tries again until they are in; the
+    // title's "N over" chip waits with them)
+    return { id: 'home', pending: !ready || null, eyebrow: esc(a.head && a.head.identity ? a.head.identity : 'Peel'), name: `${muni || 'Peel'}: what needs attention`, status: ready && a.head ? a.head.status : null, scen: scen(), answer: a.answer, caveats: caveats(),
       top: scope,
       figures: [], groups,
       // The units the answer adds, by stage: Built since 2021 beside what is approved and in review.
@@ -571,7 +575,7 @@
     const last = p => (Ph && Ph.lastActivityOf ? Ph.lastActivityOf(p) || 0 : 0);
     const recent = proj.filter(p => p.phase !== 'cancelled' && p.phase !== 'completed' && (p.units || 0) > 0).map(p => [p, last(p)]).filter(x => x[1]).sort((a, b) => b[1] - a[1]).slice(0, 5).map(x => x[0]);
     const big = proj.filter(p => p.phase === 'review' && (p.units || 0) >= 100).sort((a, b) => b.units - a.units).slice(0, 5);
-    const devRow = p => ({ attrs: { 'data-ws-pick': p.key, title: `Open ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${esc(Ph && Ph.PHASE_BY_KEY[p.phase] ? Ph.PHASE_BY_KEY[p.phase].label : p.phase)}</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${fmtNum(p.units)} units</small>` });
+    const devRow = p => ({ attrs: { 'data-ws-pick': p.key, title: `Open ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${esc(Ph && Ph.PHASE_BY_KEY[p.phase] ? Ph.PHASE_BY_KEY[p.phase].label : p.phase)}</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'}</small>` });
     // Bundle 6: the steps in one line under the search (not a list beside the map); Review an FSR
     // starts from the files that have an FSR posted (data/fsr.json), newest first.
     const steps = [['Find', 'search or pick one below'], ['Result', id === 'fsr' ? 'its servicing path with the FSR cross-check' : 'its servicing, timing and what to confirm'], ['Output', id === 'fsr' ? 'notes for the review' : 'the one-page servicing memo']];
@@ -580,7 +584,7 @@
     let fsrRows = null;
     if (id === 'fsr' && F) {
       if (!F.FSR.by) { if (F.loadFsr) F.loadFsr().then(() => { if (W() && W().renderPage) W().renderPage(true); }); }
-      else fsrRows = proj.map(p => ({ p, f: F.fsrFor(p) })).filter(x => x.f && x.f.best && x.p.phase !== 'cancelled').sort((a, b) => String(b.f.best.fsr.date || '').localeCompare(String(a.f.best.fsr.date || ''))).map(({ p, f }) => ({ attrs: { 'data-ws-pick': p.key, title: `Review ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${esc(f.best.fsr.date || '')}</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${fmtNum(p.units)} units · FSR posted${f.best.fsr.date ? ` ${esc(f.best.fsr.date)}` : ''}</small>` }));
+      else fsrRows = proj.map(p => ({ p, f: F.fsrFor(p) })).filter(x => x.f && x.f.best && x.p.phase !== 'cancelled').sort((a, b) => String(b.f.best.fsr.date || '').localeCompare(String(a.f.best.fsr.date || ''))).map(({ p, f }) => ({ attrs: { 'data-ws-pick': p.key, title: `Review ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${esc(f.best.fsr.date || '')}</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'} · FSR posted${f.best.fsr.date ? ` ${esc(f.best.fsr.date)}` : ''}</small>` }));
     }
     const lists = id === 'fsr'
       ? [{ title: 'Files with an FSR posted', rows: fsrRows || [{ kv: true, html: '<span class="muted small">Looking for posted servicing reports…</span>' }], total: fsrRows ? fsrRows.length : 0 },

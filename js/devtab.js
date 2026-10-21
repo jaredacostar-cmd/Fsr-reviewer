@@ -353,7 +353,7 @@
   }
   function fileBodyHTML(r) {
     const ev = (r.events || []).slice().sort((a, b) => a.date - b.date);
-    return `<p class="small"><strong>${esc(r.kind === 'permit' ? 'Building permit' : 'Application')} ${esc(r.ref || '')}</strong>${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · municipal status: <em>${esc(r.statusRaw)}</em>` : ''}${r.units > 0 ? ` · ${fmtNum(r.units)} units` : ''}</p>
+    return `<p class="small"><strong>${esc(r.kind === 'permit' ? 'Building permit' : 'Application')} ${esc(r.ref || '')}</strong>${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · municipal status: <em>${esc(r.statusRaw)}</em>` : ''}${r.units > 0 ? ` · ${fmtNum(r.units)} unit${r.units === 1 ? '' : 's'}` : ''}</p>
       ${r.description ? `<p class="small">${esc(r.description)}</p>` : ''}
       ${ev.length ? `<ol class="gt-evs small">${ev.map(e => `<li><span class="d">${fmtDate(e.date)}</span>${dot(e.phase)}<span>${esc(P().humanizeField(e.label || ''))}</span></li>`).join('')}</ol>` : '<p class="small muted">No dated events on this file.</p>'}
       ${recordProvHTML(r)}<details class="gt-fields"><summary class="small">Every field as published</summary><table class="rec-t">${recordRows(r)}</table></details>`;
@@ -1466,7 +1466,7 @@
   function filesTreeHTML(p) {
     const FT = root.PeelFileTree, d = FT && !p.parent ? FT.of(p) : null, files = p.records.filter(r => r.kind === 'application');
     const newest = files.slice().sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)));
-    const row = r => `<li class="pnl-kv"><span><button type="button" class="tr-ref" data-dev-file="${esc(r.ref || '')}">${esc(r.ref || 'file')}</button>${r.type ? ` <small class="muted">${esc(r.type)}</small>` : ''}</span><span>${r.units ? `${fmtNum(r.units)} units · ` : ''}${esc((P().PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}</span></li>`;
+    const row = r => `<li class="pnl-kv"><span><button type="button" class="tr-ref" data-dev-file="${esc(r.ref || '')}">${esc(r.ref || 'file')}</button>${r.type ? ` <small class="muted">${esc(r.type)}</small>` : ''}</span><span>${r.units ? `${fmtNum(r.units)} unit${r.units === 1 ? '' : 's'} · ` : ''}${esc((P().PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}</span></li>`;
     const tree = d ? FT.treeHTML(d, FT.recLookup(p), { dot: k => dot(k), latest: newest[0] && newest[0].ref, ...(root.PeelDcGate ? root.PeelDcGate.treeOpts(p, d) : {}) }) : '';
     return `${tree || `<ul class="pnl-files">${newest.slice(0, 8).map(row).join('')}</ul>`}
       <p class="small"><button type="button" class="btn small link" data-dev-hist="file">All ${fmtNum(p.records.length)} source records, by file →</button></p>`;

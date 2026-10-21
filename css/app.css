@@ -2491,9 +2491,10 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
   .tb-scen .sc-what { display: none; }
   .tb-scen { max-width: 340px; }
 }
+/* (Home and its pages have no map view chips in the top bar: there the actions keep their names) */
 @media (max-width: 1600px) {
-  .tb-actions .tb-btn:not(.tb-icon) { font-size: 0; gap: 0; }
-  .tb-actions .tb-btn:not(.tb-icon) svg { width: 16px; height: 16px; }
+  :root:not(.home-on) .tb-actions .tb-btn:not(.tb-icon) { font-size: 0; gap: 0; }
+  :root:not(.home-on) .tb-actions .tb-btn:not(.tb-icon) svg { width: 16px; height: 16px; }
 }
 @media (max-width: 700px) {
   .topbar { gap: var(--space-1); padding: var(--space-1) var(--space-2); }
@@ -2878,6 +2879,10 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 }
 @media (max-width: 700px) {
   .home-main .pnl-figs { grid-template-columns: 1fr 1fr; }
+  /* Home on a phone: the figures first, under the page's scope; the briefing's paragraph after them
+     (the HTML order, and so a screen reader's, stays header, answer, figures). */
+  .page-main[data-page="home"] > .home-h, .page-main[data-page="home"] > .page-filters, .page-main[data-page="home"] > .pnl-scen, .page-main[data-page="home"] > .home-scope { order: -2; }
+  .page-main[data-page="home"] > .home-grp { order: -1; }
   .ws-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
   .ws-chip { flex: 0 0 auto; }
 }
@@ -2911,6 +2916,12 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .page-sec:hover { color: var(--text-primary); }
 .page-sec.on { color: var(--text-primary); border-bottom-color: var(--accent); }
 /* Explore: the one search and where you are, at the top of each of its pages. */
+/* Explore's five views, a row at the top of each (js/workspaces.js viewsHTML); one line that scrolls on a phone. */
+.page-views { display: flex; gap: var(--space-1); margin: 0 0 var(--space-2); overflow-x: auto; scrollbar-width: none; }
+.page-views::-webkit-scrollbar { display: none; }
+.page-views .btn { flex: none; white-space: nowrap; }
+/* The Explore view you are on, named in its sidebar entry. */
+.home-ws-cur { font-weight: 400; color: var(--text-secondary); }
 .page-explore { display: flex; flex-direction: column; gap: var(--space-1); margin: var(--space-2) 0 0; }
 .page-explore .page-search { max-width: 640px; }
 .ex-where { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); color: var(--text-secondary); }
