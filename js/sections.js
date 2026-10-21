@@ -45,6 +45,15 @@
       { id: 'alloc', title: 'Allocations', tab: 'svc', keys: ['svc:alloc'] },
       { id: 'checks', title: 'Model checks', tab: 'svc', keys: ['svc:checks'] },
     ] },
+    // Reference (step 5): Help, How it works and the Glossary, and the map's Records › Sources and
+    // Data checks (the old Data tab) as Data sources (its own page) and Data checks.
+    reference: { host: 'data', secs: [
+      { id: 'help', title: 'Help', page: 'help' },
+      { id: 'guides', title: 'How it works', page: 'guides' },
+      { id: 'glossary', title: 'Glossary', page: 'glossary' },
+      { id: 'sources', title: 'Data sources', page: 'data' },
+      { id: 'checks', title: 'Data checks', tab: 'records', keys: ['records:checks'] },
+    ] },
     capital: { host: 'projects', secs: [
       { id: 'timing', title: 'DC timing', page: 'projects' },
       { id: 'eaflow', title: 'EA to construction', page: 'eaflow' },
@@ -54,6 +63,8 @@
   };
   const AREA_BUILD = {
     'dca:timing': () => (root.PeelDcaTab && root.PeelDcaTab.areaSpec ? root.PeelDcaTab.areaSpec() : null),
+    'records:sources': () => (root.PeelRecordsTab && root.PeelRecordsTab.sourcesPanelSpec ? root.PeelRecordsTab.sourcesPanelSpec() : null),
+    'records:checks': () => (root.PeelRecordsTab && root.PeelRecordsTab.checksPanelSpec ? root.PeelRecordsTab.checksPanelSpec() : null),
     'dca:projects': () => (root.PeelCapitalEA && root.PeelCapitalEA.projectsPanelSpec ? root.PeelCapitalEA.projectsPanelSpec() : null),
     'dca:eas': () => (root.PeelCapitalEA && root.PeelCapitalEA.easPanelSpec ? root.PeelCapitalEA.easPanelSpec() : null),
     // (Allocations sets its own panel when it renders)
@@ -97,7 +108,7 @@
     return { ...first, lists, folds, onMount: mounts.length ? host => { for (const f of mounts) try { f(host); } catch (err) { /* that part stays empty */ } } : null };
   }
 
-  const api = { SITE, AREA, WORKSPACES, BY_ID, specFor, areaSpecFor, wsSpecFor };
+  const api = { SITE, AREA, WORKSPACES, BY_ID, specFor, areaSpecFor, wsSpecFor, areaPanel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSections = api;
 })(typeof window !== 'undefined' ? window : globalThis);

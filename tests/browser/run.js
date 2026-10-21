@@ -265,6 +265,30 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(ea.page === 'eaflow' && ea.on === 'EA to construction' && ea.lit && ea.lit.wsPage === 'capital', `EA to construction is a section of Capital (${ea.page}, ${ea.on})`);
   });
 
+  // Reference and This week (step 5): one Reference entry (Help, How it works, the Glossary, the data
+  // sources and checks that were map-only); This week carries the watch list.
+  await check('Reference: one entry, the data sources and checks on pages; This week: the watch list', browser, {}, async ({ page, ev }, expect) => {
+    const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
+    expect(side.includes('reference') && !side.some(id => ['help', 'guides', 'glossary'].includes(id)), `the sidebar: ${side.join()}`);
+    await page.click('#home .home-side [data-ws-page="reference"]'); await wait(1500);
+    const bar = await ev(() => ({ page: PeelWorkspaces.page(), secs: [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent), lit: (document.querySelector('#home .home-ws.on') || {}).dataset }));
+    expect(bar.page === 'help' && bar.secs.join() === 'Help,How it works,Glossary,Data sources,Data checks' && bar.lit && bar.lit.wsPage === 'reference', `Reference (${bar.page}: ${bar.secs.join()})`);
+    const st = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+    await page.click('#home .page-sec[data-ws-page="data"]'); await wait(2000);
+    const ds = await ev(() => ({ page: PeelWorkspaces.page(), a: document.querySelector('#home .home-answer').innerHTML, m: PeelSections.areaPanel('records:sources').answer }));
+    expect(ds.page === 'data' && st(ds.a) === st(ds.m), `Data sources is the map's Records › Sources ("${st(ds.a).slice(0, 50)}")`);
+    await page.click('#home .page-sec[data-ws-wsec="reference:checks"]'); await wait(2000);
+    const dc = await ev(() => ({ a: document.querySelector('#home .home-answer').innerHTML, m: (PeelSections.wsSpecFor('reference', 'checks') || {}).answer }));
+    expect(dc.m && st(dc.a) === st(dc.m), `Data checks is the map's Records › Data checks ("${st(dc.a).slice(0, 50)}")`);
+    // A watched development is on This week's page.
+    const w = await ev(() => { const p = PeelApp.state.projects.find(q => q.units > 100 && q.phase === 'review'); PeelUtil.store.set('watch', [p.key]); PeelWorkspaces.openPage('week'); return p.title; });
+    await wait(2000);
+    const wl = await ev(() => [...document.querySelectorAll('#home .pnl-list-h h3, #home h3')].map(h => h.textContent).join('|') + '#' + document.querySelector('#home').innerText.includes('Your watch list'));
+    const has = await ev(t => document.querySelector('#home').innerText.includes(t), w);
+    expect(/true$/.test(wl) && has, `This week lists the watch list with ${w}`);
+    await ev(() => PeelUtil.store.set('watch', []));
+  });
+
   // Plan areas: Growth in an area and the map's plan filter ("Show on the map") count the same
   // developments the same way (a straddling one by its share), for every plan, sub-area and precinct.
   await check('plan areas: Growth in an area and the map’s plan filter agree, precincts included', browser, {}, async ({ page, ev }, expect) => {
