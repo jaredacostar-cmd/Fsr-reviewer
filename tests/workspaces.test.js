@@ -137,7 +137,9 @@ test('2. workspace figures equal full-map figures (Home and This week read the P
   assert.ok(h.includes(AREA.answer), 'the headline sentence');
   assert.match(h, /<div class="pnl-fig" data-ws-page="week" title="This week" role="button" tabindex="0"><b>2<\/b><span class="pnl-u">changes<\/span><span class="pnl-l">this week<\/span>/, 'This week: the same rows as its page');
   assert.match(h, /data-ws-page="tight" title="Servicing capacity" role="button" tabindex="0"><b>/);
-  assert.match(h, /<p class="home-start small"><strong>Start here:<\/strong>/);
+  // Step 6: the scope first (Peel or a municipality), then the figures in groups.
+  assert.match(h, /<div class="home-scope"><div class="seg" role="group" aria-label="Municipality"><button type="button" class="btn small on" data-ws-muni="" aria-pressed="true">Peel<\/button>/);
+  for (const g of ['Growth', 'Servicing', 'Capital', 'Change']) assert.match(h, new RegExp(`<div class="home-grp-h"><h2>${g}</h2>`), g);
   assert.match(h, /9 over/);
   // This week in its workspace: the Overview's own rows, every one.
   B.go('week');
@@ -247,7 +249,7 @@ test('3. Home links open the matching chip', () => {
   assert.match(h, /data-ws-page="tight">See all \(9\) →/);
   assert.doesNotMatch(h, /See all \(2\)/, 'no See all when every row is shown');
   assert.match(h, /<div class="pnl-fig" data-ws-page="tight"/);
-  assert.match(h, /data-ws-page="growth">Growth in an area →<\/button>/);
+  assert.match(h, /<h2>Growth<\/h2><button type="button" class="btn small link" data-ws-page="growth">Explore →<\/button>/);
   assert.match(h, /<button type="button" class="home-map-btn" data-ws-page="tight"/);
   // The start screen choice, and the screening note.
   assert.match(h, /<select data-ws-start><option value="home" selected>Home<\/option><option value="last">Last workspace<\/option><option value="full">Full map<\/option>/);

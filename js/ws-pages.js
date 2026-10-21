@@ -34,6 +34,10 @@
     return `<section class="pnl-list page-list" data-psec="list"><div class="pnl-list-h"><h3>${esc(l.title)}</h3>${l.tools || ''}${l.see && (l.all || l.total > Math.min(5, l.rows.length)) ? `<button type="button" class="btn small link"${attrs(l.see)}>${l.all ? 'Show fewer' : `See all (${fmtNum(l.seeN != null ? l.seeN : l.total)}) →`}</button>` : ''}</div>
       <ul>${l.rows.slice(0, l.all ? l.rows.length : 5).map(r => `<li class="pnl-row${r.kv ? ' kv' : ''}${r.tone ? ` t-${esc(r.tone)}` : ''}"${r.attrs ? `${attrs(r.attrs)} tabindex="0" role="button"` : ''}>${r.html}</li>`).join('')}</ul></section>`;
   }
+  // One figure card (a page's figures, Home's groups).
+  function figHTML(f, gl = x => x) {
+    return `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"${f.attrs ? `${attrs(f.attrs)} role="button" tabindex="0"` : ''}><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}</div>`;
+  }
   function pageHTML(m, note) {
     // (a zero is never coloured; n/a is never a figure)
     const figs = (m.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4).map(f => (String(f.v) === '0' && f.tone ? { ...f, tone: null } : f));
@@ -46,7 +50,12 @@
     const seen = new Set(), gl = h => (root.PeelGlossary && m.id !== 'glossary' ? root.PeelGlossary.mark(h, seen) : h);
     out.push(`<p class="home-answer" data-psec="answer">${gl(m.answer || '')}</p>`);
     for (const c of m.caveats || []) out.push(`<p class="home-caveat small" role="note" data-psec="caveat">⚠ ${esc(c.text)}${c.at ? ` <button type="button" class="btn small link" data-ws-full data-at="${esc(c.at)}">Review →</button>` : ''}</p>`);
-    if (figs.length) out.push(`<div class="pnl-figs" data-psec="figures">${figs.map(f => `<div class="pnl-fig${f.tone ? ` t-${esc(f.tone)}` : ''}"${f.attrs ? `${attrs(f.attrs)} role="button" tabindex="0"` : ''}><b>${f.v}</b>${f.u ? `<span class="pnl-u">${esc(f.u)}</span>` : ''}<span class="pnl-l">${gl(esc(f.label))}</span>${f.ctx ? `<small>${gl(f.ctx)}</small>` : ''}</div>`).join('')}</div>`);
+    if (figs.length) out.push(`<div class="pnl-figs" data-psec="figures">${figs.map(f => figHTML(f, gl)).join('')}</div>`);
+    // Home (step 6): the figures in groups (Growth, Servicing, Capital, Change), each with its page.
+    for (const g of m.groups || []) {
+      const gf = (g.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v)));
+      if (gf.length) out.push(`<section class="home-grp" data-psec="group"><div class="home-grp-h"><h2>${esc(g.title)}</h2>${g.link ? `<button type="button" class="btn small link"${attrs(g.link.attrs)}>${esc(g.link.label)} →</button>` : ''}</div><div class="pnl-figs">${gf.map(f => figHTML(f, gl)).join('')}</div></section>`);
+    }
     if (m.chart) out.push(`<div class="pnl-chart page-chart" data-psec="chart">${m.chart}</div>`);
     if (m.mid) out.push(m.mid);
     const lists = (m.lists || []).filter(l => l && l.rows && l.rows.length), first = lists[0];
@@ -463,14 +472,38 @@
     const week = a.lists.find(l => l.title === 'This week');
     // Home's rows open the matching workspace page.
     const toPage = (ws, l) => (l ? { ...l, rows: l.rows.map(r => ({ ...r, attrs: { 'data-ws-page': ws, title: (r.attrs || {}).title } })), see: { 'data-ws-page': ws } } : null);
-    return { id: 'home', eyebrow: esc(a.head && a.head.identity ? a.head.identity : 'Peel'), name: `${(App() && App().state.muni) || 'Peel'}: what needs attention`, status: a.head && a.head.status, scen: scen(), answer: a.answer, caveats: caveats(),
-      // Bundle 6: Home's figures are the other pages' answers, each opening its page (the pipeline's
-      // totals stay in the answer, with Growth in an area a tap away).
-      top: '<p class="home-start small"><strong>Start here:</strong> Servicing capacity for what is over, DC projects for whether relief comes in time, This week for what changed. <button type="button" class="btn small link" data-ws-page="growth">Growth in an area →</button> <button type="button" class="btn small link" data-ws-page="outlook">Forecast →</button> <button type="button" class="btn small link" data-ws-page="eaflow">EA to construction →</button> <button type="button" class="btn small link" data-ws-page="help">Help, by role →</button></p>',
-      figures: homeFigures(rows, ready, week),
+    // Step 6: the scope first (Peel or a municipality: every figure on the page follows it), then four
+    // groups of figures, each the answer of its page: Growth, Servicing, Capital, Change.
+    const muni = (App() && App().state.muni) || '', MUNIS = ['', 'Mississauga', 'Brampton', 'Caledon'];
+    const scope = `<div class="home-scope"><div class="seg" role="group" aria-label="Municipality">${MUNIS.map(x => `<button type="button" class="btn small${x === muni ? ' on' : ''}" data-ws-muni="${esc(x)}" aria-pressed="${x === muni}">${esc(x || 'Peel')}</button>`).join('')}</div><p class="small muted">Every figure here follows the municipality picked; one that is Region-wide says so.</p></div>`;
+    const set = (App() && App().state.filtered) || [], Gr = root.Growth, G = Gr ? Gr.pipelineTotals(set) : null, Ph = P();
+    const hf = homeFigures(rows, ready, week), byL = re => hf.find(f => f && re.test(f.label)) || null;
+    const people = (a.figures || []).find(f => f && f.u === 'people'), tm = specOf('growth:timing', areaScope), f31 = tm && (tm.figures || []).find(f => f && /2031/.test(f.label));
+    const noRelief = rows.filter(r => r.relief === 'gap' && r.limit && r.limit.y != null).length;
+    let tightFiles = null; try { const wk = week && ready ? BUILD.week() : null; tightFiles = wk && (wk.figures || []).find(f => f && /tight plant/.test(f.label)); } catch (e) { tightFiles = null; }
+    const go = page => ({ 'data-ws-page': page });
+    const groups = [
+      { title: 'Growth', link: { label: 'Explore', attrs: go('growth') }, figures: [
+        G ? { v: fmtNum(Math.round(G.planned)), u: 'homes', label: 'planned', ctx: `${fmtNum(set.length)} developments`, attrs: go('growth') } : null,
+        G ? { v: fmtNum(Math.round(G.left)), u: 'homes', label: 'left to build', ctx: `${fmtNum(Math.round(G.completed))} completed`, attrs: go('growth') } : null,
+        people ? { v: people.v, u: 'people', label: 'at build-out', ctx: 'Peel design criteria', attrs: go('growth') } : null,
+        f31 ? { v: f31.v, u: f31.u || 'units', label: 'expected by 2031', ctx: f31.ctx, attrs: go('outlook') } : null] },
+      { title: 'Servicing', link: { label: 'Servicing capacity', attrs: go('tight') }, figures: [byL(/over capacity/), byL(/first 90% trigger/)] },
+      { title: 'Capital', link: { label: 'Capital', attrs: go('projects') }, figures: [byL(/DC projects late/), ready ? { v: fmtNum(noRelief), u: noRelief === 1 ? 'facility' : 'facilities', label: 'with no relief in time', ctx: `${muni ? 'Peel-wide · ' : ''}reach a limit with no DC project in time`, tone: noRelief ? 'over' : null, attrs: go('tight') } : null] },
+      { title: 'Change', link: { label: 'This week', attrs: go('week') }, figures: [byL(/this week/), tightFiles ? { ...tightFiles, attrs: go('week') } : null] },
+    ];
+    // The largest developments left to build, and the plans furthest behind their target (both full map only until now).
+    const big = set.filter(p => p.phase !== 'cancelled').map(p => [p, Ph && Ph.unbuiltOf ? Ph.unbuiltOf(p) : 0]).filter(x => x[1] >= 1).sort((x, y) => y[1] - x[1]).slice(0, 5);
+    const lab = k => (Ph && Ph.PHASE_BY_KEY[k] ? Ph.PHASE_BY_KEY[k].label : k);
+    const unbuilt = { title: 'Largest left to build', rows: big.map(([p, u]) => ({ attrs: { 'data-ws-pick': p.key, 'data-ws-as': 'site', title: `Open ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${fmtNum(Math.round(u))} left</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${esc(lab(p.phase))}</small>` })), total: big.length };
+    const PT = root.PeelPlanTables, behind = PT && PT.behindTarget ? PT.behindTarget(5) : null;
+    const tgt = behind && behind.length ? { title: 'Plans furthest behind their target', rows: behind.map(x => ({ attrs: { 'data-ws-explore': x.node.id, title: `Open ${x.name} in Explore` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.name)}</span><span class="pnl-r-year">${Math.round(x.pctTotal * 100)}%</span></div><small class="pnl-r-line">${fmtNum(Math.round(x.total))} planned of a ${fmtNum(x.target.units)}-unit target${x.target.year ? ` (${x.target.year})` : ''}</small>` })), total: behind.length } : null;
+    return { id: 'home', eyebrow: esc(a.head && a.head.identity ? a.head.identity : 'Peel'), name: `${muni || 'Peel'}: what needs attention`, status: a.head && a.head.status, scen: scen(), answer: a.answer, caveats: caveats(),
+      top: scope,
+      figures: [], groups,
       // The units the answer adds, by stage: Built since 2021 beside what is approved and in review.
-      chart: a.stageStrip ? `${a.stageStrip}${(d => (d.n ? `<p class="small muted">${dormantNote(d).trim()}</p>` : ''))(dormantFor(App().state.muni))}` : '',
-      lists: [ready ? toPage('tight', needs) : needs, toPage('week', week)],
+      chart: a.stageStrip ? `${a.stageStrip}${(d => (d.n ? `<p class="small muted">${dormantNote(d).trim()}</p>` : ''))(dormantFor(muni))}` : '',
+      lists: [ready ? toPage('tight', needs) : needs, unbuilt, tgt, toPage('week', week)],
       map: { svg: capacityMap(rows), attrs: { 'data-ws-page': 'tight' }, link: 'Servicing capacity', label: 'Open Servicing capacity', caption: !ready ? '<span class="muted">Checking servicing capacity…</span>' : '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out (catchments, zones and plants)' },
       actions: [{ label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' }, primary: true }, { label: 'Full map', attrs: { 'data-ws-full': '' } }] };
   }

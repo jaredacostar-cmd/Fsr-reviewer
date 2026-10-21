@@ -154,7 +154,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
       await wait(2500);
       const r = await ev(() => {
         const num = s => +String(s == null ? '' : s).replace(/<[^>]+>/g, '').replace(/[^\d.]/g, '');
-        const figs = s => (s && s.figures || []).filter(Boolean);
+        const figs = s => [...(s && s.figures || []), ...((s && s.groups) || []).flatMap(g => g.figures || [])].filter(Boolean);
         const find = (s, re) => figs(s).find(f => re.test(`${f.u} ${f.label}`));
         const ov = PeelOverviewTab.lastAreaSpec(), gr = PeelWsPages.build('growth'), home = PeelWsPages.build('home'), tight = PeelWsPages.build('tight'), week = PeelWsPages.build('week');
         const set = PeelApp.state.filtered, G = Growth.pipelineTotals(set), L = PeelLayers.pipeline(set);
@@ -287,6 +287,22 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     const has = await ev(t => document.querySelector('#home').innerText.includes(t), w);
     expect(/true$/.test(wl) && has, `This week lists the watch list with ${w}`);
     await ev(() => PeelUtil.store.set('watch', []));
+  });
+
+  // Home (step 6): the scope picker sets the municipality; the four groups; the new lists; the figures
+  // are the pages' own.
+  await check('Home: the municipality picker, four groups of figures, the largest left to build', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
+    await wait(1500);
+    const g = await ev(() => [...document.querySelectorAll('#home .home-grp-h h2')].map(h => h.textContent));
+    expect(g.join() === 'Growth,Servicing,Capital,Change', `the groups: ${g.join()}`);
+    await page.click('#home [data-ws-muni="Caledon"]'); await wait(3000);
+    const c = await ev(() => ({ muni: PeelApp.state.muni, name: document.querySelector('#home h1').textContent, planned: (document.querySelector('#home .home-grp .pnl-fig b') || {}).textContent, g: Math.round(Growth.pipelineTotals(PeelApp.state.filtered).planned).toLocaleString('en-CA'), list: document.querySelector('#home').innerText.includes('Largest left to build') }));
+    expect(c.muni === 'Caledon' && /^Caledon/.test(c.name), `Caledon picked (${c.name})`);
+    expect(c.planned === c.g, `Home's homes planned ${c.planned} = Growth's ${c.g} for Caledon`);
+    expect(c.list, 'Largest left to build is listed');
+    await page.click('#home [data-ws-muni=""]'); await wait(2000);
+    expect(await ev(() => PeelApp.state.muni === ''), 'back to Peel');
   });
 
   // Plan areas: Growth in an area and the map's plan filter ("Show on the map") count the same
