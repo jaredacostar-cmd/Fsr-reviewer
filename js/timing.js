@@ -279,13 +279,15 @@
     return null;
   }
 
-  /** One observation per site and stage it entered (dated, since 2016): months to its first completion. */
-  function curveObservations(projects, now = Date.now()) {
+  /** One observation per site and stage it entered (dated, since 2016): months to its first completion.
+   *  opts.munis: only these municipalities' sites (a Set). A completion after `now` is not known yet (the
+   *  backtest's past "now"): the site is still waiting then. */
+  function curveObservations(projects, now = Date.now(), opts = {}) {
     const out = [];
     for (const p of projects || []) {
-      if (!p || p.phase === 'cancelled') continue;
-      const ms = p.milestones || {}, done = +ms.completed || null;
-      if (p.phase === 'completed' && !done) continue;           // finished on a date not published
+      if (!p || p.phase === 'cancelled' || (opts.munis && !opts.munis.has(p.municipality))) continue;
+      const ms = p.milestones || {}, done0 = +ms.completed || null, done = done0 && done0 <= now ? done0 : null;
+      if (p.phase === 'completed' && !done0) continue;          // finished on a date not published
       const size = sizeOf(p.units || 0);
       for (const stage of CURVE_STAGES) {
         const entry = +ms[stage] || null;
@@ -307,6 +309,48 @@
   function curveFor(curves, stage, units) {
     const own = st => [`${st}|${sizeOf(units)}`, `${st}|*`].map(k => curves && curves[k]).find(c => c && c.n >= MIN_CURVE_N);
     return own(stage) || (CURVE_FALLBACK[stage] ? own(CURVE_FALLBACK[stage]) : null) || null;
+  }
+
+  /**
+   * Backtest (pipeline ledger, Phase 3): the sites as they stood on `asOf` (the furthest stage each had
+   * entered by then, not yet built), each one's first-completion year predicted from curves of what was
+   * known then (opts.curveMunis: the municipalities whose sites build the curves), against the year it
+   * actually first completed. Only municipalities that date completions can be checked (opts.testMunis).
+   * A site is judged when it finished by `now`, or when its likely year has passed without it finishing;
+   * one still waiting with a likely year still ahead can't be judged yet. Range: the fast (high band) to
+   * the slow (low band) year. → { asOf, sites, judged, inRange, within1, unitsJudged, unitsInRange,
+   *   medianError (likely − actual, years), beyond (no year: past what the history shows), open }
+   */
+  function backtest(projects, asOf, opts = {}) {
+    const now = opts.now || Date.now(), yOf = t => new Date(t).getUTCFullYear(), yNow = yOf(now);
+    const curves = stageCurves(curveObservations(projects, asOf, { munis: opts.curveMunis }));
+    const rank = Object.fromEntries(CURVE_STAGES.map((st, i) => [st, i]));
+    const out = { asOf: new Date(asOf).toISOString().slice(0, 10), sites: 0, judged: 0, inRange: 0, within1: 0, unitsJudged: 0, unitsInRange: 0, beyond: 0, open: 0, errors: [] };
+    for (const p of projects || []) {
+      if (!p || p.phase === 'cancelled' || (opts.testMunis && !opts.testMunis.has(p.municipality))) continue;
+      const ms = p.milestones || {}, done = +ms.completed || null;
+      if ((p.phase === 'completed' && !done) || (done && done <= asOf)) continue;
+      let stage = null, entry = null;
+      for (const st of CURVE_STAGES) { const t = +ms[st] || null; if (t && t <= asOf && t >= CURVE_FROM && (!stage || rank[st] > rank[stage])) { stage = st; entry = t; } }
+      if (!stage) continue;
+      const c = curveFor(curves, stage, p.units || 0); if (!c) continue;
+      const e = (asOf - entry) / MONTH_MS;
+      const yr = b => { const m = remainingMonths(c, e, BAND_Q[b]); return m == null ? null : yOf(asOf + m * MONTH_MS); };
+      const fast = yr('high'), likely = yr('likely'), slow = yr('low'), actual = done ? yOf(done) : null, u = Math.max(1, p.units || 0);
+      out.sites++;
+      if (likely == null) { out.beyond++; continue; }
+      if (actual == null && likely >= yNow) { out.open++; continue; }
+      const got = actual == null ? yNow : actual;   // (not finished by now: at least this late)
+      const hit = actual != null && actual >= fast && (slow == null || actual <= slow);
+      out.judged++; out.unitsJudged += u;
+      if (hit) { out.inRange++; out.unitsInRange += u; }
+      if (actual != null && Math.abs(likely - actual) <= 1) out.within1++;
+      out.errors.push(likely - got);
+    }
+    const er = out.errors.slice().sort((a, b) => a - b);
+    out.medianError = er.length ? er[er.length >> 1] : null;
+    delete out.errors;
+    return out;
   }
 
   /**
@@ -776,7 +820,7 @@
     BANDS, COHORT_YEARS, MIN_N, FORECAST_YEARS,
     btypeOf, wilson, quantiles, calibrate, rowFor,
     projectSchedule, forecastBands, facilityBands, triggerRangeText,
-    survival, survivalAt, remainingMonths, curveObservations, stageCurves, curveFor, homesNeeded, allocationPace, stageSchedules, bandsFromSchedules, forecastModel,
+    survival, survivalAt, remainingMonths, curveObservations, stageCurves, curveFor, backtest, homesNeeded, allocationPace, stageSchedules, bandsFromSchedules, forecastModel,
     PHASE_UNITS, MIN_CURVE_N, SIZE_LABEL, QUEUE_ORDER, CURVE_STAGES,
     observationsFromProjects, pipelineItems, renderTiming, cumulative, yearTicks,
   };
