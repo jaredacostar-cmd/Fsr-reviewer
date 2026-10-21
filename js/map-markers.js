@@ -106,7 +106,8 @@
     onAdd() {
       const el = L.DomUtil.create('div', 'map-opts');
       const opts = (o, cur) => Object.entries(o).map(([k, v]) => `<option value="${k}"${k === cur ? ' selected' : ''}>${esc(typeof v === 'string' ? v : v.label)}</option>`).join('');
-      const small = matchMedia('(max-width: 700px)').matches;
+      // (folded on phones and where the map is narrow, so the panel doesn't cover half of it)
+      const small = matchMedia('(max-width: 700px)').matches || map.getSize().x < 900;
       // An on / off chip (a checkbox styled as a pill).
       const chip = (attrs, on, body, info) => `<label class="mo-chip"${info ? ` data-info="${info}"` : ''}><input type="checkbox" ${attrs}${on ? ' checked' : ''}><span>${body}</span></label>`;
       el.innerHTML = `
@@ -183,7 +184,8 @@
 
   // Cluster icon: ring segments show the phase mix of the projects inside.
   const cluster = L.markerClusterGroup({
-    chunkedLoading: true, showCoverageOnHover: false, maxClusterRadius: 50, spiderfyOnMaxZoom: true,
+    // (zoomed out the radius is wider than the largest circle, so the circles never overlap)
+    chunkedLoading: true, showCoverageOnHover: false, maxClusterRadius: z => (z < 13 ? 64 : 50), spiderfyOnMaxZoom: true,
     // At street zoom every project gets its own tappable marker (neighbouring houses
     // otherwise stay grouped and a tap only zooms in).
     disableClusteringAtZoom: 17,
@@ -204,12 +206,12 @@
       }
       if (!stops.length) stops.push('var(--nodata) 0deg 360deg');
       const n = kids.length;
-      const size = byUnits ? (tot < 500 ? 32 : tot < 5000 ? 40 : tot < 20000 ? 48 : 56) : sized ? (tot < 1000 ? 32 : tot < 10000 ? 40 : tot < 50000 ? 48 : 56) : n < 10 ? 30 : n < 100 ? 36 : n < 1000 ? 42 : 50;
+      const size = byUnits ? (tot < 500 ? 30 : tot < 5000 ? 40 : tot < 20000 ? 44 : 50) : sized ? (tot < 1000 ? 30 : tot < 10000 ? 40 : tot < 50000 ? 44 : 50) : n < 10 ? 30 : n < 100 ? 36 : n < 1000 ? 42 : 50;
       // The number says what it counts: developments, planned homes, or people + jobs (a word under it
       // where the circle has room; the legend and the hover say it in full).
       // (sized by homes but none stated in the cluster: it counts its sites instead of showing 0)
       const noUnits = byUnits && tot < 0.5;
-      const unitWord = noUnits ? 'sites' : byUnits ? 'homes' : sized ? (size >= 48 ? 'ppl+jobs' : '') : 'sites';
+      const unitWord = noUnits ? 'sites' : byUnits ? 'homes' : sized ? (size >= 44 ? 'ppl+jobs' : '') : 'sites';
       return L.divIcon({
         className: 'pm',
         iconSize: [size, size],
@@ -302,9 +304,11 @@
       if (!p._ol || p._ol.sig !== sig) p._ol = { sig, polys: outline(p, false, unloaded) };
       polys.push(...p._ol.polys);
       if (unloaded || !withDots || n >= SITE_MAX_POINTS) continue;
+      // Only dots in view count toward the cap (those outside it aren't drawn).
       for (const r of sitePermits(p)) {
+        if (!view.contains([r.lat, r.lng])) continue;
         if (n++ >= SITE_MAX_POINTS) break;
-        if (view.contains([r.lat, r.lng])) dots.push(permitDot(r, p, false));
+        dots.push(permitDot(r, p, false));
       }
     }
     // Largest boundaries first so smaller ones (and then permit dots) sit on top and get the tap.

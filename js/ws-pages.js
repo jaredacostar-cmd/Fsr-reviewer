@@ -44,9 +44,9 @@
     // (a zero is never coloured; n/a is never a figure)
     const figs = (m.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4).map(f => (String(f.v) === '0' && f.tone ? { ...f, tone: null } : f));
     const out = [];
-    out.push(`<header class="home-h" data-psec="header"><p class="page-eyebrow small">${m.eyebrow || ''}</p><h1>${esc(m.name || '')}</h1>${chipHTML(m.status)}${m.badge || ''}${m.identity ? `<p class="small muted page-id">${m.identity}</p>` : ''}${m.extra || ''}</header>`);
+    // (the scenario chip sits in the title row, beside the status: one row less above the answer)
+    out.push(`<header class="home-h" data-psec="header"><p class="page-eyebrow small">${m.eyebrow || ''}</p><h1>${esc(m.name || '')}</h1>${chipHTML(m.status)}${m.badge || ''}${m.scen ? `<div class="pnl-scen" data-psec="scenario">${m.scen}</div>` : ''}${m.identity ? `<p class="small muted page-id">${m.identity}</p>` : ''}${m.extra || ''}</header>`);
     if (m.filters) out.push(m.filters);
-    if (m.scen) out.push(`<div class="pnl-scen" data-psec="scenario">${m.scen}</div>`);
     if (m.top) out.push(m.top);
     // Bundle 5: terms underlined in the answer and figures (js/glossary.js).
     const seen = new Set(), gl = h => (root.PeelGlossary && m.id !== 'glossary' ? root.PeelGlossary.mark(h, seen) : h);
@@ -54,10 +54,14 @@
     for (const c of m.caveats || []) out.push(`<p class="home-caveat small" role="note" data-psec="caveat">⚠ ${esc(c.text)}${c.at ? ` <button type="button" class="btn small link" data-ws-full data-at="${esc(c.at)}">Review →</button>` : ''}</p>`);
     if (figs.length) out.push(`<div class="pnl-figs" data-psec="figures">${figs.map((f, i) => figHTML(f, gl, { key: `page:${m.id}`, files: root.PeelHow && root.PeelHow.filesFor(m.id), method: m.method, sources: m.sources }, i)).join('')}</div>`);
     // Home (step 6): the figures in groups (Growth, Servicing, Capital, Change), each with its page.
+    // The groups share rows on a desk screen, each as wide as its figures (--n of 4 columns), so a
+    // one- or two-figure group does not leave half a row empty.
+    const grps = [];
     for (const g of m.groups || []) {
-      const gf = (g.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v)));
-      if (gf.length) out.push(`<section class="home-grp" data-psec="group"><div class="home-grp-h"><h2>${esc(g.title)}</h2>${g.link ? `<button type="button" class="btn small link"${attrs(g.link.attrs)}>${esc(g.link.label)} →</button>` : ''}</div><div class="pnl-figs">${gf.map((f, i) => figHTML(f, gl, { key: `page:${m.id}:${g.title}`, files: root.PeelHow && root.PeelHow.filesFor(m.id) }, i)).join('')}</div></section>`);
+      const gf = (g.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4);
+      if (gf.length) grps.push(`<section class="home-grp" data-psec="group" style="--n:${gf.length}"><div class="home-grp-h"><h2>${esc(g.title)}</h2>${g.link ? `<button type="button" class="btn small link"${attrs(g.link.attrs)}>${esc(g.link.label)} →</button>` : ''}</div><div class="pnl-figs">${gf.map((f, i) => figHTML(f, gl, { key: `page:${m.id}:${g.title}`, files: root.PeelHow && root.PeelHow.filesFor(m.id) }, i)).join('')}</div></section>`);
     }
+    if (grps.length) out.push(`<div class="home-grps">${grps.join('')}</div>`);
     if (m.chart) out.push(`<div class="pnl-chart page-chart" data-psec="chart">${m.chart}</div>`);
     if (m.mid) out.push(m.mid);
     const lists = (m.lists || []).filter(l => l && (l.html || (l.rows && l.rows.length)));
@@ -216,7 +220,7 @@
     ['Fire flow (Fire Underwriters Survey) and pressures', 'eye', 'Not modelled here'],
   ];
 
-  const api = { pageHTML, sectionsOf, listHTML, reserveRows, pipeGrid, likeOf, consOf, LIKE, CONS, approvedNotBuilt, COVERAGE, STAGES, stageRows, stageOf, stageChartHTML, EST_KINDS, estimateRows };
+  const api = { pageHTML, sectionsOf, briefing, listHTML, reserveRows, pipeGrid, likeOf, consOf, LIKE, CONS, approvedNotBuilt, COVERAGE, STAGES, stageRows, stageOf, stageChartHTML, EST_KINDS, estimateRows };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -236,6 +240,18 @@
   // A panel row that opened a scope opens it on the map from a page (the workspace's map view).
   const toMap = (ws, r) => { const a = r.attrs || {}, x = { 'data-ws-go': ws }; if (a['data-ss']) x['data-ws-ss'] = a['data-ss']; if (a['data-pnl-dev']) x['data-ws-dev'] = a['data-pnl-dev']; if (a['data-ce-open']) x['data-ws-ce'] = a['data-ce-open']; if (a['data-pipe'] != null) x['data-ws-pipe'] = a['data-pipe']; return { ...r, attrs: r.attrs ? { ...x, title: a.title } : null }; };
   const loading = (id, what) => ({ id, eyebrow: eyebrow(id), name: (W() && W().BY_ID[id] && W().BY_ID[id].question) || label(id), answer: `<span class="muted">${esc(what || 'Loading…')}</span>` });
+  // The Overview's area panel, once it is worked out for the developments loaded. Until the snapshot is in,
+  // and while the panel still holds the empty one drawn before it (the Growth render that redraws it waits
+  // its turn), it is null and the page says it is loading, never "No developments match" and zeros.
+  function briefing() {
+    const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null, A = App();
+    if (!a || !A) return null;
+    if (A.fullSnapshotReady && !A.fullSnapshotReady() && !(A.state.projects || []).length) return null;
+    if (OT().lastAreaCount && !OT().lastAreaCount() && (A.state.filtered || []).length) return null;
+    return a;
+  }
+  // A page waiting on the briefing: its place kept with the figures to come, and it tries again (pending).
+  const waitingFor = (id, what, groups) => ({ ...loading(id, what), pending: true, groups: (groups || []).map(([title, labels]) => ({ title, figures: labels.map(l => ({ v: '…', u: '', label: l, ctx: 'loading' })) })) });
 
   // ---- Small maps: a Peel frame from the wastewater blocks -------------------------------------------
   // bounds: [minLng, minLat, maxLng, maxLat] to zoom to (an area), else all of Peel's sewered blocks.
@@ -466,7 +482,7 @@
     ].filter(Boolean);
   }
   function home() {
-    const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; if (!a) return loading('home', 'Loading the briefing…');
+    const a = briefing(); if (!a) return { ...waitingFor('home', 'Loading the developments and working out the briefing…', [['Growth', ['planned', 'left to build', 'at build-out', 'expected by 2031']], ['Servicing', ['over capacity at build-out', 'first 90% trigger']], ['Capital', ['DC projects late', 'with no relief in time']], ['Change', ['this week']]]), eyebrow: `Peel · ${esc((App() && App().state.muni) || 'all of Peel')}`, name: `${(App() && App().state.muni) || 'Peel'}: what needs attention`, scen: scen() };
     // The servicing model loads after the developments: until then Needs attention keeps its place with
     // a placeholder (never silently left out), and the map's key waits for the colours it explains.
     const cap = Cap() && Cap().collect ? Cap().collect() : null, ready = !!cap, rows = cap || [];
@@ -967,7 +983,7 @@
 
   // ---- This week -----------------------------------------------------------------------------------
   function week() {
-    const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; if (!a) return loading('week', 'Loading the changes…');
+    const a = briefing(); if (!a) return waitingFor('week', 'Loading the changes…');
     const ce = root.PeelCapitalEA ? root.PeelCapitalEA.attention() : [];
     const byKey = new Map(App().state.projects.map(p => [p.key, p]));
     // (the Overview's own changes: the same files, the same municipality, the same baseline rule)
@@ -1082,7 +1098,9 @@
       lists: s.lists || [], folds: s.folds, method: s.method, sources: s.sources,
       actions: [{ label: 'Refresh and manage sources', attrs: { 'data-ws-full': '', 'data-at': 'records:sources' }, primary: true }] });
   }
-  const BUILD = { home, tight, site, growth, outlook, projects, eaflow, week, fsr, pipes, study, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, logic, help, data };
+  // Labs › Sewer designer: its page is the tool's own (js/sewer-designer.js page()).
+  const sewer = () => (root.PeelSewerDesigner && root.PeelSewerDesigner.page ? root.PeelSewerDesigner.page() : { id: 'sewer', eyebrow: 'Labs', name: 'Sewer designer', answer: '<span class="muted">Loading…</span>' });
+  const BUILD = { home, tight, site, growth, outlook, projects, eaflow, week, fsr, pipes, study, sewer, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, logic, help, data };
   // Each workspace's guide (How it works), a button in its footer.
   const GUIDE_OF = { site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capital', eaflow: 'capital', pipes: 'network' };
   // A page's header count opens its workspace's full table (as the map panels' do).

@@ -46,8 +46,8 @@ test('easy to reach: Home sidebar (Reference), the Stage block, a site’s stage
   assert.match(w, /\['approvals', 'How approvals work'\][^\n]*REF\[id\] = \{ label, guide: true \};/);
   // (step 5: one Reference entry; Help, How it works, the Glossary and Data sources share its bar)
   assert.match(w, /<h2 class="home-g">Reference<\/h2><ul>\$\{item\('reference', SIDE\.reference\.what\)\}<\/ul>/);
-  assert.match(w, /if \(id !== 'home' && !BY_ID\[id\] && !REF\[id\]\) id = 'home';/);
-  assert.match(w, /\/\^p:\/\.test\(w\) && \(BY_ID\[w\.slice\(2\)\] \|\| REF\[w\.slice\(2\)\]\)/, 'a link to the page opens it');
+  assert.match(w, /if \(id !== 'home' && !BY_ID\[id\] && !REF\[id\] && !labPageOn\(id\)\) id = 'home';/);
+  assert.match(w, /\/\^p:\/\.test\(w\) && \(BY_ID\[w\.slice\(2\)\] \|\| REF\[w\.slice\(2\)\] \|\| LAB_PAGES\[w\.slice\(2\)\]\)/, 'a link to the page opens it');
   assert.match(src('index.html'), /<p class="small stage-how"><button type="button" class="btn small link" data-ws-page="approvals">How approvals map to these stages →<\/button><\/p>/);
   assert.match(src('js/devtab.js'), /data-ws-page="approvals">How approvals work →<\/button>/);
   assert.match(src('js/records-tab.js'), /secondary: \[\{ label: 'How approvals work', attrs: \{ 'data-ws-page': 'approvals' \}/);

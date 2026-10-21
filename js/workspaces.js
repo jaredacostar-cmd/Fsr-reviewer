@@ -73,6 +73,9 @@
   // Reference pages (Home's layout, no map, not a workspace): listed last in Home's sidebar.
   const REF = { help: { label: 'Help', what: 'Start here, guides, the tour, what’s new' }, guides: { label: 'How it works', what: 'Nine guides: approvals, flows, capacity, the forecast…' }, glossary: { label: 'Glossary', what: 'The terms in plain words' }, logic: { label: 'How the app decides', what: 'The data rules, gates and decisions behind the figures' }, data: { label: 'Data sources', what: 'Every source, its date, and the data checks' } };
   // The guides (js/reference.js): pages of their own, listed on How it works, not in the sidebar.
+  // Labs pages (Settings › Labs): a tool with a page of its own in Home's sidebar while its switch is on
+  // (the page itself: the tool's module, e.g. js/sewer-designer.js page()).
+  const LAB_PAGES = { sewer: { label: 'Sewer designer', what: 'Draw a sanitary sewer to an existing one: the design, profile and CSV', lab: 'sewer' } };
   for (const [id, label] of [['roles', 'Who decides what'], ['approvals', 'How approvals work'], ['flows', 'From homes to flows'], ['network', 'How sewage and water travel'], ['capacity', 'How capacity is checked'], ['fsrguide', 'What an FSR should cover'], ['capital', 'How a capital project gets built'], ['targets', 'Growth targets and forecasts'], ['forecast', 'How the forecast is timed']]) REF[id] = { label, guide: true };
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Servicing › Model checks / Records › Data checks,
@@ -126,7 +129,7 @@
   function startScreen({ hash = '', pref = 'home', last = null } = {}) {
     const q = new URLSearchParams(String(hash).replace(/^#/, ''));
     const w = q.get('w') || '';
-    if ([...q.keys()].length) return w === 'home' ? { mode: 'home', page: 'home' } : /^p:/.test(w) && (BY_ID[w.slice(2)] || REF[w.slice(2)]) ? { mode: 'home', page: w.slice(2) } : BY_ID[w] ? { mode: 'ws', ws: w } : { mode: 'full' };
+    if ([...q.keys()].length) return w === 'home' ? { mode: 'home', page: 'home' } : /^p:/.test(w) && (BY_ID[w.slice(2)] || REF[w.slice(2)] || LAB_PAGES[w.slice(2)]) ? { mode: 'home', page: w.slice(2) } : BY_ID[w] ? { mode: 'ws', ws: w } : { mode: 'full' };
     if (pref === 'full') return { mode: 'full' };
     if (pref === 'last') return { mode: 'home', page: BY_ID[last] ? last : 'tight' };
     return { mode: 'home', page: 'home' };
@@ -135,7 +138,7 @@
   const defaultWs = last => (BY_ID[last] ? last : 'tight');
 
   // ---- Browser ----------------------------------------------------------------------------------
-  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SITE_MAP, BY_ID, LAYERS, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen, defaultWs };
+  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SITE_MAP, LAB_PAGES, BY_ID, LAYERS, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen, defaultWs };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -163,9 +166,11 @@
   function setMode(m, pg) {
     if (m === 'full' && mode !== 'full') backTo = mode === 'home' ? { page } : mode === 'ws' && cur ? { ws: cur } : null;
     else if (m !== 'full') backTo = null;
+    const was = { mode, page };
     if (m === 'home') page = pg || page || 'home';
     else putMapBack();
     mode = m;
+    if (mode !== 'home' || page !== 'sewer') sewerMapOn = false;
     const de = document.documentElement, app = $('.app');
     de.classList.toggle('ws-mode', m === 'ws'); de.classList.toggle('home-on', m === 'home');
     if (app) { app.classList.toggle('ws-mode', m === 'ws'); }
@@ -180,6 +185,8 @@
     // (the first time on the full map: its tour is offered, js/tips.js)
     if (m === 'full' && root.PeelTips && root.PeelTips.maybeMapTour) setTimeout(() => root.PeelTips.maybeMapTour(), 800);
     if (root.PeelShare && root.PeelShare.viewLink) root.PeelShare.viewLink.write();
+    // (a page's tool follows it: the Sewer designer is on while its page is open)
+    if (typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('peel:page', { detail: { mode, page: mode === 'home' ? page : null, was: was.mode === 'home' ? was.page : null } }));
   }
   // The one search box: over the map in a workspace's map view, on the Find step of Check a site and
   // Review an FSR, else in the left panel (or the top bar on wide screens).
@@ -198,8 +205,16 @@
   }
   function placeMap() {
     const m = $('#map'), slot = $('#page-map-slot');
-    if (slot && m) { if (m.parentElement !== slot) { slot.appendChild(m); invalidate(); if (slot.dataset.site) fitSite(); else fitPeel(); } } else putMapBack();
+    if (slot && m) { if (m.parentElement !== slot) { slot.appendChild(m); invalidate(); if (slot.dataset.site) fitSite(); else if (slot.dataset.sewer != null) sewerMap(); else fitPeel(); } } else putMapBack();
   }
+  // The Sewer designer's page map: the existing sanitary, water and storm mains (the sewer it snaps to
+  // and the pipes it crosses) and the developments; the view is the designer's (js/sewer-designer.js).
+  let sewerMapOn = false;
+  function sewerMap() {
+    if (!sewerMapOn) { sewerMapOn = true; lean('wastewater', ['devs', 'ex-sanitary', 'ex-water', 'ex-storm']); }
+    if (root.PeelSewerDesigner && root.PeelSewerDesigner.fitPage) setTimeout(() => root.PeelSewerDesigner.fitPage(), 60);
+  }
+  const labPageOn = id => !!(LAB_PAGES[id] && root.PeelLabs && root.PeelLabs.on(LAB_PAGES[id].lab));
   // A site's page map: the infrastructure layers on, at the site (street zoom: the existing mains show).
   let siteMapFor = null;
   function fitSite() {
@@ -264,7 +279,7 @@
     const MA = root.PeelMapAnalysis;
     if (!viewKept && !booted) return;   // (before the data and the link: bootRestore does it)
     if ((viewKept || store.get('wsLean', null)) && MA && MA.showView && MA.currentView) MA.showView(MA.currentView(), { remembered: true });
-    viewKept = false; store.set('wsLean', null); siteMapFor = null;
+    viewKept = false; store.set('wsLean', null); siteMapFor = null; sewerMapOn = false;
   }
   // At boot, before a link is applied: a workspace's lean layers left on from an earlier visit give way
   // to the view's remembered settings unless the app opens on a workspace map (once; app.js).
@@ -283,8 +298,8 @@
     if (el && layersWasOpen) el.open = true;
     layersWasOpen = null;
   }
-  // This week's count (the chip's badge): the Peel Overview's own list.
-  function weekRows() { const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; const l = a && a.lists ? a.lists.find(x => x.title === 'This week') : null; return l ? l.rows : []; }
+  // This week's count (the chip's badge): the Peel Overview's own list (none while it is still loading).
+  function weekRows() { const WP = root.PeelWsPages, a = WP && WP.briefing ? WP.briefing() : OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; const l = a && a.lists ? a.lists.find(x => x.title === 'This week') : null; return l ? l.rows : []; }
   // Bundle 6: the filters that stay on while you are on a page or in a workspace, as chips with
   // Reset, so a filtered page never reads as the whole of Peel.
   function filterChipsHTML() {
@@ -413,7 +428,7 @@
     if (id === 'explore') id = root.DevScope && root.DevScope.current && root.DevScope.current() ? 'site' : (EXPLORE.includes(store.get('lastWs', '')) ? store.get('lastWs', '') : 'growth');
     if (id === 'capital') id = CAPITAL.includes(store.get('lastWs', '')) ? store.get('lastWs', '') : 'projects';
     if (id === 'reference') id = 'help';
-    if (id !== 'home' && !BY_ID[id] && !REF[id]) id = 'home';
+    if (id !== 'home' && !BY_ID[id] && !REF[id] && !labPageOn(id)) id = 'home';
     const w = BY_ID[id];
     if (w && w.scope === 'area') {
       if (root.DevScope && root.DevScope.current && root.DevScope.current()) root.DevScope.close();
@@ -425,9 +440,9 @@
     if (!o.keepScroll) { const el = $('#home'); if (el) el.scrollTop = 0; }
   }
   let lastHTML = '', timer = null, menuOpen = false;
-  const pageName = id => (id === 'home' ? 'Home' : SIDE[id] ? SIDE[id].label : BY_ID[id] ? BY_ID[id].label : REF[id] ? REF[id].label : id);
+  const pageName = id => (id === 'home' ? 'Home' : SIDE[id] ? SIDE[id].label : BY_ID[id] ? BY_ID[id].label : REF[id] ? REF[id].label : LAB_PAGES[id] ? LAB_PAGES[id].label : id);
   function sideHTML() {
-    const nW = weekRows().length, pref = store.get('startScreen', 'home');
+    const nW = weekRows().length, pref = store.get('startScreen', 'home'), labIds = Object.keys(LAB_PAGES).filter(labPageOn);
     // (a guide's page lights How it works)
     const isOn = id => page === id || (id === 'guides' && !!(REF[page] && REF[page].guide)) || (id === 'explore' && EXPLORE.includes(page)) || (id === 'capital' && CAPITAL.includes(page)) || (id === 'reference' && !!REF[page]);
     const item = (id, sub) => `<li><button type="button" class="home-ws${isOn(id) ? ' on' : ''}" data-ws-page="${id}"${isOn(id) ? ' aria-current="page"' : ''}><strong>${esc(pageName(id))}${id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</strong>${sub ? `<small>${esc(sub)}</small>` : ''}</button></li>`;
@@ -435,6 +450,7 @@
     // (a phone: the list folds behind one button naming the page you are on; it opens grouped)
     return `<nav class="home-side${menuOpen ? ' open' : ''}" aria-label="Workspaces"><button type="button" class="home-menu-btn" data-home-menu aria-expanded="${menuOpen}"><span aria-hidden="true">☰</span> ${esc(pageName(page))} <span class="muted small">· all pages</span> <span aria-hidden="true">${menuOpen ? '▴' : '▾'}</span></button><ul>${item('home', 'The briefing')}${item('week', BY_ID.week.what)}</ul>
       ${GROUPS.map(([g, ids]) => `<h2 class="home-g">${esc(g)}</h2><ul>${ids.map(id => item(id, (SIDE[id] || BY_ID[id]).what)).join('')}</ul>`).join('')}
+      ${labIds.length ? `<h2 class="home-g">Labs</h2><ul>${labIds.map(id => item(id, LAB_PAGES[id].what)).join('')}</ul>` : ''}
       <h2 class="home-g">Reference</h2><ul>${item('reference', SIDE.reference.what)}</ul>
       <button type="button" class="home-ws home-full" data-ws-full><strong>Full map</strong><small>Every layer, filter and tool</small></button>
       <label class="home-pref small">Start screen <select data-ws-start>${START.map(([k, t]) => `<option value="${k}"${pref === k ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
@@ -444,7 +460,7 @@
   function renderPage(force) {
     const el = $('#home'), WP = root.PeelWsPages; if (!el || el.hidden || !WP) return;
     const m = WP.build(page);
-    if (!REF[page]) m.filters = filterChipsHTML();
+    if (!REF[page] && !LAB_PAGES[page]) m.filters = filterChipsHTML();
     const main = WP.pageHTML(m, PN() ? PN().NOTE : '');
     const html = `<div class="home-grid">${sideHTML()}${main}</div>`;
     if (!force && html === lastHTML) return;

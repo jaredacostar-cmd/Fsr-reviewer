@@ -225,7 +225,8 @@
       if (ls && ADAPT[ls.dataset.lyr]) { safe(() => ADAPT[ls.dataset.lyr].set(ls.checked)); setTimeout(sync, 0); }
     });
     const map = W.PeelMapCore && W.PeelMapCore.map;
-    if (map) map.on('moveend zoomend', () => setTimeout(sync, 300));
+    let moveTimer = null;
+    if (map) map.on('moveend zoomend', () => { clearTimeout(moveTimer); moveTimer = setTimeout(sync, 300); });
     if (typeof document !== 'undefined') document.addEventListener('peel:layers', () => sync());
     sync();
   }
