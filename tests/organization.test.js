@@ -42,7 +42,7 @@ test('file tree: a block plan that states no count adds up its draft plans, and 
   assert.deepEqual(T.estimateOf(d), { ref: 'OZS-2024-0051', units: 2929, kind: 'online', source: 'Brampton PDC agenda / recommendation report, 2025-10-06 (checked 2026-10-17: the municipal notice for this file states it)' });
 });
 
-test('Records › Files: the tree, then the latest activity; Growth rows: one stage, the files line, ▸ the tree; estimate rows name their file', () => {
+test('Records › Files: the tree, then the latest activity; Growth: the developments table’s rows open the site; estimate rows name their file', () => {
   const r = src('js/records-tab.js');
   assert.match(r, /chart: `<h3 class="sub-title pnl-chart-t">How the files fit together <span class="pnl-chart-u">\(each under the file whose land holds it\)<\/span><\/h3>\$\{FT\.treeHTML\(d, recOf,/);
   assert.match(r, /lists: \[\{ title: 'Latest activity', rows: latest,/);
@@ -50,12 +50,8 @@ test('Records › Files: the tree, then the latest activity; Growth rows: one st
   const w = src('js/ws-pages.js');
   assert.match(w, /title: gStage === 'all' \? `Developments in \$\{n\.name\}` : `\$\{STG\[gStage\]\}: developments in \$\{n\.name\}`/);
   assert.doesNotMatch(w, /`Files in \$\{n\.name\}`/);
-  // "In review · In review": the stage once.
-  const body = w.slice(w.indexOf('    const stageLine = x =>'), w.indexOf('    const treeBits = p =>'));
-  const stageLine = new Function('STG', 'Ph', 'esc', `${body}; return stageLine;`)({ review: 'In review', permitted: 'Permit issued / building' }, { PHASE_BY_KEY: { review: { label: 'In review' }, construction: { label: 'Under construction' } } }, s => s);
-  assert.equal(stageLine({ st: 'review', p: { phase: 'review' } }), 'In review');
-  assert.equal(stageLine({ st: 'permitted', p: { phase: 'construction' } }), 'Permit issued / building · Under construction');
-  assert.match(w, /data-tr-tog="\$\{esc\(p\.key\)\}" aria-expanded="\$\{on\}"/);
+  // A row of the developments table opens the site (js/dev-table.js).
+  assert.match(src('js/dev-table.js'), /<tr class="gt-r" data-ws-pick="\$\{esc\(r\.key\)\}" data-ws-as="site"/);
   assert.match(w, /<small class="tr-sum">the estimate is on <b>\$\{esc\(e\.ref\)\}<\/b>/);
   assert.match(w, /const had = files\.find\(f => f\.p === p\);/, 'one estimate row per development');
   assert.match(src('js/workspaces.js'), /if \(pk && pk\.dataset\.wsTree\) \{ e\.preventDefault\(\); setMode\('full'\); pickDev\(pk\.dataset\.wsPick\); setTimeout\(\(\) => \{ const AT = root\.PeelAnalysisTabs; if \(AT && AT\.openTab\) AT\.openTab\('records', 'files'\);/);

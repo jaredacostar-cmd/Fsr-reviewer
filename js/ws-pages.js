@@ -19,7 +19,7 @@
   // ---- Pure: the page --------------------------------------------------------------------------------
   // model: { id, eyebrow, name, status: { tone, text }, identity, calc, answer, caveats: [{ text, at }],
   //          figures: [{ v, u, label, ctx, tone }] (≤ 4), chart, lists: [{ title, rows: [{ html, attrs, tone }],
-  //          total, see: attrs }], map: { svg, caption, attrs, html }, folds: [{ title, html, open }],
+  //          total, see: attrs }], map: { svg, caption, attrs, html, after (under the map: a treemap) }, folds: [{ title, html, open }],
   //          method, sources, actions: [{ label, attrs, primary }], note, chip, scen, top (before the answer:
   //          a search box, a live map), mid (after the figures: a form, a grid, a summary) }
   // The lists and folds sit beside the map (held in view); Method and Sources below. Sections with nothing are left out.
@@ -30,6 +30,7 @@
     ? `<button type="button" class="pnl-chip pnl-chip-btn t-${esc(s.tone || 'stage')}"${attrs(s.attrs)}${s.expanded != null ? ` aria-expanded="${!!s.expanded}"` : ''}${s.title ? ` title="${esc(s.title)}"` : ''}>${esc(s.text || TONE_WORD[s.tone] || '')} <span class="aer-car" aria-hidden="true">${s.expanded ? '▾' : '▸'}</span></button>`
     : `<span class="pnl-chip t-${esc(s.tone || 'stage')}">${esc(s.text || TONE_WORD[s.tone] || '')}</span>`);
   function listHTML(l) {
+    if (l && l.html) return l.html;
     if (!l || !l.rows || !l.rows.length) return '';
     return `<section class="pnl-list page-list" data-psec="list"><div class="pnl-list-h"><h3>${esc(l.title)}</h3>${l.tools || ''}${l.see && (l.all || l.total > Math.min(5, l.rows.length)) ? `<button type="button" class="btn small link"${attrs(l.see)}>${l.all ? 'Show fewer' : `See all (${fmtNum(l.seeN != null ? l.seeN : l.total)}) →`}</button>` : ''}</div>
       <ul>${l.rows.slice(0, l.all ? l.rows.length : 5).map(r => `<li class="pnl-row${r.kv ? ' kv' : ''}${r.tone ? ` t-${esc(r.tone)}` : ''}"${r.attrs ? `${attrs(r.attrs)} tabindex="0" role="button"` : ''}>${r.html}</li>`).join('')}</ul></section>`;
@@ -58,8 +59,8 @@
     }
     if (m.chart) out.push(`<div class="pnl-chart page-chart" data-psec="chart">${m.chart}</div>`);
     if (m.mid) out.push(m.mid);
-    const lists = (m.lists || []).filter(l => l && l.rows && l.rows.length);
-    const mapSec = m.map && (m.map.svg || m.map.html || m.map.attrs) ? `<section class="home-map" data-psec="map"><div class="pnl-list-h"><h3>${esc(m.map.title || 'Where')}</h3>${m.map.attrs ? `<button type="button" class="btn small link"${attrs(m.map.attrs)}>${esc(m.map.link || 'Open the map')} →</button>` : ''}</div>${m.map.html || `<button type="button" class="home-map-btn"${attrs(m.map.attrs)} aria-label="${esc(m.map.label || 'Open the map')}">${m.map.svg || '<span class="home-map-empty small muted">Open the map</span>'}</button>`}${m.map.caption ? `<p class="small muted">${m.map.caption}</p>` : ''}${m.map.svg && /hm-tiles|sk-tiles/.test(m.map.svg) ? '<p class="hm-credit small muted">Basemap: Esri, HERE, Garmin, © OpenStreetMap contributors</p>' : ''}</section>` : '';
+    const lists = (m.lists || []).filter(l => l && (l.html || (l.rows && l.rows.length)));
+    const mapSec = m.map && (m.map.svg || m.map.html || m.map.attrs) ? `<section class="home-map" data-psec="map"><div class="pnl-list-h"><h3>${esc(m.map.title || 'Where')}</h3>${m.map.attrs ? `<button type="button" class="btn small link"${attrs(m.map.attrs)}>${esc(m.map.link || 'Open the map')} →</button>` : ''}</div>${m.map.html || `<button type="button" class="home-map-btn"${attrs(m.map.attrs)} aria-label="${esc(m.map.label || 'Open the map')}">${m.map.svg || '<span class="home-map-empty small muted">Open the map</span>'}</button>`}${m.map.caption ? `<p class="small muted">${m.map.caption}</p>` : ''}${m.map.svg && /hm-tiles|sk-tiles/.test(m.map.svg) ? '<p class="hm-credit small muted">Basemap: Esri, HERE, Garmin, © OpenStreetMap contributors</p>' : ''}${m.map.after || ''}</section>` : '';
     // Every list and fold in the column beside the map, the map held in view as they scroll (no empty
     // space beside a tall map under a short first list); Method and Sources run full width below.
     const body = [...lists.map(l => listHTML(l)), ...(m.folds || []).filter(x => x && x.html).map(f => `<details class="pnl-fold" data-psec="fold"${f.open ? ' open' : ''}${f.id ? ` id="${esc(f.id)}"` : ''}><summary>${esc(f.title)}</summary><div>${f.html}</div></details>`)].join('');
@@ -691,18 +692,9 @@
     const kidRow = c => ({ attrs: { 'data-ws-drill': c.id, title: `Open ${c.name}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(c.name)}</span><span class="pnl-r-year">${n0(c.m.planned)} units</span></div><small class="pnl-r-line">${esc(kind(c))} · ${n0(c.m.left)} left to build · ${p0(c.m.people)} people${c.m.jobs >= 0.5 ? ` · ${p0(c.m.jobs)} jobs` : ''}${c.children.length ? ` · ${c.children.length} ${c.kind === 'municipality' ? 'plans' : 'parts'}` : ''}</small>` });
     // At Peel, the largest plans too (straight to their level).
     const plans = atPeel ? [...r.nodes.values()].filter(x => x.kind === 'plan' && x.m.planned >= 0.5).sort((x, y) => y.m.planned - x.m.planned) : [];
-    // The area's files, by stage (the bars filter them): pre-application to built.
+    // The stages (the bars and the table's buttons filter the area's developments): pre-application to built.
     const STG = Object.fromEntries(STAGES.map(([k, l]) => [k, l]));
-    const files = items.map(({ p, share }) => ({ p, share, st: Ly ? stageOf(Ly.ofDev(p)) : null })).filter(x => x.st && (gStage === 'all' || x.st === gStage) && (x.p.units || 0) > 0).sort((x, y) => y.p.units * y.share - x.p.units * x.share);
     const tools = `<div class="seg" role="group" aria-label="Stage"><button type="button" class="btn small${gStage === 'all' ? ' on' : ''}" data-ws-stage="all" aria-pressed="${gStage === 'all'}">All</button>${STAGES.map(([k, l]) => `<button type="button" class="btn small${gStage === k ? ' on' : ''}" data-ws-stage="${k}" aria-pressed="${gStage === k}">${esc(l.replace(' or under construction', ' / building'))}</button>`).join('')}</div>`;
-    // Bundle 6: each development's stage once (the growth stage, and the site's own stage only where
-    // it says something else), its files in one line and, ▸, how they fit together.
-    const FT = root.PeelFileTree;
-    const stageLine = x => { const a = STG[x.st] || '', b = Ph && Ph.PHASE_BY_KEY[x.p.phase] ? Ph.PHASE_BY_KEY[x.p.phase].label : x.p.phase; return [a, b].filter((v, i, arr) => v && arr.findIndex(w => String(w).toLowerCase() === String(v).toLowerCase()) === i).map(esc).join(' · '); };
-    const treeBits = p => { const d = FT ? FT.of(p) : null; if (!d) return { sum: '', tog: '', open: '' }; const n = (d.n || []).length, on = gOpen.has(p.key), recOf = FT.recLookup(p);
-      return { sum: `<small class="tr-sum">${FT.summaryHTML(d, recOf)}</small>`, tog: n > 1 ? `<button type="button" class="tr-tog" data-tr-tog="${esc(p.key)}" aria-expanded="${on}" title="Show how its files fit together">${on ? '▾' : '▸'}</button>` : '',
-        open: on && n > 1 ? `<div class="tr-open">${FT.treeHTML(d, recOf, { limit: 4, key: false, devKey: p.key, dot: k => (root.PeelUtil && root.PeelUtil.dot ? root.PeelUtil.dot(k) : ''), ...(root.PeelDcGate ? root.PeelDcGate.treeOpts(p, d) : {}) })}<button type="button" class="btn small link" data-ws-pick="${esc(p.key)}" data-ws-as="site" data-ws-tree="1">Its full tree →</button></div>` : '' }; };
-    const fileRow = x => { const tb = treeBits(x.p); return { attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${tb.tog}${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.p.units * x.share)} units</span></div><small class="pnl-r-line">${stageLine(x)} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}${svcTag(x.p)}</small>${tb.sum}${tb.open}` }; };
     // Estimated counts in this area (at the chosen stage): how much of the pipeline is not stated on a file.
     const es = Ly && Ly.ofDev ? estimateRows(items.filter(({ p }) => gStage === 'all' || stageOf(Ly.ofDev(p)) === gStage), q => Ly.ofDev(q)) : null;
     const pipeU = stage ? (gStage === 'all' ? stage.total : (stage.rows.find(x => x.key === gStage) || {}).units || 0) : 0;
@@ -714,21 +706,14 @@
     // site servicing permit (each city's own name for it) has been applied for. The DC count's rule.
     const DG = root.PeelDcGate;
     const svcTag = q => { const g = DG && DG.rowOf(q); return g && g.bucket === 'counted' ? ` · <span class="dcg-tag">${esc(DG.termOf(q.municipality))} permit applied${g.servicingApplied ? ` ${esc(g.servicingApplied)}` : ''}</span>` : ''; };
-    let svcRows = [], svcLine = '';
-    if (DG && !DG.loaded()) { DG.load(); svcRows = [{ kv: true, html: '<span class="muted">Loading the site servicing permits…</span>' }]; }
+    let svcLine = '';
+    if (DG && !DG.loaded()) DG.load();
     else if (DG) {
       const sums = {};
       for (const { p, share } of items) { const g = DG.rowOf(p); if (!g) continue; const u = (p.units || 0) * share; const s = sums[g.bucket] || (sums[g.bucket] = { u: 0, n: 0 }); s.u += u; s.n++; }
       const inGate = Object.values(sums).reduce((t, s) => t + s.u, 0);
       if (inGate > 0) {
-        const pct = v => (inGate > 0 ? ` (${Math.round(v / inGate * 100)}%)` : '');
-        const ORDER = ['counted', 'permitNoSvc', 'none', 'existingOnly', 'private'];
-        const terms = [...new Set(items.map(({ p }) => DG.termOf(p.municipality)))].join(' / ');
         svcLine = ` <strong>${n0((sums.counted || { u: 0 }).u)}</strong> of ${n0(inGate)} pipeline units have a site servicing permit applied for or issued.`;
-        svcRows = [
-          { kv: true, html: `<span><strong>${n0((sums.counted || { u: 0 }).u)}</strong> of ${n0(inGate)} pipeline units${pct((sums.counted || { u: 0 }).u)} have a ${esc(terms)} permit (water or wastewater) applied for or issued.</span>` },
-          ...ORDER.filter(k => sums[k] && sums[k].n).map(k => ({ attrs: { 'data-dcg-filter': k, title: 'Show these developments on the map' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(DG.BUCKETS[k].label)}</span><span class="pnl-r-year">${n0(sums[k].u)} units</span></div><small class="pnl-r-line">${fmtNum(sums[k].n)} developments${pct(sums[k].u)}</small>` })),
-        ];
       }
     }
     const empRows = emp.planned >= 1 ? [
@@ -749,7 +734,41 @@
     const f = frame(360, 300, bb), devPts = [...dm.keys()];
     const allAreas = A ? [...(A.secondaryPlans || []), ...(A.precincts || [])] : [];
     const subRings = n.children.map(c => (c.areaId ? allAreas.find(x => x.id === c.areaId) : null)).filter(x => x && x.rings);
-    const mapSvg = f ? f.svg(`${ring && ring.rings ? `<path d="${f.path(ring.rings)}" class="hm-area"/>` : ''}${subRings.map(x => `<path d="${f.path(x.rings)}" class="hm-sub"><title>${esc(x.name)}</title></path>`).join('')}${devPts.filter(p => p.lat != null && (p.units || 0) >= (atPeel ? 50 : 1)).map(p => { const [x, y] = f.pt(p.lng, p.lat); return `<circle cx="${x}" cy="${y}" r="${Math.max(1.4, Math.min(6, Math.sqrt(p.units) / 8)).toFixed(1)}" class="hm-dev"/>`; }).join('')}`, `${n.name}: its developments${ring ? ' and its outline' : ''}`) : '';
+    const mapSvg = f ? f.svg(`${ring && ring.rings ? `<path d="${f.path(ring.rings)}" class="hm-area"/>` : ''}${subRings.map(x => `<path d="${f.path(x.rings)}" class="hm-sub" data-area="${esc(x.id)}"><title>${esc(x.name)}</title></path>`).join('')}${devPts.filter(p => p.lat != null && (p.units || 0) >= (atPeel ? 50 : 1)).map(p => { const [x, y] = f.pt(p.lng, p.lat); return `<circle cx="${x}" cy="${y}" r="${Math.max(1.4, Math.min(6, Math.sqrt(p.units) / 8)).toFixed(1)}" class="hm-dev"/>`; }).join('')}`, `${n.name}: its developments${ring ? ' and its outline' : ''}`) : '';
+    // The developments, one table: grouped by the next level down, by stage or by site servicing permit
+    // (each group's totals and its bar), sorted by a column; a row opens the site. Under the map, the
+    // same as a treemap (js/dev-table.js); hovering a tile or a row rings it on the map.
+    const DT = root.PeelDevTable, stLabel = k => (STG[k] || '').replace(' or under construction', ' / building');
+    const lastOf = p => { let t = 0; for (const rc of p.records || []) for (const ev of rc.events || []) if (ev.date && +ev.date > t) t = +ev.date; return t || null; };
+    const moved = Ly && Ly.movedSince ? Ly.movedSince : () => true;
+    const whereOf = new Map();
+    const kidDevs = kids.map(c => { const cm = nodeDevs(c); for (const [p, sh] of cm) { const w = whereOf.get(p); if (!w || sh > w[1]) whereOf.set(p, [c.name, sh]); } return [c, cm]; });
+    const devRow = (p, share) => {
+      const st = Ly ? stageOf(Ly.ofDev(p)) : null;
+      if (!st || !((p.units || 0) > 0) || (gStage !== 'all' && st !== gStage)) return null;
+      const g = DG && DG.loaded() ? DG.rowOf(p) : null, pt = f && p.lat != null ? f.pt(p.lng, p.lat) : null;
+      return { key: p.key, title: p.title, st, share, units: p.units * share, left: (Ph && Ph.unbuiltOf ? Ph.unbuiltOf(p) : 0) * share, ss: g ? g.bucket : null, last: lastOf(p), quiet: !moved(p),
+        where: (whereOf.get(p) || [n.name])[0], hx: pt ? +pt[0].toFixed(1) : null, hy: pt ? +pt[1].toFixed(1) : null };
+    };
+    const allRows = items.map(({ p, share }) => devRow(p, share)).filter(Boolean);
+    const kidRows = kidDevs.map(([c, cm]) => [c, [...cm].map(([p, sh]) => devRow(p, Math.min(1, sh))).filter(Boolean)]);
+    const levelWord = atPeel ? 'Municipality' : n.kind === 'municipality' ? 'Plan' : 'Sub-area';
+    const byOpts = [...(kids.length ? [['area', levelWord]] : []), ['stage', 'Stage'], ...(DG && DG.loaded() ? [['ss', 'Site servicing']] : []), ['none', 'None']];
+    const by = byOpts.some(([k]) => k === gBy) ? gBy : byOpts[0][0];
+    const SS_ORDER = ['counted', 'permitNoSvc', 'none', 'existingOnly', 'private'];
+    const SS_SHORT = { counted: 'servicing permit applied for or issued', permitNoSvc: 'building permit, no servicing permit', none: 'no servicing permit yet', existingOnly: 'servicing permit for existing buildings', private: 'septic' };
+    const groups = by === 'area' ? kidRows.map(([c, rows]) => ({ key: c.id, name: c.name, sub: kind(c), drill: c.id, rows }))
+      : by === 'stage' ? STAGES.map(([k]) => ({ key: k, name: stLabel(k), rows: allRows.filter(x => x.st === k) }))
+        : by === 'ss' ? [...SS_ORDER, null].map(k => ({ key: k || 'other', name: k ? DG.BUCKETS[k].label : 'Not in the servicing count', mapAttrs: k ? { 'data-dcg-filter': k, title: 'Show these developments on the map' } : null, rows: allRows.filter(x => (x.ss || null) === k) }))
+          : [{ key: 'all', name: '', rows: allRows }];
+    gGk = `${n.id}|${by}`;
+    groups.filter(g => g.rows.length).forEach((g, i) => { const o = gGrp.get(`${gGk}|${g.key}`); g.open = o != null ? o : i < 2; g.all = gMore.has(`${gGk}|${g.key}`); });
+    const table = DT ? { html: DT.tableHTML({ title: gStage === 'all' ? `Developments in ${n.name}` : `${STG[gStage]}: developments in ${n.name}`, groups, by, byOpts, sort: gSort, tools, where: by !== 'area', stages: STAGES, stageLabel: stLabel,
+      ssLabel: k => (SS_SHORT[k] || ''), empty: `No developments ${gStage === 'all' ? 'with planned units' : `at ${(STG[gStage] || '').toLowerCase()}`} in ${n.name}.` }) } : null;
+    const tmV = x => (gStage === 'built' ? x.units : x.left);
+    const boxes = kids.length ? kidRows.map(([c, rows]) => ({ key: c.id, name: c.name, drill: c.id, area: c.areaId || null, tiles: rows.map(x => ({ ...x, v: tmV(x) })) }))
+      : [{ key: n.id, name: n.name, area: n.areaId || null, tiles: allRows.map(x => ({ ...x, v: tmV(x) })) }];
+    const treemap = DT ? DT.treemapHTML(boxes, { stageLabel: stLabel, caption: `${gStage === 'built' ? 'Homes built since 2021' : 'Homes left to build'}: ${kids.length ? `a box per ${levelWord.toLowerCase()}, ` : ''}a tile per development (colour: its stage). Hover one to find it on the map; click to open it.` }) : '';
     const answer = atPeel
       ? `${pl.answer}${f2031 ? ` About <strong>${f2031.v}</strong> units are expected by 2031 (${f2031.ctx}).` : ''}${svcLine}`
       : `<strong>${esc(n.name)}</strong> ${trail[1] && trail[1] !== n ? ` (${esc(trail[1].name)})` : ''} holds <strong>${n0(m.planned)}</strong> planned units, ${p0(m.people)} people${m.jobs >= 0.5 ? ` and ${p0(m.jobs)} jobs` : ''} at build-out; ${n0(anb)} approved, not yet built, ${n0(m.left)} left to build.${svcLine}`;
@@ -764,22 +783,22 @@
       ],
       chart: stage ? stageChartHTML(stage, census) : pl.chart,
       lists: [
-        kids.length ? { title: atPeel ? 'By municipality' : n.kind === 'municipality' ? 'Plans (secondary plans, character areas) and the rest' : 'Precincts and sub-areas', rows: kids.map(kidRow), total: kids.length, see: kids.length > 5 ? { 'data-ws-drillall': n.id } : null, all: gAll } : null,
-        svcRows.length ? { title: 'Site servicing permits', rows: svcRows, total: svcRows.length } : null,
+        table,
         atPeel ? { title: 'Plans with the most planned units', rows: plans.map(kidRow), total: plans.length, see: { 'data-ws-go': 'growth', 'data-ws-fulltable': 'growth:areas' } } : null,
-        { title: gStage === 'all' ? `Developments in ${n.name}` : `${STG[gStage]}: developments in ${n.name}`, tools, rows: files.length ? files.map(fileRow) : [{ kv: true, html: `<span class="muted">No files ${gStage === 'all' ? 'with planned units' : `at ${esc((STG[gStage] || '').toLowerCase())}`} in ${esc(n.name)}.</span>` }], total: files.length, see: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } },
         estRows.length ? { title: gStage === 'all' ? 'Estimated counts: files to confirm' : `${STG[gStage]}: estimated counts`, rows: estRows, total: estRows.length, seeN: es.files.length, see: estRows.length > 5 ? { 'data-ws-estall': '1' } : null, all: gEst } : null,
         empRows.length ? { title: 'Employment', rows: empRows, total: empRows.length } : null,
         ...(atPeel ? (pl.lists || []).filter(l => /municipality/i.test(l.title)) : []),
       ],
-      map: { svg: mapSvg, attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' }, label: `Show ${n.name} on the map`, caption: ring ? `<span class="hm-key hm-key-area"></span> ${esc(n.name)} <span class="hm-key hm-key-dev"></span> its developments (sized by units)` : '<span class="hm-key hm-key-dev"></span> developments of 50+ units (sized by units) · municipal outlines' },
+      map: { svg: mapSvg, attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' }, label: `Show ${n.name} on the map`, caption: ring ? `<span class="hm-key hm-key-area"></span> ${esc(n.name)} <span class="hm-key hm-key-dev"></span> its developments (sized by units)` : '<span class="hm-key hm-key-dev"></span> developments of 50+ units (sized by units) · municipal outlines', after: treemap },
       method: `${pl.method} Drill-down: Growth › Areas' plan tree (Peel, municipality, secondary plan or character area, precinct or sub-area, then "not in a plan" and "elsewhere in the plan"); every level equals the sum of the levels under it, and a site split between plans counts its share. The stages follow a file: pre-application (pre-consultation, block or precinct plan), in review, approved (draft or site plan approved; split on whether its building permits are issued), built since the 2021 census. Estimated counts: a file's units left to build that are not stated on it (found online, a pre-consultation estimate, an estimate from the wording, or counted from building permits), the hatching on the stage bars. A file with more than one kind of estimate has its estimate split between the kinds in proportion to their units. Employment: the floor area the applications state and the jobs it holds at Peel's floor space per job.${tm && atPeel ? ` ${tm.method}` : ''}`,
       sources: pl.sources,
       actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'Show on the map', attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } }, !atPeel ? { label: '↑ Up a level', attrs: { 'data-ws-drill': n.parent || 'peel' } } : null] });
   }
   let gAll = false, gEst = false;
-  // The developments whose file tree is open (▸ on their row).
-  const gOpen = new Set();
+  // The developments table: grouped by (null: the next level down), sorted by, the groups opened or
+  // closed and showing every row (keyed by level and grouping: gGk).
+  let gBy = null, gSort = { k: 'l', dir: -1 }, gGk = '';
+  const gGrp = new Map(), gMore = new Set();
   document.addEventListener('click', e => {
     // (an area's Growth section is its own page: its own content again; the same for a workspace's pages)
     const gp = e.target.closest && e.target.closest('.page-secs [data-ws-page]');
@@ -791,7 +810,7 @@
       if (W() && W().page && W().page() !== host) W().openPage(host, { keepScroll: true }); else if (W() && W().renderPage) W().renderPage(true);
       return;
     }
-    const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall],[data-tr-tog],[data-ws-sec],[data-ws-explore],[data-ws-asec]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
+    const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall],[data-gt-by],[data-gt-sort],[data-gt-tog],[data-gt-more],[data-ws-sec],[data-ws-explore],[data-ws-asec]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
     e.preventDefault(); e.stopPropagation();
     // An area's Servicing or Capital: on Growth in an area's page (from the Forecast too).
     if (t.dataset.wsAsec) { gSec = t.dataset.wsAsec; if (W() && W().page && W().page() !== 'growth') { W().openPage('growth', { keepScroll: true }); return; } if (W() && W().renderPage) W().renderPage(true); return; }
@@ -800,13 +819,40 @@
     // A step up the trail from a site: Growth in an area at that level (the site closes).
     if (t.dataset.wsExplore) { gAt = t.dataset.wsExplore; gStage = 'all'; gAll = false; gEst = false; if (W() && W().openPage) W().openPage('growth'); return; }
     if (t.dataset.wsSec) siteSec = t.dataset.wsSec;
-    else if (t.dataset.trTog) { const k = t.dataset.trTog; if (gOpen.has(k)) gOpen.delete(k); else gOpen.add(k); }
+    // The table: grouping, sorting, a group opened or closed, all its rows (the page keeps its scroll).
+    else if (t.dataset.gtBy || t.dataset.gtSort || t.dataset.gtTog || t.dataset.gtMore) {
+      if (t.dataset.gtBy) gBy = t.dataset.gtBy;
+      else if (t.dataset.gtSort) { const k = t.dataset.gtSort; gSort = gSort.k === k ? { k, dir: -gSort.dir } : { k, dir: k === 't' ? 1 : -1 }; }
+      else if (t.dataset.gtTog) gGrp.set(`${gGk}|${t.dataset.gtTog}`, t.getAttribute('aria-expanded') !== 'true');
+      else { const k = `${gGk}|${t.dataset.gtMore}`; if (gMore.has(k)) gMore.delete(k); else gMore.add(k); }
+      if (W() && W().renderPage) W().renderPage(false);
+      return;
+    }
     else if (t.dataset.wsDrill) { gAt = t.dataset.wsDrill; gStage = 'all'; gAll = false; gEst = false; const h = document.getElementById('home'); if (h) h.scrollTop = 0; }
     else if (t.dataset.wsStage) gStage = gStage === t.dataset.wsStage ? 'all' : t.dataset.wsStage;
     else if (t.dataset.wsDrillall) gAll = !gAll;
     else if (t.dataset.wsEstall) gEst = !gEst;
     if (W() && W().renderPage) W().renderPage(true);
   }, true);
+  // A treemap tile or a table row under the pointer (or focused): ringed on the page's map; a treemap
+  // box: its developments and its outline.
+  function mapRing(e) {
+    const home = document.getElementById('home'); if (!home) return;
+    for (const x of home.querySelectorAll('.hm-ring')) x.remove();
+    for (const x of home.querySelectorAll('.hm-sub.on')) x.classList.remove('on');
+    const t = e.target.closest && e.target.closest('[data-hx],[data-tm-box]'), svg = home.querySelector('.home-map-svg');
+    if (!t || !svg || !home.contains(t)) return;
+    const pts = t.dataset.hx ? [t] : [...t.querySelectorAll('[data-hx]')];
+    for (const x of pts) {
+      const c = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+      c.setAttribute('class', pts.length === 1 ? 'hm-ring' : 'hm-ring hm-ring-s'); c.setAttribute('cx', x.dataset.hx); c.setAttribute('cy', x.dataset.hy); c.setAttribute('r', pts.length === 1 ? 7 : 3.5);
+      svg.appendChild(c);
+    }
+    const a = !t.dataset.hx && t.dataset.tmArea && [...svg.querySelectorAll('.hm-sub')].find(x => x.getAttribute('data-area') === t.dataset.tmArea);
+    if (a) a.classList.add('on');
+  }
+  document.addEventListener('mouseover', mapRing);
+  document.addEventListener('focusin', mapRing);
   // ---- Projects ------------------------------------------------------------------------------------
   function projects() {
     const t = specOf('dca:timing', areaScope); if (!t) return loading('projects', 'Loading the DC program…');

@@ -1462,6 +1462,16 @@ Review an FSR, Forecast and Study area are its views.
 - An area's sections also include **Servicing** and **Capital**: the map's Servicing › Capacity and
   Capital › DC timing panels. They are Region-wide (the plants and the DC program serve more than one
   municipality), and say so inside a municipality or a plan.
+- An area's developments are **one table** (js/dev-table.js), in place of the lists of plans, site
+  servicing permits and developments. Group it by the next level down (municipality, plan or
+  sub-area: each group opens its level), by stage, by site servicing permit (each group shows its
+  developments on the map) or not at all; sort by name, units, left to build or last activity. Each
+  group heading carries its totals and a bar of its homes left to build by stage; ten rows a group,
+  then **Show all**. A row opens the site. The stage buttons filter the table, the treemap and the chart.
+- Under the map, a **treemap** of the same: a box per area, sized by homes left to build (homes built,
+  under Built since 2021), a tile per development coloured by its stage (the 30 largest a box, the
+  rest as one tile). A tile opens the site, a box's name opens its level. Hovering a tile or a table
+  row rings the development on the map; hovering a box rings its developments and outlines its area.
 
 ## Servicing and Capital: one page each, the map's sub-views as sections
 

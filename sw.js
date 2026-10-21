@@ -43,6 +43,7 @@ const SHELL_ASSETS = [
   'js/usage.js',
   'js/workspaces.js',
   'js/sections.js',
+  'js/dev-table.js',
   'js/ws-pages.js',
   './',
   'index.html',

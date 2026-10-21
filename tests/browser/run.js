@@ -307,6 +307,26 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
 
   // Plan areas: Growth in an area and the map's plan filter ("Show on the map") count the same
   // developments the same way (a straddling one by its share), for every plan, sub-area and precinct.
+  // The developments table and its treemap (js/dev-table.js): grouped by plan, by stage; a tile or a
+  // row under the pointer is ringed on the map; a row opens the site.
+  await check('Growth in an area: the developments table, its treemap under the map, a row opens the site', browser, {}, async ({ page, ev }, expect) => {
+    await ev(() => PeelWorkspaces.openPage('growth')); await wait(2000);
+    await page.click('#home [data-ws-drill="m:Caledon"]'); await wait(3000);
+    const t = await ev(() => ({ groups: [...document.querySelectorAll('#home .gt-gn b')].map(b => b.textContent), rows: document.querySelectorAll('#home .gt-r').length, tiles: document.querySelectorAll('#home .home-map .gtm-t[data-ws-pick]').length, over: document.querySelector('#home .gt').scrollWidth - document.querySelector('#home .gt-scroll').clientWidth }));
+    expect(t.groups.includes('Caledon Station') && t.groups.includes('Not in a plan'), `grouped by plan (${t.groups.slice(0, 4).join()})`);
+    expect(t.rows > 0 && t.tiles > 0, `${t.rows} rows, ${t.tiles} tiles`);
+    expect(t.over <= 1, `the table fits its column (${t.over}px over)`);
+    await page.locator('#home .gtm-t[data-hx]').first().hover(); await wait(300);
+    expect(await ev(() => document.querySelectorAll('#home .home-map-svg .hm-ring').length === 1), 'a tile under the pointer is ringed on the map');
+    await page.click('#home [data-gt-by="stage"]'); await wait(1500);
+    const st = await ev(() => [...document.querySelectorAll('#home .gt-gn b')].map(b => b.textContent));
+    expect(st[0] === 'In review', `grouped by stage (${st.join()})`);
+    const key = await ev(() => document.querySelector('#home .gt-r').dataset.wsPick);
+    await page.locator('#home .gt-r').first().click(); await wait(3000);
+    const s = await ev(() => ({ page: PeelWorkspaces.page(), dev: (DevScope.current() || {}).key }));
+    expect(s.page === 'site' && s.dev === key, `a row opens its site (${s.page}, ${s.dev})`);
+  });
+
   await check('plan areas: Growth in an area and the map’s plan filter agree, precincts included', browser, {}, async ({ page, ev }, expect) => {
     await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
     const nodes = await ev(() => [...PeelPlanTables.compute().nodes.values()].filter(n => n.areaId).map(n => ({ id: n.areaId, name: n.name, units: Math.round(n.m.planned), people: PeelUtil.roundPop(n.m.people) })));

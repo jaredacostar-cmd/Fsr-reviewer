@@ -3228,10 +3228,6 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .tr-key { margin: var(--space-2) 0 0; font-size: var(--fs-1); color: var(--text-muted); }
 .tr-sum { display: block; color: var(--text-secondary); font-size: var(--fs-1); margin-top: 2px; }
 .tr-sum b { color: var(--text-primary); font-weight: 600; }
-.tr-tog { all: unset; cursor: pointer; display: inline-grid; place-items: center; width: 22px; height: 22px; margin-right: 6px; border-radius: 4px; color: var(--text-secondary); border: 1px solid var(--border); font-size: 10px; vertical-align: 1px; }
-.tr-tog:focus-visible { outline: 2px solid var(--accent); }
-.tr-open { margin: 6px 0 2px 28px; }
-.tr-open .tr { font-size: var(--fs-1); }
 .chip.chip-link { cursor: pointer; border-style: dashed; font: inherit; font-size: var(--fs-1); }
 .chip.chip-link:hover { border-color: var(--accent); }
 /* Help as a page (js/tips.js helpPage) */
@@ -3660,3 +3656,53 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .tr-built { color: var(--hue-teal); }
 .dcg-steps .dcg-step-built { font-weight: 600; }
 .dcg-steps .dcg-step-built::before { background: var(--hue-teal); }
+
+/* Growth in an area: the developments table (js/dev-table.js): grouped, sortable, a row opens the site */
+.gt-tools { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); align-items: center; margin-bottom: var(--space-2); }
+.gt-tools .seg { flex-wrap: wrap; align-items: center; }
+.gt-by-l { margin-right: 4px; }
+.gt-scroll { overflow-x: auto; border: 1px solid var(--border); border-radius: 8px; }
+.gt { width: 100%; min-width: 460px; border-collapse: collapse; font-size: 13px; }
+.gt th, .gt td { padding: 6px 10px; text-align: left; border-bottom: 1px solid var(--surface-2); vertical-align: middle; }
+.gt thead th { font-size: 11px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-muted); font-weight: 600; background: var(--surface-1); }
+.gt .num { text-align: right; font-variant-numeric: tabular-nums; }
+.gt-sort { background: none; border: 0; padding: 4px 0; color: inherit; font: inherit; text-transform: inherit; letter-spacing: inherit; cursor: pointer; }
+.gt-sort:hover { color: var(--text-primary); }
+.gt-gh th { background: var(--surface-2); padding: 0; }
+.gt-gh-in { display: flex; align-items: center; gap: var(--space-2); padding: 4px 10px; }
+.gt-tog { display: flex; align-items: center; gap: 8px; flex: 1 1 auto; min-width: 0; min-height: 40px; background: none; border: 0; padding: 0; color: var(--text-primary); font: inherit; text-align: left; cursor: pointer; }
+.gt-gn { display: flex; flex-direction: column; min-width: 0; }
+.gt-gn b { overflow-wrap: anywhere; }
+.gt-car { width: 12px; color: var(--text-muted); }
+.gt-bar { display: flex; flex: 0 1 120px; min-width: 40px; height: 8px; border-radius: 4px; overflow: hidden; background: var(--surface-1); }
+.gt-bar i { display: block; height: 100%; }
+.gt-gl { flex: none; min-width: 64px; text-align: right; font-variant-numeric: tabular-nums; }
+.gt-r { cursor: pointer; }
+.gt-r:hover td { background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.gt-name { background: none; border: 0; padding: 0; color: var(--text-primary); font: inherit; font-weight: 500; text-align: left; cursor: pointer; }
+.gt-name:hover { text-decoration: underline; }
+.gt-line { display: block; margin-top: 2px; color: var(--text-muted); }
+.gt-stage { display: inline-flex; align-items: center; gap: 5px; color: var(--text-secondary); white-space: nowrap; }
+.gt-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.gt-ss.t-counted { color: var(--cap-room-t); }
+.gt-ss.t-permitNoSvc { color: var(--cap-tight-t); }
+.gt-quiet { color: var(--text-muted); font-style: italic; }
+.gt-more td { text-align: center; }
+/* Its treemap, under the map: a box per area, a tile per development (colour: stage) */
+.gtm { margin-top: var(--space-3); }
+.gtm-cap { margin: 0 0 6px; }
+.gtm-area { position: relative; height: 320px; border-radius: 6px; overflow: hidden; background: var(--surface-0); }
+.gtm-box { position: absolute; box-sizing: border-box; display: flex; flex-direction: column; border: 1px solid var(--surface-0); background: var(--surface-2); }
+.gtm-box:hover { outline: 2px solid var(--select); outline-offset: -2px; z-index: 1; }
+.gtm-h { flex: none; height: 18px; line-height: 18px; padding: 0 5px; border: 0; background: var(--surface-2); color: var(--text-primary); font: inherit; font-size: 11px; font-weight: 600; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+button.gtm-h { cursor: pointer; }
+.gtm-in { position: relative; flex: 1 1 auto; }
+.gtm-t { position: absolute; box-sizing: border-box; display: flex; flex-direction: column; align-items: flex-start; margin: 0; padding: 2px 4px; border: 0; box-shadow: inset 0 0 0 1px var(--surface-0); overflow: hidden; color: var(--ly-ink); font: inherit; font-size: 10px; line-height: 12px; text-align: left; cursor: pointer; }
+.gtm-t.stg-approved, .gtm-t.ly-built { color: var(--swatch-paper); }
+.gtm-t b, .gtm-t small { display: block; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.gtm-t:hover, .gtm-t:focus-visible { box-shadow: inset 0 0 0 2px var(--select); z-index: 2; }
+.gtm-more { background: repeating-linear-gradient(135deg, var(--surface-2) 0 3px, var(--surface-1) 3px 6px); color: var(--text-muted); cursor: default; }
+/* The development (or area) under the pointer, ringed on the page's map */
+.home-map-svg .hm-ring { fill: none; stroke: var(--select); stroke-width: 2.5; pointer-events: none; }
+.home-map-svg .hm-ring-s { stroke-width: 1.5; }
+.home-map-svg .hm-sub.on { fill: color-mix(in srgb, var(--select) 12%, transparent); stroke: var(--select); stroke-width: 2; stroke-dasharray: none; opacity: 1; }
