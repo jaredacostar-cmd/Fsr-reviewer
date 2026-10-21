@@ -2922,6 +2922,9 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) [data-dcasub="funding"] 
 .page-views .btn { flex: none; white-space: nowrap; }
 /* The Explore view you are on, named in its sidebar entry. */
 .home-ws-cur { font-weight: 400; color: var(--text-secondary); }
+/* A link from before Completed was shown by default (js/filter-ui.js oldLinkNote): its own line. */
+.page-filters .old-link-note { flex-basis: 100%; color: var(--text-secondary); }
+#f-showing .old-link-note { display: block; margin-top: var(--space-1); }
 .page-explore { display: flex; flex-direction: column; gap: var(--space-1); margin: var(--space-2) 0 0; }
 .page-explore .page-search { max-width: 640px; }
 .ex-where { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); color: var(--text-secondary); }

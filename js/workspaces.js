@@ -303,15 +303,15 @@
   // Bundle 6: the filters that stay on while you are on a page or in a workspace, as chips with
   // Reset, so a filtered page never reads as the whole of Peel.
   function filterChipsHTML() {
-    const F = root.PeelFilterUI, list = F && F.activeFilters ? F.activeFilters() : [];
-    if (!list.length) return '';
-    return `<div class="page-filters small" role="group" aria-label="Filters on"><span class="muted">Filters on:</span> ${list.map((f, i) => `<button type="button" class="chip on removable" data-pf-i="${i}" title="Remove this filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('')}<button type="button" class="btn small link" data-pf-reset>Reset ${list.length === 1 ? 'it' : `all ${list.length}`}</button></div>`;
+    const F = root.PeelFilterUI, list = F && F.activeFilters ? F.activeFilters() : [], old = F && F.oldLinkNote ? F.oldLinkNote() : '';
+    if (!list.length) return old ? `<div class="page-filters small" role="group" aria-label="Filters on">${old}</div>` : '';
+    return `<div class="page-filters small" role="group" aria-label="Filters on"><span class="muted">Filters on:</span> ${list.map((f, i) => `<button type="button" class="chip on removable" data-pf-i="${i}" title="Remove this filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('')}<button type="button" class="btn small link" data-pf-reset>Reset ${list.length === 1 ? 'it' : `all ${list.length}`}</button>${old}</div>`;
   }
   document.addEventListener('click', e => {
     const F = root.PeelFilterUI; if (!F || !e.target.closest) return;
-    const r = e.target.closest('[data-pf-reset]'), c = e.target.closest('[data-pf-i]'); if (!r && !c) return;
+    const r = e.target.closest('[data-pf-reset]'), c = e.target.closest('[data-pf-i]'), o = e.target.closest('.page-filters [data-include-completed]'); if (!r && !c && !o) return;
     e.preventDefault();
-    if (r) F.resetAllFilters(); else { const f = F.activeFilters()[+c.dataset.pfI]; if (f) { f.clear(); App().applyFilters(); } }
+    if (o) F.includeCompleted(); else if (r) F.resetAllFilters(); else { const f = F.activeFilters()[+c.dataset.pfI]; if (f) { f.clear(); App().applyFilters(); } }
     renderChips(); if (mode === 'home') renderPage(true);
   });
   function renderChips() {
