@@ -110,6 +110,68 @@ Water has no "upstream," so for water use the area the project serves:
   `showLoads(null, plant)` already lists). Plant rows can say "all of the {plant} sewershed"
   and link there rather than list thousands.
 
+### 4. Funding (with the Funding lab on)
+
+The Funding lab (Capital › Funding) already has the money side:
+
+| What | Where |
+|---|---|
+| Each project's DC-recoverable cost in 2026$, and how much of it is estimated | `js/dc-cost.js` `costEstimate(r)` |
+| Water and wastewater DCs per unit by unit type, and a range when the unit mix isn't stated | `dcRevenue(e)`, `dcRange(e)`, `data/dc-costs.json` `rates` |
+| The budget screen: committed projects first, then growth let through per dollar; each project falls within or outside the screen | `dcaBudget(budget, years)`, `DCB` |
+| People held back if a project is cancelled, and DC revenue at risk (`revRisk`) | `dcAnalysis()` |
+
+What's missing is the link to the developments each project affects. DC projects joins the two.
+Everything below appears only while the Funding lab is on, and never in the public view. This is
+the same rule that gates the Funding sub-view (`hiddenAt` in `js/analysis-tabs.js`).
+
+**On the list**
+- New columns: **DC cost** (2026$, "estimated" when more than half of it is estimated) and
+  **$ per affected unit** (DC cost ÷ units in groups 1 and 2)
+- A **funding-screen chip** on each row: Within / Outside / Committed / After the window, read
+  from `dcaBudget(DCB.budget, DCB.years)`
+- A new sort, **cost per affected unit**, and a filter, **outside the funding screen**
+- Head figure: "N projects outside the screen affect **M** developments (≈X units)"
+
+**On a selected project**
+- A **Funding** block under the figures:
+  - **DC cost:** "$48.2 M DC-recoverable (2026$), 30% estimated"
+  - **Funding screen:** within / outside at the current budget, and why (the `dcbCells`
+    wording), with a link to its row on Capital › Funding
+  - **DCs from the developments relying on it:** the sum of `dcRevenue` (or the `dcRange`
+    low–high when unit types aren't stated) for groups 1 and 2. A wastewater project counts only
+    the wastewater share of the rate (`rates.single.wastewater` ÷ the water + wastewater
+    total); a water project counts the water share. Shown next to the cost as "covers ≈Y%".
+  - **Revenue at risk if it slips:** the DCs from affected developments with a timing gap. If
+    the project is outside the screen, use every affected development, since they wait on it.
+- Each development row gets its DC amount (or range), so the list can be sorted by revenue
+- **Wording:** DCs go into Region-wide reserves, not to one project. So the panel says "DCs
+  from the developments that rely on it," never "paid for by." Coverage is a way to compare
+  projects, not a funding source.
+
+**On Capital › Funding**
+- The rows in Screening results and Funding levels get `data-dc-proj`, so clicking one opens
+  the same project view. Back returns to Funding.
+- **"Affects" column:** developments and units that rely on each project (groups 1 and 2),
+  next to the existing "growth by {year}". This explains the "No growth relies on it in this
+  screen" rows, which are mostly sanitary mains whose pipe constraints are hidden while
+  `PIPE_RESULTS` is off.
+- **Optional ranking switch (Labs):** rank by *held back* (today's measure, capacity-based) or by
+  *relying on it* (the upstream and connecting units from this plan, phased to the window's end
+  year with `MA().hzFrac`). Default stays *held back*. "Relying on it" overstates need where the
+  existing pipe still has room, so it is offered as a lens, not a replacement.
+
+**In the model** (`js/dc-impact.js`)
+- `impactOf(key).funding = { cost, est, screen: 'keep' | 'defer' | 'committed' | 'later', revenue: { lo, hi }, revAtRisk, perUnit }`.
+  This is only built when `App().state.dcCosts` is loaded.
+- The screen result needs a key that matches across both models. `dcAnalysis` keys lines as
+  `ln:{sys}:{p||c}` (connectors) or `MP().reliefKey(r)` (constraints). `projects()` should store
+  both keys so it can look up its `dcaBudget` row. Projects that aren't in `dcAnalysis` are
+  "not screened," because no constraint or connector puts them in the funding screen. The
+  ranking switch above is what brings them in.
+- Cache on `MP().scenarioKey()` + `DCB.budget` + `DCB.years`, so moving the budget updates the
+  chips.
+
 ## How to build it
 
 ### Step 1: an impact model (new `js/dc-impact.js`, `PeelDcImpact`)
@@ -191,6 +253,9 @@ Exports needed: `pipeReliefOf` and `dcConnectors` from `js/masterplan.js` (add t
 3. Selection: panel, map highlight, Back from a development
 4. Unify `showDcLine` / `showFacility` / DC timing rows onto it
 5. Water and facility rules, CSV, changelog
+6. Funding (Labs): cost, screen chip, DCs from the affected developments, revenue at risk;
+   click-through and the "Affects" column on Capital › Funding
+7. Optional: the "relying on it" ranking switch in the funding screen
 
 ## Open questions
 
@@ -204,3 +269,7 @@ Exports needed: `pipeReliefOf` and `dcConnectors` from `js/masterplan.js` (add t
    against the Region's own understanding of a couple of projects (e.g. 22-2255).
 5. **Timing gap:** is "expected occupancy before the last construction year" the right test, or
    should it be the first construction year (when capacity starts to arrive)?
+6. **DCs per development:** use the residential rate only (as `dcRevenueHTML` does today), or
+   add non-residential once `rates.nonResidential` is in `data/dc-costs.json`?
+7. **Ranking switch:** should "relying on it" ever become the default for the funding screen, or
+   stay a lens? My recommendation: keep it a lens until the pipe results are back on.
