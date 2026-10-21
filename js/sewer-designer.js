@@ -129,18 +129,47 @@
     return out.sort((a, b) => a.reach - b.reach || a.along - b.along);
   }
 
+  // ---- Room downstream: the design flow added to the Region sewer it joins, down to the plant ------
+  // pipes: data/sewers.json's (each [diameter mm, slope, capacity L/s, next, …, lengthM at 14]); k:
+  // the pipe it joins; q: the design flow (L/s), added in full to every pipe down the chain (no
+  // re-peaking with the rest, no attenuation: the most it can add); at(i) → { q, cap }: the pipe's
+  // flow without it (at the demand year) and its trusted full-flow capacity (0: none, e.g. no
+  // reliable slope). Rows down the chain, the tightest after, and the pipes whose state changes
+  // (85% near full, 100% surcharged; PeelMapMarkers.PIPE_CLS).
+  function downstream(pipes, k, q, at) {
+    const rows = [], seen = new Set();
+    let dist = 0;
+    for (let i = k; i != null && i >= 0 && !seen.has(i) && rows.length < 5000; i = pipes[i][3]) {
+      seen.add(i);
+      const p = pipes[i], a = at(i), cap = a.cap > 0 ? a.cap : 0;
+      rows.push({ i, dmm: p[0], year: p[7] || null, dist, len: p[14] || 0, cap, before: a.q, after: a.q + q, r0: cap ? a.q / cap : null, r1: cap ? (a.q + q) / cap : null });
+      dist += p[14] || 0;
+    }
+    const capd = rows.filter(r => r.cap);
+    const tight = capd.reduce((b, r) => (!b || r.r1 > b.r1 ? r : b), null);
+    return {
+      rows, q, recv: rows[0] || null, tight, length: dist,
+      over: capd.filter(r => r.r0 < 1 && r.r1 >= 1), near: capd.filter(r => r.r0 < 0.85 && r.r1 >= 0.85 && r.r1 < 1),
+      already: capd.filter(r => r.r0 >= 1), unchecked: rows.length - capd.length,
+    };
+  }
   // The design as CSV: the maintenance holes, then the reaches.
   function csv(d) {
     const f2 = v => (v == null ? '' : (+v).toFixed(2)), lines = ['Maintenance hole,Chainage (m),Ground (m),Invert in (m),Invert out (m),Depth to invert (m),Drop (m),Drop structure,On'];
     d.mhs.forEach((m, i) => lines.push([m.label || `MH ${i + 1}${i === d.mhs.length - 1 ? ' (connection)' : ''}`, f2(m.x), f2(m.g), m.ins && m.ins.length > 1 ? `"${m.ins.map(x => f2(x.inv)).join(' / ')}"` : f2(m.inv_in), f2(m.inv_out), f2(m.depth), f2(m.drop), m.structure ? 'yes' : '', m.run ? `branch ${m.run + 1}` : 'main line'].join(',')));
     lines.push('', 'Reach,Diameter (mm),Length (m),Slope (%),Invert up (m),Invert down (m),Full-flow capacity (L/s),Flow ratio,Velocity at design flow (m/s),Velocity full (m/s),Depth ratio,Froude,Design flow (L/s)');
     d.reaches.forEach(r => lines.push([`MH ${r.from + 1} to MH ${r.to + 1}`, r.dmm || d.dmm, f2(r.L), (r.S * 100).toFixed(3), f2(r.inv_up), f2(r.inv_dn), f2(r.qFull), r.qRatio.toFixed(2), f2(r.v), f2(r.vFull), r.depthRatio.toFixed(2), r.froude.toFixed(2), f2(r.q != null ? r.q : d.q)].join(',')));
+    if (d.down && d.down.res) {
+      const dn = d.down, pc = r => (r == null ? '' : `${Math.round(r * 100)}%`);
+      lines.push('', `Room downstream (${dn.yearLabel}),Pipe,Km down,Capacity (L/s),Without this sewer (L/s),With it (L/s),Full without,Full with`);
+      for (const r of dn.list) lines.push([`"${r.role}"`, `${r.dmm} mm`, (r.dist / 1000).toFixed(2), f2(r.cap || null), f2(r.before), f2(r.after), pc(r.r0), pc(r.r1)].join(','));
+    }
     lines.push('', `Design flow (L/s),${f2(d.q)}`, `Cover over the pipe (m),${d.cover}`, ...(d.slopes ? [`Slopes chosen (%),${f2(d.slopes[0] * 100)}–${f2(d.slopes[1] * 100)}`] : []), `Rules,"${d.source}"`, '"General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results."');
     return lines.join('\n');
   }
 
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
-    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, connBend, pointAt, checks, csv, crossings, CROSS, slopeRange };
+    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, connBend, pointAt, checks, csv, crossings, CROSS, slopeRange, downstream };
     return;
   }
   // ---- Browser ---------------------------------------------------------------------------------
@@ -380,6 +409,7 @@
       if (!(flow.q > 0)) { S.fm = null; S.formMsg = 'Type a design flow, or the population, jobs and area it serves.'; return openResult(); }
       S.flow = flow;
       S.fm = FM().design(S.ground.map(({ x, g }) => ({ x, g })), S.conn, flow.q, { vfd: f.vfd, ici: f.ici, wwDepth: +f.ww || 0 });
+      if (S.fm.ok) findDownstream(S.fm, flow.q);
       openResult(); drawLine(); return;
     }
     S.fm = null;
@@ -403,6 +433,7 @@
       d.q = d.mhs[rootN].ins.reduce((t, x) => t + d.reaches[x.reach].q, 0);
       S.view = Math.min(S.view, rs.length - 1);
       findCrossings();
+      findDownstream(d, d.q);
     }
     openResult(); drawLine();
   }
@@ -440,6 +471,53 @@
     const box = document.querySelector('[data-sd-xings]'); if (box) box.innerHTML = xingsHTML();
     drawLine();
     const pr = document.querySelector('[data-sd-profile]'); if (pr) pr.innerHTML = profileSVG(lineView(S.view));
+  }
+  // ---- Room downstream (downstream()): the Region sewer data (data/sewers.json, 300 mm and more)
+  // and its loads at the map's demand year, as the Sewer pipe capacity layer reads them.
+  let dSeq = 0;
+  const SC = () => root.PeelSewerCap, MA = () => root.PeelMapAnalysis;
+  async function findDownstream(d, q) {
+    const seq = ++dSeq, c = S.conn;
+    S.down = { busy: true }; d.down = null;
+    try { await Promise.resolve(SC() && SC().loadSewers()); } catch (e) { /* (below) */ }
+    if (seq !== dSeq || (S.d !== d && S.fm !== d)) return;
+    const data = root.PeelMapMarkers && root.PeelMapMarkers.SEW && root.PeelMapMarkers.SEW.data;
+    if (!data || !SC()) S.down = { err: 'the Region sewer capacity data did not load' };
+    else {
+      // The pipe it joins: the same pipe (300 mm and more), or from a smaller local sewer the
+      // nearest Region trunk of 300 mm or more, as each development joins one (Sewer pipe capacity).
+      const big = c.dmm >= 300, k = SC().nearestPipe(c.lng, c.lat, big ? 30 : 400, 300);
+      if (k < 0) S.down = { err: big ? 'the sewer it joins is not in the Region capacity data' : 'no Region sewer of 300 mm or more within 400 m of the connection' };
+      else {
+        const yr = MA() && MA().getCapYear ? MA().getCapYear() : null;
+        const res = downstream(data.pipes, k, q, i => { const st = SC().pipeStats(i, yr); return { q: st.then.q, cap: st.cap }; });
+        const role = new Map(), add = (r, t) => { if (r && !role.has(r.i)) role.set(r.i, t); };
+        add(res.recv, big ? 'The sewer it joins' : 'The first Region trunk (300 mm+)');
+        res.over.forEach(r => add(r, 'Goes over 100%')); res.near.forEach(r => add(r, 'Goes over 85%')); add(res.tight, 'The tightest down to the plant');
+        const list = res.rows.filter(r => role.has(r.i)).slice(0, 10).map(r => ({ ...r, role: role.get(r.i) }));
+        const k0 = data.pipes[k], m = big ? 0 : Math.round(root.PeelDcInfra && root.PeelDcInfra.dcDist ? root.PeelDcInfra.dcDist([c.lng, c.lat], SC().pipeCoords(k0)) : 0);
+        S.down = { res, list, yearLabel: yr == null ? 'build-out' : String(yr), plant: data.plants[k0[6]] || '', big, m };
+      }
+    }
+    d.down = S.down.res ? S.down : null;
+    const box = document.querySelector('[data-sd-down]'); if (box) box.innerHTML = downHTML();
+  }
+  function downHTML() {
+    const D = S.down;
+    if (!D || D.busy) return '<p class="small muted">Adding the flow to the Region sewers downstream…</p>';
+    if (D.err) return `<p class="small muted">Room downstream not checked: ${esc(D.err)}.</p>`;
+    const r = D.res, pc = x => (x == null ? '–' : `${Math.round(x * 100)}%`), km = m => `${(m / 1000).toFixed(m < 10000 ? 1 : 0)} km`;
+    const plant = D.plant === 'Toronto' ? 'the City of Toronto system' : D.plant ? `the ${esc(D.plant)} plant` : 'the end of the data';
+    const chip = r.over.length ? `<span class="pnl-chip t-over">${r.over.length} pipe${r.over.length === 1 ? '' : 's'} go${r.over.length === 1 ? 'es' : ''} over 100%</span>` : r.near.length ? `<span class="pnl-chip t-tight">${r.near.length} pipe${r.near.length === 1 ? '' : 's'} go${r.near.length === 1 ? 'es' : ''} over 85%</span>` : '<span class="pnl-chip t-room">Room downstream</span>';
+    const rc = r.recv, t = r.tight;
+    const recv = rc.cap ? `The ${fmtNum(rc.dmm)} mm sewer it ${D.big ? 'joins' : `reaches (the nearest of 300 mm or more, ${fmtNum(D.m)} m from the connection)`} goes from <strong>${pc(rc.r0)} to ${pc(rc.r1)}</strong> full (${fmt1(rc.before)} → ${fmt1(rc.after)} L/s of ${fmtNum(Math.round(rc.cap))} L/s).` : `The ${fmtNum(rc.dmm)} mm sewer it ${D.big ? 'joins' : 'reaches'} has no reliable published slope: its capacity is not known.`;
+    const tt = t && t !== rc ? ` Down to ${plant} (${fmtNum(r.rows.length)} pipes, ${km(r.length)}), the tightest is a ${fmtNum(t.dmm)} mm pipe ${km(t.dist)} down: ${pc(t.r0)} → <strong>${pc(t.r1)}</strong>.` : ` Down to ${plant} (${fmtNum(r.rows.length)} pipes, ${km(r.length)}), no pipe is tighter.`;
+    const already = r.already.length ? ` ${fmtNum(r.already.length)} pipe${r.already.length === 1 ? ' is' : 's are'} already over 100% without this sewer.` : '';
+    const st = x => { const s2 = root.PeelMapMarkers && root.PeelMapMarkers.pipeState ? root.PeelMapMarkers.pipeState(x) : null; return s2 ? `<span class="pipe-st-dot" style="--st:var(${s2[1]})"></span>${esc(s2[3])}` : 'n/a'; };
+    const rows = D.list.map(x => `<tr><th scope="row">${esc(x.role)}</th><td class="n">${fmtNum(x.dmm)} mm${x.year ? ` <small>${x.year}</small>` : ''}</td><td class="n">${(x.dist / 1000).toFixed(2)}</td><td class="n">${x.cap ? fmtNum(Math.round(x.cap)) : '–'}</td><td class="n">${pc(x.r0)}</td><td class="n">${pc(x.r1)}</td><td>${st(x.r1)}</td></tr>`).join('');
+    return `<p>${chip} ${recv}${tt}${already}</p>
+      <div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">Pipe</th><th scope="col" class="n">Size</th><th scope="col" class="n">Km down</th><th scope="col" class="n">Capacity (L/s)</th><th scope="col" class="n">Full without</th><th scope="col" class="n">Full with</th><th scope="col">With it</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <p class="small muted">At ${D.yearLabel === 'build-out' ? 'build-out' : esc(D.yearLabel)} (the Demand year on the map), as the Sewer pipe capacity layer loads each Region pipe of 300 mm or more: the census population at the plant's measured rate, and the growth since at Peel design criteria. This sewer's ${fmt1(r.q)} L/s design flow is added in full to every pipe down to the plant (not re-peaked with the rest, no attenuation). If the sewer serves a development already in the pipeline, its flow is in the load already and is counted twice here. Full-pipe capacity by Manning (n 0.013) on the published slope${r.unchecked ? `; ${fmtNum(r.unchecked)} pipe${r.unchecked === 1 ? ' has' : 's have'} no reliable slope and ${r.unchecked === 1 ? 'is' : 'are'} not checked` : ''}. A screen, not a hydraulic model.</p>`;
   }
   function xingsHTML() {
     if (S.xingsBusy) return '<p class="small muted">Looking for the watermains and storm sewers the sewer crosses…</p>';
@@ -513,6 +591,7 @@
     return `<p><span class="pnl-chip t-room">Gravity design</span> A <strong>${sizeTxt}</strong> sewer${nRuns > 1 ? ` (the main line and ${nRuns - 1} branch${nRuns === 2 ? '' : 'es'})` : ''} at ${fmt2(Math.min(...s)) === fmt2(Math.max(...s)) ? fmt2(s[0]) : `${fmt2(Math.min(...s))}–${fmt2(Math.max(...s))}`}%, ${fmtNum(d.mhs.length)} maintenance holes, ${fmt1(d.mhs[0].depth)} m deep at the start and ${fmt1(deepest)} m at the deepest, for ${fmt1(d.q)} L/s${nRuns > 1 ? ' at the connection' : ''}${S.flow && !S.flow.typed && S.flow.peak != null && nRuns === 1 ? ` (${fmt1(S.flow.peak)} L/s peak dry + ${fmt1(S.flow.ii)} L/s I&amp;I)` : ''}. The least excavation the rules allow${d.slopes ? ` within ${fmt2(d.slopes[0] * 100)}–${fmt2(d.slopes[1] * 100)}%` : ''}.${heldN ? ` <span class="pnl-chip t-tight">Under 0.75 m/s</span> ${heldN} reach${heldN === 1 ? '' : 'es'} at the steepest slope chosen, still under 0.75 m/s at the design flow (see the rules checked).` : ''}</p>
       <h4 class="sd-h">Profile${nRuns > 1 ? ` · ${S.view ? `branch ${S.view + 1} to the connection` : 'the main line'}` : ''}</h4>${views}<div data-sd-profile>${profileSVG(lineView(S.view))}</div>
       <h4 class="sd-h">Rules checked</h4><ul class="sd-checks small">${checkList.join('')}</ul>${froudeHi ? `<p class="small t-tight">${froudeHi} reach${froudeHi === 1 ? '' : 'es'} with supercritical flow (Froude 1 or more): the standard asks for subcritical flow where possible (s. 2.9.1).</p>` : ''}
+      <h4 class="sd-h">Room downstream</h4><div data-sd-down>${downHTML()}</div>
       <h4 class="sd-h">Crossings</h4><div data-sd-xings>${xingsHTML()}</div>
       <h4 class="sd-h">Maintenance holes</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">MH</th><th scope="col">On</th><th scope="col" class="n">Ground (m)</th><th scope="col" class="n">Invert in</th><th scope="col" class="n">Invert out</th><th scope="col" class="n">Depth</th><th scope="col" class="n">Drop</th></tr></thead><tbody>${mhRows}</tbody></table></div>
       <h4 class="sd-h">Reaches · ${sizeTxt}</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">Reach</th><th scope="col" class="n">Size (mm)</th><th scope="col" class="n">Flow (L/s)</th><th scope="col" class="n">Length (m)</th><th scope="col" class="n">Slope (%)</th><th scope="col" class="n">Full flow (L/s)</th><th scope="col" class="n">Flow ratio</th><th scope="col" class="n">V design (m/s)</th><th scope="col" class="n">V full (m/s)</th><th scope="col" class="n">Froude</th></tr></thead><tbody>${rRows}</tbody></table></div>
@@ -562,7 +641,8 @@
     return `${head}
       <h4 class="sd-h">Pump duty</h4>${duty}${curveSVG(f)}
       <h4 class="sd-h">Profile</h4>${fmProfileSVG(f)}
-      <h4 class="sd-h">Rules checked</h4><ul class="sd-checks small">${f.checks.map(ok).join('')}</ul>
+      <h4 class="sd-h">Rules checked</h4><ul class="sd-checks small">${f.checks.map(ok).join('')}</ul>${f.ok ? `
+      <h4 class="sd-h">Room downstream</h4><div data-sd-down>${downHTML()}</div>` : ''}
       <h4 class="sd-h">Sizes at ${fmt1(f.q)} L/s</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">Forcemain</th><th scope="col" class="n">Velocity (m/s)</th><th scope="col" class="n">Friction (m per km)</th><th scope="col" class="n">Total head (m)</th><th scope="col">1.0–3.0 m/s</th></tr></thead><tbody>${sizes}</tbody></table></div>
       <div class="sd-ps small"><strong>The pumping station is not sized here.</strong> Size it to Peel's Sewage Pumping Station Design Standard: the wet well and its operating range, the number of pumps and firm capacity, standby power, and the forcemain's redundancy (twinning, s. 4.3.1). A transient analysis is mandatory for every forcemain (s. 4.3.6); fittings, valves and station pipework add head not counted here.</div>
       <p><button type="button" class="btn small" data-sd-act="fm-csv">Download the forcemain (CSV)</button></p>`;
@@ -628,7 +708,7 @@
     P.open({
       d: S.d, view: v, nodes: v.nodes, ground: v.ground, pts: [...S.pts, ...done().flatMap(b => b.pts)], conn: S.conn, mains, flow: S.flow, groundLabel: S.groundLabel,
       plan: { lls, reaches: S.d.reaches, labels: S.d.mhs.map((m, i) => `MH ${i + 1}`), start: S.pts[0], branches: done().map(b => b.pts[0]) },
-      xings: S.xings || null, checks: checks(S.d, S.net.net, S.conn), deepest: SW().deepest(S.d, S.net.net), froudeHi: S.d.reaches.filter(x => x.froude >= 1).length,
+      xings: S.xings || null, down: S.d.down || null, checks: checks(S.d, S.net.net, S.conn), deepest: SW().deepest(S.d, S.net.net), froudeHi: S.d.reaches.filter(x => x.froude >= 1).length,
       where: dev && dev.title ? `From ${dev.title}` : `From ${st.lat.toFixed(5)}, ${st.lng.toFixed(5)}`,
       date: new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }),
       version: RP && RP.appVersion ? RP.appVersion() : 'dev', unofficial: Ut.UNOFFICIAL || 'Unofficial prototype · public data only · not a Region of Peel product',
@@ -636,7 +716,7 @@
     });
   }
   function clearAll() { xSeq++; S.xings = null; S.legs = []; S.roadsUsed = false; S.findMode = false; S.corridor = null; S.pts = []; S.conn = null; S.net = null; S.d = null; S.fm = null; S.msg = ''; S.branches = []; S.drawing = 0; S.view = 0; if (layer) layer.clearLayers(); }
-  const reset = () => { S.d = null; S.fm = null; S.net = null; S.xings = null; S.xingsErr = ''; S.xingsBusy = false; xSeq++; };
+  const reset = () => { S.d = null; S.fm = null; S.net = null; S.xings = null; S.xingsErr = ''; S.xingsBusy = false; xSeq++; S.down = null; dSeq++; };
 
   // The form and its buttons (in the result panel).
   const setField = i => {

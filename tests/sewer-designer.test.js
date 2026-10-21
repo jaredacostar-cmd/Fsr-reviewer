@@ -102,7 +102,7 @@ test('crossings: a watermain at its assumed depth checked for 0.5 m, a storm sew
 
 test('wired: crossings looked up after each design, Follow roads on the banner, the road network loaded before the designer', () => {
   const s = src('js/sewer-designer.js');
-  assert.match(s, /findCrossings\(\);\n    \}\n    openResult\(\); drawLine\(\);/);
+  assert.match(s, /findCrossings\(\);\n      findDownstream\(d, d\.q\);\n    \}\n    openResult\(\); drawLine\(\);/);
   assert.match(s, /for \(const kind of \['water', 'storm'\]\) for \(const src of EP\.EXIST\[kind\]\)/);
   assert.match(s, /data-ptool-act="sd-roads"/);
   assert.match(s, /const r = await RN\.routeBetween\(last, ll\);/);
@@ -208,4 +208,48 @@ test('the rules checked within a range: the slopes row, and a reach held at the 
   assert.match(SDR.csv(d), /Slopes chosen \(%\),0\.30–1\.00/);
   // without a range: no slopes row (ten rules, as before)
   assert.equal(SDR.checks(SD.designNet(net, conn), net, conn).length, 10);
+});
+
+test('room downstream: the design flow added in full down the chain; the pipe it joins, the tightest, the pipes that change state', () => {
+  // a chain 0 → 1 → 2 → 3 (end); [d, slope, cap, next, …, lengthM at 14]
+  const P = (d, next, len) => { const p = [d, 0.003, 0, next]; p[14] = len; return p; };
+  const pipes = [P(450, 1, 100), P(525, 2, 250), P(600, 3, 400), P(675, -1, 50), P(300, -1, 10)];
+  const base = [{ q: 70, cap: 100 }, { q: 80, cap: 100 }, { q: 99, cap: 100 }, { q: 50, cap: 0 }, { q: 1, cap: 10 }];
+  const r = SDR.downstream(pipes, 0, 12, i => base[i]);
+  assert.equal(r.rows.length, 4);
+  assert.deepEqual(r.rows.map(x => x.dist), [0, 100, 350, 750]);
+  assert.equal(r.length, 800);
+  assert.ok(near(r.recv.r0, 0.70, 1e-12) && near(r.recv.r1, 0.82, 1e-12));
+  assert.equal(r.tight.i, 2);
+  assert.ok(near(r.tight.r1, 1.11, 1e-12));
+  assert.deepEqual(r.over.map(x => x.i), [2], 'over 100% because of this sewer');
+  assert.deepEqual(r.near.map(x => x.i), [1], 'over 85% because of this sewer');
+  assert.deepEqual(r.already, []);
+  assert.equal(r.unchecked, 1, 'no reliable slope: not checked');
+  assert.equal(r.rows[3].r1, null);
+  // a pipe already over 100% is not "goes over"
+  const r2 = SDR.downstream(pipes, 0, 1, i => (i === 2 ? { q: 120, cap: 100 } : base[i]));
+  assert.deepEqual(r2.already.map(x => x.i), [2]);
+  assert.deepEqual(r2.over, []);
+  // a loop in the data stops the walk
+  const loop = [P(300, 1, 10), P(300, 0, 10)];
+  assert.equal(SDR.downstream(loop, 0, 1, () => ({ q: 1, cap: 10 })).rows.length, 2);
+});
+
+test('room downstream: in the CSV, and wired after each design (gravity and pumped)', () => {
+  const route = { nodes: SD.placeMHs([0, 240], 120).map(x => ({ x, g: 180, bend: 0 })), samples: [] };
+  const d = SD.design(route, { invert: 174, dmm: 375 }, 8);
+  const P = (dd, next, len) => { const p = [dd, 0.003, 0, next]; p[14] = len; return p; };
+  const res = SDR.downstream([P(450, 1, 100), P(525, -1, 250)], 0, 8, i => [{ q: 70, cap: 100 }, { q: 95, cap: 100 }][i]);
+  d.down = { res, yearLabel: 'build-out', list: [{ ...res.rows[0], role: 'The sewer it joins' }, { ...res.rows[1], role: 'Goes over 100%' }] };
+  const c = SDR.csv(d);
+  assert.match(c, /^Room downstream \(build-out\),Pipe,Km down,Capacity \(L\/s\),Without this sewer \(L\/s\),With it \(L\/s\),Full without,Full with$/m);
+  assert.match(c, /^"The sewer it joins",450 mm,0\.00,100\.00,70\.00,78\.00,70%,78%$/m);
+  assert.match(c, /^"Goes over 100%",525 mm,0\.10,100\.00,95\.00,103\.00,95%,103%$/m);
+  const s = src('js/sewer-designer.js');
+  assert.match(s, /findCrossings\(\);\n\s+findDownstream\(d, d\.q\);/);
+  assert.match(s, /if \(S\.fm\.ok\) findDownstream\(S\.fm, flow\.q\);/);
+  assert.match(s, /SC\(\)\.nearestPipe\(c\.lng, c\.lat, big \? 30 : 400, 300\)/);
+  assert.match(s, /SC\(\)\.pipeStats\(i, yr\)/);
+  assert.match(src('js/sewer-print.js'), /Room downstream \(\$\{e\(dt\.down\.yearLabel\)\}\)/);
 });
