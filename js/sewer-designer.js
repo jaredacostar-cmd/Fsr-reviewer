@@ -135,7 +135,7 @@
   // The main line (pts, xs, ground) runs from the site to the connection; each branch ({ pts, xs,
   // ground, join: { to (the line it joins), x }, form }) runs from its own start to a point on the main line or an
   // earlier branch. drawing: 0 while the main line is drawn, k while branch k is.
-  const S = { pts: [], legs: [], roads: false, roadsUsed: false, findMode: false, corridor: null, cw: null, conn: null, net: null, d: null, busy: false, msg: '', branches: [], drawing: 0, view: 0, form: { q: '', pop: '', jobs: '', ha: '', ici: false, avoid: false, spacing: 190, mode: 'gravity', vfd: false, ww: '' } };
+  const S = { pts: [], legs: [], roads: false, roadsUsed: false, findMode: false, corridor: null, cw: null, conn: null, net: null, d: null, busy: false, msg: '', branches: [], drawing: 0, view: 0, form: { q: '', pop: '', jobs: '', ha: '', ici: false, avoid: false, spacing: 190, mode: 'gravity', vfd: false, ww: '', dmm: '', fmdmm: '' } };
   const cur = () => (S.drawing ? S.branches[S.drawing - 1].pts : S.pts);
   const curRun = () => (S.drawing ? S.branches[S.drawing - 1] : S);
   const narrow = () => !!(root.PeelDataTab && root.PeelDataTab.shellNarrow && root.PeelDataTab.shellNarrow());
@@ -363,7 +363,7 @@
       const flow = SW().flowFrom({ q: f.q, pop: +f.pop || 0, jobs: +f.jobs || 0, ha: +f.ha || 0 });
       if (!(flow.q > 0)) { S.fm = null; S.formMsg = 'Type a design flow, or the population, jobs and area it serves.'; return openResult(); }
       S.flow = flow;
-      S.fm = FM().design(S.ground.map(({ x, g }) => ({ x, g })), S.conn, flow.q, { vfd: f.vfd, ici: f.ici, wwDepth: +f.ww || 0 });
+      S.fm = FM().design(S.ground.map(({ x, g }) => ({ x, g })), S.conn, flow.q, { vfd: f.vfd, ici: f.ici, wwDepth: +f.ww || 0, dmm: +f.fmdmm || null });
       openResult(); drawLine(); return;
     }
     S.fm = null;
@@ -373,7 +373,7 @@
     S.flow = flowSum(flows);
     const spacing = Math.min(200, Math.max(20, +f.spacing || 190));
     S.net = buildNet(spacing);
-    S.d = SW().designNet(S.net.net, S.conn, { ici: f.ici, avoidStructures: f.avoid });
+    S.d = SW().designNet(S.net.net, S.conn, { ici: f.ici, avoidStructures: f.avoid, dmm: +f.dmm || null });
     if (S.d.ok) {
       const nb = S.net, d = S.d, rootN = d.root;
       d.mhs.forEach((m, i) => {
@@ -442,6 +442,14 @@
     if (onPage()) { renderPage(); return; }
     T().openResult({ ref: 'tool:sewer-design', title: 'Sewer design', html: resultHTML(), reopen: () => openResult() });
   }
+  // The pipe size: the tool's pick (the default), or one chosen for every reach (a gravity sewer no
+  // larger than the existing one it flows into).
+  function sizeField(k, sizes, auto) {
+    // (a size the new route can't take, larger than its sewer, goes back to the tool's pick)
+    if (S.form[k] && !sizes.includes(+S.form[k])) S.form[k] = '';
+    const cur = String(S.form[k] || '');
+    return `<label class="field sd-size"><span class="label">${k === 'fmdmm' ? 'Forcemain size' : 'Pipe size'}</span><select data-sd="${k}"><option value=""${cur ? '' : ' selected'}>${esc(auto)}</option>${sizes.map(d => `<option value="${d}"${cur === String(d) ? ' selected' : ''}>${d} mm</option>`).join('')}</select></label>`;
+  }
   function formHTML() {
     const f = S.form, v = k => esc(f[k] == null ? '' : f[k]);
     const flowRow = (attr, F) => `<div class="sd-row"><label class="field"><span class="label">Flow (L/s)</span><input type="number" min="0" step="0.1" ${attr('q')} value="${esc(F.q || '')}"></label><span class="muted small">or</span>
@@ -454,8 +462,8 @@
       ${flowRow(k => `data-sd="${k}"`, f)}
       ${branches}
       <fieldset class="sd-mode"><legend class="label">Design</legend><label class="chk"><input type="radio" name="sd-mode" data-sd="mode" value="gravity"${f.mode !== 'pumped' ? ' checked' : ''}> Gravity sewer</label><label class="chk"><input type="radio" name="sd-mode" data-sd="mode" value="pumped"${f.mode === 'pumped' ? ' checked' : ''}> Pumped: a station at the start, a forcemain to the sewer</label></fieldset>
-      ${f.mode === 'pumped' ? `<div class="sd-row"><label class="field"><span class="label">Wet well low level (m below ground)</span><input type="number" min="0" step="0.1" data-sd="ww" value="${v('ww')}" placeholder="the incoming sewer"></label>
-      <label class="chk"><input type="checkbox" data-sd="vfd"${f.vfd ? ' checked' : ''}> Variable speed pumps (0.8 m/s, with 1.0 m/s flushing weekly)</label><label class="chk"><input type="checkbox" data-sd="ici"${f.ici ? ' checked' : ''}> Industrial / commercial (3.5 m of cover, else 2.5 m)</label></div>` : `<div class="sd-row"><label class="field"><span class="label">Maintenance holes at most (m apart)</span><input type="number" min="20" max="200" step="5" data-sd="spacing" value="${v('spacing')}"></label>
+      ${f.mode === 'pumped' ? `<div class="sd-row">${sizeField('fmdmm', FM().SIZES.filter(d => d >= FM().RULES.dMin), 'Largest in the velocity range')}<label class="field"><span class="label">Wet well low level (m below ground)</span><input type="number" min="0" step="0.1" data-sd="ww" value="${v('ww')}" placeholder="the incoming sewer"></label>
+      <label class="chk"><input type="checkbox" data-sd="vfd"${f.vfd ? ' checked' : ''}> Variable speed pumps (0.8 m/s, with 1.0 m/s flushing weekly)</label><label class="chk"><input type="checkbox" data-sd="ici"${f.ici ? ' checked' : ''}> Industrial / commercial (3.5 m of cover, else 2.5 m)</label></div>` : `<div class="sd-row">${sizeField('dmm', SW().SIZES.filter(d => d >= SW().RULES.dMin && (!S.conn || d <= S.conn.dmm)), 'Smallest that works')}<label class="field"><span class="label">Maintenance holes at most (m apart)</span><input type="number" min="20" max="200" step="5" data-sd="spacing" value="${v('spacing')}"></label>
       <label class="chk"><input type="checkbox" data-sd="ici"${f.ici ? ' checked' : ''}> Industrial / commercial (3.5 m of cover, else 2.5 m)</label>
       <label class="chk"><input type="checkbox" data-sd="avoid"${f.avoid ? ' checked' : ''}> Avoid drop structures</label></div>`}
       <p><button type="button" class="btn small primary" data-sd-act="design">Design</button> <button type="button" class="btn small" data-sd-act="edit">Edit the route</button> <button type="button" class="btn small link" data-sd-act="clear">Clear</button></p>
@@ -479,7 +487,7 @@
     let body = '';
     if (S.fm) body = fmHTML(S.fm);
     else if (S.d && S.d.ok) body = designHTML(S.d);
-    else if (S.d) body = `<p><span class="pnl-chip t-over">No gravity design</span> ${esc(S.d.why)}.</p>${bs.length ? '' : '<p><button type="button" class="btn small" data-sd-act="pumped">Try a pumped option</button></p>'}${profileSVG(null)}`;
+    else if (S.d) body = `<p><span class="pnl-chip t-over">No gravity design${S.form.dmm ? ` at ${fmtNum(+S.form.dmm)} mm` : ''}</span> ${esc(S.d.why)}.${S.form.dmm ? ' <button type="button" class="btn small" data-sd-act="auto-size">Use the smallest that works</button>' : ''}</p>${bs.length ? '' : '<p><button type="button" class="btn small" data-sd-act="pumped">Try a pumped option</button></p>'}${profileSVG(null)}`;
     else body = profileSVG(null);
     return `<div class="sd-res">${head}${S.corridor && root.PeelCorridorFinder ? corridorHTML() : ''}${formHTML()}${body}<p class="small muted">A preliminary design for screening: the route as drawn${S.roadsUsed ? ` (along the road centrelines where it follows them: ${esc(root.PeelRoadNet ? root.PeelRoadNet.SOURCE : 'Ontario Road Network')}, so the cover there is from the centreline, as s. 3.4.1.1 measures it)` : ''}, the ground from ${esc(S.groundLabel || 'the terrain model')} (not a survey), the existing sewer as the Region publishes it. Rules: ${esc(S.fm ? FM().SOURCE : SW().SOURCE)}. Utilities, other services, soils and groundwater are not considered.</p><p class="pnl-note small">${NOTE()}</p></div>`;
   }
@@ -493,7 +501,7 @@
     const rRows = d.reaches.map(r => `<tr><th scope="row">${r.from + 1} → ${r.to + 1}</th><td class="n">${r.dmm}</td><td class="n">${fmt1(r.q)}</td><td class="n">${fmt1(r.L)}</td><td class="n">${(r.S * 100).toFixed(2)}</td><td class="n">${fmt1(r.qFull)}</td><td class="n">${r.qRatio.toFixed(2)}</td><td class="n">${fmt2(r.v)}</td><td class="n">${fmt2(r.vFull)}</td><td class="n">${r.froude.toFixed(2)}</td></tr>`).join('');
     const sizeTxt = sizes.length > 1 ? `${fmtNum(sizes[0])}–${fmtNum(sizes[sizes.length - 1])} mm` : `${fmtNum(sizes[0])} mm`;
     const views = nRuns > 1 ? `<p class="sd-views" role="group" aria-label="Profile of">${runs().map((_, ri) => `<button type="button" class="btn small${ri === S.view ? ' on' : ''}" data-sd-view="${ri}" aria-pressed="${ri === S.view}">${ri ? `Branch ${ri + 1}` : 'Main line'}</button>`).join('')}</p>` : '';
-    return `<p><span class="pnl-chip t-room">Gravity design</span> A <strong>${sizeTxt}</strong> sewer${nRuns > 1 ? ` (the main line and ${nRuns - 1} branch${nRuns === 2 ? '' : 'es'})` : ''} at ${fmt2(Math.min(...s))}–${fmt2(Math.max(...s))}%, ${fmtNum(d.mhs.length)} maintenance holes, ${fmt1(d.mhs[0].depth)} m deep at the start and ${fmt1(deepest)} m at the deepest, for ${fmt1(d.q)} L/s${nRuns > 1 ? ' at the connection' : ''}${S.flow && !S.flow.typed && S.flow.peak != null && nRuns === 1 ? ` (${fmt1(S.flow.peak)} L/s peak dry + ${fmt1(S.flow.ii)} L/s I&amp;I)` : ''}. The least excavation the rules allow.</p>
+    return `<p><span class="pnl-chip t-room">Gravity design</span> A <strong>${sizeTxt}</strong> sewer${nRuns > 1 ? ` (the main line and ${nRuns - 1} branch${nRuns === 2 ? '' : 'es'})` : ''} at ${fmt2(Math.min(...s))}–${fmt2(Math.max(...s))}%, ${fmtNum(d.mhs.length)} maintenance holes, ${fmt1(d.mhs[0].depth)} m deep at the start and ${fmt1(deepest)} m at the deepest, for ${fmt1(d.q)} L/s${nRuns > 1 ? ' at the connection' : ''}${S.flow && !S.flow.typed && S.flow.peak != null && nRuns === 1 ? ` (${fmt1(S.flow.peak)} L/s peak dry + ${fmt1(S.flow.ii)} L/s I&amp;I)` : ''}. ${S.form.dmm ? `At the ${fmtNum(+S.form.dmm)} mm you chose: the least excavation the rules allow at that size.` : 'The smallest size that works, at the least excavation the rules allow.'}</p>
       <h4 class="sd-h">Profile${nRuns > 1 ? ` · ${S.view ? `branch ${S.view + 1} to the connection` : 'the main line'}` : ''}</h4>${views}<div data-sd-profile>${profileSVG(lineView(S.view))}</div>
       <h4 class="sd-h">Rules checked</h4><ul class="sd-checks small">${checkList.join('')}</ul>${froudeHi ? `<p class="small t-tight">${froudeHi} reach${froudeHi === 1 ? '' : 'es'} with supercritical flow (Froude 1 or more): the standard asks for subcritical flow where possible (s. 2.9.1).</p>` : ''}
       <h4 class="sd-h">Crossings</h4><div data-sd-xings>${xingsHTML()}</div>
@@ -534,19 +542,21 @@
   // ---- The pumped option: the forcemain, its profile and the pump duty point ------------------------
   function fmHTML(f) {
     const ok = c => `<li class="${c.pass ? 'sd-ok' : 'sd-no'}"><span aria-hidden="true">${c.pass ? '✓' : '✗'}</span> ${esc(c.t)}: <strong>${esc(c.val)}</strong></li>`;
-    const head = f.ok ? `<p><span class="pnl-chip t-room">Pumped design</span> A <strong>${f.dmm} mm forcemain</strong> (${esc(f.material)}), ${fmtNum(Math.round(f.L))} m at ${fmt2(f.v)} m/s, from a pumping station at the start to a discharge maintenance hole on the ${fmtNum(S.conn.dmm)} mm sewer. The pumps: <strong>${fmt1(f.q)} L/s at ${fmt1(f.tdh)} m</strong> total head.</p>`
+    // (a size chosen outside the velocity range: designed, but flagged)
+    const off = f.chosen && f.checks[0] && !f.checks[0].pass;
+    const head = f.ok ? `<p><span class="pnl-chip ${off ? 't-over' : 't-room'}">${off ? 'Pumped design · size outside the rules' : 'Pumped design'}</span> A <strong>${f.dmm} mm forcemain</strong>${f.chosen ? ' (the size you chose)' : ''} (${esc(f.material)}), ${fmtNum(Math.round(f.L))} m at ${fmt2(f.v)} m/s, from a pumping station at the start to a discharge maintenance hole on the ${fmtNum(S.conn.dmm)} mm sewer. The pumps: <strong>${fmt1(f.q)} L/s at ${fmt1(f.tdh)} m</strong> total head.</p>`
       : `<p><span class="pnl-chip t-over">No pumped design</span> ${esc(f.why)}.</p>`;
     const duty = `<dl class="sd-duty small"><dt>Design flow</dt><dd>${fmt1(f.q)} L/s${S.flow && !S.flow.typed ? ` (${fmt1(S.flow.peak)} L/s peak dry + ${fmt1(S.flow.ii)} L/s I&amp;I)` : ''}</dd>
       <dt>Static lift</dt><dd>${fmt2(f.lift)} m, from the wet well's low level ${fmt2(f.ww)} m${f.wwAssumed ? ` (${esc(f.wwNote)}; the wet well's operating range adds to it)` : ''} to the outlet obvert ${fmt2(f.outEl)} m</dd>
       ${f.over ? `<dt>Over a high point</dt><dd>${fmt2(f.over.need)} m more: the pipe at ${fmtNum(Math.round(f.over.x))} m stands above the hydraulic grade line</dd>` : ''}
       <dt>Friction</dt><dd>${fmt2(f.hf)} m (Hazen-Williams, C 140: ${fmt2(f.hfPerKm)} m per km)</dd>
       <dt>Total head</dt><dd><strong>${fmt2(f.tdh)} m</strong> · water power ${fmt1(f.power)} kW (before pump and motor losses)</dd></dl>`;
-    const sizes = f.sizes.map(c => `<tr${c.dmm === f.dmm ? ' class="on"' : ''}><th scope="row">${c.dmm} mm${c.dmm === f.dmm ? ' <small>chosen</small>' : ''}</th><td class="n">${fmt2(c.v)}</td><td class="n">${fmt2(c.hf1000)}</td><td class="n">${fmt1(f.curve(1) - f.hf + c.hf1000 * f.L / 1000)}</td><td>${c.ok ? '✓' : c.v < f.vMin ? `under ${f.vMin.toFixed(1)} m/s` : 'over 3.0 m/s'}</td></tr>`).join('');
+    const sizes = f.sizes.map(c => `<tr${c.dmm === f.dmm ? ' class="on"' : ''}><th scope="row">${c.dmm} mm${c.dmm === f.dmm ? ' <small>chosen</small>' : ''}</th><td class="n">${fmt2(c.v)}</td><td class="n">${fmt2(c.hf1000)}</td><td class="n">${fmt1(f.curve(1) - f.hf + c.hf1000 * f.L / 1000)}</td><td>${c.ok ? '✓' : c.v < f.vMin ? `under ${f.vMin.toFixed(1)} m/s` : 'over 3.0 m/s'}</td><td>${c.dmm === f.dmm ? '' : `<button type="button" class="btn small link" data-sd-act="fm-size" data-sd-size="${c.dmm}">Use</button>`}</td></tr>`).join('');
     return `${head}
       <h4 class="sd-h">Pump duty</h4>${duty}${curveSVG(f)}
       <h4 class="sd-h">Profile</h4>${fmProfileSVG(f)}
       <h4 class="sd-h">Rules checked</h4><ul class="sd-checks small">${f.checks.map(ok).join('')}</ul>
-      <h4 class="sd-h">Sizes at ${fmt1(f.q)} L/s</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">Forcemain</th><th scope="col" class="n">Velocity (m/s)</th><th scope="col" class="n">Friction (m per km)</th><th scope="col" class="n">Total head (m)</th><th scope="col">1.0–3.0 m/s</th></tr></thead><tbody>${sizes}</tbody></table></div>
+      <h4 class="sd-h">Sizes at ${fmt1(f.q)} L/s</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">Forcemain</th><th scope="col" class="n">Velocity (m/s)</th><th scope="col" class="n">Friction (m per km)</th><th scope="col" class="n">Total head (m)</th><th scope="col">1.0–3.0 m/s</th><th scope="col"><span class="sr-only">Choose</span></th></tr></thead><tbody>${sizes}</tbody></table></div>
       <div class="sd-ps small"><strong>The pumping station is not sized here.</strong> Size it to Peel's Sewage Pumping Station Design Standard: the wet well and its operating range, the number of pumps and firm capacity, standby power, and the forcemain's redundancy (twinning, s. 4.3.1). A transient analysis is mandatory for every forcemain (s. 4.3.6); fittings, valves and station pipework add head not counted here.</div>
       <p><button type="button" class="btn small" data-sd-act="fm-csv">Download the forcemain (CSV)</button></p>`;
   }
@@ -638,6 +648,8 @@
     else if (act === 'csv') downloadCSV();
     else if (act === 'print') printSheet();
     else if (act === 'pumped') { S.form.mode = 'pumped'; run(); }
+    else if (act === 'auto-size') { S.form.dmm = ''; run(); }
+    else if (act === 'fm-size') { S.form.fmdmm = b.dataset.sdSize; run(); }
     else if (act === 'fm-csv') downloadFmCSV();
     else if (act === 'refind' && S.corridor) findRoute(S.corridor.a, S.corridor.b);
     else if (act === 'branch') {

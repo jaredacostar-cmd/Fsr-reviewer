@@ -3463,7 +3463,8 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 /* Labs: the Sewer designer (js/sewer-designer.js): the form, the profile, the checks, the plan labels. */
 .sd-form { border: 1px solid var(--border); border-radius: 8px; padding: var(--space-2) var(--space-3); margin: var(--space-2) 0; }
 .sd-row { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: flex-end; margin: var(--space-1) 0; }
-.sd-row .field { width: 7.5rem; } .sd-row .field input { width: 100%; }
+.sd-row .field { width: 7.5rem; } .sd-row .field input, .sd-row .field select { width: 100%; }
+.sd-row .field.sd-size { width: 10.5rem; }
 .sd-row .chk { display: flex; gap: var(--space-1); align-items: center; font-size: var(--fs-2); }
 .sd-h { margin: var(--space-3) 0 var(--space-1); font-size: var(--fs-3); }
 .sd-prof { display: block; width: 100%; height: auto; background: var(--surface-2); border-radius: 6px; }
