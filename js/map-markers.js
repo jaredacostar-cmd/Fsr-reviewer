@@ -304,9 +304,11 @@
       if (!p._ol || p._ol.sig !== sig) p._ol = { sig, polys: outline(p, false, unloaded) };
       polys.push(...p._ol.polys);
       if (unloaded || !withDots || n >= SITE_MAX_POINTS) continue;
+      // Only dots in view count toward the cap (those outside it aren't drawn).
       for (const r of sitePermits(p)) {
+        if (!view.contains([r.lat, r.lng])) continue;
         if (n++ >= SITE_MAX_POINTS) break;
-        if (view.contains([r.lat, r.lng])) dots.push(permitDot(r, p, false));
+        dots.push(permitDot(r, p, false));
       }
     }
     // Largest boundaries first so smaller ones (and then permit dots) sit on top and get the tap.
