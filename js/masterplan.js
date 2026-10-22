@@ -252,20 +252,15 @@
   }
   const constructionYear = items => { const ys = items.flatMap(i => i.phases.filter(ph => ph[0] === 'C').map(ph => ph[1])).filter(y => y >= MM().THIS_YEAR - 1); return ys.length ? Math.min(...ys) : null; };
 
-  // Wastewater: the DC main running along an existing sewer (half its length within 150 m) — a
-  // twin or replacement.
+  // Wastewater: the DC main relieving an existing sewer (a twin, replacement or upsizing): along
+  // half of it within 150 m, sized and placed like relief for it (js/dc-relief.js).
   function pipeReliefOf(i) {
     if (!DCN.pipeRelief) DCN.pipeRelief = new Map();
     if (DCN.pipeRelief.has(i)) return DCN.pipeRelief.get(i);
-    const c = MM().SEW.data.pipes[i][10], pts = []; for (let k = 0; k < c.length; k += 2) pts.push([c[k], c[k + 1]]);
-    const mid = pts[Math.floor(pts.length / 2)], r = 150, dLng = 300 / (111320 * Math.cos(mid[1] * Math.PI / 180)), dLat = 300 / 111320;
-    let best = null;
-    for (const ln of App().state.dcInfra.wastewater.lines) {
-      const b = ln.bbox; if (mid[0] < b[0] - dLng || mid[0] > b[2] + dLng || mid[1] < b[1] - dLat || mid[1] > b[3] + dLat) continue;
-      const near = pts.filter(pt => DI().dcDist(pt, ln.g) <= r).length / pts.length;
-      if (near >= 0.5 && (!best || near > best.near || (near === best.near && (ln.d || 0) > (best.ln.d || 0)))) best = { ln, near };
-    }
-    const out = best ? best.ln : null;
+    const p = MM().SEW.data.pipes[i], c = p[10], pts = []; for (let k = 0; k < c.length; k += 2) pts.push([c[k], c[k + 1]]);
+    const mid = pts[Math.floor(pts.length / 2)], dLng = 300 / (111320 * Math.cos(mid[1] * Math.PI / 180)), dLat = 300 / 111320;
+    const near = App().state.dcInfra.wastewater.lines.filter(({ bbox: b }) => !(mid[0] < b[0] - dLng || mid[0] > b[2] + dLng || mid[1] < b[1] - dLat || mid[1] > b[3] + dLat));
+    const out = window.PeelDcRelief.pickRelief(p[0], pts, near, DI().dcDist);
     DCN.pipeRelief.set(i, out);
     return out;
   }
@@ -900,6 +895,7 @@
     lakeZones,
     ppuOf,
     dcNeedsSection,
+    pipeReliefOf,
     dcItemCons,
     reliefAdd,
     capWith,

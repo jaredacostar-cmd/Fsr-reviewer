@@ -66,7 +66,7 @@ Example: **26-2117** (a local main, no diameter) and **26-2128** (a 450 mm local
 and 26-2117 alone made 2034 the gating year for 600 developments. These are local sewers near
 the trunk, not relief for it.
 
-**Rule (tested, version 2).** A DC main relieves an existing pipe only when, in addition to
+**Rule (tested, version 2; in the app as `js/dc-relief.js`, used by `pipeReliefOf`).** A DC main relieves an existing pipe only when, in addition to
 today's test (within 150 m along at least half the pipe):
 - **Size:** the DC main is at least **half the pipe's diameter**. With no diameter on the map,
   it must be a primary or force main, or the pipe must be 600 mm or smaller. A description
@@ -172,9 +172,9 @@ half its homes are done. On main, with the allocation unchanged:
 | Its first homes (the prototype's test) | **1,041** (530 on the old curves) | 39 |
 | Half its homes done (`scheduleFor`, the app's expected year) | **567** | 33 |
 
-The two years are a median of 1 year apart. My recommendation: flag the gap at the **first
-homes**, because servicing has to be in place before anyone moves in. Show the app's expected
-year beside it, so the row agrees with Growth › Ledger. The prototype now records both
+The two years are a median of 1 year apart. **Decided (October 22, 2026): flag the gap at the
+first homes**, because servicing has to be in place before anyone moves in. Show the app's
+expected year beside it, so the row agrees with Growth › Ledger. The prototype records both
 (`need` / `needHalf`).
 
 ### 5. Apportion money, without double counting

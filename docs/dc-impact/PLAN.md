@@ -207,8 +207,8 @@ pipesUpstream(memberPipes, pipes)   // pure: Uint8Array marking every pipe whose
   computing all 95 wastewater projects up front is too slow on a phone, compute the list counts
   in an idle callback and show "counting…" until they're ready.
 
-Exports needed: `pipeReliefOf` and `dcConnectors` from `js/masterplan.js` (add them to its
-`api`).
+Exports needed: `dcConnectors` from `js/masterplan.js` (add it to its `api`). `pipeReliefOf` is
+exported, with the corrected relief rule (`js/dc-relief.js`), in the first PR.
 
 ### Step 2: the sub-view
 
@@ -297,9 +297,10 @@ projects. These numbers are behind the mock-up.
    be large near the trunks.
 4. **Labs first?** Ship behind a Labs switch like Funding until the counts have been checked
    against the Region's own understanding of a couple of projects (e.g. 22-2255).
-5. **Timing gap:** measure need at a development's first homes (recommended: 1,041 developments
-   on main) or at half its homes done (the app's `scheduleFor` year: 567)? And against the
-   project's last construction year or its first? See ALLOCATION.md, step 4.
+5. **Timing gap:** decided October 22, 2026: need is measured at a development's first homes
+   (1,041 developments on main), with the app's `scheduleFor` year shown beside it. Still open:
+   should it be compared with the project's last construction year or its first? See
+   ALLOCATION.md, step 4.
 6. **DCs per development:** use the residential rate only (as `dcRevenueHTML` does today), or
    add non-residential once `rates.nonResidential` is in `data/dc-costs.json`?
 7. **Ranking switch:** should "relying on it" ever become the default for the funding screen, or
