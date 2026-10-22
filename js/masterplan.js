@@ -646,17 +646,20 @@
     }
     return rows.sort((a, b) => b.q - a.q);
   }
-  function consDevsHTML(cs, extra = []) {
+  // A development's site servicing permit (js/dc-gate.js 'counted'): it is connecting to the
+  // existing network now, under its own permit.
+  const permitOf = p => { const G = window.PeelDcGate, r = G && G.rowOf ? G.rowOf(p) : null; return r && r.bucket === 'counted' ? r : null; };
+  function consDevsHTML(cs, extra = [], opts = {}) {
     const seen = new Map();
     for (const c of cs) for (const r of consDevs(c)) if (!seen.has(r.p.key)) seen.set(r.p.key, r);
     for (const r of extra) if (!seen.has(r.p.key)) seen.set(r.p.key, r);
     const rows = [...seen.values()].sort((a, b) => b.q - a.q), LIMIT = 60, water = cs.length && cs.every(c => c.sys === 'water');
-    if (!rows.length) return '<p class="small muted">No development since the census relies on it.</p>';
-    const by = k => rows.filter(r => r.lay === k);
-    return `<div class="chips">${['built', 'approved', 'proposed'].map(k => `<span class="chip"><span class="lg-sw" style="--mk:${MM().layerColors()[k]}"></span>${esc(MM().LAYER_NAME[k])} ${fmtNum(by(k).length)} · ${fmtNum(roundPop(by(k).reduce((t, r) => t + r.e.population, 0)))} people</span>`).join('')}</div>
-      <table class="dt loads-table"><caption>${fmtNum(rows.length)} developments relying on it, largest ${water ? 'max day' : 'peak wet weather'} first</caption>
+    if (!rows.length) return `<p class="small muted">${opts.none || 'No development since the census relies on it.'}</p>`;
+    const by = k => rows.filter(r => r.lay === k), permitted = rows.filter(r => permitOf(r.p));
+    return `<div class="chips">${['built', 'approved', 'proposed'].map(k => `<span class="chip"><span class="lg-sw" style="--mk:${MM().layerColors()[k]}"></span>${esc(MM().LAYER_NAME[k])} ${fmtNum(by(k).length)} · ${fmtNum(roundPop(by(k).reduce((t, r) => t + r.e.population, 0)))} people</span>`).join('')}${permitted.length ? `<span class="chip">Site servicing permit ${fmtNum(permitted.length)}</span>` : ''}</div>
+      <table class="dt loads-table"><caption>${fmtNum(rows.length)} ${opts.caption || 'developments relying on it'}, largest ${water ? 'max day' : 'peak wet weather'} first</caption>
         <thead><tr><th>Development</th><th>People + jobs</th><th>${water ? 'Max day' : 'Peak wet'}</th></tr></thead>
-        <tbody>${rows.slice(0, LIMIT).map(r => `<tr class="ld-row" data-dev="${esc(r.p.key)}" tabindex="0"><td>${dot(r.p.phase)} ${esc(r.p.title)}<small><span class="lg-sw" style="--mk:${MM().layerColors()[r.lay]}"></span>${esc(MM().LAYER_NAME[r.lay])} · ${esc(r.p.municipality)}${r.conn ? ' · connects to it' : ''}</small></td><td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.q)}</td></tr>`).join('')}</tbody></table>
+        <tbody>${rows.slice(0, LIMIT).map(r => `<tr class="ld-row" data-dev="${esc(r.p.key)}" tabindex="0"><td>${dot(r.p.phase)} ${esc(r.p.title)}<small><span class="lg-sw" style="--mk:${MM().layerColors()[r.lay]}"></span>${esc(MM().LAYER_NAME[r.lay])} · ${esc(r.p.municipality)}${r.conn ? ' · connects to it' : ''}${permitOf(r.p) ? ` · site servicing permit${permitOf(r.p).servicingApplied ? ` ${esc(permitOf(r.p).servicingApplied)}` : ''}: connecting to the existing network` : ''}</small></td><td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.q)}</td></tr>`).join('')}</tbody></table>
       ${rows.length > LIMIT ? `<p class="small muted">+ ${fmtNum(rows.length - LIMIT)} smaller developments.</p>` : ''}`;
   }
   const reg = c => { (DCN.reg || (DCN.reg = new Map())).set(c.id, c); return c; };
@@ -714,8 +717,18 @@
       ${cs.length ? `${needsTable(cs, ppu)}<p class="small muted">Room in units at ${ppu} persons per unit (apartment).</p>` : `<p class="small muted">${it.ln && it.ln.sys === 'wastewater' ? 'It does not run along an existing sanitary sewer of 300 mm or more (a new trunk or a local main).' : 'No tabled capacity matched to it.'}</p>`}
       ${conn.length ? `<p class="small"><strong>${fmtNum(conn.length)} development${conn.length === 1 ? '' : 's'}</strong> outside the existing network would connect to it.</p>` : ''}
       ${zoneNote}
-      <h3 class="sub-title">Developments relying on it</h3>
-      ${consDevsHTML(cs.filter(c => c.kind !== 'wplant' || cs.length === 1), [...conn, ...zoneRows])}`;
+      ${devsOfDcHTML(cs.filter(c => c.kind !== 'wplant' || cs.length === 1), conn, zoneRows)}`;
+  }
+  // Who relies on a DC project. Through an existing pipe or facility it relieves only where that
+  // runs short (a sewer with room to build-out needs no relief: the developments draining through
+  // it don't rely on the project, and their sewer trace runs through the existing pipe); and every
+  // development outside the network that would connect to the planned main itself.
+  function devsOfDcHTML(cs, conn, zoneRows) {
+    const short = cs.filter(c => c.status !== 'ok'), roomy = cs.filter(c => c.status === 'ok');
+    const relying = consDevsHTML(short, [...conn, ...zoneRows], { none: roomy.length ? 'None for capacity: what it relieves has room to build-out.' : undefined });
+    const through = roomy.length ? `<details class="dcn-more"><summary class="small">Developments draining through ${roomy.length === 1 ? `the ${esc(roomy[0].name)}` : 'what'} it relieves, which has room to build-out (they don't need this project)</summary>
+      ${consDevsHTML(roomy, [], { caption: `developments draining through ${roomy.length === 1 ? 'it' : 'them'}` })}</details>` : '';
+    return `<h3 class="sub-title">Developments relying on it</h3>${relying}${through}`;
   }
   // Panel for a planned main (tap on the map or a relief link).
   function showDcLine(ln) {
