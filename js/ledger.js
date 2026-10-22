@@ -38,7 +38,7 @@
   const DISCLAIMER = 'Public-data estimate. Not the Region’s committed capacity ledger.';
 
   const lazy = (name, file) => () => root[name] || (typeof require === 'function' ? require(file) : null);
-  const Ph = lazy('PeelPhases', './phases.js'), Dm = lazy('PeelDemand', './demand.js');
+  const Ph = lazy('PeelPhases', './phases.js'), Dm = lazy('PeelDemand', './demand.js'), PE = lazy('PeelPhaseEstimate', './phase-estimate.js');
   const ymd = t => (t != null && isFinite(+t) && +t > 0 ? new Date(+t).toISOString().slice(0, 10) : null);
   const tOf = s => (s ? Date.parse(`${s}T00:00:00Z`) : NaN);
 
@@ -83,6 +83,45 @@
     for (const k in out) out[k] /= all;
     out.later += Math.max(0, 1 - timed / all);
     return out;
+  }
+
+  // ---- Confidence tier (Phase 4; docs/pipeline-ledger-plan.md, D4: to confirm with Justin) ---------
+  // One tier per development, with its reasons:
+  //   A Underway                  a building permit, and the phase estimate (the permits' history and the
+  //                               site servicing permit, js/phase-estimate.js) says it is being built
+  //   B Committed                 a building or site servicing permit (the Peel rule, D1)
+  //   C Approved, not committed   draft or site plan approval (MECP D-5-1), no permit yet
+  //   D In review                 zoning, draft plan or site plan in review
+  //   E Early                     pre-consultation, or an official plan amendment only
+  // A flag lowers it one step (once, whatever the number of flags; each is listed): no file activity in
+  // 3 years, a superseded plan, a site servicing permit out of order (dc-gate), a possibly lapsed one.
+  const TIERS = [
+    { key: 'A', label: 'Underway' }, { key: 'B', label: 'Committed' }, { key: 'C', label: 'Approved, not committed' },
+    { key: 'D', label: 'In review' }, { key: 'E', label: 'Early' },
+  ];
+  const QUIET_YEARS = 3;
+  const OPA = /\bOPA\b|official plan amendment/i, NOT_OPA = /\bZBA?\b|zoning|rezoning|\bOZ\b|subdivision|site plan|\bSP\b|21T/i;
+  /** Its only formal files are official plan amendments (no zoning, draft plan or site plan). */
+  function opaOnly(p) {
+    const P = Ph(), f = (p.records || []).filter(r => r.kind === 'application' && r.phase !== 'cancelled' && P.fileKind(r) !== 'precon');
+    return f.length > 0 && f.every(r => P.fileKind(r) === 'use' && OPA.test(`${r.ref} ${r.type} ${r.description}`.slice(0, 300)) && !NOT_OPA.test(`${r.ref} ${r.type}`));
+  }
+  function tierOf(p, row, gate, asOf) {
+    const P = Ph(), reasons = [], flags = [];
+    let base;
+    const ground = row.buildingPermit.yes && PE() ? (PE().estimate(p, { servicing: gate ? gate.evidence : null, today: asOf }) || {}).key : null;
+    if (row.committedPeel && row.buildingPermit.yes && (ground === 'building' || ground === 'built')) { base = 'A'; reasons.push('a building permit, and its permits\u2019 history says it is being built'); }
+    else if (row.committedPeel) { base = 'B'; reasons.push(row.commitBy === 'servicing' || (gate && gate.bucket === 'counted') ? 'a site servicing permit' : 'a building permit'); }
+    else if (row.committedD51) { base = 'C'; reasons.push('draft or site plan approval, no permit yet'); }
+    else if (p.phase === 'review' && !opaOnly(p)) { base = 'D'; reasons.push('zoning, draft plan or site plan in review'); }
+    else { base = 'E'; reasons.push(p.phase === 'review' ? 'an official plan amendment only' : 'pre-consultation, or no review milestone yet'); }
+    const last = P.lastActivityOf(p);
+    if (last && asOf - last > QUIET_YEARS * YEAR_MS) flags.push(`no file activity since ${ymd(last)}`);
+    if ((p.records || []).some(r => r.kind === 'application' && r.phase !== 'cancelled' && r.superseded)) flags.push('a newer file on the same land supersedes a plan');
+    if (gate && (gate.outOfOrder || []).length) flags.push('a site servicing permit out of order (filed before the planning files)');
+    if (row.lapsed) flags.push(row.lapsed.why === 'cancelled' ? 'a site servicing permit cancelled by the city' : 'a site servicing permit possibly lapsed');
+    const i = TIERS.findIndex(t => t.key === base), tier = TIERS[Math.min(TIERS.length - 1, i + (flags.length ? 1 : 0))].key;
+    return { tier, base, label: TIERS.find(t => t.key === tier).label, reasons, flags, ground: ground || null };
   }
 
   /** The milestone bucket a year falls in (no year: after 2051 or not timed). */
@@ -155,9 +194,10 @@
         expectedYear: sch,
         milestone: bucketOf(sch && sch.likely),
         buckets: yrs && yrs.shares ? yrs.shares : bucketShares(null),
-        confidence: null,     // Phase 4
+        confidence: null,     // Phase 4: set below, once the row is whole
         sources: [...new Set((p.records || []).filter(r => r.kind === 'application').map(r => r.ref).filter(Boolean))].slice(0, 8),
       });
+      out[out.length - 1].confidence = tierOf(p, out[out.length - 1], gate, asOf);
     }
     return out;
   }
@@ -235,9 +275,12 @@
 
   /** Totals of a list of rows: units left, by stage, people, and the flags. */
   function totals(list) {
-    const t = { rows: 0, planned: 0, left: 0, people: 0, units: Object.fromEntries(STAGES.map(s => [s, 0])), lapsed: 0, lapsedUnits: 0, estimated: 0 };
+    const t = { rows: 0, planned: 0, left: 0, people: 0, units: Object.fromEntries(STAGES.map(s => [s, 0])), lapsed: 0, lapsedUnits: 0, estimated: 0,
+      tiers: Object.fromEntries(TIERS.map(x => [x.key, { rows: 0, left: 0, people: 0, base: 0, flagged: 0 }])) };
     for (const r of list || []) {
       t.rows++; t.planned += r.planned; t.left += r.left; t.people += r.people;
+      const c = r.confidence;
+      if (c) { const x = t.tiers[c.tier]; x.rows++; x.left += r.left; x.people += r.people; t.tiers[c.base].base++; if (c.flags.length) x.flagged++; }
       for (const s of STAGES) t.units[s] += r.units[s];
       if (r.lapsed) { t.lapsed++; t.lapsedUnits += r.left; }
       if (r.unitsEstimated) t.estimated++;
@@ -245,7 +288,7 @@
     return t;
   }
 
-  const api = { STAGES, STAGE_LABEL, CUTOFFS, BUCKETS, LAPSE_YEARS, DISCLAIMER, lapseOf, bucketShares, bucketOf, rows, rollup, sumOf, totals };
+  const api = { TIERS, QUIET_YEARS, opaOnly, tierOf, STAGES, STAGE_LABEL, CUTOFFS, BUCKETS, LAPSE_YEARS, DISCLAIMER, lapseOf, bucketShares, bucketOf, rows, rollup, sumOf, totals };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLedger = api;
 })(typeof window !== 'undefined' ? window : globalThis);
