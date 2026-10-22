@@ -79,6 +79,40 @@ def seg_dist(p, a, b):
 
 def poly_dist(p, poly): return min(seg_dist(p, a, b) for a, b in zip(poly, poly[1:]))
 
+def split_runs(pts, drop, step=0.5, min_len=3):
+    """The stretches of a polyline where drop(point) is false, cut where it turns true (sampled
+    every `step` pt; stubs shorter than `min_len` pt, a main grazing a box edge, are dropped)."""
+    samples = [(pts[0], True)]
+    for a, b in zip(pts, pts[1:]):
+        n = max(1, int(math.hypot(b[0] - a[0], b[1] - a[1]) / step))
+        samples += [((a[0] + (b[0] - a[0]) * i / n, a[1] + (b[1] - a[1]) * i / n), False) for i in range(1, n)] + [(b, True)]
+    runs, cur = [], []
+    for q, vertex in samples:
+        if drop(q):
+            if len(cur) > 1: runs.append(cur)
+            cur = []
+        else: cur.append((q, vertex))
+    if len(cur) > 1: runs.append(cur)
+    if len(runs) == 1 and len(runs[0]) == len(samples): return [pts]       # nothing cut
+    # Keep the original vertices and the cut ends.
+    runs = [[q for k, (q, v) in enumerate(r) if v or k in (0, len(r) - 1)] for r in runs]
+    return [r for r in runs if sum(math.hypot(b[0] - a[0], b[1] - a[1]) for a, b in zip(r, r[1:])) >= min_len]
+
+def midpoint(poly):
+    """The point halfway along a polyline (its middle vertex is an end on a two-point line, which
+    can sit on an inset's frame and read as the main map)."""
+    segs = [math.hypot(b[0] - a[0], b[1] - a[1]) for a, b in zip(poly, poly[1:])]
+    half = sum(segs) / 2
+    for (a, b), L in zip(zip(poly, poly[1:]), segs):
+        if half <= L and L: t = half / L; return (a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t)
+        half -= L
+    return poly[len(poly) // 2]
+
+def at_edge(p, r, tol=2.5):
+    """A point on the edge of a rectangle (within tol pt)."""
+    if not inside(p, r, tol): return False
+    return min(abs(p[0] - r[0]), abs(p[0] - r[2]), abs(p[1] - r[1]), abs(p[1] - r[3])) <= tol
+
 def utm_to_ll(E, N, zone=17):
     # Inverse transverse Mercator (GRS80; NAD83 ~ WGS84 at this scale).
     a = 6378137.0; f = 1 / 298.257222101; k0 = 0.9996; e2 = f * (2 - f); ep2 = e2 / (1 - e2)
@@ -118,10 +152,15 @@ def build(kind):
                 r = bbox_of(poly)
                 if r[2] - r[0] > 40 and r[3] - r[1] > 30 and len(poly) <= 6: frames.append(r)
     extents = [bbox_of(poly) for p in paths if p['dash'] and p['stroke'] and EXTENT in p['stroke'] for poly in p['polys']]
+    h = gzip.open(f'{SRC}/dc/{kind}.bbox.html.gz', 'rt').read()
+    words = [(float(a), float(b), float(c), float(d), t) for a, b, c, d, t in re.findall(r'<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">([^<]*)</word>', h)]
+    # The legend box has about the aspect ratio of an extent box too (it took the Gateway Terminal /
+    # Ray Lawson extent): it is never an inset.
+    legend = [f for f in frames if any(w[4] == 'Legend' and inside(((w[0] + w[2]) / 2, (w[1] + w[3]) / 2), f) for w in words)]
     # Pair each frame with the extent box of the same aspect ratio (inset maps); others are boxes.
     pairs = []
     used = set()
-    for f in sorted(frames, key=lambda r: -(r[2] - r[0]) * (r[3] - r[1])):
+    for f in sorted((f for f in frames if f not in legend), key=lambda r: -(r[2] - r[0]) * (r[3] - r[1])):
         fa = (f[2] - f[0]) / (f[3] - f[1])
         best = None
         for i, e in enumerate(extents):
@@ -149,14 +188,12 @@ def build(kind):
         if not cls or not p['w'] or p['w'] < 1.5: continue
         for poly in p['polys']:
             if len(poly) < 2: continue
-            mid = poly[len(poly) // 2]
+            mid = midpoint(poly)
             if in_box(mid) and not frame_of(mid): continue     # legend swatches
             fe = frame_of(mid)
             lines.append({'cls': cls, 'status': 'approved' if p['dash'] else 'proposed', 'src': poly, 'fe': fe})
     # Legend swatches: tiny isolated lines inside the legend box (frame without extent) are already dropped.
     # Labels: year / component / project blocks, and diameters.
-    h = gzip.open(f'{SRC}/dc/{kind}.bbox.html.gz', 'rt').read()
-    words = [(float(a), float(b), float(c), float(d), t) for a, b, c, d, t in re.findall(r'<word xMin="([\d.]+)" yMin="([\d.]+)" xMax="([\d.]+)" yMax="([\d.]+)">([^<]*)</word>', h)]
     projs = [w for w in words if re.fullmatch(r'\d\d-\d{4}', w[4])]
     comps = [w for w in words if re.fullmatch(r'\d{5}', w[4])]
     years = [w for w in words if re.fullmatch(r'20[2-5]\d', w[4])]
@@ -201,14 +238,34 @@ def build(kind):
                     ln.update(year=o['year'], comp=o['comp'], proj=o['proj'], inherited=True); changed = True; break
         if not changed: break
     # Main-map pieces inside an inset extent are drawn again (labelled) in the inset: keep the inset's.
+    # Only where the inset has the same kind of main: a main often runs on past the box, and an inset
+    # can leave out a trunk main the main map draws through its box (Kennedy Rd, Bramalea GO).
     extents_used = [e for f, e in pairs]
+    inset_pts = defaultdict(list)
+    for ln in lines:
+        if ln['fe']:
+            for a, b in zip(ln['src'], ln['src'][1:]):
+                n = max(1, int(math.hypot(b[0] - a[0], b[1] - a[1]) / 2))
+                for i in range(n + 1):
+                    q = to_main((a[0] + (b[0] - a[0]) * i / n, a[1] + (b[1] - a[1]) * i / n), ln['fe'])
+                    inset_pts[(ln['cls'], int(q[0]), int(q[1]))].append(q)
+    def redrawn(q, cls):
+        if not any(inside(q, e) for e in extents_used): return False
+        return any(math.hypot(q[0] - p[0], q[1] - p[1]) < 1.5 for i in (-2, -1, 0, 1, 2) for j in (-2, -1, 0, 1, 2)
+                   for p in inset_pts[(cls, int(q[0]) + i, int(q[1]) + j)])
     out = []
     for ln in lines:
         pts = [to_main(p, ln['fe']) for p in ln['src']]
-        if not ln['fe'] and any(inside(pts[len(pts) // 2], e) for e in extents_used): continue
+        runs = [pts] if ln['fe'] else split_runs(pts, lambda q: redrawn(q, ln['cls']))
         dia = max(set(ln.get('dias', [])), key=ln.get('dias', []).count) if ln.get('dias') else None
-        out.append({'k': ln['cls'], 's': ln['status'], 'y': ln.get('year'), 'c': ln.get('comp'), 'p': ln.get('proj'), 'd': dia,
-                    'g': [to_ll(*p) for p in pts]})
+        # Ends the map cuts off: on the edge of the inset frame (or of the map, or under a box drawn
+        # over it), where the main runs on beyond what the map shows ('x': which ends, 0 / 1).
+        edges = [ln['fe'][0]] if ln['fe'] else [outer] + frames
+        for run in runs:
+            ends_pg = [ln['src'][0], ln['src'][-1]] if ln['fe'] else [run[0], run[-1]]
+            x = [i for i, q in enumerate(ends_pg) if any(at_edge(q, r) for r in edges)]
+            out.append({'k': ln['cls'], 's': ln['status'], 'y': ln.get('year'), 'c': ln.get('comp'), 'p': ln.get('proj'), 'd': dia,
+                        'g': [to_ll(*p) for p in run], **({'x': x} if x else {})})
     # Facility symbols are characters of an Esri symbol font: the character gives the kind, the
     # fill of its glyph the status (approved 2026 / proposed 2027-2051 / existing).
     svg = gzip.open(f'{SRC}/dc/{kind}.svg.gz', 'rt').read()

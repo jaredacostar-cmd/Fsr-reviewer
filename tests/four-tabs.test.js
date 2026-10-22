@@ -31,7 +31,7 @@ function loadTabs({ labs = [], site = false, publicView = false, siteEas = 3 } =
 
 // The spec's inventory: the chips each tab shows at each scope.
 const SPEC = {
-  area: { overview: [], growth: ['pipeline', 'areas', 'timing'], svc: ['capacity', 'network', 'alloc', 'checks'], dca: ['timing', 'projects', 'eas'], records: ['sources', 'checks'] },
+  area: { overview: [], growth: ['pipeline', 'areas', 'timing', 'ledger'], svc: ['capacity', 'network', 'alloc', 'checks'], dca: ['timing', 'projects', 'eas'], records: ['sources', 'checks'] },
   site: { overview: [], growth: ['pipeline'], svc: ['network'], dca: ['timing', 'eas'], records: ['files'] },
 };
 
@@ -61,7 +61,7 @@ test('1. sub-views per scope match the spec (Peel / area and a development)', ()
   // The chip rows in index.html: one per tab, in the spec's order and words.
   const row = tab => { const i = HTML.indexOf(`f-subtabs`, HTML.indexOf(`data-pane="${tab}" hidden role="group"`) - 80); const s = HTML.slice(i, HTML.indexOf('</div>', i)); return [...s.matchAll(/data-(?:gsub|svcsub|dcasub|rsub)="(\w+)">([^<]+)</g)].map(m => m[2].trim()); };
   // (no two sub-views share a name: design bundle 2)
-  assert.deepEqual(row('growth'), ['Pipeline', 'Areas', 'Forecast']);
+  assert.deepEqual(row('growth'), ['Pipeline', 'Areas', 'Forecast', 'Ledger']);
   assert.deepEqual(row('svc'), ['Capacity', 'Network', 'Allocations', 'Model checks']);
   assert.deepEqual(row('dca'), ['DC timing', 'Projects', 'EAs', 'Funding']);
   assert.deepEqual(row('records'), ['Sources', 'Data checks', 'Files']);

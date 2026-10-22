@@ -211,6 +211,7 @@
   --ly-existing: #3b4a5e;
   --ly-built: #5f7fae;
   --ly-committed: #7fa6ee;
+  --ly-approved: #a9c4f5;   /* Approved, not committed (the Peel rule): between committed and in review */
   --ly-proposed: #cfe0fb;
   --ly-anticipated: #cfe0fb;
   --ly-to2051: #cfe0fb;
@@ -221,7 +222,7 @@
   --ly-over: repeating-linear-gradient(135deg, #f0665f 0 3px, transparent 3px 6px);
   --ly-hatch: repeating-linear-gradient(135deg, rgba(16, 33, 58, .55) 0 2px, transparent 2px 5px);
 }
-:root[data-theme="light"] { --ly-track: #e4e3dc; --ly-trigger: #1b1b1a; --ly-committed: #5f8fe0; --ly-proposed: #c2d6f7; --ly-anticipated: #c2d6f7; }
+:root[data-theme="light"] { --ly-track: #e4e3dc; --ly-trigger: #1b1b1a; --ly-committed: #5f8fe0; --ly-proposed: #c2d6f7; --ly-approved: #93b4ec; --ly-anticipated: #c2d6f7; }
 
 /* Stacking layers, low to high (one name per layer; z-index 1–5 stay local to a component). */
 :root {
@@ -1405,6 +1406,34 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .dc-fac.later span { opacity: .45; }
 .dc-fac.lg { display: inline-block; vertical-align: middle; margin-right: var(--space-1); }
 .dc-fac.lg span { width: 14px; height: 14px; background: var(--text-muted); font-size: var(--fs-1); }
+/* DC joins (js/dc-joins.js): each planned main's end and the line to what it joins, by how sure the
+   join is; reviewed joins in the selection colour. */
+.dcj-end { stroke: var(--on-tint); stroke-width: 1.5; fill-opacity: 1; }
+.dcj-link { stroke-width: 2; stroke-dasharray: 3 3; fill: none; }
+.dcj-drawn { fill: var(--cap-room); stroke-opacity: .9; }
+.dcj-link.dcj-drawn { stroke: var(--cap-room); }
+.dcj-bridged { fill: var(--cap-tight); }
+.dcj-link.dcj-bridged { stroke: var(--cap-tight); }
+.dcj-far { fill: var(--cap-over); }
+.dcj-link.dcj-far { stroke: var(--cap-over); }
+.dcj-open { fill: var(--hue-grey); }
+.dcj-edge { fill: var(--hue-grey); stroke-dasharray: 2 2; }
+.dcj-head { fill: var(--hue-grey); }
+.dcj-facility { fill: var(--cap-room); stroke-width: 3; }
+.dcj-link.dcj-facility { stroke: var(--cap-room); }
+.dcj-zone { fill: var(--hue-violet); }
+.dcj-unjoined { fill: var(--cap-over); }
+.dcj-reviewed { fill: var(--select); }
+.dcj-link.dcj-reviewed { stroke: var(--select); stroke-dasharray: none; }
+.dcj-pop p { margin: var(--space-1) 0; }
+.dcj-popup .leaflet-popup-content-wrapper, .dcj-popup .leaflet-popup-tip { background: var(--surface-1); color: var(--text-primary); }
+.dcj-edit-ring { stroke: var(--select); stroke-width: 2; fill: none; stroke-dasharray: 3 2; }
+.dcj-tag { display: inline-block; margin: 0 var(--space-1) 2px 0; padding: 0 6px; border-radius: 3px; background: var(--select); color: var(--surface-1); font-weight: 600; font-size: var(--fs-1); }
+.dcj-edited-note { color: var(--select); }
+.dcj-acts { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.dcj-picking, .dcj-picking .leaflet-interactive { cursor: crosshair !important; }
+.lg-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; vertical-align: middle; margin-right: 3px; }
+
 .lg-line { display: inline-block; width: 18px; height: 4px; border-radius: 4px; flex: none; margin-right: var(--space-1); }
 .lg-line.dash { background: repeating-linear-gradient(90deg, var(--text-muted) 0 5px, transparent 5px 9px); }
 .lg-line[style*="--lg-c"] { background: var(--lg-c); }
@@ -2422,6 +2451,8 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .ly-existing { background: var(--ly-existing); }
 .ly-built { background: var(--ly-built); }
 .ly-committed { background: var(--ly-committed); }
+.ly-commitPeel { background: var(--ly-committed); }
+.ly-approved { background: var(--ly-approved); }
 .ly-proposed { background: var(--ly-proposed); }
 .ly-anticipated { background: var(--ly-hatch), var(--ly-anticipated); opacity: .85; }
 .ly-to2051 { background: transparent; outline: 1px dashed var(--ly-to2051); outline-offset: -1px; }
@@ -3811,3 +3842,35 @@ button.gtm-h { cursor: pointer; }
 .home-map-svg .hm-ring { fill: none; stroke: var(--select); stroke-width: 2.5; pointer-events: none; }
 .home-map-svg .hm-ring-s { stroke-width: 1.5; }
 .home-map-svg .hm-sub.on { fill: color-mix(in srgb, var(--select) 12%, transparent); stroke: var(--select); stroke-width: 2; stroke-dasharray: none; opacity: 1; }
+
+/* ---- Growth › Ledger (the pipeline ledger, js/ledger-ui.js) ------------------------------------ */
+.ldg-ctl { display: flex; flex-wrap: wrap; gap: var(--space-2); align-items: center; margin: var(--space-2) 0; }
+.ldg-grp { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.ldg-grp .btn.on { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+.ldg-lapse { display: inline-flex; gap: var(--space-1); align-items: center; color: var(--text-secondary); }
+.ldg-key { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); margin: 0 0 var(--space-1); color: var(--text-secondary); }
+.ldg-k { display: inline-flex; gap: var(--space-1); align-items: center; }
+.ldg-sw { display: inline-block; width: 12px; height: 12px; border-radius: 2px; border: 1px solid var(--border); }
+.ldg-bar { display: flex; height: 4px; margin-top: 2px; border-radius: 2px; overflow: hidden; background: var(--ly-track); }
+.ldg-seg { display: block; height: 100%; }
+.ldg-table td { vertical-align: top; }
+.ldg-table .ldg-peel th, .ldg-table .ldg-peel td { border-top: 2px solid var(--border); font-weight: 600; }
+.ldg-disc { color: var(--text-muted); font-style: italic; margin: var(--space-1) 0 var(--space-2); }
+.ldg-notes { margin: var(--space-1) 0 var(--space-2); padding-left: var(--space-3); }
+.ldg-list td { vertical-align: top; }
+.ldg-list td:first-child { white-space: normal; min-width: 180px; }
+.ldg-list td small, .ldg-list th small { display: block; color: var(--text-muted); }
+.ldg-list th .btn.link { padding: 0; font: inherit; color: inherit; }
+.ldg-row { cursor: pointer; }
+.ldg-row:hover td, .ldg-row:focus-visible td { background: var(--surface-2); }
+.ldg-list td small.ldg-flag { color: var(--cap-tight-t); }
+.ldg-list td small.ldg-st-sm { display: none; }
+.ldg-tier { display: inline-block; min-width: 1.5em; padding: 0 var(--space-1); border: 1px solid var(--border); border-radius: 4px; text-align: center; font-weight: 600; }
+.ldg-tiers th .ldg-tier { margin-right: var(--space-1); }
+@media (max-width: 480px) {
+  .ldg-table th, .ldg-table td, .ldg-list th, .ldg-list td { padding: var(--space-1); }
+  .ldg-list td:first-child { min-width: 0; }
+  .ldg-list .ldg-st { display: none; }
+  .ldg-list td small.ldg-st-sm { display: block; }
+  .ldg-tiers th, .ldg-tiers td { white-space: normal; padding: var(--space-1); }
+}

@@ -29,6 +29,8 @@
     { id: 'projects', label: 'DC projects', group: 'Capital', tab: 'dca', sub: 'timing', scope: 'area', view: 'dc', what: 'Is each DC project in time?' },
     { id: 'eaflow', label: 'EA to construction', group: 'Capital', tab: 'dca', sub: 'eas', scope: 'area', view: 'dc', what: 'Each EA and the construction after it' },
     { id: 'pipes', label: 'Old pipes', group: 'Asset Management', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Old sewers that carry the most growth' },
+    // The pipeline ledger (docs/pipeline-ledger-plan.md, Phase 2): Growth › Ledger on a page.
+    { id: 'coming', label: 'What\u2019s coming', group: 'Planning', tab: 'growth', sub: 'ledger', scope: 'area', view: 'planning', what: 'Homes and people by stage and milestone' },
     { id: 'week', label: 'This week', group: 'Planning', tab: 'overview', sub: '', scope: 'area', view: 'planning', what: 'Files moved, new files, capital and EA dates' },
   ];
   const BY_ID = Object.fromEntries(WS.map(w => [w.id, w]));
@@ -45,6 +47,7 @@
     eaflow: ['ea', 'cons'],                         // EA study areas, Region construction
     pipes: [],                                      // the old pipes only (drawn by this module)
     week: ['devs'],
+    coming: ['devs'],
   };
   // Explore (step 3 of the page plan): Growth in an area, Check a site, Review an FSR, Forecast and
   // Study area are the views of one workspace, one entry in Home's sidebar. A site picked from an area
@@ -66,7 +69,7 @@
   const SITE_MAP = ['devs', 'ex-water', 'ex-sanitary', 'ex-storm', 'dcw', 'cons', 'ea'];
   // Home's sidebar: by team (Servicing capacity with Planning), then Full map.
   const GROUPS = [
-    ['Planning', ['explore', 'tight']],
+    ['Planning', ['explore', 'tight', 'coming']],
     ['Capital', ['capital']],
     ['Asset Management', ['pipes']],
   ];
@@ -80,7 +83,7 @@
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Servicing › Model checks / Records › Data checks,
   // Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.
-  const SUB_NAME = { capacity: 'Capacity', network: 'Network', alloc: 'Allocations', 'svc:checks': 'Model checks', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', 'dca:timing': 'DC timing', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
+  const SUB_NAME = { capacity: 'Capacity', network: 'Network', alloc: 'Allocations', 'svc:checks': 'Model checks', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', ledger: 'Ledger', 'dca:timing': 'DC timing', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
   const tabPath = (tab, sub) => [TAB_NAME[tab] || tab, sub ? SUB_NAME[`${tab}:${sub}`] || SUB_NAME[sub] || sub : ''].filter(Boolean).join(' › ');
   // What a chip does: the tab, sub-view, scope and preset; closeScopes = area chips leave a site.
   function plan(id, ctx = {}) {

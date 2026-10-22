@@ -279,13 +279,15 @@
     return null;
   }
 
-  /** One observation per site and stage it entered (dated, since 2016): months to its first completion. */
-  function curveObservations(projects, now = Date.now()) {
+  /** One observation per site and stage it entered (dated, since 2016): months to its first completion.
+   *  opts.munis: only these municipalities' sites (a Set). A completion after `now` is not known yet (the
+   *  backtest's past "now"): the site is still waiting then. */
+  function curveObservations(projects, now = Date.now(), opts = {}) {
     const out = [];
     for (const p of projects || []) {
-      if (!p || p.phase === 'cancelled') continue;
-      const ms = p.milestones || {}, done = +ms.completed || null;
-      if (p.phase === 'completed' && !done) continue;           // finished on a date not published
+      if (!p || p.phase === 'cancelled' || (opts.munis && !opts.munis.has(p.municipality))) continue;
+      const ms = p.milestones || {}, done0 = +ms.completed || null, done = done0 && done0 <= now ? done0 : null;
+      if (p.phase === 'completed' && !done0) continue;          // finished on a date not published
       const size = sizeOf(p.units || 0);
       for (const stage of CURVE_STAGES) {
         const entry = +ms[stage] || null;
@@ -304,9 +306,61 @@
     return out;
   }
   /** The curve for a stage and size: the size's own, the stage's, then the stage it falls back to. */
-  function curveFor(curves, stage, units) {
-    const own = st => [`${st}|${sizeOf(units)}`, `${st}|*`].map(k => curves && curves[k]).find(c => c && c.n >= MIN_CURVE_N);
+  function curveKeyFor(curves, stage, units) {
+    const own = st => [`${st}|${sizeOf(units)}`, `${st}|*`].find(k => curves && curves[k] && curves[k].n >= MIN_CURVE_N);
     return own(stage) || (CURVE_FALLBACK[stage] ? own(CURVE_FALLBACK[stage]) : null) || null;
+  }
+  function curveFor(curves, stage, units) { const k = curveKeyFor(curves, stage, units); return k ? curves[k] : null; }
+  // The municipalities that date their completions (Mississauga): the curves come from their sites
+  // alone and time every municipality's. Brampton and Caledon publish no completion date, so their
+  // finished sites drop out and only the ones still waiting would count, which would make the curves
+  // too slow (decided 2026-10-22, pipeline ledger Phase 3; docs/ledger/backtest.md).
+  function datedMunis(projects) {
+    const out = new Set();
+    for (const p of projects || []) if (p && p.phase !== 'cancelled' && p.milestones && +p.milestones.completed) out.add(p.municipality);
+    return out;
+  }
+
+  /**
+   * Backtest (pipeline ledger, Phase 3): the sites as they stood on `asOf` (the furthest stage each had
+   * entered by then, not yet built), each one's first-completion year predicted from curves of what was
+   * known then (opts.curveMunis: the municipalities whose sites build the curves), against the year it
+   * actually first completed. Only municipalities that date completions can be checked (opts.testMunis).
+   * A site is judged when it finished by `now`, or when its likely year has passed without it finishing;
+   * one still waiting with a likely year still ahead can't be judged yet. Range: the fast (high band) to
+   * the slow (low band) year. → { asOf, sites, judged, inRange, within1, unitsJudged, unitsInRange,
+   *   medianError (likely − actual, years), beyond (no year: past what the history shows), open }
+   */
+  function backtest(projects, asOf, opts = {}) {
+    const now = opts.now || Date.now(), yOf = t => new Date(t).getUTCFullYear(), yNow = yOf(now);
+    const curves = stageCurves(curveObservations(projects, asOf, { munis: opts.curveMunis }));
+    const rank = Object.fromEntries(CURVE_STAGES.map((st, i) => [st, i]));
+    const out = { asOf: new Date(asOf).toISOString().slice(0, 10), sites: 0, judged: 0, inRange: 0, within1: 0, unitsJudged: 0, unitsInRange: 0, beyond: 0, open: 0, errors: [] };
+    for (const p of projects || []) {
+      if (!p || p.phase === 'cancelled' || (opts.testMunis && !opts.testMunis.has(p.municipality))) continue;
+      const ms = p.milestones || {}, done = +ms.completed || null;
+      if ((p.phase === 'completed' && !done) || (done && done <= asOf)) continue;
+      let stage = null, entry = null;
+      for (const st of CURVE_STAGES) { const t = +ms[st] || null; if (t && t <= asOf && t >= CURVE_FROM && (!stage || rank[st] > rank[stage])) { stage = st; entry = t; } }
+      if (!stage) continue;
+      const c = curveFor(curves, stage, p.units || 0); if (!c) continue;
+      const e = (asOf - entry) / MONTH_MS;
+      const yr = b => { const m = remainingMonths(c, e, BAND_Q[b]); return m == null ? null : yOf(asOf + m * MONTH_MS); };
+      const fast = yr('high'), likely = yr('likely'), slow = yr('low'), actual = done ? yOf(done) : null, u = Math.max(1, p.units || 0);
+      out.sites++;
+      if (likely == null) { out.beyond++; continue; }
+      if (actual == null && likely >= yNow) { out.open++; continue; }
+      const got = actual == null ? yNow : actual;   // (not finished by now: at least this late)
+      const hit = actual != null && actual >= fast && (slow == null || actual <= slow);
+      out.judged++; out.unitsJudged += u;
+      if (hit) { out.inRange++; out.unitsInRange += u; }
+      if (actual != null && Math.abs(likely - actual) <= 1) out.within1++;
+      out.errors.push(likely - got);
+    }
+    const er = out.errors.slice().sort((a, b) => a - b);
+    out.medianError = er.length ? er[er.length >> 1] : null;
+    delete out.errors;
+    return out;
   }
 
   /**
@@ -393,6 +447,45 @@
     }
     return { sched, after, nowYear: nowY, endYear: endY };
   }
+  /**
+   * A development's expected year (pipeline ledger, Phase 3), from its own schedule in the forecast
+   * model (m: forecastModel(), the schedules the Forecast view adds up): the year by which half of
+   * what a band expects of it has finished. low from the fast band (high), high from the slow (low); a
+   * band that leaves half or more past the forecast's last year gives null. basis: what it stands on,
+   * { stage, size, curve (stage|size key), n, done (sites that finished), queued (past what similar
+   * sites show: timed by the homes the population needs), rates (muni|type key), ratesN, borrowed
+   * (its municipality dates no completions: timed with the others') }. null: nothing to time.
+   */
+  function scheduleFor(p, m) {
+    if (!p || !m || !m.ss) return null;
+    const s = m.ss.sched.get(p.key), a = m.ss.after.get(p.key);
+    if (!s && !a) return null;
+    const half = b => {
+      const ys = Object.entries((s && s[b]) || {}).map(([y, v]) => [+y, v]).sort((x, y) => x[0] - y[0]);
+      const tot = ys.reduce((t, [, v]) => t + v, 0) + (a ? a[b] : 0);
+      if (!(tot > 0)) return null;
+      let c = 0;
+      for (const [y, v] of ys) { c += v; if (c >= tot / 2 - 1e-9) return y; }
+      return null;
+    };
+    const it = pipelineItems([p])[0];
+    let basis = null;
+    if (it) {
+      const ck = curveKeyFor(m.curves, it.stage, it.units), c = ck ? m.curves[ck] : null, row = m.cal ? rowFor(m.cal, it.muni, it.btype) : null;
+      const e = Math.max(0, ((m.now || Date.now()) - (it.stageDate || m.now)) / MONTH_MS);
+      basis = { stage: it.stage, size: sizeOf(it.units), btype: it.btype, curve: ck, n: c ? c.n : 0, done: c ? c.done : 0,
+        queued: it.stage !== 'construction' && (!c || remainingMonths(c, e, BAND_Q.likely) == null),
+        rates: row ? row.key : null, ratesN: row ? (row.nApp || 0) + (row.nPermit || 0) : 0,
+        borrowed: !!(m.munis && m.munis.size && !m.munis.has(p.municipality)) };
+    }
+    // (each band scales and queues the homes its own way, so its middle year can fall either side of
+    // the likely one: the range is widened to hold it)
+    const likely = half('likely'), fast = half('high'), slow = half('low');
+    const low = fast == null || likely == null ? fast : Math.min(fast, likely);
+    const high = slow == null || likely == null ? slow : Math.max(slow, likely);
+    return { likely, low, high, basis };
+  }
+
   /** Yearly bands for the sites in `items`, from stageSchedules over all sites (the forecastBands shape). */
   function bandsFromSchedules(items, ss) {
     const years = [];
@@ -632,10 +725,11 @@
     const key = [window.PeelUtil.idOf ? window.PeelUtil.idOf(app.state.projects) : 0, app.state.projects.reduce((t, p) => t + (p.units || 0), 0), H ? 1 : 0, F ? 1 : 0, new Date(now).toISOString().slice(0, 10)].join('|');
     if (forecastModel.key !== key) {
       const cal = calibrate(observationsFromProjects(app.state.projects));
-      const curves = stageCurves(curveObservations(app.state.projects, now));
+      const munis = datedMunis(app.state.projects);
+      const curves = stageCurves(curveObservations(app.state.projects, now, { munis }));
       const homes = homesNeeded(H && H.mof && H.mof.peel, F && F.municipalities);
       const ss = stageSchedules(pipelineItems(app.state.projects), cal, { curves, homes, now });
-      forecastModel.key = key; forecastModel.m = { cal, curves, homes, ss, F, now };
+      forecastModel.key = key; forecastModel.m = { cal, curves, homes, ss, F, now, munis };
     }
     return forecastModel.m;
   }
@@ -768,7 +862,7 @@
       ${calibTable}
       ${plantsTable}
       ${waterTable}
-      <p class="small muted">ⓘ Forecast — a statistical screening estimate, not a prediction for any one site. Each site's finish year comes from how long it has already waited in its stage: among sites of the same stage and size (under 10, 10–99, 100+ units) that entered the stage since 2016, the time still to their first completion for those unfinished after that long (Kaplan–Meier, so sites still waiting count; LIKELY when half have finished, HIGH a quarter, LOW three quarters). Sites waiting longer than most similar sites ever have are beyond the data: they fill each year up to the homes the Ministry of Finance population projection for Peel needs (growth ÷ the people per new home in the Region's 2051 allocation; a municipality its share of that allocation; none in a year the population falls), furthest along and oldest first; one under construction finishes from next year. A site of 100+ units finishes about ${PHASE_UNITS} units a year from its first completion. Approval and completion rates are calibrated from the dated application and permit events in the municipal files since 2016, by municipality and building type (cohorts ${cal.cohorts[0]}–${cal.cohorts[cal.cohorts.length - 1]}, so every project had 5+ years of follow-up; ${fmtNum(cal.nObs)} dated observations; Wilson 95% intervals; cells with fewer than ${cal.minN} observations fall back to coarser aggregates). Rates count a project as approved / completed from its current phase where the dated event is missing (dated completion events are sparse outside Mississauga); LOW uses the low rate bound, HIGH the high one. Trigger years phase each facility's approved / proposed flow layers in over windows from the calibrated lags and scale them by the calibrated rates — they are not the plant Horizon assumptions on the Wastewater tab. Calibrated on all projects, and every site in Peel queues for the same homes; the forecast shows the developments shown. Applications as of <strong>${esc(asof)}</strong>.</p>`;
+      <p class="small muted">ⓘ Forecast — a statistical screening estimate, not a prediction for any one site. Each site's finish year comes from how long it has already waited in its stage: among sites of the same stage and size (under 10, 10–99, 100+ units) that entered the stage since 2016, the time still to their first completion for those unfinished after that long (Kaplan–Meier, so sites still waiting count; LIKELY when half have finished, HIGH a quarter, LOW three quarters). The sites compared are those of the municipalities that date their completions (${esc([...(forecastModel() || {}).munis || []].join(' and ') || 'none')}); Brampton and Caledon publish no completion dates, so their sites are timed the same way. Sites waiting longer than most similar sites ever have are beyond the data: they fill each year up to the homes the Ministry of Finance population projection for Peel needs (growth ÷ the people per new home in the Region's 2051 allocation; a municipality its share of that allocation; none in a year the population falls), furthest along and oldest first; one under construction finishes from next year. A site of 100+ units finishes about ${PHASE_UNITS} units a year from its first completion. Approval and completion rates are calibrated from the dated application and permit events in the municipal files since 2016, by municipality and building type (cohorts ${cal.cohorts[0]}–${cal.cohorts[cal.cohorts.length - 1]}, so every project had 5+ years of follow-up; ${fmtNum(cal.nObs)} dated observations; Wilson 95% intervals; cells with fewer than ${cal.minN} observations fall back to coarser aggregates). Rates count a project as approved / completed from its current phase where the dated event is missing (dated completion events are sparse outside Mississauga); LOW uses the low rate bound, HIGH the high one. Trigger years phase each facility's approved / proposed flow layers in over windows from the calibrated lags and scale them by the calibrated rates — they are not the plant Horizon assumptions on the Wastewater tab. Calibrated on all projects, and every site in Peel queues for the same homes; the forecast shows the developments shown. Applications as of <strong>${esc(asof)}</strong>.</p>`;
   }
 
   // ---- Public contract ----
@@ -776,7 +870,7 @@
     BANDS, COHORT_YEARS, MIN_N, FORECAST_YEARS,
     btypeOf, wilson, quantiles, calibrate, rowFor,
     projectSchedule, forecastBands, facilityBands, triggerRangeText,
-    survival, survivalAt, remainingMonths, curveObservations, stageCurves, curveFor, homesNeeded, allocationPace, stageSchedules, bandsFromSchedules, forecastModel,
+    survival, survivalAt, remainingMonths, curveObservations, stageCurves, curveFor, curveKeyFor, datedMunis, scheduleFor, BTYPE_LABEL, backtest, homesNeeded, allocationPace, stageSchedules, bandsFromSchedules, forecastModel,
     PHASE_UNITS, MIN_CURVE_N, SIZE_LABEL, QUEUE_ORDER, CURVE_STAGES,
     observationsFromProjects, pipelineItems, renderTiming, cumulative, yearTicks,
   };

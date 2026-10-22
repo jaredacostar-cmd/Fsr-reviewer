@@ -18,18 +18,30 @@
   //   ofFile(r, p)    → { layer, units, confidence }
   //   totals(devs, opts) → { units: {layer: n}, people: {layer: n}, jobs, devs: {layer: n} }
   //   toTarget(target, t) → units the plan allows beyond the applied-for layers (≥ 0)
-  // Pure; opts: { censusDate ('2021-05-11'), criteria, jobsOf(p) }.
+  // Pure; opts: { censusDate ('2021-05-11'), criteria, jobsOf(p), commit, gateOf(p), asOf }.
+  //
+  // The commitment rule (D1, settled 2026-10-21; docs/pipeline-ledger-plan.md). opts.commit 'peel' (the
+  // default "committed" of the Overview, the briefing and the ledger) splits the units still to build into
+  //   commitPeel   Committed: a site servicing permit (the whole development) or a building permit (the
+  //                units it covers), js/demand.js committedPeelUnits; a servicing permit possibly lapsed
+  //                (js/ledger.js lapseOf) commits nothing
+  //   approved     Approved, not committed: D-5-1's committed units no permit covers yet
+  // and leaves committed at 0. 'd51' (the default here: the capacity model, the layer bar's checks) keeps
+  // Committed as MECP D-5-1. gateOf(p): its data/dc-gate.json row; asOf: the lapse clock (epoch ms).
   const req = f => (typeof require === 'function' ? require(f) : null);
   const P = () => root.PeelPhases || req('./phases.js');
   const D = () => root.PeelDemand || req('./demand.js');
   const A = () => root.PeelAreas || req('./areas.js');
+  const LG = () => root.PeelLedger || req('./ledger.js');
 
   const LAYERS = ['existing', 'built', 'committed', 'proposed', 'anticipated', 'to2051'];
-  const LABEL = { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Approved, not yet built (committed)', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
+  const LABEL = { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Approved, not yet built (committed, MECP D-5-1)', commitPeel: 'Committed (building or site servicing permit)', approved: 'Approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
   const NOTE = {
     existing: 'on the system today (2021 Census)',
     built: 'completed since census day, not in the census yet',
     committed: 'draft plan or site plan approved, through permit and construction (MECP D-5-1)',
+    commitPeel: 'a site servicing permit (the whole development) or a building permit (the units it covers), filed or issued',
+    approved: 'draft plan or site plan approved, no building or site servicing permit yet',
     proposed: 'under formal review, not approved',
     anticipated: 'pre-consultation, block or precinct plan: no formal file yet',
     to2051: 'the plan allows it, not yet applied for',
@@ -38,7 +50,9 @@
   const PHASE_LAYER = { inception: 'anticipated', review: 'proposed', approved: 'committed', permit: 'committed', construction: 'committed', completed: 'built', cancelled: null };
   const CENSUS_DATE = '2021-05-11';
   const ESTIMATED = new Set(['online', 'precon', 'estimate', 'permits']);
-  const zero = () => ({ existing: 0, built: 0, committed: 0, proposed: 0, anticipated: 0 });
+  const zero = (commit = 'd51') => (commit === 'peel' ? { existing: 0, built: 0, committed: 0, commitPeel: 0, approved: 0, proposed: 0, anticipated: 0 } : { existing: 0, built: 0, committed: 0, proposed: 0, anticipated: 0 });
+  // The stages the Overview lists under each rule, furthest along first.
+  const KEYS = { d51: ['existing', 'built', 'committed', 'proposed', 'anticipated'], peel: ['existing', 'built', 'commitPeel', 'approved', 'proposed', 'anticipated'] };
 
   const censusMs = opts => +new Date(`${(opts && opts.censusDate) || CENSUS_DATE}T00:00:00Z`);
   const livePermits = p => (p.records || []).filter(r => r.kind === 'permit' && r.phase !== 'cancelled' && !r.prePlan && !r.outside);
@@ -88,8 +102,8 @@
   }
 
   function ofDev(p, opts = {}) {
-    const layer = layerOf(p, opts);
-    const parts = zero();
+    let layer = layerOf(p, opts);
+    const parts = zero(opts.commit);
     const out = { layer, units: 0, parts, unbuilt: 0, toPermit: 0, estimated: 0, confidence: 'stated', people: 0, jobs: 0, estimatedDates: false };
     if (!layer || !p) return out;
     const units = p.units > 0 ? p.units : 0;
@@ -111,10 +125,26 @@
     const est = ((p.count && p.count.parts) || []).filter(x => ESTIMATED.has(x.kind)).reduce((t, x) => t + x.units, 0);
     out.estimated = Math.min(est, rest);
     out.confidence = confidenceOf(p);
+    if (opts.commit === 'peel') { layer = toPeel(p, out, layer, opts); out.layer = layer; }
     const jobs = opts.jobsOf ? opts.jobsOf(p) || 0 : 0;
     out.jobs = jobs;
     out.people = Object.fromEntries(Object.entries(parts).map(([k, v]) => [k, peopleOf(p, v, opts)]));
     return out;
+  }
+
+  // Under the Peel rule: the committed units out of the part still to build (a completed development's
+  // open permits are held in committed), the rest of D-5-1's committed is approved, not committed.
+  function toPeel(p, out, layer, opts) {
+    const gate = opts.gateOf ? opts.gateOf(p) || null : null;
+    const c = D().committedPeelUnits(p, gate);
+    let pc = c.units;
+    if (c.by === 'servicing' && opts.asOf != null) { const l = LG().lapseOf(gate, D().buildingPermitsOf(p), +opts.asOf); if (l && l.why === 'old') pc = 0; }
+    const parts = out.parts, k = layer === 'built' || layer === 'existing' ? 'committed' : layer;
+    pc = Math.min(pc, parts[k] || 0);
+    parts[k] -= pc; parts.commitPeel = pc;
+    parts.approved += parts.committed; parts.committed = 0;
+    if (pc > 0 && (layer === 'committed' || layer === 'proposed' || layer === 'anticipated')) return 'commitPeel';
+    return layer === 'committed' ? 'approved' : layer;
   }
 
   /** A single file: its own phase's layer and its own units in the development's count. */
@@ -127,7 +157,7 @@
   }
 
   function totals(devs, opts = {}) {
-    const units = zero(), people = zero(), n = zero(), est = zero();
+    const units = zero(opts.commit), people = zero(opts.commit), n = zero(opts.commit), est = zero(opts.commit);
     let jobs = 0, estimated = 0;
     for (const p of devs) {
       const L = ofDev(p, opts); if (!L.layer) continue;
@@ -263,7 +293,7 @@
     return `About ${strong(r(pl.total))} homes are in the planning pipeline${where}${split}. About ${r(pl.notBuilt)} are not yet built.${plus}`;
   }
 
-  const api = { LAYERS, LABEL, NOTE, PHASE_LAYER, CENSUS_DATE, layerOfPhase, layerOf, ofDev, ofFile, totals, byType, toTarget, confidenceOf, MOVED_SINCE, movedSince, pipeline, roundHeadline, headlineText, infill, cmhcUnderConstruction, permittedNotCompleted };
+  const api = { LAYERS, KEYS, LABEL, NOTE, PHASE_LAYER, CENSUS_DATE, layerOfPhase, layerOf, ofDev, ofFile, totals, byType, toTarget, confidenceOf, MOVED_SINCE, movedSince, pipeline, roundHeadline, headlineText, infill, cmhcUnderConstruction, permittedNotCompleted };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLayers = api;
 })(typeof window !== 'undefined' ? window : globalThis);
