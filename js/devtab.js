@@ -353,7 +353,7 @@
   }
   function fileBodyHTML(r) {
     const ev = (r.events || []).slice().sort((a, b) => a.date - b.date);
-    return `<p class="small"><strong>${esc(r.kind === 'permit' ? 'Building permit' : 'Application')} ${esc(r.ref || '')}</strong>${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · municipal status: <em>${esc(r.statusRaw)}</em>` : ''}${r.units > 0 ? ` · ${fmtNum(r.units)} units` : ''}</p>
+    return `<p class="small"><strong>${esc(r.kind === 'permit' ? 'Building permit' : 'Application')} ${esc(r.ref || '')}</strong>${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · municipal status: <em>${esc(r.statusRaw)}</em>` : ''}${r.units > 0 ? ` · ${fmtNum(r.units)} unit${r.units === 1 ? '' : 's'}` : ''}</p>
       ${r.description ? `<p class="small">${esc(r.description)}</p>` : ''}
       ${ev.length ? `<ol class="gt-evs small">${ev.map(e => `<li><span class="d">${fmtDate(e.date)}</span>${dot(e.phase)}<span>${esc(P().humanizeField(e.label || ''))}</span></li>`).join('')}</ol>` : '<p class="small muted">No dated events on this file.</p>'}
       ${recordProvHTML(r)}<details class="gt-fields"><summary class="small">Every field as published</summary><table class="rec-t">${recordRows(r)}</table></details>`;
@@ -626,7 +626,7 @@
     const withF = items.filter(i => i.fsr).sort((a, b) => (b.fsr.date || '').localeCompare(a.fsr.date || ''));
     return { items, best: withF[0] || null };
   }
-  const FSR_HOME = { Brampton: ['BramPlanOnline', 'https://www.brampton.ca/EN/Business/planning-development/Pages/applications.aspx'], Mississauga: ['Mississauga development applications', 'https://www.mississauga.ca/services-and-programs/planning-and-development/development-applications/active-development-applications/'], Caledon: ['Caledon development applications', 'https://www.caledon.ca/en/town-services/development-applications.aspx'] };
+  const FSR_HOME = { Brampton: ['BramPlanOnline', 'https://planning.brampton.ca/CitizenAccess/Cap/CapHome.aspx?module=Planning&TabName=Planning'], Mississauga: ['Mississauga development applications', 'https://www.mississauga.ca/services-and-programs/planning-and-development/development-applications/active-development-applications/'], Caledon: ['Caledon development applications', 'https://www.caledon.ca/en/town-services/development-applications.aspx'] };
   function fsrInnerHTML(p) {
     if (!FSR.by) {
       if (hasDOM()) loadFsr().then(() => { if (liveKey === p.key) { const b = document.getElementById('devtab-fsr'); if (b) b.innerHTML = fsrInnerHTML(p); } });
@@ -638,7 +638,7 @@
     const bp = r && r.items.find(i => i.browserPage);
     if (bp) return `<strong>Servicing documents</strong> ${ext(bp.page, 'City application page')}<small>Look under Project documents for the latest Functional Servicing Report (the City's page builds that list in the browser, so it can't be linked directly).</small>`;
     if (r && r.items.length) return `<span class="muted">No FSR posted yet</span> · ${ext(r.items[0].page, 'application documents')}`;
-    if (p.municipality === 'Brampton') return `<span class="muted">Brampton's documents are on BramPlanOnline (sign-in)</span> · ${ext(home[1], 'Brampton applications')}`;
+    if (p.municipality === 'Brampton') { const f = (p.records || []).filter(x => x.kind === 'application' && x.ref).sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)))[0]; return `<strong>Servicing documents</strong> ${ext(home[1], 'BramPlanOnline')}<small>${f ? `Search ${esc(f.ref)}` : 'Search the file number'} and open its documents for the latest Functional Servicing Report. Public, no sign-in; the app can't link a Brampton file directly.</small>`; }
     return `<span class="muted">No public application page found</span>${home ? ` · ${ext(home[1], esc(home[0]))}` : ''}`;
   }
   const fsrBoxHTML = p => p.records.some(r => r.kind === 'application') ? `<div class="fsr-box small" id="devtab-fsr" data-info="fsr">${fsrInnerHTML(p)}</div>` : '';
@@ -671,11 +671,12 @@
     const pv = PV();
     if (!pv) return `<p class="small muted">Source: ${esc(r.sourceName)}${also}${mapBtn}${ri ? ` · ${ri.reportLinkHTML(r, { portal: r.sourceName })}` : ''}</p>`;
     const portal = pv.portalFor(r.sourceName);
-    const url = pv.recordSourceUrl(r, sourceUrlFor(r));
+    const url = pv.recordSourceUrl(r, sourceUrlFor(r), { format: 'html' });
     const st = state(), meta = st && st.snapshot && { generatedAt: st.snapshot.generatedAt };
     const pulled = pv.retrievedAt(r, meta);
     const report = ri ? ` · ${ri.reportLinkHTML(r, { sourceUrl: url, portal, pulledOn: pulled })}` : '';
-    return `<p class="small muted">Source: ${esc(portal)}${url ? ` · <a href="${esc(url)}" target="_blank" rel="noopener">Record ↗</a>` : ''}${pulled ? ` · pulled ${esc(pulled)}` : ''}${also}${mapBtn}${report}</p>`;
+    const look = pv.applicationSearch ? pv.applicationSearch(r) : null;
+    return `<p class="small muted">Source: ${esc(portal)}${url ? ` · <a href="${esc(url)}" target="_blank" rel="noopener">Record ↗</a>` : ''}${pulled ? ` · pulled ${esc(pulled)}` : ''}${look ? ` · <a href="${esc(look.url)}" target="_blank" rel="noopener" title="Search ${esc(look.ref)} by file number">Find ${esc(look.ref)} on ${esc(look.portal)} ↗</a>` : ''}${also}${mapBtn}${report}</p>`;
   }
   const REC_GROUPS = [
     ['master', 'Official plan / zoning / subdivision'], ['siteplan', 'Site plan'], ['condo', 'Condominium'],
@@ -1013,8 +1014,9 @@
   // Pleasant West) M" → "750-mm Water Main - Mayfield Road")
   // DC titles come from the DC map PDFs, clipped and run together ("Con 750-mm Water Main - Mayfield
   // Road (Mount M Pleasant West) M"): the kind of pipe from "<size>-mm <kind>", the road shown apart
-  // ("along …"); otherwise the title without its clipped bits. The title's size wins over the map's size
-  // field, which disagrees with the title and its description on 17 of 98 works.
+  // ("along …"); otherwise the title without its clipped bits. The size is the 2026 DC map's label; the
+  // title comes from the 2020 DC Background Study, and where its size differs (17 of 98 works, mostly
+  // larger on the 2026 map: upsized since) it is shown beside it.
   const DC_PROPER = /[A-Z][\w-]*(?:\s+[A-Z][\w-]*)*?\s+(?:Sub-Transmission Main|Transmission Main|Sanitary Trunk Sewer|Trunk Sewer|Sanitary Trunk|Force Main)(?:\s+(?:Twinning|Extension))?/g;
   const dcName = t => {
     const s0 = String(t || ''), m = /(\d{3,4})-mm\s+((?:[A-Za-z-]+\s+){0,3}?(?:Main|Sewer|Forcemain))\b/i.exec(s0);
@@ -1054,7 +1056,7 @@
         const c = lineNear(pt, ln.g); if (!c || c.m > r) continue;
         const kind = DI && DI.DC_KIND && DI.DC_KIND[ln.k] ? DI.DC_KIND[ln.k][0] : 'Planned main';
         const road = dcRoad(ln.n) || capStreet(nearStretch(ln.g, c.at)), dn = dcName(ln.n);
-        group(sys, 'dc', ln.p || ln.c || `${ln.n}|${ln.y}`, { m: c.m, at: c.at, d: dn.d || ln.d, name: dn.name || kind, year: ln.y, status: ln.s, ref: ln.p || ln.c || '', street: road, how: road ? 'along' : '', paths: [ln.g] });
+        group(sys, 'dc', ln.p || ln.c || `${ln.n}|${ln.y}`, { m: c.m, at: c.at, d: ln.d || dn.d, d2020: ln.d && dn.d && dn.d !== ln.d ? dn.d : null, name: dn.name || kind, year: ln.y, status: ln.s, ref: ln.p || ln.c || '', street: road, how: road ? 'along' : '', paths: [ln.g] });
       }
       for (const rec of (st && st.capital && st.capital.records) || []) {
         if (rec.system !== sys || !['planned', 'tendered', 'awarded', 'under construction'].includes(rec.status) || !rec.geometry) continue;
@@ -1078,7 +1080,7 @@
     const where = [o.street ? `${o.how === 'near' ? 'near' : 'along'} <strong>${esc(o.street)}</strong>` : '', mTxt(o.m)].filter(Boolean).join(' · ');
     let what;
     if (o.kind === 'existing') what = `${fmtNum(o.d)} mm${o.year ? `, ${o.year}` : ''}`;
-    else if (o.kind === 'dc') what = `${esc(o.name)}${o.d ? ` · ${fmtNum(o.d)} mm` : ''} · <b>${o.year ? `in service ${o.year}` : 'in-service year not set'}</b> <small class="muted">${esc(['2026 DC program' + (o.status ? ` (${o.status})` : ''), o.ref].filter(Boolean).join(' · '))}${o.cap ? ` · Region project ${esc(capWhen(o.cap))}` : ''}</small>`;
+    else if (o.kind === 'dc') what = `${esc(o.name)}${o.d ? ` · ${fmtNum(o.d)} mm${o.d2020 ? ` <small class="muted">(${fmtNum(o.d2020)} mm in the 2020 study)</small>` : ''}` : ''} · <b>${o.year ? `in service ${o.year}` : 'in-service year not set'}</b> <small class="muted">${esc(['2026 DC program' + (o.status ? ` (${o.status})` : ''), o.ref].filter(Boolean).join(' · '))}${o.cap ? ` · Region project ${esc(capWhen(o.cap))}` : ''}</small>`;
     else what = `${esc(o.name || 'Capital project')}${o.renewal ? ' <span class="net-renew">renewal</span>' : ''} · <b>${esc(capWhen(o))}</b> <small class="muted">Region project ${esc(o.ref)}</small>`;
     return `<li><button type="button" class="net-row" data-net-hl="${o.id}" aria-pressed="false"><i class="net-sw net-${o.sys === 'water' ? 'w' : 'ww'} net-${o.kind}"></i><span>${what} <span class="muted">${where}</span></span></button></li>`;
   }
@@ -1464,7 +1466,7 @@
   function filesTreeHTML(p) {
     const FT = root.PeelFileTree, d = FT && !p.parent ? FT.of(p) : null, files = p.records.filter(r => r.kind === 'application');
     const newest = files.slice().sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)));
-    const row = r => `<li class="pnl-kv"><span><button type="button" class="tr-ref" data-dev-file="${esc(r.ref || '')}">${esc(r.ref || 'file')}</button>${r.type ? ` <small class="muted">${esc(r.type)}</small>` : ''}</span><span>${r.units ? `${fmtNum(r.units)} units · ` : ''}${esc((P().PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}</span></li>`;
+    const row = r => `<li class="pnl-kv"><span><button type="button" class="tr-ref" data-dev-file="${esc(r.ref || '')}">${esc(r.ref || 'file')}</button>${r.type ? ` <small class="muted">${esc(r.type)}</small>` : ''}</span><span>${r.units ? `${fmtNum(r.units)} unit${r.units === 1 ? '' : 's'} · ` : ''}${esc((P().PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}</span></li>`;
     const tree = d ? FT.treeHTML(d, FT.recLookup(p), { dot: k => dot(k), latest: newest[0] && newest[0].ref, ...(root.PeelDcGate ? root.PeelDcGate.treeOpts(p, d) : {}) }) : '';
     return `${tree || `<ul class="pnl-files">${newest.slice(0, 8).map(row).join('')}</ul>`}
       <p class="small"><button type="button" class="btn small link" data-dev-hist="file">All ${fmtNum(p.records.length)} source records, by file →</button></p>`;

@@ -297,7 +297,7 @@
     else L.circleMarker([p.lat, p.lng], { radius: 16, className: 'hov-ring', interactive: false, color: MM().selColor(), weight: 2, dashArray: '4 4', fill: false }).addTo(hovLayer);
     if (onMarker) return;   // the marker's own tooltip shows
     const t = L.tooltip({ direction: 'top', offset: [0, -14], className: 'hov-tip', opacity: 1 }).setLatLng([p.lat, p.lng])
-      .setContent(`<strong>${esc(p.title)}</strong><br><span class="muted">${esc(P.PHASE_BY_KEY[p.phase].label)}${p.units ? ` · ${fmtNum(p.units)} units` : ''}${apps.length ? '' : ' · no site boundary published'}</span>`);
+      .setContent(`<strong>${esc(p.title)}</strong><br><span class="muted">${esc(P.PHASE_BY_KEY[p.phase].label)}${p.units ? ` · ${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'}` : ''}${apps.length ? '' : ' · no site boundary published'}</span>`);
     hovLayer.addLayer(t);
   }
   function setHov(ch) { Object.assign(MM().hov, ch); store.set('hoverPoly', { on: MM().hov.on, r: MM().hov.r }); if (!MM().hov.on) hovClear(); }
@@ -369,7 +369,7 @@
     }
     const byUnits = sel.slice().sort((a, b) => (b.units || 0) - (a.units || 0));
     const list = byUnits.map(p => `<li><button type="button" class="sel-item" data-open="${esc(p.key)}">${dot(p.phase)}<span class="t">${esc(p.title)}</span>
-        <span class="u">${p.buildout ? `${fmtNum(p.buildout.planned)} planned` : p.units ? `${fmtNum(p.units)} units` : App().empOf(p) && App().empOf(p).totalM2 ? `${fmtNum(App().empOf(p).totalM2)} m²` : ''}</span></button>
+        <span class="u">${p.buildout ? `${fmtNum(p.buildout.planned)} planned` : p.units ? `${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'}` : App().empOf(p) && App().empOf(p).totalM2 ? `${fmtNum(App().empOf(p).totalM2)} m²` : ''}</span></button>
         <button type="button" class="sel-x" data-drop="${esc(p.key)}" aria-label="Remove ${esc(p.title)} from the selection">×</button></li>`).join('');
     return `
       <div class="head"><h3 data-info="selection">${fmtNum(sel.length)} selected development${sel.length === 1 ? '' : 's'}</h3>

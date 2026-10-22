@@ -118,7 +118,9 @@
     if (seq === existSeq && MM().pipeLbl) placePipeLabels(lbls, existLayer);
     if (seq === existSeq && note) note.textContent = '';
   }
-  map.on('moveend', () => { if (Object.values(MM().getExistOn()).some(Boolean)) renderExisting(); });
+  // Debounced like the constraints layer: a quick run of pans redraws once.
+  let moveTimer = null;
+  map.on('moveend', () => { if (Object.values(MM().getExistOn()).some(Boolean)) { clearTimeout(moveTimer); moveTimer = setTimeout(renderExisting, 150); } });
   // Tap an existing sanitary sewer: the same pipe in the network screen (300 mm+) with every
   // development draining through it; a smaller local sewer isn't in that network, so the
   // developments beside it and the 300 mm+ sewer nearest to it are given instead.

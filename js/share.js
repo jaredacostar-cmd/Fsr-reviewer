@@ -79,11 +79,12 @@
       // the servicing switches would otherwise be whatever this browser last used).
       App().state.basis = App().DEFAULT_BASIS;
       for (const [k, o, d] of [['wm', 'ww', 'calibrated'], ['md', 'md', 'design'], ['dv', 'div', 'off'], ['nr', 'nr', 'on']]) SVCT().svcOpt[o] = q.get(k) || d;
-      if (q.get('ph')) App().state.phases = new Set(q.get('ph').split(',').filter(k => P.PHASE_BY_KEY[k]));
+      if (q.get('ph')) { App().state.phases = new Set(q.get('ph').split(',').filter(k => P.PHASE_BY_KEY[k])); App().state.oldLink = false; }
       else {
         App().state.phases = new Set(App().ACTIVE_PHASES);   // an older link: the default then (no Completed)
-        // Say so: the same data then shows fewer developments and units than a fresh open.
-        if (window.PeelUtil && window.PeelUtil.toast) setTimeout(() => window.PeelUtil.toast('This link is from before Completed was shown by default, so Completed is hidden and the totals are lower than a fresh open. Turn Completed on under Stage to include it.', 9000), 1200);
+        // Say so: the same data then shows fewer developments and units than a fresh open. A line where the
+        // filters are, with Include Completed (js/filter-ui.js oldLinkNote), not a toast over the figures.
+        App().state.oldLink = true;
       }
       if (q.has('fo')) {
         // Pre-Phase-1 focus link: migrate onto the new state (growth / none drop to the defaults).
@@ -102,9 +103,9 @@
       if (q.get('dg') && window.PeelDcGate && window.PeelDcGate.FILTER_KEYS.has(q.get('dg'))) { App().state.dcgate = q.get('dg'); window.PeelDcGate.load(); }
       if (q.get('basis') && ['all', 'buildout', 'committed', 'remaining'].includes(q.get('basis'))) App().state.basis = q.get('basis');
       // Dormant developments shown (they are held aside when the developments are built: rebuild).
-      if ((q.get('dm') === '1') !== !!App().state.showDormant) { App().state.showDormant = q.get('dm') === '1'; if (App().state.projects.length) App().rebuild(); }
+      if ((q.get('dm') === '1') !== !!App().state.showDormant) { App().state.showDormant = q.get('dm') === '1'; if (App().state.projects.length) App().rehold(); }
       // Site activity shown (held aside like the dormant ones).
-      if ((q.get('sx') === '1') !== !!App().state.showSiteActivity) { App().state.showSiteActivity = q.get('sx') === '1'; if (App().state.projects.length) App().rebuild(); }
+      if ((q.get('sx') === '1') !== !!App().state.showSiteActivity) { App().state.showSiteActivity = q.get('sx') === '1'; if (App().state.projects.length) App().rehold(); }
       { const ly = (q.get('ly') || '').split(',').filter(k => ['existing', 'built', 'committed', 'proposed', 'anticipated'].includes(k)); App().state.lyr = ly.length ? new Set(ly) : null; }
       if (q.get('cy')) MA().setCapYear(q.get('cy') === 'bo' ? null : (+q.get('cy') || MM().THIS_YEAR));
       App().state.muni = q.get('mu') || ''; App().state.kind = q.get('k') || App().DEFAULT_KIND; App().state.search = q.get('q') || '';

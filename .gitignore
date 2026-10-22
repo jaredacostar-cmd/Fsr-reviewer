@@ -6,3 +6,4 @@ docs/tree-review/tree-review.json
 # Known-answer figures (never committed)
 tests/private/
 reports-internal/
+data/sources-index.json

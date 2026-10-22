@@ -27,7 +27,9 @@ test('the tree counts are waited for, not dropped after 3 s; a failed load is sh
   const TC = require('../js/tree-counts.js');
   assert.equal(TC.status, 'idle');
   assert.match(src('js/topbar.js'), /TC\.status === 'failed'[\s\S]*tb-count-warn[\s\S]*data-tb-reload/);
-  assert.match(src('js/share.js'), /from before Completed was shown by default/);
+  // An older link (no ph) says so where the filters are, with one tap to add Completed back.
+  assert.match(src('js/share.js'), /App\(\)\.state\.oldLink = true;/);
+  assert.match(src('js/filter-ui.js'), /Opened from an older link: Completed is hidden[\s\S]*data-include-completed/);
 });
 
 test('counts found online: each with a link was checked against its page; unconfirmed ones are not used', () => {
