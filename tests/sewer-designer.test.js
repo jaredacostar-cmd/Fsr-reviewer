@@ -250,7 +250,12 @@ test('room downstream: in the CSV, and wired after each design (gravity and pump
   assert.match(s, /findCrossings\(\);\n\s+findDownstream\(d, d\.q\);/);
   assert.match(s, /if \(S\.fm\.ok\) findDownstream\(S\.fm, flow\.q\);/);
   assert.match(s, /SC\(\)\.nearestPipe\(c\.lng, c\.lat, big \? 30 : 400, 300\)/);
-  assert.match(s, /SC\(\)\.pipeStats\(i, yr\)/);
+  assert.match(s, /SC\(\)\.pipeStats\(i, yr, true\)/);
+  // every load counted, whatever the Layers switches show (the same answer on the map and on the Labs page)
+  const cap = src('js/sewer-cap.js');
+  assert.match(cap, /function pipeFlow\(i, y, all = false\) \{\n {4}const on = k => all \|\| MM\(\)\.wwOn\(k\);/);
+  assert.match(cap, /const today = pipeFlow\(i, 'today', all\), then = pipeFlow\(i, y === undefined \? MA\(\)\.getCapYear\(\) : y, all\);/);
+  assert.doesNotMatch(cap.slice(cap.indexOf('function pipeFlow'), cap.indexOf('function pipeSummary')), /MM\(\)\.wwOn\('/);
   assert.match(src('js/sewer-print.js'), /Room downstream \(\$\{e\(dt\.down\.yearLabel\)\}\)/);
 });
 
