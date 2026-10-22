@@ -344,6 +344,39 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     await ev(() => { PeelApp.state.sp = []; PeelApp.applyFilters(); });
   });
 
+  // The pipeline ledger (docs/pipeline-ledger-plan.md, Phase 2): Growth › Ledger adds up to Growth's
+  // left to build at Everything, the cut-off buttons and the units / people switch change it, every total
+  // carries the disclaimer, a row opens its development.
+  await check('Growth › Ledger: Peel equals left to build; cut-offs, people, a row opens the site', browser, {}, async ({ page, ev }, expect) => {
+    await ev(() => { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.openTab('growth', 'ledger'); });
+    await page.waitForSelector('#ledger-body .ldg-table', { timeout: 30000 }); await wait(1500);
+    await page.click('[data-ledger-cut="all"]'); await page.click('[data-ledger-measure="units"]'); await wait(800);
+    const num = s => +String(s).replace(/[^\d]/g, '');
+    const a = await ev(() => ({ peel: document.querySelector('#ledger-body .ldg-peel td:last-child strong').textContent, left: Math.round(Growth.pipelineTotals(PeelDemandUI.overviewSet()).left), disc: document.querySelector('#ledger-body .ldg-table caption').textContent, check: PeelLedgerUI.model().r.check }));
+    expect(num(a.peel) === a.left, `Peel ${a.peel} = Growth's left to build ${a.left}`);
+    expect(/Public-data estimate\. Not the Region’s committed capacity ledger\./.test(a.disc), 'the table carries the disclaimer');
+    expect(a.check < 1e-6, `every parent equals its children (check ${a.check})`);
+    await page.click('[data-ledger-cut="committed"]'); await wait(800);
+    const com = await ev(() => +document.querySelector('#ledger-body .ldg-peel td:last-child strong').textContent.replace(/[^\d]/g, ''));
+    expect(com > 0 && com < a.left, `committed only: ${com} of ${a.left}`);
+    await page.click('[data-ledger-measure="people"]'); await wait(800);
+    expect(await ev(() => /^People by/.test(document.querySelector('#ledger-body .ldg-table caption').textContent)), 'the people switch');
+    await page.click('[data-ledger-cut="all"]'); await page.click('[data-ledger-measure="units"]'); await wait(800);
+    const key = await ev(() => document.querySelector('#ledger-body tr.ldg-row').dataset.pnlDev);
+    await page.locator('#ledger-body tr.ldg-row').first().click(); await wait(2500);
+    expect(await ev(() => (DevScope.current() || {}).key) === key, `a row opens its development (${key})`);
+  });
+
+  await check('phone: Home › What’s coming shows the ledger with no sideways scroll', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
+    await ev(() => PeelWorkspaces.openPage('coming'));
+    await page.waitForSelector('#home .ldg-table', { timeout: 30000 }); await wait(1500);
+    const s = await ev(() => ({ w: document.documentElement.scrollWidth, vw: innerWidth, disc: document.querySelectorAll('#home .ldg-disc').length, rows: document.querySelectorAll('#home tr.ldg-row').length }));
+    expect(s.w <= s.vw, `no sideways scroll (${s.w} > ${s.vw})`);
+    expect(s.disc > 0 && s.rows > 0, `the list and the disclaimer (${s.rows} rows)`);
+    await page.click('#home [data-ledger-cut="approved"]'); await wait(1000);
+    expect(await ev(() => document.querySelector('#home [data-ledger-cut="approved"]').getAttribute('aria-pressed') === 'true'), 'a cut-off button works on the page');
+  });
+
   await browser.close(); srv.close();
   for (const r of results) console.log(`${r.ok ? 'ok  ' : 'FAIL'} ${r.name} (${(r.ms / 1000).toFixed(1)} s)${r.ok ? '' : `\n       - ${r.fails.join('\n       - ')}`}`);
   const bad = results.filter(r => !r.ok).length;
