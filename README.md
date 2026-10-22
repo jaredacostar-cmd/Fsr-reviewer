@@ -481,7 +481,10 @@ from street zoom (14), up to 3,000 in view.
     planned main only where no such sewer is nearer. Water joins stay in the end's pressure zone (at
     the ends and wherever the main runs within 25 m of another), crossing zones only at a station,
     reservoir or tank within 150 m (existing or planned); a water end with nothing joined is
-    flagged (red; violet when the only main in reach is across a zone boundary). Tap an end to set its join by hand (Pick where
+    flagged (red; violet when the only main in reach is across a zone boundary). An end joins a
+    main wherever it is drawn onto it (mains are straight for hundreds of metres between bends), and
+    an end the DC map cuts off (`x` in dc-infra.json: at the edge of the map or an inset) is marked
+    as such rather than as an open end. Tap an end to set its join by hand (Pick where
     it joins, then tap the pipe or planned main; or Open end): reviewed joins are blue and the traces
     follow them. Edits stay in the browser until exported (dc-joins.json) and committed to
     `data/dc-joins.json`; they are matched to the main's end by position (5 m), so they survive a

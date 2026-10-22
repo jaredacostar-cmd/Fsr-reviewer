@@ -72,8 +72,11 @@
   // Water is a looped network fed zone by zone: an end at a station, reservoir or tank joins
   // through it; one with nothing joined is worth a look (zone: the only main in reach is in another
   // pressure zone, which water doesn't cross without a facility).
+  // An end the map cuts off (scripts/build-dc-infra.py 'x': at the edge of the map or its inset).
+  const atEdge = j => !!(j.ln && j.ln.x && j.ln.g && j.ln.x.includes(j.pt[0] === j.ln.g[0][0] && j.pt[1] === j.ln.g[0][1] ? 0 : 1));
   function conf(j) {
     if (!j.auto) return 'reviewed';
+    if (!j.into && atEdge(j)) return 'edge';
     if (j.sys === 'water') {
       if (j.fac) return 'facility';
       if (!j.into) return j.zoneBlocked ? 'zone' : 'unjoined';
@@ -82,12 +85,13 @@
     return j.m <= 60 ? 'drawn' : j.m <= 200 ? 'bridged' : 'far';
   }
   const CONF = { drawn: 'joined as drawn', bridged: 'bridged gap', far: 'long bridged gap: check', open: 'open end', reviewed: 'reviewed',
+    edge: 'the map cuts the main off here: it runs on past the edge of the map',
     facility: 'joins through the facility', zone: 'nearest main is in another pressure zone: check', unjoined: 'not connected: check (water mains loop)' };
   const zoneName = id => { const z = id && App() && App().state.servicing && App().state.servicing.zones.find(x => x.id === id); return z ? z.name : ''; };
   // What a join is, in a line.
   function joinText(j) {
     const c = conf(j), zn = j.sys === 'water' ? zoneName(j.zone) : '';
-    const what = j.into ? `Joins ${intoText(j.into)}${j.m != null ? `, ${Math.round(j.m)} m` : ''}` : c === 'zone' ? `Nearest main ${Math.round(j.zoneBlocked.m)} m off is in ${zoneName(j.zoneBlocked.zone) || 'another zone'}: not joined` : c === 'facility' ? 'Not joined to a main'
+    const what = j.into ? `Joins ${intoText(j.into)}${j.m != null ? `, ${Math.round(j.m)} m` : ''}` : c === 'zone' ? `Nearest main ${Math.round(j.zoneBlocked.m)} m off is in ${zoneName(j.zoneBlocked.zone) || 'another zone'}: not joined` : c === 'facility' ? 'Not joined to a main' : c === 'edge' ? 'Not joined: the main runs off the edge of the DC map here'
       : j.sizeBlocked ? `Nearest main (${j.sizeBlocked.d ? `${j.sizeBlocked.d} mm, ` : ''}${Math.round(j.sizeBlocked.m)} m off) is under half its size: not joined` : 'Open end: no main within reach';
     return [what, j.fac ? `at ${j.fac}` : '', zn ? `in ${zn}` : '', j.along ? `also joins existing mains at ${j.along} point${j.along === 1 ? '' : 's'} along its length` : ''].filter(Boolean).join(' · ');
   }
@@ -166,8 +170,8 @@
   }
 
   // Pick mode: the next tap on the map sets the join, snapped to the nearest existing pipe or
-  // planned main of the same system within 40 px (watermains and planned mains at a vertex: the
-  // traces join at nodes). Esc or a tap on nothing cancels.
+  // planned main of the same system within 40 px (an existing main at the nearest point on it;
+  // a planned main at a vertex, where the traces join it). Esc or a tap on nothing cancels.
   function snap(sys, own, lng, lat, r) {
     const cands = [];
     if (sys === 'wastewater' && SC() && MM().SEW.data) {
@@ -181,8 +185,8 @@
       }
     }
     if (sys === 'water' && WT() && WT().wmGraph) {
-      const G = WT().wmGraph(), n = G && G.near([lng, lat], r, i => i >= G.n0);
-      if (n && n.i < G.n0) cands.push({ to: [G.xs[n.i], G.ys[n.i]], m: n.m, into: 'watermain', label: 'existing watermain' });
+      const G = WT().wmGraph(), t = G && G.tap([lng, lat], r);
+      if (t) cands.push({ to: t.q, m: t.m, into: 'watermain', label: `existing ${t.dm ? `${t.dm} mm ` : ''}watermain` });
     }
     const n = DI().dcNearest(sys, [lng, lat], r, ln => ln !== own);
     if (n) {
@@ -222,7 +226,7 @@
   if (typeof document !== 'undefined') load();
 
   const api = {
-    override, setEdit, load, exportJSON, merge, conf, intoText, joinText, render, setOn, ensureData,
+    override, setEdit, load, exportJSON, merge, conf, atEdge, intoText, joinText, render, setOn, ensureData,
     isOn: () => S.on, edits: () => J.edits.slice(), version: () => J.v, download, MATCH_M,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

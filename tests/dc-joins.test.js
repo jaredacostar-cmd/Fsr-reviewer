@@ -48,3 +48,10 @@ test('water: an end at a facility joins through it; nothing joined is flagged, b
   assert.strictEqual(DJ.conf({ sys: 'wastewater', auto: true, into: null, m: null }), 'open', 'a sewer end with nothing is just open');
   assert.strictEqual(DJ.conf({ sys: 'water', auto: true, into: { kind: 'watermain', d: 400 }, m: 30 }), 'drawn');
 });
+
+test('an end the DC map cuts off is said so, not called open', () => {
+  const ln = { g: [[-79.9, 43.8], [-79.8, 43.8]], x: [1] };
+  assert.strictEqual(DJ.conf({ sys: 'water', auto: true, ln, pt: [-79.8, 43.8], into: null, m: null }), 'edge');
+  assert.strictEqual(DJ.conf({ sys: 'water', auto: true, ln, pt: [-79.9, 43.8], into: null, m: null }), 'unjoined');
+  assert.strictEqual(DJ.conf({ sys: 'wastewater', auto: true, ln, pt: [-79.8, 43.8], into: null, m: null }), 'edge');
+});

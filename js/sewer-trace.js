@@ -208,31 +208,45 @@
       }
       if (list.length) exit.set(i, list);
     }
-    // A main's end joins the nearest point of another main: within 60 m as drawn, up to 600 m as a
-    // bridged gap (the maps often stop a main short of the one it feeds), costed 2.5× its length. A
+    // A main's end joins the nearest point on another main: within 60 m as drawn, up to 600 m as a
+    // bridged gap (the maps often stop a main short of the one it feeds), costed 2.5× its length.
+    // Mains are straight between their vertices, often for hundreds of metres: an end drawn onto one
+    // joins it there (a tap), with a join to both ends of that piece, each costed along it. A
     // bridged gap only where no existing sewer of the main's size is nearer: that sewer is where the
     // main ends, not a planned main 400 m off.
-    const gap = [], joins = [];
-    for (const t of ends) {
-      const o = ov.get(t), ln = lineOf[t];
-      let best = -1, bd = o ? 15 : 600;
-      const from = o ? o.to : [xs[t], ys[t]];
-      if (!o || (o.to && o.into === 'dc')) {
-        for (let i = 0; i < xs.length; i++) { if (lineOf[i] === ln) continue; const m = Math.abs(xs[i] - from[0]) < 0.008 && Math.abs(ys[i] - from[1]) < 0.006 ? DI().dcM(from, [xs[i], ys[i]]) : Infinity; if (m < bd) { bd = m; best = i; } }
+    const nEp = E.length, joins = [];
+    const tapDc = (pt, maxM, ok) => {
+      const kx = 111320 * Math.cos(pt[1] * Math.PI / 180), ky = 111320, rx = maxM / kx, ry = maxM / ky;
+      let best = null;
+      for (let k = 0; k < nEp; k++) {
+        const [a, b, l] = E[k]; if (!ok(l)) continue;
+        if (Math.min(xs[a], xs[b]) > pt[0] + rx || Math.max(xs[a], xs[b]) < pt[0] - rx || Math.min(ys[a], ys[b]) > pt[1] + ry || Math.max(ys[a], ys[b]) < pt[1] - ry) continue;
+        const ax = (xs[a] - pt[0]) * kx, ay = (ys[a] - pt[1]) * ky, bx = (xs[b] - pt[0]) * kx, by = (ys[b] - pt[1]) * ky;
+        const dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy, u = L2 ? Math.max(0, Math.min(1, -(ax * dx + ay * dy) / L2)) : 0, m = Math.hypot(ax + u * dx, ay + u * dy);
+        if (m <= maxM && (!best || m < best.m)) best = { a, b, l, m, q: [xs[a] + (xs[b] - xs[a]) * u, ys[a] + (ys[b] - ys[a]) * u] };
       }
-      const sewer = (exit.get(t) || []).find(c => c.reviewed || c.d >= (ln.d || 0));
-      if (!o && best >= 0 && bd > 60 && sewer && sewer.m < bd) best = -1;
-      const dm = best >= 0 ? DI().dcM([xs[t], ys[t]], [xs[best], ys[best]]) : null;
-      if (best >= 0) { E.push([t, best, null]); gap.push(!o && dm > 60); }
-      const sewerNearer = sewer && (best < 0 || sewer.m < dm);
-      joins.push({ sys: 'wastewater', ln, pt: [xs[t], ys[t]], auto: !o, ov: o,
-        ...(o && o.to && (sewerNearer || best >= 0) ? { to: o.to, m: DI().dcM([xs[t], ys[t]], o.to), into: sewerNearer ? { kind: 'sewer', d: sewer.d, k: sewer.k } : { kind: 'dc', ln: lineOf[best] } }
-          : sewerNearer ? { to: SC().pipeCoords(MM().SEW.data.pipes[sewer.k]).reduce((a, c) => (DI().dcM([xs[t], ys[t]], c) < DI().dcM([xs[t], ys[t]], a) ? c : a)), m: sewer.m, into: { kind: 'sewer', d: sewer.d, k: sewer.k } }
-          : best >= 0 ? { to: [xs[best], ys[best]], m: dm, into: { kind: 'dc', ln: lineOf[best] } } : { to: null, m: null, into: null }) });
+      return best;
+    };
+    for (const t of ends) {
+      const o = ov.get(t), ln = lineOf[t], pt = [xs[t], ys[t]];
+      let tp = null;
+      if (!o) tp = tapDc(pt, 600, l => l !== ln && !(l.d && ln.d && l.d < ln.d / 2));     // (onto a planned main at least half its size: an 1800 mm trunk doesn't end in a 450 mm local)
+      else if (o.to && o.into === 'dc') { tp = tapDc(o.to, 15, l => l !== ln); if (tp) tp = { ...tp, m: DI().dcM(pt, tp.q) }; }
+      // The sewer it hands over to: its size or bigger, or at least half its size where the main is
+      // drawn onto it (within 60 m: a twin of the existing trunk).
+      const sewer = (exit.get(t) || []).find(c => c.reviewed || c.d >= (ln.d || 0) || (c.m <= 60 && c.d >= (ln.d || 0) / 2));
+      if (!o && tp && tp.m > 60 && sewer && sewer.m < tp.m) tp = null;
+      if (tp) for (const e of [tp.a, tp.b]) E.push([t, e, null, tp.m + DI().dcM(tp.q, [xs[e], ys[e]]), !o && tp.m > 60, tp.q]);
+      const sewerNearer = sewer && (!tp || sewer.m < tp.m);
+      joins.push({ sys: 'wastewater', ln, pt, auto: !o, ov: o,
+        ...(o && o.to && (sewerNearer || tp) ? { to: o.to, m: DI().dcM(pt, o.to), into: sewerNearer ? { kind: 'sewer', d: sewer.d, k: sewer.k } : { kind: 'dc', ln: tp.l } }
+          : sewerNearer ? { to: SC().pipeCoords(MM().SEW.data.pipes[sewer.k]).reduce((a, c) => (DI().dcM(pt, c) < DI().dcM(pt, a) ? c : a)), m: sewer.m, into: { kind: 'sewer', d: sewer.d, k: sewer.k } }
+          : tp ? { to: tp.q, m: tp.m, into: { kind: 'dc', ln: tp.l } } : { to: null, m: null, into: null }) });
     }
     const adj = Array.from({ length: xs.length }, () => []); E.forEach(([a, b], k) => { adj[a].push(k); adj[b].push(k); });
-    const len = E.map(([a, b]) => DI().dcM([xs[a], ys[a]], [xs[b], ys[b]]));
-    let gi = 0; const cost = E.map((e, k) => e[2] ? len[k] : len[k] * (gap[gi++] ? 2.5 : 1));
+    // (a join edge: [end, node, null, length, bridged, tap point])
+    const len = E.map(([a, b, , l]) => l ?? DI().dcM([xs[a], ys[a]], [xs[b], ys[b]]));
+    const cost = E.map((e, k) => (e[2] ? len[k] : len[k] * (e[4] ? 2.5 : 1)));
     DCW.g = { xs, ys, E, adj, len, cost, exit, lineOf, joins }; DCW.v = DJ() ? DJ().version() : 0;
     return DCW.g;
   }
@@ -251,7 +265,7 @@
       while (Q.length) {
         let qi = 0; for (let i = 1; i < Q.length; i++) if (Q[i][0] < Q[qi][0]) qi = i;
         const [dd, u] = Q.splice(qi, 1)[0]; if (dd > dist[u]) continue; if (dd >= best) break;
-        const need = strict ? G.lineOf[u].d || dmax[u] / 2 : dmax[u] / 2, ex = (G.exit.get(u) || []).find(c => c.reviewed || c.d >= need || (u === s && c.m <= 25));
+        const need = strict ? G.lineOf[u].d || dmax[u] / 2 : dmax[u] / 2, ex = (G.exit.get(u) || []).find(c => c.reviewed || c.d >= need || (c.m <= 60 && c.d >= need / 2) || (u === s && c.m <= 25));
         if (ex) { const tot = dd + ex.cost + (pipeIn(ex.k) ? 0 : 3000); if (tot < best) { best = tot; bt = u; bex = ex; } }
         for (const k of G.adj[u]) { const [x, y] = G.E[k], v = x === u ? y : x, nd = dd + G.cost[k]; if (nd < dist[v]) { dist[v] = nd; via[v] = k; dmax[v] = Math.max(dmax[u], G.lineOf[v].d || 0); Q.push([nd, v]); } }
       }
@@ -260,11 +274,11 @@
     let r = search(true); if (r.bt < 0) r = search(false);
     const { bt, bex, via } = r;
     if (bt < 0) return null;
-    const nodes = [bt], used = new Set(); let km = 0, gaps = 0;
-    for (let v = bt; v !== s;) { const k = via[v]; km += G.len[k] / 1000; if (G.E[k][2]) used.add(G.E[k][2]); else if (G.len[k] > 60) gaps++; const [x, y] = G.E[k]; v = x === v ? y : x; nodes.push(v); }
-    nodes.reverse();
+    const nodes = [bt], used = new Set(), coords = [[G.xs[bt], G.ys[bt]]]; let km = 0, gaps = 0;
+    for (let v = bt; v !== s;) { const k = via[v]; km += G.len[k] / 1000; if (G.E[k][2]) used.add(G.E[k][2]); else if (G.E[k][4]) gaps++; const [x, y] = G.E[k]; v = x === v ? y : x; if (G.E[k][5]) coords.push(G.E[k][5]); nodes.push(v); coords.push([G.xs[v], G.ys[v]]); }
+    nodes.reverse(); coords.reverse();
     const ex = bex;
-    return { start: s, joinM: sd, coords: nodes.map(i => [G.xs[i], G.ys[i]]), km, gaps: gaps + (ex.m > 200 ? 1 : 0), lines: [...used], first: n.ln, exit: ex.k, inTarget: pipeIn(ex.k), target };
+    return { start: s, joinM: sd, coords, km, gaps: gaps + (ex.m > 200 ? 1 : 0), lines: [...used], first: n.ln, exit: ex.k, inTarget: pipeIn(ex.k), target };
   }
   // Make a traced route stand out: a dark casing and a white halo under it (kept at the back of the
   // path pane), and white dashes moving along it in the flow direction (still with reduced motion).

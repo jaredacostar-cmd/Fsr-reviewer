@@ -287,20 +287,58 @@
       ln.g.forEach(([x, y], k) => { xs.push(x); ys.push(y); lnOf.push(ln); if (k) E.push([a + k - 1, a + k, ln.d || 0, ln]); });
       planned.push([a, xs.length - 1, ln]);
     }
+    const nEp = E.length;
     const ZL = App().state.servicing && App().state.servicing.zones, zMemo = new Map();
-    const zoneOf = i => { if (!ZL) return null; if (!zMemo.has(i)) zMemo.set(i, Areas().locate(ZL, xs[i], ys[i])[0] || null); return zMemo.get(i); };
-    const sameZone = (t, i) => { const a = zoneOf(t), b = zoneOf(i); return !a || !b || a === b; };
+    // A point's zones: those within 50 m of it (a main along a boundary road serves both sides; the
+    // zone outlines are drawn to the road, not to the main).
+    const ZT = 50 / 111320;
+    const zonesOf = i => {
+      if (!ZL) return null;
+      if (!zMemo.has(i)) {
+        const kx = ZT / Math.cos(ys[i] * Math.PI / 180), set = new Set();
+        for (const [dx, dy] of [[0, 0], [kx, 0], [-kx, 0], [0, ZT], [0, -ZT]]) for (const id of Areas().locate(ZL, xs[i] + dx, ys[i] + dy)) set.add(id);
+        zMemo.set(i, set);
+      }
+      return zMemo.get(i);
+    };
+    const zoneOf = i => { const z = zonesOf(i); if (!z || !z.size) return null; const at = Areas().locate(ZL, xs[i], ys[i])[0]; return at || [...z][0]; };
+    const sameZone = (t, i) => { const a = zonesOf(t), b = zonesOf(i); return !a || !b || !a.size || !b.size || [...a].some(z => b.has(z)); };
     const facs = [
       ...(WF.data ? WF.data.facilities.filter(f => f.lnglat).map(f => ({ g: f.lnglat, name: f.name })) : []),
       ...(App().state.dcInfra ? App().state.dcInfra.water.facilities.filter(f => f.g && f.kind !== 'program').map(f => ({ g: f.g, name: `${f.name} (planned)` })) : []),
     ];
     const facAt = pt => { let best = null, bd = 150; for (const f of facs) { const m = DI().dcM(pt, f.g); if (m < bd) { bd = m; best = f; } } return best; };
+    // Mains are straight between their vertices, often hundreds of metres: a planned main drawn onto
+    // one joins it there, not at its nearest vertex. tap(): the nearest point on a main within maxM
+    // (ok(a, b, d, line): a test on its ends, size and planned line; by default existing mains only);
+    // the join then runs to both ends of that piece, each costed along it from the tap point.
+    const nE0 = d.e.length / 3, segGrid = new Map();     // (the existing mains: the first edges, then the planned ones)
+    for (let k = 0; k < nEp; k++) {
+      const [a, b] = E[k], cx0 = Math.floor(Math.min(xs[a], xs[b]) / CELL), cx1 = Math.floor(Math.max(xs[a], xs[b]) / CELL), cy0 = Math.floor(Math.min(ys[a], ys[b]) / CELL), cy1 = Math.floor(Math.max(ys[a], ys[b]) / CELL);
+      for (let cx = cx0; cx <= cx1; cx++) for (let cy = cy0; cy <= cy1; cy++) { const key = `${cx},${cy}`; (segGrid.get(key) || segGrid.set(key, []).get(key)).push(k); }
+    }
+    const tap = (pt, maxM, ok) => {
+      const r = Math.ceil(maxM / (CELL * 80000)) + 1, cx = Math.floor(pt[0] / CELL), cy = Math.floor(pt[1] / CELL), seen = new Set();
+      const kx = 111320 * Math.cos(pt[1] * Math.PI / 180), ky = 111320;
+      let best = null;
+      for (let dx = -r; dx <= r; dx++) for (let dy = -r; dy <= r; dy++) for (const k of segGrid.get(`${cx + dx},${cy + dy}`) || []) {
+        if (seen.has(k)) continue; seen.add(k);
+        const [a, b, dm, ln] = E[k]; if (ok ? !ok(a, b, dm, ln) : ln) continue;
+        const ax = (xs[a] - pt[0]) * kx, ay = (ys[a] - pt[1]) * ky, bx = (xs[b] - pt[0]) * kx, by = (ys[b] - pt[1]) * ky;
+        const ddx = bx - ax, ddy = by - ay, L2 = ddx * ddx + ddy * ddy, u = L2 ? Math.max(0, Math.min(1, -(ax * ddx + ay * ddy) / L2)) : 0;
+        const m = Math.hypot(ax + u * ddx, ay + u * ddy);
+        if (m <= maxM && (!best || m < best.m)) best = { k, a, b, dm, ln, m, q: [xs[a] + (xs[b] - xs[a]) * u, ys[a] + (ys[b] - ys[a]) * u] };
+      }
+      return best;
+    };
+    // Join edges from a planned node through a tap point: [node, end of the main, 0, line, length, tap point].
+    const joinTap = (t, tp, ln) => { for (const e of [tp.a, tp.b]) E.push([t, e, 0, ln, tp.m + DI().dcM(tp.q, [xs[e], ys[e]]), tp.q]); };
     // A planned main joins an existing one wherever it runs within 25 m of it in the same zone
     // (twinning, crossings; a transmission main passing through another zone isn't tapped there).
     const along = new Map();
     for (const [a, b, ln] of planned) for (let t = a; t <= b; t++) {
-      const n = near([xs[t], ys[t]], 25, i => i >= n0 || !sameZone(t, i));
-      if (n) { E.push([t, n.i, 0, ln]); along.set(ln, (along.get(ln) || 0) + 1); }
+      const tp = tap([xs[t], ys[t]], 25, (p, q, dm, l) => !l && (sameZone(t, p) || sameZone(t, q)));
+      if (tp) { joinTap(t, tp, ln); along.set(ln, (along.get(ln) || 0) + 1); }
     }
     for (const [a, b] of planned) for (let i = a; i <= b; i++) put(i);
     const lineAt = i => (i < n0 ? null : lnOf[i - n0]);
@@ -308,33 +346,40 @@
     for (const [a, b, ln] of planned) for (const t of [a, b]) {
       const pt = [xs[t], ys[t]], ov = DJ() ? DJ().override('water', pt) : null;
       const own = i => i >= a && i <= b, fac = facAt(pt);
-      let n = null, auto = true, zoneBlocked = null, sizeBlocked = null;
+      let n = null, tp = null, auto = true, zoneBlocked = null, sizeBlocked = null;
+      const zOk = i => fac || sameZone(t, i);
+      // The nearer of a planned main's node and a tap on an existing main.
+      const pick = (maxM, sized) => {
+        const need = sized ? (ln.d || 0) / 2 : 0;
+        // (a planned main with no size on the map is allowed)
+        tp = tap(pt, maxM, (p, q, dm, l) => l !== ln && (zOk(p) || zOk(q)) && (l ? (l.d || Infinity) : dm) >= need);
+        return tp;
+      };
       if (ov) {
         auto = false;
-        if (ov.to) n = near(ov.to, 15, own);
+        if (ov.to) { n = near(ov.to, 15, own); const tt = tap(ov.to, 15); if (tt && (!n || tt.m < n.m)) { n = null; tp = { ...tt, m: DI().dcM(pt, tt.q) }; } else if (n) n = { i: n.i, m: DI().dcM(pt, [xs[n.i], ys[n.i]]) }; }
       } else {
-        const need = (ln.d || 0) / 2, dOk = i => (i < n0 ? dOf[i] : (lineAt(i) || {}).d || 0) >= need;
-        const zOk = i => fac || sameZone(t, i);
-        n = near(pt, 300, i => own(i) || !zOk(i) || !dOk(i)) || near(pt, 60, i => own(i) || !zOk(i));
+        pick(300, true) || pick(60, false);
         // Not joined, flagged for review: the only main in reach is across a zone boundary, or in the
         // zone but under half the planned main's size.
-        if (!n) {
-          const x = near(pt, 300, own);
-          if (x && !zOk(x.i)) zoneBlocked = { m: x.m, zone: zoneOf(x.i) };
-          else if (x) sizeBlocked = { m: x.m, d: x.i < n0 ? dOf[x.i] : (lineAt(x.i) || {}).d || 0 };
+        if (!n && !tp) {
+          const x = tap(pt, 300, (p, q, dm, l) => l !== ln);
+          if (x && !zOk(x.a) && !zOk(x.b)) zoneBlocked = { m: x.m, zone: zoneOf(x.a) };
+          else if (x) sizeBlocked = { m: x.m, d: x.ln ? x.ln.d || 0 : x.dm };
         }
       }
       if (n) E.push([t, n.i, 0, ln]);
-      const into = n ? (n.i < n0 ? { kind: 'watermain', d: dOf[n.i] } : { kind: 'dc', ln: lineAt(n.i) }) : null;
-      joins.push({ sys: 'water', ln, pt, to: n ? [xs[n.i], ys[n.i]] : null, m: n ? n.m : null, into, auto, ov,
+      if (tp) joinTap(t, tp, ln);
+      const into = tp ? (tp.ln ? { kind: 'dc', ln: tp.ln } : { kind: 'watermain', d: tp.dm }) : n ? (n.i < n0 ? { kind: 'watermain', d: dOf[n.i] } : { kind: 'dc', ln: lineAt(n.i) }) : null;
+      joins.push({ sys: 'water', ln, pt, to: tp ? tp.q : n ? [xs[n.i], ys[n.i]] : null, m: tp ? tp.m : n ? n.m : null, into, auto, ov,
         zone: zoneOf(t), fac: fac ? fac.name : null, zoneBlocked, sizeBlocked, along: along.get(ln) || 0 });
     }
     const adj = Array.from({ length: xs.length }, () => []);
     E.forEach(([a, b], k) => { adj[a].push(k); adj[b].push(k); });
-    const len = E.map(([a, b]) => DI().dcM([xs[a], ys[a]], [xs[b], ys[b]]));
+    const len = E.map(([a, b, , , l]) => l ?? DI().dcM([xs[a], ys[a]], [xs[b], ys[b]]));
     // Cost: length, less on large mains, more on planned ones and on joins.
     const cost = E.map(([, , dm, ln], k) => len[k] * (dm >= 750 ? 0.7 : dm >= 400 ? 0.85 : dm ? 1 : 1.5) * (ln ? 1.2 : 1));
-    WM.g = { xs, ys, E, adj, len, cost, near, within, joins, n0 }; WM.dcKey = dcKey;
+    WM.g = { xs, ys, E, adj, len, cost, near, within, tap, joins, n0 }; WM.dcKey = dcKey;
     return WM.g;
   }
   // Shortest path from a point to a point: starting from any node near A (the distance to it counted
@@ -387,6 +432,7 @@
       for (const [k, v] of path) {
         const [, , d, ln] = G.E[k], kk = { ln }, sameKind = kind && !!kind.ln === !!ln && (!ln || kind.ln === ln);
         if (!sameKind || (!ln && d && d !== dm)) { flush(); run = [run[run.length - 1]]; kind = kk; if (d) dm = d; }
+        const via = G.E[k][5]; if (via) { run.push(via); flow.push(via); }
         run.push(at(v)); bd.extend([G.ys[v], G.xs[v]]); flow.push(at(v));
         if (ln) { kmP += G.len[k] / 1000; dcLines.set(ln, true); } else { kmE += G.len[k] / 1000; maxD = Math.max(maxD, d); }
       }
