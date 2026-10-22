@@ -1406,6 +1406,34 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .dc-fac.later span { opacity: .45; }
 .dc-fac.lg { display: inline-block; vertical-align: middle; margin-right: var(--space-1); }
 .dc-fac.lg span { width: 14px; height: 14px; background: var(--text-muted); font-size: var(--fs-1); }
+/* DC joins (js/dc-joins.js): each planned main's end and the line to what it joins, by how sure the
+   join is; reviewed joins in the selection colour. */
+.dcj-end { stroke: var(--on-tint); stroke-width: 1.5; fill-opacity: 1; }
+.dcj-link { stroke-width: 2; stroke-dasharray: 3 3; fill: none; }
+.dcj-drawn { fill: var(--cap-room); stroke-opacity: .9; }
+.dcj-link.dcj-drawn { stroke: var(--cap-room); }
+.dcj-bridged { fill: var(--cap-tight); }
+.dcj-link.dcj-bridged { stroke: var(--cap-tight); }
+.dcj-far { fill: var(--cap-over); }
+.dcj-link.dcj-far { stroke: var(--cap-over); }
+.dcj-open { fill: var(--hue-grey); }
+.dcj-edge { fill: var(--hue-grey); stroke-dasharray: 2 2; }
+.dcj-head { fill: var(--hue-grey); }
+.dcj-facility { fill: var(--cap-room); stroke-width: 3; }
+.dcj-link.dcj-facility { stroke: var(--cap-room); }
+.dcj-zone { fill: var(--hue-violet); }
+.dcj-unjoined { fill: var(--cap-over); }
+.dcj-reviewed { fill: var(--select); }
+.dcj-link.dcj-reviewed { stroke: var(--select); stroke-dasharray: none; }
+.dcj-pop p { margin: var(--space-1) 0; }
+.dcj-popup .leaflet-popup-content-wrapper, .dcj-popup .leaflet-popup-tip { background: var(--surface-1); color: var(--text-primary); }
+.dcj-edit-ring { stroke: var(--select); stroke-width: 2; fill: none; stroke-dasharray: 3 2; }
+.dcj-tag { display: inline-block; margin: 0 var(--space-1) 2px 0; padding: 0 6px; border-radius: 3px; background: var(--select); color: var(--surface-1); font-weight: 600; font-size: var(--fs-1); }
+.dcj-edited-note { color: var(--select); }
+.dcj-acts { display: flex; flex-wrap: wrap; gap: var(--space-1); }
+.dcj-picking, .dcj-picking .leaflet-interactive { cursor: crosshair !important; }
+.lg-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; vertical-align: middle; margin-right: 3px; }
+
 .lg-line { display: inline-block; width: 18px; height: 4px; border-radius: 4px; flex: none; margin-right: var(--space-1); }
 .lg-line.dash { background: repeating-linear-gradient(90deg, var(--text-muted) 0 5px, transparent 5px 9px); }
 .lg-line[style*="--lg-c"] { background: var(--lg-c); }

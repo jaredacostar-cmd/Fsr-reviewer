@@ -466,11 +466,38 @@ from street zoom (14), up to 3,000 in view.
   `scripts/build-dc-infra.py` from the Region's water and wastewater Development Charges capital
   maps (geospatial PDFs fetched by the probe workflow, `mode=dc-maps`). Proposed (2027–2051) and
   approved (2026) mains with construction year, component and project numbers and diameter, inset
-  maps placed through their extent boxes and georeferenced from the PDF (a few metres); facility
+  maps placed through their extent boxes and georeferenced from the PDF (a few metres). Inside an
+  extent box the inset's mains replace the main map's only where the inset redraws them (a main
+  running on past the box, or a trunk the inset leaves out, is kept); the legend box is never taken
+  for an inset. Checked against every pipe stroke in both PDFs: under 50 m of mains not carried; facility
   schedules (EA / property / design / construction) transcribed in `scripts/dc-facilities.json`;
   route descriptions joined from the 2020 DC Background Study by component number. Used for:
   - a **Planned works** map layer (water, wastewater or both; tap a facility for its schedule;
     works after the results year are faded);
+  - a **DC joins** layer (Layers › Pipes and works): each planned main's end and what it joins, as
+    the sewer and water traces use it: green within 60 m as drawn, orange a bridged gap to 200 m,
+    red a longer one worth checking, grey an open end. A planned main joins an existing main of a
+    matching size (a sewer at least its size, a watermain at least half), and is bridged to another
+    planned main only where no such sewer is nearer. A sewer head (one end joins within 200 m, the
+    other has nothing within 200 m and no existing sewer in reach, in a group of mains that already
+    hands over to the existing sewers) is left open, not bridged to another planned main. Water
+    ends can be set through a facility (a station, reservoir or tank). Water joins stay in the end's pressure zone (at
+    the ends and wherever the main runs within 25 m of another), crossing zones only at a station,
+    reservoir or tank within 150 m (existing or planned); a water end with nothing joined is
+    flagged (red; violet when the only main in reach is across a zone boundary). An end joins a
+    main wherever it is drawn onto it (mains are straight for hundreds of metres between bends), and
+    an end the DC map cuts off (`x` in dc-infra.json: at the edge of the map or an inset) is marked
+    as such rather than as an open end. Planned mains also join the capital projects that lay a new
+    main (`data/capital.json`: WM / SAN, tunnelling and development work, tendered to complete; not
+    relining or trenchless work), where drawn onto one (within 60 m): an earlier DC program's main is
+    often built, or being built, before it is in the watermain / sewer data. Tap an end to set its join by hand (Pick where
+    it joins, then tap the pipe or planned main; or Open end): reviewed joins are blue and the traces
+    follow them. An edited join is always marked as edited: a ringed end with an ✎ Edited tag (what
+    it was set to, by whom, when, why), the count on the layer switch, and a "Relies on an edited DC
+    join" line in any development's sewer or water trace that uses it. Edits stay in the browser
+    (marked so) until exported (dc-joins.json) and committed to
+    `data/dc-joins.json`; they are matched to the main's end by position (5 m), so they survive a
+    rebuild of the DC data or the existing network (`js/dc-joins.js`);
   - the development brief: the planned main it would connect to, trunks and facilities on its sewer
     path / in its pressure zone, plant capacity steps, and a **timing flag** when a committed
     development outside the existing network relies on a main not built until later; a marker
