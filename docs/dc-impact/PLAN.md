@@ -180,6 +180,15 @@ the same rule that gates the Funding sub-view (`hiddenAt` in `js/analysis-tabs.j
 
 ### Step 1: an impact model (new `js/dc-impact.js`, `PeelDcImpact`)
 
+**Built in the second PR.** `model()` gives, per project:
+- the developments in tiers A, B1 and B2 (B1/B2 as the DC main panel rates the sewer it relieves);
+- the built developments and the same-sewershed count, kept apart as context;
+- its DC cost and each development's flow share of it.
+
+Per development it gives the links, the gate year, the first-homes year and the timing gap.
+`impactOf(key)` and `devImpact(p)` read it. It takes 0.7 s and is cached per scenario. There is
+no UI yet.
+
 Pure where possible, so it can be tested in Node like `js/upstream.js`.
 
 ```js

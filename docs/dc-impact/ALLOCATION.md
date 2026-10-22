@@ -215,6 +215,24 @@ development many times. So for money:
 
 1. **Is the tier model right?** A + B1 count everywhere, B2 is shown but not counted for timing
    or money, and C is context. My recommendation: yes.
+   **Decided (October 22, 2026): A + B1, matching the DC main panel (#325).** The panel already
+   rates each sewer a DC main relieves against capacity (`dcItemCons`, the tightest pipe's
+   status), even with pipe results hidden. So B splits as the panel shows it:
+   - **B1:** the relieved sewer runs short (status other than `ok`);
+   - **B2:** it has room to build-out, or no capacity to compare.
+
+   `js/dc-impact.js` gates on A + B1 (`gateTiers: ['A', 'B1']`). B2 is shown but never counted
+   for timing or money. On main:
+
+   | Gating tiers | Developments with a timing gap | Projects with a gap |
+   |---|---|---|
+   | A + B1 (adopted) | 1,054 | 30 |
+   | A + B (all on the path) | 1,058 | 39 |
+   | A only | 29 | – |
+
+   The big trunks run short (22-2255, 25-2219 and 26-2242 are all B1), so the count hardly moves.
+   Small local relief with room (15-2153, 25-2120, 28-2139's sewers) drops to B2. In all, 3,635
+   links are B1 and 1,051 are B2.
 2. **Apportionment basis for money:** peak wet flow (recommended), units, or an equal share per
    development?
 3. **Water:** pressure zones flow upward through pumping. Allocate a development to the
