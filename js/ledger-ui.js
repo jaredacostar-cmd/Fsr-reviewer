@@ -8,8 +8,9 @@
   //   - municipality × milestone table (2026 to 2031, 2032 to 2041, 2042 to 2051, after 2051 or not
   //     timed), each cell stacked by stage, committed first
   //   - the development list, sortable; a row opens the development
-  // Until per-development years land (Phase 3), the milestone buckets share each development's homes
-  // out by the Forecast view's time-in-stage model (likely band, js/timing.js), labelled as such.
+  // The milestone buckets share each development's homes out by the Forecast view's time-in-stage model
+  // (likely band, js/timing.js), so they add up to its yearly totals; each row also shows its expected
+  // year (Phase 3: PeelTiming.scheduleFor), with what it is based on.
   // Every total carries the disclaimer (PeelLedger.DISCLAIMER).
   const U = root.PeelUtil || {};
   const esc = U.esc || (s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])));
@@ -42,7 +43,7 @@
     if (!m || !m.ss) return { fn: null, timed: false };
     const LG = L();
     // (the model is rebuilt when the population projection arrives: its key keeps the rows in step)
-    return { timed: T.forecastModel.key || true, homes: !!m.homes, fn: p => { const s = m.ss.sched.get(p.key), a = m.ss.after.get(p.key); return s || a ? { shares: LG.bucketShares(s ? s.likely : null, a ? a.likely : 0, P().unbuiltOf(p)) } : null; } };
+    return { timed: T.forecastModel.key || true, homes: !!m.homes, m, fn: p => { const s = m.ss.sched.get(p.key), a = m.ss.after.get(p.key); return s || a ? { shares: LG.bucketShares(s ? s.likely : null, a ? a.likely : 0, P().unbuiltOf(p)) } : null; } };
   }
   function compute() {
     const A = App(); if (!A || !A.state || !L()) return null;
@@ -62,9 +63,10 @@
       zoneOf: SD && SD.zoneOf ? p => { try { const z = SD.zoneOf(p); return z ? { id: z.id, name: (z.z && (z.z.name || z.z.label)) || String(z.id) } : null; } catch (e) { return null; } } : null,
       plantOf: MM && MM.plantOfDev ? p => { try { return MM.plantOfDev(p); } catch (e) { return null; } } : null,
       yearsOf: yr.fn,
+      scheduleOf: yr.m ? p => root.PeelTiming.scheduleFor(p, yr.m) : null,
       asOf,
     });
-    cache = { key, rows, gateOn, timed: !!yr.timed, homes: !!yr.homes, asOf, devs: set.length };
+    cache = { key, rows, gateOn, timed: !!yr.timed, homes: !!yr.homes, asOf, devs: set.length, munis: yr.m && yr.m.munis ? [...yr.m.munis] : [] };
     return cache;
   }
   const shownRows = c => (S.hideLapsed ? c.rows.filter(r => !r.lapsed) : c.rows);
@@ -108,7 +110,46 @@
     name: (a, b) => a.name.localeCompare(b.name),
     muni: (a, b) => a.municipality.localeCompare(b.municipality) || rowVal(b) - rowVal(a),
     stage: (a, b) => L().STAGES.indexOf(a.capacityStage) - L().STAGES.indexOf(b.capacityStage) || rowVal(b) - rowVal(a),
+    year: (a, b) => yearOf(a) - yearOf(b) || rowVal(b) - rowVal(a),
   };
+  // ---- Expected year (Phase 3) -------------------------------------------------------------------
+  const yearOf = r => (r.expectedYear && r.expectedYear.likely != null ? r.expectedYear.likely : 9999);
+  // What the year stands on, in words: "based on 351 similar sites (in review, 100+ units), 58 of them
+  // finished; rates from 212 Brampton townhouse files; timed with Mississauga's completions".
+  function basisText(r) {
+    const e = r.expectedYear, b = e && e.basis, T = root.PeelTiming, PH = P();
+    if (!b) return '';
+    const st = PH && PH.PHASE_BY_KEY[b.stage] ? PH.PHASE_BY_KEY[b.stage].label.toLowerCase() : b.stage;
+    const size = T && T.SIZE_LABEL ? T.SIZE_LABEL[b.size] : b.size;
+    const [rm, rt] = String(b.rates || '*|*').split('|'), typeW = rt === '*' ? 'files' : rt === 'unknown' ? 'files of no stated type' : `${(T && T.BTYPE_LABEL[rt] || rt).toLowerCase()} files`;
+    const parts = [b.n ? `based on ${fmtNum(b.n)} similar sites (${st}, ${size}), ${fmtNum(b.done)} of them finished` : 'no similar sites to compare with'];
+    if (b.queued) parts.push('waiting longer than similar sites ever have: timed by the homes the population needs');
+    if (b.ratesN) parts.push(`rates from ${fmtNum(b.ratesN)} ${rm === '*' ? 'Peel' : esc(rm)} ${typeW}`);
+    if (b.borrowed) parts.push(`timed with ${MISSING_DATES_TEXT(r.municipality)}`);
+    return parts.join('; ');
+  }
+  // (a municipality that publishes no completion dates: its sites are timed with the others')
+  const MISSING_DATES_TEXT = muni => `the completions of ${(compute().munis || []).join(' and ') || 'the other municipalities'}: ${muni} publishes no completion dates`;
+  // How this is estimated: the backtest (js/timing.js backtest), worked out once per developments list. The
+  // sites as they stood five years ago, timed by the curves of what was known then, against what was
+  // built since; only municipalities that date completions can be checked.
+  function backtestNote() {
+    const T = root.PeelTiming, A = App(), m = T && T.forecastModel ? T.forecastModel() : null;
+    if (!T || !T.backtest || !m || !m.munis || !m.munis.size) return '';
+    const y0 = new Date().getUTCFullYear() - 5, key = `${(A.state.projects || []).length}|${y0}`;
+    if (backtestNote.key !== key) {
+      const r = T.backtest(A.state.projects, Date.UTC(y0, 0, 1), { testMunis: m.munis, curveMunis: m.munis });
+      backtestNote.key = key;
+      backtestNote.text = r.judged ? `Backtest: the ${fmtNum(r.judged)} ${esc([...m.munis].join(' and '))} sites that could be checked, timed from where they stood on Jan 1, ${y0}: ${Math.round(r.inRange / r.judged * 100)}% finished within their range (${Math.round(r.unitsInRange / r.unitsJudged * 100)}% of their units), ${Math.round(r.within1 / r.judged * 100)}% within a year of the likely year; ${fmtNum(r.beyond)} were past what the history showed then and got no year (docs/ledger/backtest.md has every year).` : '';
+    }
+    return backtestNote.text;
+  }
+  function yearHTML(r) {
+    const e = r.expectedYear;
+    if (!e || e.likely == null) return `<span class="muted">${e ? 'after 2051' : 'not timed'}</span>`;
+    const rng = e.low != null && e.high != null && (e.low !== e.likely || e.high !== e.likely) ? `<small>${e.low}–${e.high}</small>` : e.high == null ? `<small>${e.low != null ? e.low : e.likely}–after 2051</small>` : '';
+    return `<span title="${esc(basisText(r))}">${e.likely}</span>${rng}${e.basis && e.basis.borrowed ? `<small class="ldg-borrow">${esc((compute().munis || []).join(' / '))} timing</small>` : ''}`;
+  }
   function flagsOf(r) {
     const f = [];
     if (r.lapsed) f.push(r.lapsed.why === 'cancelled' ? `Possibly lapsed: servicing permit ${r.lapsed.ref} cancelled by the city` : `Possibly lapsed: servicing permit issued ${r.lapsed.issued}, no building permit since`);
@@ -123,11 +164,11 @@
       const fl = flagsOf(r);
       const by = r.units.committed > 0 && r.commitBy ? `<small>committed by ${esc(COMMIT_BY[r.commitBy])}</small>` : '';
       return `<tr ${onPage ? `data-ws-pick="${esc(r.id)}" data-ws-as="site"` : `data-pnl-dev="${esc(r.id)}"`} tabindex="0" role="button" class="ldg-row${r.lapsed ? ' ldg-lapsed' : ''}"><td>${esc(r.name)}<small>${esc(r.municipality)}${r.zone ? ` · ${esc(r.zone.name)}` : ''}${r.plant && r.plant !== 'none' ? ` · ${esc(r.plant)}` : ''}</small><small class="ldg-st-sm">${esc(LG.STAGE_LABEL[r.capacityStage])}</small>${fl.map(t => `<small class="ldg-flag">⚠ ${esc(t)}</small>`).join('')}</td>
-        <td class="ldg-st">${esc(LG.STAGE_LABEL[r.capacityStage])}${by}</td><td class="n">${fmtV(rowVal(r))}</td></tr>`;
+        <td class="ldg-st">${esc(LG.STAGE_LABEL[r.capacityStage])}${by}</td><td class="n ldg-yr">${yearHTML(r)}</td><td class="n">${fmtV(rowVal(r))}</td></tr>`;
     };
     const shown = list.slice(0, S.rowsShown);
     return `<div class="hyd-scroll"><table class="dt ldg-list"><caption>Developments <span class="muted">(${fmtNum(list.length)}, ${esc(word())} at the cut-off)</span></caption>
-      <thead><tr>${th('name', 'Development')}${th('stage', 'Stage', 'ldg-st')}${th('units', word() === 'people' ? 'People' : 'Units', 'n')}</tr></thead>
+      <thead><tr>${th('name', 'Development')}${th('stage', 'Stage', 'ldg-st')}${th('year', 'Expected', 'n')}${th('units', word() === 'people' ? 'People' : 'Units', 'n')}</tr></thead>
       <tbody>${shown.map(tr).join('')}</tbody></table></div>
       ${list.length > shown.length ? `<p><button type="button" class="btn small" data-ledger-more>Show ${fmtNum(Math.min(50, list.length - shown.length))} more (${fmtNum(list.length - shown.length)} left)</button></p>` : ''}
       ${disc()}`;
@@ -154,7 +195,7 @@
       { v: fmtV(to31), u: word(), label: 'timed for 2026 to 2031', ctx: `Forecast view's model, likely · ${LG.DISCLAIMER}` },
       { v: fmtNum(t.rows), u: 'developments', label: 'with homes left to build', ctx: `of ${fmtNum(c.devs)} shown` },
     ];
-    const method = `One row per development (the developments shown, as the Overview counts them), its units left to build split by stage. <strong>Committed</strong> (the Peel rule, settled Oct 21, 2026): a site servicing permit (filed or issued) commits the whole development; a building permit commits only the units it covers, not yet built. A residential permit stating no units takes the development's units split evenly across its permits (flagged). Septic sites never count. <strong>Approved, not committed</strong>: draft or site plan approval (MECP D-5-1), no permit yet. <strong>In review</strong>: zoning, draft plan or site plan in review. <strong>Early</strong>: pre-consultation. <strong>Possibly lapsed</strong>: a servicing permit issued 3 or more years ago with no building permit since, or cancelled by the city; its commitment drops back to the development's planning stage (approved, not committed, for an approved site). Milestone buckets share each development's homes out by the Forecast view's time-in-stage model (likely band), so they add up to its yearly totals; homes the calibrated approval and completion rates do not expect to finish, and those beyond its last year, are after 2051 or not timed. A year per development comes in Phase 3. People at Peel design criteria. Every parent row equals the sum of its rows (check ${r.check < 1e-6 ? '0' : r.check.toFixed(3)}).`;
+    const method = `One row per development (the developments shown, as the Overview counts them), its units left to build split by stage. <strong>Committed</strong> (the Peel rule, settled Oct 21, 2026): a site servicing permit (filed or issued) commits the whole development; a building permit commits only the units it covers, not yet built. A residential permit stating no units takes the development's units split evenly across its permits (flagged). Septic sites never count. <strong>Approved, not committed</strong>: draft or site plan approval (MECP D-5-1), no permit yet. <strong>In review</strong>: zoning, draft plan or site plan in review. <strong>Early</strong>: pre-consultation. <strong>Possibly lapsed</strong>: a servicing permit issued 3 or more years ago with no building permit since, or cancelled by the city; its commitment drops back to the development's planning stage (approved, not committed, for an approved site). Milestone buckets share each development's homes out by the Forecast view's time-in-stage model (likely band), so they add up to its yearly totals; homes the calibrated approval and completion rates do not expect to finish, and those beyond its last year, are after 2051 or not timed. <strong>Expected year</strong> (Phase 3): the year by which half of a development's expected homes are finished in that model, with its range from the fast to the slow band; hover the year for what it is based on (how many similar sites, of what stage and size, and the files the rates come from). The timing comes from the municipalities that date their completions (${esc((compute().munis || []).join(' and ') || 'none yet')}); the others publish no completion dates, so their sites are timed the same way and marked. ${backtestNote()} People at Peel design criteria. Every parent row equals the sum of its rows (check ${r.check < 1e-6 ? '0' : r.check.toFixed(3)}).`;
     const sources = 'Planning applications and building permits (Mississauga, Brampton, Caledon open data); site servicing permits from the city building permit feeds (data/dc-gate.json, weekly); the Forecast view’s calibration. Public data only: no Region model, SCADA or Development Services data.';
     return { c, rows, r, t, all, answer, notes, figures, method, sources, scope };
   }

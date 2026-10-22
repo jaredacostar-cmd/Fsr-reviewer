@@ -85,6 +85,9 @@
     return out;
   }
 
+  /** The milestone bucket a year falls in (no year: after 2051 or not timed). */
+  const bucketOf = y => (y != null && isFinite(y) ? BUCKETS.find(b => y <= b.last).key : 'later');
+
   /**
    * rows(projects, opts) → one row per development with units left to build.
    * opts (all optional):
@@ -94,6 +97,7 @@
    *   plansOf(p)   [[planId, share]] (a development across two plans splits by share); default p.sp
    *                split evenly
    *   yearsOf(p)   { shares } from bucketShares, or null (not timed)
+   *   scheduleOf(p) its expected year, { likely, low, high, basis } (PeelTiming.scheduleFor), or null
    *   asOf         epoch ms the lapse clock runs to (the data date)
    *   all          true: rows with nothing left to build too
    */
@@ -127,6 +131,7 @@
       const zone = opts.zoneOf ? opts.zoneOf(p) : null;
       const plans = opts.plansOf ? opts.plansOf(p) || [] : (p.sp || []).map(id => [id, 1 / p.sp.length]);
       const yrs = opts.yearsOf ? opts.yearsOf(p) : null;
+      const sch = opts.scheduleOf ? opts.scheduleOf(p) || null : null;
       out.push({
         id: p.key, name: p.title || p.key, address: (p.records || []).map(r => r.address).find(Boolean) || '',
         municipality: p.municipality || 'Other', lat: p.lat != null ? p.lat : null, lon: p.lng != null ? p.lng : null,
@@ -145,7 +150,10 @@
         plant: opts.plantOf ? opts.plantOf(p) || null : null,
         plans,
         sp: p.sp || [],
-        expectedYear: null,   // Phase 3
+        // Phase 3: the year by which half its homes are expected (low–high range), and that year's bucket.
+        // The roll-up spreads its homes over the years (buckets), so the totals stay the forecast's.
+        expectedYear: sch,
+        milestone: bucketOf(sch && sch.likely),
         buckets: yrs && yrs.shares ? yrs.shares : bucketShares(null),
         confidence: null,     // Phase 4
         sources: [...new Set((p.records || []).filter(r => r.kind === 'application').map(r => r.ref).filter(Boolean))].slice(0, 8),
@@ -237,7 +245,7 @@
     return t;
   }
 
-  const api = { STAGES, STAGE_LABEL, CUTOFFS, BUCKETS, LAPSE_YEARS, DISCLAIMER, lapseOf, bucketShares, rows, rollup, sumOf, totals };
+  const api = { STAGES, STAGE_LABEL, CUTOFFS, BUCKETS, LAPSE_YEARS, DISCLAIMER, lapseOf, bucketShares, bucketOf, rows, rollup, sumOf, totals };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLedger = api;
 })(typeof window !== 'undefined' ? window : globalThis);

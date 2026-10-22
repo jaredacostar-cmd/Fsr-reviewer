@@ -80,7 +80,7 @@ Flags on the same set:
   stage (approved, not committed, for an approved site; in review for one still in review). None is
   flagged "cancelled by the city" yet: `data/dc-gate.json` lists cancelled permits only from the next
   weekly build (see below).
-- **Permit units estimated: 9 developments.** A residential building permit states no units (and the
+- **Permit units estimated: 13 developments** (9 before completed developments' open permits counted, the +789 above). A residential building permit states no units (and the
   build-out could not infer them): the development's units are split evenly across its permits.
 - **54 developments with units left to build have no dc-gate row** (the gate was built a day before
   the snapshot the app now loads). They are judged on building permits only until the next build.
