@@ -32,9 +32,15 @@ out for each project instead of only for a flagged constraint.
 
 ## Where it goes
 
-Add a **DC projects** sub-view to the Capital tab:
+Add a **DC projects** sub-view to the Capital tab (built in the third PR):
 
-`DC timing · DC projects · Projects · EAs · Funding (Labs)`
+`DC timing · DC projects · Projects · EAs`
+
+A tab shows at most four sub-views, so the Funding lab no longer has a chip of its own. With the
+lab on, its funding screen (the budget, the projects within or outside it, and the funding levels)
+sits in DC projects: as a fold in the list panel, and as the screening results and funding levels
+in its full table. Old links to Capital › Funding open DC projects. In the Capital workspace, DC
+projects is a section after DC timing, and a project opens in place on the page.
 
 - **DC timing** keeps answering "what must be built first?"
 - **DC projects** (new) answers "what does this project affect?"

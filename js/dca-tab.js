@@ -27,6 +27,8 @@
   // renderers below fill #dca-timing-body / #dca-rec-body / #dca-funding-body. The single scenario
   // bar replaces the old per-tab scenario stamp line (no stampHTML call remains in this tab).
   function renderDca() {
+    // Capital › DC projects: its own panel and full table (js/dc-projects.js), at every scope.
+    if (window.PeelDcProjects) window.PeelDcProjects.render();
     // Construction & EAs: Region capital projects and EAs (needs neither the servicing model nor the sewers).
     const bb = $('#dca-build-body'); if (bb && window.PeelCapitalEA) bb.innerHTML = window.PeelCapitalEA.listsHTML();
     // EAs: the Region's environmental assessments (Capital › EAs), scoped to the municipality or the site.
@@ -54,7 +56,7 @@
     }
     const R = DC().dcAnalysis();
     set(0, renderDcaTiming(R)); set(1, renderDcaRec(R)); set(2, renderDcaFunding(R));
-    if (PN) { PN.set('dca:timing', timingSpec(R)); const fs = fundingSpec(R); if (fs) PN.set('dca:funding', fs); }
+    if (PN) PN.set('dca:timing', timingSpec(R));
   }
   // ---- Stage 3: Capital › Timing (area and site) and Funding (Labs) as standard panels ------------------
   let pnlSort = store.get('dcaPnlSort', 'soonest');
@@ -294,6 +296,7 @@
     return timingSpec(DC().dcAnalysis());
   }
   const api = {
+    fundingSpec: () => (App().state.svcModel && App().state.dcInfra ? fundingSpec(DC().dcAnalysis()) : null),
     siteSpec,
     areaSpec,
     renderDca,

@@ -239,7 +239,8 @@
   const label = id => (W() && W().BY_ID[id] ? W().BY_ID[id].label : id);
   const eyebrow = id => `${esc(label(id))} · ${esc((App() && App().state.muni) || 'Peel')}`;
   // A panel row that opened a scope opens it on the map from a page (the workspace's map view).
-  const toMap = (ws, r) => { const a = r.attrs || {}, x = { 'data-ws-go': ws }; if (a['data-ss']) x['data-ws-ss'] = a['data-ss']; if (a['data-pnl-dev']) x['data-ws-dev'] = a['data-pnl-dev']; if (a['data-ce-open']) x['data-ws-ce'] = a['data-ce-open']; if (a['data-pipe'] != null) x['data-ws-pipe'] = a['data-pipe']; return { ...r, attrs: r.attrs ? { ...x, title: a.title } : null }; };
+  // (a DC project opens in place, on the page: js/dc-projects.js)
+  const toMap = (ws, r) => { const a = r.attrs || {}, x = { 'data-ws-go': ws }; if (a['data-dcproj-open'] != null) return r; if (a['data-ss']) x['data-ws-ss'] = a['data-ss']; if (a['data-pnl-dev']) x['data-ws-dev'] = a['data-pnl-dev']; if (a['data-ce-open']) x['data-ws-ce'] = a['data-ce-open']; if (a['data-pipe'] != null) x['data-ws-pipe'] = a['data-pipe']; return { ...r, attrs: r.attrs ? { ...x, title: a.title } : null }; };
   const loading = (id, what) => ({ id, eyebrow: eyebrow(id), name: (W() && W().BY_ID[id] && W().BY_ID[id].question) || label(id), answer: `<span class="muted">${esc(what || 'Loading…')}</span>` });
   // The Overview's area panel, once it is worked out for the developments loaded. Until the snapshot is in,
   // and while the panel still holds the empty one drawn before it (the Growth render that redraws it waits
@@ -613,7 +614,9 @@
     if (!sec || sec.page) return m;
     const s = SE.wsSpecFor(ws, id);
     if (!s) return { ...m, answer: `<span class="muted">Loading ${esc(sec.title)}…</span>`, figures: [], chart: '', lists: [], folds: [], method: '', sources: '' };
-    return { ...m, status: s.head && s.head.status, identity: s.head && s.head.identity ? s.head.identity : m.identity, answer: s.answer, figures: s.figures, chart: s.chart, lists: (s.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap(m.id, r)) })), folds: s.folds, method: s.method, sources: s.sources, onMount: s.onMount };
+    // (a section showing one item of its list, as DC projects shows a project: its name, and a way back)
+    const h = s.head || {}, back = h.back ? `<p class="small"><button type="button" class="btn small link"${Object.entries(h.back.attrs || {}).map(([k, v]) => ` ${k}="${esc(v)}"`).join('')}>‹ ${esc(h.back.label)}</button></p>` : '';
+    return { ...m, ...(h.wsName ? { name: h.wsName } : {}), status: h.status, identity: h.identity ? h.identity : m.identity, answer: `${back}${s.answer}`, figures: s.figures, chart: s.chart, lists: (s.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap(m.id, r)) })), folds: s.folds, method: s.method, sources: s.sources, onMount: s.onMount };
   }
   // An area's section (Growth in an area's own drill-down, or the map's area panel for Servicing or
   // Capital: Region-wide, so a municipality or a plan says so). The header, the trail and the map stay.
