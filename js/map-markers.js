@@ -135,7 +135,7 @@
         <div class="mo-sec"><div class="mo-h">Pipes and works</div>
           <div class="mo-chips">${chip('id="opt-pipelbl"', pipeLbl, '<b class="pl-sw">300</b>Size labels', 'pipe-labels')}</div>
           <div class="mo-row" data-info="dc-works"><span class="mo-k">DC works</span><div class="mo-chips">${[['water', 'Water', '--dc-w-feed'], ['wastewater', 'Wastewater', '--dc-ww-main']].map(([k, t, c]) => chip(`data-dcsys="${k}"`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k), `<i class="lg-line" style="background:var(${c})"></i>${t}`)).join('')}</div></div>
-          <div class="mo-chips">${chip('id="opt-dcjoins"', !!(window.PeelDcJoins && window.PeelDcJoins.isOn()), '<i class="lg-dot" style="background:var(--cap-tight)"></i>DC joins', 'dc-joins')}</div>
+          <div class="mo-chips">${chip('id="opt-dcjoins"', !!(window.PeelDcJoins && window.PeelDcJoins.isOn()), `<i class="lg-dot" style="background:var(--cap-tight)"></i>DC joins${window.PeelDcJoins && window.PeelDcJoins.editCount() ? ` <small class="dcj-count">· ${window.PeelDcJoins.editCount()} edited</small>` : ''}`, 'dc-joins')}</div>
           <button type="button" class="btn small link mo-dct" data-info="dc-needs" id="opt-dctiming">DC timing: capacity vs DC projects →</button>
         </div>
         </details>

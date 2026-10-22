@@ -53,9 +53,21 @@
   }
   function setEdit(sys, end, rec) {
     J.edits = J.edits.filter(e => !(e.sys === sys && dm(e.end, end) <= MATCH_M));
-    J.edits.push({ sys, end: r6(end), ...rec, at: new Date().toISOString().slice(0, 10) });
+    J.edits.push({ sys, end: r6(end), ...rec, at: new Date().toISOString().slice(0, 10), local: true });
     changed();
   }
+  // Every edited join says so, wherever it is used (the joins layer, the sewer and water traces):
+  // what it was set to, who set it and when, and whether it is only in this browser so far.
+  function editedText(j) {
+    if (!j) return '';
+    const what = j.auto ? 'set back to automatic' : !j.to ? 'set as an open end' : j.into === 'facility' ? `set to join through ${j.name || 'a facility'}` : `set to join ${j.name || (j.into === 'sewer' ? 'an existing sewer' : j.into === 'watermain' ? 'an existing watermain' : 'a planned main')}`;
+    return `Edited join: ${what}${j.at ? ` on ${j.at}` : ''}${j.by ? ` (${j.by})` : ''}${j.local ? ', in this browser only (not yet exported)' : ''}${j.note ? `. ${j.note}` : ''}`;
+  }
+  function editedHTML(list) {
+    const l = (list || []).filter(Boolean); if (!l.length) return '';
+    return `<strong>✎ Relies on ${l.length === 1 ? 'an edited DC join' : `${l.length} edited DC joins`}</strong> (set by hand, not read from the map): ${l.map(j => esc(editedText(j).replace(/^Edited join: /, ''))).join('; ')}.`;
+  }
+  const editCount = () => merged.length;
   // ---- Mains built since the network data, or being built -----------------------------------
   // The Region's capital projects (data/capital.json) that lay a new main (not relining or
   // trenchless work on an existing one), tendered or further: a planned DC main often connects to
@@ -84,7 +96,7 @@
     J.loading = Promise.all([get('data/dc-joins.json'), get('data/capital.json')]).then(([d, cap]) => {
       if (d && Array.isArray(d.joins)) J.shipped = d.joins;
       if (cap && Array.isArray(cap.records)) J.capRecords = cap.records;
-      merged = merge(J.shipped, J.edits); J.v++;
+      merged = merge(J.shipped, J.edits); J.v++; syncCount();
       return d;
     });
     return J.loading;
@@ -95,7 +107,7 @@
     return !!J.cap;
   }
   function exportJSON() {
-    return { version: 1, note: 'Reviewed joins of the 2026 DC planned mains onto the existing network (js/dc-joins.js). end: the planned main\'s end; to: the point it joins (null: an open end); into: what it joins.', joins: merged.map(({ sys, end, to, into, name, note, at }) => ({ sys, end, to: to || null, into: into || null, ...(name ? { name } : {}), ...(note ? { note } : {}), ...(at ? { at } : {}) })) };
+    return { version: 1, note: 'Reviewed joins of the 2026 DC planned mains onto the existing network (js/dc-joins.js). end: the planned main\'s end; to: the point it joins (null: an open end); into: what it joins.', joins: merged.map(({ sys, end, to, into, name, note, by, at }) => ({ sys, end, to: to || null, into: into || null, ...(name ? { name } : {}), ...(note ? { note } : {}), ...(by ? { by } : {}), ...(at ? { at } : {}) })) };
   }
 
   // ---- How sure an automatic join is ---------------------------------------------------------
@@ -125,9 +137,9 @@
   // What a join is, in a line.
   function joinText(j) {
     const c = conf(j), zn = j.sys === 'water' ? zoneName(j.zone) : '';
-    const what = j.into ? `Joins ${intoText(j.into)}${j.m != null ? `, ${Math.round(j.m)} m` : ''}` : c === 'zone' ? `Nearest main ${Math.round(j.zoneBlocked.m)} m off is in ${zoneName(j.zoneBlocked.zone) || 'another zone'}: not joined` : c === 'facility' ? 'Not joined to a main' : c === 'edge' ? 'Not joined: the main runs off the edge of the DC map here' : c === 'head' ? 'Head of the sewer: nothing within 200 m, and its other end joins'
+    const what = !j.into && j.fac && j.ov && j.ov.into === 'facility' ? `Joins through ${j.fac}: no main is mapped at the facility yet` : j.into ? `Joins ${intoText(j.into)}${j.m != null ? `, ${Math.round(j.m)} m` : ''}` : c === 'zone' ? `Nearest main ${Math.round(j.zoneBlocked.m)} m off is in ${zoneName(j.zoneBlocked.zone) || 'another zone'}: not joined` : c === 'facility' ? 'Not joined to a main' : c === 'edge' ? 'Not joined: the main runs off the edge of the DC map here' : c === 'head' ? 'Head of the sewer: nothing within 200 m, and its other end joins'
       : j.sizeBlocked ? `Nearest main (${j.sizeBlocked.d ? `${j.sizeBlocked.d} mm, ` : ''}${Math.round(j.sizeBlocked.m)} m off) is under half its size: not joined` : 'Open end: no main within reach';
-    return [what, j.fac ? `at ${j.fac}` : '', zn ? `in ${zn}` : '', j.along ? `also joins existing mains at ${j.along} point${j.along === 1 ? '' : 's'} along its length` : ''].filter(Boolean).join(' · ');
+    return [what, j.fac && !/^Joins through/.test(what) ? `at ${j.fac}` : '', zn ? `in ${zn}` : '', j.along ? `also joins existing mains at ${j.along} point${j.along === 1 ? '' : 's'} along its length` : ''].filter(Boolean).join(' · ');
   }
   function intoText(into) {
     if (!into) return 'nothing';
@@ -149,7 +161,16 @@
   async function ensureData() {
     await Promise.all([load(), SC() && SC().loadSewers(), WT() && WT().loadWatermains ? WT().loadWatermains() : null, WT() && WT().loadWaterFacilities ? WT().loadWaterFacilities() : null]);
   }
+  // The layer switch's count of edited joins (Layers › Pipes and works).
+  function syncCount() {
+    const lab = typeof document !== 'undefined' && document.querySelector('#opt-dcjoins + span'); if (!lab) return;
+    let c = lab.querySelector('.dcj-count'); const n = editCount();
+    if (!n) { if (c) c.remove(); return; }
+    if (!c) { c = document.createElement('small'); c.className = 'dcj-count'; lab.appendChild(c); }
+    c.textContent = ` · ${n} edited`;
+  }
   function render() {
+    syncCount();
     const m = map(), L = L_(); if (!m || !L) return;
     if (!S.layer) { S.layer = L.layerGroup(); }
     S.layer.clearLayers();
@@ -166,8 +187,10 @@
       for (const j of list) {
         const c = conf(j);
         if (j.to) L.polyline([[j.pt[1], j.pt[0]], [j.to[1], j.to[0]]], { className: `dcj-link dcj-${c}`, interactive: false, pane }).addTo(S.layer);
-        L.circleMarker([j.pt[1], j.pt[0]], { radius: 5, className: `dcj-end dcj-${c}`, pane, bubblingMouseEvents: false })
-          .bindTooltip(`<strong>${esc(DI().dcLineText(j.ln))}</strong><br>${esc(joinText(j))}<br><span class="muted">${esc(CONF[c])}${j.ov && j.ov.note ? ` · ${esc(j.ov.note)}` : ''} · tap to change</span>`, { className: 'pt', sticky: true })
+        // (an edited end: larger, with a ring, so it can't be taken for one read from the map)
+        if (j.ov) L.circleMarker([j.pt[1], j.pt[0]], { radius: 10, className: 'dcj-edit-ring', pane, interactive: false }).addTo(S.layer);
+        L.circleMarker([j.pt[1], j.pt[0]], { radius: j.ov ? 6 : 5, className: `dcj-end dcj-${c}`, pane, bubblingMouseEvents: false })
+          .bindTooltip(`${j.ov ? '<span class="dcj-tag">✎ Edited</span> ' : ''}<strong>${esc(DI().dcLineText(j.ln))}</strong><br>${esc(joinText(j))}${j.ov ? `<br><span class="dcj-edited-note">${esc(editedText(j.ov))}</span>` : ''}<br><span class="muted">${esc(CONF[c])} · tap to change</span>`, { className: 'pt', sticky: true })
           .on('click', ev => { L.DomEvent.stop(ev); openEnd(j); }).addTo(S.layer);
       }
     }
@@ -181,12 +204,13 @@
   // The end's pop-up: what it joins, and the three choices.
   function openEnd(j) {
     const m = map(), L = L_(), c = conf(j), e = editAt(j.sys, j.pt);
-    const html = `<div class="dcj-pop"><strong>${esc(DI().dcLineText(j.ln))}</strong>
+    const html = `<div class="dcj-pop">${j.ov ? '<span class="dcj-tag">✎ Edited join</span>' : ''}<strong>${esc(DI().dcLineText(j.ln))}</strong>
       <p class="small">${esc(joinText(j))}. <span class="muted">${esc(CONF[c])}</span></p>
+      ${j.ov ? `<p class="small dcj-edited-note">${esc(editedText(j.ov))}</p>` : ''}
       <div class="dcj-acts"><button type="button" class="btn small" data-dcj="pick">Pick where it joins</button>
       <button type="button" class="btn small" data-dcj="open">Open end</button>
       ${!j.auto ? '<button type="button" class="btn small" data-dcj="auto">Automatic</button>' : ''}</div>
-      ${e ? '<p class="small muted">Edited in this browser.</p>' : !j.auto ? '<p class="small muted">Reviewed (data/dc-joins.json).</p>' : ''}
+      ${e ? '<p class="small muted">Saved in this browser: export it to share it.</p>' : !j.auto ? '<p class="small muted">From data/dc-joins.json (committed).</p>' : ''}
       ${J.edits.length ? `<p class="small"><button type="button" class="btn small link" data-dcj="export">Export ${J.edits.length} edit${J.edits.length === 1 ? '' : 's'} (dc-joins.json)</button></p>` : ''}</div>`;
     S.popup = L.popup({ className: 'dcj-popup', maxWidth: 280 }).setLatLng([j.pt[1], j.pt[0]]).setContent(html).openOn(m);
     const el = S.popup.getElement(); if (!el) return;
@@ -267,7 +291,7 @@
   if (typeof document !== 'undefined') load();
 
   const api = {
-    override, setEdit, load, exportJSON, merge, conf, atEdge, intoText, joinText, capFrom, capLines, capReady, CAP_REACH_M, render, setOn, ensureData,
+    override, setEdit, load, exportJSON, merge, conf, atEdge, intoText, joinText, editedText, editedHTML, editCount, capFrom, capLines, capReady, CAP_REACH_M, render, setOn, ensureData,
     isOn: () => S.on, edits: () => J.edits.slice(), version: () => { capReady(); return J.v; }, download, MATCH_M,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

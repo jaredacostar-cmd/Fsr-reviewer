@@ -332,8 +332,8 @@
       }
       return best;
     };
-    // Join edges from a planned node through a tap point: [node, end of the main, 0, line, length, tap point].
-    const joinTap = (t, tp, ln) => { for (const e of [tp.a, tp.b]) E.push([t, e, 0, ln, tp.m + DI().dcM(tp.q, [xs[e], ys[e]]), tp.q]); };
+    // Join edges from a planned node through a tap point: [node, end of the main, 0, line, length, tap point, reviewed join].
+    const joinTap = (t, tp, ln, ov = null) => { for (const e of [tp.a, tp.b]) E.push([t, e, 0, ln, tp.m + DI().dcM(tp.q, [xs[e], ys[e]]), tp.q, ov]); };
     // A planned main joins an existing one wherever it runs within 25 m of it in the same zone
     // (twinning, crossings; a transmission main passing through another zone isn't tapped there).
     const along = new Map();
@@ -375,8 +375,8 @@
           else if (x) sizeBlocked = { m: x.m, d: x.ln ? x.ln.d || 0 : x.dm };
         }
       }
-      if (n) E.push([t, n.i, 0, ln]);
-      if (tp) joinTap(t, tp, ln);
+      if (n) E.push([t, n.i, 0, ln, undefined, undefined, ov]);
+      if (tp) joinTap(t, tp, ln, ov);
       const into = tp ? (tp.ln ? { kind: 'dc', ln: tp.ln } : { kind: 'watermain', d: tp.dm }) : n ? (n.i < n0 ? { kind: 'watermain', d: dOf[n.i] } : { kind: 'dc', ln: lineAt(n.i) }) : null;
       if (!ln.cap) joins.push({ sys: 'water', ln, pt, to: tp ? tp.q : n ? [xs[n.i], ys[n.i]] : null, m: tp ? tp.m : n ? n.m : null, into, auto, ov,
         zone: zoneOf(t), fac: fac ? fac.name : null, zoneBlocked, sizeBlocked, along: along.get(ln) || 0 });
@@ -418,7 +418,7 @@
     // Stops from the plant to the site.
     const site = [p.lng, p.lat], stops = [...t.steps.slice().reverse().map(s => ({ pt: s.f.lnglat, s })), { pt: site, site: true }];
     const bd = L.latLngBounds([[p.lat, p.lng]]);
-    let kmE = 0, kmP = 0, kmS = 0, kmL = 0, maxD = 0; const dcLines = new Map(), straight = [];
+    let kmE = 0, kmP = 0, kmS = 0, kmL = 0, maxD = 0; const dcLines = new Map(), straight = [], edited = new Set();
     let joinM = null;
     const link = (a, b, cls) => { if (cls === 'wtrace-link') kmL += DI().dcM(a, b) / 1000; L.polyline([[a[1], a[0]], [b[1], b[0]]], { className: cls, interactive: false, renderer: SD().flowRenderer }).addTo(L_); bd.extend([a[1], a[0]]).extend([b[1], b[0]]); };
     const flow = [];   // the whole route, plant → site, for the arrows
@@ -442,6 +442,7 @@
         if (!sameKind || (!ln && d && d !== dm)) { flush(); run = [run[run.length - 1]]; kind = kk; if (d) dm = d; }
         const via = G.E[k][5]; if (via) { run.push(via); flow.push(via); }
         run.push(at(v)); bd.extend([G.ys[v], G.xs[v]]); flow.push(at(v));
+        if (G.E[k][6]) edited.add(G.E[k][6]);
         if (ln && !ln.cap) { kmP += G.len[k] / 1000; dcLines.set(ln, true); } else { kmE += G.len[k] / 1000; maxD = Math.max(maxD, d); }
       }
       flush();
@@ -466,7 +467,7 @@
     });
     ST().addFlowMarker(); ST().syncPathMode(); AS().syncClearBtn();
     ST().fitClear(bd);
-    const res = { t, kmE, kmP, kmS, kmL, maxD, dc: [...dcLines.keys()], straight, joinM, net: !!G };
+    const res = { t, kmE, kmP, kmS, kmL, maxD, dc: [...dcLines.keys()], straight, joinM, net: !!G, edited: [...edited] };
     ST().WTRACE.last = res;
     return res;
   }
@@ -477,6 +478,7 @@
     const yrs = [...new Set(r.dc.map(ln => ln.y).filter(Boolean))].sort();
     return `${SCREEN_NOTE}${t.est ? zoneEstHTML(t.est) : ''}<ul class="why-list trace-sum">
       <li class="why-ok"><span>From <strong>${esc(first.name)}</strong> ${t.gw ? 'wells and treatment' : first.kind === 'plant' ? 'treatment plant' : ''}: <strong>${(r.kmE + r.kmP + r.kmS + r.kmL).toFixed(1)} km</strong> to the site${r.kmE >= 0.05 ? `, ${r.kmE.toFixed(1)} km along existing watermains${r.maxD ? ` (up to ${fmtNum(r.maxD)} mm)` : ''}` : ''}${r.kmP >= 0.05 ? `, <strong>${r.kmP.toFixed(1)} km along planned DC mains</strong>${yrs.length ? ` (${yrs.join(', ')})` : ''}` : ''}.</span></li>
+      ${r.edited && r.edited.length && DJ() ? `<li class="why-stall"><span>${DJ().editedHTML(r.edited)}</span></li>` : ''}
       ${rows.filter(s => s.pump && s.f.kind !== 'plant').length ? `<li class="why-ok"><span>Pumping on the way: ${rows.filter(s => s.pump && s.f.kind !== 'plant').map(s => `${esc(s.f.name)} <span class="muted">(${esc(s.pump.zone)}, ${fmtNum(s.pump.cap)} ML/d firm → zone ${s.to})</span>`).join(', ')}.</span></li>` : ''}
       ${r.joinM != null ? `<li class="why-ok"><span>The site is ${fmtNum(Math.round(r.joinM / 10) * 10)} m from the nearest main of 300 mm+ on the route${t.z ? ` · ${zn(t.z.name)}` : ''}.</span></li>` : ''}
       ${zr ? `<li class="${zr.b > 1 ? 'why-stall' : 'why-ok'}"><span>Pumping into zone ${zr.n} and above: <strong>${Math.round(zr.c * 100)}%</strong> of firm capacity with existing + built + approved, ${Math.round(zr.b * 100)}% at build-out.</span></li>` : ''}

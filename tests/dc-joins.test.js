@@ -74,3 +74,24 @@ test('capital projects: new mains tendered or further join the network; relining
 test('a sewer head (its other end joins) is its own state, not a gap to review', () => {
   assert.strictEqual(DJ.conf({ sys: 'wastewater', auto: true, head: true, into: null, m: null, ln: { g: [[0, 0], [1, 1]] }, pt: [0, 0] }), 'head');
 });
+
+test('an edited join says so: what it was set to, who and when, and if it is only in this browser', () => {
+  const t = DJ.editedText({ sys: 'water', end, to: [-79.83, 43.85], into: 'facility', name: 'South Albion (planned)', by: 'Reviewed with Claude Code', at: '2026-10-22', note: 'feeds the reservoir' });
+  assert.match(t, /^Edited join: set to join through South Albion \(planned\) on 2026-10-22 \(Reviewed with Claude Code\)\. feeds the reservoir$/);
+  assert.match(DJ.editedText({ sys: 'water', end, to: null, into: null, at: '2026-10-22', local: true }), /set as an open end on 2026-10-22, in this browser only/);
+  assert.match(DJ.editedHTML([{ to: null }, { to: null }]), /Relies on 2 edited DC joins/);
+  assert.strictEqual(DJ.editedHTML([]), '');
+});
+
+test('data/dc-joins.json: every committed join says what, who, when and why', () => {
+  const d = JSON.parse(require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'data', 'dc-joins.json'), 'utf8'));
+  const pt = p => Array.isArray(p) && p.length === 2 && p[0] > -80.3 && p[0] < -79.4 && p[1] > 43.4 && p[1] < 44.1;
+  for (const j of d.joins) {
+    assert.ok(['water', 'wastewater'].includes(j.sys), j.sys);
+    assert.ok(pt(j.end), 'end in Peel');
+    assert.ok(j.to === null ? j.into === null : pt(j.to) && ['sewer', 'watermain', 'dc', 'facility'].includes(j.into), `to / into: ${j.into}`);
+    assert.ok(j.by && /^\d{4}-\d{2}-\d{2}$/.test(j.at) && j.note, 'by, at and note');
+    assert.ok(!j.local, 'a committed join is not a browser-only edit');
+  }
+  assert.strictEqual(new Set(d.joins.map(j => `${j.sys}${j.end}`)).size, d.joins.length, 'each end once');
+});

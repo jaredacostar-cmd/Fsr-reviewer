@@ -198,7 +198,7 @@
       const o = ov.get(i);
       if (o) {
         const k = o.to && o.into === 'sewer' ? SC().nearestPipe(o.to[0], o.to[1], 15) : -1;
-        if (k >= 0) exit.set(i, [{ k, m: DI().dcDist([xs[i], ys[i]], SC().pipeCoords(MM().SEW.data.pipes[k])), d: MM().SEW.data.pipes[k][0], cost: 0, reviewed: true }]);
+        if (k >= 0) exit.set(i, [{ k, m: DI().dcDist([xs[i], ys[i]], SC().pipeCoords(MM().SEW.data.pipes[k])), d: MM().SEW.data.pipes[k][0], cost: 0, reviewed: true, ov: o }]);
         continue;
       }
       const r = endSet.has(i) ? 600 : 25, list = [];
@@ -261,7 +261,7 @@
       const head = !o && !c.near && !c.sewer && other && other !== c && other.near && outlet.has(find(ln));     // (an end with an existing sewer in reach may be the outlet: kept)
       let { tp, sewer } = c;
       if (head) { tp = null; sewer = null; exit.set(t, (exit.get(t) || []).filter(x => x.m <= 200)); }
-      if (tp) for (const e of [tp.a, tp.b]) E.push([t, e, null, tp.m + DI().dcM(tp.q, [xs[e], ys[e]]), !o && tp.m > 60, tp.q]);
+      if (tp) for (const e of [tp.a, tp.b]) E.push([t, e, null, tp.m + DI().dcM(tp.q, [xs[e], ys[e]]), !o && tp.m > 60, tp.q, o]);
       const sewerNearer = sewer && (!tp || sewer.m < tp.m);
       if (!ln.cap) joins.push({ sys: 'wastewater', ln, pt, auto: !o, ov: o, head,
         ...(o && o.to && (sewerNearer || tp) ? { to: o.to, m: DI().dcM(pt, o.to), into: sewerNearer ? { kind: 'sewer', d: sewer.d, k: sewer.k } : { kind: 'dc', ln: tp.l } }
@@ -269,7 +269,7 @@
           : tp ? { to: tp.q, m: tp.m, into: { kind: 'dc', ln: tp.l } } : { to: null, m: null, into: null }) });
     }
     const adj = Array.from({ length: xs.length }, () => []); E.forEach(([a, b], k) => { adj[a].push(k); adj[b].push(k); });
-    // (a join edge: [end, node, null, length, bridged, tap point])
+    // (a join edge: [end, node, null, length, bridged, tap point, reviewed join or null])
     const len = E.map(([a, b, , l]) => l ?? DI().dcM([xs[a], ys[a]], [xs[b], ys[b]]));
     const cost = E.map((e, k) => (e[2] ? len[k] : len[k] * (e[4] ? 2.5 : 1)));
     DCW.g = { xs, ys, E, adj, len, cost, exit, lineOf, joins }; DCW.v = DJ() ? DJ().version() : 0;
@@ -299,11 +299,12 @@
     let r = search(true); if (r.bt < 0) r = search(false);
     const { bt, bex, via } = r;
     if (bt < 0) return null;
-    const nodes = [bt], used = new Set(), coords = [[G.xs[bt], G.ys[bt]]]; let km = 0, gaps = 0;
-    for (let v = bt; v !== s;) { const k = via[v]; km += G.len[k] / 1000; if (G.E[k][2]) used.add(G.E[k][2]); else if (G.E[k][4]) gaps++; const [x, y] = G.E[k]; v = x === v ? y : x; if (G.E[k][5]) coords.push(G.E[k][5]); nodes.push(v); coords.push([G.xs[v], G.ys[v]]); }
+    const nodes = [bt], used = new Set(), edited = new Set(), coords = [[G.xs[bt], G.ys[bt]]]; let km = 0, gaps = 0;
+    for (let v = bt; v !== s;) { const k = via[v]; km += G.len[k] / 1000; if (G.E[k][2]) used.add(G.E[k][2]); else { if (G.E[k][4]) gaps++; if (G.E[k][6]) edited.add(G.E[k][6]); } const [x, y] = G.E[k]; v = x === v ? y : x; if (G.E[k][5]) coords.push(G.E[k][5]); nodes.push(v); coords.push([G.xs[v], G.ys[v]]); }
     nodes.reverse(); coords.reverse();
     const ex = bex;
-    return { start: s, joinM: sd, coords, km, gaps: gaps + (ex.m > 200 ? 1 : 0), lines: [...used], first: n.ln, exit: ex.k, inTarget: pipeIn(ex.k), target };
+    if (ex.ov) edited.add(ex.ov);
+    return { start: s, joinM: sd, coords, km, gaps: gaps + (ex.m > 200 ? 1 : 0), lines: [...used], first: n.ln, exit: ex.k, inTarget: pipeIn(ex.k), target, edited: [...edited] };
   }
   // Make a traced route stand out: a dark casing and a white halo under it (kept at the back of the
   // path pane), and white dashes moving along it in the flow direction (still with reduced motion).
@@ -387,6 +388,7 @@
     const P = MM().SEW.data.pipes, w = PIPE_RESULTS ? t.worst : null, st = w && MM().pipeState(w.r1);
     return `${SCREEN_NOTE}<ul class="why-list trace-sum">
       ${t.pl ? `<li class="why-ok"><span>Outside the traced catchments: joins the planned <strong>${esc(DI().dcLineText(t.pl.first))}</strong> ${fmtNum(Math.round(t.pl.joinM / 10) * 10)} m from the site, then <strong>${t.pl.km.toFixed(1)} km along planned DC mains</strong>${t.pl.lines.length > 1 ? ` (${t.pl.lines.length} mains)` : ''} to the existing sewers${t.pl.gaps ? `, bridging ${t.pl.gaps} gap${t.pl.gaps === 1 ? '' : 's'} where the mapped mains stop short (straight)` : ''}${t.pl.inTarget ? '' : ' (outside the catchment that main is mapped to)'}.</span></li>` : t.far ? `<li class="why-stall"><span>No existing sewer within 400 m and no planned DC main that reaches one: joined straight to the nearest existing sewer, ${SD().kmText(t.joinM)} away. Its route will depend on works not yet on the DC maps.</span></li>` : t.outside ? '<li class="why-stall"><span>Outside the traced catchments and no planned DC main within 1 km: joined to the nearest existing sewer.</span></li>' : ''}
+      ${t.pl && t.pl.edited && t.pl.edited.length ? `<li class="why-stall"><span>${DJ() ? DJ().editedHTML(t.pl.edited) : ''}</span></li>` : ''}
       ${t.pl ? dcWaitHTML(t.pl, t.built) : ''}
       <li class="why-ok"><span>Joins a <button type="button" class="btn small link" data-pipe="${t.first}">${P[t.first][0]} mm sewer</button> ${fmtNum(Math.round(t.joinM))} m from ${t.pl ? 'the planned main' : 'the site'}, then <strong>${t.km.toFixed(1)} km</strong> through ${fmtNum(t.route.length)} pipes to <strong>${esc(t.plantName === 'Toronto' ? 'the City of Toronto system' : SD().plantLabel(t.plantName))}</strong>.</span></li>
       ${t.blocks.length ? `<li class="why-ok"><span>Through wastewater block${t.blocks.length === 1 ? '' : 's'} ${t.blocks.map(b => `<button type="button" class="btn small link" data-block="${esc(b)}">${esc(b)}</button>`).join(' → ')}.</span></li>` : ''}

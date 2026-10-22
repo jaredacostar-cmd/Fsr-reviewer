@@ -492,7 +492,10 @@ from street zoom (14), up to 3,000 in view.
     relining or trenchless work), where drawn onto one (within 60 m): an earlier DC program's main is
     often built, or being built, before it is in the watermain / sewer data. Tap an end to set its join by hand (Pick where
     it joins, then tap the pipe or planned main; or Open end): reviewed joins are blue and the traces
-    follow them. Edits stay in the browser until exported (dc-joins.json) and committed to
+    follow them. An edited join is always marked as edited: a ringed end with an ✎ Edited tag (what
+    it was set to, by whom, when, why), the count on the layer switch, and a "Relies on an edited DC
+    join" line in any development's sewer or water trace that uses it. Edits stay in the browser
+    (marked so) until exported (dc-joins.json) and committed to
     `data/dc-joins.json`; they are matched to the main's end by position (5 m), so they survive a
     rebuild of the DC data or the existing network (`js/dc-joins.js`);
   - the development brief: the planned main it would connect to, trunks and facilities on its sewer
