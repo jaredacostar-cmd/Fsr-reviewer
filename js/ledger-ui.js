@@ -111,7 +111,24 @@
     muni: (a, b) => a.municipality.localeCompare(b.municipality) || rowVal(b) - rowVal(a),
     stage: (a, b) => L().STAGES.indexOf(a.capacityStage) - L().STAGES.indexOf(b.capacityStage) || rowVal(b) - rowVal(a),
     year: (a, b) => yearOf(a) - yearOf(b) || rowVal(b) - rowVal(a),
+    tier: (a, b) => tierRank(a) - tierRank(b) || rowVal(b) - rowVal(a),
   };
+  // ---- Confidence tier (Phase 4) ------------------------------------------------------------------
+  const tierRank = r => (r.confidence ? L().TIERS.findIndex(t => t.key === r.confidence.tier) : 9);
+  const tierWhy = c => [`${c.tier}: ${c.label}`, ...c.reasons, ...c.flags.map(f => `lowered a step: ${f}`)].join('; ');
+  const tierHTML = r => (r.confidence ? `<span class="ldg-tier" title="${esc(tierWhy(r.confidence))}">${esc(r.confidence.tier)}</span>${r.confidence.flags.length ? '<small>flagged</small>' : ''}` : '');
+  // The tiers, and how they reconcile: A + B the committed developments, C the approved ones with no
+  // permit, D + E the proposed ones (each before its flags lower it).
+  function tiersHTML(rows) {
+    const LG = L(), t = LG.totals(rows), tt = t.tiers;
+    const line = x => `<tr><th scope="row"><span class="ldg-tier">${x.key}</span> ${esc(x.label)}</th><td class="n">${fmtNum(tt[x.key].rows)}</td><td class="n">${fmtNum(Math.round(tt[x.key].left))}</td><td class="n">${fmtNum(tt[x.key].flagged)}</td></tr>`;
+    const com = rows.filter(r => r.committedPeel).length, appr = rows.filter(r => !r.committedPeel && r.committedD51).length;
+    return `<div class="hyd-scroll"><table class="dt ldg-tiers"><caption>Confidence <span class="muted">(one tier per development; a flag lowers it one step)</span><br><span class="muted small">${esc(LG.DISCLAIMER)}</span></caption>
+      <thead><tr><th scope="col">Tier</th><th scope="col" class="n">Developments</th><th scope="col" class="n">Units left</th><th scope="col" class="n">Flagged</th></tr></thead>
+      <tbody>${LG.TIERS.map(line).join('')}</tbody></table></div>
+      <p class="small muted">Before flags: A + B = ${fmtNum(tt.A.base + tt.B.base)} developments, the ${fmtNum(com)} committed (a building or site servicing permit); C = ${fmtNum(tt.C.base)}, the ${fmtNum(appr)} approved with no permit; D + E = ${fmtNum(tt.D.base + tt.E.base)}, the ${fmtNum(rows.length - com - appr)} proposed. Tiers as drafted in the plan; still to confirm with the Region.</p>`;
+  }
+
   // ---- Expected year (Phase 3) -------------------------------------------------------------------
   const yearOf = r => (r.expectedYear && r.expectedYear.likely != null ? r.expectedYear.likely : 9999);
   // What the year stands on, in words: "based on 351 similar sites (in review, 100+ units), 58 of them
@@ -164,11 +181,11 @@
       const fl = flagsOf(r);
       const by = r.units.committed > 0 && r.commitBy ? `<small>committed by ${esc(COMMIT_BY[r.commitBy])}</small>` : '';
       return `<tr ${onPage ? `data-ws-pick="${esc(r.id)}" data-ws-as="site"` : `data-pnl-dev="${esc(r.id)}"`} tabindex="0" role="button" class="ldg-row${r.lapsed ? ' ldg-lapsed' : ''}"><td>${esc(r.name)}<small>${esc(r.municipality)}${r.zone ? ` · ${esc(r.zone.name)}` : ''}${r.plant && r.plant !== 'none' ? ` · ${esc(r.plant)}` : ''}</small><small class="ldg-st-sm">${esc(LG.STAGE_LABEL[r.capacityStage])}</small>${fl.map(t => `<small class="ldg-flag">⚠ ${esc(t)}</small>`).join('')}</td>
-        <td class="ldg-st">${esc(LG.STAGE_LABEL[r.capacityStage])}${by}</td><td class="n ldg-yr">${yearHTML(r)}</td><td class="n">${fmtV(rowVal(r))}</td></tr>`;
+        <td class="ldg-st">${esc(LG.STAGE_LABEL[r.capacityStage])}${by}</td><td class="ldg-tc">${tierHTML(r)}</td><td class="n ldg-yr">${yearHTML(r)}</td><td class="n">${fmtV(rowVal(r))}</td></tr>`;
     };
     const shown = list.slice(0, S.rowsShown);
     return `<div class="hyd-scroll"><table class="dt ldg-list"><caption>Developments <span class="muted">(${fmtNum(list.length)}, ${esc(word())} at the cut-off)</span></caption>
-      <thead><tr>${th('name', 'Development')}${th('stage', 'Stage', 'ldg-st')}${th('year', 'Expected', 'n')}${th('units', word() === 'people' ? 'People' : 'Units', 'n')}</tr></thead>
+      <thead><tr>${th('name', 'Development')}${th('stage', 'Stage', 'ldg-st')}${th('tier', 'Tier', 'ldg-tc')}${th('year', 'Expected', 'n')}${th('units', word() === 'people' ? 'People' : 'Units', 'n')}</tr></thead>
       <tbody>${shown.map(tr).join('')}</tbody></table></div>
       ${list.length > shown.length ? `<p><button type="button" class="btn small" data-ledger-more>Show ${fmtNum(Math.min(50, list.length - shown.length))} more (${fmtNum(list.length - shown.length)} left)</button></p>` : ''}
       ${disc()}`;
@@ -195,7 +212,7 @@
       { v: fmtV(to31), u: word(), label: 'timed for 2026 to 2031', ctx: `Forecast view's model, likely · ${LG.DISCLAIMER}` },
       { v: fmtNum(t.rows), u: 'developments', label: 'with homes left to build', ctx: `of ${fmtNum(c.devs)} shown` },
     ];
-    const method = `One row per development (the developments shown, as the Overview counts them), its units left to build split by stage. <strong>Committed</strong> (the Peel rule, settled Oct 21, 2026): a site servicing permit (filed or issued) commits the whole development; a building permit commits only the units it covers, not yet built. A residential permit stating no units takes the development's units split evenly across its permits (flagged). Septic sites never count. <strong>Approved, not committed</strong>: draft or site plan approval (MECP D-5-1), no permit yet. <strong>In review</strong>: zoning, draft plan or site plan in review. <strong>Early</strong>: pre-consultation. <strong>Possibly lapsed</strong>: a servicing permit issued 3 or more years ago with no building permit since, or cancelled by the city; its commitment drops back to the development's planning stage (approved, not committed, for an approved site). Milestone buckets share each development's homes out by the Forecast view's time-in-stage model (likely band), so they add up to its yearly totals; homes the calibrated approval and completion rates do not expect to finish, and those beyond its last year, are after 2051 or not timed. <strong>Expected year</strong> (Phase 3): the year by which half of a development's expected homes are finished in that model, with its range from the fast to the slow band; hover the year for what it is based on (how many similar sites, of what stage and size, and the files the rates come from). The timing comes from the municipalities that date their completions (${esc((compute().munis || []).join(' and ') || 'none yet')}); the others publish no completion dates, so their sites are timed the same way and marked. ${backtestNote()} People at Peel design criteria. Every parent row equals the sum of its rows (check ${r.check < 1e-6 ? '0' : r.check.toFixed(3)}).`;
+    const method = `One row per development (the developments shown, as the Overview counts them), its units left to build split by stage. <strong>Committed</strong> (the Peel rule, settled Oct 21, 2026): a site servicing permit (filed or issued) commits the whole development; a building permit commits only the units it covers, not yet built. A residential permit stating no units takes the development's units split evenly across its permits (flagged). Septic sites never count. <strong>Approved, not committed</strong>: draft or site plan approval (MECP D-5-1), no permit yet. <strong>In review</strong>: zoning, draft plan or site plan in review. <strong>Early</strong>: pre-consultation. <strong>Possibly lapsed</strong>: a servicing permit issued 3 or more years ago with no building permit since, or cancelled by the city; its commitment drops back to the development's planning stage (approved, not committed, for an approved site). Milestone buckets share each development's homes out by the Forecast view's time-in-stage model (likely band), so they add up to its yearly totals; homes the calibrated approval and completion rates do not expect to finish, and those beyond its last year, are after 2051 or not timed. <strong>Expected year</strong> (Phase 3): the year by which half of a development's expected homes are finished in that model, with its range from the fast to the slow band; hover the year for what it is based on (how many similar sites, of what stage and size, and the files the rates come from). The timing comes from the municipalities that date their completions (${esc((compute().munis || []).join(' and ') || 'none yet')}); the others publish no completion dates, so their sites are timed the same way and marked. ${backtestNote()} <strong>Confidence tier</strong> (Phase 4, as drafted in the plan, to confirm with the Region): A underway (a building permit, and its permits\u2019 history says it is being built), B committed, C approved with no permit, D in review, E early (pre-consultation, or an official plan amendment only). One step lower for any of: no file activity in 3 years, a plan superseded by a newer file, a site servicing permit out of order, one possibly lapsed. People at Peel design criteria. Every parent row equals the sum of its rows (check ${r.check < 1e-6 ? '0' : r.check.toFixed(3)}).`;
     const sources = 'Planning applications and building permits (Mississauga, Brampton, Caledon open data); site servicing permits from the city building permit feeds (data/dc-gate.json, weekly); the Forecast view’s calibration. Public data only: no Region model, SCADA or Development Services data.';
     return { c, rows, r, t, all, answer, notes, figures, method, sources, scope };
   }
@@ -203,6 +220,7 @@
   function bodyHTML(m, onPage = false) {
     return `${controlsHTML()}${legendHTML()}${tableHTML(m.r)}
       ${m.notes.length ? `<ul class="ldg-notes small muted">${m.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}
+      ${tiersHTML(m.rows)}
       ${listHTML(m.rows, onPage)}`;
   }
 

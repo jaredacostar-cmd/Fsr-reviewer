@@ -3837,9 +3837,12 @@ button.gtm-h { cursor: pointer; }
 .ldg-row:hover td, .ldg-row:focus-visible td { background: var(--surface-2); }
 .ldg-list td small.ldg-flag { color: var(--cap-tight-t); }
 .ldg-list td small.ldg-st-sm { display: none; }
+.ldg-tier { display: inline-block; min-width: 1.5em; padding: 0 var(--space-1); border: 1px solid var(--border); border-radius: 4px; text-align: center; font-weight: 600; }
+.ldg-tiers th .ldg-tier { margin-right: var(--space-1); }
 @media (max-width: 480px) {
   .ldg-table th, .ldg-table td, .ldg-list th, .ldg-list td { padding: var(--space-1); }
   .ldg-list td:first-child { min-width: 0; }
   .ldg-list .ldg-st { display: none; }
   .ldg-list td small.ldg-st-sm { display: block; }
+  .ldg-tiers th, .ldg-tiers td { white-space: normal; padding: var(--space-1); }
 }
