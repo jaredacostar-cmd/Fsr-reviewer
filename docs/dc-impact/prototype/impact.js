@@ -34,6 +34,8 @@ function upMark(mem){const mk=new Int8Array(N);for(const i of mem)mk[i]=1;
   const r=j>=0&&mk[j]===1?1:2;for(const x of path)mk[x]=r;return r===1;};}
 // forecast first year
 let first=new Map();try{const fm=PeelTiming.forecastModel();for(const [k,s] of fm.ss.sched||fm.ss){const ys=Object.keys((s.likely)||{}).map(Number).sort();if(ys.length)first.set(k,ys[0]);}}catch(e){first.err=String(e);}
+// The app's expected year (PeelTiming.scheduleFor: half its homes done), for comparison with the first year.
+const half=new Map();try{const fm=PeelTiming.forecastModel();if(PeelTiming.scheduleFor)for(const p of A.projects){const sc=PeelTiming.scheduleFor(p,fm);if(sc&&sc.likely)half.set(p.key,sc.likely);}}catch(e){}
 const rates=DC.dcRates(), wwShare=rates.R.single.wastewater/(rates.R.single.water+rates.R.single.wastewater);
 const rev=e=>{const u=e.units||{};const t=(u.single||0)*rates.single+(u.town||0)*rates.town+((u.apartment||0)+(u.unknown||0))*rates.aptLarge;return t;};
 // costs
@@ -59,8 +61,8 @@ for(const sys of ['wastewater','water']){
    for(const d of devs){const p=d.p;if(p.pz&&p.pz.length)continue;const n=DI.dcNearest('water',[p.lng,p.lat],DI.DC_CONNECT_M);if(n&&keyOf(n.ln)===g.key){seen.add(p);rows.push({grp:1,d,how:`connects ${Math.round(n.m)} m away`});}}
   }
   const bys=g.y1||null;
-  const built=rows.filter(r=>r.d.lay==='built');const builtUnits=built.reduce((t,r)=>t+(r.d.e.totalUnits||0),0);rows=rows.filter(r=>r.d.lay!=='built');const out=rows.map(r=>{const e=r.d.e,fy=first.get(r.d.p.key);const need=r.d.p.phase==='construction'?THIS:(fy||null);const rv=rev(e)*(sys==='wastewater'?wwShare:1-wwShare);
-   return {grp:r.grp,key:r.d.p.key,title:r.d.p.title,muni:r.d.p.municipality,lay:r.d.lay,phase:r.d.p.phase,units:Math.round(e.totalUnits||0),pop:Math.round(e.population+e.employment.jobs),q:+(sys==='wastewater'?e.combined.wastewater.wetPeak:e.combined.water.maxDay).toFixed(2),need,gap:!!(need&&bys&&need<bys),rev:Math.round(rv),how:r.how,ll:[+r.d.p.lng.toFixed(5),+r.d.p.lat.toFixed(5)]};});
+  const built=rows.filter(r=>r.d.lay==='built');const builtUnits=built.reduce((t,r)=>t+(r.d.e.totalUnits||0),0);rows=rows.filter(r=>r.d.lay!=='built');const out=rows.map(r=>{const e=r.d.e,fy=first.get(r.d.p.key);const need=r.d.p.phase==='construction'?THIS:(fy||null),hy=half.get(r.d.p.key),needHalf=r.d.p.phase==='construction'?THIS:(hy||null);const rv=rev(e)*(sys==='wastewater'?wwShare:1-wwShare);
+   return {grp:r.grp,key:r.d.p.key,title:r.d.p.title,muni:r.d.p.municipality,lay:r.d.lay,phase:r.d.p.phase,units:Math.round(e.totalUnits||0),pop:Math.round(e.population+e.employment.jobs),q:+(sys==='wastewater'?e.combined.wastewater.wetPeak:e.combined.water.maxDay).toFixed(2),need,gap:!!(need&&bys&&need<bys),needHalf,gapHalf:!!(needHalf&&bys&&needHalf<bys),rev:Math.round(rv),how:r.how,ll:[+r.d.p.lng.toFixed(5),+r.d.p.lat.toFixed(5)]};});
   let shed=0,shedU=0,shedIds=[];
   if(sys==='wastewater'){const tg=DI.dcTarget(g.lines[0]);if(tg){const up=SvcTab.upstreamOf(tg,SvcTab.svcFlowTree());shedIds=[tg,...up.map(u=>u.id)];const ids=new Set(shedIds);for(const d of devs){if(d.lay==='built'||seen.has(d.p))continue;if(SD.svcIds(d.p,'dr').some(x=>ids.has(x))){shed++;shedU+=d.e.totalUnits||0;}}}}
   else{const tg=DI.dcTarget(g.lines[0]);if(tg){shedIds=[tg];for(const d of devs){if(d.lay==='built'||seen.has(d.p))continue;if(SD.svcIds(d.p,'pz').includes(tg)){shed++;shedU+=d.e.totalUnits||0;}}}}
@@ -68,7 +70,7 @@ for(const sys of ['wastewater','water']){
   const c=lineCost(sys,g.key);
   const sk=scr.get(`ln:${sys}:${g.key}`)||null;
   projList.push({shed:g.shed,shedU:g.shedU,shedIds:g.shedIds,key:g.key,sys,k:g.k,d:g.d,y0:g.y0===9999?null:g.y0,y1:g.y1||null,len:Math.round(g.len),s:g.s,n:g.n,members:g.members||0,cost:Math.round(c.dc),est:+c.est.toFixed(2),screen:sk,
-   nDev:out.length,nBuilt:built.length,builtUnits:Math.round(builtUnits),n1:out.filter(r=>r.grp===1).length,n2:out.filter(r=>r.grp===2).length,units:out.reduce((t,r)=>t+r.units,0),pop:out.reduce((t,r)=>t+r.pop,0),q:+out.reduce((t,r)=>t+r.q,0).toFixed(1),gaps:out.filter(r=>r.gap).length,rev:out.reduce((t,r)=>t+r.rev,0),
+   nDev:out.length,nBuilt:built.length,builtUnits:Math.round(builtUnits),n1:out.filter(r=>r.grp===1).length,n2:out.filter(r=>r.grp===2).length,units:out.reduce((t,r)=>t+r.units,0),pop:out.reduce((t,r)=>t+r.pop,0),q:+out.reduce((t,r)=>t+r.q,0).toFixed(1),gaps:out.filter(r=>r.gap).length,gapsHalf:out.filter(r=>r.gapHalf).length,rev:out.reduce((t,r)=>t+r.rev,0),
    muni:(()=>{const m={};for(const r of out)m[r.muni]=(m[r.muni]||0)+1;return Object.entries(m).sort((a,b)=>b[1]-a[1])[0]?.[0]||null;})(),
    devs:out.sort((a,b)=>a.grp-b.grp||b.units-a.units)});
  }}

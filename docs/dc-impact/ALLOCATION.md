@@ -4,7 +4,7 @@ Draft, October 2026. Companion to [PLAN.md](PLAN.md). The numbers here come from
 of the app's own model on the October 19, 2026 data: wastewater, the 1,724 approved or proposed
 developments that link to at least one DC wastewater project.
 
-> **Status (October 22, 2026): waiting for the DC mapping update to merge.** It was checked before merging, on branch `claude/ecstatic-ride-s5n337` at `c78c797`: the allocation holds and the figures barely move (see ALLOCATION.md, "Rerun on the DC mapping update"). Once it is on main, rerun the prototype in [prototype/](prototype/README.md) to confirm, then start building.
+> **Status (October 22, 2026): ready to build.** The DC mapping update merged to main as #322, and the prototype was rerun on main: the allocation is unchanged from the check on the branch. Main's new timing curves do change the timing gaps (see ALLOCATION.md, step 4).
 
 ## What the allocation has to answer
 
@@ -120,7 +120,7 @@ description.
 
 ### Rerun on the DC mapping update (October 22, 2026)
 
-The update on branch `claude/ecstatic-ride-s5n337` (`c78c797`, not yet merged):
+The update on branch `claude/ecstatic-ride-s5n337` (`c78c797`, merged to main as #322; the DC data and routing on main are identical to that commit):
 - recovers mains the build had dropped at the inset boxes: 227 → 234 wastewater lines and
   188 → 197 water lines, with 5 new projects;
 - adds hand-reviewed **DC joins** (`data/dc-joins.json`): where each planned main meets the
@@ -161,6 +161,21 @@ year. B2 never gates.
 Before the step 3 fix, most gates were 2028 (997 developments) or 2034 (600). The 2034 group
 was the 26-2117 artifact. With the fix, 1,464 developments are gated in 2028, and 530 are
 expected before their gate year.
+
+**Which year counts as "needed"? (decide before building).** Main now times developments with
+faster curves: Mississauga's dated completions, since Brampton and Caledon publish none. It also
+gives each development an official expected year, `PeelTiming.scheduleFor`, which is the year
+half its homes are done. On main, with the allocation unchanged:
+
+| A development is "needed" by | Developments expected before their gate year | Projects with a gap |
+|---|---|---|
+| Its first homes (the prototype's test) | **1,041** (530 on the old curves) | 39 |
+| Half its homes done (`scheduleFor`, the app's expected year) | **567** | 33 |
+
+The two years are a median of 1 year apart. My recommendation: flag the gap at the **first
+homes**, because servicing has to be in place before anyone moves in. Show the app's expected
+year beside it, so the row agrees with Growth › Ledger. The prototype now records both
+(`need` / `needHalf`).
 
 ### 5. Apportion money, without double counting
 A development can sit on up to 9 DC projects in series (prototype: 359 on one project, 468 on

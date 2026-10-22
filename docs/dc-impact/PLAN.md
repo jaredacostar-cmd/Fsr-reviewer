@@ -2,7 +2,7 @@
 
 Draft plan, October 2026. Nothing built yet.
 
-> **Status (October 22, 2026): waiting for the DC mapping update to merge.** It was checked before merging, on branch `claude/ecstatic-ride-s5n337` at `c78c797`: the allocation holds and the figures barely move (see ALLOCATION.md, "Rerun on the DC mapping update"). Once it is on main, rerun the prototype in [prototype/](prototype/README.md) to confirm, then start building.
+> **Status (October 22, 2026): ready to build.** The DC mapping update merged to main as #322, and the prototype was rerun on main: the allocation is unchanged from the check on the branch. Main's new timing curves do change the timing gaps (see ALLOCATION.md, step 4).
 
 ## The ask
 
@@ -297,8 +297,9 @@ projects. These numbers are behind the mock-up.
    be large near the trunks.
 4. **Labs first?** Ship behind a Labs switch like Funding until the counts have been checked
    against the Region's own understanding of a couple of projects (e.g. 22-2255).
-5. **Timing gap:** is "expected occupancy before the last construction year" the right test, or
-   should it be the first construction year (when capacity starts to arrive)?
+5. **Timing gap:** measure need at a development's first homes (recommended: 1,041 developments
+   on main) or at half its homes done (the app's `scheduleFor` year: 567)? And against the
+   project's last construction year or its first? See ALLOCATION.md, step 4.
 6. **DCs per development:** use the residential rate only (as `dcRevenueHTML` does today), or
    add non-residential once `rates.nonResidential` is in `data/dc-costs.json`?
 7. **Ranking switch:** should "relying on it" ever become the default for the funding screen, or
