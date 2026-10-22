@@ -75,7 +75,7 @@ test('sub-view defaults: gSub pipeline, dcSub timing, Servicing capacity, Record
 });
 
 test('sub-view valid values: at most four per tab', () => {
-  assert.deepEqual(plain(AT.TABSUBS.growth.valid), ['pipeline', 'areas', 'timing']);
+  assert.deepEqual(plain(AT.TABSUBS.growth.valid), ['pipeline', 'areas', 'timing', 'ledger']);
   assert.deepEqual(plain(AT.TABSUBS.svc.valid), ['capacity', 'network', 'alloc', 'checks']);
   assert.deepEqual(plain(AT.TABSUBS.dca.valid), ['timing', 'projects', 'eas', 'funding']);
   assert.deepEqual(plain(AT.TABSUBS.records.valid), ['sources', 'checks', 'files']);

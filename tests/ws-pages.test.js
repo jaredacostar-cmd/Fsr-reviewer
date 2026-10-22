@@ -101,7 +101,7 @@ test('Review an FSR coverage: what an FSR covers and what the app can check', ()
 
 test('every workspace has a page builder; pages open from Home, chips and the map view', () => {
   const s = src('js/ws-pages.js'), w = src('js/workspaces.js');
-  assert.match(s, /const BUILD = \{ home, tight, site, growth, outlook, projects, eaflow, week, fsr, pipes, study, sewer, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, help, data \};/, "every workspace, Labs › Sewer designer, and the Reference pages: How it works and its guides, the Glossary and Help");
+  assert.match(s, /const BUILD = \{ home, tight, site, growth, outlook, coming, projects, eaflow, week, fsr, pipes, study, sewer, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, help, data \};/, "every workspace, Labs › Sewer designer, and the Reference pages: How it works and its guides, the Glossary and Help");
   // A page's map buttons open the workspace's map view; Full map is the all-tools map; the map view has
   // a way back to the page.
   assert.match(w, /const pg = e\.target\.closest\('\[data-ws-page\]'\);\s*if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage\); return; \}/);
@@ -132,8 +132,8 @@ test('Growth: the pipeline by stage, in the order a file moves; approved split o
 
 test('the layers in plain words, across the app; capacity bars keep the most-certain-first order', () => {
   const B = require('../js/layer-bar.js');
-  assert.deepEqual(plain(B.LABEL), { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Approved, not yet built (committed)', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' });
-  assert.deepEqual(plain(B.SHORT), { existing: 'On the system', built: 'Built since 2021', committed: 'Approved, not yet built', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' }, '"Approved" never alone');
+  assert.deepEqual(plain(B.LABEL), { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Approved, not yet built (committed, MECP D-5-1)', commitPeel: 'Committed (building or site servicing permit)', approved: 'Approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' });
+  assert.deepEqual(plain(B.SHORT), { existing: 'On the system', built: 'Built since 2021', committed: 'Approved, not yet built', commitPeel: 'Committed', approved: 'Approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' }, '"Approved" never alone');
   assert.deepEqual(plain(require('../js/layers.js').LABEL), plain(B.LABEL), 'one set of names');
   // A capacity bar stacks from the base: on the system, built, approved, in review.
   assert.match(src('js/svc-capacity.js'), /segments: \[seg\('existing', r\.existing\), seg\('built', r\.built\), seg\('committed', [^)]+\)\), seg\('proposed',/);
