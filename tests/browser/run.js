@@ -377,6 +377,30 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(await ev(() => document.querySelector('#home [data-ledger-cut="approved"]').getAttribute('aria-pressed') === 'true'), 'a cut-off button works on the page');
   });
 
+  await check('DC impact model: tiers, built kept apart, cost shares add up, a gate per development', browser, {}, async ({ ev }, expect) => {
+    const r = await ev(async () => {
+      await PeelSewerCap.loadSewers();
+      for (let i = 0; i < 60 && !PeelDcImpact.model(); i++) await new Promise(res => setTimeout(res, 500));
+      const t0 = performance.now(), m = PeelDcImpact.model(), ms = performance.now() - t0; if (!m) return null;
+      const P = [...m.projects.values()], built = new Set(PeelApp.state.projects.filter(p => PeelMapMarkers.svcLayerOf(p) === 'built').map(p => p.key));
+      const off = P.filter(p => p.cost > 0 && p.devs.length && Math.abs(p.devs.reduce((t, x) => t + x.share, 0) - p.cost) > 1).map(p => p.key);
+      const devs = [...m.byDev.values()];
+      return { ms, n: P.length, withDev: P.filter(p => p.devs.length).length, tiers: [...new Set(P.flatMap(p => p.devs.map(x => x.tier)))].sort().join(''),
+        builtIn: P.reduce((t, p) => t + p.devs.filter(x => built.has(x.p.key)).length, 0), off, linked: devs.length,
+        gateOk: devs.every(d => !d.gate || d.links.some(l => l.key === d.gate.key && l.y === d.gate.y)), gaps: devs.filter(d => d.gap).length,
+        again: PeelDcImpact.model() === m };
+    });
+    expect(!!r, 'the model is ready once the sewers and the servicing model are loaded');
+    if (!r) return;
+    expect(r.n > 150 && r.withDev > 0 && r.linked > 0, `projects and links (${r.n} projects, ${r.withDev} with developments, ${r.linked} developments)`);
+    expect(r.tiers === 'AB', `both tiers present (${r.tiers})`);
+    expect(r.builtIn === 0, `no built development in a tier (${r.builtIn})`);
+    expect(!r.off.length, `each project's shares add up to its cost (${r.off.slice(0, 3).join(', ')})`);
+    expect(r.gateOk, 'every gate is one of the development’s own projects');
+    expect(r.again, 'a second call is served from the cache');
+    expect(r.ms < 10000, `computed in ${Math.round(r.ms)} ms`);
+  });
+
   await browser.close(); srv.close();
   for (const r of results) console.log(`${r.ok ? 'ok  ' : 'FAIL'} ${r.name} (${(r.ms / 1000).toFixed(1)} s)${r.ok ? '' : `\n       - ${r.fails.join('\n       - ')}`}`);
   const bad = results.filter(r => !r.ok).length;

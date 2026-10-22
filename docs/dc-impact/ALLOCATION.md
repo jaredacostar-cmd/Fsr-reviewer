@@ -215,6 +215,12 @@ development many times. So for money:
 
 1. **Is the tier model right?** A + B1 count everywhere, B2 is shown but not counted for timing
    or money, and C is context. My recommendation: yes.
+   **Open point.** While pipe results are hidden, there is no capacity evidence to split B into B1
+   and B2, so every B row is "on its path, evidence unknown". `js/dc-impact.js` gates on tiers A
+   and B for now (`gateTiers: ['A', 'B']`), the conservative reading the prototype figures used.
+   Gating on A alone would leave only the greenfield connections:
+   - A + B: 1,058 developments with a timing gap;
+   - A only: 29.
 2. **Apportionment basis for money:** peak wet flow (recommended), units, or an equal share per
    development?
 3. **Water:** pressure zones flow upward through pumping. Allocate a development to the

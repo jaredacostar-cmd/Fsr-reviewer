@@ -372,6 +372,7 @@
 
   const api = {
     dcAnalysis,
+    costEstimate,
     dcRevenueHTML, dcNonResHTML, dcRange, mixStated,
     dcaBudget,
     DCB,
