@@ -4,7 +4,7 @@ Draft, October 2026. Companion to [PLAN.md](PLAN.md). The numbers here come from
 of the app's own model on the October 19, 2026 data: wastewater, the 1,724 approved or proposed
 developments that link to at least one DC wastewater project.
 
-> **Status: on hold (October 22, 2026)** until the DC mapping (`data/dc-infra.json`) is updated in separate work. Every figure here comes from the current mapping. When it lands, rerun the prototype in [prototype/](prototype/README.md) and refresh the numbers before building.
+> **Status (October 22, 2026): waiting for the DC mapping update to merge.** It was checked before merging, on branch `claude/ecstatic-ride-s5n337` at `c78c797`: the allocation holds and the figures barely move (see ALLOCATION.md, "Rerun on the DC mapping update"). Once it is on main, rerun the prototype in [prototype/](prototype/README.md) to confirm, then start building.
 
 ## What the allocation has to answer
 
@@ -117,6 +117,41 @@ with the Region and the FSRs (below).
 
 The 2020 study's text can't do this alone: 64 of the 96 wastewater projects have no 2020
 description.
+
+### Rerun on the DC mapping update (October 22, 2026)
+
+The update on branch `claude/ecstatic-ride-s5n337` (`c78c797`, not yet merged):
+- recovers mains the build had dropped at the inset boxes: 227 → 234 wastewater lines and
+  188 → 197 water lines, with 5 new projects;
+- adds hand-reviewed **DC joins** (`data/dc-joins.json`): where each planned main meets the
+  network, which `dcSewerPath` now follows.
+
+The prototype, with the version 2 rule, against the version 2 run on the old mapping:
+
+| | Old mapping | Updated mapping |
+|---|---|---|
+| DC projects | 173 | 178 |
+| Development–project links (wastewater) | 4,849 | 4,777 |
+| Developments that need a DC main to connect | 32 | 33 |
+| DC projects matched to existing pipes | 40 | 41 |
+| Projects with developments relying on them | 62 | 64 |
+| Projects with a timing gap | 34 | 33 |
+| Developments expected before their gate year | 530 | 530 |
+| In the funding screen / not in it but relied on | 26 / 36 | 27 / 37 |
+| Unique developments relying on unscreened projects | 1,720 | 1,715 |
+
+- **The relief rule holds on the new lines.** The only new match is 25-2146, a 600 mm local
+  main on 3 pipes with no developments. Nothing wrong slips through.
+- **The gating projects are unchanged:** 22-2255 (709), 25-2219 (630) and 26-2242 (125). One
+  development, 14044 McLaughlin Road, now gates in 2034 via 31-2199 (a 750 mm main, 2034).
+  That's a real case.
+- **Mayfield West (Caledon) is rerouted by the joins:**
+  - the greenfield sites that went through 28-2139 and the 27-2147 / 25-2224 / 25-2225 chain now
+    run through **27-2189** (375 mm, 2027) and the **25-2267** trunk (1,500 mm, 2030);
+  - 28-2139 falls from 25 developments to 6, 25-2267 rises from 5 to 25, and 27-2189 from 0 to 19;
+  - the 825-unit site at 0 Chinguacousy Road now gates in 2030 instead of 2028.
+
+  This is the joins doing their job. It's also the area to check first against the FSRs.
 
 ### 4. Gate year, for timing
 **Gate year = the latest construction year among the development's tier A and B1 projects.**

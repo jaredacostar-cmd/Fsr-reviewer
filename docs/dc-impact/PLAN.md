@@ -2,7 +2,7 @@
 
 Draft plan, October 2026. Nothing built yet.
 
-> **Status: on hold (October 22, 2026)** until the DC mapping (`data/dc-infra.json`) is updated in separate work. Every figure here comes from the current mapping. When it lands, rerun the prototype in [prototype/](prototype/README.md) and refresh the numbers before building.
+> **Status (October 22, 2026): waiting for the DC mapping update to merge.** It was checked before merging, on branch `claude/ecstatic-ride-s5n337` at `c78c797`: the allocation holds and the figures barely move (see ALLOCATION.md, "Rerun on the DC mapping update"). Once it is on main, rerun the prototype in [prototype/](prototype/README.md) to confirm, then start building.
 
 ## The ask
 
