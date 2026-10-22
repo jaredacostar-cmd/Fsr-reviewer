@@ -47,8 +47,9 @@
   // "n things to confirm", computed per site (SPEC §5): what a planner should check before relying
   // on the screen. Each line names the thing and where it comes from.
   function thingsToConfirm(p, { st, f, cb, kind }) {
-    const out = [], L = root.PeelLayers && root.PeelLayers.ofDev(p), LB = root.PeelLayerBar;
-    if (L && L.layer) out.push(`Counts as <strong>${LB ? LB.nameHTML(L.layer) : esc(L.layer)}</strong>${L.layer === 'proposed' || L.layer === 'anticipated' ? ': not counted as committed until a draft plan of subdivision or a site plan is approved (MECP D-5-1)' : L.layer === 'committed' && L.toPermit > 0 ? `: ${fmtNum(L.toPermit)} units left to permit` : ''}.`);
+    // (committed by the Peel rule: a building or site servicing permit, js/layers.js toPeel)
+    const out = [], L = root.PeelLayers && root.PeelLayers.ofDev(p, DU().commitOpts()), LB = root.PeelLayerBar;
+    if (L && L.layer) out.push(`Counts as <strong>${LB ? LB.nameHTML(L.layer) : esc(L.layer)}</strong>${L.layer === 'approved' || L.layer === 'proposed' || L.layer === 'anticipated' ? ': not committed until a building permit or a water or wastewater site servicing permit is filed' : L.layer === 'commitPeel' && L.parts.approved > 0 ? `: ${fmtNum(Math.round(L.parts.commitPeel))} units on permits, ${fmtNum(Math.round(L.parts.approved))} approved, not committed` : ''}.`);
     if (f && (f.zNear || f.dNear)) out.push(`Outside the mapped ${f.zNear && f.dNear ? 'pressure zones and sewersheds' : f.zNear ? 'pressure zones' : 'sewersheds'}: ${f.zNear && f.z ? `${esc(f.z.name.replace('Pressure zone ', 'Zone '))} assigned` : ''}${f.zNear && f.dNear ? '; ' : ''}${f.dNear ? 'nearest catchment assigned' : ''} (nearest by distance) — confirm the connection.`);
     if (st.works && st.works.gap) out.push(`Waits on a planned DC main (≈${st.works.needBy}); new growth procurements are paused — confirm the timing.`);
     if (!root.PeelUtil.PIPE_RESULTS) out.push('Pipe-by-pipe capacity is not assessed here: the Region\'s hydraulic model is the authority.');
@@ -64,10 +65,12 @@
     const PN = root.PeelPanel, { st, f, cb, pe, kind, em, jobs, useTxt, wv, wwv, dcv, confirm, worst } = o;
     const TONE = { ok: 'room', warn: 'tight', bad: 'over' }, phl = P.PHASE_BY_KEY[p.phase].label;
     const ls = root.PeelMapLabels && root.PeelMapLabels.latestSub ? root.PeelMapLabels.latestSub(p) : null;
-    const fig = (v, u, label, ctx) => ({ v, u, label, ctx });
+    // (each figure carries its working: the "?" on it opens the inputs, the rule and the data, js/how.js)
+    const H = root.PeelHow, crit = App().state.criteria;
+    const fig = (v, u, label, ctx, how) => ({ v, u, label, ctx, how: H && how ? how() : null });
     const fmtDay = d => new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
-    const who = kind === 'employment' ? [fig(fmtNum(roundPop(jobs)), 'jobs', 'on the site', ''), fig(em && em.totalM2 > 0 ? fmtNum(Math.round(em.totalM2)) : '–', 'm²', 'floor area', esc(useTxt))]
-      : [fig(fmtNum(Math.round(pe.totalUnits)), 'units', 'planned', p.unitsLost ? `net of ${fmtNum(p.unitsLost)} demolished` : kind === 'mixed' && jobs > 0 ? `and ≈${fmtNum(roundPop(jobs))} jobs` : ''), fig(fmtNum(roundPop(pe.population)), 'people', 'at build-out', pe.totalUnits > 0 ? `${(pe.population / pe.totalUnits).toFixed(2)} people per unit` : '')];
+    const who = kind === 'employment' ? [fig(fmtNum(roundPop(jobs)), 'jobs', 'on the site', '', () => H.jobs(em, crit)), fig(em && em.totalM2 > 0 ? fmtNum(Math.round(em.totalM2)) : '–', 'm²', 'floor area', esc(useTxt), () => H.jobs(em, crit))]
+      : [fig(fmtNum(Math.round(pe.totalUnits)), 'units', 'planned', p.unitsLost ? `net of ${fmtNum(p.unitsLost)} demolished` : kind === 'mixed' && jobs > 0 ? `and ≈${fmtNum(roundPop(jobs))} jobs` : '', () => H.units(p)), fig(fmtNum(roundPop(pe.population)), 'people', 'at build-out', pe.totalUnits > 0 ? `${(pe.population / pe.totalUnits).toFixed(2)} people per unit` : '', () => H.people(pe, crit))];
     const plant = f && f.pl ? (SV().PLANT_SHORT[f.pl] || f.pl) : null;
     // The servicing rows (the board's card): each opens the sub-view that holds it.
     const svcRow = (label, v, at) => ({ tone: TONE[v.tone], attrs: { 'data-at': at }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${label}</span>${PN.chip({ tone: TONE[v.tone], text: v.tone === 'ok' ? 'OK' : v.tone === 'warn' ? 'Check' : 'Short' })}</div><small class="pnl-r-line">${esc(v.text)}</small>` });
@@ -107,7 +110,7 @@
         if (gaps.length) return `${gaps.map(g => `<strong>${gapTxt(g)}</strong>`).join('; ')}${c}.`;
         return need.length ? `Check ${need.join(' and ')}: the screen finds a shortfall or an open question there${c}.` : `The screen finds no servicing shortfall for this site${c}.`;
       })(),
-      figures: [...who, fig(fmt1(cb.water.maxDay), 'L/s', 'water, maximum day', 'Peel design criteria'), fig(fmt1(cb.wastewater.wetPeak), 'L/s', 'wastewater, peak wet weather', cb.wastewater.infiltration > 0 ? esc(D.iiPlain(cb.wastewater.infiltration, App().state.criteria)) : 'peak dry + I&amp;I')],
+      figures: [...who, fig(fmt1(cb.water.maxDay), 'L/s', 'water, maximum day', 'Peel design criteria', () => H.water(pe, crit)), fig(fmt1(cb.wastewater.wetPeak), 'L/s', 'wastewater, peak wet weather', cb.wastewater.infiltration > 0 ? esc(D.iiPlain(cb.wastewater.infiltration, App().state.criteria)) : 'peak dry + I&amp;I', () => H.wastewater(pe, crit))],
       chart: (() => { const k = f && f.pl && root.PeelCapacity ? root.PeelCapacity.of(`plant:${f.pl}`) : null; return k && LB() ? `<p class="small pnl-chart-t">${esc(plant)}, the plant it drains to: existing, built, committed and proposed flow <span class="pnl-chart-u">(% of rated capacity)</span></p>${LB().capacityBarHTML(k, { small: true })}${LB().capLegendHTML()}` : ''; })(),
       lists: [
         { title: 'Servicing', rows, total: rows.length },
@@ -261,7 +264,7 @@
     const adv = R ? R.list.filter(r => r.rec === 'advance').map(r => ({ name: r.name })) : [];
     const trig = (capList || []).filter(c => c.out).map(c => ({
       sys: c.sys, now: c.out === 'today',
-      text: `${c.kind === 'plant' ? SV().PLANT_SHORT[c.pl] || c.name : 'South Peel water treatment'} ${SvcTab().trigText(c)} (existing + built + committed ${SvcTab().pctRated(c, 'com')}% → ${SvcTab().pctRated(c, 'bo')}% at build-out)`,
+      text: `${c.kind === 'plant' ? SV().PLANT_SHORT[c.pl] || c.name : 'South Peel water treatment'} ${SvcTab().trigText(c)} (existing + built + committed under MECP D-5-1 ${SvcTab().pctRated(c, 'com')}% → ${SvcTab().pctRated(c, 'bo')}% at build-out)`,
     }));
     const stalled = [];
     for (const p of set) {
@@ -319,7 +322,7 @@
   // ---- Stage 3: the area Overview (Peel, a municipality, a plan) as the standard panel -----------------
   let ovSort = store.get('ovSort', 'limit');
   // The last area Overview panel (Peel or the municipality filter): Home shows its figures (Stage 4).
-  let lastArea = null;
+  let lastArea = null, lastAreaN = 0;   // (and how many developments it was worked out for)
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-ov-sort]'); if (b) { ovSort = b.dataset.ovSort; store.set('ovSort', ovSort); renderOverview(); } });
   function areaPanelSpec(o) {
     const PN = root.PeelPanel, SC = root.PeelSvcCapacity, { set, e, basis, pipe, unitsAll, unitsWord, inPlan, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr } = o, pre = o.pre || { units: 0, people: 0 };
@@ -343,7 +346,9 @@
         { v: fmtNum(set.length), u: 'developments', label: 'shown on the map', ctx: esc(scopeText()) },
         // A plan filter: the part inside the plan, as Growth in an area counts it (a straddling
         // development by its share), and what the developments shown hold outside it.
-        inPlan ? { v: fmtNum(Math.round(basis === 'all' ? inPlan.planned : inPlan.counted)), u: 'units', label: `${unitsWord} inside ${inPlan.name}`, ctx: `+ ${fmtNum(Math.round(inPlan.outside))} planned in the parts of ${fmtNum(inPlan.straddling)} development${inPlan.straddling === 1 ? '' : 's'} outside it` } : { v: fmtNum(Math.round(unitsAll)), u: 'units', label: unitsWord, ctx: [since(unitsAll, pre.units, x => fmtNum(Math.round(x))), basis === 'all' ? (n ? `${fmtNum(left)} left to build` : (lyTiles.units || '')) : pipe ? `of ${fmtNum(Math.round(pipe.planned))} planned` : ''].filter(Boolean).join(' · ') },
+        inPlan ? { v: fmtNum(Math.round(basis === 'all' ? inPlan.planned : inPlan.counted)), u: 'units', label: `${unitsWord} inside ${inPlan.name}`, ctx: `+ ${fmtNum(Math.round(inPlan.outside))} planned in the parts of ${fmtNum(inPlan.straddling)} development${inPlan.straddling === 1 ? '' : 's'} outside it` } : { v: fmtNum(Math.round(unitsAll)), u: 'units', label: unitsWord, ctx: [since(unitsAll, pre.units, x => fmtNum(Math.round(x))), basis === 'all' ? (n ? `${fmtNum(left)} left to build` : (lyTiles.units || '')) : pipe ? `of ${fmtNum(Math.round(pipe.planned))} planned` : '',
+          // (committed: the Peel rule, a building or site servicing permit, of the units still to build)
+          basis === 'all' && lyTiles.committed >= 0.5 ? `${fmtNum(Math.round(lyTiles.committed))} committed (a building or site servicing permit)` : ''].filter(Boolean).join(' · ') },
         inPlan ? { v: fmtNum(roundPop(inPlan.people)), u: 'people', label: `at build-out, inside ${inPlan.name}`, ctx: lyTiles.peopleBar || '' } : { v: fmtNum(roundPop(e.population)), u: 'people', label: 'at build-out', ctx: `${since(e.population, pre.people, x => fmtNum(roundPop(x)))}${lyTiles.peopleBar || (lyTiles.people ? ` · ${lyTiles.people}` : '')}` },
         { v: fmtNum(roundPop(inPlan ? inPlan.jobs : e.employment.jobs)), u: 'jobs', label: inPlan ? `on development sites, inside ${inPlan.name}` : 'on development sites', ctx: '' },
       ],
@@ -384,10 +389,10 @@
     const inPlan = planSplit(set);
     // The tiles carry layer sub-labels (SPEC §5): the units and people by layer, as the bars sum.
     // Existing (completed before census day) is listed too, so the parts add up to the tile.
-    const lyT = root.PeelLayers && set.length ? root.PeelLayers.totals(set, { criteria: App().state.criteria, jobsOf: App().jobsOf }) : null;   // (people at the scenario's criteria, as e.population)
+    const lyT = root.PeelLayers && set.length ? root.PeelLayers.totals(set, { criteria: App().state.criteria, jobsOf: App().jobsOf, ...DU().commitOpts() }) : null;   // (people at the scenario's criteria, as e.population; committed by the Peel rule)
     const lyTiles = (() => {
       if (!lyT) return { units: '', people: '' };
-      const t = lyT, LB = root.PeelLayerBar, ks = ['existing', 'built', 'committed', 'proposed', 'anticipated'].filter(k => t.units[k] >= 0.5);
+      const t = lyT, LB = root.PeelLayerBar, ks = root.PeelLayers.KEYS.peel.filter(k => t.units[k] >= 0.5);
       // Bundle 5: the people card's split by stage as a small bar (each part named on hover), not a
       // seven-part line.
       const peopleBar = LB && LB.barHTML ? `<span class="fig-bar">${LB.barHTML({ small: true, segments: ks.map(k => ({ layer: k, value: t.people[k], title: `${LB.LABEL[k]}: ${fmtNum(roundPop(t.people[k]))} people` })) })}</span>` : '';
@@ -395,7 +400,7 @@
       // (only where the headline counts every stage: Build-out leaves Pre-application out)
       const gk = basis === 'all' || basis === 'buildout' ? ks.filter(k => k !== 'existing' && !(basis === 'buildout' && k === 'anticipated')) : [];
       const strip = LB && LB.barHTML && gk.length ? `<div class="home-stages"><p class="small pnl-chart-t"><strong>The units it adds, by stage</strong> <span class="pnl-chart-u">(units)</span></p>${LB.barHTML({ segments: gk.map(k => ({ layer: k, value: t.units[k] })), unit: 'units' })}${LB.legendHTML(gk.map(k => ({ layer: k, value: t.units[k] })))}</div>` : '';
-      return { units: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(Math.round(t.units[k]))}`).join(' · '), people: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(roundPop(t.people[k]))}`).join(' · '), peopleBar, anticipated: ks.includes('anticipated'), strip, built: t.units.built || 0 };
+      return { committed: t.units.commitPeel || 0, units: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(Math.round(t.units[k]))}`).join(' · '), people: ks.map(k => `${LB ? LB.LABEL[k] : k} ${fmtNum(roundPop(t.people[k]))}`).join(' · '), peopleBar, anticipated: ks.includes('anticipated'), strip, built: t.units.built || 0 };
     })();
     // "Would add" is growth beyond the 2021 Census: units completed before census day are already in
     // it (Existing), so they are taken out of the headline.
@@ -424,7 +429,7 @@
     const scopeW = scopeText(), pipeL = root.PeelLayers && root.PeelLayers.pipeline ? root.PeelLayers.pipeline(set) : null;
     const infL = root.PeelLayers && root.PeelLayers.infill ? root.PeelLayers.infill(infillScope(), { secondUnits: secondUnitScope() }) : null;
     const mgmt = pipeL ? `<span class="ov-mgmt">${root.PeelLayers.headlineText(pipeL, /^all of peel$/i.test(scopeW) ? '' : ` (${esc(scopeW)})`, fmtNum, s => `<strong>${s}</strong>`, infL)}</span> ` : '';
-    const hl = set.length ? `${mgmt}The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(Math.max(0, e.population - pre.people)))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(Math.max(0, unitsAll - pre.units)))} units${lyTiles.built >= 0.5 && (basis === 'all' || basis === 'buildout') ? `, <strong>${fmtNum(Math.round(lyTiles.built))}</strong> of them built since 2021` : ''}${pre.units >= 0.5 ? ` <span class="muted">(not counting ${fmtNum(Math.round(pre.units))} completed before the 2021 Census, already in it)</span>` : ''}.${tight ? ` <strong>${esc(SV().PLANT_SHORT[tight.pl])}</strong> ${SvcTab().trigText(tight)} (existing + built + committed ${SvcTab().pctRated(tight, 'com')}% of rated capacity → ${SvcTab().pctRated(tight, 'bo')}% at build-out).` : ''}` : 'No developments match the current filters.';
+    const hl = set.length ? `${mgmt}The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(Math.max(0, e.population - pre.people)))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(Math.max(0, unitsAll - pre.units)))} units${lyTiles.built >= 0.5 && (basis === 'all' || basis === 'buildout') ? `, <strong>${fmtNum(Math.round(lyTiles.built))}</strong> of them built since 2021` : ''}${pre.units >= 0.5 ? ` <span class="muted">(not counting ${fmtNum(Math.round(pre.units))} completed before the 2021 Census, already in it)</span>` : ''}.${tight ? ` <strong>${esc(SV().PLANT_SHORT[tight.pl])}</strong> ${SvcTab().trigText(tight)} (existing + built + committed under MECP D-5-1 ${SvcTab().pctRated(tight, 'com')}% of rated capacity → ${SvcTab().pctRated(tight, 'bo')}% at build-out).` : ''}` : noDevsText();
     // ⓘ line: method, criteria, data dates.
     const fr = DU().freshness(), nDue = fr.filter(r => r.st === 'due' || r.st === 'stale').length;
     const basisTxt = { all: 'every stage, pre-consultation to completed', committed: 'approved only (committed, D-5-1)', buildout: 'every stage but pre-application', remaining: 'units left to build (not yet completed)' }[basis] || 'every stage';
@@ -432,7 +437,7 @@
     const permitCaveat = root.PeelCensusView && root.PeelCensusView.permitCaveatHTML ? root.PeelCensusView.permitCaveatHTML() : '';
     // Stage 3: the standard panel. The cards below (every tile, the capacity bars, Needs attention by
     // group, the largest unbuilt, the constraint card) are its full table.
-    lastArea = areaPanelSpec({ set, e, basis, pipe, unitsAll, unitsWord, inPlan, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue, pre });
+    lastArea = areaPanelSpec({ set, e, basis, pipe, unitsAll, unitsWord, inPlan, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue, pre }); lastAreaN = set.length;
     if (root.PeelPanel) root.PeelPanel.set('overview:', lastArea);
     el.innerHTML = `<div class="ov-top">${hlP(hl)}${permitCaveat}<button type="button" class="btn small link ov-brief" data-ov-tool="brief" title="A one-page summary to print or save as PDF (also in Export)">Executive briefing (PDF)</button></div>
       <div class="ov-grid">
@@ -507,6 +512,8 @@
     const st = App().state; if ((st.sp && st.sp.length) || (st.mtsa && st.mtsa.length) || st.daCtx) return [];
     return ((st.projects && st.projects.secondUnits) || []).filter(r => !st.muni || r.municipality === st.muni);
   }
+  // An empty set before the developments are in is loading, not a filter that matches nothing.
+  const noDevsText = () => (App().developmentsReady && !App().developmentsReady() ? 'Loading the developments…' : 'No developments match the current filters.');
   function scopeText() { return scopeLabel({ muni: App().state.muni, sp: App().state.sp.length ? PA().spSummary() : '', mtsa: App().state.mtsa.length ? 'MTSA filter' : '', svc: root.PeelSvcScope ? root.PeelSvcScope.label() : '' }); }
   // Units of the developments shown inside the filtered plans, and in their parts outside, when a
   // plan filter is on and some development straddles the boundary (else null: nothing to reconcile).
@@ -541,7 +548,7 @@
   });
 
   // ---- Public contract ----
-  const api = { renderOverview, renderVerdictCard, scopeText, scopeLabel, infillScope, secondUnitScope, capacityBarsHTML, lastAreaSpec: () => lastArea, weekChanges };
+  const api = { renderOverview, renderVerdictCard, scopeText, scopeLabel, infillScope, secondUnitScope, capacityBarsHTML, lastAreaSpec: () => lastArea, lastAreaCount: () => lastAreaN, weekChanges };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelOverviewTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -195,6 +195,7 @@
     if (on) {
       tl.timer = setInterval(() => {
         if (!tl) return;
+        if (document.hidden) return;   // a background tab holds its year instead of re-rendering unseen frames
         if (tl.year >= tl.years[tl.years.length - 1]) { setPlaying(false); return; }
         applyYear(tl.year + 1);
       }, tl.speedMs);

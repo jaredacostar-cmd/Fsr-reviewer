@@ -34,6 +34,8 @@ const SHELL_ASSETS = [
   'js/labs.js',
   'js/panel.js',
   'js/plan-rollup.js',
+  'js/ledger.js',
+  'js/ledger-ui.js',
   'js/plan-tables.js',
   'js/snapshot-index.js',
   'js/svc-capacity.js',
@@ -66,6 +68,8 @@ const SHELL_ASSETS = [
   'js/approvals-guide.js',
   'js/reference.js',
   'js/glossary.js',
+  'js/sources.js',
+  'js/how.js',
   'js/file-tree.js',
   'js/arcgis.js',
   'js/area-select.js',
@@ -83,6 +87,7 @@ const SHELL_ASSETS = [
   'js/data-tab.js',
   'js/dc-cost.js',
   'js/dc-infra.js',
+  'js/dc-joins.js',
   'js/capital-ea-model.js',
   'js/map-pick.js',
   'js/capital-ea.js',
@@ -184,6 +189,9 @@ const SHELL_ASSETS = [
 // snapshot.json is ~26.5MB parsed; it is the whole point of the offline cache.
 const DATA_URL_RE = /(?:^|\/)data\/[^/]+\.json(\?|$)/;
 
+// The URL index.html asks for: js/, css/ and the manifest carry ?v=<build> (stamped at deploy).
+const versioned = (url) => /^(js|css)\/|^manifest\.webmanifest$/.test(url) ? `${url}?v=${SW_VERSION}` : url;
+
 self.addEventListener('install', (event) => {
   // A new deploy's worker takes over at once instead of waiting for every tab to close.
   try { self.skipWaiting(); } catch (e) { /* defensive */ }
@@ -191,13 +199,16 @@ self.addEventListener('install', (event) => {
     if (!('caches' in self)) return;
     try {
       const cache = await caches.open(SHELL_CACHE);
+      // Scripts and styles are asked for with the page's own ?v=<build>, so the install is served
+      // from the files the page just downloaded (HTTP cache) instead of fetching the shell twice.
+      const urls = SHELL_ASSETS.map(versioned);
       // addAll is atomic-ish: one failure rejects the whole batch. Try it
       // first, then fall back to best-effort per-asset caching so a single
       // missing asset never kills the install.
       try {
-        await cache.addAll(SHELL_ASSETS);
+        await cache.addAll(urls);
       } catch (e) {
-        await Promise.allSettled(SHELL_ASSETS.map((url) =>
+        await Promise.allSettled(urls.map((url) =>
           cache.add(url).catch(() => {})
         ));
       }
@@ -224,6 +235,13 @@ self.addEventListener('activate', (event) => {
   })());
 });
 
+const sameFile = (a, b) => {
+  if (!a || !b) return false;
+  const tag = (r) => r.headers.get('etag'), mod = (r) => r.headers.get('last-modified');
+  if (tag(a) && tag(b)) return tag(a) === tag(b);
+  return !!(mod(a) && mod(b)) && mod(a) === mod(b);
+};
+
 // stale-while-revalidate for data/*.json: answer from cache immediately,
 // refresh in the background when the network is reachable.
 async function staleWhileRevalidate(request) {
@@ -231,7 +249,9 @@ async function staleWhileRevalidate(request) {
   const cached = await cache.match(request).catch(() => null);
   const network = fetch(request)
     .then((res) => {
-      if (res && res.ok) cache.put(request, res.clone()).catch(() => {});
+      // A revalidated file (304, handed back as 200) is the copy already cached: skip rewriting
+      // it (the snapshot is tens of MB) when its ETag / Last-Modified match.
+      if (res && res.ok && !sameFile(cached, res)) cache.put(request, res.clone()).catch(() => {});
       return res;
     })
     .catch(() => null);

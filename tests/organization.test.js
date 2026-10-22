@@ -45,7 +45,7 @@ test('file tree: a block plan that states no count adds up its draft plans, and 
 test('Records › Files: the tree, then the latest activity; Growth: the developments table’s rows open the site; estimate rows name their file', () => {
   const r = src('js/records-tab.js');
   assert.match(r, /chart: `<h3 class="sub-title pnl-chart-t">How the files fit together <span class="pnl-chart-u">\(each under the file whose land holds it\)<\/span><\/h3>\$\{FT\.treeHTML\(d, recOf,/);
-  assert.match(r, /lists: \[\{ title: 'Latest activity', rows: latest,/);
+  assert.match(r, /lists: \[\.\.\.siteList, \{ title: 'Latest activity', rows: latest,/);
   assert.match(r, /label: 'to check', ctx: 'linked by overlap only'/);
   const w = src('js/ws-pages.js');
   assert.match(w, /title: gStage === 'all' \? `Developments in \$\{n\.name\}` : `\$\{STG\[gStage\]\}: developments in \$\{n\.name\}`/);
@@ -127,7 +127,7 @@ test('the trail owns the scope’s count; filters on show on pages; Review an FS
   assert.match(src('js/topbar.js'), /const count = scoped \? `<span class="tb-count" title="This development's planned homes">· \$\{fmtNum\(Math\.round\(devU\)\)\} home/);
   const w = src('js/workspaces.js');
   assert.match(w, /<div class="page-filters small" role="group" aria-label="Filters on"><span class="muted">Filters on:<\/span>/);
-  assert.match(w, /if \(!REF\[page\]\) m\.filters = filterChipsHTML\(\);/);
+  assert.match(w, /if \(!REF\[page\] && !LAB_PAGES\[page\]\) m\.filters = filterChipsHTML\(\);/);
   assert.match(src('js/ws-pages.js'), /if \(m\.filters\) out\.push\(m\.filters\);/);
   assert.match(src('index.html'), /<div class="ws-filters" id="ws-filters"><\/div>/);
   const p = src('js/ws-pages.js');

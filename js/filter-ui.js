@@ -149,6 +149,14 @@
     set('#fv-flags', fl.length ? fl.join(', ') : 'None');
     for (const [id, on] of [['#fr-where', S.muni || S.plant || areas.length], ['#fr-what', S.minUnits || S.dwelling || S.landuse !== App().DEFAULT_LANDUSE || S.dcgate || S.kind !== App().DEFAULT_KIND || !S.newOnly], ['#fr-when', App().timeActive() || S.yearMode !== 'any'], ['#fr-counts', !!S.lyr], ['#fr-flags', fl.length]]) { const el = $(id); if (el) el.classList.toggle('active', !!on); }
   }
+  // A link from before Completed was shown by default opens without it (js/share.js): a line where the
+  // filters are, with the one tap that adds it back, while Completed is still off.
+  const oldLinkNote = () => (App().state.oldLink && !App().state.phases.has('completed')
+    ? '<span class="old-link-note">Opened from an older link: Completed is hidden, so the totals are lower than a fresh open. <button type="button" class="btn small link" data-include-completed>Include Completed</button></span>' : '');
+  function includeCompleted() {
+    App().state.phases = new Set([...App().state.phases, 'completed']); App().state.oldLink = false;
+    App().applyFilters();
+  }
   // One line saying what the map shows and why.
   function renderShowing() {
     const v = currentPhaseView();
@@ -162,13 +170,14 @@
     // Site activity held aside (js/sites.js): files that only alter what stands on a site.
     const sx = App().state.projects.siteActivity || [];
     const siteLine = sx.length ? ` · <button type="button" class="btn small link" data-site-activity title="Files that only alter what stands on a site (a patio, a unit fit-out, a new door), with no proposal of their own: each development's page lists them under On this site">${App().state.showSiteActivity ? `Including ${fmtNum(sx.length)} site activity · leave it out` : `${fmtNum(sx.length)} site activity left out · include`}</button>` : '';
-    $('#f-showing').innerHTML = `<span class="find-count"><b>${fmtNum(App().state.filtered.length)}</b> developments</span> <span class="muted">${esc(what)} · ${esc(years)} · ${esc(App().state.muni || 'all of Peel')}${App().state.search ? ` · matching “${esc(App().state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''}</span> · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>${dormLine}${siteLine}`;
+    $('#f-showing').innerHTML = `<span class="find-count"><b>${fmtNum(App().state.filtered.length)}</b> developments</span> <span class="muted">${esc(what)} · ${esc(years)} · ${esc(App().state.muni || 'all of Peel')}${App().state.search ? ` · matching “${esc(App().state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''}</span> · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>${dormLine}${siteLine}${oldLinkNote()}`;
   }
   $('#f-showing').addEventListener('click', e => {
-    if (e.target.closest('[data-site-activity]')) { App().state.showSiteActivity = !App().state.showSiteActivity; App().rebuild(); return; }
+    if (e.target.closest('[data-include-completed]')) { includeCompleted(); return; }
+    if (e.target.closest('[data-site-activity]')) { App().state.showSiteActivity = !App().state.showSiteActivity; App().rehold(); return; }
     if (!e.target.closest('[data-dormant]')) return;
     App().state.showDormant = !App().state.showDormant;
-    App().rebuild();   // (rebuild → applyFilters updates the share link)
+    App().rehold();   // (rehold → applyFilters updates the share link)
   });
   function renderFilterUI() {
     renderSectionSummaries();
@@ -245,7 +254,7 @@
   const api = {
     FLAG_TESTS, ALL_PHASE_KEYS, PLANNING_PHASES, YEAR_MS, appUnits, renderFlagChips,
     toggleFlag, activeFilters, renderFilterUI, resetAllFilters, renderEmptyMsg,
-    currentPhaseView,
+    currentPhaseView, oldLinkNote, includeCompleted,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelFilterUI = api;

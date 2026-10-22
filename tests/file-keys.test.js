@@ -133,3 +133,12 @@ test('dedupeRecords: one Mississauga permit in both permit feeds is one permit (
   const su = P.dedupeRecords([mp('SEC UNIT 23-5463 SU', 1, 'mis-permits/0', 'SEC|UNIT|23|5463|SU'), mp('SEC UNIT 23 5463', 1, 'mis-gm-permits/0')]);
   assert.deepEqual(su.map(r => r.units), [1]);
 });
+
+test('displayAddress: the municipality, province and postal code the source appends are dropped from a title', () => {
+  assert.equal(P.displayAddress('14 Twilley Rd, Brampton, ON,'), '14 Twilley Rd');
+  assert.equal(P.displayAddress('31 Banks Dr, Brampton, ON, L6P 1A5'), '31 Banks Dr');
+  assert.equal(P.displayAddress('12290 HUTCHINSON FARM LANE CALEDON ON L7C 2B6'), '12290 HUTCHINSON FARM LANE');
+  assert.equal(P.displayAddress('40 DOLYBHILL DRIVE, BRAMPTON'), '40 DOLYBHILL DRIVE');
+  // a street named after a municipality, or "Ontario" inside a street name, stays
+  for (const a of ['NORTHWEST CORNER OF EDGEWARE ROAD & MISSISSAUGA', '2 MARITIME ONTARIO BLVD', '0 BOVAIRD DR W', '100 Queen St W, Unit 5']) assert.equal(P.displayAddress(a), a, a);
+});

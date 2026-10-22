@@ -62,10 +62,11 @@
     const ri = root.PeelReportIssue;
     if (!PV) return `<p class="small muted">Source: ${esc(r.sourceName)}${also}${mapBtn}${ri ? ` · ${ri.reportLinkHTML(r, { portal: r.sourceName })}` : ''}</p>`;
     const portal = PV.portalFor(r.sourceName);
-    const url = PV.recordSourceUrl(r, sourceUrlFor(r));
+    const url = PV.recordSourceUrl(r, sourceUrlFor(r), { format: 'html' });
     const pulled = PV.retrievedAt(r, App().state.snapshot && { generatedAt: App().state.snapshot.generatedAt });
     const report = ri ? ` · ${ri.reportLinkHTML(r, { sourceUrl: url, portal, pulledOn: pulled })}` : '';
-    return `<p class="small muted">Source: ${esc(portal)}${url ? ` · <a href="${esc(url)}" target="_blank" rel="noopener">Record ↗</a>` : ''}${pulled ? ` · pulled ${esc(pulled)}` : ''}${also}${mapBtn}${report}</p>`;
+    const look = PV.applicationSearch ? PV.applicationSearch(r) : null;
+    return `<p class="small muted">Source: ${esc(portal)}${url ? ` · <a href="${esc(url)}" target="_blank" rel="noopener">Record ↗</a>` : ''}${pulled ? ` · pulled ${esc(pulled)}` : ''}${look ? ` · <a href="${esc(look.url)}" target="_blank" rel="noopener" title="Search ${esc(look.ref)} by file number">Find ${esc(look.ref)} on ${esc(look.portal)} ↗</a>` : ''}${also}${mapBtn}${report}</p>`;
   }
   // Per-file records with provenance columns, shared by the audit CSV and the
   // Excel Records sheet: the same rows the audit CSV has always had, extended.

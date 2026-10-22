@@ -24,7 +24,8 @@ const Aerial = () => root.PeelAerial;
     C.onAdd = function (m) { add.call(this, m); (m._cvs || (m._cvs = new Set())).add(this); };
     C.onRemove = function () { if (this._map && this._map._cvs) this._map._cvs.delete(this); rem.call(this); };
     const zOf = r => { const pane = r._container && r._container.parentNode; return pane ? (+getComputedStyle(pane).zIndex || 0) * 1000 + [...pane.children].indexOf(r._container) : -1; };
-    const stack = r => [...(r._map._cvs || [r])].filter(x => x._map && x._container).sort((a, b) => zOf(b) - zOf(a));
+    // Each canvas's z is read once per call, not inside the sort comparator (this runs on every mouse move).
+    const stack = r => [...(r._map._cvs || [r])].filter(x => x._map && x._container).map(x => [zOf(x), x]).sort((a, b) => b[0] - a[0]).map(e => e[1]);
     const hitOf = (r, e, click) => {
       const pt = r._map.mouseEventToLayerPoint(e); let hit = null;
       for (let o = r._drawFirst; o; o = o.next) { const l = o.layer; if (l.options.interactive && l._containsPoint(pt) && !(click && r._map._draggableMoved(l))) hit = l; }
