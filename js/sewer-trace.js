@@ -185,7 +185,7 @@
   function dcSewerNet() {
     if (DCW.g && DCW.v === (DJ() ? DJ().version() : 0)) return DCW.g;
     if (!App().state.dcInfra || !MM().SEW.data) return DCW.g;
-    const xs = [], ys = [], E = [], lineOf = [], lines = App().state.dcInfra.wastewater.lines;
+    const xs = [], ys = [], E = [], lineOf = [], lines = [...App().state.dcInfra.wastewater.lines, ...(DJ() ? DJ().capLines('wastewater') : [])];     // (with the capital projects' new sewers: js/dc-joins.js)
     for (const ln of lines) { const a = xs.length; ln.g.forEach(([x, y], k) => { xs.push(x); ys.push(y); lineOf.push(ln); if (k) E.push([a + k - 1, a + k, ln]); }); ln._n = [a, xs.length - 1]; }
     // Hand-overs to the existing sewers: a main's end within 600 m of a 300 mm+ sewer (beyond 200 m
     // costed as a bridged gap), any point within 25 m.
@@ -230,7 +230,13 @@
     for (const t of ends) {
       const o = ov.get(t), ln = lineOf[t], pt = [xs[t], ys[t]];
       let tp = null;
-      if (!o) tp = tapDc(pt, 600, l => l !== ln && !(l.d && ln.d && l.d < ln.d / 2));     // (onto a planned main at least half its size: an 1800 mm trunk doesn't end in a 450 mm local)
+      if (!o) {
+        // (onto a planned main at least half its size: an 1800 mm trunk doesn't end in a 450 mm local;
+        // onto a capital project's new sewer only where drawn onto it)
+        tp = tapDc(pt, 600, l => l !== ln && !l.cap && !(l.d && ln.d && l.d < ln.d / 2));
+        const tc = tapDc(pt, DJ() ? DJ().CAP_REACH_M : 60, l => l !== ln && l.cap);
+        if (tc && (!tp || tc.m < tp.m)) tp = tc;
+      }
       else if (o.to && o.into === 'dc') { tp = tapDc(o.to, 15, l => l !== ln); if (tp) tp = { ...tp, m: DI().dcM(pt, tp.q) }; }
       // The sewer it hands over to: its size or bigger, or at least half its size where the main is
       // drawn onto it (within 60 m: a twin of the existing trunk).
@@ -238,7 +244,7 @@
       if (!o && tp && tp.m > 60 && sewer && sewer.m < tp.m) tp = null;
       if (tp) for (const e of [tp.a, tp.b]) E.push([t, e, null, tp.m + DI().dcM(tp.q, [xs[e], ys[e]]), !o && tp.m > 60, tp.q]);
       const sewerNearer = sewer && (!tp || sewer.m < tp.m);
-      joins.push({ sys: 'wastewater', ln, pt, auto: !o, ov: o,
+      if (!ln.cap) joins.push({ sys: 'wastewater', ln, pt, auto: !o, ov: o,
         ...(o && o.to && (sewerNearer || tp) ? { to: o.to, m: DI().dcM(pt, o.to), into: sewerNearer ? { kind: 'sewer', d: sewer.d, k: sewer.k } : { kind: 'dc', ln: tp.l } }
           : sewerNearer ? { to: SC().pipeCoords(MM().SEW.data.pipes[sewer.k]).reduce((a, c) => (DI().dcM(pt, c) < DI().dcM(pt, a) ? c : a)), m: sewer.m, into: { kind: 'sewer', d: sewer.d, k: sewer.k } }
           : tp ? { to: tp.q, m: tp.m, into: { kind: 'dc', ln: tp.l } } : { to: null, m: null, into: null }) });

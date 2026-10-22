@@ -56,11 +56,43 @@
     J.edits.push({ sys, end: r6(end), ...rec, at: new Date().toISOString().slice(0, 10) });
     changed();
   }
+  // ---- Mains built since the network data, or being built -----------------------------------
+  // The Region's capital projects (data/capital.json) that lay a new main (not relining or
+  // trenchless work on an existing one), tendered or further: a planned DC main often connects to
+  // one of these (an earlier DC program's main) before it is in the watermain / sewer data. Joined
+  // to only where a planned main is drawn onto it (within 60 m: CAP_REACH_M), never as a bridged gap;
+  // a record with a DC main's project number is that main, left out.
+  const CAP_WORK = { water: /^WM(-TUNNELING|-DEVELOPMENT)?$/, wastewater: /^SAN(-TUNNELING|-DEVELOPMENT)?$/ };
+  const CAP_STATUS = new Set(['tendered', 'awarded', 'under construction', 'substantially complete', 'complete']);
+  function capFrom(records, dc) {
+    const out = { water: [], wastewater: [] };
+    for (const sys of ['water', 'wastewater']) {
+      const dcProj = new Set(dc && dc[sys] ? dc[sys].lines.map(l => l.p).filter(Boolean) : []);
+      for (const r of records || []) {
+        if (r.system !== sys || !CAP_WORK[sys].test(r.workType || '') || !CAP_STATUS.has(r.status) || /CANCELLED|ON-HOLD/.test(r.phase || '') || dcProj.has(r.projectNumber) || !r.geometry) continue;
+        const parts = r.geometry.type === 'LineString' ? [r.geometry.coordinates] : r.geometry.type === 'MultiLineString' ? r.geometry.coordinates : [];
+        for (const g of parts) if (g.length >= 2) out[sys].push({ cap: true, sys, k: sys === 'water' ? 'feeder' : 'local', s: r.status, p: r.projectNumber, n: r.street || '', work: r.workType, d: null, y: null, g });
+      }
+    }
+    return out;
+  }
+  const capLines = sys => (J.cap ? J.cap[sys] : []);
+  const CAP_REACH_M = 60;
   function load() {
     if (J.loading) return J.loading;
-    J.loading = (typeof fetch === 'function' ? fetch('data/dc-joins.json').then(r => (r.ok ? r.json() : null)).catch(() => null) : Promise.resolve(null))
-      .then(d => { if (d && Array.isArray(d.joins)) { J.shipped = d.joins; merged = merge(J.shipped, J.edits); J.v++; } return d; });
+    const get = u => (typeof fetch === 'function' ? fetch(u).then(r => (r.ok ? r.json() : null)).catch(() => null) : Promise.resolve(null));
+    J.loading = Promise.all([get('data/dc-joins.json'), get('data/capital.json')]).then(([d, cap]) => {
+      if (d && Array.isArray(d.joins)) J.shipped = d.joins;
+      if (cap && Array.isArray(cap.records)) J.capRecords = cap.records;
+      merged = merge(J.shipped, J.edits); J.v++;
+      return d;
+    });
     return J.loading;
+  }
+  // (the DC data arrives on its own: the capital mains are built once both are in)
+  function capReady() {
+    if (!J.cap && J.capRecords && App() && App().state.dcInfra) { J.cap = capFrom(J.capRecords, App().state.dcInfra); J.v++; }
+    return !!J.cap;
   }
   function exportJSON() {
     return { version: 1, note: 'Reviewed joins of the 2026 DC planned mains onto the existing network (js/dc-joins.js). end: the planned main\'s end; to: the point it joins (null: an open end); into: what it joins.', joins: merged.map(({ sys, end, to, into, note, at }) => ({ sys, end, to: to || null, into: into || null, ...(note ? { note } : {}), ...(at ? { at } : {}) })) };
@@ -97,6 +129,7 @@
   }
   function intoText(into) {
     if (!into) return 'nothing';
+    if (into.kind === 'dc' && into.ln && into.ln.cap) return `the ${DI() ? DI().dcLineText(into.ln) : 'capital project main'}`;
     if (into.kind === 'sewer') return `the existing ${into.d} mm sewer`;
     if (into.kind === 'watermain') return `the existing ${into.d ? `${into.d} mm ` : ''}watermain`;
     return `the planned ${DI() ? DI().dcLineText(into.ln) : 'main'}`;
@@ -226,8 +259,8 @@
   if (typeof document !== 'undefined') load();
 
   const api = {
-    override, setEdit, load, exportJSON, merge, conf, atEdge, intoText, joinText, render, setOn, ensureData,
-    isOn: () => S.on, edits: () => J.edits.slice(), version: () => J.v, download, MATCH_M,
+    override, setEdit, load, exportJSON, merge, conf, atEdge, intoText, joinText, capFrom, capLines, capReady, CAP_REACH_M, render, setOn, ensureData,
+    isOn: () => S.on, edits: () => J.edits.slice(), version: () => { capReady(); return J.v; }, download, MATCH_M,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDcJoins = api;

@@ -100,7 +100,9 @@
     const id = n && dcTarget(n.ln);
     return id ? { id, m: n.m, via: { p: n.ln.p, y: n.ln.y, d: n.ln.d, k: n.ln.k } } : null;
   }
-  const dcLineText = ln => `${ln.y || 'year not labelled'} ${ln.d ? `${ln.d} mm ` : ''}${DC_KIND[ln.k][0].toLowerCase()}${ln.p ? ` (project ${ln.p}${ln.c ? `, component ${ln.c}` : ''})` : ''}${ln.s === 'approved' ? ', approved 2026' : ''} · ${lnStatus(ln)} (as of ${CAPITAL.asOf})`;
+  // (a capital project's main, js/dc-joins.js: built since the network data, or being built)
+  const capText = ln => `${ln.work && /^WM/.test(ln.work) ? 'watermain' : 'sewer'} on ${ln.n ? ln.n.replace(/\b\w+/g, w => w[0] + w.slice(1).toLowerCase()) : 'a street'} (capital project ${ln.p}, ${ln.s})`;
+  const dcLineText = ln => ln.cap ? capText(ln) : `${ln.y || 'year not labelled'} ${ln.d ? `${ln.d} mm ` : ''}${DC_KIND[ln.k][0].toLowerCase()}${ln.p ? ` (project ${ln.p}${ln.c ? `, component ${ln.c}` : ''})` : ''}${ln.s === 'approved' ? ', approved 2026' : ''} · ${lnStatus(ln)} (as of ${CAPITAL.asOf})`;
   // Planned works a development relies on: the planned mains it would connect to (wastewater and
   // water, within 400 m), primary mains and facilities in the catchments on its sewer path, water
   // facilities in its pressure zone, and the receiving plant's capacity steps.

@@ -282,7 +282,8 @@
     // A reviewed join (js/dc-joins.js) replaces the automatic one: the main it was set onto, or none.
     const planned = [], n0 = xs.length, dOf = new Float64Array(n0), lnOf = [];
     for (const [a, b, dm] of E) { dOf[a] = Math.max(dOf[a], dm); dOf[b] = Math.max(dOf[b], dm); }
-    if (App().state.dcInfra) for (const ln of App().state.dcInfra.water.lines) {
+    // (with the capital projects' new watermains, built since the network data or being built: js/dc-joins.js)
+    if (App().state.dcInfra) for (const ln of [...App().state.dcInfra.water.lines, ...(DJ() ? DJ().capLines('water') : [])]) {
       const a = xs.length;
       ln.g.forEach(([x, y], k) => { xs.push(x); ys.push(y); lnOf.push(ln); if (k) E.push([a + k - 1, a + k, ln.d || 0, ln]); });
       planned.push([a, xs.length - 1, ln]);
@@ -352,7 +353,10 @@
       const pick = (maxM, sized) => {
         const need = sized ? (ln.d || 0) / 2 : 0;
         // (a planned main with no size on the map is allowed)
-        tp = tap(pt, maxM, (p, q, dm, l) => l !== ln && (zOk(p) || zOk(q)) && (l ? (l.d || Infinity) : dm) >= need);
+        tp = tap(pt, maxM, (p, q, dm, l) => l !== ln && !(l && l.cap) && (zOk(p) || zOk(q)) && (l ? (l.d || Infinity) : dm) >= need);
+        // (a capital project's new main only where drawn onto it)
+        const tc = tap(pt, Math.min(maxM, DJ() ? DJ().CAP_REACH_M : 60), (p, q, dm, l) => l !== ln && l && l.cap && (zOk(p) || zOk(q)));
+        if (tc && (!tp || tc.m < tp.m)) tp = tc;
         return tp;
       };
       if (ov) {
@@ -371,7 +375,7 @@
       if (n) E.push([t, n.i, 0, ln]);
       if (tp) joinTap(t, tp, ln);
       const into = tp ? (tp.ln ? { kind: 'dc', ln: tp.ln } : { kind: 'watermain', d: tp.dm }) : n ? (n.i < n0 ? { kind: 'watermain', d: dOf[n.i] } : { kind: 'dc', ln: lineAt(n.i) }) : null;
-      joins.push({ sys: 'water', ln, pt, to: tp ? tp.q : n ? [xs[n.i], ys[n.i]] : null, m: tp ? tp.m : n ? n.m : null, into, auto, ov,
+      if (!ln.cap) joins.push({ sys: 'water', ln, pt, to: tp ? tp.q : n ? [xs[n.i], ys[n.i]] : null, m: tp ? tp.m : n ? n.m : null, into, auto, ov,
         zone: zoneOf(t), fac: fac ? fac.name : null, zoneBlocked, sizeBlocked, along: along.get(ln) || 0 });
     }
     const adj = Array.from({ length: xs.length }, () => []);
@@ -426,7 +430,8 @@
       let run = [at(na.i)], kind = null, dm = 0;
       const flush = () => {
         if (run.length < 2) return;
-        if (kind && kind.ln) L.polyline(run.map(([x, y]) => [y, x]), { className: 'wtrace-plan', renderer: SD().flowRenderer }).bindTooltip(`<strong>Planned ${esc(DI().DC_KIND[kind.ln.k] ? DI().DC_KIND[kind.ln.k][0].toLowerCase() : 'water main')}</strong>${kind.ln.d ? ` · ${kind.ln.d} mm` : ''}<br>2026 DC capital map${kind.ln.y ? ` · ${kind.ln.y}` : ''}${kind.ln.p ? ` · project ${esc(kind.ln.p)}` : ''}`, { sticky: true, className: 'pt' }).addTo(L_);
+        if (kind && kind.ln && kind.ln.cap) L.polyline(run.map(([x, y]) => [y, x]), { className: 'wtrace-main', weight: 5, renderer: SD().flowRenderer }).bindTooltip(`<strong>${esc(DI().dcLineText(kind.ln))}</strong>`, { sticky: true, className: 'pt' }).addTo(L_);
+        else if (kind && kind.ln) L.polyline(run.map(([x, y]) => [y, x]), { className: 'wtrace-plan', renderer: SD().flowRenderer }).bindTooltip(`<strong>Planned ${esc(DI().DC_KIND[kind.ln.k] ? DI().DC_KIND[kind.ln.k][0].toLowerCase() : 'water main')}</strong>${kind.ln.d ? ` · ${kind.ln.d} mm` : ''}<br>2026 DC capital map${kind.ln.y ? ` · ${kind.ln.y}` : ''}${kind.ln.p ? ` · project ${esc(kind.ln.p)}` : ''}`, { sticky: true, className: 'pt' }).addTo(L_);
         else L.polyline(run.map(([x, y]) => [y, x]), { className: 'wtrace-main', weight: dm >= 900 ? 8 : dm >= 600 ? 7 : dm >= 400 ? 6 : 5, renderer: SD().flowRenderer }).bindTooltip(`<strong>Existing watermain</strong>${dm ? ` · ${dm} mm` : ''}`, { sticky: true, className: 'pt' }).addTo(L_);
       };
       for (const [k, v] of path) {
@@ -434,7 +439,7 @@
         if (!sameKind || (!ln && d && d !== dm)) { flush(); run = [run[run.length - 1]]; kind = kk; if (d) dm = d; }
         const via = G.E[k][5]; if (via) { run.push(via); flow.push(via); }
         run.push(at(v)); bd.extend([G.ys[v], G.xs[v]]); flow.push(at(v));
-        if (ln) { kmP += G.len[k] / 1000; dcLines.set(ln, true); } else { kmE += G.len[k] / 1000; maxD = Math.max(maxD, d); }
+        if (ln && !ln.cap) { kmP += G.len[k] / 1000; dcLines.set(ln, true); } else { kmE += G.len[k] / 1000; maxD = Math.max(maxD, d); }
       }
       flush();
       if (nb.m > 5) link(at(nb.i), B, 'wtrace-link');

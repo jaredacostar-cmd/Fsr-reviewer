@@ -484,7 +484,10 @@ from street zoom (14), up to 3,000 in view.
     flagged (red; violet when the only main in reach is across a zone boundary). An end joins a
     main wherever it is drawn onto it (mains are straight for hundreds of metres between bends), and
     an end the DC map cuts off (`x` in dc-infra.json: at the edge of the map or an inset) is marked
-    as such rather than as an open end. Tap an end to set its join by hand (Pick where
+    as such rather than as an open end. Planned mains also join the capital projects that lay a new
+    main (`data/capital.json`: WM / SAN, tunnelling and development work, tendered to complete; not
+    relining or trenchless work), where drawn onto one (within 60 m): an earlier DC program's main is
+    often built, or being built, before it is in the watermain / sewer data. Tap an end to set its join by hand (Pick where
     it joins, then tap the pipe or planned main; or Open end): reviewed joins are blue and the traces
     follow them. Edits stay in the browser until exported (dc-joins.json) and committed to
     `data/dc-joins.json`; they are matched to the main's end by position (5 m), so they survive a

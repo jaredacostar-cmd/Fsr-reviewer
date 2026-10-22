@@ -384,7 +384,8 @@
       "from": [
         "dc-infra.json",
         "sewers.json",
-        "watermains.json"
+        "watermains.json",
+        "capital.json"
       ],
       "check": "Hand-set joins of planned DC mains onto the existing network; the automatic join applies elsewhere."
     },

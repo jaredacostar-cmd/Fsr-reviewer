@@ -55,3 +55,18 @@ test('an end the DC map cuts off is said so, not called open', () => {
   assert.strictEqual(DJ.conf({ sys: 'water', auto: true, ln, pt: [-79.9, 43.8], into: null, m: null }), 'unjoined');
   assert.strictEqual(DJ.conf({ sys: 'wastewater', auto: true, ln, pt: [-79.8, 43.8], into: null, m: null }), 'edge');
 });
+
+test('capital projects: new mains tendered or further join the network; relining and DC duplicates do not', () => {
+  const g = { type: 'LineString', coordinates: [[-79.7, 43.7], [-79.69, 43.7]] };
+  const recs = [
+    { system: 'water', workType: 'WM', status: 'under construction', projectNumber: '24-2274', street: 'THE GORE RD', geometry: g },
+    { system: 'water', workType: 'WM', status: 'planned', projectNumber: '25-1151', geometry: g },
+    { system: 'wastewater', workType: 'SAN-RELINING', status: 'complete', projectNumber: '19-2300', geometry: g },
+    { system: 'wastewater', workType: 'SAN-DEVELOPMENT', status: 'complete', projectNumber: '19-2158', geometry: { type: 'MultiLineString', coordinates: [g.coordinates, g.coordinates] } },
+    { system: 'wastewater', workType: 'SAN', status: 'complete', projectNumber: '25-2146', geometry: g },
+  ];
+  const out = DJ.capFrom(recs, { water: { lines: [] }, wastewater: { lines: [{ p: '25-2146' }] } });
+  assert.deepStrictEqual(out.water.map(l => l.p), ['24-2274']);
+  assert.deepStrictEqual(out.wastewater.map(l => l.p), ['19-2158', '19-2158'], 'each part of a multi-line; the DC main itself left out');
+  assert.ok(out.water[0].cap && out.water[0].g.length === 2);
+});
