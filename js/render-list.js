@@ -135,11 +135,11 @@
     listPage = pg.page;
     $('#list-count').textContent = `· ${fmtNum(inView.length)} of ${fmtNum(App().state.filtered.length)}`;
     syncInViewChip(inView.length, App().state.filtered.length);
-    $('#list-note').textContent = !inView.length ? (App().state.filtered.length ? 'No matching developments in this part of the map — zoom out or pan.' : 'No developments match the filters.')
+    $('#list-note').textContent = !inView.length ? (App().state.filtered.length ? 'No matching developments in this part of the map — zoom out or pan.' : App().developmentsReady && !App().developmentsReady() ? 'Loading the developments…' : 'No developments match the filters.')
       : pg.pages > 1 ? `Showing ${pg.start + 1}–${pg.start + pg.items.length} of ${fmtNum(sorted.length)} — page ${pg.page + 1} of ${pg.pages}.` : '';
     $('#project-list').innerHTML = pg.items.map((p, i) =>
       `<li><button type="button" data-i="${pg.start + i}">${dot(p.phase)}<span><span class="t">${esc(p.title)}</span>
-        <span class="m">${window.PeelLayerBar && window.PeelLayerBar.stageText ? `<span class="ly-name" style="--ly-c:var(--ly-${App().layerOf(p) || 'proposed'})">${esc(window.PeelLayerBar.stageText(p, { layer: App().layerOf(p) }))}</span>` : esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${p.buildout ? ` · ${fmtNum(p.buildout.planned)} planned, ${fmtNum(P.unbuiltOf(p))} left to build` : p.units ? ` · ${fmtNum(p.units)} units` : ''}${p.last ? ` · ${fmtDate(p.last)}` : ''}</span></span></button></li>`).join('');
+        <span class="m">${window.PeelLayerBar && window.PeelLayerBar.stageText ? `<span class="ly-name" style="--ly-c:var(--ly-${App().layerOf(p) || 'proposed'})">${esc(window.PeelLayerBar.stageText(p, { layer: App().layerOf(p) }))}</span>` : esc(P.PHASE_BY_KEY[p.phase].label)} · ${esc(p.municipality)}${p.buildout ? ` · ${fmtNum(p.buildout.planned)} planned, ${fmtNum(P.unbuiltOf(p))} left to build` : p.units ? ` · ${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'}` : ''}${p.last ? ` · ${fmtDate(p.last)}` : ''}</span></span></button></li>`).join('');
     $('#project-list').onclick = e => {
       const b = e.target.closest('button[data-i]'); if (!b) return;
       const p = sorted[+b.dataset.i];

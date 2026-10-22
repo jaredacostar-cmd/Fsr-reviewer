@@ -124,6 +124,24 @@ test('road names parse into road, from and to', () => {
 // East–west road along 43.70 with cross streets at -79.74 and -79.72.
 const ROAD = { road: [[[-79.76, 43.70], [-79.73, 43.70]], [[-79.73, 43.70], [-79.70, 43.70]]], from: [[[-79.74, 43.69], [-79.74, 43.71]]], to: [[[-79.72, 43.69], [-79.72, 43.71]]] };
 
+test('mains by name: street words and a main\u2019s scattered namesakes don\u2019t place an EA; the named street in its own municipality', () => {
+  const far = [[[-79.88, 43.86], [-79.87, 43.86]]], near = [[[-79.60, 43.53], [-79.59, 43.53]]];
+  const ctx = { facilities: [], areas: [], roadWays: () => null, place: () => null,
+    dcLines: [{ name: 'Atlantic Drive / Creekbank Road water main', paths: far }, { name: 'Lorne Park Birchview trunk sewer', paths: near }, { name: 'Lorne Park Birchview trunk sewer (phase 2)', paths: [[[-79.75, 43.76], [-79.74, 43.76]]] }],
+    capital: [
+      { street: 'QUEEN ST E', ward: 'B01', system: 'water', geometry: { type: 'LineString', coordinates: [[-79.75, 43.69], [-79.74, 43.69]] } },
+      { street: 'LORNE PARK RD', ward: 'M02', system: 'wastewater', geometry: { type: 'LineString', coordinates: [[-79.61, 43.53], [-79.60, 43.53]] } },
+    ] };
+  const name = 'Fair Birch Drive, Queen Victoria Avenue, and Lorne Park Road sanitary sewer improvements';
+  // Drive + Road no longer match the Atlantic Drive main; the two Lorne Park mains are 25 km apart.
+  const g = E.resolveGeometry({ name, municipalities: ['Mississauga'] }, ctx);
+  assert.equal(g.geomMethod, 'capital project lines on the named street');
+  assert.deepEqual(g.geometry.coordinates, [[-79.61, 43.53], [-79.60, 43.53]], 'Lorne Park Rd in Mississauga, not Queen St E in Brampton');
+  const one = E.resolveGeometry({ name: 'Lorne Park Birchview trunk sewer', municipalities: ['Mississauga'] }, { ...ctx, dcLines: ctx.dcLines.slice(0, 2) });
+  assert.equal(one.geomMethod, 'DC capital map mains named like the EA');
+  assert.match(fs.readFileSync(path.join(__dirname, '..', 'scripts/build-eas.js'), 'utf8'), /map\(l => \(\{ name: l\.n, paths: \[l\.g\] \}\)\)/, 'matched by the main\u2019s name, not its description');
+});
+
 test('road centreline between cross streets (chained OSM ways)', () => {
   const r = E.roadBetween(ROAD);
   assert.equal(r.confidence, 'high');

@@ -148,7 +148,7 @@
     // Units and left to build from the one pipeline definition (as the Overview and Growth).
     const pipe = root.Growth ? root.Growth.pipelineTotals(set) : null;
     const left = pipe ? Math.round(pipe.left) : 0, unitsAll = basis === 'all' && pipe ? pipe.planned : e.totalUnits;
-    const lyT = root.PeelLayers && set.length ? root.PeelLayers.totals(set, { criteria: App().state.criteria, jobsOf: App().jobsOf }) : null;
+    const lyT = root.PeelLayers && set.length ? root.PeelLayers.totals(set, { criteria: App().state.criteria, jobsOf: App().jobsOf, ...DU().commitOpts() }) : null;   // (committed by the Peel rule)
     const pre = DU().preCensus(lyT, basis);   // as the Overview: growth beyond the census
     const built = lyT && (basis === 'all' || basis === 'buildout') ? lyT.units.built || 0 : 0;
     const fr = DU().freshness(), asOf = (fr[0] && fr[0].date) || '–', need = fr.filter(r => r.st === 'due' || r.st === 'stale');
@@ -164,7 +164,9 @@
     const infL = root.PeelLayers && root.PeelLayers.infill && OT().infillScope ? root.PeelLayers.infill(OT().infillScope(), { secondUnits: OT().secondUnitScope ? OT().secondUnitScope() : [] }) : null;
     const mgmt = pipeL ? root.PeelLayers.headlineText(pipeL, /^all of peel$/i.test(scopeW) ? '' : ` (${esc(scopeW)})`, fmtNum, s => `<b>${s}</b>`, infL) : '';
     const hl = [mgmt, `The ${fmtNum(set.length)} developments shown (${esc(OT().scopeText())}) would add about <b>${fmtNum(roundPop(Math.max(0, e.population - pre.people)))} people</b> and ${fmtNum(roundPop(e.employment.jobs))} jobs in ${fmtNum(Math.round(Math.max(0, unitsAll - pre.units)))} units${built >= 0.5 ? `, ${fmtNum(Math.round(built))} of them built since 2021` : ''}${pre.units >= 0.5 ? ` (not counting ${fmtNum(Math.round(pre.units))} completed before the 2021 Census, already in it)` : ''}, needing ${fmtNum(Math.round(cb.water.maxDay))} L/s of water at maximum day and ${fmtNum(Math.round(cb.wastewater.wetPeak))} L/s of wastewater at peak wet weather.`,
-      tight ? `<b>${esc(SD().PLANT_SHORT[tight.pl])}</b> ${ST().trigText(tight)}: existing + built + committed use ${ST().pctRated(tight, 'com')}% of its rated capacity, ${ST().pctRated(tight, 'bo')}% at build-out (expansion trigger ${Math.round(MP().PLANT_TRIGGER * 100)}%)${tight.relief.length ? `; next expansion ${esc(tight.relief[0].text)}` : ''}.` : '',
+      // (committed: the Peel rule, a building or site servicing permit; the plants below keep MECP D-5-1)
+      lyT && (lyT.units.commitPeel >= 0.5 || lyT.units.approved >= 0.5) ? `Committed (a building or site servicing permit): <b>${fmtNum(Math.round(lyT.units.commitPeel))}</b> units still to build; ${fmtNum(Math.round(lyT.units.approved))} more approved, not committed.` : '',
+      tight ? `<b>${esc(SD().PLANT_SHORT[tight.pl])}</b> ${ST().trigText(tight)}: existing + built + committed (MECP D-5-1) use ${ST().pctRated(tight, 'com')}% of its rated capacity, ${ST().pctRated(tight, 'bo')}% at build-out (expansion trigger ${Math.round(MP().PLANT_TRIGGER * 100)}%)${tight.relief.length ? `; next expansion ${esc(tight.relief[0].text)}` : ''}.` : '',
       R ? `${adv.length ? `<b>${adv.length} DC project${adv.length === 1 ? '' : 's'}</b> come online after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out: the screen shows ${adv.length === 1 ? 'it' : 'them'} late.` : 'Every DC project comes online before the capacity it relieves runs out.'}` : ''].filter(Boolean);
     const bar = x => `<div class="cap"><div class="ch"><b>${esc(x.kind === 'plant' ? SD().PLANT_SHORT[x.pl] : 'South Peel water treatment')}</b><span>existing + built + committed ${ST().pctRated(x, 'com')}% of rated → ${ST().pctRated(x, 'bo')}% build-out · ${x.out === 'today' ? 'at trigger now' : x.out ? `trigger ≈${x.out}` : `room to ${SP().hz.end}`}</span></div><div class="bar"><i class="c" style="width:${Math.min(100, ST().pctRated(x, 'com') / 1.3).toFixed(1)}%"></i><i class="b ${x.util.bo >= 1 ? 'over' : ''}" style="width:${(Math.max(0, Math.min(130, ST().pctRated(x, 'bo')) - Math.min(130, ST().pctRated(x, 'com'))) / 1.3).toFixed(1)}%"></i><i class="tg"></i><i class="tg r"></i></div></div>`;
     const prep = store.get('prepBy', '');
@@ -266,6 +268,8 @@
       <ul>${f.path.length ? `<li>Sewer path: ${esc(f.path.slice(0, 6).map(a => a.kind === 'plant' ? SD().plantLabel(a.plant) : SD().drName(a).replace(/^[^·]+· /, '')).join(' → '))}${f.path.length > 6 ? ' …' : ''}</li>` : ''}
       ${f.sps.length ? `<li>Pumping stations: ${esc(f.sps.map(x => `${SD().drName(x.a).replace(/^[^·]+· /, '')} ${Math.round(x.wet / x.firm * 100)}% of firm at build-out`).join('; '))}</li>` : ''}
       ${f.cap ? `<li>${esc(f.cap.name)}: ${window.PeelUtil.reserveWords(f.reserve, f.cap.rated)}; this development ${window.PeelUtil.capTxt(f.use, f.cap.rated)} (${esc(f.useNote)})${f.reserve > 0 ? ` = ${DD().pctOf(f.use, f.reserve)} of the reserve` : ' — the screen shows the plant over rated capacity'}</li>` : ''}</ul>` : '<p class="muted">No units or jobs stated — flows not estimated.</p>';
+    // The reviewer's site brief (js/capital-ea.js): each EA and capital work near the site, as text.
+    const brief = root.PeelCapitalEA && root.PeelCapitalEA.siteBriefHTML ? root.PeelCapitalEA.siteBriefHTML(p, { links: false }) : '';
     const ctx = [['Existing mains', domText('dev-exist')], ['Fire flow', domText('dev-fire')], ['Stormwater', domText('dev-storm')]].filter(([, t]) => t && !/^Looking up/.test(t));
     const body = `<h1>${esc(p.title)}</h1><p class="sub">${esc(p.municipality)} · ${esc(P.PHASE_BY_KEY[p.phase].label)}${files ? ` · ${esc(files)}` : ''}</p>
       <p class="meta">Servicing memo · prepared ${esc(new Date().toLocaleDateString('en-CA', { dateStyle: 'medium' }))} · Peel Growth Pipeline (unofficial)</p>
@@ -280,6 +284,7 @@
       <h2>Servicing (Peel design criteria)</h2>${svc}
       ${needs.length ? `<h2>DC needs: existing capacity vs the 2026 DC program</h2>${root.PeelUtil.pauseNote()}<table>${needHead()}${shown.map(c => needRow(c, ppu)).join('')}</table>${okN ? `<p class="muted">${okN} more with room to build-out.</p>` : ''}` : ''}
       ${st.works ? `<h2>Planned works nearby</h2><p>${esc(textOf(DI().devWorksHTML(st.works)))}</p>` : ''}
+      ${brief ? `<h2>EAs and Region capital works within 1 km</h2>${brief}` : ''}
       ${ctx.length ? `<h2>Site context (live GIS)</h2><ul>${ctx.map(([k, t]) => `<li><strong>${esc(k)}:</strong> ${esc(t)}</li>`).join('')}</ul>` : ''}
       ${reportFooter()}`;
     openReport(`Servicing memo – ${p.title}`, body);

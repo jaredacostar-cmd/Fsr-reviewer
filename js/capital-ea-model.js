@@ -269,8 +269,11 @@
     const capSec = !o.hasCapital ? '<p class="small muted">Capital projects are not published yet (waiting on Peel GIS).</p>'
       : act.length ? `<ul class="ce-list">${act.slice(0, o.allCap ? act.length : 15).map(c => `<li><button type="button" class="btn small link" data-ce-open="cap:${esc(c.key)}">${esc(workLabel(c.lead.workType))}${c.lead.street ? ` · ${esc(titleCase(c.lead.street))}` : ''}</button> ${statusBadge(c.status)}${c.percent != null ? ` <span class="small">${c.percent}% built</span>` : ''}<small class="muted"> ${esc(c.projectNumbers.join(', '))}</small></li>`).join('')}</ul>${act.length > 15 && !o.allCap ? `<p><button type="button" class="btn small" data-ce-allcap>See all ${act.length}</button></p>` : ''}`
         : `<p class="small muted">No active construction${where}.</p>`;
+    // To check (o.watch: watchList items): the records that need a look, before the list of active work.
+    const watchSec = o.watch ? `<section class="ce-sec" data-sec="watch"><h3 class="sub-title">To check <small class="muted">${o.watch.length}</small></h3>${watchListHTML(o.watch, { all: o.allWatch })}</section>` : '';
     return `<p class="small">Region capital projects${where}: what is being built and where it is at.${o.capitalAsOf ? ` Capital projects as of ${esc(fmtDate(o.capitalAsOf))}.` : ''} Environmental assessments are on <button type="button" class="btn small link" data-ce-goto="eas">Capital › EAs</button>.</p>
-      <section class="ce-sec" data-sec="active"><h3 class="sub-title">Active construction <small class="muted">${act.length}</small></h3>${capSec}</section>
+      ${watchSec}
+      <section class="ce-sec" data-sec="active"><h3 class="sub-title">Active construction <small class="muted">${act.length}</small></h3>${capSec}${o.hasCapital ? `<p class="small"><button type="button" class="btn small" data-ce-cap-csv>CSV: every contract${where}, one row each</button> <span class="muted">status, % built, days past target, last update, the EA and DC project it came from</span></p>` : ''}</section>
       ${o.screenNote || ''}`;
   }
 
@@ -643,11 +646,184 @@
       ${o.screenNote || ''}`;
   }
 
+  // ---- For the people who use the outputs: the site brief, the watch list, the per-contract CSV -------
+  // Screening wording throughout: what the records show and what to check, never what the Region should
+  // do. Dates compare as day strings (YYYY-MM-DD); a month-only date counts from the 15th (msOf).
+  const daysFrom = (a, b) => (msOf(a) == null || msOf(b) == null ? null : Math.round((msOf(b) - msOf(a)) / 864e5));
+  /** "45 days" · "7 months" · "3 years": how long ago, in plain words. */
+  function ago(days) {
+    if (days < 60) return `${days} day${days === 1 ? '' : 's'}`;
+    const mo = Math.round(days / 30.44);
+    return mo < 24 ? `${mo} months` : `${Math.floor(mo / 12)} years`;
+  }
+  const WARD_MUNI = { M: 'Mississauga', B: 'Brampton', C: 'Caledon' };
+  /** Where the work is: its ward's municipality (M01 → Mississauga), else the published field (which can name several). */
+  const placeOf = r => WARD_MUNI[String(r.ward || '').charAt(0).toUpperCase()] || titleCase(r.municipality || '');
+  const STALE_DAYS = 365, DORMANT_DAYS = 548;   // a year with no update; 18 months with no EA milestone
+  const OPEN_WORK = new Set(['planned', 'tendered', 'awarded', 'under construction', 'unknown']);
+  /** Year the contract's open work is in service (its latest substantial completion, actual or target). */
+  // (complete work: the year it finished)
+  const contractInService = c => { const rs = ACTIVE_WORK.has(c.status) ? c.records.filter(r => ACTIVE_WORK.has(r.status)) : c.records, ys = rs.map(inServiceYear).filter(Boolean); return ys.length ? Math.max(...ys) : null; };
+  /**
+   * What to check on a contract. overdue: tendered, awarded or under construction with a substantial
+   * completion target before today and no actual (days past the target). stale: still open and not
+   * updated in the year before the layer's latest update (asOf), or never dated. progress: the % built
+   * reported, else for work under construction and not yet past its target the share of its start →
+   * target span elapsed (estimated).
+   */
+  function contractCheck(c, today, asOf) {
+    const late = !BUILDING.has(c.status) ? [] : c.records.filter(r => BUILDING.has(r.status) && r.substantialTarget && !r.substantialActual)
+      .map(r => ({ target: r.substantialTarget, days: daysFrom(r.substantialTarget, today) })).filter(x => x.days > 0).sort((a, b) => b.days - a.days);
+    const age = c.lastUpdate ? daysFrom(c.lastUpdate, asOf || today) : null;
+    const stale = OPEN_WORK.has(c.status) && (age == null || age > STALE_DAYS) ? { days: age, lastUpdate: c.lastUpdate } : null;
+    let progress = c.percent > 0 ? { pct: c.percent, basis: 'reported' } : null;
+    if (!progress && c.status === 'under construction' && !late.length) {
+      const r = c.lead, s = r.startActual || r.startTarget, span = daysFrom(s, r.substantialTarget), done = daysFrom(s, today);
+      if (span > 0 && done != null) progress = { pct: Math.max(0, Math.min(99, Math.round(done / span * 100))), basis: 'estimated from dates' };
+    }
+    const flags = [...(late.length ? [`completion target passed ${ago(late[0].days)} ago`] : []), ...(stale ? [stale.lastUpdate ? `not updated since ${stale.lastUpdate}` : 'no update date'] : [])];
+    return { overdue: late[0] || null, stale, progress, flags };
+  }
+  /** An EA marked current with nothing dated ahead and no milestone in 18 months (or none published): { last, days }. */
+  function eaCheck(e, today) {
+    if (!EA_CURRENT.has(e.status)) return null;
+    const ds = (e.milestones || []).map(m => String(m.date || '')).filter(Boolean).map(d => (d.length === 7 ? `${d}-15` : d.length === 4 ? `${d}-07-01` : d)).sort();
+    if (ds.some(d => d >= today)) return null;
+    const last = ds.pop() || null, days = last ? daysFrom(last, today) : null;
+    return days == null || days > DORMANT_DAYS ? { last, days } : null;
+  }
+
+  // The planner's watch list: the records that need a look, worst first, each with why and what to check.
+  const WATCH_KINDS = [
+    ['review', 'EA complete 9+ years, no construction'],
+    ['overdue', 'Past its completion target'],
+    ['dormant', 'EA with no recent activity'],
+    ['stale', 'Not updated in a year'],
+  ];
+  const workTitle = c => `${workLabel(c.lead.workType)}${c.lead.street ? ` · ${titleCase(c.lead.street)}` : ''}`;
+  /** o: { capital, eas (list), contracts, today, asOf, muni }. Items: { kind, key, label, ref, where, why, check, page }. */
+  function watchList(o) {
+    const today = o.today, out = [], cap = o.capital;
+    const asOf = o.asOf || (cap && cap.source && cap.source.latestLastUpdate) || today;
+    const cs = o.contracts || contracts((cap && cap.records) || []);
+    for (const c of cs.values()) {
+      const where = placeOf(c.lead);
+      if (o.muni && !inMuni(where, o.muni) && !inMuni(c.lead.municipality, o.muni)) continue;
+      const k = contractCheck(c, today, asOf), base = { key: `cap:${c.key}`, label: workTitle(c), ref: c.projectNumbers.join(', '), where, page: c.lead.website || '' };
+      if (k.overdue) out.push({ ...base, kind: 'overdue', sort: -k.overdue.days, why: `${statusLabel(c.status)}; its completion target (${fmtDate(k.overdue.target)}) passed ${ago(k.overdue.days)} ago with no completion date recorded`, check: 'whether it is finished, or its new target' });
+      else if (k.stale) out.push({ ...base, kind: 'stale', sort: -(k.stale.days == null ? 1e6 : k.stale.days), why: `${statusLabel(c.status)}; ${k.stale.lastUpdate ? `last updated ${fmtDate(k.stale.lastUpdate)}` : 'no update date in the record'}`, check: 'whether its status and dates are current' });
+    }
+    const list = (o.eas || []).filter(e => !o.muni || String(e.municipality || '').toUpperCase().includes(String(o.muni).toUpperCase()));
+    for (const x of eaProgress(list, cap, msOf(today))) {
+      const e = x.e, base = { key: `ea:${e.id}`, label: e.name, ref: 'EA', where: e.municipality || '', page: (e.links && e.links.page) || '' };
+      if (x.bucket === 'limit') out.push({ ...base, kind: 'review', sort: -x.yearsSince, why: `Completed ${x.d.completion.year} (${x.yearsSince} years ago) and no linked construction follows it`, check: 'whether construction is planned: past 10 years the Class EA must be reviewed before construction' });
+      const d = eaCheck(e, today);
+      if (d) out.push({ ...base, kind: 'dormant', sort: -(d.days == null ? 1e6 : d.days), why: `${EA_STATUS[e.status]}; ${d.last ? `last milestone ${fmtDate(d.last)} (${ago(d.days)} ago) and none ahead published` : 'no dated milestone published'}`, check: 'whether the study is still under way, paused or complete' });
+    }
+    const rank = Object.fromEntries(WATCH_KINDS.map(([k], i) => [k, i]));
+    return out.sort((a, b) => rank[a.kind] - rank[b.kind] || a.sort - b.sort || a.label.localeCompare(b.label)).map(({ sort, ...x }) => x);
+  }
+  const WATCH_SHOWN = 12;
+  function watchListHTML(items, o = {}) {
+    if (!items.length) return '<p class="small muted">Nothing to check: no work past its target or left without an update for a year, and no idle or long-waiting EA.</p>';
+    const n = k => items.filter(x => x.kind === k).length, shown = o.all ? items : items.slice(0, WATCH_SHOWN);
+    return `<p class="small">${WATCH_KINDS.filter(([k]) => n(k)).map(([k, t]) => `${esc(t)}: <strong>${n(k)}</strong>`).join(' · ')}</p>
+      <ul class="ce-list ce-watch">${shown.map(x => `<li data-kind="${x.kind}"><button type="button" class="btn small link" data-ce-open="${esc(x.key)}">${esc(x.label)}</button>${x.ref && x.ref !== 'EA' ? ` <small class="muted">${esc(x.ref)}</small>` : ''}<br><small>${esc(x.why)}.</small> <small class="muted">To check: ${esc(x.check)}.</small></li>`).join('')}</ul>
+      <p class="small">${items.length > shown.length ? `<button type="button" class="btn small" data-ce-allwatch>See all ${items.length}</button> ` : ''}<button type="button" class="btn small" data-ce-watch-csv>CSV of this list</button></p>`;
+  }
+  const WATCH_COLS = ['Flag', 'What', 'Project number(s)', 'Municipality', 'Why it is listed', 'To check', 'Project page', 'Data as of'];
+  function watchSheetRows(items, asOf = '') {
+    const label = Object.fromEntries(WATCH_KINDS);
+    return { cols: WATCH_COLS, rows: (items || []).map(x => [label[x.kind], x.label, x.ref === 'EA' ? '' : x.ref, x.where, x.why, x.check, x.page, asOf]) };
+  }
+
+  // The site brief: the EAs and the open capital work near a development, for a servicing review.
+  /**
+   * o: { eas (list), contracts, lat, lng, pts ([lat, lng] boundary points), muni, m (default 1 km),
+   * today, asOf }. Returns { m, eas: [{ e, d, idle }], may: [e], works: [{ c, d, check, inService }] },
+   * each nearest first. Works: planned, tendered, awarded or under construction (complete work is not
+   * coming).
+   */
+  function siteBrief(o) {
+    const m = o.m || 1000, today = o.today, pts = o.pts || [];
+    const eas = easNear(o.eas, o.lat, o.lng, m, pts).map(({ e, d }) => ({ e, d, idle: eaCheck(e, today) }));
+    const all = [[o.lat, o.lng], ...pts], lat0 = Math.min(...all.map(p => p[0])), lat1 = Math.max(...all.map(p => p[0])), lng0 = Math.min(...all.map(p => p[1])), lng1 = Math.max(...all.map(p => p[1]));
+    const dLat = m / 110574, dLng = m / (111320 * Math.cos(o.lat * Math.PI / 180));
+    const works = [];
+    for (const c of (o.contracts || new Map()).values()) {
+      if (!ACTIVE_WORK.has(c.status)) continue;
+      let d = Infinity;
+      for (const r of c.records) {
+        if (!r.geometry || !ACTIVE_WORK.has(r.status)) continue;
+        const ps = ptsOf(r.geometry); if (!ps.length) continue;
+        // (a quick box test first: a contract's segment more than m from the site's box is skipped)
+        if (Math.max(...ps.map(p => p[1])) < lat0 - dLat || Math.min(...ps.map(p => p[1])) > lat1 + dLat || Math.max(...ps.map(p => p[0])) < lng0 - dLng || Math.min(...ps.map(p => p[0])) > lng1 + dLng) continue;
+        for (const [la, ln] of all) d = Math.min(d, geomDistM(r.geometry, la, ln));
+      }
+      if (d <= m) works.push({ c, d, check: contractCheck(c, today, o.asOf), inService: contractInService(c) });
+    }
+    works.sort((a, b) => a.d - b.d || workTitle(a.c).localeCompare(workTitle(b.c)));
+    return { m, eas, may: easMayApply(o.eas, o.muni), works };
+  }
+  const distWords = d => (d < 1 ? 'on the site' : `${Math.max(10, Math.round(d / 10) * 10)} m away`);
+  // One plain sentence per EA and per work, as [name, the rest]: the lines of the brief and its text.
+  function briefEaLine(x) {
+    const e = x.e, dec = e.decision && (e.decision.text || e.decision);
+    const when = e.status === 'complete' || e.status === 'addendum' ? (e.completedYear ? `completed ${e.completedYear}` : 'complete, year not published')
+      : e.nextStep ? `next: ${e.nextStep.text}${e.nextStep.date ? ` ${fmtDate(e.nextStep.date)}` : ''}` : x.idle ? (x.idle.last ? `no milestone since ${fmtDate(x.idle.last)}` : 'no dated milestone published') : 'no next step published';
+    return [e.name, `${EA_STATUS[e.status] || EA_STATUS.unknown} (${e.system === 'multi' ? 'Water and wastewater' : titleCase(e.system || '')}${e.schedule ? `, Schedule ${e.schedule}` : ''}), ${distWords(x.d)}; ${when}${dec ? `. Preferred solution (from the report; check it): "${dec}"` : ''}`];
+  }
+  function briefWorkLine(x) {
+    const c = x.c, k = x.check, pct = k.progress ? `, ${k.progress.pct}% built${k.progress.basis === 'reported' ? '' : ' (estimated from its dates)'}` : '';
+    const svc = k.overdue ? `; completion target ${fmtDate(k.overdue.target)} has passed with no completion recorded` : x.inService ? `; in service ${x.inService} (${c.records.some(r => ACTIVE_WORK.has(r.status) && r.substantialActual) ? 'actual' : 'target'})` : '; no completion target published';
+    return [`${workTitle(c)}${c.projectNumbers.length ? ` (project ${c.projectNumbers.join(', ')})` : ''}`, `${statusLabel(c.status)}${pct}${svc}, ${distWords(x.d)}${k.stale ? `; ${k.stale.lastUpdate ? `record last updated ${fmtDate(k.stale.lastUpdate)}` : 'record has no update date'}` : ''}`];
+  }
+  /** Paste-ready text for review comments: plain lines, each with its page, and the sources' dates. */
+  function siteBriefText(b, o = {}) {
+    const km = b.m >= 1000 ? `${b.m / 1000} km` : `${b.m} m`, end = t => (/[.!?]"?$/.test(t) ? t : `${t}.`);
+    const lines = [`Region EAs and capital works within ${km} of ${o.title || 'the site'} (screening from public Region of Peel data; confirm each on its project page).`];
+    lines.push('', `Environmental assessments (${b.eas.length}):`, ...(b.eas.length ? b.eas.map(x => `- ${end(briefEaLine(x).join(': '))}${x.e.links && x.e.links.page ? ` ${x.e.links.page}` : ''}`) : ['- None mapped within this distance.']));
+    if (b.may.length) lines.push(`- May also apply (not mapped; ${b.may.length}): ${b.may.map(e => e.name).join('; ')}.`);
+    lines.push('', `Capital works planned or under way (${b.works.length}):`, ...(b.works.length ? b.works.map(x => `- ${end(briefWorkLine(x).join(': '))}${x.c.lead.website ? ` ${x.c.lead.website}` : ''}`) : ['- None in the capital projects layer within this distance.']));
+    lines.push('', `Sources: Region of Peel EA pages${o.easChecked ? `, checked ${fmtDate(o.easChecked)}` : ''}; Region of Peel capital projects layer${o.asOf ? `, as of ${fmtDate(o.asOf)}` : ''}. General screening results only.`);
+    return lines.join('\n');
+  }
+  /** The brief as HTML (the servicing memo and the site's EA section): two lists with their links. */
+  function siteBriefHTML(b, o = {}) {
+    const li = ([head, tail], url, key) => `<li>${o.links === false ? `<strong>${esc(head)}</strong>` : `<button type="button" class="btn small link" data-ce-open="${esc(key)}">${esc(head)}</button>`}: ${esc(tail)}${url ? ` <a href="${esc(url)}" target="_blank" rel="noopener">page ↗</a>` : ''}</li>`;
+    return `<h3 class="sub-title">Environmental assessments <small class="muted">${b.eas.length}</small></h3>${b.eas.length ? `<ul class="small ce-brief">${b.eas.map(x => li(briefEaLine(x), x.e.links && x.e.links.page, `ea:${x.e.id}`)).join('')}</ul>` : '<p class="small muted">None mapped within this distance.</p>'}
+      ${b.may.length ? `<p class="small muted">May also apply (not mapped): ${esc(b.may.map(e => e.name).join('; '))}.</p>` : ''}
+      <h3 class="sub-title">Capital works planned or under way <small class="muted">${b.works.length}</small></h3>${b.works.length ? `<ul class="small ce-brief">${b.works.map(x => li(briefWorkLine(x), x.c.lead.website, `cap:${x.c.key}`)).join('')}</ul>` : '<p class="small muted">None in the capital projects layer within this distance.</p>'}`;
+  }
+
   // ---- Exports: Capital and EA sheets for the workbook, GeoJSON for both layers (no people) ----------
-  const CAP_COLS = ['Project number(s)', 'Work type', 'Street', 'From', 'To', 'Municipality', 'Ward', 'Status', '% built', 'Tender target', 'Tender actual', 'Award target', 'Award actual', 'Start target', 'Start actual', 'Substantial completion target', 'Substantial completion actual', 'Length (m)', 'Project page', 'As of'];
-  function capitalSheetRows(contracts) {
-    const rows = [...(contracts || new Map()).values()].map(c => { const r = c.lead; return [c.projectNumbers.join(', '), workLabel(r.workType), titleCase(r.street || ''), titleCase(r.from || ''), titleCase(r.to || ''), titleCase(r.municipality || ''), r.ward || '', statusLabel(c.status), c.percent != null ? c.percent : '', r.tenderTarget || '', r.tenderActual || '', r.awardTarget || '', r.awardActual || '', r.startTarget || '', r.startActual || '', r.substantialTarget || '', r.substantialActual || '', Math.round(c.lengthM || 0), r.website || '', c.lastUpdate || '']; });
-    return { cols: CAP_COLS, rows };
+  // One row per contract (a project page and its segments), flagged ones first. ctx: { today, asOf,
+  // eas (list), links (data/capital.json links), muni }: the checks, the EA and DC program each came
+  // from (and how sure that link is), and where the work is.
+  const CAP_COLS = ['Project number(s)', 'Work type', 'System', 'Street', 'From', 'To', 'Located in', 'Municipality (as published)', 'Ward', 'Status', '% built', '% built basis', 'Start target', 'Start actual', 'Substantial completion target', 'Substantial completion actual', 'In service (year)', 'Days past completion target', 'Last updated', 'Months since update', 'To check', 'From an EA', 'EA link method', 'DC program link', 'DC link confidence', 'Tender target', 'Tender actual', 'Award target', 'Award actual', 'Length (m)', 'Project page', 'Data as of'];
+  const dcLinkLabel = k => { const [sys, kind, ref, proj] = String(k).split(':'); return kind === 'fac' ? `${ref} (DC project ${proj})` : `${titleCase(sys)} DC line component ${String(ref || '').replace(/^c/, '')}`; };
+  function capitalSheetRows(contracts, ctx = {}) {
+    const today = ctx.today || new Date().toISOString().slice(0, 10), asOf = ctx.asOf || '';
+    const keyOf = new Map();
+    for (const c of (contracts || new Map()).values()) for (const r of c.records) keyOf.set(r.id, c.key);
+    const eaBy = new Map(), dcBy = new Map(), push = (m, k, v) => { if (k == null) return; if (!m.has(k)) m.set(k, []); m.get(k).push(v); };
+    for (const e of ctx.eas || []) for (const l of (e.related && e.related.capitalProjects) || []) push(eaBy, keyOf.get(l.id), { name: e.name, method: l.method });
+    for (const l of ctx.links || []) push(dcBy, keyOf.get(l.capital), l);
+    const uniq = a => [...new Set(a)];
+    const rows = [];
+    for (const c of (contracts || new Map()).values()) {
+      const r = c.lead, where = placeOf(r);
+      if (ctx.muni && !inMuni(where, ctx.muni) && !inMuni(r.municipality, ctx.muni)) continue;
+      const k = contractCheck(c, today, asOf), ea = eaBy.get(c.key) || [], dc = dcBy.get(c.key) || [];
+      const age = c.lastUpdate ? daysFrom(c.lastUpdate, asOf || today) : null;
+      const dcConf = dc.length ? (dc.some(l => l.confidence !== 'low') ? 'medium' : 'low') : '';
+      rows.push({ late: k.overdue ? k.overdue.days : -1, flagged: k.flags.length > 0, rank: RANK.indexOf(c.status), row: [c.projectNumbers.join(', '), workLabel(r.workType), c.systems.map(titleCase).join(', '), titleCase(r.street || ''), titleCase(r.from || ''), titleCase(r.to || ''), where, titleCase(r.municipality || ''), r.ward || '', statusLabel(c.status),
+        k.progress ? k.progress.pct : '', k.progress ? k.progress.basis : '', r.startTarget || '', r.startActual || '', r.substantialTarget || '', r.substantialActual || '', contractInService(c) || '', k.overdue ? k.overdue.days : '', c.lastUpdate || '', age != null ? Math.round(age / 30.44) : '',
+        k.flags.join('; '), uniq(ea.map(x => x.name)).join('; '), uniq(ea.map(x => x.method)).join('; '), uniq(dc.map(l => dcLinkLabel(l.dc))).join('; '), dcConf,
+        r.tenderTarget || '', r.tenderActual || '', r.awardTarget || '', r.awardActual || '', Math.round(c.lengthM || 0), r.website || '', asOf] });
+    }
+    rows.sort((a, b) => (b.flagged - a.flagged) || b.late - a.late || b.rank - a.rank || String(a.row[0]).localeCompare(String(b.row[0])));
+    return { cols: CAP_COLS, rows: rows.map(x => x.row) };
   }
   const EA_COLS = ['Name', 'System', 'Municipality', 'Schedule', 'Status', 'Milestones', 'Next step', 'Completed', 'Decision (from the report; check it)', 'Linked capital projects', 'Project page', 'Report', 'Location method', 'Location confidence', 'Page checked'];
   function eaSheetRows(eas) {
@@ -700,6 +876,7 @@
     PRIORITY, rankHits, tolerance, hitDistance, pickHeading, sameSpot,
     EA_OUTLINE_ZOOM, eaStyle, labelPoint, pctLabel, SYS_CASING,
     eaReview, eaDates, contractSpans, classifyLink, eaProgress, timelineRow, possibleLinks, sameStreetAs, metresTo, BUCKETS, LINK_STRENGTH, capitalSheetRows, eaSheetRows, capitalGeoJSON, easGeoJSON, CAP_COLS, EA_COLS,
+    contractCheck, eaCheck, placeOf, ago, watchList, watchListHTML, watchSheetRows, WATCH_KINDS, WATCH_COLS, siteBrief, siteBriefText, siteBriefHTML, briefEaLine, briefWorkLine,
     eaScopeHTML, capitalScopeHTML, capitalHover, eaHover, watchBtn,
     dcCapitalIndex, dcActualHTML, eaMatch, eaSort, geomDistM, easNear, easMayApply, upcoming, openPeriods, eaICS, eaTabHTML, EA_SYS, activeConstruction, currentEAs, recentEAs, RECENT_YEARS, listsHTML, easForDc, easForDcHTML, weekItems, weekHTML, watchRows, attentionItems,
   };

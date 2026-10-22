@@ -10,7 +10,7 @@
   // ---- The right panel (Stage 2): four tabs at every scope, Overview · Growth · Servicing · Capital,
   // plus Records, a small trailing tab (also opened from the Settings gear). Sub-views: at most four
   // per tab, one chip row under the tab bar (TABSUBS). Overview has none.
-  //   Growth:    Pipeline · Areas · Timing
+  //   Growth:    Pipeline · Areas · Timing · Ledger (the pipeline ledger, js/ledger-ui.js)
   //   Servicing: Capacity · Network · Allocations · Checks   (water and wastewater together)
   //   Capital:   Timing · Projects · EAs (+ Funding while its Labs switch is on)
   //   Records:   Sources · Checks · Files
@@ -21,7 +21,7 @@
   const SUB_MAP = {
     ww: { plants: 'capacity', catchments: 'network', alloc: 'alloc', pumpstations: 'network' },
     water: { capacity: 'capacity', zones: 'network', facilities: 'checks', hydro: 'checks' },
-    growth: { pipeline: 'pipeline', census2051: 'areas', byplan: 'areas', timing: 'timing', areas: 'areas' },
+    growth: { pipeline: 'pipeline', census2051: 'areas', byplan: 'areas', timing: 'timing', areas: 'areas', ledger: 'ledger' },
     dca: { timing: 'timing', build: 'projects', projects: 'projects', eas: 'eas', recommendations: 'funding', funding: 'funding' },
   };
   // A tab key from a link or a stored pref (with its sub-view, when the old key named one).
@@ -48,7 +48,7 @@
   const labOn = id => !!(root.PeelLabs && root.PeelLabs.on(id));
   // Sub-view state per tab: the chip data-attribute, the store key, the valid values, get / set.
   const TABSUBS = {
-    growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'areas', 'timing'], get: () => gSub, set: v => { gSub = v; } },
+    growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'areas', 'timing', 'ledger'], get: () => gSub, set: v => { gSub = v; } },
     svc: { attr: 'svcsub', store: 'svcSub', valid: ['capacity', 'network', 'alloc', 'checks'], get: () => svcSub, set: v => { svcSub = v; } },
     dca: { attr: 'dcasub', store: 'dcSub', valid: ['timing', 'projects', 'eas', 'funding'], get: () => dcSub, set: v => { dcSub = v; } },
     records: { attr: 'rsub', store: 'rSub', valid: ['sources', 'checks', 'files'], get: () => rSub, set: v => { rSub = v; } },
@@ -60,12 +60,12 @@
   // At a site, Capital › Timing is the site's DC projects (the projects it relies on); the Projects
   // list is Region-wide, so it is hidden there.
   const HIDDEN = {
-    site: { growth: ['areas', 'timing'], svc: ['capacity', 'alloc', 'checks'], dca: ['projects', 'funding'], records: ['sources', 'checks'] },
+    site: { growth: ['areas', 'timing', 'ledger'], svc: ['capacity', 'alloc', 'checks'], dca: ['projects', 'funding'], records: ['sources', 'checks'] },
     area: { records: ['files'] },
   };
   const SITE_HIDDEN = HIDDEN.site;
   // Sub-views that are empty at a site are hidden too: EAs with none near the site.
-  const EMPTY_AT_SITE = { 'dca:eas': () => !!(root.PeelCapitalEA && root.PeelCapitalEA.siteEaCount && root.PeelCapitalEA.siteEaCount() === 0) };
+  const EMPTY_AT_SITE = { 'dca:eas': () => !!(root.PeelCapitalEA && root.PeelCapitalEA.siteBriefCount && root.PeelCapitalEA.siteBriefCount() === 0) };
   // Capital › Funding: only while its Labs switch is on, and never in the public version.
   const isPublic = () => !!(root.PeelUtil && root.PeelUtil.isPublic && root.PeelUtil.isPublic());
   const hiddenAt = (scope, tab, sub) => !!((HIDDEN[scope] || {})[tab] && HIDDEN[scope][tab].includes(sub)) || (tab === 'dca' && sub === 'funding' && (!labOn('funding') || isPublic()))
@@ -113,6 +113,7 @@
     if (key === 'svc' && svcSub === 'alloc') setTimeout(() => DUI().renderAlloc(), 0);
     if (key === 'svc' && root.PeelSvcCapacity) setTimeout(() => root.PeelSvcCapacity.renderFor(svcSub), 0);
     if (key === 'growth' && gSub === 'areas' && root.PeelPlanTables) setTimeout(() => root.PeelPlanTables.render(), 0);
+    if (key === 'growth' && gSub === 'ledger' && root.PeelLedgerUI) setTimeout(() => root.PeelLedgerUI.render(), 0);
     // The standard panel of the open tab and sub-view (js/panel.js).
     if (root.PeelPanel) root.PeelPanel.sync();
     // A narrow screen scrolls the tab strip: keep the open tab in view.

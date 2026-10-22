@@ -325,9 +325,10 @@
         <div class="tour-ch">${chapters.map(c => `<span class="${c === st.ch ? 'on' : ''}">${esc(c)}</span>`).join('')}</div>
         <strong>${esc(st.t)}</strong><p>${esc(body)}</p>${roles}
         <div class="tour-dots" aria-hidden="true">${steps.map((_, i) => `<button type="button" tabindex="-1" class="${i === tourI ? 'on' : i < tourI ? 'done' : ''}" data-tour-dot="${i}" title="Step ${i + 1}"></button>`).join('')}</div>
-        <div class="tour-btns"><button type="button" class="btn small link" data-tour-skip>${last ? 'Close' : 'Skip tour'}</button><span>${tourI ? '<button type="button" class="btn small" data-tour-back>← Back</button>' : ''}${last ? '<button type="button" class="btn small primary" data-tour-help>Open Help &amp; tips</button>' : `<button type="button" class="btn small primary" data-tour-next>${tourI ? 'Next →' : st.roles ? 'Skip this →' : 'Start →'}</button>`}</span></div></div>`;
+        <div class="tour-btns"><button type="button" class="btn small link" data-tour-skip>${last ? 'Close' : 'Skip tour'}</button><span>${tourI ? '<button type="button" class="btn small" data-tour-back>← Back</button>' : ''}${last ? '<button type="button" class="btn small primary" data-tour-help>Open Help &amp; tips</button>' : st.roles ? '<button type="button" class="btn small" data-tour-next>Continue without a role →</button>' : `<button type="button" class="btn small primary" data-tour-next>${tourI ? 'Next →' : 'Start →'}</button>`}</span></div></div>`;
     const card = tourEl.querySelector('.tour-card'), [x2, y2] = place(card.offsetHeight); card.style.left = `${x2}px`; card.style.top = `${y2}px`;
-    const nx = tourEl.querySelector('[data-tour-next], [data-tour-help]'); if (nx) nx.focus({ preventScroll: true });
+    // (the role step: picking a role is the step's answer, so the keyboard starts on the roles)
+    const nx = tourEl.querySelector(st.roles ? '[data-tour-role]' : '[data-tour-next], [data-tour-help]'); if (nx) nx.focus({ preventScroll: true });
   }
 
   const api = { maybeTour, maybeMapTour, HOME_TOUR, TOUR_ROLES, TOUR, showHelp, showHelpLog, openAnalysis, startTour, MOVED, movedHTML, helpPage, ROLES, ASKS, HELP };

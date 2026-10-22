@@ -40,7 +40,7 @@ test('no two sub-views share a name; the chips, the trails and the source lines 
   const chips = tab => { const i = html.indexOf('f-subtabs', html.indexOf(`data-pane="${tab}" hidden role="group"`) - 80); return [...html.slice(i, html.indexOf('</div>', i)).matchAll(/data-(?:gsub|svcsub|dcasub|rsub)="\w+">([^<]+)</g)].map(m => m[1].trim()); };
   const all = ['growth', 'svc', 'dca', 'records'].flatMap(chips);
   assert.equal(new Set(all).size, all.length, `duplicate sub-view names: ${all.join(', ')}`);
-  assert.deepEqual(chips('growth'), ['Pipeline', 'Areas', 'Forecast']);
+  assert.deepEqual(chips('growth'), ['Pipeline', 'Areas', 'Forecast', 'Ledger']);
   assert.ok(chips('svc').includes('Model checks') && chips('records').includes('Data checks') && chips('dca').includes('DC timing'));
   const W = require('../js/workspaces.js');
   assert.equal(W.tabPath('svc', 'checks'), 'Servicing › Model checks');

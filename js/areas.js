@@ -110,6 +110,40 @@
     return { date: Math.min(...issued) + ((r.units || 0) >= 20 ? 30 : 12) * MONTH, estimated: true };
   }
 
+  // A development's homes and suites completed since census day, with how many of the dates counted are
+  // estimated. Kept per development and date: growthSince runs for every plant, zone and block, over the
+  // same developments (a rebuild makes new development objects, so nothing outlives its records).
+  const builtCache = new WeakMap();
+  function builtSince(p, since) {
+    let m = builtCache.get(p);
+    if (!m) { m = new Map(); builtCache.set(p, m); }
+    let b = m.get(since);
+    if (b) return b;
+    let estimated = 0;
+    const done = p.records.filter(r => {
+      if (r.kind !== 'permit' || r.phase !== 'completed') return false;
+      const c = completedAt(r);
+      if (c && c.estimated && c.date >= since) estimated++;   // (only the dates it counts carry the note)
+      return c && c.date >= since;
+    });
+    // Secondary and garden suites (and other units added to an existing house) at the apartment rate
+    // (decided 2026-10-17): a suite on a "Detached Dwelling" permit is not a house.
+    const suite = r => P.permitRole(r) === 'suite' || (P.isSecondUnitConversion && P.isSecondUnitConversion(r));
+    const suites = done.filter(suite), homes = done.filter(r => !suite(r));
+    let n = homes.length ? P.permitUnits(homes) : 0;
+    const nSuite = suites.length ? P.permitUnits(suites) : 0;
+    // Homes inferred from building permits that state no units (js/phases.js inferBlankPermits), in the
+    // buildings completed since census day.
+    const inf = p.buildout && p.buildout.inferred;
+    if (inf && inf.completed > 0 && P.isBlankPermit) {
+      const blank = p.records.filter(r => P.isBlankPermit(r) && r.phase === 'completed');
+      const since0 = blank.filter(r => { const c = completedAt(r); return c && c.date >= since; });
+      if (blank.length) n += Math.round(inf.completed * since0.length / blank.length);
+    }
+    b = { n, nSuite, estimated }; m.set(since, b);
+    return b;
+  }
+
   /**
    * Growth since the census in a geography:
    *  - built: units on building permits completed on or after census day;
@@ -125,26 +159,9 @@
     let builtUnits = 0, approvedUnits = 0, builtProjects = 0, approvedProjects = 0, estimated = 0, proposedUnits = 0, proposedProjects = 0;
     for (const p of projects) {
       if (p.phase === 'cancelled' || !inGeo(g, { muni: p.municipality, sp: p.sp, mtsa: p.mtsa })) continue;
-      const done = p.records.filter(r => {
-        if (r.kind !== 'permit' || r.phase !== 'completed') return false;
-        const c = completedAt(r);
-        if (c && c.estimated && c.date >= since) estimated++;   // (only the dates it counts carry the note)
-        return c && c.date >= since;
-      });
-      // Secondary and garden suites (and other units added to an existing house) at the apartment rate
-      // (decided 2026-10-17): a suite on a "Detached Dwelling" permit is not a house.
-      const suite = r => P.permitRole(r) === 'suite' || (P.isSecondUnitConversion && P.isSecondUnitConversion(r));
-      const suites = done.filter(suite), homes = done.filter(r => !suite(r));
-      let n = homes.length ? P.permitUnits(homes) : 0;
-      const nSuite = suites.length ? P.permitUnits(suites) : 0;
-      // Homes inferred from building permits that state no units (js/phases.js inferBlankPermits), in the
-      // buildings completed since census day.
-      const inf = p.buildout && p.buildout.inferred;
-      if (inf && inf.completed > 0 && P.isBlankPermit) {
-        const blank = p.records.filter(r => P.isBlankPermit(r) && r.phase === 'completed');
-        const since0 = blank.filter(r => { const c = completedAt(r); return c && c.date >= since; });
-        if (blank.length) n += Math.round(inf.completed * since0.length / blank.length);
-      }
+      const b = builtSince(p, since); estimated += b.estimated;
+      let n = b.n;
+      const nSuite = b.nSuite;
       const part = k => ({ ...p, units: k, buildout: null, siteAreaHa: p.siteAreaHa > 0 && p.units > 0 ? p.siteAreaHa * Math.min(1, k / p.units) : null });
       if (n > 0) { built.push(part(n)); builtUnits += n; builtProjects++; }
       if (nSuite > 0) { built.push({ ...p, units: nSuite, buildout: null, unitMix: { apartment: 1 }, siteAreaHa: null }); builtUnits += nSuite; if (!(n > 0)) builtProjects++; }
