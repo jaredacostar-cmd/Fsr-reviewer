@@ -40,3 +40,11 @@ test('automatic joins: drawn within 60 m, bridged to 200 m, far beyond, open wit
   assert.strictEqual(DJ.conf({ auto: true, m: null, into: null }), 'open');
   assert.strictEqual(DJ.conf({ auto: false, m: 0, into: null }), 'reviewed');
 });
+
+test('water: an end at a facility joins through it; nothing joined is flagged, by zone or not', () => {
+  assert.strictEqual(DJ.conf({ sys: 'water', auto: true, fac: 'Mayfield Reservoir', into: null, m: null }), 'facility');
+  assert.strictEqual(DJ.conf({ sys: 'water', auto: true, into: null, m: null, zoneBlocked: { m: 80, zone: 'pz:6' } }), 'zone');
+  assert.strictEqual(DJ.conf({ sys: 'water', auto: true, into: null, m: null }), 'unjoined');
+  assert.strictEqual(DJ.conf({ sys: 'wastewater', auto: true, into: null, m: null }), 'open', 'a sewer end with nothing is just open');
+  assert.strictEqual(DJ.conf({ sys: 'water', auto: true, into: { kind: 'watermain', d: 400 }, m: 30 }), 'drawn');
+});

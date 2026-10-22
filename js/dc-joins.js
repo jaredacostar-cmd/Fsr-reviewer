@@ -69,12 +69,28 @@
   // ---- How sure an automatic join is ---------------------------------------------------------
   // drawn: within 60 m (the maps draw it to the main); bridged: up to 200 m; far: beyond (worth a
   // look); open: nothing within reach (an upstream end, or a main the maps stop short).
+  // Water is a looped network fed zone by zone: an end at a station, reservoir or tank joins
+  // through it; one with nothing joined is worth a look (zone: the only main in reach is in another
+  // pressure zone, which water doesn't cross without a facility).
   function conf(j) {
     if (!j.auto) return 'reviewed';
+    if (j.sys === 'water') {
+      if (j.fac) return 'facility';
+      if (!j.into) return j.zoneBlocked ? 'zone' : 'unjoined';
+    }
     if (!j.into) return 'open';
     return j.m <= 60 ? 'drawn' : j.m <= 200 ? 'bridged' : 'far';
   }
-  const CONF = { drawn: 'joined as drawn', bridged: 'bridged gap', far: 'long bridged gap: check', open: 'open end', reviewed: 'reviewed' };
+  const CONF = { drawn: 'joined as drawn', bridged: 'bridged gap', far: 'long bridged gap: check', open: 'open end', reviewed: 'reviewed',
+    facility: 'joins through the facility', zone: 'nearest main is in another pressure zone: check', unjoined: 'not connected: check (water mains loop)' };
+  const zoneName = id => { const z = id && App() && App().state.servicing && App().state.servicing.zones.find(x => x.id === id); return z ? z.name : ''; };
+  // What a join is, in a line.
+  function joinText(j) {
+    const c = conf(j), zn = j.sys === 'water' ? zoneName(j.zone) : '';
+    const what = j.into ? `Joins ${intoText(j.into)}${j.m != null ? `, ${Math.round(j.m)} m` : ''}` : c === 'zone' ? `Nearest main ${Math.round(j.zoneBlocked.m)} m off is in ${zoneName(j.zoneBlocked.zone) || 'another zone'}: not joined` : c === 'facility' ? 'Not joined to a main'
+      : j.sizeBlocked ? `Nearest main (${j.sizeBlocked.d ? `${j.sizeBlocked.d} mm, ` : ''}${Math.round(j.sizeBlocked.m)} m off) is under half its size: not joined` : 'Open end: no main within reach';
+    return [what, j.fac ? `at ${j.fac}` : '', zn ? `in ${zn}` : '', j.along ? `also joins existing mains at ${j.along} point${j.along === 1 ? '' : 's'} along its length` : ''].filter(Boolean).join(' · ');
+  }
   function intoText(into) {
     if (!into) return 'nothing';
     if (into.kind === 'sewer') return `the existing ${into.d} mm sewer`;
@@ -92,7 +108,7 @@
   }
   function sysOn(sys) { const d = MM() && MM().getDcOn(); return !!d && d.on && (d.sys === 'both' || d.sys === sys); }
   async function ensureData() {
-    await Promise.all([load(), SC() && SC().loadSewers(), WT() && WT().loadWatermains ? WT().loadWatermains() : null]);
+    await Promise.all([load(), SC() && SC().loadSewers(), WT() && WT().loadWatermains ? WT().loadWatermains() : null, WT() && WT().loadWaterFacilities ? WT().loadWaterFacilities() : null]);
   }
   function render() {
     const m = map(), L = L_(); if (!m || !L) return;
@@ -112,7 +128,7 @@
         const c = conf(j);
         if (j.to) L.polyline([[j.pt[1], j.pt[0]], [j.to[1], j.to[0]]], { className: `dcj-link dcj-${c}`, interactive: false, pane }).addTo(S.layer);
         L.circleMarker([j.pt[1], j.pt[0]], { radius: 5, className: `dcj-end dcj-${c}`, pane, bubblingMouseEvents: false })
-          .bindTooltip(`<strong>${esc(DI().dcLineText(j.ln))}</strong><br>${c === 'open' ? 'Open end: no main within reach' : `Joins ${esc(intoText(j.into))}${j.m != null ? `, ${Math.round(j.m)} m` : ''}`}<br><span class="muted">${esc(CONF[c])}${j.ov && j.ov.note ? ` · ${esc(j.ov.note)}` : ''} · tap to change</span>`, { className: 'pt', sticky: true })
+          .bindTooltip(`<strong>${esc(DI().dcLineText(j.ln))}</strong><br>${esc(joinText(j))}<br><span class="muted">${esc(CONF[c])}${j.ov && j.ov.note ? ` · ${esc(j.ov.note)}` : ''} · tap to change</span>`, { className: 'pt', sticky: true })
           .on('click', ev => { L.DomEvent.stop(ev); openEnd(j); }).addTo(S.layer);
       }
     }
@@ -127,7 +143,7 @@
   function openEnd(j) {
     const m = map(), L = L_(), c = conf(j), e = editAt(j.sys, j.pt);
     const html = `<div class="dcj-pop"><strong>${esc(DI().dcLineText(j.ln))}</strong>
-      <p class="small">${c === 'open' ? 'Open end: nothing joins here.' : `Joins ${esc(intoText(j.into))}${j.m != null ? ` (${Math.round(j.m)} m)` : ''}.`} <span class="muted">${esc(CONF[c])}</span></p>
+      <p class="small">${esc(joinText(j))}. <span class="muted">${esc(CONF[c])}</span></p>
       <div class="dcj-acts"><button type="button" class="btn small" data-dcj="pick">Pick where it joins</button>
       <button type="button" class="btn small" data-dcj="open">Open end</button>
       ${!j.auto ? '<button type="button" class="btn small" data-dcj="auto">Automatic</button>' : ''}</div>
@@ -206,7 +222,7 @@
   if (typeof document !== 'undefined') load();
 
   const api = {
-    override, setEdit, load, exportJSON, merge, conf, intoText, render, setOn, ensureData,
+    override, setEdit, load, exportJSON, merge, conf, intoText, joinText, render, setOn, ensureData,
     isOn: () => S.on, edits: () => J.edits.slice(), version: () => J.v, download, MATCH_M,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

@@ -1416,6 +1416,10 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .dcj-far { fill: var(--cap-over); }
 .dcj-link.dcj-far { stroke: var(--cap-over); }
 .dcj-open { fill: var(--hue-grey); }
+.dcj-facility { fill: var(--cap-room); stroke-width: 3; }
+.dcj-link.dcj-facility { stroke: var(--cap-room); }
+.dcj-zone { fill: var(--hue-violet); }
+.dcj-unjoined { fill: var(--cap-over); }
 .dcj-reviewed { fill: var(--select); }
 .dcj-link.dcj-reviewed { stroke: var(--select); stroke-dasharray: none; }
 .dcj-pop p { margin: var(--space-1) 0; }

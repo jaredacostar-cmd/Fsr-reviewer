@@ -478,7 +478,10 @@ from street zoom (14), up to 3,000 in view.
     the sewer and water traces use it: green within 60 m as drawn, orange a bridged gap to 200 m,
     red a longer one worth checking, grey an open end. A planned main joins an existing main of a
     matching size (a sewer at least its size, a watermain at least half), and is bridged to another
-    planned main only where no such sewer is nearer. Tap an end to set its join by hand (Pick where
+    planned main only where no such sewer is nearer. Water joins stay in the end's pressure zone (at
+    the ends and wherever the main runs within 25 m of another), crossing zones only at a station,
+    reservoir or tank within 150 m (existing or planned); a water end with nothing joined is
+    flagged (red; violet when the only main in reach is across a zone boundary). Tap an end to set its join by hand (Pick where
     it joins, then tap the pipe or planned main; or Open end): reviewed joins are blue and the traces
     follow them. Edits stay in the browser until exported (dc-joins.json) and committed to
     `data/dc-joins.json`; they are matched to the main's end by position (5 m), so they survive a

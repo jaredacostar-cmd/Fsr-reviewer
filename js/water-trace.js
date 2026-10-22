@@ -251,7 +251,7 @@
     return WM.loading;
   }
   function wmGraph() {
-    const dcKey = `${App().state.dcInfra ? App().state.dcInfra.water.lines.length : 0}:${DJ() ? DJ().version() : 0}`;
+    const dcKey = `${App().state.dcInfra ? App().state.dcInfra.water.lines.length : 0}:${DJ() ? DJ().version() : 0}:${WF.data ? 1 : 0}:${App().state.servicing ? 1 : 0}`;
     if (WM.g && WM.dcKey === dcKey) return WM.g;
     const d = WM.data, xs = [], ys = [], E = [];
     for (let i = 0, x = 0, y = 0; i < d.xy.length; i += 2) { x += d.xy[i]; y += d.xy[i + 1]; xs.push(x / 1e5); ys.push(y / 1e5); }
@@ -276,8 +276,10 @@
     };
     // Planned DC water mains: their vertices join the network, their ends the nearest node of
     // another main within 300 m: of a main at least half their size when there is one, else any main
-    // within 60 m (a 1200 mm transmission main doesn't feed off a 300 mm local main). A reviewed join
-    // (js/dc-joins.js) replaces the automatic one: the main it was set onto, or none (an open end).
+    // within 60 m (a 1200 mm transmission main doesn't feed off a 300 mm local main). Water moves
+    // between pressure zones only through a station, reservoir or tank: a join stays in the zone of
+    // the end, unless the end is at a facility (within 150 m: existing, or planned on the DC map).
+    // A reviewed join (js/dc-joins.js) replaces the automatic one: the main it was set onto, or none.
     const planned = [], n0 = xs.length, dOf = new Float64Array(n0), lnOf = [];
     for (const [a, b, dm] of E) { dOf[a] = Math.max(dOf[a], dm); dOf[b] = Math.max(dOf[b], dm); }
     if (App().state.dcInfra) for (const ln of App().state.dcInfra.water.lines) {
@@ -285,25 +287,47 @@
       ln.g.forEach(([x, y], k) => { xs.push(x); ys.push(y); lnOf.push(ln); if (k) E.push([a + k - 1, a + k, ln.d || 0, ln]); });
       planned.push([a, xs.length - 1, ln]);
     }
-    // A planned main joins an existing one wherever it runs within 25 m of it (twinning, crossings).
-    for (const [a, b, ln] of planned) for (let t = a; t <= b; t++) { const n = near([xs[t], ys[t]], 25, i => i >= n0); if (n) E.push([t, n.i, 0, ln]); }
+    const ZL = App().state.servicing && App().state.servicing.zones, zMemo = new Map();
+    const zoneOf = i => { if (!ZL) return null; if (!zMemo.has(i)) zMemo.set(i, Areas().locate(ZL, xs[i], ys[i])[0] || null); return zMemo.get(i); };
+    const sameZone = (t, i) => { const a = zoneOf(t), b = zoneOf(i); return !a || !b || a === b; };
+    const facs = [
+      ...(WF.data ? WF.data.facilities.filter(f => f.lnglat).map(f => ({ g: f.lnglat, name: f.name })) : []),
+      ...(App().state.dcInfra ? App().state.dcInfra.water.facilities.filter(f => f.g && f.kind !== 'program').map(f => ({ g: f.g, name: `${f.name} (planned)` })) : []),
+    ];
+    const facAt = pt => { let best = null, bd = 150; for (const f of facs) { const m = DI().dcM(pt, f.g); if (m < bd) { bd = m; best = f; } } return best; };
+    // A planned main joins an existing one wherever it runs within 25 m of it in the same zone
+    // (twinning, crossings; a transmission main passing through another zone isn't tapped there).
+    const along = new Map();
+    for (const [a, b, ln] of planned) for (let t = a; t <= b; t++) {
+      const n = near([xs[t], ys[t]], 25, i => i >= n0 || !sameZone(t, i));
+      if (n) { E.push([t, n.i, 0, ln]); along.set(ln, (along.get(ln) || 0) + 1); }
+    }
     for (const [a, b] of planned) for (let i = a; i <= b; i++) put(i);
     const lineAt = i => (i < n0 ? null : lnOf[i - n0]);
     const joins = [];
     for (const [a, b, ln] of planned) for (const t of [a, b]) {
       const pt = [xs[t], ys[t]], ov = DJ() ? DJ().override('water', pt) : null;
-      const own = i => i >= a && i <= b;
-      let n = null, auto = true;
+      const own = i => i >= a && i <= b, fac = facAt(pt);
+      let n = null, auto = true, zoneBlocked = null, sizeBlocked = null;
       if (ov) {
         auto = false;
         if (ov.to) n = near(ov.to, 15, own);
       } else {
-        const need = (ln.d || 0) / 2;
-        n = near(pt, 300, i => own(i) || (i < n0 ? dOf[i] : (lineAt(i) || {}).d || 0) < need) || near(pt, 60, own);
+        const need = (ln.d || 0) / 2, dOk = i => (i < n0 ? dOf[i] : (lineAt(i) || {}).d || 0) >= need;
+        const zOk = i => fac || sameZone(t, i);
+        n = near(pt, 300, i => own(i) || !zOk(i) || !dOk(i)) || near(pt, 60, i => own(i) || !zOk(i));
+        // Not joined, flagged for review: the only main in reach is across a zone boundary, or in the
+        // zone but under half the planned main's size.
+        if (!n) {
+          const x = near(pt, 300, own);
+          if (x && !zOk(x.i)) zoneBlocked = { m: x.m, zone: zoneOf(x.i) };
+          else if (x) sizeBlocked = { m: x.m, d: x.i < n0 ? dOf[x.i] : (lineAt(x.i) || {}).d || 0 };
+        }
       }
       if (n) E.push([t, n.i, 0, ln]);
       const into = n ? (n.i < n0 ? { kind: 'watermain', d: dOf[n.i] } : { kind: 'dc', ln: lineAt(n.i) }) : null;
-      joins.push({ sys: 'water', ln, pt, to: n ? [xs[n.i], ys[n.i]] : null, m: n ? n.m : null, into, auto, ov });
+      joins.push({ sys: 'water', ln, pt, to: n ? [xs[n.i], ys[n.i]] : null, m: n ? n.m : null, into, auto, ov,
+        zone: zoneOf(t), fac: fac ? fac.name : null, zoneBlocked, sizeBlocked, along: along.get(ln) || 0 });
     }
     const adj = Array.from({ length: xs.length }, () => []);
     E.forEach(([a, b], k) => { adj[a].push(k); adj[b].push(k); });
