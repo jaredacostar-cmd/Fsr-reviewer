@@ -98,6 +98,16 @@ def split_runs(pts, drop, step=0.5, min_len=3):
     runs = [[q for k, (q, v) in enumerate(r) if v or k in (0, len(r) - 1)] for r in runs]
     return [r for r in runs if sum(math.hypot(b[0] - a[0], b[1] - a[1]) for a, b in zip(r, r[1:])) >= min_len]
 
+def midpoint(poly):
+    """The point halfway along a polyline (its middle vertex is an end on a two-point line, which
+    can sit on an inset's frame and read as the main map)."""
+    segs = [math.hypot(b[0] - a[0], b[1] - a[1]) for a, b in zip(poly, poly[1:])]
+    half = sum(segs) / 2
+    for (a, b), L in zip(zip(poly, poly[1:]), segs):
+        if half <= L and L: t = half / L; return (a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t)
+        half -= L
+    return poly[len(poly) // 2]
+
 def at_edge(p, r, tol=2.5):
     """A point on the edge of a rectangle (within tol pt)."""
     if not inside(p, r, tol): return False
@@ -178,7 +188,7 @@ def build(kind):
         if not cls or not p['w'] or p['w'] < 1.5: continue
         for poly in p['polys']:
             if len(poly) < 2: continue
-            mid = poly[len(poly) // 2]
+            mid = midpoint(poly)
             if in_box(mid) and not frame_of(mid): continue     # legend swatches
             fe = frame_of(mid)
             lines.append({'cls': cls, 'status': 'approved' if p['dash'] else 'proposed', 'src': poly, 'fe': fe})
