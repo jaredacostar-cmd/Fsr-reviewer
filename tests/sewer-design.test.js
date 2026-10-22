@@ -267,3 +267,14 @@ test('designNet within a range: a flow too big for a size at the steepest chosen
   const no = SD.designNet(SD.lineNet(rt, 5000), conn, { slopes: RANGE });
   assert.ok(!no.ok && /more than the largest pipe carries within the 0\.7 flow ratio and 3\.0 m\/s full at 1\.00% or flatter/.test(no.why), no.why);
 });
+
+test('a size chosen within a slope range: every reach at that size and in the range, or why not', () => {
+  const rt = route(240, x => 200 - x * 0.01), conn = { invert: 193, dmm: 375 }, net = SD.lineNet(rt, 25);
+  const d = SD.designNet(net, conn, { dmm: 300, slopes: RANGE });
+  assert.ok(d.ok, d.why);
+  for (const r of d.reaches) { assert.equal(r.dmm, 300); assert.ok(inRange(r), `${(r.S * 100).toFixed(3)}%`); }
+  // 200 mm carries 23 L/s at 1% (0.7 × 32.8): 25 L/s at that size within the range is refused, not sized up
+  const no = SD.designNet(net, conn, { dmm: 200, slopes: RANGE });
+  assert.equal(no.ok, false);
+  assert.match(no.why, /200 mm can't carry 25\.0 L\/s within the 0\.7 flow ratio and 3\.0 m\/s full at 1\.00% or flatter/);
+});

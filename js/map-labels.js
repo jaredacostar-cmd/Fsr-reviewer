@@ -44,9 +44,9 @@
         const refs = Array.from(new Set(p.records.map(r => r.ref).filter(Boolean)));
         return `<b>${esc(refs.slice(0, 2).join(', ') || p.title)}</b>${refs.length > 2 ? `<small>+${refs.length - 2} more</small>` : ''}`;
       }
-      case 'units': return p.units ? `<b>${fmtNum(p.units)} units</b><small>${esc(p.title)}</small>` : '';
+      case 'units': return p.units ? `<b>${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'}</b><small>${esc(p.title)}</small>` : '';
       case 'address-units': return `<b>${esc(p.title)}</b>${p.units ? `<small>${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'}</small>` : ''}`;
-      default: return `<b>${esc(p.title)}</b><small>${esc(ph)}${p.units ? ` · ${fmtNum(p.units)} units` : ''}</small>${lsLine(p)}`;
+      default: return `<b>${esc(p.title)}</b><small>${esc(ph)}${p.units ? ` · ${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'}` : ''}</small>${lsLine(p)}`;
     }
   }
   let labelOf = new Map();

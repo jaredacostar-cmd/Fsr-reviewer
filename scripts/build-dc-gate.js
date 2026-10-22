@@ -213,6 +213,10 @@ function gate(projects, permits) {
         .sort((a, b) => (!a.d) - (!b.d) || a.d.localeCompare(b.d)).map(x => ({ ...x, label: x.label || STEP_LABEL[x.k] })),
       // Permits on the site that don't fit the order, and why (not linked).
       outOfOrder: [...why.entries()].filter(([, w]) => w).map(([s, w]) => ({ ref: s.ref, src: s.source || undefined, applied: s.applied, issued: s.issued, lat: s.lat, lng: s.lng, reason: w })),
+      // Water / wastewater site servicing permits the city marks cancelled (Brampton, Caledon): not
+      // counted, listed so the pipeline ledger can flag the site possibly lapsed (js/ledger.js).
+      cancelled: (c => (c.length ? c : undefined))([...hits.keys()].filter(s => s.status === 'cancelled' && s.regional && !s.existing)
+        .map(s => ({ ref: s.ref, src: s.source || undefined, applied: s.applied, issued: s.issued }))),
       // Regional (water / wastewater) permits first, newest first; then the rest.
       evidence: live.sort(([a], [b]) => (b.regional && !b.existing) - (a.regional && !a.existing) || String(b.applied || '').localeCompare(String(a.applied || ''))).map(([s, how]) => ({
         ref: s.ref, src: s.source || undefined, kind: s.kind, status: s.status, applied: s.applied, issued: s.issued,

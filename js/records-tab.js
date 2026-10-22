@@ -87,7 +87,9 @@
       answer: due.length ? `<strong>${due.length}</strong> source${due.length === 1 ? ' is' : 's are'} due for an update: ${due.map(r => esc(r.name)).join(', ')}.` : `All data sources are current${apps && apps.date ? `; applications as of <strong>${esc(apps.date)}</strong>` : ''}.`,
       figures: [{ v: fmtNum(fr.length), u: 'sources', label: 'listed', ctx: '' }, { v: due.length, u: '', label: 'due or stale', ctx: '', tone: due.length ? 'tight' : 'room' }, ...(apps && apps.date ? [{ v: esc(apps.date), u: '', label: 'applications as of', ctx: `${esc(apps.every)} updates` }] : [])],
       lists: [{ title: 'Sources', rows: fr.slice(0, 5).map(r => { const [tone, word] = ST_WORD[r.st] || ST_WORD.ref; return PN.kv(esc(r.name), `${r.date ? esc(r.date) : '–'} · ${word}`, tone); }), total: fr.length, seeAll: { 'data-full-table': 'records' } }],
-      method: 'Each source with the date of the data the app holds and how often it is refreshed; due = past its refresh interval, stale = past twice that. The reports behind the design criteria and the comparisons are listed in the full table.',
+      // Every data file's receipt: its source links, its date and its fingerprint (js/sources.js).
+      folds: root.PeelSources ? [{ title: 'Every data file: its source, date and fingerprint', html: root.PeelSources.slotHTML() }] : [],
+      method: 'Each source with the date of the data the app holds and how often it is refreshed; due = past its refresh interval, stale = past twice that. The reports behind the design criteria and the comparisons are listed in the full table. Every data file\u2019s source link, date and SHA-256 fingerprint are under Every data file; Copy citation gives one line to quote.',
       sources: 'Municipal open data (applications, permits, plans), Region of Peel open data and reports, Statistics Canada, CMHC, the Ministry of Finance.',
       // (bundle 6: the old Data tab's refresh and source list are in the full table)
       foot: { primary: { label: 'Refresh and manage sources', attrs: { 'data-full-table': 'records' }, title: 'Refresh live, switch or add a source (was the Data tab)' }, secondary: [{ label: 'Copy share link', attrs: { 'data-share': '' } }] },
@@ -124,7 +126,14 @@
     const day = d => (d ? new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '');
     const sorted = files.slice().sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)));
     const plain = t => (PN.typeWords ? PN.typeWords(t) : t);
-    const latest = sorted.slice(0, 5).map(r => PN.kv(`<strong>${esc(r.ref || 'file')}</strong>${r.type ? ` <small>${esc(plain(r.type))}</small>` : ''}`, `${r.units ? `${fmtNum(r.units)} units · ` : ''}${r.statusRaw ? `municipal status: ${esc(r.statusRaw)}` : esc((PH && PH.PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}${r.date ? ` · ${esc(day(r.date))}` : ''}`));
+    const latest = sorted.slice(0, 5).map(r => PN.kv(`<strong>${esc(r.ref || 'file')}</strong>${r.type ? ` <small>${esc(plain(r.type))}</small>` : ''}`, `${r.units ? `${fmtNum(r.units)} unit${r.units === 1 ? '' : 's'} · ` : ''}${r.statusRaw ? `municipal status: ${esc(r.statusRaw)}` : esc((PH && PH.PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}${r.date ? ` · ${esc(day(r.date))}` : ''}`));
+    // Site → proposal → file (js/sites.js): the other proposals on its land, then the site's other
+    // activity (a patio, a fit-out), each opening its own page.
+    const TG = root.PeelTreeGroups, all = root.PeelApp && root.PeelApp.state && root.PeelApp.state.projects;
+    const site = TG && TG.siteParts ? TG.siteParts(p, all && (all.all || all)) : [];
+    const siteRow = q => PN.kv(`<button type="button" class="btn small link" data-pnl-dev="${esc(q.key)}"><strong>${esc(q.title)}</strong></button>${q.siteActivity ? ' <small>other activity</small>' : ''}`,
+      `${q.units > 0 ? `${fmtNum(q.units)} homes · ` : ''}${esc((PH && PH.PHASE_BY_KEY[q.phase] || {}).label || q.phase || '')}${(q.records || []).some(r => r.kind === 'application') ? ` · ${esc((q.records.find(r => r.kind === 'application') || {}).ref || '')}` : ''}`);
+    const siteList = site.length ? [{ title: `On this site${site.length > 5 ? ` (5 of ${site.length})` : ''}`, rows: site.slice(0, 5).map(siteRow), total: Math.min(5, site.length) }] : [];
     // Bundle 6: the files as a tree (the tree build), the latest activity under it; the flat list
     // where the development has no tree entry (Previous counting, or its files changed since the build).
     const d = FT && FT.of(p);
@@ -138,7 +147,7 @@
         answer: s.files > 1 ? `<strong>${s.files}</strong> planning files on one site. ${holds}${s.onLand ? `; ${s.onLand} file${s.onLand === 1 ? ' sits' : 's sit'} on its land` : ''}${s.sameLand ? `${s.onLand ? ' and' : ';'} ${s.sameLand} earlier file${s.sameLand === 1 ? '' : 's'} share${s.sameLand === 1 ? 's' : ''} the land` : ''}.` : `One planning file: ${rootTxt}, with <strong>${fmtNum(s.units)}</strong> homes.`,
         figures: [{ v: s.files, u: 'files', label: 'planning applications', ctx: 'in one tree', attrs: { 'data-dev-hist': 'file' } }, { v: fmtNum(s.units), u: 'homes', label: 'counted once', ctx: s.counted.length > 1 ? `on ${s.counted.length} files` : `on ${esc(s.root)}`, attrs: { 'data-dev-file': s.root } }, { v: permits.length, u: permits.length === 1 ? 'permit' : 'permits', label: 'building permits', ctx: '', attrs: permits.length ? { 'data-dev-hist': 'permit' } : null }, { v: s.check, u: s.check === 1 ? 'link' : 'links', label: 'to check', ctx: 'linked by overlap only' }],
         chart: `<h3 class="sub-title pnl-chart-t">How the files fit together <span class="pnl-chart-u">(each under the file whose land holds it)</span></h3>${FT.treeHTML(d, recOf, { dot: k => (root.PeelUtil.dot ? root.PeelUtil.dot(k) : ''), latest: sorted[0] && sorted[0].ref, ...(root.PeelDcGate ? root.PeelDcGate.treeOpts(p, d) : {}) })}`,
-        lists: [{ title: 'Latest activity', rows: latest, total: files.length, seeAll: { 'data-full-table': 'records' } }],
+        lists: [...siteList, { title: 'Latest activity', rows: latest, total: files.length, seeAll: { 'data-full-table': 'records' } }],
         method: 'The tree comes from the weekly tree build: each file sits under the file whose land holds it (by boundary overlap and file type, with a confidence on each link); the homes are counted once, on the root file. A link marked check was made by overlap only. Earlier files on the same land are the site\u2019s history and are not counted. Each file shows the municipality\u2019s own status wording.',
         sources: `${esc(p.municipality)} open data (applications and permits); the tree build of ${esc(((root.PeelTreeCounts && root.PeelTreeCounts.data && root.PeelTreeCounts.data.snapshotAt) || '').slice(0, 10))}.`,
         foot: { primary: { label: 'Servicing memo', attrs: { 'data-pnl-memo': '' } }, secondary: [{ label: 'How approvals work', attrs: { 'data-ws-page': 'approvals' }, title: 'Ontario’s steps, the app’s stages and how the files make a tree' }] },
@@ -149,7 +158,7 @@
       head: PN.siteHead(p),
       answer: `<strong>${files.length}</strong> planning file${files.length === 1 ? '' : 's'} and <strong>${permits.length}</strong> building permit${permits.length === 1 ? '' : 's'} on this site${p.last ? `; the latest activity ${esc(day(p.last))}` : ''}.`,
       figures: [{ v: files.length, u: 'files', label: 'planning applications', ctx: '' }, { v: permits.length, u: 'permits', label: 'building permits', ctx: '' }],
-      lists: [{ title: 'Files', rows: latest, total: files.length, seeAll: { 'data-full-table': 'records' } }],
+      lists: [...siteList, { title: 'Files', rows: latest, total: files.length, seeAll: { 'data-full-table': 'records' } }],
       method: 'The files on the land and their history: how the development\u2019s stage was set (the furthest stage reached by a file that is not withdrawn), dated events and the source records with their provenance. Each file shows the municipality\u2019s own status wording.',
       sources: `${esc(p.municipality)} open data (applications and permits), with each record\u2019s source and pull date in the full table.`,
       foot: { primary: { label: 'Servicing memo', attrs: { 'data-pnl-memo': '' } }, secondary: [{ label: 'How approvals work', attrs: { 'data-ws-page': 'approvals' }, title: 'Ontario’s steps, the app’s stages and how the files make a tree' }] },

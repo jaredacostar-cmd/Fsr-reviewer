@@ -19,7 +19,7 @@ test('typing in the search finds; it filters the list only from "Filter the list
 
 test('a suggestion tells developments at the same address apart (units, file number, plan)', () => {
   const s = src('js/search-filter.js');
-  assert.match(s, /function devLine\(p, ql\) \{[^]*?\[p\.municipality, P\.PHASE_BY_KEY\[p\.phase\]\.label, p\.units \? `\$\{fmtNum\(p\.units\)\} units` : '', ref, sp\]/);
+  assert.match(s, /function devLine\(p, ql\) \{[^]*?\[p\.municipality, P\.PHASE_BY_KEY\[p\.phase\]\.label, p\.units \? `\$\{fmtNum\(p\.units\)\} unit\$\{p\.units === 1 \? '' : 's'\}` : '', ref, sp\]/);
   assert.match(s, /<li class="sug-h" role="presentation">Places and facilities<\/li>/);
 });
 

@@ -127,7 +127,10 @@ test('developments: sized by planned homes in Planning, clusters say what they c
   const unitsPx = new Function(`${mm.match(/const unitsPx = u => [^\n]+/)[0]}; return unitsPx;`)();
   assert.ok(unitsPx(8) < unitsPx(100) && unitsPx(100) < unitsPx(1000) && unitsPx(1000) < unitsPx(5146), 'an 8-unit infill and a 5,146-unit subdivision differ');
   assert.equal(unitsPx(0), 10);
-  assert.match(mm, /const unitWord = noUnits \? 'sites' : byUnits \? 'homes' : sized \? \(size >= 48 \? 'ppl\+jobs' : ''\) : 'sites';/);
+  assert.match(mm, /const unitWord = noUnits \? 'sites' : byUnits \? 'homes' : sized \? \(size >= 44 \? 'ppl\+jobs' : ''\) : 'sites';/);
+  // zoomed out, clusters group wider than the largest circle (50 px), so circles don't overlap
+  assert.match(mm, /maxClusterRadius: z => \(z < 13 \? 64 : 50\)/);
+  assert.match(mm, /tot < 20000 \? 44 : 50\)/);
   assert.match(mm, /const glyph = mstyle\.color === 'phase' && d >= 14 && !near \? P\.PHASE_BY_KEY\[p\.phase\]\.short : '';/);
   // With capacity colours on, the developments step back.
   assert.match(ma, /map\.getContainer\(\)\.classList\.toggle\('devs-quiet', MM\(\)\.mstyle\.cap !== 'off'\);/);

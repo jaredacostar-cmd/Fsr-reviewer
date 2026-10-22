@@ -130,7 +130,9 @@
       }
       return { S, dig, L };
     };
-    const V = (S) => (partFor(D, S, Q, r.n) || { V: 0 }).V;
+    // (kept per slope: grid inverts repeat the same few slopes per reach, and each is a 60-step bisection)
+    const vAt = new Map();
+    const V = (S) => { let v = vAt.get(S); if (v === undefined) { v = (partFor(D, S, Q, r.n) || { V: 0 }).V; vAt.set(S, v); } return v; };
     // Dynamic programming, upstream → downstream. State: the outlet invert at node i.
     let layer = new Map(grid(0).map(e => [e, { cost: 0, path: [{ out: e }] }]));
     for (let i = 0; i < N - 1; i++) {
@@ -237,10 +239,13 @@
     // The smallest size for each reach's flow, then never smaller than a reach upstream of it.
     const IDX = SIZES.map((d, k) => k).filter(k => SIZES[k] >= r.dMin);
     const hmin = R.map(rc => { const k = IDX.find(k => slopeLimits(SIZES[k] / 1000, rc.q / 1000, r, range)); return k == null ? null : k; });
-    if (hmin.some(k => k == null)) { const i = hmin.findIndex(k => k == null); return { ok: false, why: `${R[i].q.toFixed(1)} L/s is more than the largest pipe carries within ${limitsText(range)}`, reasons: [], source: SOURCE, slopes: range }; }
+    if (hmin.some(k => k == null) && !opts.dmm) { const i = hmin.findIndex(k => k == null); return { ok: false, why: `${R[i].q.toFixed(1)} L/s is more than the largest pipe carries within ${limitsText(range)}`, reasons: [], source: SOURCE, slopes: range }; }
     const reasons = [];
+    // A size chosen (opts.dmm): every reach at that size, the one try (no going up a size).
+    const pickK = opts.dmm ? SIZES.indexOf(+opts.dmm) : -1;
+    if (opts.dmm && pickK < 0) return { ok: false, cover, why: `${opts.dmm} mm is not a standard size`, reasons: [], source: SOURCE };
     for (let k = 0; k < SIZES.length; k++) {
-      const idx = R.map((_, i) => Math.min(SIZES.length - 1, hmin[i] + k));
+      const idx = pickK >= 0 ? R.map(() => pickK) : R.map((_, i) => Math.min(SIZES.length - 1, hmin[i] + k));
       for (const i of order) for (const j of into[R[i].from]) idx[i] = Math.max(idx[i], idx[j]);
       const dmm = idx.map(x => SIZES[x]);
       const big = into[root].find(i => conn && conn.dmm && dmm[i] > conn.dmm);
@@ -248,7 +253,7 @@
       const res = netSizes(net, conn, dmm, order, outOf, into, root, cover, step, r, pen, range);
       if (res.ok) return { ...res, cover, rules: r, source: SOURCE, slopes: range };
       reasons.push(res.why);
-      if (res.stop || k > 0 && idx.every(x => x === SIZES.length - 1)) break;
+      if (pickK >= 0 || res.stop || k > 0 && idx.every(x => x === SIZES.length - 1)) break;
     }
     const short = reasons.map(x => [x, +((/about ([\d.]+) m below/.exec(x) || [])[1])]).filter(([, m]) => m > 0).sort((a, b) => a[1] - b[1]);
     const why = (short[0] && short[0][0]) || reasons.find(x => !/can't carry/.test(x)) || reasons[0] || 'no size works';

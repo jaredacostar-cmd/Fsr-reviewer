@@ -16,11 +16,11 @@ const plain = o => JSON.parse(JSON.stringify(o));
 const W = (() => { const ctx = { module: { exports: {} }, URLSearchParams }; ctx.globalThis = ctx; vm.runInNewContext(src('js/workspaces.js'), ctx); return ctx.module.exports; })();
 
 test('1. the chips, in the brief\'s order, and Home\'s groups', () => {
-  assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Servicing capacity', 'Growth in an area', 'Review an FSR', 'Forecast', 'Study area', 'DC projects', 'EA to construction', 'Old pipes', 'This week']);
+  assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Servicing capacity', 'Growth in an area', 'Review an FSR', 'Forecast', 'Study area', 'DC projects', 'EA to construction', 'Old pipes', 'What’s coming', 'This week']);
   // Home's sidebar: This week under Home (bundle 6), then Planning (Servicing capacity with it),
   // Capital, Asset Management; then Full map.
   // Explore (step 3): Growth in an area, Check a site, Review an FSR, Forecast and Study area are one entry.
-  assert.deepEqual(plain(W.GROUPS), [['Planning', ['explore', 'tight']], ['Capital', ['capital']], ['Asset Management', ['pipes']]]);
+  assert.deepEqual(plain(W.GROUPS), [['Planning', ['explore', 'tight', 'coming']], ['Capital', ['capital']], ['Asset Management', ['pipes']]]);
   assert.deepEqual(plain(W.CAPITAL), ['projects', 'eaflow']);
   assert.deepEqual(plain(W.EXPLORE), ['growth', 'site', 'fsr', 'outlook', 'study']);
   assert.match(fs.readFileSync(path.join(__dirname, '..', 'js', 'workspaces.js'), 'utf8'), /<ul>\$\{item\('home', 'The briefing'\)\}\$\{item\('week', BY_ID\.week\.what\)\}<\/ul>/);
@@ -34,6 +34,7 @@ test('1. each chip opens the stated tab and scope (and the layer preset)', () =>
     site: ['overview', '', 'find', 'planning'], tight: ['svc', 'capacity', 'area', 'wastewater'], growth: ['growth', 'areas', 'area', 'planning'],
     fsr: ['svc', 'network', 'find', 'wastewater'], study: ['overview', '', 'drawn', 'planning'], projects: ['dca', 'timing', 'area', 'dc'],
     pipes: ['svc', 'network', 'area', 'wastewater'], outlook: ['growth', 'timing', 'area', 'planning'], eaflow: ['dca', 'eas', 'area', 'dc'], week: ['overview', '', 'area', 'planning'],
+    coming: ['growth', 'ledger', 'area', 'planning'],
   };
   for (const [id, [tab, sub, scope, view]] of Object.entries(want)) {
     const p = W.plan(id, { site: false });
@@ -78,7 +79,7 @@ test('Old pipes: 50+ years old or moderate risk, carrying 100+ units at build-ou
   const runs = W.pipeRuns(list, data);
   assert.deepEqual(plain(runs.map(r => [r.i, r.n, r.lengthM, r.units])), [[1, 2, 220, 5200], [2, 1, 80, 150], [6, 1, 90, 100]]);
   // The units carried come from the same per-pipe accumulation as the sewer loads (js/sewer-cap.js).
-  assert.match(src('js/sewer-cap.js'), /g\[lay\]\.units\[i\] \+= e\.totalUnits \|\| 0;/);
+  assert.match(src('js/sewer-cap.js'), /t\.units\[k\] \+= e\.totalUnits \|\| 0;/);
   assert.deepEqual(plain(W.OLD), { age: 50, minUnits: 100, risk: 'MODERATE' });
 });
 
@@ -111,7 +112,7 @@ function loadBrowser(areaSpec) {
   const store = new Map();
   const window = { document, PeelUtil: { esc: x => String(x == null ? '' : x).replace(/&/g, '&amp;').replace(/</g, '&lt;'), fmtNum: n => Math.round(n).toLocaleString('en-CA'), store: { get: (k, d) => (store.has(k) ? store.get(k) : d), set: (k, v) => store.set(k, v) } },
     PeelOverviewTab: { lastAreaSpec: () => areaSpec }, PeelMapMarkers: { THIS_YEAR: 2026 }, PeelSvcCapacity: { collect: () => [] }, PeelApp: { state: { muni: '', projects: [] } } };
-  const ctx = { window, document, location: { hash: '' }, setTimeout: f => f(), URLSearchParams, CustomEvent: function CustomEvent() {} }; ctx.globalThis = ctx;
+  const ctx = { window, document, location: { hash: '' }, setTimeout: f => f(), clearTimeout() {}, URLSearchParams, CustomEvent: function CustomEvent() {} }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/panel.js'), ctx);
   vm.runInNewContext(src('js/ws-pages.js'), ctx);
   vm.runInNewContext(src('js/workspaces.js'), ctx);
@@ -126,6 +127,31 @@ const AREA = {
     { title: 'This week', rows: [{ attrs: { 'data-pnl-dev': 'k1' }, html: '<small>New: 1 Main St</small>' }, { attrs: { 'data-ce-open': 'ea:7' }, html: '<small>EA comment period closes</small>' }], total: 2 },
   ],
 };
+
+test('Home while loading: never "No developments match" and zeros, its place kept with the figures to come', () => {
+  const EMPTY = { ...AREA, answer: 'No developments match the current filters.', figures: [], lists: [] };
+  // (the snapshot not in yet, and then the developments in while the briefing still holds the empty one drawn before)
+  for (const [snapshot, projects, filtered] of [[false, [], []], [true, [{}], [{}]]]) {
+    const { W: B, nodes, window } = loadBrowser(EMPTY);
+    Object.assign(window.PeelApp, { fullSnapshotReady: () => snapshot }); Object.assign(window.PeelApp.state, { projects, filtered });
+    window.PeelOverviewTab.lastAreaCount = () => 0;
+    B.setMode('home');
+    const h = nodes['#home'].innerHTML;
+    assert.ok(!h.includes('No developments match'), 'no empty-filter message while loading');
+    assert.match(h, /Loading the developments and working out the briefing…/);
+    assert.match(h, /<h1>Peel: what needs attention<\/h1>/);
+    assert.match(h, /<p class="page-eyebrow small">Peel · all of Peel<\/p>/);
+    for (const g of ['Growth', 'Servicing', 'Capital', 'Change']) assert.match(h, new RegExp(`<div class="home-grp-h"><h2>${g}</h2>`), g);
+    assert.match(h, /<b>…<\/b><span class="pnl-l">planned<\/span><small>loading<\/small>/);
+    assert.ok(!/<b>0<\/b>/.test(h), 'no zero figures');
+  }
+  // Worked out for the developments shown: the briefing as it is (a real empty filter still says so).
+  const { W: B, nodes, window } = loadBrowser(EMPTY);
+  Object.assign(window.PeelApp, { fullSnapshotReady: () => true }); Object.assign(window.PeelApp.state, { projects: [{}], filtered: [] });
+  window.PeelOverviewTab.lastAreaCount = () => 0;
+  B.setMode('home');
+  assert.ok(nodes['#home'].innerHTML.includes('No developments match'), 'a filter that matches nothing still says so');
+});
 
 test('2. workspace figures equal full-map figures (Home and This week read the Peel Overview panel)', () => {
   const { W: B, PN, nodes } = loadBrowser(AREA);
@@ -200,7 +226,7 @@ test('picking a chip closes the map\u2019s Layers panel; the full map gets it ba
 
 test('each chip\u2019s map is lean (1–2 layers); the full map gets its own layers back, unsaved by the workspace', () => {
   // The decided sets: only what the task reads.
-  assert.deepEqual(plain(W.LAYERS), { site: ['devs', 'hov'], tight: ['cap', 'bk'], growth: ['devs', 'sp'], fsr: ['devs', 'ex-sanitary', 'ex-water'], study: ['devs'], outlook: ['devs'], projects: ['dcw', 'cons'], eaflow: ['ea', 'cons'], pipes: [], week: ['devs'] });
+  assert.deepEqual(plain(W.LAYERS), { site: ['devs', 'hov'], tight: ['cap', 'bk'], growth: ['devs', 'sp'], fsr: ['devs', 'ex-sanitary', 'ex-water'], study: ['devs'], outlook: ['devs'], projects: ['dcw', 'cons'], eaflow: ['ea', 'cons'], pipes: [], week: ['devs'], coming: ['devs'] });
   for (const id of Object.keys(W.LAYERS)) assert.ok(W.LAYERS[id].length <= 3 && W.BY_ID[id], id);
   // Every key is a real layer switch.
   const lg = src('js/layer-groups.js');
@@ -249,7 +275,7 @@ test('3. Home links open the matching chip', () => {
   assert.match(h, /data-ws-page="tight">See all \(9\) →/);
   assert.doesNotMatch(h, /See all \(2\)/, 'no See all when every row is shown');
   assert.match(h, /<div class="pnl-fig" data-ws-page="tight"/);
-  assert.match(h, /<h2>Growth<\/h2><button type="button" class="btn small link" data-ws-page="growth">Explore →<\/button>/);
+  assert.match(h, /<h2>Growth<\/h2><button type="button" class="btn small link" data-ws-page="growth">Growth in an area →<\/button>/);
   assert.match(h, /<button type="button" class="home-map-btn" data-ws-page="tight"/);
   // The start screen choice, and the screening note.
   assert.match(h, /<select data-ws-start><option value="home" selected>Home<\/option><option value="last">Last workspace<\/option><option value="full">Full map<\/option>/);

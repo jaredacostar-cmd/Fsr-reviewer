@@ -466,11 +466,38 @@ from street zoom (14), up to 3,000 in view.
   `scripts/build-dc-infra.py` from the Region's water and wastewater Development Charges capital
   maps (geospatial PDFs fetched by the probe workflow, `mode=dc-maps`). Proposed (2027–2051) and
   approved (2026) mains with construction year, component and project numbers and diameter, inset
-  maps placed through their extent boxes and georeferenced from the PDF (a few metres); facility
+  maps placed through their extent boxes and georeferenced from the PDF (a few metres). Inside an
+  extent box the inset's mains replace the main map's only where the inset redraws them (a main
+  running on past the box, or a trunk the inset leaves out, is kept); the legend box is never taken
+  for an inset. Checked against every pipe stroke in both PDFs: under 50 m of mains not carried; facility
   schedules (EA / property / design / construction) transcribed in `scripts/dc-facilities.json`;
   route descriptions joined from the 2020 DC Background Study by component number. Used for:
   - a **Planned works** map layer (water, wastewater or both; tap a facility for its schedule;
     works after the results year are faded);
+  - a **DC joins** layer (Layers › Pipes and works): each planned main's end and what it joins, as
+    the sewer and water traces use it: green within 60 m as drawn, orange a bridged gap to 200 m,
+    red a longer one worth checking, grey an open end. A planned main joins an existing main of a
+    matching size (a sewer at least its size, a watermain at least half), and is bridged to another
+    planned main only where no such sewer is nearer. A sewer head (one end joins within 200 m, the
+    other has nothing within 200 m and no existing sewer in reach, in a group of mains that already
+    hands over to the existing sewers) is left open, not bridged to another planned main. Water
+    ends can be set through a facility (a station, reservoir or tank). Water joins stay in the end's pressure zone (at
+    the ends and wherever the main runs within 25 m of another), crossing zones only at a station,
+    reservoir or tank within 150 m (existing or planned); a water end with nothing joined is
+    flagged (red; violet when the only main in reach is across a zone boundary). An end joins a
+    main wherever it is drawn onto it (mains are straight for hundreds of metres between bends), and
+    an end the DC map cuts off (`x` in dc-infra.json: at the edge of the map or an inset) is marked
+    as such rather than as an open end. Planned mains also join the capital projects that lay a new
+    main (`data/capital.json`: WM / SAN, tunnelling and development work, tendered to complete; not
+    relining or trenchless work), where drawn onto one (within 60 m): an earlier DC program's main is
+    often built, or being built, before it is in the watermain / sewer data. Tap an end to set its join by hand (Pick where
+    it joins, then tap the pipe or planned main; or Open end): reviewed joins are blue and the traces
+    follow them. An edited join is always marked as edited: a ringed end with an ✎ Edited tag (what
+    it was set to, by whom, when, why), the count on the layer switch, and a "Relies on an edited DC
+    join" line in any development's sewer or water trace that uses it. Edits stay in the browser
+    (marked so) until exported (dc-joins.json) and committed to
+    `data/dc-joins.json`; they are matched to the main's end by position (5 m), so they survive a
+    rebuild of the DC data or the existing network (`js/dc-joins.js`);
   - the development brief: the planned main it would connect to, trunks and facilities on its sewer
     path / in its pressure zone, plant capacity steps, and a **timing flag** when a committed
     development outside the existing network relies on a main not built until later; a marker
@@ -850,8 +877,8 @@ This is a screening view, not a hydraulic model. It shows normal depth pipe by p
     phases add up; for an official plan / zoning / subdivision file the largest counts.
   - Tap a file to open it on its own.
 - **Units only in the attachments**: some descriptions say "refer to the attached cover letter /
-  PJR" and give no unit count. About 76 files, nearly all in Brampton, whose documents are on
-  BramPlanOnline behind a sign-in, so they can't be read automatically.
+  PJR" and give no unit count. About 76 files, nearly all in Brampton. Their documents are public on
+  BramPlanOnline, but they are found by searching the file number and are not read automatically.
   - Those rows are flagged, and the unit count from the cover letter can be entered. Entry is also
     offered where the development has no count at all.
   - The figure is kept in this browser, marked *your figure* (× removes it), and counted like a
@@ -1051,8 +1078,14 @@ year whose forecast matches the tracker's build-out.
   public page.
 - **Caledon:** its application pages, with each application type's own numbering (direct PDF links;
   64 pages carry an FSR).
-- **Brampton:** documents are on BramPlanOnline, which needs a sign-in, so the tab links there
-  instead.
+- **Brampton:** documents are public on
+  [BramPlanOnline](https://planning.brampton.ca/CitizenAccess/Cap/CapHome.aspx?module=Planning&TabName=Planning),
+  with no sign-in. A file is found by searching its number: the portal's pages need its internal
+  record ids, which the open data doesn't carry. So the tab links the search and names the newest
+  file to look up.
+  - Brampton's reports aren't read automatically. The portal is open to people, but its firewall
+    turns away automated requests: every page answered "Request Rejected" to an automated check on
+    2026-10-21. The app doesn't try to get around that. Reading them needs the City's agreement or a data feed from it.
 - A link to all of the application's documents comes with it.
 
 **Supply route.** The Servicing tab's **Water** section shows where the water comes from, like
@@ -2826,6 +2859,83 @@ scope (SPEC §0.4). The EA lists moved here from the old "Construction & EAs" vi
   - Any EA or construction label that overlaps a development label, cluster or marker is hidden,
     so development labels take priority.
 
+## Every data file has a receipt
+
+Every figure in the app can be checked against where it came from:
+
+- **Each data file's source.** `data/sources.json` lists every file and folder in `data/`. Each entry has:
+  - what the file is, and who published it;
+  - links to the service, report or page it was read from, with the tables and pages for figures
+    transcribed from a report;
+  - the files it is built from, for data the app builds itself;
+  - the field in the file that says when it was pulled or published, and the script that builds it.
+
+  Items that have their own source say so. Each plan target, each count found online and each EA
+  carries its own link.
+- **Readable record links.** Record ↗ on a planning file or permit opens the ArcGIS page for that
+  feature, with every published field (`?f=html`). The exports keep the machine-readable link
+  (`?f=pjson`). Mississauga's services are published as a service root, so the layer is taken from the
+  record's source (`mis-devapps/6` → `…/FeatureServer/6/22`). Before, these links queried the root,
+  which ArcGIS rejects.
+- **Where to see it.** The table is under Reference › Data sources › *Every data file*, and also on
+  the Settings › Sources page. Each row has the source links, the date, the first 12 characters of the
+  file's SHA-256 and the script that builds it. *Copy citation* gives one line to quote: publisher,
+  source, date, and the exact file the app holds with its full SHA-256.
+- **Dates and fingerprints at deploy.** `scripts/build-sources-index.js` reads each file's date from
+  the file itself and computes its size and SHA-256. It writes `data/sources-index.json` in the
+  deploy job, so the table always matches the files published with it. That file is not committed.
+- **Kept that way.** `tests/sources.test.js` fails the build in any of these cases:
+  - a data file has no entry;
+  - published data has no link, or built data names no source files;
+  - a link is not a full `https` address, or a named script doesn't exist;
+  - a date field doesn't read a date from the file;
+  - a plan target lacks its link, page or quote.
+
+  One plan target, Mayfield West Phase 2 (Caledon), cites a news release with no date. It is the
+  only known undated target, and any other undated target fails the test.
+- **Brampton planning files on BramPlanOnline.** Each Brampton planning file's source line also has
+  *Find <file> on BramPlanOnline ↗*. It opens the portal's public search (no sign-in), where the
+  file number finds the file and its documents (`applicationSearch` in `js/provenance.js`). Building
+  permits are a different part of the portal and are not linked.
+- **Not yet.** Links straight to one file's page (`applicationPageUrl`) are not built for any of
+  the three municipalities: no stable address pattern has been checked.
+
+## How is this worked out? (every figure)
+
+Every figure in a panel or on a page has a **?** in its corner. It opens the figure's working under
+the figures:
+- the rule;
+- the inputs, each with its value and a link to where it comes from: a file's record, the section of
+  the design criteria document, or the document a data file was read from;
+- the design criteria in use;
+- the data files the figure reads, each with its receipt (source link, date, *Copy citation*).
+
+*Copy the working* puts all of it on the clipboard as text. `js/how.js` holds the working; `js/panel.js`
+and `js/ws-pages.js` add the buttons.
+
+**Exact working, line by line:**
+
+| Figure | Working |
+|---|---|
+| A development's **units** | The rule that picked the count (largest rezoning figure, site plan phases added up, condo phases, permits when they're higher, net of demolitions), and each file stating a count with its record |
+| **People** | Units of each type × persons per unit = people, with Linear Wastewater Standards Tables 2-1 / 2-2 |
+| **Jobs**, floor area | Floor area of each use ÷ floor space per job |
+| **Water**, maximum day | People × 270 L/cap/d ÷ 86,400, × 1.8 (and jobs at the non-residential rates), with the Modelling Demand Table |
+| **Wastewater**, peak wet weather | Average dry weather × Harmon peaking (2–4) + I&I on the site area, with sections 2.2, 2.4 and 2.5 |
+| **Servicing › Capacity**, over / tight | Each facility counted: flow at build-out ÷ its capacity, with where the capacity comes from (annual report, Master Plan table, sewer network) |
+| **Servicing › Capacity**, soonest limit and largest impact | The facility's existing, built, committed and proposed flow against its capacity |
+
+**Every other figure** opens its panel's method and sources and the data files its panel reads
+(`FILES` in `js/how.js`).
+
+**Kept that way:** `tests/how.test.js` fails the build in any of these cases:
+- a panel the app sets, or a page it builds, has no `FILES` entry;
+- a file named there has no receipt;
+- the arithmetic shown doesn't give the figure (people, water, wastewater, capacity).
+
+A figure's button has a fixed id (panel key and position), so a re-render is unchanged. If its panel
+re-renders (Home while its figures load, a filter, the scenario), the open box comes back.
+
 ## Counts that hold still, and counts found online checked
 
 **Loading.** The same data used to show different totals depending on how the app loaded:
@@ -2883,6 +2993,64 @@ Decided 2026-10-17, after testing against the committed snapshot.
   - **Against the app:** compared with homes permitted and not completed on planning applications, by municipality, refreshed with each weekly data update.
   - **Known gaps:** Mississauga (large permits signed off within two years of issue, to confirm with the City) and Caledon (no completion dates).
 
+## Capital and EA outputs: the site brief, To check, and one row per contract
+
+Each output answers one person's question, says why each item is listed, and says how far to trust it.
+Wording stays screening wording: what the records show and what to check, never what the Region
+should do.
+
+- **Site brief (for the servicing review).** On a development's **Capital** section, and in its
+  **Servicing memo**: each EA within 1 km of the site boundary and each Region capital contract that is
+  planned, tendered, awarded or under construction within 1 km, nearest first.
+  - An EA line gives its status, schedule, distance, next step or completion year, "no milestone
+    since …" when it has been idle 18 months, and the report's preferred-solution sentence when there
+    is one.
+  - A contract line gives its status, % built and the year it is in service.
+    - **% built:** the Region's figure, else estimated from the start and target dates (and labelled
+      so).
+    - **Flags:** a completion target that has passed with no completion date, and a record with no
+      update in a year.
+  - **Copy for review comments** (the site page's action row) puts the whole brief on the clipboard
+    as plain text, one line per item with its project page and the sources' dates. If the browser
+    blocks the clipboard, it is saved as a text file.
+- **To check (for the planner).** At the top of Capital › Projects, and in the map's Construction
+  view, worst first:
+  1. EAs complete 9+ years with no construction following them.
+  2. Contracts past their completion target with no completion date (how long past).
+  3. EAs marked current with nothing dated ahead and no milestone in 18 months, or none published.
+  4. Open contracts not updated in the year before the layer's latest update, or never dated.
+
+  Each item says why it is listed and what to check. It follows the map's municipality. **CSV of this
+  list**, and a **Capital to check** sheet in the workbook.
+- **CSV: every contract** (Capital › Projects, and the Construction view). One row per contract (a
+  project page and its segments), flagged ones first.
+  - **Columns added:**
+    - the municipality the work is in, from its ward (the published field often names all three);
+    - the system and the year it is in service;
+    - the % built and whether it was reported or estimated;
+    - days past the completion target, the last update and months since;
+    - what to check;
+    - the EA it came from and how that link was made;
+    - the DC program link and how sure it is;
+    - the layer's "as of" date.
+  - The workbook's **Capital** sheet is the same table.
+- **EA placement fix.** A sewer or watermain EA is placed on DC mains that share two words with its
+  name.
+  - **The bug:** street words ("Drive", "Road") counted towards those two words, and so did the
+    long description text read from the DC map's PDF. The Fair Birch Drive / Lorne Park Road EA
+    (Mississauga) was laid on 27 mains across Peel, and showed beside Brampton sites.
+  - **Now:** matching uses the main's name only and ignores street words. A match spread over more
+    than 15 km is refused. The street-name fallback keeps only capital records in the EA's own
+    municipality, by ward.
+  - **The data:** that EA's line and links were rebuilt in `data/eas.json` with the new rules. The
+    weekly build does the same for every EA.
+- **Code.**
+  - `js/capital-ea-model.js`: `siteBrief`, `siteBriefText`, `siteBriefHTML`, `watchList`,
+    `contractCheck`, `eaCheck` and `capitalSheetRows`, tested in `tests/capital-outputs.test.js`.
+  - `js/capital-ea.js`: wiring.
+  - `js/sections.js`: a merged section keeps a secondary action.
+  - `scripts/ea-lib.js`: placement, tested in `tests/ea-data.test.js`.
+
 ## Home: EA to construction, and the Forecast
 
 Two pages added to Home's sidebar, so they are no longer only on the full map:
@@ -2939,6 +3107,7 @@ with the reasons and never count as following the EA.
   zone it serves. Street: **along** a road when the road's Region project or DC line covers 70%+ of the
   pipe's length (parallel, within 40 m); **near** a road when only the nearest house address gives it
   (a guess; a main of 600 mm+ never gets a crescent or court). DC works are named from their title
-  (kind and size; the title's size wins over the map's size field, which disagrees on 17 of 98);
+  (kind; the size is the 2026 DC map's, with the 2020 DC Background Study's size beside it where it
+  differs: 17 of 98 works, mostly upsized since 2020);
   a Region project that builds a DC work joins its row; relining and trenchless works are tagged
   renewal; in-service years are the DC program's, construction dates the Region's schedule.

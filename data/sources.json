@@ -1,0 +1,731 @@
+{
+  "version": 1,
+  "note": "Every data file the app reads, with where it comes from. kind: open-data (read from a published service), document (transcribed from a published report, with its pages), derived (built from the files in from), decision (a reviewed correction to the files in from), app (the app's own records). dateField: the field in the file that says when its data was pulled or published. Checked by tests/sources.test.js: a data file with no entry here fails the build.",
+  "files": {
+    "snapshot.json": {
+      "title": "Planning applications and building permits",
+      "kind": "open-data",
+      "publisher": "City of Mississauga, City of Brampton, Town of Caledon",
+      "links": [],
+      "itemLinks": "Each record links to its own feature in its layer (Record ↗ on the record; source_url in the exports). The layers are listed from snapshot.json › sources, so Mississauga’s monthly layer is always the one read.",
+      "dateField": "generatedAt",
+      "script": "scripts/build-snapshot.js",
+      "refresh": "weekly",
+      "linksFrom": "sources"
+    },
+    "history.json": {
+      "title": "Phase history (each development's stage week by week)",
+      "kind": "derived",
+      "dateField": "updated",
+      "script": "scripts/build-snapshot.js",
+      "refresh": "weekly",
+      "method": "Each weekly snapshot's stage per development, kept; a change of the rules is a re-read (marked rules), not a change on the ground.",
+      "from": [
+        "snapshot.json"
+      ]
+    },
+    "servicing-permits.json": {
+      "title": "Site servicing permits (water, sewer, storm)",
+      "kind": "derived",
+      "script": "scripts/build-snapshot.js",
+      "refresh": "weekly",
+      "method": "The servicing permits from the municipal permit layers, kept in their own file. Each row names its source layer (source column).",
+      "dateNote": "Pulled with the weekly snapshot (snapshot.json).",
+      "from": [
+        "snapshot.json"
+      ]
+    },
+    "dc-gate.json": {
+      "title": "DC servicing gate",
+      "kind": "derived",
+      "dateField": "generatedAt",
+      "script": "scripts/build-dc-gate.js",
+      "refresh": "weekly",
+      "method": "Which developments have a site servicing permit applied for or issued (js/servicing-permits.js).",
+      "from": [
+        "snapshot.json",
+        "servicing-permits.json"
+      ]
+    },
+    "tree-counts.json": {
+      "title": "Development trees and their unit counts",
+      "kind": "derived",
+      "dateField": "generatedAt",
+      "script": "scripts/build-tree-counts.js",
+      "refresh": "weekly",
+      "method": "The files on each site grouped into one development (js/tree-groups.js) and counted (js/tree-counts.js, js/tree.js countTree).",
+      "from": [
+        "snapshot.json",
+        "tree-overrides.json",
+        "unit-lookups.json"
+      ]
+    },
+    "tree-audit.json": {
+      "title": "Tree audit (links, double counts, plan amendments)",
+      "kind": "derived",
+      "dateField": "generatedAt",
+      "script": "scripts/audit-tree.js",
+      "refresh": "on request",
+      "from": [
+        "snapshot.json",
+        "unit-lookups.json"
+      ]
+    },
+    "site-audit.json": {
+      "title": "Site audit (files, homes and stage changes per development)",
+      "kind": "derived",
+      "dateField": "generatedAt",
+      "script": "scripts/audit-sites.js",
+      "refresh": "weekly",
+      "from": [
+        "snapshot.json",
+        "tree-counts.json",
+        "council-decisions.json"
+      ]
+    },
+    "tree-overrides.json": {
+      "title": "Development tree decisions (reviewed by hand)",
+      "kind": "decision",
+      "refresh": "as reviewed",
+      "method": "Each override names the files it joins or splits and the reason; the Step B0 review workbook (docs/tree-review) records who decided.",
+      "dateNote": "Each decision carries its own date where recorded.",
+      "from": [
+        "snapshot.json"
+      ]
+    },
+    "unit-lookups.json": {
+      "title": "Unit counts found online (files that state no count)",
+      "kind": "document",
+      "publisher": "Municipal notices and decisions; named third-party pages",
+      "links": [],
+      "itemLinks": "Each count has its own url and verified { on, by }; counts a page did not confirm are in notUsed with the reason.",
+      "dateField": "updated",
+      "script": "scripts/probe-unit-lookups.js",
+      "refresh": "as found",
+      "check": "Every count with a link checked against its page (scripts/probe-unit-lookups.js)."
+    },
+    "address-points.json": {
+      "title": "Address points",
+      "kind": "open-data",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "Address_Points layer",
+          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/Address_Points/FeatureServer/0"
+        }
+      ],
+      "dateField": "built",
+      "script": "scripts/build-addresses.js",
+      "refresh": "weekly"
+    },
+    "areas.json": {
+      "title": "Secondary plans, MTSAs, precincts and census areas",
+      "kind": "open-data",
+      "publisher": "City of Brampton, City of Mississauga, Town of Caledon, Statistics Canada",
+      "links": [
+        {
+          "label": "Brampton Plan Schedule 10 (secondary planning areas)",
+          "url": "https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Brampton_Plan_Schedule_10_Secondary_Planning_Areas/FeatureServer/0"
+        },
+        {
+          "label": "Brampton Plan Schedule 1B (MTSAs)",
+          "url": "https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Brampton_Plan_Schedule_1B_Major_Transit_Station_Areas/FeatureServer/2"
+        },
+        {
+          "label": "Brampton Plan Schedule 11 (precincts)",
+          "url": "https://services3.arcgis.com/rl7ACuZkiFsmDA2g/arcgis/rest/services/Brampton_Plan_Schedule_11_Precinct_Plan_Areas/FeatureServer/0"
+        },
+        {
+          "label": "Mississauga Official Plan character areas",
+          "url": "https://services6.arcgis.com/hM5ymMLbxIyWTjn2/arcgis/rest/services/MOP_CharacterAreaCityStructure/FeatureServer/0"
+        },
+        {
+          "label": "Caledon secondary plan areas",
+          "url": "https://services3.arcgis.com/AbUjpCl3KckkXVBh/arcgis/rest/services/Secondary_Plan_Areas/FeatureServer/0"
+        }
+      ],
+      "itemLinks": "areas.json › sources lists the layer behind each kind of area.",
+      "dateField": "generatedAt",
+      "script": "scripts/build-areas.js",
+      "refresh": "weekly"
+    },
+    "das.json": {
+      "title": "2021 Census population and dwellings by dissemination area",
+      "kind": "open-data",
+      "publisher": "Statistics Canada (2021 Census of Population)",
+      "links": [
+        {
+          "label": "Census 2021 population by dissemination area (layer read)",
+          "url": "https://services.arcgis.com/txWDfZ2LIgzmw5Ts/arcgis/rest/services/Census_2021_Population_by_Dissemination_Area/FeatureServer/0"
+        },
+        {
+          "label": "Statistics Canada, 2021 Census Profile",
+          "url": "https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/index.cfm?Lang=E"
+        }
+      ],
+      "dateField": "date",
+      "dateMeaning": "census day",
+      "script": "scripts/build-areas.js",
+      "refresh": "every 5 years"
+    },
+    "das-2016.json": {
+      "title": "2016 Census population and dwellings by dissemination area",
+      "kind": "open-data",
+      "publisher": "Statistics Canada (2016 Census of Population), via the Region of Peel",
+      "links": [
+        {
+          "label": "Immigration in Peel by DA as of 2016 (layer read)",
+          "url": "https://services.arcgis.com/4TKcmj8FHh5Vtobt/arcgis/rest/services/Immigration_in_Peel_by_DA_as_of_2016/FeatureServer/0"
+        }
+      ],
+      "dateField": "date",
+      "dateMeaning": "census day",
+      "script": "scripts/build-areas.js",
+      "refresh": "reference"
+    },
+    "munis.json": {
+      "title": "Municipal outlines (context lines)",
+      "kind": "derived",
+      "dateField": "generatedAt",
+      "dateMeaning": "census day",
+      "script": "scripts/build-munis.js",
+      "refresh": "every 5 years",
+      "method": "Census areas drawn on a ~60 m grid and traced per municipality: a context line, not a legal boundary.",
+      "from": [
+        "das.json"
+      ]
+    },
+    "blocks.json": {
+      "title": "Wastewater blocks (inflow and infiltration program)",
+      "kind": "open-data",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "Block_view layer",
+          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/Block_view/FeatureServer/0"
+        }
+      ],
+      "dateField": "generatedAt",
+      "script": "scripts/build-blocks.js",
+      "refresh": "yearly"
+    },
+    "sewers.json": {
+      "title": "Sanitary sewer network (300 mm and larger)",
+      "kind": "open-data",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "Wastewater Main (waterwastWater layer 10)",
+          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/waterwastWater/FeatureServer/10"
+        }
+      ],
+      "dateField": "generatedAt",
+      "script": "scripts/build-sewer-capacity.js",
+      "refresh": "yearly",
+      "method": "Pipe capacity from the published diameter and slope (Manning); census population by area overlap."
+    },
+    "watermains.json": {
+      "title": "Watermains (300 mm and larger)",
+      "kind": "open-data",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "Watermains (waterwastWater layer 5)",
+          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/waterwastWater/FeatureServer/5"
+        }
+      ],
+      "dateField": "generatedAt",
+      "script": "scripts/build-watermains.js",
+      "refresh": "yearly"
+    },
+    "water-supply.json": {
+      "title": "Water supply mains across pressure zones",
+      "kind": "open-data",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "Large watermains (waterwastWater layer 6)",
+          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/waterwastWater/FeatureServer/6"
+        }
+      ],
+      "dateField": "generatedAt",
+      "script": "scripts/build-water-supply.js",
+      "refresh": "yearly",
+      "from": [
+        "servicing.json"
+      ]
+    },
+    "servicing.json": {
+      "title": "Pressure zones, sewer drainage areas, plants and pumping stations",
+      "kind": "open-data",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "Water Pressure Zone (layer 6)",
+          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/wastewater_infrastructure/FeatureServer/6"
+        },
+        {
+          "label": "Wastewater Main (layer 4)",
+          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/wastewater_infrastructure/FeatureServer/4"
+        },
+        {
+          "label": "Wastewater Pumping Station (layer 2)",
+          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/wastewater_infrastructure/FeatureServer/2"
+        },
+        {
+          "label": "Wastewater Resource Recovery Plant (layer 3)",
+          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/wastewater_infrastructure/FeatureServer/3"
+        }
+      ],
+      "dateField": "generatedAt",
+      "script": "scripts/build-servicing.js",
+      "refresh": "yearly",
+      "method": "Drainage areas traced down the published sewers to each plant; not the Master Plan polygons, which are not published."
+    },
+    "svc-census.json": {
+      "title": "Census population by pressure zone and drainage area",
+      "kind": "derived",
+      "dateField": "generatedAt",
+      "script": "scripts/build-svc-census.js",
+      "refresh": "yearly",
+      "method": "Area overlap: about 400 sample points per dissemination area.",
+      "from": [
+        "das.json",
+        "servicing.json"
+      ]
+    },
+    "water-facilities.json": {
+      "title": "Water plants, storage and pumping stations",
+      "kind": "document",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "2020 Master Plan, Volume 3: Tables 4–7 (pp. 26–29), 9, 11, 12 (capacities)",
+          "url": "https://peelregion.ca/sites/default/files/2024-07/ea-peel-2020-master-plan-volume-3.pdf"
+        },
+        {
+          "label": "water_infrastructure layers (locations)",
+          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/water_infrastructure/FeatureServer"
+        }
+      ],
+      "published": "2020-06",
+      "script": "scripts/build-water-facilities.py",
+      "refresh": "each Master Plan",
+      "from": [
+        "peel-reports.json"
+      ]
+    },
+    "ww-facilities.json": {
+      "title": "Wastewater pumping stations and plants",
+      "kind": "document",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "2020 Master Plan, Volume 4: Table 6 (p. 31), section 4.3.2 (p. 42) (capacities)",
+          "url": "https://peelregion.ca/sites/default/files/2024-07/ea-peel-2020-master-plan-volume-4.pdf"
+        }
+      ],
+      "published": "2020-06",
+      "script": "scripts/build-ww-facilities.js",
+      "refresh": "each Master Plan",
+      "from": [
+        "servicing.json"
+      ]
+    },
+    "master-plan-water.json": {
+      "title": "2020 Master Plan figures: water",
+      "kind": "document",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "2020 Water and Wastewater Master Plan, Volume 3 (Water)",
+          "url": "https://peelregion.ca/sites/default/files/2024-07/ea-peel-2020-master-plan-volume-3.pdf"
+        }
+      ],
+      "published": "2020-06",
+      "refresh": "each Master Plan",
+      "itemLinks": "Each figure names its table and page (docs/master-plan-data.md)."
+    },
+    "master-plan-wastewater.json": {
+      "title": "2020 Master Plan figures: wastewater",
+      "kind": "document",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "2020 Water and Wastewater Master Plan, Volume 4 (Wastewater)",
+          "url": "https://peelregion.ca/sites/default/files/2024-07/ea-peel-2020-master-plan-volume-4.pdf"
+        }
+      ],
+      "published": "2020-06",
+      "refresh": "each Master Plan",
+      "itemLinks": "Each figure names its table and page (docs/master-plan-data.md)."
+    },
+    "dc-costs.json": {
+      "title": "DC project costs and rates",
+      "kind": "document",
+      "publisher": "Region of Peel (Watson & Associates)",
+      "links": [
+        {
+          "label": "2020 DC Background Study",
+          "url": "https://www.peelregion.ca/finance/_media/Peel%20Development-Charges-Background-Study.pdf"
+        }
+      ],
+      "published": "2020-09-18",
+      "script": "scripts/build-dc-costs.py",
+      "refresh": "each DC study"
+    },
+    "dc-joins.json": {
+      "title": "Reviewed joins of the 2026 DC planned mains",
+      "kind": "derived",
+      "script": "js/dc-joins.js",
+      "refresh": "when a join is reviewed",
+      "dateNote": "Each join carries the date it was set (at).",
+      "method": "Exported from the DC joins map layer: a planned main's end and the point it joins (or none, an open end). The sewer and water traces follow these in place of the automatic join.",
+      "from": [
+        "dc-infra.json",
+        "sewers.json",
+        "watermains.json",
+        "capital.json"
+      ],
+      "check": "Hand-set joins of planned DC mains onto the existing network; the automatic join applies elsewhere."
+    },
+    "dc-infra.json": {
+      "title": "2026 DC capital maps (draft)",
+      "kind": "document",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "DC capital map: wastewater (draft v2)",
+          "url": "https://peelregion.ca/sites/default/files/2026-03/capital-map-wastewater-development-charges-v2.pdf"
+        },
+        {
+          "label": "DC capital map: water (draft v2)",
+          "url": "https://peelregion.ca/sites/default/files/2026-03/capital-map-water-development-charges-v2.pdf"
+        },
+        {
+          "label": "DC Background Study (2024)",
+          "url": "https://peelregion.ca/sites/default/files/2024-05/peel_development-charges-background-study.pdf"
+        }
+      ],
+      "dateField": "generatedAt",
+      "script": "scripts/build-dc-infra.py",
+      "refresh": "each DC study",
+      "check": "Draft, not approved by Council."
+    },
+    "capital.json": {
+      "title": "Region capital projects",
+      "kind": "open-data",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "Proposed Projects – Line",
+          "url": "https://gisprd.peelregion.ca/arcgis/rest/services/SampleWorldCities/MapServer/4"
+        }
+      ],
+      "itemLinks": "Each project keeps its own website link where the Region publishes one.",
+      "dateField": "generatedAt",
+      "script": "scripts/build-capital.js",
+      "refresh": "weekly"
+    },
+    "capital-links-audit.json": {
+      "title": "Capital project links audit",
+      "kind": "derived",
+      "dateField": "generatedAt",
+      "script": "scripts/build-capital.js",
+      "refresh": "weekly",
+      "from": [
+        "capital.json",
+        "dc-infra.json",
+        "eas.json"
+      ]
+    },
+    "capital-overrides.json": {
+      "title": "Capital project link decisions (by hand)",
+      "kind": "decision",
+      "refresh": "as reviewed",
+      "dateNote": "Each link states its reason.",
+      "from": [
+        "capital.json"
+      ]
+    },
+    "eas.json": {
+      "title": "Environmental assessments",
+      "kind": "open-data",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "List of environmental assessments",
+          "url": "https://peelregion.ca/construction/environmental-assessments/list-of-environment-assessments"
+        }
+      ],
+      "itemLinks": "Each EA links its own project page and documents.",
+      "dateField": "generatedAt",
+      "script": "scripts/build-eas.js",
+      "refresh": "weekly"
+    },
+    "eas-review.csv": {
+      "title": "Environmental assessments: review list",
+      "kind": "derived",
+      "script": "scripts/build-eas.js",
+      "refresh": "weekly",
+      "dateNote": "Rebuilt with eas.json.",
+      "from": [
+        "eas.json"
+      ]
+    },
+    "eas-overrides.json": {
+      "title": "Environmental assessment corrections (by hand)",
+      "kind": "decision",
+      "refresh": "as reviewed",
+      "dateNote": "Each correction states its reason.",
+      "from": [
+        "eas.json"
+      ]
+    },
+    "council.json": {
+      "title": "Council and committee items",
+      "kind": "open-data",
+      "publisher": "City of Mississauga, City of Brampton, Town of Caledon (eSCRIBE)",
+      "links": [
+        {
+          "label": "Mississauga eSCRIBE",
+          "url": "https://pub-mississauga.escribemeetings.com/"
+        },
+        {
+          "label": "Brampton eSCRIBE",
+          "url": "https://pub-brampton.escribemeetings.com/"
+        },
+        {
+          "label": "Caledon eSCRIBE",
+          "url": "https://pub-caledon.escribemeetings.com/"
+        }
+      ],
+      "itemLinks": "Each item links its meeting and agenda.",
+      "dateField": "generatedAt",
+      "script": "scripts/build-council.js",
+      "refresh": "weekly"
+    },
+    "council-decisions.json": {
+      "title": "Council decisions by file",
+      "kind": "derived",
+      "itemLinks": "Each decision links its meeting item.",
+      "dateField": "generatedAt",
+      "script": "scripts/build-council.js",
+      "refresh": "weekly",
+      "from": [
+        "council.json"
+      ]
+    },
+    "fsr.json": {
+      "title": "Functional servicing reports",
+      "kind": "document",
+      "publisher": "City of Mississauga, Town of Caledon, City of Brampton",
+      "links": [
+        {
+          "label": "BramPlanOnline (Brampton planning files, search by file number)",
+          "url": "https://planning.brampton.ca/CitizenAccess/Cap/CapHome.aspx?module=Planning&TabName=Planning"
+        }
+      ],
+      "itemLinks": "Each report links its document on the Mississauga or Caledon application page.",
+      "dateField": "generatedAt",
+      "script": "scripts/build-fsr.js",
+      "refresh": "weekly",
+      "check": "Brampton’s reports are public on BramPlanOnline but not linked per file: each Brampton file links the portal’s search, with its file number."
+    },
+    "housing.json": {
+      "title": "Housing targets, CMHC starts and completions, population projections",
+      "kind": "open-data",
+      "publisher": "Province of Ontario, CMHC, Ontario Ministry of Finance",
+      "links": [
+        {
+          "label": "Ontario’s housing supply progress",
+          "url": "https://data.ontario.ca/dataset/ontario-s-housing-supply-progress"
+        },
+        {
+          "label": "CMHC Housing Market Information Portal (Toronto CMA)",
+          "url": "https://www03.cmhc-schl.gc.ca/hmip-pimh/en/TableMapChart/Table?TableId=1.1.1.9&GeographyId=2270&GeographyTypeId=3&DisplayAs=Table&GeograghyName=Toronto"
+        },
+        {
+          "label": "Ontario population projections",
+          "url": "https://data.ontario.ca/dataset/population-projections"
+        }
+      ],
+      "itemLinks": "Each part (targets, cmhc, mof) carries its source, url and asOf.",
+      "dateField": "fetched",
+      "script": "scripts/build-housing.py",
+      "refresh": "yearly"
+    },
+    "peel-housing.json": {
+      "title": "Peel housing activity and building permits",
+      "kind": "open-data",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "Housing Construction Activity",
+          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/HousingConstructionActivity/FeatureServer/0"
+        },
+        {
+          "label": "Building Permits",
+          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/Building_Permits/FeatureServer/0"
+        }
+      ],
+      "dateField": "built",
+      "script": "scripts/build-peel-housing.js",
+      "refresh": "quarterly"
+    },
+    "peel-reports.json": {
+      "title": "Peel annual reports (plants, drinking water)",
+      "kind": "document",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "Wastewater annual reports",
+          "url": "https://peelregion.ca/water/wastewater/wastewater-annual-reports"
+        },
+        {
+          "label": "Drinking water quality reports",
+          "url": "https://peelregion.ca/water/drinking-water/water-quality/water-quality-reports"
+        }
+      ],
+      "itemLinks": "Each report figure links its PDF.",
+      "dateField": "year",
+      "dateMeaning": "report year",
+      "script": "scripts/fetch-peel-reports.js",
+      "refresh": "yearly"
+    },
+    "ww-events.json": {
+      "title": "Wastewater spills and overflows",
+      "kind": "document",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "Wastewater annual reports",
+          "url": "https://peelregion.ca/water/wastewater/wastewater-annual-reports"
+        }
+      ],
+      "itemLinks": "Each year links its report, with the pages and the sentence it states.",
+      "script": "scripts/check-ww-events.js",
+      "refresh": "yearly",
+      "dateNote": "Each year names its report."
+    },
+    "compliance.json": {
+      "title": "Plant effluent compliance",
+      "kind": "open-data",
+      "publisher": "Ontario Ministry of the Environment, Conservation and Parks",
+      "links": [
+        {
+          "label": "Environmental Compliance Reports",
+          "url": "https://data.ontario.ca/dataset/environmental-compliance-reports"
+        }
+      ],
+      "script": "scripts/build-compliance.py",
+      "refresh": "yearly",
+      "dateNote": "Covers the years listed in the file (years)."
+    },
+    "plant-flows.json": {
+      "title": "Measured plant flow",
+      "kind": "open-data",
+      "publisher": "Ontario Ministry of the Environment, Conservation and Parks",
+      "links": [
+        {
+          "label": "Municipal Treated Wastewater Effluent",
+          "url": "https://data.ontario.ca/dataset/municipal-treated-wastewater-effluent"
+        }
+      ],
+      "dateField": "built",
+      "script": "scripts/build-plant-flows.py",
+      "refresh": "yearly"
+    },
+    "idf.json": {
+      "title": "Rainfall IDF curves",
+      "kind": "open-data",
+      "publisher": "Ministry of Transportation Ontario",
+      "links": [
+        {
+          "label": "IDF Curve Look-up",
+          "url": "https://idfcurves.mto.gov.on.ca/"
+        }
+      ],
+      "dateField": "fetched",
+      "script": "scripts/build-idf.js",
+      "refresh": "reference"
+    },
+    "plan-targets.json": {
+      "title": "Secondary plan and MTSA targets",
+      "kind": "document",
+      "publisher": "City of Brampton, City of Mississauga, Town of Caledon, Region of Peel",
+      "links": [],
+      "itemLinks": "Each target has its own source, url, page, date and quote.",
+      "refresh": "as plans change",
+      "dateNote": "Each target carries its own date.",
+      "check": "Not yet checked against the documents: the figures are from search-result excerpts (see checked in the file)."
+    },
+    "elevation-validation.json": {
+      "title": "Ground elevation check against Peel manholes",
+      "kind": "derived",
+      "publisher": "Ontario (lidar DTM), Region of Peel (manholes)",
+      "links": [
+        {
+          "label": "Ontario DTM (lidar-derived)",
+          "url": "https://ws.geoservices.lrc.gov.on.ca/arcgis5/rest/services/Elevation/Ontario_DTM_LidarDerived/ImageServer"
+        }
+      ],
+      "dateField": "generatedAt",
+      "script": "scripts/probe-elev-validate.js",
+      "refresh": "on request",
+      "from": [
+        "probe/elevation.json"
+      ]
+    },
+    "changelog.json": {
+      "title": "Change log",
+      "kind": "app",
+      "dateField": "generatedAt",
+      "script": "scripts/build-changelog.js",
+      "refresh": "each deploy"
+    },
+    "refresh.json": {
+      "title": "Weekly refresh status",
+      "kind": "app",
+      "script": "scripts/data-check.js",
+      "refresh": "weekly",
+      "optional": true,
+      "dateNote": "Written by the weekly job."
+    },
+    "constraints/": {
+      "title": "Site constraints (regulation limits, floodplains, natural heritage, utilities)",
+      "kind": "open-data",
+      "publisher": "Conservation authorities (CVC, TRCA), Province of Ontario, Region of Peel",
+      "links": [],
+      "itemLinks": "constraints/manifest.json › datasets[]: each layer with its owner, url and licence.",
+      "dateField": "manifest.json:built",
+      "script": "scripts/build-constraints.js",
+      "refresh": "on request"
+    },
+    "3d/": {
+      "title": "3D terrain and buildings",
+      "kind": "open-data",
+      "publisher": "Province of Ontario (lidar DTM), OpenStreetMap contributors",
+      "links": [
+        {
+          "label": "Ontario DTM (lidar-derived)",
+          "url": "https://ws.geoservices.lrc.gov.on.ca/arcgis5/rest/services/Elevation/Ontario_DTM_LidarDerived/ImageServer"
+        },
+        {
+          "label": "OpenStreetMap",
+          "url": "https://www.openstreetmap.org/copyright"
+        }
+      ],
+      "dateField": "manifest.json:generatedAt",
+      "script": "scripts/build-3d-tiles.js",
+      "refresh": "on request"
+    },
+    "probe/": {
+      "title": "Source checks (reports only)",
+      "kind": "app",
+      "dateNote": "Each report has its own generatedAt.",
+      "refresh": "on request",
+      "method": "Reports from the Probe data sources workflow: what a source holds, before it is used. Not read by the counts."
+    }
+  }
+}
