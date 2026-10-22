@@ -39,11 +39,12 @@ test('markUpstream: a loop in the data cannot hang the walk', () => {
   assert.deepEqual(ups([7, -1], [1]), [1]);
 });
 
-test('gateOf: the latest construction year among the gating tiers', () => {
-  const links = [{ key: 'a', tier: 'A', y: 2027 }, { key: 'b', tier: 'B', y: 2030 }, { key: 'c', tier: 'B', y: null }];
-  assert.deepEqual(gateOf(links), { y: 2030, key: 'b' });
+test('gateOf: the latest construction year among the gating tiers (A and B1 by default)', () => {
+  const links = [{ key: 'a', tier: 'A', y: 2027 }, { key: 'b', tier: 'B1', y: 2030 }, { key: 'c', tier: 'B1', y: null }, { key: 'd', tier: 'B2', y: 2034 }];
+  assert.deepEqual(gateOf(links), { y: 2030, key: 'b' });                 // B2 (on the path only) never gates
   assert.deepEqual(gateOf(links, ['A']), { y: 2027, key: 'a' });
-  assert.equal(gateOf([{ key: 'c', tier: 'B', y: null }]), null);
+  assert.deepEqual(gateOf(links, ['A', 'B1', 'B2']), { y: 2034, key: 'd' });
+  assert.equal(gateOf([{ key: 'c', tier: 'B1', y: null }]), null);
   assert.equal(gateOf([]), null);
 });
 

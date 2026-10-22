@@ -6,16 +6,18 @@
  *      main (js/sewer-trace.js dcSewerPath); water: the planned main it would connect to, outside
  *      the mapped pressure zones;
  *   B  on its path: it drains through an existing sewer the main relieves (js/dc-relief.js), i.e.
- *      its pipe's downstream chain reaches one of them. Capacity evidence would split B into
- *      B1 (needed) and B2 (on the path only); while pipe results are hidden there is none, so B rows
- *      carry evidence: null and opts.gateTiers says whether they gate;
+ *      its pipe's downstream chain reaches one of them. As in the DC main's panel
+ *      (js/masterplan.js devsOfDcHTML): B1, needed, where that sewer runs short (its constraint's
+ *      status is not 'ok'); B2, on the path only, where it has room to build-out or has no
+ *      capacity to compare. B1 gates and shares the cost; B2 is shown, never counted;
  *   C  same sewershed: in the catchment the main serves or upstream of it, not on its path (counts
  *      only, context).
  * Developments built since the census are counted apart (context), never in a tier. Each development
- * gets a gate year (the latest construction year of the projects it relies on, in opts.gateTiers),
+ * gets a gate year (the latest construction year of the projects it relies on, in opts.gateTiers:
+ * A and B1),
  * its first-homes year (the forecast's first year with homes; under construction: this year), and a
  * timing gap when the first homes come before the gate. A project's DC cost is apportioned across
- * its developments by peak flow.
+ * its developments in the gating tiers by peak flow.
  *
  * Pure helpers (no DOM) are exported for node tests; model() reads the app's state.
  */
@@ -67,7 +69,7 @@
   }
 
   /** The gate: the latest construction year among links in the given tiers ({ key, tier, y }), with its project; null when none. */
-  function gateOf(links, tiers = ['A', 'B']) {
+  function gateOf(links, tiers = ['A', 'B1']) {
     let best = null;
     for (const l of links) if (tiers.includes(l.tier) && l.y && (!best || l.y > best.y)) best = { y: l.y, key: l.key };
     return best;
@@ -91,7 +93,7 @@
   const D = () => W().PeelDemand, DC = () => W().PeelDcCost, TM = () => W().PeelTiming;
   const IN = new Set(['approved', 'proposed']);
   const M = { key: null, res: null };
-  const DEFAULTS = { gateTiers: ['A', 'B'] };
+  const DEFAULTS = { gateTiers: ['A', 'B1'] };
 
   // First-homes year per development: the forecast's first year with homes (likely band).
   function firstYears() {
@@ -127,7 +129,7 @@
       if (d.lay === 'built') { pr.built++; pr.builtUnits += d.e.totalUnits || 0; return true; }
       if (pr.devs.some(x => x.p === d.p)) return true;
       const q = sys === 'wastewater' ? d.e.combined.wastewater.wetPeak : d.e.combined.water.maxDay;
-      pr.devs.push({ p: d.p, tier, how, e: d.e, q, units: d.e.totalUnits || 0, pop: d.e.population + d.e.employment.jobs, evidence: tier === 'B' ? null : true });
+      pr.devs.push({ p: d.p, tier, how, e: d.e, q, units: d.e.totalUnits || 0, pop: d.e.population + d.e.employment.jobs });
       return true;
     };
     // Tier A, wastewater: off the existing sewers, along the planned mains (dcSewerPath).
@@ -142,13 +144,18 @@
       const n = DI().dcNearest('water', [d.p.lng, d.p.lat], DI().DC_CONNECT_M);
       if (n) add(projectKey(n.ln), d, 'A', { joinM: n.m }, 'water');
     }
-    // Tier B: upstream of the existing sewers each project relieves.
+    // Tier B: upstream of the existing sewers each project relieves; B1 where they run short, as the
+    // DC main's panel says (its sewer group from dcItemCons: the members and the tightest pipe's status).
     const members = new Map();
     for (let i = 0; i < N; i++) { const ln = MP().pipeReliefOf(i); if (ln) { const pk = projectKey(ln); (members.get(pk) || members.set(pk, []).get(pk)).push(i); } }
     const devPipe = SC().sewerGrowth().devPipe, next = i => pipes[i][3];
     for (const [pk, mem] of members) {
-      const mark = markUpstream(N, next, mem);
-      for (const d of devs) { const i = devPipe.get(d.p); if (i != null && i >= 0 && mark[i]) add(pk, d, 'B', { pipe: i, mm: pipes[i][0] }, 'wastewater'); }
+      const pr = projects.get(`wastewater:${pk}`); if (!pr) continue;
+      const grp = MP().dcItemCons({ ln: pr.lines[0] }).find(c => c.members);
+      const tier = grp && grp.status !== 'ok' ? 'B1' : 'B2';
+      pr.relieves = grp ? { name: grp.name, status: grp.status } : null;
+      const mark = markUpstream(N, next, grp ? grp.members : mem);
+      for (const d of devs) { const i = devPipe.get(d.p); if (i != null && i >= 0 && mark[i]) add(pk, d, tier, { pipe: i, mm: pipes[i][0] }, 'wastewater'); }
     }
     // Tier C (counts): the catchment a main serves and those upstream of it, or the zone it serves.
     const tree = SvcTab().svcFlowTree();
@@ -158,11 +165,12 @@
       const seen = new Set(pr.devs.map(x => x.p));
       for (const d of devs) if (d.lay !== 'built' && !seen.has(d.p) && SD().svcIds(d.p, pr.sys === 'wastewater' ? 'dr' : 'pz').some(x => ids.has(x))) { pr.shed++; pr.shedUnits += d.e.totalUnits || 0; }
     }
-    // Cost (DC-recoverable 2026$) and its flow shares (tiers A and B).
+    // Cost (DC-recoverable 2026$) and its flow shares (the gating tiers; B2 carries none).
     for (const pr of projects.values()) {
       const c = DC() && DC().costEstimate ? DC().costEstimate(MP().lineRelief(pr.lines[0])) : null;
       pr.cost = c ? c.dc : null; pr.costEst = c ? c.est : null;
-      const sh = flowShares(pr.devs, pr.cost || 0); pr.devs.forEach((x, i) => { x.share = sh[i]; });
+      const counted = pr.devs.filter(x => o.gateTiers.includes(x.tier)), sh = flowShares(counted, pr.cost || 0);
+      pr.devs.forEach(x => { x.share = 0; }); counted.forEach((x, i) => { x.share = sh[i]; });
     }
     // Per development: its links, gate, first homes and gap.
     const first = firstYears(), byDev = new Map();
