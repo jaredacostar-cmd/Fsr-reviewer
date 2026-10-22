@@ -1,6 +1,8 @@
 # Capital › DC projects: which developments does each one affect?
 
-Draft plan, October 2026. Status: proposal, nothing built yet.
+Draft plan, October 2026. Nothing built yet.
+
+> **Status: on hold (October 22, 2026)** until the DC mapping (`data/dc-infra.json`) is updated in separate work. Every figure here comes from the current mapping. When it lands, rerun the prototype in [prototype/](prototype/README.md) and refresh the numbers before building.
 
 ## The ask
 

@@ -4,6 +4,8 @@ Draft, October 2026. Companion to [PLAN.md](PLAN.md). The numbers here come from
 of the app's own model on the October 19, 2026 data: wastewater, the 1,724 approved or proposed
 developments that link to at least one DC wastewater project.
 
+> **Status: on hold (October 22, 2026)** until the DC mapping (`data/dc-infra.json`) is updated in separate work. Every figure here comes from the current mapping. When it lands, rerun the prototype in [prototype/](prototype/README.md) and refresh the numbers before building.
+
 ## What the allocation has to answer
 
 One rule should serve three uses. Each use needs something different from it.
