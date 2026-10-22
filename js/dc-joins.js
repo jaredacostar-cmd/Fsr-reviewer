@@ -95,7 +95,7 @@
     return !!J.cap;
   }
   function exportJSON() {
-    return { version: 1, note: 'Reviewed joins of the 2026 DC planned mains onto the existing network (js/dc-joins.js). end: the planned main\'s end; to: the point it joins (null: an open end); into: what it joins.', joins: merged.map(({ sys, end, to, into, note, at }) => ({ sys, end, to: to || null, into: into || null, ...(note ? { note } : {}), ...(at ? { at } : {}) })) };
+    return { version: 1, note: 'Reviewed joins of the 2026 DC planned mains onto the existing network (js/dc-joins.js). end: the planned main\'s end; to: the point it joins (null: an open end); into: what it joins.', joins: merged.map(({ sys, end, to, into, name, note, at }) => ({ sys, end, to: to || null, into: into || null, ...(name ? { name } : {}), ...(note ? { note } : {}), ...(at ? { at } : {}) })) };
   }
 
   // ---- How sure an automatic join is ---------------------------------------------------------
@@ -109,6 +109,7 @@
   function conf(j) {
     if (!j.auto) return 'reviewed';
     if (!j.into && atEdge(j)) return 'edge';
+    if (!j.into && j.head) return 'head';
     if (j.sys === 'water') {
       if (j.fac) return 'facility';
       if (!j.into) return j.zoneBlocked ? 'zone' : 'unjoined';
@@ -118,12 +119,13 @@
   }
   const CONF = { drawn: 'joined as drawn', bridged: 'bridged gap', far: 'long bridged gap: check', open: 'open end', reviewed: 'reviewed',
     edge: 'the map cuts the main off here: it runs on past the edge of the map',
+    head: 'head of the sewer: its other end joins, nothing joins here',
     facility: 'joins through the facility', zone: 'nearest main is in another pressure zone: check', unjoined: 'not connected: check (water mains loop)' };
   const zoneName = id => { const z = id && App() && App().state.servicing && App().state.servicing.zones.find(x => x.id === id); return z ? z.name : ''; };
   // What a join is, in a line.
   function joinText(j) {
     const c = conf(j), zn = j.sys === 'water' ? zoneName(j.zone) : '';
-    const what = j.into ? `Joins ${intoText(j.into)}${j.m != null ? `, ${Math.round(j.m)} m` : ''}` : c === 'zone' ? `Nearest main ${Math.round(j.zoneBlocked.m)} m off is in ${zoneName(j.zoneBlocked.zone) || 'another zone'}: not joined` : c === 'facility' ? 'Not joined to a main' : c === 'edge' ? 'Not joined: the main runs off the edge of the DC map here'
+    const what = j.into ? `Joins ${intoText(j.into)}${j.m != null ? `, ${Math.round(j.m)} m` : ''}` : c === 'zone' ? `Nearest main ${Math.round(j.zoneBlocked.m)} m off is in ${zoneName(j.zoneBlocked.zone) || 'another zone'}: not joined` : c === 'facility' ? 'Not joined to a main' : c === 'edge' ? 'Not joined: the main runs off the edge of the DC map here' : c === 'head' ? 'Head of the sewer: nothing within 200 m, and its other end joins'
       : j.sizeBlocked ? `Nearest main (${j.sizeBlocked.d ? `${j.sizeBlocked.d} mm, ` : ''}${Math.round(j.sizeBlocked.m)} m off) is under half its size: not joined` : 'Open end: no main within reach';
     return [what, j.fac ? `at ${j.fac}` : '', zn ? `in ${zn}` : '', j.along ? `also joins existing mains at ${j.along} point${j.along === 1 ? '' : 's'} along its length` : ''].filter(Boolean).join(' · ');
   }
@@ -221,6 +223,12 @@
       const G = WT().wmGraph(), t = G && G.tap([lng, lat], r);
       if (t) cands.push({ to: t.q, m: t.m, into: 'watermain', label: `existing ${t.dm ? `${t.dm} mm ` : ''}watermain` });
     }
+    // (water: a station, reservoir or tank, existing or planned: the main joins through it)
+    if (sys === 'water') {
+      const facs = [...((WT() && WT().WF && WT().WF.data) ? WT().WF.data.facilities.filter(f => f.lnglat).map(f => ({ g: f.lnglat, name: f.name })) : []),
+        ...(App().state.dcInfra ? App().state.dcInfra.water.facilities.filter(f => f.g && f.kind !== 'program').map(f => ({ g: f.g, name: `${f.name} (planned)` })) : [])];
+      for (const f of facs) { const m = dm([lng, lat], f.g); if (m <= r) cands.push({ to: f.g, m: m * 0.5, into: 'facility', name: f.name, label: f.name }); }     // (a facility marker wins a near tie: it is the smaller target)
+    }
     const n = DI().dcNearest(sys, [lng, lat], r, ln => ln !== own);
     if (n) {
       let best = n.ln.g[0], bd = Infinity;
@@ -245,7 +253,7 @@
       const s = snap(j.sys, j.ln, ll.lng, ll.lat, Math.max(15, r));
       cancelPick();
       if (!s) { if (U.toast) U.toast('No pipe or planned main there: join not changed'); return; }
-      setEdit(j.sys, j.pt, { to: r6(s.to), into: s.into });
+      setEdit(j.sys, j.pt, { to: r6(s.to), into: s.into, ...(s.name ? { name: s.name } : {}) });
       if (U.toast) U.toast(`Joined to the ${s.label}`);
     };
     const onKey = ev => { if (ev.key === 'Escape') cancelPick(); };

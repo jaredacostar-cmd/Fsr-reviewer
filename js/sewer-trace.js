@@ -227,6 +227,7 @@
       }
       return best;
     };
+    const cand = new Map();
     for (const t of ends) {
       const o = ov.get(t), ln = lineOf[t], pt = [xs[t], ys[t]];
       let tp = null;
@@ -242,9 +243,27 @@
       // drawn onto it (within 60 m: a twin of the existing trunk).
       const sewer = (exit.get(t) || []).find(c => c.reviewed || c.d >= (ln.d || 0) || (c.m <= 60 && c.d >= (ln.d || 0) / 2));
       if (!o && tp && tp.m > 60 && sewer && sewer.m < tp.m) tp = null;
+      cand.set(t, { o, ln, pt, tp, sewer, near: !!o || (tp && tp.m <= 200) || (sewer && sewer.m <= 200) });
+    }
+    // A sewer starts at its head: where a planned main's one end joins (within 200 m) and the other
+    // has nothing within 200 m and no existing sewer in reach at all, that other end is the head, left
+    // open (no bridged gap to another planned main: a shortcut the sewer doesn't have). Only where the mains
+    // joined within reach already hand over to an existing sewer: a group that reaches one only
+    // through a long gap keeps it (that gap is its outlet).
+    const grp = new Map(), find = l => { while (grp.get(l) !== l) { grp.set(l, grp.get(grp.get(l))); l = grp.get(l); } return l; };
+    for (const ln of lines) grp.set(ln, ln);
+    const outlet = new Set();
+    for (const c of cand.values()) if (c.tp && c.tp.m <= 200) grp.set(find(c.ln), find(c.tp.l));
+    for (const c of cand.values()) if ((c.sewer && c.sewer.m <= 200) || (c.o && c.o.into === 'sewer')) outlet.add(find(c.ln));
+    for (const [i, list] of exit) if (!endSet.has(i) && list.length) outlet.add(find(lineOf[i]));     // (a main running within 25 m of a sewer)
+    for (const t of ends) {
+      const c = cand.get(t), { o, ln, pt } = c, other = cand.get(ln._n[0] === t ? ln._n[1] : ln._n[0]);
+      const head = !o && !c.near && !c.sewer && other && other !== c && other.near && outlet.has(find(ln));     // (an end with an existing sewer in reach may be the outlet: kept)
+      let { tp, sewer } = c;
+      if (head) { tp = null; sewer = null; exit.set(t, (exit.get(t) || []).filter(x => x.m <= 200)); }
       if (tp) for (const e of [tp.a, tp.b]) E.push([t, e, null, tp.m + DI().dcM(tp.q, [xs[e], ys[e]]), !o && tp.m > 60, tp.q]);
       const sewerNearer = sewer && (!tp || sewer.m < tp.m);
-      if (!ln.cap) joins.push({ sys: 'wastewater', ln, pt, auto: !o, ov: o,
+      if (!ln.cap) joins.push({ sys: 'wastewater', ln, pt, auto: !o, ov: o, head,
         ...(o && o.to && (sewerNearer || tp) ? { to: o.to, m: DI().dcM(pt, o.to), into: sewerNearer ? { kind: 'sewer', d: sewer.d, k: sewer.k } : { kind: 'dc', ln: tp.l } }
           : sewerNearer ? { to: SC().pipeCoords(MM().SEW.data.pipes[sewer.k]).reduce((a, c) => (DI().dcM(pt, c) < DI().dcM(pt, a) ? c : a)), m: sewer.m, into: { kind: 'sewer', d: sewer.d, k: sewer.k } }
           : tp ? { to: tp.q, m: tp.m, into: { kind: 'dc', ln: tp.l } } : { to: null, m: null, into: null }) });

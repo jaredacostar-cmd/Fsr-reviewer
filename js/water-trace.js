@@ -346,7 +346,8 @@
     const joins = [];
     for (const [a, b, ln] of planned) for (const t of [a, b]) {
       const pt = [xs[t], ys[t]], ov = DJ() ? DJ().override('water', pt) : null;
-      const own = i => i >= a && i <= b, fac = facAt(pt);
+      const own = i => i >= a && i <= b;
+      let fac = facAt(pt);
       let n = null, tp = null, auto = true, zoneBlocked = null, sizeBlocked = null;
       const zOk = i => fac || sameZone(t, i);
       // The nearer of a planned main's node and a tap on an existing main.
@@ -361,7 +362,9 @@
       };
       if (ov) {
         auto = false;
-        if (ov.to) { n = near(ov.to, 15, own); const tt = tap(ov.to, 15); if (tt && (!n || tt.m < n.m)) { n = null; tp = { ...tt, m: DI().dcM(pt, tt.q) }; } else if (n) n = { i: n.i, m: DI().dcM(pt, [xs[n.i], ys[n.i]]) }; }
+        // Set through a facility: the main joins the network at it (any main within 300 m of it).
+        if (ov.into === 'facility' && ov.to) { fac = { name: ov.name || 'the facility' }; const tt = tap(ov.to, 300, (p, q, dm, l) => l !== ln); if (tt) tp = { ...tt, m: DI().dcM(pt, tt.q) }; }
+        else if (ov.to) { n = near(ov.to, 15, own); const tt = tap(ov.to, 15); if (tt && (!n || tt.m < n.m)) { n = null; tp = { ...tt, m: DI().dcM(pt, tt.q) }; } else if (n) n = { i: n.i, m: DI().dcM(pt, [xs[n.i], ys[n.i]]) }; }
       } else {
         pick(300, true) || pick(60, false);
         // Not joined, flagged for review: the only main in reach is across a zone boundary, or in the

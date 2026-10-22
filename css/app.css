@@ -1417,6 +1417,7 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .dcj-link.dcj-far { stroke: var(--cap-over); }
 .dcj-open { fill: var(--hue-grey); }
 .dcj-edge { fill: var(--hue-grey); stroke-dasharray: 2 2; }
+.dcj-head { fill: var(--hue-grey); }
 .dcj-facility { fill: var(--cap-room); stroke-width: 3; }
 .dcj-link.dcj-facility { stroke: var(--cap-room); }
 .dcj-zone { fill: var(--hue-violet); }

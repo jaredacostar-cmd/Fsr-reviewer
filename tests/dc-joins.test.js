@@ -70,3 +70,7 @@ test('capital projects: new mains tendered or further join the network; relining
   assert.deepStrictEqual(out.wastewater.map(l => l.p), ['19-2158', '19-2158'], 'each part of a multi-line; the DC main itself left out');
   assert.ok(out.water[0].cap && out.water[0].g.length === 2);
 });
+
+test('a sewer head (its other end joins) is its own state, not a gap to review', () => {
+  assert.strictEqual(DJ.conf({ sys: 'wastewater', auto: true, head: true, into: null, m: null, ln: { g: [[0, 0], [1, 1]] }, pt: [0, 0] }), 'head');
+});
