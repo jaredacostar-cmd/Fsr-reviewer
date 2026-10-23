@@ -259,6 +259,48 @@ test('room downstream: in the CSV, and wired after each design (gravity and pump
   assert.match(src('js/sewer-print.js'), /Room downstream \(\$\{e\(dt\.down\.yearLabel\)\}\)/);
 });
 
+test('quantities: pipe by size, trench by depth band, the trench volume at the pipe + 0.6 m wide to the bedding', () => {
+  // one 100 m reach of 300 mm at 1% under flat ground at 180: 3.0 m deep at the top to 4.0 m at the bottom
+  const net = { nodes: [{ g: 180 }, { g: 180 }], reaches: [{ from: 0, to: 1, L: 100, q: 10, pts: Array.from({ length: 9 }, (_, k) => ({ d: (k + 1) * 10, g: 180 })) }] };
+  const d = { reaches: [{ from: 0, to: 1, L: 100, S: 0.01, inv_up: 177, dmm: 300 }], mhs: [{}, {}], structures: 0, rules: SD.RULES };
+  const q = SDR.quantities(d, net);
+  assert.equal(q.length, 100);
+  assert.deepEqual(q.bySize, [{ dmm: 300, m: 100 }]);
+  assert.deepEqual(q.byBand.map(b => [b.band, b.m]), [['under 3 m', 0], ['3–5 m', 100], ['5–8 m', 0], ['over 8 m', 0]]);
+  assert.ok(near(q.avgDepth, 3.5, 1e-9) && near(q.maxDepth, 4, 1e-9));
+  assert.ok(near(q.volume, 100 * (0.3 + 0.6) * (3.5 + 0.15), 1e-9), `${q.volume}`);
+  assert.equal(q.mhs, 2);
+  // two sizes and a band split: a second reach of 450 mm, 7 m deep
+  net.nodes.push({ g: 183 }); net.reaches.push({ from: 1, to: 2, L: 50, q: 40, pts: [] });
+  d.reaches.push({ from: 1, to: 2, L: 50, S: 0, inv_up: 176, dmm: 450 });
+  const q2 = SDR.quantities(d, net);
+  assert.deepEqual(q2.bySize, [{ dmm: 300, m: 100 }, { dmm: 450, m: 50 }]);
+  assert.equal(q2.byBand[2].m, 50, '4 → 7 m deep: 5.5 m on average, in 5–8 m');
+});
+
+test('quantities: on a real design, the CSV block with the standard\'s slopes beside it; wired in the panel and the print sheet', () => {
+  const gf = x => 232 - x * 0.012 + Math.sin(x / 60) * 0.8;
+  const rt = { nodes: SD.placeMHs([0, 418], 120).map(x => ({ x, g: gf(x), bend: 0 })), samples: Array.from({ length: 41 }, (_, k) => ({ x: k * 10 + 5, g: gf(k * 10 + 5) })) };
+  const net = SD.lineNet(rt, 47), conn = { invert: gf(418) - 6, dmm: 450 };
+  const a = SD.designNet(net, conn, { slopes: [0.003, 0.01] }), b = SD.designNet(net, conn);
+  assert.ok(a.ok && b.ok);
+  a.qty = SDR.quantities(a, net); a.qtyStd = SDR.quantities(b, net);
+  const tot = x => x.byBand.reduce((t, y) => t + y.m, 0);
+  assert.ok(near(tot(a.qty), 418, 1e-6) && near(tot(a.qtyStd), 418, 1e-6), 'every metre in a band');
+  a.mhs.forEach((m, i) => { m.x = i; m.label = `MH ${i + 1}`; });
+  const c = SDR.csv(a);
+  assert.match(c, /^Quantities,This design,Peel's standard slopes$/m);
+  assert.match(c, /^"Pipe \(m\)",418\.00,418\.00$/m);
+  assert.match(c, /^" {2}300 mm \(m\)",418\.00,0\.00$/m);
+  assert.match(c, /^" {2}250 mm \(m\)",0\.00,418\.00$/m);
+  assert.match(c, /^"Trench volume \(m³; pipe \+ 0\.6 m wide; vertical walls\)",\d+\.\d\d,\d+\.\d\d$/m);
+  assert.match(c, /^"Drop structures",\d+,\d+$/m);
+  const s = src('js/sewer-designer.js');
+  assert.match(s, /d\.qty = quantities\(d, nb\.net\);/);
+  assert.match(s, /if \(d\.slopes\) \{ const std = SW\(\)\.designNet\(nb\.net, S\.conn, \{ ici: f\.ici, avoidStructures: f\.avoid, dmm: \+f\.dmm \|\| null \}\);/);
+  assert.match(src('js/sewer-print.js'), /<h2>Quantities<\/h2>/);
+});
+
 test('Labs › Sewer designer: a page of its own in Home’s sidebar while its switch is on', () => {
   const W = require('../js/workspaces.js');
   assert.equal(W.LAB_PAGES.sewer.lab, 'sewer');

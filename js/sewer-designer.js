@@ -153,12 +153,52 @@
       already: capd.filter(r => r.r0 >= 1), unchecked: rows.length - capd.length,
     };
   }
+  // ---- Quantities (no costs): pipe by size, trench by depth, trench volume -------------------------
+  // d: designNet()'s result (ok); net: its network. The depth is to the invert, along each reach
+  // between the ground samples (as the cover check reads them). Trench volume: width = the pipe's
+  // nominal size + 0.6 m (0.3 m working room each side; the wall is not counted), from the ground to
+  // the bedding (0.15 m under the invert); vertical walls (no slope back or benching). The depth
+  // bands: under 3 m, 3–5 m, 5–8 m, over 8 m.
+  const QBANDS = [[3, 'under 3 m'], [5, '3–5 m'], [8, '5–8 m'], [Infinity, 'over 8 m']];
+  const QWORK = 0.6;
+  function quantities(d, net, r = d.rules || { bedding: 0.15 }) {
+    const bySize = new Map(), byBand = QBANDS.map(([, t]) => ({ band: t, m: 0 }));
+    let L = 0, vol = 0, depthLen = 0, maxDepth = 0;
+    d.reaches.forEach((rc, i) => {
+      const NR = net.reaches[i], D = (rc.dmm || d.dmm) / 1000, W = D + QWORK;
+      const pts = [{ d: 0, g: net.nodes[rc.from].g }, ...NR.pts.filter(p => p.d > 0 && p.d < NR.L), { d: NR.L, g: net.nodes[rc.to].g }];
+      const dep = p => p.g - (rc.inv_up - rc.S * p.d);
+      for (let k = 1; k < pts.length; k++) {
+        const dx = pts[k].d - pts[k - 1].d, d0 = dep(pts[k - 1]), d1 = dep(pts[k]), dm = (d0 + d1) / 2;
+        byBand[QBANDS.findIndex(([t]) => dm < t)].m += dx;
+        vol += dx * W * (dm + r.bedding); depthLen += dx * dm; maxDepth = Math.max(maxDepth, d0, d1);
+      }
+      bySize.set(rc.dmm || d.dmm, (bySize.get(rc.dmm || d.dmm) || 0) + rc.L); L += rc.L;
+    });
+    return {
+      length: L, bySize: [...bySize].sort((a, b) => a[0] - b[0]).map(([dmm, m]) => ({ dmm, m })), byBand, volume: vol,
+      avgDepth: L ? depthLen / L : 0, maxDepth, mhs: d.mhs.length, structures: d.structures || 0, work: QWORK,
+    };
+  }
   // The design as CSV: the maintenance holes, then the reaches.
   function csv(d) {
     const f2 = v => (v == null ? '' : (+v).toFixed(2)), lines = ['Maintenance hole,Chainage (m),Ground (m),Invert in (m),Invert out (m),Depth to invert (m),Drop (m),Drop structure,On'];
     d.mhs.forEach((m, i) => lines.push([m.label || `MH ${i + 1}${i === d.mhs.length - 1 ? ' (connection)' : ''}`, f2(m.x), f2(m.g), m.ins && m.ins.length > 1 ? `"${m.ins.map(x => f2(x.inv)).join(' / ')}"` : f2(m.inv_in), f2(m.inv_out), f2(m.depth), f2(m.drop), m.structure ? 'yes' : '', m.run ? `branch ${m.run + 1}` : 'main line'].join(',')));
     lines.push('', 'Reach,Diameter (mm),Length (m),Slope (%),Invert up (m),Invert down (m),Full-flow capacity (L/s),Flow ratio,Velocity at design flow (m/s),Velocity full (m/s),Depth ratio,Froude,Design flow (L/s)');
     d.reaches.forEach(r => lines.push([`MH ${r.from + 1} to MH ${r.to + 1}`, r.dmm || d.dmm, f2(r.L), (r.S * 100).toFixed(3), f2(r.inv_up), f2(r.inv_dn), f2(r.qFull), r.qRatio.toFixed(2), f2(r.v), f2(r.vFull), r.depthRatio.toFixed(2), r.froude.toFixed(2), f2(r.q != null ? r.q : d.q)].join(',')));
+    if (d.qty) {
+      const q = d.qty, sd = d.qtyStd;
+      lines.push('', `Quantities,This design${sd ? ',Peel\'s standard slopes' : ''}`);
+      const row = (t, a, b) => lines.push(`"${t}",${a}${sd ? `,${b}` : ''}`);
+      row('Pipe (m)', f2(q.length), sd && f2(sd.length));
+      for (const s of [...new Set([...q.bySize.map(x => x.dmm), ...(sd ? sd.bySize.map(x => x.dmm) : [])])].sort((a, b) => a - b)) row(`  ${s} mm (m)`, f2((q.bySize.find(x => x.dmm === s) || { m: 0 }).m), sd && f2((sd.bySize.find(x => x.dmm === s) || { m: 0 }).m));
+      q.byBand.forEach((b, i) => row(`  Depth to invert ${b.band} (m)`, f2(b.m), sd && f2(sd.byBand[i].m)));
+      row(`Trench volume (m³; pipe + ${q.work} m wide; vertical walls)`, f2(q.volume), sd && f2(sd.volume));
+      row('Average depth to invert (m)', f2(q.avgDepth), sd && f2(sd.avgDepth));
+      row('Deepest (m)', f2(q.maxDepth), sd && f2(sd.maxDepth));
+      row('Maintenance holes', q.mhs, sd && sd.mhs);
+      row('Drop structures', q.structures, sd && sd.structures);
+    }
     if (d.down && d.down.res) {
       const dn = d.down, pc = r => (r == null ? '' : `${Math.round(r * 100)}%`);
       lines.push('', `Room downstream (${dn.yearLabel}),Pipe,Km down,Capacity (L/s),Without this sewer (L/s),With it (L/s),Full without,Full with`);
@@ -169,7 +209,7 @@
   }
 
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
-    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, connBend, pointAt, checks, csv, crossings, CROSS, slopeRange, downstream };
+    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, connBend, pointAt, checks, csv, crossings, CROSS, slopeRange, downstream, quantities, QBANDS };
     return;
   }
   // ---- Browser ---------------------------------------------------------------------------------
@@ -432,6 +472,10 @@
       d.reaches.forEach((r, i) => { r.run = nb.rmeta[i].run; });
       d.q = d.mhs[rootN].ins.reduce((t, x) => t + d.reaches[x.reach].q, 0);
       S.view = Math.min(S.view, rs.length - 1);
+      d.qty = quantities(d, nb.net);
+      // The same route at Peel's standard slopes (only when a range is chosen; at the size chosen, if
+      // one is): what the range costs.
+      if (d.slopes) { const std = SW().designNet(nb.net, S.conn, { ici: f.ici, avoidStructures: f.avoid, dmm: +f.dmm || null }); d.qtyStd = std.ok ? quantities(std, nb.net) : null; d.stdWhy = std.ok ? '' : std.why; d.stdSizes = std.ok ? [...new Set(std.reaches.map(r => r.dmm))].sort((a, b) => a - b) : null; }
       findCrossings();
       findDownstream(d, d.q);
     }
@@ -518,6 +562,28 @@
     return `<p>${chip} ${recv}${tt}${already}</p>
       <div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">Pipe</th><th scope="col" class="n">Size</th><th scope="col" class="n">Km down</th><th scope="col" class="n">Capacity (L/s)</th><th scope="col" class="n">Full without</th><th scope="col" class="n">Full with</th><th scope="col">With it</th></tr></thead><tbody>${rows}</tbody></table></div>
       <p class="small muted">At ${D.yearLabel === 'build-out' ? 'build-out' : esc(D.yearLabel)} (the Demand year on the map), each Region pipe of 300 mm or more loaded as the Sewer pipe capacity layer loads it, with every load counted whatever the Wastewater loads switches in Layers show: the census population at the plant's measured rate, and the growth built since 2021, approved and proposed at Peel design criteria (approved and proposed as phased in Horizon years). This sewer's ${fmt1(r.q)} L/s design flow is added in full to every pipe down to the plant (not re-peaked with the rest, no attenuation). If the sewer serves a development already in the pipeline, its flow is in the load already and is counted twice here. Full-pipe capacity by Manning (n 0.013) on the published slope${r.unchecked ? `; ${fmtNum(r.unchecked)} pipe${r.unchecked === 1 ? ' has' : 's have'} no reliable slope and ${r.unchecked === 1 ? 'is' : 'are'} not checked` : ''}. A screen, not a hydraulic model.</p>`;
+  }
+  // Quantities (quantities()): this design, and the same route at Peel's standard slopes when a
+  // slope range is chosen.
+  function qtyHTML(d) {
+    const q = d.qty, sd = d.qtyStd, n0 = x => fmtNum(Math.round(x));
+    const sizes = [...new Set([...q.bySize.map(x => x.dmm), ...(sd ? sd.bySize.map(x => x.dmm) : [])])].sort((a, b) => a - b);
+    const m = (arr, k) => (arr.find(x => x.dmm === k) || { m: 0 }).m;
+    // (no difference: none at the precision shown)
+    const dif = (a, b, f = n0) => { const x = a - b, fx = f(Math.abs(x)); return fx === f(0) ? '–' : `${x > 0 ? '+' : '−'}${fx}`; };
+    const row = (t, a, b, f = n0, cls = '') => `<tr${cls ? ` class="${cls}"` : ''}><th scope="row">${t}</th><td class="n">${f(a)}</td>${sd ? `<td class="n">${f(b)}</td><td class="n">${dif(a, b, f)}</td>` : ''}</tr>`;
+    const rows = [row('Pipe (m)', q.length, sd && sd.length),
+      ...sizes.map(k => row(`<span class="sd-ind">${fmtNum(k)} mm</span>`, m(q.bySize, k), sd && m(sd.bySize, k))),
+      ...q.byBand.map((b, i) => row(`<span class="sd-ind">deep ${esc(b.band)}</span>`, b.m, sd && sd.byBand[i].m)),
+      row('Trench volume (m³)', q.volume, sd && sd.volume, n0, 'sd-qty-key'),
+      row('Average depth (m)', q.avgDepth, sd && sd.avgDepth, x => fmt2(x)),
+      row('Deepest (m)', q.maxDepth, sd && sd.maxDepth, x => fmt2(x)),
+      row('Maintenance holes', q.mhs, sd && sd.mhs), row('Drop structures', q.structures, sd && sd.structures)].join('');
+    const rg = d.slopes ? `${fmt2(d.slopes[0] * 100)}–${fmt2(d.slopes[1] * 100)}%` : '';
+    const head = `<th scope="col"></th><th scope="col" class="n">This design${rg ? ` <small>${rg}</small>` : ''}</th>${sd ? '<th scope="col" class="n">Standard slopes</th><th scope="col" class="n">Difference</th>' : ''}`;
+    const cmp = d.slopes && !sd ? `<p class="small muted">At Peel's standard slopes the same route finds no design: ${esc(d.stdWhy || 'no size works')}.</p>` : sd ? `<p class="small">${Math.abs(q.volume - sd.volume) < 0.5 ? 'The chosen slopes dig the same as the standard\'s.' : `The chosen slopes dig <strong>${fmtNum(Math.round(Math.abs(q.volume - sd.volume)))} m³ ${q.volume > sd.volume ? 'more' : 'less'}</strong> than the standard's own (${Math.round(Math.abs(q.volume / sd.volume - 1) * 100)}%)${d.stdSizes && d.stdSizes.join() !== [...new Set(d.reaches.map(r => r.dmm))].sort((a, b) => a - b).join() ? `, and the standard's design is ${d.stdSizes.map(x => `${fmtNum(x)} mm`).join('–')}` : ''}.`}</p>` : '';
+    return `${cmp}<div class="table-wrap"><table class="dt small sd-t sd-qty"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>
+      <p class="small muted">Pipe by size and by depth to the invert along the reaches (the ground as the design reads it). Trench volume: from the ground to the bedding (0.15 m under the invert), the pipe's nominal size + ${q.work} m wide (0.3 m working room each side; the wall not counted), vertical walls: no slope back, benching or shoring counted. Quantities only: no costs. ${d.slopes && sd ? 'Standard slopes: the same route, flow and settings designed to the standard\'s own limits (0.75 m/s at the design flow to 3.0 m/s full).' : ''}</p>`;
   }
   function xingsHTML() {
     if (S.xingsBusy) return '<p class="small muted">Looking for the watermains and storm sewers the sewer crosses…</p>';
@@ -606,6 +672,7 @@
       <h4 class="sd-h">Crossings</h4><div data-sd-xings>${xingsHTML()}</div>
       <h4 class="sd-h">Maintenance holes</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">MH</th><th scope="col">On</th><th scope="col" class="n">Ground (m)</th><th scope="col" class="n">Invert in</th><th scope="col" class="n">Invert out</th><th scope="col" class="n">Depth</th><th scope="col" class="n">Drop</th></tr></thead><tbody>${mhRows}</tbody></table></div>
       <h4 class="sd-h">Reaches · ${sizeTxt}</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">Reach</th><th scope="col" class="n">Size (mm)</th><th scope="col" class="n">Flow (L/s)</th><th scope="col" class="n">Length (m)</th><th scope="col" class="n">Slope (%)</th><th scope="col" class="n">Full flow (L/s)</th><th scope="col" class="n">Flow ratio</th><th scope="col" class="n">V design (m/s)</th><th scope="col" class="n">V full (m/s)</th><th scope="col" class="n">Froude</th></tr></thead><tbody>${rRows}</tbody></table></div>
+      ${d.qty ? `<h4 class="sd-h">Quantities</h4>${qtyHTML(d)}` : ''}
       <p><button type="button" class="btn small" data-sd-act="print">Print plan and profile (11×17)</button> <button type="button" class="btn small" data-sd-act="csv">Download the design (CSV)</button></p>`;
   }
   // The profile of a line view (lineView()): the ground, the cover line, the pipe (obvert and
@@ -721,7 +788,7 @@
     P.open({
       d: S.d, view: v, nodes: v.nodes, ground: v.ground, pts: [...S.pts, ...done().flatMap(b => b.pts)], conn: S.conn, mains, flow: S.flow, groundLabel: S.groundLabel,
       plan: { lls, reaches: S.d.reaches, labels: S.d.mhs.map((m, i) => `MH ${i + 1}`), start: S.pts[0], branches: done().map(b => b.pts[0]) },
-      xings: S.xings || null, down: S.d.down || null, checks: checks(S.d, S.net.net, S.conn), deepest: SW().deepest(S.d, S.net.net), froudeHi: S.d.reaches.filter(x => x.froude >= 1).length,
+      xings: S.xings || null, down: S.d.down || null, qty: S.d.qty || null, qtyStd: S.d.qtyStd || null, checks: checks(S.d, S.net.net, S.conn), deepest: SW().deepest(S.d, S.net.net), froudeHi: S.d.reaches.filter(x => x.froude >= 1).length,
       where: dev && dev.title ? `From ${dev.title}` : `From ${st.lat.toFixed(5)}, ${st.lng.toFixed(5)}`,
       date: new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }),
       version: RP && RP.appVersion ? RP.appVersion() : 'dev', unofficial: Ut.UNOFFICIAL || 'Unofficial prototype · public data only · not a Region of Peel product',
