@@ -275,12 +275,19 @@
     DCW.g = { xs, ys, E, adj, len, cost, exit, lineOf, joins }; DCW.v = DJ() ? DJ().version() : 0;
     return DCW.g;
   }
-  function dcSewerPath(p) {
+  // opts.cap: start on the capital project's new sewer nearest the point (within 60 m), not the
+  // nearest planned main (an outlet set onto a sewer being built: js/dev-outlets.js).
+  function capNearest(pt, r) {
+    let best = null;
+    for (const ln of DJ() ? DJ().capLines('wastewater') : []) { const m = DI().dcDist(pt, ln.g); if (m <= r && (!best || m < best.m)) best = { ln, m }; }
+    return best;
+  }
+  function dcSewerPath(p, opts = {}) {
     const G = dcSewerNet(); if (!G) return null;
-    const n = DI().dcNearest('wastewater', [p.lng, p.lat], DI().DC_CONNECT_M); if (!n) return null;
+    const n = opts.cap ? capNearest([p.lng, p.lat], 60) : DI().dcNearest('wastewater', [p.lng, p.lat], DI().DC_CONNECT_M); if (!n || !n.ln._n) return null;
     const [a, b] = n.ln._n; let s = a, sd = Infinity;
     for (let i = a; i <= b; i++) { const m = DI().dcM([p.lng, p.lat], [G.xs[i], G.ys[i]]); if (m < sd) { sd = m; s = i; } }
-    const target = DI().dcTarget(n.ln), inTarget = new Map();
+    const target = n.ln.cap ? null : DI().dcTarget(n.ln), inTarget = new Map();
     const pipeIn = k => { if (!inTarget.has(k)) { const c = SC().pipeCoords(MM().SEW.data.pipes[k])[0]; inTarget.set(k, !target || Areas().locate(App().state.servicing.drainage, c[0], c[1]).includes(target)); } return inTarget.get(k); };
     // Same size or bigger first; where no such sewer is in reach, at least half the size.
     const search = strict => {
@@ -322,7 +329,9 @@
     // Outside the traced catchments: along the planned DC mains first, when one is within 1 km.
     // Also where the site has no existing sewer of 300 mm+ within 400 m (greenfield in a mapped catchment).
     const G = SC().sewerGrowth(), k0 = G.devPipe.get(p) ?? SC().nearestPipe(p.lng, p.lat);
-    const outside = !(p.dr && p.dr.length) || k0 < 0, pl = outside ? dcSewerPath(p) : null;
+    // (an outlet set by hand: onto an existing sewer, that sewer; onto a planned main, its route: js/dev-outlets.js)
+    const DO = window.PeelDevOutlets, setR = DO ? DO.dcRouteFor(p) : null;
+    const outside = setR ? setR !== 'sewer' : !(p.dr && p.dr.length) || k0 < 0, pl = setR && setR !== 'sewer' ? setR : outside ? dcSewerPath(p) : null;
     // No planned path either: the nearest existing sewer within 3 km, joined straight.
     const far = !pl && k0 < 0 ? SC().nearestPipe(p.lng, p.lat, 3000) : -1;
     const k = pl ? pl.exit : k0 >= 0 ? k0 : far;

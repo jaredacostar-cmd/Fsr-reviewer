@@ -78,7 +78,7 @@ test('1.1 a development with no file boundaries keeps the permits as before', ()
 });
 
 test('1.2 a draft plan approval is phase 3 (Approved, no permit yet); a zoning approval alone is not', () => {
-  assert.equal(P.PHASE_BY_KEY.approved.label, 'Approved, no permit yet');
+  assert.equal(P.PHASE_BY_KEY.approved.label, 'Plan approved');
   const draft = app(rect(-79.70, 43.70, -79.69, 43.71), { FILE_NO: 'OZS-2021-0001', ADDRESS: '5 Elm St', STATUS: 'Draft Approved', TYPE: 'Official Plan / Zoning / Subdivision', DESCRIPTION: 'Draft Plan of Subdivision | Zoning By Law Amendment', UNITS: 80, RECEIVED_DATE: Y(2021) });
   assert.equal(P.mergeProject('a', [draft]).phase, 'approved');
   const zoning = app(rect(-79.70, 43.70, -79.69, 43.71), { FILE_NO: 'OZS-2021-0002', ADDRESS: '6 Elm St', STATUS: 'Closed Approved', TYPE: 'Official Plan / Zoning / Subdivision', DESCRIPTION: 'Zoning By Law Amendment — 12 storey apartment', UNITS: 150, RECEIVED_DATE: Y(2021) });

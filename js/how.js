@@ -42,7 +42,7 @@
     'svc:checks': [...SVC, 'housing.json', 'compliance.json'],
     'svc:alloc': ['snapshot.json', 'servicing.json'],
     'dca:timing': [...CAP, ...SVC, 'snapshot.json'],
-    'dca:funding': [...CAP, 'snapshot.json'],
+    'dca:dcproj': [...CAP, ...SVC, 'sewers.json', 'dc-joins.json', 'snapshot.json'],
     'dca:projects': CAP,
     'dca:eas': ['eas.json', 'capital.json'],
     'records:files': DEV,
@@ -60,6 +60,7 @@
     week: ['snapshot.json', 'history.json', 'capital.json', 'eas.json', 'council.json'],
     fsr: ['fsr.json', ...DEV, ...SVC],
     pipes: ['sewers.json', 'servicing.json', 'snapshot.json'],
+    outlets: ['dev-outlets.json', 'sewers.json', 'sewers-local.json', 'dc-infra.json', 'dc-joins.json', 'servicing.json', 'snapshot.json'],
     study: [...DEV, ...SVC],
     // (Labs › Sewer designer: the Region's mains, the terrain and the roads, read live)
     sewer: [],

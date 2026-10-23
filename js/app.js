@@ -50,7 +50,7 @@
     projects: [],
     filtered: [],
     phases: DEFAULT_PHASES(),
-    lyr: null,   // "Counts as" (SPEC §4): a Set of layers (js/layers.js), or null for every layer
+    lyr: null,   // "Counts as" (SPEC §4): a Set of rungs of the commitment ladder (js/layers.js RUNG_VIEW), or null for every rung
     // Default: projects with a planning application (and the permits that belong to them).
     muni: '', kind: DEFAULT_KIND, search: '', newOnly: true,
     sp: [], mtsa: [], pz: [], dr: [], ss: null,   // pz / dr: water pressure zone and wastewater drainage area ids (data/servicing.json)   // secondary plan / character area ids (several) and MTSA id (data/areas.json)
@@ -346,10 +346,13 @@
   // A development's layer (js/layers.js), kept per development object (rebuilt ones are new objects).
   const lyCache = new WeakMap();
   const layerOf = p => { if (!window.PeelLayers) return null; if (!lyCache.has(p)) lyCache.set(p, window.PeelLayers.layerOf(p)); return lyCache.get(p); };
+  // Its rung on the commitment ladder (js/layers.js rungKeyOf, the Peel rule with its site servicing
+  // permits once they are in): "Counts as" and the map's Counted as colours.
+  const rungOf = p => (window.PeelLayers && window.PeelLayers.rungKeyOf ? window.PeelLayers.rungKeyOf(p, window.PeelDemandUI && window.PeelDemandUI.commitOpts ? window.PeelDemandUI.commitOpts() : {}) : null);
   function applyFilters() {
     PeelSvcData.syncWwLayers();   // growth layers follow the selected stages
     const base = state.projects.filter(p => matches(p, true));
-    state.filtered = base.filter(p => state.phases.has(p.phase) && (!state.lyr || state.lyr.has(layerOf(p))));
+    state.filtered = base.filter(p => state.phases.has(p.phase) && (!state.lyr || state.lyr.has(rungOf(p))));
     PeelRenderList.renderPipeline(base);
     PeelRenderList.renderMarkers();
     PeelRenderList.setListPage(0); PeelRenderList.renderList();   // filters changed: back to the first page
@@ -785,7 +788,7 @@
     map: window.PeelMapCore.map,
     showDetail: (...a) => window.PeelDevNav.showDetail(...a),
     // ---- newly exposed core internals (used cross-module) ----
-    applyFilters, matches, layerOf, scheduleRebuild, recount, loadSource, showLoading, saveSources,
+    applyFilters, matches, layerOf, rungOf, scheduleRebuild, recount, loadSource, showLoading, saveSources,
     applySnapshot, jobsOf, empOf, clearEmp, mergeCriteria, setUserUnits,
     timeActive, yearsOf, setSheetH, refreshTheme,
     // Phase 6: full-snapshot load state (startup index paints first; the detail

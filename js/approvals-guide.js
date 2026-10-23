@@ -13,7 +13,7 @@
   const STAGES = [
     ['inception', '1 · Pre-application'],
     ['review', '2 · In review'],
-    ['approved', '3 · Approved, no permit yet'],
+    ['approved', '3 · Plan approved'],
     ['permit', '4 · Permit / under construction'],
     ['completed', '5 · Built'],
   ];

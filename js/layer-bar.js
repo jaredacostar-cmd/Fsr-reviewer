@@ -18,9 +18,9 @@
   // Plain names (the technical term in brackets where engineers use it: committed is MECP D-5-1's).
   // committed is MECP D-5-1's (the capacity checks); commitPeel and approved split the units still to
   // build under the Peel rule (the Overview and the briefing: js/layers.js toPeel).
-  const LABEL = { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Approved, not yet built (committed, MECP D-5-1)', commitPeel: 'Committed (building or site servicing permit)', approved: 'Approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
+  const LABEL = { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Past plan approval (MECP D-5-1)', commitPeel: 'Committed (site servicing or building permit)', approved: 'Plan approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
   // Short names for table headings and tight rows.
-  const SHORT = { existing: 'On the system', built: 'Built since 2021', committed: 'Approved, not yet built', commitPeel: 'Committed', approved: 'Approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
+  const SHORT = { existing: 'On the system', built: 'Built since 2021', committed: 'Past plan approval', commitPeel: 'Committed', approved: 'Plan approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
   const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
   const num = v => Math.round(v).toLocaleString('en-CA');
   const pc = v => `${Math.max(0, Math.min(100, v)).toFixed(2)}%`;
@@ -95,13 +95,15 @@
   const nameHTML = (layer, short) => (LABEL[layer] ? `<span class="ly-name" style="--ly-c:${PILL[layer]}"${short ? ` title="${LABEL[layer]}"` : ''}>${short ? SHORT[layer] : LABEL[layer]}</span>` : '<span class="muted">none</span>');
 
   /** A capacity result (js/capacity.js compute / of) as the layered bar: Existing, Built, Committed,
-   *  Proposed against rated (or firm), the trigger tick and the red hatch beyond. */
+   *  Proposed against rated (or firm), the trigger tick and the red hatch beyond. k.rule: the committed
+   *  horizon's rule (js/map-analysis.js ruleOf): 'd51' at the treatment plants (past plan approval),
+   *  'peel' elsewhere (a site servicing or building permit; the rest of build-out is not committed yet). */
   function capacityBarHTML(k, o = {}) {
     if (!k || !(k.cap > 0)) return '';
     const f = o.fmt || (v => (Math.abs(v) >= 100 ? Math.round(v).toLocaleString('en-CA') : (Math.round(v * 10) / 10).toLocaleString('en-CA')));
     const pct = v => `${Math.round(v / k.cap * 100)}%`;
     const seg = (layer, v) => ({ layer, value: v, title: `${LABEL[layer]}: ${f(v)} ${k.unit || ''} (${pct(v)} of ${k.firm != null ? 'firm' : 'rated'})` });
-    const segs = [seg('existing', k.existing), seg('built', k.built), seg('committed', Math.max(0, k.committed - k.existing - k.built)), seg('proposed', Math.max(0, k.buildout - k.committed))];
+    const segs = commitSegs(k, seg);
     const max = Math.max(k.cap * 1.3, k.buildout), at = v => `${(Math.min(v, max) / max * 100).toFixed(2)}%`;
     const bar = barHTML({ segments: segs, rated: k.cap, trigger: k.trigger < 1 ? k.trigger * k.cap : null, max, unit: k.unit, fmt: f, small: o.small,
       ratedLabel: `100% ${k.firm != null ? 'firm' : 'rated'}: ${f(k.cap)} ${k.unit || ''}`, triggerLabel: `${Math.round(k.trigger * 100)}% expansion trigger`,
@@ -114,10 +116,19 @@
     const trig = k.trigger < 1 && k.trigger > 0 ? `<span class="cb-t" style="left:${at(k.trigger * k.cap)}">${Math.round(k.trigger * 100)}%</span>` : '';
     return `<div class="capbar${o.small ? ' sm' : ''}"><div class="cb-vals" aria-hidden="true">${vals}</div>${bar}<div class="cb-scale" aria-hidden="true">${trig}<span class="cb-t cb-100" style="left:${at(k.cap)}">100%</span></div></div>`;
   }
+  // A capacity bar's segments: existing, built, committed by the facility's rule, then the rest of
+  // build-out (in review at a plant; plan approved, not committed, and in review elsewhere).
+  const NOT_YET = 'Not committed yet (plan approved without a permit, or in review)';
+  function commitSegs(k, seg) {
+    const peel = k.rule === 'peel', com = Math.max(0, k.committed - k.existing - k.built), rest = Math.max(0, k.buildout - k.committed);
+    const s = seg('proposed', rest);
+    return [seg('existing', k.existing), seg('built', k.built), seg(peel ? 'commitPeel' : 'committed', com), peel ? { ...s, title: s.title.replace(LABEL.proposed, NOT_YET) } : s];
+  }
   // The capacity bars' legend on one line: short names (each segment's full name is on hover); the
-  // 90% and 100% marks are labelled on the bar itself.
+  // 90% and 100% marks are labelled on the bar itself. Committed is past plan approval at the treatment
+  // plants (MECP D-5-1), a site servicing or building permit at every other facility (the Peel rule).
   function capLegendHTML() {
-    return legendHTML([{ layer: 'existing', text: 'On the system' }, { layer: 'built', text: 'Built' }, { layer: 'committed', text: 'Committed' }, { layer: 'proposed', text: 'In review' }, 'over'], { cls: 'one-line' });
+    return legendHTML([{ layer: 'existing', text: 'On the system' }, { layer: 'built', text: 'Built' }, { layer: 'committed', text: 'Committed (plants: past plan approval, MECP D-5-1; elsewhere: a servicing or building permit)' }, { layer: 'proposed', text: 'Not committed yet' }, 'over'], { cls: 'one-line' });
   }
 
   // ---- Scenario chip (SPEC §2): the basis is a set of layers ----------------------------------
@@ -179,7 +190,7 @@
     return `<button type="button" class="sc-more" data-scen-open="1" aria-haspopup="dialog" title="Scenario (${esc(what)}): ${esc(scenarioLine(rows))} — open the Scenario control to see or change it"><span class="sc-what">Scenario</span> <span class="tb-scen-t">${esc(scenarioChipText(rows))}</span> ▾</button>`;
   }
 
-  const api = { COUNT_OPTS, countLabel, LABEL, SHORT, barHTML, capacityBarHTML, capLegendHTML, legendHTML, badgeHTML, siteBadgeHTML, stageText, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioSettings, scenarioChanges, scenarioChipText, scenarioLine, scenarioListHTML, scenarioChipHTML };
+  const api = { commitSegs, NOT_YET, COUNT_OPTS, countLabel, LABEL, SHORT, barHTML, capacityBarHTML, capLegendHTML, legendHTML, badgeHTML, siteBadgeHTML, stageText, nameHTML, BASIS_LAYERS, layersOf, nextBasis, scenarioSettings, scenarioChanges, scenarioChipText, scenarioLine, scenarioListHTML, scenarioChipHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLayerBar = api;
 })(typeof window !== 'undefined' ? window : globalThis);
