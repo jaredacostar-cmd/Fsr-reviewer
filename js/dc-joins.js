@@ -83,7 +83,10 @@
       for (const r of records || []) {
         if (r.system !== sys || !CAP_WORK[sys].test(r.workType || '') || !CAP_STATUS.has(r.status) || /CANCELLED|ON-HOLD/.test(r.phase || '') || dcProj.has(r.projectNumber) || !r.geometry) continue;
         const parts = r.geometry.type === 'LineString' ? [r.geometry.coordinates] : r.geometry.type === 'MultiLineString' ? r.geometry.coordinates : [];
-        for (const g of parts) if (g.length >= 2) out[sys].push({ cap: true, sys, k: sys === 'water' ? 'feeder' : 'local', s: r.status, p: r.projectNumber, n: r.street || '', work: r.workType, d: null, y: null, g });
+        const yr = (...ds) => { const d = ds.find(Boolean); return d ? +String(d).slice(0, 4) : null; };
+        // (st: started, or due to start; sub: in service (substantially complete), or due: for the outlet checks, js/dev-outlets.js)
+        const st = yr(r.startActual, r.startTarget), sub = yr(r.substantialActual, r.substantialTarget);
+        for (const g of parts) if (g.length >= 2) out[sys].push({ cap: true, sys, k: sys === 'water' ? 'feeder' : 'local', s: r.status, p: r.projectNumber, n: r.street || '', work: r.workType, d: null, y: null, st, sub, g });
       }
     }
     return out;

@@ -1232,6 +1232,20 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .why-list li small { display: block; color: var(--text-muted); font-size: var(--fs-1); }
 .why-list .why-appeal { border-color: var(--cap-tight); } .why-list .why-stop { border-color: var(--ph-cancelled); }
 .why-list .why-stall { border-color: var(--cap-tight); } .why-list .why-ok { border-color: var(--cap-room); }
+/* Original application and later files on its land (js/earlier-files.js) */
+.why-list .why-warn { border-color: var(--cap-tight); } .why-list .why-info { border-color: var(--select); }
+.ef-miss { margin: var(--space-1) 0; padding-left: var(--space-3); }
+.ef-t th { text-align: left; font-weight: 600; padding: 2px 6px 2px 0; border-bottom: 1px solid var(--border); }
+.ef-t .num { text-align: right; white-space: nowrap; }
+.ef-tag { font-size: var(--fs-1); padding: 0 4px; border-radius: 3px; background: color-mix(in srgb, var(--cap-tight) 22%, transparent); }
+.ef .pt-actions, .ef-units-sect .pt-actions { display: flex; flex-wrap: wrap; gap: var(--space-1); margin: var(--space-1) 0; }
+.ef-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+.ef-years td.ef-ch { font-weight: 600; }
+.ef-d { display: block; font-size: var(--fs-1); color: var(--text-muted); font-weight: 400; }
+.ef-parcel { margin: var(--space-1) 0; } .ef-parcel > summary { cursor: pointer; }
+.ef-parcel tr.muted td { color: var(--text-muted); }
+.ef-t td:first-child, .ef-t .tr-ref { white-space: nowrap; }
+.leaflet-tooltip.ef-lbl { font-weight: 700; }
 .why-stall { padding: var(--space-1) var(--space-2); border-radius: 4px; background: color-mix(in srgb, var(--cap-tight) 18%, transparent); }
 .c-kind { font-size: var(--fs-1); color: var(--text-muted); }
 .c-out { font-size: var(--fs-1); font-weight: 500; padding: 0 var(--space-2); border-radius: 999px; background: var(--surface-2); }
@@ -3003,6 +3017,68 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .home-map-svg .hm-pipe { fill: none; stroke: var(--pipe-sanitary); stroke-width: 1.4; }
 .home-map-svg .hm-pipe.risky { stroke-width: 2.6; }
 .hm-key.hm-dc-wastewater { background: var(--dc-ww-main); } .hm-key.hm-dc-water { background: var(--pipe-water); }
+/* Capital › DC projects on a workspace page: the open project and the developments relying on it. */
+.home-answer .ws-back { display: block; margin-bottom: var(--space-2); }
+/* QA/QC › Review outlets: the queue filters, the development's outlet, and the map to tap. */
+.dvo-filters { display: flex; flex-wrap: wrap; gap: var(--space-1); margin: var(--space-2) 0; }
+.dvo-filters .btn.on { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
+.dvo-panel h4 { font-size: var(--fs-1); color: var(--text-secondary); text-transform: uppercase; letter-spacing: .04em; margin: var(--space-3) 0 var(--space-1); }
+.dvo-out { border: 1px solid var(--border); border-radius: 8px; padding: var(--space-2); background: var(--surface-2); }
+.dvo-out.alt { border-color: var(--cap-tight); }
+.dvo-out small { display: block; color: var(--text-secondary); }
+.dvo-plist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.dvo-plist li { display: flex; justify-content: space-between; gap: var(--space-2); }
+.dvo-plist li small { display: block; color: var(--text-secondary); }
+.dvo-plist li.add { color: var(--cap-tight-t); font-weight: 600; }
+.dvo-plist li.drop { color: var(--text-muted); text-decoration: line-through; }
+.dvo-near { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.dvo-near-b { display: flex; align-items: center; gap: var(--space-2); width: 100%; text-align: left; padding: 6px var(--space-2); border: 1px solid var(--border); border-radius: 8px; background: var(--surface-1); color: var(--text-primary); font: inherit; cursor: pointer; }
+.dvo-near-b:hover { border-color: var(--accent); }
+.dvo-near-b.on { border-color: var(--cap-tight); background: var(--surface-2); }
+.dvo-near-b > span:nth-child(2) { flex: 1; min-width: 0; }
+.dvo-near-b small { display: block; color: var(--text-secondary); }
+.dvo-near-n { flex: none; width: 20px; height: 20px; border-radius: 50%; display: inline-grid; place-items: center; font-size: var(--fs-1); font-weight: 600; background: var(--text-primary); color: var(--surface-1); }
+.home-map-svg .hm-dvo-near { cursor: pointer; }
+.home-map-svg .hm-dvo-near circle { fill: var(--text-primary); stroke: var(--map-halo); stroke-width: 1.5; }
+.home-map-svg .hm-dvo-near text { fill: var(--surface-1); font-size: 9px; font-weight: 600; pointer-events: none; }
+.home-map-svg .hm-dvo-near.on circle { fill: var(--cap-tight); }
+.dvo-ev { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; font-size: var(--fs-1); }
+.dvo-ev li { display: flex; gap: var(--space-2); align-items: baseline; }
+.dvo-ev li > span { flex: none; width: 1.1em; text-align: center; font-weight: 700; }
+.dvo-ev .ev-ok > span, .dvo-near-b small.ev-ok { color: var(--cap-room-t); }
+.dvo-ev .ev-warn > span, .dvo-near-b small.ev-warn { color: var(--cap-tight-t); }
+.dvo-ev .ev-bad, .dvo-near-b small.ev-bad { color: var(--cap-over-t); }
+.dvo-ev .ev-unk { color: var(--text-secondary); }
+.dvo-near-b.fit-bad { opacity: 0.75; }
+.dvo-src { display: block; margin-top: var(--space-2); color: var(--text-secondary); }
+.dvo-src input { display: block; width: 100%; box-sizing: border-box; margin-top: 4px; }
+.dvo-map { position: relative; }
+.dvo-map.picking svg { cursor: crosshair; outline: 2px solid var(--select); outline-offset: -2px; border-radius: 8px; }
+.dvo-banner { position: absolute; left: 8px; right: 8px; top: 8px; margin: 0; padding: 6px 10px; border-radius: 6px; background: var(--select); color: var(--on-accent); z-index: 1; }
+.home-map-svg .hm-sw { fill: none; stroke: var(--pipe-sanitary); opacity: 0.75; }
+.home-map-svg .hm-sw-x { stroke-width: 0.6; opacity: 0.55; } .home-map-svg .hm-sw-s { stroke-width: 1; } .home-map-svg .hm-sw-m { stroke-width: 1.8; } .home-map-svg .hm-sw-l { stroke-width: 2.8; }
+.home-map-svg .hm-dvo-route { fill: none; stroke: var(--accent); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.home-map-svg .hm-dvo-alt { fill: none; stroke: var(--cap-tight); stroke-width: 3.5; stroke-dasharray: 6 4; stroke-linecap: round; }
+.home-map-svg .hm-dvo-conn { fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-dasharray: 3 3; }
+.home-map-svg .hm-dvo-conn-alt { fill: none; stroke: var(--cap-tight); stroke-width: 1.6; stroke-dasharray: 3 3; }
+.home-map-svg .hm-dvo-site { fill: var(--select); stroke: var(--map-halo); stroke-width: 2; }
+.home-map-svg .hm-cap { fill: none; stroke: var(--text-primary); stroke-width: 2.4; stroke-dasharray: 1 3; stroke-linecap: round; }
+.hm-key.hm-key-cap { height: 3px; vertical-align: 2px; background: repeating-linear-gradient(90deg, var(--text-primary) 0 2px, transparent 2px 5px); }
+.hm-key.hm-key-dvo-route { height: 3px; vertical-align: 2px; background: var(--accent); }
+.hm-key.hm-key-dvo-alt { height: 3px; vertical-align: 2px; background: var(--cap-tight); }
+.home-map-svg .hm-dc-dim { opacity: 0.35; }
+.home-map-svg .hm-dcp-halo { fill: none; stroke: var(--map-halo); stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+.home-map-svg .hm-dcp { fill: none; stroke: var(--select); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.home-map-svg .hm-dcd { stroke: var(--map-halo); stroke-width: 0.8; }
+.home-map-svg .hm-dcd-a { fill: var(--accent); }
+.home-map-svg .hm-dcd-b1 { fill: var(--text-primary); }
+.home-map-svg .hm-dcd-b2 { fill: none; stroke: var(--text-secondary); stroke-width: 1.2; }
+.home-map-svg .hm-dcd-gap { fill: none; stroke: var(--cap-over); stroke-width: 1.6; pointer-events: none; }
+.hm-key.hm-key-dcp { height: 3px; vertical-align: 2px; background: var(--select); }
+.hm-key.hm-key-dcd-a { background: var(--accent); border-radius: 50%; }
+.hm-key.hm-key-dcd-b1 { background: var(--text-primary); border-radius: 50%; }
+.hm-key.hm-key-dcd-b2 { border: 1.2px solid var(--text-secondary); border-radius: 50%; }
+.hm-key.hm-key-dcd-gap { border: 1.6px solid var(--cap-over); border-radius: 50%; }
 .home-map .sk { width: 100%; height: auto; display: block; border: 0; }
 .home-map-empty { display: block; padding: var(--space-5) var(--space-3); text-align: center; }
 /* Narrow screens: the workspace list is a scrollable row of buttons above the page (one tap to switch). */

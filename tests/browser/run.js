@@ -409,7 +409,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(r.ms < 10000, `computed in ${Math.round(r.ms)} ms`);
   });
 
-  await check('Capital › DC projects: the list, a project and back; the Funding lab inside it; the workspace section', browser, {}, async ({ page, ev }, expect) => {
+  await check('Capital › DC projects: the list, a project and back; the Funding lab inside it; the workspace section and its map', browser, {}, async ({ page, ev }, expect) => {
     await ev(() => { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.openTab('dca', 'dcproj'); });
     await page.waitForSelector('#pnl-dca [data-dcproj-open]', { timeout: 90000 });
     const chips = await ev(() => [...document.querySelectorAll('[data-dcasub]')].filter(b => b.offsetParent).map(b => b.textContent.trim()));
@@ -427,9 +427,86 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     await ev(() => { PeelLabs.set('funding', false); PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage('projects'); }); await wait(1500);
     await page.click('[data-ws-wsec="capital:dcproj"]'); await page.waitForSelector('#home [data-dcproj-open]', { timeout: 30000 });
     await page.click('#home [data-dcproj-open]'); await wait(1500);
-    const w = await ev(() => ({ back: !!document.querySelector('#home [data-dcproj-back]'), name: (document.querySelector('#home h1') || {}).textContent || '' }));
+    const w = await ev(() => ({ back: !!document.querySelector('#home [data-dcproj-back]'), name: (document.querySelector('#home h1') || {}).textContent || '',
+      oneP: document.querySelectorAll('#home .home-answer').length === 1 && !!document.querySelector('#home .home-answer .ws-back') && /rel(y|ies) on it|relies on it|No development/.test((document.querySelector('#home .home-answer') || {}).textContent || ''),
+      proj: document.querySelectorAll('#home .home-map-svg .hm-dcp').length, dots: document.querySelectorAll('#home .home-map-svg .hm-dcd').length, toFull: !!document.querySelector('#home [data-dcproj-map]') }));
     expect(w.back && /·/.test(w.name), `the workspace section opens a project in place, with its name and a way back ("${w.name.slice(0, 60)}")`);
+    expect(w.oneP, 'its answer is one sentence, the way back above it');
+    expect(w.proj > 0 && w.dots > 0 && w.toFull, `the side map shows the project and the developments relying on it, and opens the full map (${w.proj} lines, ${w.dots} developments)`);
     await page.click('#home [data-dcproj-back]'); await wait(800);
+  });
+
+  await check('QA/QC › Review outlets: open a development, tap the map or pick from the nearby list (existing, local, being built, planned) to set its outlet, save it with its source, back to automatic', browser, {}, async ({ page, ev }, expect) => {
+    await ev(() => { PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage('outlets'); });
+    await page.waitForSelector('#home [data-dvo="start"]', { timeout: 120000 }); await wait(800);
+    const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
+    expect(side.includes('outlets'), `Review outlets is in Home's sidebar (${side.join()})`);
+    // (a development on the existing sewers, so a tap at its site lands on its own sewer)
+    await ev(() => { const q = PeelDevOutlets.queue(), G = PeelSewerCap.sewerGrowth(), x = q.rows.find(r => r.p.dr && r.p.dr.length && G.devPipe.get(r.p) != null); PeelDevOutlets.state.sel = x.p.key; PeelWorkspaces.renderPage(true); });
+    await wait(800);
+    expect(await ev(() => PeelDevOutlets.queue().all.every(x => x.links.length && x.links.every(l => l.sys === 'wastewater'))), 'the queue: developments relying on a DC wastewater project');
+    const st = () => ev(() => { const S = PeelDevOutlets.state, sel = PeelDevOutlets.selected(), p = sel && sel.p; return { key: p && p.key, k: p ? PeelSewerCap.sewerGrowth().devPipe.get(p) : null, rec: p ? PeelDevOutlets.recordOf(p) : null, mode: S.mode, cand: S.cand && { kind: S.cand.kind, k: S.cand.k } }; });
+    const a = await st();
+    expect(!!a.key && a.k != null && !a.rec, `a development open with its automatic outlet (${a.key}, pipe ${a.k})`);
+    await page.click('#home [data-dvo="start"]'); await wait(500);
+    expect(await ev(() => !!document.querySelector('#home [data-dvo-map].picking')), 'the map is in pick mode');
+    // a real tap where the site's connector meets its sewer: it snaps to that sewer (the tap reaches the ground)
+    const at = await ev(() => { const c = document.querySelector('#home [data-dvo-map] .hm-dvo-conn'), svg = c.ownerSVGElement, q = c.getPointAtLength(c.getTotalLength()), pt = svg.createSVGPoint(); pt.x = q.x; pt.y = q.y; const s = pt.matrixTransform(c.getScreenCTM()); return [s.x, s.y]; });
+    await page.mouse.click(at[0], at[1]); await wait(800);
+    const b = await st();
+    expect(b.mode === 'preview' && b.cand && b.cand.kind === 'sewer' && b.cand.k === a.k, `the tap picks its own sewer (${JSON.stringify(b.cand)})`);
+    expect(await ev(() => /Preview/.test(document.querySelector('#home .dvo-panel').textContent)), 'a preview before saving');
+    // the nearby list: each sewer run and planned main once, nearest first, its own sewer marked; pick from it
+    const nb = await ev(() => [...document.querySelectorAll('#home .dvo-near-b')].map(b => ({ t: b.textContent, on: b.classList.contains('on'), bad: b.classList.contains('fit-bad'), m: +b.querySelector('.dvo-near-m').textContent.replace(/[^0-9]/g, '') })));
+    expect(nb.length >= 2 && nb.every((x, i) => !i || (x.bad === nb[i - 1].bad ? x.m >= nb[i - 1].m : x.bad)), `a nearby list: those that fit first, then nearest first (${nb.map(x => `${x.m}${x.bad ? '✕' : ''}`).join(', ')} m)`);
+    // the checks: stage, timing, gravity, drainage area
+    const evs = await ev(() => [...document.querySelectorAll('#home .dvo-ev li')].map(li => li.className + ' ' + li.textContent));
+    expect(evs.some(x => /stage|permit|Built/i.test(x)) && evs.some(x => /service/.test(x)) && evs.some(x => /Gravity|gravity|pumping/.test(x)), `the checks are shown (${evs.join(' | ')})`);
+    expect(await ev(() => !!document.querySelector('#home [data-dvo="filter:misfit"]')), 'a queue filter for outlets that don’t fit their stage');
+    expect(nb.some(x => /its outlet now/.test(x.t) && x.on), 'its own sewer is on the list, marked, and picked');
+    expect(await ev(() => document.querySelectorAll('#home [data-dvo-map] .hm-dvo-near').length) >= 1, 'numbered on the map');
+    const other = nb.findIndex(x => !/its outlet now/.test(x.t));
+    await page.click(`#home .dvo-near-b[data-dvo="near:${other}"]`); await wait(800);
+    const b2 = await st();
+    expect(b2.mode === 'preview' && !(b2.cand.kind === 'sewer' && b2.cand.k === a.k), `another from the list previews it instead (${JSON.stringify(b2.cand)})`);
+    const own = await ev(() => [...document.querySelectorAll('#home .dvo-near-b')].findIndex(b => /its outlet now/.test(b.textContent)));
+    await page.click(`#home .dvo-near-b[data-dvo="near:${own}"]`); await wait(800);
+    expect((await st()).cand.k === a.k, 'and back to its own sewer from the list');
+    await page.fill('#home [data-dvo-src]', 'browser path'); await page.click('#home [data-dvo="save"]'); await wait(1500);
+    const c = await st();
+    expect(c.rec && c.rec.mode === 'set' && c.rec.src === 'browser path' && c.k === a.k, `saved, with its source, and the load model uses it (pipe ${c.k})`);
+    expect(await ev(() => /Set by hand/.test(document.querySelector('#home .dvo-panel').textContent) && !!document.querySelector('#home [data-dvo="export"]')), 'the panel says set by hand, with Export');
+    await page.click('#home .dvo-panel [data-dvo="auto"]'); await wait(1500);
+    const d = await st();
+    expect(!d.rec && d.k === a.k, 'Automatic drops it');
+    // a local sewer (under 300 mm, data/sewers-local.json; one made up here, beside the site): listed, picked,
+    // saved; the load model follows the trunk it drains to
+    await ev(k => { const p = PeelDevOutlets.selected().p, d = 0.0004, sc = 1e5; PeelSewerCap.setLocalSewers({ scale: sc, pipes: [[200, 2011, null, null, k, [Math.round((p.lng - d) * sc), Math.round((p.lat + d / 2) * sc), Math.round((p.lng + d) * sc), Math.round((p.lat + d / 2) * sc)]]] }); PeelWorkspaces.renderPage(true); }, a.k);
+    await wait(500); await page.click('#home [data-dvo="start"]'); await wait(800);
+    const li = await ev(() => [...document.querySelectorAll('#home .dvo-near-b')].findIndex(b => /200 mm local sanitary sewer/.test(b.textContent)));
+    expect(li >= 0, 'the local sewer is on the nearby list');
+    await page.click(`#home .dvo-near-b[data-dvo="near:${li}"]`); await wait(800);
+    await page.click('#home [data-dvo="save"]'); await wait(1500);
+    const lr = await ev(() => { const p = PeelDevOutlets.selected().p, r = PeelDevOutlets.recordOf(p); return { kind: r && r.kind, mm: r && r.mm, k: PeelSewerCap.sewerGrowth().devPipe.get(p), text: document.querySelector('#home .dvo-panel').textContent }; });
+    expect(lr.kind === 'local' && lr.mm === 200 && lr.k === a.k, `saved as a local sewer; the load model follows its trunk (${JSON.stringify({ kind: lr.kind, k: lr.k })})`);
+    expect(/local sanitary sewer/.test(lr.text), 'the panel names the local sewer');
+    await page.click('#home .dvo-panel [data-dvo="auto"]'); await wait(1000);
+    // a sewer being built (a capital project) near a development: on the list, picked, saved, followed by the models
+    const capDev = await ev(() => { const DO = PeelDevOutlets, x = DO.queue().all.find(r => DO.nearby(r.p).some(c => c.kind === 'cap')); if (!x) return null; DO.state.sel = x.p.key; PeelWorkspaces.renderPage(true); return x.p.key; });
+    expect(!!capDev, 'a development with a sewer being built nearby');
+    if (capDev) {
+      await wait(800); await page.click('#home [data-dvo="start"]'); await wait(800);
+      const ci = await ev(() => [...document.querySelectorAll('#home .dvo-near-b')].findIndex(b => /New sanitary sewer/.test(b.textContent)));
+      expect(ci >= 0, 'listed as a new sanitary sewer');
+      await page.click(`#home .dvo-near-b[data-dvo="near:${ci}"]`); await wait(800);
+      expect(await ev(() => PeelDevOutlets.state.cand && PeelDevOutlets.state.cand.kind === 'cap'), 'previewed as a sewer being built');
+      await page.click('#home [data-dvo="save"]'); await wait(1500);
+      const cr = await ev(() => { const p = PeelDevOutlets.selected().p, r = PeelDevOutlets.recordOf(p); return { kind: r && r.kind, project: r && r.project, pipe: PeelDevOutlets.pipeFor(p), route: !!PeelDevOutlets.dcRouteFor(p), text: document.querySelector('#home .dvo-panel').textContent }; });
+      expect(cr.kind === 'cap' && !!cr.project && cr.pipe != null && cr.route, `saved: the load model and the trace follow it (${JSON.stringify({ kind: cr.kind, project: cr.project, pipe: cr.pipe })})`);
+      expect(/being built/.test(cr.text), 'the panel says it is being built');
+      await page.click('#home .dvo-panel [data-dvo="auto"]'); await wait(1000);
+    }
+    await ev(() => localStorage.removeItem('peel-dev:devOutletEdits'));
   });
 
   await browser.close(); srv.close();

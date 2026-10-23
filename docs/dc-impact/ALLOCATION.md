@@ -190,6 +190,33 @@ development many times. So for money:
 
 ## How we'll know it's right
 
+**In the app: QA/QC › Review outlets** (`js/dev-outlets.js`). Reviewers can work through the
+developments relying on a DC project and do one of two things:
+- **confirm** the automatic outlet (the nearest 300 mm+ sewer, or the route along the planned mains);
+- **set** the right outlet, picked from a list of what is nearby or tapped on the map, after a preview
+  of the DC projects and gate year it would give. The list covers existing sewers (300 mm+ trunks, and local sewers under 300 mm near the
+  developments, `data/sewers-local.json`, each draining to a trunk the load model follows), sewers
+  being built (the Region's capital projects, tendered or further) and planned DC mains, within 400 m.
+
+Each outlet is checked against the development. The checks flag; they never block:
+
+| Check | Rule |
+|---|---|
+| Stage | Built: a sewer in service. A building permit, under construction or a site servicing permit: in service or being built, not a DC main still to tender (on its route too). Earlier stages: anything. |
+| In service by first homes | The whole route, including the DC mains it needs downstream. |
+| Install year | A sewer installed after the development was built is wrong; one installed with it, within 150 m, is likely its own. |
+| Site servicing permit | Issued well before the sewer it relies on starts: flagged. |
+| Gravity | Lidar ground at the site, 1.5 m down and 0.5 % fall, over the sewer's invert (datum shift 0.41 m, `data/elevation-validation.json`). |
+| Drainage area | The outlet in a different trunk drainage area from the site: flagged. |
+
+The queue has a filter for developments whose outlet doesn't fit their stage (28 at first run: permitted
+or under construction, relying on a DC main not tendered).
+
+Each record carries its source (FSR page, permit, Region). The sewer loads, the trace and this
+allocation all follow a set outlet. Records live in this browser until exported and committed as
+`data/dev-outlets.json`. Water connections use the same records (`sys: 'water'`), next.
+
+
 1. **Rerun after the step 3 fix.** Done (see step 3): 26-2117 and 26-2128 dropped out and the
    2034 gate went.
 2. **FSRs as ground truth.** `data/fsr.json` links 66 functional servicing reports. Read a sample

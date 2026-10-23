@@ -112,7 +112,7 @@
   function model(opts = {}) {
     if (!ready()) return null;
     const o = { ...DEFAULTS, ...opts };
-    const k = [MP().scenarioKey(), App().state.projects.length, o.gateTiers.join('')].join('|');
+    const DO = W().PeelDevOutlets, k = [MP().scenarioKey(), App().state.projects.length, o.gateTiers.join(''), DO ? DO.version() : 0].join('|');
     if (M.key === k && M.res) return M.res;
     const st = App().state, pipes = MM().SEW.data.pipes, N = pipes.length, THIS = MM().THIS_YEAR;
     const est = p => D().estimate([p], st.criteria, 'all', App().jobsOf);
@@ -133,9 +133,12 @@
       return true;
     };
     // Tier A, wastewater: off the existing sewers, along the planned mains (dcSewerPath).
+    // (an outlet set by hand, js/dev-outlets.js: onto an existing sewer, no planned main to connect;
+    // onto a planned main, its route from there)
     for (const d of devs) {
-      if (d.p.dr && d.p.dr.length) continue;
-      const path = ST().dcSewerPath(d.p); if (!path) continue;
+      const setR = DO ? DO.dcRouteFor(d.p) : null; if (setR === 'sewer') continue;
+      if (!setR && d.p.dr && d.p.dr.length) continue;
+      const path = setR || ST().dcSewerPath(d.p); if (!path) continue;
       for (const ln of new Set([path.first, ...path.lines])) add(projectKey(ln), d, 'A', { joinM: path.joinM, km: path.km }, 'wastewater');
     }
     // Tier A, water: outside the mapped pressure zones, the planned main within 1 km.
