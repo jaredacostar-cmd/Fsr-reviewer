@@ -101,15 +101,33 @@
   }
   const TONES = ['bad', 'warn', 'unk', 'ok'];
   const worst = list => TONES.find(t => (list || []).some(x => x.tone === t)) || 'ok';
+  // Does an outlet match what the FSR says (data/fsr-outlets.json, scripts/build-fsr-outlets.js)?
+  // f: { outlet: { mm, street, status, project }, confidence, quotes: [{ page }] }; c: a candidate
+  // ({ kind, mm, street, project }). Same Region project, or the size and street agreeing: ok; one of
+  // them differing: warn; both (a sure read): bad; nothing to compare: unk.
+  const normStreet = x => String(x || '').toLowerCase().replace(/\b(road|rd|street|st|avenue|ave|drive|dr|boulevard|blvd|way|crescent|cres|lane|ln|line|sideroad|parkway|pkwy|court|ct|trail|gate|circle|place|pl|east|west|north|south|e|w|n|s)\b\.?/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
+  function fsrCheck(f, c) {
+    if (!f || !f.outlet || !c) return null;
+    const o = f.outlet, pg = f.quotes && f.quotes[0] ? ` (p. ${f.quotes[0].page})` : '', said = [o.mm ? `${o.mm} mm` : '', o.street ? `on ${o.street}` : '', o.project || ''].filter(Boolean).join(' ') || 'an outlet';
+    if (o.project && c.project === o.project) return { k: 'fsr', tone: 'ok', text: `The FSR names this project${pg}` };
+    const mm = o.mm && c.mm ? o.mm === c.mm : null, st = o.street && c.street ? normStreet(o.street) === normStreet(c.street) : null;
+    if (mm === null && st === null) return { k: 'fsr', tone: 'unk', text: `The FSR names ${said}${pg}` };
+    if (mm !== false && st !== false) return { k: 'fsr', tone: 'ok', text: `The FSR names this sewer${pg}` };
+    if (mm === true || st === true) return { k: 'fsr', tone: 'warn', text: `The FSR names ${said}${pg}: the ${mm === false ? 'size' : 'street'} differs` };
+    return { k: 'fsr', tone: f.confidence === 'low' ? 'unk' : 'bad', text: `The FSR names a different outlet: ${said}${pg}` };
+  }
 
   // ---- State ----------------------------------------------------------------------------------------
-  const O = { shipped: [], edits: store.get('devOutletEdits', []), v: 1, loading: null };
+  const O = { shipped: [], edits: store.get('devOutletEdits', []), v: 1, loading: null, fsr: null };
   let recs = merge(O.shipped, O.edits);
   const changed = () => { recs = merge(O.shipped, O.edits); O.v++; store.set('devOutletEdits', O.edits); pipeCache.clear(); };
   function load() {
     if (O.loading) return O.loading;
     const get = u => (typeof fetch === 'function' ? fetch(u).then(r => (r.ok ? r.json() : null)).catch(() => null) : Promise.resolve(null));
     if (DJ() && DJ().load) DJ().load().then(refresh);     // (the capital projects' new sewers)
+    // (what the FSRs say: data/fsr-outlets.json, matched to a development through its FSR, js/fsr.js)
+    get('data/fsr-outlets.json').then(d => { if (d && Array.isArray(d.items)) O.fsr = new Map(d.items.filter(x => x.url).map(x => [x.url, x])); nearCache.key = null; refresh(); });
+    if (root.PeelFsr && root.PeelFsr.loadFsr) root.PeelFsr.loadFsr().then(() => { nearCache.key = null; refresh(); });
     if (SC() && SC().loadLocalSewers) SC().loadLocalSewers().then(() => { nearCache.key = null; pipeCache.clear(); refresh(); });     // (the local sewers)
     O.loading = get('data/dev-outlets.json').then(d => { if (d && Array.isArray(d.outlets)) O.shipped = d.outlets; recs = merge(O.shipped, O.edits); O.v++; pipeCache.clear(); refresh(); return d; });
     return O.loading;
@@ -190,14 +208,14 @@
       const links = r.links.filter(l => l.sys === 'wastewater'), gate = IM().gateOf(links, m.gateTiers);
       return { r, p: r.p, units: units.get(r.p.key) || 0, rec: recordOf(r.p), links, gate, first: r.first, gap: IM().gapOf(r.first, gate) };
     });
-    const f = { all: () => true, gap: x => x.gap, misfit, todo: x => !x.rec, done: x => !!x.rec }[S.filter] || (() => true);
+    const f = { all: () => true, gap: x => x.gap, misfit, fsr: x => !!fsrOutletOf(x.p), todo: x => !x.rec, done: x => !!x.rec }[S.filter] || (() => true);
     return { all: rows, rows: rows.filter(f).sort((a, b) => b.units - a.units) };
   }
   const selected = () => { const q = queue(); if (!q) return null; return (S.sel && q.all.find(x => x.p.key === S.sel)) || q.rows[0] || null; };
   // A candidate outlet: a point on an existing sewer (pipe k) or on a planned DC main (line ln).
   function sewerCand(k, pt, street) {
     const pp = MM().SEW.data.pipes[k], at = r6(nearestOn(pt, SC().pipeCoords(pp)));
-    return { kind: 'sewer', k, at, mm: pp[0], status: 'existing', label: `${pp[0]} mm sanitary sewer${street ? ` on ${street}` : ''}` };
+    return { kind: 'sewer', k, at, mm: pp[0], street: street || null, status: 'existing', label: `${pp[0]} mm sanitary sewer${street ? ` on ${street}` : ''}` };
   }
   // (a planned main says how far it is built where the capital records match it: js/capital-ea-model.js)
   const BUILD_WORD = { tendered: 'tendered', awarded: 'awarded', 'under construction': 'under construction', 'substantially complete': 'built', complete: 'built' };
@@ -216,13 +234,13 @@
   // A local sewer (under 300 mm, data/sewers-local.json); k: the trunk it drains to.
   function localCand(i, pt, street) {
     const lp = SC().localPipe(i), into = lp[4], k = into >= 0 ? into : SC().nearestPipe(pt[0], pt[1], 600);
-    return { kind: 'local', i, k: k >= 0 ? k : null, at: r6(nearestOn(pt, SC().localCoords(i))), mm: lp[0], status: 'existing · local sewer', label: `${lp[0]} mm local sanitary sewer${street ? ` on ${street}` : ''}` };
+    return { kind: 'local', i, k: k >= 0 ? k : null, at: r6(nearestOn(pt, SC().localCoords(i))), mm: lp[0], street: street || null, status: 'existing · local sewer', label: `${lp[0]} mm local sanitary sewer${street ? ` on ${street}` : ''}` };
   }
   // A capital project's new sewer (tendered or further: js/dc-joins.js capLines).
   const capWord = s => (/complete/.test(s) ? 'recently built' : s);
   function capCand(ln, pt) {
     const street = ln.n ? String(ln.n).toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase()) : '';
-    return { kind: 'cap', at: r6(nearestOn(pt, ln.g)), mm: null, project: ln.p, raw: ln.s, st: ln.st || null, sub: ln.sub || null, status: capWord(ln.s), label: `New sanitary sewer${street ? ` on ${street}` : ''} (${ln.p})` };
+    return { kind: 'cap', at: r6(nearestOn(pt, ln.g)), mm: null, street: street || null, project: ln.p, raw: ln.s, st: ln.st || null, sub: ln.sub || null, status: capWord(ln.s), label: `New sanitary sewer${street ? ` on ${street}` : ''} (${ln.p})` };
   }
   // A tap on the map while picking: the nearest existing sewer or planned DC main within r metres.
   function pickAt(lng, lat, r) {
@@ -271,8 +289,19 @@
     return withRoute({ cls: /complete/.test(c.raw || '') ? 'new' : c.raw ? 'building' : 'planned' }, pr ? pr.y1 : null);
   }
   const stepYear = (p, k) => { const row = DG() && DG().rowOf ? DG().rowOf(p) : null, st = row && row.steps.find(x => x.k === k); return st && st.d ? +String(st.d).slice(0, 4) : null; };
+  // What the development's newest FSR says about its outlet (the newest one read), or null.
+  function fsrOutletOf(p) {
+    const F = root.PeelFsr; if (!p || !O.fsr || !F || !F.fsrFor) return null;
+    const r = F.fsrFor(p); if (!r) return null;
+    const hit = r.items.filter(i => i.fsr && O.fsr.has(i.fsr.url) && O.fsr.get(i.fsr.url).outlet).sort((a, b) => (b.fsr.date || '').localeCompare(a.fsr.date || ''))[0];
+    return hit ? O.fsr.get(hit.fsr.url) : null;
+  }
   function checksFor(p, c, first) {
     if (!p || !c) return [];
+    const fc = fsrCheck(fsrOutletOf(p), c);
+    return fc ? [...checksBase(p, c, first), fc] : checksBase(p, c, first);
+  }
+  function checksBase(p, c, first) {
     const o = outletOf(c), gr = groundOf(p), dr = App() && App().state.servicing && App().state.servicing.drainage;
     const names = ids => ids.map(id => ((dr || []).find(a => a.id === id) || {}).name || id);
     return evidence({ phase: p.phase, ssp: stepYear(p, 'ssp'), built: stepYear(p, 'built'), first, dist: DI().dcM([p.lng, p.lat], c.at), outlet: o,
@@ -280,7 +309,13 @@
       drain: dr && AR() && p.dr ? { site: names(p.dr), outlet: names(AR().locate(dr, c.at[0], c.at[1]))[0] || null } : null });
   }
   // The outlet in use now, as a candidate: a set one from its record, else the automatic one (cur: { k, path }).
-  function currentCand(p, cur) {
+  function currentCand(p, cur, streetOf = null) {
+    const c = currentCand0(p, cur);
+    if (!c || !streetOf || c.street || (c.kind !== 'sewer' && c.kind !== 'local')) return c;
+    const st = streetOf(c.at[0], c.at[1]);
+    return st ? { ...c, street: st, label: `${c.label} on ${st}` } : c;
+  }
+  function currentCand0(p, cur) {
     const r = recordOf(p), site = [p.lng, p.lat];
     if (r && r.mode === 'set' && r.at) {
       if (r.kind === 'local' && SC().localNear) { const l = SC().localNear(r.at[0], r.at[1], 15), x = l.find(y => SC().localPipe(y.i)[0] === r.mm) || l[0]; if (x) return localCand(x.i, r.at); }
@@ -324,7 +359,7 @@
   }
   function nearby(p, { r = 400, sewers = 6, locals = 4, mains = 4, streetOf = null, first = null } = {}) {     // (mains: of each, planned and being built)
     if (!p || p.lat == null || !MM().SEW.data || !MM().SEW.grid) return [];
-    const key = `${p.key}|${r}|${O.v}|${App() && App().state.dcInfra ? 1 : 0}|${App() && App().state.addressPoints ? 1 : 0}|${DJ() && DJ().capReady && DJ().capReady() ? 1 : 0}|${App() && App().state.capital ? 1 : 0}|${first}|${DG() && DG().loaded && DG().loaded() ? 1 : 0}|${SC().localLoaded && SC().localLoaded() ? 1 : 0}`; // (street names arrive later)
+    const key = `${p.key}|${r}|${O.v}|${App() && App().state.dcInfra ? 1 : 0}|${App() && App().state.addressPoints ? 1 : 0}|${DJ() && DJ().capReady && DJ().capReady() ? 1 : 0}|${App() && App().state.capital ? 1 : 0}|${first}|${DG() && DG().loaded && DG().loaded() ? 1 : 0}|${SC().localLoaded && SC().localLoaded() ? 1 : 0}|${O.fsr ? 1 : 0}|${root.PeelFsr && root.PeelFsr.FSR && root.PeelFsr.FSR.by ? 1 : 0}`; // (street names arrive later)
     if (nearCache.key === key) return nearCache.list;
     const pt = [p.lng, p.lat], pipes = MM().SEW.data.pipes, grid = MM().SEW.grid;
     const gx = Math.floor(pt[0] / 0.004), gy = Math.floor(pt[1] / 0.003), R = Math.ceil(r / 300), seen = new Set(), sw = [];
@@ -386,6 +421,8 @@
       else if (act === 'all') { S.all = !S.all; refresh(); }
       else if (!p) return;
       else if (act === 'start') { S.mode = 'pick'; S.cand = null; refresh(); }
+      // (the FSR's outlet: the nearby option that matches it best)
+      else if (act === 'fsr-pick') { const f = fsrOutletOf(p), rank = { ok: 0, warn: 1 }; const c = nearCache.list.map(x => ({ x, t: (fsrCheck(f, x) || {}).tone })).filter(y => y.t in rank).sort((a, b) => rank[a.t] - rank[b.t] || a.x.m - b.x.m)[0]; if (c) { S.cand = c.x; S.mode = 'preview'; refresh(); } else if (U.toast) U.toast('Nothing nearby matches the FSR’s outlet: tap it on the map'); }
       else if (act === 'near') { const c = nearCache.list[+arg]; if (c) { S.cand = c; S.mode = 'preview'; refresh(); } }
       else if (act === 'cancel') { S.mode = 'idle'; S.cand = null; refresh(); }
       else if (act === 'save' && S.cand) { const src = (document.querySelector('[data-dvo-src]') || {}).value || ''; setRecord(p, { mode: 'set', kind: S.cand.kind, at: S.cand.at, mm: S.cand.mm, ...(S.cand.project ? { project: S.cand.project } : {}), ...(src ? { src } : {}) }); S.mode = 'idle'; S.cand = null; refresh(); }
@@ -398,7 +435,7 @@
   // How a record reads wherever the outlet is used.
   const recText = r => (!r ? '' : `${r.mode === 'set' ? 'outlet set by hand' : 'outlet confirmed'}${r.src ? ` · ${r.src}` : ''}${r.date ? ` · ${r.date}` : ''}${r.local ? ' (this browser)' : ''}`);
 
-  const api = { merge, exportJSON, diff, load, recordOf, pipeFor, dcRouteFor, version, queue, selected, projectsFor, pickAt, routeFrom, nearby, evidence, worst, stageGroup, checksFor, currentCand, misfit, distinct, isCurrent, sameOutlet, nearestOn, recText, state: S, edits: () => O.edits.length, records: () => recs, setRecord, backToAuto };
+  const api = { merge, exportJSON, diff, load, recordOf, pipeFor, dcRouteFor, version, queue, selected, projectsFor, pickAt, routeFrom, nearby, evidence, worst, stageGroup, checksFor, currentCand, misfit, fsrCheck, fsrOutletOf, normStreet, distinct, isCurrent, sameOutlet, nearestOn, recText, state: S, edits: () => O.edits.length, records: () => recs, setRecord, backToAuto };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDevOutlets = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -3050,6 +3050,9 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .dvo-ev .ev-bad, .dvo-near-b small.ev-bad { color: var(--cap-over-t); }
 .dvo-ev .ev-unk { color: var(--text-secondary); }
 .dvo-near-b.fit-bad { opacity: 0.75; }
+.dvo-fsr { margin: 0; padding: var(--space-2); border-left: 3px solid var(--accent); background: var(--surface-2); border-radius: 0 8px 8px 0; }
+.dvo-fsr p { margin: 0 0 4px; font-style: italic; }
+.dvo-fsr footer { font-size: var(--fs-1); color: var(--text-secondary); }
 .dvo-src { display: block; margin-top: var(--space-2); color: var(--text-secondary); }
 .dvo-src input { display: block; width: 100%; box-sizing: border-box; margin-top: 4px; }
 .dvo-map { position: relative; }

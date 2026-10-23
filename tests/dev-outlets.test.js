@@ -7,7 +7,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { merge, exportJSON, diff, nearestOn, distinct, isCurrent, sameOutlet, evidence, worst, stageGroup } = require('../js/dev-outlets.js');
+const { merge, exportJSON, diff, nearestOn, distinct, isCurrent, sameOutlet, evidence, worst, stageGroup, fsrCheck, normStreet } = require('../js/dev-outlets.js');
 
 const src = f => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
 
@@ -136,6 +136,22 @@ test('worst: bad, then warn, then unknown, then ok', () => {
   assert.equal(worst([{ tone: 'ok' }, { tone: 'unk' }, { tone: 'warn' }]), 'warn');
   assert.equal(worst([{ tone: 'ok' }, { tone: 'bad' }]), 'bad');
   assert.equal(worst([]), 'ok');
+});
+
+test('fsrCheck: does an outlet match what the FSR says', () => {
+  const f = (outlet, confidence = 'high') => ({ outlet, confidence, quotes: [{ page: 12 }] });
+  const tone = (fs, c) => (fsrCheck(fs, c) || {}).tone;
+  assert.equal(normStreet('Dixie Rd.'), normStreet('Dixie Road'));
+  assert.equal(normStreet('Hurontario Street North'), 'hurontario');
+  assert.equal(tone(f({ mm: 250, street: 'Dixie Road' }), { kind: 'local', mm: 250, street: 'Dixie Rd' }), 'ok');
+  assert.match(fsrCheck(f({ mm: 250, street: 'Dixie Road' }), { kind: 'local', mm: 250, street: 'Dixie Rd' }).text, /p\. 12/);
+  assert.equal(tone(f({ mm: 375, street: 'Dixie Road' }), { kind: 'sewer', mm: 250, street: 'Dixie Road' }), 'warn', 'same street, another size');
+  assert.equal(tone(f({ mm: 375, street: 'Mayfield Road' }), { kind: 'sewer', mm: 250, street: 'Dixie Road' }), 'bad');
+  assert.equal(tone(f({ mm: 375, street: 'Mayfield Road' }, 'low'), { kind: 'sewer', mm: 250, street: 'Dixie Road' }), 'unk', 'a low-confidence read never fails an outlet');
+  assert.equal(tone(f({ mm: 250, street: null }), { kind: 'sewer', mm: 250, street: null }), 'ok');
+  assert.equal(tone(f({ mm: null, street: 'Mayfield Road', project: '25-2267' }), { kind: 'dc', project: '25-2267' }), 'ok', 'the same Region project');
+  assert.equal(tone(f({ mm: 525, street: 'Mayfield Road' }), { kind: 'dc', mm: null, street: null, project: '28-2139' }), 'unk', 'nothing to compare');
+  assert.equal(fsrCheck(null, { kind: 'sewer' }), null);
 });
 
 test('wired in: the page, the models and the offline shell', () => {
