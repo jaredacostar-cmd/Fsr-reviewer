@@ -310,13 +310,15 @@
         <div id="hyd-box"></div>
       </section>
 
-      <div class="f-pane f-subtabs" data-pane="dca" hidden role="group" aria-label="Capital view"><button type="button" class="btn small" data-dcasub="timing">DC timing</button><button type="button" class="btn small" data-dcasub="projects">Projects</button><button type="button" class="btn small" data-dcasub="eas">EAs</button><button type="button" class="btn small lab-chip pv-hide" data-dcasub="funding">Funding <small>Labs</small></button></div>
+      <div class="f-pane f-subtabs" data-pane="dca" hidden role="group" aria-label="Capital view"><button type="button" class="btn small" data-dcasub="timing">DC timing</button><button type="button" class="btn small" data-dcasub="dcproj">DC projects</button><button type="button" class="btn small" data-dcasub="projects">Projects</button><button type="button" class="btn small" data-dcasub="eas">EAs</button></div>
       <section class="f-pane pnl-host" id="pnl-dca" data-pane="dca" aria-labelledby="ftab-dca" hidden></section>
       <section class="f-pane" id="pane-dca-timing" data-pane="dca" data-sub="timing" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-timing-body"></div></section>
+      <section class="f-pane" id="pane-dca-dcproj" data-pane="dca" data-sub="dcproj" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-dcproj-body"></div></section>
       <section class="f-pane" id="pane-dca-build" data-pane="dca" data-sub="projects" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-build-body"></div></section>
       <section class="f-pane" id="pane-dca-eas" data-pane="dca" data-sub="eas" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-eas-body"></div></section>
-      <section class="f-pane" id="pane-dca-rec" data-pane="dca" data-sub="funding" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-rec-body"></div></section>
-      <section class="f-pane" id="pane-dca-funding" data-pane="dca" data-sub="funding" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-funding-body"></div></section>
+      <!-- The Funding lab (Settings › Labs) adds the funding screen and funding levels to DC projects. -->
+      <section class="f-pane lab-funding-pane pv-hide" id="pane-dca-rec" data-pane="dca" data-sub="dcproj" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-rec-body"></div></section>
+      <section class="f-pane lab-funding-pane pv-hide" id="pane-dca-funding" data-pane="dca" data-sub="dcproj" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-funding-body"></div></section>
 
       <div class="f-pane f-subtabs" data-pane="records" hidden role="group" aria-label="Records view"><button type="button" class="btn small" data-rsub="sources">Sources</button><button type="button" class="btn small" data-rsub="checks">Data checks</button><button type="button" class="btn small" data-rsub="files">Files</button></div>
       <section class="f-pane pnl-host" id="pnl-records" data-pane="records" aria-labelledby="ftab-records" hidden></section>
@@ -548,6 +550,7 @@
   <script src="js/water-tab.js?v=__BUILD__"></script>
   <script src="js/masterplan.js?v=__BUILD__"></script>
   <script src="js/dc-impact.js?v=__BUILD__"></script>
+  <script src="js/dc-projects.js?v=__BUILD__"></script>
   <script src="js/capacity.js?v=__BUILD__"></script>
   <script src="js/zone-of.js?v=__BUILD__"></script>
   <script src="js/layers.js?v=__BUILD__"></script>

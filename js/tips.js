@@ -145,7 +145,7 @@
       ['Servicing › Checks; Records › Checks', 'Servicing › Model checks; Records › Data checks.'],
       ['The Projects workspace', 'DC projects.'],
       ['Capital › Construction', 'Capital › Projects.'],
-      ['Capital › Funding screen and Funding levels', 'Settings › Labs (DC funding); once on, Capital › Funding.'],
+      ['Capital › Funding screen and Funding levels', 'Settings › Labs (DC funding); once on, in Capital › DC projects.'],
       ['A development’s Files & history', 'Records › Files (Records is the small last tab).'],
       ['3D view, Time Box, SWMM export, Batch test sites', 'Settings › Labs.'],
       ['Heatmap; gas and hydro layers', 'Removed.'],

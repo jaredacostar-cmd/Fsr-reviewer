@@ -249,10 +249,11 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
     expect(side.includes('capital') && !side.includes('projects') && !side.includes('eaflow'), `the sidebar: ${side.join()}`);
     const st = 'h => String(h || "").replace(/<[^>]+>/g, "").replace(/\\s+/g, " ").trim()';
-    for (const [entry, ws, secs] of [['tight', 'servicing', ['network', 'alloc', 'checks']], ['capital', 'capital', ['projects', 'eas']]]) {
+    for (const [entry, ws, secs] of [['tight', 'servicing', ['network', 'alloc', 'checks']], ['capital', 'capital', ['dcproj', 'projects', 'eas']]]) {
       await page.click(`#home .home-side [data-ws-page="${entry}"]`); await wait(3000);
-      const bar = await ev(() => [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent));
-      expect(bar.length === 4, `${ws}: its sections ${bar.join()}`);
+      const bar = await ev(() => [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent.trim()));
+      const want = await ev(ws => PeelSections.WORKSPACES[ws].secs.map(x => x.title), ws);
+      expect(bar.join() === want.join(), `${ws}: its sections ${bar.join()} (${want.join()})`);
       for (const id of secs) {
         await page.click(`#home .page-sec[data-ws-wsec="${ws}:${id}"]`); await wait(3000);
         const r = await ev(([ws, id, st]) => { const f = eval(st), s = PeelSections.wsSpecFor(ws, id); return { on: (document.querySelector('#home .page-sec.on') || {}).dataset, page: f(document.querySelector('#home .home-answer').innerHTML), map: s ? f(s.answer) : null }; }, [ws, id, st]);
@@ -406,6 +407,29 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(r.gateOk, 'every gate is one of the development’s own projects');
     expect(r.again, 'a second call is served from the cache');
     expect(r.ms < 10000, `computed in ${Math.round(r.ms)} ms`);
+  });
+
+  await check('Capital › DC projects: the list, a project and back; the Funding lab inside it; the workspace section', browser, {}, async ({ page, ev }, expect) => {
+    await ev(() => { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.openTab('dca', 'dcproj'); });
+    await page.waitForSelector('#pnl-dca [data-dcproj-open]', { timeout: 90000 });
+    const chips = await ev(() => [...document.querySelectorAll('[data-dcasub]')].filter(b => b.offsetParent).map(b => b.textContent.trim()));
+    expect(chips.join('|') === 'DC timing|DC projects|Projects|EAs', `Capital's chips (${chips.join(' · ')})`);
+    const a = await ev(() => ({ rows: document.querySelectorAll('#pnl-dca [data-dcproj-open]').length, body: document.querySelectorAll('#dca-dcproj-body tr[data-dcproj-open]').length, fund: !!document.querySelector('#pnl-dca details') && [...document.querySelectorAll('#pnl-dca details summary')].some(s => /Funding/.test(s.textContent)) }));
+    expect(a.rows > 0 && a.body > a.rows, `a short list and the full table (${a.rows} / ${a.body})`);
+    expect(!a.fund, 'no funding screen while the Funding lab is off');
+    await page.click('#pnl-dca [data-dcproj-open]'); await wait(800);
+    const p = await ev(() => ({ back: !!document.querySelector('#pnl-dca [data-dcproj-back]'), devs: document.querySelectorAll('#pnl-dca [data-pnl-dev]').length, map: !!document.querySelector('#pnl-dca [data-dcproj-map]') }));
+    expect(p.back && p.devs > 0 && p.map, `a project: its developments, Show on the map, a way back (${p.devs} rows)`);
+    await page.click('#pnl-dca [data-dcproj-back]'); await wait(500);
+    expect(await ev(() => !!document.querySelector('#pnl-dca [data-dcproj-open]')), 'back to the list');
+    await ev(() => { PeelLabs.set('funding', true); PeelDcaTab.renderDca(); }); await wait(1500);
+    expect(await ev(() => [...document.querySelectorAll('#pnl-dca details summary')].some(s => /Funding screen/.test(s.textContent))), 'the Funding lab adds the funding screen to DC projects');
+    await ev(() => { PeelLabs.set('funding', false); PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage('projects'); }); await wait(1500);
+    await page.click('[data-ws-wsec="capital:dcproj"]'); await page.waitForSelector('#home [data-dcproj-open]', { timeout: 30000 });
+    await page.click('#home [data-dcproj-open]'); await wait(1500);
+    const w = await ev(() => ({ back: !!document.querySelector('#home [data-dcproj-back]'), name: (document.querySelector('#home h1') || {}).textContent || '' }));
+    expect(w.back && /·/.test(w.name), `the workspace section opens a project in place, with its name and a way back ("${w.name.slice(0, 60)}")`);
+    await page.click('#home [data-dcproj-back]'); await wait(800);
   });
 
   await browser.close(); srv.close();

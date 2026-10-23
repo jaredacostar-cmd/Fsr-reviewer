@@ -56,6 +56,7 @@
     ] },
     capital: { host: 'projects', secs: [
       { id: 'timing', title: 'DC timing', page: 'projects' },
+      { id: 'dcproj', title: 'DC projects', tab: 'dca', keys: ['dca:dcproj'] },
       { id: 'eaflow', title: 'EA to construction', page: 'eaflow' },
       { id: 'projects', title: 'Projects', tab: 'dca', keys: ['dca:projects'] },
       { id: 'eas', title: 'EAs', tab: 'dca', keys: ['dca:eas'] },
@@ -65,6 +66,7 @@
     'dca:timing': () => (root.PeelDcaTab && root.PeelDcaTab.areaSpec ? root.PeelDcaTab.areaSpec() : null),
     'records:sources': () => (root.PeelRecordsTab && root.PeelRecordsTab.sourcesPanelSpec ? root.PeelRecordsTab.sourcesPanelSpec() : null),
     'records:checks': () => (root.PeelRecordsTab && root.PeelRecordsTab.checksPanelSpec ? root.PeelRecordsTab.checksPanelSpec() : null),
+    'dca:dcproj': () => (root.PeelDcProjects ? root.PeelDcProjects.panelSpec() : null),
     'dca:projects': () => (root.PeelCapitalEA && root.PeelCapitalEA.projectsPanelSpec ? root.PeelCapitalEA.projectsPanelSpec() : null),
     'dca:eas': () => (root.PeelCapitalEA && root.PeelCapitalEA.easPanelSpec ? root.PeelCapitalEA.easPanelSpec() : null),
     // (Allocations sets its own panel when it renders)

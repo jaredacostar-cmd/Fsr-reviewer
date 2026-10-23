@@ -89,6 +89,7 @@ const SHELL_ASSETS = [
   'js/dc-infra.js',
   'js/dc-relief.js',
   'js/dc-impact.js',
+  'js/dc-projects.js',
   'js/dc-joins.js',
   'js/capital-ea-model.js',
   'js/map-pick.js',

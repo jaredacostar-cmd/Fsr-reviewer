@@ -42,7 +42,7 @@
     'svc:checks': [...SVC, 'housing.json', 'compliance.json'],
     'svc:alloc': ['snapshot.json', 'servicing.json'],
     'dca:timing': [...CAP, ...SVC, 'snapshot.json'],
-    'dca:funding': [...CAP, 'snapshot.json'],
+    'dca:dcproj': [...CAP, ...SVC, 'sewers.json', 'dc-joins.json', 'snapshot.json'],
     'dca:projects': CAP,
     'dca:eas': ['eas.json', 'capital.json'],
     'records:files': DEV,

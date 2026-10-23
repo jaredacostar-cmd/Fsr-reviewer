@@ -24,7 +24,7 @@ function loadTabs() {
 const AT_SITE = {
   growth: { pipeline: 'show', areas: 'hide', timing: 'hide', ledger: 'hide' },
   svc: { capacity: 'hide', network: 'show', alloc: 'hide', checks: 'hide' },
-  dca: { timing: 'show', projects: 'hide', eas: 'show', funding: 'hide' },
+  dca: { timing: 'show', dcproj: 'hide', projects: 'hide', eas: 'show' },
   records: { sources: 'hide', checks: 'hide', files: 'show' },
 };
 

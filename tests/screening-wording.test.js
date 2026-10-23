@@ -55,13 +55,13 @@ test('public version: ?public or the setting, and what it hides', () => {
     U.store.set('publicView', false); assert.equal(U.isPublic(), false);
   } finally { if (had) g.location = old; else delete g.location; }
   const html = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
-  // Stage 2: the funding screen (Screening results) and funding levels are Capital › Funding (Labs).
-  assert.match(html, /class="btn small lab-chip pv-hide" data-dcasub="funding"/);
-  assert.match(html, /id="pane-dca-rec" data-pane="dca" data-sub="funding"/);
+  // The funding screen (Screening results) and funding levels sit in Capital › DC projects behind the
+  // Funding lab, hidden in the public version.
+  assert.match(html, /class="f-pane lab-funding-pane pv-hide" id="pane-dca-rec" data-pane="dca" data-sub="dcproj"/);
   const dca = src('dca-tab.js');
   assert.match(dca, /<th class="pv-hide">Screening result<\/th>/);
   assert.match(dca, /\.\.\.\(isPublic\(\) \? \[\] : \['Screening result', 'Why'\]\)/, 'CSV drops the screening columns when public');
-  assert.match(src('analysis-tabs.js'), /\(!labOn\('funding'\) \|\| isPublic\(\)\)/, 'public: no Funding sub-view (it falls back to Timing)');
+  assert.match(src('dc-projects.js'), /!\(U\.isPublic && U\.isPublic\(\)\)/, 'public: no funding screen in DC projects');
   const css = fs.readFileSync(path.join(__dirname, '..', 'css', 'app.css'), 'utf8');
   assert.match(css, /\[data-public\] \.pv-hide \{ display: none !important; \}/);
 });
