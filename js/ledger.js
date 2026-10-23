@@ -19,11 +19,13 @@
   // Caledon: data/dc-gate.json `cancelled`), is flagged. A flagged commitment drops back to the
   // development's planning stage (one step for an approved site); the view can hide the flagged rows.
   const STAGES = ['committed', 'approved', 'review', 'early'];
-  const STAGE_LABEL = { committed: 'Committed', approved: 'Approved, not committed', review: 'In review', early: 'Early' };
+  // (the commitment ladder's names, js/layers.js LADDER: committed is Servicing permit and up; review holds
+  // In review and Zoning approved)
+  const STAGE_LABEL = { committed: 'Committed', approved: 'Plan approved, not committed', review: 'In review or zoning approved', early: 'Pre-application' };
   // Cut-offs: each includes the stages before it.
   const CUTOFFS = [
     { key: 'committed', label: 'Committed only', stages: ['committed'] },
-    { key: 'approved', label: '+ Approved', stages: ['committed', 'approved'] },
+    { key: 'approved', label: '+ Plan approved', stages: ['committed', 'approved'] },
     { key: 'review', label: '+ In review', stages: ['committed', 'approved', 'review'] },
     { key: 'all', label: 'Everything', stages: STAGES },
   ];
@@ -96,7 +98,7 @@
   // A flag lowers it one step (once, whatever the number of flags; each is listed): no file activity in
   // 3 years, a superseded plan, a site servicing permit out of order (dc-gate), a possibly lapsed one.
   const TIERS = [
-    { key: 'A', label: 'Underway' }, { key: 'B', label: 'Committed' }, { key: 'C', label: 'Approved, not committed' },
+    { key: 'A', label: 'Underway' }, { key: 'B', label: 'Committed' }, { key: 'C', label: 'Plan approved, not committed' },
     { key: 'D', label: 'In review' }, { key: 'E', label: 'Early' },
   ];
   const QUIET_YEARS = 3;

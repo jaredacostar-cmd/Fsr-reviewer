@@ -229,7 +229,7 @@
   const LAYERS = [
     ['existing', 'On the system', 'what the 2021 census counted, scaled to the measured flow'],
     ['built', 'Built since 2021', 'occupancy since the census'],
-    ['committed', 'Approved, not yet built', 'committed under D-5-1: draft-approved or registered subdivisions, site plan approvals, permits'],
+    ['committed', 'Committed', 'at the treatment plants, past plan approval (MECP D-5-1: draft-approved or registered subdivisions, site plan approvals, permits); at every other facility, a site servicing or building permit (the Peel rule)'],
     ['proposed', 'In review', 'and, when the Scenario includes it, Pre-application'],
   ];
   function capacityHTML(row) {

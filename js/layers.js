@@ -35,7 +35,7 @@
   const LG = () => root.PeelLedger || req('./ledger.js');
 
   const LAYERS = ['existing', 'built', 'committed', 'proposed', 'anticipated', 'to2051'];
-  const LABEL = { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Approved, not yet built (committed, MECP D-5-1)', commitPeel: 'Committed (building or site servicing permit)', approved: 'Approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
+  const LABEL = { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Past plan approval (MECP D-5-1)', commitPeel: 'Committed (site servicing or building permit)', approved: 'Plan approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' };
   const NOTE = {
     existing: 'on the system today (2021 Census)',
     built: 'completed since census day, not in the census yet',

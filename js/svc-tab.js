@@ -157,7 +157,7 @@
     const units = `<div class="svc-switch" role="group" aria-label="Units"><span class="muted small">Units</span>${[['all', 'All'], ['remaining', 'Left to build']].map(([v, t]) =>
       `<button type="button" class="btn small${(b === 'remaining') === (v === 'remaining') ? ' on' : ''}" data-svcopt="basis" data-v="${v === 'all' ? cur : v}" aria-pressed="${(b === 'remaining') === (v === 'remaining')}">${t}</button>`).join('')}</div>`;
     const A = root.PeelLayers && root.PeelLayers.NOTE;
-    const def = A ? `<p class="small muted ly-def">Approved, not yet built (committed): ${esc(A.committed)}. In review: ${esc(A.proposed)}. Pre-application: ${esc(A.anticipated)}.</p>` : '';
+    const def = A ? `<p class="small muted ly-def">Approved (MECP D-5-1): ${esc(A.committed)}. In review: ${esc(A.proposed)}. Pre-application: ${esc(A.anticipated)}. Committed, at every facility but the treatment plants: ${esc(A.commitPeel)}.</p>` : '';
     return count + units + def;
   };
   // Results for year: the year the capacity colours, pipe loads and station loads are worked

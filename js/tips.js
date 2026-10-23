@@ -154,7 +154,7 @@
       ['Committed / Proposed / Anticipated switches in the top bar', 'The Scenario control: Count "approved only · + in review · + pre-application".'],
       ['Existing', 'On the system (2021 census).'],
       ['Built', 'Built since 2021.'],
-      ['Committed', 'Approved, not yet built (committed); never "Approved" alone.'],
+      ['Committed', 'Committed: a site servicing or building permit (the Peel rule), everywhere but the treatment plants, which count past plan approval (MECP D-5-1); never "Approved" alone.'],
       ['Proposed', 'In review.'],
       ['Anticipated', 'Pre-application.'],
       ['Stage names: Inception · Under review · Draft / site plan approved · Completed', 'One set everywhere: Pre-application · In review · Approved, no permit yet · Built. Each file keeps the municipality\u2019s own status wording.'],

@@ -140,12 +140,18 @@ test('Growth: the pipeline by stage, the commitment ladder in order, then built 
 
 test('the layers in plain words, across the app; capacity bars keep the most-certain-first order', () => {
   const B = require('../js/layer-bar.js');
-  assert.deepEqual(plain(B.LABEL), { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Approved, not yet built (committed, MECP D-5-1)', commitPeel: 'Committed (building or site servicing permit)', approved: 'Approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' });
-  assert.deepEqual(plain(B.SHORT), { existing: 'On the system', built: 'Built since 2021', committed: 'Approved, not yet built', commitPeel: 'Committed', approved: 'Approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' }, '"Approved" never alone');
+  assert.deepEqual(plain(B.LABEL), { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Past plan approval (MECP D-5-1)', commitPeel: 'Committed (site servicing or building permit)', approved: 'Plan approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' });
+  assert.deepEqual(plain(B.SHORT), { existing: 'On the system', built: 'Built since 2021', committed: 'Past plan approval', commitPeel: 'Committed', approved: 'Plan approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' }, '"Approved" never alone');
   assert.deepEqual(plain(require('../js/layers.js').LABEL), plain(B.LABEL), 'one set of names');
   // A capacity bar stacks from the base: on the system, built, approved, in review.
-  assert.match(src('js/svc-capacity.js'), /segments: \[seg\('existing', r\.existing\), seg\('built', r\.built\), seg\('committed', [^)]+\)\), seg\('proposed',/);
-  assert.match(src('js/svc-capacity.js'), /\$\{pctTxt\(r\.pctCom\)\} with approved → \$\{pctTxt\(r\.pctBo\)\} at build-out/);
+  const seg = (layer, value) => ({ layer, value, title: `${B.LABEL[layer]}: ${value}` });
+  const k = { existing: 50, built: 10, committed: 80, buildout: 100 };
+  assert.deepEqual(plain(B.commitSegs({ ...k, rule: 'd51' }, seg).map(s => [s.layer, s.value])), [['existing', 50], ['built', 10], ['committed', 20], ['proposed', 20]], 'a treatment plant: past plan approval (MECP D-5-1)');
+  const peel = B.commitSegs({ ...k, rule: 'peel' }, seg);
+  assert.deepEqual(plain(peel.map(s => s.layer)), ['existing', 'built', 'commitPeel', 'proposed'], 'elsewhere: a site servicing or building permit');
+  assert.match(peel[3].title, /^Not committed yet \(plan approved without a permit, or in review\): 20$/);
+  assert.match(src('js/svc-capacity.js'), /segments: LB\(\)\.commitSegs \? LB\(\)\.commitSegs\(\{ \.\.\.r, rule: ruleOf\(r\) \}, seg\)/);
+  assert.match(src('js/svc-capacity.js'), /\$\{pctTxt\(r\.pctCom\)\} \$\{comWords\(r\)\} → \$\{pctTxt\(r\.pctBo\)\} at build-out/);
 });
 
 test('Growth drill-down: Peel → municipality → plan → precinct / sub-area → its files by stage; employment', () => {
