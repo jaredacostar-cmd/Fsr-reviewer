@@ -113,6 +113,7 @@ const SHELL_ASSETS = [
   'js/employment.js',
   'js/exist-pipes.js',
   'js/export-comparison.js',
+  'js/export-shapefile.js',
   'js/export-workbook.js',
   'js/exports.js',
   'js/filter-ui.js',

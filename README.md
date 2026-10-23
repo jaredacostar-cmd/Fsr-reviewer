@@ -425,7 +425,12 @@ from street zoom (14), up to 3,000 in view.
 - **GIS export** (Explore → Export): developments as CSV / GeoJSON now carry servicing layer,
   build-out people and jobs, flows in L/s, pressure zone, catchment and plant (with the distance
   when assigned to the nearest); *Servicing areas (GeoJSON)* gives zones and catchments with census
-  and build-out flows and pumping station load. *Print map* prints the map landscape with a title
+  and build-out flows and pumping station load. *Shapefiles (.zip)* puts every map layer
+  (developments shown, servicing areas, planned works, capital projects, EAs) in one zip for
+  ArcMap / ArcGIS Pro: one shapefile per layer and shape type, WGS84 (`.prj`), UTF-8 text
+  (`.cpg`); field names are shortened to 10 characters and `fields.csv` gives each full name,
+  text over 254 bytes is cut, and `README.txt` carries the disclaimer, filters and scenario
+  (`js/export-shapefile.js`, no library). *Print map* prints the map landscape with a title
   block, scenario, legend, north arrow and scale.
 - **Map tools** (left of the map; the Tools menu opens above the north arrow, help and scale controls): *Measure* distances (*Clear* starts a fresh line without adding a stray point) and select every shown development within
   250 m – 2 km of a point; *Test a site* drops a proposed development (units by type, jobs, site
@@ -1644,6 +1649,7 @@ From design audit, Group 10:
   |---|---|
   | CSVs (developments, allocations, corridor, batch, DC timing, funding) | three `#` lines at the top |
   | GeoJSON (developments, servicing areas, planned works) | `disclaimer`, `screening` and `criteria` properties on the collection |
+  | Shapefiles (.zip, all map layers) | `README.txt` in the zip |
   | SWMM and EPANET `.inp` model files | comment lines |
   | Excel workbook | Summary sheet |
 
