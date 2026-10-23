@@ -436,7 +436,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     await page.click('#home [data-dcproj-back]'); await wait(800);
   });
 
-  await check('QA/QC › Review outlets: open a development, tap the map to set its outlet, save it with its source, back to automatic', browser, {}, async ({ page, ev }, expect) => {
+  await check('QA/QC › Review outlets: open a development, tap the map or pick from the nearby list to set its outlet, save it with its source, back to automatic', browser, {}, async ({ page, ev }, expect) => {
     await ev(() => { PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage('outlets'); });
     await page.waitForSelector('#home [data-dvo="start"]', { timeout: 120000 }); await wait(800);
     const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
@@ -456,6 +456,18 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     const b = await st();
     expect(b.mode === 'preview' && b.cand && b.cand.kind === 'sewer' && b.cand.k === a.k, `the tap picks its own sewer (${JSON.stringify(b.cand)})`);
     expect(await ev(() => /Preview/.test(document.querySelector('#home .dvo-panel').textContent)), 'a preview before saving');
+    // the nearby list: each sewer run and planned main once, nearest first, its own sewer marked; pick from it
+    const nb = await ev(() => [...document.querySelectorAll('#home .dvo-near-b')].map(b => ({ t: b.textContent, on: b.classList.contains('on'), m: +b.querySelector('.dvo-near-m').textContent.replace(/[^0-9]/g, '') })));
+    expect(nb.length >= 2 && nb.every((x, i) => !i || x.m >= nb[i - 1].m), `a nearby list, nearest first (${nb.map(x => x.m).join(', ')} m)`);
+    expect(nb.some(x => /its outlet now/.test(x.t) && x.on), 'its own sewer is on the list, marked, and picked');
+    expect(await ev(() => document.querySelectorAll('#home [data-dvo-map] .hm-dvo-near').length) >= 1, 'numbered on the map');
+    const other = nb.findIndex(x => !/its outlet now/.test(x.t));
+    await page.click(`#home .dvo-near-b[data-dvo="near:${other}"]`); await wait(800);
+    const b2 = await st();
+    expect(b2.mode === 'preview' && !(b2.cand.kind === 'sewer' && b2.cand.k === a.k), `another from the list previews it instead (${JSON.stringify(b2.cand)})`);
+    const own = await ev(() => [...document.querySelectorAll('#home .dvo-near-b')].findIndex(b => /its outlet now/.test(b.textContent)));
+    await page.click(`#home .dvo-near-b[data-dvo="near:${own}"]`); await wait(800);
+    expect((await st()).cand.k === a.k, 'and back to its own sewer from the list');
     await page.fill('#home [data-dvo-src]', 'browser path'); await page.click('#home [data-dvo="save"]'); await wait(1500);
     const c = await st();
     expect(c.rec && c.rec.mode === 'set' && c.rec.src === 'browser path' && c.k === a.k, `saved, with its source, and the load model uses it (pipe ${c.k})`);
