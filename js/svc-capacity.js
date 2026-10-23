@@ -123,7 +123,8 @@
     for (const r of pumps) {
       const v = r.v, rt = WTab().roomTrigger(r.rated, { today: v[0] + v[1], approved: v[2], proposed: v[3] }, ph);
       rows.push({ id: `pump:${r.name}`, sys: 'water', kind: 'pump', name: r.name, sub: 'pumping into the zone', compared: 'Maximum day vs firm pumping', basis: 'design', unit: 'ML/d', cap: r.rated, capWord: 'firm',
-        existing: v[0], built: v[1], committed: v[0] + v[1] + v[2], buildout: v[0] + v[1] + v[2] + v[3],
+        // (committed: the Peel rule, a site servicing or building permit; the commitment ladder)
+        existing: v[0], built: v[1], committed: v[0] + v[1] + (r.vPeel != null ? r.vPeel : v[2]), buildout: v[0] + v[1] + v[2] + v[3],
         limit: { y: rt.c100, what: '100% firm' }, horizon: { end: ph.end, at: PICK.filter(y => y <= ph.end).map(y => [y, rt.at(y) / r.rated * 100]), c80: rt.c80, c90: rt.c90, c100: rt.c100 } });
     }
     // Storage: the 2020 Master Plan's required against available storage (its own forecast).

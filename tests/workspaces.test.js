@@ -79,7 +79,7 @@ test('Old pipes: 50+ years old or moderate risk, carrying 100+ units at build-ou
   const runs = W.pipeRuns(list, data);
   assert.deepEqual(plain(runs.map(r => [r.i, r.n, r.lengthM, r.units])), [[1, 2, 220, 5200], [2, 1, 80, 150], [6, 1, 90, 100]]);
   // The units carried come from the same per-pipe accumulation as the sewer loads (js/sewer-cap.js).
-  assert.match(src('js/sewer-cap.js'), /t\.units\[k\] \+= e\.totalUnits \|\| 0;/);
+  assert.match(src('js/sewer-cap.js'), /t\.units\[k\] \+= \(e\.totalUnits \|\| 0\) \* f;/);
   assert.deepEqual(plain(W.OLD), { age: 50, minUnits: 100, risk: 'MODERATE' });
 });
 

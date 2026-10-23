@@ -101,16 +101,18 @@
   // firm where modelled) against the design maximum day of zone n and every zone above it.
   function waterLayers(M, ids) {
     M = M || App().state.svcModel;
-    const o = { census: 0, built: 0, approved: 0, proposed: 0, jbuilt: 0, japproved: 0, jproposed: 0 };
+    const o = { census: 0, built: 0, approved: 0, proposed: 0, jbuilt: 0, japproved: 0, jproposed: 0, cpA: 0, cpP: 0, jcpA: 0, jcpP: 0 };
     for (const id of ids) { const l = M.zones.get(id); if (l) for (const k in o) o[k] += l[k] || 0; }
     const w = (p, j) => M.wMax(p, j);
-    return { o, v: [w(o.census, 0), w(o.built, o.jbuilt), w(o.approved, o.japproved), w(o.proposed, o.jproposed)] };
+    // vPeel: the growth the Peel rule commits (a site servicing or building permit, in approved and in
+    // proposed): the committed horizon of the pumping; the water treatment plants keep v[2] (MECP D-5-1).
+    return { o, v: [w(o.census, 0), w(o.built, o.jbuilt), w(o.approved, o.japproved), w(o.proposed, o.jproposed)], vPeel: w(o.cpA + o.cpP, o.jcpA + o.jcpP) };
   }
   function waterCapRow(M, name, ids, rated, base, note, capWord) {
-    const { o, v } = waterLayers(M, ids); if (!(rated > 0)) return null;
+    const { o, v, vPeel } = waterLayers(M, ids); if (!(rated > 0)) return null;
     if (base != null) { const today = v[0] + v[1], k = today > 0 ? base / today : 1; v[0] *= k; v[1] *= k; }
     const popToday = o.census + o.built, perPerson = popToday > 0 ? (v[0] + v[1]) * 1e6 / popToday : 0;
-    return { name: esc(name), rated, v, extMld: 0, perPerson, popToday, note, capWord };
+    return { name: esc(name), rated, v, vPeel, extMld: 0, perPerson, popToday, note, capWord };
   }
   // Pump groups between zones: source level (the site's reservoir zone, 0 at a plant), target
   // level (the zone number in LLPnX / HLPnX), capacity (actual firm where modelled, else firm).
