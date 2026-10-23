@@ -1,0 +1,5479 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+August 28, 2026
+
+FUN CTION AL SERV ICING A ND
+STORMWA TER MA NAGEMENT
+REPORT
+OAKBANK ESTATES
+SUBDIVISION
+OAKBANK ESTATES INC. C/O ROYAL PINE HOMES.
+TOWN OF CALEDON
+Project: 2026-5635
+
+Revision
+
+Description
+
+0.0
+
+FSR
+
+August 2026
+
+Prepared
+
+By
+Howie Liu
+Samantha Iantorno
+
+Date
+August 2026
+
+Checked
+
+By
+Sadh
+Katukurunde
+
+August 2026
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+6 Ronrose Drive
+Concord, Ontario L4K 4R3
+
+Date
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+Table of Contents
+PAGE
+1.0 INTRODUCTION ..........................................................................................................................1
+1.1 Reference Reports and Studies ..................................................................................................... 2
+2.0 DEVELOPMENT PLAN ..................................................................................................................4
+3.0 WATER SUPPLY SERVICING..........................................................................................................6
+3.1 Existing Water Supply Servicing .................................................................................................... 6
+3.2 Water Supply Servicing Design Criteria ......................................................................................... 6
+3.3 Proposed Water Supply Servicing Plan ......................................................................................... 7
+4.0 SANITARY SERVICING ................................................................................................................11
+4.1 Existing Sanitary Servicing ........................................................................................................... 11
+4.2 Sanitary Design Criteria ............................................................................................................... 11
+4.3 Proposed Sanitary Servicing Plan ................................................................................................ 11
+5.0 STORMWATER MANAGEMENT..................................................................................................15
+5.1 Existing Site Conditions ............................................................................................................... 15
+5.2 Stormwater Management Criteria .............................................................................................. 15
+5.3 Downstream Assessment ............................................................................................................ 17
+5.4 Proposed SWM Plan .................................................................................................................... 18
+5.5 SWM Pond 6 ................................................................................................................................ 18
+5.6 SWM Pond 7 ................................................................................................................................ 23
+5.7 Water Balance ............................................................................................................................. 25
+6.0 Erosion and Sediment Control Plan ...........................................................................................31
+7.0 CLOSING REMARKS ...................................................................................................................33
+
+ii
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+List of Tables
+PAGE
+Table 2-1: Ultimate Population Estimate ...................................................................................................... 4
+Table 3-1:Water Demand Criteria ................................................................................................................. 7
+Table 3-3: Ultimate Water Supply Servicing Demands ................................................................................. 8
+Table 4-1: Ultimate Sanitary Servicing Demands ........................................................................................ 12
+Table 5-1 Humber River Unit Flow Equations ............................................................................................. 17
+Table 5-2: SWM Pond 6 Allowable Release Rates Summary ...................................................................... 19
+Table 5-3: SWM Pond 6 Active Storage Requirements Summary .............................................................. 20
+Table 5-4: SWM Pond 6 Water Quality Summary....................................................................................... 20
+Table 5-5: SWM Pond 6 Erosion Control Summary .................................................................................... 21
+Table 5-6: SWM pond 6 Sediment Drying Area Summary .......................................................................... 23
+Table 5-7: SWM Pond 7 Allowable Release Rates Summary ...................................................................... 24
+Table 5-8: SWM pond 7 Active Storage Requirements Summary .............................................................. 24
+Table 5-9: SWM Pond 7 Water Quality Summary....................................................................................... 25
+Table 5-10: Water Balance Summary ......................................................................................................... 27
+
+List of Figures
+PAGE
+Figure 1.1: Location Plan ............................................................................................................................... 3
+Figure 2.1: Proposed Development Plan ...................................................................................................... 5
+Figure 3.1: Proposed Water Supply Servicing ............................................................................................... 9
+Figure 3.2: Water Supply Servicing New Growth........................................................................................ 10
+Figure 4.1: Proposed Sanitary Servicing...................................................................................................... 13
+Figure 4.2: Sanitary Servicing New Growth ................................................................................................ 14
+Figure 5.1: Pre-Development Storm Drainage............................................................................................ 28
+Figure 5.2: Proposed Storm Drainage Plan ................................................................................................. 29
+Figure 5.3: Proposed Storm Servicing ......................................................................................................... 30
+
+iii
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+Appendices
+Appendix A:
+Appendix B:
+Appendix C:
+Appendix D:
+Appendix E:
+
+BACKGROUND INFORMATION
+WATER SUPPLY SERVICING
+SANITARY SERVICING
+STORMWATER MANAGEMENT CALCULATIONS
+ENGINEERING DRAWINGS
+
+iv
+
+August 2026
+Project 2026-5635
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+1.0
+
+August 2026
+Project 2026-5635
+
+INTRODUCTION
+
+This functional servicing and stormwater management Report has been prepared in support of a proposed
+development located in the Town of Caledon. The 40.68 ha subject land is identified as Part of lot 13,
+concession 7, in the Bolton community and is located east of Highway 50, north of Columbia Way and
+west of Mount Hope Road, as shown in Figure 1.1.
+This report summarizes and assesses the municipal servicing requirements for potable water, sanitary
+servicing, and stormwater management. The following sections outline the proposed services for the
+development and their capabilities with existing infrastructure within the Bolton North Hill area.
+
+Page 1
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+The following studies were utilized in the preparation of this report.
+
+•
+
+“Development Standards Manual Ver 5.0”, by the Town of Caledon, 2019
+
+•
+
+“Stormwater Planning and Design Manual (SWMP)”, by Ministry of the Environment (MOE), March
+2003.
+
+•
+
+“Stormwater Management Criteria”, by Toronto and Region Conservation Authority, August 2012.
+
+• “Low Impact Development Stormwater Management Planning and Design Guide”, Version 1.0,
+Prepared by Toronto Region and Conservation Authority (TRCA) and Credit Valley Conservation, 2010.
+•
+
+“Public Works Stormwater Design Criteria and Procedural Manual”, June 2019, by the Region of
+Peel.
+
+•
+
+“Public Works Design, Specifications & Procedures Manual, Linear Infrastructure, Watermain Design
+Criteria”, June 2010, by the Region of Peel.
+
+•
+
+“Linear Wastewater Standards”, March 2023, by the Region of Peel.
+
+•
+
+“Water Supply for Public Fire Protection”, 2020, by the Fire Underwriters Survey.
+
+•
+
+“Source Protection Information Atlas”, 2023, by the Ontario Ministry of the Environment,
+Conservation and Parks (MECP)
+
+•
+
+“Erosion and Sediment Control Guideline”, By Sustainable Technologies for TRCA, 2019
+
+•
+
+“Functional Servicing and Stormwater Management Report Bolton North Hill Option 1 Lands”, By
+Crozier for Bolton North Hill Landowners Group, March 2026
+
+•
+
+“Secondary Plan Natural Heritage Study Report Option 1/2 Lands”, By Dillon Consulting for Bolton
+North Hills Landowners Group, March 2026
+
+•
+
+“Hydrogeological Investigation Bolton North Hill Option 1 & Option 2 Lands”, By Crozier for Bolton
+North Hill Landowners Group, December 2024
+
+Page 2
+
+W:\5600's\5635\Drawings\Services\2026-08-04-5635-Services.dwg
+
+Phil Gotfried
+
+N
+
+N
+
+FUNCTIONAL SERVICING REPORT AND DESIGN
+FOR OAKBANK ESTATES SUBDIVISION
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+
+LEGEND
+
+FIGURE 1.1
+LOCATION PLAN
+
+SUBJECT AREA
+
+6 Ronrose Drive, Concord, Ontario L4K 4R3
+Tel: (905) 738-6100 Email: general@schaeffers.com
+www.schaeffers.com
+
+2026-5635
+
+AUGUST 2026
+
+SCALE: N.T.S.
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+2.0
+
+August 2026
+Project 2026-5635
+
+DEVELOPMENT PLAN
+
+The ultimate proposed development covers 40.68 ha and will consist of a mix of residential uses, including
+192 single detached units (110 on 11.0 m lots and 82 on 9.15 m lots) and 375.5 townhouse units (261.5
+standard 7.0 m units, 103 dual frontage 6.0 m units and 11 dual frontage 7.0 m units), for a total of 567.5
+units, together with a 0.752 ha elementary school block. The draft plan of subdivision, prepared by KLM
+Planning Partners Inc. and dated July 27, 2026, is provided in Appendix A for reference. Figure 2.1
+illustrates the proposed development plan.
+Table 2-1: Ultimate Population Estimate
+
+Dwelling Type
+
+Population Density
+
+Units
+
+Estimated Population
+
+Single Family/Semi-detached
+Townhouses
+Elementary School
+Total
+
+4.2
+3.4
+70 (pp/ha)
+-
+
+192
+375.5
+0.752
+-
+
+807
+1,277
+53
+2,137
+
+Page 4
+
+Phil Gotfried
+
+W:\5600's\5635\Drawings\Services\2026-08-04-5635-Services.dwg
+
+N
+
+LEGEND
+SUBJECT AREA
+
+PHASE 1 AREA
+
+FUTURE PHASE AREAS
+
+FUNCTIONAL SERVICING REPORT AND DESIGN
+FOR OAKBANK ESTATES SUBDIVISION
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+6 Ronrose Drive, Concord, Ontario L4K 4R3
+
+LEGEND
+(AS SHOWN ABOVE)
+
+FIGURE 2.1
+PROPOSED
+DEVELOPMENT PLAN
+
+Tel: (905) 738-6100 Email: general@schaeffers.com
+www.schaeffers.com
+
+2026-5635
+
+AUGUST 2026
+
+SCALE: N.T.S.
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+3.0
+
+August 2026
+Project 2026-5635
+
+WATER SUPPLY SERVICING
+
+This section describes the proposed potable water distribution system for the subject site. The site will be
+serviced by the Town of Caledon's planned municipal water system. Detailed analysis, including hydraulic
+modelling and hydrant flow testing, will be completed at the design stage.
+
+The subject site is currently not serviced by the municipal water distribution system. Existing watermain
+infrastructure within the surrounding road network consists of the following:
+•
+
+300 mm PVC distribution watermain on Columbia Way (Pressure Zone 6)
+
+•
+
+300 mm PVC distribution watermain on Regional Road 50 (Pressure Zone 6)
+
+These watermains form part of the existing Pressure Zone 6 (PZ6) system. Due to the site's elevation
+exceeding the serviceable range of PZ6 (214.5 m – 259.1 m), servicing from the existing system is not
+feasible. Water servicing for the proposed development will be provided through the planned Pressure
+Zone 7 (PZ7) system, as described in Section 3.3.
+Future water servicing infrastructure is planned along Regional Road 50 and Columbia Way to support the
+development of the Bolton North Hill area. The existing and proposed water servicing framework is
+illustrated on Figure 3.1.
+
+The water servicing system will be designed in accordance with the Region of Peel Public Works
+Watermain Design Criteria (June 2010). The applicable design criteria are summarized below.
+
+Page 6
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+Table 3-1:Water Demand Criteria
+
+Population Type
+
+Unit
+
+Avg.
+Consumption
+Rate
+
+Max Day Factor
+
+Peak Hour Factor
+
+Residential
+ICI*
+
+L/capita/day
+L/employee/day
+
+280
+300
+
+2.0
+1.4
+
+3.0
+3.0
+
+*ICI = Industrial, Commercial or Institutional
+
+System pressure criteria:
+•
+
+Minimum pressure under Maximum Day and Fire Flow conditions: 140 kPa (20 psi)
+
+•
+
+Minimum pressure under Peak Hour Demand conditions: 275 kPa (40 psi)
+
+•
+
+Maximum pressure under Maximum Day and Fire Flow conditions: 690 kPa (100 psi)
+
+Fire Flow
+•
+
+Minimum fire flow: 250 L/s sustained for a minimum of three hours, while maintaining a minimum
+residual system pressure of 140 kPa (20 psi). The minimum fire flow was increased from 220 L/s,
+as originally established in the Bolton Residential Expansion Study Infrastructure Report (GM
+BluePlan Engineering, June 16, 2014), to 250 L/s at the direction of the Region of Peel.
+
+The proposed development will be serviced through the planned municipal PZ7 water distribution system.
+Internal watermains will connect to the future municipal water infrastructure along Regional Road 50 and
+Columbia Way. As described in Section 3.2, the subject site is above the serviceable elevation range of
+the existing PZ6 system; therefore, all water servicing will be provided through PZ7.
+Interim Servicing
+In the interim period, the subject site will be serviced through the proposed Macville Booster Pump
+Station (BPS), which will operate as a closed pressure system with a supply Hydraulic Grade Line (HGL) of
+327.7 m. The Macville BPS has been demonstrated to support an interim population of approximately
+2,960 persons within the Option 1 Lands. The proposed development, with an estimated population of
+2,137 persons, falls within this interim servicing capacity.
+
+Page 7
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+Ultimate Servicing
+Under the ultimate build-out scenario, the regional servicing strategy includes the following trunk
+infrastructure:
+•
+
+600 mm diameter feedermain along Emil Kolb Parkway to Regional Road 50
+
+•
+
+400 mm diameter watermain along Regional Road 50 and Columbia Way
+
+•
+
+Sub-trunk watermains provide internal looped distribution through the subdivision
+
+This infrastructure forms part of the broader PZ7 system, which will ultimately be supported by two
+Elevated Tanks (ETs) providing flow equalization, fire protection, and emergency storage. One ET is
+proposed within the Option 1 Lands (northeast corner, adjacent to Regional Road 50), with final location
+and sizing to be confirmed through the ongoing Environmental Assessment. A looped watermain
+configuration will be maintained throughout the development to ensure system redundancy and
+operational reliability. All watermain design will conform to Region of Peel standards for watermains and
+appurtenances.
+The existing water servicing is illustrated on Figure 3.1 with the proposed water servicing framework
+shown on Figure 3.2.
+Table 3-2: Ultimate Water Supply Servicing Demands
+
+Expected
+Population
+
+Average Demand
+(L/s)
+
+Peak Hour
+Demand
+(L/s)
+
+Maximum Day
+Demand (L/s)
+
+Fire Flow
+(L/s)
+
+Max Demand +
+Fire Flow (L/s)
+
+2,137
+
+6.94
+
+20.81
+
+13.87
+
+267
+
+280.87
+
+Fire Flow
+The fire flow demand was determined using the Fire Underwriters Survey (FUS) 2020 guidelines and has
+been incorporated into the overall demand calculations. The FUS analysis was based on a representative
+townhouse block with a preliminary ground floor area of approximately 1,080 m² and a two-storey
+dwelling. The dwellings were assumed to be of limited combustible construction, without sprinklers, and
+without firewalls. Applicable exposure conditions were considered in the analysis. A fire flow of 267 L/s
+was calculated, which exceeds the Region of Peel minimum requirement of 250 L/s established for the
+Bolton PZ7 area. The FUS-derived value of 267 L/s therefore governs.
+
+Page 8
+
+Phil Gotfried
+
+W:\5600's\5635\Drawings\Services\2026-08-04-5635-Services.dwg
+
+N
+
+LEGEND
+PHASE 1 SUBJECT AREA
+
+FUTURE PHASE AREAS
+
+PROPOSED WATERMAINS
+FUTURE WATERMAIN
+BY OTHERS
+EXISTING WATERMAINS
+
+FUNCTIONAL SERVICING REPORT AND DESIGN
+FOR OAKBANK ESTATES SUBDIVISION
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+6 Ronrose Drive, Concord, Ontario L4K 4R3
+
+LEGEND
+(AS SHOWN ABOVE)
+
+FIGURE 3.1
+PROPOSED
+WATER SUPPLY SERVICING
+
+Tel: (905) 738-6100 Email: general@schaeffers.com
+www.schaeffers.com
+
+2026-5635
+
+AUGUST 2026
+
+SCALE: N.T.S.
+
+Phil Gotfried
+
+RESIDENTIAL SUBDIVISION
+UNITED HOLDINGS INC.
+C/O SOLMAR DEVELOPMENT CORP.
+TOWN OF CALEDON
+LEGEND
+N
+
+LOCATION OF
+ELEVATED TANK
+SUBJECT TO
+REGION OF PEEL EA
+
+SUBJECT SITE
+
+WATER SERVICING SOLUTION
+
+ELEVATED WATER TANK
+
+W:\5600's\5635\Drawings\Services\2026-08-04-5635-Services.dwg
+
+SERVICES CORRIDOR
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+6 Ronrose Drive, Concord, Ontario L4K 4R3
+Tel: (905) 738-6100 Email: general@schaeffers.com
+www.schaeffers.com
+
+FIGURE 3.2
+WATER SUPPLY SERVICING
+NEW GROWTH
+
+2024-5476
+
+AUGUST 2026
+
+SCALE: N.T.S.
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+4.0
+
+August 2026
+Project 2026-5635
+
+SANITARY SERVICING
+
+The proposed development will be serviced through the planned municipal sanitary sewer system.
+Detailed analysis, including hydraulic modelling and sewer sizing, will be completed at the design stage.
+
+Bolton is serviced by two trunk sewers: 900 mm on Albion-Vaughan Road (east) and 525/600/375 mm on
+Coleraine Drive (west), merging at Coleraine Drive and Regional Road 50, then flowing south on Regional
+Road 50 to McVean SPS, and ultimately to G.E. Booth WWTP.
+The following sanitary infrastructure are in the vicinity of the project site:
+•
+
+Existing sewers on Regional Road 50 and Columbia Way are present but will not be used by this
+development
+
+The proposed sanitary servicing of the subject site will be designed in accordance with Region of Peel
+design criteria (Region of Peel Water and Wastewater Master Plan, Volume 4 2020) for sanitary sewers.
+These criteria, where applicable to the proposed development, are summarized below.
+•
+
+Residential: 290 L/cap/day
+
+•
+
+Employment 270 L/cap/day
+
+•
+
+School: 53 equivalent persons (70pp/ha)
+
+•
+
+Infiltration seepage: 0.26 L/s/ha
+
+•
+
+Peaking Factor: Harmon Formula – M = 1 + 14 / (4 + P^0.5)
+
+The proposed development will be serviced by PVC gravity sanitary sewers internal to the site, discharging
+to the proposed 1200 mm diameter trunk sanitary sewer on Regional Road 50. The 1200 mm trunk sewer
+on Regional Road 50 connects to the Emil Kolb Parkway sanitary system, where flows are conveyed via
+twin 450 mm diameter forcemains to a 525 mm diameter gravity trunk sewer on King Street, and
+ultimately to a 1200 mm diameter trunk sewer on Humber Station Road. Flows are then directed to the
+McVean Sewage Pumping Station and treated at the G.E. Booth Wastewater Treatment Plant. No sewage
+Page 11
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+pumping station is anticipated within the subject lands.
+The estimated sanitary servicing demands for the proposed development are summarized in Table 4-1.
+Supporting calculations are provided in Appendix C.
+Table 4-1: Ultimate Sanitary Servicing Demands
+
+Area (ha)
+
+Expected
+Population
+
+Average
+Flow (L/s)
+
+Harmon’s
+Peaking Factor
+
+Peak
+Flow (L/s)
+
+Infiltration
+(L/s)
+
+Total Flow
+(L/s)
+
+40.68
+
+2,137
+
+7.17
+
+3.56
+
+25.56
+
+10.58
+
+36.14
+
+Final sewer sizing and system configuration will be confirmed at the detailed design stage in accordance
+with Region of Peel requirements.
+
+Page 12
+
+Phil Gotfried
+
+W:\5600's\5635\Drawings\Services\2026-08-04-5635-Services.dwg
+
+N
+
+LEGEND
+PHASE 1 SUBJECT AREA
+
+FUTURE PHASE AREAS
+
+PROPOSED SANITARY SEWER
+PROPOSED
+SANITARY FORCEMAIN
+
+FUNCTIONAL SERVICING REPORT AND DESIGN
+FOR OAKBANK ESTATES SUBDIVISION
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+6 Ronrose Drive, Concord, Ontario L4K 4R3
+
+LEGEND
+(AS SHOWN ABOVE)
+
+FIGURE 4.1
+PROPOSED
+SANITARY SERVICING
+
+Tel: (905) 738-6100 Email: general@schaeffers.com
+www.schaeffers.com
+
+2026-5635
+
+AUGUST 2026
+
+SCALE: N.T.S.
+
+Phil Gotfried
+
+RESIDENTIAL SUBDIVISION
+UNITED HOLDINGS INC.
+C/O SOLMAR DEVELOPMENT CORP.
+TOWN OF CALEDON
+LEGEND
+N
+
+SUBJECT SITE
+
+GRAVITY SERVICING SOLUTION
+
+FORCEMAIN SERVICING SOLUTION
+
+SANITARY PUMPING STATION
+
+W:\5600's\5635\Drawings\Services\2026-08-04-5635-Services.dwg
+
+SERVICES CORRIDOR
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+6 Ronrose Drive, Concord, Ontario L4K 4R3
+Tel: (905) 738-6100 Email: general@schaeffers.com
+www.schaeffers.com
+
+FIGURE 4.2
+SANITARY SERVICING
+NEW GROWTH
+
+2024-5476
+
+AUGUST 2026
+
+SCALE: N.T.S.
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+5.0
+
+August 2026
+Project 2026-5635
+
+STORMWATER MANAGEMENT
+
+This section describes the stormwater management strategy for the proposed development area,
+including existing drainage conditions, applicable design criteria, and the proposed stormwater
+management facilities.
+
+The subject site is located east of Regional Road 50 (Highway 50), north of Columbia Way, and west of
+Mount Hope Road, within the Humber River watershed and subject to the regulatory jurisdiction of the
+Toronto and Region Conservation Authority (TRCA). Under existing pre-development conditions, the site
+consists primarily of agricultural land with limited formal drainage infrastructure. Surface runoff is
+conveyed via natural drainage channels and sheet flow to tributaries of the Main Humber River.
+The site drains to two distinct tributary systems:
+•
+
+Tributary E (sub-basin 10): The southern and eastern portion of the site drains to Tributary E,
+located within sub-basin 10 of the Humber River watershed.
+
+•
+
+Tributary D (Main Humber River): The northern and central portion of the site drains to Tributary
+D of the Main Humber River.
+
+Soils within the site are predominantly clay-based (including King Clay Loam), which limits infiltration
+potential. Groundwater levels are relatively shallow and may influence stormwater management design.
+No formal storm sewer infrastructure currently exists within the subject area. The pre-development
+drainage catchment layout is depicted in Figure 5.1.
+
+The stormwater management design for the subject site has been developed in accordance with the
+following governing documents and criteria:
+•
+
+"Development Standards Manual Ver 5.0", by the Town of Caledon, 2019.
+
+•
+
+"Stormwater Management Planning and Design Manual (SWMPD)", by Ministry of the
+Environment (MOE), March 2003.
+
+•
+
+"Stormwater Management Criteria", by Toronto and Region Conservation Authority, August 2012.
+
+•
+
+"Low Impact Development Stormwater Management Planning and Design Guide", Version 1.0,
+Prepared by TRCA and Credit Valley Conservation, 2010.
+
+•
+
+"Public Works Stormwater Design Criteria and Procedural Manual", June 2019, by the Region of
+Page 15
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+Peel.
+•
+
+"Erosion and Sediment Control Guideline for Urban Construction", by Sustainable Technologies
+for TRCA, 2019.
+
+•
+
+"Functional Servicing and Stormwater Management Report Bolton North Hill Option 1 Lands", By
+C.F. Crozier & Associates Inc. for Bolton North Hill Landowners Group, February 2026.
+
+Major and Minor System
+•
+
+The minor system will be designed to convey the 10-year storm event without surcharge, using
+the Rational Method and Town of Caledon intensity-duration-frequency (IDF) data.
+
+•
+
+The major system will be designed to convey the 100-year storm event through overland flow
+routes to stormwater management facilities.
+
+•
+
+The minimum sewer diameter will be 300 mm.
+
+•
+
+Runoff coefficients shall be determined based on land use as follows:
+o
+
+Parks & Open Space
+
+0.30
+
+o
+
+Single Family Residential
+
+0.65
+
+o
+
+Semi-detached Residential
+
+0.70
+
+o
+
+Townhouse or Rowhouse
+
+0.75
+
+o
+
+Apartments or Hi-Rise Residential
+
+0.90
+
+Quantity Control
+Stormwater flow control requirements are governed by the Humber River watershed criteria. The site
+drains to two systems with different quantity control requirements:
+•
+
+SWM Pond 6 (Sub-basin 10, Tributary E): Flow control is required to the TRCA prescribed unitary
+flow rates for Sub-basin 10, for the 2-year through 100-year return period storms. Additional flood
+control storage is required for the Regional (Hurricane Hazel) storm event. Target release rates
+are determined using the Humber River Sub-basin 10 unit flow equations summarized in Table 51.
+
+•
+
+SWM Pond 7 (Main Humber River, Tributary D): Post-development peak flows shall not exceed
+pre-development peak flows for the 2-year, 5-year, and 100-year return period storms. Additional
+flood control storage is required for the regional storm event.
+
+•
+
+Stormwater analysis for the subject site considers the following storm events:
+o
+
+TRCA AES Storm Distributions
+Page 16
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+o
+
+August 2026
+Project 2026-5635
+
+Regional storm event
+Table 5-1 Humber River Unit Flow Equations
+
+Return Period
+
+Sub-Basin 10 Equations
+
+2 Year
+
+Q=3.142-0.233*ln(A)
+
+5 Year
+
+Q=5.557-0.427*ln(A)
+
+10 Year
+
+Q=7.443-0.578*ln(A)
+
+25 Year
+
+Q=9.838-0.757*ln(A)
+
+50 Year
+
+Q=11.920-0.921*ln(A)
+
+100 Year
+
+Q=14.140-1.096*ln(A)
+
+Quality Control
+Stormwater quality control will provide Enhanced Level 1 treatment, achieving a minimum of 80% removal
+of total suspended solids (TSS), in accordance with TRCA and Town of Caledon guidelines.
+Erosion Control
+Erosion control will be provided through extended detention to detain the 25 mm/4-hour Chicago design
+storm for a minimum of 48 hours, in accordance with TRCA requirements.
+Water Balance
+Water balance objectives will be considered during design to maintain pre-development hydrologic
+conditions where feasible. Refer to Section 5.7 for water balance discussion.
+
+A downstream assessment has been undertaken to evaluate potential impacts of post-development
+runoff on the receiving watercourse systems. The subject lands discharge to Tributary D and Tributary E
+within the Main Humber River watershed. Downstream flows are governed by natural channel systems
+and hydraulic constraints identified within the Bolton North Hill servicing framework.
+Hydrologic and hydraulic modelling using Visual OTTHYMO v.6.2 and HEC-RAS v.6.4.1 has confirmed that
+the proposed stormwater management strategy does not result in a material increase in peak flows or
+flood risk at downstream locations. The downstream analysis is consistent with the findings of the Bolton
+Page 17
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+North Hill Master Functional Servicing and Stormwater Management Report (C.F. Crozier & Associates
+Inc., February 2026).
+
+The proposed stormwater management strategy for the subject lands has been developed in accordance
+with the criteria outlined in Section 5.2 and the recommendations of the Bolton North Hill Functional
+Servicing and Stormwater Management Studies.
+Stormwater runoff will be managed using a dual drainage system. The minor system will consist of storm
+sewers sized for the 10-year return period storm, while the major system will convey flows exceeding
+minor system capacity through overland flow routes to the stormwater management facilities.
+Runoff from the development will be directed to SWM Ponds 6 and 7. The proposed grading plan will
+maintain the overall drainage pattern identified within the Bolton North Hill studies and direct runoff
+towards the proposed stormwater management facilities and receiving tributaries.
+The proposed stormwater management facilities consist of dry pond facilities with associated sediment
+forebays and sediment drying areas to facilitate long-term operation and maintenance. Water quality,
+erosion control, quantity control, and regional stormwater management requirements will be provided in
+accordance with applicable MECP, Town of Caledon, and TRCA criteria.
+The proposed grading design will maintain safe overland flow routes and minimize potential impacts to
+adjacent lands. The final pond configurations, outlet structures, storage volumes, and associated drainage
+channels will be confirmed during detailed design.
+For a visual representation of the proposed stormwater servicing and drainage plan, refer to Figures 5.2
+and 5.3. Detailed stormwater management calculations are provided in Appendix D.
+
+SWM Pond 6 is proposed to service a contributing drainage area of approximately 28.27 ha. The area that
+drains to SWM Pond 6 from within the subject site is 11.18 ha. Based on the current drainage plan, the
+contributing catchment has an estimated imperviousness of 63%, resulting in a weighted runoff
+coefficient of approximately 0.64. The facility is proposed as a dry pond with associated sediment forebays
+and sediment drying areas. Runoff will be conveyed to SWM Pond 6 and discharged to the receiving
+Page 18
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+tributary system in accordance with the quantity, quality, and erosion control criteria established in the
+Bolton North Hill Option 1 Lands FSWM (Crozier, 2026).
+5.5.1
+
+SWM Pond 6 Quantity Control
+
+SWM Pond 6 has been designed to provide quantity control for the contributing drainage area in
+accordance with the criteria outlined in Section 5.2. Allowable release rates have been established based
+on the Humber River Sub-basin 10 unit flow relationships (TRCA, 2012) and applied to size the pond
+discharge for the 2-year through 100-year design storm events. Regional (Hurricane Hazel) quantity
+control has also been provided following the target release rate established in the Bolton North Hill Option
+1 Lands FSWM (Crozier, 2026), in table 14.
+5.5.1.1
+
+SWM Pond 6 Allowable Release Rates
+
+Table 5-2 summarizes the allowable release rates used for the SWM Pond 6 quantity control assessment.
+Refer to Figure 5.1 for the contributing drainage area.
+Table 5-2: SWM Pond 6 Allowable Release Rates Summary
+
+Return Period
+
+Unit Flow (L/s/ha)
+
+Release Rate (m3/s)
+
+2 Year
+
+2.36
+
+0.067
+
+5 Year
+
+4.13
+
+0.117
+
+10 Year
+
+5.51
+
+0.156
+
+25 Year
+
+7.31
+
+0.207
+
+50 Year
+
+8.84
+
+0.250
+
+100 Year
+
+10.48
+
+0.296
+
+Regional*
+
+2.125 m3/s
+
+* The regional control release rate is based on the target release rate established in the Bolton North Hill Option 1
+Lands FSWM (Crozier, 2026), in table 14
+5.5.1.2
+
+SWM Pond 6 SWM Storage Requirements
+
+VO Modelling was completed for the SWM Pond 6 quantity control assessment using the 6/12/24 hour
+AES storm distributions in accordance with TRCA criteria. The discharge curve was configured to attenuate
+post development flows to the allowable release rates summarized in Table 5-3. A total provided storage
+of 36,000 m3 is available for SWM Pond 6.
+Page 19
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+Table 5-3: SWM Pond 6 Active Storage Requirements Summary
+
+Return Period
+
+Release Rate
+(m3/s)
+
+Required Storage
+(m3) [6 Hour AES]
+
+Required Storage
+(m3) [12 Hour
+AES]
+
+Required Storage
+(m3) [24 Hour
+AES]
+
+2 Year
+
+0.067
+
+6,743
+
+7,669
+
+8,004
+
+5 Year
+
+0.117
+
+9,294
+
+10,168
+
+10,301
+
+10 Year
+
+0.156
+
+11,003
+
+11,804
+
+11,738
+
+25 Year
+
+0.207
+
+13,160
+
+13,832
+
+13,486
+
+50 Year
+
+0.250
+
+14,772
+
+15,307
+
+14,787
+
+100 Year
+
+0.296
+
+16,361
+
+16,786
+
+16,097
+
+Regional
+
+2.125
+
+5.5.2
+
+34,450
+
+SWM Pond 6 Quality Control
+
+The SWM pond 6 quality storage standards were established in accordance with the MECP SWMPD
+Manual’s Basic Protection (60% long-term S.S. removal) criteria published in March 2003. Table 5-4
+summarizes the preliminary water quality control parameters for the SWM pond 6. Refer to Appendix D
+for detailed calculations.
+Table 5-4: SWM Pond 6 Water Quality Summary
+
+SWM Pond 6 Quality Control Parameter
+
+Value
+
+Type of Facility
+
+Dry Pond
+
+Level of Protection
+
+Basic
+
+Drainage Area
+
+28.27 ha
+
+Weighted Imperviousness
+
+63%
+
+Min. Extended Detention Storage Volume Requirement
+
+4,994 m3
+
+Provided Extended Detention Storage Volume
+
+5,450 m3
+
+Water quality treatment for SWM Pond 6 is provided through a treatment train. Pre-treatment is provided
+by CB shields and deep-sump catch basins (900 mm sumps) within the tributary to the facility, which
+Page 20
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+together provide 50% TSS removal. Runoff is then conveyed to the dry SWM pond, where extended
+detention of the water quality storage volume provides a further 60% TSS removal. The two treatment
+stages in series compound to 80% TSS removal overall, i.e. 50% + 60% x (100-50)% = 80%, which meets
+the enhanced treatment policy as indicated in Section 5.2. The perforated-pipe exfiltration system
+described in Section 5.7 is provided to satisfy the water balance and infiltration objectives for the site; no
+TSS removal credit is claimed for it within the SWM Pond 6 treatment train.
+5.5.3
+
+SWM Pond 6 Erosion Control
+
+Erosion control for SWM Pond 6 is achieved through extended detention of the 25 mm rainfall event over
+a minimum 48-hour period, in accordance with TRCA (2012) criteria. Based on the contributing drainage
+area of approximately 28.27 ha, the required erosion control storage volume has been estimated at 4,523
+m3, as summarized in Table 5-5. As the water quality storage requirement of 4,994 m3 (Table 5-5) exceeds
+the erosion control requirement, the water quality volume governs the extended detention design for
+SWM Pond 6.
+Table 5-5: SWM Pond 6 Erosion Control Summary
+
+5.5.4
+
+Erosion Control Parameter
+
+Value
+
+Drainage Area
+
+28.27 ha
+
+Required Storage Volume
+
+4,523 m3
+
+Average Detention Time
+
+48 hours
+
+Average Release Rate
+
+0.026 m3/s
+
+Peak Release Rate (1.5 x Average)
+
+0.039 m3/s
+
+Provided Extended Detention Storage Volume
+
+5,450 m3
+
+SWM Pond 6 Emergency Spillway
+
+SWM Pond 6 will include an emergency spillway to safely convey flows in the event that the outlet control
+structure becomes blocked or storm events exceed the design capacity of the facility.
+The emergency spillway is designed as a weir with a trapezoidal cross-section, graded into the pond berm
+at an invert crest elevation of 264.50 m. The spillway has a crest width of 18.0 m, and 10:1 (H:V) side
+Page 21
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+slopes.
+The spillway has been sized to convey the unattenuated 100-year, 6-hour AES design storm event. Based
+on the weir equation (Q = Cd × b × H^(3/2)), the spillway achieves a maximum discharge capacity of 5.00
+m3/s at an elevation of 264.80 m, corresponding to 0.30 m of head over the invert. This exceeds the 100year peak inflow of 4.76 m3/s, confirming adequate spillway capacity with a maximum water surface
+elevation below the top of pond berm. Detailed emergency spillway calculations are provided in Appendix
+D.
+5.5.5
+
+SWM Pond 6 Sediment Forebay
+
+Two sediment forebays are proposed within SWM Pond 6 to promote the settling of coarse sediment and
+facilitate long-term maintenance of the facility. The forebays will provide preliminary treatment of
+stormwater runoff prior to entering the main storage and treatment areas, reducing sediment
+accumulation within the facility and improving overall operational performance. The sediment forebays
+have been sized in accordance with the MECP Stormwater Management Planning and Design Manual
+(2003). Yielding a required length of 27 m. A combined forebay length of 180 m has been provided,
+substantially exceeding the 27 m minimum requirement. Final forebay geometry, including individual cell
+dimensions and inlet/outlet configuration, will be confirmed during detailed design. Detailed forebay
+calculations are provided in Appendix D.
+5.5.6
+
+SWM Pond 6 Sediment Drying Area
+
+SWM Pond 6 includes a dedicated sediment drying area to provide a designated location for sediment
+removal, dewatering, and maintenance activities. The sediment drying area has been sized in accordance
+with the MECP Stormwater Management Planning and Design Manual (2003), based on the contributing
+drainage area and estimated sediment loading characteristics of the catchment.
+The contributing drainage area to SWM Pond 6 is approximately 28.27 ha with an estimated
+imperviousness of 63%, corresponding to an annual sediment loading rate of 2.38 m3/ha. Based on a 10year maintenance interval, the estimated total sediment accumulation volume is approximately 673 m3.
+A sediment drying area with a minimum surface area of 798 m² is required to accommodate this volume,
+as summarized in Table 5-6.
+The sediment drying area has been designed as a trapezoidal graded pad, 38 m in length with a bottom
+width of 15.0 m and a top width of 21.0 m, providing a maximum surface area of 798 m2 and a storage
+Page 22
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+volume of 684 m3, which exceeds the estimated 10-year sediment accumulation volume. A minimum
+depth of 1.0 m has been adopted to provide adequate dewatering and drying capacity. Detailed
+calculations are provided in Appendix D.
+Table 5-6: SWM pond 6 Sediment Drying Area Summary
+
+Sediment Drying Area Parameter
+
+Value
+
+Drainage Area
+
+28.27 ha
+
+Imperviousness
+
+63%
+
+Annual Sediment Loading
+
+2.38 m3/ha
+
+Sediment Drying Area Requirement
+
+798 m2
+
+Provided Sediment Drying Area
+
+916 m2
+
+SWM Pond 7 is proposed to provide stormwater management for the western portion of the development
+area. The contributing drainage area to SWM Pond 7 is approximately 34.27 ha with an estimated
+imperviousness of approximately 71%, resulting in a weighted runoff coefficient of approximately 0.69.
+The area that drains to SWM Pond 7 from within the subject site is 15.98 ha. The facility is proposed as a
+dry pond with associated sediment forebays and sediment drying areas. Runoff from the contributing
+drainage area will be conveyed to SWM Pond 7 and discharged to Tributary D within the Main Humber
+River Watershed. The facility is proposed to provide quantity control, quality treatment, erosion control,
+and volume control in accordance with applicable Town of Caledon, Region of Peel, MECP, and TRCA
+criteria. The design of Pond 7 will be completed by DSEL.
+5.6.1
+
+SWM Pond 7 Quantity Control
+
+SWM Pond 7 is located within the Main Humber River Watershed. In accordance with TRCA criteria and
+the findings of the downstream analysis presented in the Bolton North Hill Option 1 Lands FSWM (Crozier,
+2026), post-development peak flows from SWM Pond 7 are required to be controlled to pre-development
+levels for the 2-year, 5-year, and 100-year storm events. Regional (Hurricane Hazel) flood control is also
+required, consistent with the downstream assessment confirming increases in peak flows to Tributary D
+under uncontrolled post-development conditions. The allowable release rates for SWM Pond 7 have been
+Page 23
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+established based on a contributing drainage area of 34.27 ha and are summarized in Table 5-7.
+5.6.1.1
+
+SWM Pond 7 Allowable Release Rates
+Table 5-7: SWM Pond 7 Allowable Release Rates Summary
+
+Return Period
+
+Release Rate (m3/s)*
+
+2 Year
+
+0.038
+
+5 Year
+
+0.080
+
+10 Year
+
+-
+
+25 Year
+
+-
+
+50 Year
+
+-
+
+100 Year
+
+0.979
+
+Regional
+
+2.567
+
+*The allowable release rates are based on findings of the downstream analysis presented in the Bolton North Hill
+Option 1 Lands FSWM (Crozier, 2026), Table 22.
+5.6.1.2
+
+SWM pond 7 Storage Requirements
+
+In order to meet the allowable release rates, the required storage volumes for the design storm events
+will be confirmed through hydrologic modelling through VO. The preliminary required storage volumes
+are present in Table 5-8 below. A total provided storage of 37,000 m3 is available for SWM Pond 7.
+Table 5-8: SWM pond 7 Active Storage Requirements Summary
+
+Return Period
+
+Release Rate
+(m3/s)
+
+Required Storage
+(m3) [6 Hour AES]
+
+Required Storage
+(m3) [12 Hour
+AES]
+
+Required Storage
+(m3) [24 Hour
+AES]
+
+2 Year
+
+0.038
+
+8,790
+
+9,987
+
+10,485
+
+5 Year
+
+0.080
+
+12,333
+
+13,633
+
+14,165
+
+10 Year
+
+-
+
+13,830
+
+14,735
+
+14,869
+
+25 Year
+
+-
+
+15,537
+
+15,924
+
+15,574
+
+50 Year
+
+-
+
+16,850
+
+16,901
+
+16,312
+
+100 Year
+
+0.979
+
+18,154
+
+17,879
+
+17,201
+Page 24
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+Return Period
+
+Release Rate
+(m3/s)
+
+Regional
+
+2.567
+
+5.6.2
+
+Required Storage
+(m3) [6 Hour AES]
+
+August 2026
+Project 2026-5635
+
+Required Storage
+(m3) [12 Hour
+AES]
+
+Required Storage
+(m3) [24 Hour
+AES]
+
+36,259
+
+SWM Pond 7 Quality Control
+
+The SWM pond 7 quality storage standards were established in accordance with the MECP SWMPD
+Manual’s Basic Protection (60% long-term S.S. removal) criteria published in March 2003. Table 5-9
+summarizes the preliminary water quality control parameters for the SWM pond 7. Refer to Appendix D
+for detailed calculations.
+Table 5-9: SWM Pond 7 Water Quality Summary
+
+SWM Pond 7 Quality Control Parameter
+
+Value
+
+Type of Facility
+
+Dry Pond
+
+Level of Protection
+
+Basic
+
+Drainage Area
+
+34.27 ha
+
+Weighted Imperviousness
+
+71%
+
+Min. Extended Detention Storage Volume Requirement
+
+6,945 m3
+
+Provided Extended Detention Storage Volume
+
+7,500 m3
+
+Water quality treatment for SWM Pond 7 is provided through a treatment train. Pre-treatment is provided
+by CB shields and deep-sump catch basins (900 mm sumps) within the tributary to the facility, which
+together provide 50% TSS removal. Runoff is then conveyed to the dry SWM pond, where extended
+detention of the water quality storage volume provides a further 60% TSS removal. The two treatment
+stages in series compound to 80% TSS removal overall, i.e. 50% + 60% x (100-50)% = 80%, which meets
+the enhanced treatment policy as indicated in Section 5.2. The perforated-pipe exfiltration system
+described in Section 5.7 is provided to satisfy the water balance and infiltration objectives for the site; no
+TSS removal credit is claimed for it within the SWM Pond 7 treatment train.
+
+The subject site is not located within a Wellhead Protection Area (WHPA). As the site lies within a
+Page 25
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+Significant Groundwater Recharge Area with tight native soils and a high groundwater table, best efforts
+should be made to match the pre-development annual infiltration volume under post-development
+conditions.
+A site water balance analysis was completed and is provided in Appendix D. Under pre-development
+conditions, the site produces an average annual runoff of 70,539 m3/year, infiltration of 47,026 m3/year,
+and evapotranspiration of 232,283 m3/year.
+Under post-development conditions (without mitigation), average annual runoff increases to 191,551
+m3/year, infiltration decreases to 23,734 m3/year, and evapotranspiration is 134,563 m3/year. This results
+in an average annual infiltration deficit of 23,292 m3/year.
+To mitigate the infiltration deficit, rear yard infiltration trenches are proposed. Because of the high
+groundwater table present across the site, subsurface LID measures within the municipal right-of-way
+(ROW) are not considered feasible. The exact locations, configuration, and detailed design of the rear yard
+infiltration trenches will be provided with subsequent submissions and will be coordinated with the
+project hydrogeologist.
+Given the presence of clay in the underlying soils, an assumed native soil infiltration rate of 15 mm/hour
+was adopted and reduced by a factor of safety of 2.5 to a design infiltration rate of 6 mm/hour. Based on
+a target drawdown time of 72 hours, this yields a maximum storage depth of 1.08 m (1.08 m = 6 mm/hr x
+72 hr / 1000 / 0.4 porosity).
+The rear yard infiltration trenches have been sized to capture the single-event runoff volume required to
+satisfy the post-to-pre annual infiltration deficit of 23,292 m3/year. The resulting retention requirement
+is approximately 665 m3 per storm event. This retention is provided by approximately 1,120 m of rear yard
+infiltration trench, comprising a clear stone trench 1.5 m wide and 1.0 m deep, giving a total trench volume
+of 1,680 m3. Assuming a clear stone void ratio of 40%, the retained volume is approximately 672 m3, which
+satisfies the 665 m3 retention requirement.
+Under post-development conditions with the proposed mitigation, the site will produce an average annual
+surface runoff of 168,051 m3/year, infiltration of 47,234 m3/year, and evapotranspiration of 134,563
+m3/year. The additional infiltration provided by the rear yard infiltration trenches satisfies the post-to-pre
+infiltration deficit. Table 5-10 summarizes the water balance results. Refer to Appendix D for detailed
+Page 26
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+calculations.
+Table 5-10: Water Balance Summary
+
+Water Balance
+Parameter
+
+PreDevelopment
+
+PostDevelopment
+
+Change
+(Pre to
+Post)
+
+PostDevelopment
+with
+Mitigation
+
+Change (Pre
+to Post with
+Mitigation)
+
+Inputs (m3/year)
+Precipitation
+
+349,848
+
+349,848
+
+0
+
+349,848
+
+0
+
+Total Inputs
+
+349,848
+
+349,848
+
+0
+
+349,848
+
+0
+
+Outputs (m3/year)
+Precipitation Surplus
+
+117,565
+
+215,285
+
+97,720
+
+215,285
+
+97,720
+
+Net Surplus
+
+117,565
+
+215,285
+
+97,720
+
+215,285
+
+97,720
+
+Total Evapotranspiration
+
+232,283
+
+134,563
+
+-97,720
+
+134,563
+
+-97,720
+
+Total Infiltration
+
+47,026
+
+23,734
+
+-23,292
+
+47,234
+
+208
+
+Total Runoff
+
+70,539
+
+191,551
+
+121,012
+
+168,051
+
+97,512
+
+Total Outputs
+
+349,848
+
+349,848
+
+0
+
+349,848
+
+0
+
+Page 27
+
+Phil Gotfried
+
+RESIDENTIAL SUBDIVISION
+UNITED HOLDINGS INC.
+C/O SOLMAR DEVELOPMENT CORP.
+TOWN OF CALEDON
+LEGEND
+
+W:\5600's\5635\Drawings\Services\2026-08-04-5635-Services.dwg
+
+N
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+6 Ronrose Drive, Concord, Ontario L4K 4R3
+Tel: (905) 738-6100 Email: general@schaeffers.com
+www.schaeffers.com
+
+FIGURE 5.1
+EXISTING
+STORM DRAINAGE PLAN
+
+1
+
+SOURCE: Functional Servicing and Stormwater Management Report Bolton North Hill Option 1 Lands" by Crozier. Dated March 2026
+
+5
+
+2024-5476
+
+AUGUST 2026
+
+SCALE: N.T.S.
+
+Phil Gotfried
+
+W:\5600's\5635\Drawings\Services\2026-08-04-5635-Services.dwg
+
+N
+
+LEGEND
+PHASE 1 SUBJECT AREA
+
+FUTURE PHASE AREAS
+
+PROPOSED SWM POND
+PROPOSED DRAINAGE
+TO SWM POND 6
+AREA = 29.12ha
+PROPOSED DRAINAGE
+TO SWM POND 7
+AREA = 34.44ha
+PROPOSED DRAINAGE TO
+NORTH EAST SITE PLAN
+AREA = 0.66ha
+
+FUNCTIONAL SERVICING REPORT AND DESIGN
+FOR OAKBANK ESTATES SUBDIVISION
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+6 Ronrose Drive, Concord, Ontario L4K 4R3
+
+LEGEND
+(AS SHOWN ABOVE)
+
+FIGURE 5.2
+PROPOSED
+STORM DRAINAGE PLAN
+
+Tel: (905) 738-6100 Email: general@schaeffers.com
+www.schaeffers.com
+
+2026-5635
+
+AUGUST 2026
+
+SCALE: N.T.S.
+
+Phil Gotfried
+
+W:\5600's\5635\Drawings\Services\2026-08-04-5635-Services.dwg
+
+N
+
+LEGEND
+PHASE 1 SUBJECT AREA
+
+FUTURE PHASE AREAS
+
+PROPOSED STORM SEWERS
+
+PROPOSED SWM POND
+
+EXISTING CULVERT
+
+CONTROL MANHOLE
+
+INFILTARTION TRENCHES
+
+FUNCTIONAL SERVICING REPORT AND DESIGN
+FOR OAKBANK ESTATES SUBDIVISION
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+
+LEGEND
+
+FIGURE 5.3
+PROPOSED
+STORM SERVICING
+
+(AS SHOWN ABOVE)
+
+6 Ronrose Drive, Concord, Ontario L4K 4R3
+Tel: (905) 738-6100 Email: general@schaeffers.com
+www.schaeffers.com
+
+2026-5635
+
+AUGUST 2026
+
+SCALE: N.T.S.
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+6.0
+
+August 2026
+Project 2026-5635
+
+Erosion and Sediment Control Plan
+
+In order to mitigate the effects of construction on site, a comprehensive ESC strategy following the Erosion
+and Sediment Control Guideline for Urban Construction by Sustainable Technologies has been prepared
+for the project.
+Erosion Control Measures
+•
+
+Phasing: It is advantageous to reduce the limit of construction during the topsoil stripping phase
+in order to limit areas with soil exposure.
+
+•
+
+Stabilization: Grading for construction generally requires the removal of topsoil immediately. If
+piled or stored on site, it must be stabilized immediately. It is also recommended that areas left
+unworked for longer than 30 days be stabilized. Possible measures are as follows:
+
+•
+
+o
+
+Mechanical Seeding/Hydroseeding
+
+o
+
+Terra Seeding
+
+o
+
+Growth Media Blankets
+
+Cut-off Swales: To be designed as per ESC guidelines and stabilized accordingly.
+
+Sediment Control Measures (refer to SC drawings in submission package)
+•
+
+Siltation control perimeter fencing
+o
+
+Double Silt Fence with Straw Bales
+
+o
+
+Siltation Control Fence
+
+•
+
+Cut-off Swales: To be designed as per ESC guidelines and stabilized accordingly.
+
+•
+
+Flow distributors: Silt Socks have been proposed as they provide ponding opportunities and
+energy dissipation, helping to slow down flow velocity and promote sediment settling in swales.
+
+•
+
+Sediment Traps: Have been sized in accordance with ESC guidelines.
+
+•
+
+Temporary Sediment Ponds: Shall be sized as per MECP Quality control guidelines. A design
+Page 31
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+August 2026
+Project 2026-5635
+
+drawdown time of 48 hours is required.
+
+Page 32
+
+Functional Servicing and Stormwater Management Report
+Oakbank Estates, Town of Caledon
+
+7.0
+
+August 2026
+Project 2026-5635
+
+CLOSING REMARKS
+
+This Functional Servicing Report has been prepared to demonstrate the conformance of the proposed
+water supply, sanitary, and storm servicing concept for the subject residential development with the
+Region of Peel, Toronto and Region Conservation Authority (TRCA), and Town of Caledon design
+standards.
+Water Supply Servicing
+•
+
+The proposed development will be serviced by Pressure Zone 7 to ensure adequate water supply
+and pressure.
+
+•
+
+Connect to the future municipal water infrastructure along Regional Road 50 and Columbia Way.
+
+Sanitary Servicing
+•
+
+Sanitary flows will be directed through internal sewers along the proposed road network.
+
+•
+
+The ultimate servicing strategy will utilize the new proposed trunk sewer on Humber Station Road.
+
+Storm Servicing
+•
+
+Stormwater will be managed through a dual-drainage system, with minor flows conveyed via
+sewers and major flows through overland routes.
+
+•
+
+Two dry stormwater management ponds, SWM Pond 6 and SWM Pond 7, will provide water
+quality, erosion, and quantity control, each with associated sediment forebays and sediment
+drying areas.
+
+Page 33
+
+PROJECT No.: 5635
+PROJECT: Oakbank Estates
+LOCATION: Caledon (Bolton North)
+
+APPENDIX A
+BACKGROUND INFORMATION
+
+PROJECT No.: 5635
+PROJECT: Oakbank Estates
+LOCATION: Caledon (Bolton North)
+
+APPENDIX B
+WATER SUPPLY SERVICING
+
+Water Supply Calculations
+Project No.
+August 2026
+Oakbank Estates
+Residential‡
+ICI‡
+
+280
+300
+
+Drainage Area
+
+Land Use
+
+Number of Units
+
+1
+2
+3
+
+Townhouses
+Single Detatched
+School
+
+375.5
+192
+-
+
+Pop. Density
+†
+(persons/unit)
+3.4
+4.2
+-
+
+Average Day Demand
+(L/s)‡
+6.94
+6.94
+
+Peak Hour Demand
+Peaking Factor†
+3.0
+-
+
+Peak Hour Demand
+(L/s)
+20.81
+20.81
+
+Water Supply Demand:
+
+L/capita/day
+L/capita/day
+
+Population Summary
+Population
+1,277
+807
+53
+
+Water Demands
+Land Use
+Residential
+Total
+
+Max Day Demand
+Peaking Factor‡
+2.0
+-
+
+Max Day
+Demand (L/s)
+13.87
+13.87
+
+Fire Flow* (L/s)
+267
+267
+
+Max Demand +
+Fire Flow (L/s)
+280.87
+280.87
+
+Notes
+†
+As per Region of Peel Linear Wastewater Design Guidelines (2023)
+‡
+Based on Region of Peel Public Works Watermain Design Criteria (2010)
+*Fire demand calculated using the Fire Underwriters Survey (2020) guidelines
+
+C:\Users\hliu\Documents\5635\Water + Sanny FSR\2026-08-04-5635-Water Supply Calculations
+
+2026-08-06
+
+PROJECT No.: 5635
+PROJECT: Oakbank Estates
+LOCATION: Caledon (Bolton North)
+
+APPENDIX C
+SANITARY SERVICING
+
+Population Estimate
+Project No. 5635
+
+Date:
+
+Proposed Outlet to Highway 50:
+40.68 ha
+
+Total Site Area:
+
+Item
+
+Lot/Block #
+
+1
+
+1, 2, 4-6, 9-13, 34-62, 70-75, 78, 79, 85-93,
+112-115, 119-126, 129-136, 140-146 AND
+152-160 3, 15-24, 63-66, 76 AND 77
+
+2
+3
+4
+5
+6
+
+7, 8, 26-33, 67-69, 80-84, 94-111, 116-118,
+127, 128, 137-139, 147-151 AND 161-164 - 25-14
+166-170 and 173-187 , 165, 171 and 172
+188-196, 206-208 AND 210-216
+209
+224
+Total
+
+Area Taken from Draft Plan
+
+Land Use Type
+
+Number of Units
+
+Population Density
+(pp/unit)
+
+Population
+(Residential)
+
+Area
+(ha)
+3.787
+
+11.0m single Detached
+
+110
+
+4.2
+
+462
+
+9.15m Single Detached
+7.0m Standard townhouse
+6.0 dual frontage townhouse
+7.0 Dual frontage townhouse
+Elementery school
+
+82
+261.5
+103
+11
+-
+
+4.2
+3.4
+3.4
+3.4
+-
+
+344
+889
+350
+38
+52.5
+2137
+
+2.308
+
+567.5
+
+5.75
+2.23
+0.336
+0.752
+15.16
+
+Proposed Sanitary Flow Calculation
+Project No. 5635
+
+06-Aug-26
+
+Infiltration Rate:
+Residential Generation Rate:
+
+0.26 L/s/ha
+290 L/capita/day
+
+Proposed Outlet to Columbia Way
+40.68 ha
+
+Total Developable Land Area (ha):
+
+Summary of Sanitary Design Flow Calculation
+Population Type
+
+Total Population
+
+Average
+Demand (L/s)
+
+Residential
+
+2137
+
+7.17
+
+Harmon's
+Peaking
+Factor (M)*
+3.56
+
+Peak Flow
+(L/s)
+
+Total Area (ha)
+
+Infiltration
+(L/ha/s)
+
+Infiltration
+(L/s)
+
+Total Peak
+Flow (L/s)
+
+25.56
+
+40.68
+
+0.26
+
+10.58
+
+36.14
+
+M = 1 + 14/(4 + (P/1000) 0.5)
+Maximum M=4
+*Population Estimate based on the Region of Peel's Linear Wastewater Standards (March 2023)
+
+PROJECT No.: 5635
+PROJECT: Oakbank Estates
+LOCATION: Caledon (Bolton North)
+
+APPENDIX D
+STORMWATER MANAGEMENT CALCULATIONS
+
+PROJECT No.: 5635
+PROJECT: Oakbank Estates
+LOCATION: Caledon (Bolton North)
+
+POST-DEVELOPMENT RUNOFF COEFFICIENT
+SWMP 6 - Option 1 Lands
+Composite Runoff Coefficient
+Area (ha)*
+
+Runoff Coeff. Impervious
+
+A*R
+
+A*Imp
+
+Ximp
+
+A*Ximp
+
+4.32
+2.36
+0.93
+0.75
+2.83
+11.18
+
+Subject Site - Oakbank Estates
+0.65
+0.64
+0.50
+0.43
+0.75
+0.79
+0.75
+0.79
+0.75
+0.79
+0.66
+0.66
+
+2.81
+1.18
+0.70
+0.56
+2.12
+7.37
+
+2.78
+1.01
+0.73
+0.59
+2.22
+7.33
+
+0.51
+0.43
+0.57
+0.79
+0.79
+0.59
+
+2.22
+1.01
+0.53
+0.59
+2.22
+6.57
+
+Total Area
+
+17.09
+
+External Option 1 Lands
+0.64
+0.62
+
+10.85
+
+10.62
+
+0.50
+
+8.50
+
+Overall Area
+
+28.27
+
+18.22
+
+17.95
+
+0.53
+
+15.07
+
+Single Detached
+SWM Blocks
+Townhouse
+Elementary School
+ROW
+Total Area
+
+*Areas Extracted from CAD base
+
+0.64
+
+0.63
+
+PROJECT No.: 5635
+PROJECT: Oakbank Estates
+LOCATION: Caledon (Bolton North)
+
+POST-DEVELOPMENT RUNOFF COEFFICIENT
+SWMP 7 - Option 1 Lands
+Composite Runoff Coefficient
+Area (ha)*
+Single Detached
+Townhouse
+SWM Blocks
+ROW
+Total Area
+
+1.83
+7.42
+1.34
+5.40
+15.98
+
+Total Area
+
+18.29
+
+Overall Area
+
+34.27
+
+*Areas Extracted from CAD base
+
+Runoff Coeff. Impervious
+
+A*R
+
+A*Imp
+
+Ximp
+
+A*Ximp
+
+Subject Site - Oakbank Estates
+0.65
+0.64
+1.19
+0.75
+0.79
+5.56
+0.50
+0.43
+0.67
+0.75
+0.79
+4.05
+0.72
+0.74
+11.47
+
+1.18
+5.83
+0.57
+4.25
+11.82
+
+0.51
+0.57
+0.43
+0.79
+0.63
+
+0.94
+4.25
+0.57
+4.25
+10.01
+
+12.35
+
+12.41
+
+0.54
+
+9.93
+
+23.82
+
+24.23
+
+0.58
+
+19.94
+
+External Option 1 Lands
+0.68
+0.68
+0.69
+
+0.71
+
+PROJECT No.: 5635
+PROJECT: Oakbank Estates
+LOCATION: Caledon (Bolton North)
+
+POST-DEVELOPMENT RUNOFF COEFFICIENT
+Total Site
+Composite Runoff Coefficient
+Area (ha)*
+Single Detached
+Townhouse
+SWM Blocks
+Elementary School
+Parks/Green Space/NHS
+ROW
+Total Area
+*Areas Extracted from Draft Plan
+
+6.10
+8.34
+5.61
+0.75
+11.46
+8.42
+40.68
+
+Runoff Coeff Impervious
+0.65
+0.75
+0.50
+0.75
+0.30
+0.75
+0.57
+
+0.64
+0.79
+0.43
+0.79
+0.14
+0.79
+0.53
+
+A*R
+
+A*Imp
+
+Ximp
+
+A*Ximp
+
+3.96
+6.26
+2.81
+0.56
+3.44
+6.31
+23.34
+
+3.92
+6.55
+2.41
+0.59
+1.64
+6.61
+21.72
+
+0.51
+0.57
+0.43
+0.79
+0.14
+0.79
+0.47
+
+3.13
+4.78
+2.41
+0.59
+1.64
+6.61
+19.17
+
+PROJECT No.: 5635
+PROJECT: Oakbank Estates
+LOCATION: Caledon (Bolton North)
+
+EMERGENCY SPILLWAY
+Pond 6
+
+264.80 m
+264.50 m
+(N.T.S.)
+
+Weir Parameters
+
+Weir Length (L)
+Crest bottom Length (B)
+Crest Elevation
+Side Slope
+
+10.0 m
+18.0 m
+264.50 m
+10 :1 (h:v)
+
+(Parallel to flow)
+(Perp. to flow)
+
+3/2
+
+Weir Calculations (Q = Cd * b * H )
+
+Water Elevation
+264.55
+
+Water Level (H)
+0.05
+
+H/L
+0.005
+
+Cd
+0.63
+
+Q
+0.13
+
+264.60
+264.65
+264.70
+264.80
+
+0.10
+0.15
+0.20
+0.30
+
+0.010
+0.015
+0.020
+0.030
+
+1.12
+1.28
+1.36
+1.45
+
+0.67
+1.45
+2.44
+5.00
+
+Maximum Flow at Elevation 264.80m is
+100-Year Storm Peak Inflow is
+
+5.00
+4.76
+
+m3/s
+m3/s
+
+(6HR AES)
+
+PROJECT No.: 5635
+PROJECT: Oakbank Estates
+LOCATION: Caledon (Bolton North)
+
+EROSION CONTROL
+Pond 6
+Erosion Control:
+Input
+Area =
+R.V =
+Runoff Coefficient =
+Draw Down Time =
+
+28.27
+25
+0.64
+48
+
+ha
+mm
+hrs
+
+Calculations:
+3
+Storage =
+4,523 m
+3
+Average Outflow =
+0.026 m /s
+3
+Peak Outflow =
+0.039 m /s
+Note: Estimated at 1.5 times Average Outflow
+Provide 4523 m3 for erosion control.
+
+2026-08-06
+
+PROJECT No.: 5635
+PROJECT: Oakbank Estates
+LOCATION: Caledon (Bolton North)
+
+FOREBAY SIZING
+Pond 6
+
+FOREBAY SETTLING LENGTH
+ref: SWM Planning & Design Manual (MOE, March 2003)
+Dist = (rQp / Vs)1/2 , where
+
+Dist = forebay length (m)
+r = Length to width ratio of forebay (>2:1)
+3
+Qp = peak flowrate from the pond during design quality storm (m /s)
+Vs = settling velocity in the forebay (m/s)
+
+r=
+Qp =
+
+3.0
+0.043
+
+m3/s
+
+(2:1)
+(required erosion outflow rate)
+
+Vs =
+
+0.0003
+
+m
+
+(based on 150mm particles)
+
+Dist =
+
+21
+
+m
+
+DISPERSION LENGTH
+ref: SWM Planning & Design Manual (MOE, March 2003)
+D = 8Q / dVf , where
+
+D = length of dispersion (m)
+3
+Q = 5 year inlet flowrate (m /s)
+d = depth of permanent pool in forebay (m)
+Vf = desired velocity in the forebay (m/s)
+
+Q=
+d=
+Vf =
+
+2.49
+1.50
+0.5
+
+m3/s
+m
+m/s
+
+D=
+
+27
+
+m
+
+(from hydrologic model)
+(MOEE empirical value)
+
+Forebay Length Required: 27 metres
+Forebay Length Provided: 180 metres
+
+PROJECT No.: 5635
+PROJECT: Oakbank Estates
+LOCATION: Caledon (Bolton North)
+
+WATER QUALITY REQUIREMENT
+Dry SWM Pond 6
+
+Table: Water Quality Storage Requirements Based on Receiving Waters
+Protection
+Level
+Basic
+
+SWMP Type
+Dry Pond
+
+Storage Volume (m3/ha) for Impervious Level
+35%
+55%
+70%
+85%
+90
+150
+200
+240
+
+Input:
+Estimated Imperviousness =
+63%
+Area =
+28.27
+ha
+Level of Protection:
+3
+SWMP Type : Dry Pond
+Calculation:
+Total Storage Volume Required =
+
+177
+
+m3/ha →
+
+Average Outflow (48 hr Detention) =
+Peak Outflow =
+
+0.029
+0.043
+
+m3/s
+m3/s
+
+4,994
+
+m3
+
+PROJECT No.: 5635
+PROJECT: Oakbank Estates
+LOCATION: Caledon (Bolton North)
+
+QUANTITY CONTROL
+Allowable Release & Required Storage - Pond 6
+
+Pond 6 Drainage Area: 28.27 ha
+Storm Event
+
+Unit Flow (L/s/ha)
+
+WQ/EC
+2 Year
+5 Year
+10 Year
+25 Year
+50 Year
+100 Year
+Regional
+
+2.36
+4.13
+5.51
+7.31
+8.84
+10.48
+
+Target Release Rate
+3
+(m /s)
+
+Required Storage (m3)
+[6 hour AES]
+
+Required Storage (m3)
+[12 hour AES]
+
+Required Storage (m3)
+[24 Hour AES]
+
+6743
+9294
+11003
+13160
+14772
+16361
+
+4994
+7669
+10168
+11804
+13832
+15307
+16786
+34450
+
+8004
+10301
+11738
+13486
+14787
+16097
+
+0.043
+0.067
+0.117
+0.156
+0.207
+0.250
+0.296
+2.125
+
+PROJECT No.: 5635
+PROJECT: Oakbank Estates
+LOCATION: Caledon (Bolton North)
+
+SEDIMENT DRYING AREA
+Pond 6
+
+Annual Sediment Loading - Pond 6
+Catchment Imperviousness
+(%)
+Annual Loading (m 3 /ha)
+63
+2.38
+
+Area (ha)
+28.27
+
+Total Sediment Volume for 10 year period (m3)
+
+672.83
+
+Sediment Drying Area Req'd
+Area Req'd (m2)
+Volume, V = (a+b)/2*h*L
+a
+3:1
+
+3h
+
+h
+
+3:1
+L
+
+a
+
+3h
+b
+
+Top width, a (m)
+Bottom width, b (m)
+Height, h (m)
+Length, L (m)
+Volume Provided
+
+15.0
+21.0
+1 <--- Minimum depth
+38
+684.00
+
+798.00
+
+PROJECT No.:
+
+5635
+
+PROJECT:
+
+Oakbank Estates
+
+LOCATION:
+
+Caledon, Peel
+
+DATE:
+
+2026-07-10
+
+Water Quality Storage Calculations - Pond 7
+MECP Stormwater Management Planning & Design Manual (2003) - Table 3.2
+
+Reference: Table 3.2 - Water Quality Storage Requirements
+Protection Level
+
+Enhanced
+(80% LT S.S. removal)
+
+Normal
+(70% LT S.S. removal)
+
+Basic
+(60% LT S.S. removal)
+
+Storage Volume (m3/ha) by Impervious Level
+
+SWMP Type
+
+Infiltration
+Wetlands
+Hybrid Wet Pond/Wetland
+Wet Pond
+Infiltration
+Wetlands
+Hybrid Wet Pond/Wetland
+Wet Pond
+Infiltration
+Wetlands
+Hybrid Wet Pond/Wetland
+Wet Pond
+Dry Pond (Continuous Flow)
+
+35%
+
+55%
+
+70%
+
+85%
+
+25
+80
+110
+140
+20
+60
+75
+90
+20
+60
+60
+60
+90
+
+30
+105
+150
+190
+20
+70
+90
+110
+20
+60
+70
+75
+150
+
+35
+120
+175
+225
+25
+80
+105
+130
+20
+60
+75
+85
+200
+
+40
+140
+195
+250
+30
+90
+120
+150
+20
+60
+80
+95
+240
+
+* Wet facilities: 40 m3/ha of the total is extended detention; remainder is permanent pool. Dry Pond (Continuous Flow) is Basic protection only.
+* Imperviousness outside 35-85% is extrapolated linearly from the nearest table segment.
+
+Design Inputs
+Pond:
+Drainage Area (A):
+Imperviousness (TIMP):
+Protection Level:
+SWMP Type:
+
+Pond 7
+34.27
+71%
+Enhanced
+Wet Pond
+
+ha
+-
+
+select from dropdown
+Dry Pond is Basic only
+
+Water Quality Storage
+Unit Storage Volume (interpolated):
+Total Water Quality Storage:
+Extended Detention (Active) Storage:
+Permanent Pool Volume:
+
+226.7
+7,768
+1,371
+6,397
+
+m3/ha
+m3
+m3
+m3
+
+Erosion Control
+Runoff Volume (RV):
+Runoff Coefficient (C):
+Drawdown Time:
+Erosion Control Storage:
+
+25
+0.70
+48
+5,997
+
+mm
+hrs
+m3
+
+EC/WQ Release Rate
+Average Outflow (governing storage):
+Peak Outflow (1.5 x Average):
+
+0.0347
+0.052
+
+m3/s
+m3/s
+
+Summary
+Parameter
+
+Volume (m3)
+
+6,397
+Permanent Pool Volume
+1,371
+Extended Detention (Active WQ) Volume
+5,997
+Erosion Control Storage
+5,997
+Governing Active Storage (max of ED, EC)
+Provide 6397 m3 permanent pool and 5997 m3 active storage (max release 52 L/s).
+
+from Post-Dev Runoff calc
+
+interpolated from Table 3.2
+wet: 40 m3/ha; dry: all active
+0 for dry facilities
+
+from Post-Dev Runoff calc
+Storage = 10 x C x RV x A
+
+governing active storage over drawdown
+erosion control release rate
+
+PROJECT No.: 5635
+PROJECT: Oakbank Estates
+LOCATION: Caledon (Bolton North)
+
+QUANTITY CONTROL
+Allowable Release & Required Storage - Pond 7
+
+Pond 6 Drainage Area: 34.44 ha
+Storm Event
+
+Target Release Rate
+(m3/s)
+
+Required Storage (m3)
+[6 hour AES]
+
+Required Storage (m3)
+[12 hour AES]
+
+Required Storage (m3)
+[24 Hour AES]
+
+WQ/EC
+2 Year
+5 Year
+10 Year
+25 Year
+50 Year
+100 Year
+Regional
+
+0.061
+0.038
+0.080
+0.979
+2.546
+
+8646
+12172
+14538
+15641
+16789
+17924
+
+7003
+9913
+13542
+14695
+15875
+16848
+17822
+36111
+
+10409
+14072
+14869
+15658
+16361
+17272
+
+1977
+1978
+1979
+1980
+1981
+1982
+1983
+1984
+1985
+1986
+1987
+1988
+1989
+1990
+1991
+1992
+1993
+1994
+1995
+1996
+1997
+1998
+1999
+2000
+2001
+2002
+2003
+2004
+2005
+2006
+
+<= 15mm
+
+<=20mm
+
+<=25mm
+
+<=50mm
+
+165
+155
+203
+183
+197
+174
+164
+174
+188
+162
+175
+196
+190
+188
+196
+200
+184
+172
+181
+225
+178
+144
+121
+196
+149
+155
+184
+234
+203
+171
+
+414
+358
+347
+368
+362
+374
+364
+342
+427
+317
+427
+396
+318
+505
+318
+377
+363
+375
+387
+423
+406
+285
+322
+381
+366
+336
+383
+441
+336
+416
+
+579
+466
+581
+496
+528
+600
+559
+465
+608
+536
+564
+509
+489
+632
+590
+558
+513
+609
+476
+621
+523
+431
+395
+499
+489
+494
+555
+622
+493
+604
+
+697
+639
+704
+674
+670
+697
+662
+641
+743
+722
+657
+598
+589
+741
+692
+661
+600
+640
+541
+723
+630
+517
+518
+519
+581
+593
+676
+672
+612
+712
+
+762
+682
+817
+746
+715
+769
+860
+801
+813
+794
+723
+619
+655
+852
+755
+753
+738
+685
+676
+855
+721
+581
+540
+608
+691
+642
+761
+764
+660
+803
+
+1044
+745
+970
+832
+885
+988
+920
+915
+987
+893
+808
+660
+784
+949
+810
+925
+780
+759
+917
+1049
+749
+753
+667
+896
+789
+735
+943
+791
+808
+982
+
+180
+
+374
+
+536
+
+644
+
+728
+
+858
+
+0
+5
+10
+15
+20
+25
+30
+40
+45
+50
+
+0
+185
+384
+550
+661
+747
+774
+827
+853
+880
+
+y = -0.4921x2 + 41.174x + 11.188
+rainfall depth
+3.18
+137
+
+5.47
+222
+
+20.72
+653
+
+16.6
+559
+
+28.7
+788
+
+17.94
+591
+
+USED ABOVE TABLE FOR RAIN (FEB 2023)
+
+Precipitation Depth vs. Annual Precipitation Amount - Caledon
+1000
+900
+
+AnnuaL Precipitation (mm)
+
+Rainfall Depth
+<= 5mm
+<= 10mm
+
+Year
+
+800
+
+y = -0.4921x2 + 41.174x + 11.188
+R² = 0.9915
+
+700
+600
+500
+400
+300
+200
+
+100
+0
+0
+
+10
+
+20
+
+30
+
+Precipitation Depth (mm)
+
+40
+
+50
+
+60
+
+TABLE 1: WATER BUDGET - PRE DEVELOPMENT
+WATER BALANCE/WATER BUDGET ASSESSMENT
+Site
+Catchment Designation
+2
+
+Area (m )
+Pervious Area (m2)
+Impervious Area (m2)
+Infiltration Factors
+Topography Infiltration Factor (Slight Slopes)
+Soil Infiltration Factor (Clay)
+Land Cover Infiltration Factor (Cultivated Land)
+MOE Infiltration Factor
+Inputs (per unit area)
+Precipitation (mm/year)*
+Total Inputs (mm/year)
+Outputs (per unit area)
+Precipitation Surplus (mm/year)
+Net Surplus (mm/year)
+Downspout Disconnection Retention
+Evapotranpiration (mm/year)*
+Roof Evapotranspiration (mm/year)
+Rooftop Runoff Lawn Evaporation (mm/year)
+Total Evapotranspiration (mm/yr)
+Infiltration (mm/year)
+Rooftop Infiltration (mm/year)
+Total Infiltration (mm/year)
+Runoff Pervious Area (mm/year)
+Runoff Impervious Area (mm/year)
+Total Runoff (mm/year)
+Total Outputs (mm/year)
+Difference (Inputs - Outputs)
+Input Volumes
+Precipitation (m3/year)
+Total Inputs (m3/year)
+
+Landscape
+
+Total
+
+406800
+406800
+0
+
+406800
+406800
+0
+
+0.20
+0.10
+0.10
+0.4
+860
+860
+
+860
+860
+
+289
+289
+0
+571
+0
+0
+571
+116
+0
+116
+173
+0
+173
+860
+0
+
+289
+289
+0
+571
+0
+0
+571
+116
+0
+116
+173
+0
+173
+860
+0
+
+349848
+
+349848
+
+349848
+
+349848
+
+117565
+117565
+0
+232283
+0
+0
+232283
+47026
+0
+47026
+70539
+0
+70539
+349848
+0
+
+117565
+117565
+0
+232283
+0
+0
+232283
+47026
+0
+47026
+70539
+0
+70539
+349848
+0
+
+Outputs (Volumes)
+Precipitation Surplus (m3/year)
+Net Surplus (m3/year)
+Downspout Disconnection Retention* (m 3/year)
+Evapotranpiration (m3/year)
+Roof Evapotranspiration (m3/year)
+Rooftop Runoff Lawn Evaporation (m3/year)
+Total Evapotranspiration (m3/year)
+Infiltration (m3/year)
+Rooftop Infiltration (m3/year)
+Total Infiltration (m3/year)
+Runoff Pervious Area (m3/year)
+Runoff Impervious Area (m3/year)
+Total Runoff (m3/year)
+Total Outputs (m3/year)
+Difference (Inputs - Outputs)
+
+TABLE 2: WATER BUDGET - POST-DEVELOPMENT WITHOUT MITIGATION
+WATER BALANCE/WATER BUDGET ASSESSMENT
+Site
+Catchment Designation
+
+SD Units
+SD Units Impervious
+Pervious (36%)
+(64%)
+
+TH Pervious
+(21%)
+
+TH Impervious (79%)
+
+Area (m2)
+Pervious Area (m2)
+Impervious Area (m2)
+
+21942
+21942
+0
+
+39008
+0
+39008
+
+17516
+17516
+0
+
+65894
+0
+65894
+
+Topography Infiltration Factor
+Soil Infiltration Factor
+Land Cover Infiltration Factor
+MOE Infiltration Factor
+
+0.20
+0.10
+0.10
+0.4
+
+N/A
+N/A
+N/A
+N/A
+
+0.20
+0.10
+0.10
+0.4
+
+N/A
+N/A
+N/A
+N/A
+
+Precipitation (mm/year)
+Total Inputs (m3/year)
+
+860
+860
+
+860
+860
+
+860
+860
+
+860
+860
+
+Precipitation Surplus (mm/year)1
+Net Surplus (mm/year)
+Downspout Disconnection Retention2
+Evapotranpiration (mm/year)
+Roof Evapotranspiration (mm/year)2
+Rooftop Runoff Lawn Evaporation (mm/year)
+Total Evapotranspiration (mm/yr)
+Infiltration (mm/year)
+Rooftop Infiltration (mm/year)2
+Total Infiltration (mm/year)
+Runoff Pervious Area (mm/year)
+Runoff Impervious Area (mm/year)
+Total Runoff (mm/year)
+Total Outputs (mm/year)
+Difference (Inputs - Outputs)
+
+289
+289
+0
+571
+0
+0
+571
+116
+0
+116
+173
+0
+173
+860
+0
+
+774
+774
+0
+86
+0
+0
+86
+0
+0
+0
+0
+774
+774
+860
+0
+
+289
+289
+0
+571
+0
+0
+571
+116
+0
+116
+173
+0
+173
+860
+0
+
+774
+774
+0
+86
+0
+0
+86
+0
+0
+0
+0
+774
+774
+860
+0
+
+Precipitation (m3/year)
+
+18870
+
+33547
+
+15064
+
+56669
+
+Total Inputs (m /year)
+
+18870
+
+33547
+
+15064
+
+56669
+
+Precipitation Surplus (m3/year)
+Net Surplus (m3/year)
+Downspout Disconnection Retention2 (m3/year)
+Evapotranspiration (m3/year)
+Roof Evapotranspiration (m3/year)
+Rooftop Runoff Lawn Evaporation (m 3/year)
+Total Evapotranspiration (m3/year)
+Infiltration (m3/year)
+Rooftop Infiltration (m3/year)
+Total Infiltration (m3/year)
+Runoff Pervious Area (m 3/year)
+Runoff Impervious Area (m 3/year)
+Total Runoff (m3/year)
+
+6341
+6341
+0
+12529
+0
+0
+12529
+2536
+0
+2536
+3805
+0
+3805
+18870
+0
+
+30192
+30192
+0
+3355
+0
+0
+3355
+0
+0
+0
+0
+30192
+30192
+33547
+0
+
+5062
+5062
+0
+10002
+0
+0
+10002
+2025
+0
+2025
+3037
+0
+3037
+15064
+0
+
+51002
+51002
+0
+5667
+0
+0
+5667
+0
+0
+0
+0
+51002
+51002
+56669
+0
+
+3
+
+Total Outputs (m3/year)
+Difference (Inputs - Outputs)
+1 - Assumes 10% Evaporation from Impervious Surfaces
+
+ROW Pervious
+(21%)
+
+Elementary
+School Pervious
+(21%)
+
+Elementary School
+Impervious (79%)
+
+SWM Block
+Pervious (57%)
+
+SWM Block
+Impervious (43%)
+
+Parks/NHS/Open
+Space Pervious
+(100%)
+
+Total
+
+1579
+1579
+0
+
+5941
+0
+5941
+
+31988
+31988
+0
+
+24132
+0
+24132
+
+114610
+114610
+0
+
+406800
+205316
+201484
+
+0.2
+0.1
+0.1
+0.4
+
+N/A
+N/A
+N/A
+N/A
+
+0.20
+0.10
+0.10
+0.4
+
+N/A
+N/A
+N/A
+N/A
+
+0.20
+0.10
+0.10
+0.4
+
+860
+860
+
+860
+860
+
+860
+860
+
+860
+860
+
+860
+860
+
+860
+860
+
+289
+289
+0
+571
+0
+0
+571
+116
+0
+116
+173
+0
+173
+860
+0
+
+774
+774
+0
+86
+0
+0
+86
+0
+0
+0
+0
+774
+774
+860
+0
+
+289
+289
+0
+571
+0
+0
+571
+116
+0
+116
+173
+0
+173
+860
+0
+
+774
+774
+0
+86
+0
+0
+86
+0
+0
+0
+0
+774
+774
+860
+0
+
+289
+289
+0
+571
+0
+0
+571
+116
+0
+116
+173
+0
+173
+860
+0
+
+529
+529
+0
+331
+0
+0
+331
+58
+0
+58
+88
+383
+471
+860
+0
+
+1358
+
+5109
+
+27510
+
+20753
+
+98565
+
+349848
+
+57199
+
+1358
+
+5109
+
+27510
+
+20753
+
+98565
+
+349848
+
+51479
+51479
+0
+5720
+0
+0
+5720
+0
+0
+0
+0
+51479
+51479
+57199
+0
+
+456
+456
+0
+902
+0
+0
+902
+183
+0
+183
+274
+0
+274
+1358
+0
+
+4598
+4598
+0
+511
+0
+0
+511
+0
+0
+0
+0
+4598
+4598
+5109
+0
+
+9245
+9245
+0
+18265
+0
+0
+18265
+3698
+0
+3698
+5547
+0
+5547
+27510
+0
+
+18678
+18678
+0
+2075
+0
+0
+2075
+0
+0
+0
+0
+18678
+18678
+20753
+0
+
+33122
+33122
+0
+65442
+0
+0
+65442
+13249
+0
+13249
+19873
+0
+19873
+98565
+0
+
+215285
+215285
+0
+134563
+0
+0
+134563
+23734
+0
+23734
+35602
+155949
+191551
+349848
+0
+
+ROW Impervious
+(79%)
+
+17680
+66510
+17680
+0
+0
+66510
+Infiltration Factors
+0.20
+N/A
+0.10
+N/A
+0.10
+N/A
+0.4
+N/A
+Inputs (per unit area)
+860
+860
+860
+860
+Outputs (per unit area)
+289
+774
+289
+774
+0
+0
+571
+86
+0
+0
+0
+0
+571
+86
+116
+0
+0
+0
+116
+0
+173
+0
+0
+774
+173
+774
+860
+860
+0
+0
+Input Volumes
+15205
+57199
+15205
+Outputs (Volumes)
+5109
+5109
+0
+10095
+0
+0
+10095
+2044
+0
+2044
+3066
+0
+3066
+15205
+0
+
+TABLE 3: WATER BUDGET - POST-DEVELOPMENT WITH MITIGATION
+WATER BALANCE/WATER BUDGET ASSESSMENT
+Site
+Catchment Designation
+
+SD Units
+SD Units Impervious
+Pervious (36%)
+(64%)
+
+TH Pervious
+(21%)
+
+TH Impervious (79%)
+
+Area (m2)
+Pervious Area (m2)
+Impervious Area (m2)
+
+21942
+21942
+0
+
+39008
+0
+39008
+
+17516
+17516
+0
+
+65894
+0
+65894
+
+Topography Infiltration Factor
+Soil Infiltration Factor
+Land Cover Infiltration Factor
+MOE Infiltration Factor
+
+0.20
+0.10
+0.10
+0.4
+
+N/A
+N/A
+N/A
+N/A
+
+0.20
+0.10
+0.10
+0.4
+
+N/A
+N/A
+N/A
+N/A
+
+Precipitation (mm/year)
+Total Inputs (m3/year)
+
+860
+860
+
+860
+860
+
+860
+860
+
+860
+860
+
+Precipitation Surplus (mm/year)1
+Net Surplus (mm/year)
+Downspout Disconnection Retention2
+Evapotranpiration (mm/year)
+Roof Evapotranspiration (mm/year)2
+Rooftop Runoff Lawn Evaporation (mm/year)
+Total Evapotranspiration (mm/yr)
+Infiltration (mm/year)
+Rooftop Infiltration (mm/year)2
+LID Infiltration (mm/year)
+Total Infiltration (mm/year)
+Runoff Pervious Area (mm/year)
+Runoff Impervious Area (mm/year)
+Total Runoff (mm/year)
+Total Outputs (mm/year)
+Difference (Inputs - Outputs)
+
+289
+289
+0
+571
+0
+0
+571
+116
+0
+80
+196
+93
+0
+93
+860
+0
+
+774
+774
+0
+86
+0
+0
+86
+0
+0
+100
+100
+0
+674
+674
+860
+0
+
+289
+289
+0
+571
+0
+0
+571
+116
+0
+80
+196
+93
+0
+93
+860
+0
+
+774
+774
+0
+86
+0
+0
+86
+0
+0
+107
+107
+0
+667
+667
+860
+0
+
+Precipitation (m3/year)
+
+18870
+
+33547
+
+15064
+
+56669
+
+Total Inputs (m /year)
+
+18870
+
+33547
+
+15064
+
+56669
+
+Precipitation Surplus (m3/year)
+Net Surplus (m3/year)
+Downspout Disconnection Retention2 (m3/year)
+Evapotranspiration (m3/year)
+Roof Evapotranspiration (m3/year)
+Rooftop Runoff Lawn Evaporation (m 3/year)
+Total Evapotranspiration (m3/year)
+Infiltration (m3/year)
+Rooftop Infiltration (m3/year)
+LID Infiltration (m3/year)
+Total Infiltration (m3/year)
+Runoff Pervious Area (m 3/year)
+Runoff Impervious Area (m 3/year)
+Total Runoff (m3/year)
+
+6341
+6341
+0
+12529
+0
+0
+12529
+2536
+0
+1755
+4292
+2049
+0
+2049
+18870
+0
+
+30192
+30192
+0
+3355
+0
+0
+3355
+0
+0
+3901
+3901
+0
+26291
+26291
+33547
+0
+
+5062
+5062
+0
+10002
+0
+0
+10002
+2025
+0
+1401
+3426
+1636
+0
+1636
+15064
+0
+
+51002
+51002
+0
+5667
+0
+0
+5667
+0
+0
+7070
+7070
+0
+43932
+43932
+56669
+0
+
+3
+
+Total Outputs (m3/year)
+Difference (Inputs - Outputs)
+1 - Assumes 10% Evaporation from Impervious Surfaces
+
+ROW Pervious
+(21%)
+
+Elementary
+School Pervious
+(21%)
+
+Elementary School
+Impervious (79%)
+
+SWM Block
+Pervious (57%)
+
+SWM Block
+Impervious (43%)
+
+Parks/NHS/Open
+Space Pervious
+(100%)
+
+Total
+
+1579
+1579
+0
+
+5941
+0
+5941
+
+31988
+31988
+0
+
+24132
+0
+24132
+
+114610
+114610
+0
+
+406800
+205316
+201484
+
+0.2
+0.1
+0.1
+0.4
+
+N/A
+N/A
+N/A
+N/A
+
+0.20
+0.10
+0.10
+0.4
+
+N/A
+N/A
+N/A
+N/A
+
+0.20
+0.10
+0.10
+0.4
+
+860
+860
+
+860
+860
+
+860
+860
+
+860
+860
+
+860
+860
+
+860
+860
+
+289
+289
+0
+571
+0
+0
+571
+116
+0
+0
+116
+173
+0
+173
+860
+0
+
+774
+774
+0
+86
+0
+0
+86
+0
+0
+0
+0
+0
+774
+774
+860
+0
+
+289
+289
+0
+571
+0
+0
+571
+116
+0
+0
+116
+173
+0
+173
+860
+0
+
+774
+774
+0
+86
+0
+0
+86
+0
+0
+0
+0
+0
+774
+774
+860
+0
+
+289
+289
+0
+571
+0
+0
+571
+116
+0
+0
+116
+173
+0
+173
+860
+0
+
+529
+529
+0
+331
+0
+0
+331
+58
+0
+63
+122
+76
+332
+407
+860
+0
+
+1358
+
+5109
+
+27510
+
+20753
+
+98565
+
+349848
+
+57199
+
+1358
+
+5109
+
+27510
+
+20753
+
+98565
+
+349848
+
+51479
+51479
+0
+5720
+0
+0
+5720
+0
+0
+9977
+9977
+0
+41502
+41502
+57199
+0
+
+456
+456
+0
+902
+0
+0
+902
+183
+0
+0
+183
+274
+0
+274
+1358
+0
+
+4598
+4598
+0
+511
+0
+0
+511
+0
+0
+0
+0
+0
+4598
+4598
+5109
+0
+
+9245
+9245
+0
+18265
+0
+0
+18265
+3698
+0
+0
+3698
+5547
+0
+5547
+27510
+0
+
+18678
+18678
+0
+2075
+0
+0
+2075
+0
+0
+0
+0
+0
+18678
+18678
+20753
+0
+
+33122
+33122
+0
+65442
+0
+0
+65442
+13249
+0
+0
+13249
+19873
+0
+19873
+98565
+0
+
+215285
+215285
+0
+134563
+0
+0
+134563
+23734
+0
+25799
+49534
+30750
+135002
+165751
+349848
+0
+
+ROW Impervious
+(79%)
+
+17680
+66510
+17680
+0
+0
+66510
+Infiltration Factors
+0.20
+N/A
+0.10
+N/A
+0.10
+N/A
+0.4
+N/A
+Inputs (per unit area)
+860
+860
+860
+860
+Outputs (per unit area)
+289
+774
+289
+774
+0
+0
+571
+86
+0
+0
+0
+0
+571
+86
+116
+0
+0
+0
+96
+150
+212
+150
+78
+0
+0
+624
+78
+624
+860
+860
+0
+0
+Input Volumes
+15205
+57199
+15205
+Outputs (Volumes)
+5109
+5109
+0
+10095
+0
+0
+10095
+2044
+0
+1696
+3739
+1370
+0
+1370
+15205
+0
+
+Water Balance Mitigation Calculations
+3
+
+Pre Development Infiltration =
+Post Development Infiltration without Mitigation =
+
+47,026 m /y
+3
+23,734 m /y
+
+Post to Pre Deficit =
+
+23,292 m /y
+
+Mitigation Measures
+Exfiltration System =
+
+23,300 m /y
+
+Mitigation Volume Provided =
+
+23,300 m /y
+
+3
+
+3
+3
+
+In order to meet the annual pre-development infiltration deficit, the runoff from the site directed to the infiltration trenches
+shall be equal to the annual deficit volume. Therefore,
+Impervious Area to Exfiltration System =
+m3/year
+12.00 ha x Annual Precipitation Depth =
+19,000
+Required Annual Precpitation Depth to meet deficit =
+158
+mm/yr
+Based on this analysis, it is concluded that precipitation events of depth less than or equal to
+will produce an annual amount of precipitation equal to
+158
+mm/yr
+Pervious Area to Exfiltration System =
+m3/year
+3.00 ha x Annual Precipitation Depth =
+4,300
+Required Annual Precpitation Depth to meet deficit =
+143
+mm/yr
+Based on this analysis, it is concluded that precipitation events of depth less than or equal to
+will produce an annual amount of precipitation equal to
+143
+mm/yr
+
+3
+
+4.3 mm
+
+519.6 m /event
+
+3.9 mm
+
+117.6 m /event
+
+3
+
+637.2
+
+The analysis was performed on daily precipitation data collected from Pearson rain gauge from 1990 to 2012
+by Environment Canada. The data was then arranged into four categories for each year: Total Annual Depth of Precipitation
+from events less than or equal to 5mm, 10mm, 15mm and 20mm. This yearly data was then used to determine an average annual
+precipitation depth.
+
+Exfiltration - Perforated Pipes
+Length=
+Width=
+Trench Depth
+Porosity=
+Volume of Trench =
+Volume of Clear Stone =
+Water in Clear Stone =
+Soil Infiltration Rate=
+Safety Factor=
+Design Infiltration Rate=
+Target Drawdown time=
+Maximum Storage Depth=
+Total =
+
+Proposed Exiltration Trench Details
+1075
+m
+1.50
+m
+1.00
+m
+0.40
+m3
+1612.50
+m3
+1612.50
+m3
+645.00
+Proposed Trench Drawdown Time
+15.00
+mm/hr
+2.50
+6.00
+mm/hr
+72
+hr
+1.08
+m
+m3
+645.00
+
+* Soils with Satutrated Hydraulic Conductivity = 1(10-6) cm/s correlates to an infiltration rate of 15mm/h
+Low Impact Development Design Manual (TRCA and CVC, 2010)
+
+PROJECT No.: 5635
+PROJECT: Oakbank Estates
+LOCATION: Caledon (Bolton North)
+
+APPENDIX E
+ENGINEERING DRAWINGS
+
+³
+268.800
+
+268.500
+
+268.658
+268.004
+
+267.970
+
+267.792
+
+263.979
+264.036
+
+268.535
+
+267.614
+264.218
+264.414
+
+267.348
+
+264.703
+
+267.173
+
+265.964
+
+266.322
+
+266.710
+
+268.027
+
+267.017
+266.818
+
+267.558
+
+266.873
+
+264.910
+
+265.980
+
+267.438
+
+267.530
+
+267.761
+
+267.201
+
+266.049
+266.229
+
+265.356
+
+265.974
+
+263.955
+
+265.493
+
+263.594
+263.376
+
+264.476
+
+263.209
+263.048
+263.033
+263
+.003
+263.063
+
+262.913
+
+264.329
+
+265.765
+
+262.707
+
+262.391
+266.405
+
+266.354
+261.949
+
+266.359
+
+261.258
+
+265.999
+
+261.327
+265.905
+
+260.901
+
+265.818
+
+264.263
+
+263.175
+259.612
+260.272
+260.305
+260.733
+
+265.728
+
+261.336
+261.260
+
+261.
+784
+261.586
+261
+.984
+262.298
+
+262.364
+262.619
+
+265.673
+
+263.179
+
+265.640
+
+262.545
+
+263.318
+
+263.451
+
+263.575
+
+265.648
+
+263.492
+
+263.850
+264.106
+265.037
+265.839
+
+265.675
+
+263.912
+
+265.701
+
+263.929
+
+265.784
+
+264.100
+264.207
+
+264.333
+
+265.820
+
+B
+
+264.897
+264.597
+
+264.181
+
+265.785
+
+264.468
+264.475
+264.
+455
+
+264.506
+
+265.768
+
+264.284
+
+265.801
+
+263.793
+263.749
+
+265.845
+
+263.687
+
+265.855
+
+FUNCTIONAL SERVICING REPORT AND DESIGN FOR
+OAKBANK ESTATES SUBDIVISION
+
+263.562
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+
+F:\5635\5635-DRAWINGS\5635-GRSS-1.DWG | 2026-08-25 3:12:57 PM | mpasicolan
+
+265.851
+
+S C H A E F F E R & A S S O C I A T E S LTD.
+265.888
+
+6 Ronrose Drive, Concord,
+Ontario L4K 4R3
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+262.016
+261.747
+
+261.467
+261.396
+261.503
+261.879
+
+265.964
+262.289
+
+263.076
+
+265.941
+
+263.160
+
+TOWN OF CALEDON
+263.718
+
+264.122
+
+264.295
+
+263.841
+
+266.003
+
+266.019
+
+266.019
+
+264.163
+
+PRELIMINARY GRADING
+AND SERVICING PLAN
+
+264.169
+
+2026-5635
+264.369
+
+266.051
+
+264.393
+
+GR-SS-1
+
+FUNCTIONAL SERVICING REPORT AND DESIGN FOR
+OAKBANK ESTATES SUBDIVISION
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+
+F:\5635\5635-SWM\5635-SWM 6-1.DWG | 2026-08-27 3:30:17 PM | lyule
+
+S C H A E F F E R & A S S O C I A T E S LTD.
+
+6 Ronrose Drive, Concord,
+Ontario L4K 4R3
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+TOWN OF CALEDON
+STORMWATER
+MANAGEMENT POND 6
+2026-5635
+SWM-1
+
+FUNCTIONAL SERVICING REPORT AND DESIGN FOR
+OAKBANK ESTATES SUBDIVISION
+
+SCHAEFFERS
+F:\5635\5635-DRAWINGS\5635-CH-SEC-1.DWG | 2026-08-27 3:29:37 PM | lyule
+
+CONSULTING ENGINEERS
+
+S C H A E F F E R & A S S O C I A T E S LTD.
+
+6 Ronrose Drive, Concord,
+Ontario L4K 4R3
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+TOWN OF CALEDON
+STORMWATER
+MANAGEMENT SECTIONS
+2026-5635
+SEC-1
+
+

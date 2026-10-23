@@ -1,0 +1,13477 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+May 19th, 2023
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT
+COMPLIANCE REPORT
+
+ARGO DRAFT PLAN EAST
+TOWN OF CALEDON
+REGION OF PEEL
+PREPARED FOR
+ARGO DEVELOPMENT CORPORATION
+
+Town File No.: 21T-22002 and RZ 2022-0003
+Urbantech File No.: 15-458
+
+1st SUBMISSION - DECEMBER 2021
+2nd SUBMISSION – MAY 2023
+
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+Table of Contents
+1.0
+
+INTRODUCTION .............................................................................................. 1
+
+1.1 STUDY PURPOSE ................................................................................................................. 1
+1.2 BACKGROUND STUDIES ........................................................................................................ 2
+1.3 STUDY TEAM ....................................................................................................................... 2
+2.0
+
+EXISTING CONDITIONS .................................................................................. 3
+
+2.1 EXISTING DRAINAGE............................................................................................................. 3
+3.0
+
+PROPOSED GRADING & ROADS................................................................... 3
+
+3.1 GRADING OBJECTIVES ........................................................................................................ 3
+3.2 PRELIMINARY GRADING DESIGN ............................................................................................ 3
+3.3 ROADS
+4
+4.0
+
+STORM DRAINAGE ......................................................................................... 4
+
+4.1 STORMWATER DRAINAGE SYSTEM ........................................................................................ 4
+5.0
+
+STORMWATER MANAGEMENT PLAN........................................................... 4
+
+5.1 SWM STRATEGY ................................................................................................................. 4
+5.2 HYDROLOGIC MODELLING ..................................................................................................... 4
+5.3 SWM TARGETS & DESIGN CRITERIA ..................................................................................... 4
+5.4 QUANTITY CONTROL ............................................................................................................ 5
+5.5 QUALITY CONTROL............................................................................................................... 5
+6.0
+
+LOW IMPACT DEVELOPMENT ....................................................................... 5
+
+6.1 OVERALL SITE WATER BALANCE ........................................................................................... 5
+6.2 LOW IMPACT DEVELOPMENT ................................................................................................. 5
+7.0
+
+SANITARY SERVICING ................................................................................... 6
+
+7.1 INTERNAL SERVICING ........................................................................................................... 6
+7.2 EXTERNAL SERVICING .......................................................................................................... 6
+8.0
+
+WATER SERVICING ........................................................................................ 6
+
+9.0
+
+EROSION AND SEDIMENT CONTROL ........................................................... 6
+
+10.0
+
+CONCLUSIONS ............................................................................................... 8
+
+LIST OF APPENDICES
+Appendix 1
+Appendix 2
+Appendix 3
+Appendix 4
+Appendix 5
+Appendix 6
+
+Drawings
+Storm Sewer Design Calculations
+Stormwater Management
+DS Consultants Geotechnical and Hydrogeological Reports
+Wastewater
+R.J. Burnside & Associates Water Modelling
+i
+
+®
+
+Urbantech Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+LIST OF TABLES
+Table 5-1: Main Humber Unit Storage and Flow .......................................................... 5
+
+ii
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+LIST OF DRAWINGS
+Drawing 101
+Drawing 102
+Drawing 103
+
+Landownership Map
+Framework Plan
+Argo Draft Plan East
+
+Drawing 201
+Drawings 302 & 304
+Drawing 305
+
+Pre-Development Drainage Areas to Flow Nodes
+Grading Plans
+ROW Sections
+
+Drawing 501
+Drawing 502
+Drawing 503
+
+Storm Drainage Areas to
+SWM Ponds and Flow Nodes
+Minor System Drainage Plan and Storm Servicing
+Major System Drainage Plan
+
+Drawing 703
+
+Water Balance Plan
+
+Drawing 801
+Drawing 802
+Drawing 803
+Drawing 804
+Drawing 805
+
+External Sanitary Servicing Plan
+Internal Sanitary Drainage Plan
+External Sanitary Trunk Profile (Ultimate) 1 of 2
+External Sanitary Trunk Profile (Ultimate) 2 of 2
+External Sanitary Trunk Profiles (Interim)
+
+Drawing 901
+
+Preliminary Master Watermain Distribution Plan
+
+iii
+®
+
+Urbantech Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+1.0 INTRODUCTION
+1.1
+
+Study Purpose
+
+Urbantech Consulting has been retained by Argo Humber Station Limited (herein referred to as
+the ‘Owner’) to continue to advance the applications for Draft Plan of Subdivision (21T-22002)
+and for Amendment to the Zoning By-Law (RZ 2022-0003) which were originally submitted in
+March 2022. These applications seek planning approvals to implement redevelopment of the
+lands legally described as Part of Lots 11 and 12, Concession 5 (Albion), Town of Caledon (the
+‘Subject Lands’) and are generally located on the east side of Humber Station Road, north of King
+Street.
+It is important to note that the original applications submitted in March 2022 related to the ROPA
+30 lands only and consisted of approximately 1.59 ha (3.93 ac) and were generally located east
+of Humber Station Road, north of King Street. Since the applications were submitted in March
+2022, the Region of Peel 2051 Official Plan was approved by the Province (Nov., 2022) and
+surrounding lands have been added to the 2051 Urban Area, including additional lands owned by
+the Owners. Accordingly, the overall Subject Lands now consist of 5.61 ha (13.86 ac) and are
+now part of the subject Draft Plan of Subdivision and Rezoning applications.
+The Subject Lands are entirely within the Region of Peel’s Urban Area (ROP, Nov 2022) and the
+Region’s Major Transit Station Area (MTSA). As well, the Subject Lands are currently part of the
+Caledon Station Secondary Plan process (POPA-2021-0002). The effect of the Secondary Plan
+will be to apply land use designations to the Subject Lands, including Mixed Use and GO Transit
+Hub. The subject Draft Plan of Subdivision and Zoning By-Law Amendment for the Subject Lands
+will ensure the creation of a Mixed Use and Transit Hub Blocks of lands that will contribute towards
+the ultimate compact, pedestrian and transit-oriented development of the Subject Lands through
+implementation of the Secondary Plan policies.
+It is also important to note that on March 5, 2021, the Province of Ontario issued a Ministerial
+Zoning Order (‘MZO’) under Ontario Regulation 171 / 21 (‘O. Reg. 171 / 21’) for the Subject Lands.
+This MZO established zoning for the Subject Lands as a ‘Mobility Transit Hub Zone’. This Zone
+permits a public transit depot with accessory parking and service buildings as well as a variety of
+commercial, retail services and public uses.
+This Functional Serving and Stormwater Management Compliance Report been prepared on
+behalf of the Owner in support of a Draft Plan of Subdivision (‘DPS’) and Zoning By-law
+Amendment (‘ZBA’ or ‘Amendment’) resubmission to facilitate the development of the Draft Plan
+of Subdivision consisting of a sliver of an abutting Medium Density Block, Mixed Use Blocks, and
+GO Transit Hub Blocks. Refer to Drawing 102 and 103.
+
+1
+®
+
+Urbantech Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+1.2
+
+Background Studies
+
+The FSR is intended to provide a further level of detail to implement findings and
+recommendations of several background studies listed below. In this instance, this FSR
+addresses findings and recommendations from the following studies and guidelines:
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+
+Beacon Environmental, Comprehensive Environmental Impact Study and Management
+Plan, Caledon Station Secondary Plan, May 2023.
+DS Consultants Ltd., Report On: Preliminary Hydrogeological Investigation, Prepared
+For: Bolton Option 3 Landowners Group, May 2023.
+DS Consultants, Preliminary Geotechnical Investigation,, The Gore Road & King Street,
+November 2022
+Ministry of the Environment, Conservation and Parks (MECP, formerly Ministry of the
+Environment, MOE), Stormwater Management Practices, Planning and Design Manual,
+March 2003.
+Region of Peel and GM BluePlan Engineering, 2020 Water & Wastewater Master Plan
+for the Lake-Based System, Volumes 1 to 5.
+Region of Peel, Public Works, Design, Specifications and Procedures Manual –
+Watermain Design Criteria, June 2010.
+Region of Peel, Public Works, Linear Wastewater Standard, March 2023.
+R.J. Burnside & Associates Limited, Technical Memorandum, Bolton Option 3 Lands
+Preliminary Water Modelling, May 2023.
+Toronto and Region Conservation Authority (TRCA) and Civica Infrastructure Inc.,
+Final Report, Humber River Hydrology Update, April 2018.
+Toronto and Region Conservation Authority (TRCA), Humber River Watershed Plan,
+Pathways to a Healthy Humber, June 2008.
+Toronto and Region Conservation Authority (TRCA), Stormwater Management
+Criteria, August 2012.
+Town of Caledon, Development Standards Manual, Version 5.0, 2019.
+Urbantech Consulting, Functional Servicing Report, Caledon Station Secondary Plan,
+May 2023.
+
+1.3
+
+Study Team
+
+Members of the study team involved in the preparation of the CEISMP/FSR documents, and their
+respective disciplines are listed below:
+Beacon Environmental Limited
+
+Ecology
+Fluvial Geomorphology
+
+DS Consultants Ltd.
+
+Geotechnical
+Hydrogeology
+
+FSR
+
+Gerrard Design
+
+Land Use Design
+
+FSR
+
+R.J Burnside & Associates Ltd.
+
+Water Distribution
+
+FSR
+
+Glenn Schnarr & Associates Inc.
+
+Planning
+
+NAK Design Strategies
+
+Land Use Design
+
+FSR
+
+Urbantech Consulting
+
+Municipal Design
+Water Resources
+Group Engineering
+
+FSR
+
+CEISMP
+
+CEISMP/FSR/PJR
+
+2
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+2.0 EXISTING CONDITIONS
+2.1
+
+Existing Drainage
+
+The Subject Lands are situated in the Main Humber River watershed. Drawing 201 illustrates
+existing drainage patterns and sub-catchments within the Subject Lands and immediate
+surrounding area.
+Surface drainage runoff from the Main Humber River watershed flows easterly toward the
+Canadian Pacific Rail (CPR) line.
+Refer to Section 5 for the discussion regarding existing versus proposed drainage outlets.
+
+3.0 PROPOSED GRADING & ROADS
+3.1
+
+Grading Objectives
+
+The grading plans established in the CSSP-FSR considered the following:
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+
+Compatibility with the existing grades of King Street, a portion of Humber Station Road,
+The Gore Road and the CPR line.
+Maintenance of existing drainage patterns for lands situated to the north.
+Compatibility of future road extensions into lands situated to the north.
+Compatibility with existing or proposed elevations in the vicinity of natural features that are
+part of the community plan.
+Conformance with Town Standards
+Maintaining overall Main Humber River watershed drainage boundaries, where possible.
+Maintain drainage patterns in / out of the natural areas.
+Compatibility with neighboring properties that will develop after the subject lands and
+maintaining overall grading principles established in the CSSP-FSR.
+Provide overland flow conveyance for major storm conditions.
+Optimize cut and fill operations and work towards a balanced site.
+Maintain appropriate cover over buried utilities.
+
+3.2
+
+Preliminary Grading Design
+
+The preliminary grading design for the CSSP lands is depicted on Drawings 302 & 304. The
+grading plans present proposed road centerline elevation and slopes, existing surface contours,
+and the direction of overland flow paths. Lot specific grading is not presented at this point. The
+following sections describe critical elements of the grading design.
+3.2.1
+
+Road Centerline Gradients
+
+The preliminary grading design generally conforms to the objectives outlined in the CSSP.
+
+3
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+3.3
+
+Roads
+
+The internal road design and proposed Right-of-Way (ROW) widths are shown on the draft plans
+of subdivision Drawings 102 and 103. The draft plan conforms to the the Road Hierarchy plan
+from the CSSP-FSR. Refer to NAK Design for conceptual road cross sections. Select details of
+special road cross sections with Low Impact Development (LID) measures and civil infrastructure
+are provided on Drawing 305.
+
+4.0 STORM DRAINAGE
+4.1
+
+Stormwater Drainage System
+
+The major and minor drainage systems for the CSSP lands have been designed to convey storm
+runoff to the proposed SWM facilities prior to discharge to the outlets at the receiving drainage
+features. Drawing 501 illustrates the overall drainage areas to the SWM facilities and existing
+flow nodes.
+Major and minor system drainage has been designed in accordance with the CSSP-FSR.
+Drawings 502 illustrates the minor system drainage plan and Drawing 503 illustrates the major
+system flow paths within the overall catchments areas.
+
+5.0 STORMWATER MANAGEMENT PLAN
+5.1
+
+SWM Strategy
+
+The Subject Lands are located within the Main Humber River watershed and the SWM strategy
+in the CSSP-FSR generally maintains the pre-development individual sub-catchments/outlets.
+The proposed storm drainage plan is shown in Drawing 501.
+The proposed SWM strategy aims to satisfy the TRCA SWM Criteria (2012) and the more recent
+Town of Caledon’s Consolidated Linear Infrastructure Environmental Compliance Approval (CLIECA) SWM Criteria for water quantity and flood control, water quality control, erosion control, and
+water balance.
+
+5.2
+
+Hydrologic Modelling
+
+The hydrologic modelling of pre-development conditions was completed as part of the CSSP-FSR
+based on refinements to the hydrologic model in the 2018 Humber River Hydrology Update
+prepared by TRCA. The model was calibrated to ensure consistency between the Urbantech and
+TRCA models and it was determined that the 6-hour AES storm is to be used to determine the
+required stormwater management for the Subject Lands.
+
+5.3
+
+SWM Targets & Design Criteria
+
+The CSSP-FSR outlines the SWM criteria for the CSSP lands based on the TRCA SWM Criteria
+(2012) and the TRCA pre-development hydrologic model presented in the Humber River
+Hydrology Update (2018). The following specific SWM criteria were established:
+Water Quality – Achieving Enhanced (Level 1), 80% as per the MOE SWM Planning and Design
+Manual (March 2003).
+4
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+Quantity Control – In accordance with the Humber River Watershed in the TRCA SWM Criteria
+(2012) no quantity control is required within the Main Humber River watershed. However, there
+are capacity constraints in the downstream Canadian Pacific Rail (CPR) existing culverts so onsite storage is proposed to mitigate impacts on the culverts.
+A Visual OTTHYMO 6.2 (VO6) model was prepared to calculate the storage requirements for the
+SWM facilities to achieve the target release rates. The evaluation analyzed the 6-hour hour AES
+storm distributions.
+
+5.4
+
+Quantity Control
+
+As outlined in the CSSP-FSR the following unit storage and flow rates in Table 5-1 will be the
+targets for the residential and GO transit areas being conveyed to the CPR culverts.
+Table 5-1: Main Humber Unit Storage and Flow
+Catchment
+103
+102
+101
+
+Storm
+5
+100
+5
+100
+5
+100
+
+Unit Storage (m3/ha)
+228
+393
+191
+327
+239
+411
+
+Unit Flow for Storage Tanks (L/s/ha)
+43
+79
+63
+112
+39
+64
+
+In accordance with the CSSP-FSR, The 500 mm Node 7 culvert will be upgraded to 900 mm to
+convey post-development flows.
+
+5.5
+
+Quality Control
+
+A “treatment train” approach is recommended to achieve the 80% TSS removal objective for the
+Subject Lands. Residential lots and Go transit lands are proposed to have an ETV certified isolator
+row or Jellyfish filter. ROWs will be equipped with Catchbasin Shields with a downstream Oil-Grit
+Separator. Refer to Section 6.4.2 in the CSSP-FSR for further details.
+
+6.0 LOW IMPACT DEVELOPMENT
+6.1
+
+Overall Site Water Balance
+
+The CSSP-FSR provided an overall water balance for the CSSP lands which will be addressed
+for the Subject Lands and the CSSP as a whole. The 21,851 m3/year infiltration deficit outlined
+by DS Consultants and the CSSP-FSR will be mitigated by connected impervious to pervious
+areas and the incorporation of Silva Cell / LID devices in public owned ROW and parks.
+Opportunities for rainwater harvesting and reuse through green roofs and irrigation will be
+investigated further for medium and high-density lots as the design advances.
+
+6.2
+
+Low Impact Development
+
+As outlined in the CSSP-FSR, water balance objectives and water quality could be achieved using
+low impact development (LID) measures. Proposed LID measures include the following:
+•
+•
+•
+
+Downspout disconnection
+Additional topsoil depth
+Swales
+5
+
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+•
+•
+
+Infiltration/filtration facilities
+Rainwater harvesting
+
+The CSSP-FSR provides additional information on the proposed LIDs. Refer to Drawing 703 for
+the proposed LID locations.
+
+7.0 SANITARY SERVICING
+7.1
+
+Internal Servicing
+
+The internal servicing design is consistent with the recommendations of the CEISMP-FSR. Refer
+to Drawing 802 for the internal sanitary drainage plan.
+
+7.2
+
+External Servicing
+
+The proposed development is tributary to the South Peel Wastewater System and is ultimately
+treated in the G.E. Booth Wastewater Treatment Plant.
+The 2020 Bolton Residential Expansion Study (BRES) indicated that the Subject Lands are to be
+serviced by extensions and improvements of existing infrastructure located on Coleraine
+Drive. Since 2020, interim and ultimate sewer solutions have been contemplated by Peel Region
+that diverge from the approved Master Plan.
+The CEISMP recommends implementing the ultimate solution which provides servicing for the
+greatest catchment area from day 1 and eliminates the expenditure of the interim solution.
+Further coordination with the Region of Peel infrastructure planning group is required to confirm
+the best solution for servicing of the Subject Lands as well as the design and approval process to
+accomplish same.
+Refer to Drawings 801, 803-805 for the external sanitary servicing plan and trunk profiles.
+
+8.0 WATER SERVICING
+The CSSP-FSR provides the water servicing requirements for the interim and ultimate development of
+the CSSP. The existing and planned water distribution infrastructure is illustrated on Drawing 901.
+The required water supply for the Subject Lands will require the Ultimate Condition water
+infrastructure to be constructed. R.J Burnside completed an updated water supply analysis dated
+May 11, 2023. This updated water analysis evaluates 9 different modelling scenarios for the buildout of Pressure Zone 7.
+
+9.0
+
+EROSION AND SEDIMENT CONTROL
+
+Erosion and sediment control measures will be designed, implemented, and maintained
+throughout the construction period. At detailed design, an Erosion and Sediment Control Plan
+will be prepared in conformance with the Town and Conservation Authority guidelines.
+The following erosion and sediment control measures should be considered for use during
+construction:
+6
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+
+Natural features will be staked and temporary fencing provided to keep machinery out of
+sensitive areas;
+Sediment control fence and snow fence will be placed prior to earthworks;
+Logistics/construction plan will be implemented to limit the size of disturbed areas,
+minimizing the non-essential clearing and grading areas;
+Temporary sediment ponds;
+Rock check-dams and cut-off swales will be provided, where required, in order to control,
+slow down and direct runoff to sediment basins;
+Sediment traps will be provided;
+Gravel mud mats will be installed at construction vehicle access points to minimize off-site
+tracking of sediments;
+All temporary erosion and sediment control measures will be routinely inspected /
+monitored and repaired during construction. Temporary controls will not be removed until
+the areas they serve are restored and stable; and,
+The “multiple barrier approach” will be applied to all construction stages to ensure erosion
+is prevented rather than reduced. Recommended measures are to be installed prior to the
+initiation of the earthworks and grading.
+During home building, sediment traps will be installed in catchbasins, and perimeter ESC
+fencing will be maintained until surfaces are stabilized.
+
+Reference will be made to the Guidelines for Erosion and Sediment Control for Urban
+Construction Sites prepared by the Greater Toronto Conservation Authorities (2020) when
+preparing Erosion and Sediment Control Plans.
+
+7
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+10.0 Conclusions
+This FSR has demonstrated general compliance with the CSSP-FSR. The following specific
+conclusions are offered:
+1. The Grading complies with intent of CSSP-FSR.
+2. The grading is compatible on an interim basis with neighbours and accommodates future
+drainage.
+3. The Sanitary sewer design complies with the intent of CSSP-FSR with some re-routing
+required to address anticipated development staging.
+4. External sanitary routing will generally follow Humber Station Road from King Road to
+Mayfield based in recent studies and liaison with the Town and the Region.
+5. In accordance with the CSSP-FSR onsite storage will be provided on private residential
+lots and the GO lands to mitigate impacts to the downstream CPR culverts.
+6. Further study and agency consultation is recommended regarding the existing CPR
+culverts as the FSR is advanced.
+7. Quality control will be met through the use of a treatment train approach to meet 80% TSS
+removal for the Subject Lands.
+8. An interim water supply solution is proposed in advance of Regional capital works projects
+which has been endorsed by the Town and Region.
+
+Report Prepared by:
+Urbantech Consulting
+SSION A
+OFE
+L
+PR
+
+2023-05-17
+VI
+
+NC E
+
+R
+IO
+
+LICEN
+SE
+D
+
+EER
+GIN
+EN
+
+PR
+
+O
+
+NT
+OF O
+
+A
+
+Steven A. Hader, P,Eng.
+Senior Project Manager
+
+Adham Bakr, P.Eng.
+Senior Water Resources Engineer
+
+Janna Ormond, EIT
+Water Resources Designer
+
+8
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+APPENDIX 1
+DRAWINGS
+
+9
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+WESTERN
+
+9
+
+EXTENT
+O
+
+6
+
+3
+
+HUMBER
+
+F ROPA 3
+
+6
+
+6
+
+5
+
+6
+
+9
+
+6
+
+AD
+
+PROPERTY
+BOUNDARY
+AND OWNER ID
+
+NON-PARTICIPATING
+PROPERTY
+
+CANADIAN PACIFIC RAILWAY
+
+ROAD
+
+4
+
+2
+
+0
+
+KING STREET
+
+DOWNTOWN
+BOLTON
+
+LEGEND:
+
+4
+
+9
+
+T
+
+CSSP LIMIT
+
+WESTERN
+
+8
+
+QUEEN ST
+RE
+
+ET
+
+9
+
+STATION
+
+OF ROPA
+30
+EXTENT
+
+O
+S
+D
+N
+LA
+AL
+N
+IO
+IT
+D
+AD
+
+D
+RE ROA
+
+7
+
+G ST
+REE
+
+N.T.S.
+
+9
+
+9
+
+KIN
+
+KEY PLAN
+
+T
+CA
+N
+AP
+PL
+I
+BY
+W
+N
+
+ED
+
+1
+
+THE GO
+
+THE GORE
+
+2
+
+9
+
+HUMBER S
+TATION RO
+
+ROAD
+
+KING STREET
+
+Participating Owners
+1 - Argo Macville I Corporation
+2 - Argo Macville II Corporation
+3 - Argo Macville III Corporation
+4 - Argo Humberking
+5 - Humberking Developments Ltd
+6 - Argo Humber Station
+7 - Speirs Family
+8 - Basile
+9 - Others
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+ARGO DRAFT PLAN EAST
+
+LAND OWNERSHIP MAP
+2020
+
+JOB NO.
+
+A.G./X.S.
+
+CHECKED BY:
+
+S.H.
+
+DRAWING NO.
+
+S.K./E.L.
+
+CHECKED BY:
+
+S.K./A.F.
+
+DATE:
+
+MAY 2023
+
+J.D.B.
+
+DRAWN BY:
+DESIGNED BY:
+SCALE:
+
+15-458
+
+DATE:
+
+SURVEYED BY:
+
+1:3000
+
+SHEET NO.
+
+101
+
+p:\Projects\15-458\Reports\21-03-01 fsr argo\drawings and figures\01 - INTRODUCTION\101_LAND OWNERSHIP
+
+18
+
+18
+
+16
+
+18
+18
+
+18
+
+22
+18
+
+18
+
+18
+
+0.53ha
+(1.31ac)
+
+18
+
+22
+
+18
+
+ELEMENTARY
+SCHOOL
+2.55ha
+(6.30ac)
+
+22
+
+18
+
+ELEMENTARY
+SCHOOL
+2.43ha
+(6.00ac)
+
+22
+
+QUEEN ST
+RE
+
+ET
+
+THE GORE
+
+HUMBER S
+TATION RO
+
+ROAD
+
+AD
+
+KING STREET
+
+KIN
+
+G ST
+REE
+
+T
+
+DOWNTOWN
+BOLTON
+
+KEY PLAN
+N.T.S.
+
+18
+
+27
+
+PARK
+0.50ha
+(1.24ac)
+
+LEGEND:
+
+18
+
+22
+
+22
+
+22
+
+22
+
+MEDIUM DENSITY RESIDENTIAL
+MIXED-USE RESIDENTIAL (AT GRADE COMMERCIAL)
+
+8
+
+18
+
+18
+
+18
+
+18
+
+18
+
+18
+
+PARK
+
+18
+
+18
+
+18
+
+18
+
+18
+
+SCHOOL
+
+18
+
+18
+
+PROPOSED ENVIRONMENTAL PROTECTION AREA
+
+8
+
+8
+22
+
+18
+
+22
+
+18
+
+ENVIRONMENTAL ENHANCEMENT AREA
+
+22
+
+SWM POND
+
+22
+18
+
+22
+
+8
+
+8
+
+UNIT SPECIFIC USES
+
+14
+
+22
+
+PARK
+2.44ha
+(6.03ac)
+
+18
+
+PARK
+1.19ha
+(2.94ac)
+
+18
+
+18
+8
+
+18
+8
+
+8
+
+8
+
+18
+
+14
+
+18
+
+18
+
+ROAD
+
+18
+
+22
+
+18
+
+REAR LANE TOWNHOUSE
+
+22
+
+18
+
+18
+
+18
+
+DUAL FRONTAGE TOWNHOUSES
+
+8
+
+18
+
+22
+
+18
+
+18
+
+18
+
+18
+
+18
+
+18
+
+18
+
+18
+
+BACK-TO BACK TOWNHOUSES
+
+18
+
+STANDARD TOWNHOUSES
+
+18
+
+18
+
+18
+
+18
+
+18
+8
+
+8
+
+18
+
+STANDARD SINGLE DETACHED
+
+18
+
+22
+
+SHALLOW SINGLE DETACHED
+
+26
+
+18
+18
+
+26
+
+ROAD CLASSIFICATIONS
+
+18
+
+18
+
+8
+
+18
+
+18
+
+18
+
+ELEMENTARY
+SCHOOL
+2.56ha
+(6.33ac)
+
+22
+
+18
+
+18
+
+18
+
+22
+
+18
+
+18
+
+22
+
+22
+
+MULTI MODAL LOOP ROAD
+
+8
+
+8
+
+8
+
+18
+
+PARK
+1.16ha (2.87ac)
+
+22
+8
+
+18
+
+18
+
+18
+
+8
+
+8
+
+18
+
+RIGHT OF WAY WIDTH (m)
+
+8
+18
+
+18
+
+18
+
+16
+
+8
+
+18
+
+18
+
+18
+
+18
+
+8
+
+22
+
+22
+
+18
+
+8
+
+18
+
+8
+
+18
+
+18
+
+18
+
+SWM POND
+4.33ha
+(10.70ac)
+
+18
+
+HUMBER S
+TATION RO
+
+18
+
+AD
+
+18
+
+18
+
+18
+
+SWM POND
+3.68ha
+(9.09ac)
+
+18
+
+18
+
+18
+
+18
+
+18
+
+18
+
+18
+
+POST LAND EXCHANGE PROPERTY LINE
+
+16
+
+22
+
+18
+
+18
+
+PARK
+7.82ha
+(19.32ac)
+
+8
+
+26
+
+POTENTIAL
+GO STATION
+PARKING
+
+COLLECTOR ROADS
+
+22
+
+22
+
+22
+
+22
+
+18
+
+THE GORE
+
+18
+
+18
+
+8
+
+8
+
+18
+18
+
+GO TRANSIT LANDS
+
+22
+
+18
+
+18
+
+18
+
+18
+
+22
+
+18
+
+18
+
+22
+
+18
+
+22
+
+18
+
+8
+
+22
+
+KING
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+
+STRE
+
+ET
+
+ARGO DRAFT PLAN EAST
+
+FRAMEWORK PLAN
+2020
+
+JOB NO.
+
+A.G./X.S.
+
+CHECKED BY:
+
+S.H.
+
+DRAWING NO.
+
+S.K./E.L.
+
+CHECKED BY:
+
+S.K./A.F.
+
+DATE:
+
+MAY 2023
+
+J.D.B.
+
+DRAWN BY:
+DESIGNED BY:
+SCALE:
+
+15-458
+
+DATE:
+
+SURVEYED BY:
+
+1:3000
+
+SHEET NO.
+
+102
+
+p:\Projects\15-458\Reports\21-03-01 fsr argo\drawings and figures\01 - INTRODUCTION\102_PRELIMINARY FRAMEWORK
+
+DRAWING 103
+
+E1
+
+37.12B
+34.73 ha
+
+CULVERT #HS1
+0.45 m DIA PVC
+12.2 m LENGTH
+W. OBV.262.67
+E. OBV.262.47
+
+EXISTING
+DRAINAGE
+FEATURE
+WHT6-E
+
+37.12C
+1.24 ha
+
+DITCH INLET #1
+INLET ELEV. 269.64
+TOP OF BOX 270.09
+0.4 m CONC PIPE
+N. INV.268.28
+0.4 m CONC PIPE
+S. INV.268.27
+
+ROAD
+
+37.12
+191.72 ha
+
+7
+
+09.10H
+6.75 ha
+
+09.10G
+1.47
+ha
+
+37.12F
+2.77 ha
+
+CULVERT #1
+0.45 m DIA PVC
+9.5 m LENGTH
+N INV.268.95
+S INV.268.88
+
+CULVERT #HS3
+0.5 m DIA CSP
+14.7 m LENGTH
+W. OBV.266.15
+E. OBV.265.88
+
+CULVERT #CP2
+W.INV.261.59
+E.INV.260.96
+
+CPR
+
+DITCH INLET #2
+INLET ELEV. 266.21
+TOP OF BOX 266.74
+0.45 m PVC PIPE
+N. INV.265.01
+0.20 m PVC PIPE
+E. INV.265.05
+0.45 m PVC PIPE
+S. INV.265.03
+
+37.10B
+1.34 ha
+
+CULVERT #HS4
+0.3 m DIA CSP
+12.7 m LENGTH
+W. OBV.267.03
+E. OBV.266.81
+
+37.10
+125.86 ha
+
+09.10J
+11.16 ha
+37.10E
+7.42 ha
+
+6
+
+37.12H
+9.50 ha
+
+37.10F
+5.17 ha
+CULVERT #4
+6.4 m LENGTH
+N OBV.263.13
+S OBV.263.25
+
+37.12G
+18.32 ha
+37.10G
+6.57 ha
+
+37.10D
+6.20 ha
+CULVERT #5
+0.8 m DIA CSP
+9.4 m LENGTH
+E INV.261.35
+W INV.261.27
+
+1
+
+37.12I
+7.10 ha
+
+E2
+CULVERT #G2
+21.1 m LENGTH
+1.2 m DIA CSP
+W OBV.261.99
+E OBV.261.74
+
+CULVERT #K3
+0.6 m DIA TWIN PVC
+22.2 m LENGTH
+N INV.261.13 / 261.12
+S INV.260.97 /260.97
+
+37.03C
+4.32 ha
+
+3
+
+CULVERT #K5
+0.8 m WIDTH CONC.
+16.4 m LENGTH
+N INV.260.90
+S INV.260.99
+
+4.1
+CULVERT #K6 CSP
+(NOT FLOWING DUE TO
+OBSERVED STRUCTURAL
+DAMAGE; FLOW DIRECTED
+TO CULVERT #K4)
+N INV.263.998
+N OBV.264.447
+S INV.263.651
+S OBV.263.941
+
+CULVERT #K4
+0.9 m WIDTH
+BOX CONC.
+16.2 m LENGTH
+N INV.260.70
+S INV.260.71
+
+CULVERT #E1
+CONC
+N INV.263.549
+N OBV.263.841
+S INV.263.339
+S OBV.263.703
+
+37.10H
+9.09 ha
+
+E3
+CULVERT #G3
+0.55 m DIA PVC
+20.2 m LENGTH
+W. OBV.258.96
+E. OBV.258.61
+
+CULVERT #K7
+BOX CONC.
+(20 m LENGTH)
+N. OBV.266.08
+INV.264.21
+S. OBV.266.07
+INV.264.15
+
+4
+
+E5
+
+KING STREET
+
+37.11A
+32.47 ha
+
+37.10J
+13.94 ha
+
+37.10I
+7.32 ha
+
+CULVERT #HS6
+0.5 m DIA
+(16.5 m LENGTH)
+W. OBV.264.76
+E. OBV.264.71
+
+AD
+
+2
+
+37.12J
+6.46
+ha
+6.46 ha
+
+CULVERT #E2
+1.35 m TWIN DIA CSP
+53.3 m LENGTH
+W. OBV.264.00
+E. OBV.263.58
+W. OBV.263.99
+E. OBV.263.87
+
+TATION R
+O
+
+37.03B
+0.76 ha
+
+5
+
+CULVERT #HS5
+1.35 m DIA CSP
+18.9 m LENGTH
+W OBV.264.18
+E. OBV.264.00
+
+CULVERT #6
+CONC. BOX
+N INV.263.61
+N OBV.263.773
+S INV.263.547
+S OBV.263.643
+
+37.11B
+10.09 ha
+
+CPR
+
+KING STREET
+
+CULVERT #7
+0.9 m DIA CSP
+13.5 m LENGTH
+N INV.264.22
+S INV.263.80
+
+37.11F
+7.08 ha
+
+37.10C
+5.08 ha
+
+CULVERT #CP3
+CONC.BOX ∅800
+W.INV.259.24
+E.INV.259.02
+
+09.10I
+5.72 ha
+
+HUMBER S
+
+CULVERT #3
+0.75 m TWIN PVC
+L-shaped N. INV.;
+10.6 m LENGTH
+N INV.263.18
+S. INV.263.08
+N. INV.263.16
+S. INV.262.91
+
+CULVERT #K2
+29.6 m LENGTH
+0.8 m DIA PVC
+N OBV.262.71
+S OBV.262.18
+
+QUEEN ST
+REET
+
+09.10
+327.28 ha
+
+09.10C
+2.93 ha
+
+37.10A
+22.56 ha
+
+CULVERT #K1
+1.35 m DIA CSP
+N OBV.260.21 INV.259.24
+S OBV.260.00 INV.258.80
+1.95 m WIDTH BOX CONC.
+N OBV.260.15 INV.258.58
+S OBV.260.06 INV.258.52
+
+DOWNTOWN
+BOLTON
+
+N.T.S.
+
+09.10E
+4.86 ha
+
+CULVERT #2
+0.45 m DIA PVC
+12.3 m LENGTH
+N INV.268.77
+S INV.268.34
+
+T
+
+KEY PLAN
+
+09.10F
+2.78 ha
+
+37.03
+145.14 ha
+
+REE
+
+09.10D
+4.99 ha
+
+37.12E
+54.23 ha
+
+THE GORE
+
+37.03A
+23.38 ha
+
+G ST
+
+8
+
+09.10A
+1.69 ha
+
+09.10B
+9.39 ha
+
+37.12D
+1.96 ha
+
+KIN
+
+CULVERT #CP1
+CONC.BOX∅700
+W.INV.259.65
+E.INV.259.52
+CSP∅600
+W.INV.259.76
+E.INV.259.56
+
+CULVERT #HS2
+0.375 m DIA PVC
+12.2 m LENGTH
+W. OBV.265.42
+E. OBV.265.09
+
+9
+
+HUMBER ST
+
+HUMBER S
+TATION R
+OAD
+
+37.12A
+40.84 ha
+
+CULVERT #G1
+0.9 m DIA CSP
+17.7 m LENGTH
+W. OBV.278.21
+E. OBV.278.09
+
+THE GORE
+R
+
+OAD
+
+ATION RO
+AD
+
+KING STREET
+
+CULVERT #K8
+1.8 m DIA CSP
+23.0 m LENGTH
+N. OBV.262.28
+S. OBV.262.30
+
+CULVERT #CP4
+CSP∅400
+NE.INV.262.50
+SW.INV.262.44
+
+CULVERT #CP5
+CSP∅600
+NW.INV.262.36
+SE.INV.262.13
+
+37.12K
+24.38 ha
+CULVERT #E3
+2.0 m DIA CSP
+29.9 m LENGTH
+NE. OBV.260.51
+SW.
+OBV.260.40
+
+37.10K
+7.26 ha
+7.51
+ha
+
+10
+37.11C
+5.34 ha
+5.34
+ha
+
+37.10L
+12.7 ha
+12.58
+ha
+
+11
+E4
+
+CULVERT #G4
+3.50 m WIDTH BOX
+CULVERT
+38.9 m LENGTH
+E. OBV.248.25
+INV.245.82
+W. OBV.247.81
+W. INV.245.89
+
+CULVERT #HS7
+0.75 m TWIN DIA CSP
+14.8 m LENGTH
+W. OBV.257.42 E.
+OBV.257.43
+W. OBV.257.38 E.
+OBV.257.42
+
+13
+
+12
+
+E6
+
+37.11
+189.12 ha
+
+37.02
+27.64 ha
+
+37.11D
+75.42 ha
+75.42
+ha
+
+37.02A
+34.24 ha
+34.24
+ha
+
+37.11E
+71.95 ha
+71.95
+ha
+
+LEGEND:
+WATERSHED BOUNDARY BETWEEN
+THE MAIN HUMBER AND THE WEST
+HUMBER RIVER BY TRCA
+
+CALEDON STATION
+SECONDARY PLAN LIMIT
+CEISMP STUDY LIMITS
+(SUBJECT LANDS + 120M BUFFER)
+EXISTING CONTOUR
+EX. CULVERT LOCATION
+CEISMP HEADWATER DRAINAGE
+FEATURES (BEACON)
+
+TRCA SUBCATCHMENT
+BOUNDARY
+
+37.02
+27.64 ha
+
+DRAINAGE SUB-AREA BOUNDARY
+TO FLOW NODES (URBANTECH)
+
+UNEVALUATED CEISMP HEADWATER
+DRAINAGE FEATURES (BEACON)
+
+SUBCATCHMENT BOUNDARY
+BASED ON UPDATED
+TOPOGRAPHY (URBANTECH);
+REFER TO TABLE CONTRIBUTING
+DRAINAGE AREAS
+
+EXISTING OVERLAND FLOW
+DRAINAGE PATH
+UNEVALUATED WETLANDS
+
+09.10J
+11.16 ha
+PROVINCIALLY SIGNIFICANT WETLAND
+
+TRCA DRAINAGE AREA ID
+
+DRAINAGE SUB-AREA ID
+
+2
+
+FLOW NODE ID WITHIN STUDY
+AREA LIMIT
+
+E3
+
+FLOW NODE ID OUTSIDE
+OF STUDY AREA LIMIT (CULVERT)
+
+12
+
+FLOW NODE ID OUTSIDE
+OF STUDY AREA LIMIT
+
+CULVERT #K3
+0.9 m WIDTH
+BOX CONC.
+16.2 m LENGTH
+N INV.260.70
+S INV.260.71
+
+FLOW NODE
+CULVERT DESCRIPTION
+
+CULVERT #G4
+21.1 m LENGTH
+1.2 m DIA CSP
+W OBV.261.99
+E OBV.261.74
+
+EXISTING CULVERT
+DESCRIPTION
+
+WEST HUMBER DRAINAGE
+AREA BY URBANTECH
+MAIN HUMBER DRAINAGE
+AREA BY URBANTECH
+
+Flow Node Drainage Area to Flow
+ID
+Node (ha)
+1
+2
+3
+4
+4.1
+5
+9
+10
+11
+12
+13
+E1
+E2
+E3
+E4
+E5
+E6
+6
+7
+8
+
+6.42
+28.76
+26.24
+7.10
+7.08
+163.59
+78.77
+127.74
+537.12
+324.85
+209.86
+44.04
+24.14
+4.32
+571.36
+170.05
+194.43
+18.80
+2.78
+19.00
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+
+PRE-DEVELOPMENT DRAINAGE
+AREAS TO FLOW NODES
+SURVEYED BY:
+
+J.D.B. DATE:
+
+2021 JOB NO.
+
+DRAWN BY:
+
+A.G./X.S. CHECKED BY:
+
+DESIGNED BY:
+
+S.K./E.L. CHECKED BY:
+
+S.K./A.F.
+
+SCALE:
+
+1:5000
+
+DATE:
+
+MAY 2023
+
+15-458
+
+S.H. DRAWING NO.
+
+SHEET NO.
+
+201
+
+p:\Projects\15-458\Reports\21-03-01 fsr argo\drawings and figures\02 - EXISITING CONDITIONS\201_PRE-DEVELOPMENT DRAINAGE AREAS TO FLOW NODES.dwg
+
+QUEEN ST
+REET
+
+.24
+268
+
+261.70
+
+61
+68.
+
+262.36
+
+.85
+
+268
+
+L
+OF
+
+THE GORE
+
+m
+.82
+111
+
+R OA D
+
+KING STREET
+
+.V.C
+
+262.99
+
+.98
+268
+
+2
+
+HUMBER ST
+ATION RO
+AD
+
+2
+
+KIN
+
+G ST
+
+REE
+
+T
+
+DOWNTOWN
+BOLTON
+
+KEY PLAN
+N.T.S.
+
+01
+69.
+
+.00
+
+263.53
+
+269
+
+.91
+268.90
+268
+
+GREENBELT
+
+LEGEND:
+
+263.99
+PROPERTY BOUNDARY
+
+.75
+
+268
+
+264.37
+
+.59
+268
+
+GREENBELT
+
+264.67
+
+%
+0.79
+
+EXISTING WETLAND BOUNDARY
+
+PROP. FLOOD LINE
+
+.43
+268
+
+W9
+
+.88
+264
+
+EXISTING WETLAND ID
+
+200
+.00m
+OF L
+
+27
+
+EXISTING DRAINAGE
+FEATURE WHT6-E
+
+.V.C
+
+.
+268
+
+265
+
+ENVIRONMENTAL POLICY AREA (EPA)
+INCLUDING BUFFER TO PROPOSED LIMIT OF
+DEVELOPMENT
+
+.02
+
+GRADE INTERCEPTOR
+
+PROP. FLOOD LINE
+27
+
+272.49SW
+
+EXISTING DRAINAGE FEATURE
+
+1.
+00
+
+0.75%
+
+272.65
+
+272.79
+
+272.94
+
+273.09
+
+273.24
+
+273.25
+
+0.75%
+
+273.11
+
+272.96
+
+272.85
+
+272.95
+
+273.07
+
+272.85
+
+272.87
+
+273.02
+
+273.17
+
+273.32
+
+273.47
+
+273.62
+
+273.77
+
+273.92
+
+274.07
+
+274.22
+
+4
+274.2
+
+0.75%
+
+267.95
+
+267.79
+
+STREET 'I'
+
+.79
+
+264
+
+64
+264.
+
+267.48
+
+267.32
+BH20-11
+BTM of BH 260.4 m
+
+0.75%
+
+0.75%
+
+272.58
+
+267.16
+
+267.00
+
+264.19
+
+266.85
+
+264.04
+
+0.75%
+
+264.51
+
+265.02
+
+265.52
+
+266.02
+
+266.49
+
+266.32
+
+266.80
+
+267.28
+
+267.76
+
+268.24
+
+268.48
+74.60m OF L.V.C
+
+2.40%
+
+268.51
+
+266.07
+265.97
+
+STREET 'C'
+265.99
+0.75%
+
+268.57
+
+268.52
+
+269.64
+
+270.92
+
+269.49
+
+BH20-15
+BTM of BH 254.4 m
+
+266.13
+
+268.47
+
+265.98
+
+268.23
+
+265.83
+0.75%
+
+268.38
+
+265.68
+
+265.87
+
+266.27
+
+266.67
+
+267.06
+
+267.46
+
+267.59
+
+267.94
+
+1.98%
+
+265.81
+
+265.60
+
+STREET 'D'
+
+265.73
+
+LIMIT OF ARGO
+EAST DRAFT PLAN
+268.23
+
+1.69%
+
+266.07
+
+268.38
+
+266.41
+
+268.53
+
+266.75
+
+STREET 'E'
+
+268.83
+
+267.04
+
+1.89%
+
+EX. 500mm
+CSP CULVERT
+
+267.04
+267.27
+
+267.65
+
+268.03
+
+268.49
+268.40
+
+268.75
+
+0.75%
+
+268.41
+
+268.26
+
+268.11
+
+267.97
+267.99
+
+267.93
+
+267.93
+
+FUTURE
+GO STATION
+
+0.75%
+
+271.07
+
+267.95
+
+268.13
+
+268.59
+
+2.57%
+
+FUTURE
+GO STATION
+
+265.87
+
+268.68
+
+269.79
+
+269.02
+
+269.54
+
+270.56
+
+270.05
+
+STREET 'E'
+270.85
+
+271.03
+
+STREET 'E'
+
+269.04
+
+268.89
+
+270.30
+
+REFER TO 304
+
+GREENBELT
+
+269.13
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+
+268.98
+
+268.83
+
+GRADING PLAN
+
+0.75%
+
+0.75%
+
+270.45
+
+STREET 'B'
+
+STREET 'F'
+
+STREET 'W'
+
+STREET 'V'
+
+LANE 'B'
+
+269.19
+
+270.61
+
+268.98
+
+HUMBER STATION ROAD
+
+0.77%
+
+269.34
+
+269.99
+
+269.91
+
+269.77
+
+269.87
+
+0.75%
+
+270.04
+270.02
+
+270.17
+
+270.47
+
+270.62
+
+270.77
+
+270.92
+
+271.07
+
+271.22
+
+271.37
+
+0.75%
+
+270.32
+
+STREET 'U'
+
+STREET 'U'
+
+STREET 'I'
+
+0.75%
+
+STREET 'V'
+
+270.19
+
+265.79
+
+267.20
+
+269.95
+
+270.76
+
+270.49
+
+270.34
+
+265.46
+
+0.75%
+
+270.13
+270.10
+
+0.75%
+
+270.53
+
+270.45
+
+270.31
+
+270.39
+
+0.57%
+
+270.50
+
+270.61
+
+270.73
+
+270.84
+
+270.96
+
+271.03
+
+271.11
+
+1.01%
+
+271.31
+
+271.51
+
+271.71
+
+271.84
+
+271.87
+
+270.64
+
+STREET 'T'
+
+LIMIT OF ARGO
+EAST DRAFT PLAN
+
+0.75%
+
+270.02
+
+BH14-07
+BH Depth 8.1 m
+
+271.17
+
+270.89
+
+271.04
+
+0.75%
+
+270.79
+
+STREET 'T'
+
+1.69%
+
+HUMBER STATION ROAD
+268.74
+
+HUMBER STATION ROAD
+
+271.54
+
+271.23
+
+271.22
+271.19
+
+271.10
+
+0.75%
+
+270.95
+
+270.80
+
+270.65
+
+270.44
+270.60
+
+270.86
+
+270.64
+
+270.42
+
+270.44
+
+270.56
+
+270.71
+
+270.86
+
+271.01
+
+271.16
+
+271.31
+
+271.46
+
+271.61
+
+271.76
+
+0.75%
+
+265.12
+
+268.08
+
+0.75%
+
+271.69
+
+271.38
+
+STREET 'E'
+
+267.68
+
+267.90
+
+STREET 'D'
+
+269.87
+
+0.75%
+
+STREET 'S'
+
+STREET 'S'
+
+266.81
+
+266.49
+
+267.13
+
+269.38
+269.26
+268.33
+
+268.76
+
+269.20
+
+269.63
+
+2.16%
+
+0.75%
+
+271.09
+
+270.94
+
+267.79
+
+0.76%
+
+270.49
+
+270.10
+
+STREET 'B'
+
+271.24
+
+269.79
+
+STREET 'D'
+
+0.77%
+
+STREET 'F'
+
+271.39
+
+LANE 'E'
+
+264.78
+
+265.60
+
+269.79
+
+271.84
+
+0.75%
+
+2.16%
+
+270.92
+
+271.35
+
+271.78
+
+272.09
+
+271.82
+
+272.14
+
+BH14-08
+BH Depth 8.1 m
+
+268.49
+
+STREET 'D'
+
+271.54
+
+272.00
+
+271.85
+
+271.82
+
+271.99
+
+0.75%
+
+271.84
+
+271.69
+
+271.54
+
+271.39
+
+271.24
+
+271.39
+
+271.17
+
+271.69
+
+267.51
+
+268.08
+
+269.88
+
+272.15
+BH14-09
+BH Depth 8.1 m
+
+271.91
+
+269.72
+
+270.08
+
+0.77%
+
+271.84
+
+0.75%
+
+267.73
+
+268.33
+
+269.96
+
+270.00
+
+269.93
+269.95
+269.98
+
+269.88
+
+269.97
+
+270.03
+
+272.31
+
+0.75%
+
+STREET 'C'
+
+0.75%
+
+272.46
+
+BH20-10
+BTM of BH 260.1 m
+
+60.00m OF L.V.C
+
+HUMBER STATION ROAD
+
+272.15
+
+STREET 'B'
+
+STREET 'I'
+
+0.75%
+
+271.93
+
+271.94
+
+272.08
+
+272.23
+
+272.38
+
+272.54
+
+272.69
+
+272.84
+
+272.99
+
+273.14
+
+273.29
+
+273.44
+
+273.49
+
+268.93
+
+0.75%
+
+0.75%
+
+269.98
+
+270.30
+
+270.85
+
+271.30
+
+271.60
+
+272.04
+
+269.68
+
+2.62%
+
+269.82
+
+272.31
+
+271.99
+
+STREET 'R'
+
+269.53
+
+270.13
+
+270.73
+
+271.33
+
+271.93
+
+272.53
+272.32
+
+272.44
+
+272.34
+
+272.16
+
+269.94
+
+0.75%
+
+272.29
+
+272.14
+
+264.44
+
+265.87
+
+269.67
+
+272.16
+
+272.41
+
+STREET 'Q'
+
+267.23
+
+268.33
+
+269.55
+269.60
+
+STREET 'C'
+
+0.75%
+
+272.38
+
+LANE 'D'
+
+272.36
+
+272.16
+
+STREET 'C'
+
+85.04m OF L.V.C
+
+29.87m OF L.V.C
+
+272.31
+
+272.32
+
+GREENBELT
+
+269.55
+272.23
+
+0.75% 272.42
+
+264.10
+
+268.06
+
+269.58
+
+272.46
+
+272.38
+
+272.54
+
+272.68
+
+272.52
+
+272.37
+
+272.21
+
+0.75%
+
+263.96
+
+268.24
+
+0.75%
+
+0.75%
+0.75%
+
+272.43
+
+272.21
+272.29
+
+272.64
+
+272.34
+
+272.50
+
+272.66
+
+272.82
+
+272.98
+
+273.14
+
+0.80%
+
+273.30
+
+273.46
+
+273.62
+
+273.78
+
+273.87
+
+269.73
+
+272.24
+
+272.43
+272.44
+
+269.88
+
+272.61
+
+272.27
+
+272.33
+
+0.80%
+
+272.46
+0.75%
+
+0.75%
+
+272.42
+
+272.44
+
+272.31
+
+264.18
+
+266.98
+
+270.06
+
+STREET 'B'
+
+STREET 'F'
+
+272.57
+
+STREET 'K'
+
+STREET 'L'
+
+0.75%
+
+272.34
+
+LANE 'A'
+
+STREET 'I'
+
+272.27
+
+272.72
+
+263.96
+266.79
+
+266.96
+
+0.75%
+
+0.75%
+
+272.34
+
+272.47
+
+3.00%
+
+269.94
+
+272.46
+
+272.87
+
+272.31
+
+273.58
+BH Depth 8.1 m
+
+273.06
+
+273.02
+
+272.62
+
+STREET 'C'
+
+273.04
+
+272.38
+
+PROPOSED FLOODLINE
+
+1.38%
+
+0.75%
+
+273.04
+
+273.29
+
+273.23
+
+273.08
+
+272.93
+
+272.78
+
+272.63
+
+269.79
+
+272.46
+
+273.62
+
+269.94
+
+272.61
+
+0.75%
+
+0.75%
+
+272.77
+
+273.77
+
+272.90
+
+3.00%
+
+273.04
+
+LANE 'C'
+
+STREET 'M'
+
+0.75%
+
+STREET 'O'
+
+273.92
+
+273.21
+
+272.85
+
+272.42
+
+272.49
+
+272.92
+
+274.07
+
+0.75%
+
+269.72
+
+272.98
+
+274.13
+
+272.66
+
+272.68
+
+272.90
+
+274.05
+
+STREET 'A'
+
+272.99
+
+0.75%
+
+0.75%
+
+STREET 'N'
+
+0.75%
+
+43.52m OF L.V.C
+
+272.58
+
+0.75%
+
+272.75
+
+273.90
+
+BH14-01
+BH Depth 8.1 m
+
+0.75%
+
+272.54
+
+BH14-02
+BH Depth 8.1 m
+
+272.51
+
+STREET 'A'
+
+272.52
+
+272.48
+
+272.63
+
+272.90
+
+0.75%
+
+272.68
+
+273.83
+
+REFER TO 301
+
+272.78
+
+272.93
+
+273.08
+
+0.75%
+
+273.23
+
+273.53
+
+273.68
+
+273.83
+
+273.98
+
+274.05
+
+273.38
+
+STREET 'A'
+
+PROPOSED EPA (ENVIRONMENTAL
+POLICY AREA) / CHANNEL
+
+264.34
+
+272.26
+
+272.37
+
+PROPOSED OPEN SPACE BLOCK
+
+264.49
+
+PROPOSED GREEN TRAIL
+
+272.30
+
+BH14-10
+BH Depth 11.1 m
+
+PROPOSED SWM POND
+
+EX. 700mm CONC. BOX &
+EX. 60mmCULVERT
+
+272.73
+
+272.45
+
+POST-DEVELOPMENT OVERLAND FLOW DIRECTION
+
+0.79%
+
+0.75%
+
+272.82
+
+272.64
+272.72
+
+272.91
+
+272.97
+
+272.76
+
+272.88
+
+272.89
+
+272.59
+
+272.43
+
+272.31
+
+0.75%
+
+ELEMENTARY
+SCHOOL
+
+STREET 'G'
+
+0.75%
+
+0.75%
+
+272.53
+
+272.31
+
+272.48
+
+272.64
+
+272.80
+
+272.96
+
+273.13
+
+273.29
+
+273.45
+
+273.61
+
+273.78
+
+STREET 'J'
+272.74
+
+0.75%
+
+273.91
+
+272.73
+
+272.60
+
+PROPOSED ELEVATION
+
+%
+
+STREET 'J'
+0.81%
+
+267.63
+
+272.62
+
+272.75
+
+CSSP STUDY AREA LIMIT
+
+.94
+264
+.94
+264
+
+0.75
+
+273.81
+
+PRE-DEVELOPMENT OVERLAND FLOW DIRECTION
+
+.05
+
+265
+
+261.15
+
+272.66
+
+272.90
+
+273.96
+
+273.94
+
+272.96
+
+0.75%
+
+274.11
+
+EXISTING CONTOUR AND ELEVATION
+
+.07
+
+272.81
+
+273.05
+
+EXISTING ELEVATION
+
+265
+
+STREET 'H'
+
+STREET 'H'
+
+261.15
+
+.07
+
+265
+
+272.83
+
+0.75%
+
+273.20
+
+273.73
+
+1
+
+0.75%
+
+BH20-5
+BTM of BH 263.3 m
+BH14-11
+BH Depth 9.1 m
+
+268.1
+
+273.11
+
+273.35
+
+267.26
+
+EXISTING DRAINAGE
+
+(2 OF 4)
+
+268.68
+
+15-458
+
+SURVEYED BY:
+
+J.D.B.
+
+DATE:
+
+2020
+
+JOB NO.
+
+DRAWN BY:
+
+A.G./X.S.
+
+CHECKED BY:
+
+S.H.
+
+DRAWING NO.
+
+DESIGNED BY:
+
+S.K./E.L.
+
+CHECKED BY:
+
+S.K./A.F.
+
+SCALE:
+
+1:1000
+
+DATE:
+
+MAY 2023
+
+SHEET NO.
+
+302
+
+p:\Projects\15-458\Reports\21-03-01 fsr argo\drawings and figures\03 - PROPOSED GRADING AND ROW DETAILS\302_ GRADING PLAN (PART 2).dwg
+
+STREET 'B'
+
+.04
+
+263.68
+MAX. 3:1
+
+267.81
+267.87
+
+263.90
+
+264.15
+
+263.90
+
+0.83%
+
+2.49%
+
+C'
+STREET 'C
+
+OD LINE
+
+PROP. FLO
+
+267.00
+
+3.0m WID
+
+26
+
+T
+QUEEN ST
+REE
+
+AD
+ATION RO
+
+ROAD
+
+HUMBER ST
+
+THE GORE
+
+269.98
+
+270.63
+
+271.39
+271.29
+
+271.86
+
+272.22
+
+272.35
+
+272.26
+
+271.95
+
+271.60
+
+271.43
+
+266.23
+
+.7
+3
+
+2.7
+
+7
+
+REMOVE EX. 1350mm CSP CULVERT
+AND EX. TWIN 1350 CSP CULVERTS
+AND INSTALL A 1.5X3.0m BOX
+CULVERT
+IN INV. 262.70
+OUT INV.262.23
+
+2
+
+265.53
+
+265.81
+
+265.96
+
+265.18
+
+4:1
+
+268.06
+
+4:1
+
+268.09
+
+265.8 HWL
+
+PROP. FLOOD LINE
+
+(REGIONA
+L)
+
+7:1
+
+266.16
+
+266.01
+
+0.75%
+
+265.86
+
+265.71
+
+265.56
+
+265.41
+
+265.26
+
+265.17
+
+STONE CORE
+WETLAND
+(0.5m DEEP)
+
+3:1
+
+262.7
+263.0 (PER
+M POOL)
+263.3
+
+265.34
+
+261.00 (BOT
+. POND
+
+261.00 (BOT. POND
+
+262.7
+263.0 (PERM POOL)
+263.3
+
+265.68
+
+3:1
+
+265.8 HWL (REGIONAL)
+
+ROAD (266.30)
+
+265.93
+
+F L.V.C
+
+3:1
+
+266.05
+
+77.58m O
+
+268.06
+
+5.0m WIDE MAINTENANCE
+
+1.25%
+
+4:1
+
+268.15
+
+STREET 'I
+'
+
+267.26
+
+0.75%
+
+265.51
+
+266.1
+1
+
+268.05
+
+267.81
+
+267.74
+
+267.59
+
+267.20
+
+0.75%
+
+265.50
+
+265.82
+
+266.14
+
+266.77
+
+267.08
+
+267.29
+
+267.51
+267.43
+
+267.29
+
+267.71
+267.76
+
+266.58
+
+FOREBAY WEIR
+(263.0)
+
+7:1
+
+MED
+IU
+RESI M DENS
+I
+DEN
+TIAL TY
+BLOC
+K
+
+270.85
+
+270.27
+
+269.70
+
+2
+5.7
+26
+
+0.75%
+
+MAX. 3:1
+
+263.90
+
+LOW FLOW
+CHANNEL
+276m @ 0
+.09%
+
+263.23
+
+265.08
+
+267.86
+
+0.77%
+
+267.04
+
+267.27
+
+267.65
+269.12
+
+265.87
+
+266.02
+
+266.17
+
+266.32
+
+266.47
+
+266.52
+
+263.90
+
+266.91
+
+263.95
+
+264.01
+
+OOD LINE
+263.75
+
+263.90
+
+263.08
+
+265.26
+265.12
+
+265.88
+
+CONNECTOR
+CHANNEL
+
+3:1
+
+0.96%
+
+265.08
+
+265.66
+
+26
+2.8
+9
+
+4:1
+
+267.44
+
+267.28
+
+1.58%
+
+.21
+
+267.13
+
+265.04
+
+266
+
+266.98
+
+265.01
+
+0.75%
+
+X)
+MA
+
+LOW FLOW
+CHANNEL
+127m @ 0
+.30%
+
+E TRAIL
+0%
+
+267.39
+
+20m EMERGENCY
+SPILLWAY (266.0)
+
+P (1
+RAM
+
+267.33
+
+267.48
+
+26
+2
+
+SWM POND 1
+
+267.21
+0.77%
+
+2
+
+WET CELL
+
+267.47
+
+267.66
+
+265.42
+
+1.75%
+
+0.96%
+
+'
+STREET 'I
+
+'
+
+ESS
+
+LANE 'J
+
+ACC
+
+268.56
+
+FOREBAY
+
+EX. 800mm CONC. BOX
+CULVERT
+
+265.36
+
+266.60
+
+261.00 (BOT. POND
+
+IDE
+
+268.98
+
+267.28
+
+266.88
+
+266.93
+
+266.54
+
+4:1
+
+MA
+X)
+
+3:1
+
+mW
+
+267.09
+
+268.96
+
+267.56
+
+PROP. FL
+
+263.3
+263.0 (PERM POOL)
+262.7
+
+266.03
+
+(10
+%
+
+0.75%
+
+265.21
+
+PROP. FLO
+
+7:1
+
+MAX. 3:1
+
+4:1
+
+RA
+MP
+
+263.06
+
+5.0
+
+268.81
+
+268.06
+
+3.08%
+
+262.70
+
+SS
+
+266.90
+
+STREET 'HH'
+
+263.23
+
+4:1
+
+AC
+CE
+
+263.04
+
+261.00 (BOT. POND
+
+WI
+DE
+
+263.06
+
+268.66
+
+265.8 HWL (REGIONAL)
+
+m
+
+266.73
+
+267.63
+
+D LINE
+
+3:1
+
+263.3
+263.0 (PERM POOL) 7:1
+262.7
+
+1
+
+267.28
+
+263.05
+PROP. FLO
+O
+
+5.0
+
+4:1
+
+8
+
+267.33
+
+OD LINE
+
+265.8 HWL (REGIONAL)
+
+266.
+8
+
+265.27
+
+5.0m WIDE MAINTENANCE ROAD (266.30)
+
+267.05
+
+.03
+
+267.18
+
+3:1
+
+265.93
+
+268.51
+
+267.20
+3:1
+
+267
+
+265.57
+
+268.28
+
+CONC. CULVERT
+
+MAX. 3:1
+
+STREET 'FF'
+
+1500∅
+
+0.75%
+
+STREET 'CC'
+
+0.75%
+
+268.36
+
+0.00
+
+268.20
+267.35
+
+E TRAIL
+
+76.58m OF L.V.C
+
+268.06
+
+268.86
+
+PROPOSED FLOODLINE
+
+265.12
+268.54
+
+268.91
+
+268.90
+
+268.85
+
+0.75%
+
+268.80
+
+268.65
+
+268.50
+
+268.35
+
+268.20
+
+267.97
+
+268.05
+
+267.90
+
+267.75
+
+267.60
+
+267.45
+
+267.30
+
+267.24
+
+267.46
+
+267.24
+
+267.47
+
+267.92
+
+267.96
+
+0.75%
+
+268.82
+
+268.64
+
+267.75
+268.33
+
+268.50
+
+268.51
+
+268.46
+
+268.32
+
+268.69
+
+3.0m WID
+
+267.84
+
+267.50
+
+268.17
+
+268.84
+
+267.96
+
+268.00
+
+W9
+
+8
+
+267.03
+
+0.83%
+
+BH20-13
+BTM of BH 259.9 m
+
+269.00
+
+0.75%
+
+1.27%
+
+268.17
+
+268.20
+
+STREET 'GG'
+
+269.18
+
+269.01
+
+268.89
+
+268.63
+
+268.94
+
+269.37
+
+269.72
+
+265.97
+
+267.76
+
+265.82
+
+NOTE:
+
+0.75%
+
+267.30
+
+REFER TO DRAWING 401 FOR CHANNEL
+CROSS SECTIONS 1-1 AND 2-2.
+
+2.92%
+
+265.68
+
+MEDIUM DENSITY RESIDENTIAL BLOCK
+
+266.68
+
+0
+
+PROP. FLOOD LINE
+
+EX. 1800mm CSP
+CULVERT
+IN INV. 262.28
+OUT INV.262.30
+
+265.46
+266.10
+
+EX. 1.9m CONC.
+BOX CULVERT
+
+2.16%
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+263.50
+
+263.50
+
+263.18
+
+263.50
+
+263.50
+
+263.50
+
+263.58
+
+263.55
+
+264.00
+
+264.00
+
+264.00
+
+264.00
+
+264.01
+
+264.50
+
+264.50
+
+264.50
+
+263.50
+
+264.83
+
+264.59
+
+265.00
+
+265.00
+
+265.07
+
+265.50
+
+265.50
+
+265.50
+
+264.80
+
+265.50
+
+265.51
+
+266.00
+
+266.00
+
+266.00
+
+266.00
+
+266.00
+
+266.00
+
+266.32
+
+BH20-16
+BTM of BH 2570.3 m
+
+266.50
+
+266.50
+
+266.50
+
+265.21
+
+266.50
+
+266.50
+
+266.5
+
+0
+
+0
+266.5
+
+266.5
+
+266.5
+
+0
+
+265.53
+
+265.46
+
+REFER TO 303
+
+267.95
+
+267.65
+
+63.9m OF L.V.C
+
+269.15
+
+7.1
+
+05
+
+268.33
+
+PROPOSED GREEN TRAIL
+
+0.
+
+268.10
+
+26
+
+26
+
+0.75%
+
+269.30
+
+267.44
+
+268.50
+
+0.7
+5
+
+%
+
+264.00
+
+PROPOSE
+D CHANN
+
+LOW
+FL
+276m OW CHAN
+NEL
+@ 0.0
+9%
+
+MAX. 3:1
+
+E TRAIL
+
+3.0m WID
+
+0.83%
+
+STREET 'I'
+
+LANE 'G'
+
+STREET 'CC'
+
+269.45
+
+3
+
+67
+0.
+
+1
+
+PROPOSED EPA (ENVIRONMENTAL
+POLICY AREA) / CHANNEL
+
+7.3
+
+26
+
+1.27%
+
+269.60
+
+268.67
+
+26
+
+EL
+
+269.90
+
+269.92
+
+269.80
+
+269.65
+
+269.50
+
+269.35
+
+269.20
+
+269.05
+
+268.88
+
+269.75
+
+269.24
+
+2.44%
+
+PROPOSED SWM POND
+
+PROPOSED OPEN SPACE BLOCK
+
+266.45
+
+1.27%
+
+0.75%
+
+269.06
+
+0.75%
+
+268.83
+
+268.25
+
+268.47
+
+POST-DEVELOPMENT OVERLAND FLOW DIRECTION
+
+8
+
+BH20-14
+BTM of BH 256.4 m
+
+269.49
+
+268.38
+
+268.03
+
+8
+
+50
+2.
+26
+
+268.40
+
+267.80
+
+268.55
+
+267.7
+
+25
+2.
+
+268.55
+
+268.73
+
+PROPOSED ELEVATION
+
+261.15
+
+26
+7.4
+
+270.00
+
+268.98
+
+CSSP STUDY AREA LIMIT
+
+267.93
+
+26
+
+PROP. FLOO
+
+269.93
+
+270.07
+
+D LINE
+
+0.75
+
+269.00
+
+53.85m OF L.V.C
+
+268.12
+
+268.38
+
+268.12
+
+268.50
+
+268.90
+
+270.09
+
+2
+
+270
+
+.41
+270
+
+.59
+270
+
+64
+70.
+
+270
+
+.63
+.40
+
+.53
+
+269.16
+
+268.70
+
+2.24%
+
+PRE-DEVELOPMENT OVERLAND FLOW DIRECTION
+
+268.08
+
+269.33
+
+270.25
+
+STREET 'BB'
+
+EXISTING ELEVATION
+
+.63
+
+268.85
+
+269.74
+
+261.15
+
+268.23
+
+267
+
+269.00
+
+270.51
+
+STREET 'AA'
+
+ENVIRONMENTAL POLICY AREA (EPA)
+INCLUDING BUFFER TO PROPOSED LIMIT OF
+DEVELOPMENT
+
+EXISTING DRAINAGE FEATURE
+
+269.23
+
+270
+
+.25
+270
+
+.09
+270
+
+94
+269.
+
+269.79
+
+269.64
+
+269.49
+
+269.34
+
+269.19
+
+269.04
+
+268.96
+
+269.18
+
+268.96
+
+269.27
+
+270.30
+270.11
+
+270.89
+
+271.45
+
+271.78
+
+271.90
+
+271.85
+
+V.C
+
+L
+AI
+TR
+
+271.80
+
+F L.
+mO
+
+2.00%
+
+270.76
+
+STREET 'Z'
+
+EXISTING WETLAND ID
+
+268.35
+
+268
+
+269.48
+
+270.88
+
+W9
+
+78
+1.
+
+269.70
+
+EXISTING WETLAND BOUNDARY
+
+EXISTING CONTOUR AND ELEVATION
+
+DE
+
+0.75%
+
+%
+
+%
+
+63
+82.
+
+WI
+
+89.4m OF L.V.C
+
+4.22%
+
+FUTURE GRADE
+SEPARATION
+
+27
+
+m
+
+271.10
+
+268.68
+
+26
+
+22
+
+.
+270
+
+0.75
+
+.55
+270
+.55
+270
+
+.68
+
+269
+
+STREET 'Y'
+
+6
+0.1
+
+3.0
+
+STREET 'Y'
+
+70
+
+.
+268
+
+.61
+269
+269.29
+
+30
+
+53
+
+LANE 'F'
+
+269.44
+
+.59
+
+269.
+
+268
+
+9
+
+.83
+269
+
+269.59
+
+LANE 'F'
+
+GREENBELT
+
+268.53
+
+.
+269
+
+.020
+2700
+270.
+
+84
+269.
+
+93
+269.
+
+270.08
+
+270.16
+
+270.08
+
+269.93
+
+269.78
+
+269.63
+
+269.48
+
+269.44
+
+0.75%
+
+269.66
+
+269.58
+
+269.44
+
+269.89
+
+270.59
+
+271.28
+
+271.92
+
+271.91
+
+271.76
+
+3.47%
+
+.9
+269
+
+%
+
+271.58
+271.61
+
+269.74
+
+0.77
+
+0.75%
+
+268.83
+
+0.75%
+
+BH14-06
+BH Depth 8.1 m
+
+BH14-05
+BH Depth 8.1 m
+
+PROPERTY BOUNDARY
+
+0.75%
+
+0.75%
+
+STREET 'F'
+
+STREET 'V'
+
+LANE 'B'
+
+STREET 'I'
+
+269.89
+
+STREET 'X'
+
+HUMBER STATION ROAD
+
+0.77%
+
+268.74
+
+268.98
+
+269.99
+
+269.91
+
+269.77
+
+269.87
+
+270.02
+
+270.17
+
+270.32
+
+STREET 'W'
+
+0.75%
+
+STREET 'V'
+270.47
+
+270.14
+
+LEGEND:
+
+2
+
+268.89
+
+DOWNTOWN
+BOLTON
+
+8
+1.
+
+270.30
+
+269.13
+
+26
+
+270.62
+
+270.04
+
+269.04
+
+REE
+T
+
+N.T.S.
+
+LIMIT OF ARGO
+EAST DRAFT PLAN
+
+0
+
+270.45
+
+G ST
+
+KEY PLAN
+
+5
+3.
+
+270.19
+
+269.19
+
+270.61
+
+GREENBELT
+
+KIN
+
+26
+
+270.34
+
+0.75%
+
+269.34
+
+270.76
+
+270.49
+
+STREET 'U'
+
+KING STREET
+
+268.98
+
+269.49
+
+270.92
+
+270.53
+
+270.45
+
+270.31
+
+270.39
+
+270.50
+
+270.61
+
+270.73
+
+270.84
+
+270.96
+
+271.03
+
+0.57%
+
+FUTURE
+GO STATION
+
+0.75%
+
+0.75%
+
+270.64
+
+STREET 'T'
+
+1.89%
+
+268.83
+
+269.64
+
+271.07
+
+268.49
+268.40
+
+268.75
+
+0.75%
+
+268.49
+
+268.41
+
+268.26
+
+268.11
+
+267.97
+267.99
+
+267.93
+
+267.95
+
+268.13
+
+2.57%
+
+268.59
+
+269.02
+
+269.54
+
+270.05
+
+270.56
+
+269.79
+
+04
+
+270.79
+
+270.85
+
+0.75%
+
+271.03
+
+271.17
+
+270.89
+
+271.04
+
+271.22
+271.19
+
+271.10
+
+270.95
+
+270.80
+
+270.65
+
+270.44
+270.60
+
+270.64
+
+270.86
+
+270.44
+
+270.42
+
+270.56
+
+270.71
+
+271.01
+
+271.16
+
+0.75%
+
+271.23
+
+267.04
+
+268.68
+
+3.
+
+271.31
+
+0.75%
+
+STREET 'E'
+
+STREET 'E'
+
+26
+
+270.86
+
+STREET 'S'
+
+STREET 'E'
+
+270.94
+
+REFER TO 302
+
+GRADING PLAN
+(4 OF 4)
+
+264.72
+
+15-458
+
+SURVEYED BY:
+
+J.D.B.
+
+DATE:
+
+2020
+
+JOB NO.
+
+DRAWN BY:
+
+A.G./X.S.
+
+CHECKED BY:
+
+S.H.
+
+DRAWING NO.
+
+DESIGNED BY:
+
+S.K./E.L.
+
+CHECKED BY:
+
+S.K./A.F.
+
+DATE:
+
+MAY 2023
+
+SCALE:
+
+1:1000
+
+SHEET NO.
+
+304
+
+P:\Projects\15-458\Reports\21-03-01 FSR Argo\Drawings and Figures\03 - PROPOSED GRADING AND ROW DETAILS\304_ GRADING PLAN (PART 4).dwg
+
+HUMBER S
+
+THE GORE
+
+QUEEN ST
+REET
+
+ROAD
+
+TATION RO
+AD
+
+KING STREET
+
+KIN
+
+G ST
+
+REE
+
+T
+
+DOWNTOWN
+BOLTON
+
+KEY PLAN
+N.T.S.
+
+NOTES
+1. WATERMAIN TO HAVE MINIMUM COVER OF 1.70m.
+2. UTILITY CORRIDOR TO HAVE A MINIMUM COVER OF 0.90m.
+3. TREES TO BE PLACED IN LOCATIONS PER APPROVED LANDSCAPE PLAN.
+4. STREET LIGHT FIXTURE PER APPROVED TOWN STANDARD.
+5. THE FOLLOWING IS A MINIMUM ROAD BASE AND WILL REQUIRE A SOILS REPORT VERIFICATION
+40mm
+HL3
+65mm
+HL8
+150mm
+GRANULAR "A"
+300mm
+GRANULAR "B"
+
+6.
+7.
+8.
+
+THE BOULEVARDS REQUIRE A MINIMUM OF 300mm OF TOPSOIL AND NURSERY SOD.
+ON A CRESCENT THE MINIMUM WATERMAIN SHALL BE PLACED ON THE OUTSIDE.
+FULL LENGTH MINIMUM 100mm DIA. SUBDRAIN C/W FILTERCLOTH SHALL BE INSTALLED, AS PER
+APPROVE TOWN OF CALEDON STANDARD NO. 219.
+9. SUB-GRADE SHALL BE COMPACTED TO A MINIMUM 95% OF S.P.D. AT OPTIMUM MOISTURE
+CONTENT.
+10. WHERE POSSIBLE MANHOLE LIDS TO BE LOCATED OUT OF TIRE LANE OF TRAFFIC.
+11. LONG DIMENSION OF TRANSFORMER TO BE PARALLEL TO STREETLINE.
+
+6.
+7.
+8.
+
+THE BOULEVARDS REQUIRE A MINIMUM OF 300mm OF TOPSOIL AND NURSERY SOD.
+ON A CRESCENT THE MINIMUM WATERMAIN SHALL BE PLACED ON THE OUTSIDE.
+FULL LENGTH MINIMUM 100mm DIA. SUBDRAIN C/W FILTERCLOTH SHALL BE INSTALLED, AS PER
+APPROVE TOWN OF CALEDON STANDARD NO. 219.
+9. SUB-GRADE SHALL BE COMPACTED TO A MINIMUM 95% OF S.P.D. AT OPTIMUM MOISTURE
+CONTENT.
+10. WHERE POSSIBLE MANHOLE LIDS TO BE LOCATED OUT OF TIRE LANE OF TRAFFIC.
+11. LONG DIMENSION OF TRANSFORMER TO BE PARALLEL TO STREETLINE.
+
+18.0m LOCAL ROAD
+8.5m ROADWAY (7.9m PAVEMENT)
+SCALE: N.T.S.
+
+NOTES
+1. WATERMAIN TO HAVE MINIMUM COVER OF 1.70m.
+2. UTILITY CORRIDOR TO HAVE A MINIMUM COVER OF 0.90m.
+3. TREES TO BE PLACED IN LOCATIONS PER APPROVED LANDSCAPE PLAN.
+4. STREET LIGHT FIXTURE PER APPROVED TOWN STANDARD.
+5. THE FOLLOWING IS A MINIMUM ROAD BASE AND WILL REQUIRE A SOILS REPORT VERIFICATION
+40mm
+HL3
+90mm
+HL8
+150mm
+GRANULAR "A"
+450mm
+GRANULAR "B"
+
+6.
+7.
+8.
+
+THE BOULEVARDS REQUIRE A MINIMUM OF 300mm OF TOPSOIL AND NURSERY SOD.
+ON A CRESCENT THE MINIMUM WATERMAIN SHALL BE PLACED ON THE OUTSIDE.
+FULL LENGTH MINIMUM 100mm DIA. SUBDRAIN C/W FILTERCLOTH SHALL BE INSTALLED, AS PER
+APPROVE TOWN OF CALEDON STANDARD NO. 219.
+9. SUB-GRADE SHALL BE COMPACTED TO A MINIMUM 95% OF S.P.D. AT OPTIMUM MOISTURE
+CONTENT.
+10. WHERE POSSIBLE MANHOLE LIDS TO BE LOCATED OUT OF TIRE LANE OF TRAFFIC.
+11. LONG DIMENSION OF TRANSFORMER TO BE PARALLEL TO STREETLINE.
+
+NOTES
+1. WATERMAIN TO HAVE MINIMUM COVER OF 1.70m.
+2. UTILITY CORRIDOR TO HAVE A MINIMUM COVER OF 0.90m.
+3. TREES TO BE PLACED IN LOCATIONS PER APPROVED LANDSCAPE PLAN.
+4. STREET LIGHT FIXTURE PER APPROVED TOWN STANDARD.
+5. THE FOLLOWING IS A MINIMUM ROAD BASE AND WILL REQUIRE A SOILS REPORT VERIFICATION
+40mm
+HL3
+65mm
+HL8
+150mm
+GRANULAR "A"
+300mm
+GRANULAR "B"
+
+6.
+7.
+8.
+
+THE BOULEVARDS REQUIRE A MINIMUM OF 300mm OF TOPSOIL AND NURSERY SOD.
+ON A CRESCENT THE MINIMUM WATERMAIN SHALL BE PLACED ON THE OUTSIDE.
+FULL LENGTH MINIMUM 100mm DIA. SUBDRAIN C/W FILTERCLOTH SHALL BE INSTALLED, AS PER
+APPROVE TOWN OF CALEDON STANDARD NO. 219.
+9. SUB-GRADE SHALL BE COMPACTED TO A MINIMUM 95% OF S.P.D. AT OPTIMUM MOISTURE
+CONTENT.
+10. WHERE POSSIBLE MANHOLE LIDS TO BE LOCATED OUT OF TIRE LANE OF TRAFFIC.
+11. LONG DIMENSION OF TRANSFORMER TO BE PARALLEL TO STREETLINE.
+
+16.0m LOCAL ROAD
+8.5m ROADWAY (7.9m PAVEMENT)
+SCALE: N.T.S.
+
+14.0m LOCAL ROAD
+8.0m ROADWAY (7.4m PAVEMENT)
+SCALE: N.T.S.
+
+8.0m LOCAL ROAD
+6.0m ROADWAY (5.4m PAVEMENT)
+SCALE: N.T.S.
+
+NOTES
+1. WATERMAIN TO HAVE MINIMUM COVER OF 1.70m.
+2. UTILITY CORRIDOR TO HAVE A MINIMUM COVER OF 0.90m.
+3. TREES TO BE PLACED IN LOCATIONS PER APPROVED LANDSCAPE PLAN.
+4. STREET LIGHT FIXTURE PER APPROVED TOWN STANDARD.
+5. THE FOLLOWING IS A MINIMUM ROAD BASE AND WILL REQUIRE A SOILS REPORT VERIFICATION
+40mm
+HL3
+65mm
+HL8
+150mm
+GRANULAR "A"
+300mm
+GRANULAR "B"
+
+NOTES
+1. WATERMAIN TO HAVE MINIMUM COVER OF 1.70m.
+2. UTILITY CORRIDOR TO HAVE A MINIMUM COVER OF 0.90m.
+3. TREES TO BE PLACED IN LOCATIONS PER APPROVED LANDSCAPE PLAN.
+4. STREET LIGHT FIXTURE PER APPROVED TOWN STANDARD.
+5. THE FOLLOWING IS A MINIMUM ROAD BASE AND WILL REQUIRE A SOILS REPORT VERIFICATION
+40mm
+HL3
+65mm
+HL8
+150mm
+GRANULAR "A"
+300mm
+GRANULAR "B"
+
+NOTE: SILVA CELLS ONLY PROPOSED
+ALONG RIGHT OF WAYS WHERE SHOWN
+ON DRAWING 703. IF SILVA CELLS ARE
+DESIGNED AS FILTERS, AN UNDERDRAIN
+SHALL BE INSTALLED AND CONNECTED
+TO STORM SEWER SYSTEM.
+
+NOTES
+1. WATERMAIN TO HAVE MINIMUM COVER OF 1.70m.
+2. UTILITY CORRIDOR TO HAVE A MINIMUM COVER OF 0.90m.
+3. TREES TO BE PLACED IN LOCATIONS PER APPROVED LANDSCAPE PLAN.
+4. STREET LIGHT FIXTURE PER APPROVED TOWN STANDARD.
+5. THE FOLLOWING IS A MINIMUM ROAD BASE AND WILL REQUIRE A SOILS REPORT VERIFICATION
+40mm
+HL3
+65mm
+HL8
+150mm
+GRANULAR "A"
+300mm
+GRANULAR "B"
+
+6.
+7.
+8.
+
+THE BOULEVARDS REQUIRE A MINIMUM OF 300mm OF TOPSOIL AND NURSERY SOD.
+ON A CRESCENT THE MINIMUM WATERMAIN SHALL BE PLACED ON THE OUTSIDE.
+FULL LENGTH MINIMUM 100mm DIA. SUBDRAIN C/W FILTERCLOTH SHALL BE INSTALLED, AS PER
+APPROVE TOWN OF CALEDON STANDARD NO. 219.
+9. SUB-GRADE SHALL BE COMPACTED TO A MINIMUM 95% OF S.P.D. AT OPTIMUM MOISTURE
+CONTENT.
+10. WHERE POSSIBLE MANHOLE LIDS TO BE LOCATED OUT OF TIRE LANE OF TRAFFIC.
+11. LONG DIMENSION OF TRANSFORMER TO BE PARALLEL TO STREETLINE.
+
+18.0m LOCAL ROAD WITH LINEAR PARK
+8.5m ROADWAY (7.9m PAVEMENT)
+SCALE: N.T.S.
+
+6.
+7.
+
+ON A CRESCENT THE MINIMUM WATERMAIN SHALL BE PLACED ON THE OUTSIDE.
+FULL LENGTH MINIMUM 100mm DIA. SUBDRAIN C/W FILTERCLOTH SHALL BE INSTALLED, AS PER
+APPROVE TOWN OF CALEDON STANDARD NO. 219.
+8. SUB-GRADE SHALL BE COMPACTED TO A MINIMUM 95% OF S.P.D. AT OPTIMUM MOISTURE
+CONTENT.
+9. WHERE POSSIBLE MANHOLE LIDS TO BE LOCATED OUT OF TIRE LANE OF TRAFFIC.
+10. THE BOULEVARDS REQUIRE A MINIMUM OF 300mm OF TOPSOIL AND NURSERY SOD
+
+22.0m LOCAL THROUGH/URBAN
+9.3m ROADWAY (8.7m PAVEMENT)
+SCALE: N.T.S.
+
+NOTES
+1. WATERMAIN TO HAVE MINIMUM COVER OF 1.70m.
+2. UTILITY CORRIDOR TO HAVE A MINIMUM COVER OF 0.90m.
+3. TREES TO BE PLACED IN LOCATIONS PER APPROVED LANDSCAPE PLAN.
+4. STREET LIGHT FIXTURE PER APPROVED TOWN STANDARD.
+5. THE FOLLOWING IS A MINIMUM ROAD BASE AND WILL REQUIRE A SOILS REPORT VERIFICATION
+40mm
+HL3
+90mm
+HL8
+150mm
+GRANULAR "A"
+450mm
+GRANULAR "B"
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+
+ON A CRESCENT THE MINIMUM WATERMAIN SHALL BE PLACED ON THE OUTSIDE.
+FULL LENGTH MINIMUM 100mm DIA. SUBDRAIN C/W FILTERCLOTH SHALL BE INSTALLED, AS PER
+APPROVE TOWN OF CALEDON STANDARD NO. 219.
+8. SUB-GRADE SHALL BE COMPACTED TO A MINIMUM 95% OF S.P.D. AT OPTIMUM MOISTURE
+CONTENT.
+9. WHERE POSSIBLE MANHOLE LIDS TO BE LOCATED OUT OF TIRE LANE OF TRAFFIC.
+10. THE BOULEVARDS REQUIRE A MINIMUM OF 300mm OF TOPSOIL AND NURSERY SOD
+6.
+7.
+
+ARGO DRAFT PLAN EAST
+
+ROW SECTIONS
+
+26.0m LOCAL THROUGH/URBAN
+13.4m ROADWAY (12.8m PAVEMENT)
+SCALE: N.T.S.
+
+15-458
+
+DATE:
+
+2020
+
+JOB NO.
+
+CHECKED BY:
+
+S.H.
+
+DRAWING NO.
+
+SURVEYED BY:
+
+J.D.B.
+
+DRAWN BY:
+
+A.G./X.S.
+
+DESIGNED BY:
+
+S.K./E.L.
+
+CHECKED BY:
+
+S.K./A.F.
+
+SCALE:
+
+N.T.S.
+
+DATE:
+
+MAY 2023
+
+SHEET NO.
+
+305
+
+p:\Projects\15-458\Reports\21-03-01 fsr argo\drawings and figures\Figures\15-458_ROW CROSS SECTIONS.dwg
+
+QUEEN ST
+REET
+
+TION ROA
+D
+
+KIN
+
+G ST
+REE
+
+HUMBER ST
+A
+
+THE GORE
+
+R OA D
+
+KING STREET
+
+T
+
+DOWNTOWN
+BOLTON
+
+KEY PLAN
+N.T.S.
+
+LEGEND
+STUDY AREA LIMIT
+
+GREENBELT
+
+EXISTING UNEVALUATED
+WETLAND AND WETLAND ID
+
+W5
+
+EXTERNAL
+CATCHMENT TO
+PROPOSED CHANNEL
+VIA CLEAN WATER
+COLLECTOR PIPE
+
+PROPOSED OPEN SPACE BLOCK
+
+PROPOSED EPA (ENVIRONMENTAL
+POLICY AREA) / CHANNEL
+
+75.6
+
+##
+
+PROPOSED SWM POND
+
+EXISTING OVERLAND FLOW
+ROUTE
+
+INTERCEPT EXISTNG WHT6-E AND DIRECT
+EXTERNAL PRE-DEVELOPMENT DRAINAGE TO
+CLEAN WATER COLLECTOR PIPE FOR DISCHARGE
+TO PROPOSED CHANNEL
+
+EXISTING
+DRAINAGE FEATURE WHT6-E
+
+EX. 450mm PVC CULVERT
+
+STORM DRAINAGE AREA BOUNDARY
+
+INTERIM DRAINAGE AREA BOUNDARY
+
+EX. 400mm PVC CULVERT
+EXISTING STORM DRAINAGE AREA
+BOUNDARY
+
+BH20-5
+BTM of BH 263.3 m
+BH14-11
+BH Depth 9.1 m
+
+EX. 375mm PVC CULVERT
+EX. 700mm CONC BOX
+CULVERT
+
+BH14-10
+BH Depth 9.6 m
+
+BH20-1
+BTM of BH 271.6 m
+
+BH14-09
+BH Depth 8.1 m
+
+14.61
+BH20-11
+BTM of BH 260.4 m
+
+0.78
+
+EX. 750mm CSP CULVERT
+
+BH14-08
+BH Depth 8.1 m
+
+BH14-02
+BH Depth 8.1 m
+
+BH14-10
+BH Depth 11.1 m
+
+BH20-2
+BTM of BH 270.6 m
+
+CATCHMENT 101
+OUTLET TO EX. CULVERT
+
+BH14-01
+BH Depth 8.1 m
+
+POST DEVELOPMENT CATCHMENT
+BOUNDARY FOR DISCHARGE TO
+MAIN HUMBER CREEK
+
+BH14-06
+BH Depth 8.6 m
+
+BH14-07
+BH Depth 8.1 m
+
+BH14-03
+BH Depth 8.1 m
+
+13.7
+
+DRAINAGE AREA (ha)
+
+0.82
+
+RUNOFF COEFFICIENT
+
+BH20-15
+BTM of BH 254.4 m
+
+BH20-4
+BTM of BH 270.4 m
+
+BH20-3
+BTM of BH 271.9 m
+
+POST DEVELOPMENT CATCHMENT
+BOUNDARY FOR DISCHARGE TO
+WEST HUMBER CREEK
+
+CATCHMENT
+101
+
+BH14-05
+BH Depth 8.1 m
+
+CATCHMENT
+105
+
+EXTERNAL STORM DRAINAGE
+AREA CONTRIBUTION TO
+PROPOSED CHANNEL
+
+GREENBELT
+
+BH20-10
+BTM of BH 260.1 m
+
+CATCHMENT
+104
+BH14-02
+BH Depth 8.1 m
+
+BH14-01
+BH Depth 8.1 m
+
+PROPOSED OVERLAND FLOW
+ROUTE (UNCONTROLLED
+DISCHARGE TO WETLAND)
+
+BH14-08
+BH Depth 8.1 m
+
+BH14-09
+BH Depth 8.1 m
+
+EX. 500mm CSP CULVERT
+
+BH14-03
+BH Depth 9.5 m
+
+9.00
+
+BH14-07
+BH Depth 8.1 m
+
+0.70
+STREET 'YY'
+
+EX. 500mm CONC
+CULVERT
+
+BH14-04
+BH Depth 7.9 m
+
+BH20-6
+BTM of BH 262.8 m
+
+BH20-8
+BTM of BH 269.0 m
+
+BH20-9
+BTM of BH 265.9 m
+
+BH14-04
+BH Depth 8.1 m
+
+CATCHMENT
+102
+
+CATCHMENT 102
+OUTLET TO NEW
+900mm∅ CONC.
+CULVERT
+
+28.02
+
+EX. 300mm PVC CULVERT
+
+0.76
+BH14-06
+BH Depth 8.1 m
+
+BH14-05
+BH Depth 8.1 m
+
+0.48
+0.27
+
+W1
+
+CATCHMENT
+103
+
+2.09
+0.27
+
+BH20-14
+BTM of BH 256.4 m
+
+#####
+
+0.82
+
+69.48
+
+5.86
+
+0.72
+
+0.27
+
+W3
+
+EX. 800mm CONC BOX
+CULVERT
+
+2.88
+0.27
+
+W2
+
+CATCHMENT
+106
+
+EX. 750mm PVC CULVERT
+
+W4
+
+SWM
+POND 2A
+
+1500mm∅ CULVERT
+
+EX. 400mm CSP CULVERT
+
+0.75
+
+W5
+0.96
+
+1.93
+
+W6
+
+SWM POND 1
+
+0.27
+
+0.27
+
+SWM POND 1
+
+3.73
+0.55
+SWM POND 2A
+
+3.43
+
+CATCHMENT 103
+OUTLET TO EX. CULVERT
+
+27.63
+
+2.16
+
+0.27
+
+BH20-13
+BTM of BH 259.9 m
+
+0.87
+0.27
+
+POND 1 OUTLET
+TO EX. CULVERT
+EX. TWIN 1350mm CSP
+CULVERT
+
+NOTES:
+
+EX. 400mm CSP CULVERT
+
+BH20-7
+BTM of BH 250.4 m
+
+0.27
+
+EX. 750mm CSP CULVERT
+
+EX. 850mm X 900mm
+CONC BOX CULVERT
+
+BH19-8
+BTM of BH 254.6 m
+
+EX. 850mm X 900mm
+CONC BOX CULVERT
+
+EX. TWIN 600mm
+CORRUGATED PVC
+CULVERT
+
+2.30
+
+CATCHMENT
+107
+
+BH20-12
+BTM of BH 256.7 m
+
+0.76
+BH19-4
+BTM of BH 256.2 m
+
+EX. 450mm PVC CULVERT
+
+BH19-7
+BTM of BH 252.4 m
+
+BH20-16
+BTM of BH 2570.3 m
+
+BH19-5
+BTM of BH 254.2 m
+
+8.57
+0.84
+
+* REFER TO DRAWING 502 FOR MINOR SYSTEM
+DRAINAGE AREAS AND STORM SERVICING.
+* REFER TO DRAWING 503 FOR MAJOR SYSTEM
+FLOW.
+* REFER TO DRAWING 504 FOR PRELIMINARY
+CLEAN WATER COLLECTOR (CWC) PIPE DETAILS.
+
+EX. 500mm CONC
+CULVERT
+
+EX. 600mm CSP CULVERT
+BH19-6
+BTM of BH 252.9 m
+
+BH19-3
+BTM of BH 253.3 m
+
+SWM
+POND 2B
+
+CATCHMENT 107
+OUTLET TO EX. CULVERT
+EX. 1800mm CSP CULVERT
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+
+SWM POND 2B
+
+2.71
+0.76
+
+BH19-1
+BTM of BH 250.7 m
+
+STORM DRAINAGE AREAS
+TO SWM PONDS
+
+BH19-2
+BTM of BH 252.5 m
+
+15-458
+
+SURVEYED BY:
+
+J.D.B.
+
+DATE:
+
+2020
+
+JOB NO.
+
+DRAWN BY:
+
+A.G./X.S.
+
+CHECKED BY:
+
+S.H.
+
+DRAWING NO.
+
+DESIGNED BY:
+
+S.K./E.L.
+
+CHECKED BY:
+
+S.K./A.F.
+
+SCALE:
+
+1:3000
+
+DATE:
+
+MAY 2023
+
+SHEET NO.
+
+501
+
+p:\Projects\15-458\Reports\21-03-01 fsr argo\drawings and figures\05 - STORM SERVICING\501_STORM DRAINAGE TO PONDS.dwg
+
+REET
+
+75.62ha
+
+OAD
+
+KING STREET
+
+BH20-5
+BTM of BH 263.3 m
+
+BH20-2
+BTM of BH 270.6 m
+
+STREET 'C'
+
+STREET 'C'
+
+BH14-03
+BH Depth 8.1 m
+
+BH14-01
+BH Depth 8.1 m
+
+STM.MH3
+TOP 272.39m
+NW 267.85m
+SE 267.85m
+
+STREET 'C'
+
+STREET 'C'
+
+STREET 'C'
+
+STREET 'E
+
+EE'
+
+LANE 'Q'
+
+3.25ha
+
+LANE 'N'
+BH14-03
+BH Depth 9.5 m
+
+STM.MH33
+STREET 'TT'
+TOP 274.45m
+NW
+267.63m
+STREET 'S'
+SE 267.48m
+
+STREET 'YY'
+
+0.76
+
+STM.MH5
+TOP 270.77m
+NW 266.68m
+SE 266.38m
+
+STREET 'R'
+LANE 'E'
+
+STREET 'D'
+
+17.10ha
+
+0.72
+
+STM.MH400
+TOP 267.88m
+NE 263.75m
+
+BH14-07
+BH Depth 8.1 m
+
+OIL GRIT SEPARATOR
+(TO BE DETAILED UNDER
+DETAILED DESIGN)
+
+1.76ha
+
+MH20B
+MH23B
+59.6m-375mm
+96
+CWS @ 0.50%
+CW .1mS @ 375
+0.5 mm
+0%
+
+0.75
+
+STM.MH41
+TOP 271.01m
+SW 263.54m
+SE 262.94m
+
+STREET 'Y'
+
+1.60ha
+
+STREET 'E'
+
+STM.MH404
+TOP 264.43m
+NW 262.76m
+
+STM.MH44
+TOP 267.37m
+NW 261.38m
+SE 261.29m
+
+12.04ha
+
+STM.HW4
+SW 260.80m
+
+EET
+STR
+
+BH20-12
+BTM of BH 256.7 m
+
+STM.MH46
+TOP 260.64m
+SE 258.89m
+NE 258.98m
+
+BH19-8
+BTM of BH 254.6 m
+
+KING
+
+STRE
+ET
+
+STM.MH45
+TOP 266.83m
+NW 259.60m
+SW 259.51m
+
+STREET 'B'
+
+STREET 'F'
+
+STREET 'W'
+
+STREET 'V'
+
+0.70
+
+EXISTING UNEVALUATED WETLAND
+AND WETLAND ID
+
+W5
+
+PROPOSED OPEN SPACE BLOCK
+
+STREET 'I'
+
+LANE 'G'
+
+STREET 'CC'
+
+PROPOSED EPA (ENVIRONMENTAL
+POLICY AREA) / CHANNEL
+
+0.72
+
+PROPOSED SWM POND
+
+(TO BE RE
+-ALIGNED)
+
+STM.MH503
+TOP 261.30m
+SE 258.67m
+NE 258.29m
+NW 258.45m
+
+3.20ha
+
+STM.MH502
+TOP 260.91m
+SE 258.56m
+
+98.1m-1050mm
+STM. @ 0.50%
+
+0.82
+
+STM.HW500
+SW 257.80m
+
+EXISTING OVERLAND FLOW
+ROUTE
+PROPOSED OVERLAND
+FLOW ROUTE
+
+OIL GRIT SEPARATOR
+(TO BE DETAILED UNDER
+DETAILED DESIGN)
+
+AREA Ha.
+RUNOFF COEFFICIENT
+
+2.00ha
+
+101.1m-675mm
+STM. @ 0.50%
+
+0.70
+
+STREET 'CC'
+
+STM.MH9
+TOP 266.37m
+W 263.78m
+NE 263.18m
+
+STM.MH500
+TOP 261.40m
+NW 259.18m
+
+STM.HW1
+SW 263.00m
+
+STM.MH2
+TOP 90.70m
+S 85.00m
+E 85.00m
+W 85.00m
+N 85.00m
+
+8.54ha
+
+0.80
+
+STORM MANHOLE ID
+PROPOSED GROUND ELEVATION
+PROPOSED SEWER INVERTS
+
+EX. 1350mm CSP CULVERT
+
+17.5m-1500x3000mm
+STM. @ 1.00%
+
+SWM POND 1
+
+77.1m-1500x3000mm CONC.
+BOX CULVERT @ 0.60%
+
+EX. 1350mm CSP CULVERT
+
+OUTLET 1
+
+46.6m-1500mm
+STM. @ 3.65%
+
+'JJ'
+
+52.9m-1350mm
+STM. @ 1.00%
+
+19.8m-900mm
+STM. @ 1.00%
+
+STREET 'HH'
+
+2.36ha
+
+21.1m-900mm
+STM. @ 0.50%
+
+STREET 'C
+
+169.2m-1350mm
+STM. @ 1.00%
+
+GREENBELT
+
+25.3m-1500x2400mm
+STM. @ 0.50%
+
+STREET 'I'
+
+STM.CONTROL MH2
+TOP 264.00m
+W 261.00m
+NE 261.00m
+
+STR
+EET
+
+0.75
+
+STREET 'FF'
+
+STREET 'GG'
+
+OIL GRIT SEPARATOR
+(TO BE DETAILED UNDER
+DETAILED DESIGN)
+
+.
+STM
+
+12.30ha
+
+LANE 'J
+'
+STREET 'I'
+
+STREET 'JJ'
+
+SWM POND 2A
+
+REMOVE EX. 500mm CSP
+CULVERT
+AND REPLACE WITH A
+900mm
+Ø CONC.
+CULVERT
+
+0.82
+
+C'
+
+33.6m-450mm
+CWS @ 0.40%
+
+LANE 'L'
+
+HW6
+
+75.5m-1350mm
+STM. @ 0.50%
+
+'II'
+
+62.4m-1650mm
+STM. @ 0.40%
+
+MH11B
+21.7m-450mm
+CWS @ 0.40%
+
+LANE 'K'
+
+MH13B
+
+STREET 'II'
+
+MH12BCWS @ 0.40% 140.0m-375mm CWS @ 0.40% MH10B
+40.4m-450mm
+
+MH14B
+
+HW5
+
+STM.MH402
+TOP 264.28m
+NE 262.10m
+NW 262.33m
+SE 262.50m
+
+10.11ha
+
+STM.MH8
+TOP 267.03m
+NW 263.91m
+E 263.91m
+
+STREET 'EE'
+
+MAJOR SYSTEM CAPTURE AREA
+
+0.70
+
+34.6m-1650mm
+STM. @ 0.35%
+
+HUMBER ST
+ATION
+ROAD
+
+@
+CW
+4.
+8m
+
+12
+
+30.3m-450mm
+CWS @ 0.40%
+
+STM.HW400
+SW 261.70m
+
+BH20-14
+BTM of BH 256.4 m
+
+BH20-13
+BTM of BH 259.9 m
+
+STM.MH43
+TOP 268.27m
+NW 261.79m
+SE 261.76m
+
+Y
+
+55.0m-750mm
+STM. @ 0.50%
+
+STM.HW700
+W 264.00m
+
+S
+
+5.87ha
+
+STREET 'BB'
+
+77.3m-450mm
+CWS @ 0.40%
+
+MH15(B)
+
+STM.MH39
+TOP 263.83m
+SW 261.25m
+NW 261.27m
+
+EX. 850mm X 900mm
+CONC BOX CULVERT
+
+STREET 'DD'
+
+230.0m-1350mm
+STM. @ 0.50%
+
+MH2B
+
+0.27
+
+EX. 750mm PVC CULVERT
+
+STREET 'Z'
+
+0.75
+
+EX. 300mm PVC CULVERT
+
+PROPOSED CULVERT AT
+ROAD CROSSING
+
+80.5m-975mm
+STM. @ 0.50%
+
+STREET 'Y'
+
+STREET 'AA'
+
+11.68ha
+
+-5
+2
+0. 5m
+40 m
+%
+
+148.9m-1650mm
+STM. @ 0.40%
+
+STM.MH40
+TOP 272.47m
+NE 264.76m
+
+STM.MH706
+TOP 270.09m
+S 264.15m
+E 264.12m
+
+mm
+650
+m-1 .35%
+2
+.
+0
+12
+@0
+
+STM.MH705
+TOP 270.05m
+W 264.60m
+N 264.57m
+
+STREET 'DD'
+
+STM.MH38
+TOP 262.84m
+NW 261.90m
+SE 261.87m
+
+EX. 850mm X 900mm
+CONC BOX CULVERT
+
+STREET 'Y'
+
+334.6m-1500x2400mm STM. @ 0.50%
+
+STM.MH35
+TOP 270.90m
+NE 262.86m
+SW 262.84m
+
+LANE 'H'
+
+50.1m-1500mm
+STM. @ 0.40%
+
+157.5m-525mm CWS @ 0.40%
+
+STM.MH37
+TOP 269.63m
+N 262.09m
+SE 262.07m
+
+50.2m-900mm
+STM. @ 3.39%
+
+STM.MH6
+74.1m-1650mm
+TOP 269.62m STM. @ 0.35%
+NW 265.58m
+LANE 'F'
+SE 265.58m
+
+LANE 'F'
+
+LANE 'F'
+
+ha 'F'
+3.90LANE
+
+244.0m-825mm STM. @ 0.50%
+
+90.0m-1650mm
+STM. @ 0.40%
+
+41.8m-1650mm
+STM. @ 0.40%
+SOUTHERN HERITAGE SYSTEM
+UNEVALUATED WETLANDS
+
+BH20-7
+BTM of BH 250.4 m
+
+LANE 'B'
+
+STREET 'V'
+
+STM.MH34
+TOP 271.43m
+NW 264.55m
+SW 263.06m
+MH1B
+
+10.0m-375mm
+CWS @ 0.50%
+
+OUTLET 2
+
+BH14-06
+BH Depth 8.1 m
+
+MH21B
+
+MH22B
+
+STM.HW2A
+NE 261.00m
+
+STM.MH704
+TOP 270.05m
+NW 264.88m
+E 264.86m
+
+STREET 'X'
+
+STREET 'X'
+
+STREET 'X'
+
+STREET 'JJ'
+
+HW3
+
+0.72
+
+BH14-05
+BH Depth 8.1 m
+
+STM.MH36
+TOP 271.38m
+NE 262.60m
+S 262.45m
+W 263.19m
+60.2m-1500mm
+STM. @ 0.40%
+
+0.76
+
+7.11ha
+STREET 'U'
+
+STREET 'U'
+
+STREET 'U'
+
+LANE 'I'
+
+23.7m-375mm
+CWS @ 0.50%
+
+STREET 'QQ'
+
+STM.MH53
+TOP 272.07m
+N 263.99m
+E 263.85m
+
+STREET 'UU'
+
+0.76
+
+57.0m-750mm
+STM. @ 0.50%
+
+STREET 'VV'
+
+5.45ha
+
+BH20-9
+BTM of BH 265.9 m
+
+BH14-04
+BH Depth 8.1 m
+
+CLEAN WATER
+COLLECTOR PIPE
+
+STM.MH401
+TOP 265.81m
+SW 262.74m
+SE 262.60m
+
+STREET 'D'
+
+EX. 500mm CONC CULVERT
+
+160.0m-1500x2400mm
+STM. @ 0.50%
+
+STREET 'T'
+
+PROPOSED STORM SEWER
+
+BH20-15
+BTM of BH 254.4 m
+
+EXISTING STORM SEWER
+
+52.0m-600mm
+STM. @ 0.50%
+
+STREET 'I'
+
+BH20-8
+BTM of BH 269.0 m
+
+STM.MH52
+TOP 272.36m
+NW 264.57m
+S 264.28m
+
+225.0m-1350mm STM. @ 1.30%
+
+BH20-6
+BTM of BH 262.8 m
+
+STREET 'T'
+
+BH14-04
+BH Depth 7.9 m
+
+MINOR SYSTEM STORM DRAINAGE
+AREA BOUNDARY
+
+100.5m-600mm
+STM. @ 1.00%
+
+HUMBER STATION ROAD
+
+STREET 'T'
+
+EXISTING CONTOUR
+& ELEVATION
+
+0.70
+
+STREET 'S'
+
+128.8m-450mm
+STM. @ 0.50%
+
+DRAFT PLAN AREAS
+
+MINOR SYSTEM STORM DRAINAGE
+AREA BOUNDARY TO SWM POND
+AND FLOW NODE
+
+2.09ha
+
+STREET 'E'
+
+STREET 'E'
+
+DOWNTOWN
+BOLTON
+
+LEGEND
+
+STREET 'C'
+
+STREET 'D'
+
+STREET 'D'
+
+T
+
+N.T.S.
+
+DIAN
+CANA
+
+STM.MH303
+TOP 264.22m
+SW 260.73m
+NW 260.43m
+
+BH14-08
+BH Depth 8.1 m
+
+STREET 'E'
+
+STREET 'S'
+
+STREET 'S'
+
+0.70
+
+STREET 'B'
+
+BH14-02
+BH Depth 8.1 m
+
+BH14-09
+BH Depth 8.1 m
+
+513.0m-1650mm STM. @ 0.35%
+
+136.8m-450mm
+
+STREET 'EEE'STM. @ 0.50%
+
+STREET 'SS'
+
+2.95ha
+
+BH20-10
+BTM of BH 260.1 m
+
+STREET 'F'
+
+0.76
+
+BH14-01
+BH Depth 8.1 m
+
+0.76
+
+STREET 'SS'
+
+STREET 'QQ'
+
+1.08ha
+
+4.33ha
+
+STM.MH51
+TOP 273.01m
+SW 265.26m
+SE 265.21m
+
+181.5m-1200mm STM. @ 1.30%
+
+LANE 'T'
+
+STREET 'VV'
+
+STREET 'YY'
+
+STREET 'DDD'
+
+STREET 'JJ'
+
+STM.MH32
+TOP 276.26m
+NW 270.14m
+SE 269.99m
+
+LANE 'S'
+
+LANE 'M'
+
+STREET 'Q'
+
+234.0m-1200x2400mm STM. @ 0.50%
+
+STREET 'AAA'
+
+STREET 'I'
+
+STREET 'QQ'
+
+STREET 'RR'
+
+LANE 'P'
+
+STREET 'B'
+
+LANE 'D'
+BH20-4
+BTM of BH 270.4 m
+
+HUMBER STATION ROAD
+
+0.78
+
+G ST
+REE
+
+KEY PLAN
+
+OIL GRIT SEPARATOR
+(TO BE DETAILED UNDER
+DETAILED DESIGN)
+
+100.5m-900mm
+STM. @ 1.00%
+
+5.84ha
+
+STREET 'B'
+
+STREET 'F'
+
+STREET 'K'
+
+0.78
+STREET 'L'
+
+0.78
+
+115.0m-750mm
+STM. @ 1.00%
+
+5.94ha
+
+0.72
+
+2.82ha
+
+STREET 'A'
+
+STM.MH2
+TOP 272.50m
+NW 268.82m
+SE 268.52m
+18.11ha
+
+EX. 750mm CSP CULVERT
+
+ILWA
+IC R A
+PACIF
+
+STM.MH301
+TOP 269.65m
+NE 263.05m
+
+STM.MH302
+TOP 266.73m
+SW 261.90m
+NE 261.74m
+
+KIN
+
+HUMBER S
+
+179.6m-1650mm STM. @ 0.35%
+
+STREET 'I'
+
+STREET 'G'
+BH14-02
+BH Depth 8.1 m
+
+LANE 'A'
+
+STREET 'P'
+
+STREET 'JJ'
+
+STREET 'OO'
+
+STREET 'PP'
+
+STREET 'VV'
+
+STREET 'O'
+
+BH14-06
+BH Depth 8.6 m
+
+STREET 'C'
+
+BH20-11
+BTM of BH 260.4 m
+
+HUMBER STATION ROAD
+
+STREET 'A
+AA
+
+STREET 'CCC'
+
+BH20-3
+BTM of BH 271.9 m
+
+STM.MH50
+TOP 273.70m
+NE 265.94m
+
+STREET 'N'
+
+STM.MH304
+TOP 262.30m
+SE 259.94m
+N 259.91m
+
+HUMBER STATION ROAD
+
+BH14-07
+BH Depth 8.1 m
+
+0.76
+
+186.0m-1050mm STM. @ 1.30%
+
+LANE 'O'
+
+STREET 'XX'
+
+STREET 'YY'
+
+STREET 'ZZ'
+
+8.90ha
+
+'
+
+STREET 'BBB'
+
+STREET 'NN'
+
+STM.MH703
+TOP 272.83m
+SW 266.68m
+SE 266.66m
+
+STREET 'A'
+
+STREET 'I'
+
+. 30m)
+
+THE GOR
+E
+
+STREET 'AAA'
+
+STREET 'J'
+
+STM.MH702
+TOP 272.45m
+NW 267.22m
+NE 267.20m
+
+149.5m-1650mm STM. @ 0.35%
+
+133.6m-1200x1800mm
+STM. @ 0.50%
+
+ROAD (Ultim
+
+BH14-05
+BH Depth 8.1 m
+
+STREET 'MM'
+
+EX. 700mm CONC BOX
+CULVERT
+
+EX. 375mm PVC CULVERT
+
+STREET 'A'
+
+STREET 'A'
+
+LANE 'R'
+
+22.7m-1200mm
+STM. @ 0.50%
+
+BH14-10
+BH Depth 11.1 m
+
+LANE 'C'
+
+STM.MH31
+TOP 277.77m
+NW 272.94m
+SE 272.56m
+
+STREET 'A'
+
+ate R.O.W
+
+STREET 'LL'
+
+STREET 'M'
+
+0.76
+
+0.72
+STREET 'J'
+
+STREET 'JJ'
+
+3.23ha
+BH14-08
+BH Depth 8.1 m
+
+STREET 'KK'
+
+STREET 'WW'
+
+6.05ha
+STREET 'VV'
+
+BH14-09
+BH Depth 8.1 m
+
+181.4m-900mm STM. @ 0.50%
+
+183.7m-675mm STM. @ 1.30%
+
+BH20-1
+BTM of BH 271.6 m
+
+STREET 'H'
+
+98.3m-1200mm
+STM. @ 0.50%
+
+STM.MH1
+TOP 273.29m
+SE 269.73m
+
+STREET 'H'
+
+STREET 'KK'
+BH14-10
+BH Depth 9.6 m
+
+THE GORE
+R
+
+BH14-11
+BH Depth 9.1 m
+
+TATION RO
+AD
+
+STM.HW701
+TOP 269.92m
+SE 267.85m
+
+STM.MH30
+TOP 278.86m
+SE 275.32m
+
+QUEEN ST
+
+0.25
+
+3.18ha
+
+EX. 400mm CSP CULVERT
+
+18.5m-1500mm
+STM. @ 1.00%
+STM.CONTROL MH1
+TOP 265.52m
+SW 263.00m
+N 263.00m
+
+0.72
+
+BH19-4
+BTM of BH 256.2 m
+
+89.0m-1350mm
+STM. @ 1.00%
+
+EX. 500mm CONC CULVERT
+STM.MH47
+TOP 260.74m
+NW 258.00m
+SE 257.98m
+
+BH19-7
+BTM of BH 252.4 m
+
+105.2m-1650mm
+STM. @ 0.46%
+
+BH19-5
+BTM of BH 254.2 m
+
+BH20-16
+BTM of BH 2570.3 m
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+
+EX. 1800mm CSP CULVERT
+
+SWM POND 2B
+
+ARGO DRAFT PLAN EAST
+
+BH19-6
+BTM of BH 252.9 m
+
+BH19-3
+BTM of BH 253.3 m
+
+MINOR SYSTEM DRAINAGE
+PLAN AND STORM
+SERVICING
+
+STM.HW2B
+NW 257.50m
+
+NOTE:
+REFER TO DRAWING 503 FOR
+MAJOR SYSTEM CAPTURE DETAILS
+
+15-458
+
+DATE:
+
+2020
+
+JOB NO.
+
+A.G./X.S.
+
+CHECKED BY:
+
+S.H.
+
+DRAWING NO.
+
+DESIGNED BY:
+
+S.K./E.L.
+
+CHECKED BY:
+
+S.K./A.F.
+
+SCALE:
+
+1:3000
+
+DATE:
+
+MAY 2023
+
+SURVEYED BY:
+
+J.D.B.
+
+DRAWN BY:
+
+SHEET NO.
+
+502
+
+p:\Projects\15-458\Reports\21-03-01 fsr argo\drawings and figures\05 - STORM SERVICING\502_MINOR SYSTEM DRAINAGE PLAN.dwg
+
+ET
+STREET 'G'
+
+HUMBER STATION ROAD
+
+STREET 'B'
+
+STREET 'F'
+
+STREET 'K'
+
+STREET 'L'
+
+STM.MH3
+TOP 272.39m
+NW 267.85m
+SE 267.85m
+
+STREET 'C'
+
+STREET 'C'
+
+STREET 'E
+
+EE'
+
+LANE 'Q'
+
+BH14-03
+BH Depth 9.5 m
+
+STM.MH33
+STREET 'TT'
+TOP 274.45m
+NW
+267.63m
+STREET 'S'
+SE 267.48m
+
+STREET 'YY'
+
+STM.MH5
+TOP 270.77m
+NW 266.68m
+SE 266.38m
+
+STREET 'R'
+LANE 'E'
+
+STREET 'B'
+STREET 'D'
+
+STREET 'D'
+
+STREET 'D'
+
+STM.MH400
+TOP 267.88m
+NE 263.75m
+
+BH14-07
+BH Depth 8.1 m
+
+244.0m-825mm STM. @ 0.50%
+
+STREET 'Y'
+
+77.3m-450mm
+CWS @ 0.40%
+
+STREET 'B'
+
+STREET 'F'
+
+21.1m-900mm
+STM. @ 0.50%
+STM.MH503
+TOP 261.30m
+SE 258.67m
+NE 258.29m
+NW 258.45m
+
+STM.MH44
+TOP 267.37m
+NW 261.38m
+SE 261.29m
+
+STR
+
+52.9m-1350mm
+STM. @ 1.00%
+BH20-12
+BTM of BH 256.7 m
+
+STM.MH46
+TOP 260.64m
+SE 258.89m
+NE 258.98m
+
+BH19-8
+BTM of BH 254.6 m
+
+SWM POND 1
+
+BH19-4
+BTM of BH 256.2 m
+
+89.0m-1350mm
+STM. @ 1.00%
+STM.MH47
+TOP 260.74m
+NW 258.00m
+SE 257.98m
+
+BH19-7
+BTM of BH 252.4 m
+
+105.2m-1650mm
+STM. @ 0.46%
+
+BH19-5
+BTM of BH 254.2 m
+
+BH19-6
+BTM of BH 252.9 m
+
+KING
+
+STM.HW500
+SW 257.80m
+
+98.1m-1050mm
+STM. @ 0.50%
+
+OIL GRIT SEPARATOR
+(TO BE DETAILED UNDER
+DETAILED DESIGN)
+
+101.1m-675mm
+STM. @ 0.50%
+
+STM.MH500
+TOP 261.40m
+NW 259.18m
+
+77.1m-1500x3000mm CONC.
+BOX CULVERT @ 0.60%
+
+OUTLET 1
+
+46.6m-1500mm
+STM. @ 3.65%
+
+STM.MH45
+TOP 266.83m
+NW 259.60m
+SW 259.51m
+
+STM.MH502
+TOP 260.91m
+SE 258.56m
+
+18.5m-1500mm
+STM. @ 1.00%
+STM.CONTROL MH1
+TOP 265.52m
+SW 263.00m
+N 263.00m
+
+CPR
+
+19.8m-900mm
+STM. @ 1.00%
+
+17.5m-1500x3000mm
+STM. @ 1.00%
+STREET 'C
+
+STM.HW4
+SW 260.80m
+
+STREET 'HH'
+
+STM.HW1
+SW 263.00m
+
+STREET 'I'
+
+50.2m-900mm
+STM. @ 3.39%
+
+169.2m-1350mm
+STM. @ 1.00%
+
+STM.MH9
+TOP 266.37m
+W 263.78m
+NE 263.18m
+
+'JJ'
+
+BH20-7
+BTM of BH 250.4 m
+
+STM.CONTROL MH2
+W4TOP 264.00m
+W 261.00m
+NE 261.00m
+
+STR
+EET
+
+OUTLET 2
+
+EET
+
+SWM POND 2A
+
+STREET 'FF'
+
+STREET 'GG'
+
+25.3m-1500x2400mm
+STM. @ 0.50%
+
+LANE 'J
+'
+STREET 'I'
+
+W6
+
+FUTURE
+GRADE
+SEPARATION
+
+W9
+
+C'
+
+W5
+
+33.6m-450mm
+CWS @ 0.40%
+
+'II'
+
+HW6
+
+75.5m-1350mm
+STM. @ 0.50%
+LANE 'L'
+
+62.4m-1650mm
+STM. @ 0.40%
+
+MH11B
+21.7m-450mm
+CWS @ 0.40%
+
+LANE 'K'
+
+MH13B
+
+STREET 'JJ'
+
+MH14B
+
+HW5
+
+STREET 'II'
+
+MH12BCWS @ 0.40% 140.0m-375mm CWS @ 0.40% MH10B
+40.4m-450mm
+
+MINOR SYSTEM STORM DRAINAGE
+AREA BOUNDARY TO SWM POND
+AND FLOW NODE
+
+BH20-14
+BTM of BH 256.4 m
+
+STM.MH8
+TOP 267.03m
+NW 263.91m
+E 263.91m
+
+STREET 'EE'
+
+STREET 'CC'
+
+30.3m-450mm
+CWS @ 0.40%
+
+PROPOSED OVERLAND
+FLOW ROUTE
+
+GREENBELT
+
+PROPOSED CULVERT AT
+ROAD CROSSING
+
+STATION
+
+CW
+
+STM.MH39
+TOP 263.83m
+SW 261.25m
+NW 261.27m
+
+12
+4.
+8m
+
+STM.HW2A
+NE 261.00m
+
+STM.MH43
+TOP 268.27m
+NW 261.79m
+SE 261.76m
+
+EXISTING OVERLAND FLOW
+ROUTE
+
+OIL GRIT SEPARATOR
+(TO BE DETAILED UNDER
+DETAILED DESIGN)
+
+STM.HW700
+W 264.00m
+
+BH20-13
+BTM of BH 259.9 m
+
+-5
+2
+0. 5m
+40 m
+%
+
+W2
+
+STM.MH402
+TOP 264.28m
+NE 262.10m
+NW 262.33m
+SE 262.50m
+
+PROPOSED SWM POND
+
+FUTURE
+GO
+STATION
+
+TM.
+
+S
+
+@
+
+MH15(B)
+
+STM.HW400
+SW 261.70m
+
+RD
+
+STREET 'BB'
+
+80.5m-975mm
+STM. @ 0.50%
+
+55.0m-750mm
+STM. @ 0.50%
+
+STREET 'E'
+
+PROPOSED EPA (ENVIRONMENTAL
+POLICY AREA) / CHANNEL
+
+STM.MH401
+TOP 265.81m
+SW 262.74m
+SE 262.60m
+
+34.6m-1650mm
+STM. @ 0.35%
+
+STREET 'I'
+
+230.0m-1350mm
+STM. @ 0.50%
+
+LANE 'G'
+
+STREET 'AA'
+
+MH2B
+
+148.9m-1650mm
+STM. @ 0.40%
+
+STREET 'CC'
+
+STREET 'DD'
+
+STREET 'Z'
+
+STREET 'DD'
+
+STM.MH38
+TOP 262.84m
+NW 261.90m
+SE 261.87m
+
+STM.MH40
+TOP 272.47m
+NE 264.76m
+
+LANE 'H'
+
+STM.MH37
+TOP 269.63m
+N 262.09m
+SE 262.07m
+
+STM. @ 0.40%
+
+STM.MH35
+TOP 270.90m
+NE 262.86m
+SW 262.84m
+
+STM.MH706
+TOP 270.09m
+S 264.15m
+E 264.12m
+
+PROPOSED OPEN SPACE BLOCK
+
+STREET 'D'
+
+S
+mm
+650
+m-1 .35%
+2
+.
+0
+12
+@0
+
+STM.MH705
+TOP 270.05m
+W 264.60m
+N 264.57m
+
+334.6m-1500x2400mm STM. @ 0.50%
+
+W3 41.8m-1650mm
+
+50.1m-1500mm
+STM. @ 0.40%
+
+157.5m-525mm CWS @ 0.40%
+
+90.0m-1650mm
+STM. @ 0.40%
+
+100.5m-600mm
+STM. @ 1.00%
+
+STREET 'Y'
+
+MH21B
+
+10.0m-375mm
+CWS @ 0.50%
+
+STREET 'W'
+
+STREET 'V'
+
+STREET 'I'
+
+STREET 'V'
+
+STM.MH41
+TOP 271.01m
+SW 263.54m
+SE 262.94m
+
+STREET 'Y'
+
+MH1B
+
+STM.MH6
+74.1m-1650mm
+TOP 269.62m STM. @ 0.35%
+NW 265.58m
+LANE 'F'
+SE 265.58m
+
+LANE 'F'
+
+LANE 'F'
+
+LANE 'F'
+
+STREET 'JJ'
+
+MH22B
+
+STM.MH34
+TOP 271.43m
+NW 264.55m
+SW 263.06m
+
+STREET 'X'
+
+STREET 'X'
+
+STREET 'X'
+
+LANE 'I'
+
+HW3
+
+BH14-06
+BH Depth 8.1 m
+
+HUMBER
+
+MH20B
+MH23B
+59.6m-375mm
+96
+.
+CWS
+@
+0.50%
+1
+CW mS @ 375
+0.5 mm
+0%
+
+STREET 'U'
+
+STREET 'U'
+
+STREET 'U'
+
+STM.MH704
+TOP 270.05m
+NW 264.88m
+E 264.86m
+
+BH14-05
+BH Depth 8.1 m
+
+STM.MH36
+TOP 271.38m
+NE 262.60m
+S 262.45m
+W 263.19m
+60.2m-1500mm
+STM. @ 0.40%
+
+23.7m-375mm
+CWS @ 0.50%
+
+STREET 'QQ'
+
+STM.MH53
+TOP 272.07m
+N 263.99m
+E 263.85m
+
+OIL GRIT SEPARATOR
+(TO BE DETAILED UNDER
+DETAILED DESIGN)
+
+STREET 'UU'
+
+W1
+
+STREET 'VV'
+
+57.0m-750mm
+STM. @ 0.50%
+
+BH20-9
+BTM of BH 265.9 m
+
+BH14-04
+BH Depth 8.1 m
+
+LANE 'B'
+
+BH20-8
+BTM of BH 269.0 m
+
+STM.MH52
+TOP 272.36m
+NW 264.57m
+S 264.28m
+
+225.0m-1350mm STM. @ 1.30%
+
+E RD
+THE GOR
+
+BH20-6
+BTM of BH 262.8 m
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+
+INTERIM
+POND 1
+
+STRE
+ET
+
+EXISTING UNEVALUATED WETLAND
+AND WETLAND ID
+
+FUTURE
+GO
+STATION
+
+STM.MH404
+TOP 264.43m
+NW 262.76m
+
+160.0m-1500x2400mm
+STM. @ 0.50%
+
+STREET 'T'
+
+GREENBELT
+
+GREENBELT
+
+BH20-15
+BTM of BH 254.4 m
+
+HUMBER STATION ROAD
+
+STREET 'T'
+
+128.8m-450mm
+STM. @ 0.50%
+
+STREET 'T'
+
+STREET 'C'
+
+52.0m-600mm
+STM. @ 0.50%
+
+STREET 'S'
+BH14-04
+BH Depth 7.9 m
+
+EXISTING CONTOUR
+& ELEVATION
+
+W5
+
+STREET 'E'
+
+STREET 'E'
+
+STREET 'E'
+
+STREET 'S'
+
+STREET 'S'
+
+DOWNTOWN
+BOLTON
+
+STM.MH303
+TOP 264.22m
+SW 260.73m
+NW 260.43m
+
+BH14-08
+BH Depth 8.1 m
+
+STREET 'B'
+
+LANE 'N'
+
+BH14-09
+BH Depth 8.1 m
+
+513.0m-1650mm STM. @ 0.35%
+
+BH14-02
+BH Depth 8.1 m
+
+STREET 'SS'
+
+BH20-10
+BTM of BH 260.1 m
+
+STREET 'F'
+
+136.8m-450mm
+
+STREET 'EEE'STM. @ 0.50%
+
+BH14-01
+BH Depth 8.1 m
+
+STM.MH51
+TOP 273.01m
+SW 265.26m
+SE 265.21m
+
+STREET 'SS'
+
+STREET 'QQ'
+
+LANE 'T'
+
+STREET 'VV'
+
+STM.MH50
+TOP 273.70m
+NE 265.94m
+
+STREET 'YY'
+
+STREET 'DDD'
+
+181.5m-1200mm STM. @ 1.30%
+
+LANE 'M'
+
+STREET 'JJ'
+
+STM.MH32
+TOP 276.26m
+NW 270.14m
+SE 269.99m
+
+LANE 'S'
+
+STREET 'Q'
+
+234.0m-1200x2400mm STM. @ 0.50%
+
+STREET 'AAA'
+
+STREET 'I'
+
+STREET 'RR'
+
+LANE 'P'
+
+T
+
+DRAFT PLAN AREAS
+
+OIL GRIT SEPARATOR
+(TO BE DETAILED UNDER
+DETAILED DESIGN)
+
+100.5m-900mm
+STM. @ 1.00%
+
+115.0m-750mm
+STM. @ 1.00%
+
+STREET 'C'
+
+STREET 'QQ'
+
+BH20-4
+BTM of BH 270.4 m
+
+REE
+
+LEGEND
+
+STREET 'A'
+
+LANE 'D'
+
+BH20-3
+BTM of BH 271.9 m
+
+G ST
+
+KEY PLAN
+
+CPR
+
+STREET 'C'
+
+BH14-03
+BH Depth 8.1 m
+
+BH14-01
+BH Depth 8.1 m
+
+HUMBER STATION ROAD
+
+BH14-06
+BH Depth 8.6 m
+
+STREET 'C'
+
+STM.MH301
+TOP 269.65m
+NE 263.05m
+
+STM.MH2
+TOP 272.50m
+NW 268.82m
+SE 268.52m
+
+LANE 'A'
+
+LANE 'C'
+
+STREET 'P'
+
+STREET 'JJ'
+
+STREET 'OO'
+
+STREET 'PP'
+
+BH14-02
+BH Depth 8.1 m
+
+STM.MH302
+TOP 266.73m
+SW 261.90m
+NE 261.74m
+
+HUMBER STATION ROAD
+
+STREET 'C'
+
+STREET 'VV'
+
+LANE 'O'
+
+STREET 'XX'
+
+STREET 'YY'
+STREET 'ZZ'
+
+STREET 'CCC'
+
+BH20-2
+BTM of BH 270.6 m
+
+186.0m-1050mm STM. @ 1.30%
+
+STREET 'A
+AA'
+
+BH14-07
+BH Depth 8.1 m
+
+STREET 'O'
+
+STM.MH304
+TOP 262.30m
+SE 259.94m
+N 259.91m
+
+BH20-11
+BTM of BH 260.4 m
+
+STREET 'A'
+
+133.6m-1200x1800mm
+STM. @ 0.50%
+
+STREET 'BBB'
+
+STREET 'NN'
+
+STM.MH703
+TOP 272.83m
+SW 266.68m
+SE 266.66m
+
+STM.MH702
+TOP 272.45m
+NW 267.22m
+NE 267.20m
+
+149.5m-1650mm STM. @ 0.35%
+
+STREET 'N'
+
+STREET 'MM'
+
+STREET 'AAA'
+
+STREET 'J'
+
+STREET 'I'
+
+BH14-05
+BH Depth 8.1 m
+
+KIN
+
+N.T.S.
+
+STREET 'A'
+
+STREET 'A'
+
+LANE 'R'
+
+22.7m-1200mm
+STM. @ 0.50%
+
+BH14-10
+BH Depth 11.1 m
+
+STREET 'M'
+
+STM.MH31
+TOP 277.77m
+NW 272.94m
+SE 272.56m
+
+STREET 'A'
+
+179.6m-1650mm STM. @ 0.35%
+
+STREET 'I'
+STREET 'KK'
+
+STREET 'JJ'
+
+BH14-08
+BH Depth 8.1 m
+
+STREET 'VV'
+
+STREET 'WW'
+
+STREET 'J'
+
+STREET 'LL'
+
+181.4m-900mm STM. @ 0.50%
+
+183.7m-675mm STM. @ 1.30%
+
+BH14-09
+BH Depth 8.1 m
+
+STREET 'H'
+
+98.3m-1200mm
+STM. @ 0.50%
+
+STM.MH1
+TOP 273.29m
+SE 269.73m
+
+STREET 'H'
+
+STREET 'KK'
+BH14-10
+BH Depth 9.6 m
+
+CPR
+
+BH20-5
+BTM of BH 263.3 m
+
+HUMBER S
+T
+
+STM.HW701
+TOP 269.92m
+SE 267.85m
+
+BH14-11
+BH Depth 9.1 m
+
+BH20-1
+BTM of BH 271.6 m
+
+THE GORE
+
+DIRECT FLOWS INTO
+CLEAN WATER COLLECTOR
+PIPE AT HEADWALL
+
+GRADE INTERCEPTOR
+SWALE TO COLLECT
+EXISITING DRAINAGE
+
+STM.MH30
+TOP 278.86m
+SE 275.32m
+
+ROAD
+
+KING STREET
+
+ATION RO
+AD
+
+GREENBELT
+
+EXISTING DRAINAGE
+FEATURE WHT6-E
+GRADE INTERCEPTOR
+SWALE TO COLLECT
+EXISITING DRAINAGE
+
+QUEEN ST
+RE
+
+EXISITING DRAINAGE CONVEYED
+TO PROPOSED CHANNEL VIA
+CLEAN WATER COLLECTOR PIPE
+
+ARGO DRAFT PLAN EAST
+
+BH20-16
+BTM of BH 2570.3 m
+
+MAJOR SYSTEM
+DRAINAGE PLAN
+
+BH19-3
+BTM of BH 253.3 m
+
+STM.HW2B
+
+15-458
+
+DATE:
+
+2020
+
+JOB NO.
+
+A.G./X.S.
+
+CHECKED BY:
+
+S.H.
+
+DRAWING NO.
+
+DESIGNED BY:
+
+S.K./E.L.
+
+CHECKED BY:
+
+S.K./A.F.
+
+SCALE:
+
+1:3000
+
+DATE:
+
+MAY 2023
+
+SURVEYED BY:
+
+J.D.B.
+
+DRAWN BY:
+
+SHEET NO.
+
+503
+
+p:\Projects\15-458\Reports\21-03-01 fsr argo\drawings and figures\05 - STORM SERVICING\503_MAJOR SYSTEM DRAINAGE PLAN AND FLOW CAPTURE.dwg
+
+REET
+QUEEN ST
+
+TATION RO
+AD
+
+INTERCEPT EXISTNG WHT6-E AND DIRECT
+EXTERNAL PRE-DEVELOPMENT DRAINAGE TO
+CLEAN WATER COLLECTOR PIPE FOR DISCHARGE
+TO PROPOSED CHANNEL
+
+EXISTING
+DRAINAGE FEATURE WHT6-E
+
+HUMBER S
+
+THE GORE
+R
+
+OAD
+
+KING STREET
+
+KIN
+
+G ST
+REE
+
+T
+
+DOWNTOWN
+BOLTON
+
+KEY PLAN
+N.T.S.
+
+BH20-5
+BTM of BH 263.3 m
+
+BH14-11
+BH Depth 9.1 m
+
+105-R1
+
+0.79
+
+BH14-10
+BH Depth 9.6 m
+
+0.25
+
+22
+
+104-R10
+0.19
+
+LEGEND
+
+STREET 'H'
+
+18
+
+0.05
+
+104-R7
+STREET 'H'0.26
+
+104-R4
+
+STREET 'KK'
+
+18
+
+104-R1
+
+18
+
+0.12
+
+105-R4
+
+104-R3
+
+18
+
+0.31
+
+22
+
+0.61
+
+STREET 'A'
+
+104-R5
+
+104-R9
+
+0.08
+
+0.61
+
+STREET 'A'
+
+STREET 'A'
+
+101-PARK 1
+
+104-R12
+BH14-10
+BH Depth 11.1 m
+
+0.36
+
+BH14-02
+BH Depth 8.1 m
+
+0.02
+
+0.11
+
+0.15
+
+STREET 'B'
+
+STREET 'I'
+0.03
+
+LANE 'E'
+
+8
+
+STREET 'TT'
+
+0.03
+
+22
+
+GREENBELT
+
+STREET 'D'
+
+STREET 'B'
+
+18
+
+CATCHMENT
+102
+
+HUMBER STATION ROAD
+
+STREET 'B'
+
+STREET 'F'
+
+STREET 'W'
+
+STREET 'V'
+
+LANE 'B'
+
+STREET 'I'
+
+STREET 'V'
+
+STREET 'QQ'
+
+STREET 'UU'
+
+LINEAR PARK
+26
+
+8
+
+26
+
+18
+
+18
+
+18
+
+22
+
+0.03
+LANE 'F'
+
+SILVA CELL
+
+LANE 'F'
+
+8
+
+8
+
+8
+
+LANE 'F'
+
+LANE 'F'
+
+SWM PONDS
+
+BH14-06
+BH Depth 8.1 m
+
+BH14-05
+BH Depth 8.1 m
+
+106-PARK 1
+
+106-PARK 2
+0.03
+'Y'
+STREET
+
+STREET 'Y'
+
+2.28
+
+104-PARK 10
+
+18
+STREET 'DD'
+
+STREET 'DD'
+
+106-R4
+
+106-R5
+
+0.24
+
+0.14
+
+ANNEL
+
+1500mm∅ CULVERT
+
+CHAN 1
+2.09
+
+18
+
+CATCHMENT 103
+OUTLET TO EX. CULVERT
+
+STREET 'EE'
+
+18
+
+22
+
+8
+
+8
+
+SWM POND 1
+
+EET
+'JJ'
+
+CHAN 2
+
+2.19
+
+0.87
+
+C'
+
+POND 1 OUTLET
+TO EX. CULVERT
+
+STREET 'C
+
+STR
+
+18
+
+POND 1(4)
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+
+BH19-8
+BTM of BH 254.6 m
+
+STREET 'I'
+
+BH20-12
+BTM of BH 256.7 m
+
+STR
+
+EET
+
+18
+
+BH20-7
+BTM of BH 250.4 m
+
+22
+
+STREET 'HH'
+
+18
+
+SWM POND 2A
+
+2.63
+
+8
+
+STREET 'GG'
+
+'II'
+
+18
+
+3.01
+POND 1(5)
+
+18
+
+W6
+
+18
+
+CHANNEL
+
+LANE 'J
+'
+STREET 'I'
+
+3.76
+
+18
+
+LANE 'K'
+
+18
+
+POND 2A
+
+STREET 'JJ'
+
+LANE 'L'
+
+18
+
+STREET 'FF'
+
+18
+
+W4
+
+STREET 'CC'
+
+STREET 'II'
+
+0.32
+
+18
+
+18
+
+18
+
+106-PARK 3
+
+W5
+
+BH20-13
+BTM of BH 259.9 m
+
+18
+
+18
+
+0.43
+
+16
+
+8
+
+106-R3
+
+8
+
+CATCHMENT
+106
+
+1.14
+
+18
+
+STREET 'BB'
+
+18
+
+18
+
+105-PARK 5
+
+W2
+
+18
+
+18
+
+18
+
+18
+0.27
+
+5.04
+
+LANE 'G'
+
+STREET 'AA'
+
+106-R7
+
+105-PARK 4
+
+8
+
+8
+STREET 'CC'
+
+18
+
+0.27
+
+LANE 'H'
+
+LANE 'I'
+
+STREET 'JJ'
+
+18
+
+16
+
+106-R6
+
+RIGHT OF WAY WIDTH (m)
+
+18
+
+BH20-14
+BTM of BH 256.4 m
+
+18
+
+18
+
+SOUTHERN HERITAGE SYSTEM
+UNEVALUATED WETLANDS
+
+1.16
+
+22
+
+STREET 'Z'
+
+8
+
+22
+
+8
+
+CATCHMENT
+26
+103
+
+22
+
+22
+
+106
+
+22
+
+22
+
+STREET 'Y'
+
+PROPOSE
+D CH
+
+18
+
+STREET 'I'
+
+18
+
+18
+
+AREA ID
+AREA (ha)
+
+0.30
+
+STREET 'X'
+
+STREET 'X'
+
+STREET 'X'
+
+W1
+
+W3
+
+18
+
+102
+
+CATCHMENT 102
+OUTLET TO NEW
+900mm∅ CONC.
+CULVERT
+
+18
+
+18
+
+22
+
+18
+
+18
+
+STREET 'U'
+
+STREET 'U'
+
+STREET 'U'
+
+18
+
+STREET 'VV'
+
+8
+
+18
+18
+
+22
+
+0.42
+
+8
+
+2.05
+
+22
+
+0.42
+
+18
+
+22
+
+22
+
+CHAN 1
+
+STREET 'E'
+
+18
+
+106-R2
+
+18
+
+CLEAN AREAS
+(ROOFTOP AND YARDS)
+
+STREET 'D'
+
+STREET 'T'
+
+BH20-9
+BTM of BH 265.9 m
+
+BH14-04
+BH Depth 8.1 m
+
+PARK AREAS
+
+22
+
+STREET 'E'
+
+18
+
+BH20-8
+BTM of BH 269.0 m
+
+105-R6
+
+STREET 'T'
+
+BH14-04
+BH Depth 7.9 m
+
+22
+
+0.08
+
+STREET 'E'
+
+18
+
+STREET 'T'
+
+REALIGNE
+D
+
+BH20-15
+BTM of BH 254.4 m
+
+102-PARK 3
+
+18
+
+0.13
+
+18
+
+106-R1
+
+0.13
+
+18
+
+BH20-6
+BTM of BH 262.8 m
+
+105-R5
+
+PROPOSED EPA (ENVIRONMENTAL POLICY
+AREA) / CHANNEL
+
+STREET 'C'
+
+0.10
+
+BH14-07
+BH Depth 8.1 m
+
+STREET 'E'
+
+STREET 'S'
+
+18
+
+18
+
+18
+
+18
+
+18
+
+18
+
+ROAD TO
+BE
+
+EXISTING UNEVALUATED WETLAND
+
+102-PARK 2
+
+104-PARK 8
+STREET 'S'
+
+18
+
+18
+
+NON-PARTICIPATING PROPERTY
+
+22
+
+STREET 'S'
+
+18
+
+CATCHMENT 101
+OUTLET TO EX. CULVERT
+
+GREENBELT
+
+0.11
+
+STREET 'D'
+
+STREET 'D'
+
+104-PARK 7
+
+STREET 'R'
+
+STREET 'S'
+
+18
+
+102-PARK 1
+
+STREET 'F'
+
+STREET 'JJ'
+
+18
+
+BH14-03
+BH Depth 9.5 m
+
+18
+
+18
+
+STREET 'QQ'
+
+STREET 'VV'
+
+BH14-08
+BH Depth 8.1 m
+
+0.13
+
+14
+
+STREET 'YY'
+
+104-PARK 9
+
+BH14-09
+BH Depth 8.1 m
+
+22
+
+LANE 'N'
+
+STREET 'YY'
+
+2.44
+
+104
+
+STREET 'SS'
+
+0.26
+
+22
+
+104-PARK 6
+
+14.75
+
+8
+
+8
+
+22
+
+LANE 'Q'
+
+EE'
+
+CATCHMENT
+104
+
+6.82
+
+LINEAR PARK
+
+18
+
+104-PARK 3
+
+18
+
+104-PARK 2
+
+STREET 'SS'
+
+BH14-02
+BH Depth 8.1 m
+
+18
+
+STREET 'F'
+
+STREET 'K'
+
+STREET 'L'
+
+LANE 'A'
+
+STREET 'I'
+
+LANE 'C'
+
+STREET 'M'
+
+STREET 'P'
+
+STREET 'JJ'
+
+STREET 'PP'
+
+STREET 'VV'
+
+LANE 'O'
+
+STREET 'XX'
+
+STREET 'YY'
+
+STREET 'ZZ'
+
+18
+
+STREET 'QQ'
+
+18
+BH20-10
+BTM of BH 260.1 m
+
+105-PARK 3
+
+18
+
+18
+
+STREET 'E
+
+0.03
+
+18
+
+1.19
+
+DRAFT PLAN AREAS
+101-PARK 3
+
+18
+
+104-PARK 5
+
+STREET 'Q'
+
+8
+
+105-PARK 2
+
+18
+
+18
+
+14
+
+18
+
+8
+
+105
+
+8.95
+
+8
+
+STREET 'EEE'
+
+18
+
+LANE 'M'
+
+LANE 'S'
+
+LANE 'T'
+
+STREET 'C'
+
+STREET 'C'
+
+STREET 'C'
+
+0.03
+
+LANE 'D'
+
+8
+
+8
+
+18
+
+22
+
+0.28
+
+CATCHMENT
+101
+
+18
+
+18
+
+STREET 'RR'
+
+LANE 'P'
+
+CATCHMENT
+8
+105
+
+BH14-01
+BH Depth 8.1 m
+
+104-PARK 4
+
+22
+
+STREET 'AAA'
+
+STREET 'DDD'
+
+18
+
+18
+
+18
+
+18
+
+18
+
+STREET 'A
+AA'
+
+18
+
+BH20-4
+BTM of BH 270.4 m
+
+8
+
+8
+
+0.76
+
+STREET 'C'
+
+BH14-03
+BH Depth 8.1 m
+
+101-PARK 2
+
+18
+101
+
+18
+
+STREET 'C'
+
+BH20-3
+BTM of BH 271.9 m
+
+18
+
+18
+
+BH14-06
+BH Depth 8.6 m
+
+0.31
+
+STREET 'C'
+
+BH20-2
+BTM of BH 270.6 m
+
+STREET 'O'
+
+104-R6
+
+BH14-07
+BH Depth 8.1 m
+
+18
+
+STREET 'CCC'
+
+18
+
+22
+
+18
+
+18
+
+STREET 'NN'
+
+18
+
+STREET 'BBB'
+
+18
+
+22
+
+18
+
+18
+18
+
+STREET 'N'
+
+18
+
+8
+STREET 'AAA'
+
+STREET 'OO'
+
+8
+
+22
+
+STORM DRAINAGE AREA BOUNDARY
+
+22
+
+BH14-05
+BH Depth 8.1 m
+
+STREET 'MM'
+
+0.22
+
+STREET 'A'
+
+STREET 'A'
+
+22
+
+LANE 'R'
+
+BH14-01
+BH Depth 8.1 m
+
+HUMBER STATION ROAD
+
+105-R3
+
+BH20-11
+BTM of BH 260.4 m
+
+HUMBER STATION ROAD
+
+0.37
+
+BH14-08
+BH Depth 8.1 m
+
+18
+
+HUMBER STATION ROAD
+
+0.16
+
+STREET 'J'
+
+STREET 'J'
+
+STREET 'B'
+
+STREET 'KK'
+
+104-PARK 1
+
+18
+
+0.36
+
+18
+
+105-PARK 1
+
+18
+
+STREET 'LL'
+
+18
+
+STREET 'WW'
+
+18
+
+STREET 'VV'
+
+BH14-09
+BH Depth 8.1 m
+
+104-R11
+
+22
+
+STATION
+
+0.51
+
+EX. HUMB
+ER
+
+104-R8
+
+0.44
+
+STREET 'JJ'
+
+0.25
+
+16
+
+18
+
+104-R2
+
+STREET 'G'
+
+18
+
+105-R2
+
+STREET 'I'
+
+BH20-1
+BTM of BH 271.6 m
+
+CATCHMENT
+107
+
+22
+
+BH19-4
+BTM of BH 256.2 m
+
+ARGO DRAFT PLAN EAST
+
+WATER BALANCE PLAN
+
+BH19-7
+BTM of BH 252.4 m
+
+BH20-16
+BTM of BH 2570.3 m
+
+BH19-5
+BTM of BH 254.2 m
+
+15-458
+
+DATE:
+
+2020
+
+JOB NO.
+
+A.G./X.S.
+
+CHECKED BY:
+
+S.H.
+
+DRAWING NO.
+
+DESIGNED BY:
+
+S.K./E.L.
+
+CHECKED BY:
+
+S.K./A.F.
+
+SCALE:
+
+1:3000
+
+DATE:
+
+MAY 2023
+
+SURVEYED BY:
+
+J.D.B.
+
+DRAWN BY:
+
+SHEET NO.
+
+703
+
+p:\Projects\15-458\Reports\21-03-01 fsr argo\drawings and figures\07 - WETLAND WATER BALANCE\701_WATER BALANCE PLAN.dwg
+
+AD
+
+QUEEN ST
+REE
+
+T
+THE GORE
+
+HUMBER ST
+ATION RO
+
+ROAD
+
+KING STREET
+
+KIN
+
+G ST
+
+REE
+T
+
+DOWNTOWN
+BOLTON
+
+KEY PLAN
+N.T.S.
+
+LEGEND:
+CALEDON STATION
+SECONDARY PLAN (CSSP)
+
+GRAVITY SERVICEABILITY
+OF THIS AREA SUBJECT TO
+FURTHER REVIEW.
+
+GREENBELT
+
+450mm∅ SAN. @ 0.40%
+
+120.3ha
+60P/ha
+
+BRES-1 LANDS
+114.7ha
+97P/ha
+
+POP. ~ 7,218
+
+WHITE BELT LANDS
+
+PROPOSED BRES
+SANITARY DRAINAGE
+AREA BOUNDARY
+
+PUMP STATION
+
+SANITARY DRAINAGE AREA
+
+23ha
+60P/ha
+
+BH20-5
+BTM of BH 263.3 m
+BH14-11
+BH Depth 9.1 m
+
+POPULATION DENSITY
+
+BH14-10
+BH Depth 9.6 m
+
+AN
+
+E
+
+BH14-08
+BH Depth 8.1 m
+
+AL
+
+N
+LA
+
+W
+
+BH14-05
+BH Depth 8.1 m
+
+O
+
+BH14-06
+BH Depth 8.6 m
+
+N
+
+BH20-2
+BTM of BH 270.6 m
+
+AD
+
+BH20-4
+BTM of BH 270.4 m
+
+IO
+IT
+
+BH14-03
+BH Depth 8.1 m
+
+D
+
+BH20-15
+BTM of BH 254.4 m
+
+BH20-10
+BTM of BH 260.1 m
+
+BH14-08
+BH Depth 8.1 m
+
+BH14-09
+BH Depth 8.1 m
+
+BH14-07
+BH Depth 8.1 m
+
+BH14-03
+BH Depth 9.5 m
+
+BH14-02
+BH Depth 8.1 m
+
+BH14-01
+BH Depth 8.1 m
+
+BH14-01
+BH Depth 8.1 m
+
+OLB
+EMIL K
+AY
+PARKW
+
+ROAD
+
+STREET 'YY'
+
+BH14-04
+BH Depth 7.9 m
+
+BH20-9
+BTM of BH 265.9 m
+
+THE GOR
+E
+
+CSSP LANDS
+(BRES-3)
+
+BH14-06
+BH Depth 8.1 m
+
+BH14-05
+BH Depth 8.1 m
+
+BH20-14
+BTM of BH 256.4 m
+
+169.1ha
+145P/ha
+
+HUMBER
+STATION R
+OAD
+
+BH14-04
+BH Depth 8.1 m
+
+BH20-8
+BTM of BH 269.0 m
+
+BH20-6
+BTM of BH 262.8 m
+
+REVERSED FLOW
+DIRECTION AT KING ROAD
+SEWER (ULTIMATE)
+
+CPR
+
+BH20-13
+BTM of BH 259.9 m
+
+BH20-7
+BTM of BH 250.4 m
+BH20-12
+BTM of BH 256.7 m
+
+BH19-8
+BTM of BH 254.6 m
+
+KIN
+STR G
+EET
+
+500.0m-525mm
+SAN. @ 0.30%
+
+BH19-4
+BTM of BH 256.2 m
+
+EXISTING SANITARY TRUNK
+
+MH6B
+TOP264.29
+SW INV256.50
+NE INV256.47
+
+BH20-16
+BTM of BH 2570.3 m
+BH19-7
+BTM of BH 252.4 m
+
+BH19-5
+BTM of BH 254.2 m
+
+.
+
+MOON DR
+
+BH19-2
+BTM of BH 252.5 m
+
+BH19-1
+BTM of BH 250.7 m
+
+LB
+KO Y
+IL
+EM KWA
+R
+PA
+
+KING STREET
+MH7B
+450.0m-525mm TOP262.50
+MH5B
+SAN. @ 0.30%SW INV255.12
+TOP264.79
+N INV255.10
+NE INV258.00
+
+MH5C
+TOP264.79
+SE INV256.80
+
+BH19-3
+BTM of BH 253.3 m
+
+BH19-6
+BTM of BH 252.9 m
+
+314.8m-525mm
+SAN. @ 0.30%
+MH10B
+TOP258.68
+NW INV252.58
+SE INV252.55
+
+HARVEST
+
+850.0m-600mm SAN. @
+0.75%
+
+225.8m-525mm
+SAN. @ 0.30%
+
+MH11B
+TOP256.88
+NW INV251.87
+SE INV251.85
+
+R
+CP
+
+BRES-4 LANDS
+
+400.1m-67
+5
+SAN. @ 0.5 mm
+0%
+
+MH6C
+TOP257.94
+NW INV250.42
+SE INV250.35
+
+203ha
+60P/ha
+
+ST MOO
+N DR.
+
+KI
+
+NG
+
+483.5m-525mm
+SAN. @ 0.30%
+
+ST
+RE
+
+E
+
+EX. MH121 T W.
+
+EX. 294.9m-450mm
+SAN. @ 0.30%
+
+ELWOO
+
+D DRIVE
+WEST
+
+MH7C
+TOP257.46
+NW INV248.35
+SE INV248.30
+
+655.0m-67
+5mm SAN.
+@
+0.50%
+
+HUMBER
+
+BRES-5 LANDS
+
+EX. 139.9m-375mm
+SAN. @ 0.64%
+
+EX. 525mm SAN.
+MA
+
+NC
+
+HE
+ST
+
+ER
+
+CT
+
+.
+
+EX. MH118
+TOP256.80
+NW INV250.44
+SE INV250.38
+NW INV250.40
+EX. MH116
+R
+
+243ha
+60P/ha
+
+ALL PIPE SIZES ARE SUBJECT TO REGION OF PEEL
+MASTER PLAN UPDATES
+
+CP
+
+STATION
+
+ROAD
+
+EX. CREEK CROSSING
+(CREEK INV. ~245.80)
+
+HARVE
+
+INTERIM SANITARY SEWER
+
+EX. MH123
+TOP256.88
+SE INV252.75
+
+EX. 525mm
+SAN.
+
+THE GOR
+E
+
+ROAD
+
+EX. CREEK CROSSING
+(CREEK INV. ~256.60)
+
+ULTIMATE SANITARY SEWER
+(SEE DRAWINGS 803 & 804)
+
+177.6m-525mm
+SAN. @ 0.30%
+MH8B
+TOP260.66
+S INV254.56
+E INV254.52
+323.6m-525mm
+SAN. @ 0.30%
+MH9B
+TOP261.17
+W INV253.55
+SE INV253.52
+CHIKADE
+E
+LANE
+
+BH14-07
+BH Depth 8.1 m
+
+S
+
+BY
+
+BH14-02
+BH Depth 8.1 m
+
+BH14-10
+BH Depth 11.1 m
+
+HUMBER STATION
+WASTEWATER SEWER
+(REGION DC#23-2271)
+COUNTRYSIDE DR. TO HEALY
+ROAD/ CONSTRUCTION
+COMPLETE BY 2025
+
+SANITARY FORCEMAIN
+
+BH20-11
+BTM of BH 260.4 m
+
+WESTERN
+EXTENT
+
+D
+
+ED
+N
+
+TH
+
+PL
+AP
+
+OF ROPA 30
+
+IC
+
+BH14-09
+BH Depth 8.1 m
+
+BH20-3
+BTM of BH 271.9 m
+
+LANDS
+
+T
+
+BH20-1
+BTM of BH 271.6 m
+
+E DRIVE
+
+m SAN.
+
+COLERAIN
+
+EX. 525m
+
+517.1m-67
+5mm
+@ 0.75% SAN.
+
+D
+
+MH9C
+TOP246.11
+NW INV239.23
+SE INV239.20
+
+EX. MH103
+
+SAN.
+
+MH10C
+TOP242.32
+NW INV235.32
+SE INV235.25
+
+MH8C
+TOP256.02
+NW INV245.02
+SE INV244.95
+
+AN
+LL E
+HO IV
+DR
+
+571.6m-67
+5mm SAN.
+@
+1.00%
+
+EX. MH113
+
+HEALEY ROAD
+
+EX. MH1A
+TOP241.91
+SE INV219.37
+NW INV234.57
+
+EX. 525m
+m
+
+90.4m-675mm SAN. @
+0.75%
+
+EX. 1200m
+m SAN.
+
+EX. CREEK CROSSING
+(CREEK INV. ~236.50)
+
+COLERAIN
+E DRIVE
+
+EX. MH38
+EX. 600 ∅ NW IN INV. 234.725
+EX. 750 ∅ E IN INV. 234.617
+EX. 750 ∅ S. OUT INV. 234.575
+
+219ha
+60P/ha
+
+m SAN.
+STATION
+HUMBER
+
+EX. MH4
+
+EX. MH5A
+
+EX. 1200mm SAN.
+
+Y
+
+NOTES:
+
+41
+
+3
+
+m SAN.
+
+MAYFIELD ROAD
+MAYFIELD ROAD
+
+E DRIVE
+COLERAIN
+
+m SAN.
+EX. 750m
+
+m SAN.
+
+EX. MH7A
+
+EX. 1200m
+
+EX. 83.1m-1200mm
+SAN. @ 0.27%
+EX. 1200mm SAN.
+
+EX. 1200mm SAN.COUNTRY SIDE DRIVE
+
+HW
+
+EX. 1200m
+
+AY DRIV
+E
+CLARKW
+
+EX. MH3
+
+EX. 1200m
+
+ROAD
+
+E ROAD
+THE GOR
+E ROAD
+THE GOR
+
+EX. MH2
+
+PARR
+BOULEVARD
+
+EX. MH6A
+
+EX. PLUG
+SE INV203.13
+
+OLTON
+GEORGE B
+Y
+A
+PARKW
+
+SAN.
+
+BRES-6 LANDS
+
+EX. MH4A
+
+MAYFIELD ROAD
+
+EX. MH99
+
+EX. 525 ∅ N. IN INV. 240.02
+WITH 450 ∅ DROP AT EL. 237.26
+EX. 375 ∅ E. IN INV. 237.289
+EX. 600 ∅ S. OUT INV. 237.060
+
+EX. 750mm
+
+13
+Y4
+
+HW
+
+EX. 1200m
+m
+
+SAN.
+
+EX. MH3A
+TOP233.50
+NW INV215.02
+SE INV215.02
+
+EX. 525mm
+
+SAN.
+
+EX. 677.6m-1200mm
+SAN. @ 0.30%
+
+EX. MH2A
+TOP237.20
+NW INV217.34
+SE INV217.33
+
+HEALEY ROAD
+
+EX. MH8A
+
+EX. MH57
+TOP235.86
+NW INV228.56
+SE INV228.50
+
+* ESTIMATED POPULATION DENSITY 60 PEOPLE
+/ HECTARE FOR EXTERNAL DRAINAGE AREAS
+OUTSIDE OF CSSP TO BE CONFIRMED BY
+REGION.
+*SUBJECT TO REGION CONFIRMATION ON THE
+EXISTING COLERAINE TRUNK SEWER CAPACITY,
+EXTERNAL DRAINAGE NORTH OF CSSP COULD BE
+ACCOMMODATED IN THE CSSP SANITARY SEWER
+SYSTEM.
+* REFER TO DRAWING 802 FOR CSSP INTERNAL
+SANITARY DRAINAGE PLAN AND SERVICING.
+* REFER TO DRAWINGS 803 AND 804 FOR
+EXTERNAL TRUNK SANITARY SEWER PROFILE.
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+
+COUNTRY SIDE DRIVE
+
+EX. 1200mm SAN.
+EX. MH5
+
+EX. 750mm SAN.
+
+TRUNK (DC) SANITARY
+SERVICING PLAN
+
+EX. 1200mm SAN.
+
+15-458
+
+DATE:
+
+2020
+
+JOB NO.
+
+A.G./X.S.
+
+CHECKED BY:
+
+S.H.
+
+DRAWING NO.
+
+DESIGNED BY:
+
+S.K./E.L.
+
+CHECKED BY:
+
+S.K./A.F.
+
+SCALE:
+
+1:10000
+
+DATE:
+
+MAY 2023
+
+SURVEYED BY:
+
+J.D.B
+
+DRAWN BY:
+
+SHEET NO.
+
+801
+
+p:\Projects\15-458\Reports\21-03-01 fsr argo\drawings and figures\08 - SANITARY SERVICING\801_EXTERNAL SANITARY.dwg
+
+T
+
+N
+A
+C
+LI
+
+8.0 ha
+
+BH14-03
+BH Depth 9.5 m
+
+STREET 'S'
+
+STREET 'YY'
+
+SAN.MH20A
+TOP 274.03m
+NE 266.27m
+SW 266.32m
+
+STREET 'JJ'
+
+LANE 'N'
+
+SAN.MH21A
+TOP 274.59m
+NW 267.09m
+STREET 'TT'
+NE 267.05m
+
+STREET 'QQ'
+
+A2 1838
+
+SAN.MH30A
+TOP 272.10m
+SW 265.41m
+SE 265.37m
+
+STREET 'G'
+
+RE-ALIGNED
+
+STREET 'B'
+
+16.5 ha
+
+A10 6062
+
+BH14-07
+BH Depth 8.1 m
+
+AY
+LW
+C RAI
+ACIFI
+
+STREET 'C'
+
+EXISTING UNEVALUATED WETLAND
+BH20-15
+BTM of BH 254.4 m
+
+PROPOSED EPA (ENVIRONMENTAL POLICY
+AREA) / CHANNEL
+STREET 'D'
+
+A11 2509
+
+INTERNALSANITARY DRAINAGE
+AREA BOUNDARY
+
+SAN.MH13A
+TOP 268.71m
+NW 262.41m
+SE 262.36m
+
+EXTERNAL SANITARY DRAINAGE
+AREA BOUNDARY
+
+STREET 'E'
+
+STREET 'E'
+
+STREET 'E'
+
+STREET 'E'
+
+STREET 'S'
+
+P
+DIAN
+CANA
+
+HUMBER STATION ROAD
+
+STREET 'B'
+
+STREET 'F'
+
+STREET 'K'
+
+STREET 'L'
+
+SAN.MH5A
+TOP 270.84m
+NW 264.07m
+SE 264.00m
+
+STREET 'S'
+
+NON-PARTICIPATING PROPERTY
+
+10.7 ha
+
+STREET 'D'
+
+STREET 'D'
+
+STREET 'D'
+
+LANE 'E'
+
+DRAFT PLAN AREAS
+
+BH14-08
+BH Depth 8.1 m
+
+BH14-09
+BH Depth 8.1 m
+
+STREET 'R'
+
+171.9m-375mm SAN. @ 0.50%
+
+146.1m-375mm SAN. @ 0.50%
+
+BH20-10
+BTM of BH 260.1 m
+
+STREET 'B'
+
+180.0m-375mm SAN. @ 0.50%
+
+STREET 'SS'
+
+STREET 'C'
+
+STREET 'C'
+
+STREET 'C'
+
+SAN.MH3A
+TOP 272.41m
+NW 265.29m
+SE 265.24m
+
+STREET 'F'
+
+STREET 'Q'
+
+STREET 'SS'
+
+INTERNAL SANITARY SEWER
+
+STREET 'S'
+
+STREET 'II'
+
+STREET 'CC'
+
+67.7m-450mm
+SAN. @ 0.50%
+
+ATION
+
+@ 0.50%
+
+STREET 'HH'
+
+STREET 'C
+
+mm SAN.
+
+C'
+
+STR
+
+EET
+
+'II'
+
+LANE 'J
+'
+STREET 'I'
+
+132.2m-450mm
+SAN. @ 0.50%
+
+STREET 'I'
+
+KING
+
+STRE
+
+E ROAD
+
+PROPOSED GROUND ELEVATION
+PROPOSED SEWER INVERTS
+
+NOTE:
+
+* REFER TO DRAWING 801 FOR EXTERNAL
+DRAINAGE AREAS AND TRUNK SEWER.
+
+SAN.MH9A
+TOP 268.04m
+NW 260.52m
+SE 260.44m
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+
+3.5 ha
+
+ET
+
+BH19-4
+BTM of BH 256.2 m
+
+THE GOR
+
+SANITARY MANHOLE ID
+
+524.9m-450
+
+'JJ'
+
+9.3 ha
+A7 1803
+
+BH19-8
+BTM of BH 254.6 m
+
+FUTURE POPULATION EQUIVALENT PP/Ha.
+
+SAN.MH8A
+TOP 266.92m
+SE 261.18m
+NW 261.22m
+
+EET
+STR
+
+BH20-12
+BTM of BH 256.7 m
+
+6.4 ha
+
+A12 865
+
+SAN.MH5A
+TOP 90.75m
+S 85.00m
+N 85.00m
+E 85.00m
+
+STREET 'GG'
+
+BH20-7
+BTM of BH 250.4 m
+
+188.4m-450mm SAN. @ 0.50%
+
+STREET 'B'
+
+6.1 ha
+A6 749
+
+LANE 'K'
+
+STREET 'JJ'
+
+STREET 'F'
+
+STREET 'I'
+BH20-13
+BTM of BH 259.9 m
+
+STREET 'EE'
+
+LANE 'L'
+
+STREET 'W'
+
+STREET 'V'
+
+LANE 'B'
+
+70 140
+
+FUTURE AREA Ha.
+FUTURE POPULATION
+
+-ALIGNED)
+
+SAN.MH7A
+TOP 267.44m
+SE 261.56m
+NW 261.65m
+
+4.9 ha
+
+POPULATION EQUIVALENT PP/Ha.
+2.0 ha
+
+SAN.MH16A
+TOP 267.29m
+N 260.85m
+S 260.80m
+
+ROAD
+
+STREET 'BB'
+
+F2 864
+
+60 5820
+
+105.9m-450mm
+SAN. @ 0.50%
+
+EXTERNAL AREA Ha.
+EXTERNAL POPULATION
+
+(TO BE RE
+
+STREET 'DD'
+
+STREET 'AA'
+
+230.0m-450mm SAN. @ 0.50%
+
+11.2 ha
+
+STREET 'FF'
+
+97 ha
+
+BH20-14
+BTM of BH 256.4 m
+
+A3 1203
+
+AREA Ha.
+POPULATION
+POPULATION EQUIVALENT PP/Ha.
+
+STREET 'Z'
+
+LANE 'G'
+
+STREET 'DD'
+
+LANE 'H'
+
+STREET 'JJ'
+
+LANE 'I'
+
+SAN.MH40A
+TOP 271.07m
+SW 264.30m
+NE 264.20m
+NW 264.25m
+
+70 140
+
+SAN.MH15A
+TOP 268.08m
+SE 261.38m
+NW 261.42m
+
+LANE 'F'
+SAN.MH6A
+TOP 269.13m
+NW 262.87m
+STREET 'Y'
+SE 262.80m
+SW 262.84m
+
+272.0m-375mm SAN. @ 0.50%
+
+245.5m-250mm SAN. @ 0.50%
+
+F1 1828
+
+2.0 ha
+
+14.6 ha
+
+STREET 'Y'
+
+STREET 'Y'
+
+EXTERNAL SANITARY SEWER
+
+A5 1746
+
+LANE 'F'
+
+LANE 'F'
+
+LANE 'F'
+
+STREET 'CC'
+
+15.4 ha
+
+STREET 'X'
+
+STREET 'X'
+
+BH14-06
+BH Depth 8.1 m
+
+BH14-05
+BH Depth 8.1 m
+
+HUMBER ST
+
+STREET 'X'
+
+STREET 'U'
+
+STREET 'U'
+
+STREET 'I'
+
+224.8m-375mm SAN. @ 0.50%
+
+STREET 'QQ'
+
+STREET 'UU'
+
+STREET 'VV'
+
+STREET 'U'
+
+225.0m-375mm SAN. @ 0.50%
+
+BH20-9
+BTM of BH 265.9 m
+
+BH14-04
+BH Depth 8.1 m
+
+SAN.MH1F
+TOP 272.46m
+NE 265.53m
+
+STREET 'T'
+
+STREET 'V'
+
+BH20-8
+BTM of BH 269.0 m
+
+STREET 'T'
+
+BH14-04
+BH Depth 7.9 m
+
+HUMBER STATION ROAD
+
+STREET 'T'
+
+BH20-6
+BTM of BH 262.8 m
+
+DOWNTOWN
+BOLTON
+
+GREENBELT
+
+HUMBER STATION ROAD
+
+STREET 'E
+
+EE'
+
+LANE 'Q'
+
+STREET 'VV'
+
+STREET 'YY'
+
+STREET 'DDD'
+
+BH14-02
+BH Depth 8.1 m
+
+STREET 'A'
+
+STREET 'A'
+
+STREET 'I'
+
+LANE 'D'
+
+LANE 'M'
+
+STREET 'EEE'
+
+SAN.MH10A
+TOP 266.77m
+SE 264.25m
+
+BH14-01
+BH Depth 8.1 m
+
+23.1 ha
+
+STREET 'C'
+
+BH14-03
+BH Depth 8.1 m
+
+LANE 'S'
+
+BH14-01
+BH Depth 8.1 m
+
+BH14-10
+BH Depth 11.1 m
+
+LANE 'A'
+
+STREET 'O'
+
+234.0m-300mm SAN. @ 0.50%
+
+LANE 'P'
+
+21.3 ha
+
+A9 943
+BH14-02
+BH Depth 8.1 m
+
+A4 2628
+
+SAN.MH22A
+TOP 276.27m
+NW 268.03m
+STREET 'RR'
+SE 267.99m
+
+A1 2484
+
+4.4 ha
+
+STATION ROAD
+HUMBER
+HUMBER
+STATION ROAD
+
+STREET 'C'
+
+AD
+
+STREET 'AAA'
+
+LANE 'T'
+
+LANE 'C'
+
+STREET 'P'
+
+STREET 'JJ'
+
+STREET 'OO'
+
+STREET 'NN'
+
+T
+
+LEGEND
+
+BH20-11
+BTM of BH 260.4 m
+
+367.5m-375mm SAN. @ 0.50%
+
+I
+D
+
+O
+I
+T
+
+L
+
+STREET 'J'
+
+STREET 'N'
+
+STREET 'M'
+
+AN
+
+G ST
+REE
+
+N.T.S.
+
+BH14-06
+BH Depth 8.6 m
+
+STREET 'C'
+
+BH20-4
+BTM of BH 270.4 m
+
+BH14-05
+BH Depth 8.1 m
+
+WESTERN
+OF ROPA EXTENT
+30 LAND
+S
+
+BH20-3
+BTM of BH 271.9 m
+
+STREET 'A'
+
+STREET 'QQ'
+
+STREET 'A
+
+STREET 'CCC'
+
+AL
+
+N
+
+BH14-07
+BH Depth 8.1 m
+
+BH20-2
+BTM of BH 270.6 m
+
+STREET 'JJ'
+
+STREET 'KK'
+
+STREET 'VV'
+
+LANE 'O'
+
+STREET 'YY'
+
+S
+D
+
+W
+O
+
+STREET 'J'
+
+STREET 'MM'
+
+AA'
+
+STREET 'BBB'
+
+STREET 'ZZ'
+
+THE GOR
+E
+
+STREET 'AAA'
+
+STREET 'XX'
+
+ROAD (Ultim
+ate
+
+LANE 'R'
+
+ED
+
+BY
+
+E
+H
+T
+
+N
+
+STREET 'A'
+
+STREET 'PP'
+
+R.O.W. 30m
+)
+
+STREET 'A'
+
+STREET 'VV'
+
+370.2m-375mm SAN. @ 1.00%
+
+BH14-08
+BH Depth 8.1 m
+
+STREET 'LL'
+
+STREET 'I'
+
+P
+P
+A
+
+BH14-09
+BH Depth 8.1 m
+
+KIN
+
+KEY PLAN
+
+STREET 'I'
+
+BH20-1
+BTM of BH 271.6 m
+
+STREET 'H'
+
+STREET 'H'
+
+315.2m-300mm SAN. @ 0.50%
+
+STREET 'KK'
+
+STREET 'WW'
+
+BH14-11
+BH Depth 9.1 m
+
+QUEEN ST
+
+REET
+BH20-5
+BTM of BH 263.3 m
+
+BH14-10
+BH Depth 9.6 m
+
+TATION RO
+AD
+
+SAN.MH1A
+TOP 273.32m
+SE 266.86m
+
+SAN.MH23A
+TOP 278.88m
+SE 271.74m
+
+HUMBER S
+
+THE GORE
+R
+
+OAD
+
+KING STREET
+
+133.9m-525mm
+SAN. @ 0.50%
+129.6m-525mm
+SAN. @ 0.50%
+
+BH19-7
+BTM of BH 252.4 m
+
+A8 1388
+
+198.9m-525mm
+SAN. @ 0.50%
+BH20-16
+BTM of BH 2570.3 m
+
+SAN.MH5
+TOP 264.79m
+SW 258.05m
+NW 258.05m
+
+25.4m-450mm
+SAN. @ 0.50%
+
+ARGO DRAFT PLAN EAST
+
+BH19-5
+BTM of BH 254.2 m
+
+SAN.MH100A
+TOP 266.42m
+NW 259.77m
+NE 259.73m
+
+BH19-6
+BTM of BH 252.9 m
+
+BH19-3
+BTM of BH 253.3 m
+
+INTERNAL SANITARY
+DRAINAGE PLAN
+
+SAN.MH101A
+TOP 265.81m
+SW 259.08m
+NE 259.04m
+
+850.0m-600mm
+SAN. @ 0.75%
+
+15-458
+
+DATE:
+
+2020
+
+JOB NO.
+
+A.G./X.S.
+
+CHECKED BY:
+
+S.H.
+
+DRAWING NO.
+
+DESIGNED BY:
+
+S.K./E.L.
+
+CHECKED BY:
+
+S.K./A.F.
+
+SCALE:
+
+1:3000
+
+DATE:
+
+MAY 2023
+
+SURVEYED BY:
+
+J.D.B.
+
+DRAWN BY:
+
+SHEET NO.
+
+802
+
+p:\Projects\15-458\Reports\21-03-01 fsr argo\drawings and figures\08 - SANITARY SERVICING\802_INTERNAL SANITARY DRAINAGE PLAN.dwg
+
+264
+263
+262
+261
+260
+259
+258
+257
+256
+255
+254
+253
+252
+251
+250
+249
+248
+247
+246
+245
+244
+243
+242
+241
+240
+239
+238
+237
+236
+235
+234
+
+256.90
+
+SAN. MH8C
+DIA=1500mm
+(OPSD 701.011)
+
+SAN. MH7C
+DIA=1500mm
+(OPSD 701.011)
+
+NW245.02
+SE244.95
+
+N ROAD
+HUMBER S
+TATIO
+
+EET
+
+ROAD
+THE GORE
+
+STA 2+540 TO 3+760
+HEALEY RD
+
+AY DR
+
+AL
+
+BI
+ON
+
+VA
+U
+
+GH
+
+AN
+
+RD
+
+COLERAIN
+E DRIVE
+
+264
+263
+262
+261
+260
+259
+258
+257
+256
+255
+254
+253
+252
+251
+250
+249
+248
+247
+246
+245
+244
+243
+242
+241
+240
+239
+238
+237
+236
+235
+234
+
+CLARKW
+
+MAYFIELD ROAD
+
+COUNTRY SIDE DR
+
+KEY PLAN
+N.T.S.
+
+NOTES:
+1.
+
+REFER TO DRAWING 801 FOR PLANVIEW DESIGN.
+
+SANITARY
+SEWER
+INVERT
+
+EXISTING
+CENTERLINE
+ELEVATION
+
+257.36
+
+257.59
+
+257.81
+
+258.08
+
+258.51
+
+258.94
+
+258.70
+
+258.35
+
+257.99
+
+257.62
+
+257.25
+
+256.90
+
+256.59
+
+256.29
+
+255.78
+
+254.42
+
+252.56
+
+250.62
+
+249.60
+
+248.91
+
+248.23
+
+247.75
+
+247.27
+
+246.80
+
+EXISTING
+CENTERLINE
+ELEVATION
+
+CENTERLINE
+CHAINAGE
+
+2+600
+
+2+650
+
+2+700
+
+2+750
+
+2+800
+
+2+850
+
+2+900
+
+2+950
+
+3+000
+
+3+050
+
+3+100
+
+3+150
+
+3+200
+
+3+250
+
+3+300
+
+3+350
+
+3+400
+
+3+450
+
+3+500
+
+3+550
+
+3+600
+
+3+650
+
+3+700
+
+3+750
+
+571.6m-675mm CONC. SAN. @ 1.00%
+
+257.13
+
+655.0m-675mm CONC. SAN. @ 0.50%
+
+DOWNTOWN
+BOLTON
+
+PAR BOULEVARD
+
+2+550
+
+400.1m-675mm
+CONC. SAN. @ 0.50%
+
+NW248.35
+SE248.30
+
+SANITARY
+SEWER
+INVERT
+
+T
+
+CENTERLINE
+CHAINAGE
+
+HUMBER STATION ROAD
+EXISTING GROUND
+
+REE
+
+GEORGE BOLTON
+PARKWAY
+
+EXISTING
+CENTERLINE
+ELEVATION
+
+2+500
+
+256.66
+
+2+450
+
+2+400
+
+2+350
+
+256.57
+
+256.82
+
+257.13
+
+2+300
+
+257.74
+
+2+250
+
+2+200
+
+258.35
+
+258.43
+
+2+150
+
+258.23
+
+2+100
+
+2+050
+
+258.02
+
+257.59
+
+2+000
+
+258.58
+
+1+950
+
+1+900
+
+259.32
+
+260.01
+
+1+850
+
+260.43
+
+1+800
+
+260.86
+
+1+750
+
+261.32
+
+1+700
+
+1+650
+
+262.37
+
+263.10
+
+1+600
+
+1+550
+
+263.67
+
+264.56
+
+1+500
+
+265.02
+
+1+450
+
+265.07
+
+1+400
+
+1+350
+
+SE256.80
+265.24
+
+CENTERLINE
+CHAINAGE
+
+G ST
+
+STA 3+760 TO 4+980
+
+SANITARY
+SEWER
+INVERT
+
+400.1m-675mm CONC. SAN. @ 0.50%
+
+KIN
+
+DR
+
+EXISTING
+CENTERLINE
+ELEVATION
+
+850.0m-600mm CONC. SAN. @ 0.75%
+
+EMIL KOLB
+PARKWAY
+
+STA 1+320 TO 2+540
+
+D
+
+SANITARY
+SEWER
+INVERT
+
+NW250.42
+SE250.35
+
+EXISTING GROUND
+
+KING STREET
+
+AN
+LL
+
+SAN. MH6C
+DIA=1500mm
+(OPSD 701.011)
+
+KING ST
+
+SAN. MH5C
+DIA=1500mm
+(OPSD 701.011)
+
+HUMBER STATION ROAD
+
+HO
+
+272
+271
+270
+269
+268
+267
+266
+265
+264
+263
+262
+261
+260
+259
+258
+257
+256
+255
+254
+253
+252
+251
+250
+249
+248
+247
+246
+245
+
+R
+CP
+
+272
+271
+270
+269
+268
+267
+266
+265
+264
+263
+262
+261
+260
+259
+258
+257
+256
+255
+254
+253
+252
+251
+250
+249
+248
+247
+246
+245
+
+QUEEN ST
+R
+
+AD
+
+WESTERN
+EXTENT OF
+ROPA 30
+LANDS
+
+ED
+
+N
+W
+O
+S T
+D N
+N ICA
+LA PL
+L
+A P
+N EA
+IO H
+IT T
+D BY
+
+CENTERLINE
+CHAINAGE
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+
+EXTERNAL SANITARY TRUNK
+PROFILE (ULTIMATE)
+2020
+
+JOB NO.
+
+E.L.
+
+CHECKED BY:
+
+S.H.
+
+DRAWING NO.
+
+SHEET NO.
+
+E.L.
+
+CHECKED BY:
+
+S.H.
+
+803
+
+1 OF 2
+
+J.D.B.
+
+DRAWN BY:
+DESIGNED BY:
+SCALE:
+
+15-458
+
+DATE:
+
+SURVEYED BY:
+
+V 1:200 H 1:2000 DATE:
+
+MAY 2021
+
+P:\PROJECTS\15-458\REPORTS\21-03-01 FSR ARGO\DRAWINGS AND FIGURES\08 - SANITARY SERVICING\803_SANITARY TRUNK PROFILE.DWG
+
+N ROAD
+HUMBER S
+TATIO
+
+G ST
+
+REE
+
+T
+
+DOWNTOWN
+BOLTON
+EET
+
+ROAD
+THE GORE
+
+HEALEY RD
+
+AY DR
+
+VA
+U
+
+AL
+
+PAR BOULEVARD
+
+BI
+ON
+
+GEORGE BOLTON
+PARKWAY
+
+GH
+
+AN
+
+RD
+
+COLERAIN
+E DRIVE
+
+STA 3+760 TO 4+980
+
+MAYFIELD ROAD
+
+CLARKW
+
+EX SAN. MH1A
+NW234.57
+
+NW235.32
+SE235.25
+
+KIN
+
+DR
+
+COUNTRY SIDE DR
+
+KEY PLAN
+N.T.S.
+
+SANITARY
+SEWER
+INVERT
+
+EXISTING
+CENTERLINE
+ELEVATION
+
+246.49
+
+246.19
+
+245.78
+
+245.20
+
+244.88
+
+245.28
+
+245.25
+
+244.64
+
+243.47
+
+242.96
+
+242.82
+
+242.69
+
+242.56
+
+242.15
+
+241.70
+
+240.98
+
+240.58
+
+240.10
+
+239.61
+
+239.15
+
+238.75
+
+239.10
+
+240.14
+
+239.70
+
+EXISTING
+CENTERLINE
+ELEVATION
+
+CENTERLINE
+CHAINAGE
+
+3+850
+
+3+900
+
+3+950
+
+4+000
+
+4+050
+
+4+100
+
+4+150
+
+4+200
+
+4+250
+
+4+300
+
+4+350
+
+4+400
+
+4+450
+
+4+500
+
+4+550
+
+4+600
+
+4+650
+
+4+700
+
+4+750
+
+4+800
+
+4+850
+
+4+900
+
+4+950
+
+EX. 1200mm CONC. SAN.
+
+3+800
+
+90.4m-675mm
+CONC. SAN. @ 0.75%
+
+EMIL KOLB
+PARKWAY
+
+D
+
+517.1m-675mm CONC. SAN. @ 0.75%
+
+KING STREET
+
+AN
+LL
+
+571.6m-675mm
+CONC. SAN. @ 1.00%
+
+NW239.23
+SE239.20
+
+EXISTING GROUND
+
+SE219.37
+
+SAN. MH10C
+DIA=1500mm
+(OPSD 701.011)
+
+SAN. MH9C
+DIA=1500mm
+(OPSD 701.011)
+
+HUMBER STATION ROAD
+
+HO
+
+SANITARY
+SEWER
+INVERT
+
+252
+251
+250
+249
+248
+247
+246
+245
+244
+243
+242
+241
+240
+239
+238
+237
+236
+235
+234
+233
+232
+231
+230
+229
+228
+227
+226
+225
+224
+223
+222
+221
+220
+219
+218
+217
+
+R
+CP
+
+252
+251
+250
+249
+248
+247
+246
+245
+244
+243
+242
+241
+240
+239
+238
+237
+236
+235
+234
+233
+232
+231
+230
+229
+228
+227
+226
+225
+224
+223
+222
+221
+220
+219
+218
+217
+
+QUEEN ST
+R
+
+AD
+
+WESTERN
+EXTENT OF
+ROPA 30
+LANDS
+
+ED
+
+N
+W
+O
+S T
+D N
+N ICA
+LA PL
+L
+A P
+N EA
+IO H
+IT T
+D BY
+
+CENTERLINE
+CHAINAGE
+
+NOTES:
+1.
+
+REFER TO DRAWING 801 FOR PLANVIEW DESIGN.
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+
+EXTERNAL SANITARY TRUNK
+PROFILE (ULTIMATE)
+2020
+
+JOB NO.
+
+E.L.
+
+CHECKED BY:
+
+S.H.
+
+DRAWING NO.
+
+SHEET NO.
+
+E.L.
+
+CHECKED BY:
+
+S.H.
+
+804
+
+2 OF 2
+
+J.D.B.
+
+DRAWN BY:
+DESIGNED BY:
+SCALE:
+
+15-458
+
+DATE:
+
+SURVEYED BY:
+
+V 1:200 H 1:2000 DATE:
+
+MAY 2021
+
+P:\PROJECTS\15-458\REPORTS\21-03-01 FSR ARGO\DRAWINGS AND FIGURES\08 - SANITARY SERVICING\804_SANITARY TRUNK PROFILE.DWG
+
+272
+271
+270
+269
+268
+267
+266
+265
+264
+263
+262
+261
+260
+259
+258
+257
+256
+255
+254
+253
+
+WESTERN
+EXTENT OF
+ROPA 30
+LANDS
+
+N ROAD
+
+REE
+
+T
+
+EET
+
+DOWNTOWN
+BOLTON
+QUEEN ST
+R
+
+HEALEY RD
+
+CENTERLINE
+CHAINAGE
+
+RD
+AN
+
+MAYFIELD ROAD
+
+CLARKW
+
+AY DR
+
+AL
+
+PAR BOULEVARD
+
+BI
+ON
+
+GEORGE BOLTON
+PARKWAY
+
+GH
+
+HUMBER S
+TATIO
+
+G ST
+
+COLERAIN
+E DRIVE
+
+3+050
+3+060
+
+260.44
+
+EXISTING
+CENTERLINE
+ELEVATION
+
+3+000
+
+KIN
+
+VA
+U
+
+ROAD
+
+SANITARY
+SEWER
+INVERT
+
+S254.56
+E254.52
+260.94
+
+2+950
+
+261.44
+
+2+900
+
+261.94
+
+2+850
+
+THE GORE
+
+SAN. MH8B
+DIA=1500mm
+(OPSD 701.011)
+
+SAN. MH7B
+DIA=1500mm
+(OPSD 701.011)
+262.54
+
+2+800
+
+262.89
+
+2+750
+
+2+700
+
+2+650
+
+263.07
+
+263.06
+
+263.19
+
+2+600
+
+263.42
+
+2+550
+
+2+500
+
+263.66
+
+263.89
+
+2+450
+
+2+400
+
+264.25
+
+264.30
+
+2+350
+
+263.82
+
+2+300
+
+2+250
+
+263.38
+
+263.10
+
+2+200
+
+2+150
+
+263.08
+
+263.29
+
+2+100
+
+263.50
+
+2+050
+
+2+000
+
+263.75
+
+264.00
+
+1+950
+
+264.36
+
+1+900
+
+SW255.12
+N255.10
+
+SW256.50
+NE256.47
+
+NE258.00
+264.79
+
+1+840
+1+850
+
+EMIL KOLB
+PARKWAY
+
+DR
+
+177.6m-525mm CONC. SAN. @ 0.30%
+
+KING STREET
+
+D
+
+CENTERLINE
+CHAINAGE
+
+450.0m-525mm CONC. SAN. @ 0.30%
+
+AD
+
+AN
+LL
+
+EXISTING
+CENTERLINE
+ELEVATION
+
+500.0m-525mm CONC. SAN. @ 0.30%
+
+ED
+
+N
+W
+O
+S T
+D N
+N ICA
+LA PL
+L
+A P
+N EA
+IO H
+IT T
+D BY
+
+HO
+
+SANITARY
+SEWER
+INVERT
+
+SAN. MH6B
+DIA=1500mm
+(OPSD 701.011)
+
+SAN. MH5B
+DIA=1500mm
+(OPSD 701.011)
+
+KING STREET
+
+R
+CP
+
+272
+271
+270
+269
+268
+267
+266
+265
+264
+263
+262
+261
+260
+259
+258
+257
+256
+255
+254
+253
+
+EX SAN. MH121
+
+EX SAN. MH122
+
+SAN. MH11B
+DIA=1500mm
+(OPSD 701.011)
+
+EX SAN. MH123
+
+SAN. MH10B
+DIA=1500mm
+(OPSD 701.011)
+
+SE252.75
+
+EX. 375mm PVC SAN.
+
+260.27
+
+260.07
+
+259.96
+
+260.46
+
+260.62
+
+261.23
+
+260.84
+
+260.00
+
+259.83
+
+259.42
+
+259.01
+
+258.60
+
+258.18
+
+257.77
+
+257.36
+
+256.95
+
+257.35
+
+258.22
+
+258.10
+
+255.53
+
+253.54
+
+253.67
+
+CENTERLINE
+CHAINAGE
+
+2+650
+
+2+700
+
+2+750
+
+2+800
+
+2+850
+
+2+900
+
+2+950
+
+3+000
+
+3+050
+
+3+100
+
+3+150
+
+3+200
+
+3+250
+
+3+300
+
+3+350
+
+3+400
+
+3+450
+
+3+500
+
+3+550
+
+3+600
+
+3+650
+
+3+700
+
+3+750
+3+760
+
+NW251.49
+SE251.37
+
+NW251.86
+SE251.77
+
+NW251.87
+SE251.85
+
+260.48
+
+EXISTING
+CENTERLINE
+ELEVATION
+CENTERLINE
+CHAINAGE
+
+EX SAN. MH113
+NW248.45
+SE248.39
+
+NW249.92
+SE249.61
+
+256.49
+
+256.88
+
+257.46
+
+258.31
+
+259.10
+
+259.37
+
+259.75
+
+260.11
+
+260.32
+
+260.10
+
+259.70
+
+259.17
+
+258.64
+
+258.11
+
+257.59
+
+256.58
+
+255.18
+
+253.79
+
+252.37
+
+251.21
+
+250.45
+
+249.92
+
+3+950
+
+4+000
+
+4+050
+
+4+100
+
+4+150
+
+4+200
+
+4+250
+
+4+300
+
+4+350
+
+4+400
+
+4+450
+
+4+500
+
+4+550
+
+4+600
+
+4+650
+
+4+700
+
+4+750
+
+4+800
+
+4+850
+
+4+900
+
+4+950
+
+NW250.07
+SE250.06
+
+NOTES:
+1.
+
+REFER TO DRAWING 801 FOR PLANVIEW DESIGN.
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+SANITARY
+SEWER
+INVERT
+
+EX. 525mm CONC. SAN.
+
+3+900
+
+EX. 525mm CONC. SAN.
+
+256.37
+
+EX. 525mm
+CONC. SAN.
+
+3+850
+
+NW250.40
+
+NW250.44
+SE250.38
+
+NW250.77
+SE250.72
+
+EX. 525mm PVC SAN.
+
+255.54
+
+EX. 450mm PVC SAN.
+
+3+800
+
+3+760
+
+EX. 450mm PVC SAN.
+
+EXISTING
+CENTERLINE
+ELEVATION
+4+980
+
+EX SAN. MH117
+
+EX SAN. MH118
+
+EX SAN. MH119
+
+EX SAN. MH120 (2)
+
+264
+263
+262
+261
+260
+259
+258
+257
+256
+255
+254
+253
+252
+251
+250
+249
+248
+247
+246
+245
+244
+
+483.5m-525mm CONC. SAN. @ 0.30%
+
+EXISTING
+CENTERLINE
+ELEVATION
+CENTERLINE
+CHAINAGE
+
+COLERAINE DRIVE
+
+EX. 450mm PVC SAN.
+NW251.00
+SE250.99
+
+SANITARY
+SEWER
+INVERT
+
+EMIL KOLB PARKWAY
+
+EX SAN. MH116
+
+EXISTING
+CENTERLINE
+ELEVATION
+
+264
+263
+262
+261
+260
+259
+258
+257
+256
+255
+254
+253
+252
+251
+250
+249
+248
+247
+246
+245
+244
+
+STA 8+560 TO 8+860
+
+SANITARY
+SEWER
+INVERT
+
+EX. 450mm PVC SAN.
+
+260.68
+
+EX. 375mm PVC SAN.
+
+2+600
+
+225.8m-525mm CONC. SAN. @ 0.30%
+
+N.T.S.
+
+260.93
+
+314.8m-525mm CONC. SAN. @ 0.30%
+
+KEY PLAN
+
+2+540
+2+550
+
+323.6m-525mm CONC. SAN. @ 0.30%
+
+NW252.58
+SE252.55
+
+S254.56
+E254.52
+
+SANITARY
+SEWER
+INVERT
+
+W253.55
+SE253.52
+
+483.5m-525mm CONC. SAN. @ 0.30%
+
+COUNTRY SIDE DR
+
+266
+265
+264
+263
+262
+261
+260
+259
+258
+257
+256
+255
+254
+253
+252
+251
+250
+249
+248
+247
+246
+245
+244
+
+EMIL KOLB PARKWAY
+
+SAN. MH9B
+DIA=1500mm
+(OPSD 701.011)
+
+SAN. MH8B
+DIA=1500mm
+(OPSD 701.011)
+
+266
+265
+264
+263
+262
+261
+260
+259
+258
+257
+256
+255
+254
+253
+252
+251
+250
+249
+248
+247
+246
+245
+244
+
+CENTERLINE
+CHAINAGE
+
+EXTERNAL SANITARY
+TRUNK PROFILE (INTERIM)
+2020
+
+JOB NO.
+
+E.L.
+
+CHECKED BY:
+
+S.H.
+
+DRAWING NO.
+
+SHEET NO.
+
+E.L.
+
+CHECKED BY:
+
+S.H.
+
+805
+
+1 OF 1
+
+J.D.B.
+
+DRAWN BY:
+DESIGNED BY:
+SCALE:
+
+15-458
+
+DATE:
+
+SURVEYED BY:
+
+V 1:200 H 1:2000 DATE:
+
+MAY 2021
+
+P:\PROJECTS\15-458\REPORTS\21-03-01 FSR ARGO\DRAWINGS AND FIGURES\08 - SANITARY SERVICING\805_SANITARY TRUNK PROFILE.DWG
+
+BOLTON ZONE 7
+ELEVATED TANK
+(LOCATION SHOWN
+SCHEMATICALLY)
+HWL - 327.7m
+
+AD
+
+QUEEN ST
+RE
+
+ET
+
+THE GORE
+
+HUMBER S
+TATION RO
+
+ROAD
+
+KING STREET
+
+KIN
+
+G ST
+REE
+
+T
+
+DOWNTOWN
+BOLTON
+
+KEY PLAN
+N.T.S.
+
+LEGEND:
+GREENBELT
+
+WATER PRESSURE
+ZONE BOUNDARY
+
+ZONE 7
+
+PROPOSED 200mm
+WATERMAIN
+
+PROPOSED 400mm
+WATERMAIN
+
+PROPOSED 600mm
+WATERMAIN
+
+BH20-5
+BTM of BH 263.3 m
+
+BH14-11
+BH Depth 9.1 m
+
+T
+
+N
+CA
+
+BH14-10
+BH Depth 9.6 m
+
+I
+PL
+
+BH20-1
+BTM of BH 271.6 m
+
+BH14-09
+BH Depth 8.1 m
+
+E
+
+BH14-08
+BH Depth 8.1 m
+
+AL
+
+BH20-11
+BTM of BH 260.4 m
+
+BH14-07
+BH Depth 8.1 m
+
+BH14-06
+BH Depth 8.6 m
+
+BH20-4
+BTM of BH 270.4 m
+
+BH14-02
+BH Depth 8.1 m
+
+EXISTING TRUNK
+WATERMAIN
+
+BH20-15
+BTM of BH 254.4 m
+
+BH20-10
+BTM of BH 260.1 m
+
+BH14-08
+BH Depth 8.1 m
+
+BH14-09
+BH Depth 8.1 m
+
+BH14-01
+BH Depth 8.1 m
+
+PROPOSED 1050mm
+WATERMAIN
+
+ROPA 30
+
+BH14-03
+BH Depth 8.1 m
+
+WESTERN
+
+D
+RE ROA
+THE GO
+
+BH20-2
+BTM of BH 270.6 m
+
+BH20-3
+BTM of BH 271.9 m
+
+IT
+
+D
+
+AD
+
+BH14-01
+BH Depth 8.1 m
+
+BH14-05
+BH Depth 8.1 m
+
+N
+
+IO
+
+BH14-02
+BH Depth 8.1 m
+
+BH14-10
+BH Depth 11.1 m
+
+N
+
+W
+
+O
+
+TH
+
+EXTENT O
+F
+LANDS
+
+D
+
+N
+
+LA
+
+S
+
+ED
+
+BY
+
+AP
+
+PROPOSED ELEVATED
+WATER TANK (LOCATION
+SUBJECT TO EA)
+
+BH14-03
+BH Depth 9.5 m
+
+BH14-07
+BH Depth 8.1 m
+
+STREET 'YY'
+
+BH14-04
+BH Depth 7.9 m
+
+BH20-8
+BTM of BH 269.0 m
+
+BH14-04
+BH Depth 8.1 m
+
+BH20-9
+BTM of BH 265.9 m
+
+PROPOSED BOOSTER
+PUMPING STATION
+(LOCATION SUBJECT
+TO EA)
+
+BH14-06
+BH Depth 8.1 m
+
+BH14-05
+BH Depth 8.1 m
+
+LB
+EMIL KO
+Y
+PARKWA
+
+BH20-14
+BTM of BH 256.4 m
+
+HUMBER
+STATION
+ROAD
+
+BH20-6
+BTM of BH 262.8 m
+
+NOTES:
+
+SWM
+POND 2A
+
+SWM POND 1
+
+CPR
+
+BH20-13
+BTM of BH 259.9 m
+
+EXISTING WEST
+DEMANDS
+
+BH20-7
+BTM of BH 250.4 m
+
+BH19-4
+BTM of BH 256.2 m
+
+BH19-7
+BTM of BH 252.4 m
+
+KI
+STR NG
+EET
+
+PROPOSED BOOSTER PUMPING STATION
+AT KING STREET AND COLERAINE DRIVE
+(APPROXIMATE LOCATION)
+
+BH20-16
+BTM of BH 2570.3 m
+
+ZONE 7
+
+BH19-6
+BTM of BH 252.9 m
+
+SWM
+POND 2B
+
+BH19-3
+BTM of BH 253.3 m
+
+ZONE 6
+BH19-2
+BTM of BH 252.5 m
+
+KING STREET
+
+OLB
+IL K Y
+EM KWA
+PAR
+
+BH19-1
+BTM of BH 250.7 m
+
+BH19-5
+BTM of BH 254.2 m
+
+CHIKAD
+EE
+LANE
+
+BH20-12
+BTM of BH 256.7 m
+
+BH19-8
+BTM of BH 254.6 m
+
+* ULTIMATE CSSP BUILD OUT WILL REQUIRE DEVELOPMENT
+OF A NEW ZONE 7.
+* IT IS EXPECTED THAT A PORTION OF THE INITIAL CSSP
+DEVELOPMENT WILL BE ABLE TO PROCEED PRIOR TO
+CONSTRUCTION OF THE ULTIMATE ZONE 7 SERVICING
+SOLUTION. FURTHER MODELING SHOULD DETERMINE WHICH
+SERVICING AREAS WILL BE SUPPORTED WITH THE EXISTING
+ZONE 6 WATERMAIN.
+* THE BOOSTER STATION AND ZONE 7 ELEVATED TANK
+LOCATIONS ARE SUBJECT TO FUTURE EAs.
+*THIS PLAN IS A RECREATION OF THE MODEL FORM BOLTON
+OPTION 3 LANDS PRELIMINARY WATER MODELING BY R.J.
+BURNSIDE DATED 2023-05-15.
+
+BOLTON ZONE 6 ELEVATED
+TANK LOCATED AT COLERAINE
+DRIVE AND HOLLAND DRIVE
+(NOT SHOWN ON DRAWING)
+HWL - 297m
+FIRE FLOW HWL - 295m
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+CALEDON STATION SECONDARY PLAN
+ARGO DRAFT PLAN EAST
+
+WATER DISTRIBUTION PLAN
+15-458
+
+DATE:
+
+2020
+
+JOB NO.
+
+A.G./X.S.
+
+CHECKED BY:
+
+S.H.
+
+DRAWING NO.
+
+DESIGNED BY:
+
+S.K./E.L.
+
+CHECKED BY:
+
+S.K./A.F.
+
+SCALE:
+
+1:6000
+
+DATE:
+
+MAY 2023
+
+SURVEYED BY:
+
+J.D.B.
+
+DRAWN BY:
+
+SHEET NO.
+
+901
+
+p:\Projects\15-458\Reports\21-03-01 fsr argo\drawings and figures\09 - WATER SERVICING\901_WATERMAIN DISTRIBUTIO
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+APPENDIX 2
+STORM SEWER DESIGN CALCULATIONS
+REFER TO CSSP-FSR FOR APPENDIX
+
+10
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+APPENDIX 3
+STORMWATER MANGEMENT
+REFER TO CSSP-FSR FOR OTHER STORMWATER MANAGEMENT
+
+11
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+APPENDIX 4
+DS CONSULTANTS GEOTECHNICAL
+AND HYDROGEOLOGICAL REPORTS
+REFER TO CSSP-FSR FOR APPENDIX
+
+12
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+APPENDIX 5
+WASTEWATER
+REFER TO CSSP-FSR FOR APPENDIX
+
+13
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan East Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+APPENDIX 6
+R.J. BURNSIDE & ASSOCIATES WATER MODELLING
+REFER TO CSSP-FSR FOR APPENDIX
+
+14
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+

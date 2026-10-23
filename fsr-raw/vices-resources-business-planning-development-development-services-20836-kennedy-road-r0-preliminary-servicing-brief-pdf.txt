@@ -1,0 +1,1200 @@
+R.J. Burnside & Associates Limited 6990 Creditview Road, Unit 2 Mississauga ON L5N 8R9 CANADA
+telephone (905) 821-1800 fax (226) 526-9660 web www.rjburnside.com
+
+Preliminary Servicing Brief
+Date:
+
+December 16, 2025
+
+Project No.: 300054526.0000
+
+Project Name: Attrell Lot Severances, 20836 Kennedy Road, Caledon
+Client Name:
+
+To:
+
+From:
+
+1.0
+
+Attrell
+Ms. Sandra DeMaria
+Director, Planning & Development
+The Corporation of the Town of Caledon
+6311 Old Church Road
+Caledon, Ontario
+L7C 1J6
+sandra.demaria@caledon.ca
+Anne Egan, P.Eng.
+Peter Bruce, Senior Project Manager
+
+Introduction and Background
+
+R.J. Burnside & Associates Limited (Burnside) is retained by John Attrell (the client) to provide
+engineering services related to a proposed severance of lands located at 20836 Kennedy Road,
+within the Town of Caledon.
+This work is being conducted in support of the client’s lot severance application and the future
+development of three detached homes. The subject property has an area of approximately
+41 ha and is located on the west side of Kennedy Road, south of Highway 9 and contains a
+single detached dwelling. It is proposed to sever the existing lot to create two additional
+residential lots, for a total of three individual lots. The proposed severance would create a
+single lot to the north of the existing dwelling (Lot A) with an area of approximately 1.5 ha, and a
+second lot to the south of the existing dwelling (Lot B), with an area of approximately 1.4 ha.
+The retained lands would consist of 38.3 ha.
+Each lot is to contain a separate dwelling to be serviced with individual private water wells and
+sewage systems. This preliminary servicing brief presents a review to demonstrate feasibility of
+water supply, sewage servicing and stormwater management to support the planning approvals
+for the site.
+
+2.0
+
+Soil and Subsurface Conditions
+
+In August of 2022, Burnside oversaw the excavation of three test pits across the site, with a mini
+excavator supplied and operated by VanGerven Excavating. The soils were found to be
+consistent across the three areas of the property, consisting of sand and gravel with some silt.
+
+Memorandum
+300054526.0000
+December 16, 2025
+
+Page 2 of 4
+
+Two soil samples (from TP1 and TP3) were submitted to Chung & Vander Doelen for a grain
+size analysis to assist in estimating the percolation rate (T-time) of the native soils. According to
+the grain size analysis for TP1, the soil consists of sand and gravel, trace silt. We have
+classified the soil as SW soil, for which T-times range from 2 to 12 min/cm according to
+Supplementary Standard SB-6 of the Ontario Building Code (OBC). Based on the grain size
+distribution, consideration of the silt and clay content and our visual observations, a T-time
+of 8 min/cm has been assigned to the native soil for TP1, which corresponds to the Retained
+Lot, and Lot B (south).
+The grain size analysis for TP3 is representative of the conditions in Lot A (north), consisting of
+gravelly sand, trace silt. This soil can also be classified as SW. Based on the coarser sand
+grain size for this part of the site, we have assigned a T-time of 4 min/cm for TP3, to be used for
+the north Lot A.
+
+3.0
+
+Design Sewage Flows
+
+Daily sewage design flows for the proposed dwellings are calculated in accordance with the
+Ontario Building Code Table 8.2.1.3.A. using a base flow for the number of bedrooms, and
+additional flow to account for floor area exceeding 200 m2, or fixture units exceeding 20,
+whichever is greater.
+Lot A is proposed to contain a 4-bedroom, 3.5 bath dwelling with a finished floor area of 325 m2
+(3,500 ft2). An allowance has also been included for a future basement bathroom.
+Table 1A – Lot A (North)
+Unit Flow
+4-Bedroom Dwelling
+Plus, the greater of:
+Floor Area, or
+Fixtures
+Total Sewage Flow
+
+Total Units
+
+2,000 L/day
+
+1
+
+Total Flow
+(L/day)
+2,000
+
+100 L per each 10
+m2 between 200 m2 and 400 m2
+50 L for each fixture unit over
+20 fixture units
+
+13
+
+1,300
+
+40.5
+fixture units total
+
+1,025
+3,300
+
+Lot B is proposed to contain a 5-bedroom, 4.5 bath dwelling with a finished floor area of 465 m2
+(5,000 ft2). An allowance has also been included for a future basement bathroom.
+
+Memorandum
+300054526.0000
+December 16, 2025
+
+Table 1B – Lot B (South)
+Unit Flow
+5-Bedroom Dwelling 2,500 L/day
+Plus, the greater of:
+Floor Area, or
+100 L per each 10 m2 between
+200 m2 and 400 m2
+75 L per each 10 m2 between
+400 m2 and 600 m2
+Subtotal of Floor Area Unit Flow
+Fixtures
+50 L for each fixture unit over
+20 fixture units
+Total Sewage Flow
+
+Page 3 of 4
+
+Total Units
+1
+
+Total Flow
+(L/day)
+2,500
+
+20
+
+2,000
+
+7
+
+525
+
+2,525
+46.5 fixture units total 1,325
+5,025
+
+The retained lot is proposed to contain a 4-bedroom, 3.5 bath dwelling with a finished floor area
+of 418 m2 (4,500 ft2). An allowance has also been included for a future basement bathroom.
+Table 1C – Retained Lot
+Unit Flow
+4-Bedroom Dwelling 2,000 L/day
+Plus, the greater of:
+Floor Area, or
+100 L per each 10 m2 between
+200 m2 and 400 m2
+75 L per each 10 m2 between
+400 m2 and 600 m2
+Subtotal of Floor Area Unit Flow
+Fixtures
+50 L for each fixture unit over
+20 fixture units
+Total Sewage Flow
+
+4.0
+
+Total Units
+1
+
+Total Flow
+(L/day)
+2,000
+
+20
+
+2,000
+
+2
+
+150
+
+2,150
+40.5 fixture units total 1,025
+4,150
+
+Preliminary Sewage System Designs
+
+Each dwelling will be serviced with a new Class 4 septic tank and leaching bed system. The
+soils on the property are conducive to an in-ground leaching bed system, which is to consist of
+absorption trenches.
+Each septic tank would be sized in accordance with Article 8.2.2.3. of the OBC, which requires a
+septic tank to provide a minimum capacity of two times the daily sewage flow, or 3,600 L,
+whichever is greater.
+The size of the absorption trench leaching bed is determined based on the relationship
+L = QT/200
+Where:
+
+L = the minimum length of absorption trench, in m
+Q = the daily design flow (L/day)
+T = the design percolation time (T-time), in min/cm
+
+Memorandum
+300054526.0000
+December 16, 2025
+
+Page 4 of 4
+
+Lot B and the Retained Lot will require a pump chamber to dose the leaching bed, since the
+total length of absorption trenches will exceed 150 m.
+The minimum size for each sewage system is summarized in Table 2. As shown on Figures 1
+to 3, sufficient area has been allocated for the sewage systems. Detailed sizing and layouts
+would be provided at the time of the building permit application.
+Table 2: Minimum Sewage System Size Requirements
+Lot A (North)
+Design Flow
+3,300
+T-time (min/cm)
+8
+Minimum Septic Tank Capacity
+6,600
+Required (L)
+Minimum total length of absorption
+66
+trenches (m)
+
+5.0
+
+Lot B (South)
+5,025
+8
+10,050
+
+Retained Lot
+4,150
+8
+8,300
+
+201
+
+166
+
+Water Supply Review
+
+Each lot will be serviced with a private domestic well. Burnside reviewed existing well records in
+the vicinity of the proposed lot severances and confirmed adequate supply for residential use.
+Ground water levels indicate approximate water elevation between 12 m and 20 m. Actual well
+depth will vary depending on the install location.
+
+6.0
+
+Storm Water Management
+
+Impervious areas of the severed lots cover less than 10% of total lot areas. The retained lot will
+maintain roughly 99.5% pervious land area post-development. Retention of roughly 90-99% of
+pervious areas will encourage natural infiltration, as the existing soil is conducive to infiltration.
+Additional runoff from pervious surfaces will be controlled with swales and landscaping to
+encourage retention on the subject properties.
+
+7.0
+
+Summary
+
+As shown, the proposed lot severance provides sufficient area to accommodate the proposed
+dwelling and sewage system on each lot. Additionally, the existing soil will provide adequate
+drainage for the impervious sources, and existing water records indicate sufficient water supply
+for the proposed use.
+
+Anne Egan, P.Eng.
+AE/PB:ao
+Enclosure(s)
+
+Attrell Lot Severances
+
+054526_Attrell_PrelimServicingBrief_251215
+12/16/2025 2:38 PM
+
+Peter Bruce
+
+PROPOSED LOT AREA = 15,220 m²
+AREA OF DISTURBANCE = 3,767 m² (24.8%)
+IMPERVIOUS AREA = 1,286 m² (8.4%)
+
+SWH
+
+SWH BUFFER
+
+E
+
+D
+SE
+
+T
+LO
+
+LIN
+
+O
+OP
+
+PROPOSED LOT SIZE = 3.76 ACRES
+
+PR
+
+KE
+
+N
+
+N
+ED
+
+Y
+
+R
+O
+
+AD
+
+LIMIT OF DISTURBANCE
+
+N
+
+O
+
+R
+
+TH
+
+436.25
+436.30
+436.20
+
+436.10
+
+GARAGE
+FF = 436.35
+43
+6.
+30
+
+435.00
+
+434.75
+LIMIT OF DISTURBANCE
+
+436.15
+
+43
+6.2
+0
+
+436.00
+436.25
+
+436.30
+
+436.00
+
+6.00
+
+436.30
+436.10
+1%
+
+434.50
+
+435.58
+435.95
+
+435.25
+434.90
+
+PROPOSED
+WELL
+
+HOUSE
+FF = 436.80
+
+435.85
+
+436.00
+
+434.30
+
+435.60 6.00
+
+436.40
+436.00
+
+2.4%
+
+435.50
+
+436.00
+
+436.00
+
+434.75
+
+2.2%
+
+436.30
+
+436.65
+
+3.5%
+
+435.55
+
+1.7%
+
+PR
+
+436.30
+
+OP
+
+1.5%
+
+OS
+
+434.30
+
+434.65
+
+436.60
+
+ED
+
+2.0%
+
+435.80
+
+LO
+TL
+
+435.00
+
+435.50
+
+436.25
+
+435.90
+1.2%
+
+2%
+
+436.55
+
+435.25
+
+E
+IN
+434.30
+
+436.70
+
+PROPOSED ABSORPTION TRENCH LEACHING BED
+434.90
+4 TRENCHES
+EACH TRENCH 17m
+68m TOTAL TRENCH LENGTH
+3,300 L/day CAPACITY
+
+436.75
+
+436.55
+
+435.00
+436.00
+
+434.60
+
+434.60
+
+LIMIT OF DISTURBANCE
+
+LIMIT OF DISTURBANCE
+
+E
+
+CVC REGULATED AREA
+
+SWH BUFFER
+SWH
+
+Notes
+
+1. This drawing is the exclusive property of R. J. Burnside & Associates Limited. The reproduction of
+any part without prior written consent of this office is strictly prohibited.
+
+Drawing Title
+
+No.
+
+Issue / Revision
+
+Date
+
+Auth.
+
+R.J. Burnside & Associates Limited
+15 Townline
+Orangeville, Ontario, L9W 3R4
+telephone 1-800-265-9662
+web www.rjburnside.com
+
+2. The contractor shall verify all dimensions, levels, and datums on site and report any discrepancies
+or omissions to this office prior to construction.
+3. This drawing is to be read and understood in conjunction with all other plans and documents
+applicable to this project.
+
+NOT FOR CONSTRUCTION
+
+ATTRELL LOT SEVERENCES
+20836 KENNEDY ROAD, CALEDON
+SEVERENCE A
+
+Client
+
+MR. JOHN ATTRELL
+
+Drawn
+
+110 CANAM CRESCENT
+BRAMPTON, ONTARIO
+L7A 1A9
+
+Project No.
+
+Checked
+
+CADD
+
+PB
+
+Designed
+
+Checked
+
+PB
+
+PB
+
+Contract No.
+
+1:300
+
+Drawing No.
+
+22/08/05
+Revision No.
+
+300054526
+Scale
+
+Date
+
+0
+0
+
+6.0
+
+12.0
+
+18.0m
+
+1
+
+File: \\drteeth\Shared Work Areas\054526 Attrell Lot Severences\03_ProductionDwg\054526 SEVERENCE A.dwg Date Plotted: December 15, 2025 - 3:39 PM
+
+T LIN
+
+D LO
+
+OSE
+PROP
+
+PROPOSED LOT LINE
+
+DRIP LINE
+
+LIMIT OF DISTURBANCE
+
+.0
+0
+
+42
+
+WALKOUT
+
+42
+
+42
+60
+
+.5
+0
+42
+
+4.
+80
+
+42
+
+2.
+
+65
+
+2.
+
+42
+4
+
+4.
+80
+
+5.
+
+00
+
+42
+
+PROPOSED LOT AREA = 13,743 m²
+AREA OF DISTURBANCE = 3,346 m² (24%)
+IMPERVIOUS AREA = 1,363 m² (9.9%)
+
+4.
+
+00
+
+42
+4
+
+5.
+00
+
+42
+
+4.
+
+42
+
+4.
+80
+
+60
+GARAGE
+FF = 425.00
+
+HOUSE
+FF = 425.75
+
+WALKOUT
+
+PROPOSED LOT LINE
+
+42
+
+PROPOSED ABSORPTION TRENCH
+LEACHING BED
+8 TRENCHES
+EACH TRENCH 26m
+208m TOTAL TRENCH LENGTH
+5,025 L/day CAPACITY
+
+PROPOSED
+WELL
+
+42
+4
+
+PROPOSED LOT SIZE = 3.4 ACRES
+
+LOT LINE
+
+.9
+0
+
+42
+
+5.
+
+25
+
+42
+
+PROPOSED
+
+2.
+60
+
+42
+
+2.
+
+65
+
+WALKOUT
+
+42
+5
+
+.0
+0
+
+42
+4
+
+.7
+
+5
+
+42
+
+4.
+8
+
+0
+42
+4.
+
+65
+
+LIMIT OF DISTURBANCE
+42
+4.
+
+TREES TO REMAIN
+
+55
+
+APPROX.
+LOCATION OF
+EXISTING
+SEPTIC BED
+
+WOODLAND
+BUFFER
+
+6m
+
+42
+
+3.
+9
+
+0
+
+42
+
+.8
+0
+
+4.
+
+25
+
+42
+42
+3
+
+4.
+00
+
+PSW BUFFER
+
+6.
+
+00
+
+.9
+0
+
+42
+3.
+
+90
+
+42
+
+42
+3.
+
+75
+
+3.
+57
+
+KENNEDY ROAD NORTH
+
+42
+3
+
+TOP OF BANK
+
+LINE
+
+PSW LIMIT
+
+WOODLAND BUFFER
+
+COLD WATERCOURSE BUFFER
+
+Notes
+
+1. This drawing is the exclusive property of R. J. Burnside & Associates Limited. The reproduction of
+any part without prior written consent of this office is strictly prohibited.
+
+Drawing Title
+
+No.
+
+Issue / Revision
+
+Date
+
+Auth.
+
+R.J. Burnside & Associates Limited
+15 Townline
+Orangeville, Ontario, L9W 3R4
+telephone 1-800-265-9662
+web www.rjburnside.com
+
+2. The contractor shall verify all dimensions, levels, and datums on site and report any discrepancies
+or omissions to this office prior to construction.
+3. This drawing is to be read and understood in conjunction with all other plans and documents
+applicable to this project.
+
+NOT FOR CONSTRUCTION
+
+ATTRELL LOT SEVERENCES
+20836 KENNEDY ROAD, CALEDON
+SEVERENCE B
+
+Client
+
+MR. JOHN ATTRELL
+
+Drawn
+
+110 CANAM CRESCENT
+BRAMPTON, ONTARIO
+L7A 1A9
+
+Project No.
+
+Checked
+
+CADD
+
+PB
+
+Designed
+
+Checked
+
+PB
+
+PB
+
+Contract No.
+
+1:300
+
+Drawing No.
+
+22/08/05
+Revision No.
+
+300054526
+Scale
+
+Date
+
+0
+0
+
+6.0
+
+12.0
+
+18.0m
+
+2
+
+File: \\drteeth\Shared Work Areas\054526 Attrell Lot Severences\03_ProductionDwg\054526 SEVERENCE B.dwg Date Plotted: December 15, 2025 - 3:39 PM
+
+PROPOSED LOT
+
+PROPOSED LOT AREA = 383,537 m²
+AREA OF DISTURBANCE = 6,497 m² (1.7%)
+IMPERVIOUS AREA = 1791 m² (0.5%)
+SWH BUFFER
+
+SWH
+
+425.21
+
+Y
+ED
+NN
+
+KE
+A
+RO
+
+DRIP LINE
+DRIP LINE
+
+LIMIT OF DISTURBANCE
+
+D
+R
+NO
+
+424.1
+
+TH
+
+424.10 0
+
+424.15
+
+424.20
+
+M
+
+AT
+
+CH
+
+424.10
+
+424.20
+
+EX
+
+IS
+TI
+
+NG
+
+G
+
+RA
+
+DE
+
+423.2
+423.20 0
+423.80
+
+S
+
+GARA
+GE F
+424.20 F
+
+2.4
+
+423.95
+
+1.
+5%
+
+6.00
+
+.5%
+
+424.00
+
+%
+
+2
+
+424.10
+424.20
+424.20
+
+422.4
+422.4 0
+0
+
+424.65
+
+423.70
+
+MATCH EXISTING GRADES
+
+423.80
+
+HOUS
+E FF
+424.70
+
+MATCH E
+
+425.89
+EX
+
+XISTING
+
+GRADES
+426.40
+
+426.33
+EX
+
+425.73
+EX
+
+%
+
+2.5
+424.20
+
+423.55
+
+2.5%
+
+2.5%
+
+425.85
+
+425.20
+
+424.65
+20m
+
+424.10
+
+LANDSCAPED ISLAND
+
+4.0
+
+%
+
+424.30
+
+2.5%
+
+423.65
+
+2%
+
+424.20
+
+424.80
+
+423.50
+
+6.00
+
+424.00
+
+3.6
+%
+
+423.85
+
+PROPOSED
+WELL
+
+424.90
+
+424.00
+
+423.45
+
+2%
+
+423.70
+
+424.30
+
+424.00
+
+421.5
+
+421.50 0
+
+423.90
+
+423.80
+
+423.20
+
+423.50
+
+PSW BUFFER
+
+DRIP LINE
+
+Notes
+
+1. This drawing is the exclusive property of R. J. Burnside & Associates Limited. The reproduction of
+any part without prior written consent of this office is strictly prohibited.
+
+Drawing Title
+
+No.
+
+Issue / Revision
+
+Date
+
+Auth.
+
+R.J. Burnside & Associates Limited
+15 Townline
+Orangeville, Ontario, L9W 3R4
+telephone 1-800-265-9662
+web www.rjburnside.com
+
+2. The contractor shall verify all dimensions, levels, and datums on site and report any discrepancies
+or omissions to this office prior to construction.
+3. This drawing is to be read and understood in conjunction with all other plans and documents
+applicable to this project.
+
+NOT FOR CONSTRUCTION
+
+ATTRELL LOT SEVERENCES
+20836 KENNEDY ROAD, CALEDON
+RETAINED LOT
+
+Client
+
+MR. JOHN ATTRELL
+
+Drawn
+
+110 CANAM CRESCENT
+BRAMPTON, ONTARIO
+L7A 1A9
+
+Project No.
+
+Checked
+
+CADD
+
+PB
+
+Designed
+
+Checked
+
+PB
+
+PB
+
+Contract No.
+
+1:300
+
+Drawing No.
+
+22/08/05
+Revision No.
+
+300054526
+Scale
+
+Date
+
+0
+0
+
+6.0
+
+12.0
+
+18.0m
+
+3
+
+File: \\drteeth\Shared Work Areas\054526 Attrell Lot Severences\03_ProductionDwg\054526 RETAINED LOT.dwg Date Plotted: December 15, 2025 - 3:39 PM
+
+PROPOSED ABSORPTION TRENCH LEACHING BED
+6 TRENCHES
+EACH TRENCH 28m
+168m TOTAL TRENCH LENGTH
+4,150 L/day CAPACITY
+
+

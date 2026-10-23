@@ -1,0 +1,3153 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+August 15, 2025
+
+FUNCTIONAL SERVICING REPORT
+HUMBER STATION DISTRIBUTION CENTRE
+TOWN OF CALEDON
+REGION OF PEEL
+
+PREPARED FOR:
+PLD HUMBER STATION INVESTMENT LP
+PREPARED BY:
+C.F. CROZIER & ASSOCIATES INC.
+2800 HIGH POINT DRIVE, SUITE 100
+MILTON, ON L9T 6P4
+AUGUST 2025
+CFCA FILE NO. 0624-6777
+
+The material in this report reflects best judgment in light of the
+information available at the time of preparation. Any use which
+a third party makes of this report, or any reliance on or decisions
+made based on it, are the responsibilities of such third parties.
+C.F. Crozier & Associates Inc. accepts no responsibility for
+damages, if any, suffered by any third party as a result of
+decisions made or actions based on this report.
+
+PLD Humber Station Investment LP
+Humber Station Distribution Centre, Town of Caledon
+
+Functional Servicing Report
+August 2025
+
+Revision Number
+
+Date
+
+Comments
+
+Rev.0
+
+November 22, 2024
+
+Issued for SPA Submission 1B
+
+Rev. 1
+
+August 06, 2025
+
+Re-Issued for SPA Submission
+
+C.F. Crozier & Associates Inc.
+Project No. 0624-6777
+
+ii
+
+PLD Humber Station Investment LP
+Humber Station Distribution Centre, Town of Caledon
+
+Functional Servicing Report
+August 2025
+
+TABLE OF CONTENTS
+1.0
+
+INTRODUCTION ................................................................................................................... 1
+
+2.0
+
+BACKGROUND .................................................................................................................... 1
+2.1
+2.2
+2.3
+
+3.0
+
+Existing Conditions ....................................................................................................... 1
+Proposed Conditions .................................................................................................... 1
+Related Studies & Reports ............................................................................................ 2
+WATER SERVICES ................................................................................................................. 2
+
+3.1
+3.2
+3.3
+4.0
+
+Proposed Water Demands ........................................................................................... 3
+Fire Flow Demand ......................................................................................................... 3
+Proposed Water Servicing............................................................................................ 4
+SANITARY SERVICING ......................................................................................................... 4
+
+4.1
+4.2
+4.3
+5.0
+
+Existing Sanitary System ............................................................................................... 4
+Design Sanitary Demand ............................................................................................. 5
+Proposed Sanitary Servicing ........................................................................................ 5
+STORMWATER SERVICING ................................................................................................... 6
+
+5.1
+5.2
+
+Existing Drainage Conditions ....................................................................................... 6
+Proposed Storm Sewer System .................................................................................... 6
+
+6.0
+
+GRADING ............................................................................................................................ 7
+
+7.0
+
+EROSION & SEDIMENT CONTROL DURING CONSTRUCTION .............................................. 8
+
+8.0
+
+CONCLUSIONS AND RECOMMENDATIONS ....................................................................... 9
+
+C.F. Crozier & Associates Inc.
+Project No. 0624-6777
+
+iii
+
+PLD Humber Station Investment LP
+Humber Station Distribution Centre, Town of Caledon
+
+Functional Servicing Report
+August 2025
+
+LIST OF TABLES
+Table 1:
+
+Domestic Water Demands
+
+Table 2:
+
+Fire Water Demands
+
+Table 3:
+
+Proposed Sanitary Flows
+
+LIST OF APPENDICES
+Appendix A:
+
+Water Demand Calculations
+
+Appendix B:
+
+Sanitary Flow Calculations
+
+LIST OF FIGURES
+Figure 1:
+
+Phase 1 Functional Servicing Plan
+
+Figure 2:
+
+Phase 1 Functional Grading Plan
+
+C.F. Crozier & Associates Inc.
+Project No. 0624-6777
+
+iv
+
+PLD Humber Station Investment LP
+Humber Station Distribution Centre, Town of Caledon
+
+1.0
+
+Functional Servicing Report
+August 2025
+
+Introduction
+
+C.F. Crozier & Associates Inc. (Crozier) was retained by PLD Humber Station Investment LP to prepare
+a Functional Servicing Report to support the Zoning by-law application and Site Plan Application for
+a proposed Industrial development located at 12519-12713 Humber Station Road within the Humber
+Station Employment Area in the Town of Caledon (the Property). This report demonstrates how the
+proposed development’s servicing will conform with the requirements of the Town of Caledon
+(Town) and Region of Peel (Region).
+This report has been prepared to document details associated with the servicing strategy for the
+proposed development. Contained in this report is a description of the Subject Property (Section
+2.0); the proposed water servicing strategy (Section 3.0); proposed sanitary servicing strategy
+(Section 4.0); the proposed stormwater servicing strategy (Section 5.0); proposed grading and road
+access (Section 6.0); a summary of erosion and sediment control (ESC) measures during
+construction (Section 7.0); and conclusions and recommendations (Section 8.0). Details regarding
+the stormwater management design are captured under the “Stormwater Management
+Implementation Report” prepared by Crozier dated August 2025 under a separate cover.
+
+2.0
+
+Background
+
+2.1
+
+Existing Conditions
+
+The property encompasses an area of approximately 78.5 ha and currently consists of agricultural
+lands. The property lies within the approved Regional Official Plan Amendment (ROPA) 30 Bolton
+Expansion Area, referred to as “Option 6”, which formally designates the lands within the Bolton
+Rural Service Centre area. The property is bound by Humber Station Road to the west, agricultural
+land to the north and south, and existing industrial facilities to the east. A proposed road running
+east-west, known as Street ‘A’ (designed by others) will extend from Humber Station Road to the site
+area and will terminate at the east limit of the site with a cul-de-sac. This proposed road will include
+storm, sanitary, and watermain infrastructure, which will be designed to service the proposed
+development. Further, the proposed watermain and sanitary sewer infrastructure on Humber Station
+Road has been designed and will be constructed as part of the Region’s project (project no. 091115) for the proposed sanitary sewer and watermain construction on Humber Station Road,
+Clarkway Drive and Healey Road.
+An existing tributary known as the Clarkway Drive Tributary runs north-south along the east property
+line. A second tributary known as the Goreway Road Tributary Reach 1 runs north-south, west of
+Humber Station Road. An existing headwater drainage feature (HDF-3) extends from the north to the
+southwest area of the property, connecting to an existing wetland, with an existing natural pond
+area. This HDF will be re-aligned through a proposed channel, to be designed and constructed by
+others. Refer to the Humber Station Comprehensive Environmental Impact Study and Management
+Plan prepared by GEI dated July 2025.
+2.2
+
+Proposed Conditions
+
+The proposed development will ultimately consist of four slab-on grade buildings (Buildings 1 to 4),
+at-grade asphalt parking and loading areas, access driveways, and landscaped areas. The
+development will be constructed in phases, including Phase 1A, Phase 1B, and Phase 2. Refer to
+Figures 1 and 2 for the delineation of these areas. This report focuses on the detailed design of Phase
+1A within the property, with consideration for the Phase 1B area from a functional servicing
+perspective. Phase 1A occupies approximately 33.99 ha of the property, and Phase 1B occupies
+approximately 29.16 ha of the property.
+C.F. Crozier & Associates Inc.
+Project No. 624-6777
+
+Page 1 of 9
+
+PLD Humber Station Investment LP
+Humber Station Distribution Centre, Town of Caledon
+
+Functional Servicing Report
+August 2025
+
+Phase 1A of the proposed development as outlined in the Site Plan prepared by Petroff Partnership
+Architects (Petroff), received July 25, 2025, includes the development of a 1-storey industrial Building
+(Building 1) located on the northeast side of the property. The total gross area for Building 1 is
+144,266 m2. The Phase 1A area will also include loading docks on the east and west sides of the
+building, trailer parking on the east and west property limits, an internal drive aisle that wraps around
+the extents of the building, and a passenger vehicle parking lot south of the building. Access for
+passenger vehicles and trucks is proposed via two driveway accesses to a proposed ‘Street A’
+(designed by others) which will run east-west through the property area connecting Phase 1A to
+Humber Station Road.
+Phase 1B of the development includes the development of three smaller 1-storey industrial buildings
+(Buildings 2, 3 and 4), located on the west side of the property. The total gross building area for
+Phase 1B will be approximately 108,600 m 2. The concept plan for Phase 2 of the development will be
+determined in the future.
+The following sections of this report outline the servicing strategy for Phase 1A of the development,
+with consideration for Phase 1B.
+2.3
+
+Related Studies & Reports
+
+This report has been completed in accordance with the guidelines, standards, and policies of the
+Town of Caledon, Peel Region, and TRCA. The relevant background studies and reports include:
+
+
+Ministry of Environment (MOE) Stormwater Management Planning and Design Manual,
+dated March 2003
+
+
+
+Town of Caledon Development Standards Manual (2019)
+
+
+
+Region of Peel Public Works Watermain Design Criteria Manual (June 2010)
+
+
+
+Region of Peel Linear Wastewater Standards (March 2023)
+
+
+
+Region of Peel Public Works Stormwater Design Criteria Manual (June 2019)
+
+
+
+Master Site Plan (Petroff, July 2025)
+
+
+
+Topographic Survey (David B. Searles Surveying Ltd., April 2022)
+
+
+
+Humber Station – Comprehensive Environmental Impact Study and Management Plan (July
+2024, revised July 2025)
+
+3.0
+
+Water Services
+
+The Region of Peel is responsible for the operation and maintenance of the public water system in
+the Town of Caledon, and any local system connecting to this public system. The following sections
+outline the existing and proposed design of the water services.
+The existing and future municipal domestic and fire-fighting water supply infrastructure surrounding
+the property includes:
+
+
+An existing 200 mm diameter watermain within Humber Station Road (PP04-D, Region of
+Peel, December 2022)
+
+C.F. Crozier & Associates Inc.
+Project No. 624-6777
+
+Page 2 of 9
+
+PLD Humber Station Investment LP
+Humber Station Distribution Centre, Town of Caledon
+
+Functional Servicing Report
+August 2025
+
+
+
+A future 400 mm diameter watermain within Humber Station Road (PP04-D, Region of Peel,
+December 2022)
+
+
+
+A future 400 mm diameter watermain within ‘Street A’ (designed by others)
+
+3.1
+
+Proposed Water Demands
+
+Region of Peel Watermain Design Criteria was referenced to calculate water demands for the
+Phase 1A and 1B areas of the development. An average water demand of 300 L/capita/day was
+used in conjunction with a population density of 70 persons/ha for industrial sites. The table below
+summarizes the water demands.
+Table 1: Domestic Water Demands
+Phase
+
+Building
+
+1A
+
+1
+2
+3
+4
+
+1B
+Total
+
+Area
+(ha)
+
+Building
+Gross Floor
+Area
+(ha)
+
+Equivalent
+Population
+
+Average
+Daily
+Demand
+(L/s)
+
+Maximum
+Daily
+Demand
+(L/s)
+
+Peak
+Hourly
+Demand
+(L/s)
+
+33.99
+5.69
+5.69
+10.92
+56.29
+
+14.43
+3.15
+2.79
+4.92
+14.32
+
+1010
+220
+195
+344
+1770
+
+3.51
+0.77
+0.68
+1.20
+6.14
+
+4.91
+1.07
+0.95
+1.67
+8.60
+
+10.52
+2.30
+2.03
+3.59
+18.43
+
+As shown in the table above, the total peak hourly demand for Phase 1A is 10.52 L/s, for Phase 1B is
+7.92 L/s, and for the total Phase 1 area is 18.43 L/s.
+Refer to Appendix A for the detailed domestic water demand calculations and for the Region’s
+Demand Table which summarize the Phase 1A proposed domestic demand.
+3.2
+
+Fire Flow Demand
+
+Fire Underwriters Survey (FUS, 2020) criteria was used to estimate fire flow demands for the proposed
+building in Phase 1A, and the three proposed buildings in Phase 1B. Estimated flows are based on
+the total building floor areas, one-storey building equivalents, non-combustible construction type,
+free burning content, automated sprinkler system, and distances to adjacent buildings. The required
+fire flows per FUS 2020 guidelines are presented in Table 2.
+Table 2: Fire Water Demands
+
+Phase
+
+Building
+
+Building
+Gross Floor
+Area
+(ha)
+
+1A
+
+1
+2
+3
+4
+
+14.43
+3.15
+2.79
+4.92
+
+1B
+
+C.F. Crozier & Associates Inc.
+Project No. 624-6777
+
+Required
+Fire Flow
+(L/s)
+
+Duration
+(hr)
+
+316.67
+316.67
+316.67
+316.67
+
+4.5
+4.5
+4.5
+4.5
+
+Page 3 of 9
+
+PLD Humber Station Investment LP
+Humber Station Distribution Centre, Town of Caledon
+
+Functional Servicing Report
+August 2025
+
+The required fire flow for each of the proposed buildings in the Phase 1A and 1B areas is 316.67 L/s.
+The maximum day demand plus fire protection required for Building 1 is 321.58 L/s, for Building 2 is
+317.74 L/s, for Building 3 is 317.62 L/s, and for Building 4 is 318.34. Refer to Appendix A for FUS fire flow
+calculations.
+The proposed development’s watermain system will connect to a future 400 mm diameter
+watermain on Street A, which will connect to a future 400 m diameter watermain on Humber Station
+Road. It is assumed that the two 400 mm diameter watermains will be designed to provide the
+required domestic and fire flows to Phase 1A and Phase 1B of the development.
+3.3
+
+Proposed Water Servicing
+
+The Phase 1A building is proposed to be serviced by a 300 mm diameter PVC watermain for fire and
+a 150 mm watermain for domestic flows. The proposed 300 mm diameter fire water line will connect
+to the future 400 mm watermain in ‘Street A’ (designed by others) and will tee off internal to the
+Phase 1A area for the 150 mm diameter domestic water line per Region of Peel standard 1-8-6. The
+150 mm diameter domestic water line will tie directly into the building to service the proposed
+offices, and the 300 mm diameter fire water line will be looped around the proposed building to
+service the building and the fire hydrants. Note that a detector check valve in chamber will be
+placed on the 300 mm fire line and a water meter will be placed in the water meter room located
+at the south end of the building.
+The Phase 1B area will be fed by the future 400 mm diameter watermain within Humber Station
+Road. Buildings 2 and 3 have frontage directly to Humber Station Road and will be serviced by a fire
+water line that connects directly to the future 400 mm diameter watermain on Humber Station
+Road. Building 4 will be serviced by a fire water line that is connected to the future 400 mm diameter
+watermain within ‘Street A' (designed by others). Both the fire water line proposed to service
+Buildings 2 and 3, and the fire water line proposed to service Building 4 will tee off to domestic water
+lines that tie directly into the proposed buildings. Sizing for the proposed fire and domestic water
+lines for the Phase 1B area will be completed at the detailed design stage for Phase 1B.
+Refer to Drawing C200 for the overall water servicing strategy for Phase 1A, and Drawings C201 to
+C208 for the detailed water servicing strategy for Phase 1A. Refer to Figure 1 in this report for a
+depiction of the high-level water servicing strategy for the entirety of Phase 1 including Phase 1B.
+
+4.0
+
+Sanitary Servicing
+
+The Region of Peel is responsible for the operation and maintenance of the public sewage
+collection and treatment systems in the Town of Caledon, and any local sewage system that
+connects to this public system.
+4.1
+
+Existing Sanitary System
+
+The municipal sanitary infrastructure surrounding the property includes:
+
+
+A future 1200 mm diameter sanitary sewer on Humber Station Road (PP04-D, Region of Peel,
+December 2022)
+
+
+
+A future 600 mm diameter sanitary sewer on Humber Station Road designed by the Region
+of Peel
+
+
+
+A future 250 mm diameter sanitary sewer within ‘Street A’ (to be designed by others)
+
+C.F. Crozier & Associates Inc.
+Project No. 624-6777
+
+Page 4 of 9
+
+PLD Humber Station Investment LP
+Humber Station Distribution Centre, Town of Caledon
+
+4.2
+
+Functional Servicing Report
+August 2025
+
+Design Sanitary Demand
+
+To estimate the sanitary design flows from the proposed development, the Region of Peel Design
+Standards were referenced. The calculated design flows are based on the building areas provided
+on the Site Plan by Petroff. A summary of the calculated design flows is shown in the following table
+and detailed calculations are provided in Appendix B.
+
+Phase
+
+Building
+
+1A
+
+1
+2
+3
+4
+
+1B
+Total
+
+Table 3: Proposed Sanitary Flows
+Average
+Peak Daily
+Equivalent
+Peak
+Daily Flow
+Flow
+population
+Factor
+(L/s)
+(L/s)
+1010
+3.16
+3.80
+11.98
+220
+0.69
+4.00
+2.76
+195
+0.61
+4.00
+2.44
+344
+1.08
+4.00
+4.30
+1770
+5.53
+21.48
+
+Infiltration
+Flow
+(L/s)
+8.84
+1.48
+1.48
+2.84
+14.64
+
+Total
+Flow
+(L/s)
+20.82
+4.23
+3.92
+7.14
+36.12
+
+The total sanitary design flow for the Phase 1A area is 20.82 L/s, and for the Phase 1B area is 15.30 L/s.
+The total sanitary design flow for the total Phase 1 area is 36.12 L/s.
+Refer to Appendix B for the detailed sanitary demand calculations and the Region’s Demand table
+which summarize the proposed sanitary demand.
+4.3
+
+Proposed Sanitary Servicing
+
+Sanitary servicing for Phase 1A will be achieved via a 250 mm diameter gravity sanitary sewer
+system that collects sanitary flows from various points along the proposed building. The 250 mm
+diameter sanitary sewer system internal to the Phase 1A area will drain to the future 250 mm
+diameter sanitary sewer within ‘Street A’ (designed by others). Refer to Drawing C123 for the sanitary
+sewer drainage plan and Appendix B sanitary sewer design sheet.
+Sanitary flows from Phase 1B will be discharged through two different systems, both ultimately
+discharging to the future 1200 mm diameter sanitary sewer on Humber Station Road. Sanitary flows
+from Buildings 2 and 3 will be conveyed through a gravity sanitary sewer system designed for both
+buildings and will drain to the future 1200 mm diameter sanitary sewer on Humber Station Road via
+the future 600 mm diameter sanitary sewer on Humber Station Road. Sanitary flows from Building 4
+will be conveyed through a sanitary sewer system that will drain to the future 250 mm diameter
+sanitary sewer within ‘Street A’ (designed by others). Sizing for the sanitary sewer systems for Phase
+1B will be completed at the detailed design stage for Phase 1B.
+Refer to Drawing C200 for the overall sanitary servicing strategy for Phase 1A and Drawings C201 to
+C208 for the detailed sanitary servicing for Phase 1A. Refer to Figure 1 for the high-level sanitary
+servicing strategy for the entirety of Phase 1, including Phase 1B.
+
+C.F. Crozier & Associates Inc.
+Project No. 624-6777
+
+Page 5 of 9
+
+PLD Humber Station Investment LP
+Humber Station Distribution Centre, Town of Caledon
+
+5.0
+
+Functional Servicing Report
+August 2025
+
+Stormwater Servicing
+
+The proposed storm drainage design for the Phase 1A area is detailed in the Stormwater
+Management Implementation Report, prepared by Crozier in August 2025. The proposed
+stormwater management strategy has been prepared in accordance with the quantity, quality,
+and water balance requirements of the Town, Region, and TRCA. Refer to the Stormwater
+Management Implementation Report (under separate cover) for details.
+5.1
+
+Existing Drainage Conditions
+
+The property is located in a rural area of the West Humber Watershed (sub-basin 36) and is bordered
+by industrial lands to the east. Under existing conditions, the property consists primarily of agricultural
+fields with residential dwellings fronting Humber Station Road.
+Based on the topographic survey, the property drainage is delineated into three separate drainage
+patterns. The center area of the property drains south to the existing HDF-8. The east area of the
+property drains east through the existing east wetland, and outlets to the Clarkway Drive Tributary.
+The northwest area of the property drains west through the existing culvert under Humber Station
+Road, and outlets to the Goreway Road Tributary reach 1. The southwest area of the property drains
+south to the existing HDF-3, the west wetland, and the roadside ditch along Humber Station Road.
+5.2
+
+Proposed Storm Sewer System
+
+The proposed stormwater management strategy for the Phase 1A area of the property includes the
+use of underground detention tanks, surface ponding, and an interim stormwater management
+pond located on the Phase 2 lands to provide stormwater quantity control. Storm sewers internal to
+the Phase 1A area will capture the 100-year storm event from the drive aisle, loading docks, and
+parking areas, such that the 100-year storm event can be controlled and stored within the
+underground stormwater storage tanks, with some surface ponding for only the 100-year storm
+event.
+Rooftop runoff from catchments C201R, C202R and C203R will be conveyed to open-bottom
+infiltration tanks located within the proposed trailer parking on the east side of the building. Rooftop
+runoff from catchment C204R will be controlled on the building rooftop and routed directly to an
+underground detention tank. Catchments C205R and C206R will be conveyed to open-bottom
+infiltration tanks within the proposed drive aisle on the west side of the building. Overflow from the
+infiltration tanks is proposed to be directed to the proposed detention tanks. Refer to the Post
+Development Drainage plan C121.
+Figure 1 illustrates the general stormwater sewer design for Phase 1, with the detailed storm sewer
+system layout for Phase 1A shown on Drawings C201 to C208.
+Quality control requirements for Phase 1A will be achieved through the proposed interim stormwater
+management pond, which has a TSS removal rate of 80%. Further details are provided in the
+Stormwater Management Implementation Report prepared by Crozier in August 2025.
+The proposed stormwater management strategy for the Phase 1B area of the property will include
+the use of underground detention tanks for stormwater quantity control. Stormwater from Phase 1B
+will ultimately outlet to the realigned channel that runs through the property. The detailed design for
+stormwater management, including stormwater quantity control, quality control, and water
+balance for Phase 1B will be described further in future submissions.
+
+C.F. Crozier & Associates Inc.
+Project No. 624-6777
+
+Page 6 of 9
+
+PLD Humber Station Investment LP
+Humber Station Distribution Centre, Town of Caledon
+
+6.0
+
+Functional Servicing Report
+August 2025
+
+Grading
+
+The grading of the Phase 1A area of the property will be governed by the overall storm drainage
+system for the proposed development, with consideration of the following:
+
+
+Provide safe overland conveyance of emergency flows exceeding the capacity of the
+storm sewer system to the proposed ‘Street A’ right-of-way.
+
+
+
+Match existing grades along property limits, future grades at ‘Street A’, and realigned
+channel limits.
+
+
+
+Maintain minimum cover requirements over storm sewers, sanitary sewers, and watermains,
+while considering the ground water elevations of the property.
+
+
+
+Satisfy the Town’s requirement for containing stormwater flows within the property, while
+ensuring a maximum of 0.3 m of emergency stormwater ponding at low points.
+
+Based on review of the existing topographic survey, the property generally falls from north to south.
+The proposed grading strategy for Phase 1A will match this existing drainage condition, with the
+emergency overland flow route directing drainage to the south to the proposed Street A right-ofway. Existing elevations will be matched at the north, east, and south part of the west Phase 1A
+limits, utilizing 3:1 sloping to match existing grades. The north part of the west Phase 1A limit will
+match the proposed top of channel elevations for the realigned channel west of the Phase 1A area
+through the use of a retaining wall. The south Phase 1A limit will match the proposed elevations at
+the limit of Street A, through the use of 3:1 sloping within the proposed landscape buffer.
+The proposed loading docks on either side of the proposed building will slope away from the
+building at a 1.0% slope. The proposed trailer parking along the east and west Phase 1A limit will be
+sloped at 0.5% from the property lines towards the internal drive aisle. Due to the significant size of
+the building footprint, the proposed grading strategy uses “sawtooth grading”. Low points at 237.22
+and high points at 237.43 are proposed along the length of the building on both the east and west
+sides. Drainage will be contained within the drive aisle, as the minimum top of curb elevations at the
+back of the trailer parking stalls are 237.62, and the spill elevations at the south end of the Phase 1A
+area are 237.45. Building 1 has a proposed finished floor elevation of 239.00.
+The grading design for Phase 1B will maintain the grading strategy for Phase 1A, matching existing
+elevations at the property lines where possible, and proposed elevations around the proposed
+realigned channel and ‘Street A’ (designed by others). Emergency overland flow will be directed to
+Humber Station Road and ‘Street A’, and emergency ponding over low points will be less than 0.3
+m. Detailed grading for the Phase 1B area will be provided in a subsequent application.
+Refer to Figure 2 for the overall grading design for Phase 1, and Drawings C301 to C308 for the
+detailed grading design for Phase 1A.
+
+C.F. Crozier & Associates Inc.
+Project No. 624-6777
+
+Page 7 of 9
+
+PLD Humber Station Investment LP
+Humber Station Distribution Centre, Town of Caledon
+
+7.0
+
+Functional Servicing Report
+August 2025
+
+Erosion & Sediment Control During Construction
+
+Erosion and sediment controls will be installed prior to the commencement of any construction
+activities and will be maintained until the property is stabilized or as directed by the Site Engineer
+and/or the City, Region, and the TRCA. The Removals and Erosion & Sediment Control Plans
+(Drawing C801 and C802) identify the location of the recommended control features. Controls will
+be inspected each week and after each significant rainfall events and maintained in proper
+working condition.
+ESC measures will be applied to Phase 1A and Phase 1B with two (2) stages. Stage 1 is topsoil
+stripping, and Stage 2 is channel realignment and pre-grade. Assuming Street A is pre-graded, there
+will be one construction access from Humber Station Road. Drawings C801 and C802 show the
+topsoil stripping and mass grading of Phase 1A only within the 10m Pre-Grading Setback provided
+by SLR. Detailed ESC measures, topsoil removal and mass grading plans for Phase 1B will be
+provided at detailed design stage of Phase 1B.
+The following sediment and erosion controls will be included during construction on the property:
+Heavy Duty Silt Fencing
+Heavy duty silt fence will be installed surrounding the perimeter of the area where pre-grading will
+occur to intercept sheet flow. Additional silt fence may be added based on field decisions by the
+Site Engineer and Owner, prior to, during and following construction.
+Mud Mat
+Mud mats will be installed at the construction entrances to prevent mud tracking from the property
+onto the surrounding lands and perimeter roadway network. All construction traffic will be restricted
+to this access only.
+Interceptor Swale with Rock Check Dam
+Interceptor swales utilize the existing drainage features on the property. These conveyance systems
+collect and convey runoff to the downstream sediment control pond. The rock check dams are
+designed to reduce velocities within the swales to prevent channel erosion.
+Temporary Sediment Control Ponds
+Temporary sediment control ponds will be implemented during construction to promote settling of
+suspended sediment particles and to prevent erosion.
+A Grading Permit set has been issued to the Town of Caledon including the ESC drawings C801 and
+C802 which outline the topsoil management, pre-grade design and erosion and sediment control
+measures. A temporary pond is located on Phase 2 lands south of the proposed ‘Street A’ which
+ultimately discharges to HDF-8. The temporary pond is designed in a manner to receive flows during
+the topsoil removal stage and pre-grading phase. Refer to drawings C801 and C802 for additional
+details.
+
+C.F. Crozier & Associates Inc.
+Project No. 624-6777
+
+Page 8 of 9
+
+PLD Humber Station Investment LP
+Humber Station Distribution Centre, Town of Caledon
+
+8.0
+
+Functional Servicing Report
+August 2025
+
+Conclusions and Recommendations
+
+We conclude that the proposed development of the subject property can be readily serviced. The
+proposed civil engineering servicing design outlined in this report can meet the objectives of the
+regulatory agencies and will be subject to further detailed design.
+Based on the information contained in this report, we offer the following conclusions:
+1. Domestic water and fire flows will be provided for the Phase 1A area of the property by a
+proposed 150 mm diameter domestic line and 300 mm diameter fire line that are proposed
+to connect to the proposed 400 mm watermain within ‘Street A’ (designed by others) which
+will ultimately connect to the proposed 400 mm diameter watermain within Humber Station
+Road. The peak domestic water demand for Phase 1A is 10.52 L/s and the maximum fire flow
+requirement is 316.67 L/s.
+2. Sanitary servicing for Phase 1A will discharge to the proposed 250 mm diameter sanitary
+sewer within ‘Street A’ (designed by others), before ultimately discharging to the proposed
+1200 mm diameter sanitary sewer on Humber Station Road. The peak sanitary demand for
+the Phase 1A is 20.82 L/s.
+3. Approximate design flows for Phase 1B have been calculated, and the final design flows
+and proposed servicing strategy will be confirmed at the detailed design stage for Phase 1B.
+4. The proposed stormwater management strategy for the Phase 1A area includes the use of
+rooftop storage, underground stormwater detention tanks, infiltration tanks, an interim
+stormwater management pond. Storm sewers internal to the Phase 1A area will capture and
+convey the 100-year storm event. Refer to the Stormwater Management Implementation
+Report prepared by Crozier dated August 2025 under a separate cover for details.
+5. Grading will be governed by the overall drainage system for the proposed development,
+while matching into existing and future elevations at the development limits.
+Based on the conclusions provided, the property can be serviced according to Town of Caledon
+and Region of Peel requirements. We recommend approval of the Site Plan Application for the
+proposed development from the perspective of servicing requirements. If you have any questions
+about this report, please call us.
+Respectfully submitted,
+C.F. CROZIER & ASSOCIATES INC.
+
+C.F. CROZIER & ASSOCIATES INC.
+
+Katrina Weel, P.Eng.
+Project Engineer, Land Development
+
+Mena Iskander, P.Eng.
+Project Manager, Land Development
+
+LE:KW/stm:tc
+J:\600\624 - Prologis\6777 - Prologis Humber Station - Phase 1 & 2\Reports\2025.07.XX_FSR Report\6777_FSR.docx
+
+C.F. Crozier & Associates Inc.
+Project No. 624-6777
+
+Page 9 of 9
+
+PLD Humber Station Investment LP
+Humber Station Distribution Centre, Town of Caledon
+
+APPENDIX
+
+Functional Servicing Report
+August 2025
+
+A
+
+Water Demand Calculations
+
+C.F. Crozier & Associates Inc.
+Project No. 0624-6777
+
+Project: Humber Station
+Project No.: 0624-6777
+
+Design: L.E.
+Check: K.W./M.I.
+
+Date:
+Updated:
+
+2024-03-18
+2025-07-29
+
+Water Demand - Building - 1
+Block Area
+Building Area
+Population Density
+Population
+
+33.99
+14.43
+70
+1,010
+
+ha
+ha
+persons/ha
+persons
+
+Design Criteria:
+Average Daily Demand:
+Maximum Daily Demand Peaking Factor:
+Peak Hourly Demand Peaking Factor:
+
+300
+1.40
+3.00
+
+L/employee.day
+
+Domestic Water Demand:
+Average Daily Demand:
+Maximum Daily Demand:
+Peak Hourly Demand:
+
+302959 L/day
+3.51 L/s
+424142 L/day
+4.91 L/s
+908876 L/day
+10.52 L/s
+
+J:\600\624 - Prologis\6777 - Prologis Humber Station - Phase 1 & 2\Design\Civil_Water\SPA - Phase 1a\6777_Water Demand_PH 1a
+
+-
+
+Region of Peel - Public Works Design,
+Specifications & Procedures Manual Linear Infrastructure - Watermain Design
+Criteria (June 2010)
+*Population calculation is based on the
+total Gross Floor Area (GFA) of the
+proposed Building 1 shown on the Site
+Plan prepared by Petroff Partnership
+Architects
+
+Page 1 of 6
+
+Project: Humber Station
+Project No.: 0624-6777
+
+Design: L.E.
+Check: K.W./M.I.
+
+Date:
+Updated:
+
+2024-03-18
+2025-07-29
+
+Water Demand - Building - 2
+Block Area
+Building Area
+Population Density
+Population
+
+5.69
+3.15
+70
+220
+
+ha
+ha
+persons/ha
+persons
+
+Design Criteria:
+Average Daily Demand:
+Maximum Daily Demand Peaking Factor:
+Peak Hourly Demand Peaking Factor:
+
+300
+1.40
+3.00
+
+L/employee.day
+
+Domestic Water Demand:
+Average Daily Demand:
+Maximum Daily Demand:
+Peak Hourly Demand:
+
+66128 L/day
+0.77 L/s
+92579 L/day
+1.07 L/s
+198384 L/day
+2.30 L/s
+
+J:\600\624 - Prologis\6777 - Prologis Humber Station - Phase 1 & 2\Design\Civil_Water\SPA - Phase 1a\6777_Water Demand_PH 1a
+
+-
+
+Region of Peel - Public Works Design,
+Specifications & Procedures Manual Linear Infrastructure - Watermain Design
+Criteria (June 2010)
+*Population calculation is based on the
+total Gross Floor Area (GFA) of the
+proposed Building 2 shown on the Site
+Plan prepared by Petroff Partnership
+Architects
+
+Page 2 of 6
+
+Project: Humber Station
+Project No.: 0624-6777
+
+Design: L.E.
+Check: K.W./M.I.
+
+Date:
+Updated:
+
+2024-03-18
+2025-07-29
+
+Water Demand - Building - 3
+Block Area
+Building Area
+Population Density
+Population
+
+5.69
+2.79
+70
+195
+
+ha
+ha
+persons/ha
+persons
+
+Design Criteria:
+Average Daily Demand:
+Maximum Daily Demand Peaking Factor:
+Peak Hourly Demand Peaking Factor:
+
+300
+1.40
+3.00
+
+L/employee.day
+
+Domestic Water Demand:
+Average Daily Demand:
+Maximum Daily Demand:
+Peak Hourly Demand:
+
+58556 L/day
+0.68 L/s
+81978 L/day
+0.95 L/s
+175668 L/day
+2.03 L/s
+
+J:\600\624 - Prologis\6777 - Prologis Humber Station - Phase 1 & 2\Design\Civil_Water\SPA - Phase 1a\6777_Water Demand_PH 1a
+
+-
+
+Region of Peel - Public Works Design,
+Specifications & Procedures Manual Linear Infrastructure - Watermain Design
+Criteria (June 2010)
+*Population calculation is based on the
+total Gross Floor Area (GFA) of the
+proposed Building 3 shown on the Site
+Plan prepared by Petroff Partnership
+Architects
+
+Page 3 of 6
+
+Project: Humber Station
+Project No.: 0624-6777
+
+Design: L.E.
+Check: K.W./M.I.
+
+Date:
+Updated:
+
+2024-03-18
+2025-07-29
+
+Water Demand - Building - 4
+Block Area
+Building Area
+Population Density
+Population
+
+10.92
+4.92
+70
+344
+
+ha
+ha
+persons/ha
+persons
+
+Design Criteria:
+Average Daily Demand:
+Maximum Daily Demand Peaking Factor:
+Peak Hourly Demand Peaking Factor:
+
+300
+1.40
+3.00
+
+L/employee.day
+
+Domestic Water Demand:
+Average Daily Demand:
+Maximum Daily Demand:
+Peak Hourly Demand:
+
+103284 L/day
+1.20 L/s
+144598 L/day
+1.67 L/s
+309852 L/day
+3.59 L/s
+
+J:\600\624 - Prologis\6777 - Prologis Humber Station - Phase 1 & 2\Design\Civil_Water\SPA - Phase 1a\6777_Water Demand_PH 1a
+
+-
+
+Region of Peel - Public Works Design,
+Specifications & Procedures Manual Linear Infrastructure - Watermain Design
+Criteria (June 2010)
+*Population calculation is based on the
+total Gross Floor Area (GFA) of the
+proposed Building 4 shown on the Site
+Plan prepared by Petroff Partnership
+Architects
+
+Page 4 of 6
+
+0624-6777
+Humber Station
+Water Demand - Phase 1
+
+Building
+
+Equivalent
+Population
+
+1
+2
+3
+4
+Total
+
+1010
+220
+195
+344
+1770
+
+Average Day
+Maximum
+Demand
+Day Demand
+(L/s)
+(L/s)
+3.51
+4.91
+0.77
+1.07
+0.68
+0.95
+1.20
+1.67
+6.14
+8.60
+
+Date: 2024-03-18
+Designed By: L.E.
+Checked By: K.W./M.I.
+Updated: 2025-07-29
+
+Peak Hour
+Demand
+(L/s)
+10.52
+2.30
+2.03
+3.59
+18.43
+
+PROJECT: Humber Station
+PROJECT NO.: 0624-6777
+
+CREATED BY: K.W.
+CHECKED BY: M.I.
+
+Water Demand Table (Region of Peel)
+Connection Demand Table - Phase 1a
+Water Connection
+Connection point
+Humber Station Road
+Pressure zone of connection point
+Total equivalent population to be serviced
+Total lands to be serviced (Phase 1a)
+Hydrant flow test
+Hydrant flow test location:
+N/A
+
+N/A
+1,010 persons
+33.99 Ha
+
+Pressure (kPa)
+
+Flow (in l/s)
+
+Time
+
+Humber Station Road
+Minimum water pressure
+Maximum water pressure
+Water Demands
+
+No.
+Demand Type
+1 Average day flow
+2 Maximum day flow
+3 Peak hour flow
+4 Fire flow
+
+Domestic
+3.51
+4.91
+10.52
+316.67
+
+5 Maximum day plus fire flow
+
+321.58
+
+Demand (in l/s)
+Use 2
+
+Total
+3.51
+4.91
+10.52
+316.67
+
+Analysis
+321.58
+
+WASTEWATER CONNECTION
+Total
+Connection Point
+Total equivalent population to be serviced
+Total lands to be serviced
+6 Wastewater sewer effluent (in l/s)
+
+Sanitary Manhole 21A
+1010
+33.99
+20.82
+
+1 Please refer to design criteria for population equivalencies
+2 Please reference the Fire Underwriters Survey Document
+3 Please specify the connection point ID
+4 Please specify the connection point (wastewater line or manhole ID)
+Also, the "total equivalent population to be serviced" and the "total lands
+to be serviced" should reference the connection point. (The FSR should contain one
+copy of Site Servicing Plan)
+5 Please complete as many uses are necessary for the development
+(Please specify each use)
+6 A hydrant flow test will be conducted prior to detailed design
+Please include the graphs associated with the hydrant flow test information table.
+Please provide Professional Engineer's signature and stamp on the demand table.
+All required calculations must be submitted with the demand table submission.
+
+1010
+33.99
+20.82
+
+DATE: 2024-03-18
+UPDATED: 2025-07-29
+
+Humber Station Building 1
+Fire Protection Volume Calculation
+CFCA File: 624-6777
+
+Date: 2025-07-29
+Design: L.E.
+Check: K.W./M.I.
+
+Water Supply for Public Fire Protection - 2020
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+1. An estimate of fire flow required for a given area may be determined by the formula:
+F = 220 * C * sqrt A
+where
+F = the required fire flow in litres per minute
+C = coefficient related to the type of construction:
+=
+1.5 for Type V Wood Frame Construction
+=
+0.8 for Type IV-A Mass Timber Construction
+=
+0.9 for Type IV-B Mass Timer Construction
+=
+1.0 for Type IV-C Mass Timber Construction
+=
+1.5 for Type IV-D Mass Timber Construction
+=
+1.0 for Type III Ordinary Construction
+=
+0.8 for Type II Non-combustible Construction
+=
+0.6 for Type I Fire-Resistive constructio
+A = The total floor area in square metres
+Proposed Buildings
+GFA
+High Storey Building GFA equivalent
+High Storey Building GFA equivalent
+Total Area =
+C=
+
+1.0
+
+Therefore F =
+
+144266 sq.m
+144266 sq.m
+144266 sq.m
+432798.0 sq.m
+
+100%
+100% (refer to High One Storey Building in FUS 2020)
+100% (refer to High One Storey Building in FUS 2020)
+
+Assume non-combustible construction (fully protected frame, floors, roof)
+
+30,000 L/min
+
+Fire flow determined above shall not exceed:
+30,000 L/min for wood frame construction
+30,000 L/min for ordinary construction
+25,000 L/min for non-combustible construction
+25,000 L/min for fire-resistive construction
+
+2. Values obtained in No. 1 may be reduced by as much as 25% for occupancies having low contents fire hazard or may
+be increased by up to 25% surcharge for occupancies having a high fire hazard.
+Non-Combustible
+Limited Combustible
+Combustible
+
+-25%
+-15%
+0% (No Change)
+
+Rapid Burning
+
+Free Burning
+Rapid Burning
+
+15%
+25%
+
+25% addition
+7,500 L/min occupancy
+37,500 L/min
+
+Note: Flow determined shall not be less than 2,000 L/min
+3. Sprinklers - The value obtained in No. 2 above maybe reduced by up to 50% for complete automatic sprinkler protection.
+The credit for the system will be a maximum of 30% for an adequately designed system conforming to NFPA 13 and other
+NFPA sprinkler standards.
+As part of this analysis, building is assumed to have sprinkler protection (50% reduction),
+-18,750 L/min reduction
+
+Humber Station Building 1
+Fire Protection Volume Calculation
+CFCA File: 624-6777
+
+Date: 2025-07-29
+Designed By: L.E.
+Checked By: K.W./M.I.
+
+Page 2
+
+Water Supply for Public Fire Protection - 2020
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+4. Exposure - To the value obtained in No. 2, a percentage should be added for structures exposed within 30 metres
+by the fire area under consideration. The percentage shall depend upon the height, area, and construction of the
+building(s) being exposed, the separation, openings in the exposed building(s), the length and height of exposure,
+the provision of automatic sprinklers and/or outside sprinklers in the building(s) exposed, the occupancy of the
+exposed building(s) and the effect of hillside locations on the possible spread of fire.
+Separation
+0 to 3 m
+Max.
+3.1 to 10 m Max.
+10.1 to 20 m Max.
+
+Charge Separation
+25%
+20.1 to 30 m Max.
+20%
+> 30m
+15%
+
+Charge
+10%
+0%
+
+Per Table 6 "Exposure Adjustment Factors for Subject Building considering Construction Type of Exposed Building Face", the
+above table of exposure factors is the maximum to be used. The length to height ratio for the exposed wall on each side of the
+building, including the construction type of the exposed building, and whether or not the exposed building has protected openings,
+was taken into account for each wall of the proposed buildings, in addition to the distance between the subject building and the
+exposed building.
+Distance (m)
+North
+South
+East
+West
+
+>30
+>30
+>30
+>30
+
+Length of Exposed
+Building Face
+-
+
+Height of exposed
+building in stories
+-
+
+LengthHeight Ratio
+-
+
+Building
+Type
+-
+
+Determine Required Fire Flow
+No.1 30,000
+No. 2 7,500 addition
+No. 3 -18,750 reduction
+No. 4
+0 surcharge
+Required Flow: 18,750 L/min
+Rounded to nearest 1000 L/min: 19,000 L/min
+
+or
+
+316.67 L/s
+5,019 USGPM
+
+Protected
+Openings?
+-
+
+Exposure
+Charge
+0%
+0%
+0%
+0%
+
+Surcharge
+0.0
+0.0
+0.0
+0.0
+0.0 L/min Surcharge
+
+Required Duration of Fire Flow
+Flow Required
+Duration
+L/min
+(hours)
+2,000 or less
+1.0
+3,000
+1.25
+4,000
+1.5
+5,000
+1.75
+6,000
+2.0
+8,000
+2.0
+10,000
+2.0
+12,000
+2.5
+14,000
+3.0
+16,000
+3.5
+18,000
+4.0
+20,000
+4.5
+22,000
+5.0
+24,000
+5.5
+26,000
+6.0
+28,000
+6.5
+30,000
+7.0
+32,000
+7.5
+34,000
+8.0
+36,000
+8.5
+38,000
+9.0
+40,000 and over
+9.5
+
+Humber Station Building 2
+Fire Protection Volume Calculation
+CFCA File: 624-6777
+
+Date: 2025-07-29
+Design: L.E.
+Check: K.W./M.I.
+
+Water Supply for Public Fire Protection - 2020
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+1. An estimate of fire flow required for a given area may be determined by the formula:
+F = 220 * C * sqrt A
+where
+F = the required fire flow in litres per minute
+C = coefficient related to the type of construction:
+=
+1.5 for Type V Wood Frame Construction
+=
+0.8 for Type IV-A Mass Timber Construction
+=
+0.9 for Type IV-B Mass Timer Construction
+=
+1.0 for Type IV-C Mass Timber Construction
+=
+1.5 for Type IV-D Mass Timber Construction
+=
+1.0 for Type III Ordinary Construction
+=
+0.8 for Type II Non-combustible Construction
+=
+0.6 for Type I Fire-Resistive constructio
+A = The total floor area in square metres
+Proposed Buildings
+GFA
+High Storey Building GFA equivalent
+High Storey Building GFA equivalent
+Total Area =
+C=
+
+1.0
+
+Therefore F =
+
+31489.5 sq.m
+31489.5 sq.m
+31489.5 sq.m
+94468.5 sq.m
+
+100%
+100% (refer to High One Storey Building in FUS 2020)
+100% (refer to High One Storey Building in FUS 2020)
+
+Assume non-combustible construction (fully protected frame, floors, roof)
+
+30,000 L/min
+
+Fire flow determined above shall not exceed:
+30,000 L/min for wood frame construction
+30,000 L/min for ordinary construction
+25,000 L/min for non-combustible construction
+25,000 L/min for fire-resistive construction
+
+2. Values obtained in No. 1 may be reduced by as much as 25% for occupancies having low contents fire hazard or may
+be increased by up to 25% surcharge for occupancies having a high fire hazard.
+Non-Combustible
+Limited Combustible
+Combustible
+
+-25%
+-15%
+0% (No Change)
+
+Rapid Burning
+
+Free Burning
+Rapid Burning
+
+15%
+25%
+
+25% addition
+7,500 L/min addition
+37,500 L/min
+
+Note: Flow determined shall not be less than 2,000 L/min
+3. Sprinklers - The value obtained in No. 2 above maybe reduced by up to 50% for complete automatic sprinkler protection.
+The credit for the system will be a maximum of 30% for an adequately designed system conforming to NFPA 13 and other
+NFPA sprinkler standards.
+As part of this analysis, building is assumed to have sprinkler protection (50% reduction),
+-18,750 L/min reduction
+
+Humber Station Building 2
+Fire Protection Volume Calculation
+CFCA File: 624-6777
+
+Date: 2025-07-29
+Designed By: L.E.
+Checked By: K.W./M.I.
+
+Page 2
+
+Water Supply for Public Fire Protection - 2020
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+4. Exposure - To the value obtained in No. 2, a percentage should be added for structures exposed within 30 metres
+by the fire area under consideration. The percentage shall depend upon the height, area, and construction of the
+building(s) being exposed, the separation, openings in the exposed building(s), the length and height of exposure,
+the provision of automatic sprinklers and/or outside sprinklers in the building(s) exposed, the occupancy of the
+exposed building(s) and the effect of hillside locations on the possible spread of fire.
+Separation
+0 to 3 m
+Max.
+3.1 to 10 m Max.
+10.1 to 20 m Max.
+
+Charge Separation
+25%
+20.1 to 30 m Max.
+20%
+> 30m
+15%
+
+Charge
+10%
+0%
+
+Per Table 6 "Exposure Adjustment Factors for Subject Building considering Construction Type of Exposed Building Face", the
+above table of exposure factors is the maximum to be used. The length to height ratio for the exposed wall on each side of the
+building, including the construction type of the exposed building, and whether or not the exposed building has protected openings,
+was taken into account for each wall of the proposed buildings, in addition to the distance between the subject building and the
+exposed building.
+Distance (m)
+North
+South
+East
+West
+
+>30
+>30
+>30
+>30
+
+Length of Exposed
+Building Face
+-
+
+Height of exposed
+building in stories
+-
+
+LengthHeight Ratio
+-
+
+Building
+Type
+-
+
+Determine Required Fire Flow
+No.1 30,000
+No. 2 7,500 addition
+No. 3 -18,750 reduction
+No. 4
+0 surcharge
+Required Flow: 18,750 L/min
+Rounded to nearest 1000 L/min: 19,000 L/min
+
+or
+
+316.67 L/s
+5,019 USGPM
+
+Protected
+Openings?
+-
+
+Exposure
+Charge
+0%
+0%
+0%
+0%
+
+Surcharge
+0.0
+0.0
+0.0
+0.0
+0.0 L/min Surcharge
+
+Required Duration of Fire Flow
+Flow Required
+Duration
+L/min
+(hours)
+2,000 or less
+1.0
+3,000
+1.25
+4,000
+1.5
+5,000
+1.75
+6,000
+2.0
+8,000
+2.0
+10,000
+2.0
+12,000
+2.5
+14,000
+3.0
+16,000
+3.5
+18,000
+4.0
+20,000
+4.5
+22,000
+5.0
+24,000
+5.5
+26,000
+6.0
+28,000
+6.5
+30,000
+7.0
+32,000
+7.5
+34,000
+8.0
+36,000
+8.5
+38,000
+9.0
+40,000 and over
+9.5
+
+Humber Station Building 3
+Fire Protection Volume Calculation
+CFCA File: 624-6777
+
+Date: 2025-07-29
+Design: L.E.
+Check: K.W./M.I.
+
+Water Supply for Public Fire Protection - 2020
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+1. An estimate of fire flow required for a given area may be determined by the formula:
+F = 220 * C * sqrt A
+where
+F = the required fire flow in litres per minute
+C = coefficient related to the type of construction:
+=
+1.5 for Type V Wood Frame Construction
+=
+0.8 for Type IV-A Mass Timber Construction
+=
+0.9 for Type IV-B Mass Timer Construction
+=
+1.0 for Type IV-C Mass Timber Construction
+=
+1.5 for Type IV-D Mass Timber Construction
+=
+1.0 for Type III Ordinary Construction
+=
+0.8 for Type II Non-combustible Construction
+=
+0.6 for Type I Fire-Resistive constructio
+A = The total floor area in square metres
+Proposed Buildings
+GFA
+High Storey Building GFA equivalent
+High Storey Building GFA equivalent
+Total Area =
+C=
+
+1.0
+
+Therefore F =
+
+37833.8 sq.m
+37833.8 sq.m
+37833.8 sq.m
+113501.4 sq.m
+
+100%
+100% (refer to High One Storey Building in FUS 2020)
+100% (refer to High One Storey Building in FUS 2020)
+
+Assume non-combustible construction (fully protected frame, floors, roof)
+
+30,000 L/min
+
+Fire flow determined above shall not exceed:
+30,000 L/min for wood frame construction
+30,000 L/min for ordinary construction
+25,000 L/min for non-combustible construction
+25,000 L/min for fire-resistive construction
+
+2. Values obtained in No. 1 may be reduced by as much as 25% for occupancies having low contents fire hazard or may
+be increased by up to 25% surcharge for occupancies having a high fire hazard.
+Non-Combustible
+Limited Combustible
+Combustible
+
+-25%
+-15%
+0% (No Change)
+
+Rapid Burning
+
+Free Burning
+Rapid Burning
+
+15%
+25%
+
+25% addition
+7,500 L/min addition
+37,500 L/min
+
+Note: Flow determined shall not be less than 2,000 L/min
+3. Sprinklers - The value obtained in No. 2 above maybe reduced by up to 50% for complete automatic sprinkler protection.
+The credit for the system will be a maximum of 30% for an adequately designed system conforming to NFPA 13 and other
+NFPA sprinkler standards.
+As part of this analysis, building is assumed to have sprinkler protection (50% reduction),
+-18,750 L/min reduction
+
+Humber Station Building 3
+Fire Protection Volume Calculation
+CFCA File: 624-6777
+
+Date: 2025-07-29
+Designed By: L.E.
+Checked By: K.W./M.I.
+
+Page 2
+
+Water Supply for Public Fire Protection - 2020
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+4. Exposure - To the value obtained in No. 2, a percentage should be added for structures exposed within 30 metres
+by the fire area under consideration. The percentage shall depend upon the height, area, and construction of the
+building(s) being exposed, the separation, openings in the exposed building(s), the length and height of exposure,
+the provision of automatic sprinklers and/or outside sprinklers in the building(s) exposed, the occupancy of the
+exposed building(s) and the effect of hillside locations on the possible spread of fire.
+Separation
+0 to 3 m
+Max.
+3.1 to 10 m Max.
+10.1 to 20 m Max.
+
+Charge Separation
+25%
+20.1 to 30 m Max.
+20%
+> 30m
+15%
+
+Charge
+10%
+0%
+
+Per Table 6 "Exposure Adjustment Factors for Subject Building considering Construction Type of Exposed Building Face", the
+above table of exposure factors is the maximum to be used. The length to height ratio for the exposed wall on each side of the
+building, including the construction type of the exposed building, and whether or not the exposed building has protected openings,
+was taken into account for each wall of the proposed buildings, in addition to the distance between the subject building and the
+exposed building.
+Distance (m)
+North
+South
+East
+West
+
+>30
+>30
+>30
+>30
+
+Length of Exposed
+Building Face
+-
+
+Height of exposed
+building in stories
+-
+
+LengthHeight Ratio
+-
+
+Building
+Type
+-
+
+Determine Required Fire Flow
+No.1 30,000
+No. 2 7,500 addition
+No. 3 -18,750 reduction
+No. 4
+0 surcharge
+Required Flow: 18,750 L/min
+Rounded to nearest 1000 L/min: 19,000 L/min
+
+or
+
+316.67 L/s
+5,019 USGPM
+
+Protected
+Openings?
+-
+
+Exposure
+Charge
+0%
+0%
+0%
+0%
+
+Surcharge
+0.0
+0.0
+0.0
+0.0
+0.0 L/min Surcharge
+
+Required Duration of Fire Flow
+Flow Required
+Duration
+L/min
+(hours)
+2,000 or less
+1.0
+3,000
+1.25
+4,000
+1.5
+5,000
+1.75
+6,000
+2.0
+8,000
+2.0
+10,000
+2.0
+12,000
+2.5
+14,000
+3.0
+16,000
+3.5
+18,000
+4.0
+20,000
+4.5
+22,000
+5.0
+24,000
+5.5
+26,000
+6.0
+28,000
+6.5
+30,000
+7.0
+32,000
+7.5
+34,000
+8.0
+36,000
+8.5
+38,000
+9.0
+40,000 and over
+9.5
+
+Humber Station Building 4
+Fire Protection Volume Calculation
+CFCA File: 624-6777
+
+Date: 2025-07-29
+Design: L.E.
+Check: K.W./M.I.
+
+Water Supply for Public Fire Protection - 2020
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+1. An estimate of fire flow required for a given area may be determined by the formula:
+F = 220 * C * sqrt A
+where
+F = the required fire flow in litres per minute
+C = coefficient related to the type of construction:
+=
+1.5 for Type V Wood Frame Construction
+=
+0.8 for Type IV-A Mass Timber Construction
+=
+0.9 for Type IV-B Mass Timer Construction
+=
+1.0 for Type IV-C Mass Timber Construction
+=
+1.5 for Type IV-D Mass Timber Construction
+=
+1.0 for Type III Ordinary Construction
+=
+0.8 for Type II Non-combustible Construction
+=
+0.6 for Type I Fire-Resistive constructio
+A = The total floor area in square metres
+Proposed Buildings
+GFA
+High Storey Building GFA equivalent
+High Storey Building GFA equivalent
+Total Area =
+C=
+
+1.0
+
+Therefore F =
+
+49182.9 sq.m
+49182.9 sq.m
+49182.9 sq.m
+147548.7 sq.m
+
+100%
+100% (refer to High One Storey Building in FUS 2020)
+100% (refer to High One Storey Building in FUS 2020)
+
+Assume non-combustible construction (fully protected frame, floors, roof)
+
+30,000 L/min
+
+Fire flow determined above shall not exceed:
+30,000 L/min for wood frame construction
+30,000 L/min for ordinary construction
+25,000 L/min for non-combustible construction
+25,000 L/min for fire-resistive construction
+
+2. Values obtained in No. 1 may be reduced by as much as 25% for occupancies having low contents fire hazard or may
+be increased by up to 25% surcharge for occupancies having a high fire hazard.
+Non-Combustible
+Limited Combustible
+Combustible
+
+-25%
+-15%
+0% (No Change)
+
+Rapid Burning
+
+Free Burning
+Rapid Burning
+
+15%
+25%
+
+25% addition
+7,500 L/min addition
+37,500 L/min
+
+Note: Flow determined shall not be less than 2,000 L/min
+3. Sprinklers - The value obtained in No. 2 above maybe reduced by up to 50% for complete automatic sprinkler protection.
+The credit for the system will be a maximum of 30% for an adequately designed system conforming to NFPA 13 and other
+NFPA sprinkler standards.
+As part of this analysis, building is assumed to have sprinkler protection (50% reduction),
+-18,750 L/min reduction
+
+Humber Station Building 4
+Fire Protection Volume Calculation
+CFCA File: 624-6777
+
+Date: 2025-07-29
+Designed By: L.E.
+Checked By: K.W./M.I.
+
+Page 2
+
+Water Supply for Public Fire Protection - 2020
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+4. Exposure - To the value obtained in No. 2, a percentage should be added for structures exposed within 30 metres
+by the fire area under consideration. The percentage shall depend upon the height, area, and construction of the
+building(s) being exposed, the separation, openings in the exposed building(s), the length and height of exposure,
+the provision of automatic sprinklers and/or outside sprinklers in the building(s) exposed, the occupancy of the
+exposed building(s) and the effect of hillside locations on the possible spread of fire.
+Separation
+0 to 3 m
+Max.
+3.1 to 10 m Max.
+10.1 to 20 m Max.
+
+Charge Separation
+25%
+20.1 to 30 m Max.
+20%
+> 30m
+15%
+
+Charge
+10%
+0%
+
+Per Table 6 "Exposure Adjustment Factors for Subject Building considering Construction Type of Exposed Building Face", the
+above table of exposure factors is the maximum to be used. The length to height ratio for the exposed wall on each side of the
+building, including the construction type of the exposed building, and whether or not the exposed building has protected openings,
+was taken into account for each wall of the proposed buildings, in addition to the distance between the subject building and the
+exposed building.
+Distance (m)
+North
+South
+East
+West
+
+>30
+>30
+>30
+>30
+
+Length of Exposed
+Building Face
+-
+
+Height of exposed
+building in stories
+-
+
+LengthHeight Ratio
+-
+
+Building
+Type
+-
+
+Determine Required Fire Flow
+No.1 30,000
+No. 2 7,500 addition
+No. 3 -18,750 reduction
+No. 4
+0 surcharge
+Required Flow: 18,750 L/min
+Rounded to nearest 1000 L/min: 19,000 L/min
+
+or
+
+316.67 L/s
+5,019 USGPM
+
+Protected
+Openings?
+-
+
+Exposure
+Charge
+0%
+0%
+0%
+0%
+
+Surcharge
+0.0
+0.0
+0.0
+0.0
+0.0 L/min Surcharge
+
+Required Duration of Fire Flow
+Flow Required
+Duration
+L/min
+(hours)
+2,000 or less
+1.0
+3,000
+1.25
+4,000
+1.5
+5,000
+1.75
+6,000
+2.0
+8,000
+2.0
+10,000
+2.0
+12,000
+2.5
+14,000
+3.0
+16,000
+3.5
+18,000
+4.0
+20,000
+4.5
+22,000
+5.0
+24,000
+5.5
+26,000
+6.0
+28,000
+6.5
+30,000
+7.0
+32,000
+7.5
+34,000
+8.0
+36,000
+8.5
+38,000
+9.0
+40,000 and over
+9.5
+
+Katrina Weel
+From:
+Sent:
+To:
+Subject:
+
+Katrina Weel
+April 19, 2024 1:36 PM
+Katrina Weel
+FW: Prologis - Humber Station - Concept Plan DBS FILE 19-22
+
+Katrina Weel, EIT
+Engineering Intern, Land Development
+DID: 416.842.0026| Cell: 416.420.9768
+From: Rizalyn Corciega Bismonte <Rcorciega@petroff.com>
+Sent: Wednesday, April 10, 2024 5:01 PM
+To: Mena Iskander <miskander@cfcrozier.ca>
+Cc: Jongmin Kim <Jkim@petroff.com>
+Subject: RE: Prologis - Humber Station - Concept Plan DBS FILE 19-22
+Hi Mena,
+See architectural response below highlighted with RED text. Please let us know if you have any further questions.
+Regards,
+
+Rizalyn Corciega Bismonte
+Senior Project Manager
+P E T R O F F
+
+260 Town Centre Blvd, Suite 300
+Markham, Ontario
+Canada L3R 8H8
+t: 416-795-0317
+rcorciega@petroff.com
+www.petroff.com
+
+This communication and any attachments may contain information that is privileged or confidential and is
+intended only for the use of the individual to whom it is addressed. Any other distribution, copying or disclosure
+is strictly prohibited. If you have received this communication in error, please notify PETROFF, immediately by
+"replying" to this e-mail then delete this communication from your mailbox.
+
+From: Jongmin Kim <Jkim@petroff.com>
+Sent: Tuesday, April 9, 2024 10:37 AM
+1
+
+To: Rizalyn Corciega Bismonte <Rcorciega@petroff.com>
+Subject: FW: Prologis - Humber Station - Concept Plan DBS FILE 19-22
+From: Mena Iskander <miskander@cfcrozier.ca>
+Sent: Tuesday, April 9, 2024 10:31 AM
+To: Jongmin Kim <Jkim@petroff.com>
+Subject: RE: Prologis - Humber Station - Concept Plan DBS FILE 19-22
+Good morning Jongmin,
+To complete the fire flow calculations for this site, we require confirmation regarding the building construction type,
+vertical openings and firewalls, occupancy fire hazards, and sprinkler systems. If known, please provide answers to the
+following questions:
+1. What is the construction type of the proposed buildings as defined in the attached FUS document on pages 20
+and 21?
+a. Type V Wood Frame Construction
+b. Type IV-A Mass Timber Construction (Encapsulated Mass Timber)
+c. Type IV-B Mass Timber Construction (Rated Mass Timber)
+d. Type IV-C Mass Timber Construction (Ordinary Mass Timber)
+e. Type IV-D Mass Timber Construction (Un-Rated Mass Timber)
+f. Type III Ordinary Construction (Jointed Masonry) >>> Type III, Precast concrete exterior walls, Non-rated
+roof
+g. Type II Non-Combustible Construction
+h. Type I Fire Resistance Construction
+2. Do vertical openings (i.e. walls of masonry or other limited or non-combustible construction) have a fire
+resistance rating of at least 1 hour? >>> No – Shell Design Only in Current Scope
+3. Do all vertical firewalls have a fire resistance rating of at least 2 hours and meet the requirements of the
+National Building Code? >>> No – Shell Design Only in Current Scope
+4. What is the occupancy fire hazard for the buildings?
+a. Non-Combustible
+b. Limited Combustible
+c. Combustible
+d. Free Burning >>> Current design for F2 Warehouse (Med Hazard)
+e. Rapid Burning >>> Current design for F2 Warehouse (Med Hazard)
+*Refer to Table 3: Recommended Occupancy/Contents Charges by Major Occupancy Examples in the attached
+FUS 2020 document for further clarification
+5. Are there any sprinkler systems provided for the building? >>> Response below is based on previous Prologis
+projects
+a. If so, is it an automatic sprinkler protection design and installed in accordance with NFPA 13? >>> Yes
+b. Is the water supply standard for both the system and Fire Department hose lines? >>> Status of flow
+test pending
+c. Is it a fully supervised system? >>> Yes
+Attached is the Fire Underwriter’s Survey (2020) which outlines the requirements and provides more detail for the
+questions above.
+Thanks,
+2
+
+Mena
+
+Mena Iskander, P.Eng.
+Project Engineer, Land Development
+Office: 416.868.5211
+Collingwood | Milton | Toronto | Bradford | Guelph
+Proudly named one of Canada’s Top Small &
+Medium Employers for 2024. Read more here.
+
+This email was sent on behalf of C.F. Crozier & Associates Inc. and may contain confidential and/or privileged information for the sole use of the
+intended recipient. If you have received this email in error, please contact the sender and delete all copies. Any review or distribution by anyone
+other than the intended recipient is strictly prohibited.
+
+3
+
+PLD Humber Station Investment LP
+Humber Station Distribution Centre, Town of Caledon
+
+APPENDIX
+
+Functional Servicing Report
+August 2025
+
+B
+
+Sanitary Flow Calculations
+
+C.F. Crozier & Associates Inc.
+Project No. 0624-6777
+
+Project: Humber Station
+Project No.: 0624-6777
+
+Design: L.E.
+Check: K.W./M.I.
+
+Date:
+Updated:
+
+2024-03-18
+2025-08-01
+
+Proposed Sanitary Design Flow - Building 1
+Block Area:
+
+33.99
+
+ha
+
+Building GFA:
+
+14.43
+
+ha
+
+Population Density:
+
+70
+
+persons/ha
+
+Population*
+
+1,010
+
+persons
+
+Design Criteria
+Total Peak Flow = Average Daily Flow + Infiltration Allowance
+Peak Factor =
+3.8
+Harmon Peaking Factor
+270.0
+L/cap/d
+Average Industrial Flow =
+Infiltration =
+0.26
+L/s/ha
+Sanitary Design Flow - Unit Sewage Flow Rate:
+Average Daily Flow =
+Peak Factor =
+Peak Daily Flow =
+
+3.16
+3.80
+11.98
+
+L/s
+
+Infiltration Flow =
+
+8.84
+
+L/s
+
+Total Peak Flow =
+
+20.82
+
+L/s
+
+L/s
+
+J:\600\624 - Prologis\6777 - Prologis Humber Station - Phase 1 & 2\Design\Civil_Water\SPA - Phase 1a\6777_Sanitary Demand_PH 1a
+
+Region of Peel - Linear Wastewater
+Standards (March 2023)
+
+*Population calculation is based on
+the total Gross Floor Area (GFA) of
+the proposed Building 1 shown on
+the Site Plan prepared by Petroff
+Partnership Architects
+
+Page 4 of 5
+
+Project: Humber Station
+Project No.: 0624-6777
+
+Design: L.E.
+Check: K.W./M.I.
+
+Date:
+Updated:
+
+2024-03-18
+2025-08-01
+
+Proposed Sanitary Design Flow - Building 2
+Block Area:
+
+5.69
+
+ha
+
+Building GFA:
+
+3.15
+
+ha
+
+Population Density:
+
+70
+
+persons/ha
+
+Population*
+
+220
+
+persons
+
+Design Criteria
+Total Peak Flow = Average Daily Flow + Infiltration Allowance
+Peak Factor =
+4.1
+Harmon Peaking Factor
+270.0
+L/cap/d
+Average Industrial Flow =
+Infiltration =
+0.26
+L/s/ha
+Sanitary Design Flow - Unit Sewage Flow Rate:
+Average Daily Flow =
+Peak Factor =
+Peak Daily Flow =
+
+0.69
+4.00
+2.76
+
+L/s
+
+Infiltration Flow =
+
+1.48
+
+L/s
+
+Total Peak Flow =
+
+4.23
+
+L/s
+
+L/s
+
+J:\600\624 - Prologis\6777 - Prologis Humber Station - Phase 1 & 2\Design\Civil_Water\SPA - Phase 1a\6777_Sanitary Demand_PH 1a
+
+Region of Peel - Linear Wastewater
+Standards (March 2023)
+
+*Population calculation is based on
+the total Gross Floor Area (GFA) of
+the proposed Building 1 shown on
+the Site Plan prepared by Petroff
+Partnership Architects
+
+Page 3 of 5
+
+Project: Humber Station
+Project No.: 0624-6777
+
+Design: L.E.
+Check: K.W./M.I.
+
+Date:
+Updated:
+
+2024-03-18
+2025-08-01
+
+Proposed Sanitary Design Flow - Building 3
+Block Area:
+
+5.69
+
+ha
+
+Building GFA:
+
+2.79
+
+ha
+
+Population Density:
+
+70
+
+persons/ha
+
+Population*
+
+195
+
+persons
+
+Design Criteria
+Total Peak Flow = Average Daily Flow + Infiltration Allowance
+Peak Factor =
+4.2
+Harmon Peaking Factor
+270.0
+L/cap/d
+Average Industrial Flow =
+Infiltration =
+0.26
+L/s/ha
+Sanitary Design Flow - Unit Sewage Flow Rate:
+Average Daily Flow =
+Peak Factor =
+Peak Daily Flow =
+
+0.61
+4.00
+2.44
+
+L/s
+
+Infiltration Flow =
+
+1.48
+
+L/s
+
+Total Peak Flow =
+
+3.92
+
+L/s
+
+L/s
+
+J:\600\624 - Prologis\6777 - Prologis Humber Station - Phase 1 & 2\Design\Civil_Water\SPA - Phase 1a\6777_Sanitary Demand_PH 1a
+
+Region of Peel - Linear Wastewater
+Standards (March 2023)
+
+*Population calculation is based on
+the total Gross Floor Area (GFA) of
+the proposed Building 1 shown on
+the Site Plan prepared by Petroff
+Partnership Architects
+
+Page 2 of 5
+
+Project: Humber Station
+Project No.: 0624-6777
+
+Design: L.E.
+Check: K.W./M.I.
+
+Date:
+Updated:
+
+2024-03-18
+2025-08-01
+
+Proposed Sanitary Design Flow - Building 4
+Block Area:
+
+10.92
+
+ha
+
+Building GFA:
+
+4.92
+
+ha
+
+Population Density:
+
+70
+
+persons/ha
+
+Population*
+
+344
+
+persons
+
+Design Criteria
+Total Peak Flow = Average Daily Flow + Infiltration Allowance
+Peak Factor =
+4.1
+Harmon Peaking Factor
+270.0
+L/cap/d
+Average Industrial Flow =
+Infiltration =
+0.26
+L/s/ha
+Sanitary Design Flow - Unit Sewage Flow Rate:
+Average Daily Flow =
+Peak Factor =
+Peak Daily Flow =
+
+1.08
+4.00
+4.30
+
+L/s
+
+Infiltration Flow =
+
+2.84
+
+L/s
+
+Total Peak Flow =
+
+7.14
+
+L/s
+
+L/s
+
+J:\600\624 - Prologis\6777 - Prologis Humber Station - Phase 1 & 2\Design\Civil_Water\SPA - Phase 1a\6777_Sanitary Demand_PH 1a
+
+Region of Peel - Linear Wastewater
+Standards (March 2023)
+
+*Population calculation is based on
+the total Gross Floor Area (GFA) of
+the proposed Building 1 shown on
+the Site Plan prepared by Petroff
+Partnership Architects
+
+Page 1 of 5
+
+0624-6777 Humber Station
+Proposed Sanitary Design Flow - Phase 1
+
+Date: 2024-03-18
+Designed By: L.E.
+Checked By: K.W./M.I.
+Updated: 2025-08-01
+
+Building
+1
+2
+3
+4
+Total
+
+Block Area
+
+Building GFA
+
+ha
+33.99
+5.69
+5.69
+10.92
+33.99
+
+ha
+14.43
+3.15
+2.79
+4.92
+25.28
+
+Equivalent
+Population
+1010
+220
+195
+344
+1770
+
+Peak Flow Infiltration Flow
+(L/s)
+11.98
+2.76
+2.44
+4.30
+21.48
+
+(L/s)
+8.84
+1.48
+1.48
+2.84
+14.64
+
+Total Flow
+(L/s)
+20.82
+4.23
+3.92
+7.14
+36.12
+
+Outlet
+Humber Station Road
+Humber Station Road
+Humber Station Road
+Humber Station Road
+
+Sanitary Sewer Design Sheet - Phase 1A
+CFCA File No.: 0624 - 6777
+Regional File No.:
+HUMBER STATION DISTRIBUTION CENTRE
+TOWN OF CALEDON, Region of Peel
+Manning's "n":
+Industrial
+Avg. Daily/Capita Flow (L/cap.d):
+
+270
+
+1
+
+2
+
+3
+
+4
+
+FROM
+MH
+NO
+
+TO
+MH
+NO
+
+PLUG1A
+MH9A
+MH8A
+PLUG2A
+MH7A
+MH6A
+PLUG3A
+MH5A
+MH4A
+PLUG4A
+MH3A
+MH2A
+MH1A
+MH24A
+
+MH9A
+MH8A
+MH7A
+MH7A
+MH6A
+MH5A
+MH5A
+MH4A
+MH3A
+MH3A
+MH2A
+MH1A
+MH24A
+MH23A
+
+AREA2
+(Ha)
+3.63
+
+3.57
+
+3.57
+
+3.63
+
+POP.1
+
+TOTAL
+TRIB. POP.
+
+PEAK FACTOR
+
+AVG. FLOW (l/s)
+
+MAX. FLOW (l/s)
+
+INFILT. (l/s)
+
+TOTAL
+INFILT. (l/s)
+
+TOTAL FLOW
+(l/s)
+
+LENGTH (m)
+
+254
+0
+0
+250
+0
+0
+250
+0
+0
+254
+0
+0
+0
+0
+
+254
+254
+254
+504
+504
+504
+754
+754
+754
+1008
+1008
+1008
+1008
+1008
+
+4.11
+4.11
+4.11
+3.97
+3.97
+3.97
+3.88
+3.88
+3.88
+3.80
+3.80
+3.80
+3.80
+3.80
+
+0.79
+0.79
+0.79
+1.58
+1.58
+1.58
+2.36
+2.36
+2.36
+3.15
+3.15
+3.15
+3.15
+3.15
+
+3.26
+3.26
+3.26
+6.26
+6.26
+6.26
+9.13
+9.13
+9.13
+11.96
+11.96
+11.96
+11.96
+11.96
+
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+8.84
+
+12.10
+12.10
+12.10
+15.09
+15.09
+15.09
+17.97
+17.97
+17.97
+20.80
+20.80
+20.80
+20.80
+20.80
+
+28.6
+89.4
+90.9
+28.6
+89.1
+90.0
+28.7
+90.0
+90.0
+28.6
+76.1
+50.4
+53.4
+16.5
+
+1. Note: Populations calculated based on 70 persons/ha [Region of Peel Linear Wastewater Standards (March 2023)]
+2. Sanitary Drainage Areas for each plug based on 25% of building area
+3. Flow velocity to be within 0.75 m/s to 3.5 m/s per Region of Peel Linear Wastewater Standards (March 2023)
+
+Date: 2025-08-06
+
+0.26
+
+Infiltration Q (L/ha.s):
+
+CATCHMENT
+I.D.
+
+Prepared by: KW
+Checked by: MI
+
+0.013
+1+(14/(4+(P/1000)^0.5))
+
+Peak Factor (M):
+
+PIPE DIAM.
+SLOPE (%)
+(mm)
+200
+250
+250
+200
+250
+250
+200
+250
+250
+200
+250
+250
+250
+300
+
+1.00%
+0.50%
+0.50%
+2.00%
+0.50%
+0.50%
+2.00%
+0.50%
+0.50%
+2.00%
+0.50%
+0.50%
+0.50%
+2.00%
+
+CAP.
+(l/s)
+
+CAP.
+(%)
+
+FULL FLOW
+VELOCITY
+(m/s)
+
+32.80
+42.05
+42.05
+46.38
+42.05
+42.05
+46.38
+42.05
+42.05
+46.38
+42.05
+42.05
+42.05
+136.76
+
+36.89%
+28.77%
+28.77%
+32.54%
+35.90%
+35.90%
+38.74%
+42.73%
+42.73%
+44.84%
+49.47%
+49.47%
+49.47%
+15.21%
+
+1.04
+0.86
+0.86
+1.48
+0.86
+0.86
+1.48
+0.86
+0.86
+1.48
+0.86
+0.86
+0.86
+1.93
+
+PLD Humber Station Investment LP
+Humber Station Distribution Centre, Town of Caledon
+
+FIGURES
+
+C.F. Crozier & Associates Inc.
+Project No. 0624-6777
+
+Functional Servicing Report
+August 2025
+
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+

@@ -1,0 +1,13505 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+June 17, 2024
+
+FUNCTIONAL SERVICING AND
+STORMWATER MANAGEMENT REPORT
+
+Proposed Multi-Residential Condo Development
+12148 Albion Vaughan Road • Town of Caledon
+Aztec Restoration Inc.
+
+March 2024
+
+MAEL Project 17-849
+
+REPORT TITLE:
+
+Functional Servicing and Stormwater
+Management Report
+
+PROJECT TITLE:
+
+Multi-Residential Condo Development
+
+PROJECT ADDRESS:
+
+12148 Albion Vaughan Road
+Aztec Restoration Inc.
+
+CLIENT:
+
+17-849
+
+MAEL PROJECT NO:
+
+NO.
+
+DATE
+(YY.MM.DD)
+
+DESCRIPTION OF ISSUED AND/OR REVISION
+
+01
+
+20.12.20
+
+Issued for First Submission
+
+02
+
+23.12.22
+
+Issued for Second Submission
+
+03
+
+24.03.30
+
+Issued for Third Submission
+
+MASONGSONG ASSOCIATES ENGINEERING LIMITED
+7800 KENNEDY ROAD, SUITE 201
+
+•
+
+MARKHAM, ONTARIO
+
+•
+
+L3R 2C7
+
+•
+
+T (905) 944-0162
+
+•
+
+www.maeng.ca
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+17-849
+
+TABLE OF CONTENTS
+1
+
+INTRODUCTION .................................................................................................................. 2
+
+1.1
+
+Study Objectives and Location ........................................................................................... 2
+
+1.2
+
+Existing Site Description .................................................................................................... 3
+
+1.3
+Proposed Development Plan ............................................................................................... 4
+2
+GRADING .............................................................................................................................. 4
+2.1
+
+Existing Topography........................................................................................................... 4
+
+2.2
+Proposed Roadway and Grading ......................................................................................... 5
+3
+WATER SERVICING ............................................................................................................ 5
+3.1
+
+Existing Water Servicing .................................................................................................... 5
+
+3.2
+
+Proposed Water Servicing................................................................................................... 5
+
+3.3
+
+Proposed Water Demands ................................................................................................... 6
+
+3.4
+Water Distribution System Modeling ................................................................................. 6
+4
+SANITARY SERVICING ...................................................................................................... 8
+4.1
+
+Existing Sanitary Servicing................................................................................................. 8
+
+4.2
+
+Proposed Sanitary Servicing ............................................................................................... 8
+
+4.3
+Sanitary Sewage Flow Estimates ........................................................................................ 8
+5
+STORM DRAINAGE AND STORMWATER MANAGEMENT ...................................... 10
+5.1
+
+Existing Storm Servicing .................................................................................................. 10
+
+5.2
+
+Water Balance ................................................................................................................... 10
+
+5.3
+
+Stormwater Quality Control .............................................................................................. 13
+5.3.1
+TSS Removal .......................................................................................................... 13
+
+5.4
+
+Quantity Controls .............................................................................................................. 14
+5.4.1
+Allowable Peak Flow .............................................................................................. 14
+5.4.2
+Post-development Discharge .................................................................................. 15
+Erosion and Sediment Control .............................................................................................. 17
+CONCLUSIONS AND SUMMARY RECOMMENDATIONS.......................................... 18
+
+6
+7
+
+APPENDICES
+Appendix A:
+Appendix B:
+Appendix C:
+Appendix D:
+Appendix E:
+Appendix F:
+
+Background Figures, Site Plans, Pre/Post Development Figures
+Water Main
+Sanitary Sewer
+Storm Sewer
+Approved TRCA Creek Realignment
+Engineering drawings
+
+Masongsong Associates Engineering Limited
+
+Page 1
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+1
+1.1
+
+17-849
+
+INTRODUCTION
+Study Objectives and Location
+Masongsong Associates Engineering Limited has been retained by Aztec Restoration Inc. to
+prepare this Functional Servicing Plan (FSR), and Stormwater Management Report in
+support of a Site Plan Application for the development of a Multiple Residential
+comprising a total of 265 condo units in the Town of Caledon
+The subject site is located 370m North of Mayfield Road between Regional Road 50 and
+Albion-Vaughan Road in the south sector of Town of Caledon. Figure 1 below illustrates
+the location of the proposed development.
+The existing site has an overall area of approximately 1.538 ha (3.80 ac), however road
+widening plans on Albion Vaughan Road, Highway 50 and 0.3m reserves further reduce
+the overall area by 0.1152 ha, 0.0812 ha, and 0.0079 ha respectively for a total area of
+1.334 ha. There are 0.3078 ha at the west side are undevelopable floodplain lands, and
+instead will be slightly regraded to realign a portion of the Robinson creek inside the
+subject site which was improperly realigned by the previous landowner. for a final
+developable area of 1.026 ha (2.53 ac)
+
+Masongsong Associates Engineering Limited
+
+Page 2
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+Figure 1
+
+17-849
+
+Site Location Key Plan
+
+The objective of this report is to identify the requirements for the site servicing and
+stormwater management as it relates to current Town of Caledon criteria, and to
+demonstrate how this proposed site will function within the framework of existing
+infrastructure.
+1.2
+
+Existing Site Description
+The subject site is part of Lot 1 Concession 7 Town of Caledon. Regional Municipality of
+Peel. Refer to Survey plan prepared by David B. Searles Surveying enclosed In Appendix A.
+The site is identified with municipality address 12148 Albion Vaughan comprising of two
+brick dwellings and framed stucco pavilion with approximately 97% of the site covering
+with small vegetation and a few trees. The subject site is bounded by regional Road
+50/Robinson Creek to the west, Commercial lands to the south, Albion-Vaughan Road to
+the east and a residential property to the North.
+There is a portion of the existing channel running on the west site of the study which
+will be realigned as per the approved TRCA submission, attached in Appendix E.
+
+Masongsong Associates Engineering Limited
+
+Page 3
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+17-849
+
+The subject site is located partially within the Regulatory Flood Plain as identified on
+Humber River Floodplain mapping Sheet No.169 provided by the Toronto and Region
+Conservation Authority (TRCA), enclosed in Appendix A for reference.
+1.3
+
+Proposed Development Plan
+The development proposal is to construct a 6-storey residential high-rise condominium
+tower A, 6-storey residential high-rise condominium tower B with a total of 265 units,
+438 underground parking spaces and 15 parking spaces at grade.
+Vehicular access to the site will be provided at the following three locations: one main
+driveway, and one service road for each tower all on Albion Vaughan Road.
+The proposed architectural Site Plan Concept is included in Appendix A1.0 prepared by
+Fausto Cortese Architects.
+The proposal to slightly modify the existing floodplain has been approved by TRCA and
+the required minimum 10m setback will be provided from the floodplain line to the
+development limit.
+
+2
+
+GRADING
+
+2.1
+
+Existing Topography
+The existing topography indicates that the lands generally slope from the north to the
+south, with a 1.42m grade differential, ranging from a high of 230.08m to a low of
+228.66m over 115.5m (a 1.2% gradient). The peak elevation runs along the furthest
+northwest corner of the existing site, while the low elevations are at the south of the
+subject site. A topographic survey plan prepared by David B. Searles Surveying Ltd.
+dated June 6, 2016 is included in Appendix A.
+The pre-development drainage pattern indicates that the majority area currently sheet
+drains towards the existing channel located at the west site of the subject site, refer to
+Pre-development Drainage Plan, Figure 2 enclosed in Appendix A.
+The west portion of site is bounded by an existing channel that runs south. Part of the
+existing channel will be regraded in accordance with TRCA policies; however, the predevelopment drainage pattern and existing grade will be maintained at the south, east
+and majority of north property line. Refer to figure 3 for Post-development Master
+storm drainage plan and grading plan drawing GR1 enclosed in Appendix A and F
+respectively.
+
+Masongsong Associates Engineering Limited
+
+Page 4
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+17-849
+
+The subject site is currently accessible from one driveway on Albion Vaughan Road and
+one on Highway 50, leading to the front of the existing two houses.
+The existing topography data was provided by prepared by David B. Searles Surveying
+Ltd. dated June 6, 2016 is included in Appendix A.
+2.2
+
+Proposed Roadway and Grading
+As illustrated on the grading plan GR1 enclosed in Appendix F, the internal road network
+will have three accesses off Albion Vaughan Road. The current driveway and culvert on
+Highway 50 will be removed. Correspondence between TRCA and the Region of Peel is
+attached in Appendix A shows that the Region is currently pursuing the culvert removal
+works.
+The western portion of the site, of approximately 0.376ha which represents about 27%
+of the entire site, has been identified as an Open Space area and will be regraded to
+match the original drainage pattern of the site prior to the improper creek realignment
+by the previous landowner. The remainder of the site, which consists of 1.042 ha of
+developable area, will be graded to ensure that the storm drainage is self contained.
+Driveways, road, and laneway drainage will be directed towards a local low point where
+a Low Impact Development (LID) measure will be located to capture and treat the storm
+drainage. There are 0.1067ha of uncontrolled area draining into the south west side of
+the site. Refer to post-development Master storm drainage plan, enclosed in Appendix
+A.
+
+3
+
+WATER SERVICING
+
+3.1
+
+Existing Water Servicing
+The subject site will be serviced by an existing 300mm diameter PVC watermain located
+along the Albion Vaughn Road.
+Refer to existing municipal infrastructure Figure 5 and drawing 51608-D enclosed in
+Appendix A for existing infrastructure.
+
+3.2
+
+Proposed Water Servicing
+A 300 mm watermain lateral servicing as the fire line will be tapped into the existing
+300mm PVC watermain running along Albion Vaughn Road. A 150mm diameter domestic
+cold-water supply will branch off the main service, both fire and domestic lines will
+contain shut-off valves at the streetline and water meters in accordance with Region Peel
+Standards.
+
+Masongsong Associates Engineering Limited
+
+Page 5
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+17-849
+
+Fire Protection for the subject site will be provided by one proposed private hydrant
+within the site and two existing hydrants located on Albion Vaughn Road.
+For proposed watermain layout refer to drawing SS1 enclosed in Appendix F.
+3.3
+
+Proposed Water Demands
+The residential per capita demand is estimated based on the Region of Peel criteria of 280
+L/c/d. with 686 persons for the residential area (as shown in sanitary section 4.3), the
+average-day domestic demand is 2.22 L/s. The maximum day demand has a factor of 2.0,
+therefore yielding a max-day domestic consumption rate of 4.45L/s or 267L/min. The max
+peak hour demand has a factor of 3.0, therefore yielding a peak hour consumption rate of
+6.67L/s or 400.2 L/s.
+
+3.4
+
+Water Distribution System Modeling
+Hydraulic analysis of proposed water distribution system is conducted using EPANET 2
+modeling software to ensure the system delivers desired pressures and flows for the
+proposed development under various demand scenarios. It was assumed a residential
+fire flow of 7000L/min or 116.67L/s
+The summary of analysis result is provided in the following Table 3.3:
+
+Table 3.3
+No
+
+Scenarios
+
+EPANET
+
+Region
+Criteria
+< 690 (Ok)
+
+1
+
+Max. pressure during min. hour demand (kpa)
+
+Results
+346
+
+2
+
+Min. pressure during max. hour demand (kpa)
+
+345
+
+> 275 (OK)
+
+3
+
+Min. pressure during max. day demand + fire (kpa)
+
+270
+
+> 140 (OK)
+
+The above summary of EPANET modeling result shows that proposed watermain system
+meets Region standard criteria for required pressures for the noted scenarios.
+Refer to table 3.3.1 and Epanet results for watermain calculations enclosed in Appendix
+B
+
+Masongsong Associates Engineering Limited
+
+Page 6
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+17-849
+
+A hydrant flow test was performed in July 2023 to ascertain the available municipal supply
+on Albion Vaughan Road. Based on the Fire Underwriters Survey (FUS), the required fire
+flow is 9,000 L/min. See Appendix B for the results of the hydrant test as well as tables F1F6 for the FUS calculations of Building A + podium and Building B.
+Detailed hydrant flows confirm that the existing Albion Vaughan system is capable of
+delivering a fire flow of 11,732 L/min at a minimum pressure of 140 kPa, which satisfies both
+FUS and ISO fire flows.
+
+Based on the hydrant testing results, the existing main has adequate supply and pressures
+to meet the critical high-demand flow for fire-fighting plus the maximum-day-domestic
+consumption rate in accordance with the Fire Underwriters Survey model calculations.
+Therefore, the existing municipal water main is sufficient to support the proposed
+development.
+
+ The proposed 150 mm diameter will be tapped into the existing 300mm diameter
+municipal waterman running on Albion Vaughan Road to provide both fire and domestic
+water services for the subject site. Hydrant flow tests and analysis will be performed to
+confirm that there is adequate supply and pressure for firefighting purposes.
+
+Masongsong Associates Engineering Limited
+
+Page 7
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+4
+4.1
+
+17-849
+
+SANITARY SERVICING
+Existing Sanitary Servicing
+Sanitary servicing is available from an existing 900m sanitary sewer running on Albion
+Vaughan Road; refer to existing municipal infrastructure Figure 5 and drawing 51608-D
+enclosed in Appendix A for existing infrastructure.
+
+4.2
+
+Proposed Sanitary Servicing
+It is proposed to connect into the existing sanitary sewer system on Albion Vaughan
+Road, providing a 200 mm diameter PVC sanitary sewer connection to service the
+proposed multiple Residential Condo. The sanitary flow generated by the study area will
+discharge into the proposed sanitary control manhole MH2A to ultimately discharge
+into the existing sanitary manhole MH6A.
+Refer to plans SS1 and DE1 enclosed in Appendix F for proposed sanitary connections
+details.
+
+4.3
+
+Sanitary Sewage Flow Estimates
+The proposed development comprises 265 condo units, which is estimated with the
+current Region’s Peel Design, Specification & Procedures Manual as having an
+equivalent population of 686 persons as outlined in the following Table 4.3.
+Table 4.3
+
+Unit type
+
+Estimated Population for Residential Development
+
+Density
+
+Apartments
+smaller than
+750 sqft
+1.6p/unit
+Apartments
+larger than
+750 sqft
+3.0p/unit
+Total
+
+No. of
+Units
+
+Total Population
+
+78
+
+187
+265
+
+124.8
+561
+686
+
+In accordance with the Region’s requirements, the sanitary sewage flow estimates are
+calculated based on the STD. DWG. 2-9-2 and ground water infiltration flows. Using the
+
+Masongsong Associates Engineering Limited
+
+Page 8
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+17-849
+
+above population estimates, the future sanitary sewerage rate from the subject site is
+calculated as follow. Appendix C shows the Regions sanitary design standards as well as
+the design sheet for the proposed development.
+Proposed Site Design Flow:
+Peak Flow Design Parameters
+Residential Population
+Total Population
+If Population<1000 =
+Infiltration
+Total Flow
+
+= 686 (Refer to Table 4.3 above)
+= 686
+0.013 m3/s (STD. DWG. 2-9-2)
+= 0.000821 m3/s
+= 0.0138821 m3/s
+
+The sanitary discharge from the subject site will be accommodated with a proposed
+200mm diameter PVC sanitary sewer, discharging to the existing 900mm diameter
+sanitary sewer on Albion Vaughn Road.
+From the Region of Peel Drawing 51608-D Plan and Profile, enclosed in Appendix A, the
+existing sewer is at a depth of approximately 5.7 m from existing ground.
+
+Masongsong Associates Engineering Limited
+
+Page 9
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+5
+
+17-849
+
+STORM DRAINAGE AND STORMWATER MANAGEMENT
+The stormwater management plan for the subject site will be designed in accordance
+with the Town of Caledon Criteria in conjunction with the Best Management Practice
+guidelines in the MOE SWMPP Manual and Low Impact Development Guidelines by
+TRCA. Specific criteria to be applied in the stormwater management design are as
+follows:
+•
+
+Water Quality control – Level 1 or Enhanced Protection
+
+•
+
+Water Balance – a minimum 5 mm “first-flush” event retained for infiltration and
+water reuse
+
+•
+
+Water Quantity – It is proposed to control the peak flows for each event (2 year, 5
+year, 10 year,25 year, 50 year and 100 years) to pre-developments levels in
+accordance with TRCA criteria for Humber River Storm Management Quantity
+Control
+
+The following sections will detail the pre- and post-development conditions, and
+describe how the Low Impact Development targets can be achieved on site.
+5.1
+
+Existing Storm Servicing
+There is an existing ditch running on the east of the subject site along Albion Vaughan
+Road and existing channel running on the west part of the subject site. There is no
+existing municipal storm sewer available for the subject site.
+Refer to existing municipal infrastructure Figure 2 enclosed in Appendix A
+
+5.2
+
+Water Balance
+In conjunction with water quantity and quality mitigation to be imposed at the source
+control level, efforts shall be made to preserve the pre-development hydrology of the
+lands prior to development, through the implementation of water balance targets for
+new site plan developments.
+On-site water balance to a minimum 5 mm retention, through infiltration,
+evapotranspiration and/or rainwater reuse; and
+The volume of on-site water retention is estimated in the following Table 5.2
+
+Masongsong Associates Engineering Limited
+
+Page 10
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+Table 5.2
+
+17-849
+
+5 mm Water Balance Volumes
+
+Surface Area
+Component
+Roofs
+
+Area
+(m2)
+2096.1
+
+Initial Abstraction
+(mm)
+
+(m3)
+
+Water
+Retention
+Target
+(mm)
+
+1
+
+2.10
+
+5
+
+Deficit Storage Required
+to meet Water Balance
+Target
+(mm)
+(m3)
+5
+10.48
+
+Green Roof
+
+2335.6
+
+5
+
+11.68
+
+0
+
+0
+
+0
+
+Landscape
+
+2277.4
+
+5
+
+11.39
+
+0
+
+0
+
+0
+
+Hard surface
+
+3547.9
+
+1
+
+3.55
+
+5
+
+5
+
+17.74
+
+Undevelopable
+area (landscape)
+
+3078
+
+5
+
+15.39
+
+0
+
+0
+
+0
+
+Total
+
+13335
+
+44.11
+
+28.22
+
+A total of 28.22 m3 of additional on-site storage is required to meet 5 mm site retention
+targets. This will be captured by a cistern located within the stormwater management
+tank, which will collect clean rainwater from the rooftops only, to be reused over 72
+hours. Excess water will overflow into the stormwater management tank.
+Retention of Roof Runoff:
+It is recommended to separate roof runoff from street and parking lot runoff and retain
+it on the rooftops. One of the targets for water balance is that essentially all roof
+runoffs be infiltrated or undergo evapotranspiration as much as possible, leaving very
+little roof runoff that will discharge through overland pathways to surface waters. The
+rooftops will be designed to the most current Ontario Building Code (OBC) structural
+standards and will be capable of storing quantity of stormwater on its surface.
+A primary roof drain design indicates that each roof can accommodate controlled flow
+and volumes with the use of control-flow drain; roof drain calculations based on a Zurn
+Control- Flo Model are given in appendix D.
+To gain the necessary storage volume, we propose to implement flow control drains
+that will allow a total release rate of 42 L/s/ha., which is an industry standard. Roof
+controls are typically specified at the working-drawing stage of building designs as they
+necessarily need to be coordinated between the architect, mechanical and structural
+engineers. Roof scuppers will need to be provided for emergency overflow or for events
+exceeding the 100-year storms. In practice, the roof ponding areas will need to be
+determined by roof and column geometry at the time of building design.
+Release rate = 42 L/s/ha x Area
+Release rate = 42 x 0.4432 = 18.61 L/s
+
+Masongsong Associates Engineering Limited
+
+Page 11
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+17-849
+
+Based on the above release rate, the roof drain notch configuration required for general
+compliance is: 10-Zurn105 units with a 465 notch area rating, having 1 notch per drain
+The calculations are shown in table 5.2.2 in Appendix D.
+The required storage on roof will be 151.9 m3. Refer to table 5.2.1 enclosed In Appendix
+D. Assuming 90% of the rooftop area is usable for storage, and pyramidal storage to a
+depth of 0.1245m, the following storage volume is available:
+The provided storage on roof will be 165.5 m3 = ((4432/3) m2 * 0.1245m*0.9).
+Use of Green Roof Technologies:
+Green roofs can significantly reduce the volume and rate of runoff from building lots. A
+layer of absorbent soil and vegetation on top of building can retain rainfall and allow it
+to evaporate or transpire. Engineered green roofs may also provide heating or cooling
+savings by insulating buildings, as well as aesthetic benefits, air quality benefits, and
+reductions in the “urban heat island” effect, etc.
+A total of 2335.6 m3 of green roof is proposed for this site, which is just over half of the
+total roof area and greatly reduces the water balance deficit.
+Irrigation:
+Irrigation calculations by the landscape architects MSLA are shown in Appendix D and
+demonstrate that the site has enough landscape to provide up to 43.87 m3 of irrigation
+volume. A proposed 28.4 m3 cistern will collect rainwater from the roofs only and be
+used to provide enough water to meet the water balance requirements though a
+pumped irrigation system.
+
+Masongsong Associates Engineering Limited
+
+Page 12
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+5.3
+
+17-849
+
+Stormwater Quality Control
+Long-term average removal of 80% of Total Suspended Solids (TSS) on an annual loading
+basis, based on the site discharge at post-development imperviousness
+
+5.3.1 TSS Removal
+The subject site will require Best Management Practices (BMP) of stormwater runoff to
+achieve 80% TSS removal. Storm runoff from the site consists of the landscape, roof,
+and pavement areas. Runoff from the roof areas is considered clean, while the
+landscape area runoff will attain an 80% TTS removal by natural filtration.
+The overall baseline TSS removal efficiency is presented in the following Table 5.3.1
+Table 5.3.1
+
+Baseline TSS Removal Rate and Average Runoff Coefficient
+
+Surface Area
+Component
+
+Area
+
+Percent
+Area
+
+(m2)
+
+(%)
+
+Baseline
+TSS
+Removal
+Rate
+(%)
+
+Weighted TSS
+Removal Rate
+
+Roofs
+
+4432
+
+33.2
+
+80%
+
+26.6
+
+Pavement
+
+3548
+
+26.6
+
+0
+
+0%
+
+Landscape
+
+2277
+
+17.1
+
+80%
+
+13.7
+
+Landscape area
+(non-developable
+area)
+
+3078
+
+Totals
+
+13335
+
+23.1
+100%
+
+80%
+
+18.5
+
+58.8%
+
+The subject site will also require best-practice treatment of stormwater runoff to
+achieve 80% TSS removal.
+Storm runoff from the site consists of the landscape, roof and pavement areas. Runoff
+from the roof areas is considered clean, while the landscape area runoff will attain an
+80% TTS removal by natural filtration.
+The baseline weight average TSS removal is 58.8%, which does not meet the targeted
+80% long-term. Therefore, a Jellyfish system will be provided as a supplementary water
+quality treatment for the storm flow generated by the permanent drainage area
+(Pavement area)
+
+Masongsong Associates Engineering Limited
+
+Page 13
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+17-849
+
+A Stormfilter SFPD 0612 has been selected to treat an area of 0.4922ha at R=0.67, refer
+to detailed Stormfilter sizing report enclosed in Appendix D.
+5.4
+
+Quantity Controls
+
+5.4.1 Allowable Peak Flow
+The allowable peak flows for each storm event (2-year, 5-year, 10 year,25 year, 50 year
+and 100 years) are based on the pre-developments levels in accordance with TRCA criteria
+for Humber River Storm Management Quantity Control Release Rates. The following
+section shows the calculations for the allowable flows for the subject site:
+The site specifics indicate that the post-development runoff coefficient is R=0.50 in
+accordance with the development standards manual of Town of Caledon standards,
+refer to table 5.4 below for composite runoff coefficient, therefore on-site controls are
+required as follows:
+Q2 yr Post at Runoff coefficient of 0.50 to be controlled to Q2 yr Pre at Runoff coefficient of 0.25
+Q 5yr Post at Runoff coefficient of 0.50 to be controlled to Q5 yr Pre at Runoff coefficient of 0.25
+Q 10yr Post at Runoff coefficient of 0.50 to be controlled to Q10 yr Pre at Runoff coefficient of 0.25
+Q 25yr Post at Runoff coefficient of 0.50 to be controlled to Q25 yr Pre at Runoff coefficient of 0.25
+Q 50yr Post at Runoff coefficient of 0.50 to be controlled to Q50 yr Pre at Runoff coefficient of 0.25
+Q 100yr Post at Runoff coefficient of 0.50 to be controlled to Q100yr Pre at Runoff coefficient of 0.25
+
+The allowable release rate for each storm event is calculated as follows:
+Q2yr = 9.506-0.719*ln(A) =9.299 L/s/ha
+Q5yr = 14.652-1.136*ln(A) =14.325 L/s/ha
+Q10yr = 17.957-1.373*ln(A) =17.562 L/s/ha
+Q25yr = 22.639-1.71*ln(A) =22.147 L/s/ha
+Q50yr = 26.566-2.082*ln(A) =25.967 L/s/ha
+Q100yr = 29.912-2.316*ln(A) =29.245 L/s/ha
+Q unit flow (L/s/ha- litres per second per hectare)
+A = Area in hectares (ha) =1.3335Ha
+Q2yr-allow = 12.400 L/s
+Q5yr-allow = 19.102 L/s
+Q10yr-allow = 23.419 L/s
+Q25yr-allow = 29.533 L/s
+Q50yr-allow =34.627 L/s
+Q100yr-allow = 38.999 L/s
+
+Masongsong Associates Engineering Limited
+
+Page 14
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+17-849
+
+Q unit flow (L/s/ha- litres per second per hectare)
+Non developable Area = 0.3078 Ha, Uncontrolled Area = 0.0903 Ha
+Total uncontrolled area = 0.3981 Ha
+Q2yr-allow = 3.702 L/s
+Q5yr-allow = 5.703 L/s
+Q10yr-allow = 6.991 L/s
+Q25yr-allow = 8.817 L/s
+Q50yr-allow =10.337 L/s
+Q100yr-allow = 11.642 L/s
+Therefore, the net allowable release rated for the controlled areas of the site is calculate
+as follows:
+Q2yr-allow = 12.400 L/s- 4.465 L/s = 8.698 L/s
+Q5yr-allow = 19.102 L/s- 6.877 L/s= 13.399 L/s
+Q10yr-allow = 23.419 L/s – 8.431 L/s = 16.428 L/s
+Q25yr-allow = 29.533 L/s – 10.633 L/s= 20.716 L/s
+Q50yr-allow = 34.627 L/s – 12.465 L/s= 24.290 L/s
+Q100yr-allow = 38.999 L/s – 14.039 L/s= 27.357 L/s
+Refer to figure 4 in Appendix A for Surface Composition Plan
+All flows from the ground level of the subject site will be captured using area drains
+sized for the 100-year storm event, which will be directed into the Jellyfish Filter and
+stormwater management tank.
+5.4.2 Post-development Discharge
+To meet the stormwater quantity objectives, the subject site is proposed to provide onsite water quantity control up to the maximum allowable release rate. The required
+storage volume has been calculated using Modified Rational Method included as Table
+5.4.2-F in Appendix D.
+From Table 5.4.2-F, the required total onsite storage is 196.99m3, and will be provided
+utilizing a storage tank. The proposed stormwater management tank is 230m3, which
+includes a 28.4m3 cistern. As the proposed volume is greater than the requirement, the
+site will be able to control all storm events up to the 100 year storm.
+As the depth of the tank and cistern is below the elevation of the discharge location, the
+proposed system must be pumped. The discharge will be set at a maximum rate for each
+storm event with a peak flow of 27.357 L/s for the 100 year storm, and an above grade
+access manhole that also services as an overflow for emergency spillover. Refer to tables
+5.4.2-A to table 5.4.2-F for onsite storage calculation and release rates.
+
+Masongsong Associates Engineering Limited
+
+Page 15
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+17-849
+
+As the underground storage tanks involve coordination with architectural, structural and
+mechanical disciplines, the detailed design of the underground storage tanks are to be
+undertaken by the project architect and building-team at building design stage to
+maintain the area and volume of the tank.
+ In summary, the total post-development discharges are controlled to allowable release
+levels for all storms up to the 100-year events; therefore, the existing storm sewers can
+accommodate the site without imposing any detrimental effects downstream.
+5.5
+
+Inspection and Maintenance
+Stormfilter
+The primary purpose of the Stormfilter system is to filter and prevent pollutants from
+entering the waterways. Routine inspection and maintenance tasks are key to restore
+the Stormfilter to its full efficiency and effectiveness. Maintenance activities may be
+required in the event of a chemical spill or after a major storm events.
+Routine inspection and maintenance activities as shown in the attached Appendix D
+“Stormfilter Owner’s Manual” should be implemented for the continued operation of
+the Stormfilter Unit.
+Stormwater Management Tank
+As per the Ontario Stormwater Management Planning and Design Manual. During the
+first two years of operation, inspections after significant storms will ensure that the
+system is functioning properly. After this, annual checks may be done to identify
+maintenance needs. Blockages may need to be cleared from inlets and outlets.
+
+Masongsong Associates Engineering Limited
+
+Page 16
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+6
+
+17-849
+
+Erosion and Sediment Control
+Erosion and sediment control should be implemented for all construction activities
+within the subject site, including topsoil stripping, parking lot construction, foundation
+excavation and stockpiling of materials. The basic principles considered to minimize
+erosion and sedimentation and resultant negative environmental impacts include:
+•
+•
+•
+•
+
+Minimize local disturbance activities (e.g. limit area-wide grading);
+Expose the smallest possible land area to erosion for the shortest possible time;
+Implement erosion and sediment control measures before the outset of
+construction activities; and,
+Carry out regular inspections of erosion and sediment control measures and repair
+or maintain as necessary.
+
+The proposed grading, servicing and building construction should be carried out in such
+a manner that a minimum amount of erosion occurs and such that sedimentation
+facilities control any erosion that does occur. Erosion and sediment control measures
+should include but not be limited to the following:
+•
+•
+•
+•
+•
+•
+•
+
+Erection of silt fences around all site perimeters.
+Provide sediment traps (e.g. rock check dams, straw bales, scour basins) along
+interceptor swales and points of swale discharge.
+Inlet controls at catchbasins, comprising filter cloth overlain with rip-rap;
+Implement a daily street sweeping and cleaning program for any mud tracking onto
+Albion Vaughan Road.
+Provide gravel “mud mats” at construction vehicle access points to minimize off-site
+tracking of sediments; and,
+Confine refueling/servicing equipment to areas well away from inlets to the minor
+system or major system elements.
+All waste and unused building materials (including garbage, cleaning wastes,
+wastewater, toxic materials, or hazardous materials) shall be properly disposed of
+and not allowed to be mixed with and carried off by runoff from the site into a
+receiving watercourse or storm sewer.
+
+Erosion and sediment control measures outlined above should be implemented in
+consultation with the Construction Manager prior to any stage of construction.
+Removal of the erosion and sediment controls should be done once construction is
+completed and sediment run-off from the construction activities has stabilized.
+
+Masongsong Associates Engineering Limited
+
+Page 17
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development - 12148 Albion Vaughan Rd, Town of Caledon
+
+7
+
+17-849
+
+CONCLUSIONS AND SUMMARY RECOMMENDATIONS
+This functional servicing and stormwater management report demonstrates that the
+proposed residential development has been accommodated by the existing local
+infrastructure. More specifically:
+•
+
+Water Service will be provided by an existing 300 mm diameter municipal
+watermain located on Albion Vaughan Road. A proposed 150mm fire servicing with
+100mm domestic branch will be used to service the subject site. A proposed private
+fire hydrant will be provided as per Fire Code requirements.
+
+•
+
+Sanitary Service is accommodated by the existing 200 mm diameter sanitary sewer
+running on Albion Vaughan Road. A 200mm diameter service lateral is proposed to
+service the subject development.
+Stormwater Quantity Controls will be provided for each storm event using an
+underground storage tank located on P1. The outlet will directly discharge into
+Robinson Creek.
+
+•
+•
+•
+
+Stormwater Quality Controls A treatment train of LID devices (roof green, rainwater
+harvesting,) will provide on-site stormwater quality controls. Supplementary quality
+control and TSS removals will be provided by a Storm filter.
+Water Balance will be provided by a combination of green roofs and irrigation using
+stormwater from the roof.
+Erosion and Sediment Controls will need to be implemented during development
+until the site has been stabilized with groundcover.
+
+Respectfully Submitted,
+MASONGSONG ASSOCIATES ENGINEERING LIMITED
+
+Tony Masongsong, P. Eng
+Principal
+
+Masongsong Associates Engineering Limited
+
+Rui Song, P. Eng
+Project Engineer
+
+Page 18
+
+Appendix A
+Background Figures
+Topographical Survey
+Site Plan
+Pre-Development Plan
+Post-Development Figures
+TRCA and Region Correspondence Regarding Driveway/Culvert Removal
+
+MASONGSONG ASSOCIATES ENGINEERING LIMITED
+7800 KENNEDY ROAD, SUITE 201
+
+•
+
+MARKHAM, ONTARIO
+
+•
+
+L3R 2C7
+
+•
+
+T (905) 944-0162
+
+•
+
+www.maeng.ca
+
+Y RO
+KIRB
+
+LEGEND
+
+BT
+
+BT
+
+BT
+
+BT
+
+DL
+
+DL
+
+DL
+DL
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+DL
+DL
+DL
+
+DL
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+G
+N
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+SI
+
+BT
+BT
+BT
+
+BT
+
+BT
+
+BT
+BT
+
+BT
+
+BT
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BC
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BB
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+REAR YARD
+
+7.5 m (MIN.)
+
+0.0 m
+
+SOUTH SIDE YARD
+
+7.5 m (MIN.)
+
+3.9 m
+
+NORTH SIDE YARD
+
+7.5 m (MIN.)
+
+5.6 m
+
+SNOW STORAGE
+
+205.1 m2 (2% MIN.)
+
+239.8 m2 (2.3%)
+
+PLAY FACILITY AREA (OUTDOOR)
+
+410.2 m2 (4% MIN.)
+
+205.7 m2 (2.0%)
+
+PRIVATE AMENITY AREA (PER UNIT)
+
+N/A
+
+6.5 m2 (1.8 m X 3.6 m)
+
+2051.2 m2 (20% MIN.)
+
+2158.9 m2 (21.1%)
+
+BT
+BT
+
+BT
+
+BT
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+DL
+DL
+DL
+DL
+DL
+
+TYPE B
+2750 x 6000
+
+1500
+TYPE A
+3400 x 6000
+
+1500
+
+DL
+
+2600 x 6000
+
+347
+2600
+
+DL
+DL
+DL
+DL
+
+DL
+DL
+DL
+
+DL
+DL
+DL
+
+2900 x 6000
+
+2900
+
+DL
+
+DL
+
+DL
+
+R9.
+
+0m
+
+6000
+
+X
+MBO
+
+SP
+
+DL
+DL
+DL
+DL
+DL
+DL
+
+DL
+DL
+DL
+
+DL
+DL
+
+DL
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+DL
+
+DL
+DL
+
+TOTAL TOWER A BUILDING AREA
+
+2109.6 m2
+
+TOWER B FLOOR AREA
+
+2019.1 m2
+
+TOWER B BALCONIES
+
+310.6 m2
+
+TOTAL TOWER B BUILDING AREA
+
+2329.7 m2
+
+AMENITY FLOOR AREA
+
+432.7 m2
+
+TOTAL FLOOR AREA
+(TOWER A + TOWER B + AMENITY)
+
+4872.0 m2
+
+DL
+DL
+
+PROVIDED
+
+N/A
+
+258 (264/1.025599)
+
+REQUIRED
+
+PROVIDED
+
+CONDO RESIDENT PARKING SPACES (1.5 SPOTS PER DWELLING UNIT)
+
+396 (1.5 * 264)
+
+401
+
+CONDO VISITOR PARKING SPACES (0.25 SPOTS PER DWELLING UNIT)
+
+66 (0.25 * 264)
+
+67
+
+4
+
+RE-ISSUED FOR SPA
+
+2024-04-05
+
+12 (INCLUDED IN TOTAL ABOVE)
+
+12 (INCLUDED IN TOTAL ABOVE)
+
+3
+
+ISSUE FOR COORDINATION
+
+2024-01-30
+
+2
+
+ISSUED FOR COORDIANTION
+
+2023-12-08
+
+462
+
+468
+1
+
+RE-ISSUED FOR SPA
+
+2023-03-10
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+REQUIRED
+
+DL
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+DL
+
+DL
+
+DL
+DL
+DL
+DL
+
+DL
+
+DL
+
+AY
+
+DL
+
+KW
+
+R4
+.2
+
+DL
+DL
+DL
+
+SP
+
+m
+
+DL
+
+DL
+
+DL
+
+W
+AL
+
+RE
+TE
+
+DL
+
+DL
+
+NC
+
+DL
+DL
+DL
+DL
+
+TOTAL PARKING
+
+DL
+
+DL
+
+DL
+
+DL
+
+ACCESSIBLE PARKING (2% OF TOTAL + 2)
+
+DL
+
+DL
+
+DL
+
+No.
+
+DATE
+
+DL
+
+DESCRIPTION
+
+DL
+
+F - STORAGE
+
+DL
+
+REVISIONS
+
+REQUIRED
+
+PROVIDED
+
+BICYCLE STORAGE
+
+N/A
+
+86
+
+LOCKER STORAGE
+
+N/A
+
+271
+
+DL
+
+DL
+
+ISSUED FOR CONSTRUCTION
+ISSUED FOR BID
+
+DL
+
+DL
+
+DL
+
+DL
+
+ISSUED FOR BUILDING PERMIT
+
+2021-01-27
+
+ISSUED FOR SITE PLAN APPROVAL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+SUBMITTALS
+
+DL
+
+1.5m
+
+280.3 m2
+
+DL
+
+DL
+
+1
+A4.0
+
+TOWER A BALCONIES
+
+DL
+
+DL
+DL
+DL
+
+DL
+DL
+
+DL
+
+m
+
+1829.3 m2
+
+DL
+
+m
+.0
+26
+
+SOLID
+PAVEMENT
+MARKINGS FOR
+PEDESTRIAN
+CROSSWALK
+
+STORAGE BREAKDOWN
+
+DEPRESSED
+CONC. CURB
+REFER TO
+DETAIL 3/A1.2 &
+5/A1.2
+HEAVY DUTY ASPHALT
+DESIGNED TO SUPPORT MIN. 35
+TONNE FULLY-LOADED WASTE
+COLLECTION VEHICLE
+REFER TO CIVIL DWGS
+
+5
+7.
+
+TOWER A FLOOR AREA
+
+DL
+
+DL
+
+LOT COVERAGE BREAKDOWN
+
+LOCKER
+STORAGE
+
+BICYCLE STORAGE
+
+PARKING BREAKDOWN
+
+CONTRACTORS MUST CHECK AND VERIFY ALL DIMENSIONS
+AND CONDITIONS ON THE PROJECT AND MUST REPORT
+ANY DISCREPANCIES TO THE DESIGNER BEFORE
+PROCEEDING WITH CONSTRUCTION.
+
+PARKING PROVIDED
+
+THIS DRAWING MUST NOT BE USED FOR CONSTRUCTION
+PURPOSES UNTIL SEALED AND SIGNED BY THE DESIGNER.
+DO NOT SCALE DRAWINGS.
+
+VISITOR
+
+RESIDENT
+
+TOTAL
+
+P1 LEVEL
+
+59
+
+164
+
+223
+
+0
+
+P2 LEVEL
+
+0
+
+237
+
+237
+
+28
+
+96
+
+GROUND
+SURFACE
+LEVEL
+
+8
+
+0
+
+8
+
+0
+
+28
+
+96
+
+GRAND TOTAL
+PARKING
+PROVIDED
+
+67
+
+401
+
+468 spaces prov.
+
+30
+
+86
+
+271
+
+LONG TERM
+
+SHORT-TERM
+
+TOTAL
+
+TOTAL
+
+FLOORS 1-7 +
+PENTHOUSE
+
+0
+
+0
+
+0
+
+79
+
+GROUND
+SURFACE LEVEL
+
+0
+
+30
+
+30
+
+P1 LEVEL
+
+28
+
+0
+
+P2 LEVEL
+
+28
+
+GRAND TOTAL
+
+56
+
+EV PARKING
+
+1
+A3.2
+
+BUILDING PIERS
+(TYP.)
+
+D
+
+8.
+2m
+
+BT
+
+9m
+
+BT
+BT
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+6.
+
+BT
+
+BT
+
+BT
+
+CO
+
+E
+ROUT
+
+BT
+
+BT
+BT
+BT
+
+W
+
+9.2 m
+
+305
+
+DL
+
+BT
+
+BT
+
+BT
+BT
+BT
+
+RT
+
+9.0 m (MIN.)
+
+DL
+
+DL
+
+BT
+
+BT
+
+BT
+
+BT
+
+W
+
+FRONT YARD
+
+2600 x 6000
+
+DL
+
+DL
+
+DL
+DL
+DL
+
+DL
+
+SIGN
+
+BT
+
+BT
+BT
+BT
+BT
+BT
+BT
+
+SP
+
+2750 x 6000
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+BT
+
+BT
+
+BT
+BT
+
+BT
+
+106.9 m
+
+2600 x 6000
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+DL
+
+DL
+
+DL
+
+RE
+FI
+
+m
+.5
+R7
+
+BT
+
+BT
+BT
+BT
+
+N
+
+30 m (MIN.)
+
+2600 x 6000
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+RO
+
+UT
+
+E
+
+D
+
+℄R
+
+19.9m
+
+FIRE
+
+℄ RAMP
+
+E
+FIRE ROUT
+
+25.7m
+
+BT
+
+BT
+
+BT
+
+G
+
+FRONTAGE
+
+ACCESSIBLE PARKING
+
+TOTAL
+
+PUBLIC AMENITY AREA BREAKDOWN
+GROUND FLOOR LEVEL
+
+GROUND
+SURFACE
+LEVEL
+
+TOTAL
+
+4
+
+INCLUDES 4 ACCESSIBLE PARKING SPOTS
+
+GROUND
+SURFACE
+LEVEL
+
+P1 LEVEL
+
+29
+
+P1 LEVEL
+
+8
+
+P2 LEVEL
+
+38
+
+P2 LEVEL
+
+0
+
+GRAND TOTAL
+EV PARKING
+SPOTS
+
+75
+
+GRAND TOTAL
+PARKING
+SPOTS
+
+12
+
+432.7 m2
+
+8
+
+DRAWING:
+
+BT
+
+BT
+
+PA
+
+T
+
+AN
+D
+
+2,
+
+PL
+
+AN
+
+43
+
+R-
+
+33
+
+44
+
+6
+
+7)
+BC
+
+6
+
+CC
+U
+
+NS
+
+NE
+PROPOSED PEDESTRIAN
+ROUTE LINK
+
+6
+44 N
+33 I
+R- NT 14 )
+43 ME 910 (LT
+AN SE 18 73
+PL EA PR -18
+3, TO IN 51
+RT T AS 143
+PA EC R N
+BJ VE PI
+SU S O
+S
+RO
+
+0
+
+LI
+
+2ND FLOOR LEVEL
+
+432.7 m2
+
+TOWER A (ROOF LEVEL)
+
+664.8 m2
+
+TOWER B (ROOF LEVEL)
+TOTAL GFA
+
+RT
+
+G
+
+No
+.5
+
+Y
+RT
+
+PE
+O
+PR
+
+5m
+
+AD
+
+9
+89 9)
+20 3-3
+AN 09
+PL P-2
+,
+25 AN
+RT PL
+PA TO
+(M
+
+1.
+
+RO
+
+228.91
+
+628.7 m2
+2158.9 m2
+
+INCLUDED IN PARKING TOTAL
+
+PROPOSED MIX-USE
+CONDO DEVELOPMENT
+ON
+12148 ALBION VAUGHAN RD.
+BOLTON
+TOWN OF
+CALEDON
+
+INCLUDED IN PARKING TOTAL
+DRAWING:
+
+SITE PLAN
+
+FILE NAME: 12148 ALBION RD - A1.1-A1.2 - 2023-12-06.DWG
+XREFS:
+
+0m
+
+BT
+
+BT
+
+7.
+
+BT
+BT
+
+BT
+BT
+
+BT
+
+3075.1 m2 (30.0%)
+
+N/A
+
+PLOTTED:
+DATE:
+
+PROJECT No:
+
+2019-22
+
+02/04/2024
+SCALE:
+
+DRAWING No:
+
+AS NOTED
+DRAWN BY:
+
+REVIEWED BY:
+
+AD
+
+F.C.
+
+A1.1
+
+PLOT SCALE: 1=
+
+BT
+
+BT
+
+BT
+
+1500
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+BT
+
+BT
+
+BT
+
+BT
+
+SI
+
+B
+
+R
+PI T 1,
+N P
+14 LA
+35 N
+1- 43
+18 R
+73 -33
+(L 44
+T) 6
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+.3
+m
+
+3400
+
+DL
+
+DL
+DL
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+3m
+0.
+
+BT
+
+4615.2 m2 (45% MIN.)
+
+TYP. PARKING SPACE ADJACENT TO WALL (UNDERGROUND P1 & P2)
+
+DL
+
+9.
+7m
+
+BT
+
+BT
+
+BT
+
+BT
+BT
+
+BT
+
+LANDSCAPE AREA
+
+P
+
+PA
+
+BT
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+SIGN
+
+4
+
+AN
+.S
+EX H6A
+M
+
+DL
+
+BT
+
+BT
+
+BT
+
+BT
+
+4872.0 m2 (47.5%)
+
+TOTAL DENSITY (UNITS/TOTAL NET DEVELOPABLE AREA)
+
+DL
+
+BT
+
+BT
+
+BT
+
+BT
+
+2051.2 m2 (20% MAX.)
+
+6000
+AISLE SPACE
+
+DL
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+LOT COVERAGE
+
+6000
+
+DL
+
+BT
+
+BT
+
+25.9 m
+
+TYP. PARKING SPACE (UNDERGROUND P1 & P2)
+
+DL
+
+BT
+
+12.2 m
+
+DL
+
+BT
+
+BT
+
+PROVIDED
+
+DL
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+BT
+
+18
+
+E
+
+46
+
+4
+-33
+
+G
+N
+
+43R
+
+W
+
+m
+
+47
+
+LAN
+
+D
+
+8
+
+.2
+96
+
+229.12
+
+m
+
+.3
+
+17
+
+m
+.4
+
+17
+
+4, P
+
+8
+
+LI
+
+R
+
+PE
+
+°0
+
+.2
+96
+
+TY
+
+0m
+
+45
+°5
+0'1
+0"
+
+47
+
+22
+NE
+
+O
+PR
+
+-N
+
+RT
+
+-N
+
+-N
+
+4
+9.3
+
+"
+'25
+
+1
+
+22
+
+2.
+
+m
+
+m
+
+EX.
+FH
+
+m
+
+R6.0m
+
+BT
+
+BT
+
+REQUIRED
+
+D - NET DENSITY (UNITS/HECTARE)
+
+PROPOSED
+ASPHALT
+EDGE
+
+9.3
+
+TOWER A SERVICE
+ENTRY ROAD
+
+PA
+
+K
+
+SI
+
+AC
+
+T
+
+5
+4'2
+
+°0
+
+D
+
+4m
+15.
+
+R12.0m
+
+BT
+BT
+BT
+
+1500
+
+DL
+
+DL
+
+DL
+
+DL
+DL
+
+DL
+DL
+DL
+
+DL
+DL
+
+DL
+
+BT
+BT
+BT
+BT
+BT
+BT
+
+ETB
+DS
+YAR
+
+BT
+
+OA
+
+m
+3.2
+
+KWAY
+
+TE WA
+L
+
+m CONCRE
+14.6
+
+PLANTER
+
+PLANTER
+
+BT
+
+BT
+
+WEL
+L
+
+AY
+W
+
+AL
+K
+W
+TE
+RE
+
+NC
+LKWAY
+
+CONCRETE WA
+
+LINE
+CONVEYANCE
+
+BT
+BT
+
+2750
+
+DL
+DL
+
+DL
+
+DL
+
+E
+LIN
+CE
+EY
+AN
+CO
+NV
+
+CO
+
+LIN
+E
+Y
+ER
+T
+OP
+PR
+E
+5"
+7'4
+°2
+38
+-N
+1m
+0.9
+15
+BT
+BT
+BT
+BT
+BT
+BT
+
+10255.99 m2
+
+400
+
+DL
+DL
+
+DL
+
+DL
+DL
+
+m
+R9
+.0
+
+DL
+
+RD
+YA
+E
+SI
+D
+R
+TE
+RI
+O
+IN
+
+m
+
+PA
+R
+PI T 1
+N ,P
+14 L
+35 AN
+1- 4
+00 3R
+57 -3
+(L 14
+T) 6
+
+DN
+
+BT
+
+N/A
+
+PUBLIC AMENITY AREA
+
+SERVICE ENTRY
+ROAD SIGNAGE
+PROPOSED
+CULVERT OVER
+EXISTING DITCH
+
+2m
+7.
+
+NT
+
+VE
+R
+
+229.14
+
+"E
+
+6000
+
+E - PARKING
+
+2m
+3.
+
+BT
+
+0" W
+10'2
+24°
+
+BT
+
+-N
+
+BT
+
+NET DEVELOPABLE AREA
+
+D
+
+D
+
+5m
+1.
+
+D
+11
+6.
+09
+
+5m
+
+BT
+
+m
+31
+
+BT
+
+.
+146
+
+BT
+
+13333.83 m2
+
+400
+2600
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+
+DL
+DL
+
+DL
+
+DL
+
+R12.0m
+2.7
+m
+
+1.5
+m
+
+K
+SE
+TB
+AC
+
+IP
+ST
+R
+PE
+ND
+SC
+A
+LA
+3m
+
+7
+NC LOT
+ES 2
+SI
+ON
+
+N/A
+
+D
+3m
+
+CU
+L
+
+DEVELOPABLE SITE AREA (AFTER ROAD WIDENING)
+
+1.
+
+5m
+1.
+
+D
+
+AL
+W
+
+m
+
+9.3
+22
+
+0m
+
+LD
+
+R
+NC
+CO
+
+4.
+
+O
+
+E
+ET
+
+AY
+
+5m
+
+7
+
+KW
+
+I
+
+5
+5.
+
+RO RE
+AD G
+AL IO
+LO N
+W
+A
+PI ANC L
+N
+
+6
+9.3 IGN
+22
+S
+7
+9.3
+2
+2
+
+R
+
+BA
+
+6
+0.
+
+5m
+7.
+
+IO
+
+T
+SE
+
+1.
+8m
+
+AY
+
+D
+
+ER
+NT
+
+DE
+SI
+
+YA
+
+RD
+
+229.24
+
+1.
+
+FRO
+
+D
+1.
+
+KW
+
+22
+
+D
+
+D
+
+B
+
+0m
+
+3m
+
+SNOW
+STORAGE
+84.6 m2
+
+R9.0m R9.0m
+
+2.
+
+A
+SC
+
+ND
+LA
+
+ST
+
+9m
+
+AY
+
+KW
+
+WL
+
+0m
+
+RI
+
+PE
+
+8m
+
+AL
+
+7
+9.3
+
+15375.96 m2
+
+m
+4.7
+
+FH
+
+m
+
+9.2
+
+D
+
+5.
+
+5m
+
+1.
+
+D
+
+E
+
+AL
+
+m
+.5
+AR
+
+EA
+
+1.
+
+CK
+
+LIN
+
+BT
+
+TY
+
+BT
+
+PER
+
+INE
+W
+
+22
+
+0
+
+0.2
+
+2
+D
+A4.0
+
+RO
+
+L
+TY
+E
+
+UP
+
+5m
+1.
+
+2
+A3.2
+
+SP
+
+PER
+T
+RE
+NC
+
+9m
+
+1.
+
+PI
+
+CK
+
+WL1
+
+F.F.E = +230.20
+(151 SUITES)
+7 STOREYS +
+2 UNDERGROUND
+STOREYS
+
+8m
+1.
+
+D
+
+OU
+
+RO
+
+CO
+
+E
+
+E
+ET Y
+CR WA
+N
+K
+CO AL
+W
+
+TOWER B
+
+P20
+93
+-1
+)
+
+EVI
+
+WP
+
+5m
+
+PL
+AN
+
+0m
+
+NE
+
+1.
+
+BT
+
+PR
+
+IP
+Y
+EV
+
+23
+
+45.
+
+STR
+
+BT
+
+PE
+
+EV
+
+BT
+
+CA
+EV
+
+BT
+
+DS
+WA
+PARKING
+
+BLM
+
+LAN
+LK
+WA
+VISITOR/EV
+
+1
+A3.3
+
+er )
+ad 00
+t Lo X 61
+on 0
+- Fr 1300
+k
+uc X
+Tr 000
+ge (4
+ba 'G'
+ar
+PE
+TY
+
+CO
+
+5m
+
+m
+1.5
+
+6m
+TE
+
+EV
+
+SP
+
+12.
+
+m
+6.0
+RE
+
+(M
+TO
+
+W
+
+SITE PLAN
+SCALE: 1:400
+
+NC
+
+VISITOR
+
+66
+3
+
+O
+
+1
+
+R
+
+PL
+AN
+
+14 E B
+3 5 ET
+1- W
+1 8 EE
+56 N
+(L C
+T) ON
+CE
+SS
+I
+
+A1.1
+
+G
+
+LINE OF
+EXTERIOR
+GROUND LEVEL
+WALL
+
+2 PARKING
+STALLS
+DEDICATED TO
+CARPOOL
+
+POWER DOOR OPERATOR
+REFER TO FLOOR PLAN
+FOR LOCATION
+
+TE
+
+AL
+
+VISITO
+
+R
+
+WL
+
+D
+
++
+
+RE
+
+IN
+
+CO
+
+R
+VISITO
+
+.=
+
+F.F
+
+NC
+
+G
+
+EV
+
+VISITOR
+
+0
+
+CO
+
+(O
+RI
+
+m
+0.5
+
+m
+9.4
+B
+
+BY
+
+ITO
+
+G
+
+BA
+
+D
+
+1
+
+WL
+
+MAIN
+ENTRANCE
+TOWER B
+
+NOTE:
+LIGHTING
+FEATURES
+ADJACENT TO
+ACCESSIBLE
+PARKING SPACES &
+AT MAIN ENTRANCE
+TO TOWER A , B &
+AMENITY AREA
+SHALL BE MIN.
+LIGHTING LEVEL OF
+35 LUX
+
+9.0m
+
+m
+
+6
+0.
+
+C1
+
+3m GA
+1.
+R
+
+TRANSFORMER
+REFER TO ELEC.
+DWGS
+R
+
+D .5m
+
+1m
+6.
+
+)
+
+IN
+
+45
+°5
+0'1
+0"
+W
+
+CO
+
+D
+
+6m
+3.
+
+0.0
+23
+
+NE
+
+EN
+
+m 2.8m
+
+D
+
+RE
+NC
+
+SHORT-TERM
+BICYCLE STORAGE (20)
+
+DEPRESSED
+CONC. CURB
+REFER TO
+DETAIL 3/A1.2
+& 5/A1.2
+
+LI
+
+ID
+
+.8m1.5
+
+D
+
+WATER METER
+SET & CHECK VALVE
+IN CHAMBER
+REFER TO CIVIL DWGS
+
+D
+
+AY
+
+KW
+
+L
+DWA
+TE
+
+FIRE ROUTE SIGN
+REFER TO DETAIL 4/A1.2
+
+2
+A4.0
+
+D
+
+DEPRESSED
+CONC. CURB
+REFER TO DETAIL
+3/A1.2 & 5/A1.2
+
+m
+6.0
+
+P1 LEVEL
+PEDESTRIAN
+ACCESS
+
+1.5
+m
+
+PROPOSED
+ASPHALT
+EDGE &
+CURB
+
+EXISTING
+DITCH
+
+.5m
+m3
+1.5 D
+
+DN
+
+AY
+KW
+D
+AL
+
+D
+
+CE
+
+W
+
+CO
+
+TE
+RE
+NC
+
+W
+
+D
+
+UP
+
+io
+
+-N
+
+1
+A4.0
+
+AN
+EY
+
+m
+
+2
+A3.3
+
+6.0m
+
+D
+
+3m
+
+RAISED
+PLANTER
+
+C
+
+D
+
+FIRE ROUTE SIGN
+REFER TO DETAIL 4/A1.2
+
+NV
+CO
+
+11
+6.
+09
+
+6.
+
+D
+
+5m
+1.
+
+LI
+NE
+
+E
+
+R28.2m
+
+t
+pa
+8m loor
+1.
+f
+d
+un
+ro
+
+RT
+Y
+
+.4
+m
+
+m
+
+ACCESSIBLE
+PARKING SIGN
+REFER TO
+DETAIL 7/A1.2
+
+g
+p.
+
+PR
+O
+PE
+
+650 m2
+
+BUILDING HEIGHT (FROM FIN. GRADE)
+
+PROPOSED
+CULVERT OVER
+EXISTING DITCH
+
+2m
+26.
+
+(ty
+
+US
+
+8m
+1.
+
+C1
+TYPE
+
+D
+
+LI
+NE
+
+E
+
+12.4
+
+D
+
+A
+
+PR
+EV
+IO
+
+R9
+
+CONCRETE
+PAVERS
+
+WL
+
+TYPE
+
+RT
+Y
+
+PROPOSED
+
+C - SITE STATISTICS
+
+0m
+18.
+W
+RO
+
+Y
+
+D
+
+VIS
+
+PR
+O
+PE
+
+OUTLINE OF
+UNDERGROUND
+STORMWATER
+MANAGEMENT
+TANK
+REFER TO CIVIL
+DWGS
+
+D
+TB
+AC
+K
+
+C
+ER
+
+m
+
+m
+
+P
+(M ART
+TO 2
+PL 4 , P
+AN LA
+P- N 2
+20 08
+93 99
+-3
+9)
+
+SE
+
+E
+
+D
+
+POWER DOOR OPERATOR
+REFER TO FLOOR PLAN
+FOR LOCATION
+RD
+
+E
+
+m
+
+NE
+W
+
++457 mm
+TOE
+MAIN
+WALL
+ENTRANCE
+WL
+C
+AMENITY
+.3m
+6RETAINING
+AREA
+D
+WALL W/ E
+m GUARDRAIL
+2.5
+m
+UNDERGROUND
+2.1
+PARKING RAMP
+WALLS OUTLINE
+BELOW
+
+1.5
+
+YA
+
+9.5m
+
++457 mm
+TOE
+WALL
+
+E
+
+MAIN
+EXIT
+ROAD
+
+WA
+
+ALK
+
+W
+ETE
+
+1.5
+
+1.5
+
+D
+
+E
+
+.7m
+R22
+
+ME
+
+CR
+
+F
+
+.5m2
+
+0
+0.2
+23
+
+FIRE DEPARTMENT
+CONNECTION
+
+D
+A
+
+6000
+
+6000
+
+MAIN ENTRY
+SIGNAGE
+REFER TO
+DETAIL 5/A3.1
+
+D
+
+N
+CO
+
+m1
+
+1.5m 0.9m
+
++
+
+1.9m
+
++765 mm
+TOE
+WALL
+
+E
+
++305 mm
+RAISED
+BENCH
+(TYP.)
+
+3.4
+
+=
+
+.
+F.F
+
+F.F.E = +230.20
+2 AMENITY STOREYS +
+2 UNDERGROUND STOREYS
+
+D
+
+WL
+
+3.0m
+
+R12.4m
+
+3
+A3.3
+
+MAIN
+
+3.2m
+
+E
+
+N
+
+DIA
+
+P.)
+(T Y
+
+5
+
+UT
+
+MAIN AMENITIES
+LOBBY
+
+.8m
+R5
+
+E
+
+PICK-UP
+/ DROP
+1.5m OFF
+SHLDR.
+
+150C1
+
+ABO
+
+D
+
+FH
+
+UND
+
+D
+
+C
+E
+
+mm
+
+m
+
+L RO
+
+A
+
+RAISED
+PLANTERS
+
+6.2m
+
+RB
+CU
+
+m
+1.5
+
+10.0m
+
+R22
+.7m
+
+6.3m
+
+WL
+
+DEPRESSED
+CONC. CURB
+REFER TO
+DETAIL 3/A1.2
+& 5/A1.2
+FIREFIGHTER
+ENTRANCE
+
+D
+
+R1
+2.
+8m 9.5
+m
+
+OA
+℄R
+
+1.5
+
+TRA
+
+FIRE ROUTE SIGN
+ON RAISED WALL
+REFER TO DETAIL
+4/A1.2
+
+D
+
+3
+
+R2
+
+2
+A3.1
+
+CEN
+
+D
+
+.0m
+
+RAMP DN
+TO PARKING
+R9.0m
+LEVEL 1
++1830 mm
+RETAINING WALL
+
+m
+
+1.5m
+
+DEPRESSED
+CONC. CURB
+REFER TO
+DETAIL 3/A1.2
+& 5/A1.2
+
++1065 mm
+RETAINING
+WALL
+R12
+
+m
+
+D
+0.7m
+
+U
+RO
+
+TE
+
+9.2m
+
+D
+
+E
+
+R
+FI
+
+1
+A3.1
+
+1
+A4.0
+
+G
+KIN
+
+MAIN
+ENTRY
+ROAD
+
+6m
+
+22.
+
+ET
+
+m
+
+D
+
+PAR
+
+AY
+
+W
+ALK
+EW
+
+B
+
+TYPE
+
+5
+12.
+
+0.6
+
+A
+
+CR
+
+ON
+
+C
+C1
+
+V
+R
+R/E
+ITO
+VIS
+ITO OAD
+S
+I
+V
+℄R
+
+6.8
+m
+
+D
+
+TYPE
+
+.5
+
+m1
+
+2.8
+
+3.4
+
+.5m
+m1
+
+m
+
+C
+
+1.
+1
+1.8 .2m 2m
+m
+1.5 1.8
+m
+m
+
+R
+
+2.8
+
+D
+
+SNOW STORAGE
+13.8 m2
+
+D
+
+9
+9.3
+22
+
+RE
+AR
+
+7.9
+
+3
+
+AY
+
+D
+
+FIRE ROUTE SIGN
+REFER TO DETAIL 4/A1.2
+
+7.
+5m
+
+C
+
+.5m
+m1
+
+EV
+
+LKW
+WA
+
+IT
+VIS
+
+C1
+
+ITO
+VIS
+
+.5m
+m 1
+
+m
+6.0
+
+D
+
+D
+
+0
+0.1
+23
+
+EX.
+FH
+
+C.
+ON
+
+EV
+
+.8
+R5
+
+9.7
+22
+
+WL
+
+m
+
+1. 8
+m
+
+7
+0.1
+23
+
+MAIN
+ENTRANCE
+TOWER A
+
+OR
+
+m
+
+m
+
+1.6
+m
+
+F.F.= + 230.20
+
+m
+0.6
+
+EV
+
+6.0
+
+F.F.E. = +230.20
+(114 SUITES)
+6 STOREYS +
+2 UNDERGROUND
+STOREYS
+
+WL
+
+m
+1.5
+
+POWER DOOR OPERATOR
+REFER TO FLOOR PLAN
+
+TOWER A FOR LOCATION
+
+D1.5
+23
+.1
+
+RM - MULTIPLE RESIDENTIAL
+
+REQUIRED
+GROSS SITE AREA (BEFORE ROAD WIDENING)
+
+G
+
+7.5
+
+AY
+
+3
+8.4
+.35
+28
+
+RR - RURAL RESIDENTIAL
+
+B - LOT AREA
+
+N)
+HA
+
+ACCESSIBLE PARKING SIGN
+REFER TO DETAIL 7/A1.2
+
+D
+D
+
+D
+22
+
+R9.0m
+m
+
+2.0
+
+PROPOSED
+
+TYP. ACCESSIBLE PARKING SPACE
+TYPE B
+
+TYP. PARKING SPACE (GROUND SURFACE LEVEL)
+
+2m
+20.
+
+W
+ALK
+
+1
+A4.0
+
+ZONE
+
+REQUIRED
+
+2600
+
+DL
+
+DL
+
+DL
+DL
+DL
+
+DL
+DL
+
+DL
+
+DL
+
+DL
+SW
+SW
+SW
+
+SW
+SW
+
+SW
+
+SW
+
+SW
+SW
+
+SW
+
+SW
+
+SW
+SW
+SW
+SW
+SW
+SW
+SW
+
+SW
+SW
+SW
+
+D
+
+1m
+
+10.
+
+D AUG
+OA N & V
+
+.7m
+
+1
+A3.0
+
+3
+0.3
+23
+
+A - ZONING
+
+IO
+ALB
+
+m
+
+D
+
+24
+
+.W
+NC
+
+2
+8 .8
+22
+
+P
+(M ART
+TO 2
+3
+PL , P
+AN LA
+P- N 2
+20 08
+93 99
+-3
+9)
+
+SITE DEVELOPMENT STATS
+
+NR
+
+m
+7.9
+0.3
+
+CO
+
+5
+8.6
+22
+
+2
+
+TYP. ACCESSIBLE PARKING SPACE
+TYPE A
+
+A
+GH
+
+m
+
+CHILD'S PLAYGROUND AREA
+
+PARKING LEGEND
+
+1m
+10.
+
+SW
+
+SW
+
+SW
+
+SNOW STORAGE AREA
+
+PROPERTY LIMITS ARE NOT FENCED UNLESS OTHERWISE NOTED ON THE
+FACE OF THE PLAN.
+
+VAU
+
+m
+0.9
+
+D
+
+SW
+
+SW
+
+SW
+
+7.7
+
+m
+3.8
+
+m
+1.5
+
+FIRE HYDRANT LOCATION
+
+NOTE
+
+ION
+ALB
+
+m
+
+1.8
+
+FH
+
+LOCATIONS OF ALL UTILITIES ARE APPROXIMATE. ALL UTILITIES SHOULD
+BE CONTACTED PRIOR TO ANY DIGGING OR CONSTRUCTION.
+
+OF
+IPS
+SH LT)
+(
+WN
+TO 00 9 4
+EEN 321ETW IN 03
+P
+
+m
+
+WALL LIGHTING
+
+CAUTION
+
+B
+CE
+AN
+OW
+ALL
+AD
+
+8m
+
+4
+A3.0
+
+N
+
+DL
+DL
+
+DL
+
+DL
+DL
+DL
+
+DL
+DL
+DL
+
+DL
+
+(RO
+63.
+
+8m
+
+1.8
+
+D
+
+2
+A3.0
+
+SW
+
+SW
+
+UNDERGROUND
+PARKING LEVEL
+OUTLINE BELOW
+(DASHED)
+
+Y
+
+m
+1.5
+
+SW
+
+m
+5.1
+CH
+DIT
+
+WA
+ALK
+
+.W
+
+NC
+
+0
+
+SW
+
+SW
+
+SW
+
+SW
+
+SW
+
+SW
+
+GROUND/WALL LIGHTING
+REFER TO LUMINAIRE SCHEDULE
+
+2600 x 6000
+
+DL
+
+DL
+DL
+
+DL
+
+38
+°2
+7'4
+5"
+E
+15
+0.9
+1m
+
+-N
+
+R9.0m
+
+E
+LIN
+
+INE
+
+CO
+
+.6m
+
+50
+
+KEY PLAN
+
+2750
+
+DL
+
+DL
+
+DL
+DL
+DL
+
+DL
+
+FFIC
+T RA
+
+L
+TY
+PER
+RO
+SP
+OU
+
+33
+PR
+.2m
+OP
+ER
+TY
+LIN
+E
+
+AD
+RO
+
+PA
+R
+PI T 2
+N ,P
+14 L
+35 AN
+1- 4
+00 3R
+60 -3
+(L 14
+T) 6
+
+m
+3.1
+
+EVI
+
+m
+1.5
+
+SW
+
+SW
+
+SW
+
+SW
+
+SW
+
+SIGNAGE
+
+ELEVATIONS ARE REFERRED TO THE CITY OF BRAMPTON BENCHMARK
+No. 042010221, BEING A BRASS CAP IN CONCRETE APPROX. 21 m SOUTH OF
+CENTRELINE OF NASHVILLE ROAD AND 11 m EAST OF CENTRELINE OF
+REGIONAL ROAD 50, IN FRONT OF GAS STATION/COFFEE SHOP HAVING
+AN ELEVATION OF 220.967 m.
+
+PLAY
+FACILITY
+AREA
+205.7 m2
+(2 214 sq.ft)
+
+m
+1.5
+
+D
+
+m
+6.0
+
+SW
+
+- MAIN ENTRANCES TO TOWER A & B & THE
+AMENITY AREAS SHALL EACH BE FULLY
+ACCESSIBLE TO PERSONS WITH
+DISABILITIES BY INCLUSION OF A
+POWER DOOR OPERATOR
+
+m
+6.3
+
+1
+
+13.
+
+D
+OA
+
+R
+0" PW
+10'2
+24°
+
+WL
+m
+
+3.0
+
+SHORT-TERM
+BICYCLE STORAGE (10)
+
+B1
+
+K
+
+m
+6.0
+
+INE
+
+m
+1.5
+
+EXISTING
+DITCH
+
+SNOW
+STORAGE
+141.3 m2
+
+.5m
+
+No
+.
+
+FENCING
+
+BENCH MARK NOTE
+
+PROPOSED
+ASPHALT EDGE
+& CURB
+
+RO
+
+AD
+
+DISTANCES AND COORDINATES SHOWN ON THIS PLAN ARE
+IN METRES AND CAN BE CONVERTED TO FEET BY DIVIDING
+BY 0.3048
+
+257.4
+
+IO
+
+DRIVE-IN DOOR LOCATIONS
+
+METRIC
+
+10,255.99 m2 (110,394 sq/ft) 1.03 ha
+
+G
+
+NA
+L
+
+David B. Searles Surveying Ltd.
+
+CONVEYANCE LINE OFFSET
+
+EX.
+FH
+
+L
+TY
+ER
+OP
+PR
+
+WL
+
+RE
+
+ONTARIO LAND SURVEYORS
+
+NET DENSITY (UNIT/HECTARE)
+
+W
+NE
+C
+BA
+AY
+SET
+LKW YARD
+WA
+NT
+TE
+RE
+FRO
+NC
+9m
+
+D
+
+CO
+
+E
+LIN
+
+8
+9.0
+22
+
+- LIGHTING FEATURES ADJACENT TO
+ACCESSIBLE PARKING SPACES AND AT MAIN
+ENTRANCES TO TOWER A & B & AMENITY AREAS
+SHALL BE MINIMUM LIGHTING LEVEL OF 35 LUX.
+
+2m
+25.
+
+22
+
+D
+
+AREA
+
+D
+
+m
+
+CONCRETE WALKWAY
+
+E
+NC
+EYA
+NV
+CO
+
+6
+9.1
+
+B
+
+5m
+
+18.
+
+m
+
+5.7
+
+m
+
+m
+3.2
+
+-PARKING OF COMMERCIAL MOTOR VEHICLES
+AND THE ASSOCIATED LIST OF STANDARDS
+APPLIES TO THE SITE, WHICH WILL ALLOW THE
+PARKING OF COMMERCIAL VEHICLES ON THE
+SITE UNDER 4,500 KG SUCH AS ANY DELIVERY
+AND MAINTENANCE THAT WILL SERVE THE
+RESIDENTS OF THE RESIDENTIAL
+CONDOMINIUM COMPLEX
+
+1.5
+
+1.5
+
+5.0
+m
+
+1.3
+m
+
+E PIC
+KUP
+
+13,333.83 m2 (143,524 sq/ft) 1.33 ha
+
+NR
+
+-N
+
+G
+TY arba
+PE ge
+'G Tr
+' (4 uc
+00 k 0
+X Fron
+13 t
+00 Lo
+0 ad
+X
+61 er
+00
+)
+
+GAR
+BAG
+
+MAN DOOR ENTRANCES
+
+A
+GH
+VAU
+ION
+ALB
+
+m
+.31
+146
+
+5m
+
+E
+
+B
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+
+50
+
+10.
+
+IN
+OODL
+ED FL
+
+1.5
+m
+
+PROPOSED AREA DRAINS
+
+SCALE AS NOTED IN ORIGINAL SURVEY PLAN
+
+NATURAL HERITAGE/10m BUFFER AREA 3,077.84 m2 (33,130 sq/ft)
+NET DEVELOPABLE AREA
+
+R9.0m
+
+1
+9.2
+22
+
+811.65 m2 (8,737 sq/ft)
+1,151.89 m2 (12,399 sq/ft)
+78.59 m2
+(846 sq/ft)
+
+(AFTER ROAD WIDENING & RESERVE DEDUCTIONS)
+
+EXISTING CREEK SHORELINES
+
+SERVICE ENTRY
+ROAD SIGNAGE
+
+.
+No
+
+PROPOSED
+CULVERT OVER
+EXISTING DITCH
+
+TOWER B SERVICE
+ENTRY ROAD
+
+R12.0m
+
+AD
+
+46
+
+OSED
+PROP LINE
+FROM
+RY
+E (10m E BOUNDA
+N
+ER LIN
+BUFF INE) = ZO
+DL
+FLOO
+
+OS
+PROP
+
+3
+A3.0
+
+DEVELOPABLE SITE AREA
+
+BUFFER AREA (HATCHED)
+
+SITE
+
+RO
+
+-31
+43R
+
+R5.8m
+
+CONCESSION 7
+
+(GEOGRAPHIC TOWNSHIP OF ALBION)
+
+HWY 50 LAND DEDICATION
+ALBION/VAUGHAN ROAD WIDENING
+0.3m RESERVES
+
+10 m BUFFER LINE OFFSET
+=ZONE BOUNDARY LINE
+
+KI
+
+PROPOSED GRADE
+
+L
+NA
+
+(BEFORE ROAD WIDENING)
+
+PROPOSED
+ASPHALT
+EDGE
+
+R9.0m
+
+GENERAL NOTES:
+- SITE SHALL CONFORM TO SECTION 5.2.19
+TOWN OF CALEDON ZONING BY-LAW.
+5.2.19 ILLUMINATION
+WHERE PARKING AREAS ARE ILLUMINATED, THE
+LIGHTING FIXTURES SHALL BE PROVIDED IN
+ACCORDANCE WITH THE FOLLOWING
+PROVISIONS:
+i) NO PART OF THE LIGHTING FIXTURE SHALL BE
+MORE THAN 9 METRES ABOVE GRADE AND NO
+CLOSER THAN 4.5M TO ANY LOT LINE; AND,
+ii) LIGHTING FIXTURES SHALL BE INSTALLED IN
+SUCH A MANNER THAT ALL LIGHT EMITTED BY
+THE FIXTURE, EITHER DIRECTLY FROM THE
+LAMP OR A DIFFUSING ELEMENT, OR
+INDIRECTLY BY REFLECTION OR REFRACTION
+FROM ANY PART OF THE FIXTURE IS PROJECTED
+BELOW THE LAMP AND ONTO THE LOT THE
+LIGHTING IS INTENDED TO SERVE.
+
+15,375.96 m2 (165,505 sq/ft) 1.54 ha
+
+0
+
+00
+
++0
+
+IO
+
+LAN
+3, P
+RT
+
+GROSS SITE AREA
+PROPOSED FLOODLINE
+
+m
+.0
+10
+
+SURVEYOR'S REAL PROPERTY REPORT
+PART 1 , PLAN OF PART OF LOT 1
+
+LOT AREA BREAKDOWN
+
+G
+RE
+
+PA
+
+HEAVY DUTY ASPHALT
+DESIGNED TO SUPPORT MIN. 35
+TONNE FULLY-LOADED WASTE
+COLLECTION VEHICLE
+REFER TO CIVIL DWGS
+
+AD
+
+AD
+
+RO
+RBY
+
+Y RO
+KIRB
+
+UNIT BREAKDOWN
+
+BUILDING STATISTICS
+
+AD
+
+AD
+
+RO
+RBY
+
+TOWER B
+6TH
+FLOOR
+
+GROUND
+FLOOR
+
+2ND
+FLOOR
+
+3RD
+FLOOR
+
+4TH
+FLOOR
+
+5TH
+FLOOR
+
+6TH
+FLOOR
+
+7TH
+FLOOR
+
+TYPE 1-4
+
+592-633
+
+55-64
+
+6
+
+7
+
+6
+
+6
+
+6
+
+6
+
+4
+
+6
+
+6
+
+6
+
+6
+
+6
+
+6
+
+TOTALS
+
+SITE
+
+PARKING LEVEL 1 - P1
+
+1
+
+9040.92
+
+97315.65
+
+PARKING LEVEL 2 - P2
+
+1
+
+9040.92
+
+97315.65
+
+18081.84
+
+194631.31
+
+TOTAL GFA
+
+Name of Project:
+Fausto Cortese Architect
+MIX-USED CONDO DEVELOPMENT AT 12148 ALBION VAUGHAN RD. BOLTON - CALEDON
+Location:
+3560 Rutheford road, Unit 7
+Vaughan, Ontario
+
+New
+
+Part 11
+
+Addition
+Change of Use
+
+18441.16
+
+2ND FLOOR LEVEL
+
+1
+
+1870.33
+
+20132.06
+
+3RD FLOOR LEVEL
+
+1
+
+1882.15
+
+20259.29
+
+4TH TO 6TH FLOOR LEVEL
+
+3
+
+5646.45
+
+60777.88
+
+ROOF LEVEL
+
+1
+
+169.29
+
+1822.22
+
+TOTAL BUILDING AREA
+
+1713.24
+
+18441.16
+
+TOTAL GFA
+
+11281.46
+
+121432.62
+
+GROUND FLOOR LEVEL
+
+1
+
+1907.84
+
+20535.82
+
+2ND FLOOR LEVEL
+
+1
+
+2019.14
+
+21733.84
+
+3RD FLOOR LEVEL
+
+1
+
+2113.65
+
+22751.14
+
+4TH TO 7TH FLOOR LEVEL
+
+4
+
+8454.60
+
+91004.56
+
+ROOF LEVEL
+
+1
+
+327.19
+
+3521.84
+
+Part 9
+
+Part 3
+
+11.1 to 11.4
+
+1713.24
+
+1.1.2. [A]
+
+1.1.2.
+9.10.1.3.
+
+3.1.2.1.(1)
+
+9.10.2.
+
+Alteration
+
+2
+
+Major Occupancy(s)
+
+Group C
+
+3
+
+Building Area (m2)
+
+NEW: 2261.94 m2
+
+TOTAL: 2261.94 m2
+
+1.4.1.2 [A] 1
+
+1.4.1.2 [A]
+
+4
+
+Gross Area (m2)
+
+NEW: 13132.05 m2
+
+TOTAL: 13132.05 m2
+
+1.4.1.2 [A]
+
+1.4.1.2 [A]
+
+1.4.1.2 [A] & 3.2.1.1.
+
+1.4.1.2 [A]
+9.10.4.
+
+TOTAL BUILDING AREA
+
+1907.84
+
+20535.82
+
+TOTAL GFA
+
+14822.42
+
+159547.20
+
+5
+
+Number of Storeys
+
+6
+
+Number of Streets/Fire Fighter Access: 1
+
+3.2.2.10 & 3.2.5.
+
+9.10.20.
+
+7
+
+Building Classification:
+3.2.2.43
+
+3.2.2.43
+
+9.10.2.
+
+8
+
+Sprinkler System Proposed
+
+9.10.8.2.
+
+Above Grade: 6
+
+Below Grade: 2
+
+GROUP C
+
+entire building
+
+in lieu of roof rating
+
+3.2.2.67
+
+selected compartments
+
+not required
+
+3.2.1.5
+
+selected floor areas
+
+EXISTING NO CHANGE
+
+3.2.2.17
+
+basement
+
+INDEX
+
+INDEX
+
+1
+
+432.68
+
+4657.33
+
+2ND FLOOR LEVEL
+
+1
+
+432.68
+
+4657.33
+
+TOWER A (ROOF LEVEL)
+
+1
+
+664.84
+
+7156.28
+
+TOWER B (ROOF LEVEL)
+
+1
+
+628.70
+
+6767.27
+
+432.68
+
+4657.33
+
+2158.90
+
+23238.21
+
+No
+
+3.2.9.
+
+N/A
+
+10
+
+Fire Alarm required
+
+Yes
+
+No
+
+3.2.4.
+
+9.10.18.
+
+TOTAL BUILDING AREA
+
+11
+
+Water Service/Supply is Adequate
+
+Yes
+
+No
+
+3.2.5.7.
+
+N/A
+
+TOTAL GFA
+
+12
+
+High Building
+
+Yes
+
+No
+
+3.2.6
+
+N/A
+
+13
+
+Construction Restrictions
+
+Combustible
+Permitted
+
+Non-combustible
+Required
+
+Both
+
+3.2.2.67
+
+9.10.6.
+
+Actual Construction
+
+Combustible
+
+Non-combustible
+
+Both
+
+15
+
+Occupant load based on
+
+16
+
+Barrier-free Design
+
+17
+
+Hazardous Substances
+
+North
+South
+East
+
+9.10.1.3.(4)
+
+TOTAL BUILDING AREA
+
+227.32
+
+4646.67
+
+9.10.8.
+9.10.9.
+
+TOTAL GFA
+
+470.89
+
+5068.62
+
+Roof:
+
+0
+
+Hours
+
+FRR of Supporting
+
+Listed Design No.
+
+Members
+
+or Description (SB-3)
+
+Floor:
+
+1
+
+Hours
+
+Roof:
+
+-
+
+Hours
+3.2.3
+
+H/L
+_
+
+(Hours)
+
+Listed
+Design or
+Description
+
+Const
+
+Comb.
+Constr. Nonc.
+Cladding
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+-
+
+_
+
+_
+
+_
+
+_
+
+FRR
+
+Comb
+
+2
+
+2
+
+2
+
+2
+
+2
+
+2
+
+36
+
+TYPE 1-13
+
+932-1114
+
+86-104
+
+6
+
+5
+
+5
+
+5
+
+5
+
+5
+
+12
+
+11
+
+9
+
+9
+
+9
+
+9
+
+9
+
+99
+
+TYPE 1-9
+
+1011-1244
+
+94-116
+
+0
+
+2
+
+4
+
+4
+
+4
+
+4
+
+0
+
+1
+
+4
+
+4
+
+4
+
+4
+
+4
+
+39
+
+TYPE 1
+
+1584-1801
+
+147-167
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+1
+
+13
+
+18
+
+20
+
+19
+
+19
+
+19
+
+19
+
+19
+
+21
+
+22
+
+22
+
+22
+
+22
+
+22
+
+KEY PLAN
+
+150
+
+114
+
+TOTAL UNITS PER TOWER
+
+264
+
+1ST FLOOR -
+
+TOWER A - (2) - 1 BEDROOM + (1) 2 BEDROOM
+TOWER B - (1) - 1 BEDROOM + (2) 2 BEDROOM
+(6) - TOTAL
+TOWER A - (2) - 1 BEDROOM + (1) 2 BEDROOM
+TOWER B - (1) - 1 BEDROOM + (2) 2 BEDROOM
+(6) - TOTAL
+
+3RD FLOOR - TOWER A - (2) - 1 BEDROOM + (1) 2 BEDROOM
+TOWER B - (1) - 1 BEDROOM + (2) 2 BEDROOM
+(6) - TOTAL
+4TH FLOOR - TOWER A - (2) - 1 BEDROOM + (1) 2 BEDROOM
+TOWER B - (1) - 1 BEDROOM + (2) 2 BEDROOM
+(6) - TOTAL
+5TH FLOOR - TOWER A - (2) - 1 BEDROOM + (1) 2 BEDROOM
+TOWER B - (1) - 1 BEDROOM + (2) 2 BEDROOM
+(6) - TOTAL
+6TH FLOOR - TOWER A - (2) - 1 BEDROOM + (1) 2 BEDROOM
+TOWER B - (1) - 1 BEDROOM + (2) 2 BEDROOM
+
+4281.08
+
+48280.98
+
+TOTAL GFA
+(NOT INCLUDING UNDERGROUND PARKING)
+
+28733.67
+
+309286.65
+
+7TH FLOOR - TOWER A - N/A
+TOWER B - (1) - 1 BEDROOM + (3) 2 BEDROOM
+(4) - TOTAL
+
+8
+A1.2
+
+Non-comb
+
+(19) 1 BEDROOM + (21) 2 BEDROOM
+(40) BARRIER-FREE SUITES
+
+AREAS
+SCALE: NTS
+
+Const
+
+Location:
+3560 Rutheford road, Unit 7
+Vaughan, Ontario
+
+OBC Reference
+
+1.4.1.2 [A] & 3.2.1.1.
+
+1.4.1.2 [A]
+9.10.4.
+
+6
+
+Number of Streets/Fire Fighter Access: 1
+
+3.2.2.10 & 3.2.5.
+
+9.10.20.
+
+7
+
+Building Classification:
+3.2.2.42
+
+3.2.2.42
+
+9.10.2.
+
+GROUP C
+
+450
+
+15
+
+25
+
+BY PERMIT
+ONLY
+
+10
+
+Sprinkler System Proposed
+
+entire building
+
+in lieu of roof rating
+
+3.2.2.67
+
+selected compartments
+
+not required
+
+3.2.1.5
+
+selected floor areas
+
+EXISTING NO CHANGE
+
+3.2.2.17
+
+basement
+
+9.10.8.2.
+
+35
+
+Van Accessible
+
+75
+
+INDEX
+
+INDEX
+
+9
+
+Standpipe required
+
+Yes
+
+No
+
+3.2.9.
+
+N/A
+
+10
+
+Fire Alarm required
+
+Yes
+
+No
+
+3.2.4.
+
+9.10.18.
+
+Yes
+
+No
+
+3.2.5.7.
+
+12
+1
+11
+1
+
+30
+
+N/A
+
+REFER TO SITE PLAN FOR INSTALLATION LOCATION
+
+12
+
+High Building
+
+13
+
+Construction Restrictions
+
+Combustible
+Permitted
+
+Non-combustible
+Required
+
+Both
+
+Actual Construction
+
+Combustible
+
+Non-combustible
+
+Both
+
+Yes
+
+2
+
+14
+
+Mezzanine Area (m ):
+
+15
+
+Occupant load based on
+
+No
+
+N/A
+2
+
+m /person
+
+Occupancy: 420
+
+design of building
+
+Load:
+
+3.2.6
+
+N/A
+
+3.2.2.67
+
+9.10.6.
+
+3.2.1.1.(3)-(8)
+
+9.10.4.1.
+
+3.1.17
+
+9.9.1.3.
+
+THE SIGN FACE MUST BE SECURED TO A:
+
+1.20m
+
+POST
+
+Barrier-free Design
+
+Yes
+
+No (Explain):
+
+3.8
+
+9.5.2.
+
+17
+
+Hazardous Substances
+
+Yes
+
+No
+
+3.3.1.2. & 3.3.1.19
+
+9.10.1.3.(4)
+
+3.2.2.20.-.83 &
+3.2.1.4
+
+9.10.8.
+9.10.9.
+
+Horizontal Assemblies
+
+Listed Design No.
+
+FRR (Hours)
+
+or Description (SB-3)
+
+EXPANSION
+JOINT
+AROUND
+FOOTING
+FINISHED GRADE
+
+METAL BUILDING FACE WHERE THE MINIMUM METAL
+THICKNESS IS 2mm WITH TWO # 10 PLATED, SELF-TAPPING
+SHEET-METAL SCREWS WITH FLAT WASHERS.
+
+0.3m Ø POURED CONCRETE FOOTING CAST IN PLACE PIER.
+
+0
+
+Hours
+
+VARIES
+SEE SITE PLAN
+
+0.40m
+
+ALL PARKING LOT LINE
+STRIPPING TO BE YELLOW
+
+or Description (SB-3)
+1.20m
+
+Floor:
+Roof:
+
+VARIES
+SEE SITE PLAN
+
+Hours
+
+-
+
+0.80m
+
+Spatial Separation - Construction of Exterior Walls - Existing Building
+
+East
+West
+
+30.00 cm
+
+Proposed
+% of
+Openings
+_
+
+(Hours)
+_
+
+_
+
+Non-comb
+
+Const
+
+Comb.
+Constr. Nonc.
+Cladding
+
+_
+
+_
+
+_
+
+(m )
+_
+
+H/L
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+_
+
+L/H or
+
+_
+
+_
+
+_
+
+FRR
+
+-
+
+Comb
+
+WHERE AN UNOBSTRUCTED BUILDING FACE IS NO MORE
+THAN 2.0M FROM THE FACE OF THE CURB AT THE
+ACCESSIBLE STALL, THE REQUIRED SIGN(S) MAY
+BE MOUNTED ON THE BUILDING FACE.
+
+Const
+
+5.00 cm
+
+_
+
+_
+
+_
+
+MOUNTING DETAIL
+
+TYPICAL ACCESSIBLE PARKING
+
+DO NOT SCALE DRAWINGS.
+
+ADJACENT SURFACE
+VARIES
+
+CLEARANCE AREA
+1200 MIN. FROM
+TOP OF RAMP
+
+1500mm MIN.
+
+1. SIGNS TO BE SET AN ANGLE OF NOT LESS THAN 30° AND NO MORE THAN 45°, TO A
+LINE PARALLEL TO THE FLOW OF TRAFFIC AND SHOULD ALWAYS BE VISIBLE TO APPROCHING
+TRAFFIC
+
+3.81 cm
+2005-188
+
+RED CIRCL E BL ACK TEX T
+
+2. SIGNS TO BE PLACED ON EITHER SIDES (STAGGERED) OF THE FIRE ACCESS ROUTE AT
+INTERVALS OF NOT MORE THAN 30 METERS (100 FEET) APART.
+
+8% - 10% MAX
+
+BOTTOM OF CURB
+
+6
+A1.2
+
+A1.2
+
+1500
+MIN.
+
+ASPHALT SURFACE
+COMPACTED
+GRANULAR FILL
+
+50 150
+
+PARTING STRIP
+NEW SIDEWALK - POURED CONCRETE
+CONCRETE OR BRICK PAVERS
+(SEE SITE PLAN)
+
+ASPHALT SURFACE
+COMPACTED
+GRANULAR FILL
+
+.
+10
+MAX
+E 1:
+SLOP
+
+4. SIGNS SHALL BE INSTALLED AT A MAXIMUM OF 3 METERS (10 FEET) AND A MINIMUM OF
+1 METER (3 FEET) MEASURED HORIZONTALLY FROM THE CURB.
+
+7. ALL SIGNAGE AND INSTALLATION OF THE ACCESS FIRE ROUTE SIGN MUST ALSO CONFORM
+TO THE REQUIREMENT AS OUTLINED IN THE CITY/TOWN.
+
+HOLES - METRO PUNCH
+
+5
+
+PRIVACY PANEL SCREENS
+SCALE: 1:25
+
+DEPRESSED CONC. CURB PLAN VIEW
+SCALE: NTS
+DRAWING:
+
+3. SIGNS SHALL NOT BE EXCEED 2 METERS (7 FEET) AND NOT LESS THAN 1.5M (5 FEET) IN
+HEIGHT MEASURED FROM THE BOTTOM OF THE SIGN TO THE FINISHED PAVEMENT/GRADE.
+
+6. SIGN SHALL DISPLAY SINGLE HEADED ARROWS POINTING IN THE DIRECTION IN WHICH THE
+REGULATION IS IN EFFECT. AT INTERMEDIATE POINTS THROUGHOUT THE REGULATED AREA,
+DOUBLE-HEADED ARROWS SHALL INDICATE THAT THE PROHIBITION OR RESTRICTION EXITS IN
+EACH DIRECTION.
+
+0.0084 GAUGE ALUMINUM SIGN BLANK
+
+TOP OF CURB
+
+1500
+
+45.00 cm INSTALLATION REQUIREMENTS
+
+2.54 cm
+
+WHITE BACKGROUND
+
+_
+
+CONTRACTORS MUST CHECK AND VERIFY ALL DIMENSIONS
+AND CONDITIONS ON THE PROJECT AND MUST REPORT
+ANY DISCREPANCIES TO THE DESIGNER BEFORE
+PROCEEDING WITH CONSTRUCTION.
+
+ELEVATION
+
+5. FACES TO CONFORM TO REG. 486 OF THE HIGHWAY TRAFFIC ACT.
+
+18.81 cm
+
+SIGN FACE
+
+0.3m
+
+FINISH CURB ELEVATION
+(SEE GRADING PLAN )
+PLANT MATERIALS ( SEE
+LANDSCAPE DRAWINGS )
+
+50 150
+
+POURED
+CONCRETE CURB
+
+100 100
+200
+
+FINISH CURB ELEVATION
+(SEE LANDSCAPE PLAN)
+PARTING STRIP
+
+50 150
+
+COMPACTED
+GRANULAR FILL
+
+13mm Ø DOWELS 450mm LONG ACROSS
+13mm EXPANSION JOINTS @ 5485mm
+O.C. ONE END OF DOWEL SHALL BE
+LUBRICATED WITH A RELEASING
+AGENT
+
+POURED CONCRETE
+CURB
+
+NEW SIDEWALK - UNIT
+PAVERS CONCRETE OR
+BRICK PAVERS (SEE
+LANDSCAPE PLAN)
+
+100 100
+200
+
+COMPACTED
+GRANULAR FILL
+
+PROPOSED MIX-USE
+CONDO DEVELOPMENT
+ON
+12148 ALBION VAUGHAN RD.
+BOLTON
+TOWN OF
+CALEDON
+
+DRAWING:
+
+SITE DETAILS & AREAS
+
+ASPHALT SURFACE
+
+13mm Ø DOWELS 450mm LONG
+ACROSS 13mm EXPANSION
+JOINTS @ 5485mm O.C. ONE END
+OF DOWEL SHALL BE LUBRICATED
+WITH A RELEASING AGENT
+
+100 100
+200
+
+COMPACTED
+GRANULAR FILL
+13mm Ø DOWELS 450mm LONG ACROSS
+13mm EXPANSION JOINTS @ 5485mm O.C.
+ONE END OF DOWEL SHALL BE
+LUBRICATED WITH A RELEASING AGENT
+
+N/A
+
+PLOTTED:
+DATE:
+
+PROJECT No:
+
+9
+
+OBC MATRIX
+SCALE: NTS
+
+7
+A1.2
+
+'BY PERMIT ONLY' ACCESSIBLE PARKING SIGN DETAIL
+SCALE: NTS
+
+4
+A1.2
+
+FIRE ROUTE SIGN DETAIL
+SCALE: NTS
+
+3
+A1.2
+
+DEPRESSED CONCRETE CURB DETAIL
+SCALE: 1:20
+
+2019-22
+
+02/04/2024
+SCALE:
+
+A1.2
+
+2021-01-27
+
+THIS DRAWING MUST NOT BE USED FOR CONSTRUCTION
+PURPOSES UNTIL SEALED AND SIGNED BY THE DESIGNER.
+
+8% - 10% MAX
+
+7. ALL COLOURS TO MEET M.T.O. STANDARDS
+
+HANDICAP PARKING SYMBOL
+
+HANDICAP SPACES
+TO BE PAINTED LIGHT BLUE
+
+ISSUED FOR BUILDING PERMIT
+
+SUBMITTALS
+
+TACTILE WALKING
+SURFACE
+
+1500
+
+5. SIGNS SHALL BE INSTALLED SO THAT THERE NO OBSTRUCTIONS WITHIN 6 METERS (20
+FEET) OF THE SIGN AND BE VISIBLE TO APPROCHING TRAFFIC.
+
+U/S PIER
+
+ISSUED FOR BID
+
+8% - 10% MAX
+
+4. FINISHED SIGNS AND SYMBOLS SHALL BE APPLIED TO 1.63MM UTILITY GRADE
+ALUMINUM WITH BRIGHT WHITE MILL BAKED FINISH ON BOTH SIDES. ALL INKS SHALL BE
+GLOSSY
+
+4.22 cm
+
+9.10.14.
+
+EBF (m )
+_
+
+L.D.
+2
+
+South
+
+3.2.3
+Listed
+Design or
+Description
+
+Permitted
+Max. % of
+Openings
+_
+
+Area of
+
+THE REQUIRED SIGN(S) MUST BE MOUNTED AT LEAST 1.0M
+AND NOT MORE THAN 2.0M FROM THE FACE OF THE CURB
+AT A HEIGHT OF 1.2M ABOVE THE TOP OF CURB ELEVATION.
+SIGNS MUST NOT OBSTRUCT THE SIDEWALK.
+
+Hours
+
+2
+
+ADJACENT SURFACE
+VARIES
+
+CONCRETE SLAB
+
+3. SIGN BLANKS SHALL COMPLETED SIGNS SHALL HAVE 11MM. X 18MM. SLOTTED HOLES TO
+ACCEPT METRIC OR IMPERIAL MOUNTING WITH HOLES 3CM-12CM FROM OUTER EDGE OR
+AS PER DIAGRAM. CENTRE OF MOUNTING SLOTS SHALL BE EQUAL TO MULTIPLE OF
+5.08CM (2 INCHES) CENTRALLY LOCATED ON BLANK. ON STEEL BLANKS, FABRICATIONS
+SHALL BE FABRICATED BEFORE GALVANISING AS TO PREVENT CORROSION. ON ALUMINUM
+BLANKS, FABRICATING SHALL BE PERFORMED PRIOR TO PAINTING AND BAKING.
+
+REFER TO SITE PLAN FOR INSTALLATION LOCATION
+
+ONE SIGN PER STALL REQUIRED UNLESS A ROW OF SEVERAL
+BAYS IS PROVIDED IN WHICH CASE, A SIGN AT EACH END
+OF THE ROW WITH APPROPRIATE DIRECTIONAL ARROWS.
+
+PLAN VIEW
+
+2. ALL SIGN SHALL HAVE APPROPRIATE RADIUS. CORNER AS PER DIAGRAM OR 4
+CM. RADIUS. ALL SHARP EDGES REMOVED
+
+CONFORMS TO REG. 581 ACCESSIBLE PARKING
+FOR PERSON WITH DESIBILITIES: SCHEDULE 11
+
+ACCESSIBLE PARKING SIGNAGE
+REQUIREMENTS
+
+METAL POST SLEEVE
+ANCHORED TO SLAB
+
+SIGN REQUIREMENTS
+
+BLACK LETTER "P"
+LEGEND AND BORDER
+WHITE REFLECTIVE
+BACKGROUND
+
+ALL ACCESSIBLE PARKING STALLS SHALL BE DESIGNED
+BY SIGNAGE.
+
+Listed Design No.
+
+1500
+
+CONCRETE PAVING
+
+1. SIGNS SHALL COMPLY WITH THE ATTACHED FIGURE 5
+
+ACCESSIBLE SIGN
+
+PIER
+
+DATE
+
+METAL POST
+
+BLUE REFLECTIVE
+BACKGROUND
+AND OUTLINE
+
+BY PERMIT
+ONLY
+
+DESCRIPTION
+
+SLOPE 10% MAX.
+5% DESIRABLE
+
+450
+
+Roof:
+
+TEMPERED
+FROSTED GLASS
+PANEL
+
+50
+450
+
+Hours
+
+1500
+
+8% - 10% MAX
+
+50
+
+2
+
+Members
+
+North
+
+30.5
+39
+11.47
+12.34
+
+6. ALL LETTERING TO MEET M.T.O. STANDARDS
+
+Floor:
+
+FRR of Supporting
+
+Wall
+
+30
+10
+30
+35
+
+2023-03-10
+
+ISSUED FOR SITE PLAN APPROVAL
+
+0.930 2156
+0.880 3581
+0.900 963
+0.900 1286
+
+1.5cm RED REFLECTIVE
+INTERDICTORY STROKE
+BLUE REFLECTIVE
+BACKGROUND
+AND OUTLINE
+
+15
+
+POST WITH TWO GALVANIZED 12mm HEX HEAD BOLTS 450
+AND NUTS WITH FLAT WASHERS ON BOTH SIDES.
+125
+THE SIGNS SHALL BE MOUNTED ON TELESCOPIC SQUARE
+PERFORATED TUBE SIGNSUPPORT SYSTEMS, SUCH AS
+TELSPAR OR EQUAL.
+25
+MASONRY BUILDING FACE WITH TWO GALVANIZED
+500mm LONG 8mm DIAMETER HED-HEAD LAG BOLTS
+WITH FLAT WASHERS IN LEAD SHIELD MASONRY ANCHORS.
+
+Load:
+
+16
+
+Required
+Fire
+Resistance
+Rating
+(FRR)
+
+1500
+
+BLACK LETTER "P"
+LEGEND AND BORDER
+2cm RED REFLECTIVE
+ANNULAR BAND
+
+150
+
+2023-12-08
+
+RE-ISSUED FOR SPA
+
+ISSUED FOR CONSTRUCTION
+
+300
+
+SIGN MOUNTING
+
+ISSUED FOR COORDINATION
+
+1
+
+REVISIONS
+
+ACCESSIBLE PARKING SIGN
+TYPE A-VAN ACCESSIBLE
+
+SIGN FACE
+
+Water Service/Supply is Adequate
+
+E
+F
+WL
+WL1
+
+2
+
+No.
+
+CONCRETE SLAB
+
+450
+
+Below Grade: 2
+
+Above Grade: 7
+
+2024-04-05
+
+2
+A1.2
+
+CONCRETE CURB DETAIL
+SCALE: 1:20
+
+1
+A1.2
+
+CONCRETE CURB/SIDEWALK DETAIL
+SCALE: 1:20
+
+FILE NAME: 12148 ALBION RD - A1.1-A1.2 - 2023-12-06.DWG
+XREFS:
+
+1.4.1.2 [A]
+
+RE-ISSUED FOR SPA
+
+DRAWING No:
+
+AS NOTED
+DRAWN BY:
+
+REVIEWED BY:
+
+AD
+
+F.C.
+
+A1.2
+
+PLOT SCALE: 1=
+
+1.4.1.2 [A]
+
+3
+
+150
+
+TOTAL: 15601.62 m2
+
+30
+
+50
+
+1.4.1.2 [A]
+
+50
+
+Number of Storeys
+
+1.4.1.2 [A] 1
+
+20-25
+
+NEW: 15601.62 m2
+
+TOTAL: 2019.14 m2
+
+MRM-LED-07L-SIL-2-30-70CRI-IL
+MRS-LED-03L-SIL-3-30-70CRI-IL
+MRS-LED-06L-SIL-3-30-70CRI-IL
+MRS-LED-06L-SIL-3-30-70CRI
+MRS-LED-06L-SIL-3-30-70CRI-IL
+RZRB1-PLED-III-M-20LED-175mA30K-HS
+MRB-LED-25L-ACR-S-30
+MRS-LED-06L-SIL-4-30-70CRI-IL
+MO13HL-PP-MW-8L40K-DCC-DV
+WPSLS-01L-40
+
+150
+
+Gross Area (m2)
+
+9.10.2.
+
+2
+4
+1
+5
+5
+67
+
+610
+
+4
+
+300
+
+3.1.2.1.(1)
+
+A
+B
+B1
+C
+C1
+D
+
+150
+
+Alteration
+
+300
+
+NEW: 2019.14 m2
+
+1.1.2. [A]
+
+Luminaire Luminaire
+Lumens
+Watts
+0.880 4594
+48
+0.580 4030
+39
+0.880 4030
+39
+0.880 6017
+39
+0.880 4030
+39
+0.930 1261
+11
+
+1500
+
+Building Area (m2)
+
+LLF
+
+Description
+
+1.1.2.
+9.10.1.3.
+
+1200 MIN
+
+3
+
+11.1 to 11.4
+
+Luminaire Schedule
+Qty
+Symbol
+Label
+
+Part 9
+
+Part 3
+
+50
+
+Part 11
+
+50
+
+New
+
+2440
+[8'-081"]
+
+Project Description: 7 Storey Condo Building
+
+360
+[1'-281"]
+
+References are to Division B unless noted
+[A] for Division A or [C] for Division C
+
+3000
+[9'-1081"]
+
+Ontario Building Code Data Matrix - Part 3 & 9
+
+Group C
+
+19
+
+2
+
+50
+
+Name of Project:
+Fausto Cortese Architect
+MIX-USED CONDO DEVELOPMENT AT 12148 ALBION VAUGHAN RD. BOLTON - CALEDON
+
+Major Occupancy(s)
+
+18
+
+3
+
+No
+.
+
+(6) - TOTAL
+
+TOTAL BUILDING AREA
+
+9.10.14.
+
+Proposed
+% of
+Openings
+_
+
+2
+
+11
+
+3
+
+TOTAL -
+
+Change of Use
+
+8
+
+3
+
+GRAND TOTAL
+
+Addition
+
+5
+
+421.95
+
+3.2.2.20.-.83 &
+3.2.1.4
+
+Permitted
+Max. % of
+Openings
+_
+
+ITEM
+1
+
+39.20
+
+25 MAX.
+
+TOWER B
+
+West
+
+TOWER B - MECHANICAL ROOM (ROOF LEVEL)
+
+3.3.1.2. & 3.3.1.19
+
+Hours
+
+_
+
+1198.02
+
+No
+Listed Design No.
+
+(m )
+_
+
+111.30
+
+Yes
+
+or Description (SB-3)
+
+EBF (m )
+_
+
+TOWER B - GARBAGE (GROUND FLOOR)
+
+9.5.2.
+
+FRR (Hours)
+
+L/H or
+
+2199.82
+
+3.8
+
+Horizontal Assemblies
+
+L.D.
+
+204.37
+
+Yes
+
+1
+
+2
+
+3
+
+Load:
+
+Floor:
+
+Area of
+
+TOWER A - MECHANICAL ROOM (ROOF LEVEL)
+
+No (Explain):
+
+Load:
+
+Spatial Separation - Construction of Exterior Walls - Existing Building
+Wall
+
+1248.83
+
+150
+
+19
+
+Required
+Fire
+Resistance
+Rating
+(FRR)
+
+116.02
+
+9.9.1.3.
+
+design of building
+
+5
+
+300
+
+18
+
+TOWER A - GARBAGE (GROUND FLOOR)
+
+3.1.17
+
+2
+
+5
+
+74-93
+
+SERVICE AREAS
+
+9.10.4.1.
+
+m /person
+
+Occupancy: 350
+
+20% OF DEVELOPABLE LOT AREA = 2051.2 m2
+(min.)
+
+3.2.1.1.(3)-(8)
+
+N/A
+
+800-1004
+
+* INCLUDES 40 BARRIER-FREE SUITES (15% OF TOTAL SUITES OBC 3.8.2.1.(5))*
+
+GROUND FLOOR LEVEL
+
+Yes
+
+Mezzanine Area (m ):
+
+TYPE 1-7
+
+PARTIAL UNITS PER TOWER
+
+AMENITY SPACE
+
+Standpipe required
+
+14
+
+RO
+
+AD
+
+TOTAL UNITS
+
+9
+
+2
+
+IO
+
+TOWER B (RESIDENTIAL CONDO)
+
+References are to Division B unless noted
+[A] for Division A or [C] for Division C
+
+Project Description: 3 & 6 Storeys Condo Building
+
+1
+
+G
+
+NA
+L
+
+150
+
+1
+
+OBC Reference
+
+Ontario Building Code Data Matrix - Part 3 & 9
+
+ITEM
+
+GROUND FLOOR LEVEL
+
+RE
+
+300
+
+TOWER A
++ AMENITY
+
+TOWER A (RESIDENTIAL CONDO)
+
+77
+
+2 BEDROOM
+
+SQ/FT
+
+2 BEDROOM +
+LARGE BALCONY
+
+m2
+
+3 BEDROOM
+
+QTY.
+
+1 BEDROOM +
+1 BEDROOM
+DEN
+
+D
+OA
+
+5TH
+FLOOR
+
+NR
+
+4TH
+FLOOR
+
+A
+GH
+VAU
+ION
+ALB
+
+3RD
+FLOOR
+
+50
+
+2ND
+FLOOR
+
+.
+No
+
+GROUND
+FLOOR
+
+AD
+
+m2
+
+RO
+
+SQ/FT
+
+L
+NA
+
+UNIT TYPE
+
+IO
+
+UNDERGROUND LEVEL
+
+TOWER A
+
+G
+RE
+
+STOREYS
+
+KI
+
+UNITS TYPE
+
+KIRB
+G
+
+AN
+GH
+VAU
+ON
+
+IO
+
+NA
+L
+
+AD
+Y RO
+
+I
+ALB
+
+RE
+
+RO
+
+AD
+
+No
+.5
+
+0
+
+AD
+RO
+RE
+G
+
+IO
+
+NA
+
+L
+
+RO
+
+AD
+
+No
+.
+
+50
+
+LEGEND
+
+7800 KENNEDY ROAD
+SUITE 201
+MARKHAM, ONTARIO
+L3R 2C7
+T: (905) 944-0162
+www.maeng.ca
+
+12148 ALBION VAUGHAN ROAD
+TOWN OF CALEDON
+
+EXISTING DRAINAGE
+AREA
+
+1.
+No.
+
+DESCRIPTION
+
+REVISIONS
+
+BY
+
+DATE
+
+DATE:
+
+SCALE
+
+DEC. 2020
+
+N.T.S
+
+DESIGN BY:
+
+DRAWN BY:
+
+PROJECT No.
+
+I.S
+
+17-849
+
+FIG. No.
+
+2
+
+AD
+
+Y RO
+KIRB
+I
+ALB
+
+RE
+L
+NA
+
+AD
+RO
+AN
+GH
+VAU
+ON
+
+IO
+G
+RO
+AD
+.
+No
+50
+
+IO
+
+G
+RE
+L
+NA
+RO
+AD
+.
+No
+50
+
+LEGEND
+
+TYP
+EA
+
+TYP
+
+EB
+
+TYP
+EA
+
+PE
+
+TY
+B
+
+³
+³
+
+7800 KENNEDY ROAD
+SUITE 201
+MARKHAM, ONTARIO
+L3R 2C7
+T: (905) 944-0162
+www.maeng.ca
+
+12148 ALBION VAUGHAN ROAD
+TOWN OF CALEDON
+
+POST-DEVELOPMENT MASTER
+STORM DRAINAGE PLAN
+
+1.
+No.
+
+DESCRIPTION
+
+REVISIONS
+
+BY
+
+DATE
+
+DATE:
+
+SCALE
+
+DEC. 2020
+
+N.T.S
+
+DESIGN BY:
+
+DRAWN BY:
+
+PROJECT No.
+
+I.S
+
+17-849
+
+FIG. No.
+
+3
+
+KIRB
+G
+
+AN
+GH
+VAU
+ON
+
+IO
+
+NA
+L
+
+AD
+Y RO
+
+I
+ALB
+
+RE
+
+RO
+
+AD
+
+No
+.5
+
+0
+
+AD
+RO
+RE
+G
+
+IO
+
+NA
+
+L
+
+RO
+
+AD
+
+No
+.
+
+50
+
+LEGEND
+
+TYP
+
+EA
+
+TYP
+
+EB
+
+PE
+TY
+
+B
+
+PE
+TY
+
+7800 KENNEDY ROAD
+SUITE 201
+MARKHAM, ONTARIO
+L3R 2C7
+T: (905) 944-0162
+www.maeng.ca
+
+12148 ALBION VAUGHAN ROAD
+TOWN OF CALEDON
+
+SURFACE COMPOSITION PLAN
+1.
+No.
+
+DESCRIPTION
+
+REVISIONS
+
+BY
+
+DATE
+
+DATE:
+
+SCALE
+
+DEC. 2020
+
+N.T.S
+
+DESIGN BY:
+
+DRAWN BY:
+
+PROJECT No.
+
+I.S
+
+17-849
+
+FIG. No.
+
+4
+
+A
+
+KIRB
+G
+
+AN
+GH
+VAU
+ON
+
+IO
+
+NA
+L
+
+AD
+Y RO
+
+I
+ALB
+
+RE
+
+RO
+
+AD
+
+No
+.5
+
+0
+
+AD
+RO
+RE
+G
+
+IO
+
+NA
+
+L
+
+RO
+
+AD
+
+No
+.
+
+50
+
+LEGEND
+EX. WATERMAIN
+EX. STORM SEWER
+EX. SANITARY SEWER
+EX. FLOODPLAIN
+EX. FLOODPLAIN TRCA
+PROPERTY LINE
+
+7800 KENNEDY ROAD
+SUITE 201
+MARKHAM, ONTARIO
+L3R 2C7
+T: (905) 944-0162
+www.maeng.ca
+
+12148 ALBION VAUGHAN ROAD
+TOWN OF CALEDON
+
+EXISTING MUNICIPAL
+INFRASTRUCTURE
+
+1.
+No.
+
+DESCRIPTION
+
+REVISIONS
+
+BY
+
+DATE
+
+DATE:
+
+SCALE
+
+DEC. 2020
+
+N.T.S
+
+DESIGN BY:
+
+DRAWN BY:
+
+PROJECT No.
+
+I.S
+
+17-849
+
+FIG. No.
+
+5
+
+From:
+To:
+Cc:
+Subject:
+Date:
+Attachments:
+
+Nick Cascone
+Rui Song; Prowse, Dylan
+Garbos, Olek; Shen, Yifan; Mike Liburdi; patsypaquet@icloud.com; Alyssa Woods; Grant Uyeyama; Dilnesaw
+Chekol; Emma Benko
+RE: Culvert and Access Removal: OZ-21-001C - 12148 Albion Vaughan Road
+February 22, 2024 1:52:02 PM
+image001.png
+image002.png
+image003.png
+image004.png
+
+Further my previous email, I have received word from our Infrastructure Planning and Permits (IPP)
+team that the Region will be perusing the culvert removal work though a separate permit/approval.
+As such, the requirements listed below will not be needed as part of the development process
+relating to 12148 Albion Vaughan Road and instead will be addressed through the Region’s permit.
+Thanks,
+Nick Cascone, M.Sc.Pl
+Senior Planner
+Development Planning and Permits | Development and Engineering Services
+T: (437) 880-1943
+E: nick.cascone@trca.ca
+A: 101 Exchange Avenue, Vaughan, ON, L4K 5R6 | trca.ca
+
+From: Nick Cascone
+Sent: Thursday, February 22, 2024 12:04 PM
+To: Rui Song <RuiS@maeng.ca>; Prowse, Dylan <dylan.prowse@peelregion.ca>
+Cc: Garbos, Olek <olek.garbos@peelregion.ca>; Shen, Yifan <yifan.shen@peelregion.ca>; Mike
+Liburdi <mike@aztecrestoration.com>; patsypaquet@icloud.com; Alyssa Woods
+<awoods@klmplanning.com>; Grant Uyeyama <GUyeyama@klmplanning.com>; Shirin Varzgani
+<Shirin.Varzgani@trca.ca>; Kristen Sullivan <kristen.sullivan@trca.ca>; Dilnesaw Chekol
+<Dilnesaw.Chekol@trca.ca>
+Subject: RE: Culvert and Access Removal: OZ-21-001C - 12148 Albion Vaughan Road
+Hello Rui,
+Thanks for the additional information. I had a chance to look at this matter with the project Water
+Resources Engineer. It seems that this may have been missed on our end as part of the original
+permit (which is now expired). Also, there may have been some confusion on our end as well given
+more recent discussions regarding a sidewalk that would potentially use that culvert as a crossing.
+Notwithstanding, if the plan is to remove the culvert as part of this development, we require
+
+additional minor details/revisions to the drawings that were not initially provided. These include the
+following:
+Clearly identify the removal of the culvert on all relevant engineering drawings. Currently, the
+only location where this is identified is the profile on Drawing P1.
+Please revise the channel plan to show the new channel in the area of the culvert removal.
+Further, please include a cross-section showing the new channel (once the culvert is
+removed) along with erosion protection measures.
+Revise the ESC plan to account for the culvert removal.
+I believe the floodplain modelling accounts for removal of the culvert. As such, I don’t believe
+anything will need to be updated on this end, however, I will allow you to confirm this is the
+case.
+In addition to the above, I would also like confirmation on the following matters (perhaps for Dylan
+at the Region):
+Is the intention to approve the culvert removal (and associated plan) through the
+development applications for this site, with the works being carried out by the Region? Or
+would they form part of other ongoing road improvement works associated with Highway 50?
+I am just trying to understand what this will mean from a permitting perspective on our end.
+Thanks,
+Nick Cascone, M.Sc.Pl
+Senior Planner
+Development Planning and Permits | Development and Engineering Services
+T: (437) 880-1943
+E: nick.cascone@trca.ca
+A: 101 Exchange Avenue, Vaughan, ON, L4K 5R6 | trca.ca
+
+From: Rui Song <RuiS@maeng.ca>
+Sent: Friday, February 16, 2024 5:20 PM
+To: Nick Cascone <Nick.Cascone@trca.ca>; Prowse, Dylan <dylan.prowse@peelregion.ca>
+Cc: Garbos, Olek <olek.garbos@peelregion.ca>; Shen, Yifan <yifan.shen@peelregion.ca>; Mike
+Liburdi <mike@aztecrestoration.com>; patsypaquet@icloud.com; Alyssa Woods
+<awoods@klmplanning.com>; Grant Uyeyama <GUyeyama@klmplanning.com>; Shirin Varzgani
+<Shirin.Varzgani@trca.ca>; Kristen Sullivan <kristen.sullivan@trca.ca>
+Subject: RE: Culvert and Access Removal: OZ-21-001C - 12148 Albion Vaughan Road
+EXTERNAL SENDER
+Hi Nick,
+In our original application, we had proposed for the culvert and driveway to be removed when
+
+making the floodline analysis. Please see attached drawing P1 which shows the removal in the profile
+along with the rest of our channel realignment. I have also attached the rest of the permit files for
+everyone’s information.
+Thank you,
+
+Rui Song, P.Eng | Project Engineer
+Cell (416) 302-3413
+Masongsong Associates Engineering Limited
+7800 Kennedy Road, Suite 201 . Markham, Ontario . L3R 2C7
+T: (905) 944-0162    F:(905) 944-0165   www.maeng.ca
+CONFIDENTIALITY NOTICE: This e-mail contains information that is privileged and confidential and subject to legal restrictions and
+penalties regarding its unauthorized disclosure or other use. You are prohibited from copying, distributing or otherwise using this
+information if you are not the intended recipient. If you have received this e-mail in error, please notify us immediately by return e-mail
+and delete this e-mail and all attachments from your system. Thank You.
+
+From: Nick Cascone <Nick.Cascone@trca.ca>
+Sent: Friday, February 16, 2024 5:05 PM
+To: Prowse, Dylan <dylan.prowse@peelregion.ca>
+Cc: Garbos, Olek <olek.garbos@peelregion.ca>; Shen, Yifan <yifan.shen@peelregion.ca>; Mike
+Liburdi <mike@aztecrestoration.com>; patsypaquet@icloud.com; Rui Song <RuiS@maeng.ca>;
+Alyssa Woods <awoods@klmplanning.com>; Grant Uyeyama <GUyeyama@klmplanning.com>;
+Shirin Varzgani <Shirin.Varzgani@trca.ca>; Kristen Sullivan <kristen.sullivan@trca.ca>
+Subject: RE: Culvert and Access Removal: OZ-21-001C - 12148 Albion Vaughan Road
+Hello Dylan,
+It is TRCA’s understanding that the culvert will not be removed as part of this development
+application. Any removal of the culvert would require TRCA approval as it conveys a regulated
+watercourse and floodplain. The impacts of removal of the culvert on the flood hazard would likely
+need to be assessed to ensure that adjacent properties are not being impacted.
+Please note that if culvert removal is to proceed as part of a future Peel capital project, our
+Infrastructure Planning and Permits (IPP) team will need to be consulted. I have copied my
+colleagues Kristen Sullivan and Shirin Varzgani on this email chain – they will be able to assist you
+with any future inquires on the matter.
+Thanks,
+Nick Cascone, M.Sc.Pl
+Senior Planner
+
+Development Planning and Permits | Development and Engineering Services
+T: (437) 880-1943
+E: nick.cascone@trca.ca
+A: 101 Exchange Avenue, Vaughan, ON, L4K 5R6 | trca.ca
+
+From: Grant Uyeyama <GUyeyama@klmplanning.com>
+Sent: Friday, February 16, 2024 2:50 PM
+To: Prowse, Dylan <dylan.prowse@peelregion.ca>; Nick Cascone <Nick.Cascone@trca.ca>
+Cc: Garbos, Olek <olek.garbos@peelregion.ca>; Shen, Yifan <yifan.shen@peelregion.ca>; Mike
+Liburdi <mike@aztecrestoration.com>; patsypaquet@icloud.com; Rui Song <RuiS@maeng.ca>;
+Alyssa Woods <awoods@klmplanning.com>; Grant Uyeyama <GUyeyama@klmplanning.com>
+Subject: RE: Culvert and Access Removal: OZ-21-001C - 12148 Albion Vaughan Road
+EXTERNAL SENDER
+KLM File: P-2623
+Hi Dylan,
+I spoke with the Owner, and he gives permission for the Region of Peel to remove the culvert and
+driveway access adjacent to Highway 50 as part of Peel’s capital project. Let us know if you require
+anything else from the Owner, and please keep us informed as the capital project moves ahead.
+Grant Uyeyama, BAA, MCIP, RPP
+Principal Planner
+
+Mobile 416-871-6887 Office 905-669-4055
+Email guyeyama@klmplanning.com
+Web www.klmplanning.com
+64 Jardin Drive, Unit 1B, Concord, Ontario L4K 3P3
+CELEBRATING 35 YEARS
+Please note that I may be working remotely
+at times and can be reached by email and
+on my mobile phone at 416-871-6887
+
+From: Grant Uyeyama <GUyeyama@klmplanning.com>
+Sent: Friday, February 16, 2024 10:04 AM
+To: Prowse, Dylan <dylan.prowse@peelregion.ca>; Nick.Cascone@trca.ca
+Cc: Garbos, Olek <olek.garbos@peelregion.ca>; Shen, Yifan <yifan.shen@peelregion.ca>; Grant
+Uyeyama <GUyeyama@klmplanning.com>
+Subject: RE: Culvert and Access Removal: OZ-21-001C - 12148 Albion Vaughan Road
+Hi Dylan,
+
+Thanks for your email.
+Will there be any costs charged back to the client for Peel to remove the driveway access and culvert
+or will Peel absorb all costs as part of the capital works project? Please let me know.
+I will also discuss with the client and respond back to you soon. However, if you can get back to me
+first that would be great. Thanks!
+Grant Uyeyama, BAA, MCIP, RPP
+Principal Planner
+
+Mobile 416-871-6887 Office 905-669-4055
+Email guyeyama@klmplanning.com
+Web www.klmplanning.com
+64 Jardin Drive, Unit 1B, Concord, Ontario L4K 3P3
+CELEBRATING 35 YEARS
+Please note that I may be working remotely
+at times and can be reached by email and
+on my mobile phone at 416-871-6887
+
+From: Prowse, Dylan <dylan.prowse@peelregion.ca>
+Sent: Thursday, February 15, 2024 8:19 PM
+To: Grant Uyeyama <GUyeyama@klmplanning.com>; Nick.Cascone@trca.ca
+Cc: Garbos, Olek <olek.garbos@peelregion.ca>; Shen, Yifan <yifan.shen@peelregion.ca>
+Subject: Culvert and Access Removal: OZ-21-001C - 12148 Albion Vaughan Road
+Hi Grant and Nick,
+Our Traffic Development and Capital works teams reached out to me regarding the culvert under the
+location of the existing access at 12148 Albion Vaughan Road (see image below). They are looking
+for your input on whether or not the culvert will be retained as part of the development. My
+understanding is that the access and culvert will be removed as they are no longer required for
+vehicle or pedestrian movement but I wanted to confirm with you. If these features can be removed,
+please advise if the Region can advance those removals through the capital project works in this
+area?
+I have included Olek Garbos on this email as he is leading the capital project, please reach out to
+either of us if you have any additional questions or wish to set up a call to discuss.
+
+Best,
+Dylan Prowse
+(He/Him)
+Intermediate Planner
+Development Services
+Region of Peel
+10 Peel Centre Drive Suite A, 6th Floor
+dylan.prowse@peelregion.ca
+In response to the emergence of the novel coronavirus, the Region of Peel is implementing various measures to protect our
+customers, employees and workplaces. Development Services will endeavour to maintain the continuity of our business
+operations, however delays in service may still be experienced. We appreciate your patience during this time.  
+We have recently updated our website to better serve your needs. For information on Planning and Engineering matters of
+Regional interest, please visit this link : https://www.peelregion.ca/planning/about/devservices.htm . Let us know how we can
+serve you better
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development -12148 Albion Vaughan Rd*Town of Caledon
+
+17-849
+
+Appendix B
+Water Demand Calculations
+Hydrant Flow Test
+Existing Water Connection Locates
+
+Masongsong Associates Engineering Limited
+
+FALCON FIRE SPRINKLER DESIGN AND CONSULTING INC.
+521 Piercey Rd., Unit 6, Bolton, Ontario, L7E 5B5
+
+HYDRANT FLOW TEST REPORT
+SITE INFORMATION
+Test Location:
+
+12148 Albion Vaughan Road, Bolton
+
+Underground W/M Size:
+
+12” (300 mm)
+
+Date of Test:
+
+July 5, 2023
+
+Pipe Material:
+
+PVC
+
+Time of Test
+
+9:00am
+
+Flow Hydrant ID:
+
+12190 Albion Vaughan Road, Bolton
+
+0.8
+
+Res. Hydrant ID:
+
+11401 Albion Vaughan Road, Bolton
+
+Flow Hyd. Co-Efficient:
+Static Reading:
+
+90 PSI
+
+FIELD DATA
+Test
+No.
+
+Outlet Size
+(inches)
+
+Pitot Reading
+(PSI)
+
+Flow Adjustment
+(USGPM)
+
+Total Flow
+(USGPM)
+
+Residual
+(PSI)
+
+Field Notes
+(if applicable)
+
+1
+
+1 – 1¾”
+
+75
+
+791
+
+632.80
+
+87
+
+0.997
+
+2
+
+1 – 2½”
+
+50
+
+1,318
+
+1,054.40
+
+85
+
+-
+
+3
+
+2 – 2½”
+
+43, 43
+
+2,446
+
+1,956.80
+
+82
+
+-
+
+4
+
+-
+
+-
+
+-
+
+-
+
+-
+
+-
+
+WATER SUPPLY GRAPH
+
+Residual Pressure (PSI)
+
+Water Supply Graph
+100
+95
+90
+85
+80
+75
+70
+65
+60
+55
+50
+45
+40
+35
+30
+25
+20
+15
+10
+5
+0
+
+Static @90 PSI
+
+632.8 USGPM @87 PSI
+
+ADDITIONAL COMMENTS
+▪ All readings are true at the time of actual hydrant test.
+
+1054.4 USGPM @85 PSI
+
+1956.8 USGPM @82
+
+Flow (USGPM)
+
+FALCON FIRE SPRINKLER DESIGN AND CONSULTING INC.
+521 Piercey Rd., Unit 6, Bolton, Ontario, L7E 5B5
+
+AREA MAP (NTS) –
+For test hydrant locations only.
+
+RESIDUAL HYDRANT @
+11401 Albion Vaughan Rd.
+
+FLOW HYDRANT @
+12190 Albion Vaughan Rd.
+
+Table F1
+
+Available Fire Flow Calculations
+
+Project:
+Client:
+
+12148 Albion Vaughan Road
+Aztec Restoration
+
+Outlet diameter:
+Static pressure:
+Resid. pressure:
+
+• Observed Flow
+where
+
+
+
+• Available Flow
+where
+
+2.5 in, one port
+90 psi
+82 psi, one port
+
+Location: 12148 Albion Vaughan Road, Bolton
+Date of Test: 05-Jul-23
+Operator: Falcon Fire Sprinkler
+
+2
+0.5
+QF = 29.83 x C x (d ) x (p )
+
+C=
+d=
+p=
+QF =
+
+0.80 Coefficient
+2.50 in, Outlet diameter
+43.00 psi, Pitot Pressure
+961 USGPM
+3,637 L/min
+
+QR = QF x ( hR0.54 ) / (hF0.54)
+hF =
+
+8.00 psi, Pressure difference, static to measured residual
+
+hR =
+
+70.00 psi, Pressure difference, static to required residual
+20.00 psi
+
+Required =
+QF =
+
+
+3,099 USGPM
+11,732 L/min
+
+Masongsong Associates Engineering Limited
+
+17-849 Hydrant Flow Analysis Building A.xlsx [F1]
+
+Table F2
+
+Required Fire Flow Calculations
+
+Project:
+Client:
+
+12148 Albion Vaughan Road
+Aztec Restoration
+
+0.5
+
+FB = 220 x CC x A
+
+• Base Flow
+where
+
+
+CC = 0.70
+A = 4567.5
+FB = 10,408
+11,000
+
+• Occupancy Factor
+
+from Table F3
+2
+
+m
+L/min
+L/min
+
+CO = -15%
+
+from Table F3
+rounded to nearest 1,000 L/min
+
+from Table F3
+
+FO = FB + (FB x CO)
+= 9,350
+
+• Sprinkler Factor
+
+L/min
+
+CS = -50%
+
+from Table F3
+
+f S = FO x CS
+= -4,675
+
+• Exposure Factor
+
+L/min
+
+CE = 50%
+
+from Table F3
+
+f E = FO x CE
+= 4,675
+
+• Total Required Flow
+
+L/min
+
+F = FO + f S + f E
+= 9,350
+L/min
+= 9,000
+L/min
+
+Masongsong Associates Engineering Limited
+
+rounded to nearest 1,000 L/min
+
+17-849 Hydrant Flow Analysis Building A.xlsx [F2]
+
+Table F3
+
+Building Area and Coefficients
+
+Project:
+Client:
+
+12148 Albion Vaughan Road
+Aztec Restoration
+
+• Area of Building A
+
+4,568 m
+
+2
+
+=2401 + 2303/2 + 2030/2
+
+The total floor area in square metres (including all storeys, but excluding basements at
+least 50 percent below grade) in the building being considered.
+For fire-resistive buildings, consider the two largest adjoining floors plus 50 percent of
+each of any floors immediately above them up to eight, when the vertical openings are
+inadequately protected.
+
+ If the vertical openings and exterior vertical communications are property protected
+
+(one hour rating), consider only the area of the largest floor plus 25 percent of each of
+the two immediately adjoining floors.
+
+• Construction Coefficient
+
+floors.
+
+0.70
+
+
+
+1.50
+1.00
+0.80
+0.70
+0.60
+
+Wood Frame
+Ordinary Construction
+Non-Combustible
+Fire Resistive (<2 hrs)
+Fire Resistive (>2 hrs)
+
+• Occupacy Coefficient
+
+CO =
+
+-15%
+
+
+
+-25%
+
+Non-Combustible
+
+-15%
+0%
+15%
+25%
+
+Limited Combustible
+Combustible
+Free Burning
+Rapid Burning
+
+-30%
+
+NFPA 13 standard
+
+-40%
+-50%
+
++ fully supervised
++ std water supply
+
+25%
+
+0 - 3m separation
+
+20%
+15%
+10%
+5%
+
+3.1- 10m separation
+10.1- 20m separation
+20.1- 30m separation
+> 30m separation
+percentages counted
+per side, max 75%
+
+CS =
+
+• Sprinkler Coefficient
+
+CE =
+
+• Exposure Coefficient
+
+N 10-20m
+S 0-3m
+E >30m
+W > 30m
+
+Masongsong Associates Engineering Limited
+
+-50%
+
+50%
+15%
+25%
+5%
+5%
+
+
+
+
+
+17-849 Hydrant Flow Analysis Building A.xlsx [F3]
+
+Table F4
+
+Available Fire Flow Calculations - Building B
+
+12148 Albion Vaughan Road
+Aztec Restoration
+
+Project:
+Client:
+Outlet diameter:
+Static pressure:
+Resid. pressure:
+
+• Observed Flow
+where
+
+
+
+• Available Flow
+where
+
+2.5 in, one port
+90 psi
+82 psi, one port
+
+Location: 12148 Albion Vaughan Road, Bolton
+Date of Test: 05-Jul-23
+Operator: Falcon Fire Sprinkler
+
+2
+0.5
+QF = 29.83 x C x (d ) x (p )
+
+C=
+d=
+p=
+QF =
+
+0.80 Coefficient
+2.50 in, Outlet diameter
+43.00 psi, Pitot Pressure
+961 USGPM
+3,637 L/min
+
+QR = QF x ( hR0.54 ) / (hF0.54)
+hF =
+
+8.00 psi, Pressure difference, static to measured residual
+
+hR =
+
+70.00 psi, Pressure difference, static to required residual
+20.00 psi
+
+Required =
+QF =
+
+
+3,099 USGPM
+11,732 L/min
+
+Masongsong Associates Engineering Limited
+
+17-849 Hydrant Flow Analysis Building B.xlsx [F1]
+
+Table F5
+
+Required Fire Flow Calculations
+
+Project:
+Client:
+
+12148 Albion Vaughan Road
+Aztec Restoration
+
+0.5
+
+FB = 220 x CC x A
+
+• Base Flow
+where
+
+
+CC = 0.60
+A = 4159
+FB = 8,513
+9,000
+
+• Occupancy Factor
+
+from Table F3
+2
+
+m
+L/min
+L/min
+
+CO = -15%
+
+from Table F3
+rounded to nearest 1,000 L/min
+
+from Table F3
+
+FO = FB + (FB x CO)
+= 7,650
+
+• Sprinkler Factor
+
+L/min
+
+CS = -50%
+
+from Table F3
+
+f S = FO x CS
+= -3,825
+
+• Exposure Factor
+
+L/min
+
+CE = 40%
+
+from Table F3
+
+f E = FO x CE
+= 3,060
+
+• Total Required Flow
+
+L/min
+
+F = FO + f S + f E
+= 6,885
+L/min
+= 7,000
+L/min
+
+Masongsong Associates Engineering Limited
+
+rounded to nearest 1,000 L/min
+
+17-849 Hydrant Flow Analysis Building B.xlsx [F2]
+
+Table F6
+
+Building Area and Coefficients
+
+Project:
+Client:
+
+12148 Albion Vaughan Road
+Aztec Restoration
+
+• Area of Building B
+
+4,159 m
+
+2
+
+=2093 + 2019/2 + 2113/2
+
+The total floor area in square metres (including all storeys, but excluding basements at
+least 50 percent below grade) in the building being considered.
+For fire-resistive buildings, consider the two largest adjoining floors plus 50 percent of
+each of any floors immediately above them up to eight, when the vertical openings are
+inadequately protected.
+
+ If the vertical openings and exterior vertical communications are property protected
+
+(one hour rating), consider only the area of the largest floor plus 25 percent of each of
+the two immediately adjoining floors.
+
+• Construction Coefficient
+
+floors.
+
+0.60
+
+
+
+1.50
+1.00
+0.80
+0.70
+0.60
+
+Wood Frame
+Ordinary Construction
+Non-Combustible
+Fire Resistive (<2 hrs)
+Fire Resistive (>2 hrs)
+
+• Occupacy Coefficient
+
+CO =
+
+-15%
+
+
+
+-25%
+
+Non-Combustible
+
+-15%
+0%
+15%
+25%
+
+Limited Combustible
+Combustible
+Free Burning
+Rapid Burning
+
+-30%
+
+NFPA 13 standard
+
+-40%
+-50%
+
++ fully supervised
++ std water supply
+
+25%
+
+0 - 3m separation
+
+20%
+15%
+10%
+5%
+
+3.1- 10m separation
+10.1- 20m separation
+20.1- 30m separation
+> 30m separation
+percentages counted
+per side, max 75%
+
+CS =
+
+• Sprinkler Coefficient
+
+CE =
+
+• Exposure Coefficient
+
+N 10-20m
+S 0-3m
+E >30m
+W > 30m
+
+Masongsong Associates Engineering Limited
+
+-50%
+
+40%
+25%
+5%
+5%
+5%
+
+
+
+
+
+17-849 Hydrant Flow Analysis Building B.xlsx [F3]
+
+Table 3.3.1. Nodal Demand Summary
+12149 Albion Vaugh Rd
+Town of Caledon
+Markham Design Criteria: Fire demand = 7,000 L/min for single residential
+Node
+
+Elev
+
+1.00
+
+180.28
+
+No. of
+Units
+
+78
+187
+
+Demand
+Pop
+1.6 ppu (< 750 sqft)
+
+Average Daily Demand Flow
+(280L/capita/day)
+
+Min Hourly
+Demand ( Res.)
+0.7X280L/c/d
+
+Peak Daily
+Demand-Res.
+2.0X280 L/c/d
+
+Peak hourly
+Demand Res.
+3.0X280 L/c/d
+
+3.0 ppu (> 750 sqft)
+125
+561
+
+L/s
+
+L/s
+
+L/s
+
+L/s
+
+0.405
+1.818
+-
+
+0.284
+1.273
+-
+
+0.81
+3.64
+-
+
+1.215
+5.454
+12737.000
+
+Total
+
+686.00
+
+Reservoir
+VSB
+Elevation (m)
+229.82
+Pressure (Kpa)
+344.74
+Pressure (m)
+35.16
+Total Head (m)
+264.98
+Total requiered fire flow L/s
+At Node 1 Fire demand and max day L/s
+
+2.22
+
+1.56
+
+4.45
+
+required
+
+6.67
+
+116.667 L/sec
+7,000 L/min
+
+116.67
+121.11
+
+116.67
+
+Analysis Results
+
+Region of Peel Criteria
+
+Type of Scenarios
+
+Pressure
+(Node 1)
+
+27.50 m
+
+269.61
+39.10
+
+kPA
+psi
+
+140 kPA min
+20 psi
+
+Peak Daily Flow Plus Fire Scenario
+
+Pressure
+(Node 1)
+
+35.27 m
+
+345.79
+50.15
+
+kPA
+psi
+
+690 kPA max
+100 psi
+
+Minimum Hourly Demand Scenario
+
+Pressure
+(Node 1)
+
+35.21 m
+
+345.20
+50.07
+
+kPA
+psi
+
+275 kPA min
+40 psi
+
+Peak Hourly Demand Scenario
+
+Masongsong Associates Engineering Limited
+
+Page 1 / 1
+
+\15\746\design\water\17-849 Table 1.1Nodal Demand Summary V2.xls
+
+Page 1
+2023‐01‐03 3:30:54 PM
+**********************************************************************
+*
+E P A N E T
+*
+*
+Hydraulic and Water Quality
+*
+*
+Analysis for Pipe Networks
+*
+*
+Version 2.2
+*
+**********************************************************************
+Input File: 17‐849wmminhourly.net
+
+Link ‐ Node Table:
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+Link
+Start
+End
+Length Diameter
+mm
+ID
+Node
+Node
+m
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+1
+VSB‐R
+1
+17.7
+150
+Node Results:
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+Node
+Demand
+Head Pressure
+Quality
+ID
+LPS
+m
+m
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+1
+2.29
+264.98
+35.27
+0.00
+VSB‐R
+‐2.29
+264.98
+0.00
+0.00 Reservoir
+Link Results:
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+Link
+Flow VelocityUnit Headloss
+Status
+ID
+LPS
+m/s
+m/km
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+Open
+1
+2.29
+0.13
+0.28
+
+Page 1
+2023‐01‐03 3:33:29 PM
+**********************************************************************
+*
+E P A N E T
+*
+*
+Hydraulic and Water Quality
+*
+*
+Analysis for Pipe Networks
+*
+*
+Version 2.2
+*
+**********************************************************************
+Input File: 17‐849wmpeakdaily+fire.net
+
+Link ‐ Node Table:
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+Link
+Start
+End
+Length Diameter
+mm
+ID
+Node
+Node
+m
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+1
+VSB‐R
+1
+17.7
+150
+Node Results:
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+Node
+Demand
+Head Pressure
+Quality
+ID
+LPS
+m
+m
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+1
+121.25
+257.25
+27.50
+0.00
+VSB‐R
+‐121.25
+264.98
+0.00
+0.00 Reservoir
+Link Results:
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+Link
+Flow VelocityUnit Headloss
+Status
+ID
+LPS
+m/s
+m/km
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+Open
+1
+121.25
+6.86
+436.79
+
+Page 1
+2023‐01‐03 3:32:16 PM
+**********************************************************************
+*
+E P A N E T
+*
+*
+Hydraulic and Water Quality
+*
+*
+Analysis for Pipe Networks
+*
+*
+Version 2.2
+*
+**********************************************************************
+Input File: 17‐849wmpeakhourly.net
+
+Link ‐ Node Table:
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+Link
+Start
+End
+Length Diameter
+mm
+ID
+Node
+Node
+m
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+1
+VSB‐R
+1
+17.7
+150
+Node Results:
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+Node
+Demand
+Head Pressure
+Quality
+ID
+LPS
+m
+m
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+1
+4.58
+264.96
+35.21
+0.00
+VSB‐R
+‐4.58
+264.98
+0.00
+0.00 Reservoir
+Link Results:
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+Link
+Flow VelocityUnit Headloss
+Status
+ID
+LPS
+m/s
+m/km
+‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐‐
+Open
+1
+4.58
+0.26
+1.01
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development -12148 Albion Vaughan Rd*Town of Caledon
+
+17-849
+
+Appendix C
+Sanitary Design Criteria
+
+Masongsong Associates Engineering Limited
+
+Population
+1000
+1050
+1100
+1150
+1200
+1300
+1400
+1500
+1600
+1700
+1800
+1900
+2000
+2200
+2400
+2600
+2800
+3000
+3250
+3500
+3750
+4000
+4250
+4500
+
+Peak Flow
+(m3/sec)
+0.0130
+0.0139
+0.0145
+0.0151
+0.0157
+0.0169
+0.0181
+0.0193
+0.0204
+0.0217
+0.0228
+0.0239
+0.0251
+0.0273
+0.0296
+0.0318
+0.0340
+0.0361
+0.0387
+0.0415
+0.0441
+0.0467
+0.0492
+0.0518
+
+Population
+4750
+5000
+5250
+5500
+5750
+6000
+6250
+6500
+6750
+7000
+7250
+7500
+7750
+8000
+8250
+8500
+8750
+9000
+9250
+9500
+9750
+10000
+11000
+12000
+
+Peak Flow
+(m3/sec)
+0.0542
+0.0569
+0.0594
+0.0618
+0.0640
+0.0666
+0.0691
+0.0710
+0.0737
+0.0762
+0.0784
+0.0809
+0.0830
+0.0854
+0.0878
+0.0898
+0.0922
+0.0945
+0.0968
+0.0981
+0.1010
+0.1033
+0.1120
+0.1210
+
+Population
+13000
+14000
+15000
+16000
+17000
+18000
+19000
+20000
+25000
+30000
+35000
+40000
+45000
+50000
+55000
+60000
+65000
+70000
+75000
+80000
+85000
+90000
+95000
+100000
+
+Peak Flow
+(m3/sec)
+0.1292
+0.1376
+0.1459
+0.1540
+0.1620
+0.1700
+0.1779
+0.1857
+0.2236
+0.2601
+0.2955
+0.3298
+0.3634
+0.3963
+0.4286
+0.4603
+0.4915
+0.5224
+0.5528
+0.5828
+0.6126
+0.6420
+0.6711
+0.7000
+
+Notes:
+1. Domestic sewage flows are based upon a unit sewage flow of 302.8 Lpcd.
+2. The flows in the above table include the Harmon Peaking Factor.
+3. Domestic sewage flow for less than 1000 persons shall be 0.013m3/sec.
+4. Domestic sewage flow for greater than 100,000 persons shall be 7.0 x 10-6 m3/sec per
+capita.
+5. Lpcd = Litres per capita per day
+1 Litre = 0.001 metre3
+
+Date: June
+2005
+
+Rev: 1
+
+Approved:
+
+SEWAGE FLOWS
+(EXCLUDING INFILTRATION)
+
+STD. DWG. 2-5-2
+2-9-2
+
+REGION OF PEEL
+
+CUMULATIVE
+POPULATION
+
+1
+SEWAGE FLOW
+(m³/sec)
+
+2 INFILTRATION
+FLOW (m³/sec)
+
+3
+FOUNDATION
+DRAIN (m³/sec)
+
+TOTAL FLOW
+1+2+3 (m³/sec)
+
+LENGTH (m)
+
+PIPE DIAMETER
+(mm)
+
+GRADIENT (%)
+
+CAPACITY
+(m³/sec)
+
+VELOCITY (m/sec)
+
+686
+
+1.026
+
+686
+
+0.0130
+
+0.000821
+
+-
+
+0.0138
+
+22.0
+
+200
+
+2.00
+
+0.0464
+
+1.476
+
+Date
+
+Consultant
+
+Masongsong Associates Engineering
+Limited
+
+Client
+Sheet
+Project No.
+
+01-Apr-24
+
+Aztec Restorations
+1
+
+of
+17-849
+
+1
+
+Date
+Approved
+
+Design Criteria:
+1
+
+Designed By:
+Checked By:
+
+Aparments
+
+2.7 ppu
+
+Domestic Flow
+
+302.8 L/p/ha.
+
+0.0002 m3/s/ha.
+Infiltration
+0.000028 m3/s/m. of sewer length
+Additional MH inflow
+Sewer flow numbers taken from STD.DWG 2-9-2
+
+Masongsong Associates Engineering Limited
+
+..\04\178\design\17-849-peel-san.xls
+
+DROP IN LOWER
+M.H. (m)
+
+CUMULATIVE
+AREA (ha)
+
+1.03
+
+POPULATION
+
+EX MH
+
+DENSITY (ppu)
+
+SAN MH
+
+# OF UNIT
+
+AREA (ha)
+
+SUBJECT SITE
+
+TO MH
+
+LOCATION
+
+MH FROM
+
+SANITARY SEWER DESIGN SHEET
+12148 Albion Vaughan Road
+Caledon, Ontario
+
+R.S.
+T.M.
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development -12148 Albion Vaughan Rd*Town of Caledon
+
+17-849
+
+Appendix D
+Storage Calculations
+Storm Design Sheet
+Jellyfish Design Report
+Jellyfish Filter Maintenance Manual
+Commitment Letter by Owner
+Irrigation Calculations
+
+Masongsong Associates Engineering Limited
+
+Table 5.2.1
+
+PRELIMINARY Calculation of Roof Drain
+Sizing
+Multiple Residential Condo Development
+
+Notch Area
+m2
+232
+465
+697
+929
+232
+465
+697
+929
+
+51
+Discharge Water Depth
+LPM
+mm
+66
+73.5
+77.5
+86.5
+84
+94
+86.5
+96.5
+LPS
+1.10
+1.29
+1.40
+1.44
+
+Rise
+102
+Discharge
+Water Depth
+LPM
+mm
+82
+91.5
+93
+104
+100
+112
+104.5
+117
+LPS
+1.37
+1.55
+1.67
+1.74
+
+Discharge
+LPM
+97.5
+111.5
+120.5
+127.5
+LPS
+1.63
+1.86
+2.01
+2.13
+
+152
+Water Depth
+mm
+109
+124.5
+134.5
+142
+
+Allowable Release Rate
+Roof Area
+*Release Rate
+
+0.4332
+42
+
+ha
+L/s/ha
+
+Allowable Release Rate
+
+18.19
+
+L/s
+
+Roof Drain Sizing
+Drain Type
+Depth of Ponding
+Number of Drains
+Number of Notches per Drain
+Flow Rating per Notch
+
+465
+0.1245
+10
+1
+1.86
+
+Flow from Each Drain Type 465
+Total Flow from Drain Type 465
+Total Number of Drains
+
+1.86
+18.19
+10
+
+m ( Standard Max. ponding depth
+for roof storage)
+L/m
+L/s
+L/s
+
+Table 5.4.2-F
+On-Site Storage
+Calculator
+
+Project: Multiple Residential Condo
+Development
+
+TOWN OF CALEDON 100-Year
+
+Project No.: 17-849
+By: I.S
+Date: 11-Dec-20
+
+Location: TOWN OF CALEDON
+A=
+Composite C =
+-100y (Allowable) =
+Q Allowable =
+
+0.492 ha
+0.67
+196.54 mm/hr
+3
+0.0274 m /s
+
+Area= Area total- Uncontrolled area-roof Area
+
+Q Actual =
+
+3
+0.0274 m /s
+
+tc
+
+l
+
+Q100
+
+Qstored
+
+(mm/hr)
+
+(m3/s)
+
+(m3/s)
+
+(min)
+
+i_100= 4688(tc+17)-0.9624
+
+Q100= including roof control rate of 15.8L/s
+Peak Volume
+(m3)
+
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+
+76.470
+75.462
+74.480
+73.524
+72.593
+71.685
+70.800
+69.938
+69.096
+68.275
+67.473
+66.691
+65.927
+65.180
+64.451
+63.737
+63.040
+62.358
+61.691
+61.039
+60.400
+59.775
+59.163
+58.563
+57.976
+57.401
+
+0.086
+0.085
+0.084
+0.083
+0.082
+0.081
+0.081
+0.080
+0.079
+0.078
+0.078
+0.077
+0.076
+0.076
+0.075
+0.074
+0.074
+0.073
+0.072
+0.072
+0.071
+0.071
+0.070
+0.069
+0.069
+0.068
+
+0.058
+0.058
+0.057
+0.056
+0.055
+0.054
+0.053
+0.053
+0.052
+0.051
+0.050
+0.050
+0.049
+0.048
+0.047
+0.047
+0.046
+0.046
+0.045
+0.044
+0.044
+0.043
+0.043
+0.042
+0.042
+0.041
+
+193.025
+193.431
+193.810
+194.162
+194.490
+194.794
+195.074
+195.332
+195.569
+195.784
+195.980
+196.157
+196.314
+196.454
+196.576
+196.681
+196.771
+196.844
+196.902
+196.945
+196.974
+196.988
+196.990 ***
+196.978
+196.954
+196.917
+
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+
+56.837
+56.284
+55.743
+55.211
+54.690
+54.179
+53.678
+53.186
+52.703
+52.229
+51.763
+51.306
+50.857
+50.416
+
+0.068
+0.067
+0.067
+0.066
+0.066
+0.065
+0.065
+0.065
+0.064
+0.064
+0.063
+0.063
+0.062
+0.062
+
+0.041
+0.040
+0.040
+0.039
+0.039
+0.038
+0.038
+0.037
+0.037
+0.036
+0.036
+0.035
+0.035
+0.035
+
+196.869
+196.809
+196.737
+196.655
+196.562
+196.458
+196.345
+196.222
+196.089
+195.947
+195.796
+195.636
+195.468
+195.291
+
+Masongsong Associates Engineering Limited
+
+Page 1 / 1
+
+H:\PROJECTS\17\849\Design\STM\17-849 Storage-orifice v3.xls
+
+Determining Number of
+Cartridges for Flow Based
+Systems
+Date
+
+2/20/2024
+
+Black Cells = Calculation
+
+Site Information
+Project Name
+Project Location
+OGS ID
+Drainage Area, Ad
+Impervious Area, Ai
+Pervious Area, Ap
+% Impervious
+Runoff Coefficient, Rc
+Treatment storm flow rate, Q treat
+
+12148 Albion Vaughan Road
+Caledon, ON
+Stormfilter
+1.44 ac (0.5825 ha)
+0.87 ac
+0.57
+61%
+0.64
+0.46 cfs (13.01 L/s)
+
+Peak storm flow rate, Q peak
+
+TBC cfs
+
+Filter System
+Filtration brand
+Cartridge height
+Specific Flow Rate
+Flow rate per cartridge
+
+StormFilter
+18 in
+2
+2.00 gpm/ft
+15.00 gpm
+
+SUMMARY
+Number of Cartridges
+Media Type
+
+14
+Perlite
+
+Event Mean Concentration (EMC)
+Annual TSS Removal
+Percent Runoff Capture
+
+120 mg/L
+80%
+90%
+
+Recommend SFPD 0612 vault or CIP
+
+©2012 CONTECH Engineered Solutions
+conteches.com
+
+200 Enterprise Drive
+Scarborough, ME 04074
+Phone 877-907-8676
+Fax 207-885-9825
+
+1 of 1
+
+STORMFILTER DESIGN NOTES
+·
+
+2'-7" [787]
+INLET
+
+INLET BAY
+
+·
+
+TRANSFER
+HOLE AND
+COVER
+
+STORMFILTER
+CARTRIDGE
+
+ACTIVATION
+DISK
+
+(6'-0" [1829])
+
+FRAME AND
+COVER
+LOCATION
+
+ALTERNATE
+PIPE LOCATION
+
+·
+
+STORMFILTER TREATMENT CAPACITY VARIES BY CARTRIDGE COUNT AND LOCALLY APPROVED SURFACE AREA SPECIFIC FLOW RATE. PEAK
+CONVEYANCE CAPACITY TO BE DETERMINED BY ENGINEER OF RECORD
+A 6' x 12' [1829 x 3658] PEAK DIVERSION STYLE STORMFILTER IS SHOWN WITH THE MAXIMUM NUMBER OF CARTRIDGES (14) AND IS AVAILABLE IN
+A LEFT INLET (AS SHOWN) OR A RIGHT INLET CONFIGURATION
+ALL PARTS AND INTERNAL ASSEMBLY PROVIDED BY CONTECH UNLESS NOTED OTHERWISE
+
+CARTRIDGE SIZE (in. [mm])
+
+27 [686]
+
+18 [457]
+
+RECOMMENDED HYDRAULIC DROP (H) (ft. [mm])
+
+3.05 [930]
+
+2.3 [701]
+
+1.8 [549]
+
+HEIGHT OF WEIR (W) (ft. [mm])
+
+3.00 [914]
+
+2.25 [686]
+
+1.75 [533]
+
+LOW DROP
+
+SPECIFIC FLOW RATE (gpm/sf [L/s/m2])
+
+2 [1.36]
+
+1.67* [1.13]*
+
+1 [0.68]
+
+2 [1.36]
+
+1.67* [1.13]*
+
+1 [0.68]
+
+2 [1.36]
+
+1.67* [1.13]*
+
+1 [0.68]
+
+CARTRIDGE FLOW RATE (gpm [L/s])
+
+22.5 [1.42]
+
+18.79 [1.19]
+
+11.25 [0.71]
+
+15 [0.95]
+
+12.53 [0.79]
+
+7.5 [0.47]
+
+10 [0.63]
+
+8.35 [0.53]
+
+5 [0.32]
+
+* 1.67 gpm/sf [1.13 L/s/m2] SPECIFIC FLOW RATE IS APPROVED WITH PHOSPHOSORB® (PSORB) MEDIA ONLY
+
+SITE SPECIFIC
+DATA REQUIREMENTS
+STRUCTURE ID
+WATER QUALITY FLOW RATE (cfs [L/s])
+PEAK FLOW RATE (cfs [L/s])
+
+OUTLET BAY
+
+FILTRATION BAY
+
+OUTLET
+
+FRAME AND GRATE
+(24" SQUARE)
+(NOT TO SCALE)
+
+PLAN
+
+CARTRIDGE FLOW RATE
+CARTRIDGE SIZE (27, 18, LOW DROP (LD))
+MEDIA TYPE (PERLITE, ZPG, PSORB)
+NUMBER OF CARTRIDGES REQUIRED
+INLET BAY RIM ELEVATION
+FILTER BAY RIM ELEVATION
+PIPE DATA:
+
+®
+
+www.ContechES.com
+
+INVERT
+
+MATERIAL
+
+DIAMETER
+
+INLET PIPE 1
+INLET PIPE 2
+OUTLET PIPE
+
+FRAME AND COVER
+(TYP OF 3)
+
+NOTES/SPECIAL REQUIREMENTS:
+
+GRADE RINGS/RISERS
+(TYP OF 3)
+
+FRAME AND COVER
+(30" ROUND)
+(NOT TO SCALE)
+
+INLET PIPE
+
+4'-11" [1500] MIN
+
+SEPARATION
+WALL
+STEPS
+
+(W)
+
+WEIR WALL
+
+(H)
+
+I:\COMMON\CAD\TREATMENT\10 STORMFILTER\40 STANDARD DRAWINGS\SFPD\STANDARD\IN PROCESS\DWG\SFPD0612-DTL.DWG 10/20/2020 3:06 PM
+
+(12'-0" [3658])
+
+RETURN PERIOD OF PEAK FLOW (yrs)
+
+OUTLET PIPE
+
+STORMFILTER
+CARTRIDGE
+
+ELEVATION
+
+FLOW KIT
+
+PERFORMANCE SPECIFICATION
+FILTER CARTRIDGES SHALL BE MEDIA-FILLED, PASSIVE, SIPHON ACTUATED, RADIAL FLOW, AND SELF CLEANING. RADIAL MEDIA DEPTH
+SHALL BE 7" [178]. FILTER MEDIA CONTACT TIME SHALL BE AT LEAST 37 SECONDS. SPECIFIC FLOW RATE SHALL BE 2 GPM/SF [1.36 L/s/m2]
+(MAXIMUM). SPECIFIC FLOW RATE IS THE MEASURE OF THE FLOW (GPM) DIVIDED BY THE MEDIA SURFACE CONTACT AREA (SF). MEDIA
+VOLUMETRIC FLOW RATE SHALL BE 6 GPM/CF [13.39 L/s/m3] OF MEDIA (MAXIMUM).
+GENERAL NOTES
+1. CONTECH TO PROVIDE ALL MATERIALS UNLESS NOTED OTHERWISE.
+2. DIMENSIONS MARKED WITH ( ) ARE REFERENCE DIMENSIONS. ACTUAL DIMENSIONS MAY VARY.
+3. ALTERNATE DIMENSIONS ARE IN MILLIMETERS [mm] UNLESS NOTED OTHERWISE.
+4. FOR FABRICATION DRAWINGS WITH DETAILED STRUCTURE DIMENSIONS AND WEIGHTS, PLEASE CONTACT YOUR CONTECH
+REPRESENTATIVE. www.ContechES.com
+5. STORMFILTER WATER QUALITY STRUCTURE SHALL BE IN ACCORDANCE WITH ALL DESIGN DATA AND INFORMATION CONTAINED IN THIS
+DRAWING. CONTRACTOR TO CONFIRM STRUCTURE MEETS REQUIREMENTS OF PROJECT.
+6. STRUCTURE SHALL MEET AASHTO HS20 LOAD RATING, ASSUMING EARTH COVER OF 0' - 10' [3048] AND GROUNDWATER ELEVATION AT, OR
+BELOW, THE OUTLET PIPE INVERT ELEVATION. ENGINEER OF RECORD TO CONFIRM ACTUAL GROUNDWATER ELEVATION. CASTINGS
+SHALL MEET AASHTO M306 AND BE CAST WITH THE CONTECH LOGO.
+INSTALLATION NOTES
+A. ANY SUB-BASE, BACKFILL DEPTH, AND/OR ANTI-FLOTATION PROVISIONS ARE SITE-SPECIFIC DESIGN CONSIDERATIONS AND SHALL BE
+SPECIFIED BY ENGINEER OF RECORD.
+B. CONTRACTOR TO PROVIDE EQUIPMENT WITH SUFFICIENT LIFTING AND REACH CAPACITY TO LIFT AND SET THE STORMFILTER STRUCTURE.
+C. CONTRACTOR TO INSTALL JOINT SEALANT BETWEEN ALL SECTIONS AND ASSEMBLE STRUCTURE.
+D. CONTRACTOR TO PROVIDE, INSTALL, AND GROUT PIPES. MATCH OUTLET PIPE INVERT WITH OUTLET BAY FLOOR.
+E. CONTRACTOR TO TAKE APPROPRIATE MEASURES TO PROTECT CARTRIDGES FROM CONSTRUCTION-RELATED EROSION RUNOFF.
+F. CONTRACTOR TO REMOVE THE TRANSFER OPENING COVER WHEN THE SYSTEM IS BROUGHT ONLINE.
+
+THIS PRODUCT MAY BE PROTECTED BY ONE OR MORE OF THE FOLLOWING
+U.S. PATENTS: 5,322,629; 5,524,576; 5,707,527; 5,985,157; 6,027,639; 6,649,048;
+RELATED FOREIGN PATENTS, OR OTHER PATENTS PENDING.
+
+www.ContechES.com
+9025 Centre Pointe Dr., Suite 400, West Chester, OH 45069
+800-526-3999
+
+513-645-7000
+
+513-645-7993 FAX
+
+SFPD0612 (6' x 12')
+PEAK DIVERSION STORMFILTER
+STANDARD DETAIL
+
+ENGINEERED SOLUTIONS
+
+StormFilter Inspection and
+Maintenance Procedures
+
+Maintenance Guidelines
+The primary purpose of the Stormwater Management
+StormFilter® is to filter and prevent pollutants from entering our
+waterways. Like any effective filtration system, periodically these
+pollutants must be removed to restore the StormFilter to its full
+efficiency and effectiveness.
+Maintenance requirements and frequency are dependent on the
+pollutant load characteristics of each site. Maintenance activities
+may be required in the event of a chemical spill or due to
+excessive sediment loading from site erosion or extreme storms. It
+is a good practice to inspect the system after major storm events.
+
+Maintenance Procedures
+Although there are many effective maintenance options, we
+believe the following procedure to be efficient, using common
+equipment and existing maintenance protocols. The following
+two-step procedure is recommended::
+1. Inspection
+• Inspection of the vault interior to determine the need for
+
+maintenance.
+2. Maintenance
+• Cartridge replacement
+• Sediment removal
+
+Inspection and Maintenance Timing
+At least one scheduled inspection should take place per year with
+maintenance following as warranted.
+First, an inspection should be done before the winter season.
+During the inspection the need for maintenance should be
+determined and, if disposal during maintenance will be required,
+samples of the accumulated sediments and media should be
+obtained.
+Second, if warranted, a maintenance (replacement of the filter
+cartridges and removal of accumulated sediments) should be
+performed during periods of dry weather.
+
+2
+
+In addition to these two activities, it is important to check
+the condition of the StormFilter unit after major storms for
+potential damage caused by high flows and for high sediment
+accumulation that may be caused by localized erosion in the
+drainage area. It may be necessary to adjust the inspection/
+maintenance schedule depending on the actual operating
+conditions encountered by the system. In general, inspection
+activities can be conducted at any time, and maintenance should
+occur, if warranted, during dryer months in late summer to early
+fall.
+
+Maintenance Frequency
+The primary factor for determining frequency of maintenance for
+the StormFilter is sediment loading.
+A properly functioning system will remove solids from water by
+trapping particulates in the porous structure of the filter media
+inside the cartridges. The flow through the system will naturally
+decrease as more and more particulates are trapped. Eventually
+the flow through the cartridges will be low enough to require
+replacement. It may be possible to extend the usable span of the
+cartridges by removing sediment from upstream trapping devices
+on a routine as-needed basis, in order to prevent material from
+being re-suspended and discharged to the StormFilter treatment
+system.
+The average maintenance lifecycle is approximately 1-5 years.
+Site conditions greatly influence maintenance requirements.
+StormFilter units located in areas with erosion or active
+construction may need to be inspected and maintained more
+often than those with fully stabilized surface conditions.
+Regulatory requirements or a chemical spill can shift maintenance
+timing as well. The maintenance frequency may be adjusted as
+additional monitoring information becomes available during the
+inspection program. Areas that develop known problems should
+be inspected more frequently than areas that demonstrate no
+problems, particularly after major storms. Ultimately, inspection
+and maintenance activities should be scheduled based on the
+historic records and characteristics of an individual StormFilter
+system or site. It is recommended that the site owner develop
+a database to properly manage StormFilter inspection and
+maintenance programs..
+
+Maintenance Decision Tree
+The need for maintenance is typically based on results of the
+inspection. The following Maintenance Decision Tree should be used as
+a general guide. (Other factors, such as Regulatory Requirements, may
+need to be considered).
+Please note Stormwater Management StormFilter devices installed
+downstream of, or integrated within, a stormwater storage facility
+typically have different operational parameters (i.e. draindown time). In
+these cases, the inspector must understand the relationship between
+the retention/detention facility and the treatment system by evaluating
+site specific civil engineering plans, or contacting the engineer of record,
+and make adjustments to the below guidance as necessary. Sediment
+deposition depths and patterns within the StormFilter are likely to
+be quite different compared to systems without upstream storage
+and therefore shouldn’t be used exclusively to evaluate a need for
+maintenance.
+
+Inspection Procedures
+The primary goal of an inspection is to assess the condition of the
+cartridges relative to the level of visual sediment loading as it relates
+to decreased treatment capacity. It may be desirable to conduct this
+inspection during a storm to observe the relative flow through the
+filter cartridges. If the submerged cartridges are severely plugged,
+then typically large amounts of sediments will be present and very
+little flow will be discharged from the drainage pipes. If this is the
+case, then maintenance is warranted and the cartridges need to be
+replaced.
+Warning: In the case of a spill, the worker should abort
+inspection activities until the proper guidance is obtained.
+Notify the local hazard control agency and Contech Engineered
+Solutions immediately.
+To conduct an inspection:
+Important: Inspection should be performed by a person who is
+familiar with the operation and configuration of the StormFilter
+treatment unit and the unit’s role, relative to detention or
+retention facilities onsite.
+
+1. Sediment loading on the vault floor.
+a.
+
+2. Sediment loading on top of the cartridge.
+a.
+
+3. Open the access portals to the vault and allow the system vent.
+4. Without entering the vault, visually inspect the inside of the
+unit, and note accumulations of liquids and solids.
+5. Be sure to record the level of sediment build-up on the floor of
+the vault, in the forebay, and on top of the cartridges. If flow
+is occurring, note the flow of water per drainage pipe. Record
+all observations. Digital pictures are valuable for historical
+documentation.
+
+If >1/4” of accumulation, maintenance is required.
+
+3. Submerged cartridges.
+a.
+
+If >4” of static water above cartridge bottom for more
+than 24 hours after end of rain event, maintenance
+is required. (Catch basins have standing water in the
+cartridge bay.)
+
+4. Plugged media.
+a. While not required in all cases, inspection of the media
+within the cartridge may provide valuable additional
+information.
+b. If pore space between media granules is absent,
+maintenance is required.
+5. Bypass condition.
+a.
+
+1. If applicable, set up safety equipment to protect and notify
+surrounding vehicle and pedestrian traffic.
+2. Visually inspect the external condition of the unit and take notes
+concerning defects/problems.
+
+If >4” of accumulated sediment, maintenance is
+required.
+
+If inspection is conducted during an average rain fall
+event and StormFilter remains in bypass condition
+(water over the internal outlet baffle wall or submerged
+cartridges), maintenance is required.
+
+6. Hazardous material release.
+a.
+
+If hazardous material release (automotive fluids or other)
+is reported, maintenance is required.
+
+7. Pronounced scum line.
+a.
+
+If pronounced scum line (say ≥ 1/4” thick) is present
+above top cap, maintenance is required.
+
+6. Close and fasten the access portals.
+7. Remove safety equipment.
+8. If appropriate, make notes about the local drainage area relative
+to ongoing construction, erosion problems, or high loading of
+other materials to the system.
+9. Discuss conditions that suggest maintenance and make decision
+as to whether or not maintenance is needed.
+3
+
+Maintenance
+Depending on the configuration of the particular system,
+maintenance personnel will be required to enter the vault to
+perform the maintenance.
+Important: If vault entry is required, OSHA rules for confined
+space entry must be followed.
+Filter cartridge replacement should occur during dry weather.
+It may be necessary to plug the filter inlet pipe if base flows is
+occurring.
+Replacement cartridges can be delivered to the site or customers
+facility. Information concerning how to obtain the replacement
+cartridges is available from Contech Engineered Solutions.
+Warning: In the case of a spill, the maintenance personnel
+should abort maintenance activities until the proper guidance
+is obtained. Notify the local hazard control agency and
+Contech Engineered Solutions immediately.
+To conduct cartridge replacement and sediment removal
+maintenance:
+1. If applicable, set up safety equipment to protect maintenance
+personnel and pedestrians from site hazards.
+2. Visually inspect the external condition of the unit and take
+notes concerning defects/problems.
+3. Open the doors (access portals) to the vault and allow the
+system to vent.
+4. Without entering the vault, give the inside of the unit,
+including components, a general condition inspection.
+5. Make notes about the external and internal condition of
+the vault. Give particular attention to recording the level of
+sediment build-up on the floor of the vault, in the forebay,
+and on top of the internal components.
+6. Using appropriate equipment offload the replacement
+cartridges (up to 150 lbs. each) and set aside.
+7. Remove used cartridges from the vault using one of the
+following methods:
+
+Method 1:
+A.
+
+B.
+
+4
+
+Important: Care must be used to avoid damaging the
+cartridges during removal and installation. The cost of
+repairing components damaged during maintenance will be
+the responsibility of the owner.
+C.
+
+Set the used cartridge aside or load onto the hauling
+truck.
+
+D.
+
+Continue steps a through c until all cartridges have been
+removed.
+
+Method 2:
+A.
+
+This activity will require that maintenance personnel enter
+the vault to remove the cartridges from the under drain
+manifold and place them under the vault opening for
+lifting (removal). Disconnect each filter cartridge from the
+underdrain connector by rotating counterclockwise 1/4 of
+a turn. Roll the loose cartridge, on edge, to a convenient
+spot beneath the vault access.
+
+B.
+
+Unscrew the cartridge cap.
+
+Using appropriate hoisting equipment, attach a cable
+from the boom, crane, or tripod to the loose cartridge.
+Contact Contech Engineered Solutions for suggested
+attachment devices.
+
+C.
+
+Remove the cartridge hood and float.
+
+D.
+
+At location under structure access, tip the cartridge on its
+side.
+
+Remove the used cartridges (up to 250 lbs. each) from the
+vault.
+
+E.
+
+Empty the cartridge onto the vault floor. Reassemble the
+empty cartridge.
+
+F.
+
+Set the empty, used cartridge aside or load onto the
+hauling truck.
+
+G.
+
+Continue steps a through e until all cartridges have been
+removed.
+
+This activity will require that maintenance personnel enter
+the vault to remove the cartridges from the under drain
+manifold and place them under the vault opening for
+lifting (removal). Disconnect each filter cartridge from the
+underdrain connector by rotating counterclockwise 1/4 of
+a turn. Roll the loose cartridge, on edge, to a convenient
+spot beneath the vault access.
+
+8.		Remove accumulated sediment from the floor of the
+vault and from the forebay. This can most effectively be
+accomplished by use of a vacuum truck.
+9. Once the sediments are removed, assess the condition of the
+vault and the condition of the connectors.
+10. Using the vacuum truck boom, crane, or tripod, lower and
+install the new cartridges. Once again, take care not to
+damage connections.
+11. Close and fasten the door.
+12. Remove safety equipment.
+13. Finally, dispose of the accumulated materials in accordance
+with applicable regulations. Make arrangements to return the
+used empty cartridges to Contech Engineered Solutions.
+
+Material Disposal
+The accumulated sediment found in stormwater treatment
+and conveyance systems must be handled and disposed of in
+accordance with regulatory protocols. It is possible for sediments
+to contain measurable concentrations of heavy metals and
+organic chemicals (such as pesticides and petroleum products).
+Areas with the greatest potential for high pollutant loading
+include industrial areas and heavily traveled roads.
+Sediments and water must be disposed of in accordance with
+all applicable waste disposal regulations. When scheduling
+maintenance, consideration must be made for the disposal of
+solid and liquid wastes. This typically requires coordination with
+a local landfill for solid waste disposal. For liquid waste disposal
+a number of options are available including a municipal vacuum
+truck decant facility, local waste water treatment plant or on-site
+treatment and discharge.
+
+Related Maintenance Activities Performed on an as-needed basis
+StormFilter units are often just one of many structures in a more
+comprehensive stormwater drainage and treatment system.
+In order for maintenance of the StormFilter to be successful, it
+is imperative that all other components be properly maintained.
+The maintenance/repair of upstream facilities should be carried
+out prior to StormFilter maintenance activities.
+In addition to considering upstream facilities, it is also important
+to correct any problems identified in the drainage area. Drainage
+area concerns may include: erosion problems, heavy oil loading,
+and discharges of inappropriate materials.
+
+5
+
+Inspection Report
+Date:—————————————— Personnel:—————————————————————————————————————
+Location:————————————— System Size:______________________________ Months in Service:—————————————
+System Type:
+
+Vault
+
+Cast-In-Place
+
+Linear Catch Basin
+
+Manhole
+
+Other:____________
+
+Sediment Thickness in Forebay:______________________________________________________ Date:_____________________________
+Sediment Depth on Vault Floor:________________________________________________________________________________________
+Sediment Depth on Cartridge Top(s):___________________________________________________________________________________
+Structural Damage:—————————————————————————————————————————————————
+Estimated Flow from Drainage Pipes (if available):—————————————————————————————————————
+Cartridges Submerged:
+
+Yes
+
+No
+
+Depth of Standing Water:———————————————————————
+
+StormFilter Maintenance Activities (check off if done and give description)
+Trash and Debris Removal:————————————————————————————————————————————
+Minor Structural Repairs:—————————————————————————————————————————————
+Drainage Area Report——————————————————————————————————————————————
+Excessive Oil Loading:
+
+Yes
+
+No
+
+Source:————————————————————————
+
+Sediment Accumulation on Pavement:
+
+Yes
+
+No
+
+Source:————————————————————————
+
+Erosion of Landscaped Areas:
+
+Yes
+
+No
+
+Source:————————————————————————
+
+Items Needing Further Work: —————————————————————————————————————————————
+Owners should contact the local public works department and inquire about how the department disposes of their street waste
+residuals.
+Other Comments:
+—————————————————————————————————————————————————————————
+—————————————————————————————————————————————————————————
+—————————————————————————————————————————————————————————
+—————————————————————————————————————————————————————————
+—————————————————————————————————————————————————————————
+—————————————————————————————————————————————————————————
+—————————————————————————————————————————————————————————
+—————————————————————————————————————————————————————————
+
+Review the condition reports from the previous inspection visits.
+
+StormFilter Maintenance Report
+Date:—————————————— Personnel:—————————————————————————————————————
+Location:————————————— System Size:————————————————————————————————————
+System Type:
+
+Vault
+
+Cast-In-Place
+
+Linear Catch Basin
+
+Manhole
+
+Other:___________
+
+List Safety Procedures and Equipment Used:———————————————————————————————————————
+—————————————————————————————————————————————————————————
+—————————————————————————————————————————————————————————
+
+System Observations
+Months in Service:___________________________________________________________________________________________________
+Oil in Forebay (if present):
+
+Yes
+
+No
+
+Sediment Depth in Forebay (if present):—————————————————————————————————————————
+Sediment Depth on Vault Floor:————————————————————————————————————————————
+Sediment Depth on Cartridge Top(s):——————————————————————————————————————————
+Structural Damage: —————————————————————————————————————————————————
+
+Drainage Area Report
+Excessive Oil Loading:
+
+Yes
+
+No
+
+Source:——————————————————————————
+
+Sediment Accumulation on Pavement:
+
+Yes
+
+No
+
+Source: ——————————————————————————
+
+Erosion of Landscaped Areas:
+
+Yes
+
+No
+
+Source:——————————————————————————
+
+StormFilter Cartridge Replacement Maintenance Activities
+Remove Trash and Debris:
+
+Yes
+
+No
+
+Details:———————————————————————————
+
+Replace Cartridges:
+
+Yes
+
+No
+
+Details:———————————————————————————
+
+Sediment Removed:
+
+Yes
+
+No
+
+Details:———————————————————————————
+
+No
+
+Details:——————————————————————————
+
+Quantity of Sediment Removed (estimate?):
+Minor Structural Repairs:
+
+Yes
+
+Residuals (debris, sediment) Disposal Methods:———————————————————————————————————————
+Notes:
+——————————————————————————————————————————————————————————
+——————————————————————————————————————————————————————————
+——————————————————————————————————————————————————————————
+——————————————————————————————————————————————————————————
+——————————————————————————————————————————————————————————
+——————————————————————————————————————————————————————————
+——————————————————————————————————————————————————————————
+
+ENGINEERED SOLUTIONS
+
+© 2020 CONTECH ENGINEERED SOLUTIONS LLC, A QUIKRETE COMPANY
+800-338-1122
+www.ContechES.com
+All Rights Reserved. Printed in the USA.
+Contech Engineered Solutions LLC provides site solutions for the civil engineering industry. Contech’s portfolio includes bridges,
+drainage, sanitary sewer, stormwater and earth stabilization products. For information on other Contech division offerings, visit
+www.ContechES.com or call 800.338.1122.
+Support
+• Drawings and specifications are available at www.conteches.com.
+• Site-specific design support is available from our engineers.
+NOTHING IN THIS CATALOG SHOULD BE CONSTRUED AS A WARRANTY. APPLICATIONS SUGGESTED HEREIN ARE DESCRIBED
+ONLY TO HELP READERS MAKE THEIR OWN EVALUATIONS AND DECISIONS, AND ARE NEITHER GUARANTEES NOR
+WARRANTIES OF SUITABILITY FOR ANY APPLICATION. CONTECH MAKES NO WARRANTY WHATSOEVER, EXPRESS OR IMPLIED,
+RELATED TO THE APPLICATIONS, MATERIALS, COATINGS, OR PRODUCTS DISCUSSED HEREIN. ALL IMPLIED WARRANTIES OF
+MERCHANTABILITY AND ALL IMPLIED WARRANTIES OF FITNESS FOR ANY PARTICULAR PURPOSE ARE DISCLAIMED BY CONTECH.
+SEE CONTECH’S CONDITIONS OF SALE (AVAILABLE AT WWW.CONTECHES.COM/COS) FOR MORE INFORMATION.
+
+StormFilter Inspection and Maintenance Procedures 4/20
+
+800.338.1122
+www.conteches.com
+
+MARTON SMITH LANDSCAPE ARCHITECTS
+170 The Donway West, Suite 206
+North York, Ontario. M3C 2G3
+Tel. 416 492-9966
+e-mail: msla@msla.ca
+
+Attn.
+
+Masongsong Associates
+c/o Rui Song
+7800 Kennedy Road, Suite 201
+Markham, ON. L3R 2C7
+
+Date:
+
+Mar. 19, 2024
+
+Re.:
+
+Landscape Irrigation Calculation Estimate
+12148 Albion-Vaughan Road, Caledon, Ontario.
+
+The purpose of this letter is to confirm whether the water stored in the stormwater cistern can be
+reused within 72 hours, by using an on-site irrigation system.
+
+ESTIMATED POTENTIAL IRRIGATION USE IN CUBIC METRES
+May
+June
+July
+August
+September
+Total WR m³
+Total Monthly Avg WR m³
+Total 72 hr Avg
+
+384.42
+445.27
+490.70
+445.27
+384.42
+2150.08
+430.02
+43.87
+
+Notes:
+• Please refer to the following sheets for formulas and monthly water use breakdowns
+• This irrigation calculation has been estimated for landscape consumption only and reflects an
+approximate potential irrigation use based on standard landscape coefficients and local values.
+• The months May through September are included in the calculation to represent the typical
+irrigation potential for the Toronto region growing season (153 days).
+• Landscape planting specific irrigation design, mechanical systems, and related specifications
+shall be provided by a qualified irrigation consultant or contractor during the construction
+phase. This includes confirming the daily use frequency of the irrigation system.
+• Any additional irrigation, beyond the rainwater harvesting system, is considered optional.
+Therefore, based on the above potential irrigation use, 43.87 m³ of water can be re-used for the purposes of
+irrigation, during the average 72 hr period. Any additional irrigation, beyond the rainwater harvesting system,
+is considered optional, and to conform with local by-laws and green standard requirements.
+Sincerely,
+Dave Reid, O.A.L.A., C.S.L.A.
+Per. MSLA Landscape Architects
+
+MSLA 170 The Donway W., Suite 206, North York, Ontario. M3C 2G3 Tel: (416) 492-9966 Fax: (416) 492-0426 e-mail: msla@msla.ca
+
+WATER REQUIREMENT STANDARD FORMULA
+WR = [(ETo x KL) – RE] x A
+DU x EWM x CU
+Item Type
+
+Description
+Quantity of water required to irrigate the
+landscape areas
+Based on industry standards for the City of
+Toronto
+
+WR
+
+=
+
+Irrigation Water Requirement
+
+ETo
+
+=
+
+Reference Evapotranspiration
+in mm
+
+July (ETo = 138.2) is used as the reference value,
+and a percentage is determined based on the
+remaining months of irrigation use:
+
+KL
+
+=
+
+Landscape Coefficient
+
+May = 103.65 (75% of July)
+June = 124.38 (90% of July)
+July = 138.2 (Reference Value)
+August = 124.38 (90% of July)
+September = 103.65 (75% of July)
+Based on the type of plant material, and in
+conjunction with LEED standards and calculating
+system (Standard LEED Calculator)
+
+RE
+
+=
+
+Effective Rainfall
+
+Shrubs/Perennials = 1.0
+Green Roof = 1.0
+Sodded Area = 1.2
+See chart and description on following page
+
+A
+DU
+
+=
+=
+
+Area in m²
+Distribution Uniformity
+
+Area of landscape to be irrigated
+Based on industry standards
+
+EWM
+
+=
+
+Water Management Efficiency
+
+CU
+
+=
+
+1000 (Constant)
+
+Sodded Area = 0.75
+Shrubs/Perennials = 0.75
+Green Roof = 0.9
+Water management efficiency of the irrigation
+system
+Good = 0.85 (constant)
+Constant for unit conversion
+
+MSLA 170 The Donway W., Suite 206, North York, Ontario. M3C 2G3 Tel: (416) 492-9966 Fax: (416) 492-0426 e-mail: msla@msla.ca
+
+EFFECTIVE RAINFALL
+The effective rainfall is the total rainfall, minus runoff, minus evaporation, and minus deep
+percolation; only the water retained in the root zone can be used by the plants and represents
+what is called the effective part of the rainwater. The remaining water requirement for the plants is
+fulfilled by the irrigation system, as needed. (see: https://www.fao.org/3/s2022e/s2022e08.htm)
+For the purposes of this calculation, Rainfall (ETo) = 138.2 mm for July. This is then entered into
+the chart below, which results in an Effective Rainfall (RE) value of 85. The same is done for the
+remaining months included in this report.
+This value is then subtracted from the irrigation estimate, in order to account for initial 5mm of rain
+abstraction (which is already included in the stormwater report). Please refer to the formula on the
+previous page
+
+RAINFALL (ETo) AND EFFECTIVE RAINFALL (RE) in mm/month
+ETo
+(mm/month)
+
+RE
+(mm/month)
+
+ETo
+(mm/month)
+
+RE
+(mm/month)
+
+0
+
+0
+
+130
+
+79
+
+10
+
+0
+
+140
+
+87
+
+20
+
+2
+
+150
+
+95
+
+30
+
+8
+
+160
+
+103
+
+40
+
+14
+
+170
+
+111
+
+50
+
+20
+
+180
+
+119
+
+60
+
+26
+
+190
+
+127
+
+70
+
+32
+
+200
+
+135
+
+80
+
+39
+
+210
+
+143
+
+90
+
+47
+
+220
+
+151
+
+100
+
+55
+
+230
+
+159
+
+110
+
+63
+
+240
+
+167
+
+120
+
+71
+
+250
+
+175
+
+Source:
+
+Based on “Irrigation Water Management: Irrigation Water Needs.”
+http://www.fao.org/3/s2022e/s2022e03.htm . FAO (Food and Agriculture
+Organization of the United Nations) 1986.
+
+MSLA 170 The Donway W., Suite 206, North York, Ontario. M3C 2G3 Tel: (416) 492-9966 Fax: (416) 492-0426 e-mail: msla@msla.ca
+
+MONTHLY BREAKDOWN - ESTIMATED POTENTIAL IRRIGATION USE
+MAY
+
+Type
+Sodded Area
+Green Roof
+Shrubs/
+Perennials
+
+% of
+July
+Reference
+ET
+75%
+75%
+75%
+
+ETo
+(Reference ET
+in mm)
+
+KL
+
+RE (50%
+Effective Rainfall
+in mm)
+
+A
+(m²)
+
+DU
+(Distribution
+Uniformity)
+
+EWM (Water
+Management
+Efficiency)
+
+WR (m³)
+
+103.65
+103.65
+
+1.2
+1
+
+28.5
+28.5
+
+599.7
+1420.3
+
+0.75
+0.9
+
+0.85
+0.85
+
+90.19
+139.52
+
+103.65
+
+1
+
+28.5
+
+1312.3
+
+0.75
+
+0.85
+
+154.70
+
+May Total
+Scheduled Irrigation Flow per 72 hr in m³
+
+384.42
+39.71
+
+JUNE
+
+Type
+Sodded Area
+Green Roof
+Shrubs/
+Perennials
+
+% of
+July
+Reference
+ET
+90%
+90%
+90%
+
+ETo
+(Reference ET
+in mm)
+
+KL
+
+RE (50%
+Effective Rainfall
+in mm)
+
+A
+(m²)
+
+DU
+(Distribution
+Uniformity)
+
+EWM (Water
+Management
+Efficiency)
+
+WR (m³)
+
+124.38
+124.38
+
+1.2
+1
+
+37.5
+37.5
+
+599.7
+1420.3
+
+0.75
+0.9
+
+0.85
+0.85
+
+105.13
+161.30
+
+124.38
+
+1
+
+37.5
+
+1312.3
+
+0.75
+
+0.85
+
+178.84
+
+June Total
+Scheduled Irrigation Flow per 72 hr in m³
+
+445.27
+44.53
+
+JULY
+
+Type
+Sodded Area
+Green Roof
+Shrubs/
+Perennials
+
+% of
+July
+Reference
+ET
+100%
+100%
+100%
+
+ETo
+(Reference ET
+in mm)
+
+KL
+
+RE (50%
+Effective Rainfall
+in mm)
+
+A
+(m²)
+
+DU
+(Distribution
+Uniformity)
+
+EWM (Water
+Management
+Efficiency)
+
+WR (m³)
+
+138.2
+138.2
+
+1.2
+1
+
+42.5
+42.5
+
+599.7
+1420.3
+
+0.75
+0.9
+
+0.85
+0.85
+
+116.03
+177.68
+
+138.2
+
+1
+
+42.5
+
+1312.3
+
+0.75
+
+0.85
+
+197.00
+
+July Total
+Scheduled Irrigation Flow per 72 hr in m³
+
+AUGUST
+
+490.70
+50.69
+
+Type
+Sodded Area
+Green Roof
+Shrubs/
+Perennials
+
+% of
+July
+Reference
+ET
+90%
+90%
+90%
+
+ETo
+(Reference ET
+in mm)
+
+KL
+
+RE (50%
+Effective Rainfall
+in mm)
+
+A
+(m²)
+
+DU
+(Distribution
+Uniformity)
+
+EWM (Water
+Management
+Efficiency)
+
+WR (m³)
+
+124.38
+124.38
+
+1.2
+1
+
+37.5
+37.5
+
+599.7
+1420.3
+
+0.75
+0.9
+
+0.85
+0.85
+
+105.13
+161.30
+
+124.38
+
+1
+
+37.5
+
+1312.3
+
+0.75
+
+0.85
+
+178.84
+
+August Total
+Scheduled Irrigation Flow per 72 hr in m³
+
+445.27
+46.00
+
+SEPTEMBER
+
+Type
+Sodded Area
+Green Roof
+Shrubs/
+Perennials
+
+% of
+July
+Reference
+ET
+75%
+75%
+75%
+
+ETo
+(Reference ET
+in mm)
+
+KL
+
+RE (50%
+Effective Rainfall
+in mm)
+
+A
+(m²)
+
+DU
+(Distribution
+Uniformity)
+
+EWM (Water
+Management
+Efficiency)
+
+WR (m³)
+
+103.65
+103.65
+
+1.2
+1
+
+28.5
+28.5
+
+599.7
+1420.3
+
+0.75
+0.9
+
+0.85
+0.85
+
+90.19
+139.52
+
+103.65
+
+1
+
+28.5
+
+1312.3
+
+0.75
+
+0.85
+
+154.70
+
+September Total
+Scheduled Irrigation Flow per 72 hr in m³
+
+Total Combined WR in m³
+May
+June
+July
+August
+September
+Total WR m³
+Total Monthly Avg WR m³
+Total 72 hr Avg
+
+384.42
+445.27
+490.70
+445.27
+384.42
+2150.08
+430.02
+43.87
+
+384.42
+38.44
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development -12148 Albion Vaughan Rd*Town of Caledon
+
+17-849
+
+Appendix E
+Approved TRCA Creek Realignment Submission and Drawings (2021)
+
+Masongsong Associates Engineering Limited
+
+MEMORANDUM
+Date:
+
+January 25, 2021
+
+MA-Project No: 2017-849
+
+To:
+
+Sameer Dhalla
+Director, Development and Engineering Services
+Toronto and Region Conservation Authority
+
+From:
+
+David Hoover
+Masongsong Associates Engineering Limited
+
+Subject:
+
+Robinson Creek Channel Re-Alignment
+12148 Albion Vaughan Road, Bolton
+Town of Caledon, Ontario
+
+Masongsong Associates Engineering Limited (MAEL) has been retained by Aztec Restoration to prepare this
+technical memorandum in support of the channel re-alignment at Reach 1 of Robinson Creek, a tributary to the
+Humber River. The purpose of this memo is to identify the existing hydraulic conditions and to demonstrate how
+the proposed alignment will preserve and enhance the function of the watercourse to the satisfaction of the
+Toronto and Region Conservation Authority (TRCA).
+The proposed re-alignment is located entirely within the property of 12148 Albion Vaughan Road and
+characterized by proposed site grading in support a new building. The requirement for this re-alignment was
+identified during the zoning by-law and site plan application process when it was discovered that the previous
+land use had significantly altered the site topography resulting in negative impacts to regulatory floodplain.
+Therefore, channel re-alignment is necessary to restore and enhance the function of the watercourse while
+supporting the proposed development.
+The areas of concerns for Robinson Creek is identified as
+Reach 1 starting from River Station 2223.1 to River Station
+2223.16. The lands tributary to this length of Robinson Creek
+is limited to the subject property.
+1.
+
+BACKGROUND
+
+The subject property is approximately 1.3 ha (3.2 acres),
+bound by Highway 50 (a Peel Regional arterial roadway) to the
+west, and bound by Albion Vaughan Road (the designated
+“frontage”) to the east. Directly to the north is existing rural
+residential and to the south is a commercial site with outdoor
+storage provisions. The legal description of the property is Part
+1 of Lot 1, Concession 7 in the Town of Caledon. Refer to
+FIGURE 1 for the Site Plan Location.
+
+7800 KENNEDY ROAD, SUITE 201
+
+MARKHAM, ONTARIO
+
+Figure 1: Site Plan Location
+
+L3R 2C7
+
+T (905) 944-0162
+
+F (905) 944-0165
+
+MEMORANDUM
+
+2.
+
+Page 2 of 7
+
+HYDRAULIC MODELLING (GEOHEC-RAS) RESULTS
+
+The hydraulic modelling results presented herein describes the channel hydraulics based on the details of the TRCA
+2015 HEC RAS model, existing topography and site design where applicable. The following tasks were undertaken:
+
+
+
+
+Update the relevant cross sections for each modelling scenario based on available topographic data.
+Determine regulatory flood elevations for the pre-existing (PEX), existing (EX) and proposed (PR) scenarios
+Evaluate the results of the proposed (PR) channel re-alignment with the pre-existing (PEX) and existing (EX)
+scenarios
+
+METHODOLOGY
+To achieve the modelling objectives described in the preceding section, the U.S. Army Corps of Engineers' River
+Analysis System (HEC-RAS) was utilized. HEC-RAS is designed to perform one-dimensional steady and unsteady flow
+river hydraulics calculations, sediment transport-mobile bed modelling, and water temperature analysis. The HECRAS software supersedes the HEC-2 river hydraulics package.
+The modelling system calculates water surface profiles for steady gradually varied flow. The system can handle a full
+network of channels, a dendritic system, or a single river reach. The steady flow component is capable of modelling
+subcritical, supercritical, and mixed flow regime water surface profiles.
+The basic computational procedure is based on the solution of the one-dimensional energy equation. Energy losses
+are evaluated by friction (Manning's equation) and contraction/expansion (coefficient multiplied by the change in
+velocity head). The momentum equation is utilized in situations where the water surface profile is rapidly varied.
+These situations include mixed flow regime calculations (i.e., hydraulic jumps), hydraulics of bridges, and evaluating
+profiles at river confluences (stream junctions).
+This model has the ability to consider the effects of various obstructions, such as bridges, culverts, dams, weirs, and
+other structures in the floodplain on water levels. The steady flow system is designed for application in floodplain
+management, estimation of floodplain storage, and for assessing the change in water surface profiles due to channel
+modifications.
+The model requires the following input:
+
+
+
+
+
+Channel geometry (low flow centerline profile and cross-sections; culvert crossing details);
+Manning’s roughness for main channel and overbank areas;
+Cumulative flow; and,
+Downstream boundary conditions.
+
+MEMORANDUM
+
+Page 3 of 7
+
+PRE-EXISTING CONDITIONS (PEX)
+The Robinson Creek HEC-RAS was obtained from the TRCA and has been used to establish the original floodline
+conditions for our site, 12148 Albion Vaughan Road. The following outlines the measures taken when analyzing
+the pre-existing hydraulic model:
+o
+
+Uses flow data from the provided TRCA HEC-RAS model (Table 1)
+Table 1: TRCA Flows
+XS 2223.18
+XS2223.12
+Storm
+Flow
+Flow
+Event
+(m3/s)
+(m3/s)
+
+o
+
+2-Year
+
+5.47
+
+5.69
+
+5-Year
+
+7.78
+
+8.09
+
+10-Year
+
+9.36
+
+9.73
+
+25-Year
+
+11.54
+
+11.99
+
+50-Year
+
+13.25
+
+13.77
+
+100-Year
+
+15.21
+
+15.81
+
+Regional
+
+17.88
+
+18.59
+
+Uses original geometry from the provided TRCA 2015 HEC-RAS model
+
+The resultant water surface elevations (W.S.E.) for regulatory storm event in the pre-existing model are
+summarized in Table 2. The floodplain mapping complete with river station locations and flood line for this
+scenario can be found on Drawing PEX.
+EXISTING CONDITIONS (EX)
+The existing condition model was established by updating the relevant cross sections of the Robinson Creek
+HEC-RAS obtained from the TRCA. The update is based on the data from a topographic survey of the existing
+grades which were found to be significantly altered from the original geometry in the pre-existing (PEX) scenario
+above. The following outlines the measures taken when analyzing the existing hydraulic model:
+o
+o
+
+Uses flow data from the provided TRCA 2015 HEC-RAS model (Table 1)
+Uses existing geometry and sections from the provided TRCA 2015 HEC-RAS model and then updated
+with the topographical survey (see below):
+
+
+
+
+
+
+
+
+
+o
+
+Section 2223.15
+Section 2223.14
+Section 2223.134
+Section 2223.133
+Section 2223.132
+Section 2223.131
+Section 2223.112
+Section 2223.11
+
+Additional cross sections have been provided to increase the accuracy across the site (see below):
+
+
+
+Section 2223.156
+Section 2223.152
+
+MEMORANDUM
+
+
+
+
+
+
+
+
+Page 4 of 7
+
+Section 2223.148
+Section 2223.146
+Section 2223.145
+Section 2223.143
+Section 2223.141
+Section 2223.125
+
+The resultant water surface elevations (W.S.E.) for regulatory storm event in the existing model are summarized
+in Table 2. The floodplain mapping complete with river station locations and flood line for this scenario can be
+found on Drawing EX.
+PROPOSED CONDITIONS (PR)
+The proposed conditions model includes the projected grading for our site. The following outlines the measures
+taken when analyzing the proposed hydraulic model:
+o
+o
+
+Uses flow data from the provided TRCA 2013 HEC-RAS model (Table 1)
+Uses existing geometry from the Baseline Model HEC-RAS model with modifications which are as
+follows:
+
+
+o
+
+Uses existing geometry and sections from the provided TRCA 2015 HEC-RAS model and then updated
+with the proposed site grading design (see below):
+
+
+
+
+
+
+
+
+
+o
+
+Section 2223.105 which represents a culvert structure has been removed from the model which
+as the existing culvert that serviced the driveway access is no longer required in the proposed
+condition.
+
+Section 2223.15
+Section 2223.14
+Section 2223.134
+Section 2223.133
+Section 2223.132
+Section 2223.131
+Section 2223.112
+Section 2223.11
+
+Additional cross sections have been provided to increase the accuracy across the site (see below):
+
+
+
+
+
+
+
+
+
+Section 2223.156
+Section 2223.152
+Section 2223.148
+Section 2223.146
+Section 2223.145
+Section 2223.143
+Section 2223.141
+Section 2223.125
+
+The resultant water surface elevations (W.S.E.) for regulatory storm event in the proposed model are
+
+MEMORANDUM
+
+Page 5 of 7
+
+summarized in Table 2. The floodplain mapping complete with river station locations and flood line for this
+scenario can be found on Drawing PR.
+Table 2: Regulatory W.S.E. For Various Scenarios
+River Station
+
+Regulatory W.S.E. (m)
+PEX
+
+EX
+
+PR
+
+230.20
+
+230.20
+
+230.20
+
+2223.156
+
+229.92
+
+229.93
+
+2223.152
+
+229.76
+
+229.68
+
+2223.16
+
+229.80
+
+229.36
+
+2223.148
+
+2223.15
+
+229.60
+
+229.78
+
+229.33
+
+2223.146
+
+229.79
+
+229.32
+
+2223.145
+
+229.79
+
+229.32
+
+2223.143
+
+229.78
+
+229.31
+
+2223.141
+
+229.77
+
+229.19
+
+2223.14
+
+229.23
+
+229.70
+
+229.19
+
+2223.134
+
+229.20
+
+229.56
+
+229.01
+
+2223.133
+
+229.19
+
+229.45
+
+229.07
+
+2223.132
+
+229.18
+
+229.44
+
+229.07
+
+2223.131
+
+229.17
+
+229.36
+
+229.05
+
+2223.13
+
+229.09
+
+228.87
+
+229.02
+
+228.84
+
+228.98
+
+2223.125
+2223.12
+
+229.05
+
+228.94
+
+228.97
+
+2223.11
+
+228.69
+
+228.68
+
+228.97
+
+2223.105
+
+CULVERT
+
+CULVERT
+
+REMOVED
+
+2223.1
+
+228.44
+
+228.41
+
+228.94
+
+2223.09
+
+228.60
+
+228.56
+
+228.50
+
+2223.08
+
+227.91
+
+227.88
+
+228.05
+
+2223.075
+
+CULVERT
+
+CULVERT
+
+CULVERT
+
+2223.07
+
+227.73
+
+227.71
+
+227.71
+
+2223.06
+
+227.63
+
+227.61
+
+227.61
+
+2223.05
+
+226.71
+
+226.69
+
+226.69
+
+2223.04
+
+226.27
+
+226.24
+
+226.24
+
+2223.03
+
+226.00
+
+225.99
+
+225.99
+
+2223.025
+
+CULVERT
+
+CULVERT
+
+CULVERT
+
+2223.02
+
+225.61
+
+225.61
+
+225.61
+
+MEMORANDUM
+
+Page 6 of 7
+
+DISCUSSION
+The regulatory water surface elevation for the pre-existing and the proposed condition is shown in Table 3
+below. The proposed channel re-alignment that only consists of site grading changes within the subject property
+restores and enhances the original (PEX) condition by significantly reducing the regulatory water surface
+elevation within this length of Robinson Creek
+Table 3: Regulatory W.S.E. For Various Scenarios
+River Station
+
+Regulatory W.S.E. (m)
+PEX
+
+PR
+
+Difference
+
+2223.16
+
+230.20
+
+230.20
+
+0.00
+
+2223.15
+
+229.60
+
+229.36
+
+-0.24
+
+2223.14
+
+229.23
+
+229.19
+
+-0.04
+
+2223.134
+
+229.20
+
+229.01
+
+-0.19
+
+2223.133
+
+229.19
+
+229.07
+
+-0.12
+
+2223.132
+
+229.18
+
+229.07
+
+-0.11
+
+2223.131
+
+229.17
+
+228.05
+
+-0.12
+
+2223.13
+
+229.09
+
+228.02
+
+-0.07
+
+2223.12
+
+229.05
+
+228.97
+
+-0.08
+
+2223.11
+
+228.69
+
+228.97
+
+0.28
+
+2223.105
+
+CULVERT
+
+CULVERT REMOVED
+
+-
+
+2223.1
+
+228.44
+
+228.94
+
+0.50
+
+2223.09
+
+228.60
+
+228.50
+
+-0.10
+
+2223.08
+
+227.91
+
+228.05
+
+0.14
+
+2223.075
+
+CULVERT
+
+CULVERT
+
+-
+
+2223.07
+
+227.73
+
+227.71
+
+-0.02
+
+2223.06
+
+227.63
+
+227.61
+
+-0.02
+
+2223.05
+
+226.71
+
+226.69
+
+-0.02
+
+2223.04
+
+226.27
+
+226.24
+
+-0.03
+
+2223.03
+
+226.00
+
+225.99
+
+-0.01
+
+2223.025
+
+CULVERT
+
+CULVERT
+
+-
+
+2223.02
+
+225.61
+
+225.61
+
+0.00
+
+Based on Table 3 above, the water surface elevations increase under proposed conditions at Station 2223.14
+and Station 2223.1, both outliers are clarified as follows:
+Station 2223.11 – The 0.28m increase in WSE is caused by different topographic data between the two
+conditions. Under the pre-existing condition, the channel is significantly wider at this cross section while the
+updated topographic survey under the proposed condition shows that this section and immediately upstream is
+steep and narrow. Therefore, the WSE in the pre-existing condition did not reflect actual ground conditions and
+does not provide an applicable comparison with the proposed model. Despite the 0.28m increase in WSE, the
+regulatory flood line is contained within the roadside ditch under the proposed condition as show in Drawing CP.
+Station 2223.1 & 2223.08 – The increase in WSE is the result of the removal of the culvert that was facilitating
+the existing driveway access. Under the pre-existing condition, the low WSE at this station is caused by the
+
+MEMORANDUM
+
+Page 7 of 7
+
+culvert changing the flow regime from subcritical to super critical as the water passes the driveway access. The
+WSE at the following station is higher which demonstrates that the flows transition from supercritical back to
+subcritical flows. Under the proposed conditions, with the culvert removed, the WSE remains constant or is
+lowers than the subsequent stations which illustrate that there the flow is not constricted along the creek.
+Therefore, an increase is negligible given an the WSE reduction between 0.01m to 0.24m across the subject area
+of study including the stations immediately upstream and downstream.
+In addition, the increase in WSE is also caused by different topographic data between the two conditions. Under
+the pre-existing conditions, the WSE is shown to spill onto Highway 50 at the approximate centerline elevation
+of 228.51m. In the proposed conditions, an updated topographic survey shows an approximate centerline
+elevation of 228.79m. The 0.28m centerline elevation difference prevents any overland spill to occur on
+Highway 50 which would result in an increase of WSE. Despite the increase in WSE, the regulatory flood line is
+contained within the roadside ditch under the proposed condition as show in Drawing CP.
+With the outliers clarified, there is no actual impacts caused by the proposed channel re-alignment. The detailed
+HEC-RAS summary output can be found as attached. The existing and proposed HEC-RAS cross-sections can be
+found in the appendix.
+3.
+
+CONCLUSIONS
+
+In summary, the proposed channel re-alignment will reduce the floodplain on the subject property without
+having any negative impact to the upstream or downstream water surface elevation. The newly re-alignment
+channel will be designed using BMP and erosion mitigation measures to maintain the meander belt and prevent
+negative effects to infrastructure and property limits. Erosion and sediment control strategies are in place to
+perform the channel re-alignment and satisfy both TRCA and the local municipal criteria. Details for the
+mitigation measures and the erosion and sediment control strategies are provided in the design package
+prepared by Palmer.
+I trust that this memorandum is complete and to the satisfaction of the TRCA. If you have any questions or
+concerns, please do not hesitate to contact the undersigned at 905-944-0162 ext. 230.
+Respectfully Submitted,
+MASONGSONG ASSOCIATES ENGINEERING LIMITED
+
+David Hoover, P.Eng
+Senior Project Engineer
+H:\PROJECTS\17\849\Design\17-849_Memo TRCA - Rainbow Creek Channel Re-Alignment - 20201123.doc
+
+Attachments:
+Pre-Existing Condition Plan (PEX)
+Existing Condition Plan (EX)
+Proposed Condition Plan (PR)
+Composite Plan (CP)
+Digital Model Output
+Digital Modelling Files
+
+BY
+
+KIR
+
+D
+ROA
+
+OAD
+
+Y R
+
+B
+KIR
+
+ESC STAGE 1 NOTES:
+
+P
+R
+O
+
+SW
+
+L
+IL
+
+ROAD
+REEK
+OLD C
+
+SITE
+TH
+R
+A
+O
+D
+
+KEY PLAN
+SCALE: N.T.S.
+
+G
+TY arba
+PE ge
+'G Tr
+' (4 uc
+00 k 0 X Fr
+13 ont
+00 Lo
+0 X ad
+61 er
+00
+)
+
+7800 KENNEDY ROAD
+SUITE 201
+MARKHAM, ONTARIO
+L3R 2C7
+T: (905) 944-0162
+www.maeng.ca
+
+5 Shoreham Drive Downsview Ontario M3N 1S4 (416) 661-6600
+
+BY
+
+KIR
+
+D
+ROA
+
+OAD
+
+Y R
+
+B
+KIR
+
+ESC STAGE 2 NOTES:
+
+P
+R
+O
+
+SW
+
+L
+IL
+
+ROAD
+REEK
+OLD C
+
+SITE
+TH
+R
+A
+O
+D
+
+KEY PLAN
+SCALE: N.T.S.
+
+G
+TY arba
+PE ge
+'G Tr
+' (4 uc
+00 k 0 X Fr
+13 ont
+00 Lo
+0 X ad
+61 er
+00
+)
+
+7800 KENNEDY ROAD
+SUITE 201
+MARKHAM, ONTARIO
+L3R 2C7
+T: (905) 944-0162
+www.maeng.ca
+
+5 Shoreham Drive Downsview Ontario M3N 1S4 (416) 661-6600
+
+BY
+
+KIR
+
+GENERAL ESC NOTES:
+
+D
+ROA
+
+OAD
+
+Y R
+
+B
+KIR
+
+SITE
+P
+R
+O
+
+SW
+
+L
+IL
+
+ROAD
+REEK
+OLD C
+
+1. EROSION AND SEDIMENT CONTROL (ESC) MEASURES WILL BE IMPLEMENTED PRIOR TO, AND MAINTAINED DURING CONSTRUCTION
+PHASES, TO PREVENT ENTRY OF SEDIMENT INTO THE WATER. ALL DAMAGED EROSION AND SEDIMENT CONTROL MEASURES SHOULD BE
+REPAIRED OR REPLACED WITHIN 48 HOURS OF INSPECTION OR BOTH.
+2. ALL DISTURBED AREAS WILL BE MINIMIZED TO THE EXTENT POSSIBLE, AND TEMPORARILY OR PERMANENTLY STABILIZED OR RESTORED
+AS THE WORK PROGRESSES.
+3. THE EROSION AND SEDIMENT CONTROL STRATEGIES OUTLINED ON THE PLANS ARE NOT STATIC AND MAY NEED TO BE
+UPGRADED/AMENDED AS SITE CONDITIONS CHANGE TO MINIMIZE SEDIMENT LADEN RUNOFF FROM LEAVING THE WORK AREA. IF THE
+PRESCRIBED MEASURES ON THE PLANS ARE NOT EFFECTIVE IN PREVENTING THE RELEASE OF A DELETERIOUS SUBSTANCE, THEN
+ALTERNATIVE MEASURES MUST BE IMPLEMENTED IMMEDIATELY TO MINIMIZE POTENTIAL ECOLOGICAL IMPACTS AND A TORONTO REGION
+CONSERVATION AUTHORITY ENFORCEMENT OFFICE SHOULD BE IMMEDIATELY CONTACTED. ADDITIONAL ESC MEASURES TO BE KEPT ON
+SITE AND USED AS NECESSARY.
+4. ALL ACTIVITIES, INCLUDING MAINTENANCE PROCEDURES, WILL BE CONTROLLED TO PREVENT THE ENTRY OF PETROLEUM PRODUCTS,
+DEBRIS, RUBBLE, CONCRETE OR OTHER DELETERIOUS SUBSTANCES INTO THE WATER. VEHICULAR REFUELING AND MAINTENANCE AND
+REFUELING
+
+TH
+R
+A
+O
+D
+
+TRCA STANDARD NOTES:
+1. ALL IN-WATER AND NEAR WATER WORKS WILL BE CONDUCTED IN THE DRY WITH APPROPRIATE EROSION AND SEDIMENT CONTROLS.
+2. AN ENVIRONMENTAL MONITOR WILL ATTEND THE SITE TO INSPECT ALL NEW CONTROLS, AS WELL AS ON A REGULAR BASIS, OR
+FOLLOWING RAIN/SNOWMELT EVENT, TO MONITOR ALL WORKS, AND IN PARTICULAR WORKS RELATED TO EROSION AND SEDIMENT
+CONTROLS, DEWATERING OR UNWATERING, RESTORATION AND IN- OR NEAR- WATER WORKS. SHOULD CONCERNS ARISE ON SITE THE
+ENVIRONMENTAL MONITOR WILL CONTACT THE TRCA ENFORCEMENT OFFICER AS WELL AS THE PROPONENT.
+3. ALL ACTIVITIES, INCLUDING MAINTENANCE PROCEDURES, WILL BE CONTROLLED TO PREVENT THE ENTRY OF PETROLEUM PRODUCTS,
+DEBRIS, RUBBLE, CONCRETE OR OTHER DELETERIOUS SUBSTANCES INTO THE WATER. VEHICULAR REFUELING AND MAINTENANCE WILL
+BE CONDUCTED A MINIMUM OF 30 METRES FROM THE WATER.
+4. THE PROPONENT/CONTRACTOR SHALL MONITOR THE WEATHER SEVERAL DAYS IN ADVANCE OF THE ONSET OF THE PROJECT TO ENSURE
+THAT THE WORKS WILL BE CONDUCTED DURING FAVOURABLE WEATHER CONDITIONS. SHOULD AN UNEXPECTED STORM ARISE, THE
+CONTRACTOR WILL REMOVE ALL UNFIXED ITEMS FROM THE REGIONAL STORM FLOOD PLAIN THAT WOULD HAVE THE POTENTIAL TO CAUSE
+A SPILL OR AN OBSTRUCTION TO FLOW, E.G., FUEL TANKS, PORTA- POTTIES, MACHINERY, EQUIPMENT, CONSTRUCTION MATERIALS, ETC.
+5. ALL DEWATERING/UNWATERING SHALL BE TREATED AND RELEASED TO THE ENVIRONMENT AT LEAST 30 METRES FROM A WATERCOURSE
+OR WETLAND AND ALLOWED TO DRAIN THROUGH A WELL-VEGETATED AREA. NO DEWATERING EFFLUENT SHALL BE SENT DIRECTLY TO
+ANY WATERCOURSE, WETLAND OR FOREST, OR ALLOWED TO DRAIN ONTO DISTURBED SOILS WITHIN THE WORK AREA. THESE CONTROL
+MEASURES SHALL BE MONITORED FOR EFFECTIVENESS AND MAINTAINED OR REVISED TO MEET THE OBJECTIVE OF PREVENTING THE
+RELEASE OF SEDIMENT LADEN WATER.
+6. ALL ACCESS TO THE WORK SITE SHALL BE FROM EITHER SIDE OF THE WATERCOURSE. NO EQUIPMENT OR VEHICLES ARE PERMITTED TO
+CROSS THROUGH THE WATERCOURSE UNLESS APPROVED BY TRCA.
+7. IN ORDER TO COMPLY WITH THE MIGRATORY BIRDS CONVENTION ACT AND ENDANGERED SPECIES ACT, ALL VEGETATION REMOVAL
+(INCLUDING TREES) MUST BE COMPLETED BETWEEN JULY 1 TO SEPTEMBER 15.
+8. TO PROTECT LOCAL FISH POPULATIONS DURING THEIR SPAWNING, NURSERY AND MIGRATORY PERIODS, IN- WATER/NEAR-WATER
+ACTIVITIES, MAY ONLY OCCUR DURING THE COLD WATER CONSTRUCTION TIMING WINDOW.
+9. AN ENVIRONMENTAL MONITOR WILL BE ON SITE, AND PROVIDE ADVICE, TO ENSURE THAT ACTIVITIES THAT COULD HAVE A NEGATIVE
+IMPACT TO THE NATURAL ENVIRONMENT ARE EFFECTIVELY MITIGATED AS CONSTRUCTION PROCEEDS. THE ENVIRONMENTAL MONITOR
+SHALL NOTIFY THE TRCA ENFORCEMENT OFFICER AND PROJECT MANAGER IF AN ISSUE ARISES.
+G
+TY arba
+PE ge
+'G Tr
+' (4 uc
+00 k 0 X Fr
+13 ont
+00 Lo
+0 X ad
+61 er
+00
+)
+
+OTHER EROSION AND SEDIMENT CONTROL NOTES:
+1. PLEASE REFER TO ESC GUIDELINE FOR URBAN CONSTRUCTION (DECEMBER 2006) FOR THE DESIGN AND DESIGN ALTERATION OF ESC
+MEASURES.
+2. ANY SEDIMENT SPILL FROM THE SITE SHOULD BE REPORTED TO MINISTRY OF ENVIRONMENT (SPILL ACTION CENTER) AT 1-800-268-6060.
+3. THE CONTRACTOR SHALL MONITOR WEATHER FORECASTS TO ENSURE THAT THE WORKS WILL BE CONDUCTED IN FAVOURABLE WEATHER.
+THE CONTRACTOR IS RESPONSIBLE FOR REMOVING ALL CONSTRUCTION EQUIPMENT AND MATERIALS THAT WOULD HAVE POTENTIAL TO
+CAUSE A SPILL OR OBSTRUCTION (I.E. FUEL TANKS, PORTABLE TOILETS, MACHINERY, ETC.), FROM THE 100 YEAR FLOODPLAIN IN THE CASE
+OF A LARGE STORM EVENT.
+4. AN AFTER-HOURS CONTACT NUMBER IS TO BE VISIBLY POSTED ON-SITE FOR EMERGENCIES. ALL THE PLANS SHOULD HAVE NAME AND
+CONTACT INFO OF THE PERSON RESPONSIBLE FOR ESC MEASURES.
+5. ALL NEAR OR IN-WATER WORKS SHALL BE COMPLETED WITHIN THE TIMING WINDOW SPECIFIED BY THE DFO, BETWEEN JULY 1 TO
+SEPTEMBER 15, UNLESS THE APPROPRIATE APPROVAL AGENCIES HAVE PROVIDED PRIOR WRITTEN APPROVAL TO EXTENSION OF THE
+TIMING WINDOW. THE CONTRACTOR SHALL PLAN AND IMPLEMENT THEIR ACTIVITIES TO ENSURE ADHERENCE TO THE TIMING WINDOW
+RESTRICTIONS.
+6. TEMPORARY SEDIMENT CONTROL FENCE TO BE INSTALLED ON THE DOWN SLOPE SIDE OF PITS AND IN TRENCHING LOCATIONS WHERE
+GRADES SLOPE TOWARD THE NATURAL SYSTEMS OR CATCH BASINS TO ENSURE
+
+GENERAL NOTES
+
+KEY PLAN
+SCALE: N.T.S.
+
+FLOOD/EROSION ACCESS SETBACK
+· THE 10 M FLOOD/EROSION ACCESS SETBACK IS TO BE SEEDED AT A RATE OF 25 KGS/HA WITH A NATIVE GRASS SEED MIX THAT ALIGNS WITH
+THE TRCA SEED MIX GUIDELINES (TORONTO AND REGION CONSERVATION AUTHORITY, 2004). THE RECOMMENDED GRASS SEED MIX
+INCLUDES:
+· CANADA WILD RYE (ELYMUS CANADENSIS) - 20%
+· SWITCHGRASS (PANICUM VIRGATUM) - 20%
+· FOWL BLUEGRASS (POA PALUSTRIS) - 20%
+· BIG BLUESTEM (ANDROPOGON GERARDII) - 10%
+· LITTLE BLUESTEM (ANDROPOGON SCOPARIUS) - 10%
+· FOX SEDGE (CAREX VULPINOIDEA) - 10%
+· SIMILAR TO THE NATURAL FEATURE SETBACK PLANTING AREA, THE 10 M FLOOD/EROSION ACCESS SETBACK SHOULD ALSO BE SEEDED WITH
+
+A NURSE CROP OF COMMON OATS OR BUCKWHEAT AT A RATE OF 25 KGS/HA.
+
+TIMING
+· PLANTING AND SEEDING SHOULD BE COMPLETED IN THE SPRING OR FALL. THE SPRING SEASON PLANTING WINDOW IS APRIL TO MID-MAY
+AND THE FALL SEASON WINDOW IS MID-SEPTEMBER TO LATE OCTOBER.
+
+· THE ASSESSMENT OF PLANT STOCK SHOULD BE CONDUCTED UPON DELIVERY TO ENSURE THAT THE MATERIAL CONSISTS OF APPROPRIATE
+NATIVE SPECIES IN PROPER QUANTITIES.
+· SEEDING SHOULD BE COMPLETED IMMEDIATELY AFTER THE PLANTING OF WOODY VEGETATION BUT NOT DURING DROUGHT-PRONE SUMMER
+MONTHS (TORONTO AND REGION CONSERVATION AUTHORITY, 2004).
+
+TENDING FOR RESTORATION PLANTINGS
+· RESTORATION PLANTINGS WILL REQUIRE REGULAR WATERING TO FACILITATE THE ESTABLISHMENT OF YOUNG TREES, WHICH ARE
+TYPICALLY HIGHLY SUSCEPTIBLE TO WATER STRESS.
+
+· AT A MINIMUM, WATERING SHOULD OCCUR WHEN TREES SHOW SIGNS OF STRESS AND DURING PERIODS OF NATURAL DROUGHT CONDITIONS
+(E.G. IF THERE IS LESS THAN 25 MM OF RAIN OVER A 30-DAY PERIOD DURING LATE SPRING TO THE END OF SUMMER).
+
+NATURAL FEATURE SETBACK TREE PLANTING PRESCRIPTION
+
+· THE FOLLOWING RESTORATION RECOMMENDATIONS FOLLOW THE PRACTICAL OBJECTIVES FOR THE REVETMENT AND THE RESTORATION
+METHODS IN THE TRCA GUIDELINE FOR DETERMINING ECOSYSTEM COMPENSATION (TORONTO AND REGION CONSERVATION AUTHORITY,
+2018).
+
+· RESTORATION EFFORTS WILL AIM TO RESTORE THE REALIGNED ROBINSON CREEK AND THE REDESIGNED FLOODPLAIN.
+· RESTORATION PLANTINGS WILL BE IMPLEMENTED FOLLOWING THE COMPLETION OF THE WATERCOURSE REALIGNMENT.
+· THE SPECIES TO BE PLANTED AS PART OF THE RESTORATION EFFORTS ARE NATIVE TO THE REGION AND SUITABLE TO THE SITE
+CONDITIONS.
+· ALL TREES AND WOODY DEBRIS FROM REMOVED DUE TO SITE DISTURBANCE SHOULD BE KEPT ON-SITE AND DISTRIBUTED THROUGHOUT
+THE SITE TO PROVIDE WILDLIFE HABITAT OPPORTUNITIES, AWAY FROM THE ACTIVE FLOW CHANNEL, AFTER TO COMPLETION OF
+RESTORATION PLANTINGS.
+· IF OF SMALL ENOUGH DIAMETER, TREE MATERIAL REMOVED DURING SITE CLEARING COULD BE USED AS EMBEDDED WOODY DEBRIS TO BE
+INCORPORATED INTO THE CHANNEL REALIGNMENT DESIGN.
+
+SOIL AMENDMENTS
+WITHIN THE REDESIGNED FLOODPLAIN, INCLUDING THE NATURAL FEATURE SETBACK AND FLOOD/EROSION HAZARD ACCESS SETBACK, SOILS
+ARE TO BE IMPROVED AFTER CONSTRUCTION WORKS BY:
+
+· DECOMPACTION OF SUBSOIL TO A DEPTH OF 25 CM, BY TILLING OR SCARIFYING THE SOIL IN A PERPENDICULAR DIRECTION TO THE
+REALIGNED WATERCOURSE.
+
+· INCORPORATION OF 7 CM OF COMPOST INTO THE SOILS DURING TILLING.
+· APPLICATION OF 20 - 30 CM OF UNCOMPACTED IMPORTED TOPSOIL WITH 15% ORGANIC MATTER BY DRY WEIGHT.
+
+IN-CHANNEL RESTORATION
+· LIVE STAKES (BRANCH CUTTINGS FROM LIVE SHRUBS) HAVE BEEN RECOMMENDED TO BE PLACED IN THE BENDS AND VEGETATED ROCK
+REVETMENT PORTIONS OF THE ROBINSON CREEK RE-ALIGNMENT.
+
+· LIVE STAKES ARE TO BE PLANTED IN GROUPS OF 10/SPECIES AT 0.3 M ON-CENTRE SPACING.
+· LIVE STAKES ARE RECOMMENDED TO BE 25 - 75 MM DIAMETER STAKES, TO BE HAND PLACED BETWEEN THE STONE REVETMENT/RIP-RAP.
+· STAKES SHOULD BE BURIED >0.5 M BELOW THE RIP-RAP, ENSURING PLACEMENT WITHIN THE SOIL MATRIX AND SEASONAL WATER TABLE.
+· CERTIFIED SOILS SHOULD BE USED TO FILL THE REMAINING SPACE IN EACH PLANTING HOLE.
+THE TIMING WINDOW FOR CONDUCTING ANY IN-WATER OR NEAR-WATER WORKS IS JULY 1 TO SEPTEMBER 15.
+
+LIVE STAKE RESTORATION SPECIES
+
+NATURAL FEATURE SETBACK RESTORATION
+· THE NATURAL FEATURE SETBACK IS TO BE SEEDED AND PLANTED TO BUFFER THE WATERCOURSE/NATURAL FEATURES FROM THE
+DEVELOPMENT.
+· THE NATURAL FEATURE SETBACK IS TO BE SEEDED AT A RATE OF 25 KGS/HA WITH AN EARLY SUCCESSION WET MEADOWSEED MIX THAT
+ALIGNS WITH THE TRCA SEED MIX GUIDELINES (TORONTO AND REGION CONSERVATION AUTHORITY, 2004; CREDIT VALLEY CONSERVATION
+AUTHORITY, 2014).
+
+· THE EARLY SUCCESSION WET MEADOW MIX (CVC 6) INCLUDES:
+· BEBB'S SEDGE (CAREX BEBBII) 5%
+· PURPLE STEMMED ASTER (ASTER PUNICEUS) 1%
+· FOWL BLUEGRASS (POA PALUSTRIS) 25%
+· FOX SEDGE (CAREX VULPINOIDEA) 25%
+· GREAT BLUE LOBELIA (LOBELIA SIPHILITICA) 1%
+· NEW ENGLAND ASTER (ASTER NOVAE-ANGLIAE) 1%
+· PATH RUSH (JUNCUS TENUIS) 3%
+· CANADA GOLDENROD (SOLIDAGO CANADENSIS) 2%
+· SOFT RUSH (JUNCUS EFFUSUS) 5%
+· STALK-GRAIN SEDGE (CAREX STIPATA) 4%
+
+7800 KENNEDY ROAD
+SUITE 201
+MARKHAM, ONTARIO
+L3R 2C7
+T: (905) 944-0162
+www.maeng.ca
+
+· TALL MANNA GRASS (GLYCERIA GRANDIS) 2%
+· VIRGINIA WILD RYE (ELYMUS VIRGINICUS) 25%
+· WILD BERGAMOT (MONARDA FISTULOSA) 1%
+· TO ASSIST IN ESTABLISHMENT AND PROMOTE BIOMASS, THE PLANTING AREA SHOULD ALSO BE SEEDED WITH A NURSE CROP OF COMMON
+OATS (AVENA SATIVA) OR BUCKWHEAT (FAGOPYRUM ESCULENTU) AT A RATE OF 25 KGS/HA.
+· SUBSEQUENTLY, THE NATURAL FEATURE SETBACK IS TO BE PLANTED WITH TREES AND SHRUBS ARE IN GROUPS OF APPROXIMATELY
+2
+
+2
+10/SPECIES, AT A DENSITY OF 2.45 M X 2.45 M (6 M ), AND SHRUBS AT A 1 M X 1 M (1 M ) SPACING.
+
+· REPLACEMENT TREE AND SPECIES ARE RECOMMENDED BE NATIVE TO TRCA'S WATERSHED, AND TARGETED TO PROVIDE NATURAL,
+
+SELF-SUSTAINING VEGETATION (TORONTO AND REGION CONSERVATION AUTHORITY, 2014).
+· THE NATURAL FEATURE SETBACK AND FLOODPLAIN AREA TO BE RESTORED IS APPROXIMATELY 2,000 M2 AND THE RECOMMENDED PLANTING
+SPACING WOULD ALLOW PLANTING OF ABOUT 330 TREES OR 2,000 SHRUBS, OR COMBINATION THEREOF.
+
+· BASED ON THESE EXISTING SITE CONDITIONS, THE RECOMMENDED PLANTING PRESCRIPTION INCLUDES:
+
+5 Shoreham Drive Downsview Ontario M3N 1S4 (416) 661-6600
+
+D
+
+BY
+
+KIR
+BY
+
+KIR
+
+ROA
+
+D
+ROA
+
+OLD C
+
+W
+LS
+IL
+P
+
+ROAD
+REEK
+
+SITE
+O
+TH
+R
+R
+O
+A
+D
+
+KEY PLAN
+SCALE: N.T.S.
+
+7800 KENNEDY ROAD
+SUITE 201
+MARKHAM, ONTARIO
+L3R 2C7
+T: (905) 944-0162
+www.maeng.ca
+
+5 Shoreham Drive Downsview Ontario M3N 1S4 (416) 661-6600
+
+D
+
+BY
+
+KIR
+BY
+
+KIR
+
+ROA
+
+D
+ROA
+
+OLD C
+
+W
+LS
+IL
+P
+
+ROAD
+REEK
+
+SITE
+O
+TH
+R
+R
+O
+A
+D
+
+KEY PLAN
+SCALE: N.T.S.
+
+7800 KENNEDY ROAD
+SUITE 201
+MARKHAM, ONTARIO
+L3R 2C7
+T: (905) 944-0162
+www.maeng.ca
+
+5 Shoreham Drive Downsview Ontario M3N 1S4 (416) 661-6600
+
+BY
+
+KIR
+
+D
+ROA
+
+OAD
+
+Y R
+
+B
+KIR
+
+233.76
+233.76
+
+2223.21
+
+SITE
+229.93
+-
+
+2223.156
+
+229.68
+-
+
+2223.152
+
+229.38
+229.60
+
+2223.150
+
+R
+O
+
+SW
+
+L
+IL
+TH
+
+233.66
+233.66
+
+R
+A
+O
+
+2223.29
+
+233.76
+233.76
+
+P
+
+2223.30
+
+ROAD
+REEK
+OLD C
+
+2223.31
+
+231.80
+231.80
+
+D
+
+2223.28
+
+232.94
+232.94
+2223.27
+
+231.65
+231.65
+232.66
+232.66
+231.53
+231.53
+
+2223.26
+
+2223.20
+
+2223.19
+
+232.66
+232.66
+
+229.37
+-
+
+2223.25
+
+2223.24
+
+232.61
+232.61
+
+2223.148
+
+229.36
+-
+
+2223.146
+
+229.36
+-
+
+2223.145
+
+229.35
+-
+
+2223.143
+
+229.26
+-
+
+2223.141
+
+KEY PLAN
+SCALE: N.T.S.
+
+232.44
+232.44
+2223.23
+
+2223.22
+
+232.44
+232.44
+
+128.77
+128.77
+
+2223.111
+
+232.32
+232.32
+229.26
+229.09
+
+2223.18
+
+2223.14
+
+228.75
+-
+
+2223.125
+
+228.67
+229.05
+
+2223.12
+
+231.29
+231.29
+
+2223.17
+
+230.57
+230.57
+
+2223.16
+
+230.20
+230.20
+
+2223.134
+
+228.96
+229.20
+
+2223.133
+
+229.02
+229.19
+
+2223.132
+
+229.01
+229.18
+
+2223.131
+
+2223.13
+
+228.63
+228.69
+
+2223.11
+
+228.57
+228.44
+
+2223.10
+
+228.56
+228.60
+
+2223.09
+
+227.88
+227.91
+
+2223.08
+
+227.71
+227.73
+
+2223.07
+
+228.96
+229.17
+
+228.86
+229.09
+
+7800 KENNEDY ROAD
+SUITE 201
+MARKHAM, ONTARIO
+L3R 2C7
+T: (905) 944-0162
+www.maeng.ca
+
+5 Shoreham Drive Downsview Ontario M3N 1S4 (416) 661-6600
+
+2223.06
+
+227.61
+227.63
+© 2020 Microsoft Corporation © 2020 Maxar ©CNES (2020) Distribution Airbus DS
+
+BY
+
+KIR
+
+D
+ROA
+
+OAD
+
+Y R
+
+B
+KIR
+
+233.76
+233.76
+
+2223.21
+
+SITE
+229.92
+-
+
+2223.156
+
+229.76
+-
+
+2223.152
+
+229.80
+229.60
+
+2223.15
+
+R
+O
+
+SW
+
+L
+IL
+TH
+
+233.66
+233.66
+
+R
+A
+O
+
+2223.29
+
+233.76
+233.76
+
+P
+
+2223.30
+
+ROAD
+REEK
+OLD C
+
+2223.31
+
+231.80
+231.80
+
+D
+
+2223.28
+
+232.94
+232.94
+2223.27
+
+231.65
+231.65
+232.66
+232.66
+231.53
+231.53
+
+2223.26
+
+2223.20
+
+2223.19
+
+232.66
+232.66
+
+229.78
+-
+
+2223.25
+
+2223.24
+
+232.61
+232.61
+
+2223.148
+
+229.79
+-
+
+2223.146
+
+229.79
+-
+
+2223.145
+
+229.78
+-
+
+2223.143
+
+229.77
+-
+
+2223.141
+
+KEY PLAN
+SCALE: N.T.S.
+
+232.44
+232.44
+
+128.77
+128.77
+
+2223.23
+
+232.44
+232.44
+
+2223.22
+
+232.32
+232.32
+229.70
+229.23
+
+2223.18
+
+2223.111
+
+2223.14
+
+228.84
+-
+
+2223.125
+
+228.94
+229.05
+
+2223.12
+
+231.29
+231.29
+
+2223.17
+
+230.57
+230.57
+
+2223.16
+
+230.2
+230.2
+
+223.134
+
+229.56
+229.20
+
+2223.133
+
+229.45
+229.19
+
+2223.132
+
+229.44
+229.18
+
+2223.131
+
+2223.13
+
+228.68
+228.69
+
+2223.11
+
+228.41
+228.44
+
+2223.10
+
+228.56
+228.60
+
+2223.09
+
+227.88
+227.91
+
+2223.08
+
+227.71
+227.73
+
+2223.07
+
+229.36
+229.17
+
+228.87
+229.09
+
+7800 KENNEDY ROAD
+SUITE 201
+MARKHAM, ONTARIO
+L3R 2C7
+T: (905) 944-0162
+www.maeng.ca
+
+5 Shoreham Drive Downsview Ontario M3N 1S4 (416) 661-6600
+
+2223.06
+
+227.61
+227.63
+© 2020 Microsoft Corporation © 2020 Maxar ©CNES (2020) Distribution Airbus DS
+
+BY
+
+KIR
+
+D
+ROA
+
+OAD
+
+Y R
+
+B
+KIR
+
+231.80
+233.76
+
+SITE
+233.76
+
+P
+R
+O
+
+SW
+
+L
+IL
+
+2223.30
+
+ROAD
+REEK
+OLD C
+
+2223.31
+
+2223.21
+
+TH
+
+233.66
+
+R
+A
+O
+
+2223.29
+
+D
+
+231.65
+
+2223.28
+
+2223.20
+
+232.94
+
+KEY PLAN
+SCALE: N.T.S.
+
+2223.27
+
+232.66
+231.53
+
+2223.26
+
+2223.19
+
+232.66
+229.60
+
+2223.25
+
+2223.24
+
+2223.15
+
+232.61
+
+232.44
+
+128.77
+128.77
+
+2223.23
+
+232.44
+
+2223.22
+
+232.32
+
+229.23
+
+2223.18
+
+2223.17
+
+2223.16
+
+2223.111
+
+2223.14
+
+229.09
+
+2223.13
+
+229.05
+
+2223.12
+
+228.69
+
+2223.11
+
+228.44
+
+2223.10
+
+228.60
+
+2223.09
+
+227.91
+
+2223.08
+
+227.73
+
+2223.07
+
+231.29
+
+230.57
+
+230.2
+
+223.134
+
+229.20
+
+2223.133
+
+229.19
+
+2223.132
+
+229.18
+
+2223.131
+
+229.17
+
+7800 KENNEDY ROAD
+SUITE 201
+MARKHAM, ONTARIO
+L3R 2C7
+T: (905) 944-0162
+www.maeng.ca
+
+5 Shoreham Drive Downsview Ontario M3N 1S4 (416) 661-6600
+
+2223.06
+
+227.63
+© 2020 Microsoft Corporation © 2020 Maxar ©CNES (2020) Distribution Airbus DS
+
+BY
+
+KIR
+
+D
+ROA
+
+OAD
+
+Y R
+
+B
+KIR
+
+233.76
+233.76
+
+2223.21
+
+SITE
+229.93
+-
+
+2223.156
+
+229.68
+-
+
+2223.152
+
+229.38
+229.60
+
+2223.150
+
+R
+O
+
+SW
+
+L
+IL
+TH
+
+233.66
+233.66
+
+R
+A
+O
+
+2223.29
+
+233.76
+233.76
+
+P
+
+2223.30
+
+ROAD
+REEK
+OLD C
+
+2223.31
+
+231.80
+231.80
+
+D
+
+2223.28
+
+232.94
+232.94
+2223.27
+
+231.65
+231.65
+232.66
+232.66
+231.53
+231.53
+
+2223.26
+
+2223.20
+
+2223.19
+
+232.66
+232.66
+
+229.37
+-
+
+2223.25
+
+2223.24
+
+232.61
+232.61
+
+2223.148
+
+229.36
+-
+
+2223.146
+
+229.36
+-
+
+2223.145
+
+229.35
+-
+
+2223.143
+
+229.26
+-
+
+2223.141
+
+KEY PLAN
+SCALE: N.T.S.
+
+232.44
+232.44
+2223.23
+
+232.44
+232.44
+
+2223.22
+
+232.32
+232.32
+
+128.77
+128.77
+
+229.26
+229.09
+
+2223.18
+
+2223.111
+
+2223.14
+
+228.75
+-
+
+2223.125
+
+228.67
+229.05
+
+2223.12
+
+231.29
+231.29
+
+2223.17
+
+230.57
+230.57
+
+2223.16
+
+230.20
+230.20
+
+2223.134
+
+228.96
+229.20
+
+2223.133
+
+229.02
+229.19
+
+2223.132
+
+229.01
+229.18
+
+2223.131
+
+2223.13
+
+228.63
+228.69
+
+2223.11
+
+228.57
+228.44
+
+2223.10
+
+228.56
+228.60
+
+2223.09
+
+227.88
+227.91
+
+2223.08
+
+227.71
+227.73
+
+2223.07
+
+228.96
+229.17
+
+228.86
+229.09
+
+7800 KENNEDY ROAD
+SUITE 201
+MARKHAM, ONTARIO
+L3R 2C7
+T: (905) 944-0162
+www.maeng.ca
+
+5 Shoreham Drive Downsview Ontario M3N 1S4 (416) 661-6600
+
+2223.06
+
+227.61
+227.63
+© 2020 Microsoft Corporation © 2020 Maxar ©CNES (2020) Distribution Airbus DS
+
+Functional Servicing and Stormwater Management Report
+Proposed Multiple Residential Condo Development -12148 Albion Vaughan Rd*Town of Caledon
+
+17-849
+
+Appendix F
+Engineering drawings
+
+Masongsong Associates Engineering Limited
+
+

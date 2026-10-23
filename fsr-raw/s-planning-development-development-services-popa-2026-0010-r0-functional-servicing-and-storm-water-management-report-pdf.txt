@@ -1,0 +1,4930 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+07/23/2026
+
+FUNCTIONAL SERV ICING A ND
+STORMWA TER MA NAGEMENT
+REPORT
+‘0’ HUMBER STATION ROAD
+SITE PLAN
+
+TOWN OF CALEDON
+Project: 2025-5532
+
+Revision
+
+Description
+
+0.0
+
+FSR
+
+January 2026
+
+Prepared
+
+Checked
+
+By
+
+Date
+
+By
+
+Date
+
+S. Saini
+
+Nov 2025
+
+S. Katukurunde
+
+Dec 2025
+
+SCHAEFFERS
+CONSULTING
+
+ENGINEERS
+
+6 Ronrose Drive
+Concord, Ontario L4K 4R3
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+Jan 2026
+Project 2025-5532
+
+Table of Contents
+1.0 INTRODUCTION ..........................................................................................................................1
+1.1 Reference Reports and Studies ..................................................................................................... 2
+2.0 DEVELOPMENT PLAN ..................................................................................................................4
+3.0 WATER SUPPLY SERVICING..........................................................................................................6
+3.1 Existing and Planned Water Supply Servicing ............................................................................... 6
+3.2 Water Supply Servicing Design Criteria ......................................................................................... 6
+3.3 Proposed Water Supply Servicing Plan ......................................................................................... 7
+4.0 SANITARY SERVICING ................................................................................................................ 10
+4.1 Existing and Planned Sanitary Servicing ...................................................................................... 10
+4.2 Sanitary Design Criteria ............................................................................................................... 10
+4.3 Proposed Sanitary Servicing Plan ................................................................................................ 11
+5.0 STORMWATER MANAGEMENT.................................................................................................. 13
+5.1 Existing Site Conditions ............................................................................................................... 13
+5.2 Stormwater Management Criteria .............................................................................................. 13
+5.3 Proposed SWM Plan .................................................................................................................... 15
+5.4 Site Plan 1 .................................................................................................................................... 16
+5.5 Site Plan 2 .................................................................................................................................... 16
+5.6 Public ROW .................................................................................................................................. 17
+5.7 Water Balance ............................................................................................................................. 18
+5.8 CLI-ECA Requirements ................................................................................................................. 22
+5.9 Erosion and Sediment Control Plan ............................................................................................ 23
+6.0 CLOSING REMARKS ................................................................................................................... 24
+
+ii
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+Jan 2026
+Project 2025-5532
+
+List of Tables
+Table 2-1: Population Estimate ..................................................................................................................... 4
+Table 3-1: Typical Water Demand Criteria.................................................................................................... 6
+Table 3-2: Potential Short Term Water Demand Criteria for New Development ........................................ 7
+Table 3-3: Water Supply Servicing Demands ................................................................................................ 8
+Table 4-1: Sanitary Servicing Demands ....................................................................................................... 11
+Table 5-1: Existing External Culvert Summary ............................................................................................ 13
+Table 5-2: Water Balance Summary ........................................................................................................... 19
+Table 5-3 Summary of CLI-ECA Requirements ............................................................................................ 22
+
+List of Figures
+Figure 1.1: Location Plan ............................................................................................................................... 3
+Figure 2.1: Development Plan ...................................................................................................................... 5
+Figure 3.1: Proposed Water Supply Servicing ............................................................................................... 9
+Figure 4.1: Proposed Sanitary Servicing...................................................................................................... 12
+Figure 5.1: Pre-Development Drainage Areas ............................................................................................ 20
+Figure 5.2: Proposed Storm Servicing ......................................................................................................... 21
+
+Appendices
+Appendix A:
+Appendix B:
+Appendix C:
+Appendix D:
+Appendix E:
+
+BACKGROUND INFORMATION
+WATER SUPPLY SERVICING
+SANITARY SERVICING
+STORMWATER MANAGEMENT
+CALCULATIONS ENGINEERING DRAWINGS
+
+iii
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+1.0
+
+Jan 2026
+Project 2025-5532
+
+INTRODUCTION
+
+This Functional Servicing and Stormwater Management Report is provided in support of a proposed site
+plan located in the Town of Caledon. The objective of this report is to provide a servicing plan for the 2.6
+ha property referred to as “’0’ Humber Station Road”, located north of King Street and east of Humber
+Station Road. The subject site is registered as part of Lot 11, Concession 5, Town of Caledon within the
+Regional Municipality of Peel. Please refer to Figure 1.1 for the location plan.
+This document will summarize the proposed municipal servicing scheme in regards to potable water,
+sanitary flows, and stormwater management. The following sections provide information regarding the
+proposed services for the subject development while ensuring compatibility with the existing
+infrastructure and previous planning resolutions.
+
+Page 1
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+Jan 2026
+Project 2025-5532
+
+The following studies were utilized in the preparation of this report.
+
+•
+
+“Development Standards Manual Ver 5.0”, by the Town of Caledon, 2019
+
+•
+
+“Stormwater Planning and Design Manual (SWMP)”, by Ministry of the Environment (MOE), March
+2003.
+
+•
+
+“Stormwater Management Criteria”, by Toronto and Region Conservation Authority, August 2012.
+
+• “Low Impact Development Stormwater Management Planning and Design Guide”, Version 1.0,
+Prepared by Toronto Region and Conservation Authority (TRCA) and Credit Valley Conservation, 2010.
+•
+
+“Public Works Stormwater Design Criteria and Procedural Manual”, June 2019, by the Region of
+Peel.
+
+•
+
+“Public Works Design, Specifications & Procedures Manual, Linear Infrastructure, Watermain Design
+Criteria”, by the Region of Peel, June 2010.
+
+•
+
+“Linear Wastewater Standards”, by the Region of Peel, March 2023.
+
+•
+
+“Water Supply for Public Fire Protection”, by the Fire Underwriters Survey, 2020.
+
+•
+
+“Source Protection Information Atlas”, by the Ontario Ministry of the Environment, Conservation
+and Parks (MECP), 2023.
+
+•
+
+“Stormwater Management Guideline”, By Credit Valley Conservation, July 2022
+
+•
+
+“Erosion and Sediment Control Guideline”, By Sustainable Technologies for TRCA, 2019
+
+•
+
+“Final Community-Wide Function Servicing Report – Caledon Sation Secondary Plan”, by Urbantech
+for Caledon Community Partners, October 2024.
+
+Page 2
+
+W:\5500's\5532\Drawings\Services\2026-01-06-5532-Services.dwg
+
+Phil Gotfried
+
+N
+
+'0' HUMBER STATION ROAD
+CALEDON, ONTARIO
+REGION OF PEEL
+LEGEND
+SUBJECT AREA
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+6 Ronrose Drive, Concord, Ontario L4K 4R3
+Tel: (905) 738-6100 Email: general@schaeffers.com
+www.schaeffers.com
+
+FIGURE 1.1
+LOCATION PLAN
+
+2025-5532
+
+JANUARY 2026
+
+SCALE: N.T.S.
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+2.0
+
+Jan 2026
+Project 2025-5532
+
+DEVELOPMENT PLAN
+
+The proposed development covers 2.6 ha and will include both commercial buildings and apartment
+buildings. The architect plan, prepared by “n Architecture Inc.” and dated October 10 2025 is provided in
+Appendix A for reference. Figure 2.1 illustrates the proposed development plan.
+Table 2-1: Population Estimate
+
+Land Use Type
+
+Population Density
+
+Units
+
+Estimated Population
+
+Apartment - large
+Apartment - small
+Commercial
+Total
+
+3.1 persons/unit
+1.7 persons/unit
+50 persons/ha
+-
+
+370 units
+290 units
+-
+
+1,147
+493
+36
+1,676
+
+Region of Peel Linear Wastewater Design Guidelines, 2023
+
+Page 4
+
+W:\5500's\5532\Drawings\Services\2026-01-06-5532-Services.dwg
+
+Phil Gotfried
+
+N
+
+'0' HUMBER STATION ROAD
+CALEDON, ONTARIO
+REGION OF PEEL
+LEGEND
+SUBJECT AREA
+
+PROPOSED SITE PLAN 1
+
+PROPOSED SITE PLAN 2
+
+PROPOSED
+PUBLIC RIGHT OF WAY
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+6 Ronrose Drive, Concord, Ontario L4K 4R3
+Tel: (905) 738-6100 Email: general@schaeffers.com
+www.schaeffers.com
+
+FIGURE 1.2
+DEVELOPMENT PLAN
+
+2025-5532
+
+JANUARY 2026
+
+SCALE: N.T.S.
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+3.0
+
+Jan 2026
+Project 2025-5532
+
+WATER SUPPLY SERVICING
+
+This section describes how the proposed water distribution plan is able to adequately supply potable
+drinking water for the proposed development.
+
+The subject site is located just outside of Pressure Zone 6 (PZ6). PZ6 is able to service elevations up to 262
+masl. The Caledon Station Secondary Plan (CSSP) identifies that the proposed ground elevations of the
+Subject lands area too high for adequate long-term servicing by the PZ6 servicing system (Urbantech
+2024). The ultimate servicing will be provided through a new Pressure Zone 7 (PZ7), which would service
+lands between elevations of 262 – 250 masl. Interim alternative water servicing arrangements are being
+investigated at the secondary plan level. Some of these alternatives include such a proposed booster
+station at King and Coleraine Drive as well as an elevated tank that would be located at the north west
+corner of the CCSP lands. Details of the external servicing approach will become available further along in
+the project design.
+A 400 mm watermain along Humber Station is proposed to supply water to the subject lands (Urbantech
+2024). Figure 3.1 depicts the proposed future watermain along Humber Station Road.
+
+The water servicing system was designed in accordance with the Region of Peel Public Works Watermain
+Design Criteria (June 2010). Table 3-1 and Table 3-2 summarize the applicable criteria.
+Table 3-1: Typical Water Demand Criteria
+
+Population Type
+
+Avg.
+Consumption
+Rate Unit
+
+Avg.
+Consumption
+Rate
+
+Max Day Factor
+
+Peak Hour Factor
+
+Residential
+ICI
+
+L/Capita*day
+L/Employee*day
+
+280
+300
+
+2.0
+1.4
+
+3.0
+3.0
+
+ICI = Industrial, Commercial or Institutional
+Region of Peel Public Works Watermain Design Criteria, June 2010
+
+Page 6
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+Jan 2026
+Project 2025-5532
+
+Table 3-2: Potential Short Term Water Demand Criteria for New Development
+
+Population Type
+
+Unit
+
+Avg.
+Consumption
+Rate
+
+Max Day Factor
+
+Peak Hour Factor
+
+Residential
+ICI
+
+L/Capita * day
+L/Employee * day
+
+409
+300
+
+2.0
+1.4
+
+3.0
+3.0
+
+ICI = Industrial, Commercial or Institutional
+Region of Peel Public Works Watermain Design Criteria, June 2010
+
+Design criteria for pressure and fire protection is identified in the Region of Peel Public Works Watermain
+Design Criteria document (June 2010). The following summarizes the applicable criteria:
+
+Pressure Design Criteria:
+•
+
+Minimum pressure for Maximum Day and Fire Flow demand of 140 kPa (20 psi);
+
+•
+
+Minimum pressure for Peak Hour Demand of 275 kPa (40 psi);
+
+•
+
+Maximum pressure for Maximum Day and Fire Flow demand of 690 kPa (100 psi);
+
+Fire Protection Demand Design Criteria:
+•
+
+Fire flow demands for the proposed development have been estimated based on Fire
+Underwriters Survey (FUS) methods with preliminary building layout information.
+
+•
+
+As additional design details become available, it is recommended that fire flow requirements be
+reassessed using the FUS methodology. The final design should accommodate the ultimate
+requirements to effectively support the proposed servicing needs.
+
+A network of watermains is proposed to service the units within the subject site. The network of
+watermains will connect to the future watermain along the continuation of the public Right-of-Way (ROW)
+along the north edge of the site within the adjacent property. The future transmission main along Humber
+Station Road will be designed in coordination with the Region of Peel at a later stage.
+A summary of the water supply demands is presented in Table 3-3. For supporting calculations, refer to
+Appendix B. Please note that pressures within the watermains will be verified via hydrant tests once the
+infrastructure is constructed.
+
+Page 7
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+Jan 2026
+Project 2025-5532
+
+Table 3-3: Water Supply Servicing Demands
+
+Expected
+Population
+
+Average Demand
+(L/s)
+
+Peak Hour
+Demand
+(L/s)
+
+Maximum Day
+Demand (L/s)
+
+Fire Flow
+(L/s)
+
+Max Demand +
+Fire Flow (L/s)
+
+1,676
+
+11.28
+
+5.44
+
+10.80
+
+200
+
+210.8
+
+As a part of the CSSP report, R.J. Burnside executed preliminary modelling to determine interim water
+servicing solutions. According to R.J. Burnside, the site can be serviced to provide water supply with the
+addition of the booster station at King and Coleraine Drive (Urbantech 2024). Detailed fire flow
+calculations are provided in Appendix B, and Figure 3.1 presents the proposed water servicing.
+
+Page 8
+
+W:\5500's\5532\Drawings\Services\2026-01-06-5532-Services.dwg
+
+Phil Gotfried
+
+N
+
+'0' HUMBER STATION ROAD
+CALEDON, ONTARIO
+REGION OF PEEL
+LEGEND
+SUBJECT AREA
+
+PROPOSED WATERMAIN
+
+PROPOSED FUTURE WATERMAIN
+BY OTHERS
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+6 Ronrose Drive, Concord, Ontario L4K 4R3
+Tel: (905) 738-6100 Email: general@schaeffers.com
+www.schaeffers.com
+
+FIGURE 3.1
+PROPOSED WATER SUPPLY SERVICING
+
+2025-5532
+
+JANUARY 2026
+
+SCALE: N.T.S.
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+4.0
+
+Jan 2026
+Project 2025-5532
+
+SANITARY SERVICING
+
+The following sections demonstrate that the municipal sanitary servicing plan can adequately service the
+proposed development.
+
+According to Volume 4 of the Region of Peel 2020 Water and Wastewater Master Plan, the subject
+property is located within the Region of Peel McVean Trunk system. The area is serviced by the Gore Road
+trunk, a 750 mm-1200 mm sewer running south along Gore Road, converging with the Brampton-Bolton
+trunk sewers and ultimately discharging to the G.E. Booth Wastewater Treatment Plant (WWT).
+The CSSP identifies that the following sewers are or will be in service to service the subject property
+(Urbantech 2024):
+•
+
+The extension of a new 1200 mm sewer along Humber Station Road from Mayfield Road to Healey
+Road
+
+The design for a 1200 mm sewer extension along Humber Station Road from Healey Road to Humber
+Station Road is underway (Urbantech 2024). The sewer extension will be utilized as the main outlet for
+the subject lands. Refer to Figure 4.1 for the proposed future servicing.
+
+The proposed sanitary servicing of the subject site will be designed in accordance with Region of Peel
+design criteria for sanitary sewers. These criteria, where applicable to the proposed development, are
+summarized below.
+•
+
+Applied 1.7 persons/unit for small apartments and 3.2 persons/unit for large apartments;
+
+•
+
+Unit sewage flow of 290 L/capita/day for residential and 270 L/capita/day for commercial;
+
+•
+
+Peak sanitary flow factor (M) is based on the Harmon formula, where P is population in thousands:
+𝑀=
+
+1 + 14
+4 + 𝑃0.5
+
+•
+
+Infiltration allowance to be 0.26 L/s/ha for all types of land use;
+
+•
+
+For residential areas, minimum pipe size shall be 200 mm in diameter;
+
+•
+
+Maximum velocity shall not be greater than 3 m/s with the pipe flowing full, and minimum velocity
+shall not be less than 0.75 m/s at actual flow.
+Page 10
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+Jan 2026
+Project 2025-5532
+
+The proposed site plans will be serviced by a sewer running along the internal ROW. It is proposed to
+construct a sanitary sewer along the future road proposed north of the site, extending west toward
+Humber Station Road. A 450 mm sewer is proposed along Humber Station Road to carry sewage flow
+south. The final design of the internal sanitary sewers will be confirmed during the detailed design stage.
+No capacity constraints are anticipated. Refer to Figure 4.2 for the proposed sanitary servicing scheme
+and Appendix E for the engineering drawings.
+Table 4-1 presents the sanitary servicing demands with supporting calculations presented in Appendix C.
+Table 4-1: Sanitary Servicing Demands
+
+Area (ha)
+
+Expected
+Total
+Population
+
+Average
+Flow (L/s)
+
+Harmon’s
+Peaking Factor
+(L/s)
+
+Peak
+Flow (L/s)
+
+Infiltration
+(L/s)
+
+Total Flow
+(L/s)
+
+2.63
+
+1676
+
+5.62
+
+3.64
+
+20.47
+
+0.68
+
+21.15
+
+Page 11
+
+W:\5500's\5532\Drawings\Services\2026-01-09-5532-Services.dwg
+
+Phil Gotfried
+
+N
+
+'0' HUMBER STATION ROAD
+CALEDON, ONTARIO
+REGION OF PEEL
+LEGEND
+SUBJECT AREA
+
+PROPOSED SANITARY SEWER
+
+PROPOSED FUTURE
+SANITARY SEWER BY OTHERS
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+6 Ronrose Drive, Concord, Ontario L4K 4R3
+Tel: (905) 738-6100 Email: general@schaeffers.com
+www.schaeffers.com
+
+FIGURE 4.1
+PROPOSED SANITARY SERVICING
+
+2025-5532
+
+JANUARY 2026
+
+SCALE: N.T.S.
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+5.0
+
+Jan 2026
+Project 2025-5532
+
+STORMWATER MANAGEMENT
+
+The following sections provide details on the Stormwater Management (SWM) plan for the proposed site
+and is in accordance with applicable provincial guidelines, municipal and conservation authority criteria.
+
+The site fronts Humber Station Road, north of King Road, and is bounded at the east by the Canada Pacific
+(CP) railway. The site is located within the Humber River watershed and drains east towards the main
+branch of the Humber River. There is an existing culvert under the CP rail which facilitates the drainage of
+the site. The capacity of the culvert was assessed within the CSSP which is summarized in Table 5-1 below
+(Urbantech 2024). An existing drainage layout of the site is depicted in Figure 5.1.
+Table 5-1: Existing External Culvert Summary
+
+Culvert
+
+Diameter (mm)
+
+Drainage Area
+(ha)
+
+Pre-development
+Peak Flow (m3/s)
+[100-year]
+
+CP3
+
+800
+
+18.80
+
+2.32
+
+Excerpted from Table 6-17 of the Caledon Station Secondary Plan (Urbantech 2024)
+
+A geotechnical borehole investigation conducted by Englobe revealed low permeability soils characterized
+as clayey silt to silt and clay glacial till with some sand. Groundwater levels were recorded where present
+and were found to be generally high. Further study is required to appropriately characterize the nature of
+groundwater at the subject site. The groundwater contour map is attached for reference in Appendix A.
+
+As per the Town of Caledon’s Design Criteria and the Toronto and Region Conservation Authority’s
+Stormwater Management Criteria, the following guidelines will be used in the design of the site’s
+stormwater management system:
+Major and Minor System
+•
+
+Storm sewers shall be designed to convey the 10-year return frequency storm without any
+surcharges;
+
+•
+
+Storm sewers shall be designed as per the Town of Caledon’s IDF curve rainfall intensities with a
+minimum time of concentration of 10 minutes;
+
+•
+
+The minimum pipe diameter for storm sewers is 300 mmØ;
+Page 13
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+•
+
+Jan 2026
+Project 2025-5532
+
+Maximum full-bore velocity shall not be greater than 4 m/s, and minimum velocity shall not be
+less than 0.75 m/s.
+
+•
+
+The major system shall be designed to convey the 100-year storm event;
+
+•
+
+The maximum flow depth shall be the lesser of 10 cm above the crown of the road or the water
+level up to the ROW.
+
+•
+
+Runoff coefficients shall be determined based on land use as follows:
+o
+
+Parks & Open Space (under 4 ha)
+
+0.30
+
+o
+
+Apartments or Hi-Rise Residential
+
+0.75
+
+o
+
+Commercial
+
+0.90
+
+o
+
+Parking Lots & Asphalt
+
+0.90
+
+Quantity Control:
+•
+
+The site is located within the Main Humber River watershed. Per TRCA Stormwater Design
+Guidelines, quantity control is not required within the Main Humber River watershed.
+
+•
+
+Quantity control is provided to either site plan in order to meet the storm sewer requirement for
+conveying the 10-year storm.
+
+•
+
+Storage will be provided on site up to the 100-year storm in order to meet the 10-year storm flow
+rate requirement through storm sewers.
+
+•
+
+AES and Chicago design storms are assessed to size storage requirements.
+
+•
+
+Town of Caledon Rainfall intensity curves are applied to determine site flows.
+
+Quality Control
+•
+
+Per the CSSP, quality control shall provide Level 1 Enhanced treatment through the long-term
+removal of 80% Total Suspended Solids (TSS) controlling the 90th percentile runoff event
+(Urbantech 2024).
+
+Erosion Control
+•
+
+Per the CSSP, erosion control is to be provided via 5 mm retention on site for the site plan area
+and 2 mm retention on site for the public ROW (Urbantech 2024).
+
+Page 14
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+Jan 2026
+Project 2025-5532
+
+Water Balance
+•
+
+Requirement to meet pre-development water balance to the greatest extent feasible. Per the
+Source Protection Information Atlas (MECP) the site is not in a wellhead protection area (WHPA)
+or a Significant Groundwater Protection Area (SGRA). Refer to Section 5.7 for the water balance
+discussion.
+
+CLI-ECA Requirements
+•
+
+Developments within the Town are required to comply with CLI-ECA requirements. The CLI-ECA
+mandates controlling at least 27 mm through retention methods (such as infiltration and reuse),
+followed by filtration for any remaining amount. Conventional water quality control measures are
+permitted only after maximizing retention and filtration.
+
+The following sections outline the proposed stormwater management solutions to be implemented on
+the subject site, ensuring compliance with the applicable stormwater management criteria detailed in
+Section 5.2. Stormwater will be managed using a dual drainage system. The minor system, consisting of
+sewers, will be designed to capture and convey flows from a 10-year storm event. The major system,
+comprising of overland flow routes, will handle excess flows beyond the capacity of the minor system.
+Preliminary groundwater levels recorded from the borehole log results indicate that the groundwater
+table is relatively high (See the Groundwater Contour Map in Appendix A). High groundwater levels limit
+the feasibility for infiltration and retention technologies to be employed on site. It is possible that there
+may be seasonal lows in groundwater depth that may allow for the application of some technologies for
+parts of the year, however further investigation would be needed to confirm if such conditions exist. Upon
+further study, infiltration and retention technology applications may be revisited.
+The CSSP outlines that drainage areas leading to the Main Humber River watershed do not require
+quantity controls (Urbantech 2024). The subject site is graded to maintain the existing topographic
+direction towards the northeast.
+Quantity and quality control for Site Plan 1 would be provided through two underground storage tanks
+and storm filter unit. The tanks will store up to the 100-year volume to control to the 10-year storm sewer
+flow.
+
+Page 15
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+Jan 2026
+Project 2025-5532
+
+Quantity and quality for Site Plan 2 would be provided through two underground storage tanks and storm
+filter units. The tanks will store up to the 100-year to control to the 10-year storm sewer flow. Water reuse would also be implemented to meet the erosion control requirement.
+Quantity control for the ROW is not required as per the conclusion in the CSSP. Quality control is provided
+through a proposed filter unit that will be located at the downstream end of the outlet culvert per the
+CSSP (Urbantech 2024).
+The CLI-ECA volume control requirement is to retain 27 mm runoff volume through a hierarchal approach.
+High groundwater levels constrain the site for retention and filtration opportunities. Water re-use is to be
+implemented in Site Plan 2 to support the requirements. Section 5.8 further discusses the CLI-ECA
+approach. Alternatives to achieve water balance criteria will be investigated at the detailed design stage.
+Refer to Figure 5.2 and Figure 5.3 for the proposed storm drainage and servicing plans.
+
+5.4.1
+
+Site Plan 1 Quantity Control
+
+The CSSP outlines that drainage areas leading to the Main Humber River watershed do not require
+quantity controls (Urbantech 2024). Site Plan 1 is proposed to store up to the 100-year in order to control
+to the 10-year storm sewer flow requirement. The 10-year proposed peak discharge is 0.424 m3/s with a
+total storage to be provided of 186.1 m3. The storage will be provided through two plastic or concrete
+modular tanks. See Appendix D for calculations.
+5.4.2
+
+Site Plan 1 Quality Control
+
+Quality control for Site Plan 1 will be managed through a storm filter unit (or approved equivalent) to
+provide 80% TSS removal. Refer to a sizing report of the proposed unit in Appendix D.
+5.4.3
+
+Site Plan 1 Erosion Control
+
+The preliminary groundwater results indicate that groundwater levels are high. Consequently, it is not
+technically feasible to provide erosion control for the site plan. As well, extended detention is not feasible
+as a result of the controlled release rate.
+
+5.5.1
+
+Site Plan 2 Quantity Control
+
+The CSSP outlines that drainage areas leading to the Main Humber River watershed do not require
+Page 16
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+Jan 2026
+Project 2025-5532
+
+quantity controls (Urbantech 2024). Site Plan 2 is proposed to store up to the 100-year to control to the
+10-year storm sewer flow requirement. The 10-year proposed peak discharge is 0.322 m3/s with a storage
+to be provided of 141.1 m3. Two tanks will be utilized based on the proposed development plan, located
+on the P1 level of the underground parking lot.
+5.5.2
+
+Site Plan 2 Quality Control
+
+Quality control for Site Plan 2 will be managed through storm filter units (or approved equivalent) to
+provide 80% TSS removal. Two tanks will be utilized based on the proposed development plan. The filter
+units will be placed on the P1 level of the underground parking garage. The tank would discharge through
+a gravity outlet to the sewer system. A sizing report of the proposed unit in Appendix D.
+5.5.3
+
+Site Plan 2 Erosion Control
+
+Erosion control will be achieved for Site Plan 2 via 5 mm on-site retention. The retention volume target is
+43.1 m3 (1.02 ha x 0.85 x 5 mm x 10). Each storm filter tank is to be equipped with a rainwater harvesting
+tank to meet this requirement. The total storage to be provided, as well as the pump design for supplying
+the re-use water, will be conducted at the Site Plan Application stage.
+
+5.6.1
+
+ROW Quantity Control
+
+The ROW is proposed to flow uncontrolled. Runoff from the ROW area will be directed through the pipe
+system to the outlet culvert at the CP railway. The CSSP outlines that drainage areas leading to the Main
+Humber River watershed do not require quantity controls (Urbantech 2024). Thus, this approach is in
+agreement with the overall SWM strategy for the area.
+5.6.2
+
+ROW Quality Control
+
+Quality control for the public ROW will be managed by a filter unit to be designed and installed upstream
+of the discharge manhole to the CP Rail culverts (Urbantech 2024). This filter unit is to be designed and
+installed by other proponents.
+5.6.3
+
+ROW Erosion Control
+
+Based on the preliminary groundwater results, it appears that on-site retention and infiltration will not be
+feasible due to high groundwater levels. Detailed plans for the ROW erosion controls will be finalized at
+the detailed design stage.
+
+Page 17
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+Jan 2026
+Project 2025-5532
+
+A water balance assessment was conducted to characterize the water entering and existing the site area.
+Through the Ontario Ministry of the Environment, Conservation and Parks (MECP) Source Protection
+Information Atlas, it is determined that the subject site is not located within a Well Head Protection Area
+(WHPA) or a Significant Groundwater Recharge Area (SGRA). As a result, the proponent is not required to
+maintain the existing water balance, however efforts to achieve it will be investigated.
+Additional groundwater monitoring data is expected to support the design of the project at the detailed
+design phase. At present, the groundwater monitoring data shows high ground water levels relative to
+the site ground levels, reducing the feasibility for any infiltration efforts. As well, the site soils are
+comprised of silty clay material, which is unfavourable for infiltration. As more site-specific monitoring
+data is made available, the feasibility for infiltration may be revisited.
+A site water balance analysis was completed and provided in Appendix D. Based on the analysis, the predevelopment site conditions have a runoff of 4,501 m3/year, infiltration of 5,501 m3/year, and
+evapotranspiration of 12,445 m3/year.
+In the post-development conditions (without mitigation), average annual volumes for runoff are 20,203
+m3/year and evapotranspiration of 2,245 m3/year. Table 5-2 summarizes the water balance assessment.
+Refer to Appendix D for detailed water balance calculations.
+
+Page 18
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+Jan 2026
+Project 2025-5532
+
+Table 5-2: Water Balance Summary
+
+Water Balance
+Parameter
+
+PreDevelopment
+
+PostDevelopment
+
+Change (Pre to
+Post)
+
+Inputs (m3/year)
+Precipitation
+
+22,448
+
+22,448
+
+0
+
+Total Inputs
+
+22,448
+
+22,448
+
+0
+
+Outputs (m3/year)
+Precipitation Surplus
+
+10,003
+
+20,203
+
+10,200
+
+Total Evapotranspiration
+
+12,445
+
+2,245
+
+-10,200
+
+Total Infiltration
+
+5,501
+
+0
+
+-5,501
+
+Total Runoff
+
+4,501
+
+20,203
+
+15,702
+
+Total Outputs
+
+22,448
+
+22,448
+
+0
+
+Page 19
+
+W:\5500's\5532\Drawings\Drainage\2026-01-06-5532-Ex Drainage.dwg
+
+Phil Gotfried
+
+N
+
+'0' HUMBER STATION ROAD
+CALEDON, ONTARIO
+REGION OF PEEL
+LEGEND
+SUBJECT AREA
+EXISTING DRAINAGE
+TO SUBJECT AREA
+AREA = 2.60ha
+EXISTING DRAINAGE
+DRAINING NORTH
+AREA = 0.99ha
+EXISTING DRAINAGE
+DRAINING SOUTH
+AREA = 1.34ha
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+6 Ronrose Drive, Concord, Ontario L4K 4R3
+Tel: (905) 738-6100 Email: general@schaeffers.com
+www.schaeffers.com
+
+FIGURE 5.1
+PRE-DEVELOPMENT DRAINAGE AREAS
+
+2025-5532
+
+JANUARY 2026
+
+SCALE: N.T.S.
+
+W:\5500's\5532\Drawings\Services\2026-01-09-5532-Services.dwg
+
+Phil Gotfried
+
+N
+
+'0' HUMBER STATION ROAD
+CALEDON, ONTARIO
+REGION OF PEEL
+LEGEND
+SUBJECT AREA
+
+PROPOSED STORM SEWER
+
+PROPOSED FUTURE
+STORM SEWER BY OTHERS
+
+EXISTING STORM SEWER
+
+FILTER UNIT
+
+FILTER UNIT
+
+PROPOSED SWM TANK
+
+PROPOSED SWM TANK
+WITH RWH TANK
+
+PROPOSED DRAINAGE AREA
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+6 Ronrose Drive, Concord, Ontario L4K 4R3
+Tel: (905) 738-6100 Email: general@schaeffers.com
+www.schaeffers.com
+
+FIGURE 5.2
+PROPOSED STORM SERVICING
+
+2025-5532
+
+JANUARY 2026
+
+SCALE: N.T.S.
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+Jan 2026
+Project 2025-5532
+
+The new CLI-ECA program includes a 27 mm runoff volume retention requirement for stormwater
+management, which can be achieved through a hierarchical approach to provide flexibility in the
+implementation of measures to meet the runoff volume target. The runoff volume control target
+hierarchy has the following order:
+•
+
+Control hierarchy priority 1 (Retention),
+
+•
+
+Control hierarchy priority 2 (LID filtration), and
+
+•
+
+Control hierarchy priority 3 (Conventional Treatment).
+
+The subject site has underlying silty clay and high groundwater levels which limits the opportunity for
+infiltrating stormwater for retention and infiltration trenches. Instead, opportunities for site plan
+retention and filtration will be revisited later on in the design process.
+Refer to Table 5-3 below for a summary of the CLI-ECA requirements.
+Table 5-3 Summary of CLI-ECA Requirements
+
+Overall Volume Control Parameter
+
+Value
+
+Total Controlled Drainage Area
+
+2.61 ha
+
+Imperviousness (site area)
+
+85%
+
+Imperviousness (ROW)
+
+75%
+
+Required Volume Control
+
+104 m3
+
+Site Plan 1 Volume Control
+
+0 m3
+
+Site Plan 2 Volume Control
+
+0 m3
+
+ROW Volume Control
+
+0 m3
+
+Total Provided Volume Control
+
+0 m3
+
+Page 22
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+Jan 2026
+Project 2025-5532
+
+In order to mitigate the effects of construction on site, a comprehensive ESC strategy following the Erosion
+and Sediment Control Guideline for Urban Construction by Sustainable Technologies is outlined for the
+project. This ESC Plan provides a framework to be further refined at a later stage of the design process.
+Erosion Control Measures
+•
+
+Phasing: It is advantageous to reduce the limit of construction during the topsoil stripping phase
+in order to limit areas with soil exposure.
+
+•
+
+Stabilization: Grading for construction generally requires the removal of topsoil immediately. If
+piled or stored on site, it must be stabilized immediately. It is also recommended that areas left
+u-worked for longer than 30 days be stabilized. Possible measures are as follows:
+
+•
+
+o
+
+Mechanical Seeding/Hydroseeding
+
+o
+
+Terra Seeding
+
+o
+
+Growth Media Blankets
+
+Cut-off Swales: To be designed as per ESC guidelines and stabilized accordingly.
+
+Sediment Control Measures
+•
+
+Siltation control perimeter fencing
+o
+
+Double Silt Fence with Straw Bales
+
+o
+
+Siltation Control Fence
+
+•
+
+Cut-off Swales: To be designed as per ESC guidelines and stabilized accordingly.
+
+•
+
+Flow distributors: Silt Socks have been proposed as they provide ponding opportunities and
+energy dissipation, helping to slow down flow velocity and promote sediment settling in swales.
+
+•
+
+Sediment Traps: Have been sized in accordance with ESC guidelines.
+
+•
+
+Temporary Sediment Ponds: Shall be sized as per MECP Quality control guidelines. A design
+drawdown time of 48 hours is required.
+Page 23
+
+Functional Servicing and Stormwater Management Report
+Site Plan ‘0’, Town of Caledon
+
+6.0
+
+Jan 2026
+Project 2025-5532
+
+CLOSING REMARKS
+
+This Functional Servicing Report has been prepared to demonstrate the conformance of the proposed
+storm, sanitary, and water supply servicing concept for the subject residential development with the
+Region of Peel, TRCA, and Town of Caledon Design Standards.
+Water Supply Servicing
+•
+
+The proposed development will ultimately be serviced by Pressure Zone 7 to ensure adequate
+water supply and pressure. The construction of a booster station at King Street and Coleraine
+Drive would be able to service the site as an interim solution for water supply.
+
+•
+
+A 400 mm transmission watermain proposed along Humber Station Road will provide connectivity
+to the municipal system.
+
+Sanitary Servicing
+•
+
+Sanitary flows will be directed through a sewer along the public ROW and directed north and
+across to Humber Station Road.
+
+•
+
+The ultimate servicing strategy will utilize the new proposed trunk sewer on Humber Station Road.
+
+Storm Servicing
+•
+
+Stormwater will be managed through a dual-drainage system, with minor flows conveyed via
+sewers and major flows through overland routes.
+
+•
+
+High groundwater levels are noted which limits the feasibility for retention and infiltration on
+site. Further monitoring results will inform the project design.
+
+•
+
+Site Plan 1 will achieve quantity and quality control through a storage tank and filter unit.
+
+•
+
+The Public ROW will drain uncontrolled towards the outlet. Quality control is to be provided by a
+filter unit upstream of the outlet culvert, to be designed and implemented by others.
+
+•
+
+Site Plan 2 will achieve quantity and quality through underground tanks and filter units located
+in the P1 level parking garage. The tanks will also be designed for rainwater re-use.
+
+Page 24
+
+Appendix A
+Background Information
+
+Architect Plan
+
+Groundwater Contour Map
+
+Appendix B
+Water Supply Servicing
+
+Population Estimate
+Project No. 5532
+
+Date:
+
+06-Jan-26
+
+Proposed Outlet to Humber Station Road:
+Total Site Area:
+
+2.63 ha
+
+Item
+
+Phase
+
+1
+2
+3
+
+Phase 1 & 2
+Phase 3
+Phase 4
+
+Total
+
+Area Taken from Draft Plan
+
+Land Use Type
+
+Apartment Building 1 & 2
+Commercial Building -A B C D
+Commercial Building -E F G H
+
+Residential Units
+1 Bedroom
+2 & 3 Bedroom
+
+290
+370
+-
+
+Population Density
+(pp/unit)
+
+Population
+(Residential)
+
+1.7
+3.1
+-
+
+493
+1147
+0
+0
+1640
+
+Commercial Area
+(ha)
+
+Population Density
+(pp/ha)
+
+Population
+(Commercial)
+
+Population
+(Residential +
+Commercial)
+
+0.2106
+
+50
+
+11
+
+1651
+
+0.2404
+0.2379
+
+50
+50
+
+13
+12
+36
+
+13
+12
+1676
+
+Water Supply Calculations
+Project No. 5532
+December 2025
+Proposed Site Plan Humber Station Road and King Road, Caledon
+Residential‡
+
+280
+
+L/capita/day
+
+ICI‡
+
+300
+
+L/capita/day
+
+Drainage Area
+
+Land Use
+
+Number of Units
+
+1
+2
+
+Appartment Residential
+Commercial
+
+290
+370
+-
+
+Water Supply Demand:
+
+Population Summary
+Pop. Density
+(persons/unit)†
+1.7
+3.1
+-
+
+Population
+493
+1,147
+36
+
+Water Demands
+Land Use
+Residential
+ICI
+Total
+
+Average Day Demand
+(L/s)‡
+5.31
+0.13
+5.44
+
+Peak Hour Demand Peak Hour Demand
+(L/s)
+Peaking Factor†
+3.0
+15.94
+3.0
+0.38
+16.32
+
+Max Day Demand
+Peaking Factor‡
+2.0
+1.4
+-
+
+Max Day
+Demand (L/s)
+10.63
+0.18
+10.80
+
+Fire Flow* (L/s)
+200
+200
+
+Max Demand +
+Fire Flow (L/s)
+210.63
+0.18
+210.80
+
+Notes
+†
+As per Region of Peel Linear Wastewater Design Guidelines (2023)
+‡
+Based on Region of Peel Public Works Watermain Design Criteria (2010)
+*Fire demand calculated using the Fire Underwriters Survey (2020) guidelines
+
+W:\5500's\5532\Calculations\2025-10-29 Water and Sani\2025-10-29-5532-Water Supply Calculations
+
+2025-12-09
+
+Required Fire Flow Calculations (FUS 2020) ‐ Apartment 1
+Project Title:
+Project No.:
+Municipality
+Building/Parcel:
+
+Proposed Site Plan Humber Station Road and King Road
+5532
+Town of Caledon
+Apartment 1
+
+Required Fire Flow
+A ‐ Construction Type
+Type of Construction:
+Construction C Value:
+
+Type I ‐ Fire‐resistive Construction (Fully protected frame, floor, roof)
+0.6
+
+B ‐ Floor Area
+If Construction C Value < 1.0:
+Are the vertical openings and exterior vertical communications properly protected (1 hour rating)?
+2,522.99 m2
+Total floor area of 2 largest adjoining floors
+11,807.22 m2
+Total floor area of up to 8 floors immediately above 2 largest adjoining floors
+8427 m
+
+2
+
+No
+
+Total Floor Area Considered for RFF Calculation (Fire‐resistive construction)
+
+C ‐ Required Fire Flow (Rounded, Unadjusted)
+12000 L/min
+Required Fire Flow (Unadjusted)
+
+Adjustments
+D ‐ Fire Hazard Occupancy
+Occupancy Group:
+Occupancy and Contents:
+
+C ‐ Residential
+Limited Combustible
+
+‐15% Total Adjustment for Fire Hazard Occupancy
+10200 L/min
+Required Fire Flow (Unadjusted)
+E ‐ Sprinkler System
+Is an automatic sprinkler system in accordance with NFPA 13 present?
+Is the water supply standard for both the system and fire department hose required?
+Is the system fully supervised?
+‐40% Total Adjustment for Sprinkler System
+F ‐ Building Exposure
+North Side
+13 m
+Building Separation
+Apply corresponding maximum exposure charge?
+15% Adjustment for North Side
+
+Yes
+
+East Side
+30 m
+Building Separation
+Apply corresponding maximum exposure charge?
+10% Adjustment for East Side
+South Side
+12 m
+Building Separation
+Apply corresponding maximum exposure charge?
+15% Adjustment for South Side
+
+Yes
+
+Yes
+
+West Side
+35 m
+Building Separation
+Apply corresponding maximum exposure charge?
+0% Adjustment for West Side
+40% Total Adjustment for Building Exposure
+G ‐ Net Required Fire Flow
+10000 L/min
+167 L/s
+2642 USGPM
+
+Required Fire Flow
+
+Yes
+
+Yes
+Yes
+No
+
+Required Fire Flow Calculations (FUS 2020) ‐ Apartment 2
+Project Title:
+Project No.:
+Municipality
+Building/Parcel:
+
+Proposed Site Plan Humber Station Road and King Road
+5532
+Town of Caledon
+Apartment 2
+
+Required Fire Flow
+A ‐ Construction Type
+Type of Construction:
+Construction C Value:
+
+Type I ‐ Fire‐resistive Construction (Fully protected frame, floor, roof)
+0.6
+
+B ‐ Floor Area
+If Construction C Value < 1.0:
+Are the vertical openings and exterior vertical communications properly protected (1 hour rating)?
+2,522.99 m2
+Total floor area of 2 largest adjoining floors
+11,807.22 m2
+Total floor area of up to 8 floors immediately above 2 largest adjoining floors
+8427 m
+
+2
+
+No
+
+Total Floor Area Considered for RFF Calculation (Fire‐resistive construction)
+
+C ‐ Required Fire Flow (Rounded, Unadjusted)
+12000 L/min
+Required Fire Flow (Unadjusted)
+
+Adjustments
+D ‐ Fire Hazard Occupancy
+Occupancy Group:
+Occupancy and Contents:
+
+C ‐ Residential
+Limited Combustible
+
+‐15% Total Adjustment for Fire Hazard Occupancy
+10200 L/min
+Required Fire Flow (Unadjusted)
+E ‐ Sprinkler System
+Is an automatic sprinkler system in accordance with NFPA 13 present?
+Is the water supply standard for both the system and fire department hose required?
+Is the system fully supervised?
+‐40% Total Adjustment for Sprinkler System
+F ‐ Building Exposure
+North Side
+12 m
+Building Separation
+Apply corresponding maximum exposure charge?
+15% Adjustment for North Side
+
+Yes
+
+East Side
+30 m
+Building Separation
+Apply corresponding maximum exposure charge?
+10% Adjustment for East Side
+South Side
+13 m
+Building Separation
+Apply corresponding maximum exposure charge?
+15% Adjustment for South Side
+
+Yes
+
+Yes
+
+West Side
+35 m
+Building Separation
+Apply corresponding maximum exposure charge?
+0% Adjustment for West Side
+40% Total Adjustment for Building Exposure
+G ‐ Net Required Fire Flow
+10000 L/min
+167 L/s
+2642 USGPM
+
+Required Fire Flow
+
+Yes
+
+Yes
+Yes
+No
+
+FUS Calculation - Commercial Building A
+Project: 5532
+Project Name: Proposed Site Plan Humber Station Road and King Road
+Municipality: Town of Caledon
+
+A = Type of Construction
+Type of Construction:
+Type V Wood Frame
+Type IV - A Encapsulated Mass Timber
+Type IV - B Rated Mass Timber
+Type IV - C Ordinary Mass Timber
+Type IV - D Un-rated Mass Timber
+Type III - Ordinary
+Type II - Non-Combustible
+Type I - Fire-Resistive
+
+C
+1.5
+0.8
+0.9
+1
+1.5
+1
+0.8
+0.6
+
+Construction Coefficient:
+
+1.5
+
+B = Largest Floor
+Area:
+
+Description
+(essentially all combustible)
+
+(brick/masonry walls, combustible interior)
+(unprotected metal structure, masonry/metal walls)
+(fully protected frame, roof, floors)
+
+565 square metres
+
+C = Height (storeys)
+Height:
+
+1 Storeys
+
+D = Fire Flow (000's)
+GFA
+Construction Type
+Fire Flow
+
+565 square metres
+1.5
+7,843 L/min.
+
+-> Fire Flow
+
+8,000 L/min.
+
+E = Occupancy Factor
+Fire Hazard of Contents
+Non-Combustible
+Limited Combustible
+Combustible
+Free Burning
+Rapid Burning
+
+Charge
+-25%
+-15%
+0%
+15%
+25%
+
+Occupancy Factor
+Fire Flow
+
+-15%
+6,800 L/min.
+
+F = Sprinkler Factor
+Sprinkler System
+Charge
+n/a
+NFPA 13 System
+Water supply is standard for both the system and
+Fire Dep. Hose lines
+Fully Supervised System
+Sprinkler Factor:
+G = Exposure Factor
+Separation
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+20.1 to 30 m
+Greater than 30
+
+0%
+-30%
+-10%
+-10%
+0%
+
+Charge
+25%
+20% N (4.8m) SW (6m)
+15%
+10% E(23m)
+0%
+
+Exposure Factor
+
+50.00% (no more than 75%)
+
+H - Net Fire Flow Required
+Charge
+F + G Factors
+
+Fire Flow:
+
+50%
+10200 L/min.
+10000 L/min.
+167 L/s
+2642 USGPM
+
+FUS Calculation - Commercial Building B
+Project: 5532
+Project Name: Proposed Site Plan Humber Station Road and King Road
+Municipality: Town of Caledon
+
+A = Type of Construction
+Type of Construction:
+Type V Wood Frame
+Type IV - A Encapsulated Mass Timber
+Type IV - B Rated Mass Timber
+Type IV - C Ordinary Mass Timber
+Type IV - D Un-rated Mass Timber
+Type III - Ordinary
+Type II - Non-Combustible
+Type I - Fire-Resistive
+
+C
+1.5
+0.8
+0.9
+1
+1.5
+1
+0.8
+0.6
+
+Construction Coefficient:
+
+1.5
+
+B = Largest Floor
+Area:
+
+Description
+(essentially all combustible)
+
+(brick/masonry walls, combustible interior)
+(unprotected metal structure, masonry/metal walls)
+(fully protected frame, roof, floors)
+
+598 square metres
+
+C = Height (storeys)
+Height:
+
+1 Storeys
+
+D = Fire Flow (000's)
+GFA
+Construction Type
+Fire Flow
+
+598 square metres
+1.5
+8,067 L/min.
+
+-> Fire Flow
+
+8,000 L/min.
+
+E = Occupancy Factor
+Fire Hazard of Contents
+Non-Combustible
+Limited Combustible
+Combustible
+Free Burning
+Rapid Burning
+
+Charge
+-25%
+-15%
+0%
+15%
+25%
+
+Occupancy Factor
+Fire Flow
+
+-15%
+6,800 L/min.
+
+F = Sprinkler Factor
+Sprinkler System
+Charge
+n/a
+NFPA 13 System
+Water supply is standard for both the system and
+Fire Dep. Hose lines
+Fully Supervised System
+Sprinkler Factor:
+G = Exposure Factor
+Separation
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+20.1 to 30 m
+Greater than 30
+
+0%
+-30%
+-10%
+-10%
+0%
+
+Charge
+25%
+20% NE (6m)
+15% S (18m) W (20m)
+10%
+0%
+
+Exposure Factor
+
+50.00% (no more than 75%)
+
+H - Net Fire Flow Required
+Charge
+F + G Factors
+
+Fire Flow:
+
+50%
+10200 L/min.
+10000 L/min.
+167 L/s
+2642 USGPM
+
+FUS Calculation - Commercial Building C
+Project: 5532
+Project Name: Proposed Site Plan Humber Station Road and King Road
+Municipality: Town of Caledon
+
+A = Type of Construction
+Type of Construction:
+Type V Wood Frame
+Type IV - A Encapsulated Mass Timber
+Type IV - B Rated Mass Timber
+Type IV - C Ordinary Mass Timber
+Type IV - D Un-rated Mass Timber
+Type III - Ordinary
+Type II - Non-Combustible
+Type I - Fire-Resistive
+
+C
+1.5
+0.8
+0.9
+1
+1.5
+1
+0.8
+0.6
+
+Construction Coefficient:
+
+1.5
+
+B = Largest Floor
+Area:
+
+Description
+(essentially all combustible)
+
+(brick/masonry walls, combustible interior)
+(unprotected metal structure, masonry/metal walls)
+(fully protected frame, roof, floors)
+
+270 square metres
+
+C = Height (storeys)
+Height:
+
+1 Storeys
+
+D = Fire Flow (000's)
+GFA
+Construction Type
+Fire Flow
+
+270 square metres
+1.5
+5,422 L/min.
+
+-> Fire Flow
+
+5,000 L/min.
+
+E = Occupancy Factor
+Fire Hazard of Contents
+Non-Combustible
+Limited Combustible
+Combustible
+Free Burning
+Rapid Burning
+
+Charge
+-25%
+-15%
+0%
+15%
+25%
+
+Occupancy Factor
+Fire Flow
+
+-15%
+4,250 L/min.
+
+F = Sprinkler Factor
+Sprinkler System
+Charge
+n/a
+NFPA 13 System
+Water supply is standard for both the system and
+Fire Dep. Hose lines
+Fully Supervised System
+Sprinkler Factor:
+G = Exposure Factor
+Separation
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+20.1 to 30 m
+Greater than 30
+
+0%
+-30%
+-10%
+-10%
+0%
+
+Charge
+25%
+20%
+15% N (15.6m) S(14.5m)
+10%
+0%
+
+Exposure Factor
+
+30.00% (no more than 75%)
+
+H - Net Fire Flow Required
+Charge
+F + G Factors
+
+30%
+
+Fire Flow:
+
+5525 L/min.
+6000 L/min.
+100 L/s
+1585 USGPM
+
+FUS Calculation - Commercial Building D
+Project: 5532
+Project Name: Proposed Site Plan Humber Station Road and King Road
+Municipality: Town of Caledon
+
+A = Type of Construction
+Type of Construction:
+Type V Wood Frame
+Type IV - A Encapsulated Mass Timber
+Type IV - B Rated Mass Timber
+Type IV - C Ordinary Mass Timber
+Type IV - D Un-rated Mass Timber
+Type III - Ordinary
+Type II - Non-Combustible
+Type I - Fire-Resistive
+
+C
+1.5
+0.8
+0.9
+1
+1.5
+1
+0.8
+0.6
+
+Construction Coefficient:
+
+1.5
+
+B = Largest Floor
+Area:
+
+Description
+(essentially all combustible)
+
+(brick/masonry walls, combustible interior)
+(unprotected metal structure, masonry/metal walls)
+(fully protected frame, roof, floors)
+
+486 square metres
+
+C = Height (storeys)
+Height:
+
+2 Storeys
+
+D = Fire Flow (000's)
+GFA
+Construction Type
+Fire Flow
+
+972 square metres
+1.5
+10,288 L/min.
+
+-> Fire Flow
+
+10,000 L/min.
+
+E = Occupancy Factor
+Fire Hazard of Contents
+Non-Combustible
+Limited Combustible
+Combustible
+Free Burning
+Rapid Burning
+
+Charge
+-25%
+-15%
+0%
+15%
+25%
+
+Occupancy Factor
+Fire Flow
+
+-15%
+8,500 L/min.
+
+F = Sprinkler Factor
+Sprinkler System
+Charge
+n/a
+NFPA 13 System
+Water supply is standard for both the system and
+Fire Dep. Hose lines
+Fully Supervised System
+Sprinkler Factor:
+G = Exposure Factor
+Separation
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+20.1 to 30 m
+Greater than 30
+
+0%
+-30%
+-10%
+-10%
+0%
+
+Charge
+25%
+20% N(4.8m)
+15% S(15.6m)
+10% W(23m)
+0%
+
+Exposure Factor
+
+45.00% (no more than 75%)
+
+H - Net Fire Flow Required
+Charge
+F + G Factors
+
+Fire Flow:
+
+45%
+12325 L/min.
+12000 L/min.
+200 L/s
+3170 USGPM
+
+FUS Calculation - Commercial Building E
+Project: 5532
+Project Name: Proposed Site Plan Humber Station Road and King Road
+Municipality: Town of Caledon
+
+A = Type of Construction
+Type of Construction:
+Type V Wood Frame
+Type IV - A Encapsulated Mass Timber
+Type IV - B Rated Mass Timber
+Type IV - C Ordinary Mass Timber
+Type IV - D Un-rated Mass Timber
+Type III - Ordinary
+Type II - Non-Combustible
+Type I - Fire-Resistive
+
+C
+1.5
+0.8
+0.9
+1
+1.5
+1
+0.8
+0.6
+
+Construction Coefficient:
+
+1.5
+
+B = Largest Floor
+Area:
+
+Description
+(essentially all combustible)
+
+(brick/masonry walls, combustible interior)
+(unprotected metal structure, masonry/metal walls)
+(fully protected frame, roof, floors)
+
+588 square metres
+
+C = Height (storeys)
+Height:
+
+1 Storeys
+
+D = Fire Flow (000's)
+GFA
+Construction Type
+Fire Flow
+
+588 square metres
+1.5
+7,999 L/min.
+
+-> Fire Flow
+
+8,000 L/min.
+
+E = Occupancy Factor
+Fire Hazard of Contents
+Non-Combustible
+Limited Combustible
+Combustible
+Free Burning
+Rapid Burning
+
+Charge
+-25%
+-15%
+0%
+15%
+25%
+
+Occupancy Factor
+Fire Flow
+
+-15%
+6,800 L/min.
+
+F = Sprinkler Factor
+Sprinkler System
+Charge
+n/a
+NFPA 13 System
+Water supply is standard for both the system and
+Fire Dep. Hose lines
+Fully Supervised System
+Sprinkler Factor:
+G = Exposure Factor
+Separation
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+20.1 to 30 m
+Greater than 30
+
+0%
+-30%
+-10%
+-10%
+0%
+
+Charge
+25%
+20% SE(6M)
+15% N(18m) W(20m)
+10%
+0%
+
+Exposure Factor
+
+50.00% (no more than 75%)
+
+H - Net Fire Flow Required
+Charge
+F + G Factors
+
+Fire Flow:
+
+50%
+10200 L/min.
+10000 L/min.
+167 L/s
+2642 USGPM
+
+FUS Calculation - Commercial Building F
+Project: 5532
+Project Name: Proposed Site Plan Humber Station Road and King Road
+Municipality: Town of Caledon
+
+A = Type of Construction
+Type of Construction:
+Type V Wood Frame
+Type IV - A Encapsulated Mass Timber
+Type IV - B Rated Mass Timber
+Type IV - C Ordinary Mass Timber
+Type IV - D Un-rated Mass Timber
+Type III - Ordinary
+Type II - Non-Combustible
+Type I - Fire-Resistive
+
+C
+1.5
+0.8
+0.9
+1
+1.5
+1
+0.8
+0.6
+
+Construction Coefficient:
+
+1.5
+
+B = Largest Floor
+Area:
+
+Description
+(essentially all combustible)
+
+(brick/masonry walls, combustible interior)
+(unprotected metal structure, masonry/metal walls)
+(fully protected frame, roof, floors)
+
+549 square metres
+
+C = Height (storeys)
+Height:
+
+1 Storeys
+
+D = Fire Flow (000's)
+GFA
+Construction Type
+Fire Flow
+
+549 square metres
+1.5
+7,735 L/min.
+
+-> Fire Flow
+
+8,000 L/min.
+
+E = Occupancy Factor
+Fire Hazard of Contents
+Non-Combustible
+Limited Combustible
+Combustible
+Free Burning
+Rapid Burning
+
+Charge
+-25%
+-15%
+0%
+15%
+25%
+
+Occupancy Factor
+Fire Flow
+
+-15%
+6,800 L/min.
+
+F = Sprinkler Factor
+Sprinkler System
+Charge
+n/a
+NFPA 13 System
+Water supply is standard for both the system and
+Fire Dep. Hose lines
+Fully Supervised System
+Sprinkler Factor:
+G = Exposure Factor
+Separation
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+20.1 to 30 m
+Greater than 30
+
+0%
+-30%
+-10%
+-10%
+0%
+
+Charge
+25%
+20% S(4.8m) NW (6M)
+15%
+10%
+0%
+
+Exposure Factor
+
+40.00% (no more than 75%)
+
+H - Net Fire Flow Required
+Charge
+F + G Factors
+
+Fire Flow:
+
+40%
+9520 L/min.
+10000 L/min.
+167 L/s
+2642 USGPM
+
+FUS Calculation - Commercial Building G
+Project: 5532
+Project Name: Proposed Site Plan Humber Station Road and King Road
+Municipality: Town of Caledon
+
+A = Type of Construction
+Type of Construction:
+Type V Wood Frame
+Type IV - A Encapsulated Mass Timber
+Type IV - B Rated Mass Timber
+Type IV - C Ordinary Mass Timber
+Type IV - D Un-rated Mass Timber
+Type III - Ordinary
+Type II - Non-Combustible
+Type I - Fire-Resistive
+
+C
+1.5
+0.8
+0.9
+1
+1.5
+1
+0.8
+0.6
+
+Construction Coefficient:
+
+1.5
+
+B = Largest Floor
+Area:
+
+Description
+(essentially all combustible)
+
+(brick/masonry walls, combustible interior)
+(unprotected metal structure, masonry/metal walls)
+(fully protected frame, roof, floors)
+
+486 square metres
+
+C = Height (storeys)
+Height:
+
+2 Storeys
+
+D = Fire Flow (000's)
+GFA
+Construction Type
+Fire Flow
+
+972 square metres
+1.5
+10,288 L/min.
+
+-> Fire Flow
+
+10,000 L/min.
+
+E = Occupancy Factor
+Fire Hazard of Contents
+Non-Combustible
+Limited Combustible
+Combustible
+Free Burning
+Rapid Burning
+
+Charge
+-25%
+-15%
+0%
+15%
+25%
+
+Occupancy Factor
+Fire Flow
+
+-15%
+8,500 L/min.
+
+F = Sprinkler Factor
+Sprinkler System
+Charge
+n/a
+NFPA 13 System
+Water supply is standard for both the system and
+Fire Dep. Hose lines
+Fully Supervised System
+Sprinkler Factor:
+G = Exposure Factor
+Separation
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+20.1 to 30 m
+Greater than 30
+
+0%
+-30%
+-10%
+-10%
+0%
+
+Charge
+25%
+20% S(5M)
+15% N(15.6)
+10%
+0%
+
+Exposure Factor
+
+35.00% (no more than 75%)
+
+H - Net Fire Flow Required
+Charge
+F + G Factors
+
+Fire Flow:
+
+35%
+11475 L/min.
+11000 L/min.
+183 L/s
+2906 USGPM
+
+FUS Calculation - Commercial Building H
+Project: 5532
+Project Name: Proposed Site Plan Humber Station Road and King Road
+Municipality: Town of Caledon
+
+A = Type of Construction
+Type of Construction:
+Type V Wood Frame
+Type IV - A Encapsulated Mass Timber
+Type IV - B Rated Mass Timber
+Type IV - C Ordinary Mass Timber
+Type IV - D Un-rated Mass Timber
+Type III - Ordinary
+Type II - Non-Combustible
+Type I - Fire-Resistive
+
+C
+1.5
+0.8
+0.9
+1
+1.5
+1
+0.8
+0.6
+
+Construction Coefficient:
+
+1.5
+
+B = Largest Floor
+Area:
+
+Description
+(essentially all combustible)
+
+(brick/masonry walls, combustible interior)
+(unprotected metal structure, masonry/metal walls)
+(fully protected frame, roof, floors)
+
+270 square metres
+
+C = Height (storeys)
+Height:
+
+1 Storeys
+
+D = Fire Flow (000's)
+GFA
+Construction Type
+Fire Flow
+
+270 square metres
+1.5
+5,422 L/min.
+
+-> Fire Flow
+
+5,000 L/min.
+
+E = Occupancy Factor
+Fire Hazard of Contents
+Non-Combustible
+Limited Combustible
+Combustible
+Free Burning
+Rapid Burning
+
+Charge
+-25%
+-15%
+0%
+15%
+25%
+
+Occupancy Factor
+Fire Flow
+
+-15%
+4,250 L/min.
+
+F = Sprinkler Factor
+Sprinkler System
+Charge
+n/a
+NFPA 13 System
+Water supply is standard for both the system and
+Fire Dep. Hose lines
+Fully Supervised System
+Sprinkler Factor:
+G = Exposure Factor
+Separation
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+20.1 to 30 m
+Greater than 30
+
+0%
+-30%
+-10%
+-10%
+0%
+
+Charge
+25%
+20%
+15% N(14.5m) S(15.6m)
+10%
+0%
+
+Exposure Factor
+
+30.00% (no more than 75%)
+
+H - Net Fire Flow Required
+Charge
+F + G Factors
+
+30%
+
+Fire Flow:
+
+5525 L/min.
+6000 L/min.
+100 L/s
+1585 USGPM
+
+Appendix C
+Sanitary Servicing
+
+Proposed Sanitary Flow Calculation
+Project No. 5532
+
+06‐Jan‐26
+
+Infiltration Rate:
+Residential Generation Rate:
+ICI Generation Rate:
+
+0.26 L/s/ha
+290 L/capita/day
+270 L/capita/day
+
+Proposed Outlet to Columbia Way
+2.63 ha
+
+Total Developable Land Area (ha):
+
+Summary of Sanitary Design Flow Calculation
+Population Type
+
+Total Population
+
+Residential
+Commerical
+
+1640
+36
+
+Average
+Demand (L/s)
+5.62
+
+Harmon's
+Peaking
+Factor (M)*
+3.64
+
+Peak Flow
+(L/s)
+
+Total Developable
+Land Area (ha)
+
+Infiltration
+(L/ha/s)
+
+Infiltration
+(L/s)
+
+Total Peak
+Flow (L/s)
+
+20.47
+
+2.63
+
+0.26
+
+0.68
+
+21.15
+
+M = 1 + 14/(4 + (P/1000) 0.5)
+Maximum M=4
+*Population Estimate based on the Region of Peel's Linear Wastewater Standards (March 2023)
+
+Appendix D
+Stormwater Management Calculations
+
+Storage and Flow Calculations
+
+Runoff Coefficient Calculations
+Project No:
+2025-5532
+Date:
+January 2026
+Project Name: "0" Humber Station Road, Caledon
+Criteria:
+The Runoff Coefficients were taken from the Township of King's Design Criteria
+Calculations for Existing Subject Site
+
+Site Plan 1
+Site Plan 2
+
+Area (ha)
+1.339
+1.015
+2.354
+
+Runoff Coeff.
+0.85
+0.85
+
+Weighted Runoff Coefficient
+
+0.125 cms
+
+AxC
+1.14
+0.86
+2.00
+
+0.85
+
+per hectare
+
+Flow Calculations - Rational Method
+Project No:
+Date:
+Project Name:
+
+2025-5532
+January 2026
+"0" Humber Station Road, Caledon
+
+Criteria:
+The Runoff Coefficients were taken from City's Design Criteria.
+Rainfall intensity
+Design Storm Event
+2-Year
+5-Year
+10-Year
+25-Year
+50-Year
+100-Year
+
+A
+1070
+1593
+2221
+3158
+3886
+4688
+
+B
+7.85
+11.00
+12.00
+15.00
+16.00
+17.00
+
+C
+0.8759
+0.8789
+0.9080
+0.9335
+0.9495
+0.9624
+
+0.85
+1.34
+0.271
+0.347
+0.424
+0.495
+0.557
+0.622
+
+ha
+m3/s
+m3/s
+m3/s
+m3/s
+m3/s
+m3/s
+
+0.85
+1.02
+0.206
+0.263
+0.322
+0.375
+0.423
+0.471
+
+ha
+m3/s
+m3/s
+m3/s
+m3/s
+m3/s
+m3/s
+
+Note:
+T=10 minutes
+I=A(T+B)-C
+Proposed Peak Discharge Rate - Site Plan 1
+Runoff Coefficient, C
+Drainage Area
+2-Year Peak Flow, Q2
+5-Year Peak Flow, Q5
+10-Year Peak Flow, Q10
+25-Year Peak Flow, Q25
+50-Year Peak Flow, Q50
+100-Year Peak Flow, Q100
+Proposed Peak Discharge Rate - Site Plan 2
+Runoff Coefficient, C
+Drainage Area
+2-Year Peak Flow, Q2
+5-Year Peak Flow, Q5
+10-Year Peak Flow, Q10
+25-Year Peak Flow, Q25
+50-Year Peak Flow, Q50
+100-Year Peak Flow, Q100
+Erosion Control
+(5mm x imp. Area x C x 10)
+Site Plan 1
+Site Plan 2
+
+56.91
+43.14
+
+m3
+m3
+
+ROW
+C
+Area
+Retention depth
+Volume
+
+0.75
+0.2605
+2
+3.91
+
+ha
+mm
+m3
+
+I (mm/hr)
+85.72
+109.68
+134.16
+156.47
+176.19
+196.54
+
+Flow Calculations - Rational Method
+Project No:
+Date:
+Project Name:
+
+2025-5532
+January 2026
+"0" Humber Station Road, Caledon
+
+Criteria:
+The Runoff Coefficients were taken from City's Design Criteria.
+Rainfall intensity
+Design Storm Event
+2-Year
+5-Year
+10-Year
+25-Year
+50-Year
+100-Year
+
+A
+1070
+1593
+2221
+3158
+3886
+4688
+
+B
+7.85
+11.00
+12.00
+15.00
+16.00
+17.00
+
+C
+0.8759
+0.8789
+0.9080
+0.9335
+0.9495
+0.9624
+
+0.75
+3.26
+0.583
+0.745
+0.912
+1.064
+1.198
+1.336
+
+ha
+m3/s
+m3/s
+m3/s
+m3/s
+m3/s
+m3/s
+
+Note:
+T=10 minutes
+I=A(T+B)-C
+Proposed Peak Discharge Rate - Public ROW
+Runoff Coefficient, C
+Drainage Area
+2-Year Peak Flow, Q2
+5-Year Peak Flow, Q5
+10-Year Peak Flow, Q10
+25-Year Peak Flow, Q25
+50-Year Peak Flow, Q50
+100-Year Peak Flow, Q100
+
+I (mm/hr)
+85.72
+109.68
+134.16
+156.47
+176.19
+196.54
+
+Storage Volume Calculation - Underground Storage Tank - Site Plan 1
+Project No:
+Date:
+Project Name:
+
+2025-5532
+January 2026
+"0" Humber Station Road, Caledon
+
+Modified Rational Method
+Area (ha) =
+
+1.339
+
+C=
+
+0.85
+
+C (100 year) =
+
+1.00 *1.25 Adjustment Factor
+
+Maximum Release Rate (l/s) =
+
+424.5
+
+100 Year Storm
+Design Storm =
+
+City of Toronto
+
+A=
+
+4688
+
+B=
+
+17.00
+
+C=
+
+0.9624
+
+Total
+
+Maximum
+
+Required
+
+Time
+
+Intensity
+
+Total
+
+Total
+
+Runoff
+
+Release
+
+Storage
+
+(min)
+
+100 year
+
+Runoff
+
+Runoff
+
+(mm/hr)
+
+(l/s)
+
+(l/s)
+
+Volume
+(m3)
+
+Volume
+(m3)
+
+Volume
+(m3)
+
+5
+
+239.35
+
+890.97
+
+890.97
+
+267.29
+
+127.35
+
+139.94
+
+6
+
+229.33
+
+853.66
+
+853.66
+
+307.32
+
+152.82
+
+154.50
+
+7
+
+220.13
+
+819.40
+
+819.40
+
+344.15
+
+178.29
+
+165.86
+
+8
+
+211.65
+
+787.84
+
+787.84
+
+378.16
+
+203.76
+
+174.40
+
+9
+
+203.81
+
+758.65
+
+758.65
+
+409.67
+
+229.23
+
+180.44
+
+10
+
+196.54
+
+731.59
+
+731.59
+
+438.95
+
+254.70
+
+184.26
+
+11
+
+189.78
+
+706.43
+
+706.43
+
+466.24
+
+280.17
+
+186.08
+
+12
+
+183.47
+
+682.97
+
+682.97
+
+491.74
+
+305.64
+
+186.10
+
+13
+
+177.58
+
+661.05
+
+661.05
+
+515.62
+
+331.11
+
+184.51
+
+14
+
+172.07
+
+640.51
+
+640.51
+
+538.03
+
+356.58
+
+181.45
+
+15
+
+166.89
+
+621.24
+
+621.24
+
+559.11
+
+382.05
+
+177.07
+
+16
+
+162.02
+
+603.11
+
+603.11
+
+578.98
+
+407.52
+
+171.47
+
+17
+
+157.43
+
+586.03
+
+586.03
+
+597.75
+
+432.99
+
+164.76
+
+18
+
+153.10
+
+569.90
+
+569.90
+
+615.50
+
+458.46
+
+157.04
+
+19
+
+149.01
+
+554.66
+
+554.66
+
+632.31
+
+483.92
+
+148.39
+
+20
+
+145.13
+
+540.23
+
+540.23
+
+648.27
+
+509.39
+
+138.88
+
+21
+
+141.45
+
+526.54
+
+526.54
+
+663.44
+
+534.86
+
+128.57
+
+22
+
+137.96
+
+513.54
+
+513.54
+
+677.87
+
+560.33
+
+117.54
+
+23
+24
+
+134.64
+131.48
+
+501.18
+489.41
+
+501.18
+489.41
+
+691.62
+704.75
+
+585.80
+611.27
+
+105.82
+93.47
+
+Required Storage (m 3):
+
+186.10
+
+100 Year
+
+Storage Volume Calculation - Underground Storage Tank - Site Plan 2
+Project No:
+Date:
+Project Name:
+
+2025-5532
+January 2026
+"0" Humber Station Road, Caledon
+
+Modified Rational Method
+Area (ha) =
+
+1.015
+
+C=
+
+0.85
+
+C (100 year) =
+
+1.00 *1.25 Adjustment Factor
+
+Maximum Release Rate (l/s) =
+
+321.8
+
+100 Year Storm
+Design Storm =
+
+City of Toronto
+
+A=
+
+4688
+
+B=
+
+17.00
+
+C=
+
+0.9624
+
+Total
+
+Maximum
+
+Required
+
+Time
+
+Intensity
+
+Total
+
+Total
+
+Runoff
+
+Release
+
+Storage
+
+(min)
+
+100 year
+
+Runoff
+
+Runoff
+
+(mm/hr)
+
+(l/s)
+
+(l/s)
+
+Volume
+(m3)
+
+Volume
+(m3)
+
+Volume
+(m3)
+
+5
+
+239.35
+
+675.38
+
+675.38
+
+202.62
+
+96.53
+
+106.08
+
+6
+
+229.33
+
+647.10
+
+647.10
+
+232.96
+
+115.84
+
+117.12
+
+7
+
+220.13
+
+621.13
+
+621.13
+
+260.87
+
+135.15
+
+125.73
+
+8
+
+211.65
+
+597.20
+
+597.20
+
+286.66
+
+154.45
+
+132.20
+
+9
+
+203.81
+
+575.08
+
+575.08
+
+310.54
+
+173.76
+
+136.78
+
+10
+
+196.54
+
+554.57
+
+554.57
+
+332.74
+
+193.07
+
+139.67
+
+11
+
+189.78
+
+535.49
+
+535.49
+
+353.43
+
+212.37
+
+141.05
+
+12
+
+183.47
+
+517.71
+
+517.71
+
+372.75
+
+231.68
+
+141.07
+
+13
+
+177.58
+
+501.09
+
+501.09
+
+390.85
+
+250.99
+
+139.86
+
+14
+
+172.07
+
+485.53
+
+485.53
+
+407.84
+
+270.29
+
+137.55
+
+15
+
+166.89
+
+470.91
+
+470.91
+
+423.82
+
+289.60
+
+134.22
+
+16
+
+162.02
+
+457.17
+
+457.17
+
+438.89
+
+308.91
+
+129.98
+
+17
+
+157.43
+
+444.23
+
+444.23
+
+453.11
+
+328.22
+
+124.89
+
+18
+
+153.10
+
+432.00
+
+432.00
+
+466.56
+
+347.52
+
+119.04
+
+19
+
+149.01
+
+420.45
+
+420.45
+
+479.31
+
+366.83
+
+112.48
+
+20
+
+145.13
+
+409.51
+
+409.51
+
+491.41
+
+386.14
+
+105.27
+
+21
+
+141.45
+
+399.13
+
+399.13
+
+502.90
+
+405.44
+
+97.46
+
+22
+
+137.96
+
+389.28
+
+389.28
+
+513.84
+
+424.75
+
+89.10
+
+23
+24
+
+134.64
+131.48
+
+379.91
+370.98
+
+379.91
+370.98
+
+524.27
+534.22
+
+444.06
+463.36
+
+80.21
+70.85
+
+Required Storage (m 3):
+
+141.07
+
+100 Year
+
+Subdivision Water Balance
+
+TABLE 1: WATER BUDGET - PRE DEVELOPMENT
+WATER BALANCE/WATER BUDGET ASSESSMENT
+Catchment Designation
+Pervious Area (m2)
+Impervious Area (m2)
+Total Area (m2)
+
+Site
+Landscape
+
+Total
+
+25981
+0
+
+25981
+0
+
+25981
+
+25981
+
+Infiltration Factors
+Topography Infiltration Factor (Flat Land)
+Soil Infiltration Factor (Silty Clay)
+Land Cover Infiltration Factor (Cultivated Land)
+
+0.30
+0.15
+0.10
+
+MOE Infiltration Factor
+
+0.55
+Inputs (mm/year)
+
+Precipitation*
+Run-On
+Other Inputs
+
+864
+0
+0
+
+864
+0
+0
+
+864
+
+864
+
+Precipitation Surplus
+Net Surplus
+Downspout Disconnection Retention
+Evapotranpiration**
+Roof Evapotranspiration
+Rooftop Runoff Lawn Evaporation
+Total Evapotranspiration
+Infiltration
+Rooftop Infiltration
+Total Infiltration
+Runoff Pervious Area
+Runoff Impervious Area
+Total Runoff
+
+385
+385
+0
+479
+0
+0
+479
+212
+0
+212
+173
+0
+173
+
+385
+385
+0
+479
+0
+0
+479
+212
+0
+212
+173
+0
+173
+
+Total Outputs
+Difference (Inputs - Outputs)
+
+864
+0
+
+864
+0
+
+22448
+0
+0
+
+22448
+0
+0
+
+22448
+
+22448
+
+Precipitation Surplus
+Net Surplus
+Downspout Disconnection Retention
+Evapotranpiration
+Roof Evapotranspiration
+Rooftop Runoff Lawn Evaporation
+Total Evapotranspiration
+Infiltration
+Rooftop Infiltration
+Total Infiltration
+Runoff Pervious Area
+Runoff Impervious Area
+Total Runoff
+
+10003
+10003
+0
+12445
+0
+0
+12445
+5501
+0
+5501
+4501
+0
+4501
+
+10003
+10003
+0
+12445
+0
+0
+12445
+5501
+0
+5501
+4501
+0
+4501
+
+Total Outputs
+Difference (Inputs - Outputs)
+* From TRSPA Water Balance Tool
+** Value Adjusted through balancing TRSPA Result
+
+22448
+0
+
+22448
+0
+
+Total Inputs
+Outputs (mm/year)
+
+Inputs (m3/year)
+Precipitation
+Run-On
+Other Inputs
+Total Inputs
+3
+
+Outputs (m /year)
+
+TABLE 2: WATER BUDGET - POST-DEVELOPMENT WITHOUT MITIGATION
+WATER BALANCE/WATER BUDGET ASSESSMENT
+Site
+Catchment Designation
+Pervious Area (m2)
+Impervious Area (m2)
+Area (m2)
+Topography Infiltration Factor
+Soil Infiltration Factor
+Land Cover Infiltration Factor
+MOE Infiltration Factor
+Precipitation (mm/year)
+Total Inputs (m3/year)
+Precipitation Surplus (mm/year)1
+Net Surplus (mm/year)
+Downspout Disconnection Retention
+Evapotranpiration (mm/year)
+Roof Evapotranspiration (mm/year)
+Rooftop Runoff Lawn Evaporation (mm/year)
+Total Evapotranspiration (mm/yr)
+Infiltration (mm/year)
+Rooftop Infiltration (mm/year)
+Total Infiltration (mm/year)
+Runoff Pervious Area (mm/year)
+Runoff Impervious Area (mm/year)
+Total Runoff (mm/year)
+Total Outputs (mm/year)
+Difference (Inputs - Outputs)
+Precipitation (m3/year)
+3
+Total Inputs (m /year)
+Precipitation Surplus (m3/year)
+Net Surplus (m3/year)
+Downspout Disconnection Retention (m3/year)
+Evapotranspiration (m3/year)
+Roof Evapotranspiration (m3/year)
+Rooftop Runoff Lawn Evaporation (m3/year)
+Total Evapotranspiration (m3/year)
+
+Commercial
+Block
+
+Mid/High Rise
+Block
+
+Total
+
+0
+2438
+2438
+Infiltration Factors
+
+0
+13392
+13392
+
+0
+10151
+10151
+
+0
+25981
+25981
+
+N/A
+N/A
+N/A
+N/A
+Inputs (per unit area)
+864
+864
+Outputs (per unit area)
+
+N/A
+N/A
+N/A
+N/A
+
+N/A
+N/A
+N/A
+N/A
+
+864
+864
+
+864
+864
+
+864
+864
+
+778
+778
+0
+86
+0
+0
+86
+0
+0
+0
+0
+778
+778
+864
+0
+Input Volumes
+2106
+2106
+Outputs (Volumes)
+1896
+1896
+0
+211
+0
+0
+211
+
+778
+778
+0
+86
+0
+0
+86
+0
+0
+0
+0
+778
+778
+864
+0
+
+778
+778
+0
+86
+0
+0
+86
+0
+0
+0
+0
+778
+778
+864
+0
+
+778
+778
+0
+86
+0
+0
+86
+0
+0
+0
+0
+778
+778
+
+11571
+11571
+
+8770
+8770
+
+22448
+22448
+
+10414
+10414
+0
+1157
+0
+0
+1157
+
+7893
+7893
+0
+877
+0
+0
+877
+
+20203
+20203
+0
+2245
+0
+0
+2245
+
+ROW
+
+864
+0
+
+Infiltration (m3/year)
+Rooftop Infiltration (m3/year)
+3
+Total Infiltration (m /year)
+Runoff Pervious Area (m3/year)
+Runoff Impervious Area (m3/year)
+Total Runoff (m3/year)
+
+0
+0
+0
+0
+1896
+1896
+
+0
+0
+0
+0
+10414
+10414
+
+0
+0
+0
+0
+7893
+7893
+
+0
+0
+0
+0
+20203
+20203
+
+Total Outputs (m3/year)
+Difference (Inputs - Outputs)
+
+2106
+0
+
+11571
+0
+
+8770
+0
+
+22448
+0
+
+1 - Assumes 10% Evaporation from Impervious Surfaces
+
+Filter Sizing Reports
+
+Hydroworks Sizing Summary
+Humber Station Road & King Street - SP1
+Caledon, ON
+01-07-2026
+
+Recommended Size: HydroFilter HF34
+Hydroworks Sizing Program Version 5.8.5
+A HydroFilter HF34 is recommended to provide 80 % annual TSS removal based on a drainage
+area of 1.34 (ha) with an imperviousness of 94 % and Toronto Central, Ontario rainfall for the
+ETV par8cle size distribu8on.
+The recommended HydroFilter HF34 treats 90 % of the annual runoﬀ and provides 82 % annual
+TSS removal for the Toronto Central rainfall records and ETV par8cle size distribu8on.
+
+This summary report provides the main parameters that were used for sizing. These parameters
+are shown on the summary tables and graphs provided in this report.
+If you have any ques8ons regarding this sizing summary please do not hesitate to contact
+Hydroworks at 888-290-7900 or email us at support@hydroworks.com.
+
+The sizing program is for sizing purposes only and does not address any site speciﬁc parameters such as hydraulic gradeline, tailwater submergence,
+groundwater, soils bearing capacity, etc. Headloss calcula ons are not a hydraulic gradeline calcula on since this requires a star ng water level
+and an analysis of the en re system downstream of the HydroFilter .
+
+Page 1
+
+TSS Removal Sizing Summary
+
+TSS Particle Size Distribution
+
+Page 2
+
+Rainfall Station - Toronto Central, Ontario(1982 To 1999)
+
+Site Physical Characteristics
+
+Page 3
+
+Generic HF34 CAD Drawing
+
+TSS Buildup And Washoff
+
+Page 4
+
+Upstream Quantity Storage
+
+Other Parameters
+
+Page 5
+
+Flagged Issues
+None
+
+Hydroworks Sizing Program - Version 5.8.5
+Copyright Hydroworks, LLC, 2024
+1-800-290-7900
+www.hydroworks.com
+
+Page 6
+
+Hydroworks Sizing Summary
+Humber Station Road & King Street - SP2
+Caledon, ON
+01-07-2026
+
+Recommended Size: HydroFilter HF14
+Hydroworks Sizing Program Version 5.8.5
+A HydroFilter HF14 is recommended to provide 80 % annual TSS removal based on a drainage
+area of 0.51 (ha) with an imperviousness of 94 % and Toronto Central, Ontario rainfall for the
+ETV par7cle size distribu7on.
+The recommended HydroFilter HF14 treats 90 % of the annual runoﬀ and provides 82 % annual
+TSS removal for the Toronto Central rainfall records and ETV par7cle size distribu7on.
+
+This summary report provides the main parameters that were used for sizing. These parameters
+are shown on the summary tables and graphs provided in this report.
+If you have any ques7ons regarding this sizing summary please do not hesitate to contact
+Hydroworks at 888-290-7900 or email us at support@hydroworks.com.
+
+The sizing program is for sizing purposes only and does not address any site speciﬁc parameters such as hydraulic gradeline, tailwater submergence,
+groundwater, soils bearing capacity, etc. Headloss calcula ons are not a hydraulic gradeline calcula on since this requires a star ng water level
+and an analysis of the en re system downstream of the HydroFilter .
+
+Page 1
+
+TSS Removal Sizing Summary
+
+TSS Particle Size Distribution
+
+Page 2
+
+Rainfall Station - Toronto Central, Ontario(1982 To 1999)
+
+Site Physical Characteristics
+
+Page 3
+
+Generic HF14 CAD Drawing
+
+TSS Buildup And Washoff
+
+Page 4
+
+Upstream Quantity Storage
+
+Other Parameters
+
+Page 5
+
+Flagged Issues
+None
+
+Hydroworks Sizing Program - Version 5.8.5
+Copyright Hydroworks, LLC, 2024
+1-800-290-7900
+www.hydroworks.com
+
+Page 6
+
+Appendix E
+Engineering Drawings
+
+CA
+
+NA
+
+DA
+
+RA
+
+IL
+
+HU
+M
+BE
+
+R
+
+W
+
+AY
+
+SITE
+ST
+A
+
+TI
+
+O
+
+N
+
+RO
+
+NG
+
+ST
+RE
+E
+
+T
+
+AD
+
+KI
+
+HT
+G LE
+I
+YL NG
+A
+D RIA
+T
+
+KEY PLAN
+N.T.S.
+
+NOTES:
+1. THE LOCATION OF ALL UNDERGROUND AND ABOVEGROUND UTILITIES AND STRUCTURES
+ARE NOT NECESSARILY SHOWN ON CONTRACT DRAWINGS, AND WHERE SHOWN THE
+ACCURACY OF THE LOCATION AND ELEVATION OF SUCH UTILITIES AND STRUCTURES
+ARE NOT GUARANTEED.THE CONTRACTOR SHALL VERIFY EXACT LOCATION AND
+ELEVATION OF SUCH UTILITIES AND STRUCTURES PRIOR TO COMMENCING
+CONSTRUCTION AND SHALL ASSUME ALL LIABILITIES OF DAMAGE.
+
+RETAIL
+
+LOADING BAY
+RAMP TO
+BASEMENT
+
+2. ALL AREAS DISTURBED AND DAMAGED DURING DEVELOPMENT OF DEVELOPER'S LAND
+SHALL BE RESTORED TO ORIGINAL CONDITION OR BETTER, TO THE SATISFACTION OF
+THE CITY OF BRAMPTON AND REGION OF PEEL. GRASSED AREA SHALL BE TOPPED
+WITH 100mm TOPSOIL AND SODDED AS PER CITY STANDARDS. ALL EXISTING SERVICES
+TO BE ADJUSTED TO SUIT NEW GRADES.
+
+RETAIL
+
+VESTIBULE
+
+LEGEND
+DENOTES EXISTING ELEVATION
+
+DENOTES STORM MANHOLE MANHOLE
+
+DENOTES PROPOSED ELEVATION
+
+VE
+
+ST
+
+IB
+
+UL
+
+E
+
+CANADA PACIFIC RAILWAY
+
+RETAIL
+
+HUMBER
+STATION
+R
+
+OAD
+
+RETAIL
+
+RETAIL
+
+RETAIL
+
+E
+UL
+B
+I
+ST
+
+VE
+
+DENOTES SANITARY MANHOLE
+
+DENOTES PROPOSED TOP OF
+CURB ELEVATION
+
+DENOTES CATCHBASIN
+
+DENOTES PROPOSED BOTTOM OF
+CURB ELEVATION
+
+DENOTES DOUBLE CATCHBASIN
+
+DENOTES PROPOSED ELEVATION
+LOW POINT
+
+DENOTES AREA DRAIN
+
+DENOTES PROPOSED ELEVATION
+HIGH POINT
+
+DENOTES HYDRANT
+DENOTES VALVE & CHAMBER
+
+DENOTES SWALE ELEVATION
+DENOTES VALVE & BOX
+
+DENOTES EXISTING
+CONTOUR ELEVATION
+
+DENOTES PROPERTY LIMIT
+
+DENOTES SWALE
+
+DENOTES PHASING LIMIT
+
+DENOTES TREE
+PROTECTION HOARDING
+DENOTES OVERLAND
+FLOW ROUTE
+
+NO.
+
+DATE
+
+ISSUED FOR
+
+1.
+
+JAN/09/26
+
+ISSUED FOR ZBA SUBMISSION
+
+BEARING NOTE
+BEARINGS ARE UTM GRID, DERIVED FROM GPS OBSERVED BY REAL TIME NETWORK
+(SOKIA POWER NET) OBSERVATIONS, UTM ZONE 17, NAD83 (CSRS) (2010.0).
+
+ELEVATION NOTE
+ELEVATIONS HEREON ARE GEODETIC IN ORIGIN AND WERE DERIVED FROM GPS
+OBSERVATIONS USING THE "TOPNET" GPS NETWORK AND ARE REFERRED TO THE
+CGVD-1978 DATUM.
+Town of Caledon
+APPROVED AS NOTED
+This approval constitutes a general review and
+does not certify dimensional accuracy.
+This approval is subject to further certification of
+the "as constructed" works by a registered
+Professional Engineer of the Province of Ontario.
+
+LOADING BAY
+
+RAMP TO
+BASEMENT
+
+RETAIL
+
+R.O.W.
+
+2.0m CONC SIDEWALK
+
+1.5m CONC SIDEWALK
+
+R.O.W.
+
+VESTIBULE
+
+JAN/09/26
+
+Date: ________________
+Approved By: ________________
+
+'0' HUMBER STATION ROAD
+
+RETAIL
+
+CALEDON, ONTARIO
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+
+S C H A E F F E R & A S S O C I A T E S LTD.
+
+HT
+IG LE
+YL NG
+DA RIA
+T
+
+SPECIAL NOTES FOR SIDEWALK/CONCRETE
+WALKWAYS AT BUILDING PERIMETER
+
+6 Ronrose Drive, Concord,
+Ontario L4K 4R3
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+IN ORDER TO AVOID FROST HEAVING AND RELATED PROBLEMS, THE
+FOLLOWING SHALL BE STRICTLY IMPLEMENTED:
+1.
+
+COMPACTION OF SUB-GRADE TO BE INSPECTED AND APPROVED BY
+THE GEOTECHNICAL ENGINEER PRIOR TO PLACEMENT OF THE
+GRANULAR BASE.
+
+TOWN OF CALEDON
+
+2.
+
+DEPTH OF GRANULAR BASE TO BE INCREASED IF RECOMMENDED BY
+THE GEOTECHNICAL ENGINEER AFTER INSPECTION OF THE
+SUB-GRADE.
+
+SITE GRADING PLAN
+
+3.
+
+SUB-DRAINS TO BE INSTALLED AROUND THE BUILDING WALL
+FOUNDATION. IF RECOMMENDED BY THE GEOTECHNICAL ENGINEER,
+ADDITIONAL SUB-DRAINS SHALL BE INSTALLED BELOW BARRIER CURBS.
+ALL SUB-DRAINS TO HAVE POSITIVE OUTLET TO STORM SEWERS.
+
+4.
+
+ALTERNATIVE SOLUTIONS ENDORSED BY THE GEOTECHNICAL
+ENGINEER MAY BE IMPLEMENTED.
+
+CITY FILE #
+SCALE:
+
+REGION FILE #
+
+1:300
+
+PROJECT No.
+
+DESIGNED BY: D.W.
+
+DRAWN BY: V.H.
+
+CHECKED BY: H.S.
+
+DATE: JUL. 2025
+
+2025-5532
+DRAWING No.
+
+SG-1
+
+CA
+
+NA
+
+DA
+
+RA
+I
+
+LW
+
+AY
+
+HU
+
+SITE
+
+M
+
+BE
+R
+
+ST
+
+AT
+
+IO
+
+AD
+
+RE
+ET
+
+RO
+
+NG
+
+ST
+
+N
+
+KI
+
+HT
+G LE
+I
+YL NG
+DA RIA
+T
+
+KEY PLAN
+N.T.S.
+
+NOTES:
+1. THE LOCATION OF ALL UNDERGROUND AND ABOVEGROUND UTILITIES AND STRUCTURES
+ARE NOT NECESSARILY SHOWN ON CONTRACT DRAWINGS, AND WHERE SHOWN THE
+ACCURACY OF THE LOCATION AND ELEVATION OF SUCH UTILITIES AND STRUCTURES
+ARE NOT GUARANTEED.THE CONTRACTOR SHALL VERIFY EXACT LOCATION AND
+ELEVATION OF SUCH UTILITIES AND STRUCTURES PRIOR TO COMMENCING
+CONSTRUCTION AND SHALL ASSUME ALL LIABILITIES OF DAMAGE.
+
+RETAIL
+
+LOADING BAY
+RAMP TO
+BASEMENT
+
+2. ALL AREAS DISTURBED AND DAMAGED DURING DEVELOPMENT OF DEVELOPER'S LAND
+SHALL BE RESTORED TO ORIGINAL CONDITION OR BETTER, TO THE SATISFACTION OF
+THE CITY OF BRAMPTON AND REGION OF PEEL. GRASSED AREA SHALL BE TOPPED
+WITH 100mm TOPSOIL AND SODDED AS PER CITY STANDARDS. ALL EXISTING SERVICES
+TO BE ADJUSTED TO SUIT NEW GRADES.
+
+RETAIL
+
+LEGEND
+DENOTES PROPERTY LIMIT
+DENOTES PHASING LIMIT
+
+VESTIBULE
+DENOTES STORM MANHOLE MANHOLE
+DENOTES SANITARY MANHOLE
+DENOTES CATCHBASIN
+DENOTES DOUBLE CATCHBASIN
+
+VE
+S
+
+TI
+
+DENOTES AREA DRAIN
+
+BU
+LE
+
+DENOTES HYDRANT
+
+CANADA PACIFIC RAILWAY
+
+RETAIL
+
+STATION
+
+ROAD
+
+RETAIL
+
+HUMBER
+
+RETAIL
+
+RETAIL
+
+E
+UL
+
+IB
+
+ST
+E
+V
+
+DENOTES VALVE & CHAMBER
+DENOTES VALVE & BOX
+DENOTES WATER METER IN ROOM
+(REFER TO MECHANICAL FOR DETAILS)
+DENOTES SWALE
+DENOTES TREE
+PROTECTION HOARDING
+SANITARY SEWER OBVERT
+
+STORM SEWER OBVERT
+
+NO.
+
+DATE
+
+ISSUED FOR
+
+1.
+
+JAN/09/26
+
+ISSUED FOR ZBA SUBMISSION
+
+BEARING NOTE
+BEARINGS ARE UTM GRID, DERIVED FROM GPS OBSERVED BY REAL TIME NETWORK
+(SOKIA POWER NET) OBSERVATIONS, UTM ZONE 17, NAD83 (CSRS) (2010.0).
+
+ELEVATION NOTE
+ELEVATIONS HEREON ARE GEODETIC IN ORIGIN AND WERE DERIVED FROM GPS
+OBSERVATIONS USING THE "TOPNET" GPS NETWORK AND ARE REFERRED TO THE
+CGVD-1978 DATUM.
+Town of Caledon
+APPROVED AS NOTED
+This approval constitutes a general review and
+does not certify dimensional accuracy.
+This approval is subject to further certification of
+the "as constructed" works by a registered
+Professional Engineer of the Province of Ontario.
+
+LOADING BAY
+
+RAMP TO
+BASEMENT
+
+RETAIL
+
+R.O.W.
+
+2.0m CONC SIDEWALK
+
+1.5m CONC SIDEWALK
+
+R.O.W.
+
+VESTIBULE
+
+JAN/09/26
+
+Date: ________________
+Approved By: ________________
+
+'0' HUMBER STATION ROAD
+
+RETAIL
+
+CALEDON, ONTARIO
+
+SCHAEFFERS
+CONSULTING ENGINEERS
+
+S C H A E F F E R & A S S O C I A T E S LTD.
+
+6 Ronrose Drive, Concord,
+Ontario L4K 4R3
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+HT
+IG LE
+YL NG
+DA RIA
+T
+
+PLUMBING NOTES:
+1.
+
+ALL AD/CB/TRENCH DRAINS DESIGNED TO CAPTURE 100 YR STM. EVENT AND DIRECTED TO INTERNAL
+PLUMBING SYSTEM - PLUMBING TO BE DESIGNED BY MECHANICAL ENGINEER.
+
+2.
+
+SANITARY & STORM DRAINAGE PIPE/PLUMBING WITHIN/OVER THE BUILDING ENVELOPE SHALL BE
+DESIGNED BY THE MECHANICAL ENGINEER, TO BE ABLE TO OPERATE UNDER MUNICIPAL SEWER
+SURCHARGE CONDITIONS.
+
+3.
+
+AREA DRAINS, CATCH BASINS, AND TRENCH DRAINS DENOTED AS "AD*", "TD* OR "CB*, TD BE
+CONNECTED TO FILTRATION UNIT (STM.MH3). ALL OTHER AD/CB/TD TO BE CONNECTED TO RWH TANK PLUMBING TO BE DESIGNED BY MECHANICAL ENGINEER.
+
+4.
+
+ROOF DRAINS TO BE CONNECTED TO RWH TANK - PLUMBING TO BE DESIGNED BY MECHANICAL
+ENGINEER.
+
+5.
+
+LANDSCAPE/MECHANICAL TO ENSURE ALL PLANTER BOXES HAVE POSITIVE DRAINAGE TO A DRAIN,
+AND TO ENSURE ALL PATIOS, AND STAIRWELLS TO HAVE AREA DRAINS CONNECTED TO THE
+PLUMBING SYSTEM.
+
+6.
+
+TOWN OF CALEDON
+SITE SERVICING PLAN
+CITY FILE #
+SCALE:
+
+REGION FILE #
+
+1:300
+
+PROJECT No.
+
+DESIGNED BY: D.W.
+
+DRAWN BY: V.H.
+
+CHECKED BY: H.S.
+
+DATE: JUL. 2025
+
+2025-5532
+DRAWING No.
+
+MECHANICAL TO ENSURE PLUMBING DESIGN IS COORDINATED WITH THE CIVIL DESIGN DRAWINGS.
+
+SS-1
+
+

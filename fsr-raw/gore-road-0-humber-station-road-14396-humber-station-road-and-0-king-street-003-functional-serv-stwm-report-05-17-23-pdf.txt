@@ -1,0 +1,310 @@
+Argo Draft Plan West Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+APPENDIX 2
+HYDRAULIC MODEL REPORTS
+REFER TO CSSP-FSR FOR APPENDIX
+
+15
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan West Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+APPENDIX 3
+STORM SEWER DESIGN CALCULATIONS
+REFER TO CSSP-FSR FOR APPENDIX
+
+16
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan West Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+APPENDIX 4
+INTERIM POND
+Disk Available Upon Request for Detailed Output
+
+STORMWATER MANGEMENT
+REFER TO CSSP-FSR FOR OTHER STORMWATER MANAGEMENT
+
+17
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+SWM DESIGN CALCULATIONS - POND
+HYRDO-0: Contributing Drainage Area and Land Use
+
+Project Name: Macville Community
+
+Prepared by: J.P.O
+
+Municipality: Town of Caledon
+
+Checked by: S.H.
+
+Project No.: 15-458
+Date: 2023-05-11
+Area
+[ha]
+
+Runoff
+Coefficient
+
+%IMP=100 X (C-0.2)/0.7
+
+Imperviousness %IMP=
+(C-0.05)/0.009
+
+Total Drainage Area (including Pond)
+
+20.41
+
+0.74
+
+77.0
+
+76.6
+
+Conveyance
+●
+
+Quantity
+●
+
+Quality
+●
+
+Total Drainage Area (Quality Control Only)
+Total Drainage Area (Quantity Control Only)
+Total Drainage Area to Pond
+
+20.41
+20.41
+20.41
+
+0.74
+0.74
+0.74
+
+77.0
+77.0
+77.0
+
+76.6
+76.6
+76.6
+
+20.41
+
+20.41
+
+20.41
+
+Inteirm Pond
+
+From
+
+To
+
+Imperviousness
+
+Design Requirement
+
+SWM POND DESIGN CALCULATION - POND
+SWMF-1 TARGET SUMMARY
+Project Name: Macville Community
+Municipality: Town of Caledon
+Project No.: 15-458
+Date: 11-May-23
+
+Prepared by: J.P.O
+Checked by: S.H.
+
+Interim Pond
+Design Target
+
+Wet Pond
+Impervious
+Level
+
+(Per MOE Stormwater Management Planning and Design Manual 2003, Table 3.2)
+Water Quality
+Extended
+Storage Vol
+Detention
+
+(%)
+35%
+55%
+70%
+85%
+Interpolated Storage Requirement
+76.6%
+
+Total Contributing Area
+Quantity Control Only
+Quality Control Only
+
+Permanent
+Pool
+
+m3/ha
+140
+190
+225
+250
+
+m3/ha
+40
+40
+40
+40
+
+m3/ha
+100
+150
+185
+210
+
+236
+
+40
+
+196
+
+Area [ha]
+20.41
+20.41
+20.41
+
+IMP%
+77%
+77%
+77%
+
+VO6 Model Results - Inteirm Pond
+Project Name: Macville Community
+Municipality: Town of Caledon
+Project No.: 15-458
+Date: 2023-05-11
+
+Prepared by: J.P.O
+Checked by: S.H
+
+Elevation
+
+Target
+Flows
+
+ED
+2
+5
+
+271.12
+271.25
+271.41
+
+m3/s
+0.150
+0.229
+
+Post
+Development
+Flows
+Pond
+m3/s
+0.015
+0.150
+0.229
+
+10
+
+271.62
+
+0.282
+
+0.282
+
+8,212
+
+25
+50
+100
+Regional
+Maintenance Road
+
+271.77
+271.88
+271.98
+273.24
+273.50
+
+0.355
+0.414
+0.468
+-
+
+0.355
+0.414
+0.468
+5.512
+-
+
+9,711
+10,808
+11,920
+27,537
+31,376
+
+Pond Level
+
+Volume
+(m3)
+3,792
+4,870
+6,316
+
+Argo Draft Plan West Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+APPENDIX 5
+DS CONSULTANTS GEOTECHNICAL
+AND HYDROGEOLOGICAL REPORTS
+REFER TO CSSP-FSR FOR APPENDIX
+
+18
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan West Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+APPENDIX 6
+WASTEWATER
+REFER TO CSSP-FSR FOR APPENDIX
+
+19
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+Argo Draft Plan West Compliance Report
+Town of Caledon, Region of Peel
+May 2023
+
+APPENDIX 7
+R.J. BURNSIDE & ASSOCIATES WATER MODELLING
+REFER TO CSSP-FSR FOR APPENDIX
+
+20
+Urbantech® Consulting, A Division of Leighton-Zec West Ltd. | 2030 Bristol Circle, Suite 105・Oakville・ON・L6H 0H2 905.829.8818
+urbantech.com
+
+

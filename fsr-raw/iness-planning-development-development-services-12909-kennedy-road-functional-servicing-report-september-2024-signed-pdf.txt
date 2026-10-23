@@ -1,0 +1,19900 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+October 18, 2024
+
+FUNCTIONAL SERVICING REPORT
+
+TREND KENNEDY DEVELOPMENT RESIDENTIAL SUBDIVISION
+12909 KENNEDY ROAD
+PART OF LOT 22, CONCESSION 2
+TOWN OF CALEDON
+
+1ST SUBMISSION September 2024
+
+SEPT 23, 2024
+
+PROJECT NO. W22068
+
+Table of Contents
+1.
+
+INTRODUCTION ................................................................................................................................ 1
+
+2.
+
+BACKGROUND AND SITE SPECIFIC TECHNICAL STUDIES .................................................... 3
+
+3.
+
+2.1
+
+Background Studies ..................................................................................................................... 3
+
+2.2
+
+Site Specific Studies .................................................................................................................... 3
+
+EXISTING CONDITIONS ................................................................................................................... 4
+3.1 Land Use ............................................................................................................................................. 4
+3.2 Topography, Drainage and Natural Features .................................................................................... 4
+3.3 Physiography and Geotechnical Conditions ..................................................................................... 5
+
+4.
+
+SANITARY AND WATER SERVICING ........................................................................................... 6
+4.1
+
+Sanitary ........................................................................................................................................... 6
+
+4.1.1 Existing Sanitary Sewers............................................................................................................... 6
+4.1.2 Proposed Sanitary Sewer System ................................................................................................ 6
+4.2 Water ................................................................................................................................................. 9
+4.2.1 Existing Watermains................................................................................................................... 9
+4.2.2 Proposed Watermain System ...................................................................................................... 9
+5.
+
+STORM DRAINAGE AND STORMWATER MANAGEMENT ..................................................... 10
+5.1 General ............................................................................................................................................ 10
+5.2
+
+Storm Drainage Design and Requirements................................................................................ 11
+
+5.3
+
+Storm Sewer (Minor) System .................................................................................................... 13
+
+5.4 Stormwater Management Pond Design............................................................................................. 14
+5.4.1 Water Quality Control ................................................................................................................ 14
+5.4.2 Erosion Control .......................................................................................................................... 14
+5.4.3
+
+Thermal Mitigation ............................................................................................................... 15
+
+5.4.4
+
+Water Quantity Control ......................................................................................................... 16
+
+5.4.4.1
+
+SWM Pond Outflow Rates ........................................................................................................ 16
+
+5.4.5
+
+Sediment Loading and Drying Area...................................................................................... 18
+
+5.4.6
+
+Water Balance ....................................................................................................................... 19
+
+6
+
+Natural Heritage System & Buffer ............................................................................................ 20
+
+7
+
+EROSION AND SEDIMENT CONTROL........................................................................................... 21
+
+8
+
+CONCLUSIONS................................................................................................................................. 23
+
+ii
+
+W22068 FSR – August 2024
+
+8.1
+
+Summary.................................................................................................................................... 23
+
+8.2
+
+Conclusion ................................................................................................................................. 23
+
+FIGURES
+FIGURE 1
+
+Location Plan
+
+DRAWINGS
+DRAWING PL-1
+DRAWING PS-1
+DRAWING WM-1
+DRAWING PG-1
+DRAWING ST-1
+DRAWING PRE-STMDR
+DRAWING SA-1
+
+Draft Plan of Subdivision (CANDEVCON GROUP, Aug. 1, 2024)
+Preliminary Servicing Plan
+Water Distribution Plan
+Preliminary Grading Plan
+Storm Drainage Area Plan
+Pre-Development Storm Drainage Area Plan
+Sanitary Drainage Area Plan
+
+APPENDICES
+
+APPENDIX A
+
+Sanitary Sewer Design Sheet
+
+APPENDIX B
+
+Vo Results For Pre-Development Flows To Arcadia Road
+
+APPENDIX C
+
+Stormwater Management Design Calculations
+
+APPENDIX D
+
+Storm Sewer Design Sheets
+
+APPENDIX E
+
+Preliminary Geotechnical Investigation Report
+
+APPENDIX F
+
+Preliminary Hydrogeological Investigation Report
+
+iii
+
+W22068 FSR – August 2024
+
+1.
+
+INTRODUCTION
+This Study has been prepared as a technical document in support of the Draft Plan application for the
+subject subdivision and addresses sanitary, storm and water servicing and stormwater management.
+
+The proposed subdivision is located at the southeast corner of Kennedy Road and Old School Road,
+in the town of Caledon, as shown on figure 1. It is bounded by Kilmanagh creek to the east and
+existing residential lands and Bonnieglen Farm Boulevard to the south.
+
+The subdivision, as illustrated on the Draft Plan of Subdivision by Candevcon Group Inc. (copy
+attached) comprises an area of 36.87 ha and includes:
+• 230 single detached units;
+• 56 semi-detached units;
+• 99 townhomes; Blocks 1, 1A, 1B, 1C & 1D
+• 3 medium density Condominium Blocks 2, 2A & 2B
+• Mixed use Block 3;
+• Residential (Special) Block 3A;
+• Heritage house Block 4;
+• Park Block 5;
+• Stormwater management pond Block 6;
+• Vista Block 7;
+• Walkway Block 8;
+• NHS (Natural Heritage System) and NHS Buffer, Block 9 & Block 10, 10A;
+• Right-of-ways including Streets ‘A’ through ‘K’;
+• Road widening Blocks 11, 11A & 11B;
+• Other lands Block 12
+
+This report describes the existing site conditions, and the proposed sanitary, storm and water systems,
+as well as the stormwater management infrastructure. This report includes preliminary grading
+information and outlines the required Erosion and Sediment Control Measures.
+
+Page 1 of 23
+
+W22068 FSR – September 2024
+
+2.
+FIGURE 1
+
+Page 2 of 23
+
+W22068 FSR – September 2024
+
+BACKGROUND AND SITE SPECIFIC TECHNICAL STUDIES
+2.1
+
+Background Studies
+
+The following Technical Studies are relevant to the stormwater management criteria for the subject
+lands:
+•
+
+Humber River Hydrology Study Scenario Modelling and Analysis Report conducted by
+TRCA in 2008
+
+2.2
+
+Site Specific Studies
+
+The following Studies were completed in support of the subject application:
+•
+
+Preliminary Geotechnical Investigation and Slope Stability Assessment prepared by DS
+Consultants Ltd., dated January 11, 2023, Reference No. 22-371-100-R.
+
+•
+
+Preliminary Hydrogeological Investigation prepared by DS Consultants Ltd., dated
+January 17, 2023, Reference No. 22-371-100.
+
+•
+
+Comprehensive Environmental Impact Study and Management Plan, Mayfield West
+Phase 1 – Stage 2 Expansion Area, prepared by Beacon Environmental Ltd. et al., dated
+August 30, 2021, Reference 219527.1.
+
+Page 3 of 23
+
+W22068 FSR – September 2024
+
+3. EXISTING CONDITIONS
+3.1 Land Use
+The subject subdivision property currently comprises Agricultural lands and associated farm
+buildings. There is an existing heritage building on the subject lands which will be
+incorporated into the proposed subdivision.
+
+3.2 Topography, Drainage and Natural Features
+The site is relatively flat with approximately 21.50ha of the land draining east to Kilmanagh
+Creek at approx. 0.5% slope. Two areas at the northwest and west of the site (2.80ha and
+1.83ha) drain directly to the Kennedy Road ditch. The remaining 10.74ha and 0.95ha
+(externally from the Dixon Cemetery) drain south to an existing ditch inlet catch basin (DICB)
+at the Arcadia Road located at the south and west corner of the site. The DICB captures
+stormwater runoff for the 2-year through 100-year storm events and conveys flows to an
+existing 1050mm diameter municipal storm sewer beneath the Arcadia Road.
+Existing elevations in the developable area range from approx. 269.0m to 274.8m. The
+Kilmanagh Creek which runs through the east portion of the site was classified as a natural
+heritage system (NHS) by the Toronto and Region Conservation Authority (TRCA). This NHS
+area is regulated by the TRCA and 6.68ha of land and 2.14ha of buffering land will be
+dedicated as natural heritage lands.
+For details of the existing drainage patterns refer to drawing PRE-STMDR - Pre-development
+Drainage Area Plan. A summary of the pre-development catchment areas is provided in the
+table below.
+TABLE 1.1 PRE-DEVELOPMENT DRAINAGE AREAS
+Catchment ID
+
+Outlet Location
+
+Area
+
+Drainage Area No. 1
+
+Kilmanagh Creek
+
+21.50ha
+
+Drainage Area No. 2
+
+Arcadia Road DICB
+
+10.74ha
+
+Drainage Area No. 3
+
+Kennedy Road Ditch
+
+2.80ha
+
+Drainage Area No. 4
+
+Kennedy Road Ditch
+
+1.83ha
+
+Drainage Area No. 5
+
+Arcadia Road DICB
+
+0.95ha
+
+Total
+
+Page 4 of 23
+
+37.82ha
+
+W22068 FSR – September 2024
+
+3.3 Physiography and Geotechnical Conditions
+The preliminary Geotechnical Investigation (copy of report included in Appendix “D”)
+indicated that the surficial soils beneath the topsoil layer is comprised of clayey silt to silty
+clay till deposits (to a depth of 1.7m to 7.8m) overlying sandy silt till.
+
+The preliminary Geotechnical investigation indicated groundwater test holes were dry to
+1.91m. Depth to the groundwater ranges from 1.91m to 6.10 below ground surface.
+
+Four Single Well Response Tests were conducted to determine soil conductivity K values of
+the soils. Based on the testing K values were calculated to be 0.03 to 0.0004cm/hr. A copy of
+the hydrogeological report is included in Appendix E.
+
+Page 5 of 23
+
+W22068 FSR – September 2024
+
+4. SANITARY AND WATER SERVICING
+
+4.1
+
+Sanitary
+
+4.1.1 Existing Sanitary Sewers
+There is an existing 250mm sanitary sewer on Bonnieglen Farm Boulevard to serve as an
+outlet for a portion of the subject lands. There is no existing sanitary sewer beneath the
+Kennedy Road.
+
+4.1.2 Proposed Sanitary Sewer System
+The proposed sanitary sewer system is shown on Drawing SA-1, and consists of a 250mm
+sanitary sewer that will connect to the existing 250mm sanitary sewer on Bonnieglen
+Farm Boulevard to service a portion of the lands at the south west. This section will
+include 24 single detached lots and 24 townhomes. This section of the development can
+proceed in advance of the full build out. The remainder and majority of the development
+will be serviced internally by a 250mm sanitary sewer which will convey flows westerly
+beneath street ‘A’ through the adjacent development lands and ultimately to a proposed
+sanitary pumping station to be located at the west. The Medium density Block 2B will
+require a separate sanitary service connection and off-site sewer connection.
+Approximately 200m of 250mm diameter municipal sewer will be required to developed
+this block. Details of the sanitary servicing layout can be found on drawings SA-1 and
+PS-1.
+
+The sewer system is designed in accordance with the Region of Peel New Linear
+Wastewater Standard, 2023.
+
+The peak sanitary flows were calculated based on the following;
+Population densities in persons per hectare provided in Table 4.1;
+A sanitary flow based on 290 Lpcd (Litres per capita per day);
+A Harmon Peaking Factor calculated based upon the Harmon Peaking Formula
+(M = 1+14/(4+P0.5), where M = ratio of peak flow to average flow and P = the tributary
+population in thousands; and,
+An infiltration allowance of 0.26 L/s/ha.
+Page 6 of 23
+
+W22068 FSR – September 2024
+
+The sanitary drainage areas for the subdivision are shown on Drawing SA-1 and a
+preliminary Sanitary Sewer Design Sheet is included in Appendix A.
+
+The peak sanitary flow to the existing Bonnieglen Farm Boulevard sanitary sewer is
+calculated to be 3.0 L/s. The peak sanitary flow to the proposed pumping station is
+calculated to be 30.3 L/s.
+Manning’s equation was used to determine the capacity of the proposed sanitary sewers.
+The capacity of a 250mm diameter sewer at 0.5% slope is 42.1 L/s which is greater than
+the peak sanitary flow for the proposed subdivision.
+Sanitary flows shown in Appendix A are based on the values shown in table 4.1.
+
+TABLE 4.1 SANITARY DESIGN POPULATIONS PER HECTARE
+Density
+Pop. /Hectare
+Single family (greater than 10m frontage)
+117 persons/hectare*
+Semi detached
+197 persons/hectare*
+Townhouses
+183 persons/hectare*
+Medium Density (Condominium)
+175 persons/hectare
+Mixed-Use Midrise
+175 persons/hectare
+*Based on unit per hectare densities on Draft Plan of Subdivision x population per unit type in Table 4.2
+The anticipated sanitary flows from the development based on actual unit types and count
+are as shown in table 4.3, populations per unit type are shown in table 4.2 and are based
+on the Region of Peel standards.
+TABLE 4.2 SANITARY DESIGN POPULATIONS PER UNIT TYPE
+Unit type
+
+Population
+
+Single detached
+
+4.2
+
+Semi detached
+
+4.2
+
+Townhouse
+
+3.4
+
+Condo
+
+3.1
+
+Apartment
+
+3.1
+
+The following is a breakdown of anticipated sanitary flows for the subject lands. Table
+4.3 and Table 4.4 provide a summary of the anticipated sanitary flows to the existing
+sanitary and proposed pumping station, respectively.
+Page 7 of 23
+
+W22068 FSR – September 2024
+
+TABLE 4.3 SANITARY FLOWS BASED ON UNIT TYPE
+To Existing Sanitary Sewer – Arcadia Road
+Developable area(ha)
+unit type
+
+2.05
+Units
+
+Single detached
+Semi-detached
+Medium density (towns)
+Medium density (condo)
+Commercial Mixed Use (ha)
+
+pop/unit
+
+population
+
+24
+4.2
+0
+4.2
+24
+3.4
+0
+175
+0
+50
+Total population
+0.6
+4.0
+0.5
+3.0
+
+Average day (l/s)
+peak factor
+Infiltration
+total peak sanitary flow (l/s)
+
+101
+0
+82
+0
+0
+183
+
+TABLE 4.4 SANITARY FLOWS BASED ON UNIT TYPE AREA
+To Proposed Pumping Station – Kennedy Road
+Developable area(ha)
+unit type
+Single detached
+Semi-detached
+Medium density (towns)
+Medium density (condo)
+Commercial Mixed Use (ha)
+Average day (l/s)
+peak factor
+infiltration
+total peak sanitary flow (l/s)
+
+20.01
+ha
+
+pop/ha
+206
+4.2
+56
+4.2
+75
+3.4
+4.22
+175
+0
+50
+Total population
+7.0
+3.6
+5.2
+30.3
+
+Page 8 of 23
+
+population
+865
+235
+255
+739
+0
+2094
+
+W22068 FSR – September 2024
+
+4.2 Water
+4.2.1 Existing Watermains
+The proposed plan is located within Region of Peel water Zone 7. The existing
+watermain system in the vicinity of the subject subdivision is shown on Drawing PS-1
+and consists of the following;
+•
+
+600mm diameter watermain on Kennedy Road;
+
+•
+
+400mm diameter watermain on Kennedy Road;
+
+•
+
+300mm diameter watermain on Bonnieglen Farm Boulevard;
+
+•
+
+300mm diameter watermain on Old School Road
+
+4.2.2 Proposed Watermain System
+The proposed water distribution system is shown on Drawings WM-1 and consists of a
+150mm watermain to be constructed on the internal streets that will connect to the
+surrounding existing 300mm watermain on Old School Road to the north, 400mm
+watermain on Kennedy Road to the west and the 300mm watermain on Bonnieglen Farm
+Boulevard to the south.
+The estimated water demand for the proposed subdivision is summarized in the following
+table:
+TABLE 4.5
+WATER DEMAND BASED ON UNIT TYPE AREA
+# of Units
+Persons/Unit
+Unit Type
+Population
+Area (ha)
+Persons/ha
+Single Detached (units)
+230
+4.2
+966
+Semi-detached (units)
+56
+4.2
+236
+Medium density Towns (units)
+99
+3.1
+337
+Medium density Condo (ha)
+3.82
+175
+669
+Commercial Mixed Use (ha)
+0
+50
+0
+Special Residential (ha)
+0.4
+175
+70
+Total population
+2277
+Water Demand (L/s)
+Average day (L/s) A
+Max day (L/s) B
+Peak Hour Consumption (L/s) C
+Max Day plus fire (L/s)
+
+7.4
+14.8
+22.1
+114.8
+
+A Based on 280 L/cap/day average consumption rate
+B Based on Max Day Factor of 2.0
+C Based on Peak Hour Factor of 3.0
+
+Page 9 of 23
+
+W22068 FSR – September 2024
+
+5. STORM DRAINAGE AND STORMWATER MANAGEMENT
+5.1 General
+The subject site is located within the West Humber River Watershed, as illustrated in the
+2012 TRCA Stormwater Management Criteria. The site includes a portion of Kilmanagh
+Creek, which has been identified as part of the Greenbelt Plan Area. Furthermore, the
+Regional Official Plan designates the creek and valley corridor of the West Humber River
+tributary as a Core Area. In the absence of a specific subwatershed study for the site that
+establishes the required SWM controls, the SWM design will adhere to the criteria set forth
+for the West Humber River Watershed.
+The following documents have been consulted to provide additional information for the
+stormwater management plan for the subject lands:
+•
+
+Humber River Watershed Scenario Modelling and Analysis Report, 2008.
+
+•
+
+Town of Caledon Development Standards Manual, 2019, Version 5.0.
+
+•
+
+Comprehensive Environmental Impact Study and Management Plan Mayfield
+West Phase 1 – Stage 2 Expansion Area Beacon Environmental Limited, David
+Schaeffer Engineering Ltd., Glen Schnarr & Associates Inc. and DS Consultants
+Ltd., June 2023.
+
+•
+
+Stormwater Management Planning and Design Manual, Ontario, Ministry of
+Environment, March 2003 (SWMP Manual).
+
+•
+
+TRCA Stormwater Management Criteria, August 2012.
+
+•
+
+TRCA & CVC Low Impact Development Stormwater Management Planning and
+Design Guide, 2010, Version 1.0.
+
+•
+
+Guidance for Development Activities in Redside Dace Protected Habitat (MNRF,
+March 2016)
+
+•
+
+Hydrogeological Report prepared by DS Consultants Ltd, dated January 2023.
+
+Page 10 of 23
+
+W22068 FSR – September 2024
+
+5.2 Storm Drainage Design and Requirements
+The Stormwater management criteria for the proposed development has been designed in
+accordance with the standards and requirements of the Town of Caledon, TRCA and the
+MOECP and are summarized below:
+•
+
+Storm sewer systems shall be designed to accommodate a 10-year storm where
+foundation drains are to be connected. For systems that do not allow for foundation
+drains, a 5-year design will be allowed.
+
+•
+
+Storm sewers shall be located a minimum of one (1) meter below basement floor
+elevations to allow for the installation of foundation connections. In areas of no
+storm sewer connection, the sewers shall have a minimum frost cover of 1.5m.
+
+•
+
+The major system should be designed to accommodate runoff exceeding the
+capacity of the minor system for flows up to and including the 100-year storm or
+regional storm event, whichever is greater. The major system should be contained
+within the ROW and designated easements.
+
+•
+
+Roof leaders must not be connected directly to the storm sewer system, and the
+following conditions must be complied with:
+o
+
+Roof leaders must discharge onto concrete splash pads which direct the
+water into side yard swales, these swales must discharge to the front of the
+lot, no roof leaders shall drain to the rear of the lot. Roof leaders are not
+permitted to discharge onto driveways or walkways. For walkouts, a note
+is to be added to the drawings that all roof drainage is to be directed to the
+front of the lot, unless otherwise approved by the Town.
+
+o
+
+Houses located on corner lots have roof leaders located at the corner(s) of
+the house, closest to the street lines.
+
+o
+•
+
+Roof leader down spout locations is to be indicated on site grading plans.
+
+Inverts of service connections at the property line shall be surcharge free and be
+above the 100-year hydraulic grade line of the municipal storm sewer system.
+
+•
+
+Foundation Drain Collector (FDC) sewers are permitted to connect by gravity to
+the storm sewer system provided that the elevation of the basement floor is at least
+1.0 metres above the elevation of the storm sewer obvert at that point. Where
+provisions for gravity connection of foundation drains cannot be met, a sump pump
+
+Page 11 of 23
+
+W22068 FSR – September 2024
+
+system must be installed in the building and discharge to a location, which is
+satisfactory to the Town’s Director of Public Works and Engineering.
+Water quality, erosion, and quantity control for the subject lands will be addressed by the
+proposed SWM pond located at the southeast corner of the property. The SWM Pond will
+drain to the Kilmanagh Creek (Tributary to West Humber River).
+The general design criteria for the SWM facility are summarized as follows:
+•
+
+The stormwater management facility is designed as an off-line wet pond with
+permanent storage for water quality control in accordance with the “enhanced”
+protection level (80% TSS Removal) for the receiving watercourse as defined in
+the March 2003 MOE guidelines.
+
+•
+
+As mentioned in the EIS report, the portion of Kilmanagh Creek flowing through
+the Russell parcel within the study area is considered occupied habitat for the
+endangered Redside Dace. The Redside Dace is listed as endangered both federally
+and provincially, and it is regulated by the DFO under the Species at Risk Act and
+by the MECP under the Endangered Species Act. Consequently, thermal
+mitigation measures are required.
+
+•
+
+Erosion control criteria is based on the 48-hour detention of runoff from a 25mm,
+4-hour Chicago storm.
+
+•
+
+The SWM facility is designed to provide water quantity control for the 2 to100Year and Regional Storm events.
+
+•
+
+Water Quantity Control release targets are established as per the Humber River
+Unit Flow Rates for Sub-Basin 36 (Equation F) for 2, 5, 10, 25, 50 and 100-year
+return period rainfall events.
+
+•
+
+Regional storm event (285mm depth, 48-hour Hurricane Hazel).
+
+•
+
+The grading and configuration of the SWM pond is designed as per Town of
+Caledon Standards:
+o
+
+4:1 (H: V) from the bottom of the permanent pool to up to 0.5m below the
+normal water level (NWL).
+
+o
+
+7:1 above the 4:1 sloping zone up to the berm/maintenance access road.
+
+o
+
+4:1 where the slope backs on to the rear yard lot line, adjacent road system or
+valley.
+
+o
+
+5.0m wide maintenance access route from a municipal road.
+
+Page 12 of 23
+
+W22068 FSR – September 2024
+
+5.3 Storm Sewer (Minor) System
+A. Sewers to Proposed SWM Pond
+The proposed storm sewer system is shown on Drawing ST-1. The sewer system will
+be designed in accordance with the Town of Caledon Standards to accommodate a 10year storm event and will outlet to the proposed stormwater management pond.
+The sewer system and pipe sizing will be designed so that the hydraulic grade line in
+the sewers will be one (1) metre below the basement floor elevations. The storm
+drainage areas are shown on Drawing ST-1 and the related Storm Sewer Design Sheets
+are included in Appendix B. Overland flow will be conveyed within the road right of
+way (maximum ponding depth of 0.3m) to the proposed stormwater management pond.
+Rear yards will generally drain via swales directed to rear lot catch basins. Single
+detached homes backing onto the NHS buffer will drain via sheet flow directly overland
+to the creek.
+Storm Sewer Design Sheets is included in Appendix D.
+B. Sewers to Arcadia Road
+A portion of the storm sewer system will be designed to accommodate the 100-year
+storm event and will outlet to the existing 1050mm diameter storm sewer on Arcadia
+Road.
+As previously discussed in section 3.2, In pre-development condition, approximately
+10.74 ha of subject site drains to DICB located near the southwest boundary. The DICB
+is designed to capture surface runoff from subject site and drains to the existing storm
+sewer located on Arcadia Road. The pre-development peak flow for this area was
+determined using Hydrologic Modelling (Visual Otthymo). The pre-development peak
+flow rate for the 100-year storm event, determined using the hydrologic modeling
+program Visual OTTHYMO (VO), is 1.16 m³/s.
+As a result of grading constraints in the post-development condition, a portion of the
+stormwater drainage area (2.35 Ha) will discharge into the existing 1050mm diameter
+storm sewer on Arcadia Road. The post-development peak flows will be managed to
+match the pre-development peak levels. Using the rational method, the 100-year peak
+flow rate was calculated to be 0.63 m³/s, which is lower than the pre-development 100year peak flow.
+
+Page 13 of 23
+
+W22068 FSR – September 2024
+
+Storm sewer design sheet is included in Appendix D and VO Results are included in
+Appendix B.
+5.4 Stormwater Management Pond Design
+5.4.1 Water Quality Control
+Proposed SWM Wet Pond #4 shall provide an Enhanced Level of Protection for runoff
+from total drainage area of 23.65ha at an imperviousness of 65%.
+Based on the Table 3.2 (Water Quality Storage Requirements based on receiving waters)
+in the 2003 MOE Stormwater Management Planning and Design Manual and an overall
+imperviousness of 65%, a wet pond will require 213 m3 /ha of storage volume to provide a
+“Enhanced Level of Protection” or 80% TSS removal. For a total drainage area of 23.65
+hectares, this translates to a required volume of 5,045 m³, with 4091 m³ assigned to the
+permanent pool and 946 m³ allocated for extended detention storage. With a 2.0m deep
+permanent pool, the total permanent pool volume provided in the pond is 7,239 m³.
+5.4.2 Erosion Control
+At a minimum, TRCA requires on-site retention of the first 5 mm of runoff generated from
+the total impervious area. This requirement applies in situations where the sensitivity of
+the receiving watercourses does not warrant a more comprehensive analysis of the erosion
+potential associated with urban development. For properties with stormwater management
+facilities, extended detention of the 25 mm design storm event for a period of 48-hours are
+required.
+Drainage Area (Ha) =
+
+23.65 Ha
+
+25mm Chicago Storm Runoff Volume (mm) =
+
+14.97 mm
+
+Volume Required =
+
+3,540 m3
+
+Volume Provided =
+
+3,548 m3
+
+Drawdown Time =
+
+48 Hr
+
+Orifice Plate Size =
+
+155 mm
+
+Elevation in Pond =
+
+268.55
+
+Refer to Appendix C for Stormwater Management Pond Design Calculations.
+
+Page 14 of 23
+
+W22068 FSR – September 2024
+
+5.4.3
+
+Thermal Mitigation
+The presence of the endangered species Redside Dace in Kilmanagh Creek necessitates
+the incorporation of specific thermal mitigation measures in the design of the SWM
+Pond. These measures are crucial to protect the habitat of the Redside Dace, which is
+sensitive to temperature fluctuations.
+The proposed SWM pond will be designed with deeper permanent pools near the outlet
+and bottom draw outlets. These deeper pools enable cooler water to settle near the
+bottom, where it will be collected and conveyed through the bottom draw outlets,
+maintaining lower temperatures. Additional mitigation measures will be considered
+during detailed design stage:
+•
+
+Bottom-draw pipe: Positioned within the deepest portion of the permanent
+pool to collect cooler water from the bottom and convey it through the outlet.
+
+•
+
+Berms: Incorporated into the pond to increase its length-to-width ratio and
+enhance the resident time, promoting natural cooling.
+
+•
+
+Cooling trenches: Implemented between the SWM pond and the outlet if a
+deeper permanent pool is not feasible.
+
+•
+
+LID techniques: Utilizing infiltration and evapotranspiration where
+appropriate within the development.
+
+•
+
+Plunge Pool: At the outfall, deep plunge pool with native plantings to provide
+additional benefits such as erosion control, energy dissipation, and flow
+dispersion.
+
+Adhering to the above measures will enable the discharge of relatively cool effluent to
+the receiving watercourse in accordance with the mitigation measures proposed by the
+MECP (2003) manual.
+
+Page 15 of 23
+
+W22068 FSR – September 2024
+
+5.4.4
+
+Water Quantity Control
+5.4.4.1 SWM Pond Outflow Rates
+As mentioned in section 5.2, the SWM Pond will provide quantity control of postdevelopment peak flows to allowable target release rates for 2 to 100-year storm and
+regional design storm event.
+The required flow release rates were calculated using the unit flow equations for the
+West Humber River (Sub-Basin 36). These equations were applied to the total drainage
+area to SWM Pond. Table I below shows the corresponding Target Release Rates.
+TABLE I
+TARGET RELEASE RATES (L/s)
+
+Drainage
+Area (Ha)*
+
+2-Year
+
+5-Year
+
+10-Year
+
+25-Year
+
+50-Year
+
+100-Year
+
+23.65
+
+171
+
+262
+
+322
+
+405
+
+473
+
+534
+
+*Total Development Drainage Area Breakdown for 23.65 Ha.
+Low Density Subdivision Area = 12.91 Ha
+Medium Density Subdivision Area = 6.430 Ha
+Park and Open Spaces = 1.93 Ha
+Roads = 0.29 Ha
+SWM Pond Area = 2.12 Ha
+5.4.4.2 SWM Pond Volume Design
+Based on the drainage area and release rates identified in Table I, an iterative process
+was used to calculate the pond's effective stage-storage-discharge relationship, thereby
+determining the control structure sizing. The ponds have been adequately sized to
+accommodate all storm events up to and including the Regional event. The Visual
+Otthymo (VO) model was used to determine storm flow calculations and required
+stormwater quantity control volumes based on the required release rates. Table II below
+provides an overview of the modeling results for the pond operation during 2 to 100year storm events (AES 6 and 12 hour) as well as the Regional Storm. Detailed design
+information for the pond can be found on Drawing SWM-1. A copy of the related VO
+outputs is included in Appendix C.
+
+Page 16 of 23
+
+W22068 FSR – September 2024
+
+TABLE II
+STORMWATER MANAGEMENT POND - SUMMARY OF VO RESULTS
+(DESIGN STORAGE VOLUME REQUIRED/PROVIDED)
+Design Storm
+Description
+2-Year
+
+5-Year
+
+10-Year
+
+25-Year
+
+50-Year
+
+100-Year
+
+Regional
+
+Unit Flow Targets (m3/s)
+
+0.171
+
+0.262
+
+0.322
+
+0.405
+
+0.473
+
+0.534
+
+---
+
+VO Peak Flows (m3/s)
+
+0.844
+
+2.074
+
+2.540
+
+3.132
+
+3.588
+
+4.025
+
+3.287
+
+Outflow (m3/s)
+
+0.073
+
+0.192
+
+0.304
+
+0.374
+
+0.419
+
+0.461
+
+0.314
+
+Pond W.L (m)
+
+268.75
+
+268.97
+
+269.07
+
+269.25
+
+269.40
+
+269.50
+
+269.73
+
+Storage Required (m3)
+
+4,925
+
+6,479
+
+7,626
+
+9,155
+
+10,469
+
+11,763
+
+14,904
+
+Storage Provided (m3)
+
+5,058
+
+6,944
+
+7,719
+
+9,711
+
+11,371
+
+12,478
+
+15,022
+
+An orifice plate will be used for erosion control outflow, and a rectangular weir are
+proposed to control the peak outflows for the 2-year up to the Regional storm events. The
+control structure stage-storage-discharge curve is provided in Table III below.
+TABLE III
+STORMWATER MANAGEMENT POND
+CONTROL STRUCTURE RATING CURVE
+Storm Event
+
+Stage (m)
+
+Storage (m3)
+
+Outflow (m3/s)
+
+25mm
+
+268.55
+
+3,548
+
+0.036
+
+2-Year
+
+268.75
+
+5,058
+
+0.075
+
+5-Year
+
+268.97
+
+6,944
+
+0.231
+
+10-Year
+
+269.07
+
+7,719
+
+0.314
+
+25-Year
+
+269.25
+
+9,711
+
+0.394
+
+50-Year
+
+269.40
+
+11,371
+
+0.450
+
+100-Year
+
+269.50
+
+12,478
+
+0.483
+
+Regional
+
+269.73
+
+15,022
+
+3.32
+
+Page 17 of 23
+
+W22068 FSR – September 2024
+
+The following summarizes the outlet controls:
+•
+
+25mm Erosion Control: 155mm diameter orifice plate.
+
+•
+
+2 to 100 Year and Regional Storm Release: combination of 155mm diameter
+
+•
+
+orifice plate and 0.60m wide x 0.30m high weir.
+
+•
+
+A 12.0m wide emergency spillway is sized to safely convey the 100-Year
+uncontrolled peak flow (4.03m3/s). The crest elevation of the emergency spillway
+is set at an elevation of 269.50m.
+
+The event storage conditions of the wet pond, supporting stage storage and discharge
+calculations are included in Appendix C.
+
+5.4.5
+
+Sediment Loading and Drying Area
+
+The estimated annual sediment loading, based on 65% catchment imperviousness, is 2.50
+m³/ha. With the SWM pond drainage area covering 23.65 hectares, the annual sediment
+generation amounts to 59.13 m³. Over a ten-year interval, assuming the sediment is
+removed from the SWM pond, the total sediment generated will be 592.0 m³.
+
+To prevent sediment dispersion to the surrounding area, it is proposed that the sediment
+storage area be enclosed with interlocking plastic barriers (New Jersey barrier style) lined
+with Terrafix 270R Geotextile, which will allow the water to drain from the sediment.
+Based on a 1.2m storage height, a minimum footprint area of 493 m² is required.
+
+Typically, sediment is allowed to dry in the pond before removal, avoiding double handling
+and additional costs. However, to comply with the new Excess Soil Regulations, it is
+essential that the sediment from the forebay is dry and remains dry until it is hauled offsite. Therefore, we have provided a sediment drying area, as described above, to meet these
+specific regulatory requirements and ensure the responsible management of sediment in
+accordance with the Town’s guidelines.
+
+Page 18 of 23
+
+W22068 FSR – September 2024
+
+5.4.6
+
+Water Balance
+
+The Province of Ontario (MOECP) and the Town of Caledon have established a
+Consolidated Linear Infrastructure Environmental Compliance Approval (CLI-ECA)
+agreement. The CLI-ECA requirements include maintaining the post- to pre-development
+infiltration rate or retaining the 90th Percentile Storm event on the property in the absence
+of a water balance study. One key constraint of the CLIECA is that it mandates water
+balance measures on public property. Consequently, the LID (Low Impact Development)
+strategy for this property focuses on public LID options rather than private ones. Typically,
+for residential developments like this property, traditional water balance design involves
+directing roof drainage to rear yard infiltration trenches on private lots to meet infiltration
+deficit volumes. However, this approach cannot be proposed due to CLI-ECA
+requirements. The list below combines Low Impact Development (LID) measures that are
+applicable on both private and public properties.
+•
+
+Increased topsoil depths (Houses, boulevard, parks)
+
+•
+
+Disconnected roof leaders to discharge to rear yards in private blocks (medium
+density)
+
+•
+
+Infiltration trenches or galleries where feasible
+
+•
+
+Permeable pavements where feasible
+
+The preferred LID plan will be determined through consultation with the Town of Caledon
+at the detailed design stage.
+
+Page 19 of 23
+
+W22068 FSR – September 2024
+
+6
+
+Natural Heritage System & Buffer
+The subject lands include approximately 8.82 hectares of environmental policy area, which will be
+dedicated as a natural heritage system (NHS) with a transition buffer to facilitate preservation. A
+portion of the stormwater management (SWM) pond will be situated within the NHS buffer, which
+is currently used for agricultural purposes.
+To minimize impact, grading within the NHS buffer will be limited and only performed as
+necessary to match existing grades. Walk-out lots with a 2.4-meter drop over a 7.2-meter span will
+help reduce the need for extensive grading within the NHS buffer. Transition slopes within the
+buffer will be constructed at a maximum 3:1 slope.
+Grading will also be required within the NHS to establish an outfall from the SWM pond headwall
+to the creek, with the outfall leading to a grassed swale.
+Detailed grading plans will be provided at the detailed design stage. Preliminary grading and pond
+location are illustrated on Drawing PG-1.
+The Stormwater Management Pond (Block 6) location is proposed within the Natural Heritage
+System (NHS) Buffer of the Protected Countryside of the Greenbelt Plan. As per section 4.2.3 of
+the Green Belt Plan, applications for development and site alteration in the Protected Countryside
+shall be accompanied by a SWM plan that demonstrates that:
+a) Planning, design and construction practices will minimize vegetation removal, grading
+and soil compaction, sediment erosion and impervious surfaces.
+b) An integrated treatment approach will be used to minimize stormwater flows and mimic
+natural hydrology through lot level controls, low impact development and other conveyance
+techniques.
+c) Applicable recommendations, standards or targets within a subwatershed plan or
+equivalent and water budgets will be complied with; and
+d) Applicable objectives, targets, and any other requirements within a stormwater master
+plan will be met in accordance with the policies in subsection 3.2.7 of the Growth Plan.
+As outlined in Section 5 (Storm Drainage & Stormwater Management) of this report, all the abovementioned stormwater management plan objectives are achieved without compromising the
+integrity of the NHS lands.
+
+Page 20 of 23
+
+W22068 FSR – September 2024
+
+7
+
+EROSION AND SEDIMENT CONTROL
+Erosion and sedimentation are naturally occurring processes that involve particle detachment,
+sediment transport and deposition of soil particles. Construction activities commonly alter the
+landscapes where they are located, exacerbating these natural processes. One of the most
+significant alterations encountered during construction is the removal of the vegetation that
+stabilizes the subsoil. In the absence of the vegetation, the underlying soils are fully or partially
+exposed to various natural forces such as rain, flowing water, wind, and gravity1
+The discharge of high sediment loads to natural watercourses has significant impacts on receiving
+waters and aquatic habitat. Some specific examples include:
+
+
+Degradation of water quality;
+
+
+
+Damage or destruction of fish habitat;
+
+
+
+Increased flooding.
+
+In consideration of the above, it is necessary as part of the Final Design and implementation of
+infrastructure and development servicing to incorporate a comprehensive Erosion and Sediment
+Control Plan. The objectives are:
+
+(i)
+
+Minimize wherever possible the extent of vegetation removal;
+
+(ii)
+
+Provide appropriate sediment control measures to minimize the off-site transport of
+sediment;
+
+(iii)
+
+Minimize the extent of time that sites are devoid of stabilizing vegetation;
+
+(iv)
+
+Provide interim erosion control measures where permanent restoration is not feasible.
+
+(v)
+
+Provide permanent restoration to eliminate future erosion.
+
+The Erosion and Sediment Control Plan should consider the specific characteristics of each
+development site and address the requirements relating to the following typical construction
+stages:
+
+1
+
+Erosion and Sediment Control Guidelines for Urban Construction, December 2006, Greater Horseshoe
+Conservation Authorities.
+
+Page 21 of 23
+
+W22068 FSR – September 2024
+
+∙
+
+Topsoil Stripping and Site Pre-Grading
+
+∙
+
+Infrastructure Servicing
+
+∙
+
+Building Construction
+A “treatment train” approach is recommended in the development of an appropriate Erosion and
+Sediment Control Plan in compliance with the Erosion and Sediment Control Guidelines for
+Urban Construction. Typical sediment control measures include:
+
+∙
+
+Installation of double silt fencing along the boundary of work areas adjacent to the NHS;
+
+∙
+
+Construction of vegetated cut off swales including sediment traps and rock check dams;
+
+∙
+
+Stabilization of temporary sediment traps and provision of vegetated filter strips adjacent
+to the NHS;
+
+∙
+
+Provision of catch basin sediment controls.
+
+Inherent in the Erosion and Sediment Control Plan is a monitoring program with an Action Plan
+to implement remedial measures in a timely manner where required.
+
+As part of the final engineering design, the Sediment and Erosion Control Plan will be prepared
+including sizing of temporary sedimentation ponds and sediment traps.
+
+Page 22 of 23
+
+W22068 FSR – September 2024
+
+8
+
+CONCLUSIONS
+
+8.1
+
+Summary
+
+This Functional Servicing Report was prepared as a technical document in support of the Draft Plan of
+Subdivision. The report addresses sanitary, water and storm drainage servicing and stormwater
+management.
+The report outlines a proposed servicing strategy for the proposed subdivision development and provides
+preliminary engineering design for sanitary, water, storm drainage and stormwater management in
+accordance with the technical requirements of the Region of Peel, Town of Caledon, Toronto and Region
+Conservation Authority and MECP guidelines.
+
+8.2
+
+Conclusion
+Based on the findings of this report, the conclusions and recommendations are as follows:
+(i)
+
+Sanitary sewer servicing can be achieved by connecting to the existing Sanitary
+sewer on Bonnieglen Farm Boulevard and the future pumping station proposed to
+the west of Kennedy Road.
+
+(ii)
+
+Water supply can be achieved by connecting to the existing watermains on
+Kennedy Road, Old School Road and Bonnieglen Farm Boulevard
+
+(iii)
+
+Storm water quality, quantity and erosion control requirements will be provided
+by a Stormwater Management Wet Pond Facility to be located within the limits of
+Block 6.
+
+(iv)
+
+Erosion and sediment control measures will be installed as recommended.
+
+____________________________________
+
+_______________________________________
+
+Scott Lang, P. Eng
+
+Scott Ahonen
+
+Page 23 of 23
+
+W22068 FSR – September 2024
+
+APPENDIX A
+
+Sanitary Sewer Design Sheets
+
+J:\CDC-2022 WEST - Files\W22068 - Kennedy Road-Balkaran Dhillonharan\FSR\Sanitary\2024-09-09 W22068 SANITARY.xlsx
+
+Subdivision:
+File No.:
+Consultant:
+Drainage Area Plan:
+
+Trend Kennedy
+
+Town of Caledon
+SANITARY DRAINAGE
+
+Candevcon Limited
+SA-1
+LOCATION
+
+STREET
+
+1
+
+Project No.:
+Date:
+Prepared By:
+Checked By:
+
+AREA
+ID
+2
+
+W22068
+2024-09-09
+SAA
+
+SECTION AREA (Ha)
+
+MAINTANANCE HOLES
+Upstream
+3
+
+Downstream
+4
+
+PLUG
+MH54A
+MH55A
+
+MH54A
+MH55A
+MH56A
+
+Right of Way
+
+5
+
+Low Density
+
+6
+
+SemiDetached
+
+7
+
+Medium
+Density
+(Towns)
+
+8
+
+Medium
+Density
+(Condos)
+
+9
+
+Commercial
+/Retail
+
+10
+
+POPULATION
+
+FLOWS
+
+REMARKS
+
+DESIGN FLOW /
+FULL FLOW
+%
+Junior School
+
+11
+
+Senior School
+
+12
+
+High School
+
+13
+
+Residential
+
+Commercial
+
+14
+
+School
+
+15
+
+16
+
+TOTAL
+POP
+17
+
+ACCUM.
+POP.
+
+PEAK
+FACTOR
+
+18
+
+AREA
+(ha)
+20
+
+19
+
+ACCUM.
+AREA
+(ha)
+21
+
+PK. DAY
+FLOW
+(m3/s)
+22
+
+INFILT.
+3
+
+(m /s)
+23
+
+TOTAL
+FLOW
+(m3/s)
+24
+
+SIZE
+(mm)
+25
+
+SLOPE
+
+CAPACITY
+
+(%)
+26
+
+3
+
+(m /s)
+27
+
+VELOCITY
+FULL FLOW ACT. FLOW
+(m/s)
+(m/s)
+28
+
+29
+
+30
+
+OUTLET TO KENNEDY ROAD - South
+Kennedy Road
+Kennedy Road
+Kennedy Road
+
+60
+59
+
+1.17
+0.37
+
+205
+0
+0
+
+0
+0
+0
+
+0.00
+0.00
+0.00
+
+205
+0
+0
+
+205
+205
+205
+
+4
+4
+4
+
+1.17
+0.37
+0.00
+
+1.17
+1.54
+1.54
+
+0.0027
+0.0027
+0.0027
+
+0.000
+0.000
+0.000
+
+0.003
+0.003
+0.003
+
+250
+250
+250
+
+0.50%
+0.50%
+0.50%
+
+0.042
+0.042
+0.042
+
+0.86
+0.86
+0.86
+
+0.28
+0.28
+0.28
+
+7
+7
+7
+
+60
+
+0
+
+0.00
+
+60
+
+60
+
+4
+
+0.33
+
+0.33
+
+0.0008
+
+0.000
+
+0.001
+
+250
+
+1.00%
+
+0.060
+
+1.21
+
+0.07
+
+2
+
+0
+
+0.00
+
+0.00
+
+0
+
+0
+
+4
+
+0.16
+
+0.16
+
+0.0000
+
+0.000
+
+0.000
+
+250
+
+1.00%
+
+0.060
+
+1.21
+
+0
+
+29
+0
+0
+
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+
+29
+0
+0
+
+90
+90
+90
+
+4
+4
+4
+
+0.16
+0.03
+0.11
+
+0.65
+0.68
+0.79
+
+0.0012
+0.0012
+0.0012
+
+0.000
+0.000
+0.000
+
+0.001
+0.001
+0.001
+
+250
+250
+250
+
+0.50%
+0.50%
+0.50%
+
+0.042
+0.042
+0.042
+
+0.86
+0.86
+0.86
+
+14
+55
+22
+91
+70
+
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+
+14
+55
+22
+91
+70
+
+14
+69
+91
+182
+251
+
+4
+4
+4
+4
+4
+
+0.07
+0.28
+0.11
+0.48
+0.38
+
+0.07
+0.35
+0.46
+0.94
+1.32
+
+0.0002
+0.0009
+0.0012
+0.0024
+0.0034
+
+0.000
+0.000
+0.000
+0.000
+0.000
+
+0.000
+0.001
+0.001
+0.003
+0.004
+
+250
+250
+250
+250
+250
+
+1.00%
+0.50%
+0.50%
+0.50%
+0.50%
+
+0.060
+0.042
+0.042
+0.042
+0.042
+
+1.21
+0.86
+0.86
+0.86
+0.86
+
+0.00
+0.00
+0.14
+0.14
+0.14
+0.00
+0.00
+0.10
+0.14
+0.26
+0.31
+
+OUTLET TO KENNEDY ROAD - North
+STREET 'E'
+
+2
+
+MH2A
+
+MH4A
+
+STREET 'C'
+
+3
+
+MH3A
+
+MH4A
+
+0.16
+
+STREET 'D'
+
+4
+5
+6
+
+MH4A
+MH5A
+MH6A
+
+MH5A
+MH6A
+MH11A
+
+0.03
+0.11
+
+STREET 'E'
+
+7
+8
+9
+10, 10A
+11
+
+MH2A
+MH7A
+MH8A
+MH9A
+MH10A
+
+MH7A
+MH8A
+MH9A
+MH10A
+MH11A
+
+STREET 'D'
+
+12
+
+MH11A
+
+MH13A
+
+1.54
+
+270
+
+0.00
+
+0.00
+
+270
+
+611
+
+3.93
+
+1.54
+
+3.65
+
+0.0081
+
+0.001
+
+0.009
+
+250
+
+0.50%
+
+0.042
+
+0.86
+
+0.55
+
+21
+
+STREET 'F'
+
+13
+
+MH12A
+
+MH13A
+
+0.78
+
+137
+
+0.00
+
+0.00
+
+137
+
+137
+
+4
+
+0.78
+
+0.78
+
+0.0018
+
+0.000
+
+0.002
+
+250
+
+1.00%
+
+0.060
+
+1.21
+
+0.20
+
+3
+
+STREET 'B'
+
+1, 14, 15, 15A
+16, 16A
+17, 17A
+
+MH13A
+MH14A
+MH15A
+
+MH14A
+MH15A
+MH42A
+
+82
+94
+59
+
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+
+82
+94
+59
+
+829
+923
+982
+
+3.85
+3.82
+3.81
+
+0.61
+0.60
+0.38
+
+5.04
+5.64
+6.02
+
+0.0107
+0.0118
+0.0125
+
+0.001
+0.001
+0.002
+
+0.012
+0.013
+0.014
+
+250
+250
+250
+
+0.50%
+0.50%
+0.50%
+
+0.042
+0.042
+0.042
+
+0.86
+0.86
+0.86
+
+0.66
+0.70
+0.72
+
+29
+32
+33
+
+19
+20, 20A
+21
+22
+23
+24
+25
+
+MH12A
+MH16A
+MH17A
+MH18A
+MH19A
+MH20A
+MH21A
+
+MH16A
+MH17A
+MH18A
+MH19A
+MH20A
+MH21A
+MH42A
+
+0.07
+0.39
+0.59
+0.48
+0.16
+0.54
+0.19
+
+8
+73
+69
+56
+19
+63
+22
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+8
+73
+69
+56
+19
+63
+22
+
+8
+81
+150
+206
+225
+288
+311
+
+4
+4
+4
+4
+4
+4
+4
+
+0.07
+0.54
+0.59
+0.48
+0.16
+0.54
+0.19
+
+0.07
+0.61
+1.20
+1.68
+1.84
+2.38
+2.57
+
+0.0001
+0.0011
+0.0020
+0.0028
+0.0030
+0.0039
+0.0042
+
+0.000
+0.000
+0.000
+0.000
+0.000
+0.001
+0.001
+
+0.000
+0.001
+0.002
+0.003
+0.004
+0.004
+0.005
+
+250
+250
+251
+250
+250
+250
+250
+
+1.00%
+0.50%
+0.50%
+0.50%
+1.00%
+0.50%
+0.50%
+
+0.060
+0.042
+0.043
+
+1.21
+0.86
+0.86
+
+0.00
+0.10
+0.24
+
+0
+3
+5
+
+0.060
+0.042
+0.042
+
+1.21
+0.86
+0.86
+
+0.34
+0.35
+0.37
+
+6
+11
+11
+
+STREET 'I'
+
+26
+27
+28
+29
+30
+
+MH22A
+MH23A
+MH24A
+MH25A
+MH26A
+
+MH23A
+MH24A
+MH25A
+MH26A
+MH30A
+
+0.47
+0.37
+0.15
+0.80
+0.20
+
+55
+43
+18
+94
+23
+
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+
+55
+43
+18
+94
+23
+
+55
+98
+116
+209
+233
+
+4
+4
+4
+4
+4
+
+0.47
+0.37
+0.15
+0.80
+0.20
+
+0.47
+0.84
+0.99
+1.79
+1.99
+
+0.0007
+0.0013
+0.0016
+0.0028
+0.0031
+
+0.000
+0.000
+0.000
+0.000
+0.001
+
+0.001
+0.002
+0.002
+0.003
+0.004
+
+250
+250
+250
+250
+250
+
+0.50%
+0.50%
+0.50%
+0.50%
+0.50%
+
+0.042
+0.042
+0.042
+0.042
+0.042
+
+0.86
+0.86
+0.86
+0.86
+0.86
+
+0.10
+0.14
+0.19
+0.28
+0.31
+
+2
+4
+4
+8
+9
+
+STREET 'K'
+
+31
+
+MH27A-1
+
+MH27A
+
+0.38
+
+44
+
+0.00
+
+0.00
+
+44
+
+44
+
+4
+
+0.38
+
+0.38
+
+0.0006
+
+0.000
+
+0.001
+
+250
+
+0.50%
+
+0.042
+
+0.86
+
+0.05
+
+2
+
+STREET 'J'
+
+32
+
+MH27A-2
+
+MH27A
+
+0.40
+
+47
+
+0.00
+
+0.00
+
+47
+
+47
+
+4
+
+0.40
+
+0.40
+
+0.0006
+
+0.000
+
+0.001
+
+252
+
+200.50%
+
+0.861
+
+17.28
+
+0.00
+
+0
+
+STREET 'J'
+STREET 'J'
+
+33
+59
+60
+
+MH27A
+MH28A
+MH29A
+
+MH28A
+MH29A
+MH30A
+
+0.16
+0.11
+0.29
+
+19
+13
+34
+
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+
+19
+13
+34
+
+110
+123
+157
+
+4
+4
+4
+
+0.16
+0.11
+0.29
+
+0.94
+1.05
+1.34
+
+0.0015
+0.0016
+0.0021
+
+0.000
+0.000
+0.000
+
+0.002
+0.002
+0.002
+
+254
+250
+250
+
+400.50%
+1.00%
+1.00%
+
+1.243
+0.060
+0.060
+
+24.55
+1.21
+1.21
+
+0.00
+0.20
+0.27
+
+0
+3
+4
+
+STREET 'I'
+
+35
+
+MH30A
+
+MH35A
+
+0.52
+
+61
+
+0.00
+
+0.00
+
+61
+
+450
+
+4.00
+
+0.52
+
+3.85
+
+0.0060
+
+0.001
+
+0.007
+
+250
+
+0.50%
+
+0.042
+
+0.86
+
+0.46
+
+17
+
+STREET 'I'
+
+STREET 'I'
+
+36
+37
+38
+39
+40
+
+MH22A
+MH31A
+MH32A
+MH33A
+MH34A
+
+MH31A
+MH32A
+MH33A
+MH34A
+MH35A
+
+0.50
+0.14
+0.49
+0.50
+0.27
+
+59
+16
+57
+59
+32
+
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+
+59
+16
+57
+59
+32
+
+59
+75
+132
+191
+222
+
+4
+4
+4
+4
+4
+
+0.50
+0.14
+0.49
+0.50
+0.27
+
+0.50
+0.64
+1.13
+1.63
+1.90
+
+0.0008
+0.0010
+0.0018
+0.0026
+0.0030
+
+0.000
+0.000
+0.000
+0.000
+0.000
+
+0.001
+0.001
+0.002
+0.003
+0.003
+
+250
+250
+250
+250
+250
+
+0.50%
+1.00%
+0.50%
+0.50%
+0.50%
+
+0.042
+0.060
+0.042
+0.042
+0.042
+
+0.86
+1.21
+0.86
+0.86
+0.86
+
+0.10
+0.07
+0.19
+0.28
+0.31
+
+2
+2
+5
+7
+8
+
+STREET 'I'
+
+41
+
+MH35A
+
+MH37A
+
+0.46
+
+54
+
+0.00
+
+0.00
+
+54
+
+727
+
+3.89
+
+0.46
+
+6.21
+
+0.0095
+
+0.002
+
+0.011
+
+250
+
+0.50%
+
+0.042
+
+0.86
+
+0.62
+
+26
+
+STREET 'I'
+
+60
+
+MH57A
+
+MH37A
+
+0.10
+
+12
+
+0.00
+
+0.00
+
+12
+
+12
+
+4
+
+0.10
+
+0.10
+
+0.0002
+
+0.000
+
+0.000
+
+250
+
+1.00%
+
+0.060
+
+1.21
+
+0.00
+
+0
+
+STREET 'G'
+
+43
+44
+46, 46A
+47
+
+MH37A
+MH37A
+MH40A
+MH41A
+
+MH38A
+MH40A
+MH41A
+MH42A
+
+0.20
+0.52
+0.33
+
+23
+61
+104
+20
+
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+
+23
+61
+104
+20
+
+762
+823
+927
+947
+
+3.87
+3.85
+3.82
+3.82
+
+0.20
+0.52
+0.69
+0.11
+
+6.51
+7.03
+7.72
+7.83
+
+0.0099
+0.0106
+0.0119
+0.0121
+
+0.002
+0.002
+0.002
+0.002
+
+0.012
+0.012
+0.014
+0.014
+
+250
+250
+250
+250
+
+1.00%
+0.50%
+0.50%
+0.50%
+
+0.060
+0.042
+0.042
+0.042
+
+1.21
+0.86
+0.86
+0.86
+
+0.74
+0.67
+0.72
+0.72
+
+19
+30
+33
+34
+
+STREET 'D'
+STREET 'D'
+STREET 'E'
+STREET 'E'
+STREET 'E'
+STREET 'E'
+
+STREET 'B'
+STREET 'B
+STREET 'F'
+STREET 'F'
+STREET 'F'
+STREET 'F'
+STREET 'F'
+STREET 'F'
+STREET 'F'
+STREET 'I'
+STREET 'I'
+STREET 'I'
+STREET 'I'
+
+STREET 'J'
+
+STREET 'I'
+STREET 'I'
+STREET 'I'
+
+STREET 'G'
+STREET 'G'
+STREET 'G'
+
+0.33
+
+0.16
+
+0.07
+0.28
+0.11
+0.26
+
+0.13
+
+0.10
+0.30
+0.20
+
+0.03
+0.30
+0.18
+
+0.22
+0.38
+
+0.35
+
+0.15
+
+0.36
+0.11
+
+3
+3
+3
+0
+2
+3
+6
+9
+
+Page 1 of 2
+
+J:\CDC-2022 WEST - Files\W22068 - Kennedy Road-Balkaran Dhillonharan\FSR\Sanitary\2024-09-09 W22068 SANITARY.xlsx
+
+LOCATION
+
+STREET
+
+1
+STREET 'A'
+STREET 'A'
+STREET 'A'
+STREET 'A'
+
+AREA
+ID
+2
+
+48
+49
+50
+51
+
+SECTION AREA (Ha)
+
+MAINTANANCE HOLES
+Upstream
+3
+
+Downstream
+4
+
+MH42A
+MH43A
+MH44A
+MH45A
+MH46A
+
+MH43A
+MH44A
+MH45A
+MH46A
+MH56A
+
+Right of Way
+
+SemiDetached
+
+Low Density
+
+5
+
+6
+
+7
+
+Medium
+Density
+(Towns)
+
+8
+
+Medium
+Density
+(Condos)
+
+9
+
+Commercial
+/Retail
+
+10
+
+1.15
+0.43
+
+10.38
+
+2.13
+
+2.06
+
+3.47
+
+FLOWS
+
+REMARKS
+
+DESIGN FLOW /
+FULL FLOW
+%
+Junior School
+
+11
+
+0.26
+0.28
+0.36
+
+18.47
+
+POPULATION
+
+Senior School
+
+12
+
+High School
+
+13
+
+Residential
+
+14
+
+Commercial
+
+School
+
+15
+
+16
+
+TOTAL
+POP
+
+ACCUM.
+POP.
+
+17
+
+18
+
+PEAK
+FACTOR
+
+AREA
+(ha)
+20
+
+19
+
+ACCUM.
+AREA
+(ha)
+21
+
+PK. DAY
+FLOW
+(m3/s)
+22
+
+INFILT.
+
+TOTAL
+FLOW
+(m3/s)
+24
+
+3
+
+(m /s)
+23
+
+SIZE
+
+SLOPE
+
+CAPACITY
+
+(%)
+26
+
+3
+
+(m /s)
+27
+
+(mm)
+25
+
+VELOCITY
+FULL FLOW ACT. FLOW
+(m/s)
+(m/s)
+28
+
+29
+
+30
+
+51
+55
+71
+201
+0
+
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+
+51
+55
+71
+201
+0
+
+2291
+2346
+2417
+2618
+2618
+
+3.54
+3.53
+3.52
+3.49
+3.49
+
+0.26
+0.28
+0.36
+1.15
+0.00
+
+16.68
+16.96
+17.32
+18.47
+18.47
+
+0.0272
+0.0278
+0.0286
+0.0307
+0.0307
+
+0.004
+0.004
+0.005
+0.005
+0.005
+
+0.032
+0.032
+0.033
+0.035
+0.0355
+
+250
+250
+250
+250
+250
+
+0.50%
+0.50%
+0.50%
+0.50%
+0.50%
+
+0.042
+0.042
+0.042
+0.042
+0.042
+
+0.86
+0.86
+0.86
+0.86
+0.86
+
+0.97
+0.97
+0.97
+0.96
+0.96
+
+75
+76
+79
+84
+84
+
+32
+16
+74
+57
+
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+
+32
+16
+74
+57
+
+32
+48
+122
+179
+
+4
+4
+4
+4
+
+0.27
+0.09
+0.47
+0.35
+
+0.27
+0.36
+0.83
+1.18
+
+0.0004
+0.0006
+0.0016
+0.0024
+
+0.000
+0.000
+0.000
+0.000
+
+0.000
+0.001
+0.002
+0.003
+
+250
+250
+250
+250
+
+1.00%
+0.50%
+0.50%
+0.50%
+
+0.060
+0.042
+0.042
+0.042
+
+1.21
+0.86
+0.86
+0.86
+
+0.00
+0.05
+0.19
+0.26
+
+1
+2
+4
+6
+
+0.00
+
+OUTLET TO EXISTING SANITARY SEWER - ARCADIA - BONNIEGLEN FARM BOULEVARD
+MH40A
+MH39A
+MH47A
+MH48A
+
+MH39A
+MH47A
+MH48A
+MH36A
+
+0.27
+
+STREET 'H'
+
+45
+52
+53, 53A
+54, 54A
+
+STREET 'I'
+
+42
+
+MH57A
+
+MH36A
+
+0.39
+
+46
+
+0.00
+
+0.00
+
+46
+
+46
+
+4
+
+0.39
+
+0.39
+
+0.0006
+
+0.000
+
+0.001
+
+250
+
+0.50%
+
+0.042
+
+0.86
+
+0.05
+
+2
+
+STREET 'I'
+
+55
+56
+57
+58
+
+MH36A
+MH49A
+MH50A
+MH51A
+
+MH49A
+MH50A
+MH51A
+EX.MH
+
+0.12
+0.04
+0.04
+0.08
+
+0.20
+
+23
+0
+0
+0
+
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+
+23
+0
+0
+0
+
+248
+248
+248
+248
+
+4
+4
+4
+4
+
+0.32
+0.04
+0.04
+0.08
+
+1.89
+1.93
+1.97
+2.05
+
+0.0033
+0.0033
+0.0033
+0.0033
+
+0.000
+0.001
+0.001
+0.001
+
+0.004
+0.004
+0.004
+0.0039
+
+250
+250
+250
+250
+
+0.50%
+0.50%
+0.50%
+0.50%
+
+0.042
+0.042
+0.042
+0.042
+
+0.86
+0.86
+0.86
+0.86
+
+0.33
+0.33
+0.33
+0.33
+
+9
+9
+9
+9
+
+0.28
+
+0.88
+
+STREET 'H'
+STREET 'H'
+STREET 'H'
+
+STREET 'I'
+STREET 'I'
+STREET 'I'
+
+0.09
+0.29
+0.24
+
+0.18
+0.11
+
+1.78
+
+0.00
+
+0.62
+
+0.00
+
+0.00
+
+Check Sums
+Kennedy
+DESIGN CRITERIA
+
+147
+
+2617.82
+
+2617.82 Kennedy
+
+18.47
+
+18.47
+
+0.0355
+
+Bonnieglen
+
+247.96
+
+247.96 Bonnieglen
+
+2.05
+
+2.05
+
+0.0039
+
+KENNEDY SOUTH
+
+204.75
+
+204.75 Total
+
+1.54
+
+1.54
+
+0.0031
+
+Total
+
+2865.78
+
+452.71 Total
+
+22.06
+
+22.06
+
+Equivalent Populations
+
+people/ha
+
+Right of Way
+
+0
+
+Low Density (less than 10m frontage)
+
+117
+
+Semi Detached
+
+196.854
+
+Peaking Factor:
+
+Medium Density (Towns)
+
+182.92
+
+Infiltration:
+
+Medium Density (Condos)
+
+42.5 L/s
+
+Average Day Flow:
+
+Pipes:
+
+Lpcd
+
+1+14/(4+(P)^0.5)
+3
+0.00026 m /s/ha
+
+P = Pop. in 1000's
+
+3
+
+0.000028 m /s/m
+
+175
+Manning's Co-eff.:
+
+Commercial/Retail
+
+290
+
+n=
+
+0.013
+
+50
+
+Page 2 of 2
+
+APPENDIX B
+
+Vo Results For Pre-Development Flows To Arcadia Road
+
+VO LAYOUT (100-YR-6-HR Event)
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 100 Year 6 Hour AES (Bloor, T **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+de9ed17bb177\05252cf9
+| Ptotal= 80.31 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+1.61
+0.25
+1.61
+0.50
+1.61
+0.75
+1.61
+1.00
+1.25
+1.50
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+8e084524-50e4-41c4-8ff6Comments: 100 Year 6 Hour AES (Bloor, TRCA)
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+1.75
+
+27.30 |
+
+3.50
+
+11.24 |
+
+5.25
+
+1.61 |
+
+2.00
+
+27.30 |
+
+3.75
+
+6.42 |
+
+5.50
+
+1.61 |
+
+2.25
+
+73.88 |
+
+4.00
+
+6.42 |
+
+5.75
+
+1.61 |
+
+2.50
+
+73.88 |
+
+4.25
+
+3.21 |
+
+6.00
+
+1.61 |
+9.64 |
+9.64 |
+
+2.75
+3.00
+3.25
+
+20.88 |
+20.88 |
+11.24 |
+
+4.50
+4.75
+5.00
+
+3.21 |
+1.61 |
+1.61 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+
+| NASHYD
+( 0001)|
+|ID= 1 DT=10.0 min |
+-------------------NOTE:
+
+RAIN
+mm/hr
+1.61
+1.61
+1.61
+1.61
+1.61
+1.61
+1.61
+0.81
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+
+11.69
+5.00
+0.20
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+18.47 | 3.500
+
+11.24 |
+
+5.17
+
+0.333
+
+0.81 | 2.000
+
+27.30 | 3.667
+
+11.24 |
+
+5.33
+
+0.500
+
+1.61 | 2.167
+
+27.30 | 3.833
+
+8.83 |
+
+5.50
+
+0.667
+
+1.61 | 2.333
+
+50.59 | 4.000
+
+6.42 |
+
+5.67
+
+0.833
+
+1.61 | 2.500
+
+73.88 | 4.167
+
+6.42 |
+
+5.83
+
+1.000
+
+1.61 | 2.667
+
+73.88 | 4.333
+
+4.81 |
+
+6.00
+
+1.167
+
+1.61 | 2.833
+
+47.38 | 4.500
+
+3.21 |
+
+6.17
+
+1.333
+
+5.62 | 3.000
+
+20.88 | 4.667
+
+3.21 |
+
+6.33
+
+1.500
+1.667
+
+9.64 | 3.167
+9.64 | 3.333
+
+20.88 | 4.833
+16.06 | 5.000
+
+2.41 |
+1.61 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+2.233
+1.157 (i)
+2.833
+39.797
+80.310
+0.496
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------
+
+APPENDIX C
+
+Stormwater Management Design Calculations
+
+SIMCOE
+DUFFERIN
+
+Aurora
+
+Y 9
+HW
+
+0
+
+Mono
+
+e
+Yong
+
+40
+HWY
+
+Adjala
+
+St
+
+Rd
+
+n St
+
+Ch
+
+ur
+
+ch
+
+7
+
+or
+t
+
+R
+
+King
+
+Ol
+d
+
+irp
+
+H
+W
+Y
+
+d
+
+Ca
+st
+led
+er
+g
+
+Si
+de
+ro
+
+ad
+
+PEEL
+Legend
+River / Stream
+
+Unit Flow Relationships
+
+Dufferi
+
+HWY 2
+
+A
+
+King
+
+Th
+e
+
+G
+
+or
+e
+
+Richmond
+Hill
+
+St
+
+I
+
+50
+
+Rd
+
+Vaughan
+D
+nzie
+acke
+M
+r
+Majo
+
+Caledon
+
+Equation A (Sub Basin 4)
+
+YORK
+
+r
+
+Dr
+
+Equation B (Sub Basin 6)
+
+ay
+f
+
+M
+
+ho
+
+Y7
+HW
+
+07
+Y4
+HW
+
+4 Kms
+
+St
+Q
+ue
+
+en
+
+00
+
+427
+
+01
+Y4
+HW
+
+407
+
+Bo
+va
+ird
+
+HWY 4
+
+d
+R
+
+Humber River Stormwater Management
+Quantity Control Release Rates
+
+HW
+Y
+
+2
+
+Brampton
+
+Dr
+
+1
+
+10
+
+t
+or
+rp
+
+0
+
+d
+
+Ai
+
+Quantity Flood Control Not Required
+
+W
+Y
+
+R
+
+Sc
+
+Contact TRCA Staff
+
+H
+
+d
+
+Equation G (Sub Basin 46)
+
+Site Location
+ol
+
+Equation F (Sub Basin 36)
+
+ak
+e
+
+Ol
+
+Equation E (Sub Basin 19A)
+
+Rd
+
+H
+ea
+rt
+L
+
+Equation D (Sub Basin 15)
+
+iel
+d
+
+Equation C (Sub Basin 10)
+
+HWY 409
+
+W
+Y
+
+41
+0
+
+Y
+HW
+
+1
+40
+
+27
+Y 4
+HW
+
+H
+
+To r o n t o
+
+Drainage Area & Imperviousness
+Catchment
+Id
+
+Drainage
+Area (Ha)
+
+%
+Imperviousness
+(TIMP)
+
+1
+
+0.79
+
+80%
+
+0.75
+
+Medium Density
+
+2
+
+0.33
+
+80%
+
+0.75
+
+Medium Density
+
+3
+
+0.15
+
+100%
+
+0.90
+
+Road
+
+4
+
+0.16
+
+80%
+
+0.75
+
+Medium Density
+
+5
+
+0.03
+
+100%
+
+0.90
+
+Road
+
+6
+
+0.11
+
+100%
+
+0.90
+
+Road
+
+7
+
+0.07
+
+60%
+
+0.50
+
+Low Density
+
+8
+
+0.28
+
+60%
+
+0.50
+
+Low Density
+
+9
+
+0.11
+
+60%
+
+0.50
+
+Low Density
+
+10
+
+0.24
+
+80%
+
+0.75
+
+Medium Density
+
+10 A
+
+0.26
+
+60%
+
+0.50
+
+Low Density
+
+11
+
+0.37
+
+80%
+
+0.75
+
+Medium Density
+
+12
+
+1.53
+
+80%
+
+0.75
+
+Mixed-Use/Mid Rise
+
+13
+
+0.27
+
+80%
+
+0.75
+
+Medium Density
+
+14
+
+0.30
+
+60%
+
+0.50
+
+Low Density
+
+15
+
+0.24
+
+80%
+
+0.75
+
+Medium Density
+
+15 A
+
+0.24
+
+60%
+
+0.50
+
+Low Density
+
+16
+
+0.33
+
+60%
+
+0.50
+
+Low Density
+
+17
+
+0.57
+
+60%
+
+0.50
+
+Low Density
+
+18
+
+0.25
+
+60%
+
+0.50
+
+Low Density
+
+19
+
+1.15
+
+80%
+
+0.75
+
+Medium Density
+
+20
+
+0.35
+
+60%
+
+0.50
+
+Low Density
+
+21
+
+0.30
+
+60%
+
+0.50
+
+Low Density
+
+22
+
+0.23
+
+60%
+
+0.50
+
+Low Density
+
+23
+
+0.06
+
+60%
+
+0.50
+
+Low Density
+
+24
+
+0.27
+
+60%
+
+0.50
+
+Low Density
+
+25
+
+0.27
+
+60%
+
+0.50
+
+Low Density
+
+26
+
+0.26
+
+60%
+
+0.50
+
+Low Density
+
+27
+
+0.13
+
+60%
+
+0.50
+
+Low Density
+
+28
+
+0.53
+
+60%
+
+0.50
+
+Low Density
+
+29
+
+0.19
+
+60%
+
+0.50
+
+Low Density
+
+30
+
+0.11
+
+80%
+
+0.75
+
+Medium Density
+
+31
+
+1.93
+
+10%
+
+0.25
+
+Park
+
+32
+
+0.33
+
+80%
+
+0.75
+
+Medium Density
+
+32 A
+
+0.35
+
+60%
+
+0.50
+
+Low Density
+
+33
+
+0.26
+
+60%
+
+0.50
+
+Low Density
+
+34
+
+0.45
+
+60%
+
+0.50
+
+Low Density
+
+35
+
+0.27
+
+60%
+
+0.50
+
+Low Density
+
+36
+
+0.07
+
+80%
+
+0.75
+
+Medium Density
+
+37
+
+0.27
+
+80%
+
+0.75
+
+Medium Density
+
+37 A
+
+0.20
+
+60%
+
+0.50
+
+Low Density
+
+38
+
+0.24
+
+80%
+
+0.75
+
+Medium Density
+
+38 A
+
+0.13
+
+60%
+
+0.50
+
+Low Density
+
+39A
+
+0.16
+
+60%
+
+0.50
+
+Low Density
+
+40
+
+0.53
+
+60%
+
+0.50
+
+Low Density
+
+41
+
+0.46
+
+60%
+
+0.50
+
+Low Density
+
+42
+
+0.14
+
+60%
+
+0.50
+
+Low Density
+
+43
+
+0.40
+
+60%
+
+0.50
+
+Low Density
+
+44
+
+0.16
+
+60%
+
+0.50
+
+Low Density
+
+45
+
+0.37
+
+60%
+
+0.50
+
+Low Density
+
+46
+
+0.26
+
+60%
+
+0.50
+
+Low Density
+
+47
+
+0.47
+
+60%
+
+0.50
+
+Low Density
+
+48
+
+0.37
+
+60%
+
+0.50
+
+Low Density
+
+49
+
+0.43
+
+60%
+
+0.50
+
+Low Density
+
+50
+
+0.23
+
+60%
+
+0.50
+
+Low Density
+
+51
+
+0.16
+
+60%
+
+0.50
+
+Low Density
+
+52
+
+0.10
+
+60%
+
+0.50
+
+Low Density
+
+53
+
+0.13
+
+60%
+
+0.50
+
+Low Density
+
+54
+
+0.54
+
+60%
+
+0.50
+
+Low Density
+
+55
+
+0.43
+
+60%
+
+0.50
+
+Low Density
+
+56
+
+0.30
+
+60%
+
+0.50
+
+Low Density
+
+57
+
+0.12
+
+60%
+
+0.50
+
+Low Density
+
+58
+
+0.57
+
+60%
+
+0.50
+
+Low Density
+
+59
+
+0.04
+
+60%
+
+0.50
+
+Low Density
+
+64
+
+0.17
+
+60%
+
+0.50
+
+Low Density
+
+Pond Area
+
+2.13
+
+100%
+
+Runoff "C" (Refer to Storm
+(XIMP)
+Drainage Area Plan)
+
+0.95
+
+23.65
+65%
+Total Drainage to SWM Pond (Ha) =
+
+0.59
+23.65
+
+Overall Imperviousness =
+
+65%
+
+Composite Runoff C =
+
+0.59
+
+21.52
+
+Project No. : W22068
+Project Name : Trend Kennedy - Town of Caledon
+
+STORMWATER MANAGEMENTS POND DESIGN
+
+Kennedy Road
+
+UNIT FLOW EQUATIONS - HUMBER RIVER
+POND RELEASE RATE TARGETS (L/S)
+
+Site Location
+
+Kilmanagh
+
+Site Location : Town of Caledon
+
+Total Development Area (A) =
+
+23.65
+
+ha
+
+Humber River Unit Flow Equation F (Sub Basin 36 is Applicable)
+Storm
+Event
+
+Humber River
+Sub-Basin 36
+
+B
+
+C
+
+Pond to
+Tributary (L/s)
+
+100-Year
+
+Q = 29.912 - 2.316*ln(A)
+
+29.912
+
+-2.316
+
+534
+
+50-Year
+
+Q = 26.566 - 2.082*ln(A)
+
+26.566
+
+-2.082
+
+473
+
+25-Year
+
+Q = 22.639 - 1.741*ln(A)
+
+22.639
+
+-1.741
+
+405
+
+10-Year
+
+Q = 17.957 - 1.373*ln(A)
+
+17.957
+
+-1.373
+
+322
+
+5-Year
+
+Q = 14.652 - 1.136*ln(A)
+
+14.652
+
+-1.136
+
+262
+
+2-Year
+
+Q = 9.506 - 0.719*ln(A)
+
+9.506
+
+-0.719
+
+171
+
+The proposed SWM Pond will drain to Kilmanagh Creek of the West Humber River. The Humber River
+Stormwater Management Quantity Control Release Rates Equation F for Sub-Basin 36 is applicable
+based on the site location.
+
+Page 2
+
+7/11/2024
+
+Drainage Area vs Landuse Type Breakdown (SWM Pond)
+Total Site Area draining to Proposed SWM Pond =
+
+23.65 Ha
+
+Typical
+
+Typical Run-
+
+Imperviousness
+
+Off "C"
+
+Park/Open Space
+
+10%
+
+0.25
+
+1.93
+
+LowDensity Residential
+
+60%
+
+0.50
+
+12.91
+
+80%
+
+0.75
+
+6.40
+
+Roads
+
+100%
+
+0.90
+
+0.29
+
+SWM Pond Area
+
+100%
+
+0.90
+
+2.12
+
+Catchment Type
+
+Medium-Density
+Residential
+
+Area (Ha)
+
+23.65
+213 m3/ha
+
+MOECP Requirements (@ 65% Imp) =
+Permanent Pool Volume Required =
+Elevations
+
+Forebay Area
+
+Main Cell
+Area
+
+Total
+Area
+
+Average
+
+(m2)
+
+(m2)
+
+(m2)
+
+266.00
+
+576
+
+1631
+
+2207
+
+267.00
+
+1127
+
+2374
+
+3502
+
+1445
+
+2789
+
+5570
+
+268.00
+
+5570
+
+269.00
+269.00
+270.00
+
+Depth
+
+Delta
+Volume
+
+Total
+Volume
+
+(m2)
+
+(m)
+
+(m3)
+
+(m3)
+
+2854
+
+1.00
+
+2854
+
+3868
+
+0.50
+
+1934
+
+4902
+
+0.50
+
+2451
+
+Area
+
+2854
+
+4234
+
+268.00
+
+268.50
+
+Extended Detention)
+
+5,045 m3
+
+(m)
+
+267.50
+
+(Includes 40m3/ha
+
+4788
+7239
+0
+6341
+
+0.50
+
+3171
+
+7546
+
+0.50
+
+3773
+
+9063
+
+0.00
+
+0
+
+11068
+
+1.00
+
+11068
+
+7112
+
+3171
+
+7980
+
+6944
+
+10145
+11990
+
+Permanent Pool
+Storage
+
+6944
+18011
+
+Top of Pond
+
+Water Quality Volume Design
+TRCA's 25mm Erosion Control Requirement
+Contributing Drainage Area (ha) =
+
+23.65 Ha
+
+25mm 4Hr Chicago Post Development Runoff Volume in Depth =
+
+14.97 mm
+(Refer to VO Results)
+( R. V x Drainage Area)
+25mm Volume Required =
+3,540 m3
+3,548 m3 at Elv = 268.55m in pond
+
+25mm Volume Provided =
+Drawdown Time for Erosion Control ;
+Based on Equation 4.11 MOE SWM Planning and Design Manual
+
+t = Drawdown time in seconds
+
+Ap = Surface area of the pond (m2)
+C = Discharge Coefficient (typically 0.63)
+
+Ao = Cross-sectional area of the orifice (m2)
+g = Gravitational acceleration constant (9.81 m/s)
+h1 = Starting water elevation above the orifice (m)
+h2 = Ending water elevation above the orifice (m)
+C2 = Slope coefficient from the area-depth linear regression
+C3 = Intercept from the area-depth linear regression
+
+Head vs Surface Area Graph
+8500
+
+y = 2896.4x + 5601.1
+R² = 0.9959
+
+8000
+
+6804
+
+7500
+7000
+
+6187
+
+6500
+
+7199
+
+5570
+
+6000
+5500
+
+0.10
+
+0.20
+
+7112
+
+6495
+
+5878
+0.00
+
+7286
+
+0.30
+
+Elevation(m)
+268.00
+268.10
+268.20
+268.30
+268.40
+268.50
+268.55
+268.60
+
+0.40
+
+0.50
+
+0.60
+
+Intercept of Regression , C3 =
+
+5601.1
+
+Slope coef. of Regression, C2 =
+Ultimate Ponding Elevation =
+Depth over orifice =
+
+2896.4
+268.55 m (25mm Water Quality Level)
+0.55 m (25mm Level - Permanent Pool Elevation)
+(268.55 - 268.00)
+
+Orifice Diameter =
+
+155 mm
+
+Orifice Area =
+Drawdown Time (t) =
+
+0.01897 m2
+174229 seconds
+48 hours
+
+Head (m) AREA (m2)
+0.00
+5570
+0.10
+5878
+0.20
+6187
+0.30
+6495
+0.40
+6804
+0.50
+7112
+0.55
+7199
+0.60
+7286
+
+SWM POND CONTROL STRUCTURE DESIGN
+Orifice No. 1 ( To Control 25mm Erosion)
+
+Weir/Orifice No.2 (To Control 2 - 100-Year)
+0.155 m
+155 mm
+0.0190 m2
+0.63
+268.00 m
+268.08 m
+
+Orifice Plate Diameter =
+Area =
+Orifice Coeff. ( C )=
+Invert =
+Orifice Plate Centroid =
+
+Orifice Width =
+Orifice Height =
+Area =
+Orifice Coeff. ( C )=
+Invert =
+Orifice Centroid =
+
+Qo = 0.63 x A x [2 x g x H]1/2
+
+Submerged Orifice Equation =
+
+Weir Equation =
+
+0.60 m
+0.30 m
+0.18 m2
+0.63
+268.65 m
+268.80 m
+
+BOX CUT-OUT DETAILS
+
+Qw = 1.67 x L x H^1.5
+
+Where,
+Q = Flow rate (m3/s)
+C = Constant
+
+Weir Specifications
+
+Where,
+
+Length of Weir =
+2
+
+Qw = Flow rate (m3/s)
+
+0.60
+
+A = Area of opening (m )
+H = Net head above the orifice (m)
+
+Weir Sill =
+
+268.65 m
+
+C = Constant
+
+Weir Top =
+
+268.95 m
+
+L = Weir Length (m)
+
+g = Acceleration due to gravity (m/s)
+
+Weir Coefficient =
+
+1.67
+
+H = Net Head on the Orifice (m)
+
+NOTE : As per Vo Results Output, Peak flows generated by 100-year storm event are greater than Regional Storm, therefore, the Pond is designed for 100-year Storm Event
+Stage (m):
+
+0.05
+
+ORIFICE CONTROL-1 (ORIFICE PLATE)
+
+25mm
+
+2-Year
+
+5-Year
+
+10-Year
+
+25-Year
+
+50-Year
+100-Year
+Regional
+
+Top of Pond
+
+STORAGE IN
+POND (m3)
+0
+317
+634
+951
+1268
+1586
+1903
+2220
+2537
+2854
+3171
+3548
+3926
+4303
+4680
+5058
+5435
+5812
+6189
+6567
+6944
+6944
+7497
+7719
+8051
+8604
+9157
+9711
+10264
+10817
+11371
+11924
+12478
+13031
+13584
+14138
+14691
+15022
+15244
+15798
+16351
+16904
+17458
+18011
+
+ORIFICE/WEIR CONTROL-2 (BOX CUT-OUT)
+
+(1+2)
+
+Elevation
+
+Depth above orifice
+
+Orifice No.1 Flow
+
+Depth above orifice
+
+Orifice No.2 Flow
+
+Depth Above
+
+Weir No.2 Flow
+
+Total Flow
+
+(m)
+
+Centroid (m)
+
+(m3/s)
+
+Centroid (m)
+
+(m3/s)
+
+Weir (m)
+
+(m3/s)
+
+(m3/s)
+
+268.00
+268.05
+268.10
+268.15
+268.20
+268.25
+268.30
+268.35
+268.40
+268.45
+268.50
+268.55
+268.60
+268.65
+268.70
+268.75
+268.80
+268.85
+268.90
+268.95
+268.97
+269.00
+269.05
+269.07
+269.10
+269.15
+269.20
+269.25
+269.30
+269.35
+269.40
+269.45
+269.50
+269.55
+269.60
+269.65
+269.70
+269.73
+269.75
+269.80
+269.85
+269.90
+269.95
+270.00
+
+0
+0.00
+0.02
+0.07
+0.12
+0.17
+0.22
+0.27
+0.32
+0.37
+0.42
+0.47
+0.52
+0.57
+0.62
+0.67
+0.72
+0.77
+0.82
+0.87
+0.89
+0.92
+0.97
+0.99
+1.02
+1.07
+1.12
+1.17
+1.22
+1.27
+1.32
+1.37
+1.42
+1.47
+1.52
+1.57
+1.62
+1.65
+1.67
+1.72
+1.77
+1.82
+1.87
+1.92
+
+0
+0.000
+0.008
+0.014
+0.019
+0.022
+0.025
+0.028
+0.030
+0.032
+0.034
+0.036
+0.038
+0.040
+0.042
+0.043
+0.045
+0.047
+0.048
+0.049
+0.050
+0.051
+0.052
+0.053
+0.054
+0.055
+0.056
+0.057
+0.059
+0.060
+0.061
+0.062
+0.063
+0.064
+0.065
+0.07
+0.067
+0.068
+0.068
+0.069
+0.070
+0.071
+0.072
+0.073
+
+0.20
+0.25
+0.27
+0.30
+0.35
+0.40
+0.45
+0.50
+0.55
+0.60
+0.65
+0.70
+0.75
+0.80
+0.85
+0.90
+0.93
+0.95
+1.00
+1.05
+1.10
+1.15
+1.20
+
+0.225
+0.251
+0.261
+0.275
+0.297
+0.318
+0.337
+0.355
+0.373
+0.389
+0.405
+0.420
+0.435
+0.449
+0.463
+0.477
+0.484
+0.490
+0.502
+0.515
+0.527
+0.539
+0.550
+
+0.00
+0.05
+0.10
+0.15
+0.20
+0.25
+0.30
+0.32
+
+0.000
+0.011
+0.032
+0.058
+0.090
+0.125
+0.165
+0.181
+
+0.000
+0.000
+0.008
+0.014
+0.019
+0.022
+0.025
+0.028
+0.030
+0.032
+0.034
+0.036
+0.038
+0.040
+0.053
+0.075
+0.103
+0.136
+0.173
+0.214
+0.231
+0.275
+0.303
+0.314
+0.329
+0.352
+0.374
+0.394
+0.414
+0.432
+0.450
+0.467
+0.483
+0.499
+0.515
+0.529
+0.544
+0.552
+0.558
+0.572
+0.585
+0.598
+0.611
+0.624
+
+25mm Erosion Control
+
+2-Year (171 L/s)
+
+5-Year (262 L/s)
+
+10-Year (322 L/s)
+
+25-Year (405 L/s)
+
+50-Year (473 L/s)
+100-Year (534 L/s)
+0.28
+0.78
+0.79
+1.31
+1.46
+1.98
+2.24
+2.78
+2.76
+3.32
+Regional Storage
+3.13
+3.69
+4.12
+4.69
+5.19
+5.77
+6.34
+6.94
+7.56
+8.17
+8.86
+9.48
+Flows from Emergency Spillway
+
+Visual Otthymo Results for AES storm, 2 to 100-Year storm events for 6 & 12 Hour Runs - SWM Pond
+6 - HOUR RUN
+Storm Event
+
+2-Year
+
+5-Year
+
+10-Year
+
+25-Year
+
+50-Year
+
+100-Year
+
+3
+
+171
+
+262
+
+322
+
+405
+
+473
+
+534
+
+3
+
+VO Peak Flows (m /s)
+
+1.329
+
+2.074
+
+2.540
+
+3.132
+
+3.588
+
+4.025
+
+Outflow Rate (m3/s)
+
+0.069
+
+0.192
+
+0.304
+
+0.374
+
+0.419
+
+0.461
+
+Target Release (m /s)
+
+Storage Volume (m3)
+
+4,671
+
+6,479
+
+7,626
+
+9,215
+
+10,469
+
+11,763
+
+12 - HOUR RUN
+Storm Event
+
+2-Year
+
+5-Year
+
+10-Year
+
+25-Year
+
+50-Year
+
+100-Year
+
+Target Release (m3/s)
+
+171
+
+262
+
+322
+
+405
+
+473
+
+534
+
+VO Peak Flows (m3/s)
+
+0.844
+
+1.254
+
+1.531
+
+1.893
+
+2.138
+
+2.381
+
+Outflow Rate (m3/s)
+
+0.073
+
+0.190
+
+0.289
+
+0.36
+
+0.403
+
+0.442
+
+3
+
+4,925
+
+Storage Volume (m )
+
+0.075
+
+Control Structure Flows
+3
+
+Storage Provided in Pond (m )
+Elevation in Pond (m)
+
+5,058
+268.75
+
+6,454
+0.231
+
+7,500
+0.314
+
+8,888
+0.394
+
+6,944
+
+7,719
+
+9,711
+
+268.97
+
+269.07
+
+269.25
+
+9,999
+
+11,156
+
+0.450
+
+0.483
+
+11,371
+
+12,478
+
+269.40
+
+269.50
+
+Emergency Spillway Design
+Notes : * As per MOE SWM Manual definition, the Emergency Spillway is designed to convey strom drainage flows out of the facility
+in the event that the other outlets (in control structure) are not functioning properly.
+** As per Vo Results 100-year Peak flows are greater than Regional Storm, therefore, emergency spillway is
+designed for 100-year peak flows
+The Emergency spillway is proposed at 100-year Elevation =
+100-Year Storm Peak Flows (Qinflow) =
+
+4.03
+
+Regional Peak Flows (Qinflow) =
+
+3.29
+
+269.50 m
+m3/s
+
+(Refer to 100-Yr, 6 Hr Vo Results)
+
+m s
+
+(Refer to Hurrican Hazel-Regional VO Results)
+
+3/
+
+Emergency Spillway Weir Parameters
+Top Width of Weir =
+Downstream Width of Weir =
+Side Slopes =
+Median Width (B) =
+Weir Sill Elevation (At 100-Year) =
+Weir Top Elevation =
+Depth of Weir =
+Weir Equation;
+
+Stage :
+
+18 m
+12.0 m
+10 : 1
+15 m
+269.50 m
+270.00 m
+0.50 m
+
+Qw = (CL(H3/2)
+0.05
+
+Depth
+
+Cd
+
+Q
+0.00
+
+269.50
+
+0
+
+1.67
+
+269.55
+
+0.05
+
+1.67
+
+0.28
+
+269.60
+
+0.10
+
+1.67
+
+0.79
+
+269.65
+
+0.15
+
+1.67
+
+1.46
+
+269.70
+
+0.20
+
+1.67
+
+2.24
+
+269.75
+
+0.25
+
+1.67
+
+3.13
+
+269.80
+
+0.30
+
+1.67
+
+4.12
+
+269.85
+
+0.35
+
+1.67
+
+5.19
+
+269.90
+
+0.40
+
+1.67
+
+6.34
+
+269.95
+
+0.45
+
+1.67
+
+7.56
+
+270.00
+
+0.50
+
+1.67
+
+8.86
+
+Therefore, Maximum capacity of Spillway is =
+
+8.857
+
+m3/s
+
+>
+
+4.03
+m3/s
+(100-Year Storm Peak Flows)
+
+FOREBAY DESIGN CALCULATIONS
+Settling Calculations
+Forebay Settling Length (MOE Equation 4.5)
+
+For Forebay
+
+Length-to-width ratio of forebay (r) =
+
+4.0 : 1
+
+Peak flow rate from the pond during design quality storm (Qp) =
+Settling Velocity (Vs) =
+Forebay Settling Length Required =
+Total Forebay Length Provided =
+
+3
+
+0.036 m /s (Refer to Control Structure Release Rates for 25mm)
+0.0003 m/s (Recommended from MOEE Manual)
+22.0 m
+60.0 m
+
+Dispersion Length Calculations
+Length of Dispersion (MOE Equation 4.6)
+
+Inlet flow rate - 10 yr. (Q) =
+Depth of permanent pool in the forebay (d) =
+Desired velocity in the forebay (Vf) =
+
+3.31 m3/s (Refer to Storm Design Sheet)
+2.0 m
+0.5 m/s (Recommended from MOEE Manual)
+
+Length of Dispersion =
+
+26.5 m
+
+Total Forebay Length Provided =
+
+60.0 m
+
+Minimum Forebay Deep Zone Bottom Width
+Minimum Forebay Deep Zone Bottom Width (MOE Equation 4.7)
+
+Distance ( DR ) =
+
+26.5 m (Required Dispersion Length)
+
+Width (W R) =
+
+3.31 m (Required Forebay Bottom Width)
+
+Forebay Bottom Width (W P) =
+
+18.00 m (Provided Forebay Bottom Width)
+
+Sediment Drying Area Calculation
+
+Above Table 6.3 is extracted from Stormwater Management Planning & Design Manual, March 2003
+
+Area
+
+% Imp
+
+(Ha)
+23.65
+
+65%
+
+Annual
+Loading
+Rate
+
+Annual
+Sediment
+Load
+
+(m3/ha)
+
+(m3)
+
+2.5
+
+59.13
+
+Volume
+Required
+for 10
+Years
+
+Area
+Required
+
+Area
+Provided
+
+(m3)
+
+(m2)
+
+(m2)
+
+591.3
+
+493
+
+500
+
+Refer to M3 drawing for sediment drying area location and design details
+
+1.2 m (Max)
+
+VISUAL OTTHYMO MODELLING RESULTS
+
+VO LAYOUT FOR 25mm STORM EVENT (Erosion Control)
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+*****
+
+D E T A I L E D
+
+TM
+
+O U T P U T *****
+
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 25MM-4HR
+**
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+a8195d79fce6\d576b9ee
+| Ptotal= 25.00 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+2.80
+0.17
+2.62
+0.33
+2.48
+0.50
+2.35
+0.67
+2.23
+0.83
+2.14
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+e4cf23d1-d658-449c-8209Comments: 25MM-4HR
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+2.07 |
+
+1.00
+
+5.70 |
+
+2.00
+
+5.19 |
+
+3.00
+
+2.27 |
+
+1.17
+
+10.78 |
+
+2.17
+
+4.47 |
+
+3.17
+
+2.52 |
+
+1.33
+
+50.21 |
+
+2.33
+
+3.95 |
+
+3.33
+
+2.88 |
+
+1.50
+
+13.37 |
+
+2.50
+
+3.56 |
+
+3.50
+
+3.38 |
+
+1.67
+
+8.29 |
+
+2.67
+
+3.25 |
+
+3.67
+
+4.18 |
+
+1.83
+
+6.30 |
+
+2.83
+
+3.01 |
+
+3.83
+
+------------------------------------------------------------------------------
+
+-------------------| CALIB
+|
+| NASHYD
+( 0003)|
+|ID= 1 DT=10.0 min |
+-------------------Unit Hyd Qpeak
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+1.93
+5.00
+0.20
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+
+0.369
+0.020 (i)
+1.667
+4.664
+24.997
+0.187
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)= 12.91
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 60.00
+Dir. Conn.(%)= 50.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+7.75
+5.16
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+293.37
+40.00
+Mannings n
+=
+0.013
+0.250
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+50.21
+10.00
+6.42 (ii)
+10.00
+0.13
+
+10.02
+30.00
+24.13 (ii)
+30.00
+0.04
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.75
+1.50
+24.00
+25.00
+0.96
+
+0.07
+1.83
+2.67
+25.00
+0.11
+
+*
+
+TOTALS*
+0.771 (iii)
+1.50
+13.33
+25.00
+0.53
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------
+
+| CALIB
+|
+| STANDHYD ( 0002)|
+|ID= 1 DT=10.0 min |
+-------------------Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+
+Area
+(ha)=
+Total Imp(%)=
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+6.40
+80.00
+
+IMPERVIOUS
+5.12
+1.00
+1.00
+206.56
+0.013
+
+Dir. Conn.(%)=
+
+75.00
+
+PERVIOUS (i)
+1.28
+1.50
+2.00
+40.00
+0.250
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+50.21
+10.00
+5.20 (ii)
+10.00
+0.15
+
+10.02
+30.00
+22.91 (ii)
+30.00
+0.04
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.59
+1.50
+24.00
+25.00
+0.96
+
+0.02
+1.83
+2.67
+25.00
+0.11
+
+*
+
+TOTALS*
+0.597 (iii)
+1.50
+18.67
+25.00
+0.75
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0001):
+12.91
+0.771
+1.50
+13.33
++ ID2= 2 ( 0002):
+6.40
+0.597
+1.50
+18.67
+====================================================
+ID = 3 ( 0004):
+19.31
+1.369
+1.50
+15.10
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+3 + 2 = 1
+|
+-------------------ID1= 3 ( 0004):
++ ID2= 2 ( 0003):
+
+AREA
+(ha)
+19.31
+1.93
+
+QPEAK
+(cms)
+1.369
+0.020
+
+TPEAK
+(hrs)
+1.50
+1.67
+
+R.V.
+(mm)
+15.10
+4.66
+
+====================================================
+ID = 1 ( 0004):
+21.24
+1.384
+1.50
+14.15
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0007)|
+Area
+(ha)=
+0.29
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.28
+0.01
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+43.97
+40.00
+Mannings n
+=
+0.013
+0.250
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+50.21
+10.00
+2.06 (ii)
+10.00
+0.17
+
+63.34
+20.00
+10.53 (ii)
+20.00
+0.08
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.04
+1.50
+24.00
+25.00
+0.96
+
+0.00
+1.67
+5.65
+25.00
+0.23
+
+*
+
+TOTALS*
+0.037 (iii)
+1.50
+22.16
+25.00
+0.89
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0006)|
+Area
+(ha)=
+2.12
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+2.01
+0.11
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+118.88
+40.00
+Mannings n
+=
+0.013
+0.250
+Max.Eff.Inten.(mm/hr)=
+
+50.21
+
+63.34
+
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+10.00
+3.73 (ii)
+10.00
+0.16
+
+20.00
+12.21 (ii)
+20.00
+0.07
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.25
+1.50
+24.00
+25.00
+0.96
+
+0.01
+1.67
+5.65
+25.00
+0.23
+
+*
+
+TOTALS*
+0.256 (iii)
+1.50
+22.16
+25.00
+0.89
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0004):
+21.24
+1.384
+1.50
+14.15
++ ID2= 2 ( 0006):
+2.12
+0.256
+1.50
+22.16
+====================================================
+ID = 3 ( 0005):
+23.36
+1.640
+1.50
+14.88
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+3 + 2 = 1
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 3 ( 0005):
+23.36
+1.640
+1.50
+14.88
++ ID2= 2 ( 0007):
+0.29
+0.037
+1.50
+22.16
+====================================================
+ID = 1 ( 0005):
+23.65
+1.677
+1.50
+14.97
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+-----------------------------------------------------------------------------FINISH
+==========================================================================
+=================================
+
+VO LAYOUT FOR 2 to 100 Year Storm Event (TRCA, AES Storm Event)
+
+**************************************************
+** SIMULATION:10 Year 12 Hour AES (Bloor, TRCA) **
+**************************************************
+-------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+0.0000
+0.0000
+|
+0.3940
+0.0750
+0.5058
+|
+0.4500
+0.2310
+0.6944
+|
+0.4830
+0.3140
+0.7719
+|
+3.3200
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+1.531
+0.289
+
+TPEAK
+(hrs)
+5.17
+6.50
+
+STORAGE
+(ha.m.)
+0.9711
+1.1371
+1.2478
+1.5022
+R.V.
+(mm)
+43.84
+43.77
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 18.89
+TIME SHIFT OF PEAK FLOW
+(min)= 80.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.7500
+-----------------------------------------------------------------------------*************************************************
+** SIMULATION:10 Year 6 Hour AES (Bloor, TRCA) **
+*************************************************
+-------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+2.540
+0.304
+
+TPEAK
+(hrs)
+2.67
+3.83
+
+R.V.
+(mm)
+40.17
+40.10
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 11.95
+TIME SHIFT OF PEAK FLOW
+(min)= 70.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.7626
+-----------------------------------------------------------------------------***************************************************
+** SIMULATION:100 Year 12 Hour AES (Bloor, TRCA) **
+***************************************************
+-------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+
+| DT= 10.0 min
+|
+--------------------
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+OUTFLOW
+(cms)
+0.0000
+0.0750
+0.2310
+0.3140
+
+0005)
+0008)
+
+STORAGE
+(ha.m.)
+0.0000
+0.5058
+0.6944
+0.7719
+
+AREA
+(ha)
+23.650
+23.650
+
+|
+|
+|
+|
+|
+|
+
+QPEAK
+(cms)
+2.381
+0.442
+
+OUTFLOW
+(cms)
+0.3940
+0.4500
+0.4830
+3.3200
+TPEAK
+(hrs)
+5.17
+6.50
+
+STORAGE
+(ha.m.)
+0.9711
+1.1371
+1.2478
+1.5022
+R.V.
+(mm)
+66.98
+66.90
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 18.57
+TIME SHIFT OF PEAK FLOW
+(min)= 80.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 1.1158
+-----------------------------------------------------------------------------**************************************************
+** SIMULATION:100 Year 6 Hour AES (Bloor, TRCA) **
+**************************************************
+-------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+4.025
+0.461
+
+TPEAK
+(hrs)
+2.67
+3.83
+
+R.V.
+(mm)
+63.13
+63.06
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 11.46
+TIME SHIFT OF PEAK FLOW
+(min)= 70.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 1.1763
+-----------------------------------------------------------------------------*************************************************
+** SIMULATION:2 Year 12 Hour AES (Bloor, TRCA) **
+*************************************************
+-------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+0.844
+0.073
+
+TPEAK
+(hrs)
+5.17
+7.67
+
+R.V.
+(mm)
+26.05
+25.98
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 8.65
+TIME SHIFT OF PEAK FLOW
+(min)=150.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.4925
+-----------------------------------------------------------------------------************************************************
+** SIMULATION:2 Year 6 Hour AES (Bloor, TRCA) **
+************************************************
+-------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+1.329
+0.069
+
+TPEAK
+(hrs)
+2.67
+4.50
+
+R.V.
+(mm)
+22.71
+22.63
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 5.21
+TIME SHIFT OF PEAK FLOW
+(min)=110.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.4671
+-----------------------------------------------------------------------------**************************************************
+** SIMULATION:25 Year 12 Hour AES (Bloor, TRCA) **
+**************************************************
+-------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+1.893
+0.360
+
+TPEAK
+(hrs)
+5.17
+6.33
+
+R.V.
+(mm)
+53.11
+53.04
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 19.05
+TIME SHIFT OF PEAK FLOW
+(min)= 70.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.8892
+-----------------------------------------------------------------------------*************************************************
+** SIMULATION:25 Year 6 Hour AES (Bloor, TRCA) **
+*************************************************
+-------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+3.132
+0.374
+
+TPEAK
+(hrs)
+2.67
+3.83
+
+R.V.
+(mm)
+49.30
+49.23
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 11.93
+TIME SHIFT OF PEAK FLOW
+(min)= 70.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.9215
+-----------------------------------------------------------------------------*************************************************
+** SIMULATION:5 Year 12 Hour AES (Bloor, TRCA) **
+*************************************************
+-------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+1.254
+0.190
+
+TPEAK
+(hrs)
+5.17
+6.67
+
+R.V.
+(mm)
+36.46
+36.38
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 15.17
+TIME SHIFT OF PEAK FLOW
+(min)= 90.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.6454
+------------------------------------------------------------------------------
+
+************************************************
+** SIMULATION:5 Year 6 Hour AES (Bloor, TRCA) **
+************************************************
+-------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+0.0000
+0.0000
+|
+0.3940
+0.0750
+0.5058
+|
+0.4500
+0.2310
+0.6944
+|
+0.4830
+0.3140
+0.7719
+|
+3.3200
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+2.074
+0.192
+
+TPEAK
+(hrs)
+2.67
+4.00
+
+STORAGE
+(ha.m.)
+0.9711
+1.1371
+1.2478
+1.5022
+R.V.
+(mm)
+33.04
+32.97
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 9.28
+TIME SHIFT OF PEAK FLOW
+(min)= 80.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.6479
+-----------------------------------------------------------------------------**************************************************
+** SIMULATION:50 Year 12 Hour AES (Bloor, TRCA) **
+**************************************************
+-------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+2.138
+0.403
+
+TPEAK
+(hrs)
+5.17
+6.33
+
+R.V.
+(mm)
+59.98
+59.91
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 18.86
+TIME SHIFT OF PEAK FLOW
+(min)= 70.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 1.0002
+-----------------------------------------------------------------------------*************************************************
+** SIMULATION:50 Year 6 Hour AES (Bloor, TRCA) **
+*************************************************
+-------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+
+| DT= 10.0 min
+|
+--------------------
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+OUTFLOW
+(cms)
+0.0000
+0.0750
+0.2310
+0.3140
+
+0005)
+0008)
+
+STORAGE
+(ha.m.)
+0.0000
+0.5058
+0.6944
+0.7719
+
+AREA
+(ha)
+23.650
+23.650
+
+|
+|
+|
+|
+|
+|
+
+QPEAK
+(cms)
+3.588
+0.419
+
+OUTFLOW
+(cms)
+0.3940
+0.4500
+0.4830
+3.3200
+TPEAK
+(hrs)
+2.67
+3.83
+
+STORAGE
+(ha.m.)
+0.9711
+1.1371
+1.2478
+1.5022
+R.V.
+(mm)
+56.23
+56.15
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 11.69
+TIME SHIFT OF PEAK FLOW
+(min)= 70.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 1.0471
+-----------------------------------------------------------------------------******************************************
+** SIMULATION:Hurricane Hazel-Regional **
+******************************************
+-------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+3.287
+3.139
+
+TPEAK
+(hrs)
+10.00
+10.00
+
+R.V.
+(mm)
+227.34
+227.27
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 95.50
+TIME SHIFT OF PEAK FLOW
+(min)= 0.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 1.4904
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 2 Year 6 Hour AES (Bloor, TRC **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+6ea15636f4fe\ac2a428b
+| Ptotal= 36.00 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+0.72
+0.25
+0.72
+0.50
+0.72
+0.75
+0.72
+1.00
+1.25
+1.50
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+859d813f-8991-4bf3-9eb8Comments: 2 Year 6 Hour AES (Bloor, TRCA)
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+1.75
+
+12.24 |
+
+3.50
+
+5.04 |
+
+5.25
+
+0.72 |
+
+2.00
+
+12.24 |
+
+3.75
+
+2.88 |
+
+5.50
+
+0.72 |
+
+2.25
+
+33.12 |
+
+4.00
+
+2.88 |
+
+5.75
+
+0.72 |
+
+2.50
+
+33.12 |
+
+4.25
+
+1.44 |
+
+6.00
+
+0.72 |
+4.32 |
+4.32 |
+
+2.75
+3.00
+3.25
+
+9.36 |
+9.36 |
+5.04 |
+
+4.50
+4.75
+5.00
+
+1.44 |
+0.72 |
+0.72 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+
+| NASHYD
+( 0003)|
+|ID= 1 DT=10.0 min |
+-------------------NOTE:
+
+RAIN
+mm/hr
+0.72
+0.72
+0.72
+0.72
+0.72
+0.72
+0.72
+0.36
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+
+1.93
+5.00
+0.20
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+8.28 | 3.500
+
+5.04 |
+
+5.17
+
+0.333
+
+0.36 | 2.000
+
+12.24 | 3.667
+
+5.04 |
+
+5.33
+
+0.500
+
+0.72 | 2.167
+
+12.24 | 3.833
+
+3.96 |
+
+5.50
+
+0.667
+
+0.72 | 2.333
+
+22.68 | 4.000
+
+2.88 |
+
+5.67
+
+0.833
+
+0.72 | 2.500
+
+33.12 | 4.167
+
+2.88 |
+
+5.83
+
+1.000
+
+0.72 | 2.667
+
+33.12 | 4.333
+
+2.16 |
+
+6.00
+
+1.167
+
+0.72 | 2.833
+
+21.24 | 4.500
+
+1.44 |
+
+6.17
+
+1.333
+
+2.52 | 3.000
+
+9.36 | 4.667
+
+1.44 |
+
+6.33
+
+1.500
+1.667
+
+4.32 | 3.167
+4.32 | 3.333
+
+9.36 | 4.833
+7.20 | 5.000
+
+1.08 |
+0.72 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.369
+0.048 (i)
+2.833
+9.905
+36.000
+0.275
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)= 12.91
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 60.00
+Dir. Conn.(%)= 50.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+7.75
+5.16
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+293.37
+40.00
+Mannings n
+=
+0.013
+0.250
+
+NOTE:
+
+RAIN
+mm/hr
+0.72
+0.72
+0.72
+0.72
+0.72
+0.72
+0.72
+0.36
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+8.28 | 3.500
+
+5.04 |
+
+5.17
+
+0.333
+
+0.36 | 2.000
+
+12.24 | 3.667
+
+5.04 |
+
+5.33
+
+0.500
+
+0.72 | 2.167
+
+12.24 | 3.833
+
+3.96 |
+
+5.50
+
+0.667
+
+0.72 | 2.333
+
+22.68 | 4.000
+
+2.88 |
+
+5.67
+
+0.833
+
+0.72 | 2.500
+
+33.12 | 4.167
+
+2.88 |
+
+5.83
+
+1.000
+
+0.72 | 2.667
+
+33.12 | 4.333
+
+2.16 |
+
+6.00
+
+1.167
+
+0.72 | 2.833
+
+21.24 | 4.500
+
+1.44 |
+
+6.17
+
+1.333
+
+2.52 | 3.000
+
+9.36 | 4.667
+
+1.44 |
+
+6.33
+
+1.500
+1.667
+
+4.32 | 3.167
+4.32 | 3.333
+
+9.36 | 4.833
+7.20 | 5.000
+
+1.08 |
+0.72 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+33.12
+10.00
+7.58 (ii)
+10.00
+0.12
+
+16.49
+30.00
+22.10 (ii)
+30.00
+0.05
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.58
+2.67
+35.00
+36.00
+0.97
+
+0.13
+3.00
+5.55
+36.00
+0.15
+
+*
+
+TOTALS*
+0.627 (iii)
+2.67
+20.28
+36.00
+0.56
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0002)|
+Area
+(ha)=
+6.40
+
+|ID= 1 DT=10.0 min |
+-------------------Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+NOTE:
+
+RAIN
+mm/hr
+0.72
+0.72
+0.72
+0.72
+0.72
+0.72
+0.72
+0.36
+
+Total Imp(%)=
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+80.00
+
+IMPERVIOUS
+5.12
+1.00
+1.00
+206.56
+0.013
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+75.00
+
+PERVIOUS (i)
+1.28
+1.50
+2.00
+40.00
+0.250
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+Dir. Conn.(%)=
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+8.28 | 3.500
+
+5.04 |
+
+5.17
+
+0.333
+
+0.36 | 2.000
+
+12.24 | 3.667
+
+5.04 |
+
+5.33
+
+0.500
+
+0.72 | 2.167
+
+12.24 | 3.833
+
+3.96 |
+
+5.50
+
+0.667
+
+0.72 | 2.333
+
+22.68 | 4.000
+
+2.88 |
+
+5.67
+
+0.833
+
+0.72 | 2.500
+
+33.12 | 4.167
+
+2.88 |
+
+5.83
+
+1.000
+
+0.72 | 2.667
+
+33.12 | 4.333
+
+2.16 |
+
+6.00
+
+1.167
+
+0.72 | 2.833
+
+21.24 | 4.500
+
+1.44 |
+
+6.17
+
+1.333
+
+2.52 | 3.000
+
+9.36 | 4.667
+
+1.44 |
+
+6.33
+
+1.500
+1.667
+
+4.32 | 3.167
+4.32 | 3.333
+
+9.36 | 4.833
+7.20 | 5.000
+
+1.08 |
+0.72 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+33.12
+10.00
+6.14 (ii)
+10.00
+0.14
+
+16.49
+30.00
+20.66 (ii)
+30.00
+0.05
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.44
+2.67
+35.00
+36.00
+0.97
+
+0.03
+3.00
+5.55
+36.00
+0.15
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+
+*
+
+TOTALS*
+0.448 (iii)
+2.67
+27.64
+36.00
+0.77
+
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0001):
+12.91
+0.627
+2.67
+20.28
++ ID2= 2 ( 0002):
+6.40
+0.448
+2.67
+27.64
+====================================================
+ID = 3 ( 0004):
+19.31
+1.075
+2.67
+22.72
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+3 + 2 = 1
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 3 ( 0004):
+19.31
+1.075
+2.67
+22.72
++ ID2= 2 ( 0003):
+1.93
+0.048
+2.83
+9.90
+====================================================
+ID = 1 ( 0004):
+21.24
+1.119
+2.67
+21.55
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0006)|
+Area
+(ha)=
+2.12
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+2.01
+0.11
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+118.88
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAIN
+mm/hr
+0.72
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+0.167
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+0.00 | 1.833
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+8.28 | 3.500
+
+5.04 |
+
+5.17
+
+0.72
+0.72
+0.72
+0.72
+0.72
+0.72
+0.36
+
+0.333
+
+0.36 | 2.000
+
+12.24 | 3.667
+
+5.04 |
+
+5.33
+
+0.500
+
+0.72 | 2.167
+
+12.24 | 3.833
+
+3.96 |
+
+5.50
+
+0.667
+
+0.72 | 2.333
+
+22.68 | 4.000
+
+2.88 |
+
+5.67
+
+0.833
+
+0.72 | 2.500
+
+33.12 | 4.167
+
+2.88 |
+
+5.83
+
+1.000
+
+0.72 | 2.667
+
+33.12 | 4.333
+
+2.16 |
+
+6.00
+
+1.167
+
+0.72 | 2.833
+
+21.24 | 4.500
+
+1.44 |
+
+6.17
+
+1.333
+
+2.52 | 3.000
+
+9.36 | 4.667
+
+1.44 |
+
+6.33
+
+1.500
+1.667
+
+4.32 | 3.167
+4.32 | 3.333
+
+9.36 | 4.833
+7.20 | 5.000
+
+1.08 |
+0.72 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+33.12
+10.00
+4.41 (ii)
+10.00
+0.15
+
+51.18
+20.00
+13.64 (ii)
+20.00
+0.07
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.17
+2.67
+35.00
+36.00
+0.97
+
+0.01
+2.83
+13.87
+36.00
+0.39
+
+*
+
+TOTALS*
+0.185 (iii)
+2.67
+32.89
+36.00
+0.91
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0007)|
+Area
+(ha)=
+0.29
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.28
+0.01
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+43.97
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+10.0 MIN. TIME STEP.
+
+RAIN
+mm/hr
+0.72
+0.72
+0.72
+0.72
+0.72
+0.72
+0.72
+0.36
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+8.28 | 3.500
+
+5.04 |
+
+5.17
+
+0.333
+
+0.36 | 2.000
+
+12.24 | 3.667
+
+5.04 |
+
+5.33
+
+0.500
+
+0.72 | 2.167
+
+12.24 | 3.833
+
+3.96 |
+
+5.50
+
+0.667
+
+0.72 | 2.333
+
+22.68 | 4.000
+
+2.88 |
+
+5.67
+
+0.833
+
+0.72 | 2.500
+
+33.12 | 4.167
+
+2.88 |
+
+5.83
+
+1.000
+
+0.72 | 2.667
+
+33.12 | 4.333
+
+2.16 |
+
+6.00
+
+1.167
+
+0.72 | 2.833
+
+21.24 | 4.500
+
+1.44 |
+
+6.17
+
+1.333
+
+2.52 | 3.000
+
+9.36 | 4.667
+
+1.44 |
+
+6.33
+
+1.500
+1.667
+
+4.32 | 3.167
+4.32 | 3.333
+
+9.36 | 4.833
+7.20 | 5.000
+
+1.08 |
+0.72 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+33.12
+10.00
+2.43 (ii)
+10.00
+0.17
+
+51.18
+20.00
+11.65 (ii)
+20.00
+0.08
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.02
+2.67
+35.00
+36.00
+0.97
+
+0.00
+2.83
+13.87
+36.00
+0.39
+
+*
+
+TOTALS*
+0.025 (iii)
+2.67
+32.89
+36.00
+0.91
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+1 + 2 = 3
+|
+-------------------ID1= 1 ( 0004):
+
+AREA
+(ha)
+21.24
+
+QPEAK
+(cms)
+1.119
+
+TPEAK
+(hrs)
+2.67
+
+R.V.
+(mm)
+21.55
+
++ ID2= 2 ( 0006):
+2.12
+0.185
+2.67
+32.89
+====================================================
+ID = 3 ( 0005):
+23.36
+1.304
+2.67
+22.58
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+3 + 2 = 1
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 3 ( 0005):
+23.36
+1.304
+2.67
+22.58
++ ID2= 2 ( 0007):
+0.29
+0.025
+2.67
+32.89
+====================================================
+ID = 1 ( 0005):
+23.65
+1.329
+2.67
+22.71
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+1.329
+0.069
+
+TPEAK
+(hrs)
+2.67
+4.50
+
+R.V.
+(mm)
+22.71
+22.63
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 5.21
+TIME SHIFT OF PEAK FLOW
+(min)=110.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.4671
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 2 Year 12 Hour AES (Bloor, TR **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+6ea15636f4fe\fc24c798
+| Ptotal= 42.00 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+0.42
+0.25
+0.42
+0.50
+0.42
+0.75
+0.42
+1.00
+0.42
+1.25
+0.42
+1.50
+0.42
+1.75
+0.42
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+859d813f-8991-4bf3-9eb8Comments: 2 Year 12 Hour AES (Bloor, TRCA)
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+3.25
+
+7.14 |
+
+6.50
+
+2.94 |
+
+9.75
+
+0.42 |
+
+3.50
+
+7.14 |
+
+6.75
+
+2.94 | 10.00
+
+0.42 |
+
+3.75
+
+7.14 |
+
+7.00
+
+2.94 | 10.25
+
+0.42 |
+
+4.00
+
+7.14 |
+
+7.25
+
+1.68 | 10.50
+
+0.42 |
+
+4.25
+
+19.32 |
+
+7.50
+
+1.68 | 10.75
+
+0.42 |
+
+4.50
+
+19.32 |
+
+7.75
+
+1.68 | 11.00
+
+0.42 |
+
+4.75
+
+19.32 |
+
+8.00
+
+1.68 | 11.25
+
+0.42 |
+
+5.00
+
+19.32 |
+
+8.25
+
+0.84 | 11.50
+
+0.42
+0.42
+
+2.00
+
+0.42 |
+
+5.25
+
+5.46 |
+
+8.50
+
+0.84 | 11.75
+
+2.25
+
+2.52 |
+
+5.50
+
+5.46 |
+
+8.75
+
+0.84 | 12.00
+
+2.50
+2.75
+3.00
+
+2.52 |
+2.52 |
+2.52 |
+
+5.75
+6.00
+6.25
+
+5.46 |
+5.46 |
+2.94 |
+
+9.00
+9.25
+9.50
+
+0.84 |
+0.42 |
+0.42 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0003)|
+|ID= 1 DT=10.0 min |
+-------------------NOTE:
+
+RAIN
+mm/hr
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+
+1.93
+5.00
+0.20
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 3.333
+
+4.83 | 6.500
+
+2.94 |
+
+9.67
+
+0.333
+
+0.21 | 3.500
+
+7.14 | 6.667
+
+2.94 |
+
+9.83
+
+0.500
+
+0.42 | 3.667
+
+7.14 | 6.833
+
+2.94 | 10.00
+
+0.667
+
+0.42 | 3.833
+
+7.14 | 7.000
+
+2.94 | 10.17
+
+0.833
+
+0.42 | 4.000
+
+7.14 | 7.167
+
+2.94 | 10.33
+
+1.000
+
+0.42 | 4.167
+
+7.14 | 7.333
+
+2.31 | 10.50
+
+1.167
+
+0.42 | 4.333
+
+13.23 | 7.500
+
+1.68 | 10.67
+
+1.333
+
+0.42 | 4.500
+
+19.32 | 7.667
+
+1.68 | 10.83
+
+1.500
+
+0.42 | 4.667
+
+19.32 | 7.833
+
+1.68 | 11.00
+
+1.667
+
+0.42 | 4.833
+
+19.32 | 8.000
+
+1.68 | 11.17
+
+1.833
+
+0.42 | 5.000
+
+19.32 | 8.167
+
+1.68 | 11.33
+
+2.000
+
+0.42 | 5.167
+
+19.32 | 8.333
+
+1.26 | 11.50
+
+2.167
+
+0.42 | 5.333
+
+12.39 | 8.500
+
+0.84 | 11.67
+
+2.333
+
+1.47 | 5.500
+
+5.46 | 8.667
+
+0.84 | 11.83
+
+0.42
+0.42
+0.21
+
+2.500
+
+2.52 | 5.667
+
+5.46 | 8.833
+
+0.84 | 12.00
+
+2.667
+
+2.52 | 5.833
+
+5.46 | 9.000
+
+0.84 | 12.17
+
+2.833
+
+2.52 | 6.000
+
+5.46 | 9.167
+
+0.84 | 12.33
+
+3.000
+3.167
+
+2.52 | 6.167
+2.52 | 6.333
+
+5.46 | 9.333
+4.20 | 9.500
+
+0.63 |
+0.42 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.369
+0.041 (i)
+5.167
+13.268
+42.000
+0.316
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)= 12.91
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 60.00
+Dir. Conn.(%)= 50.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+7.75
+5.16
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+293.37
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAIN
+mm/hr
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 3.333
+
+4.83 | 6.500
+
+2.94 |
+
+9.67
+
+0.333
+
+0.21 | 3.500
+
+7.14 | 6.667
+
+2.94 |
+
+9.83
+
+0.500
+
+0.42 | 3.667
+
+7.14 | 6.833
+
+2.94 | 10.00
+
+0.667
+
+0.42 | 3.833
+
+7.14 | 7.000
+
+2.94 | 10.17
+
+0.833
+
+0.42 | 4.000
+
+7.14 | 7.167
+
+2.94 | 10.33
+
+1.000
+
+0.42 | 4.167
+
+7.14 | 7.333
+
+2.31 | 10.50
+
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.21
+
+1.167
+
+0.42 | 4.333
+
+13.23 | 7.500
+
+1.68 | 10.67
+
+1.333
+
+0.42 | 4.500
+
+19.32 | 7.667
+
+1.68 | 10.83
+
+1.500
+
+0.42 | 4.667
+
+19.32 | 7.833
+
+1.68 | 11.00
+
+1.667
+
+0.42 | 4.833
+
+19.32 | 8.000
+
+1.68 | 11.17
+
+1.833
+
+0.42 | 5.000
+
+19.32 | 8.167
+
+1.68 | 11.33
+
+2.000
+
+0.42 | 5.167
+
+19.32 | 8.333
+
+1.26 | 11.50
+
+2.167
+
+0.42 | 5.333
+
+12.39 | 8.500
+
+0.84 | 11.67
+
+2.333
+
+1.47 | 5.500
+
+5.46 | 8.667
+
+0.84 | 11.83
+
+2.500
+
+2.52 | 5.667
+
+5.46 | 8.833
+
+0.84 | 12.00
+
+2.667
+
+2.52 | 5.833
+
+5.46 | 9.000
+
+0.84 | 12.17
+
+2.833
+
+2.52 | 6.000
+
+5.46 | 9.167
+
+0.84 | 12.33
+
+3.000
+3.167
+
+2.52 | 6.167
+2.52 | 6.333
+
+5.46 | 9.333
+4.20 | 9.500
+
+0.63 |
+0.42 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+19.32
+10.00
+9.41 (ii)
+10.00
+0.11
+
+11.69
+30.00
+26.06 (ii)
+30.00
+0.04
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.35
+5.17
+41.00
+42.00
+0.98
+
+0.09
+5.50
+4.58
+42.00
+0.11
+
+*
+
+TOTALS*
+0.406 (iii)
+5.17
+22.79
+42.00
+0.54
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0002)|
+Area
+(ha)=
+6.40
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 80.00
+Dir. Conn.(%)= 75.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+
+Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+NOTE:
+
+RAIN
+mm/hr
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.21
+
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+5.12
+1.00
+1.00
+206.56
+0.013
+
+1.28
+1.50
+2.00
+40.00
+0.250
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 3.333
+
+4.83 | 6.500
+
+2.94 |
+
+9.67
+
+0.333
+
+0.21 | 3.500
+
+7.14 | 6.667
+
+2.94 |
+
+9.83
+
+0.500
+
+0.42 | 3.667
+
+7.14 | 6.833
+
+2.94 | 10.00
+
+0.667
+
+0.42 | 3.833
+
+7.14 | 7.000
+
+2.94 | 10.17
+
+0.833
+
+0.42 | 4.000
+
+7.14 | 7.167
+
+2.94 | 10.33
+
+1.000
+
+0.42 | 4.167
+
+7.14 | 7.333
+
+2.31 | 10.50
+
+1.167
+
+0.42 | 4.333
+
+13.23 | 7.500
+
+1.68 | 10.67
+
+1.333
+
+0.42 | 4.500
+
+19.32 | 7.667
+
+1.68 | 10.83
+
+1.500
+
+0.42 | 4.667
+
+19.32 | 7.833
+
+1.68 | 11.00
+
+1.667
+
+0.42 | 4.833
+
+19.32 | 8.000
+
+1.68 | 11.17
+
+1.833
+
+0.42 | 5.000
+
+19.32 | 8.167
+
+1.68 | 11.33
+
+2.000
+
+0.42 | 5.167
+
+19.32 | 8.333
+
+1.26 | 11.50
+
+2.167
+
+0.42 | 5.333
+
+12.39 | 8.500
+
+0.84 | 11.67
+
+2.333
+
+1.47 | 5.500
+
+5.46 | 8.667
+
+0.84 | 11.83
+
+2.500
+
+2.52 | 5.667
+
+5.46 | 8.833
+
+0.84 | 12.00
+
+2.667
+
+2.52 | 5.833
+
+5.46 | 9.000
+
+0.84 | 12.17
+
+2.833
+
+2.52 | 6.000
+
+5.46 | 9.167
+
+0.84 | 12.33
+
+3.000
+3.167
+
+2.52 | 6.167
+2.52 | 6.333
+
+5.46 | 9.333
+4.20 | 9.500
+
+0.63 |
+0.42 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+
+19.32
+10.00
+7.62 (ii)
+
+11.69
+30.00
+24.28 (ii)
+
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+10.00
+0.12
+
+30.00
+0.04
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.26
+5.17
+41.00
+42.00
+0.98
+
+0.02
+5.50
+4.58
+42.00
+0.11
+
+*
+
+TOTALS*
+0.273 (iii)
+5.17
+31.89
+42.00
+0.76
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0001):
+12.91
+0.406
+5.17
+22.79
++ ID2= 2 ( 0002):
+6.40
+0.273
+5.17
+31.89
+====================================================
+ID = 3 ( 0004):
+19.31
+0.679
+5.17
+25.81
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+3 + 2 = 1
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 3 ( 0004):
+19.31
+0.679
+5.17
+25.81
++ ID2= 2 ( 0003):
+1.93
+0.041
+5.17
+13.27
+====================================================
+ID = 1 ( 0004):
+21.24
+0.719
+5.17
+24.67
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0006)|
+Area
+(ha)=
+2.12
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+2.01
+0.11
+Dep. Storage
+(mm)=
+1.00
+1.50
+
+Average Slope
+Length
+Mannings n
+NOTE:
+
+RAIN
+mm/hr
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.21
+
+(%)=
+(m)=
+=
+
+1.00
+118.88
+0.013
+
+2.00
+40.00
+0.250
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 3.333
+
+4.83 | 6.500
+
+2.94 |
+
+9.67
+
+0.333
+
+0.21 | 3.500
+
+7.14 | 6.667
+
+2.94 |
+
+9.83
+
+0.500
+
+0.42 | 3.667
+
+7.14 | 6.833
+
+2.94 | 10.00
+
+0.667
+
+0.42 | 3.833
+
+7.14 | 7.000
+
+2.94 | 10.17
+
+0.833
+
+0.42 | 4.000
+
+7.14 | 7.167
+
+2.94 | 10.33
+
+1.000
+
+0.42 | 4.167
+
+7.14 | 7.333
+
+2.31 | 10.50
+
+1.167
+
+0.42 | 4.333
+
+13.23 | 7.500
+
+1.68 | 10.67
+
+1.333
+
+0.42 | 4.500
+
+19.32 | 7.667
+
+1.68 | 10.83
+
+1.500
+
+0.42 | 4.667
+
+19.32 | 7.833
+
+1.68 | 11.00
+
+1.667
+
+0.42 | 4.833
+
+19.32 | 8.000
+
+1.68 | 11.17
+
+1.833
+
+0.42 | 5.000
+
+19.32 | 8.167
+
+1.68 | 11.33
+
+2.000
+
+0.42 | 5.167
+
+19.32 | 8.333
+
+1.26 | 11.50
+
+2.167
+
+0.42 | 5.333
+
+12.39 | 8.500
+
+0.84 | 11.67
+
+2.333
+
+1.47 | 5.500
+
+5.46 | 8.667
+
+0.84 | 11.83
+
+2.500
+
+2.52 | 5.667
+
+5.46 | 8.833
+
+0.84 | 12.00
+
+2.667
+
+2.52 | 5.833
+
+5.46 | 9.000
+
+0.84 | 12.17
+
+2.833
+
+2.52 | 6.000
+
+5.46 | 9.167
+
+0.84 | 12.33
+
+3.000
+3.167
+
+2.52 | 6.167
+2.52 | 6.333
+
+5.46 | 9.333
+4.20 | 9.500
+
+0.63 |
+0.42 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+19.32
+10.00
+5.47 (ii)
+10.00
+0.14
+
+28.79
+20.00
+17.08 (ii)
+20.00
+0.06
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.10
+5.17
+41.00
+42.00
+0.98
+
+*
+
+0.01
+5.17
+13.73
+42.00
+0.33
+
+TOTALS*
+0.110 (iii)
+5.17
+38.27
+42.00
+0.91
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0007)|
+Area
+(ha)=
+0.29
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.28
+0.01
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+43.97
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAIN
+mm/hr
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 3.333
+
+4.83 | 6.500
+
+2.94 |
+
+9.67
+
+0.333
+
+0.21 | 3.500
+
+7.14 | 6.667
+
+2.94 |
+
+9.83
+
+0.500
+
+0.42 | 3.667
+
+7.14 | 6.833
+
+2.94 | 10.00
+
+0.667
+
+0.42 | 3.833
+
+7.14 | 7.000
+
+2.94 | 10.17
+
+0.833
+
+0.42 | 4.000
+
+7.14 | 7.167
+
+2.94 | 10.33
+
+1.000
+
+0.42 | 4.167
+
+7.14 | 7.333
+
+2.31 | 10.50
+
+1.167
+
+0.42 | 4.333
+
+13.23 | 7.500
+
+1.68 | 10.67
+
+1.333
+
+0.42 | 4.500
+
+19.32 | 7.667
+
+1.68 | 10.83
+
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.42
+0.21
+
+1.500
+
+0.42 | 4.667
+
+19.32 | 7.833
+
+1.68 | 11.00
+
+1.667
+
+0.42 | 4.833
+
+19.32 | 8.000
+
+1.68 | 11.17
+
+1.833
+
+0.42 | 5.000
+
+19.32 | 8.167
+
+1.68 | 11.33
+
+2.000
+
+0.42 | 5.167
+
+19.32 | 8.333
+
+1.26 | 11.50
+
+2.167
+
+0.42 | 5.333
+
+12.39 | 8.500
+
+0.84 | 11.67
+
+2.333
+
+1.47 | 5.500
+
+5.46 | 8.667
+
+0.84 | 11.83
+
+2.500
+
+2.52 | 5.667
+
+5.46 | 8.833
+
+0.84 | 12.00
+
+2.667
+
+2.52 | 5.833
+
+5.46 | 9.000
+
+0.84 | 12.17
+
+2.833
+
+2.52 | 6.000
+
+5.46 | 9.167
+
+0.84 | 12.33
+
+3.000
+3.167
+
+2.52 | 6.167
+2.52 | 6.333
+
+5.46 | 9.333
+4.20 | 9.500
+
+0.63 |
+0.42 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+19.32
+10.00
+3.01 (ii)
+10.00
+0.16
+
+28.79
+20.00
+14.63 (ii)
+20.00
+0.07
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.01
+5.00
+41.00
+42.00
+0.98
+
+0.00
+5.17
+13.73
+42.00
+0.33
+
+*
+
+TOTALS*
+0.015 (iii)
+5.17
+38.27
+42.00
+0.91
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0004):
+21.24
+0.719
+5.17
+24.67
++ ID2= 2 ( 0006):
+2.12
+0.110
+5.17
+38.27
+====================================================
+ID = 3 ( 0005):
+23.36
+0.829
+5.17
+25.90
+
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+3 + 2 = 1
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 3 ( 0005):
+23.36
+0.829
+5.17
+25.90
++ ID2= 2 ( 0007):
+0.29
+0.015
+5.17
+38.27
+====================================================
+ID = 1 ( 0005):
+23.65
+0.844
+5.17
+26.05
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+0.844
+0.073
+
+TPEAK
+(hrs)
+5.17
+7.67
+
+R.V.
+(mm)
+26.05
+25.98
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 8.65
+TIME SHIFT OF PEAK FLOW
+(min)=150.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.4925
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 5 Year 6 Hour AES (Bloor, TRC **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+6ea15636f4fe\465a7276
+| Ptotal= 47.81 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+0.96
+0.25
+0.96
+0.50
+0.96
+0.75
+0.96
+1.00
+1.25
+1.50
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+859d813f-8991-4bf3-9eb8Comments: 5 Year 6 Hour AES (Bloor, TRCA)
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+1.75
+
+16.25 |
+
+3.50
+
+6.69 |
+
+5.25
+
+0.96 |
+
+2.00
+
+16.25 |
+
+3.75
+
+3.82 |
+
+5.50
+
+0.96 |
+
+2.25
+
+43.98 |
+
+4.00
+
+3.82 |
+
+5.75
+
+0.96 |
+
+2.50
+
+43.98 |
+
+4.25
+
+1.91 |
+
+6.00
+
+0.96 |
+5.74 |
+5.74 |
+
+2.75
+3.00
+3.25
+
+12.43 |
+12.43 |
+6.69 |
+
+4.50
+4.75
+5.00
+
+1.91 |
+0.96 |
+0.96 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+
+| NASHYD
+( 0003)|
+|ID= 1 DT=10.0 min |
+-------------------NOTE:
+
+RAIN
+mm/hr
+0.96
+0.96
+0.96
+0.96
+0.96
+0.96
+0.96
+0.48
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+
+1.93
+5.00
+0.20
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+10.99 | 3.500
+
+6.69 |
+
+5.17
+
+0.333
+
+0.48 | 2.000
+
+16.25 | 3.667
+
+6.69 |
+
+5.33
+
+0.500
+
+0.96 | 2.167
+
+16.25 | 3.833
+
+5.25 |
+
+5.50
+
+0.667
+
+0.96 | 2.333
+
+30.11 | 4.000
+
+3.82 |
+
+5.67
+
+0.833
+
+0.96 | 2.500
+
+43.98 | 4.167
+
+3.82 |
+
+5.83
+
+1.000
+
+0.96 | 2.667
+
+43.98 | 4.333
+
+2.86 |
+
+6.00
+
+1.167
+
+0.96 | 2.833
+
+28.20 | 4.500
+
+1.91 |
+
+6.17
+
+1.333
+
+3.35 | 3.000
+
+12.43 | 4.667
+
+1.91 |
+
+6.33
+
+1.500
+1.667
+
+5.74 | 3.167
+5.74 | 3.333
+
+12.43 | 4.833
+9.56 | 5.000
+
+1.43 |
+0.96 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.369
+0.081 (i)
+2.833
+16.791
+47.810
+0.351
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)= 12.91
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 60.00
+Dir. Conn.(%)= 50.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+7.75
+5.16
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+293.37
+40.00
+Mannings n
+=
+0.013
+0.250
+
+NOTE:
+
+RAIN
+mm/hr
+0.96
+0.96
+0.96
+0.96
+0.96
+0.96
+0.96
+0.48
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+10.99 | 3.500
+
+6.69 |
+
+5.17
+
+0.333
+
+0.48 | 2.000
+
+16.25 | 3.667
+
+6.69 |
+
+5.33
+
+0.500
+
+0.96 | 2.167
+
+16.25 | 3.833
+
+5.25 |
+
+5.50
+
+0.667
+
+0.96 | 2.333
+
+30.11 | 4.000
+
+3.82 |
+
+5.67
+
+0.833
+
+0.96 | 2.500
+
+43.98 | 4.167
+
+3.82 |
+
+5.83
+
+1.000
+
+0.96 | 2.667
+
+43.98 | 4.333
+
+2.86 |
+
+6.00
+
+1.167
+
+0.96 | 2.833
+
+28.20 | 4.500
+
+1.91 |
+
+6.17
+
+1.333
+
+3.35 | 3.000
+
+12.43 | 4.667
+
+1.91 |
+
+6.33
+
+1.500
+1.667
+
+5.74 | 3.167
+5.74 | 3.333
+
+12.43 | 4.833
+9.56 | 5.000
+
+1.43 |
+0.96 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+43.98
+10.00
+6.77 (ii)
+10.00
+0.13
+
+36.38
+20.00
+17.34 (ii)
+20.00
+0.06
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.77
+2.67
+46.81
+47.81
+0.98
+
+0.36
+2.83
+14.26
+47.81
+0.30
+
+*
+
+TOTALS*
+1.058 (iii)
+2.67
+30.53
+47.81
+0.64
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0002)|
+Area
+(ha)=
+6.40
+
+|ID= 1 DT=10.0 min |
+-------------------Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+NOTE:
+
+RAIN
+mm/hr
+0.96
+0.96
+0.96
+0.96
+0.96
+0.96
+0.96
+0.48
+
+Total Imp(%)=
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+80.00
+
+IMPERVIOUS
+5.12
+1.00
+1.00
+206.56
+0.013
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+Dir. Conn.(%)=
+
+75.00
+
+PERVIOUS (i)
+1.28
+1.50
+2.00
+40.00
+0.250
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+10.99 | 3.500
+
+6.69 |
+
+5.17
+
+0.333
+
+0.48 | 2.000
+
+16.25 | 3.667
+
+6.69 |
+
+5.33
+
+0.500
+
+0.96 | 2.167
+
+16.25 | 3.833
+
+5.25 |
+
+5.50
+
+0.667
+
+0.96 | 2.333
+
+30.11 | 4.000
+
+3.82 |
+
+5.67
+
+0.833
+
+0.96 | 2.500
+
+43.98 | 4.167
+
+3.82 |
+
+5.83
+
+1.000
+
+0.96 | 2.667
+
+43.98 | 4.333
+
+2.86 |
+
+6.00
+
+1.167
+
+0.96 | 2.833
+
+28.20 | 4.500
+
+1.91 |
+
+6.17
+
+1.333
+
+3.35 | 3.000
+
+12.43 | 4.667
+
+1.91 |
+
+6.33
+
+1.500
+1.667
+
+5.74 | 3.167
+5.74 | 3.333
+
+12.43 | 4.833
+9.56 | 5.000
+
+1.43 |
+0.96 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+43.98
+10.00
+5.48 (ii)
+10.00
+0.14
+
+36.38
+20.00
+16.06 (ii)
+20.00
+0.06
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.58
+2.67
+46.81
+47.81
+0.98
+
+0.09
+2.83
+14.26
+47.81
+0.30
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+
+*
+
+TOTALS*
+0.655 (iii)
+2.67
+38.67
+47.81
+0.81
+
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0001):
+12.91
+1.058
+2.67
+30.53
++ ID2= 2 ( 0002):
+6.40
+0.655
+2.67
+38.67
+====================================================
+ID = 3 ( 0004):
+19.31
+1.713
+2.67
+33.23
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+3 + 2 = 1
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 3 ( 0004):
+19.31
+1.713
+2.67
+33.23
++ ID2= 2 ( 0003):
+1.93
+0.081
+2.83
+16.79
+====================================================
+ID = 1 ( 0004):
+21.24
+1.790
+2.67
+31.74
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0006)|
+Area
+(ha)=
+2.12
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+2.01
+0.11
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+118.88
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAIN
+mm/hr
+0.96
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+0.167
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+0.00 | 1.833
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+10.99 | 3.500
+
+6.69 |
+
+5.17
+
+0.96
+0.96
+0.96
+0.96
+0.96
+0.96
+0.48
+
+0.333
+
+0.48 | 2.000
+
+16.25 | 3.667
+
+6.69 |
+
+5.33
+
+0.500
+
+0.96 | 2.167
+
+16.25 | 3.833
+
+5.25 |
+
+5.50
+
+0.667
+
+0.96 | 2.333
+
+30.11 | 4.000
+
+3.82 |
+
+5.67
+
+0.833
+
+0.96 | 2.500
+
+43.98 | 4.167
+
+3.82 |
+
+5.83
+
+1.000
+
+0.96 | 2.667
+
+43.98 | 4.333
+
+2.86 |
+
+6.00
+
+1.167
+
+0.96 | 2.833
+
+28.20 | 4.500
+
+1.91 |
+
+6.17
+
+1.333
+
+3.35 | 3.000
+
+12.43 | 4.667
+
+1.91 |
+
+6.33
+
+1.500
+1.667
+
+5.74 | 3.167
+5.74 | 3.333
+
+12.43 | 4.833
+9.56 | 5.000
+
+1.43 |
+0.96 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+43.98
+10.00
+3.94 (ii)
+10.00
+0.16
+
+74.73
+20.00
+11.87 (ii)
+20.00
+0.08
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.23
+2.67
+46.81
+47.81
+0.98
+
+0.02
+2.83
+24.11
+47.81
+0.50
+
+*
+
+TOTALS*
+0.249 (iii)
+2.67
+44.54
+47.81
+0.93
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0007)|
+Area
+(ha)=
+0.29
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.28
+0.01
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+43.97
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+10.0 MIN. TIME STEP.
+
+RAIN
+mm/hr
+0.96
+0.96
+0.96
+0.96
+0.96
+0.96
+0.96
+0.48
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+10.99 | 3.500
+
+6.69 |
+
+5.17
+
+0.333
+
+0.48 | 2.000
+
+16.25 | 3.667
+
+6.69 |
+
+5.33
+
+0.500
+
+0.96 | 2.167
+
+16.25 | 3.833
+
+5.25 |
+
+5.50
+
+0.667
+
+0.96 | 2.333
+
+30.11 | 4.000
+
+3.82 |
+
+5.67
+
+0.833
+
+0.96 | 2.500
+
+43.98 | 4.167
+
+3.82 |
+
+5.83
+
+1.000
+
+0.96 | 2.667
+
+43.98 | 4.333
+
+2.86 |
+
+6.00
+
+1.167
+
+0.96 | 2.833
+
+28.20 | 4.500
+
+1.91 |
+
+6.17
+
+1.333
+
+3.35 | 3.000
+
+12.43 | 4.667
+
+1.91 |
+
+6.33
+
+1.500
+1.667
+
+5.74 | 3.167
+5.74 | 3.333
+
+12.43 | 4.833
+9.56 | 5.000
+
+1.43 |
+0.96 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+43.98
+10.00
+2.17 (ii)
+10.00
+0.17
+
+74.73
+20.00
+10.10 (ii)
+20.00
+0.08
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.03
+2.67
+46.81
+47.81
+0.98
+
+0.00
+2.83
+24.11
+47.81
+0.50
+
+*
+
+TOTALS*
+0.034 (iii)
+2.67
+44.54
+47.81
+0.93
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+1 + 2 = 3
+|
+-------------------ID1= 1 ( 0004):
+
+AREA
+(ha)
+21.24
+
+QPEAK
+(cms)
+1.790
+
+TPEAK
+(hrs)
+2.67
+
+R.V.
+(mm)
+31.74
+
++ ID2= 2 ( 0006):
+2.12
+0.249
+2.67
+44.54
+====================================================
+ID = 3 ( 0005):
+23.36
+2.039
+2.67
+32.90
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+3 + 2 = 1
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 3 ( 0005):
+23.36
+2.039
+2.67
+32.90
++ ID2= 2 ( 0007):
+0.29
+0.034
+2.67
+44.54
+====================================================
+ID = 1 ( 0005):
+23.65
+2.074
+2.67
+33.04
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+2.074
+0.192
+
+TPEAK
+(hrs)
+2.67
+4.00
+
+R.V.
+(mm)
+33.04
+32.97
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 9.28
+TIME SHIFT OF PEAK FLOW
+(min)= 80.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.6479
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 5 Year 12 Hour AES (Bloor, TR **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+6ea15636f4fe\4d23ff77
+| Ptotal= 54.38 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+0.54
+0.25
+0.54
+0.50
+0.54
+0.75
+0.54
+1.00
+0.54
+1.25
+0.54
+1.50
+0.54
+1.75
+0.54
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+859d813f-8991-4bf3-9eb8Comments: 5 Year 12 Hour AES (Bloor, TRCA)
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+3.25
+
+9.25 |
+
+6.50
+
+3.81 |
+
+9.75
+
+0.54 |
+
+3.50
+
+9.25 |
+
+6.75
+
+3.81 | 10.00
+
+0.54 |
+
+3.75
+
+9.25 |
+
+7.00
+
+3.81 | 10.25
+
+0.54 |
+
+4.00
+
+9.25 |
+
+7.25
+
+2.18 | 10.50
+
+0.54 |
+
+4.25
+
+25.02 |
+
+7.50
+
+2.18 | 10.75
+
+0.54 |
+
+4.50
+
+25.02 |
+
+7.75
+
+2.18 | 11.00
+
+0.54 |
+
+4.75
+
+25.02 |
+
+8.00
+
+2.18 | 11.25
+
+0.54 |
+
+5.00
+
+25.02 |
+
+8.25
+
+1.09 | 11.50
+
+0.54
+0.54
+
+2.00
+
+0.54 |
+
+5.25
+
+7.07 |
+
+8.50
+
+1.09 | 11.75
+
+2.25
+
+3.26 |
+
+5.50
+
+7.07 |
+
+8.75
+
+1.09 | 12.00
+
+2.50
+2.75
+3.00
+
+3.26 |
+3.26 |
+3.26 |
+
+5.75
+6.00
+6.25
+
+7.07 |
+7.07 |
+3.81 |
+
+9.00
+9.25
+9.50
+
+1.09 |
+0.54 |
+0.54 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0003)|
+|ID= 1 DT=10.0 min |
+-------------------NOTE:
+
+RAIN
+mm/hr
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+
+1.93
+5.00
+0.20
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 3.333
+
+6.26 | 6.500
+
+3.81 |
+
+9.67
+
+0.333
+
+0.27 | 3.500
+
+9.25 | 6.667
+
+3.81 |
+
+9.83
+
+0.500
+
+0.54 | 3.667
+
+9.25 | 6.833
+
+3.81 | 10.00
+
+0.667
+
+0.54 | 3.833
+
+9.25 | 7.000
+
+3.81 | 10.17
+
+0.833
+
+0.54 | 4.000
+
+9.25 | 7.167
+
+3.81 | 10.33
+
+1.000
+
+0.54 | 4.167
+
+9.25 | 7.333
+
+3.00 | 10.50
+
+1.167
+
+0.54 | 4.333
+
+17.14 | 7.500
+
+2.18 | 10.67
+
+1.333
+
+0.54 | 4.500
+
+25.02 | 7.667
+
+2.18 | 10.83
+
+1.500
+
+0.54 | 4.667
+
+25.02 | 7.833
+
+2.18 | 11.00
+
+1.667
+
+0.54 | 4.833
+
+25.02 | 8.000
+
+2.18 | 11.17
+
+1.833
+
+0.54 | 5.000
+
+25.02 | 8.167
+
+2.18 | 11.33
+
+2.000
+
+0.54 | 5.167
+
+25.02 | 8.333
+
+1.64 | 11.50
+
+2.167
+
+0.54 | 5.333
+
+16.05 | 8.500
+
+1.09 | 11.67
+
+2.333
+
+1.90 | 5.500
+
+7.07 | 8.667
+
+1.09 | 11.83
+
+0.54
+0.54
+0.27
+
+2.500
+
+3.26 | 5.667
+
+7.07 | 8.833
+
+1.09 | 12.00
+
+2.667
+
+3.26 | 5.833
+
+7.07 | 9.000
+
+1.09 | 12.17
+
+2.833
+
+3.26 | 6.000
+
+7.07 | 9.167
+
+1.09 | 12.33
+
+3.000
+3.167
+
+3.26 | 6.167
+3.26 | 6.333
+
+7.07 | 9.333
+5.44 | 9.500
+
+0.82 |
+0.54 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.369
+0.064 (i)
+5.167
+21.040
+54.380
+0.387
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)= 12.91
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 60.00
+Dir. Conn.(%)= 50.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+7.75
+5.16
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+293.37
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAIN
+mm/hr
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 3.333
+
+6.26 | 6.500
+
+3.81 |
+
+9.67
+
+0.333
+
+0.27 | 3.500
+
+9.25 | 6.667
+
+3.81 |
+
+9.83
+
+0.500
+
+0.54 | 3.667
+
+9.25 | 6.833
+
+3.81 | 10.00
+
+0.667
+
+0.54 | 3.833
+
+9.25 | 7.000
+
+3.81 | 10.17
+
+0.833
+
+0.54 | 4.000
+
+9.25 | 7.167
+
+3.81 | 10.33
+
+1.000
+
+0.54 | 4.167
+
+9.25 | 7.333
+
+3.00 | 10.50
+
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.27
+
+1.167
+
+0.54 | 4.333
+
+17.14 | 7.500
+
+2.18 | 10.67
+
+1.333
+
+0.54 | 4.500
+
+25.02 | 7.667
+
+2.18 | 10.83
+
+1.500
+
+0.54 | 4.667
+
+25.02 | 7.833
+
+2.18 | 11.00
+
+1.667
+
+0.54 | 4.833
+
+25.02 | 8.000
+
+2.18 | 11.17
+
+1.833
+
+0.54 | 5.000
+
+25.02 | 8.167
+
+2.18 | 11.33
+
+2.000
+
+0.54 | 5.167
+
+25.02 | 8.333
+
+1.64 | 11.50
+
+2.167
+
+0.54 | 5.333
+
+16.05 | 8.500
+
+1.09 | 11.67
+
+2.333
+
+1.90 | 5.500
+
+7.07 | 8.667
+
+1.09 | 11.83
+
+2.500
+
+3.26 | 5.667
+
+7.07 | 8.833
+
+1.09 | 12.00
+
+2.667
+
+3.26 | 5.833
+
+7.07 | 9.000
+
+1.09 | 12.17
+
+2.833
+
+3.26 | 6.000
+
+7.07 | 9.167
+
+1.09 | 12.33
+
+3.000
+3.167
+
+3.26 | 6.167
+3.26 | 6.333
+
+7.07 | 9.333
+5.44 | 9.500
+
+0.82 |
+0.54 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+25.02
+10.00
+8.48 (ii)
+10.00
+0.12
+
+20.42
+30.00
+21.81 (ii)
+30.00
+0.05
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.45
+5.17
+53.38
+54.38
+0.98
+
+0.22
+5.33
+12.35
+54.38
+0.23
+
+*
+
+TOTALS*
+0.643 (iii)
+5.17
+32.86
+54.38
+0.60
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0002)|
+Area
+(ha)=
+6.40
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 80.00
+Dir. Conn.(%)= 75.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+
+Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+NOTE:
+
+RAIN
+mm/hr
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.27
+
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+5.12
+1.00
+1.00
+206.56
+0.013
+
+1.28
+1.50
+2.00
+40.00
+0.250
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 3.333
+
+6.26 | 6.500
+
+3.81 |
+
+9.67
+
+0.333
+
+0.27 | 3.500
+
+9.25 | 6.667
+
+3.81 |
+
+9.83
+
+0.500
+
+0.54 | 3.667
+
+9.25 | 6.833
+
+3.81 | 10.00
+
+0.667
+
+0.54 | 3.833
+
+9.25 | 7.000
+
+3.81 | 10.17
+
+0.833
+
+0.54 | 4.000
+
+9.25 | 7.167
+
+3.81 | 10.33
+
+1.000
+
+0.54 | 4.167
+
+9.25 | 7.333
+
+3.00 | 10.50
+
+1.167
+
+0.54 | 4.333
+
+17.14 | 7.500
+
+2.18 | 10.67
+
+1.333
+
+0.54 | 4.500
+
+25.02 | 7.667
+
+2.18 | 10.83
+
+1.500
+
+0.54 | 4.667
+
+25.02 | 7.833
+
+2.18 | 11.00
+
+1.667
+
+0.54 | 4.833
+
+25.02 | 8.000
+
+2.18 | 11.17
+
+1.833
+
+0.54 | 5.000
+
+25.02 | 8.167
+
+2.18 | 11.33
+
+2.000
+
+0.54 | 5.167
+
+25.02 | 8.333
+
+1.64 | 11.50
+
+2.167
+
+0.54 | 5.333
+
+16.05 | 8.500
+
+1.09 | 11.67
+
+2.333
+
+1.90 | 5.500
+
+7.07 | 8.667
+
+1.09 | 11.83
+
+2.500
+
+3.26 | 5.667
+
+7.07 | 8.833
+
+1.09 | 12.00
+
+2.667
+
+3.26 | 5.833
+
+7.07 | 9.000
+
+1.09 | 12.17
+
+2.833
+
+3.26 | 6.000
+
+7.07 | 9.167
+
+1.09 | 12.33
+
+3.000
+3.167
+
+3.26 | 6.167
+3.26 | 6.333
+
+7.07 | 9.333
+5.44 | 9.500
+
+0.82 |
+0.54 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+
+25.02
+10.00
+6.87 (ii)
+
+20.42
+30.00
+20.20 (ii)
+
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+10.00
+0.13
+
+30.00
+0.05
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.33
+5.17
+53.38
+54.38
+0.98
+
+0.06
+5.33
+12.35
+54.38
+0.23
+
+*
+
+TOTALS*
+0.383 (iii)
+5.17
+43.12
+54.38
+0.79
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0001):
+12.91
+0.643
+5.17
+32.86
++ ID2= 2 ( 0002):
+6.40
+0.383
+5.17
+43.12
+====================================================
+ID = 3 ( 0004):
+19.31
+1.026
+5.17
+36.26
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+3 + 2 = 1
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 3 ( 0004):
+19.31
+1.026
+5.17
+36.26
++ ID2= 2 ( 0003):
+1.93
+0.064
+5.17
+21.04
+====================================================
+ID = 1 ( 0004):
+21.24
+1.090
+5.17
+34.88
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0006)|
+Area
+(ha)=
+2.12
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+2.01
+0.11
+Dep. Storage
+(mm)=
+1.00
+1.50
+
+Average Slope
+Length
+Mannings n
+NOTE:
+
+RAIN
+mm/hr
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.27
+
+(%)=
+(m)=
+=
+
+1.00
+118.88
+0.013
+
+2.00
+40.00
+0.250
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 3.333
+
+6.26 | 6.500
+
+3.81 |
+
+9.67
+
+0.333
+
+0.27 | 3.500
+
+9.25 | 6.667
+
+3.81 |
+
+9.83
+
+0.500
+
+0.54 | 3.667
+
+9.25 | 6.833
+
+3.81 | 10.00
+
+0.667
+
+0.54 | 3.833
+
+9.25 | 7.000
+
+3.81 | 10.17
+
+0.833
+
+0.54 | 4.000
+
+9.25 | 7.167
+
+3.81 | 10.33
+
+1.000
+
+0.54 | 4.167
+
+9.25 | 7.333
+
+3.00 | 10.50
+
+1.167
+
+0.54 | 4.333
+
+17.14 | 7.500
+
+2.18 | 10.67
+
+1.333
+
+0.54 | 4.500
+
+25.02 | 7.667
+
+2.18 | 10.83
+
+1.500
+
+0.54 | 4.667
+
+25.02 | 7.833
+
+2.18 | 11.00
+
+1.667
+
+0.54 | 4.833
+
+25.02 | 8.000
+
+2.18 | 11.17
+
+1.833
+
+0.54 | 5.000
+
+25.02 | 8.167
+
+2.18 | 11.33
+
+2.000
+
+0.54 | 5.167
+
+25.02 | 8.333
+
+1.64 | 11.50
+
+2.167
+
+0.54 | 5.333
+
+16.05 | 8.500
+
+1.09 | 11.67
+
+2.333
+
+1.90 | 5.500
+
+7.07 | 8.667
+
+1.09 | 11.83
+
+2.500
+
+3.26 | 5.667
+
+7.07 | 8.833
+
+1.09 | 12.00
+
+2.667
+
+3.26 | 5.833
+
+7.07 | 9.000
+
+1.09 | 12.17
+
+2.833
+
+3.26 | 6.000
+
+7.07 | 9.167
+
+1.09 | 12.33
+
+3.000
+3.167
+
+3.26 | 6.167
+3.26 | 6.333
+
+7.07 | 9.333
+5.44 | 9.500
+
+0.82 |
+0.54 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+25.02
+10.00
+4.93 (ii)
+10.00
+0.15
+
+41.29
+20.00
+14.99 (ii)
+20.00
+0.07
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.13
+5.17
+53.38
+54.38
+0.98
+
+*
+
+0.01
+5.17
+23.03
+54.38
+0.42
+
+TOTALS*
+0.144 (iii)
+5.17
+50.34
+54.38
+0.93
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0007)|
+Area
+(ha)=
+0.29
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.28
+0.01
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+43.97
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAIN
+mm/hr
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 3.333
+
+6.26 | 6.500
+
+3.81 |
+
+9.67
+
+0.333
+
+0.27 | 3.500
+
+9.25 | 6.667
+
+3.81 |
+
+9.83
+
+0.500
+
+0.54 | 3.667
+
+9.25 | 6.833
+
+3.81 | 10.00
+
+0.667
+
+0.54 | 3.833
+
+9.25 | 7.000
+
+3.81 | 10.17
+
+0.833
+
+0.54 | 4.000
+
+9.25 | 7.167
+
+3.81 | 10.33
+
+1.000
+
+0.54 | 4.167
+
+9.25 | 7.333
+
+3.00 | 10.50
+
+1.167
+
+0.54 | 4.333
+
+17.14 | 7.500
+
+2.18 | 10.67
+
+1.333
+
+0.54 | 4.500
+
+25.02 | 7.667
+
+2.18 | 10.83
+
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.27
+
+1.500
+
+0.54 | 4.667
+
+25.02 | 7.833
+
+2.18 | 11.00
+
+1.667
+
+0.54 | 4.833
+
+25.02 | 8.000
+
+2.18 | 11.17
+
+1.833
+
+0.54 | 5.000
+
+25.02 | 8.167
+
+2.18 | 11.33
+
+2.000
+
+0.54 | 5.167
+
+25.02 | 8.333
+
+1.64 | 11.50
+
+2.167
+
+0.54 | 5.333
+
+16.05 | 8.500
+
+1.09 | 11.67
+
+2.333
+
+1.90 | 5.500
+
+7.07 | 8.667
+
+1.09 | 11.83
+
+2.500
+
+3.26 | 5.667
+
+7.07 | 8.833
+
+1.09 | 12.00
+
+2.667
+
+3.26 | 5.833
+
+7.07 | 9.000
+
+1.09 | 12.17
+
+2.833
+
+3.26 | 6.000
+
+7.07 | 9.167
+
+1.09 | 12.33
+
+3.000
+3.167
+
+3.26 | 6.167
+3.26 | 6.333
+
+7.07 | 9.333
+5.44 | 9.500
+
+0.82 |
+0.54 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+25.02
+10.00
+2.72 (ii)
+10.00
+0.17
+
+41.29
+20.00
+12.77 (ii)
+20.00
+0.07
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.02
+5.00
+53.38
+54.38
+0.98
+
+0.00
+5.17
+23.03
+54.38
+0.42
+
+*
+
+TOTALS*
+0.020 (iii)
+5.17
+50.34
+54.38
+0.93
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0004):
+21.24
+1.090
+5.17
+34.88
++ ID2= 2 ( 0006):
+2.12
+0.144
+5.17
+50.34
+====================================================
+ID = 3 ( 0005):
+23.36
+1.234
+5.17
+36.28
+
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+3 + 2 = 1
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 3 ( 0005):
+23.36
+1.234
+5.17
+36.28
++ ID2= 2 ( 0007):
+0.29
+0.020
+5.17
+50.34
+====================================================
+ID = 1 ( 0005):
+23.65
+1.254
+5.17
+36.46
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+1.254
+0.190
+
+TPEAK
+(hrs)
+5.17
+6.67
+
+R.V.
+(mm)
+36.46
+36.38
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 15.17
+TIME SHIFT OF PEAK FLOW
+(min)= 90.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.6454
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 10 Year 6 Hour AES (Bloor, TR **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+6ea15636f4fe\6881b5fd
+| Ptotal= 55.69 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+1.11
+0.25
+1.11
+0.50
+1.11
+0.75
+1.11
+1.00
+1.25
+1.50
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+859d813f-8991-4bf3-9eb8Comments: 10 Year 6 Hour AES (Bloor, TRCA)
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+1.75
+
+18.94 |
+
+3.50
+
+7.80 |
+
+5.25
+
+1.11 |
+
+2.00
+
+18.94 |
+
+3.75
+
+4.46 |
+
+5.50
+
+1.11 |
+
+2.25
+
+51.24 |
+
+4.00
+
+4.46 |
+
+5.75
+
+1.11 |
+
+2.50
+
+51.24 |
+
+4.25
+
+2.23 |
+
+6.00
+
+1.11 |
+6.68 |
+6.68 |
+
+2.75
+3.00
+3.25
+
+14.48 |
+14.48 |
+7.80 |
+
+4.50
+4.75
+5.00
+
+2.23 |
+1.11 |
+1.11 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+
+| NASHYD
+( 0003)|
+|ID= 1 DT=10.0 min |
+-------------------NOTE:
+
+RAIN
+mm/hr
+1.11
+1.11
+1.11
+1.11
+1.11
+1.11
+1.11
+0.56
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+
+1.93
+5.00
+0.20
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+12.81 | 3.500
+
+7.80 |
+
+5.17
+
+0.333
+
+0.56 | 2.000
+
+18.94 | 3.667
+
+7.80 |
+
+5.33
+
+0.500
+
+1.11 | 2.167
+
+18.94 | 3.833
+
+6.13 |
+
+5.50
+
+0.667
+
+1.11 | 2.333
+
+35.09 | 4.000
+
+4.46 |
+
+5.67
+
+0.833
+
+1.11 | 2.500
+
+51.24 | 4.167
+
+4.46 |
+
+5.83
+
+1.000
+
+1.11 | 2.667
+
+51.24 | 4.333
+
+3.34 |
+
+6.00
+
+1.167
+
+1.11 | 2.833
+
+32.86 | 4.500
+
+2.23 |
+
+6.17
+
+1.333
+
+3.89 | 3.000
+
+14.48 | 4.667
+
+2.23 |
+
+6.33
+
+1.500
+1.667
+
+6.68 | 3.167
+6.68 | 3.333
+
+14.48 | 4.833
+11.14 | 5.000
+
+1.67 |
+1.11 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.369
+0.106 (i)
+2.833
+21.917
+55.690
+0.394
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)= 12.91
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 60.00
+Dir. Conn.(%)= 50.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+7.75
+5.16
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+293.37
+40.00
+Mannings n
+=
+0.013
+0.250
+
+NOTE:
+
+RAIN
+mm/hr
+1.11
+1.11
+1.11
+1.11
+1.11
+1.11
+1.11
+0.56
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+12.81 | 3.500
+
+7.80 |
+
+5.17
+
+0.333
+
+0.56 | 2.000
+
+18.94 | 3.667
+
+7.80 |
+
+5.33
+
+0.500
+
+1.11 | 2.167
+
+18.94 | 3.833
+
+6.13 |
+
+5.50
+
+0.667
+
+1.11 | 2.333
+
+35.09 | 4.000
+
+4.46 |
+
+5.67
+
+0.833
+
+1.11 | 2.500
+
+51.24 | 4.167
+
+4.46 |
+
+5.83
+
+1.000
+
+1.11 | 2.667
+
+51.24 | 4.333
+
+3.34 |
+
+6.00
+
+1.167
+
+1.11 | 2.833
+
+32.86 | 4.500
+
+2.23 |
+
+6.17
+
+1.333
+
+3.89 | 3.000
+
+14.48 | 4.667
+
+2.23 |
+
+6.33
+
+1.500
+1.667
+
+6.68 | 3.167
+6.68 | 3.333
+
+14.48 | 4.833
+11.14 | 5.000
+
+1.67 |
+1.11 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+51.24
+10.00
+6.37 (ii)
+10.00
+0.13
+
+48.66
+20.00
+15.78 (ii)
+20.00
+0.06
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.90
+2.67
+54.69
+55.69
+0.98
+
+0.49
+2.83
+20.62
+55.69
+0.37
+
+*
+
+TOTALS*
+1.319 (iii)
+2.67
+37.66
+55.69
+0.68
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0002)|
+Area
+(ha)=
+6.40
+
+|ID= 1 DT=10.0 min |
+-------------------Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+NOTE:
+
+RAIN
+mm/hr
+1.11
+1.11
+1.11
+1.11
+1.11
+1.11
+1.11
+0.56
+
+Total Imp(%)=
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+80.00
+
+IMPERVIOUS
+5.12
+1.00
+1.00
+206.56
+0.013
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+Dir. Conn.(%)=
+
+75.00
+
+PERVIOUS (i)
+1.28
+1.50
+2.00
+40.00
+0.250
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+12.81 | 3.500
+
+7.80 |
+
+5.17
+
+0.333
+
+0.56 | 2.000
+
+18.94 | 3.667
+
+7.80 |
+
+5.33
+
+0.500
+
+1.11 | 2.167
+
+18.94 | 3.833
+
+6.13 |
+
+5.50
+
+0.667
+
+1.11 | 2.333
+
+35.09 | 4.000
+
+4.46 |
+
+5.67
+
+0.833
+
+1.11 | 2.500
+
+51.24 | 4.167
+
+4.46 |
+
+5.83
+
+1.000
+
+1.11 | 2.667
+
+51.24 | 4.333
+
+3.34 |
+
+6.00
+
+1.167
+
+1.11 | 2.833
+
+32.86 | 4.500
+
+2.23 |
+
+6.17
+
+1.333
+
+3.89 | 3.000
+
+14.48 | 4.667
+
+2.23 |
+
+6.33
+
+1.500
+1.667
+
+6.68 | 3.167
+6.68 | 3.333
+
+14.48 | 4.833
+11.14 | 5.000
+
+1.67 |
+1.11 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+51.24
+10.00
+5.16 (ii)
+10.00
+0.15
+
+48.66
+20.00
+14.57 (ii)
+20.00
+0.07
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.68
+2.67
+54.69
+55.69
+0.98
+
+0.13
+2.83
+20.62
+55.69
+0.37
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+
+*
+
+TOTALS*
+0.785 (iii)
+2.67
+46.17
+55.69
+0.83
+
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0001):
+12.91
+1.319
+2.67
+37.66
++ ID2= 2 ( 0002):
+6.40
+0.785
+2.67
+46.17
+====================================================
+ID = 3 ( 0004):
+19.31
+2.105
+2.67
+40.48
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+3 + 2 = 1
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 3 ( 0004):
+19.31
+2.105
+2.67
+40.48
++ ID2= 2 ( 0003):
+1.93
+0.106
+2.83
+21.92
+====================================================
+ID = 1 ( 0004):
+21.24
+2.207
+2.67
+38.79
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0006)|
+Area
+(ha)=
+2.12
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+2.01
+0.11
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+118.88
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAIN
+mm/hr
+1.11
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+0.167
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+0.00 | 1.833
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+12.81 | 3.500
+
+7.80 |
+
+5.17
+
+1.11
+1.11
+1.11
+1.11
+1.11
+1.11
+0.56
+
+0.333
+
+0.56 | 2.000
+
+18.94 | 3.667
+
+7.80 |
+
+5.33
+
+0.500
+
+1.11 | 2.167
+
+18.94 | 3.833
+
+6.13 |
+
+5.50
+
+0.667
+
+1.11 | 2.333
+
+35.09 | 4.000
+
+4.46 |
+
+5.67
+
+0.833
+
+1.11 | 2.500
+
+51.24 | 4.167
+
+4.46 |
+
+5.83
+
+1.000
+
+1.11 | 2.667
+
+51.24 | 4.333
+
+3.34 |
+
+6.00
+
+1.167
+
+1.11 | 2.833
+
+32.86 | 4.500
+
+2.23 |
+
+6.17
+
+1.333
+
+3.89 | 3.000
+
+14.48 | 4.667
+
+2.23 |
+
+6.33
+
+1.500
+1.667
+
+6.68 | 3.167
+6.68 | 3.333
+
+14.48 | 4.833
+11.14 | 5.000
+
+1.67 |
+1.11 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+51.24
+10.00
+3.70 (ii)
+10.00
+0.16
+
+89.83
+20.00
+11.07 (ii)
+20.00
+0.08
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.27
+2.67
+54.69
+55.69
+0.98
+
+0.02
+2.83
+31.32
+55.69
+0.56
+
+*
+
+TOTALS*
+0.292 (iii)
+2.67
+52.35
+55.69
+0.94
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0007)|
+Area
+(ha)=
+0.29
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.28
+0.01
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+43.97
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+10.0 MIN. TIME STEP.
+
+RAIN
+mm/hr
+1.11
+1.11
+1.11
+1.11
+1.11
+1.11
+1.11
+0.56
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+12.81 | 3.500
+
+7.80 |
+
+5.17
+
+0.333
+
+0.56 | 2.000
+
+18.94 | 3.667
+
+7.80 |
+
+5.33
+
+0.500
+
+1.11 | 2.167
+
+18.94 | 3.833
+
+6.13 |
+
+5.50
+
+0.667
+
+1.11 | 2.333
+
+35.09 | 4.000
+
+4.46 |
+
+5.67
+
+0.833
+
+1.11 | 2.500
+
+51.24 | 4.167
+
+4.46 |
+
+5.83
+
+1.000
+
+1.11 | 2.667
+
+51.24 | 4.333
+
+3.34 |
+
+6.00
+
+1.167
+
+1.11 | 2.833
+
+32.86 | 4.500
+
+2.23 |
+
+6.17
+
+1.333
+
+3.89 | 3.000
+
+14.48 | 4.667
+
+2.23 |
+
+6.33
+
+1.500
+1.667
+
+6.68 | 3.167
+6.68 | 3.333
+
+14.48 | 4.833
+11.14 | 5.000
+
+1.67 |
+1.11 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+51.24
+10.00
+2.04 (ii)
+10.00
+0.17
+
+89.83
+10.00
+9.41 (ii)
+10.00
+0.11
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.04
+2.67
+54.69
+55.69
+0.98
+
+0.00
+2.67
+31.32
+55.69
+0.56
+
+*
+
+TOTALS*
+0.041 (iii)
+2.67
+52.35
+55.69
+0.94
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+1 + 2 = 3
+|
+-------------------ID1= 1 ( 0004):
+
+AREA
+(ha)
+21.24
+
+QPEAK
+(cms)
+2.207
+
+TPEAK
+(hrs)
+2.67
+
+R.V.
+(mm)
+38.79
+
++ ID2= 2 ( 0006):
+2.12
+0.292
+2.67
+52.35
+====================================================
+ID = 3 ( 0005):
+23.36
+2.499
+2.67
+40.02
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+3 + 2 = 1
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 3 ( 0005):
+23.36
+2.499
+2.67
+40.02
++ ID2= 2 ( 0007):
+0.29
+0.041
+2.67
+52.35
+====================================================
+ID = 1 ( 0005):
+23.65
+2.540
+2.67
+40.17
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+2.540
+0.304
+
+TPEAK
+(hrs)
+2.67
+3.83
+
+R.V.
+(mm)
+40.17
+40.10
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 11.95
+TIME SHIFT OF PEAK FLOW
+(min)= 70.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.7626
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 10 Year 12 Hour AES (Bloor, T **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+6ea15636f4fe\eb41fbb2
+| Ptotal= 62.71 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+0.63
+0.25
+0.63
+0.50
+0.63
+0.75
+0.63
+1.00
+0.63
+1.25
+0.63
+1.50
+0.63
+1.75
+0.63
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+859d813f-8991-4bf3-9eb8Comments: 10 Year 12 Hour AES (Bloor, TRCA)
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+3.25
+
+10.66 |
+
+6.50
+
+4.39 |
+
+9.75
+
+0.63 |
+
+3.50
+
+10.66 |
+
+6.75
+
+4.39 | 10.00
+
+0.63 |
+
+3.75
+
+10.66 |
+
+7.00
+
+4.39 | 10.25
+
+0.63 |
+
+4.00
+
+10.66 |
+
+7.25
+
+2.51 | 10.50
+
+0.63 |
+
+4.25
+
+28.84 |
+
+7.50
+
+2.51 | 10.75
+
+0.63 |
+
+4.50
+
+28.84 |
+
+7.75
+
+2.51 | 11.00
+
+0.63 |
+
+4.75
+
+28.84 |
+
+8.00
+
+2.51 | 11.25
+
+0.63 |
+
+5.00
+
+28.84 |
+
+8.25
+
+1.25 | 11.50
+
+0.63
+0.63
+
+2.00
+
+0.63 |
+
+5.25
+
+8.15 |
+
+8.50
+
+1.25 | 11.75
+
+2.25
+
+3.76 |
+
+5.50
+
+8.15 |
+
+8.75
+
+1.25 | 12.00
+
+2.50
+2.75
+3.00
+
+3.76 |
+3.76 |
+3.76 |
+
+5.75
+6.00
+6.25
+
+8.15 |
+8.15 |
+4.39 |
+
+9.00
+9.25
+9.50
+
+1.25 |
+0.63 |
+0.63 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0003)|
+|ID= 1 DT=10.0 min |
+-------------------NOTE:
+
+RAIN
+mm/hr
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+
+1.93
+5.00
+0.20
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 3.333
+
+7.21 | 6.500
+
+4.39 |
+
+9.67
+
+0.333
+
+0.32 | 3.500
+
+10.66 | 6.667
+
+4.39 |
+
+9.83
+
+0.500
+
+0.63 | 3.667
+
+10.66 | 6.833
+
+4.39 | 10.00
+
+0.667
+
+0.63 | 3.833
+
+10.66 | 7.000
+
+4.39 | 10.17
+
+0.833
+
+0.63 | 4.000
+
+10.66 | 7.167
+
+4.39 | 10.33
+
+1.000
+
+0.63 | 4.167
+
+10.66 | 7.333
+
+3.45 | 10.50
+
+1.167
+
+0.63 | 4.333
+
+19.75 | 7.500
+
+2.51 | 10.67
+
+1.333
+
+0.63 | 4.500
+
+28.84 | 7.667
+
+2.51 | 10.83
+
+1.500
+
+0.63 | 4.667
+
+28.84 | 7.833
+
+2.51 | 11.00
+
+1.667
+
+0.63 | 4.833
+
+28.84 | 8.000
+
+2.51 | 11.17
+
+1.833
+
+0.63 | 5.000
+
+28.84 | 8.167
+
+2.51 | 11.33
+
+2.000
+
+0.63 | 5.167
+
+28.84 | 8.333
+
+1.88 | 11.50
+
+2.167
+
+0.63 | 5.333
+
+18.50 | 8.500
+
+1.25 | 11.67
+
+2.333
+
+2.19 | 5.500
+
+8.15 | 8.667
+
+1.25 | 11.83
+
+0.63
+0.63
+0.31
+
+2.500
+
+3.76 | 5.667
+
+8.15 | 8.833
+
+1.25 | 12.00
+
+2.667
+
+3.76 | 5.833
+
+8.15 | 9.000
+
+1.25 | 12.17
+
+2.833
+
+3.76 | 6.000
+
+8.15 | 9.167
+
+1.25 | 12.33
+
+3.000
+3.167
+
+3.76 | 6.167
+3.76 | 6.333
+
+8.15 | 9.333
+6.27 | 9.500
+
+0.94 |
+0.63 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.369
+0.081 (i)
+5.167
+26.762
+62.710
+0.427
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)= 12.91
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 60.00
+Dir. Conn.(%)= 50.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+7.75
+5.16
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+293.37
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAIN
+mm/hr
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 3.333
+
+7.21 | 6.500
+
+4.39 |
+
+9.67
+
+0.333
+
+0.32 | 3.500
+
+10.66 | 6.667
+
+4.39 |
+
+9.83
+
+0.500
+
+0.63 | 3.667
+
+10.66 | 6.833
+
+4.39 | 10.00
+
+0.667
+
+0.63 | 3.833
+
+10.66 | 7.000
+
+4.39 | 10.17
+
+0.833
+
+0.63 | 4.000
+
+10.66 | 7.167
+
+4.39 | 10.33
+
+1.000
+
+0.63 | 4.167
+
+10.66 | 7.333
+
+3.45 | 10.50
+
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.31
+
+1.167
+
+0.63 | 4.333
+
+19.75 | 7.500
+
+2.51 | 10.67
+
+1.333
+
+0.63 | 4.500
+
+28.84 | 7.667
+
+2.51 | 10.83
+
+1.500
+
+0.63 | 4.667
+
+28.84 | 7.833
+
+2.51 | 11.00
+
+1.667
+
+0.63 | 4.833
+
+28.84 | 8.000
+
+2.51 | 11.17
+
+1.833
+
+0.63 | 5.000
+
+28.84 | 8.167
+
+2.51 | 11.33
+
+2.000
+
+0.63 | 5.167
+
+28.84 | 8.333
+
+1.88 | 11.50
+
+2.167
+
+0.63 | 5.333
+
+18.50 | 8.500
+
+1.25 | 11.67
+
+2.333
+
+2.19 | 5.500
+
+8.15 | 8.667
+
+1.25 | 11.83
+
+2.500
+
+3.76 | 5.667
+
+8.15 | 8.833
+
+1.25 | 12.00
+
+2.667
+
+3.76 | 5.833
+
+8.15 | 9.000
+
+1.25 | 12.17
+
+2.833
+
+3.76 | 6.000
+
+8.15 | 9.167
+
+1.25 | 12.33
+
+3.000
+3.167
+
+3.76 | 6.167
+3.76 | 6.333
+
+8.15 | 9.333
+6.27 | 9.500
+
+0.94 |
+0.63 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+28.84
+10.00
+8.01 (ii)
+10.00
+0.12
+
+25.88
+30.00
+20.13 (ii)
+30.00
+0.05
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.52
+5.17
+61.71
+62.71
+0.98
+
+0.30
+5.33
+18.56
+62.71
+0.30
+
+*
+
+TOTALS*
+0.798 (iii)
+5.17
+40.13
+62.71
+0.64
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0002)|
+Area
+(ha)=
+6.40
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 80.00
+Dir. Conn.(%)= 75.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+
+Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+NOTE:
+
+RAIN
+mm/hr
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.31
+
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+5.12
+1.00
+1.00
+206.56
+0.013
+
+1.28
+1.50
+2.00
+40.00
+0.250
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 3.333
+
+7.21 | 6.500
+
+4.39 |
+
+9.67
+
+0.333
+
+0.32 | 3.500
+
+10.66 | 6.667
+
+4.39 |
+
+9.83
+
+0.500
+
+0.63 | 3.667
+
+10.66 | 6.833
+
+4.39 | 10.00
+
+0.667
+
+0.63 | 3.833
+
+10.66 | 7.000
+
+4.39 | 10.17
+
+0.833
+
+0.63 | 4.000
+
+10.66 | 7.167
+
+4.39 | 10.33
+
+1.000
+
+0.63 | 4.167
+
+10.66 | 7.333
+
+3.45 | 10.50
+
+1.167
+
+0.63 | 4.333
+
+19.75 | 7.500
+
+2.51 | 10.67
+
+1.333
+
+0.63 | 4.500
+
+28.84 | 7.667
+
+2.51 | 10.83
+
+1.500
+
+0.63 | 4.667
+
+28.84 | 7.833
+
+2.51 | 11.00
+
+1.667
+
+0.63 | 4.833
+
+28.84 | 8.000
+
+2.51 | 11.17
+
+1.833
+
+0.63 | 5.000
+
+28.84 | 8.167
+
+2.51 | 11.33
+
+2.000
+
+0.63 | 5.167
+
+28.84 | 8.333
+
+1.88 | 11.50
+
+2.167
+
+0.63 | 5.333
+
+18.50 | 8.500
+
+1.25 | 11.67
+
+2.333
+
+2.19 | 5.500
+
+8.15 | 8.667
+
+1.25 | 11.83
+
+2.500
+
+3.76 | 5.667
+
+8.15 | 8.833
+
+1.25 | 12.00
+
+2.667
+
+3.76 | 5.833
+
+8.15 | 9.000
+
+1.25 | 12.17
+
+2.833
+
+3.76 | 6.000
+
+8.15 | 9.167
+
+1.25 | 12.33
+
+3.000
+3.167
+
+3.76 | 6.167
+3.76 | 6.333
+
+8.15 | 9.333
+6.27 | 9.500
+
+0.94 |
+0.63 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+
+28.84
+10.00
+6.49 (ii)
+
+25.88
+20.00
+18.61 (ii)
+
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+10.00
+0.13
+
+20.00
+0.06
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.38
+5.17
+61.71
+62.71
+0.98
+
+0.08
+5.17
+18.56
+62.71
+0.30
+
+*
+
+TOTALS*
+0.462 (iii)
+5.17
+50.92
+62.71
+0.81
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0001):
+12.91
+0.798
+5.17
+40.13
++ ID2= 2 ( 0002):
+6.40
+0.462
+5.17
+50.92
+====================================================
+ID = 3 ( 0004):
+19.31
+1.260
+5.17
+43.71
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+3 + 2 = 1
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 3 ( 0004):
+19.31
+1.260
+5.17
+43.71
++ ID2= 2 ( 0003):
+1.93
+0.081
+5.17
+26.76
+====================================================
+ID = 1 ( 0004):
+21.24
+1.342
+5.17
+42.17
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0006)|
+Area
+(ha)=
+2.12
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+2.01
+0.11
+Dep. Storage
+(mm)=
+1.00
+1.50
+
+Average Slope
+Length
+Mannings n
+NOTE:
+
+RAIN
+mm/hr
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.31
+
+(%)=
+(m)=
+=
+
+1.00
+118.88
+0.013
+
+2.00
+40.00
+0.250
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 3.333
+
+7.21 | 6.500
+
+4.39 |
+
+9.67
+
+0.333
+
+0.32 | 3.500
+
+10.66 | 6.667
+
+4.39 |
+
+9.83
+
+0.500
+
+0.63 | 3.667
+
+10.66 | 6.833
+
+4.39 | 10.00
+
+0.667
+
+0.63 | 3.833
+
+10.66 | 7.000
+
+4.39 | 10.17
+
+0.833
+
+0.63 | 4.000
+
+10.66 | 7.167
+
+4.39 | 10.33
+
+1.000
+
+0.63 | 4.167
+
+10.66 | 7.333
+
+3.45 | 10.50
+
+1.167
+
+0.63 | 4.333
+
+19.75 | 7.500
+
+2.51 | 10.67
+
+1.333
+
+0.63 | 4.500
+
+28.84 | 7.667
+
+2.51 | 10.83
+
+1.500
+
+0.63 | 4.667
+
+28.84 | 7.833
+
+2.51 | 11.00
+
+1.667
+
+0.63 | 4.833
+
+28.84 | 8.000
+
+2.51 | 11.17
+
+1.833
+
+0.63 | 5.000
+
+28.84 | 8.167
+
+2.51 | 11.33
+
+2.000
+
+0.63 | 5.167
+
+28.84 | 8.333
+
+1.88 | 11.50
+
+2.167
+
+0.63 | 5.333
+
+18.50 | 8.500
+
+1.25 | 11.67
+
+2.333
+
+2.19 | 5.500
+
+8.15 | 8.667
+
+1.25 | 11.83
+
+2.500
+
+3.76 | 5.667
+
+8.15 | 8.833
+
+1.25 | 12.00
+
+2.667
+
+3.76 | 5.833
+
+8.15 | 9.000
+
+1.25 | 12.17
+
+2.833
+
+3.76 | 6.000
+
+8.15 | 9.167
+
+1.25 | 12.33
+
+3.000
+3.167
+
+3.76 | 6.167
+3.76 | 6.333
+
+8.15 | 9.333
+6.27 | 9.500
+
+0.94 |
+0.63 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+28.84
+10.00
+4.66 (ii)
+10.00
+0.15
+
+49.39
+20.00
+14.02 (ii)
+20.00
+0.07
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.15
+5.17
+61.71
+62.71
+0.98
+
+*
+
+0.01
+5.17
+30.02
+62.71
+0.48
+
+TOTALS*
+0.167 (iii)
+5.17
+58.54
+62.71
+0.93
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0007)|
+Area
+(ha)=
+0.29
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.28
+0.01
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+43.97
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAIN
+mm/hr
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 3.333
+
+7.21 | 6.500
+
+4.39 |
+
+9.67
+
+0.333
+
+0.32 | 3.500
+
+10.66 | 6.667
+
+4.39 |
+
+9.83
+
+0.500
+
+0.63 | 3.667
+
+10.66 | 6.833
+
+4.39 | 10.00
+
+0.667
+
+0.63 | 3.833
+
+10.66 | 7.000
+
+4.39 | 10.17
+
+0.833
+
+0.63 | 4.000
+
+10.66 | 7.167
+
+4.39 | 10.33
+
+1.000
+
+0.63 | 4.167
+
+10.66 | 7.333
+
+3.45 | 10.50
+
+1.167
+
+0.63 | 4.333
+
+19.75 | 7.500
+
+2.51 | 10.67
+
+1.333
+
+0.63 | 4.500
+
+28.84 | 7.667
+
+2.51 | 10.83
+
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.31
+
+1.500
+
+0.63 | 4.667
+
+28.84 | 7.833
+
+2.51 | 11.00
+
+1.667
+
+0.63 | 4.833
+
+28.84 | 8.000
+
+2.51 | 11.17
+
+1.833
+
+0.63 | 5.000
+
+28.84 | 8.167
+
+2.51 | 11.33
+
+2.000
+
+0.63 | 5.167
+
+28.84 | 8.333
+
+1.88 | 11.50
+
+2.167
+
+0.63 | 5.333
+
+18.50 | 8.500
+
+1.25 | 11.67
+
+2.333
+
+2.19 | 5.500
+
+8.15 | 8.667
+
+1.25 | 11.83
+
+2.500
+
+3.76 | 5.667
+
+8.15 | 8.833
+
+1.25 | 12.00
+
+2.667
+
+3.76 | 5.833
+
+8.15 | 9.000
+
+1.25 | 12.17
+
+2.833
+
+3.76 | 6.000
+
+8.15 | 9.167
+
+1.25 | 12.33
+
+3.000
+3.167
+
+3.76 | 6.167
+3.76 | 6.333
+
+8.15 | 9.333
+6.27 | 9.500
+
+0.94 |
+0.63 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+28.84
+10.00
+2.57 (ii)
+10.00
+0.17
+
+49.39
+20.00
+11.92 (ii)
+20.00
+0.08
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.02
+5.00
+61.71
+62.71
+0.98
+
+0.00
+5.17
+30.02
+62.71
+0.48
+
+*
+
+TOTALS*
+0.023 (iii)
+5.17
+58.54
+62.71
+0.93
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0004):
+21.24
+1.342
+5.17
+42.17
++ ID2= 2 ( 0006):
+2.12
+0.167
+5.17
+58.54
+====================================================
+ID = 3 ( 0005):
+23.36
+1.508
+5.17
+43.65
+
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+3 + 2 = 1
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 3 ( 0005):
+23.36
+1.508
+5.17
+43.65
++ ID2= 2 ( 0007):
+0.29
+0.023
+5.17
+58.54
+====================================================
+ID = 1 ( 0005):
+23.65
+1.531
+5.17
+43.84
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+1.531
+0.289
+
+TPEAK
+(hrs)
+5.17
+6.50
+
+R.V.
+(mm)
+43.84
+43.77
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 18.89
+TIME SHIFT OF PEAK FLOW
+(min)= 80.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.7500
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 25 Year 6 Hour AES (Bloor, TR **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+6ea15636f4fe\c6cd8f0e
+| Ptotal= 65.59 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+1.31
+0.25
+1.31
+0.50
+1.31
+0.75
+1.31
+1.00
+1.25
+1.50
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+859d813f-8991-4bf3-9eb8Comments: 25 Year 6 Hour AES (Bloor, TRCA)
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+1.75
+
+22.30 |
+
+3.50
+
+9.18 |
+
+5.25
+
+1.31 |
+
+2.00
+
+22.30 |
+
+3.75
+
+5.25 |
+
+5.50
+
+1.31 |
+
+2.25
+
+60.35 |
+
+4.00
+
+5.25 |
+
+5.75
+
+1.31 |
+
+2.50
+
+60.35 |
+
+4.25
+
+2.62 |
+
+6.00
+
+1.31 |
+7.87 |
+7.87 |
+
+2.75
+3.00
+3.25
+
+17.06 |
+17.06 |
+9.18 |
+
+4.50
+4.75
+5.00
+
+2.62 |
+1.31 |
+1.31 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+
+| NASHYD
+( 0003)|
+|ID= 1 DT=10.0 min |
+-------------------NOTE:
+
+RAIN
+mm/hr
+1.31
+1.31
+1.31
+1.31
+1.31
+1.31
+1.31
+0.66
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+
+1.93
+5.00
+0.20
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+15.08 | 3.500
+
+9.18 |
+
+5.17
+
+0.333
+
+0.65 | 2.000
+
+22.30 | 3.667
+
+9.18 |
+
+5.33
+
+0.500
+
+1.31 | 2.167
+
+22.30 | 3.833
+
+7.21 |
+
+5.50
+
+0.667
+
+1.31 | 2.333
+
+41.32 | 4.000
+
+5.25 |
+
+5.67
+
+0.833
+
+1.31 | 2.500
+
+60.35 | 4.167
+
+5.25 |
+
+5.83
+
+1.000
+
+1.31 | 2.667
+
+60.35 | 4.333
+
+3.93 |
+
+6.00
+
+1.167
+
+1.31 | 2.833
+
+38.70 | 4.500
+
+2.62 |
+
+6.17
+
+1.333
+
+4.59 | 3.000
+
+17.06 | 4.667
+
+2.62 |
+
+6.33
+
+1.500
+1.667
+
+7.87 | 3.167
+7.87 | 3.333
+
+17.06 | 4.833
+13.12 | 5.000
+
+1.97 |
+1.31 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.369
+0.139 (i)
+2.833
+28.816
+65.590
+0.439
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)= 12.91
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 60.00
+Dir. Conn.(%)= 50.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+7.75
+5.16
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+293.37
+40.00
+Mannings n
+=
+0.013
+0.250
+
+NOTE:
+
+RAIN
+mm/hr
+1.31
+1.31
+1.31
+1.31
+1.31
+1.31
+1.31
+0.66
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+15.08 | 3.500
+
+9.18 |
+
+5.17
+
+0.333
+
+0.65 | 2.000
+
+22.30 | 3.667
+
+9.18 |
+
+5.33
+
+0.500
+
+1.31 | 2.167
+
+22.30 | 3.833
+
+7.21 |
+
+5.50
+
+0.667
+
+1.31 | 2.333
+
+41.32 | 4.000
+
+5.25 |
+
+5.67
+
+0.833
+
+1.31 | 2.500
+
+60.35 | 4.167
+
+5.25 |
+
+5.83
+
+1.000
+
+1.31 | 2.667
+
+60.35 | 4.333
+
+3.93 |
+
+6.00
+
+1.167
+
+1.31 | 2.833
+
+38.70 | 4.500
+
+2.62 |
+
+6.17
+
+1.333
+
+4.59 | 3.000
+
+17.06 | 4.667
+
+2.62 |
+
+6.33
+
+1.500
+1.667
+
+7.87 | 3.167
+7.87 | 3.333
+
+17.06 | 4.833
+13.12 | 5.000
+
+1.97 |
+1.31 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+60.35
+10.00
+5.96 (ii)
+10.00
+0.14
+
+61.43
+20.00
+14.54 (ii)
+20.00
+0.07
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+1.07
+2.67
+64.59
+65.59
+0.98
+
+0.66
+2.83
+29.00
+65.59
+0.44
+
+*
+
+TOTALS*
+1.652 (iii)
+2.67
+46.79
+65.59
+0.71
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0002)|
+Area
+(ha)=
+6.40
+
+|ID= 1 DT=10.0 min |
+-------------------Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+NOTE:
+
+RAIN
+mm/hr
+1.31
+1.31
+1.31
+1.31
+1.31
+1.31
+1.31
+0.66
+
+Total Imp(%)=
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+80.00
+
+IMPERVIOUS
+5.12
+1.00
+1.00
+206.56
+0.013
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+Dir. Conn.(%)=
+
+75.00
+
+PERVIOUS (i)
+1.28
+1.50
+2.00
+40.00
+0.250
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+15.08 | 3.500
+
+9.18 |
+
+5.17
+
+0.333
+
+0.65 | 2.000
+
+22.30 | 3.667
+
+9.18 |
+
+5.33
+
+0.500
+
+1.31 | 2.167
+
+22.30 | 3.833
+
+7.21 |
+
+5.50
+
+0.667
+
+1.31 | 2.333
+
+41.32 | 4.000
+
+5.25 |
+
+5.67
+
+0.833
+
+1.31 | 2.500
+
+60.35 | 4.167
+
+5.25 |
+
+5.83
+
+1.000
+
+1.31 | 2.667
+
+60.35 | 4.333
+
+3.93 |
+
+6.00
+
+1.167
+
+1.31 | 2.833
+
+38.70 | 4.500
+
+2.62 |
+
+6.17
+
+1.333
+
+4.59 | 3.000
+
+17.06 | 4.667
+
+2.62 |
+
+6.33
+
+1.500
+1.667
+
+7.87 | 3.167
+7.87 | 3.333
+
+17.06 | 4.833
+13.12 | 5.000
+
+1.97 |
+1.31 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+60.35
+10.00
+4.83 (ii)
+10.00
+0.15
+
+61.43
+20.00
+13.41 (ii)
+20.00
+0.07
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.80
+2.67
+64.59
+65.59
+0.98
+
+0.17
+2.83
+29.00
+65.59
+0.44
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+
+*
+
+TOTALS*
+0.950 (iii)
+2.67
+55.69
+65.59
+0.85
+
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0001):
+12.91
+1.652
+2.67
+46.79
++ ID2= 2 ( 0002):
+6.40
+0.950
+2.67
+55.69
+====================================================
+ID = 3 ( 0004):
+19.31
+2.602
+2.67
+49.74
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0004)|
+|
+3 + 2 = 1
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 3 ( 0004):
+19.31
+2.602
+2.67
+49.74
++ ID2= 2 ( 0003):
+1.93
+0.139
+2.83
+28.82
+====================================================
+ID = 1 ( 0004):
+21.24
+2.738
+2.67
+47.84
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0006)|
+Area
+(ha)=
+2.12
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+2.01
+0.11
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+118.88
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAIN
+mm/hr
+1.31
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+0.167
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+0.00 | 1.833
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+15.08 | 3.500
+
+9.18 |
+
+5.17
+
+1.31
+1.31
+1.31
+1.31
+1.31
+1.31
+0.66
+
+0.333
+
+0.65 | 2.000
+
+22.30 | 3.667
+
+9.18 |
+
+5.33
+
+0.500
+
+1.31 | 2.167
+
+22.30 | 3.833
+
+7.21 |
+
+5.50
+
+0.667
+
+1.31 | 2.333
+
+41.32 | 4.000
+
+5.25 |
+
+5.67
+
+0.833
+
+1.31 | 2.500
+
+60.35 | 4.167
+
+5.25 |
+
+5.83
+
+1.000
+
+1.31 | 2.667
+
+60.35 | 4.333
+
+3.93 |
+
+6.00
+
+1.167
+
+1.31 | 2.833
+
+38.70 | 4.500
+
+2.62 |
+
+6.17
+
+1.333
+
+4.59 | 3.000
+
+17.06 | 4.667
+
+2.62 |
+
+6.33
+
+1.500
+1.667
+
+7.87 | 3.167
+7.87 | 3.333
+
+17.06 | 4.833
+13.12 | 5.000
+
+1.97 |
+1.31 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+60.35
+10.00
+3.47 (ii)
+10.00
+0.16
+
+108.76
+20.00
+10.29 (ii)
+20.00
+0.08
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.32
+2.67
+64.59
+65.59
+0.98
+
+0.03
+2.83
+40.39
+65.59
+0.62
+
+*
+
+TOTALS*
+0.346 (iii)
+2.67
+62.17
+65.59
+0.95
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0007)|
+Area
+(ha)=
+0.29
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 95.00
+Dir. Conn.(%)= 90.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.28
+0.01
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+43.97
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+10.0 MIN. TIME STEP.
+
+RAIN
+mm/hr
+1.31
+1.31
+1.31
+1.31
+1.31
+1.31
+1.31
+0.66
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+0.00 | 1.833
+
+15.08 | 3.500
+
+9.18 |
+
+5.17
+
+0.333
+
+0.65 | 2.000
+
+22.30 | 3.667
+
+9.18 |
+
+5.33
+
+0.500
+
+1.31 | 2.167
+
+22.30 | 3.833
+
+7.21 |
+
+5.50
+
+0.667
+
+1.31 | 2.333
+
+41.32 | 4.000
+
+5.25 |
+
+5.67
+
+0.833
+
+1.31 | 2.500
+
+60.35 | 4.167
+
+5.25 |
+
+5.83
+
+1.000
+
+1.31 | 2.667
+
+60.35 | 4.333
+
+3.93 |
+
+6.00
+
+1.167
+
+1.31 | 2.833
+
+38.70 | 4.500
+
+2.62 |
+
+6.17
+
+1.333
+
+4.59 | 3.000
+
+17.06 | 4.667
+
+2.62 |
+
+6.33
+
+1.500
+1.667
+
+7.87 | 3.167
+7.87 | 3.333
+
+17.06 | 4.833
+13.12 | 5.000
+
+1.97 |
+1.31 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+60.35
+10.00
+1.91 (ii)
+10.00
+0.17
+
+108.76
+10.00
+8.73 (ii)
+10.00
+0.12
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.04
+2.67
+64.59
+65.59
+0.98
+
+0.00
+2.67
+40.39
+65.59
+0.62
+
+*
+
+TOTALS*
+0.048 (iii)
+2.67
+62.17
+65.59
+0.95
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) HORTONS EQUATION SELECTED FOR PERVIOUS LOSSES:
+Fo
+(mm/hr)= 50.00
+K (1/hr)= 2.00
+Fc
+(mm/hr)= 7.50
+Cum.Inf.
+(mm)= 0.00
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+1 + 2 = 3
+|
+-------------------ID1= 1 ( 0004):
+
+AREA
+(ha)
+21.24
+
+QPEAK
+(cms)
+2.738
+
+TPEAK
+(hrs)
+2.67
+
+R.V.
+(mm)
+47.84
+
++ ID2= 2 ( 0006):
+2.12
+0.346
+2.67
+62.17
+====================================================
+ID = 3 ( 0005):
+23.36
+3.084
+2.67
+49.14
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0005)|
+|
+3 + 2 = 1
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 3 ( 0005):
+23.36
+3.084
+2.67
+49.14
++ ID2= 2 ( 0007):
+0.29
+0.048
+2.67
+62.17
+====================================================
+ID = 1 ( 0005):
+23.65
+3.132
+2.67
+49.30
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| RESERVOIR( 0008)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.3940
+0.9711
+0.0750
+0.5058
+|
+0.4500
+1.1371
+0.2310
+0.6944
+|
+0.4830
+1.2478
+0.3140
+0.7719
+|
+3.3200
+1.5022
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0005)
+0008)
+
+AREA
+(ha)
+23.650
+23.650
+
+QPEAK
+(cms)
+3.132
+0.374
+
+TPEAK
+(hrs)
+2.67
+3.83
+
+R.V.
+(mm)
+49.30
+49.23
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 11.93
+TIME SHIFT OF PEAK FLOW
+(min)= 70.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.9215
+------------------------------------------------------------------------------
+
+

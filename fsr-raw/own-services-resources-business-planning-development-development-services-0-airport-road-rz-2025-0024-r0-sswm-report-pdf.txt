@@ -1,0 +1,10327 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+November 18th, 2025
+
+SERVICING & STORMWATER
+MANAGEMENT REPORT
+BROCCOLINI AIRPORT ROAD
+
+TOWN OF CALEDON
+REGION OF PEEL
+
+PREPARED FOR:
+BROCCOLINI AIRPORT ROAD LP
+PREPARED BY:
+C.F. CROZIER & ASSOCIATES INC.
+211 YONGE STREET, SUITE 600
+TORONTO, ON M5B 1M4
+
+OCTOBER 2025
+
+CFCA FILE NO. 2278-7228
+The material in this report reflects best judgment in light of the
+information available at the time of preparation. Any use which
+a third party makes of this report, or any reliance on or decisions
+made based on it, are the responsibilities of such third parties.
+C.F. Crozier & Associates Inc. accepts no responsibility for
+damages, if any, suffered by any third party as a result of
+decisions made or actions based on this report.
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+Servicing & Stormwater Management Report
+October 2025
+
+Revision Number
+
+Date
+
+Comments
+
+Rev.0
+
+October 30, 2025
+
+Issued for First Submission (ZBA & SPA)
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+Servicing & Stormwater Management Report
+October 2025
+
+TABLE OF CONTENTS
+1.0
+
+INTRODUCTION ................................................................................................................... 1
+1.1
+1.2
+1.3
+
+2.0
+
+Site Description ............................................................................................................. 1
+Proposed Development ............................................................................................... 1
+Referenced Documents ............................................................................................... 1
+SANITARY SERVICING ......................................................................................................... 2
+
+2.1
+2.2
+2.3
+3.0
+
+Sanitary Design Criteria................................................................................................ 2
+Existing Municipal Sanitary System ............................................................................. 2
+Proposed Sanitary Sewer System ................................................................................ 2
+WATER SERVICING .............................................................................................................. 3
+
+3.1
+3.2
+3.3
+4.0
+
+STORMWATER MANAGEMENT ............................................................................................ 4
+4.1
+4.2
+4.2.1
+
+Existing Drainage Conditions ....................................................................................... 5
+Proposed Drainage Conditions ................................................................................... 5
+External Drainage ......................................................................................................... 5
+
+4.3
+4.4
+4.5
+4.6
+4.7
+
+Stormwater Quantity Control ....................................................................................... 6
+Stormwater Quality Control ......................................................................................... 8
+Groundwater Condition ............................................................................................... 9
+Water Balance / Erosion Control ................................................................................. 9
+Feature-Based Water Balance .................................................................................. 10
+
+5.0
+
+EROSION AND SEDIMENT CONTROL ................................................................................ 10
+5.1
+5.2
+
+6.0
+
+Sanitary Design Criteria................................................................................................ 3
+Existing Municipal Watermain System ........................................................................ 3
+Proposed Watermain System ...................................................................................... 3
+
+Erosion Control Measures .......................................................................................... 10
+Sediment Control Measures ...................................................................................... 10
+CONCLUSIONS .................................................................................................................. 11
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+Servicing & Stormwater Management Report
+October 2025
+
+LIST OF TABLES
+Table 1:
+
+Proposed Sanitary Demand Flows
+
+Table 2:
+
+Domestic Water Demands
+
+Table 3:
+
+Fire Flow Demands – Fire Underwriter’s Survey
+
+Table 4:
+
+Post-Development Catchments
+
+Table 5:
+
+Summary of Unit Flow Relationships and Allowable Release Rates for the Site
+
+Table 6:
+
+Summary of Peak Flow Rates from the North Parcel
+
+Table 7:
+
+Summary of Peak Flow Rates from the South Parcel
+
+Table 8:
+
+Summary of Proposed Infiltration Galleries
+
+LIST OF APPENDICES
+Appendix A:
+
+Sanitary Flow Calculations
+
+Appendix B:
+
+Water Demand Calculations
+
+Appendix C:
+
+Stormwater Management Calculations
+
+Appendix D:
+
+Erosion Control Calculations
+
+LIST OF DRAWINGS
+Drawing C101:
+
+Erosion & Sediment Control Plan
+
+Drawing C101 A:
+
+Erosion & Sediment Control Details
+
+Drawing C102 – C102 C:
+
+Site Servicing Plan
+
+Drawing C103 – C103 C:
+
+Site Grading Plan
+
+Drawing C104:
+
+Standard Details – Region of Peel
+
+Drawing C104 A & C104 B:
+
+Standard Details – Ontario Provincial
+
+Drawing C104 C:
+
+North Control Manhole Detail
+
+Drawing C104 D:
+
+South Control Manhole Detail
+
+Drawing C105:
+
+Notes
+
+LIST OF FIGURES
+Figure 1:
+
+Sanitary Drainage Area Plan
+
+Figure 2:
+
+Catchbasin Drainage Area Plan
+
+Figure 3:
+
+Pre-Development Drainage Area Plan
+
+Figure 4:
+
+Post-Development Drainage Area Plan
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+1.0
+
+Servicing & Stormwater Management Report
+October 2025
+
+Introduction
+
+C.F. Crozier & Associated Inc. (Crozier) was retained by Broccolini Airport Road LP to prepare a
+Servicing and Stormwater Management Report in support of the Zoning Bylaw Amendment (ZBA)
+and Site Plan Application (SPA) for the property known as Broccolini Airport Road (the Site) in the
+Town of Caledon (Town). This report demonstrates how the proposed development’s servicing and
+stormwater management will conform with the Tullamore North West Secondary Plan design
+prepared by Crozier (May 2025) as well as the requirements of the Town and Region of Peel
+(Region).
+1.1
+
+Site Description
+
+The Site is bound by Airport Road to the east and agricultural lands to the north, west and south. The
+property consists of a total area of 24.25 ha, of which 13.44 ha is proposed to be redeveloped. The
+portion of the Site that is proposed to be redeveloped is the east portion of the property and
+currently consists of agricultural lands while the remainder of the Site is classified as an
+environmental zone. Salt Creek flows through the environmental zone within the Site.
+1.2
+
+Proposed Development
+
+As shown in the Site Plan prepared by Powers Brown Architecture, the developable area is proposed
+to be severed into two parcels. Each parcel will have its own servicing and stormwater
+management and will be referred to as the North Parcel (4.87 ha) and the South Parcel (8.57 ha) in
+this report. The proposed development includes one (1) one-storey industrial building on each
+parcel. Building A on the North Parcel has a total area of 23,576 m2 and Building B on the South
+Parcel has a total area of 47,809 m2. Three (3) vehicular access points to the Site are proposed from
+Airport Road.
+1.3
+
+Referenced Documents
+
+The following reports and design standards were referenced during the preparation of this report:
+•
+
+Master Environmental Servicing Report, Tullamore North Secondary Plan (GEI, May 2025)
+
+•
+
+Functional Servicing and Stormwater Management Report for Tullamore North West
+Secondary Plan (Crozier, May 2025)
+
+•
+
+Hydrogeological Investigation Report (Crozier, October 2025)
+
+•
+
+Environmental Impact Study, Broccolini Airport Road
+
+•
+
+Region of Peel Public Works Design, Specifications & Procedures Manual (Region of Peel,
+2010)
+
+•
+
+Development Standards Manual (Town of Caledon, 2019)
+
+•
+
+Stormwater Management Criteria (TRCA, August 2012)
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Page 1 of 11
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+2.0
+
+Sanitary Servicing
+
+2.1
+
+Sanitary Design Criteria
+
+Servicing & Stormwater Management Report
+October 2025
+
+The proposed sanitary sewer for the Site has been designed based on the Region of Peel – Linear
+Wastewater standards. The sanitary design criteria are as follows:
+
+2.2
+
+•
+
+Population Density – 70 persons/ha (industrial)
+
+•
+
+Infiltration – 0.26 L/s/ha
+
+•
+
+Non-Residential Sanitary Sewage Demand – 270 L/capita/day
+
+•
+
+Harmon Peaking Factor
+Existing Municipal Sanitary System
+
+Review of the Region of Peel As-Constructed Drawings 21983-D, 21984-D, 21985-D and 21986-D
+shows an existing 600 mm diameter gravity sanitary sewer sloping between 0.25 – 0.35% on Airport
+Road across the entire frontage of the site. The existing sewer is located on the west side of the
+Airport Road ROW and currently services Caledon East.
+2.3
+
+Proposed Sanitary Sewer System
+
+Sanitary servicing for Building A will be provided by a 250 mm diameter sanitary sewer connection to
+EX.MH31 on Airport Road with MH101A serving as the property line maintenance hole. Sanitary
+connections to Building A will be 200 mm in diameter and will be plugged at the face of the
+building.
+Sanitary servicing for Building B will be provided by a 250 mm diameter sanitary sewer connection to
+EX.MH29 on Airport Road with MH201A serving as the property line maintenance hole. Sanitary
+connections to Building B will be 200 mm in diameter and will be plugged at the face of the
+building.
+A sanitary sewer design sheet has been completed based on the Sanitary Drainage Area Plan
+(Figure 1) and is included in Appendix A. The proposed sanitary services are shown on Drawings
+C102-C102C.
+The sanitary sewage design flows were calculated using the Region’s standards and the Site Plan
+prepared by Powers Brown Architecture. Table 1 outlines the sanitary demands for the proposed
+development. Detailed calculations are included in Appendix A.
+
+Building
+A
+B
+
+Table 1: Proposed Sanitary Demand Flows
+Peak
+Infiltration
+Total
+Equivalent
+Flow
+Flow
+Flow
+Population
+(L/s)
+(L/s)
+(L/s)
+341
+4.26
+1.27
+5.53
+600
+7.37
+2.23
+9.60
+
+Outlet
+Airport Road
+Airport Road
+
+Sanitary flows from Building A & B will discharge to Airport Road and result in an increase of 5.53 L/s
+and 9.60 L/s, respectively.
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Page 2 of 11
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+3.0
+
+Water Servicing
+
+3.1
+
+Sanitary Design Criteria
+
+Servicing & Stormwater Management Report
+October 2025
+
+Water servicing for the Site has been designed in accordance with the Region of Peel standards
+and specifications to ensure that adequate pressures and flows are achieved. Watermain design
+flows are based on the following criteria:
+
+3.2
+
+•
+
+Average Day Demand – 300 L/employee/day
+
+•
+
+Population Density – 70 persons/ha (industrial)
+
+•
+
+Maximum Day Factor – 1.4
+
+•
+
+Peak Hour Factor – 3.0
+
+•
+
+Design Flow - greater of maximum daily demand plus fire flow or peak hourly demand
+Existing Municipal Watermain System
+
+Review of the Region of Peel As-Constructed Drawings 21983-D, 21984-D, 21985-D and 21986-D
+shows an existing 300 mm diameter watermain on Airport Road. The Site is in Pressure Zone 6 within
+the South Region of Peel Water Supply System.
+3.3
+
+Proposed Watermain System
+
+Water servicing for Buildings A and B will be provided by separate 300 mm diameter water service
+connections to the existing 300 mm diameter watermain within Airport Road. At the property line,
+the 300 mm water services will split into 300 mm fire and 150 mm domestic water services. The
+300mm fire services are set to be complete with detector check valves in chambers at the property
+line. The fire service for the North Parcel will enter Building A where the mechanical room is located,
+then it will exit the building and wrap around the parcel to service hydrants and individual fire
+connections to the building. The fire service for the South Parcel will enter Building B where the
+mechanical room is located, then it will exit the building and wrap around the parcel to service
+hydrants and individual fire connections to the building. Note, the fire service design will be detailed
+through coordination with the mechanical engineer and sprinkler consultant as part of upcoming
+submissions. The domestic service for each parcel will enter the building, where a water meter and
+backflow preventer will be provided per mechanical design and specifications. The proposed water
+servicing is shown on Drawings C102-C102C.
+The domestic water demand has been calculated based on the Site Plan by Powers Brown
+Architecture. Table 2 below summarizes the domestic water demands for both buildings. The
+detailed calculations are included in Appendix B.
+
+Building
+A
+B
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Table 2: Proposed Domestic Demand
+Average Daily
+Maximum Daily
+Equivalent
+Demand
+Demand
+Population
+(L/s)
+(L/s)
+341
+1.18
+1.66
+600
+2.08
+2.92
+
+Peak hourly
+demand
+(L/s)
+3.55
+6.25
+
+Page 3 of 11
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+Servicing & Stormwater Management Report
+October 2025
+
+The fire flow requirements for Building A & B were calculated based on the Fire Underwriters Survey
+(FUS) requirements, as shown in Table 3 below. It has been assumed that a fire wall will be provided
+in the centre of Building B. The location of this fire wall will be further refined in a future submission.
+Table 3: Fire Flow Demands – Fire Underwriter’s Survey
+Required Fire Flow
+Building
+(L/s)
+A
+150.0
+B
+166.7
+Note, a fire suppression consultant may be retained to calculate the building’s specific fire flow
+demands based on the individual fire suppression tactics that are proposed.
+A hydrant flow test was completed on October 28, 2025 for the 300 mm diameter watermain on
+Airport Road. It was determined that at 20 psi, a flow of 191 L/s (3024 USGPM) is available. As such,
+the municipal watermain has sufficient pressure and flow to service the proposed development.
+Refer to the hydrant flow test in Appendix B for reference.
+
+4.0
+
+Stormwater Management
+
+The stormwater management strategy for the Site has been designed in accordance with the
+Secondary Plan for Tullamore North West (Crozier, May 2025). The stormwater management criteria
+are summarized below:
+•
+
+Quantity Control: Control of the 2-year to 100-year storm events according to the unit flow
+relationships established by TRCA for Sub-Basin 63. Refer to Section 4.2 for more details on the
+design flow targets for each parcel. The Secondary Plan report (May 2025) indicates that
+further analysis is needed to determine Regional storm event control requirements. If
+Regional controls are deemed necessary for the Site, the stormwater management design
+will be updated as part of the next submission accordingly.
+
+•
+
+Quality Control: Enhanced level of water quality protection (80% total suspended solids (TSS)
+removal).
+
+•
+
+Site Water Balance: Water balance analysis is required using the average and more frequent
+precipitation events that comprise of the bulk volume of annual precipitation to ensure
+maintenance of pre-development water balance following development. Per the analysis
+completed in the Hydrogeological Investigation Report (October 2025) this results in an
+infiltration target of 44 mm/year, which equates to a volume of 157.9 m3 and 210.3 m3 for the
+North Parcel and the South Parcel, respectively.
+
+•
+
+Feature-Base Water Balance: Candidate significant wetland has been identified within the
+lands owned by Broccolini by GEI. The wetland is located along the length of Salt Creek and
+is 2 m wide at the bottom of the valley. A feature-based water balance assessment was
+undertaken to estimate the potential impact of the proposed development on the wetland.
+Refer to Section 4.6 for more details.
+
+•
+
+Erosion Control: At a minimum, TRCA requires on-site retention of the first 5 mm of runoff
+generated from the total impervious area.
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Page 4 of 11
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+4.1
+
+Servicing & Stormwater Management Report
+October 2025
+
+Existing Drainage Conditions
+
+According to aerial imagery, the portion of property proposed for redevelopment currently consists
+of agricultural land. A review of existing drainage patterns on Site and the surrounding area was
+completed based on the topographic survey completed by R-PE Surveying Ltd. (July 29, 2025) and
+the TRCA GTA_2023 data retrieved from the Government of Canada High Resolution Digital
+Elevation Model (HRDEM) – CanElevation Series on April 11, 2025.
+Existing drainage is split within the Site, where approximately 67% drains towards Salt Creek and the
+other 33% drains towards Airport Road. There is also a 1.93 ha external area north of the Site that
+drains through the northwest corner for the property. Refer to Figure 3 for the pre-development
+drainage catchments and overland flow directions. Note, the catchments within the Site have been
+divided according to the proposed severance line since the two parcels will have separate
+stormwater management.
+4.2
+
+Proposed Drainage Conditions
+
+The proposed grading on Site is designed to match the drainage patterns outlined in the Secondary
+Plan Report (May 2025). As part of the overall stormwater design described in the Secondary Plan
+Report (May 2025), drainage from the Site must be directed towards Salt Creek. The grading design
+ensures that drainage is contained within the individual parcels.
+Stormwater for the proposed rooftops will be controlled to a release rate of 42 L/s/ha and conveyed
+to infiltration galleries. Overflow from the infiltration galleries will be directed to the internal storm
+sewer system and underground storage tanks. Drainage from the parking and paved surfaces
+surrounding the buildings will be captured through catchbasins and directed to the underground
+storage tanks. Majority of the landscaped areas will also be captured by catchbasins and directed
+to the underground tank. Some minor landscaping at the rear of the property will drain uncontrolled
+toward Salt Creek. The stormwater management systems within each parcel will be separate. The
+outlet for the tank on each parcel will be Salt Creek. Storm sewer design sheets based on the
+Catchbasin Drainage Area Plan (Figure 2) were used for internal pipe sizing for each parcel and are
+included in Appendix C. The storm sewers within the Site have been sized to convey the 5-year storm
+event to the control manhole and the 100-year controlled flow downstream of the control manhole.
+The post-development catchments are summarized in Table 4. Refer to Figure 4 for the postdevelopment drainage area plan.
+Table 4: Post-Development Catchments
+
+4.2.1
+
+Catchment ID
+
+Area
+(ha)
+
+Runoff
+Coefficient
+
+TIMP
+
+XIMP
+
+201
+202
+UC1
+North Parcel Total
+203
+204
+UC2
+South Parcel Total
+EXT1
+
+2.40
+2.36
+0.11
+4.87
+3.65
+4.78
+0.14
+8.57
+1.93
+
+0.73
+0.90
+0.25
+0.80
+0.74
+0.90
+0.25
+0.82
+0.25
+
+0.74
+0.99
+0.76
+0.99
+-
+
+0.74
+0.99
+0.76
+0.99
+-
+
+Curve
+Number
+(CN)
+81
+81
+81
+81
+81
+81
+86
+
+Time to
+Peak
+(hr)
+0.17
+0.17
+0.39
+
+External Drainage
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Page 5 of 11
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+Servicing & Stormwater Management Report
+October 2025
+
+As shown in Figure 4, there is external drainage entering the Site at the northwest corner of the North
+Parcel. The external catchment (EXT1) is 1.93 ha and currently consists of agricultural land. A swale is
+proposed along the north boundary of the Site to convey external runoff towards Salt Creek,
+mimicking existing conditions. The swale is sized as a triangular channel, with the low point in line
+with the property line. The swale will convey the Regional storm event flow (0.264 m3/s) with 0.3 m of
+freeboard. Refer to Appendix C for the FlowMaster calculations.
+4.3
+
+Stormwater Quantity Control
+
+Visual Otthymo (VO), a hydrologic stormwater modeling software, was used to determine peak
+runoff within the Site. In accordance with Table 3-1 of the Stormwater Management Criteria (TRCA,
+2012) calculation of return period peak flows within the Humber River Watershed shall be based on
+the 6-hour and 12- hour AES storm distributions.
+Table 4 summarizes the Time of Peak (Tp) values and SCS Curve Numbers (CN), which are based on
+soil, land use and topographic conditions. It is noted that a minimum Tp value of 10 minutes has
+been implemented where the calculated value using the Airport Method was below 10 minutes.
+The TIMP and XIMP values for each STANDHYD were determined based on the proposed land cover
+for each catchment. For catchments consisting only of rooftop, TIMP was assigned as 0.99,
+representing completely impervious cover. The XIMP values are equal to the TIMP for all catchments.
+The TIMP and XIMP values are also summarized in Table 4.
+An initial abstraction (IA) value of 1 mm has been applied for catchments consisting of rooftops only
+and an IA of 2 mm was applied for parking lots.
+As indicated in the Secondary Plan Report (May 2025), the allowable release rate for each parcel is
+dictated by the unit flow relationships for Sub-Basin 36 established by the TRCA. For the North Parcel,
+flows from Catchments 201 and 202 are controlled to ensure they do not exceed the allowable
+release rate, minus the uncontrolled flows from Catchment UC1. For the South Parcel, flows from
+Catchments 203 and 204 are controlled to ensure they do not exceed the allowable release rate,
+minus the uncontrolled flows from Catchment UC2.
+The allowable release rates are determined using the pre-development area directed towards Salt
+Creek. Under existing conditions, runoff from 3.96 ha and 5.05 ha of the North and South Parcels,
+respectively, are directed towards Salt Creek. Refer to Table 5 for the allowable release rates for
+each parcel and Figure 3 for the pre-development drainage areas.
+Table 5: Summary of Unit Flow Relationships and Allowable Release Rates for the Site
+Allowable Release Rate (m3/s)
+Unit Flow Equations
+Storm Event
+(Sub-Basin 36)
+North Parcel
+South Parcel
+2-year
+Q = 9.506 – 0.719 * ln (A)
+0.034
+0.042
+5-year
+
+Q = 14.652 – 1.136 * ln (A)
+
+0.052
+
+0.065
+
+10-year
+
+Q = 17.957 – 1.373 * ln (A)
+
+0.064
+
+0.079
+
+25-year
+
+Q = 22.639 – 1.741 * ln (A)
+
+0.080
+
+0.100
+
+50-year
+
+Q = 26.566 – 2.082 * ln (A)
+
+0.094
+
+0.117
+
+100-year
+
+Q = 29.912 – 2.316 * ln (A)
+
+0.106
+
+0.132
+
+Notes: Q = unit flow (L/s/ha), A = area (ha)
+Source: Stormwater Management Criteria prepared by TRCA (August 2012)
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Page 6 of 11
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+Servicing & Stormwater Management Report
+October 2025
+
+North Parcel
+Rooftop control is provided on the North Parcel at a rate of 42 L/s/ha. This results in a total release
+rate of 0.099 m3/s for Catchment 202, requiring rooftop storage of 928 m3. Flows from the rooftop are
+also directed to the proposed underground infiltration galleries and storage tank for further control.
+An outlet control manhole (MH101) with two (2) orifice controls is proposed to control the postdevelopment peak stormwater flows from both Catchment 201 and 202. The first orifice is 100 mm
+diameter at an elevation of 246.75 and controls the 2-year storm event. The second orifice is 130 mm
+diameter at an elevation of 247.85. The combination of the two orifices controls the 5-year to 100year storm events. Refer to Drawing C104C for the control manhole details.
+Refer to Table 6 for a summary of the results and Appendix C for the VO model inputs.
+Table 6: Summary of Peak Flow Rates from the North Parcel
+
+1.
+2.
+
+Storm
+Event
+
+6-hour AES Distribution
+Uncontrolled
+Controlled (201+202)
+(UC1) Peak
+Peak
+Storage
+Flow
+Flow
+Required
+(m³/s)
+(m³/s)
+(m3)
+
+Total
+Peak
+Flow
+(m³/s)
+
+12-hour AES Distribution
+Controlled (201+202)
+Uncontrolled
+(UC1) Peak
+Peak
+Storage
+Flow
+Flow
+Required
+(m³/s)
+(m³/s)
+(m3)
+
+Total
+Peak
+Flow
+(m³/s)
+
+2-year
+
+0.025
+
+987
+
+0.003
+
+0.026
+
+0.027
+
+1,043
+
+0.003
+
+0.028
+
+5-year
+
+0.046
+
+1,393
+
+0.006
+
+0.046
+
+0.046
+
+1,403
+
+0.004
+
+0.047
+
+10-year
+
+0.054
+
+1,627
+
+0.007
+
+0.055
+
+0.056
+
+1,674
+
+0.005
+
+0.057
+
+25-year
+
+0.065
+
+1,893
+
+0.010
+
+0.065
+
+0.069
+
+1,985
+
+0.007
+
+0.070
+
+50-year
+
+0.092
+
+2,033
+
+0.011
+
+0.092
+
+0.093
+
+2,121
+
+0.008
+
+0.094
+
+100-year
+
+0.093
+
+2,093
+
+0.013
+
+0.093
+
+0.094
+
+2,272
+
+0.009
+
+0.094
+
+Controlled flow for Catchment 201 and 202 represents the peak flow from the orifice per the VO results. Refer to Appendix C
+for the orifice control curve used in VO.
+Addition of individual flows do not exactly equal the total flow indicated. The difference in peak flows occurs because the
+total flow to the outlet is calculated in VO, which accounts for time to peak values.
+
+As shown in Table 6, the storage requirement is dictated by the 12- hour design storm. The maximum
+required storage volume in addition to the rooftop storage provided is 2,272 m3. The proposed
+underground storage tank consists of MC-7200 StormTech Chambers, providing 2,006 m3 of active
+storage, and is proposed within the paved area along the south side of Building A. In addition to the
+underground storage, there is also surface ponding, providing additional storage of 790 m3, resulting
+in a total storage of 2,796 m3 provided. Shop drawings for the storage tank will be provided with the
+next submission. The preliminary sizing sheet is included in Appendix C.
+Emergency overland flow for the north parcel is provided through two curb cuts, one in the west
+end of the passenger vehicle parking area north of Building A and one in the northwest corner of
+the trailer parking area for Building A. The curb cuts were sized as weirs using the full curb height (0.3
+m), a weir coefficient of 1.55, and the 100-year storm flow for the corresponding drainage area. The
+minimum curb cut widths for each curb cut are noted on Drawings C103-C103C, and curb cut sizing
+calculations are included in Appendix C.
+South Parcel
+Rooftop control is provided on the South Parcel at a rate of 42 L/s/ha. This results in a total release
+rate of 0.201 m3/s for Catchment 204, requiring rooftop storage of 1,834 m3. Flows from the rooftop
+are also directed to the proposed underground infiltration galleries and storage tank for further
+control.
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Page 7 of 11
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+Servicing & Stormwater Management Report
+October 2025
+
+An outlet control manhole (MH201) with two (2) orifice controls is proposed to control the postdevelopment peak stormwater flows from both Catchment 203 and 204. The first orifice is 110 mm
+diameter at an elevation of 246.00 and controls the 2-year event. The second orifice is 120 mm
+diameter at an elevation of 247.85. The combination of the two orifices controls the 5-year to 100year storm events. Refer to Drawing C104D for the control manhole details.
+Refer to Table 7 for a summary of the results and Appendix C for the VO model inputs.
+Table 7: Summary of Peak Flow Rates from the South Parcel
+
+2-year
+
+6-hour AES Distribution
+Uncontrolled
+Controlled (203+204)
+(UC2) Peak
+Peak
+Storage
+Flow
+Flow
+Required
+(m³/s)
+(m³/s)
+(m3)
+1,882
+0.004
+0.038
+
+5-year
+
+0.056
+
+2,727
+
+0.007
+
+0.056
+
+0.056
+
+2,758
+
+0.005
+
+0.057
+
+10-year
+
+0.064
+
+3,217
+
+0.007
+
+0.064
+
+0.066
+
+3,319
+
+0.007
+
+0.067
+
+25-year
+
+0.075
+
+3,849
+
+0.012
+
+0.075
+
+0.097
+
+3,981
+
+0.008
+
+0.098
+
+50-year
+
+0.099
+
+4,292
+
+0.015
+
+0.092
+
+0.099
+
+4,438
+
+0.010
+
+0.100
+
+0.100
+
+4,627
+
+0.017
+
+0.100
+
+0.101
+
+4,897
+
+0.011
+
+0.102
+
+Storm
+Event
+
+100-year
+1.
+2.
+
+Total
+Peak
+Flow
+(m³/s)
+0.038
+
+12-hour AES Distribution
+Controlled (203+204)
+Uncontrolled
+(UC2) Peak
+Peak
+Storage
+Flow
+Flow
+Required
+(m³/s)
+(m³/s)
+(m3)
+1,994
+0.003
+0.039
+
+Total
+Peak
+Flow
+(m³/s)
+0.040
+
+Controlled flow for Catchment 203 and 204 represents the peak flow from the orifice per the VO results. Refer to Appendix C
+for the orifice control curve used in VO.
+Addition of individual flows do not exactly equal the total flow indicated. The difference in peak flows occurs because the
+total flow to the outlet is calculated in VO, which accounts for time to peak values.
+
+As shown in Table 7, the storage requirement is dictated by the 12- hour design storm. The maximum
+required storage volume in addition to rooftop storage provided is 4,897 m3. The proposed
+underground storage tank consists of MC-7200 StormTech Chambers, providing 3,943 m3 of active
+storage, and is proposed within the paved area along the north side of Building B. In addition to the
+underground storage, there is also surface ponding, providing additional storage of 1,120 m3,
+resulting in a total storage of 5,063 m3 provided. Shop drawings for the storage tank will be provided
+with the next submission. The preliminary sizing sheet is included in Appendix C.
+Emergency overland flow for the south parcel is provided through two curb cuts, one in the west
+end of the passenger vehicle parking area south of Building B and one in the northwest corner of
+the trailer parking area for Building B, at the far west side of the site. The curb cuts were sized as weirs
+using the full curb height (0.3 m), a weir coefficient of 1.55, and the 100-year storm flow for the
+corresponding drainage area. The minimum curb cut widths for each curb cut are noted on
+Drawings C103-C103C, and curb cut sizing calculations are included in Appendix C.
+4.4
+
+Stormwater Quality Control
+
+An “Enhanced Level of Protection” of 80% TSS removal is required to treat runoff leaving the Site.
+Water quality for each parcel is achieved with a Jellyfish Filtration System. For the North Parcel, an
+offline Jellyfish model JF12-24-5 has been sized to treat all stormwater that is directed to the
+stormwater tank, to provide a total TSS removal of 80% for Catchments 201 and 202. For the South
+Parcel, two (2) Jellyfish model JF12-22-5 units in parallel with flow-splitting in the diversion manhole
+have been recommended to treat all stormwater that is directed to the stormwater tank, to provide
+a total TSS removal of 80% for Catchments 203 and 204. The Jellyfish Filtration Systems are certified
+with ISO 14034/ETV verification to provide the minimum 80% TSS removal requirement, as shown in
+the Jellyfish system specifications in Appendix C.
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Page 8 of 11
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+Servicing & Stormwater Management Report
+October 2025
+
+In addition to the proposed Jellyfish units, pre-treatment will be provided by the isolator rows that will
+be installed in the stormwater tanks at the inlet and outlet locations, providing a treatment train
+approach within both parcels.
+4.5
+
+Groundwater Condition
+
+A Hydrogeological Investigation for the subject Site was completed by Crozier (October 2025),
+which details the groundwater conditions for the Site. The major conclusions of the Hydrogeological
+Investigation are summarized below:
+
+4.6
+
+•
+
+The seasonally high groundwater elevation varies across the Site. The groundwater contour
+figure included as part of the Hydrogeological Investigation Report was referenced when
+designing the proposed infiltration galleries. The groundwater elevations at the location of
+each infiltration gallery are indicated on Drawings C102 and C102C.
+
+•
+
+An infiltration rate of 12.7 mm/hr was determined based on the grain size curves in the
+Geotechnical Investigation & Slope Assessment report prepared by MTE (May 15, 2025) for
+the Site as part of the work completed for the Secondary Plan Application. A safety factor of
+1.5 was applied to this, to achieve an effective infiltration rate of 8.5 mm/hr. This infiltration
+rate was used when designing the exfiltration gallery.
+Water Balance / Erosion Control
+
+A water balance analysis is required using the average and more frequent precipitation events that
+comprise of the bulk volume of annual precipitation to ensure maintenance of pre-development
+water balance following development. Water balance calculations were completed using the
+Thornthwaite and Mather Method (1957) as part of the Hydrogeological Investigation. To mitigate
+the infiltration deficit within the entire Site, the Hydrogeological Investigation indicates that the
+infiltration target is 42 mm/year. Refer to the Hydrogeological Investigation Report prepared by
+Crozier under separate cover (October 2025) for more details.
+In addition to the water balance requirement, TRCA has an erosion criterion that applies to the Site,
+which requires retention of 5 mm of runoff generated from the total impervious area. Therefore, the
+larger infiltration target between the water balance and erosion control requirements must be
+applied.
+North Parcel
+As indicated in the Hydrogeological Investigation Report (Crozier, October 2025), the infiltration
+target for the North Parcel is 6.7 mm of rainfall over the rooftop area (Building A) to match predevelopment infiltration rates, which equates to a total volume of 158 m3 (23,574 m2 rooftop area x
+6.7 mm). The erosion control infiltration target is 207 m3 (4.14 ha impervious area x 5 mm). Therefore,
+the infiltration requirement for the North Parcel is dictated by the erosion control criteria, resulting in
+a target of 207 m3.
+South Parcel
+As indicated in the Hydrogeological Investigation Report (Crozier, October 2025), the infiltration
+target for the South Parcel is 4.4 mm of rainfall over the rooftop area (Building B) to match predevelopment infiltration rates, which equates to a total volume of 210 m3 (47,803 m2 rooftop area x
+4.4 mm). The erosion control infiltration target is 378 m3 (7.55 ha impervious area x 5 mm). Therefore,
+the infiltration requirement for the North Parcel is dictated by the erosion control criteria, resulting in
+a target of 378 m3.
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Page 9 of 11
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+Servicing & Stormwater Management Report
+October 2025
+
+Two (2) infiltration galleries are proposed to satisfy the water balance and erosion control
+requirements for each parcel. One (1) gallery is located on southwest side of the proposed building,
+and the other is on the northwest side. The building roof leaders are routed to each gallery,
+designed to direct half of the roof runoff to each facility for infiltration of clean runoff. Overflow from
+the galleries is to the proposed storm sewer, which directs additional runoff to the underground
+storage tank for further control. The infiltration galleries have been designed using an infiltration rate
+of 8.5 mm/hr. A minimum 1.0 m clearance with the high groundwater elevation was provided for all
+galleries except for one given the high groundwater elevation in the southwest corner of the Site. It
+is noted that the groundwater elevation varies across the Site. Refer to Table 8 for more details on
+the design of the infiltration galleries and Appendix C for the sizing calculations.
+Table 8: Summary of Proposed Infiltration Galleries
+Drawdown
+Bottom of
+Depth
+Volume
+Time
+Gallery
+Elevation
+(m)
+(m3)
+(hours)
+(masl)
+0.72
+115
+34
+249.50
+
+Groundwater
+Elevation
+(masl)
+248.50
+
+ID
+
+Footprint
+(m2)
+
+North-1
+
+400
+
+North-2
+
+650
+
+0.40
+
+104
+
+19
+
+248.19
+
+247.19
+
+South-1
+
+475
+
+1.00
+
+190
+
+47
+
+248.00
+
+247.00
+
+South-2
+
+735
+
+0.65
+
+191
+
+31
+
+249.68
+
+249.18
+
+4.7
+
+Feature-Based Water Balance
+
+A feature-based water balance assessment was undertaken by Crozier under separate cover to
+estimate the potential impact of the proposed development on Salt Creek and its surrounding
+wetland. A Thornthwaite and Mather assessment was conducted using the catchment areas
+directed to the wetland in the pre- and post-development scenarios. The results of the analysis show
+that pre-development flows to the wetland is maintained post-development. In fact, the proposed
+stormwater outlets ensure that flows continue to be directed towards Salt Creek and its wetland,
+maintain existing drainage conditions. Refer to the Hydrogeological Investigation Report prepared
+by Crozier (October 2025) for more details.
+
+5.0
+
+Erosion and Sediment Control
+
+The following erosion and sediment control features will be implemented for the project.
+5.1
+
+Erosion Control Measures
+
+Interceptor Swales – Interceptor swales have been designed with reduced slope gradients to
+reduce erosion potential during the construction period. The interceptor swales have been
+designed to convey the 100-year storm event. Refer to Appendix D for calculations related to the
+interceptor swale design.
+5.2
+
+Sediment Control Measures
+
+Stone Mud Mat – A stone mud mat will be provided to minimize the migration of unwanted material
+on to the adjacent ROWs. The construction access must be maintained (cleaned, swept and
+flushed) to minimize any disruption to the Regional ROW. Construction access for the Site is provided
+through Airport Road.
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Page 10 of 11
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+Servicing & Stormwater Management Report
+October 2025
+
+Silt Fence – Sediment control fence will be installed in accordance with the drawings. The erosion
+and sediment control fencing will be monitored on a regular basis and repaired/replaced as
+required.
+Temporary Sediment Basin – A temporary sediment basin has been designed to intercept sediment
+laden water and allow for settling of suspended soil particles. Refer to Appendix D for additional
+details and calculations related to the permanent pool, active storage, and outlet structure design.
+Sediment Curtain – A sediment curtain will be installed in the temporary sediment basin and will be
+located between the swale inlets and basin outlet. The curtain keeps sediment contained to the
+area between the curtain and the pond bank and slows the movement of water in the isolated
+area, providing additional sediment control within the temporary sediment basins. The sediment
+curtains will be monitored on a regular basis and repaired/replaced as required.
+
+6.0
+
+Conclusions
+
+Based on the conclusions and recommendations outlined in this report, the proposed development
+can be serviced for water, sanitary, and stormwater in general conformance with the servicing and
+stormwater management design outlined in the Secondary Plan prepared by Crozier (May 2025).
+The design is also in accordance with the Town of Caledon and Region of Peel requirements and
+standards.
+
+Should you have any questions or require any further information, please do not hesitate to contact
+us.
+Respectfully submitted,
+C.F. CROZIER & ASSOCIATES INC.
+
+C.F. CROZIER & ASSOCIATES INC.
+
+Isabelle Forsyth, P.Eng.
+Project Engineer
+
+Julie Scott, P.Eng.
+Manager, Land Development
+
+J:\2200\2278- Broccolini\7228 - Broccolini Secondary Plan\Reports\Civil\Broccolini Site\2025.10.23_First
+Submission\7228_S&SWM Report.docx
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Page 11 of 11
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+Servicing & Stormwater Management Report
+October 2025
+
+APPENDIX A
+Sanitary Flow Calculations
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Project: Broccolini Airport Rd
+Project No.: 2278-7228
+
+Design: A.H.
+Check: K.W./J.S.
+
+Date:
+
+2025-10-30
+
+Proposed Sanitary Design Flow - Building A
+North Parcel Area
+Building A GFA
+Population Density
+Population*
+
+4.87
+2.36
+70
+341
+
+ha
+ha
+persons/ha
+persons
+
+Design Criteria
+Total Peak Flow = Peak Daily Flow + Infiltration Allowance
+Peak Factor =
+4.0
+Harmon Peaking Factor
+Average Industrial Flow =
+270.0
+L/cap/d
+Infiltration =
+0.26
+L/s/ha
+Sanitary Design Flow - Unit Sewage Flow Rate
+Average Daily Flow =
+Peak Factor =
+Peak Daily Flow =
+Infiltration Flow =
+Total Peak Flow =
+
+1.07
+4.0
+4.26
+1.27
+5.53
+
+L/s
+L/s
+L/s
+L/s
+
+J:\2200\2278- Broccolini\7228 - Broccolini Secondary Plan\Design\Civil_Water\Broccolini Site\7228_Sanitary Demand Calculations
+
+Region of Peel - Linear Wastewater
+Standards
+(March 2023)
+
+*Population calculation and is
+based on the Site Plan prepared by
+Powers Brown Architecture.
+
+Page 1 of 3
+
+Project: Broccolini Airport Rd
+Project No.: 2278-7228
+
+Design: A.H.
+Check: K.W./J.S.
+
+Date:
+
+2025-10-30
+
+Proposed Sanitary Design Flow - Building B
+South Parcel Area
+Building GFA
+Population Density
+Population*
+
+8.57
+4.78
+70
+600
+
+ha
+ha
+persons/ha
+persons
+
+Design Criteria
+Total Peak Flow = Peak Daily Flow + Infiltration Allowance
+Peak Factor =
+3.9
+Harmon Peaking Factor
+Average Industrial Flow =
+270.0
+L/cap/d
+Infiltration =
+0.26
+L/s/ha
+Sanitary Design Flow - Unit Sewage Flow Rate
+Average Daily Flow =
+Peak Factor =
+Peak Daily Flow =
+Infiltration Flow =
+Total Peak Flow =
+
+1.87
+3.9
+7.37
+2.23
+9.60
+
+L/s
+L/s
+L/s
+L/s
+
+J:\2200\2278- Broccolini\7228 - Broccolini Secondary Plan\Design\Civil_Water\Broccolini Site\7228_Sanitary Demand Calculations
+
+Region of Peel - Linear Wastewater
+Standards
+(March 2023)
+
+*Population calculation and is
+based on the Site Plan prepared by
+Powers Brown Architecture.
+
+Page 2 of 3
+
+2278-7228 Broccolini Airport Rd
+Sanitary Demand Flows - Summary
+
+Designed By: A.H.
+Checked By: KW
+Date: 2025-10-30
+
+Phase
+1
+2
+Total
+
+Block Area
+
+Building GFA
+
+ha
+4.87
+8.57
+13.44
+
+ha
+2.36
+4.78
+7.14
+
+Equivalent
+Population
+341
+600
+941
+
+Peak Flow Infiltration Flow
+(L/s)
+4.26
+7.37
+11.63
+
+Note: Block Areas are based on Power Brown Architects
+Note: Population estimates are based on building GFAs provided by Power Brown Site Plan
+
+(L/s)
+1.27
+2.23
+3.49
+
+Total Flow
+(L/s)
+5.53
+9.60
+15.13
+
+Outlet
+Airport Rd
+Airport Rd
+
+SANITARY SEWER DESIGN SHEET
+Broccolini Site, Region of Peel, Town of Caledon
+Project #: 2200-7228
+Updated Date: 2025.10.29
+Designed: V.M.
+Checked: J.S.
+
+Min Diameter =
+Mannings 'n'=
+Min. Velocity =
+Max. Velocity =
+
+200
+0.013
+0.75
+3.50
+
+EXTERNAL / BLOCK AREA
+
+mm
+
+Avg. Domestic Flow =
+Infiltration =
+Max. Peaking Factor =
+Min. Peaking Factor=
+
+m/s
+m/s
+
+270.0
+0.260
+4.00
+1.50
+
+l/c/d
+l/s/ha
+Factor of Safety =
+
+COMMERCIAL/INDUSTRIAL/INSTITUTIONAL
+
+20
+
+%
+
+%
+
+NOMINAL PIPE SIZE USED
+
+FLOW CALCULATIONS
+
+PIPE DATA
+CONSTANT
+
+DESCRIPTION
+
+FROM
+
+TO
+
+MH
+
+MH
+
+ACC.
+AREA
+
+AREA
+
+UNITS
+
+DENISTY
+
+DENSITY
+
+(ha)
+
+(ha)
+
+(#)
+
+(P/ha)
+
+(P/unit)
+
+EXT
+
+ACCUM.
+
+ACC.
+
+EQUIV.
+
+FLOW
+
+EQUIV.
+
+ACCUM.
+
+POP
+
+EXT
+
+AREA
+
+AREA
+
+POP.
+
+RATE
+
+POP.
+
+EQUIV.
+
+POP.
+
+(ha)
+
+(ha)
+
+(p/ha)
+
+(l/s/ha)
+
+INFILTRATION
+
+PIPE
+
+TOTAL
+
+PEAKING
+
+POP.
+
+COMM.
+
+ACCUM.
+
+TOTAL
+
+ACCUM.
+
+FACTOR
+
+FLOW
+
+FLOW
+
+COMM. FLOW
+
+FLOW
+
+(l/s)
+
+(l/s)
+
+(l/s)
+
+(l/s)
+
+(%)
+
+POP.
+
+(l/s)
+
+POP.
+
+SLOPE
+
+DIAMETER
+
+FULL FLOW
+
+FULL FLOW
+
+ACTUAL
+
+PERCENT
+
+CAPACITY
+
+VELOCITY
+
+VELOCITY
+
+FULL
+
+(mm)
+
+(l/s)
+
+(m/s)
+
+(m/s)
+
+(%)
+
+BUILDING A
+3A
+101
+2A
+102
+103
+1A
+5A
+107
+4A
+106
+105
+104
+0
+0
+0
+BUILDING B
+3B
+
+0
+PLUG103A
+MH105A
+PLUG102A
+MH104A
+MH103A
+PLUG101A
+PLUG105A
+MH109A
+PLUG104A
+MH108A
+MH107A
+MH106A
+MH102A
+MH101A
+0
+0
+PLUG203A
+
+0
+MH105A
+MH104A
+MH104A
+MH103A
+MH102A
+MH102A
+MH109A
+MH108A
+MH108A
+MH107A
+MH106A
+MH102A
+MH101A
+EX.MH31
+0
+0
+MH208A
+
+0.0000
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0.00
+0.39
+0.27
+0.37
+0.31
+0.08
+0.40
+0.65
+1.26
+0.55
+0.43
+0.10
+0.09
+0.00
+0.00
+0.00
+0.00
+0.83
+
+0.00
+0.39
+0.66
+0.37
+1.34
+1.42
+0.40
+0.65
+1.91
+0.55
+2.89
+2.99
+3.08
+4.90
+4.90
+0.00
+0.00
+0.83
+
+0
+70
+70
+70
+70
+70
+70
+70
+70
+70
+70
+70
+70
+0
+0
+0
+0
+70
+
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+
+0
+28
+19
+26
+22
+6
+28
+46
+89
+39
+31
+7
+7
+0
+0
+0
+0
+59
+
+0
+28
+47
+26
+95
+101
+28
+46
+135
+39
+205
+212
+219
+348
+348
+0
+0
+59
+
+0.00
+0.10
+0.17
+0.10
+0.35
+0.37
+0.10
+0.17
+0.50
+0.14
+0.75
+0.78
+0.80
+1.27
+1.27
+0.00
+0.00
+0.22
+
+0
+28
+47
+26
+95
+101
+28
+46
+135
+39
+205
+212
+219
+348
+348
+0
+0
+59
+
+0.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+0.00
+0.00
+4.00
+
+0.00
+0.35
+0.59
+0.33
+1.19
+1.26
+0.35
+0.58
+1.69
+0.49
+2.56
+2.65
+2.74
+4.35
+4.35
+0.00
+0.00
+0.74
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+0.00
+0.45
+0.76
+0.42
+1.54
+1.63
+0.45
+0.74
+2.18
+0.63
+3.31
+3.43
+3.54
+5.62
+5.62
+0.00
+0.00
+0.95
+
+0.00
+2.00
+0.50
+2.00
+0.50
+0.50
+2.00
+2.00
+0.59
+2.00
+0.50
+0.50
+0.50
+0.50
+2.00
+0.00
+0.00
+2.00
+
+0
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+0
+0
+200
+
+0.00
+46.38
+23.19
+46.38
+23.19
+23.19
+46.38
+46.38
+25.19
+46.38
+23.19
+23.19
+23.19
+23.19
+46.38
+0.00
+0.00
+46.38
+
+0.00
+1.48
+0.74
+1.48
+0.74
+0.74
+1.48
+1.48
+0.80
+1.48
+0.74
+0.74
+0.74
+0.74
+1.48
+0.00
+0.00
+1.48
+
+0.00
+0.47
+0.34
+0.46
+0.42
+0.43
+0.47
+0.55
+0.49
+0.52
+0.52
+0.53
+0.53
+0.61
+1.00
+
+0.0%
+1.0%
+3.3%
+0.9%
+6.6%
+7.0%
+1.0%
+1.6%
+8.7%
+1.4%
+14.3%
+14.8%
+15.3%
+24.2%
+12.1%
+0.0%
+0.0%
+2.1%
+
+201
+202
+2B
+203
+1B
+204
+205
+206
+6B
+211
+5B
+210
+209
+4B
+208
+
+MH208A
+MH207A
+PLUG202A
+MH206A
+PLUG201A
+MH205A
+MH204A
+MH203A
+PLUG206A
+MH213A
+PLUG205A
+MH212A
+MH111A
+PLUG204A
+MH210A
+
+MH207A
+MH206A
+MH206A
+MH205A
+MH205A
+MH204A
+MH203A
+MH202A
+MH213A
+MH212A
+MH212A
+MH111A
+MH210A
+MH209A
+MH209A
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+0
+
+0.31
+1.17
+0.88
+0.48
+0.93
+0.48
+0.09
+0.21
+0.69
+0.47
+0.73
+0.29
+0.11
+0.72
+0.09
+
+1.14
+2.31
+0.88
+3.67
+0.93
+5.08
+5.17
+5.38
+0.69
+1.16
+0.73
+2.18
+2.29
+0.72
+2.38
+
+70
+70
+70
+70
+70
+70
+70
+70
+70
+70
+70
+70
+70
+70
+70
+
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+
+22
+82
+62
+34
+66
+34
+7
+15
+49
+33
+52
+21
+8
+51
+7
+
+81
+163
+62
+259
+66
+359
+366
+381
+49
+82
+52
+155
+163
+51
+170
+
+0.30
+0.60
+0.23
+0.95
+0.24
+1.32
+1.34
+1.40
+0.18
+0.30
+0.19
+0.57
+0.60
+0.19
+0.62
+
+81
+163
+62
+259
+66
+359
+366
+381
+49
+82
+52
+155
+163
+51
+170
+
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+4.00
+
+1.01
+2.04
+0.78
+3.24
+0.83
+4.49
+4.58
+4.76
+0.61
+1.03
+0.65
+1.94
+2.04
+0.64
+2.13
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+1.31
+2.64
+1.00
+4.19
+1.07
+5.81
+5.92
+6.16
+0.79
+1.33
+0.84
+2.50
+2.63
+0.82
+2.74
+
+0.50
+0.50
+2.00
+0.50
+2.00
+0.50
+0.50
+0.45
+2.00
+0.50
+2.00
+0.50
+0.50
+2.00
+0.50
+
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+200
+
+23.19
+23.19
+46.38
+23.19
+46.38
+23.19
+23.19
+22.00
+46.38
+23.19
+46.38
+23.19
+23.19
+46.38
+23.19
+
+0.74
+0.74
+1.48
+0.74
+1.48
+0.74
+0.74
+0.70
+1.48
+0.74
+1.48
+0.74
+0.74
+1.48
+0.74
+
+0.40
+0.49
+0.60
+0.56
+0.61
+0.61
+0.62
+0.60
+0.56
+0.40
+0.57
+0.48
+0.49
+0.56
+0.50
+
+5.6%
+11.4%
+2.2%
+18.1%
+2.3%
+25.0%
+25.5%
+28.0%
+1.7%
+5.7%
+1.8%
+10.8%
+11.4%
+1.8%
+11.8%
+
+207
+0
+0
+0
+
+MH209A
+MH202A
+MH201A
+0
+
+MH202A
+MH201A
+EX.MH29
+0
+
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+
+0
+0
+0
+
+0
+0
+0
+
+0
+0
+0
+
+0
+0
+0
+
+0
+0
+0
+0
+
+0.07
+0.0000
+0.00
+0.00
+
+3.17
+8.55
+8.55
+0.00
+
+70
+0
+0
+0
+
+0.000
+0.000
+0.000
+0.000
+
+5
+0
+0
+0
+
+226
+607
+607
+0
+
+0.82
+2.22
+2.22
+0.00
+
+226
+607
+607
+0
+
+4.00
+3.93
+3.93
+0.00
+
+2.83
+7.45
+7.45
+0.00
+
+0.0
+0.0
+0.0
+0.0
+
+0.0
+0.0
+0.0
+0.0
+
+3.65
+9.68
+9.68
+0.00
+
+0.35
+0.50
+2.00
+0.00
+
+200
+200
+200
+0
+
+19.40
+23.19
+46.38
+0.00
+
+0.62
+0.74
+1.48
+0.00
+
+0.00
+0.70
+1.17
+0.00
+
+18.8%
+41.7%
+20.9%
+0.0%
+
+NOTES
+
+J:\2200\2278- Broccolini\7228 - Broccolini Secondary Plan\Design\Civil_Water\Broccolini Site\7228_SAN Design Sheet (version 1):SAN
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+Servicing & Stormwater Management Report
+October 2025
+
+APPENDIX B
+Water Demand Calculations
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Project: Broccolini Airport Rd
+Project No.: 2200-7228
+
+Design: A.H.
+Check: K.W./J.S.
+
+Date: 2025-10-30
+
+Water Demand - Building A
+North Parcel Area
+Population Density
+Population
+
+4.87
+70
+341
+
+ha
+persons/ha
+persons
+
+Design Criteria:
+Average Daily Demand:
+Maximum Daily Demand Peaking Factor:
+Peak Hourly Demand Peaking Factor:
+
+300
+1.4
+3.0
+
+L/employee.day
+
+-
+
+Region of Peel - Public Works Design,
+Specifications & Procedures Manual Linear Infrastructure - Watermain Design
+Criteria (June 2010)
+
+Domestic Water Demand:
+Average Daily Demand:
+Maximum Daily Demand:
+Peak Hourly Demand:
+
+102270 L/day
+1.18 L/s
+143178 L/day
+1.66 L/s
+306810 L/day
+3.55 L/s
+
+J:\2200\2278- Broccolini\7228 - Broccolini Secondary Plan\Design\Civil_Water\Broccolini Site\7228_Water Demand Calculations
+
+*Population calculation and is based on
+the Site Plan prepared by Powers Brown
+Architecture.
+
+Page 1 of 2
+
+Project: Broccolini Airport Rd
+Project No.: 2200-7228
+
+Design: A.H.
+Check: K.W./J.S.
+
+Date: 2025-10-30
+
+Water Demand - Building B
+South Parcel Area
+Population Density
+Population
+
+8.57
+70
+600
+
+ha
+persons/ha
+persons
+
+Design Criteria:
+Average Daily Demand:
+Maximum Daily Demand Peaking Factor:
+Peak Hourly Demand Peaking Factor:
+
+300
+1.4
+3.0
+
+L/employee.day
+
+-
+
+Region of Peel - Public Works Design,
+Specifications & Procedures Manual Linear Infrastructure - Watermain Design
+Criteria (June 2010)
+
+Domestic Water Demand:
+Average Daily Demand:
+Maximum Daily Demand:
+Peak Hourly Demand:
+
+179970 L/day
+2.08 L/s
+251958 L/day
+2.92 L/s
+539910 L/day
+6.25 L/s
+
+J:\2200\2278- Broccolini\7228 - Broccolini Secondary Plan\Design\Civil_Water\Broccolini Site\7228_Water Demand Calculations
+
+*Population calculation and is based on
+the Site Plan prepared by Powers Brown
+Architecture.
+
+Page 2 of 2
+
+Broccolini Airport Rd. - Building A
+Fire Protection Volume Calculation
+CFCA File: 2200-7228
+
+Date: 2025-11-12
+Design: AH
+Check: KW
+
+Water Supply for Public Fire Protection - 2020
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+1. An estimate of fire flow required for a given area may be determined by the formula:
+RFF = 220 * C * sqrt A
+where
+RFF = the required fire flow in litres per minute
+C = coefficient related to the type of construction:
+=
+1.5
+for Type V Wood Frame Construction (structure essentially all combustible)
+=
+0.8
+for Type IV-A Mass Timber Construction (encapsulated mass timber)
+=
+0.9
+for Type IV-B Mass Timber Construction (rated mass timber)
+=
+1.0
+for Type IV-C Mass Timber Construction (ordinary mass timber)
+=
+1.5
+for Type IV-D Mass Timber Construction (un-rated mass timber)
+=
+1.0
+for Type III Ordinary Construction (brick or other masonry walls, combustible floor and interior)
+=
+0.8
+for Type II Non-combustible Construction (unprotected metal structural components)
+=
+0.6
+for Type I Fire-resistive Construction (fully protected frame, floors, roof)
+Proposed Buildings
+Floor Area
+Area =
+C=
+
+Therefore RFF =
+
+23,576.1
+
+sq.m
+
+23,576 sq.m
+0.6 Assumes Type I Fire-resistive Construction (fully protected frame, floors, roof)
+
+20,268 L/min
+
+2. Values obtained in No. 1 may be reduced by as much as 25% for occupancies having low contents fire hazard or may
+be increased by up to 25% surcharge for occupancies having a high fire hazard.
+Non-Combustible
+Limited Combustible
+Combustible
+
+-25%
+-15%
+0% (No Change)
+
+Limited Combustible
+
+Free Burning
+Rapid Burning
+
+15%
+25%
+
+-15% reduction
+-3,040 L/min reduction
+17,228 L/min
+
+Note: Flow determined shall not be less than 2,000 L/min
+3. Sprinklers - The value obtained in No. 2 above maybe reduced by up to 50% for complete automatic sprinkler protection.
+The initial credit for the system will be a maximum of 30% for an adequately designed system conforming to NFPA 13 and other
+NFPA sprinkler standards.
+As part of this analysis, the building will have sprinkler protection:
+
+8,614 L/min reduction
+
+50%
+
+Broccolini Airport Rd. - Building A
+Fire Protection Volume Calculation
+CFCA File: 2200-7228
+
+Date: 2025-11-12
+Designed By: AH
+Checked By: KW
+
+Water Supply for Public Fire Protection - 2020
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+4. Exposure - To the value obtained in No. 2, a percentage should be added for structures exposed within 45 metres
+by the fire area under consideration. The percentage shall depend upon the height, area, and construction of the
+building(s) being exposed, the separation, openings in the exposed building(s), the length and height of exposure,
+the provision of automatic sprinklers and/or outside sprinklers in the building(s) exposed, the occupancy of the
+exposed building(s) and the effect of hillside locations on the possible spread of fire.
+Separation
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+
+Charge
+25%
+20%
+15%
+
+Separation
+20.1 to 30 m
+> 30 m
+
+Charge
+10%
+0%
+
+Exposed buildings
+Name
+E
+W
+N
+S
+
+Distance (m)
+> 30
+> 30
+> 30
+> 30
+
+Charge Surcharge
+(%)
+(L/min)
+0%
+0%
+0%
+0%
+0 L/min Surcharge
+
+Determine Required Fire Flow
+No.1
+No. 2
+No. 3
+No. 4
+Required Flow:
+Rounded to nearest 1000 L/min:
+
+20,268
+-3,040 reduction
+-8,614 reduction
+0 surcharge
+8,614 L/min
+9,000 L/min
+
+or
+
+150.0 L/s
+2,378 USGPM
+
+Page 2
+
+Broccolini Airport Rd. - Building B
+Fire Protection Volume Calculation
+CFCA File: 2200-7228
+
+Date: 2025-11-12
+Design: AH
+Check: KW
+
+Water Supply for Public Fire Protection - 2020
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+1. An estimate of fire flow required for a given area may be determined by the formula:
+RFF = 220 * C * sqrt A
+where
+RFF = the required fire flow in litres per minute
+C = coefficient related to the type of construction:
+=
+1.5
+for Type V Wood Frame Construction (structure essentially all combustible)
+=
+0.8
+for Type IV-A Mass Timber Construction (encapsulated mass timber)
+=
+0.9
+for Type IV-B Mass Timber Construction (rated mass timber)
+=
+1.0
+for Type IV-C Mass Timber Construction (ordinary mass timber)
+=
+1.5
+for Type IV-D Mass Timber Construction (un-rated mass timber)
+=
+1.0
+for Type III Ordinary Construction (brick or other masonry walls, combustible floor and interior)
+=
+0.8
+for Type II Non-combustible Construction (unprotected metal structural components)
+=
+0.6
+for Type I Fire-resistive Construction (fully protected frame, floors, roof)
+Proposed Buildings
+Floor Area
+Area =
+C=
+
+Therefore RFF =
+
+23,904.4
+
+sq.m
+
+Note: A fire wall has been assumed in the middle of Building B.
+
+23,904 sq.m
+0.6 Assumes Type I Fire-resistive Construction (fully protected frame, floors, roof)
+
+20,409 L/min
+
+2. Values obtained in No. 1 may be reduced by as much as 25% for occupancies having low contents fire hazard or may
+be increased by up to 25% surcharge for occupancies having a high fire hazard.
+Non-Combustible
+Limited Combustible
+Combustible
+
+-25%
+-15%
+0% (No Change)
+
+Limited Combustible
+
+Free Burning
+Rapid Burning
+
+15%
+25%
+
+-15% reduction
+-3,061 L/min reduction
+17,348 L/min
+
+Note: Flow determined shall not be less than 2,000 L/min
+3. Sprinklers - The value obtained in No. 2 above maybe reduced by up to 50% for complete automatic sprinkler protection.
+The initial credit for the system will be a maximum of 30% for an adequately designed system conforming to NFPA 13 and other
+NFPA sprinkler standards.
+As part of this analysis, the building will have sprinkler protection:
+
+8,674 L/min reduction
+
+50%
+
+Broccolini Airport Rd. - Building B
+Fire Protection Volume Calculation
+CFCA File: 2200-7228
+
+Date: 2025-11-12
+Designed By: AH
+Checked By: KW
+
+Water Supply for Public Fire Protection - 2020
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+4. Exposure - To the value obtained in No. 2, a percentage should be added for structures exposed within 45 metres
+by the fire area under consideration. The percentage shall depend upon the height, area, and construction of the
+building(s) being exposed, the separation, openings in the exposed building(s), the length and height of exposure,
+the provision of automatic sprinklers and/or outside sprinklers in the building(s) exposed, the occupancy of the
+exposed building(s) and the effect of hillside locations on the possible spread of fire.
+Separation
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+
+Charge
+25%
+20%
+15%
+
+Separation
+20.1 to 30 m
+> 30 m
+
+Charge
+10%
+0%
+
+Exposed buildings
+Name
+E
+W
+N
+S
+
+Distance (m)
+Fire Wall
+> 30
+> 30
+> 30
+
+Charge Surcharge
+(%)
+(L/min)
+10%
+1,735
+0%
+0%
+0%
+1,735 L/min Surcharge
+
+Determine Required Fire Flow
+No.1
+No. 2
+No. 3
+No. 4
+Required Flow:
+Rounded to nearest 1000 L/min:
+
+20,409
+-3,061 reduction
+-8,674 reduction
+1,735 surcharge
+10,409 L/min
+10,000 L/min
+
+or
+
+166.7 L/s
+2,642 USGPM
+
+Page 2
+
+Hydrant Testing Ontario
+Tel: 289-354-1942
+Info@HTOntario.ca
+
+REPORT
+N . 2592
+o
+
+November 12, 2025
+To:
+
+Alex Di Cesare
+Development Manager
+Broccolini Airport Road LP
+2680 Skymark Avenue, Suite 800
+Mississauga, Ontario, L4W 5L6
+
+RE: Hydrant Flow Test –
+
+BROCCOLINI LANDS
+
+Please find the Report for the following works
+Scope: Conducted Hydrant Flow Test as per NFPA291 Recommended Practices for
+Water Flow Testing and Marking of Hydrants.
+
+CALEDON
+DATE:
+
+October 28, 2025
+
+TIME:
+
+12:40 PM
+
+HYDRANT No.
+
+HYD-R1
+
+R -TEST HYDRANT
+
+AIRPORT ROAD
+
+HYDRANT MODEL:
+
+CENTURY
+
+COLOUR:
+
+BLUE
+
+65
+
+VARIANCE:
+
+52%
+
+STATIC PRESSURE psi (hr-20^0.54):
+Q - FLOW HYDRANT
+
+AIRPORT ROAD
+
+HYDRANT MODEL:
+
+CENTURY
+
+No.
+Outlets
+1
+2
+3
+
+Residual Pressure
+
+4
+
+COLOUR:
+
+Orifice Dia
+
+(hf-R^0.54)
+
+Dia. (in.) (d )
+
+54
+43
+
+2.5
+2.5
+2.5
+2.5
+
+2
+
+37
+31
+
+HYDRANT No. HYD-F1/2
+
+Coefficient
+
+Nozzle PSI
+
+Q = Flow (USGPM)
+
+2.6351
+0.90
+0.90
+0.90
+0.90
+
+(√psi)
+
+Q =29.83 (c) (d2) (√psi)
+
+30
+15
+25
+15
+
+919
+650
+839
+650
+2599
+
+Q F = Total Flow (USGPM)
+
+3024
+191
+
+Q R = flow predicted @ 20 psi
+Q R =Q F *(H r -20
+
+^0.54
+
+)/(H f -R
+
+^0.54
+
+NFPA Rating:
+
+)
+
+USGPM
+L/s
+
+CLASS AA - BLUE
+Pressure - Flow Graph at Test Hydrant
+
+70
+
+Pressure (PSI)
+
+60
+50
+40
+30
+20
+10
+0
+
+0
+
+1000
+
+BLUE
+
+2000
+
+Flow (USGPM)
+
+3000
+
+4000
+
+25
+04/11/2025 12:50:00
+
+04/11/2025 12:49:45
+
+04/11/2025 12:49:30
+
+04/11/2025 12:49:15
+
+04/11/2025 12:49:00
+
+04/11/2025 12:48:45
+
+04/11/2025 12:48:30
+
+04/11/2025 12:48:15
+
+04/11/2025 12:48:00
+
+04/11/2025 12:47:45
+
+04/11/2025 12:47:30
+
+04/11/2025 12:47:15
+
+04/11/2025 12:47:00
+
+04/11/2025 12:46:45
+
+04/11/2025 12:46:30
+
+44.73
+
+04/11/2025 12:46:15
+
+04/11/2025 12:46:00
+
+04/11/2025 12:45:45
+
+04/11/2025 12:45:30
+
+04/11/2025 12:45:15
+
+04/11/2025 12:45:00
+
+04/11/2025 12:44:45
+
+04/11/2025 12:44:30
+
+04/11/2025 12:44:15
+
+04/11/2025 12:44:00
+
+04/11/2025 12:43:45
+
+04/11/2025 12:43:30
+
+04/11/2025 12:43:15
+
+04/11/2025 12:43:00
+
+04/11/2025 12:42:45
+
+04/11/2025 12:42:30
+
+55
+
+04/11/2025 12:42:15
+
+04/11/2025 12:42:00
+
+45
+
+04/11/2025 12:41:45
+
+04/11/2025 12:41:30
+
+65
+
+04/11/2025 12:41:15
+
+04/11/2025 12:41:00
+
+04/11/2025 12:40:45
+
+04/11/2025 12:40:30
+
+04/11/2025 12:40:15
+
+04/11/2025 12:40:00
+
+HYD R1 RESIDUAL PRESSURE psi - BROCCOLINI LANDS
+
+75
+
+64.74
+
+53.63
+
+45.01
+
+35
+30.98
+
+Test Conclusion
+The system at the time of testing produced a theorectical projected flow rate of:
+LOCATION
+
+Total
+USGPM
+
+USGPM at
+20 psi
+
+lps at 20
+psi
+
+Test #
+
+AIRPORT ROAD
+
+2599
+
+3024
+
+191
+
+1
+
+Hydrants are classified in accordance with their rated capacities as per NFPA291.
+COLOUR
+
+CLASS
+
+Available Flow @ 20psi
+
+BLUE
+GREEN
+ORANGE
+RED
+
+AA
+A
+B
+C
+
+1500 GPM or more
+1000 – 1499 GPM
+500 – 999 GPM
+Below 500 GPM
+
+We strongly feel that all attempts have been made to ensure that the required data as
+stipulated was captured, stored and presented in an accurate, efficient and timely
+manner for the required period.
+We look forward to working with you in the future.
+Please feel free to contact the undersigned should you require any further information.
+Best Regards
+
+Rob Gamache E.P
+Manager of Operations
+Hydrant Testing Ontario
+Info@HTOntario.ca
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+Servicing & Stormwater Management Report
+October 2025
+
+APPENDIX C
+Stormwater Management Calculations
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+Proposed Conditions VO Model Schematic
+
+Infiltrated runoff
+
+Infiltrated runoff
+
+Prepared by: IF
+Date: 2025-10-22
+
+Project Name:
+Project Number:
+Date:
+By:
+Checked by:
+
+Broccolini Airport Road
+2278-7228
+2025-10-07
+IF
+JS
+
+NASHYD - CN & IA Values
+
+Parameter
+
+Hydrologic
+Soil Group
+
+CN Values
+
+D
+N/A
+
+Soil Category
+Clay Loam/Clay
+
+IA Values
+
+77
+
+SWMF /
+Wetland
+50
+
+10
+
+10
+
+Woodland
+
+Meadow
+78
+
+Landuse
+Cultivated/
+Lawn /
+Crops
+Landscape
+86
+81
+
+8
+
+7
+
+5
+
+98
+
+Paved /
+Concrete
+98
+
+2
+
+2
+
+1
+
+Paved /
+Concrete
+
+Building
+
+Gravel
+
+Building
+98
+
+*Note these values are taken from the MTO manual, check against municipal standards for CN values to be used
+
+Catchment
+ID
+
+UC1
+
+UC2
+
+EXT1
+
+Hydrologic
+Soil Group
+D
+N/A
+Total
+D
+N/A
+Total
+D
+N/A
+Total
+
+Area (ha) for each land use and soil group
+Soil Category
+
+Woodland
+
+SWMF /
+Wetland
+
+Meadow
+
+Cultivated/
+Lawn /
+Crops
+Landscape
+
+Gravel
+
+81
+
+5.0
+
+0.00
+
+0.11
+0.00
+0.11
+
+81
+
+5.0
+
+0.00
+
+0.14
+0.00
+0.14
+
+86
+
+7.0
+
+0.00
+
+1.93
+0.00
+1.93
+
+0.11
+
+Clay Loam/Clay
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0.11
+
+0.00
+
+0.00
+
+0.14
+
+Clay Loam/Clay
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0.14
+
+0.00
+
+0.00
+
+1.93
+
+Clay Loam/Clay
+0.00
+
+0.00
+
+0.00
+
+1.93
+
+0.00
+
+0.00
+
+0.00
+
+Subtotal Weighted
+Weighted IA
+Area (ha)
+CN
+
+J:\2200\2278- Broccolini\7228 - Broccolini Secondary Plan\Design\Civil_Water\Broccolini Site\SWM\VO Model\7228_Proposed Hydrologic ParametersCN & IA for NasHYD
+
+Project Name:
+Project Number:
+Date:
+By:
+Checked by:
+
+Broccolini Airport Road
+2278-7228
+2025-10-07
+IF
+JS
+
+Time to Peak - Bransby Williams & Airport Methods
+Airport Method
+
+Bransby William
+
+Equation from MTO Drainage Management Manual 1997
+
+Catchment
+ID
+
+Subtotal Area
+(ha)
+
+Runoff
+Coefficient
+
+Method
+
+Flow Path Length
+(m)
+
+US Elev
+
+DS Elev
+
+Flow Path
+Drop (m)
+
+Slope
+(%)
+
+Tc (hr)
+
+Tp (hr)
+
+UC1
+
+0.11
+
+0.25
+
+AIRPORT
+
+11
+
+250.45
+
+249.77
+
+UC2
+
+0.14
+
+0.25
+
+AIRPORT
+
+17
+
+249.00
+
+244.60
+
+0.68
+
+6.18
+
+0.084
+
+0.17
+
+4.40
+
+25.88
+
+0.065
+
+EXT1
+
+1.93
+
+0.25
+
+AIRPORT
+
+229
+
+253.50
+
+249.50
+
+0.17
+
+4.00
+
+1.75
+
+0.581
+
+0.39
+
+*Note: A minimum Tp of 0.17hrs (10 minutes) has been applied
+
+J:\2200\2278- Broccolini\7228 - Broccolini Secondary Plan\Design\Civil_Water\Broccolini Site\SWM\VO Model\7228_Proposed Hydrologic ParametersTp (Bransby-Airport)
+
+Project Name: Broccolini Airport Road
+Project Number: 2278-7228
+Date: 2025-10-07
+By: IF
+Checked by: JS
+
+NASHYD Summary
+
+Catchment ID
+
+Area (ha)
+
+DT (min)
+
+CN Value
+
+CN*
+
+IA (mm)
+
+N
+
+Tp (hr)
+
+UC1
+
+0.11
+
+5
+
+81
+
+81
+
+5.0
+
+3
+
+0.17
+
+UC2
+
+0.14
+
+5
+
+81
+
+81
+
+5.0
+
+3
+
+0.17
+
+EXT1
+
+1.93
+
+5
+
+86
+
+89
+
+7.0
+
+3
+
+0.39
+
+J:\2200\2278- Broccolini\7228 - Broccolini Secondary Plan\Design\Civil_Water\Broccolini Site\SWM\VO
+Model\7228_Proposed Hydrologic ParametersSummary (NasHYD)
+
+Project Name: Broccolini Airport Road
+Project Number:
+Date:
+By:
+Checked by:
+
+2278-7228
+2025-10-07
+IF
+JS
+
+STANDHYD - TIMP, XIMP & CN Values
+
+Parameter
+
+CN Values
+
+Landuse
+
+Hydrologic Soil
+Group
+
+Woodland
+
+SWMF / Wetland
+
+Meadow
+
+Cultivated/
+Crops
+
+Lawn /
+Landscape
+
+D
+
+77
+
+50
+
+78
+
+86
+
+81
+
+10
+
+10
+
+8
+
+7
+
+5
+
+N/A
+
+IA Values
+
+*Note these values are taken from the MTO manual, check against municipal standards for CN values to be used
+
+Pervious Areas (ha)
+Catchment ID
+
+Hydrologic Soil
+Group
+
+Impervious Areas (ha)
+
+Woodland
+
+SWMF
+(Landscaped)
+
+Meadow
+
+Crops
+
+Lawn /
+Landscape
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+N/A
+
+Pervious Total
+Area (ha)
+
+Paved / Concrete /
+Building
+
+SWMF
+(Permanent
+pool)
+
+To
+Pervious
+
+To Outlet
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+To Outlet
+
+D
+0.62
+0.62
+1.78
+N/A
+0.00
+Total
+0.00
+0.00
+0.00
+0.00
+0.62
+1.78
+0.62
+D
+0.00
+2.36
+202
+N/A
+0.00
+Total
+0.00
+0.00
+0.00
+0.00
+0.00
+2.36
+0.00
+D
+0.88
+0.88
+2.77
+203
+N/A
+0.00
+Total
+0.00
+0.00
+0.00
+0.00
+0.88
+2.77
+0.88
+D
+0.00
+4.78
+204
+N/A
+0.00
+Total
+0.00
+0.00
+0.00
+0.00
+0.00
+4.78
+0.00
+* Assuming all industrial blocks are10% landscaped per miniumum requiremed by Town of Caledon zoning for Industrial land
+201
+
+Results
+Impervious
+Total Area
+(ha)
+
+Subcatchment
+Total Area (ha)
+
+1.78
+0.00
+1.78
+2.36
+0.00
+2.36
+2.77
+0.00
+2.77
+4.78
+0.00
+4.78
+
+2.40
+0.00
+2.40
+2.36
+0.00
+2.36
+3.65
+0.00
+3.65
+4.78
+0.00
+4.78
+
+TIMP
+(Fraction)
+
+XIMP
+(Fraction)
+
+Weighted
+RC
+
+Weighted
+Pervious CN
+
+Weighted
+Pervious IA
+
+0.74
+
+0.74
+
+0.73
+
+81
+
+5
+
+0.99
+
+0.99
+
+0.90
+
+81
+
+5
+
+0.76
+
+0.76
+
+0.74
+
+81
+
+5
+
+0.99
+
+0.99
+
+0.90
+
+81
+
+5
+
+J:\2200\2278- Broccolini\7228 - Broccolini Secondary Plan\Design\Civil_Water\Broccolini Site\SWM\VO Model\7228_Proposed Hydrologic ParametersCalculate TIMP, XIMP, CN, IA
+
+Project Name:
+Project Number:
+Date:
+By:
+Checked by:
+
+Broccolini Airport Road
+2278-7228
+2025-10-07
+IF
+JS
+
+STANDHYD Summary
+
+Catchment ID
+
+Area (ha)
+
+DT (min)
+
+TIMP
+
+XIMP
+
+201
+
+2.40
+
+5
+
+0.74
+
+202
+
+2.36
+
+5
+
+203
+
+3.65
+
+5
+
+204
+
+4.78
+
+5
+
+Pervious Area
+
+Impervious Area
+
+CN Value
+
+CN*
+
+IA (mm)
+
+SLPP (%)
+
+LGP (m)
+
+MNI
+
+DPSI
+
+SLPI (%)
+
+LGI (m)
+
+MNI
+
+0.74
+
+81
+
+81
+
+5
+
+2.0
+
+40
+
+0.25
+
+2
+
+1
+
+AUTO
+
+0.013
+
+0.99
+
+0.99
+
+81
+
+81
+
+5
+
+2.0
+
+40
+
+0.25
+
+1
+
+1
+
+AUTO
+
+0.013
+
+0.76
+
+0.76
+
+81
+
+81
+
+5
+
+2.0
+
+40
+
+0.25
+
+2
+
+1
+
+AUTO
+
+0.013
+
+0.99
+
+0.99
+
+81
+
+81
+
+5
+
+2.0
+
+40
+
+0.25
+
+1
+
+1
+
+AUTO
+
+0.013
+
+J:\2200\2278- Broccolini\7228 - Broccolini Secondary Plan\Design\Civil_Water\Broccolini Site\SWM\VO Model\7228_Proposed Hydrologic ParametersSummary (StandHYD)
+
+North Property Line Swale
+Project Description
+Friction Method
+
+Manning Formula
+
+Solve For
+
+Normal Depth
+
+Input Data
+0.030
+
+Roughness Coefficient
+Channel Slope
+
+0.00300
+
+Left Side Slope
+
+3.00
+
+m/m (H:V)
+
+Right Side Slope
+
+3.00
+
+m/m (H:V)
+
+Discharge
+
+0.264
+
+m³/s
+
+Normal Depth
+
+0.39
+
+m
+
+Flow Area
+
+0.45
+
+m²
+
+Wetted Perimeter
+
+2.44
+
+m
+
+Hydraulic Radius
+
+0.18
+
+m
+
+Top Width
+
+2.32
+
+m
+
+Critical Depth
+
+0.28
+
+m
+
+Critical Slope
+
+0.01834
+
+m/m
+
+Results
+
+m/m
+
+Velocity
+
+0.59
+
+m/s
+
+Velocity Head
+
+0.02
+
+m
+
+Specific Energy
+
+0.40
+
+m
+
+Froude Number
+Flow Type
+
+0.43
+Subcritical
+
+GVF Input Data
+Downstream Depth
+
+0.00
+
+m
+
+Length
+
+0.00
+
+m
+
+Number Of Steps
+
+0
+
+GVF Output Data
+Upstream Depth
+
+0.00
+
+m
+
+Profile Description
+0.00
+
+m
+
+Downstream Velocity
+
+Infinity
+
+m/s
+
+Upstream Velocity
+
+Infinity
+
+m/s
+
+0.39
+
+m
+
+Critical Depth
+
+0.28
+
+m
+
+Channel Slope
+
+0.00300
+
+m/m
+
+Critical Slope
+
+0.01834
+
+m/m
+
+Profile Headloss
+
+Normal Depth
+
+Bentley Systems, Inc. Haestad Methods Solution
+Bentley
+Center
+FlowMaster V8i (SELECTseries 1) [08.11.01.03]
+2025-10-17 8:44:30 AM
+
+27 Siemons Company Drive Suite 200 W Watertown, CT 06795 USA +1-203-755-1666
+
+Page
+
+1 of
+
+1
+
+Project Name: Broccolini Site Plan
+
+Design: IF
+
+Project No.: 2278-7228
+
+Date: 2025-10-09
+
+Underground Storage + Surface Ponding Operation Levels - North Parcel
+Orifice 1
+
+Orifice 2
+
+Orifice 1 Coefficient:
+
+0.62
+
+Orifice 2 Coefficient:
+
+0.62
+
+Orifice 1 Diameter:
+
+0.100 m
+
+Orifice 2 Diameter:
+
+0.130 m
+
+Orifice 1 Invert Elevation:
+
+246.75 m
+
+Orifice 2 Invert Elevation:
+
+247.85 m
+
+Orifice 1 Centroid Elevation:
+
+246.80 m
+
+Orifice 2 Centroid Elevation:
+
+247.92 m
+
+Operating Level
+
+Elev.
+
+(m)
+Lowest Invert of Tank
+
+247.17
+247.19
+
+Depth Above
+Orifice
+
+Total Storage
+Volume
+
+(m)
+
+(m)
+
+(cu.m)
+
+(cu.m/s)
+
+(cu.m/s)
+
+(cu.m/s)
+
+(ha-m)
+
+0.00
+
+0.00
+
+0
+
+0.000
+
+0.000
+
+0.000
+
+0.000
+
+0.03
+
+0.44
+
+36
+
+0.014
+
+0.000
+
+0.014
+
+0.004
+
+247.30
+
+0.13
+
+0.55
+
+180
+
+0.015
+
+0.000
+
+0.015
+
+0.018
+
+247.40
+
+0.23
+
+0.65
+
+322
+
+0.017
+
+0.000
+
+0.017
+
+0.032
+
+247.50
+
+0.33
+
+0.75
+
+463
+
+0.018
+
+0.000
+
+0.018
+
+0.046
+
+247.60
+
+0.43
+
+0.85
+
+602
+
+0.019
+
+0.000
+
+0.019
+
+0.060
+
+247.70
+
+0.53
+
+0.95
+
+739
+
+0.020
+
+0.000
+
+0.020
+
+0.074
+
+247.80
+
+0.63
+
+1.05
+
+872
+
+0.022
+
+0.000
+
+0.022
+
+0.087
+
+247.91
+
+0.74
+
+1.16
+
+1,003
+
+0.023
+
+0.000
+
+0.023
+
+0.100
+
+247.94
+
+0.77
+
+1.19
+
+1,043
+
+0.023
+
+0.005
+
+0.028
+
+0.104
+
+248.01
+
+0.84
+
+1.26
+
+1,130
+
+0.024
+
+0.011
+
+0.035
+
+0.113
+
+248.11
+
+0.94
+
+1.36
+
+1,253
+
+0.025
+
+0.016
+
+0.041
+
+0.125
+
+248.21
+
+1.04
+
+1.46
+
+1,371
+
+0.026
+
+0.020
+
+0.045
+
+0.137
+
+248.24
+
+1.07
+
+1.49
+
+1,403
+
+0.026
+
+0.022
+
+0.047
+
+0.140
+
+248.31
+
+1.14
+
+1.56
+
+1,483
+
+0.027
+
+0.023
+
+0.049
+
+0.148
+
+248.41
+
+1.24
+
+1.66
+
+1,587
+
+0.027
+
+0.026
+
+0.053
+
+0.159
+
+248.51
+
+1.35
+
+1.76
+
+1,674
+
+0.028
+
+0.029
+
+0.057
+
+0.167
+
+248.59
+
+1.42
+
+1.84
+
+1,741
+
+0.029
+
+0.030
+
+0.059
+
+0.174
+
+248.69
+
+1.52
+
+1.94
+
+1,811
+
+0.030
+
+0.032
+
+0.062
+
+0.181
+
+248.79
+
+1.63
+
+2.04
+
+1,876
+
+0.030
+
+0.034
+
+0.065
+
+0.188
+
+248.90
+
+1.73
+
+2.15
+
+1,941
+
+0.031
+
+0.036
+
+0.067
+
+0.194
+
+50-Year Water Level
+
+248.97
+
+1.80
+
+2.22
+
+1,985
+
+0.032
+
+0.038
+
+0.070
+
+0.199
+
+Top of Tank
+
+249.00
+
+1.83
+
+2.25
+
+2,006
+
+0.032
+
+0.038
+
+0.070
+
+0.201
+
+250.02
+
+2.85
+
+3.27
+
+2,006
+
+0.039
+
+0.053
+
+0.092
+
+0.201
+
+50-Year Water Level
+
+250.06
+
+2.89
+
+3.31
+
+2,121
+
+0.039
+
+0.055
+
+0.094
+
+0.212
+
+100-Year Water Level
+
+250.12
+
+2.95
+
+3.37
+
+2,272
+
+0.039
+
+0.055
+
+0.094
+
+0.227
+
+Surface Ponding Spill @ 250.32
+
+250.32
+
+3.15
+
+3.57
+
+2,796
+
+0.040
+
+0.057
+
+0.097
+
+0.280
+
+2-Year Water Level
+
+5-Year Water Level
+
+10-Year Water Level
+
+Depth Above
+Bottom of Tank
+
+Discharge Orifice Discharge Orifice Total Discharge
+1
+2
+
+Storage
+
+J:\2200\2278- Broccolini\7228 - Broccolini Secondary Plan\Design\Civil_Water\Broccolini Site\SWM\Storm Tanks\7228_NorthSSD_Tank_SurfacePond
+
+Project:
+
+North Parcel - SWM Tank
+
+Chamber Model Units Number of Chambers Number of End Caps Voids in the stone (porosity) Base of Stone Elevation Amount of Stone Above Chambers Amount of Stone Below Chambers Area of System-
+
+MC-7200
+Metric
+275
+20
+40
+246.94
+305
+229
+1600
+
+Include Perimeter Stone in Calculations
+
+Click for Stage Area Data
+
+%
+m
+mm
+mm
+sq.meters
+
+StormTech MC-7200 Cumulative Storage Volumes
+Height of
+System
+(mm)
+2057
+2032
+2007
+1981
+1956
+1930
+1905
+1880
+1854
+1829
+1803
+1778
+1753
+1727
+1702
+1676
+1651
+1626
+1600
+1575
+1549
+1524
+1499
+1473
+1448
+1422
+1397
+1372
+1346
+1321
+1295
+1270
+1245
+1219
+1194
+1168
+1143
+1118
+1092
+1067
+1041
+1016
+991
+965
+940
+914
+889
+864
+838
+813
+787
+762
+737
+711
+686
+660
+635
+610
+584
+559
+533
+508
+483
+457
+432
+406
+381
+356
+330
+305
+279
+254
+229
+203
+178
+152
+127
+102
+76
+51
+25
+
+Click to Invert Stage Area Data
+
+Click Here for Imperial
+Min. Area -
+
+Incremental Single
+Incremental
+Incremental Incremental End Incremental
+Chamber
+Single End Cap
+Chambers
+Cap
+Stone
+(cubic meters)
+(cubic meters) (cubic meters) (cubic meters) (cubic meters)
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.002
+0.000
+0.46
+0.01
+16.07
+0.005
+0.001
+1.48
+0.02
+15.66
+0.008
+0.001
+2.14
+0.03
+15.39
+0.010
+0.002
+2.78
+0.04
+15.13
+0.013
+0.002
+3.57
+0.05
+14.81
+0.021
+0.003
+5.78
+0.06
+13.92
+0.031
+0.004
+8.54
+0.07
+12.81
+0.037
+0.005
+10.27
+0.09
+12.11
+0.042
+0.005
+11.67
+0.11
+11.55
+0.047
+0.006
+12.88
+0.12
+11.05
+0.051
+0.007
+13.97
+0.14
+10.61
+0.054
+0.008
+14.95
+0.16
+10.21
+0.058
+0.009
+15.87
+0.17
+9.84
+0.061
+0.009
+16.71
+0.19
+9.50
+0.064
+0.010
+17.50
+0.20
+9.17
+0.066
+0.011
+18.25
+0.22
+8.87
+0.069
+0.012
+18.95
+0.23
+8.58
+0.071
+0.012
+19.62
+0.25
+8.31
+0.074
+0.013
+20.25
+0.27
+8.05
+0.076
+0.014
+20.86
+0.28
+7.80
+0.078
+0.015
+21.43
+0.29
+7.56
+0.080
+0.015
+21.99
+0.31
+7.34
+0.082
+0.016
+22.52
+0.32
+7.12
+0.084
+0.017
+23.02
+0.33
+6.91
+0.085
+0.017
+23.51
+0.35
+6.71
+0.087
+0.018
+23.97
+0.36
+6.52
+0.089
+0.018
+24.42
+0.36
+6.34
+0.090
+0.019
+24.85
+0.38
+6.16
+0.092
+0.020
+25.27
+0.40
+5.99
+0.093
+0.020
+25.67
+0.41
+5.82
+0.095
+0.021
+26.05
+0.42
+5.67
+0.096
+0.022
+26.42
+0.43
+5.51
+0.097
+0.022
+26.78
+0.44
+5.37
+0.099
+0.023
+27.12
+0.45
+5.23
+0.100
+0.023
+27.45
+0.46
+5.09
+0.101
+0.024
+27.77
+0.47
+4.96
+0.102
+0.024
+28.08
+0.48
+4.83
+0.103
+0.024
+28.37
+0.49
+4.71
+0.104
+0.025
+28.66
+0.50
+4.59
+0.105
+0.026
+28.93
+0.51
+4.48
+0.106
+0.026
+29.19
+0.52
+4.37
+0.107
+0.026
+29.44
+0.52
+4.27
+0.108
+0.027
+29.68
+0.53
+4.17
+0.109
+0.027
+29.92
+0.54
+4.07
+0.110
+0.027
+30.14
+0.55
+3.98
+0.110
+0.028
+30.35
+0.56
+3.89
+0.111
+0.027
+30.55
+0.55
+3.82
+0.112
+0.028
+30.75
+0.57
+3.73
+0.112
+0.029
+30.93
+0.57
+3.66
+0.113
+0.029
+31.11
+0.58
+3.58
+0.114
+0.029
+31.27
+0.58
+3.51
+0.114
+0.029
+31.43
+0.59
+3.45
+0.115
+0.030
+31.58
+0.59
+3.39
+0.115
+0.030
+31.72
+0.60
+3.33
+0.116
+0.030
+31.85
+0.59
+3.28
+0.116
+0.030
+31.98
+0.60
+3.23
+0.117
+0.030
+32.10
+0.61
+3.17
+0.117
+0.031
+32.21
+0.61
+3.13
+0.118
+0.031
+32.32
+0.62
+3.08
+0.118
+0.031
+32.48
+0.63
+3.01
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+0.000
+0.000
+0.00
+0.00
+16.26
+
+1593.59 sq.meters
+
+Incremental Ch,
+EC and Stone
+(cubic meters)
+16.26
+16.26
+16.26
+16.26
+16.26
+16.26
+16.26
+16.26
+16.26
+16.26
+16.26
+16.26
+16.54
+17.16
+17.56
+17.95
+18.43
+19.76
+21.42
+22.47
+23.32
+24.06
+24.72
+25.32
+25.88
+26.39
+26.88
+27.33
+27.76
+28.18
+28.57
+28.94
+29.29
+29.63
+29.96
+30.27
+30.57
+30.85
+31.13
+31.40
+31.66
+31.90
+32.14
+32.37
+32.59
+32.80
+33.01
+33.20
+33.39
+33.57
+33.75
+33.92
+34.08
+34.23
+34.39
+34.53
+34.67
+34.80
+34.92
+35.04
+35.16
+35.27
+35.37
+35.47
+35.56
+35.65
+35.72
+35.80
+35.88
+35.95
+36.02
+36.12
+16.26
+16.26
+16.26
+16.26
+16.26
+16.26
+16.26
+16.26
+16.26
+
+Cumulative
+System
+Elevation
+(cubic meters) (meters)
+2152.03
+249.00
+2135.77
+248.97
+2119.52
+248.95
+2103.26
+248.92
+2087.00
+248.90
+2070.75
+248.87
+2054.49
+248.85
+2038.24
+248.82
+2021.98
+248.79
+2005.72
+248.77
+1989.47
+248.74
+1973.21
+248.72
+1956.96
+248.69
+1940.42
+248.67
+1923.26
+248.64
+1905.70
+248.62
+1887.76
+248.59
+1869.33
+248.57
+1849.57
+248.54
+1828.15
+248.51
+1805.68
+248.49
+1782.36
+248.46
+1758.30
+248.44
+1733.58
+248.41
+1708.26
+248.39
+1682.38
+248.36
+1655.99
+248.34
+1629.11
+248.31
+1601.78
+248.29
+1574.01
+248.26
+1545.84
+248.24
+1517.27
+248.21
+1488.33
+248.18
+1459.04
+248.16
+1429.41
+248.13
+1399.45
+248.11
+1369.18
+248.08
+1338.61
+248.06
+1307.76
+248.03
+1276.63
+248.01
+1245.23
+247.98
+1213.57
+247.96
+1181.67
+247.93
+1149.53
+247.91
+1117.16
+247.88
+1084.57
+247.85
+1051.77
+247.83
+1018.76
+247.80
+985.56
+247.78
+952.17
+247.75
+918.60
+247.73
+884.85
+247.70
+850.93
+247.68
+816.84
+247.65
+782.61
+247.63
+748.22
+247.60
+713.69
+247.58
+679.02
+247.55
+644.23
+247.52
+609.31
+247.50
+574.26
+247.47
+539.11
+247.45
+503.84
+247.42
+468.47
+247.40
+433.00
+247.37
+397.44
+247.35
+361.80
+247.32
+326.07
+247.30
+290.27
+247.27
+254.39
+247.24
+218.44
+247.22
+182.42
+247.19
+146.30
+247.17
+130.05
+247.14
+113.79
+247.12
+97.54
+247.09
+81.28
+247.07
+65.02
+247.04
+48.77
+247.02
+32.51
+246.99
+16.26
+246.97
+
+Project Name: Broccolini Site Plan
+
+Design: IF
+
+Project No.: 2278-7228
+
+Date: 2025-10-09
+
+Underground Storage + Surface Ponding Operation Levels - South Parcel
+Orifice 1
+
+Orifice 2
+
+Orifice 1 Coefficient:
+
+0.62
+
+Orifice 2 Coefficient:
+
+0.62
+
+Orifice 1 Diameter:
+
+0.110 m
+
+Orifice 2 Diameter:
+
+0.120 m
+
+Orifice 1 Invert Elevation:
+
+246.00 m
+
+Orifice 2 Invert Elevation:
+
+247.85 m
+
+Orifice 1 Centroid Elevation:
+
+246.06 m
+
+Orifice 2 Centroid Elevation:
+
+247.91 m
+
+Operating Level
+
+Elev.
+
+(m)
+Lowest Invert of Tank
+
+247.17
+247.19
+
+Depth Above
+Orifice
+
+Total Storage
+Volume
+
+(m)
+
+(m)
+
+(cu.m)
+
+(cu.m/s)
+
+(cu.m/s)
+
+(cu.m/s)
+
+(ha-m)
+
+0.00
+
+0.00
+
+0
+
+0.000
+
+0.000
+
+0.000
+
+0.000
+
+0.03
+
+1.19
+
+71
+
+0.028
+
+0.000
+
+0.028
+
+0.007
+
+247.30
+
+0.13
+
+1.30
+
+354
+
+0.029
+
+0.000
+
+0.029
+
+0.035
+
+247.40
+
+0.23
+
+1.40
+
+634
+
+0.030
+
+0.000
+
+0.030
+
+0.063
+
+247.50
+
+0.33
+
+1.50
+
+911
+
+0.031
+
+0.000
+
+0.031
+
+0.091
+
+247.60
+
+0.43
+
+1.60
+
+1,185
+
+0.032
+
+0.000
+
+0.032
+
+0.118
+
+247.70
+
+0.53
+
+1.70
+
+1,454
+
+0.033
+
+0.000
+
+0.033
+
+0.145
+
+247.80
+
+0.63
+
+1.80
+
+1,717
+
+0.035
+
+0.000
+
+0.035
+
+0.172
+
+247.91
+
+0.74
+
+1.91
+
+1,994
+
+0.036
+
+0.004
+
+0.040
+
+0.199
+
+248.01
+
+0.84
+
+2.01
+
+2,225
+
+0.036
+
+0.010
+
+0.046
+
+0.223
+
+248.11
+
+0.94
+
+2.11
+
+2,467
+
+0.037
+
+0.014
+
+0.051
+
+0.247
+
+248.21
+
+1.04
+
+2.21
+
+2,699
+
+0.038
+
+0.017
+
+0.055
+
+0.270
+
+248.24
+
+1.07
+
+2.24
+
+2,758
+
+0.039
+
+0.018
+
+0.057
+
+0.276
+
+248.31
+
+1.14
+
+2.31
+
+2,919
+
+0.039
+
+0.020
+
+0.059
+
+0.292
+
+248.41
+
+1.24
+
+2.41
+
+3,124
+
+0.040
+
+0.022
+
+0.062
+
+0.312
+
+248.51
+
+1.34
+
+2.51
+
+3,319
+
+0.042
+
+0.025
+
+0.067
+
+0.332
+
+248.59
+
+1.42
+
+2.59
+
+3,427
+
+0.042
+
+0.026
+
+0.067
+
+0.343
+
+248.69
+
+1.52
+
+2.69
+
+3,562
+
+0.042
+
+0.027
+
+0.070
+
+0.356
+
+248.79
+
+1.63
+
+2.79
+
+3,689
+
+0.043
+
+0.029
+
+0.072
+
+0.369
+
+248.90
+
+1.73
+
+2.90
+
+3,816
+
+0.044
+
+0.031
+
+0.075
+
+0.382
+
+249.00
+
+1.83
+
+3.00
+
+3,943
+
+0.045
+
+0.032
+
+0.077
+
+0.394
+
+250.02
+
+2.85
+
+4.02
+
+3,943
+
+0.052
+
+0.045
+
+0.097
+
+0.394
+
+25-Year Water Level
+
+250.03
+
+2.86
+
+4.03
+
+3,981
+
+0.052
+
+0.046
+
+0.098
+
+0.398
+
+50-Year Water Level
+
+250.15
+
+2.98
+
+4.15
+
+4,438
+
+0.053
+
+0.047
+
+0.100
+
+0.444
+
+100-Year Water Level
+
+250.28
+
+3.11
+
+4.28
+
+4,897
+
+0.054
+
+0.048
+
+0.102
+
+0.490
+
+Surface Ponding Spill @ 250.32
+
+250.32
+
+3.15
+
+4.32
+
+5,063
+
+0.054
+
+0.048
+
+0.102
+
+0.506
+
+2-Year Water Level
+
+5-Year Water Level
+
+10-Year Water Level
+
+Top of Tank
+
+Depth Above
+Bottom of Tank
+
+Discharge Orifice Discharge Orifice Total Discharge
+1
+2
+
+Storage
+
+J:\2200\2278- Broccolini\7228 - Broccolini Secondary Plan\Design\Civil_Water\Broccolini Site\SWM\Storm Tanks\7228_SouthSSD_Tank_SurfacePond
+
+Project:
+
+South Parcel - SWM Tank
+
+Chamber Model Units Number of Chambers Number of End Caps Voids in the stone (porosity) Base of Stone Elevation Amount of Stone Above Chambers Amount of Stone Below Chambers Area of System-
+
+MC-7200
+Metric
+550
+20
+40
+246.94
+305
+229
+3125
+
+Include Perimeter Stone in Calculations
+
+Click for Stage Area Data
+
+%
+m
+mm
+mm
+sq.meters
+
+StormTech MC-7200 Cumulative Storage Volumes
+Height of
+System
+(mm)
+2057
+2032
+2007
+1981
+1956
+1930
+1905
+1880
+1854
+1829
+1803
+1778
+1753
+1727
+1702
+1676
+1651
+1626
+1600
+1575
+1549
+1524
+1499
+1473
+1448
+1422
+1397
+1372
+1346
+1321
+1295
+1270
+1245
+1219
+1194
+1168
+1143
+1118
+1092
+1067
+1041
+1016
+991
+965
+940
+914
+889
+864
+838
+813
+787
+762
+737
+711
+686
+660
+635
+610
+584
+559
+533
+508
+483
+457
+432
+406
+381
+356
+330
+305
+279
+254
+229
+203
+178
+152
+127
+102
+76
+51
+25
+
+Click to Invert Stage Area Data
+
+Click Here for Imperial
+Min. Area -
+
+Incremental Single
+Incremental
+Incremental Incremental End Incremental
+Chamber
+Single End Cap
+Chambers
+Cap
+Stone
+(cubic meters)
+(cubic meters) (cubic meters) (cubic meters) (cubic meters)
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.002
+0.000
+0.92
+0.01
+31.38
+0.005
+0.001
+2.96
+0.02
+30.56
+0.008
+0.001
+4.29
+0.03
+30.02
+0.010
+0.002
+5.56
+0.04
+29.51
+0.013
+0.002
+7.14
+0.05
+28.88
+0.021
+0.003
+11.55
+0.06
+27.11
+0.031
+0.004
+17.08
+0.07
+24.89
+0.037
+0.005
+20.53
+0.09
+23.50
+0.042
+0.005
+23.33
+0.11
+22.37
+0.047
+0.006
+25.77
+0.12
+21.39
+0.051
+0.007
+27.94
+0.14
+20.52
+0.054
+0.008
+29.90
+0.16
+19.73
+0.058
+0.009
+31.73
+0.17
+18.99
+0.061
+0.009
+33.41
+0.19
+18.31
+0.064
+0.010
+35.01
+0.20
+17.67
+0.066
+0.011
+36.49
+0.22
+17.07
+0.069
+0.012
+37.90
+0.23
+16.50
+0.071
+0.012
+39.23
+0.25
+15.96
+0.074
+0.013
+40.50
+0.27
+15.44
+0.076
+0.014
+41.71
+0.28
+14.95
+0.078
+0.015
+42.87
+0.29
+14.48
+0.080
+0.015
+43.97
+0.31
+14.04
+0.082
+0.016
+45.03
+0.32
+13.61
+0.084
+0.017
+46.04
+0.33
+13.20
+0.085
+0.017
+47.01
+0.35
+12.81
+0.087
+0.018
+47.95
+0.36
+12.43
+0.089
+0.018
+48.84
+0.36
+12.07
+0.090
+0.019
+49.71
+0.38
+11.71
+0.092
+0.020
+50.54
+0.40
+11.38
+0.093
+0.020
+51.34
+0.41
+11.05
+0.095
+0.021
+52.11
+0.42
+10.74
+0.096
+0.022
+52.84
+0.43
+10.44
+0.097
+0.022
+53.56
+0.44
+10.15
+0.099
+0.023
+54.24
+0.45
+9.87
+0.100
+0.023
+54.90
+0.46
+9.60
+0.101
+0.024
+55.54
+0.47
+9.34
+0.102
+0.024
+56.15
+0.48
+9.10
+0.103
+0.024
+56.74
+0.49
+8.86
+0.104
+0.025
+57.31
+0.50
+8.62
+0.105
+0.026
+57.86
+0.51
+8.40
+0.106
+0.026
+58.38
+0.52
+8.19
+0.107
+0.026
+58.89
+0.52
+7.99
+0.108
+0.027
+59.37
+0.53
+7.79
+0.109
+0.027
+59.83
+0.54
+7.60
+0.110
+0.027
+60.27
+0.55
+7.42
+0.110
+0.028
+60.70
+0.56
+7.25
+0.111
+0.027
+61.10
+0.55
+7.09
+0.112
+0.028
+61.49
+0.57
+6.93
+0.112
+0.029
+61.86
+0.57
+6.78
+0.113
+0.029
+62.21
+0.58
+6.63
+0.114
+0.029
+62.54
+0.58
+6.50
+0.114
+0.029
+62.86
+0.59
+6.37
+0.115
+0.030
+63.16
+0.59
+6.25
+0.115
+0.030
+63.44
+0.60
+6.13
+0.116
+0.030
+63.71
+0.59
+6.03
+0.116
+0.030
+63.96
+0.60
+5.93
+0.117
+0.030
+64.20
+0.61
+5.83
+0.117
+0.031
+64.42
+0.61
+5.74
+0.118
+0.031
+64.63
+0.62
+5.65
+0.118
+0.031
+64.96
+0.63
+5.52
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+0.000
+0.000
+0.00
+0.00
+31.75
+
+3124.15 sq.meters
+
+Incremental Ch,
+EC and Stone
+(cubic meters)
+31.75
+31.75
+31.75
+31.75
+31.75
+31.75
+31.75
+31.75
+31.75
+31.75
+31.75
+31.75
+32.31
+33.54
+34.34
+35.11
+36.06
+38.72
+42.04
+44.13
+45.81
+47.28
+48.60
+49.78
+50.89
+51.91
+52.87
+53.78
+54.63
+55.44
+56.21
+56.95
+57.65
+58.32
+58.96
+59.58
+60.17
+60.73
+61.28
+61.81
+62.31
+62.80
+63.27
+63.72
+64.15
+64.57
+64.97
+65.36
+65.73
+66.09
+66.44
+66.77
+67.09
+67.39
+67.69
+67.97
+68.24
+68.50
+68.74
+68.99
+69.21
+69.42
+69.63
+69.82
+70.00
+70.17
+70.33
+70.48
+70.63
+70.77
+70.90
+71.10
+31.75
+31.75
+31.75
+31.75
+31.75
+31.75
+31.75
+31.75
+31.75
+
+Cumulative
+System
+Elevation
+(cubic meters) (meters)
+4228.90
+249.00
+4197.15
+248.97
+4165.40
+248.95
+4133.65
+248.92
+4101.90
+248.90
+4070.15
+248.87
+4038.40
+248.85
+4006.65
+248.82
+3974.90
+248.79
+3943.15
+248.77
+3911.40
+248.74
+3879.65
+248.72
+3847.90
+248.69
+3815.59
+248.67
+3782.05
+248.64
+3747.71
+248.62
+3712.60
+248.59
+3676.54
+248.57
+3637.82
+248.54
+3595.78
+248.51
+3551.66
+248.49
+3505.84
+248.46
+3458.56
+248.44
+3409.96
+248.41
+3360.18
+248.39
+3309.29
+248.36
+3257.38
+248.34
+3204.51
+248.31
+3150.73
+248.29
+3096.10
+248.26
+3040.66
+248.24
+2984.45
+248.21
+2927.51
+248.18
+2869.86
+248.16
+2811.54
+248.13
+2752.58
+248.11
+2693.00
+248.08
+2632.84
+248.06
+2572.10
+248.03
+2510.83
+248.01
+2449.02
+247.98
+2386.71
+247.96
+2323.91
+247.93
+2260.65
+247.91
+2196.93
+247.88
+2132.78
+247.85
+2068.21
+247.83
+2003.24
+247.80
+1937.88
+247.78
+1872.15
+247.75
+1806.06
+247.73
+1739.62
+247.70
+1672.85
+247.68
+1605.76
+247.65
+1538.36
+247.63
+1470.67
+247.60
+1402.70
+247.58
+1334.46
+247.55
+1265.95
+247.52
+1197.21
+247.50
+1128.22
+247.47
+1059.02
+247.45
+989.59
+247.42
+919.97
+247.40
+850.15
+247.37
+780.14
+247.35
+709.97
+247.32
+639.64
+247.30
+569.16
+247.27
+498.52
+247.24
+427.75
+247.22
+356.85
+247.19
+285.75
+247.17
+254.00
+247.14
+222.25
+247.12
+190.50
+247.09
+158.75
+247.07
+127.00
+247.04
+95.25
+247.02
+63.50
+246.99
+31.75
+246.97
+
+Project: Broccolini Airport Road
+Project No.: 2278-7228
+Date: 2025-10-22
+
+Created By: IF
+Revised:
+Checked By:
+
+Stone Sizing Calculations - North Outlet
+
+Actual Shear Stress Based on Outflow Velocity
+Input:
+Pipe Diameter
+Pipe Slope
+Hydraulic Radius, R
+Q100-year
+Velocity
+
+=
+=
+=
+=
+=
+
+450
+0.005
+0.11
+0.095
+1.25
+
+mm
+m/m
+m
+m3/s
+m/s
+
+(From FlowMaster model output)
+(From VO model output)
+(From FlowMaster model output)
+
+1/R
+Tractive force, T
+
+=
+=
+
+9.09
+2.2
+
+kg/m2
+
+(From MTO Design Chart 2.24)
+
+Stone Size, D50
+
+=
+
+100
+
+mm
+
+Output:
+Critical Shear Stress Resistance, Tcb
+
+=
+
+Output:
+
+Critical Shear Stress Resistance of Stone
+Input:
+
+=
+
+0.0642 x D50
+6.42
+
+(MTO, Equation 5.31)
+kg/m2
+
+Conclusion
+Since the critical shear stress capacity of the stone is greater than the tractive force of the flow, the
+proposed stone size is appropriate.
+
+Project: Broccolini Airport Road
+Project No.: 2278-7228
+Date: 2025-10-22
+
+Created By: IF
+Revised:
+Checked By:
+
+Stone Sizing Calculations - South Outlet
+
+Actual Shear Stress Based on Outflow Velocity
+Input:
+Pipe Diameter
+Pipe Slope
+Hydraulic Radius, R
+Q100-year
+Velocity
+
+=
+=
+=
+=
+=
+
+450
+0.005
+0.11
+0.101
+1.27
+
+mm
+m/m
+m
+m3/s
+m/s
+
+(From FlowMaster model output)
+(From VO model output)
+(From FlowMaster model output)
+
+1/R
+Tractive force, T
+
+=
+=
+
+9.09
+2.3
+
+kg/m2
+
+(From MTO Design Chart 2.24)
+
+Stone Size, D50
+
+=
+
+100
+
+mm
+
+Output:
+Critical Shear Stress Resistance, Tcb
+
+=
+
+Output:
+
+Critical Shear Stress Resistance of Stone
+Input:
+
+=
+
+0.0642 x D50
+6.42
+
+(MTO, Equation 5.31)
+kg/m2
+
+Conclusion
+Since the critical shear stress capacity of the stone is greater than the tractive force of the flow, the
+proposed stone size is appropriate.
+
+Worksheet for North Outlet
+Project Description
+Friction Method
+
+Manning Formula
+
+Solve For
+
+Normal Depth
+
+Input Data
+0.013
+
+Roughness Coefficient
+
+0.00500
+
+Channel Slope
+
+m/m
+
+Diameter
+
+0.45
+
+m
+
+Discharge
+
+0.095
+
+m³/s
+
+0.22
+
+m
+
+Flow Area
+
+0.08
+
+m²
+
+Wetted Perimeter
+
+0.69
+
+m
+
+Hydraulic Radius
+
+0.11
+
+m
+
+Top Width
+
+0.45
+
+m
+
+Critical Depth
+
+0.21
+
+m
+
+Results
+Normal Depth
+
+Percent Full
+
+48.3
+
+Critical Slope
+
+0.00529
+
+m/m
+
+Velocity
+
+1.25
+
+m/s
+
+Velocity Head
+
+0.08
+
+m
+
+Specific Energy
+
+0.30
+
+m
+
+Froude Number
+
+0.97
+
+Maximum Discharge
+
+0.22
+
+m³/s
+
+0.20
+
+m³/s
+
+0.00111
+
+m/m
+
+Discharge Full
+Slope Full
+Flow Type
+
+%
+
+SubCritical
+
+GVF Input Data
+Downstream Depth
+
+0.00
+
+m
+
+Length
+
+0.00
+
+m
+
+0
+
+Number Of Steps
+
+GVF Output Data
+0.00
+
+m
+
+0.00
+
+m
+
+Average End Depth Over Rise
+
+0.00
+
+%
+
+Normal Depth Over Rise
+
+48.28
+
+%
+
+Downstream Velocity
+
+Infinity
+
+m/s
+
+Upstream Depth
+Profile Description
+Profile Headloss
+
+Bentley Systems, Inc. Haestad Methods Solution
+Bentley
+Center
+FlowMaster V8i (SELECTseries 1) [08.11.01.03]
+2025-10-22 3:50:56 PM
+
+27 Siemons Company Drive Suite 200 W Watertown, CT 06795 USA +1-203-755-1666
+
+Page
+
+1 of
+
+2
+
+Worksheet for North Outlet
+GVF Output Data
+Upstream Velocity
+Normal Depth
+
+Infinity
+
+m/s
+
+0.22
+
+m
+
+Critical Depth
+
+0.21
+
+Channel Slope
+
+0.00500
+
+m/m
+
+m
+
+Critical Slope
+
+0.00529
+
+m/m
+
+Bentley Systems, Inc. Haestad Methods Solution
+Bentley
+Center
+FlowMaster V8i (SELECTseries 1) [08.11.01.03]
+2025-10-22 3:50:56 PM
+
+27 Siemons Company Drive Suite 200 W Watertown, CT 06795 USA +1-203-755-1666
+
+Page
+
+2 of
+
+2
+
+Worksheet for South Outlet
+Project Description
+Friction Method
+
+Manning Formula
+
+Solve For
+
+Normal Depth
+
+Input Data
+0.013
+
+Roughness Coefficient
+
+0.00500
+
+Channel Slope
+
+m/m
+
+Diameter
+
+0.45
+
+m
+
+Discharge
+
+0.101
+
+m³/s
+
+0.23
+
+m
+
+Flow Area
+
+0.08
+
+m²
+
+Wetted Perimeter
+
+0.71
+
+m
+
+Hydraulic Radius
+
+0.11
+
+m
+
+Top Width
+
+0.45
+
+m
+
+Critical Depth
+
+0.22
+
+m
+
+Results
+Normal Depth
+
+Percent Full
+
+50.0
+
+Critical Slope
+
+0.00535
+
+m/m
+
+Velocity
+
+1.27
+
+m/s
+
+Velocity Head
+
+0.08
+
+m
+
+Specific Energy
+
+0.31
+
+m
+
+Froude Number
+
+0.96
+
+Maximum Discharge
+
+0.22
+
+Discharge Full
+Slope Full
+Flow Type
+
+%
+
+m³/s
+
+0.20
+
+m³/s
+
+0.00125
+
+m/m
+
+SubCritical
+
+GVF Input Data
+Downstream Depth
+
+0.00
+
+m
+
+Length
+
+0.00
+
+m
+
+0
+
+Number Of Steps
+
+GVF Output Data
+0.00
+
+m
+
+0.00
+
+m
+
+Average End Depth Over Rise
+
+0.00
+
+%
+
+Normal Depth Over Rise
+
+50.04
+
+%
+
+Downstream Velocity
+
+Infinity
+
+m/s
+
+Upstream Depth
+Profile Description
+Profile Headloss
+
+Bentley Systems, Inc. Haestad Methods Solution
+Bentley
+Center
+FlowMaster V8i (SELECTseries 1) [08.11.01.03]
+2025-10-22 3:51:40 PM
+
+27 Siemons Company Drive Suite 200 W Watertown, CT 06795 USA +1-203-755-1666
+
+Page
+
+1 of
+
+2
+
+Worksheet for South Outlet
+GVF Output Data
+Upstream Velocity
+Normal Depth
+
+Infinity
+
+m/s
+
+0.23
+
+m
+
+Critical Depth
+
+0.22
+
+Channel Slope
+
+0.00500
+
+m/m
+
+m
+
+Critical Slope
+
+0.00535
+
+m/m
+
+Bentley Systems, Inc. Haestad Methods Solution
+Bentley
+Center
+FlowMaster V8i (SELECTseries 1) [08.11.01.03]
+2025-10-22 3:51:40 PM
+
+27 Siemons Company Drive Suite 200 W Watertown, CT 06795 USA +1-203-755-1666
+
+Page
+
+2 of
+
+2
+
+2025-10-30
+
+BROCCOLLINI SITEPLAN
+Town Of Caledon, Region of Peel
+PROJECT NUMBER - 2278-7228
+5-YEAR STORM SEWER DESIGN SHEET
+FREQUENCY - 5 YEAR - TOWN OF CALEDON
+Coef. A=
+
+1593
+
+Coef. B=
+
+11
+
+Coef. C=
+
+0.8789
+
+MATERIAL
+
+MANNINGS "n"
+
+PVC
+
+0.013
+
+CONC.
+
+0.013
+
+CSP
+
+0.024
+
+SLOPE
+
+PIPE DIA.
+
+VM
+JS
+
+DESIGNED BY:
+CHECKED BY:
+DATE:
+ISUED FOR:
+
+2025-10-30
+SPA
+
+INITIAL TIME OF CONCENTRATION (minutes)
+10.00=
+CATCHMENT
+I.D.
+
+FROM
+MH
+
+TO
+MH
+
+AREA (A)
+
+5 YEAR RUN-OFF COEFF
+
+DESIGN STORM
+AxC
+
+(Ha)
+
+(C5)
+
+0.00
+0.00
+0.04
+0.00
+0.00
+0.00
+0.14
+0.00
+0.15
+0.21
+0.00
+0.15
+0.00
+0.07
+0.00
+0.26
+0.20
+0.24
+0.24
+0.22
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.18
+0.17
+0.17
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.82
+0.00
+0.00
+0.00
+0.82
+0.00
+0.82
+0.74
+0.00
+0.58
+0.00
+0.52
+0.00
+0.57
+0.90
+0.90
+0.90
+0.90
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.90
+0.25
+0.25
+0.00
+0.00
+0.00
+0.00
+0.00
+
+5 YEAR
+CUMUL.
+
+TIME OF CONC.
+
+A x C5
+
+(min.)
+
+0.00
+0.00
+0.03
+0.00
+0.00
+0.00
+0.15
+0.15
+0.27
+0.43
+0.43
+0.09
+0.55
+0.04
+0.55
+0.15
+0.18
+0.22
+0.22
+0.20
+0.00
+0.00
+0.00
+0.00
+0.00
+1.51
+0.16
+0.04
+0.04
+1.75
+0.00
+0.00
+0.00
+0.00
+
+10.00
+10.15
+10.19
+10.00
+10.14
+10.29
+10.88
+11.36
+11.77
+12.55
+13.30
+10.00
+13.78
+10.00
+14.82
+10.00
+10.00
+10.00
+10.00
+10.00
+10.00
+10.07
+10.00
+12.16
+13.03
+15.03
+10.00
+10.00
+10.00
+15.31
+10.00
+10.04
+10.07
+10.27
+
+5 YEAR
+
+CONTROLLED ROOF
+FLOW
+
+CONTROLLED FLOW
+CUMUL.
+
+Q (RUNOFF)
+
+(mm/hr)
+
+(L/sec)
+
+(L/sec)
+
+(L/sec)
+
+(L/sec)
+
+(%)
+
+(mm)
+
+191.07
+191.03
+191.02
+191.07
+191.04
+191.00
+190.85
+190.73
+190.63
+190.43
+190.25
+191.07
+190.13
+191.07
+189.87
+191.07
+191.07
+191.07
+191.07
+191.07
+191.07
+191.05
+191.07
+190.53
+190.31
+189.82
+191.07
+191.07
+191.07
+189.75
+191.07
+191.06
+191.05
+191.00
+
+24.75
+
+24.75
+24.75
+24.75
+24.75
+24.75
+24.75
+24.75
+49.50
+49.50
+49.50
+49.50
+0.00
+49.50
+0.00
+49.50
+0.00
+0.00
+0.00
+0.00
+0.00
+24.75
+24.75
+24.75
+49.50
+49.50
+99.00
+0.00
+0.00
+0.00
+99.00
+106.00
+106.00
+106.00
+106.00
+
+0.00
+0.00
+17.42
+0.00
+0.00
+0.00
+78.31
+78.26
+143.40
+225.53
+225.31
+46.21
+290.39
+19.33
+290.00
+78.72
+95.61
+114.73
+114.73
+105.17
+0.00
+0.00
+0.00
+0.00
+0.00
+795.56
+86.05
+22.58
+22.58
+925.56
+0.00
+0.00
+0.00
+0.00
+
+24.75
+24.75
+42.17
+24.75
+24.75
+24.75
+103.06
+127.76
+192.90
+275.03
+274.81
+46.21
+339.89
+19.33
+339.50
+78.72
+95.61
+114.73
+114.73
+105.17
+24.75
+24.75
+24.75
+49.50
+49.50
+894.56
+86.05
+22.58
+22.58
+1024.56
+106.00
+106.00
+106.00
+106.00
+
+1.00%
+2.00%
+0.50%
+1.00%
+0.50%
+2.00%
+0.40%
+0.40%
+0.35%
+0.35%
+0.35%
+2.00%
+0.50%
+2.00%
+0.50%
+
+200
+250
+300
+200
+250
+250
+450
+450
+525
+600
+600
+375
+600
+375
+600
+
+1.00%
+0.35%
+1.00%
+0.45%
+2.00%
+0.25%
+5.39%
+2.00%
+2.00%
+0.25%
+1.00%
+1.00%
+0.30%
+0.30%
+
+200
+250
+200
+300
+300
+975
+300
+375
+375
+1050
+450
+450
+450
+450
+
+I
+
+DESIGN FLOW
+
+VELOCITY
+
+LENGTH
+
+TIME OF
+FLOW
+
+PIPE CAPACITY
+
+CAPACITY
+
+(m/sec)
+
+(m)
+
+(min)
+
+(L/sec)
+
+(%)
+
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+
+1.0
+1.7
+1.0
+1.0
+0.9
+1.7
+1.1
+1.1
+1.2
+1.3
+1.3
+2.2
+1.5
+2.2
+1.5
+
+9.4
+4.3
+39.9
+8.6
+8.1
+4.3
+32.8
+27.8
+55.2
+57.3
+37.3
+1.8
+95.7
+1.5
+19.7
+
+0.15
+0.04
+0.69
+0.14
+0.16
+0.04
+0.48
+0.41
+0.78
+0.74
+0.48
+0.01
+1.04
+0.01
+0.21
+
+32.80
+84.10
+68.38
+32.80
+42.05
+84.10
+180.32
+180.32
+254.43
+363.25
+363.25
+247.95
+434.17
+247.95
+434.17
+
+75%
+29%
+62%
+75%
+59%
+29%
+57%
+71%
+76%
+76%
+76%
+19%
+78%
+8%
+78%
+
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+
+1.0
+0.72
+1.0
+0.9
+1.9
+1.5
+3.2
+2.2
+2.2
+1.6
+1.8
+1.8
+1.0
+1.0
+
+4.5
+90.0
+4.5
+47.8
+19.0
+25.1
+12.3
+27.5
+7.7
+90.0
+4.2
+3.5
+11.5
+41.9
+
+0.07
+2.09
+0.07
+0.87
+0.16
+0.28
+0.06
+0.20
+0.06
+0.95
+0.04
+0.03
+0.20
+0.71
+
+32.80
+35.18
+32.80
+64.87
+136.76
+1120.53
+224.50
+247.95
+247.95
+1365.36
+285.11
+285.11
+156.16
+156.16
+
+75%
+70%
+75%
+76%
+36%
+80%
+38%
+9%
+9%
+75%
+37%
+37%
+68%
+68%
+
+MANNING'S "n"
+
+BUILDING A
+
+C101
+
+C102
+C103
+C104
+C105
+C106
+C107
+C108
+C109
+C110
+C111
+
+C112
+C113
+C114
+
+PLUG101
+MH101R
+CBMH101
+PLUG102
+MH102R
+MH102T
+DCBMH101
+MH101
+DCBMH102
+DCBMH103
+MH102
+DCB101
+MH103
+DCB102
+MH104
+DCB103
+DCB104
+DCB105
+DCB106
+DCB107
+PLUG103
+MH103R
+PLUG104
+MH104R
+MH101T
+TANK A
+DCB108
+DCB109
+DCB110
+MH105
+CONTROL MH101.
+DIVERSION MH100
+RETURN MH100
+MH107
+
+MH101R
+CBMH101
+DCBMH101
+MH102R
+MH102T
+MH101
+MH101
+DCBMH102
+DCBMH103
+MH102
+MH103
+MH103
+MH104
+MH103
+TANK A
+TANK A
+TANK A
+TANK A
+TANK A
+TANK A
+MH103R
+MH104R
+MH104R
+MH101T
+TANK A
+MH105
+MH105
+MH105
+MH105
+CONTROL MH101
+DIVERSION MH100
+RETURN MH100
+MH107
+HW100
+
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+
+J:\2200\2278- Broccolini\7228 - Broccolini Secondary Plan\Design\Civil_Water\Broccolini Site\STM\7228_STM DESIGN SHEET
+
+0.00
+0.00
+0.03
+0.00
+0.00
+0.00
+0.11
+0.00
+0.12
+0.16
+0.00
+0.09
+0.00
+0.04
+0.00
+0.15
+0.18
+0.22
+0.22
+0.20
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.16
+0.04
+0.04
+0.00
+0.00
+0.00
+0.00
+0.00
+
+24.75
+
+24.75
+24.75
+
+106.00
+
+Page 1 of 2
+
+2025-10-30
+
+BROCCOLLINI SITEPLAN
+Town Of Caledon, Region of Peel
+PROJECT NUMBER - 2278-7228
+5-YEAR STORM SEWER DESIGN SHEET
+FREQUENCY - 5 YEAR - TOWN OF CALEDON
+Coef. A=
+
+1593
+
+Coef. B=
+
+11
+
+Coef. C=
+
+0.8789
+
+MATERIAL
+
+MANNINGS "n"
+
+PVC
+
+0.013
+
+CONC.
+
+0.013
+
+CSP
+
+0.024
+
+SLOPE
+
+PIPE DIA.
+
+VM
+JS
+
+DESIGNED BY:
+CHECKED BY:
+DATE:
+ISUED FOR:
+
+2025-10-30
+SPA
+
+INITIAL TIME OF CONCENTRATION (minutes)
+10.00=
+CATCHMENT
+I.D.
+
+FROM
+MH
+
+TO
+MH
+
+AREA (A)
+
+5 YEAR RUN-OFF COEFF
+
+DESIGN STORM
+AxC
+
+(Ha)
+
+(C5)
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.15
+0.14
+0.15
+0.15
+0.02
+0.17
+0.04
+0.16
+0.00
+0.13
+0.19
+0.00
+0.00
+0.14
+0.20
+0.24
+0.24
+0.23
+0.43
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.33
+0.18
+0.06
+0.09
+0.00
+0.09
+0.18
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.82
+0.82
+0.82
+0.82
+0.25
+0.82
+0.25
+0.77
+0.00
+0.53
+0.43
+0.00
+0.00
+0.64
+0.90
+0.90
+0.90
+0.90
+0.90
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.90
+0.90
+0.25
+0.25
+0.00
+0.25
+0.25
+0.00
+0.00
+0.00
+0.00
+0.00
+
+5 YEAR
+CUMUL.
+
+TIME OF CONC.
+
+A x C5
+
+(min.)
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.12
+0.24
+0.36
+0.48
+0.01
+0.63
+0.01
+0.12
+0.76
+0.07
+0.08
+0.91
+0.91
+0.09
+0.18
+0.22
+0.22
+0.21
+0.39
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.30
+0.16
+0.02
+0.02
+2.70
+0.02
+0.07
+2.77
+0.00
+0.00
+0.00
+0.00
+
+10.00
+10.01
+10.00
+11.87
+12.04
+12.08
+12.75
+13.55
+14.33
+10.00
+14.98
+10.00
+10.00
+15.57
+10.00
+10.00
+16.57
+17.30
+10.00
+10.00
+10.00
+10.00
+10.00
+10.00
+10.00
+10.27
+10.00
+11.74
+10.00
+13.33
+10.00
+10.00
+10.00
+10.00
+17.54
+10.00
+10.29
+17.67
+10.00
+10.02
+10.05
+10.08
+
+5 YEAR
+
+CONTROLLED ROOF
+FLOW
+
+CONTROLLED FLOW
+CUMUL.
+
+Q (RUNOFF)
+
+(mm/hr)
+
+(L/sec)
+
+(L/sec)
+
+(L/sec)
+
+(L/sec)
+
+(%)
+
+(mm)
+
+191.07
+191.07
+191.07
+190.60
+190.56
+190.55
+190.39
+190.19
+189.99
+191.07
+189.83
+191.07
+191.07
+189.69
+191.07
+191.07
+189.44
+189.26
+191.07
+191.07
+191.07
+191.07
+191.07
+191.07
+191.07
+191.00
+191.07
+190.64
+191.07
+190.24
+191.07
+191.07
+191.07
+191.07
+189.20
+191.07
+191.00
+189.17
+191.07
+191.07
+191.06
+191.05
+
+40.20
+
+40.20
+40.20
+40.20
+80.40
+80.40
+80.40
+80.40
+80.40
+80.40
+0.00
+80.40
+0.00
+0.00
+80.40
+0.00
+0.00
+80.40
+80.40
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+40.20
+40.20
+40.20
+80.40
+40.20
+120.60
+0.00
+0.00
+0.00
+0.00
+201.00
+0.00
+0.00
+201.00
+132.00
+132.00
+132.00
+132.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+65.16
+125.86
+190.76
+255.53
+2.66
+331.52
+5.31
+65.44
+401.51
+36.60
+43.40
+480.30
+479.85
+47.59
+95.61
+114.73
+114.73
+109.95
+205.57
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+157.76
+86.05
+7.97
+11.95
+1422.30
+11.95
+35.84
+1457.56
+0.00
+0.00
+0.00
+0.00
+
+40.20
+40.20
+40.20
+80.40
+80.40
+145.56
+206.26
+271.16
+335.93
+2.66
+411.92
+5.31
+65.44
+481.91
+36.60
+43.40
+560.70
+560.25
+47.59
+95.61
+114.73
+114.73
+109.95
+205.57
+40.20
+40.20
+40.20
+80.40
+40.20
+120.60
+157.76
+86.05
+7.97
+11.95
+1623.30
+11.95
+35.84
+1658.56
+132.00
+132.00
+132.00
+132.00
+
+2.00%
+0.35%
+2.00%
+0.35%
+3.00%
+0.55%
+0.40%
+0.35%
+0.50%
+2.00%
+0.40%
+2.00%
+2.00%
+0.35%
+2.00%
+2.00%
+0.45%
+0.45%
+
+250
+300
+250
+375
+250
+450
+525
+600
+600
+300
+675
+300
+375
+750
+375
+375
+750
+750
+
+1.00%
+0.35%
+1.00%
+0.35%
+2.00%
+3.00%
+
+2.00%
+2.00%
+1.55%
+2.00%
+1.73%
+1.00%
+1.00%
+1.13%
+1.00%
+0.50%
+
+I
+
+DESIGN FLOW
+
+VELOCITY
+
+LENGTH
+
+TIME OF
+FLOW
+
+PIPE CAPACITY
+
+CAPACITY
+
+(m/sec)
+
+(m)
+
+(min)
+
+(L/sec)
+
+(%)
+
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+
+1.7
+0.8
+1.7
+0.9
+2.1
+1.3
+1.3
+1.3
+1.5
+1.9
+1.5
+1.9
+2.2
+1.5
+2.2
+2.2
+1.7
+1.7
+
+1.5
+90.0
+1.5
+9.5
+5.8
+53.1
+60.4
+60.4
+60.0
+6.9
+51.8
+2.3
+1.8
+90.0
+1.5
+1.3
+73.5
+25.0
+
+0.01
+1.85
+0.01
+0.17
+0.05
+0.67
+0.80
+0.78
+0.65
+0.06
+0.58
+0.02
+0.01
+1.01
+0.01
+0.01
+0.72
+0.25
+
+84.10
+57.21
+84.10
+103.73
+103.00
+211.44
+272.00
+363.25
+434.17
+136.76
+531.63
+136.76
+247.95
+658.62
+247.95
+247.95
+746.81
+746.81
+
+48%
+70%
+48%
+78%
+78%
+69%
+76%
+75%
+77%
+2%
+77%
+4%
+26%
+73%
+15%
+18%
+75%
+75%
+
+250
+300
+250
+375
+250
+300
+
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+
+1.2
+0.8
+1.2
+0.9
+1.7
+2.4
+
+19.3
+71.4
+19.3
+90.0
+19.3
+5.6
+
+0.27
+1.47
+0.27
+1.60
+0.19
+0.04
+
+59.47
+57.21
+59.47
+103.73
+84.10
+167.49
+
+68%
+70%
+68%
+78%
+48%
+72%
+
+375
+375
+975
+300
+300
+1050
+450
+450
+450
+450
+
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+0.013
+
+2.2
+2.2
+3.7
+1.9
+1.8
+3.2
+1.8
+1.9
+1.8
+1.3
+
+21.3
+30.3
+28.7
+33.2
+19.1
+7.5
+2.5
+3.5
+2.5
+62.3
+
+0.16
+0.22
+0.13
+0.29
+0.18
+0.04
+0.02
+0.03
+0.02
+0.82
+
+247.95
+247.95
+2790.09
+136.76
+127.19
+2730.73
+285.11
+303.07
+285.11
+201.60
+
+3%
+5%
+58%
+9%
+28%
+61%
+46%
+44%
+46%
+65%
+
+MANNING'S "n"
+
+BUILDING B
+
+C201
+C202
+C203
+C204
+C206
+C205
+C207a
+C207
+C208
+C209
+
+C210
+C211
+C212
+C213
+C214
+C215
+
+C216
+C217
+C218
+C219
+C221
+C220
+
+PLUG201
+MH201R
+PLUG202
+MH202R
+MH201T
+DCBMH201
+DCBMH202
+DCBMH203
+DCBMH204
+DCB201
+DCBMH205
+DCB202
+DCB203
+MH201
+DCB204
+DCB205
+MH202
+MH203
+DCB206
+DCB207
+DCB208
+DCB209
+DCB210
+DCB211
+PLUG203
+MH203R
+PLUG204
+MH204R
+PLUG205
+MH205R
+DCB212
+DCB213
+DCB214
+DCB215
+TANK B
+DCB216
+DCBMH206
+MH204
+CONTROL MH201.
+DIVERSION MH200
+RETURN MH200
+MH205
+
+MH201R
+MH202R
+MH202R
+MH201T
+DCBMH201
+DCBMH202
+DCBMH203
+DCBMH204
+DCBMH205
+DCBMH205
+MH201
+MH201
+MH201
+MH202
+MH202
+MH202
+MH203
+TANK B
+TANK B
+TANK B
+TANK B
+TANK B
+TANK B
+TANK B
+MH203R
+MH204R
+MH204R
+MH205R
+MH205R
+TANK B
+TANK B
+TANK B
+TANK B
+TANK B
+MH204
+DCBMH206
+MH204
+CONTROL MH201
+DIVERSION MH200
+RETURN MH200
+MH205
+HW200
+
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+5 year
+
+J:\2200\2278- Broccolini\7228 - Broccolini Secondary Plan\Design\Civil_Water\Broccolini Site\STM\7228_STM DESIGN SHEET
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.12
+0.11
+0.12
+0.12
+0.01
+0.14
+0.01
+0.12
+0.00
+0.07
+0.08
+0.00
+0.00
+0.09
+0.18
+0.22
+0.22
+0.21
+0.39
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.30
+0.16
+0.02
+0.02
+0.00
+0.02
+0.05
+0.00
+0.00
+0.00
+0.00
+0.00
+
+40.20
+
+40.20
+40.20
+40.20
+
+132.00
+
+Page 2 of 2
+
+Project: Broccolini Airport Road
+Project No.: 2278-7228
+Created By: IF
+Checked By: JS
+Date: 2025-10-22
+
+Infiltration Gallery - North Parcel
+Infiltration Rate
+12.70
+
+mm/hr
+
+Infiltration rate at the proposed bottom elevation of the infiltration gallery must be divided by a safety correction factor:
+Safety Factor = 1.5
+Design infiltration Rate determined by dividing mean infiltration rate at bottom of infiltration trench by the safety correction factor:
+Design Infiltration Rate =
+
+8.5
+
+mm/hr
+
+equation from TRCA LID Manual (2010) page 4-58
+
+Size Infiltration Gallery Area
+Required Volume in Trench
+3
+(m )
+207
+
+Design Depth of
+Tank (m)
+
+Void Ratio
+
+Surface Area (m )
+
+Volume
+Provided (m³)
+
+Drawdown
+Time (hours)
+
+0.72
+
+0.40
+
+400
+
+115
+
+34
+
+0.40
+
+0.40
+
+650
+
+104
+
+19
+
+2
+
+219
+
+Project: Broccolini Airport Road
+Project No.: 2278-7228
+Created By: IF
+Checked By: JS
+Date: 2025-10-22
+
+Infiltration Gallery - South Parcel
+Infiltration Rate
+12.70
+
+mm/hr
+
+Infiltration rate at the proposed bottom elevation of the infiltration gallery must be divided by a safety correction factor:
+Safety Factor = 1.5
+Design infiltration Rate determined by dividing mean infiltration rate at bottom of infiltration trench by the safety correction factor:
+Design Infiltration Rate =
+
+8.5
+
+mm/hr
+
+equation from TRCA LID Manual (2010) page 4-58
+
+Size Infiltration Gallery Area
+Required Volume in Trench
+3
+(m )
+378
+
+Design Depth of
+Tank (m)
+
+Void Ratio
+
+Surface Area (m )
+
+Volume
+Provided (m³)
+
+Drawdown
+Time (hours)
+
+1.00
+
+0.40
+
+475
+
+190
+
+47
+
+0.65
+
+0.40
+
+735
+
+191
+
+31
+
+2
+
+381
+
+Project: Broccolini Airport Rd
+Project No.: 2278-7228
+
+Design: K.W.
+Check: J.S.
+Date: 2025-10-30
+
+Curb Cut Sizing
+Required Curb Cut Length = 2-year Flow Rate / Weir Coefficient*(Head^1.5)
+- Where the Weir Coefficient is equal to 1.55
+- Where the Head is equal to 0.30m
+
+LID #
+Curb Cut 1
+Curb Cut 2
+Curb Cut 3
+Curb Cut 4
+
+Q (100yr)
+3
+(m /yr)
+0.349
+0.564
+0.984
+0.654
+
+Required Curb Cut
+Length (m)
+1.4
+2.2
+3.9
+2.6
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+Servicing & Stormwater Management Report
+October 2025
+
+DRAWINGS
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+LEGEND
+SUBJECT
+PROPERTY
+
+EX. 250.44
+
+KEY PLAN
+SCALE: N.T.S.
+
+0
+.4
+
+.
+EX
+
+.
+
+9
+24
+
+42
+0.
+5
+2
+
+EX
+
+EX. 250.11
+
+EX. 250.42
+
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+·
+·
+
+·
+·
+·
+·
+·
+·
+·
+·
+
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+
+³
+
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+
+³
+
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+EX.252.00
+
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+EX.252.00
+
+.
+EX
+??
+?
+
+EX
+
+SUBJECT
+PROPERTY
+
+.?
+??
+
+EX
+
+.?
+?
+
+?
+
+EX
+
+.?
+
+??
+
+KEY PLAN
+EX
+
+SCALE: N.T.S.
+
+.?
+
+??
+
+EX.???
+
+EX.252.00
+
+?
+
+??
+
+.
+EX
+
+???
+EX.
+
+EX.???
+
+?
+
+?
+EX.?
+
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+EX.252.00
+
+??
+
+.?
+
+EX
+
+EX
+
+.?
+
+EX
+
+.?
+??
+
+EX
+
+.?
+
+EX
+
+.?
+
+??
+
+EX.???
+
+?
+
+??
+
+.
+EX
+
+???
+
+EX.
+
+??
+
+??
+
+Broccolini Airport Road LP
+Broccolini Airport Road, Town of Caledon
+
+Servicing & Stormwater Management Report
+October 2025
+
+FIGURES
+
+C.F. Crozier & Associates Inc.
+Project No. 2278-7228
+
+LEGEND
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+

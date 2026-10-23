@@ -1,0 +1,4035 @@
+FUNCTIONAL SERVICING
+&
+STORMWATER MANAGEMENT
+REPORT
+FOR
+
+SNELL’S HOLLOW EAST SECONDARY
+PLAN AREA
+
+TOWN OF CALEDON
+REGION OF PEEL
+
+PROJECT NO. 23-1353
+
+APRIL 2025
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE i
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+FUNCTIONAL SERVICING & STORMWATER MANAGEMENT REPORT
+FOR THE
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+DECEMBER 2024
+TOWN OF CALEDON
+TABLE OF CONTENTS
+1.0
+
+INTRODUCTION ............................................................................................................ 3
+
+2.0
+
+PREVIOUS STUDIES AND REPORTS .......................................................................... 4
+
+3.0
+
+LAND USE ..................................................................................................................... 5
+
+4.0
+
+STORM DRAINAGE ...................................................................................................... 6
+4.1 Existing Features and Drainage Patterns ................................................................ 6
+4.1.1
+Western Parcel (west of Heart Lake Road and East of Kennedy Road): ......... 6
+4.1.2
+Eastern Parcel (located east of Heart Lake Road and west of HWY 410) ....... 7
+4.2 Floodplain Assessment ........................................................................................... 7
+4.3 Proposed Drainage Patterns ................................................................................... 8
+4.3.1
+Boundary Road Drainage and External Drainage ............................................ 9
+4.4 Conveyance of Minor System Flows ......................................................................10
+4.5 Conveyance of Major Storm Flows ........................................................................10
+4.5.1
+Uncontrolled Areas.........................................................................................11
+4.6 Impact to Existing SWM Ponds ..............................................................................11
+
+5.0
+
+STORMWATER MANAGEMENT..................................................................................14
+5.1 Design Criteria .......................................................................................................15
+5.2 Operating Characteristics ......................................................................................16
+5.3 Pond Components .................................................................................................17
+5.3.1
+Sediment Forebay ..........................................................................................17
+5.3.2
+Permanent Pool .............................................................................................17
+5.3.3
+Extended Detention........................................................................................18
+5.3.4
+Quantity Control .............................................................................................18
+5.3.5
+Emergency Overflows ....................................................................................20
+5.3.6
+Access Road ..................................................................................................20
+5.3.7
+Sediment Drying Area ....................................................................................20
+5.4 Thermal Mitigation .................................................................................................21
+5.5 Pond Outfalls .........................................................................................................23
+5.6 Servicing Blocks ....................................................................................................23
+
+6.0
+
+LOW IMPACT DEVELOPMENT STRATEGIES ............................................................24
+6.1 LID Design Considerations ....................................................................................26
+6.2 Feature Based Water Balance ...............................................................................30
+
+7.0
+
+WATER SUPPLY SERVICING......................................................................................33
+7.1 Water Supply Servicing Design Criteria .................................................................33
+7.2 Existing Water Services .........................................................................................33
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE ii
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+7.3 External Water Supply Requirements ....................................................................34
+7.4 Proposed Water Supply .........................................................................................34
+8.0
+
+SANITARY SERVICING................................................................................................35
+8.1 Region of Peel Sanitary Design Criteria .................................................................35
+8.2 Existing Sanitary Services .....................................................................................36
+8.3 Proposed Sanitary Servicing ..................................................................................36
+
+9.0
+
+ROADS .........................................................................................................................38
+
+10.0
+
+GRADING .....................................................................................................................38
+10.1 Grading in Natural Heritage System.......................................................................38
+10.2 Retaining Walls ......................................................................................................39
+
+11.0
+
+CREEK CROSSINGS ...................................................................................................39
+11.1 Pedestrian Crossings .............................................................................................39
+
+12.0
+
+POND MAINTENANCE .................................................................................................40
+12.1 Inspections ............................................................................................................40
+12.2 Regular Operation and Maintenance Activities ......................................................40
+
+13.0
+
+HERITAGE HOUSE SITE .............................................................................................41
+
+14.0
+
+EROSION AND SEDIMENT CONTROL .......................................................................41
+
+15.0
+
+CONCLUSIONS ............................................................................................................42
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE iii
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+FIGURES
+Figure 1F
+Figure 2F
+Figure 3F
+Figure 4F
+Figure 5F
+Figure 6F
+Figure 7F
+Figure 8F
+Figure 9F
+Figure 10F
+Figure 11F
+Figure 12F
+Figure 13F
+Figure 14F
+Figure 15F
+Figure 15AF
+Figure 16F
+
+Site Location Plan
+Concept Plan
+Pre-Development Drainage Area Plan
+Pre-Development Drainage Area Plan
+Conceptual Watermain Servicing
+Conceptual Pond Design – SWM Pond 1
+Conceptual Pond Design – SWM Pond 2
+16.0m ROW
+18.0m ROW
+20.0m ROW
+22.0m ROW
+21.5m ROW
+21.5m to 24.75m Transition ROW
+26.0m ROW
+Potential LID Plan
+Groundwater Clearance Plan
+Sidewalk & Trail Plan
+DRAWINGS
+
+Drawing 1D
+Drawing 2D
+Drawing 3D
+Drawing 4D
+Drawing 5D
+Drawing 6D
+Drawing SILT-1
+
+Conceptual Grading Plan
+Conceptual Storm Servicing Plan
+Conceptual Sanitary Servicing Plan
+Plan and Profiles
+Plan and Profiles
+Cross-sections
+Siltation Plan
+
+TABLES
+Table 2-1: Background Studies and Guidelines
+Table 3-1: Summary of Proposed Land Uses
+Table 4-1: Pond 1 Targets, accounting for uncontrolled areas
+Table 4-2: Impacts to Existing Pond at Kennedy Road and Mayfield Road
+Table 4-3: 100-year Impacts to Existing Pond at Kennedy Road and
+Mayfield Road
+Table 4-4: Operating Levels and Outflows of the Heart Lake Road Pond
+Table 5-1: Quantity Control - Unit Release Rate Criteria and Target Release
+Rates
+Table 5-2: Summary of Pond Storage Characteristics
+Table 5-3: Permanent Pool Storage
+Table 5-4: Extended Detention / Erosion Control
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 1
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Table 5-5: Quantity Control - Target Storage Volumes
+Table 5-6: Quantity Control – Peak Outflows Based on Preliminary Control
+Structures
+Table 5-7: Potential Thermal Mitigation Measures
+Table 6-1: Target Additional LID Infiltration Volumes
+Table 6-2: Target Additional LID Infiltration Volumes
+Table 6-3: Preliminary Calculation of Water Quality Control Volume
+Table 6-4: LID Storage Volume
+Table 6-5: 5mm on-site retention volume
+Table 6-6: Average Flow on Annual, Seasonal, and Monthly Basis
+Table 6-7: Average Volume (m3) on Annual, Seasonal, and Monthly Basis
+Table 6-8: Average Depth on Annual, Seasonal, and Monthly Basis
+Table 7-1: Water Design Criteria
+Table 7-2: Region of Peel Linear Design Manual Population Densities
+Table 8-1: Wastewater Design Criteria
+Table 8-2: Region of Peel Linear Design Manual Population Densities
+APPENDICES
+Appendix A
+Appendix B
+Appendix C
+Appendix D
+Appendix E
+Appendix F
+Appendix G
+Appendix H
+Appendix I
+Appendix J
+Appendix K
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+Proposed Concept Plan
+Preliminary Storm Design Sheets & Imperviousness
+Calculations
+Floodplain Assessment
+Preliminary Pond Sizing Calculations
+Water Model
+Preliminary LID Measures
+Preliminary Sanitary Design Sheets
+Sanitary Trunk Background
+Storm Background
+Feature-Based Water Balance
+Existing Swale Calculations
+
+PAGE 2
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+FUNCTIONAL SERVICING & STORMWATER MANAGEMENT REPORT
+FOR THE
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+DECEMBER 2024
+TOWN OF CALEDON
+
+1.0
+
+INTRODUCTION
+
+David Schaeffer Engineering Limited (DSEL) has been retained by the Snell’s Hollow Developers
+Group to prepare a Functional Servicing and Stormwater Management Report (FS&SWMR) in
+support of the Snell’s Hollow East Secondary Plan located in the Town of Caledon, Regional
+Municipality of Peel. The FSR study area is 62.36 hectares and is bounded by Kennedy Road to
+the west, Mayfield Road to the south, and Highway 410 to the north and east as illustrated in
+Figure 1F, herein described as the subject site. The subject site is legally described as Parts of
+Lot 18, Concession 2 and 3. The existing land use of the subject site is primarily agricultural.
+The subject site is split into two parcels; the lands between Heart Lake Road and Kennedy Road
+north of Mayfield Road and south of HWY 410 described as the western parcel, as well as the
+lands east of Heart Lake Road, north of Mayfield Road and southwest of HWY 410 described as
+the east parcel.
+The western parcel site topography is generally sloped towards the south east and generally
+outlets to a Tributary of the Etobicoke Creek watershed. The eastern parcel topography generally
+drains south easterly towards the HWY 410 on-ramp, and to the southwest towards Mayfield Road
+and Heart Lake Road.
+The following report is in support of the Official Plan Amendment and Secondary Plan for the
+subject site and demonstrates the availability of municipals services to the subject property. The
+report further demonstrates general conformance to the Town of Caledon standards, the
+requirements of Toronto and Region Conservation Authority (TRCA), Region of Peel guidelines,
+and general industry practice.
+The subject property location is illustrated in Figure 1F. The FSR&SWMR prepared by DSEL
+consolidates the Functional Servicing Report and Stormwater Management Report into a single
+document.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 3
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+2.0
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+PREVIOUS STUDIES AND REPORTS
+
+The following material has been reviewed in order to identify the constraints, which govern
+development within the subject site shown in Table 2-1 below.
+Table 2-1: Background Studies and Guidelines
+RESOURCES
+Comprehensive Environmental Impact Study and Management Plan - Snell’s Hollow East
+Secondary Plan
+Snell’s Hollow Developers Group, August 2021 (revised April 2025)
+(CEISMP)
+Region of Peel Public Works Design, Specifications & Procedures Manual, Linear
+Infrastructure, Sanitary Sewer Design Criteria
+Region of Peel, July 2009, revised March 2017
+(Sanitary Design Criteria)
+Region of Peel Public Works Design, Specifications & Procedures Manual, Linear
+Infrastructure, Watermain Design Criteria
+Region of Peel, June 2010
+(Watermain Design Criteria)
+Stormwater Management Planning and Design Manual
+Ministry of Environment, March 2003
+(SWMP Manual)
+Low Impact Development Stormwater Management Planning and Design Guide
+Toronto and Region Conservation Authority, 2011
+(LID Design Manual)
+Region of Peel Water & Wastewater Master Plan for the Lake-Based System
+Region of Peel, 2020
+(Peel Master Plan)
+Etobicoke Creek Hydrology Update
+MMM Group, 2013
+(TRCA Hydrology Report)
+Hydrogeological Assessment & Water Balance
+R.J. Burnside & Associates, December 2024 (revised April 2025)
+(Hydrogeology Report)
+Snell’s Hollow East Secondary Plan Baseline Conditions Report – 2019
+R.J. Burnside & Associates, revised August 2020
+(Baseline Conditions Report)
+The above documents form the basis for this report.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 4
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+3.0
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+LAND USE
+
+Existing
+The subject site is currently under agricultural use including natural heritage features with
+tributaries to Etobicoke Creek. The tributary is recognized as an ‘Environmentally Sensitive Area’
+and represents a portion of the Heart Lake Provincially Significant Wetlands (PSW) system.
+Proposed
+The subject site is proposed for residential land use consisting of approximately 62.36 ha,
+including 36.97 ha of developable area, 0.7 ha of existing SWM pond and 24.68 ha of Natural
+Heritage System area, including buffer area. The proposed development consists of detached
+houses, semi-detached houses, townhouses, Medium-High density residential areas, roads, park
+blocks, open space and SWM blocks. The development concepts is illustrated in Figure 2F and
+in Appendix A, and the land uses have been summarized below in Table 3-1.
+The proposed commercial block and Medium High-density residential blocks will be developed in
+more detail through a future site plan process.
+Table 3-1: Summary of Proposed Land Uses
+Area
+Land Use
+(Ha)
+Low Density Residential
+9.04
+Medium Density (Townhouses &
+4.71
+Medium Density Block)
+Medium-High Density (Townhouses,
+3.88
+Apartments)
+SWM Blocks
+3.23
+Right of Way
+10.96
+Park Blocks
+2.88
+Open Space (MTO Setback)
+2.31
+Servicing/Walkway Block
+0.04
+Natural Heritage System
+21.17
+Open Space (Buffer)
+3.08
+Existing SWM Pond
+0.66
+Open Space
+0.07
+Buffer Blocks
+0.08
+Road Widening Blocks
+0.25
+Total
+62.36
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+Units
+316
+431
+697
+1444
+
+PAGE 5
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+4.0
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+STORM DRAINAGE
+
+The subject lands will be developed using a treatment-train approach for addressing stormwater
+runoff generated by the proposed development, consisting of:
+ the application of source control and LID techniques as appropriate, located in public
+areas to provide stormwater quality control and address the site water balance and feature
+based water balance;
+ conveyance techniques as appropriate; and
+ end of pipe facilities such as wet ponds for additional quantity, quality, and erosion control.
+The pre-development drainage areas and drainage patterns for the subject property are shown in
+Figure 3F.
+
+4.1
+
+Existing Features and Drainage Patterns
+
+4.1.1 Western Parcel (west of Heart Lake Road and East of Kennedy Road):
+The western parcel of the subject site is traversed by Etobicoke Creek and one of its tributaries,
+the Spring Creek. The natural heritage feature segments the western parcel into a north and south
+drainage areas. Topography of the areas is undulating with general slopes towards the Etobicoke
+Creek valley, generally from north to south for lands north of the creek, and south to north for
+lands south of the creek. Existing grades can be described as rolling to a steeper at the valley
+walls of the Etobicoke Creek valley system. The area generally consists of agricultural row crops
+with naturalized meadows, woodland inclusions and a large swamp thicket and marsh wetland
+associated within the Spring Creek tributary. The wetland is part of the provincially significant
+Heart Lake PSW Complex as noted in the Baseline Conditions Report by R.J. Burnside &
+Associates Limited. The western parcel contains Head Water Drainage Features (HDFs)
+identified by R.J. Burnside which generally consist of small swale corridors throughout the site
+and in some instances, lead towards the valley.
+The majority of the western parcel drains southeast towards the tributary of the Etobicoke Creek
+located within the site, then through an existing culvert under Mayfield Road. Flows to the Mayfield
+Road culvert are restricted by an existing 450mm diameter culvert, upstream of the Mayfield Road
+crossing, at an elevation of 255.15m. When the water level in the wetland/ creek reaches an
+elevation of 255.20m, flows will spill to the existing 1050mm culvert across Mayfield Road, at an
+elevation of 254.26m.
+The southeast corner of the western parcel drains towards Heart Lake Road and is captured in a
+storm system that outlets south of Mayfield Road and east of Heart Lake Road, where it flows
+easterly towards another branch of the Etobicoke Creek system as illustrated on Figure 3F.
+The existing storm infrastructure within the vicinity of the site includes existing SWM ponds
+located at the southwest corner of the subject property and at the northeast corner of the Heart
+Lake Road and Mayfield Road intersection, culverts, existing swales, and a storm sewer system
+on Mayfield Road, collecting the road drainage. Please refer to Figure 3F, which identifies the
+existing SWM ponds and existing culverts.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 6
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Existing South West Pond (Located at Kennedy Road and Mayfield Road)
+The existing South West Pond (Kennedy Pond), designed initially by Stantec (2007), was sized
+to accommodate runoff from Mayfield Road, Kennedy Road, and external area northwest of the
+pond. Based on the tributary drawings, the estate lots along Mayfield Road, within the subject
+boundary, were accommodated in the pond as an external area. The Stantec (2007) report
+identified that any future development of the external lands should provide their own quantity and
+quality control. The pond was sized to accommodate the Mayfield Road Widening and to
+discharge northeast to the Spring Creek tributary that runs through the subject site. GHD (2017)
+completed a facility retrofit report to ensure that the pond was providing adequate quality and
+quantity control. Subsequently, AECOM (2024) completed supplemental investigative activities of
+SWMF performance deficiencies and provided the Region with recommendations for SWMF
+improvements. Section 4.6 discusses the impact of the proposed development on the existing
+pond.
+Existing Heart Lake Road Pond (Located south of Mayfield Road and west of Heart Lake Road)
+The existing Heart Lake Road Pond (Mayfield Pond), designed initially by Stantec (2007), was
+sized to accommodate runoff from Heart Lake Road, Mayfield Road and a small portion of external
+drainage within the subject lands. Based on the tributary drawing prepared as part of original
+design, small areas from east and west of Heart Lake Road within the subject lands were
+accommodated in the pond. GHD (2017) completed a SWM facility retrofit report to improve
+conveyance and stormwater quality controls. The pond discharges to the existing ditch on the
+east side of Heart Lake Road, south of Mayfield Road. Section 4.6 discusses the impact of the
+proposed development on the existing pond
+Please refer to Appendix I for additional information on the existing storm infrastructure.
+
+4.1.2 Eastern Parcel (located east of Heart Lake Road and west of HWY 410)
+The eastern parcel of the subject lands, located east of Heart Lake Road and north of Mayfield
+Road, primarily drains in the southeasterly direction towards a culvert under the HWY 410 onramp before discharging south to the PSW complex south of Mayfield Road.
+The westerly portion of the eastern parcel drains west towards Heart Lake Road and is captured
+in the Heart Lake Road storm sewer system and conveyed south to the existing ditch east of
+Heart Lake Road.
+
+4.2
+
+Floodplain Assessment
+
+A preliminary floodplain assessment was prepared by Schaeffers Engineering Ltd. for the Spring
+Creek tributary of Etobicoke Creek in the western parcel. The preliminary floodplain assessment
+was documented in the Stormwater Management Report (Schaeffers, February 2021). A brief
+summary of the preliminary floodplain analysis is described below:
+•
+
+It was determined the floodplain north of Mayfield Road in the Spring Creek tributary of
+Etobicoke Creek functions in a backwater, caused by the existing 1050 mm diameter
+Mayfield Road culvert.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 7
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+•
+•
+•
+•
+•
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+A conventional 1-D HECRAS modeling approach, which ignores the impacts of storage in
+the valley system, results in over-topping of Mayfield Road during the Regional storm
+event.
+A floodplain mapping approach was discussed between Schaeffers and TRCA (meeting
+on August 7, 2020), and it was concluded that the culvert at Mayfield Road should be
+assumed as blocked/plugged, and assume valley system as a complete storage unit
+Schaeffers established a proposed conditions Regional storm runoff volume to the valley
+system, and calculated the total available storage in the valley system north of Mayfield
+Road and below the spill elevation over Mayfield Road
+The proposed conditions runoff volume (95,454 m3) and valley storage (183,870 m3) were
+used to plot the resulting water level and floodplain.
+The analysis determined that the Regional floodplain is contained in the valley system,
+and does not over-top Mayfield Road under these assumptions.
+
+As part of this FS&SWMR the development concept and stormwater management strategy for
+the development lands have changed. To update the Schaeffers floodplain analysis, the following
+steps were taken:
+•
+
+•
+•
+
+The proposed conditions runoff volume was re-calculated based on the latest
+development concept plan and stormwater management strategy. The digital PCSWMM
+model files used to calculate the total regional storm runoff volume (122,540 m3) is
+provided in Appendix C. For conservativism, this volume represents the total uncontrolled
+regional volume.
+The depth-storage rating curve for the valley system, north of Mayfield Road, and below
+the elevation of Mayfield Road centreline was calculated, and is provided in Appendix C.
+The highest water surface elevation determined from the depth-storage curve was used
+to set the maximum water levels at Mayfield Road in HEC-RAS, and depicted as the
+floodplain limits on Drawing 1D. Through discussions with TRCA staff, the HEC-RAS
+model was adjusted to reflect the maximum water surface elevation
+
+The updates described above conclude that the regional storm water surface is contained within
+the valley system and does not over-top Mayfield Road.
+
+4.3
+
+Proposed Drainage Patterns
+
+Post-development drainage areas have been regularized to reflect the draft plan and with due
+consideration for property ownership, community phasing, and considerations for existing
+drainage patterns entering the subject property.
+A conventional storm sewer system and major system conveyance network is designed to direct
+storm flows safely through the catchment to designated stormwater management facilities for
+treatment where appropriate. The proposed conditions drainage strategy is illustrated in Figure
+4F. There are some areas where major overland flow to the pond is not possible; in these areas
+100-year capture will be provided to pipe major system flows to the pond. 100-year capture areas
+are illustrated on Drawing 2D.
+There are two proposed stormwater management ponds, and one on-site control area, proposed
+for the subject site. The post development drainage divide is proposed to split near the center of
+the western parcel with a portion of the west parcel draining to Pond 1, and the eastern portion of
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 8
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+the western parcel as well as the eastern parcel draining to Pond 2. As noted in Section 4.1.2, a
+portion of the eastern parcel currently drains to a wetland complex south of Mayfield Road. As
+shown in Figure 4F, flows from the medium density block can be directed east, ultimately towards
+the wetland; if required through a future study. The stormwater strategy for the medium density
+block will be refined through draft plan approval.
+Pond 1 outlets to the Spring Creek tributary of Etobicoke Creek, while Pond 2 has two outlets;
+one to the Spring Creek tributary and one to the east side of Heart Lake Road south of Mayfield
+Road. The purpose of two outlets for Pond 2 is to generally maintain pre-development drainage
+boundaries to Spring Creek and the tributary of Etobicoke Creek located east of Heart Lake Road.
+Additional discussion on setting the release rates for the two outlets of Pond 2 is provided in
+Section 5.1.
+The mixed-use density block located in the western parcel, abutting Mayfield Road, is proposed
+to have on site controls and outlet towards the Spring Creek tributary to Etobicoke Creek.
+The grading and drainage boundaries may be further refined at the detailed design stage.
+
+4.3.1 Boundary Road Drainage and External Drainage
+The catchments to Pond 1, Pond 2 and the on-site control area are not proposed to capture or
+treat external or boundary road drainage. The stormwater management strategies for boundary
+road drainage areas are summarized below:
+Kennedy Road – Runoff from Kennedy Road is currently directed to the existing pond at the
+northeast corner of Kennedy Road and Mayfield Road (Kennedy Pond). The existing pond is
+discussed in Section 4.1.1. No modifications are proposed to the current Kennedy Road
+stormwater management strategy.
+Mayfield Road – Runoff from Mayfield Road, west of Stonegate Drive, is currently directed to the
+existing pond at the northeast corner of Kennedy Road and Mayfield Road (Kennedy Pond).
+Runoff from Mayfield Road, between Stonegate Drive and the Spring Creek tributary, is directed
+to an outlet south of Mayfield Road. Runoff from Mayfield Road, from Spring Creek to east of
+Heart Lake Road, is directed to the existing SWM Pond at the southwest corner of Mayfield Road
+and Heart Lake Road (Heart Lake Road/ Mayfield Pond). AtkinsRéalis (2024) has prepared a
+60% detailed design for the widening of Mayfield Road on behalf of Peel Region. The proposed
+stormwater management design includes modifications to the existing drainage boundaries on
+Mayfield Road; however, runoff from Mayfield Road is proposed to be managed through a
+treatment train approach including Oil-Grit Separators, LIDs, and the use of the existing SWM
+ponds. As such, no modifications are proposed to the stormwater management plan for the
+widening of Mayfield Road.
+Heart Lake Road – Runoff from Heart Lake Road, north of Mayfield Road, is currently directed
+to the existing pond at the southwest corner of Mayfield Road and Heart Lake Road (Heart Lake
+Road/ Mayfield Pond), discussed in Section 4.1.1. The pond was designed based on the ultimate
+cross section of Heart Lake Road with four lanes of traffic. As such, no modifications are proposed
+to the existing Heart Lake Road stormwater management strategy. Future urbanization of Heart
+Lake Road can be coordinated with the Town of Caledon.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 9
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+4.4
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Conveyance of Minor System Flows
+
+The subject property will generally be serviced by a conventional storm sewer system designed
+in accordance with Town of Caledon standards. Town of Caledon requires that storm sewer be
+sized:
+ Using a 10-year return frequency without surcharging where foundation drains will be
+connected to the storm sewer.
+ Using a 5-year return frequency where foundation drains will not be connected to the minor
+system (i.e. sump pumps are utilized).
+Sump pumps will be required in areas of shallow storm sewers or where 0.3 m of freeboard is not
+achieved from the 100 year / Regional hydraulic grade line to the underside of footing elevation.
+The sump pump outlet locations will be established through detailed design and will require back
+flow preventers or gooseneck connections to discharge to the storm sewer.
+Given grading constraints associated with boundary roads and natural heritage systems,
+combined with the requirement for Regional control ponds and the resulting pond water levels
+and hydraulic grade line, sump pumps will be required for the subject property. As such, in
+accordance with Town standards, the storm sewers are to be sized using a 5-year return
+frequency.
+Storm flows will be directed to one of the three proposed stormwater management facilities in the
+study area (two SWM Ponds, one on-site controls), where the runoff will be treated for water
+quality, erosion, and quantity control. Localized areas that cannot be conveyed to the stormwater
+management facilities will be treated using oil-grit separators.
+The conceptual storm servicing plan is provided in Drawing 2D and the overall drainage plan
+identifying catchment areas to the respective ponds is provided in Figure 4F. Preliminary storm
+design sheets are included in Appendix B.
+
+4.5
+
+Conveyance of Major Storm Flows
+
+A continuous overland flow route will be provided through the study area in order to safely convey
+major system flows in excess of the minor system and up to the 100-year event. Overland flow
+routes will be directed to one of two stormwater management ponds located within the study area.
+As discussed in Section 4.3, some areas are too low for overland flows to be conveyed to the
+pond; 100-year capture will be provided for these areas to convey flows to the pond. The major
+system flow will not exceed the width of the road allowance, and in no case will the depth of flow
+exceed 0.30 meters above the gutter of the road during a 100-year event, in accordance with the
+Town of Caledon criteria.
+Should the major system flow exceed the conveyance capacity of any given road, the storm sewer
+will be sized to accommodate the flows in excess of the road capacity. The major system flows
+will be attenuated in the stormwater management ponds or on-site control facility to achieve the
+allowable release rates as defined in Section 5.0. The conceptual major storm system is
+illustrated on Figure 4F.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 10
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+4.5.1 Uncontrolled Areas
+Driven primarily by grading constraints, there are two areas that are unable to drain minor/major
+system to the stormwater management facilities. The two areas are backyard drainage, backing
+onto the NHS system, where in the backyard is several meters below the road and are unable to
+be captured with rear-yard catchbasins. The total rear roof and rear yard area that will drain
+uncontrolled to the NHS is 0.71 ha.
+An assessment has been completed to demonstrate these uncontrolled areas can discharge to
+Etobicoke Creek system while still achieving the target peak flow rates. The uncontrolled peak
+runoff flows were subtracted from the established targets described in Table 4-1. These revised
+targets were then used to design the actual outflow from Pond 1. The areas are shown on Figure
+4F and the modeling files associated with the assessment is included in Appendix C.
+A summary of the adjusted target peak flows from Pond 1, adjusted for the uncontrolled areas, is
+provided in Table 4-1.
+Table 4-1: Pond 1 Targets, accounting for uncontrolled areas
+Storm Event
+Target Outflow
+Uncontrolled Peak
+Adjusted Target
+(m3/s)
+Runoff (m3/s)
+Outflow (m3/s)
+2-yr
+0.147
+0.040
+0.107
+5-yr
+0.259
+0.054
+0.205
+10-yr
+0.345
+0.063
+0.282
+25-yr
+0.461
+0.075
+0.386
+50-yr
+0.553
+0.080
+0.473
+100-yr
+0.648
+0.092
+0.556
+Regional
+1.850
+0.137
+1.713
+The assessment ensures that peak flows to Spring Creek tributary of Etobicoke Creek are
+maintained as per the required targets.
+
+4.6
+
+Impacts to Existing SWM Ponds
+
+As discussed in Section 4.1.1 and 4.3.1, there are two existing ponds adjacent to the subject
+lands. DSEL has completed an investigation into the impact of the proposed development on the
+existing ponds.
+Existing South West Pond (Located at Kennedy Road and Mayfield Road)
+As noted in Section 4.1.1 above, Peel Region is currently investigating SWM Pond retrofits to the
+Kennedy Road pond. The existing pond outlets to the West Wetland, upstream of proposed SWM
+Pond 1. To evaluate the impact of the proposed development on the Kennedy Road Pond, DSEL
+has compared the water levels in the downstream wetland and the Kennedy Road Pond under
+existing and proposed conditions. The stage-storage, outflow curves and drainage areas for the
+pond were updated in the PCSWMM model based on the 2017 GHD report. Table 4-2 below
+summarizes the impact to the existing SWM Pond.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 11
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Table 4-2: Impacts to Existing Pond at Kennedy Road and Mayfield Road
+SWM
+Pre-Development
+Post-Development
+Pond
+Targets*
+SWM
+SWM
+SWM
+SWM
+Downstream
+SWM
+Downstream
+Pond
+Pond
+Storm
+Pond
+Pond
+Wetland
+Pond
+Wetland
+Water
+Water
+Event Outflow
+Outflow Water Level
+Outflow Water Level
+Level
+Level
+(cms)
+(cms)
+(m)
+(cms)
+(m)
+(m)
+(m)
+100yr
+1.070
+256.53
+0.738
+255.77
+256.53
+0.760
+255.80
+50yr
+0.920
+256.50
+0.605
+255.74
+256.5
+0.622
+255.76
+25yr
+0.770
+256.46
+0.460
+255.71
+256.46
+0.474
+255.72
+10yr
+0.580
+256.40
+0.259
+255.66
+256.40
+0.260
+255.67
+5yr
+0.440
+256.36
+0.153
+255.62
+256.36
+0.151
+255.64
+2yr
+0.250
+258.28
+0.042
+255.57
+256.28
+0.041
+255.58
+25mm
+N/A
+256.03
+0.014
+255.53
+256.02
+0.014
+255.53
+*SWM Pond Targets as established in the 2007 Stantec SWM Pond Design
+
+As shown in the table above, the downstream water levels in the wetland are within 3cm of existing
+conditions under 25mm through 100yr events. The resulting operating levels in the pond are within
+1cm of existing conditions. The South SWM Pond outflows are within 3% of the current SWM
+pond outflows, and significantly lower than the SWM Pond Targets per the original pond design.
+Therefore, the proposed development is not expected to negatively impact the existing pond at
+Kennedy Road and Mayfield Road.
+
+Existing Heart Lake Road Pond (Located south of Mayfield Road and west of Heart Lake Road)
+As noted in Section 4.1.1 above, the existing Heart Lake Pond treats runoff from Heart Lake
+Road, Mayfield Road, and a small portion of the subject lands. Approximately 2.5 Ha of the subject
+lands tributary to the Heart Lake Pond will be redirected to the SWM Pond 2 within the
+development, reducing the total drainage area to the existing pond. The proposed outlet for SWM
+Pond 2 will be discharged to the existing storm sewer immediately downstream of the Heart Lake
+Road Pond.
+To evaluate the impact of the proposed development on the Heart Lake Road Pond, the hydraulic
+grade line and resulting water levels in the pond were compared to existing conditions. The stagestorage, outflow curves and drainage areas for the Heart Lake Road Pond were updated in the
+PCSWMM model based on the 2017 GHD report. Table 4.3 below compares the maximum 100year flow and 100-year HGL in the existing storm sewer downstream of the Heart Lake Road
+Pond.
+Table 4-3: 100-year Impacts to Existing Pond at Kennedy Road and Mayfield Road
+Pre
+Post
+Pre
+Post
+Percentage
+Full
+Junction
+Max HGL
+Max HGL
+Max Flow
+Max Flow
+(%)
+(m)
+(m)
+(m3/s)
+(m3/s)
+Ex. MH76
+258.49
+258.53
+0.510
+0.580
+63
+Ex. MH77
+258.19
+258.26
+0.514
+0.584
+63
+Heart Lake
+253.99
+254.02
+0.559
+0.645
+65
+Wetland
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 12
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+As shown in the table above, the 100-year hydraulic grade line and flow in the storm sewer are
+slightly higher than existing conditions; but the 100-year flows are still less than that pipe capacity.
+That is to say that the storm sewers downstream of the Heart Lake Road Pond operate under a
+free outflow condition under existing and proposed conditions. To further evaluate the impacts of
+the proposed development on the existing Heart Lake Road Pond, Table 4-4 compares the
+existing and proposed operating levels of the pond.
+Table 4-4: Operating Levels and Outflows of the Heart Lake Road Pond
+Existing vs. Proposed Conditions
+Pre
+Post
+Pre
+Post
+Storm Event
+Mayfield W/L
+Mayfield W/L
+Mayfield Flow
+Mayfield Flow
+(m)
+(m)
+(m3/s)
+(m3/s)
+100yr
+259.97
+259.88
+0.182
+0.129
+50yr
+259.92
+259.83
+0.149
+0.105
+25yr
+259.86
+259.78
+0.118
+0.083
+10yr
+259.78
+259.72
+0.081
+0.057
+5yr
+259.71
+259.66
+0.055
+0.036
+2yr
+259.59
+259.54
+0.021
+0.015
+25mm
+259.37
+259.33
+0.012
+0.012
+As shown in Tables 4-3 and 4-4 above, the storm sewers downstream of the Heart Lake Road
+Pond will continue to operate under free flowing conditions and the water levels/ outflows in the
+pond are not increased under post-development conditions. As such, the proposed development
+is not expected to have a negative impact on the existing Heart Lake Road Pond.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 13
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+5.0
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+STORMWATER MANAGEMENT
+
+Stormwater management for the subject lands will be accommodated in two (2) stormwater
+management ponds, with localized use of an on-site control facility in the mixed-use density block
+(north of Mayfield Road, west of Heart Lake Road) as described in Section 4.3. Each pond
+services a distinct development area and all facilities are proposed as wet ponds as further
+described below. Details for the on-site controls for the mixed-use density block will be provided
+at detailed design, and will be designed to provide 80% TSS removal (i.e. Jellyfish Unit TM, or
+equivalent) for the upstream catchment.
+Pond 1 is located west of Etobicoke Creek. The pond is situated at the low point of the area and
+is bounded by the south side by the natural heritage system. Monitoring well MW22-1 was drilled
+and installed by Burnside in November 2022 within the footprint of Pond 1. The soils encountered
+include approximately 7.8 m of clayey silt/silty clay till overlaying a sand and silt/sandy silt till to
+approximately 15.2 m below ground surface. Underlying these surficial tills is an aquifer
+interpreted to be the Oak Ridges Aquifer Complex (ORAC). Saturated soils were not observed
+in the upper till soils. The preliminary design for Pond 1 includes a bottom elevation 257.50 m
+within silty clay till, which is in close proximity to sand and silt deposit at an elevation 256.0 m.
+Groundwater levels in MW22-1 have consistently been about 14.5 – 15 m below ground surface.
+A clay liner is recommended to prevent any stormwater from infiltrating into the ground.
+Pond 2 is located immediately east of Heart Lake Road, situated at the existing low point near
+Heart Lake Road and Mayfield Road. Borehole BH/MW19-06 was installed in close proximity of
+Pond 2 by Golder (now WSP) in March 2019. Silty clay/clayey silt till was observed to a depth of
+about 8.3 m at which the borehole was terminated. Soil was observed grey at a depth of about
+3.1 m indicating permanent water table and groundwater levels measured in the well have been
+observed to range between above ground surface to about 1.6 m below ground surface. A clay
+liner is recommended to keep the groundwater and surface water separate. The hydraulic
+conductivity of the underlying soils will be low given the low permeability of silty clay/clayey silt
+soils, so the pond construction is not expected to significantly impact the groundwater in this area.
+Groundwater will continue to flow in its current direction, albeit around the clay liner given it would
+be less permeable.
+During the draft plan process, at least one geotechnical borehole along with installation of
+monitoring well within the footprint of each SWMP location to a depth of about 3 ~ 4m below the
+lower elevation of respective pond is suggested to provide geotechnical recommendation for clay
+liner thickness and to confirm dewatering requirements during construction.
+The following sections outline the preliminary details for Ponds 1 and 2 and on-site controls within
+the subject property.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 14
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+5.1
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Design Criteria
+
+Stormwater management within the subject property must be practiced as follows:
+Water Quality Control
+
+ Provide Enhanced (Level 1) water quality treatment, sized in
+accordance with the SWMP Manual.
+
+Erosion Control
+
+ Provide adequate drawdown time / erosion control to protect
+the form and function of watercourses downstream of the
+SWM facilities as per TRCA requirements of a 24-48-hour
+drawdown time for the 25 mm storm runoff volume
+
+Quantity Control
+
+ Volume required to meet unitary rates from the TRCA’s
+Etobicoke Hydrology report based on pre-development
+drainage area to SWM facility.
+ Quantity Controls are required for 2- to 100-year and Regional
+storm events. In addition, the Regional storm requires
+214m3/ha of additional storage to be added after the storage
+is sized per the criteria below.
+
+All facilities will be designed to meet the criteria in Section 4.2.1 of the TRCA’s Approaches to
+Manage Regulatory Event Flow Increases resulting from Urban Development (TRCA, 2016),
+where applicable. Facilities will also be designed to generally meet the criteria in Appendix E of
+the TRCA’s Stormwater Management Criteria (TRCA, 2012), where applicable.
+The total pre-development drainage area to Spring Creek tributary of Etobicoke Creek is 44.3 ha
+from the subject site, and 10.3 ha to the Heart Lake storm system that drains to the east side of
+Heart Lake Road and easterly to Etobicoke Creek. As noted in Section 4.3, there is
+approximately 5.3 ha of drainage in the eastern parcel that drains to a culvert under the HWY 410
+on-ramp that is being directed to Pond 2. Overcontrol will be provided in Pond 2 to account for
+this exchange. Similarly, there is 1.8 ha of drainage in the north-west corner of the western parcel
+that drains north to HWY 410 under existing conditions that is being diverted to Pond 1 and overcontrolled.
+Using the above noted pre-development drainage areas the following target release rates have
+been calculated for Pond 1, Pond 2, and the on-site control area in Table 5-1.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 15
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Table 5-1: Quantity Control - Unit Release Rate Criteria and Target Release Rates
+
+Storm
+Event
+
+Target Release Rate (m3/s)
+
+Unit Release
+Criteria
+Etobicoke Creek
+(Pond 1, Pond 2 W.
+Outlet and OSC)
+Unit Release Rate1
+(m3/s/ha)
+
+Unit Release
+Criteria
+Heart Lake
+(Pond 2 E.
+Outlet
+Unit Release
+Rate2
+(m3/s/ha)
+
+Pond 1
+
+Pond 2
+
+OSC Area
+
+Pre.-Dev.
+Area = 14.5
+ha
+
+Pre.-Dev. Area
+West =
+5.2 ha
+
+East =
+10.3 ha
+
+Pre.-Dev.
+Area = 2.5
+ha
+
+0.01011
+0.01785
+0.02375
+0.03177
+0.03808
+0.04465
+0.12744
+
+0.01109
+0.0192
+0.02534
+0.03363
+0.04012
+0.04685
+0.12744
+
+0.147
+0.259
+0.345
+0.461
+0.553
+0.648
+1.85
+
+0.053
+0.093
+0.124
+0.165
+0.198
+0.232
+0.663
+
+0.114
+0.198
+0.261
+0.346
+0.413
+0.483
+1.313
+
+0.025
+0.045
+0.060
+0.080
+0.096
+0.112
+0.320
+
+2-yr
+5-yr
+10-yr
+25-yr
+50-yr
+100-yr
+Regional3
+
+1 – From Draft Final Report – Etobicoke Creek Hydrology Update, Catchment 41
+2 – From Draft Final Report – Etobicoke Creek Hydrology Update, Catchment 24
+3 - From Draft Final Report - Etobicoke Creek Hydrology Update, Basin 6
+
+Pond 2 is proposed to have two outlets to reduce drainage diversion and minimize over-control
+requirements. The target release rates for Pond 2 outlets to the west (Spring Creek tributary) and
+to the east (east side of Heart lake Road, south of Mayfield Road) have been pro-rated based on
+pre-development drainage areas to the west and east. The combined release rate for the west
+and east outlet have been used to size the quantity control volume for Pond 2.
+The erosion controls have been established through a continuous erosion analysis approach.
+DSEL prepared a continuous pre-development and post-development hydrology model, and
+provided peak flow hydrographs to Geo Morphix. Geo Morphix has prepared a Fluvial
+Geomorphology Report that reviews the continuous model results. Please refer to Appendix C of
+the CEISMP for more details.
+
+5.2
+
+Operating Characteristics
+
+The stormwater management ponds have been designed in accordance with the requirements of
+the Town of Caledon Design Standards, TRCA Etobicoke Creek Hydrology Update (MMM
+Group Limited, 2013), and the SWMP Manual, and include the following features:
+Sediment Forebay
+
+to improve sediment removal prior to entering the pond
+
+Permanent Pool
+
+to provide water quality and trap pollutants
+
+Extended Detention Storage
+
+to provide erosion control
+
+Quantity Control Storage
+
+to attenuate post development flows to the allowable
+release rates as per the TRCA Etobicoke Creek
+Hydrology Update
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 16
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+The conceptual designs of the stormwater management ponds including typical cross sections
+are presented in Figure 6F and Figure 7F. All ponds are designed as a wet pond. A summary
+of the pond operating characteristics is presented in Table 5-2::
+Table 5-2: Summary of Pond Storage Characteristics
+Imp.
+Coverage
+(%)
+
+Permanent
+Pool
+Volume 1
+(m3)
+
+Erosion
+Control
+Volume 2
+(m3)
+
+100 Year Flood
+Control
+Volume 3
+(m3)
+
+Regional
+Flood Control
+Volume 3
+(m3)
+
+14.0
+
+65.8
+
+5,822
+
+2,167
+
+5,470
+
+14,785
+
+Pond 2
+
+19.7
+
+75
+
+7,064
+
+3,457
+
+8,677
+
+20,221
+
+OSC
+
+2.51
+
+93
+
+527
+
+540
+
+1,046
+
+1,209
+
+Pond
+I.D.
+
+Drainage
+Area
+(ha)
+
+Pond 1
+
+1
+2
+3
+
+Permanent pool and quality control provided for MOE Enhanced protection as per MOE SWMP Manual
+Erosion control to provide 24-48-hour drawdown time for the 25mm storm runoff volume
+Proposed conditions as modelled in PCSWMM. Quantity control required for the 2- to 100-year and Regional
+events in accordance with target release rates and volumes.
+
+The impervious coverage has been estimated based on the various land uses and their respective
+sizes in the current draft plan. The final impervious coverage will be updated at the detailed
+design stage based on the characteristics of the actual plan. The design of the ponds and OSC
+in this FSR is based on the volumes from Table 5-2.
+A calculation of the average imperviousness for the subject property is included in Appendix B.
+The on-site control (OSC) area will need to provide erosion control, quantity control, and quality
+control, similar to Pond 1 and Pond 2. The OSC area is (approximately 2.51 ha) can achieve
+erosion control and quantity control through use of controlled releases of proposed conditions
+runoff (e.g. storage). The storage requirements for erosion control and quantity control can be
+achieved through underground storage, roof top storage, surface storage, or some combination
+thereof. Quality control can be achieved through a treatment train approach or through a Jellyfish
+OGS unit. The final form of the OSC stormwater strategy is heavily dependent on the future site
+plan design; as such, the details will be provided through future site plan applications.
+
+5.3
+
+Pond Components
+
+5.3.1 Sediment Forebay
+A sediment forebay is provided in each pond to improve the pollutant removal by trapping larger
+particles near the inlet of the pond. The forebays are designed with a length to width ratio of
+approximately 3:1 and do not exceed one third of the permanent pool surface area, as required
+in the SWMP Manual. The forebays have a depth of 1.5 m to minimize the potential for resuspension. Detailed sediment forebay sizing calculations will be provided at detailed design.
+
+5.3.2 Permanent Pool
+The permanent pools have been sized to provide Enhanced level of protection in accordance with
+the SWMP Manual. The average permanent pool depths are proposed as 1.5 m for Ponds 1 and
+2. The storage characteristics are summarized in Table 5-3: .
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 17
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Table 5-3: Permanent Pool Storage
+Pond
+I.D.
+
+Drainage
+Area
+(ha)
+
+Imp.
+Coverage
+(%)
+
+Volume1
+Required
+(m3)
+
+Volume
+Provided
+(m3)
+
+Pond 1
+
+14.0
+
+65.8
+
+2,425
+
+5,822
+
+Pond 2
+
+19.7
+
+75
+
+3,809
+
+7,064
+
+1
+
+SWMP Design Manual, Table 3.2
+
+The slopes in the permanent pools will be graded with side slopes of 4:1 and 7:1, with minor
+localized variations.
+
+5.3.3 Extended Detention
+Stormwater erosion criteria for proposed SWM facilities were established based on the TRCA
+SWM Criteria (2012) and MOE (2003) requirement for extended detention volume based on
+detention of the 25mm storm event over a period of 48 hours. This level of design was sufficient
+to develop preliminary sizing of stormwater facilities in support of the draft plan.
+The resulting pond characteristics are summarized in Table 5-4: .
+Table 5-4: Extended Detention / Erosion Control
+Pond
+I.D.
+
+Drainage
+Area
+(ha)
+
+Imp.
+Coverage
+(%)
+
+Release
+Rate
+Required1
+(m3/s)
+
+Volume
+Required1
+(m3)
+
+Volume
+Provided
+(m3)
+
+Pond 1
+
+14.0
+
+65.8
+
+0.024
+
+2,140
+
+2,167
+
+Pond 2
+
+19.7
+
+75
+
+0.044
+
+3,420
+
+3,457
+
+OSC
+
+2.5
+
+93
+
+0.0088
+
+540
+
+540
+
+1
+
+Based on 24-48-hour drawdown time for the 25 mm storm runoff volume. For pond 2 this is the total target
+release rate for west and east outlets.
+
+The extended detention component has been provided with side slopes of 7:1 with minor localized
+variations. Side slopes of 7:1 have been applied to the pond area 1 m on either side of the
+permanent pool water levels.
+The extended detention volumes within the ponds will outlet through a reverse graded pipe. An
+orifice will be provided to discharge the extended detention volume at the allowable release rate.
+When used in connection with a perforated pipe outlet configuration, the minimum orifice size as
+per the SWMP Manual is 50mm. If this is not possible, an alternative option such as using a
+custom inlet control device (e.g. Hydrovex) may be reviewed at the detailed design stage.
+
+5.3.4 Quantity Control
+Flood control for the subject site is to be provided for 2-to-100 year and Regional Storm events
+based on the target release rates in Section 5.1. The details of the outlet structures for each pond
+are included in Appendix D.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 18
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+The ponds have been modelled in PCSWMM to determine the storage volumes required to
+achieve the target peak outflow rates for each storm event. A summary of the required volume is
+presented in Table 5-5: 5, with further details provided in Appendix D.
+Table 5-5: Quantity Control - Target Storage Volumes
+Pre- Development Area
+Post-Development Area
+Storm
+Event
+
+2-yr
+5-yr
+10-yr
+25-yr
+50-yr
+100-yr
+Regional2
+
+14.5 ha
+15.5 ha
+2.5 ha
+Target Release Rates (m3/s)
+Pond 1
+Pond 2
+OSC
+0.147
+0.259
+0.345
+0.461
+0.553
+0.648
+1.85
+
+West
+0.053
+0.093
+0.124
+0.165
+0.198
+0.232
+0.663
+
+East
+0.114
+0.198
+0.261
+0.346
+0.413
+0.483
+1.313
+
+0.028
+0.049
+0.065
+0.087
+0.104
+0.122
+0.348
+
+14.0 ha
+19.7 ha
+2.5 ha
+Required Storage Volume (m3)
+Pond 1
+Pond 21
+OSC
+2,914
+3,566
+4,031
+4,572
+4,984
+5,470
+14,785
+
+4,668
+5,757
+6,550
+7,439
+8,095
+8,677
+20,221
+
+617
+725
+798
+901
+973
+1,046
+1,209
+
+1 - Pond 2 storage volumes were determined based on the total combined allowable release rate for pond 2 for the west and east
+outlets.
+2 – Regional volumes include additional 214m3/ha
+
+A drop inlet structure will be provided at the pond outlets, which restricts flows to the required
+rates for 2- to 100-year and Regional storm events by a combination of orifices and/or weirs. The
+outlet pipe will be sized such that the full flow capacity of the pipe exceeds the maximum regional
+pond outflow for each pond. The preliminary control structure design has been completed in
+Appendix D. The designed peak outflows for the preliminary control structure are outlined in
+Table 5-6.
+Table 5-6: Quantity Control – Peak Outflows Based on Preliminary Control Structures
+Target Release Rates
+Designed Release Rates (m3/s)
+3
+(m /s)
+Storm
+Pond
+Pond 2
+Pond 1
+Pond 2
+Event
+11
+West
+East
+West
+East
+0.107
+0.053 0.114
+0.091
+0.047
+0.092
+2-yr
+0.205
+0.093 0.198
+0.186
+0.092
+0.195
+5-yr
+0.282
+0.124 0.261
+0.257
+0.119
+0.258
+10-yr
+0.386
+0.165 0.346
+0.358
+0.163
+0.338
+25-yr
+0.473
+0.198 0.413
+0.448
+0.188
+0.409
+50-yr
+0.556
+0.232 0.483
+0.518
+0.209
+0.477
+100-yr
+1.713
+0.663 1.313
+1.022
+0.640
+0.968
+Regional
+1 – Target release rates adjusted for uncontrolled areas
+
+Regional active storage will be provided up to a maximum 3.5 m depth. A 0.10m freeboard from
+the Regional water level to the emergency spillway elevation is to be provided.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 19
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+5.3.5 Emergency Overflows
+In the event of a blockage or a storm greater than the Regional Event, an emergency overflow
+weir has been provided. The emergency overflow weir will be sized through detailed design to
+convey the greater of the unattenuated 100 year or Regional inflow to the pond.
+Emergency overflows for Pond 1 and OSC area are to the Etobicoke Creek valley system, and
+emergency overflows from Pond 2 will be directed to Heart Lake Road where they will flow south
+along the road for approximately 150 m before discharging to the east side of Heart lake Road
+and ultimately the easterly Etobicoke Creek tributary.
+The Pond 2 outfall will convey the Regional storm without overland flow to the Regional Road
+system. In the event of an emergency, such as a blocked outlet structure or outlet pipe failure,
+the emergency spill way would discharge to Heart Lake Road and flow south across Mayfield to
+the receiving watercourse south of Mayfield Road. During normal operation of Pond 2, even
+during a Regional Storm, there will be no overland flows to Regional Roads.
+
+5.3.6 Access Road
+A 5.0 m wide access road will be provided on at least two sides of the pond blocks to facilitate
+routine inspection and maintenance activities within the pond. The access road will be graded
+with a maximum slope of 2% cross slope, and 10:1 longitudinal slope for the access road into the
+pond forebay and main cell.
+The pond access roads will connect to municipal right-of-ways, and will allow for access to the
+outlet structure, inlet structures, forebay and main cell. The maintenance access road will be
+configured such that two points of entry are provided where possible. The access road shall be
+situated in a manner that allows trucks to drive around the pond without having to turn around;
+alternatively, the access road may incorporate a turning circle (minimum radius 12.0m) where two
+access points are not provided.
+Trails will be combined with the maintenance access roads in locations where the trail alignment
+passes through the SWM pond block.
+
+5.3.7 Sediment Drying Area
+The Town has varied criteria for storm facility maintenance depending on whether sediment
+removal operations will occur in dry conditions or wet conditions. Sediment drying areas will be
+provided above the 2-year water level to allow for sediment removal. The sediment drying areas
+have been sized to provide a sediment drying volume for a minimum of 10 years of sediment
+accumulation. Please refer to Appendix D for the sediment drying area calculations.
+It should be noted that in municipalities that do require sediment drying areas, it has been
+observed that contractors do not use the sediment drying areas when cleaning ponds prior to
+assumption. Instead, it has been observed that contractors will use long-boom excavators to
+recover sediment from the forebays and load directly into dump trucks.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 20
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+5.4
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Thermal Mitigation
+
+Effluent from ponds can experience increased temperatures due to solar exposure prior to
+discharging from the facilities. The stormwater management concept is to consider opportunities
+to reduce thermal inputs to the receiving watercourses. General guidance on opportunities and
+implementation of thermal mitigation practices can be found in the Thermal Impacts of
+Urbanization including Practices and Mitigation Techniques (CVC, January 2011). A combination
+of some of the following acceptable techniques, in order of implementation priority, should be
+implemented when developing detailed subdivision designs:
+ LID infiltration BMPs;
+ Deep pool and bottom-draw from SWM facility;
+ Urban terrestrial canopy;
+ Facility shading, orientation and length to width ratio; and,
+ Concrete sewer system.
+The CVC Thermal Impacts report identified five zones where thermal mitigation measures can be
+implemented. These include:
+ Zone 1 - Pond catchment area
+ Zone 2 - Stormwater Management Facility Inlet
+ Zone 3 - Stormwater Management Facility
+ Zone 4 - Stormwater Management Facility Outlet
+ Zone 5 - Riparian Corridor
+The typical outlet structure for all SWM facilities will consist of a deep outlet pool, reverse-slope
+extended detention pipe, and a sub-surface outlet pipe. The thermal mitigation strategy including
+planting/landscaping details will be further refined during the detailed SWM facility design stage.
+The potential thermal mitigation measures that were considered for each facility is summarized in
+Table 5-7: 7. The recommendations below include sub surface storm sewers, LID measures,
+downspout disconnection, buried inlet pipes, reversed slope submerged pond outlets and extra
+permanent pool depth that should be implemented at detailed design.
+
+Table 5-7: Potential Thermal Mitigation Measures
+Thermal Mitigation Techniques per Development “Zone”
+Thermal Mitigation
+Techniques
+
+Pond
+Zone
+
+Energy transfer between warm
+storm runoff and cool subsurface storm sewers
+LID measures
+Roof Colour
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+1
+
+2
+
+OSC
+
+1
+
+Yes
+
+Yes
+
+Yes
+
+1
+
+Yes
+
+Yes
+
+TBD
+
+1
+
+No
+
+No
+
+No
+
+Notes
+
+See Section 6.0 of this report
+Development characteristics not
+yet known
+PAGE 21
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Thermal Mitigation Techniques per Development “Zone”
+Pond
+
+Thermal Mitigation
+Techniques
+
+Zone
+
+Downspout Disconnection
+Up-Gradient Plantings
+Buried Inlet Pipe
+
+1
+
+2
+
+OSC
+
+1
+1
+2
+
+Yes
+TBD
+Yes
+
+Yes
+TBD
+Yes
+
+TBD
+TBD
+Yes
+
+Inlet Cooling Trench
+
+2
+
+No
+
+No
+
+No
+
+Inlet Plantings
+Shading of open water areas
+by maximizing canopy
+
+2
+
+TBD
+
+TBD
+
+N/A
+
+3
+
+Yes
+
+Yes
+
+N/A
+
+Artificial shade system
+
+3
+
+No
+
+No
+
+N/A
+
+Floating island
+
+3
+
+No
+
+No
+
+N/A
+
+Reduce Open water area
+
+3
+
+Yes
+
+Yes
+
+N/A
+
+Increased L:W Ratio
+
+3
+
+No
+
+No
+
+N/A
+
+Pond orientation to increase
+exposure to prevailing wind
+
+3
+
+No
+
+No
+
+N/A
+
+Landscaped jetties for shading
+
+3
+
+TBD
+
+TBD
+
+TBD
+
+Sub-surface SWM Facility
+
+3
+
+No
+
+No
+
+Potentially
+
+Outlet sub-surface cooling
+trench and shading
+
+4
+
+No
+
+No
+
+No
+
+4
+
+Yes
+
+Yes
+
+Yes
+
+4
+
+No
+
+No
+
+TBD
+
+4
+
+Yes
+
+Yes
+
+Yes
+
+4
+
+Yes
+
+Yes
+
+Yes
+
+Concrete outlet pipe
+Introduce cool water at SWM
+Pond outlets such as
+foundation drain collectors,
+where feasible
+Reversed slope submerged
+pond outlet and extra
+permanent pool depth at outlet
+Distributed outlets along the
+NHS to take advantage of the
+NHS shading
+Night time release of
+discharge
+
+4
+
+No
+
+No
+
+No
+
+Watercourse shading
+
+5
+
+Yes
+
+Yes
+
+Yes
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+Notes
+
+Not recommended due to
+additional infrastructure/
+maintenance
+
+Not recommended due to
+additional infrastructure/
+maintenance
+Not recommended due to
+additional infrastructure/
+maintenance
+Not recommended due to
+location constraints
+The orientation of the ponds are
+based on topographic and
+boundary constraints and to
+meet other development
+objectives.
+Not practical for large drainage
+areas, but potentially provided in
+Medium Density OSC area
+Not recommended – historically
+MECP has indicated cooling
+trenches have marginal effect on
+effluent water
+temperatures
+Not recommended due to
+additional infrastructure/
+maintenance
+
+Not recommended due to
+additional infrastructure/
+maintenance of resulting
+complex system
+
+PAGE 22
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+5.5
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Pond Outfalls
+
+Pond 1 and 2, as well as the uncontrolled area within the lands west of Kennedy Road, will
+discharge to the Etobicoke Creek valley system. All outfalls to Etobicoke Creek will be designed
+to generally meet the criteria in Appendix E2 of the TRCA’s Stormwater Management Criteria
+(TRCA, 2012), where applicable. Stormwater outfalls are proposed to discharge to the valley floor,
+given the bank steepness; generally located as close to the toe of valley slope as possible. Exact
+outfall locations will be refined through draft plan approval process. Efforts will be made to limit
+disturbance to the wetland resulting from the outfall and plunge pool installations. Disturbance to
+the wetland will be restored following installation to the extent feasible and/or compensated for,
+as required, through detailed design. The outfalls will provide energy dissipation at the headwall
+to mitigate localized erosive forces in the floodplain and valley floor. Construction of the outfalls
+should minimize disturbance to the Natural Heritage System. For example, construction using
+trench boxes for open cut installation will reduce the footprint of excavation in the NHS, and
+reduce disturbance. The preliminary Pond outfall locations are illustrated on Figures 6F and 7F.
+As discussed in Section 4.1.1, a portion of the site west of Heart Lake Road currently discharges
+to the wetland north of Mayfield Road and west of Heart Lake Road (East Wetland), while the
+portion of the site east of Heart Lake Road generally drains to the wetland complex south of
+Mayfield Road and east of Heart Lake Road (Heart Lake Wetland). Since these drainage areas
+are consolidated into a single pond (Pond 2), two outfalls are proposed to maintain existing
+drainage patterns.
+The Pond 2 (east) outfall is proposed to connect to the existing Heart Lake Road storm sewer
+system, before discharging approximately 150 m south of Mayfield Road on the east side of Heart
+Lake Road. It should be noted that the first two existing sewers downstream of the Pond 2 (east)
+outfall will be upsized from 525 mm to 675 mm in order to maintain storage capacity in the pond
+to provide the required additional storage above the regional storm elevation, while maintaining
+the necessary freeboard in the pond. Please refer to Drawing 2D for the location of the upsized
+sewers.
+The Pond 2 (west) outfall is proposed to discharge to Spring Creek, north of Mayfield Road. This
+outfall will maintain flows to the East Wetland and minimize increases in flows to the Heart Lake
+Wetland.
+
+5.6
+
+Servicing Blocks
+
+There is one proposed servicing block located east of Heart Lake Road, north of Mayfield Road.
+The servicing block provides a corridor to connect storm sewers from the eastern parcel to Pond
+2. The servicing block allows for the large diameter storm sewers, which convey the 100-year
+flows, to connect to Pond 2 without excessive depth. The same servicing block will also be used
+for a watermain connection from the east parcel to the watermain in Heart Lake Road, providing
+a second connection to the east parcel for system security. The servicing block width will be
+determined through the draft plan process.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 23
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+6.0
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+LOW IMPACT DEVELOPMENT STRATEGIES
+
+The Town of Caledon has entered into an agreement with the Ministry of the Environment,
+Conservation and Parks (MECP) to participate in the CLI-ECA program for stormwater
+infrastructure. The CLI-ECA program requires that the proposed design consider the Water
+Balance and Water Quality for development scenarios. A pre and post-development water
+balance has been completed to determine the post-development infiltration target for LIDs within
+the subject lands. Please refer to Appendix B of the CEISMP for the hydrogeological assessment
+and water balance assessment prepared by R.J. Burnside. A summary of the post-development
+infiltration target is provided below in Table 6-1.
+Table 6-1: Target Additional LID Infiltration Volumes
+Area
+
+Pre-Development
+Annual Infiltration
+Volume
+(m3/year)
+
+PostDevelopment
+Annual Infiltration
+Volume
+Without
+Mitigation
+(m3/year)
+
+Target Annual
+Infiltration
+Volume
+(m3/year)
+
+Pond 1
+
+31,664
+
+21,894
+
+9,770
+
+Pond 2
+
+8,477
+
+4,976
+
+3,501
+
+South Block
+
+1,925
+
+15
+
+1,910
+
+Total
+
+42,066
+
+26,885
+
+15,181
+
+Refer to Table H-7 of the Preliminary Hydrogeological Investigation, R.J. Burnside, 2025 for further details
+
+As shown in the table above, without LID measures in place, post-development conditions will
+provide less infiltration than pre-development conditions. Where feasible, LID measures for SWM
+will be incorporated into the development design to provide additional water balance and control
+runoff measures. As outlined in the SWMP Design Manual (2003), Low Impact Development
+Stormwater Management Planning and Design Guide published by the CVC and TRCA (2010),
+and Sustainable Technologies Evaluation Program LID Stormwater Management webpage, there
+are a suite of LID techniques that can be considered to match pre-development infiltration
+volumes.
+There are number of techniques that maximize the water availability in pervious areas that are
+not credited through the CLI-ECA program. This includes measures located on private property
+such direction of roof runoff towards pervious areas and increased topsoil depth within private
+lots. These types of surface LID techniques promote natural infiltration simply by providing
+additional water volumes in the pervious areas (i.e., these areas would receive precipitation as
+well as extra water from roof runoff). While these techniques are not credited through the CLIECA program, they can provide a water quantity benefit.
+In addition to the techniques mentioned above, there are a number of LID measures that can be
+implemented as part of the CLI-ECA program. These include measures within areas owned or
+maintained by the municipality. To determine the optimal LID strategy, the proposed design must
+first consider site constraints. As part of the CLI-ECA program, the MECP provides a checklist of
+stormwater management site constraints that should be considered when evaluating if LID
+measures are suitable to meet the water balance and/ or quality control targets. Table A2 from
+the Environmental Compliance Approvals for a Stormwater Management System (MECP, 2022)
+has been provided below for reference of site constraints.
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 24
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Table A2. Stormwater Management Practices Site Constraints
+Potential Site Constraints
+Shallow bedrock [1], areas of blasted bedrock [2], and Karst;
+
+Notes
+N/A
+
+High groundwater [1] or areas where increased infiltration will result in elevated groundwater levels which can be shown through an appropriate area specific study to impact critical utilities or property (e.g.,
+susceptible to flooding);
+
+Groundwater clearance has been considered in LID design. Groundwater elevations should
+be confirmed at detailed design.
+
+Swelling clays [3] or unstable sub-soils;
+
+N/A
+
+Contaminated soils (e.g., brownfields);
+
+N/A
+
+High Risk Site Activities including spill prone areas;
+
+N/A
+
+Prohibitions and or restrictions per the approved Source Protection Plans and where impacts to private drinking water wells and /or Vulnerable Domestic Well Supply Areas cannot be appropriately mitigated;
+
+N/A
+
+Flood risk prone areas or structures and/ or areas of high inflow and infiltration (I/I) where wastewater systems (storm and sanitary) have been shown through technical studies to be sensitive to groundwater
+conditions that contribute to extraneous flow rates that cause property flooding / Sewer back-ups;
+
+N/A
+
+For existing municipal rights-of-way infrastructure (e.g., roads, sidewalks, utility corridor, Sewers, LID, and trails) where reconstruction is proposed and where surface and subsurface areas are not available
+based on a site-specific assessment completed by a QP;
+
+N/A
+
+For developments within partially separated wastewater systems where reconstruction is proposed and where, based on a site-specific assessment completed by a QP, can be shown to:
+Increase private property flood risk liabilities that cannot be mitigated through design;
+Impact pumping and treatment cost that cannot be mitigated through design; or
+Increase risks of structural collapse of Sewer and ground systems due to infiltration and the loss of pipe and/or pavement support that cannot be mitigated through design.
+
+N/A
+
+Surface water dominated or dependent features including but not limited to marshes and/or riparian forest wetlands which derive all or a majority of their water from surface water, including streams, runoff,
+and overbank flooding. Surface water dominated or dependent features which are identified through approved site specific hydrologic or hydrogeologic studies, and/or Environmental Impact Statements (EIS)
+may be considered for a reduced volume control target. Pre-consultation with the MECP and local agencies is encouraged;
+
+N/A
+
+Existing urban areas where risk to water distribution systems has been identified through assessments to meet applicable drinking water requirements, including Procedures F-6 and F-6-1, and substantiated
+by a QP through an appropriate area specific study and where the risk cannot be reasonably mitigated per the relevant design guidelines;
+
+N/A
+
+Existing urban areas where risk to life, human health, property, or infrastructure has been is identified and substantiated by a QP through an appropriate area specific study and where the risk cannot be N/A
+reasonably mitigated per the relevant design guidelines;
+Water reuse feasibility study has been completed to determine non-potable reuse of Stormwater for onsite or shared use;
+N/A
+Economic considerations set by infrastructure feasibility and prioritization studies undertaken at either the local/site or municipal/system level [4].
+The Town of Oakville must consider the future maintenance cost of LID infrastructure.
+Footnote:
+1. May limit infiltration capabilities if bedrock and groundwater is within 1m of the proposed Facility invert per Table 3.4.1 of the LID Stormwater Planning and Design Guide (2010, V1.0 or most recent by TRCA/CVC). Detailed assessment or studies are required to demonstrate infiltration effects
+and results may permit relaxation of the minimum 1m offset.
+2. Where blasting is more localized, this constraint may not be an issue elsewhere on the property. While infiltration-based practices may be limited in blasted rock areas, other forms of LID, such as filtration, evapotranspiration, etc., are still viable options that should be pursued.
+3. Swelling clays are clay soils that is prone to large volume changes (swelling and shrinking) that are directly related to changes in water content.
+Infrastructure feasibility and prioritization studies should comprehensively assess Stormwater site opportunities and constraints to improve cost effectiveness, environmental performance, and overall benefit to the receivers and the community. The studies include assessing and prioritizing municipal
+infrastructure for upgrades in a prudent and economically feasible manner.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 25
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Figure 15AF illustrates the clearance between groundwater and proposed grades within the site.
+As noted in Table A-2 above, 1m clearance should be provided between the high groundwater
+elevation and the bottom of the proposed LID to ensure that the LID is able to function properly.
+LIDs have therefore been proposed in areas where 1m separation can be provided between
+groundwater and the bottom of the LID. Groundwater elevations should be confirmed through
+additional testing at detailed design.
+
+6.1
+
+LID Design Considerations
+
+Soil Characteristics and Infiltration Rates
+The CVC LID Design Guide recommends that testing be completed to determine the infiltration
+rate of native soils to help determine appropriate LID locations. The CVC LID Design Guide also
+recommends a safety correction factor be applied to the measured infiltration rates in order to
+calculate a design infiltration rate.
+For the purposes of the preliminary LID design, an infiltration rate of 12mm/hr was assumed
+across the site. A safety factor of 2.5 was applied to the infiltration rate for a design infiltration rate
+of 4.8mm/hr. Additional infiltration testing is recommended at the draft plan and detailed design
+stages to confirm infiltration rates.
+LID Depth and Drawdown Time
+The preliminary LID sizing and drawdown times were calculated using the LID Design Guide
+within the Subject Lands and detailed in Appendix F. The design guidelines have been used to
+calculate the allowable reservoir depths of the trenches, as well as the required trench footprints.
+The LID sizing is based on a drawdown of designed storage volume within 48 hours with a void
+ratio of 0.4 and the adjusted infiltration rate as discussed above. The parameters of this
+preliminary infiltration trench sizing should be confirmed and refined through detailed design.
+Infiltration Galleries in the Parks
+As shown in Figure 15F, infiltration galleries are proposed within the community parks on the east
+and west parcels. This LID type typically requires approximately 2.7m clearance between
+groundwater and surface grades to provide 1m clearance from groundwater to the bottom of the
+gallery (based on 1.2m cover to the top of gallery and ~0.5m depth of gallery). As shown on
+Figure 15F, runoff from the park will be captured in local catchbasins and/ or area drains. Runoff
+will then be directed to the infiltration galleries by the local storm sewers within the park. Overflow
+from infiltration galleries will be provided to the municipal storm sewer in the adjacent roads.
+LID Design Summary
+LID
+Cover
+Number
+(m)
+G-1
+G-2
+
+1.2
+1.2
+
+Depth
+(m)
+
+Width
+(m)
+
+Length
+(m)
+
+Porosity
+
+0.6
+0.6
+
+51
+35
+
+50
+35
+
+0.4
+0.4
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+Storage
+Volume
+(m3)
+561
+270
+
+Drawdown
+Time
+(hrs)
+46
+46
+
+PAGE 25
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+LID Infiltration Summary
+LID
+Property
+Number
+
+G-1
+G-2
+
+Coscorp Inc. in Trust
+Coscorp HL
+Development Inc.
+
+Drainage
+Area
+(Ha)
+
+Runoff
+‘C’
+
+2.75
+1.65
+
+0.42
+0.67
+
+Design
+Storm
+Event
+(mm)
+25
+25
+
+Annual Infiltration
+Volume
+(m3/yr)
+7,831
+6,789
+
+Infiltration Trenches in the Rights-of-Way
+As shown in Figure 15F, infiltration galleries are proposed within rights-of-way throughout the
+plan. This LID type typically requires 3.1m to 3.2m clearance between groundwater and surface
+grades to provide 1m clearance from groundwater to the bottom of the gallery (based on 1.75m
+cover to the top of underdrain and 0.35m below the top of underdrain).
+As shown on Figure 15F, the proposed infiltration trenches will be connected to catchbasins
+within the road. Pre-treatment will be provided in the catchbasins using CB shields, before runoff
+is directed to the LID. A subdrain will be connected to the catchbasin to direct flows to the LID,
+with an overflow to the CB lead that allows larger storm events to be directed to the storm sewer.
+Figures 8F to 12F present the proposed ROW sections including the ROW LID measures.
+LID Design Summary
+LID
+Cover
+Number
+(m)
+ROW-1
+ROW-2
+
+1.75
+1.75
+
+Depth
+(m)
+
+Width
+(m)
+
+Length
+(m)
+
+Porosity
+
+0.6
+0.6
+
+2.4
+2.4
+
+1,602
+2,778
+
+0.65
+0.71
+
+Drainage
+Area
+(Ha)
+
+Runoff
+‘C’
+
+9.27
+
+15.20
+
+LID Infiltration Summary
+LID
+Property
+Number
+
+ROW-1
+
+Coscorp Inc. in Trust
+
+Storage
+Volume
+(m3)
+846
+1,467
+
+Drawdown
+Time
+(hrs)
+46
+46
+
+0.65
+
+Design
+Storm
+Event
+(mm)
+12.5
+
+Annual
+Infiltration
+Volume
+(m3/yr)
+28,988
+
+0.71
+
+12.5
+
+53,308
+
+Non-Participating Landowner
+
+ROW-2
+
+Mayfield Kennedy Investment
+Corporation
+Clearbrook Developments
+Limited
+Coscorp HL Developments Inc.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 27
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Water Balance - Post-Development Recharge
+Table 6-2 below provides a comparison between the infiltration targets and infiltration provided
+by the LID measures. As shown in the table below, although the South Block has an infiltration
+deficit under post-development conditions, the total infiltration provided by the LIDs greatly
+exceed the total infiltration target volume on an average annual basis. LID measures for the South
+Block can be investigated as part of the site plan process, however the LID measures would be
+located on private property.
+Table 6-2: Target Additional LID Infiltration Volumes
+Target Annual
+Infiltration
+Volume
+(m3/year)
+
+Annual Infiltration
+Volume Provided
+by LIDs
+(m3/year)
+
+Annual Infiltration
+Surplus with LIDs
+
+Pond 1
+
+9,770
+
+36,819
+
+27,049
+
+Pond 2
+
+3,501
+
+60,097
+
+56,596
+
+South Block
+
+1,910
+
+0
+
+-1,910
+
+Total
+
+15,181
+
+96,916
+
+81,735
+
+Area
+
+Refer to Table H-7 of the Preliminary Hydrogeological Investigation, R.J. Burnside, 2025 for further details
+
+Water Quality
+The CLI-ECA program requires that the stormwater management design control the 90th
+percentile storm event for suspended solid removal. The suggested 90th percentile storm event
+from the Manual for Low Impact Development (LID) Stormwater Management Guidance is shown
+in the image below.
+
+As shown in the figure above, the suggested 90th percentile rain event for Caledon is the 28mm
+event. This means that 28mm will be treated for water quality. A summary of the 90th percentile
+(28mm) runoff volume for the site is provided below in Table 6-3.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 28
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Table 6-3: Preliminary Calculation of Water Quality Control Volume
+Area (Ha)
+
+Imperviousness (%)
+
+Water Quality Volume
+(m3)
+
+36.89
+
+71
+
+7,373
+
+As shown in Table 6-3 above, the total 90th percentile water quality volume for the subjects lands
+is calculated to be 7,373m3. The CLI-ECA criteria requires that control be following hierarchical
+order, with each step exhausted before proceeding to the next: 1) retention (infiltration, reuse, or
+evapotranspiration), 2) LID filtration, and 3) conventional Stormwater management. The LIDs
+described above are considered “Hierarchy 1” measures and provide a portion of this water quality
+volume. The total water quality volume provided by the proposed “Hierarchy 1” LID measures is
+3,144m3 as shown below in Table 6-4.
+Table 6-4: LID Storage Volume
+LID
+Storage
+Number
+Volume
+(m3)
+G-1
+561
+G-2
+270
+ROW-1
+846
+ROW-2
+1,467
+Total
+3,144
+The storage provided by the proposed LIDs represents approximately 43% of the 90th percentile
+storm event volume. The proposed LIDs are located in available public spaces such as rights-ofway and parks; as such, there is little opportunity to provide further “Hierarchy 2” LID measures
+within public property to provide additional quality controls. As noted above, LID sizing can be
+refined through the draft plan stage. If site specific tests allow for the LIDs to be upsized to provide
+further quality control as part of a “Hierarchy 2” approach then that can be explored at the draft
+plan stage. However, that site specific analysis would also need to consider environmental
+impacts of the increased sizing, given that increased LID filtration would also result in increased
+infiltration. The current proposed LID measures already provide significantly more infiltration than
+pre-development conditions. The Town of Caledon would also need consider the benefits of the
+additional LIDs to provide filtration compared to the cost of installation and maintenance for
+additional infrastructure, as noted in Table A2 of the CLI-ECA guidelines above.
+The CLI-ECA criteria notes that “if conventional methods are necessary, then enhanced, normal,
+or basic levels of protection (80%, 70%, or 60% respectively) for suspended solids removal
+(based on the receiver)” be provided. Section 5 discusses the permanent pool requirements to
+provide enhanced level protection in conformance with the CLI-ECA requirements.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 29
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+TRCA Requirements for Runoff Retention
+Section 4.3 (Erosion Control Analysis Methodology) of the TRCA’s Stormwater Management
+Criteria requires that a minimum 5mm of on-site retention be provided where comprehensive
+studies have not been completed. A detailed geomorphological assessment has been completed
+as part of the CEISMP to establish SWM Pond targets and to evaluate post-development
+conditions of the downstream watercourse. In addition to the erosion assessment completed as
+part of the CESIMP, the LIDs described above will provide on-site retention for storms greater
+than the 5mm event. Table 6-5 below provides a comparison of the 5mm retention target and the
+volumes provided by the LIDs. As shown in the table below, the proposed LID volumes exceed
+the 5mm runoff volume. However, it should be noted that the continuous erosion assessment
+provided in the CEISMP considered the impact of the development without the need to provide
+5mm of retention on-site.
+Table 6-5: 5mm On-Site Retention Volume
+Development Area
+(Ha)
+36.89
+
+6.2
+
+Imperviousness
+(%)
+71
+
+5mm Runoff
+Volume
+(m3)
+1,316
+
+On-Site Retention
+LID Volume
+(m3)
+3,144
+
+Feature Based Water Balance
+
+In addition to the overall site water balance, within the subject property there are individual natural
+features that will require feature based water balance considerations. The wetlands within the
+site, and immediately downstream of the subject site are considered for feature based water
+balance. There is a west and east wetland cell in the Spring Creek valley system. The west side
+of the wetland complex is comprised mostly of treed and thicket swamp communities; the east
+side of the wetland complex is comprised of marsh and open water communities, as illustrated on
+Figure 2 of the CEISMP. The existing conditions drainage areas to the west and east wetlands
+are 41.8 ha and 12.0 ha, respectively. There is a downstream wetland that is part of the Heart
+Lake Wetland Complex located south of Mayfield Road and east of Heart Lake Road which Pond
+2 (east outlet) will discharge to, herein referred to as the Heart Lake Wetland.
+A continuous feature-based water balance has been prepared for the West, East, and Heart Lake
+wetlands. J.F. Sabourin and Associates (JFSA) prepared an analysis to assess the existing and
+proposed conditions surface water balance on a continuous basis using approximately 17 years
+of precipitation data from Pearson airport. Surface runoff in the updated models was simulated in
+SWMHYMO to produce hydrographs that are used as inputs into PCSWMM to simulate wetland
+and pond hydraulics. Calibration of the models were completed using monitoring data between
+2019-2022 collected by Geo Morphix. Topographic data was used to update the stage-storage
+outflow relationships for the three wetland features. LID measures, as described above in Section
+6.1, were incorporated into the model under post-development conditions.
+A summary of the pre- and post-development average monthly, seasonal, and annual
+comparisons of average flow, volume, and water-levels to the West, East, and Heart Lake
+wetlands are provided below in Table 6-6 to 6-8.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 30
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Table 6-6: Average Flow on Annual, Seasonal, and Monthly Basis
+
+Annual
+Winter
+Spring
+Summer
+Fall
+January
+February
+March
+April
+May
+June
+July
+August
+September
+October
+November
+December
+
+West Wetland
+Average Flow (L/s)
+Diff from
+Existing Proposed Existing
+%
+2.21
+2.31
+4.2
+1.7
+1.82
+7.3
+2.37
+2.4
+1.2
+2.45
+2.48
+1.4
+2.34
+2.52
+7.9
+2.08
+2.03
+-2.3
+1.48
+1.5
+1.3
+1.31
+1.33
+1.5
+2.75
+2.79
+1.5
+3.07
+3.1
+0.9
+2.5
+2.51
+0.3
+2.19
+2.2
+0.1
+2.65
+2.75
+3.5
+2.36
+2.55
+8.1
+2
+2.13
+6.4
+2.66
+2.89
+9.0
+1.51
+1.9
+25.8
+
+East Wetland
+Average Flow (L/s)
+Diff from
+Existing Proposed Existing
+%
+2.25
+2.39
+6.0
+1.83
+1.98
+8.2
+2.39
+2.49
+4.1
+2.34
+2.43
+3.7
+2.44
+2.65
+8.6
+2.28
+2.25
+-1.3
+1.58
+1.64
+3.3
+1.28
+1.33
+3.9
+2.81
+2.93
+4.1
+3.1
+3.23
+4.2
+2.34
+2.4
+2.5
+1.98
+2.04
+3.2
+2.71
+2.85
+5.0
+2.36
+2.57
+8.7
+2.11
+2.25
+6.7
+2.86
+3.14
+9.9
+1.6
+2.02
+26.2
+
+Heart Lake Wetland
+Average Flow (L/s)
+Diff from
+Existing Proposed Existing
+%
+1.36
+1.3
+-4.1
+1.08
+1.02
+-5.2
+1.45
+1.39
+-4
+1.47
+1.41
+-4.1
+1.43
+1.39
+-3.3
+1.27
+1.16
+-9.1
+0.93
+0.88
+-5.4
+0.87
+0.83
+-4.5
+1.67
+1.59
+-4.8
+1.81
+1.76
+-3.0
+1.52
+1.43
+-6.0
+1.36
+1.3
+-4.4
+1.53
+1.5
+-2.0
+1.44
+1.42
+-1.6
+1.23
+1.17
+-4.3
+1.64
+1.57
+-4.1
+1.02
+1.02
+-0.2
+
+(1) Winter = January - March + December, Spring = April to May, Summer = June to August, Fall = September to November.
+
+As shown above, with the annual flows are 4.2%, 6.0%, and -4.1% from existing conditions in the
+West, East, and Heart Lake wetlands, respectively. The monthly flows to the West wetland range
+between 2.3% less and 25.8% greater than pre-development. The monthly flows to the East
+wetland range between 1.3% less and 26.2% greater than pre-development. The monthly flows
+to the Heart Lake wetland range between 9.1% and 0.2% less than pre-development.
+Table 6-7: Average Volume (m3) on Annual, Seasonal, and Monthly Basis
+
+Annual
+Winter
+Spring
+Summer
+Fall
+January
+February
+March
+April
+May
+June
+July
+August
+September
+October
+November
+December
+
+West Wetland
+Average Volume
+Diff from
+(m3)
+Existing
+%
+Existing Proposed
+2.21
+2.31
+4.2
+1.7
+1.82
+7.3
+2.37
+2.4
+1.2
+2.45
+2.48
+1.4
+2.34
+2.52
+7.9
+2.08
+2.03
+-2.3
+1.48
+1.5
+1.3
+1.31
+1.33
+1.5
+2.75
+2.79
+1.5
+3.07
+3.1
+0.9
+2.5
+2.51
+0.3
+2.19
+2.2
+0.1
+2.65
+2.75
+3.5
+2.36
+2.55
+8.1
+2
+2.13
+6.4
+2.66
+2.89
+9.0
+1.51
+1.9
+25.8
+
+East Wetland
+Average Volume
+Diff from
+(m3)
+Existing
+%
+Existing Proposed
+2.25
+2.39
+6.0
+1.83
+1.98
+8.2
+2.39
+2.49
+4.1
+2.34
+2.43
+3.7
+2.44
+2.65
+8.6
+2.28
+2.25
+-1.3
+1.58
+1.64
+3.3
+1.28
+1.33
+3.9
+2.81
+2.93
+4.1
+3.1
+3.23
+4.2
+2.34
+2.4
+2.5
+1.98
+2.04
+3.2
+2.71
+2.85
+5.0
+2.36
+2.57
+8.7
+2.11
+2.25
+6.7
+2.86
+3.14
+9.9
+1.6
+2.02
+26.2
+
+Heart Lake Wetland
+Average Volume
+Diff from
+(m3)
+Existing
+%
+Existing Proposed
+1.36
+1.3
+-4.1
+1.08
+1.02
+-5.2
+1.45
+1.39
+-4
+1.47
+1.41
+-4.1
+1.43
+1.39
+-3.3
+1.27
+1.16
+-9.1
+0.93
+0.88
+-5.4
+0.87
+0.83
+-4.5
+1.67
+1.59
+-4.8
+1.81
+1.76
+-3.0
+1.52
+1.43
+-6.0
+1.36
+1.3
+-4.4
+1.53
+1.5
+-2.0
+1.44
+1.42
+-1.6
+1.23
+1.17
+-4.3
+1.64
+1.57
+-4.1
+1.02
+1.02
+-0.2
+
+(1) Winter = January - March + December, Spring = April to May, Summer = June to August, Fall = September to November.
+
+As shown above, with the annual runoff volumes are 4.2%, 6.0%, and -4.1% from existing
+conditions in the West, East, and Heart Lake wetlands, respectively. The monthly runoff volumes
+to the West wetland range between 2.3% less and 25.8% greater than pre-development. The
+monthly runoff volumes to the East wetland range between 1.3% less and 26.2% greater than
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 31
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+pre-development. The monthly runoff volumes to the Heart Lake wetland range between 9.1%
+and 0.2% less than pre-development.
+Table 6-8: Average Depth on Annual, Seasonal, and Monthly Basis
+
+Annual
+Winter
+Spring
+Summer
+Fall
+January
+February
+March
+April
+May
+June
+July
+August
+September
+October
+November
+December
+
+West Wetland
+Average Depth (m)
+Diff from
+Existing Proposed Existing
+%
+255.50
+255.50
+0
+255.50
+255.50
+0
+255.50
+255.50
+0
+255.50
+255.50
+0
+255.50
+255.50
+0
+255.50
+255.50
+0
+255.50
+255.50
+0
+255.50
+255.50
+0
+255.50
+255.50
+0
+255.50
+255.50
+0
+255.50
+255.50
+0
+255.50
+255.50
+0
+255.50
+255.50
+0
+255.50
+255.50
+0
+255.50
+255.50
+0
+255.50
+255.50
+0
+255.50
+255.50
+0
+
+East Wetland
+Average Depth (m)
+Diff from
+Existing Proposed Existing
+%
+255.15
+255.15
+0
+255.16
+255.16
+0
+255.15
+255.15
+0
+255.13
+255.13
+0
+255.15
+255.15
+0
+255.16
+255.16
+0
+255.16
+255.16
+0
+255.15
+255.15
+0
+255.15
+255.15
+0
+255.15
+255.15
+0
+255.14
+255.14
+0
+255.13
+255.13
+0
+255.13
+255.13
+0
+255.14
+255.14
+0
+255.15
+255.15
+0
+255.16
+255.16
+0
+255.16
+255.16
+0
+
+Heart Lake Wetland
+Average Depth (m)
+Diff from
+Existing Proposed Existing
+%
+253.73
+253.73
+0
+253.73
+253.73
+0
+253.73
+253.73
+0
+253.73
+253.73
+0
+253.73
+253.73
+0
+253.73
+253.73
+0
+253.73
+253.73
+0
+253.73
+253.73
+0
+253.73
+253.73
+0
+253.73
+253.73
+0
+253.73
+253.73
+0
+253.73
+253.73
+0
+253.73
+253.73
+0
+253.73
+253.73
+0
+253.73
+253.73
+0
+253.73
+253.73
+0
+253.73
+253.73
+0
+
+(1) Winter = January - March + December, Spring = April to May, Summer = June to August, Fall = September to November.
+
+Unlike flows and runoff volumes, the average water surface elevation is consistent between
+existing and proposed conditions. That is not to say that the water levels in the wetlands do not
+fluctuate throughout the simulation; it is simply to demonstrate that the post-development water
+levels in the wetlands closely match pre-development water levels.
+For example, water levels in the East Wetland are governed by the existing culvert discussed in
+Section 4.1.1. This “perched” culvert causes water levels in the wetland to rise before flows can
+spill downstream to the main culvert at Mayfield Road. This means that the water levels in the
+wetland vary by up to 1.3m under the existing conditions simulation. A similar response is
+observed in the post-development conditions. The average water levels in the post-development
+condition match the average water levels in the pre-development condition. The maximum
+difference between pre- and post-development conditions, at any instance during the simulation,
+is 2cm. The wetland depths have been provided in graphical format, on a continuous basis, for
+the entire simulation duration. Please refer to Appendix J for the graphical representation of
+wetland water levels in pre- and post-development. The impact analysis of the feature-based
+water balance results and the influence of groundwater to the wetland features are outlined in the
+CEISMP (RJ Burnside, April 2025).
+In addition to the wetlands discussed above, there is a feature located south of Mayfield Road
+that connects into the Heart Lake Road wetland. As discussed in Section 4.1.1, 5.3 Ha area of
+the subject lands discharges to this feature under existing conditions. This represents
+approximately 4% of the total drainage area (132 Ha) to the top end of the feature, and
+approximately 3% of the total drainage area (190 Ha) to the feature as a whole. Please see
+Appendix J for the existing catchment area to the feature. As shown in Figure 4F, flows from the
+medium density block can be directed east, ultimately towards the wetland, to maintain flows
+under post-development conditions. The stormwater strategy can be refined in detail through
+future draft plan specific studies.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 32
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+7.0
+
+WATER SUPPLY SERVICING
+
+7.1
+
+Water Supply Servicing Design Criteria
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+The water supply servicing the subject property will be designed according to the Region of Peel
+design criteria, by taking into consideration watermain sizing, depth, crossings, valves, hydrants,
+and service connections such that adequate pressures and fire flows can be achieved. Water
+design flows will be designed with the following criteria shown in Table 7-1 and Table 7-2 below.
+Table 7-1: Water Design Criteria
+DEMAND TYPE
+
+CRITERIA
+
+Average Daily Demand - Residential (L/c/d)
+
+280
+
+Maximum Daily Demand - Residential (L/c/d)
+
+2.0 x avg. day
+
+Peak Hour Demand - Residential (L/c/d)
+
+3.0 x avg. day
+
+Table 7-2: Region of Peel Linear Design Manual Population Densities
+DEVELOPMENT TYPE
+
+7.2
+
+EQUIVALENT POPULATION
+DENSITY (PERSON / HA)
+
+Single Family
+
+50
+
+Single family (Less than 10 m frontage)
+
+70
+
+Semi-detached
+
+70
+
+Townhouse / Row Dwellings
+
+175
+
+Commercial
+
+50
+
+Existing Water Services
+
+The site is located within the vicinity of Region of Peel’s Pressure Zone 6 and 7. The existing
+watermains that are currently available within the vicinity of the development are as follows:
+Heart Lake Road
+ 400 mm watermain on the east side of the road (Zone 7)
+ 900 mm & 1200 mm diameter feedermains
+Kennedy Road
+ 600 mm diameter CPP watermain on west side of the road (Zone 7)
+ 300 mm diameter PVC watermain near the CL of the road (Zone 7)
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 33
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Mayfield Road
+ 300 mm diameter watermain on the north side of the road (Zone 7)
+ 400 mm diameter CPP watermain on the south side of the road (Zone 7)
+ 600 mm diameter CPP watermain on the road (Zone 7)
+ 750 mm diameter CPP watermain on the north side of the road (Zone 6)
+The existing watermains are illustrated in Figure 6.
+
+7.3
+
+External Water Supply Requirements
+
+The development will be connected to Pressure Zone 7C via one (1) connection to the existing
+300 mm Kennedy Road watermain, two (2) connections to the existing 400 mm watermain on
+Heart Lake Road and two (2) connections to the existing 300 mm watermain on Mayfield Road.
+The hydraulic capacity and model analysis included in Appendix E confirms the Snell’s Hollow
+East Secondary Plan lands can be adequately serviced by the existing watermains.
+The primary water source for the development is anticipated to be the Mayfield West tank (CS7)
+which is supplied by the North Brampton pumping station HLP7C. This infrastructure supports
+Pressure Zone 7 for the subject property.
+
+7.4
+
+Proposed Water Supply
+
+The proposed development is within Pressure Zone 7 of the Peel Region water distribution
+network. The site will be serviced by connection to the existing 300 mm watermain within
+Kennedy Road, existing 300 mm watermain within Mayfield Road, and existing 400 mm in Heart
+Lake Road.
+A preliminary Hydraulic Capacity and Modeling Analysis has been completed by GeoAdvice for
+the subject property and is included in Appendix E. The analysis encompasses the entirety of
+the subject lands. Two hydrant flow tests were completed in 2020 for the existing hydrants on
+Kennedy Road and Heart Lake Road in the vicinity of the subject property to calibrate the model.
+The hydrant flow test reported a static pressure of 78 psi on Kennedy Road and 80 psi on Heart
+Lake Road.
+The modeling analysis confirms that the Average Day Demand (ADD) and Peak Hourly Demand
+(PHD) service pressures are expected to be within the Region of Peel guidelines for water
+distribution systems. All fire flows are achievable with residual pressures exceeding 20 psi and
+no watermain will reach a velocity in excess of 3.0 m/s. External watermains will adequately
+service the Snell’s Hollow Secondary plan Area, including the 5 new connections to the existing
+watermains. The extent of watermain required on boundary roads to service the draft plan is
+illustrated in Figure 5F. No watermain crossings of the natural heritage system within the subject
+lands are required.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 34
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+The water distribution system within the development will be sized to meet the pressures and
+flows in accordance with the Region of Peel criteria. The system will be looped internally in order
+to provide system security.
+If necessary, the internal infrastructure may be further evaluated through detailed design
+applications using the Region’s current water distribution model and associated water demand /
+fire flow criteria.
+The proposed watermain network is illustrated in Figure 5F.
+
+8.0
+
+SANITARY SERVICING
+
+8.1
+
+Region of Peel Sanitary Design Criteria
+
+The sanitary mains will be designed with the following Region of Peel design criteria:
+Table 8-1: Wastewater Design Criteria
+DEMAND TYPE
+Average Dry Weather Flow
+Infiltration
+Peaking Factor
+
+CRITERIA
+302.8
+0.0002 m3 per second per hectare
+Peak Flow Factor – Harmon
+Formula
+
+Table 8-2: Region of Peel Linear Design Manual Population Densities
+DEVELOPMENT TYPE
+
+EQUIVALENT POPULATION
+DENSITY (PERSON / HA)
+
+Single Family
+
+50
+
+Single family (Less than 10 m frontage)
+
+70
+
+Semi-detached
+
+70
+
+Townhouse / Row Dwellings
+
+175
+
+Commercial
+
+50
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 35
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+8.2
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Existing Sanitary Services
+
+There is currently a 1200 mm CPP sanitary sewer construction job at the Kennedy Road and
+Mayfield Road intersection which is expected to be completed by Summer 2023. This sewer
+upgrade is part of Peel Region’s Kennedy Road North and Conservation Drive. (Project 15-2153)
+sanitary tunnel expansion. The Kennedy Road sewer will connect to the existing sewer network
+downstream at Conservation Drive and Dawnridge Trail.
+The 1200 mm CPP sanitary sewer will provide additional capacity to future developments and is
+shown in Appendix H for reference.
+There is currently a dual sanitary sewer network located within the subdivision southwest of the
+Kennedy Road and Mayfield Road intersection that has recently been upgraded to outlet to the
+new 1200 mm CPP sewer as part of Region of Peel’s Project 15-2153 works. The closest manhole
+to the Snell’s Hollow Secondary Plan is located at the upstream end of Stone Gate Drive off
+Mayfield Road (MH 9A). Further investigation is required to determine the capacity of the sanitary
+sewer system. Please refer to Drawing 3D for details on the sanitary connection options.
+Within Heart Lake Road immediately adjacent to the development, there is currently no existing
+external sanitary service available to connect to from the subject site. The closest available
+sanitary service is located south of Heart Lake Road at MH11A which is part of the Ecopark Cl.
+sanitary sewer network that completed construction in 2021. This sanitary sewer network is
+proposed to service the subject site, as well as the Heart Lake Road Employment Lands, per the
+MESP by TMIG (dated March 2015).
+Please refer to Appendix H for the sanitary drainage plan (EXSAN03) by TMIG.
+
+8.3
+
+Proposed Sanitary Servicing
+
+The subject site will be serviced by a network of local gravity sewers designed in accordance with
+Region of Peel criteria. The subject site will generally drain to two, and possibly, three different
+sanitary outlets; 1200 mm sewer on Kennedy Road, Ecopark Cl, and potentially Stone Gate Drive
+(subject to capacity).
+Kennedy Road Outlet
+The western half of the western parcel will be serviced by local 250 mm sanitary sewers that is
+proposed to connect to the 1200 mm Kennedy sewer as discussed in Section 8.2. To connect to
+the provided 1200 mm Kennedy sewer, an additional 26 m of sanitary sewer is required to be
+constructed external to the site on Kennedy Road to service the development. The western parcel
+will contribute a total drainage area of 12.1 ha and generate a total sanitary flow of 0.016 m3/s to
+the Kennedy Road sewer.
+Heart Lake Road Outlet
+The eastern half of the western parcel, and the eastern parcel, will be serviced by local 250 mm
+sanitary sewers that will be extended down Heart Lake Road to the existing sanitary sewer at
+Ecopark Cl. To reach the provided Ecopark sewer, an additional 875 m of sanitary sewer is
+required to be constructed on Heart Lake Road to service the development. The eastern parcels
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 36
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+will contribute a total drainage area of 17.7 ha and generate a total sanitary flow of 0.025 m3/s to
+the Ecopark sewer.
+Mayfield Road Outlet
+There are a two potential servicing options for the medium density block located adjacent to
+Mayfield Road, west of Heart Lake Road, as described below:
+•
+
+Service across Mayfield Road, approximately 50 m, to the existing Stonegate Drive sewer
+
+•
+
+Service along Mayfield Road, approximately 550 m, to Kennedy Road
+
+The preference is to service the medium density block to Stonegate Drive, subject to Region of
+Peel confirmation of available capacity, as this outlet is closer to the medium density block than
+Kennedy Road. Furthermore, connecting to Stonegate Drive requires less disturbance to
+Mayfield Road than servicing to Kenedy Road. The medium density block total drainage area of
+0.21 ha will generate a sanitary flow of 0.013 m3/s . The sanitary servicing outlet for the medium
+density block can be determined through a future site plan approval process.
+The conceptual sanitary servicing concept is illustrated on Drawing 3D and the sanitary design
+sheets are provided under Appendix G.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 37
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+9.0
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+ROADS
+
+Access to the subject property is available from the boundary roads located on Kennedy Road
+and Heart Lake Road. The medium density block will also have road connections to the site
+located immediately south of the subject property on Mayfield Road. The community will include
+a series of 16 m, 18 m, 21.5 m 22, 23.5 m, and 26 m wide municipal roads in accordance with
+Town of Caledon standards. Sidewalks will be constructed in accordance with the standard
+municipal cross sections.
+Please refer to Figure 2F for an illustration of the internal road network, and Figure 8F to 14F
+illustrate proposed typical road cross sections.
+
+10.0
+
+GRADING
+
+A preliminary grading plan has been prepared for the study area based on the environmental and
+engineering constraints identified. The proposed road grades range from 0.5% to 5%. The Town
+of Caledon minimum road grade is 0.75%; however, given the site constrains a minimum slope
+of 0.5% has been used in some locations to minimize elevation change (delta) along NHS and
+boundary roads, as well as to manage the earthworks requirements for the site.
+The conceptual grading is illustrated in Drawing 1D.
+
+10.1
+
+Grading in Natural Heritage System
+
+Grading in the NHS and the associated buffers is minimized but required at the following locations:
+ Pond and OSC outfalls
+ 3:1 grade transition within maximum of approximately 50% of buffer width
+ Grading may be required to provide emergency spillways for the ponds adjacent to the
+NHS.
+ Grading is required to facilitate trails within the buffers or pedestrian crossings of the NHS
+The anticipated grading within the NHS buffers is illustrated on Drawing 1D.
+The grading in the NHS has been minimized through use of walk-out units (approximately 2.5 m
+vertically transitions through the lots), and the roads have been lowered from the previous
+submission to reduce required transition slopes through lots and buffers to the extent possible.
+The remaining vertical difference is addressed through transition sloping in the buffer to a
+maximum of approximately 50% of the 10 m buffer/setback. The trail is proposed within the buffer
+and will be graded with a cross slope towards the valley lands. The proposed grading in the NHS
+will generally match existing grades at the feature or constraint limit, with the exception of where
+the trail system transitions to a pedestrian bridge crossing of the Spring Creek tributary (Reach
+EC-3), and the stormwater outfalls. The CEISMP discusses the buffer grading/restoration in more
+detail. Localized grading to permit construction of the pedestrian crossing, stormwater
+management pond and OSC outfalls , and associated plunge pools will be subject to permits from
+TRCA. The proposed pedestrian crossing in the valley system is short enough to span with a
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 38
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+pedestrian crossing, and the span is anticipated to be located outside the valley floor and will
+have no impact on upstream water levels resulting from the crossing.
+The pedestrian bridge crossing sizes are preliminary and will be reviewed at detailed design.
+A typical cross section of the 10 m buffer/setback transition grading and trails is provided on
+Drawing 6D.
+
+10.2
+
+Retaining Walls
+
+Retaining walls are proposed in areas where transitional sloping is not feasible to make up the
+grade differential. The subject property currently proposes (3) three retaining walls at the following
+locations as depicted in Drawing 1D:
+•
+
+Behind the lots located on Street ‘K’, adjacent to the trail/grading buffer.
+
+•
+
+At the end of the turnaround for the east mixed-use block.
+
+•
+
+Adjacent to Mayfield Road within the southwestern limit of the west mixed-use block.
+
+Details and further refinements to the retaining wall grading will be reviewed in detailed design.
+As an alternative grading option to eliminate the retaining wall by Street ‘K’, the trail is proposed
+to loop around Street ‘K’ in order to utilize the buffer area for transitional sloping from the property
+line to the buffer area’s toe of slope. This alternative grading option is subject to the Town’s review
+and can be seen in Drawing 1D.
+11.0
+
+CREEK CROSSINGS
+
+A pedestrian crossing is proposed in the Spring Creek valley system to accommodate active
+transportation (trail) requirements within the community. There are no proposed utility or road
+crossings of the creeks in the subject site.
+
+11.1
+
+Pedestrian Crossings
+
+One pedestrian crossing location has been proposed which provide connectivity between active
+transportation trails through the NHS. The preliminary pedestrian bridge size will be refined at
+future planning stages and permit applications.
+Locations of trails and pedestrian crossings are identified on Figure 16F.
+The location of the crossing has been selected to minimize the valley crossing distance. In general
+the pedestrian bridge footings should avoid the 25 year meander belt of the water course.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 39
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+12.0
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+POND MAINTENANCE
+
+The following section provides general guidance on pond maintenance for the subject property
+community. Further refinement and details can be provided at functional and/or detailed design
+of the individual draft plans.
+
+12.1
+
+Inspections
+
+As recommended in the SWMP Manual, inspections should be made after every significant storm
+(e.g., >10 mm) during the first two years of operation to ensure that the facility is functioning
+properly. It is anticipated that four inspections will be required per year. After the initial period,
+and proper operation has been confirmed, an inspection schedule can be established based on
+the observed operation of the ponds. Although four inspections per year are recommended, the
+ponds should be inspected annually as a minimum requirement.
+
+12.2
+
+Regular Operation and Maintenance Activities
+
+Grass Cutting
+Grass cutting is not recommended for the ponds. Allowing grass to grow enhances the water
+quality and provides other benefits. It is understood though, that grass cutting enhances the
+aesthetics of the facility for nearby residents and therefore, should be done as infrequently as
+possible.
+Grass should not be cut to the edge of the permanent pool and should be done parallel to the
+shoreline. Grass clippings should be ejected away from the pond.
+Weed Control
+If weed control is required to remove a specific species, the weeds should be removed by hand.
+Plantings
+Different parts of the SWM ponds will require different vegetative treatments for upland, flood,
+shoreline and aquatic conditions. Planting methods and any replanting should be carried out in
+accordance with an approved Landscape Design and the recommendations of the SWMP
+Manual, or as modified by the operating authority.
+Trash Removal
+Trash and debris should be removed by hand, and performed as required based on inspections.
+Sediment Removal
+In accordance with the SWMP Manual, it is recommended that the frequency of sediment removal
+be determined based on a 5% reduction in the total suspended solids (TSS) removal efficiency.
+The frequency of pond maintenance will be determined at the detailed design stage. It should be
+noted that routine cleaning of the sediment forebay should allow for less frequent cleaning of the
+main cell than indicated in the SWMP Manual. However, the extension of service life prior to
+cleaning cannot be quantified.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 40
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+Safety
+The ponds should be provided with appropriate signage which warns the public of the presence
+of deep water and slopes. Landscape drawings are to be prepared with strategic plantings around
+the perimeter of the pond to discourage direct access to the facility. All inlets, outlets, structures,
+and headwalls will be provided with the appropriate grates, covers, and safety features to prevent
+public entry or tampering.
+
+13.0
+
+HERITAGE HOUSE SITE
+
+An existing heritage dwelling is located near the future entrance of Street ‘A’ off of Kennedy Road.
+Due to the realignment of the arterial road, grading conditions and SWM Pond capacity benefits,
+the heritage dwelling is proposed to be relocated further east as shown in Figure 2F.
+Further details and plans regarding the relocated heritage house is to be confirmed at the plan of
+subdivision stage. A preliminary grading plan (Drawing 1) considers the relocated heritage house
+location.
+14.0
+
+EROSION AND SEDIMENT CONTROL
+
+An erosion and sediment control strategy should be implemented prior to construction of site
+services. The following measures are recommended:
+Erosion
+ regular inspection and monitoring of the erosion and sediment control devices.
+ ensure stabilized soil and slope stability to prevent runoff and stability hazards.
+ cover non-active work faces of stockpiles, excavation areas, all other exposed surfaces of
+concern with tarps or other appropriate materials as practicable.
+ Monitoring the weather forecast daily and plan/schedule work activities with specific
+consideration of impending weather conditions to prevent events leading towards further
+erosion.
+ Minimize to the extent possible staging and temporary stockpile of soil and other materials.
+Sediment
+ silt control fencing and double row silt control fencing with straw bales where required.
+ stone mud mat at the construction entrance.
+ interceptor swale with rock check dam where appropriate.
+ use of the permanent ponds as a temporary silt basin during site construction activities.
+ removal and disposal of the erosion and sediment control devices after the site has been
+stabilized.
+Please refer to Drawing SILT-1 Siltation Plan for details.
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 41
+© DSEL
+
+FUNCTIONAL SERVICING AND SWM REPORT
+APRIL 2025
+
+15.0
+
+SNELL’S HOLLOW EAST SECONDARY PLAN AREA
+
+CONCLUSIONS
+
+This Functional Servicing and Stormwater Management Report provides an overview of the
+servicing plan for the subject property in support of the draft plan application. This report generally
+demonstrates the availability of water, sanitary, and storm services for the proposed development
+in accordance with Town of Caledon, Region of Peel, and TRCA criteria and in consideration of
+applicable guideline documents.
+We trust you will find the contents of this report satisfactory.
+Prepared by,
+David Schaeffer Engineering Ltd.
+
+Brian Betts
+Per: Brian Betts, P.Eng.
+© DSEL
+
+1353_Snell's Hollow FSR_Subm3_ds.docx
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+PAGE 42
+© DSEL
+
+FIGURES
+DSEL, DECEMBER 2023
+
+DRAWINGS
+DSEL, NOVEMBER 2023
+
+APPENDIX A
+PROPOSED CONCEPT PLAN
+
+APPENDIX B
+PRELIMINARY STORM DESIGN SHEETS & IMPERVIOUSNESS CALCULATIONS
+
+APPENDIX C
+FLOODPLAIN ASSESSMENT
+
+APPENDIX D
+PRELIMINARY POND SIZING CALCULATION
+
+APPENDIX E
+WATER MODEL
+
+APPENDIX F
+PRLEIMINARY LID MEASURES
+
+APPENDIX G
+PRELIMINARY SANITARY DESIGN SHEETS
+
+APPENDIX H
+SANITARY TRUNK BACKGROUND
+
+APPENDIX I
+STORM BACKGROUND
+
+APPENDIX J
+FEATURE-BASED WATER BALANCE
+
+APPENDIX K
+EXISTING SWALE CALCULATIONS
+
+

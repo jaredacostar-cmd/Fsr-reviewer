@@ -1,0 +1,11865 @@
+VALDOR ENGINEERING INC.
+Municipal  Land Development  Water Resources
+Site Development  Project Management  Contract Administration
+
+Consulting Engineers – est. 1992
+
+571 Chrislea Road, Unit 4
+Woodbridge, Ontario L4L 8A2
+TEL (905) 264-0054
+FAX (905) 264-0069
+info@valdor-engineering.com
+www.valdor-engineering.com
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+May 27, 2026
+
+FUNCTIONAL SERVICING REPORT
+Proposed Amelia Street Subdivision
+West Side of Main Street, North of Queen Street
+Community of Alton
+Town of Caledon (21T-24001C)
+Region of Peel
+
+April 2022
+Rev: February 2024
+Rev: April 2026
+Prepared For: Mount Nicholas Holdings, Inc.
+
+File: 17121
+
+S:\Projects\2017\17121\Report\Revision 2 - April 2026\17121 FSR April 2026.Docx
+
+Authorized by the Association of Professional Engineers
+of Ontario to offer professional engineering services.
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+TABLE OF CONTENTS
+1.0 INTRODUCTION.................................................................................................................. 4
+1.1 Existing Conditions ...........................................................................................................................................4
+1.2 Proposed Development ...................................................................................................................................4
+1.3 Purpose of Report ............................................................................................................................................4
+
+2.0 WATER SERVICING ........................................................................................................... 5
+2.1 Domestic Demand ............................................................................................................................................5
+2.2 Local Watermains & Service Connections ...................................................................................................5
+2.3 Fire Protection...................................................................................................................................................6
+
+3.0 WASTEWATER SERVICING............................................................................................... 6
+3.1 Wastewater Design Flow ................................................................................................................................7
+3.2 Septic System Components ...........................................................................................................................7
+
+4.0 STORM CONVEYANCE SYSTEM ...................................................................................... 9
+4.1 Minor System Design .......................................................................................................................................9
+4.2 Major System Design ..................................................................................................................................... 11
+4.3 Foundation Drainage ..................................................................................................................................... 11
+4.4 Roof Drainage ................................................................................................................................................. 11
+
+5.0 FLOODPLAIN.....................................................................................................................11
+6.0 STORMWATER MANAGEMENT .......................................................................................11
+6.1 Storm Drainage Areas ................................................................................................................................... 11
+6.1.1 Pre-Development .................................................................................................................. 11
+6.1.2 Post-Development ................................................................................................................. 12
+6.1.3 External Areas ....................................................................................................................... 12
+6.2 Stormwater Management Design Criteria .................................................................................................. 12
+6.3 Quantity Control .............................................................................................................................................. 13
+6.4 Quality Control ............................................................................................................................................... 14
+6.5 Erosion Control .............................................................................................................................................. 15
+
+7.0 SITE WATER BALANCE ....................................................................................................15
+7.1 Pre-Development Infiltration Volume.......................................................................................................... 16
+7.2 Post-Development Infiltration Volume (Unmitigated) ............................................................................... 16
+7.3 Proposed Infiltration BMP – Roof Downspout Disconnection ................................................................ 16
+7.4 Proposed Infiltration BMP – Infiltration Trenches ..................................................................................... 18
+7.5 Post-Development Infiltration Volume (Mitigated) .................................................................................... 18
+
+8.0 VEHICULAR & PEDESTRIAN ACCESS ............................................................................19
+8.1 Municipal Roads ............................................................................................................................................. 19
+
+1
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+8.2 Driveways ........................................................................................................................................................ 19
+
+9.0 GRADING ...........................................................................................................................19
+9.1 Grading Criteria .............................................................................................................................................. 19
+9.2 Preliminary Design ......................................................................................................................................... 19
+9.3 Permitting ........................................................................................................................................................ 20
+
+10.0 EROSION & SEDIMENT CONTROL DURING CONSTRUCTION ....................................20
+10.1 Control Measures ......................................................................................................................................... 21
+10.2 Construction Sequencing ............................................................................................................................ 21
+10.3 ESC Inspection & Maintenance ................................................................................................................. 22
+
+11.0 UTILITIES .........................................................................................................................22
+12.0
+
+SUMMARY ....................................................................................................................23
+
+13.0
+
+REFERENCES & BIBLIOGRAPHY ..............................................................................25
+
+LIST OF TABLES
+Table 1
+
+Development Statistics………………………………………………..…… . 4
+
+Table 2
+
+Domestic Water & Fire Flow Demand………………………..….….……. 5
+
+Table 3
+
+Wastewater Flow………………………………………………………..….. 7
+
+Table 4
+
+Summary of Peak Flows Rates……....……………………...…………… 13
+
+LIST OF FIGURES
+
+2
+
+Figure 1
+
+Location Plan
+
+Follows Text
+
+Figure 2
+
+Proposed Development
+
+Follows Text
+
+Figure 3
+
+Storm Drainage Plan – Pre-Development
+
+Follows Text
+
+Figure 4
+
+Storm Drainage Plan – Post-Development
+
+Follows Text
+
+Figure 5
+
+Infiltration Trench Locations
+
+Follows Text
+
+Figure 6
+
+Infiltration Trench Detail
+
+Follows Text
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+TABLE OF CONTENTS (Continued)
+LIST OF APPENDICES
+Appendix “A” Draft Plan & Equivalent Population Calculation
+Appendix “B” Water Demand Details & Calculations
+Appendix “C” Wastewater Servicing Details & Calculations
+Appendix “D” Watershed Map, Regulation Mapping & IDF Data
+Appendix “E” Stormwater Management Calculations
+Appendix “F” Water Balance Calculations
+Appendix “G” Road Details
+Appendix “H” Functional Servicing, Grading & ESC Plans
+
+3
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+1.0 INTRODUCTION
+Valdor Engineering Inc. has been retained by Mount Nicholas Holdings, Inc. to provide consulting
+engineering services for the proposed residential subdivision located on a 5.84 hectare parcel
+located west of Main Street and north of Queen Street in the Alton Community of the Town of
+Caledon as illustrated in Figure 1.
+
+1.1 Existing Conditions
+The subject site is currently vacant and has rolling topography with tree cover. The site is
+bounded to the east by residential lots fronting Main Street and to the south by residential
+lots fronting Amelia Street. The site is bounded to the north and west by a forested area.
+The subject site has access to Amelia Street to the south as well as access to Main Street
+to the east via the untravelled road allowances of Spring Street and Nicholas Street.
+
+1.2 Proposed Development
+The proposed development consists of 15 residential lots for detached dwellings which
+will be serviced by the northly extension of Amelia Street to connect to Main Street via the
+untravelled road allowance of Spring Street. A large woodlot on the west side of the site
+will be preserved and will be contained within Lot 7.
+The configuration of the proposed development is illustrated in Figure 2. The development
+statistics and the equivalent population data are summarized in Table 1. A copy of the draft
+plan of subdivision indicating the configuration of the lots is included in Appendix “A”
+together with calculation of the equivalent population.
+
+Table 1. Development Statistics
+Area
+(Ha)
+
+Residential
+Units
+(No.)
+
+Residential Lots
+
+5.44
+
+15
+
+Road Allowances & 0.30m Reserves
+
+0.39
+
+TOTAL
+
+5.84
+
+Land Use
+
+15
+
+1.3 Purpose of Report
+This report has been prepared in support of the application for draft plan approval for the
+subject property. The primary intent of the report is to demonstrate the viability of water
+and wastewater servicing, storm drainage and stormwater management, grading as well
+as vehicular and pedestrian access for the proposed development with respect to
+applicable guidelines, policies and design criteria.
+This report has been prepared based on a review of the topographic survey and
+background studies, discussions with engineering staff at the Town of Caledon, Region of
+
+4
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+Peel and Credit Valley Conservation, as well as visits to the site. The conceptual design
+is documented on a series of large size preliminary plans which are contained in a pocket
+at the rear of this report. This document provides guidance for detailed engineering design
+of the subdivision.
+
+2.0 WATER SERVICING
+The Region of Peel is responsible for the treatment and distribution of water within the Town of
+Caledon as well as the City of Brampton and the City of Mississauga. The Region’s South Peel
+Drinking Water System is a lake-based system that supplies a population of over 1.3 million
+people in the urban area drawing water from Lake Ontario after which it is treated at either the
+Lakeview or Lornepark water treatment facilities. The rural communities of Caledon including
+Palgrave, Caledon East, Caledon Village, Cheltenham Village, Inglewood as well as Alton are
+serviced by well based water systems which are operated by the Region of Peel.
+The community of Alton is serviced by the Caledon Village – Alton Drinking Water System. This
+system consists of wells in both Caledon Village and in Alton which are interconnected to form a
+single system which includes a water treatment plant and service a population of approximately
+4,900. The subject site is located within Water Pressure Zone AV12. The following is a summary
+of the water servicing requirements for the subject site.
+
+2.1 Domestic Demand
+The domestic water demand is to be calculated using the Region of Peel engineering
+design standards which includes the following parameters:
+Residential Average Day Demand:
+Maximum Day Factor:
+Peak Hour Factor
+
+280 L/person/day
+2.0
+3.0
+
+A detailed tabulation of the domestic water demand calculation is detailed in Table B1 of
+Appendix “B”. The demands are summarized in Table 2 below.
+
+Table 2. Domestic Water & Fire Flow Demand
+Land Use
+
+Detached Dwellings
+
+Equivalent
+Population
+
+Average
+Day
+Demand
+
+Maximum
+Day
+Demand
+
+Peak
+Hour
+Demand
+
+Fire
+Flow
+
+Maximum
+Day Plus
+Fire Flow
+
+Maximum
+Day Plus
+Fire Flow
+
+(Persons)
+
+(L/min)
+
+(L/min)
+
+(L/min)
+
+(L/min)
+
+(L/min)
+
+(L/s)
+
+60
+
+11.7
+
+23.3
+
+35.0
+
+5,000
+
+5,023
+
+83.7
+
+2.2 Local Watermains & Service Connections
+The local water distribution system within the subdivision will consist of watermains of
+150mm diameter. This internal water system will connect to the existing 200mm diameter
+
+5
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+watermain on the Main Street and the existing 150mm diameter watermain on Amelia
+Street at Nicholas Street.
+Based on Ontario Building Code (OBC 2012) regulations (7.6.3.4.(1) and (5) and Table
+7.6.3.4), the houses will be serviced with 25mm diameter water connections given that it
+is anticipated that the dwellings will each have more than 16 fixture units.
+Water meters are to be purchased from the Region and will be installed in the basement
+of each dwelling unit with a remote readout device located on the exterior ground floor wall
+of the unit. A copy of the standard water service connection detail are included in
+Appendix “B”. The location of the existing and proposed watermains are indicated in on
+the Functional Servicing Plan.
+
+2.3 Fire Protection
+The fire flow required for the proposed detached dwelling units and commercial buildings
+was calculated using the criteria indicated in the Water Supply for Public Fire Protection
+Manual, 1999, by the Fire Underwriters Survey (FUS). The calculation incorporates
+various parameters such as coefficient for fire-resistant construction, an area reduction
+accounting for a fire-resistant (one hour rating) protection, a reduction for low-hazard
+occupancies, and a factor for neighbouring building proximity.
+Based on the calculations, the minimum fire suppression flow required for the detached
+dwellings is 5,000 L/min. The preliminary fire flow calculation is shown in Table B2
+contained in Appendix “B”. In accordance with the Region of Peel standards, this flow
+must be available at the nearest hydrant with a minimum pressure of 140 KPa.
+Fire hydrants will be provided along the road at a 150m spacing in accordance with the
+Region of Peel design criteria. A copy of the standard fire hydrant connection detail is
+included in Appendix “B”. The location of the existing proposed fire hydrants are
+indicated on the Functional Servicing Plan.
+
+3.0 WASTEWATER SERVICING
+The Region of Peel operates and maintains approximately 3,500 Km of sanitary sewer including
+those within the urban areas of Caledon as well as those in the City of Brampton and the City of
+Mississauga. Wastewater treatment for these urban areas is provided by the Clarkson and G.E.
+Booth Lakeview Wastewater Treatment facilities located on the shore of Lake Ontario. Caledon’s
+Inglewood Community is serviced by the Inglewood Communal Wastewater Treatment Station
+which discharges to the Credit River. Homes in the balance of Caledon’s rural communities,
+including Alton are serviced by individual private on-site sewage systems.
+The following sections detail the sizing of the private on-site sewage systems in accordance with
+the Ontario Building Code.
+
+6
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+3.1 Wastewater Design Flow
+In accordance with Part 8 of the Ontario Building Code (OBC) the daily design flow for a
+dwelling is to be calculated based on the floor area of the dwelling, the number of
+bedrooms and the number of fixture units.
+Although architectural house plans are not yet available, for the purpose of confirming
+servicing feasibility, it is assumed that the proposed detached dwellings will have four
+bedrooms, 278 m2 (3,000 sq.ft) of floor area with 24.5 fixture units. Based on these
+parameters the design sewage flow has been calculated to be 2,800 L/day as summarized
+in Table 3. The calculation of the design flow is provided in Table C1 and the listing of
+fixture units is provided in Table C2 which are both included in Appendix “C”.
+A Preliminary Geotechnical Investigation prepared by Sirati & Partners Consultants
+Limited determined that the native soils across the lots consist of sand, sandy silt or silty
+sand. A Hydrogeological Investigation prepared by Palmer Environmental Consulting
+Group Inc. includes a Septic System Servicing Assessment with percolation rates. Based
+on this assessment the preliminary sizing of septic systems have been based on a
+percolation rate (“T” time) of 28 min/cm. Excerpts from the Preliminary Geotechnical
+Investigation and the Hydrogeological Investigation are included in Appendix “C”.
+
+Table 3. Wastewater Flow
+
+278 m2 (3,000 sq.ft.), 4 bedrooms, 24.5 fixture units
+
+House Size:
+Design Flow, Q:
+Native Soils:
+
+2,800 L/day
+Sand, Sandy Silt, Silty Sand
+
+Percolation Rate:
+
+28 minutes / cm
+
+Tertiary Treatment Septic System:
+Anaerobic Digester Tank
+
+5,664 L
+
+Waterloo Biofilter® Tank
+
+Model AD-7480
+
+Area Bed: Stone Layer:
+
+37.3 sq.m.
+
+Sand Layer:
+
+196.0 sq.m.
+
+3.2 Septic System Components
+In order to provide high quality treatment and reduce nitrate loading, tertiary treatment
+septic systems are proposed for all of the lots within the subdivision. There are several
+alternative treatment systems available which have been approved by the Ministry of
+Municipal Affairs & Housing (MMAH) and recognized in the OBC. Alternative treatment
+systems designed as "Treatment Units" other than septic tanks must meet the
+requirements of Section 8.6.2.2 of the OBC and must produce tertiary quality effluent. One
+
+7
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+such technology providing tertiary treatment is the Waterloo Biofilter® manufactured by
+Waterloo Biofilter Systems Inc.
+Although there are several commercially available and OBC approved tertiary treatment
+systems, the following is a summary of the sizing of a Waterloo Biofilter® system:
+Anaerobic Digester Tank
+A 100mm diameter gravity sanitary drain will convey sewage flows to the Waterloo
+Biofilter Anaerobic Digester tank from plumbing fixtures on the main floor of the
+dwelling and above. Fixtures in the basement will require an internal sewage
+ejector to pump flow up to the gravity sanitary drain.
+In accordance with Section 8.2.2.3 of the OBC the tank volume is to be a minimum
+of twice the daily design flow as follows:
+Minimum Tank Size =
+
+2,800 L/day x 2 =
+
+Available Anaerobic Digester Tank Size =
+
+5,600 L
+5,664 L
+
+Pump Tank
+Given that the effluent from the anaerobic digestor mut be pumped to the treatment
+unit a pump tank is required. Based on a design flow of 2,800 L/day a Waterloo
+Biofilter® tank model PT-3000 is required.
+Tertiary Treatment Unit - Waterloo Biofilter®
+The Waterloo Biofilter® is an aerobic trickling filter that uses an absorbent synthetic
+filter material developed by researchers at the University of Waterloo and was
+incorporated into the OBC in 1998. Effluent is applied intermittently over modules
+of plastic foam pieces (patented biofilter medium) contained in wire mesh baskets.
+This synthetic media is a support for microbiological growth, and these
+microorganisms are responsible for the aerobic breakdown of the wastewater.
+Approximately 50% of the effluent exiting the unit is pumped back to the septic
+tank, while the other half is directed to a disposal bed.
+In accordance with the manufacturer’s guidelines, based on a design flow of 2,800
+L/day the Waterloo Biofilter ® model AD-7480 is required.
+Subsurface Disposal: Area Bed
+An area bed dispersal system is typically utilized with alternative treatment
+systems for subsurface disposal. The area bed is to be comprised of a stone layer
+overlying a sand layer where the stone layer is to be a minimum of 250mm in
+depth, wrapped with a permeable geo-textile fabric, and comprised of stone
+meeting the requirements of either Subclause 8.7.3.3.(1)(b)(i) or (ii) of the OBC.
+Distribution pipes having 75mm diameter are to be spaced evenly within the stone
+layer with spacing not exceeding 1.2m. The sand layer is to be a minimum of
+300mm in depth having a percolation rate (“T” time) of 6 to 10 min/cm. The sand
+8
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+layer covers the entire area bed. The sizing of the stone layer and sand layer is
+as follows:
+Stone Layer:
+Given that the daily design flow is less than 3,000 L, the loading on the
+surface of the stone layer is calculated as follows:
+Minimum Surface Area = Q / 75 = 2,800 / 75 =
+
+37.3 m2
+
+Sand Layer:
+This sand layer is to extend over an area which is calculated as follows:
+Minimum Surface Area = Q x T / 400 = 2,800 x 28 / 400 = 196.0 m2
+The area bed absorption system also includes a mantle extending a
+minimum of 15m beyond the distribution pipe allows an additional area for
+the effluent to seep laterally into the native underlying soils.
+A summary of the tertiary treatment sizing is provided in Table 3. The location of
+the area beds are indicated on the Functional Servicing Plan and the Functional
+Grading Plan. The septic bed sizing calculations are included in Appendix “C”.
+
+4.0 STORM CONVEYANCE SYSTEM
+The subject site is located within the Credit River watershed which encompasses approximately
+860 km2 of area. The Credit River is almost 90 km long and meanders southeast from its
+headwaters in Orangeville, Erin and Mono, through nine municipalities including Brampton,
+eventually draining into Lake Ontario at Port Credit in Mississauga.
+In particular, the property is located within the Shaw’s Creek sub-watershed which is one of twenty
+sub-watersheds of the Credit River watershed. The Shaw’s Creek sub-watershed, referred to as
+Tributary 17 is approximately 78 sq. km in area and is located partly within the Town of Caledon,
+the Town of Erin, the Township of East Garafraxa, and the Town of Orangeville. All of the subwatersheds within the Credit River watershed are under the jurisdiction of the Credit Valley
+Conservation Authority (CVC). A plan of the watershed is included in Appendix “D”.
+In accordance with Town standards, a major / minor system storm conveyance concept has been
+incorporated into the functional servicing design for the subject development. The following
+sections provide a brief summary of the storm drainage components:
+
+4.1 Minor System Design
+In accordance with the Town’s engineering design criteria, the proposed development is
+to be serviced with a minor storm sewer system that is designed to convey runoff from the
+5-year storm event. The rainfall intensity values, I, are calculated in accordance with the
+Town’s rainfall intensity duration frequency (IDF). Based on this data the rainfall intensity
+for the 5- and 100-year rainfall events is calculated as follows:
+
+9
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+I5 =
+
+1593
+
+(t + 11)0.8789
+
+I 100 =
+
+April 2026
+File: 17121
+
+4688
+
+(t + 17 )0.9624
+
+The peak flows are calculated using the following formula:
+Q = R x A x I x 2.778
+
+where: Q = peak flow (L/s)
+A = area in hectares (Ha)
+I = rainfall intensity (mm/hr)
+R = composite runoff coefficient
+t = time of concentration (min)
+
+The IDF curve data detailed in the Town’s Engineering Standards is included in Appendix
+“D”. A schematic design of the minor system is illustrated in on the Functional Servicing
+Plan (Dwg. FSP-1).
+The sizing of street catchbasins, ditch inlet catchbasins and rear lot catchbasins will be
+completed at the detailed engineering design stage. The spacing of street catchbasins will
+be in accordance with Town standards.
+Total capture will be provided at two locations:
+•
+
+The low point on Amelia Street, just south of Main Street, will provide total capture
+for all drainage in the northern portion of the proposed development. Total capture
+will be achieved via two double catchbasins in sags. The storm sewer will be sized
+to convey the 100-year flow for this drainage area at detailed design.
+
+•
+
+Due to grading constraints, it is not possible to construct a low point at the Amelia
+Street and Nicholas Street intersection in order to capture drainage from the
+majority of the site. To ensure total capture at this location, catchbasins with highcapacity grates will be installed within the gutters. These catchbasins will be
+connected directly to the proposed on-site SWM control (box culvert storage tank).
+
+The design of this total capture catchbasins will be completed at the detailed design stage.
+There is a large external drainage area to the south of the subject site that drains through
+the development area. It is proposed that external flows will by-pass the SWM controls.
+To achieve this, drainage from this external area will be intercepted by cut-off swales
+directing flow to DICBs, which will in turn convey flow to a separate storm sewer running
+in parallel with the storm sewer servicing the proposed development, bypassing the onsite SWM controls. The two storm sewer systems will combine at the intersection of Amelia
+Street and Nicholas Street and then flow will be conveyed along Nicholas Street to Main
+Street in the form of a concrete box culvert.
+Based on the Municipal Class Environmental Assessment Environmental Study Report
+Final prepared by R.V. Anderson Associates Limited and the Alton Village Drainage Study,
+Phase 2, prepare by R.J. Burnside & Associates Limtied, flow from the subject site, and
+the upstream drainage area, is to be directed to the existing 750mm diameter culvert under
+Main Street. In this regard, the proposed box culvert along Nicholas Street will discharge
+to the Main Street ditch just upstream of the existing culvert as indicated on the Functional
+
+10
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+Servicing Plan (Dwg FSP-1) . Due to the relatively shallow depth of the existing culvert,
+the proposed box culvert will have reduced cover. The final size and alignment of the box
+culvert will be design and the detailed subdivisdion engineering stage.
+
+4.2 Major System Design
+The major system will generally be comprised of an overland flow route along the
+municipal road network directing drainage to one of two total capture locations discussed
+above. The major system flow route is illustrated in Functional Grading Plan (Dwg FGP1).
+
+4.3 Foundation Drainage
+It is anticipated that the proposed dwellings will have conventional basements which will
+have foundation weeping tile. Given the high-water level within the proposed storm sewer
+due to the on-site SWM controls, gravity connections will not be provided. Sump pumps
+will therefore be required. The sump pumps are to discharge over splash pads to grassed
+areas. The sump pumps are not to discharge to the septic system.
+
+4.4 Roof Drainage
+It is anticipated that the proposed dwellings will have conventional peaked roof with eaves
+troughs and downspouts. As per standard practice the downspouts are to discharge to
+grade over splash pads, preferably towards sodded areas.
+
+5.0 FLOODPLAIN
+As per the CVC regulation mapping provided in Appendix “D”, the subject site is not located
+within the Shaw’s Creek floodplain. As such, no floodplain mitigation measures are required.
+
+6.0 STORMWATER MANAGEMENT
+6.1 Storm Drainage Areas
+Based on the topographic survey and the proposed draft plan of subdivision, the
+following is a summary of the pre- and post-development drainage areas. As per the
+Town’s request, references to the findings and recommendations from the Alton
+Village Drainage Study - Phase 2 Report prepared by R.J. Burnside & Associates
+Limited was made. Excerpts from this report can be found in Appendix “E”.
+
+6.1.1 Pre-Development
+The existing site within the project area (Catchment 101, 2.65 ha) consists of
+forested lands draining east to an existing culvert under Main Street, just north of
+Nicholas Street.
+Site elevations within the project area vary from approximately 423.5 m at the rear
+of Lot 7, to approximately 404.0 m at the south-eastern limit of the site where the
+11
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+Amelia Street extension will meet the existing street. The existing slopes range
+from approximately 7% to approximately 28%.
+Figure 3 shows the pre-development condition storm drainage plan for the subject
+site.
+
+6.1.2 Post-Development
+The subject site will be developed into an estate residential subdivision consisting
+of 15 detached-home lots, a road and environmental zones.
+The majority of the proposed development area (Catchment 201, 2.02 ha) will drain
+to the proposed street and will be controlled by a box culvert storage tank located
+under the street. The box culvert will provide quantity control and will discharge to
+an Oil/Grit Separator which will provide quality control. This flow will be directed to
+the existing 750 mm culvert under Main street and will follow the same drainage
+patterns as the findings of the Alton Village Drainage Study - Phase 2 Report.
+The rear of Lots 1-4 and the area south of the Nicholas Street intersection (Lot 15
+and part of Lot 14) will drain uncontrolled (Catchment 202, 0.63 ha).
+Figure 4 shows the post-development condition storm drainage plan for the
+subject site.
+
+6.1.3 External Areas
+The external drainage area to the south of the proposed development (Catchment
+301, 5.19 ha) will drain to cut-off swales located at the rear of Lots 5-15 and to a
+separate storm sewer that will bypass the box culvert storage tank. The drainage
+patterns for the external drainage area to the west of the proposed development
+(Catchment 302, 2.24 ha) will generally remain untouched, but will be conveyed
+under the Amelia Street extension via a proposed culvert with rip-rap sized for the
+100 year storm for erosion protection. Further details will be provided at detailed
+design.
+
+6.2 Stormwater Management Design Criteria
+The proposed SWM facilities shall be designed to provide the following levels of control
+as per the requirements of the Ministry of the Environment (MOE), Credit Valley
+Conservation (CVC) and the Town of Caledon:
+
+12
+
+•
+
+Quality Control: Water quality control shall be provided to achieve Enhanced
+(Level 1) treatment of stormwater runoff (80% TSS removal).
+
+•
+
+Erosion Control: Erosion control shall be provided to ensure zero runoff from
+the first 5 mm of precipitation over the entire site area.
+
+•
+
+Flood Control: Flood storage and control shall be provided to maintain peak
+outflows from the site at or below pre-development levels for the 2-year through
+100-year design storm events.
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+•
+
+April 2026
+File: 17121
+
+Water Balance: Pre-development annual infiltration rates are to be maintained
+under post-development conditions.
+
+6.3 Quantity Control
+6.3.1 Pre-Development Condition
+The development area is occupied by mostly forested areas with grassed lawn and
+single detached areas as depicted in Figure 3. Based on the various surface types
+the pre-development composite runoff coefficient was calculated to be 0.15. The
+pre-development peak flows are calculated in Table E2 contained in Appendix
+“E” and summarized in the first row of Table 4.
+
+Table 4: Summary of Peak Flow Rates
+Runoff
+Coefficient
+
+Condition
+
+Peak Flows (L/s)
+2-Year
+
+5-Year
+
+10-Year
+
+25-Year
+
+50-Year
+
+100-Year
+
+Pre-Development
+
+0.15
+
+97.6
+
+124.9
+
+152.7
+
+178.1
+
+200.6
+
+223.7
+
+Post-Development-Unmitigated
+
+0.48
+
+304.7
+
+389.8
+
+476.8
+
+556.1
+
+626.2
+
+698.5
+
+Post-Development-Mitigated
+
+0.48
+
+96.9
+
+122.3
+
+146.7
+
+169.2
+
+187.9
+
+207.2
+
+6.3.2 Post-Development Condition: Un-Mitigated
+Based on a review of the Draft plan, the post-development storm drainage areas
+and composite runoff coefficients for the development area were determined and
+summarized in Figure 4. The surfaces include the impervious roofs, roads and
+lawn areas.
+Based on these surfaces, the proposed development has a higher level of
+imperviousness than the pre-development condition and the post-development
+runoff coefficient was calculated to be 0.48. The post-development unmitigated
+peak flow calculation is provided in Tables E3-A and F3-B contained in Appendix
+“E” and summarized in the second row of Table 4.
+
+6.3.3 Post-Development Condition: Mitigated
+A comparison of the first and second rows of Table 4 indicates that an increase in
+peak flows is anticipated and therefore stormwater mitigation measures are
+required.
+In order to achieve the target discharge rates, an on-site stormwater detention
+system consisting of a box culvert storage tank under Amelia Street and orifice
+control is proposed to provide on-site detention. Ground surface detention is not
+required.
+
+13
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+The stormwater quantity control was modelled using the modified rational method.
+This method calculates the storage volume using the composite runoff coefficient
+and the allowable release rate based on rainfall intensities using the Town’s
+standard IDF data. Through an iterative process, a combination of orifice
+diameters, high water levels (HWL) and detention volumes were analyzed to
+optimize the SWM system.
+Using an orifice diameter of 133 mm, the post-development 2- to 100-year peak
+flows can be controlled to the pre-development flows, as indicated in the third row
+of Table 4. Based on this, the required detention volume is 509.92 m3, which is
+less than the provided detention volume of 513.00 m3. The stormwater detention
+calculations are provided in Table E4 to Table E6, all of which are contained in
+Appendix “E” together with the summary Table E1. The location of the detention
+tank and the control device are illustrated in Functional Servicing Plan (Dwg.
+FSP-1).
+The type of SWM detention pipe (box culvert, circular or elliptical) will be reviewed
+at the detailed subdivision engineering design stage for consideration with respect
+to future flushing and maintenance.
+
+6.4 Quality Control
+Based on the Stormwater Management Planning & Design Manual prepared by the
+Ministry of the Environment (March 2003), various levels of treatment are defined with the
+goal to maintain or enhance existing aquatic habitat based on the total suspended solids
+(TSS) removal efficiency.
+Based on the municipal criteria for the area, storm water quality control for the subject site
+is to be designed to achieve “Enhanced” protection level (Level 1 treatment) which
+provides 80% TSS removal. In order to provide stormwater quality control for the subject
+site, catch basin infiltration trenches pretreated with goss traps in conjunction with an oil /
+grit separator is proposed. Separators are generally implemented on relatively small sites
+and are typically in the form of a pre-cast concrete maintenance hole with a deep sump
+with a special insert which diverts low flows to a lower chamber to capture and store oil
+and grit from the storm drainage discharge from the site. The insert diverts high flow away
+from the lower chamber to ensure that captured pollutants do not scour or re-suspend.
+For this application a Stormceptor® type oil / grit separator manufactured by Hanson Pipe
+and Products Inc. has been selected. This separator has been sized in accordance with
+the manufacturer’s recommendations using the software PCSWMM for Stormceptor.
+Based on the simulation, a Stormceptor® Model EFO4 has been chosen which, based on
+the site area and imperviousness, has the capability of providing a TSS removal rate of
+45%. Details of the oil grit separator sizing output and sections is provided in Appendix
+“E”. The oil / grit separator has been located downstream of the orifice control such that
+it receives only controlled flows in order to maximize its removal efficiency. The location
+of the oil / grit separator is illustrated in Functional Servicing Plan (Dwg. FSP-1).
+
+14
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+The infiltration tanks will provide a TSS removal rate of 70%. With a treatment train
+approach, a total TSS removal of 83.5% is achieved, which meets the water quality criteria
+of 80%. Detailed calculations can be found in Table E.7 in Appendix “E”.
+
+6.5 Erosion Control
+As per the requirements of the Credit Valley Conservation Authority, the proposed site is
+to ensure zero runoff from the first 5 mm of precipitation over the entire site area in order
+to mitigate potential erosion downstream. As calculated in Table F1 in Appendix “F”, a
+minimum storage volume of 44 m3 is required.
+An infiltration volume of 44.40 m3 will be provided in seven infiltration trenches located
+underneath Amelia Street. These infiltration trench is discussed in further detail in Section
+7.4. The erosion control target for the site is therefore being achieved.
+
+6.6 SWM Inspection & Maintenance
+The proposed stormwater management system requires regular inspection and
+maintenance to ensure the infrastructure function as designed. The suggested inspection
+and maintenance procedures are as follows:
+Catchbasins &
+CB Manholes:
+
+Keep catchbasin grates clear of debris. Inspect silt depth in
+sumps regularly. Clean sump when reaches 50% full.
+
+Orifice Device:
+
+Inspect orifice devices periodically. Ensure orifice device
+clear of blockage. Clean sump when accumulates over 50%
+of debris.
+
+Oil Grit Separator:
+
+Inspect and maintain the oil / grit separator unit in
+accordance with the owner’s manual which will be provided
+by the manufacturer upon completion of the installation.
+
+Infiltration Trench:
+
+The infiltration trench will receive clean runoff from the rear
+lawn areas and the external forested area to the south, with
+little anticipated sediment accumulation. In order to ensure
+the proper functioning of the DICBs located to either end of
+the infiltration trench, they should be periodically inspected
+to ensure they are clear of debris.
+
+Maintenance should be performed immediately if an abnormality is observed such as slow
+catchbasin draining rate.
+
+7.0 SITE WATER BALANCE
+In accordance with the requirements of the Credit Valley Conservation, an annual site water
+balance assessment was completed by Palmer for the subject development area to determine
+the overall infiltration deficit under proposed conditions and to design LID measures as part of an
+
+15
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+overall mitigation strategy to maintain pre-development infiltration volumes (Hydrogeological
+Investigation; Palmer, January 2022). Excerpts from the Hydrogeological Investigation Report
+regarding the water balance analysis (Section 4 Water Balance) are included in Appendix “F”.
+The findings of the Hydrogeological Assessment water balance analysis are summarized below.
+Refer to Appendix “F” for the detailed water balance calculations.
+
+7.1 Pre-Development Infiltration Volume
+For the pre-development condition, a total estimated infiltration volume of 14,181 m³/year
+was determined.
+
+7.2 Post-Development Infiltration Volume (Unmitigated)
+For the post-development condition, without infiltration enhancements, a total estimated
+infiltration of 12,706 m³/year was determined. This corresponds to a total infiltration deficit
+of 1,475 m³/year, a 10% decrease in annual infiltration compared to the pre-development
+condition.
+The decrease in annual infiltration indicates the need for Low Impact Development (LID)
+strategies be implemented in order to maintain pre-development infiltration rates. The LID
+measures that are proposed in order to meet the infiltration deficit include roof downspout
+disconnections and an infiltration trench. The design of these LID measures are presented
+below.
+
+7.3 Proposed Infiltration BMP – Roof Downspout Disconnection
+As per Section 4.3 – Roof Downspout Disconnection of the Low Impact Development
+Stormwater Management Planning and Design Guide (Credit Valley Conservation,
+Toronto and Region Conservation, 2010), roof downspout disconnection is a common
+practice to achieve water balance benefits. In order to achieve the required infiltration, roof
+downspout disconnections must meet the following design criteria:
+•
+
+Available Space: Simple downspout disconnection requires a minimum flow path
+length across the pervious area (at least 5 metres) and suitable soil conditions. If
+the flow path length is less than 5 metres and soils are hydrologic soil group (HSG)
+C or D, roof downspouts should be directed to another LID practice such as a
+rainwater harvesting system, soakaway, swale, bioretention area or perforated
+pipe system.
+In order to meet this design criteria, houses will be required to direct roof
+downspouts to a discharge location a minimum distance of 5 m from the
+road right-of-way or rear-lot catchbasin. For runoff draining the back yard
+of the lot (split-drainage lots), a minimum flow length of 5 m will be
+achieved. For runoff draining to the front, roof downspouts will be installed
+as required in order to ensure a minimum flow length of 5 m. Where
+required, roof downspouts shall discharge to the side of the house into a
+side swale in order to meet the flow length requirement.
+
+16
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+According to the hydrologic modelling completed for this site, the soils
+generally fall into hydrologic soil group AB, which is considered to be
+acceptable for roof downspout disconnections.
+•
+
+Site Topography: Disconnected downspouts should discharge to a gradual slope
+that conveys runoff away from the building. The slope should be between 1% and
+5%. Grading should discourage flow from reconnecting with adjacent impervious
+surfaces.
+In order to meet this design criteria, lots will generally be graded at 2%.
+Grading will be designed to discourage flow from reconnecting with
+adjacent impervious surfaces for a minimum of 5 m for the downspout
+discharge location.
+
+•
+
+Soils: If the infiltration rate of soils in the pervious area is less than 15 mm/hr (i.e.,
+hydraulic conductivity less than 1x10-6 cm/s), as determined from measurements
+(see Appendix C for acceptable methods), they should be tilled to a depth of 300
+mm and amended with compost to achieve an organic content in the range of 8 to
+15% by weight or 30 to 40% by volume.
+As per Section 3.3.1 – Hydraulic Conductivity Testing and Infiltration Rate
+Estimates (Hydrogeological Investigation; Palmer, January 2022) the
+infiltration rate varies between 30 and 76 mm/hr, the infiltration rate of the
+soils are considered acceptable. Assuming the lowest measured infiltration
+rate of 30 mm/hr to be conservative, the infiltration rate of the soils are
+considered acceptable.
+
+•
+
+Drainage Area: For simple downspout disconnection the roof drainage area
+should not be greater than 100 square meters.
+Although most roof areas will exceed 100 m2 (excluding townhouse lots), the
+roof drainage area to any single roof downspout will be less than 100 m2 (splitdraining, peaked roofs). However, when performing the infiltration calculations,
+it is assumed that no more than 100 m2 of roof area per lot contributes to
+infiltration, to be conservative.
+As per the draft plan, all lots have an average minimum roof area of 140 m2.
+There are a total of 15 single detached residential lots, each with an applicable
+roof area of 100 m2, for a total applicable roof area of 1,500 m2 (0.15 ha).
+
+Section 4.3 – Roof Downspout Disconnection of the Low Impact Development Stormwater
+Management Planning and Design Guide indicates that “a conservative runoff reduction
+rate estimate for roof downspout disconnection is 25% for hydrologic soil group (HSG) C
+and D soils and 50% for HSG A and B soils. These values apply to disconnections that
+meet the physical suitability and constraints criteria outlined in this section.” As
+demonstrated above, the roof downspout disconnection design and applicable roof area
+meet the outlined design requirements and conditions for hydrologic soil group A and B
+soils. A runoff reduction of 50%, and the corresponding infiltration volume of 50%, is
+therefore considered acceptable.
+17
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+Based on the Geotechnical Investigation Report, the total annual site precipitation is 901.6
+mm/yr. The total roof area applicable to roof downspout disconnection infiltration is 0.15
+ha. The precipitation to applicable roof areas is therefore 1,352 m3/yr (0.15 ha x 901.6
+mm/yr = 1,352 m3/yr). Based on an evaporation rate of 10% of incident precipitation for
+impervious areas, as per the Geotechnical Investigation Report, the surplus for the
+applicable roof area is therefore 1,217 m3/yr (1,352 m3/yr x (1 – 0.1) = 1,217 m3/yr).
+Assuming an infiltration rate of 50%, the infiltration volume due to roof downspout
+disconnections is therefore 609 m3/yr (1,217 m3/yr x 0.50 = 609 m3/yr).
+
+7.4 Proposed Infiltration BMP – Infiltration Trenches
+Roof downspout disconnection will account for an annual infiltration volume of 609 m3/yr.
+The remaining deficit of 866 m3/yr (1,475 m3/yr – 609 m3/yr = 866 m3/yr) will be infiltrated
+through the installation of infiltration trenches underneath the street. The infiltration
+trenches wil be comprised of a trench lined with filer fabric and filled with clear stone. The
+voids between the stone will provide the required storage volume for the water that is to
+be infiltrated. The street CB infiltration trenches will be located beneath the street and will
+be supplied by runoff that will have been pre-treated by goss traps installed in the CBs.
+With regards to the groundwater table, the elevations were measured in monitoring wells
+that were drilled in conjunction with the Hydrogeological Investigation prepared by Palmer.
+dated January 24, 2022. Based on this data the bottom of the proposed infiltration
+trenches will be at least 1.0 m above the groundwater level.
+The infiltration trenches have been designed based on a soil infiltration rate of 30 mm/hr,
+a drawdown time of 48 hours, a void ratio of 0.40. Tables F.3 provides a preliminary sizing
+of the CB infiltration trenches underneath the street, and further details will be provided at
+detailed design.
+With the implementation of the proposed infiltration trenches, an additional infiltration
+capacity of 1,360 m3/yr is achieved.
+
+7.5 Post-Development Infiltration Volume (Mitigated)
+With the inclusion of the roof downspout disconnection and infiltration trench LID
+measures, the total post-development infiltration volume will be 14,675 m3/yr (12,706 m3/yr
++ 609 m3/yr + 1360 m3/yr = 14,675 m3/yr), which is 103.4% of the annual pre-development
+infiltration volume (14,181 m3/yr). The pre-development infiltration volumes will therefore
+be maintained under post-development conditions. The location of the infiltration trenches
+is indicated in Figure 5 and a preliminary infiltration detail is provided in Figure 6.
+
+18
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+8.0 VEHICULAR & PEDESTRIAN ACCESS
+The layout of the proposed subdivision has been developed with consideration for efficient and
+safe access and circulation of both vehicular and pedestrian traffic.
+
+8.1 Municipal Roads
+Vehicular access to the subject site will be provided by road connection to Amelia Street,
+Main Street and Nicholas Street which are all under the jurisdiction of the Town of
+Caledon.
+The proposed municipal road will be constructed to urban standards which includes an asphalt
+pavement, crowned with 2% cross fall and edged with concrete curb and gutter. The
+proposed 20.0m wide road allowance will facilate an 8.7m wide pavement in accordance
+with the Town’s standard urban cross section. The longitudinal slope of the road will
+generally be 0.75% with some length of road ranging up to 6.00% slope. A copy of the
+Town’s standard road cross section is included in Appendix “G”.
+
+8.2 Driveways
+Each dwelling will have an attached garage and driveway. It is anticipated that the slope
+of driveways is to be within the range of 2.0% to 6.0% in accordance with Town standards
+and will be designed at the in conjunction with the individual site grading plans at the
+building permit stage.
+
+9.0 GRADING
+As is typical with all subdivision, earthmoving is required, to varying degrees, in order to achieve
+the municipal design criteria and accommodate the development form.
+
+9.1 Grading Criteria
+The subject site is to be graded in accordance with the Town grading criterion which
+dictates that road grades are to range from 0.75% to 6.0% (8.0% for 18.5m ROW) and
+that sodded yard areas are to range from 2.0% to 5.0%. For large grade differentials, a
+maximum slope 4H : 1V can be used for sodded embankments. In areas where space is
+limited, retaining walls can be utilized to accommodate grade differentials, however, their
+use should be minimized.
+
+9.2 Preliminary Design
+Based on the topographic survey, the proposed subdivision configuration and the Town’s
+criteria, a preliminary grading design has been prepared and is provided on the
+Functional Grading Plan (Dwg FGP-1). The preliminary grading design, considered the
+following factors:
+• Achieve the Town’s lot grading criteria.
+• Meet the Town’s vertical road design parameters.
+
+19
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+• Minimize the depth of cut and of fill.
+• Minimize the requirement for retaining walls.
+• Match existing grades along the adjacent properties and road allowances.
+• Provide an overland flow route to direct drainage to a safe outlet.
+• Provide sufficient cover over the storm sewer.
+• Match the existing grade along the limit of the woodland buffer.
+Due to the existing topography, retaining walls will be required within the Town's existing
+road allowances for Spring Street, Amelia Street and Nicholas Street. These retaining
+walls can be constructed using systems that do not require tie backs. No retaining walls
+are required within the proposed road allowance within the subject site. We have added
+cross sections to the Functional Grading Plan to illustrate the extent of the retaining walls.
+It may be possible to reduce / eliminate some of the retaining walls if 4:1 slopes can be
+incorporated within the boulevards. The grading design will be refined at the detailed
+subdivision engineering design stage.
+An analysis of the earthworks will be conducted using digital terrain modelling software at
+the detailed design stage to optimize the cut and fill volumes in an effort to achieve a
+balance. Based on the preliminary design, no significant difficulties are anticipated in
+achieving the municipal grading design standards or an earthworks balance.
+
+9.3 Permitting
+A review of the Regulation Mapping indicates that the subject site is not located within an
+area that is regulated by the CVC, however, this will be confirmed at the detailed
+engineering design stage in conjunction with the finalization of the storm drainage and
+stormwater management design.
+
+10.0 EROSION & SEDIMENT CONTROL DURING CONSTRUCTION
+Construction activity, especially operations involving the handling of earthen material,
+dramatically increases the availability of particulate matter for erosion and transport by surface
+drainage. In order to mitigate the adverse environmental impacts caused by the release of siltladen stormwater runoff into receiving watercourses, measures for erosion and sediment control
+are required for construction sites. This is an extremely important component of land development
+that plays a large role in the protection of downstream watercourses and aquatic habitat. It is of
+particular concern for this site given the proximity of the site to a watercourse.
+The impact of construction on the environment is recognized by the Greater Golden Horseshoe
+Area Conservation Authorities. Their document titled Erosion & Sediment Control Guidelines for
+Urban Construction (ESC Guideline) provides guidance for the preparation of effective erosion
+and sediment control plans.
+Control measures must be selected that are appropriate for the erosion potential of the site and it
+is important that they be implemented and modified on a staged basis to reflect the site activities.
+Furthermore, their effectiveness decreases with sediment loading and therefore inspection and
+maintenance is required. The selection, implementation, inspection and maintenance of the
+control features are summarized as follows:
+
+20
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+10.1 Control Measures
+On relatively large sites, measures for erosion and sediment control typically include the
+use of silt fencing, a mud mat and sediment traps. The following is a description of the
+sediment controls to be implemented on the subject site:
+•
+
+Silt Fences are to be installed adjacent to all property limits subject to drainage
+from the development area prior to topsoil stripping and in other locations, such as
+at the bases of topsoil stockpiles. It is recommended that earthworks not extend
+immediately adjacent to the silt fence and instead 1m to 2m vegetated buffer be
+maintained for additional protection. The silt fences are to be constructed with 150
+x 150mm wire farm fence fabric to properly support the geotextile. Heavy duty silt
+fence is recommended, consisting of two rows of fence with a row of staked straw
+bales between.
+
+•
+
+Mud Mat is to be installed at the construction entrance prior to commencing
+earthworks to minimize the tracking of mud onto municipal roads.
+
+•
+
+Sediment Traps are to be installed at all catchbasin locations once the storm
+sewer system has been constructed to prevent silt laden runoff from entering.
+
+The proposed sediment controls are illustrated on the Preliminary Erosion & Sediment
+Control Plan (Dwg ESC-1).
+
+10.2 Construction Sequencing
+The following is a summary of the scheduling of construction activities and the related
+implementation of sediment controls:
+Stage 1 – Subdivision Earthworks
+1. Construct mud mat for temporary construction access.
+2. Install silt fencing around the limits of grading prior to topsoil stripping.
+3. Strip topsoil from the lots and road allowance, stockpile where indicated and
+install silt fence around the perimeter.
+4. Rough grade the road allowance by placing cut material in fill areas and
+spreading and compacting of imported fill. Maintain the mud mat to minimize
+the tracking of silt onto the municipal road and provide street sweeping as
+necessary.
+Stage 2 – Subdivision Servicing & Road Construction
+1. Install underground servicing, covering the end of the pipe at the end of each
+work day to ensure that silt does not enter the storm sewer.
+2. Construct roads and install sediment controls at street catchbasins and ditch
+inlet catchbasins.
+3. Construct the road including granular base, base curb and base courase
+asphalt.
+
+21
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+Stage 3 – House Construction
+1. Excavate for house foundations, backfill and frame the dwellings.
+2. Once the houses are cladded, install the septic systems.
+3. Pave the driveway and stabilize the lot with topsoil and sod.
+4. Remove silt fencing on a phased basis as areas are stabilized.
+
+10.3 ESC Inspection & Maintenance
+In order to ensure that the erosion and sediment control measures operate effectively,
+they are to be regularly monitored and they will require periodic cleaning (e.g., removal of
+accumulated silt), maintenance and/or re-construction.
+Inspections of all of the erosion and sediment controls on the construction site should be
+undertaken with the following frequency:
+•
+•
+•
+•
+
+On a weekly basis
+After every rainfall event
+After significant snow melt events
+Prior to forecasted rainfall events
+
+If damaged control measures are found they should be repaired and/or replaced within 48
+hours. Site inspection staff and construction managers should refer to the Erosion and
+Sediment Control Inspection Guide (2008) prepared by the Greater Golden Horseshoe
+Area Conservation Authorities. This Inspection Guide provides information related to the
+inspection reporting, problem response and proper installation techniques.
+
+11.0 UTILITIES
+While some external upgrades may be necessary by the utility providers, it is anticipated that
+utilities such as hydro (Hydro One Networks Inc.), natural gas (Enbridge Gas Distribution Inc.),
+cable television (Rogers Cable Inc.), and telephone service (Bell Canada) will be available to
+service the subject development. As per standard practice in subdivisions, utilities will be installed
+underground. Co-ordination with the local hydro authority and the various utility companies will be
+undertaken at the detailed engineering design stage to determine appropriate locations for
+pedestals, transformers and street lights.
+It is recommended that the utility installation be in the form of a joint trench as outlined in the
+Town’s Design Standards. The process of joint trenching allows all of the utility companies to coordinate the placement of their lines in a common trench excavated by a single utility contractor.
+Joint trenching maximizes the efficiency of the available area in the utility corridor and provides
+for a safe installation.
+
+22
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+12.0 SUMMARY
+Based on the analysis contained herein, the proposed residential subdivision can be adequately
+serviced (watermain, wastewater and storm) in accordance with the standards of the Town of
+Caledon, Region of Peel and the Credit Valley Conservation Authority design criteria as follows:
+Water
+•
+
+The community of Alton is serviced by the Caledon Village – Alton Drinking Water System
+which is owned and operated by the Region of Peel. This system consists of several wells,
+a water treatment plant, watermains and fire hydrants.
+
+•
+
+The subject site will be serviced by a looped watermain having a connection to the existing
+200mm watermain on Main Street and a connection to the the existing 150mm diameter
+watermain on Amelia Street at Nicholas Street.
+
+•
+
+The proposed development will have a fire flow plus maximum day demand of 83.7 L/s.
+
+Waste Water
+•
+
+There are no municipal sanitary sewers in the community of Alton and therefore each lot
+within the development will be serviced by a private on-site sewage system.
+
+•
+
+In order to provide high quality treatment and reduce nitrate loading, tertiary treatment
+septic systems are proposed for all of the lots within the subdivision.
+
+Storm Drainage
+•
+
+The subject site is located within the Shaw’s Creek sub-watershed which is located in the
+Credit River watershed.
+
+•
+
+In accordance with Town criteria, the subject site will be serviced by minor system
+comprised of a municipal storm sewer sized for the 5-year storm event.
+
+•
+
+The major system will be comprised of an overland flow route which will convey the
+development’s runoff from rainfall events in excess of the capacity of the municipal storm
+sewer to the 100-year total capture locations.
+
+Floodplain
+•
+
+Based on a review of CVC mapping, the subject site is not located within the flood plain
+of Shaw’s Creek and therefore no flood proofing measures are required.
+
+Stormwater Management
+
+23
+
+•
+
+In order to address the stormwater management criteria, quantity, quality, water balance
+and erosion control measures will be implemented in the form of a stormwater detention
+tank, and oil/grit separator and an infiltration trench, as follows:
+
+•
+
+Enhance (Level 1) quality control is being achieve for the site, with a TSS removal of
+83.5% for the site development area using a treatment train approach involving infiltration
+trenches in conjunction with an OGS.
+
+•
+
+The 5 mm runoff volume will be infiltrated within infiltration trenches. The erosion control
+target for the site is therefore achieved.
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+•
+
+Quantity control is provided for the 2- through 100-year storm events to meet site predevelopment flow targets. Runoff storage is provided by a stormwater detention tank.
+Discharge from the tank is controlled by an orifice plate discharging to the storm sewer.
+
+•
+
+A site water balance assessment has been undertaken to ensure that pre-development
+infiltration volumes are maintained. Based on the analysis it was determined that
+mitigation measures are required in the form of roof top disconnections and infiltration
+trenches.
+
+Vehicular Access
+•
+
+Vehicular access to the subject site will be provided by road connection to Amelia Street,
+Main Street and Nicholas Street which are all under the jurisdiction of the Town of
+Caledon.
+
+•
+
+The proposed 20.0m wide road allowance will facilate an 8.7m wide pavement with curbs
+in accordance with the Town’s standard urban cross section.
+
+Grading
+•
+
+As is typical with subdivision development, earthmoving will be required to achieve the
+proposed subdivision grading necessary to meet the criteria of the Town. A detailed
+analysis of the earthworks will be conducted at the detailed design stage to optimize the
+cut and fill volumes. Based on the preliminary grading design, given the rolling topography
+of the site, some 3:1 slopes and retaining walls will be required to provide the necessary
+grading transitions, however, it is anticipated that the Town’s municipal grading design
+standards can be acheived.
+
+•
+
+A review of the Regulation Mapping indicates that the subject site is not located within an
+area that is regulated by the CVC, however, this will be confirmed at the detailed
+engineering design stage in conjunction with the finalization of the storm drainage and
+stormwater management design.
+
+Erosion & Sediment Control During Construction
+•
+
+Erosion and sediment control (ESC) measures are to be implemented during construction
+to prevent silt laden runoff downstream in accordance with the Erosion & Sediment Control
+Guidelines for Urban Construction (2019). The ESC plans are to be prepared at the
+detailed engineering design stage and are to reflect the various construction stages.
+
+Subdivision Engineering Design
+•
+
+24
+
+Detailed design for the proposed development is to be prepared at the subdivision
+engineering stage. This detailed design is to include servicing and grading plans as well
+as a stormwater management report based on the criteria established in this Functional
+Servicing Report.
+
+VALDOR
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+April 2026
+File: 17121
+
+13.0 REFERENCES & BIBLIOGRAPHY
+•
+
+Town of Caledon, Development Standards, Policies & Guidelines, January 2009.
+
+•
+
+Region of Peel, Public Works Design, Specifications & Procedures Manual, Linear
+Infrastructure, Watermain Design Criteria, June 2010.
+
+•
+
+Ontario Ministry of Environment, Stormwater Management Planning and Design
+Manual, March 2003.
+
+•
+
+Greater Golden Horseshoe Area Conservation Authorities, Erosion & Sediment Control
+Guidelines for Urban Construction, 2019.
+
+•
+
+Credit Valley Conservation & Toronto and Region Conservation, Low Impact
+Development Stormwater Management Planning and Design Guide, 2010.
+
+•
+
+Fire Underwriters Survey, Water Supply for Public Fire Protection, 2020.
+
+•
+
+Ministry of Municipal Affairs & Housing, Ontario Building Code, 2024.
+
+•
+
+Sirati & Partners Consultants Limited, Preliminary Geotechnical Investigation, Sept 6, 2017.
+
+•
+
+Palmer Environmental Consulting Group Inc., Hydrogeological Impact Study, January
+24, 2022.
+
+•
+
+R.V. Anderson Associates Limited, Village of Alton – Main Street North & Queen Street
+West Municipal Class EA Environmental Study Report Final, February 17, 2022.
+
+•
+
+R.J. Burnside & Associates Limtied, Alton Village Drainage Study, Phase 2, December
+2019.
+
+____________________________________________________________________________
+Respectfully Submitted,
+VALDOR ENGINEERING INC.
+
+2026/04/17
+
+David Giugovaz, P.Eng.
+Senior Project Manager
+dgiugovaz@valdor-engineering.com
+905-264-0054 x 224
+This report was prepared by Valdor Engineering Inc. for the account of Mount Nicholas Holdings, Inc. The comments,
+recommendations and material in this report reflect Valdor Engineering Inc.’s best judgment in light of the information available to it at
+the time of preparation. Any use of which a third party makes of this report, or any reliance on, or decisions made based on it, are the
+responsibility of such third parties. Valdor Engineering Inc. accepts no responsibility whatsoever for any damages, if any, suffered by
+any third party as a result of decisions made or actions based on this report.
+
+25
+
+VALDOR
+
+S:\Projects\2017\17121\Drawings\17121_Figures.dwg, Figure 2, 2024-02-28 2:20:54 PM
+
+VALDOR ENGINEERING INC.
+Consulting Engineers - Project Managers
+571 Chrislea Road, Unit 4, 2nd Floor, Woodbridge, Ontario, L4L 8A2
+TEL (905)264-0054, FAX (905)264-0069
+E-MAIL: info@valdor-engineering.com
+www.valdor-engineering.com
+
+410
+41
+5
+
+42
+
+0
+
+5
+
+40
+
+5
+42
+
+410
+
+0
+42
+
+415
+
+43
+
+0
+
+43
+
+42
+
+5
+
+5
+
+43
+
+0
+
+435
+
+PROJECT
+
+AMELIA STREET SUBDIVISION
+COMMUNITY OF ALTON
+REGION OF PEEL
+
+TITLE
+
+SWM DRAINAGE PLAN
+PRE-DEVELOPMENT
+
+VALDOR ENGINEERING INC.
+
+Consulting Engineers - Project Managers
+
+571 Chrislea Road, Unit 4, 2nd Floor Vaughan, Ontario, L4L 8A2
+TEL (905)264-0054, FAX (905)264-0069
+E-MAIL: info@valdor-engineering.com
+www.valdor-engineering.com
+
+PREPARED BY
+
+CHECKED BY
+
+SCALE
+
+DATE
+
+PROJECT
+
+FIGURE 3
+
+402.27
+
+CB
+
+402.16
+
+CB
+
+2
+D ST
+M W O
+No.UN ELLI REY
+19ICIP NG
+87 AL
+6
+
+2
+D ST
+M W O
+No.UN ELLI REY
+19 ICIP NG
+90 AL
+4
+
+2 ST
+O
+MDW REY
+No.UN ELLI WO
+IC
+19 IPANG OD
+93 L
+4
+
+MUNICIPAL
+No. 19934
+
+D 2 ST
+M W O
+No.UN ELLI REY
+19ICIP NG
+93 AL
+0
+
+2
+D ST
+M W O
+No.UN ELLI REY
+19ICIP NG
+96 AL
+0
+
+2 STOREY WOOD
+CLAD DWELLING
+
+DRIVEWA
+
+Y
+
+VINYL
+GARAGE
+
+WOOD
+GARAGE DRIVEWAY
+
+410
+
+WOOD SHED
+
+WOOD SHED
+
+METAL SHED
+
+W/O
+
+W/O
+
+WOOD
+BUILDING
+
+W/O
+
+W/O
+
+#5
+
+0A
+
+M
+
+EL
+
+IA
+
+ST
+
+.
+
+41
+5
+
+0
+
+6A
+M
+EL
+
+IA
+
+ST
+
+.
+
+5
+
+40
+
+#4
+
+42
+
+5
+42
+
+#3
+
+8A
+
+M
+
+EL
+
+IA
+
+ST
+
+.
+
+410
+
+415
+
+42
+
+0
+
+WOOD
+SHED
+
+43
+0
+
+5
+42
+
+43
+5
+
+43
+
+0
+
+435
+
+PROJECT
+
+AMELIA STREET SUBDIVISION
+COMMUNITY OF ALTON
+REGION OF PEEL
+
+TITLE
+
+SWM DRAINAGE PLAN
+POST-DEVELOPMENT
+
+VALDOR ENGINEERING INC.
+
+Consulting Engineers - Project Managers
+
+571 Chrislea Road, Unit 4, 2nd Floor Vaughan, Ontario, L4L 8A2
+TEL (905)264-0054, FAX (905)264-0069
+E-MAIL: info@valdor-engineering.com
+www.valdor-engineering.com
+
+PREPARED BY
+
+CHECKED BY
+
+SCALE
+
+DATE
+
+PROJECT
+
+FIGURE 4
+
+CB
+
+402.16
+
+CB
+
+402.27
+
+MARY STREET
+
+WOOD SHED
+
+INFILTRATION TRENCH #2
+10.0m LONG, 1.0m WIDE, 1.0m HIGH
+
+WOOD SHED
+
+METAL SHED
+
+INFILTRATION TRENCH #3
+13.0m LONG, 1.0m WIDE, 1.0m HIGH
+INFILTRATION TRENCH #1
+20.0m LONG, 1.0m WIDE, 1.0m HIGH
+
+WOOD
+BUILDING
+
+INFILTRATION TRENCH #7
+25.0m LONG, 1.0m WIDE, 1.0m HIGH
+
+INFILTRATION TRENCH #5
+15.0m LONG, 1.0m WIDE, 1.0m HIGH
+
+S:\Projects\2017\17121\Hydrotechnical\0-Working\Figures\17121_Infiltration Trench Locations.dwg, Proposed, 2026-04-17 1:13:06 PM
+
+A
+
+INFILTRATION TRENCH #6
+15.0m LONG, 1.0m WIDE, 1.0m HIGH
+INFILTRATION TRENCH #4
+13.0m LONG, 1.0m WIDE, 1.0m HIGH
+
+WOOD
+SHED
+
+PROJECT
+
+AMELIA STREET SUBDIVISION
+COMMUNITY OF ALTON
+REGION OF PEEL
+
+TITLE
+
+INFILTRATION TRENCH
+LOCATIONS
+
+VALDOR ENGINEERING INC.
+
+Consulting Engineers - Project Managers
+
+571 Chrislea Road, Unit 4, 2nd Floor Vaughan, Ontario, L4L 8A2
+TEL (905)264-0054, FAX (905)264-0069
+E-MAIL: info@valdor-engineering.com
+www.valdor-engineering.com
+
+PREPARED BY
+
+CHECKED BY
+
+SCALE
+
+DATE
+
+PROJECT
+
+FIGURE 5
+
+PROJECT
+
+AMELIA STREET SUBDIVISION
+COMMUNITY OF ALTON
+REGION OF PEEL
+
+TITLE
+
+INFILTRATION TRENCH
+DETAIL
+
+VALDOR ENGINEERING INC.
+
+Consulting Engineers - Project Managers
+
+571 Chrislea Road, Unit 4, 2nd Floor Vaughan, Ontario, L4L 8A2
+TEL (905)264-0054, FAX (905)264-0069
+E-MAIL: info@valdor-engineering.com
+www.valdor-engineering.com
+
+PREPARED BY
+
+CHECKED BY
+
+SCALE
+
+DATE
+
+PROJECT
+
+FIGURE 6
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+APPENDIX “A”
+Draft Plan & Equivalent Population Calculation
+
+April 2026
+File: 17121
+
+END OF FENCE
+0.7 NW
+
+POST AND
+
+IB
+
+END OF FENCE
+ON LINE
+
+72.89
+
+.
+
+LOT 42
+
+N45°19'25"W
+4.877
+
+27.
+75
+
+7.
+07
+40.21
+
+45.31
+
+35.25
+
+AMELIA STREET
+EXTENSION
+20.00m WIDE
+
+27.00
+27.00
+
+27.00
+
+35.25
+
+SIB 1253
+0.06 NE
+
+26.00
+
+36.6
+2
+
+IB VH
+
+IB 865
+
+N45°15'20"W
+20.104
+
+N45°10'30"W
+
+PIN 14277-0083
+
+SUBJECT TO
+EASEMENT AS IN
+INSTRUMENT
+No. RO1074138
+PREVIOUSLY
+DESCRIBED BY
+CA24238
+
+IB OU
+
+C
+
+AMELIA STREET
+20m WIDE R.O.W.
+
+(NOT TRAVELLED)
+BY REGISTERED PLAN CAL-5
+TRANSFERRED BY INSTRUMENT No. P
+PIN 14277 - 0071
+
+46.197
+SIB
+1253
+
+25.51
+
+SIB 1253
+NO FENCE
+
+5"W
+
+435
+
+WEST
+
+24.50
+
+POST AND
+WIRE FENCE
+
+END OF
+FENCE
+0.7 NE
+
+N45°15'20"W
+N45°15'20"W
+4.193
+10.895
+
+POST AND WIRE FENCE
+FENCE
+0.3 NE
+
+WIT
+34.08
+
+26.00
+
+WIRE FENCE
+
+0073
+
+IB 865
+WIT NO FENCE
+
+N44°50'15"E
+
+ACTUAL LINE
+EXAGERATED LINE
+
+25.50
+
+N45°15'20"W
+33.574
+
+-
+
+AND
+
+FENCE
+0.3 NE
+
+PIN 14277-0082
+
+1
+0.16ha
+
+A
+
+SIB 1253 WIT
+
+°
+
+SIB 1253 WIT
+
+N1
+0
+11
+'2
+
+LOT 34
+64.06
+
+12
+0.16ha
+
+IB
+
+IB
+
+SIB 1253
+
+11
+0.16ha
+
+N44°50'15"E
+20.421
+
+LOT 21
+
+LOT 35
+
+SUBJECT TO
+EASEMENT AS IN
+INSTRUMENT
+No. CA24238
+
+65.86
+
+N45°10'30"W
+0.305
+
+PL AN
+
+63.957
+
+CONCESSION 4
+
+BY REGISTERED PLAN CAL-5
+CLOSED BY JUDGE'S ORDER
+AS IN INSTRUMENT
+No. VS124476
+
+0.64
+
+N45°15'20"W
+27.000
+
+POST
+
+14277
+
+37.60
+
+NO FENCE
+
+N45°10'45"W
+
+2
+0.15ha
+
+NELSON
+STREET
+
+BY REGISTERED PLAN CAL-5
+CLOSED BY JUDGE'S ORDER AS IN
+INSTRUMENT No. VS124476
+
+24.50
+
+N45°15'20"W
+25.007
+
+27.00
+
+IB 1111
+0.10 NE
+
+PIN
+
+0066
+
+FENCE
+0.3 NE
+
+40.74
+
+10
+0.18ha
+
+G
+XI0STIN AL
+E1
+4
+ENTI
+D
+I
+S
+E
+R
+
+FENCE
+1.1 NE
+
+LOT 22
+
+NELSON STREET
+
+214.78
+
+N45°15'20"W
+20.397
+
+-
+
+SIB 1253
+
+LOT 23
+
+PIN 14277 - 0415
+
+LOT 51
+
+END OF FENCE
+0.5 NE
+
+0.15ha
+
+PIN 14277 - 0069
+
+IB
+B 1253
+
+LOT 24
+
+37.25NO FENCE
+
+3
+
+74.62
+
+LOT 52
+
+NO FENCE
+
+FENCE CORNER
+0.5 SW
+
+LOT 23
+
+9
+0.20ha
+LOT 36
+
+N44°50'15"E
+3.938
+
+ING
+EXIST IAL
+ENT
+RESID
+
+PIN
+
+-
+
+142 77
+
+LOT 33
+64.05
+
+LOT 50
+
+43
+
+38.78
+
+22.00
+
+IB 1253 WIT
+END OF FENCE 0.8 N
+
+5
+
+40
+
+END OF CHAIN
+LINK FENCE 0.8 E
+
+PIN 142 77 - 0204
+
+BY REGISTERED PLAN CAL-5
+PIN 14277-0075
+
+SSIB
+
+POST AND WIRE FENCE
+FENCE
+0.1 SE
+
+POST AND
+WIRE FENCE
+
+C A L1-05
+4
+
+IB OU
+
+KEY PLAN:
+
+END OF
+POST AND
+WIRE FENCE
+0.2 SE
+
+TITLE:
+
+13.91
+
+50.228
+
+PIN 14277 - 0084
+
+VAN HARTEN SURVEYING INC.
+
+DATE
+
+POST AND
+WIRE FENCE
+
+49.850
+
+N45°18'45"E
+
+ING
+EXIST IAL
+ENT
+RESID
+
+LUKE G. WILCOX. O.L.S.
+
+DATE
+
+PIN 14277 - 0063
+
+SIB OU
+FENCE CORNER 0.3 E
+
+I HEREBY CERTIFY THAT THE BOUNDARIES OF THE LANDS TO BE
+SUBDIVIDED AS SHOWN ON THIS PLAN ANDMUNICIPALITY
+THEIR RELATIONSHIP TO THE
+ADJACENT LANDS ARE ACCURATE AND CORRECTLY SHOWN IN
+ACCORDANCE WITH A PLAN OF SURVEY PREPARED BY
+VAN HARTEN SURVEYING INC.
+
+36.30
+
+15
+0.16ha
+LOT 31
+
+FENCE
+0.1 SE
+
+SIB 1253
+FENCE
+CORNER
+0.1 E
+
+N42°25'25"W
+18.575
+
+FENCE
+0.3
+
+N46°13'35"E
+
+SURVEYOR'S CERTIFICATE:
+
+REQUIRED INFORMATION:
+
+DRAFT PLAN
+OF SUBDIVISION
+
+PROJECT No.:
+
+APPROVAL STAMP
+
+AS REQUIRED UNDER SECTION 51(17) OF THE PLANNING
+ACT R.S.O. 1990.
+
+ET
+
+AR
+RG
+MA ST
+
+SUBJECT
+SITE
+
+N
+EE
+QU
+
+LEGAL DESCRIPTION:
+
+ST
+
+W
+
+(a) SEE PLAN
+(b) SEE PLAN
+(c) SEE KEY MAP
+(d) SEE SCHEDULE OF LAND USE
+(e) SEE PLAN
+(f) SEE PLAN
+
+DRAFTED BY:
+
+(g) SEE PLAN
+(h) MUNICIPAL WATER AND SEWAGE AVAILABLE
+(i) TOPSOIL, FILL, SAND, SANDY SILT, SILTY SAND,
+SILT, SAND AND GRAVEL
+(j) SEE PLAN
+(k) MUNICIPAL WATER AND SEWAGE AVAILABLE
+(l) SEE PLAN
+
+DRAWING No.:
+
+EC
+
+16420
+
+DATE:
+
+March 7, 2024
+
+SCALE:
+
+1:500
+CHECKED BY:
+
+DP-01
+
+NOTE: CONTOURS RELATE TO CANADIAN GEODETIC DATUM
+
+IN
+
+MA
+ST
+
+S
+
+NE
+
+AG
+ST
+
+PLAN OF SURVEY OF
+PART LOT 23, CONCESSION 4,
+WEST OF HURONTARIO STREET,
+(GEOGRAPHIC TOWNSHIP OF CALEDON)
+AND
+PART OF LOTS 21, 22, 23, 24, 25, 26, 27 31, 32, 33, 34, 35, 47 & 59,
+ALL OF LOTS 28, 36, 37, 38, 39, 40, 41, 42, 43, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57 & 58, AND
+PARTS OF SPRING STREET,
+NELSON STREET,
+NICHOLAS STREET,
+ALFRED STREET AND
+ANN STREET
+BLOCK 7,
+REGISTERED PLAN CAL-5
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+
+24.00
+
+24.00
+22.00
+
+415
+
+STREET
+
+LOT 47
+
+I HEREBY AUTHORIZE THE BIGLIERI GROUP LTD. TO PREPARE AND SUBMIT
+THIS DRAFT PLAN OF SUBDIVISION TO THE
+
+2496815 Ontario Inc.
+
+64.03
+
+LOT 48
+
+96
+.05
+3
+
+106.683
+
+BY REGISTERED PLAN CAL-5
+CLOSED BY INSTRUMENT No. VS125329
+
+OWNER'S CERTIFICATE:
+
+2496815 Ontario Inc.
+
+14
+0.14ha
+
+NICHOLAS STREET
+
+PIN 14277-0083
+
+64.04
+
+0
+42
+
+HURONTARIO
+
+SIB 1253
+
+E
+
+LOT 32
+
+ACTUAL LINE
+EXAGERATED LINE
+
+OF
+
+8
+
+.26
+
+81
+
+LOT 49
+
+21.00
+
+0
+
+5
+42
+
+13
+0.15ha
+
+REVISIONS
+
+ALTON VILLAGE
+CALEDON, ONTARIO
+
+3
+2
+1
+No.
+
+ROAD CLOSED BY BYLAW
+83-156 AS IN INSTRUMEN
+No. RO668728
+
+40.41
+
+74.72
+LOT 37
+
+LOT 53
+
+POST AND
+WIRE FENCE
+
+ANN STREET
+
+BY REGISTERED PLAN CAL-5
+CLOSED BY JUDGE'S ORDER AS IN
+INSTRUMENT No. VS124476
+
+8
+0.20ha
+
+14277
+
+65.464
+
+ALFRED STREET
+
+PIN
+
+BY REGISTERED PLAN CAL-5
+CLOSED BY JUDGE'S ORDER AS IN
+INSTRUMENT No. VS124476
+
+REGISTERED
+
+N43°37'10"W
+
+LOT 25
+
+LOT 38
+
+LOT 55
+
+LOT 54
+
+40.38
+
+LOT 39
+
+74.72
+
+PIN 14277 - 0068
+
+END OF FENCE
+0.4 SW
+
+10m Woodland MVPZ
+
+LOT 56
+
+37.18
+
+SIB 1253
+
+LOT 40
+
+BY REGISTERED
+PLAN CAL-5
+(NOT TRAVELLED)
+
+SIB 1253
+WIT
+
+SSIB VH
+
+PIN 14277-0081
+
+4
+0.15ha
+
+LOT 26
+
+N45°15'20"W
+4.572
+
+35.35
+
+SPRING
+STREET
+20m WIDESPRING
+R.O.W. STREET
+
+IB 1253
+
+5
+
+59.
+455
+
+Limit of Woodland
+LOT 57
+
+SIB 1253
+
+41
+
+BY REGISTERED PLAN CAL-5
+CLOSED BY JUDGE'S ORDER AS IN
+INSTRUMENT No. VS124476
+
+IB 1253
+WIT
+
+NO FENCE
+
+4
+2
+0
+
+SPRING
+STREET
+EXTENSION
+20.00m WIDE
+
+N44°47'05"E
+10.104
+
+N45°15'20"W
+15.240
+
+25
+SPRING STREET
+
+N8
+1°
+01
+'15
+"
+
+SIB 1253
+
+NO FENCE
+SIB 1253
+
+4
+
+ING
+EXIST
+L
+RURA
+
+PIN 142770063
+
+1
+21.0 LOT 27
+
+LOT 41
+
+N45°12'55"W
+15.331
+
+N2
+3
+°
+18'3
+0"W
+
+LOT 58
+
+21.59
+
+SIB
+1253
+
+SIB 1253
+
+SIB 1253
+
+43
+0
+
+43
+5
+
+8
+64.4
+
+43
+
+PIN 14277-0134
+
+LOT 59
+8
+24
+
+LOT 28
+
+46.854
+
+50
+
+6
+0.16ha
+
+58.99
+
+40
+
+30
+
+20
+
+7
+3.21ha
+
+5
+0.15ha
+NO FENCE
+62.16
+
+°
+N7
+
+34.21
+
+LOT 43
+
+BLOCK 7
+
+"E
+'30
+3
+3
+
+5 10
+
+RIB 1253
+0.04 S
+FENCE 0.1 NW
+
+IB OU
+
+35.966
+
+5"E
+N37°21'1
+
+27.70
+
+N45°12'55"W
+
+5"E
+N37°21'1
+
+SIB OU
+
+FENCE
+0.3 NW
+
+98.887
+CE
+WIRE FEN
+
+2472 Kingston Rd, Scarborough
+21 King Street W, Suite 1502, Hamilton
+(416) 693-9155
+thebiglierigroup.com
+
+Description
+
+Date
+
+Int.
+
+0074
+
+TABLE: A1
+
+VALDOR ENGINEERING INC.
+571 Chrislea Road, Unit 4, Woodbridge, ON, L4L 8A2
+Tel: 905-264-0054 Fax: 905-264-0069 info@valdor-engineering.com
+www.valdor-engineering.com
+
+EQUIVALENT POPULATION CALCULATION
+Project Name: Amelia Street Extension, Alton, Town of Caledon
+File: 17121
+Date: March 2026
+
+Land Use
+Detached Dwellings
+
+4.2
+
+Density
+
+Number of Units
+
+Equivalent
+Population
+
+persons per unit
+
+15
+
+63.0
+
+Total Equivalent Population (persons):
+
+63
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+APPENDIX “B”
+Water Demand Details & Calculations
+
+April 2026
+File: 17121
+
+TABLE: B1
+
+VALDOR ENGINEERING INC.
+571 Chrislea Road, Unit 4, Woodbridge, ON, L4L 8A2
+Tel: 905-264-0054 Fax: 905-264-0069 info@valdor-engineering.com
+www.valdor-engineering.com
+
+WATER DEMAND CALCULATION
+Project Name: Amelia Street Subdivision, Alton, Town of Caledon
+File: 17121
+Date: March 2026
+Demand Critera:
+Base Demand
+
+Peaking Factors
+Max Day
+
+Residential
+
+Detached Dwellings
+
+280
+
+Equivalent
+
+Average
+
+Average
+
+Population
+
+Day
+
+Day
+
+(L/day)
+
+17,640
+
+63
+
+L/capita/day Peak Hour
+
+Max Day
+
+Peak Hour
+
+(L/min)
+
+(L/min)
+
+(L/min)
+
+12.3
+
+24.5
+
+36.8
+
+2.00
+3.00
+
+TABLE: B2
+
+VALDOR ENGINEERING INC.
+571 Chrislea Road, Unit 4, Woodbridge, ON, L4L 8A2
+Tel: 905-264-0054 Fax: 905-264-0069 info@valdor-engineering.com
+www.valdor-engineering.com
+
+REQUIRED FIRE FLOW CALCULATION
+In accordance to Water Supply for Public Fire Protection, Fire Underwriters Survey 1999
+
+Project Name: Amelia Street Subdivision, Alton, Town of Caledon
+File: 17121
+Notes: 3,000 sq.ft. Detached Dwelling
+Date: April 2022
+Type of Construction C=
+Total Floor Area:
+A=
+
+Ordinary Construction
+1.0
+278.7
+279
+
+sq.m
+sq.m
+
+(Total Floor Area includes all storeys, but excludes basements at least 50 percent below grade)
+
+F = 220 C
+F =
+3,673
+F =
+4,000
+
+L/min
+(to nearest 1,000 Lmin)
+
+Occupancy Factor
+Type: Limited Combustible
+f1 =
+
+Charge
+-15%
+-15%
+
+Sprinkler Credit
+NFPA 13 Sprinkler Standard:
+Standard Water Supply:
+Fully Supervised System:
+Total Charge to Fire Flow:
+
+NO
+NO
+NO
+
+Charge
+0%
+0%
+0%
+f2 =
+0%
+
+F' = F x (1+f 1 ) x (1+f 2 )
+F' =
+3,400
+Exposure Factor
+Side 1 - Distance to Building (m):
+Side 2 - Distance to Building (m):
+Side 3 - Distance to Building (m):
+Side 4 - Distance to Building (m):
+
+30.1 to 45m
+30.1 to 45m
+3.1 to 10m
+3.1 to 10m
+f3 =
+
+F'' = F' x (1+f 3 )
+F'' =
+5,100
+
+REQUIRED FIRE FLOW
+F'' =
+5,000
+
+L/min
+Charge
+5%
+Front
+5%
+Rear
+20%
+Right Site
+20%
+Left Site
+50% (maximum of 75%)
+
+L/min
+
+L/min (to nearest 1,000 L/min)
+
+OFFSET AS PER THE AREA MUNICIPALITY
+ROAD CROSS-SECTION
+1.0m MIN.
+50 MIN.
+150 MAX.
+FINISHED GRADE
+
+1700 M I
+N.
+
+1700 M I
+N.
+
+VALVE BOX
+
+150 GATE
+
+EXCEPT 1100 ACROSS DI
+TCHES
+
+12 GAUGE TWIN STRANDED
+COPPER TRACER WIRE
+
+600
+
+20 D.I. CLEAR
+STONE 900 WIDE
+
+GEOTECHNICAL CLOTH
+COVER COMPLETELY AROUND
+(TERRAFIX 200R OR EQUAL)
+
+150
+
+VALVE FL/MJ
+
+600
+
+300x300
+
+150 PIPE
+
+BOND BREAKER
+
+CONC. SUPPORT
+UNDISTURBED
+GROUND
+
+ANCHOR TEE
+GRANULAR BEDDING AS PER WATERMAIN
+PROJECT SPECIFIC DESIGN DETAILS
+
+NOTE
+1. IF THE WATERMAIN IS NOT AT THE STANDARD OFFSET, THE LOCATION OF THE HYDRANT TO BE AS PER CONSTRUCTION DRAWINGS.
+2. BACKFILL TRENCH WITH GRANULAR 'B' COMPACTED TO 100% STD. PROCTOR DENSITY.
+3. MECHANICAL RESTRAINTS REQUIRED ON ALL PVC HYDRANT LATERALS INCLUDING VALVES AND FITTINGS
+AS PER REGION STANDARD DRAWING 1-5-9.
+4. ALL PIPING, FITTINGS, VALVES, APPURTENANCES AND MECHANICAL RESTRAINTS TO BE c/w DENSO PASTE, DENSO MASTIC
+AND DENSO TAPE OR APPROVED EQUAL, APPLIED TO MANUFACTURER'S RECOMMENDATIONS.
+
+PUBLIC WORKS
+
+REV. DATE: APRIL 2014
+
+STANDARD DRAWING
+
+HYDRANT SETTING
+FOR D.I. OR P.V.C. PIPE
+
+APPROVED BY
+
+DRAWN BY
+
+A.P.
+
+AINLEY GROUP
+
+STD. DWG. NUMBER
+
+SCALE
+
+1-6-1
+
+N.T.S.
+
+'A'
+
+ON UNIMPROVED ROADS
+
+1950
+
+2100
+
+ON CURB AND GUTTER ROADS
+
+1500
+
+1700
+
+SET TO FINISHED GRADE
+
+'
+A'M I
+N.COVER
+
+FINISHED GRADE
+
+STREET LI
+NE
+
+'B'
+
+150 M I
+N.
+
+'
+B'M I
+N.COVER
+
+FROST RING
+IF TO BE IN CONC.
+
+EXTENSION
+SERVICE BOX
+SET VERTICAL
+
+BRASS
+CURB STOP
+TYPE K COPPER
+CORPORATION MAIN
+STOP WITH APPROVED
+SADDLE
+
+BRICK OR
+CONC. BLOCK
+
+P.V.C., D.I. OR
+CONC. WATERMAIN
+
+SECTION
+
+EXTENSION SERVICE
+BOX SET VERTICAL
+12 GAUGE TWIN STRANDED
+COPPER TRACER WIRE
+
+BRASS
+CURB STOP
+
+PLASTIC PIPE
+BRICK OR
+CONC. BLOCK
+
+CORPORATION MAIN
+STOP WITH APPROVED
+SADDLE
+
+SECTION
+
+WATERPROOF DIRECT BURY
+
+12 GAUGE TWIN STRANDED
+COPPER TRACER WIRE
+
+CONNECTING LUGS FOR
+BRANCH WIRE CONNECTION
+(STD. DWG. 1-7-10)
+
+PLASTIC PIPE
+
+BRASS
+CURB STOP
+
+CORPORATION MAIN
+STOP WITH APPROVED
+SADDLE
+
+PLAN
+NOTE
+
+2. WATER SERVICE TO BE A MIN. OF 1100mm UNDER THE BOTTOM OF DITCH.
+3. SERVICE BOX TO BE SET TO FINISH GRADE.
+4. NO DIRECT TAPPING OF PVC WATERMAINS. ALL CONNECTIONS TO PVC PIPE TO BE MADE
+USING AN APPROVED WIDE-BAND SERVICE SADDLE.
+5. TRACER WIRE TO BE INSTALLED AS PER REGION STANDARDS.
+6. ALL WATER SERVICE MATERIALS SHALL BE STORED IN ACCORDANCE WITH MANUFACTURER'S RECOMMENDATIONS.
+
+PUBLIC WORKS
+
+REV. DATE: APRIL 2014
+
+STANDARD DRAWING
+
+WATER SERVICE CONNECTION
+
+APPROVED BY
+
+DRAWN BY
+
+A.P.
+
+AINLEY GROUP
+
+STD. DWG. NUMBER
+
+SCALE
+
+1-7-1
+
+N.T.S.
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+APPENDIX “C”
+Wastewater Servicing Details & Calculations
+
+April 2026
+File: 17121
+
+TABLE: C1
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2022
+
+PROJECT: Amelia Street Subdivision
+Community of Alton
+Town of Caledon
+
+SEPTIC SYSTEM SIZING
+House Data
+House Model
+Number of bedrooms
+Floor Area (ft2)
+Floor Area (m2)
+Fixture Count (see attached calcs)
+
+Dwelling design flows (L/day)*
+4
+3,000
+278.7
+24.5
+
+Soils Data
+t-time for native soil (min/cm)
+t-time for fill (min/cm)
+
+28
+10
+
+Dwelling Flow (L/day) up to 5 bedrooms
+
+75
+
+800
+* part of Ontario Building Code Table 8.2.1.3.A
+
+0
+800
+0
+0
+225
+
+Loading Rates*
+2,800
+
+Total Peak Daily Design Flow (L/day)
+
+2,800
+
+(Available Sizes 4500L, 6800L, 9000L, 13500L)
+
+B) each 10m2 (or part thereof) over 400m 2 up to 600m2
+
+2,000
+
+Peak Daily Design Flow (L/day)
+
+Septic Tank Capacity (L)
+
+750
+1100
+1600
+2000
+2500
+
+C) each 10m2 (or part thereof) over 600m 2, or
+iii) each fixture unit over 20 fixture units
+
+Daily Design Flow*
+
+Additional Flow:
+i) for over 5 bedrooms
+ii) area - A
+area - B
+area - C
+iii) fixtures over 20 units
+
+1
+a) 1 Bedroom
+2
+b) 2 Bedroom
+c) 3 Bedroom
+3
+d) 4 Bedroom
+4
+e) 5 Bedroom
+5
+f) Additional for:
+i) each bedroom over 5
+ii) A) each 10m2 (or part thereof) over 200m 2 up to 400m2
+
+Minimum:
+Use:
+
+* based on Ontario Building Code Table 8.2.1.3.A
+if t <= 20min - Trench In-Ground Bed
+Peak Flow
+Length of pipe (m)
+L = [Q*t/200]
+392.0
+Approx Bed Area (m2)
+A = [L*1.6]
+627.2
+if t >20min - Raised Conventional Bed
+Peak Flow
+Length of pipe (m)
+L = [Q*t/200]
+140.0
+Minimum Loading Area (m2)
+350.0
+if t >20min - Raised Filter Bed
+Peak Flow
+350.0
+Bed Area Required (m2)
+92.2
+Minimum Contact Area (m2)
+Effective Filter Area Required (m 2)
+37.3
+BMEC Area Bed
+37.3
+Minimum Stone Layer (m2)
+Minimum Sand Layer (m2)
+196.0
+
+5,600
+6,800
+
+Percolation Time of Soil
+(min/cm)
+1 < t <= 20
+20 < t <= 35
+35 < t <= 50
+t > 50
+
+Loading Rates
+(L/m2/day)
+10
+8
+6
+4
+
+* part of Ontario Building Code Table 8.7.4.1.A
+
+500
+100
+50
+50
+
+TABLE: C2
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2022
+
+PROJECT: Amelia Street Subdivision
+Community of Alton
+Town of Caledon
+
+FIXTURE COUNTS
+
+Fixture
+
+Load*
+(units)
+
+BASEMENT
+Kitchen sink
+Dishwasher
+Toilet
+Bidet
+Tub/shower
+Shower
+Lavatory
+Whirlpool
+Other sink
+Clothes washer
+Laundry tub
+Bathroom group
+2" Floor Drain
+3" Floor Drain
+Other
+
+1.5
+1.0
+4.0
+1.0
+1.5
+1.5
+1.0
+1.5
+1.5
+1.5
+1.5
+6.0
+2.0
+3.0
+
+Main Floor
+Kitchen sink
+Dishwasher
+Toilet
+Bidet
+Tub/shower
+Shower
+Lavatory
+Whirlpool
+Other sink
+Clothes washer
+Laundry tub
+Bathroom group
+Other
+
+1.5
+1.0
+4.0
+1.0
+1.5
+1.5
+1.0
+1.5
+1.5
+1.5
+1.5
+6.0
+
+Second Floor
+Kitchen sink
+Dishwasher
+Toilet
+Bidet
+Tub/shower
+Shower
+Lavatory
+Whirlpool
+Other sink
+Clothes washer
+Laundry tub
+Bathroom group
+Other
+
+1.5
+1.0
+4.0
+1.0
+1.5
+1.5
+1.0
+1.5
+1.5
+1.5
+1.5
+6.0
+
+Number of
+Fixtures
+
+TOTAL
+* part of Ontario Building Code Table 7.4.9.3
+
+1
+1
+1
+
+1
+1
+1
+
+1
+
+2
+
+Calculated
+Units
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+1.5
+1.5
+0.0
+2.0
+0.0
+0.0
+
+1.5
+1.0
+4.0
+0.0
+0.0
+0.0
+1.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+12.0
+0.0
+24.5
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+APPENDIX “D”
+Watershed Map, Regulation Mapping & IDF Data
+
+April 2026
+File: 17121
+
+17-Shaw’s Creek Subwatershed
+.
+
+Orangeville
+W
+
+9
+
+C
+
+ou
+
+y
+nt
+
+R
+
+1
+d.
+
+09
+
+R
+
+Li
+ne
+
+3r
+d
+
+Si
+
+de
+r
+
+d.
+
+A
+
+10
+
+19
+t
+
+Caledon
+Lake
+
+h
+
+h
+
+ug
+h
+
+10
+
+by
+
+R
+
+/2
+
+CVC Conservation Areas
+
+4
+
+Trail Network
+
+d.
+
+Rivers and Streams
+on
+
+al
+R
+
+d
+
+Lakes and Ponds
+
+Melville
+13
+
+6
+
+CVC Watershed Boundary
+Subwatershed Boundary
+
+e
+
+W
+.
+
+Subcatchment Boundary
+
+Li
+ne
+
+4t
+h
+18
+t
+
+Li
+n
+
+eg
+i
+
+illo
+
+Li
+
+Transportation Network
+ne
+
+Li
+ne
+
+Highway
+
+W
+.
+
+Railroad
+a
+Sh
+
+Major Road
+
+w
+'s
+
+Li
+ne
+
+Street
+
+re
+
+h
+
+C
+
+17
+t
+
+ek
+
+Alton
+
+R
+d.
+
+.
+rd
+
+hu
+r
+
+0.5
+
+1
+
+2
+
+3
+
+Si
+de
+
+C
+
+ch
+
+km
+
+Subject Site
+ill
+
+Bl
+v
+
+d.
+
+CVC Watershed
+
+Si
+de
+
+19
+
+e
+
+Li
+ne
+
+ov
+
+h
+
+h Gr
+
+10
+t
+
+rd
+.
+
+nli
+
+ne
+
+Dufferin County
+
+To
+w
+
+Li
+ne
+
+17
+
+18
+
+16
+
+ec
+
+13
+
+Be
+9t
+h
+
+15
+
+Li
+
+12
+8a
+
+10
+
+7
+
+8b
+
+5
+
+14
+6
+
+.
+
+ne
+
+rd
+
+Li
+
+11
+
+2
+
+Si
+de
+
+8t
+h
+
+Peel Region
+
+20
+
+ne
+Wellington
+County
+
+4
+3
+
+h
+
+d
+
+d.
+2
+
+al
+R
+
+R
+
+4
+
+on
+
+ty
+
+Re
+gi
+
+13
+t
+
+ou
+n
+
+22
+
+1
+
+C
+
+Li
+ne
+
+t
+
+22
+
+9
+
+27
+
+Halton Region
+
+d
+
+15
+th
+
+0
+
+int
+
+on
+
+po
+
+d.
+lR
+
+na
+g io
+Re
+
+Li
+ne
+
+in
+st
+
+Hi
+gh
+
+3
+
+W
+16
+th
+
+21
+
+Credit Valley Conservation assumes no responsibility for any errors
+and is not liable for any damages of any kind resulting from the
+use of, or reliance on the information contained herein.
+COPYRIGHT 2009 Credit Valley Conservation
+Created June 2009
+THIS IS NOT A PLAN OF SURVEY
+
+Lake
+Ontario
+
+CVC REGULATION MAPPING
+
+Regulation Boundary
+
+Subject Site
+
+CVC Regulation Mapping for
+Shaw's Creek
+
+RETURN PERIOD
+
+EQUATION OF CURVE
+
+RAINFALL INTENSITY - MILLIMETERS/HOUR
+
+400
+300
+
+100 YEAR
+
+i=
+
+200
+
+50
+
+YEAR
+
+i=
+
+25
+
+YEAR
+
+i=
+
+10
+
+YEAR
+
+i=
+
+5
+
+YEAR
+
+i=
+
+2
+
+YEAR
+
+i=
+
+100
+90
+80
+70
+60
+50
+40
+
+4688
+(td + 17)
+3886
+(td + 16)
+3158
+(td + 15)
+2221
+(td + 12)
+1593
+(td + 11)
+1070
+(td + 7.85)
+
+.9624
+.9495
+.9335
+.9080
+.8789
+
+SUBURBAN RESIDENTIAL
+(ROOF DRAINS UNCONNECTED)
+(ROOF DRAINS CONNECTED)
+
+15 min
+10 min
+
+SUBURBAN, COMMERCIAL, INDUSTRIAL
+MULTIPLE FAMILY
+
+10 min
+
+DOWNTOWN COMMERCIAL, HIGH DENSITY
+APARTMENTS, EXPRESSWAYS
+
+5 min
+
+.8759
+
+1
+50 0 0
+YE YE
+10 Y AR AR
+Y EA
+R RE
+5
+YE EAR R R ETU TU
+A
+2
+R ET RN RN
+R
+YE
+RE ETU UR
+PE PE
+AR
+R
+TU RN N
+PE RIO IO
+RE
+RN
+PE R
+D D
+TU
+I
+PE R O
+RN
+RI IOD D
+OD
+PE
+RI
+O
+D
+25
+
+30
+
+INLET TIMES
+
+RUNOFF COEFFICIENT
+COMMERCIAL
+- DOWNTOWN & SUBURBAN SHOPPING
+
+0.90
+
+INDUSTRIAL
+- DOWNTOWN
+- SUBURBAN INDUSTRIAL PARKS
+
+0.90
+0.75
+
+RESIDENTIAL
+- APARTMENTS
+- ROW DWELLINGS
+- DUPLEX DWELLINGS
+- SEMIDETACHED - DOWNTOWN
+- SINGLE FAMILY - DOWNTOWN
+- SEMIDETACHED - SUBURBAN
+- SINGLE FAMILY - SUBURBAN
+
+0.75
+0.70
+0.70
+0.60
+0.60
+0.50
+0.40
+
+4
+
+SCHOOLS, CHURCHES, HOSPITALS
+
+0.75
+
+3
+
+PARKS, CEMETERIES, RAIL YARDS
+(OVER 4 Ha)
+(UNDER 4 Ha)
+
+0.20
+0.25
+
+2
+
+PARKING LOTS
+ASPHALT & GRAVEL
+
+20
+
+10
+9
+8
+7
+6
+5
+
+5
+
+10
+
+15
+
+30
+
+60
+
+2h 120
+
+6h 360
+
+12h 720
+
+24h 1440
+
+0.90
+
+DURATION - MINUTES
+
+TOWN OF CALEDON
+
+RAINFALL
+INTENSITY CURVES
+
+3
+2
+
+ADDITION OF TEXT
+STANDARD 104 NOW 103
+
+1
+
+STANDARD 112.01 NOW 104
+
+NO.
+
+REVISION
+
+APR 19
+JAN 08
+JUNE 08
+APR'D
+
+DATE
+
+APR'D:
+
+C.C.
+
+DATE:
+
+FEB 2000
+
+DRAWN:
+
+BJM
+
+SCALE:
+
+N.T.S.
+
+STANDARD No. 103
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+APPENDIX “E”
+Stormwater Management Calculations
+
+April 2026
+File: 17121
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+Project:
+
+Amelia Street Subdivision, Town of Caledon
+
+TABLE E1: PEAK FLOW SUMMARY
+
+Condition
+Catchment Area (ha)
+
+Runoff
+Coefficent
+
+2 Year
+
+5 Year
+
+Peak Flow (L/s)
+10 Year
+25 Year
+
+50 Year
+
+100 year
+
+101
+
+2.650
+
+0.15
+
+97.6
+
+124.9
+
+152.7
+
+178.1
+
+200.6
+
+223.7
+
+Total
+
+2.650
+
+0.15
+
+97.6
+
+124.9
+
+152.7
+
+178.1
+
+200.6
+
+223.7
+
+201
+
+2.020
+
+0.50
+
+240.4
+
+307.6
+
+376.3
+
+438.9
+
+494.2
+
+551.3
+
+202
+
+0.630
+
+0.43
+
+64.2
+
+82.2
+
+100.5
+
+117.2
+
+132.0
+
+147.2
+
+Total
+
+2.650
+
+0.48
+
+304.7
+
+389.8
+
+476.8
+
+556.1
+
+626.2
+
+698.5
+
+201
+
+2.020
+
+0.50
+
+32.7
+
+40.2
+
+46.2
+
+52.0
+
+55.9
+
+59.9
+
+202
+
+0.630
+
+0.43
+
+64.2
+
+82.2
+
+100.5
+
+117.2
+
+132.0
+
+147.2
+
+Total
+
+2.650
+
+0.48
+
+96.9
+
+122.3
+
+146.7
+
+169.2
+
+187.9
+
+207.2
+
+Pre-Development
+
+Post-Development
+(Un-Mitigated)
+
+Post-Development
+(Mitigated)
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+TABLE: E2
+
+PRE-DEVELOPMENT PEAK FLOW CALCULATION
+Catchment 101
+Surface Type
+Landscape/Forest
+Forest
+Impervious
+Total
+
+Area
+0.12
+2.53
+0.00
+2.65
+
+R
+0.25
+0.15
+0.95
+0.15
+
+2 Year Pre-Development Flow
+I = 1070 / (tc+7.85) ^ 0.8759
+tc =
+I=
+
+10 minutes
+85.72 mm/hr
+
+R=
+N=
+
+0.15 (composite)
+2.78
+
+Q=RxAxIxN
+
+where I = Rainfall Rate (mm/hr)
+
+2 year Q =
+
+97.58 L/s
+
+5 Year Pre-Development Flow
+I = 1593 / (tc+11) ^ 0.8789
+tc =
+I=
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+109.68 mm/hr
+
+R=
+N=
+
+0.15 (composite)
+2.78
+
+Q=RxAxIxN
+
+5 year Q =
+
+124.86 L/s
+
+10 Year Pre-Development Flow
+I = 2221 / (tc+12) ^ 0.9080
+tc =
+I=
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+134.16 mm/hr
+
+R=
+N=
+Q=RxAxIxN
+
+0.15 (composite)
+2.78
+10 year Q =
+
+152.73 L/s
+
+25 Year Pre-Development Flow
+I = 3158 / (tc+15) ^ 09335
+tc =
+I=
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+156.47 mm/hr
+
+R=
+N=
+
+0.15 (composite)
+2.78
+
+Q=RxAxIxN
+
+25 year Q =
+
+178.13 L/s
+
+50 Year Pre-Development Flow
+I = 3886 / (tc+16) ^ 0.9495
+tc =
+I=
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+176.19 mm/hr
+
+R=
+N=
+
+0.15 (composite)
+2.78
+
+Q=RxAxIxN
+
+50 year Q =
+
+200.58 L/s
+
+100 Year Pre-Development Flow
+I = 4688 / (tc+17) ^ 0.9624
+tc =
+I=
+R=
+
+10 minutes
+196.54 mm/hr
+0.15 (composite)
+
+where I = Rainfall Rate (mm/hr)
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+TABLE: E3-A
+
+POST-DEVELOPMENT PEAK FLOW CALCULATION: UNMITIGATED
+Catchment 201
+Surface Type
+Landscape
+Forest
+Impervious
+Total
+
+Area
+1.30
+0.00
+0.72
+2.02
+
+R
+0.25
+0.15
+0.95
+0.50
+
+2 Year Post-Development Flow
+I = 1070 / (tc+7.85) ^ 0.8759
+tc =
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+85.72 mm/hr
+0.50 (composite)
+2.78
+
+I=
+R=
+N=
+Q=RxAxIxN
+
+2 year Q =
+
+240.44 L/s
+
+5 Year Post-Development Flow
+I = 1593 / (tc+11) ^ 0.8789
+tc =
+I=
+R=
+N=
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+109.68 mm/hr
+0.50 (composite)
+2.78
+
+Q=RxAxIxN
+
+5 year Q =
+
+307.65 L/s
+
+10 Year Post-Development Flow
+I = 2221 / (tc+12) ^ 0.9080
+tc =
+I=
+R=
+N=
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+134.16 mm/hr
+0.50 (composite)
+2.78
+
+Q=RxAxIxN
+
+10 year Q =
+
+376.33 L/s
+
+25 Year Post-Development Flow
+I = 3158 / (tc+15) ^ 09335
+tc =
+I=
+R=
+N=
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+156.47 mm/hr
+0.50 (composite)
+2.78
+
+Q=RxAxIxN
+
+25 year Q =
+
+438.91 L/s
+
+50 Year Post-Development Flow
+I = 3886 / (tc+16) ^ 0.9495
+tc =
+I=
+R=
+N=
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+176.19 mm/hr
+0.50 (composite)
+2.78
+
+Q=RxAxIxN
+
+50 year Q =
+
+494.22 L/s
+
+100 Year Post-Development Flow
+I = 4688 / (tc+17) ^ 0.9624
+tc =
+I=
+R=
+N=
+Q=RxAxIxN
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+196.5 mm/hr
+0.50 (composite)
+2.78
+100 year Q =
+
+551.29 L/s
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+TABLE: E3-B
+
+POST-DEVELOPMENT PEAK FLOW CALCULATION: UNMITIGATED
+Catchment 201
+Surface Type
+Landscape
+Forest
+Impervious
+Total
+
+Area
+0.47
+0.00
+0.16
+0.63
+
+R
+0.25
+0.15
+0.95
+0.43
+
+2 Year Post-Development Flow
+I = 1070 / (tc+7.85) ^ 0.8759
+tc =
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+85.72 mm/hr
+0.43 (composite)
+2.78
+
+I=
+R=
+N=
+Q=RxAxIxN
+
+2 year Q =
+
+64.22 L/s
+
+5 Year Post-Development Flow
+I = 1593 / (tc+11) ^ 0.8789
+tc =
+I=
+R=
+N=
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+109.68 mm/hr
+0.43 (composite)
+2.78
+
+Q=RxAxIxN
+
+5 year Q =
+
+82.17 L/s
+
+10 Year Post-Development Flow
+I = 2221 / (tc+12) ^ 0.9080
+tc =
+I=
+R=
+N=
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+134.16 mm/hr
+0.43 (composite)
+2.78
+
+Q=RxAxIxN
+
+10 year Q =
+
+100.52 L/s
+
+25 Year Post-Development Flow
+I = 3158 / (tc+15) ^ 09335
+tc =
+I=
+R=
+N=
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+156.47 mm/hr
+0.43 (composite)
+2.78
+
+Q=RxAxIxN
+
+25 year Q =
+
+117.23 L/s
+
+50 Year Post-Development Flow
+I = 3886 / (tc+16) ^ 0.9495
+tc =
+I=
+R=
+N=
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+176.19 mm/hr
+0.43 (composite)
+2.78
+
+Q=RxAxIxN
+
+50 year Q =
+
+132.00 L/s
+
+100 Year Post-Development Flow
+I = 4688 / (tc+17) ^ 0.9624
+tc =
+I=
+R=
+N=
+
+where I = Rainfall Rate (mm/hr)
+
+10 minutes
+196.54 mm/hr
+0.43 (composite)
+2.78
+
+Q=RxAxIxN
+
+100 year Q =
+
+147.25 L/s
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+TABLE: E4-A
+
+CONTROL ORIFICE DESIGN
+2 Year Storm
+Orifice Pipe Location
+
+=
+
+Detention Tank
+
+Orifice Coefficient (C)
+
+=
+
+0.63 (Plate)
+
+Acceleration due to gravity (g)
+
+=
+
+9.81 (m/s/s)
+
+Orifice Invert
+
+=
+
+0.00 (m)
+
+High Water Level
+
+=
+
+0.78 (m)
+
+Orifice diameter
+
+=
+
+133 (mm)
+
+Cross section area of orifice (A)
+
+=
+
+0.0139 (sq.m.)
+
+Head (H)
+
+=
+
+0.71 (m)
+
+Actual Discharge (Q)
+
+=
+
+32.7 (L/s)
+
+(C x A x ( 2 x g x H)^0.5)
+
+2 Year
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+TABLE: E4-B
+
+CONTROL ORIFICE DESIGN
+5 Year Storm
+Orifice Pipe Location
+
+=
+
+Detention Tank
+
+Orifice Coefficient (C)
+
+=
+
+0.63 (Plate)
+
+Acceleration due to gravity (g)
+
+=
+
+9.81 (m/s/s)
+
+Orifice Invert
+
+=
+
+0.00 (m)
+
+High Water Level
+
+=
+
+1.14 (m)
+
+Orifice diameter
+
+=
+
+133 (mm)
+
+Cross section area of orifice (A)
+
+=
+
+0.0139 (sq.m.)
+
+Head (H)
+
+=
+
+1.07 (m)
+
+Actual Discharge (Q)
+
+=
+
+40.2 (L/s)
+
+(C x A x ( 2 x g x H)^0.5)
+
+5 Year
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+TABLE: E4-C
+
+CONTROL ORIFICE DESIGN
+10 Year Storm
+Orifice Pipe Location
+
+=
+
+Detention Tank
+
+Orifice Coefficient (C)
+
+=
+
+0.63 (Plate)
+
+Acceleration due to gravity (g)
+
+=
+
+9.81 (m/s/s)
+
+Orifice Invert
+
+=
+
+0.00 (m)
+
+High Water Level
+
+=
+
+1.42 (m)
+
+Orifice diameter
+
+=
+
+133 (mm)
+
+Cross section area of orifice (A)
+
+=
+
+0.0139 (sq.m.)
+
+Head (H)
+
+=
+
+1.42 (m)
+
+Actual Discharge (Q)
+
+=
+
+46.2 (L/s)
+
+( C x A x ( 2 x g x H)
+
+0.5
+
+)
+
+10 Year
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+TABLE: E4-D
+
+CONTROL ORIFICE DESIGN
+25 Year Storm
+Orifice Pipe Location
+
+=
+
+Detention Tank
+
+Orifice Coefficient (C)
+
+=
+
+0.63 (Plate)
+
+Acceleration due to gravity (g)
+
+=
+
+9.81 (m/s/s)
+
+Orifice Invert
+
+=
+
+0.00 (m)
+
+High Water Level
+
+=
+
+1.80 (m)
+
+Orifice diameter
+
+=
+
+133 (mm)
+
+Cross section area of orifice (A)
+
+=
+
+0.0139 (sq.m.)
+
+Head (H)
+
+=
+
+1.80 (m)
+
+Actual Discharge (Q)
+
+=
+
+52.0 (L/s)
+
+( C x A x ( 2 x g x H)
+
+0.5
+
+)
+
+10 Year
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+TABLE: E4-E
+
+CONTROL ORIFICE DESIGN
+50 Year Storm
+Orifice Pipe Location
+
+=
+
+Detention Tank
+
+Orifice Coefficient (C)
+
+=
+
+0.63 (Plate)
+
+Acceleration due to gravity (g)
+
+=
+
+9.81 (m/s/s)
+
+Orifice Invert
+
+=
+
+0.00 (m)
+
+High Water Level
+
+=
+
+2.08 (m)
+
+Orifice diameter
+
+=
+
+133 (mm)
+
+Cross section area of orifice (A)
+
+=
+
+0.0139 (sq.m.)
+
+Head (H)
+
+=
+
+2.08 (m)
+
+Actual Discharge (Q)
+
+=
+
+55.9 (L/s)
+
+( C x A x ( 2 x g x H)
+
+0.5
+
+)
+
+100 Year
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+TABLE: E4-F
+
+CONTROL ORIFICE DESIGN
+100 Year Storm
+Orifice Pipe Location
+
+=
+
+Detention Tank
+
+Orifice Coefficient (C)
+
+=
+
+0.63 (Plate)
+
+Acceleration due to gravity (g)
+
+=
+
+9.81 (m/s/s)
+
+Orifice Invert
+
+=
+
+0.00 (m)
+
+High Water Level
+
+=
+
+2.39 (m)
+
+Orifice diameter
+
+=
+
+133 (mm)
+
+Cross section area of orifice (A)
+
+=
+
+0.0139 (sq.m.)
+
+Head (H)
+
+=
+
+2.39 (m)
+
+Actual Discharge (Q)
+
+=
+
+59.9 (L/s)
+
+( C x A x ( 2 x g x H)
+
+0.5
+
+)
+
+100 Year
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+TABLE: E5-A
+
+Storage Volume Calculations - Rational Method
+5-year - Town of Caledon
+Project: Amelia Street Subdivision, Town of Caledon
+Surface Type
+
+Total Area (ha)
+5 yr Runoff Coefficient
+Maximum Discharge Through Orifice (L/s)
+
+Area
+2.0200
+0.0000
+2.020
+0.50
+32.7
+
+Discharged Volume per 5 min Interval (cu.m)
+
+9.8
+
+201
+202
+
+Coefficient
+0.50
+0.43
+
+Time (min) Intensity (mm/hr) Runoff Volume (cu.m) Discharged Volume (cu.m)Storage Volume (cu.m)
+0
+
+0.0
+
+0.000
+
+0.000
+
+5
+
+2.0
+
+1.646
+
+1.646
+
+0.000
+
+10
+
+2.2
+
+1.827
+
+1.827
+
+0.000
+
+15
+
+2.4
+
+2.054
+
+2.054
+
+0.000
+
+20
+
+2.8
+
+2.345
+
+2.345
+
+0.000
+
+25
+
+3.2
+
+2.733
+
+2.733
+
+0.000
+
+30
+
+3.9
+
+3.272
+
+3.272
+
+0.000
+
+35
+
+4.8
+
+4.068
+
+4.068
+
+0.000
+
+40
+
+6.4
+
+5.347
+
+5.347
+
+0.000
+
+45
+
+9.1
+
+7.684
+
+7.684
+
+0.000
+
+50
+
+15.5
+
+13.020
+
+9.804
+
+3.216
+
+55
+
+39.3
+
+33.076
+
+9.804
+
+23.273
+
+60
+
+114.3
+
+96.195
+
+9.804
+
+86.391
+
+65
+
+51.2
+
+43.051
+
+9.804
+
+33.247
+
+70
+
+27.5
+
+23.102
+
+9.804
+
+13.298
+
+75
+
+17.9
+
+15.088
+
+9.804
+
+5.285
+
+80
+
+13.0
+
+10.952
+
+9.804
+
+1.148
+
+85
+
+10.1
+
+8.489
+
+8.489
+
+0.000
+
+90
+
+8.2
+
+6.880
+
+6.880
+
+0.000
+
+95
+
+6.8
+
+5.758
+
+5.758
+
+0.000
+
+100
+
+5.9
+
+4.937
+
+4.937
+
+0.000
+
+105
+
+5.1
+
+4.313
+
+4.313
+
+0.000
+
+110
+
+4.5
+
+3.824
+
+3.824
+
+0.000
+
+115
+
+4.1
+
+3.432
+
+3.432
+
+0.000
+
+120
+
+3.7
+
+3.112
+
+3.112
+
+0.000
+
+125
+
+3.4
+
+2.845
+
+2.845
+
+0.000
+
+130
+
+3.1
+
+2.620
+
+2.620
+
+0.000
+
+135
+
+2.9
+
+2.428
+
+2.428
+
+0.000
+
+140
+
+2.7
+
+2.262
+
+2.262
+
+0.000
+
+145
+
+2.5
+
+2.117
+
+2.117
+
+0.000
+
+150
+
+2.4
+
+1.990
+
+1.990
+
+0.000
+
+155
+
+2.2
+
+1.877
+
+1.877
+
+0.000
+
+160
+
+2.1
+
+1.777
+
+1.777
+
+0.000
+
+165
+
+2.0
+
+1.687
+
+1.687
+
+0.000
+
+170
+
+1.9
+
+1.605
+
+1.605
+
+0.000
+
+175
+
+1.8
+
+1.532
+
+1.532
+
+0.000
+
+180
+
+1.7
+
+1.465
+
+1.465
+
+0.000
+
+Total Storage Volume Required (cu.m)
+
+0.000
+
+165.9
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+TABLE: E5-B
+
+Storage Volume Calculations - Rational Method
+5-year - Town of Caledon
+Project: Amelia Street Subdivision, Town of Caledon
+Surface Type
+
+Total Area (ha)
+5 yr Runoff Coefficient
+Maximum Discharge Through Orifice (L/s)
+
+Area
+2.0200
+0.0000
+2.020
+0.50
+40.2
+
+Discharged Volume per 5 min Interval (cu.m)
+
+12.1
+
+201
+202
+
+Coefficient
+0.50
+0.43
+
+Time (min) Intensity (mm/hr) Runoff Volume (cu.m) Discharged Volume (cu.m)Storage Volume (cu.m)
+0
+
+0.0
+
+0.000
+
+0.000
+
+0.000
+
+5
+
+3.0
+
+2.550
+
+2.550
+
+0.000
+
+10
+
+3.4
+
+2.844
+
+2.844
+
+0.000
+
+15
+
+3.8
+
+3.214
+
+3.214
+
+0.000
+
+20
+
+4.4
+
+3.690
+
+3.690
+
+0.000
+
+25
+
+5.1
+
+4.326
+
+4.326
+
+0.000
+
+30
+
+6.2
+
+5.213
+
+5.213
+
+0.000
+
+35
+
+7.8
+
+6.522
+
+6.522
+
+0.000
+
+40
+
+10.2
+
+8.616
+
+8.616
+
+0.000
+
+45
+
+14.7
+
+12.391
+
+12.051
+
+0.341
+
+50
+
+24.6
+
+20.700
+
+12.051
+
+8.649
+
+55
+
+57.4
+
+48.298
+
+12.051
+
+36.247
+
+60
+
+139.3
+
+117.212
+
+12.051
+
+105.161
+
+65
+
+72.7
+
+61.212
+
+12.051
+
+49.161
+
+70
+
+42.1
+
+35.444
+
+12.051
+
+23.393
+
+75
+
+28.4
+
+23.881
+
+12.051
+
+11.830
+
+80
+
+20.9
+
+17.574
+
+12.051
+
+5.523
+
+85
+
+16.3
+
+13.700
+
+12.051
+
+1.649
+
+90
+
+13.2
+
+11.121
+
+11.121
+
+0.000
+
+95
+
+11.1
+
+9.301
+
+9.301
+
+0.000
+
+100
+
+9.5
+
+7.959
+
+7.959
+
+0.000
+
+105
+
+8.2
+
+6.935
+
+6.935
+
+0.000
+
+110
+
+7.3
+
+6.131
+
+6.131
+
+0.000
+
+115
+
+6.5
+
+5.486
+
+5.486
+
+0.000
+
+120
+
+5.9
+
+4.958
+
+4.958
+
+0.000
+
+125
+
+5.4
+
+4.519
+
+4.519
+
+0.000
+
+130
+
+4.9
+
+4.148
+
+4.148
+
+0.000
+
+135
+
+4.6
+
+3.832
+
+3.832
+
+0.000
+
+140
+
+4.2
+
+3.560
+
+3.560
+
+0.000
+
+145
+
+3.9
+
+3.323
+
+3.323
+
+0.000
+
+150
+
+3.7
+
+3.115
+
+3.115
+
+0.000
+
+155
+
+3.5
+
+2.931
+
+2.931
+
+0.000
+
+160
+
+3.3
+
+2.767
+
+2.767
+
+0.000
+
+165
+
+3.1
+
+2.620
+
+2.620
+
+0.000
+
+170
+
+3.0
+
+2.489
+
+2.489
+
+0.000
+
+175
+
+2.8
+
+2.369
+
+2.369
+
+0.000
+
+180
+
+2.7
+
+2.261
+
+2.261
+
+0.000
+
+Total Storage Volume Required (cu.m)
+
+242.0
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+TABLE: E5-C
+
+Storage Volume Calculations - Rational Method
+10-year - Town of Caledon
+Project: Amelia Street Subdivision, Town of Caledon
+Catchment
+201
+202
+Total Area (ha)
+Runoff Coefficient
+Maximum Discharge Through Orifice (L/s)
+
+Area
+2.020
+0.000
+2.020
+0.50
+46.2
+
+Discharged Volume per 5 min Interval (cu.m)
+
+13.9
+
+Coefficient
+0.50
+0.43
+
+Time (min) Intensity (mm/hr) Runoff Volume (cu.m) Discharged Volume (cu.m)Storage Volume (cu.m)
+0
+
+0.0
+
+0.000
+
+0.000
+
+0.000
+
+5
+
+3.2
+
+2.662
+
+2.662
+
+0.000
+
+10
+
+3.6
+
+2.999
+
+2.999
+
+0.000
+
+15
+
+4.1
+
+3.427
+
+3.427
+
+0.000
+
+20
+
+4.7
+
+3.985
+
+3.985
+
+0.000
+
+25
+
+5.6
+
+4.738
+
+4.738
+
+0.000
+
+30
+
+6.9
+
+5.800
+
+5.800
+
+0.000
+
+35
+
+8.8
+
+7.389
+
+7.389
+
+0.000
+
+40
+
+11.8
+
+9.963
+
+9.963
+
+0.000
+
+45
+
+17.4
+
+14.664
+
+13.860
+
+0.804
+
+50
+
+29.8
+
+25.107
+
+13.860
+
+11.247
+
+55
+
+70.8
+
+59.560
+
+13.860
+
+45.700
+
+60
+
+169.6
+
+142.678
+
+13.860
+
+128.819
+
+65
+
+89.8
+
+75.525
+
+13.860
+
+61.666
+
+70
+
+51.8
+
+43.595
+
+13.860
+
+29.735
+
+75
+
+34.6
+
+29.075
+
+13.860
+
+15.216
+
+80
+
+25.1
+
+21.139
+
+13.860
+
+7.279
+
+85
+
+19.3
+
+16.275
+
+13.860
+
+2.416
+
+90
+
+15.5
+
+13.053
+
+13.053
+
+0.000
+
+95
+
+12.8
+
+10.792
+
+10.792
+
+0.000
+
+100
+
+10.9
+
+9.135
+
+9.135
+
+0.000
+
+105
+
+9.4
+
+7.879
+
+7.879
+
+0.000
+
+110
+
+8.2
+
+6.899
+
+6.899
+
+0.000
+
+115
+
+7.3
+
+6.118
+
+6.118
+
+0.000
+
+120
+
+6.5
+
+5.483
+
+5.483
+
+0.000
+
+125
+
+5.9
+
+4.958
+
+4.958
+
+0.000
+
+130
+
+5.4
+
+4.518
+
+4.518
+
+0.000
+
+135
+
+4.9
+
+4.145
+
+4.145
+
+0.000
+
+140
+
+4.5
+
+3.825
+
+3.825
+
+0.000
+
+145
+
+4.2
+
+3.548
+
+3.548
+
+0.000
+
+150
+
+3.9
+
+3.306
+
+3.306
+
+0.000
+
+155
+
+3.7
+
+3.093
+
+3.093
+
+0.000
+
+160
+
+3.5
+
+2.905
+
+2.905
+
+0.000
+
+165
+
+3.3
+
+2.737
+
+2.737
+
+0.000
+
+170
+
+3.1
+
+2.587
+
+2.587
+
+0.000
+
+175
+
+2.9
+
+2.452
+
+2.452
+
+0.000
+
+180
+
+2.8
+
+2.330
+
+2.330
+
+0.000
+
+Total Storage Volume Required (cu.m)
+
+302.9
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+TABLE: E5-D
+
+Storage Volume Calculations - Rational Method
+25-year - Town of Caledon
+Project: Amelia Street Subdivision, Town of Caledon
+Catchment
+201
+202
+Total Area (ha)
+Runoff Coefficient
+Maximum Discharge Through Orifice (L/s)
+
+Area
+2.020
+0.000
+2.020
+0.50
+52.0
+
+Discharged Volume per 5 min Interval (cu.m)
+
+15.6
+
+Coefficient
+0.50
+0.43
+
+Time (min) Intensity (mm/hr) Runoff Volume (cu.m) Discharged Volume (cu.m)Storage Volume (cu.m)
+0
+
+0.0
+
+0.000
+
+0.000
+
+0.000
+
+5
+
+3.7
+
+3.075
+
+3.075
+
+0.000
+
+10
+
+4.2
+
+3.508
+
+3.508
+
+0.000
+
+15
+
+4.8
+
+4.061
+
+4.061
+
+0.000
+
+20
+
+5.7
+
+4.790
+
+4.790
+
+0.000
+
+25
+
+6.9
+
+5.782
+
+5.782
+
+0.000
+
+30
+
+8.5
+
+7.193
+
+7.193
+
+0.000
+
+35
+
+11.1
+
+9.314
+
+9.314
+
+0.000
+
+40
+
+15.2
+
+12.760
+
+12.760
+
+0.000
+
+45
+
+22.6
+
+19.021
+
+15.604
+
+3.417
+
+50
+
+38.8
+
+32.624
+
+15.604
+
+17.020
+
+55
+
+88.2
+
+74.184
+
+15.604
+
+58.580
+
+60
+
+192.7
+
+162.165
+
+15.604
+
+146.561
+
+65
+
+110.1
+
+92.661
+
+15.604
+
+77.057
+
+70
+
+66.2
+
+55.707
+
+15.604
+
+40.103
+
+75
+
+44.8
+
+37.720
+
+15.604
+
+22.116
+
+80
+
+32.7
+
+27.529
+
+15.604
+
+11.925
+
+85
+
+25.1
+
+21.157
+
+15.604
+
+5.553
+
+90
+
+20.1
+
+16.885
+
+15.604
+
+1.281
+
+95
+
+16.5
+
+13.869
+
+13.869
+
+0.000
+
+100
+
+13.8
+
+11.652
+
+11.652
+
+0.000
+
+105
+
+11.8
+
+9.970
+
+9.970
+
+0.000
+
+110
+
+10.3
+
+8.659
+
+8.659
+
+0.000
+
+115
+
+9.1
+
+7.616
+
+7.616
+
+0.000
+
+120
+
+8.0
+
+6.770
+
+6.770
+
+0.000
+
+125
+
+7.2
+
+6.073
+
+6.073
+
+0.000
+
+130
+
+6.5
+
+5.491
+
+5.491
+
+0.000
+
+135
+
+5.9
+
+5.000
+
+5.000
+
+0.000
+
+140
+
+5.4
+
+4.580
+
+4.580
+
+0.000
+
+145
+
+5.0
+
+4.218
+
+4.218
+
+0.000
+
+150
+
+4.6
+
+3.904
+
+3.904
+
+0.000
+
+155
+
+4.3
+
+3.629
+
+3.629
+
+0.000
+
+160
+
+4.0
+
+3.386
+
+3.386
+
+0.000
+
+165
+
+3.8
+
+3.171
+
+3.171
+
+0.000
+
+170
+
+3.5
+
+2.979
+
+2.979
+
+0.000
+
+175
+
+3.3
+
+2.807
+
+2.807
+
+0.000
+
+180
+
+3.2
+
+2.652
+
+2.652
+
+0.000
+
+Total Storage Volume Required (cu.m)
+
+383.6
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+TABLE: E5-E
+
+Storage Volume Calculations - Rational Method
+50-year - Town of Caledon
+Project: Amelia Street Subdivision, Town of Caledon
+Catchment
+201
+202
+Total Area (ha)
+Runoff Coefficient
+Maximum Discharge Through Orifice (L/s)
+
+Area
+2.020
+0.000
+2.020
+0.50
+55.9
+
+Discharged Volume per 5 min Interval (cu.m)
+
+16.8
+
+Coefficient
+0.50
+0.43
+
+Time (min) Intensity (mm/hr) Runoff Volume (cu.m) Discharged Volume (cu.m)Storage Volume (cu.m)
+0
+
+0.0
+
+0.000
+
+0.000
+
+0.000
+
+5
+
+3.8
+
+3.232
+
+3.232
+
+0.000
+
+10
+
+4.4
+
+3.716
+
+3.716
+
+0.000
+
+15
+
+5.2
+
+4.340
+
+4.340
+
+0.000
+
+20
+
+6.1
+
+5.165
+
+5.165
+
+0.000
+
+25
+
+7.5
+
+6.296
+
+6.296
+
+0.000
+
+30
+
+9.4
+
+7.912
+
+7.912
+
+0.000
+
+35
+
+12.3
+
+10.355
+
+10.355
+
+0.000
+
+40
+
+17.0
+
+14.340
+
+14.340
+
+0.000
+
+45
+
+25.7
+
+21.598
+
+16.782
+
+4.816
+
+50
+
+44.4
+
+37.332
+
+16.782
+
+20.550
+
+55
+
+100.5
+
+84.608
+
+16.782
+
+67.826
+
+60
+
+215.8
+
+181.599
+
+16.782
+
+164.817
+
+65
+
+125.3
+
+105.416
+
+16.782
+
+88.634
+
+70
+
+75.8
+
+63.800
+
+16.782
+
+47.018
+
+75
+
+51.3
+
+43.211
+
+16.782
+
+26.429
+
+80
+
+37.4
+
+31.454
+
+16.782
+
+14.672
+
+85
+
+28.6
+
+24.075
+
+16.782
+
+7.293
+
+90
+
+22.7
+
+19.121
+
+16.782
+
+2.339
+
+95
+
+18.6
+
+15.624
+
+15.624
+
+0.000
+
+100
+
+15.5
+
+13.056
+
+13.056
+
+0.000
+
+105
+
+13.2
+
+11.111
+
+11.111
+
+0.000
+
+110
+
+11.4
+
+9.599
+
+9.599
+
+0.000
+
+115
+
+10.0
+
+8.398
+
+8.398
+
+0.000
+
+120
+
+8.8
+
+7.426
+
+7.426
+
+0.000
+
+125
+
+7.9
+
+6.628
+
+6.628
+
+0.000
+
+130
+
+7.1
+
+5.963
+
+5.963
+
+0.000
+
+135
+
+6.4
+
+5.404
+
+5.404
+
+0.000
+
+140
+
+5.9
+
+4.927
+
+4.927
+
+0.000
+
+145
+
+5.4
+
+4.517
+
+4.517
+
+0.000
+
+150
+
+4.9
+
+4.162
+
+4.162
+
+0.000
+
+155
+
+4.6
+
+3.852
+
+3.852
+
+0.000
+
+160
+
+4.3
+
+3.580
+
+3.580
+
+0.000
+
+165
+
+4.0
+
+3.339
+
+3.339
+
+0.000
+
+170
+
+3.7
+
+3.125
+
+3.125
+
+0.000
+
+175
+
+3.5
+
+2.933
+
+2.933
+
+0.000
+
+180
+
+3.3
+
+2.761
+
+2.761
+
+0.000
+
+Total Storage Volume Required (cu.m)
+
+444.4
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+TABLE: E5-F
+
+Storage Volume Calculations - Rational Method
+100-year - Town of Caledon
+Project: Amelia Street Subdivision, Town of Caledon
+Catchment
+201
+202
+Total Area (ha)
+Runoff Coefficient
+Maximum Discharge Through Orifice (L/s)
+
+Area
+2.020
+0.000
+2.020
+0.50
+59.9
+
+Discharged Volume per 5 min Interval (cu.m)
+
+18.0
+
+Coefficient
+0.50
+0.43
+
+Time (min) Intensity (mm/hr) Runoff Volume (cu.m) Discharged Volume (cu.m)Storage Volume (cu.m)
+0
+
+0.0
+
+0.000
+
+0.000
+
+0.000
+
+5
+
+4.1
+
+3.439
+
+3.439
+
+0.000
+
+10
+
+4.7
+
+3.983
+
+3.983
+
+0.000
+
+15
+
+5.6
+
+4.686
+
+4.686
+
+0.000
+
+20
+
+6.7
+
+5.622
+
+5.622
+
+0.000
+
+25
+
+8.2
+
+6.909
+
+6.909
+
+0.000
+
+30
+
+10.4
+
+8.756
+
+8.756
+
+0.000
+
+35
+
+13.7
+
+11.557
+
+11.557
+
+0.000
+
+40
+
+19.2
+
+16.139
+
+16.139
+
+0.000
+
+45
+
+29.1
+
+24.485
+
+17.973
+
+6.512
+
+50
+
+50.5
+
+42.498
+
+17.973
+
+24.525
+
+55
+
+113.7
+
+95.658
+
+17.973
+
+77.685
+
+60
+
+239.4
+
+201.417
+
+17.973
+
+183.444
+
+65
+
+141.2
+
+118.862
+
+17.973
+
+100.889
+
+70
+
+86.2
+
+72.565
+
+17.973
+
+54.592
+
+75
+
+58.5
+
+49.269
+
+17.973
+
+31.296
+
+80
+
+42.6
+
+35.844
+
+17.973
+
+17.871
+
+85
+
+32.5
+
+27.377
+
+17.973
+
+9.404
+
+90
+
+25.8
+
+21.677
+
+17.973
+
+3.704
+
+95
+
+21.0
+
+17.649
+
+17.649
+
+0.000
+
+100
+
+17.5
+
+14.691
+
+14.691
+
+0.000
+
+105
+
+14.8
+
+12.451
+
+12.451
+
+0.000
+
+110
+
+12.7
+
+10.711
+
+10.711
+
+0.000
+
+115
+
+11.1
+
+9.331
+
+9.331
+
+0.000
+
+120
+
+9.8
+
+8.217
+
+8.217
+
+0.000
+
+125
+
+8.7
+
+7.303
+
+7.303
+
+0.000
+
+130
+
+7.8
+
+6.544
+
+6.544
+
+0.000
+
+135
+
+7.0
+
+5.905
+
+5.905
+
+0.000
+
+140
+
+6.4
+
+5.363
+
+5.363
+
+0.000
+
+145
+
+5.8
+
+4.898
+
+4.898
+
+0.000
+
+150
+
+5.3
+
+4.496
+
+4.496
+
+0.000
+
+155
+
+4.9
+
+4.145
+
+4.145
+
+0.000
+
+160
+
+4.6
+
+3.838
+
+3.838
+
+0.000
+
+165
+
+4.2
+
+3.567
+
+3.567
+
+0.000
+
+170
+
+4.0
+
+3.326
+
+3.326
+
+0.000
+
+175
+
+3.7
+
+3.112
+
+3.112
+
+0.000
+
+180
+
+3.5
+
+2.919
+
+2.919
+
+0.000
+
+Total Storage Volume Required (cu.m)
+
+509.9
+
+VALDOR ENGINEERING INC.
+File: 17121
+
+TABLE: E6
+
+April 2026
+
+Table E.6: Detention Tank Stage-Storage Table
+Stage Storage Curve
+Elevation
+Width
+
+Sec Area
+2.4
+
+Avg Area
+
+Sec Volume Cumulative
+Volume
+
+Length
+(m)
+
+89
+(m2)
+
+(m2)
+
+(m3)
+
+(m3)
+
+0.00
+
+214
+
+-
+
+-
+
+0
+
+0.10
+
+214
+
+214
+
+21
+
+21
+
+0.78
+
+214
+
+214
+
+145
+
+166
+
+1.14
+
+214
+
+214
+
+78
+
+244
+
+1.42
+
+214
+
+214
+
+60
+
+303
+
+1.80
+
+214
+
+214
+
+81
+
+384
+
+2.08
+
+214
+
+214
+
+60
+
+445
+
+2.39
+2.40
+
+214
+214
+
+214
+214
+
+65
+3
+
+510
+513
+
+Detention Tank
+
+Bottom of Tank
+2 YR HWL
+5 YR HWL
+10 YR HWL
+25 YR HWL
+50 YR HWL
+100 YR HWL
+TOP OF TANK
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+Table E.7: Treatment Train TSS Removal Calculation
+Treatment
+OGS
+Infiltration Tank
+
+Removal Efficiency
+0.45
+0.7
+
+Area (ha)
+Quality
+
+2.23
+
+Total
+
+2.23
+
+Treatment
+Infiltration
+OGS
+
+Removal rate
+0.7
+0.45
+
+TSS removed (ha)
+1.561
+0.301
+1.862
+83.5%
+
+TSS remaining (ha)
+0.669
+0.368
+0.368
+
+Project Summary Report: 17121_Amelia Street Subdivision
+Stormceptor Sizing
+Project Information & Location
+Project Name
+
+17121_Amelia Street Subdivision
+
+Project Number
+
+17121
+
+City
+
+Caledon
+
+State/ Province
+
+Ontario
+
+Country
+
+Canada
+
+Date
+
+4/14/2026
+
+EOR Information (optional)
+
+Designer Information
+Name
+
+Phoebe Yung
+
+Name
+
+Company
+
+Valdor
+
+Company
+
+Phone #
+
+905-264-0054
+
+Phone #
+
+Email
+
+pyung@valdor-engineering.com
+
+Email
+
+Stormwater Treatment Recommendation
+The recommended Stormceptor Model(s) which achieve or exceed the user defined water quality objective for each site
+within the project are listed in the below Sizing Summary table.
+
+Site Name
+
+Drainage Imperviousness
+Area (ha)
+%
+2.22
+40.00
+
+Project Summary
+Target TSS
+PSD
+Removal (%)
+71
+
+TSS Removal
+(%) Provided
+Parallel Models
+
+Recommended
+Model
+Parallel Models
+
+Notes
+• Stormceptor performance estimates are based on simulations using PCSWMM for Stormceptor, which uses the EPA
+Rainfall and Runoff modules.
+• Design estimates listed are only representative of specific project requirements based on total suspended solids (TSS)
+removal defined by the selected PSD, and based on stable site conditions only, after construction is completed.
+• For submerged applications or sites specific to spill control, please contact your local Stormceptor representative for
+further design assistance.
+
+Stormceptor Detailed Sizing Report – Page 1 of 1
+
+JSK
+
+JSK
+
+SCALE = NTS
+
+5/26/17
+0
+
+INITIAL RELEASE
+
+####
+
+UPDATES
+6/8/18
+1
+
+####
+
+####
+
+####
+
+####
+
+####
+
+####
+####
+####
+
+####
+####
+####
+
+FOR SITE SPECIFIC DRAWINGS PLEASE CONTACT YOUR LOCAL STORMCEPTOR REPRESENTATIVE.
+SITE SPECIFIC DRAWINGS ARE BASED ON THE BEST AVAILABLE INFORMATION AT THE TIME. SOME
+FIELD REVISIONS TO THE SYSTEM LOCATION OR CONNECTION PIPING MAY BE NECESSARY BASED
+ON AVAILABLE SPACE OR SITE CONFIGURATION REVISIONS. ELEVATIONS SHOULD BE MAINTAINED
+EXCEPT WHERE NOTED ON BYPASS STRUCTURE (IF REQUIRED).
+GENERAL NOTES:
+* MAXIMUM SURFACE LOADING RATE (SLR) INTO LOWER CHAMBER THROUGH
+DROP PIPE IS 1135 L/min/m2 (27.9 gpm/ft2) FOR STORMCEPTOR EF4 AND 535
+L/min/m2 (13.1 gpm/ft2) FOR STORMCEPTOR EFO4 (OIL CAPTURE
+CONFIGURATION). WEIR HEIGHT IS 150 mm (6 INCH) FOR EF04.
+1. ALL DIMENSIONS INDICATED ARE IN MILLIMETERS (INCHES) UNLESS
+OTHERWISE SPECIFIED.
+2. STORMCEPTOR STRUCTURE INLET AND OUTLET PIPE SIZE AND ORIENTATION
+SHOWN FOR INFORMATIONAL PURPOSES ONLY.
+3. UNLESS OTHERWISE NOTED, BYPASS INFRASTRUCTURE, SUCH AS ALL
+UPSTREAM DIVERSION STRUCTURES, CONNECTING STRUCTURES, OR PIPE
+CONDUITS CONNECTING TO COMPLETE THE STORMCEPTOR SYSTEM SHALL BE
+PROVIDED AND ADDRESSED SEPARATELY.
+4. DRAWING FOR INFORMATION PURPOSES ONLY. REFER TO ENGINEER'S
+SITE/UTILITY PLAN FOR STRUCTURE ORIENTATION.
+5. NO PRODUCT SUBSTITUTIONS SHALL BE ACCEPTED UNLESS SUBMITTED 10
+DAYS PRIOR TO PROJECT BID DATE, OR AS DIRECTED BY THE ENGINEER OF
+RECORD.
+
+INSTALLATION NOTES
+A. ANY SUB-BASE, BACKFILL DEPTH, AND/OR ANTI-FLOTATION PROVISIONS ARE
+SITE-SPECIFIC DESIGN CONSIDERATIONS AND SHALL BE SPECIFIED BY
+ENGINEER OF RECORD.
+B. CONTRACTOR TO PROVIDE EQUIPMENT WITH SUFFICIENT LIFTING AND REACH
+CAPACITY TO LIFT AND SET THE STRUCTURE (LIFTING CLUTCHES PROVIDED)
+C. CONTRACTOR WILL INSTALL AND LEVEL THE STRUCTURE, SEALING THE JOINTS,
+LINE ENTRY AND EXIT POINTS (NON-SHRINK GROUT WITH APPROVED
+WATERSTOP OR FLEXIBLE BOOT)
+D. CONTRACTOR TO TAKE APPROPRIATE MEASURES TO PROTECT THE DEVICE
+FROM CONSTRUCTION-RELATED EROSION RUNOFF.
+E. DEVICE ACTIVATION, BY CONTRACTOR, SHALL OCCUR ONLY AFTER SITE HAS
+BEEN STABILIZED AND THE STORMCEPTOR UNIT IS CLEAN AND FREE OF
+DEBRIS.
+
+STANDARD DETAIL
+NOT FOR CONSTRUCTION
+
+SITE SPECIFIC DATA REQUIREMENTS
+STORMCEPTOR MODEL
+EFO4
+STRUCTURE ID
+HYDROCARBON STORAGE REQ'D (L)
+WATER QUALITY FLOW RATE (L/s)
+PEAK FLOW RATE (L/s)
+RETURN PERIOD OF PEAK FLOW (yrs)
+DRAINAGE AREA (HA)
+DRAINAGE AREA IMPERVIOUSNESS (%)
+SLOPE %
+PIPE DATA:
+I.E.
+MAT'L
+DIA
+INLET #1
+*
+*
+*
+*
+INLET #2
+*
+*
+*
+*
+OUTLET
+*
+*
+*
+*
+* PER ENGINEER OF RECORD
+
+*
+*
+*
+*
+*
+*
+*
+HGL
+*
+*
+*
+
+DATE:
+
+10/13/2017
+DESIGNED:
+
+DRAWN:
+
+JSK
+
+JSK
+
+CHECKED:
+
+APPROVED:
+
+BSF
+
+SP
+
+PROJECT No.:
+
+SEQUENCE No.:
+
+EFO4
+
+*
+
+SHEET:
+
+1
+
+OF
+
+1
+
+MARY STREET
+
+KEY PLAN
+
+CB
+
+402.27
+
+Ex. 750mm DIA
+CSP CULVERT
+
+CB
+
+402.16
+
+MAIN STREET
+
+SPRING
+STREET
+
+NORTH ANGLE
+LOT 9, BLOCK 7
+REGISTERED
+PLAN CAL-5
+
+NICHOLAS STREET
+
+MAIN STREET
+
+Ex. CULVERT
+
+WOOD SHED
+
+410
+
+WOOD SHED
+
+PROPOSED
+CULVERT
+
+AMELIA STREET
+
+METAL SHED
+
+41
+
+WATER STREET
+
+WOOD
+BUILDING
+
+5
+
+AMELIA STREET
+
+ANN STREET
+
+AMELIA STREET
+
+42
+0
+
+Area A
+(2.02 ha)
+
+Area B
+(0.21 ha)
+
+5
+
+40
+
+5
+42
+
+410
+
+415
+
+0
+42
+
+WOOD
+SHED
+
+43
+0
+
+42
+
+5
+
+43
+5
+
+43
+
+0
+
+435
+
+VALDOR ENGINEERING INC.
+Consulting Engineers - Project Managers
+571 Chrislea Road, Unit 4, 2nd Floor, Woodbridge, Ontario, L4L 8A2
+TEL (905)264-0054, FAX (905)264-0069
+E-MAIL: info@valdor-engineering.com
+www.valdor-engineering.com
+
+AMELIA STREET SUBDIVISION
+COMMUNITY OF ALTON
+TOWN OF CALEDON
+REGION OF PEEL
+
+STORM DRAINAGE PLAN
+POST-DEVELOPMENT
+17121
+
+FIGURE 4
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+APPENDIX “F”
+Water Balance Calculations
+
+April 2026
+File: 17121
+
+TABLE: F1
+
+VALDOR ENGINEERING INC.
+File: 17121
+April 2026
+
+WATER BALANCE CALCULATIONS: 5 mm RETENTION VOLUME REQUIRED
+1. INITIAL ABSTRACTION
+
+Surface Type
+
+Area
+
+Init. Abstract.
+
+(Ha)
+
+(mm)
+
+Catchment 201
+Impervious Area
+
+0.72
+
+0.0
+
+Landscape Area
+
+1.30
+
+5.0
+
+Catchment 202
+Impervious Area
+
+0.16
+
+0.0
+
+Landscape Area
+
+0.47
+
+5.0
+
+2.65
+
+3.3
+
+Total
+
+2. STORAGE VOLUME REQUIRED
+Total Area of Site (A) =
+Target Retention Depth (D) =
+Overall Initial Abstractions (I) =
+
+2.65 ha
+5.0 mm
+3.3 mm
+
+Storage Volume Required = V = A x (D - I) =
+
+44.0 cu.m.
+
+3. INFILTRATION TRENCH MAXIMUM DEPTH
+In-Situ Percolation Rate =
+Safety Factor =
+Design Percolation Rate (P) =
+
+51.9 mm/hr
+2.5
+20.7
+
+Maximum Retention Time (T) =
+
+48 hours
+1.00 m
+
+Maximum Chamber Height Allowable (D) = (PT/(1000*S)) =
+*MOE recommends max depth of 1.5m
+
+Clear Stone Trench
+
+Length (m) Width (m)
+
+Height (m)
+
+Void Ratio
+
+Infiltration Trench #1
+
+20.0
+
+Infiltration Trench #2
+
+10.0
+
+1.0
+
+1.00
+
+0.40
+
+1.0
+
+1.00
+
+0.40
+
+Infiltration Trench #3
+Infiltration Trench #4
+
+10.0
+
+1.0
+
+1.00
+
+0.40
+
+10.0
+
+1.0
+
+1.00
+
+0.40
+
+Infiltration Trench #5
+
+15.0
+
+1.0
+
+1.00
+
+0.40
+
+Infiltration Trench #6
+
+15.0
+
+1.0
+
+1.00
+
+0.40
+
+Infiltration Trench #7
+
+25.0
+
+1.0
+
+1.00
+
+0.40
+
+Infiltration Trench #8
+
+5.0
+
+1.0
+
+0.60
+
+0.40
+
+Infiltration Trench #9
+
+5.0
+
+1.0
+
+0.60
+
+0.40
+
+Total:
+
+Storage Volume
+Provided (m³)
+8
+4
+4
+4
+6
+6
+10
+1.2
+1.2
+44.40
+
+Table F.2: Rainfall Analysis Initial Abstraction = 3.0 mm
+VALDOR ENGINEERING INC.
+File: 17121
+Date: April 2022
+
+Number of Days ≥ Rainfall Depth vs Rainfall Depth
+
+140.0
+
+y = -22.103605032839ln(x) + 77.686047833171
+R² = 0.996092697455
+
+Number of
+Days ≥
+Rainfall
+Depth (days)
+
+120.0
+100.0
+80.0
+60.0
+40.0
+Normal
+Rainfall
+Depth
+(mm)
+0.2
+5
+10
+25
+
+Simulated
+Depth
+(mm)
+
+0.2
+0.5
+1.5
+2.5
+3.5
+4.5
+5.5
+6.5
+7.5
+8.5
+9.5
+10.5
+11.5
+12.5
+13.5
+14.5
+15.5
+16.5
+17.5
+18.5
+19.5
+20.5
+21.5
+22.5
+23.5
+24.5
+25.5
+26.5
+27.5
+28.5
+29
+
+Normal
+Days
+≥ Rainfall
+Depth
+(days)
+112.0
+46.4
+25.9
+4.4
+
+Simulated
+Days
+≥
+Sim Depth
+(days)
+113.26
+93.01
+68.72
+57.43
+50.00
+44.44
+40.00
+36.31
+33.15
+30.38
+27.92
+25.71
+23.70
+21.86
+20.16
+18.58
+17.10
+15.72
+14.42
+13.19
+12.03
+10.92
+9.87
+8.87
+7.90
+6.98
+6.10
+5.25
+4.43
+3.64
+3.26
+
+20.0
+
+Orangeville MOE Climate Normals (1981 - 2010)
+750.1 Normal Annual Rainfall Depth (mm)
+112 Normal Annual Days with Rainfall (≥ 0.2 mm)
+901.5 Normal Annual Precipitation Depth (mm)
+
+0.0
+0.1
+
+1
+
+10
+
+100
+
+Rainfall Depth (mm)
+Series1
+
+Average
+Event
+Depth
+(mm)
+
+0.2 - 0.5
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+≥ 29
+
+Log. (Series1)
+
+Simulated
+Days
+Equal to
+Avg Depth
+(days)
+
+Assumed
+IA
+(mm)
+
+Runoff
+(Rain - IA)
+(mm)
+
+INF
+Design
+Storm
+(mm)
+
+Event Based
+Maximum
+Design INF
+Depth
+(mm)
+
+Event Based
+Design INF
+Depth
+(mm)
+
+Annual
+Incremental
+Design INF
+Depth
+(mm)
+
+Annual
+Cumulative
+Design INF
+Depth
+(mm)
+
+Annual
+Incremental
+Total Rain
+Depth
+(mm)
+
+Annual
+Percent of
+Total
+Rain
+(%)
+
+Annual
+Cumulative
+Total Rain
+Depth
+(mm)
+
+Annual
+Cumulative
+Percent of
+Total Depth
+(%)
+
+20.25
+24.28
+11.29
+7.44
+5.55
+4.44
+3.69
+3.16
+2.77
+2.46
+2.21
+2.01
+1.84
+1.70
+1.58
+1.47
+1.38
+1.30
+1.23
+1.16
+1.11
+1.05
+1.00
+0.96
+0.92
+0.88
+0.85
+0.82
+0.79
+3.26
+
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+3.00
+
+0.00
+0.00
+0.00
+0.00
+1.00
+2.00
+3.00
+4.00
+5.00
+6.00
+7.00
+8.00
+9.00
+10.00
+11.00
+12.00
+13.00
+14.00
+15.00
+16.00
+17.00
+18.00
+19.00
+20.00
+21.00
+22.00
+23.00
+24.00
+25.00
+26.00
+
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+15.00
+
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+
+0.00
+0.00
+0.00
+0.00
+1.00
+2.00
+3.00
+4.00
+5.00
+6.00
+7.00
+8.00
+9.00
+10.00
+11.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+12.00
+
+0.00
+0.00
+0.00
+0.00
+5.55
+8.87
+11.08
+12.65
+13.83
+14.75
+15.49
+16.09
+16.59
+17.01
+17.37
+17.69
+16.58
+15.61
+14.74
+13.96
+13.26
+12.63
+12.06
+11.53
+11.05
+10.61
+10.20
+9.82
+9.47
+39.08
+
+0.00
+0.00
+0.00
+0.00
+5.55
+14.43
+25.50
+38.16
+51.99
+66.74
+82.22
+98.31
+114.90
+131.91
+149.28
+166.97
+183.56
+199.16
+213.90
+227.87
+241.13
+253.76
+265.82
+277.36
+288.41
+299.02
+309.22
+319.05
+328.52
+367.60
+
+24.28
+22.58
+22.31
+22.22
+22.18
+22.15
+22.14
+22.13
+22.13
+22.12
+22.12
+22.12
+22.11
+22.11
+22.11
+22.11
+22.11
+22.11
+22.11
+22.11
+22.11
+22.11
+22.11
+22.11
+22.11
+22.11
+22.11
+22.11
+127.87
+
+0.000
+0.032
+0.030
+0.030
+0.030
+0.030
+0.030
+0.030
+0.030
+0.029
+0.029
+0.029
+0.029
+0.029
+0.029
+0.029
+0.029
+0.029
+0.029
+0.029
+0.029
+0.029
+0.029
+0.029
+0.029
+0.029
+0.029
+0.029
+0.029
+0.170
+
+0.0
+24.3
+46.9
+69.2
+91.4
+113.6
+135.7
+157.9
+180.0
+202.1
+224.3
+246.4
+268.5
+290.6
+312.7
+334.8
+356.9
+379.0
+401.2
+423.3
+445.4
+467.5
+489.6
+511.7
+533.8
+555.9
+578.0
+600.1
+622.2
+750.1
+
+0.000
+0.032
+0.062
+0.092
+0.122
+0.151
+0.181
+0.210
+0.240
+0.269
+0.299
+0.328
+0.358
+0.387
+0.417
+0.446
+0.476
+0.505
+0.535
+0.564
+0.594
+0.623
+0.653
+0.682
+0.712
+0.741
+0.771
+0.800
+0.830
+1.000
+
+Table F.3: Infiltration Trench Calculation
+VALDOR ENGINEERING INC.
+571 Chrislea Road, Unit 4, 2nd Floor, Vaughan, Ontario, L4L 8A2
+
+Project No: 17121
+
+Tel: 905-264-0054 Fax: 905-264-0069
+info@valdor-engineering.com
+
+Total Req'd Annual
+Infiltration Volume to
+Achieve Target
+(m 3 )
+
+Total Actual Annual
+Infiltration Volume
+per Design
+(m 3 )
+
+1,360
+
+866
+
+Date: April 2026
+
+www.valdor-engineering.com
+
+Soil
+Infiltration
+Rate
+(mm/h)
+
+30
+
+Total annual infiltration volume provided (m3/yr):
+
+Equivalent Drainage
+Area (ha)
+
+0.37
+
+Maximum Trench
+Length per Site
+Plan (m)
+
+Initial Abstraction
+(Trench Drainage
+Area)
+(mm)
+
+-
+
+Retention Time
+(hr)
+
+(m 3 )
+
+367.60
+
+234.1
+
+Design Depth
+(m)
+
+Bottom Area
+(m²)
+
+Void Ratio
+
+Storage Volume
+Provided
+(m³)
+
+Lesser of Available Infiltration Volume
+or Storage Volume Provided
+(m³)
+
+48
+
+44.4
+
+15.0
+
+1,360
+
+Maximum Allowable Depth
+
+Minimum Bottom Area
+30
+
+V, Runoff Volume to Infiltrated (m³):
+
+44
+
+T, Drawdown Time (hr):
+
+48
+
+P, Soil Infiltration Rate (mm/h):
+
+30.0
+
+d, Maximum Allowable Depth (m):
+
+1.44
+
+n, Void Ratio (clear stone):
+
+0.40
+
+∆t, Drawdown Time (hr):
+
+48
+
+A, Minimum Bottom Area (m²):
+
+77
+
+4.2,
+
+1000 ·
+· ·∆
+
+Req'd Event-Based
+Runoff Volume to be
+Infiltrated (Based on
+Req'd Design Storm
+Depth)
+
+750.1
+
+3.0
+
+P, Soil Infiltration Rate (mm/h):
+
+·
+1000
+
+Total Annual
+Total Rainfall Depth
+1
+Available for
+Rainfall Depth
+Req'd Design
+Annual Rainfall Depth
+(Per 1981-2010
+Infiltration Per
+Storm Depth to
+Needed to Achieve
+Rainfall Analysis
+Climate Normals
+Achieve Annual
+Target Infiltration
+for Peterborough Assuming Ia=3.0mm
+Infiltration
+(mm)
+(Refer to Table F.5)
+Airport)
+Requirements
+(mm)
+(mm)
+
+,
+
+, 2003
+
+4.3,
+
+,
+
+, 2003
+
+Infiltration Trench Design
+3
+
+Infiltration Trench Location
+
+Drainage
+Area (ha)
+
+Available Infiltration
+Volume (m³)
+
+Length
+(m)
+
+Width
+(m)
+
+Infiltration Trench #1
+
+0.35
+
+42.0
+
+20.0
+
+1.0
+
+1.00
+
+20
+
+0.40
+
+8.0
+
+8.0
+
+Infiltration Trench #2
+
+0.11
+
+13.2
+
+10.0
+
+1.0
+
+1.00
+
+10
+
+0.40
+
+4.0
+
+4.0
+
+Infiltration Trench #3
+
+0.08
+
+9.0
+
+13.0
+
+1.0
+
+1.00
+
+13
+
+0.40
+
+5.2
+
+5.2
+
+Infiltration Trench #4
+
+0.08
+
+9.0
+
+13.0
+
+1.0
+
+1.00
+
+13
+
+0.40
+
+5.2
+
+5.2
+
+Infiltration Trench #5
+
+0.07
+
+7.8
+
+15.0
+
+1.0
+
+1.00
+
+15
+
+0.40
+
+6.0
+
+6.0
+
+Infiltration Trench #6
+
+0.07
+
+7.8
+
+15.0
+
+1.0
+
+1.00
+
+15
+
+0.40
+
+6.0
+
+6.0
+
+Infiltration Trench #7
+
+0.11
+
+13.2
+
+25.0
+
+1.0
+
+1.00
+
+25
+
+0.40
+
+10.0
+
+10.0
+
+Total Drainage Area (ha):
+
+0.85
+
+Total Bottom Area Provided (m²):
+
+111
+
+Total Infiltration Volume Used (m³):
+
+44.4
+
+Notes:
+Infiltration facilities are sized based on the following criteria (SWMPDM, MOE, 2003) and/or assumptions:
+(1) Infiltration trench volume should be sized based on the runoff generated by a 4-hr 15-mm event or smaller.
+(2) The drainage area to each infiltration trench should be sufficient to provide required runoff quantity.
+(3) The maximum allowable depth of the infiltration facility is based on the soil infiltrate rate and the retention time.
+(4) It is feasible to convey the runoff to the infiltration facility.
+(5) The seasonal high water table should be at least 1 m below the infiltration trench.
+
+Total:
+
+44.40
+
+74 Berkeley Street, Toronto, ON M5A 2W7
+Tel: 647‑795‑8153 | www.pecg.ca
+
+Hydrogeological
+Investigation
+0 Nicholas Street, Alton Village, Town of
+Caledon, ON
+
+Palmer Project #
+1904308
+
+Prepared For
+Goodman, Solomon & Gold
+
+January 24, 2022
+
+4857200
+
+574200
+
+574300
+
+574400
+
+574500
+
+574600
+
+574700
+
+574800
+LEGEND:
+
+!
+<
+
+Bore hole Loca tion
+
+!
+Monitoring We llLoca tion
+<
+E
+Wa te rcou rse
+4857100
+
+Su b je c
+tSite
+
+M
+
+4857000
+
+M
+
+A
+
+IN
+
+S
+
+R
+
+Y
+
+S
+
+T
+
+T
+
+S
+
+T
+
+BH-5
+
+E
+
+T
+
+!
+<
+
+A
+
+R
+
+G
+
+A
+
+R
+
+I
+m a g e ry(
+2018)prov
+ide db yEsrib a se m a p se rv
+ic
+e .Conta ins inform a tion
+lic
+e nse du nde r the Ope n Gov
+e rnm e ntLic
+e nce –Onta rio
+
+S
+
+T
+
+M
+
+Key Map
+
+H
+
+O
+
+LA
+
+S
+
+4856900
+
+N
+
+IC
+
+BH-6
+
+SITE LOCATION
+
+!
+<
+E
+
+o
+
+BH-7
+
+4856800
+
+!
+<
+E
+
+0
+
+50
+
+100
+
+metres
+
+o
+CLIENT:
+
+LI
+
+S
+
+T
+
+W
+
+N
+Q
+
+UE
+
+EN
+
+ST
+
+TO
+AL
+K/
+EE
+CR
+S
+
+IC
+
+TITLE:
+
+TO
+
+R
+
+IA
+
+S
+
+T
+
+AW
+
+V
+
+574300
+
+574400
+
+574500
+
+574600
+
+1904308 REVISION:
+
+J
+u n 22,2021
+
+DATE:
+DRAWN:
+CHECKED:
+
+CV
+SH
+
+SCALE:
+
+DATUM:
+
+PROJECTION:
+
+PREPARED BY:
+
+Alton Villa g e
+
+Site
+Location
+
+FIGURE 1
+
+SH
+574200
+
+PROJECT NO.
+
+The
+Big lie ri
+Grou p
+
+PROJECT:
+
+BR
+
+A
+
+CH
+
+E
+
+AN
+
+M
+
+4856700
+
+A
+
+574700
+
+Docu m e nt P a th:G:
+\
+Sha re ddrive s\
+P roje cts 2019\
+19043-The Big lie riGrou p\
+1904308-Alton Villa g e \
+Ma pping \
+Fig u re s\
+5_ArcGI
+S\
+HydroG\
+1904308_11_Site Loca tion.
+m xd
+
+BH-1
+
+!
+<
+E
+
+A
+
+574800
+
+11
+
+1:
+3000
+
+NAD1983
+
+UTM z
+one 17
+
+Hydrogeological Investigation
+0 Nicholas Street, Alton Village, Town of Caledon, Ontario
+
+Topsoil and Fill Material.
+A 220 mm to 330 mm thick surficial layer of topsoil was found at all borehole locations. Fill material was
+encountered at all borehole locations except for BH6. The fill ranges from 0.8 m to 2.3 m and consists of
+mainly sand and silty sand with trace clay and topsoil.
+Cohesionless Silty and Sandy Deposits
+The native soil underlying the fill material in all boreholes consists of cohesionless material of sand, sandy
+silt to silty sand, silt and some sand and gravel. This layer was not fully penetrated in BH1, BH5 and BH8.
+Sandy Silt to Silty Sand Till
+The silty and sandy deposits in BH6 was underlain by glacial till deposits comprising of sandy silt to silt
+sand soils. The layer was observed to extend from 6.1 m to the bottom of the borehole. The sand was found
+to be in a loose to dense state and was not fully penetrated. This layer was also observed at depth in BH4.
+Clayey Silt to Silt Clay Till
+A cohesive layer of clayey silt to silty clay was observed in BH7 underlying the sand to silty sand layer. This
+layer extended from 10.7 m to the bottom of the borehole. The later was found to be in a stiff and hard state
+and was not fully penetrated.
+
+3.3
+
+Water Level Monitoring and Groundwater Flow
+
+Groundwater levels were measured manually at installed MWs at the site by SPCL on July 13, 2017 and
+by Palmer on May 05, May 18, and June 23, 2021. Measurements were made using a water level tape and
+recorded to the nearest centimeters. In addition, a datalogger, programmed to record data at intervals of
+one hour, was installed in BH6 to continuously record water levels on-site before, during and following site
+grading and construction. Manual groundwater level results are summarized in Table 2, below. During
+Palmer’s monitoring program to date, the depth to water table ranged from 1.73 to 3.73 mbgs,
+corresponding to an elevation range of 401.97 to 415.72 metres above sea level (mASL). As indicated on
+Figure 6, shallow horizontal groundwater flow is directed east-northeastwards reflecting the influences of
+local surface water features and topography on the hydraulic regime. It is important to consider that
+groundwater levels are subject to fluctuations due to seasonal trends and precipitation input
+
+Table 2.
+
+Groundwater Level Monitoring Results
+Water Level
+
+MW ID
+
+Grade
+Elevation
+(mASL)
+
+Depth
+(mbgs)
+
+BH1
+
+418.91
+
+6.02
+
+BH5
+
+BH6
+
+BH7
+
+Not available
+
+415.85
+
+403.93
+
+Unit
+
+July 13,
+2017
+
+May 05,
+2021
+
+May 18,
+2021
+
+June 23,
+2021
+
+mbgs
+
+2.9
+
+3.29
+
+3.19
+
+3.47
+
+mASL
+
+416.0
+
+415.62
+
+415.72
+
+415.44
+
+mbgs
+
+2.7
+
+3.05
+
+3.06
+
+3.39
+
+mASL
+
+-
+
+-
+
+-
+
+-
+
+mbgs
+
+2.9
+
+3.36
+
+-
+
+3.63
+
+mASL
+
+414.95
+
+412.49
+
+-
+
+412.22
+
+mbgs
+
+1.3
+
+1.73
+
+1.75
+
+1.97
+
+mASL
+
+403.6
+
+402.20
+
+402.18
+
+401.97
+
+6.80
+
+10.50
+
+12.56
+
+Palmer_1904308_Alton Village Hydrogeology And Water Balance Study-2022-01-24
+
+10
+
+Hydrogeological Investigation
+0 Nicholas Street, Alton Village, Town of Caledon, Ontario
+
+3.3.1
+
+Hydraulic Conductivity Testing and Infiltration Rate Estimates
+
+Single Well Response Tests (SWRT) were performed by Palmer at all monitoring wells to estimate the
+hydraulic conductivity of the soil materials surrounding the well screen at each location. Tests were
+completed by lowering a 1 L slug into each well and then rapidly removing it to create a change in hydraulic
+head. Hydraulic conductivity values were estimated by measuring the rate of change in recovery of the
+water level (also known as a Rising Head Test). Water levels in each well were recorded using a datalogger
+set to record either every one or two seconds. The tests were terminated once either 80% recovery had
+been attained, or 30 minutes had elapsed.
+Hydraulic conductivity values were calculated from the displacement-time data using the Bouwer & Rice
+(1976, 1989) Method for an unconfined aquifer as implemented in a spreadsheet distributed by the United
+States Geological Survey. The results are presented in Appendix D.1 and included in Table 3, below. The
+calculated hydraulic conductivities range from 2.0x10-7 m/s to 6.4x10-6 m/s with a geometric mean of 2.0x106 m/s. The results assume fully penetrating conditions. Hydraulic conductivity decreases slightly if a thicker
+aquifer/partial penetration is assumed.
+In addition, the hydraulic conductivity of the soil samples collected during SPCL’s 2017 geotechnical
+investigation were estimated from grain size distribution data using the spreadsheet HydrogeoSieveXL ver
+2.2. (Devlin, 2016). This spreadsheet contains 15 different methods of estimating hydraulic conductivity;
+however, only the results of those methods for which the sample met acceptance criteria are used. The
+HydrogeoSieveXL output sheets are provided in Appendix D.2 and the results are included in Table 3,
+below. The calculated hydraulic conductivities range from 3.8x10 -7 m/s to 2.3x10-6 m/s with a geometric
+mean of 1.2x10-6 m/s.
+An estimation of the percolation rate of the soils within the site was produced empirically using the method
+developed by Toronto and Region Conservation Authority (TRCA) (2012) and Credit Valley Conservation
+(CVC) (2010). The results of the calculations are also provided in Table 3, below. The estimated percolation
+rate of the tested soils ranged from 30.1 to 76.0 mm/hr (T-time of 19.9 to 7.9 min/cm) with a geometric
+mean of 51.9 mm/hr (T-time of 11.6 min/cm). When applying a default safety factor of 2.5, the geometric
+mean infiltration rate is 20.7 mm/hr (T-time of 29.9 min/cm). It is recommended that this rate be used for
+preliminary design purposes until future site-specific percolation rate testing is completed.
+
+3.3.2
+
+Groundwater Chemistry
+
+Groundwater samples were collected on May 04, 2021 from BH6 and BH7. The samples were submitted
+to ALS Canada Ltd. (ALS) for analysis for a suite of general potability parameters including turbidity, TSS,
+TDS, pH, metals, and cations and anions. ALS is accredited by the Canadian Association for Laboratory
+Accreditation (CALA). A copy of the Certificate of Analysis is provided in Appendix E.
+The results were compared against the 2006 Ontario Drinking Water Standards, Objectives and Guidelines
+(ODWSOG), 2006 and the Ontario Drinking Water Quality Standards (ODWQS), 2020.
+A summary of the groundwater analytical results is presented in Table 4, below, with the Certificate of
+Analysis provided in Appendix E. Both samples exceeded the ODWSOG Aesthetic Objectives (AOs) for
+colour and turbidity and the ODWSOG Operational Guideline (OG) for hardness. Sample BH6 exceeded
+the ODWQS for sodium but not its ODWSOG AO. Sample BH7 exceeded the ODWSOG AO for
+manganese.
+
+Palmer_1904308_Alton Village Hydrogeology And Water Balance Study-2022-01-24
+
+12
+
+Hydrogeological Investigation
+0 Nicholas Street, Alton Village, Town of Caledon, Ontario
+
+Table 3.
+
+Summary of Hydraulic Conductivity Values and Infiltration Rates
+
+Location
+
+Test
+Used
+
+Depth (m)
+
+Soil
+Description
+
+K (m/s)
+
+Infiltration Rate
+(mm/hour)
+
+Infiltration
+Rate (min/cm)
+
+BH1
+
+Slug
+Test
+
+3.3 - 6.4
+
+Sandy silt to
+sand
+
+2.0x10-07
+
+30.1
+
+19.9
+
+BH5
+
+Slug
+Test
+
+4.5 - 7.6
+
+Sandy silt/sand
+and gravel
+
+6.4x10-06
+
+76.0
+
+7.9
+
+BH6
+
+Slug
+Test
+
+7.3 - 10.4
+
+Silty sand
+
+3.2x10-06
+
+63.2
+
+9.5
+
+BH7
+
+Slug
+Test
+
+9.6 - 12.7
+
+Silt to silty clay
+
+3.7x10-06
+
+65.7
+
+9.1
+
+BH1
+
+Grain size –
+SS4
+
+2.3 - 2.9
+
+Sandy silt/silty
+sand, trace clay
+
+3.8x10-07
+
+35.7
+
+16.8
+
+1.5 - 2.1
+
+Sand and gravel
+,trace silt
+
+2.1x10-06
+
+56.4
+
+10.6
+
+4.4 - 5.0
+
+Sand, trace silt
+
+1.1x10-06
+
+47.5
+
+12.6
+
+1.5 - 2.1
+
+Silty sand, trace
+clay
+
+2.3x10-06
+
+57.8
+
+10.4
+
+BH2
+
+BH3
+
+BH7
+
+Grain size
+distribution –
+SS3
+Grain size
+distribution –
+SS6
+Grain size
+distribution –
+SS3
+
+Palmer_1904308_Alton Village Hydrogeology And Water Balance Study-2022-01-24
+
+13
+
+Hydrogeological Investigation
+0 Nicholas Street, Alton Village, Town of Caledon, Ontario
+
+4.
+
+Water Balance
+
+4.1
+
+Water Budget Methodology
+
+4.1.1
+
+Water Surplus
+
+The water surplus described the difference between precipitation and evapotranspiration (ET) to estimate
+the amount of water or surplus that is available to contribute to infiltration and runoff. The surplus was
+calculated using the monthly soil-moisture balance approach as described in Thornthwaite and Mather
+(1957). Surplus on impermeable surfaces is assumed to be 90% of the precipitation. A soil moisture storage
+value of 200 mm was used, which is appropriate for silt loam and moderately – deep rooted crops. Data for
+average monthly precipitation and temperature was derived from the 1981 – 2010 climate normals from the
+Orangeville climate station (ID 6155790). Actual evapotranspiration is calculated based on a potential ET
+(or PET) and soil-moisture storage withdrawal. Monthly PET is estimated using monthly temperature data
+and is defined as a water loss from a homogeneous vegetation-covered area that never lacks water
+(Thornthwaite, An Approach Toward a Rational Classification of Climate, 1948).
+
+4.1.2
+
+Infiltration Factors
+
+The partitioning of the water surplus between runoff and infiltration depends on soil type, topography and
+vegetation cover. Water will infiltrate more easily through sands compared to clays, on flat slopes compared
+to steep sloped, and through natural vegetated soils compared to agricultural crops or urban areas. The
+method developed by Bernard (1932) and described by the Ministry of the Environment and Energy (MOEE)
+(1995) was used to estimate infiltration for the site. The infiltration factor is calculated by adding the
+individual sub-factors at the site. The water surplus is then multiplied by the total infiltration factor to
+determine the partitioning between the amount of runoff and the amount of infiltration that occurs annually.
+The runoff is the total amount of surplus remaining after taking into account infiltration (1 – infiltration factor
+= runoff factor).
+
+4.2
+
+Water Budget Results
+
+4.2.1
+
+Pre-Development Conditions
+
+For reference, the CVC Water Balance Tool (CVC, 2021) reports precipitation of 897 mm/yr, infiltration of
+370 to 381 mm/yr (lower values are on the plateau to the west), evapotranspiration of approximately 402
+mm/yr and runoff of approximately 114 mm/yr. However, it should be noted that the eastern flank of the
+most prominent hill in the area comprises the western portion of the site.
+The total yearly precipitation recorded by the Orangeville Meteorological Station was 901.5 mm/year (Table
+5.). The calculated actual ET (or AET) based on the Thornthwaite and Mather monthly water balance model
+is approximately 559 mm/year (Table 5). The estimated water surplus for the site area is approximately
+343 mm/year (38% of the total precipitation). The surplus values are given below in Table 5.
+Based on OGS surficial geology mapping and borehole data, the site is underlain by sand to silty sand,
+treated as “open sandy loam” under MOE, 1995 (infiltration factor of 0.4), the site has hilly topography
+(infiltration factor 0.1), and the land use on-site is woodland (infiltration factor of 0.2). Table 6. presents the
+soil infiltration factors used for the site-wide water budget.
+Using the method in the MOE stormwater management (SWM) manual and MOEE (1995) for guidance, it
+is estimated that approximately 70% (240 mm/year) of the surplus infiltrates, and the remaining 30% (102.8
+
+Palmer_1904308_Alton Village Hydrogeology And Water Balance Study-2022-01-24
+
+17
+
+Hydrogeological Investigation
+0 Nicholas Street, Alton Village, Town of Caledon, Ontario
+
+mm/year) runs off. Based on a site area of 5.91 ha, it is estimated that 14,181.4 m3/year infiltrates and
+6,077.8 m3/year runs off under existing conditions. The results are summarized in Table 7..
+
+Table 5.
+
+Water Surplus
+
+Water Balance
+
+Jan
+
+Feb
+
+Mar
+
+Apr
+
+May
+
+Jun
+
+Jul
+
+Aug
+
+Sep
+
+Oct
+
+Nov
+
+Dec
+
+Year
+
+Precipitation (mm)
+
+64.3
+
+54.5
+
+60.9
+
+70.1
+
+86.6
+
+81.3
+
+80.8
+
+88.2
+
+87
+
+76.6
+
+87.1
+
+64.2 901.6
+
+Temperature (°C)
+
+-7.5
+
+-6.5
+
+-2.1
+
+5.3
+
+11.7
+
+16.9
+
+19.4
+
+18.4
+
+14.3
+
+7.8
+
+2.0
+
+-4.1
+
+6.3
+
+0.0
+
+0.0
+
+0.0
+
+29.5
+
+75.1 110.3 129.1 113.1 75.4
+
+36.8
+
+7.7
+
+0.0
+
+577.0
+
+64.3
+
+54.5
+
+60.9
+
+40.6
+
+11.5
+
+-29.0 -48.3 -24.9 11.6
+
+39.8
+
+79.4
+
+64.2 325.0
+
+0.0
+
+0.0
+
+0.0
+
+0.0
+
+0.0
+
+-29.0 -48.0 -25.0 102.0
+
+0.0
+
+0.0
+
+0.0
+
+Potential
+Evapotranspiration (PET)
+(mm)
+P – PET
+Change in Soil Moisture
+Storage
+Soil Moisture Storage
+
+200.0 200.0 200.0 200.0 200.0 171.0 123.0
+
+Actual
+
+0.0
+
+98.0 200.0 200.0 200.0 200.0 200.0
+
+0.0
+
+0.0
+
+0.0
+
+29.5
+
+75.1 108.3 118.8 107.2 75.4
+
+36.8
+
+7.7
+
+0.0
+
+558.8
+
+Soil Moisture Deficit (mm)
+
+0.0
+
+0.0
+
+0.0
+
+0.0
+
+0.0
+
+-29.0 -48.0 -25.0
+
+0.0
+
+0.0
+
+0.0
+
+0.0
+
+0.0
+
+Surplus (P – AET)
+
+64.3
+
+54.5
+
+60.9
+
+40.6
+
+11.5
+
+-27.0 -38.0 -19.0 11.6
+
+39.8
+
+79.4
+
+64.2 342.8
+
+Evapotranspiration (AET)
+
+Table 6.
+
+MOEE (1995) Infiltration Factors
+Description of the Area
+
+Value of the Infiltration Factor
+
+TOPOGRAPHY
+-
+
+Hilly topography
+
+0.10
+
+-
+
+Sand to silty sand
+
+0.4 (treated as “Open sandy loam”)
+
+SOIL
+
+COVER
+-
+
+Agricultural
+
+-
+
+Woodland
+
+0.10
+0.20
+
+4.2.2
+
+Post-Development Conditions
+
+It is intended to develop the site with 15 residences and a roadway (refer to Site Plan by The Biglieri Group
+Ltd., (Appendix A). The portion of the site that is not reserved as a Conservation Easement is
+approximately 2.61 ha. Details of the planned residences are not available. As a temporary measure, it is
+assumed that the homes will have a first floor footprint of 1,800 ft 2 (167.3 m2) each and that the standard
+driveway will be, on average, 4.5 x 10 m. The roadway is approximately 188 m long with an assumed paved
+
+Palmer_1904308_Alton Village Hydrogeology And Water Balance Study-2022-01-24
+
+18
+
+Hydrogeological Investigation
+0 Nicholas Street, Alton Village, Town of Caledon, Ontario
+
+width of 25 ft/7.6 m. This results in 4,615 m2 of impervious surfaces (rooftops and paved areas). It is also
+assumed that the remaining portion of the developed area will be divided evenly between new lawns/open
+space and existing woodlands. An infiltration factor of 0.15 (average of agricultural and woodland) is
+applied to this 2.15 ha.
+It is estimated that, post-development, 12,705.7 m3/year (215 mm/year) of precipitation will infiltrate (a
+decrease of 10.4%), and 9,534.6 m3/year (161 mm/year) will run off (an increase of 56.8%). Through the
+use of Low Impact Development (LID) measures which are designed to re-infiltrate 1,475.7 m3 of
+precipitation per year across the entire site area, the post-development infiltration will be maintained at predevelopment conditions.
+Based on the soil and groundwater conditions at the site, infiltration based LIDs such as infiltration trenches,
+galleries, or swales would be effective in promoting groundwater recharge to balance the pre-to-post
+development water balance. LIDs should be installed 1 m above the high water table and designed based
+a percolation rate of 20.7 mm/hr, which includes a 2.5x factor of safety from the percolation rates provided
+in Table 3.
+
+Palmer_1904308_Alton Village Hydrogeology And Water Balance Study-2022-01-24
+
+19
+
+Hydrogeological Investigation
+0 Nicholas Street, Alton Village, Town of Caledon, Ontario
+
+Table 7.
+
+Pre- and Post Development Water Balances
+
+Pre-Development
+
+Water
+Land Use
+
+Area Impervious Impervious Surplus on
+(ha)
+
+Factor
+
+Area (ha) Impervious
+Area (m/yr)
+
+Woodland
+
+Water
+
+Runoff
+from
+
+Pervious
+
+Impervious
+
+Area
+
+Area
+
+(ha)
+
+(m3/yr)
+
+Runoff
+
+Surplus
+on
+
+Infiltration
+
+Volume
+Runoff
+
+from
+
+Volume
+Infiltration
+
+from
+
+Total
+
+Total
+
+Runoff Infiltration
+
+Pervious Coefficient Pervious Coefficient Pervious Volume
+
+Volume
+
+(m3/yr)
+
+(m3/yr)
+
+Area
+
+Area
+
+Area
+
+(m/yr)
+
+(m3/yr)
+
+(m3/yr)
+
+5.91
+
+0.00
+
+0.00
+
+0.772
+
+0
+
+5.91
+
+0.3428
+
+0.30
+
+6,077.8
+
+0.70
+
+14,181.4
+
+6,077.8
+
+14,181.4
+
+Building/Paved 0.00
+
+1.00
+
+0.00
+
+0.772
+
+0
+
+0.00
+
+0.3428
+
+1.00
+
+0
+
+0.00
+
+0
+
+0
+
+0
+
+0
+
+5.91
+
+14,181.4
+
+6,077.8
+
+14,181.4
+
+Development –
+Areas
+Total
+
+5.91
+
+0.00
+
+6,077.8
+
+Post-Development (No Mitigation)
+
+Land Use
+
+Area (ha)
+
+Impervious
+
+Impervious Area
+
+Factor
+
+(ha)
+
+Water Surplus on
+
+Runoff from
+
+Impervious Area
+
+Impervious Area
+
+(m/yr)
+
+(m3/yr)
+
+Pervious Area
+
+Water Surplus
+
+(ha)
+
+on Pervious
+Area (m/yr)
+
+Runoff
+Coefficient
+
+Runoff Volume
+from Pervious
+Area (m3/yr)
+
+Infiltration
+Infiltration
+
+Volume from
+
+Coefficient
+
+Pervious Area
+(m3/yr)
+
+Total Runoff
+Volume
+(m3/yr)
+
+Total Infiltration
+Volume (m3/yr)
+
+Woodland
+(Conservation
+
+3.2985
+
+0.00
+
+0.00
+
+0.772
+
+0.00
+
+3.2985
+
+0.3428
+
+0.3
+
+3,392.2
+
+0.70
+
+7,915.1
+
+3,392.2
+
+7,915.1
+
+2.15
+
+0.00
+
+0.00
+
+0.772
+
+0.00
+
+2.15
+
+0.3428
+
+0.35
+
+2,579.6
+
+0.65
+
+4,790.6
+
+2,579.6
+
+4,790.6
+
+0.4615
+
+1.00
+
+0.4615
+
+0.772
+
+3,562.8
+
+0.00
+
+0.3428
+
+1.00
+
+0
+
+0.00
+
+0
+
+3,562.8
+
+0
+
+3,562.8
+
+5.4485
+
+12,705.7
+
+9,534.6
+
+12,705.7
+
+Reserve)
+Lawn/Woodland
+Development –
+Building/Paved Areas
+Total
+
+5.91
+
+0.4615
+
+5,971.8
+
+Post-Development (With Mitigation)
+
+Land Use
+
+Area (ha)
+
+Impervious
+Factor
+
+Water Surplus on
+Impervious Area (ha)
+
+Runoff from
+
+Impervious Area Impervious Area
+(m/yr)
+
+(m3/yr)
+
+Pervious Area
+(ha)
+
+Water Surplus
+on Pervious
+Area (m/yr)
+
+Runoff
+Coefficient
+
+Runoff Volume
+from Pervious
+Area (m3/yr)
+
+Infiltration
+Infiltration
+
+Volume from
+
+Coefficient
+
+Pervious Area
+(m3/yr)
+
+Total Runoff
+Volume
+(m3/yr)
+
+Total Infiltration
+Volume (m3/yr)
+
+Woodland
+(Conservation
+
+3.2985
+
+0.00
+
+0.00
+
+0.772
+
+0.00
+
+3.2985
+
+0.3428
+
+0.3
+
+3,392.2
+
+0.70
+
+7,915.1
+
+3,392.2
+
+7,915.1
+
+2.15
+
+0.00
+
+0.00
+
+0.772
+
+0.00
+
+2.15
+
+0.3428
+
+0.35
+
+2,579.6
+
+0.65
+
+4,790.6
+
+2,579.6
+
+4,790.6
+
+Reserve)
+Lawn/Woodland
+
+Palmer_1904308_Alton Village Hydrogeology And Water Balance Study-2022-01-24
+
+20
+
+Hydrogeological Investigation
+0 Nicholas Street, Alton Village, Town of Caledon, Ontario
+
+Land Use
+
+Development –
+Building/Paved Areas
+
+Area (ha)
+
+Impervious
+Factor
+
+0.4615
+
+1.00
+
+Water Surplus on
+Impervious Area (ha)
+
+0.4615
+
+Runoff from
+
+Impervious Area Impervious Area
+(m/yr)
+
+(m3/yr)
+
+0.772
+
+3,562.8
+
+Pervious Area
+(ha)
+
+0.00
+
+Water Surplus
+on Pervious
+Area (m/yr)
+
+0.3428
+
+Runoff
+Coefficient
+
+1.00
+
+Runoff Volume
+from Pervious
+Area (m3/yr)
+
+0
+
+Infiltration
+Infiltration
+
+Volume from
+
+Coefficient
+
+Pervious Area
+
+Total Runoff
+
+(m3/yr)
+0.00
+
+0
+
+Infiltration Based LID
+(assumed)
+Total
+
+5.91
+
+0.4615
+
+3,562.8
+
+5.4485
+
+5,971.8
+
+12,705.7
+
+Volume
+(m3/yr)
+
+Total Infiltration
+Volume (m3/yr)
+
+3,562.8
+
+0
+
+-1,475.7
+
++1,475.7
+
+8,058.9
+
+14,181.4
+
+Pre-toPost
+Difference
+No
+
+(%)
+
+Mitigation
+
+Pre-toPost
+Difference
+
++56.8
+
++3,456.8
+
+-10.4%
+
+1,475.7
+
+(m3)
+Pre-toPost
+Difference
+With
+
+(%)
+
+Mitigation
+
+Pre-toPost
+Difference
+
++32.6%
+
+0%
+
++1,981.1
+
+0%
+
+(m3)
+
+Palmer_1904308_Alton Village Hydrogeology And Water Balance Study-2022-01-24
+
+21
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+APPENDIX “G”
+Road Details
+
+April 2026
+File: 17121
+
+6.05m
+5.65m
+
+7.9m
+8.7m PAVEMENT
+
+3.95m
+4.35m
+
+EP
+
+1.5m
+
+3.95m
+4.35m
+
+6.05m
+5.65m
+
+SIDEWALK
+
+1.65m
+
+1.5m
+
+EP
+
+1.65m
+
+STREETLINE
+
+STREETLINE
+
+20.0m ROW
+
+SIDEWALK
+
+HYDRO
+TRANS.
+
+1.7m
+
+3%
+
+AS APPROVED BY
+REGION OF PEEL
+
+STM
+
+HYDRO.
+TRANS.
+JOINT USE
+UTIL.
+CORR.
+
+W/M
+
+3%
+
+SUBDRAIN
+
+JOINT USE
+UTIL.
+CORR.
+
+2% - 4%
+
+2% MIN.
+
+2%
+
+2%
+
+2.7m MIN.
+
+SUBDRAIN
+
+2% MIN.
+
+2.0m MIN.
+
+2% - 4%
+
+9.3m
+(7.9m PAVEMENT)
+8.5m ROADWAY (8.7m
+
+9.5
+
+10.0
+0
+
+8.5
+1.5
+
+5. TREES TO BE PLACED IN LOCATIONS PER APPROVED LANDSCAPE PLAN
+6. STREETLIGHT FIXTURE PER APPROVED TOWN STANDARD.
+7. ON A CRESCENT THE WATERMAIN SHALL BE PLACED ON THE OUTSIDE.
+8. FULL LENGTH MINIMUM 100MM DIA.SUB-DRAINS C/W FILTERCLOTH SHALL BE
+INSTALLED TO TOWN OF CALEDON STANDARD NO. 218.
+9. SUB-GRADE SHALL BE COMPACTED TO A MINIMUM 95% OF S.P.D. AT
+OPTIMUM MOISTURE CONTENT.
+10. WHERE POSSIBLE MANHOLE LIDS TO BE LOCATED OUT OF TIRE LANE OF
+TRAFFIC.
+11. ESTATE RESIDENTIAL 4.0 METERS LANE WIDTH.
+
+TEXT AND SLOPE REVISIONS
+
+JULY 19
+
+DIMENSION AND TEXT REVISION
+
+JAN. 09
+
+DIMENSION, LAYOUT REVISION
+
+JULY 08
+
+DIMENSION EDIT, STD No. 201 NOW 203
+
+JUNE 08
+APRIL 08
+
+OFFSETS
+
+REVISION
+
+0.5
+
+7.6
+8.0
+2.4
+2.0
+
+8.5
+
+20.0m LOCAL URBAN/RURAL
+
+5
+4
+3
+2
+1
+NO.
+
+6.6
+
+1.5
+
+10.0
+
+TOWN OF CALEDON
+
+3.4
+
+0
+
+8.5
+
+NOTES:
+1. UTILITY CORRIDOR TO HAVE A MINIMUM COVER OF 0.9m.
+2. WATERMAIN TO HAVE MINIMUM COVER OF 1.7m.
+3. THE FOLLOWING IS A MINIMUM ROAD BASE AND WILL REQUIRE A SOILS REPORT
+VERIFICATION
+40mm HL3
+65mm HL8
+150mm GRANULAR "A"
+300mm GRANULAR 'B'
+4. THE BOULEVARDS REQUIRE A MINIMUM OF 300mm OF TOPSOIL AND NURSERY SOD
+
+4.9 5.1
+4.0 6.0
+
+1.5
+
+4.0
+
+8.0
+7.6
+2.0
+2.4
+
+6.6
+
+8.5
+1.5
+
+6.0
+
+9.5
+0.5
+
+3.4
+
+10.0
+0
+
+-1.0 11.0
+
+SAN
+
+APR'D
+
+APR'D:
+
+C.C.
+
+DATE:
+
+DRAWN:
+
+BJM
+
+SCALE:
+
+19/01/00
+
+N.T.S.
+
+STANDARD No. 203
+
+DATE
+
+MODIFIED PAVEMENT WIDTH FOR 21T-24001C
+
+Functional Servicing Report
+Proposed Residential Subdivision, Alton, Town of Caledon
+
+APPENDIX “H”
+Functional Servicing, Grading & ESC Plan
+
+April 2026
+File: 17121
+
+T
+E
+
+E
+
+R
+
+T
+S
+Y
+
+R
+
+A
+
+M
+
+T
+E
+R
+A ET
+G
+R E
+A R
+M ST
+
+Ex. 750mm DIA
+CSP CULVERT
+IN
+A
+M
+S
+LA
+O ET
+H E
+IC R
+N ST
+
+NO FENCE
+
+MH.2
+
+W/O
+
+W/O
+
+W/O
+W/O
+
+6.3m - 300Ø STM SEWER @ 1.0%
+
+16
+
+.3
+
+-S
+
+TM
+
+INFILTRATION TRENCH #3
+13m LONG, 1.0m WIDE, 1.0m HIGH
+
+SE
+
+W
+
+AMELIA STREET
+
+ER
+
+MH.3
+
+MH.4
+
+54.5m - STM SEWER
+
+MH.5
+
+4.4m
+
+77-0412
+
+A
+.6
+
+30
+(EX .1m - S
+TER
+T
+NAL M SEW
+DRA ER
+INA
+GE)
+
+MH
+.7
+
+MH.10
+OGS MODEL EFO4
+6.3m - 300Ø STM SEWER @ 1.0%
+CONTROL MH.9
+TOP 406.31
+INV 403.04
+100YR CONTROLLED
+RELEASE RATE: 0.06m³/s
+
+INFILTRATION TRENCH #5
+15m LONG, 1.0m WIDE, 1.0m HIGH
+
+PROPOSED
+RETAINING
+WALL
+
+MH.11
+TOP 405.56
+INV 402.31
+COMBINED FLOW: 1.74m³/s
+
+2.5m - 0.9mHx1.2mW BOX CULVERT @ 0.50%
+6.4m - STM SEWER
+
+INFILTRATION TRENCH #6
+15m LONG, 1.0m WIDE, 1.0m HIGH
+
+MH.8
+
+22.5° BEND
+
+PERFORATED PIPE
+
+AY
+
+ER
+
+29.2m - STM SEWER
+(EXTERNAL DRAINAGE)
+
+82.2m - STM SEWER
+(EXTERNAL DRAINAGE)
+
+MH.17
+
+OVERFLOW TO
+BYPASS SEWER
+
+AMELIA STREET
+
+MH.19
+
+150Ø PVC WATERMAIN
+
+INFILTRATION TRENCH #7
+25m LONG, 1.0m WIDE, 1.0m HIGH
+
+NO FENCE
+MH.18
+EXTERNAL
+FLOW: 1.68m³/s
+
+REMOVE Ex.90° BEND AND
+CONNECT WITH 150Ø TEE
+
+OLD CHAIN
+LINK FENCE
+
+#5
+0
+
+AM
+EL
+
+IA
+
+PROPOSED
+SURFACE
+SWALE
+RETAINING
+CONVEYING FLOWWALL
+SOUTH
+
+PROPOSED
+RETAINING
+WALL
+
+EW
+
+MH
+MH.16
+22.5° BEND
+
+150Ø PVC WATERMAIN
+
+INFILTRATION TRENCH #4
+13m LONG, 1.0m WIDE, 1.0m HIGH
+
+POST AND
+CE
+WIRE FEN
+
+PIN 142
+
+54.1m - STM SEWER
+(EXTERNAL DRAINAGE)
+
+MH.15
+
+- ST
+
+MS
+
+54.5m - STM SEWER
+
+NO FENCE
+
+m
+
+VINYL
+GARAGE
+
+EX
+DRIVEW
+
+WATER STREET
+
+PROPOSED
+RETAINING
+WALL
+
+BOX CULVERT FOR
+SWM DETENTION
+89m LONG, 2.4m
+WIDE, 2.4m HIGH
+
+N.T.S
+2 STOREY WOOD
+CLAD DWELLING
+MUNICIPAL
+No. 19934
+
+MH.12
+TOP 403.27
+INV 401.98
+
+WOOD
+BUILDING
+
+NO FENCE
+
+AMELIA STREET
+
+HYD&V
+
+NO FENCE
+
+POST AND
+WIRE FENCE
+
+EX
+DRIVEWAY
+
+KEY PLAN
+
+.
+
+INFILTRATION TRENCH #2
+10m LONG, 1.0m WIDE,
+1.0m HIGH
+
+62.0m - STM SEWER
+
+INFILTRATION
+TRENCH #1
+20m LONG, 1.0m
+WIDE, 1.0m HIGH
+
+17.1m - 0.9mHx1.2mW
+BOX CULVERT @ 0.50%
+
+2
+D ST
+M WE ORE
+U
+No NI LLIN Y
+. 1 CIP G
+98 AL
+76
+RAIL FENCE
+
+WOOD SHED
+
+WOOD SHED
+
+MH.13
+TOP 403.18
+INV 401.78
+
+ST
+
+PROPOSED
+2 X 525Ø HDPE
+CULVERT
+
+410
+
+PROPOSED
+RIP RAP
+(2 LAYERS OF
+350mm DIA STONE)
+
+SUBJECT TO
+EASEMENT AS IN
+INSTRUMENT
+No. RO1074138
+PREVIOUSLY
+DESCRIBED BY
+CA24238
+
+41.0m - 0.9mHx1.2mW BOX CULVERT @ 0.50%
+
+PROPOSED
+RIP RAP
+(2 LAYERS OF
+350mm DIA STONE)
+
+WOOD
+GARAGE
+
+66.5m - 0.9mHx1.2mW BOX CULVERT @ 0.50%
+
+MH.1
+
+NICHOLAS STREET
+
+2
+D ST
+M WE ORE
+No UNI LLIN Y
+. 1 CIP G
+99 AL
+30
+
+PROPOSED
+RETAINING
+WALL
+
+(NOT TRAVELLED)
+BY REGISTERED PLAN CAL-5
+TRANSFERRED BY INSTRUMENT
+No. PR3206655
+PIN 14277-0477
+
+2S
+
+2
+D ST
+M WE ORE
+U
+No NI LLIN Y
+. 1 CIP G
+99 AL
+04
+
+TO
+D R
+M W E EY W
+No UNI LLIN OO
+. 1 CIP G D
+99 AL
+34
+
+SPRING
+STREET
+
+2
+D ST
+M WE ORE
+No UNI LLIN Y
+. 1 CIP G
+99 AL
+60
+
+PROPOSED
+RETAINING
+WALL
+
+5.1m - 0.9mHx1.2mW
+BOX CULVERT @ 0.50%
+
+MAIN STREET
+
+Ex. CULVERT
+
+MH.14
+TOP 403.15
+INV 401.75
+
+HW.1
+INV 401.66
+
+NORTH ANGLE
+LOT 9, BLOCK 7
+REGISTERED
+PLAN CAL-5
+
+Q
+U
+EE
+N
+
+EX. INV.
+401.66
+
+CUT-IN
+250x150Ø TEE
+
+METAL SHED
+
+ST
+RE
+ET
+
+W
+
+.
+
+T
+
+E
+
+E
+R
+
+T
+
+S
+
+SUBJECT
+SITE
+
+MAIN STREET BY REGISTERED PLAN CAL-5
+
+5
+#4
+6A
+
+M
+
+EL
+
+IA
+
+ST
+.
+
+40
+
+PROPOSED
+RETAINING
+WALL
+PROPOSED
+RETAINING
+WALL
+
+POST AND
+WIRE FENCE
+
+5
+42
+
+#3
+
+8A
+
+M
+
+EL
+
+IA
+
+ST
+.
+
+NO FENCE
+
+OLD CHAIN
+LINK FENCE
+
+PRELIMINARY
+WOOD
+SHED
+
+VALDOR ENGINEERING INC
+
+Consulting Engineers - Project Manage
+NO
+
+571 Chrislea Road, Unit 4, 2nd Floor, Woodbridge, Ontario, L4L 8
+TEL (905)264-0054, FAX (905)264-0069
+E-MAIL: info@valdor-engineering.com
+www.valdor-engineering.com
+
+0
+42
+
+COMMUNITY OF ALTON
+TOWN OF CALEDON
+REGION OF PEEL
+FILE NUMBER: 21T-24001C
+
+FUNCTIONAL
+SERVICING PLAN
+
+0
+FEN
+CE
+
+1:500
+
+43
+5
+
+17121
+
+PIN 14277-0415
+
+NC
+
+5
+
+E
+
+NO FENCE
+
+FE
+
+NO
+
+NO
+
+43
+
+42
+
+S:\Projects\2017\17121\Drawings\FSP-1_FGP-1_17121.dwg, FSP-1, 2026-04-17 11:31:50 AM
+
+E
+
+NC
+FE
+
+AMELIA STREET SUBDIVISION
+
+FSP-1
+
+

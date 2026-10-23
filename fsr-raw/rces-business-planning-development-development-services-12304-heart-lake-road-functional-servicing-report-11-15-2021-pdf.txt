@@ -1,0 +1,6646 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+Final Report
+
+FUNCTIONAL SERVICING REPORT
+12304 Heart Lake Road, Caledon
+
+Prepared for Broccolini
+by IBI Group
+November 15, 2021
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+Table of Contents
+1
+
+2
+
+3
+
+4
+
+5
+
+November 15, 2021
+
+Introduction ......................................................................................................................... 1
+1.1
+
+Background .............................................................................................................. 1
+
+1.2
+
+Site Description ........................................................................................................ 1
+
+1.3
+
+Site Proposal............................................................................................................ 2
+
+Terms of Reference and Methodology ............................................................................. 2
+2.1
+
+Terms of Reference ................................................................................................. 2
+
+2.2
+
+Methodology: Sanitary Discharge ............................................................................ 2
+
+2.3
+
+Methodology: Water Usage ..................................................................................... 2
+
+Groundwater Discharge ..................................................................................................... 3
+3.1
+
+Groundwater Quality ................................................................................................ 3
+
+3.2
+
+Short-term Groundwater Discharge ......................................................................... 3
+
+3.3
+
+Long-term Groundwater Discharge ......................................................................... 3
+
+Sanitary Drainage System ................................................................................................. 4
+4.1
+
+Existing Sanitary Drainage System ......................................................................... 4
+
+4.2
+
+Proposed Sanitary Drainage System....................................................................... 4
+
+4.3
+
+Post-Development Population ................................................................................. 4
+
+4.4
+
+Post-Development Sanitary Design Flow ................................................................ 4
+
+4.5
+
+Sanitary Service Connections .................................................................................. 5
+
+4.6
+
+Sanitary Sewer (Abbotside Way Extension) ............................................................ 5
+
+Water Supply System ......................................................................................................... 6
+5.1
+
+Existing Water Supply System................................................................................. 6
+
+5.2
+
+Proposed Water Supply System .............................................................................. 6
+
+5.3
+
+Domestic Water Supply Demands ........................................................................... 6
+
+5.4
+
+Fire Supply Demands .............................................................................................. 7
+
+5.5
+
+System Pressure Under Normal Operation ............................................................. 7
+
+5.6
+
+System Pressure Under Fire Flow ........................................................................... 8
+
+5.7
+
+Water Service Connections ..................................................................................... 8
+
+5.8
+
+Hydrant Coverage .................................................................................................... 8
+
+i
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+Table of Contents (continued)
+6
+
+Conclusions and Recommendations ............................................................................... 9
+
+Figure 1 – Vicinity Map ................................................................................................................. 1
+Figure 2 – Aerial Plan ................................................................................................................... 1
+Appendix A – Background Information ...................................................................................... 2
+Appendix B – Groundwater.......................................................................................................... 3
+Appendix C – Sanitary Analysis .................................................................................................. 4
+Appendix D – Water Analysis ...................................................................................................... 5
+
+Enclosures:
+Site Plan Drawings
+SG-01 – Site Grading 01
+SG-02 – Site Grading 02
+SG-03 – Site Grading 03
+SG-04 – Site Grading 04
+SS-01 – Site Servicing 01
+SS-02 – Site Servicing 02
+SS-03 – Site Servicing 03
+SS-04 – Site Servicing 04
+XS-01 - Sections
+
+Abbotside Way Extension Drawings
+
+November 15, 2021
+
+ii
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+1
+
+Introduction
+
+1.1
+
+Background
+
+IBI Group Canada (IBI) has been retained by Broccolini (the “Owner”) to prepare a set of
+engineering drawings for the extension of Abbotside Way as part of a Development Agreement,
+and to prepare a Functional Servicing Report to support the Zoning By-Law Amendment (ZBA)
+and Site Plan Application (SPA) processes for a proposed industrial development located at
+12304 Heart Lake Road in the Town of Caledon (the “Town”) and the Region of Peel (the
+“Region”). The purpose of this report is to provide a municipal servicing strategy for both sanitary
+discharge, and water supply. More specifically, the report will present the following:
+•
+
+Evaluate groundwater quantity and quality parameters from the hydrogeological report
+and develop a strategy to manage groundwater under both short- and long-term
+conditions
+
+•
+
+Identify sanitary servicing opportunities and constraints and evaluate the capacity of the
+receiving municipal sewer.
+
+Identify water servicing opportunities and constraints, calculate the proposed domestic
+water and firefighting supply needs; and evaluate the capacity of the municipal
+infrastructure.
+The following documents have been obtained from various sources:
+•
+
+1.2
+
+•
+
+Approved Town of Caledon plan and profile drawings for Abbotside Way, prepared by
+SCS Consulting Group Ltd. (SCS), dated August 2016;
+
+•
+
+Mayfield West Functional Servicing and Stormwater Management Study (Mayfield West
+FSR), prepared by David Schaeffer Engineering Ltd., dated November 2007;
+
+•
+
+Region of Peel 2041 Wastewater Capital Program, dated June 2020;
+
+•
+
+Speirs Giffen Avenue Ultimate Sanitary Area Drainage Plan, prepared by IBI Group, dated
+July 2019;
+
+•
+
+Topographic Survey prepared by R-PE Surveying Ltd., dated September 2021; and,
+
+•
+
+Architectural plans and site statistics prepared by Ware Malcomb.
+
+Site Description
+
+Located at 12304 Heart Lake Road in the Town of Caledon and Region of Peel, the overall subject
+site is approximately 37 ha in size, however, it should be noted that this report will only consider
+Phase 1 of the development, which consists of a 9.95 ha portion at the southwest of the site,
+bounded by Abbotside Way to the north, existing agricultural lands to the east, Highway 410 to
+the south, and an adjacent industrial development application to the west. A vicinity map and an
+aerial exhibit can be found as Figure 1 and Figure 2 respectively following the report.
+The overall site is currently comprised of agricultural land and slopes in a southwesterly direction
+with a change in elevation starting at ±274 m at Heart Lake Road and falling to ±266 m at the west
+property line. A copy of the topographic survey can be found in Appendix A for reference.
+The site is located within the Mayfield West Study Area for which a Functional Servicing and
+Stormwater Management Study was completed in November 2007.
+
+November 15, 2021
+
+1
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+1.3
+
+Site Proposal
+
+As previously noted, this report will only consider Phase 1 of the development, which includes a
+48,610 m2 building (Building 1) within a 9.95 ha portion at the southwest corner of the site.
+Construction will be slab on grade, with no underground levels. Sample architectural drawings
+can be found in Appendix A for reference.
+It should also be noted that Abbotside Way will be extended in an easterly direction
+to Heart Lake Road and is to be conveyed to the Town through a Development Agreement.
+
+2
+
+Terms of Reference and Methodology
+
+2.1
+
+Terms of Reference
+
+The terms of reference used for the scope of this report are based on the Region’s Design,
+Specifications, and Procedures Manual for Linear Infrastructure, dated March 2017; the Town’s
+Engineering design criteria; and the aforementioned background studies and reports.
+
+2.2
+
+Methodology: Sanitary Discharge
+
+Peak sanitary sewer flows that consider infiltration will be calculated based on Table 2.1 below, in
+accordance with the Region’s design criteria. Based on the calculated peak flows, the adequacy
+of the existing infrastructure to support the proposed development will be discussed.
+Table 2.1 Sanitary Design Parameters
+
+2.3
+
+Criteria
+
+Unit
+
+Source
+
+Industrial Population
+
+70 pp/ha
+
+Peel
+
+Average Flow
+
+302.8 L/cap/day
+
+Peel
+
+Infiltration
+
+0.0002 m3/s/ha
+
+Peel
+
+Methodology: Water Usage
+
+The domestic water usage will be calculated based on Table 2.2 below, in accordance with the
+Region’s design criteria. Pressure and flow testing to determine the adequacy of the existing
+watermain to support the development with fire suppression in accordance with the Fire
+Underwriters Survey (FUS) Guidelines will be discussed in the subsequent sections.
+Table 2.2 Water Design Parameters
+
+November 15, 2021
+
+Criteria
+
+Unit
+
+Source
+
+ICI Average Consumption
+
+300 L/Employee/day
+
+Peel
+
+Maximum Day Factor
+
+1.4
+
+Peel
+
+Peak Hour Factor
+
+3.0
+
+Peel
+
+2
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+3
+
+Groundwater Discharge
+
+3.1
+
+Groundwater Quality
+
+A hydrogeological assessment was carried out by EXP Services Inc. (EXP) to assess existing
+groundwater conditions from both quality and quantity perspectives. The following table is a
+summary of the observed groundwater quality parameters compared to the Region’s limits for
+discharge:
+Table 3.1 Groundwater Quality Exceedances
+Parameter
+
+Storm By-Law
+Criteria (µg/L)
+
+Sanitary By-Law
+Criteria (µg/L)
+
+Measured Reading
+(µg/L)
+
+Total Manganese
+
+5,000
+
+50
+
+78
+
+Chloroform
+
+40
+
+2
+
+2.8
+
+Per the hydrogeological assessment, observed levels of Total Manganese and Chloroform exceed
+the City’s and Region’s threshold for discharge to storm sewer but meet the threshold for discharge
+to sanitary sewers. It is therefore recommended that all dewatering activities be discharged to the
+sanitary sewer without pre-treatment. Please see Appendix B for an excerpt copy of the
+hydrogeological assessment.
+
+3.2
+
+Short-term Groundwater Discharge
+
+The anticipated average short-term groundwater discharge has been estimated by EXP as shown
+in the table below. At the time of this report, a dewatering plan was not made available. It is
+therefore assumed that groundwater pumping will operate for 16 hours per day resulting in a
+corresponding maximum pumping rate as shown:
+Table 3.2 Short-Term Groundwater Discharge
+Building
+
+Average
+Discharge 1
+
+Average
+Discharge
+
+Hours of
+Operation
+
+Peak
+Discharge
+
+Connection
+Outlet
+
+Treatment
+Required
+
+Building 1
+
+640,000 L/day
+
+7.4 L/s
+
+16 hrs
+
+11.1 L/s
+
+Sanitary
+
+None
+
+It should be noted that a Permit to Take Water (PTTW) application must be submitted to the
+Ministry of the Environment, Conservation and Parks (MECP) if dewatering rates exceed
+50 m3/day.
+
+3.3
+
+Long-term Groundwater Discharge
+
+Per the hydrogeological assessment, a Private Water Drainage System (PWDS) will not be
+required, as the building will utilize slab on grade construction. Please see Appendix B for an
+excerpt copy of the hydrogeological assessment.
+
+1
+
+Includes short-term groundwater discharge with a safety factor of 2.0, and stormwater removal from a 15 mm precipitation event
+
+November 15, 2021
+
+3
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+4
+
+Sanitary Drainage System
+
+4.1
+
+Existing Sanitary Drainage System
+
+Per the Town’s record information, local sanitary infrastructure consists of a 250 mm sanitary
+sewer within Abbotside Way which flows in a westerly direction and conveys flows to a 525 mm
+trunk sanitary sewer within Kennedy Road. Further east of the subject site, an existing 375 mm
+sanitary sewer is located within Speirs Giffen Avenue which conveys flows in an easterly direction
+to an existing 525 mm sanitary sewer within Dixie Road.
+
+4.2
+
+Proposed Sanitary Drainage System
+
+As illustrated in the sanitary drainage area plan prepared by SCS, the overall site has been
+identified as industrial lands with a portion in the southwest corner allocated to be conveyed to the
+existing 250 mm sanitary sewer which will convey flows in a westerly direction to the
+Abbotside Way sanitary sewer system.
+For the balance of the industrial lands, a conceptual 300 mm sanitary sewer with a 0.4% slope
+has been identified as part of the approved plan and profile drawings (#409 and #410) prepared
+by SCS. It is therefore proposed to install this 300 mm sanitary sewer which will convey flows in
+an easterly direction to Heart Lake Road as part of proposed Abbotside Way Extension.
+It should be noted that this 300 mm sanitary sewer within Abbotside Way will be constructed as
+part of the enclosed Abbotside Way Extension drawing set, however will be plugged at
+Heart Lake Road and remain unused until such a time that Speirs Giffen Avenue is extended to
+Heart Lake Road per the Mayfield West FSR.
+Copies of the approved plan and profile drawings prepared by SCS for the Abbotside Way
+Extension can be found in Appendix A. Excerpt copies of the Mayfield West FSR, Speirs Giffen
+sanitary drainage area plan, and the Livingston Estates drainage area plan prepared by SCS can
+be found in Appendix C for reference.
+
+4.3
+
+Post-Development Population
+
+The following post-development population will be used to size the sanitary service connection:
+Table 4.1 Post-Development Populations
+Building
+
+Area
+
+Population Density
+
+Pop.
+
+Building 1
+
+9.95 ha
+
+70 pp/ha/day
+
+697
+
+Please see Appendix C for the detailed design sheet.
+
+4.4
+
+Post-Development Sanitary Design Flow
+
+Based on the criteria set in Section 2.2 and the post-development population, the corresponding
+post-development sanitary sewer flow is calculated as follows:
+302.8 L/c·d ∙ 697 pers ∙ 3.90P.F.
+QBuilding 1 = �
+� + (0.20 L/s·ha ∙ 9.95 ha) = 11.5 L/s
+86400 s / day
+
+November 15, 2021
+
+4
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+4.5
+
+Sanitary Service Connection
+
+A 250 mm sanitary service and control MH were installed at the time Abbotside Way was
+constructed as part of the Livingston Estates residential subdivision. The control MH was installed
+on the adjacent property to the west however was installed for the subject site within an easement.
+It is therefore proposed the existing 250 mm sanitary service be utilized to service Building 1.
+The following table illustrates the peak flow and corresponding capacity of the existing service:
+Table 4.2
+
+Sanitary Service Performance
+
+Building
+
+From
+
+To
+
+Service
+Size (mm)
+
+Service
+Slope
+
+Peak Flow
+(L/s)
+
+Capacity
+(L/s)
+
+Percent of
+Full Flow
+
+Bldg. 1
+
+Cntrl.MH
+
+Ex. 250 mm
+San. Sewer
+
+200
+
+1.0 %
+
+11.5
+
+34.2
+
+34 %
+
+As shown above, the sanitary service will convey the post-development peak sanitary flow while
+operating at 34% of full flow capacity.
+Conceptual 300 mm sanitary services for future applications were identified as part of the
+approved plan and profile drawings prepared by SCS and will be installed as part of the Abbotside
+Way Extension to avoid future disruption to the municipal road.
+Please see the approved plan and profile drawings prepared by SCS which can be found in
+Appendix A, the detailed design sheet which can be found in Appendix C, and the enclosed
+Abbotside Way Extension drawing set.
+
+4.6
+
+Sanitary Sewer (Abbotside Way Extension)
+
+As previously mentioned, an existing 250 mm sanitary sewer at a 1.0% slope within
+Abbotside Way will be utilized to convey flows from Building 1 in a westerly direction.
+Furthermore, a new 300 mm sanitary sewer shall be installed within the Abbotside Way extension
+at a 0.4% slope as outlined in the approved Livingston Estates Plan and Profile prepared by SCS.
+This new municipal sewer is to be capped until such a time as the proposed Speirs Giffen
+extension is built. Please see approved plan and profile drawings prepared by SCS which can
+be found in Appendix A for reference, and the new Abbotside Way Extension drawings
+enclosed for reference.
+
+November 15, 2021
+
+5
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+5
+
+Water Supply System
+
+5.1
+
+Existing Water Supply System
+
+Per the Town and Region’s record information, local existing water infrastructure consists of a
+300 mm watermain within Abbotside Way, a local 400 mm watermain within Heart Lake Road, and
+both a 900 mm and a 1200 mm feedermain within Heart Lake Road.
+Hydrant flow testing was performed at existing fire hydrants along Abbotside Way to confirm the
+available water supply’s flow-pressure response curve. These tests were performed on
+November 18, 2021 and were conducted in accordance with NFPA 291. The results are
+summarized as follows:
+Table 6.1 Hydrant Response Curve
+Abbotside Way
+Flow
+(gpm)
+
+Flow
+(L/s)
+
+Pressure
+(psi)
+
+Pressure
+(kPa)
+
+0
+
+0
+
+81
+
+558
+
+1,126
+
+71.0
+
+74
+
+510
+
+1,838
+
+116.0
+
+73
+
+503
+
+As shown above, static pressure within the system is expected to be approximately 81 psi. A copy
+of the hydrant flow test can be found in Appendix D for reference.
+
+5.2
+
+Proposed Water Supply System
+
+As part of the Mayfield West FSR, the existing 300 mm watermain within Abbotside Way shall be
+extended within the proposed Abbotside Way extension and connected to the existing 400 mm
+watermain within Heart Lake Road. Please refer to the water distribution plan as part of the
+Mayfield West FSR which can be found in Appendix D for reference.
+
+5.3
+
+Domestic Water Supply Demands
+
+The Average Day Demand (ADD), Peak Hour Demand (PHD), and Max Day Demand (MDD) for
+the overall site have been calculated using the criteria set in Section 2.3, and are summarized as
+follows:
+Table 5.1 Domestic Water Demands
+Building
+
+Population
+
+ADD
+(L/s)
+
+PHD
+(L/s)
+
+MDD
+(L/s)
+
+Building 1
+
+697
+
+2.4
+
+7.3
+
+3.4
+
+The domestic supply line for the building will be designed based on PHD while maintaining a
+minimum available pressure of 40 psi (275 kPa) at the face of the building. Please see Appendix D
+for the detailed calculations.
+
+November 15, 2021
+
+6
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+5.4
+
+Fire Supply Demands
+
+The recommended fire flow demand for the building has been calculated using the design criteria
+outlined in the Water Supply for Public Fire Protection Manual, 1999 by the Fire Underwriters
+Survey (FUS). As the building will constructed using fire resistive materials, the effective floor
+area is taken as the largest floor area plus 25 % of the two adjacent floors. The corresponding
+floor area and FUS factors will be applied as follows:
+Table 5.2 Effective Floor Area and Fire Underwriters Survey Factors
+Building
+
+Floor Area
+(m2)
+
+Construction
+Coefficient
+
+Building
+Occupancy
+
+Sprinkler
+Adjustment
+
+Proximity
+Factor
+
+Building 1
+
+48,610
+
+0.6 (resistive)
+
+-15% (limited)
+
+-30%
+
++15%
+
+Using the effective floor area for the building and the appropriate FUS factors, the required fire
+flow is calculated as follows:
+Table 5.3 Fire Demand Calculations
+Fire Flow (F) Calculation
+
+Applying FUS factors
+
+Adjusted Fire Flow
+
+Total Demand (TD)
+
+F = 220 · 0.6 √Area
+
+F1=F·0.85 = 24,650 L/min
+
+Fire Flow = F1 - F2 + F3
+
+TD= FF + MDD
+
+F = 220 · 0.6 √48,610 m2
+
+F2=F1·0.50 = 12,325 L/min
+
+FF= 16,000 L/min (rnd’d)
+
+TD= 266.7 L/s + 3.4 L/s
+
+F = 29,000 L/min (rnd’d)
+
+F3=F1·0.15 = 3,698 L/min
+
+FF = 266.7 L/s
+
+TD= 270.1 L/s
+
+The fire supply line for the building will be designed based on Total Demand (Fire Flow + MDD)
+while maintaining a minimum available pressure of 20 psi (140 kPa) at the face of the building.
+Please see Appendix D for the detailed calculations.
+
+5.5
+
+System Pressure Under Normal Operation
+
+As previously mentioned, the domestic service for the building shall be sized to convey domestic
+demands under normal system operating conditions (PHD) while maintaining a minimum available
+pressure of 40 psi (275 kPa). The residual pressure at the building is calculated by first
+interpolating the PHD residual pressure within the existing watermain, and then subtracting head
+losses within the system using the Hazen-Williams formula. The following table summarizes the
+residual pressure for the proposed domestic service:
+Table 5-2 Residual Pressure under PHD Conditions
+Flow
+Conditions
+
+PHD
+(L/s)
+
+Domestic
+Service
+(mm)
+
+PHD
+
+7.3
+
+150
+
+Residual Pressure @
+Main
+
+Residual Pressure
+@ Bldg.
+
+(psi)
+
+(kPa)
+
+(psi)
+
+(kPa)
+
+81
+
+558
+
+81
+
+557
+
+As shown above, there is no appreciable head loss within the system, and the residual pressure
+at the building face is above the minimum acceptable pressure of 40 psi (275 kPa) under PHD
+conditions. Please see Appendix E for the detailed design calculations.
+
+November 15, 2021
+
+7
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+5.6
+
+System Pressure Under Fire Flow
+
+As previously mentioned, the fire service shall be sized to convey the total fire demand
+(Fire + MDD) while maintaining a minimum available pressure of 20 psi (140 kPa). The residual
+pressure at the building is calculated by first interpolating the residual pressure within the existing
+watermain, and then subtracting head losses within the system using the Hazen-Williams formula.
+The following table summarizes the residual pressure for the proposed fire service:
+Table 5-3 Residual Pressure under Fire + MDD Conditions
+Flow
+Conditions
+
+FF+MDD
+(L/s)
+
+Fire
+Service
+(mm)
+
+FF+MDD
+
+270.1
+
+300
+
+Residual Pressure @
+Main
+
+Residual Pressure
+@ Bldg.
+
+(psi)
+
+(kPa)
+
+(psi)
+
+(kPa)
+
+43
+
+295
+
+38
+
+262
+
+As shown above, the residual pressure at the building face for the fire service is above the
+minimum acceptable pressure of 20 psi (140 kPa) under fire demand conditions (Fire + MDD).
+Please see Appendix D for the detailed design calculations.
+
+5.7
+
+Water Service Connections
+
+To service the proposed building, a new 300 mm fire service is proposed to be looped around the
+building with two connections the 300 mm watermain within Abbotside Way. A separate 150 mm
+domestic service will tee off from the fire line, and a new valve and box shall be installed at the
+property line for each incoming service.
+Each incoming 300 mm fire service shall be installed with a detector check valve placed in a
+1800 mm precast chamber per Peel Dwg. 1-3-1, and the incoming 150 mm water service shall be
+installed with a meter placed in a 1500 mm precast chamber per Peel Dwg. 1-4-4.
+The National Fire Protection Association (NFPA) considers any building over 23 m in height to be
+classified as a high-rise building and thus requires a remotely located secondary siamese
+connection for each zone. As the proposed building is less than 23 m in height, one siamese
+connection will suffice, however additional siamese connections may be required for multiple fire
+zones, and shall be confirmed at the Building Permit stage. All siamese connections shall be
+placed within 45 m of a hydrant.
+Please see enclosed servicing drawings SS-01 through SS-04, and the enclosed Abbotside Way
+Extension drawing set for reference.
+
+5.8
+
+Hydrant Coverage
+
+Existing hydrants are located on the north side of Abbotside Way and on either side of
+Heart Lake Road. Four new municipal hydrants are proposed within the north boulevard of the
+Abbotside Way Extension. Additional private hydrants shall be installed around the permitter of
+Building 1, and as previously mentioned all proposed siamese connections shall be strategically
+placed within 45 m of a hydrant to satisfy OBC requirements.
+Please see Drawings SS-01 through SS-04 and the enclosed Abbotside Way Extension drawing
+set for the location of all existing and proposed water infrastructure.
+
+November 15, 2021
+
+8
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+6
+
+Conclusions and Recommendations
+
+Sanitary Sewers
+The receiving sanitary system within Abbotside Way, which was designed as part of the
+Mayfield West FSR, and detailed as part of the Livingston Estates FSR, has been sized to
+accommodate sanitary flows from the subject site.
+Water Supply
+The existing watermain network has been designed in accordance with the Mayfield West FSR.
+It is noted that additional hydrant testing will be conducted shortly, and it is expected that the
+watermain network will easily support the proposed fire and domestic water demands for the
+proposed development.
+Summary
+In summary, it can be concluded that both the Zoning By-Law Amendment and Site Plan
+Application can be supported from a municipal site servicing perspective subject to further fire flow
+testing.
+Should you have any questions, please do not hesitate to contact the undersigned.
+Respectfully Submitted,
+IBI Group Canada Inc.
+
+November 15, 2021
+
+Jason Jenkins, P.Eng, P.E.
+Associate Manager - Land Engineering
+Tel:
+E-Mail:
+
++1.905.763.2322 x 63542
+Jason.Jenkins@ibigroup.com
+
+https://ibigroup.sharepoint.com/sites/projects1/135636/internal documents/6.0_technical/6.04_civil/03_tech-reports/phase 1/zba and spa/revision 1/functional
+servicing/135636 - functional servicing report (revision 1).docx
+
+November 15, 2021
+
+9
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+Figure 1 – Vicinity Map
+
+November 15, 2021
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+True North
+
+D
+
+IX
+I
+
+E
+
+R
+
+O
+
+AD
+
+H
+EA
+
+LA
+
+KE
+
+R
+
+AD
+
+Last Saved: November 2, 2021, by Jasmine.Zhang
+
+Plotted:
+
+O
+
+SITE
+410
+
+File Location: J:\135636_12304Heart\7.0_Production\7.03_Design\04_Civil\Sheets\SPA\Phase 1\Figures\135636-SHT-FIG.dwg
+Thursday, November 4, 2021 10:44:25 AM by Nicolas Di Stefano
+
+HWY.
+
+Y
+
+ED
+
+M
+
+N
+N
+
+AY
+
+FI
+
+KE
+
+EL
+D
+
+RO
+AD
+
+PHASE 1
+
+AD
+
+O
+
+R
+PROJECT NAME
+
+12304 HEART LAKE ROAD
+CALEDON, ONTARIO
+SCALE:
+
+DATE:
+
+FIGURE NAME
+
+N.T.S.
+
+NOV 2021
+
+KEY PLAN
+
+PROJECT ENG:
+
+DRAWN BY:
+
+JJ
+
+NDS
+
+CHECKED BY:
+
+APPROVED BY:
+
+JJ
+PROJECT NO:
+
+135636
+
+FIGURE NO.
+
+FIG-1
+
+10mm
+
+IBI GROUP
+Unit 300 – 8133 Warden Avenue
+Markham ON L6G 1B3 Canada
+tel 905 763 2322 fax 905 763 9983
+ibigroup.com
+
+INDUSTRIAL
+DEVELOPMENT - PHASE 1
+
+REVISION
+
+SCALE CHECK
+1 in
+
+R
+T
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+Figure 2 – Aerial Plan
+
+November 15, 2021
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+True North
+
+D
+
+IX
+
+IE
+
+H
+
+EA
+
+R
+
+A
+D
+
+LA
+
+E
+
+R
+
+Plotted:
+
+K
+
+D
+
+Last Saved: November 2, 2021, by Jasmine.Zhang
+
+SITE
+0
+
+File Location: J:\135636_12304Heart\7.0_Production\7.03_Design\04_Civil\Sheets\SPA\Phase 1\Figures\135636-SHT-FIG.dwg
+Thursday, November 4, 2021 10:45:56 AM by Nicolas Di Stefano
+
+Y
+
+41
+
+RO
+
+AY
+FI
+E
+
+LD
+
+PHASE 1
+
+AD
+
+HW
+
+M
+
+K
+EN
+N
+
+ED
+
+Y
+
+R
+
+D
+
+PROJECT NAME
+
+12304 HEART LAKE ROAD
+CALEDON , ONTARIO
+SCALE:
+
+DATE:
+
+FIGURE NAME
+
+N.T.S.
+
+NOV 2021
+
+AERIAL PLAN
+
+PROJECT ENG:
+
+DRAWN BY:
+
+JJ
+
+NDS
+
+CHECKED BY:
+
+APPROVED BY:
+
+JJ
+PROJECT NO:
+
+135636
+
+FIGURE NO.
+
+FIG-2
+
+10mm
+
+IBI GROUP
+Unit 300 – 8133 Warden Avenue
+Markham ON L6G 1B3 Canada
+tel 905 763 2322 fax 905 763 9983
+ibigroup.com
+
+INDUSTRIAL
+DEVELOPMENT - PHASE 1
+
+REVISION
+
+SCALE CHECK
+1 in
+
+T
+
+R
+O
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+Appendix A – Background Information
+Sample Architectural Drawings (Ware Malcomb)
+Topographic Survey (R-PE)
+Plan and Profile Drawings (Town of Caledon)
+
+November 15, 2021
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+GTA WEST FAA
+
+LARSON PEAK RD
+
+BLDG 3
+
+FOOTPRINT:
+±92,433 m²
+±994,941 SF
+
+HEART LAKE RD
+
+BONNIEGLEN FARM BLVD
+
+NOISE BERM
+
+SETBACK
+FROM RESIDE
+NTAIL
+
+NO LEFT-TURN
+SIGN FOR TRUCKS
+
+26m
+R.O.W.
+
+15m
+
+ABBOTSIDE WAY
+
+7m
+
+NOTE: HEIGHT VARIANCE MAY BE
+REQUIRED DEPENDING ON ZONING
+
+This conceptual design is based
+upon a preliminary review of
+entitlement requirements and on
+unverified and possibly incomplete
+site and/or building information, and
+is intended merely to assist in
+exploring how the project might be
+developed.
+
+OFFICE
+
+OFFICE
+OFFICE
+
+BLDG 1
+
+56'
+TYP.
+
+FOOTPRINT:
+±48.610 m²
+±523,234 SF
+
+BLDG 2
+
+36'-9"
+
+FOOTPRINT:
+±29,830 m²
+±321,087 SF
+
+Stormwater Management Design:
+ASSUMED UNDERGROUND
+SYSTEM
+
+RIGHT-IN
+RIGHT-OUT
+ACCESS
+
+Boundary Source:
+PDF ALTA SURVEY
+
+1137'-6"
+
+14m
+
+HWY SETBACK
+
+185'
+
+60' 50'
+TYP.
+
+36'-9"
+
+10m
+
+460'
+
+10m
+
+1:1500
+0
+
+scheme: 09
+
+20m
+
+40m
+
+75m
+
+150m
+
+NORTH
+
+Conceptual Site Plan
+12304 Heart Lake Road
+
+Caledon, ON, Canada
+
+TOR21-0032-00
+10.20.2021
+
+SHEET
+
+1
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+ROAD
+N
+LA
+
+E
+
+1
+A-
+
+NF
+LD
+
+AB
+
+ALNWIC
+AVENUEK
+
+BO
+TS
+ID
+E
+W
+AY
+
+PE
+
+AK
+
+STR
+EET
+AVE
+NU
+E
+
+REET
+
+43M-1800
+
+CONDO
+BLOCK 193
+
+DIR AVE
+NUE
+
+O ST
+
+STRE
+ET
+
+SANITARY
+INVERT
+
+STORM
+INVERT
+EXISTING CL
+RD GRADES
+
+CENTERLINE
+CHAINAGE
+
+SANITARY
+INVERT
+
+STORM
+INVERT
+
+EXISTING C
+L
+RD GRADES
+
+CENTERLINE
+CHAINAGE
+
+ABBOTSIDE WAY
+
+C. CAMPBELL, C.E.T.
+DIRECTOR OF PUBLIC WORKS
+AND ENGINEERING
+
+APPROVED BY:__________________________
+
+PLAN AND PROFILE OF
+(FROM STA. 0+460.000 TO STA. 0+597.983)
+
+ABBOTSIDE WAY
+C
+
+DSEL
+
+600 Alden Road, Suite 500
+Markham, Ontario, L3R 0E7
+Tel. (905) 475-3080
+Fax. (905) 475-3081
+www.DSEL.ca
+
+SOUTH FIELDS COMMUNITY MOSCORP
+PHASES 1A (21T-06004C)
+PHASES 2 (21T-06002C)
+
+DATE :__________________
+
+THIS APPROVAL IS SUBJECT TO THE FURTHER CERTIFICATION OF
+THE "AS CONSTRUCTED" WORKS BY A REGISTERED PROFESSIONAL
+ENGINEER OF THE PROVINCE OF ONTARIO.
+
+THIS APPROVAL CONSTITUTES A GENERAL REVIEW AND DOES NOT
+CERTIFY DIMENSIONAL ACCURACY.
+
+APPROVED FOR CONSTRUCTION
+
+AS-CONSTRUCTED
+
+SCALE 1:8000
+
+Y
+
+BENA
+
+LOSIN
+
+KEY PLAN
+
+EMPLOYMENT
+
+43M-1800
+
+D
+
+PARK
+
+LEAR
+MONT
+AVEN
+LOSI
+NO
+UE
+
+KEA
+RNY
+AVE
+NUE
+
+RO
+A
+
+PHASE 1A ABBOTSIDE WA
+
+ST
+R
+EE
+T
+
+IE
+
+SWM
+POND
+
+AD
+RO
+
+O
+
+REFER TO
+
+KE
+
+STELLAR AVEN
+UE
+Y
+ED
+NN
+
+N
+
+SCHOOL
+
+Nov 26, 2021
+
+DWG No. 64
+
+0
+
+AVEAR
+EN NY
+UE
+
+LOSI
+NO
+BE
+NA
+DIR
+A
+TT
+
+NT
+
+LANE B-2
+
+C
+ST AS
+RE PIA
+ET N
+TT
+ST ONF
+RE IEL
+ET D
+
+SWM
+POND
+
+CO
+
+43M-1801
+
+LA
+RS
+O
+
+MO
+
+PHASE 2 K
+
+CA
+STRSPIA
+EET N
+
+AR
+
+CO
+
+LE
+
+LARSON PEAK
+ROAD
+
+E
+
+E
+
+KENNEDY
+
+TOKARA
+AVENUE
+
+WA
+TE
+RV
+ILL
+
+NU
+
+OD
+CK
+WAY
+
+AV
+E
+
+1801
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+(
+
+'
+
+.
+ 
+ $
+
+
+
+
+
+#
+
++
+
+
+
+  
+   
+ 
+
+   
+
+   
+
+ !!
+
+3  ,  '  $    
+
+  '  
+
+3 '    #1  
+    $
+
+
+
+ 
+
+
+
+
+
+) '  *
+
+ 
+
+
+
+
+
+
+   ' '
+   
+
+
+
+) '  *
+
+
+
+
+
+
+
+
+ 
+  
+
+
+
+  #
+
+    "   
+     # 
+    
+      
+ !!
+      
+ 
+
+  
+
+
+
+  
+' '
+
+
+
+)' *
+
+'
+
+.
+ 
+ $
+
+
+
+
+
+#
+
++
+
+
+
+  
+
+
+)' *
+
+)' *
+
+  
+
+
+
+  
+
+
+)' *
+
+ 
+   
+
+
+
+)' *
+
+  
+
+
+
+  
+
+  
+
+
+ ,
+
+ $ 
+
+ 
+
+    $  
+
+ )   *
+
+
+
+
+ 
+ 
+
+
+
+
+
+
+ ,
+
+
+
+ .
+".", 
+
+ $ ,(
+
+'  $   "   '  '
+  
+ ' ! 
+!  & ,   
+    '  $    
+(
+
+,.
+
+,  $
+
+
+
+ "  -(
+
+
+' /
+
+
+
+##
+
+
+
+' & ,(
+
+' & ,(   .
+
+  -(
+
+
+
+   '
+' 
+ %   + "
+ ( )#* # +
+( )#* # #
+
+ $ 
+
+
+'  $
+    
+$  
+  ,  
+ ,
+
+
+
+  ,(
+
+
+ ,(
+#
+
+' (# $ (#
+  (
+
+   #
+, 
+
+
+ .
+
+    $%   
+ &'%    
+ ( )#* +# 
+( )#* +# #
+
+  $ 
+   
+$ 
+'  )  *
+
+  
+
+  
+
+$
+
+, 
+
+
+
+     
+
+   $
+
+   
+
+      $
+
+
+
+ 
+
+  $ 
+
+  
+
+  $ ,  
+
+1 ''    )      *
+
+  
+
+(   & )   '  *
+
+  $,  
+
+ $,  
+
+  ,   
+
+ ,   %   
+     
+      00
+    
+
+        ,  
+
+,     $    
+ 
+            ,
+   2     
+  
+      )   '  '*
+
+ $ '  
+
+  
+
+  
+
+     ' )     *
+
+$,  $ , '  " $ $  % "
+
+$  
+
+ 
+
+ .    
+
+
+
+   $    
+  $     )  $ 
+ 2      '  '*
+
+ 
+
+    
+
+  
+
+   
+
+ ',   .   
+
+$ $  
+ $ $  
+
+ ',   $ $
+
+',   $ $
+
+    ' '  .     $  ) *
+    '
+     '
+
+   ' '  .     $  ) *
+
+    ,
+ ,  .' 
+   .' 
+   .' 
+  , ' 
+   ' 
+
+(
+
+
+
+
+
+-
+
+ ' 
+
+
+
+(
+
+ '  '    '       ,   &       '
+ '   $'   )   0*   1    
+ 
+
+ ' &(
+
+
+
+&,  
+
+
+
+   ,
+ 
+
+ $ 
+
+
+ 
+
+Nov 26, 2021
+
+
+
+'  & 
+
+
+
+   
+ $ 
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+Appendix B – Groundwater
+Excerpt Hydrogeological Investigation (EXP)
+
+November 15, 2021
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+12304 Heart Lake Road, Caledon, Ontario
+L7C 2J2
+Hydrogeological Investigation and Water Balance Assessment
+Client:
+Broccolini Limited Partnership No. 6
+2680 Skymark Avenue, Suite 800, Mississauga, Ontario L4W 5L6
+Attention: Mr. Ben Wilson
+
+Type of Document:
+Final
+Project Name:
+12304 Heart Lake Road, Caledon, Ontario
+
+Project Number:
+BRM-21004344-D0
+EXP Services Inc.
+1595 Clark Boulevard
+Brampton, ON, L6T 4V1
+t: 905.793.9800
+f: 905.793.0641
+
+Date Submitted:
+2021-11-12
+
+1595 Clark Boulevard | Brampton, ON, L6T 4V1 | Brampton
+t: 905.793.9800 | f: 905.793.0641 | exp.com
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+EXP Services Inc.
+12304 Heart Lake Road, Caledon, Ontario
+Hydrogeological Investigation and Water Balance Assessment
+BRM-21004344-D0
+November 12, 2021
+
+1
+
+Table of Contents
+1 Introduction ............................................................................................................................................. 4
+1.1
+
+Project Description......................................................................................................................................... 4
+
+1.2
+
+Project Objectives .......................................................................................................................................... 4
+
+1.3
+
+Scope of Work ................................................................................................................................................ 5
+
+1.4
+
+Review of Previous Reports ........................................................................................................................... 6
+
+2 Hydrogeological Setting ........................................................................................................................... 7
+2.1
+
+Regional Setting ............................................................................................................................................. 7
+
+2.1.1
+
+Regional Physiography ............................................................................................................................... 7
+
+2.1.2
+
+Regional Geology and Hydrogeology ......................................................................................................... 7
+
+2.1.3
+
+Existing Water Well Survey ........................................................................................................................ 8
+
+2.2
+
+Site Setting ..................................................................................................................................................... 8
+
+2.2.1
+
+Site Topography ......................................................................................................................................... 8
+
+2.2.2
+
+Local Surface Water Features .................................................................................................................... 8
+
+2.2.3
+
+Vulnerability Mapping ............................................................................................................................... 8
+
+2.2.4
+
+Local Geology and Hydrogeology............................................................................................................... 9
+
+3 Results.................................................................................................................................................... 11
+3.1
+
+Monitoring Well Details ............................................................................................................................... 11
+
+3.2
+
+Water Level Monitoring ............................................................................................................................... 11
+
+3.3
+
+Hydraulic Conductivity Testing..................................................................................................................... 12
+
+3.4
+
+Groundwater Quality ................................................................................................................................... 12
+
+3.5
+
+Infiltration Testing ........................................................................................................................................ 14
+
+4 Water Balance Study ............................................................................................................................. 15
+4.1
+
+Background Information .............................................................................................................................. 15
+
+4.2
+
+Methodology ................................................................................................................................................ 15
+
+4.3
+
+Meteorological Data .................................................................................................................................... 16
+
+4.4
+
+Pre- and Post-Development Site Characteristics ......................................................................................... 16
+
+4.4.1
+
+Pre-Development Site Characteristics ..................................................................................................... 16
+
+4.4.2
+
+Post-Development Site Characteristics.................................................................................................... 17
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+EXP Services Inc.
+12304 Heart Lake Road, Caledon, Ontario
+Hydrogeological Investigation and Water Balance Assessment
+BRM-21004344-D0
+November 12, 2021
+
+2
+
+4.5
+
+Pre-Development Water Balance Estimates ................................................................................................ 17
+
+4.5.1
+
+Climate Data Analysis............................................................................................................................... 17
+
+4.5.2
+
+Infiltration ................................................................................................................................................ 18
+
+4.5.3
+
+Pre-Development Water Balance Analysis .............................................................................................. 18
+
+4.6
+
+Post-Development Water Balance Estimates .............................................................................................. 19
+
+4.6.1
+
+Post-Development Water Balance........................................................................................................... 19
+
+4.7
+
+Impact and Proposed Mitigation Measures ................................................................................................. 20
+
+5 Dewatering Assessment ........................................................................................................................ 21
+5.1
+
+Dewatering Flow Rate Estimate and Zone of Influence ............................................................................... 22
+
+5.2
+
+Cooper-Jacob’s Radius of Influence ............................................................................................................. 22
+
+5.3
+
+Stormwater .................................................................................................................................................. 22
+
+5.4
+
+Results of Dewatering Rate Estimates ......................................................................................................... 23
+
+5.4.1
+
+Construction Dewatering Rate Estimate.................................................................................................. 23
+
+5.4.2
+
+Post-Construction Dewatering Rate Estimate ......................................................................................... 24
+
+5.5
+
+MECP Water Taking Permits ........................................................................................................................ 24
+
+5.5.1
+
+Short-Term Discharge Rate (Construction Phase) ................................................................................... 24
+
+6 Environmental Impacts .......................................................................................................................... 25
+6.1
+
+Surface Water Features ............................................................................................................................... 25
+
+6.2
+
+Groundwater Sources .................................................................................................................................. 25
+
+6.3
+
+Geotechnical Considerations ....................................................................................................................... 25
+
+6.4
+
+Groundwater Quality ................................................................................................................................... 25
+
+6.5
+
+Well Decommissioning ................................................................................................................................. 26
+
+7 Conclusions and Recommendations ...................................................................................................... 27
+8 Limitations ............................................................................................................................................. 29
+9 References ............................................................................................................................................. 30
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+EXP Services Inc.
+12304 Heart Lake Road, Caledon, Ontario
+Hydrogeological Investigation and Water Balance Assessment
+BRM-21004344-D0
+November 12, 2021
+
+12
+
+One (1) map was created for the Site to show groundwater contours of the overburden water-bearing zone (Figure 6).
+Accordingly, the groundwater flow directions in overburden interpreted to be southeast and southwest of the Site.
+Groundwater levels are expected to show seasonal fluctuations and vary in response to prevailing climate conditions. This may
+also affect the direction and rate of flow. It is recommended to conduct seasonal groundwater level measurements to provide
+more information on seasonal groundwater level fluctuations.
+
+3.3 Hydraulic Conductivity Testing
+Four (4) Single Well Response Tests (SWRT’s) were completed on monitoring wells BH/MW 1, BH/MW 9, BH/MW 16, and
+BH/MW 25 on October 7 and 12, 2021. The tests were completed to estimate the saturated hydraulic conductivity (K) of the
+soils at the well screen depths. Please note that SWRT was not possible to conduct for BH/MW 30 since the well was dry during
+the monitoring period.
+The static water level within each monitoring well was measured prior to the start of testing. In advance of performing SWRTs,
+each monitoring well underwent development to remove fines introduced into the screens following construction. The
+development process involved purging of the monitoring wells to induce the flow of fresh formation water through the screen.
+Each monitoring well was permitted to fully recover prior to performing SWRTs.
+Hydraulic conductivity values were calculated from the SWRT and constant rate test data as per Hvorslev’s solution included in
+the Aqtesolv Pro. V.4.5 software package. The semi-log plots for normalized drawdown versus time are included in
+Appendix C.
+A summary of the hydraulic conductivities (K-values) estimated from the SWRTs are provided in Table 3-2.
+Table 3-2: Summary of Hydraulic Conductivity Testing
+Monitoring Well
+
+Well Depth
+(mbgs)
+
+Screen Interval (mbgs)
+from
+
+to
+
+Soil Formation Screened
+
+Estimated Hydraulic
+Conductivity (m/s)
+
+BH/MW 1
+
+7.60
+
+4.60
+
+7.60
+
+Clayey Silt Till and Sandy Silt Till
+
+3.1E-06
+
+BH/MW 9
+
+7.57
+
+4.57
+
+7.57
+
+Clayey Silt Till and Sandy Silt Till
+
+4.0E-07
+
+BH/MW 16
+
+7.49
+
+4.49
+
+7.49
+
+Clayey Silt Till
+
+3.3E-07
+
+BH/MW 25
+
+7.55
+
+4.55
+
+7.55
+
+Clayey Silt Till
+
+3.9E-07
+
+Highest Estimated K Value
+
+3.1E-06
+
+Geometric Mean of Estimated K values
+
+6.3E-07
+
+SWRTs provide K-estimates of the geological formation surrounding the well screens and may not be representative of bulk
+formation hydraulic conductivity. As shown in Table 3-2, the highest K-value of the tested water-bearing zone is 3.1E-06 m/s,
+and the geometric mean of the K-values is 6.3E-07 m/s.
+
+3.4 Groundwater Quality
+To assess the suitability for discharging pumped groundwater into the sewers owned by the Regional Municipality of Peel / City
+of Mississauga during dewatering activities, one (1) groundwater sample was collected from monitoring well BH/MW 1 on
+October 12, 2021, using a peristaltic pump.
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+EXP Services Inc.
+12304 Heart Lake Road, Caledon, Ontario
+Hydrogeological Investigation and Water Balance Assessment
+BRM-21004344-D0
+November 12, 2021
+
+13
+
+Prior to collecting the noted water sample, approximately three (3) standing well volumes of groundwater were purged from
+the referred well. The samples were collected unfiltered and placed into pre-cleaned laboratory-supplied vials and/or bottles
+provided with analytical test group specific preservatives, as required. Dedicated nitrile gloves were used during sample
+handling. The groundwater samples were submitted for analysis to Bureau Veritas Laboratory, a CALA certified independent
+laboratory in Mississauga, Ontario. Analytical results are provided in Appendix D.
+Table 3-3 summarizes exceedance(s) of the Sanitary (Table 1) and Storm (Table 2) Sewer Use By-Law parameters.
+When comparing the chemistry of the collected groundwater samples to the Regional Municipality of Peel Sanitary and
+Combined Sewer Discharge Criteria (By-Law Number 53-2010, Table 1), there were no parameter exceedances to be reported.
+When comparing the chemistry of the collected groundwater samples to the Regional Municipality of Peel Storm Sewer
+Discharge Criteria (By-Law Number 53-2010, Table 2) the following parameters reported an exceedance: Total manganese and
+Chloroform
+Reporting detection limits (RDLs) were below the Sewer Use By-Law parameter criteria of Tables 1 and 2.
+Table 3-3: Summary of Analytical Results
+
+Units
+
+City of Mississauga /
+Regional Municipality of
+Peel Sanitary and
+Combined Sewer
+Discharge Limit
+(Table 1)
+
+City of Mississauga /
+Regional Municipality
+of Peel Storm Sewer
+Discharge Limit
+(Table 2)
+
+Concentration
+BH/MW 1
+12-Oct-21
+
+Total Manganese (Mn)
+
+µg/L
+
+5,000
+
+50
+
+78
+
+Chloroform
+
+µg/L
+
+40
+
+2
+
+2.8
+
+Parameter
+
+Bold – Exceeds City of Mississauga / Regional Municipality of Peel Storm Sewer Discharge Limit (Table 2).
+For the short-term dewatering system (construction phase), it is anticipated that TSS levels and some other parameters (for
+example, Total Metals) in the pumped groundwater may become elevated and exceed both, Sanitary and Storm Sewer Use ByLaw limits. To control the concentration of TSS and associated metals, it is recommended that a suitable treatment method be
+implemented (filtration or decantation facilities and/ or any other applicable treatment system) during construction
+dewatering activities to discharge to the applicable sewer system. The specifications of the treatment system will need to be
+adjusted to the reported water quality results by the treatment contractor/process engineer.
+The water quality results presented in this report may not be representative of the long-term condition of groundwater quality
+onsite. As such, regular water quality monitoring is recommended for the post-construction phase, as required by the City.
+An agreement to discharge into the sewers owned by the City of Mississauga / Regional Municipality of Peel will be required
+prior to releasing dewatering effluent.
+The Environmental Site Assessment Report(s) shall be reviewed for more information on the groundwater quality conditions at
+the Site.
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+EXP Services Inc.
+12304 Heart Lake Road, Caledon, Ontario
+Hydrogeological Investigation and Water Balance Assessment
+BRM-21004344-D0
+November 12, 2021
+
+14
+
+3.5 Infiltration Testing
+EXP completed four (4) infiltration rate tests (INF 1, INF 9, INF 25 and INF 30) within the Site area on October 7 and 12, 2021.
+These tests were conducted in proximity of selected monitoring wells: September 7, 2021, at BH/MW 1 (INF 1), BH/MW 9 (INF
+9), BH/MW 30 (INF 30) and BH/MW 25 (INF 25).
+Infiltration tests were conducted at depths ranged from 0.6 mbgs to 0.9 mbgs. The reported water levels at these monitoring
+wells are; 4.24 mbgs (BH/MW 1), 5.92 mbgs (BH/MW 9), and <7.58 (BH/MW 30) on October 7, 2021, and 6.66 mbgs (BH/MW
+25) on October 12 15, 2021 (Table 3.2).
+The stratigraphy of the shallow subsurface comprises a silt/sand with some pebbles. Table 3.5 below shows a summary of field
+saturated hydraulic conductivity (Kfs) testing and design infiltration rates, as per the Low Impact Development (LID)
+Stormwater Management Planning and Design Guide, CVC – TRCA, 2010, Appendix G. The estimated field saturated hydraulic
+conductivities were correlated to infiltration rates based on the relationship provided in Appendix D of the guideline.
+Infiltration rate testing locations are shown on Figure 4 and infiltration rate analysis is provided in Appendix E.
+Table 3.4: Summary of Infiltration Testing Results
+Field Saturated
+Hydraulic Conductivity,
+Kfs (cm/s)
+
+Infiltration Rate
+(mm/hr)
+
+Clayey Silt Till
+
+3.4 x 10-6
+
+19
+
+0.75
+
+Clayey Silt Till
+
+3.5 x 10-6
+
+19
+
+INF 25 (BH/MW 25)
+
+0.90
+
+Clayey Silt Till
+
+2.7 x 10-6
+
+18
+
+INF 30 (BH/MW 30)
+
+0.70
+
+Clayey Silt to Sandy Silt (Fill)
+
+9.0 x 10-6
+
+24
+
+4.12 x 10-6
+
+20
+
+Design Infiltration Rate*
+
+8 (20/2.5)
+
+Infiltration Test
+Location/ MW ID
+
+Depth of Hole
+
+INF 1 (BH/MW 1)
+
+0.60
+
+INF 9 (BH/MW 9)
+
+(mbgs)
+
+Formation tested
+
+Geometric Mean
+
+Notes:
+*Safety Factor of 2.5 was applied to calculate the design infiltration rate (Low Impact Development (LID) Stormwater Management Planning and Design Guide,
+CVC – TRCA, 2010, Appendix D).
+
+The estimated design infiltration rate based on percolation rate testing for the Site is 8 mm/hr.
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+EXP Services Inc.
+12304 Heart Lake Road, Caledon, Ontario
+Hydrogeological Investigation and Water Balance Assessment
+BRM-21004344-D0
+November 12, 2021
+
+23
+
+A 15 mm precipitation event was utilized for estimating the stormwater volume. The calculation of the stormwater volume is
+included in Appendix G.
+The estimate of the stormwater volume only accounts for direct precipitation into the excavation. The dimensions of the
+excavation are considered in the dewatering calculations. Runoff from outside of the excavation’s footprint is excluded and it
+should be directed away from the excavation.
+During precipitation events greater than 15 mm (ex: 100-year storm), measures should be taken by the contractor to retain
+stormwater onsite in a safe manner to not exceed the allowable water taking and discharge limits, as necessary. A two (2) and
+a one hundred (100) year storm events over a 24-hour period are 57.3 and 125.2 mm, respectively, which would produce
+2,419 and 5,286 L of water within Building 1 footprint area.
+
+5.4 Results of Dewatering Rate Estimates
+5.4.1 Construction Dewatering Rate Estimate
+For this assessment, it was assumed that the proposed construction plans include an excavation without shoring system. EXP
+should be retained to review the assumptions outlined in this section, should a shoring system be included.
+Short-term (construction) dewatering calculations are presented in Appendix G.
+Based on the assumptions provided in this report, the results of the dewatering rate estimate can be summarized as follows:
+Table 4-2 Summary of Construction Dewatering Rate (Without Basement)
+
+Description
+
+Building 1
+(L/day)
+
+Estimated Short Term Dewatering Rate (without safety factor or precipitation)
+
+5,000
+
+With Factor of Safety of 2.0 (excluding precipitation) for permit
+
+10,000
+
+From Precipitation Event of 15 mm in one day for whole building footprint
+
+630,000
+
+With Factor of Safety of 2.0 (including precipitation) for designs, and budgeting
+
+640,000
+
+Radius of Influence from sides of excavation (m)
+
+16
+
+It should be noted that the construction dewatering is required mainly to remove rainwater from the excavation after rainfall
+events. The MECP regulates the groundwater taking and since the estimated flow rate is less than 50,000 L/day then no MECP
+water taking permit (EASR or PTTW) is required.
+The peak dewatering flow rates does not account for flow from utility beddings and variations in hydrogeological properties
+beyond those encountered during this investigation. Local dewatering may be required for pits (elevator pits, sump pits, raft)
+and for localized areas with permeable, soft, or wet soil conditions. Local dewatering is not considered to be part of this
+assessment, but contractor should be ready to install additional system to manage such conditions. Dewatering estimates
+should be reviewed once the pit dimensions are available.
+All grading around the perimeter of the excavation should be graded away from the excavation and ramp/site access to
+redirect runoff away from excavation.
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+EXP Services Inc.
+12304 Heart Lake Road, Caledon, Ontario
+Hydrogeological Investigation and Water Balance Assessment
+BRM-21004344-D0
+November 12, 2021
+
+24
+
+The contractor is responsible for the design of the dewatering system to ensure that dry conditions are always maintained
+within the excavation at all costs.
+As shown on Table 4.2, more than 90% of the dewatering volume is expected to be required after rainfall events. As such it is
+suggested to revise the construction plan to reduce the area of excavation kept open at any given point of time.
+
+5.4.2 Post-Construction Dewatering Rate Estimate
+As per preliminary Site drawings, it is our present understanding that the proposed Building 1 will be constructed without
+basements. Therefore, no long-term dewatering requirements are anticipated for the proposed Building 1.
+
+5.5 MECP Water Taking Permits
+5.5.1 Short-Term Discharge Rate (Construction Phase)
+In accordance with the Ontario Water Resources Act, if the water taking for the construction dewatering is more than 50,000
+L/day but less than 400,000 L/day, then an online registration in the Environmental Activity and Sector Registry (EASR) with the
+MECP will be required. If groundwater dewatering rates onsite exceed 400,000 L/day, a Category 3 Permit to Take Water
+(PTTW) will be required from the MECP.
+As of July 1, 2021, an amendment of O. Reg. 63/16 has come into effect and replaced the former subsection 7 (5) such that the
+water taking limit of 400,000 L/day would apply to groundwater takings of each dewatered work area only, excluding
+stormwater.
+The dewatering estimates including a safety factor and excluding precipitation is stated below. The MECP construction
+dewatering rate excludes the precipitation amount and is the rate used for the permit application.
+Table 4-4: MECP Construction Dewatering Flow Rate
+
+Scenario
+MECP Construction Dewatering Flow Rate with Safety Factor of 2.0
+(excluding rainwater collection)
+
+Total Flow Rate
+Buildings 1
+(L/day)
+10,000
+
+Based on the estimated construction dewatering rates, an EASR from the MECP will not be required to facilitate the
+construction dewatering program of the Site.
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+Appendix C – Sanitary Analysis
+Excerpt Mayfield West Functional Servicing Study
+Speirs Giffen Avenue Ultimate Sanitary Area Drainage Plan
+Livingston Estates Sanitary Drainage Area Plan
+Sanitary Demand Calculations
+
+November 15, 2021
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+FUNCTIONAL SERVICING
+AND
+STORMWATER MANAGEMENT
+STUDY
+FOR
+
+MAYFIELD WEST COMMUNITY
+IN THE
+
+TOWN OF CALEDON
+
+NOVEMBER 2007
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+TABLE OF CONTENTS
+Section
+
+Page No.
+
+1.0
+
+INTRODUCTION .................................................................................................. 1
+
+2.0
+
+PLANNING CONTEXT......................................................................................... 2
+
+3.0
+
+WASTEWATER SERVICING............................................................................... 3
+3.2
+3.3
+3.4
+3.5
+
+4.0
+
+WATER SERVICING............................................................................................ 6
+4.2
+4.3
+4.4
+
+5.0
+
+Existing Watermains .................................................................................. 6
+Proposed Water Servicing ......................................................................... 7
+Mayfield West Elevated Tank and Associated Watermains ....................... 7
+
+STORM DRAINAGE ............................................................................................ 8
+5.1
+5.2
+
+6.0
+
+Existing Wastewater Services.................................................................... 3
+Population Assumptions ............................................................................ 3
+Proposed Sanitary Servicing...................................................................... 4
+Permanent Sanitary Pump Station............................................................. 5
+
+Background Information............................................................................. 8
+Existing Features and Drainage Patterns .................................................. 8
+
+STORMWATER MANAGEMENT ........................................................................ 9
+6.1
+6.2
+6.3
+6.4
+
+Etobicoke Creek Watershed Stormwater Management Requirements...... 9
+West Humber River Watershed Stormwater Management Requirements . 9
+Selection of Stormwater Management Controls....................................... 10
+Preliminary Pond locations ...................................................................... 14
+
+7.0
+
+POND OPERATING CHARACTERISTICS........................................................ 15
+
+8.0
+
+POND COMPONENTS ...................................................................................... 17
+8.1
+8.2
+8.3
+8.4
+8.5
+8.6
+8.7
+
+Sediment Forebay ................................................................................... 17
+Permanent Pool ....................................................................................... 18
+Extended Detention Storage.................................................................... 18
+Extended Detention Outlet....................................................................... 18
+Access Road............................................................................................ 20
+Emergency Overflows.............................................................................. 20
+Thermal Mitigation ................................................................................... 20
+
+9.0
+
+OPERATIONS AND MAINTENANCE................................................................ 20
+
+10.0
+
+STORM DRAINAGE .......................................................................................... 21
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+10.1
+10.2
+10.3
+
+Conveyance of Minor System Flows........................................................ 21
+Conceptual Storm Trunk Sewers ............................................................. 21
+Conveyance of Major Storm Flows .......................................................... 21
+
+11.0
+
+CREEK AND UTILITY CROSSINGS ................................................................. 22
+
+12.0
+
+REGIONAL STORM CONVEYANCE AND FLOODPLAIN STORAGE............. 22
+
+13.0
+
+CONSTRUCTION PRACTICES ......................................................................... 23
+
+14.0
+
+PRELIMINARY GRADING AND SERVICING.................................................... 23
+
+15.0
+
+ROAD ALLOWANCE DESIGN .......................................................................... 23
+
+16.0
+
+COST SHARING ................................................................................................ 24
+16.1
+16.2
+16.3
+
+17.0
+
+Region of Peel Development Charge Infrastructure ................................ 24
+Town of Caledon Development Charge Infrastructure ............................. 24
+Developers’ Group Cost Sharing Agreement........................................... 24
+
+RESPONSE TO COMMENTS FROM AGENCIES............................................. 25
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+3.0
+
+WASTEWATER SERVICING
+
+3.1
+
+Background Information
+
+Town of Caledon commissioned various studies in order to define the servicing
+requirements for Mayfield West. The following studies were used to define the
+preliminary wastewater servicing requirements:
+¾ Mayfield West Community Development Plan Study, Existing Water Supply and
+Sanitary Sewage System, CG&S, November 1996 (Background Studies)
+¾ Mayfield West Community Development Plan Study, Water Supply and Sanitary
+Sewage System Function Servicing, CG&S, February 1997 (Background
+Studies)
+¾ Region of Peel Sewer and Watermain Maps
+¾ Region of Peel Design Criteria, October 2000
+The Background Studies commissioned by Town of Caledon for water and wastewater
+are included in Appendix A.
+The above documents form the basis of this report.
+3.2
+
+Existing Wastewater Services
+
+An existing 525 mm diameter sanitary sewer is located at the intersection of Mayfield
+Road and Inder Heights Drive. The Background Studies determined that the sewer is
+able to accommodate sanitary flows from 10,000 people.
+An existing 750 mm diameter sanitary sewer is located on Dixie Road, terminating
+approximately 1,800 metres south of Mayfield Road. Discussions with Region of Peel
+have confirmed that the capacity of the existing sewer is not a constraint to the
+development of this community.
+The location of the existing sanitary sewers is illustrated in Figure 3.
+3.3
+
+Population Assumptions
+
+Residential
+In accordance with population projections provided by Town of Caledon, the following
+residential population is currently being considered:
+Mayfield West
+Snells Hollow
+
+¾ 8,500 people
+¾ 2,000 people
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT STUDY
+MAYFIELD WEST COMMUNITY, TOWN OF CALEDON
+
+PAGE 3
+© DSEL
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+Employment
+As of this writing, employment populations have not been finalized. As such, an
+assumption of 70 people per hectare has been applied in accordance with Region of
+Peel Design Criteria.
+3.4
+
+Proposed Sanitary Servicing
+
+Region of Peel has included an allowance for the ultimate development of Mayfield
+West in the planning of the existing infrastructure. Accordingly, existing sewer pipes
+have been sized to convey the predicted Mayfield West flows. Furthermore, major
+infrastructure such as treatment plants and pump stations has sufficient existing and
+planned capacity to accommodate the development of the new community.
+The Mayfield West community will be serviced by a network of new gravity sewers
+designed in accordance with Region of Peel design criteria. Two sanitary outlets will be
+used to service the Mayfield West Community, as follows:
+Inder Heights Drive
+An existing 525 mm diameter sanitary sewer is located at the intersection of Mayfield
+Road and Inder Heights Drive. The Background Studies determined that the sewer is
+able to accommodate sanitary flows from 10,000 people.
+It is proposed that the entire residential population in Mayfield West will be directed to
+the Inder Heights sewer. The total population contribution to Inder Heights is calculated
+as follows:
+Table 1
+Population Assumptions
+Community
+Snells Hollow
+Mayfield Residential
+Mayfield Employment
+Total
+
+Population
+1,400
+8,500
+600
+10,500
+
+It should be noted that the total Snells Hollow population of 2,000 people has been split
+between the Inder Heights and Dixie sewers in accordance with the Background
+Studies. The split has been estimated as 1,400 / 600 (Inder Heights / Dixie).
+It should also be noted that since the time of the Background Studies per capita flow
+generation rates have been reduced, due in large part to recent Building Code
+amendments which require water conservation fixtures in all new residential
+construction.
+As such, it is expected that the additional population can be
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT STUDY
+MAYFIELD WEST COMMUNITY, TOWN OF CALEDON
+
+PAGE 4
+© DSEL
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+accommodated in the Inder Heights sewer. It is recommended that sanitary flows be
+monitored during buildout of the community to ensure that the capacity of the receiving
+sewers in not exceeded.
+Consideration should also be included for the potential future extension of the Mayfield
+West urban boundary up to Old School Road. Assuming the same residential land use
+and population density as the existing community, there is the potential for
+approximately 25.8 hectares of residential development which will drain to the Inder
+Heights sewer. This corresponds to 258 units and an additional population of 902. As
+stated previously, flow monitoring is recommended to ensure that the capacity of the
+receiving sewers in not exceeded.
+Dixie Road
+An existing 750 mm diameter sanitary sewer is located on Dixie Road, terminating
+approximately 1,800 metres south of Mayfield Road. Discussions with Region of Peel
+have confirmed that the capacity of the existing sewer is not a constraint to the
+development of this community.
+The employment lands and the research campus will be directed to the Dixie Road
+sewer.
+Consideration should also be included for the potential future extension of the Mayfield
+West urban boundary up to Old School Road. Assuming the same residential and
+employment land use and population density as the existing community, there is the
+potential for approximately 18.0 hectares of residential development and 90.6 hectares
+of employment development which will drain to the Dixie sewer. For the residential
+component, this corresponds to 180 residential units and an additional residential
+population of 630. For the employment component, this corresponds to an additional
+residential population of 4,530.
+The conceptual sanitary sewer plan is illustrated in Figure 3. The conceptual sanitary
+profiles are illustrated in Appendix B.
+3.5
+
+Permanent Sanitary Pump Station
+
+A permanent pump station is required in order to convey sanitary flows from
+approximately 65.7 hectares originating in the north-west portion of the residential lands
+(between Kennedy Road and Hwy 10). A gravity sewer cannot provide service to this
+area for the following reasons:
+¾ The elevation of Etobicoke Creek precludes a gravity crossing on Hwy 10 to the
+west, as the valley is several metres lower than the lowest possible sewer invert.
+¾ The low grades in this area cannot be serviced to the new internal trunk sewer to
+the east.
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT STUDY
+MAYFIELD WEST COMMUNITY, TOWN OF CALEDON
+
+PAGE 5
+© DSEL
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+The peak sanitary flow generated from this area is estimated as 43 l/s.
+The pump station will discharge by forcemain to the new internal trunk sewers located
+to the east.
+As mentioned previously, the sewer design has regard for the possible expansion of
+Mayfield West up to Old School Road. If the Inder Heights sewer is found to be
+constrained by the expansion population, it is recommended that the pump station flows
+be redirected to Hwy 10 via a new forcemain. The flows will be pumped under
+Etobicoke Creek and drained by a new gravity sewer ultimately connecting to the
+Valleywood Subdivision. The redirection of flows would be a requirement of the future
+expansion area, and would only be triggered by a limitation in downstream capacity as
+identified through flow monitoring.
+4.0
+
+WATER SERVICING
+
+4.1
+
+Background Information
+
+Town of Caledon commissioned various studies in order to define the servicing
+requirements for Mayfield West. The following studies were used to define the
+preliminary water servicing requirements:
+¾ Mayfield West Community Development Plan Study, Existing Water Supply and
+Sanitary Sewage System, CG&S, November 1996 (Background Studies)
+¾ Mayfield West Community Development Plan Study, Water Supply and Sanitary
+Sewage System Function Servicing, CG&S, February 1997 (Background
+Studies)
+¾ The Region of Peel, Development Charges, March 27, 2007 (Background
+Studies)
+¾ Region of Peel Sewer and Watermain Maps
+¾ Region of Peel Design Criteria
+The above documents form the basis of this report.
+4.2
+
+Existing Watermains
+
+Existing watermains are currently available in the vicinity of Mayfield West as shown in
+Figure 4.
+The Region of Peel will be constructing the Mayfield West elevated tank at the corner of
+Kennedy Road and King Street, located to the north of the study area. The project will
+also include the construction of a new 600 mm transmission main and a new 400 mm
+distribution main on Kennedy Road.
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT STUDY
+MAYFIELD WEST COMMUNITY, TOWN OF CALEDON
+
+PAGE 6
+© DSEL
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+12304 Heart Lake Road
+Industrial
+Nov 26,Development
+2021
+
+From
+
+Phase 1
+Building 1
+
+Sanitary Sewer Design Sheet
+
+Peel Region Design Criteria for Sanitary Sewers
+Domestic Flow =
+
+To
+
+302.8
+
+L/cap/day
+
+Population Density =
+
+70
+
+pp/ha
+
+Infiltration=
+
+0.20
+
+L/s/ha
+
+Mannings=
+
+0.013
+
+Minimum Velocity =
+
+0.75
+
+m/s
+
+Maximum Velocity =
+
+3.50
+
+m/s
+
+Area
+(ha)
+
+Density
+(pp/ha)
+
+Population
+
+Project Name: 12304 Heart Lake Road
+Project Number: 135636
+Date: October 29, 2021
+Designed By: Jason Jenkins, P.Eng., P.E.
+
+DESIGN FLOW CALCULATIONS
+Cumulative Cumulative
+Peaking
+Sewage
+Area (ha)
+Population
+Factor
+Flow
+(L/s)
+(1)
+
+SEWER DESIGN & ANALYSIS
+Infiltration
+Flow
+(L/s)
+(2)
+
+Comm.
+Flow
+(L/s)
+(3)
+
+Ground
+Water
+(L/s)
+(4)
+
+Total
+Flow, Qd
+(L/s)
+(1) thru (4)
+
+2.0
+
+0.0
+
+0.0
+
+11.5
+
+Nominal
+Diameter
+
+Pipe
+Slope
+
+Pipe
+Length
+
+Full Flow
+Capacity,
+
+Full Flow
+Velocity
+
+Actual
+Velocity
+
+(mm)
+
+(%)
+
+(m)
+
+Qf (L/s)
+
+(m/s)
+
+(m/s)
+
+200
+
+1.0%
+
+10.0
+
+34.2
+
+1.06
+
+0.95
+
+Percent of
+Full Flow
+(%)
+
+Notes
+
+Services
+Ctrl. MH
+
+Ex. Sewer
+
+9.95
+
+70
+
+697
+
+10.0
+
+697
+
+3.90
+
+9.5
+
+34%
+
+San. Service
+
+Page 1 of 1
+
+TOWN OF CALEDON
+PLANNING
+IBI GROUP FINAL REPORT
+RECEIVED
+
+FUNCTIONAL SERVICING REPORT
+
+Prepared for Broccolini
+Nov 26, 2021
+
+Appendix D – Water Analysis
+Excerpt Mayfield West Functional Servicing Study
+Heart Lake Road - Capital Works Projects (Region of Peel)
+Watermain Plan and Profile Drawings (Region of Peel)
+Water Demand Calculations
+
+November 15, 2021
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+FUNCTIONAL SERVICING
+AND
+STORMWATER MANAGEMENT
+STUDY
+FOR
+
+MAYFIELD WEST COMMUNITY
+IN THE
+
+TOWN OF CALEDON
+
+NOVEMBER 2007
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+The peak sanitary flow generated from this area is estimated as 43 l/s.
+The pump station will discharge by forcemain to the new internal trunk sewers located
+to the east.
+As mentioned previously, the sewer design has regard for the possible expansion of
+Mayfield West up to Old School Road. If the Inder Heights sewer is found to be
+constrained by the expansion population, it is recommended that the pump station flows
+be redirected to Hwy 10 via a new forcemain. The flows will be pumped under
+Etobicoke Creek and drained by a new gravity sewer ultimately connecting to the
+Valleywood Subdivision. The redirection of flows would be a requirement of the future
+expansion area, and would only be triggered by a limitation in downstream capacity as
+identified through flow monitoring.
+4.0
+
+WATER SERVICING
+
+4.1
+
+Background Information
+
+Town of Caledon commissioned various studies in order to define the servicing
+requirements for Mayfield West. The following studies were used to define the
+preliminary water servicing requirements:
+¾ Mayfield West Community Development Plan Study, Existing Water Supply and
+Sanitary Sewage System, CG&S, November 1996 (Background Studies)
+¾ Mayfield West Community Development Plan Study, Water Supply and Sanitary
+Sewage System Function Servicing, CG&S, February 1997 (Background
+Studies)
+¾ The Region of Peel, Development Charges, March 27, 2007 (Background
+Studies)
+¾ Region of Peel Sewer and Watermain Maps
+¾ Region of Peel Design Criteria
+The above documents form the basis of this report.
+4.2
+
+Existing Watermains
+
+Existing watermains are currently available in the vicinity of Mayfield West as shown in
+Figure 4.
+The Region of Peel will be constructing the Mayfield West elevated tank at the corner of
+Kennedy Road and King Street, located to the north of the study area. The project will
+also include the construction of a new 600 mm transmission main and a new 400 mm
+distribution main on Kennedy Road.
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT STUDY
+MAYFIELD WEST COMMUNITY, TOWN OF CALEDON
+
+PAGE 6
+© DSEL
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+Construction of the elevated tank and Zone 7 watermains is scheduled for fall of 2007.
+4.3
+
+Proposed Water Servicing
+
+The Mayfield West community will be serviced by a network of new watermains
+designed in accordance with Town of Caledon design criteria and M.O.E. guidelines.
+The conceptual watermain requirements were defined through the Background Studies.
+The primary water distribution network will be comprised primarily of 300 mm mains,
+with the exception of the following 400 mm watermains:
+¾ East / west industrial collector from the north / south industrial collector to Dixie
+Road.
+¾ North / south industrial collector
+¾ Dixie Road from Mayfield Road to East / west industrial collector
+¾ East/ west residential collector from Main Street (Hwy 10) to Kennedy Road
+The water distribution requirements were verified through watermain modeling for
+Mayfield West based on the proposed Secondary Plan. The watermain analysis
+conducted by MacViro Consultants in included in Appendix C.
+The conceptual watermain plan is illustrated in Figure 4.
+Final watermain sizing will be completed at the detailed design stage based on the
+actual development characteristics.
+Furthermore, the water distribution should be
+looped in order to provide system security.
+4.4
+
+Mayfield West Elevated Tank and Associated Watermains
+
+It is noted that the proposed Secondary Plan requires the realignment of Kennedy Road
+from it current location to a new corridor located to the east. Based on the Region’s
+construction schedule of the Kennedy Road watermains for fall of 2007, the watermains
+may be placed in their final location along the Mayfield West community’s realignment
+of Kennedy Road.
+In the event that the Region’s elevated tank and watermain proceed in advance of the
+community approvals and construction, portions of the new Kennedy Road watermains
+will have to be relocated to conform with the new road alignment.
+Satisfactory
+construction and financial arrangement would be made between the owners’ and
+Region of Peel for the relocation of the watermains. Furthermore, there would be
+limited development in the area prior to triggering the need to relocate the Kennedy
+Road watermains. As such, opportunities to reduce the size of the watermains during
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT STUDY
+MAYFIELD WEST COMMUNITY, TOWN OF CALEDON
+
+PAGE 7
+© DSEL
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+DAVID SCHAEFFER ENGINEERING LTD.
+
+the initial construction should be explored such that the throw-away costs are
+minimized. Further analysis and discussions with the Region are required to implement
+an interim design solution.
+
+5.0
+
+STORM DRAINAGE
+
+5.1
+
+Background Information
+
+The following studies were used to define the preliminary drainage and stormwater
+management requirements:
+¾ “DRAFT” Etobicoke Creek Headwaters Subwatershed Background Report,
+Surface Water Quality, December 2004, Toronto and Region Conservation
+Authority
+¾ A Report Card on the Health of the Humber River Watershed, July 2000,
+Toronto and Region Conservation Authority
+¾ 2003 Humber Watershed Progress Report, Toronto and Region Conservation
+Authority
+¾ Greening our Watersheds: Revitalization Strategies for Etobicoke and
+Mimico Creeks, May 2002, Toronto and Region Conservation Authority
+¾ Etobicoke Creek Flood Control Study, Watershed Management Strategy,
+Final Report, May 1995, Revised September 1996, Fred Schaeffer & Associates
+Ltd. (Etobicoke Creek Study)
+¾ West Humber River Subwatershed Study, February 1996, Aquafor Beech
+Limited (West Humber Study)
+¾ Stormwater Management Planning and Design Manual, March 2003, Ministry
+of Environment (SWMP Design Manual)
+¾ Town of Caledon Development Standards, Policies and Guidelines, Ver. 3,
+January 2005
+The above documents form the basis of this report.
+5.2
+
+Existing Features and Drainage Patterns
+
+The Mayfield West community is largely defined by the major drainage features which
+frame the community. To the south west, the main branch of Etobicoke Creek forms a
+well defined development limit. An unnamed tributary of Etobicoke Creek creates the
+north-west limit of the community. The H3 tributary of the West Humber River creates
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT STUDY
+MAYFIELD WEST COMMUNITY, TOWN OF CALEDON
+
+PAGE 8
+© DSEL
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+900 FEEDERMAIN DATA
+ITEM
+IC-902
+
+TRENCH PLUG
+
+REFER TO DETAIL
+
+AN
+
+WS
+
+LS
+
+ASPH.
+
+B
+
+395
+9.00
+
+396
+11.00
+
+CONSTRUCTION (BY OTHERS)
+
+(BY OTHERS)
+
+TO BE REMOVED AND
+
+REPLACED (SEE NOTES 3 & 4)
+
+(TYP. 3)
+
+HOUSE
+12304
+
+397
+10.00
+
+BE RELOCATED PRIOR TO
+
+PROP. 2400 PRECAST INSPECTION
+
+EXIST. MAIL BOX TO BE
+
+CHAMBER (IC-902) c/w 900x900X750 FL.
+
+TEMPORARILY RELOCATED AND
+
+OUTLET (TOP) FOR CCTV INSPECTION
+CHAMBER FOR 900 FEEDERMAIN.
+
+12.20.2016
+
+A.F.
+
+COMMUNIC. CABLES
+
+11.29.2016
+
+A.F.
+
+DETAILS
+
+INIT.
+
+MAY 3/2017
+
+ISSUED FOR TENDER
+
+N.L.
+
+SEP. 14/2017
+
+ISSUED FOR CONSTRUCTION
+
+N.L.
+
+M AYFI
+ELD RD.
+
+CONC
+ESSI
+ON3
+
+HW Y.
+410
+
+NOTES:
+D.
+2
+7
+2
+9
+AN5
+SEEPL
+ES,
+ORGENERALNOT
+1. F
+
+REINSTATED TO MATCH
+
+12280
+
+L
+NG ATAL
+I
+GHT
+I
+ADAYL
+EDVI
+OCAT
+O BEL
+EST
+I
+T
+I
+L
+I
+NG UT
+I
+ST
+2. EXI
+O
+ORT
+ONSPRI
+I
+OCAT
+CEL
+ERSERVI
+PROPOSEDWAT
+ON.
+I
+RUCT
+CONST
+ACED
+O BEREMOVEDANDREPL
+ST
+VERT
+VEWAYCUL
+NG DRI
+I
+ST
+3. EXI
+HSAME
+T
+ORWI
+ER,
+AMET
+ERNALDI
+NT
+mm I
+5
+7
+MUM OF3
+NI
+HMI
+T
+WI
+
+ORIGINAL CONDITION
+
+HAN
+ARGERT
+SL
+EI
+Z
+NG SI
+I
+ST
+HEEXI
+FT
+ERI
+AMET
+ERNALDI
+NT
+I
+)
+0
+0
+0
+BOSS2
+L(
+HWAL
+HDPESMOOT
+ER,
+AMET
+ERNALDI
+NT
+mm I
+5
+7
+3
+MUM
+NI
+HAMI
+T
+GRADEANDWI
+S,
+NVERT
+NG I
+I
+ST
+CHEXI
+O MAT
+PET
+PI
+S.
+T
+N
+E
+M
+E
+R
+I
+U
+Q
+E
+R
+N
+O
+D
+E
+OWNOFCAL
+ASPERT
+m,
+0
+.
+HOF7
+ENGT
+L
+
+REFER TO PEEL STD. DWG. 1-3-13 c/w
+
+COMPANION FLANGE, 50mm THREADED
+OUTLET AND SHUT OFF VALVE. AIR
+RELEASE VALVE NOT REQUIRED
+
+32427
+AN 43RPL
+HEART LAKE ROAD
+
+ON
+I
+T
+NG CONDI
+I
+ST
+O EXI
+OREDT
+O BEREST
+VEWAYSARET
+LDRI
+4. AL
+R
+O
+F
+T
+L
+A
+H
+P
+S
+A
+.
+E
+.
+I
+(
+L
+A
+I
+R
+E
+T
+A
+M
+G
+N
+I
+H
+C
+T
+A
+M
+H
+T
+WI
+ER,
+T
+ORBET
+NE.
+I
+YL
+HEPROPERT
+OT
+T
+,
+)
+ORGRAVEL
+GRAVELF
+,
+T
+ASPHAL
+O BEREMOVEDAND
+ST
+L
+NG WAL
+NI
+AI
+VEWAYRET
+NG DRI
+I
+ST
+EXI
+ER.
+T
+ONSORBET
+I
+T
+NG CONDI
+I
+ST
+CHEXI
+O MAT
+ACEDT
+REPL
+
+General Notes
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+
+EX. C/L ROAD PROFILE
+
+278
+
+278
+
+276
+
+PROP. 900 FEEDERMAIN
+
+274
+
+475 CSP
+
+20C
+
+Existing Water Service, Size In mm
+
+WS20
+
+Proposed Water Service, Size In mm
+
+B.M. No.
+
+(ABOVE 1200 AND 900 FDM.
+
+EX. WEST DITCH
+
+All Horizontal And Vertical Bends Are In Degrees
+All Pipes Size In mm
+
+EX. C/L GROUND PROFILE
+
+PROP. 1200 FEEDERMAIN
+
+276
+
+Elev.
+
+Description
+Location
+The Contractor Is Responsible For Locating And Protecting All Existing
+Utilities Prior To And During Construction. Location Of Existing Utilities
+Approximate Only, To Be Verified In Field By Contractor.
+
+274
+
+375 CSP
+
+EX. BELL
+
+EX. BELL
+
+0WM.
+0
+4
+PROP.
+
+4.
+72m
+
+270
+
+272
+
+266
+
+Chkd.
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+268
+
+266
+
+ON2E
+CONCESSI
+BENTONITE CLAY
+
+TRENCH PLUG. TOP
+
+I
+NSPECTI
+ON
+
+19mm GRANULAR "A" BEDDING AND COMPACTED GRANULAR "B" AND SUB-BASE (REFER TO 59312-D)
+
+258
+
+8+321.
+4
+
+256
+
+8+400.
+0
+
+300.00m - 1200mm FDM. A.W.W.A. C-301(L), CL-16 @ 0.10%
+
+8+394.
+0
+
+300.00m - 900mm FDM. A.W.W.A. C-301(L), CL-16 @ 0.10%
+
+CHAM BER (
+C902)
+I
+
+262
+
+STD.DW G.1313
+
+ELEV. 272.9m +/-
+
+264
+
+264
+
+THE REGIONAL MUNICIPALITY OF PEEL:
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+BELL CANADA
+
+ROGERS CABLE
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ALLSTREAM
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+PSN (PUBLIC SECTOR NETWORK)
+
+ONTARIO CLEAN WATER AGENCY
+
+FUTUREWAY (FCI BROADBAND)
+
+HYDRO ONE NETWORKS
+ENERSOURCE, HYDRO MISSISSAUGA
+HYDRO ONE BRAMPTON
+
+0
+
+274.59
+
+274.53
+
+274.45
+
+274.40
+
+274.32
+
+274.15
+
+273.90
+
+273.65
+
+273.41
+
+8+100
+
+8+120
+
+8+140
+
+8+160
+
+8+180
+
+8+200
+
+8+220
+
+8+240
+
+8+260
+
+8+280
+
+8+300
+
+8+320
+
+8+340
+
+8+360
+
+8+380
+
+8+400
+
+3
+
+4m
+VERTICAL SCALE
+
+HEART LAKE ROAD
+(FROM OLD SCHOOL RD. TO NORTH BRAMPTON P.S.)
+
+VICTORIA FEEDERMAIN - CONTRACT 2
+PROP. 1200MM AND 900MM FEEDERMAIN
+STA. 8+100
+
+INV. EL. 1200 FDM. CAD Area
+
+274.61
+
+2
+
+256
+
+267.80
+274.60
+
+1
+
+258
+
+268.11
+274.57
+
+20m
+
+260
+
+INV. EL. 900 FDM.
+
+274.52
+
+15
+
+1:100
+
+267.80
+
+274.48
+
+10
+
+HORIZONTAL SCALE
+
+0
+
+262
+
+268.11
+
+274.43
+
+5
+
+1:500
+
+RESTRAINED JOINTS
+
+274.41
+
+Approved by
+
+Designed by
+
+270
+
+PVI
+-917
+PVI
+-1217
+
+268
+
+260
+
+CTV
+
+ONT. CLEAN WATER
+
+KEY PLAN (N.T.S.)
+
+398
+11.00
+
+EXIST. HYDRO/BELL POLE TO
+
+FEEDERMAIN CONSTRUCTION
+
+ELEV. 273.4m +/-
+
+PARKS & REC.
+
+-
+
+KENNE
+DYRD
+.
+
+10.
+70m
+
+454
+9.00
+
+FEEDERMAIN CONSTRUCTION
+
+ELEV. 273.4m +/-
+
+A.F.
+
+LS
+
+RELOCATED PRIOR TO FEEDERMAIN
+
+TRENCH PLUG. TOP
+
+11.18.2016
+
+OLD SCHOOL RD.
+
+PI-1217
+
+HP
+
+GRAV.ENT.
+
+393
+12.00
+
+RELOCATED PRIOR TO
+
+TRENCH PLUG. TOP
+
+HYDRO ONE
+
+31.
+15m R.
+O.
+W.
+
+OH
+
+EXIST. HYDRO/BELL POLE TO BE
+
+BENTONITE CLAY
+
+TRANSIT
+
+-
+
+STA.8+400
+
+HBP
+
+BELL
+PED
+
+EXIST. BELL PEDESTAL TO BE
+
+BENTONITE CLAY
+
+-
+
+CONC
+ESSI
+ON2
+
+13.
+20m
+
+MB
+
+HBP
+
+HP
+
+392
+9.00
+
+391
+11.00
+
+ASPH.
+
+EXIST. DRIVEWAY AND CULVERT
+
+8+400
+
+PI-917
+
+OH
+
+WS
+
+(TYP.)
+
+272
+
+C
+OH
+
+(TYP.)
+
+SHEET 59312-D
+
+448
+
+375 CSP
+
+GRAV.ENT.
+
+OH
+
+BENTONITE CLAY
+
+HYDRO U/G CABLE
+
+HEART
+L
+AKER
+D.
+
+M ATCH LI
+NE
+
+3.
+74m
+
+RE FENCE
+POST & WI
+
+A.F.
+
+447
+
+B
+
+2.
+55m
+
+NORTH)
+ED (
+BURI
+
+HBP
+
+WATERMAINS
+
+GM
+
+8+360
+
+OH
+
+13-50
+
+450 CSP
+
+390
+9.00
+
+POST & WIRE FENCE
+
+453
+4.00
+
+BELL
+PED
+
+PROP. 1200 FDM.
+
+449
+12.00
+
+456
+3.00
+
+BURI
+ED
+
+B
+13-81
+
+B
+
+450
+8.00
+
+452
+10.00
+
+REFER TO PLAN 59284D
+
+375 CSP
+
+8+260
+
+OH
+
+8+240
+
+8+220
+
+8+200
+
+8+180
+
+8+160
+
+459
+6.00
+
+454
+9.00
+
+455
+4.00
+
+458
+
+HBP
+
+P
+ROP
+.
+9
+0
+0F
+DM.
+
+RE FENCE
+POST & WI
+
+M ATCH LI
+NE
+
+457
+14.00
+
+2.
+50m
+
+13-49
+
+PROP. 400 WM
+
+451
+10.00
+
+FIELD ACCESS
+
+OH
+
+8+140
+
+8+120
+
+2.
+50m
+
+8+100
+
+REFER TO PLAN 59282D
+
+OH
+
+AN
+
+-
+
+DI
+XI
+ERD.
+
+OVERHEAD WIRES
+
+GRAV.ENT.
+
+10.00
+
+463
+
+BELL U/G CABLE
+
+BETTER
+
+CAUTION:
+
+460
+7.00
+
+AN 462
+
+INIT.
+
+GAS MAINS
+
+TO ORIGINAL CONDITION OR
+
+GS
+
+26.
+20m R.
+O.
+W.
+
+467
+5.00
+
+E
+
+HBP
+
+465
+8.00
+
+DATE
+
+STORM SEWERS
+
+TO BE REMOVED AND REPLACED
+
+461
+4.00
+
+C
+N
+FE
+
+375 HDPE
+
+AN
+
+T
+S
+O
+P
+
+GM
+
+E 595717.360
+
+EXIST. STONE RETAINING WALLS
+
+5.
+75m
+
+464
+11.00
+
+466
+14.00
+
+&
+
+HBP
+
+N 4845731.731
+
+SERVICE
+
+03.22.2017
+
+DATE
+
+GRAV.ENT.
+
+E
+
+POST & WIRE FENCE
+
+474
+8.00
+
+267.88
+
+INIT.
+
+DATE
+
+SAN SEWERS
+
+REVISIONS
+
+OVERHEAD WIRES
+
+R
+I
+
+8.00
+
+1-3-13
+
+ALL COORDINATES SHOWN ARE GRID 6° UTM-17N, NAD 83
+
+W
+
+468
+13.00
+
+473
+
+379
+8.00
+
+4.99m RT.
+
+REMARKS / COORDINATES
+
+INVERT
+
+8+340
+
+8.00
+
+9.00
+
+469
+17.00
+
+8+321.40
+
+8+320
+
+471
+
+472
+
+INSPECTION CHAMBER
+
+FEEDERMAIN
+
+DRAWING
+
+OHS
+
+GRAV.ENT.
+
+STANDARD
+
+CAUTION:
+
+POST &
+
+7.00
+
+BASELINE
+
+2.
+68m
+
+RE FENCE
+WI
+
+STA.8+100
+
+These records are based upon available and unverified
+information and may prove inaccurate.
+The Region of Peel disclaims any responsibility should these
+records be relied upon to the detriment of any person.
+
+470
+
+STATION
+
+OFFSET
+
+PLEASE NOTE: THIS DRAWING IS
+NOT MARKED AS CONSTRUCTED
+
+construction
+north
+
+DESCRIPTION
+
+SERVICE
+
+8+380
+
+IF
+DISCLAIMER
+
+SERVICE DATA
+
+8+300
+
+Nov 26, 2021
+
+8+280
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+EX. ROAD ELEV. Checked by
+
+N.L./M.M.
+
+Area
+
+TO
+C-06/C-07
+
+STA. 8+400
+Project No.
+
+10-1210, 13-1392
+
+A.F.
+
+Drawn by
+
+Plan No.
+
+ROAD CHAINAGE
+
+Date
+
+SEPTEMBER 2017 Sheet
+
+13
+
+of 143
+
+59283-D
+
+SERVICE CONNECTION DATA
+
+8+250.00
+
+12304
+
+-
+
+-
+
+8+340.85
+
+12280
+
+150mm
+
+19mm
+
+25mm
+
+1
+
+50mm
+
+1
+
+15.75
+
+E 595657.220
+
+LVC-407
+
+N 4845712.201
+
+E 595725.448
+
+RE FENCE
+WI
+
+POST & WIRE FENCE
+
+464
+11.00
+
+466
+14.00
+
+-
+
+271.40
+
+N 4845794.383
+
+E 595664.846
+
+PVI-418
+
+8+330.00
+
+2.67m LT.
+
+-
+
+271.05
+
+N 4845731.137
+
+E 595728.876
+
+3.
+50m
+
+457
+14.00
+
+375 CSP
+
+OH
+
+13-50
+
+OH
+
+PROP. 50 WATER SERVICE
+
+SHEET 59312-D
+
+CONNECTION
+
+(TYP.)
+
+AS PER REGION OF PEEL
+STD. DWG. 1-7-1
+
+HOUSE
+
+PVI
+-417
+
+HP
+
+AN
+
+GRAV.ENT.
+
+393
+12.00
+
+KENNE
+DYRD
+.
+
+KEY PLAN (N.T.S.)
+
+WS
+
+LS
+
+395
+9.00
+
+ASPH.
+
+CONC
+ESSI
+ON3
+
+CONC
+ESSI
+ON2
+
+397
+10.00
+
+396
+11.00
+
+NOTES:
+
+398
+11.00
+
+1.
+
+FOR GENERAL NOTES, SEE PLAN 59272-D.
+
+2.
+
+EXISTING UTILITIES TO BE LOCATED VIA DAYLIGHTING AT ALL
+
+R.O.W.
+
+PROPOSED WATER SERVICE LOCATIONS PRIOR TO
+CONSTRUCTION.
+
+CONNECTION
+
+STD. DWG. 1-7-1
+
+3.
+
+EXISTING DRIVEWAY CULVERTS TO BE REMOVED AND
+REPLACED WITH MINIMUM OF 375mm INTERNAL DIAMETER, OR
+WITH SAME INTERNAL DIAMETER IF THE EXISTING SIZE IS
+LARGER THAN 375mm INTERNAL DIAMETER, HDPE SMOOTH
+WALL (BOSS 2000) PIPE TO MATCH EXISTING INVERTS AND
+GRADE.
+
+4.
+
+ALL DRIVEWAYS ARE TO BE RESTORED TO EXISTING CONDITION
+OR BETTER, WITH MATCHING MATERIAL (I.E. ASPHALT FOR
+ASPHALT, GRAVEL FOR GRAVEL), TO THE PROPERTY LINE.
+EXISTING DRIVEWAY RETAINING WALLS TO BE REMOVED AND
+REPLACED TO MATCH EXISTING CONDITIONS OR BETTER.
+
+General Notes
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+
+278
+
+All Horizontal And Vertical Bends Are In Degrees
+All Pipes Size In mm
+
+EX. C/L ROAD PROFILE
+
+20C
+
+Existing Water Service, Size In mm
+
+WS20
+
+Proposed Water Service, Size In mm
+
+EX. C/L GROUND PROFILE
+
+B.M. No.
+
+(ABOVE 400 WM)
+
+276
+
+375
+CSP
+
+WATER SERVICE
+
+PROP. 400
+
+CONNECTION
+
+WATERMAIN
+
+(TYP.)
+
+274
+
+272
+
+Chkd.
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+268
+
+TRENCH PLUG. TOP
+
+ELEV. 274.1m +/-
+
+ELEV. 273.6m +/-
+
+30.00m - 400mm WM. A.W.W.A.
+C-303, CL-16 @ 0.18%
+264
+
+90.00m - 400mm WM. A.W.W.A. C-303, CL-16 @ 0.38%
+
+Approved by
+
+Designed by
+
+270
+
+BENTONITE CLAY
+
+TRENCH PLUG. TOP
+
+Elev.
+
+Description
+Location
+The Contractor Is Responsible For Locating And Protecting All Existing
+Utilities Prior To And During Construction. Location Of Existing Utilities
+Approximate Only, To Be Verified In Field By Contractor.
+
+EX. EAST DITCH
+
+BENTONITE CLAY
+
+19mm GRANULAR "A" BEDDING AND
+COMPACTED FULL DEPTH GRANULAR 'B'
+(REFER TO 59312-D)
+
+INIT.
+
+B
+
+PVI
+-418
+
+2.
+70m
+
+PVI
+-416
+
+OH
+
+12280
+
+266
+
+266
+
+THE REGIONAL MUNICIPALITY OF PEEL:
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+BELL CANADA
+
+ROGERS CABLE
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ALLSTREAM
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+PSN (PUBLIC SECTOR NETWORK)
+
+ONTARIO CLEAN WATER AGENCY
+
+FUTUREWAY (FCI BROADBAND)
+
+HYDRO ONE NETWORKS
+
+264
+
+70.00m - 400mm WM. A.W.W.A. C-303, CL-16 @ 1.65%
+
+ENERSOURCE, HYDRO MISSISSAUGA
+HYDRO ONE BRAMPTON
+
+0
+
+5
+
+10
+
+15
+
+20m
+
+1:500
+
+HORIZONTAL SCALE
+
+8+345.
+0
+
+C/
+W 150 V&B
+
+8+331.
+5
+
+0°44'VERT.DEFL.
+
+8+246.
+0
+
+8+318.
+0
+
+0°13'VERT.DEFL.
+8+234.
+0
+
+8+208.
+0
+
+8+240.
+0
+
+C/
+W 150 V&B
+
+400x150 TEE
+8+195.
+0
+
+8+182.
+0
+
+8+153.
+0
+
+(
+LVC407)
+
+PEEL STD.DW G.1319
+
+LI
+NE VALVE CHAM BER
+8+140.
+0
+
+0°06'VERT.DEFL.
+
+400x150 TEE
+
+19mm GRANULAR "A" BEDDING AND COMPACTED FULL DEPTH GRANULAR 'B' (REFER TO 59312-D)
+
+262
+
+8+130.
+0
+
+HBP
+
+BELL
+PED
+
+AS PER REGION OF PEEL
+
+268
+
+8+124.
+0
+
+MB
+
+HBP
+
+8+330.
+0
+
+M ATCH LI
+NE
+
+REFER TO DETAIL
+
+110.00m - 400mm WM. A.W.W.A. C-303, CL-16 @ 0.00%
+
+DETAILS
+
+HEART
+L
+AKER
+D.
+
+PROP. 25 WATER SERVICE
+
+PROP.
+1
+2
+0
+0AND9
+0
+0F
+DM
+
+256
+
+447
+
+454
+9.00
+
+270
+
+258
+
+PVI-418
+
+LS
+
+276
+
+260
+
+C
+448
+
+HP
+
+392
+9.00
+
+391
+11.00
+
+278
+
+10.00m FULL DEPTH
+UNSHRINKABLE BACKFILL
+
+R.O.W.
+
+456
+3.00
+
+375 CSP
+
+REFER TO PEEL STD. DWG. 1-3-19
+
+ELEV. 273.7m +/-
+
+449
+12.00
+
+GM
+
+OH
+
+400 GV
+
+TRENCH PLUG. TOP
+
+POST & WIRE FENCE
+
+OH
+
+HEART LAKE ROAD
+
+BENTONITE CLAY
+
+450
+8.00
+
+452
+10.00
+
+B
+
+LINE VALVE CHAMBER
+
+272
+
+A.F.
+
+DI
+XI
+ERD.
+
+453
+4.00
+
+BURI
+ED
+
+ASPH.
+
+375 CSP
+
+454
+9.00
+
+455
+4.00
+
+458
+
+459
+6.00
+
+IPT
+
+274
+
+A.F.
+
+11.29.2016
+
+451
+10.00
+
+(TYP.)
+
+1800 x 3000
+
+PLEASE NOTE: THIS DRAWING IS
+NOT MARKED AS CONSTRUCTED
+
+FIELD ACCESS
+
+12304
+
+400 WM.
+
+12.20.2016
+
+COMMUNIC. CABLES
+
+N.L.
+
+TRENCH PLUG
+
+These records are based upon available and unverified
+information and may prove inaccurate.
+The Region of Peel disclaims any responsibility should these
+records be relied upon to the detriment of any person.
+
+CTV
+
+ONT. CLEAN WATER
+
+N.L.
+
+BENTONITE CLAY
+
+LVC-407
+
+PARKS & REC.
+
+-
+
+ISSUED FOR CONSTRUCTION
+
+WS
+
+DISCLAIMER
+
+A.F.
+
+SEP. 14/2017
+
+GRAV.ENT.
+
+R.O.W.
+
+11.18.2016
+
+MAIN AND PROP. HYD
+
+NORTH)
+ED (
+BURI
+
+RE FENCE
+POST & WI
+
+HYDRO ONE
+
+DATE
+
+OHS
+
+RE FENCE
+POST & WI
+
+TRANSIT
+
+-
+
+HYDR/BELL POLE DURING
+
+BELL
+PED
+
+HBP
+
+-
+
+ISSUED FOR TENDER
+
+450 CSP
+
+390
+9.00
+
+HYDRO U/G CABLE
+
+MAY 3/2017
+
+B
+13-81
+
+PROP. 1200 FDM
+
+A.F.
+
+TEMPORARILY SUPPORT EXIST.
+
+8+260
+
+OH
+
+8+240
+
+8+220
+
+8+200
+
+8+180
+
+8+160
+
+8+140
+
+PROP. 900 FDM
+
+B
+
+WATERMAINS
+
+GRAV.ENT.
+
+HBP
+
+PVI-417
+
+-
+
+PROVIDE MIN. 1m
+
+OH
+
+PROP. 400 WM
+
+BELL U/G CABLE
+
+REVISIONS
+
+SIDE OF HEART LAKE ROAD STA
+
+460
+7.00
+
+AN 462
+
+GAS MAINS
+
+STORM SEWERS
+
+8+100 TO STA 8+400)
+
+10.00
+
+463
+
+OH
+
+8+120
+
+E
+
+467
+5.00
+
+HBP
+
+T
+S
+O
+P
+
+465
+8.00
+
+AN
+
+8+100
+
+2.84m LT.
+
+461
+4.00
+
+C
+N
+FE
+
+GM
+
+375 HDPE
+
+13-49
+
+8+240.00
+
+8+300
+
+468
+13.00
+
+&
+
+PVI-416
+
+PVI-417
+
+CONSTRUCTION, INCLUDING
+
+GRAV.ENT.
+
+E
+
+10.
+20m
+
+469
+17.00
+
+473
+
+8.00
+
+AN
+
+E 595593.703
+
+8+280
+
+8.00
+
+474
+8.00
+
+HBP
+
+N 4845864.655
+
+BETWEEN EX. GAS
+
+R
+I
+
+379
+8.00
+
+271.40
+
+HORIZ. CLEARANCE
+
+MAIN AND PROP. HYD
+
+E 595586.586
+
+1-3-19
+
+HORIZ. CLEARANCE
+
+W
+
+3.
+55m
+
+472
+
+9.00
+
+N 4845871.685
+
+PROVIDE MIN. 1m
+
+3.
+32m
+
+471
+
+271.40
+
+BETWEEN EX. GAS
+
+POST &
+
+GRAV.ENT.
+
+-
+
+3.00m LT.
+
+(TYPICAL FOR ALL HP'S ON EAST
+
+7.00
+
+INVERT
+
+DRAWING
+
+3.01m LT.
+
+REMARKS / COORDINATES
+
+8+140.00
+
+LINE VALVE CHAMBER
+
+TO BE REMOVED AND REPLACED
+
+470
+
+WATERMAIN
+
+ALL COORDINATES SHOWN ARE GRID 6° UTM-17N, NAD 83
+
+(SEE NOTED 3 & 4)
+
+AS PER PEEL STD. DWG. 1-3-19
+
+REFER TO PLAN 59319D
+
+N 4845772.610
+
+8+130.00
+
+GUY WIRE REPLACEMENT
+
+PROP. LINE VALVE CHAMBER
+
+31.
+15m R.
+O.
+W.
+
+PVI-416
+
+EXIST. DRIVEWAY AND CULVERT
+
+(LVC-407)
+
+STANDARD
+
+OFFSET
+
+150mm
+
+20.65
+
+BASELINE
+
+INIT.
+
+M AYFI
+ELD RD.
+
+-
+
+50mm
+
+STATION
+
+DATE
+
+HW Y.
+410
+
+-
+
+STA.8+100
+
+construction
+north
+
+25mm
+
+DESCRIPTION
+
+SERVICE
+
+03.22.2017
+
+OLD SCHOOL RD.
+
+19mm
+
+ITEM
+
+INIT.
+
+DATE
+
+SAN SEWERS
+
+31.
+15m R.
+O.
+W.
+
+@ P/L
+
+SERVICE
+
+10.
+25m
+
+LINE (M)
+
+NUMBER
+
+400 WATERMAIN DATA
+
+STA.8+400
+
+COORDINATES
+
+8+400
+
+LENGTH TO PROPERTY
+
+REFER TO PLAN 59321D
+
+SERVICE CONNECTION
+
+M ATCH LI
+NE
+
+ADDRESS
+
+8+360
+
+STATION
+
+8+340
+
+NAME
+
+8+320
+
+ROLL
+
+8+380
+
+IF
+
+SERVICE DATA
+
+32427
+AN 43RPL
+
+Nov 26, 2021
+
+GS
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+0
+
+262
+
+1
+
+2
+
+3
+
+4m
+
+1:100
+
+VERTICAL SCALE
+
+260
+
+258
+
+HEART LAKE ROAD
+256
+
+(FROM OLD SCHOOL RD. TO NORTH BRAMPTON P.S.)
+
+VICTORIA FEEDERMAIN - CONTRACT 2
+PROP. 400MM WATERMAIN
+
+RESTRAINED JOINTS
+
+STA. 8+100
+271.33
+
+271.37
+
+271.40
+
+271.40
+
+271.40
+
+271.40
+
+271.40
+
+271.40
+
+271.31
+
+271.24
+
+271.16
+
+271.08
+
+270.88
+
+270.55
+
+270.22
+
+269.90
+
+BOT. EL. OF WM. CAD Area
+
+-
+
+274.41
+
+274.43
+
+274.48
+
+274.52
+
+274.57
+
+274.60
+
+274.61
+
+274.59
+
+274.53
+
+274.45
+
+274.40
+
+274.32
+
+274.15
+
+273.90
+
+273.65
+
+273.41
+
+EX. ROAD ELEV. Checked by
+
+N.L./M.M.
+
+8+100
+
+8+120
+
+8+140
+
+8+160
+
+8+180
+
+8+200
+
+8+220
+
+8+240
+
+8+260
+
+8+280
+
+8+300
+
+8+320
+
+8+340
+
+8+360
+
+8+380
+
+8+400
+
+Area
+
+TO
+C-06/C-07
+
+STA. 8+400
+Project No.
+
+10-1210, 13-1392
+
+A.F.
+
+Drawn by
+
+Plan No.
+
+ROAD CHAINAGE
+
+Date
+
+SEPTEMBER 2017 Sheet
+
+50
+
+of 143
+
+59320-D
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+HYDRANT FLOW TESTING
+
+Nov 26, 2021
+
+NOTE:Hydrants tested according to NFPA 291: Recommended Practice for Fire Flow Testing and
+Marking of Hydrants
+
+GENERAL INFORMATION
+General Information
+Date of Testing
+
+18-Nov-21
+
+Project Number:
+
+135636
+
+Site Location / Address:
+
+12304 Heart Lake
+
+Region / Municipality
+
+Peel Region
+
+Hydrants Opened By:
+
+Peel Region
+
+Tested by:
+
+Daniel S
+Val V
+
+HYDRANT TEST INFORMATION
+Hydrant Test Location - Residual Hydrant=R, Flow Hydrant=F (North at Top)
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+Test Data
+Time of Test
+
+8:14 AM
+
+Pipe Size (mm)
+
+300
+
+Flow Hydrant Test Location (description)
+
+101 Abbotside Way and Learmont Ave
+
+Residual Hydrant Test Location (description)
+
+First hydrant east of 101 Abbotside Way and Learmont
+Ave
+
+Static Pressure(PSIG)
+
+81
+
+Q1 Test Data (1 Orifice)
+# OUTLETS
+
+ORIFICE SIZE(IN)
+
+PITOT
+PRESSURE(PSIG)
+
+FLOW(USGPM)
+
+RESIDUAL
+PRESSURE(PSIG)
+
+1
+
+2.5
+
+45
+
+1126
+
+74
+
+# OUTLETS
+
+ORIFICE SIZE(IN)
+
+PITOT
+PRESSURE(PSIG)
+
+FLOW(USGPM)
+
+RESIDUAL
+PRESSURE(PSIG)
+
+2
+
+2.5
+
+30
+
+1838
+
+73
+
+QT Test Data (2 Orifices)
+
+Calculations
+FORMULA: Q= 29.83 cd^2√p....................................Where: c- coefficient of discharge (1 in smooth pipe)
+............................................................................................................................ d- pipe diameter (inches)
+.............................................................................................................................p- pitot reading (psig)
+Q1 - 1 Orifice(s)
+
+Q1= (29.83)(0.9)(2.5)^2 √45=1126
+
+QT - 2 Orifice(s)
+
+QT= 2(29.83)(0.9)(2.5)^2 √30=1838
+
+Static Pressure(PSIG)
+
+81
+
+Test Results - Plot
+
+2021-11-18
+
+PAGE 2 OF 2
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+12304 Heart Lake Road
+
+DOMESTIC WATER DEMAND CALCULATIONS
+
+Industrial Development
+
+Project Name: 12304 Heart Lake Road
+Project Number: 135636
+Date: November 12, 2021
+Designed By: Jason Jenkins, P.Eng., P.E.
+
+Land Use
+ICI
+
+Peaking Factors
+Peak Hour
+3.00
+
+Maximum Day
+1.40
+
+ADD (L/s)
+2.4
+2.4
+
+(ADDxP.F.)
+PHD (L/s)
+7.3
+7.3
+
+(ADDxP.F.)
+MDD (L/s)
+3.4
+3.4
+
+1. ADD = 300 L/cap/day per Region of Peel standards
+2. Population Densities per Region of Peel standards
+3. Peaking factors per Region of Peel standards
+
+Building 1
+
+Units / Area
+9.95 ha
+
+Density
+70 pp/ha
+Totals
+
+Population
+697
+697
+
+Page 1 of 3
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+12304 Heart Lake Road
+
+FIRE FLOW DEMAND CALCULATIONS
+
+Industrial Development
+Project Name: 12304 Heart Lake Road
+Project Number: 135636
+Date: November 12, 2021
+Designed By: Jason Jenkins, P.Eng., P.E.
+Based on the Water Supply for Public Fire Protecetion Manual, 1999 by the Fire Underwriters Survey
+
+Step 1: Calculate Fire Flow (based on area)
+Construction Coefficient =
+Largest Floor Area =
+Floor Above =
+Floor Below =
+Area =
+Fire Flow (F) =
+
+0.6
+48,610
+0
+0
+48,610
+29,000
+
+F = required fire flow (L/min)
+
+m2
+m2
+m2
+m2
+L/min
+
+C = coefficient related to type of construction
+0.6 for fire resistive (fully protected, 3-hr ratings)
+0.8 for non combustable (i.e. unprotected metal buildings)
+
+F = 220C A
+
+1.0 for ordinary construction
+1.5 for wood frame construction
+A = total floor area excluding basements 50% below grade
+
+* If vertical openings are inadequately protected, consider two largest two largest adjoining floors plus 50% of each of any floors above up to eight floors.
+* If vertical openings are adequately protected (one hour rating), consider largest floor area + 25% of two immediately floors.
+
+Step 2: Adjustment for Building Occupancy (shall not be less than 2000 L/s)
+Occupancy Adjustment =
+F1 = Fire Flow x Adjustment =
+
+-0.15
+24,650
+
+L/min
+
+Non-Combust.
+
+-25%
+
+Free Burning
+
+15%
+
+Limited Comb.
+
+-15%
+
+Rapid Burning
+
+25%
+
+Combustable
+
+No change
+
+Step 3: Adjust F1 for Fire Supression System
+Sprinkler Adjustment =
+F2 = F1 x Adjustment =
+
+50%
+12,325
+
+L/min
+
+Automatic Sprinklers (monitored)
+
+-50%
+
+Adequatly Designed System
+
+-30%
+
+Step 4: Adjust F1 for Exposure / Proximity (shall not exceed 75%)
+Proximity Adjustment =
+F3 = F1 x Factor =
+
+15%
+3,698
+
+(max 75%)
+L/min
+
+Separation
+
+Adjustment
+
+Separation
+
+Adjustment
+
+0m to 3m
+
+25%
+
+20.1m to 30m
+
+10%
+
+3.1m to 10m
+
+20%
+
+30.1m to 45m
+
+5%
+
+10.1m to 20m
+
+15%
+
+Step 5: Calculate Adjusted Fire Flow (shall not be less than 2000 L/min or greater than 45,000 L/min)
+F1 =
+- F2 =
++ F3 =
+
+24,650
+12,325
+3,698
+
+L/min
+L/min
+L/min
+
+Fire Flow =
+Fire Flow =
+Total Demand (Fire Flow + MDD) =
+
+16,000
+266.7
+270.1
+
+L/min
+L/s
+L/s
+
+Fire Flow = F1 − F2 + F3
+
+Checks:
+
+Fire Flow greater than 2000 L/min
+Fire Flow less than 45,000 L/min
+
+Page 2 of 3
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Nov 26, 2021
+
+12304 Heart Lake Road
+
+HEAD LOSS CALCULATIONS
+
+Industrial Development
+
+Project Name: 12304 Heart Lake Road
+Project Number: 135636
+Date: November 12, 2021
+Designed By: Jason Jenkins, P.Eng., P.E.
+
+Hydrant Flow Test - Abbotside Way
+Flow
+(gpm)
+0
+1,126
+1,838
+
+Flow
+(L/s)
+0.0
+71.0
+116.0
+
+Flow
+(L/min)
+0
+4,262
+6,958
+
+Pressure
+(psi)
+81
+74
+73
+
+Pressure
+(kPa)
+558
+510
+503
+
+Residual Pressure at Main
+Source: Walski, Thomas M. (2007): Advanced Water Distribution Modeling and Management
+
+where: QR = flow predicted at desired residual pressure
+
+ℎ𝑟𝑟 0.54
+QR = QF × 0.54
+ℎ𝑓𝑓
+
+QF = total flow measured during test
+hr = pressure drop to desired residual pressure
+hf = pressure drop to measured during test
+
+Flow
+(L/s)
+
+Domestic (PHD)
+
+Flow
+(gpm)
+115
+
+Flow
+(L/min)
+
+7.3
+
+435
+
+Fire Flow (Fire+MDD)
+
+4,281
+
+270.1
+
+16,203
+
+43
+
+295
+
+Projecting Curve to Fire Flow
+
+To 20 psi
+
+3,579
+
+225.8
+
+13,547
+
+54
+
+369
+
+Projecting Curve to 20 psi
+
+(1 gal = 3.785 L)
+
+Residual Pressure @ Main
+(psi)
+(kPa)
+81
+558
+
+(Goal Seek)
+
+Residual Pressure at Building
+where: hL = Pressure Drop (m)
+
+10.675 ∗ L ∗ Q1.85
+hL =
+C1.85 ∗ D4.8655
+
+L = Length of Service (m)
+Q = Flow Rate (m3/s)
+D = Pipe Diameter (m)
+C = Roughness Coefficient
+
+PHD Conditions
+
+Fire + MDD Conditions
+
+Domestic
+
+Fire Service
+
+L=
+
+50.0
+
+m
+
+L=
+
+70.0
+
+m
+
+Q=
+
+0.007
+
+m3/s
+
+Q=
+
+0.270
+
+m3/s
+
+D=
+
+150
+
+mm
+
+D=
+
+300
+
+mm
+
+C=
+
+C=
+
+hL=
+
+100
+0.1
+
+m
+
+hL=
+
+120
+3.3
+
+m
+
+hL=
+
+4.7
+
+in
+
+hL=
+
+130.1
+
+in
+
+hL=
+
+0.2
+
+psi
+
+hL=
+
+4.7
+
+psi
+
+hL=
+
+1.2
+
+kPa
+
+hL=
+
+32.4
+
+kPa
+
+Flow
+
+Flow
+
+Flow
+
+Residual Pressure @ Bldg.
+
+(gpm)
+115
+
+(L/s)
+
+(L/min)
+
+Domestic
+
+7.3
+
+435
+
+(psi)
+81
+
+(kPa)
+557
+
+Fire
+
+4,281
+
+270.1
+
+16,203
+
+38
+
+262
+
+Residual Pressure (DOMESTIC) at building is greater than 40 psi (275 kPa).
+Residual Pressure (FIRE) at building is greater than 20 psi (140 kPa).
+
+Page 3 of 3
+
+

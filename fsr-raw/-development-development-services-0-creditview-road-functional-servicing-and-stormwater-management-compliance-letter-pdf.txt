@@ -1,0 +1,4819 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 02, 2025
+
+June 13, 2025
+Project #:
+
+20-665
+
+Carmine Caruso, MCIP, RPP
+Manager, Development
+Town of Caledon
+6311 Old Church Road
+Caledon, ON
+L7C 1J6
+Re:
+
+Draft Plan of Subdivision Submission (Reference PRE 2024-0107)
+1st Submission – FSR Letter of Compliance
+12101 Creditview Developments Limited
+
+Carmine,
+We confirm that the proposed development, 12101 Creditview Developments Limited (Fieldgate Homes),
+as shown on the latest draft plan prepared by GSAI, complies with the recommendations for site servicing,
+grading, drainage, and stormwater management as described in the Alloa Tertiary Plan – Phase 1
+Functional Servicing Report (FSR) (September 2024).
+Sanitary Servicing
+The site is accommodated by the existing 750 mm sanitary trunk sewer on Brisdale Drive. Wastewater
+generated within the draft plan area will generally flow north to south, collected by either a 375 mm sewer
+on Tim Manley Avenue or a 375 mm sewer on Welsh Avenue. These local sewers run west to east and
+connect to the planned regional trunk system on Speersville Drive (Project 29-2199), which discharges to
+the existing 750 mm stub connection at Brisdale Drive, just north of Mayfield Road.
+A 200 mm local sanitary sewer is proposed on Creditview Road to collect service connections for lots
+fronting Creditview. This sewer runs south to north and ultimately connects to the 375 mm sewer on Tim
+Manley Avenue.
+Water Servicing
+Municipal water will be supplied to the 12101 Creditview Developments Limited site through Peel Region’s
+lake-based system (Pressure Zone 7W). Water services will extend north from the existing 600 mm
+watermain on Mayfield Road. The Region’s capital program includes two new 400 mm watermains—on
+Creditview Road (Project 26-1188) and Tim Manley Boulevard (Project 26-1187)—to service the Alloa
+Phase 1 area, including the subject development. A network of local 300 mm watermains on Speersville
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+Page 2 of 3
+
+Drive, Blackhorse Drive, and Welsh Avenue will provide looping and security of supply, connecting to both
+existing and proposed Regional infrastructure.
+Stormwater Management
+The draft plan spans two watersheds: Fletcher’s Creek (south) and Etobicoke Creek (north). Postdevelopment drainage patterns have been designed to closely match pre-development conditions.
+Accordingly, stormwater associated with the draft plan is managed through three distinct drainage areas:
+•
+
+Northern area (Etobicoke Creek watershed): Stormwater flows west to east to SWM Pond 4,
+which outlets to the re-aligned Alloa Drain (Etobicoke Creek).
+
+•
+
+Southwest area (Fletcher’s Creek watershed): Stormwater is directed south to SWM Pond 2,
+which will discharge to a CWS and downstream NHS via a 900 mm storm sewer across Mayfield
+Road. The CWS will either be constructed by the Region as part of the Mayfield Road widening or
+front-end financed and constructed by the owners (depending on timing).
+
+•
+
+Southeast area (Fletcher’s Creek watershed): Stormwater is conveyed east to SWM Pond 1,
+which will discharge through a 3.66 m x 1.5 m open bottom culvert across Mayfield Road. The
+culvert will either be constructed by the Region as part of Mayfield Road widening or front-end
+financed by the owners.
+
+All ponds are designed to meet applicable requirements for quantity, erosion, and quality control (Enhanced
+Level 1 – 80% TSS removal).
+It is noted that a small area adjacent to Creditview Road and south of the Alloa Drain, previously identified
+in the FSR for on-site control, has since been re-graded and re-routed to SWM Pond 4. Only the mixeduse block (Block 62) will continue to be serviced via on-site private stormwater control.
+Supporting Materials
+Servicing drawings from the FSR are attached for information. For additional details please refer to the
+Alloa Tertiary Plan – Phase 1 Functional Servicing Report (FSR) (September 2024). Please note that minor
+variations in lotting and unit counts are not anticipated to impact the servicing plan as described in the FSR.
+Servicing details will be finalized in consultation with the Town as part of detailed design.
+We trust that the enclosed information satisfies the requirements of the Draft Plan application. If you have
+any questions or concerns, please feel free to contact our office.
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+Page 3 of 3
+
+Regards,
+Urbantech® Consulting
+
+June 13, 2025
+
+Dragan Zec, P.Eng.
+Partner
+Attachment 1: Stormwater, Sanitary and Water Servicing Plans (Alloa Tertiary Plan – Phase 1 FSR,
+Sept. 2024), with draft plan area identified
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+K-plan
+CREDITVIEW RD.
+
+MISSISSAUGA RD
+
+W.CHURCHILL
+
+ROUTE
+
+14
+
+ALLOA
+PHASE 1
+
+RD.
+MAYFIELD
+
+.
+
+BUICK BLVD
+
+ILLE
+ONV
+
+.R.
+
+DR
+
+WANLESS
+
+HUTT
+
+C.N
+
+McLAUGHLIN RD.
+
+G
+
+RED
+PREFER
+TA WEST
+
+HERITAGE RD.
+
+BLVD.
+
+OL RD.
+OLD SCHO
+
+CHINGUACOUSY RD
+
+19
+
+SANDALWOO
+
+D PKWY.
+
+K
+CREE
+
+TCPL
+
+ANSITWAY
+
+BOVAIRD DR.
+
+HIGWAY 413 TR
+
+7
+
+PH
+
+E1
+
+AY 4
+
+TOP
+NE
+
+13 TR
+
+ANSI
+T
+
+S N
+
+STREET
+
+F
+
+A
+M H2
+MH
+3A
+
+MH7A
+
+S
+
+MH
+8A
+
+MH49A
+
+S N
+S N
+
+R.
+
+E ST N WOO
+
+OT
+
+N T
+
+E S STE
+
+MH19A
+TOP
+SE
+
+S N
+
+MH
+5
+
+A
+
+N
+
+C.N
+.
+
+E EN
+
+S N
+
+MH6A
+
+DR.
+
+WAY
+
+S N
+
+S N
+
+BOVAIRD
+R
+
+MI
+T
+
+HIGW
+
+MH1A
+
+VE
+RI
+
+MH48A
+TOP
+SE
+
+LI
+
+IT
+ED
+CR
+
+AS
+
+PHASE 1 LIMIT
+
+MH4A
+
+E T
+
+S N
+S N
+
+A
+
+A
+10
+MH
+
+S N
+
+MH51A
+
+STREET C
+
+S N
+M
+H1
+2A
+
+S N
+M
+A
+13
+
+H
+
+MEDIUM-HIGH
+DENSITY
+RESIDENTIAL
+
+S N
+
+S NT
+E
+O N
+
+MEDIUM-HIGH
+DENSITY
+RESIDENTIAL
+
+PH
+AS
+E
+
+S N
+
+O
+
+MH
+
+O
+
+S N
+
+ET F
+STRE
+
+MH29A
+
+S N
+
+TOP
+NW
+SE
+
+S N
+
+S N
+
+S N
+
+S N
+
+MH56
+A
+
+S N
+
+S N
+
+MH57
+
+TOP
+NW
+
+AD
+
+STREET
+
+MH46A
+
+S N
+
+B
+
+COUSY R
+O
+CHINGU
+A
+S N
+
+O
+
+T
+
+O
+
+NEIL PROMENADE
+
+CHINGU
+ACOUSY
+ROAD
+ACOUSY
+
+S N
+
+S N
+
+CHINGU
+
+F
+
+S N
+
+E
+S N
+
+STREET
+
+JAMES
+MAYNARD
+ROAD
+
+D
+SWM POND 1
+
+SWM POND 2
+
+STREET
+
+MH92A
+TOP
+NW
+SE
+
+MH81A
+TOP
+NW
+
+Urbantech® Consulting
+EX. PLUG 1
+TOP
+NW
+SE
+
+TOP
+NW
+
+MIXED USE
+
+MAYFIELD ROAD
+
+A Division of Leighton-Zec Ltd.
+
+EXISTING
+HYDRO
+TRANSFORMER
+
+3760 14th Avenue, Suite 301,
+Markham, ON. L3R 3T7
+TEL 905.946.9461
+
+ON S N T
+O
+
+E
+
+ON
+
+MAYFIELD ROAD
+
+S N
+
+CHINGU
+ACOUSY
+ROAD
+
+MH 9B
+TOP
+NW
+SW
+
+EDENBROOK
+DRIVE
+
+ON
+N
+
+COMMERCIAL BLOCKS NORTH OF MAYFIELD ARE
+ALLOWED FOR IN THE EXISTING BRISDALE SEWER.
+SUBJECT TO THE COMMERCIAL BLOCK TIMING,
+PROPOSED BLOCKS COULD BE SERVICED IN THE
+INTERIM BY DIRECTING DRAINAGE TO THE EXISTING
+LOCAL SANITARY SEWER ON ROBERT PARKINSON
+DRIVE. HOWEVER, THIS CONNECTION SHALL BE
+DIVERTED TO THE MAYFIELD SANITARY TRUNK
+SEWER UPON COMPLETION OF THE TRUNK SEWER BY
+PEEL REGION.
+
+urbantech.com
+
+N
+
+EX. MH
+
+S N
+
+MH82A
+
+MIXED USE
+
+THORNB
+USH
+BLVD.
+
+T
+S N T
+O
+
+EX. MH1
+TOP
+NW
+SE
+
+S N
+
+S N
+
+MH84A
+
+P
+
+675mm SANITARY TRUNK
+(BY REGION-2032-PROJ.29-2199)
+
+E
+
+O
+
+STREET D
+
+STREET E
+
+MIXED USE
+
+N
+
+CREDITV
+IEW
+ROAD
+
+N
+
+S N T
+
+ROBERT
+PARKINSON
+DRIVE
+
+T
+ON
+
+S N
+MH87A
+
+ON
+S N T
+
+S N
+
+T
+MH 10B
+TOP
+NE
+SW
+
+MH83A
+
+MIXED USE
+
+MH8
+5A
+
+S N
+
+MH8
+
+MH94A
+
+STREET G
+
+MH 8B
+TOP
+NW
+SE
+
+MEDIUM-HIGH
+DENSITY RESIDENTIAL
+
+675mm SANITARY TRUNK
+(BY REGION-2031-PROJ. 29-2199)
+
+6A
+
+COMMERCIAL
+
+MH79A
+TOP
+NE
+SW
+
+S N
+
+S N
+
+PHASE 1
+LI
+
+O
+
+TWEEDHILL AVENUE
+
+A
+
+S N
+
+S N
+
+N
+
+MAYFIELD ROAD
+N
+
+MH91A
+
+ON
+S N T
+
+STREET
+
+MH 80A
+TOP
+NW
+SE
+SW
+NE
+
+S N
+
+S N
+
+T
+
+MAYFIELD ROAD
+
+S N T
+
+STREET
+
+TOP
+SE
+NW
+
+S N
+
+ON
+
+MH90A
+TOP
+NW
+NE
+
+MH76A
+TOP
+SW
+
+S N
+
+MH67A
+TOP
+NE
+SE
+SW
+NW
+
+BRISDALE
+DRIVE
+
+MIT
+
+COMMERCIAL
+
+S N
+
+STREET
+F
+
+O
+N
+S N T
+ON
+T
+
+AD
+IEW RO
+
+MH 7B
+
+MH93A
+TOP
+SE
+
+T
+
+O
+
+MH77A
+TOP
+NE
+SW
+
+S N
+
+MH89A
+TOP
+SW
+SE
+
+S N
+
+O P SE
+N S
+E EEN
+O
+O TE
+O
+W STEW TE SE
+N N T E E ST N
+T N SEWE
+ON
+S
+E
+E W T N E ST N
+O NT P E S NT O
+S PE
+PP O E
+O
+E
+S
+N
+E E NT O
+ET E S
+S ON ES NS T E
+N E
+ONT
+T ON TO
+S
+E T N SEWE
+O P SES O
+EST
+TE
+O E TE N
+N E N POP
+T ON O
+W
+WO
+ENE TE T E OW O
+S TT E
+PST E
+EN O
+S
+E P PE S STE
+EST
+TE P SE
+E E OP ENT
+E S OWN ON T S P N
+E
+N SW PON S N N S O P SES O PP O
+TE
+O
+E E OP
+E N
+N
+ES ENT
+POP
+T ON
+O
+E ON O PEE
+ENT E NE ESS
+SEWE
+P O E ENTS
+ON N SO T O
+S
+E
+EW
+W
+ET
+E E
+T E P NNE
+E E OP ENTS NO T O
+E
+O
+N
+N
+O P SE E TE N
+N
+ST
+T E
+P O E ENTS
+PEE W
+E P E ENTE N ON N T ON
+WT T E
+O P SE P NN N
+PP O
+S N NT
+P SES O
+O
+E E OP ENT
+T S P N E E TS T E T
+TE P SE SE
+N
+ON EPT
+SE ON T E PP O E
+O
+N
+W S PPO T N
+ST
+ES OWE E
+N S
+E T TO T E PEE E ON
+ON
+T ON
+PO T ON O
+O P SE
+N S O
+E
+PE
+NENT
+O
+O TE N T E E ST N T
+N E
+T N S NT
+SEWE W T N W
+S O
+T E O
+E
+E E OP ENT T T E NO T WEST
+O NE O
+E
+N
+E T EW O
+P O EE W T
+ONST
+T ON
+E
+O
+O P SE
+ES ENT
+N S T E
+NTE
+O
+E
+O
+SE
+N W
+E E P O E TO
+E TEN E ST N
+S NT
+O T ET ON O E T
+P
+NSON
+E N O
+O OW N
+O P ET ON O T E
+E T N SEWE T E NTE
+SE
+E ONNE T ON
+WO
+E E O
+SS ONE TO T E E ON S S T S
+T ON N
+O
+E
+E E OP ENT OWS PE
+NENT
+E TE TO
+T E
+E O T
+E
+E TO
+O
+O TE E E OP ENT T
+N
+O
+N OWNE S
+O P TO ENTE NTO
+ONT EN N
+EE ENT W T PEE O
+E E
+O NE ESS
+E ON
+N
+ST
+T E
+E
+O T E
+PT P O
+P NN N
+S E
+E
+
+MH78A
+TOP
+NE
+SW
+
+STREET A
+
+S N
+
+S NT
+SEWE
+E ONNE T ON
+
+PUBLIC
+ELEMENTARY
+SCHOOL
+
+S N
+
+MH74A
+
+MH88A
+
+SE
+
+CALEDON
+WORKS
+YARD
+
+S N
+
+MH71A
+TOP
+SW
+NE
+
+675mm SANITARY TRUNK
+(BY REGION-2032-PROJ.29-2199)
+
+ALLOA PHASE 1 WASTEWATER SERVICING NOTES:
+
+MH66A
+TOP
+NW
+SE
+
+S N
+
+STREET A
+
+TOP
+SE
+NE
+
+NEIGHBOURHOOD
+PARK
+
+525mm SANITARY TRUNK
+(BY REGION-2031-PROJ. 29-2199)
+
+TOP
+SW
+NE
+
+S N
+
+CREDIT
+V
+
+S N
+
+E
+
+TIM MANLEY BLVD
+
+S N
+
+MH65A
+
+MH73A
+TOP
+SW
+NE
+
+S N
+
+NSON
+
+P
+
+ROAD
+
+STREET E
+
+AS
+
+MH 100A
+TOP
+SW
+NE
+NW
+SE
+
+S NT
+
+TOP
+NW
+SE
+
+MH75A
+
+S N
+
+E
+N
+
+MH41A
+TOP
+NW
+SW
+NE
+
+PH
+
+NEIGHBOURHOOD
+PARK
+
+G
+ALLOA
+RESERVOIR
+AND
+PUMPING
+STATION
+
+0A
+
+E SE
+E
+E SEWE
+
+12101 CREDITVIEW
+DEVELOPMENTS LIMITED
+
+MH63A
+TOP
+NW
+SE
+
+MH64A
+TOP
+NW
+SE
+
+E
+
+STREET
+LIMIT
+PHASE 1
+
+MH7
+
+E
+
+MH40A
+
+S N
+
+CREDIT
+V
+
+O
+
+PUBLIC
+ELEMENTARY
+SCHOOL
+
+MH69A
+
+N E TE N
+O
+O SE
+E ONNE T ONS
+
+S N T
+
+TOP
+NW
+SW
+
+E1
+
+LIM
+
+IT
+
+TOP
+NW
+NE
+SW
+
+S N
+
+MEDIUM-HIGH
+DENSITY RESIDENTIAL
+
+S N
+
+E TS
+
+S N
+
+S N
+
+S N
+
+S N
+
+MH62A
+
+STREET A
+
+P OPOSE SEWE O
+
+T ON
+
+MH42A
+
+S N
+
+MH45A
+
+S N
+
+MH72A
+TOP
+SW
+NE
+
+O N E E
+
+TOP
+SE
+
+MH44A
+
+STREET B
+
+S N
+
+TOP
+NE
+
+P OPOSE
+
+TOWN O SE
+
+LINDSE
+Y
+AVENU
+E
+
+S N
+TOP
+NW
+SE
+NE
+
+S N
+
+STREET H
+
+MH68A
+
+N O E
+
+450mm SANITARY TRUNK
+(2030)
+
+MH43A
+
+MH61A
+
+MH 5B
+
+S NT
+SEWE O SE
+ONNE T ON
+
+S NT
+
+S N
+
+MH47A
+TOP
+NE
+SE
+SW
+
+SWM POND 7
+
+ENT PP
+
+TOP
+SE
+
+MH38A
+
+S N
+
+STREET B
+
+S NT
+SEWE
+E ONNE T ON
+
+T ON E
+
+N
+
+MH37A
+
+SWM POND 3
+
+S N
+
+STREET D
+
+S N
+
+SWM POND 4
+
+SE
+
+SEWE
+
+S N
+
+STREET F
+
+S N
+
+ON
+
+COMMUNITY
+PARK
+
+E
+
+MH39A
+
+N
+
+675mm SANITARY TRUNK
+(BY REGION-2032-PROJ.29-2199)
+
+E
+
+N
+
+TD
+
+STREE
+TF
+
+S N
+
+MH36A
+
+LIMIT
+PHASE 1
+
+1
+
+POP
+
+ET
+
+MH60A
+
+IEW RO
+AD
+
+E
+AS
+H
+P
+
+T ON
+
+NTE
+O
+O E TP
+
+SWM POND 5
+
+TOP
+NW
+SE
+
+O
+
+M
+LI
+
+N
+
+E
+POP
+
+OTS E
+S NT
+
+S N T
+
+MH59A
+
+CATHOLIC
+ELEMENTARY
+SCHOOL
+
+TOP
+NW
+SE
+
+MH 6B
+
+T
+
+MH34A
+
+MH 3B
+
+IT
+
+SAN.MH5A
+TOP
+S
+N
+E
+
+BIRKHE
+AD
+DRIVE
+
+TOP
+NW
+SE
+
+STREE
+
+1 LIMIT
+PHASE
+
+S N
+
+MH35A
+
+EXTERNAL 62.0ha FOR PHASE 2
+DRAINAGE TO CREDITVIEW ROAD
+
+S NT
+
+SEWE
+
+MH27A
+
+TOP
+NW
+SE
+
+MH 4B
+TOP
+NW
+SE
+SW
+
+O
+
+TOP
+NW
+
+N
+
+S N
+
+S NT
+
+E ST N S N T
+
+S N
+MH30A
+
+A
+
+T
+
+S N
+
+S N T
+
+MH54A
+MH55A
+
+ON
+
+MH32A
+
+MH26A
+
+N
+S N T
+
+TOP
+NE
+SE
+SW
+
+O
+
+S N T
+
+E
+
+S N
+
+ON
+
+T
+
+N
+O N
+
+S N
+
+A
+
+IEW RO
+AD
+
+MH23A
+
+8
+H2
+
+CREDIT
+V
+
+S N
+
+S N
+
+BIRKHE
+AD
+DRIVE
+
+MH25A
+
+S N
+
+MH58A
+TOP
+NW
+SE
+SW
+
+SWM POND 6
+
+S NT
+S
+E
+IT
+
+TOP
+SW
+
+STREET C
+
+MH17A
+
+S N
+
+NEIGHBOURHOOD
+PARK
+
+T
+
+S N
+
+A
+
+MH31A
+
+S N
+
+E
+
+MH24A
+
+MH33A
+
+S NT
+SEWE O
+SE
+E ONNE T ON
+
+M
+
+N
+
+S N
+
+S N
+
+16
+
+MEDIUM-HIGH
+DENSITY
+RESIDENTIAL
+
+S N
+
+LI
+
+MH21A
+
+S N
+
+TOP
+NW
+SE
+
+S N T
+
+A
+
+TOP
+SW
+NE
+NW
+
+1
+
+M
+
+S N
+
+675mm SANITARY TRUNK
+(BY REGION-2032-PROJ.29-2199)
+
+MH 2B
+
+MH
+
+15
+
+MH18A
+
+STREET D
+
+SE
+
+H1
+4A
+
+MH53
+A
+
+S NT
+SEWE
+E ONNE T ON
+
+S N
+
+M
+
+MH22A
+
+S N
+
+ROAD
+
+MH52
+
+MEDIUM-HIGH
+DENSITY
+RESIDENTIAL
+
+ACOUSY
+
+NEIGHBOURHOOD
+PARK
+
+A
+
+TOP
+SE
+
+CHINGU
+
+S N
+
+MH20A
+
+MH 1B
+
+EEN E T
+
+S N
+
+MH
+11A
+
+TOP
+SE
+NW
+
+N
+
+MH50A
+
+S N
+MH
+9
+
+S N
+
+PHASE 1 ALLOA EIR/FSR
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+
+SANITARY DRAINAGE PLAN
+P O E TN
+
+TE
+
+S
+
+E
+
+W
+
+5.1
+
+SEP
+P P
+
+P
+
+P
+
+S
+
+N
+
+S NT
+
+SE
+
+N
+
+W
+
+S
+
+S
+
+P
+
+E
+
+T
+
+S
+
+UTE
+D RO
+
+TRANSITWAY
+HIGWAY 413
+
+C.N
+.R.
+
+.
+
+BUICK BLVD
+
+IL
+ONV
+
+WE
+GTA
+
+HUTT
+
+ERRE
+
+REF
+ST P
+
+14
+
+ALLOA
+PHASE 1 WANLESS DR
+
+RD.
+MAYFIELD
+
+SANDALWO
+
+OD PKWY.
+
+REEK
+LE C
+
+TCPL
+
+7
+IT
+ED
+CR
+
+BOVAIRD
+
+BOVAIRD DR.
+
+DR.
+
+C.N
+.R.
+
+R
+VE
+RI
+
+MEDIUM-HIGH
+DENSITY
+RESIDENTIAL
+
+STREET C
+
+FUT. 750
+∅ TRANSMISSION MAIN
+(BY REGION-2026)
+
+MEDIUM-HIGH
+DENSITY
+RESIDENTIAL
+
+MEDIUM-HIGH
+DENSITY
+RESIDENTIAL
+
+NEIGHBOURHOOD
+PARK
+
+LEGEND:
+MEDIUM-HIGH
+DENSITY
+RESIDENTIAL
+
+ALLOA PHASE 1 BOUNDARY
+
+CONNECT 300∅ WM
+TO 600∅ WM
+
+GREENBELT
+
+EXISTING WATERMAIN (ZONE 7)
+
+PROPOSED DC RECOVERABLE
+WATERMAIN (ZONE 7)
+
+EXISTING TRANSMISSION MAIN
+FUTURE TRANSMISSION MAIN
+
+COUSY
+ROAD
+
+STREET
+
+FUTURE DC RECOVERABLE
+WATERMAIN (ZONE 6)
+
+300 ∅WM.
+
+SWM POND 5
+
+ET D
+
+PROPOSED 300∅ DIA. WATERMAIN
+(ZONE 7- SIZE TO BE CONFIRMED)
+PROPOSED 150/200∅ DIA.
+WATERMAIN (ZONE 7- SIZE TO BE
+CONFIRMED)
+
+CHINGUA
+
+SWM POND 6
+
+EXISTING WATERMAIN (ZONE 6)
+
+FUTURE DC RECOVERABLE
+WATERMAIN (ZONE 7)
+
+STRE
+
+F
+
+CREDIT
+V
+
+600∅ WATERMAIN
+(BY REGION-2026
+PROJ.26-1182)
+
+CATHOLIC
+ELEMENTARY
+SCHOOL
+
+NATURAL HERITAGE SYSTEM
+
+BIRKHEA
+D
+
+IEW RO
+
+AD
+
+DRIVE
+
+STREET C
+
+NEIGHBOURHOOD
+PARK
+
+FUT. 400∅ WATERMAIN
+(BY REGION-2026
+PROJ.26-1186)
+
+12101 CREDITVIEW
+DEVELOPMENTS LIMITED
+
+CONNECT 200∅ WM
+TO 300∅ WM
+
+CONNECT 400∅ WM
+TO EX. 600∅ WM
+
+STREET B
+
+STREET B
+
+NEIL PROMENADE
+
+·
+·
+
+CPP WM.
+
+WATERMAIN
+SERVICING
+BLOCK
+
+EX. 600 ∅
+
+MEDIUM-HIGH
+DENSITY RESIDENTIAL
+
+WATERMAIN
+SERVICING/
+WALKWAY BLOCK
+
+CONNECT 300∅ WM
+TO EX. 600∅ WM
+
+EX. 600 ∅ CPP
+P 7 WM PLUG
+
+FUT. 300∅
+WATERMAIN
+
+CHINGUA
+
+COUSY R
+O
+
+AD
+
+STREET D
+
+STREET E
+
+G
+
+CONNECT 300∅ WM
+TO EX. 600∅ WM
+
+COMMERCIAL
+
+·
+
+THE PHASE 1 ALLOA LANDS ARE WITHIN THE PEEL PRESSURE
+ZONE 7W SERVICE AREA.
+PROPOSED TRUNK WATER SERVICING INFRASTRUCTURE
+SHOWN ON THIS PLAN IS CONSISTENT WITH THE REGION OF
+PEEL DEVELOPMENT CHARGES 2024 SCHEDULE.
+IT IS CONTEMPLATED THAT DEVELOPMENT CHARGE PROJECTS
+SHOWN AS FUTURE ARE NOT REQUIRED FOR PHASE 1
+SERVICING.
+ALLOA PHASE 1 DEVELOPMENT IS NOT RELIANT ON THE
+FUTURE CALEDON WEST ELEVATED TANK, AND DEVELOPMENT
+CAN BE SUPPORTED BY INSTALLATION OF THE NECESSARY
+TRUNK WATERMAINS WITHIN PHASE 1 LANDS AS IDENTIFIED
+ON THIS PLAN. REFER TO THE REGION OF PEEL DEVELOPMENT
+CHARGES 2024 SCHEDULE FOR THE LOCATION OF THE
+ELEVATED TANK AND ASSOCIATED INFRASTRUCTURE.
+HYDRAULIC ANALYSIS TO BE COMPLETED BY THE REGION'S
+PROGRAM PLANNING GROUP FOR VERIFICATION OF LOCAL
+WATERMAIN SIZES.
+SHOULD REQUIRED, ALLOA LANDOWNER'S GROUP TO ENTER
+INTO A FRONT ENDING AGREEMENT WITH PEEL FOR DELIVERY
+OF NECESSARY REGIONAL DC INFRASTRUCTURE AHEAD OF THE
+CAPITAL PROGRAM PLANNING SCHEDULE.
+
+F
+
+CREDIT
+
+STREET
+
+PUBLIC
+ELEMENTARY
+SCHOOL
+
+PUBLIC
+ELEMENTARY
+SCHOOL
+
+STREET A
+
+JAMES MAYNARD ROAD
+
+MIXED USE
+
+COMMERCIAL
+
+CONNECT 300∅ WM
+TO EX. 600∅ WM
+
+EX. 600 ∅ WM PLUG
+
+SWM
+POND 1
+
+SWM
+POND 2
+
+CONNECT 300∅ WM
+TO EX. 600∅ WM
+
+EX. 600 ∅ WM
+
+EX. 600 ∅ WM
+
+FUT. 600∅ WATERMAIN
+(BY REGION-2035)
+
+NEIGHBOURHOOD
+PARK
+
+STREET A
+
+400∅ WATERMAIN
+(BY REGION-2026
+PROJ.26-1188)
+
+CALEDON
+WORKS
+YARD
+
+NEIGHBOURHOOD
+PARK
+
+EX. 300 ∅ PVC WM.
+
+VIEW R
+O
+
+AD
+
+MEDIUM-HIGH
+DENSITY RESIDENTIAL
+
+CONNECT 300∅ WM
+TO 400∅ WM
+
+STREET
+
+EXISTING
+ALLOA
+RESERVOIR
+AND PUMPING
+STATION FOR
+PEEL ONE
+6W AND 7W
+SERVICING
+
+·
+
+TIM MANLEY BLVD
+
+400∅ WATERMAIN
+(BY REGION-2026
+PROJ. 26-1187)
+
+COMMUNITY
+PARK
+
+SWM POND 7
+
+·
+
+EX.200 ∅WM.
+EX. 400 ∅WM.
+
+400∅ WATERMAIN
+(BY REGION-2026
+PROJ.26-1187)
+
+300∅ WATERMAIN
+TO BE EXTENDED IN THE
+FUTURE AS PART OF PHASE 2
+OF THE ALLOA SECONDARY PLAN
+
+ALLOA PHASE 1 WATER SERVICING NOTES:
+·
+
+LOCAL WATERMAIN
+FOR SERVICE
+CONNECTIONS
+
+FUT. 600∅ WATERMAIN
+(BY REGION-2026
+PROJ.26-1185)
+
+LOTS REQUIRING EXTERNAL (LOCAL)
+WATERMAIN FOR SERVICE
+CONNECTIONS
+
+SWM POND 3
+
+SWM
+POND 4
+
+FUT. 750
+∅ TRANSMISSION MAIN
+(BY REGION-2026)
+
+CONNECT 300∅ WM
+TO EX. 600∅ WM
+
+Urbantech® Consulting
+A Division of Leighton-Zec Ltd.
+
+MIXED USE
+MIXED USE
+
+MIXED USE
+
+EX. 600 ∅ WM
+
+3760 14th Avenue, Suite 301,
+Markham, ON. L3R 3T7
+
+EXISTING
+HYDRO
+TRANSFORMER
+
+EX. 750
+
+OK DRIV
+
+∅ WM.
+
+E
+
+MAYFIELD ROAD
+
+EX. 300
+
+WM.
+
+COUSY
+ROAD
+
+EX. 750 ∅ WM.
+
+EX. 400 ∅
+
+MAYFIELD ROAD
+
+CHINGUA
+
+BRISDALE
+DRIVE
+
+EX. 300 ∅ WM.
+
+EX. 750 ∅ WM.
+
+THORNBU
+SH
+BLVD.
+
+W ROAD
+
+EX. 750
+
+MAYFIELD ROAD
+
+TEL 905.946.9461
+
+EDENBRO
+
+WM.
+
+CREDITVI
+E
+
+∅WM.
+
+EX. 1200
+∅
+TRANSMISSION MAIN
+
+EX. 600
+
+0 ∅ WM.
+ION 120
+NSMISS
+EX. TRA
+
+EX. 1050 ∅ WM.
+
+ROBERT
+PARKINSON
+DRIVE
+
+MAYFIELD ROAD
+
+∅ WM.
+
+EX. 600 ∅ WM.
+
+EX. 900 ∅ WM
+PLUG
+400∅ WATERMAIN
+(BY REGION-2035)
+
+McLAUGHLIN RD.
+
+FUT. 400∅ WATERMAIN
+(BY REGION-2029)
+
+MISSISSAUGA RD
+
+W.CHURCHILL
+
+ES
+
+HERITAGE RD.
+
+BLVD.
+
+TE
+
+U
+ED RO
+R
+R
+E
+F
+T PRE
+
+GTA W
+
+OL RD.
+OLD SCHO
+
+CHINGUACOUSY RD
+
+19
+
+CREDITVIEW RD.
+
+K-plan
+
+urbantech.com
+
+PHASE 1 ALLOA EIR/FSR
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+
+WATER SERVICING PLAN
+PROJECT No.
+
+DATE
+
+20-665
+
+SCALE
+
+SEP. 2024 1:5,000
+
+DWG No.
+
+6.1
+
+K-plan
+
+RD.
+MAYFIELD
+
+100YR-1
+
+5.76 ha
+
+14
+
+ALLOA
+PHASE 1
+
+.R.
+
+18.67min
+
+BOVAIRD DR.
+
+PH
+AS
+
+LIM
+
+3
+50
+
+5
+
+508
+
+MH 504
+
+MH
+511
+
+51
+2
+H
+
+40
+
+0.
+%
+
+F
+
+MIXED USE
+
+MH 2
+TOP 258.20m
+NW 256.77m
+
+EX. MH C1
+S INV. 259.098
+
+S
+
+0.74
+
+0.628cms
+17.56min
+
+SWM POND 2 DISCHARGE TO EX.
+CWS AND DOWNSTREAM NHS VIA
+900mm∅ HDPE STM (BY REGION)
+IN INV. 256.08
+OUT INV. 255.66
+
+EX. 450mm
+∅ CWS @ 0.15%
+
+STREET D
+
+131.3m-9
+
+26
+MH 5
+
+D
+MH 307
+
+m STM.
+-1050m
+0.30%
+
+MH 23C
+
+STREET D
+
+27.2m-1050mm
+STM. @ 0.30%
+
+@
+
+m STM.
+
+-600m
+169.2m
+
+CTRL MH 1
+TOP 257.75m
+N 255.68m
+SE 255.68m
+
+MAYFIELD ROAD
+
+OUSY ROA
+
+AD
+COUSY RO
+
+4.70ha
+
+0.76
+
+37.3m-675mm
+STM. @ -8.06%
+(REVERSED SLOPE)
+
+0.87
+MH 12C
+TOP 256.47m
+NW 255.66m
+E 255.61m
+SW 255.61m
+
+CHINGUA
+
+·
+
+EX. 825mm
+∅ CWS @ 1.00%
+EX. 1050mm
+∅ CWS @ 0.40%
+EX. FLOW SPLITTER
+
+EX. CWS STUB
+
+600mm
+∅ CULVERT
+N INV. 255.12
+S INV. 255.03
+
+EX. 600mm
+∅
+CWS @ 0.30%
+
+EX. 600mm
+∅
+CWS @ 0.30%
+EX. MH 13
+NW 254.697
+SW 254.617
+
+Urbantech® Consulting
+A Division of Leighton-Zec Ltd.
+
+EXISTING
+HYDRO
+TRANSFORMER
+
+ROW STORM DISCHARGE TO
+600mm∅ HDPE CULVERT
+(BY REGION)
+
+REFER TO DRAWING 2.4A FOR SWM FACILITY DRAINAGE PLAN
+AND DRAWINGS 2.5A TO 2.5G FOR SWM PONDS DETAILS.
+DUE TO GRADING CONSTRAINTS ASSOCIATED WITH THE
+BOUNDARY ROADS, ON-SITE STORAGE / UNDERGROUND SWM
+SOLUTION IS PROPOSED FOR DEVELOPMENT LANDS WITH
+UNCONTROLLED FLOW DISCHARGE TO NHS. DETAILS TO BE
+CONFIRMED BY AGENCIES.
+REFER TO DRAWING 2.4A FOR ROOF AND FOUNDATION DRAIN
+COLLECTOR DRAINAGE AREAS TO CLEAN WATER SEWERS.
+
+MIXED USE & MEDIUM-HIGH
+RISE DEVELOPMENT DRAINAGE
+DISCHARGE TO EX. CWS
+
+MH 13C
+21.9m-375mm PVC CWS @ TOP 256.61m
+NE 255.70m
+0.50%
+
+HW 1C
+NW INV. 255.34m
+65.3m-375mm PVC CWS @
+0.50%
+
+·
+
+30%
+
+4.64ha
+
+MH 3C
+TOP 257.17m
+SW 255.86m
+SE 255.83m
+MH 2C
+TOP 256.57m
+NE 256.19m
+
+·
+
+. CWS @ 0.
+
+STREET D
+
+MIXED USE
+
+0.71
+
+STM.HICKENBOTTOM 1
+S INV. 252.00m
+
+AD
+
+MH 10C
+TOP 257.62m
+NW 256.25m
+SE 256.23m
+SW 256.23m
+
+JAMES MAYNARD ROAD
+
+0.20ha
+
+SWM
+POND 1
+
+12.72min
+
+NOTES:
+
+MH 11C
+TOP 257.99m
+NE 256.32m
+
+MH 116
+TOP 259.07m
+SE 256.24m
+NW 256.40m
+SW 256.33m
+
+MH 117
+TOP 258.62m
+NW 256.43m
+
+0.71
+
+0.085cms
+
+CHINGUA
+COUSY RO
+
+mm CONC
+
+MH 113
+TOP 259.85m
+NE 257.60m
+SW 257.55m
+
+0.71
+
+0.74 ha
+
+30%
+. CWS @ 0.
+
+0.76ha
+
+289.0m-825
+
+M. @ 0.50%
+x1800mm
+ST
+151.2m-900
+
+HW 2C
+W INV. 255.55m
+
+S @ 0.30%
+
+TWEEDHILL AVENUE
+
+A
+
+62.0m-600mm
+STM. @ 0.30%
+
+MH 115
+TOP 259.52m
+NW 256.55m
+SE 256.53m
+
+54.3m-1200x2400mm
+STM. @ 0.30%
+
+MH 8C
+TOP 259.91m
+NW 257.14m
+SE 257.12m
+SW 257.12m
+
+@ 0.30%
+
+91.5m-1200x2400mm
+CONC. BOX STM. @ 0.30%
+
+62.3m-300mm
+STM. @ 0.30%
+
+0.71
+14.00min
+
+0.49ha
+
+STM.HW 1-1
+N INV. 255.00m
+
+3.80 ha
+
+0.426cms
+
+MH 112
+MEDIUM-HIGH
+TOP 259.37m
+DENSITY RESIDENTIAL SW 257.78m
+
+43.6m-1200x2400mm
+STM. @ 0.30%
+
+100YR-5
+
+100YR-4
+
+MH 111
+TOP 260.93m
+NW 257.06m
+SE 257.04m
+NE 257.04m
+
+EX. 825mm
+∅ CWS @ 1.00%
+
+EX. 1200mm
+∅ CWS @ 0.50%
+
+STREET
+
+0.71
+
+STM.HW 1-O
+NW INV. 254.93m
+
+16.9m-675mm
+STM. @ 0.30%
+
+MH 9C
+TOP 260.05m
+NE 257.20m
+67.9m-1050mm
+STM. @
+0.30%
+
+41.4m-1200x2400mm
+CONC. BOX STM. @ 0.30%
+
+MH 16C
+TOP 257.97m
+NE 256.37m
+
+MIXED USE
+
+m CONC. CW
+
+MH 109
+TOP 260.73m
+NE 257.85m
+SW 257.80m
+
+MH 110
+TOP 261.29m
+NE 257.41m
+SW 257.36m
+
+MH 6C
+TOP 260.73m
+NW 257.64m
+SE 257.62m
+SW 257.62m
+
+162.4m-825
+m
+
+0.71
+
+MH 108
+TOP 260.22m
+SW 258.06m
+
+MH 114
+TOP 260.32m
+NW 256.84m
+SE 256.82m
+
+1800mm ST
+M. @
+0.50%
+
+STREET
+
+40.3m-675mm
+STM. @ -7.46%
+(REVERSED SLOPE)
+
+CHINGUA
+C
+
+MH 312
+
+3.83ha
+
+130.9m
+
+66.7m-1200x2400mm
+CONC. BOX STM. @ 0.30%
+
+147.6m-120
+0x
+
+E
+
+MH 125
+TOP 258.20m
+NW 257.19m
+SE 257.19m
+
+70.6m-525mm CONC CWS
+@ 0.30%
+ROW STORM DISCHARGE
+TO 750mm∅ HDPE
+CULVERT
+IN INV. 255.19
+OUT INV. 254.81
+(BY REGION)
+
+14.61min
+
+mm CONC
+
+137.5m-675m
+m STM. @ 0.3
+
+. @ 0.50%
+
+STREET E
+
+211.3m-450
+
+STM.HICKENBOTTOM 2
+SE INV. 253.15m
+
+BRISDALE
+DRIVE
+
+5.83ha
+
+THORNBU
+SH
+BLVD.
+
+100YR-3
+
+EX. 825m
+∅ CW
+
+CREDITVI
+EW
+ROAD
+
+MH 28C
+
+0%
+
+CTRL MH 2
+TOP 259.35m
+NW 256.82m
+SE 256.82m
+
+750mm∅ HDPE CULVERT
+IN INV. 257.50
+OUT INV. 257.00
+(BY REGION)
+
+EX. MH C2
+W INV. 258.761
+S INV. 258.681
+
+MH 123
+TOP 259.80m
+SW 258.32m
+SE 257.94m
+NE 257.94m
+
+4.71ha
+
+EX. 750mm
+∅ CWS @ 0.35%
+EX. 900m
+∅ CWS @0.50%
+
+186.4m-900mm STM
+
+0.50%
+
+28.8m-1200x2400mm
+STM. @ 0.35%
+
+18.33min
+
+EX. HW
+INV. 258.926
+EX. 825mm
+∅ CWS
+
+MH 107
+TOP 261.37m
+NW 257.31m
+SE 257.28m
+NE 257.28m
+
+STM.HW 1-2
+S INV. 255.00m
+
+MIXED USE
+
+MAYFIELD ROAD
+
+750mm∅ HDPE CULVERT
+IN INV. 259.62
+OUT INV. 259.18
+(BY REGION)
+
+0.71
+
+233.9m-750mm STM. @ 0.50%
+
+mm STM. @
+
+11.6m900x1800mm
+STM. @ 0.35%
+
+MH 5C
+TOP 261.06m
+SE 257.84m
+SW 257.84m
+
+190.3m-825
+
+67.2m-900x1800mm
+STM. @ 0.35%
+
+13.09min
+
+0.304cms
+
+MH 105
+TOP 261.03m
+SW 258.55m
+
+1.13ha
+
+148.9m-1200x180
+0mm CONC. BO
+X
+STM. @ 0.30%
+
+STREET F
+
+208
+
+SWM
+POND 2
+
+218
+
+MH 217
+TOP 258.24m
+W 257.86m
+NE 257.81m
+
+0.71
+
+0.114cms
+
+0.71
+
+MH 124
+TOP 260.73m
+SW 259.11m
+
+STREET A
+
+MH 126
+TOP 257.97m
+NW 256.45m
+NE 256.37m
+
+0.71
+
+0.97 ha
+
+MH 7C
+TOP 260.96m
+NE 257.70m
+
+73.3m-1200x1800mm
+CONC. BOX STM. @ 0.30%
+
+10.11ha
+
+28.8m-900mm
+STM. @ 0.50%
+
+100YR-7
+
+2.75 ha
+
+0.71
+
+0.71
+
+MH 220
+TOP 260.02m
+NW 257.44m
+SW 257.44m
+
+0.482cms
+
+MAYFIELD ROAD
+
+MH 4C
+TOP 261.43m
+NE 257.99m
+
+CHINGUA
+COUSY
+ROAD
+
+0.74
+
+MEDIUM-HIGH
+DENSITY RESIDENTIAL
+
+NEIL PROMENADE
+
+STREET
+MH 405
+M. @ 0.50
+%
+75mm ST
+
+@ 0.30%
+mm STM.
+
+STREET F
+
+215.9m-1
+
+1
+MH 21
+
+STM.HW 2-1
+S INV. 256.15m
+
+1.15ha
+
+0.92ha
+
+17C
+
+4.55 ha
+
+MH 106
+TOP 262.31m
+NW 257.81m
+SE 257.76m
+
+PUBLIC
+ELEMENTARY
+SCHOOL
+
+MH
+
+100YR-2
+
+EX. MH102
+TOP 264.44m
+NW 261.06m
+SE 261.64m
+SW 261.74m
+
+0.71
+
+0.71
+
+TIM MANLEY BLVD
+
+100YR-6
+
+6.43ha
+
+0.86ha
+
+88.3m-1200x1800mm
+STM. @ 0.30%
+STM.HW 2-2
+N INV. 256.15m
+
+6
+
+0.74
+
+COMMERCIAL BLOCK STORM
+DRAINAGE DISCHARGE TO
+EXISTING CWS AND
+DOWNSTREAM NHS
+
+MH 209
+TOP 259.42m
+NW 257.54m
+NE 257.45m
+SE 257.45m
+
+12101 CREDITVIEW
+DEVELOPMENTS LIMITED
+
+12.59min
+
+MH 101
+TOP 261.51m
+SW 259.79m
+
+MH 104
+TOP 262.46m
+NW 258.17m
+SE 257.88m
+NE 257.85m
+
+4.44ha
+
+MH 221
+TOP 259.75m
+NE 257.29m
+S 257.24m
+
+10.2m-900x1800mm
+STM. @ 0.35%
+
+0.95ha
+
+MH 210
+TOP 261.14m
+NW 259.78m
+
+215
+
+173.1m-900x1800mm STM. @ 0.35%
+60.3m-900x1800mm
+STM. @ 0.35%
+
+PROPOSED SEWER OBVERTS
+
+0.083cms
+
+0.73
+
+0.76
+
+23.4m-1200x1800mm
+CONC. BOX STM. @ 0.30%
+
+MH 122
+TOP 260.84m
+NW 259.26m
+NE 259.26m
+
+38.6m-900mm
+STM. @ 0.50%
+
+PROPOSED GROUND ELEVATION
+
+231.9m-750mm STM. @ 0.30%
+
+187.3m-1200mm STM. @ 0.50%
+
+200x1800
+
+MH 212
+TOP 262.56m
+SE 259.10m
+NE 259.02m
+
+COMMERCIAL
+
+NEIGHBOURHOOD
+PARK
+
+0.71
+
+STREET A
+
+0.74
+
+MH
+
+IT
+
+MH 213
+
+104.2m-825mm
+STM. @ 0.35%
+
+ROBERT
+PARKINSON
+DRIVE
+
+MH 119
+TOP 262.70m
+NW 260.69m
+SE 260.66m
+
+60.1m-900mm
+STM. @ 0.50%
+
+MH
+
+55.4m-825mm
+STM. @ 0.35%
+
+75.5m-825mm
+STM. @ 0.35%
+
+0.71
+
+0.71
+
+0.74
+
+6.7m-900x1800mm
+STM. @ 0.35%
+MH 214
+TOP 258.66m
+SW 258.28m
+E 258.23m
+
+21
+
+STREET G
+
+STREET F
+
+@ 0.50%
+mm STM.
+140.4m-450
+
+0.74
+
+MH 306
+TOP 261.98m
+SW 260.03m
+NW 259.65m
+
+3.50ha
+
+7.63ha
+2.11ha
+
+0.71
+
+4.03ha
+
+CLEAN WATER SEWER MANHOLE ID
+
+0.73
+
+1.66ha
+
+0.71
+
+MH 121
+TOP 260.95m
+NW 259.59m
+SE 259.56m
+
+%
+M. @ 0.50
+188.0m-5
+
+MH 206
+
+CREDITV
+IEW
+ROAD
+
+8.73ha
+
+100-YEAR CAPTURE AREA ID
+100-YEAR CAPTURE AREA
+RUNOFF COEFFICIENT
+CONSTANT FLOW (Q100-Q10)
+TIME OF CONCENTRATION
+
+264.2m-675mm STM. @ 0.30%
+
+0.73
+
+MH 118
+TOP 262.57m
+SE 261.10m
+
+0.81ha
+
+50.3m-525mm
+STM. @ 0.50%
+
+H
+
+47.4m-675mm
+STM. @ 0.30%
+
+MH 219
+TOP 261.83m
+SE 258.49m
+
+25mm ST
+
+203.1m-525
+mm STM.
+
+0.94ha
+
+MH2
+TOP 90.70m
+S 85.00m
+E 85.00m
+W 85.00m
+N 85.00m
+
+PROPOSED SEWER OBVERTS
+
+M
+
+MH 103
+TOP 263.39m
+N 258.89m
+SE 258.89m
+
+147.0m-9
+
+CREDITV
+
+%
+75mm ST
+M. @ 0.50
+140.4m-9
+
+0.68
+
+10
+
+16.7m-675mm
+STM. @ 0.30%
+
+4.36ha
+
+0.71
+
+0.74
+
+20.61min
+
+PROPOSED GROUND ELEVATION
+
+100YR-8
+
+1.07ha
+
+NEIGHBOURHOOD
+PARK
+
+6.18ha
+
+0.74
+2.642cms
+
+0.73
+
+210.5m-1200mm STM. @ 0.50%
+
+20.3m-525mm
+STM. @ 0.50%
+
+2
+
+30
+
+228.9m-1200mm STM. @ 0.30%
+
+MH 207
+
+MH
+
+@ 0.50%
+
+MH 705
+TOP 264.65m
+SW 262.99m
+
+@ 0.50%
+
+2
+
+3.43ha
+
+82.0m
+-1200
+mm
+STM.
+@
+0.30%
+
+0.74
+
+mm STM.
+
+H
+
+6.83ha
+
+77.1m-1200mm
+STM. @ 0.50%
+
+26.22 ha
+
+0.55ha
+
+51.5m-600mm
+STM. @ 0.50%
+
+213.1m-525
+
+MH 402
+TOP 264.94m
+SW 262.20m
+NW 262.20m
+
+MH 202
+TOP 261.11m
+NW 258.52m
+SE 258.50m
+SW 258.58m
+
+100YR-6
+
+STORM MANHOLE ID
+
+MH 308
+TOP 261.06m
+SW 259.05m
+NW 259.27m
+SE 259.30m
+
+52.2m-900x1800mm
+STM. @ 0.30%
+
+M
+
+STREET E
+
+@ 0.50%
+mm STM.
+208.4m-600
+
+IEW RO
+AD
+
+LIM
+IT
+E1
+AS
+PH
+0.50%
+m STM. @
+150.0m-750
+m
+
+STREET G
+
+IMIT
+PHASE 1 L
+
+MH 410
+TOP 262.72m
+SW 260.25m
+NE 260.22m
+
+TOP 262.35m
+SE 258.91m
+
+MH
+
+PHASE 1 LIM
+
+0.68
+
+PUBLIC
+ELEMENTARY
+SCHOOL
+MH 201
+
+MH 204
+TOP 264.46m
+SE 259.51m
+NE 259.66m
+NW 262.51m
+
+3
+
+21.2m-825mm
+STM. @ 0.50%
+
+MH 706
+
+COMMERCIAL
+
+∅ CWS
+EX. 900mm
+
+0.68
+
+10.98ha
+
+8
+
+0.68
+
+63.1m-1200x1800mm
+STM. @ 0.30%
+
+MH 305
+
+MH 412
+TOP 262.08m
+SW 260.38m
+
+0.68
+
+MH 411
+TOP 262.21m
+SW 259.87m
+NW 259.79m
+NE 260.09m
+57.3m-750mm
+STM. @ 0.50%
+
+0.74
+
+4.34ha
+
+MH 314
+
+28.1m-900mm
+STM. @ 0.50%
+
+STREET B
+
+0.87ha
+
+MH 205
+TOP 262.63m
+NW 260.75m
+
+61.6m-450mm CONC. CWS
+@ 0.50%
+
+0.53ha
+
+STM.HICKENBOTTOM 3
+NW INV. 255.85m
+
+AREA (ha)
+RUNOFF COEFFICIENT
+
+0.70 ha
+
+118.2m-???mm STM. @
+0.30%
+
+0.70ha
+
+LINDSEY AVENUE
+
+11.3m-1200x2400mm
+STM. @ 0.30%
+
+31.0m-1200x2400mm
+STM. @ 0.30%
+
+MH 120
+TOP 262.35m
+NW 260.52m
+SE 260.52m
+
+72.4m-825mm
+STM. @ 0.50%
+
+1.52ha
+
+0.73
+
+MH 301
+TOP 264.50m
+NE 262.73m
+
+STM.HW 4-1
+SE INV. 258.50m
+
+0.68
+
+MH 203
+TOP 265.53m
+SE 263.21m
+
+3.68ha
+0.73
+
+0.68
+
+311.4m-750mm STM. @ 0.30%
+
+12.7m-900mm
+STM. @ 0.50%
+
+MH 303
+TOP 263.41m
+S 261.48m
+NW 261.48m
+
+0.69ha
+
+STM.HW 4-2
+SW INV. 258.50m
+
+3.12ha
+
+MH 401
+TOP 264.87m
+NE 263.13m
+SE 263.11m
+
+MH 304
+TOP 263.06m
+SE 261.22m
+NE 261.22m
+
+STM.MH2
+TOP 90.70m
+S 85.00m
+E 85.00m
+W 85.00m
+N 85.00m
+
+38.4m-1200x2400mm
+STM. @ 0.30%
+
+31
+
+0.68
+
+0.68
+
+0.74
+
+STREET A
+
+ROW STORM DISCHARGE
+TO 900mm∅ STM SEWER
+(BY REGION) AND
+DOWNSTREAM POND
+
+0.70ha
+
+2.08ha
+
+70
+
+STREET H
+
+MH 707
+TOP 265.70m
+NE 262.47m
+NW 262.47m
+
+MH 1C
+TOP 263.79m
+SE 261.37m
+
+MH 403
+TOP 264.19m
+SE 261.46m
+NW 261.46m
+SW 261.46m
+
+0.73
+
+@ 0.30%
+
+MH 801
+TOP 264.50m
+NW 261.04m
+
+H
+
+0.68
+
+MH 701
+TOP 267.15m
+NW 264.44m
+
+CALEDON
+WORKS
+YARD
+
+MH 404
+TOP 263.90m
+NE 261.96m
+
+0.75
+
+SWM
+POND 4
+
+2.83ha
+
+3.75ha
+
+2.57ha
+
+MH 315
+TOP 260.97m
+SE 259.24m
+N 259.16m
+
+64.6m-900mm
+STM. @ 0.50%
+
+29.7m-825mm
+STM. @ 0.30%
+
+147.9m-???mm STM. @ 0.30%
+
+100.4m-450mm
+STM. @ 0.50%
+
+0.68
+
+73.6m-675mm
+STM. @ 0.30%
+
+MH 406
+TOP 263.56m
+SW 260.88m
+NE 260.70m
+SE 260.70m
+NW 260.80m
+
+44.4m-???mm STM.
+@ 0.50%
+38.9m-1200mm
+STM. @ 0.50%
+
+0.50ha
+
+0.68
+
+MH 413
+TOP 262.28m
+NE 259.63m
+
+174.8m-450mm STM. @ 0.50%
+
+0.68
+
+14.2m-975mm
+STM. @ 0.50%
+
+1.79ha
+
+0.68
+
+MH 409
+TOP 263.13m
+SW 261.18m
+SE 261.03m
+
+77.0m-750mm
+STM. @ 0.30%
+
+0.98ha
+
+M
+
+MH 702
+TOP 265.91m
+SE 263.43m
+NW 263.43m
+
+0.68
+
+161.0m-825mm STM. @ 0.50%
+
+MH 309
+TOP 263.52m
+NE 261.99m
+
+STM.HICKENBOTTOM 4
+N INV. 256.50m
+MH 414
+TOP 261.68m
+SW 259.41m
+NE 259.41m
+
+STM.HW 3
+SE INV. 257.85m
+
+57.5m-900mm
+STM. @ 0.50%
+
+0.68
+1.75ha
+
+31.8m-675mm
+STM. @ -6.30%
+(REVERSED SLOPE)
+
+SWM POND 3
+
+216.7m-750mm STM. @ 0.50%
+
+1.82ha
+
+0.74
+
+2.27ha
+
+CTRL MH 3
+TOP 260.60m
+SE 258.52m
+W 258.52m
+
+19.5m-675mm
+STM. @ 0.50%
+
+MH 311
+TOP 261.73m
+SW 260.10m
+E 260.02m
+
+0.73
+
+0.73
+
+0.55ha
+
+MH 704
+TOP 264.51m
+SW 261.69m
+NW 261.61m
+E 261.62m
+
+0.70
+
+H
+
+MH 407
+TOP 263.44m
+NE 261.75m
+
+197.6m-1200mm STM. @ 0.50%
+
+MH 703
+TOP 264.75m
+SE 262.68m
+NE 262.68m
+
+2.00ha
+
+STM.HW 5-1
+S INV. 257.85m
+
+2.29ha
+
+STREET B
+
+MH 400
+TOP 265.60m
+NW 263.47m
+
+38.8m-1200x1800mm
+STM. @ 0.40%
+
+PROPOSED OVERLAND
+FLOW ROUTE
+
+28.9m-675mm
+STM. @ -6.94%
+(REVERSED SLOPE)
+
+.
+240.8m-1200mm STM
+
+CTRL MH 7
+TOP 263.91m
+NE 260.92m
+W 260.92m
+
+1.55ha
+
+31.3m-900mm
+STM. @ 0.30%
+
+MH 805
+TOP 262.92m
+NW 260.21m
+
+MH 802
+TOP 262.43m
+SE 260.00m
+NW 259.98m
+
+STM.HW 7
+S INV. 260.25m
+
+SWM POND 5
+
+M
+
+1.64ha
+
+0.68
+MH 408
+TOP 263.32m
+NE 261.68m
+167.0m-600mm STM. @ 0.30%
+
+04
+
+6.5m-675mm STM.
+@ 0.79%
+
+EXISTING OVERLAND FLOW
+ROUTE
+
+CTRL MH 5
+TOP 260.85m
+SW 258.52m
+NE 258.52m
+
+MH 522
+TOP 262.08m
+NW 259.23m
+NE 259.15m
+
+STREET D
+
+IMIT
+PHASE 1
+L
+
+34.6m-675mm
+STM. @ -5.79%
+(REVERSED SLOPE)
+
+PROPOSED SWM POND
+
+STM.HW 5-O
+SW INV. 257.74m
+
+STM.HICKENBOTTOM 5
+NE INV. 255.85m
+
+MH 310
+TOP 262.96m
+SW 260.91m
+NE 260.91m
+
+EXISTING WETLAND AND WETLAND ID
+
+NATURAL HERITAGE SYSTEM
+
+BIRKHE
+AD
+DRIVE
+
+22.0m-675mm
+STM. @ 0.50%
+
+STM.HW 5-2
+NW INV. 257.85m
+
+0.91ha
+STM.HW 4-O
+SE INV. 258.40m
+
+W5
+
+STM.HW 9-O
+NW INV. 257.65m
+
+5.3m-675mm STM.
+@ 0.30%
+16.2m-1050mm
+STM. @ 0.50%
+
+51.1m-900x1800mm
+STM. @ 0.50%
+
+20.1m-675mm
+STM. @ 0.50%
+
+23.1m-450mm
+STM. @ 0.50%
+
+STREET B
+
+STM.HICKENBOTTOM 7
+SW INV. 258.25m
+
+MH 24C
+TOP 262.28m
+NW 260.27m
+SE 260.16m
+SW 260.44m
+
+206.6m-675mm CONC. CWS
+@ 0.30%
+MH 36C
+TOP 262.16m
+NW 259.63m
+NE 259.58m
+
+0.69
+
+CTRL MH 4
+TOP 261.55m
+S 259.18m
+NW 259.18m
+
+IT
+
+SWM POND 7
+
+MH 521
+TOP 262.33m
+NW 259.71m
+SE 259.71m
+161.0m-1200x1800mm
+STM. @ 0.30%
+
+GREENBELT
+
+MH 902
+TOP 259.60m
+NW 258.39m
+SE 258.34m
+
+STM.HW 3-O
+E INV. 257.75m
+
+MH 803
+TOP 262.35m
+SE 260.32m
+
+8
+MH
+
+STM.HW 7-O
+E INV. 260.20m
+
+2.74ha
+
+1.92ha
+
+STM.HW 6-O
+NW INV. 258.76m
+
+75.8m-600mm
+STM. @ 0.50%
+
+72.1m-375mm
+STM. @ 0.50%
+
+7
+52
+
+11.6m-900mm
+STM. @ 0.50%
+
+STM.TIE IN TO CULVERT
+SE INV. 259.00m
+
+36.6m-675mm
+STM. @ -5.47%
+(REVERSED SLOPE)
+
+36.7m-675mm
+STM. @ 0.30%
+36.8m-1050mm
+STM. @ 0.50%
+
+26.5m-675mm
+STM. @ 0.90%
+
+STM.HW 8-O
+SE INV. 259.22m
+
+0.68
+
+121.2m-825mm CONC.
+CWS @ 0.15%
+C
+MH 35
+
+CATHOLIC
+ELEMENTARY
+SCHOOL
+
+NEIGHBOURHOOD
+PARK
+
+MH 901
+TOP 259.95m
+SE 258.50m
+
+MH 528
+
+114.8m-1050mm STM. @
+0.50%
+
+42.8m-900x1800mm
+STM. @ 0.30%
+
+33.0m-1200x1800mm
+STM. @ 0.30%
+HW 6C
+SW INV. 258.81m
+
+134.0m-450mm
+STM. @ 0.50%
+
+COMMUNITY
+PARK
+5.83ha
+
+MH 529
+TOP 260.96m
+NE 259.24m
+SE 259.01m
+
+CTRL MH 6
+TOP 262.55m
+W 259.68m
+SE 259.68m
+
+0.83
+
+0.83
+
+0.72
+
+0.70
+
+M
+
+MH 30C
+TOP 262.88m
+SW 260.80m
+NE 260.67m
+NW 260.75m
+
+MH 31C
+TOP 264.09m
+NW 261.27m
+N 261.19m
+
+MH 612
+TOP 264.28m
+SW 262.47m
+
+6.48ha
+
+0.69
+
+MH 34C
+
+C
+32
+MH
+197.0m-825mm CONC. CWS
+@ 0.15%
+
+@ 0.50%
+
+2.06ha
+
+1.87ha
+
+0.72
+
+0.61ha
+
+1.36ha
+
+0.69
+
+MAJOR SYSTEM CAPTURE AREA
+
+MAYFIELD ROAD
+
+3760 14th Avenue, Suite 301,
+Markham, ON. L3R 3T7
+
+EDENBROOK DRIVE
+
+9
+61
+34.8m-675mm
+STM. @ -5.75%
+(REVERSED SLOPE)
+
+3.11ha
+
+TD
+STREE
+
+LIMIT
+
+H
+
+SWM POND 6
+
+MH 620
+TOP 262.06m
+NW 260.67m
+
+A
+PH
+
+C
+26
+
+M
+STM.HICKENBOTTOM 6
+E INV. 257.00m
+
+0.72
+
+194.7m-975mm STM.
+
+MH 614
+TOP 262.62m
+NW 260.47m
+SW 260.39m
+
+0.81ha
+
+SE
+
+33C
+MH
+
+STM.HW 6-1
+N INV. 259.00m
+60.9m-1200x2400mm
+STM. @ 0.30%
+
+57.7m-975mm
+STM. @ 0.50%
+
+MH 525
+TOP 262.10m
+NW 260.71m
+SE 260.71m
+
+H
+
+MH 27C
+
+218.8m-825mm CONC. CWS
+@ 0.15%
+
+MH 613
+TOP 263.77m
+NE
+261.50m
+173.3
+m-975
+SW 261.45m
+mm S
+TM. @
+0.50%
+
+37.6m-1200x2400mm
+STM. @ 0.30%
+
+STM.HW 6-2
+W INV. 259.00m
+
+148.2m-525mm
+STM. @ 0.35%
+
+0.69
+
+HW 5C
+SE INV. 260.50m
+
+73.3m-1200x1800mm
+STM. @ 0.50%
+
+34.0m-900x1800mm
+STM. @ 0.35%
+
+1
+62
+
+7.81ha
+
+H
+
+44.0m-900x1800mm
+STM. @ 0.35%
+
+PHASE 1
+
+MH 610
+TOP 263.31m
+NW 260.97m
+SE 260.95m
+
+462.1m-675mm CONC. CWS
+@ 0.30%
+
+M
+
+0.72
+
+0.69
+
+MH 25C
+TOP 263.57m
+SW 261.34m
+SE 261.26m
+HW 4C
+NE INV. 260.56m
+
+MH 611
+TOP 262.85m
+NW 260.58m
+SE 260.58m
+NE 260.58m
+
+1.34ha
+
+0.69
+
+71.2m-900x1800mm
+STM. @ 0.30%
+
+BIRKHE
+AD
+DRIVE
+
+MH 524
+TOP 262.49m
+NW 261.00m
+SE 261.00m
+
+0.64ha
+
+1.81ha
+
+MH 29C
+
+19.9m-1200x1800mm
+STM. @ 0.50%
+
+0.72
+
+32.7m-525mm
+STM. @ 0.35%
+
+1
+
+MH 21C
+
+STREE
+MH 607
+MH 608
+
+3.47ha
+3.27ha
+
+17.3m-900x1800mm
+STM. @ 0.35%
+
+M
+LI
+
+MH 20C
+
+STREET C
+
+MH 518
+TOP 263.74m
+SW 260.93m
+SE 260.55m
+
+MH 517
+
+MH 18C
+TOP 264.37m
+NW 261.92m
+NE 261.84m
+
+52.4m-1200mm
+STM. @ 0.40%
+
+MH 60
+9
+
+54.6m-1200x1800mm
+STM. @ 0.50%
+
+0.72
+
+MH
+
+MH 516
+
+MH 19C
+
+PROPOSED CULVERT AT
+ROAD CROSSING
+
+96.2m-1200mm
+STM. @ 0.40%
+
+28.8m-1200x1800mm
+STM. @ 0.50%
+
+MH 617
+TOP 263.35m
+NW 260.33m
+SE 260.31m
+
+MH 618
+TOP 263.00m
+NW 260.16m
+E 260.08m
+
+59.8m-1200mm
+STM. @ 0.40%
+
+128.6m-1200x1800mm
+STM. @ 0.50%
+
+EXISTING CLEAN WATER COLLECTOR PIPE
+
+IT
+
+73.0m-900mm
+STM. @ 0.50%
+
+MH 22C
+00x1800m
+m STM.
+@
+0.30%
+MH 519
+
+TF
+
+0.35%
+
+MH 603
+TOP 265.79m
+NW 263.70m
+SE 263.70m
+
+0.72
+
+400.3m-900
+x1800mm
+STM. @
+
+MH 602
+
+CREDITV
+IEW RO
+AD
+
+0.72
+
+MATCHLINE A
+
+ALLOA
+RESERVOIR
+AND
+PUMPING
+STATION
+
+DENSITY
+RESIDENTIAL
+
+HW 3C
+SE INV. 261.37m
+
+51
+
+MH 520
+
+@ 0.50%
+mm STM.
+166.1m-450
+
+STREET
+F
+
+0.35%
+362.9m-120
+0mm STM
+.@
+
+8.97ha
+
+77.5m-1200mm
+STM. @ 0.50%
+
+0.68
+
+0.69
+
+CLEAN WATER COLLECTOR PIPE
+
+1
+
+LI
+M
+MEDIUM-HIGH
+
+0.69
+
+MH 515
+TOP 264.60m
+W 261.86m
+NE 261.86m
+
+57.3m-975mm
+STM. @ 0.40%
+
+8.41ha
+
+SE
+
+OUSY ROA
+D
+
+MH 60
+5
+
+M
+
+.@
+M
+ST
+M
+H
+
+PH
+A
+
+MH 523
+TOP 263.06m
+SE 261.36m
+
+4
+
+16.7m-450mm
+STM. @ 0.50%
+
+8.94ha
+
+EXISTING STORM SEWER
+MEDIUM-HIGH
+DENSITY
+RESIDENTIAL
+
+m
+5m
+
+4.54ha
+
+MH 606
+TOP 264.75m
+NW 262.25m
+SE 262.25m
+
+0.72
+
+0.72
+
+MEDIUM-HIGH
+DENSITY
+RESIDENTIAL
+
+5.95ha
+
+5.82ha
+
+0.84ha
+
+PROPOSED STORM SEWER
+
+MEDIUM-HIGH
+DENSITY
+RESIDENTIAL
+
+7
+-9
+7m
+
+MH 513
+TOP 266.00m
+N 262.75m
+E 262.67m
+
+0.69
+102.3m-900x1800mm
+STM. @ 0.50%
+
+MH 601
+TOP 266.75m
+SE 264.66m
+
+MINOR SYSTEM STORM DRAINAGE
+AREA BOUNDARY
+
+CHINGUA
+C
+
+MH
+37.8m-900mm
+STM. @ 0.40%
+
+2.12ha
+
+IT
+PHASE 1 LIM
+
+10
+
+31.4m-900mm
+STM. @ 0.40%
+
+NEIGHBOURHOOD
+PARK
+
+16.0m-600mm
+STM. @ 0.40%
+12.2m-900mm
+STM. @ 0.40%
+
+0.
+
+0.72
+
+STREET C
+
+MINOR SYSTEM STORM DRAINAGE
+AREA BOUNDARY TO SWM POND
+AND FLOW NODE
+
+53.8m-600mm
+STM. @ 0.40%
+
+56.8m-900mm
+STM. @ 0.40%
+
+MH 509
+TOP 266.46m
+NW 263.48m
+NE 263.48m
+
+MH 604
+TOP 265.67m
+NW 263.31m
+SE 262.99m
+
+6.30ha
+
+AY
+
+TRANSITW
+HIGWAY 413
+
+50
+
+EXISTING CONTOUR
+& ELEVATION
+
+89.7m-1
+050mm
+STM. @
+0.50%
+
+MH 602
+
+MH
+
+13
+
+MH 615
+TOP 264.85m
+SE 263.32m
+
+02
+
+MH 506
+
+5
+MH
+
+18.67min
+
+.3m
+ST -600m
+M
+0.4 . @ m
+0%
+
+0.69
+
+35.6m-900x1800mm
+STM. @ 0.50%
+
+R.
+
+LEGEND
+
+MH
+
+STREET
+
+37.8m-750mm
+STM. @ 0.40%
+
+MH 603
+TOP 265.79m
+NW 263.70m
+SE 263.70m
+
+C.N
+.
+
+DRAFT PLAN AREAS
+
+0.69
+
+65
+
+ROUTE
+FERRED
+E
+R
+P
+T
+100YR-1
+TA WES
+0.589cms
+
+10.5m-600mm
+STM. @ 0.40%
+
+1.74ha
+
+8.97ha
+0.72
+
+WAY
+
+MH 5
+
+@ 0.50%
+
+F
+
+166.1m-450
+mm STM.
+
+0.35%
+m STM. @
+362.9m-120
+0m
+
+39.9m-600mm
+STM. @ 0.40%
+
+41.7m-750mm
+STM. @ 0.40%
+
+2.13ha
+
+77.5m-1200mm
+STM. @ 0.50%
+
+MH 616
+TOP 266.21m
+NW 262.05m
+SE 261.73m
+
+0.69
+
+MH 507
+TOP 266.76m
+NE 263.85m
+SE 263.85m
+
+DR.
+
+R
+
+0.72
+
+NSIT
+
+BOVAIRD
+
+MH 501
+TOP 266.66m
+NE 264.93m
+
+1.75ha
+
+5.82ha
+
+0.72
+
+IT 15.2m-600mm
+
+3 TRA
+
+STM. @ 0.40%
+
+MH 601
+TOP 266.75m
+SE 264.66m
+
+0.84ha
+
+HIGW
+AY 41
+
+VE
+RI
+
+CREDITV
+IE
+
+7
+
+E1
+
+IT
+
+0.72
+
+D PKWY.
+
+TCPL
+
+Y
+
+TRANSITWA
+
+IT
+ED
+CR
+
+W ROAD
+
+HIGWAY 413
+
+PHASE 1 LIM
+
+5.76 ha
+
+SANDALWOO
+
+K
+CREE
+
+MH 615
+TOP 264.85m
+SE 263.32m
+
+16.7m-450mm
+STM. @ 0.50%
+
+G
+
+.
+
+BUICK BLVD
+
+ILLE
+ONV
+
+C.N
+
+DR
+
+WANLESS
+
+HUTT
+
+0.72
+
+0.589cms
+
+CREDITVIEW RD.
+
+MISSISSAUGA RD
+
+HERITAGE RD.
+
+BLVD.
+
+ROUTE
+
+McLAUGHLIN RD.
+
+T
+
+S
+GTA WE
+
+W.CHURCHILL
+
+MATCHLINE A
+
+RED
+PREFER
+
+OL RD.
+OLD SCHO
+
+CHINGUACOUSY RD
+
+19
+
+TEL 905.946.9461
+
+urbantech.com
+
+PHASE 1 ALLOA EIR/FSR
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+
+STORM SERVICING PLAN
+PROJECT No.
+
+DATE
+
+20-665
+
+SCALE
+
+DWG No.
+
+SEP. 2024 1:3,000 2.4B
+
+File: P:\Projects\20-665 - Alloa Caledon (Argo - Peel)\Reports\Phase 1 FSR\_Drawings & Figures\2_STORMWATER MANAGEMENT\DWG 2.4B_Storm Servicing Plan.dwg - Revised by <DZEC> : Wed, Sep
+
+

@@ -1,0 +1,20845 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+October 10, 2024
+
+Mayfield Golf Club,
+Town of Caledon
+Functional Servicing and Stormwater
+Management Report
+October 2024
+
+Submitted by:
+SCS Consulting Group Ltd
+30 Centurian Drive, Suite 100
+Markham, ON, L3R 8B8
+Phone 905 475 1900
+Fax 905 475 8335
+
+Project Number: 2539
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+Table of Contents
+Page
+1.0
+
+Introduction _____________________________________________________ 1
+1.1 Purpose of the Functional Servicing Report ___________________________ 1
+1.2 Study Area _____________________________________________________ 1
+1.3 Background Servicing Information___________________________________ 2
+2.0
+Stormwater Management __________________________________________ 4
+2.1 Stormwater Runoff Control Criteria _________________________________ 4
+2.2 Existing Drainage ________________________________________________ 4
+2.2.1 Existing Site Characterization __________________________________ 5
+2.2.2 Existing Hydrologic Modelling__________________________________ 5
+2.3 Best Management Practices _______________________________________ 6
+2.3.1 Lot-Level Controls ___________________________________________ 7
+2.3.2 Conveyance Controls ________________________________________ 8
+2.3.3 End-of-Pipe Controls _________________________________________ 8
+2.3.4 Selection of Best Management Practices _________________________ 8
+2.4 Proposed Storm Drainage _________________________________________ 9
+2.5 Proposed Stormwater Management Plan _____________________________ 9
+2.5.1 Quantity Control ___________________________________________ 10
+2.5.1.1 Allowable Release Rate ___________________________________ 10
+2.5.1.2 SWM Facility 1__________________________________________ 11
+2.5.1.3 SWM Facility 2__________________________________________ 12
+2.5.1.4 SWM Facility 3__________________________________________ 12
+2.5.1.5 SWM Facility 4__________________________________________ 13
+2.5.2 Quality Control ____________________________________________ 13
+2.5.3 Erosion Control ____________________________________________ 14
+2.5.4 Regional Storm Release Rates ________________________________ 15
+2.5.5 5 mm On-Site Retention _____________________________________ 15
+2.5.6 Water Budget _____________________________________________ 16
+2.5.7 Temperature Mitigation _____________________________________ 17
+2.6 Underground Stormwater Management Facilities _____________________ 17
+2.7 Wet Stormwater Management Pond _______________________________ 18
+2.8 Rear Yard Infiltration Trenches ____________________________________ 19
+2.9 Storm Servicing ________________________________________________ 19
+2.10 Overland Flow _________________________________________________ 20
+3.0
+Sanitary Servicing ________________________________________________ 21
+3.1 Existing Sanitary Sewer System ____________________________________ 21
+3.2 External Sanitary Sewer System ___________________________________ 21
+3.3 Proposed Sanitary Sewer System __________________________________ 22
+
+Project No. 2539
+
+Page i
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+3.4 Interim Sanitary Servicing ________________________________________ 23
+4.0
+Water Supply and Distribution ______________________________________ 24
+4.1 Existing Water Distribution _______________________________________ 24
+4.2 External Water System __________________________________________ 24
+4.3 Proposed Water System _________________________________________ 24
+5.0
+Grading ________________________________________________________ 26
+5.1 Existing Grading Conditions _______________________________________ 26
+5.2 Proposed Grading Concept _______________________________________ 26
+6.0
+Rights-of-way and Sidewalks _______________________________________ 28
+7.0
+Erosion and Sediment Control During Construction _____________________ 29
+8.0
+Proposed Crossings and Floodplain Modifications _______________________ 30
+8.1 Street A Crossing Design _________________________________________ 30
+8.2 Street C Crossing Design _________________________________________ 31
+9.0
+Utility Considerations _____________________________________________ 33
+9.1 Hydro ________________________________________________________ 33
+9.2 Gas __________________________________________________________ 33
+9.3 Bell __________________________________________________________ 33
+9.4 Cable_________________________________________________________ 33
+10.0 Summary _______________________________________________________ 34
+
+Project No. 2539
+
+Page ii
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+List of Tables
+Table 2.1
+Table 2.2
+Table 2.3
+Table 2.4
+Table 2.5
+Table 2.6
+Table 2.7
+Table 2.8
+Table 2.9
+Table 2.10
+Table 2.11
+Table 2.12
+Table 2.13
+Table 2.14
+Table 2.15
+Table 8.1
+Table 8.2
+
+Stormwater Runoff Control Criteria
+Summary of Existing Regional Peak Flows
+Recommended Stormwater BMP’s
+Summary of Unit Flow Rate Equations
+Summary of Allowable Release Rates
+SWM Facility 1 Operating Characteristics
+SWM Facility 2 Operating Characteristics
+SWM Facility 3 Operating Characteristics
+SWM Facility 4 Operating Characteristics
+Quality Control Summary
+Erosion Control Summary
+Summary of Existing and Proposed Regional Storm Peak Flows
+5 mm Retention Volume Summary
+Rear Yard At-Surface Infiltration Trench Dimensions
+Rainfall Intensity Parameters
+Regional Flood Elevations – Street ‘A’ Crossing
+Regional Flood Elevations – Street ‘C’ Crossing
+
+List of Figures
+Figure 1.1
+Figure 2.1
+Figure 2.2
+Figure 2.3
+Figure 2.4
+Figure 2.5
+Figure 2.6
+Figure 2.7
+Figure 2.8
+Figure 2.9
+Figure 2.10
+Figure 2.11
+Figure 3.1
+Figure 3.2
+Figure 4.1
+Figure 5.1
+Figure 8.1
+Figure 8.2
+
+Site Location Plan
+Existing Storm Drainage Plan
+Proposed Storm Drainage Plan
+Proposed Stormwater Management Facility 1
+Proposed Stormwater Management Facility 2
+Proposed Stormwater Management Facility 3
+Proposed Stormwater Management Facility 4
+Rear Yard Infiltration Trench Detail
+Proposed Servicing Plan
+Street A Culvert Crossing
+Street C Culvert Crossing
+LID Layout Plan
+Proposed Sanitary Drainage Plan
+External Sanitary Servicing Plan
+Proposed Water Distribution Plan
+Preliminary Grading Plan
+Existing Floodplain Mapping
+Proposed Floodplain Mapping
+
+Project No. 2539
+
+Page iii
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+List of Appendices
+Appendix A
+Appendix B
+Appendix C
+Appendix D
+Appendix E
+Appendix F
+Appendix G
+Appendix H
+
+Draft Plan
+Relevant Excerpts
+Hydrology Model and Parameters
+Stormwater Management Calculations
+Sanitary Flow Calculations
+Water Distribution Analysis
+Right-of-Way Concepts
+Hydraulic Model and Crossing Analysis
+
+Submission History
+Submission
+
+Date
+
+In Support Of
+
+Distributed To
+
+1st
+
+October 2024
+
+Draft Plan Approval
+and Official Plan
+Amendment
+
+Town of Caledon
+Region of Peel
+TRCA
+
+Project No. 2539
+
+Page iv
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+1.0
+
+October 2024
+
+Introduction
+
+SCS Consulting Group Ltd. has been retained by Mayfield Golf Course Inc. to prepare a
+Functional Servicing and Stormwater Management Report (FSSR) for a proposed
+residential development located on the west side of Torbram Road, north of Mayfield
+Road, located in the Town of Caledon.
+1.1
+
+Purpose of the Functional Servicing Report
+
+The FSSR has been prepared in support of a Draft Plan of Subdivision for the proposed
+residential developments at 12580 and 12552 Torbram Road (currently Mayfield Golf
+Club) and Part of Lot 19, Concession 5 (hereafter referred to as the study area). The
+property located at 12306 Torbram Road, which is included in the study area, is
+currently a non-participating property with regard to the Draft Plan application,
+however the grading and servicing of this property has been included to provide a
+comprehensive analysis. The Draft Plan of Subdivision is provided in Appendix A.
+It should be noted that existing single-detached properties fronting Torbram Road are
+not included in the study area. Additionally, the lands located at the southwest corner of
+the Draft Plan of Subdivision have been omitted from this report and will be addressed
+under separate cover.
+The subject lands will consist of the following land uses:
+low density residential,
+medium density residential (street and laneway townhouses),
+medium density blocks,
+commercial,
+firehall,
+school block,
+parks,
+private natural feature/open space,
+SWM blocks
+Underground SWM Facilities with at-grade parkland, and
+proposed laneways and roads.
+The purpose of this report is to demonstrate that the development can be graded and
+serviced in accordance with the Town of Caledon, TRCA, and the Ministry of
+Environment, Conservation and Parks (MECP) design criteria.
+1.2
+
+Study Area
+
+The study area, including non-participant lands, is 103.02 ha in size and is bound by
+agricultural land and open space area to the north, west and south, and bound by
+
+Project No. 2539
+
+Page 1
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+Torbram Road to the east (see Figure 1.1). The study area is part of the Mayfield
+Tullamore Secondary Plan.
+The existing subject lands are comprised of a golf course (Mayfield Golf Course) and
+open space areas. The subject lands are located within the Humber River Watershed in
+the Town of Caledon.
+1.3
+
+Background Servicing Information
+
+In preparation of the servicing and SWM strategies, the following reports, design
+guidelines and standards were used:
+Phase 1 Local Subwatershed Study (SWS) prepared by SCS Consulting
+Group Ltd., dated August 2024;
+High Level Servicing Memo prepared by SCS Consulting Group Ltd., dated
+August 29, 2024;
+Region of Peel Water and Wastewater Master Plan (2020);
+Region of Peel Sanitary Sewer Design Criteria (2017);
+Region of Peel Watermain Design Criteria (2010);
+Town of Caledon Development Standards Manual dated 2019;
+MNRF Guidance for Development Activities in Redside Dace Protected
+Habitat dated 2016;
+TRCA Erosion and Sediment Control Guideline for Urban Construction,
+dated December 2019;
+TRCA Crossings Guideline for Valley and Stream Corridors dated September
+2015;
+TRCA Stormwater Management Criteria, dated April 2012 Version 1.0;
+TRCA Low Impact Development Stormwater Management Planning and
+Design Guide, dated 2010 Version 1.0;
+Final Report Humber River Hydrology Update, Civica Infrastructure Inc.,
+dated June 2015;
+Ministry of Environment, Conservation and Parks (MECP) Design Criteria
+for Sanitary Sewers, Storm Sewers and Forcemains for Alterations
+Authorized under Environmental Compliance Approval dated January 2023,
+(V.1.2);
+Environmental Compliance Approval for a Municipal Stormwater
+Management System, Appendix A dated May 2022;
+Ministry of Environment, Conservation and Parks (MECP) Stormwater
+Management Planning and Design Manual dated March 2003; and
+Ministry of Transportation (MTO) Drainage Management Manual (1997).
+The servicing and SWM strategies in this report are based on the following reports for
+this Draft Plan of Subdivision:
+
+Project No. 2539
+
+Page 2
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+Detailed Factual Geotechnical and Hydrogeological Subsurface
+Investigation Report, prepared by Gemtec, dated September 26, 2024;
+Preliminary Water and Wastewater Calculations, prepared by Municipal
+Engineering Solutions, dated September 13, 2024;
+Draft Natural Heritage Evaluation, prepared by Beacon Environmental Ltd.,
+dated August 2023;
+Draft Geomorphic Assessment, prepared by Beacon Environmental Ltd.,
+dated July 2023;
+Draft Preliminary Environmental Noise Study, prepared by Jade Acoustics
+Inc., dated August 2, 2023; and
+Functional Servicing and Stormwater Management Report, 12245 Torbram
+Road, prepared by C.F. Crozier and Associates Inc., dated April, 2023.
+The servicing and SWM strategies are also based on the following approved Engineering
+Drawings:
+Torbram Road Proposed 200 mm Watermain – Sta. 0+000 – Sta. 2+040,
+prepared by the Region of Peel, dated August 1986.
+Excerpts from the above listed documents are included in Appendix B.
+
+Project No. 2539
+
+Page 3
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+2.0
+
+Stormwater Management
+
+2.1
+
+Stormwater Runoff Control Criteria
+
+October 2024
+
+The following stormwater runoff control criteria have been established based on the
+requirements of each of the design guidelines and standards listed in Section 1.3 and as
+established in the Phase 1 Local SWS (2024). The stormwater runoff criteria are
+summarized below in Table 2.1:
+Please note that the MECP CLI ECA retention criteria is superseded by the Final Report
+Humber River Hydrology Update prepared Civica Infrastructure Inc. dated June 2015.
+Table 2.1: Stormwater Runoff Control Criteria
+Criteria
+
+Control Measure
+
+Agency
+
+Quantity
+Control
+
+Per Table E.1 of the TRCA Stormwater Management Criteria,
+control post-development peak flow rates per unit flow
+Equation F Sub-Basin 36.
+Control proposed conditions to existing conditions peak flow
+for the Regional storm event.
+
+TRCA, Town
+
+Quality
+Control
+
+MECP Enhanced Level Protection (80% TSS Removal).
+
+TRCA, Town
+
+Erosion
+Control
+
+Minimum 5 mm on-site retention.
+
+TRCA
+
+Attenuation of the 25 mm rainfall runoff for a minimum of
+48 hours.
+
+TRCA, Town
+
+Maintain existing groundwater recharge rates and
+appropriate distribution, ensuring the protection of
+related hydrology ecologic functions.
+
+TRCA
+
+Temperature SWM pond outflows should target discharge water
+Mitigation
+temperatures below 24 degrees Celsius.
+
+MECP
+
+Water
+Budget
+
+2.2
+
+Existing Drainage
+
+The existing surface drainage patterns are shown in Figure 2.1.
+Runoff from Catchments 101 (42.69 ha), Catchment 102 (11.49 ha), Catchment 103
+(14.83 ha), Catchment 104 (14.18 ha) and Catchment 105 (13.89 ha) is conveyed
+overland to Campbell Tributary K – Reach 1 and Campbell Tributary J – Reach 2 which
+ultimately confluence at the center of the subject lands into Campbell Tributary J –
+
+Project No. 2539
+
+Page 4
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+Reach 1. Runoff from Catchment 106 (18.41 ha) is conveyed overland west towards
+Campbell Tributary J – Reach 1. Campbell Tributary J – Reach 1 combines with Campbell
+Tributary A – Reach 3 at the west edge of the Subject Lands, which flows southeast
+towards an existing culvert at Torbram Road. Runoff from Catchment 107 (19.58 ha) is
+conveyed overland east towards an existing culvert underneath Torbram Road, before
+ultimately joining Campbell Tributary A – Reach 3 downstream.
+2.2.1 Existing Site Characterization
+The soil classifications were identified in geotechnical and hydrogeological investigations
+undertaken by Gemtec Consulting Engineers and Scientists Ltd. The geotechnical
+investigation, dated July 25, 2023, identifies that the soils within the study limits are
+generally comprised of surficial topsoil and fill materials overlying interlayered deposits of
+glacial till and silty clay to clayey silt. The cohesive glacial till and clay deposits were typically
+found in the upland areas at higher elevations while the non-cohesive silt, sand and gravel
+and glacial till deposits were typically found in the valley lands underlying the cohesive
+deposits.
+Hydraulic conductivity testing was conducted at several locations across the site, the lowest
+measured hydraulic conductivity was 1 x 10-6 cm/s which corresponds to an infiltration rate
+of approximately 14 mm/hr (per LID SWM Planning and Design Guide Table C1). The design
+infiltration rate will be confirmed with in-situ testing at the detailed design stage. Relevant
+excerpts from the geotechnical investigation are provided in Appendix B.
+Groundwater measurements were conducted across the site in Spring 2023. The depth to
+groundwater was found to be in the order of 4 meters below ground surface (mbgs) more
+frequently, less during the period of spring high water levels in the areas north and south of
+the central tributary. Artesian conditions were encountered in BH23-28S/D in the northwest
+corner of 12580 Torbram Road. Relevant excerpts from the hydrogeological investigation
+are provided in Appendix B.
+Per the Natural Heritage Evaluation prepared by Beacon, the Campbell Tributary A and J
+have been identified as contributing Redside Dace habitat.
+
+2.2.2 Existing Hydrologic Modelling
+Existing hydrologic modelling was undertaken using the Visual Otthymo Version 6.2
+software (VO6) based on the Regional storm. The existing subject area has been divided
+into three different quadrants, each with a different outlet. As described in Section 2.2,
+runoff from Catchment 106 (18.41 ha) is conveyed overland west towards Campbell
+Tributary J – Reach 1 (Outlet #1). Runoff from Catchment 107 (19.58 ha) is conveyed
+overland east towards an existing culvert underneath Torbram Road, before ultimately
+joining Campbell Tributary A – Reach 3 downstream (Outlet #2). Runoff from
+Catchments 101-105 are conveyed from overland to Campbell Tributary K – Reach 1 and
+
+Project No. 2539
+
+Page 5
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+Campbell Tributary J – Reach 2 which ultimately confluence at the center of the subject
+lands into Campbell Tributary J – Reach 1 (Outlet #3). The existing Regional Storm peak
+flows from the study area to the outlet locations are summarized in Table 2.2.
+Table 2.2: Summary of Existing Regional Storm Peak Flows
+
+Design Storm
+
+To Outlet #1
+(VO Node 1)
+
+To Outlet #2
+(VO Node 2)
+
+To Outlet #3
+(VO Node 3)
+
+Regional (m3/s)
+
+2.588
+
+2.547
+
+12.115
+
+2.3
+
+Best Management Practices
+
+In accordance with the Ministry of Environment, Conservation and Parks Stormwater
+Management Planning and Design Manual (2003), a review of stormwater management
+best practices was completed using a treatment train approach, which evaluated lot
+level, conveyance system and end-of-pipe alternatives. The potential best management
+practices were evaluated based on the stormwater management criteria listed in Table
+2.1.
+The following are examples of at-source, conveyance and end-of-pipe controls that were
+evaluated for use in the subject lands. While evaluating the following controls, cost,
+feasibility, groundwater and grading constraints were taken into consideration. Please
+note water budget calculations will be provided in future submissions following
+coordination with Town staff to confirm approvable municipal low impact development
+(LID) facilities.
+Lot Level Controls
+Lot-level controls are at-source measures that reduce runoff prior to stormwater entering
+the conveyance system, such as:
+Increased topsoil depth;
+Roof leaders to grassed areas;
+At-source storage (i.e. rooftop or parking lot storage);
+Permeable pavements; and
+Infiltration trenches/soak-away pits.
+Conveyance Controls
+Conveyance controls provide treatment of stormwater during the transport of runoff from
+individual lots to the receiving watercourse or end-of-pipe facility. Examples of conveyance
+controls include:
+
+Project No. 2539
+
+Page 6
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+Grassed Swales;
+Bioretention systems;
+Catchbasin infiltration/filtration systems;
+Permeable pavement;
+Grassed filter strip, and
+Pervious pipe systems.
+End-of-Pipe Controls
+End-of-pipe stormwater management facilities receive stormwater flows from a conveyance
+system (i.e., storm sewers or ditches) and provide treatment of stormwater prior to
+discharging flows to the receiving watercourse. Typical end-of-pipe controls include:
+Wet ponds;
+Wetlands;
+Dry ponds;
+Infiltration/filtration basins;
+Manhole insert treatment systems (i.e. oil-grit-separators and filters); and
+Underground wet SWM facility.
+
+2.3.1 Lot-Level Controls
+Lot-level controls are at-source measures that reduce runoff prior to stormwater
+entering the conveyance system. These controls are typically proposed on private
+properties. Incorporating controls that require minimal maintenance can be an effective
+method in the treatment train approach to SWM. The following lot-level controls have
+been evaluated for use in the subject lands:
+Increased Topsoil Depth – An increase in the restored topsoil depth on lots can be used
+to promote lot level infiltration and evapotranspiration (up to 0.3 m depth). Increased
+topsoil depth will contribute to lot level quality and water balance control. This
+contribution is not quantified to address the stormwater runoff control criteria in Table
+2.1. A minimum depth of 0.3 m is proposed in all landscaped areas.
+Roof Leaders to Grassed Areas – Roof leaders will be discharged to grassed areas to
+promote lot level infiltration, thereby passively contributing to water quality and
+quantity control. This contribution is not quantified to address the stormwater runoff
+control criteria in Table 2.1.
+Rear Yard At-Surface Infiltration Trenches – Infiltration trenches will be provided in the
+single detached and townhouse rear yards as able, thereby passively contributing to
+water quality and quantity control. This contribution is not quantified as part of the
+quality and quantity control requirement in Table 2.1. At-surface trenches will be
+
+Project No. 2539
+
+Page 7
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+utilized to meet water balance and retention requirements. Adequate separation to the
+seasonally high groundwater will be provided to ensure functionality.
+A summary of the suitability of potential lot level controls for the subject lands is
+provided in Table 2.2.
+2.3.2 Conveyance Controls
+Conveyance controls provide treatment of stormwater during the transport of runoff
+from individual lots to the receiving watercourse or end-of-pipe facility and present
+opportunities to distribute stormwater management techniques throughout a
+development. The use of conveyance controls to meet water balance and retention
+targets will be confirmed with Town staff.
+2.3.3 End-of-Pipe Controls
+Stormwater management facilities at the end-of-pipe receive stormwater flows from a
+conveyance system and provide treatment of stormwater prior to discharging flows to
+the receiving outlet. The following end-of-pipe controls have been evaluated for use in
+the subject lands:
+Wet Ponds, Wetlands, Dry Ponds – Sized in accordance with the MECP criteria, these
+end-of-pipe facilities can provide water quality, quantity, and erosion control treatment.
+Underground Wet SWM Facility – Sized in accordance with the MECP criteria, these
+end-of-pipe facilities can provide water quality, quantity, and erosion control treatment.
+A underground wet facilities are proposed to provide water quality, quantity, and
+erosion control treatment for the development.
+2.3.4 Selection of Best Management Practices
+Table 2.3 summarizes the proposed stormwater management controls identified for the
+subject lands.
+Table 2.3: Proposed Stormwater BMP’s
+Stormwater Management Control
+
+Recommended BMP
+
+Lot-Level Controls
+
+Increased Topsoil Depth
+Roof Leader to Grassed Areas
+Rear Yard At-Surface Infiltration Trenches
+
+Conveyance System Controls
+
+N/A
+
+End-Of-Pipe Controls
+
+Underground Wet SWM Facility
+Wet SWM Pond
+
+Project No. 2539
+
+Page 8
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+2.4
+
+October 2024
+
+Proposed Storm Drainage
+
+The proposed storm drainage plan is shown on Figure 2.2. Runoff from the subject lands
+will be captured and conveyed to one of four SWM facilities (three underground wet
+SWM facilities (SWM Facilities 1, 2 and 4), and one wet SWM pond (SWM Pond 3)). The
+details of the SWM facilities are discussed further in Sections 2.5.1.2 to 2.5.1.5. It should
+be noted that the external drainage areas and hydrology parameters are based on
+anticipated proposed drainage boundaries determined through discussion with the
+Mayfield Tullamore Secondary Plan Local Subwatershed Study consultant team and
+therefore, are subject to change.
+Runoff from Catchment 201 (16.36 ha) will be conveyed to SWM Facility 1 (located in
+Catchment 202). Overland flow will generally be conveyed to a low point on Street M
+adjacent to SWM Facility 1 (underground wet SWM facility). Overland flow conveyance
+is discussed further in Section 2.9.
+Runoff from Catchment 204 (10.85 ha) will be conveyed to SWM Facility 2 (located in
+Catchment 205). Overland flow will generally be conveyed to a low point on Street B
+adjacent to SWM Facility 2 (underground wet SWM facility).
+Runoff from Catchment 206 (8.99 ha), Catchment 207 (3.58 ha), and Catchment EXT1
+(67.23 ha) will be conveyed to SWM Facility 3 (wet SWM pond) which is located in
+Catchment 207). Overland flow from Catchments 206 and EXT1 will generally be
+conveyed south to a low point in Street A adjacent to SWM Facility 3.
+Runoff from Catchment 209 (2.39 ha), and Catchment EXT2 (11.91 ha) will be conveyed
+to SWM Facility 4 (underground wet SWM facility) which is located in Catchment 210).
+Overland flow from Catchment 209 will generally be conveyed south to a low point on
+Street D adjacent to SWM Facility 4.
+Runoff from Catchments 202, 203, 205, 208, and 210 (rear yard, roof and parkland) will
+drain uncontrolled to the existing Campbell Tributary valley.
+2.5
+
+Proposed Stormwater Management Plan
+
+The proposed wet SWM facilities will provide quantity control, erosion control, quality
+control, and temperature mitigation for the study area and tributary external
+development. The proposed SWM facilities will control proposed flows to the allowable
+peak flow rates for the 2 to 100 year and Regional storm events. A VO6 model was
+prepared to determine the required volumes and peak flow rates. The model
+parameters and a digital download link to access the VO6 hydrology model are provided
+in Appendix C.
+
+Project No. 2539
+
+Page 9
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+It should be noted that the provided design volumes of the proposed underground wet
+SWM facilities outlined below are based on typical void space values for an underground
+wet facility. The actual facility volumes will be determined based on the design provided
+by the facility manufacturer at the detailed design stage, but will generally be within the
+range outlined below.
+2.5.1 Quantity Control
+2.5.1.1 Allowable Release Rate
+The allowable release rates for the 2 to 100 year storm for the subject lands have been
+established based on unit flow Equation F Sub-Basin 36 per Table E.1 of the TRCA
+Stormwater Management Criteria (refer to Appendix B). The unit flow relationships for
+the watershed are summarized in Table 2.4. The allowable release rate for the Regional
+Storm for the study area has been established based on the existing Regional Storm
+peak flow rate. Since SWM facilities 3 and 4 share an outlet (Outlet #3), the allowable
+release rates for SWM facility 3 and 4 were calculated by area-weighting the existing
+Regional Storm peak flow to Outlet #3. Please refer to Table 2.5 for the Regional Storm
+allowable release rates.
+Table 2.4: Summary of Unit Flow Rate Equations
+Return Period Unit Flow Rate
+Storm
+Equation
+2 Year
+5 Year
+10 Year
+25 Year
+50 Year
+100 Year
+
+9.506-0.719*ln(A)
+14.652-1.136*ln(A)
+17.957-1.373*ln(A)
+22.639-1.741*ln(A)
+26.566-2.082*ln(A)
+29.912-2.316*ln(A)
+
+The allowable release rates for each SWM facility to the Humber River subwatershed for
+each design storm are presented in Table 2.5 below. It should be noted that the
+allowable Regional release rate accounts for uncontrolled areas conveyed directly to the
+receiving watercourse whereas the unit release rates are based solely on tributary area
+to the respective SWM Facility.
+
+Project No. 2539
+
+Page 10
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+Table 2.5: Summary of Allowable Release Rates
+SWM Facility 1
+Return Period
+(m3/s) – (16.36
+Storm
+ha, Outlet 1)
+
+SWM Facility 2
+(m3/s) – (10.85
+ha, Outlet 2)
+
+SWM Facility 3
+(m3/s) – (79.80
+ha, Outlet 3)
+
+SWM Facility 4
+(m3/s) – (14.30
+ha, Outlet 3)
+
+2 Year
+5 Year
+10 Year
+25 Year
+50 Year
+100 Year
+Regional
+
+0.085
+0.130
+0.159
+0.201
+0.234
+0.265
+2.547
+
+0.507
+0.772
+0.953
+1.198
+1.392
+1.578
+10.201
+
+0.109
+0.166
+0.205
+0.258
+0.301
+0.340
+1.914
+
+0.123
+0.188
+0.231
+0.291
+0.339
+0.383
+2.588
+
+Four SWM facilities connected to control maintenance holes will control proposed peak
+flows to the Campbell Tributary from the study area (and tributary external lands) to the
+allowable release rates for the 2 to 100 year storm events and the Regional Storm event.
+Each quantity control facility is discussed in greater detail below. Preliminary outlet
+control structure design and SWM facility parameters are provided in Appendix D.
+2.5.1.2 SWM Facility 1
+A 135 mm diameter extended detention orifice plate and a 365 mm diameter orifice
+plate are required to meet the design peak flow rates in Table 2.5. Multiple outlet
+design configuration and calculations are provided in Appendix D. The storage discharge
+characteristics of the underground wet SWM facility are provided below in Table 2.6.
+SWM Facility 1 does not require Regional Storm quantity controls as the uncontrolled
+proposed Regional Storm peak flow to Outlet 1 is less than the existing Regional Storm
+peak flow (refer to Section 2.5.4).
+Table 2.6: SWM Facility 1 Operating Characteristics
+Return
+Period
+Storm
+
+Governing
+Design
+Storm
+
+Stage (m)
+
+Storage
+(m3)
+
+Discharge
+(m3/s)
+
+Allowable
+(m3/s)
+
+2 Year
+5 Year
+10 Year
+25 Year
+50 Year
+100 Year
+Regional
+
+12 Hour AES
+12 Hour AES
+12 Hour AES
+6 Hour AES
+6 Hour AES
+6 Hour AES
+N/A
+
+246.19
+246.39
+246.55
+246.80
+247.00
+247.20
+N/A
+
+3,384
+4,167
+4,789
+5,720
+6,485
+7,275
+N/A
+
+0.070
+0.169
+0.216
+0.272
+0.309
+0.344
+N/A
+
+0.123
+0.188
+0.231
+0.291
+0.339
+0.383
+2.588
+
+Project No. 2539
+
+Page 11
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+2.5.1.3 SWM Facility 2
+A 100 mm diameter extended detention orifice plate and a 315 mm diameter orifice
+plate are required to meet the design peak flow rates in Table 2.5. Multiple outlet
+design configuration and calculations are provided in Appendix D. The storage discharge
+characteristics of the underground wet SWM facility are provided below in Table 2.7.
+SWM Facility 2 does not require Regional Storm quantity controls as the uncontrolled
+proposed Regional Storm peak flow to Outlet 2 is less than the existing Regional Storm
+peak flow (refer to Section 2.5.4).
+Table 2.7: SWM Facility 2 Operating Characteristics
+Return
+Period
+Storm
+
+Governing
+Design
+Storm
+
+Stage (m)
+
+Storage
+(m3)
+
+Discharge
+(m3/s)
+
+Allowable
+(m3/s)
+
+2 Year
+5 Year
+10 Year
+25 Year
+50 Year
+100 Year
+Regional
+
+12 Hour AES
+12 Hour AES
+12 Hour AES
+6 Hour AES
+6 Hour AES
+6 Hour AES
+N/A
+
+244.04
+244.23
+244.39
+244.64
+244.83
+245.04
+N/A
+
+2,211
+2,694
+3,097
+3,703
+4,198
+4,712
+N/A
+
+0.049
+0.116
+0.152
+0.192
+0.219
+0.244
+N/A
+
+0.085
+0.130
+0.159
+0.201
+0.234
+0.265
+2.560
+
+2.5.1.4 SWM Facility 3
+An 0.35 m wide by 0.60 m high rectangular extended detention orifice plate, a 1.40 m
+long weir and an 2.0 m long regional weir are required to meet the design peak flow
+rates in Table 2.5. Multiple outlet design configuration and calculations are provided in
+Appendix D. The storage discharge characteristics of the wet SWM pond are provided
+below in Table 2.8. The Regional storm peak flow comparison is discussed in Section
+2.5.4.
+Table 2.8: SWM Facility 3 Operating Characteristics
+Return
+Period
+Storm
+
+Governing
+Design
+Storm
+
+Stage (m)
+
+Storage
+(m3)
+
+Discharge
+(m3/s)
+
+Allowable
+(m3/s)
+
+2 Year
+5 Year
+10 Year
+25 Year
+
+12 Hour AES
+12 Hour AES
+12 Hour AES
+12 Hour AES
+
+249.02
+249.29
+249.49
+249.70
+
+13,858
+19,617
+23,937
+28,665
+
+0.383
+0.496
+0.559
+0.832
+
+0.507
+0.772
+0.953
+1.198
+
+Project No. 2539
+
+Page 12
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+Return
+Period
+Storm
+
+Governing
+Design
+Storm
+
+Stage (m)
+
+Storage
+(m3)
+
+Discharge
+(m3/s)
+
+Allowable
+(m3/s)
+
+50 Year
+100 Year
+Regional
+
+6 Hour AES
+6 Hour AES
+N/A
+
+249.83
+249.96
+251.03
+
+31,585
+34,717
+61,005
+
+1.131
+1.502
+9.215
+
+1.392
+1.578
+-
+
+2.5.1.5 SWM Facility 4
+A 170 mm diameter extended detention orifice plate, a 0.50 m wide by 0.60 m high
+rectangular orifice plate and a 0.70 m long regional weir are required to meet the design
+peak flow rates in Table 2.5. Multiple outlet design configuration and calculations are
+provided in Appendix D. The storage discharge characteristics of the underground wet
+SWM facility are provided below in Table 2.9. The Regional storm peak flow comparison
+is discussed in Section 2.5.4.
+Table 2.9: SWM Facility 4 Operating Characteristics
+Return
+Period
+Storm
+
+Governing
+Design
+Storm
+
+Stage (m)
+
+Storage
+(m3)
+
+Discharge
+(m3/s)
+
+Allowable
+(m3/s)
+
+2 Year
+5 Year
+10 Year
+25 Year
+50 Year
+100 Year
+Regional
+
+12 Hour AES
+12 Hour AES
+12 Hour AES
+12 Hour AES
+6 Hour AES
+6 Hour AES
+N/A
+
+253.00
+253.14
+253.22
+253.31
+253.39
+253.48
+254.44
+
+2,686
+3,575
+4,106
+4,736
+5,284
+5,830
+12,249
+
+0.036
+0.089
+0.136
+0.205
+0.264
+0.334
+1.340
+
+0.109
+0.166
+0.205
+0.258
+0.301
+0.340
+-
+
+2.5.2 Quality Control
+SWM Facilities 1-4 will provide quality control to meet MECP Enhanced Level Protection
+(80% TSS Removal) requirements for runoff conveyed to the SWM facilities (see Table
+3.2, 2003 MOE Guidelines). The required permanent pool volumes are based on total
+developed area and catchment imperviousness draining to the facilities. The required
+and available/anticipated permanent pool storages for each SWM facility are listed in
+Table 2.10 (see calculations in Appendix D).
+
+Project No. 2539
+
+Page 13
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+Table 2.10: Quality Control Summary
+
+Drainage Area (ha)
+Imperviousness (%)
+Required Permanent
+Pool Volume (m3)
+Provided/Anticipated
+Permanent Pool
+Volume (m3)
+
+SWM Facility 1
+
+SWM Facility 2 SWM Facility 3 SWM Facility 4
+
+16.36
+69
+
+10.85
+69
+
+79.80
+63
+
+14.30
+63
+
+2,988
+
+1,982
+
+13,529
+
+2,412
+
+3,000
+
+2,100
+
+29,434
+
+2,550
+
+No quality control is proposed for Catchments 202, 203, 205, 207, 208, and 210 as these
+catchments are comprised of landscaped and rear roof area which is generally
+considered to be clean.
+2.5.3 Erosion Control
+SWM Facilities 1-4 will provide erosion control for runoff conveyed to the facilities. The
+extended detention volumes will be sized based on the detention of the 25 mm – 4-hour
+Chicago rainfall event. The volumes calculated for the extended detention will be
+attenuated for a minimum of 48 hours. The extended detention volumes, orifice sizes
+and peak extended detention release rates for SWM Facilities 1-4 are listed in Table
+2.11.
+Table 2.11: Erosion Control Summary
+SWM Facility 1 SWM Facility 2 SWM Facility 3 SWM Facility 4
+Drainage Area (ha)
+Orifice Size (mm)
+Extended Detention
+Volume (m3)
+Detention Time (hr)
+Peak Release Rate
+(m3/s)
+
+16.36
+135
+
+10.85
+100
+
+79.80
+350 x 600
+
+14.30
+170
+
+2,266
+
+1,457
+
+9.608
+
+1,604
+
+51.2
+
+49.2
+
+54.0
+
+48.9
+
+0.029
+
+0.016
+
+0.223
+
+0.025
+
+The calculations for the extended detention component of the proposed SWM facilities
+are provided in Appendix D.
+
+Project No. 2539
+
+Page 14
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+2.5.4 Regional Storm Release Rates
+As discussed in Section 2.5.1.1, the allowable release rate for the Regional Storm for the
+study area has been established based on the existing Regional Storm peak flow rate.
+Please note that SWM Facilities 1 and 2 (Outlet #1 and #2 respectively) did not require
+regional quantity controls, as the proposed Regional Storm peak flow rate into the SWM
+facilities was less than existing Regional Storm peak flow rate. The regional storm event
+for SWM Facility 3 (wet SWM pond) is controlled by a 2.0 m long broad crested weir.
+The regional storm event for SWM Facility 4 (underground wet SWM facility) is
+controlled by a 0.70 m long broad crested weir. Table 2.12 below provides a comparison
+of existing and proposed Regional Storm peak flow rates for each outlet. Please refer to
+SWM facility calculations in Appendix D.
+Table 2.12: Summary of Existing and Proposed Regional Storm Peak Flows
+
+Design Storm
+
+Regional (m3/s)
+
+To Outlet #1
+(VO Node 1)
+
+To Outlet #2
+(VO Node 2)
+
+To Outlet #3
+(VO Node 17)
+
+Ex.
+2.588
+
+Ex.
+2.547
+
+Ex.
+12.115
+
+Prop.
+1.500
+
+Prop.
+1.209
+
+Prop.
+11.653
+
+2.5.5 5 mm On-Site Retention
+The total proposed development area for the study area is approximately 58.17 ha with
+an imperviousness of 56%. To retain the 5 mm over the proposed impervious area for the
+study area, approximately 1,630.0 m3 of infiltration storage volume is required (refer to
+calculations provided in Appendix D).
+Per Section 2.3.4, lot level infiltration facilities such as rear yard shallow infiltration
+trenches will be provided to meet the 5 mm on-site retention targets.
+Preliminary lot-level infiltration facility sizing calculations have been completed based on
+the following assumptions:
+Lot-level infiltration facilities to be provided on split-draining single detached
+and townhouse lots;
+Lot-level infiltration facilities to capture 25 mm of runoff from 20% of the lot
+area (i.e. approximately half roof or the driveway plus one quarter of the
+roof area).
+Based on the preliminary grading plan, lot-level infiltration facilities are proposed on
+approximately 186 single detached split draining residential lots. A total roof area of
+
+Project No. 2539
+
+Page 15
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+approximately 1.13 ha can be directed to rear yard infiltration trenches assuming 20% of
+the lot area as roof is directed to an infiltration trench. The lot-level infiltration facilities
+will be sized to infiltrate a total runoff volume of approximately 307.8 m3. Preliminary
+details for the rear yard infiltration trenches are provided in Section 2.7.
+The school, firehall, commercial, and medium density blocks are proposed to provide
+onsite retention of the 5 mm storm event. The method to achieve the retention target
+volume will be determined at the site plan application stage. The anticipated retention
+volumes based on the assumed imperviousness are provided in Table 2.13.
+Based on the groundwater levels throughout the tableland portion of study area, there is
+no opportunity to provide an infiltration gallery on the tableland downstream of the SWM
+Facilities or within park blocks. Therefore, the proposed measures are proposed as a “best
+efforts” solution. Refer to calculations in Appendix D for preliminary LID sizing and Figure
+2.2 for preliminary LID locations.
+A summary of the proposed retention volumes are provided in Table 2.13 below.
+Table 2.13 – 5 mm Retention Volume Summary
+Retention Measure
+
+Preliminary Retention
+Volume (m3)
+
+Rear Yard Infiltration Trench
+
+307.8
+
+Assumed Rear Yard Infiltration Trench
+(Non-Participant Property)
+
+163.6
+
+School Block Retention System
+
+102.5
+
+Firehall Block Retention System
+
+37.5
+
+Commercial Block Retention System
+
+22.5
+
+Combined Medium Density Block
+Retention System
+
+205.5
+
+Total Proposed Retention Volume
+
+839.4
+
+Total Required Retention Volume
+
+1,630.0
+
+2.5.6 Water Budget
+Where feasible, measures to minimize impacts on the water budget will be incorporated
+into the development design. As recommended in Section 2.3, low impact development
+measures, such as increased topsoil depths, roof runoff to grassed areas, and infiltration
+facilities such as rear yard infiltration trenches will be implemented, where feasible, to
+
+Project No. 2539
+
+Page 16
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+maintain or increase existing infiltration rates. Water budget calculations will be
+provided in future submissions following coordination with Town staff to confirm
+approvable municipal LID facilities.
+2.5.7 Temperature Mitigation
+A permanent pool depth of 3.0 m with a bottom draw outlet is preferred for SWM ponds
+conveying runoff to Redside Dace Habitat. The proposed grading in the SWM Facility 3
+aftbay (wet SWM pond) has been maximized to provide a permanent pool depth of 3.0
+m. A bottom draw outlet is proposed and the invert will be set 0.5 m off the SWM Facility
+3 bottom (244.25 m) to maximize the potential to discharge cool water from the
+permanent pool.
+Temperature mitigation for SWM facilities 1, 2 and 4 will be provided by the 1.5 m deep
+underground concrete chamber permanent pool.
+2.6
+
+Underground Stormwater Management Facilities
+
+SWM Facilities 1, 2, and 4 are proposed to provide quantity control, quality control,
+erosion control, and temperature mitigation. SWM facilities 1, 2 and 4 are proposed to
+be underground “Vault” SWM systems (hybrid plastic and concrete chamber system).
+For additional details, please refer to the manufacturer information provided in
+Appendix D. The facility design parameters and layout will be refined through further
+correspondence with Town staff including incorporating park programming.
+All underground SWM facilities will have a permanent pool depth of 1.5 m and an active
+storage depth of 2.0 m (total internal height of 3.5 m). Preliminary park/SWM facility
+block layouts are provided on Figures 2.3, 2.4 and 2.6 respectively with footprints based
+on typical underground SWM facility void space. Preliminary facility designs will be
+provided in future submissions following coordination with Town staff to confirm park
+programming and underground facility design requirements.
+The facility block sizes were established based on the following general criteria including
+but not limited to:
+A 5.0 m wide maintenance access road will be provided from a proposed
+municipal road with a maximum longitudinal slope of 10% and a crossfall of
+2% (max). It will be used to facilitate machinery to access the forebay
+during scheduled maintenance as well as to access the outlet structure for
+maintenance purposes;
+Access ports located throughout the underground SWM facility for access
+to key locations (inlet, outlet, forebay, etc); and
+A 1.5 m deep permanent pool and control maintenance hole will be
+provided for each underground SWM facility. The control maintenance
+
+Project No. 2539
+
+Page 17
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+holes will be connected to an outlet storm sewer which will convey flows
+to the valley.
+As shown on Figure 8.1, the Regional Storm Floodplain elevation at the proposed SWM
+facilities is well within the limits of the valley, therefore the existing floodplain will not
+impact the outlet control structure hydraulics. Regional Storm floodplain modelling is
+discussed further in Section 8.0.
+An emergency overflow channel will be provided at each park/SWM block which will
+convey the uncontrolled 100 year and Regional storm event peak flow from the
+park/SWM block to the valley. These overflow channels will act as the emergency
+conveyance for the SWM facilities to avoid additional disturbance through the Campbell
+Tributary valley wall.
+Access to SWM Facilities 1, 2 and 4 will be provided from local roads to facilitate
+maintenance and future cleanout of the SWM facilities. An access road and turning
+circle will be provided at each park/SWM block for access to the outlet control
+maintenance hole and SWM facility aftbay.
+2.7
+
+Wet Stormwater Management Pond
+
+Preliminary wet pond grading is provided on Figure 2.5. The preliminary wet pond design
+was established based on the following general criteria:
+A maintenance access road in accordance with Caledon Development
+Standards will be provided from a proposed road with a maximum
+longitudinal slope of 8% and a crossfall of 2% (max). A maximum longitudinal
+slope of 5% will be used where pedestrian access is anticipated. The
+maintenance access road will be used to facilitate machinery to access the
+forebay during scheduled maintenance as well as to access the outlet
+structure for maintenance purposes;
+A minimum length-to-width ratio of 4:1 for the SWM pond;
+A permanent pool depth of 3.0 m to meet temperature criteria;
+An active storage depth of 3.0 m to provide sufficient volume to control
+Regional storm event peak flows;
+A safety shelf with a maximum slope of 7:1 from 0.5 m below the normal
+water level to the forebay berm elevation will be provided
+A maximum slope of 3:1 is proposed above the safety shelf. 3:1 sloping
+above the safety shelf is required to size the SWM pond for regional quantity
+controls without grading beyond the limits of development and onto nonparticipating property owners; and
+A maximum slope of 4:1 will be provided below the safety shelf.
+
+Project No. 2539
+
+Page 18
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+2.8
+
+October 2024
+
+Rear Yard Infiltration Trenches
+
+As noted in Section 4.5.4 and shown on Figure 2.11 rear yard at-surface infiltration
+trenches may be provided on split-draining, single detached (non-laneway) lots to meet
+the 5 mm onsite retention and water balance targets. Where lots back toward the valley
+or golf course, overflow from the infiltration trenches will drain uncontrolled to the
+Campbell Tributaries. Within the development, overflows from the rear yard infiltration
+trenches will be directed via the storm sewer system to the proposed park/SWM blocks.
+The trenches will be located beneath the rear yard swales, covered by approximately
+0.15 m of topsoil. Due to the proximity of the seasonally high groundwater, the
+maximum trench depth will be limited to 0.5 m and the runoff in the trench will be
+infiltrated within 48 hours, given the design infiltration rate of 14 mm/hr. Based on the
+hydrogeological investigation and the preliminary grading plan, the recommended
+minimum 1 m separation from the bottom of the trench will be achieved. The rear yard
+infiltration trenches will provide sufficient storage volume to infiltrate the 25 mm storm
+event over the rear roof area of the lot (approximately 20% of lot area). Preliminary
+maximum infiltration trench dimensions based on lot frontage are provided in Table
+2.14 below. Refer to Figure 2.7 for rear yard at-surface infiltration trench details and
+Appendix D for preliminary sizing calculations.
+Table 2.14: Rear Yard At-Surface Infiltration Trench Dimensions
+Maximum Trench Dimensions
+Minimum Lot
+Frontage (m)
+
+Depth (m)
+
+Length (m)
+
+Width (m)
+
+Maximum Infiltration
+Volume Provided (m3)*
+
+9.75
+11.60
+13.40
+
+0.5
+0.5
+0.5
+
+8.75
+9.00
+11.00
+
+1.0
+1.0
+1.0
+
+1.8
+1.8
+2.2
+
+*Note: assumes a porosity of 0.4
+
+2.9
+
+Storm Servicing
+
+The storm sewer system (minor system) will be designed for the 10 year return storm as
+per the Town of Caledon standards. The major system flow drainage (up to the 100 year
+and Regional storm events) will generally be conveyed overland along the road rights-ofway and easements. Preliminary storm design sheets are provided in Appendix D.
+The storm sewer system will typically be designed with grades between 0.5% and 2%.
+Throughout the subject lands, the storm sewer will be constructed at a minimum depth
+of 1.5 m to provide frost protection and a minimum of 1.0 m below basement floor
+elevations where gravity foundation connections are proposed. It is anticipated that all
+storm sewers will have sufficient depth to service foundation connections by gravity.
+
+Project No. 2539
+
+Page 19
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+The preliminary layout for the proposed storm sewer within the subject lands is
+provided on Figure 2.8.
+The storm drainage system will be designed in accordance with the Town of Caledon
+and MECP guidelines, including the following:
+Pipes to be sized to accommodate runoff from a 10 year storm event,
+Minimum Pipe Size: 300 mm diameter,
+Maximum Flow Velocity: 4.0 m/s,
+Minimum Flow Velocity: 0.75 m/s,
+Minimum Pipe Depth: 1.0 m below basement floor elevations for gravity
+service connections,
+Minimum Pipe Depth: 1.5 m to obvert.
+The rainfall intensity will be calculated as follows, where ‘i’ is the rainfall intensity
+(mm/hour) and A, B, and C are as per Table 2.15:
+I = A / (Tc +B)c
+Table 2.15: Rainfall Intensity Parameters
+Return Period
+Storm
+
+A
+
+B
+
+C
+
+2 Year
+5 Year
+10 Year
+25 Year
+50 Year
+100 Year
+
+1070
+1593
+2221
+3158
+3886
+4688
+
+7.85
+11
+12
+15
+16
+17
+
+0.8759
+0.8789
+0.9080
+0.9335
+0.9495
+0.9624
+
+2.10 Overland Flow
+Major system flows (greater than the 10 year up to the 100 year and Regional storm
+events) will be conveyed within the road rights-of-way to the SWM facilities. Right-ofway capacity calculations are provided in Appendix D and show that the major system
+flows can be safely conveyed within the proposed road rights-of-way. Major system
+flows will be captured at low points adjacent to the underground SWM Facility blocks.
+Major system capture sizing calculations will be provided at the detailed design stage.
+
+Project No. 2539
+
+Page 20
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+3.0
+
+Sanitary Servicing
+
+3.1
+
+Existing Sanitary Sewer System
+
+October 2024
+
+There is no existing sanitary sewer system within the immediate vicinity of the subject
+lands.
+In accordance with the Region of Peel Water and Wastewater Master Plan and the
+Mayfield Tullamore Secondary Plan High Level Background Servicing and Stormwater
+Management Analysis (SCS, 2024), the Subject Lands are anticipated to be serviced by
+Regional trunk sanitary sewer ST-178 which will be constructed as part of the proposed
+development immediately to the east (Tullamore). Two connections will be provided to
+service the study area. The future connection locations are identified on Figure 3.1,
+relevant excerpts are provided in Appendix B.
+3.2
+
+External Sanitary Sewer System
+
+Per the High-Level Background Servicing and Stormwater Management Analysis (SCS
+2024), It is anticipated that external sanitary flows will be conveyed through the study
+area (refer to Figure 3.2). Approximately 324.88 ha of future residential sanitary
+drainage will be conveyed to the Street A trunk sanitary sewer at the western limit of
+the subject lands. Approximately 12.02 ha of external sanitary drainage will be conveyed
+to a connection at the northeast corner of the study area.
+An additional sanitary servicing connection is proposed as part of this application to
+temporarily service development south of the study area due to the delayed timing of
+individual properties to the south which could impede the immediate servicing of this
+area. The external development to be temporarily serviced extends along Mayfield Road
+from Bramalea Road to Torbram Road (Pt Lot 17, 18, 19, Conc 5), refer to Catchments
+EXT9 and EXT10 on Figure 3.2.
+Per the High-Level Background Servicing and Stormwater Management Analysis (SCS
+2024), the external development south of the study area (Catchments EXT9 and EXT10)
+are intended to be serviced by Regional trunk sanitary sewers ST-012 and ST-136. The
+external development can be serviced immediately via a temporary pumping station
+with a forcemain connecting to the proposed southern sanitary sewer connection for
+the Subject Lands. The proposed forcemain can connect to the proposed sanitary sewer
+by either conveying flows internally to the external development with a crossing
+underneath Campbell Tributary A or conveying flows via Mayfield Road and Torbram
+Road. Refer to Figure 3.2 for preliminary temporary sanitary pumping station and
+forcemain locations.
+
+Project No. 2539
+
+Page 21
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+3.3
+
+October 2024
+
+Proposed Sanitary Sewer System
+
+Two sanitary connections are proposed to service the study area at Torbram Road.
+Flows from 28.00 ha of the Subject Lands will be conveyed to the proposed north
+sanitary connection at Street A and 11.04 ha will be conveyed to the proposed south
+sanitary connection at Street B. A total drainage area of 352.88 ha is conveyed to the
+Street A connection when accounting for the external drainage areas outlined above.
+Two crossings underneath Campbell Tributaries are required to service the study area.
+As discussed in Section 8.1, the Street A crossing consists of a proposed 14.9 m wide
+open bottom arch concrete culvert. To avoid conflicts with the open bottom culvert
+footings, the proposed sanitary sewer is to cross under Campbell Tributary J north of the
+proposed crossing, as shown on Figure 2.8. A minimum cover of 2.0 m will be provided
+from the tributary invert to the sanitary sewer obvert.
+As discussed in Section 8.2, the Street C crossing consists of a proposed 6.4 m wide by
+1.5 m tall by 25.2 m long concrete box culvert. The proposed crossings underneath
+Campbell Tributary J and K will have a minimum clearance of 0.5 m provided from the
+obvert of the sanitary sewer to the underside of the culvert. Should footings be required
+for the proposed culvert, the sanitary alignment will be directed around the culvert and
+a minimum cover of 2.0 m will be provided to the tributary invert. The preliminary
+layout for the proposed sanitary sewer within the study area is provided on Figure 2.8.
+The local sanitary sewers within the study area will have slopes ranging between 0.5%
+and 2% (typically) and will be provided at 3 m to 5 m deep.
+The trunk sanitary sewer on Street A is much deeper than typical with cover ranging
+from approximately 10 m to 14 m deep and a slope of 0.5%. The depth of the sanitary
+sewer is required to facilitate the gravity connection underneath Campbell Tributary J
+and to accommodate the anticipated depth of upstream sanitary services.
+The sanitary sewer system will be designed in accordance with the Region of Peel and
+MECP criteria, including but not limited to:
+Residential Sanitary Generation Rate: 290 L/c/d,
+Commercial Sanitary Generation Rate: 270 L/emp/ha,
+Population Density: 4.2 people/unit,
+Peaking Factor: Harmon (Max. 4.0),
+Infiltration Rate: 0.26 L/s/ha,
+Minimum Pipe Size: 200 mm diameter,
+Minimum Pipe Cover: 2.5 m,
+Minimum Actual Velocity: 0.75 m/s, and
+Maximum Velocity: 3.0 m/s.
+
+Project No. 2539
+
+Page 22
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+A preliminary sanitary sewer design sheet is provided in Appendix E. The peak flow
+conveyed to the Street A and Street C connections are approximately 377.7 L/s and 17.0
+L/s which is 9.5 L/s and 6.3 L/s less than the flow at these locations in the High-Level
+Background Servicing and Stormwater Management Analysis (SCS 2024) sanitary design
+sheet respectively (relevant excerpts providing in Appendix B). Therefore, the flows
+from the study area are in conformance with the High-Level Servicing Analysis and will
+not result in capacity constraints in the downstream sanitary sewers.
+3.4
+
+Interim Sanitary Servicing
+
+In the event that the development lands south of Mayfield Road are delayed, an interim
+sanitary servicing solution concept is proposed to service the study area.
+A sanitary sewer is proposed on the Tullamore Industrial lands to the east of the study
+area which will outlet directly to the Airport Road trunk sewer (refer to relevant
+excerpts in Appendix B). With the installation of a temporary lift station on the
+Tullamore Industrial lands, the sanitary flows from the study area that outlet to the
+proposed connection at Street A and a portion of the Tullamore Industrial lands can
+potentially be conveyed directly to the Airport Road trunk sewer.
+The sanitary flows from the study area that outlet to the proposed connection at Street
+C can also potentially be serviced by the direct connection to the Airport Road trunk
+sewer via a temporary gravity sanitary sewer on the Tullamore Industrial lands.
+The interim sanitary servicing options are illustrated on Figure 3.2. When the servicing
+of the development lands south of Mayfield Road is complete, the sanitary flows will be
+directed to their ultimate outlet. The potential interim servicing options will be
+discussed in further detail with Region staff as the draft plan application process
+proceeds.
+
+Project No. 2539
+
+Page 23
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+4.0
+
+October 2024
+
+Water Supply and Distribution
+
+A Water System Analysis report for the subject lands was prepared by Municipal
+Engineering Solutions, dated September 2024, which outlines the existing and proposed
+external and internal infrastructure of the Subject Lands. A summary of the information
+in the report is provided below. The report has been provided in Appendix F for reference.
+4.1
+
+Existing Water Distribution
+
+In the vicinity of the Subject Lands, an existing 200 mm diameter watermain currently
+extends from the intersection of Mayfield Road and Torbram Road to north of the
+existing golf course access along Torbram Road. Per the Peel Water and Wastewater
+Master Plan, the Subject Lands are within Pressure Zone 6 which has a serviceable
+elevation of 214.5 m – 259.1 m.
+The existing watermain system is illustrated on Figure 4.1.
+4.2
+
+External Water System
+
+In accordance with the High-Level Background Servicing and Stormwater Management
+Analysis (SCS 2024), the study area is anticipated to be serviced by Regional trunk
+watermains D-180 and D-181. Watermain D-181 will be constructed as part of the
+Tullamore development to the east which is approved and is currently under
+development. Watermain D-180 is proposed to upsize the existing 200 mm diameter
+watermain to a 400 mm diameter watermain on Torbram Road.
+The location of watermains D-180 and D-181 are illustrated on Figure 4.1.
+4.3
+
+Proposed Water System
+
+The study area is proposed to be serviced via the future 400 mm diameter watermain on
+Torbram Road. The Subject Lands are anticipated to be within the serviceable elevation
+range therefore no additional infrastructure is required to provide adequate pressure,
+refer to Section 5.2 for proposed grading information. The preliminary layout for the
+proposed watermain system is provided on Figure 4.1.
+The watermain system will be designed in accordance with the Region of Peel and MECP
+criteria including:
+Residential water usage rate: 280 L/c/d,
+Commercial water usage rate: 300 L/emp/ha,
+Population Density: 4.2 people/unit,
+Minimum Pipe Size: 150 mm diameter,
+Minimum Pipe Depth: 1.7 m, and
+
+Project No. 2539
+
+Page 24
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+Maximum Hydrant Spacing: 150 m.
+As discussed in the memo prepared by Municipal Engineering Solutions, the design of
+the internal and external watermain system will be finalized once the building design
+criteria (ie. required fire flows) has been confirmed and a hydrant test is completed. A
+watermain hydraulic modelling analysis will be prepared subsequently to ensure that
+the minimum required fire flows can be met at each of the hydrants within the
+development.
+
+Project No. 2539
+
+Page 25
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+5.0
+
+Grading
+
+5.1
+
+Existing Grading Conditions
+
+October 2024
+
+Per the topographic survey shown on Figure 2.1, the subject lands are comprised of
+three distinct areas: the tableland, the valley wall, and the valleyland. The characteristics
+of the tableland are fairly distinct and are described in further detail below. The valley
+wall is comprised of steep slopes with a grade range of approximately 25% to more
+typically 50%, with a maximum valley wall height of approximately 7 m. Campbell
+Tributaries meander through the valleyland and convey flows from north to south. In
+the locations where the Campbell Tributaries are not immediately adjacent to the valley
+wall, the valleyland is moderately sloped with a grade range of approximately 1% to
+10%.
+The tableland of the subject lands are comprised of rolling golf course lands with a grade
+range of less than 1% to approximately 15%. The topographic elevations of the tableland
+vary from approximately 260.0 m in the northwest corner of the subject lands to
+approximately 237.5 m at the southern limit of the subject lands within the valley. The
+southeastern quadrant of the subject lands is divided in two by an existing high point.
+The west half slopes west towards Campbell Tributary J and Campbell Tributary A. The
+east half slopes east towards the existing Torbram Road ditch, and are ultimately slopes
+to an existing Torbram Road existing culvert.
+5.2
+
+Proposed Grading Concept
+
+In general, the study area will be graded in a manner which will satisfy the following
+goals:
+Satisfy the Town of Caledon lot and road grading criteria including:
+ Minimum Road Grade: 0.75%
+ Maximum Road Grade: 6.0%
+ Minimum Lot Grade (split lots): 2%
+ Minimum Lot Grade (front draining lots): 3%
+ Maximum Lot Grade: 5%
+ Maximum slope between houses in any direction: 4:1
+ Provide a 0.6 m wide gently sloped area at 2.0% away from the
+house on at least one side of the building where side yard
+setbacks permits
+Provide continuous road grades for overland flow conveyance;
+Minimize the need for retaining walls;
+Minimize the volume of earth to be moved and minimize cut/fill
+differential;
+Minimize the need for rear lot catchbasins; and
+
+Project No. 2539
+
+Page 26
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+Achieve the stormwater management objectives required for the subject
+lands.
+A minimum road grade of 0.5% has been utilized as necessary to achieve continuous
+overland drainage towards the proposed SWM facilities, due to the relatively flat
+tableland within the study area. A preliminary grading plan is provided on Figure 5.1.
+At the detailed design stage, the preliminary grading shown on Figure 5.1 will be subject
+to a more in-depth analysis in an attempt to balance the cut and fill volumes and
+minimize slopes and walls.
+
+Project No. 2539
+
+Page 27
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+6.0
+
+October 2024
+
+Rights-of-way and Sidewalks
+
+The road network of the subject lands will be comprised of 16.0 m, 18.0 m and 22.0 m
+ROWs, and 8.0 m laneways.
+The 8.0 m laneway will the Town of Caledon standard drawing No. 200.
+The 16.0 m ROW will the Town of Caledon standard drawing No. 201.
+The 18.0 m ROW will the Town of Caledon standard drawing No. 202.
+The 22.0 m ROW will the Town of Caledon standard drawing No. 205.
+The proposed right-of-way cross-sections are provided in Appendix G.
+For the areas where sidewalk will be provided along one side of the street, sidewalks
+will be typically be located on north or east side of the boulevard or the boulevard side
+where the larger number of frontages can be serviced.
+
+Project No. 2539
+
+Page 28
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+7.0
+
+October 2024
+
+Erosion and Sediment Control During Construction
+
+During the detailed design stage, erosion and sediment control measures will be
+designed with a focus on erosion control practices (such as stabilization, track walking,
+staged earthworks, etc.) as well as sediment controls (such as fencing, mud mats,
+catchbasin sediment control devices, rock check dams and temporary sediment control
+ponds). These measures will be designed and constructed as per the “Erosion and
+Sediment Control Guide for Urban Construction” document (TRCA, 2019). A detailed
+erosion and sediment control plan will be prepared for review and approval by the
+Municipality and Conservation Authority prior to any proposed grading being
+undertaken. This plan will address phasing, inspection and monitoring aspects of erosion
+and sediment control. All reasonable measures will be taken to ensure sediment loading
+to the adjacent watercourses and properties are minimized both during and following
+construction.
+
+Project No. 2539
+
+Page 29
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+8.0
+
+October 2024
+
+Proposed Crossings and Floodplain Modifications
+
+The TRCA HEC-RAS model (West Humber), as refined through the Phase 1 local
+subwatershed study (SCS, GEI, 2024), was used to quantify the hydraulic characteristics
+of the Campbell Tributaries based on the proposed development. The TRCA HEC-RAS
+model geometry has been updated based on a detailed topographic survey of the site.
+The model was run using HEC-RAS version 6.4.1. Results of the modelling and a copy of
+the HEC-RAS model are provided in a digital download link in Appendix H.
+Under existing conditions, Campbell Tributary K, J, and A drain southwards through the
+centre of the study area through several golf cart crossings and exit the site along the
+south limit of property. The updated existing Regional Storm floodlines have been plotted
+on Figure 8.1.
+Two road crossings are required for the proposed development – one through the centre
+of the study area as Street A crosses Campbell Tributary J, and one along the north limit
+of property as Street C crosses Campbell Tributary K. The design of the crossings are
+outlined below and incorporate recommendations from the Geomorphic Assessment
+prepared by Beacon, relevant excerpts provided in Appendix B. Additional cross-sections
+have been included in the HEC-RAS model upstream and downstream of the proposed
+crossings to produce more accurate floodline elevations. The proposed Regional Storm
+floodlines have been plotted on Figure 8.2 (HEC-RAS Plan ID SCS Proposed).
+8.1
+
+Street A Crossing Design
+
+As Street A extends through the centre of the subject lands, a proposed crossing is
+required over the Campbell Tributary J. The following design criteria has been established:
+Design flow return period of 50 year storm (Collector Road, Section 1.2.1 of
+MTO Drainage Design Standards);
+Span the 100 year erosion limit (14.0 m);
+Maintain Regional Storm Event (Hurricane Hazel) flooding condition external
+to the Subject Lands (unless otherwise approved); and
+Accommodate passage of fish.
+To meet the criteria listed above, the watercourse will be conveyed via a 14.9 m wide arch
+open bottom culvert (O-Series 0949).
+The proposed crossing will be able to convey the 50 year storm event with a water surface
+elevation of 246.94 m (refer to Appendix H for HEC-RAS model results). The Regional
+Storm event will be fully conveyed by the proposed crossing without overtopping. Refer
+to Table 8.1 for a summary of the existing and proposed Regional Storm floodline
+elevations at the proposed crossing.
+
+Project No. 2539
+
+Page 30
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+The existing golf cart crossing will be removed and restored as part of the construction of
+the proposed development. The proposed Regional Storm floodlines have been plotted
+on Figure 8.2.
+Table 8.1: Regional Storm Flood Elevations – Street A Crossing
+HEC-RAS
+Section
+
+Existing Floodline
+Elevation (m)
+
+Proposed Floodline
+Elevation (m)
+
+867.84
+
+247.04
+
+248.79
+
+Culvert (U/S)
+
+N/A
+
+248.79
+
+790.77
+
+246.58
+
+246.83
+
+As shown above, the Regional Storm flooding condition increases in elevation upstream
+of the proposed culvert. The floodline elevation increase does not impact upstream
+landowners or limits of development.
+A low flow channel will be provided within the 14.9 m wide arch open bottom culvert to
+reflect the existing conditions where the watercourse displayed discernible bed and banks
+and to allow for passage of fish. The design of the low flow channel will be prepared at
+the detailed design stage.
+8.2
+
+Street C Crossing Design
+
+As Street C extends along the north limit of the study area, a proposed crossing is required
+over the Campbell Tributary K. The following design criteria has been established:
+Design flow return period of 25 year storm (Local Road, Section 1.2.1 of MTO
+Drainage Design Standards); and
+Maintain Regional Storm Event (Hurricane Hazel) flooding condition eternal to
+the subject lands unless otherwise approved.
+It should be noted that a 100 year erosion limit and fish passage is not required for this
+tributary. To meet the criteria listed above, the watercourse will be conveyed via a 6.4 m
+wide by 1.5 m high by 40.6 m long concrete box culvert.
+The proposed crossing will be able to convey the 25 year storm event with a water surface
+elevation of 254.90 m (refer to Appendix H for HEC-RAS model results). The Regional
+Storm event will be fully conveyed by the proposed crossing without overtopping. Refer
+
+Project No. 2539
+
+Page 31
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+to Table 8.2 for a summary of the existing and proposed Regional Storm floodline
+elevations at the proposed crossing.
+The proposed Regional Storm floodlines have been plotted on Figure 8.2.
+Table 8.2: Regional Storm Flood Elevations – Street ‘C’ Crossing
+HEC-RAS
+Section
+
+Existing Floodline
+Elevation (m)
+
+Proposed Floodline
+Elevation (m)
+
+499.49
+
+256.12
+
+255.98
+
+451.42
+
+255.57
+
+255.51
+
+422.55
+
+N/A
+
+255.21
+
+Culvert (U/S)
+
+N/A
+
+255.21
+
+392.99
+
+N/A
+
+254.39
+
+364.98
+
+253.99
+
+253.92
+
+The Regional Storm flood elevations generally return to existing conditions by Section
+499.49 and do not impact external properties. The proposed floodlines have been plotted
+on Figure 8.2.
+Since the Regional Storm is fully conveyed by the proposed crossing without overtopping,
+there are no safe ingress/egress concerns.
+
+Project No. 2539
+
+Page 32
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+9.0
+
+October 2024
+
+Utility Considerations
+
+The utility companies (hydro, natural gas, and telecommunications) have been
+contacted to circulate the proposed draft plan of subdivision to confirm whether there is
+sufficient servicing capacity.
+9.1
+
+Hydro
+
+An existing hydro pole line is located in the east boulevard of Torbram Road with local
+connections. Confirmation is required from Hydro One regarding the proposed
+connection location(s). Modifications to the existing hydro poles and guy wires will not
+be required as part of the grading along the interface with Torbram Road.
+9.2
+
+Gas
+
+Confirmation is required from Enbridge regarding the proposed connection(s) location
+to the site.
+9.3
+
+Bell
+
+Existing Bell telephone lines and pedestals are located on the west side of Torbram
+Road. Confirmation is required from Bell regarding the proposed connection(s) location
+to the site. Modifications to existing Bell lines may be required due to the proposed
+intersections with Torbram Road.
+9.4
+
+Cable
+
+Existing Rogers cable lines and pedestals are located on the west and east sides of
+Torbram Road. Confirmation is required from Rogers regarding the proposed
+connection(s) location to the site. Modifications to existing Rogers lines may be required
+due to the proposed intersections with Torbram Road.
+
+Project No. 2539
+
+Page 33
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+10.0 Summary
+This Functional Servicing and Stormwater Management Report has been prepared in
+support of the Draft Plan of Subdivision and Official Plan Amendment applications for a
+proposed residential development in the Town of Caledon. This report outlines the
+means by which the study area can be graded and serviced in accordance with the Town
+of Caledon, Toronto and Region Conservation Authority, Region of Peel, and the
+Ministry of Environment, Conservation and Parks design criteria and policies.
+General Information
+The existing land use is primarily golf course and open space;
+The study area is located in the Humber River Watershed; and
+The study area consists of low and medium density residential (detached,
+townhomes and medium density blocks), proposed municipal roads and
+laneways, park blocks, SWM blocks, school block, firehall block and commercial
+blocks.
+Stormwater Management and Storm Servicing
+Quality Control: MECP Enhanced (Level 1) water quality protection can be
+provided by three (3) wet underground SWM facilities and one (1) wet SWM
+pond;
+Erosion Control: The runoff volume from a 25 mm rainfall event will be detained
+over 48 hours by three (3) wet underground SWM facilities and one (1) wet SWM
+pond;
+Erosion Control: The retention of the first 5 mm of rainfall will be provided
+through the mitigation measures, such as at-surface rear yard infiltration
+trenches;
+Quantity Control: Quantity control will be provided via three (3) wet
+underground SWM facilities and one (1) wet SWM pond to control proposed
+runoff rates in the 2 through 100 year storm events and existing regional peak
+flows;
+Water Budget: A water budget will be provided in future submissions, the
+proposed retention measures are anticipated to match existing annual
+infiltration volumes;
+Storm Servicing:
+ Storm runoff will be conveyed by storm sewers designed in accordance
+with Town of Caledon and MECP criteria;
+ Storm sewers will generally be designed for the 10 year storm event; and
+ Adequate 100 year overland flow routes will be provided.
+
+Project No. 2539
+
+Page 34
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+Sanitary Servicing
+The sanitary sewer system will be designed in accordance with the Town of
+Caledon criteria;
+The study area will convey a peak sanitary flow of approximately 377.7 L/s to the
+north servicing connection and a peak flow of approximately 17.0 L/s to the south
+servicing connection which is in conformance with the Secondary Plan high-level
+servicing analysis;
+External flows from future development lands northwest of the study area are
+anticipated to be conveyed through the site; and
+An additional sanitary servicing connection for lands along Mayfield Road is
+proposed via forcemain due to delayed timing in the development of individual
+properties to the south.
+Water Supply and Distribution
+The study area is proposed to be serviced via connections to the future 400 mm
+diameter watermain on Torbram Road;
+Preliminary demand calculations have been generated for the Region to
+incorporate into the water system model; and
+Water supply allocation is required from the Town of Caledon.
+Grading
+The study area will be graded in accordance with the Town of Caledon criteria;
+The study area grading has been developed to match to the existing surrounding
+grades, and provide conveyance of stormwater runoff, including external
+drainage; and
+The site grading will be subject to further grading design at the detailed design
+stage.
+Rights-of-Way
+The proposed municipal roads and laneways will follow the Town of Caledon
+standards.
+Erosion and Sediment Control during Construction
+An erosion and sediment control plan will be prepared at the detailed
+engineering stage, in accordance with the “Erosion and Sediment Control
+Guideline for Urban Construction” document (TRCA 2019).
+
+Project No. 2539
+
+Page 35
+
+Functional Servicing and Stormwater Management Report
+12580 and 12552 Torbram Road, Town of Caledon
+
+October 2024
+
+Proposed Crossings and Floodplain Modifications
+Two crossings of Campbell Tributary are proposed to facilitate access to the
+study area, one for Street A as it crosses Campbell Tributary J through the center
+of the study area, and one from the northwest portion of the study area to the
+northeast portion of the site for Street C as it crosses Campbell Tributary J; and
+The Regional flood condition of Campbell Tributary J will be maintained or
+improved by the proposed crossings.
+Utility Considerations
+The presence of and location of existing hydro, Bell and cable utilities on
+Torbram Road have been confirmed.
+Confirmation is required from Enbridge, Hydro One, Bell and Rogers regarding
+the proposed connection(s) location to the site.
+
+Respectfully Submitted:
+SCS Consulting Group Ltd.
+
+N. D. MCINTOSH
+100230564
+
+Oct. 08, 2024
+
+Nicholas McIntosh, M.A.Sc., P.Eng.
+nmcintosh@scsconsultinggroup.com
+
+Colby Maier-Downing, P.Eng.
+cmaier-downing@scsconsultinggroup.com
+
+P:\2539 Mayfield Golf Club\Design\Reports\FSR\2539 - Report - FSSR.docx
+
+Project No. 2539
+
+Page 36
+
+AD
+
+TR
+I
+LL
+CA
+M
+PB
+E
+TR
+
+NON-PARTICIPANT PROPERTY
+(12306 TORBRAM ROAD)
+
+IB
+Y
+AR
+UT
+
+ROAD
+
+LL
+
+E
+PB
+A
+
+BRAMALEA
+
+M
+CA
+
+SINGLE DETACHED
+NON-PARTICIPANT
+PROPERTIES
+
+AIRPORT RO
+
+AD
+
+TORBRAM R
+O
+
+12580 TORBRAM
+ROAD
+
+BU
+
+TA
+R
+
+Y
+
+J
+
+OLD SCHOOL
+ROAD
+
+PART OF LOT 9,
+CONCESSION 5
+
+FUTURE
+DEVELOPMENT
+LANDS
+
+MAYFIELD ROA
+D
+
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+MAYFIELD GOLF CLUB
+SITE LOCATION PLAN
+
+DESIGNED BY:
+
+N.D.M.
+
+CHECKED BY:
+
+SCALE:
+
+N.T.S.
+
+DATE:
+
+S.E.K.
+
+OCTOBER 2024
+
+PROJECT No:
+
+2539
+
+FIGURE No:
+
+1.1
+
+27
+
+1.5
+
+0E
+
+X
+
+OLD SCHOOL ROAD
+
+267.
+55
+
+EX
+
+26
+
+2.0
+
+0E
+X
+
+L=775m
+
+25
+
+TORBRAM R
+OAD
+
+X
+25
+6.5
+0E
+X
+
+9.3
+5E
+
+00EX
+265.
+
+5m
+L=34
+
+11.49ha
+102 1%
+
+16.98ha
+105 1%
+
+L=
+
+39.59ha
+101 1%
+
+m
+
+0
+53
+
+25
+
+8. 1
+
+0E
+X
+
+m
+67
+
+5
+L=
+
+255.26EX
+
+GOLF CART CROSSING
+(RIVER STATION: 383)
+APPROXIMATE LOCATION
+OF EXISTING 600mm
+DIAMETER CSP CULVERT
+
+71m
+L=3
+
+262
+
+.45
+E
+
+X
+
+14.83ha
+103 1%
+
+GOLF CART CROSSING
+(RIVER STATION: 380)
+
+255.75EX
+
+CAMPBELL TRIBUTARY
+(RIVER STATION: K - REACH 1)
+
+Y
+
+C
+
+GOLF CART CROSSING
+(RIVER STATION: 226)
+
+AR
+UT
+B
+I
+TR 2
+ELL EACH
+B
+P R
+AM J -
+
+25
+1.3
+5
+
+EX
+
+GOLF CART CROSSING
+(RIVER STATION: 154)
+
+L=
+2
+33
+
+m
+L=646
+
+m
+
+14.18ha
+104 1%
+
+GOLF CART CROSSING
+(RIVER STATION: 25.8)
+
+GOLF CART CROSSING
+(RIVER STATION: 39.1)
+
+X
+
+4E
+
+7.9
+
+24
+Y
+
+8E
+
+.3
+51
+
+R
+TA
+BU 1
+I
+TR H
+LL AC
+E
+PB - RE
+M
+J
+A
+
+X
+
+C
+
+2
+
+18.41ha
+106 10%
+
+CA
+M
+
+14
+
+PB
+A ELL
+-R T
+EA RIB
+CH UT
+3 AR
+
+3
+L=
+
+m
+
+253.67EX
+
+Y
+
+4)
+02
+,2
+)
+ON
+0m 24
+AC
+R 3 20
+BE
+FE N,
+E(
+IN
+UF CO
+IPL
+E B EA
+IN (B
+DR
+IPL CK
+DR TBA
+SE
+
+249.22EX
+
+2.5
+
+25
+X
+
+0E
+
+CA
+
+PB
+A ELL
+-R T
+EA RIB
+CH UT
+3 AR
+
+TORBRAM R
+OAD
+
+M
+
+31m
+
+L=3
+
+Y
+
+19.58ha
+107 3%
+
+EX
+
+.93
+
+9
+24
+LIMIT OF DEVELOPMENT
+TO BE CONFIRMED ON
+NON-PARTICIPANT
+PROPERTIES
+
+RY
+
+A
+UT
+RIB 3
+LT H
+EL AC
+PB RE
+M A-
+
+CA
+APPROXIMATE LOCATION
+OF EXISTING 350mm
+DIAMETER CSP CULVERT
+
+245.59EX
+
+L=359m
+
+CONSTRAINTS LEGEND:
+DRIPLINE (BEACON, 2024)
+DRIPLINE BUFFER 30m
+SETBACK (BEACON, 2024)
+GREENBELT BOUNDARY
+STAKED TOP OF BANK
+(BEACON, 2024)
+STAKED TOP OF BANK 30m
+SETBACK (BEACON, 2024)
+STAKED TOP OF BANK 10m
+SETBACK (BEACON, 2024)
+LONG TERM STABLE TOP OF SLOPE
+(GEMTEC, 2023)
+LONG TERM STABLE TOP OF SLOPE
+10m SETBACK (GEMTEC, 2023)
+EXISTING REGIONAL FLOODLINE
+EXISTING REGIONAL
+FLOODLINE+10m BUFFER
+*NOTE: LAYOUT IS SCHEMATIC ONLY. DETAILS TO BE PROVIDED AT DETAILED DESIGN STAGE
+
+LEGEND:
+
+MAJOR SYSTEM OVERLAND FLOW
+
+LIMIT OF PARTICIPATING
+PROPERTY
+
+EXISTING CONTOUR
+AND ELEVATION
+STORM DRAINAGE
+BOUNDARY
+
+LIMIT OF DEVELOPMENT
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+LIMIT OF DEVELOPMENT
+TO BE CONFIRMED
+HUMBER RIVER TRIBUTARY
+
+L=314m
+
+TIME OF PEAK FLOW
+PATH AND LENGTH
+
+7.26ha
+205 18%
+6.76ha
+ID
+%
+
+DRAINAGE AREA (HECTARES)
+
+MAYFIELD GOLF CLUB
+
+PERCENT (%) IMPERVIOUS
+CATCHMENT ID
+EXTERNAL STORM DRAINAGE
+AREA (HECTARES)
+
+DESIGNED BY:
+
+N.D.M.
+
+CHECKED BY:
+
+SCALE:
+
+1:3500
+
+DATE:
+
+S.E.K.
+
+PERCENT (%) IMPERVIOUS
+CATCHMENT ID
+
+OCTOBER 2024
+
+EXISTING
+STORM DRAINAGE PLAN
+PROJECT No:
+
+FIGURE No:
+
+2539
+
+2.1
+
+OLD SCHOOL ROAD
+0.16ha
+EXT6 15%
+
+0.99ha
+EXT5 15%
+
+11.91ha
+EXT2 62%
+
+TORBRAM R
+OAD
+
+67.23ha
+EXT1 63%
+
+1.67ha
+EXT4 15%
+
+PROPOSED 6.4m WIDE BY 1.5m TALL BY
+40.6m LONG CONCRETE BOX CULVERT.
+REFER TO DETAILS ON FIGURE 2.10.
+U/S INV. 254.40m
+D/S INV. 253.64m
+
+STREET C
+
+STREET C
+2.39ha
+209 63%
+
+STREET F
+
+STREET H
+
+5.33ha
+EXT3 15%
+
+8.99ha
+206 71%
+
+TD
+
+STREET E
+
+STREET I
+
+APPROXIMATE LOCATION
+OF EXISTING 600mm
+DIAMETER CSP CULVERT
+
+ST
+
+E
+RE
+
+2.80ha
+210 23%
+Y
+
+AR
+UT
+B
+I
+TR 2
+ELL EACH
+B
+MP J - R
+CA
+
+ST. G
+
+STR
+
+EET
+
+SWM FACILITY 4
+NWL=252.60m
+
+1.66ha
+203 19%
+
+A
+
+CAMPBELL TRIBUTARY
+(RIVER STATION: K - REACH 1)
+
+0.55ha
+208 52%
+
+L
+
+STR
+
+STREET J
+
+EET
+
+K
+
+3.58ha
+207 50%
+
+PROPOSED 14.9m WIDE BY 53.2m LONG
+CONCRETE ARCH OPEN-BOTTOM
+CULVERT (DECAST O-SERIES 0949).
+REFER TO DETAILS ON FIGURE 2.9.
+U/S INV. 245.34m
+D/S INV. 244.64m
+
+Y
+
+STREET A
+
+STREET M
+
+ST. N
+
+STREET B
+
+C
+
+STREET O
+
+STREET J
+
+SWM POND 3
+NWL=248.25m
+
+ST.
+
+R
+TA
+BU 1
+I
+TR H
+LL AC
+E
+PB - RE
+M
+J
+A
+
+CA
+M
+
+PB
+A ELL
+-R T
+EA RIB
+CH UT
+3 AR
+
+STREET P
+
+Y
+
+3.99ha
+202 19%
+
+SWM FACILITY 1
+NWL=245.30m
+
+16.36ha
+201 69%
+
+CA
+
+STREET Q
+
+4)
+02
+,2
+)
+ON
+0m 24
+AC
+R 3 20
+BE
+FE N,
+E(
+IN
+UF CO
+IPL
+E B EA
+IN (B
+DR
+IPL CK
+DR TBA
+SE
+
+STREET M
+
+STREET Q
+
+PB
+A ELL
+-R T
+EA RIB
+CH UT
+3 AR
+
+TORBRAM R
+OAD
+
+M
+
+10.85ha
+204 69%
+
+Y
+
+EET
+STR
+
+LIMIT OF DEVELOPMENT TO
+BE CONFIRMED ON PARCELS
+SOUTH OF GOLF COURSE
+SWM FACILITY 2
+NWL=243.15m
+
+RY
+
+A
+UT
+RIB 3
+LT H
+EL AC
+PB RE
+M A-
+
+CA
+
+B
+
+APPROXIMATE LOCATION
+OF EXISTING 350mm
+DIAMETER CSP CULVERT
+
+CONSTRAINTS LEGEND:
+
+5.26ha
+205 19%
+
+DRIPLINE (BEACON, 2024)
+DRIPLINE BUFFER 30m
+SETBACK (BEACON, 2024)
+GREENBELT BOUNDARY
+STAKED TOP OF BANK
+(BEACON, 2024)
+STAKED TOP OF BANK 15m
+SETBACK (BEACON, 2024)
+STAKED TOP OF BANK 10m
+SETBACK (BEACON, 2024)
+APPROXIMATE WOODLAND
+BOUNDARY (BEACON, 2024)
+APPROXIMATE WOODLAND
+BOUNDARY 30m SETBACK
+(BEACON, 2024)
+LONG TERM STABLE TOP OF SLOPE
+(BEACON, 2024)
+LONG TERM STABLE TOP OF SLOPE
+10m SETBACK
+PROPOSED REGIONAL FLOODLINE
+RPOPOSED REGIONAL
+FLOODLINE+10m BUFFER
+EXISTING REGIONAL FLOODLINE
+EXISTING REGIONAL
+FLOODLINE+10m BUFFER
+
+*NOTE: LAYOUT IS SCHEMATIC ONLY. DETAILS TO BE PROVIDED AT DETAILED DESIGN STAGE
+
+LEGEND:
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+STORM DRAINAGE
+BOUNDARY
+LIMIT OF PARTICIPATING
+PROPERTY
+LIMIT OF DEVELOPMENT
+LIMIT OF DEVELOPMENT
+TO BE CONFIRMED
+STORM SEWER AND
+MAINTENANCE HOLE
+HUMBER RIVER TRIBUTARY
+
+MAX 3:1 SLOPE
+EXISTING CONTOUR
+AND ELEVATION
+
+100 YEAR CAPTURE
+LOCATION
+
+MAJOR SYSTEM OVERLAND FLOW
+
+7.26ha
+205 18%
+6.76ha
+ID
+%
+
+DRAINAGE AREA (HECTARES)
+
+CATCHMENT ID
+EXTERNAL STORM DRAINAGE
+AREA (HECTARES)
+PERCENT (%) IMPERVIOUS
+CATCHMENT ID
+
+PROPOSED STORM
+DRAINAGE PLAN
+
+MAYFIELD GOLF CLUB
+
+PERCENT (%) IMPERVIOUS
+
+DESIGNED BY:
+
+N.D.M.
+
+CHECKED BY:
+
+SCALE:
+
+1:3500
+
+DATE:
+
+S.E.K.
+
+OCTOBER 2024
+
+PROJECT No:
+
+FIGURE No:
+
+2539
+
+2.2
+
+LEGEND:
+LIMIT OF SWM FACILITY/
+PARK BLOCK
+EXISTING CONTOUR AND
+ELEVATION
+PROPOSED STORM SEWER
+
+9
+
+220.00
+221.27 EX
+
+25
+0.7
+
+OUTLET HW
+INV. 243.55m
+25 YR FLOODLINE
+ELEVATION 242.89m
+
+PROPOSED ELEVATION
+EXISTING ELEVATION
+
+0.5
+%
+
+OVERLAND FLOW DIRECTION
+
+600mmØ
+STM @ 0.5%
+
+ST
+RE
+
+UNDERGROUND SWM FACILITY
+
+ET
+
+EMERGENCY
+CONVEYANCE CHANNEL
+
+L
+
+100 YEAR CAPTURE POINT
+DRIPLINE (BEACON, 2024)
+DRIPLINE BUFFER 30m SETBACK
+(BEACON, 2024)
+GREENBELT
+
+251.14EX
+
+EX
+
+EXISTING REGULATORY FLOODLINE
+
+STREET P
+
+25
+0
+
+.29
+
+SWM FACILITY CONTROL
+MAINTENANCE HOLE
+
+PROPOSED REGULATORY FLOODLINE
+PROPOSED REGULATORY
+FLOODLINE+10m SETBACK
+HUMBER RIVER TRIBUTARY
+
+STREET M
+
+*NOTE: LAYOUT IS SCHEMATIC ONLY, DETAILS TO BE
+PROVIDED AT DETAILED DESIGN STAGE.
+
+1.2%
+
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+MAYFIELD GOLF CLUB
+
+.20
+251
+
+STREET M
+
+24
+
+9.
+5
+
+FSSR
+
+1E
+X
+
+STORMWATER MANAGEMENT
+FACILITY 1
+
+3.0
+
+0
+
+2.4%
+
+SWM FACILITY 1 SUMMARY:
+PERMANENT POOL REQUIRED = 2,988m³
+O
+PERMANENT POOL PROVIDED = 3,000m³
+TREET
+S
+SWM FACILITY BOTTOM ELEVATION = 243.80m
+DESIGNED BY:
+NORMAL WATER LEVEL (NWL) = 245.30m
+ACTIVE STORAGE DEPTH = 2.0m
+SCALE:
+EXTENDED DETENTION REQUIRED = 2,266m³
+PROJECT No:
+EXTENDED DETENTION LEVEL = 245.90m
+SWM FACILITY TOP OF ACTIVE STORAGE = 247.30m
+MAXIMUM TOTAL INSTALLATION DEPTH = 7.5m
+
+25
+
+25
+
+8
+0.3
+
+LONG TERM STABLE TOP OF SLOPE
+(GEMTEC, 2023)
+LONG TERM STABLE TOP OF SLOPE 10m
+SETBACK (GEMTEC, 2023)
+EXISTING FLOODLINE +10m SETBACK
+
+G.M.
+
+CHECKED BY:
+
+1:1000
+
+DATE:
+
+N.D.M.
+OCTOBER 2024
+
+FIGURE No:
+
+2539
+
+2.3
+
+SWM FACILITY 2 SUMMARY:
+PERMANENT POOL REQUIRED = 1,982m³
+PERMANENT POOL PROVIDED = 2,100m³
+SWM FACILITY BOTTOM ELEVATION = 241.65m
+NORMAL WATER LEVEL (NWL) = 243.15m
+ACTIVE STORAGE DEPTH = 2.0m
+EXTENDED DETENTION REQUIRED = 1,457m³
+EXTENDED DETENTION LEVEL = 243.73m
+SWM FACILITY TOP OF ACTIVE STORAGE = 245.15m
+MAXIMUM TOTAL INSTALLATION DEPTH = 4.6m
+
+LEGEND:
+
+5
+
+248.4
+6
+248.7
+
+LIMIT OF SWM FACILITY/
+PARK BLOCK
+EXISTING CONTOUR AND
+ELEVATION
+PROPOSED STORM SEWER
+
+2
+248.6
+220.00
+221.27 EX
+
+PROPOSED ELEVATION
+EXISTING ELEVATION
+OVERLAND FLOW DIRECTION
+UNDERGROUND SWM FACILITY
+EMERGENCY
+CONVEYANCE CHANNEL
+
+0.5%
+
+100 YEAR CAPTURE POINT
+
+EET
+STR
+
+SWM FACILITY
+CONTROL MANHOLE
+
+DRIPLINE (BEACON, 2022)
+DRIPLINE BUFFER 30m SETBACK
+(BEACON, 2022)
+GREENBELT
+STAKED TOP OF BANK (BEACON, 2022)
+STAKED TOP OF BANK 30m SETBACK
+(BEACON, 2022)
+STAKED TOP OF BANK 10m SETBACK
+(BEACON, 2022)
+LONG TERM STABLE TOP OF SLOPE
+(GEMTEC, 2023)
+LONG TERM STABLE TOP OF SLOPE 10m
+SETBACK (GEMTEC, 2023)
+EXISTING FLOODLINE +10m SETBACK
+
+24
+
+8.2
+
+0
+
+B
+
+600mmØ
+STM @ 0.5%
+
+EXISTING REGULATORY FLOODLINE
+PROPOSED REGULATORY FLOODLINE
+PROPOSED REGULATORY
+FLOODLINE+10m SETBACK
+
+.95
+
+247
+
+1.0
+
+.09
+8
+4
+2
+
+%
+
+OUTLET HW
+INV. 239.00m
+25 YR
+FLOODLINE
+ELEVATION
+238.86m
+
+HUMBER RIVER TRIBUTARY
+
+248.
+
+15
+
+*NOTE: LAYOUT IS SCHEMATIC ONLY, DETAILS TO BE
+PROVIDED AT DETAILED DESIGN STAGE.
+
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+.29
+
+248
+
+1.0
+%
+
+MAYFIELD GOLF CLUB
+
+M
+
+HU
+R
+
+BE
+
+FSSR
+VE
+
+RI
+R
+
+STORMWATER MANAGEMENT
+FACILITY 2
+Y
+
+AR
+
+UT
+
+IB
+
+TR
+
+DESIGNED BY:
+
+G.M.
+
+CHECKED BY:
+
+SCALE:
+
+1:1000
+
+DATE:
+
+PROJECT No:
+
+N.D.M.
+OCTOBER 2024
+
+FIGURE No:
+
+2539
+
+2.4
+
+4
+5. 8
+25
+
+SWM FACILITY 3 SUMMARY:
+PERMANENT POOL REQUIRED = 13,529m³
+PERMANENT POOL PROVIDED = 29,434m³
+SWM FACILITY BOTTOM ELEVATION = 245.25m
+NORMAL WATER LEVEL (NWL) = 248.25m
+ACTIVE STORAGE DEPTH = 3.0m
+EXTENDED DETENTION REQUIRED = 9,608m³
+EXTENDED DETENTION LEVEL = 248.81m
+SWM FACILITY TOP OF ACTIVE STORAGE = 252.25m
+
+7
+
+4.7
+25
+
+LIMIT OF SWM FACILITY
+PARK BLOCK
+EXISTING CONTOUR AND
+ELEVATION
+POND/NORMAL WATER
+LEVEL POND CONTOUR
+PROPOSED STORM SEWER
+
+4.8
+
+25
+
+220.00
+221.27 EX
+
+5.0m WIDE
+MAINTENANCE
+ACCESS ROAD
+
+2
+
+1.2%
+
+0
+
+5.0
+
+6
+
+25
+
+.63
+
+25
+
+0
+.0
+
+LEGEND:
+
+254
+
+4.1
+
+EMERGENCY
+CONVEYANCE CHANNEL
+
+0
+
+MAINTENANCE ACCESS ROAD
+
+25
+.30
+
+3.3
+
+%
+
+25
+3.
+252 02
+.82
+252 252.7 253.0
+5
+.95
+5
+
+254
+
+2
+
+8.0%
+
+EXISTING ELEVATION
+OVERLAND FLOW DIRECTION
+
+0.7%
+
+4.1
+25
+
+1.0m WIDE
+FOREBAY BERM
+
+PROPOSED ELEVATION
+
+8.0
+
+%
+
+OVERLAND FLOW ROUTE
+PERMANENT POOL
+3:1 SLOPE (MAX)
+100 YEAR CAPTURE POINT
+
+0.5
+
+PROPOSED CULVERT
+HUMBER RIVER TRIBUTARY
+
+%
+
+ST
+RE
+
+253
+
+A
+
+RPOPOSED REGIONAL
+FLOODLINE+10m BUFFER
+EXISTING REGIONAL FLOODLINE
+
+253 253.5
+.33 6
+
+24
+
+7.6
+
+00
+
+ET
+
+.56
+
+PROPOSED REGIONAL FLOODLINE
+
+EXISTING REGIONAL
+FLOODLINE+10m BUFFER
+
+2.0m WIDE BERM
+
+SWM FACILITY 3 OUTLET
+HEADWALL INV. 247.09
+25 YEAR FLOODLINE
+ELEVATION = 244.71
+SWM FACILITY CONTROL
+MAINTENANCE HOLE
+
+RY
+SWM FACILITY BOTTOM
+UTA
+B
+I
+R
+T
+DRAW OUTLET
+BELL ACH 1
+M
+A
+E
+C
+J-R
+
+CONSTRAINTS LEGEND:
+
+2.0m WIDE BERM
+
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+DRIPLINE (BEACON, 2024)
+DRIPLINE BUFFER 30m
+SETBACK (BEACON, 2024)
+
+MAYFIELD GOLF CLUB
+
+GREENBELT BOUNDARY
+STAKED TOP OF BANK
+(BEACON, 2024)
+STAKED TOP OF BANK 15m
+SETBACK (BEACON, 2024)
+STAKED TOP OF BANK 10m
+SETBACK (BEACON, 2024)
+APPROXIMATE WOODLAND
+BOUNDARY (BEACON, 2024)
+APPROXIMATE WOODLAND
+BOUNDARY 30m SETBACK
+(BEACON, 2024)
+
+2.0m WIDE BERM
+
+*NOTE: LAYOUT IS SCHEMATIC ONLY, DETAILS TO BE
+PROVIDED AT DETAILED DESIGN STAGE.
+
+LONG TERM STABLE TOP OF SLOPE
+(BEACON, 2024)
+LONG TERM STABLE TOP OF SLOPE
+10m SETBACK
+
+FSSR
+STORMWATER MANAGEMENT
+FACILITY 3
+DESIGNED BY:
+
+C.M.D.
+
+CHECKED BY:
+
+SCALE:
+
+1:1500
+
+DATE:
+
+PROJECT No:
+
+N.D.M.
+OCTOBER 2024
+
+FIGURE No:
+
+2539
+
+2.5
+
+256
+.82
+
+2 56
+
+.39
+
+256
+
+.58
+
+257
+. 88
+
+0.5%
+
+0.8%
+
+.32
+256
+
+258.02
+
+256
+.48
+
+18
+8.
+04
+25
+8.
+25
+
+220.00
+221.27 EX
+
+LIMIT OF SWM FACILITY/
+PARK BLOCK
+EXISTING CONTOUR AND
+ELEVATION
+PROPOSED STORM SEWER
+PROPOSED ELEVATION
+EXISTING ELEVATION
+OVERLAND FLOW DIRECTION
+UNDERGROUND SWM FACILITY
+
+0.7%
+
+EMERGENCY
+CONVEYANCE CHANNEL
+3:1 SLOPE (MAX)
+
+.00
+
+100 YEAR CAPTURE POINT
+
+25
+
+256
+
+%
+0.7
+
+E
+
+0.5%
+
+LEGEND:
+
+DRIPLINE (BEACON, 2024)
+DRIPLINE BUFFER 30m SETBACK
+(BEACON, 2024)
+GREENBELT
+STAKED TOP OF BANK (BEACON, 2024)
+STAKED TOP OF BANK 30m SETBACK
+(BEACON, 2024)
+STAKED TOP OF BANK 10m SETBACK
+(BEACON, 2024)
+LONG TERM STABLE TOP OF SLOPE
+(GEMTEC, 2023)
+LONG TERM STABLE TOP OF SLOPE 10m
+SETBACK (GEMTEC, 2023)
+EXISTING FLOODLINE +10m SETBACK
+
+257
+
+.23
+
+5.
+
+ET
+E
+R
+ST
+
+93
+
+D
+
+7
+
+7.3
+
+25
+
+EXISTING REGULATORY FLOODLINE
+PROPOSED REGULATORY FLOODLINE
+PROPOSED REGULATORY
+FLOODLINE+10m SETBACK
+PROPOSED CULVERT
+HUMBER RIVER TRIBUTARY
+*NOTE: LAYOUT IS SCHEMATIC ONLY, DETAILS TO BE
+PROVIDED AT DETAILED DESIGN STAGE.
+
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+SWM FACILITY
+CONTROL MANHOLE
+
+NB
+
+T
+L
+E
+
+MAYFIELD GOLF CLUB
+H1
+
+T
+
+OUTLET HW
+INV. 249.00m
+25 YR FLOODLINE
+ELEVATION 248.68m
+
+U
+RIB
+
+LT
+EL
+
+MB
+
+CA
+
+YJ
+
+C
+EA
+
+R
+
+AR
+
+SWM FACILITY 4 SUMMARY:
+PERMANENT POOL REQUIRED = 2.412m³
+PERMANENT POOL PROVIDED = 2,550m³
+SWM FACILITY BOTTOM ELEVATION = 251.10m
+NORMAL WATER LEVEL (NWL) = 252.60m
+ACTIVE STORAGE DEPTH = 2.0m
+EXTENDED DETENTION REQUIRED = 1,604m³
+EXTENDED DETENTION LEVEL = 252.84m
+SWM FACILITY TOP OF ACTIVE STORAGE = 254.60m
+MAXIMUM TOTAL INSTALLATION DEPTH = 1.9m
+
+FSSR
+STORMWATER MANAGEMENT
+FACILITY 4
+DESIGNED BY:
+
+C.M.D.
+
+CHECKED BY:
+
+SCALE:
+
+1:1000
+
+DATE:
+
+PROJECT No:
+
+N.D.M.
+OCTOBER 2024
+
+FIGURE No:
+
+2539
+
+2.6
+
+A
+
+PROPOSED
+INFILTRATION
+TRENCH
+1.0m LONG x 0.15m DEEP
+WASHED CLEARSTONE BED AT
+MIN. 0.5m
+SURFACE AT DOWNSTREAM
+END OF REAR YARD SWALE
+
+MIN. 0.5m
+
+L
+
+PROPERTY
+LINE
+MIN. 0.5m
+MIN. 5.0m
+
+A
+
+LOT LINE
+
+LOT LINE
+
+HOUSE
+
+PLAN
+
+PROPERTY LINE
+
+SCALE 1:250
+PROPOSED
+GROUND
+
+W
+0.50m
+0.15m
+0.15m
+
+TOPSOIL
+WASHED CLEAR STONE
+INFILTRATION TRENCH
+WRAPPED IN NON-WOVEN
+FILTER CLOTH
+
+D
+
+0.5m MIN.
+
+W
+
+CROSS - SECTION A-A
+SCALE: N.T.S.
+
+MAXIMUM TRENCH DIMENSIONS:
+MINIMUM TYPICAL
+LOT FRONTAGE (m)
+9.75
+11.60
+13.40
+
+DEPTH (m)
+
+LENGTH (m)
+
+WIDTH (m)
+
+0.5
+0.5
+0.5
+
+8.75
+9.00
+11.00
+
+1.0
+1.0
+1.0
+
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+MAXIMUM INFILTRATION
+VOLUME PROVIDED (m³)
+1.8
+1.8
+2.2
+
+MAYFIELD GOLF CLUB
+REAR YARD INFILTRATION
+TRENCH DETAIL
+
+DESIGNED BY:
+
+N.D.M.
+
+CHECKED BY:
+
+SCALE:
+
+N.T.S.
+
+DATE:
+
+S.E.K.
+
+OCTOBER 2024
+
+PROJECT No:
+
+2539
+
+FIGURE No:
+
+2.7
+
+TOP 258.04m
+E OBV 251.28m
+S OBV 251.90m
+COVER=6.76m
+
+TOP 258.77m
+CULVERT INV 254.03m
+SAN OBV 250.87
+CLEARANCE=3.16m
+
+TOP 256.87m
+OBV 252.21
+COVER=4.66m
+
+SAN @ 0.5%
+TOP 256.87m
+OBV 253.87m
+COVER=3.00m
+
+STREET C
+250mmØ SAN @ 0.5%
+
+STREET C
+STM @ 0.5%
+
+TOP 259.13m
+S OBV 250.55m
+COVER=8.58m
+TOP 258.85m
+OBV 255.85m
+COVER=3.00m
+
+STREET I
+
+STREET@E0.5%
+
+SAN
+
+TOP 257.16m
+S OBV 252.40m
+COVER=4.76m
+
+STREET F
+
+SWM FACILITY 4
+NWL=252.60m
+1800mm x 1200mm
+STM @ 0.5%
+
+LT
+
+G
+
+SWM FACILITY 4 OUTLET HEADWALL INV. 248.62m
+25 YEAR FLOODLINE ELEVATION= 248.32m
+
+TOP 255.00m
+W SAN OBV 246.56m
+COVER=8.44m
+
+A
+0.4
+
+%
+
+EX ELEV 245.39m
+SAN OBV 243.39m
+CLEARANCE=2.00m
+
+60
+
+0m
+mØ
+
+SA
+
+ST
+RE
+
+ET
+
+@
+
+0.5
+
+%
+0.5
+%
+
+N
+
+3000mm x
+2400mm STM
+@ 0.5%
+
+TOP 254.79m
+SAN OBV 251.79m
+STM OBV 250.79m
+COVER = 3.00m
+
+A
+
+LANEWAY
+
+'B'
+
+SAN @ 0.5%
+
+ST.
+L
+
+TOP 254.58m
+N STM OBV 248.99m
+E STM OBV 250.35m
+COVER=4.23m
+
+SWM FACILITY 3 OUTLET HEADWALL INV. 247.09
+25 YEAR FLOODLINE ELEVATION = 244.71
+
+TOP 253.62m
+S STM OBV 249.44m
+COVER=4.18m
+
+STREET J
+
+TOP 252.75m
+S OBV 249.75m
+COVER=3.00m
+
+SWM POND 3
+NWL=248.25m
+
+@
+
+K
+
+N
+
+EN
+E
+GR
+
+TOP 252.75m
+W SAN OBV 245.87m
+N SAN OBV 243.91m
+COVER=8.84m
+
+EET
+
+SA
+
+TOP 255.07m
+OBV 252.07m
+COVER=3.00m
+
+LT
+E
+B
+
+STR
+
+EET
+
+@
+
+STR
+
+TOP 254.30m
+N SANI OBV 250.30m
+W SAN OBV 246.21m
+COVER=8.09m
+
+SAN
+
+SAN @ 0.4%
+
+E
+NB
+
+E
+
+E
+GR
+
+ST.
+TOP 256.00m
+SAN OBV 247.00m
+COVER=9.00m
+
+LOW POINT:
+TOP 255.93m
+STM OBV 252.74m
+COVER=3.19m
+
+TORBRAM R
+
+%
+STM @ 0.5
+
+STREET H
+
+D
+
+OAD
+
+R
+
+ST
+
+T
+EE
+
+TOP 254.43
+SAN OBV 251.43m
+STM OBV 250.43m
+COVER = 3.00m
+TOP 254.72m
+INV 240.89m
+COVER=13.83m
+
+STREET A
+@
+
+0.5
+
+%
+
+PROPOSED SANITARY SEWER
+TO CONNECT TO THE FUTURE
+REGIONAL TRUNK SANITARY
+SEWER ST-178
+
+ST. N
+TOP 250.29m
+W OBV 247.29m
+COVER=3.00m
+
+N @ 0.5%
+
+TOP 254.29m
+OBV 241.54m
+COVER=12.75m
+
+STREET J
+
+STREET B
+
+STM
+SWM FACILITY 1 OUTLET
+HEADWALL INV. 243.55m
+25 YEAR FLOODLINE
+ELEVATION = 242.89m
+
+SAN @ 0.5%
+
+STREET M
+
+TOP 250.79m
+N OBV 247.79m
+E OBV 247.75m
+COVER=3.00m
+
+600mmØ SA
+
+TOP 254.58m
+N SAN OBV 249.79m
+W SAN OBV 242.42m
+S SAN OBV 243.12m
+COVER=4.79m
+
+TOP 252.19m
+W OBV 243.96m
+S OBV 247.25m
+COVER=4.94m
+
+TOP 254.43
+SAN OBV 251.43m
+STM OBV 250.43m
+COVER = 3.00m
+
+TOP 251.53m
+E OBV 248.53m
+S OBV 247.62m
+COVER=3.00m
+
+STREET O
+
+TOP 250.79m
+STM OBV = 247.75m
+SAN OBV 244.93m
+CLEARANCE=MIN. 0.5m
+
+1800mm x 1200mm
+STM @ 0.5%
+
+TOP 254.43
+SAN OBV 251.43m
+STM OBV 250.43m
+COVER = 3.00m
+
+STREET P
+
+SWM FACILITY 1
+NWL=245.30m
+
+STREET M
+
+SAN @ 0.5%
+
+TOP 250.29m
+STM OBV = 247.29m
+SAN OBV 245.59m
+CLEARANCE=MIN. 0.5m
+
+STREET Q
+
+TOP 254.36
+STM OBV 251.36m
+COVER = 3.00m
+
+TOP 252.53m
+SAN OBV 249.53m
+STM OBV 249.53m
+COVER=3.00m
+
+STREET Q
+
+EE
+GR
+E
+NB
+
+TOP 253.41m
+OBV 250.41m
+COVER=3.00m
+
+LT
+TOP 253.00
+SAN OBV 250.00m
+STM OBV 250.00m
+COVER = 3.00m
+
+TOP 250.89
+SAN OBV 247.89m
+STM OBV 247.89m
+COVER = 3.00m
+
+TORBRAM R
+
+TOP 252.25m
+N SAN OBV 249.25m
+W SAN OBV 249.25m
+E SAN OBV 246.15m
+COVER=3.00m
+
+OAD
+
+TOP 252.47m
+SAN OBV 248.60m
+SAN INV 248.35m
+STM OBV =247.16m
+CLEARANCE=1.19m
+
+SAN
+.5%
+
+@0
+
+TOP 251.50m
+STM OBV =248.50m
+SAN OBV 245.38m
+CLEARANCE=MIN. 0.5m
+
+TOP 251.00m
+OBV 244.93m
+COVER=6.07m
+
+SWM FACILITY 2
+NWL=243.15m
+
+E
+STR
+
+EE
+
+GR
+
+ET B
+
+TOP 247.950m
+OBV 244.95m
+COVER=3.0m
+
+CONSTRAINTS LEGEND:
+DRIPLINE (BEACON, 2024)
+
+EL
+
+NB
+
+1800mm x 900mm
+STM @ 0.5%
+
+DRIPLINE BUFFER 30m
+SETBACK (BEACON, 2024)
+
+T
+
+TOP 247.58m
+INV 244.14m
+COVER=3.44m
+
+250
+SWM FACILITY 2 OUTLET
+HEADWALL INV. 239.00
+25 YR FLOODLINE
+ELEVATION 238.86m
+
+GREENBELT BOUNDARY
+STAKED TOP OF BANK
+(BEACON, 2024)
+STAKED TOP OF BANK 15m
+SETBACK (BEACON, 2024)
+STAKED TOP OF BANK 10m
+SETBACK (BEACON, 2024)
+
+mm
+
+TOP 247.95m
+W OBV 244.95m
+E OBV 243.55m
+COVER=3.00m
+TOP 247.92
+SAN OBV 244.92m
+STM OBV 243.92m
+COVER = 3.00m
+
+ØS
+AN
+
+@0
+
+.5%
+
+APPROXIMATE WOODLAND
+BOUNDARY (BEACON, 2024)
+APPROXIMATE WOODLAND
+BOUNDARY 30m SETBACK
+(BEACON, 2024)
+
+TOP 247.27m
+INV 244.27m
+COVER=3.00m
+
+GREENBELT
+
+LONG TERM STABLE TOP OF SLOPE
+(BEACON, 2024)
+LONG TERM STABLE TOP OF SLOPE
+10m SETBACK
+
+PROPOSED SANITARY SEWER
+TO CONNECT TO THE FUTURE
+REGIONAL TRUNK SANITARY
+SEWER ST-178
+
+PROPOSED REGIONAL FLOODLINE
+RPOPOSED REGIONAL
+FLOODLINE+10m BUFFER
+EXISTING REGIONAL FLOODLINE
+EXISTING REGIONAL
+FLOODLINE+10m BUFFER
+
+LEGEND:
+
+CULVERT
+LIMIT OF PARTICIPATING
+PROPERTY
+
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+SANITARY SEWER AND
+MANHOLE
+
+MAYFIELD GOLF CLUB
+
+EXISTING SANITARY
+SEWER AND MANHOLE
+
+LIMIT OF DEVELOPMENT
+
+EXISTING CULVERT
+
+STORM SEWER AND
+MANHOLE
+
+DESIGNED BY:
+
+N.D.M.
+
+CHECKED BY:
+
+LIMIT OF DEVELOPMENT
+TO BE CONFIRMED
+
+HUMBER RIVER
+TRIBUTARY
+
+EXISTING STORM SEWER
+AND MANHOLE
+
+SCALE:
+
+1:2000
+
+DATE:
+
+S.E.K.
+
+OCTOBER 2024
+
+PROPOSED SERVICING PLAN
+PROJECT No:
+
+FIGURE No:
+
+2539
+
+2.8
+
+STREET K
+
+TAR
+RIBU
+LL T H 1
+C
+PBE
+CAM J - REA
+
+Y 1)
+AR
+UT CH
+RIB - REA
+LT
+BEL N: K
+MP IO
+CA STAT
+VER
+(RI
+
+MAX 3:1 SLOPE
+
+Y
+EX ELEV 245.39m
+SAN OBV 243.39m
+CLEARANCE=2.00m
+
+223.91
+
+PROPOSED ELEVATION
+
+224.35EX
+
+EXISTING ELEVATION
+
+ST. L
+
+EX
+.85
+252
+
+.93
+
+WATERMAIN
+
+.98
+
+253
+
+253
+
+100 YEAR CAPTURE
+LOCATION
+
+.00
+254
+
+.89
+
+.79
+
+253
+
+7
+
+253
+
+64
+
+.36
+
+253.4
+
+STORM SEWER AND
+MAINTENANCE HOLE
+SANITARY SEWER AND
+MAINTENANCE HOLE
+
+0.5%
+253
+.
+
+253
+
+STREET A
+
+253
+
+.25
+
+0.5%
+
+2
+253 52.40E
+X
+.80
+
+.60
+
+3
+
+STREET A
+
+253.3
+
+253.47
+
+253
+
+.29
+253
+
+.17
+253
+
+.53
+
+248
+
+.80
+
+EX
+
+247
+
+.42
+
+.00
+
+600Ø SAN @ 0.5%
+
+246
+
+EX
+
+EX
+
+EXISTING CONTOUR
+AND ELEVATION
+
+249
+
+0E
+
+X
+
+X
+
+24
+
+*NOTE: LAYOUT IS SCHEMATIC ONLY, DETAILS TO BE
+PROVIDED AT DETAILED DESIGN STAGE.
+
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+6E
+
+7.1
+PROPOSED 14.9m WIDE BY 53.2m LONG
+CONCRETE ARCH OPEN-BOTTOM CULVERT
+(DECAST O-SERIES 0949)
+U/S INV. 245.34m
+D/S INV. 244.64m
+
+MAYFIELD GOLF CLUB
+FSSR
+
+CAMP
+
+BELL T
+J - REA RIBUTARY
+CH 1
+
+X
+
+X
+
+3E
+
+6.2
+
+24
+
+X
+1E
+
+.98
+
+1.2
+
+9.9
+
+7E
+
+24
+
+1.1
+
+25
+
+25
+
+X
+
+6E
+
+2.6
+
+25
+3000mm x
+2400mm
+STM @ 0.5%
+
+247
+
+4
+253.0
+
+5
+252.7
+
+2
+252.8 252.85
+
+LIMIT OF DEVELOPMENT
+
+CULVERT
+
+TOP 252.75m
+W SAN OBV 243.97m
+N SAN OBV 243.91m
+COVER=8.78m
+
+253.02
+
+LEGEND:
+
+STREET A CULVERT CROSSING
+DESIGNED BY:
+
+G.M.
+
+CHECKED BY:
+
+SCALE:
+
+1:1000
+
+DATE:
+
+PROJECT No:
+
+N.D.M.
+OCTOBER 2024
+
+FIGURE No:
+
+2539
+
+2.9
+
+LEGEND:
+LIMIT OF PARTICIPATING
+PROPERTY
+LIMIT OF DEVELOPMENT
+
+CULVERT
+
+EX
+
+223.91
+
+PROPOSED ELEVATION
+
+224.35EX
+
+EXISTING ELEVATION
+EXISTING CONTOUR
+AND ELEVATION
+
+EX
+
+.2 0
+
+EX
+
+.81
+
+255
+
+STORM SEWER AND
+MAINTENANCE HOLE
+
+256
+
+255
+
+.31
+
+255
+.
+
+X
+256
+.
+
+54E
+
+TOP 258.77m
+CULVERT INV 254.03m
+SAN OBV 252.63
+CLEARANCE=1.40m
+
+SANITARY SEWER AND
+MAINTENANCE HOLE
+
+258
+
+.49
+
+259
+.12
+
+259
+.2
+
+6
+
+259
+.34
+
+259
+.46
+
+257
+.58
+
+04E
+X
+
+257
+.3
+
+6EX
+
+MAX 3:1 SLOPE
+
+.26
+
+.31
+
+0.5%
+
+250Ø SAN @ 0.5%
+
+259
+
+258
+.41
+
+.12
+
+2.0%
+
+258
+
+258
+
+259
+
+259
+.27
+
+3
+
+9.1
+
+25
+
+0.7%
+
+258
+
+.23
+
+0.7%
+
+.98
+
+WATERMAIN
+
+STREET C
+
+*NOTE: LAYOUT IS SCHEMATIC ONLY, DETAILS TO BE
+PROVIDED AT DETAILED DESIGN STAGE.
+
+258.02
+
+X
+
+2E
+
+5.6
+X
+
+MAYFIELD GOLF CLUB
+
+5.9
+
+25
+
+3E
+
+5.0
+
+X
+
+5E
+
+5.4
+
+25
+
+25
+
+X
+
+2E
+
+X
+
+3E
+
+6.1
+
+25
+
+X
+
+0E
+
+6.0
+
+25
+
+25
+
+9
+
+8.9
+
+25
+
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+FSSR
+
+2.0%
+
+PROPOSED 6.4m WIDE BY 1.5m TALL BY
+40.6m LONG CONCRETE BOX CULVERT
+U/S INV. 254.40m
+D/S INV. 253.64m
+EXISTING 900mmØ CULVERT
+TO BE REMOVED
+
+STREET C CULVERT CROSSING
+DESIGNED BY:
+
+G.M.
+
+CHECKED BY:
+
+SCALE:
+
+1:500
+
+DATE:
+
+PROJECT No:
+
+N.D.M.
+OCTOBER 2024
+
+FIGURE No:
+
+2539
+
+2.10
+
+STREET C
+
+STREET C
+
+STREET I
+T
+EE
+
+D
+
+R
+
+STREET E
+
+STREET F
+
+STREET H
+
+TORBRAM R
+OAD
+
+ST
+
+ST.
+G
+
+A
+
+RE
+
+A
+
+ST.
+
+L
+
+ET
+
+STREET J
+
+ST
+
+K
+
+EET
+
+STR
+EET
+
+STR
+
+LANEWAY
+
+'B'
+
+ST. N
+
+STREET B
+
+STREET M
+
+STREET J
+
+STREET A
+
+STREET O
+
+STREET Q
+
+STREET M
+
+STREET Q
+
+TORBRAM R
+
+OAD
+
+STREET P
+
+STR
+B
+EET
+
+*NOTE: LAYOUT IS SCHEMATIC ONLY. DETAILS TO BE PROVIDED AT DETAILED DESIGN STAGE
+
+LEGEND:
+LIMIT OF PARTICIPATING
+PROPERTY
+LIMIT OF DEVELOPMENT
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+LIMIT OF DEVELOPMENT
+TO BE CONFIRMED
+HUMBER RIVER TRIBUTARY
+
+EXISTING CONTOUR
+AND ELEVATION
+PROPOSED SINGLE LOTS
+WITH SHALLOW REAR YARD
+INFILTRATION TRENCHES
+
+MAYFIELD GOLF CLUB
+DESIGNED BY:
+
+N.D.M.
+
+CHECKED BY:
+
+SCALE:
+
+1:2000
+
+DATE:
+
+S.E.K.
+
+5mm ON-SITE RETENTION
+OCTOBER 2024
+
+LID LOCATION PLAN
+PROJECT No:
+
+FIGURE No:
+
+2539
+
+2.11
+
+12.02ha
+1465
+EXT 8
+
+SAN @ 0.5%
+
+STREET C
+
+STREET C
+
+63.16ha
+7578
+EXT 7
+
+250mmØ SAN @ 0.5%
+
+2.74ha
+301 176
+
+STREET I
+
+D
+
+STREET F
+
+TORBRAM R
+OAD
+
+STREET H
+
+4.01ha
+303 388
+
+S
+
+SAN
+STREET@E0.5%
+
+4.41ha
+302 319
+
+T
+EE
+R
+T
+
+ST.
+G
+
+SAN @ 0.4%
+
+STR
+
+EET
+A
+SA
+
+N
+
+0.38ha
+304 67
+
+@
+
+0.4
+
+0.76ha
+310 38
+
+%
+
+60
+
+SA
+
+N
+
+@
+
+0.5
+
+3.46ha
+309 211
+
+ST.
+
+L
+
+%
+
+SAN @ 0.5%
+
+mØ
+
+A
+
+K
+
+0m
+
+LANEWAY
+
+STREET J
+
+60
+
+0.5
+
+ET
+
+%
+
+@
+
+RE
+
+0.5
+
+SAN
+
+ST
+
+@
+
+EET
+
+N
+
+STR
+
+SA
+
+%
+
+0m
+mØ
+
+0.81ha
+311 142
+
+'B'
+
+STREET A
+
+PROPOSED SANITARY SEWER
+TO CONNECT TO THE FUTURE
+REGIONAL TRUNK SANITARY
+SEWER ST-178
+600mmØ SA
+
+N @ 0.5%
+
+0.20ha
+306 24
+
+0.49ha
+312 86
+
+ST. N
+
+0.47ha
+313 23
+
+STREET O
+0.61ha
+307 61
+
+7.55ha
+305 483
+
+STREET P
+
+STREET Q
+
+SAN @ 0.5%
+
+STREET M
+
+STREET B
+
+SAN @ 0.5%
+
+STREET M
+
+STREET J
+
+2.13ha
+308 1100
+
+STREET Q
+
+3.88ha
+314 294
+
+TORBRAM R
+
+OAD
+
+3.59ha
+315 328
+
+SAN
+.5%
+@0
+
+EET
+STR
+
+1.94ha
+317 352
+
+B
+
+1.41ha
+316 50
+
+25
+0m
+
+mØ
+
+SA
+N
+
+@
+
+0.5
+
+%
+
+0.62ha
+318 95
+
+PROPOSED SANITARY SEWER
+TO CONNECT TO THE FUTURE
+REGIONAL TRUNK SANITARY
+SEWER ST-178
+
+LEGEND:
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+LIMIT OF PARTICIPATING
+PROPERTY
+LIMIT OF DEVELOPMENT
+SANITARY DRAINAGE BOUNDARY
+EXTERNAL SANITARY
+DRAINAGE BOUNDARY
+SANITARY SEWER AND MANHOLE
+
+3.46ha
+606
+
+DRAINAGE AREA (HECTARES)
+
+0.55ha
+314 99
+
+DRAINAGE AREA (HECTARES)
+
+POPULATION
+
+POPULATION
+CATCHMENT ID
+
+102.5ha
+50p/ha
+EXT 1
+
+EXTERNAL SANITARY
+DRAINAGE AREA (ha)
+POPULATION DENSITY
+(PERSONS PER HECTARE)
+
+MAYFIELD GOLF CLUB
+DESIGNED BY:
+
+N.D.M.
+
+CHECKED BY:
+
+SCALE:
+
+1:2000
+
+DATE:
+
+S.E.K.
+
+CATCHMENT ID
+OCTOBER 2024
+
+PROPOSED SANITARY
+DRAINAGE PLAN
+PROJECT No:
+
+FIGURE No:
+
+2539
+
+3.1
+
+125.96ha
+8817
+EXT 1+2
+
+64.44ha
+4511
+EXT 3+4
+
+OLD SHCOOL ROAD
+
+TORBRAM
+
+48.44ha
+7902
+EXT 5
+
+10.86ha
+3187
+EXT 6
+
+BRAMALE
+A
+
+ROAD
+
+ROAD
+
+OLD SCHOOL ROAD
+
+63.16ha
+7578
+EXT 7
+
+TORBRAM
+
+ROAD
+
+12.02ha
+1465
+EXT 8
+
+ROAD
+
+OPTION 2
+CONVEY SANITARY FLOWS IN
+MAYFIELD ROAD AND TORBRAM
+ROAD ROW VIA FORCEMAIN
+
+BRAMALE
+
+A ROAD
+
+OPTION 1
+CONVEY SANITARY FLOWS
+INTERNAL TO DG GROUP LANDS
+UNDER HUMBER WEST
+TRIBUTARY VIA FORCEMAIN
+
+LOCATION OF INTERIM LIFT
+STATION
+
+AIRPORT
+
+POTENTIAL INTERIM GRAVITY
+CONNECTION TO SANITARY SEWER
+
+AIRPORT ROAD
+SANITARY TRUNK SEWER
+CONTINUES NORTH
+
+MAYFIELD ROAD
+
+MAYFIELD RO
+
+AD
+
+AIRPORT
+
+BRAMALE
+
+ROAD
+
+A ROAD
+
+TORBRAM
+
+ROAD
+
+SANDRINGHAM
+SERVICING PLAN
+EXTERNAL 4
+155ha
+POP 7750
+
+AIRPORT ROAD
+SANITARY TRUNK SEWER
+CONTINUES SOUTH
+
+FLOWS CONVEYED
+TO AIRPORT ROAD
+SANITARY SEWER
+
+*NOTE: LAYOUT IS SCHEMATIC ONLY, DETAILS TO BE PROVIDED AT DETAILED DESIGN STAGE.
+
+LEGEND:
+LIMIT OF MZO
+
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+EXTERNAL SANITARY SERVICING
+PLAN
+
+EXISTING
+SANITARY SEWER
+BLOCK 48-2 SANITARY SEWER
+ULTIMATE TRUNK SANITARY
+SEWER
+SANITARY DRAINAGE
+BOUNDARY
+
+23.18ha
+4498
+EXT 12
+
+EXTERNAL SANITARY
+DRAINAGE AREA
+(HECTARES)
+
+DESIGNED BY:
+
+N.D.M.
+
+CHECKED BY:
+
+SCALE:
+
+1:6000
+
+DATE:
+
+S.M.S.
+
+POPULATION
+CATCHMENT ID
+
+OCTOBER 2024
+
+PROJECT No:
+
+FIGURE No:
+
+2539
+
+3.2
+
+STREET C
+
+STREET C
+
+STREET I
+
+STREET E
+
+STREET F
+
+STREET H
+
+D
+
+TORBRAM R
+OAD
+
+S
+
+T
+EE
+R
+T
+
+ST.
+G
+
+STR
+
+A
+
+ST.
+
+L
+
+STR
+
+ET
+
+STREET J
+
+RE
+
+EET
+
+ST
+
+K
+
+EET
+A
+
+LANEWAY
+
+'B'
+
+STREET A
+
+STREET J
+
+STREET B
+
+STREET M
+
+ST. N
+
+FUTURE 400mm (dia)
+WATERMAIN PER PEEL
+REGION MASTER PLAN
+Project D-181
+
+STREET O
+
+STREET P
+
+STREET Q
+FUTURE 400mm (dia)
+WATERMAIN PER PEEL
+REGION MASTER PLAN
+Project D-180
+
+STREET M
+
+TORBRAM R
+
+OAD
+
+STREET Q
+
+EET
+STR
+B
+
+LEGEND:
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+MAYFIELD GOLF CLUB
+
+LIMIT OF PARTICIPATING
+PROPERTY
+
+PROPOSED WATERMAIN
+
+LIMIT OF DEVELOPMENT
+
+FUTURE WATERMAIN
+
+DESIGNED BY:
+
+N.D.M.
+
+CHECKED BY:
+
+LIMIT OF DEVELOPMENT
+TO BE CONFIRMED
+
+PROPOSED WATERMAIN PLUG
+
+SCALE:
+
+1:2000
+
+DATE:
+
+S.E.K.
+
+OCTOBER 2024
+
+PROPOSED WATER
+DISTRIBUTION PLAN
+PROJECT No:
+
+FIGURE No:
+
+2539
+
+4.1
+
+X
+
+256
+.82
+
+256 256.48
+.32 2
+56.5
+8
+256
+.39
+
+257
+.88
+
+257
+.23
+
+STREET E
+
+TORBRAM R
+OAD
+
+S
+
+S
+
+7
+7.3
+25
+SWM FACILITY 4
+NWL=252.60m
+
+S
+
+S
+
+ST.
+G
+
+W/
+
+1.3%
+
+25
+
+25
+5.0
+7
+
+STR
+E
+0.7% ET A
+
+SSTTRREEEETT JJ
+
+8
+3.5
+
+25
+4.2
+0
+
+25
+
+X
+
+25
+4
+25 .60
+5.3
+0E
+X
+
+25
+4
+25 .60
+4.3
+0E
+
+STREET J
+
+0.5%
+
+X
+6E
+
+2.9
+
+25
+
+2.7
+
+0
+
+2
+
+25
+
+25
+
+S
+
+6
+
+1.1
+
+5
+
+STREET Q
+
+25
+
+2.4
+
+250
+
+0.5%
+
+SWM FACILITY 1
+NWL=245.30m
+
+S
+
+25
+
+0.9%
+
+S
+
+253
+.0
+
+0.6%
+
+3
+
+253
+
+STREETQQ
+STREET
+
+253
+
+1.2%
+
+.50
+
+S
+
+.00
+
+S
+
+STREET M
+
+0.9%
+
+2.4%
+
+1.2%
+
+.20
+
+0.5%
+
+S
+
+STREET P S
+
+251
+
+2.6
+
+25
+
+0.5%
+
+S
+
+250
+.43
+250
+.29
+
+2.3 25
+0 2.14
+
+25
+
+STREET O
+
+0.5%
+
+25
+3
+25 .56
+3.2
+6E
+
+X
+
+TB
+
+2
+.30 52.1
+9
+STREE
+252
+
+1.5
+
+3
+
+.36
+251
+
+4
+
+251
+.5
+
+.58
+
+1.7%
+
+S
+
+4.4
+4
+4 .7
+2E
+X
+
+%
+0.9
+
+.32
+251
+250
+250 .93
+.79
+250
+0.8
+.62
+%
+
+ST. N
+
+1.7%
+
+250
+0.5 .72
+%
+
+S
+
+1.2%
+
+0.5%
+
+S
+
+0.8%
+
+STREET M
+
+25
+
+6
+25
+
+0.5%
+
+0.5%
+
+S
+
+4.3
+
+25
+
+STREET A
+
+25
+
+'B'
+
+4.0 253.88
+6
+
+6
+5
+3.4 53.4
+25
+2
+
+%
+
+25
+6
+25 .45
+6.1
+5E
+X
+
+25
+4.6
+3
+
+25
+4.7
+7
+
+K
+EET
+
+%
+
+STR
+
+5
+25
+
+.27
+
+253
+
+.98
+253
+
+254
+
+%
+
+0.9
+
+LANEWAY
+
+0.5%
+
+0.5
+
+1
+
+254.2
+
+2
+254.1
+
+L
+
+S
+
+253.7
+
+ST.
+
+%
+
+0.6%
+
+0
+
+.09
+
+0.5
+
+254
+.01
+
+SWM POND 3
+NWL=248.25m
+
+0.6%
+
+253
+.47
+
+A
+
+0.5%
+0.5
+
+0
+
+ST .5%
+RE
+ET
+
+25
+4.1
+3
+
+PROPOSED 14.9m WIDE BY 53.2m LONG
+CONCRETE ARCH OPEN-BOTTOM
+CULVERT (DECAST O-SERIES 0949).
+REFER TO DETAILS ON FIGURE 2.9.
+U/S INV. 245.34m
+D/S INV. 244.64m
+
+3.7
+
+252
+.82
+
+0.5%
+
+%
+
+253
+.3
+2533
+.47
+
+3.3
+
+S
+2 2
+252 52.7553.05
+.95
+
+.30
+
+25
+3.0
+2
+
+254
+
+2
+0
+4.1
+4.1
+25
+25
+
+2
+0
+4.8
+5.0
+25
+25
+
+1.2%
+
+1.0
+
+%
+
+7
+4.7
+25
+3
+4.6
+
+O
+
+X
+
+6.0
+
+4
+5.8
+25
+0
+
+25
+
+00
+
+6.
+25
+
+S
+
+TD
+E
+RE
+ST 2.6%
+
+APPROXIMATE LOCATION
+OF EXISTING 600mm
+DIAMETER CSP CULVERT
+
+25
+5
+25 .72
+5.4
+2E
+
+STREET F
+
+1.3%
+
+S
+
+1.8%
+
+S
+
+B/S
+
+2.3%
+
+STREET F
+S
+
+S
+
+S
+
+S
+
+0
+7.0
+25
+6
+6.8
+25
+
+S
+
+.13
+0.5%
+
+257
+
+4
+6.8
+25
+0
+7.0
+25
+6
+6.8
+25
+
+0.9%
+
+0.6%
+
+2.0%
+
+STREET FH
+
+0.8%
+
+S
+
+%
+
+S
+
+0.7%
+
+S
+
+W/O
+
+39
+
+7.
+25
+
+258.02
+
+0
+8.0
+25
+5
+7.8
+25
+
+S
+
+1.8%
+
+0.7
+
+4
+7.8
+25
+0
+8.0
+25 1.3%
+
+S
+
+0.5%
+
+255
+.93
+256
+.00
+
+0.6%
+
+25
+258258.3 8.49
+.4 1
+2581
+.26
+
+2E
+9.3
+
+.10
+258 0.5%
+
+STREET
+STRCEET C
+
+0.7%
+
+STREETF I
+
+2.0%
+
+S
+
+18 4
+8 . .0
+2 5 258
+
+S
+
+3
+6EX 9.1 .99
+7.3 25
+8
+25
+25 2.0%
+
+S
+
+STREET C
+
+257
+252959.46.58
+.34
+2
+25959.23
+.27
+2
+2
+259 58.959.12
+.12 8
+
+0.7%
+
+0
+8.5 8.35
+25
+25 0.6%
+
+S
+
+0.5%
+
+9.0
+0E
+259 X
+.58
+
+259
+.26 25
+
+258
+.67
+
+0.5%
+
+25
+
+X
+3E
+
+0
+
+6.9
+25
+
+.8
+
+8
+25
+
+256
+.87
+
+PROPOSED 6.4m WIDE BY 1.5m TALL BY
+40.6m LONG CONCRETE BOX CULVERT.
+REFER TO DETAILS ON FIGURE 2.10.
+U/S INV. 254.40m
+D/S INV. 253.64m
+
+25
+3.4
+
+2.4%
+
+0.5%
+
+253
+
+.00
+
+1
+0.8
+9
+25
+1.0
+25 5
+0.7
+5E
+X
+
+.60
+252
+
+25
+
+7
+2.4
+25
+
+1.4%
+
+9.8
+9
+25
+0.0
+24 5
+9.7
+5E
+X
+
+EET
+STR
+
+24
+7
+24 .93
+8.5
+3E
+X
+
+0.5%
+
+.15
+
+24
+
+7.9
+5
+
+24
+7
+24 .93
+7.6
+3E
+X
+
+B
+
+CONSTRAINTS LEGEND:
+DRIPLINE (BEACON, 2024)
+
+248
+
+GREENBELT BOUNDARY
+
+1.0
+
+%
+
+STAKED TOP OF BANK
+(BEACON, 2024)
+STAKED TOP OF BANK 15m
+SETBACK (BEACON, 2024)
+STAKED TOP OF BANK 10m
+SETBACK (BEACON, 2024)
+
+X
+
+247
+.27
+
+%
+
+1.0
+
+DRIPLINE BUFFER 30m
+SETBACK (BEACON, 2024)
+
+24
+7.
+24 35
+7.5
+8E
+
+S
+
+9.5
+245
+9.2
+
+9
+9.3
+0.5%
+
+24
+
+0.7%
+
+24
+
+248
+
+24
+8
+24.76
+8.
+24 62
+8.4
+5
+
+.91
+
+0.5%
+
+5E
+X
+
+24
+
+0.5%
+
+24
+9
+24.16
+9.
+24 02
+8.8
+9
+
+TORBRAM R
+
+1.4%
+
+3.6%
+
+SWM FACILITY 2
+NWL=243.15m
+
+OAD
+
+25
+
+79
+
+.
+251
+
+1.6
+
+5
+
+252
+
+25
+252.25
+2.1
+2
+
+.53
+
+0.7%
+
+0.5%
+
+APPROXIMATE WOODLAND
+BOUNDARY (BEACON, 2024)
+APPROXIMATE WOODLAND
+BOUNDARY 30m SETBACK
+(BEACON, 2024)
+LONG TERM STABLE TOP OF SLOPE
+(BEACON, 2024)
+LONG TERM STABLE TOP OF SLOPE
+10m SETBACK
+PROPOSED REGIONAL FLOODLINE
+RPOPOSED REGIONAL
+FLOODLINE+10m BUFFER
+EXISTING REGIONAL FLOODLINE
+EXISTING REGIONAL
+FLOODLINE+10m BUFFER
+
+LEGEND:
+LIMIT OF PARTICIPATING
+PROPERTY
+LIMIT OF DEVELOPMENT
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+223.91
+
+PROPOSED ELEVATION
+
+224.35EX
+
+EXISTING ELEVATION
+
+0.5%
+7
+223.
+
+ROAD SLOPE
+
+1
+
+PROPOSED ROAD ELEVATION
+EXISTING CONTOUR
+AND ELEVATION
+
+PRELIMINARY
+GRADING PLAN
+
+MAYFIELD GOLF CLUB
+
+HUMBER RIVER TRIBUTARY
+
+DESIGNED BY:
+
+N.D.M.
+
+CHECKED BY:
+
+SCALE:
+
+1:2000
+
+DATE:
+
+S.E.K.
+
+OCTOBER 2024
+
+PROJECT No:
+
+FIGURE No:
+
+2539
+
+5.1
+
+GOLF CART CROSSING
+(RIVER STATION: 383)
+
+APPROXIMATE LOCATION
+OF EXISTING 600mm
+DIAMETER CSP CULVERT
+CAMPBELL TRIBUTARY
+(RIVER STATION: K - REACH 1)
+
+GOLF CART CROSSING
+(RIVER STATION: 380)
+
+Y
+
+AR
+UT
+B
+I
+TR 2
+ELL EACH
+B
+P R
+AM J -
+
+GOLF CART CROSSING
+(RIVER STATION: 226)
+
+C
+
+GOLF CART CROSSING
+(RIVER STATION: 154)
+
+GOLF CART CROSSING
+(RIVER STATION: 39.1)
+
+CA
+M
+
+PB
+J - ELL
+RE TR
+AC IB
+H UT
+1 AR
+
+Y
+
+GOLF CART CROSSING
+(RIVER STATION: 25.8)
+
+RY
+
+TA
+BU
+RI 3
+L T CH
+EL EA
+PB - R
+M A
+
+CA
+CA
+
+MP
+B
+A - ELL T
+RE RIB
+AC UT
+H 3 AR
+Y
+
+CONSTRAINTS LEGEND:
+DRIPLINE (BEACON, 2024)
+
+Y
+AR
+UT
+RIB 3
+LT H
+EL AC
+PB RE
+M A-
+
+CA
+
+DRIPLINE BUFFER 30m
+SETBACK (BEACON, 2024)
+GREENBELT BOUNDARY
+
+APPROXIMATE LOCATION
+OF EXISTING 350mm
+DIAMETER CSP CULVERT
+
+STAKED TOP OF BANK
+(BEACON, 2024)
+STAKED TOP OF BANK 15m
+SETBACK (BEACON, 2024)
+STAKED TOP OF BANK 10m
+SETBACK (BEACON, 2024)
+APPROXIMATE WOODLAND
+BOUNDARY (BEACON, 2024)
+APPROXIMATE WOODLAND
+BOUNDARY 30m SETBACK
+(BEACON, 2024)
+LONG TERM STABLE TOP OF SLOPE
+(BEACON, 2024)
+LONG TERM STABLE TOP OF SLOPE
+10m SETBACK
+PROPOSED REGIONAL FLOODLINE
+RPOPOSED REGIONAL
+FLOODLINE+10m BUFFER
+EXISTING REGIONAL FLOODLINE
+EXISTING REGIONAL
+FLOODLINE+10m BUFFER
+
+LEGEND:
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+LIMIT OF PARTICIPATING
+PROPERTY
+
+EXISTING CONTOUR
+AND ELEVATION
+
+LIMIT OF DEVELOPMENT
+
+HEC-RAS CROSS-SECTION
+(CAMPBELL TRIBUTARIES J & K)
+
+LIMIT OF DEVELOPMENT
+TO BE CONFIRMED
+
+HEC-RAS CROSS-SECTION
+(CAMPBELL TRIBUTARY A)
+
+EXISTING REGIONAL
+FLOOD ELEVATION
+HYDRAULIC SECTION ID
+
+MAYFIELD GOLF CLUB
+
+FLOODLINE ELEVATION
+LEADER
+
+HUMBER RIVER TRIBUTARY
+
+DESIGNED BY:
+
+N.D.M.
+
+CHECKED BY:
+
+SCALE:
+
+1:2000
+
+DATE:
+
+S.E.K.
+
+OCTOBER 2024
+
+EXISTING FLOODPLAIN
+MAPPING
+PROJECT No:
+
+FIGURE No:
+
+2539
+
+8.1
+
+PROPOSED 6.4m WIDE BY 1.5m TALL BY
+40.6m LONG CONCRETE BOX CULVERT.
+REFER TO DETAILS ON FIGURE 2.10.
+U/S INV. 254.40m
+D/S INV. 253.64m
+
+STREET C
+
+STREET C
+
+GOLF CART CROSSING
+(RIVER STATION: 383)
+
+STREET I
+T
+EE
+R
+T
+
+D
+
+STREET E
+
+S
+
+Y
+
+AR
+UT
+B
+I
+TR 2
+ELL EACH
+B
+P R
+AM J -
+
+GOLF CART CROSSING
+(RIVER STATION: 226)
+
+C
+
+STREET F
+
+STREET H
+
+GOLF CART CROSSING
+(RIVER STATION: 380)
+
+TORBRAM R
+OAD
+
+CAMPBELL TRIBUTARY
+K - REACH 1
+
+GOLF CART CROSSING
+(RIVER STATION: 154)
+
+ST.
+G
+
+STR
+
+EET
+A
+GOLF CART CROSSING
+(RIVER STATION: 39.1)
+
+STREET J
+
+A
+
+CA
+M
+
+ST.
+
+L
+
+PB
+J - ELL
+RE TR
+AC IB
+H UT
+1 AR
+Y
+
+STR
+
+ET
+
+K
+
+RE
+
+PROPOSED 14.9m WIDE BY 53.2m LONG
+CONCRETE ARCH OPEN-BOTTOM
+CULVERT (DECAST O-SERIES 0949).
+REFER TO DETAILS ON FIGURE 2.9.
+U/S INV. 245.34m
+D/S INV. 244.64m
+
+EET
+
+ST
+
+GOLF CART CROSSING
+(RIVER STATION: 25.8)
+
+LANEWAY
+
+'B'
+
+ST. N
+
+Y
+
+AR
+UT
+RIB
+LL T H 3
+PBE REAC
+CAM A -
+
+STREET O
+
+STREET P
+
+STREET Q
+
+STREET M
+
+STREET Q
+
+OAD
+
+MP
+B
+A - ELL T
+RE RIB
+AC UT
+H 3 AR
+Y
+
+TORBRAM R
+
+CA
+
+STREET B
+
+STREET M
+
+STREET J
+
+STREET A
+
+EET
+STR
+B
+
+CONSTRAINTS LEGEND:
+DRIPLINE (BEACON, 2024)
+
+CA
+
+M
+
+PB
+A ELL
+-R T
+EA RIB
+CH U
+3 TAR
+
+DRIPLINE BUFFER 30m
+SETBACK (BEACON, 2024)
+GREENBELT BOUNDARY
+
+Y
+
+STAKED TOP OF BANK
+(BEACON, 2024)
+STAKED TOP OF BANK 15m
+SETBACK (BEACON, 2024)
+STAKED TOP OF BANK 10m
+SETBACK (BEACON, 2024)
+APPROXIMATE WOODLAND
+BOUNDARY (BEACON, 2024)
+APPROXIMATE WOODLAND
+BOUNDARY 30m SETBACK
+(BEACON, 2024)
+LONG TERM STABLE TOP OF SLOPE
+(BEACON, 2024)
+LONG TERM STABLE TOP OF SLOPE
+10m SETBACK
+PROPOSED REGIONAL FLOODLINE
+RPOPOSED REGIONAL
+FLOODLINE+10m BUFFER
+EXISTING REGIONAL FLOODLINE
+EXISTING REGIONAL
+FLOODLINE+10m BUFFER
+
+LEGEND:
+LIMIT OF PARTICIPATING
+PROPERTY
+LIMIT OF DEVELOPMENT
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+LIMIT OF DEVELOPMENT
+TO BE CONFIRMED
+HUMBER RIVER TRIBUTARY
+
+EXISTING CONTOUR
+AND ELEVATION
+HEC-RAS CROSS-SECTION
+(CAMPBELL TRIBUTARIES J & K)
+HEC-RAS CROSS-SECTION
+(CAMPBELL TRIBUTARY A)
+
+MAYFIELD GOLF CLUB
+
+EXISTING REGIONAL
+FLOOD ELEVATION
+HYDRAULIC SECTION ID
+FLOODLINE ELEVATION
+LEADER
+PROPOSED REGIONAL
+FLOOD ELEVATION
+
+DESIGNED BY:
+
+N.D.M.
+
+CHECKED BY:
+
+SCALE:
+
+1:2000
+
+DATE:
+
+S.E.K.
+
+OCTOBER 2024
+
+PROPOSED FLOODPLAIN
+MAPPING
+PROJECT No:
+
+FIGURE No:
+
+2539
+
+8.2
+
+APPENDIX A
+DRAFT PLAN
+
+ELT
+GREENB
+Temporary
+Turning Circle
+BLOCK 316
+
+BLOCK 294
+Natural Heritage System
+0.31 ha
+
+BLK 297
+Future Residential
+
+BLK
+FS
+298 15.19
+BLK
+FS
+300 20.5
+6
+
+BLK 283
+
+4
+39.
+
+.66
+39
+
+o
+
+Park
+0.63 ha
+
+6
+
+o
+36.93
+
+o
+
+Road Widening
+0.20 ha
+
+12.80 2.58
+
+.0
+
+262.6
+
+90
+
+40
+13.
+40
+13.
+
+Storm Water
+Management Pond
+/ Park
+1.51 ha
+
++
+
+36.56
+
+=
+
+13
+
+36.03
+
+12
+
+LT
+
+=
+
+E
+NB
+
+35.64
+
+EE
+
+11 +
+
+GR
+
+34.65
+
+10 +
+
+REGIONAL FLOOD LINE
+
+31.22
+
+9
+
+8
+
+85.6
+
+10m FROM REGIONAL
+FLOOD LINE
+
++
+
+7
+
+30.0 +
+0
+
+BLOCK 295
+Natural Heritage
+System
+10.35 ha
+
+G
+
+x
+39.95
+
+7
+
+x .6
+
+10.0
+
+6.1 6.1
+
+6.1
+
+BLK 245
+7 Units
+x x x x
+x
+
+x
+
+13.3
+
+30.1
+
+6.1
+
+11.4
+
+x
+
+30.0
+
+x
+
+30.0
+
+L
+
+ST
+.
+0
+
+25
+
+44
+
+.2
+
+5.8
+
+L
+
+U/G
+
+9.1
+
+BLK 256
+6 Units
+L L L L L
+
+7.3 7.3
+5.8 5.8 5.8 5.8
+
+L
+
+L L
+
+15.07
+
+5.8
+
+L L L L 6.99
+BLK 257
+L
+7 Units
+14.93
+
+18.00
+
+22.0
+
+.00
+
+STREET B
+
+STREET J
+
+11.32
+
+TORBRAM R
+
+0.3m Reserve
+
+OAD
+
+9.0
+
+BLOCK 317
+
+9.0
+
+231
+
+11.53 11.00
+o
+o
+
+18.00
+
+Open Space
+0.02 ha
+
+16.00
+
+12.74
+
+30.30
+
+.5
+48
+
+NB
+
+EE
+
+ELT
+
+Natural Heritage
+System
+29.78 ha
+
+68.0
+
+.8
+12
+
+18.31
+
+230
+
+75.0
+
+67.7
+
+BLOCK 312
+
+STREET Q
+
+18.00
+
+R23
+.0
+
+GR
+
+BLOCK 296
+
+STREET M
+
+68.99
+
+75.1
+
+R90.00
+
+29.76
+
+29.49
+
+o 194
+
+29.64
+
+14.12 11.00 11.00 11.00 11.00 13.40 11.60
+
+29.70
+
+11.00 11.00 11.00 11.00 11.00 11.00 11.00 12.01
+
+29.27
+
+o 195
+30.00
+
+29.98
+
+o
+
+8.8
+
+9.71
+
+3.0
+
+00
+o 196
+
+188 189 190 191 192 193
+
++
+
+9.0
+
+9.0
+
+11.00 12.20
+
+29.57
+
+o
+
+187
+
+o
+
+Commercial
+0.47 ha
+
+R2
+
+9.75
+
+^ ^ ^ ^ ^ ^ ^
+
+o
+
+5 11.00
+
+29.78
+
+29.84
+
+29.72
+
+o
+
+29.67
+
+o
+
+197
+30.
+
+29.83
+
+30.84
+
+29.61
+
+^
+
+31.01
+
+198
+
+30.00
+
+179 180 181 182 183 184 185 186
+
+o
+
+BLOCK 292
+
+44.2
+
+208 207
+
+9.15 9.15
+
+18.00
+
+R90.00
+
+204203 202 201 200 199
+206 205
+22.00
+
+59.3
+
+10.69 9.1
+
+166
+
+17.26
+o
+
+36.0
+
+15 Stacked
+Units
+
+29.00
+
+210 209
+
+o
+15.47
+
+o
+
+161.1
+
+18.00
+
+29.36
+
+13.20 9.75 9.75 9.75 9.75 9.75 9.75
+
+165
+
++
+
+^
+
+29.00
+
+29.00
+
+14.14
+
+29.55
+
+o
+
+29.00
+
+13.40
+
+29.50
+
+o
+
+o
+
+^
+
+12.67 9.75 9.75 9.75 9.75 9.75 9.75 9.75 9.75
+9.15
+
+STREET Q
+
+29.54
+
+o
+
+31.69
+
+o
+
+33.40
+
+o
+
+Units
+
+0
+
+12.2
+
+178 o
+
+34.25
+
++
+
+0
+
+13.4
+
+o
+
+29.83
+
+o
+
+o
+
+^ ^ ^ ^ ^ ^
+
+R90.00
+
+11.00 11.00 11.00
+
+o
+
+x
+
+219 218 217 216 215 214 213 212 211
+
+164
+
+11.00 11.00 14.84
+
+169 168 167
+
+32.54
+
+o
+
+171 170
+
+30.40
+
+o
+11.00
+
+5
+
+15.4
+
+177
+
+o
+
+31.01
+
+14.10
+
+176
+
+11.00 11.00
+
+13.74
+
+175
+
+11.00 11.00
+
+163
+
+BLK 250
+4 Units
+x x x
+
+^
+
++
+
+Medium Density
+18 Stacked0.48 ha
+
+R108.00
+
+6.1
+
+6.
+
+1
+6.1 6.1
+BLK 251
+6.1 7.6
+6 Units
+BLK 252
+7.6
+7.6
+Units
+8
+x x x x x x x
+x x
+x
+x x
+x
+
+18.00
+
+13.64
+
+11.58 11.00
+
+173 172
+
+o
+
+28.78
+
+13.45 11.00
+11.00 11.00
+11.00 11.00
+
+174 o
+
+o
+
+29.45
+
+14.36
+
+29.40
+
+o
+
+x
+
+22.00
+
+7.6 6.1 6.1 6.1 6.1 7.6
+
+29.00
+
+o
+
+160 161 162
+
+6.1 6.1 7.6
+
+29.20
+
+o
+
+15.6
+
+29.03
+
+143
+
+o
+
+R90.00
+
+STREET O
+
+29.00
+
+o
+
+83.4
+
+o
+
+12.32
+
+146 145 144
+
+o
+
+9.0
+
+.7
+
+12 Stacked
+Units
+
+18.00
+18.00
+
+o
+
+o
+
+156 157 158 159
+
+o
+
+11.00 9.15 9.15
+
+R
+
+o
+
+142
+
+18.00
+
+o
+11.00
+
++
+
+11.00 11.00
+
+29.40
+
+13.40
+
+12.83
+
+30.13
+
+o
+29.40
+
+17.60
+
+154
+
+ST. N
+11.00
+
+R90.00
+
+o
+
+14.43
+
+9.15 9.15
+
+131.0
+0
+
+21.06 11.0
+0 11.00
+
+150 149
+148 147
+
+13.
+40
+
+15.
+63
+
+30.
+00 o
+
++
+
+2
+
+11.00
+
+o
+
+9.15
+11.93
+
+o
+
+30.06
+
+12.
+20
+
+00
+
+11.
+
+153
+30.0
+
+155
+
+151
+
+14.6
+
+x
+
+30.06
+
+30.06
+
+04
+
+14.
+
+20
+
+o
+
+o
+
+9.15
+
+.15
+12.
+
+137 138 139 140 141
+
+0
+
+30.
+00
+
+29.40
+
+5 9
+
+11.
+00
+
+00
+
+11.
+
+30.
+00 o
+
+o
+11.00
+
+BLOCK 281
+Elementary School
+2.12 ha
+
+12.0
+
+x x x x x
+x
+
+0.0
+
+0
+
+6.1 6.1
+
+12
+
+78.7
+
+11.0
+0 1
+
+18.00
+
+9.15
+
+9.1
+
+BLK 249
+7 Units
+
+9.0
+
+40.7
+
+BLOCK 277
+
+18.00
+
+5
+
+29.40
+
+11.
+0
+
+6.1 6.1 6.1
+
+STREET P
+R90.00
+
+55.45
+
+Storm Water
+Management Pond
+/ Park
+2.29 ha
+
+136
+
+7.6
+
+30
+
+R90.0
+
+152
+
+18.00
+
+30.17
+
+2
+
+77.
+
+BLOCK 290
+
+132
+
+1
+
+30.00
+
+.00
+
+229
+
+13.40
+
++
+
+13.40
+
+3
+
+23.7
+
++
+228
+37.96
+
+13.40
+
+37.48 227
+
+93.5
+
+R90
+
++
+
+131
+
+133 .00
+134
+3
+
+135
+
+13.
+40
+
+0
+
+1.4
+
+1
+
+13.4
+
++
+32.7 226
+6
+
+13.
+40
+
++
+30. 225
+39
+
+3.4
+0
+
+27
+.9
+
+123
+.9
+
+223
++
+30. 224
+00
+
+13.
+40
+
++
+
+36.00
+
+51.1
+
+9.0
+
+9.0
+
+1.00
+
+.0
+R23
+
+40
+.9
+
+00
+
+221
+
++
+30. 222
+00
+
+14.
+08
+
+o
+
+5
+
+220
+
+30.
+
+129
+
+40.5
+
+12 Stacked
+Units
+
+130
+
+STREET M
+
+30.1
+
+12.
+41
+
+84.
+8
+
+o
+
+7
+
+33.42
+
+Park
+1.81 ha
+
+128
+
+31.5
+
+Road Widening
+0.40 ha
+
+12 Stacked
+Units
+
+L
+
+111.2
+
+00
+
+BLOCK 310
+
+18 Stacked
+Units
+
+STREET A
+
+22.
+
+11.0
+0
+
+137
+.4
+
+BLOCK 285
+
+Medium Density
+0.81 ha
+
+.8
+12
+
+G
+
+.8
+
+11.0
+0 1
+1
+
+29.9 123
+7
+o
+29.9 124
+7
+o
+29.9 125
+7
+o
+29.9 126
+7
+30.4 o 127
+1
+
+5.8 5
+
+1.00
+
+12 Stacked
+BLOCK 276
+Units
+
+12 Stacked
+Units
+
+LANE D
+
+L L
+L
+BLK 258
+5 Units
+
+R13
+
+0
+
+29.9
+o 7
+
+U/G
+
+1
+.72.7
+121
+
+12.2
+0 1
+1.0
+
+o
+121
+29.9
+1
+o 122
+
+7.3 5.8 5.8
+5.8 5.8
+
+30.03
+
+DRIPLINE
+BEACON ENVIROMENTAL
+AUG. 22, 2024
+
+7.3
+
+8.0
+
+EL
+T
+
+18.0
+
+14.
+
+120
+
+5.8
+
+BLK 255
+4 Units
+L
+L L
+L
+
+15
+Stacked
+Units
+
+15
+Stacked
+Units
+
+132.5
+
+0
+
+14.3
+6
+
+22
+.0
+
+o
+
+5.8
+
+13.2
+
+28.28
+
+119
+
+11.
+0
+
+34.0o
+5
+
+6.1 6.1 6.1
+
+57.6
+
+132.5
+
+118
+
+.51
+
+9.9
+
+18.00
+
+56
+
+9.3
+
+R90.0
+
+11.0
+0 11
+.00
+
+34.o
+09 117
+o
+
+.1
+
+12.5
+7
+
+o
+34.
+05 116
+
+FUTURE
+INDUSTRIAL
+
+STREET J
+
+TK
+6.1
+
+RE
+E
+
+6.1 6.1
+
+31.0
+
+29.7
+
+6.1
+
+ST
+
+6.1
+
+7.6 6.
+1
+
+x x 7.6 7.6
+7.9
+x x x x x
+x
+BLK 247
+BLK 248
+4 Units
+6.1
+Units
+5
+6.1 10
+
+30.0
+
+74.7
+
+10.2
+
+x
+
+30.0
+
+BLK 246 x
+8 Units x
+x
+7.6
+x
+x
+x
+
+R23.0
+
+Firehall
+0.75 ha
+
+18.00
+
+.0
+
+x
+
+9.9
+
+BLOCK 293
+
+30.1
+
+10.6
+
+R90
+
+6.1
+
+171
+.0
+
+A
+
+31.0
+
+30.7
+
+R23.0
+
+0
+
+22
+8.0
+
+1 6.1 6.
+
+1 6.
+1
+
+16.0
+
+ST
+RE
+ET
+
+8.8
+
+32.6
+
+79.86
+
+Park
+1.58 ha
+
+BLK 242
+5 Units
+
+41.52
+x
+x x
+BLK 244 x7.6 7.
+6
+x x x x
+6.1 5 Units
+x 12.3
+6.1
+x
+6.1
+BLK 243
+6 Units
+6.
+
+BLK 284
+
+TOP OF BANK STAKED BY R-PE
+WITH TRCA ON AUGUST 28, 2023
+
+x
+
+136.9
+
+x
+x
+
+LIMIT OF CONSTRAINTS
+BEACON ENVIROMENTAL AUG. 22, 2024
+
+36.0
+.00
+
+R18
+
+6.1 6.1 6.1
+
++
+
+51.5
+
+2
+39.
+
+NB
+
+x
+
+5
+
+33.6
+
+E
+RE
+10.5
+
++
+
+T
+EL
+
+.2
+13
+
++
+
+.7
+
+30.0 +
+0
+
+12
+
++
+
+.74
+12
+
+6
+
+30.0 +
+0
+
+49.8
+
+BLOCK 311
+
+45
+14.
+
+92
+
+D
+
+T
+EE
+
+20
+
+EN
+B
+
+34.00
+
+89
+
+BLOCK 289
+
+.23
+
+=
+15 37.10
+14
+=
+
+Storm Water
+Management Pond
+3.65 ha
+
+RE
+
+1
+1.0
+0
+
+.0
+R23
+
+.93
+
+0
+
+R
+ST
+
+96
+13.
+
+11.0
+
+00
+30.
+
+00
+11.
+
+R23.0
+
+11
+
+102
+
+R23.0
+
+.00
+
+100
+.00
+11
+101
+.00
+
+o
+o
+
+12.20 11
+
+3
+
+04
+
+13.
+
+FS
+
+45
+
+8
+30.7
++
+
+36
+17.
+
+99
+
+20.56
+
+90
+
+o
+
+BLK 301
+Future
+Residential
+
+BLK
+303
+
+.02
+
+91
+
+o
+
+93
+
+0
+11.0
+
+0 .0
+
+98
+
+00
+30.
+
+0
+
+15.2
+
+00
+30.
+
+13.4
+
+o
+
+o
+
+o
+
+3
+14.1
+
+R=9
+
+0
+
+57
+31.
+
+11
+
+11.00
+
+o
+
+94
+
+10.4
+
+BLK
+302
+
+18.00
+
+18.00
+
+13.40
+
+1.0
+11.00 1
+
+103
+
+95
+
+12.51
+
+12.20
+
+13.14
+
+97
+
++
+
+115
+83
+
+37.64
+
+30
+
+R=
+
+114
+
++ 5.76
+5
+
+=
+
+16
+
+35.19
+
++
+
+.10
+
+0
+0.0
+
+4
+
+o
+
+R9
+
+=
+
+113
+
++
+8
+5.4
+
+38.17
+
+96
+
+o
+
+104
+
+0
+12.3
+
+17
+
+14.12
+
+=
+
+3
+
+40
+13.
+
+18
+
+13.08
+
+R = 9 0 .0
+
+13.40 11.00 11.00 11.00 13.86
+
+0.03
+
+40
+13.
+
+38.
+
+36.53
+
+37.67
+
+112
+
++
+33
+
+=
+
+19
+
+0
+
+=
+
+35.39
+
+13.4
+
+STREET E
+
+13.40
+
+o
+
+105
+
+0
+
+STREET F
+
+13.40
+
+30.14
+
+.0
+
+LANE A
+
+13.40
+
+106 o
+
+13.4
+
+LANE B
+
+82
+
+12.07
+
+81
+
+o
+
+o
+
+9.81
+
+o
+
+85
+
+9.81 9.20
+
+30.10
+
+30.10
+
+13.40
+
+R=90
+
+3.40
+0 1
+
+20
+
+111
+
++
+55
+31.
+
+90.
+
+BLOCK 288
+
+88
+
+29.
+
+21
+
+3
+
+41
+
+.0
+12.30 11
+
+Medium
+Density
+0.38 ha
+
+2233.35
+
+2
+
+30.
+
++
+
+84
+
+1
+
+22
+.0
+
+BLOCK 275
+
+14.
+60
+
+R13
+1.00
+
+110
+
++
+
+5
+
+4
+
+13.40
+
+18.00
+
+1
+31.1
+
+23
+
+30.0 +
+1
+
+1
+
+0
+
+11.9
+
+109
+
++
+
+31.55
+
+11.60 13.40
+
+0
+13.4
+
+.8 5
+.8
+
+0
+
+.8 5
+
+13.4
+0
+
+.90
+
+33
+
+13.4
+
+30.00
+
+STRE
+ET A
+
+50.36
+
+3.40
+
+31.48
+
+28.89
+
+L
+
+108
+
+34.52
+
+24
+
+13.4
+0
+13.4
+
+8.00
+
+11.58
+
+BLK 261 5.8
+L
+7.3 7. L
+7 Units
+3 L
+LAN
+L
+EC
+18.
+L
+24
+L
+L L
+L
+L L
+L
+L
+L L
+BLK 260
+L
+L L
+5 Units
+5.8 5.8
+L
+5.8
+BLK 259
+7.3
+7.3
+5.8 6 Units
+5
+L L L
+L L
+
+25
+
+13.40
+
+.G
+
+39.18
+
+o
+
+1
+
+68
+
+0
+
+5.8
+
+0.00
+
+=
+
+13.4
+
+5.8
+
+3 67
+
+3.40
+
+5.8
+
+=
+
+R91.00
+
+ST
+
+66
+
+12.8
+0
+
+5.8
+
+6.1 7
+.6
+
+31.11
+
+=
+
+0
+
+.0
+
+= 65
+
+11.6
+
+6.1
+6.1
+
+30.03
+
+11.65
+
+6.1
+
+64
+
++
+
+11.46
+
+R=90
+
+BLK 262
+6 Units
+
+17.25
+
+7.6 7.
+6
+
+18.00
+
+R = 9 0 .0
+
+x x
+x
+BLK 254 x x
+6 Units
+
+29.99
+
+6.1 6.1 6.1 6.1
+
+x
+
+63
+
+107
+
+o
+
+26
+
+9.15 9.15 9.15 9.15 9.15 11.60 11.60 11.60 11.60 11.60 11.60 11.60 11.60
+
+H
+
+10.93
+
+17.42
+
+50.3
+
+18.92
+
+30.00
+
+^ ^ ^
+9.75
+
+x
+
+BLK 253
+6 Units
+
+9.15 9.15 9.15 9.15
+
+62
+
+13.11
+
+x x x x
+
+10.8
+
+61
+
+57
+
+30.50
+
+x
+
+5.8 5.8 5.8 5.8
+
+L
+L
+BLK 263
+L
+6 Units
+L
+
+L
+
+BLOCK 313
+Future Road
+0.09 ha
+
+^
+
+28.63
+
+L
+
+^
+
+11.00
+
+15.57
++
+
+75 74 73 9.75 9.75
+72
+9.75 9.
+75
+71
+70
+^ ^ ^
+69
+^
+30.07
+
+00
+
+L
+L
+L
+BLK 264
+6 Units L
+L
+
+76
+
+28.00
+
+L 28.
+
+77
+
+59
+
+60
+
+9.75 9.75 9.75
+
+18.00
+
+L
+L
+LBLK 265
+7 Units
+L
+L
+
+5.8 7.3
+7.3 5.8
+
+28.00 L
+
+L
+
+5.8 7.3
+7.3 5.8
+
+L
+L
+BLK 266
+L
+7 Units
+L
+L
+
+9.75
+
+0
+
+30.49
+
+18.00
+
+36.00
+
+35.66
+
+STREET
+
+o
+
+56
+
+30.00
+
+o
+
+79
+
+88
+
++
+
+83
+
+STREET C
+
+14.56
+
+o
+
+54 55
+
+.00 11.00
+
+10.95
+
+R = 9 0 .0
+
+58
+
+56.4
+
+29.74
+
+11.41
+
+o
+
+11.00 11.00
+11
+
+11.00 11.00 12.20
+
+o
+
+52 53
+
+13.36
+
+o
+
+30.36
+
+30.00
+
+51
+
+L
+L
+L BLK 267
+7 Units
+L
+L
+28.00
+
+I
+
+31
+
+o
+
+18.00
+
+o
+
+o
+30
+30.00
+
+43
+
+12.85
+
+11.00
+47 46
+45
+o
+44
+o
+
+30.00
+
+L
+
+L
+
+L
+
+30.06
+
+o
+
+49 48
+
+o
+30.00
+
+o
+
+30.79
+
+o
+
+30.00
+
+49.67
+
+.0
+
+11.00 11.00
+
+30.00
+
+30.00
+
+o
+
+28
+
+29
+
+o
+
+L
+L
+
+L
+8.00
+
+30.56
+
+31.42
+
+50
+
++
+
+o
+
+o
+
+42
+13.40 11.
+00 11.00 11
+.00
+
+R =9 0
+
+6
+
+32
+
+o
+
+o
+
+11.76 11.00 11.00 11.00
+
+12.2
+
+33.23
+
+o
+
+40 41
+
+R=90.
+
+L
+
+o
+
+R = 9 0 .0
+
+11.76
+
+L
+L
+BLK 268
+L
+7 Units
+L
+L
+28.00 L
+
+33.26
+
+31.84
+
+o
+
+STREET
+
+L
+LBLK 269
+L 7 Units
+
+8.00
+
+39
+
+14.84
+
+31.40
+
+L
+L
+BLK 270L
+7 Units L
+L
+L
+
++
+
+38
+
+L
+L BLK 271
+L 6 Units
+L
+
+L 28.00
+L
+
++
+30.68
+
+.00
+
+L
+
+o
+
+11.03
+
+34 33
+
+78
+
+12.20
+o
+
+86 87
+
++
+
++
+
++
+
+80
+
+30.10
+
+36 35
+
+o
+
+5.8 7.3
+7.3 5.8
+
+L
+BLK 272L
+6 Units
+L
+L
+28.00 L
+
+BLOCK 314
+Future Road
+0.07 ha
+
+11.00 11.00 13.47
+
+37
+18.00
+
+5.8 7.3
+7.3 5.8
+
+L
+L 28
+
+L
+
+L
+
+14.27
+
+L
+L
+BLK 273
+L
+6 Units
+L
+
+0 .0
+
+L
+L
+BLK 274
+L
+6 Units
+L
+L
+28.00 L
+
++
+
+BLK 299
+Future Residential
+
+0.3m Reserve
+
+30.10
+
+C
+
+BLOCK 315
+Future Road
+0.06 ha
+
+95.7
+
+20
+19.
+
+27
+
+12.44
+o
+
+7
+57.
+
+30.10
+
+.0
+
+30.18
+
+R=90
+
+8
+
+18.00
+
+27.06
+
+STREET C
+
+17.2
+
+28.10
+
+BLK 282
+Park
+
+BLK 304
+Future
+Residential
+
+EXISTING
+RESIDENTIAL
+
+BLK 305
+Future
+Residential
+
+LIMIT OF CONSTRAINTS
+BEACON ENVIROMENTAL AUG. 22, 2024
+
+0.3m Reserve
+
+306
+FS
+
+BLK
+307
+
+1.00
+0 1
+
+234
+
+22.0
+
+0
+0 .00
+11.0 8
+
+T
+
+Road Widening
+0.22 ha
+
+B
+
+11.0
+
+240
+
+11
+
+33.3
+
+3.7
+
+30
+
+.0
+
+9.7
+
+.1
+
+294
+
+63.0
+
+97.5
+
+GREENBELT
+93.6
+
+BLOCK 287
+Park
+1.63 ha
+
+150.8
+
+461.4
+
+153.5
+
+20.0
+
+Medium Density
+0.62 ha
+
+8.5
+
+.4
+12
+
+54.3
+
+10m MPZ FROM TOP OF BANK
+(R-PE, 2023)
+
+BLOCK 280
+
+8.8
+
+1712.1
+
+Future
+Residential
+3.40 ha
+
+36.0
+
+22.0
+
+.9
+
+TOP OF BANK STAKED BY R-PE
+WITH TRCA ON AUGUST 28, 2023
+
+0
+13.
+
+9.3
+
+28.4
+
+R1
+109
+
+BLOCK 308
+
+BLOCK 309
+
+ET
+
+1.00
+0 1
+
+239
+
+o
+5
+30.4 241
+o
+2
+31.7
+
+Storm Water
+Management Pond
+/Park
+0.85 ha
+
+10m MPZ FROM TOP OF BANK
+(R-PE, 2023)
+
+11.0
+
+o
+
+BLOCK 291
+
+RE
+
+0
+
+238
+
+o 0.00
+3
+
+L
+BE
+
+103.5
+
+N
+EE
+
+237
+
+o
+
+11.0
+
+o 30.00
+
+164.5
+
+236
+
+TOP OF BANK STAKED BY R-PE
+WITH TRCA ON AUGUST 28, 2023
+
+BLOCK 279
+Medium Density
+1.82 ha
+
+ST
+
+o 235
+
+1.00
+0 1
+
+GR
+
+11.0
+
+o 30.00
+
+.0
+108
+
++
+0
+30.0
+233
+o
+
+0
+11.0
+
+64.2
+
+Medium Density
+0.02 ha
+
+13.4
+
+232
+
+52.4
+
+BLOCK 278
+
+0
+
+0
+
+30.0
+
+Park
+0.81 ha
+
+156.2
+
+11.6
+
+FS
+
+0
+
+0
+30.0 BLK
+
+11.6
+
+FS
+
+BLOCK 286
+
+Temporary
+Turning Circle
+
+BLOCK 318
+
+N
+
+0 20 40
+
+DRAFT - FOR DISCUSSION PURPOSES ONLY
+
+100
+
+200
+
+300m
+
+DRAFT PLAN OF SUBDIVISION
+SCHEDULE OF LAND USE
+
+KEY PLAN
+
+OWNER'S AUTHORIZATION
+
+SURVEYOR'S CERTIFICATE
+
+I hereby authorize Malone Given Parsons Ltd. to prepare
+and submit this Draft Plan of Subdivision to the Town of
+Caledon.
+
+I hereby certify that the boundaries of the lands
+to be subdivided as shown on this Plan and
+their relationship to the adjacent lands are
+accurately and correctly shown.
+
+Date
+
+Revision
+
+By
+
+ROAD
+
+TORBRAM
+
+ROAD
+
+OLD SCHOOL ROAD
+
+Mayfield Golf Course Inc.
+
+BRAMALEA
+
+Part of Lots 19, 20 and 21
+Concession 5,
+East of Hurontario Street
+Town of Caledon
+Regional Municipality of Peel
+
+Date
+RPE
+
+Date
+
+ADDITIONAL INFORMATION
+MAYFIELD ROAD
+
+Tullamore Industrial GP Inc.
+
+N
+0
+
+100
+
+300
+
+Date
+
+450m
+
+AS REQUIRED UNDER SECTION 51(17) OF
+THE PLANNING ACT, CHAPTER P.13(R.S.O.
+
+SUBJECT PROPERTY
+
+Prepared For:
+Mayfield Golf Course Inc. &
+Tullamore Industrial GP Inc.
+
+Tullamore Industrial GP Inc.
+
+Date
+
+1990).
+(a),(e),(f),(g),(j),(l) - As shown of the Draft Plan.
+(b),(c) - As shown on the Draft and Key Plan.
+(d) - Land to be used in accordance with the
+Schedule of Land Use.
+(i) - Soil is silt and clay loam.
+(h),(k) - Full municipal services to be provided.
+
+MGP File No.: 22-3154
+Date: May 31, 2024
+Revised: October 1, 2024
+
+140 Renfrew Drive, Suite 201 | Markham, ON | L3R 6B3
+905 513 0170 | mgp.ca
+
+APPENDIX B
+RELEVANT EXCERPTS
+
+SIMCOE
+DUFFERIN
+
+Aurora
+
+Y 9
+HW
+
+0
+
+Mono
+
+e
+Yong
+
+40
+HWY
+
+Adjala
+
+St
+
+Rd
+
+n St
+
+Ch
+
+ur
+
+ch
+
+7
+
+or
+t
+
+R
+
+King
+
+Ol
+d
+
+irp
+
+H
+W
+Y
+
+d
+
+Ca
+st
+led
+er
+g
+
+Si
+de
+ro
+
+ad
+
+PEEL
+Legend
+River / Stream
+
+Th
+e
+
+G
+
+or
+e
+
+Richmond
+Hill
+
+St
+
+I
+
+50
+
+Rd
+
+Vaughan
+D
+nzie
+acke
+M
+r
+Majo
+
+Caledon
+
+Unit Flow Relationships
+
+Dufferi
+
+HWY 2
+
+A
+
+King
+
+Equation A (Sub Basin 4)
+
+YORK
+
+r
+
+Dr
+
+Equation B (Sub Basin 6)
+
+Equation F (Sub Basin 36)
+
+Contact TRCA Staff
+
+H
+
+W
+Y
+
+ay
+f
+
+R
+
+d
+
+Brampton
+
+4 Kms
+
+St
+Q
+ue
+
+en
+
+00
+
+Bo
+va
+ird
+
+HWY 4
+
+427
+
+Humber River Stormwater Management
+Quantity Control Release Rates
+
+d
+R
+
+Dr
+
+2
+
+t
+or
+rp
+
+1
+
+07
+Y4
+HW
+
+Ai
+
+Quantity Flood Control Not Required
+0
+
+Y7
+HW
+
+10
+
+01
+Y4
+HW
+
+407
+
+Equation G (Sub Basin 46)
+
+ak
+e
+
+HW
+Y
+
+Equation E (Sub Basin 19A)
+
+M
+
+H
+ea
+rt
+L
+
+Equation D (Sub Basin 15)
+
+iel
+d
+
+Equation C (Sub Basin 10)
+
+HWY 409
+
+W
+Y
+
+41
+0
+
+Y
+HW
+
+1
+40
+
+27
+Y 4
+HW
+
+H
+
+To r o n t o
+
+VOLUME 3 – WATER MASTER PLAN
+CONTEXT
+
+Pressure Zones
+The Region of Peel transmission and distribution systems deliver water to users through seven pressure
+zones separated by approximately 30-metre intervals of elevation. Table 3 presents a summary of the
+lake-base water system pressure zones.
+Table 3 – Lake-based water system pressure zones.
+
+Pressure Zone
+
+Top Water Level
+
+Hydraulic Grade Line
+
+Serviceable Elevation
+
+Zone 1
+
+144.8 m
+
+152.4 m
+
+75.0 – 106.7 m
+
+Zone 2
+
+175.3 m
+
+182.9 m
+
+87.8 – 137.2 m
+
+Zone 3
+
+205.7 m
+
+213.4 m
+
+135.9 – 167.6 m
+
+Zone 4
+
+236.2 m
+
+243.8 m
+
+166.4 – 210.6 m
+
+Zone 5
+
+266.7 m
+
+274.3 m
+
+182.4 – 236.2 m
+
+Zone 6
+
+297.2 m
+
+304.8 m
+
+214.5 – 259.1 m
+
+Zone 7
+
+327.7 m
+
+335.3 m
+
+243.4 – 289.6 m
+
+Transmission Mains
+The Region Peel transmission system is divided into three main trunk systems: West, Central and East. In
+reviewing the flow transfer capability of the transmission main, two important factors are considered;
+theoretical capacity and actual capacity. The capacity of the transmission main is defined based on the
+watermain characteristics as follows:
+Theoretical capacity
+• Size of the transmission main,
+• Expected resistance (or energy loss) of the transmission main, and
+• Standard/assumed roughness coefficient for a new transmission main.
+Actual capacity
+• Size of the transmission main,
+• Expected resistance (or energy loss) of the transmission main, and
+• Roughness coefficient obtained from the calibrated hydraulic model.
+
+Region of Peel – 2020 Water and Wastewater Master Plan for the Lake-Based Systems
+
+19
+
+a Town
+Garafrax
+
+Line
+109
+
+Porterfield Rd
+
+Caledon-E
+
+Finnerty
+
+Hunsden Si
+
+Pat t erson Side
+
+Rd
+
+Rd
+
+redit Rd
+of the C
+
+Old Churc
+
+il K
+
+ine
+gT
+ow
+
+don
+
+Cale
+
+aug
+ha
+A lb
+ion
+V
+
+Coleraine Dr
+
+Kennedy Rd
+
+Coleraine Dr
+
+Clarkway Dr
+
+McVean Dr
+
+Goreway Dr
+
+lvd
+
+ado
+Me w B
+
+S u nn y
+
+n Dr
+
+e n Rd
+
+Maritz Dr
+Hurontario St
+E dw ards Blvd
+
+Re n
+fo rt
+h
+
+Whitt le Rd
+
+r a il Dr
+yt
+
+!
+
+Rd
+
+Water Treatment Plant (WTP)
+Pumping Station (PS)
+Reservoir (RES)
+Elevated Tank (ET)
+Sub- Transmission Main
+Transmission Main
+
+Existing Pressure Zones
+Zone 1
+Zone 2
+Zone 3
+Zone 4
+
+O gden Ave
+
+Erindale Station Rd
+
+"
+
+Po n
+
+Rd
+
+Lorne
+Park WTP
+
+#
+
+Silverthron
+RES PS
+
+ve
+At wat er A
+
+ga
+au
+
+Southdown Rd
+
+Rutherf
+o rd Rd
+
+Main St
+a
+
+M avis R d
+
+Second Line
+
+Terry Fox Way
+
+ve
+
+Erin Mills
+
+rin Dr
+
+Glen E
+
+W ins ton Churc hill B lvd
+
+Cent ral Par
+
+on
+
+in
+W
+Li n e
+Tent h
+
+L
+Ninth ine
+
+is s
+re
+Lak es ho
+
+$
+
+Existing Infrastructure
+
+Rd
+
+F i e l dg ate Dr
+
+C hurchill Blvd
+
+Heritage Rd
+
+Qu eens way
+
+Cawth ra Rd
+
+tion P ky
+
+K ing S t
+
+B lo or St
+
+#
+*
+"
+
+Mi
+
+In d ian Rd
+
+Dr
+
+Pky
+
+n
+Rat hb ur
+
+ss
+
+Clarks on Rd
+
+Royal
+
+Dr
+Wind sor
+
+B lvd
+
+w Dr
+
+Queens way
+
+Tr usc ott Dr
+
+Rd
+Brit annia
+
+$
+
+Dundas S t
+
+RES PS
+
+t a r Dr
+gS
+
+Drew Rd
+
+Eastgat e
+
+Cent ral P ky
+
+#
+*Herridge
+"
+
+rnin
+
+Hanlan RES PS
+
+#
+*
+"
+
+A ve
+
+der a
+n fe
+Co
+
+e Rd
+
+50
+
+k Dr
+ree
+
+r
+eway D
+R id g
+
+m t horp
+
+Mo
+
+Hw
+y
+
+neypark Dr
+Co urt
+
+B ristol Rd
+
+e Vie
+Cent r
+
+Burn h
+a
+
+Rd
+
+mk
+
+Mathe s on
+
+Eglinton
+
+Rd
+
+Clark Blvd
+
+F inch Av e
+
+lc
+
+#
+* Streetsville
+"
+PS
+d
+Erin C entre B lvRES
+
+Ebenez er
+
+Q ueen S t
+
+e
+Steeles Av
+
+d
+
+M il
+as S t
+
+ttr elle B lvd
+
+Derry Rd
+
+Cant ay R
+d
+
+d
+B rit annia R
+
+Co
+
+k
+
+Beckett Sproule
+RES PS
+
+To
+
+y
+
+Thom
+
+#
+*
+"
+
+n B lvd
+
+A gent ia Rd
+r
+
+Pk
+
+O ren
+da
+
+#
+*
+"
+
+Dr
+
+l Dr
+B al m o r a
+
+Dr
+
+y Laws o
+
+e n B lvd
+
+W es t
+
+is
+Ma v
+
+R
+
+ow
+d
+
+Dr
+
+W illiam s P k y
+
+East Brampton
+RES PS
+H
+Dr
+
+Queen S t
+
+S
+Cl arence t
+
+lvd
+Charolais B
+
+vale Blvd
+M ea d ow
+
+Bolton Standpipes ET
+
+re Rd
+Cas tlemo
+
+erwest Pk y
+mb
+Hu
+
+Cent re St
+
+Rd
+Emblet on
+
+Battleford #
+Booster PS
+
+ntainas h R d
+Mo u
+
+r Rd
+te
+
+St
+Vodd en
+
+West Brampton
+RES PS
+
+A
+
+Airport
+RES PS
+k
+North Par
+
+t
+
+#
+*
+"
+
+ot
+
+R
+
+S
+ay
+Ma c k
+
+B ovaird Dr
+
+Aquit ai n e
+
+Fernfor es t Dr
+
+tio
+
+Dr
+
+Count ryside
+
+Blvd
+rt s on
+P e t e r Robe
+
+Meadowvale
+
+!
+nR
+d
+
+Airport Rd
+Bramalea Rd
+
+North Brampton
+
+S andalwood Pky
+
+#
+* North RES PS
+"
+
+!
+
+Mayfield Rd
+
+#
+* RES PS
+"
+
+!
+Cons erva
+
+st
+
+#
+
+Healey Rd
+
+Tullamore
+
+McLaughlin Rd
+
+Chinguacousy Rd
+
+Mississauga Rd
+
+#
+*
+"
+
+#
+*
+"
+
+West Bolton ET !
+
+#
+*
+"
+RES PS
+
+Snelgrove ET
+
+Alloa RES PS
+
+J ames P
+
+C ol um bia W a y
+
+Rd
+
+Wanless
+
+b Pk y
+ol
+
+Em
+
+Bolton ET
+
+Torbram Rd
+
+Victoria RES
+! Mayfield West ET
+
+Creditview Rd
+Old School
+
+Side Rd
+
+Bolton North Hill PS
+
+Kin g St
+
+"
+
+h Rd
+
+Kin
+
+Dixie Rd
+
+M ills Rd
+
+Rd
+
+Ballinafad
+
+The Gore Rd
+
+Line Rd
+Olde Ba se
+
+Boston
+
+rg
+Castlede
+
+Humber Station Rd
+
+Walker Rd
+
+Innis Lake Rd
+
+Side Rd
+The Grange
+
+Rd
+
+Centreville Creek Rd
+
+Horseshoe Hill Rd
+
+n Rd
+
+Ol d Churc h
+
+Mount Hope Rd
+
+cLar
+e
+
+$
+Arthur P.
+Kennedy WTP
+
+General Features
+Provincial
+Freeways
+Regional Roads
+Region of Peel
+Boundary
+0
+
+2020 WATER AND WASTEWATER MASTER PLAN
+
+Existing Water System
+
+Zone 5
+Zone 6
+Zone 7
+
+Greenbelt
+
+5
+Kilometres
+
+June 2020
+715022-139-W-PIC 2
+NAD 1983 UTM Zone 17N
+
+Document Path: W:\GTA\715000\715022 - Region of Peel W WW MP\3_WIP\3_GIS\715022-139-W-Existing Water System (MSP).mxd
+
+Fork s
+M
+
+5 0 H wy
+
+Bus h S t
+
+de Rd
+
+M ount P leasant Rd
+
+St. Andre w's
+
+Side Rd
+Es carpm ent
+
+Pin e Ave
+
+nL
+
+ara
+
+ct R d
+
+Ca t
+
+Si de Rd
+
+Albion Trail
+
+Horseshoe Hill Rd
+
+Heart Lake Rd
+
+Kennedy Rd
+
+S ide Rd
+
+Charles ton
+
+Rd
+
+ffys Lane
+Du
+
+Shaws Creek Rd
+
+Main St
+
+ns Side
+C ooli ha
+
+Mount Wolfe Rd
+
+Side Rd
+
+Beech G rove
+
+Mountainview Rd
+
+Willoughby Rd
+
+Glen Haffy Rd
+
+ide Rd
+tS
+
+Porterfield Rd
+
+Highpoi n
+
+KEY PLAN
+SCALE: N.T.S.
+
+2800 High Point Drive
+Suite 100
+Milton, ON L9T 6P4
+905-875-0026 T
+905-875-4915 F
+www.cfcrozier.ca
+
+KEY PLAN
+SCALE: N.T.S.
+
+2800 High Point Drive
+Suite 100
+Milton, ON L9T 6P4
+905-875-0026 T
+905-875-4915 F
+www.cfcrozier.ca
+
+LEGEND:
+ROA D
+
+73.81ha
+EXT1 5167
+
+20.15ha
+EXT3 1411
+52.15ha
+EXT2 3651
+
+ROAD
+BRAMALEA
+
+61.55ha
+EXT16 4309
+450mmØ
+SAN @ 0.5%
+
+HWAY 410
+
+51.88ha
+EXT15 7782
+
+REGION DC MAPPING PROPOSED
+PRIMARY WASTEWATER MAIN >2024
+
+413
+
+SANITARY DRAINAGE BOUNDARY
+
+22.36ha
+EXT8 1565
+
+10.86ha
+103 3187
+
+EXTERNAL SANITARY DRAINAGE
+BOUNDARY
+
+ANATOLIA
+INVESTMENT
+CORP.
+
+POPULATION
+CATCHMENT ID
+
+SENTINEL
+(TORBRAM)
+HOLDINGS INC.
+(DG GROUP)
+
+2844484
+ONTARIO INC.
+
+250mmØ
+SAN @ 0.5%
+
+83.13ha
+104 10720
+
+DRAINAGE AREA (HECTARES)
+
+14.82ha
+101 1807
+
+375mmØ
+SAN @ 0.5%
+
+OLD SCHOOL ROAD
+
+SENTINEL
+(TORBRAM)
+HOLDINGS INC.
+(DG GROUP)
+
+525mmØ SAN @ 0.5%
+
+FUTURE H
+IG
+
+SENTINEL (TORBRAM)
+HOLDING INC. (DG GROUP)
+
+102.60ha
+EXT6 5130
+
+GREENBELT
+EXISTING CONTOUR
+AND ELEVATION
+
+DG GROUP (SENTINEL
+HOLDINGS INC.)
+
+MARKHAM
+FARMS
+6
+SA 00m
+N
+@ mØ
+0.5
+%
+
+17.71ha
+105 2191
+
+12442
+BRAMALEA
+ROAD
+LIMITED
+PARTNERSHIP
+DG (CALEDON 1) INC.
+(DG GROUP)
+
+ST-208
+
+mØ
+0m 5%
+25 @ 0.
+N
+SA
+
+TULLAMORE
+INDUSTRIAL GP
+LTD.
+
+TOWN OF CALEDON
+PEEL DISTRICT
+SCHOOL BOARD
+
+1867350
+ONTARIO
+INC.
+
+ROAD
+
+TORCHIA
+(2052743
+ONTARIO INC.)
+
+35.10ha
+602 5172
+EXISTING SANITARY
+PUMPING STATION TO BE
+CONNECTED TO STR-012
+
+375mmØ
+SAN @ 0.5%
+
+JOHN FRANCIS AND
+LYNDA CHRISTINE WHITE
+
+200mmØ
+SAN @ 0.5%
+
+2.31ha
+EXT11 404
+
+MAYFIELD RO
+A
+
+D
+
+750mmØ SAN
+@ 0.35%
+
+ST-009
+
+675mmØ SA
+
+89
+
+ST-0
+
+EXISTING SANITARY PUMPING STATION
+TO BE CONNECTED TO STR-012
+
+N @ 0.5%
+
+MAYFIELD ROAD
+
+300mmØ
+SAN @ 0.5%
+
+300mmØ
+SAN @ 1.0%
+
+MAYFIELD
+LANDING
+DEVELOPMENTS
+INC. (DG GROUP)
+
+23.18ha
+401 4498
+300mmØ
+SAN @ 0.5%
+
+37.30ha
+EXT9 732
+
+39.15ha
+EXT10 1273
+
+38.04ha
+501 5145
+
+BRAMALEA
+
+ST-192
+
+600mmØ SAN @ 0.5%
+
+BRAMALEA ROAD
+LIMITED
+PARTNERSHIP
+
+AIELLO
+
+ST-195
+
+ST-178
+
+69.74ha
+601 12427
+
+12.31ha
+201 1639
+
+1.73ha
+EXT12 303
+ST-012
+
+ST-06
+
+ST
+
+36
+
+ST-011
+
+8
+
+-1
+
+ST-253
+
+ST-193
+
+70.77ha
+EXT5 1941
+
+ST-153
+
+0.5
+%
+
+ST-196
+
+@
+
+AIRPORT R
+OAD
+
+SA
+N
+
+MAYFIELD GOLF
+COURSE INC.
+
+33.98ha
+EXT13 5097
+
+ROAD
+
+52
+5m
+mØ
+
+600mmØ
+SAN @ 0.5%
+
+TORBRAM
+
+PROPOSED FLOW SPLITTER MANHOLE ON
+DIXIE ROAD. WASTEWATER FLOWS TO BE
+DIVERTED TO EITHER SANITARY TRUNK
+ST-208 OR TO SANITARY TRUNK ST-192 AT
+THE DISCRETION OF THE REGION OF PEEL.
+
+DIXIE ROAD
+
+ST-194
+
+18.68ha
+EXT7 1308
+
+TACC
+DEVELOPMENTS
+(ARMSTRONG) LTS.
+
+33.62ha
+102 6095
+
+PROPOSED LOCAL WASTEWATER
+MAIN EXTENSION >2024
+
+450mmØ SA
+N @ 0.5%
+
+88.99ha
+EXT14 13349
+
+14.82ha
+101 1807
+
+REGION DC MAPPING PROPOSED
+LOCAL WASTEWATER MAIN >2024
+
+FUTURE HIGHWA
+Y
+
+11.82ha
+301 2401
+
+DIXIE ROAD
+
+EXTENSION
+
+OLD SCHOOL ROAD
+
+EXISTING WASTEWATER MAIN
+(REGION, 2024)
+
+AIRPORT R
+OAD
+
+60.39ha
+EXT17 4227
+
+44.29ha
+EXT4 3100
+
+LIMIT OF SECONDARY PLAN
+
+TORBRAM
+
+FUTURE HIGHWAY 413
+
+*NOTE: LAYOUT IS SCHEMATIC ONLY, DETAILS TO BE PROVIDED AT DETAILED DESIGN STAGE.
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+0
+
+MAYFIELD TULLAMORE LANDOWNER GROUP
+
+5
+10
+25
+
+0
+50
+
+20
+
+m
+
+75
+
+40
+
+ST-137
+
+0
+10
+0
+20
+
+MASTER SANITARY
+DRAINAGE PLAN
+
+0m
+30
+
+COUNTRYSIDE ROAD
+
+COUNTRYSIDE ROAD
+
+DESIGNED BY:
+
+C.M.D.
+
+CHECKED BY:
+
+N.D.M.
+
+SCALE:
+
+1:10000
+
+DATE:
+
+AUGUST 2024
+
+PROJECT No:
+
+FIGURE No:
+
+2699
+
+2
+
+Sanitary Design Sheet
+Mayfield Tullamore Landowner Group
+MESP
+Town of Caledon, Region of Peel
+Minimum Sewer Diameter (mm) =
+
+200
+
+Avg. Domestic Flow (l/cap/day) =
+
+290
+
+Mannings n =
+
+0.013
+
+Avg. Non-Residential Flow (l/emp/day) =
+
+270
+
+Project: Mayfield Tullamore Landowner Group
+Project No. 2699
+
+Minimum Velocity (m/s) =
+
+0.75
+
+Infiltration Rate (l/s/ha) =
+
+0.26
+
+Notes:
+
+Maximum Velocity (m/s) =
+
+3
+
+Max. Harmon Peaking Factor =
+
+4.0
+
+1. Population Density based on discussions with Region staff
+
+Designed By: G.M.
+
+Minimum Pipe Slope (%) =
+
+0.50
+
+Min. Harmon Peaking Factor =
+
+2.0
+
+2. Per capita sanitary flow of 285 L/day per Region of Peel standards
+
+Reviewed By: N.D.M.
+
+3. Area and population per Sanitary Drainage Plan (Drawing SAN-01) and Pipe Design Sheet dated March 28, 2024 prepared by Crozier Consulting Engineers
+
+NOMINAL PIPE SIZE USED
+LOCATION
+
+Date: 9-Aug-24
+
+RESIDENTIAL
+MANHOLE
+AREA
+
+STREET
+FROM
+
+INDUSTRIAL/COMMERCIAL/INSTITUTIONAL
+
+DENSITY
+ACCUM.
+AREA
+
+UNITS
+PER UNIT
+
+PER HA
+
+(#)
+
+(p/unit)
+
+(p/ha)
+
+RESIDENTIAL
+POPULATION
+
+ACCUM.
+RESIDENTIAL
+POPULATION
+
+AREA
+
+ACCUM.
+AREA
+
+POPULATION
+DENSITY
+
+FLOW
+RATE
+
+(ha)
+
+(ha)
+
+(p/ha)
+
+(l/s/ha)
+
+P:\2699 Mayfield Tullamore Landowner Group\Design\Pipe Design\Sanitary\2024 07(Jul) 17 - Prelim Sani Sizing\[2699 - Sanitary Sheet Design.xlsm]Design
+
+FLOW CALCULATIONS
+
+ACCUM.
+EQUIV.
+POPULATION
+
+INFILTRATION
+
+TOTAL
+ACCUM.
+POPULATION
+
+AVG.
+DOMESTIC
+FLOW
+
+ACCUM. AVG.
+DOMESTIC
+FLOW
+
+(L/s)
+
+(L/s)
+
+PEAKING
+FACTOR
+
+PIPE DATA
+PEAKED
+RESIDENTIAL
+FLOW
+
+ICI
+FLOW
+
+TOTAL
+FLOW
+
+LENGTH
+
+PIPE
+DIAMETER
+
+SLOPE
+
+(L/s)
+
+(L/s)
+
+(L/s)
+
+(m)
+
+(mm)
+
+(%)
+
+(L/s)
+
+(m/s)
+
+FULL FLOW FULL FLOW
+CAPACITY
+VELOCITY
+
+TO
+
+CATCHMENT 101
+
+(ha)
+
+(ha)
+
+14.82
+
+0.00
+
+(L/s)
+
+Single/Semi-Detached
+
+101-1
+
+101-2
+
+10.97
+
+10.97
+
+274
+
+4.20
+
+1152
+
+1152
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+2.85
+
+1152
+
+3.87
+
+3.87
+
+3.76
+
+14.53
+
+0.00
+
+17.39
+
+100.00
+
+200.00
+
+0.50
+
+23.18
+
+UNDER
+
+Street Townhouses
+
+101-2
+
+102-1
+
+3.85
+
+14.82
+
+193
+
+3.40
+
+655
+
+1807
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+3.85
+
+1807
+
+2.20
+
+6.07
+
+3.62
+
+21.95
+
+0.00
+
+25.81
+
+100.00
+
+250.00
+
+0.50
+
+42.03
+
+0.86
+
+Catchment EXT11,2
+
+EXT1-1
+
+EXT2-1
+
+73.81
+
+73.81
+
+0
+
+70.00
+
+5167
+
+5167
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+19.19
+
+5167
+
+17.04
+
+17.04
+
+3.23
+
+55.08
+
+0.00
+
+74.27
+
+100.00
+
+375.00
+
+0.50
+
+123.91
+
+1.12
+
+Catchment EXT21,2
+
+EXT2-1
+
+102-4
+
+52.15
+
+125.96
+
+0
+
+70.00
+
+3651
+
+8817
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+32.75
+
+8817
+
+12.04
+
+29.08
+
+3.01
+
+87.51
+
+0.00
+
+120.26
+
+100.00
+
+450.00
+
+0.50
+
+201.50
+
+1.27
+
+33.62
+
+0.00
+
+Apartments (NC)
+
+102-1
+
+102-2
+
+3.27
+
+18.09
+
+491
+
+2.70
+
+1324
+
+3131
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+4.70
+
+3131
+
+4.45
+
+10.51
+
+3.43
+
+36.01
+
+0.00
+
+40.72
+
+100.00
+
+300.00
+
+0.50
+
+68.34
+
+0.97
+
+Stacked Townhouses (UC)
+
+102-2
+
+102-3
+
+4.91
+
+23.00
+
+491
+
+3.40
+
+1669
+
+4801
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+5.98
+
+4801
+
+5.60
+
+16.11
+
+3.26
+
+52.55
+
+0.00
+
+58.53
+
+100.00
+
+300.00
+
+0.50
+
+68.34
+
+0.97
+
+Single/Semi-Detached
+
+102-3
+
+102-4
+
+18.83
+
+41.83
+
+471
+
+4.20
+
+1977
+
+6778
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+10.88
+
+6778
+
+6.64
+
+22.75
+
+3.12
+
+70.98
+
+0.00
+
+81.85
+
+100.00
+
+375.00
+
+0.50
+
+123.91
+
+1.12
+
+Street Townhouses
+
+102-4
+
+103-1
+
+6.61
+
+174.41
+
+331
+
+3.40
+
+1125
+
+16719
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+45.35
+
+16719
+
+3.77
+
+55.61
+
+2.73
+
+151.85
+
+0.00
+
+197.20
+
+100.00
+
+525.00
+
+0.50
+
+303.95
+
+1.40
+
+10.86
+
+0.00
+
+Apartments (NC)
+
+103-1
+
+103-2
+
+1.96
+
+176.37
+
+294
+
+2.70
+
+794
+
+17513
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+45.85
+
+17513
+
+2.66
+
+58.27
+
+2.71
+
+157.94
+
+0.00
+
+203.80
+
+100.00
+
+525.00
+
+0.50
+
+303.95
+
+1.40
+
+Stacked Townhouses (UC)
+
+103-2
+
+103-3
+
+6.00
+
+182.37
+
+600
+
+3.40
+
+2040
+
+19553
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+47.41
+
+19553
+
+6.85
+
+65.12
+
+2.66
+
+173.37
+
+0.00
+
+220.78
+
+100.00
+
+525.00
+
+0.50
+
+303.95
+
+1.40
+
+Single/Semi-Detached
+
+103-3
+
+103-4
+
+2.15
+
+184.51
+
+54
+
+4.20
+
+225
+
+19778
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+47.97
+
+19778
+
+0.76
+
+65.88
+
+2.66
+
+175.05
+
+0.00
+
+223.03
+
+100.00
+
+525.00
+
+0.50
+
+303.95
+
+1.40
+
+Street Townhouses
+
+103-4
+
+104-1
+
+0.75
+
+185.27
+
+38
+
+3.40
+
+128
+
+19907
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+48.17
+
+19907
+
+0.43
+
+66.31
+
+2.65
+
+176.01
+
+0.00
+
+224.18
+
+100.00
+
+525.00
+
+0.50
+
+303.95
+
+1.40
+
+Catchment EXT31,2
+
+EXT3-1
+
+EXT4-1
+
+20.15
+
+20.15
+
+0
+
+70.00
+
+1411
+
+1411
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+5.24
+
+1411
+
+4.65
+
+4.65
+
+3.70
+
+17.21
+
+0.00
+
+22.45
+
+100.00
+
+250.00
+
+0.50
+
+42.03
+
+0.86
+
+Catchment EXT41,2
+
+EXT4-1
+
+104-4
+
+44.29
+
+64.44
+
+0
+
+70.00
+
+3100
+
+4511
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+16.75
+
+4511
+
+10.23
+
+14.88
+
+3.29
+
+48.90
+
+0.00
+
+65.65
+
+100.00
+
+375.00
+
+0.50
+
+123.91
+
+1.12
+
+83.13
+
+0.00
+
+Schools
+
+104-1
+
+104-2
+
+0.00
+
+185.27
+
+0
+
+0
+
+19907
+
+5.60
+
+5.60
+
+160.71
+
+0.00
+
+900
+
+49.62
+
+20807
+
+2.81
+
+69.12
+
+2.64
+
+182.14
+
+0.00
+
+231.77
+
+100.00
+
+525.00
+
+0.50
+
+303.95
+
+1.40
+
+Stacked Townhouses (UC)
+
+104-2
+
+104-3
+
+1.69
+
+186.96
+
+169
+
+575
+
+20481
+
+0.00
+
+5.60
+
+0.00
+
+0.00
+
+900
+
+50.06
+
+21381
+
+1.93
+
+71.05
+
+2.62
+
+186.38
+
+0.00
+
+236.45
+
+100.00
+
+525.00
+
+0.50
+
+303.95
+
+1.40
+
+CATCHMENT 102
+
+CATCHMENT 103
+
+CATCHMENT 104
+
+3.40
+
+Single/Semi-Detached
+
+104-3
+
+104-4
+
+56.12
+
+243.08
+
+1403
+
+4.20
+
+5893
+
+26374
+
+0.00
+
+5.60
+
+0.00
+
+0.00
+
+900
+
+64.66
+
+27274
+
+19.78
+
+90.83
+
+2.52
+
+228.71
+
+0.00
+
+293.36
+
+100.00
+
+600.00
+
+0.50
+
+433.95
+
+1.53
+
+Street Townhouses
+
+104-4
+
+105-6
+
+19.72
+
+327.24
+
+986
+
+3.40
+
+3352
+
+34237
+
+0.00
+
+5.60
+
+0.00
+
+0.00
+
+900
+
+86.54
+
+35137
+
+11.25
+
+116.96
+
+2.41
+
+281.89
+
+0.00
+
+368.43
+
+100.00
+
+600.00
+
+0.50
+
+433.95
+
+1.53
+
+17.71
+
+0.00
+
+Schools
+
+105-1
+
+105-2
+
+0.00
+
+0.00
+
+0
+
+Medium Density
+
+105-2
+
+105-3
+
+1.46
+
+1.46
+
+0
+
+Firehall
+
+105-3
+
+105-4
+
+0.00
+
+1.46
+
+Commercial
+
+105-4
+
+105-5
+
+0.00
+
+Single/Semi-Detached
+
+105-5
+
+105-6
+
+Street Townhouses
+
+105-6
+
+EXT5-1
+
+12.31
+
+0.00
+
+Medium Density
+
+201-1
+
+201-2
+
+2.60
+
+2.60
+
+0
+
+Single/Semi-Detached
+
+201-2
+
+201-3
+
+7.19
+
+9.79
+
+180
+
+Street Townhouses
+
+201-3
+
+EXT5-1
+
+2.52
+
+12.31
+
+126
+
+CATCHMENT 105
+
+CATCHMENT 201
+
+0
+
+0
+
+2.10
+
+2.10
+
+214.29
+
+0.00
+
+450
+
+0.55
+
+450
+
+1.41
+
+1.41
+
+4.00
+
+5.62
+
+0.00
+
+6.17
+
+100.00
+
+200.00
+
+0.50
+
+23.18
+
+UNDER
+
+256
+
+256
+
+0.00
+
+2.10
+
+0.00
+
+0.00
+
+450
+
+0.93
+
+706
+
+0.86
+
+2.26
+
+3.89
+
+8.81
+
+0.00
+
+9.74
+
+100.00
+
+200.00
+
+0.50
+
+23.18
+
+UNDER
+
+0
+
+0
+
+256
+
+1.00
+
+3.10
+
+50.00
+
+0.00
+
+500
+
+1.19
+
+756
+
+0.16
+
+2.42
+
+3.88
+
+9.38
+
+0.00
+
+10.56
+
+100.00
+
+200.00
+
+0.50
+
+23.18
+
+UNDER
+
+1.46
+
+0
+
+0
+
+256
+
+0.50
+
+3.60
+
+50.00
+
+0.00
+
+525
+
+1.32
+
+781
+
+0.08
+
+2.50
+
+3.87
+
+9.66
+
+0.00
+
+10.98
+
+100.00
+
+200.00
+
+0.50
+
+23.18
+
+UNDER
+
+9.36
+
+10.82
+
+234
+
+3.64
+
+852
+
+1107
+
+0.00
+
+3.60
+
+0.00
+
+0.00
+
+525
+
+3.75
+
+1632
+
+2.86
+
+5.36
+
+3.65
+
+19.57
+
+0.00
+
+23.32
+
+100.00
+
+250.00
+
+0.50
+
+42.03
+
+0.86
+
+3.29
+
+341.35
+
+164
+
+3.40
+
+559
+
+35904
+
+0.00
+
+9.20
+
+0.00
+
+0.00
+
+1425
+
+91.14
+
+37329
+
+1.84
+
+124.16
+
+2.38
+
+296.10
+
+0.00
+
+387.24
+
+100.00
+
+600.00
+
+0.50
+
+433.95
+
+1.53
+
+455
+
+455
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+0.68
+
+455
+
+1.53
+
+1.53
+
+3.99
+
+6.10
+
+0.00
+
+6.78
+
+100.00
+
+200.00
+
+0.50
+
+23.18
+
+UNDER
+
+4.20
+
+754
+
+1209
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+2.54
+
+1209
+
+2.53
+
+4.06
+
+3.75
+
+15.20
+
+0.00
+
+17.75
+
+100.00
+
+200.00
+
+0.50
+
+23.18
+
+UNDER
+
+3.40
+
+429
+
+1639
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+3.20
+
+1639
+
+1.44
+
+5.50
+
+3.65
+
+20.08
+
+0.00
+
+23.28
+
+100.00
+
+250.00
+
+0.50
+
+42.03
+
+0.86
+
+175.00
+
+Street A
+
+175.00
+
+Street C
+
+Catchment EXT71,2
+
+EXT7-1
+
+EXT6-1
+
+18.68
+
+18.68
+
+0
+
+Catchment EXT81,2
+
+EXT8-1
+
+EXT6-1
+
+0.00
+
+0.00
+
+0
+
+70.00
+
+1308
+
+1308
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+4.86
+
+1308
+
+4.31
+
+4.31
+
+3.72
+
+16.05
+
+0.00
+
+20.91
+
+100.00
+
+250.00
+
+0.50
+
+42.03
+
+0.86
+
+0
+
+0
+
+22.36
+
+22.36
+
+70.00
+
+0.00
+
+1565
+
+5.81
+
+1565
+
+5.16
+
+5.16
+
+3.67
+
+18.93
+
+0.00
+
+24.74
+
+100.00
+
+250.00
+
+0.50
+
+42.03
+
+0.86
+
+1 of 3
+
+Sanitary Design Sheet
+Mayfield Tullamore Landowner Group
+MESP
+Town of Caledon, Region of Peel
+Minimum Sewer Diameter (mm) =
+
+200
+
+Avg. Domestic Flow (l/cap/day) =
+
+290
+
+Mannings n =
+
+0.013
+
+Avg. Non-Residential Flow (l/emp/day) =
+
+270
+
+Project: Mayfield Tullamore Landowner Group
+Project No. 2699
+
+Minimum Velocity (m/s) =
+
+0.75
+
+Infiltration Rate (l/s/ha) =
+
+0.26
+
+Notes:
+
+Maximum Velocity (m/s) =
+
+3
+
+Max. Harmon Peaking Factor =
+
+4.0
+
+1. Population Density based on discussions with Region staff
+
+Designed By: G.M.
+
+Minimum Pipe Slope (%) =
+
+0.50
+
+Min. Harmon Peaking Factor =
+
+2.0
+
+2. Per capita sanitary flow of 285 L/day per Region of Peel standards
+
+Reviewed By: N.D.M.
+
+3. Area and population per Sanitary Drainage Plan (Drawing SAN-01) and Pipe Design Sheet dated March 28, 2024 prepared by Crozier Consulting Engineers
+
+NOMINAL PIPE SIZE USED
+LOCATION
+
+Date: 9-Aug-24
+
+RESIDENTIAL
+MANHOLE
+ACCUM.
+AREA
+
+UNITS
+
+(ha)
+
+(ha)
+
+(#)
+
+11.82
+
+0.00
+
+AREA
+STREET
+FROM
+
+INDUSTRIAL/COMMERCIAL/INSTITUTIONAL
+
+DENSITY
+PER UNIT
+
+PER HA
+
+(p/unit)
+
+(p/ha)
+
+RESIDENTIAL
+POPULATION
+
+ACCUM.
+RESIDENTIAL
+POPULATION
+
+AREA
+
+ACCUM.
+AREA
+
+POPULATION
+DENSITY
+
+FLOW
+RATE
+
+(ha)
+
+(ha)
+
+(p/ha)
+
+(l/s/ha)
+
+P:\2699 Mayfield Tullamore Landowner Group\Design\Pipe Design\Sanitary\2024 07(Jul) 17 - Prelim Sani Sizing\[2699 - Sanitary Sheet Design.xlsm]Design
+
+FLOW CALCULATIONS
+
+ACCUM.
+EQUIV.
+POPULATION
+
+INFILTRATION
+
+TOTAL
+ACCUM.
+POPULATION
+
+AVG.
+DOMESTIC
+FLOW
+
+ACCUM. AVG.
+DOMESTIC
+FLOW
+
+(L/s)
+
+(L/s)
+
+PEAKING
+FACTOR
+
+PIPE DATA
+PEAKED
+RESIDENTIAL
+FLOW
+
+ICI
+FLOW
+
+TOTAL
+FLOW
+
+LENGTH
+
+PIPE
+DIAMETER
+
+SLOPE
+
+(L/s)
+
+(L/s)
+
+(L/s)
+
+(m)
+
+(mm)
+
+(%)
+
+FULL FLOW FULL FLOW
+CAPACITY
+VELOCITY
+
+TO
+
+CATCHMENT 301
+
+(L/s)
+
+(L/s)
+
+(m/s)
+
+UNDER
+
+Apartments (NC)
+
+301-1
+
+301-2
+
+3.39
+
+3.39
+
+509
+
+2.70
+
+1373
+
+1373
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+0.88
+
+1373
+
+4.61
+
+4.61
+
+3.71
+
+17.08
+
+0.00
+
+17.96
+
+100.00
+
+200.00
+
+0.50
+
+23.18
+
+Single/Semi-Detached
+
+301-2
+
+301-3
+
+6.24
+
+9.63
+
+156
+
+4.20
+
+655
+
+2028
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+2.50
+
+2028
+
+2.20
+
+6.81
+
+3.58
+
+24.38
+
+0.00
+
+26.88
+
+100.00
+
+250.00
+
+0.50
+
+42.03
+
+0.86
+
+Street Townhouses
+
+301-3
+
+EXT6-1
+
+2.19
+
+11.82
+
+110
+
+3.40
+
+373
+
+2401
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+3.07
+
+2401
+
+1.25
+
+8.06
+
+3.52
+
+28.39
+
+0.00
+
+31.46
+
+100.00
+
+250.00
+
+0.50
+
+42.03
+
+0.86
+
+Catchment EXT6
+
+EXT6-1
+
+EXT5-1
+
+0.00
+
+30.50
+
+0
+
+0
+
+3708
+
+102.60
+
+124.96
+
+50.00
+
+0.00
+
+6695
+
+40.42
+
+10404
+
+16.03
+
+33.57
+
+2.94
+
+98.60
+
+0.00
+
+139.02
+
+100.00
+
+450.00
+
+0.50
+
+201.50
+
+1.27
+
+Catchment EXT53
+
+EXT5-1
+
+ST-009
+
+0.00
+
+384.16
+
+0
+
+0
+
+41251
+
+70.77
+
+204.93
+
+27.43
+
+0.00
+
+10061
+
+153.16
+
+51312
+
+6.07
+
+169.29
+
+2.25
+
+381.60
+
+0.00
+
+534.77
+
+100.00
+
+750.00
+
+0.35
+
+658.29
+
+1.49
+
+Catchment EXT9
+
+EXT9-1
+
+EXT10-1
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+37.30
+
+37.30
+
+19.62
+
+0.00
+
+732
+
+9.70
+
+732
+
+2.29
+
+2.29
+
+3.88
+
+8.88
+
+0.00
+
+18.58
+
+100.00
+
+300.00
+
+1.00
+
+96.65
+
+1.37
+
+Catchment EXT103
+
+EXT10-1
+
+Airport Road
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+39.15
+
+76.45
+
+32.51
+
+0.00
+
+2005
+
+19.88
+
+2005
+
+3.98
+
+6.26
+
+3.58
+
+22.46
+
+0.00
+
+42.34
+
+100.00
+
+300.00
+
+0.50
+
+68.34
+
+0.97
+
+Catchment EXT113
+
+EXT11-1
+
+Block 48-2
+
+2.31
+
+2.31
+
+0
+
+404
+
+404
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+0.60
+
+404
+
+1.36
+
+1.36
+
+4.00
+
+5.43
+
+0.00
+
+6.03
+
+100.00
+
+200.00
+
+0.50
+
+23.18
+
+UNDER
+
+23.18
+
+0.00
+
+Apartments (NC)
+
+401-1
+
+401-2
+
+5.91
+
+5.91
+
+887
+
+2.70
+
+2394
+
+2394
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+1.54
+
+2394
+
+8.03
+
+8.03
+
+3.52
+
+28.31
+
+0.00
+
+29.85
+
+100.00
+
+250.00
+
+0.50
+
+42.03
+
+0.86
+
+Single/Semi-Detached
+
+401-2
+
+401-3
+
+12.78
+
+18.69
+
+319
+
+4.20
+
+1342
+
+3735
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+4.86
+
+3735
+
+4.50
+
+12.54
+
+3.36
+
+42.12
+
+0.00
+
+46.98
+
+100.00
+
+300.00
+
+0.50
+
+68.34
+
+0.97
+
+Street Townhouses
+
+401-3
+
+Block 48-2
+
+4.49
+
+23.18
+
+224
+
+3.40
+
+763
+
+4498
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+6.03
+
+4498
+
+2.56
+
+15.10
+
+3.29
+
+49.63
+
+0.00
+
+55.66
+
+100.00
+
+300.00
+
+0.50
+
+68.34
+
+0.97
+
+38.04
+
+0.00
+
+CATCHMENT 401
+
+CATCHMENT 501
+
+175.00
+
+Stacked Townhouses (UC)
+
+501-1
+
+501-2
+
+2.33
+
+2.33
+
+233
+
+3.40
+
+792
+
+792
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+0.61
+
+792
+
+2.66
+
+2.66
+
+3.86
+
+10.27
+
+0.00
+
+10.88
+
+100.00
+
+200.00
+
+0.50
+
+23.18
+
+UNDER
+
+Single/Semi-Detached
+
+501-2
+
+501-3
+
+26.43
+
+28.76
+
+661
+
+4.20
+
+2775
+
+3567
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+7.48
+
+3567
+
+9.31
+
+11.97
+
+3.38
+
+40.44
+
+0.00
+
+47.91
+
+100.00
+
+300.00
+
+0.50
+
+68.34
+
+0.97
+
+Street Townhouses
+
+501-3
+
+Block 48-2
+
+9.28
+
+38.04
+
+464
+
+3.40
+
+1578
+
+5145
+
+0.00
+
+0.00
+
+0.00
+
+0.00
+
+0
+
+9.89
+
+5145
+
+5.30
+
+17.27
+
+3.23
+
+55.84
+
+0.00
+
+65.73
+
+100.00
+
+375.00
+
+0.50
+
+123.91
+
+1.12
+
+Catchment EXT171,2
+
+EXT17-1
+
+Dixie Road
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+60.39
+
+60.39
+
+70.00
+
+0.00
+
+4227
+
+15.70
+
+4227
+
+13.94
+
+13.94
+
+3.31
+
+46.18
+
+0.00
+
+61.88
+
+100.00
+
+375.00
+
+0.50
+
+123.91
+
+1.12
+
+Catchment EXT161,2
+
+EXT16-1
+
+Dixie Road
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+61.55
+
+61.55
+
+70.00
+
+0.00
+
+4309
+
+16.00
+
+4309
+
+14.21
+
+14.21
+
+3.30
+
+46.96
+
+0.00
+
+62.96
+
+100.00
+
+375.00
+
+0.50
+
+123.91
+
+1.12
+
+Catchment EXT151
+
+EXT15-1
+
+EXT13-1
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+51.88
+
+51.88
+
+150.00
+
+0.00
+
+7782
+
+13.49
+
+7782
+
+24.32
+
+24.32
+
+3.06
+
+74.46
+
+0.00
+
+87.95
+
+100.00
+
+375.00
+
+0.50
+
+123.91
+
+1.12
+
+Catchment EXT141
+
+EXT14-1
+
+EXT13-1
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+88.99
+
+88.99
+
+150.00
+
+0.00
+
+13349
+
+23.14
+
+13349
+
+41.71
+
+41.71
+
+2.83
+
+118.02
+
+0.00
+
+141.16
+
+100.00
+
+450.00
+
+0.50
+
+201.50
+
+1.27
+
+Catchment EXT131
+
+EXT13-1
+
+601-5
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+33.98
+
+174.85
+
+150.00
+
+0.00
+
+26228
+
+45.46
+
+26228
+
+15.93
+
+81.96
+
+2.53
+
+207.76
+
+0.00
+
+253.22
+
+100.00
+
+525.00
+
+0.50
+
+303.95
+
+1.40
+
+69.74
+
+0.00
+
+Schools
+
+601-1
+
+601-2
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+2.40
+
+2.40
+
+187.50
+
+0.00
+
+450
+
+0.62
+
+450
+
+1.41
+
+1.41
+
+4.00
+
+5.62
+
+0.00
+
+6.25
+
+100.00
+
+200.00
+
+0.50
+
+23.18
+
+UNDER
+
+Apartments (NC)
+
+601-2
+
+601-3
+
+6.28
+
+6.28
+
+942
+
+2.70
+
+2543
+
+2543
+
+0.00
+
+2.40
+
+0.00
+
+0.00
+
+450
+
+2.26
+
+2993
+
+8.54
+
+9.94
+
+3.44
+
+34.24
+
+0.00
+
+36.49
+
+100.00
+
+250.00
+
+0.50
+
+42.03
+
+0.86
+
+Stacked Townhouses (UC)
+
+601-3
+
+601-4
+
+9.13
+
+15.41
+
+913
+
+3.40
+
+3104
+
+5648
+
+0.00
+
+2.40
+
+0.00
+
+0.00
+
+450
+
+4.63
+
+6098
+
+10.42
+
+20.36
+
+3.16
+
+64.43
+
+0.00
+
+69.06
+
+100.00
+
+375.00
+
+0.50
+
+123.91
+
+1.12
+
+CATCHMENT 601
+
+Single/Semi-Detached
+
+601-4
+
+601-5
+
+38.43
+
+53.84
+
+961
+
+4.20
+
+4035
+
+9682
+
+0.00
+
+2.40
+
+0.00
+
+0.00
+
+450
+
+14.62
+
+10132
+
+13.54
+
+33.90
+
+2.95
+
+99.99
+
+0.00
+
+114.61
+
+100.00
+
+450.00
+
+0.50
+
+201.50
+
+1.27
+
+Street Townhouses
+
+601-5
+
+ST-208
+
+13.50
+
+67.34
+
+675
+
+3.40
+
+2295
+
+11978
+
+0.00
+
+177.25
+
+0.00
+
+0.00
+
+26678
+
+63.59
+
+38655
+
+7.70
+
+123.57
+
+2.37
+
+292.89
+
+0.00
+
+356.48
+
+100.00
+
+600.00
+
+0.50
+
+433.95
+
+1.53
+
+35.10
+
+0.00
+
+Existing Schools
+
+602-1
+
+602-2
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+10.86
+
+10.86
+
+110.50
+
+0.00
+
+1200
+
+2.82
+
+1200
+
+3.75
+
+3.75
+
+3.75
+
+14.05
+
+0.00
+
+16.88
+
+100.00
+
+200.00
+
+0.50
+
+23.18
+
+UNDER
+
+Existing Rec Centre
+
+602-2
+
+602-3
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+3.93
+
+14.79
+
+50.00
+
+0.00
+
+1397
+
+3.85
+
+1397
+
+0.61
+
+4.36
+
+3.70
+
+16.15
+
+0.00
+
+20.00
+
+100.00
+
+250.00
+
+0.50
+
+42.03
+
+0.86
+
+Community Centre
+
+602-3
+
+602-4
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+5.00
+
+19.79
+
+50.00
+
+0.00
+
+1647
+
+5.15
+
+1647
+
+0.78
+
+5.15
+
+3.65
+
+18.78
+
+0.00
+
+23.93
+
+100.00
+
+250.00
+
+0.50
+
+42.03
+
+0.86
+
+CATCHMENT 602
+
+Stacked Townhouses (UC)
+
+602-4
+
+602-5
+
+5.41
+
+5.41
+
+541
+
+3.40
+
+1839
+
+1839
+
+0.00
+
+19.79
+
+0.00
+
+0.00
+
+1647
+
+6.55
+
+3486
+
+6.17
+
+11.32
+
+3.39
+
+38.33
+
+0.00
+
+44.88
+
+100.00
+
+300.00
+
+0.50
+
+68.34
+
+0.97
+
+Single/Semi-Detached
+
+602-5
+
+602-6
+
+10.23
+
+15.64
+
+256
+
+4.20
+
+1075
+
+2914
+
+0.00
+
+19.79
+
+0.00
+
+0.00
+
+1647
+
+9.21
+
+4560
+
+3.61
+
+14.93
+
+3.28
+
+48.98
+
+0.00
+
+58.20
+
+100.00
+
+300.00
+
+0.50
+
+68.34
+
+0.97
+
+Street Townhouses
+
+602-6
+
+ST-208
+
+3.60
+
+19.24
+
+180
+
+3.40
+
+611
+
+3525
+
+0.00
+
+19.79
+
+0.00
+
+0.00
+
+1647
+
+10.15
+
+5172
+
+2.05
+
+16.98
+
+3.23
+
+54.86
+
+0.00
+
+65.01
+
+100.00
+
+375.00
+
+0.50
+
+123.91
+
+1.12
+
+2 of 3
+
+Sanitary Design Sheet
+Mayfield Tullamore Landowner Group
+MESP
+Town of Caledon, Region of Peel
+Minimum Sewer Diameter (mm) =
+
+200
+
+Avg. Domestic Flow (l/cap/day) =
+
+290
+
+Mannings n =
+
+0.013
+
+Avg. Non-Residential Flow (l/emp/day) =
+
+270
+
+Project: Mayfield Tullamore Landowner Group
+Project No. 2699
+
+Minimum Velocity (m/s) =
+
+0.75
+
+Infiltration Rate (l/s/ha) =
+
+0.26
+
+Notes:
+
+Maximum Velocity (m/s) =
+
+3
+
+Max. Harmon Peaking Factor =
+
+4.0
+
+1. Population Density based on discussions with Region staff
+
+Designed By: G.M.
+
+Minimum Pipe Slope (%) =
+
+0.50
+
+Min. Harmon Peaking Factor =
+
+2.0
+
+2. Per capita sanitary flow of 285 L/day per Region of Peel standards
+
+Reviewed By: N.D.M.
+
+3. Area and population per Sanitary Drainage Plan (Drawing SAN-01) and Pipe Design Sheet dated March 28, 2024 prepared by Crozier Consulting Engineers
+
+NOMINAL PIPE SIZE USED
+LOCATION
+
+Date: 9-Aug-24
+
+RESIDENTIAL
+MANHOLE
+
+INDUSTRIAL/COMMERCIAL/INSTITUTIONAL
+
+DENSITY
+AREA
+
+STREET
+
+ACCUM.
+AREA
+
+UNITS
+PER UNIT
+
+FROM
+
+TO
+(ha)
+
+(ha)
+
+(#)
+
+Catchment EXT12
+
+EXT12-1
+
+ST-208
+
+1.73
+
+1.73
+
+0
+
+Bramalea Road
+
+ST-208
+
+ST-012
+
+0.00
+
+88.31
+
+0
+
+(p/unit)
+
+PER HA
+
+RESIDENTIAL
+POPULATION
+
+ACCUM.
+RESIDENTIAL
+POPULATION
+
+AREA
+
+303
+
+303
+
+0
+
+15806
+
+0.00
+
+(p/ha)
+
+175.00
+
+FLOW CALCULATIONS
+
+ACCUM.
+EQUIV.
+POPULATION
+
+INFILTRATION
+
+0.00
+
+0
+
+0.00
+
+28324
+
+ACCUM.
+AREA
+
+POPULATION
+DENSITY
+
+FLOW
+RATE
+
+(ha)
+
+(ha)
+
+(p/ha)
+
+(l/s/ha)
+
+0.00
+
+0.00
+
+0.00
+
+197.04
+
+0.00
+
+3 of 3
+
+P:\2699 Mayfield Tullamore Landowner Group\Design\Pipe Design\Sanitary\2024 07(Jul) 17 - Prelim Sani Sizing\[2699 - Sanitary Sheet Design.xlsm]Design
+
+TOTAL
+ACCUM.
+POPULATION
+
+AVG.
+DOMESTIC
+FLOW
+(L/s)
+
+(L/s)
+
+0.45
+
+303
+
+1.02
+
+74.19
+
+44130
+
+0.00
+
+(L/s)
+
+ACCUM. AVG.
+DOMESTIC
+FLOW
+
+PIPE DATA
+
+PEAKING
+FACTOR
+
+PEAKED
+RESIDENTIAL
+FLOW
+(L/s)
+
+(L/s)
+
+(L/s)
+
+(m)
+
+(mm)
+
+(%)
+
+(L/s)
+
+(m/s)
+
+1.02
+
+4.00
+
+4.06
+
+0.00
+
+4.51
+
+100.00
+
+200.00
+
+0.50
+
+23.18
+
+UNDER
+
+141.56
+
+2.32
+
+327.78
+
+0.00
+
+401.97
+
+100.00
+
+675.00
+
+0.50
+
+594.08
+
+1.66
+
+ICI
+FLOW
+
+TOTAL
+FLOW
+
+LENGTH
+
+PIPE
+DIAMETER
+
+SLOPE
+
+FULL FLOW FULL FLOW
+CAPACITY
+VELOCITY
+
+Sanitary Design Sheet
+Mayfield Golf Club
+MESP
+Caledon
+Minimum Sewer Diameter (mm) =
+
+200
+
+Mannings n =
+Minimum Velocity (m/s) =
+
+Project: Mayfield Golf Club
+
+Avg. Domestic Flow (l/cap/day) =
+
+290
+
+Project No. 2539
+
+0.013
+
+Infiltration Rate (l/s/ha) =
+
+0.26
+
+Notes:
+
+0.75
+
+Max. Harmon Peaking Factor =
+
+4.0
+
+1. Population Density based on Mayfield Tullamore Secondary Plan High Level Background Servicing and Stormwater Management Analysis (SCS, 2024)
+
+Designed By: G.M.
+
+Maximum Velocity (m/s) =
+
+3
+
+Min. Harmon Peaking Factor =
+
+2.0
+
+2. Per capita sanitary flow of 285 L/day per Region of Peel standards
+
+Reviewed By: N.D.M.
+
+Minimum Pipe Slope (%) =
+
+0.50
+
+NOMINAL PIPE SIZE USED
+
+Date: 19-Sep-24
+
+P:\2539 Mayfield Golf Club\Design\Pipe Design\Sanitary\[Sanitary Sheet Design MESP - 2539.xlsm]Design
+
+LOCATION
+
+RESIDENTIAL
+MANHOLE
+
+INDUSTRIAL/COMMERCIAL/INSTITUTIONAL
+
+DENSITY
+AREA
+
+STREET
+
+ACCUM.
+AREA
+
+UNITS
+PER UNIT
+
+PER HA
+
+(p/unit)
+
+(p/ha)
+
+RESIDENTIAL
+POPULATION
+
+ACCUM.
+RESIDENTIAL
+POPULATION
+
+AREA
+
+ACCUM.
+AREA
+
+POPULATION
+DENSITY
+
+FLOW
+
+RATE
+
+FLOW CALCULATIONS
+
+ACCUM. EQUIV.
+POPULATION
+
+INFILTRATION
+
+TOTAL ACCUM.
+POPULATION
+
+AVG. DOMESTIC
+FLOW
+
+ACCUM. AVG.
+DOMESTIC FLOW
+
+PIPE DATA
+
+PEAKING
+FACTOR
+
+PEAKED
+RESIDENTIAL
+FLOW
+
+ICI
+
+FLOW
+
+TOTAL
+FLOW
+
+LENGTH
+
+PIPE
+DIAMETER
+
+FULL FLOW
+CAPACITY
+
+FULL FLOW
+VELOCITY
+
+(%)
+
+(L/s)
+
+(m/s)
+
+0.50
+
+201.5
+
+1.27
+
+0.50
+
+123.9
+
+1.12
+
+450
+
+0.50
+
+201.5
+
+1.27
+
+450
+
+0.50
+
+201.5
+
+1.27
+
+FROM
+
+TO
+(ha)
+
+(ha)
+
+(#)
+
+(ha)
+
+(ha)
+
+(p/ha)
+
+(l/s/ha)
+
+(L/s)
+
+(L/s)
+
+(L/s)
+
+(L/s)
+
+(L/s)
+
+(m)
+
+(mm)
+
+External 1 + 21,2
+
+EXT1
+
+EXT5-1
+
+125.96
+
+125.96
+
+0
+
+70.0
+
+8817
+
+8817
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+32.8
+
+8817
+
+29.1
+
+29.1
+
+3.01
+
+87.5
+
+0.0
+
+120.3
+
+100.0
+
+450
+
+External 3 + 41,2
+
+EXT3
+
+EXT7-1
+
+64.44
+
+64.44
+
+0
+
+70.0
+
+4511
+
+4511
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+16.8
+
+4511
+
+14.9
+
+14.9
+
+3.29
+
+48.9
+
+0.0
+
+65.7
+
+100.0
+
+375
+
+External 5 - Apartments
+
+EXT5-1
+
+EXT5-2
+
+3.27
+
+129.23
+
+491
+
+2.70
+
+1324
+
+10142
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+33.6
+
+10142
+
+4.4
+
+33.5
+
+2.95
+
+98.9
+
+0.0
+
+132.5
+
+100.0
+
+External 5 - Stacked Townhouses
+
+EXT5-2
+
+EXT5-3
+
+4.91
+
+134.14
+
+491
+
+3.40
+
+1669
+
+11811
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+34.9
+
+11811
+
+5.6
+
+39.1
+
+2.88
+
+112.8
+
+0.0
+
+147.7
+
+100.0
+
+(L/s)
+
+SLOPE
+
+External 5 - Single/Semi-detached
+
+EXT5-3
+
+EXT5-4
+
+29.80
+
+163.94
+
+745
+
+4.20
+
+3129
+
+14940
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+42.6
+
+14940
+
+10.5
+
+49.6
+
+2.78
+
+138.0
+
+0.0
+
+180.6
+
+100.0
+
+525
+
+0.50
+
+303.9
+
+1.40
+
+External 5 - Street Townhouses
+
+EXT5-4
+
+EXT6-1
+
+10.46
+
+174.41
+
+523
+
+3.40
+
+1779
+
+16719
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+45.3
+
+16719
+
+6.0
+
+55.6
+
+2.73
+
+151.9
+
+0.0
+
+197.2
+
+100.0
+
+525
+
+0.50
+
+303.9
+
+1.40
+
+External 6 - Apartments
+
+EXT6-1
+
+EXT6-2
+
+1.96
+
+176.37
+
+294
+
+2.70
+
+794
+
+17513
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+45.9
+
+17513
+
+2.7
+
+58.3
+
+2.71
+
+157.9
+
+0.0
+
+203.8
+
+100.0
+
+525
+
+0.50
+
+303.9
+
+1.40
+
+External 6 - Stacked Townhouses
+
+EXT6-2
+
+EXT6-3
+
+6.00
+
+182.37
+
+600
+
+3.40
+
+2040
+
+19553
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+47.4
+
+19553
+
+6.8
+
+65.1
+
+2.66
+
+173.4
+
+0.0
+
+220.8
+
+100.0
+
+525
+
+0.50
+
+303.9
+
+1.40
+
+External 6 - Single/Semi-detached
+
+EXT6-3
+
+EXT6-4
+
+2.15
+
+184.52
+
+54
+
+4.20
+
+226
+
+19779
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+48.0
+
+19779
+
+0.8
+
+65.9
+
+2.66
+
+175.1
+
+0.0
+
+223.0
+
+100.0
+
+525
+
+0.50
+
+303.9
+
+1.40
+
+External 6 - Street Townhouses
+
+EXT6-4
+
+EXT7-1
+
+0.75
+
+185.27
+
+38
+
+3.40
+
+128
+
+19906
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+48.2
+
+19906
+
+0.4
+
+66.3
+
+2.65
+
+176.0
+
+0.0
+
+224.2
+
+100.0
+
+525
+
+0.50
+
+303.9
+
+1.40
+
+External 7 - Schools
+
+EXT7-1
+
+EXT7-2
+
+0.00
+
+249.71
+
+0
+
+0
+
+24417
+
+5.60
+
+5.60
+
+161
+
+0
+
+900
+
+66.4
+
+25317
+
+3.0
+
+84.2
+
+2.55
+
+214.7
+
+0.0
+
+281.1
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+External 7 - Stacked Townhouses
+
+EXT7-2
+
+EXT7-3
+
+1.69
+
+251.40
+
+169
+
+3.40
+
+575
+
+24992
+
+0.00
+
+5.60
+
+0
+
+0
+
+900
+
+66.8
+
+25891
+
+1.9
+
+86.1
+
+2.54
+
+218.8
+
+0.0
+
+285.6
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+External 7 - Single/Semi-detached
+
+EXT7-3
+
+EXT7-4
+
+41.34
+
+292.74
+
+958
+
+4.20
+
+4022
+
+29013
+
+0.00
+
+5.60
+
+0
+
+0
+
+900
+
+77.6
+
+29913
+
+13.5
+
+99.6
+
+2.48
+
+246.9
+
+0.0
+
+324.5
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+External 7 - Street Townhouses
+
+EXT7-4
+
+4
+
+14.53
+
+307.27
+
+612
+
+3.40
+
+2082
+
+31095
+
+0.00
+
+5.60
+
+0
+
+0
+
+900
+
+81.3
+
+31995
+
+7.0
+
+106.6
+
+2.45
+
+261.2
+
+0.0
+
+342.5
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+External 8 - Single/Semi-detached
+
+EXT8-1
+
+EXT8-2
+
+8.89
+
+8.89
+
+222
+
+4.20
+
+934
+
+934
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+2.3
+
+934
+
+3.1
+
+3.1
+
+3.82
+
+12.0
+
+0.0
+
+14.3
+
+100.0
+
+250
+
+0.50
+
+42.0
+
+0.86
+
+External 8 - Street Townhouses
+
+EXT8-2
+
+1
+
+3.13
+
+12.02
+
+156
+
+3.40
+
+531
+
+1465
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+3.1
+
+1465
+
+1.8
+
+4.9
+
+3.69
+
+18.1
+
+0.0
+
+21.3
+
+100.0
+
+250
+
+0.50
+
+42.0
+
+0.86
+
+4.20
+
+176
+
+1642
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+3.8
+
+1642
+
+0.6
+
+5.5
+
+3.65
+
+20.1
+
+0.0
+
+24.0
+
+100.0
+
+250
+
+0.50
+
+42.0
+
+0.86
+
+0
+
+1642
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+3.8
+
+1642
+
+0.0
+
+5.5
+
+3.65
+
+20.1
+
+0.0
+
+24.0
+
+100.0
+
+250
+
+0.50
+
+42.0
+
+0.86
+
+0.86
+
+Catchment 301 - Singles
+
+1
+
+2
+
+2.74
+
+14.76
+
+42
+
+Street C Crossing
+
+2
+
+3
+
+0.00
+
+14.76
+
+0
+
+Catchment 302 - Singles
+
+3
+
+4
+
+4.41
+
+19.17
+
+76
+
+4.20
+
+319
+
+1961
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+5.0
+
+1961
+
+1.1
+
+6.6
+
+3.59
+
+23.6
+
+0.0
+
+28.6
+
+100.0
+
+250
+
+0.50
+
+42.0
+
+Catchment 303 - Towns
+
+4
+
+5
+
+4.01
+
+330.45
+
+114
+
+3.40
+
+388
+
+33444
+
+0.00
+
+5.60
+
+0
+
+0
+
+900
+
+87.4
+
+34344
+
+1.3
+
+114.5
+
+2.42
+
+277.1
+
+0.0
+
+364.4
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+Catchment 304 - Medium Density
+
+5
+
+6
+
+0.38
+
+330.83
+
+0
+
+67
+
+33510
+
+0.00
+
+5.60
+
+0
+
+0
+
+900
+
+87.5
+
+34410
+
+0.2
+
+114.7
+
+2.42
+
+277.5
+
+0.0
+
+365.0
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+Steet A Crossing
+
+6
+
+7
+
+0.00
+
+330.83
+
+0
+
+0
+
+33510
+
+0.00
+
+5.60
+
+0
+
+0
+
+900
+
+87.5
+
+34410
+
+0.0
+
+114.7
+
+2.42
+
+277.5
+
+0.0
+
+365.0
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+175.0
+
+Catchment 305 - Singles
+
+7
+
+8
+
+7.55
+
+338.38
+
+115
+
+4.20
+
+483
+
+33993
+
+0.00
+
+5.60
+
+0
+
+0
+
+900
+
+89.4
+
+34893
+
+1.6
+
+116.3
+
+2.41
+
+280.8
+
+0.0
+
+370.2
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+Catchment 306 - Towns
+
+8
+
+9
+
+0.20
+
+338.58
+
+7
+
+3.40
+
+24
+
+34017
+
+0.00
+
+5.60
+
+0
+
+0
+
+900
+
+89.5
+
+34917
+
+0.1
+
+116.4
+
+2.41
+
+280.9
+
+0.0
+
+370.4
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+Catchment 307 - Towns
+
+9
+
+10
+
+0.61
+
+339.19
+
+18
+
+3.40
+
+61
+
+34078
+
+0.00
+
+5.60
+
+0
+
+0
+
+900
+
+89.6
+
+34978
+
+0.2
+
+116.6
+
+2.41
+
+281.3
+
+0.0
+
+371.0
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+Catchment 308 - Elementary School
+
+10
+
+11
+
+0.00
+
+339.19
+
+0
+
+0
+
+34078
+
+2.12
+
+7.72
+
+94
+
+0
+
+1100
+
+90.2
+
+35178
+
+0.7
+
+117.3
+
+2.41
+
+282.7
+
+0.0
+
+372.9
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+Catchment 309 - Towns
+
+11
+
+12
+
+3.46
+
+342.65
+
+62
+
+211
+
+34289
+
+0.00
+
+7.72
+
+0
+
+0
+
+1100
+
+91.1
+
+35389
+
+0.7
+
+118.0
+
+2.41
+
+284.1
+
+0.0
+
+375.2
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+3.40
+
+Catchment 310 - Firehall
+
+12
+
+13
+
+0.00
+
+342.65
+
+0
+
+0
+
+34289
+
+0.75
+
+8.47
+
+50
+
+0
+
+1137
+
+91.3
+
+35426
+
+0.1
+
+118.1
+
+2.41
+
+284.3
+
+0.0
+
+375.6
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+Catchment 311 - Medium Density
+
+13
+
+14
+
+0.81
+
+343.46
+
+0
+
+175.0
+
+142
+
+34431
+
+0.00
+
+8.47
+
+0
+
+0
+
+1137
+
+91.5
+
+35568
+
+0.5
+
+118.6
+
+2.41
+
+285.3
+
+0.0
+
+376.8
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+Catchment 312 - Medium Density
+
+14
+
+15
+
+0.48
+
+343.94
+
+0
+
+175.0
+
+84
+
+34515
+
+0.00
+
+8.47
+
+0
+
+0
+
+1137
+
+91.6
+
+35652
+
+0.3
+
+118.9
+
+2.40
+
+285.8
+
+0.0
+
+377.5
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+Catchment 313 - Commercial
+
+15
+
+16
+
+0.00
+
+343.94
+
+0
+
+0
+
+34515
+
+0.47
+
+8.94
+
+50
+
+0
+
+1161
+
+91.7
+
+35676
+
+0.1
+
+119.0
+
+2.40
+
+286.0
+
+0.0
+
+377.7
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+Street A Outlet
+
+16
+
+17
+
+0.00
+
+343.94
+
+0
+
+0
+
+34515
+
+0.00
+
+8.94
+
+0
+
+0
+
+1161
+
+91.7
+
+35676
+
+0.0
+
+119.0
+
+2.40
+
+286.0
+
+0.0
+
+377.7
+
+100.0
+
+600
+
+0.50
+
+434.0
+
+1.53
+
+Catchment 314 - Residential
+
+18
+
+19
+
+3.88
+
+3.88
+
+70
+
+4.20
+
+294
+
+294
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+1.0
+
+294
+
+1.0
+
+1.0
+
+4.00
+
+3.9
+
+0.0
+
+5.0
+
+100.0
+
+250
+
+0.50
+
+42.0
+
+0.86
+
+Catchment 315 - Residential
+
+19
+
+20
+
+3.59
+
+7.47
+
+78
+
+4.20
+
+328
+
+622
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+1.9
+
+622
+
+1.1
+
+2.1
+
+3.92
+
+8.2
+
+0.0
+
+10.1
+
+100.0
+
+250
+
+0.50
+
+42.0
+
+0.86
+
+Catchment 316 - Singles
+
+20
+
+21
+
+1.02
+
+8.49
+
+12
+
+4.20
+
+50
+
+672
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+2.2
+
+672
+
+0.2
+
+2.3
+
+3.90
+
+8.8
+
+0.0
+
+11.0
+
+100.0
+
+250
+
+0.50
+
+42.0
+
+0.86
+
+Catchment 317 - Medium Density
+
+21
+
+22
+
+2.01
+
+10.50
+
+0
+
+175.0
+
+352
+
+1024
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+2.7
+
+1024
+
+1.2
+
+3.4
+
+3.79
+
+13.0
+
+0.0
+
+15.8
+
+100.0
+
+250
+
+0.50
+
+42.0
+
+0.86
+
+175.0
+
+95
+
+1118
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+2.9
+
+1118
+
+0.3
+
+3.8
+
+3.77
+
+14.1
+
+0.0
+
+17.0
+
+100.0
+
+250
+
+0.50
+
+42.0
+
+0.86
+
+0
+
+1118
+
+0.00
+
+0.00
+
+0
+
+0
+
+0
+
+2.9
+
+1118
+
+0.0
+
+3.8
+
+3.77
+
+14.1
+
+0.0
+
+17.0
+
+100.0
+
+250
+
+0.50
+
+42.0
+
+0.86
+
+Catchment 318 - Medium Density
+
+22
+
+23
+
+0.54
+
+11.04
+
+0
+
+Street B Outlet
+
+23
+
+24
+
+0.00
+
+11.04
+
+0
+
+1 of 1
+
+Appendix C
+
+Hydrology Model and Parameters
+
+DIGITAL MODELLING FILES
+
+The following secure link is being provided by SCS Consulting Group to share
+Mayfield Golf Club related digital data:
+https://filesafecloud.scsconsultinggroup.com/url/wmsjcfg7xjzfgddq
+Please click on the link and download all files from this location.
+Visual Otthymo modelling
+
+Existing Conditions VO Schematic
+
+Mayfield Golf Club
+Project Number: 2539
+Date: September 2024
+Designer: A.Y.
+
+P:\2539 Mayfield Golf Club\Design\Reports\FSR\Appendix C - Hydrology Model and Parameters\Individual Files\VOSchematicHeader.xlsx
+
+Existing Conditions
+VO Parameter Summary
+
+NASHYD
+Number
+Description
+DT(min)
+Area (ha)
+CN*
+IA(mm)
+TP Method
+TP (hr)
+
+101+102+103+104+105
+2
+97.08
+82.0
+7.4
+Uplands
+0.54
+
+106
+
+107
+
+2
+18.41
+75.0
+4.7
+Uplands
+0.23
+
+2
+19.58
+84.0
+7.3
+Uplands
+0.47
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Hydrology\2539-VO Model Parameters Pre.xlsm
+
+Mayfield Golf Club
+Project Number: 2539
+Date: September 2024
+Designer Initials: C.M.D.
+
+Mayfield Golf Club
+Project Number: 2539
+Date: September 2024
+Designer Initials: C.M.D.
+
+Existing Conditions
+CN Calculations
+
+Site Soils:
+
+As per Draft Phase 1 Local Subwatershed Study prepared by GEI (July 2024),
+Detailed Factual Geotechnical and Hydrogeological Subsurface Investigation Report prepared by GEMTEC (July 2023)
+Soil Type
+Pontypool Sandy Loam
+Chinguacousy Clay Loam
+
+Hydrologic Soil Group
+A
+C
+
+TABLE OF CURVE NUMBERS (CN's)**
+Hydrologic Soil Type
+A
+AB
+B
+BC
+C
+CD
+30
+44
+58
+64.5
+71
+74.5
+Meadow
+"Good"
+Woodlot
+"Fair"
+36
+48
+60
+66.5
+73
+76
+Gravel
+76
+80.5
+85
+87
+89
+90
+Lawns
+"Good"
+39
+50
+61
+67.5
+74
+77
+Pasture/Range
+58
+61.5
+65
+70.5
+76
+78.5
+Crop
+66
+70
+74
+78
+82
+84
+Fallow (Bare)
+77
+82
+86
+89
+91
+93
+Low Density Residences
+57
+64.5
+72
+76.5
+81
+83.5
+Streets, paved
+98
+98
+98
+98
+98
+98
+1. MTO Drainage Manual (1997), Design Chart 1.09-Soil/Land Use Curve Numbers
+2. USDA (1986), Urban Hydrology for Small Watersheds, Table 2.2-Runoff Curve Numbers for Urban Areas
+
+Manning's
+'n'
+0.40
+0.40
+0.30
+0.25
+0.17
+0.13
+0.05
+0.25
+0.01
+
+Source
+
+Low Density Impervious
+Residences
+
+Total
+
+Land Use
+
+Catchment
+
+A
+
+101+102+103+
+104+105
+106
+107
+
+Catchment
+
+HYDROLOGIC SOIL TYPE (%) - Existing Conditions
+Hydrologic Soil Type
+AB
+B
+BC
+C
+CD
+
+1.3
+
+Meadow
+
+Woodlot
+
+2.6
+
+0.2
+
+101+102+103+
+104+105
+106
+107
+
+Gravel
+
+0.1
+
+D
+
+D
+78
+79
+91
+80
+81
+86
+94
+86
+98
+
+TOTAL
+
+98.7
+
+100
+
+100
+100
+
+100
+100
+
+LAND USE (%) - Existing Conditions
+Lawns
+Pasture
+Crop
+Range
+
+Fallow
+(Bare)
+
+MTO
+MTO
+USDA
+USDA
+MTO
+MTO
+MTO
+USDA
+USDA
+
+17.4
+
+78.8
+
+0.9
+
+100.0
+
+88.7
+16.9
+
+1.1
+80.5
+
+10.1
+2.6
+
+100.0
+100.0
+
+Note: Where STANDHYD command used (shaded), impervious fraction is not considered in CN determination, since %Imp directly input in STANDHYD command
+
+Catchment
+
+Meadow
+
+101+102+103+
+104+105
+106
+107
+
+Woodlot
+
+CURVE NUMBER (CN) - Existing Conditions
+Gravel
+Lawns
+Pasture
+Crop
+Fallow
+Range
+(Bare)
+
+Low Density Impervious
+Residences
+
+Weighted
+CN
+
+1.8
+
+0.2
+
+0.0
+
+12.8
+
+0.0
+
+64.5
+
+0.0
+
+0.0
+
+0.9
+
+80
+
+0.0
+0.0
+
+0.0
+0.0
+
+0.0
+0.0
+
+65.6
+12.5
+
+0.0
+0.0
+
+0.9
+66.0
+
+0.0
+0.0
+
+0.0
+0.0
+
+9.9
+2.5
+
+77
+81
+
+** AMC II assumed
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Hydrology\2539-VO Model Parameters Pre.xlsm
+
+Existing Conditions
+CN Calculations
+
+Mayfield Golf Club
+Project Number: 2539
+Date: September 2024
+Designer Initials: C.M.D.
+
+Input Values
+101+102+103
+Subcatchment: +104+105
+CN (AMC II):
+80
+
+Step
+1
+2
+3
+
+CN (AMC III) =
+100 Year Precipitation, P =
+
+Q = (P - Ia)2
+(P - Ia) + S
+
+91
+88.54
+
+mm
+
+106
+77
+
+107
+81
+
+89
+88.54
+
+92
+88.54
+
+S = (P - Ia)2 - (P - Ia)
+Q
+
+Q = rainfall excess or runoff, mm
+S = potential maximum retention or available storage, mm
+CN = 25400
+S + 254
+
+S = 25400 - 254
+CN
+
+CN* = modified SCS curve # that better reflects Ia conditions in Ontario
+
+Output Values
+
+4
+
+101+102+103
++104+105
+25.12
+SCS Assumption of 0.2 S = Ia =
+5.02
+QIII =
+64.20
+
+mm
+mm
+mm
+
+106
+31.39
+6.28
+59.54
+
+107
+22.09
+4.42
+66.63
+
+5
+
+Preferred Initial Abstraction, Ia =
+S*III =
+
+7.4
+21.36
+
+mm
+mm
+
+4.7
+34.16
+
+7.3
+17.76
+
+6
+
+CN*III =
+
+92.24
+
+mm
+
+88.15
+
+93.47
+
+7
+
+CN*III=
+CN*II=
+
+92
+82
+
+Rounded
+convert
+
+88
+75
+
+93
+84
+
+Subcatchment:
+SIII =
+
+Explanation of Procedure
+1 Determine CN based on typical AMC II conditions (attached)
+2 Convert CN from AMC II to AMC III conditions (standard SCS tables)
+3 Get precipitation depth P for 100 year storm
+4 Using CNIII with Ia = 0.2S, compute QIII for 100 year precipitation
+5 For the same QIII, compute S*III using Ia=1.5mm (or otherwise determined)
+6 Compute CN*III using S*III
+7 Calculate CN*II using SCS conversion table
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Hydrology\2539-VO Model Parameters Pre.xlsm
+
+Mayfield Golf Club
+Project Number: 2539
+Date: September 2024
+Designer Initials: C.M.D.
+
+Existing Conditions
+IA Calculations
+
+Catchment
+
+101+102+103+104+
+105
+106
+107
+
+Meadow
+
+Woodlot
+
+2.6
+
+0.2
+
+0.1
+
+Catchment
+
+Meadow
+
+Woodlot
+
+IA (mm)
+
+8
+
+10
+
+0.2
+
+0.0
+
+101+102+103+104+
+105
+106
+107
+
+0.0
+
+LAND USE (%) - Existing Conditions
+Gravel
+Lawns
+Pasture
+Crop
+Range
+
+Fallow
+(Bare)
+
+Low Density Impervious
+Residences
+
+Total
+
+17.4
+
+78.8
+
+0.9
+
+100.0
+
+88.7
+16.9
+
+1.1
+80.5
+
+10.1
+2.6
+
+100.0
+100.0
+
+IA VALUES (mm) - Existing Conditions
+Gravel
+Lawns
+Pasture
+Crop
+Range
+2
+5
+8
+8
+
+Fallow
+(Bare)
+3
+
+Low Density Impervious
+Residences
+2
+2
+
+Total
+
+0.9
+
+6.3
+
+0.0
+
+7.4
+
+4.4
+0.8
+
+0.1
+6.4
+
+0.2
+0.1
+
+4.7
+7.3
+
+* IA values based on TRCA guidelines
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Hydrology\2539-VO Model Parameters Pre.xlsm
+
+Mayfield Golf Club
+Project Number: 2539
+Date: September 2024
+Designer Initials: C.M.D.
+
+Existing Conditions
+Time to Peak Calculations
+
+Uplands Method:
+Catchment
+ID
+
+High
+Elevation
+
+Low
+Elevation
+
+Length (m)
+
+Slope (%)
+
+Land Cover Type
+
+Velocity (m/s)
+
+Time of
+Concentration (s)
+
+Time of
+Concentration (hr)
+
+Time to
+Peak (hr)
+
+101+102+103+104+105a
+
+271.50
+
+259.35
+
+775
+
+1.57
+
+Cultivated Straight Row
+
+0.35
+
+2216.5
+
+0.62
+
+0.41
+
+101+102+103+104+105b
+101+102+103+104+105
+106a
+106
+107a
+107b
+107
+
+259.35
+
+255.26
+
+345
+
+1.19
+
+Waterway
+
+0.51
+
+674.1
+
+0.19
+
+253.67
+
+249.22
+
+314
+
+1.42
+
+Pasture
+
+0.26
+
+1211.2
+
+0.34
+
+252.50
+249.93
+
+249.93
+245.59
+
+331
+359
+
+0.78
+1.21
+
+Cultivated Straight Row
+Cultivated Straight Row
+
+0.25
+0.31
+
+1342.6
+1168.4
+
+0.37
+0.32
+
+0.13
+0.54
+0.23
+0.23
+0.25
+0.22
+0.47
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Hydrology\2539-VO Model Parameters Pre.xlsm
+
+Proposed Conditions VO Schematic
+
+Mayfield Golf Club
+Project Number: 2539
+Date: September 2024
+Designer: A.Y.
+
+P:\2539 Mayfield Golf Club\Design\Reports\FSR\Appendix C - Hydrology Model and Parameters\Individual Files\VOSchematicHeader.xlsx
+
+Mayfield Golf Club
+Project Number: 2539
+Date: October 2024
+Designer Initials: A.Y.
+
+Proposed Conditions
+VO Parameter Summary
+
+STANDHYD
+Number
+Description
+DT(min)
+Area (ha)
+TIMP2
+XIMP1,2
+CN*
+IA(mm)
+SLPP(%)
+LGP(m)
+MNP
+DPSI (mm)
+SLPI(%)
+LGI(m)
+MNI
+1
+2
+
+201
+
+202
+
+203
+
+204
+
+2
+16.36
+0.69
+0.40
+73.0
+5.0
+2
+40
+0.25
+1.0
+1
+330.25
+0.013
+
+2
+4.20
+0.19
+0.01
+73.0
+5.0
+2
+40
+0.25
+1.0
+1
+167.33
+0.013
+
+2
+1.66
+0.19
+0.01
+73.0
+5.0
+2
+40
+0.25
+1.0
+1
+105.20
+0.013
+
+2
+10.85
+0.69
+0.36
+73.0
+5.0
+2
+40
+0.25
+1.0
+1
+268.95
+0.013
+
+205
+
+206+EXT1
+2
+5.26
+0.19
+0.01
+73.0
+5.0
+2
+40
+0.25
+1.0
+
+187.26
+0.013
+
+2
+76.22
+0.64
+0.28
+73.0
+5.0
+2
+40
+0.25
+1.0
+1
+712.83
+0.013
+
+207
+2
+3.58
+0.50
+0.50
+73.0
+5.0
+2
+40
+0.25
+1.0
+1
+154.49
+0.013
+
+208
+2
+0.55
+0.52
+0.01
+73.0
+5.0
+2
+40
+0.25
+1.0
+1
+60.55
+0.013
+
+209+EXT2
+2
+14.30
+0.63
+0.22
+73.0
+5.0
+2
+40
+0.25
+1.0
+1
+308.76
+0.013
+
+210
+2
+2.80
+0.23
+0.01
+73.0
+5.0
+2
+40
+0.25
+1.0
+1
+136.63
+0.013
+
+EXT3
+
+EXT4
+
+2
+5.33
+0.15
+0.01
+61.0
+5.0
+2
+40
+0.25
+1.0
+1
+188.50
+0.013
+
+Note that where there is NO directly connected area (ie: roof runoff to grassed areas), the hydrology program does not accept XIMP=0%, therefore, XIMP = 1% has been used
+Note that where there is NO pervious area, the hydrology program does not accept TIMP and XIMP=100%, therefore, TIMP and XIMP = 99% has been used
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Hydrology\2539-VO Model Parameters Post.xlsm
+
+2
+1.67
+0.15
+0.01
+73.0
+5.0
+2
+40
+0.25
+1.0
+1
+105.51
+0.013
+
+EXT5
+2
+0.99
+0.15
+0.01
+73.0
+5.0
+2
+40
+0.25
+1.0
+1
+81.24
+0.013
+
+EXT6
+2
+0.16
+0.15
+0.01
+73.0
+5.0
+2
+40
+0.25
+1.0
+1
+32.66
+0.013
+
+Mayfield Golf Club
+Project Number: 2539
+Date: October 2024
+Designer Initials: A.Y.
+
+Proposed Conditions
+CN Calculations
+
+Site Soils:
+Just per Draft Phase 1 Local Subwatershed Study prepared by GEI (July 2024),
+Detailed Factual Geotechnical and Hydrogeological Subsurface Investigation Report prepared by GEMTEC (July 2023)
+Soil Type
+Pontypool Sandy Loam
+Chinguacousy Clay Loam
+
+Hydrologic Soil Group
+A
+C
+
+TABLE OF CURVE NUMBERS (CN's)**
+Hydrologic Soil Type
+A
+AB
+B
+BC
+C
+CD
+30
+44
+58
+64.5
+71
+74.5
+Meadow
+"Good"
+Woodlot
+"Fair"
+36
+48
+60
+66.5
+73
+76
+Gravel
+76
+80.5
+85
+87
+89
+90
+Lawns
+"Good"
+39
+50
+61
+67.5
+74
+77
+Pasture/Range
+58
+61.5
+65
+70.5
+76
+78.5
+Crop
+66
+70
+74
+78
+82
+84
+Fallow (Bare)
+77
+82
+86
+89
+91
+93
+Low Density Residences
+57
+64.5
+72
+76.5
+81
+83.5
+Streets, paved
+98
+98
+98
+98
+98
+98
+1. MTO Drainage Manual (1997), Design Chart 1.09-Soil/Land Use Curve Numbers
+2. USDA (1986), Urban Hydrology for Small Watersheds, Table 2.2-Runoff Curve Numbers for Urban Areas
+Land Use
+
+Catchment
+201
+202
+203
+204
+205
+206+EXT1
+207
+208
+209+EXT2
+210
+EXT3
+EXT4
+EXT5
+EXT6
+
+Catchment
+201
+202
+203
+204
+205
+206+EXT1
+207
+208
+209+EXT2
+210
+EXT3
+EXT4
+EXT5
+EXT6
+
+A
+
+B
+
+Woodlot
+
+Gravel
+
+23.1
+
+Meadow
+
+HYDROLOGIC SOIL TYPE (%)
+Hydrologic Soil Type
+BC
+C
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+76.9
+100
+100
+100
+
+AB
+
+Lawns
+
+CD
+
+LAND USE (%)
+Pasture
+Crop
+Range
+
+D
+78
+79
+91
+80
+81
+86
+94
+86
+98
+
+D
+
+TOTAL
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+
+Fallow
+(Bare)
+
+Low Density Residences
+
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+100
+
+Note: Where STANDHYD command used (shaded), impervious fraction is not considered in CN determination, since %Imp directly input in STANDHYD command
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Hydrology\2539-VO Model Parameters Post.xlsm
+
+Manning's
+'n'
+0.40
+0.40
+0.30
+0.25
+0.17
+0.13
+0.05
+0.25
+0.01
+
+Source
+
+Impervious
+
+Total
+
+MTO
+MTO
+USDA
+USDA
+MTO
+MTO
+MTO
+USDA
+USDA
+
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+
+Mayfield Golf Club
+Project Number: 2539
+Date: October 2024
+Designer Initials: A.Y.
+
+Proposed Conditions
+CN Calculations
+
+Catchment
+
+Meadow
+
+Woodlot
+
+Gravel
+
+201
+202
+203
+204
+205
+206+EXT1
+207
+208
+209+EXT2
+210
+EXT3
+EXT4
+EXT5
+EXT6
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+CURVE NUMBER (CN) - Existing Conditions
+Pasture
+Fallow
+Lawns
+Crop
+Range
+(Bare)
+74
+74
+74
+74
+74
+74
+74
+74
+74
+74
+66
+74
+74
+74
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+Low Density Residences
+
+Impervious
+
+Total
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+74
+74
+74
+74
+74
+74
+74
+74
+74
+74
+66
+74
+74
+74
+
+** AMC II assumed
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Hydrology\2539-VO Model Parameters Post.xlsm
+
+Mayfield Golf Club
+Project Number: 2539
+Date: October 2024
+Designer Initials: A.Y.
+
+Proposed Conditions
+CN Calculations
+
+Input Values
+Step
+1
+
+Subcatchment:
+CN (AMC II):
+
+2
+3
+
+CN (AMC III) =
+100 Year Precipitation, P =
+
+201
+
+mm
+
+74
+
+202
+74
+
+203
+74
+
+204
+74
+
+205
+74
+
+206+EXT1
+74
+
+88
+100
+
+88
+100
+
+88
+100
+
+88
+100
+
+88
+100
+
+207
+74
+
+208
+74
+
+209+EXT2
+74
+
+88
+100
+
+88
+100
+
+88
+100
+
+210
+74
+
+EXT3
+66
+
+EXT4
+74
+
+EXT5
+74
+
+EXT6
+74
+
+88
+100
+
+88
+100
+
+82
+100
+
+88
+100
+
+88
+100
+
+88
+100
+
+Q = (P - Ia)2
+(P - Ia) + S
+Q = rainfall excess or runoff, mm
+S = potential maximum retention or available storage, mm
+CN = 25400
+S + 254
+CN* = modified SCS curve # that better reflects Ia conditions in Ontario
+
+Output Values
+Subcatchment:
+SIII =
+
+201
+34.64
+6.93
+67.83
+
+202
+34.64
+6.93
+67.83
+
+203
+34.64
+6.93
+67.83
+
+204
+34.64
+6.93
+67.83
+
+205
+206+EXT1
+34.64
+34.64
+6.93
+6.93
+67.83
+67.83
+
+207
+34.64
+6.93
+67.83
+
+208
+209+EXT2
+34.64
+34.64
+6.93
+6.93
+67.83
+67.83
+
+210
+34.64
+6.93
+67.83
+
+EXT3
+55.76
+11.15
+54.59
+
+EXT4
+34.64
+6.93
+67.83
+
+EXT5
+34.64
+6.93
+67.83
+
+EXT6
+34.64
+6.93
+67.83
+
+4
+
+SCS Assumption of 0.2 S = Ia =
+QIII =
+
+mm
+mm
+mm
+
+5
+
+Preferred Initial Abstraction, Ia =
+S*III =
+
+mm
+mm
+
+5.0
+38.05
+
+5.0
+38.05
+
+5.0
+38.05
+
+5.0
+38.05
+
+5.0
+38.05
+
+5.0
+38.05
+
+5.0
+38.05
+
+5.0
+38.05
+
+5.0
+38.05
+
+5.0
+38.05
+
+5.0
+70.32
+
+5.0
+38.05
+
+5.0
+38.05
+
+5.0
+38.05
+
+6
+
+CN*III =
+
+mm
+
+86.97
+
+86.97
+
+86.97
+
+86.97
+
+86.97
+
+86.97
+
+86.97
+
+86.97
+
+86.97
+
+86.97
+
+78.32
+
+86.97
+
+86.97
+
+86.97
+
+7
+
+CN*III=
+CN*II=
+
+Rounded
+convert
+
+87
+73
+
+87
+73
+
+87
+73
+
+87
+73
+
+87
+73
+
+87
+73
+
+87
+73
+
+87
+73
+
+87
+73
+
+87
+73
+
+78
+61
+
+87
+73
+
+87
+73
+
+87
+73
+
+Explanation of Procedure
+1 Determine CN based on typical AMC II conditions (attached)
+2 Convert CN from AMC II to AMC III conditions (standard SCS tables)
+3 Get precipitation depth P for 100 year storm
+4 Using CNIII with Ia = 0.2S, compute QIII for 100 year precipitation
+5 For the same QIII, compute S*III using Ia=1.5mm (or otherwise determined)
+6 Compute CN*III using S*III
+7 Calculate CN*II using SCS conversion table
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Hydrology\2539-VO Model Parameters Post.xlsm
+
+Mayfield Golf Club
+Project Number: 2539
+Date: October 2024
+Designer Initials: A.Y.
+
+Proposed Conditions
+IA Calculations
+
+Catchment
+
+Meadow
+
+Woodlot
+
+Gravel
+
+LAND USE (%) - Proposed Conditions
+Lawns
+Pasture
+Crop
+Range
+
+Fallow
+(Bare)
+
+Low Density Impervious
+Residences
+
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+
+201
+202
+203
+204
+205
+206+EXT1
+207
+208
+209+EXT2
+210
+EXT3
+EXT4
+EXT5
+EXT6
+
+Catchment
+
+Meadow
+
+Woodlot
+
+Gravel
+
+IA (mm)
+
+8
+
+10
+
+2
+
+IA VALUES (mm) - Proposed Conditions
+Lawns
+Pasture
+Crop
+Fallow
+Range
+(Bare)
+5
+8
+8
+3
+
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+100.0
+
+Low Density Impervious
+Residences
+2
+2
+
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+
+201
+202
+203
+204
+205
+206+EXT1
+207
+208
+209+EXT2
+210
+EXT3
+EXT4
+EXT5
+EXT6
+
+Total
+
+* IA values based on TRCA guidelines
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Hydrology\2539-VO Model Parameters Post.xlsm
+
+Total
+
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+5.0
+
+Mayfield Golf Club
+Project Number: 2539
+Date: October 2024
+Designer Initials: A.Y.
+
+Proposed Conditions
+Percent Impervious Calculations
+
+Catchment Area (ha)
+Land Use Areas
+Timp
+Singles and ROW
+63%
+Uncontrolled Singles
+63%
+Townhouses
+65%
+Laneway Townhouses
+90%
+Laneways
+100%
+School*
+77%
+Parks/Vista Blocks
+15%
+SWM Pond
+50%
+Firehall*
+77%
+Medium Density
+90%
+Open Space
+0%
+Commercial
+90%
+
+201
+16.36
+Ximp
+20%
+0%
+32%
+45%
+100%
+77%
+0%
+50%
+77%
+90%
+0%
+90%
+Total Land Use =
+Timp =
+Ximp =
+
+202
+4.20
+
+203
+1.66
+
+0.38
+
+0.13
+
+9.46
+1.53
+0.49
+0.09
+2.12
+0.15
+
+204
+10.85
+
+205
+5.26
+
+8.39
+
+3.82
+
+0.46
+
+1.53
+
+4.80
+
+206+EXT1
+76.22
+
+StandHyd IDs
+207
+208
+3.58
+0.55
+Land Use Areas
+
+46.16
+0.26
+15.22
+4.70
+0.35
+5.66
+3.38
+
+209+EXT2
+14.3
+
+210
+2.8
+
+EXT3
+5.33
+
+EXT4
+1.67
+
+EXT5
+0.99
+
+EXT6
+0.16
+
+11.06
+0.45
+
+0.44
+3.05
+
+0.19
+
+2.36
+
+5.33
+
+1.67
+
+0.99
+
+0.16
+
+14.30
+63%
+22%
+
+2.80
+23%
+0%
+
+5.33
+15%
+0%
+
+1.67
+15%
+0%
+
+0.99
+15%
+0%
+
+0.16
+15%
+0%
+
+3.58
+0.76
+1.29
+0.47
+16.36
+69%
+40%
+
+2.46
+
+4.20
+19%
+0%
+
+1.66
+19%
+0%
+
+10.85
+69%
+36%
+
+0.38
+0.09
+5.26
+19%
+0%
+
+76.20
+64%
+28%
+
+0.10
+3.58
+50%
+50%
+
+0.55
+52%
+0%
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Hydrology\2539-VO Model Parameters Post.xlsm
+
+Appendix D
+
+Stormwater Management Calculations
+
+SWM Facility 1
+Permanent Pool and
+Extended Detention Sizing
+
+Mayfield Golf Club
+Project Number: 2539
+Date: September 2024
+Designer Initials: A.Y.
+
+Weighted Impervious Calculation
+Catchment ID
+201
+Total
+
+Total Area
+(ha)
+16.36
+16.36
+
+Imperviousness Impervious Area
+(%)
+(ha)
+69
+11.29
+69
+11.29
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Design Calculations\SWM Facility Design\SWM Facility 1\2539-Stage Storage - Facility 1.xlsm
+
+Mayfield Golf Club
+Project Number: 2539
+Date: September 2024
+Designer Initials: A.Y.
+
+SWM Facility 1
+Permanent Pool and
+Extended Detention Sizing
+PERMANENT POOL
+Level of Protection = Enhanced
+
+(Level 1)
+
+Weighted Impervious =
+
+69 %
+
+Drainage Area =
+
+16.36 ha
+
+SWMP Type = 4. Wet Pond
+
+3
+
+3
+
+222.7 m /ha
+3
+183 m /ha
+
+Required Water Quality Control (including 40m /ha for extended detention)=
+3
+Required Permanent Pool (minus 40m /ha for extended detention)=
+
+3
+
+2988 m
+
+Required Permanent Pool =
+
+TABLE 3.2 - WATER QUALITY STORAGE REQUIREMENTS
+(FROM MOE SWM PLANNING AND DESIGN MANUAL - 2003)
+3
+Protectio
+Storage Volume (m /ha) for Impervious Level
+SWMP Type
+n Level
+35%
+55%
+70%
+1. Infiltration
+25
+30
+35
+Enhance
+2. Wetlands
+80
+105
+120
+d (Level
+3. Hybrid Wet Pond/Wetland
+110
+150
+175
+1)
+4. Wet Pond
+140
+190
+225
+1. Infiltration
+20
+20
+25
+Normal 2. Wetlands
+60
+70
+80
+(Level 2) 3. Hybrid Wet Pond/Wetland
+75
+90
+105
+4. Wet Pond
+90
+110
+130
+1. Infiltration
+20
+20
+20
+2. Wetlands
+60
+60
+60
+Basic
+3. Hybrid Wet Pond/Wetland
+60
+70
+75
+(Level 3)
+4. Wet Pond
+60
+75
+85
+5. Dry Pond (Continuous Flow)
+90
+150
+200
+
+85%
+40
+140
+195
+250
+30
+90
+120
+150
+20
+60
+80
+95
+240
+
+EXTENDED DETENTION
+Using the 25mm - 4 hour Chicago Storm
+3
+
+Erosion Control Volume (V) = Runoff Depth (mm) x Drainage Area (ha) x 10 (m ) / (mm)(ha)
+Erosion Control Volume (V) =
+
+13.85 mm
+
+Erosion Control Volume (V) =
+
+2266 m
+
+x
+
+16.36
+
+3
+
+ha x 10 m / mm·ha
+
+3
+
+3
+
+Using 40m /ha
+3
+
+Extended Detention Volume (V) = 40m /ha x Drainage Area (ha)
+Extended Detention Volume (V) =
+
+3
+
+40 m /ha
+
+16.36 ha
+
+3
+
+Extended Detention Volume (V) =
+
+654.4 m
+
+Governing Volume (V) =
+
+2266 m
+
+3
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Design Calculations\SWM Facility Design\SWM Facility 1\2539-Stage Storage - Facility 1.xlsm
+
+Mayfield Golf Club
+Project Number: 2539
+Date: September 2024
+Designer Initials: A.Y.
+
+SWM Facility 1
+Permanent Pool Stage-Storage
+Rating Table
+Elevation
+(m)
+243.8
+
+Area
+2
+(m )
+2000
+
+245.3
+
+2000
+
+Area
+2
+(m )
+
+H
+(m)
+
+Vol
+3
+(m )
+
+2000
+
+1.5
+
+3000
+
+Permanent Pool Volume Required =
+Permanent Pool Volume Provided =
+
+Volume
+3
+(m )
+0
+
+Storage
+3
+(m )
+
+Depth
+(m)
+0
+
+3000
+
+0
+
+1.5
+
+N.W.L.
+
+3
+
+2988 m
+3
+3000 m
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Design Calculations\SWM Facility Design\SWM Facility 1\2539-Stage Storage - Facility 1.xlsm
+
+SWM FACILITY 1
+CONTROL STRUCTURE SUMMARY
+
+Orifice 1
+Invert =
+Size =
+Orifice Coefficient, C =
+Obvert =
+
+245.30 m
+0.135 m
+0.62
+245.435 m
+
+Orifice 2
+Invert =
+Size =
+C=
+Obvert =
+
+(Round Only)
+246.00 m
+0.365 m
+0.62
+246.365 m
+
+Mayfield Golf Club
+Project Number: 2539
+Date: September 2024
+Designer Initials: A.Y.
+
+0.135
+inv=245.3
+
+0.365
+inv=246
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Design Calculations\SWM Facility Design\SWM Facility 1\2539-Multiple Outlet Design - Stage Storage
+Discharge - Facility 1.xlsm
+
+Mayfield Golf Club
+Project Number: 2539
+Date: September 2024
+Designer Initials: A.Y.
+
+SWM FACILITY 1
+OUTFLOW SUMMARY
+Starting Water Level (m) = 245.30
+Elevation Increment (m) = 0.02
+
+Shading represents Storage-Discharge pairings used in VO modelling
+Upstream
+Elevation
+(m)
+245.30
+245.32
+245.34
+245.36
+245.38
+245.40
+245.42
+245.44
+245.46
+245.48
+245.50
+245.52
+245.54
+245.56
+245.58
+245.60
+245.62
+245.64
+245.66
+245.68
+245.70
+245.72
+245.74
+245.76
+245.78
+245.80
+245.82
+245.84
+245.86
+245.88
+245.90
+245.92
+245.94
+245.96
+245.98
+246.00
+246.02
+246.04
+246.06
+246.08
+246.10
+246.12
+246.14
+246.16
+246.18
+246.20
+246.22
+246.24
+246.26
+246.28
+246.30
+246.32
+246.34
+246.36
+246.38
+246.40
+246.42
+246.44
+246.46
+246.48
+246.50
+246.52
+246.54
+246.56
+
+Orifice 1
+Outflow
+(cms)
+0.000
+0.000
+0.001
+0.002
+0.004
+0.007
+0.009
+0.011
+0.012
+0.013
+0.014
+0.015
+0.016
+0.017
+0.018
+0.019
+0.020
+0.021
+0.021
+0.022
+0.023
+0.023
+0.024
+0.025
+0.025
+0.026
+0.026
+0.027
+0.028
+0.028
+0.029
+0.029
+0.030
+0.030
+0.031
+0.031
+0.032
+0.032
+0.033
+0.033
+0.034
+0.034
+0.035
+0.035
+0.035
+0.036
+0.036
+0.037
+0.037
+0.038
+0.038
+0.038
+0.039
+0.039
+0.040
+0.040
+0.040
+0.041
+0.041
+0.041
+0.042
+0.042
+0.043
+0.043
+
+Orifice 2
+Outflow
+(cms)
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.001
+0.002
+0.005
+0.008
+0.012
+0.017
+0.023
+0.029
+0.036
+0.038
+0.056
+0.069
+0.080
+0.090
+0.098
+0.107
+0.114
+0.121
+0.128
+0.134
+0.140
+0.146
+0.151
+0.157
+0.162
+0.167
+0.172
+0.177
+
+Backwater
+Elevation
+(m)
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+Stage
+(m)
+245.30
+245.32
+245.34
+245.36
+245.38
+245.40
+245.42
+245.44
+245.46
+245.48
+245.50
+245.52
+245.54
+245.56
+245.58
+245.60
+245.62
+245.64
+245.66
+245.68
+245.70
+245.72
+245.74
+245.76
+245.78
+245.80
+245.82
+245.84
+245.86
+245.88
+245.90
+245.92
+245.94
+245.96
+245.98
+246.00
+246.02
+246.04
+246.06
+246.08
+246.10
+246.12
+246.14
+246.16
+246.18
+246.20
+246.22
+246.24
+246.26
+246.28
+246.30
+246.32
+246.34
+246.36
+246.38
+246.40
+246.42
+246.44
+246.46
+246.48
+246.50
+246.52
+246.54
+246.56
+
+Total
+Flow
+(cms)
+0.000
+0.000
+0.001
+0.002
+0.004
+0.007
+0.009
+0.011
+0.012
+0.013
+0.014
+0.015
+0.016
+0.017
+0.018
+0.019
+0.020
+0.021
+0.021
+0.022
+0.023
+0.023
+0.024
+0.025
+0.025
+0.026
+0.026
+0.027
+0.028
+0.028
+0.029
+0.029
+0.030
+0.030
+0.031
+0.031
+0.032
+0.034
+0.037
+0.041
+0.046
+0.051
+0.057
+0.064
+0.071
+0.074
+0.092
+0.106
+0.117
+0.127
+0.136
+0.145
+0.153
+0.160
+0.167
+0.174
+0.180
+0.187
+0.192
+0.198
+0.204
+0.209
+0.214
+0.219
+
+Storage
+3
+
+(m )
+0
+76
+153
+229
+306
+382
+459
+535
+612
+688
+765
+841
+918
+994
+1070
+1147
+1223
+1300
+1376
+1453
+1529
+1606
+1682
+1759
+1835
+1912
+1988
+2064
+2141
+2217
+2294
+2370
+2447
+2523
+2600
+2676
+2753
+2829
+2905
+2982
+3058
+3135
+3211
+3288
+3364
+3441
+3517
+3594
+3670
+3747
+3823
+3899
+3976
+4052
+4129
+4205
+4282
+4358
+4435
+4511
+4588
+4664
+4741
+4817
+
+Detention
+Time
+(hrs)
+0.0
+0.0
+0.0
+11.6
+17.8
+21.5
+24.1
+26.3
+28.2
+29.9
+31.4
+32.9
+34.2
+35.5
+36.7
+37.8
+38.9
+40.0
+41.0
+42.0
+42.9
+43.8
+44.7
+45.6
+46.5
+47.3
+48.1
+48.9
+49.7
+50.4
+51.2
+51.9
+52.6
+53.3
+54.0
+54.7
+55.4
+56.0
+56.6
+57.2
+57.7
+58.1
+58.5
+58.8
+59.1
+59.4
+59.7
+59.9
+60.1
+60.3
+60.4
+60.6
+60.7
+60.9
+61.0
+61.1
+61.2
+61.4
+61.5
+61.6
+61.7
+61.8
+61.9
+62.0
+
+6 Hour AES
+
+12 Hour AES
+
+Orifice 1
+
+Extended Detention
+
+Orifice 2
+
+2 Year
+
+2 Year
+
+5 Year
+5 Year
+
+10 Year
+10 Year
+
+P:\2539 Mayfield Golf Club\Design\SWM\FSP\Design Calculations\SWM Facility Design\SWM Facility 1\2539-Multiple Outlet Design - Stage Storage
+Discharge - Facility 1.xlsm
+
+

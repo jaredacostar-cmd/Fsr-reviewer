@@ -1,0 +1,1705 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+MAYFIELD WEST
+
+July 15, 2022
+
+PHASE 2 - STAGE 3 LANDS
+TOWN OF CALEDON
+
+PRELIMINARY FUNCTIONAL SERVICING STUDY
+PREPARED FOR
+CALEDON DEVELOPMENT GENERAL PARTNER LTD.
+SCHOOL WEST INVESTMENTS INC.
+SCHOOL VALLEY DEVELOPMENTS INC.
+SCHOOL VALLEY SOUTH LTD
+BROOKVALLEY DEVELOPMENTS (HWY 10) LTD.
+(C/O BROOKVALLEY PROJECT MANAGEMENT INC.)
+
+JULY 15TH 2022
+
+JULY 15, 2022
+
+CANDEVCON LIMITED
+CONSULTING ENGINEERS & PLANNERS
+TEL (905) 794-0600
+
+FAX (905) 794-0611
+
+PROJECT NO. W22043
+
+Contents
+1.
+
+INTRODUCTION .................................................................................................................... 1
+
+2.
+
+RELATED TECHNICAL STUDIES ....................................................................................... 2
+2.1
+
+R.J. Burnside & Associates Limited ................................................................................. 2
+
+2.2
+
+The Municipal Infrastructure Group Ltd. .......................................................................... 2
+
+2.3
+
+Urbantech Consulting ........................................................................................................ 4
+
+3.
+
+URBAN STRUCTURE CONCEPTUAL PLAN ..................................................................... 6
+
+4.
+
+EXISTING AND PLANNED WATER AND WASTEWATER INFRASTRUCTURE ........ 7
+
+5.
+
+6.
+
+4.1
+
+Water ................................................................................................................................. 7
+
+4.2
+
+Wastewater ........................................................................................................................ 7
+
+FUTURE/REQUIRED WATER AND WASTEWATER INFRASTRUCTURE ................... 9
+5.1
+
+Water ................................................................................................................................. 9
+
+5.2
+
+Wastewater ........................................................................................................................ 9
+
+SUMMARY AND CONCLUSIONS ..................................................................................... 11
+
+FIGURES
+FIGURE 1
+
+Location Plan
+
+FIGURE 2
+
+Urban Structure Conceptual Plan
+
+FIGURE 3
+
+Region of Peel 2021-2041 DC Water Infrastructure
+
+FIGURE 4
+
+Region of Peel 2021-2041 DC Wastewater Infrastructure
+
+FIGURE 4
+
+Existing and Planned Water Infrastructure
+
+FIGURE 6
+
+Existing and Planned Wastewater Infrastructure
+
+FIGURE 5
+
+Future/Required Water Infrastructure
+
+FIGURE 6
+
+Future/Required Wastewater Infrastructure
+
+(i)
+
+REFERENCE DRAWINGS
+
+Urbantech Consulting Drawing No. 801...Sanitary Trunk Sewers (Functional Servicing Study, dated
+August 2017)
+
+APPENDICES
+
+APPENDIX "A"
+
+Figures 4, 6 and 7 of The Municipal Infrastructure Group Water and
+Wastewater Servicing Study dated January 2016
+
+APPENDIX "B"
+
+Urbantech Consulting, Sanitary Sewer Design Sheets 1 and 2 of Appendix 8 of
+FSR dated August 2017
+
+(ii)
+
+1.
+
+INTRODUCTION
+Brookvalley is proposing an Official Plan Amendment to the Town of Caledon Official Plan to
+include the Mayfield West Phase 2 Stage 3 Lands (which are the residual lands in the Mayfield
+West Study Area west of Hurontario Street) within the Mayfield West Rural Service Centre
+boundary and re-designate them for urban land uses within the Mayfield West Phase 2 Secondary
+Plan. The Official Plan Amendment application is required to determine land use designations,
+along with population, employment, and density targets for the Mayfield West Phase 2 Stage 3
+Lands prior to the submission of development applications. The proposed amendment will
+designate the lands for a range of uses, including low and medium density residential, commercial,
+institutional, parks and open space uses and a public road network.
+
+The Mayfield West Phase 2 Stage 3 Lands are shown on Figure 1 and comprise a total area of
+approximately 270 hectares generally bounded by Chinguacousy Road to the west, Old School Road
+to the north, Hurontario Street (Highway 10) to the east and the Etobicoke Creek to the south
+
+This study, which addresses water, wastewater and storm water management servicing, is one of
+several Technical Studies that have been prepared to fulfil the Growth Plan requirements for a
+Settlement Boundary expansion northerly to Old School Road. The purpose of the Study is to
+provide a high-level evaluation and identification of the sanitary, water and storm water
+management servicing infrastructure that will be required to accommodate the urban development
+of the subject lands, and to facilitate the Region of Peel to include the required infrastructure
+improvements in its Capital Works Planning Process.
+
+1
+
+2.
+
+RELATED TECHNICAL STUDIES
+The following Water and Wastewater Studies have been completed over the last ten years which
+relate to the servicing of the subject lands.
+
+2.1
+
+R.J. Burnside & Associates Limited
+Mayfield West Phase 2 Secondary Plan Water and Wastewater Servicing Study
+Town of Caledon
+-
+
+Part A Report dated May 2009
+
+-
+
+Part B Report dated October 8th 2010
+
+The Study, which was commissioned by the Town of Caledon, was one of several
+component studies prepared in support of the Mayfield West Phase 2 (MW2) Secondary
+Plan.
+
+The Study Area comprised the lands bounded by Chinguacousy Road to the west, Old
+School Road to the north, Dixie Road to the east and Mayfield Road to the south.
+
+The Part B report evaluated water and wastewater servicing for three (3) Community
+Development Scenarios that were under consideration and also identified potential external
+regional servicing improvements that would be required to service the Community
+Development Scenarios.
+
+2.2
+
+The Municipal Infrastructure Group Ltd.
+Mayfield West - Phase 2 Secondary Plan Water and Wastewater Servicing Study,
+January 2014
+The Study, which was commissioned by the Mayfield Station Landowners Group, was
+prepared in support of the Mayfield West Phase 2 Secondary Plan, and was undertaken to
+address servicing requirements as a result of changes to the MW2 Plan through OPA 226
+(dated September 11th 2012) and the Planning Report DP-2013-092 dated September 3rd
+2013.
+
+2
+
+The purpose of the study was to:
+-
+
+Identify existing and planned water and wastewater infrastructure;
+
+-
+
+Provide a summary of proposed water and wastewater demands;
+
+-
+
+Identify proposed water and wastewater infrastructure to support the Study Area;
+
+-
+
+Identify possible interim servicing opportunities utilizing existing water and
+wastewater infrastructure, and
+
+-
+
+Identify potential development planning limits based on planned and proposed
+Infrastructure timing.
+
+The proposed water and wastewater network/routing design addressed the servicing
+requirements for three (3) areas as follows:
+
+-
+
+Stage 1:Lands within the Town of Caledon Council Endorsed Framework Plan;
+
+-
+
+Stage 2:Potential development lands beyond the Council Endorsed Framework
+Plan and south of the Etobicoke Creek
+
+-
+
+North Lands:
+
+Potential development lands north of Etobicoke Creek having an
+approximate gross area of 325 ha.
+
+Note:
+
+The ANorth Lands@ are the subject lands in this (Candevcon=s) report i.e. AStage
+3 Lands@.
+
+Copies of Figures 4, 6 and 7 of the report showing the Servicing Areas and the
+Recommended Water and Wastewater Servicing Plans are included in Appendix AA@ for
+reference.
+
+3
+
+2.3
+
+Urbantech Consulting
+Functional Servicing Reports - Mayfield West Phase 2
+- May 2016 and August 2017
+
+The Town of Caledon Council adopted the Mayfield West Phase 2 Secondary Plan (MW2)
+Official Plan Amendment OPA 222 on November 10th 2015.
+
+The approved MW2
+
+Secondary Plan included the Stage 1 Area only.
+
+The Study, which was prepared for the Mayfield West Landowners Group, along with
+companion reports (EIR, Transportation) was intended to support the individual Draft Plans
+of Subdivision within the MW2 Phase 2 Stage 1 lands and to demonstrate how the Stage 2
+lands would be integrated into the Stage 1 development.
+
+The Study report (August 2017) includes the preliminary design of the sanitary sewer
+system which included the MW2 Phase 2 Stage 1 and Stage 2 lands as well as future
+development north of the Etobicoke Creek/Green Belt to Old School Road (i.e. Mayfield
+West Phase 2 Stage 3 Lands). The relevant Sanitary Sewer Design Sheets are included in
+Appendix AB@ and a print of the Sanitary Sewer Plan (Drawing 801) is included as a
+Reference Drawing to this report. As shown on the Sanitary Sewer Design Sheets, the
+sanitary sewers in the Stage 1 and Stage lands are designed to accommodate the future
+development of the Stage 3 lands at a population density of 80 persons/ha.
+
+The Study report (August 2017) also included the future/planned trunk watermain
+infrastructure on Chinguacousy Road (600mm diameter) and on McLaughlin Road (400mm
+diameter) which will accommodate development of the Stage 3 lands.
+
+4
+
+2.4
+
+GM Blueplan
+Settlement Area boundary expansion (SABE)
+Water and wastewater servicing Analysis.
+August 12, 2021
+
+The Region of Peel commissioned the SABE as a follow-up to the Region’s 2020 Water
+and Wastewater Master Plan to review the servicing needs in the Caledon area including
+future growth north of Mayfield Road beyond the “2041 servicing boundary”. The study
+confirmed the water and wastewater upgrades, required for the area, identified in the 2020
+Water and Wastewater Masterplan
+
+5
+
+3.
+
+URBAN STRUCTURE CONCEPTUAL PLAN
+The Urban Structure Conceptual Plan for the Phase 2 Stage 3 lands is illustrated on Figure 2 and
+identifies a range of residential densities as well as Commercial Nodes at key locations and
+employment uses. Community uses such as Schools and Parks, as well as infrastructure facilities
+such as stormwater management ponds, have been located.
+
+6
+
+4.
+
+EXISTING AND PLANNED WATER AND WASTEWATER INFRASTRUCTURE
+
+4.1
+
+Water
+The subject Stage 3 lands are located in Region of Peel Pressure Zone 7W. The planned
+watermain infrastructure, based on the Region of Peel Water DC Map 2021, is shown on
+Figure 3 and includes the following trunk watermains which will service the Phase 2, Stage
+3 lands.
+•
+
+600mm diameter main on Chinguacousy Road from the East-West Collector Road
+in the Phase 2 Stage 1/2 lands to Old School Road;
+
+•
+
+400mm diameter main on McLaughlin Road from East-West Collector Road in the
+Phase 2 Stage 1/2 lands to Old School Road;
+
+•
+
+600mm diameter main on Old School Road from Dixie Road to Creditview Road
+
+•
+
+West Caledon Elevated Tank located on Chinguacousy, north of Airport Road
+
+•
+
+750mm watermain from the Alloa Pumping station to the west Caledon elevated
+tank
+
+4.2
+
+Wastewater
+The planned wastewater infrastructure, based on the Region of Peel Wastewater DC Map
+2020 is shown on Figure 4 and includes the following infrastructure which will service the
+Phase 2 Stage 3 lands:
+•
+
+450mm diameter trunk sanitary sewer on Chinguacousy Road from the East-West
+Collector Road in the MW Phase 2 Stage 1/2 lands to south of Old School Road
+Creek crossing.
+
+Note: Based on the Urbantech Functional Servicing Report
+
+(August 2017), this sewer is designed to accommodate a drainage area of 95.70 ha
+(at 80 p/ha) in the Phase 2 Stage 3 lands.
+•
+
+525mm diameter trunk sanitary sewer on McLaughlin Road from the East-West
+Collector Road in the MW Phase 2 Stage 1/2 lands to the south side of Old school
+road.
+
+Note: Based on the Urbantech Functional Servicing Report (August
+
+2017), this sewer is designed to accommodate a drainage area of 151.5 ha (at 80
+p/ha) in the Stage 3 lands. A pumping station (and forcemain) will be required
+7
+
+to service the Stage 3 lands.
+•
+
+375mm diameter sanitary sewer serving the lands west of McLaughlin Road
+between Etobicoke Creek and Old School road, to the 450mm sanitary sewer on
+Chinguacousy Road
+
+•
+
+525mm diameter sanitary sewer serving the lands east of McLaughlin Road
+between Old School Road and Etobicoke Creek to the 525mm sanitary sewer on
+Mclaughlin Road
+
+8
+
+5.
+
+FUTURE/REQUIRED WATER, WASTEWATER AND STORM WATER
+MANAGEMENT INFRASTRUCTURE
+5.1
+
+Water
+The conceptual configuration of the required water infrastructure to service the Phase 2
+Stage 3 lands is shown on Figure 5 and generally will comprise:
+•
+
+600mm diameter main on Chinguacousy Road from the East-West Collector Road
+in the Phase 2 Stage 1/2 lands to Old School Road;
+
+•
+
+400mm diameter main on McLaughlin Road from East-West Collector Road in the
+Phase 2 Stage 1/2 lands to Old School Road;
+
+•
+
+600mm diameter main on Old School Road from Airport Road to Creditview Road
+
+For the purpose of this report, it is assumed that all infrastructure within Stage 2 will be
+completed to the northern development limit. The configuration of the trunk and sub-trunk
+mains, as well as the internal watermain network, will be determined as part of a future
+Functional Servicing Study for the Phase 2 Stage 3 lands.
+
+5.2
+
+Wastewater
+For the purpose of this report, it is assumed that all infrastructure within Stage 2 will be
+completed to the northern development limit. The configuration of the sub-trunk and local
+sanitary sewers to service the Phase 2 Stage 3 lands will be determined as part of a future
+Functional Servicing Study for the Stage 3 lands. The conceptual configuration of the
+required wastewater infrastructure is shown on Figure 6 and generally will comprise:
+•
+
+Sub-trunk (375mm to 450mm diameter) sanitary sewers on a future East-West
+Collector Road connecting to the planned 450mm diameter trunk sewer on
+Chinguacousy Road, and to a future pumping station on McLaughlin Road;
+
+• A pumping station to be located to the north of the Etobicoke Creek Greenland at
+McLaughlin Road, with a force main on McLaughlin Road draining to the planned
+525mm diameter sanitary sewer on McLaughlin Road.
+
+9
+
+5.3
+
+Storm Water Management
+
+The configuration of the proposed storm water management concept is show on figure 7.
+The preliminary pond locations were determined based on existing contours and
+maintaining existing drainage boundaries.
+
+A total of 13 storm water management
+
+facilities are proposed to service Phase 2, Stage 3.
+
+The location and preliminary drainage boundaries of the Storm Water Management
+facilities is shown on figure 7 and are summarized below
+
+Pond Number Drainage Area (ha)
+1
+19.4
+2
+
+19.4
+
+3
+
+3.6
+
+4
+
+11.7
+
+5
+
+38.4
+
+6
+
+20.3
+
+7
+
+15.3
+
+8
+
+19.3
+
+9
+
+30.7
+
+10
+
+17.5
+
+11
+
+8.8
+
+12
+
+3.5
+
+13
+
+6.6
+
+The SWM facilities will be designed as part of a future Functional Servicing Study for the
+Phase 2, Stage 3 lands.
+
+10
+
+6.
+
+SUMMARY AND CONCLUSIONS
+As summarized in Section 2 of this report, the Technical Studies (Water and Wastewater Servicing
+Studies and Functional Servicing Reports) which have been completed for the Mayfield West Phase
+2 Secondary Plan as well as for the Mayfield West Phase 2 Stage 1/2 lands have consistently
+included for the future development of the Phase 2 Stage 3 (north) lands. The Region of Peel Water
+and Wastewater DC Maps have also identified the trunk services in the Mayfield West Phase 2
+Secondary Plan area that will accommodate the future development of the Phase 2 Stage 3 lands.
+
+Accordingly, the development of the Phase 2 Stage 3 Lands will utilize trunk water and wastewater
+infrastructure that will have been constructed and sized to accommodate the Phase 2 Stage 3 Lands.
+
+11
+
+APPENDIX "A"
+
+Figures 4, 6 and 7 of The Municipal Infrastructure Group Water and
+Wastewater Servicing Study dated January 2016
+
+APPENDIX "B"
+
+Urbantech Consulting, Sanitary Sewer Design Sheets 1 and 2 of Appendix 8 o9f FSR dated August
+2017
+
+REFERENCE PLANS
+
+FIGURES
+
+CAMPBELLS
+CROSS
+EET
+
+KING STR
+
+OAD
+
+27 SIDER
+
+TERRA COTTA
+
+LEGEND:
+
+3rd LINE E.H.S.
+
+1st LINE E.H.S.
+
+HURONTARIO ST
+
+1st LINE W.H.S.
+
+2nd LINE W.H.S.
+
+3rd LINE W.H.S.
+
+4th LINE W.H.S.
+
+5th LINE W.H.S
+
+OLD SCH
+
+2nd LINE E.H.S.
+
+MAYFIELD WEST
+PHASE 2 - STAGE 3 BOUNDARY
+MAYFIELD WEST
+PHASE 2 - STAGE 1
+MAYFIELD WEST
+PHASE 2 - STAGE 2
+MAYFIELD WEST
+PHASE 2 - STAGE 3
+MAYFIELD WEST
+PHASE 1
+
+D
+OOL ROA
+
+MAYFIELD WEST
+
+S DRIV
+WANLES
+
+E
+
+CITY
+
+MAYFIELD WEST
+PHASE 2 - STAGE 3 LANDS
+
+DIXIE
+ROAD
+
+ROAD
+
+ROAD
+
+ROAD
+
+HIGHWAY 10
+
+ROAD
+
+McLAUGHLIN
+
+KENNEDY
+
+ON
+
+HEART LAKE
+
+HIGHWAY 410
+
+ROAD
+
+ROAD
+
+CREDITVIEW
+
+ROAD
+
+MISSISSAUGA
+
+ROAD
+
+HERITAGE
+
+MAYFIELD
+
+ROAD
+
+OF
+
+TOWN
+
+CALED
+
+CHINGUACOUSY
+
+WINSTON CHURCHILL BOULEVARD
+
+J:\CDC-2022 WEST - Files\W22043-MAYFIELD-WEST-OPA-2-3\W22043-CANDEVCON-DRAWINGS\W22043-XREF-JULY-12-2022\W22043-FIGURE-1-LOCATION-PLAN-JULY-12-2022.dwg
+
+PHASE 2 - STAGE 3 LANDS
+
+TOWN OF CALEDON
+
+LOCATION PLAN
+
+YSIDE
+COUNTR
+
+CANDEVCON LIMITED
+CONSULTING ENGINEERS AND PLANNERS
+
+OF
+
+BRAMP
+
+TEL. (905) 794-0600
+
+TON
+
+SAN
+
+AY
+D PARKW
+DALWOO
+
+ST
+
+EA
+
+FAX (905) 794-0611
+
+DATE
+
+JULY 12th 2022
+
+PROJECT No
+
+DRAWN
+
+S.G.K.
+
+FIGURE No.
+
+SCALE
+
+1:40,000
+
+W22043
+
+FIGURE 1
+
+R
+
+RR
+
+IDO
+
+O
+TC
+
+ES
+
+AW
+
+STREET
+
+SWM
+SWM
+
+Low Density Residential
+
+SWM
+SWM
+
+Medium Density Residential
+General Commercial
+
+HURONT
+A
+
+McLAUG
+H
+
+Mayfield West Phase 2 - Stage 3
+Secondary Plan Boundary
+
+RIO
+
+ROAD
+SWM
+
+LIN
+
+SWM
+
+CHINGUA
+
+COUSY
+
+LAND USE
+
+ROAD
+
+TRAIL SY
+STEM
+
+SCHOOL
+
+ROAD
+
+OLD
+
+FUTURE
+
+GT
+
+Institutional
+Open Space Policy Area
+SWM
+
+SWM
+
+SWM
+
+Stormwater Pond Facility
+Collector Roads
+
+Environmental Policy Area
+SWM
+
+SWM
+
+Boundary of Greenbelt Plan Area
+
+SWM
+
+Elementary School
+
+SWM
+
+NOTE:
+SWM
+
+HWY
+
+PROPOSED LAND USES BASED ON
+MALONE GIVEN PARSONS FILE No. 21-3130
+MAYFIELD WEST - URBAN STRUCTURE PLAN
+2022 06 30 Land Use Plan-FINAL.dwg
+DATED JUNE 30 2022
+
+MAYFIELD WEST
+PHASE 2 - STAGE 3 LANDS
+
+410
+
+J:\CDC-2022 WEST - Files\W22043-MAYFIELD-WEST-OPA-2-3\W22043-CANDEVCON-DRAWINGS\W22043-XREF-JULY-12-2022\W22043-FIGURE-2-URBAN-STRUCTURE-CONCEPT-PLAN-LAND-USE-2022 06 30 Land Use Plan-FINAL.dwg
+
+Future Trail System
+
+TOWN OF CALEDON
+
+URBAN STRUCTURE
+CONCEPTUAL PLAN
+
+CANDEVCON LIMITED
+CONSULTING ENGINEERS AND PLANNERS
+FAX (905) 794-0611
+
+TEL. (905) 794-0600
+DATE
+
+JULY 12th 2022
+
+PROJECT No.
+
+DRAWN
+
+S.G.K.
+
+FIGURE No.
+
+SCALE 0m
+
+100
+
+200
+
+300
+
+W22043
+
+FIGURE 2
+
+SITE
+
+SUBJECT SITE
+
+5
+4
+3
+2
+1
+
+NO.
+
+DESCRIPTION
+
+DATE
+
+BY
+
+REVISIONS
+
+CANDEVCON LIMITED
+CONSULTING ENGINEERS AND PLANNERS
+
+J:\CDC-2022 WEST - Files\W22043-MAYFIELD-WEST-OPA-2-3\W22043-CANDEVCON-DRAWINGS\W22043-XREF-JULY-12-2022\W22043-FIGURE-3-WATER-DC-MAP-2021-JULY-12-2022.dwg
+
+9358 GOREWAY DRIVE
+TEL. (905) 794-0600
+
+BRAMPTON, ONTARIO L6P 0M7
+FAX (905) 794-0611
+
+MAYFIELD WEST
+PHASE 2 - STAGE 3 LANDS
+TOWN OF CALEDON
+SHEET TITLE:
+
+REGION OF PEEL
+2021- 2041 WATER DC MAP
+DRAWN BY:
+CHECKED BY:
+SCALE:
+DATE:
+
+S.G.K.
+D.K.H.
+1:125,000
+
+JULY 12th 2022
+
+PROJECT No.
+
+W22043
+
+DRAWING No.
+
+FIG.3
+
+SITE
+
+SUBJECT SITE
+
+5
+4
+3
+2
+1
+
+NO.
+
+DESCRIPTION
+
+DATE
+
+BY
+
+REVISIONS
+
+CANDEVCON LIMITED
+CONSULTING ENGINEERS AND PLANNERS
+
+J:\CDC-2022 WEST - Files\W22043-MAYFIELD-WEST-OPA-2-3\W22043-CANDEVCON-DRAWINGS\W22043-XREF-JULY-12-2022\W22043-FIGURE-4-WASTEWATER-DC-MAP-2021-JULY-12-2022.dwg
+
+9358 GOREWAY DRIVE
+TEL. (905) 794-0600
+
+BRAMPTON, ONTARIO L6P 0M7
+FAX (905) 794-0611
+
+MAYFIELD WEST
+PHASE 2 - STAGE 3 LANDS
+TOWN OF CALEDON
+SHEET TITLE:
+
+REGION OF PEEL
+2021- 2041
+WASTEWATER DC MAP
+
+DRAWN BY:
+CHECKED BY:
+SCALE:
+DATE:
+
+S.G.K.
+D.K.H.
+1:125,000
+
+JULY 12th 2022
+
+PROJECT No.
+
+W22043
+
+DRAWING No.
+
+FIG.4
+
+R
+
+RR
+
+IDO
+
+O
+TC
+
+ES
+
+AW
+
+SCHOOL
+
+LAND USE
+
+ROAD
+
+600mm
+TRAIL SY
+STEM
+
+ROAD
+
+4
+
+McLAUG
+
+SWM
+
+12
+
+SWM
+
+10
+
+SWM
+
+Mayfield West Phase 2 - Stage 3
+Secondary Plan Boundary
+Low Density Residential
+Medium Density Residential
+
+13
+
+SWM
+
+11
+
+FUTURE
+
+SWM
+
+400mm
+
+3
+
+HLIN
+
+400mm
+
+SWM
+
+CHINGUA
+
+COUSY
+
+ROAD
+
+600mm
+
+STREET
+
+OLD
+
+HURONT
+ARIO
+
+GT
+
+General Commercial
+Institutional
+Open Space Policy Area
+SWM
+
+13
+SWM
+
+SWM
+
+2
+
+6
+
+Stormwater Pond Facility
+Collector Roads
+
+SWM
+
+SWM
+
+8
+
+SWM
+
+9
+
+Environmental Policy Area
+Boundary of Greenbelt Plan Area
+Elementary School
+
+SWM
+
+5
+
+EXISTING WATERMAIN
+PROPOSED WATERMAIN
+NOTE:
+
+SWM
+
+1
+
+HWY
+
+PROPOSED LAND USES BASED ON
+MALONE GIVEN PARSONS FILE No. 21-3130
+MAYFIELD WEST - URBAN STRUCTURE PLAN
+2022 06 30 Land Use Plan-FINAL.dwg
+DATED JUNE 30 2022
+
+MAYFIELD WEST
+PHASE 2 - STAGE 3 LANDS
+
+400mm
+
+410
+
+J:\CDC-2022 WEST - Files\W22043-MAYFIELD-WEST-OPA-2-3\W22043-CANDEVCON-DRAWINGS\W22043-XREF-JULY-12-2022\W22043-FIGURE-5-EXISTING-PROPOSED-WATERMAIN-JULY-12-2022.dwg
+
+7
+
+600mm
+
+Future Trail System
+
+TOWN OF CALEDON
+
+EXISTING AND PLANNED
+WATER INFRASTRUCTURE PLAN
+
+CANDEVCON LIMITED
+CONSULTING ENGINEERS AND PLANNERS
+
+400mm
+
+FAX (905) 794-0611
+
+TEL. (905) 794-0600
+
+400mm
+
+DATE
+
+JULY 12th 2022
+
+PROJECT No.
+
+DRAWN
+
+S.G.K.
+
+FIGURE No.
+
+SCALE 0m
+
+100
+
+200
+
+300
+
+W22043
+
+FIGURE 5
+
+R
+
+RR
+
+IDO
+
+O
+TC
+
+ES
+
+AW
+
+SWM
+
+375mm SA
+N.
+SWM
+
+STREET
+
+SWM
+
+Low Density Residential
+Medium Density Residential
+
+13
+
+SWM
+
+11
+
+General Commercial
+Institutional
+Open Space Policy Area
+13
+
+SWM
+
+Stormwater Pond Facility
+Collector Roads
+
+6
+
+525mm SA
+
+375mm SAN.
+
+12
+
+10
+
+SWM
+
+N.
+
+2
+
+McLAUG
+
+HLIN
+
+4
+
+SWM
+SWM
+
+Mayfield West Phase 2 - Stage 3
+Secondary Plan Boundary
+
+HURONT
+ARIO
+
+ROAD
+
+3
+
+CHINGUA
+
+COUSY
+
+SWM
+
+SWM
+
+Future Trail System
+
+525mm SAN.
+
+Environmental Policy Area
+SWM
+
+7
+
+SWM
+
+8
+
+Boundary of Greenbelt Plan Area
+
+SWM
+
+9
+
+Elementary School
+
+5
+
+EXISTING SANITARY
+PROPOSED SANITARY
+NOTE:
+
+N.
+
+SWM
+
+PROPOSED LAND USES BASED ON
+MALONE GIVEN PARSONS FILE No. 21-3130
+MAYFIELD WEST - URBAN STRUCTURE PLAN
+2022 06 30 Land Use Plan-FINAL.dwg
+DATED JUNE 30 2022
+
+MAYFIELD WEST
+PHASE 2 - STAGE 3 LANDS
+
+410
+
+450mm SA
+
+N.
+
+525mm SA
+
+1
+
+HWY
+
+J:\CDC-2022 WEST - Files\W22043-MAYFIELD-WEST-OPA-2-3\W22043-CANDEVCON-DRAWINGS\W22043-XREF-JULY-12-2022\W22043-FIGURE-6-EXISTING-PROPOSED-WASTEWATER-JULY-12-2022.dwg
+
+LAND USE
+
+ROAD
+
+TRAIL SY
+STEM
+
+SCHOOL
+
+ROAD
+
+OLD
+
+FUTURE
+
+GT
+
+TOWN OF CALEDON
+
+EXISTING AND PLANNED
+WASTEWATER INFRASTRUCTURE PLAN
+
+450mm SAN.
+
+600mm SAN.
+
+CANDEVCON LIMITED
+
+525mm SAN.
+
+CONSULTING ENGINEERS AND PLANNERS
+FAX (905) 794-0611
+
+TEL. (905) 794-0600
+DATE
+
+JULY 12th 2022
+
+PROJECT No.
+
+DRAWN
+
+S.G.K.
+
+FIGURE No.
+
+SCALE 0m
+
+100
+
+200
+
+300
+
+W22043
+
+FIGURE 6
+
+LEGEND:
+
+RESIDENTIAL - MEDIUM STACKED
+27
+
+270.0
+
+270.0
+
+270.0
+
+0.0
+27
+
+0.0
+
+27
+0.0
+
+OLD
+
+SCHOOL
+
+26
+
+5.0
+
+RESIDENTIAL - LOW DENSITY
+
+ROAD
+
+RESIDENTIAL - MEDIUM TOWNHOUSE
+
+26
+
+5.0
+
+T
+
+R
+
+270.0
+
+A
+GT
+
+S
+WE
+
+R
+CO
+
+O
+RID
+
+265.0
+
+26
+5.0
+
+PARK
+
+270.
+0
+
+265.0
+
+5.0
+
+10
+SWM
+
+4
+
+11
+
+GHLIN
+
+SWM
+
+260.0
+
+6
+
+GENERAL COMMERCIAL
+
+SWM
+
+SWM
+
+13
+
+13
+
+GREENBELT AREA
+
+NATURAL HERITAGE BOUNDARY
+
+T
+
+MAYFIELD WEST
+PHASE 2 - STAGE 3
+
+COLLECTOR ROAD
+
+SWM
+
+SWM
+
+8
+
+7
+
+STORMWATER POND FACILITY
+
+STREE
+
+RAIL
+
+PROPOSED ROAD
+
+MAYFIELD WEST
+PHASE 2 - STAGE 3 BOUNDARY
+DRAINAGE BOUNDARY
+
+TARIO
+
+260.0
+
+SWM
+
+SWM
+
+2
+
+12
+
+SWM
+
+5.0
+26
+
+McLAU
+
+3
+
+SWM
+
+SWM
+
+9
+
+SWM
+
+5
+
+HURON
+
+265.0
+
+ROAD
+
+26
+
+SWM
+
+INSTITUTIONAL
+
+260.0
+
+260.0
+
+26
+
+0.0
+
+0.0
+
+26
+
+255.0
+
+26
+
+0.0
+
+SWM
+
+1
+
+260.
+
+0
+
+ROA D
+
+Y
+
+SY
+
+260.
+
+0
+
+260.
+0
+
+260.
+0
+
+HW
+41
+
+4
+3
+2
+
+UACOU
+
+1
+
+NO.
+
+DESCRIPTION
+
+DATE
+
+BY
+
+REVISIONS
+
+CANDEVCON LIMITED
+CONSULTING ENGINEERS AND PLANNERS
+
+260.0
+
+9358 GOREWAY DRIVE
+TEL. (905) 794-0600
+
+CHING
+
+0.0
+26
+
+BRAMPTON, ONTARIO L6P 0M7
+FAX (905) 794-0611
+
+MAYFIELD WEST
+PHASE 2 - STAGE 3 LANDS
+255.0
+
+5.0
+
+25
+
+5.0
+
+25
+
+TOWN OF CALEDON
+SHEET TITLE:
+
+255.
+
+0
+
+255.0
+
+9.0
+25
+26
+
+0.0
+
+255.0
+
+255.0
+255.0
+
+ROAD
+
+DRAWN BY:
+
+S.G.K.
+
+PROJECT No.
+
+W22043
+
+25
+
+5.0
+
+255.0
+
+255.0
+5.0
+
+MAYFIELD
+
+255.0
+
+255.0
+
+5.0
+25
+
+25
+
+255.0
+
+5.0
+
+25
+
+255.0
+
+FUTURE STORMWATER
+MANAGEMENT FACILITY
+DRAINAGE BOUNDARY PLAN
+CHECKED BY:
+
+255.0
+
+255.
+0
+255.0
+
+0
+255.
+
+J:\CDC-2022 WEST - Files\W22043-MAYFIELD-WEST-OPA-2-3\W22043-CANDEVCON-DRAWINGS\W22043-XREF-JULY-12-2022\W22043-FIGURE-7-SWM-POND-DRAINAGE-BOUNDARY-MAYFIELD-WEST-JULY-12-2022.dwg
+
+0
+
+5
+
+255.
+0
+
+SCALE:
+DATE:
+
+D.K.H.
+1:5000
+
+JULY 12th 2022
+
+DRAWING No.
+
+FIG.7
+
+

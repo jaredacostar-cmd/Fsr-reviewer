@@ -1,0 +1,1204 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+Nov.29, 2021
+
+SOSCIA
+
+ENGINEERING LTD.
+____________________________________________________________________________
+
+PROFESSIONAL ENGINEERS & PROJECT MANAGERS
+_____________________________________________________________________________
+
+FUNCTIONAL SERVICING REPORT
+
+PROPOSED STACKED TOWNHOUSE DEVELOPMENT
+13656 EMIL KOLB PARKWAY
+CALEDON, ONTARIO
+
+AUG 23, 2021
+
+SPA 2021-0077
+SOSCIA PROJECT # 20-007
+
+10376 YONGE ST, STE 307, RICHMOND HILL, ONTARIO, L4C 3B8, TEL: (905) 237-5410, FAX: (905) 237-5413
+
+SOSCIA
+ENGINEERING LTD.
+____________________________________________________________________________
+PROFESSIONAL ENGINEERS & PROJECT MANAGERS
+_____________________________________________________________________________
+
+TABLE OF CONTENTS
+1.0
+
+SITE DESCRIPTION
+
+2.0
+
+STORM WATER MANAGEMENT PLAN
+
+3.0
+
+2.1
+
+DESIGN CRITERIA
+
+2.2
+
+EXISTING CONDITION
+
+2.3
+
+PROPOSED CONDITION
+
+WATER SERVICING
+3.1 EXISTING WATERMAIN
+3.2 METHODOLGY- WATER USAGE
+3.3 PROPOSED CONDITION
+3.4 HYDRANT COVERAGE
+
+4.0
+
+SANITARY SERVICING
+4.1 EXISTING SANITARY SEWER
+4.2 METHODOLGY- SANITARY DISCHARGE
+4.3 PROPOSED SANITARY SEWER
+
+5.0
+
+CONCLUSION
+
+APPENDIX
+APPENDIX A1 : SITE PLAN
+APPENDIX A2 : SITE SERVICING PLAN SW2
+APPENDIX B
+
+: STORM SEWER DESIGN SHEET
+
+TABLE 1 : EXTERNAL STORM SEWER ANALYSIS( 2 YEAR)
+TABLE 2 : INTERNAL STORM SEWER ANALYSIS (5 YEAR)
+APPENDIX C
+
+: SANITARY SEWER DESIGN SHEET
+
+10376 YONGE ST, STE 307, RICHMOND HILL, ONTARIO, L4C 3B8, TEL: (905) 237-5410, FAX: (905) 237-5413
+
+SOSCIA
+ENGINEERING LTD.
+____________________________________________________________________________
+PROFESSIONAL ENGINEERS & PROJECT MANAGERS
+_____________________________________________________________________________
+
+1.0
+
+SITE DESCRIPTION
+
+The subject property is located at the North-West corner of Harvest Moon Drive and
+Coleraine Drive. The subject lands are located upon Part of the East Half of Lot 9,
+Concession 5, Town of Caledon in the Regional Municipality of Peel. The property is
+currently vacant with approximately 0.4538 ha in area, bound by residential properties to
+the west and north.
+The proposed development comprises of 45 condominium stacked townhouse units,
+with asphalt parking, concrete walkways, interlocking stones and landscaped areas. The
+road access to the development is through Harvest Moon Drive. The Site plan of the
+development is provided in Appendix A.
+Soscia Professional Engineers Inc. aims to prepare the Functional Servicing Report
+discussing the Stormwater, Sanitary and Water servicing requirements for the proposed
+development. The grading and servicing plans have been prepared in accordance with the
+design criteria of Town of Caledon, Toronto Region and Conservation Authority(TRCA), and
+the Regional Municipality of Peel.
+
+10376 YONGE ST, STE 307, RICHMOND HILL, ONTARIO, L4C 3B8, TEL: (905) 237-5410, FAX: (905) 237-5413
+
+SOSCIA
+ENGINEERING LTD.
+____________________________________________________________________________
+PROFESSIONAL ENGINEERS & PROJECT MANAGERS
+_____________________________________________________________________________
+
+2.0
+
+STORM SEWER MANAGEMENT PLAN
+2.1
+
+DESIGN CRITERIA
+
+The Town of Caledon requires that the storm water drainage from the proposed
+development shall be controlled to the pre-development release rates for all storm events.
+The storm water management design is premised on controlling the 100 yr postdevelopment flows to an allowable release of 180 l/ha/sec. This will be achieved by flow
+restrictor device provided at the outlet of Control Manhole (MH1). The Water Quality
+standards will be achieved by the removal 80% suspended solids. A water balance analysis
+is also carried out to retain at least 5mm of rainfall within the site by on site infiltration.
+2.2
+
+EXISTING CONDITION
+
+The property currently drains by sheet flow from the north west to the south east.
+The drainage ultimately ends up in a double catch basin in the north west corner of Harvest
+Moon Drive and Coleraine Drive. This will serve as the point of connection for the storm
+service from the site. This double catch basin outlets via a 300mm storm sewer which
+discharges to a municipal stormwater pond located south of Harvest Moon Drive.
+2.3
+
+PROPOSED CONDITION
+
+The storm runoff from the subject site is collected by the proposed underground
+storm sewer system and directed to the existing Double Catch basin located at the
+intersection of Harvest Moon and Coleraine Drive. For the connection to be established, the
+DCB is to be upgraded to a 1500mm Double catch basin Manhole (DCBMH). (Please refer
+Appendix A2 for the Site Servicing plan SW2).
+Apart from the controlled and uncontrolled flow from the site, the proposed DCBMH will
+also convey flow from the rear of residential lots on Frank Johnson Rd, a portion of road
+along Harvest Moon and Coleraine Drive. With reference to StormWater Management
+Report prepared for the lot by Urban Watershed Group Ltd. in 2014, an external storm
+sewer analysis was carried out to check the 2 year storm event capacity of exiting storm
+lines leading to the stormwater pond. (Please refer to Table1 of Appendix B). The internal
+storm sewer system is designed to 5 year storm sewer intensity (Please refer to Table 2 of
+Appendix B).
+An orifice restrictor(100mm orifice plate) is proposed within the storm control
+Manhole in order to attenuate the 1 in 100 year flows from this development area.
+Attenuation of the 1 in 100 year flow will require on-site storage to be provided. The excess
+run-off will be stored above as well under ground.
+10376 YONGE ST, STE 307, RICHMOND HILL, ONTARIO, L4C 3B8, TEL: (905) 237-5410, FAX: (905) 237-5413
+
+SOSCIA
+ENGINEERING LTD.
+____________________________________________________________________________
+PROFESSIONAL ENGINEERS & PROJECT MANAGERS
+_____________________________________________________________________________
+
+Post Development Storage Required = 43.66 m3
+Storage Provided:
+Surface Ponding = 18.79 cu.m
+Cultec Chamber 280HD = 10.03 cu.m
+Underground sewers = 22.93 cu.m
+Total Available storage = 51.75 m3
+
+The enhanced level of Water Quality for the proposed site is provided by installing
+an Oil/grit separator device downstream of the orifice control device. A stormceptor model
+EF4 (or approved equivalent) has been proposed allowing for 88% TSS removal and
+captures 90% of total runoff volume.
+A Water balance analysis on site resulted in a storage requirement of 22.69m3 to
+retain a minimum of 5mm of rainfall. The proposed CULTEC infiltration system will
+recharge the storm water providing a storage of 15.42m3. The remaining will be recharged
+through initial abstraction.
+The design criteria also aims at adopting a set of Erosion and Sediment control
+techniques to implement Best Management Practices on site. (Please refer to SWM Report
+(MAR,2021) prepared by Soscia Engineers for detailed storm water management design.)
+3.0
+
+WATER SERVICING
+3.1
+
+EXISTING WATERMAIN
+
+An existing 300mm Water Main on Harvest Moon Drive will service the site.
+3.2
+below:
+
+METHODOLOGY: WATER USAGE
+
+The estimated water demand generated from the proposed development is given
+Total Townhouse units
+Population (at 3.5ppu)
+Average Consumption Rate
+Average Daily Demand(m3/day)
+
+= 45
+= 45*3.5 = 158
+= 280 L/cap/day
+= 280x158
+= 44.24 m3/day
+Peak Daily Demand (Daily Peak Factor:2)
+= 88.48 m3/day
+Peak Hourly Demand (Hourly Peak factor: 3) = 132.72 m3/day
+10376 YONGE ST, STE 307, RICHMOND HILL, ONTARIO, L4C 3B8, TEL: (905) 237-5410, FAX: (905) 237-5413
+
+SOSCIA
+ENGINEERING LTD.
+____________________________________________________________________________
+PROFESSIONAL ENGINEERS & PROJECT MANAGERS
+_____________________________________________________________________________
+
+3.3
+
+PROPOSED WATERMAIN
+
+As shown on the servicing plan (SW2) (See Appendix A2), 150mm lateral
+connections are tapped from the existing 300mm Municipal Watermain at two separate
+locations to establish a looped system. The physical connection is made with a 300x150
+tapping saddle , complete with check valve in chamber as per the Region of Peel standard
+drawing 1-8-2. Internally the 150mm PVC watermain will be reduced to 100mm pipe to
+service individual units with a 19mm diameter Type 'K' copper water connection and
+meter.
+The maximum and minimum pressure under normal operating conditions shall be
+700 kPa and 280 kPa respectively. The minimum system pressure under fire flow
+conditions shall not be less than 140 kPa.
+3.4 HYDRANT COVERAGE
+
+The Site will be serviced by an existing City Fire Hydrant located on Harvest Moon
+Drive. The hydrant is currently located on the proposed Driveway which has to be
+relocated to the Boulevard. Additionally, the site will be serviced by a private hydrant
+located within the property.
+All the 3 buildings meet the maximum coverage of 45m from the hydrants.
+4.0
+
+SANITARY SEWER PLAN
+4.1
+
+EXISTING SANITARY SEWER
+
+An Existing 150mm Sanitary sewer stub has been allotted solely to service the
+subject site upon development from the existing 375mm CONC SAN sewer on Coleraine
+Drive.
+4.2
+
+METHODOLOGY: SANITARY DISCHARGE
+
+The proposed development consists of 45 stacked townhouse units in 0.4538 ha area.
+Sanitary discharge design flows for the development will be calculated based on the Region of Peel
+design parameters as outlined below.
+The residential population density for townhouse units = 175 persons/ha
+Unit Domestic sewage flow = 302.8 L/cap.d
+10376 YONGE ST, STE 307, RICHMOND HILL, ONTARIO, L4C 3B8, TEL: (905) 237-5410, FAX: (905) 237-5413
+
+SOSCIA
+ENGINEERING LTD.
+____________________________________________________________________________
+PROFESSIONAL ENGINEERS & PROJECT MANAGERS
+_____________________________________________________________________________
+
+Peak Flow Design :
+Total Population
+Average Domestic flow
+Peaking Factor
+Site Area
+Proposed Manholes
+Manhole Infiltration Rate
+Sewer Infiltration Rate
+Total Infiltration Rate
+Peak Population Flow
+Peak Design Flow
+
+4.3
+
+= 0.4538 ha x 175persons/ha = 79 p
+= 302.8 L/p/day
+= 1+14/(4+(P/1000)0.5) = 4.26
+= 0.4538 ha
+= 11 mh
+= 0.00028m3/s/mh * 11mh = 3.08 L/s
+= 0.0002m3/s/ha * 0.4538ha = 0.09L/s
+= 3.17 L/s
+= PqM/86400
+= (79*302.8*4.26)/86400
+= 1.18 L/s
+= 4.36 L/s
+
+PROPOSED SANITARY SEWERS
+
+The sanitary servicing of the proposed townhouse development is designed based
+on Region of Peel standard servicing drawing 1-8-2 for Townhouses (See Appendix C for
+attachment). The detailed Sanitary servicing plan is outlined in SW2 (Appendix A2).
+An Internal Sanitary sewer system with a combined length of 378m will individually
+service the units.
+The anticipated sanitary discharge from the proposed development is estimated to be 4.36
+L/s. Based on the Sanitary sewer design sheet, the last leg of the proposed pipe system is
+only 40% full at the design flow.
+The design flow from the site will not add any additional load on the existing 150mm
+downstream stub connection from the 375 CONC SAN . (See Appendix C for Sanitary sewer
+design sheet).
+5.0
+
+CONCLUSIONS:
+
+In summary, the functional servicing analysis established the following:
+STORMWATER SERVICING
+The 100 year post development runoff from the site is controlled to the 2 year pre
+development rate by providing a 100mm orifice plate at the downstream control Manhole.
+Detention and Retention storage will be provided by a proposed Cultec System (280HD).
+10376 YONGE ST, STE 307, RICHMOND HILL, ONTARIO, L4C 3B8, TEL: (905) 237-5410, FAX: (905) 237-5413
+
+SOSCIA
+ENGINEERING LTD.
+____________________________________________________________________________
+PROFESSIONAL ENGINEERS & PROJECT MANAGERS
+_____________________________________________________________________________
+
+A quality treatment unit (Stormceptor unit model EF4 or approved equivalent) will be
+installed to yield a minimum TSS removal rate of 80% for quality control purposes. The
+storm system from the site will discharge to an existing 300mm municipal line which
+eventually drain to an existing SWM pond.
+WATER SUPPLY
+
+Water supply servicing will be provided from an existing 300 mm diameter water main
+located on Harvest Moon Drive. A 150mm Water service line is proposed to meet the
+domestic water demands. The existing city hydrant and proposed private Hydrant will be
+sufficient to meet the fire requirements of the 3 buildings.
+SANITARY
+
+The anticipated sanitary discharge from the proposed development will be 4.36 L/s which
+will be carried by an existing 375mm CONC SAN on Coleraine Drive. Downstream sanitary
+analysis indicates there will be no surcharge in the municipal sewer system as a result of
+this development.
+Sincerely,
+
+SOSCIA ENGINEERING LTD.
+
+Sandro Soscia, P. Eng.
+
+10376 YONGE ST, STE 307, RICHMOND HILL, ONTARIO, L4C 3B8, TEL: (905) 237-5410, FAX: (905) 237-5413
+
+SOSCIA
+ENGINEERING LTD.
+____________________________________________________________________________
+PROFESSIONAL ENGINEERS & PROJECT MANAGERS
+_____________________________________________________________________________
+
+“APPENDIX”
+
+10376 YONGE ST, STE 307, RICHMOND HILL, ONTARIO, L4C 3B8, TEL: (905) 237-5410, FAX: (905) 237-5413
+
+SOSCIA
+ENGINEERING LTD.
+____________________________________________________________________________
+PROFESSIONAL ENGINEERS & PROJECT MANAGERS
+_____________________________________________________________________________
+
+APPENDIX A1:
+
+SITE PLAN
+
+10376 YONGE ST, STE 307, RICHMOND HILL, ONTARIO, L4C 3B8, TEL: (905) 237-5410, FAX: (905) 237-5413
+
+SOSCIA
+ENGINEERING LTD.
+____________________________________________________________________________
+PROFESSIONAL ENGINEERS & PROJECT MANAGERS
+_____________________________________________________________________________
+
+APPENDIX A2:
+
+SERVICING PLAN (SW2)
+
+10376 YONGE ST, STE 307, RICHMOND HILL, ONTARIO, L4C 3B8, TEL: (905) 237-5410, FAX: (905) 237-5413
+
+SOSCIA
+ENGINEERING LTD.
+____________________________________________________________________________
+PROFESSIONAL ENGINEERS & PROJECT MANAGERS
+_____________________________________________________________________________
+
+APPENDIX B
+
+STORM SEWER DESIGN SHEETS
+
+10376 YONGE ST, STE 307, RICHMOND HILL, ONTARIO, L4C 3B8, TEL: (905) 237-5410, FAX: (905) 237-5413
+
+2 Y E A R - STORM SEWER DESIGN SHEET
+TABLE 1 : EXTERNAL STORM SEWER ANALYSIS
+PROJECT CONSULTANT: SOSCIA ENGINEERING
+
+Design Parameters:
+
+PROJECT DESCRIPTION: coleraine
+
+N = 2.778 given Area (ha) & Rainfall Intensity (mm/hr)
+
+PROJECT LOCATION: CALEDON, ON
+
+2 YR Intensity =743/(tc+6)^0.7989
+
+SOSCIA FILE #: 20-007
+
+tc=10
+
+Manning's Coeff = 0.013
+
+Revision Date: APRIL 16,2021
+FROM
+MH.
+
+TO
+MH.
+
+EXTERNAL AREA
+
+UNCONTROLLED FRM
+SITE
+CONTROLLED FROM
+SITE
+
+SECTION
+AREA
+(ha)
+
+RUNOFF
+FACTOR
+"R"
+
+SECTION
+A*R
+"AR"
+
+ACCUM
+A*R
+"AR"
+
+RAINFALL Q = RAIN
+PIPE
+I
+LENGTH
+(mm/hr)
+(L/s)
+(m)
+
+0.085
+
+0.50
+
+0.043
+
+0.043
+
+81.09
+
+9.57
+
+0.00
+
+0.048
+
+0.25
+
+0.012
+
+0.012
+
+81.09
+
+2.70
+
+0.00
+
+0.072
+
+0.90
+
+0.065
+
+0.065
+
+81.09
+
+14.60
+
+0.00
+
+0.0836
+
+0.90
+
+0.075
+
+0.075
+
+81.09
+
+16.95
+
+0.00
+
+0.0849
+
+0.25
+
+0.021
+
+0.021
+
+81.09
+
+4.78
+
+0.00
+
+0.126
+
+0.70
+
+0.088
+
+0.088
+
+81.09
+
+19.87
+
+0.00
+
+0.328
+
+0.82
+
+100.79
+
+FULL
+CAP'TY
+(L/s)
+
+2.07
+
+300
+
+139.15
+
+0.25
+
+0.027
+
+0.027
+
+81.09
+
+6.19
+
+0.00
+
+0.0866
+
+0.90
+
+0.078
+
+0.078
+
+81.09
+
+17.56
+
+0.00
+
+124.54
+
+FULL
+VEL'TY
+(m/s)
+
+TIME OF
+TIME OF
+PERCENT
+FLOW
+CONCENT'N
+FULL
+(min)
+(min)
+(%)
+
+0.00
+14.5
+
+0.1099
+
+MH104
+
+TOTAL AREA =
+
+(%)
+
+PIPE
+DIAM.
+(mm)
+
+32.32
+
+DCBMH(N) DCBMH(S)
+
+DCBMH(S)
+
+SLOPE
+
+13
+
+2.07
+
+300
+
+1.024
+
+NOTE: External areas and runoff coefficients derived from Storm Drainage Area Plan, Figure 2, Stormwater management report by Urban Watershed Group Ltd, April 2014
+
+139.15
+
+1.97
+
+0.12
+
+10.00
+
+72.4%
+
+1.97
+
+0.11
+
+10.00
+
+89.5%
+
+5 Y E A R - STORM SEWER DESIGN SHEET
+TABLE 2
+PROJECT CONSULTANT: SOSCIA ENGINEERING
+
+Design Parameters:
+
+PROJECT DESCRIPTION: COLERAINE-HARVEST MOON
+
+N = 2.778 given Area (ha) & Rainfall Intensity (mm/hr)
+
+PROJECT LOCATION: CALEDON, ON
+
+5 YR Intensity =1593/(tc+11)^0.8789tc=10
+
+SOSCIA FILE #: 20-007
+
+Manning's Coeff = 0.013
+
+Revision Date: APR 08,2021
+FROM
+MH.
+
+TO
+MH.
+
+SECTION
+AREA
+(ha)
+
+RUNOFF
+FACTOR
+"R"
+
+SECTION
+A*R
+"AR"
+
+ACCUM
+A*R
+"AR"
+
+RAINFALL Q = RAIN
+PIPE
+I
+LENGTH
+(mm/hr)
+(L/s)
+(m)
+
+SLOPE
+(%)
+
+PIPE
+DIAM.
+(mm)
+
+FULL
+CAP'TY
+(L/s)
+
+FULL
+VEL'TY
+(m/s)
+
+PERCENT
+TIME OF
+TIME OF
+FULL
+FLOW CONCENT'N
+(min)
+(min)
+(%)
+
+CB1
+
+CBMH1
+
+0.095
+
+0.90
+
+0.086
+
+0.086
+
+109.68
+
+26.19
+
+12.0
+
+1.00
+
+250
+
+59.48
+
+1.21
+
+0.17
+
+10.00
+
+44.0%
+
+MH1
+
+CBMH2
+
+0.000
+
+0.90
+
+0.000
+
+0.114
+
+109.68
+
+34.62
+
+37.0
+
+1.00
+
+250
+
+59.48
+
+1.21
+
+0.51
+
+10.00
+
+58.2%
+
+0.042
+
+0.90
+
+0.038
+
+0.196
+
+109.68
+
+59.87
+
+6.0
+
+1.00
+
+300
+
+0.07
+
+10.00
+
+61.9%
+
+0.104
+
+0.90
+
+0.094
+
+0.290
+
+109.68
+
+88.50
+
+5.0
+
+1.60
+
+300
+
+122.34
+
+0.05
+
+10.00
+
+72.3%
+
+300
+
+118.45
+
+CBMH1
+CBMH2
+
+MH1
+
+CBMH3
+
+0.050
+
+CBMH4
+
+0.000
+
+STC
+
+0.000
+
+CBMH3
+
+CULTEC
+
+CBMH4
+
+CMH
+
+CULTEC
+Ctl. MH
+STC
+
+0.031
+
+EX.DCBMH
+
+TOTAL AREA =
+
+0.000
+
+0.90
+
+0.028
+
+0.90
+
+0.045
+
+0.90
+
+0.000
+
+0.90
+
+0.90
+
+0.000
+
+0.000
+
+0.114
+
+0.159
+
+109.68
+
+0.196
+
+109.68
+
+0.290
+
+109.68
+
+0.290
+
+0.323
+
+MANNINGS COEFF
+
+109.68
+
+0.013
+
+109.68
+
+34.62
+48.36
+
+59.87
+88.50
+
+88.50
+
+20.0
+
+15.0
+5.0
+18.0
+
+16.0
+
+1.00
+
+1.00
+
+1.00
+1.50
+
+1.50
+
+250
+
+59.48
+
+1.21
+
+0.28
+
+250
+
+59.48
+
+1.21
+
+0.21
+
+300
+
+96.72
+
+1.37
+
+0.06
+
+300
+
+96.72
+118.45
+
+1.37
+1.73
+1.68
+
+1.68
+
+0.18
+
+0.16
+
+10.00
+
+10.00
+
+10.00
+10.00
+
+10.00
+
+58.2%
+
+81.3%
+
+61.9%
+74.7%
+
+74.7%
+
+SOSCIA
+ENGINEERING LTD.
+____________________________________________________________________________
+PROFESSIONAL ENGINEERS & PROJECT MANAGERS
+_____________________________________________________________________________
+
+APPENDIX C
+
+SANITARY SEWER DESIGN SHEET
+
+10376 YONGE ST, STE 307, RICHMOND HILL, ONTARIO, L4C 3B8, TEL: (905) 237-5410, FAX: (905) 237-5413
+
+SANITARY SEWER DESIGN SHEET
+PROJECT
+Coleraine‐Harvest Moon‐20‐007
+PREPARED BY : SOSCIA PROFESSIONAL ENGINEERS
+DATE:
+04‐09‐2021
+where P is population in 1000's
+q= average daily per capita flow (L/cap.d) =
+I= unit of peak extraneous flow (L/ha.s)=
+Manhole Infiltration Rate=0.00028m3/s/mh
+Sewer Infiltration Rate= 0.0002m3/ha
+Q(p)= peak population flow (L/s)
+Q(i) = peak extraneous flow/infiltration (L/s)
+Q(d)= peak design flow (L/s)
+
+Locatio
+n
+Street
+
+Location
+F
+From
+
+Location
+T
+To
+
+DENSITY
+( h )
+(ppha)
+
+302.8
+3.08
+0.09
+1.188
+3.17
+4.36
+
+L/cap/day
+L/ha/s
+L/s
+L/s
+L/s
+L/s
+L/s
+
+(L/s) where A = area in ha
+(L/s)
+(L/s)
+Mannings coeff
+
+Pop.Flow
+Individual
+Peak
+Cumulative
+Cumulative
+Peak design
+Peaking
+Area A
+Population
+Area A
+extraneous
+P
+Pop.
+F t (M)
+Factor(M)
+fl
+flow
+Q(d)
+(hectares)
+(hectares)
+flow Q(i) L/s
+Q(p) L/s
+
+Existing
+Sewer
+L
+Length
+th
+(m)
+
+Proposed
+Sewer Pipe
+Size(mm)
+
+0.013
+
+Proposed
+Proposed
+Proposed
+Sewer Full
+Sewer Full
+Sewer
+Capacity(L/s)
+C
+it (L/ ) fl
+flow velocity
+l it
+Grade%
+n=
+(m/s)
+
+Percent Full
+
+Proposed
+Sewer Actual
+velocity at
+Q(d)
+
+MH 3A
+
+MH1A
+
+175
+
+0.4538
+
+79
+
+79
+
+0.4538
+
+4.27
+
+1.188
+
+3.17
+
+4.36
+
+25
+
+150
+
+0.5
+
+10.77
+
+0.61
+
+40.5%
+
+0.247
+
+MH 1A
+
+Municipal
+connection
+
+175
+
+0.4538
+
+79
+
+79
+
+0.4538
+
+4.27
+
+1.188
+
+3.17
+
+4.36
+
+16.5
+
+150
+
+15
+
+59.00
+
+3.34
+
+7.4%
+
+0.247
+
+4.36
+
+

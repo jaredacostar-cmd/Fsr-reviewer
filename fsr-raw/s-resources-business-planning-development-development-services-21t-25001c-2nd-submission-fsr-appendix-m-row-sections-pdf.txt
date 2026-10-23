@@ -1,0 +1,522 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Aug 29, 2025
+
+APPENDIX M
+ROW SECTIONS
+
+P OPE T LINE
+
+CL OF
+OW P
+
+8.50
+T A EL WA TO FOC
+
+FOC
+
+1.35
+LS
+
+D
+
+. 5
+
+FOC
+
+. 5
+
+2. 5
+
+P OPE T LINE
+
+1.35
+LS
+
+2.30
+T ANS
+
+0.3
+
+0.20
+
+0.9
+
+1.25
+
+1.80
+SIDEWALK
+
+IN
+1.50
+ST
+
+1.50
+SAN
+
+S
+
+D AIN
+. .C.
+
+2. 0
+
+D AIN
+
+2.00
+
+1. 0
+
+. .C.
+
+1.5
+
+S
+
+IN
+
+IN
+
+.T.
+
+1.05
+
+2.55
+PLANTING
+
+0.9
+
+0.50
+
+0.50
+3.95
+
+5.05
+O LE A D
+
+3.95
+
+2.55
+PLANTING
+
+1.5
+
+1.80
+0.20
+SIDEWALK
+
+5.05
+O LE A D
+
+.90
+PA E ENT
+
+18.00 OW
+. .C.
+.T.
+
+OINT SE TILIT CO
+D O T ANSFO
+E
+
+IDO
+
+CALEDON C OSS SECTION
+18.0
+
+L
+D
+
+P
+
+28 2025
+
+F
+
+8155 03 A C
+
+S
+
+2025 05 28 A G
+
+.O.W.
+8.5
+S
+S
+Modified Town of Caledon Standard No. 202
+C
+
+SEC
+
+0 815503 SCS
+
+.
+
+Project:
+Project No.
+Date:
+Revised:
+
+Caledon
+8155-03
+March 20, 2024
+April 15, 2025
+
+Drawing No.
+
+S1
+
+P OPE T LINE
+
+CL OF
+O
+PM
+
+T A EL
+
+.25
+
+P OPE T LINE
+
+.00
+A TO FOC
+
+.25
+
+3. 0
+T ANSFO ME
+
+.35
+LS
+
+FOC
+
+.25 H
+FOC
+
+.25 H
+.35
+LS
+
+3. 0
+T ANSFO ME
+
+0.3
+
+0.3
+
+.U.C.
+
+.50
+0.50
+
+0.
+
+.25
+
+3.00
+MULTI-USE PATH
+
+2.55
+PLANTING
+
+.50
+STM
+
+.50
+SAN
+
+SU
+
+. 0 MIN
+
+AIN
+
+2. 0 MIN
+
+SU
+
+2.00 MIN
+
+H.T.
+. 0 MIN
+
+H.T.
+
+AIN
+
+.U.C.
+
+.05
+
+.05
+
+0.50
+
+0.50
+5.20
+
+.55
+OULE A
+
+5.20
+
+.25
+
+0.
+
+.50
+
+2.55
+PLANTING
+
+3.00
+MULTI-USE PATH
+
+0.50
+
+.55
+OULE A
+
+0. 0
+PA EMENT
+23.50
+.O. .
+
+.U.C. - OINT USE UTILIT CO
+H.T. - H
+O T ANSFO ME
+
+I O
+
+CALE ON C OSS-SECTION
+23.5
+C
+P
+
+M
+
+2
+
+2025
+
+F
+
+55-03 A C
+
+-S
+
+2025-05-2
+
+A-G
+
+C
+
+- SEC- 0 -
+
+5503 SCS
+
+.O. .
+M
+U
+
+.
+
+-U
+
+P
+
+Project:
+Project No.
+Date:
+Revised:
+
+Caledon
+8155-03
+March 20, 2024
+May 28, 2025
+
+Drawing No.
+
+S-
+
+PROPERTY LINE
+
+CL OF
+ROW P
+
+11.00
+TRA EL WAY TO FOC
+
+.50
+
+.50
+
+3.00
+
+2.30
+TRANS
+
+3. 0 LS
+
+FOC
+
+YD
+FOC
+
+3.00
+
+PROPERTY LINE
+
+2.30
+TRANS
+
+3. 0 LS
+
+0.3
+
+0.3
+
+0.20
+
+0.
+
+3. 5
+
+1.80
+SIDEWALK
+
+3.20
+PLANTING
+
+1.80
+CYCLE
+TRACK
+
+IN
+1.50
+ST
+
+1.05
+
+S
+
+DRAIN
+
+. .C.
+
+2. 0
+
+2.00
+
+DRAIN
+
+1. 0
+
+IN
+
+S
+
+1. 0
+
+. .C.
+
+IN
+
+.T.
+IN
+
+.T.
+
+1.50
+
+YD
+
+1.50
+SAN
+
+0.50
+
+0.50
+5.20
+
+3.00
+W
+
+1.05
+
+5.20
+
+0.30
+
+1.80
+CYCLE
+TRACK
+
+0.
+3.20
+PLANTING
+
+1.50
+1.80
+0.20
+SIDEWALK
+
+0.30
+
+.80
+O LE ARD
+
+.80
+O LE ARD
+
+10. 0
+PA E ENT
+
+2 .00 ROW
+
+. .C. OINT SE TILITY CORRIDOR
+.T.
+YDRO TRANSFOR ER
+
+CALEDON CROSS SECTION
+2 .0
+C
+D
+
+P
+
+28 2025
+
+F
+
+8155 03 A C
+
+S
+
+2025 05 28 A G
+
+C
+
+SEC R0 815503 SCS
+
+R.O.W.
+S
+.
+
+Project:
+Project No.
+Date:
+Revised:
+
+Caledon
+8155-03
+March 20, 2024
+May 28, 2025
+
+Drawing No.
+
+S5
+
+

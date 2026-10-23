@@ -1,0 +1,20953 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+29 April 2020
+19-G-3958
+2473903 Ontario Inc.
+8144 King Street
+Caledon, Ontario L7E 0T8
+Attention:
+
+RE:
+
+Mr. Firoz Khan
+
+Proposed Rezoning and Site Plan Application
+Functional Servicing and Stormwater Management Brief
+8186 King Street, Town of Caledon, Regional Municipality of Peel
+
+Dear Mr Khan:
+Greenland Consulting Engineers are pleased to provide the following Functional
+Servicing and Stormwater Management Brief for the redevelopment of the above-noted
+site in the Town of Caledon. This report has also been updated to respond to comments
+received from the Toronto Region Conservation Authority (TRCA) dated July 14, 2017
+(CFN 55174.14). The Stormwater Management Brief has been expanded to also
+address the screening tool required by TRCA to have regard for the wetland feature
+situated north east of the corner of the property. Since the property is with 120 metres
+of the wetland, the TRCA has requested that this screening process be followed.
+1
+
+SITE LOCATION
+
+The site comprises 1.92 hectares and is located at 8186 King Street in the Town of
+Caledon. The existing site has gravel and asphalt driveway areas, a residence, and
+fallow agricultural fields. The site is shown in Figure 1.
+
+Figure 1 Site Location
+GREENLAND International Consulting Ltd.
+120 Hume Street, Collingwood, Ontario, L9Y 1V5
+TEL: 705 444-8805 FAX: 705 444-5482 E-MAIL: greenland@grnland.com WEBSITE: www.grnland.com
+Greater Toronto • Collingwood
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+Adjacent land uses include agriculture to the east and north, the existing Banas Stones
+yard and Alliance Agri-Turf developments to the west. These two developed properties
+have split drainage with the land fronting onto King Street draining into a SWM facility
+on the south side of the road.
+2
+
+WETLAND WATER BALANCE RISK EVALUATION
+
+Prior to completing the stormwater management and water balance design for the site
+development, the protocols for a wetland water balance risk evaluation were completed
+based on the new criteria outlined in the TRCA November 2017 documentation. The
+two wetland features that are located north of the site have a combined drainage area
+of 20.24 ha. Figure 2 shows the entire drainage area to these features based on present
+day conditions. The drainage area was determined using a digital terrain model
+compiled from the SCOOP 2013 data.
+
+Figure 2 Wetland Complex Drainage Area
+The entire present impervious area that is draining to the wetland features from all other
+properties comprises 1.65 ha. This constitutes approximately 8.15% of the total
+drainage area to the wetland features.
+The portion of the proposed site that drains to the two wetland features is only 0.71 ha.
+This is the last remaining area that has been designated for development in the
+watershed draining to the wetland feature. The remainder of the lands that drain to the
+wetlands are either designated prime agricultural or greenbelt lands according to the
+Town of Caledon Official Plan (April 2018, Schedule C). To maintain a low magnitude
+of hydrologic change, the overall impervious area should be no greater than 10% of the
+wetland catchment area.
+
+_________
+GREENLAND
+
+2
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+The impervious cover score can be determined as follows:
+S = (IC x Cdev)/C
+where
+
+IC – proportion of impervious cover
+Cdev – total development area in wetland catchment
+C – total wetland catchment area
+
+S = 85.4 x 2.37/20.24 = 10%
+To stay below the medium threshold condition, the impervious area from this site
+draining to the wetland has to be less than 0.606 ha.
+The remainder of the site drains to an existing ditch system along the west side of the
+property that drains away from the wetland feature and outlets to King Street. This ditch
+system also collects drainage from the existing developed site to the west.
+3.0
+
+SITE STATISTICS
+3.1
+
+Existing Conditions
+
+The existing site is presently zoned Dry Industrial and consists of a combination of
+gravel and asphalt driveway areas, a residence including an outbuilding, and agricultural
+fields in fallow or pasture state. Table 1 provides a breakdown of the land use coverage
+for the property
+TABLE 1: EXISTING SURFACE CONDITIONS
+Surface Type
+
+Area 1
+
+Area 2
+
+Outlet to King Street
+
+Outlet to Wetland
+
+Area
+(sq.m.)
+
+Coverage
+(%)
+
+Area
+(sq.m.)
+
+Coverage (%)
+
+Grassed
+
+9,500
+
+78.45
+
+7,100
+
+100.0
+
+Building
+
+340
+
+2.81
+
+0
+
+0.0
+
+Asphalt/Gravel
+
+2,270
+
+18.74
+
+0
+
+0.0
+
+Total
+
+12,110
+
+100%
+
+7,100
+
+100.0
+
+3.2
+
+Proposed Condition
+
+The proposal is to retain the existing house as a contractor facility and develop the rear
+of the property for open storage of crated natural stone products. It is proposed to
+rezone the property to MS – Serviced Industrial and EPA – Environmental Policy Area.
+A vegetation buffer zone is proposed in the northeast corner of the property for a part
+of the Bolton Wetland Complex which is located off the subject property. Currently, the
+buffer is proposed in a 30m radius from the northeast property corner.
+Proposed surface conditions are listed in Table 2. Proposed drainage boundaries and
+runoff coefficients are shown on Figure 3.
+
+_________
+GREENLAND
+
+3
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TABLE 2: PROPOSED SURFACE CONDITIONS
+Surface Type
+
+Area A1
+
+Area A2
+
+Outlet to King Street
+
+Outlet to Wetland
+
+Area (sq.m.)
+
+Coverage
+(%)
+
+Area
+(sq.m.)
+
+Coverage (%)
+
+Landscape
+
+1,615
+
+13.3
+
+1,633
+
+23.0
+
+Building Roof
+
+292
+
+2.4
+
+0
+
+0.0
+
+Asphalt/Gravel
+
+10,203
+
+84.3
+
+5,467
+
+77.0
+
+Total
+
+12,110
+
+100%
+
+7,100
+
+100.0
+
+4.0
+
+STORMWATER MANAGEMENT
+
+Based on review of Figure 3.1 in the Humber River Hydrology (Civica, 2019), the site
+appears to fall into the area draining to the main branch of the Humber River, indicating
+that it would not require use of the unit flow equations. The following stormwater
+management criteria have been proposed for the site:
+
+
+
+
+Water Quantity: 2 to 100 year post to pre peak flow control for the area of the
+property draining to the King Street right-of-way
+Water Quality: 80% removal of total suspended solids
+Water Balance: On-site retention of 5 mm of runoff
+4.1 Water Quantity
+
+A VO2 model was prepared for the site for both existing and proposed conditions in
+order to determine the flows to the wetland complex and to King Street. The model also
+was used to determine the storage required to meet the predevelopment flow conditions
+once the site is developed. The predominant soil type for the area is found in the
+Chinguacousy Clay Loam group which is a Hydrologic Group C soil. A CN value of 74
+was applied for pervious areas in the model.
+Post to pre peak flow control is proposed for the front catchment area which drains to
+the King Street right-of-way. Proposed conditions were modelled using the CALIB
+STANDHYD command.
+The Atmospheric Environmental Service (AES) storm distributions for the 100-year
+return period 1-hour, 6-hour and 12-hour duration storms were tested to establish
+storage requirements that control the design. The 1-hour duration 100-year event
+resulted in the largest storage volume requirements. Proposed surface ponding areas
+on site are indicated on Drawing 19051-SSG. Flows from the front catchment are
+proposed to be restricted at the outlet to CMH1 by provision of a 110mm diameter orifice
+tube.
+Q = 0.8 X (π/4) X (0.11)2 X (2g X 1.255)1/2
+= 0.0377 m3/sec
+Storage usage and expected peak flows were computed in VO2 for both the front and
+rear catchments by applying the ROUTE RESERVOIR command with the storagedischarge relationship for each ponding area. The results are summarized in Table 3
+and copies of the output files for the existing and proposed conditions are provided in
+Attachment A.
+
+_________
+GREENLAND
+
+4
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TABLE 3: PRE/POST DEVELOPMENT FLOWS AND STORAGE REQUIREMENTS
+CATCHMENT draining to King Street
+Event
+
+Computed Peak Flows (cms)
+
+(1-hr
+AES)
+
+Existing
+Conditions
+
+Post Dev
+
+Storage
+Proposed
+Outlet
+
+Contributing
+to SWM
+Controls
+
+Controlled
+
+Requirement
+(cu.m.)
+
+Approx.
+Surface
+Ponding
+Elevation
+(m)
+
+Flows
+
+2 year
+
+0.014
+
+0.068
+
+0.033
+
+101
+
+263.43
+
+5 year
+
+0.035
+
+0.159
+
+0.034
+
+186
+
+263.49
+
+10 year
+
+0.051
+
+0.206
+
+0.035
+
+249
+
+263.52
+
+25 year
+
+0.075
+
+0.269
+
+0.036
+
+331
+
+263.55
+
+50 year
+
+0.094
+
+0.319
+
+0.037
+
+394
+
+263.57
+
+100 year
+
+0.114
+
+0.440
+
+0.038
+
+457
+
+263.59
+
+Storage
+
+Approx.
+Surface
+Ponding
+Elevation
+
+CATCHMENT draining to wetland complex
+Event
+
+Computed Peak Flows (cms)
+
+(1-hr
+AES)
+
+Existing
+Conditions
+
+Post Dev
+
+Proposed
+Outlet
+
+Contributing
+to SWM
+Controls
+
+Controlled
+
+Requirement
+(cu.m.)
+
+(m)
+
+Flows
+
+2 year
+
+0.010
+
+0.062
+
+0.008
+
+87
+
+262.52
+
+5 year
+
+0.024
+
+0.109
+
+0.014
+
+133
+
+262.60
+
+10 year
+
+0.035
+
+0.141
+
+0.019
+
+166
+
+262.68
+
+25 year
+
+0.052
+
+0.181
+
+0.024
+
+208
+
+262.77
+
+50 year
+
+0.067
+
+0.215
+
+0.029
+
+240
+
+262.80
+
+100 year
+
+0.082
+
+0.246
+
+0.033
+
+272
+
+262.80
+
+While no water quantity criteria were identified for the rear catchment, some peak flow
+control is proposed in the form of a berm/level spreader (8.0 m weir) and provision of
+one 150mm diameter outlet pipe at 0.5%. The total available storage at 262.80 m in 272
+m3 of surface storage and 35.5 m3 of subsurface storage.
+orifice tube
+head at 262.70m
+
+Q = 0.8 x (π/4) x (0.15)2 x (2g x 0.275)1/2 = 0.0328 m3/sec with
+
+The overflow weir will function only once the full storage has been utilized.
+
+_________
+GREENLAND
+
+5
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+4.2
+
+Shared Ditch Capacity (8144/8186 King Street)
+
+There is a common drainage ditch shared between the subject property (8186 King
+Street) and the existing development to the west (8144 King Street). Sections of the
+existing shared drainage ditch are provided on Drawing 19051-ESC1.
+The capacity of the existing ditch was determined using the Manning’s equation with the
+following parameters and dimensions:
+
+
+
+
+
+Manning’s n for stone bottom of 0.035;
+Steep side slopes of 1 horizontal to 5 vertical;
+rectangular channel with a 1m bottom width; and,
+longitudinal slope of 0.3%.
+
+The capacity of the existing ditch was determined to be 0.938 cms at a depth of 0.95 m.
+The area draining to the ditch under proposed conditions was delineated on Figure 4.
+The inlet time was set to 5 minutes (Std 103 Town of Caledon). The runoff coefficient of
+the 8144 King Street was assumed to be 0.9 therefore, the uncontrolled flows from this
+existing site would contribute the following:
+Q = 1.25 X 0.9 X 239.35 mm/hr X 0.68 ha/360 (C not to exceed 1.0)
+= 239.35 X 0.68/360
+= 0.452 m3/sec
+
+#8186
+C=0.82
+A=1.21ha
+
+#8144
+C=0.90
+A=0.68ha
+
+Figure 4 Drainage Areas to Common Ditch
+Once added to the controlled flows leaving the subject site, the total flow during a 100
+year storm would be 0.452 + 0.038 = 0.490 m3/sec
+
+_________
+GREENLAND
+
+6
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+There is also a very small drainage pocket on the neighbouring property to the east that
+a small pipe to convey the flow has been included. This area may be approximately 50
+m2 in surface area. The proposed pipe crosses the property and outlets into the ditch
+and provides relief for this potential flow. The flow is approximately 1.0 l/sec. (Q = 0.3 X
+0.005 X 239.35/360).
+There is sufficient capacity in the ditch to convey the 100-year peak flow. This flow
+would yield a water depth within the channel of approximately 0.62 m.
+4.3
+
+Water Balance
+
+The water balance requirement is to capture the first 5 mm of rainfall through infiltration,
+evapotranspiration, and/or reuse for the entire site to meet TRCA requirements. This
+volume is proposed to be provided in the following locations:
+
+
+
+
+A 336 m2 infiltration gallery located south of CMH1 (25m length x 13.44m
+width x 0.45m depth x 0.4 void ratio = 60.5 m3);
+A 3.9 m3 bioretention area behind existing building (3.7m width x 5.3m length
+x 0.9m depth x 0.4 void ratio) and approximately 1 m3. on the surface (3.7m
+width x 5.3m length x 0.05m depth); and,
+A 38.4 m3 bioretention area at the rear of the property (4.0 m width X 30 m
+length X 0.80m depth X 0.4 void ratio).
+
+The infiltration gallery will be connected to the proposed diversion manhole MH2 with a
+pipe with the invert at 262.06m. The pipe will feed into the top of the gallery with the
+base of the gallery at 261.55m. The soils report prepared for the neighbouring property
+indicates that the water table is not in the vicinity of this proposed gallery. No
+groundwater was encountered to the 258.4m elevation at the extent of boreholes. The
+report is provided in Attachment C.
+4.4
+
+Water Quality
+
+Separate water quality measures are proposed for the two portions of the site draining
+to either the front or the back of the property. An oil-grit separator is proposed for the
+front portion of the catchment that drains to King Street. Two alternatives were originally
+considered for this device including:
+
+
+
+
+Stormceptor – Imbrium Systems – EF-06; and,
+Defender OGS – Hydro International – FD-4HC.
+The Defender OGS FD-4HC is being selected for the site. The manufacturer
+specifications suggest that the device will meet Enhanced Protection
+requirements by providing at least 80% TSS removal annually (82.7%). The
+sizing summary is provided in Attachment B.
+
+The Defender OGS FD-4HC will be part of a treatment train to King Street. It will
+provide the first line of defense to settle out the larger particles before flows enter the
+infiltration gallery. The infiltration gallery connected to MH2 has been sized for 5 mm
+of runoff from the contributing site. This effectively means that out of the 113.2 rainfall
+events that occur statistically every year, the infiltration gallery will capture at least
+79.5% of the rainfall. The Canadian Climate Normals for Toronto Pearson Airport from
+1981 to 2010 were used to arrive at this determination as shown in Table 4. Coupled
+with the treatment achieved with the OGS Device, the water quality target for flows
+draining to King Street has been achieved.
+
+_________
+GREENLAND
+
+7
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TABLE 4: ANNUAL RAINFALL STORM SUMMARY
+Rainfall
+
+No of
+Events
+
+<5mm
+5 to 10
+10 to 25
+>25mm
+
+70.6
+20.1
+18.3
+4.2
+
+% of
+Events
+
+% Captured
+
+5/5=100
+62.4
+5/7.5=66.6
+17.8
+16.2 5/17.5=28.5
+5/25=20
+3.7
+Total
+
+%
+Annual
+Treatment
+62.4
+11.8
+4.6
+0.7
+79.5
+
+For the rear of the property, a passive system is proposed that will discharge to a rocklined ditch that connects to an existing drainage system previously constructed by the
+local farmer. This passive system will consist of a berm/level spreader and vegetated
+buffer filter strip linked to a bioretention gallery. Figure 5 shows a schematic of the
+system proposed.
+
+Figure 5 Rear Bioretention Gallery
+Similar to the front system, the bioretention gallery contains an infiltration component
+that will capture the 5 mm event. Therefore, the bioretention gallery captures at least
+79.5% of the rainfall events for treatment. Coupled with the vegetated buffer and the
+bioretention filter the Enhance Protection criteria of 80% removal of annual TSS
+loadings is achieved.
+
+_________
+GREENLAND
+
+8
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+5.0
+
+EROSION AND SEDIMENT CONTROL
+
+Standard erosion and sediment controls proposed for the site meet either the Town of
+Caledon standards or the Erosion & Sediment Control Guideline for Urban Construction
+manual prepared by the Greater Golden Horseshoe Area Conservation Authorities.
+These include:
+
+
+
+
+
+mud mats at the site ingress/egress points;
+peripheral siltation fencing;
+tree protection; and,
+catch-basins/manholes protection.
+
+The staging of construction will be to complete the grading of the gravel areas prior to
+the construction of the bioretention features. The infiltration gallery can be installed
+during the construction of the sewer network but should include a plug to remain off-line
+until the site has been stabilized. The erosion and sediment control measures including
+siltation-fence, tree-protection, catch-basin protection, and mud mat specifications are
+shown on Drawing 19051-ESC1.
+6.0
+
+SANITARY SERVICING
+
+6.1
+
+Existing Sanitary Servicing
+
+The site is currently serviced by an existing septic system located behind the existing
+residential building. The approximate location of the septic system is shown on the Site
+Servicing and Grading Plan (Drawing 19051-SSG). Drawings provided by the Region
+of Peel indicate an existing 300mm PVC sanitary sewer is located within the eastbound
+traffic lane of King Street. This sewer flows east and connects to an existing 300mm
+PVC easterly flowing sanitary sewer on Tarquini Crescent. Plan and profiles of the
+existing municipal sewers can be found in Attachment D.
+6.2
+
+Proposed Sanitary Servicing and Peak Discharge Rates
+
+Sanitary servicing is to be provided consistent with the Region of Peel Public Works
+Sanitary Sewer Design Criteria (2017). It is proposed to decommission the existing
+septic system and connect the property to the existing 300mm diameter municipal
+sanitary sewer on King Street. A new connection is proposed via a 150mm diameter
+PVC sanitary lateral at minimum 2% slope complete with sampling manhole located at
+the limit of the road widening. The general arrangement of the proposed sanitary sewer
+has been indicated on the Site Servicing & Grading Plan (Drawing 19051-SSG).
+The proposed peak sanitary discharge generated from the development has been
+calculated in accordance with Region of Peel Design Criteria as follows:
+Proposed Sanitary Peak Discharge
+Population
+
+= 50 persons/hectare
+
+Site Area
+
+= 1.92 hectares
+
+Equivalent Population = 50 persons/hectare x 1.92 hectares
+= 96 persons
+
+_________
+GREENLAND
+
+9
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+Domestic sewage flow is based upon a unit rate of 302.8 litres/capita/day, therefore:
+Domestic Sewage Flow
+
+= 96 persons x 302.8 litres/capita/day
+= 29,068.8 litres/day
+= 0.336 litres/sec
+
+The Harmon Peaking Factor (M) must be applied for Dry Weather Flows:
+M
+
+= 1 + 14 / (4 + P 0.5)
+= 1 + 14 / (4 + (96/1000) 0.5)
+= 4.25
+
+A maximum Harmon Peaking Factor of 4 shall be used, therefore:
+Maximum Dry Weather Flow
+
+= 0.336 litres/sec x 4
+= 1.344 litres/sec
+
+Infiltration Amount
+
+= 0.0002 m3 /sec/ha x 1.92 ha
+= 0.000384 m3 /sec
+= 0.384 litres/sec
+
+Total Prop. Peak Discharge
+
+= Commercial Flow + Infiltration Amount
+= 1.344 l/sec + 0.384 l/sec
+= 1.728 l/sec
+
+The internal 150mm diameter pipe with a minimum fall of 2.0% has a capacity of 22.5
+l/sec, and will be more than sufficient to convey the proposed flows to the municipal
+sewers.
+A Connection Demand Table has been included in Attachment E, in which a more
+detailed analysis of water and wastewater demand from the proposed development has
+been completed.
+7.0
+
+WATER SERVICING
+
+7.1
+
+Existing Water Services
+
+The property has an existing 25mm municipal water service. The approximate
+alignment is shown on the Site Servicing and Grading Plan (Drawing 19051-SSG).
+There is at least one existing well on the property. This well and any other wells found
+during construction should be decommissioned consistent with applicable standards.
+Drawings provided by the Region of Peel indicate there is an existing 300mm diameter
+PVC municipal watermain on King Street. The 300mm diameter watermain connects
+to the 300mm watermain on Tarquini Crescent. Plan and profiles of the existing
+municipal watermain can be found in Attachment D.
+
+_________
+GREENLAND
+
+10
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+7.2
+
+Proposed Water Services & Peak Water Demands
+
+It is proposed to replace the existing 25mm service with a new fireline/domestic
+connection per Region of Peel Standard 1-6-4. A new connection to the 300mm
+diameter municipal watermain on King Street is proposed via a 150mm diameter PVC
+water service installed via a tap and sleeve. The proposed domestic service size is
+25mm, and will branch off the proposed 150mm diameter water service connection
+immediately before the limit of the road widening. The existing water meter in the
+building will be retained for reuse. An on-site hydrant (complete with detector check
+valve in chamber at property line) is proposed for fire protection.
+The general arrangement of the fire and domestic water services has been indicated on
+the Site Servicing & Grading Plan (Drawing 19051-SSG).
+7.2.1
+
+Domestic Flow
+
+Domestic water demands have been estimated using the Region of Peel Public Works
+Watermain Design Criteria (2010). For the 96 employees (calculated for proposed peak
+sanitary flow), average ICI consumption rate of 300 L/day/cap has been used. A max
+day factor of 1.4 and a peak hour factor of 3.0 has also been applied.
+Peak Water Demand
+Daily Water Consumption
+
+= 96 persons x 300 litres/capita/day
+= 28,800 litres/day
+= 0.333 litres/sec
+
+Maximum Daily Demand
+
+= Daily Water Consumption x Max Day Factor
+= 28,800 L/day x 1.4
+= 40,320 L/day
+= 0.467 L/s
+
+Peak Hourly Demand
+
+= Daily Water Consumption x Peak Hour Factor
+= 28,800 L/day x 3.0 / 24 hours/day
+= 3,600 L/hour
+= 1.00 L/s
+
+7.2.2
+
+Fire Flow Demands
+
+The fire flow requirements for the building have been estimated using the NFPA Fire
+Underwriters Survey’s Water Supply for Public Fire Protection (1999). The existing 215
+sq.m gross floor area, has been used to calculate the fire flow requirement of 4,252
+L/min (70.87 L/s). Detailed calculations of the fire flow demand are included in
+Attachment F.
+7.2.3
+
+Hydrant Flow Test and Available Pressures
+
+The maximum anticipated water demand from the development will be 71.337 L/s
+(70.87 L/s + 0.467 L/s), or 1,131 GPM. A hydrant flow test was carried out by FCFP on
+October 9th, 2019 on the 300mm diameter watermain on King Street/ Tarquini Crescent
+to confirm that adequate pressures are available to service the proposed change in
+land-use. The flow test results, which are provided in Attachment G, indicate a static
+pressure of 45 PSI within the watermain.
+
+_________
+GREENLAND
+
+11
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+Furthermore, extrapolation of the flow test data indicates that a residual fire flow
+pressure of 41.8 PSI (288kPA), can be expected during the fire flow and maximum day
+demand and is above the Region’s minimum operating pressure of 20 PSI. The
+proposed hydrant connection will have a similar configuration as the existing private
+hydrant on the adjacent property (which was tested during the October 9th, 2019 flow
+test), and is therefore expected to have a similar operating pressure.
+A Connection Demand Table has been included in Attachment E, in which a more
+detailed analysis of water and wastewater demand from the proposed development has
+been completed.
+8.0
+
+LIGHTING
+
+The present exterior lighting is proposed to be maintained for the proposed
+development. The existing building has wall mounted exterior lights (locations indicated
+on the site plan). Town of Caledon standard notes indicate that the minimum level of
+lighting of 35 lux be maintained at the building main entrance and the accessible parking
+space. The standard notes are included on the site plan (Drawing 19051 GEN).
+9.0
+
+NOISE
+
+A noise study was originally prepared by Aercoustics Engineering Ltd. This report
+recommended the following noise control measures for the proposed development:
+
+
+
+prohibiting the use of the Volvo front loader/forklift within 130m from the
+neighbouring residential dwelling; and,
+this limit should be demarcated on the site plan.
+
+If you have any questions or comments please do not hesitate to forward them to the
+undersigned.
+Sincerely,
+GREENLAND CONSULTING ENGINEERS
+
+Don Moss, M.Eng., P. Eng.
+Associate
+Attachment A: VO2 Model Output (Digital Files)
+Attachment B: OGS Sizing Information
+Attachment C: Soils Report
+Attachment D: Servicing Plan and Profiles
+Attachment E: Single Use Demand Tables
+
+Attachment F: Fire Flow Demand
+Attachment G: Hydrant Flow Test
+Attachment H: Site Servicing and Grading Plan
+
+_________
+GREENLAND
+
+12
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+Attachment A: VO2 Model Output (Digital Files)
+
+_________
+GREENLAND
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+=================================================================================================
+==========
+
+V
+
+V
+
+I
+
+SSSSS
+
+U
+
+U
+
+A
+
+L
+
+V
+
+V
+
+I
+
+SS
+
+U
+
+U
+
+A A
+
+L
+
+V
+
+V
+
+I
+
+SS
+
+U
+
+U
+
+AAAAA
+
+L
+
+V
+
+V
+
+I
+
+SS
+
+U
+
+U
+
+A
+
+A
+
+L
+
+VV
+
+I
+
+SSSSS
+
+UUUUU
+
+A
+
+A
+
+LLLLL
+
+OOO
+
+TTTTT
+
+TTTTT
+
+H
+
+H
+
+Y
+
+Y
+
+M
+
+M
+
+OOO
+
+TM, Version 2.1
+
+O
+
+O
+
+T
+
+T
+
+H
+
+H
+
+Y Y
+
+MM MM
+
+O
+
+O
+
+O
+
+O
+
+T
+
+T
+
+H
+
+H
+
+Y
+
+M
+
+M
+
+O
+
+O
+
+OOO
+
+T
+
+T
+
+H
+
+H
+
+Y
+
+M
+
+M
+
+OOO
+
+Developed and Distributed by Clarifica Inc.
+Copyright 1996, 2007 Clarifica Inc.
+All rights reserved.
+
+*****
+
+Input
+
+D E T A I L E D
+
+O U T P U T *****
+
+filename: C:\Program Files (x86)\Visual OTTHYMO 2.3.1\voin.dat
+
+Output filename: T:\3958 Banas Stone SWM Analysis\Models\VO2\Banas Stone\Existing
+Condition.out
+Summary filename: T:\3958 Banas Stone SWM Analysis\Models\VO2\Banas Stone\Existing
+Condition.sum
+
+DATE: 8/29/2019
+
+TIME: 11:53:33 AM
+
+USER:
+
+COMMENTS: ____________________________________________________________
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+---------------------------------------------------------------------------------------------------------****************************
+** SIMULATION NUMBER:
+
+1 **
+
+****************************
+
+-------------------|
+
+READ STORM
+
+|
+
+|
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\
+
+|
+
+| Ptotal= 24.38 mm |
+
+VO2\Banas Stone\Storms\2yr-1hr.STM
+Comments: 2yr/1hr
+
+-------------------TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.08
+
+.00 |
+
+.42
+
+75.84 |
+
+.75
+
+4.98 |
+
+1.08
+
+.15
+
+.17
+
+10.83 |
+
+.50
+
+69.69 |
+
+.83
+
+2.05 |
+
+.25
+
+32.50 |
+
+.58
+
+29.28 |
+
+.92
+
+.88 |
+
+.33
+
+54.17 |
+
+.67
+
+12.00 |
+
+1.00
+
+.29 |
+
+-------------------------------------------------------------------------------
+
+-------------------| CALIB
+
+|
+
+| NASHYD
+
+(0001) |
+
+Area
+
+(ha)=
+
+.38
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.17
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+Curve Number
+
+(CN)= 74.0
+
+# of Linear Res.(N)= 3.00
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 |
+
+.300
+
+54.17 |
+
+.583
+
+29.04 |
+
+.87
+
+.88
+
+.033
+
+.00 |
+
+.317
+
+54.17 |
+
+.600
+
+12.00 |
+
+.88
+
+.88
+
+.050
+
+.00 |
+
+.333
+
+54.34 |
+
+.617
+
+12.00 |
+
+.90
+
+.88
+
+.067
+
+.00 |
+
+.350
+
+75.84 |
+
+.633
+
+12.00 |
+
+.92
+
+.87
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+.083
+
+.02 |
+
+.367
+
+75.84 |
+
+.650
+
+12.00 |
+
+.93
+
+.29
+
+.100
+
+10.83 |
+
+.383
+
+75.84 |
+
+.667
+
+11.89 |
+
+.95
+
+.29
+
+.117
+
+10.83 |
+
+.400
+
+75.84 |
+
+.683
+
+4.98 |
+
+.97
+
+.29
+
+.133
+
+10.83 |
+
+.417
+
+75.78 |
+
+.700
+
+4.98 |
+
+.98
+
+.29
+
+.150
+
+10.83 |
+
+.433
+
+69.69 |
+
+.717
+
+4.98 |
+
+1.00
+
+.29
+
+.167
+
+10.92 |
+
+.450
+
+69.69 |
+
+.733
+
+4.98 |
+
+1.02
+
+.15
+
+.183
+
+32.50 |
+
+.467
+
+69.69 |
+
+.750
+
+4.93 |
+
+1.03
+
+.15
+
+.200
+
+32.50 |
+
+.483
+
+69.69 |
+
+.767
+
+2.05 |
+
+1.05
+
+.15
+
+.217
+
+32.50 |
+
+.500
+
+69.20 |
+
+.783
+
+2.05 |
+
+1.07
+
+.15
+
+.233
+
+32.50 |
+
+.517
+
+29.28 |
+
+.800
+
+2.05 |
+
+1.08
+
+.15
+
+.250
+
+32.63 |
+
+.533
+
+29.28 |
+
+.817
+
+2.05 |
+
+.267
+
+54.17 |
+
+.550
+
+29.28 |
+
+.833
+
+2.03 |
+
+.283
+
+54.17 |
+
+.567
+
+29.28 |
+
+.850
+
+.88 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.085
+
+PEAK FLOW
+
+(cms)=
+
+.005 (i)
+
+TIME TO PEAK
+
+(hrs)=
+
+.683
+
+RUNOFF VOLUME
+
+(mm)=
+
+1.994
+
+TOTAL RAINFALL
+
+(mm)=
+
+24.379
+
+RUNOFF COEFFICIENT
+
+=
+
+.082
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| CALIB
+
+|
+
+| NASHYD
+
+(0002) |
+
+Area
+
+(ha)=
+
+1.54
+
+Curve Number
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+# of Linear Res.(N)= 3.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.31
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.190
+
+PEAK FLOW
+
+(cms)=
+
+.016 (i)
+
+TIME TO PEAK
+
+(hrs)=
+
+.833
+
+RUNOFF VOLUME
+
+(mm)=
+
+2.403
+
+(CN)= 78.0
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOTAL RAINFALL
+
+(mm)=
+
+RUNOFF COEFFICIENT
+
+24.379
+
+=
+
+.099
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+------------------------------------------------------------------------------****************************
+** SIMULATION NUMBER:
+
+2 **
+
+****************************
+
+-------------------|
+
+READ STORM
+
+|
+
+|
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\
+
+|
+
+| Ptotal= 33.57 mm |
+
+VO2\Banas Stone\Storms\5yr-1hr.STM
+Comments: 5yr/1hr
+
+-------------------TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.08
+
+.00 |
+
+.42
+
+104.43 |
+
+.75
+
+6.85 |
+
+1.08
+
+.20
+
+.17
+
+14.92 |
+
+.50
+
+95.96 |
+
+.83
+
+2.82 |
+
+.25
+
+44.76 |
+
+.58
+
+40.32 |
+
+.92
+
+1.21 |
+
+.33
+
+74.59 |
+
+.67
+
+16.53 |
+
+1.00
+
+.40 |
+
+-------------------------------------------------------------------------------
+
+-------------------| CALIB
+
+|
+
+| NASHYD
+
+(0001) |
+
+Area
+
+(ha)=
+
+.38
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.17
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+Curve Number
+
+(CN)= 74.0
+
+# of Linear Res.(N)= 3.00
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 |
+
+.300
+
+74.59 |
+
+.583
+
+39.99 |
+
+.87
+
+1.21
+
+.033
+
+.00 |
+
+.317
+
+74.59 |
+
+.600
+
+16.53 |
+
+.88
+
+1.21
+
+.050
+
+.00 |
+
+.333
+
+74.83 |
+
+.617
+
+16.53 |
+
+.90
+
+1.21
+
+.067
+
+.00 |
+
+.350
+
+104.43 |
+
+.633
+
+16.53 |
+
+.92
+
+1.19
+
+.083
+
+.03 |
+
+.367
+
+104.43 |
+
+.650
+
+16.53 |
+
+.93
+
+.40
+
+.100
+
+14.92 |
+
+.383
+
+104.43 |
+
+.667
+
+16.38 |
+
+.95
+
+.40
+
+.117
+
+14.92 |
+
+.400
+
+104.43 |
+
+.683
+
+6.85 |
+
+.97
+
+.40
+
+.133
+
+14.92 |
+
+.417
+
+104.35 |
+
+.700
+
+6.85 |
+
+.98
+
+.40
+
+.150
+
+14.92 |
+
+.433
+
+95.96 |
+
+.717
+
+6.85 |
+
+1.00
+
+.40
+
+.167
+
+15.04 |
+
+.450
+
+95.96 |
+
+.733
+
+6.85 |
+
+1.02
+
+.20
+
+.183
+
+44.76 |
+
+.467
+
+95.96 |
+
+.750
+
+6.78 |
+
+1.03
+
+.20
+
+.200
+
+44.76 |
+
+.483
+
+95.96 |
+
+.767
+
+2.82 |
+
+1.05
+
+.20
+
+.217
+
+44.76 |
+
+.500
+
+95.29 |
+
+.783
+
+2.82 |
+
+1.07
+
+.20
+
+.233
+
+44.76 |
+
+.517
+
+40.32 |
+
+.800
+
+2.82 |
+
+1.08
+
+.19
+
+.250
+
+44.94 |
+
+.533
+
+40.32 |
+
+.817
+
+2.82 |
+
+.267
+
+74.59 |
+
+.550
+
+40.32 |
+
+.833
+
+2.79 |
+
+.283
+
+74.59 |
+
+.567
+
+40.32 |
+
+.850
+
+1.21 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.085
+
+PEAK FLOW
+
+(cms)=
+
+.013 (i)
+
+TIME TO PEAK
+
+(hrs)=
+
+.667
+
+RUNOFF VOLUME
+
+(mm)=
+
+4.923
+
+TOTAL RAINFALL
+
+(mm)=
+
+33.569
+
+RUNOFF COEFFICIENT
+
+=
+
+.147
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| CALIB
+
+|
+
+| NASHYD
+
+(0002) |
+
+Area
+
+(ha)=
+
+1.54
+
+Curve Number
+
+(CN)= 78.0
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+# of Linear Res.(N)= 3.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.31
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.190
+
+PEAK FLOW
+
+(cms)=
+
+.039 (i)
+
+TIME TO PEAK
+
+(hrs)=
+
+.817
+
+RUNOFF VOLUME
+
+(mm)=
+
+5.834
+
+TOTAL RAINFALL
+
+(mm)=
+
+33.569
+
+RUNOFF COEFFICIENT
+
+=
+
+.174
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+------------------------------------------------------------------------------****************************
+** SIMULATION NUMBER:
+
+3 **
+
+****************************
+
+-------------------|
+
+READ STORM
+
+|
+
+|
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\
+
+|
+
+| Ptotal= 39.76 mm |
+
+VO2\Banas Stone\Storms\10yr-1hr.STM
+Comments: 10yr/1hr
+
+-------------------TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.08
+
+.00 |
+
+.42
+
+123.70 |
+
+.75
+
+8.12 |
+
+1.08
+
+.24
+
+.17
+
+17.67 |
+
+.50
+
+113.67 |
+
+.83
+
+3.34 |
+
+.25
+
+53.01 |
+
+.58
+
+47.76 |
+
+.92
+
+1.43 |
+
+.33
+
+88.36 |
+
+.67
+
+19.58 |
+
+1.00
+
+.48 |
+
+-------------------------------------------------------------------------------
+
+-------------------| CALIB
+
+|
+
+| NASHYD
+
+(0001) |
+
+Area
+
+(ha)=
+
+.38
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.17
+
+Curve Number
+
+(CN)= 74.0
+
+# of Linear Res.(N)= 3.00
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 |
+
+.300
+
+88.36 |
+
+.583
+
+47.37 |
+
+.87
+
+1.43
+
+.033
+
+.00 |
+
+.317
+
+88.36 |
+
+.600
+
+19.58 |
+
+.88
+
+1.43
+
+.050
+
+.00 |
+
+.333
+
+88.64 |
+
+.617
+
+19.58 |
+
+.90
+
+1.43
+
+.067
+
+.00 |
+
+.350
+
+123.70 |
+
+.633
+
+19.58 |
+
+.92
+
+1.41
+
+.083
+
+.04 |
+
+.367
+
+123.70 |
+
+.650
+
+19.58 |
+
+.93
+
+.48
+
+.100
+
+17.67 |
+
+.383
+
+123.70 |
+
+.667
+
+19.40 |
+
+.95
+
+.48
+
+.117
+
+17.67 |
+
+.400
+
+123.70 |
+
+.683
+
+8.12 |
+
+.97
+
+.48
+
+.133
+
+17.67 |
+
+.417
+
+123.60 |
+
+.700
+
+8.12 |
+
+.98
+
+.48
+
+.150
+
+17.67 |
+
+.433
+
+113.67 |
+
+.717
+
+8.12 |
+
+1.00
+
+.47
+
+.167
+
+17.81 |
+
+.450
+
+113.67 |
+
+.733
+
+8.12 |
+
+1.02
+
+.24
+
+.183
+
+53.01 |
+
+.467
+
+113.67 |
+
+.750
+
+8.03 |
+
+1.03
+
+.24
+
+.200
+
+53.01 |
+
+.483
+
+113.67 |
+
+.767
+
+3.34 |
+
+1.05
+
+.24
+
+.217
+
+53.01 |
+
+.500
+
+112.88 |
+
+.783
+
+3.34 |
+
+1.07
+
+.24
+
+.233
+
+53.01 |
+
+.517
+
+47.76 |
+
+.800
+
+3.34 |
+
+1.08
+
+.23
+
+.250
+
+53.22 |
+
+.533
+
+47.76 |
+
+.817
+
+3.34 |
+
+.267
+
+88.36 |
+
+.550
+
+47.76 |
+
+.833
+
+3.30 |
+
+.283
+
+88.36 |
+
+.567
+
+47.76 |
+
+.850
+
+1.43 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.085
+
+PEAK FLOW
+
+(cms)=
+
+.019 (i)
+
+TIME TO PEAK
+
+(hrs)=
+
+.667
+
+RUNOFF VOLUME
+
+(mm)=
+
+7.443
+
+TOTAL RAINFALL
+
+(mm)=
+
+39.764
+
+RUNOFF COEFFICIENT
+
+=
+
+.187
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+--------------------------------------------------------------------------------------------------
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+| CALIB
+
+|
+
+| NASHYD
+
+(0002) |
+
+Area
+
+(ha)=
+
+1.54
+
+Curve Number
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+# of Linear Res.(N)= 3.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.31
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.190
+
+PEAK FLOW
+
+(cms)=
+
+.058 (i)
+
+TIME TO PEAK
+
+(hrs)=
+
+.817
+
+RUNOFF VOLUME
+
+(mm)=
+
+8.736
+
+TOTAL RAINFALL
+
+(mm)=
+
+39.764
+
+RUNOFF COEFFICIENT
+
+=
+
+(CN)= 78.0
+
+.220
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+------------------------------------------------------------------------------****************************
+** SIMULATION NUMBER:
+
+4 **
+
+****************************
+
+-------------------|
+|
+
+READ STORM
+
+|
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\
+
+|
+
+| Ptotal= 47.46 mm |
+
+VO2\Banas Stone\Storms\25yr-1hr.STM
+Comments: 25yr/1hr
+
+-------------------TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.08
+
+.00 |
+
+.42
+
+147.63 |
+
+.75
+
+9.69 |
+
+1.08
+
+.29
+
+.17
+
+21.09 |
+
+.50
+
+135.66 |
+
+.83
+
+3.99 |
+
+.25
+
+63.27 |
+
+.58
+
+57.00 |
+
+.92
+
+1.71 |
+
+.33
+
+105.45 |
+
+.67
+
+23.37 |
+
+1.00
+
+.57 |
+
+-------------------------------------------------------------------------------
+
+--------------------
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+| CALIB
+
+|
+
+| NASHYD
+
+(0001) |
+
+Area
+
+(ha)=
+
+.38
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.17
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+Curve Number
+
+(CN)= 74.0
+
+# of Linear Res.(N)= 3.00
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 |
+
+.300
+
+105.45 |
+
+.583
+
+56.53 |
+
+.87
+
+1.71
+
+.033
+
+.00 |
+
+.317
+
+105.45 |
+
+.600
+
+23.37 |
+
+.88
+
+1.71
+
+.050
+
+.00 |
+
+.333
+
+105.79 |
+
+.617
+
+23.37 |
+
+.90
+
+1.71
+
+.067
+
+.00 |
+
+.350
+
+147.63 |
+
+.633
+
+23.37 |
+
+.92
+
+1.68
+
+.083
+
+.04 |
+
+.367
+
+147.63 |
+
+.650
+
+23.37 |
+
+.93
+
+.57
+
+.100
+
+21.09 |
+
+.383
+
+147.63 |
+
+.667
+
+23.15 |
+
+.95
+
+.57
+
+.117
+
+21.09 |
+
+.400
+
+147.63 |
+
+.683
+
+9.69 |
+
+.97
+
+.57
+
+.133
+
+21.09 |
+
+.417
+
+147.51 |
+
+.700
+
+9.69 |
+
+.98
+
+.57
+
+.150
+
+21.09 |
+
+.433
+
+135.66 |
+
+.717
+
+9.69 |
+
+1.00
+
+.56
+
+.167
+
+21.26 |
+
+.450
+
+135.66 |
+
+.733
+
+9.69 |
+
+1.02
+
+.29
+
+.183
+
+63.27 |
+
+.467
+
+135.66 |
+
+.750
+
+9.59 |
+
+1.03
+
+.29
+
+.200
+
+63.27 |
+
+.483
+
+135.66 |
+
+.767
+
+3.99 |
+
+1.05
+
+.29
+
+.217
+
+63.27 |
+
+.500
+
+134.72 |
+
+.783
+
+3.99 |
+
+1.07
+
+.29
+
+.233
+
+63.27 |
+
+.517
+
+57.00 |
+
+.800
+
+3.99 |
+
+1.08
+
+.28
+
+.250
+
+63.52 |
+
+.533
+
+57.00 |
+
+.817
+
+3.99 |
+
+.267
+
+105.45 |
+
+.550
+
+57.00 |
+
+.833
+
+3.94 |
+
+.283
+
+105.45 |
+
+.567
+
+57.00 |
+
+.850
+
+1.71 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.085
+
+PEAK FLOW
+
+(cms)=
+
+.028 (i)
+
+TIME TO PEAK
+
+(hrs)=
+
+.650
+
+RUNOFF VOLUME
+
+(mm)=
+
+11.073
+
+TOTAL RAINFALL
+
+(mm)=
+
+47.458
+
+RUNOFF COEFFICIENT
+
+=
+
+.233
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| CALIB
+
+|
+
+| NASHYD
+
+(0002) |
+
+Area
+
+(ha)=
+
+1.54
+
+Curve Number
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+# of Linear Res.(N)= 3.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.31
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.190
+
+PEAK FLOW
+
+(cms)=
+
+.085 (i)
+
+TIME TO PEAK
+
+(hrs)=
+
+.800
+
+RUNOFF VOLUME
+
+(mm)=
+
+12.860
+
+TOTAL RAINFALL
+
+(mm)=
+
+47.458
+
+RUNOFF COEFFICIENT
+
+=
+
+(CN)= 78.0
+
+.271
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+------------------------------------------------------------------------------****************************
+** SIMULATION NUMBER:
+
+5 **
+
+****************************
+
+-------------------|
+|
+
+READ STORM
+
+|
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\
+
+|
+
+| Ptotal= 53.25 mm |
+
+VO2\Banas Stone\Storms\50yr-1hr.STM
+Comments: 50yr/1hr
+
+-------------------TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.08
+
+.00 |
+
+.42
+
+165.66 |
+
+.75
+
+10.87 |
+
+1.08
+
+.32
+
+.17
+
+23.67 |
+
+.50
+
+152.22 |
+
+.83
+
+4.48 |
+
+.25
+
+71.00 |
+
+.58
+
+63.96 |
+
+.92
+
+1.92 |
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+.33
+
+118.33 |
+
+.67
+
+26.22 |
+
+1.00
+
+.64 |
+
+-------------------------------------------------------------------------------
+
+-------------------| CALIB
+
+|
+
+| NASHYD
+
+(0001) |
+
+Area
+
+(ha)=
+
+.38
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.17
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+Curve Number
+
+(CN)= 74.0
+
+# of Linear Res.(N)= 3.00
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 |
+
+.300
+
+118.33 |
+
+.583
+
+63.43 |
+
+.87
+
+1.92
+
+.033
+
+.00 |
+
+.317
+
+118.33 |
+
+.600
+
+26.22 |
+
+.88
+
+1.92
+
+.050
+
+.00 |
+
+.333
+
+118.71 |
+
+.617
+
+26.22 |
+
+.90
+
+1.92
+
+.067
+
+.00 |
+
+.350
+
+165.66 |
+
+.633
+
+26.22 |
+
+.92
+
+1.89
+
+.083
+
+.05 |
+
+.367
+
+165.66 |
+
+.650
+
+26.22 |
+
+.93
+
+.64
+
+.100
+
+23.67 |
+
+.383
+
+165.66 |
+
+.667
+
+25.97 |
+
+.95
+
+.64
+
+.117
+
+23.67 |
+
+.400
+
+165.66 |
+
+.683
+
+10.87 |
+
+.97
+
+.64
+
+.133
+
+23.67 |
+
+.417
+
+165.53 |
+
+.700
+
+10.87 |
+
+.98
+
+.64
+
+.150
+
+23.67 |
+
+.433
+
+152.22 |
+
+.717
+
+10.87 |
+
+1.00
+
+.63
+
+.167
+
+23.86 |
+
+.450
+
+152.22 |
+
+.733
+
+10.87 |
+
+1.02
+
+.32
+
+.183
+
+71.00 |
+
+.467
+
+152.22 |
+
+.750
+
+10.76 |
+
+1.03
+
+.32
+
+.200
+
+71.00 |
+
+.483
+
+152.22 |
+
+.767
+
+4.48 |
+
+1.05
+
+.32
+
+.217
+
+71.00 |
+
+.500
+
+151.16 |
+
+.783
+
+4.48 |
+
+1.07
+
+.32
+
+.233
+
+71.00 |
+
+.517
+
+63.96 |
+
+.800
+
+4.48 |
+
+1.08
+
+.31
+
+.250
+
+71.28 |
+
+.533
+
+63.96 |
+
+.817
+
+4.48 |
+
+.267
+
+118.33 |
+
+.550
+
+63.96 |
+
+.833
+
+4.43 |
+
+.283
+
+118.33 |
+
+.567
+
+63.96 |
+
+.850
+
+1.92 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.085
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+PEAK FLOW
+
+(cms)=
+
+.036 (i)
+
+TIME TO PEAK
+
+(hrs)=
+
+.650
+
+RUNOFF VOLUME
+
+(mm)=
+
+14.119
+
+TOTAL RAINFALL
+
+(mm)=
+
+53.253
+
+RUNOFF COEFFICIENT
+
+=
+
+.265
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| CALIB
+
+|
+
+| NASHYD
+
+(0002) |
+
+Area
+
+(ha)=
+
+1.54
+
+Curve Number
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+# of Linear Res.(N)= 3.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.31
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.190
+
+PEAK FLOW
+
+(cms)=
+
+.108 (i)
+
+TIME TO PEAK
+
+(hrs)=
+
+.800
+
+RUNOFF VOLUME
+
+(mm)=
+
+16.282
+
+TOTAL RAINFALL
+
+(mm)=
+
+53.253
+
+RUNOFF COEFFICIENT
+
+=
+
+(CN)= 78.0
+
+.306
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+------------------------------------------------------------------------------****************************
+** SIMULATION NUMBER:
+
+6 **
+
+****************************
+
+-------------------|
+|
+
+READ STORM
+
+|
+|
+
+| Ptotal= 58.95 mm |
+--------------------
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\
+VO2\Banas Stone\Storms\100yr-1hr.STM
+Comments: 100yr/1hr
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.08
+
+.00 |
+
+.42
+
+183.37 |
+
+.75
+
+12.04 |
+
+1.08
+
+.35
+
+.17
+
+26.20 |
+
+.50
+
+168.50 |
+
+.83
+
+4.96 |
+
+.25
+
+78.59 |
+
+.58
+
+70.80 |
+
+.92
+
+2.12 |
+
+.33
+
+130.98 |
+
+.67
+
+29.03 |
+
+1.00
+
+.71 |
+
+-------------------------------------------------------------------------------
+
+-------------------| CALIB
+
+|
+
+| NASHYD
+
+(0001) |
+
+Area
+
+(ha)=
+
+.38
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.17
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+Curve Number
+
+(CN)= 74.0
+
+# of Linear Res.(N)= 3.00
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 |
+
+.300
+
+130.98 |
+
+.583
+
+70.22 |
+
+.87
+
+2.12
+
+.033
+
+.00 |
+
+.317
+
+130.98 |
+
+.600
+
+29.03 |
+
+.88
+
+2.12
+
+.050
+
+.00 |
+
+.333
+
+131.40 |
+
+.617
+
+29.03 |
+
+.90
+
+2.12
+
+.067
+
+.00 |
+
+.350
+
+183.37 |
+
+.633
+
+29.03 |
+
+.92
+
+2.09
+
+.083
+
+.05 |
+
+.367
+
+183.37 |
+
+.650
+
+29.03 |
+
+.93
+
+.71
+
+.100
+
+26.20 |
+
+.383
+
+183.37 |
+
+.667
+
+28.76 |
+
+.95
+
+.71
+
+.117
+
+26.20 |
+
+.400
+
+183.37 |
+
+.683
+
+12.04 |
+
+.97
+
+.71
+
+.133
+
+26.20 |
+
+.417
+
+183.22 |
+
+.700
+
+12.04 |
+
+.98
+
+.71
+
+.150
+
+26.20 |
+
+.433
+
+168.50 |
+
+.717
+
+12.04 |
+
+1.00
+
+.70
+
+.167
+
+26.41 |
+
+.450
+
+168.50 |
+
+.733
+
+12.04 |
+
+1.02
+
+.35
+
+.183
+
+78.59 |
+
+.467
+
+168.50 |
+
+.750
+
+11.91 |
+
+1.03
+
+.35
+
+.200
+
+78.59 |
+
+.483
+
+168.50 |
+
+.767
+
+4.96 |
+
+1.05
+
+.35
+
+.217
+
+78.59 |
+
+.500
+
+167.33 |
+
+.783
+
+4.96 |
+
+1.07
+
+.35
+
+.233
+
+78.59 |
+
+.517
+
+70.80 |
+
+.800
+
+4.96 |
+
+1.08
+
+.34
+
+.250
+
+78.90 |
+
+.533
+
+70.80 |
+
+.817
+
+4.96 |
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+.267
+
+130.98 |
+
+.550
+
+70.80 |
+
+.833
+
+4.90 |
+
+.283
+
+130.98 |
+
+.567
+
+70.80 |
+
+.850
+
+2.12 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.085
+
+PEAK FLOW
+
+(cms)=
+
+.044 (i)
+
+TIME TO PEAK
+
+(hrs)=
+
+.650
+
+RUNOFF VOLUME
+
+(mm)=
+
+17.336
+
+TOTAL RAINFALL
+
+(mm)=
+
+58.947
+
+RUNOFF COEFFICIENT
+
+=
+
+.294
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| CALIB
+
+|
+
+| NASHYD
+
+(0002) |
+
+Area
+
+(ha)=
+
+1.54
+
+Curve Number
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+# of Linear Res.(N)= 3.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.31
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.190
+
+PEAK FLOW
+
+(cms)=
+
+.132 (i)
+
+TIME TO PEAK
+
+(hrs)=
+
+.800
+
+RUNOFF VOLUME
+
+(mm)=
+
+19.867
+
+TOTAL RAINFALL
+
+(mm)=
+
+58.947
+
+RUNOFF COEFFICIENT
+
+=
+
+(CN)= 78.0
+
+.337
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+------------------------------------------------------------------------------****************************
+** SIMULATION NUMBER:
+
+7 **
+
+****************************
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+-------------------|
+
+READ STORM
+
+|
+
+|
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\
+
+|
+
+| Ptotal= 80.31 mm |
+
+VO2\Banas Stone\Storms\100yr-6hr.STM
+Comments: 100yr/6
+
+-------------------TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.25
+
+.00 |
+
+2.00
+
+27.30 |
+
+3.75
+
+11.24 |
+
+5.50
+
+1.61
+
+.50
+
+1.61 |
+
+2.25
+
+27.30 |
+
+4.00
+
+6.42 |
+
+5.75
+
+1.61
+
+.75
+
+1.61 |
+
+2.50
+
+73.88 |
+
+4.25
+
+6.42 |
+
+6.00
+
+1.61
+
+1.00
+
+1.61 |
+
+2.75
+
+73.88 |
+
+4.50
+
+3.21 |
+
+6.25
+
+1.61
+
+1.25
+
+1.61 |
+
+3.00
+
+20.88 |
+
+4.75
+
+3.21 |
+
+1.50
+
+9.64 |
+
+3.25
+
+20.88 |
+
+5.00
+
+1.61 |
+
+1.75
+
+9.64 |
+
+3.50
+
+11.24 |
+
+5.25
+
+1.61 |
+
+-------------------------------------------------------------------------------
+
+-------------------| CALIB
+
+|
+
+| NASHYD
+
+(0001) |
+
+Area
+
+(ha)=
+
+.38
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.17
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+Curve Number
+
+(CN)= 74.0
+
+# of Linear Res.(N)= 3.00
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 | 1.583
+
+9.64 | 3.150
+
+20.88 |
+
+4.72
+
+3.21
+
+.033
+
+.00 | 1.600
+
+9.64 | 3.167
+
+20.88 |
+
+4.73
+
+3.21
+
+.050
+
+.00 | 1.617
+
+9.64 | 3.183
+
+20.88 |
+
+4.75
+
+3.21
+
+.067
+
+.00 | 1.633
+
+9.64 | 3.200
+
+20.88 |
+
+4.77
+
+1.61
+
+.083
+
+.00 | 1.650
+
+9.64 | 3.217
+
+20.88 |
+
+4.78
+
+1.61
+
+.100
+
+.00 | 1.667
+
+9.64 | 3.233
+
+20.88 |
+
+4.80
+
+1.61
+
+.117
+
+.00 | 1.683
+
+9.64 | 3.250
+
+20.88 |
+
+4.82
+
+1.61
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+.133
+
+.00 | 1.700
+
+9.64 | 3.267
+
+11.24 |
+
+4.83
+
+1.61
+
+.150
+
+.00 | 1.717
+
+9.64 | 3.283
+
+11.24 |
+
+4.85
+
+1.61
+
+.167
+
+.00 | 1.733
+
+9.64 | 3.300
+
+11.24 |
+
+4.87
+
+1.61
+
+.183
+
+.00 | 1.750
+
+9.64 | 3.317
+
+11.24 |
+
+4.88
+
+1.61
+
+.200
+
+.00 | 1.767
+
+27.30 | 3.333
+
+11.24 |
+
+4.90
+
+1.61
+
+.217
+
+.00 | 1.783
+
+27.30 | 3.350
+
+11.24 |
+
+4.92
+
+1.61
+
+.233
+
+.00 | 1.800
+
+27.30 | 3.367
+
+11.24 |
+
+4.93
+
+1.61
+
+.250
+
+.00 | 1.817
+
+27.30 | 3.383
+
+11.24 |
+
+4.95
+
+1.61
+
+.267
+
+1.61 | 1.833
+
+27.30 | 3.400
+
+11.24 |
+
+4.97
+
+1.61
+
+.283
+
+1.61 | 1.850
+
+27.30 | 3.417
+
+11.24 |
+
+4.98
+
+1.61
+
+.300
+
+1.61 | 1.867
+
+27.30 | 3.433
+
+11.24 |
+
+5.00
+
+1.61
+
+.317
+
+1.61 | 1.883
+
+27.30 | 3.450
+
+11.24 |
+
+5.02
+
+1.61
+
+.333
+
+1.61 | 1.900
+
+27.30 | 3.467
+
+11.24 |
+
+5.03
+
+1.61
+
+.350
+
+1.61 | 1.917
+
+27.30 | 3.483
+
+11.24 |
+
+5.05
+
+1.61
+
+.367
+
+1.61 | 1.933
+
+27.30 | 3.500
+
+11.24 |
+
+5.07
+
+1.61
+
+.383
+
+1.61 | 1.950
+
+27.30 | 3.517
+
+11.24 |
+
+5.08
+
+1.61
+
+.400
+
+1.61 | 1.967
+
+27.30 | 3.533
+
+11.24 |
+
+5.10
+
+1.61
+
+.417
+
+1.61 | 1.983
+
+27.30 | 3.550
+
+11.24 |
+
+5.12
+
+1.61
+
+.433
+
+1.61 | 2.000
+
+27.30 | 3.567
+
+11.24 |
+
+5.13
+
+1.61
+
+.450
+
+1.61 | 2.017
+
+27.30 | 3.583
+
+11.24 |
+
+5.15
+
+1.61
+
+.467
+
+1.61 | 2.033
+
+27.30 | 3.600
+
+11.24 |
+
+5.17
+
+1.61
+
+.483
+
+1.61 | 2.050
+
+27.30 | 3.617
+
+11.24 |
+
+5.18
+
+1.61
+
+.500
+
+1.61 | 2.067
+
+27.30 | 3.633
+
+11.24 |
+
+5.20
+
+1.61
+
+.517
+
+1.61 | 2.083
+
+27.30 | 3.650
+
+11.24 |
+
+5.22
+
+1.61
+
+.533
+
+1.61 | 2.100
+
+27.30 | 3.667
+
+11.24 |
+
+5.23
+
+1.61
+
+.550
+
+1.61 | 2.117
+
+27.30 | 3.683
+
+11.24 |
+
+5.25
+
+1.61
+
+.567
+
+1.61 | 2.133
+
+27.30 | 3.700
+
+11.24 |
+
+5.27
+
+1.61
+
+.583
+
+1.61 | 2.150
+
+27.30 | 3.717
+
+11.24 |
+
+5.28
+
+1.61
+
+.600
+
+1.61 | 2.167
+
+27.30 | 3.733
+
+11.24 |
+
+5.30
+
+1.61
+
+.617
+
+1.61 | 2.183
+
+27.30 | 3.750
+
+11.24 |
+
+5.32
+
+1.61
+
+.633
+
+1.61 | 2.200
+
+27.30 | 3.767
+
+6.42 |
+
+5.33
+
+1.61
+
+.650
+
+1.61 | 2.217
+
+27.30 | 3.783
+
+6.42 |
+
+5.35
+
+1.61
+
+.667
+
+1.61 | 2.233
+
+27.30 | 3.800
+
+6.42 |
+
+5.37
+
+1.61
+
+.683
+
+1.61 | 2.250
+
+27.30 | 3.817
+
+6.42 |
+
+5.38
+
+1.61
+
+.700
+
+1.61 | 2.267
+
+73.88 | 3.833
+
+6.42 |
+
+5.40
+
+1.61
+
+.717
+
+1.61 | 2.283
+
+73.88 | 3.850
+
+6.42 |
+
+5.42
+
+1.61
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+.733
+
+1.61 | 2.300
+
+73.88 | 3.867
+
+6.42 |
+
+5.43
+
+1.61
+
+.750
+
+1.61 | 2.317
+
+73.88 | 3.883
+
+6.42 |
+
+5.45
+
+1.61
+
+.767
+
+1.61 | 2.333
+
+73.88 | 3.900
+
+6.42 |
+
+5.47
+
+1.61
+
+.783
+
+1.61 | 2.350
+
+73.88 | 3.917
+
+6.42 |
+
+5.48
+
+1.61
+
+.800
+
+1.61 | 2.367
+
+73.88 | 3.933
+
+6.42 |
+
+5.50
+
+1.61
+
+.817
+
+1.61 | 2.383
+
+73.88 | 3.950
+
+6.42 |
+
+5.52
+
+1.61
+
+.833
+
+1.61 | 2.400
+
+73.88 | 3.967
+
+6.42 |
+
+5.53
+
+1.61
+
+.850
+
+1.61 | 2.417
+
+73.88 | 3.983
+
+6.42 |
+
+5.55
+
+1.61
+
+.867
+
+1.61 | 2.433
+
+73.88 | 4.000
+
+6.42 |
+
+5.57
+
+1.61
+
+.883
+
+1.61 | 2.450
+
+73.88 | 4.017
+
+6.42 |
+
+5.58
+
+1.61
+
+.900
+
+1.61 | 2.467
+
+73.88 | 4.033
+
+6.42 |
+
+5.60
+
+1.61
+
+.917
+
+1.61 | 2.483
+
+73.88 | 4.050
+
+6.42 |
+
+5.62
+
+1.61
+
+.933
+
+1.61 | 2.500
+
+73.88 | 4.067
+
+6.42 |
+
+5.63
+
+1.61
+
+.950
+
+1.61 | 2.517
+
+73.88 | 4.083
+
+6.42 |
+
+5.65
+
+1.61
+
+.967
+
+1.61 | 2.533
+
+73.88 | 4.100
+
+6.42 |
+
+5.67
+
+1.61
+
+.983
+
+1.61 | 2.550
+
+73.88 | 4.117
+
+6.42 |
+
+5.68
+
+1.61
+
+1.000
+
+1.61 | 2.567
+
+73.88 | 4.133
+
+6.42 |
+
+5.70
+
+1.61
+
+1.017
+
+1.61 | 2.583
+
+73.88 | 4.150
+
+6.42 |
+
+5.72
+
+1.61
+
+1.033
+
+1.61 | 2.600
+
+73.88 | 4.167
+
+6.42 |
+
+5.73
+
+1.61
+
+1.050
+
+1.61 | 2.617
+
+73.88 | 4.183
+
+6.42 |
+
+5.75
+
+1.61
+
+1.067
+
+1.61 | 2.633
+
+73.88 | 4.200
+
+6.42 |
+
+5.77
+
+1.61
+
+1.083
+
+1.61 | 2.650
+
+73.88 | 4.217
+
+6.42 |
+
+5.78
+
+1.61
+
+1.100
+
+1.61 | 2.667
+
+73.88 | 4.233
+
+6.42 |
+
+5.80
+
+1.61
+
+1.117
+
+1.61 | 2.683
+
+73.88 | 4.250
+
+6.42 |
+
+5.82
+
+1.61
+
+1.133
+
+1.61 | 2.700
+
+73.88 | 4.267
+
+3.21 |
+
+5.83
+
+1.61
+
+1.150
+
+1.61 | 2.717
+
+73.88 | 4.283
+
+3.21 |
+
+5.85
+
+1.61
+
+1.167
+
+1.61 | 2.733
+
+73.88 | 4.300
+
+3.21 |
+
+5.87
+
+1.61
+
+1.183
+
+1.61 | 2.750
+
+73.88 | 4.317
+
+3.21 |
+
+5.88
+
+1.61
+
+1.200
+
+1.61 | 2.767
+
+20.89 | 4.333
+
+3.21 |
+
+5.90
+
+1.61
+
+1.217
+
+1.61 | 2.783
+
+20.88 | 4.350
+
+3.21 |
+
+5.92
+
+1.61
+
+1.233
+
+1.61 | 2.800
+
+20.88 | 4.367
+
+3.21 |
+
+5.93
+
+1.61
+
+1.250
+
+1.61 | 2.817
+
+20.88 | 4.383
+
+3.21 |
+
+5.95
+
+1.61
+
+1.267
+
+9.64 | 2.833
+
+20.88 | 4.400
+
+3.21 |
+
+5.97
+
+1.61
+
+1.283
+
+9.64 | 2.850
+
+20.88 | 4.417
+
+3.21 |
+
+5.98
+
+1.61
+
+1.300
+
+9.64 | 2.867
+
+20.88 | 4.433
+
+3.21 |
+
+6.00
+
+1.61
+
+1.317
+
+9.64 | 2.883
+
+20.88 | 4.450
+
+3.21 |
+
+6.02
+
+1.61
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+1.333
+
+9.64 | 2.900
+
+20.88 | 4.467
+
+3.21 |
+
+6.03
+
+1.61
+
+1.350
+
+9.64 | 2.917
+
+20.88 | 4.483
+
+3.21 |
+
+6.05
+
+1.61
+
+1.367
+
+9.64 | 2.933
+
+20.88 | 4.500
+
+3.21 |
+
+6.07
+
+1.61
+
+1.383
+
+9.64 | 2.950
+
+20.88 | 4.517
+
+3.21 |
+
+6.08
+
+1.61
+
+1.400
+
+9.64 | 2.967
+
+20.88 | 4.533
+
+3.21 |
+
+6.10
+
+1.61
+
+1.417
+
+9.64 | 2.983
+
+20.88 | 4.550
+
+3.21 |
+
+6.12
+
+1.61
+
+1.433
+
+9.64 | 3.000
+
+20.88 | 4.567
+
+3.21 |
+
+6.13
+
+1.61
+
+1.450
+
+9.64 | 3.017
+
+20.88 | 4.583
+
+3.21 |
+
+6.15
+
+1.61
+
+1.467
+
+9.64 | 3.033
+
+20.88 | 4.600
+
+3.21 |
+
+6.17
+
+1.61
+
+1.483
+
+9.64 | 3.050
+
+20.88 | 4.617
+
+3.21 |
+
+6.18
+
+1.61
+
+1.500
+
+9.64 | 3.067
+
+20.88 | 4.633
+
+3.21 |
+
+6.20
+
+1.61
+
+1.517
+
+9.64 | 3.083
+
+20.88 | 4.650
+
+3.21 |
+
+6.22
+
+1.61
+
+1.533
+
+9.64 | 3.100
+
+20.88 | 4.667
+
+3.21 |
+
+6.23
+
+1.61
+
+1.550
+
+9.64 | 3.117
+
+20.88 | 4.683
+
+3.21 |
+
+6.25
+
+1.61
+
+1.567
+
+9.64 | 3.133
+
+20.88 | 4.700
+
+3.21 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.085
+
+PEAK FLOW
+
+(cms)=
+
+.034 (i)
+
+TIME TO PEAK
+
+(hrs)=
+
+2.800
+
+RUNOFF VOLUME
+
+(mm)=
+
+30.982
+
+TOTAL RAINFALL
+
+(mm)=
+
+80.310
+
+RUNOFF COEFFICIENT
+
+=
+
+.386
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| CALIB
+
+|
+
+| NASHYD
+
+(0002) |
+
+Area
+
+(ha)=
+
+1.54
+
+Curve Number
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+# of Linear Res.(N)= 3.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.31
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.190
+
+PEAK FLOW
+
+(cms)=
+
+.119 (i)
+
+(CN)= 78.0
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TIME TO PEAK
+
+(hrs)=
+
+2.933
+
+RUNOFF VOLUME
+
+(mm)=
+
+34.825
+
+TOTAL RAINFALL
+
+(mm)=
+
+80.310
+
+RUNOFF COEFFICIENT
+
+=
+
+.434
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+------------------------------------------------------------------------------****************************
+** SIMULATION NUMBER:
+
+8 **
+
+****************************
+
+-------------------|
+|
+
+READ STORM
+
+|
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\
+
+|
+
+| Ptotal= 88.54 mm |
+
+VO2\Banas Stone\Storms\100yr-12hr.STM
+Comments: 100yr/12hr
+
+-------------------TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.25
+
+.00 |
+
+3.50
+
+15.05 |
+
+6.75
+
+6.20 | 10.00
+
+.89
+
+.50
+
+.89 |
+
+3.75
+
+15.05 |
+
+7.00
+
+6.20 | 10.25
+
+.89
+
+.75
+
+.89 |
+
+4.00
+
+15.05 |
+
+7.25
+
+6.20 | 10.50
+
+.89
+
+1.00
+
+.89 |
+
+4.25
+
+15.05 |
+
+7.50
+
+3.54 | 10.75
+
+.89
+
+1.25
+
+.89 |
+
+4.50
+
+40.71 |
+
+7.75
+
+3.54 | 11.00
+
+.89
+
+1.50
+
+.89 |
+
+4.75
+
+40.71 |
+
+8.00
+
+3.54 | 11.25
+
+.89
+
+1.75
+
+.89 |
+
+5.00
+
+40.71 |
+
+8.25
+
+3.54 | 11.50
+
+.89
+
+2.00
+
+.89 |
+
+5.25
+
+40.71 |
+
+8.50
+
+1.77 | 11.75
+
+.89
+
+2.25
+
+.89 |
+
+5.50
+
+11.51 |
+
+8.75
+
+1.77 | 12.00
+
+.89
+
+2.50
+
+5.31 |
+
+5.75
+
+11.51 |
+
+9.00
+
+1.77 | 12.25
+
+.89
+
+2.75
+
+5.31 |
+
+6.00
+
+11.51 |
+
+9.25
+
+1.77 |
+
+3.00
+
+5.31 |
+
+6.25
+
+11.51 |
+
+9.50
+
+.89 |
+
+3.25
+
+5.31 |
+
+6.50
+
+6.20 |
+
+9.75
+
+.89 |
+
+-------------------------------------------------------------------------------
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+-------------------| CALIB
+
+|
+
+| NASHYD
+
+(0001) |
+
+Area
+
+(ha)=
+
+.38
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.17
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+Curve Number
+
+(CN)= 74.0
+
+# of Linear Res.(N)= 3.00
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 | 3.083
+
+5.31 | 6.150
+
+11.51 |
+
+9.22
+
+1.77
+
+.033
+
+.00 | 3.100
+
+5.31 | 6.167
+
+11.51 |
+
+9.23
+
+1.77
+
+.050
+
+.00 | 3.117
+
+5.31 | 6.183
+
+11.51 |
+
+9.25
+
+1.77
+
+.067
+
+.00 | 3.133
+
+5.31 | 6.200
+
+11.51 |
+
+9.27
+
+.89
+
+.083
+
+.00 | 3.150
+
+5.31 | 6.217
+
+11.51 |
+
+9.28
+
+.89
+
+.100
+
+.00 | 3.167
+
+5.31 | 6.233
+
+11.51 |
+
+9.30
+
+.89
+
+.117
+
+.00 | 3.183
+
+5.31 | 6.250
+
+11.50 |
+
+9.32
+
+.89
+
+.133
+
+.00 | 3.200
+
+5.31 | 6.267
+
+6.20 |
+
+9.33
+
+.89
+
+.150
+
+.00 | 3.217
+
+5.31 | 6.283
+
+6.20 |
+
+9.35
+
+.89
+
+.167
+
+.00 | 3.233
+
+5.31 | 6.300
+
+6.20 |
+
+9.37
+
+.89
+
+.183
+
+.00 | 3.250
+
+5.31 | 6.317
+
+6.20 |
+
+9.38
+
+.89
+
+.200
+
+.00 | 3.267
+
+15.05 | 6.333
+
+6.20 |
+
+9.40
+
+.89
+
+.217
+
+.00 | 3.283
+
+15.05 | 6.350
+
+6.20 |
+
+9.42
+
+.89
+
+.233
+
+.00 | 3.300
+
+15.05 | 6.367
+
+6.20 |
+
+9.43
+
+.89
+
+.250
+
+.00 | 3.317
+
+15.05 | 6.383
+
+6.20 |
+
+9.45
+
+.89
+
+.267
+
+.89 | 3.333
+
+15.05 | 6.400
+
+6.20 |
+
+9.47
+
+.89
+
+.283
+
+.89 | 3.350
+
+15.05 | 6.417
+
+6.20 |
+
+9.48
+
+.89
+
+.300
+
+.89 | 3.367
+
+15.05 | 6.433
+
+6.20 |
+
+9.50
+
+.89
+
+.317
+
+.89 | 3.383
+
+15.05 | 6.450
+
+6.20 |
+
+9.52
+
+.89
+
+.333
+
+.89 | 3.400
+
+15.05 | 6.467
+
+6.20 |
+
+9.53
+
+.89
+
+.350
+
+.89 | 3.417
+
+15.05 | 6.483
+
+6.20 |
+
+9.55
+
+.89
+
+.367
+
+.89 | 3.433
+
+15.05 | 6.500
+
+6.20 |
+
+9.57
+
+.89
+
+.383
+
+.89 | 3.450
+
+15.05 | 6.517
+
+6.20 |
+
+9.58
+
+.89
+
+.400
+
+.89 | 3.467
+
+15.05 | 6.533
+
+6.20 |
+
+9.60
+
+.89
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+.417
+
+.89 | 3.483
+
+15.05 | 6.550
+
+6.20 |
+
+9.62
+
+.89
+
+.433
+
+.89 | 3.500
+
+15.05 | 6.567
+
+6.20 |
+
+9.63
+
+.89
+
+.450
+
+.89 | 3.517
+
+15.05 | 6.583
+
+6.20 |
+
+9.65
+
+.89
+
+.467
+
+.89 | 3.533
+
+15.05 | 6.600
+
+6.20 |
+
+9.67
+
+.89
+
+.483
+
+.89 | 3.550
+
+15.05 | 6.617
+
+6.20 |
+
+9.68
+
+.89
+
+.500
+
+.89 | 3.567
+
+15.05 | 6.633
+
+6.20 |
+
+9.70
+
+.89
+
+.517
+
+.89 | 3.583
+
+15.05 | 6.650
+
+6.20 |
+
+9.72
+
+.89
+
+.533
+
+.89 | 3.600
+
+15.05 | 6.667
+
+6.20 |
+
+9.73
+
+.89
+
+.550
+
+.89 | 3.617
+
+15.05 | 6.683
+
+6.20 |
+
+9.75
+
+.89
+
+.567
+
+.89 | 3.633
+
+15.05 | 6.700
+
+6.20 |
+
+9.77
+
+.89
+
+.583
+
+.89 | 3.650
+
+15.05 | 6.717
+
+6.20 |
+
+9.78
+
+.89
+
+.600
+
+.89 | 3.667
+
+15.05 | 6.733
+
+6.20 |
+
+9.80
+
+.89
+
+.617
+
+.89 | 3.683
+
+15.05 | 6.750
+
+6.20 |
+
+9.82
+
+.89
+
+.633
+
+.89 | 3.700
+
+15.05 | 6.767
+
+6.20 |
+
+9.83
+
+.89
+
+.650
+
+.89 | 3.717
+
+15.05 | 6.783
+
+6.20 |
+
+9.85
+
+.89
+
+.667
+
+.89 | 3.733
+
+15.05 | 6.800
+
+6.20 |
+
+9.87
+
+.89
+
+.683
+
+.89 | 3.750
+
+15.05 | 6.817
+
+6.20 |
+
+9.88
+
+.89
+
+.700
+
+.89 | 3.767
+
+15.05 | 6.833
+
+6.20 |
+
+9.90
+
+.89
+
+.717
+
+.89 | 3.783
+
+15.05 | 6.850
+
+6.20 |
+
+9.92
+
+.89
+
+.733
+
+.89 | 3.800
+
+15.05 | 6.867
+
+6.20 |
+
+9.93
+
+.89
+
+.750
+
+.89 | 3.817
+
+15.05 | 6.883
+
+6.20 |
+
+9.95
+
+.89
+
+.767
+
+.89 | 3.833
+
+15.05 | 6.900
+
+6.20 |
+
+9.97
+
+.89
+
+.783
+
+.89 | 3.850
+
+15.05 | 6.917
+
+6.20 |
+
+9.98
+
+.89
+
+.800
+
+.89 | 3.867
+
+15.05 | 6.933
+
+6.20 | 10.00
+
+.89
+
+.817
+
+.89 | 3.883
+
+15.05 | 6.950
+
+6.20 | 10.02
+
+.89
+
+.833
+
+.89 | 3.900
+
+15.05 | 6.967
+
+6.20 | 10.03
+
+.89
+
+.850
+
+.89 | 3.917
+
+15.05 | 6.983
+
+6.20 | 10.05
+
+.89
+
+.867
+
+.89 | 3.933
+
+15.05 | 7.000
+
+6.20 | 10.07
+
+.89
+
+.883
+
+.89 | 3.950
+
+15.05 | 7.017
+
+6.20 | 10.08
+
+.89
+
+.900
+
+.89 | 3.967
+
+15.05 | 7.033
+
+6.20 | 10.10
+
+.89
+
+.917
+
+.89 | 3.983
+
+15.05 | 7.050
+
+6.20 | 10.12
+
+.89
+
+.933
+
+.89 | 4.000
+
+15.05 | 7.067
+
+6.20 | 10.13
+
+.89
+
+.950
+
+.89 | 4.017
+
+15.05 | 7.083
+
+6.20 | 10.15
+
+.89
+
+.967
+
+.89 | 4.033
+
+15.05 | 7.100
+
+6.20 | 10.17
+
+.89
+
+.983
+
+.89 | 4.050
+
+15.05 | 7.117
+
+6.20 | 10.18
+
+.89
+
+1.000
+
+.89 | 4.067
+
+15.05 | 7.133
+
+6.20 | 10.20
+
+.89
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+1.017
+
+.89 | 4.083
+
+15.05 | 7.150
+
+6.20 | 10.22
+
+.89
+
+1.033
+
+.89 | 4.100
+
+15.05 | 7.167
+
+6.20 | 10.23
+
+.89
+
+1.050
+
+.89 | 4.117
+
+15.05 | 7.183
+
+6.20 | 10.25
+
+.89
+
+1.067
+
+.89 | 4.133
+
+15.05 | 7.200
+
+6.20 | 10.27
+
+.89
+
+1.083
+
+.89 | 4.150
+
+15.05 | 7.217
+
+6.20 | 10.28
+
+.89
+
+1.100
+
+.89 | 4.167
+
+15.05 | 7.233
+
+6.20 | 10.30
+
+.89
+
+1.117
+
+.89 | 4.183
+
+15.05 | 7.250
+
+6.19 | 10.32
+
+.89
+
+1.133
+
+.89 | 4.200
+
+15.05 | 7.267
+
+3.54 | 10.33
+
+.89
+
+1.150
+
+.89 | 4.217
+
+15.05 | 7.283
+
+3.54 | 10.35
+
+.89
+
+1.167
+
+.89 | 4.233
+
+15.05 | 7.300
+
+3.54 | 10.37
+
+.89
+
+1.183
+
+.89 | 4.250
+
+15.05 | 7.317
+
+3.54 | 10.38
+
+.89
+
+1.200
+
+.89 | 4.267
+
+40.71 | 7.333
+
+3.54 | 10.40
+
+.89
+
+1.217
+
+.89 | 4.283
+
+40.71 | 7.350
+
+3.54 | 10.42
+
+.89
+
+1.233
+
+.89 | 4.300
+
+40.71 | 7.367
+
+3.54 | 10.43
+
+.89
+
+1.250
+
+.89 | 4.317
+
+40.71 | 7.383
+
+3.54 | 10.45
+
+.89
+
+1.267
+
+.89 | 4.333
+
+40.71 | 7.400
+
+3.54 | 10.47
+
+.89
+
+1.283
+
+.89 | 4.350
+
+40.71 | 7.417
+
+3.54 | 10.48
+
+.89
+
+1.300
+
+.89 | 4.367
+
+40.71 | 7.433
+
+3.54 | 10.50
+
+.89
+
+1.317
+
+.89 | 4.383
+
+40.71 | 7.450
+
+3.54 | 10.52
+
+.89
+
+1.333
+
+.89 | 4.400
+
+40.71 | 7.467
+
+3.54 | 10.53
+
+.89
+
+1.350
+
+.89 | 4.417
+
+40.71 | 7.483
+
+3.54 | 10.55
+
+.89
+
+1.367
+
+.89 | 4.433
+
+40.71 | 7.500
+
+3.54 | 10.57
+
+.89
+
+1.383
+
+.89 | 4.450
+
+40.71 | 7.517
+
+3.54 | 10.58
+
+.89
+
+1.400
+
+.89 | 4.467
+
+40.71 | 7.533
+
+3.54 | 10.60
+
+.89
+
+1.417
+
+.89 | 4.483
+
+40.71 | 7.550
+
+3.54 | 10.62
+
+.89
+
+1.433
+
+.89 | 4.500
+
+40.71 | 7.567
+
+3.54 | 10.63
+
+.89
+
+1.450
+
+.89 | 4.517
+
+40.71 | 7.583
+
+3.54 | 10.65
+
+.89
+
+1.467
+
+.89 | 4.533
+
+40.71 | 7.600
+
+3.54 | 10.67
+
+.89
+
+1.483
+
+.89 | 4.550
+
+40.71 | 7.617
+
+3.54 | 10.68
+
+.89
+
+1.500
+
+.89 | 4.567
+
+40.71 | 7.633
+
+3.54 | 10.70
+
+.89
+
+1.517
+
+.89 | 4.583
+
+40.71 | 7.650
+
+3.54 | 10.72
+
+.89
+
+1.533
+
+.89 | 4.600
+
+40.71 | 7.667
+
+3.54 | 10.73
+
+.89
+
+1.550
+
+.89 | 4.617
+
+40.71 | 7.683
+
+3.54 | 10.75
+
+.89
+
+1.567
+
+.89 | 4.633
+
+40.71 | 7.700
+
+3.54 | 10.77
+
+.89
+
+1.583
+
+.89 | 4.650
+
+40.71 | 7.717
+
+3.54 | 10.78
+
+.89
+
+1.600
+
+.89 | 4.667
+
+40.71 | 7.733
+
+3.54 | 10.80
+
+.89
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+1.617
+
+.89 | 4.683
+
+40.71 | 7.750
+
+3.54 | 10.82
+
+.89
+
+1.633
+
+.89 | 4.700
+
+40.71 | 7.767
+
+3.54 | 10.83
+
+.89
+
+1.650
+
+.89 | 4.717
+
+40.71 | 7.783
+
+3.54 | 10.85
+
+.89
+
+1.667
+
+.89 | 4.733
+
+40.71 | 7.800
+
+3.54 | 10.87
+
+.89
+
+1.683
+
+.89 | 4.750
+
+40.71 | 7.817
+
+3.54 | 10.88
+
+.89
+
+1.700
+
+.89 | 4.767
+
+40.71 | 7.833
+
+3.54 | 10.90
+
+.89
+
+1.717
+
+.89 | 4.783
+
+40.71 | 7.850
+
+3.54 | 10.92
+
+.89
+
+1.733
+
+.89 | 4.800
+
+40.71 | 7.867
+
+3.54 | 10.93
+
+.89
+
+1.750
+
+.89 | 4.817
+
+40.71 | 7.883
+
+3.54 | 10.95
+
+.89
+
+1.767
+
+.89 | 4.833
+
+40.71 | 7.900
+
+3.54 | 10.97
+
+.89
+
+1.783
+
+.89 | 4.850
+
+40.71 | 7.917
+
+3.54 | 10.98
+
+.89
+
+1.800
+
+.89 | 4.867
+
+40.71 | 7.933
+
+3.54 | 11.00
+
+.89
+
+1.817
+
+.89 | 4.883
+
+40.71 | 7.950
+
+3.54 | 11.02
+
+.89
+
+1.833
+
+.89 | 4.900
+
+40.71 | 7.967
+
+3.54 | 11.03
+
+.89
+
+1.850
+
+.89 | 4.917
+
+40.71 | 7.983
+
+3.54 | 11.05
+
+.89
+
+1.867
+
+.89 | 4.933
+
+40.71 | 8.000
+
+3.54 | 11.07
+
+.89
+
+1.883
+
+.89 | 4.950
+
+40.71 | 8.017
+
+3.54 | 11.08
+
+.89
+
+1.900
+
+.89 | 4.967
+
+40.71 | 8.033
+
+3.54 | 11.10
+
+.89
+
+1.917
+
+.89 | 4.983
+
+40.71 | 8.050
+
+3.54 | 11.12
+
+.89
+
+1.933
+
+.89 | 5.000
+
+40.71 | 8.067
+
+3.54 | 11.13
+
+.89
+
+1.950
+
+.89 | 5.017
+
+40.71 | 8.083
+
+3.54 | 11.15
+
+.89
+
+1.967
+
+.89 | 5.033
+
+40.71 | 8.100
+
+3.54 | 11.17
+
+.89
+
+1.983
+
+.89 | 5.050
+
+40.71 | 8.117
+
+3.54 | 11.18
+
+.89
+
+2.000
+
+.89 | 5.067
+
+40.71 | 8.133
+
+3.54 | 11.20
+
+.89
+
+2.017
+
+.89 | 5.083
+
+40.71 | 8.150
+
+3.54 | 11.22
+
+.89
+
+2.033
+
+.89 | 5.100
+
+40.71 | 8.167
+
+3.54 | 11.23
+
+.89
+
+2.050
+
+.89 | 5.117
+
+40.71 | 8.183
+
+3.54 | 11.25
+
+.89
+
+2.067
+
+.89 | 5.133
+
+40.71 | 8.200
+
+3.54 | 11.27
+
+.89
+
+2.083
+
+.89 | 5.150
+
+40.71 | 8.217
+
+3.54 | 11.28
+
+.89
+
+2.100
+
+.89 | 5.167
+
+40.71 | 8.233
+
+3.54 | 11.30
+
+.89
+
+2.117
+
+.89 | 5.183
+
+40.71 | 8.250
+
+3.54 | 11.32
+
+.89
+
+2.133
+
+.89 | 5.200
+
+40.71 | 8.267
+
+1.77 | 11.33
+
+.89
+
+2.150
+
+.89 | 5.217
+
+40.71 | 8.283
+
+1.77 | 11.35
+
+.89
+
+2.167
+
+.89 | 5.233
+
+40.71 | 8.300
+
+1.77 | 11.37
+
+.89
+
+2.183
+
+.89 | 5.250
+
+40.69 | 8.317
+
+1.77 | 11.38
+
+.89
+
+2.200
+
+.89 | 5.267
+
+11.51 | 8.333
+
+1.77 | 11.40
+
+.89
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+2.217
+
+.89 | 5.283
+
+11.51 | 8.350
+
+1.77 | 11.42
+
+.89
+
+2.233
+
+.89 | 5.300
+
+11.51 | 8.367
+
+1.77 | 11.43
+
+.89
+
+2.250
+
+.89 | 5.317
+
+11.51 | 8.383
+
+1.77 | 11.45
+
+.89
+
+2.267
+
+5.31 | 5.333
+
+11.51 | 8.400
+
+1.77 | 11.47
+
+.89
+
+2.283
+
+5.31 | 5.350
+
+11.51 | 8.417
+
+1.77 | 11.48
+
+.89
+
+2.300
+
+5.31 | 5.367
+
+11.51 | 8.433
+
+1.77 | 11.50
+
+.89
+
+2.317
+
+5.31 | 5.383
+
+11.51 | 8.450
+
+1.77 | 11.52
+
+.89
+
+2.333
+
+5.31 | 5.400
+
+11.51 | 8.467
+
+1.77 | 11.53
+
+.89
+
+2.350
+
+5.31 | 5.417
+
+11.51 | 8.483
+
+1.77 | 11.55
+
+.89
+
+2.367
+
+5.31 | 5.433
+
+11.51 | 8.500
+
+1.77 | 11.57
+
+.89
+
+2.383
+
+5.31 | 5.450
+
+11.51 | 8.517
+
+1.77 | 11.58
+
+.89
+
+2.400
+
+5.31 | 5.467
+
+11.51 | 8.533
+
+1.77 | 11.60
+
+.89
+
+2.417
+
+5.31 | 5.483
+
+11.51 | 8.550
+
+1.77 | 11.62
+
+.89
+
+2.433
+
+5.31 | 5.500
+
+11.51 | 8.567
+
+1.77 | 11.63
+
+.89
+
+2.450
+
+5.31 | 5.517
+
+11.51 | 8.583
+
+1.77 | 11.65
+
+.89
+
+2.467
+
+5.31 | 5.533
+
+11.51 | 8.600
+
+1.77 | 11.67
+
+.89
+
+2.483
+
+5.31 | 5.550
+
+11.51 | 8.617
+
+1.77 | 11.68
+
+.89
+
+2.500
+
+5.31 | 5.567
+
+11.51 | 8.633
+
+1.77 | 11.70
+
+.89
+
+2.517
+
+5.31 | 5.583
+
+11.51 | 8.650
+
+1.77 | 11.72
+
+.89
+
+2.533
+
+5.31 | 5.600
+
+11.51 | 8.667
+
+1.77 | 11.73
+
+.89
+
+2.550
+
+5.31 | 5.617
+
+11.51 | 8.683
+
+1.77 | 11.75
+
+.89
+
+2.567
+
+5.31 | 5.633
+
+11.51 | 8.700
+
+1.77 | 11.77
+
+.89
+
+2.583
+
+5.31 | 5.650
+
+11.51 | 8.717
+
+1.77 | 11.78
+
+.89
+
+2.600
+
+5.31 | 5.667
+
+11.51 | 8.733
+
+1.77 | 11.80
+
+.89
+
+2.617
+
+5.31 | 5.683
+
+11.51 | 8.750
+
+1.77 | 11.82
+
+.89
+
+2.633
+
+5.31 | 5.700
+
+11.51 | 8.767
+
+1.77 | 11.83
+
+.89
+
+2.650
+
+5.31 | 5.717
+
+11.51 | 8.783
+
+1.77 | 11.85
+
+.89
+
+2.667
+
+5.31 | 5.733
+
+11.51 | 8.800
+
+1.77 | 11.87
+
+.89
+
+2.683
+
+5.31 | 5.750
+
+11.51 | 8.817
+
+1.77 | 11.88
+
+.89
+
+2.700
+
+5.31 | 5.767
+
+11.51 | 8.833
+
+1.77 | 11.90
+
+.89
+
+2.717
+
+5.31 | 5.783
+
+11.51 | 8.850
+
+1.77 | 11.92
+
+.89
+
+2.733
+
+5.31 | 5.800
+
+11.51 | 8.867
+
+1.77 | 11.93
+
+.89
+
+2.750
+
+5.31 | 5.817
+
+11.51 | 8.883
+
+1.77 | 11.95
+
+.89
+
+2.767
+
+5.31 | 5.833
+
+11.51 | 8.900
+
+1.77 | 11.97
+
+.89
+
+2.783
+
+5.31 | 5.850
+
+11.51 | 8.917
+
+1.77 | 11.98
+
+.89
+
+2.800
+
+5.31 | 5.867
+
+11.51 | 8.933
+
+1.77 | 12.00
+
+.89
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+2.817
+
+5.31 | 5.883
+
+11.51 | 8.950
+
+1.77 | 12.02
+
+.89
+
+2.833
+
+5.31 | 5.900
+
+11.51 | 8.967
+
+1.77 | 12.03
+
+.89
+
+2.850
+
+5.31 | 5.917
+
+11.51 | 8.983
+
+1.77 | 12.05
+
+.89
+
+2.867
+
+5.31 | 5.933
+
+11.51 | 9.000
+
+1.77 | 12.07
+
+.89
+
+2.883
+
+5.31 | 5.950
+
+11.51 | 9.017
+
+1.77 | 12.08
+
+.89
+
+2.900
+
+5.31 | 5.967
+
+11.51 | 9.033
+
+1.77 | 12.10
+
+.89
+
+2.917
+
+5.31 | 5.983
+
+11.51 | 9.050
+
+1.77 | 12.12
+
+.89
+
+2.933
+
+5.31 | 6.000
+
+11.51 | 9.067
+
+1.77 | 12.13
+
+.89
+
+2.950
+
+5.31 | 6.017
+
+11.51 | 9.083
+
+1.77 | 12.15
+
+.89
+
+2.967
+
+5.31 | 6.033
+
+11.51 | 9.100
+
+1.77 | 12.17
+
+.89
+
+2.983
+
+5.31 | 6.050
+
+11.51 | 9.117
+
+1.77 | 12.18
+
+.89
+
+3.000
+
+5.31 | 6.067
+
+11.51 | 9.133
+
+1.77 | 12.20
+
+.89
+
+3.017
+
+5.31 | 6.083
+
+11.51 | 9.150
+
+1.77 | 12.22
+
+.89
+
+3.033
+
+5.31 | 6.100
+
+11.51 | 9.167
+
+1.77 | 12.23
+
+.89
+
+3.050
+
+5.31 | 6.117
+
+11.51 | 9.183
+
+1.77 | 12.25
+
+.89
+
+3.067
+
+5.31 | 6.133
+
+11.51 | 9.200
+
+1.77 |
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.085
+
+PEAK FLOW
+
+(cms)=
+
+.023 (i)
+
+TIME TO PEAK
+
+(hrs)=
+
+5.283
+
+RUNOFF VOLUME
+
+(mm)=
+
+36.762
+
+TOTAL RAINFALL
+
+(mm)=
+
+88.539
+
+RUNOFF COEFFICIENT
+
+=
+
+.415
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| CALIB
+
+|
+
+| NASHYD
+
+(0002) |
+
+Area
+
+(ha)=
+
+1.54
+
+Curve Number
+
+|ID= 1 DT= 1.0 min |
+
+Ia
+
+(mm)=
+
+10.00
+
+# of Linear Res.(N)= 3.00
+
+--------------------
+
+U.H. Tp(hrs)=
+
+.31
+
+Unit Hyd Qpeak
+
+(cms)=
+
+.190
+
+(CN)= 78.0
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+PEAK FLOW
+
+(cms)=
+
+.095 (i)
+
+TIME TO PEAK
+
+(hrs)=
+
+5.333
+
+RUNOFF VOLUME
+
+(mm)=
+
+32.336
+
+TOTAL RAINFALL
+
+(mm)=
+
+88.539
+
+RUNOFF COEFFICIENT
+
+=
+
+.365
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------
+
+FINISH
+=================================================================================================
+==========
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+=================================================================================================
+==========
+
+V
+
+V
+
+I
+
+SSSSS
+
+U
+
+U
+
+A
+
+L
+
+V
+
+V
+
+I
+
+SS
+
+U
+
+U
+
+A A
+
+L
+
+V
+
+V
+
+I
+
+SS
+
+U
+
+U
+
+AAAAA
+
+L
+
+V
+
+V
+
+I
+
+SS
+
+U
+
+U
+
+A
+
+A
+
+L
+
+VV
+
+I
+
+SSSSS
+
+UUUUU
+
+A
+
+A
+
+LLLLL
+
+OOO
+
+TTTTT
+
+TTTTT
+
+H
+
+H
+
+Y
+
+Y
+
+M
+
+M
+
+OOO
+
+O
+
+O
+
+T
+
+T
+
+H
+
+H
+
+Y Y
+
+MM MM
+
+O
+
+O
+
+O
+
+O
+
+T
+
+T
+
+H
+
+H
+
+Y
+
+M
+
+M
+
+O
+
+O
+
+OOO
+
+T
+
+T
+
+H
+
+H
+
+Y
+
+M
+
+M
+
+OOO
+
+TM, Version 2.1
+
+Developed and Distributed by Clarifica Inc.
+Copyright 1996, 2007 Clarifica Inc.
+All rights reserved.
+
+*****
+
+Input
+
+D E T A I L E D
+
+O U T P U T *****
+
+filename: C:\Program Files (x86)\Visual OTTHYMO 2.3.1\voin.dat
+
+Output filename: T:\3958 Banas Stone SWM Analysis\Models\VO2\Banas Stone - Read Storm\Proposed
+Condition.out
+Summary filename: T:\3958 Banas Stone SWM Analysis\Models\VO2\Banas Stone - Read Storm\Proposed
+Condition.sum
+
+DATE: 8/29/2019
+
+TIME: 1:59:16 PM
+
+USER:
+
+COMMENTS: ____________________________________________________________
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+---------------------------------------------------------------------------------------------------------****************************
+** SIMULATION NUMBER:
+
+1 **
+
+****************************
+
+-------------------|
+
+READ STORM
+
+|
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\VO
+
+|
+
+|
+
+2\Banas Stone - Read Storm\Storms\
+
+|
+
+|
+
+2yr-1hr.STM
+
+| Ptotal= 24.38 mm |
+
+Comments: 2yr/1hr
+
+-------------------TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.08
+
+.00 |
+
+.42
+
+75.84 |
+
+.75
+
+4.98 |
+
+1.08
+
+.15
+
+.17
+
+10.83 |
+
+.50
+
+69.69 |
+
+.83
+
+2.05 |
+
+.25
+
+32.50 |
+
+.58
+
+29.28 |
+
+.92
+
+.88 |
+
+.33
+
+54.17 |
+
+.67
+
+12.00 |
+
+1.00
+
+.29 |
+
+-------------------------------------------------------------------------------
+
+-------------------| CALIB
+
+|
+
+| STANDHYD
+
+(0001) |
+
+|ID= 1 DT= 1.0 min |
+
+Area
+
+(ha)=
+
+.58
+
+Total Imp(%)=
+
+77.00
+
+Dir. Conn.(%)=
+
+.10
+
+-------------------IMPERVIOUS
+
+PERVIOUS (i)
+
+Surface Area
+
+(ha)=
+
+.45
+
+.13
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.80
+
+1.30
+
+Length
+
+(m)=
+
+62.10
+
+95.00
+
+=
+
+.013
+
+.250
+
+Mannings n
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+1.0 MIN. TIME STEP.
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 |
+
+.300
+
+54.17 |
+
+.583
+
+29.04 |
+
+.87
+
+.88
+
+.033
+
+.00 |
+
+.317
+
+54.17 |
+
+.600
+
+12.00 |
+
+.88
+
+.88
+
+.050
+
+.00 |
+
+.333
+
+54.34 |
+
+.617
+
+12.00 |
+
+.90
+
+.88
+
+.067
+
+.00 |
+
+.350
+
+75.84 |
+
+.633
+
+12.00 |
+
+.92
+
+.87
+
+.083
+
+.02 |
+
+.367
+
+75.84 |
+
+.650
+
+12.00 |
+
+.93
+
+.29
+
+.100
+
+10.83 |
+
+.383
+
+75.84 |
+
+.667
+
+11.89 |
+
+.95
+
+.29
+
+.117
+
+10.83 |
+
+.400
+
+75.84 |
+
+.683
+
+4.98 |
+
+.97
+
+.29
+
+.133
+
+10.83 |
+
+.417
+
+75.78 |
+
+.700
+
+4.98 |
+
+.98
+
+.29
+
+.150
+
+10.83 |
+
+.433
+
+69.69 |
+
+.717
+
+4.98 |
+
+1.00
+
+.29
+
+.167
+
+10.92 |
+
+.450
+
+69.69 |
+
+.733
+
+4.98 |
+
+1.02
+
+.15
+
+.183
+
+32.50 |
+
+.467
+
+69.69 |
+
+.750
+
+4.93 |
+
+1.03
+
+.15
+
+.200
+
+32.50 |
+
+.483
+
+69.69 |
+
+.767
+
+2.05 |
+
+1.05
+
+.15
+
+.217
+
+32.50 |
+
+.500
+
+69.20 |
+
+.783
+
+2.05 |
+
+1.07
+
+.15
+
+.233
+
+32.50 |
+
+.517
+
+29.28 |
+
+.800
+
+2.05 |
+
+1.08
+
+.15
+
+.250
+
+32.63 |
+
+.533
+
+29.28 |
+
+.817
+
+2.05 |
+
+.267
+
+54.17 |
+
+.550
+
+29.28 |
+
+.833
+
+2.03 |
+
+.283
+
+54.17 |
+
+.567
+
+29.28 |
+
+.850
+
+.88 |
+
+Max.Eff.Inten.(mm/hr)=
+
+75.83
+
+174.95
+
+over (min)
+
+5.00
+
+13.00
+
+1.80 (ii)
+
+12.59 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+13.00
+
+Unit Hyd. peak
+
+.39
+
+.09
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.04
+
+.039 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+.47
+
+.67
+
+.67
+
+RUNOFF VOLUME
+
+(mm)=
+
+23.38
+
+11.90
+
+11.90
+
+TOTAL RAINFALL
+
+(mm)=
+
+24.38
+
+24.38
+
+24.38
+
+.96
+
+.49
+
+.49
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| CALIB
+| STANDHYD
+
+|
+(0002) |
+
+|ID= 1 DT= 1.0 min |
+
+Area
+
+(ha)=
+
+1.34
+
+Total Imp(%)=
+
+86.00
+
+Dir. Conn.(%)=
+
+.10
+
+-------------------IMPERVIOUS
+
+PERVIOUS (i)
+
+Surface Area
+
+(ha)=
+
+1.15
+
+.19
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.00
+
+2.50
+
+Length
+
+(m)=
+
+94.60
+
+214.00
+
+=
+
+.020
+
+.250
+
+Max.Eff.Inten.(mm/hr)=
+
+75.83
+
+358.07
+
+over (min)
+
+5.00
+
+15.00
+
+3.57 (ii)
+
+14.41 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+15.00
+
+Unit Hyd. peak
+
+.28
+
+.08
+
+Mannings n
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.10
+
+.103 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+.50
+
+.68
+
+.68
+
+RUNOFF VOLUME
+
+(mm)=
+
+23.38
+
+14.91
+
+14.92
+
+TOTAL RAINFALL
+
+(mm)=
+
+24.38
+
+24.38
+
+24.38
+
+.96
+
+.61
+
+.61
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| RESERVOIR (0003) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+.0000
+
+.0000
+
+|
+
+.0200
+
+.0063
+
+.0040
+
+.0004
+
+|
+
+.0230
+
+.0079
+
+.0070
+
+.0015
+
+|
+
+.0250
+
+.0095
+
+.0120
+
+.0031
+
+|
+
+.0270
+
+.0112
+
+.0160
+
+.0043
+
+|
+
+.0300
+
+.0129
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+INFLOW : ID= 2 (0001)
+
+.58
+
+.04
+
+.67
+
+11.90
+
+OUTFLOW: ID= 1 (0003)
+
+.58
+
+.01
+
+.98
+
+11.86
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 36.91
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+(min)= 19.00
+
+USED
+
+(ha.m.)=
+
+.0038
+
+-------------------------------------------------------------------------------------------------| RESERVOIR (0004) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+.0000
+
+.0000
+
+|
+
+.0570
+
+.0089
+
+.0530
+
+.0000
+
+|
+
+.0580
+
+.0187
+
+.0550
+
+.0006
+
+|
+
+.0600
+
+.0327
+
+.0560
+
+.0031
+
+|
+
+.0610
+
+.0500
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+INFLOW : ID= 2 (0002)
+
+1.34
+
+.10
+
+.68
+
+14.92
+
+OUTFLOW: ID= 1 (0004)
+
+1.34
+
+.06
+
+.93
+
+14.97
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 54.35
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+(min)= 15.00
+
+USED
+
+(ha.m.)=
+
+.0049
+
+------------------------------------------------------------------------------****************************
+** SIMULATION NUMBER:
+
+2 **
+
+****************************
+
+-------------------|
+
+READ STORM
+
+|
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\VO
+
+|
+
+|
+
+2\Banas Stone - Read Storm\Storms\
+
+|
+
+|
+
+5yr-1hr.STM
+
+| Ptotal= 33.57 mm |
+
+Comments: 5yr/1hr
+
+-------------------TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.08
+
+.00 |
+
+.42
+
+104.43 |
+
+.75
+
+6.85 |
+
+1.08
+
+.20
+
+.17
+
+14.92 |
+
+.50
+
+95.96 |
+
+.83
+
+2.82 |
+
+.25
+
+44.76 |
+
+.58
+
+40.32 |
+
+.92
+
+1.21 |
+
+.33
+
+74.59 |
+
+.67
+
+16.53 |
+
+1.00
+
+.40 |
+
+-------------------------------------------------------------------------------
+
+-------------------| CALIB
+| STANDHYD
+
+|
+(0001) |
+
+|ID= 1 DT= 1.0 min |
+
+Area
+
+(ha)=
+
+.58
+
+Total Imp(%)=
+
+77.00
+
+Dir. Conn.(%)=
+
+-------------------IMPERVIOUS
+
+PERVIOUS (i)
+
+.10
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+Surface Area
+
+(ha)=
+
+.45
+
+.13
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.80
+
+1.30
+
+Length
+
+(m)=
+
+62.10
+
+95.00
+
+=
+
+.013
+
+.250
+
+Mannings n
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 |
+
+.300
+
+74.59 |
+
+.583
+
+39.99 |
+
+.87
+
+1.21
+
+.033
+
+.00 |
+
+.317
+
+74.59 |
+
+.600
+
+16.53 |
+
+.88
+
+1.21
+
+.050
+
+.00 |
+
+.333
+
+74.83 |
+
+.617
+
+16.53 |
+
+.90
+
+1.21
+
+.067
+
+.00 |
+
+.350
+
+104.43 |
+
+.633
+
+16.53 |
+
+.92
+
+1.19
+
+.083
+
+.03 |
+
+.367
+
+104.43 |
+
+.650
+
+16.53 |
+
+.93
+
+.40
+
+.100
+
+14.92 |
+
+.383
+
+104.43 |
+
+.667
+
+16.38 |
+
+.95
+
+.40
+
+.117
+
+14.92 |
+
+.400
+
+104.43 |
+
+.683
+
+6.85 |
+
+.97
+
+.40
+
+.133
+
+14.92 |
+
+.417
+
+104.35 |
+
+.700
+
+6.85 |
+
+.98
+
+.40
+
+.150
+
+14.92 |
+
+.433
+
+95.96 |
+
+.717
+
+6.85 |
+
+1.00
+
+.40
+
+.167
+
+15.04 |
+
+.450
+
+95.96 |
+
+.733
+
+6.85 |
+
+1.02
+
+.20
+
+.183
+
+44.76 |
+
+.467
+
+95.96 |
+
+.750
+
+6.78 |
+
+1.03
+
+.20
+
+.200
+
+44.76 |
+
+.483
+
+95.96 |
+
+.767
+
+2.82 |
+
+1.05
+
+.20
+
+.217
+
+44.76 |
+
+.500
+
+95.29 |
+
+.783
+
+2.82 |
+
+1.07
+
+.20
+
+.233
+
+44.76 |
+
+.517
+
+40.32 |
+
+.800
+
+2.82 |
+
+1.08
+
+.19
+
+.250
+
+44.94 |
+
+.533
+
+40.32 |
+
+.817
+
+2.82 |
+
+.267
+
+74.59 |
+
+.550
+
+40.32 |
+
+.833
+
+2.79 |
+
+.283
+
+74.59 |
+
+.567
+
+40.32 |
+
+.850
+
+1.21 |
+
+Max.Eff.Inten.(mm/hr)=
+
+104.41
+
+291.53
+
+over (min)
+
+5.00
+
+11.00
+
+1.58 (ii)
+
+10.38 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+11.00
+
+Unit Hyd. peak
+
+.41
+
+.11
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.07
+
+.069 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+.45
+
+.62
+
+.62
+
+RUNOFF VOLUME
+
+(mm)=
+
+32.57
+
+19.09
+
+19.09
+
+TOTAL RAINFALL
+
+(mm)=
+
+33.57
+
+33.57
+
+33.57
+
+.97
+
+.57
+
+.57
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| CALIB
+| STANDHYD
+
+|
+(0002) |
+
+|ID= 1 DT= 1.0 min |
+
+Area
+
+(ha)=
+
+1.34
+
+Total Imp(%)=
+
+86.00
+
+Dir. Conn.(%)=
+
+.10
+
+-------------------IMPERVIOUS
+
+PERVIOUS (i)
+
+Surface Area
+
+(ha)=
+
+1.15
+
+.19
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.00
+
+2.50
+
+Length
+
+(m)=
+
+94.60
+
+214.00
+
+=
+
+.020
+
+.250
+
+Max.Eff.Inten.(mm/hr)=
+
+104.41
+
+567.86
+
+over (min)
+
+5.00
+
+13.00
+
+3.15 (ii)
+
+12.16 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+13.00
+
+Unit Hyd. peak
+
+.30
+
+.09
+
+Mannings n
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.18
+
+.175 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+.48
+
+.65
+
+.65
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+RUNOFF VOLUME
+
+(mm)=
+
+32.57
+
+22.99
+
+23.00
+
+TOTAL RAINFALL
+
+(mm)=
+
+33.57
+
+33.57
+
+33.57
+
+.97
+
+.68
+
+.69
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| RESERVOIR (0003) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+.0000
+
+.0000
+
+|
+
+.0200
+
+.0063
+
+.0040
+
+.0004
+
+|
+
+.0230
+
+.0079
+
+.0070
+
+.0015
+
+|
+
+.0250
+
+.0095
+
+.0120
+
+.0031
+
+|
+
+.0270
+
+.0112
+
+.0160
+
+.0043
+
+|
+
+.0300
+
+.0129
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+INFLOW : ID= 2 (0001)
+
+.58
+
+.07
+
+.62
+
+19.09
+
+OUTFLOW: ID= 1 (0003)
+
+.58
+
+.02
+
+.95
+
+19.05
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 30.23
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+USED
+
+(min)= 20.00
+(ha.m.)=
+
+.0068
+
+--------------------------------------------------------------------------------------------------
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+| RESERVOIR (0004) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+.0000
+
+.0000
+
+|
+
+.0570
+
+.0089
+
+.0530
+
+.0000
+
+|
+
+.0580
+
+.0187
+
+.0550
+
+.0006
+
+|
+
+.0600
+
+.0327
+
+.0560
+
+.0031
+
+|
+
+.0610
+
+.0500
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+INFLOW : ID= 2 (0002)
+
+1.34
+
+.18
+
+.65
+
+23.00
+
+OUTFLOW: ID= 1 (0004)
+
+1.34
+
+.06
+
+.98
+
+23.09
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 32.77
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+USED
+
+(min)= 20.00
+(ha.m.)=
+
+.0136
+
+------------------------------------------------------------------------------****************************
+** SIMULATION NUMBER:
+
+3 **
+
+****************************
+
+-------------------|
+
+READ STORM
+
+|
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\VO
+
+|
+
+|
+
+2\Banas Stone - Read Storm\Storms\
+
+|
+
+|
+
+10yr-1hr.STM
+
+| Ptotal= 39.76 mm |
+
+Comments: 10yr/1hr
+
+-------------------TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.08
+
+.00 |
+
+.42
+
+123.70 |
+
+.75
+
+8.12 |
+
+1.08
+
+.24
+
+.17
+
+17.67 |
+
+.50
+
+113.67 |
+
+.83
+
+3.34 |
+
+.25
+
+53.01 |
+
+.58
+
+47.76 |
+
+.92
+
+1.43 |
+
+.33
+
+88.36 |
+
+.67
+
+19.58 |
+
+1.00
+
+.48 |
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+-------------------------------------------------------------------------------
+
+-------------------| CALIB
+
+|
+
+| STANDHYD
+
+(0001) |
+
+|ID= 1 DT= 1.0 min |
+
+Area
+
+(ha)=
+
+.58
+
+Total Imp(%)=
+
+77.00
+
+Dir. Conn.(%)=
+
+.10
+
+-------------------IMPERVIOUS
+
+PERVIOUS (i)
+
+Surface Area
+
+(ha)=
+
+.45
+
+.13
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.80
+
+1.30
+
+Length
+
+(m)=
+
+62.10
+
+95.00
+
+=
+
+.013
+
+.250
+
+Mannings n
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 |
+
+.300
+
+88.36 |
+
+.583
+
+47.37 |
+
+.87
+
+1.43
+
+.033
+
+.00 |
+
+.317
+
+88.36 |
+
+.600
+
+19.58 |
+
+.88
+
+1.43
+
+.050
+
+.00 |
+
+.333
+
+88.64 |
+
+.617
+
+19.58 |
+
+.90
+
+1.43
+
+.067
+
+.00 |
+
+.350
+
+123.70 |
+
+.633
+
+19.58 |
+
+.92
+
+1.41
+
+.083
+
+.04 |
+
+.367
+
+123.70 |
+
+.650
+
+19.58 |
+
+.93
+
+.48
+
+.100
+
+17.67 |
+
+.383
+
+123.70 |
+
+.667
+
+19.40 |
+
+.95
+
+.48
+
+.117
+
+17.67 |
+
+.400
+
+123.70 |
+
+.683
+
+8.12 |
+
+.97
+
+.48
+
+.133
+
+17.67 |
+
+.417
+
+123.60 |
+
+.700
+
+8.12 |
+
+.98
+
+.48
+
+.150
+
+17.67 |
+
+.433
+
+113.67 |
+
+.717
+
+8.12 |
+
+1.00
+
+.47
+
+.167
+
+17.81 |
+
+.450
+
+113.67 |
+
+.733
+
+8.12 |
+
+1.02
+
+.24
+
+.183
+
+53.01 |
+
+.467
+
+113.67 |
+
+.750
+
+8.03 |
+
+1.03
+
+.24
+
+.200
+
+53.01 |
+
+.483
+
+113.67 |
+
+.767
+
+3.34 |
+
+1.05
+
+.24
+
+.217
+
+53.01 |
+
+.500
+
+112.88 |
+
+.783
+
+3.34 |
+
+1.07
+
+.24
+
+.233
+
+53.01 |
+
+.517
+
+47.76 |
+
+.800
+
+3.34 |
+
+1.08
+
+.23
+
+.250
+
+53.22 |
+
+.533
+
+47.76 |
+
+.817
+
+3.34 |
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+.267
+
+88.36 |
+
+.550
+
+47.76 |
+
+.833
+
+3.30 |
+
+.283
+
+88.36 |
+
+.567
+
+47.76 |
+
+.850
+
+1.43 |
+
+Max.Eff.Inten.(mm/hr)=
+
+123.68
+
+368.78
+
+over (min)
+
+5.00
+
+10.00
+
+1.48 (ii)
+
+9.49 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+10.00
+
+Unit Hyd. peak
+
+.42
+
+.12
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.09
+
+.092 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+.45
+
+.60
+
+.60
+
+RUNOFF VOLUME
+
+(mm)=
+
+38.76
+
+24.25
+
+24.26
+
+TOTAL RAINFALL
+
+(mm)=
+
+39.76
+
+39.76
+
+39.76
+
+.97
+
+.61
+
+.61
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| CALIB
+| STANDHYD
+
+|
+(0002) |
+
+|ID= 1 DT= 1.0 min |
+
+Area
+
+(ha)=
+
+1.34
+
+Total Imp(%)=
+
+86.00
+
+Dir. Conn.(%)=
+
+-------------------IMPERVIOUS
+
+PERVIOUS (i)
+
+Surface Area
+
+(ha)=
+
+1.15
+
+.19
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.00
+
+2.50
+
+Length
+
+(m)=
+
+94.60
+
+214.00
+
+=
+
+.020
+
+.250
+
+Mannings n
+
+.10
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+Max.Eff.Inten.(mm/hr)=
+
+123.68
+
+702.47
+
+over (min)
+
+5.00
+
+12.00
+
+2.94 (ii)
+
+11.22 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+12.00
+
+Unit Hyd. peak
+
+.31
+
+.10
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.23
+
+.228 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+.48
+
+.63
+
+.63
+
+RUNOFF VOLUME
+
+(mm)=
+
+38.76
+
+28.65
+
+28.66
+
+TOTAL RAINFALL
+
+(mm)=
+
+39.76
+
+39.76
+
+39.76
+
+.97
+
+.72
+
+.72
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| RESERVOIR (0003) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+.0000
+
+.0000
+
+|
+
+.0200
+
+.0063
+
+.0040
+
+.0004
+
+|
+
+.0230
+
+.0079
+
+.0070
+
+.0015
+
+|
+
+.0250
+
+.0095
+
+.0120
+
+.0031
+
+|
+
+.0270
+
+.0112
+
+.0160
+
+.0043
+
+|
+
+.0300
+
+.0129
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+INFLOW : ID= 2 (0001)
+
+.58
+
+.09
+
+.60
+
+24.26
+
+OUTFLOW: ID= 1 (0003)
+
+.58
+
+.02
+
+.93
+
+24.22
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 26.62
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+(min)= 20.00
+
+USED
+
+(ha.m.)=
+
+.0091
+
+-------------------------------------------------------------------------------------------------| RESERVOIR (0004) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+.0000
+
+.0000
+
+|
+
+.0570
+
+.0089
+
+.0530
+
+.0000
+
+|
+
+.0580
+
+.0187
+
+.0550
+
+.0006
+
+|
+
+.0600
+
+.0327
+
+.0560
+
+.0031
+
+|
+
+.0610
+
+.0500
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+INFLOW : ID= 2 (0002)
+
+1.34
+
+.23
+
+.63
+
+28.66
+
+OUTFLOW: ID= 1 (0004)
+
+1.34
+
+.06
+
+1.00
+
+28.75
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 25.55
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+USED
+
+(min)= 22.00
+(ha.m.)=
+
+.0205
+
+------------------------------------------------------------------------------****************************
+** SIMULATION NUMBER:
+
+4 **
+
+****************************
+
+-------------------|
+|
+
+READ STORM
+
+|
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\VO
+
+|
+
+2\Banas Stone - Read Storm\Storms\
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+|
+
+|
+
+| Ptotal= 47.46 mm |
+
+25yr-1hr.STM
+Comments: 25yr/1hr
+
+-------------------TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.08
+
+.00 |
+
+.42
+
+147.63 |
+
+.75
+
+9.69 |
+
+1.08
+
+.29
+
+.17
+
+21.09 |
+
+.50
+
+135.66 |
+
+.83
+
+3.99 |
+
+.25
+
+63.27 |
+
+.58
+
+57.00 |
+
+.92
+
+1.71 |
+
+.33
+
+105.45 |
+
+.67
+
+23.37 |
+
+1.00
+
+.57 |
+
+-------------------------------------------------------------------------------
+
+-------------------| CALIB
+
+|
+
+| STANDHYD
+
+(0001) |
+
+|ID= 1 DT= 1.0 min |
+
+Area
+
+(ha)=
+
+.58
+
+Total Imp(%)=
+
+77.00
+
+Dir. Conn.(%)=
+
+.10
+
+-------------------IMPERVIOUS
+
+PERVIOUS (i)
+
+Surface Area
+
+(ha)=
+
+.45
+
+.13
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.80
+
+1.30
+
+Length
+
+(m)=
+
+62.10
+
+95.00
+
+=
+
+.013
+
+.250
+
+Mannings n
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 |
+
+.300
+
+105.45 |
+
+.583
+
+56.53 |
+
+.87
+
+1.71
+
+.033
+
+.00 |
+
+.317
+
+105.45 |
+
+.600
+
+23.37 |
+
+.88
+
+1.71
+
+.050
+
+.00 |
+
+.333
+
+105.79 |
+
+.617
+
+23.37 |
+
+.90
+
+1.71
+
+.067
+
+.00 |
+
+.350
+
+147.63 |
+
+.633
+
+23.37 |
+
+.92
+
+1.68
+
+.083
+
+.04 |
+
+.367
+
+147.63 |
+
+.650
+
+23.37 |
+
+.93
+
+.57
+
+.100
+
+21.09 |
+
+.383
+
+147.63 |
+
+.667
+
+23.15 |
+
+.95
+
+.57
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+.117
+
+21.09 |
+
+.400
+
+147.63 |
+
+.683
+
+9.69 |
+
+.97
+
+.57
+
+.133
+
+21.09 |
+
+.417
+
+147.51 |
+
+.700
+
+9.69 |
+
+.98
+
+.57
+
+.150
+
+21.09 |
+
+.433
+
+135.66 |
+
+.717
+
+9.69 |
+
+1.00
+
+.56
+
+.167
+
+21.26 |
+
+.450
+
+135.66 |
+
+.733
+
+9.69 |
+
+1.02
+
+.29
+
+.183
+
+63.27 |
+
+.467
+
+135.66 |
+
+.750
+
+9.59 |
+
+1.03
+
+.29
+
+.200
+
+63.27 |
+
+.483
+
+135.66 |
+
+.767
+
+3.99 |
+
+1.05
+
+.29
+
+.217
+
+63.27 |
+
+.500
+
+134.72 |
+
+.783
+
+3.99 |
+
+1.07
+
+.29
+
+.233
+
+63.27 |
+
+.517
+
+57.00 |
+
+.800
+
+3.99 |
+
+1.08
+
+.28
+
+.250
+
+63.52 |
+
+.533
+
+57.00 |
+
+.817
+
+3.99 |
+
+.267
+
+105.45 |
+
+.550
+
+57.00 |
+
+.833
+
+3.94 |
+
+.283
+
+105.45 |
+
+.567
+
+57.00 |
+
+.850
+
+1.71 |
+
+Max.Eff.Inten.(mm/hr)=
+
+147.61
+
+467.38
+
+over (min)
+
+5.00
+
+9.00
+
+1.38 (ii)
+
+8.66 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+9.00
+
+Unit Hyd. peak
+
+.43
+
+.13
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.12
+
+.122 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+.45
+
+.58
+
+.58
+
+RUNOFF VOLUME
+
+(mm)=
+
+46.46
+
+30.91
+
+30.92
+
+TOTAL RAINFALL
+
+(mm)=
+
+47.46
+
+47.46
+
+47.46
+
+.98
+
+.65
+
+.65
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| CALIB
+
+|
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+| STANDHYD
+
+(0002) |
+
+|ID= 1 DT= 1.0 min |
+
+Area
+
+(ha)=
+
+1.34
+
+Total Imp(%)=
+
+86.00
+
+Dir. Conn.(%)=
+
+.10
+
+-------------------IMPERVIOUS
+
+PERVIOUS (i)
+
+Surface Area
+
+(ha)=
+
+1.15
+
+.19
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.00
+
+2.50
+
+Length
+
+(m)=
+
+94.60
+
+214.00
+
+=
+
+.020
+
+.250
+
+Max.Eff.Inten.(mm/hr)=
+
+147.61
+
+871.00
+
+over (min)
+
+5.00
+
+11.00
+
+2.74 (ii)
+
+10.33 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+11.00
+
+Unit Hyd. peak
+
+.32
+
+.11
+
+Mannings n
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.30
+
+.297 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+.48
+
+.62
+
+.62
+
+RUNOFF VOLUME
+
+(mm)=
+
+46.46
+
+35.82
+
+35.83
+
+TOTAL RAINFALL
+
+(mm)=
+
+47.46
+
+47.46
+
+47.46
+
+.98
+
+.75
+
+.75
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| RESERVOIR (0003) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+.0000
+
+.0000
+
+|
+
+.0200
+
+.0063
+
+.0040
+
+.0004
+
+|
+
+.0230
+
+.0079
+
+.0070
+
+.0015
+
+|
+
+.0250
+
+.0095
+
+.0120
+
+.0031
+
+|
+
+.0270
+
+.0112
+
+.0160
+
+.0043
+
+|
+
+.0300
+
+.0129
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+INFLOW : ID= 2 (0001)
+
+.58
+
+.12
+
+.58
+
+30.92
+
+OUTFLOW: ID= 1 (0003)
+
+.58
+
+.03
+
+.92
+
+30.88
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 23.48
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+(min)= 20.00
+
+USED
+
+(ha.m.)=
+
+.0122
+
+-------------------------------------------------------------------------------------------------| RESERVOIR (0004) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+.0000
+
+.0000
+
+|
+
+.0570
+
+.0089
+
+.0530
+
+.0000
+
+|
+
+.0580
+
+.0187
+
+.0550
+
+.0006
+
+|
+
+.0600
+
+.0327
+
+.0560
+
+.0031
+
+|
+
+.0610
+
+.0500
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+INFLOW : ID= 2 (0002)
+
+1.34
+
+.30
+
+.62
+
+35.83
+
+OUTFLOW: ID= 1 (0004)
+
+1.34
+
+.06
+
+1.02
+
+35.93
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 20.04
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+USED
+
+(min)= 24.00
+(ha.m.)=
+
+.0295
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+------------------------------------------------------------------------------****************************
+** SIMULATION NUMBER:
+
+5 **
+
+****************************
+
+-------------------|
+
+READ STORM
+
+|
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\VO
+
+|
+
+|
+
+2\Banas Stone - Read Storm\Storms\
+
+|
+
+|
+
+50yr-1hr.STM
+
+| Ptotal= 53.25 mm |
+
+Comments: 50yr/1hr
+
+-------------------TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.08
+
+.00 |
+
+.42
+
+165.66 |
+
+.75
+
+10.87 |
+
+1.08
+
+.32
+
+.17
+
+23.67 |
+
+.50
+
+152.22 |
+
+.83
+
+4.48 |
+
+.25
+
+71.00 |
+
+.58
+
+63.96 |
+
+.92
+
+1.92 |
+
+.33
+
+118.33 |
+
+.67
+
+26.22 |
+
+1.00
+
+.64 |
+
+-------------------------------------------------------------------------------
+
+-------------------| CALIB
+
+|
+
+| STANDHYD
+
+(0001) |
+
+|ID= 1 DT= 1.0 min |
+
+Area
+
+(ha)=
+
+.58
+
+Total Imp(%)=
+
+77.00
+
+Dir. Conn.(%)=
+
+.10
+
+-------------------IMPERVIOUS
+
+PERVIOUS (i)
+
+Surface Area
+
+(ha)=
+
+.45
+
+.13
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.80
+
+1.30
+
+Length
+
+(m)=
+
+62.10
+
+95.00
+
+=
+
+.013
+
+.250
+
+Mannings n
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+1.0 MIN. TIME STEP.
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 |
+
+.300
+
+118.33 |
+
+.583
+
+63.43 |
+
+.87
+
+1.92
+
+.033
+
+.00 |
+
+.317
+
+118.33 |
+
+.600
+
+26.22 |
+
+.88
+
+1.92
+
+.050
+
+.00 |
+
+.333
+
+118.71 |
+
+.617
+
+26.22 |
+
+.90
+
+1.92
+
+.067
+
+.00 |
+
+.350
+
+165.66 |
+
+.633
+
+26.22 |
+
+.92
+
+1.89
+
+.083
+
+.05 |
+
+.367
+
+165.66 |
+
+.650
+
+26.22 |
+
+.93
+
+.64
+
+.100
+
+23.67 |
+
+.383
+
+165.66 |
+
+.667
+
+25.97 |
+
+.95
+
+.64
+
+.117
+
+23.67 |
+
+.400
+
+165.66 |
+
+.683
+
+10.87 |
+
+.97
+
+.64
+
+.133
+
+23.67 |
+
+.417
+
+165.53 |
+
+.700
+
+10.87 |
+
+.98
+
+.64
+
+.150
+
+23.67 |
+
+.433
+
+152.22 |
+
+.717
+
+10.87 |
+
+1.00
+
+.63
+
+.167
+
+23.86 |
+
+.450
+
+152.22 |
+
+.733
+
+10.87 |
+
+1.02
+
+.32
+
+.183
+
+71.00 |
+
+.467
+
+152.22 |
+
+.750
+
+10.76 |
+
+1.03
+
+.32
+
+.200
+
+71.00 |
+
+.483
+
+152.22 |
+
+.767
+
+4.48 |
+
+1.05
+
+.32
+
+.217
+
+71.00 |
+
+.500
+
+151.16 |
+
+.783
+
+4.48 |
+
+1.07
+
+.32
+
+.233
+
+71.00 |
+
+.517
+
+63.96 |
+
+.800
+
+4.48 |
+
+1.08
+
+.31
+
+.250
+
+71.28 |
+
+.533
+
+63.96 |
+
+.817
+
+4.48 |
+
+.267
+
+118.33 |
+
+.550
+
+63.96 |
+
+.833
+
+4.43 |
+
+.283
+
+118.33 |
+
+.567
+
+63.96 |
+
+.850
+
+1.92 |
+
+Max.Eff.Inten.(mm/hr)=
+
+165.63
+
+542.94
+
+over (min)
+
+5.00
+
+9.00
+
+1.32 (ii)
+
+8.17 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+9.00
+
+Unit Hyd. peak
+
+.44
+
+.13
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.15
+
+.145 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+.45
+
+.58
+
+.58
+
+RUNOFF VOLUME
+
+(mm)=
+
+52.25
+
+36.07
+
+36.08
+
+TOTAL RAINFALL
+
+(mm)=
+
+53.25
+
+53.25
+
+53.25
+
+.98
+
+.68
+
+.68
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| CALIB
+| STANDHYD
+
+|
+(0002) |
+
+|ID= 1 DT= 1.0 min |
+
+Area
+
+(ha)=
+
+1.34
+
+Total Imp(%)=
+
+86.00
+
+Dir. Conn.(%)=
+
+.10
+
+-------------------IMPERVIOUS
+
+PERVIOUS (i)
+
+Surface Area
+
+(ha)=
+
+1.15
+
+.19
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.00
+
+2.50
+
+Length
+
+(m)=
+
+94.60
+
+214.00
+
+=
+
+.020
+
+.250
+
+Max.Eff.Inten.(mm/hr)=
+
+165.63
+
+998.41
+
+over (min)
+
+5.00
+
+10.00
+
+2.61 (ii)
+
+9.81 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+10.00
+
+Unit Hyd. peak
+
+.33
+
+.11
+
+Mannings n
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.35
+
+.353 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+.48
+
+.60
+
+.60
+
+RUNOFF VOLUME
+
+(mm)=
+
+52.25
+
+41.30
+
+41.31
+
+TOTAL RAINFALL
+
+(mm)=
+
+53.25
+
+53.25
+
+53.25
+
+.98
+
+.78
+
+.78
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| RESERVOIR (0003) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+.0000
+
+.0000
+
+|
+
+.0200
+
+.0063
+
+.0040
+
+.0004
+
+|
+
+.0230
+
+.0079
+
+.0070
+
+.0015
+
+|
+
+.0250
+
+.0095
+
+.0120
+
+.0031
+
+|
+
+.0270
+
+.0112
+
+.0160
+
+.0043
+
+|
+
+.0300
+
+.0129
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+INFLOW : ID= 2 (0001)
+
+.58
+
+.15
+
+.58
+
+36.08
+
+OUTFLOW: ID= 1 (0003)
+
+.58
+
+.03
+
+.92
+
+36.03
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 22.63
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+(min)= 20.00
+
+USED
+
+(ha.m.)=
+
+.0145
+
+-------------------------------------------------------------------------------------------------| RESERVOIR (0004) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+.0000
+
+.0000
+
+|
+
+.0570
+
+.0089
+
+.0530
+
+.0000
+
+|
+
+.0580
+
+.0187
+
+.0550
+
+.0006
+
+|
+
+.0600
+
+.0327
+
+.0560
+
+.0031
+
+|
+
+.0610
+
+.0500
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+INFLOW : ID= 2 (0002)
+
+1.34
+
+.35
+
+.60
+
+41.31
+
+OUTFLOW: ID= 1 (0004)
+
+1.34
+
+.06
+
+1.02
+
+41.39
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 17.06
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+(min)= 25.00
+
+USED
+
+(ha.m.)=
+
+.0365
+
+------------------------------------------------------------------------------****************************
+** SIMULATION NUMBER:
+
+6 **
+
+****************************
+
+-------------------|
+
+READ STORM
+
+|
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\VO
+
+|
+
+|
+
+2\Banas Stone - Read Storm\Storms\
+
+|
+
+|
+
+100yr-1hr.STM
+
+| Ptotal= 58.95 mm |
+
+Comments: 100yr/1hr
+
+-------------------TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.08
+
+.00 |
+
+.42
+
+183.37 |
+
+.75
+
+12.04 |
+
+1.08
+
+.35
+
+.17
+
+26.20 |
+
+.50
+
+168.50 |
+
+.83
+
+4.96 |
+
+.25
+
+78.59 |
+
+.58
+
+70.80 |
+
+.92
+
+2.12 |
+
+.33
+
+130.98 |
+
+.67
+
+29.03 |
+
+1.00
+
+.71 |
+
+-------------------------------------------------------------------------------
+
+-------------------| CALIB
+| STANDHYD
+
+|
+(0001) |
+
+|ID= 1 DT= 1.0 min |
+
+Area
+
+(ha)=
+
+.58
+
+Total Imp(%)=
+
+77.00
+
+Dir. Conn.(%)=
+
+-------------------IMPERVIOUS
+
+PERVIOUS (i)
+
+.10
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+Surface Area
+
+(ha)=
+
+.45
+
+.13
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.80
+
+1.30
+
+Length
+
+(m)=
+
+62.10
+
+95.00
+
+=
+
+.013
+
+.250
+
+Mannings n
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 |
+
+.300
+
+130.98 |
+
+.583
+
+70.22 |
+
+.87
+
+2.12
+
+.033
+
+.00 |
+
+.317
+
+130.98 |
+
+.600
+
+29.03 |
+
+.88
+
+2.12
+
+.050
+
+.00 |
+
+.333
+
+131.40 |
+
+.617
+
+29.03 |
+
+.90
+
+2.12
+
+.067
+
+.00 |
+
+.350
+
+183.37 |
+
+.633
+
+29.03 |
+
+.92
+
+2.09
+
+.083
+
+.05 |
+
+.367
+
+183.37 |
+
+.650
+
+29.03 |
+
+.93
+
+.71
+
+.100
+
+26.20 |
+
+.383
+
+183.37 |
+
+.667
+
+28.76 |
+
+.95
+
+.71
+
+.117
+
+26.20 |
+
+.400
+
+183.37 |
+
+.683
+
+12.04 |
+
+.97
+
+.71
+
+.133
+
+26.20 |
+
+.417
+
+183.22 |
+
+.700
+
+12.04 |
+
+.98
+
+.71
+
+.150
+
+26.20 |
+
+.433
+
+168.50 |
+
+.717
+
+12.04 |
+
+1.00
+
+.70
+
+.167
+
+26.41 |
+
+.450
+
+168.50 |
+
+.733
+
+12.04 |
+
+1.02
+
+.35
+
+.183
+
+78.59 |
+
+.467
+
+168.50 |
+
+.750
+
+11.91 |
+
+1.03
+
+.35
+
+.200
+
+78.59 |
+
+.483
+
+168.50 |
+
+.767
+
+4.96 |
+
+1.05
+
+.35
+
+.217
+
+78.59 |
+
+.500
+
+167.33 |
+
+.783
+
+4.96 |
+
+1.07
+
+.35
+
+.233
+
+78.59 |
+
+.517
+
+70.80 |
+
+.800
+
+4.96 |
+
+1.08
+
+.34
+
+.250
+
+78.90 |
+
+.533
+
+70.80 |
+
+.817
+
+4.96 |
+
+.267
+
+130.98 |
+
+.550
+
+70.80 |
+
+.833
+
+4.90 |
+
+.283
+
+130.98 |
+
+.567
+
+70.80 |
+
+.850
+
+2.12 |
+
+Max.Eff.Inten.(mm/hr)=
+
+183.34
+
+617.89
+
+over (min)
+
+5.00
+
+8.00
+
+1.26 (ii)
+
+7.78 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+8.00
+
+Unit Hyd. peak
+
+.44
+
+.14
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.17
+
+.170 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+.45
+
+.57
+
+.57
+
+RUNOFF VOLUME
+
+(mm)=
+
+57.95
+
+41.21
+
+41.23
+
+TOTAL RAINFALL
+
+(mm)=
+
+58.95
+
+58.95
+
+58.95
+
+.98
+
+.70
+
+.70
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| CALIB
+| STANDHYD
+
+|
+(0002) |
+
+|ID= 1 DT= 1.0 min |
+
+Area
+
+(ha)=
+
+1.34
+
+Total Imp(%)=
+
+86.00
+
+Dir. Conn.(%)=
+
+.10
+
+-------------------IMPERVIOUS
+
+PERVIOUS (i)
+
+Surface Area
+
+(ha)=
+
+1.15
+
+.19
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.00
+
+2.50
+
+Length
+
+(m)=
+
+94.60
+
+214.00
+
+=
+
+.020
+
+.250
+
+Max.Eff.Inten.(mm/hr)=
+
+183.34
+
+1123.73
+
+over (min)
+
+5.00
+
+10.00
+
+2.51 (ii)
+
+9.37 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+10.00
+
+Unit Hyd. peak
+
+.34
+
+.12
+
+Mannings n
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.41
+
+.406 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+.48
+
+.58
+
+.58
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+RUNOFF VOLUME
+
+(mm)=
+
+57.95
+
+46.73
+
+46.74
+
+TOTAL RAINFALL
+
+(mm)=
+
+58.95
+
+58.95
+
+58.95
+
+.98
+
+.79
+
+.79
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| RESERVOIR (0003) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+.0000
+
+.0000
+
+|
+
+.0200
+
+.0063
+
+.0040
+
+.0004
+
+|
+
+.0230
+
+.0079
+
+.0070
+
+.0015
+
+|
+
+.0250
+
+.0095
+
+.0120
+
+.0031
+
+|
+
+.0270
+
+.0112
+
+.0160
+
+.0043
+
+|
+
+.0300
+
+.0129
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+INFLOW : ID= 2 (0001)
+
+.58
+
+.17
+
+.57
+
+41.23
+
+OUTFLOW: ID= 1 (0003)
+
+.58
+
+.04
+
+.88
+
+41.18
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 21.76
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+USED
+
+(min)= 19.00
+(ha.m.)=
+
+.0169
+
+--------------------------------------------------------------------------------------------------
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+| RESERVOIR (0004) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+.0000
+
+.0000
+
+|
+
+.0570
+
+.0089
+
+.0530
+
+.0000
+
+|
+
+.0580
+
+.0187
+
+.0550
+
+.0006
+
+|
+
+.0600
+
+.0327
+
+.0560
+
+.0031
+
+|
+
+.0610
+
+.0500
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+INFLOW : ID= 2 (0002)
+
+1.34
+
+.41
+
+.58
+
+46.74
+
+OUTFLOW: ID= 1 (0004)
+
+1.34
+
+.06
+
+1.02
+
+46.83
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 14.95
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+USED
+
+(min)= 26.00
+(ha.m.)=
+
+.0435
+
+------------------------------------------------------------------------------****************************
+** SIMULATION NUMBER:
+
+7 **
+
+****************************
+
+-------------------|
+
+READ STORM
+
+|
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\VO
+
+|
+
+|
+
+2\Banas Stone - Read Storm\Storms\
+
+|
+
+|
+
+100yr-6hr.STM
+
+| Ptotal= 80.31 mm |
+
+Comments: 100yr/6
+
+-------------------TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.25
+
+.00 |
+
+2.00
+
+27.30 |
+
+3.75
+
+11.24 |
+
+5.50
+
+1.61
+
+.50
+
+1.61 |
+
+2.25
+
+27.30 |
+
+4.00
+
+6.42 |
+
+5.75
+
+1.61
+
+.75
+
+1.61 |
+
+2.50
+
+73.88 |
+
+4.25
+
+6.42 |
+
+6.00
+
+1.61
+
+1.00
+
+1.61 |
+
+2.75
+
+73.88 |
+
+4.50
+
+3.21 |
+
+6.25
+
+1.61
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+1.25
+
+1.61 |
+
+3.00
+
+20.88 |
+
+4.75
+
+3.21 |
+
+1.50
+
+9.64 |
+
+3.25
+
+20.88 |
+
+5.00
+
+1.61 |
+
+1.75
+
+9.64 |
+
+3.50
+
+11.24 |
+
+5.25
+
+1.61 |
+
+-------------------------------------------------------------------------------
+
+-------------------| CALIB
+
+|
+
+| STANDHYD
+
+(0001) |
+
+|ID= 1 DT= 1.0 min |
+
+Area
+
+(ha)=
+
+.58
+
+Total Imp(%)=
+
+77.00
+
+Dir. Conn.(%)=
+
+.10
+
+-------------------IMPERVIOUS
+
+PERVIOUS (i)
+
+Surface Area
+
+(ha)=
+
+.45
+
+.13
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.80
+
+1.30
+
+Length
+
+(m)=
+
+62.10
+
+95.00
+
+=
+
+.013
+
+.250
+
+Mannings n
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 | 1.583
+
+9.64 | 3.150
+
+20.88 |
+
+4.72
+
+3.21
+
+.033
+
+.00 | 1.600
+
+9.64 | 3.167
+
+20.88 |
+
+4.73
+
+3.21
+
+.050
+
+.00 | 1.617
+
+9.64 | 3.183
+
+20.88 |
+
+4.75
+
+3.21
+
+.067
+
+.00 | 1.633
+
+9.64 | 3.200
+
+20.88 |
+
+4.77
+
+1.61
+
+.083
+
+.00 | 1.650
+
+9.64 | 3.217
+
+20.88 |
+
+4.78
+
+1.61
+
+.100
+
+.00 | 1.667
+
+9.64 | 3.233
+
+20.88 |
+
+4.80
+
+1.61
+
+.117
+
+.00 | 1.683
+
+9.64 | 3.250
+
+20.88 |
+
+4.82
+
+1.61
+
+.133
+
+.00 | 1.700
+
+9.64 | 3.267
+
+11.24 |
+
+4.83
+
+1.61
+
+.150
+
+.00 | 1.717
+
+9.64 | 3.283
+
+11.24 |
+
+4.85
+
+1.61
+
+.167
+
+.00 | 1.733
+
+9.64 | 3.300
+
+11.24 |
+
+4.87
+
+1.61
+
+.183
+
+.00 | 1.750
+
+9.64 | 3.317
+
+11.24 |
+
+4.88
+
+1.61
+
+.200
+
+.00 | 1.767
+
+27.30 | 3.333
+
+11.24 |
+
+4.90
+
+1.61
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+.217
+
+.00 | 1.783
+
+27.30 | 3.350
+
+11.24 |
+
+4.92
+
+1.61
+
+.233
+
+.00 | 1.800
+
+27.30 | 3.367
+
+11.24 |
+
+4.93
+
+1.61
+
+.250
+
+.00 | 1.817
+
+27.30 | 3.383
+
+11.24 |
+
+4.95
+
+1.61
+
+.267
+
+1.61 | 1.833
+
+27.30 | 3.400
+
+11.24 |
+
+4.97
+
+1.61
+
+.283
+
+1.61 | 1.850
+
+27.30 | 3.417
+
+11.24 |
+
+4.98
+
+1.61
+
+.300
+
+1.61 | 1.867
+
+27.30 | 3.433
+
+11.24 |
+
+5.00
+
+1.61
+
+.317
+
+1.61 | 1.883
+
+27.30 | 3.450
+
+11.24 |
+
+5.02
+
+1.61
+
+.333
+
+1.61 | 1.900
+
+27.30 | 3.467
+
+11.24 |
+
+5.03
+
+1.61
+
+.350
+
+1.61 | 1.917
+
+27.30 | 3.483
+
+11.24 |
+
+5.05
+
+1.61
+
+.367
+
+1.61 | 1.933
+
+27.30 | 3.500
+
+11.24 |
+
+5.07
+
+1.61
+
+.383
+
+1.61 | 1.950
+
+27.30 | 3.517
+
+11.24 |
+
+5.08
+
+1.61
+
+.400
+
+1.61 | 1.967
+
+27.30 | 3.533
+
+11.24 |
+
+5.10
+
+1.61
+
+.417
+
+1.61 | 1.983
+
+27.30 | 3.550
+
+11.24 |
+
+5.12
+
+1.61
+
+.433
+
+1.61 | 2.000
+
+27.30 | 3.567
+
+11.24 |
+
+5.13
+
+1.61
+
+.450
+
+1.61 | 2.017
+
+27.30 | 3.583
+
+11.24 |
+
+5.15
+
+1.61
+
+.467
+
+1.61 | 2.033
+
+27.30 | 3.600
+
+11.24 |
+
+5.17
+
+1.61
+
+.483
+
+1.61 | 2.050
+
+27.30 | 3.617
+
+11.24 |
+
+5.18
+
+1.61
+
+.500
+
+1.61 | 2.067
+
+27.30 | 3.633
+
+11.24 |
+
+5.20
+
+1.61
+
+.517
+
+1.61 | 2.083
+
+27.30 | 3.650
+
+11.24 |
+
+5.22
+
+1.61
+
+.533
+
+1.61 | 2.100
+
+27.30 | 3.667
+
+11.24 |
+
+5.23
+
+1.61
+
+.550
+
+1.61 | 2.117
+
+27.30 | 3.683
+
+11.24 |
+
+5.25
+
+1.61
+
+.567
+
+1.61 | 2.133
+
+27.30 | 3.700
+
+11.24 |
+
+5.27
+
+1.61
+
+.583
+
+1.61 | 2.150
+
+27.30 | 3.717
+
+11.24 |
+
+5.28
+
+1.61
+
+.600
+
+1.61 | 2.167
+
+27.30 | 3.733
+
+11.24 |
+
+5.30
+
+1.61
+
+.617
+
+1.61 | 2.183
+
+27.30 | 3.750
+
+11.24 |
+
+5.32
+
+1.61
+
+.633
+
+1.61 | 2.200
+
+27.30 | 3.767
+
+6.42 |
+
+5.33
+
+1.61
+
+.650
+
+1.61 | 2.217
+
+27.30 | 3.783
+
+6.42 |
+
+5.35
+
+1.61
+
+.667
+
+1.61 | 2.233
+
+27.30 | 3.800
+
+6.42 |
+
+5.37
+
+1.61
+
+.683
+
+1.61 | 2.250
+
+27.30 | 3.817
+
+6.42 |
+
+5.38
+
+1.61
+
+.700
+
+1.61 | 2.267
+
+73.88 | 3.833
+
+6.42 |
+
+5.40
+
+1.61
+
+.717
+
+1.61 | 2.283
+
+73.88 | 3.850
+
+6.42 |
+
+5.42
+
+1.61
+
+.733
+
+1.61 | 2.300
+
+73.88 | 3.867
+
+6.42 |
+
+5.43
+
+1.61
+
+.750
+
+1.61 | 2.317
+
+73.88 | 3.883
+
+6.42 |
+
+5.45
+
+1.61
+
+.767
+
+1.61 | 2.333
+
+73.88 | 3.900
+
+6.42 |
+
+5.47
+
+1.61
+
+.783
+
+1.61 | 2.350
+
+73.88 | 3.917
+
+6.42 |
+
+5.48
+
+1.61
+
+.800
+
+1.61 | 2.367
+
+73.88 | 3.933
+
+6.42 |
+
+5.50
+
+1.61
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+.817
+
+1.61 | 2.383
+
+73.88 | 3.950
+
+6.42 |
+
+5.52
+
+1.61
+
+.833
+
+1.61 | 2.400
+
+73.88 | 3.967
+
+6.42 |
+
+5.53
+
+1.61
+
+.850
+
+1.61 | 2.417
+
+73.88 | 3.983
+
+6.42 |
+
+5.55
+
+1.61
+
+.867
+
+1.61 | 2.433
+
+73.88 | 4.000
+
+6.42 |
+
+5.57
+
+1.61
+
+.883
+
+1.61 | 2.450
+
+73.88 | 4.017
+
+6.42 |
+
+5.58
+
+1.61
+
+.900
+
+1.61 | 2.467
+
+73.88 | 4.033
+
+6.42 |
+
+5.60
+
+1.61
+
+.917
+
+1.61 | 2.483
+
+73.88 | 4.050
+
+6.42 |
+
+5.62
+
+1.61
+
+.933
+
+1.61 | 2.500
+
+73.88 | 4.067
+
+6.42 |
+
+5.63
+
+1.61
+
+.950
+
+1.61 | 2.517
+
+73.88 | 4.083
+
+6.42 |
+
+5.65
+
+1.61
+
+.967
+
+1.61 | 2.533
+
+73.88 | 4.100
+
+6.42 |
+
+5.67
+
+1.61
+
+.983
+
+1.61 | 2.550
+
+73.88 | 4.117
+
+6.42 |
+
+5.68
+
+1.61
+
+1.000
+
+1.61 | 2.567
+
+73.88 | 4.133
+
+6.42 |
+
+5.70
+
+1.61
+
+1.017
+
+1.61 | 2.583
+
+73.88 | 4.150
+
+6.42 |
+
+5.72
+
+1.61
+
+1.033
+
+1.61 | 2.600
+
+73.88 | 4.167
+
+6.42 |
+
+5.73
+
+1.61
+
+1.050
+
+1.61 | 2.617
+
+73.88 | 4.183
+
+6.42 |
+
+5.75
+
+1.61
+
+1.067
+
+1.61 | 2.633
+
+73.88 | 4.200
+
+6.42 |
+
+5.77
+
+1.61
+
+1.083
+
+1.61 | 2.650
+
+73.88 | 4.217
+
+6.42 |
+
+5.78
+
+1.61
+
+1.100
+
+1.61 | 2.667
+
+73.88 | 4.233
+
+6.42 |
+
+5.80
+
+1.61
+
+1.117
+
+1.61 | 2.683
+
+73.88 | 4.250
+
+6.42 |
+
+5.82
+
+1.61
+
+1.133
+
+1.61 | 2.700
+
+73.88 | 4.267
+
+3.21 |
+
+5.83
+
+1.61
+
+1.150
+
+1.61 | 2.717
+
+73.88 | 4.283
+
+3.21 |
+
+5.85
+
+1.61
+
+1.167
+
+1.61 | 2.733
+
+73.88 | 4.300
+
+3.21 |
+
+5.87
+
+1.61
+
+1.183
+
+1.61 | 2.750
+
+73.88 | 4.317
+
+3.21 |
+
+5.88
+
+1.61
+
+1.200
+
+1.61 | 2.767
+
+20.89 | 4.333
+
+3.21 |
+
+5.90
+
+1.61
+
+1.217
+
+1.61 | 2.783
+
+20.88 | 4.350
+
+3.21 |
+
+5.92
+
+1.61
+
+1.233
+
+1.61 | 2.800
+
+20.88 | 4.367
+
+3.21 |
+
+5.93
+
+1.61
+
+1.250
+
+1.61 | 2.817
+
+20.88 | 4.383
+
+3.21 |
+
+5.95
+
+1.61
+
+1.267
+
+9.64 | 2.833
+
+20.88 | 4.400
+
+3.21 |
+
+5.97
+
+1.61
+
+1.283
+
+9.64 | 2.850
+
+20.88 | 4.417
+
+3.21 |
+
+5.98
+
+1.61
+
+1.300
+
+9.64 | 2.867
+
+20.88 | 4.433
+
+3.21 |
+
+6.00
+
+1.61
+
+1.317
+
+9.64 | 2.883
+
+20.88 | 4.450
+
+3.21 |
+
+6.02
+
+1.61
+
+1.333
+
+9.64 | 2.900
+
+20.88 | 4.467
+
+3.21 |
+
+6.03
+
+1.61
+
+1.350
+
+9.64 | 2.917
+
+20.88 | 4.483
+
+3.21 |
+
+6.05
+
+1.61
+
+1.367
+
+9.64 | 2.933
+
+20.88 | 4.500
+
+3.21 |
+
+6.07
+
+1.61
+
+1.383
+
+9.64 | 2.950
+
+20.88 | 4.517
+
+3.21 |
+
+6.08
+
+1.61
+
+1.400
+
+9.64 | 2.967
+
+20.88 | 4.533
+
+3.21 |
+
+6.10
+
+1.61
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+1.417
+
+9.64 | 2.983
+
+20.88 | 4.550
+
+3.21 |
+
+6.12
+
+1.61
+
+1.433
+
+9.64 | 3.000
+
+20.88 | 4.567
+
+3.21 |
+
+6.13
+
+1.61
+
+1.450
+
+9.64 | 3.017
+
+20.88 | 4.583
+
+3.21 |
+
+6.15
+
+1.61
+
+1.467
+
+9.64 | 3.033
+
+20.88 | 4.600
+
+3.21 |
+
+6.17
+
+1.61
+
+1.483
+
+9.64 | 3.050
+
+20.88 | 4.617
+
+3.21 |
+
+6.18
+
+1.61
+
+1.500
+
+9.64 | 3.067
+
+20.88 | 4.633
+
+3.21 |
+
+6.20
+
+1.61
+
+1.517
+
+9.64 | 3.083
+
+20.88 | 4.650
+
+3.21 |
+
+6.22
+
+1.61
+
+1.533
+
+9.64 | 3.100
+
+20.88 | 4.667
+
+3.21 |
+
+6.23
+
+1.61
+
+1.550
+
+9.64 | 3.117
+
+20.88 | 4.683
+
+3.21 |
+
+6.25
+
+1.61
+
+1.567
+
+9.64 | 3.133
+
+20.88 | 4.700
+
+3.21 |
+
+Max.Eff.Inten.(mm/hr)=
+
+73.88
+
+285.55
+
+over (min)
+
+5.00
+
+11.00
+
+1.82 (ii)
+
+10.69 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+11.00
+
+Unit Hyd. peak
+
+.39
+
+.10
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.09
+
+.093 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+2.50
+
+2.78
+
+2.78
+
+RUNOFF VOLUME
+
+(mm)=
+
+79.31
+
+61.05
+
+61.06
+
+TOTAL RAINFALL
+
+(mm)=
+
+80.31
+
+80.31
+
+80.31
+
+.99
+
+.76
+
+.76
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| CALIB
+| STANDHYD
+
+|
+(0002) |
+
+Area
+
+(ha)=
+
+1.34
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+|ID= 1 DT= 1.0 min |
+
+Total Imp(%)=
+
+86.00
+
+Dir. Conn.(%)=
+
+.10
+
+-------------------IMPERVIOUS
+
+PERVIOUS (i)
+
+Surface Area
+
+(ha)=
+
+1.15
+
+.19
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.00
+
+2.50
+
+Length
+
+(m)=
+
+94.60
+
+214.00
+
+=
+
+.020
+
+.250
+
+Max.Eff.Inten.(mm/hr)=
+
+73.88
+
+498.79
+
+over (min)
+
+5.00
+
+14.00
+
+3.61 (ii)
+
+13.11 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+14.00
+
+Unit Hyd. peak
+
+.28
+
+.08
+
+Mannings n
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.22
+
+.222 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+2.68
+
+2.80
+
+2.80
+
+RUNOFF VOLUME
+
+(mm)=
+
+79.31
+
+67.39
+
+67.40
+
+TOTAL RAINFALL
+
+(mm)=
+
+80.31
+
+80.31
+
+80.31
+
+.99
+
+.84
+
+.84
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------------------------| RESERVOIR (0003) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+.0000
+
+.0000
+
+|
+
+.0200
+
+.0063
+
+.0040
+
+.0004
+
+|
+
+.0230
+
+.0079
+
+.0070
+
+.0015
+
+|
+
+.0250
+
+.0095
+
+.0120
+
+.0031
+
+|
+
+.0270
+
+.0112
+
+.0160
+
+.0043
+
+|
+
+.0300
+
+.0129
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+INFLOW : ID= 2 (0001)
+
+.58
+
+.09
+
+2.78
+
+61.06
+
+OUTFLOW: ID= 1 (0003)
+
+.58
+
+.03
+
+3.32
+
+61.02
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 37.06
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+(min)= 32.00
+
+USED
+
+(ha.m.)=
+
+.0155
+
+-------------------------------------------------------------------------------------------------| RESERVOIR (0004) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+.0000
+
+.0000
+
+|
+
+.0570
+
+.0089
+
+.0530
+
+.0000
+
+|
+
+.0580
+
+.0187
+
+.0550
+
+.0006
+
+|
+
+.0600
+
+.0327
+
+.0560
+
+.0031
+
+|
+
+.0610
+
+.0500
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+INFLOW : ID= 2 (0002)
+
+1.34
+
+.22
+
+2.80
+
+67.40
+
+OUTFLOW: ID= 1 (0004)
+
+1.34
+
+.06
+
+3.58
+
+67.40
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 27.12
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+USED
+
+(min)= 47.00
+(ha.m.)=
+
+.0374
+
+-------------------------------------------------------------------------------
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+****************************
+** SIMULATION NUMBER:
+
+8 **
+
+****************************
+
+-------------------|
+
+READ STORM
+
+|
+
+Filename: T:\3958 Banas Stone SWM Analysis\Models\VO
+
+|
+
+|
+
+2\Banas Stone - Read Storm\Storms\
+
+|
+
+|
+
+100yr-12hr.STM
+
+| Ptotal= 88.54 mm |
+
+Comments: 100yr/12hr
+
+-------------------TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.25
+
+.00 |
+
+3.50
+
+15.05 |
+
+6.75
+
+6.20 | 10.00
+
+.89
+
+.50
+
+.89 |
+
+3.75
+
+15.05 |
+
+7.00
+
+6.20 | 10.25
+
+.89
+
+.75
+
+.89 |
+
+4.00
+
+15.05 |
+
+7.25
+
+6.20 | 10.50
+
+.89
+
+1.00
+
+.89 |
+
+4.25
+
+15.05 |
+
+7.50
+
+3.54 | 10.75
+
+.89
+
+1.25
+
+.89 |
+
+4.50
+
+40.71 |
+
+7.75
+
+3.54 | 11.00
+
+.89
+
+1.50
+
+.89 |
+
+4.75
+
+40.71 |
+
+8.00
+
+3.54 | 11.25
+
+.89
+
+1.75
+
+.89 |
+
+5.00
+
+40.71 |
+
+8.25
+
+3.54 | 11.50
+
+.89
+
+2.00
+
+.89 |
+
+5.25
+
+40.71 |
+
+8.50
+
+1.77 | 11.75
+
+.89
+
+2.25
+
+.89 |
+
+5.50
+
+11.51 |
+
+8.75
+
+1.77 | 12.00
+
+.89
+
+2.50
+
+5.31 |
+
+5.75
+
+11.51 |
+
+9.00
+
+1.77 | 12.25
+
+.89
+
+2.75
+
+5.31 |
+
+6.00
+
+11.51 |
+
+9.25
+
+1.77 |
+
+3.00
+
+5.31 |
+
+6.25
+
+11.51 |
+
+9.50
+
+.89 |
+
+3.25
+
+5.31 |
+
+6.50
+
+6.20 |
+
+9.75
+
+.89 |
+
+-------------------------------------------------------------------------------
+
+-------------------| CALIB
+| STANDHYD
+
+|
+(0001) |
+
+|ID= 1 DT= 1.0 min |
+
+Area
+
+(ha)=
+
+.58
+
+Total Imp(%)=
+
+77.00
+
+Dir. Conn.(%)=
+
+-------------------IMPERVIOUS
+Surface Area
+
+(ha)=
+
+.45
+
+PERVIOUS (i)
+.13
+
+.10
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.80
+
+1.30
+
+Length
+
+(m)=
+
+62.10
+
+95.00
+
+=
+
+.013
+
+.250
+
+Mannings n
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN |
+
+TIME
+
+RAIN
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr |
+
+hrs
+
+mm/hr
+
+.017
+
+.00 | 3.083
+
+5.31 | 6.150
+
+11.51 |
+
+9.22
+
+1.77
+
+.033
+
+.00 | 3.100
+
+5.31 | 6.167
+
+11.51 |
+
+9.23
+
+1.77
+
+.050
+
+.00 | 3.117
+
+5.31 | 6.183
+
+11.51 |
+
+9.25
+
+1.77
+
+.067
+
+.00 | 3.133
+
+5.31 | 6.200
+
+11.51 |
+
+9.27
+
+.89
+
+.083
+
+.00 | 3.150
+
+5.31 | 6.217
+
+11.51 |
+
+9.28
+
+.89
+
+.100
+
+.00 | 3.167
+
+5.31 | 6.233
+
+11.51 |
+
+9.30
+
+.89
+
+.117
+
+.00 | 3.183
+
+5.31 | 6.250
+
+11.50 |
+
+9.32
+
+.89
+
+.133
+
+.00 | 3.200
+
+5.31 | 6.267
+
+6.20 |
+
+9.33
+
+.89
+
+.150
+
+.00 | 3.217
+
+5.31 | 6.283
+
+6.20 |
+
+9.35
+
+.89
+
+.167
+
+.00 | 3.233
+
+5.31 | 6.300
+
+6.20 |
+
+9.37
+
+.89
+
+.183
+
+.00 | 3.250
+
+5.31 | 6.317
+
+6.20 |
+
+9.38
+
+.89
+
+.200
+
+.00 | 3.267
+
+15.05 | 6.333
+
+6.20 |
+
+9.40
+
+.89
+
+.217
+
+.00 | 3.283
+
+15.05 | 6.350
+
+6.20 |
+
+9.42
+
+.89
+
+.233
+
+.00 | 3.300
+
+15.05 | 6.367
+
+6.20 |
+
+9.43
+
+.89
+
+.250
+
+.00 | 3.317
+
+15.05 | 6.383
+
+6.20 |
+
+9.45
+
+.89
+
+.267
+
+.89 | 3.333
+
+15.05 | 6.400
+
+6.20 |
+
+9.47
+
+.89
+
+.283
+
+.89 | 3.350
+
+15.05 | 6.417
+
+6.20 |
+
+9.48
+
+.89
+
+.300
+
+.89 | 3.367
+
+15.05 | 6.433
+
+6.20 |
+
+9.50
+
+.89
+
+.317
+
+.89 | 3.383
+
+15.05 | 6.450
+
+6.20 |
+
+9.52
+
+.89
+
+.333
+
+.89 | 3.400
+
+15.05 | 6.467
+
+6.20 |
+
+9.53
+
+.89
+
+.350
+
+.89 | 3.417
+
+15.05 | 6.483
+
+6.20 |
+
+9.55
+
+.89
+
+.367
+
+.89 | 3.433
+
+15.05 | 6.500
+
+6.20 |
+
+9.57
+
+.89
+
+.383
+
+.89 | 3.450
+
+15.05 | 6.517
+
+6.20 |
+
+9.58
+
+.89
+
+.400
+
+.89 | 3.467
+
+15.05 | 6.533
+
+6.20 |
+
+9.60
+
+.89
+
+.417
+
+.89 | 3.483
+
+15.05 | 6.550
+
+6.20 |
+
+9.62
+
+.89
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+.433
+
+.89 | 3.500
+
+15.05 | 6.567
+
+6.20 |
+
+9.63
+
+.89
+
+.450
+
+.89 | 3.517
+
+15.05 | 6.583
+
+6.20 |
+
+9.65
+
+.89
+
+.467
+
+.89 | 3.533
+
+15.05 | 6.600
+
+6.20 |
+
+9.67
+
+.89
+
+.483
+
+.89 | 3.550
+
+15.05 | 6.617
+
+6.20 |
+
+9.68
+
+.89
+
+.500
+
+.89 | 3.567
+
+15.05 | 6.633
+
+6.20 |
+
+9.70
+
+.89
+
+.517
+
+.89 | 3.583
+
+15.05 | 6.650
+
+6.20 |
+
+9.72
+
+.89
+
+.533
+
+.89 | 3.600
+
+15.05 | 6.667
+
+6.20 |
+
+9.73
+
+.89
+
+.550
+
+.89 | 3.617
+
+15.05 | 6.683
+
+6.20 |
+
+9.75
+
+.89
+
+.567
+
+.89 | 3.633
+
+15.05 | 6.700
+
+6.20 |
+
+9.77
+
+.89
+
+.583
+
+.89 | 3.650
+
+15.05 | 6.717
+
+6.20 |
+
+9.78
+
+.89
+
+.600
+
+.89 | 3.667
+
+15.05 | 6.733
+
+6.20 |
+
+9.80
+
+.89
+
+.617
+
+.89 | 3.683
+
+15.05 | 6.750
+
+6.20 |
+
+9.82
+
+.89
+
+.633
+
+.89 | 3.700
+
+15.05 | 6.767
+
+6.20 |
+
+9.83
+
+.89
+
+.650
+
+.89 | 3.717
+
+15.05 | 6.783
+
+6.20 |
+
+9.85
+
+.89
+
+.667
+
+.89 | 3.733
+
+15.05 | 6.800
+
+6.20 |
+
+9.87
+
+.89
+
+.683
+
+.89 | 3.750
+
+15.05 | 6.817
+
+6.20 |
+
+9.88
+
+.89
+
+.700
+
+.89 | 3.767
+
+15.05 | 6.833
+
+6.20 |
+
+9.90
+
+.89
+
+.717
+
+.89 | 3.783
+
+15.05 | 6.850
+
+6.20 |
+
+9.92
+
+.89
+
+.733
+
+.89 | 3.800
+
+15.05 | 6.867
+
+6.20 |
+
+9.93
+
+.89
+
+.750
+
+.89 | 3.817
+
+15.05 | 6.883
+
+6.20 |
+
+9.95
+
+.89
+
+.767
+
+.89 | 3.833
+
+15.05 | 6.900
+
+6.20 |
+
+9.97
+
+.89
+
+.783
+
+.89 | 3.850
+
+15.05 | 6.917
+
+6.20 |
+
+9.98
+
+.89
+
+.800
+
+.89 | 3.867
+
+15.05 | 6.933
+
+6.20 | 10.00
+
+.89
+
+.817
+
+.89 | 3.883
+
+15.05 | 6.950
+
+6.20 | 10.02
+
+.89
+
+.833
+
+.89 | 3.900
+
+15.05 | 6.967
+
+6.20 | 10.03
+
+.89
+
+.850
+
+.89 | 3.917
+
+15.05 | 6.983
+
+6.20 | 10.05
+
+.89
+
+.867
+
+.89 | 3.933
+
+15.05 | 7.000
+
+6.20 | 10.07
+
+.89
+
+.883
+
+.89 | 3.950
+
+15.05 | 7.017
+
+6.20 | 10.08
+
+.89
+
+.900
+
+.89 | 3.967
+
+15.05 | 7.033
+
+6.20 | 10.10
+
+.89
+
+.917
+
+.89 | 3.983
+
+15.05 | 7.050
+
+6.20 | 10.12
+
+.89
+
+.933
+
+.89 | 4.000
+
+15.05 | 7.067
+
+6.20 | 10.13
+
+.89
+
+.950
+
+.89 | 4.017
+
+15.05 | 7.083
+
+6.20 | 10.15
+
+.89
+
+.967
+
+.89 | 4.033
+
+15.05 | 7.100
+
+6.20 | 10.17
+
+.89
+
+.983
+
+.89 | 4.050
+
+15.05 | 7.117
+
+6.20 | 10.18
+
+.89
+
+1.000
+
+.89 | 4.067
+
+15.05 | 7.133
+
+6.20 | 10.20
+
+.89
+
+1.017
+
+.89 | 4.083
+
+15.05 | 7.150
+
+6.20 | 10.22
+
+.89
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+1.033
+
+.89 | 4.100
+
+15.05 | 7.167
+
+6.20 | 10.23
+
+.89
+
+1.050
+
+.89 | 4.117
+
+15.05 | 7.183
+
+6.20 | 10.25
+
+.89
+
+1.067
+
+.89 | 4.133
+
+15.05 | 7.200
+
+6.20 | 10.27
+
+.89
+
+1.083
+
+.89 | 4.150
+
+15.05 | 7.217
+
+6.20 | 10.28
+
+.89
+
+1.100
+
+.89 | 4.167
+
+15.05 | 7.233
+
+6.20 | 10.30
+
+.89
+
+1.117
+
+.89 | 4.183
+
+15.05 | 7.250
+
+6.19 | 10.32
+
+.89
+
+1.133
+
+.89 | 4.200
+
+15.05 | 7.267
+
+3.54 | 10.33
+
+.89
+
+1.150
+
+.89 | 4.217
+
+15.05 | 7.283
+
+3.54 | 10.35
+
+.89
+
+1.167
+
+.89 | 4.233
+
+15.05 | 7.300
+
+3.54 | 10.37
+
+.89
+
+1.183
+
+.89 | 4.250
+
+15.05 | 7.317
+
+3.54 | 10.38
+
+.89
+
+1.200
+
+.89 | 4.267
+
+40.71 | 7.333
+
+3.54 | 10.40
+
+.89
+
+1.217
+
+.89 | 4.283
+
+40.71 | 7.350
+
+3.54 | 10.42
+
+.89
+
+1.233
+
+.89 | 4.300
+
+40.71 | 7.367
+
+3.54 | 10.43
+
+.89
+
+1.250
+
+.89 | 4.317
+
+40.71 | 7.383
+
+3.54 | 10.45
+
+.89
+
+1.267
+
+.89 | 4.333
+
+40.71 | 7.400
+
+3.54 | 10.47
+
+.89
+
+1.283
+
+.89 | 4.350
+
+40.71 | 7.417
+
+3.54 | 10.48
+
+.89
+
+1.300
+
+.89 | 4.367
+
+40.71 | 7.433
+
+3.54 | 10.50
+
+.89
+
+1.317
+
+.89 | 4.383
+
+40.71 | 7.450
+
+3.54 | 10.52
+
+.89
+
+1.333
+
+.89 | 4.400
+
+40.71 | 7.467
+
+3.54 | 10.53
+
+.89
+
+1.350
+
+.89 | 4.417
+
+40.71 | 7.483
+
+3.54 | 10.55
+
+.89
+
+1.367
+
+.89 | 4.433
+
+40.71 | 7.500
+
+3.54 | 10.57
+
+.89
+
+1.383
+
+.89 | 4.450
+
+40.71 | 7.517
+
+3.54 | 10.58
+
+.89
+
+1.400
+
+.89 | 4.467
+
+40.71 | 7.533
+
+3.54 | 10.60
+
+.89
+
+1.417
+
+.89 | 4.483
+
+40.71 | 7.550
+
+3.54 | 10.62
+
+.89
+
+1.433
+
+.89 | 4.500
+
+40.71 | 7.567
+
+3.54 | 10.63
+
+.89
+
+1.450
+
+.89 | 4.517
+
+40.71 | 7.583
+
+3.54 | 10.65
+
+.89
+
+1.467
+
+.89 | 4.533
+
+40.71 | 7.600
+
+3.54 | 10.67
+
+.89
+
+1.483
+
+.89 | 4.550
+
+40.71 | 7.617
+
+3.54 | 10.68
+
+.89
+
+1.500
+
+.89 | 4.567
+
+40.71 | 7.633
+
+3.54 | 10.70
+
+.89
+
+1.517
+
+.89 | 4.583
+
+40.71 | 7.650
+
+3.54 | 10.72
+
+.89
+
+1.533
+
+.89 | 4.600
+
+40.71 | 7.667
+
+3.54 | 10.73
+
+.89
+
+1.550
+
+.89 | 4.617
+
+40.71 | 7.683
+
+3.54 | 10.75
+
+.89
+
+1.567
+
+.89 | 4.633
+
+40.71 | 7.700
+
+3.54 | 10.77
+
+.89
+
+1.583
+
+.89 | 4.650
+
+40.71 | 7.717
+
+3.54 | 10.78
+
+.89
+
+1.600
+
+.89 | 4.667
+
+40.71 | 7.733
+
+3.54 | 10.80
+
+.89
+
+1.617
+
+.89 | 4.683
+
+40.71 | 7.750
+
+3.54 | 10.82
+
+.89
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+1.633
+
+.89 | 4.700
+
+40.71 | 7.767
+
+3.54 | 10.83
+
+.89
+
+1.650
+
+.89 | 4.717
+
+40.71 | 7.783
+
+3.54 | 10.85
+
+.89
+
+1.667
+
+.89 | 4.733
+
+40.71 | 7.800
+
+3.54 | 10.87
+
+.89
+
+1.683
+
+.89 | 4.750
+
+40.71 | 7.817
+
+3.54 | 10.88
+
+.89
+
+1.700
+
+.89 | 4.767
+
+40.71 | 7.833
+
+3.54 | 10.90
+
+.89
+
+1.717
+
+.89 | 4.783
+
+40.71 | 7.850
+
+3.54 | 10.92
+
+.89
+
+1.733
+
+.89 | 4.800
+
+40.71 | 7.867
+
+3.54 | 10.93
+
+.89
+
+1.750
+
+.89 | 4.817
+
+40.71 | 7.883
+
+3.54 | 10.95
+
+.89
+
+1.767
+
+.89 | 4.833
+
+40.71 | 7.900
+
+3.54 | 10.97
+
+.89
+
+1.783
+
+.89 | 4.850
+
+40.71 | 7.917
+
+3.54 | 10.98
+
+.89
+
+1.800
+
+.89 | 4.867
+
+40.71 | 7.933
+
+3.54 | 11.00
+
+.89
+
+1.817
+
+.89 | 4.883
+
+40.71 | 7.950
+
+3.54 | 11.02
+
+.89
+
+1.833
+
+.89 | 4.900
+
+40.71 | 7.967
+
+3.54 | 11.03
+
+.89
+
+1.850
+
+.89 | 4.917
+
+40.71 | 7.983
+
+3.54 | 11.05
+
+.89
+
+1.867
+
+.89 | 4.933
+
+40.71 | 8.000
+
+3.54 | 11.07
+
+.89
+
+1.883
+
+.89 | 4.950
+
+40.71 | 8.017
+
+3.54 | 11.08
+
+.89
+
+1.900
+
+.89 | 4.967
+
+40.71 | 8.033
+
+3.54 | 11.10
+
+.89
+
+1.917
+
+.89 | 4.983
+
+40.71 | 8.050
+
+3.54 | 11.12
+
+.89
+
+1.933
+
+.89 | 5.000
+
+40.71 | 8.067
+
+3.54 | 11.13
+
+.89
+
+1.950
+
+.89 | 5.017
+
+40.71 | 8.083
+
+3.54 | 11.15
+
+.89
+
+1.967
+
+.89 | 5.033
+
+40.71 | 8.100
+
+3.54 | 11.17
+
+.89
+
+1.983
+
+.89 | 5.050
+
+40.71 | 8.117
+
+3.54 | 11.18
+
+.89
+
+2.000
+
+.89 | 5.067
+
+40.71 | 8.133
+
+3.54 | 11.20
+
+.89
+
+2.017
+
+.89 | 5.083
+
+40.71 | 8.150
+
+3.54 | 11.22
+
+.89
+
+2.033
+
+.89 | 5.100
+
+40.71 | 8.167
+
+3.54 | 11.23
+
+.89
+
+2.050
+
+.89 | 5.117
+
+40.71 | 8.183
+
+3.54 | 11.25
+
+.89
+
+2.067
+
+.89 | 5.133
+
+40.71 | 8.200
+
+3.54 | 11.27
+
+.89
+
+2.083
+
+.89 | 5.150
+
+40.71 | 8.217
+
+3.54 | 11.28
+
+.89
+
+2.100
+
+.89 | 5.167
+
+40.71 | 8.233
+
+3.54 | 11.30
+
+.89
+
+2.117
+
+.89 | 5.183
+
+40.71 | 8.250
+
+3.54 | 11.32
+
+.89
+
+2.133
+
+.89 | 5.200
+
+40.71 | 8.267
+
+1.77 | 11.33
+
+.89
+
+2.150
+
+.89 | 5.217
+
+40.71 | 8.283
+
+1.77 | 11.35
+
+.89
+
+2.167
+
+.89 | 5.233
+
+40.71 | 8.300
+
+1.77 | 11.37
+
+.89
+
+2.183
+
+.89 | 5.250
+
+40.69 | 8.317
+
+1.77 | 11.38
+
+.89
+
+2.200
+
+.89 | 5.267
+
+11.51 | 8.333
+
+1.77 | 11.40
+
+.89
+
+2.217
+
+.89 | 5.283
+
+11.51 | 8.350
+
+1.77 | 11.42
+
+.89
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+2.233
+
+.89 | 5.300
+
+11.51 | 8.367
+
+1.77 | 11.43
+
+.89
+
+2.250
+
+.89 | 5.317
+
+11.51 | 8.383
+
+1.77 | 11.45
+
+.89
+
+2.267
+
+5.31 | 5.333
+
+11.51 | 8.400
+
+1.77 | 11.47
+
+.89
+
+2.283
+
+5.31 | 5.350
+
+11.51 | 8.417
+
+1.77 | 11.48
+
+.89
+
+2.300
+
+5.31 | 5.367
+
+11.51 | 8.433
+
+1.77 | 11.50
+
+.89
+
+2.317
+
+5.31 | 5.383
+
+11.51 | 8.450
+
+1.77 | 11.52
+
+.89
+
+2.333
+
+5.31 | 5.400
+
+11.51 | 8.467
+
+1.77 | 11.53
+
+.89
+
+2.350
+
+5.31 | 5.417
+
+11.51 | 8.483
+
+1.77 | 11.55
+
+.89
+
+2.367
+
+5.31 | 5.433
+
+11.51 | 8.500
+
+1.77 | 11.57
+
+.89
+
+2.383
+
+5.31 | 5.450
+
+11.51 | 8.517
+
+1.77 | 11.58
+
+.89
+
+2.400
+
+5.31 | 5.467
+
+11.51 | 8.533
+
+1.77 | 11.60
+
+.89
+
+2.417
+
+5.31 | 5.483
+
+11.51 | 8.550
+
+1.77 | 11.62
+
+.89
+
+2.433
+
+5.31 | 5.500
+
+11.51 | 8.567
+
+1.77 | 11.63
+
+.89
+
+2.450
+
+5.31 | 5.517
+
+11.51 | 8.583
+
+1.77 | 11.65
+
+.89
+
+2.467
+
+5.31 | 5.533
+
+11.51 | 8.600
+
+1.77 | 11.67
+
+.89
+
+2.483
+
+5.31 | 5.550
+
+11.51 | 8.617
+
+1.77 | 11.68
+
+.89
+
+2.500
+
+5.31 | 5.567
+
+11.51 | 8.633
+
+1.77 | 11.70
+
+.89
+
+2.517
+
+5.31 | 5.583
+
+11.51 | 8.650
+
+1.77 | 11.72
+
+.89
+
+2.533
+
+5.31 | 5.600
+
+11.51 | 8.667
+
+1.77 | 11.73
+
+.89
+
+2.550
+
+5.31 | 5.617
+
+11.51 | 8.683
+
+1.77 | 11.75
+
+.89
+
+2.567
+
+5.31 | 5.633
+
+11.51 | 8.700
+
+1.77 | 11.77
+
+.89
+
+2.583
+
+5.31 | 5.650
+
+11.51 | 8.717
+
+1.77 | 11.78
+
+.89
+
+2.600
+
+5.31 | 5.667
+
+11.51 | 8.733
+
+1.77 | 11.80
+
+.89
+
+2.617
+
+5.31 | 5.683
+
+11.51 | 8.750
+
+1.77 | 11.82
+
+.89
+
+2.633
+
+5.31 | 5.700
+
+11.51 | 8.767
+
+1.77 | 11.83
+
+.89
+
+2.650
+
+5.31 | 5.717
+
+11.51 | 8.783
+
+1.77 | 11.85
+
+.89
+
+2.667
+
+5.31 | 5.733
+
+11.51 | 8.800
+
+1.77 | 11.87
+
+.89
+
+2.683
+
+5.31 | 5.750
+
+11.51 | 8.817
+
+1.77 | 11.88
+
+.89
+
+2.700
+
+5.31 | 5.767
+
+11.51 | 8.833
+
+1.77 | 11.90
+
+.89
+
+2.717
+
+5.31 | 5.783
+
+11.51 | 8.850
+
+1.77 | 11.92
+
+.89
+
+2.733
+
+5.31 | 5.800
+
+11.51 | 8.867
+
+1.77 | 11.93
+
+.89
+
+2.750
+
+5.31 | 5.817
+
+11.51 | 8.883
+
+1.77 | 11.95
+
+.89
+
+2.767
+
+5.31 | 5.833
+
+11.51 | 8.900
+
+1.77 | 11.97
+
+.89
+
+2.783
+
+5.31 | 5.850
+
+11.51 | 8.917
+
+1.77 | 11.98
+
+.89
+
+2.800
+
+5.31 | 5.867
+
+11.51 | 8.933
+
+1.77 | 12.00
+
+.89
+
+2.817
+
+5.31 | 5.883
+
+11.51 | 8.950
+
+1.77 | 12.02
+
+.89
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+2.833
+
+5.31 | 5.900
+
+11.51 | 8.967
+
+1.77 | 12.03
+
+.89
+
+2.850
+
+5.31 | 5.917
+
+11.51 | 8.983
+
+1.77 | 12.05
+
+.89
+
+2.867
+
+5.31 | 5.933
+
+11.51 | 9.000
+
+1.77 | 12.07
+
+.89
+
+2.883
+
+5.31 | 5.950
+
+11.51 | 9.017
+
+1.77 | 12.08
+
+.89
+
+2.900
+
+5.31 | 5.967
+
+11.51 | 9.033
+
+1.77 | 12.10
+
+.89
+
+2.917
+
+5.31 | 5.983
+
+11.51 | 9.050
+
+1.77 | 12.12
+
+.89
+
+2.933
+
+5.31 | 6.000
+
+11.51 | 9.067
+
+1.77 | 12.13
+
+.89
+
+2.950
+
+5.31 | 6.017
+
+11.51 | 9.083
+
+1.77 | 12.15
+
+.89
+
+2.967
+
+5.31 | 6.033
+
+11.51 | 9.100
+
+1.77 | 12.17
+
+.89
+
+2.983
+
+5.31 | 6.050
+
+11.51 | 9.117
+
+1.77 | 12.18
+
+.89
+
+3.000
+
+5.31 | 6.067
+
+11.51 | 9.133
+
+1.77 | 12.20
+
+.89
+
+3.017
+
+5.31 | 6.083
+
+11.51 | 9.150
+
+1.77 | 12.22
+
+.89
+
+3.033
+
+5.31 | 6.100
+
+11.51 | 9.167
+
+1.77 | 12.23
+
+.89
+
+3.050
+
+5.31 | 6.117
+
+11.51 | 9.183
+
+1.77 | 12.25
+
+.89
+
+3.067
+
+5.31 | 6.133
+
+11.51 | 9.200
+
+1.77 |
+
+Max.Eff.Inten.(mm/hr)=
+
+40.71
+
+160.92
+
+over (min)
+
+5.00
+
+14.00
+
+2.31 (ii)
+
+13.46 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+14.00
+
+Unit Hyd. peak
+
+.35
+
+.08
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.06
+
+.057 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+4.53
+
+5.27
+
+5.27
+
+RUNOFF VOLUME
+
+(mm)=
+
+87.54
+
+68.85
+
+68.86
+
+TOTAL RAINFALL
+
+(mm)=
+
+88.54
+
+88.54
+
+88.54
+
+.99
+
+.78
+
+.78
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+-------------------------------------------------------------------------------------------------| CALIB
+
+|
+
+| STANDHYD
+
+(0002) |
+
+|ID= 1 DT= 1.0 min |
+
+Area
+
+(ha)=
+
+1.34
+
+Total Imp(%)=
+
+86.00
+
+Dir. Conn.(%)=
+
+.10
+
+-------------------IMPERVIOUS
+
+PERVIOUS (i)
+
+Surface Area
+
+(ha)=
+
+1.15
+
+.19
+
+Dep. Storage
+
+(mm)=
+
+1.00
+
+.70
+
+Average Slope
+
+(%)=
+
+1.00
+
+2.50
+
+Length
+
+(m)=
+
+94.60
+
+214.00
+
+=
+
+.020
+
+.250
+
+Max.Eff.Inten.(mm/hr)=
+
+40.71
+
+278.08
+
+over (min)
+
+5.00
+
+17.00
+
+4.58 (ii)
+
+16.58 (ii)
+
+Unit Hyd. Tpeak (min)=
+
+5.00
+
+17.00
+
+Unit Hyd. peak
+
+.24
+
+.07
+
+Mannings n
+
+Storage Coeff.
+
+(min)=
+
+(cms)=
+
+*TOTALS*
+PEAK FLOW
+
+(cms)=
+
+.00
+
+.14
+
+.138 (iii)
+
+TIME TO PEAK
+
+(hrs)=
+
+4.77
+
+5.27
+
+5.27
+
+RUNOFF VOLUME
+
+(mm)=
+
+75.94
+
+64.11
+
+64.12
+
+TOTAL RAINFALL
+
+(mm)=
+
+88.54
+
+88.54
+
+88.54
+
+.86
+
+.72
+
+.72
+
+RUNOFF COEFFICIENT
+
+=
+
+***** WARNING:FOR AREAS WITH IMPERVIOUS RATIOS BELOW 20%
+YOU SHOULD CONSIDER SPLITTING THE AREA.
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN*
+
+=
+
+70.0
+
+Ia = Dep. Storage
+
+(Above)
+
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+-------------------------------------------------------------------------------
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+-------------------| RESERVOIR (0003) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+.0000
+
+.0000
+
+|
+
+.0200
+
+.0063
+
+.0040
+
+.0004
+
+|
+
+.0230
+
+.0079
+
+.0070
+
+.0015
+
+|
+
+.0250
+
+.0095
+
+.0120
+
+.0031
+
+|
+
+.0270
+
+.0112
+
+.0160
+
+.0043
+
+|
+
+.0300
+
+.0129
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+INFLOW : ID= 2 (0001)
+
+.58
+
+.06
+
+5.27
+
+68.86
+
+OUTFLOW: ID= 1 (0003)
+
+.58
+
+.03
+
+5.63
+
+68.82
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 52.69
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+(min)= 22.00
+
+USED
+
+(ha.m.)=
+
+.0129
+
+-------------------------------------------------------------------------------------------------| RESERVOIR (0004) |
+| IN= 2---> OUT= 1 |
+| DT=
+
+1.0 min
+
+|
+
+OUTFLOW
+
+STORAGE
+
+|
+
+OUTFLOW
+
+STORAGE
+
+--------------------
+
+(cms)
+
+(ha.m.)
+
+|
+
+(cms)
+
+(ha.m.)
+
+.0000
+
+.0000
+
+|
+
+.0570
+
+.0089
+
+.0530
+
+.0000
+
+|
+
+.0580
+
+.0187
+
+.0550
+
+.0006
+
+|
+
+.0600
+
+.0327
+
+.0560
+
+.0031
+
+|
+
+.0610
+
+.0500
+
+AREA
+
+QPEAK
+
+TPEAK
+
+R.V.
+
+(ha)
+
+(cms)
+
+(hrs)
+
+(mm)
+
+INFLOW : ID= 2 (0002)
+
+1.34
+
+.14
+
+5.27
+
+64.12
+
+OUTFLOW: ID= 1 (0004)
+
+1.34
+
+.06
+
+5.88
+
+64.19
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+PEAK
+
+FLOW
+
+REDUCTION [Qout/Qin](%)= 42.82
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM
+
+STORAGE
+
+USED
+
+(min)= 37.00
+(ha.m.)=
+
+.0253
+
+-------------------------------------------------------------------------------
+
+FINISH
+=================================================================================================
+==========
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+Attachment B:
+
+_________
+GREENLAND
+
+OGS Sizing Information
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+Attachment C: Soils Report
+
+_________
+GREENLAND
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+Attachment D: Servicing Plan and Profiles
+
+_________
+GREENLAND
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+o
+ç
+
+{
+
+È
+
+\I
+\
+
+"f
+
+q
+-
+
+^\!
+Q"--.1!:.
+
+o.9u
+
+o
+
+/
+
+SaDrtG
+
+\-
+
+54.Oñ-3CO STs O 0-72t
+
+cs¡c Es. - cRaNu.LÆ
+
+.i
+
+t!
+íz
+èã
+
+¡
+
+I
+
+s-
+
+s
+
+i{to
+
+zt¡J
+
+s
+
+æ
+
+CRI
+
+CEN
+
+9/t
+
+95
+
+96
+
+I
+
+E
+
+t--
+
+O
+Ø
+
+@
+
+D
+
+s
+
+:
+
+i
+
+8ioilNc
+
+A\ENUE
+
+35102 -
+
+5-
+
+i
+
+^
+
+æ
+
+\
+
+)
+
+l-
+
+TO
+
+Xrar q m
+
+6170l-^-17 aoÊ Érals
+
+cs{tcÌû
+
+sñtt
+
+ll
+
+IU
+
+É.
+()
+
+Er6r tm ø &¡
+
+rÆ( cqÌ N urcx r\ro
+
+:s
+
+DE]ÂIL FOR CONNIC'TION
+rNTC tXrS-riNC ASpHÂ!-Ì
+
+rc[
+
+zf
+a
+É.
+
+!.t\t Nf{lda
+
+-PROP. Jæ
+
+F
+
+rtrlffi
+
+RTUOW EXISTINô NRICåX
+
+v¡lcH rNlo E¡rsT. F.o.w
+
+&
+
+REPúCI SRRICÆE ONCT
+coiNfcl¡oNs ÆE uÐE oR
+
+øÈEÉt c r{ toc rr
+9 r Lgrrs trRa r{{ 6 {m4
+lE{ts ø
+{uB ro r{ 5Mñ s. ^ r{ ltrÊ *crG 6 r{.L@Û
+ffi
+sÆ N
+rE zæ 16r È xxtutô úH c*@
+fr Àça6 W* @Û.lEP @Élt Ê
+rc ffiúr
+tr *¡tur
+tgcr€o a f{ s rur NL!. Á gtPs 44 s&aC È M¡
+d aÌ aúY ttr!
+F r{ sE¡ &ús sJ'aro ffi9
+aEMrtlY.
+lÉ ls Ú l¡svÂrù. È
+rtx É (:nl]|,q rtÊ wÆ{ ¡wÈr
+@
+!mÊ 2N f E Eru Eõ 4 ^1 E 4(.{tO.û
+ËN Siñ
+8Mt
+
+W
+
+xM 5r4€t S&dl
+& Fw
+to E {srffiÐ æf tc ¡ru
+c@toHÆFEcrÊoNÆ
+& 9'
+'|!trEF
+
+DISCLAIMER
+Tt* ñdd. r. bd uFn:r¡¡l¿&..n¡ unr(ild
+¡.í(m¡dh úJ m,! Fûrrinñlr¡¡c
+ûoi¿rhR
+¡l.Rdaofl'ddklinre!.¡rr\¡hlill
+rñrd1h ¡d¡d u@ io rhcdd"m6r of ù1 Fyr
+
+ÆCTSS ru
+
+AS ÛRTCIEO BY TOTN TNGINåEF
+
+uNfrm
+
+637f0 1-À-13
+
+KING STREET
+
+RiFtF lc orc 617æ.j-À-a
+tff ltvPoffit
+ûO
+6J7$.r-A-:6 fOR rR{FrC
+NSE¡TÑI FOF (IM STR€EI
+
+CROSS SICÌ,CN
+
+cùslÊrar& {ctss
+
+a0 ut
+
+l1M¡6 staxs,
+I srñ ff6. *ñt¿s, AÐ Ærtw€S,
+.{kr^E, .¡@!tr'
+Fc. ru æ sl4É0 N Sr4@ r
+d r{
+M øqsr6
+Æc(M ñr¡ r* tr@
+rmqt@
+$l & s{0
+Þ @as
+2. Wrß gEE s{5.
+Ñ qctaræ
+wF E lÀ.m
+ao NsÌ{rao Â {i]Ð:f
+dEftcü€@
+W È 5æ6 À€
+I {L r fÊM- glws. S Mt,sIS
+d t4 E* e dEL
+FrÊ È qc@rs
+Eruo * {c(N
+M BwS ø r{ rÉ s ruÞ
+. m 5r¡@ qgûÌffi
+(Æç
+rO
+& ft
+É@€
+ao 1* R@ ff {EL W È
+t Ì* MÍ iul rÉ sf@
+r4ñ ftqcrú Jlffirt
+qdûræ&MøfÉrmq@*ÉË6
+q ftt! æ þr cøR Ffr(@ ÍÊr s
+n F!@ 6
+^ 4 c4rF6@ Ñ P5 tr rÉ G5
+To
+14 rucr &rc
+ff r* øf6 æ
+¡)M
+r* sraas qcfal$
+q6üfft
+^Ð
+*
+mY.
+Ñ Frm
+sr¡ffi
+5 f6 @ñ& þras m c65lÊúlû Éf&s r.gF fô @5ss
+6379r-^-rì rC r0 ^-2r.
+6.f*l\a@ñ-gcÚN¡sNXTE{@
+È17þr-^-17 ro
+to ürå fi Éw
+^-lô
+l¡m€S rC È sN tu€o Æ rl@o l0
+7 Mu
+^a@
+w{ærec*6ûqcaìffi
+tu ¡ß 5&! É
+a a! sr€¡gss æao úü tg!€m
+G Ë E@
+sß rc E 9ÉFû
+6ratto fft Éw
+
+CONSIRUaTTON
+
+ROÐ A^*
+
+'a
+
+o,
+
+¡
+
+(ì
+
+32.0m O O.75%
+
+¿:¡!
+
+82 Om @ 1.182
+
+ì
+
+\,
+
+-
+
+90.Om @. 0.802
+
+1
+
+0f. tm @ O.752
+
+!E $_E :
+
+.áa,/
+-- €9
+i¡
+5l
+
+;l
+a
+
+I
+
+ÉP ER lct
+
+rzli
+
+::å
+!
+
+-f_
+
+,
+
+rORrGlf
+
+AP?ROVED FOR COilATRUGTIOI'
+
+a
+
+Êî
+
+f i+
+L-
+
+6W
+
+t
+
+265
+
+ì;+
+
+L GROUND
+
+Trlm
+Pæ-
+
+I
+
+(
+
+1Þiþ.*
+
+n
+
+_1i_
+n r'- lÅ*
+
+ll-::'-,l'
+il
+
+I
+
+il-- _ ll
+1BÈ:
+
+262
+
+ì:ì:Ð--
+
+t*
+
+---t---___
+
+264
+
+263
+
+á
+
+_.___JoO@
+
+ll
+
+C¡^Sç
+
+r.^
+
+.
+
+¡æ wv ll
+_ _ _
+_-:_ylly_Í ¿.0¡o
+
+æffiwm
+
+I
+
+roru ffiærmìnG
+swf
+rcmda
+¡E'Æffimt^Ëælæmsot
+EtrERGreffiGffiÆ,
+
+i-:
+
+Ë+l
+
+vs
+
+264
+No 7957
+
+à
+
+il
+
+Y ll ¡
+
+¡
+
+ELtVAlrÉ=2s|
+
+æasNcs
+
+^s'cüsTtuc[o
+ffiPÆ€O 8Y
+CMR ¿NGINIERNC IÐ
+(trss
+,6 DÀED æRlL ll.
+
+dt
+
+nt [l-
+
+?J
+
+262
+
+2æ7)
+
+,tru aú_oæ
+
+'d
+
+I C9 Ar&..
+261
+
+261
+
+Ìç.#i; õs jg;";
+
+I
+
+tl
+
+I
+
+92h
+
+¡xúr<¡ÐGblr
+
+U
+
+'----'-'--------i
+
+P.€re
+
+H
+
+t
+
+-
+
+lt
+
+il
+
+e
+
+)#zo q1z
+
+-'-------------ì l'"
+260
+
+PVC
+
+ULIRA_RIB CSA
+
+Pvc ULIKA-^'
+
+il
+
+260
+
+t1a2.4
+
+8a.90ñ - 3C ) sAN @ 0.f97
+
+-ffi5#-
+
+ôÁ ,rñ_Ìnô ç¿
+PVC SDR 35
+
+SANOl
+
+5LU
+
+I
+
+ohr c- c
+
+254
+
+259
+
+vtltcos GoRPoRATloil
+Aquafor
+Beech
+
+254
+
+Limìted
+
+-
+
+REGIOil OF PEEL
+¡ô
+
+sloRv
+rNlfRls
+
+SICRY
+
+IN\€RIS
+
+rDc
+
+38
+
+FDC
+
+IN\ERTS
+
+rñwFTS
+
+;i
+
+SAN]TARI
+
+IN\TRT5
+
+SANI]ÀRY
+TNWRIS
+
+RD GRADT
+
+RO GRADE
+CHAl\ACÊ
+
+¡It;Ê
+
+ÆsÎ
+OF
+
+TOV/N
+
+0+000
+
+O+O20
+
+O+O4O
+
+O+060
+
+O. O8O
+
+0r 1C0
+
+0r 12ar
+
+o+140
+
+0+ 160
+
+0+ l8O
+
+0+ 2OO
+
+0+ 220
+
+c
+
+cHArtAü
+
+T- 89038C
+
+CALEDCi\
+
+TAROUINI CRESCENT
+SlA. o+OCO ta SlA O+22O
+
+PROPOS!O
+
+PROPOSt0
+
+ç
+
+L
+
+O ¡E:_
+
+ii!
+
+----ii----
+
+.l
+
+tì
+
+]K^m[ffis^æEruffiNGmr
+
+r.
+
+õ:
+
+63730 Í
+
+35098 -
+
+D
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+o
+
+rOR eOìSfRUCTlOta
+
+mÆffismf
+rcffitæruÉs^æm
+^PPnOVED
+ffiDËWÆqruY.
+nEmasstrclÎoreruffiffiÛ
+tE'Æ ffiruEYY66W^ffireffissm
+ffiRCffiffiCmm
+AmMOEY.
+|ffi,ffi
+ffNCa 6:
+
+ìo 7S57 tlfv^lü=251 929ñ
+rdtó{r'oÉtev.õr
+
+AS-CSSRCfto
+
+ruP^roo gY
+
+ORAH{CS
+
+CAGF EÑO{EERINC LT
+(RtMg* 16 OAIO APRL 11,
+2e7)
+
+v|rrcos GoRPoRATloil
+Aquafor
+Beech
+
+r.elø,Fçn.
+dr&
+úr 97 ø-n-25t
+
+Limited
+
+-
+
+REGIOII OF PEEL
+
+ÆõR
+*8ffi^*
+TO\^/i! OF CALEDON
+SAN¡IARY
+
+IN\IR I
+
+PROPOS€D
+RD CRADE
+
+I
+
+SANIIARY
+
+INWRI
+
+KING STRTIT _ WATERIIAIN &
+SAhI!TARY ST\ryiR EXTENSIOI.{
+srA. o+0co ro srA o+f40
+
+3
+PROPOS€D
+
+RO CRAOE
+
+s,z rs
+ú
+
+wer r:$
+
+6J750.1
+
+35rO5 - D
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+ftì Èa - ¡or ro f{
+
+Jun 15, 2020
+
+.-f\
+
+@
+/
+
+9:
+
+t:
+
+d
+
+LEGiI'¡D
+
+-....<
+
+o
+
+E¡61S f¡f€e æ¡
+¿ ær (EY OEÊs)
+
+*fR
+€rÁrñ $ìle
+f¡ÁM sI& sMÊ
+
+\\
+
+-
+
+BENCHMARK INFO:
+F:5 *
+
+r'ð9t7
+
+! C5¡
+
+r_à_
+
+f
+
+/a 26Jæ
+
+FIGIONÀL UUNìCIPÂLIIY
+ÉL€VAÎON 26J5t
+
+Of P€€L BENC! MARK NO. 76
+
+UETRES
+
+! : þzmy (Eì
+
+<s
+æh-21h
+
+\ rr.e'-
+
+Prc sl5
+
+9\ c r
+
+-/V*- "*
+owRs)
+"¡e
+
+6e s@cr&
+g ^s {i
+
+¡
+
+EE! SD
+
+\l
+
+s
+
+-6- r
+lA rfr-1S
+
+i
+
+xÉÉÐÉ6d¡Ê
+
+-6-l
+
+Pæ ORf,: S¡N C
+
+40ñø r^lte la¡fÊ
+
+æ
+
+æ
+
+x7
+
+æ7
+
+266
+
+ã
+
+æ
+
+æ
+
+&
+
+H
+
+263
+
+¡l
+
+t--,_
+
+C O N S U LT IN
+
+G iN C .
+
+26t
+
+&
+8t
+
+MGTVI
+
+2g¿
+
+tl
+
+æt
+SnucruE
+
+^s
+
+2û
+
+2æ
+
+æ
+
+25e
+
+28
+
+I
+
+These records are based upon available and unverified
+
+informution and mny prove inaccurate.
+The Region ofPeel disclainrs any responsibility should these
+records be relied upon to the detriment ofanl person.
+
+SCALE
+
+H 1:500
+V 1:50
+
+RFCIONAI MUNICIPALITY OF PEEI CONSIRUCIION STANDARDS
+ro r{
+9Ñ c@w
+€ff
+{L UltRS ÀrO CNIMI&
+
+I
+
+Efr tuM 165 sra|re a0 q@ræ
+2
+E&^N A0 / G r ER giffi V^r$l&s UP lo M frq@c
+(r2-)
+'
+9&€Ê &Sr q æ.Wr R(re (Þw) ÈË.
+Jfu
+(?') m
+^E
+9ã tu
+¡o
+ls qø¡c^rûs
+ctr(Mc
+yruR 9u E
+^fr^rfi x cffiñ Pft.
+ro
+uw
+vww
+ctrR
+c laÊ Ítuct5 Æ
+J. rattRN aolc gMU¡
+ffiZNÀ 5PÆ'Ú ø^ ! il (.') fRù
+r.7u (56J m Á
+r{Etws a0 & orH€R unÚ€s
+lc r6sM. õc. Æt
+r* fLÉN utn !ffi ffi
+a ffi
+(.J
+htH
+t!
+* ¡@
+tæl
+{?-) @Ìr¡ ù l@
+Æ ÆÊ !Nts.^rc(EF ^Lfr€s Ñ ¡o uw fLiffi
+Ðf0 ^t
+r{ trc. 1{ w€ azE é r{ tr¡t. tF eusl {9 Ë'ws
+PRÑ Loì $ tm
+G È80 to aL@ Í{ ulEÊ ro tu sto
+@lLtf ro &^ !w! (.J NEER
+@N fi fr6 !MS, tllffi
+^
+5 & CUnS Sfñ fO 4 Jq (r0) trF f{ tÆt q r{ Bl]È'N
+Mrao
+w-tss oÌ{ff{
+r-6-1 w€Nq
+6 |1l1fur Æ va{ g ro E@¡ staw
+^
+N L OTc (?') N 0.9! (lJ ß0 uW rulEÊ rczzu
+q ÆMo
+ffi
+7 ratEMs ro E r6laú0 10 ros
+$tÊls u6t ^sff 5uE{0 Ìo
+9r! PW. Cø q ro
+m,8 ro colvfEtutú 6 @. r{ft EoutsrEo
+ffict6
+w rçctG
+WU¡ v¡ñC& CL@C€ 6 0 ry (l:_)
+I TaTERUßS rUSf U[
+ùtR/o.a (2o') uÐÊP^stú6 aD aL oIKR urrlrllts traÑ ce6!rc
+ç [r PmFGEO r^lÊÊ PAIC cUSl & r$úEO ,:t t¡6l$ LB¡S
+fr ffiR ro u& r{æ4ruflr Êñss@a f€srrc ao cHLFrurrK
+FW tx6¡irc 5686.
+ro 4r Lú rP¡K ao @tilfû oa {Gù f^lfR v&{s seL æ ffi40
+TAFO@ Bt RtGlM r$æCrfr AO ¡59CN[O æ F aqrÆrrú fHt
+@ttut06 ac vairtrct ù¡!ù
+
+ALIIÁNCE AGRI.TURF INC.
+
+cffiñr
+
+Fnm@ s¡r{TARY lro ìlArER s€R\lE lG
+E112 X¡6grnÊff
+
+Búto¡,ofirRþ
+
+PROPOSED SERVNNG
+
+AC
+ffi
+
+MLS
+1. 5C0
+
+''" zo¡2-ooo
+201 2- 006
+c1 2.304
+ãÉffi-
+
+201 2-006-41
+
+51766-D
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+Attachment E: Single Use Demand Tables
+
+_________
+GREENLAND
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+Connection Demand Table
+WATER CONNECTION
+Connection point 3)
+
+King Street, North of Tarquini Crecsent
+Pressure zone of connection point
+Pressure Zone 5B
+96 ( 50 cap/ha)
+Total equivalent population to be serviced 1)
+Total lands to be serviced
+1.92 ha
+Hydrant flow test
+Hydrant flow test location
+King Street (via private hydrant at 8144 King Street)
+Pressure
+Flow (in l/s)
+Time
+(kPa)
+30.22
+10:00 AM
+296
+Minimum water pressure
+52.74
+296
+10:00 AM
+Maximum water pressure
+Water demands
+Demand type
+Demand
+1 Average day flow
+0.333
+2 Maximum day flow
+0.467
+3 Peak hour flow
+1.00
+2)
+70.87
+4 Fire flow
+Analysis
+71.337
+5 Maximum day plus fire flow
+No.
+
+WASTEWATER CONNECTION
+Connection point 4)
+Total equivalent population to be serviced 1)
+Total lands to be serviced
+6 Wastewater sewer effluent (in l/s)
+
+Units
+l/s
+l/s
+l/s
+l/s
+l/s
+
+300mm PVC
+96
+1.92 ha
+1.728
+
+1)
+
+Please refer to design criteria for population equivencies
+Please reference the Fire Underwriters Survey Document
+3)
+Please specify the connection point ID
+4)
+Please specify the connection point (wastewater line or manhole ID)
+Also, the "total equivalent popopulation to be serviced" and the "total lands
+to be serviced" should reference the connection point. (The FSR should contain one
+copy of Site Servicing Plan)
+2)
+
+Please include the graphs associated with the hydrant flow test information table
+Please provide Professional Engineer's signature and stamp on the demand table
+All required calculations must be submitted with the demand table submission.
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jun 15, 2020
+
+Attachment F: Fire Flow Demand
+
+_________
+GREENLAND
+
+

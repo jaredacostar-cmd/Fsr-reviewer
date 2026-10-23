@@ -1,0 +1,23880 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+November 30 2023
+
+Functional Servicing Report
+Argo Summer Valley
+Argo Summer Valley Limited
+4990 Palladium Way, Suite 105
+Burlington ON L7M 0W7
+City of Brampton File No.: OZS-2022-0030
+Town of Caledon File No.: POPA 2022-0005,
+RZ 2022-0008, 21T-22005C
+Region of Peel File No.: T-22011Ba
+Region of Peel File No.: T-22005Ca
+
+Functional Servicing Report
+Argo Summer Valley
+Argo Summer Valley Limited
+4990 Palladium Way, Suite 105
+Burlington ON L7M 0W7
+City of Brampton File No.: OZS-2022-0030
+Town of Caledon File No.: POPA 2022-0005,
+RZ 2022-0008, 21T-22005C
+Region of Peel File No.: T-22011Ba
+Region of Peel File No.: T-22005Ca
+
+R.J. Burnside & Associates Limited
+6990 Creditview Road, Unit 2
+Mississauga ON L5N 8R9 CANADA
+
+November 2023
+300054371.0000
+
+Argo Summer Valley Limited
+
+i
+
+Functional Servicing Report
+November 2023
+
+Distribution List
+No. of
+Hard
+Copies
+0
+0
+0
+0
+0
+
+PDF
+
+Email
+
+Yes
+Yes
+Yes
+Yes
+Yes
+
+------
+
+Organization Name
+City of Brampton
+Town of Caledon
+Region of Peel
+Toronto Region Conservation Authority
+Argo Summer Valley Limited
+
+Record of Revisions
+Revision
+0
+1
+2
+3
+
+Date
+June 16, 2022
+November 4, 2022
+May 30, 2023
+November 23, 2023
+
+Description
+Draft Plan of Subdivision Application
+Revised Per Region of Peel Comments
+Revised as Per Received Comments
+Revised for Final Submission
+
+R.J. Burnside & Associates Limited
+
+Report Prepared By:
+
+Nov 23, 2023
+
+Lorena Niemi, P.Eng.
+Executive Vice President, Land Development
+LN:rk
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+ii
+
+Functional Servicing Report
+November 2023
+
+Table of Contents
+1.0
+
+Introduction ........................................................................................................ 1
+1.1 General ........................................................................................................ 1
+1.2 Site Location and Context ............................................................................ 1
+1.3 Existing Land Use ........................................................................................ 1
+1.4 Objectives .................................................................................................... 4
+
+2.0
+
+Background Information and Documentation ................................................. 5
+2.1 Previous Studies .......................................................................................... 5
+2.2 Additional Studies ........................................................................................ 5
+
+3.0
+
+Existing Site Conditions .................................................................................... 6
+3.1 Soil Conditions ............................................................................................. 6
+3.2 Groundwater Conditions .............................................................................. 6
+3.3 Environmental Features ............................................................................... 7
+
+4.0
+5.0
+6.0
+
+Proposed Development ..................................................................................... 9
+Roads ................................................................................................................ 11
+Wastewater Servicing ...................................................................................... 13
+6.1 Existing Municipal System ......................................................................... 13
+6.2 Design Criteria ........................................................................................... 14
+6.3 Proposed Sanitary Servicing ...................................................................... 14
+
+7.0
+
+Water Servicing ................................................................................................ 17
+7.1 Existing Water Services ............................................................................. 17
+7.2 Water Design Criteria ................................................................................. 17
+7.3 Proposed Water Servicing ......................................................................... 17
+
+8.0
+
+Grading and Storm Drainage .......................................................................... 20
+8.1 Existing Municipal System ......................................................................... 20
+8.2 Existing Site Drainage ................................................................................ 21
+8.3 Grading and Drainage ................................................................................ 23
+8.4 Proposed Storm Servicing ......................................................................... 24
+
+9.0
+
+Stormwater Management ................................................................................ 28
+9.1 Existing Stormwater Management System ................................................ 28
+9.2 Proposed Stormwater Management .......................................................... 28
+9.2.1 Stormwater Criteria ........................................................................ 28
+9.2.2 Stormwater Quality Control ............................................................ 29
+9.2.3 25 mm Extended Detention ............................................................ 33
+9.2.4 Annual Water Balance.................................................................... 35
+9.2.5 5 mm Retention .............................................................................. 35
+
+10.0
+11.0
+
+Erosion and Sediment Control ....................................................................... 36
+Conclusions ..................................................................................................... 39
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+iii
+
+Functional Servicing Report
+November 2023
+
+Tables
+Table 1: Argo Summer Valley Land Use and Population Projection ................................ 9
+Table 2: Proposed Sanitary Drainage Area Details ....................................................... 14
+Table 3: Domestic Water and Fire Demand Summary................................................... 18
+Table 4: Existing Storm Drainage Area Details .............................................................. 21
+Table 5: Proposed Storm Sewer Drainage Area Details ................................................ 24
+Table 6: Hurontario Storm Flows ................................................................................... 25
+Table 7: Pond Drainage Area Parameters ..................................................................... 33
+Figures
+Figure 1: Site Location Plan ............................................................................................. 2
+Figure 2: Existing Site Context ......................................................................................... 3
+Figure 3: Existing Site Conditions .................................................................................... 8
+Figure 4A: Proposed Draft Plan of Subdivision (Town of Caledon) ............................... 10
+Figure 4B: Proposed Draft Plan of Subdivision (City of Brampton) ................................ 11
+Figure 5: Proposed Sanitary Servicing Plan .................................................................. 16
+Figure 6: Proposed Water Servicing Plan ...................................................................... 19
+Figure 7: Existing Condition Drainage Plan ................................................................... 22
+Figure 8: Proposed Stormwater Area Drainage Plan ..................................................... 26
+Figure 9: Proposed Storm Sewer Drainage Area Plan .................................................. 27
+Figure 10: Erosion and Sediment Control Plan .............................................................. 37
+Figure 11: Proposed Driveway Layout ........................................................................... 38
+Drawing List
+G1
+S1
+
+Grading Plan
+Servicing Plan
+
+Appendices
+Appendix A As Constructed Drawings
+Appendix B Brampton STD200
+Appendix C Design Calculations
+Appendix D Water Demand Calculations and Hydrant Flow Testing
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+iv
+
+Functional Servicing Report
+November 2023
+
+Disclaimer
+Other than by the addressee, copying or distribution of this document, in whole or in
+part, is not permitted without the express written consent of R.J. Burnside & Associates
+Limited.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+1
+
+Functional Servicing Report
+November 2023
+
+1.0
+
+Introduction
+
+1.1
+
+General
+
+R.J. Burnside & Associates Limited (Burnside) has been retained by Argo Summer Valley
+Limited (Argo) to prepare a Functional Servicing Report (FSR) in support of an Application for
+Official Plan Amendment, Zoning By-Law Amendment and Draft Plan of Subdivision for lands
+which lie within both the City of Brampton (City) and the Town of Caledon (Town). This
+Functional Servicing and Preliminary Stormwater Management Report is intended to
+demonstrate that the subject lands can be developed and connect to municipal servicing in
+accordance with applicable regulatory requirements and site-specific criteria established
+through the completion of previous servicing studies for the area.
+
+1.2
+
+Site Location and Context
+
+The subject site is an approximately 3.62 ha infill area at the south limits of Caledon and the
+north limits of Brampton, as identified on Figure 1. The site is legally described as Part of
+Lot 19, Concession 1, E.H.S., Town of Caledon and Part of Lot 18, Concession 1, E.H.S., City
+of Brampton, Regional Municipality of Peel. The site is bounded by Hurontario Street to the
+west, the Highway 410 corridor to the north, Highwood Road and The Creek’s Edge Subdivision
+to the south, and Reinhart Estates to the east, both of which are adjacent to the Etobicoke
+Creek Valley to the east. An overview and context of the area, including an aerial photo, is
+presented in Figure 2.
+
+1.3
+
+Existing Land Use
+
+Currently, the majority of the existing site is disturbed and vacant. Historically, the site was
+occupied by a number of buildings and a parking area for the Reinhart Auction lands, which
+have since been demolished / decommissioned. There are no natural features within the
+property, though there are a number of manmade swales and drains around the perimeter of the
+site.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Drawn
+
+KT
+
+D
+
+FI
+EL
+
+Checked
+
+LN
+
+M
+
+RO
+
+AD
+
+D
+RD
+
+O
+CI WN
+TY
+O
+OF F C
+BR AL
+AM ED
+PT ON
+ON
+
+HE
+AR
+TD
+T R
+
+LIG
+HT
+
+AY
+
+Figure Title
+
+CITY OF BRAMPTON FILE NUMBER : 0ZS-2022-0030
+
+ARGO SUMMER VALLEY
+
+SITE LOCATION PLAN
+
+23/11/20
+
+Date
+
+Scale
+
+Project No.
+
+1:10,000
+
+300054371
+
+Figure No.
+
+FIG 1
+
+File: \\MONTY\Shared Work Areas\054371 - Argo Summer Valley\07_Figures\054371 - SITE LOCATION PLAN - FIG 1.dwg Date Plotted: November 20, 2023 - 3:56 PM
+
+AY
+
+O
+R
+U
+H M
+
+T
+
+N
+
+AR
+
+OO
+
+W
+
+HI
+
+ER
+
+IO
+
+R H
+T
+IG
+H
+S
+
+T
+E
+E
+
+SU
+M
+
+ARGO SUMMER VALLEY LIMITED
+VA
+L
+
+0
+41
+
+Client
+
+DR
+
+AY
+
+HW
+
+SITE LOCATION
+LE
+Y
+
+G
+HI
+
+TO
+CI WN
+TY
+O
+OF F C
+BR AL
+AM ED
+PT ON
+ON
+
+N
+
+0
+
+41
+
+G
+HW
+
+R
+
+H
+
+W
+Y
+TO T DR
+41
+0
+CI W
+TY N
+O OF
+F C
+BR A
+AM LED
+PT ON
+O
+N
+
+HT
+HE
+A
+LIG
+FA
+
+RD
+D
+
+ES
+
+OO
+
+AR
+BR
+I
+
+ER
+
+VA
+LL
+
+EY
+
+DR
+
+IE
+LD
+
+RD
+
+SW
+
+EE
+T
+
+HI
+
+GH
+P
+
+AT
+H
+
+LN
+
+CR
+
+HW
+HI
+G
+
+ST
+
+AY
+F
+
+IO
+
+R
+ND
+SU
+
+E
+
+IG
+
+M
+
+E
+
+M
+
+AR
+
+NT
+
+AV
+
+RO
+
+HU
+
+D
+
+SU
+M
+
+ST
+CITY OF BRAMPTON FILE NUMBER : 0ZS-2022-0030
+Figure Title
+
+ARGO SUMMER VALLEY
+EXISTING SITE CONTEXT
+Client
+
+Drawn
+
+ARGO SUMMER VALLEY LIMITED
+
+KT
+
+Checked
+
+LN
+
+Date
+
+23/11/20
+
+Scale
+
+Project No.
+
+N.T.S.
+
+300054371
+
+Figure No.
+
+FIG 2
+
+File: \\MONTY\Shared Work Areas\054371 - Argo Summer Valley\07_Figures\054371 - SITE LOCATION PLAN.dwg Date Plotted: November 20, 2023 - 3:57 PM
+
+LIMIT OF SUBJECT
+PROPERTY
+
+LN
+
+OO
+
+RM
+
+IN
+GW
+
+N
+
+CO
+LL
+
+SO
+
+ROYAL VALLEY DR
+
+Argo Summer Valley Limited
+
+4
+
+Functional Servicing Report
+November 2023
+
+1.4
+
+Objectives
+
+The purpose of this Functional Servicing and Preliminary Stormwater Management Report is to
+provide the following context and assessment in support of the proposed Draft Plan of
+Subdivision(s) (DPOS) and associated applications:
+•
+•
+•
+•
+
+Calculate proposed sanitary design flows and demonstrate the adequacy of the existing
+sanitary sewer system to accommodate the proposed development.
+Calculate proposed water demand and demonstrate the adequacy of the existing water
+distribution system (pressure and flow) to service the proposed development.
+Confirm existing and proposed drainage patterns for the site.
+Develop a stormwater management plan that demonstrates confirmation of capacity and
+accommodation of the proposed development within the existing drainage system, including
+any relevant site-specific stormwater management measures.
+
+All the above will be completed in accordance with accepted engineering practices and criteria
+of the governing approval agencies.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+5
+
+Functional Servicing Report
+November 2023
+
+2.0
+
+Background Information and Documentation
+
+2.1
+
+Previous Studies
+
+The site has been considered for development and accommodated in the design of downstream
+infrastructure as identified in various studies for developments in both the City and the Town.
+This FSR has been prepared in accordance with the information and recommendations
+provided in the following documents:
+•
+•
+•
+
+2.2
+
+Functional Servicing Report, Donal JV Limited (Reinhart Auction Lands) Draft Plan
+21T-99002C, Charlton Engineering Limited, Revised September 2001.
+Creek’s Edge Subdivision Pond Design Brief, Schaeffers Consulting Engineers, Revised
+September 1997.
+Town of Caledon, City of Brampton, and Region of Peel Development Design Standards.
+
+Additional Studies
+
+The following studies are being completed in conjunction with, and provide guidance to, this
+Functional Servicing and Preliminary Stormwater Management Report.
+•
+
+•
+
+12197 Hurontario Street, Brampton and 12211, 12213 & 12233 Hurontario Street, Caledon,
+Geotechnical Investigation, Proposed Residential Development (Summer Valley) EXP
+Services Inc., February 4, 2022 (Revised October 20, 2023).
+12197 Hurontario Street, Brampton and 12211, 12213 & 12233 Hurontario Street, Caledon,
+Hydrogeological Investigation and Water Balance Assessment, EXP Services Inc.,
+November 11, 2023.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+6
+
+Functional Servicing Report
+November 2023
+
+3.0
+
+Existing Site Conditions
+
+The subject property covers a total area of 3.62 ha, 3.08 ha of which are in the Town, with the
+remaining 0.54 ha located in the City. The existing site is vacant and largely disturbed by
+previous land use and remediation works. The site is relatively flat, sloping very gently from an
+elevated central area to various low-lying areas in the east and west. There is a total of
+approximately 3 m of fall in each direction from the central high point at an elevation of 259 m
+above sea level. The east portion of the site drains towards multiple constructed swale /
+drainage draws and existing storm sewer inlets along the south and east limits of the property.
+The west portion of the site drains towards an existing storm sewer inlet at the southwest limits
+of the site adjacent the Hurontario Street and Highwood Road intersection. The existing site
+conditions are identified on Figure 3.
+
+3.1
+
+Soil Conditions
+
+Based on the Ontario Soils Mapping database, the subject property is located within a single
+soil formation, Chinguacousy Clay Loam. The soil formation is an imperfectly draining soil with
+smooth, gently sloping surfaces.
+A Geotechnical Investigation was completed for the study area by EXP Services Inc. in
+February 2022, updated in October 2023. Based on the findings of the investigation, the site is
+covered by a surficial layer of topsoil, asphalt, and granular materials with some pockets of fill.
+The native materials beneath the surficial cover comprise sandy silt till in portions, to depths
+ranging from 4.2 to 8.1 m below the surface with clayey silt till below the sand or fill layers. The
+clayey silt till extends 8.1 m below existing grade where the boreholes were terminated. As a
+result of the historical land uses and activities, the top layer of soil is defined as reworked /
+disturbed. The completed geotechnical investigation should be read in conjunction with the
+FSR.
+
+3.2
+
+Groundwater Conditions
+
+As part of the Geotechnical Investigation, monitoring wells were installed in four of the borehole
+locations. During the completion of the drilling program, groundwater was observed at depths
+ranging from 7.0 to 8.0 m below the ground surface, except for one borehole that remained dry.
+Additional measurements in the installed monitoring wells were taken following the initial drilling
+operation, and groundwater depths were measured at depths ranging from 1.6 to 6.5 m below
+grade. The completed hydrogeological investigation should be read in conjunction with the
+FSR.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+7
+
+Functional Servicing Report
+November 2023
+
+3.3
+
+Environmental Features
+
+The subject property has been historically used for a variety of purposes, including residential,
+and a combination of residential and commercial purposes. The site is currently vacant and
+disturbed with no environmental features present.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+W
+
+W
+
+W
+
+TE
+
+W
+
+W
+
+EW
+AL
+K
+CO
+NK
+NC
+TO
+RE
+P
+
+BA
+
+SID
+
+SID
+EW
+AL
+K
+AS
+PH
+AL
+T
+
+W
+
+BA
+N
+K
+
+EA
+BR
+
+26
+252600.5
+252599.5
+8.
+5
+
+W
+
+E
+
+W
+
+AIN
+
+P
+
+BA
+NK
+
+W
+
+IN
+
+TO
+
+W
+
+KL
+
+DIT
+CH
+NK
+
+W
+
+O
+F
+
+BA
+
+W
+
+BO
+T
+TO
+M
+
+1
+
+26
+
+NC
+
+E
+
+LIN
+
+K
+
+CH
+
+258
+BO
+TT
+OM
+
+W
+
+TO
+P
+
+FE
+
+W
+
+BANK TOP
+
+FENCE CHAIN LINK
+
+BXB
+
+W
+
+258
+
+W
+
+258
+
+W
+
+W
+
+8.5
+25
+
+BANK TOP
+
+BA
+NK
+
+.5
+25
+9
+25
+9.5
+26
+0
+26
+0.5
+
+OF
+
+0
+
+W
+
+W
+
+MH
+
+258
+
+BANK TOP
+
+BANK TOP
+DITCH
+
+26
+
+BOTTOM OF BANK
+
+.5
+
+W
+
+OHGUY
+OHGUY
+OHGUY
+
+HEIGHT
+
+OHGUY
+
+OHGUY
+
+2.4 METRE
+OHGUY
+
+W
+W
+
+OM
+W
+
+W
+W
+
+ALT
+
+W
+
+RE HEIGHT
+
+W
+
+W
+W
+
+K ASPH
+
+W
+
+26
+0
+
+W
+
+BOTTOM OF
+BANK
+
+W
+
+SIDEW
+AL
+
+BAN
+K
+
+W
+
+W
+
+OF
+
+DONHER
+B CRES
+
+257.5
+258
+258.5
+
+BOTT
+
+W
+
+258.5
+259
+259.5
+260
+
+W
+
+W
+
+W
+
+FENCE BOA
+RD 2 MET
+
+W
+
+W
+
+W
+
+259
+259
+9
+2525
+8.5
+258
+
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+W
+OHGUY
+
+OHGUY
+
+W
+
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+W
+
+W
+
+BREAKLI
+W
+NE
+OHGUY
+OHGUY
+
+OHGUY
+OHGUY
+
+NK
+W
+
+RE HEIGHT
+
+W
+
+RD 2 MET
+
+W
+W
+
+W
+
+BANK TOP
+
+8.5
+
+W
+
+25
+
+25
+
+W
+
+CB
+
+0.20Ø
+
+CONCRETE
+
+W
+
+W
+
+NK
+
+EX. MH18A
+
+FENCE BOA
+
+9.5
+
+BA
+
+258
+
+WV
+
+CB
+
+EX. MH4A
+
+EX. 250mm SAN
+EX. 750mm STM
+WV
+EX. DCB MH17
+ALT
+
+9
+
+EWAY
+
+ASPH
+
+W
+
+DR
+
+W
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+W
+
+OHGUY
+OHGUY
+
+NCRETE
+
+W
+
+W
+
+O STR
+EET
+
+W
+
+ALK CO
+
+W
+W
+W
+W
+W
+
+258
+
+W
+
+W
+W
+
+258.5
+257.5
+
+W
+
+SIDEW
+
+W
+W
+OHGUY
+
+OHGUY
+
+W
+
+W
+
+OHGUY
+
+OHGUY
+
+W
+W
+W
+
+W
+
+D 1.9 METR
+
+W
+
+W
+
+W
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+
+257
+
+W
+
+25
+
+7.
+
+8
+W
+
+EX. 250mm STM
+CB
+
+W
+W
+
+BXB
+
+N
+
+K
+
+TO
+
+P
+
+W
+
+SAN
+mmSTM
+300
+EX.975mm
+EX.
+25
+6.5
+
+EX. MH04AEX. 300m
+m SAN
+EX. 975mm
+STM
+EX. MH05
+
+CB
+
+E
+CRET
+
+K
+EWAL
+
+CON
+
+SID
+
+EX. MH06
+
+258
+
+257.5
+
+EX. 375mm STM
+WV
+
+WV
+
+MH
+MH
+
+T&WIRE
+
+Figure Title
+
+CRETE
+
+FENCE POS
+
+SIDEWALK
+CON
+
+HILLPAT
+H
+CRESCE
+NT
+
+BA
+
+BOTTO
+M OF BAN
+BO
+K
+TT
+OM
+OF
+W
+
+W
+
+RETAINING WALL
+
+EX. MH07
+
+CB
+
+EX. MH05A
+
+257
+
+5
+
+EX. 150mmØ WM
+
+W
+
+25
+8
+2
+225575.58
+7
+
+258
+
+EX. MH06A
+
+EX. MH07A EX. 300mm SAN
+
+W
+
+25
+
+257.5
+
+W
+W
+
+256.5
+
+W
+
+W
+
+W
+
+FENCE BOAR
+
+W
+
+8.5
+
+W
+
+25
+
+W
+
+BANK TOP
+
+STM
+
+5
+
+EX. 300mm
+
+EX. 300mm SAN
+CB
+
+SIDEWALK CONCRETE
+
+6.
+
+WV
+
+WV
+
+Ø WATERMAIN
+
+E
+
+RET
+
+OD ROAD
+
+SU
+MM
+
+W
+
+NK
+
+PW
+
+NK
+
+25
+
+NC. BOX
+
+E HEIGHT
+
+W
+
+BA
+
+TO
+
+BA
+
+CH
+
+EX. 300mm
+Ø WATERM
+AIN
+
+SI
+
+RETAINING WALL
+
+EX. 300mmØ WATERMAIN SIDEWALK CONCRETE
+
+EX. MH08
+
+CB
+
+ONC
+
+RETAINING WALL
+
+E
+DR R VA
+IV LL
+E
+EY
+
+W
+
+W
+
+HURO
+NTARI
+
+OHGUY
+
+OHGUY
+
+257.5
+257.5
+258
+258.5
+
+RLCB
+
+OHGUY
+
+OF
+W
+
+NK
+
+BA
+
+Ø WATE2RM
+58AIN
+
+T
+
+W
+
+OM
+
+DIT
+
+P
+
+P
+TO
+
+TO
+
+NK
+
+NK
+
+BA
+
+BA
+
+EX. 600mm
+
+AL
+
+HEADWALL
+
+BOTTOM OF BANK
+BOTTOM
+FENCE BOARD 2 METRE HEIGHT OF BANK
+BANK TOP
+
+RLCB
+
+HIGHWO
+DEW
+
+EX. 300mm STM
+CULVERT
+FENCE CHAIN LINK
+WV
+
+2
+
+57
+
+C
+ALK
+
+MH
+
+ARGO SUMMER VALLEY
+N
+
+LEGEND
+
+PH
+AS
+
+BOTTOM OF BANK
+
+DRIVEWAY GRAVEL
+
+TT
+
+EX. 300m
+mØ
+600mmØWATERMAIN
+LINER
+
+1.5m CO
+
+BANK TOP
+FENCE BOARD 2 METRE HEIGHT
+
+RLCB
+
+0.54ha AREA SUBJECT SITE
+IN CITY OF BRAMPTON
+
+BO
+
+SIDEWALK CONCRETE
+
+6
+
+25
+
+BANK TOP
+
+BANK TOP
+
+DITCH
+
+MH
+
+.5
+256
+BOTTOM OF BANK
+
+P
+
+WV
+
+BOTTOM OF BANK
+
+BANK
+TO
+
+SIDEWALK CONCRETE
+
+AY
+EW
+
+OHGUY
+
+IV
+
+T
+VERT
+
+CB
+
+WV
+
+ERMAIN
+
+0.20Ø
+
+0.20Ø
+
+BANK TOP
+
+MH
+
+EX. 300mmØ WAT
+
+EX. 150mmØ WM
+0.15Ø
+
+257
+
+FENCE BOARD 1.9 METRE HEIGHT
+
+300mmØ CUL
+
+COLLINGWOOD
+AVENUE
+
+PLUG
+& B.O.
+
+EX. MH3A EX. 250mm SAN
+EX. 825mm STM
+EX. MH3
+
+LIGHTHEART
+DRIVE
+
+ALT
+
+ASPHAL
+
+CB
+
+DITCH
+
+OHGUY
+OHGUY
+
+9
+
+BANK TOP
+
+OHGUY
+OHGUY
+
+BANK TOP
+
+DITCH
+BANK TO
+P
+
+OHGUY
+OHGUY
+OHGUY
+
+25
+
+SIDEWALK
+
+WV
+
+EX. 750mm STM
+
+.5
+
+257
+
+DRIVEWAY ASPH
+
+259
+
+FENCE CHAIN LINK
+
+EX. 250mm SAN
+EX. 375mm STM
+
+EX. MH4
+
+DRIV
+
+TEMP DICB
+
+MH
+
+SIDEWALK
+
+F
+
+O
+
+9.
+5
+
+W
+
+M
+
+25
+
+O
+
+25
+
+NK TO
+P
+
+P
+
+TT
+
+TO
+
+BO
+
+NK
+
+BA
+
+P
+TO
+
+BA
+
+25 25
+8 9
+E2 .5
+58
+.5
+
+EXISTING LAND USE & SERVICING
+
+PROPERTY LINE
+EXISTING SANITARY SEWER
+
+0
+
+20
+
+40
+
+60
+
+80
+
+EXISTING STORM SEWER
+Metres
+
+EXISTING WATERMAIN
+CITY OF BRAMPTON FILE NUMBER : 0ZS-2022-0030
+
+Client
+
+Drawn
+
+ARGO SUMMER VALLEY LIMITED
+
+KT
+
+Checked
+
+LN
+
+Date
+
+23/11/20
+
+Scale
+
+Project No.
+
+1:1250
+
+300054371
+
+Figure No.
+
+FIG 3
+
+File: \\MONTY\Shared Work Areas\054371 - Argo Summer Valley\04_Preliminary\004_Figures\054371 - EXISTING CONDITIONS.dwg Date Plotted: November 20, 2023 - 3:57 PM
+
+OHGUY
+
+W
+OHGUY
+
+N
+
+OHGUY
+
+W
+
+SIDE
+WAL
+K CO
+NCRE
+BAN
+TE
+K TO
+P
+
+BA
+
+DIT
+NC BA C
+E NK H
+PO T
+ST OP
+&W
+IR
+
+FE
+
+EX. 250mm SA
+
+W
+
+CENT
+
+W
+
+26
+
+FENCE BOA
+RD
+
+0
+
+W
+
+3.08ha AREA SUBJECT SITE
+IN TOWN OF CALEDON
+
+M
+
+W
+
+N
+O
+NS E
+HI LAN
+TC M
+HU AR
+F
+MH
+
+EX. 375mm ST
+
+OHGUY
+
+OHGUY
+
+W
+
+WV
+
+Argo Summer Valley Limited
+
+9
+
+Functional Servicing Report
+November 2023
+
+4.0
+
+Proposed Development
+
+The Summer Valley DPOS has been prepared by Glenn Schnarr and Associates Inc. and is
+included as Figure 4. The DPOS features a mix of residential areas, buffer (MTO setback), and
+required road allowances and widenings.
+The proposed DPOS connects to the surrounding road network at an intersection with
+Highwood Road opposing Hillpath Crescent, and through an extension of Lightheart Drive at the
+east limits of the site, which will provide road and infrastructure connectivity to the adjacent
+development.
+The table below summarizes the proposed land use for the site, including population
+projections, based on City, Town, and Region design criteria.
+Table 1: Argo Summer Valley Land Use and Population Projection
+Land Use
+City of Brampton
+Detached – 12.20 m
+Detached – 12.80 m
+Detached – 15.24 m
+Buffer (MTO Setback)
+Road Widening
+17.0 m ROW (length 43 m)
+Subtotal
+Town of Caledon
+Detached – 12.20 m
+Detached – 12.80 m
+Detached – 15.24 m
+Buffer (MTO Setback)
+17.0 m ROW (length 426 m)
+Subtotal
+Total
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+Net Area
+(ha)
+
+Units
+
+0.08
+0.04
+0.26
+0.05
+0.04
+0.07
+0.54
+
+2
+1
+5
+
+0.24
+1.65
+0.15
+0.22
+0.82
+3.08
+3.62
+
+7
+46
+4
+
+PPU
+4.202
+4.202
+4.202
+
+8
+
+57
+65
+
+Population
+8.40
+4.20
+21.0
+
+34 (33.6)
+4.202
+4.202
+4.202
+
+29.41
+193.29
+16.81
+
+239 (239.20)
+274 (273.13)
+
+300054371.0000
+
+W
+AL
+
+K
+
+AL
+K
+
+SI
+DE
+
+SI
+DE
+W
+
+AL
+
+T
+
+CO
+NC
+RE
+TE
+
+PH
+
+.75
+
+00
+
+AS
+
+260
+
+26
+
+0.
+
+0
+.0
+
+9
+25
+
+.50
+60
+
+H
+
+C
+
+IT
+
+D
+
+2
+
+00
+26
+
+IN
+
+LIN
+
+K
+
+HIGHWAY 410
+
+A
+CH
+
+25
+8.
+00
+
+26
+
+0 .0
+
+0
+
+26
+
+25
+
+8.
+
+25
+
+5
+0.2
+
+5
+0.7
+
+CE
+
+0
+41
+
+00
+
+8.
+
+25
+9.
+
+25
+
+N
+FE
+
+0
+258.0
+50
+00
+0.
+26
+
+ARIO ST
+R
+HURONT
+
+HEIGHT
+
+RB CRE
+SCENT
+GE
+
+CROW
+N
+
+ENT ED
+
+PAVEM
+
+DONHE
+
+ETE SID
+
+5
+
+EWALK
+
+258.00
+
+257.7
+
+ASPH
+A
+DRIVE LT
+WAY
+
+ASPH
+A
+DRIVE LT
+WAY
+
+WAY
+DRIVE
+
+257.75
+
+H) MUNICIPAL AND PIPED WATER TO BE PROVIDED
+I) SANDY LOAM AND CLAY LOAM
+K) SANITARY AND STORM SEWERS TO BE PROVIDED
+
+5
+7.2
+25
+
+BOARD FENCE
+
+0
+
+257.2
+
+5
+
+258.25
+
+ADDITIONAL LANDS OWNED BY THE APPLICANT
+(CONCURRENT APPLICATION WITH THE CITY OF BRAMPTON)
+
+25
+7.2
+5
+
+75
+
+MH
+
+9 METRE
+
+CON
+
+TE
+CRE
+
+TOTAL
+
+K
+WAL
+
+SIDE
+
+MH
+
+H CRESC
+
+LK
+
+257.00
+
+256.75
+
+Y
+EWA
+DRIV LOCK
+R
+INTE
+
+ALT
+ASPH AY
+W
+DRIVE
+
+ASPHALT Y
+A
+DRIVEW
+
+5
+
+ASPHALT
+DRIVEWAY
+
+257.2
+
+257.2
+
+5
+
+EXISTING
+RESIDENTIAL
+
+Figure Title
+
+ARGO SUMMER VALLEY
+PROPOSED DRAFT PLAN OF SUBDIVISION
+(TOWN OF CALEDON)
+
+HILLPAT
+
+CONCRE
+TE
+
+SIDEWA
+
+CE
+IRE FEN
+
+0
+257.0
+
+POST&W
+
+257.25
+
+258.00
+
+258.00
+
+258.00
+
+CROWN
+
+25
+
+256.50
+257.00
+
+CH
+DIT
+
+CH
+
+258.00
+
+257.00
+
+.50
+
+257
+
+MH
+
+MH
+
+ASPHALT
+DRIVEWAY
+
+ENT
+
+W
+
+8.
+
+DIT
+
+00
+
+257.25
+
+EXISTING
+SALES CENTRE
+
+L 25
+7.25
+
+AL
+
+5
+
+6.7
+25
+
+00
+
+BXB
+
+1.65
+
+4.08
+
+46
+
+27.88
+
+4
+
+26.67
+
+57
+
+27.94
+
+0.15
+
+0.37
+
+0.22
+
+0.54
+
+58
+
+0.82
+3.08
+
+2.03
+7.61
+
+- ALL DAYLIGHT RADII ARE 5.0m, UNLESS OTHERWISE DENOTED
+- PAVEMENT & SIDEWALK ILLUSTRATION IS DIAGRAMMATIC
+
+WA
+SIDE
+
+7.
+
+CHAIN LINK FENCE
+RETAINING WALL
+
+DRIVEWAY
+INTERLOCK
+
+25
+
+25
+8.0
+0
+
+8.2
+
+5
+
+5
+256.7
+
+25
+
+.00
+
+258
+
+CPAD
+
+TE
+
+CRE
+
+CON
+
+MH
+
+7.
+25
+
+MAILBOX
+
+29.17
+
+NOTES
+LK
+
+MH
+
+CROWN
+
+MH
+
+CONCRETE SIDEWALK
+
+7
+
+256.5
+
+256.5
+
+256.75
+
+257.00
+
+CROWN
+
+0.59
+
+0
+
+HIGHWOOD ROAD
+
+.25
+
+0.24
+
+.75
+
+256
+
+257
+
+AREA AREA
+DENSITY
+(ha)
+(ac) UNITS (UPHA)
+
+58
+
+17.0m LOCAL R.O.W. (LENGTH: 473m)
+
+256.75
+
+0
+
+00
+
+MH
+
+257.2
+5
+257.0
+0
+
+BUFFER (MTO SETBACK)
+
+ALT
+ASPHEWAY
+DRIV
+
+CROWN
+
+7.
+25
+
+7.5
+0
+
+1-57
+
+DETACHED - 15.24m (50')
+
+0
+
+00
+
+258.00
+
+257.75
+
+ALK
+
+DETACHED - 12.80m (42')
+
+CONCRETE SIDEWALK
+
+25
+
+LOTS / BLOCKS
+
+DETACHED - 12.20m (40')
+
+RETAINING WALL
+
+RETAINING WALL
+
+MH
+
+CONCRETE SIDEW
+
+EXISTING
+RESIDENTIAL
+
+257.7
+5
+
+257.25
+257.5
+0
+
+0
+
+7.
+
+258.25
+
+COLLINGWOOD
+AVENUE
+
+7.0
+
+LAND USE SCHEDULE
+LAND USE
+
+258.00
+
+257.0
+
+5
+
+256.7
+
+25
+CHAIN LINK FENCE
+
+25
+
+ING
+
+OARD 1.
+
+256.75
+
+MH
+
+BUILD
+
+FENCE B
+
+.50
+257
+
+DITCH
+
+258.00
+
+256.50
+
+257
+.75
+
+25
+
+8.5
+
+ASPHALT
+DRIVEW
+AY
+
+0
+
+5
+
+MH
+
+EXISTING
+RESIDENTIAL
+
+HEIGHT
+
+.00
+
+256.7
+
+CONCRETE SIDEWALK
+
+ADDITIONAL INFORMATION
+(UNDER SECTION 51(17) OF THE PLANNING ACT) INFORMATION REQUIRED BY
+CLAUSES A,B,C,D,E,F,G,J & L ARE SHOWN ON THE DRAFT AND KEY PLANS.
+
+FENCE
+
+00
+
+CHAIN LINK FENCE
+
+FENCE BOARD 2 METRE HEIGHT
+
+GRAVEL
+DRIVEWAY
+
+257
+
+FEB. 18, 2022
+DATE: _____________
+
+SIGNED: _________________________
+A. U. KUMARANAYAKE, O.L.S.
+
+5
+258.00
+
+0
+
+DITCH
+
+7.5
+
+257.2
+
+25
+
+EXISTING
+COMMERCIAL
+
+75
+7.
+25
+
+I HEREBY CERTIFY THAT THE BOUNDARIES OF THE LANDS TO BE SUBDIVIDED AS
+SHOWN ON THIS PLAN AND THEIR RELATIONSHIP TO ADJACENT LANDS ARE
+CORRECTLY AND ACCURATELY SHOWN.
+
+5
+25
+6.
+7
+
+50
+7.
+25
+
+0
+257.5
+
+DITCH
+
+258.5
+
+EW
+IV
+DR
+
+5
+
+FENCE BOARD 2 METRE HEIGHT
+FENCE BOARD 1.9 METRE HEIGHT
+
+AY
+
+MHST
+LT
+
+A
+PH
+AS
+
+EXISTING
+RESIDENTIAL
+
+421m²
+
+25
+
+5
+
+257.25
+
+258.75
+
+SURVEYORS CERTIFICATE
+MHSA
+
+.7
+
+25
+
+5
+
+8.7
+
+5
+
+6.7
+
+5
+
+.2
+256
+
+7
+
+.0
+0
+342m²
+6
+
+25
+0
+6.5
+25
+
+25
+
+2
+
+6.7
+
+25
+
+25
+
+314m²
+
+310m²
+0
+56.5
+
+2 STOR
+EY
+BRICK
+DWELL
+ING
+
+37
+
+6.
+
+ASPHA
+
+258
+.00
+
+25
+8.2
+5
+
+EWALK
+LT SID
+
+258.0
+0
+
+POST&WIRE
+
+FENCE
+
+39
+
+40
+
+256.75
+
+38
+
+256.
+
+310m²
+
+310m²
+
+392m²
+
+00
+
+50
+
+6.
+
+41
+
+FEB. 15, 2022
+DATE: _____________
+
+SIGNED: _________________________
+
+R-PE SURVEYING LTD.
+25
+
+42
+
+396m²
+
+57
+
+9.
+
+25
+
+43
+
+I HEREBY AUTHORIZE GLEN SCHNARR & ASSOCIATES INC. TO PREPARE AND SUBMIT
+THIS DRAFT PLAN OF SUBDIVISION TO THE TOWN OF CALEDON FOR APPROVAL.
+
+ARGO SUMMER VALLEY LIMITED
+
+0
+
+5
+
+2
+7.
+25
+
+25
+
+1
+
+OCK
+
+.25
+
+5
+7.7
+25
+
+OWNERS CERTIFICATE
+
+MR. GORD BUCK, A.S.O.
+
+258
+
+0
+
+7.0
+
+25
+
+44
+
+352m²
+
+HV
+
+METRE
+
+FUTURE SIDEWALK CONNECTION
+258.00
+
+776m²
+
+TOWN OF CALEDON LIMIT
+CITY OF BRAMPTON LIMIT
+
+LT
+ASPHAWAY
+DRIVE
+
+INTERL
+
+ASPHA
+L
+DRIVEW T
+AY
+
+8.0
+
+417m²
+
+323m²
+
+257.50
+
+LIGHTHEART
+DRIVE
+257.75
+
+MHST
+
+ASPHA
+L
+DRIVEW T
+AY
+
+25
+
+50
+
+8.
+
+2
+
+257.75
+
+25
+
+56
+
+EXISTIN
+RESIDE G
+NTIAL
+
+T
+E HEIGH
+2 METR
+
+25
+
+563m²
+
+330m²
+
+258.00
+BOARD
+FENCE
+
+E HEIG
+HT
+2 METR
+BOARD
+FENC
+
+45
+
+326m²
+
+5
+6.7
+
+ASPHA
+L
+DRIVEW T
+AY
+
+MHST
+
+258.00
+
+E
+
+345m²
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+
+5
+
+MHSA
+DRIVEW
+INTERL AY
+OCK
+
+6.
+75
+
+27
+
+317m²
+
+DRIVEW
+INTERL AY
+OCK
+
+FENCE
+
+0
+
+7.0
+
+25
+
+317m²
+
+MH
+
+55
+
+FENCE
+B
+
+25
+7.5
+0
+
+25
+7.
+25
+
+E ROAD
+257.25
+
+257.5
+0
+
+257.75
+
+.00
+258
+
+36
+
+26
+
+ASPHA
+L
+DRIVEW T
+AY
+
+DRIVEW
+INTERL AY
+OCK
+
+25
+
+322m²
+
+McALP
+IN
+
+307m²
+
+307m²
+
+PLANTER
+
+(GEOGRAPHIC TOWNSHIP OF CHINGUACOUSY)
+
+BOARD
+
+0
+9.0
+25
+
+28
+
+35
+
+25
+
+366m²
+
+LINK
+
+N
+CROW
+
+307m²
+
+CHAIN
+
+ALK
+
+307m²
+
+259.00
+
+3
+
+258.00
+
+29
+
+34
+
+24
+
+366m²
+
+.7
+
+7
+25
+
+PART OF LOT 19, CONCESSION 1, E.H.S.
+
+257.50
+
+322m²
+.75
+258
+
+2
+
+FILE # 21T-22005C
+
+T
+AL AY
+PH W
+AS IVE
+DR
+
+CHAIN LINK FENCE
+
+46
+
+54
+
+50
+
+.
+57
+
+307m²
+
+307m²
+
+0
+
+293m²
+
+.50
+
+307m²
+
+30
+
+33
+
+258.25
+
+293m²
+
+258
+
+307m²
+
+8.5
+
+McALP
+INE RO
+AD
+
+259
+.
+
+GATE
+
+00
+
+5
+
+47
+
+53
+
+322m²
+
+25
+
+IDEW
+
+LIGHTH
+EART D
+RIVE
+
+25
+8.
+25
+
+259.00
+
+5
+25
+
+9.2
+
+293m²
+
+2
+
+328m²
+
+352m²
+
+23
+
+5
+.7
+
+.75
+
+ETE S
+
+48
+
+ARGO SUMMER VALLEY LIMITED
+
+31
+
+7
+25
+
+MAYFIELD ROAD
+
+DRAFT PLAN OF SUBDIVISION
+
+565m²
+
+317m²
+
+309m²
+
+439m²
+
+22
+
+258.00
+
+258
+.25
+
+25
+9.5
+
+0
+
+ASPH
+A
+
+259
+
+.50
+
+LT SID
+EWA
+
+LK
+
+260.00
+
+25
+
+6
+
+5
+
+75
+
+OARD 2.
+4
+
+25
+8.
+50
+
+25
+8.2
+5
+
+25
+
+8.0
+
+0
+
+25
+9.7
+5
+0.0
+
+0
+
+CON
+CRE
+TE
+
+26
+
+5
+
+258
+
+CONC
+R
+
+21
+
+318m²
+
+345m²
+
+49
+
+50
+
+51
+
+52
+
+258.25
+
+.25
+
+EXISTING
+AGRICULTURAL
+
+25
+8.7
+5
+
+25
+8.5
+0
+
+25
+9.5
+0
+K
+
+259
+.25
+
+EET
+SIDE
+WAL
+
+260.00
+
+ARIO S
+TR
+
+8.2
+
+25
+
+.2
+58
+
+WE
+
+32
+
+335m²
+
+75
+
+258
+
+20
+
+452m²
+
+McALPINE ROAD
+LL
+
+349m²
+
+258.
+
+0
+
+19
+
+305m²
+
+357m²
+
+4
+
+8.5
+
+18
+
+305m²
+
+7.
+
+9
+
+MH
+
+25
+
+17
+
+305m²
+
+25
+
+7
+
+0
+
+E
+
+9.5
+
+FE
+NC
+
+HURON
+T
+
+E
+
+16
+
+305m²
+
+766m²
+
+8
+
+NCE
+INK FE
+
+IR
+
+15
+
+305m²
+
+257.75
+
+&W
+
+522m²
+WELL
+
+14
+
+305m²
+
+311m²
+
+L
+CHAIN
+
+5
+9.7
+25
+
+PO
+ST
+
+13
+
+305m²
+
+CONCR
+
+258.
+25
+
+0.
+00
+26
+
+0
+259
+.0
+
+258.50
+259.00
+
+258.75
+.00
+
+00
+9.
+25
+
+DI
+TC
+H
+
+N
+
+12
+
+318m²
+
+ADDITIONAL
+LANDS OWNED BY
+THE APPLICANT
+
+EET
+
+5
+
+258
+.00
+
+DITCH
+
+25
+9.
+
+75
+
+257.7
+
+. 75
+258
+
+HUT
+CHIN
+S ON
+FAR
+M LA
+NE
+260
+
+CR
+OW
+
+11
+
+10
+
+BLOCK 58
+BUFFER
+(MTO SETBACK)
+0.22ha (0.54ac)
+
+9.
+25
+
+.25
+258
+
+MH
+
+0
+258.5
+
+.75
+
+75
+
+00
+
+5
+
+259
+
+7.
+
+257.75
+
+8.2
+25
+
+5
+
+259.2
+
+25
+
+257.50
+
+MH
+
+.00
+258
+
+00
+
+257.75
+257.75
+
+BXB
+
+.75
+
+9.
+
+.00
+
+CHAIN LINK FENCE
+
+25
+0.
+26
+
+257
+
+25
+
+SUBJECT
+LANDS
+
+258
+
+258.00
+
+258.25
+
+0.
+26
+
+KEY PLAN
+
+AY
+HW
+G
+HI
+
+.00
+
+261
+
+Client
+
+Drawn
+
+ARGO SUMMER VALLEY LIMITED
+0
+
+KT
+
+Checked
+
+LN
+
+Date
+
+23/11/20
+
+Scale
+
+Project No.
+
+N.T.S.
+
+300054371
+
+Figure No.
+
+FIG 4A
+
+SCALE 1:500
+(24 x 36)
+
+NOVEMBER 16, 2023
+
+G
+HI
+
+KEY PLAN
+
+AY
+HW
+41
+
+HIGHWAY 410
+
+0
+
+X
+
+X
+
+X
+
+X
+
+X
+X
+
+HURONT
+
+No. 3
+7
+2S
+BRIC TOREY
+K DW
+ELLIN
+G
+
+W
+
+X
+
+W
+
+X
+
+W
+
+X
+
+W
+W
+
+ARGO SUMMER VALLEY LIMITED
+
+X
+
+W
+
+DRAFT PLAN OF SUBDIVISION
+FILE # 21T-22011B
+
+B CRES
+
+X
+X
+
+X
+
+X
+X
+X
+X
+X
+X
+
+X
+
+DONHE
+R
+
+X
+
+X
+
+BOARD
+
+X
+
+X
+
+FENCE
+
+CENT
+
+EXISTIN
+RESIDE G
+NTIAL
+
+X
+
+W
+W
+W
+W
+
+X
+X
+
+X
+
+N
+INK FE
+
+X
+
+CE
+
+(GEOGRAPHIC TOWNSHIP OF CHINGUACOUSY)
+
+CITY OF BRAMPTON
+REGIONAL MUNICIPALITY OF PEEL
+OWNERS CERTIFICATE
+I HEREBY AUTHORIZE GLEN SCHNARR & ASSOCIATES INC. TO PREPARE AND SUBMIT
+THIS DRAFT PLAN OF SUBDIVISION TO THE CITY OF BRAMPTON FOR APPROVAL.
+
+FEB. 15, 2022
+DATE: _____________
+
+SIGNED: _________________________
+MR. GORD BUCK, A.S.O.
+ARGO SUMMER VALLEY LIMITED
+
+X
+
+X
+
+ADDITIONAL LANDS OWNED BY THE APPLICANT
+(CONCURRENT APPLICATION WITH THE TOWN OF CALEDON )
+
+PART OF LOT 18, CONCESSION 1, E.H.S.
+
+X
+
+TARIO
+
+W
+
+L
+CHAIN
+
+X
+
+X
+
+HURON
+
+MAYFIELD ROAD
+
+X
+
+W
+
+X
+
+W
+
+X
+
+STREET
+
+X
+
+X
+
+X
+
+BR 2 S No.
+IC TO 35
+K
+DW REY
+EL
+LIN
+G
+
+X
+
+BOARD
+
+X
+
+FENCE
+
+X
+
+X
+
+X
+
+ARIO ST
+R
+
+HUT
+CHIN
+S ON
+FAR
+M LA
+NE
+
+BOARD FENCE
+
+NO FENCE
+
+ADDITIONAL
+LANDS OWNED BY
+THE APPLICANT
+
+EET
+
+SUBJECT
+LANDS
+
+CHAIN LINK FENCE
+
+X
+
+FENC
+
+E
+
+X
+
+LINK
+
+X
+
+CHAIN
+
+X
+
+EXISTING
+AGRICULTURAL
+
+SURVEYORS CERTIFICATE
+
+BOARD FENCE
+
+LIGHTHEART
+DRIVE
+
+I HEREBY CERTIFY THAT THE BOUNDARIES OF THE LANDS TO BE SUBDIVIDED AS
+SHOWN ON THIS PLAN AND THEIR RELATIONSHIP TO ADJACENT LANDS ARE
+CORRECTLY AND ACCURATELY SHOWN.
+
+FEB. 18, 2022
+DATE: _____________
+
+SIGNED: _________________________
+NO FEN
+CE
+
+A. U. KUMARANAYAKE, O.L.S.
+
+TOWN OF CALEDON LIMIT
+CITY OF BRAMPTON LIMIT
+
+SHED
+
+4
+
+EXISTING
+RESIDENTIAL
+NCE
+
+8
+
+1
+
+(UNDER SECTION 51(17) OF THE PLANNING ACT) INFORMATION REQUIRED BY
+CLAUSES A,B,C,D,E,F,G,J & L ARE SHOWN ON THE DRAFT AND KEY PLANS.
+
+LAND USE SCHEDULE
+
+No. 23
+2 STORE
+Y
+BRICK D
+WELLING
+
+7
+
+5
+
+BOARD FE
+
+2
+
+SHED
+
+McALPINE
+ROAD
+
+CENTE
+RLINE O
+F CONS
+AS PER
+TRU
+CH3168
+6 AND C CTION
+H31566
+
+3
+
+ADDITIONAL INFORMATION
+
+H) MUNICIPAL AND PIPED WATER TO BE PROVIDED
+I) SANDY LOAM AND CLAY LOAM
+K) SANITARY AND STORM SEWERS TO BE PROVIDED
+
+BOARD FENCE
+
+LAND USE
+
+LOTS / BLOCKS
+
+DETACHED - 12.20m (40')
+DETACHED - 12.80m (42')
+
+1-8
+
+DETACHED - 15.24m (50')
+
+6
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+H CRESC
+
+0.04
+
+0.10
+
+1
+
+25.00
+
+0.26
+
+0.64
+
+5
+
+19.23
+
+8
+
+21.05
+
+9
+
+0.05
+
+0.12
+
+ROAD WIDENING
+17.0m LOCAL R.O.W. (LENGTH: 43m)
+
+10
+
+0.04
+
+0.10
+
+10
+
+0.07
+0.54
+
+0.17
+1.33
+
+Figure Title
+
+ARGO SUMMER VALLEY
+PROPOSED DRAFT PLAN OF SUBDIVISION
+(CITY OF BRAMPTON)
+
+HILLPAT
+
+0.20
+
+- ALL DAYLIGHT RADII ARE 5.0m, UNLESS OTHERWISE DENOTED
+- PAVEMENT & SIDEWALK ILLUSTRATION IS DIAGRAMMATIC
+
+EXISTING
+0.3m RESERVE
+
+EXISTING
+RESIDENTIAL
+
+Client
+
+Drawn
+
+ARGO SUMMER VALLEY LIMITED
+0
+
+0.08
+
+NOTES
+
+HIGHWOOD ROAD
+
+X
+
+X
+
+X
+
+X
+
+ENT
+
+X
+
+EXISTING
+SALES CENTRE
+
+X
+
+BLOCK 10
+ROAD WIDENING
+0.04ha (0.10ac)
+
+X
+
+CHAIN LINK FENCE
+
+X
+
+X
+
+AREA AREA
+DENSITY
+(ha)
+(ac) UNITS (UPHA)
+
+BUFFER (MTO SETBACK)
+
+TOTAL
+X
+
+EXISTING
+RESIDENTIAL
+
+No. 63
+2 STORE
+Y
+BRICK D
+WELLING
+
+BOARD FENCE
+
+X
+
+COLLINGWOOD
+AVENUE
+
+BLOCK 9
+BUFFER
+(MTO SETBACK)
+0.05ha (0.12ac)
+
+EXISTING
+RESIDENTIAL
+
+X
+
+EXISTING
+COMMERCIAL
+
+R-PE SURVEYING LTD.
+
+KT
+
+Checked
+
+LN
+
+Date
+
+23/11/20
+
+Scale
+
+Project No.
+
+N.T.S.
+
+300054371
+
+Figure No.
+
+FIG 4B
+
+SCALE 1:500
+(24 x 36)
+
+MAY 9, 2023
+
+2
+
+25.00
+
+Argo Summer Valley Limited
+
+12
+
+Functional Servicing Report
+November 2023
+
+5.0
+
+Roads
+
+The proposed development includes a 17 m Right-of-Way (ROW) cross section, with connection
+to Highwood Road directly opposing Hillpath Crescent and an extension of Lightheart Drive.
+The 17 m ROW proposed throughout the development will be consistent with the City Standard
+Drawing Std. 200 for a minor local road with 8 m wide pavement on 17 m ROW. A copy of the
+Std. 200 is included in Appendix B.
+The site was historically planned as an extension of the Creek’s Edge subdivision to the south,
+which has been designed and constructed with the City standard roads. The adjacent Donal JV
+site, including the existing Lightheart Drive, was also constructed with 17 m ROWs with 8 m of
+pavement. The adoption of the proposed road design standard in both the Town and City
+portions of the site will be in line with adjacent road design standards and is considered
+appropriate.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+13
+
+Functional Servicing Report
+November 2023
+
+6.0
+
+Wastewater Servicing
+
+6.1
+
+Existing Municipal System
+
+The proposed DPOS is located within the servicing area of the Etobicoke Creek West Shed
+trunk sanitary sewer. Based on the As-Constructed drawings for the surrounding subdivision
+lands, as provided by the Region of Peel, the infrastructure systems of the adjacent subdivisions
+were designed and constructed with consideration to development of the subject site.
+Along the south property frontage, there is an existing 300 mm diameter sanitary sewer
+extended within Highwood Road, which drains to a 375 mm sanitary sewer immediately
+downstream of the site, with ultimate discharge point into the 450 mm diameter sanitary trunk
+sewer on Summer Valley Drive. The As-Constructed Plan and Profile drawing for Highwood
+Road is included in Appendix A. As identified, EX.MH06A is situated at the intersection of
+Highwood Road and Hillpath Crescent, which provides connection opportunity for the proposed
+DPOS. The downstream invert elevation of the sanitary sewer at EX.MH06A is 252.07 m.
+At the east limits of the site, there is an existing 250 mm sanitary sewer extended from
+Lightheart Drive to the site, which also drains to the 450 mm sanitary trunk sewer on Summer
+Valley Drive. The sanitary sewer is a 250 mm diameter sewer terminating at EX.MH18A, which
+is located within the subject site. The downstream invert elevation of the existing sanitary sewer
+is situated at 253.92 m. The As-Constructed Plan and Profile drawing for Lightheart Drive and
+Highwood Road, including the existing sanitary infrastructure, is included Appendix A.
+Appendix A includes a copy of the Creek’s Edge Subdivision Sanitary Drainage Plan (Part I)
+which identifies drainage areas at a density of 50 ppha on the north side of Highwood Road to
+the City limits as directly tributary to the existing infrastructure (MH7A through 5A). In addition,
+an external area of 3.0 ha of 50 ppha from the Town is accommodated on Highwood Road in
+the sanitary plug with connection to MH5A.
+As identified on the External Tributary Area inset on the As-Constructed drawing, an area of
+88.25 ha to the northwest, in addition to the 3.0 ha noted above, has been accommodated
+within the sanitary sewer system on Highwood Road. The plan also identifies a drainage area
+of 12.96 ha immediately to the north of Summer Valley Drive, and an additional area of 80.22 ha
+to the northeast as accommodated within the Summery Valley Drive trunk sewer. The subject
+lands within the Town fall within the identified external drainage areas for the existing system.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+14
+
+Functional Servicing Report
+November 2023
+
+6.2
+
+Design Criteria
+
+The proposed sanitary sewers will be designed and constructed to current Region of Peel and
+Ministry of Environment Conservation and Parks criteria and specifications. The sanitary design
+criteria are as follows:
+•
+•
+•
+•
+
+6.3
+
+Residential Flow Rate
+Infiltration / Inflow
+Peaking Factor
+Population Density
+−
+Single Detached
+
+-
+
+290 L per capita per day
+0.260 L/sec/ha
+Harmon Peaking Factor Formula
+Varies:
+4.202 ppu
+
+Proposed Sanitary Servicing
+
+The proposed development will utilize the existing and available connections and Region
+infrastructure at the east and south limits of the site. The proposed development will drain to
+the existing sanitary sewer on Highwood Road via direct service connection for the lots fronting
+Highwood Road and via a sanitary sewer connection to EX.MH06A at the intersection of
+Highwood and Hillpath Crescent. The remainder of the site will flow to the eastern site limits at
+the extension of Lightheart Drive and connect to the existing sanitary sewer network at
+EX.MH18A. Figure 5 identifies the proposed drainage boundaries, the total drainage areas, and
+the calculated drainage densities for the three connection points. Table 2 summarizes the
+sanitary drainage area and flow calculation parameters for the proposed DPOS.
+Table 2: Proposed Sanitary Drainage Area Details
+Drainage Connection
+Highwood EX.MH06A
+Highwood Direct Service Connection
+Lightheart Drive EX.MH18A
+Total Area
+
+Drainage
+Area (ha)
+0.90
+0.14
+2.28
+3.32
+
+Population
+80
+9
+185
+274
+
+Flow (L/s)
+1.35
+0.15
+3.19
+
+As identified on the As-Constructed Drainage Plan, 3.0 ha of external flow, and the direct
+frontage of the subject property on Highwood Road, were accommodated at 50 ppha in the
+Creek’s Edge Subdivision. Per the summary above, the proposed development will contribute a
+total of 1.02 ha and 89 people to the existing Highwood Road system, which is less than the
+design population of 150 people.
+The remainder of the subject site will drain to the existing sanitary sewer on Lightheart Drive
+and the trunk on Summer Valley Drive. The total drainage area falls within the planned capacity
+of the Summer Valley Drive trunk system with a density of 50 ppha equivalent to 115 people.
+The proposed catchment to Lightheart Drive and the Summer Valley trunk will contribute a total
+population of 185 people, in addition to the Highwood Road contribution of 89 people. This total
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+15
+
+Functional Servicing Report
+November 2023
+
+exceeds the Region planned capacity for the site-specific drainage area of 3.32 ha at
+50 ppha, 166. However, the planned capacity of the trunk sewer includes the MTO lands, and
+the area occupied by Highway 410, immediately to the north of the subject site. As this area will
+not be developed at the planned population density, there is residual capacity within the trunk
+sewer, sufficient to accommodate the proposed development at the increased density.
+Accounting for the MTO lands along the north property boundary and the area of the Highway,
+there is over 8.6 ha of area that will not contribute flow to the sanitary sewer. This area alone
+creates additional planned capacity in the trunk, equivalent to 430 people, which is more than
+sufficient to accommodate the proposed development in the trunk sewer.
+As noted in Table 2, the total flow contribution to the Lightheart Drive sanitary sewer is 3.19 L/s.
+The existing sanitary sewer is a 250 mm pipe at 0.76% in Lightheart Drive, which drains
+approximately 3 ha of existing development. The sewer has a capacity of 51.8 L/s, sufficient to
+accommodate more than 30 ha of development at 100 ppha, indicating that there is more than
+sufficient capacity in the local system to accommodate the proposed development.
+Based on the above, the proposed DPOS falls within the available capacity of the existing
+sanitary system.
+The local sewers servicing the development site will follow the alignment of the roads. At the
+south site boundary, connection to the existing system will be made at EX.MH06A at the
+intersection of McAlpine Road and Highwood Road. At the east side of the site, the sanitary
+sewer will follow the proposed extension of Lightheart Drive to provide connection to the existing
+sanitary EX.MH18A.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+SID
+EW
+AL
+K
+CO
+NK
+NC
+TO
+RE
+P
+TE
+
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+
+BA
+
+SID
+
+W
+
+O
+
+EW
+AL
+K
+
+BO
+TT
+M
+
+AS
+PH
+AL
+T
+
+F
+
+W
+
+O
+
+W
+
+K
+
+BA
+N
+
+BR
+
+KL
+EA
+
+26
+252600.5
+252599.5
+8.
+5
+
+E
+
+P
+TO
+
+W
+W
+
+NK
+BA
+
+W
+
+IN
+
+CH
+
+BA
+NK
+T
+
+W
+
+DIT
+
+1
+
+26
+
+N
+FE
+
+CE
+
+CH
+
+K
+
+AIN
+
+LIN
+
+BO
+TT
+OM
+
+W
+
+OP
+
+258
+
+W
+
+BANK TOP
+
+W
+
+W
+
+W
+
+W
+
+BXB
+
+OHGUY
+OHGUY
+
+OHGUY
+OHGUY
+
+W
+W
+
+0
+
+W
+
+21
+MH06A
+TOP=258.43
+DEPTH=3.5m
+
+W
+W
+
+OHGUY
+
+W
+OHGUY
+
+W
+W
+
+W
+OHGUY
+
+OHGUY
+OHGUY
+
+W
+
+25
+9.5
+
+W
+W
+W
+
+W
+W
+
+W
+W
+W
+W
+
+W
+OHGUY
+
+W
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+W
+
+OHGUY
+OHGUY
+
+TE
+
+W
+
+CONCRE
+
+W
+
+W
+
+N
+
+W
+W
+
+W
+W
+W
+
+258
+
+W
+
+W
+W
+
+258.5
+257.5
+
+W
+
+SIDEW
+ALK
+
+O STR
+EET
+
+MH11A
+TOP=258.26
+DEPTH=4.0m
+38
+39
+
+40
+
+CONNECT TO EX. SANITARY
+SEWER EX.MH18A
+(D/S INV. ELEV. 253.92m)
+
+37
+
+.5
+256
+6
+25
+BOTTOM OF BANK
+
+BOTTOM OF BANK
+
+TOWN OF CALEDON
+CITY OF BRAMPTON
+
+BOTTOM OF BANK
+
+W
+
+BANK TOP
+
+W
+
+BANK TOP
+OHGUY
+
+OHGUY
+
+OHGUY
+OHGUY
+
+OHGUY
+
+W
+
+W
+
+W
+
+W
+
+256.5
+
+OD ROAD
+
+7
+
+EX. MH04A EX. 30
+6
+
+ALK
+
+C
+CON
+
+AN
+mS
+
+m
+
+300
+
+W
+
+PW
+
+K
+
+TO
+
+AN
+
+W
+
+K
+
+FB
+
+SIDEWALK CONCRETE
+
+EX. 300mm SAN
+
+W
+
+EX. 300mm SAN
+EX. MH06A
+
+W
+
+25
+7.
+5
+
+W
+
+EX. MH07A
+
+257
+
+W
+
+W
+
+EX.
+
+RETAINING WALL
+
+25
+
+6.5
+
+EW
+SID
+
+RETAINING WALL
+
+0mm SAN
+
+E
+
+RET
+
+O
+OM
+
+TT
+
+BO
+
+258
+
+25
+
+E
+DR R VA
+IV LL
+E
+EY
+
+W
+
+W
+
+W
+
+257.5
+
+W
+
+W
+
+257.5
+
+W
+
+W
+
+257
+
+W
+
+DITCH
+
+P
+
+1
+
+HIGHWO
+
+8
+
+7
+
+5
+258
+
+BLOCK
+9
+BUFFER
+
+W
+
+W
+
+250mm SAN
+
+W
+W
+W
+
+W
+
+25
+8.5
+
+0.90 ha
+80 POP
+1.35 L/s
+
+BANK
+TO
+
+N
+BA
+
+258
+
+2
+
+4
+
+258
+
+W
+
+W
+
+W
+
+DRIVEWAY GRAVEL
+
+MH
+
+SIDEWALK CONCRETE
+
+0.14 ha
+9 POP
+0.15 L/s
+
+W
+
+W
+
+VERT
+
+300mmØ CUL
+
+3
+
+SU
+MM
+
+W
+
+W
+
+OHGUY
+
+BANK TOP
+
+BANK TOP
+
+HURO
+NTARI
+
+0.20Ø
+
+0.20Ø
+
+OHGUY
+
+DITCH
+
+257.5
+257.5
+258
+258.5
+
+CONCRETE
+
+BOTTOM OF BANK
+
+41
+
+SIDEWALK
+
+0.15Ø
+
+ASPHALT
+
+T
+
+BANK TOP
+
+42
+
+43
+
+m SAN
+EX.
+EX.250m
+MH3A
+
+LIGHTHEART
+DRIVE
+
+DRIV
+
+PLUG
+& B.O.
+
+LIGHTHEART
+DRIVE
+BOTTOM OF BANK
+
+EX. 250mm SAN
+EX. MH4A
+
+T 250mm SAN
+EX. MH18AEWAY ASEX.
+PHAL
+
+2
+250mm SAN
+
+44
+MH10A
+TOP=258.54
+DEPTH=3.9m
+
+57
+
+B
+
+57.5
+
+MH09A
+TOP=258.60
+DEPTH=3.9m
+
+257
+
+2
+
+TEMP DIC
+
+250mm SAN
+
+0.20Ø
+
+DRIVEWAY
+
+45
+
+56
+
+1
+
+250mm SAN
+
+250mm SAN
+
+BANK TOP
+
+3
+
+MH12A 26
+TOP=258.11
+DEPTH=4.0m
+
+27
+258
+
+8.5
+
+25
+
+McALPINE
+
+OHGUY
+OHGUY
+
+BLOCK 58
+BUFFER
+
+OHGUY
+OHGUY
+
+TOP
+
+36
+
+25
+
+BANK TOP
+
+COLLINGWOOD
+AVENUE
+
+MH
+
+250mm SAN
+
+OHGUY
+
+BANK
+
+ROAD
+
+OHGUY
+
+W
+
+W
+
+BREAKLI
+W
+NE
+
+9
+
+ASPHAL
+
+OHGUY
+OHGUY
+
+SIDEWALK
+
+OHGUY
+OHGUY
+
+BANK TOP
+
+OHGUY
+OHGUY
+OHGUY
+
+25
+
+35
+
+McALPINE
+
+W
+
+9
+
+DITCH
+BANK TO
+P
+
+TOWN OF CALEDON
+CITY OF BRAMPTON
+
+55259
+MH01A
+TOP=257.88
+DEPTH=3.4m
+
+250mm SA
+N
+
+W
+
+W
+
+25
+
+4
+
+46
+
+250mm SA
+
+W
+
+W
+
+NK
+
+BA
+
+MH
+
+54
+
+LIGHTHEA
+RT DRIVE
+
+W
+
+W
+
+259
+259
+2525
+9
+8.5
+258
+
+W
+
+F
+
+5
+
+47
+
+53
+
+ROAD
+
+SA
+N
+0m
+m
+25
+
+W
+
+T
+
+W
+
+O
+
+9.
+5
+
+6
+
+257.5
+258
+258.5
+
+W
+W
+
+W
+
+W
+
+W
+
+W
+
+26
+0
+
+W
+
+258.5
+259
+259.5
+260
+
+W
+
+25
+
+M
+
+O
+
+25 25
+8 9
+E2 .5
+58
+.5
+
+2.28 ha
+185 POP
+3.19 L/s 28
+
+T
+
+W
+
+P
+
+TT
+
+TO
+
+BO
+
+NK
+
+BA
+
+P
+TO
+
+OS TO
+T& P
+W
+IR
+
+29
+
+34
+
+BANK
+
+ALK AS
+PHAL
+
+W
+
+NK
+
+D
+NC BA ITC
+E NK H
+P
+
+48
+
+52
+MH03A
+TOP=259.15
+DEPTH=3.2m
+
+BOTTOM OF
+
+BAN
+K
+
+SIDEW
+
+W
+OHGUY
+OHGUY
+
+AL
+
+OF
+
+W
+OHGUY
+OHGUY
+
+24
+
+PH
+
+OM
+
+W
+
+7
+
+30
+
+33
+
+23
+
+AS
+
+BOTT
+
+W
+
+TE
+
+BA
+
+OHGUY
+
+31
+
+49
+
+50
+
+51
+
+EW
+
+W
+
+NCRE
+
+8
+
+IV
+
+W
+
+250mm SAN
+32
+
+DR
+
+W
+
+TOP
+
+WAL
+K CO
+
+BAN
+K
+
+SIDE
+
+9
+
+DONHER
+B CRES
+
+OHGUY
+
+N
+O
+NS E
+HI LAN
+TC M
+HU AR
+F
+MH
+
+FE
+
+22
+MH07A
+TOP=258.37
+DEPTH=3.7m
+
+250mm SAN
+
+250mm SAN
+
+EWAL
+
+EX. MH05A
+
+E
+RET
+
+ONC
+
+KC
+
+SID
+
+W
+W
+W
+
+SIDEWALK CONCRETE
+
+MH
+
+T&WIRE
+
+MH
+MH
+
+TO
+
+P
+
+25
+8
+2
+225575.58
+7
+
+EXISTING
+0.3m RESERVE
+
+CONNECT TO EX. SANITARY SEWER
+EX.MH06A @ INTERSECTION
+(D/S INV. ELEV. 252.07m)
+
+Figure Title
+
+ARGO SUMMER VALLEY
+PROPOSED SANITARY SERVICING PLAN
+
+N
+
+PROPOSED SANITARY
+PROPOSED SANITARY MANHOLE
+
+CONCRETE
+
+EXISTING SANITARY SEWER
+
+FENCE POS
+
+PROPERTY LINE
+
+BLOCK 10
+ROAD WIDENING
+
+SIDEWALK
+
+BANK TOP
+
+LEGEND
+
+K
+
+BA
+NK
+
+STM
+
+N
+
+OF
+
+W
+
+CH
+
+NC. BOX
+
+5
+
+6.
+
+BA
+
+W
+
+BOTTO
+M OF BAN
+BO
+K
+TT
+OM
+
+W
+
+P
+
+DIT
+
+P
+
+TO
+
+TO
+
+NK
+
+NK
+
+BA
+
+BA
+
+25
+
+1.5m CO
+
+BXB
+RETAINING WALL
+
+HILLPAT
+H
+CRESCE
+NT
+
+SIDEWALK CONCRETE
+
+0.90 ha
+80 POP
+1.35 L/s
+
+DRAINAGE AREA (HECTARES)
+POPULATION
+TOTAL FLOW
+0
+
+Client
+25
+
+50
+
+75
+
+100
+
+Metres
+
+CITY OF BRAMPTON FILE NUMBER : 0ZS-2022-0030
+
+Drawn
+
+ARGO SUMMER VALLEY LIMITED
+
+KT
+
+Checked
+
+LN
+
+Date
+
+23/11/20
+
+Scale
+
+Project No.
+
+1:1250
+
+300054371
+
+Figure No.
+
+FIG 5
+
+File: \\MONTY\Shared Work Areas\054371 - Argo Summer Valley\07_Figures\054371 - PROPOSED SAN FIGURE.dwg Date Plotted: November 20, 2023 - 3:58 PM
+
+OHGUY
+
+26
+
+20
+
+N
+
+OHGUY
+
+McALPINE ROAD
+
+10
+
+19
+
+EX. 250mm SA
+
+W
+
+OHGUY
+
+17
+18
+MH05A
+TOP=258.68
+DEPTH=3.4m
+
+16
+
+15
+
+14
+
+13
+
+12
+
+CENT
+
+W
+
+11
+
+MH04A
+TOP=258.99
+DEPTH=3.4m
+
+AY
+
+W
+
+MH
+
+258
+
+BANK TOP
+
+BANK TOP
+DITCH
+
+8.5
+25
+
+BANK TOP
+
+BA
+NK
+
+258
+258
+.5
+25
+9
+25
+9 .5
+26
+0
+26
+0.5
+
+OF
+
+0
+
+26
+
+BOTTOM OF BANK
+
+.5
+
+Argo Summer Valley Limited
+
+17
+
+Functional Servicing Report
+November 2023
+
+7.0
+
+Water Servicing
+
+7.1
+
+Existing Water Services
+
+Water supply is provided by the Region of Peel water distribution system. The subject site is
+located within Pressure Zone 7, the southern boundary of which runs along Mayfield Road.
+Along Highwood Road there is an existing 300 mm diameter watermain on the north side of the
+road across the frontage of the subject site. Additionally, there is an existing 300 mm diameter
+watermain on Summer Valley Drive which feeds the 150 mm diameter watermain on
+Lightheart Drive. A 150 mm watermain with plug and blow off is extended from Lightheart Drive
+to the east limit of the subject property.
+
+7.2
+
+Water Design Criteria
+
+Water servicing for the subject lands will be designed in accordance with the Region of Peel
+standards and specifications to ensure that adequate pressures and flows are achieved.
+Watermain design flows will be based on the following criteria:
+•
+•
+•
+•
+
+7.3
+
+Average Day Demand
+Population Density
+Peaking Factor
+Design Flow
+
+-
+
+280 L per capita per day
+Per 2020 DC By-Law Update (4.202 ppu)
+Per Region of Peel criteria
+Greater of Max. Day plus Fire or Peak
+
+Proposed Water Servicing
+
+The proposed water servicing of the subject property includes two connections to the existing
+municipal water system, one to the 300 mm main on Highwood Road and one at the plug of the
+150 mm main extended from Lightheart Drive. The proposed connections create a looped
+system for the proposed development. The connection at Highwood Road is consistent with the
+location of the proposed intersection identified in the DPOS. Given the proximity of the trunk
+mains to the subject site, the connections to Highwood Road watermain with the additional
+connection to the Lightheart Drive watermain is sufficient to provide services to the DPOS.
+The proposed fire demand for the development has been calculated based on the Fire
+Underwriters Survey criteria, while the proposed domestic water demand has been calculated
+using the Region of Peel’s Watermain Design Criteria. Additionally, hydrant flow testing was
+completed on October 18, 2022, on Highwood Road. Based on this testing, it can be expected
+that the available fire flow at the sampling location would be approximately 218 L/s at a
+minimum residual pressure of 20 PSI. Table 3 summarizes the results of the completed
+demand calculations. Refer to Appendix D for detailed calculations as well as the hydrant flow
+test results.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+18
+
+Functional Servicing Report
+November 2023
+
+Table 3: Domestic Water and Fire Demand Summary
+Average Day Demand
+Maximum Day Demand
+Peak Hour Demand
+Fire Flow Required
+
+0.89 L/s or 76.48 m3/day
+1.77 L/s or 152.95 m3/day
+5.31 L/s or 458.86 m3/day
+117 L/s
+
+Figure 6 depicts the proposed water servicing distribution network for the DPOS. The internal
+water main distribution network is proposed to follow the internal road alignments and will be
+designed in accordance with Municipal standards within the proposed ROW. Based on the
+Draft Plan configuration, the connection to Lightheart Drive will be accommodated through the
+ROW connection through the extension of Lightheart Drive to the plug location at the property
+boundary. The water main is proposed to be a 150 mm diameter main with final sizing to be
+confirmed through consultation with the Region during the detailed design process.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+SID
+EW
+AL
+K
+CO
+NK
+NC
+TO
+RE
+P
+TE
+
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+
+BA
+
+SID
+
+W
+
+O
+
+EW
+AL
+K
+
+BO
+TT
+M
+
+AS
+PH
+AL
+T
+
+F
+
+W
+
+O
+
+W
+
+K
+
+BA
+N
+
+BR
+
+IN
+
+E
+W
+
+CH
+
+W
+
+P
+TO
+
+W
+
+NK
+BA
+
+W
+
+KL
+EA
+
+DIT
+
+BA
+NK
+T
+
+N
+FE
+
+CE
+
+CH
+
+K
+
+AIN
+
+LIN
+
+BO
+TT
+OM
+
+W
+
+OP
+
+W
+
+BANK TOP
+
+OF
+
+W
+W
+
+W
+W
+
+BXB
+
+W
+W
+OHGUY
+OHGUY
+
+W
+W
+
+AIN
+150mmØ
+
+TERMAIN
+
+W
+
+150mmØ WA
+
+W
+
+RE HEIGHT
+RD 2 MET
+FENCE BOA
+
+AIN
+WATERM
+
+W
+
+W
+W
+
+W
+W
+W
+W
+
+W
+W
+W
+
+BANK TOP
+
+41
+
+40
+
+37
+39
+
+38
+
+57
+
+TOWN OF CALEDON
+CITY OF BRAMPTON
+HEADWALL
+
+BOTTOM OF BANK
+BOTTOM OF BANK
+FENCE BOARD 2 METRE HEIGHT
+BANK TOP
+
+BOTTOM OF BANK
+BANK TOP
+FENCE BOARD 2 METRE HEIGHT
+
+W
+
+W
+
+DONHER
+B CRES
+
+W
+W
+W
+
+W
+
+W
+W
+
+W
+W
+W
+W
+
+W
+OHGUY
+
+W
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+W
+
+OHGUY
+OHGUY
+
+TE
+CONCRE
+SIDEW
+ALK
+
+O STR
+EET
+
+42
+
+BOTTOM OF BANK
+
+CONNECT TO EX. 150mmØ
+VIA 2 - 22.50° BENDS
+
+11.25° BEND
+
+RLCB
+
+RLCB
+
+RLCB
+
+OHGUY
+OHGUY
+
+OHGUY
+OHGUY
+
+W
+
+W
+W
+
+W
+W
+
+W
+
+W
+
+W
+
+W
+
+HIGHWO
+
+OD ROAD
+
+CB
+
+W
+
+DITCH
+
+P
+
+1
+
+W
+
+6
+
+TT
+W
+
+FENCE CHAIN LINK
+
+RETAINING WALL
+
+RETAINING WALL
+
+PW
+
+K
+
+TO
+
+AN
+
+W
+
+K
+
+FB
+
+O
+OM
+
+WV
+
+WV
+
+EX. 300mmØ WATERMAIN SIDEWALK CONCRETE
+
+WV
+
+W
+
+ERMAIN
+
+CB
+
+CB
+
+EX. 300mmØ WAT
+
+E
+CRET
+
+CB
+
+K
+EWAL
+
+EX. 150mmØ WM
+
+W
+
+AIN
+
+CON
+
+SID
+
+W
+W
+
+Ø WATERM
+
+E
+
+RET
+
+ONC
+
+C
+ALK
+
+EW
+
+SID
+
+EX. HYD
+
+W
+W
+
+SIDEWALK CONCRETE
+
+BXB
+BA
+
+N
+
+K
+
+TO
+
+P
+
+OF
+
+W
+
+BOTTO
+M OF BAN
+BO
+K
+TT
+OM
+
+RETAINING WALL
+
+BA
+NK
+
+WV
+
+BLOCK 10
+ROAD WIDENING
+
+WV
+
+T&WIRE
+
+CONCRETE
+
+FENCE POS
+
+BANK TOP
+
+SIDEWALK
+
+HILLPAT
+H
+CRESCE
+NT
+
+W
+
+W
+
+BO
+
+EX. 300mm
+
+SU
+MM
+
+W
+
+W
+
+8
+
+7
+
+5
+
+2
+
+FENCE BOAR
+
+W
+
+W
+
+E HEIGHT
+
+BLOCK
+9
+BUFFER
+
+W
+W
+
+W
+
+W
+
+DRIVEWAY GRAVEL
+
+D 1.9 METR
+
+W
+
+W
+
+W
+
+W
+
+W
+
+4
+
+3
+
+BANK
+TO
+
+W
+
+CH
+
+STM
+
+E
+DR R VA
+IV LL
+E
+EY
+
+OHGUY
+
+W
+
+OHGUY
+
+HURO
+NTARI
+
+0.20Ø
+
+OHGUY
+
+VERT
+
+300mmØ CUL
+
+AIN
+
+LIGHTHEART DRIVE
+43
+
+BOTTOM OF BANK
+
+BANK TOP
+
+BANK TOP
+
+Ø WATERM
+
+CONCRETE
+
+EX. 150mmØ WATERMAIN
+
+0.20Ø
+
+ASPHALT
+
+4 - 22.5° BENDS
+44
+
+CB
+
+NC. BOX
+
+EXISTING
+0.3m RESERVE
+
+MH
+MH
+
+CONNECT TO EX.
+300mm Ø WATERMAIN
+
+Figure Title
+
+ARGO SUMMER VALLEY
+PROPOSED WATERMAIN DISTRIBUTION
+
+N
+
+LEGEND
+PROPERTY LINE
+
+Client
+0
+
+25
+
+50
+
+75
+
+Drawn
+
+100
+
+EXISTING WATERMAIN
+PROPOSED WATERMAIN
+
+LIGHTHEART
+DRIVE
+
+ASPH
+
+EX. 150mmØ WM
+0.15Ø
+
+BANK TOP
+
+MH
+W
+
+P
+
+DIT
+
+P
+
+TO
+
+TO
+
+NK
+
+NK
+
+BA
+
+BA
+
+EX. 600mm
+
+SIDEWALK
+
+EWAY
+
+DRIVEWAY
+
+McALPINE
+
+OHGUY
+OHGUY
+
+BLOCK 58
+BUFFER
+
+OHGUY
+OHGUY
+
+WATERM
+
+OHGUY
+OHGUY
+
+TOP
+
+ROAD
+
+W
+OHGUY
+
+OHGUY
+
+BANK
+
+150mmØ WA
+TERMAIN
+
+W
+OHGUY
+
+W
+
+W
+
+BREAKLI
+W
+NE
+
+CB
+
+DRIV
+
+TEMP DICB
+
+45
+
+56
+
+1
+
+CB
+
+WV
+
+ALT
+
+HYD
+
+PLUG
+& B.O.
+
+2
+
+MH
+
+EX. 300m
+mØ
+600mmØWATERMAIN
+LINER
+
+1.5m CO
+
+150mmØ
+
+W
+
+WATERM
+AIN
+
+W
+W
+
+W
+
+DITCH
+
+SIDEWALK CONCRETE
+
+0.20Ø
+
+WV
+
+55
+
+HYD
+
+T
+
+CB
+
+N
+BA
+
+MH
+
+22.50° BEND
+
+27
+
+FENCE BOARD 1.9 METRE HEIGHT
+
+EX. HYD
+
+WV
+
+150mmØ WA
+TERMAIN
+
+W
+
+ASPHAL
+
+CB
+
+WV
+
+SIDEWALK CONCRETE
+EX. 300mmØ WAT
+ERMAIN
+
+26
+BANK TOP
+
+LIGHTHEA
+RT DRIVE
+
+W
+W
+
+W
+
+SIDEWALK
+
+COLLINGWOOD
+AVENUE
+
+150mmØ
+
+W
+
+W
+W
+W
+
+T
+
+W
+
+OHGUY
+OHGUY
+
+3
+
+36
+
+HYD
+
+RD 2 MET
+
+W
+
+W
+
+OHGUY
+OHGUY
+
+BANK TOP
+
+DITCH
+BANK TO
+P
+
+OHGUY
+OHGUY
+OHGUY
+
+FENCE CHAIN LINK
+
+46
+
+25
+
+DR
+
+W
+
+NK
+
+BA
+
+4
+
+54
+
+28
+
+35
+
+BANK
+
+ALK AS
+PHAL
+
+W
+
+F
+
+5
+
+47
+
+53
+
+29
+
+34
+
+BOTTOM OF
+
+BAN
+K
+
+SIDEW
+
+W
+
+6
+
+48
+
+52
+
+24
+
+RE HEIGHT
+
+W
+
+OF
+
+W
+
+7
+
+30
+
+33
+
+23
+
+FENCE BOA
+
+W
+
+OM
+
+W
+OHGUY
+OHGUY
+
+31
+
+49
+
+50
+
+51
+
+McALPINE
+ROAD
+
+BOTT
+
+W
+
+TE
+
+8
+
+T
+
+W
+
+W
+
+W
+
+NCRE
+
+OHGUY
+OHGUY
+
+O
+
+TOWN OF CALEDON
+CITY OF BRAMPTON
+
+RE HEIGHT
+
+OHGUY
+
+W
+
+TOP
+
+WAL
+K CO
+
+BAN
+K
+
+SIDE
+
+32
+
+22.5° BEND
+
+Metres
+
+CITY OF BRAMPTON FILE NUMBER : 0ZS-2022-0030
+
+ARGO SUMMER VALLEY LIMITED
+
+KT
+
+Checked
+
+LN
+
+Date
+
+23/11/20
+
+Scale
+
+Project No.
+
+1:1250
+
+300054371
+
+Figure No.
+
+FIG 6
+
+File: \\MONTY\Shared Work Areas\054371 - Argo Summer Valley\07_Figures\054371 - PROPOSED WM DISTRIBUTION.dwg Date Plotted: November 20, 2023 - 3:58 PM
+
+W
+
+M
+
+O
+
+MH
+
+WV
+
+FENCE BOA
+RD 2.4 MET
+
+W
+
+9
+
+AL
+
+OHGUY
+OHGUY
+
+W
+
+P
+
+TT
+
+TO
+
+BO
+
+NK
+
+BA
+
+P
+TO
+
+E
+
+22
+
+CENT
+
+W
+
+W
+
+OHGUY
+OHGUY
+
+OHGUY
+
+NK
+
+OS TO
+T& P
+W
+IR
+
+150mmØ WATERMAIN
+
+150mmØ WATERMAIN
+
+BA
+
+D
+NC BA ITC
+E NK H
+P
+
+4 - 22.5° BENDS
+
+HYD
+
+PH
+
+OHGUY
+
+21
+
+McALPINE ROAD
+
+10
+
+MH
+
+FE
+
+20
+
+AS
+
+OHGUY
+
+N
+O
+NS E
+HI LAN
+TC M
+HU AR
+F
+
+WV
+
+19
+
+18
+
+17
+
+EW
+
+OHGUY
+
+EX. HYD
+
+16
+
+15
+
+14
+
+13
+
+12
+
+22.5° BEND
+11
+11.25° BEND
+
+AY
+
+W
+
+MH
+
+IV
+
+BANK TOP
+
+BANK TOP
+DITCH
+
+FENCE CHAIN LINK
+
+BANK TOP
+
+BA
+NK
+
+BOTTOM OF BANK
+
+Argo Summer Valley Limited
+
+20
+
+Functional Servicing Report
+November 2023
+
+8.0
+
+Grading and Storm Drainage
+
+8.1
+
+Existing Municipal System
+
+The proposed DPOS is located within the Etobicoke Creek watershed. Based on the
+As-Constructed drawings and stormwater management reports for the surrounding subdivision
+lands, the infrastructure systems of the adjacent subdivisions were designed and constructed
+with consideration to development of the subject site.
+Along the south property limits, there is an existing 375 mm diameter storm sewer on
+Highwood Road along the frontage of the subject site which drains to a 975 mm storm sewer
+immediately downstream of the site. The storm sewer on Highwood Road discharges into the
+1,350 mm diameter storm trunk on Summer Valley Drive which conveys drainage to a quality
+control stormwater management facility located adjacent to Etobicoke Creek, north of
+Mayfield Road. The As-Constructed Plan and Profile drawing for Highwood Road is included in
+Appendix A. As identified, EX.MH07 is situated at the intersection of Highwood Road and
+Hillpath Crescent, which provides connection opportunity for the proposed DPOS. The
+downstream invert elevation of the storm sewer at EX.MH07 is 253.99 m.
+At the east limits of the site there is an existing 750 mm storm sewer extended from
+Lightheart Drive to an existing ditch inlet catch basin within the subject site as part of the Donal
+JV Subdivision development. This storm sewer also drains to the 1,350 mm storm trunk sewer
+on Summer Valley Drive. The downstream invert elevation of the existing storm sewer at
+STM DCBMH17 is situated at 254.17 m. The As-Constructed Plan and Profile drawing for
+Lightheart Drive and Highwood Road, including the existing storm infrastructure, is included
+Appendix A.
+Appendix A includes a copy of the Creek’s Edge Subdivision Storm Drainage Plan (Part I) which
+identifies drainage areas, with a runoff coefficient of 0.50, on the north side of Highwood Road
+to the City limits as directly tributary to the existing storm infrastructure (EX.MH08 through
+EX.MH06). In addition, an external future development area of 15.58 ha with a runoff coefficient
+of 0.50, from the Town of Caledon, north of Summer Valley Drive is accommodated with the
+storm infrastructure on Summer Valley Drive. Under existing conditions 7.25 ha, including the
+subject site, with a runoff coefficient of 0.25 is accommodated within an RLCB between existing
+lots 151 and 152, with discharge to the storm sewer on Highwood Road at EX.MH04A.
+The storm sewer drainage plan for the adjacent Donal JV Subdivision is also included in
+Appendix A. As identified on that plan, the infrastructure within the Donal JV subdivision has
+been designed to accommodate 4.48 ha of developed area with a runoff coefficient of 0.75 to
+the storm sewer on Lightheart Drive and the continued accommodation of 2.76 ha of drainage
+area at 0.30 runoff coefficient to the RLCB between lots 151 and 152.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+21
+
+Functional Servicing Report
+November 2023
+
+8.2
+
+Existing Site Drainage
+
+The existing site is relatively flat, sloping very gently from an elevated central area to various
+low-lying areas in the east and west. There are a total of six sub-catchment areas within the
+site with various outlets to the existing surrounding drainage system. Figure 7 identifies the
+existing sub-catchment drainage areas and sizes and discharge points as summarized in
+Table 4 below.
+Table 4: Existing Storm Drainage Area Details
+Drainage Connection
+
+Catchment
+ID
+
+Drainage
+Area (ha)
+
+MTO Drainage Ditch (North)
+
+PRE1
+
+0.26
+
+Hurontario Drainage Ditch / Highwood Road
+
+PRE2
+
+1.36
+
+975 mm Highwood Road Storm via CB
+
+PRE3
+
+0.38
+
+975 mm Highwood Road Storm via RLCB (Lot 144)
+
+PRE4
+
+0.06
+
+975 mm Highwood Road Storm via RLCB (Lot 148)
+
+PRE5
+
+0.55
+
+Subtotal to Highwood Road Storm Sewer
+750 mm Lightheart Drive Storm via DICB
+Total Area
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+2.35
+PRE6
+
+1.02
+3.63
+
+300054371.0000
+
+SID
+EW
+AL
+K
+CO
+NK
+NC
+TO
+RE
+P
+TE
+
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+
+BA
+
+SID
+
+W
+
+O
+
+EW
+AL
+K
+
+BO
+TT
+M
+
+AS
+PH
+AL
+T
+
+F
+
+W
+
+O
+
+W
+
+K
+
+BA
+N
+
+BR
+
+KL
+EA
+
+26
+252600.5
+252599.5
+8.
+5
+
+E
+
+P
+TO
+
+W
+W
+
+NK
+BA
+
+W
+
+IN
+
+CH
+
+BA
+NK
+T
+
+W
+
+DIT
+
+1
+
+26
+
+N
+FE
+
+CE
+
+CH
+
+K
+
+AIN
+
+LIN
+
+BO
+TT
+OM
+
+W
+
+OP
+
+258
+
+W
+
+BANK TOP
+
+BXB
+
+W
+
+W
+
+W
+
+W
+
+FENCE CHAIN LINK
+
+W
+OHGUY
+
+W
+OHGUY
+OHGUY
+
+OM
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+
+FENCE BOA
+
+W
+
+W
+
+259
+259
+2525
+9
+8.5
+258
+
+RE HEIGHT
+
+W
+
+W
+
+T
+
+W
+
+RD 2 MET
+
+W
+
+BANK
+
+W
+
+W
+
+W
+
+W
+
+W
+W
+OHGUY
+
+OHGUY
+
+W
+
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+W
+
+W
+
+BREAKLI
+W
+NE
+OHGUY
+
+OHGUY
+OHGUY
+
+OHGUY
+OHGUY
+
+NK
+W
+
+W
+W
+
+W
+W
+W
+W
+OHGUY
+
+W
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+W
+W
+
+7
+25
+
+OHGUY
+
+OHGUY
+
+W
+
+W
+
+OHGUY
+
+OHGUY
+
+W
+
+W
+W
+W
+
+W
+
+D 1.9 METR
+
+W
+
+W
+W
+
+W
+W
+
+W
+W
+
+W
+
+W
+
+W
+
+W
+W
+
+257
+
+257.5
+
+OD ROAD
+
+CB
+
+RETAINING WALL
+
+PW
+
+WV
+
+WV
+
+SIDEWALK CONCRETE
+
+W
+
+25
+7.
+5
+
+W
+
+EX. 375mm STM
+
+9
+
+K
+EWAL
+
+CB
+
+CON
+
+SID
+
+257
+
+W
+
+EX. MH07
+
+EX. 250mm STM
+
+m
+75m
+
+STM
+
+E
+CRET
+
+EX. MH06
+
+CB
+
+5mm STM
+
+25
+
+6.5
+
+EX.
+
+CB
+
+K
+
+TO
+
+RETAINING WALL
+
+WV
+
+EX. MH05EX. 97
+
+E
+
+RET
+
+ONC
+
+C
+ALK
+
+EW
+
+SID
+
+FENCE CHAIN LINK
+
+AN
+
+W
+
+K
+
+FB
+
+W
+W
+
+25
+8
+
+258
+
+258
+
+257.5
+
+W
+
+W
+
+CB
+
+W
+
+SIDEWALK CONCRETE
+
+WV
+
+BXB
+BA
+
+N
+
+K
+
+TO
+
+P
+
+BOTTO
+M OF BAN
+BO
+K
+TT
+OM
+
+RETAINING WALL
+
+6.
+
+WV
+
+T&WIRE
+
+CONCRETE
+
+FENCE POS
+
+SIDEWALK
+
+BANK TOP
+
+EXISTING STORM SEWER
+
+HILLPAT
+H
+CRESCE
+NT
+
+W
+
+W
+W
+
+256.5
+
+W
+
+25
+8.5
+
+RLCB
+
+EX. HEADWALL
+INV. = 255.35
+EX. RLCB
+T/G = 256.63
+NW INV. = 255.29
+SE INV. = 255.07
+
+E HEIGHT
+
+W
+
+W
+
+25
+8
+2
+225575.58
+7
+
+7
+
+O
+OM
+
+TT
+
+258
+
+25
+
+HEADWALL
+
+BOTTOM OF BANK
+BOTTOM OF BANK
+FENCE BOARD 2 METRE HEIGHT
+BANK TOP
+
+RLCB
+
+HIGHWO
+
+FENCE BOAR
+
+W
+
+BO
+
+BA
+NK
+
+STM
+
+257.5
+
+W
+
+W
+
+W
+W
+
+W
+W
+W
+
+258
+
+W
+
+W
+W
+
+258.5
+257.5
+
+W
+
+W
+
+W
+OHGUY
+
+OHGUY
+
+DITCH
+
+OF
+
+W
+
+NC. BOX
+
+PROPERTY LINE
+
+EX. RLCB
+T/G = 256.23
+INV. = 255.03
+
+DRIVEWAY GRAVEL
+
+P
+
+W
+
+CH
+
+1.5m CO
+
+FENCE BOA
+
+RD 2 MET
+
+W
+
+W
+
+RE HEIGHT
+
+W
+
+25
+9.5
+TE
+CONCRE
+SIDEW
+ALK
+
+O STR
+EET
+
+OHGUY
+
+HURO
+NTARI
+
+BANK TOP
+FENCE BOARD 2 METRE HEIGHT
+
+RLCB
+
+PRE3
+0.38 ha
+
+EX. MH08
+
+5
+
+6.5
+
+6
+
+25
+
+BOTTOM OF BANK
+
+BANK
+TO
+
+W
+
+P
+
+DIT
+
+P
+
+TO
+
+TO
+
+NK
+
+NK
+
+BA
+
+BA
+
+LEGEND
+
+257
+256.5
+
+BANK TOP
+
+MH
+
+25
+
+0.20Ø
+
+25
+
+VERT
+
+300mmØ CUL
+
+257.5
+257.5
+258
+258.5
+
+BANK TOP
+
+BOTTOM OF BANK
+
+BANK TOP
+
+BANK TOP
+
+EX. 300mm STM
+CULVERT
+
+SIDEWALK CONCRETE
+
+PRE5
+0.55 ha
+
+0.20Ø
+
+T
+
+PRE4
+0.06 ha
+
+BOTTOM OF BANK
+
+DITCH
+
+WV
+
+MH
+
+.5
+257
+
+T
+
+N
+BA
+
+SIDEWALK CONCRETE
+
+PLUG
+& B.O.
+
+0.15Ø
+
+MH
+
+WV
+
+MH
+
+Figure Title
+
+MH
+
+ARGO SUMMER VALLEY
+
+EXISTING WATERMAIN
+
+EXISTING SITE DRAINAGE
+
+N
+
+EXISTING OVERLAND FLOW
+PRE-DEVELOPMENT
+DRAINAGE BOUNDARY
+
+PRE1
+1.00 ha
+
+EX. 825mm STM
+
+ASPHALT
+
+ASPHAL
+
+COLLINGWOOD
+AVENUE
+
+EX. MH3
+
+EW
+
+259
+FENCE CHAIN LINK
+
+FENCE BOARD 1.9 METRE HEIGHT
+
+CB
+
+LIGHTHEART
+DRIVE
+
+IV
+
+W
+
+ALT
+
+ASPH
+
+EX. 750mm STM
+EX. DCB MH17WV
+EWAY
+
+DRIVEWAY
+
+SIDEWALK
+
+OHGUY
+OHGUY
+
+BANK TOP
+
+OHGUY
+OHGUY
+
+CB
+
+CB
+
+EX. MH4
+
+DR
+
+9
+
+DITCH
+BANK TO
+P
+
+OHGUY
+OHGUY
+OHGUY
+
+9
+
+CONCRETE
+
+BANK TOP
+
+5
+8.
+25
+
+25
+WV
+
+25
+
+CB
+
+WV
+
+DRIV
+
+TEMP DICB
+
+AL
+
+NK
+
+EX. TEMP DICB
+T/G = 256.36
+INV. = 254.24
+
+258
+
+0.20Ø
+
+PH
+
+BA
+
+PRE2
+1.36 ha
+
+AS
+
+F
+
+MH
+
+SIDEWALK
+
+O
+
+9.
+5
+
+TOP
+
+25
+
+M
+
+O
+
+25 25
+8 9
+E2 .5
+58
+.5
+
+BANK
+
+P
+
+TT
+
+TO
+
+BO
+
+NK
+
+BA
+
+P
+TO
+
+OS TO
+T& P
+W
+IR
+
+E
+DR R VA
+IV LL
+E
+EY
+
+26
+0
+
+W
+
+ALK AS
+PHAL
+
+W
+
+BOTTOM OF
+
+BAN
+K
+
+SIDEW
+
+W
+
+TE
+
+258.5
+259
+259.5
+260
+
+OF
+
+W
+
+NCRE
+
+DONHER
+B CRES
+
+W
+
+W
+
+BOTT
+
+257.5
+258
+258.5
+
+W
+
+W
+
+W
+
+W
+
+W
+
+TOP
+
+WAL
+K CO
+
+BAN
+K
+
+SIDE
+
+BA
+
+D
+NC BA ITC
+E NK H
+P
+
+FE
+
+SU
+MM
+
+W
+
+26
+
+0
+
+W
+
+FENCE BOA
+RD 2.4 MET
+
+W
+
+CENT
+
+OHGUY
+OHGUY
+
+W
+
+MH
+
+CATCHMENT ID
+Client
+
+DRAINAGE AREA
+
+0
+
+25
+
+50
+
+75
+
+Drawn
+
+100
+
+ARGO SUMMER VALLEY LIMITED
+Metres
+
+CITY OF BRAMPTON FILE NUMBER : 0ZS-2022-0030
+
+KT
+
+Checked
+
+LN
+
+Date
+
+23/11/20
+
+Scale
+
+Project No.
+
+1:1250
+
+300054371
+
+Figure No.
+
+FIG 7
+
+File: \\MONTY\Shared Work Areas\054371 - Argo Summer Valley\07_Figures\054371 - PRE DEVELOPMENT CONDITIONS.dwg Date Plotted: November 20, 2023 - 3:58 PM
+
+OHGUY
+OHGUY
+
+PRE6
+1.02 ha
+
+M
+
+OHGUY
+
+RE HEIGHT
+
+OHGUY
+
+N
+O
+NS E
+HI LAN
+TC M
+HU AR
+F
+
+WV
+
+EX. 375mm ST
+
+W
+
+W
+
+OHGUY
+
+PRE1
+0.26 ha
+
+AY
+
+W
+
+MH
+
+258
+
+BANK TOP
+
+BANK TOP
+DITCH
+
+8.5
+25
+
+BANK TOP
+
+BA
+NK
+
+258
+258
+.5
+25
+9
+25
+9 .5
+26
+0
+26
+0.5
+
+OF
+
+0
+
+26
+
+BOTTOM OF BANK
+
+.5
+
+Argo Summer Valley Limited
+
+23
+
+Functional Servicing Report
+November 2023
+
+8.3
+
+Grading and Drainage
+
+The proposed grading for the site takes into consideration the following requirements and
+constraints:
+•
+•
+•
+•
+
+Conformance to the Town and City’s grading and drainage criteria.
+Provision for adequate cover over proposed services.
+Provision for emergency overland flow conveyance to the external ROW while maintaining a
+maximum ponding depth of 0.30 m.
+Provision for berming along the north and west property boundaries to meet the
+requirements of the noise study.
+
+It is proposed that pavement grades of 0.5% be implemented for the subdivision, which is in
+keeping with the City of Brampton minimum standard but less than the Town of Caledon
+Standard of 0.75%. The proposed use of 0.5% centerline road grades results in less fill for the
+overall development and a better interface between the proposed lots on the east and south
+side of the development with the existing lots in Caledon and Brampton. In these area split
+drainage is required, even with 0.5% road grades. Additional grade would result in a more
+significant elevation difference between the lots. Detailed design will confirm the minimum
+gutter grades of 0.75% along all bends. Additionally, the capacity of the overland flow route will
+be confirmed, and 100 year capture areas will be identified, as required, to ensure the major
+system drainage remains within the identified ROW limits.
+The general intent of the grading and drainage approach is to direct storm drainage up to the
+100-year return storm, to the existing outlets at the south and east limits of the property with
+discharge to the existing municipal storm sewer and ROWs extended on Highwood Road and
+Lightheart Drive. Emergency overflows in excess of the 100-year return event will spill to the
+designated Major System overland flow routes.
+The majority of the lots within the development are proposed to be back to front draining lots. In
+localized areas at the interface with the existing developments to the east and south, Lots 22
+through 26 and 37 through 44, within the Town of Caledon, are proposed as split draining lots
+with the inclusion of RLCBs within the proposed development. The lots along the east property
+boundary are graded with an internal overland flow route along the rear property line with
+discharge to Lightheart Drive.
+For the lots along the south property boundary, the grade differential between the proposed
+Lightheart Drive and the existing rear lot lines in the adjacent subdivision eliminates the ability to
+provide an overland flow route internal to the proposed development site. The natural outlet for
+these areas is to the south, into the City of Brampton, where there are existing headwalls and
+RLCBs sized for the capture and conveyance of external flow. For this area, the associated
+RLCBs in Lots 37, 40 and 42 will be sized to capture and convey the 100 year flows such that
+only emergency overland flow will discharge to the existing infrastructure in the City of
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+24
+
+Functional Servicing Report
+November 2023
+
+Brampton. Under existing conditions, the existing site drains to these outlets uncontrolled in all
+storm events. Accordingly, it was felt that it would be acceptable to continue to allow
+emergency flows to discharge per the existing drainage patterns. The alternative would be the
+introduction of a significant retaining wall with a typical height of approximately 2.5 m along the
+entire property line, creating an undesirable situation for both the proposed development and
+the existing lots. Capture calculations for the RLCBs are included in Appendix C.
+The preliminary grading has been identified on Drawing G1, including the identification of the
+overland flow routes for the site.
+
+8.4
+
+Proposed Storm Servicing
+
+The proposed development will utilize the existing and available connections and municipal
+infrastructure at the east and south limits of the site. The proposed development will drain to
+the existing storm sewer on Highwood Road via direct service connection for the lots fronting
+Highwood Road and via a storm sewer connection to EX.MH07 at the intersection of Highwood
+and Hillpath Crescent. A portion of the subject property, to be conveyed as MTO setback limits,
+will drain directly to the existing drainage system along Hurontario Street. The remainder of the
+site will connect to the existing 750 mm diameter storm sewer located at the eastern limits of the
+site, at the extension of Lightheart Drive. Figure 8 identifies the proposed drainage boundaries,
+the total drainage areas, and the calculated runoff coefficients for the proposed sub-catchments.
+Table 5 summarizes the storm sewer drainage area and runoff coefficients for the proposed
+DPOS.
+Table 5: Proposed Storm Sewer Drainage Area Details
+Drainage Connection
+MTO Drainage Ditch (North)
+Hurontario Drainage Ditch/Highwood Road
+Highwood Road MH07
+Highwood Road Storm Sewer direct connection
+Subtotal to Highwood Road Storm Sewer (excl. Hurontario)
+Lightheart Drive Storm Sewer
+Total Area
+
+Catch.
+ID
+N/A
+POST1
+POST2
+POST3
+POST4
+
+Drainag
+e Area
+(ha)
+0.269
+0.524
+0.087
+0.611
+2.707
+3.587
+
+Runoff
+Coeff.
+0.25
+0.62
+0.50
+0.60
+0.61
+
+As identified on the As-Constructed Drainage Plan, the direct frontage of the subject property on
+Highwood Road, was accommodated in the Creek’s Edge Subdivision as single detached lots,
+totaling 0.52 ha, excluding the required 0.02 ha conveyance of the Highwood Road ROW.
+Under proposed conditions, POST2 and POST3 will drain to that designated stretch of storm
+sewer with a slight increase in area and runoff coefficients from the original design.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+25
+
+Functional Servicing Report
+November 2023
+
+In total, the proposed drainage area from the development site designed to discharge directly to
+Highwood Road is approximately 0.091 ha larger than the As-Constructed design, with a slightly
+increased runoff coefficient. To confirm capacity in the existing system, the relevant pipes were
+included in the storm sewer design sheet for the proposed development (Appendix C). It was
+identified that the existing 375 mm storm sewer on Highwood Road would require upsizing to a
+600 mm storm sewer to accommodate the developed conditions. The remainder of the
+Highwood Road storm sewer downstream of the 375 mm pipe has more than sufficient capacity
+to accommodate the proposed increase in drainage area. The downstream pipe is an oversized
+975 mm sewer, sized to accommodate a significant external drainage area under
+predevelopment conditions.
+The post development drainage areas to the Hurontario Drainage system and Lightheart Drive
+are below the accommodated drainage areas per the as constructed information. The
+confirmation calculations are included in Appendix C. The table below specifically outlines the
+pre- and post-development discharge rates to the Hurontario catchment area. There is no
+additional post development flow proposed to the MTO catchment to the north of the site.
+Table 6: Hurontario Storm Flows
+Catchment
+PRE2
+POST1
+
+2 year
+74.8
+14.8
+
+5 year
+98.8
+19.6
+
+10 year
+114.8
+22.7
+
+25 year
+143.4
+26.7
+
+100 year
+173.4
+32.7
+
+As noted in the table above, the post development flow rates to the MTO / Hurontario lands are
+significantly less than the predevelopment flow rates as a result of the proposed grading and
+drainage plan for the development. Detailed calculations are included in Appendix C.
+Based on the above and with the proposed upgrade of the noted storm sewer, the proposed
+DPOS falls within the available capacity of the existing storm drainage system.
+The local storm sewers servicing the development site will follow the alignment of the roads for
+the majority of the sewer lengths. The sewers will be designed to accommodate the 10-year
+storm flow per the Town and City design criteria. At the east limits of the site, the storm sewer
+will be extended within the extension of Lightheart Drive, to provide connection to the existing
+750 mm sewer. This proposed sewer is designed to convey the minor flows to the existing
+storm sewer system with some localized 100 year capture points in the RLCBs. The storm
+sewer depth ranges from 3.9 m to 4.11 m, providing sufficient depth and cover to ensure that
+the HGL conditions can accommodate gravity connections of the foundation drainage system.
+The major system flow will be conveyed via the ROW to the designated outlets. The proposed
+storm sewer drainage areas and identified RLCB areas are outlined on Figure 9 to support the
+design sheet calculations for the sewer sizing.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+W
+W
+
+NOTE:
+RLCB IN LOTS 38, 40, & 42 SIZED TO CAPTURE 100 YEAR
+STORM DRAINAGE - EMERGENCY OVERLAND FLOW TO
+DISCHARGE TO EX. RLCB/HW OUTLETS AS NOTED
+
+SID
+
+W
+
+O
+M
+
+EW
+AL
+K
+
+BO
+TT
+BA
+N
+K
+
+BR
+
+EA
+
+W
+
+AS
+PH
+AL
+T
+
+O
+F
+
+1.0
+
+W
+
+26
+
+W
+
+KL
+
+DIT
+
+IN
+
+E
+W
+
+P
+TO
+
+W
+
+CE
+
+CH
+
+K
+
+AIN
+
+LIN
+
+258.0
+BO
+TT
+OM
+
+BANK TOP
+
+W
+
+W
+
+N
+FE
+
+OP
+
+0
+26
+
+NK
+BA
+
+W
+
+CH
+
+BA
+NK
+T
+
+.5
+
+OF
+
+W
+W
+
+BANK TOP
+
+BA
+NK
+
+BOTTOM OF BANK
+
+W
+
+W
+W
+W
+W
+
+W
+W
+W
+
+W
+W
+
+W
+W
+
+W
+
+W
+
+W
+
+W
+W
+
+RE HEIGHT
+
+DONHER
+
+FENCE BOA
+RD 2 MET
+
+RE HEIGHT
+
+7.0
+
+RD 2 MET
+
+FENCE BOA
+
+25
+
+.5
+257
+258.0
+
+38
+
+CONNECT PROPOSED 750mmØ
+STM INTO EX. DCB MH17.
+MAINTAIN EXISTING INVERTS
+EX. TEMP. DICB AND 750mmØ
+STM PIPE TO BE REMOVED.
+HEADWALL
+
+BOTTOM OF BANK
+BOTTOM
+FENCE BOARD 2 METRE HEIGHT OF BANK
+BANK TOP
+
+RLCB
+
+RLCB
+
+TOWN OF CALEDON
+CITY OF BRAMPTON
+
+RLCB
+
+W
+
+T
+BO
+
+POST3
+0.151 ha
+0.51
+
+6
+
+E HEIGHT
+
+W
+
+W
+
+5
+
+CB
+
+E
+
+RET
+
+ONC
+
+C
+ALK
+
+EX. MH05 EX. 97
+5mm
+
+W
+
+W
+
+MO
+
+TO
+
+EW
+
+SID
+
+PW
+
+K
+
+TO
+
+AN
+
+W
+
+NK
+
+FB
+
+CB
+
+WV
+
+W
+
+WV
+
+EX. MH06
+
+CB
+
+600mm STM
+
+W
+W
+
+EX. MH08
+
+39
+
+0
+
+37
+
+EX. MH3
+
+LIGHTHEART
+DRIVE
+
+0.20Ø
+
+D 1.9 METR
+
+BLOCK
+9
+BUFFER
+
+W
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+
+450mm STM
+
+W
+
+W
+
+W
+
+8
+
+7
+
+FENCE BOAR
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+W
+
+4
+
+WV
+
+SIDEWALK CONCRETE
+
+EX. 825mm STM
+
+MH10
+TOP=258.42
+DEPTH=4.1m
+257
+.0
+
+W
+
+OHGUY
+
+OHGUY
+
+DITCH
+
+TOP
+
+D
+McALPINE ROA
+
+W
+
+258.5
+.0
+2255578.5
+2
+7.00
+257.
+25
+7.5
+257.5
+
+RLCB
+
+EX. 375mm STM
+
+RLCB
+
+RETAINING WALL
+
+RETAINING WALL
+
+256.
+
+BANK TOP
+FENCE BOARD 2 METRE HEIGHT
+
+FENCE BOARD 1.9 METRE HEIGHT
+
+257.5
+
+40
+
+BOTTOM OF BANK
+
+250mm STM
+
+250mm STM
+
+300mm STM
+
+W
+W
+
+W
+W
+W
+
+W
+
+O STR
+EET
+
+450mm S
+
+W
+W
+W
+
+W
+
+W
+W
+W
+W
+W
+W
+
+W
+OHGUY
+
+W
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+W
+
+OHGUY
+OHGUY
+
+TE
+CONCRE
+
+SIDEW
+ALK
+
+OHGUY
+
+BANK
+
+HU8R
+25 .5 ONTAR
+I
+
+RLCB
+
+5
+
+VERT
+
+300mmØ CUL
+
+EX. 300mm STM
+
+FENCE CHAIN LINK
+
+7.
+25
+
+BANK TOP
+
+BANK TOP
+
+1
+
+CONCRETE
+
+6.5
+41 25
+
+42
+
+43
+
+EX. MH4
+
+ASPHALT
+
+BANK TOP
+
+6.5
+25
+
+0
+257.
+
+CB
+
+0.20Ø
+
+0
+
+8.5
+25
+258.0
+
+MH11
+TOP=258.26
+DEPTH=4.2m
+
+DRIVEWAY
+
+7.5
+
+25
+
+0.15Ø
+
+.
+256
+
+BOTTOM OF BANK
+
+DITCH
+
+BA
+
+WV
+
+BANK TOP
+
+56
+
+57
+
+2
+
+SIDEWALK
+
+375mm S
+TM
+
+OHGUY
+OHGUY
+
+BLOCK 58
+BUFFER
+
+OHGUY
+OHGUY
+
+TOP
+
+T
+
+25
+0
+2
+5 8.
+25
+.5
+.0
+22558877.5
+.5
+
+TM
+
+W
+W
+
+OHGUY
+OHGUY
+
+9.5
+
+OHGUY
+
+OHGUY
+
+BANK
+
+25
+
+OHGUY
+
+W
+
+W
+
+BREAKLI
+W
+NE
+
+ASPHAL
+
+WV
+
+SIDEWALK CONCRETE
+
+450mm STM
+
+CB
+
+WV
+
+EX. 750mm STM
+
+PLUG
+& B.O.
+
+525mm STM
+
+45
+
+BOTTOM OF BANK
+
+POST2
+0.669 ha
+0.62
+
+257.0
+257.5
+
+W
+W
+
+SIDEWALK
+
+BANK TOP
+
+DITCH
+BANK TO
+P
+
+3
+
+MH
+
+MH
+
+.0
+.0
+259
+
+44
+
+BANK TOP
+
+AY AS
+
+EW
+DRIV
+
+TEMP DICB
+
+WV
+
+259
+
+2
+
+1
+
+EX. 750mm STM
+EX. DCB MH17
+0.20Ø
+TOP=259.17
+DEPTH=1.7m
+T
+
+250mm STM
+
+W
+W
+
+MH01
+TOP=257.85
+DEPTH=4.0m
+
+55
+
+RLCB
+
+PHAL
+
+750mm STM
+
+257.0
+
+W
+
+3
+
+DRIVEWAY GRAVEL
+
+CB
+
+TM
+26
+
+4
+FENCE CHAIN LINK
+
+MH07
+TOP=258.28
+DEPTH=4.0m
+
+25
+
+250mm S
+
+27
+MH12
+TOP=258.15
+DEPTH=4.3m
+525mm STM
+
+36
+
+TM
+
+W
+
+W
+
+NK
+BA
+OHGUY
+OHGUY
+
+675mm S
+
+W
+
+W
+
+F
+
+COLLINGWOOD
+AVENUE
+
+OHGUY
+OHGUY
+
+CB
+
+E ROAD
+
+m
+45
+0m
+
+W
+
+ALT
+
+W
+
+O
+OHGUY
+OHGUY
+OHGUY
+
+.0
+
+MH09
+TOP=258.50
+DEPTH=4.1m
+
+M`cALPIN
+
+W
+
+W
+
+W
+
+W
+
+K ASPH
+
+W
+
+W
+
+M
+
+25
+9
+
+46
+
+MH02 54
+TOP=259.02
+DEPTH=3.9m
+
+28
+
+35
+
+BOTTOM OF
+BANK
+
+BAN
+K
+
+SIDEW
+AL
+
+W
+
+O
+
+5
+
+47
+
+53
+
+5
+
+8.
+25
+
+LIGHTHEA
+RT DRIVE
+
+ST
+M
+
+W
+
+OF
+
+W
+
+6
+
+24
+
+B CRES
+
+W
+W
+
+OM
+
+W
+OHGUY
+OHGUY
+
+POST4
+2.499 ha 29
+0.63
+
+34
+
+23
+
+T
+
+BOTT
+
+W
+OHGUY
+OHGUY
+
+48
+
+52
+
+RLCB
+
+PH
+
+W
+
+7
+
+30
+
+33
+
+TM
+
+.5
+257
+
+EX. 250mm STM
+
+EX.
+
+mm
+
+975
+EWAL
+
+HIGHWO
+STM
+
+OD ROAD
+
+STM
+
+CB
+
+E
+RET
+
+ONC
+
+KC
+
+SID
+
+W
+
+CB
+W
+
+SIDEWALK CONCRETE
+
+W
+
+SIDEWALK CONCRETE
+
+MH
+
+WV
+
+TO
+
+HILLPAT
+H
+CRESCE
+NT
+
+P
+
+LOTS WITH SOAK AWAY
+PITS FOR 5mm RETENTION
+
+EX. MH07
+TOP=258.10
+
+BLOCK 10
+ROAD WIDENING
+
+MH
+MH
+
+EXISTING
+0.3m RESERVE
+
+EX. 375mmØ STM SEWER TO BE
+REMOVED AND REPLACED
+WITH 525mmØ STM
+Figure Title
+
+ARGO SUMMER VALLEY
+
+CATCHMENT ID
+DRAINAGE AREA (HECTARES)
+RUNOFF COEFFICIENT
+
+PROPOSED STORMWATER DRAINAGE AREA PLAN
+
+N
+
+POST -DEVELOPMENT
+DRAINAGE BOUNDARY
+
+POST1
+1.00 ha
+0.50
+
+T&WIRE
+
+MAJOR OVERLAND FLOW ROUTE
+
+CONCRETE
+
+EXISTING STORM SEWER
+
+FENCE POS
+
+PROPOSED STORM SEWER
+
+SIDEWALK
+
+BANK TOP
+
+258.0
+
+K
+
+NK
+
+BA
+
+PROPERTY LINE
+
+NC. BOX
+STM
+
+N
+
+OF
+
+W
+
+1.5m CO
+
+BA
+
+W
+
+BOTTO
+M OF BAN
+BO
+K
+TT
+OM
+
+W
+
+CH
+
+DIT
+
+P
+
+P
+TO
+
+TO
+
+NK
+
+NK
+
+BA
+
+BA
+
+LEGEND
+
+WV
+
+BXB
+RETAINING WALL
+
+Client
+0
+
+25
+
+50
+
+75
+
+Drawn
+
+100
+
+Metres
+
+CITY OF BRAMPTON FILE NUMBER : 0ZS-2022-0030
+
+ARGO SUMMER VALLEY LIMITED
+
+KT
+
+Checked
+
+LN
+
+Date
+
+23/11/20
+
+Scale
+
+Project No.
+
+1:1250
+
+300054371
+
+Figure No.
+
+FIG 8
+
+File: \\MONTY\Shared Work Areas\054371 - Argo Summer Valley\07_Figures\054371 - POST DEVELOPMENT CONDITIONS.dwg Date Plotted: November 20, 2023 - 3:58 PM
+
+OHGUY
+
+W
+
+51
+
+MH03
+TOP=259.10
+DEPTH=4.1m
+
+31
+
+E
+DR R VA
+IV LL
+E
+EY
+
+OHGUY
+
+W
+
+8
+
+250mm S
+
+32
+
+SU
+MM
+
+OHGUY
+
+W
+
+NCRE
+TE
+
+P
+
+TT
+
+TO
+
+BO
+
+NK
+
+BA
+
+P
+TO
+
+MH
+
+TOWN OF CALEDON
+CITY OF BRAMPTON
+
+MH08
+TOP=258.54
+DEPTH=3.8m
+50
+49
+
+M
+
+W
+
+TOP
+
+ALK
+CO
+
+BAN
+K
+
+SIDE
+W
+
+9
+
+EX. 375mm ST
+
+W
+
+OHGUY
+
+2259
+2255589.0.5
+.5
+
+WV
+
+22
+
+600mm STM
+
+CENT
+
+W
+
+525mm STM
+
+257.5
+
+25
+8.
+0
+
+W
+
+MH
+
+K
+N
+E
+
+600mm STM
+
+AS
+
+OHGUY
+
+OHGUY
+
+W
+
+9.5
+
+BA
+OS TO
+T& P
+W
+IR
+
+HEIGHT
+
+OHGUY
+
+OHGUY
+
+N
+O
+NS E
+HI LAN
+TC M
+HU AR
+F
+DIT
+NC BA C
+E NK H
+P
+
+FE
+
+21
+
+MH06
+TOP=258.36
+DEPTH=4.0m
+
+MH05
+TOP=258.69
+DEPTH=4.1m
+
+McALPINE ROAD
+
+20
+
+2.4 METRE
+
+OHGUY
+
+MH04
+TOP=258.94
+DEPTH=4.1m
+10 2
+58.5
+
+19
+
+18
+
+17
+
+16
+
+15
+
+14
+
+FENCE BOA
+RD
+
+OHGUY
+
+25
+2599.5
+.5
+2259
+2559..5
+8.05
+
+2266
+26000
+0
+
+.5
+26
+0
+
+W
+
+25
+8.5
+
+W
+W
+W
+
+258.5
+258.5
+25
+9 .0
+259.5
+260
+260
+.5
+
+13
+
+12
+
+11
+
+AL
+
+8.0
+
+IV
+
+OHGUY
+
+POST1
+0.269 ha
+0.25
+
+WV
+
+25
+
+BXB
+
+AY
+EW
+
+25
+
+DR
+
+BANK TOP
+
+BANK TOP
+DITCH
+
+FENCE CHAIN LINK
+
+MH
+
+W
+W
+W
+
+EW
+AL
+K
+
+O
+M
+
+BR
+
+EA
+
+BA
+N
+K
+
+W
+
+AS
+PH
+AL
+T
+
+O
+F
+
+W
+
+NOTE:
+RLCB IN LOTS 38, 40, & 42 SIZED TO CAPTURE 100 YEAR
+STORM DRAINAGE - EMERGENCY OVERLAND FLOW TO
+DISCHARGE TO EX. RLCB/HW OUTLETS AS NOTED
+
+SID
+
+BO
+TT
+
+2
+
+.0
+61
+
+W
+
+KL
+
+DIT
+
+IN
+
+E
+W
+
+P
+TO
+
+W
+
+CE
+
+CH
+
+K
+
+AIN
+
+LIN
+
+258.0
+BO
+TT
+OM
+
+BANK TOP
+
+W
+
+W
+
+N
+FE
+
+OP
+
+0
+26
+
+NK
+BA
+
+W
+
+CH
+
+BA
+NK
+T
+
+.5
+
+OF
+
+W
+W
+
+BANK TOP
+
+BA
+NK
+
+BOTTOM OF BANK
+
+W
+
+42
+
+43
+
+RLCB
+
+RLCB
+
+W
+W
+
+W
+W
+
+W
+
+W
+
+W
+W
+
+W
+W
+
+T
+BO
+
+HEIGHT
+FENCE BOA
+RD
+
+2.4 METRE
+
+EX. MH05 EX. 97
+5mm
+
+E
+
+RET
+
+ONC
+
+C
+ALK
+
+W
+
+W
+
+MO
+
+TO
+
+EW
+
+PW
+
+K
+
+TO
+
+AN
+
+W
+
+NK
+
+FB
+
+CB
+
+WV
+
+WV
+
+SIDEWALK CONCRETE
+
+W
+W
+
+600mm STM
+
+W
+
+EX. 250mm STM
+
+EX.
+
+EX. MH06
+
+CB
+
+.5
+257
+258.0
+
+HEADWALL
+
+CRESCEN
+T
+
+TOWN OF CALEDON
+CITY OF BRAMPTON
+
+RLCB
+
+D ROAD
+
+CB
+
+SID
+
+RETAINING WALL
+
+RETAINING WALL
+
+RLCB
+
+RLCB
+
+HIGHWOO
+
+6
+
+WV
+
+BOTTOM OF BANK
+BOTTOM
+FENCE BOARD 2 METRE HEIGHT OF BANK
+BANK TOP
+
+EX. TEMP. DICB AND 750mmØ
+STM PIPE TO BE REMOVED.
+
+SI
+
+5mm
+
+97
+
+AL
+DEW
+
+STM
+
+STM
+
+CB
+
+E
+RET
+
+ONC
+
+KC
+
+W
+
+SU
+
+W
+
+W
+W
+
+E HEIGHT
+
+BLOCK
+9
+BUFFER
+
+W
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+
+450mm STM
+
+W
+
+W
+
+DITCH
+
+TOP
+
+W
+
+5
+
+D 1.9 METR
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+BANK
+
+1
+
+8
+
+7
+
+0.03
+
+39 0.05 38
+
+0
+
+37
+
+MH10
+TOP=258.42
+DEPTH=4.1m
+
+FENCE BOAR
+
+OHGUY
+
+OHGUY
+
+2
+
+0.12
+0.63
+
+0.20Ø
+
+0.20Ø
+
+RLCB
+
+0.15
+0.51
+
+4
+
+256.
+
+BANK TOP
+FENCE BOARD 2 METRE HEIGHT
+
+FENCE BOARD 1.9 METRE HEIGHT
+
+257.5
+
+257
+.0
+
+OHGUY
+
+3
+
+D
+McALPINE ROA
+
+W
+
+BANK TOP
+
+40
+
+BOTTOM OF BANK
+
+0.09
+0.63
+
+CONNECT PROPOSED 750mmØ
+STM INTO EX. DCB MH17.
+MAINTAIN EXISTING INVERTS
+
+CB
+W
+
+SIDEWALK CONCRETE
+
+W
+
+SIDEWALK CONCRETE
+
+MH
+
+HILLPATH
+CRESCE
+NT
+
+TO
+
+P
+
+T&WIRE
+
+CONCRETE
+
+FENCE POS
+
+MAJOR OVERLAND FLOW ROUTE
+
+WV
+
+SIDEWALK
+
+258.0
+
+BANK TOP
+
+EXISTING STORM SEWER
+
+NC. BOX
+STM
+
+K
+
+NK
+
+BA
+
+1.5m CO
+
+RETAINING WALL
+
+N
+
+OF
+
+W
+
+PROPOSED STORM SEWER
+
+WV
+
+BXB
+BA
+
+W
+
+CH
+
+DIT
+
+P
+
+P
+TO
+
+TO
+
+NK
+
+NK
+
+BA
+
+BA
+
+PROPERTY LINE
+
+BOTTO
+M OF BAN
+BO
+K
+TT
+OM
+
+W
+
+LEGEND
+
+EX. MH07
+TOP=258.10
+
+BLOCK 10
+ROAD WIDENING
+
+MH
+MH
+
+EXISTING
+0.3m RESERVE
+
+EX. 375mmØ STM SEWER TO BE
+REMOVED AND REPLACED
+WITH 600mmØ STM
+Figure Title
+
+ARGO SUMMER VALLEY
+
+POST -DEVELOPMENT
+DRAINAGE BOUNDARY
+
+RLCB CATCHMENT AREAS
+
+1.00
+0.51
+
+DRAINAGE AREA (HECTARES)
+RUNOFF COEFFICIENT
+
+1.00
+
+RLCB
+CATCHMENT
+AREA
+(HECTARES)
+
+PROPOSED STORM SEWER DRAINAGE AREA PLAN
+
+N
+
+LOTS WITH SOAK AWAY
+PITS FOR 5mm RETENTION
+
+Client
+0
+
+25
+
+50
+
+75
+
+100
+
+Metres
+
+CITY OF BRAMPTON FILE NUMBER : 0ZS-2022-0030
+
+ARGO SUMMER VALLEY LIMITED
+
+Drawn
+
+Checked
+
+MM
+
+ET
+
+Date
+
+23/11/20
+
+Scale
+
+Project No.
+
+1:1250
+
+300054371
+
+Figure No.
+
+FIG 9
+
+File: \\MONTY\Shared Work Areas\054371 - Argo Summer Valley\07_Figures\054371 - STORM DRAINAGE AREA FIGURE.dwg Date Plotted: November 20, 2023 - 3:59 PM
+
+0.09
+
+6.5
+41 25
+
+EX. 825mm STM
+EX. MH3
+
+E
+DR R VA
+IV LL
+E
+EY
+
+W
+W
+
+W
+W
+
+0.41
+0.62
+
+57
+
+BANK TOP
+
+W
+
+258.5
+.0
+2255578.5
+2
+7.00
+257.
+25
+7.5
+257.5
+
+W
+
+1
+
+BOTTOM OF BANK
+
+0
+257.
+
+EX. 375mm STM
+
+MM
+
+W
+
+7.5
+
+25
+
+MH11
+0.24 TOP=258.26
+0.63 DEPTH=4.2m
+
+250mm STM
+
+W
+
+56
+
+0.15Ø
+
+250mm STM
+
+W
+
+W
+W
+W
+
+T
+STREE
+
+300mm STM
+
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+W
+
+W
+
+OHGUY
+OHGUY
+
+TE
+CONCRE
+
+450mm S
+
+W
+W
+W
+
+W
+
+W
+W
+W
+W
+W
+W
+
+W
+OHGUY
+
+W
+
+OHGUY
+
+DR
+
+SIDEW
+ALK
+
+5
+
+450mm STM
+
+8.5
+25
+258.0
+
+PLUG
+& B.O.
+
+525mm STM
+
+0.05
+0.63
+
+45
+
+WV
+
+LIGHTHEART
+DRIVE
+
+ASPHALT
+
+TARIO
+
+7.
+25
+
+.0
+.0
+259
+
+6.5
+25
+
+HURO
+N
+
+CONCRETE
+
+EX. MH4
+
+EX. 750mm STM
+
+0
+
+258.5
+
+CB
+
+T
+
+.
+256
+
+25
+0
+2
+5 8.
+25
+.5
+.0
+22558877.5
+.5
+
+CB
+
+WV
+
+PHAL
+
+EW
+DRIV
+
+DRIVEWAY
+
+259
+
+44
+
+EX. MH08
+
+BANK TOP
+
+55
+
+BOTTOM OF BANK
+
+VERT
+
+300mmØ CUL
+
+EX. 300mm STM
+
+EX. 750mm STM
+EX. DCB MH17
+0.20Ø
+TOP=259.17
+DEPTH=1.7m
+AY AS
+
+750mm STM
+
+2
+
+FENCE CHAIN LINK
+
+SIDEWALK
+
+375mm S
+TM
+
+OHGUY
+OHGUY
+
+BLOCK 58
+BUFFER
+
+OHGUY
+OHGUY
+
+TOP
+
+MH01
+TOP=257.85
+DEPTH=4.0m
+
+BANK TOP
+
+BANK TOP
+
+WV
+
+MH
+
+TM
+
+W
+W
+
+OHGUY
+OHGUY
+
+9.5
+
+OHGUY
+
+OHGUY
+
+BANK
+
+25
+
+OHGUY
+
+W
+
+W
+
+BREAKLI
+W
+NE
+
+DITCH
+
+SIDEWALK CONCRETE
+
+RLCB
+
+DONHER
+B
+
+W
+W
+
+3
+
+T
+
+BA
+
+COLLINGWOOD
+AVENUE
+
+TM
+
+26
+
+257.0
+
+W
+W
+
+0.26
+0.62
+
+FENCE CHAIN LINK
+
+MH
+
+WV
+
+250mm S
+
+TEMP DICB
+
+4
+
+DRIVEWAY GRAVEL
+
+CB
+
+M
+
+W
+
+ASPHAL
+
+CB
+
+27 MH12
+TOP=258.15
+DEPTH=4.3m
+525mm STM
+
+36
+
+EX. 375mm ST
+
+W
+
+W
+
+SIDEWALK
+
+BANK TOP
+
+DITCH
+BANK TO
+P
+OHGUY
+OHGUY
+
+MH09
+TOP=258.50
+DEPTH=4.1m
+
+25
+
+257.5
+
+W
+
+W
+
+NK
+BA
+
+.0
+
+46
+
+MH02 54
+TOP=259.02
+DEPTH=3.9m
+
+28
+
+35
+
+0.05
+
+RE HEIGHT
+
+W
+
+ALT
+
+W
+
+F
+
+5
+
+47
+
+53
+
+5
+
+8.
+25
+
+0.51
+0.63
+
+FENCE BOA
+RD 2 MET
+
+m
+45
+0m
+
+W
+
+W
+
+W
+
+W
+
+K ASPH
+
+W
+
+W
+
+O
+
+0.22
+0.63
+
+BOTTOM OF
+BANK
+
+BAN
+K
+
+SIDEW
+AL
+
+W
+
+6
+
+24
+
+RE HEIGHT
+
+W
+
+OF
+
+W
+OHGUY
+OHGUY
+
+29
+
+34
+
+23
+
+RD 2 MET
+
+W
+
+OM
+
+W
+OHGUY
+OHGUY
+
+48
+
+52
+
+.5
+
+257
+
+FENCE BOA
+
+BOTT
+
+W
+
+M
+
+WV
+
+OHGUY
+OHGUY
+
+0.42
+0.63
+
+33
+
+RLCB
+
+7.0
+
+W
+
+W
+
+W
+
+7
+
+31 MH07
+TOP=258.28
+DEPTH=4.0m
+30
+
+25
+
+OHGUY
+
+W
+
+MH03
+TOP=259.10
+DEPTH=4.1m
+
+0.07
+
+257.0
+257.5
+
+OHGUY
+
+W
+
+NCRE
+TE
+
+O
+
+25
+9
+
+OHGUY
+OHGUY
+
+49
+
+LIGHTHEA
+RT DRIVE
+
+OHGUY
+
+W
+
+ST
+M
+
+W
+
+TOP
+
+ALK
+CO
+
+BAN
+K
+
+SIDE
+W
+
+P
+
+TT
+
+TO
+
+BO
+
+NK
+
+BA
+
+P
+TO
+
+MH
+
+OHGUY
+
+50
+
+22
+
+250mm S
+TM
+
+32
+
+TM
+
+W
+OHGUY
+
+2259
+2255589.0.5
+.5
+
+TOWN OF CALEDON
+CITY OF BRAMPTON
+
+MH08
+TOP=258.54
+DEPTH=3.8m
+51
+
+0.11
+0.63
+
+600mm STM
+
+675mm S
+
+W
+
+525mm STM
+
+OAD
+
+W
+
+8
+
+600mm STM
+
+250mm STM
+
+OHGUY
+
+OHGUY
+
+W
+
+MH
+
+K
+N
+E
+
+0.27
+0.25
+
+21
+
+MH06
+MH05
+0.26
+TOP=258.69 0.63 TOP=258.36
+DEPTH=4.0m
+DEPTH=4.1m
+
+McALPINE
+R
+
+25
+8.
+0
+
+25
+2599.5
+.5
+2259
+2559..5
+8.05
+
+2266
+26000
+0
+
+.5
+26
+0
+
+25
+8.5
+
+W
+W
+W
+
+W
+
+OHGUY
+
+OHGUY
+
+9.5
+
+BA
+OS TO
+T& P
+W
+IR
+
+0.17
+0.63
+
+20
+
+T
+
+OHGUY
+
+10 2
+58.5
+MH04
+TOP=258.94
+9
+DEPTH=4.1m
+
+19
+
+18
+
+17
+
+16
+
+15
+
+14
+
+AL
+
+OHGUY
+
+N
+O
+NS E
+HI LA N
+TC M
+HU A R
+F
+DIT
+NC BA C
+E NK H
+P
+
+FE
+
+13
+
+0.31
+0.63
+
+PH
+
+258.5
+258.5
+25
+9 .0
+259.5
+260
+260
+.5
+
+12
+
+11
+
+AS
+
+OHGUY
+
+8.0
+
+McALPINE ROAD
+
+WV
+
+25
+
+BXB
+
+AY
+EW
+
+25
+
+IV
+
+BANK TOP
+
+BANK TOP
+DITCH
+
+FENCE CHAIN LINK
+
+MH
+
+Argo Summer Valley Limited
+
+28
+
+Functional Servicing Report
+November 2023
+
+9.0
+
+Stormwater Management
+
+9.1
+
+Existing Stormwater Management System
+
+The surrounding subdivision development areas discharge to the existing stormwater
+management facility located adjacent to Etobicoke Creek at the south limits of the Creek’s Edge
+subdivision. The existing pond was designed as a quality and erosion control facility with the
+provision of Level 2 quality control and 25 mm retention for the proposed drainage area. The
+pond design was established through the Creek’s Edge subdivision by Schaeffers Consulting
+Engineers and further confirmed as part of the Charlton Engineering Limited review for the
+Donal JV lands immediately to the east of the subject site.
+The ultimate drainage area established for the facility in the original design report totaled
+39.38 ha comprised of 20 ha of Creeks Edge subdivision, 15.58 ha of external development to
+the north of Creeks Edge, including the Donal JV lands and the subject site, 1.10 ha of
+Hurontario Street corridor and 9.70 ha of undeveloped lands west of Hurontario Street. The
+drainage area is identified below.
+The existing stormwater management pond is constructed with a permanent pool volume of
+1,594 m3 and an active storage of 3,407 m3 for the 25 mm extended detention. The
+As-Constructed information, taken from the above noted reports, is included in Appendix A for
+reference.
+
+9.2
+
+Proposed Stormwater Management
+
+The overall post-development drainage plan for the site is identified on Figure 8. Most of the
+development site will drain to the proposed storm sewer system on either Highwood Road or
+Lightheart Drive as outlined above. These sewers are tributary to the existing Creek’s Edge
+stormwater management pond.
+9.2.1
+
+Stormwater Criteria
+
+The proposed stormwater management design will need to meet the requirements of the Town’s
+Consolidated Linear Infrastructure Environmental Compliance Application (CLI ECA) with
+respect to the quality control measures as follows:
+•
+
+•
+•
+
+Water Quality: Control 90th percentile storm event and if conventional methods are
+necessary, then enhanced, normal or basic levels of protection (80%, 70%, or 60%
+respectively) for suspended solids removal based on the receiver. Based on consultation
+with both the Town and City, the site will be required to achieve Level 1 or 80% TSS
+removal
+Erosion Control: Detain the 25 mm storm event for over 24 or 48 hours.
+Water Quantity: Per Master Stormwater Management Plan for surrounding areas the site is
+not subject to water quantity controls.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+29
+
+Functional Servicing Report
+November 2023
+
+•
+
+Water Balance: Recharge must meet pre-development conditions on property or control the
+runoff from the 90th percentile storm event.
+
+The proposed approach to meet the above noted criteria has been established with
+consideration to the design and construction of the subdivision infrastructure in the adjacent
+Creek’s Edge Subdivision (Brampton) and Donal JV Subdivision (Caledon) and in accordance
+with the approved reports and documents submitted for each.
+9.2.2
+
+Stormwater Quality Control
+
+The stormwater management facility for the Creek’s Edge subdivision was designed with
+consideration to the development of external area. The stormwater management facility
+drainage area and the storm sewer drainage plan include the identification of 15.89 ha of
+external drainage, from the Town of Caledon as contributing to the storm sewer on Summer
+Valley Drive and an additional 0.54 ha of drainage area fronting Highwood Road in the City of
+Brampton. The 0.54 ha portion of the site is depicted on the drainage area plans for the existing
+Creeks Edge storm sewer system below. It includes portions of two sub catchments (0.37 ha
+and 0.47 ha sub catchments) less the existing Highwood Road and development on the south
+side of Highwood.
+The 15.89 ha drainage area in the Town of Caledon includes land, immediately north of the
+subject site, that has been developed for the Highway 410 extension and Hurontario
+interchange. These lands were developed with site specific stormwater management controls
+and will not drain to the existing system. The drainage plans developed for the proposed
+highway expansion are included in Appendix A for reference.
+The proposed 3.32 ha development site, within both the Town and the City, is part of the
+external drainage areas identified on the drainage maps. Clips from the As-Constructed
+drainage plans are included for reference below. The full drainage area mapping is included in
+Appendix A.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+30
+
+Functional Servicing Report
+November 2023
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+31
+
+Functional Servicing Report
+November 2023
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+32
+
+Functional Servicing Report
+November 2023
+
+As identified, the proposed development site falls within the drainage area originally
+anticipated for the stormwater management pond design completed by Schaeffers
+Consulting Engineers as part of the Creek’s Edge Subdivision. This is further confirmed
+in the subsequent studies for the Donal JV Lands, in the Town of Caledon, completed by
+Charlton Engineering Limited. The clip below is from the As-Constructed drainage area
+plan for the adjacent Donal JV Subdivision which includes an allowance for external
+flows from the subject site:
+
+The Donal JV report confirmed that the stormwater management facility was constructed
+with 1594 m3 of permanent pool with a normal water level of 241.60 m and an active
+storage volume of 3407 m3 to an elevation of 242.20 m. Further, the calculations in the
+report identify the watershed parameters, draining to the stormwater management facility
+for both the Creek’s Edge and Donal JV subdivisions for assessment of the stormwater
+management facility capacity.
+The site-specific parameters for the proposed Summer Valley development are based
+on the proposed draft plans as well as a detailed review of the proposed unit types for
+each lot per the proposed lot coverage depicted on Figure 8. The detailed calculations
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+33
+
+Functional Servicing Report
+November 2023
+
+for the impervious percentages and runoff coefficients are included in Appendix C and
+reflective of the specific unit sitings for the lots. The following table identifies the
+parameters for the existing development, the subject property, and the total pond
+drainage area to be applied to the capacity review calculations.
+Table 7: Pond Drainage Area Parameters
+
+Drainage Area to Pond
+(ha)
+Runoff Coefficient
+Total Impervious
+Connected Impervious
+Curve Number
+
+Ex. Creeks Edge
+plus Donal JV
+27.226
+
+Proposed
+Summer Valley
+3.3191
+
+30.0
+
+0.5
+43%
+30%
+72
+
+0.62
+60%
+40%
+72
+
+0.51
+44.9%
+31.1%
+72
+
+Total
+
+Note the total is not a direct sum of existing and proposed as 0.54 ha portion of the
+subject property was included in the original Creek’s Edge subdivision drainage area.
+All other values have been prorated to reflect the proposed development.
+Based on the above information the resultant permanent pool requirement for the total
+drainage area is 59.93 m3/ha or 1798 m3 for provision of Level 2 (70% TSS removal)
+quality control. This exceeds the available 1594 m3 permanent pool in the facility.
+However, the pond will still provide a degree of quality control, albeit less than the design
+requirement of 70%.
+With the additional drainage area, the available storage in the permanent pool is
+53.13 m3/ha, resulting in a treatment efficiency of 68.5% in the facility. With the inclusion
+of OGS units upstream of the connection points in both the Town of Caledon and the
+City of Brampton, each providing 50% TSS removal, the treatment train results in an
+overall removal of 84% TSS for the proposed development site, which exceeds the
+requirement of Level 1 or 80% TSS removal for the development lands. The detailed
+calculations are included in Appendix C and the as constructed full scale drainage maps
+are included in Appendix A.
+9.2.3
+
+25 mm Extended Detention
+
+The SCS method is an alternative approach for calculating the runoff volumes for the
+quality design storm in lieu of modelling. For assessment of the subject site, the SCS
+calculation approach was calibrated through comparison of the SWM Hymo modelling
+that was completed for the Donal JV subdivision, against an SCS calculation for the
+same area. With the incorporation of the parameters applied to the Hymo modelling to
+the SCS calculation, the resultant 25 mm volume for the Donal JV assessment was
+calculated at 3010 m3, compared to the SWM Hymo runoff volume of 3011 m3,
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+34
+
+Functional Servicing Report
+November 2023
+
+confirming the SCS methodology appropriately reflects the previously modelled
+conditions.
+Utilizing the parameters for the overall drainage area to the existing facility, including the
+proposed development site, the 25 mm runoff volume from the catchment is calculated
+to be 3411 m3, through the SCS method. This volume is 4 m3 higher than the noted
+active storage capacity in the pond, but well within design tolerances given the depth
+associated with 4 m3 is less than 0.5mm. Therefore, the pond is sufficiently sized to
+provide the volume requirements for the extended detention of the 25 mm event.
+9.2.3.1
+
+Diversion Structure Requirements
+
+The existing pond includes a diversion structure, upstream of the facility, designed to
+direct the 25 mm storm flows to the facility and bypass the flows exceeding the 25 mm
+event directly to Etobicoke Creek. The existing diversion structure was sized as a
+900 mm pipe, to divert the quality flow generated from the fully developed drainage area,
+including the subject site, to the stormwater management facility. For the interim
+conditions associated with the Creeks Edge subdivision development only, the 900 mm
+pipe was fitted with a 600 mm orifice, at the time of construction, to control the discharge
+to the pond to the quality control flow rate of 0.84 cm. The remainder of the flow will
+bypass the facility and discharge directly into Etobicoke Creek.
+The inclusion of the subject site will result in an increased peak flow for the quality storm
+which will need to be directed to the control facility. Based on a two-hour Chicago storm,
+the Donal JV modelling established the quality storm hydrograph duration to be 1 hour
+and 22 minutes. Applying this duration to the quality control volume for the subject site
+and existing drainage area, results in a calculated peak flow runoff of 1.04 cms.
+With the increase in the 25 mm runoff rate associated with the addition of the
+development lands, the 600 mm diameter orifice is insufficient to convey the full 25 mm
+event. The orifice will need to be replaced with a 715 mm diameter orifice to allow for
+appropriate diversion flow to be conveyed to the pond. This will need to be completed
+as part of the subdivision infrastructure.
+9.2.3.2
+
+Outlet Control Structure Requirements
+
+The existing outlet control structure for the stormwater management facility includes a
+100 mm diameter orifice sized to provide 48 hour extended detention for the Creeks
+Edge and Donal JV subdivisions. The calculations for the additional extended detention
+volume confirm that the 100 mm diameter orifice will continue to provide the control
+necessary for 48 hours of extended detention. Therefore, no outlet structure updates
+are required to accommodate the proposed development site.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+35
+
+Functional Servicing Report
+November 2023
+
+The supporting calculations, Donal JV SWM Hymo modelling, Creeks Edge diversion
+and extended detention calculations are included in Appendix C.
+9.2.4
+
+Annual Water Balance
+
+A water balance assessment, utilizing the Thornthwaite and Mather method was
+completed as part of the Hydrogeological study prepared by EXP for the proposed
+development. As identified in the report and given the historical land use and site
+coverage, the post development conditions and associated pervious areas, result in an
+increase in the annual infiltration volume. This is based on the available greenspace
+and the discharge of roof leaders at grade allowing for greater volumes of water to
+infiltrate on an annual basis. No further mitigation measures are required or proposed.
+The details of the calculations are further identified in the EXP report.
+9.2.5
+
+5 mm Retention
+
+The proposed development includes the implementation of extra depth topsoil in the
+available greenspace areas within the lots. The additional topsoil will provide full 5 mm
+retention for the direct rainfall as well as additional 1.5 mm retention of the rooftop runoff
+to be directed to the rear yards. As identified in the EXP report, the groundwater table
+elevation is lowest at the southern limits of the site, in the areas of the sandy silt till and
+in a small band along the north property boundary. It is proposed that roof leader soak
+away pits be implemented in these areas to promote infiltration of the 5 mm runoff from
+the proposed rooftop. The soak away pits will be incorporated in lots 15-19, 37-45,
+56 and 57 on the Caledon DPOS and lots 1 through 8 on the Brampton DPOS, as
+identified on Figure 8. With the implementation of the proposed measures,
+approximately 105 m3 of the calculated 165 m3 will be retained on site. Detailed
+calculations are included in Appendix C.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+36
+
+Functional Servicing Report
+November 2023
+
+10.0
+
+Erosion and Sediment Control
+
+The following general Erosion and Sediment Control (ESC) measures will be
+implemented as part of the proposed construction works associated with the
+development of the DPOS. A detailed ESC Plan will be established during the detailed
+design approvals process. Figure 10 outlines a preliminary ESC Plan for the site. The
+ESC measures noted below are intended to mitigate the impacts associated with the
+construction activities on the surrounding environment. The ESC measures listed below
+are applicable to all construction activities within the subject property:
+1. ESC measures will be implemented prior to, and maintained during, the construction
+phases to prevent entry of sediment into the storm drainage system.
+2. Sediment control fence consisting of non-woven material shall be installed and
+maintained to prevent sediment from leaving the proposed construction areas.
+Location of fencing will be established based on the site staging and proposed
+construction work.
+3. The Contractor shall maintain a supply of silt fence, clear stone, straw bales, and
+filter fabric on site for emergency use.
+4. No sediment-laden water or deleterious substances will be released to the existing
+storm sewer system at any time. Dewatering discharge containing sediment-laden
+water must be discharged to a sediment bag positioned in a vegetated area and
+allowed to discharge into existing established vegetation at least 30 m from any
+feature or existing storm catch basin.
+5. Removal of vegetative cover will be staged and restricted to a period immediately
+preceding the commencement of earth works in each stage.
+6. Disturbed areas will be temporarily or permanently stabilized or restored as the work
+progresses.
+7. If site construction activities are interrupted, and / or inactivity exceeds 30 days, all
+stripped and / or bare soil areas are to be stabilized using either erosion control
+matting (e.g., jute), sodding / seeding / mulching, or other approved methods to the
+satisfaction of the site inspector.
+8. All damaged erosion and sediment control measures should be repaired and / or
+replaced within 48 hours of the inspection.
+9. After hours contact numbers are to be posted on site for emergencies.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+SID
+EW
+AL
+K
+CO
+NK
+NC
+TO
+RE
+P
+TE
+
+W
+
+W
+
+W
+
+W
+
+BA
+
+W
+
+W
+
+SILT FENCE AS PER CITY OF BRAMPTON
+STD. 406 TO BE PROVIDED AROUND
+THE PERIMETER OF THE SITE
+
+SID
+
+W
+
+M
+
+EW
+AL
+K
+
+BO
+TT
+O
+
+AS
+PH
+AL
+T
+
+W
+
+O
+F
+
+W
+
+BA
+N
+K
+
+BR
+
+KL
+EA
+
+K
+
+CH
+
+AIN
+
+LIN
+
+W
+W
+
+PRE1
+0.26 ha
+
+26
+
+FENCE BOA
+RD 2.4 MET
+
+0
+
+STRE
+
+OHGUY
+OHGUY
+OHGUY
+
+BOTT
+W
+
+W
+
+OM
+W
+
+W
+
+OF
+
+RE HEIGHT
+
+W
+
+W
+
+W
+
+W
+
+FENCE BOA
+
+W
+
+W
+
+259
+259
+9
+2525
+8.5
+258
+W
+
+W
+
+W
+W
+
+W
+
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+W
+
+W
+
+W
+
+256.86
+
+256.39
+
+BANK TOP
+
+W
+
+W
+
+W
+
+5
+8.
+25
+
+EX. TEMP DICB
+T/G = 256.36
+INV. = 254.24
+
+W
+
+25
+9
+
+258
+
+W
+
+0.20Ø
+
+CB
+
+CONCRETE
+
+PRE2
+1.36 ha
+
+SIDEWALK
+
+W
+
+W
+
+TOP
+
+.5
+
+OHGUY
+
+OHGUY
+
+BANK
+
+25
+9
+
+OHGUY
+
+W
+
+W
+
+BREAKLI
+W
+NE
+W
+
+0
+
+W
+W
+W
+
+T
+
+W
+
+SEDIMENT TRAP 3 AS PER OPSD 219.220.
+SEDIMENT TRAP TO BE 18.0m x 9.0m x 1.0m DEEP
+CONTRIBUTING DRAINAGE AREA = 1.28 ha
+STORAGE VOLUME REQUIRED = 160.0 m³
+STORAGE VOLUME PROVIDED = 162.0 m³
+
+OHGUY
+OHGUY
+
+NK
+
+CB
+
+WV
+
+EX. MH4
+
+EX. MH3
+
+ALT
+
+ASPH
+
+EX. 750mm STM
+EX. DCB MH17WV
+EWAY
+
+DRIV
+
+TEMP DICB
+
+EX. 825mm STM
+
+LIGHTHEART
+DRIVE
+
+OHGUY
+
+OHGUY
+OHGUY
+
+OHGUY
+
+W
+W
+
+W
+W
+
+W
+W
+
+257.5
+
+258
+
+W
+
+257
+
+W
+
+W
+
+W
+
+W
+
+256.5
+
+W
+
+OF
+W
+
+PW
+
+NK
+
+TO
+W
+
+5
+
+W
+
+258
+
+W
+
+25
+8
+
+W
+
+CB
+
+SIDEWALK CONCRETE
+
+RETAINING WALL
+
+N
+
+K
+
+TO
+
+P
+
+25
+8
+2
+225575.58
+7
+
+BA
+
+BOTTO
+M OF BAN
+BO
+K
+TT
+OM
+
+OF
+
+W
+
+.
+56
+
+BA
+NK
+
+T&WIRE
+
+1.00 ha
+
+CONCRETE
+
+FENCE POS
+
+EXISTING OVERLAND FLOW
+
+CATCHMENT ID
+
+25
+6.5
+
+EX.
+
+257.5
+
+257
+
+5mm STM
+
+TM
+mS
+
+m
+
+975
+
+CB
+
+E
+CRET
+
+K
+EWAL
+
+CON
+
+SID
+
+INTERCEPTOR SWALE
+DEPTH VARIES (MIN. 0.3m)
+SLOPE VARIES (MIN. 0.30%)
+
+0
+
+25
+
+50
+
+75
+
+100
+
+WV
+
+SIDEWALK
+
+BANK TOP
+
+PRE1
+
+WV
+
+BXB
+
+EXISTING STORM SEWER
+EXISTING WATERMAIN
+
+EX. 375mm STM
+
+25
+
+7.
+
+W
+
+W
+
+CH
+
+PROPERTY LINE
+
+STM
+
+EX. MH07
+
+EX. 250mm STM
+
+OD ROAD
+
+N
+
+W
+
+W
+
+P
+
+DIT
+
+TO
+
+P
+TO
+
+NK
+
+NK
+
+BA
+
+BA
+
+2
+
+NC. BOX
+
+EX. MH06
+
+CB
+
+EX. MH08
+
+5
+
+CB
+
+WV
+
+WV
+
+SIDEWALK CONCRETE
+
+MH
+
+1.5m CO
+
+RETAINING WALL
+
+RETAINING WALL
+
+257
+
+K
+
+BA
+
+FENCE CHAIN LINK
+
+WV
+
+HILLPAT
+H
+CRESCE
+NT
+
+W
+
+W
+
+OM
+
+SIDEWALK CONCRETE
+
+EX. MH05EX. 97
+
+E
+
+RET
+
+ONC
+
+C
+ALK
+
+EW
+
+SID
+
+SEDIMENT TRAP 2 AS PER OPSD 219.220.
+SEDIMENT TRAP TO BE 16.0m x 8.0m x 1.0m DEEP
+CONTRIBUTING DRAINAGE AREA = 0.99 ha
+STORAGE VOLUME REQUIRED = 124.0 m³
+STORAGE VOLUME PROVIDED = 128.0 m³
+
+HIGHWO
+CB
+
+256.07
+
+TT
+
+EX. 300mm STM
+CULVERT
+
+MH
+
+E HEIGHT
+
+W
+
+BO
+
+WV
+
+SEDIMENT TRAP 2 TO
+OUTLET TO EX. HEADWALL
+
+FENCE BOAR
+
+W
+
+DITCH
+
+P
+
+N
+BA
+
+SIDEWALK CONCRETE
+
+258
+
+W
+
+25
+8.5
+
+BANK
+TO
+
+MH
+
+WV
+
+7
+
+W
+
+W
+
+256.25
+
+EX. RLCB
+T/G = 256.23
+INV. = 255.03
+
+D 1.9 METR
+
+W
+
+W
+W
+
+DRIVEWAY GRAVEL
+
+25
+
+W
+
+W
+
+W
+
+W
+
+VERT
+
+CB
+
+257.5
+
+W
+
+W
+
+300mmØ CUL
+
+257.5
+257.5
+258
+258.5
+
+OHGUY
+
+OHGUY
+
+SILT SOXX TO BE
+PRE3
+INSTALLED
+ALONG BASE
+0.38
+OF ha
+SILT FENCE
+
+BANK TOP
+
+COLLINGWOOD
+AVENUE
+
+BANK TOP
+
+OHGUY
+OHGUY
+
+OHGUY
+
+DITCH
+
+OHGUY
+OHGUY
+
+BANK TOP
+
+DITCH
+BANK TO
+P
+
+OHGUY
+OHGUY
+OHGUY
+
+RLCB
+
+EX. HEADWALL
+INV. = 255.35
+EX. RLCB
+T/G = 256.63
+NW INV. = 255.29
+SE INV. = 255.07
+
+Metres
+MH
+
+Figure Title
+
+MH
+
+ARGO SUMMER VALLEY
+PROPOSED AREA OF
+DISTURBANCE
+
+EROSION AND SEDIMENT CONTROL PLAN
+
+DRAINAGE AREA
+
+POST-EARTHWORKS
+OVERLAND FLOW
+
+CATCHBASIN SEDIMENT FILTER c/w
+300mm DEEP, 19mmØ CLEAR STONE
+
+PRE-DEVELOPMENT
+DRAINAGE BOUNDARY
+
+ROCK CHECK DAM AS
+PER OPSD 219.210
+
+CITY OF BRAMPTON FILE NUMBER : 0ZS-2022-0030
+
+Client
+
+Drawn
+
+ARGO SUMMER VALLEY LIMITED
+
+SB
+
+Checked
+
+LN
+
+Date
+
+23/11/20
+
+Scale
+
+Project No.
+
+1:1250
+
+300054371
+
+Figure No.
+
+FIG 10
+
+File: \\MONTY\Shared Work Areas\054371 - Argo Summer Valley\07_Figures\054371 - ESC.dwg Date Plotted: November 20, 2023 - 3:59 PM
+
+RLCB
+
+HEADWALL
+
+BOTTOM OF BANK
+BOTTOM
+FENCE BOARD 2 METRE HEIGHT OF BANK
+BANK TOP
+
+RLCB
+
+SILT FENCE AS PER CITY OF BRAMPTON
+STD. 406 TO BE PROVIDED AROUND
+THE PERIMETER OF THE SITE
+
+SU
+
+BANK TOP
+
+256.03
+
+MM
+E
+DR R VA
+IV LL
+E
+EY
+
+2
+BOTTOM OF BANK
+BANK TOP
+FENCE BOARD 2 METRE HEIGHT
+
+W
+
+W
+
+W
+
+W
+
+W
+
+BOTTOM OF BANK
+
+255.93
+
+SEDIMENT TRAP 3 TO
+OUTLET TO EX. TEMP DICB
+
+255.45
+
+5
+
+255.45 256.
+
+56
+
+0.20Ø
+
+.5
+
+BANK TOP
+
+BOTTOM OF BANK
+
+FENCE BOARD 1.9 METRE HEIGHT
+W
+
+PRE5
+0.55 ha
+
+25
+6
+
+W
+
+W
+W
+W
+
+W
+W
+
+258
+
+W
+
+T
+
+258.5
+257.5
+
+SILT SOXX TO BE
+INSTALLED ALONG
+BASE OF SILT FENCE
+
+25
+7
+
+W
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+W
+
+OHGUY
+OHGUY
+
+TE
+
+W
+
+PRE4
+0.06 ha
+
+15.0m - 450mmØ
+TEMPORARY CSP OR HDPE
+CULVERT @ 0.90%
+NW INV = 256.86
+SE INV = 256.72
+256.55
+
+0.20Ø
+
+T
+
+ASPHAL
+
+CB
+
+0.15Ø
+
+AL
+
+CONCRE
+
+PLUG
+& B.O.
+
+.5
+
+7
+25
+
+PH
+
+9
+
+AS
+
+259
+
+AY
+
+CONSTRUCTION
+ACCESS MUD MAT
+
+ASPHALT
+
+SIDEW
+ALK
+
+EW
+
+OHGUY
+
+IV
+
+FENCE CHAIN LINK
+
+DRIVEWAY
+
+SIDEWALK
+
+25
+
+WV
+
+LEGEND
+
+RD 2 MET
+
+W
+
+HURO
+N
+
+26
+
+W
+OHGUY
+OHGUY
+
+BA
+
+MH
+
+SEDIMENT TRAP 1 AS PER OPSD 219.220.
+SEDIMENT TRAP TO BE 19.0m x 9.5m x 1.0m DEEP
+CONTRIBUTING DRAINAGE AREA = 1.36 ha
+VOLUME REQUIRED = 170.0 m³
+VOLUME PROVIDED = 180.5 m³
+SEDIMENT TRAP 1 TO OUTLET
+TO EX. 300mmØ CULVERT
+
+BANK
+
+ALK AS
+PHAL
+
+W
+
+BOTTOM OF
+
+W
+
+SIDEW
+
+BAN
+K
+
+W
+
+W
+
+F
+
+INTERCEPTOR SWALE
+DEPTH VARIES (MIN. 0.3m)
+SLOPE VARIES (MIN. 0.30%)
+
+257.5
+258
+258.5
+
+W
+
+W
+
+W
+
+TARIO
+
+W
+
+TE
+
+OHGUY
+
+RE HEIGHT
+
+W
+
+NCRE
+
+PRE6
+1.02 ha
+
+RD 2 MET
+
+W
+
+TOP
+
+WAL
+K CO
+
+BAN
+K
+
+SIDE
+
+257.26
+
+FENCE BOA
+
+W
+
+W
+
+W
+
+256.60
+
+DONHER
+B
+
+W
+
+258.5
+259
+259.5
+260
+
+257.56
+
+DR
+
+OHGUY
+OHGUY
+
+W
+
+O
+
+9.
+5
+
+258.08
+
+INTERCEPTOR SWALE
+DEPTH VARIES (MIN. 0.3m)
+SLOPE VARIES (MIN. 0.30%)
+
+256.94
+
+257.05
+
+RE HEIGHT
+
+ET
+
+OHGUY
+OHGUY
+
+25
+
+M
+
+O
+
+25 25
+8 9
+E2 .5
+58
+.5
+
+257.41
+
+257.27
+
+CRESCE
+
+W
+
+258
+258
+.5
+25
+9
+25
+9 .5
+26
+0
+26
+0.5
+W
+
+OHGUY
+
+P
+
+TT
+
+TO
+
+BO
+
+NK
+
+BA
+
+P
+TO
+
+OS TO
+T& P
+W
+IR
+
+BXB
+
+W
+W
+W
+
+W
+OHGUY
+
+NK
+
+BA
+
+DIT
+NC BA C
+E NK H
+P
+
+FENCE CHAIN LINK
+
+MH
+
+BANK TOP
+
+OHGUY
+
+N
+O
+NS E
+HI LAN
+TC M
+HU AR
+F
+
+WV
+
+MH
+
+FE
+
+8.5
+
+BOTTOM OF BANK
+
+258
+
+BANK TOP
+
+BANK TOP
+DITCH
+
+25
+
+BA
+NK
+
+2
+
+BANK TOP
+
+OF
+
+5
+
+.
+60
+
+258
+BO
+TT
+OM
+
+W
+
+OP
+
+INTERCEPTOR SWALE
+DEPTH VARIES (MIN. 0.3m)
+SLOPE VARIES (MIN. 0.30%)
+
+M
+
+CE
+
+NT
+
+N
+FE
+
+EX. 375mm ST
+
+26
+252600.5
+252599.5
+8.
+5
+
+W
+
+W
+
+E
+
+P
+TO
+
+W
+
+NK
+BA
+
+BA
+NK
+T
+
+W
+
+IN
+
+CH
+
+1
+26
+
+DIT
+
+INTERCEPTOR SWALE
+DEPTH VARIES (MIN. 0.3m)
+SLOPE VARIES (MIN. 0.30%)
+
+SID
+EW
+AL
+K
+CO
+NK
+NC
+TO
+RE
+P
+TE
+
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+
+BA
+
+SID
+
+W
+
+O
+
+EW
+AL
+K
+
+BO
+TT
+M
+
+AS
+PH
+AL
+T
+
+F
+
+W
+
+O
+
+W
+
+K
+
+BA
+N
+
+BR
+
+IN
+
+E
+W
+
+CH
+
+W
+
+P
+TO
+
+W
+
+NK
+BA
+
+W
+
+KL
+EA
+
+DIT
+
+BA
+NK
+T
+
+N
+FE
+
+CE
+
+CH
+
+K
+
+AIN
+
+LIN
+
+BO
+TT
+OM
+
+W
+
+OP
+
+W
+
+BANK TOP
+
+OF
+
+W
+W
+
+W
+W
+
+BXB
+
+20
+
+OHGUY
+
+OHGUY
+OHGUY
+
+W
+W
+W
+OHGUY
+
+W
+OHGUY
+
+22
+
+OHGUY
+
+BOTT
+W
+
+W
+
+OM
+
+W
+
+W
+OHGUY
+
+OHGUY
+
+OHGUY
+OHGUY
+
+W
+W
+W
+
+W
+
+W
+W
+
+W
+W
+W
+W
+
+W
+OHGUY
+
+W
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+W
+
+OHGUY
+OHGUY
+
+TE
+
+RE HEIGHT
+RD 2 MET
+FENCE BOA
+
+ALT
+
+EWAY
+
+WV
+
+0.15Ø
+
+W
+
+W
+
+ASPH
+
+PLUG
+& B.O.
+
+45
+
+W
+
+CONCRE
+
+LIGHTHEART
+DRIVE
+
+0.20Ø
+
+0.20Ø
+
+ASPHALT
+
+SIDEW
+ALK
+
+CB
+
+WV
+
+DRIV
+
+TEMP DICB
+
+DRIVEWAY
+
+O STR
+EET
+
+0.20Ø
+
+LP
+
+CB
+
+CONCRETE
+
+27
+
+55
+
+W
+
+LIGHTHEART DRIVE
+
+W
+
+56
+
+W
+
+2
+
+W
+W
+
+44
+
+W
+
+W
+W
+
+BOTTOM OF BANK
+
+BANK TOP
+
+40
+
+37
+39
+
+38
+
+TOWN OF CALEDON
+CITY OF BRAMPTON
+HEADWALL
+
+BOTTOM OF BANK
+BOTTOM OF BANK
+FENCE BOARD 2 METRE HEIGHT
+BANK TOP
+
+BOTTOM OF BANK
+
+BANK TOP
+
+W
+
+41
+
+57
+BANK TOP
+FENCE BOARD 2 METRE HEIGHT
+
+W
+
+W
+
+1
+
+42
+
+43
+
+BOTTOM OF BANK
+
+RLCB
+
+RLCB
+
+RLCB
+
+OHGUY
+
+OHGUY
+OHGUY
+
+OHGUY
+
+5
+
+OD ROAD
+
+W
+
+W
+W
+
+W
+
+W
+
+W
+
+CB
+
+W
+
+DITCH
+
+SU
+MM
+
+W
+
+W
+
+E HEIGHT
+
+W
+
+W
+
+W
+
+W
+
+HIGHWO
+
+D 1.9 METR
+
+BLOCK
+9
+BUFFER
+
+W
+W
+
+W
+
+W
+
+2
+
+P
+
+1
+
+W
+
+BO
+
+6
+
+E
+
+RET
+
+ONC
+
+C
+ALK
+
+EW
+
+TT
+
+SID
+
+W
+
+EX. HYD
+FENCE CHAIN LINK
+
+RETAINING WALL
+
+RETAINING WALL
+
+CB
+
+PW
+
+K
+
+TO
+
+AN
+
+W
+
+K
+
+FB
+
+O
+OM
+
+N
+BA
+
+CB
+
+WV
+
+WV
+
+SIDEWALK CONCRETE
+
+WV
+
+W
+
+E
+CRET
+
+CB
+
+K
+EWAL
+
+CON
+
+SID
+
+W
+
+MH
+
+8
+
+7
+
+FENCE BOAR
+
+W
+
+W
+
+W
+
+W
+
+W
+
+W
+
+DRIVEWAY GRAVEL
+
+BANK
+TO
+
+W
+
+4
+
+3
+
+MH
+
+WV
+
+E
+DR R VA
+IV LL
+E
+EY
+
+W
+
+W
+
+OHGUY
+
+OHGUY
+
+VERT
+
+300mmØ CUL
+
+EX. HYD
+
+OHGUY
+
+HURO
+NTARI
+
+SIDEWALK
+
+BANK TOP
+
+36
+
+3
+
+BANK TOP
+
+CB
+
+WV
+
+SIDEWALK CONCRETE
+
+46
+
+26
+
+FENCE BOARD 1.9 METRE HEIGHT
+
+BANK TOP
+
+COLLINGWOOD
+AVENUE
+
+McALPINE
+
+W
+
+OHGUY
+OHGUY
+
+BLOCK 58
+BUFFER
+
+OHGUY
+OHGUY
+
+TOP
+
+CB
+
+DITCH
+
+OHGUY
+OHGUY
+
+FENCE CHAIN LINK
+
+T
+
+OHGUY
+OHGUY
+
+ASPHAL
+
+OHGUY
+OHGUY
+OHGUY
+
+BANK TOP
+
+DITCH
+BANK TO
+P
+
+TOWN OF CALEDON
+CITY OF BRAMPTON
+
+SIDEWALK
+
+WV
+
+ROAD
+
+OHGUY
+
+BANK
+
+NK
+
+BA
+
+4
+
+54
+
+28
+
+35
+
+25
+
+DR
+
+W
+
+BREAKLI
+W
+NE
+
+F
+
+MH
+
+47
+
+53
+
+HP
+
+RE HEIGHT
+
+W
+
+O
+
+5
+
+HP
+
+McALPINE
+
+W
+W
+
+W
+
+M
+
+O
+
+E
+
+6
+
+LIGHTHEA
+RT DRIVE
+
+W
+
+P
+
+TT
+
+TO
+
+BO
+
+NK
+
+BA
+
+P
+TO
+
+OS TO
+T& P
+W
+IR
+
+29
+
+34
+
+RD 2 MET
+
+W
+
+W
+W
+W
+
+W
+W
+
+W
+
+NK
+
+D
+NC BA ITC
+E NK H
+P
+
+48
+
+52
+
+T
+
+T
+
+W
+OHGUY
+OHGUY
+
+AL
+
+W
+OHGUY
+OHGUY
+
+24
+
+PH
+
+W
+
+7
+
+30
+
+33
+
+23
+
+BANK
+
+ALK AS
+PHAL
+
+W
+
+BA
+
+OHGUY
+
+31
+
+49
+
+50
+
+51
+
+FENCE BOA
+
+W
+
+BAN
+K
+
+SIDEW
+
+W
+
+TE
+
+8
+
+AS
+
+W
+
+OF
+
+32
+
+ROAD
+
+W
+
+W
+
+NCRE
+
+MH
+
+FE
+
+DONHER
+B CRES
+
+W
+
+W
+
+W
+
+W
+
+W
+
+TOP
+
+WAL
+K CO
+
+BAN
+K
+
+SIDE
+
+9
+BOTTOM OF
+
+N
+O
+NS E
+HI LAN
+TC M
+HU AR
+F
+
+WV
+
+FENCE BOA
+RD 2.4 MET
+
+W
+
+McALPINE ROAD
+
+10
+
+AY
+
+OHGUY
+OHGUY
+
+W
+
+EX. HYD
+
+W
+
+W
+
+CB
+W
+
+SIDEWALK CONCRETE
+
+W
+
+SIDEWALK CONCRETE
+
+MH
+
+T&WIRE
+
+CONCRETE
+
+FENCE POS
+
+TO
+
+P
+
+BANK TOP
+
+EXISTING
+0.3m RESERVE
+
+MH
+
+Figure Title
+
+MH
+
+ARGO SUMMER VALLEY
+PROPOSED DRIVEWAY LAYOUT
+
+N
+
+LEGEND
+
+BLOCK 10
+ROAD WIDENING
+
+WV
+
+SIDEWALK
+
+HILLPAT
+H
+CRESCE
+NT
+
+K
+
+BA
+NK
+
+STM
+
+N
+
+OF
+
+W
+
+CH
+
+NC. BOX
+
+BA
+
+W
+
+BOTTO
+M OF BAN
+BO
+K
+TT
+OM
+
+W
+
+P
+
+DIT
+
+P
+
+TO
+
+TO
+
+NK
+
+NK
+
+BA
+
+BA
+
+1.5m CO
+
+WV
+
+BXB
+RETAINING WALL
+
+PROPERTY LINE
+HP
+LP
+
+HIGH POINT ALONG ROAD CENTER LINE
+
+Client
+0
+
+25
+
+50
+
+75
+
+Drawn
+
+100
+
+LOW POINT ALONG ROAD CENTER LINE
+Metres
+
+CITY OF BRAMPTON FILE NUMBER : 0ZS-2022-0030
+
+ARGO SUMMER VALLEY LIMITED
+
+KT
+
+Checked
+
+MR
+
+Date
+
+23/11/20
+
+Scale
+
+Project No.
+
+1:1250
+
+300054371
+
+Figure No.
+
+FIG 11
+
+File: \\MONTY\Shared Work Areas\054371 - Argo Summer Valley\07_Figures\054371 - PROPOSED DRIVEWAY LAYOUT.dwg Date Plotted: November 20, 2023 - 3:59 PM
+
+OHGUY
+
+21
+
+RE HEIGHT
+
+W
+
+19
+
+18
+
+17
+
+EW
+
+OHGUY
+
+16
+
+15
+
+14
+
+13
+
+12
+
+11
+
+CENT
+
+W
+
+W
+
+MH
+
+IV
+
+BANK TOP
+
+BANK TOP
+DITCH
+
+FENCE CHAIN LINK
+
+BANK TOP
+
+BA
+NK
+
+BOTTOM OF BANK
+
+Argo Summer Valley Limited
+
+39
+
+Functional Servicing Report
+November 2023
+
+11.0
+
+Conclusions
+
+This Functional Servicing and Stormwater Management Report is intended to satisfy
+Town, City, Region of Peel and Toronto Region Conservation Authority requirements for
+a review of site servicing and stormwater management in support of the planning
+applications for the Argo Summer Valley DPOS. Based on a review of all the materials
+available, the following conclusions and / or recommendations are made:
+•
+•
+•
+•
+•
+
+•
+
+•
+•
+•
+•
+•
+
+•
+
+The existing 450 mm diameter trunk sewer, located on Summer Valley Drive, is
+sufficiently sized to accommodate the proposed development.
+Sanitary servicing is available through the existing MHs at the south and east limits
+of the site via the Highwood Road and Lightheart Drive sanitary system.
+Direct connections will be made to the existing sanitary sewer for the lots fronting
+Highwood Road, as intended in the Creek’s Edge subdivision design.
+The DPOS will be serviced through an internal system of gravity draining sanitary
+sewers with connection to the existing sanitary system at existing available MHs.
+A 300 mm distribution water main exists along Highwood Road and a 150 mm
+diameter water main has been extended to the site from Lightheart Drive to service
+the proposed development.
+Internal distribution mains extended via the local road system within the DPOS will
+serve the development with connection to the 300 mm main on Highwood Road and
+extension of the 150 mm main from Lightheart Drive, providing security of service
+and sufficient flow and pressure for the proposed DPOS.
+The existing 1,350 mm diameter trunk sewer located on Summer Valley Drive is
+sufficiently sized to accommodate the proposed development.
+Storm servicing is available through the existing MHs at the south and east limits of
+the site via the Highwood Road and Lightheart Drive storm drainage system.
+The proposed development requires upsizing of the existing 375 mm storm sewer on
+Highwood Road to a 600 mm storm sewer.
+Direct connections will be made to the upsized storm sewer for the lots fronting
+Highwood Road, as intended in the Creek’s Edge subdivision design.
+The proposed storm drainage system will be sized in accordance with City and Town
+Requirements, with the provision of 10-year flow capacity within the storm sewer
+system. The storm sewers will provide gravity drainage to the existing storm sewer
+infrastructure on Highwood Road and Lightheart Drive.
+The proposed development will include a treatment train approach to addressing
+quality control for the site through the installation of OGS units at the connection
+points to the existing storm sewer system and utilizing the existing treatment
+efficiency in the existing stormwater management facility in the adjacent subdivision.
+The proposed measures result in achieving 84% TSS removal for the subject site.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Argo Summer Valley Limited
+
+40
+
+Functional Servicing Report
+November 2023
+
+•
+
+•
+
+•
+•
+
+The existing stormwater management pond is sufficiently sized to accommodate the
+increase in 25 mm runoff generated from the proposed development. The pond will
+provide sufficient erosion control for the DPOS development.
+The existing 600 mm orifice in the diversion MH at the stormwater management
+facility will need to be upsized to a 715 mm orifice to convey the additional flow for
+treatment in the stormwater management pond. The existing extended detention
+release orifice is sufficiently sized to provide 48 hours of extended detention for the
+additional volume.
+Details of the stormwater management system will be finalized during the detailed
+design stage of the subdivision.
+ESC measures will be included in the detailed design, prior to the commencement of
+any earthworks activity.
+
+R.J. Burnside & Associates Limited
+054371_FSR 2ES_Summer Valley_2311
+
+300054371.0000
+
+Drawings
+
+Drawings
+
+LN
+SON FARM
+
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+W
+
+OHGUY
+OHGUY
+OHGUY
+
+W
+
+HUTCHIN
+
+W
+
+W
+
+0
+41
+
+SITE AREA
+
+W
+
+AY
+
+W
+
+OHGUY
+
+W
+GH
+HI
+
+OHGUY
+
+263.69
+
+67
+263.
+
+HIGHWA
+T DR
+HEAR
+
+W
+
+W
+
+BLOCK 9
+BUFFER
+
+W
+
+W
+W
+W
+
+W
+W
+
+W
+W
+
+W
+W
+
+W
+
+W
+
+W
+W
+
+W
+W
+
+W
+W
+
+W
+
+W
+
+W
+
+9 EX
+256.5
+
+W
+
+5
+
+259
+.04
+26
+260 0.54
+.53
+2.0
+0%
+
+8
+
+2.00%
+
+257.8
+258
+258.2
+258.5
+258.8
+2.00%
+
+T
+
+2.40%
+
+CRESCE
+N
+
+2.00%
+
+7.8
+258
+258.2
+
+2.00%
+
+257.5
+257.5
+
+258
+
+5
+
+25
+2577.2
+257
+.5
+257.8
+
+258.06
+
+257.34
+
+257.40
+
+257.85
+0+180
+
+258.05
+0+160
+
+256.8
+
+258.25
+258.37
+
+257.46
+0+ 220
+
+257
+
+257
+257.2
+
+7.5
+2.00%25
+25
+
+258.80
+
+258.64
+
+257.8
+
+257.
+
+258.99
+
+E ROAD
+McALPIN
+
+0+140
+
+258.36
+258.48
+
+257.02 EX
+
+25 256.94 EX 257.18
+6.
+258.04
+63
+
+93
+6.
+25
+
+81
+
+6.
+
+25
+
+256.94 EX
+
+257.18258.27
+
+256.87 258.41258.41
+258.53
+256.63 EX
+
+77
+
+6.
+
+25
+
+256.89 EX
+
+257.03 EX
+
+25
+6
+25 .95
+6.
+98
+
+71
+
+6.
+
+25
+
+7.8
+
+258.99
+
+0.50%
+52.0m @
+257.2
+
+0.50%
+
+258.34
+0+120
+
+257.13 258.45 258.48
+258.60
+
+257.27 258.50 258.54
+258.66
+
+258.61
+258.73
+
+256.86
+258.63
+256.62 EX
+
+7.
+02
+25
+
+25
+
+259.21
+
+258.4
+6
+0+ 28
+0
+
+258.48
+259.26
+
+259.28
+259.09
+
+258.96
+
+10.0m @
+
+258.46
+258.44
+0+100
+
+25
+8
+0+ .56
+08
+0
+
+2.0
+
+3.00
+%
+
+DONHER
+B
+
+8.5
+25
+
+258
+
+.5
+257
+
+259.03
+
+259.16
+259.22
+
+0.75%
+
+2580.%
+258. 70
+82
+
+257.
+39 2 3.00%
+58.6
+0
+
+258.56
+
+258.57
+0+ 260
+
+259.21
+.2
+258
+
+0.50%
+17.7m @
+
+259.47
+
+LIGHTHE
+
+20.7m @
+
+258.50
+
+.8
+
+259.27
+
+258.66
+
+259.29
+259.21
+
+0.50%
+35.3m @
+
+E
+ART DRIV
+
+259.59
+
+259.46
+
+258.67
+0+ 240
+
+258.77
+0+ 220
+
+258.87
+0+ 200
+
+4
+
+256.39 EX
+
+RLCB
+
+256.35 EX
+
+CITY OF BRAMPTON
+
+7 EX
+
+256.5
+
+X
+256.81 E
+X
+256.68 E
+
+WV
+
+WV
+
+6.0m @ 3.00%
+
+8.1m @ 0.50%
+
+258.46
+
+W
+
+25
+7.
+
+TOWN OF CALEDON
+
+256.91 EX
+
+XSECT A-A
+
+256.87 EX
+256.77 EX
+
+263
+
+SCALE H 1:500 V 1:100
+
+BLOCK 58
+OPEN SPACE
+
+262
+
+256.8
+
+263
+LOT 7
+
+17.0m STREET A ROW
+
+262
+
+0.5m WIDE TOP OF ACOUSTIC BERM
+
+261
+
+W
+
+257
+
+261
+
+3:1 SIDE SLOPE (MAX)
+TO MATCH INTO EXISTING GRADE
+
+0
+
+10.0
+
+20.0
+
+30.0
+
+40.0
+
+Metres
+
+W
+W
+
+260
+
+260
+
+259
+
+259
+
+Figure Title
+
+W
+
+ARGO SUMMER VALLEY
+
+W
+W
+
+W
+W
+W
+W
+W
+
+W
+W
+
+CH
+
+DIT
+W
+
+FENCE PO
+ST&WIR
+
+HILLPAT
+H
+CRESCE
+NT
+
+5.0
+
+3:1 SIDE SLOPE (MAX)
+
+BLOCK 10
+ROAD WIDENING
+
+EXISTING
+0.3m RESERVE
+
+PROPOSED GROUND
+
+258
+257
+
+PROPOSED GROUND
+BY OTHERS PER MTO
+410 INTERCHANGE
+DESIGN
+
+MAX FILL WITHIN EX.
+EASEMENT = 0.70m
+
+EXISTING GROUND
+
+Client
+
+257
+BELL EASEMENT
+PART 2, PLAN 43R-32579
+
+PRELIMINARY GRADING PLAN
+
+258
+Drawn
+
+ARGO SUMMER VALLEY LIMITED
+
+KT
+
+Checked
+
+LN
+
+Date
+
+23/05/30
+
+Scale
+
+Project No.
+
+1:500
+
+300054371
+
+Figure No.
+
+G1
+
+CITY OF BRAMPTON FILE NUMBER : 0ZS-2022-0030
+
+File: \\MONTY\Shared Work Areas\054371 - Argo Summer Valley\07_Figures\054371 - G1.dwg Date Plotted: November 20, 2023 - 4:02 PM
+
+W
+
+W
+
+2.00%
+
+E
+DR R VA
+IV LL
+E
+EY
+
+W
+
+W
+
+LO
+
+MM
+
+W
+
+W
+
+257.68
+
+W
+
+W
+
+W
+
+257.66
+
+W
+W
+
+W
+
+EX. HEADWALL
+INV. = 255.35
+
+37
+
+SU
+
+W
+W
+
+25
+7.
+8
+
+256.94
+
+W
+
+W
+
+257.06 EX
+
+W
+
+W
+
+256.5
+
+6
+
+256.99
+
+W
+
+W
+
+257.
+1
+
+W
+W
+
+257.26
+
+W
+
+W
+
+0.20Ø
+
+.8
+
+W
+W
+
+McALPINE ROAD
+
+W
+
+W
+
+258.97
+0+180
+
+5%
+0.7
+@
+12
+
+259.65
+
+259.26
+
+257.83
+
+W
+W
+
+W
+
+W
+
+.5
+
+257
+
+7
+
+W
+
+W
+
+25
+
+W
+
+W
+
+257.90
+
+OHGUY
+OHGUY
+OHGUY
+
+W
+
+257.59
+
+OHGUY
+OHGUY
+OHGUY
+
+OHGUY
+
+W
+
+258
+
+OHGUY
+OHGUY
+
+W
+
+258.25
+
+EX
+
+OHGUY
+
+OHGUY
+OHGUY
+
+W
+
+258.82
+
+EX
+257.88
+
+BLOCK 5
+8
+BUFFER
+257.26
+
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+W
+
+25
+8.5
+
+259
+.69
+0%
+0.5
+@
+.0m
+
+27.0m @
+0.50%
+28.9m @
+
+259.62
+
+EX
+X 258.28
+258.18
+E
+
+OHGUY
+
+W
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+W
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+W
+
+0.20Ø
+
+257.46 EX
+257
+.5
+
+256
+
+EX
+
+25
+
+258.38
+
+8.5
+
+W
+
+259.76
+
+W
+
+W
+
+258.
+W
+W
+
+W
+W
+
+W
+W
+W
+W
+W
+W
+
+W
+W
+
+W
+
+259.19
+258.55
+OHGUY
+
+OHGUY
+
+W
+
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+W
+W
+W
+W
+W
+
+W
+W
+W
+W
+W
+
+W
+W
+W
+W
+W
+
+W
+W
+W
+W
+W
+W
+
+W
+W
+W
+W
+
+W
+W
+W
+
+W
+
+W
+W
+
+OHGUY
+OHGUY
+
+W
+
+259.72
+
+W
+
+W
+
+W
+
+W
+
+9
+25
+W
+W
+W
+W
+
+W
+
+W
+
+258.5
+25
+8.2
+225578.8
+2
+57.5
+25
+7.2
+257.2
+2257.5
+57.5
+OHGUY
+
+W
+
+259.10
+
+258.24 EX
+
+W
+
+259.06
+
+8 259.27
+
+9.2
+25
+
+OHGUY
+
+W
+
+13.0m @ 0.50%
+
+N
+
+W
+
+25
+8
+
+257.81
+
+W
+W
+W
+W
+
+W
+W
+W
+W
+
+9.5
+
+25
+
+TREET
+
+WV
+7.8
+25
+
+TARIO S
+
+EX
+
+257.53 EX
+
+ASPHALT
+
+HURON
+
+50
+
+T
+
+PHAL
+Y AS
+
+DRIVEWAY
+
+W
+
+.2
+
+7.
+
+25
+
+EX
+
+OD ROAD
+
+6.5
+
+W
+
+258
+
+7.5
+25
+
+.5
+257
+
+8
+
+38
+
+SD
+
+25
+
+W
+
+258.2
+
+WV
+
+257
+
+EWA
+
+6.8
+
+25
+
+87
+
+258.5
+
+258.25
+
+DRIV
+
+6.
+25
+
+258.5
+
+258.49
+
+8
+
+5
+
+W
+
+258
+
+EMERGENCY OVERLAND
+FLOW FROM 100 YEAR
+CAPTURE AREAS
+
+HIGHWO
+
+WV
+
+MH
+
+WALK OUT UNITS
+
+NOTE:
+RLCB IN LOTS 38, 40, & 42 SIZED TO CAPTURE 100 YEAR
+STORM DRINAGE - EMERGENCY OVERLAND FLOW TO
+DISCHARGE TO EX. RLCB/HW OUTLETS AS NOTED
+
+257.26
+
+BXB
+
+WV
+
+WO
+
+SD
+
+6.
+
+W
+
+W
+
+MH
+
+LOOK OUT UNITS
+
+1
+8.
+
+LO
+
+3.00%
+
+3:1 SLOPE (MAX)
+
+25
+
+W
+
+W
+
+257.13
+
+7.2
+25
+
+SD
+
+258.52
+
+3.00%
+
+2.00%
+
+LO
+
+63
+
+FD
+
+2.00%
+
+W
+
+W
+
+0+000
+
+26
+
+6.
+
+3
+
+7
+
+5
+
+256.91
+
+256.95
+
+23
+
+25
+
+39
+
+25
+
+.2
+
+25
+7
+
+2.00%
+
+FD
+
+W
+
+WV
+
+2.00%
+
+258.49 RL
+CB
+
+3.00%
+
+LO
+
+SPLIT DRAINAGE UNITS
+
+258.63
+
+3.00%
+
+258.68
+
+SD
+
+EX. RLCB
+T/G = 256.63
+NW INV. = 255.29
+SE INV. = 255.07
+
+257.59
+
+2.16%
+
+43.4m @ 0.50%
+0+020
+256.94
+
+1
+
+2.
+
+0.97%
+
+FRONT DRAINAGE UNITS
+
+8
+
+7.
+25
+
+1.00%
+
+FD
+
+SD
+
+2.00%
+
+2.00%
+
+25
+
+6.
+5
+RLCB 3
+
+2.00%
+
+3.00%
+
+2.00%
+
+EX. RLCB
+T/G = 256.23
+INV. = 255.03
+
+6.8
+
+8
+
+25
+
+2.00%
+
+257.09
+
+0%
+
+LO
+
+40
+
+3.00%
+
+3.00%
+
+3.00%
+
+RLCB
+
+2.00%
+
+25
+
+4
+
+2.00%
+
+25
+
+8.
+25
+
+.57
+
+@ 3.0
+
+3.00%
+
+41
+
+2.00%
+
+258.65
+
+4.0m
+
+2.00%
+
+LO
+
+SD
+
+0.15Ø
+
+258.75
+
+3.00%
+
+42
+
+3.00%
+
+3.00%
+
+43
+
+WO
+
+24
+
+258
+
+4
+2580+.3264
+
+2.00%
+
+2.00%
+
+2.00%
+
+WO
+
+8.
+25
+
+0.20Ø
+
+@
+86.2m
+
+FD
+
+APPROXIMATE LOCATION OF
+SOAKAWAY PIPE (MIN. AREA
+1.125 SQ.M.) SET MIN 5m FROM
+BUILDING AND 0.5m FROM LOT
+LINE
+
+257.96
+
+2
+258.1
+
+258.81
+
+2.00%
+
+258.84 54 258.69
+
+258.07
+
+0+360
+
+258.88
+
+SD
+
+0
+
+FD
+
+52.6m @ 0.50%
+
+23
+
+95
+
+36
+
+25
+
+.1
+
+27
+
+258.65
+
+5
+
+8
+25
+
+258.13
+
+258.70
+
+PROPOSED RJB ADJUSTED
+MTO INTERCHANGE GRADE
+
+7.
+
+2.00%
+
+2.00%
+
+258.97
+
+RLCB
+2
+8.
+
+258.26 00%
+
+258.12
+0+340
+
+258.87
+
+25
+
+258.61
+
+6
+25
+
+FD
+
+2.00%
+
+45.4m @ 5.00%
+
+258
+
+257.8
+
+257.02
+
+W
+
+257.8
+
+7.8
+25
+
+28
+
+MTO INTERCHANGE GRADE
+
+7.2
+
+W
+
+OHGUY
+OHGUY
+
+257.09
+
+259.16 257.66
+259.15
+
+258.2
+
+25
+
+OHGUY
+OHGUY
+
+257
+
+0 +040
+257.04
+
+258.76
+
+258.87
+
+2.00%
+
+2.00%
+
+258.33
+
+258.20
+
+258.5
+
+VERTICAL CURVE
+LENGTH =2.40%
+51.0m
+257.28K = 11.75
+
+257.06
+
+2.00
+
+258.97
+
+44
+
+FD
+
+BVC = 0+043.94
+
+257.17
+
+LO
+
+8
+
+2.00%
+
+FD
+
+258.77 %
+
+258.22
+0+320
+
+LIGHTHEART DRIVE
+
+.2
+
+OHGUY
+
+OHGUY
+
+57
+
+25
+
+258.68
+
+SD
+
+5
+
+259.10
+
+.48
+
+FD
+
+35
+
+8.9
+
+0%
+
+29
+
+2.00%
+
+%
+.00
+
+2
+
+258.56
+
+SD
+
+2.
+
+259.01
+
+2
+
+FD
+
+2.0
+
+W
+
+MH
+
+.74
+58
+
+258.82
+
+SD
+
+2.60%
+
+258.41
+
+2.00%
+
+258.26
+
+34
+
+SD
+
+56
+
+257.85
+
+258.74
+2.00%
+
+258.7800%
+
+25
+
+W
+
+WV
+
+45
+
+257
+
+OHGUY
+
+OHGUY
+
+W
+
+259.65
+
+OHGUY
+
+OHGUY
+
+W
+
+OHGUY
+
+OHGUY
+
+259.91
+
+OHGUY
+
+OHGUY
+
+FD
+2.00%
+
+FD
+
+259.06
+
+258.66
+
+258.75
+
+7.5
+
+OHGUY
+
+W
+
+OHGUY
+
+2.00%
+
+259.59
+
+258.32
+
+30
+
+2.
+
+258.32
+0+300
+
+EXISTING GRADE
+
+22
+
+258.81
+
+258.33
+
+256.57 EX
+
+OVERLAND FLOW ROUTE
+
+2.00%
+
+2.50%
+
+33
+SD
+
+20.7m @ 0.75%
+
+FD
+
+258.93
+
+2.00%
+
+258.72 83%
+
+258.70
+0+040
+
+258.69
+0+060
+
+31
+
+0%
+
+8.5
+25
+
+258.48
+
+SD
+
+3.48%
+
+25
+
+OHGUY
+
+OHGUY
+
+W
+
+OHGUY
+
+OHGUY
+
+25
+6.8
+
+FD
+
+8.8
+
+257.90
+
+OHGUY
+
+OHGUY
+
+2
+
+25
+
+25
+8
+
+W
+
+OHGUY
+
+257.5
+257.2
+
+FD
+
+46
+
+257.5
+
+OHGUY
+
+W
+
+W
+
+257.8
+
+DRIVEWAY GRAVEL
+
+MH
+WV
+
+257.36
+
+2.0
+
+PROPOSED SLOPE
+
+6
+9.0
+25
+
+259.30
+
+5
+
+259.14
+
+258.75
+
+258.79
+
+55
+
+2.74%
+
+0 +060
+257.35
+
+259.33 257.83
+259.32
+
+259.18 257.68
+259.17
+
+2.00%
+
+259.34
+
+257.80
+
+257.82
+
+2.00%
+
+259.27
+
+FD
+
+EVC = 0+070.94
+
+2.00%
+
+3
+
+258.5
+
+W
+
+W
+
+W
+
+BREAKLIN
+E
+
+259.55
+
+W
+
+257.5
+2
+25
+57
+7.2
+.2
+25
+7.
+25
+7.85
+8
+25
+258.2
+258.5
+
+10
+
+259
+
+W
+
+W
+
+DITCH
+
+COLLINGWOOD
+AVENUE
+
+259.61
+
+W
+
+W
+
+261.23
+
+257.97 EX
+
+W
+
+W
+
+W
+W
+
+W
+
+259.88
+
+W
+
+257.85
+
+W
+
+OHGUY
+OHGUY
+
+FD
+
+259.65
+
+BVC = 0+080.89
+
+2.4m ACOUSTIC FENCE
+
+FD
+
+258.99
+
+W
+
+OHGUY
+OHGUY
+
+DITCH
+
+OHGUY
+OHGUY
+
+1
+
+259.46
+
+W
+
+W
+
+W
+
+ASPHA
+LT
+
+OHGUY
+OHGUY
+
+258.44
+
+259.75 258.25
+259.74
+
+FD
+
+47
+
+259.27
+
+2.00%
+
+257.5
+
+2.00%
+
+W
+
+259.02
+
+W
+
+W
+
+W
+
+0.55%
+
+W
+
+SIDEWA
+LK
+
+OHGUY
+
+DITCH
+
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+.69
+
+OA
+D
+
+LP
+IN
+
+Mc
+A
+
+.84
+
+26
+
+W
+
+W
+
+ER
+
+.76
+
+259
+
+3
+1.2
+
+EX
+
+W
+W
+W
+
+257.95
+
+W
+
+W
+W
+
+W
+
+W
+
+259
+
+BL
+BU OCK
+FF 58
+ER
+
+257
+X
+8E
+25
+
+W
+
+W
+W
+
+CITY OF BRAMPTON
+
+FD
+
+2.00%
+
+W
+
+W
+
+TOWN OF CALEDON
+
+257.8
+
+259.28
+
+54 SD
+
+0+100
+259.03
+
+0+ 080
+30
+258.
+
+2
+
+258.76
+
+2.00%
+
+258.74
+
+2.00%
+
+260.32 258.82
+260.31
+
+259.19
+
+W
+
+W
+
+W
+
+K ASP
+HALT
+
+W
+
+W
+
+W
+
+WV
+
+258
+
+2.00%
+
+258.84
+
+53
+
+VERTICAL CURVE
+LENGTH = 43.0m
+259K.1=48.00
+2.00%
+
+258.90
+
+FD
+
+SD
+
+32
+
+258.66
+
+258.60
+0+020
+
+2.00%
+
+S.D.
+
+259.61
+
+2.00%
+
+3
+
+2.00%
+
+EWAL
+
+W
+
+257.89
+
+W
+
+259.1
+3
+
+SID
+
+W
+
+W
+
+W
+
+260.76 25 .2
+9.2
+8
+260.75 25 6
+
+258.91
+
+W
+
+W
+
+W
+
+LEGAL HURONTARIO STREET
+DRIVEWAY ACCESSES TO BE
+REMOVED
+
+FD
+
+258.98
+
+7.9
+
+W
+
+MH
+
+49
+
+48
+
+259.32
+
+SD
+
+258.57
+
+259.39
+
+FD
+
+259.55
+
+259.33
+
+259.26
+
+3.72%
+
+SD
+2.00%
+
+2.30%
+
+2.00%
+
+4
+
+.0m
+
+.91
+
+25 9
+.39
+W
+
+W
+W
+
+W
+W
+W
+
+W
+W
+W
+
+W
+
+W
+
+261.12 259
+.62
+261.11
+
+258.2
+
+26
+1.2
+7
+
+25
+
+25
+
+25
+8.8
+
+8.5
+
+2
+258.2 58.2
+6E
+X
+
+258
+
+7.
+8
+25
+
+7.9
+1
+
+25
+9.8
+5
+
+W
+
+W
+
+FD
+
+52
+
+2.
+
+120
+2509+.3
+0
+
+FD
+
+258.62
+
+4.0m @ 3.00%
+
+W
+
+3:1 SLOPE TO MATCH
+INTO EXISTING GRADE
+
+10.0m @ 0.50%
+
+W
+
+5
+
+FD
+
+0%
+
+25
+
+257.66
+0 + 200
+
+26
+0.
+49
+2
+2255599.8
+225599..25
+2
+5
+25 88..8
+85
+258.2
+257.8
+
+W
+W
+W
+W
+W
+
+W
+W
+W
+
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+OHGUY
+OHGUY
+
+OHGUY
+
+W
+
+259.40
+
+259.59
+
+259.32 00%
+
+259.29
+
+2.00%
+
+50
+
+0 +000
+
+5
+9.0
+
+90
+
+OHGUY
+
+W
+
+261.26 25
+9.76
+261.25
+
+259.17
+
+2.0
+
+21
+
+PROPOSED GRADE
+
+2.0%
+
+9
+25
+
+8.
+
+OHGUY
+
+W
+
+2
+2 59
+25 59 .8
+.5
+9
+2
+225 5 .2
+25 588. .89
+5
+8.5
+
+FD
+
+2.00%
+
+2.00%
+
+259.24
+259.31
+
+EVC = 0
++124.87
+
+2.4m ACOUSTIC FENCE
+
+258.74
+
+.13
+
+25
+
+OHGUY
+
+W
+
+IR
+E
+
+3:1 SLOPE TO TOP OF
+BERM ELEVATION
+
+51
+
+A
+
+259.25
+
+20
+
+259.11
+258.59
+
+OHGUY
+
+W
+
+9.
+8
+
+1
+
+259.37
+
+6
+
+FD
+
+2.00%
+
+OHGUY
+
+W
+
+25
+
+N
+O
+NS E
+HI LAN
+TC M
+HU AR
+F
+
+DI
+TC
+H
+PO
+ST
+&W
+
+19
+
+258.65
+
+OHGUY
+
+W
+
+E
+
+96.2m @ 0.50%
+
+259.61
+
+259.74
+
+9.1
+
+2.00%
+
+14.00
+
+OHGUY
+OHGUY
+
+2.00%
+
+OHGUY
+
+W
+OHGUY
+OHGUY
+
+18
+
+258.71
+
+OHGUY
+
+W
+OHGUY
+
+2.00%
+
+W
+OHGUY
+
+OHGUY
+
+FD
+
+259.24
+
+15
+9.
+25
+
+W
+OHGUY
+
+OHGUY
+
+25 0+16
+9.1 0
+0
+
+0+14
+0
+259.2
+1
+
+FD
+
+259.30
+258.78
+
+W
+OHGUY
+
+258.84
+
+W
+OHGUY
+
+259.03
+
+W
+
+%
+
+00
+
+W
+OHGUY
+
+259.10
+
+2.
+
+W
+OHGUY
+
+258.97
+
+W
+
+261.23 25
+9.7
+261.22 258.2 3
+
+9.0
+6
+
+FD
+
+FD
+
+2.00%
+
+W
+
+MH
+
+FE
+NC
+
+25
+
+259.
+31
+
+FD
+
+259.36
+
+258.83
+-0+-010
+
+25
+
+259
+.25
+
+%
+
+17
+
+14.0m MTO SETBACK
+
+258.87
+
+257.8
+
+McALPINE ROAD
+
+25
+9.1
+9
+
+2.16
+
+2.00%
+
+W
+
+FD
+
+258.90
+
+54
+9.
+25
+
+W
+
+8
+
+2.00%
+
+W
+
+9
+FD
+
+2.00%
+
+W
+
+0%
+
+2.00%
+
+W
+
+2.0
+
+16
+
+259.43
+
+259.49
+
+259.56
+
+259.63
+
+15
+
+BXB
+
+260.46 258.96
+260.45
+
+OHGUY
+
+4
+
+7
+
+2.00%
+
+04
+1. 03
+26 261.
+
+OHGUY
+
+FD
+
+FD
+
+14
+
+260.52 259.02
+260.51
+
+OHGUY
+
+10
+
+FD
+
+13
+
+FD
+
+FD
+
+260.59 259.09
+260.58
+
+OHGUY
+
+26
+1
+26 .04
+1.0 25
+3 9.5
+
+12
+
+MH
+
+260.65 259.15
+260.64
+
+OHGUY
+
+14.0m MTO
+SETBACK (TYP.)
+
+261
+261.11 2
+.10 59.6
+1
+
+PROPERTY LINE
+
+259.11
+
+260.71 259.21
+260.70
+
+OHGUY
+
+14.00
+
+261.
+1
+261. 9 259.69
+18
+
+11
+
+FD
+
+FD
+
+260.78 259.28
+260.77
+
+OHGUY
+
+2.4m ACOUSTIC FENCE
+
+260.84 259.34
+260.83
+
+OHGUY
+
+.8
+258
+
+OHGUY
+
+A
+
+260.98 259.48
+260.97
+
+OHGUY
+
+WV
+
+2.4m ACOUSTIC FENCE
+
+2.4m ACOUSTIC FENCE
+
+261.28
+
+LEGEND
+
+257.41 EX
+
+257.5
+257.5
+
+260.91 259.41
+260.90
+
+259
+.8
+
+26 0
+0..22
+
+W
+
+W
+
+W
+W
+
+.8
+
+9
+25
+
+257.80 EX
+257.8
+
+257.89 EX
+
+258.01 EX
+
+258.40 EX
+
+258
+
+W
+W
+
+W
+W
+W
+W
+W
+
+W
+W
+W
+W
+
+W
+W
+
+W
+W
+
+25
+8
+258
+.2
+258
+.5
+25
+8.8
+25
+9
+25
+9.
+25 2
+9.
+25 5
+9.8
+26
+0
+26
+0
+26 . 2
+0.
+26 5
+0.8
+
+257.8
+
+W
+
+0
+
+W
+
+26
+
+258
+
+T
+
+26
+
+SCALE: N.T.S.
+3:1 SLOPE TO TOP OF
+BERM ELEVATION
+
+AL
+PH
+
+W
+
+E
+IN
+
+2
+0.
+
+KEY PLAN
+
+3:1 SLOPE TO MATCH
+INTO EXISTING GRADE
+
+258.39 EX
+
+07
+8. 04
+5
+2 58.
+2
+
+5
+
+0.
+
+REET
+
+MAYFIELD ROAD
+
+AS
+
+W
+
+KL
+
+DITCH
+
+26
+
+74
+
+HILLPATH CRSC.
+SWEET BRIAR LN
+
+H
+
+8
+
+0.
+
+257.
+
+258.4
+6
+
+3
+8.3 5
+25 58.0 .37
+2 58
+2
+
+26
+
+35
+
+AY
+
+W
+
+258.75
+
+258.
+
+EW
+
+W
+
+258.80
+
+258.71
+
+257.78
+258.
+81
+
+IV
+
+W
+
+257.83
+
+TOWN OF CALEDON
+CITY OF BRAMPTON
+
+SUMMER VALLEY DR
+
+W
+
+EA
+
+W
+
+BR
+
+W
+
+257.88
+
+HIGHWOOD RD
+
+D
+IT
+C
+
+W
+
+258.67
+
+T
+LIGH
+
+HURON
+TARIO S
+T
+
+W
+
+W
+
+W
+
+W
+
+W
+
+TOWN OF CALEDON
+CITY OF BRAMPTON
+
+DR
+
+W
+
+S
+
+9
+8.1 02
+25580.
+2 8.31
+25
+
+0
+
+W
+
+258.78
+
+257.93
+
+.49
+258
+8
+257.9
+258.49
+
+ID
+E
+W
+AL
+K
+A
+S
+PH
+AL
+T
+
+3
+1.
+26
+
+258.85
+258.77
+
+.10
+
+W
+
+W
+
+W
+
+W
+
+2
+26
+
+Y 410
+
+DONHERB CRSC.
+
+W
+
+W
+
+W
+
+W
+
+.90
+262
+
+E
+
+SON FARM
+
+W
+OHGUY
+OHGUY
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+OHGUY
+
+OHGUY
+
+OHGUY
+OHGUY
+
+OHGUY
+
+OHGUY
+OHGUY
+
+OHGUY
+
+OHGUY
+OHGUY
+
+W
+W
+W
+
+W
+
+OHGUY
+OHGUY
+
+W
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+W
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+W
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+W
+
+OHGUY
+
+OHGUY
+
+@ 2.00%
+
+W
+
+W
+W
+W
+W
+W
+
+W
+
+250mm SA
+N
+
+W
+W
+W
+W
+W
+
+W
+W
+W
+W
+
+W
+W
+W
+W
+W
+
+AIN
+
+W
+
+W
+OHGUY
+
+W
+OHGUY
+
+OHGUY
+OHGUY
+
+OHGUY
+
+300mm STM
+
+150mmØ
+
+@ 4.00%
+
+WATERM
+
+OHGUY
+
+W
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+W
+
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+W
+
+W
+W
+W
+W
+
+W
+
+W
+W
+W
+W
+W
+
+W
+W
+W
+W
+
+MH01A
+
+W
+
+HALT
+
+MH01
+
+44
+
+SE INV=254.47
+
+W
+
+W
+
+258
+
+W
+
+W
+
+W
+
+2 TOP=257.85
+NW INV=254.62
+
+56
+
+W
+
+43
+
+W
+
+W
+
+258.5
+
+W
+
+W
+
+W
+
+BOTTOM OF BA
+
+W
+
+257.5
+
+CB
+
+W
+W
+
+LIGHTHEART DRIVE
+257
+
+42
+
+BANK TOP
+
+41
+
+40
+
+W
+
+BOTTOM OF BANK
+BANK TOP
+FENCE BOARD 2 METRE HEIGHT
+
+W
+
+W
+
+FENCE BOARD 1.9 METRE HEIGHT
+
+P
+
+EX. 300mmØ STM
+
+OHGUY
+
+OHGUY
+
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+OHGUY
+OHGUY
+
+OHGUY
+OHGUY
+
+OHGUY
+
+OHGUY
+
+OHGUY
+
+W
+
+OHGUY
+
+OHGUY
+
+W
+
+OHGUY
+OHGUY
+
+W
+
+OHGUY
+
+OHGUY
+OHGUY
+
+W
+W
+
+W
+W
+
+W
+W
+
+W
+
+W
+
+W
+W
+
+W
+
+W
+W
+
+W
+W
+
+W
+W
+
+W
+
+W
+
+W
+
+W
+W
+W
+
+W
+W
+W
+
+W
+W
+W
+
+W
+W
+W
+
+W
+W
+W
+
+W
+
+W
+
+W
+
+W
+W
+
+257
+
+W
+
+W
+
+256.5
+
+W
+
+W
+
+W
+
+AN
+
+W
+
+E
+SID
+
+K
+
+W
+
+P
+TO
+W
+
+W
+W
+
+SIDEWALK CONCRETE
+
+EX. MH05A
+
+CB
+
+W
+
+EX. 300mm SAN
+
+257
+
+258
+
+W
+
+EX. MH07A
+
+CB
+
+W
+
+SIDEWALK CONCRETE
+
+W
+
+MH
+
+W
+
+B
+NK
+
+TO
+
+P
+
+25
+8
+
+W
+W
+
+OF
+
+OTTOM
+OF BAN
+BO
+K
+TT
+OM
+
+W
+
+BA
+
+W
+
+RETAINING WALL
+
+EX. 1200mmØ MAINTENANCE
+HOLE TO BE REPLACED
+
+BXB
+
+W
+
+BA
+NK
+
+HEIGHT
+258
+
+258.5
+
+257.5
+
+CE NT
+B CRES
+
+OARD 2
+METRE H
+EIGHT
+
+OD ROAD
+
+EX. MH05
+
+EX.
+
+S
+0mm
+
+EX. 975m
+m STM
+
+30
+
+CB
+
+S
+5mm
+
+TM
+
+97
+
+NCR
+
+K CO
+
+WAL
+SIDE
+
+ETE
+
+EX. 375mm STM
+TOP=258.47
+EX. SW INV=253.48
+EX. N INV=253.01
+SW INV=253.38
+
+EX. 375mmØ STORM SEWER TO
+BE REMOVED AND REPLACED
+WITH 600mmØ STORM SEWER.
+
+EX. MH07
+
+WV
+
+SIDEWALK
+
+ST&WIRE
+
+CONCRETE
+
+OP
+
+FENCE PO
+
+BANK T
+
+HILLPAT
+H
+CRESCE
+NT
+
+W
+
+W
+
+2
+25 58
+25 7.5
+7
+
+EX.
+
+EX. 250mmØ
+STM
+
+600mm STM @ 0.50%
+
+7.
+5
+25
+
+EX. MH08
+
+HIGHWO
+
+EX. 300mmØ
+STM
+
+EX. MH06
+
+EX. 150mmØ WM
+
+EX. 250mm STM
+
+25
+
+AN
+
+EX. 300mm SAN
+
+W
+
+mØ WATER
+MAIN
+
+CITY OF BRAMPTON
+
+m SAN
+
+6.5
+
+TERMAIN
+
+W
+
+AIN
+
+KC
+WAL
+
+EX. 300mmØ WA
+
+WV
+
+WV
+
+W
+
+W
+
+CH
+
+DIT
+
+P
+
+TO
+
+P
+TO
+
+EX. 300m
+
+RLCB
+
+MM
+E
+DR R VA
+IV LL
+E
+EY
+
+W
+
+8.5
+
+FB
+
+W
+
+258
+
+EX. HEADWALL
+INV. = 255.35
+
+TOWN OF CALEDON
+
+SU
+
+W
+
+25
+
+HT
+
+W
+
+W
+
+WV
+
+W
+
+WATERM
+
+RLCB
+
+HEADWALL
+
+EX. 300m
+E
+RET
+ONC
+
+RETAINING WALL
+
+W
+
+EX. 600m
+mØ
+
+EX. STM MH17
+
+TOP=259.17
+EX. SW INV=254.17
+EX. NE INV=254.15
+SW INV=254.17
+
+CONNECT TO EX. 150mm WATERMAIN
+VIA 2 - 22.50° BENDS
+
+RLCB
+BOTTOM OF BANK
+BOTTOM OF BANK
+FENCE BOARD 2 METRE HEIGHT
+BANK TOP
+
+EX. MH04A
+
+CB
+
+W
+
+NK
+
+NK
+
+. BOX S
+TM
+
+CB
+
+6
+
+RETAINING WALL
+
+EX. 300mmØ WATERMAIN
+
+W
+
+BA
+
+BA
+
+5
+6.
+25
+
+1.5m CO
+NC
+
+7
+
+EX. MH06A
+
+W
+
+EX. 300mm STM
+CULVERT
+
+LIGHTHEART DRIVE
+
+EX. 300mmØ
+STM
+
+EX. 250mmØ
+STM
+
+TOP=258.00
+NW INV=253.22
+EX. SW INV=252.14
+EX. NE INV=252.06
+
+CONNECT TO EX.
+300mmØ WATERMAIN
+
+W
+
+SIDEWALK CONCRETE
+
+25
+
+EX. WATERMAIN TO BE LOWERED
+TO ACCOMMODATE PROPOSED
+STORM SEWER CONNECTION
+
+1
+
+FENCE CHAIN LINK
+
+8
+
+7
+
+5
+
+ETRE HEIG
+
+W
+
+W
+
+W
+
+W
+
+W
+
+MH
+
+EX. 825mm STM
+
+CONNECT PROPOSED 750mmØ STM INTO
+EX. STM MH17. MAINTAIN EXISTING
+INVERTS
+
+37
+
+38
+
+EX. MH3
+
+0.20Ø
+
+0.20Ø
+
+ARD 1.9 M
+
+W
+
+258
+
+W
+
+257.5
+
+W
+
+W
+
+EX. 300m
+mØ WA
+TERMA
+IN
+600mmØ
+LINER
+
+WV
+
+WATERMAIN
+
+K
+
+SIDEWALK CONCRETE
+
+MO
+TTO
+BO
+
+WV
+
+EX. 750mm STM
+
+EX. RLCB
+T/G = 256.63
+NW INV. = 255.29
+SE INV. = 255.07
+
+FENCE BO
+
+W
+
+BAN
+K TO
+P
+
+MH
+
+N
+BA
+
+EX. 300mmØ
+
+PROPOSED OGS AT
+DEVELOPMENT LIMITS
+
+McALPINE ROAD
+
+W
+
+257.5
+
+2
+
+4
+
+257.5
+
+W
+
+258.5
+
+BLOCK 9
+BUFFER
+
+W
+
+257.5
+
+DRIVEWAY GRAVEL
+
+EX. RLCB
+T/G = 256.23
+INV. = 255.03
+
+258
+
+W
+
+W
+
+3
+
+258
+
+W
+
+CULVERT
+DITCH
+
+COLLINGWOOD
+AVENUE
+
+0%
+450mm STM @ 0.6
+250mm SAN @ 1.75%
+
+W
+
+W
+
+300mmØ
+
+CB
+
+0.15Ø
+
+EX. 250mm SAN
+
+W
+
+OHGUY
+
+OHGUY
+OHGUY
+
+BANK T
+OP
+
+OHGUY
+OHGUY
+
+OHGUY
+
+DITCH
+
+OHGUY
+OHGUY
+
+OHGUY
+OHGUY
+
+BANK TOP
+
+DITCH
+TOP
+OHGUY
+OHGUY
+
+OHGUY
+OHGUY
+
+OHGUY
+
+OHGUY
+OHGUY
+
+OHGUY
+OHGUY
+OHGUY
+OHGUY
+
+OP
+
+BANK T
+
+BANK
+
+CITY OF BRAMPTON
+
+RLCB
+
+EX. MH3A
+
+PROPOSED OGS AT DEVELOPMENT
+LIMITS
+
+RLCB
+
+W
+
+W
+
+RLCB
+
+EX. 375mm STM
+
+EX. MH4
+
+EX. 150mmØ WM
+
+PLUG
+& B.O.
+
+525mm STM @ 0.30%
+
+39
+6
+25
+
+BANK TO
+
+RMA
+Ø WATE
+
+.5
+256
+
+57
+
+W
+
+TOWN OF CALEDON
+
+MH11
+
+TOP=258.26
+SW INV=254.78
+N INV=254.70
+
+BOTTOM OF BANK
+
+NK
+
+1
+
+W
+
+250mm RLCB LEAD
+
+TREET
+
+ETE
+ONCR
+SIDEW
+
+ALK C
+
+HURON
+TARIO S
+
+MH10
+
+EX. 250mm SAN
+EX. MH4A
+
+WV
+
+ASPHALT
+
+LK ASP
+
+WV
+
+150mm
+
+450mm STM @ 0.40%
+
+TOP=257.88
+NW INV=254.51
+SE INV=254.46
+
+DRIV
+
+IN
+
+525mm STM @ 0.30%
+
+WV
+
+LT EX. 250mm SAN
+
+750mm STM @ 0.50%
+
+.5
+
+0.20Ø
+
+CB
+
+EX. TEMP. DICB AND 750mmØ STM
+BE REMOVED.
+EX. PIPE
+750mmTO
+STM
+PHA
+Y AS
+EWA
+
+TEMP DICB
+
+257
+
+TOP=258.42
+W INV=255.00
+NE INV=254.92
+
+EX. MH18A
+
+TOP=258.22
+SW INV=253.97
+EX. NE INV=253.92
+EX. NW INV=253.96
+
+250mm SAN @ 0.50%
+
+250mm SAN @ 0.50%
+
+45
+
+TOP=256.36
+
+CB
+
+CONCRETE
+
+TOP=258.54
+W INV=254.65
+NE INV=254.59
+
+EXDICB
+
+DRIVEWAY
+
+3
+
+TOP=258.26
+SW INV=254.36
+N INV=254.30
+
+MH10A
+
+259
+
+BANK T
+OP
+
+8.5
+
+25
+
+TOP=258.50
+NW INV=255.12
+E INV=255.04
+
+55
+
+MH11A
+
+250mm SAN @ 1.00%
+
+SIDEWALK
+
+W
+
+.30%
+
+W
+W
+W
+W
+
+W
+
+25
+9.5
+
+STM @ 0
+
+OHGUY
+OHGUY
+
+W
+
+OHGUY
+OHGUY
+
+BLOCK 58
+BUFFER
+
+OHGUY
+
+OHGUY
+
+OP
+
+375mm
+
+OHGUY
+
+OHGUY
+
+W
+
+BAN
+KT
+
+SIDEWA
+
+9
+
+FENCE CHAIN LINK
+
+11.5m - 250mm SAN @ 1.00%
+258
+
+MH09
+
+4
+
+27
+
+36
+
+TOP=258.15
+NW INV=254.62
+S INV=254.66
+NE INV=254.44
+
+PROPOSED WATERMAIN
+
+N
+
+W
+
+W
+
+W
+
+BREAKLI
+NE
+
+9
+
+46
+
+MH09A
+
+TOP=258.60
+NW INV=254.79
+E INV=254.73
+
+26
+
+MH12
+
+TOP=258.11
+NW INV=254.39
+S INV=254.19
+NE INV=254.13
+
+PROPOSED SANITARY
+PROPOSED SANITARY MANHOLE
+
+EX. 250mm
+SA
+
+W
+
+25
+
+MH
+
+LCB LEA
+D
+
+PROPOSED STORM SEWER
+PROPOSED STORM MANHOLE
+
+DONHER
+
+W
+
+W
+
+STORM SEWER
+DRAINAGE DIVIDE
+
+RLCB
+
+250mm R
+
+35
+MH12A
+
+54
+
+25
+
+28
+
+250mm RLCB LEAD
+
+W
+
+W
+
+LIGHTHE
+
+W
+
+W
+
+K
+
+MH02
+
+TOP=259.02
+SE INV=255.76
+NW INV=255.80
+
+FENCE B
+
+W
+
+W
+
+N
+O
+NS E
+HI LAN
+TC M
+HU AR
+F
+
+N
+.5
+59 BA
+
+5
+
+24
+
+TRE HEIG
+HT
+
+W
+W
+
+W
+W
+
+W
+
+W
+
+258
+
+W
+
+259
+258
+.5
+
+W
+
+W
+
+W
+
+259
+
+W
+
+259
+
+W
+
+TO
+
+STORM SEWER
+DRAINAGE DIVIDE
+
+47
+
+53
+
+%
+
+W
+
+2
+OF
+P
+OM
+TO
+TT
+BO
+P
+
+NK
+BA
+
+6
+
+29
+
+34
+
+250mm RLCB LEAD
+
+W
+W
+
+W
+
+48
+
+52
+
+%
+
+W
+
+W
+
+W
+
+W
+W
+
+LT
+
+W
+OHGUY
+OHGUY
+
+TM @ 0.3
+0%
+250mm S
+AN @ 1.0
+0
+
+W
+OHGUY
+OHGUY
+
+450mm S
+
+W
+
+W
+
+W
+
+SPHA
+
+W
+
+Mc
+A
+
+W
+
+26
+
+0
+
+W
+
+W
+
+W
+
+W
+
+W
+
+260
+
+NK
+
+W
+OHGUY
+
+BOTTOM
+OF BANK
+
+SIDEW
+ALK A
+
+W
+OHGUY
+
+AIN
+
+W
+
+W
+OHGUY
+
+OHGUY
+
+OHGUY
+
+WATERM
+
+W
+
+OF
+BA
+
+W
+
+NK
+
+OHGUY
+
+OHGUY
+
+23
+
+30
+
+33
+
+150mmØ
+
+W
+
+W
+
+W
+
+7
+
+ART DRIV
+E
+
+W
+
+W
+
+W
+
+45
+0m
+m
+25
+0m
+ST
+M
+m
+SA
+@
+N
+0.3
+@
+0%
+1.0
+0%
+
+W
+
+OTT
+OM
+
+W
+
+SANITARY SEWER
+DRAINAGE DIVIDE
+
+RLCB
+
+W INV=254.78
+SE INV=254.72
+
+OARD 2
+ME
+
+LP
+IN
+ER
+OA
+D
+
+B
+
+W
+
+49
+
+FENCE B
+
+W
+W
+W
+
+W
+
+W
+
+W
+
+W
+
+259.5
+
+W
+
+259
+
+W
+
+258.5
+
+W
+
+W
+
+MH03A
+
+TOP=259.15
+SE INV=255.92
+N INV=255.92
+
+MH07A
+31 TOP=258.37
+
+EXISTING WATERMAIN
+
+FENCE B
+
+OHGUY
+
+W
+
+50
+
+51
+
+EXISTING SANITARY SEWER
+EXISTING STORM SEWER
+
+LCB LEA
+D
+
+E ROAD
+
+OHGUY
+
+OHGUY
+
+W
+
+TOP=258.54
+SE INV=255.31
+
+PROPERTY LINE
+
+250mm R
+
+250mm SAN @ 1.75%
+
+McALPIN
+
+OHGUY
+
+OHGUY
+
+W
+
+BA
+
+OHGUY
+
+OHGUY
+
+32
+
+MH08
+
+150mmØ
+WATERM
+AIN
+
+OHGUY
+
+OHGUY
+
+W
+
+N INV=255.59
+
+MH04A
+
+M @ 0.30
+%
+
+OHGUY
+
+W
+
+8 TOP=259.10
+SE INV=255.66
+
+TOP=258.43
+SW INV=254.99
+E INV=254.92
+
+675mm S
+T
+
+OHGUY
+
+W
+
+MH03
+
+MH07
+
+MH06A
+
+TOP=258.99
+S INV=255.62
+NE INV=255.56
+
+LEGEND
+
+22
+
+TOP=258.28
+W INV=254.91
+SE INV=254.83
+
+250mm S
+AN @ 0.5
+0
+
+W
+
+SANITARY SEWER
+DRAINAGE DIVIDE
+
+250mm SAN @ 0.50%
+
+STM
+
+W
+
+SID
+E
+W
+ALK
+CON
+CRE
+BAN
+TE
+KT
+OP
+
+9
+
+600mm STM @ 0.30%
+
+250mm SAN @ 0.50%
+
+EX. 375mm
+
+26
+0
+
+W
+
+600mm STM @ 0.30%
+
+525mm STM @ 0.30%
+
+SCALE: N.T.S.
+
+T
+
+W
+
+150mmØ WATERMAIN
+
+AL
+
+W
+
+10
+
+KEY PLAN
+
+PH
+
+W
+
+TOP=258.36
+SW INV=255.03
+E INV=254.95
+
+AS
+
+W
+
+MH06
+
+McALPINE ROAD
+
+AY
+
+W
+
+TOP=258.69
+SW INV=255.27
+NE INV=255.20
+
+EW
+
+W
+
+TOP=258.68
+SW INV=255.29
+NE INV=255.26
+SE INV=255.51
+
+IV
+
+W
+
+MH05A
+
+MH05
+
+MAYFIELD ROAD
+
+DR
+
+W
+
+21
+
+OARD 2.
+4 METRE
+
+W
+
+MH04
+
+TOP=258.94
+S INV=255.50
+NE INV=255.42
+
+20
+
+19
+
+18
+
+16
+
+15
+
+HILLPATH CRSC.
+SWEET BRIAR LN
+
+WV
+
+EXISTING
+0.3m RESERVE
+
+TOP=258.10
+NW INV=253.98
+EX. SW INV=254.10
+EX. NE INV=253.99
+NE INV=253.69
+
+MH
+
+MH
+
+BLOCK 10
+ROAD WIDENING
+N
+
+0
+
+5.0
+
+10.0
+
+20.0
+
+30.0
+
+40.0
+
+Metres
+Figure Title
+
+ARGO SUMMER VALLEY
+PRELIMINARY SERVICING PLAN
+Client
+
+Drawn
+
+ARGO SUMMER VALLEY LIMITED
+
+KT
+
+Checked
+
+LN
+
+Date
+
+23/05/30
+
+Scale
+
+Project No.
+
+1:500
+
+300054371
+
+Figure No.
+
+S1
+
+CITY OF BRAMPTON FILE NUMBER : 0ZS-2022-0030
+
+File: \\MONTY\Shared Work Areas\054371 - Argo Summer Valley\07_Figures\054371 - S1.dwg Date Plotted: November 20, 2023 - 4:03 PM
+
+OHGUY
+
+W
+
+OHGUY
+
+14
+
+TOWN OF CALEDON
+CITY OF BRAMPTON
+
+HIGHWOOD RD
+
+SUMMER VALLEY DR
+
+258
+
+W
+
+W
+W
+W
+
+OHGUY
+
+11
+
+13
+
+T
+LIGH
+
+HURON
+TARIO S
+T
+
+W
+W
+W
+
+MH
+
+12
+
+T DR
+HEAR
+
+REET
+
+26
+0.5
+
+26
+0
+
+9.5
+25
+
+TOWN OF CALEDON
+CITY OF BRAMPTON
+
+BXB
+
+17
+
+25
+
+HUTCHIN
+
+W
+W
+
+W
+W
+
+W
+
+25
+9
+
+W
+W
+W
+
+W
+W
+
+FENCE CHAIN LINK
+
+W
+
+BANK TOP
+
+BANK TOP
+DITCH
+
+8.5
+25
+
+Y 410
+
+DONHERB CRSC.
+
+BANK TO
+P
+
+BOTTOM OF BANK
+
+BA
+NK
+
+258
+.5
+
+W
+
+M
+
+258
+
+W
+
+O
+
+TT
+
+HIGHWA
+
+O
+F
+
+5
+
+0.
+26
+
+MH
+
+25
+8.
+5
+
+0
+41
+
+SITE AREA
+
+BO
+
+BANK TOP
+
+AY
+
+258
+
+WV
+
+D
+FE
+NC BA ITC
+E NK H
+PO T
+ST OP
+25
+&W
+2
+9
+IR 58.5
+E
+
+W
+GH
+HI
+
+FE
+
+TO
+P
+
+W
+
+C
+
+NC
+
+NK
+
+W
+
+NK
+LI
+
+LN
+
+BA
+
+25
+8.
+
+5
+
+IN
+HA
+
+Appendix A
+
+Appendix A
+As Constructed Drawings
+
+DISCLAIMER
+These records are based upon available and unverified
+information and may prove inaccurate.
+The Region of Peel disclaims any responsibility should these
+records be relied upon to the detriment of any person.
+
+29709_d.dgn 2009-08-20 1:15:30 PM
+
+These records are based upon available and unverified
+information and may prove inaccurate.
+The Region of Peel disclaims any responsibility should these
+records be relied upon to the detriment of any person.
+
+DISCLAIMER
+
+SUMMER
+VALLEY
+SUBJECT
+PROPERTY
+
+Brampton STD200
+
+Appendix B
+
+Appendix B
+
+Appendix C
+Design Calculations
+
+Appendix C
+
+LOT MODULE STUDY
+
+GTA SINGLE
+17.0m DEEP SCHEME A
+
+GTA, ONTARIO
+
+ARCHITECTS
+
+CAIVAN
+
+Proj. No. 23008
+Scale3/32" = 1'-0"
+
+2023.07.27
+Rev.
+
+UNIT NAME
+42' SINGLE
+
+LOT MODULE STUDY
+
+GTA SINGLE
+17.0m DEEP SCHEME B
+
+GTA, ONTARIO
+
+ARCHITECTS
+
+CAIVAN
+
+Proj. No. 23008
+Scale3/32" = 1'-0"
+
+2023.07.27
+Rev.
+
+UNIT NAME
+42' SINGLE
+
+LOT MODULE STUDY
+
+GTA SINGLE CORNER
+17.0m DEEP
+
+GTA, ONTARIO
+
+ARCHITECTS
+
+CAIVAN
+
+Proj. No. 23008
+Scale3/32" = 1'-0"
+
+2023.07.27
+Rev.
+
+UNIT NAME
+42' SINGLE
+
+LOT MODULE STUDY
+
+GTA SINGLE
+17.0m DEEP SCHEME A
+
+GTA, ONTARIO
+
+ARCHITECTS
+
+CAIVAN
+COMMUNITIES
+
+Proj. No. 22009
+Scale3/32" = 1'-0"
+
+2023.03.24
+Rev.
+
+UNIT NAME
+50' SINGLE
+
+LOT MODULE STUDY
+
+GTA SINGLE
+17.0m DEEP SCHEME B
+
+GTA, ONTARIO
+
+ARCHITECTS
+
+CAIVAN
+COMMUNITIES
+
+Proj. No. 22009
+Scale3/32" = 1'-0"
+
+2023.03.24
+Rev.
+
+UNIT NAME
+50' SINGLE
+
+DocuSign Envelope ID: 71E932D0-F193-4A9D-B2F5-767255C199A8
+
+NOTE:
+Land department sign-off on this zoning matrix is to confirm that Architecture can
+use these building footprints for design of new TBSD Singles for Brampton and
+Caledon and Kleinberg. These will be heavily modified versions of the TASDs in
+Creekside and Bronte.
+
+ZONING MATRIX TEMPLATE
+COMPILED BY: P.MACDONALD REVIEWED BY:____________
+
+Jul-11-2022
+LOT WIDTH = 12.80m (42'-0")
+
+PLEASE NOTE:
+THIS PRELIMINARY ZONING INFORMATION IS BASED
+ON PARENT BY-LAW ZONING INFO SENT TO Q4
+ARCHITECTS INC. BY KORSIAK ON JULY 22, 2021.
+AND BRAMPTON MZO ZONING RECEIVED APRIL 14,
+2022
+MZO + 22-2006 & 49-2006
+
+BY-LAW #
+ZONE
+MIN. LOT WIDTH
+MIN. LOT AREA
+MIN. CORNER LOT AREA
+MIN. LOT DEPTH
+
+R1F & (R1F - 9.0 - 2556)
+9.0m INT. + CORNER
+
+COVERED OR UNCOVERED
+
+MZO + (R1F - 9.0 - 2556)
+
+MZO 215m2, 225.0m2 (R1F - 9.0 - 2556)
+270.0m2 (R1F - 9.0 - 2556)
+MZO 24.0m, 25.0m (R1F - 9.0 - 2556)
+
+(R1F - 9.0 - 2556)
+
+N/A
+MZO, 6.0m (R1F - 9.0 - 2556)
+rev. 21/10/01
+MZO, 1.2m (R1F - 9.0 - 2556)
+MZO, 0.6m
+1.2m
+
+2.75m MIN
+
+PORCH
+
+0.5m MIN
+
+(R1F - 9.0 - 2556)
+
+MZO 5.75m, 5.5m
+
+0.5m MIN
+
+MZO 2.5m, 3.0m
+
+5.5m+0.6m = 6.1m MAX
+
+2.5m MIN
+
+SETBACKS:
+FRONT YARD
+TO HOUSE
+TO GARAGE
+TO STAGGERED GARAGE
+To side of rear garage
+REAR YARD 0.6m
+accessed for flankage
+INT. SIDE YARD 1 (House)
+INT. SIDE YARD 2 (Garage)
+MIN. BLDG SEPARATION
+FLANKAGE TO HOUSE (Ext.)
+DAY LIGHT TRIANGLE
+ENCROACHMENTS:
+PORCH & BALCONY
+
+4.5mx1.0m MAX
+
+(R1F - 9.0 - 2556)
+
+(R1F - 9.0 - 2556)
+
+3.0m (R1F - 9.0 - 2556)
+1.0m (R1F - 9.0 - 2556)
+
+INCLUDING EAVES
+
+APPROX. FIN. BASEMENT
+
+850 S.F.
+
+GROUND FLOOR AREA
+SECOND FLOOR AREA
+(FLUSH W/ GARAGE FACE)
+
+1258 S.F.
+1658 S.F.
+
+APPROX. THIRD FLOOR AREA
+TOTAL S.F.
+
+500 S.F.
+4266 S.F.
+
+SECOND FLOOR AREA
+(FRONT YARD SETBACK)
+
++ 197SF
+
+WITH OR W/O COLD CELLAR
+
+FRONT YARD
+SIDE YARD
+
+2.0m
+
+(R1F - 9.0 - 2556)
+
+FLANKAGE YARD
+
+2.0m
+
+(R1F - 9.0 - 2556)
+
+REAR YARD
+
+3.0m
+
+(6.13)
+
+STEPS BEYOND PORCH/DECK
+W.O.DECK INTO REAR
+MAX. DECK HEIGHT ( 1 Storey )
+
+BAY/BOX WINDOWS
+
+MZO-TO WITHIN 3.5m OF
+REAR LOT LINE 3.0m (6.13)
+4.5m SETBACK (R1F - 9.0 2556)
+
+WITH FOUNDATION
+
+CANTILEVERED
+
+NO WINDOW SEAT REQUIRED
+
+STACKED BAYS PERMITTED
+
+INCLUDING EAVES
+
+DOOR PERMITTED WITHIN BAY
+
+INCLUDED IN COVERAGE
+
+DEFINITION PROVIDED
+
+MZO-1.0mX4.5m (R1F - 9.0 - 2556)
+WINDOW BAY PROJECTING
+REAR
+MORE THAN 0.6m MUST HAVE
+MZO-1.0mX4.5m (R1F - 9.0 - 2556)
+WINDOWS ON THE SIDE. CAN
+FRONT
+HAVE ADOOR IN IT AND CAN BE
+MZO-1.0mX4.5m (R1F - 9.0 - 2556)
+FLANKAGE 2-3 STOREYS IN HEIGHT
+
+AIR CONDITIONER
+FIREPLACE / CHIMNEY
+ARCHITECTURAL ORNAMENTS
+
+ARCHITECTURAL CONTROL:
+MAX. SETBACK FROM GARAGE
+TO SECOND FLOOR
+MAX. GARAGE PROJECTION
+BEYOND DWELLING FACE / PORCH
+
+Guidelines Not Available
+
+1.5m (R1F - 9.0 - 2556)
+
+MAX. RECESSED 2ND FLOOR
+FROM GND FLR DWELLING WALL
+
+0.5m IN ANY YARD (6.13)
+0.5m IN ANY YARD (6.13)
+
+MAX. GARAGE DOOR WIDTH
+
+3.7m MAX. (R3E-6.0 2562)
+
+NUMBER OF PARKING
+
+2 spaces required / unit
+
+MIN. 1 CAR GARAGE
+
+MAX. CORNER GARAGE WIDTH
+
+2 CAR PERMITED. (R3E-6.0 2562)
+
+MIN. 2 CAR GARAGE
+
+2.7mx5.4m (10.5c) - 1 Step
+encroacment allowed
+5.4mx5.4m (10.5c)
+
+MIN. AMENITY AREA
+
+3.5m2 (R3E-6.0-2562)
+
+MIN. PARKING SPACE
+
+2.7mx5.4m (10.5c)
+
+ON BALCONY OR IN FRONT YARD
+
+MIN. DRIVEWAY
+
+2.75m (R1F - 9.0 - 2556)
+
+MAX. DRIVEWAY
+
+6.7m (10.9.1.1) for Lots 9.14m - 15.24m
+
+MAX. BUILDING HEIGHT
+
+MZO 13.0m, 12.0m (R3E-6.0-2562)
+
+MEASURED FROM AVERAGE GRADE AROUND ALL 4
+SIDES, TO MEAN ROOF (BETWEEN EAVE & RIDGE)
+
+MIN. LANDSCAPED AREA
+MAX. COVERAGE
+
+N/A (R1F - 9.0 - 2556)
+
+MAX. UNITS PER TOWNHOUSE BLDG 16 (R3E-6.0-2562) 8 UNIT WIDE
+
+TOWNHOUSE REAR YARD ACCESS
+
+N/A
+
+The purpose of the ZONING MATRIX TEMPLATE is to
+test zoning constraints on the proposed lot module. It
+is also used to identify potential zoning issues and/or
+required information.
+
+LOT SIZE
+BRAMPTON, ONTARIO
+
+ARCHITECTS
+
+CAIVAN
+COMMUNITIES
+
+12.8mX 24.0m
+Proj. No.
+22015
+Date 2022.06.08
+
+Detached
+Single
+
+42'
+
+DocuSign Envelope ID: 71E932D0-F193-4A9D-B2F5-767255C199A8
+
+NOTE:
+Land department sign-off on this zoning matrix is to confirm that Architecture can
+use these building footprints for design of new TBSD Singles for Brampton and
+Caledon and Kleinberg. These will be heavily modified versions of the TASDs in
+Creekside and Bronte.
+
+ZONING MATRIX TEMPLATE
+COMPILED BY: P.MACDONALD REVIEWED BY:____________
+
+Jul-11-2022
+LOT WIDTH = 12.12m (39'-9")
+
+PLEASE NOTE:
+THIS PRELIMINARY ZONING INFORMATION IS BASED
+ON PARENT BY-LAW ZONING INFO SENT TO Q4
+ARCHITECTS INC. BY KORSIAK ON JULY 22, 2021.
+AND BRAMPTON MZO ZONING RECEIVED APRIL 14,
+2022
+
+4.5mx1.0m MAX
+
+MZO + 22-2006 & 49-2006
+
+BY-LAW #
+ZONE
+MIN. LOT WIDTH
+MIN. LOT AREA
+MIN. CORNER LOT AREA
+MIN. LOT DEPTH
+
+R1F & (R1F - 9.0 - 2556)
+2.0m MIN
+
+MZO + (R1F - 9.0 - 2556)
+0.6mX4.0m REQ'D WINDOW
+BAY ENCROACHMENT
+4.5m is current max.
+
+9.0m INT. + CORNER
+
+MZO 215m2, 225.0m2 (R1F - 9.0 - 2556)
+270.0m2 (R1F - 9.0 - 2556)
+MZO 24.0m, 25.0m (R1F - 9.0 - 2556)
+
+5.0M+0.6m = 5.6m MAX
+
+0.5m MIN
+
+ENCROACHMENTS:
+PORCH & BALCONY
+COVERED OR UNCOVERED
+
+PORCH
+
+MZO 2.5m, 3.0m
+
+(R1F - 9.0 - 2556)
+
+MZO 5.75m, 5.5m
+
+(R1F - 9.0 - 2556)
+
+N/A
+MZO, 6.0m (R1F - 9.0 - 2556)
+
+0.5m MIN
+
+2.75m MIN
+
+2.5m MIN
+
+SETBACKS:
+FRONT YARD
+TO HOUSE
+TO GARAGE
+TO STAGGERED GARAGE
+To side of rear garage
+REAR YARD 0.6m
+accessed for flankage
+INT. SIDE YARD 1 (House)
+INT. SIDE YARD 2 (Garage)
+MIN. BLDG SEPARATION
+FLANKAGE TO HOUSE (Ext.)
+DAY LIGHT TRIANGLE
+
+DAYLIGHT TRIANGLE 1.0m
+MIN TO HOUSE, 0.0m FOR
+PORCHES AND WINDOW
+BAYS
+
+rev. 21/10/01
+MZO, 1.2m (R1F - 9.0 - 2556)
+MZO, 0.6m
+1.2m
+
+(R1F - 9.0 - 2556)
+
+(R1F - 9.0 - 2556)
+
+3.0m (R1F - 9.0 - 2556)
+1.0m (R1F - 9.0 - 2556)
+
+INCLUDING EAVES
+
+APPROX. FIN. BASEMENT
+
+850 S.F.
+
+GROUND FLOOR AREA
+SECOND FLOOR AREA
+(FLUSH W/ GARAGE FACE)
+
+1031 S.F.
+1408 S.F.
+
+APPROX. THIRD FLOOR AREA
+TOTAL S.F.
+
+500 S.F.
+3789 S.F.
+
+SECOND FLOOR AREA
+(FRONT YARD SETBACK)
+
++ 201 SF
+
+WITH OR W/O COLD CELLAR
+
+FRONT YARD
+SIDE YARD
+
+2.0m
+
+(R1F - 9.0 - 2556)
+
+FLANKAGE YARD
+
+2.0m
+
+(R1F - 9.0 - 2556)
+
+REAR YARD
+
+3.0m
+
+(6.13)
+
+STEPS BEYOND PORCH/DECK
+W.O.DECK INTO REAR
+MAX. DECK HEIGHT ( 1 Storey )
+
+BAY/BOX WINDOWS
+
+MZO-TO WITHIN 3.5m OF
+REAR LOT LINE 3.0m (6.13)
+4.5m SETBACK (R1F - 9.0 2556)
+
+WITH FOUNDATION
+
+CANTILEVERED
+
+NO WINDOW SEAT REQUIRED
+
+STACKED BAYS PERMITTED
+
+INCLUDING EAVES
+
+DOOR PERMITTED WITHIN BAY
+
+INCLUDED IN COVERAGE
+
+DEFINITION PROVIDED
+
+MZO-1.0mX4.5m (R1F - 9.0 - 2556)
+WINDOW BAY PROJECTING
+REAR
+MORE THAN 0.6m MUST HAVE
+MZO-1.0mX4.5m (R1F - 9.0 - 2556)
+WINDOWS ON THE SIDE. CAN
+FRONT
+HAVE ADOOR IN IT AND CAN BE
+MZO-1.0mX4.5m (R1F - 9.0 - 2556)
+FLANKAGE 2-3 STOREYS IN HEIGHT
+
+AIR CONDITIONER
+FIREPLACE / CHIMNEY
+ARCHITECTURAL ORNAMENTS
+
+ARCHITECTURAL CONTROL:
+MAX. SETBACK FROM GARAGE
+TO SECOND FLOOR
+MAX. GARAGE PROJECTION
+BEYOND DWELLING FACE / PORCH
+
+Guidelines Not Available
+
+1.5m (R1F - 9.0 - 2556)
+
+MAX. RECESSED 2ND FLOOR
+FROM GND FLR DWELLING WALL
+
+0.5m IN ANY YARD (6.13)
+0.5m IN ANY YARD (6.13)
+
+MAX. GARAGE DOOR WIDTH
+
+3.7m MAX. (R3E-6.0 2562)
+
+NUMBER OF PARKING
+
+2 spaces required / unit
+
+MIN. 1 CAR GARAGE
+
+MAX. CORNER GARAGE WIDTH
+
+2 CAR PERMITED. (R3E-6.0 2562)
+
+MIN. 2 CAR GARAGE
+
+2.7mx5.4m (10.5c) - 1 Step
+encroacment allowed
+5.4mx5.4m (10.5c)
+
+MIN. AMENITY AREA
+
+3.5m2 (R3E-6.0-2562)
+
+MIN. PARKING SPACE
+
+2.7mx5.4m (10.5c)
+
+ON BALCONY OR IN FRONT YARD
+
+MIN. DRIVEWAY
+
+2.75m (R1F - 9.0 - 2556)
+
+MAX. DRIVEWAY
+
+6.7m (10.9.1.1) for Lots 9.14m - 15.24m
+
+MAX. BUILDING HEIGHT
+
+MZO 13.0m, 12.0m (R3E-6.0-2562)
+
+MEASURED FROM AVERAGE GRADE AROUND ALL 4
+SIDES, TO MEAN ROOF (BETWEEN EAVE & RIDGE)
+
+MIN. LANDSCAPED AREA
+MAX. COVERAGE
+
+N/A (R1F - 9.0 - 2556)
+
+MAX. UNITS PER TOWNHOUSE BLDG 16 (R3E-6.0-2562) 8 UNIT WIDE
+
+TOWNHOUSE REAR YARD ACCESS
+
+N/A
+
+The purpose of the ZONING MATRIX TEMPLATE is to
+test zoning constraints on the proposed lot module. It
+is also used to identify potential zoning issues and/or
+required information.
+
+LOT SIZE
+12.12
+
+BRAMPTON, ONTARIO
+
+ARCHITECTS
+
+CAIVAN
+COMMUNITIES
+
+13.12mX 24.0m
+
+Proj. No.
+22015
+Date 2022.06.08
+
+Corner Detached
+Single
+
+41'
+
+DocuSign Envelope ID: 71E932D0-F193-4A9D-B2F5-767255C199A8
+
+NOTE:
+Land department sign-off on this zoning matrix is to confirm that Architecture can
+use these building footprints for design of new TBSD Singles for Brampton and
+Caledon and Kleinberg. These will be heavily modified versions of the TASDs in
+Creekside and Bronte.
+
+ZONING MATRIX TEMPLATE
+COMPILED BY: P.MACDONALD REVIEWED BY:____________
+
+Jul-11-2022
+LOT WIDTH = 15.24m (50'-0")
+
+PLEASE NOTE:
+THIS PRELIMINARY ZONING INFORMATION IS BASED
+ON PARENT BY-LAW ZONING INFO SENT TO Q4
+ARCHITECTS INC. BY KORSIAK ON JULY 22, 2021.
+AND BRAMPTON MZO ZONING RECEIVED APRIL 14,
+2022
+
+4.5mx1.0m MAX
+
+MZO + 22-2006 & 49-2006
+
+BY-LAW #
+ZONE
+MIN. LOT WIDTH
+MIN. LOT AREA
+MIN. CORNER LOT AREA
+MIN. LOT DEPTH
+
+R1F & (R1F - 9.0 - 2556)
+9.0m INT. + CORNER
+
+MZO + (R1F - 9.0 - 2556)
+
+MZO 215m2, 225.0m2 (R1F - 9.0 - 2556)
+270.0m2 (R1F - 9.0 - 2556)
+MZO 24.0m, 25.0m (R1F - 9.0 - 2556)
+5.6M+0.6m = 6.2m MAX
+
+ENCROACHMENTS:
+PORCH & BALCONY
+COVERED OR UNCOVERED
+
+(R1F - 9.0 - 2556)
+
+N/A
+MZO, 6.0m (R1F - 9.0 - 2556)
+
+2.75m MIN
+PORCH
+
+rev. 21/10/01
+MZO, 1.2m (R1F - 9.0 - 2556)
+MZO, 0.6m
+1.2m
+
+0.5m MIN
+
+(R1F - 9.0 - 2556)
+
+MZO 5.75m, 5.5m
+
+0.5m MIN
+
+MZO 2.5m, 3.0m
+
+2.5m MIN
+
+SETBACKS:
+FRONT YARD
+TO HOUSE
+TO GARAGE
+TO STAGGERED GARAGE
+To side of rear garage
+REAR YARD 0.6m
+accessed for flankage
+INT. SIDE YARD 1 (House)
+INT. SIDE YARD 2 (Garage)
+MIN. BLDG SEPARATION
+FLANKAGE TO HOUSE (Ext.)
+DAY LIGHT TRIANGLE
+
+(R1F - 9.0 - 2556)
+
+(R1F - 9.0 - 2556)
+
+3.0m (R1F - 9.0 - 2556)
+1.0m (R1F - 9.0 - 2556)
+
+INCLUDING EAVES
+
+APPROX. FIN. BASEMENT
+
+1050 S.F.
+
+GROUND FLOOR AREA
+SECOND FLOOR AREA
+(FLUSH W/ GARAGE FACE)
+
+1667 S.F.
+2066 S.F.
+
+APPROX. THIRD FLOOR AREA
+TOTAL S.F.
+
+500 S.F.
+5283 S.F.
+
+SECOND FLOOR AREA
+(FRONT YARD SETBACK)
+
++ 198 SF
+
+WITH OR W/O COLD CELLAR
+
+FRONT YARD
+SIDE YARD
+
+2.0m
+
+(R1F - 9.0 - 2556)
+
+FLANKAGE YARD
+
+2.0m
+
+(R1F - 9.0 - 2556)
+
+REAR YARD
+
+3.0m
+
+(6.13)
+
+STEPS BEYOND PORCH/DECK
+W.O.DECK INTO REAR
+MAX. DECK HEIGHT ( 1 Storey )
+
+BAY/BOX WINDOWS
+
+MZO-TO WITHIN 3.5m OF
+REAR LOT LINE 3.0m (6.13)
+4.5m SETBACK (R1F - 9.0 2556)
+
+WITH FOUNDATION
+
+CANTILEVERED
+
+NO WINDOW SEAT REQUIRED
+
+STACKED BAYS PERMITTED
+
+INCLUDING EAVES
+
+DOOR PERMITTED WITHIN BAY
+
+INCLUDED IN COVERAGE
+
+DEFINITION PROVIDED
+
+MZO-1.0mX4.5m (R1F - 9.0 - 2556)
+WINDOW BAY PROJECTING
+REAR
+MORE THAN 0.6m MUST HAVE
+MZO-1.0mX4.5m (R1F - 9.0 - 2556)
+WINDOWS ON THE SIDE. CAN
+FRONT
+HAVE ADOOR IN IT AND CAN BE
+MZO-1.0mX4.5m (R1F - 9.0 - 2556)
+FLANKAGE 2-3 STOREYS IN HEIGHT
+
+AIR CONDITIONER
+FIREPLACE / CHIMNEY
+ARCHITECTURAL ORNAMENTS
+
+ARCHITECTURAL CONTROL:
+MAX. SETBACK FROM GARAGE
+TO SECOND FLOOR
+MAX. GARAGE PROJECTION
+BEYOND DWELLING FACE / PORCH
+
+Guidelines Not Available
+
+1.5m (R1F - 9.0 - 2556)
+
+MAX. RECESSED 2ND FLOOR
+FROM GND FLR DWELLING WALL
+
+0.5m IN ANY YARD (6.13)
+0.5m IN ANY YARD (6.13)
+
+MAX. GARAGE DOOR WIDTH
+
+3.7m MAX. (R3E-6.0 2562)
+
+NUMBER OF PARKING
+
+2 spaces required / unit
+
+MIN. 1 CAR GARAGE
+
+MAX. CORNER GARAGE WIDTH
+
+2 CAR PERMITED. (R3E-6.0 2562)
+
+MIN. 2 CAR GARAGE
+
+2.7mx5.4m (10.5c) - 1 Step
+encroacment allowed
+5.4mx5.4m (10.5c)
+
+MIN. AMENITY AREA
+
+3.5m2 (R3E-6.0-2562)
+
+MIN. PARKING SPACE
+
+2.7mx5.4m (10.5c)
+
+ON BALCONY OR IN FRONT YARD
+
+MIN. DRIVEWAY
+
+2.75m (R1F - 9.0 - 2556)
+
+MAX. DRIVEWAY
+
+6.7m (10.9.1.1) for Lots 9.14m - 15.24m
+
+MAX. BUILDING HEIGHT
+
+MZO 13.0m, 12.0m (R3E-6.0-2562)
+
+MEASURED FROM AVERAGE GRADE AROUND ALL 4
+SIDES, TO MEAN ROOF (BETWEEN EAVE & RIDGE)
+
+MIN. LANDSCAPED AREA
+MAX. COVERAGE
+
+N/A (R1F - 9.0 - 2556)
+
+MAX. UNITS PER TOWNHOUSE BLDG 16 (R3E-6.0-2562) 8 UNIT WIDE
+
+TOWNHOUSE REAR YARD ACCESS
+
+N/A
+
+The purpose of the ZONING MATRIX TEMPLATE is to
+test zoning constraints on the proposed lot module. It
+is also used to identify potential zoning issues and/or
+required information.
+
+LOT SIZE
+BRAMPTON, ONTARIO
+
+ARCHITECTS
+
+CAIVAN
+COMMUNITIES
+
+15.24mX 24.0m
+Proj. No.
+22015
+Date 2022.06.08
+
+Detached
+Single
+
+50'
+
+STORM SEWER DESIGN SHEET: (2/10/100 Year Storm)
+
+Argo Summer Valley, City of Brampton
+Rainfall Intensity =
+Project #: 300054371.0
+Date: 20-Nov-23
+Designed: EDT
+Checked: LN
+
+DESCRIPTION
+
+FROM
+MH
+
+McAlpine Road
+MH02
+McAlpine Road
+MH03
+McAlpine Road
+MH04
+McAlpine Road
+MH05
+McAlpine Road
+MH06
+McAlpine Road
+RLCB
+McAlpine Road
+RLCB
+McAlpine Road
+MH07
+0
+0
+Lightheart Drive
+MH08
+Lightheart Drive
+MH09
+Lightheart Drive
+RLCB
+Lightheart Drive
+MH10
+Lightheart Drive
+RLCB
+Lightheart Drive
+MH11
+0
+0
+Lightheart Drive
+RLCB
+Lightheart Drive
+MH12
+Lightheart Drive
+OGSMH02
+Lightheart Drive
+EX.DCB MH17
+Lightheart Drive
+EX.MH3
+Lightheart Drive
+EX.MH2
+0
+0
+External Area North of
+Lightheart Drive
+EXT 1
+Summer Valley Drive
+EX.MH1
+Summer Valley Drive
+EX.MH2
+0
+0
+McAlpine Road
+MH02
+McAlpine Road
+MH01
+McAlpine Road
+OGSMH01
+0
+0
+External Area From Hwy
+10
+EXT 2
+Highwood Road
+EXMH08
+0
+0
+Highwood Road
+EXMH07
+Highwood Road
+EXMH06
+Highwood Road
+EXMH05
+0
+0
+External Area From North
+(RLCB)
+EXT3
+0
+0
+Highwood Road
+EXMH04
+0
+0
+Summer Valley Drive
+EXMH03
+Summer Valley Drive
+EX.MH9
+External Area to Hillpath EXT4
+Hillpath Crescent
+EXT 5
+0
+0
+Summer Valley Drive
+EX.MH10
+0
+0
+Sweet Briar Lane
+EXT
+0
+0
+Summer Valley Drive
+EX.MH17
+Summer Valley Drive
+EX.MH21
+0
+0
+
+Min. Diameter =
+Mannings 'n'=
+Starting Tc =
+Factor of Safety =
+
+TO
+MH
+
+AREA
+
+2 YR
+'AR'
+
+10 YR 100 YR
+2 YR
+10 YR
+100 YR
+'AR'
+AR' ACCUM. ACCUM. ACCUM. RAINFALL RAINFALL RAINFALL
+AR'
+AR'
+'AR'
+INTENSITY INTENSITY INTENSITY
+(2 YR) (10 YR) (100 YR) (mm/hr)
+(mm/hr)
+(mm/hr)
+
+300
+0.013
+10
+20
+
+mm
+
+FLOW
+
+CONSTANT
+FLOW
+(m3/s)
+
+ACCUM.
+CONSTANT
+FLOW
+(m3/s)
+
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+
+A
+(Tc+B)^c
+1070
+7.85
+0.8759
+
+where Tc is in minutes
+2221.0
+(2 Yr)
+12.0
+0.908
+
+TOTAL
+FLOW
+(m3/s)
+
+LENGTH
+
+SLOPE
+
+(m)
+
+(%)
+
+PIPE
+DIAMETER
+(mm)
+
+0.051
+0.089
+0.156
+0.207
+0.224
+0.016
+0.012
+0.329
+0.000
+0.098
+0.106
+0.033
+0.169
+0.018
+0.188
+0.000
+0.010
+0.507
+0.511
+0.000
+0.000
+0.000
+0.000
+
+44.2
+31.4
+51.9
+56.5
+12.9
+12.9
+12.9
+88.4
+0.0
+62.7
+10.1
+31.3
+47.1
+31.3
+13.8
+0.0
+31.3
+32.8
+1.8
+44.8
+58.0
+35.0
+0.0
+
+0.30
+0.30
+0.30
+0.30
+0.30
+1.00
+1.00
+0.30
+0.00
+0.30
+0.40
+1.00
+0.30
+1.00
+0.30
+0.00
+1.00
+0.50
+0.55
+1.20
+0.79
+0.20
+0.00
+
+0.0
+51.2
+58.5
+0.0
+28.4
+60.4
+13.7
+0.0
+
+A=
+B=
+C=
+
+min
+%
+
+4688.0
+17.0
+0.962
+
+(100 Yr)
+
+FULL FLOW
+CAPACITY
+(m3/s)
+
+FULL FLOW
+VELOCITY
+(m/s)
+
+INITIAL
+Tc
+(min)
+
+375
+450
+525
+600
+600
+250
+250
+675
+0
+450
+450
+250
+525
+250
+525
+0
+300
+750
+750
+750
+825
+900
+0
+
+0.096
+0.156
+0.236
+0.336
+0.336
+0.059
+0.059
+0.460
+0.000
+0.156
+0.180
+0.059
+0.236
+0.059
+0.236
+0.000
+0.097
+0.787
+0.826
+1.220
+1.276
+0.810
+0.000
+
+0.87
+0.98
+1.09
+1.19
+1.19
+1.21
+1.21
+1.29
+0.00
+0.98
+1.13
+1.21
+1.09
+1.21
+1.09
+0.00
+1.37
+1.78
+1.87
+2.76
+2.39
+1.27
+0.00
+
+10.00
+10.85
+11.38
+12.18
+12.97
+10.00
+10.00
+13.15
+0.00
+10.00
+11.06
+10.00
+11.21
+10.00
+11.93
+0.00
+10.00
+14.29
+14.60
+10.00
+10.00
+10.41
+0.00
+
+0.85
+0.53
+0.79
+0.79
+0.18
+0.18
+0.18
+1.15
+0.00
+1.06
+0.15
+0.43
+0.72
+0.43
+0.21
+0.00
+0.38
+0.31
+0.02
+0.27
+0.41
+0.46
+0.00
+
+10.85
+11.38
+12.18
+12.97
+13.15
+10.18
+10.18
+14.29
+0.00
+11.06
+11.21
+10.43
+11.93
+10.43
+12.15
+0.00
+10.38
+14.60
+14.62
+10.27
+10.41
+10.86
+0.00
+
+53%
+57%
+66%
+62%
+66%
+27%
+20%
+71%
+0%
+63%
+59%
+55%
+72%
+30%
+80%
+0%
+11%
+64%
+62%
+0%
+0%
+0%
+0%
+
+0.00
+0.43
+0.40
+0.00
+4.00
+0.60
+0.60
+0.00
+
+0
+1200
+1200
+0
+300
+375
+300
+0
+
+0.000
+2.557
+2.466
+0.000
+0.193
+0.136
+0.075
+0.000
+
+0.00
+2.26
+2.18
+0.00
+2.74
+1.23
+1.06
+0.00
+
+0.00
+13.75
+14.13
+0.00
+10.00
+10.00
+10.00
+0.00
+
+0.00
+0.38
+0.45
+0.00
+0.17
+0.82
+0.22
+0.00
+
+13.75
+14.13
+14.57
+0.00
+10.17
+10.82
+10.22
+0.00
+
+0%
+79%
+83%
+0%
+31%
+70%
+0%
+0%
+
+(10 Yr)
+
+NOMINAL PIPE SIZE USED
+
+YEAR STORM
+CAPTURE
+
+(ha)
+
+RUNOFF
+COEFFICIENT
+"R"
+
+MH03
+MH04
+MH05
+MH06
+MH07
+MH07
+MH07
+MH12
+0
+MH09
+MH10
+MH10
+MH11
+MH11
+MH12
+0
+OGSMH02
+OGSMH02
+EX.MH.1
+EX. MH3
+EX.MH2
+EX.MH1 0
+
+0.22
+0.17
+0.31
+0.26
+0.11
+0.07
+0.05
+0.39
+0.00
+0.42
+0.05
+0.09
+0.14
+0.05
+0.04
+0.00
+0.03
+0.09
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.00
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.00
+0.63
+0.63
+0.00
+0.50
+0.50
+0.50
+0.00
+
+10.00
+10.00
+10.00
+10.00
+10.00
+10.00
+10.00
+10.00
+0.00
+10.00
+10.00
+100.00
+10.00
+100.00
+10.00
+0.00
+100.00
+10.00
+10.00
+10.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.14
+0.11
+0.20
+0.16
+0.07
+0.04
+0.03
+0.25
+0.00
+0.26
+0.03
+0.00
+0.09
+0.00
+0.02
+0.00
+0.00
+0.06
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.06
+0.00
+0.03
+0.00
+0.00
+0.02
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.14
+0.25
+0.44
+0.60
+0.67
+0.04
+0.03
+1.00
+0.00
+0.26
+0.30
+0.00
+0.39
+0.00
+0.41
+0.00
+0.00
+1.46
+1.46
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.06
+0.06
+0.03
+0.09
+0.00
+0.02
+0.09
+0.11
+0.00
+0.00
+0.00
+0.00
+
+85.7
+82.3
+80.3
+77.5
+74.9
+85.7
+85.7
+74.4
+0.0
+85.7
+81.5
+85.7
+80.9
+85.7
+78.3
+0.0
+85.7
+71.0
+70.1
+85.7
+85.7
+84.1
+0.0
+
+134.2
+129.6
+127.0
+123.2
+119.6
+134.2
+134.2
+118.8
+0.0
+134.2
+128.5
+134.2
+127.8
+134.2
+124.3
+0.0
+134.2
+114.1
+112.9
+134.2
+134.2
+132.0
+0.0
+
+196.5
+190.8
+187.3
+182.4
+177.8
+196.5
+196.5
+176.7
+0.0
+196.5
+189.4
+196.5
+188.4
+196.5
+183.9
+0.0
+196.5
+170.5
+168.9
+196.5
+196.5
+193.7
+0.0
+
+0.051
+0.089
+0.156
+0.207
+0.224
+0.016
+0.012
+0.329
+0.000
+0.098
+0.106
+0.033
+0.169
+0.018
+0.188
+0.000
+0.010
+0.507
+0.511
+0.000
+0.000
+0.000
+0.000
+
+EX.MH1
+EX.MH2
+EXMH03
+0
+MH01
+OGSMH01
+EXMH07
+0
+
+12.26
+0.23
+0.39
+0.00
+0.26
+0.41
+0.00
+0.00
+
+0.50
+0.50
+0.50
+0.00
+0.62
+0.62
+0.00
+0.00
+
+10.00
+10.00
+10.00
+0.00
+10.00
+10.00
+10.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+6.13
+0.12
+0.20
+0.00
+0.16
+0.25
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+6.13
+6.25
+6.44
+0.00
+0.16
+0.25
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+72.5
+72.5
+71.4
+0.0
+85.7
+85.7
+85.7
+0.0
+
+116.3
+116.3
+114.8
+0.0
+134.2
+134.2
+134.2
+0.0
+
+173.4
+173.4
+171.4
+0.0
+196.5
+196.5
+196.5
+0.0
+
+1.980
+2.017
+2.053
+0.000
+0.059
+0.095
+0.000
+0.000
+
+0.000
+0.000
+0.000
+0.000
+
+0.000
+0.000
+0.000
+0.000
+
+1.980
+2.017
+2.053
+0.000
+0.059
+0.095
+0.000
+0.000
+
+EXMH08
+EXMH07
+0
+EXMH06
+EXMH05
+EXMH04
+0
+
+0.78
+0.13
+0.00
+0.39
+0.52
+0.35
+0.00
+
+0.53
+0.50
+0.00
+0.50
+0.50
+0.50
+0.00
+
+10.00
+10.00
+0.00
+10.00
+10.00
+10.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.41
+0.07
+0.00
+0.20
+0.26
+0.18
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.41
+0.48
+0.00
+0.68
+0.94
+1.11
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+64.9
+64.9
+0.0
+63.3
+62.0
+61.0
+0.0
+
+105.5
+105.5
+0.0
+103.2
+101.2
+99.8
+0.0
+
+158.9
+158.9
+0.0
+155.7
+153.1
+151.2
+0.0
+
+0.121
+0.141
+0.000
+0.194
+0.263
+0.308
+0.000
+
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+
+0.121
+0.141
+0.000
+0.194
+0.263
+0.308
+0.000
+
+1.0
+55.0
+0.0
+62.0
+52.5
+46.0
+0.0
+
+100.00
+0.65
+0.00
+0.60
+0.39
+0.38
+0.00
+
+300
+375
+0
+600
+975
+975
+0
+
+0.967
+0.141
+0.000
+0.476
+1.400
+1.381
+0.000
+
+13.68
+1.28
+0.00
+1.68
+1.87
+1.85
+0.00
+
+16.67
+16.67
+0.00
+17.38
+18.00
+18.47
+0.00
+
+0.00
+0.72
+0.00
+0.61
+0.47
+0.41
+0.00
+
+16.67
+17.38
+0.00
+18.00
+18.47
+18.88
+0.00
+
+13%
+100%
+0%
+41%
+19%
+22%
+0%
+
+EXMH04
+0
+EXMH03
+0
+EX.MH9
+EX.MH10
+EXT 5
+EX.MH10
+0
+EX.MH17
+0
+EX.MH17
+0
+EX.MH21
+EX.MH22
+0
+
+0.18
+0.00
+0.37
+0.00
+0.71
+0.17
+9.70
+3.92
+0.00
+0.54
+0.00
+1.68
+0.00
+0.52
+0.39
+0.00
+
+0.50
+0.00
+0.50
+0.00
+0.50
+0.50
+0.25
+0.50
+0.00
+0.50
+0.00
+0.50
+0.00
+0.50
+0.50
+0.00
+
+10.00
+0.00
+10.00
+0.00
+10.00
+10.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+10.00
+0.00
+10.00
+0.00
+10.00
+0.00
+10.00
+10.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.09
+0.00
+0.19
+0.00
+0.36
+0.09
+2.43
+1.96
+0.00
+0.27
+0.00
+0.84
+0.00
+0.26
+0.20
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.09
+0.00
+1.39
+0.00
+8.18
+8.27
+2.43
+4.39
+0.00
+12.92
+0.00
+0.84
+0.00
+14.02
+14.22
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+85.7
+0.0
+60.2
+0.0
+59.4
+58.3
+176.0
+176.0
+0.0
+57.8
+0.0
+176.0
+0.0
+56.9
+56.4
+0.0
+
+134.2
+0.0
+98.6
+0.0
+97.5
+95.8
+232.6
+232.6
+0.0
+95.1
+0.0
+232.6
+0.0
+93.7
+93.0
+0.0
+
+196.5
+0.0
+149.5
+0.0
+147.9
+145.6
+306.8
+306.8
+0.0
+144.6
+0.0
+306.8
+0.0
+142.7
+141.7
+0.0
+
+0.034
+0.000
+0.380
+0.000
+2.216
+2.201
+1.567
+2.833
+0.000
+3.413
+0.000
+0.543
+0.000
+3.650
+3.672
+0.000
+
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+
+0.034
+0.000
+0.380
+0.000
+2.216
+2.201
+1.567
+2.833
+0.000
+3.413
+0.000
+0.543
+0.000
+3.650
+3.672
+0.000
+
+46.0
+0.0
+56.5
+0.0
+85.5
+39.7
+0.0
+0.0
+0.0
+82.5
+0.0
+0.0
+0.0
+92.5
+82.0
+0.0
+
+4.46
+0.00
+0.65
+0.00
+0.41
+0.41
+0.00
+0.00
+0.00
+0.44
+0.00
+0.00
+0.00
+1.85
+0.48
+0.00
+
+375
+0
+975
+0
+1350
+1350
+0
+0
+0
+1500
+0
+0
+0
+1500
+1500
+0
+
+0.370
+0.000
+1.807
+0.000
+3.418
+3.418
+0.000
+0.000
+0.000
+4.689
+0.000
+0.000
+0.000
+9.615
+4.897
+0.000
+
+3.35
+0.00
+2.42
+0.00
+2.39
+2.39
+0.00
+0.00
+0.00
+2.65
+0.00
+0.00
+0.00
+5.44
+2.77
+0.00
+
+10.00
+0.00
+18.88
+0.00
+19.27
+19.87
+0.00
+0.00
+0.00
+20.14
+0.00
+0.00
+0.00
+20.66
+20.94
+0.00
+
+0.23
+0.00
+0.39
+0.00
+0.60
+0.28
+0.00
+0.00
+0.00
+0.52
+0.00
+0.00
+0.00
+0.28
+0.49
+0.00
+
+10.23
+0.00
+19.27
+0.00
+19.87
+20.14
+0.00
+0.00
+0.00
+20.66
+0.00
+0.00
+0.00
+20.94
+21.44
+0.00
+
+9%
+0%
+21%
+0%
+65%
+64%
+0%
+0%
+0%
+73%
+0%
+0%
+0%
+38%
+75%
+0%
+
+(m3/s)
+
+TIME OF
+ACC. TIME OF
+CONCENTRATION CONCENTRATION
+(min)
+(min)
+
+PERCENT
+FULL
+(%)
+
+\\MONTY\Shared Work Areas\054371 - Argo Summer Valley\09_DesignDocs\FSR Design Sheet - Storm\054371 - Storm Design Sheet.xlsx:STM Caledon
+
+DESCRIPTION
+
+EXT AREA + STM
+Easement
+STM Easement
+STM Easement
+0
+0
+0
+
+FROM
+MH
+
+EX.MH22
+EX.MH31
+EX.MH32
+0
+0
+0
+
+TO
+MH
+
+EX.MH31
+EX.MH32
+HEAD WALL
+0
+0
+0
+
+AREA
+
+YEAR STORM
+CAPTURE
+
+(ha)
+
+RUNOFF
+COEFFICIENT
+"R"
+
+7.75
+0.10
+0.00
+0.00
+0.00
+0.00
+
+0.50
+0.50
+0.00
+0.00
+0.00
+0.00
+
+10.00
+10.00
+10.00
+0.00
+0.00
+0.00
+
+2 YR
+'AR'
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+10 YR 100 YR
+2 YR
+10 YR
+100 YR
+'AR'
+AR' ACCUM. ACCUM. ACCUM. RAINFALL RAINFALL RAINFALL
+AR'
+AR'
+'AR'
+INTENSITY INTENSITY INTENSITY
+(2 YR) (10 YR) (100 YR) (mm/hr)
+(mm/hr)
+(mm/hr)
+
+3.88
+0.05
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+18.09
+18.14
+18.14
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+139.9
+139.3
+138.8
+0.0
+0.0
+0.0
+
+91.7
+91.3
+91.0
+0.0
+0.0
+0.0
+
+55.6
+55.3
+55.0
+0.0
+0.0
+0.0
+
+ACCUM.
+CONSTANT
+FLOW
+(m3/s)
+
+TOTAL
+FLOW
+(m3/s)
+
+LENGTH
+
+SLOPE
+
+(m3/s)
+
+CONSTANT
+FLOW
+(m3/s)
+
+(m)
+
+4.610
+4.601
+4.585
+0.000
+0.000
+0.000
+
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+
+4.610
+4.601
+4.585
+0.000
+0.000
+0.000
+
+47.0
+33.0
+10.0
+0.0
+0.0
+0.0
+
+FLOW
+
+(%)
+
+PIPE
+DIAMETER
+(mm)
+
+FULL FLOW
+CAPACITY
+(m3/s)
+
+FULL FLOW
+VELOCITY
+(m/s)
+
+INITIAL
+Tc
+(min)
+
+1.22
+1.06
+1.00
+0.00
+0.00
+0.00
+
+1500
+1500
+1500
+0
+0
+0
+
+7.808
+7.278
+7.069
+0.000
+0.000
+0.000
+
+4.42
+4.12
+4.00
+0.00
+0.00
+0.00
+
+21.44
+21.61
+21.75
+0.00
+0.00
+0.00
+
+TIME OF
+ACC. TIME OF
+CONCENTRATION CONCENTRATION
+(min)
+(min)
+
+0.18
+0.13
+0.04
+0.00
+0.00
+0.00
+
+21.61
+21.75
+21.79
+0.00
+0.00
+0.00
+
+PERCENT
+FULL
+(%)
+
+59%
+63%
+65%
+0%
+0%
+0%
+
+\\MONTY\Shared Work Areas\054371 - Argo Summer Valley\09_DesignDocs\FSR Design Sheet - Storm\054371 - Storm Design Sheet.xlsx:STM Caledon
+
+Project:
+
+Argo Summer Valley
+
+Location:
+Project #:
+Designer:
+Date:
+
+Town of Caledon/City of Brampton
+300054371
+S. Breen
+20-Nov-2023
+
+Post-Dev Imperviousness / Runoff Coefficient Calculations
+POST1 - HURONTARIO DRAINAGE SYSTEM
+Total Area =
+2692.3 sq.m
+Area ID
+Area (sq.m) Imperviousness
+Pervious Vegetated Area
+2692.3
+7%
+Impervious Area
+0.0
+100%
+2692.3
+RC =
+POST2 - HIGHWOOD ROAD MH 7
+Total Area =
+6688.8 sq.m
+Area ID
+Area (sq.m) Imperviousness
+Pervious Vegetated Area
+2919.6
+7%
+Impervious Area:
+Within Lots (incl. driveway)
+2551.4
+100%
+17.0m ROW (Imperv. Portion)
+1217.8
+100%
+Total Impervious Area
+3769.2
+6688.8
+RC =
+POST3 - HIGHWOOD ROAD DIRECT CONNECTIONS
+Total Area =
+1512.3 sq.m
+Area ID
+Area (sq.m) Imperviousness
+Pervious Vegetated Area
+905.6
+7%
+Impervious Area:
+Within Lots (incl. driveway)
+606.6
+100%
+17.0m ROW (Imperv. Portion)
+0.0
+100%
+Total Impervious Area
+606.6
+100%
+1512.3
+RC =
+
+AxI
+188.5
+0.0
+7% = I (comp)
+0.25
+
+AxI
+204.4
+2551.4
+1217.8
+3769.2
+59% = I (comp)
+0.62
+
+AxI
+63.4
+606.6
+0.0
+606.6
+44% = I (comp)
+0.51
+
+POST4 - LIGHTHEART DRIVE CONNECTION
+Total Area =
+24986.3 sq.m
+Area ID
+Area (sq.m) Imperviousness
+Pervious Vegetated Area
+10487.1
+7%
+Impervious Area:
+Within Lots (incl. driveway)
+8994.4
+100%
+17.0m ROW (Imperv. Portion)
+5504.8
+100%
+Total Impervious Area
+14499.2
+24986.3
+RC =
+
+Total Developed Drainage Area to Ex. Creek's Edge SWM Facility
+
+Average Imperviousness for Drainage to Ex. SWM Facility
+Average Runoff Coefficient for Drainage to Ex. SWM Facility
+Total Site Area
+Total Site Impervious
+
+AxI
+734.1
+8994.4
+5504.8
+14499.2
+61% = I (comp)
+0.63
+
+33187.4 sq.m
+3.3187397 ha
+60%
+0.62
+35879.74
+0.56
+
+Notes:
+1 Calculations for ROW imperviousness assume half of a given lot or townhouse boulevard frontage is
+comprised of driveway.
+2 Calculations assume all detached corner lots consist of 12.12m lot unit type.
+3 Calculations assume minimum front-yard setback is used for all units.
+4 It has been assumed that all entrances from Hurontario Street will be removed under post-dev. conditions.
+
+Project:
+File:
+Designed by:
+Checked by:
+Date:
+
+Argo Summer Valley
+300054371.0000
+S.Breen
+L.Niemi
+20-Nov-23
+
+PROPOSED CONDITIONS TO SWM FACILITY
+Total Drainage Area=
+300007.4 m2
+
+or
+
+Institutional Areas (m2)
+
+30.00 ha
+
+Commercial Areas(m2)
+
+Total Area=
+
+0 ha
+
+TIMP
+XIMP
+
+Total Area
+Area
+0.00 ha
+0.00 ha
+
+65%
+40%
+
+Medium Density Residential (m2)
+33187.397 DEVELOPED AREA
+
+0 ha
+
+TIMP
+XIMP
+
+90%
+90%
+
+Single Family
+0 to Highwood
+
+Total Area
+
+3.32 ha
+
+TIMP
+XIMP
+
+60%
+40%
+
+Low Density Residential (m2)
+214560 Creeks Edge
+52260 Donal JV
+
+Area
+1.99 ha
+1.33 ha
+
+Total Area
+
+0.00 ha
+
+TIMP
+XIMP
+
+59%
+40%
+
+Area
+0.00 ha
+0.00 ha
+
+Parkland Areas(m2)
+less DPOS area
+
+Total Area
+
+26.68 ha
+
+TIMP
+XIMP
+
+43%
+30%
+
+Area
+11.47 ha
+8.00 ha
+
+Total Area (less Residential)=
+0.00 ha
+Total Residential Area(if not able to directly measure)=
+Total Area (uncontrolled to pond)
+
+Total Area
+
+0.00 ha
+
+TIMP
+XIMP
+
+10%
+5%
+
+30.00 ha
+
+30.00 ha
+
+TOTAL OVERALL DRAINGE AREA
+
+Total TIMP=
+Total XIMP=
+
+Area
+0.00
+0.00
+
+13.46 ha
+9.33 ha
+
+Overall TIMP=
+Overall XIMP=
+
+44.9 %
+31.1 %
+
+Area
+0.00 ha
+0.00 ha
+
+Project:
+File:
+Designed by:
+Checked by:
+Date:
+
+Argo Summer Valley
+300054371.0000
+S.Breen
+L.Niemi
+20-Nov-23
+
+Wet Pond Permament Pool Requirement
+MOE Table 3.2 Water Quality Storage Requirements Based on Receiving Waters.
+IMPERVIOUSNESS
+Protection Level (1, 2, or 3)
+
+44.87 %
+2
+
+NOTE - 40 cu.m/ha has been removed from MOE table values for Ex. Detention Portion
+Enhanced (Level 1) Protection
+x
+y
+Permanent Pool
+Imperviousness
+StorageVolume
+(%)
+(cu.m./ha)
+35
+100
+55
+150
+70
+185
+85
+210
+95.0
+236
+
+Normal (Level 2) Protection
+x
+y
+Permanent Pool
+Imperviousness
+StorageVolume
+(%)
+(cu.m./ha)
+35
+50
+55
+70
+70
+90
+85
+110
+95.0
+121
+
+Basic (Level 3) Protection
+x
+y
+Permanent Pool
+Imperviousness
+StorageVolume
+(%)
+(cu.m./ha)
+35
+20
+55
+35
+70
+45
+85
+55
+95.0
+62
+
+Known (x)
+Imperviousness
+(%)
+44.87
+
+Calc (y)
+Permanent Pool
+StorageVolume
+(cu.m./ha)
+124.67
+
+Total Permanent
+Pool Required
+(cu.m)
+3740.25
+
+Calc (y)
+Permanent Pool
+StorageVolume
+(cu.m./ha)
+59.87
+
+Total Permanent
+Pool Required
+(cu.m)
+1796.11
+
+Calc (y)
+Permanent Pool
+StorageVolume
+(cu.m./ha)
+27.40
+
+Total Permanent
+Pool Required
+(cu.m)
+822.07
+
+Extrapolated
+
+Known (x)
+Imperviousness
+(%)
+44.87
+
+Extrapolated
+
+Known (x)
+Imperviousness
+(%)
+44.87
+
+Extrapolated
+
+Pond Efficiency
+Wet Pond - As Constructed
+Project:
+File:
+Designed by:
+Checked by:
+Date:
+
+Argo Summer Valley
+300054371.0000
+S.Breen
+L.Niemi
+20-Nov-23
+
+CALCULATED POND REQUIREMENTS WITH INCLUSION OF SUMMER VALLEY DISCHARGE
+Imperviousness
+Level 2 Quality Volume Required:
+which includes:
+
+44.87 %
+2996 cum/ha
+1796 cum for Perm. Pool
+40 cum/ha for Ext. Det.
+
+Site Contributing Drainage Area
+
+30.00 ha
+
+As Constructed Permanent Pool Details:
+Permanent Pool Required (per MOE)
+Permanent Pool Provided
+
+1796 cu.m
+1594 cu.m (per Donal JV Report)
+
+Pond Permanent Pool Deficiency
+
+202 cu.m
+
+MECP Pond Efficiency (Table 4 - Quality Control)
+Wet Pond Design Parameters
+Volume
+(cum/ha)
+Enhanced Permanent Pool Volume
+120
+Normal Permanent Pool Volume
+58
+Basic Permanent Pool Volume
+26
+Calculated PP Volume per ha of drainage
+Interpolated Resultant Treatment Efficiency
+
+Treatment Efficiency
+(%)
+80
+70
+60
+53.13 cu.m/ha
+68.5 %
+
+Project:
+Project #:
+Designed By:
+Date:
+
+Argo Summer Valley
+300054371
+L.Niemi
+20-Nov-2023
+
+TSS Removal Efficiency - Treatment Train
+Control
+
+POST 4 to Caledon (Lightheart)
+
+Area Description
+
+Drainage area (ha)
+
+Infiltration
+
+CB Shield
+
+OGS
+
+SWM Pond
+
+Total Efficiency
+
+Post 4 Drainage Area (to pond)
+
+2.50
+
+0%
+
+0%
+
+50%
+
+68%
+
+84%
+
+Subtotal Total Caledon Drainage Area
+
+2.50
+
+Post 2 Drainage Area (to pond)
+
+0.67
+
+0%
+
+0%
+
+50%
+
+68%
+
+84%
+
+Post 3 Drainage Area (to pond)
+
+0.15
+
+0%
+
+0%
+
+50%
+
+68%
+
+84%
+
+Subtotal Total Brampton Drainage Area
+
+0.82
+
+Overall TSS Removal to Highwood Drive:
+
+84%
+
+TOTAL SITE
+
+3.32
+
+Overall TSS Removal FOR SITE:
+
+84%
+
+84%
+
+Overall TSS Removal to Lightheart Drive:
+
+Note - existing SWM pond as constructed conditions will provide 68% TSS with addition of development area
+
+EXTENDED DETENTION VOLUME CALCULATIONS
+(based on minor drainage area)
+Project:
+Argo Summer Valley
+File:
+300054371.0000
+Designed by:
+S.Breen
+Checked by:
+L.Niemi
+Date:
+20-Nov-23
+
+Extended Detention Volume (as Constructed)
+
+3407 cu.m
+
+Ex. Extended Detention Volume req. (per Donal JV) - using SCS Method
+Existing Total Drainage to Pond (per Donal JV Report)
+Existing Total Imperviousness of Drainage to Pond (per Donal JV)
+Existing CN for Drainage Area
+
+27.23 ha
+43 %
+72
+
+25 mm Runoff total Contributing Area (SCS Method)
+Q=
+S=
+T IMP =
+
+(P-IA)^2/P-(IA-S)
+-254+25400/CN
+43.0 %
+
+Pervious Area
+P=
+IA =
+CN =
+S=
+Q=
+
+Impervious Area
+P=
+IA =
+CN =
+S=
+Q=
+
+25 mm
+3 mm
+72
+98.8
+4.0 mm
+per
+4.0
+15.5
+622
+
+SCS Runoff Volume
+Drainage Area
+Runoff Volume
+
+imp
+20.4
+11.7
+2388
+
+25 mm
+2.3 mm
+99
+2.6
+20.4 mm
+total
+11.05
+27.23
+3010
+
+mm
+ha
+cu.m
+
+Proposed Post Development Drainage to Pond - Updated to Include Summer Valley:
+Total Drainage to Pond (with Summer Valley)
+30.00 ha
+Total Imperviousness of Drainage to Pond (with Summer Valley)
+44.9 %
+CN for Total Drainage Area
+72
+25 mm Runoff total Contributing Area (SCS Method)
+Q=
+S=
+T IMP =
+
+(P-IA)^2/P-(IA-S)
+-254+25400/CN
+44.9 %
+
+Pervious Area
+P=
+IA =
+CN =
+S=
+Q=
+
+SCS Runoff Volume
+Drainage Area
+Runoff Volume
+
+Impervious Area
+P=
+IA =
+CN =
+S=
+Q=
+
+25 mm
+3 mm
+72
+98.8
+4.0 mm
+per
+4.0
+16.5
+663
+
+Extended Detention Required per SCS Method
+Extended Detention Provided
+Extended Detention Deficit SCS Method
+
+imp
+20.4
+13.5
+2745
+3408
+3407
+1
+
+25 mm
+2.3 mm
+99
+2.6
+20.4 mm
+total
+11.4
+30.00
+3408
+
+cu.m
+cu.m
+cu.m
+
+mm
+ha
+cu.m
+
+Orifice Sizing Calculations
+Existing Structures
+Project:
+Argo Summer Valley
+File:
+300054371.0000
+Designed by: S.Breen
+Checked by: L.Niemi
+Date:
+20-Nov-23
+
+Diversion Orifice Calculations - to convey quality peak flow to the pond
+Extended Detention Volume Required
+Qin =
+duration =
+
+1.5*Runoff Volume/hydrograph duration
+82
+mins
+
+Peak 25mm runoff flow rate
+Duration (from hymo modelling)
+
+Calcualted 25 mm Runoff Peak Flow
+A=
+h=
+C=
+
+Q/C*(2*g*h)^0.5
+0.54 m
+0.8
+
+3408 cu.m
+
+1.04 cms
+Orifice Area
+head (per Creek's Edge HGL)
+due to benching in MH
+
+Calcualted Diversion Orifice Area
+Calculated Minimum Orifice Diameter
+Proposed Diversion Orifice Diameter
+
+0.40 sq.m
+0.713 m
+715 mm
+
+Extended Detention Orifice Calculations - to provide 48 hrs detention
+Minimum Detention Time
+Q out ave =
+ED volume/detention time
+Q out peak
+1.5*Q out ave
+Calcualted 25 mm Average discharge
+Calcualted 25 mm peak discharge
+A=
+h=
+C=
+
+Q/C*(2*g*h)^0.5
+1.6 m
+0.625
+
+Calcualted Outlet Orifice Area
+Calculated Maximum Orifice Diameter
+Proposed OUtlet Orifice Diameter
+
+48 hours
+
+0.0197 cms
+0.0296 cms
+Orifice Area
+Extended Detention Depth
+submerged orifice
+0.0084 sq.m
+0.1037 m
+100 mm
+
+Project:
+Project #:
+Designed By:
+Date:
+
+Argo Summer Valley
+300054371.0000
+S. Breen/L.Niemi
+20-Nov-2023
+Rear Yard Soakaway Pits
+
+Total Drainage Area
+Roof Area per Lot to Soakaway =
+Roof Area to Soakaway Pit per Lot =
+
+2
+
+119 m
+2
+119 m
+
+50% of Maximum Lot Coverage
+
+17.5 mm/hr
+
+* from exp report
+
+Infiltration Rate
+Infiltration Rate =
+
+Infiltration rate at the proposed bottom elevation of the infiltration gallery must be divided by a safety correction factor:
+Ratio of mean measured infiltration rates =
+17.50
+17.50
+=
+1
+therefore, safety correction factor is -------->
+2.5
+Design infiltration rate determined by dividing mean infiltration rate at bottom of infiltration trench by the safety correction factor:
+Design Infiltration Rate =
+7.0
+mm/hr
+Maximum Storage Depth
+Maximum depth of storage determined by multiplying design infiltration rate desired drawdown time of 48hr divided by void ratio of
+Maximum depth of storage=
+0.84
+m
+Storage Required (5mm)
+5 mm
+
+Runoff depth
+
+Per Lot Rooftop Area to Soakaway =
+
+Runoff =
+
+119 m
+
+2
+
+Approximate
+
+Min. Storage Volume Required per Lot =
+
+0.59 m
+
+3
+
+Area (m ) x Runoff (mm)/1000
+
+Number of Lots in Infiltration Area =
+
+2
+
+23.5
+
+Size Infiltration Gallery
+Surface Area of Infiltration (m2)
+
+Required Volume
+of Infiltration (m 3)
+
+Drawdown Time
+(hrs)
+
+Min. Required Depth of
+Storage Trench (m)
+
+5.0
+0.59
+17.0
+Note: each lot assumed to have 2 trenches (one on each side for roof leader discharge
+Number of Lots =
+Number of Soakaway Pits =
+Soakaway Pit design dimensions:
+
+Design Volume =
+Void Ratio =
+Total Storage Volume per Soakaway Pit =
+Total Storage Volume per Lot =
+
+23.5
+47 (2 per lot)
+0.75 m wide
+1.50 m long
+0.8 m deep
+0.9 m3
+0.40
+0.36 m3
+3
+0.72 m
+
+TOTAL STORAGE VOLUME PROVIDED IN ALL TRENCHES
+
+0.30
+
+Equivalent Runoff Depth
+3
+
+17 m
+
+6.07 mm
+
+5 mm Runoff Control/Retention
+Project:
+File:
+
+Argo Summer Valley
+
+Designed by:
+Checked by:
+Date:
+
+S.Breen
+L.Niemi
+20-Nov-23
+
+5mm Retention achieved through Initial Abstration on all surfaces, accounting for ponding, infiltration
+evaporation and direction of flow to pervious surfaces as follows:
+Grassed Area
+Paved Surface
+Roof tops
+
+5.0 mm
+1.5 mm
+0.75 mm
+
+* based on minimum of 50% of roof discharge to grass (rear only)
+and 1.5mm retention available in topsoil for roof discharge
+
+Secondary measures are introduced to enhance 5mm retention including soakaway pits where feasible
+Calculated secondary retention is based on the soakway pit design in relevant lots
+Post2 - Rooftop Runoff Secondary Retention
+Total Roof Area in Catchment
+Roof Area to Soakaway in Rear Yard
+Volume to Soakaway (Area to Soakaway*depth)
+6.07 mm
+Prorated Secondary Retention of Rooftop Runoff (Vol/Total Area)
+
+2551 sq.m
+856 sq.m
+5.19 cu.m
+2.04 mm
+
+Post3 - Rooftop Runoff Secondary Retention
+Total Roof Area in Catchment
+Roof Area to Soakaway in Rear Yard
+Volume to Soakaway (Area to Soakaway*depth)
+6.07 mm
+Prorated Secondary Retention of Rooftop Runoff (Vol/Total Area)
+
+559 sq.m
+279 sq.m
+1.69 cu.m
+3.03 mm
+
+Post4 - Rooftop Runoff Secondary Retention
+Total Roof Area in Catchment
+Roof Area to Soakaway in Rear Yard
+Volume to Soakaway (Area to Soakaway*depth)
+6.07 mm
+Prorated Secondary Retention of Rooftop Runoff (Vol/Total Area)
+
+8994 sq.m
+1239 sq.m
+7.52 cu.m
+0.84 mm
+
+Site 5mm Volume Retention
+Site Area
+
+POST1
+
+POST2
+
+POST3
+
+POST4
+
+Grassed Area
+Paved Surface
+Roof Area
+Grassed Area
+Paved Surface
+Roof Area
+Grassed Area
+Paved Surface
+Roof Area
+Grassed Area
+Paved Surface
+Roof Area
+
+2692 m2
+0 m2
+0 m2
+2920 m2
+1218 m2
+2551 m2
+906 m2
+26 m2
+581 m2
+10487 m2
+5652 m2
+8847 m2
+2
+33187 m
+
+Required 5mm
+Volume Retention
+13.46 m3
+0.00 m3
+0.00 m3
+14.60 m3
+6.09 m3
+12.76 m3
+4.53 m3
+0.13 m3
+2.90 m3
+52.44 m3
+28.26 m3
+44.24 m3
+3
+165.94 m
+
+Initial
+Abstraction
+5.0 mm
+1.5 mm
+0.75 mm
+5.0 mm
+1.5 mm
+0.75 mm
+5.0 mm
+1.5 mm
+0.75 mm
+5.0 mm
+1.5 mm
+0.75 mm
+
+Secondary
+Retention
+
+2.04 mm
+
+3.0 mm
+
+0.84 mm
+
+Total Provided
+Volume
+13.46 m3
+0.00 m3
+0.00 m3
+14.60 m3
+1.83 m3
+7.11 m3
+4.53 m3
+0.04 m3
+2.20 m3
+52.44 m3
+8.48 m3
+14.03 m3
+3
+105.24 m
+
+Project Name:
+Job Number:
+Designer:
+Date:
+
+Argo Summer Valley
+300054371
+LN
+20-Nov-23
+
+Capture Calculations for RLCB - Capacity confirmtion
+RLCB to capture 100 year flow (from design sheet) with 50% blockage
+Flow Range
+0.013 cms min
+0.037 cms max
+Note: The capacity is based on a "sag" location assumption
+Catchbasin Capacity
+Average Depth above grate =
+Area of Orifice =
+Orifice Coefficient =
+Total Discharge, Q=
+Discharge Vel., V=
+
+0.100
+0.0036
+0.6
+0.003
+0.840
+
+m
+m2
+
+Honeycomb Grating
+Grating Length =
+Grating Width =
+
+0.762
+0.768
+
+m
+m
+
+Catchbasin Opening
+Length =
+Width =
+Area =
+Area Lost to Grating/Opening =
+Orifice Opening Area =
+Effective number of Openings =
+Grating Open Area =
+Assumed Blockage =
+Effective Grating Open Area =
+Effective flow Capacity =
+Number of Catchbasins =
+Catchbasin Capacity =
+
+0.616
+0.622
+0.383
+0.0006
+0.0036
+91
+0.328
+50.0
+0.164
+0.1377
+1
+0.138
+
+m
+m
+m2
+m2
+m2
+
+Total Inlet Capacity =
+
+0.138
+
+m3/sec
+
+SUFFICIENT CAPACITY FOR FLOW RANGE
+
+yes
+
+m3/sec
+m/sec
+
+m2
+%
+m2
+m3/sec
+m3/sec
+
+Project:
+
+Argo Summer Valley
+
+Location:
+
+City of Brampton/Town of Caledon
+
+Project #:
+
+300054371
+
+Designer:
+Date:
+
+S. Breen
+20-Nov-2023
+
+Storm Flow Calculations
+Pre Develpoment Flow to Hurontario Drainage system
+
+Post Develpoment Flow to Hurontario Drainage system
+
+Area ID
+
+Existing Conditions
+
+Pre-Development 'C'
+
+Area ID
+
+PRE2
+
+13600 m
+
+2
+
+0.25
+
+POST1
+
+2692 m
+
+2
+
+TOTAL
+
+1876800 m
+
+2
+
+#REF!
+
+TOTAL
+
+2692 m
+
+2
+
+Runoff Equation
+
+Post-Development 'C'
+0.25
+0.25
+
+Intensity Equation
+
+I = ATC
+
+Q = 2.78CIA (L/s)
+where,
+
+Proposed Conditions
+
+C = runoff coefficient
+I = rainfall intensity (mm/hr)
+A = area (ha)
+2.78= conversion factor
+
+I= Rainfall Intensity (mm/hr)
+T= Time of concentration (hours)
+
+Pre-Development Stormwater Flows (Tc=10 min)
+Return
+Period
+2 year
+5 year
+10 year
+25 year
+50 year
+100 year
+
+A
+22.1
+29.9
+35.1
+41.6
+46.5
+51.3
+
+C
+-0.714
+-0.701
+-0.695
+-0.691
+-0.688
+-0.686
+
+T
+0.17
+0.17
+0.17
+0.17
+0.17
+0.17
+
+I
+79.43 mm/hr
+104.99 mm/hr
+121.93 mm/hr
+143.48 mm/hr
+159.52 mm/hr
+175.36 mm/hr
+
+PRE2
+
+Q (L/s)
+POST1
+
+Increase
+
+74.8
+98.8
+114.8
+135.1
+150.2
+165.1
+
+14.8
+19.6
+22.7
+26.7
+29.7
+32.7
+
+-60.0
+-79.3
+-92.1
+-108.3
+-120.4
+-132.4
+
+ORIFICE CALCULATIONS FROM THE CREEK'S EDGE SUBDIVISION
+STORMWATER MANAGEMENT REPORT.
+
+Appendix D
+Water Demand Calculations
+and Hydrant Flow Testing
+
+Appendix D
+
+Date: 5-May-2023
+Revision: 1
+Completed By: EDT / MR
+Checked By: LN
+
+Argo Summer Valley Limited
+Argo Summer Valley
+300054371
+
+BASE FIRE FLOW
+An estimate of the fire flow for a given area may be determined by the formula:
+F = 220 x C x sqrt(A)
+where
+F = the required fire flow in litres per minute
+C = coefficient related to the type of construction
+A = the total floor area in square metres (including all stories, but excluding basements at least 50% below grade) of the building considered
+Type of Construction Co-efficients
+0.6 Fire-resistive construction
+0.8 Non-combustible construction
+1.0 Ordinary construction
+1.5 Wood frame construction
+
+Proposed Homes/buildings:
+C=
+
+A=
+
+1.0 Ordinary construction
+2 storey
+200 m² footprint
+400 m² total floor area
+
+F = 220 x 1 x sqrt(400)
+=
+4,400.00 L/min
+OCCUPANCIES
+Values may be reduced by as much as 25% for occupancies have low fire hazard or may be increased by up to 25% surcharge for occupancies having
+a high fire hazard. See Notes tab for examples of Occupancies and Hazard rankings.
+Non-combustible
+Limited combustible
+Combustible
+Free Burning
+Rapid Burning
+
+-25%
+-15%
+0%
+15%
+25%
+Limited combustible
+
+Occupancy dwellings:
+
+-15%
+
+F₀ = F + F x (Occupancy factor)
+= 4400 + 4400 x -0.15
+=
+3740.00 L/min
+Note: The fire flow shall not be less than 2,000 L/min
+
+SPRINKLERS
+Fire flow may be reduced up to 50% for automatic sprinkler systems (enter as positives)
+Base Sprinkler reduction
+Standard Credit
+Supervision Credit
+Total Reduction
+
+0% Adequately design system conforming to NFPA 13 and other NFPA standards (max 30%)
+0% Additional credit if the water supply is standard for both system and fire department hose lines required (max 10%)
+0% Additional credit if the system is supervised, including water flow and control valves (max 10%)
+0%
+
+F₁ = F₀ - (F₀ x 0)
+= 3740 - (3740 x 0)
+=
+3740.00 L/min
+EXPOSURE
+To the value obtained above, a percentage should be added for structures exposed within 45m by the fire area under consideration.
+The percentage shall depend upon height, area, and construction of the building(s) being exposed, the separation, openings in the exposed buildings,
+length and height of exposure, and provision of automatic sprinklers and/or outside sprinklers in the buildings, the occupancy of the exposed buildings,
+and the effect of hillside locations on the possible spread of fire.
+The charge in general for any one side should not exceed the following limits for separation. (see Exposure on the Notes tab)
+Separation
+0 0 to 3 m
+3 3.1 to 10 m
+# 10.1 to 20 m
+# 20.1 to 30 m
+# 30.1 to 45 m
+#
+Exposure
+North
+South
+East
+West
+
+Charge
+25%
+20%
+15%
+10%
+0%
+0%
+Type
+Adjacent Dwelling
+Adjacent Dwelling
+Adjacent Dwelling
+Adjacent Dwelling
+
+Distance (m) Charge
+1
+25%
+1
+25%
+10
+20%
+22
+10%
+Total
+75% The total percentage shall not exceed 75%
+
+F₂ = F₁ - (F₀ x 0.75)
+= 3740 + (3740 x 0.75)
+=
+6,545.00 L/min
+Note: The fire flow shall not exceed 45,000 L/min or be less than 2,000 L/min
+Fire Flow Required =
+Fire Flow Required =
+Average Area per hydrant =
+Required Duration =
+
+7,000
+117
+13,500
+2.00
+
+L/min
+L/s
+m²
+hours
+
+Standard Hydrant Distribution
+Fire Flow
+Average Area per
+required (L/min)
+Hydrant (m²)
+2,000
+16,000
+4,000
+15,000
+1
+6,000
+14,000
+8,000
+13,000
+10,000
+12,000
+12,000
+11,000
+14,000
+10,000
+16,000
+9,500
+18,000
+9,000
+20,000
+8,500
+22,000
+8,000
+24,000
+7,500
+26,000
+7,000
+28,000
+6,500
+30,000
+6,000
+32,000
+5,500
+34,000
+5,250
+36,000
+5,000
+38,000
+4,750
+40,000
+4,500
+42,000
+4,250
+44,000
+4,000
+46,000
+3,750
+48,000
+3,500
+
+(Rounded to the nearest 1,000 L/min)
+(Interpolated from chart below)
+(Interpolated from chart below)
+
+Required Duration of Fire Flow
+Fire Flow
+required (L/min)
+2,000
+3,000
+4,000
+5,000
+1
+6,000
+8,000
+10,000
+12,000
+14,000
+16,000
+18,000
+20,000
+22,000
+24,000
+26,000
+28,000
+30,000
+32,000
+34,000
+36,000
+38,000
+40,000
+999999999
+-
+
+Duration (hours)
+1.00
+1.25
+1.50
+1.75
+2.00
+2.00
+2.00
+2.50
+3.00
+3.50
+4.00
+4.50
+5.00
+5.50
+6.00
+6.50
+7.00
+7.50
+8.00
+8.50
+9.00
+9.50
+9.5
+
+Argo Summer Valley Water Demand Calculations
+Prepared by: EDT / MR
+Checked by: LN
+Project No: 300054371
+Date: 5/8/2023
+Assumptions
+Average Per Capita Water Consumption
+Maximum Day Factor
+Peak Hour Factor
+Housing Summary
+Single Detached
+TOTAL
+Average Day Demand
+Maximum Day Demand
+Peak Hour Demand
+
+280 L/cap/day
+2
+3
+#
+65
+65
+
+Region of Peel Public Work Watermain Design Criteria (June 2010)
+Region of Peel Public Work Watermain Design Criteria (June 2010)
+Region of Peel Public Work Watermain Design Criteria (June 2010)
+
+Persons Per Unit Population
+4.202
+
+0.89 L/s
+1.77 L/s
+5.31 L/s
+
+273
+273
+76.48 m3/day
+152.95 m3/day
+458.86 m3/day
+
+R.J. Burnside & Associates Limited
+
+

@@ -1,0 +1,1954 @@
+Palgrave Estate Subdivision
+Town of Caledon
+
+Functional Servicing & Stormwater Management Report
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+July 29, 2020
+
+October 2019
+
+MAEL Project 2018-951
+
+Functional Servicing & Stormwater Management Report
+
+Palgrave Estate Subdivision
+Town of Caledon
+For
+Casltemore Corp.
+
+October 2019
+
+Prepared by:
+
+MASONGSONG ASSOCIATES ENGINEERING LIMITED
+
+7800 Kennedy Road, Suite #201
+Markham, Ontario • L3R 2C7
+T (905) 944-0162 F (905) 944-0165
+Project No: MAEL 2018-951
+
+Functional Servicing & SWM Report
+Palgrave Estate Subdivision, Town of Caledon
+
+October 2019
+
+Contents:
+1.
+
+INTRODUCTION ..................................................................................................................................... 1
+
+1.1
+1.2
+1.3
+1.4
+2
+
+PROPOSED SERVICES ............................................................................................................................. 3
+
+2.1
+2.2
+2.3
+3
+
+Background....................................................................................................................... 1
+Proposed Development ................................................................................................... 2
+Existing Grading and Landform ........................................................................................ 2
+Existing Infrastructures .................................................................................................... 2
+Water Servicing ................................................................................................................ 3
+Water Distribution System Modeling .............................................................................. 3
+Sanitary Sewerage ............................................................................................................ 4
+
+STORMWATER MANAGEMENT ............................................................................................................. 4
+
+3.1
+3.2
+3.3
+3.4
+
+Water Quantity................................................................................................................. 4
+Water Quality ................................................................................................................... 7
+Water Balance .................................................................................................................. 7
+Sedimentation and Erosion Control During Construction ............................................... 8
+
+4
+
+LANDFORM AND GRADING ................................................................................................................... 8
+
+5
+
+SUMMARY AND RECOMMENDATIONS ................................................................................................. 9
+
+Appendices
+Appendix A:
+
+Appendix B:
+
+Appendix C:
+
+Copy of Draft Plan of Subdivision
+Copy of TRCA Enhanced Grass Swale Details
+Copy of the Plan & Profiles indicating Existing Services
+Copy of MTO Design Chart 4.19
+GP1
+DR1
+GR1
+EC1
+
+General Plan
+Drainage Plan
+Grading Plan
+Erosion & Sediment Control Plan
+
+Detailed Watermain Analysis Calculations
+Discharge Velocity Curve for Box Culvert
+Calculation of Time of Concentration
+Watercourse Cross-section Capacity Analysis
+
+Masongsong Associates Engineering Limited
+
+0
+
+Functional Servicing & SWM Report
+Palgrave Estate Subdivision, Town of Caledon
+
+1.
+
+October 2019
+
+INTRODUCTION
+Masongsong Associates Engineering limited has been retained by Casltemore Corp. to
+prepare this Functional Servicing and Stormwater Management Report in support of
+development application for Palgrave Estate subdivision, in the Town of Caledon,
+Regional Municipality of Peel.
+The purpose of this report is to identify the requirements for servicing/stormwater
+management and to demonstrate how the subject site will function within the
+framework of existing and proposed infrastructures.
+
+1.1
+
+Background
+The subject site is located south of Highway 9 between Mount Hope and Mount
+Pleasant roads. The current use of property is mainly as agricultural field. It is abutted
+by Mount Hope Road to the west and existing residentials and vacant lands to other
+directions.
+Refer to below for proposed site location plan:
+
+Masongsong Associates Engineering Limited
+
+1
+
+Functional Servicing & SWM Report
+Palgrave Estate Subdivision, Town of Caledon
+
+1.2
+
+October 2019
+
+Proposed Development
+Proposed development draft plan of subdivision consists of 29 estate lots and municipal
+roads namely Street A, B, and C. The draft plan also delineates areas to be designated as
+green spaces.
+Refer to Appendix-A for proposed draft plan of subdivision.
+Major development works for the initial stage of proposed development will be
+construction of municipal roads, installation of watermain and utilities.
+
+1.3
+
+Existing Grading and Landform
+From the topographic survey observation, the subject land terrain generally remains
+undisturbed at natural state. The existing landform feature slope ranges from moderate
+to steep. Existing woodlands, watercourses and vegetations concludes key natural
+features found throughout the subject site.
+
+1.4
+
+Existing Infrastructures
+The key existing infrastructures reviewed in support of the subject lands include:
+Water
+
+A 300 mm diameter municipal watermain within Mount Hope Road. A
+150mm watermain on Barbara Place and McGuire Trail to the east of the
+subject site
+
+Sanitary
+
+No municipal sanitary sewer system is available in this part of the Town
+and all existing adjacent residential lots are provided with individual
+septic system.
+
+Storm
+
+The proposed development is located within rural part of the Town with
+no municipal storm sewer system. Existing watercourses as drainage
+receiving system and roadside ditches as drainage conveyance system
+along with drainage culverts are considered subject site existing
+stormwater management features.
+
+Masongsong Associates Engineering Limited
+
+2
+
+Functional Servicing & SWM Report
+Palgrave Estate Subdivision, Town of Caledon
+
+2
+
+October 2019
+
+PROPOSED SERVICES
+The proposed site is estate lot development and existing municipal services are not fully
+available in the vicinity of the subject site to service the proposed development. The
+only municipal service available to service the proposed development is existing
+watermain within the adjacent municipal roads.
+This report will describe how the proposed development can be serviced in context of
+estate lot development in order to comply with relevant agencies requirement including
+Town of Caledon and Region of Peel standard criteria. It also points out to any potential
+constraints that may affect the serviceability of the site.
+
+2.1
+
+Water Servicing
+The subject site is within Peel Region Pressure District 8A water distribution system. A
+200mm diameter PVC watermain is proposed along the proposed municipal roads
+namely Street A, B, and C. and service connections to proposed lots will be made from
+this main. Proposed service connection will be 25mm cupper line and to be installed as
+per Region of Peel standard detail 1-7-1.
+The proposed watermain requires looping; therefore, a 150mm watermain extension
+beyond the limit of proposed development is proposed be installed to connect to
+existing 150mm watermain in McGuire Trail in order to form a strong looped system.
+Refer to Drawing GP1 enclosed in Appendix-B for illustration of proposed site water
+servicing system.
+
+2.2
+
+Water Distribution System Modeling
+Flow testing of existing hydrants on Mount Hope Road and Barbara Place indicate 83
+and 86 psi, static pressure respectively.
+Hydraulic analysis of proposed water distribution system is conducted using EPANET 2
+modeling software to ensure the system delivers desired pressures and flows for the
+proposed development under various demand scenarios.
+The summary of analysis result is provided in the following Table 2.1:
+Table 2.1
+No
+
+Scenarios
+
+EPANET
+
+Region
+Criteria
+< 690 (Ok)
+
+1
+
+Max. pressure during min. hour demand (kpa)
+
+Results
+629
+
+2
+
+Min. pressure during max. hour demand (kpa)
+
+570
+
+> 275 (OK)
+
+3
+
+Min. pressure during max. day demand + fire (kpa)
+
+242
+
+> 140 (OK)
+
+Masongsong Associates Engineering Limited
+
+3
+
+Functional Servicing & SWM Report
+Palgrave Estate Subdivision, Town of Caledon
+
+October 2019
+
+The above summary of EPANET modeling result shows that proposed watermain system
+meets Region standard criteria for required pressures for noted scenarios.
+Refer to Appendix-C for watermain analysis detailed calculations and EPANET result
+output.
+2.3
+
+Sanitary Sewerage
+As noted, there is no municipal sanitary sewer system available for this development.
+Typically, due to the nature/type of proposed estate lots, septic system for individual lot
+is considered feasible alternative for sanitary servicing. Proposed septic system typical
+size and approximate location of disposal area / leaching bed is show on proposed
+development engineering plans. The actual size and location of the system (in
+consideration with the individual lot landform constraints) will be detailed during
+individual site grading and siting plan preparation stages.
+The design of septic system is to be coordinated with site mechanical consultant during
+detailed design stages.
+Refer to Drawing GP1 enclosed in Appendix-B for illustration of proposed septic system
+approximate locations.
+
+3
+
+STORMWATER MANAGEMENT
+
+3.1
+
+Water Quantity
+Proposed municipal roads are considered major change to existing landform yet in
+comparison to overall site area it accounts only for 6.5% of development area. In
+addition, disturbance to existing landform and minor increase in hard surface (driveways
+and roof) within the proposed lots will not result in significant increase to postdevelopment runoffs. This is due to size of disturbed area in comparison to overall size
+of the proposed lots which will largely remain unchanged at pre-development condition
+as vegetated surface with minimum grading changes.
+In the context of the proposed estate lot development, there will we be no significant
+increase in post-development peak runoff; therefore, design of new end-of-pipe
+stormwater management facility/feature is not feasible or recommended.
+Nonetheless, as part of the Low Impact Development (LID) measures, Enhanced Grass
+Swale is proposed as lot-level and conveyance controls for attenuation of stormwater
+runoff from proposed roads which helps in peak runoff reduction. It also conveys the
+runoff to existing watercourse which qualifies as drainage receiving system.
+In addition, the Low Impact Development measures proposed as lot-level infiltrationbased controls for each individual lot (as outlined in MECP Stormwater Management
+Planning and Design Manual) to include the followings:
+
+Masongsong Associates Engineering Limited
+
+4
+
+Functional Servicing & SWM Report
+Palgrave Estate Subdivision, Town of Caledon
+
+October 2019
+
+•
+
+reduced grading to allow greater ponding of stormwater and natural
+infiltration;
+
+•
+
+directing roof leaders to rear yard ponding areas, soakaway pits, or to
+cisterns or rain barrels;
+
+•
+
+sump pumping foundation drains to rear yard ponding areas;
+
+•
+
+infiltration trenches;
+
+•
+
+grassed swales;
+
+•
+
+pervious pipe systems;
+
+•
+
+vegetated filter strips; and
+
+•
+
+stream and valley corridor buffer strips.
+
+Design and Implementation of the above lot-level quantity controls will be applicable
+during detailed individual lot grading and siting plans preparation.
+Efforts should be made during road and lot design/construction stages so that the
+existing overall drainage pattern is to be maintained at original conditions to the extent
+possible).
+Refer to Drawing DR1 enclosed in Appendix-B, for illustration proposed development
+drainage scheme.
+Furthermore, from the topographical survey contours observation, it is evident that the
+proposed development receives external drainage from lands to the north of the subject
+site. Drainage from this external area which is estimated to be 15.10 ha is tributary to
+existing watercourse that traverses the subject site.
+As part the proposed development, Street ‘A’ crosses the existing watercourse and
+therefore, a drainage culvert is proposed to safely convey flows to downstream
+receiving system. Proposed culvert is sized to convey 25-year event flows. Total flow to
+be conveyed by the proposed 1.22 x 0.610 m box culvert is calculated as follows:
+Total flow = External flows+ internal flows
+External
+Q
+Where:
+Q
+C
+I
+A
+C
+I
+
+= CIA
+= Design flow (m3/sec)
+= Runoff coefficient
+= Rainfall intensity (mm/hour)
+= Contributing drainage area (ha)
+= 0.30
+= a/ (t+c)b (a=3158, b=0.9335, c=15)
+
+Masongsong Associates Engineering Limited
+
+5
+
+Functional Servicing & SWM Report
+Palgrave Estate Subdivision, Town of Caledon
+
+t
+I
+A
+Q (25-y)
+
+October 2019
+
+= 85.80 min (Calculated by Airport Formula method see detailed
+calculation in Appendix-C-)
+=3158/ (85.80+15)0.9335
+= 42.58 mm/hour
+= 10.77 ha (external drainage Area)
+= (0.3) x (42.58) x (10.77) /360
+=0.38 m3/s
+
+Internal
+Q
+Where:
+C
+I
+t
+I
+A
+Q (25-y)
+Q
+Where:
+C
+I
+t
+I
+A
+(25-y)
+
+= CIA
+= 0.30
+= a/ (t+c)b (a=3158, b=0.9335, c=15)
+= 85.80 min (Calculated by Airport Formula method see detailed
+calculation in Appendix-C)
+=3158/ (85.80+15)0.9335
+= 42.58 mm/hour
+= 21.32 ha
+= (0.30) x (42.58) x (2.32) /360
+=0.76 m3/s
+= CIA
+= 0.50
+= a/ (t+c)b (a=3158, b=0.9335, c=15)
+= 85.80 min (Calculated by Airport Formula method see detailed
+calculation in Appendix-C)
+=3158/ (85.80+15)0.9335
+= 42.87 mm/hour
+= 4.42 ha (Proposed streets) Q
+= (0.5) x (42.58) x (4.42) /360
+=0.26 m3/s
+
+Total flows to culvert= 1.40 m3/s (0.38+0.76+0.26)
+Proposed culvert is sized to covey the flows at about 75 % full flow capacity. Proposed
+culvert full flows capacity is 1.51 m3/s larger than the required flow of 1.40 m3/s.
+Refer to in Appendix-C for Discharge/velocity Curve for Box Culvert design for detailed
+calculations.
+Drainage tributary to existing watercourse downstream of the proposed culvert is
+calculated as follows:
+
+Masongsong Associates Engineering Limited
+
+6
+
+Functional Servicing & SWM Report
+Palgrave Estate Subdivision, Town of Caledon
+
+Q
+Where:
+C
+I
+t
+I
+A
+Q (25-y)
+
+October 2019
+
+= CIA
+= 0.30
+= a/ (t+c)b (a=3158, b=0.9335, c=15)
+= 85.80 min (Calculated by Airport Formula method see
+detailed calculation in Appendix-C)
+=3158/ (85.80+15)0.9335
+= 42.58 mm/hour
+= 4.75 ha
+= (0.30) x (42.58) x (4.75) /360=0.17 m3/s
+
+The total drainage downstream of culvert is calculated to be 1.57 m3/s (1.40+0.17).
+The downstream segment of existing watercourse to be modified to 20.00m wide
+watercourse with min. depth of 0.35m for sufficient conveyance capacity to convey
+post-development flows to existing conveyance system beyond the limits of the
+proposed development. The flows from 25-year event tributary to downstream
+segment of watercourse is calculated to be 1.57 m3/s and the watercourse conveyance
+capacity is 1.70 m3/s. Refer to Appendix-C for watercourse generalized cross-section
+capacity analysis calculations
+3.2
+
+Water Quality
+Proposed Enhanced Grass Swale as roadside ditches not only convey and attenuate
+stormwater runoff it also provides effective quality control functionality. To this end,
+the proposed enhanced grass swale along proposed municipal roads provide quality
+treatment for stormwater runoff from roads. Road drainage is directed to enhanced
+grass swale by providing gutter outlets at certain interval which will convey road
+drainage to enhanced grass swale.
+Detailed design of Enhanced Grass Swale will be provided at detailed design stages.
+Typical detail of enhanced grass swale is shown on Drawing DR1 enclosed in AppendixB of this report.TRCA standard Enhanced Grass Swale detail is enclosed in Appendix-A
+for reference.
+
+3.3
+
+Water Balance
+No significant changes to overall water balance essential components are expected due
+to proposed development. As such, the impact of proposed lot development on water
+balance was considered minor in nature. Nonetheless, the recommended LIDs
+mitigation measures (to offset the loss of infiltration from rooftop and paved areas) is
+to direct rooftops and driveways drainage to grassed areas where natural infiltration of
+runoff can occur. The implementation of LIDs measures are possible during proposed
+lots detailed design at permitting stages.
+Masongsong Associates Engineering Limited
+
+7
+
+Functional Servicing & SWM Report
+Palgrave Estate Subdivision, Town of Caledon
+
+3.4
+
+October 2019
+
+Sedimentation and Erosion Control During Construction
+On-site erosion and sediment control should be implemented for all construction
+activities within the subject site, and for each consecutive stages of construction,
+including earthworks, servicing and building activities. Erosion and sedimentation
+control BMP is to be designed in accordance with TRCA Sedimentation Control
+Guidelines for Urban Construction (2006).
+The basic principles to be considered for minimizing erosion, sedimentation, and
+resultant negative environmental impacts include:
+•
+
+Minimize local disturbance activities (e.g. grading);
+
+•
+
+Expose the smallest possible land area to erosion for the shortest possible time;
+
+•
+
+Implement erosion and sediment control measures before the outset of
+construction activities; and,
+
+•
+
+Carry out regular inspections of erosion and sediment control measures and
+repair or maintain as necessary;
+
+•
+
+Erect sediment control fence around site perimeters;
+
+•
+
+Install sediment control fence around site perimeters existing wetlands;
+
+•
+
+Provide sediment traps (e.g. rock check dams, straw bales, scour basins) along
+interceptor swales and points of swale discharge;
+
+•
+
+Provide gravel “mud mats” at construction vehicle access points to minimize offsite tracking of sediments; and,
+
+•
+
+Confine refueling/servicing equipment to areas well away from inlets to the
+minor system or major system elements.
+
+•
+
+Remove erosion and sediment controls once construction is completed and
+sediment run-off from the construction activities has stabilized.
+
+Refer to Appendix-B, Drawing EC1 for Erosion and Sedimentation Control plan.
+4
+
+LANDFORM AND GRADING
+Effort is made to preserves the existing landform and grades to the extent possible.
+To achieve this, proposed lot grading boundaries and corner grades matches
+existing grades minimizing any grading disturbances along proposed lot boundaries.
+Typically, main grading will be within/around the proposed house envelope and
+driveways.
+Typical house envelop and septic system for individual lots are shown within areas
+where slopes are minimum to avoid major landform alteration. However, more
+detail grating will require coordination with site architect at detailed lot grading
+design stages and the house can be designed/tailored to better fit to existing
+landform to minimize grading works.
+Refer to Drawing GR1 enclosed in Appendix-B for conceptual grading plan.
+Masongsong Associates Engineering Limited
+
+8
+
+Functional Servicing & SWM Report
+Palgrave Estate Subdivision, Town of Caledon
+
+October 2019
+
+Appendix A
+
+Masongsong Associates Engineering Limited
+
+GENERAL DESCRIPTION
+
+Source: Thomas Engineering
+
+Source: Seattle Public Utilities
+
+ABILITY TO MEET SWM OBJECTIVES
+
+Where development density, topography and depth to water table permit,
+enhanced grass swales are a preferred alternative to both curb and gutter
+and storm drains as a stormwater conveyance system. When incorporated
+into a site design, they can reduce impervious cover, accent the natural
+landscape, and provide aesthetic benefits.
+
+Water Balance Water Quality
+Benefit
+Improvement
+
+Enhanced
+Grass Swale
+
+Partial – depends Yes, if design velocity Partial – depends
+on soil infiltration is 0.5 m/s or less for
+on soil infiltration
+rate
+a 4 hour, 25 mm
+rate
+Chicago storm
+
+GEOMETRY AND SITE LAYOUT
+
+•
+
+Shape: Should be designed with a trapezoidal or parabolic cross
+section. Trapezoidal swales will generally evolve into parabolic
+swales over time, so the initial trapezoidal cross-section design
+should be checked for capacity and conveyance assuming it is
+a parabolic cross-section. Swale length between culverts should
+be 5 metres or greater.
+
+Longitudinal Slope: Slopes should be between 0.5% and 4%.
+Check dams should be incorporated on slopes greater than 3%.
+
+•
+
+Length: When used to convey and treat road runoff, the length
+simply parallels the road, and therefore should be equal to, or
+greater than the contributing roadway length.
+
+•
+
+Flow Depth: A maximum flow depth of 100 mm is recommended
+during a 4 hour, 25 mm Chicago storm event.
+
+•
+
+Side Slopes: Should be as flat as possible to aid in providing pretreatment for lateral incoming flows and to maximize the swale
+filtering surface. Steeper side slopes are likely to have erosion
+gullying from incoming lateral flows. A maximum slope of 2.5:1
+(H:V) is recommended and a 4:1 slope is preferred where space
+permits.
+
+PLAN VIEW OF A GRASS SWALE
+
+Component
+
+Specification
+
+Quantity
+
+Check Dams
+
+Constructed of a non-erosive
+material such as suitably sized aggregate, wood, gabions, riprap, or
+concrete. All check dams should
+be underlain with geotextile filter
+fabric.
+
+Spacing should
+be based on the
+longitudinal slope
+and desired ponding
+volume.
+
+SOIL AMENDMENTS
+If soils along the location of the swale are highly compacted, or of
+such low fertility that vegetation cannot become established, they
+should be tilled to a depth of 300 mm and amended with compost
+to achieve an organic content of 8 to 15% by weight or 30 to 40% by
+volume.
+
+Site topography constrains the
+application of grass swales. Longitudinal slopes between 0.5 and
+6% are allowable. This prevents
+ponding while providing residence
+time and preventing erosion. On
+slopes steeper than 3%, check
+dams should be used.
+
+Drainage Area & Runoff
+Volume
+The conveyance capacity should
+match the drainage area. Sheet
+flow to the grass swale is preferable. If drainage areas are greater
+than 2 hectares, high discharge
+through the swale may not allow
+for filtering and infiltration, and
+may create erosive conditions.
+Typical ratios of impervious drainage area to treatment facility area
+range from 5:1 to 10:1.
+
+Gravel
+Diaphragm
+
+Washed stone between 3 and 10
+mm in diameter.
+
+Soil
+Grass swales can be applied on
+sites with any type of soils.
+
+Minimum of 300 mm
+wide and 600 mm
+deep.
+
+Pollution Hot Spot Runoff
+To protect groundwater from possible contamination, source areas
+where land uses or human activities have the potential to generate
+highly contaminated runoff (e.g.,
+vehicle fueling, servicing and demolition areas, outdoor storage
+and handling areas for hazardous
+materials and some heavy industry sites) should not be treated by
+grass swales.
+
+CONSTRUCTION CONSIDERATIONS
+Grass swales should be clearly marked before site work begins to avoid
+disturbance during construction. No vehicular traffic, except that specifically used to construct the facility, should be allowed within the swale site.
+Any accumulation of sediment that does occur within the swale must be
+removed during the final stages of grading to achieve the design cross-section. Final grading and planting should not occur until the adjoining areas
+draining into the swale are stabilized. Flow should not be diverted into the
+swale until the banks are stabilized.
+
+PLAN AND PROFILE VIEWS
+
+Preferably, the swale should be planted in the spring so that the vegetation
+can become established with minimal irrigation. Installation of erosion control matting or blanketing to stabilize soil during establishment of vegetation
+is highly recommended. If sod is used, it should be placed with staggered
+ends and secured by rolling the sod. This helps to prevent gullies.
+
+CONVEYANCE AND OVERFLOW
+Grass swales must be designed for a maximum velocity of 0.5 m/s
+or less for the 4 hour 25 mm Chicago storm event. The swale should
+also convey the locally required design storm (usually the 10 year
+storm) at non-erosive velocities.
+
+Site Topography
+
+Wood used for check dams should
+consist of pressure treated logs
+or timbers, or water-resistant tree
+species such as cedar, hemlock,
+swamp oak or locust.
+
+PRE-TREATMENT
+A pea gravel diaphragm located along the top of each bank can be
+used to provide pretreatment of any runoff entering the swale laterally
+along its length. Vegetated filter strips or mild side slopes (3:1) also
+provide pretreatment for any lateral sheet flow entering the swale.
+Sedimentation forebays at inlets to the swale are also a pretreatment
+option.
+
+Grass swales usually consume
+about 5 to 15% of their contributing
+drainage area. A width of at least 2
+metres is needed.
+
+Stream Channel
+Erosion Control
+Benefit
+
+GENERAL SPECIFICATIONS
+
+Bottom Width: Should be designed with a bottom width between
+0.75 and 3.0 metres. Should allow for shallow flows and adequate water quality treatment, while preventing flows from concentrating and creating gullies.
+
+•
+
+SITE CONSIDERATIONS
+Available Space
+
+BMP
+
+DESIGN GUIDANCE
+
+•
+
+Source: CWP
+
+Source: Sue Donaldson
+
+OPERATION AND MAINTENANCE
+Generally, routine maintenance will be the same as for any other landscaped area;
+weeding, pruning, and litter removal. Grassed swales should be mown at least twice
+yearly to maintain grass height between 75 and 150 mm. The lightest possible mowing equipment should be used to prevent soil compaction. Routine roadside ditch
+maintenance practices such as scraping and re-grading should be avoided. Regular
+watering may be required during the first two years until vegetation is established.
+Routine inspection is very important to ensure that dense vegetation cover is maintained and inlets and pretreatment devices are free of debris.
+
+For the first two years following construction the swale should be inspected at
+least quarterly and after every major storm event (> 25 mm). Subsequently,
+inspections should be conducted in the spring and fall of each year and after
+major storm events. Inspect for vegetation density (at least 80% coverage),
+damage by foot or vehicular traffic, accumulation of debris, trash and sediment,
+and structural damage to pretreatment devices.
+
+U
+
+Proximity to Underground
+Utilities
+Utilities running parallel to the
+grass swale should be offset from
+the centerline of the swale. Underground utilities below the bottom of
+the swale are not a problem.
+
+Water Table
+The bottom of the swale should be
+separated from the seasonally high
+water table or top of bedrock elevation by at least one (1) metre.
+
+Setback from Buildings
+Should be located a minimum of
+four (4) metres from building foundations to prevent water damage.
+
+ENHANCED GRASS SWALES
+
+Source: Delaware Department of Transportation
+
+CVC/TRCA LOW IMPACT DEVELOPMENT
+PLANNING AND DESIGN GUIDE - FACT SHEET
+
+Enhanced grass swales are vegetated open channels designed to convey, treat and attenuate stormwater runoff (also referred to as enhanced
+vegetated swales). Check dams and vegetation in the swale slows the water to allow sedimentation, filtration through the root zone and soil matrix,
+evapotranspiration, and infiltration into the underlying native soil. Simple
+grass channels or ditches have long been used for stormwater conveyance, particularly for roadway drainage. Enhanced grass swales incorporate design features such as modified geometry and check dams that
+improve the contaminant removal and runoff reduction functions of simple
+grass channel and roadside ditch designs.
+
+Trash and debris should be removed from pretreatment devices and the surface of the swale at least twice annually. Other maintenance activities include
+weeding, replacing dead vegetation, repairing eroded areas, dethatching and
+aerating as needed. Remove accumulated sediment on the swale surface
+when dry and exceeding 25 mm depth.
+FOR FURTHER DETAILS SEE SECTION 4.8 OF THE CVC/TRCA LID SWM GUIDE
+
+Design Charts
+
+Design Chart 4.19: Inlet Capacity at Road Sag
+
+103
+
+Functional Servicing & SWM Report
+Palgrave Estate Subdivision, Town of Caledon
+
+October 2019
+
+Appendix B
+
+Masongsong Associates Engineering Limited
+
+Functional Servicing & SWM Report
+Palgrave Estate Subdivision, Town of Caledon
+
+October 2019
+
+Appendix C
+
+Masongsong Associates Engineering Limited
+
+Watermain Analysis
+
+Project:
+
+Palgrave Estate Subdivsion
+
+Client:
+
+Casltemore Corp
+
+Location:
+
+Town of Caledon
+
+Date of Test:
+
+11-Oct-19
+
+Operator:
+
+Hydratest
+
+Design demands
+A
+
+Average Daily Consumption
+
+409 l/c/d
+
+B
+
+Max. Daily Demand (Ax2)
+
+818 l/c/d
+
+C
+
+Max. Hour Demand (Ax3)
+
+1,227 l/c/d
+
+D
+
+Min. Hour Demand (Ax0.7)
+
+286 l/c/d
+
+Peak Demands
+E
+
+Equivalent Population (10 persons/ha) for 31 ha
+
+310 Persons
+
+F
+
+Average Daily Consumption (AxF/86,400)
+
+1.47 l/s
+
+G
+
+Max. Daily Demand (BxF/86,400)
+
+2.93 l/s
+
+I
+
+Max. Hour Demand (CxF/86,400)
+
+4.40 l/s
+
+J
+
+Min. Hour Demand (ExF/86,400)
+
+1.03 l/s
+
+Hydrant Flow Test Info
+Mount Hope Road
+K
+
+Pressure (Ex-hydrant static pressure field test)
+
+83.00 psi
+
+L
+
+Ex-hydrant static pressure head (Kx6.89476/9.81)
+
+58.33 m
+
+M
+
+Elevation (Ex-Hydrant top elevation)
+
+301.30 m
+
+N
+
+Total head at Ex-hydrant (L+M)
+
+359.63 m
+
+Barbara Place
+K
+
+Pressure (Ex-hydrant static pressure field test)
+
+86.00 psi
+
+L
+
+Ex-hydrant static pressure head (Kx6.89476/9.81)
+
+60.44 m
+
+M
+
+Elevation (Ex-Hydrant top elevation)
+
+306.00 m
+
+N
+
+Total head at Ex-hydrant (L+M)
+
+366.44 m
+
+Fire Flow Demand per Region Design Criteria
+O
+Min. Residential fire flow (7,000 l/min)
+P
+Max. day demand plus fire flow (G+O)
+
+116.67 l/s
+119.60 l/s
+
+EPANET 2 Modeling (input)
+1
+Total head at Ex-hydrant
+2
+Existing Main size
+3
+Roughness
+
+359.63 m
+150-300 mm
+100-110
+
+Region Criteria for Max/Min Pressures
+1
+Maximum pressure during the min. hour demand (kpa)
+2
+Minimum pressure during max. hour demand
+3
+Minimum pressure during max. day demand plus fire flow
+
+690.00 kpa (100 psi)
+275.00 kpa (40 psi)
+140.00 kpa (20 psi)
+
+EPANET 2 pressure calculations (modeling output)
+Maximum pressure during the min. hour demand (kpa)
+1
+or
+2
+
+Minimum pressure during max. hour demand
+
+3
+
+Minimum pressure during max. day demand plus fire flow
+
+or
+or
+Conclusion
+1
+Maximum pressure during the min. hour demand (kpa)
+2
+3
+
+Minimum pressure during max. hour demand
+Minimum pressure during max. day demand plus fire flow
+
+64.17 m (node 4)
+629.12 kpa
+58.19 m (node 5)
+570.49 kpa
+24.69 m (node 3)
+242.06 kpa
+629 < 690 (Ok)
+570 > 275 (ok)
+242 > 140 (ok)
+
+Day 1, 1
+
+1
+
+3
+
+2
+
+4
+
+VSB-R
+
+5
+6
+5
+
+LC-R
+
+EPANET 2
+
+1
+
+2
+
+3
+
+4
+
+Page 1
+
+Page 1
+2019-10-11 5:39:15 PM
+**********************************************************************
+*
+E P A N E T
+*
+*
+Hydraulic and Water Quality
+*
+*
+Analysis for Pipe Networks
+*
+*
+Version 2.0
+*
+**********************************************************************
+Input File: Minimum Hour Demand
+
+Link - Node Table:
+---------------------------------------------------------------------Link
+Start
+End
+Length Diameter
+ID
+Node
+Node
+m
+mm
+---------------------------------------------------------------------2
+1
+2
+332.659
+200
+1
+LC-R
+2
+108.97
+200
+4
+3
+4
+219.871
+200
+3
+2
+4
+358.773
+200
+5
+4
+5
+263
+200
+6
+5
+VSB-R
+200
+200
+Node Results:
+---------------------------------------------------------------------Node
+Demand
+Head Pressure
+Quality
+ID
+LPS
+m
+m
+---------------------------------------------------------------------1
+1.03
+360.21
+58.96
+0.00
+2
+1.03
+360.21
+61.46
+0.00
+3
+1.03
+362.41
+63.58
+0.00
+4
+4.40
+362.41
+64.17
+0.00
+5
+1.03
+364.65
+58.65
+0.00
+LC-R
+26.36
+359.63
+0.00
+0.00 Reservoir
+VSB-R
+-34.88
+366.44
+0.00
+0.00 Reservoir
+Link Results:
+---------------------------------------------------------------------Link
+Flow VelocityUnit Headloss
+Status
+ID
+LPS
+m/s
+m/km
+---------------------------------------------------------------------2
+-1.03
+0.03
+0.01
+Open
+1
+-26.36
+0.84
+5.34
+Open
+4
+-1.03
+0.03
+0.01
+Open
+3
+-28.42
+0.90
+6.14
+Open
+5
+-33.85
+1.08
+8.49
+Open
+6
+-34.88
+1.11
+8.97
+Open
+
+Page 1
+2019-10-11 5:31:51 PM
+**********************************************************************
+*
+E P A N E T
+*
+*
+Hydraulic and Water Quality
+*
+*
+Analysis for Pipe Networks
+*
+*
+Version 2.0
+*
+**********************************************************************
+Input File: Maximum Day Demand plus Fire
+
+Link - Node Table:
+---------------------------------------------------------------------Link
+Start
+End
+Length Diameter
+ID
+Node
+Node
+m
+mm
+---------------------------------------------------------------------2
+1
+2
+332.659
+200
+1
+LC-R
+2
+108.97
+200
+4
+3
+4
+219.871
+200
+3
+2
+4
+358.773
+200
+5
+4
+5
+263
+200
+6
+5
+VSB-R
+200
+150
+Node Results:
+---------------------------------------------------------------------Node
+Demand
+Head Pressure
+Quality
+ID
+LPS
+m
+m
+---------------------------------------------------------------------1
+2.93
+355.24
+54.00
+0.00
+2
+2.93
+355.27
+56.52
+0.00
+3
+119.60
+323.52
+24.69
+0.00
+4
+2.93
+342.85
+44.61
+0.00
+5
+2.93
+347.48
+41.48
+0.00
+LC-R
+-78.18
+359.63
+0.00
+0.00 Reservoir
+VSB-R
+-53.14
+366.44
+0.00
+0.00 Reservoir
+Link Results:
+---------------------------------------------------------------------Link
+Flow VelocityUnit Headloss
+Status
+ID
+LPS
+m/s
+m/km
+---------------------------------------------------------------------2
+-2.93
+0.09
+0.09
+Open
+1
+78.18
+2.49
+40.00
+Open
+4
+-119.60
+3.81
+87.90
+Open
+3
+72.32
+2.30
+34.63
+Open
+5
+-50.21
+1.60
+17.62
+Open
+6
+-53.14
+3.01
+94.79
+Open
+
+Page 1
+2019-10-11 5:46:14 PM
+**********************************************************************
+*
+E P A N E T
+*
+*
+Hydraulic and Water Quality
+*
+*
+Analysis for Pipe Networks
+*
+*
+Version 2.0
+*
+**********************************************************************
+Input File: Peak Hour Demand
+
+Link - Node Table:
+---------------------------------------------------------------------Link
+Start
+End
+Length Diameter
+ID
+Node
+Node
+m
+mm
+---------------------------------------------------------------------2
+1
+2
+332.659
+200
+1
+LC-R
+2
+108.97
+200
+4
+3
+4
+219.871
+200
+3
+2
+4
+358.773
+200
+5
+4
+5
+263
+200
+6
+5
+VSB-R
+200
+200
+Node Results:
+---------------------------------------------------------------------Node
+Demand
+Head Pressure
+Quality
+ID
+LPS
+m
+m
+---------------------------------------------------------------------1
+4.40
+359.84
+58.59
+0.00
+2
+4.40
+359.90
+61.15
+0.00
+3
+4.40
+361.76
+62.93
+0.00
+4
+4.40
+361.80
+63.56
+0.00
+5
+4.40
+364.19
+58.19
+0.00
+LC-R
+17.46
+359.63
+0.00
+0.00 Reservoir
+VSB-R
+-39.46
+366.44
+0.00
+0.00 Reservoir
+Link Results:
+---------------------------------------------------------------------Link
+Flow VelocityUnit Headloss
+Status
+ID
+LPS
+m/s
+m/km
+---------------------------------------------------------------------2
+-4.40
+0.14
+0.19
+Open
+1
+-17.46
+0.56
+2.49
+Open
+4
+-4.40
+0.14
+0.19
+Open
+3
+-26.26
+0.84
+5.30
+Open
+5
+-35.06
+1.12
+9.06
+Open
+6
+-39.46
+1.26
+11.27
+Open
+
+Discharge/Velocity Curve for Box Culverts
+Span =
+Rise =
+Haunch V =
+Haunch H =
+
+1.220
+0.610
+0.200
+0.200
+
+m
+m
+m
+m
+
+Slope =
+Manning's n =
+Sections =
+
+0.0050
+0.013
+1.000
+
+Wetted
+Perimeter
+(m)
+
+Waterway
+Area
+(m2)
+
+Hydraulic
+Radius
+(m)
+
+0.000
+0.040
+
+0.8200
+0.9331
+
+0.0000
+0.0344
+
+0.0000
+0.0369
+
+0.0000
+0.6025
+
+0.0000
+0.02
+
+0.080
+0.120
+0.160
+0.200
+0.221
+0.242
+0.263
+0.284
+0.305
+0.326
+0.347
+0.368
+0.389
+0.410
+0.430
+0.450
+0.470
+0.490
+0.510
+0.530
+0.550
+0.570
+0.590
+0.610
+
+1.0463
+1.1594
+1.2725
+1.3857
+1.4277
+1.4697
+1.5117
+1.5537
+1.5957
+1.6377
+1.6797
+1.7217
+1.7637
+1.8057
+1.8623
+1.9188
+1.9754
+2.0320
+2.0885
+2.1451
+2.2017
+2.2582
+2.3148
+3.1914
+
+0.0720
+0.1128
+0.1568
+0.2040
+0.2296
+0.2552
+0.2809
+0.3065
+0.3321
+0.3577
+0.3833
+0.4090
+0.4346
+0.4602
+0.4842
+0.5074
+0.5298
+0.5514
+0.5722
+0.5922
+0.6114
+0.6298
+0.6474
+0.6642
+
+0.0688
+0.0973
+0.1232
+0.1472
+0.1608
+0.1737
+0.1858
+0.1973
+0.2081
+0.2184
+0.2282
+0.2375
+0.2464
+0.2549
+0.2600
+0.2644
+0.2682
+0.2714
+0.2740
+0.2761
+0.2777
+0.2789
+0.2797
+0.2081
+
+0.9134
+1.1506
+1.3469
+1.5165
+1.6086
+1.6931
+1.7710
+1.8432
+1.9102
+1.9728
+2.0313
+2.0862
+2.1378
+2.1865
+2.2158
+2.2409
+2.2621
+2.2799
+2.2945
+2.3062
+2.3152
+2.3218
+2.3262
+1.9102
+
+0.07
+0.13
+0.21
+0.31
+0.37
+0.43
+0.50
+0.56
+0.63
+0.71
+0.78
+0.85
+0.93
+1.01
+1.07
+1.14
+1.20
+1.26
+1.31
+1.37
+1.42
+1.46
+1.51
+1.27
+
+Depth of
+Flow
+(m)
+
+0.000
+Step = 0.040
+
+0.200
+
+Step = 0.021
+
+0.410
+
+Step = 0.020
+
+0.610
+
+m/m
+
+Velocity Capacity
+V
+Q
+(m/s)
+(m3/s)
+
+3
+Discharge
+Velocity
+
+2
+2
+1
+1
+0
+0.00
+
+0.10
+
+0.20
+
+0.30
+
+0.40
+
+0.50
+
+0.60
+
+0.70
+
+Depth of Flow (m)
+
+Masongsong Associates Engineering Limited
+
+g:\design-aids\18951 BoxCulvert.xls
+
+Calculation of Time of Concentration
+Airport Formula
+For watersheds where the runoff coefficient, C, is less than 0.40, the Airport formula gives a better
+estimate of tc. This method was developed for airfields and is expressed as follows:
+tc = 3.26 * (1.1 - C) * L0.5
+S w0.33
+where:
+tc = time of concentration, min
+C = runoff coefficient
+Sw = watershed slope, %
+L = watershed length, m
+
+Estimate the time of concentration, tc, is 85.80 min per the following calculations:
+Given
+C = 0.30
+Sw = 0.5%
+L = 685 m
+Solution
+Airport Formula; recommended when C = 0.3:
+tc =
+
+3.26 * (1.1 - C) * L0.5
+Sw0.33
+
+tc = 3.26 * (1.1 - 0.30) * 6850.5
+0.50.33
+= 85.80 min
+
+Generalized Channel Capacity Analysis
+Watercourse
+Top Width:
+
+20.00 m
+
+Bottom Width:
+
+0.00 m
+
+Channel Roughness:
+
+0.050 Manning n
+
+Longitudinal Slope:
+
+0.0060 m/m
+
+Side Slope:
+Side Slope Roughness:
+Side slope Width:
+
+0.035 m/m
+0.050 Manning n
+10.00 m
+
+Graph Exageration:
+
+5.00 Vertical
+
+Max Depth of Flow
+
+350 mm
+
+Max Flow Capacity Provided
+
+1.70 m /s
+
+25 Y Flow Capacity Required
+
+3
+1.57 m /s
+
+Sample Section Plot…
+
+Case 4: Open Channel
+
+3
+
+Cross-Section Rating Curve
+Flow and Velocity
+1.800
+
+1.600
+
+0.600
+
+Q
+
+0.500
+
+V
+
+0.400
+
+Flow, Q (m3/s)
+
+1.200
+
+1.000
+0.300
+0.800
+
+0.200
+
+Average Velocity, V (m/s)
+
+1.400
+
+0.600
+
+0.400
+
+0.100
+
+0.200
+0.000
+-0.050
+0.000
+
+0.050
+
+0.100
+
+0.150
+
+0.200
+
+-0.200
+
+0.250
+
+0.300
+
+0.350
+
+0.400
+(0.100)
+
+Depth (m)
+
+pvmtflow.xls / Summary
+
+1 / 1
+
+Printed: 2019-11-18 / 5:43 PM
+
+Markham Head Office
+7800 Kennedy Road, Suite 201
+Markham, Ontario
+L3R 2C7
+T: (905) 944-0162
+F: (905) 944-0165
+W: www.maeng.ca
+
+

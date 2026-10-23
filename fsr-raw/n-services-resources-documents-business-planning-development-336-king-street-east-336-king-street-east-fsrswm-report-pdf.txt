@@ -1,0 +1,4684 @@
+ENGINEERING
+
+SURVEYING
+
+PLANNING
+
+ARCHITECTURE
+
+336 KINGS RIDGE INC.
+336 King Street East, Caledon, ON
+Functional Servicing and Stormwater Management Report
+Project No. 17-1419
+September 28, 2018
+Aplin & Martin Consultants Ltd.
+
+336 KING STREET, TOWN OF CALEDON
+PREPARED FOR: 336 KINGS RIDGE INC.
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT REPORT
+
+Statement of Limitations
+Aplin & Martin Consultants Ltd. prepared this report for the Town of Caledon.
+The material in this report reflects the best judgment of Aplin & Martin Consultants Ltd.
+in the light of the information available at the time of preparation. Any use of, or reliance
+placed upon, the material contained in this report by third parties, or decisions based
+upon this report are the sole responsibility of those third parties. Aplin & Martin
+Consultants Ltd. accepts no responsibility for damages suffered by any third parties as
+a result of decisions made, or actions taken, based upon information contained within
+this report.
+
+APLIN & MARTIN CONSULTANTS LTD.
+PROJECT NO. 17-1419
+
+PAGE 2
+SEPTEMBER 28, 2018
+
+336 KING STREET, TOWN OF CALEDON
+PREPARED FOR: 336 KINGS RIDGE INC.
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT REPORT
+
+TABLE OF CONTENTS
+1.0
+
+Introduction ................................................................
+................................................................................................
+...........................................................................................
+........................................................... 4
+
+2.0
+
+Site Conditions ................................................................
+................................................................................................
+......................................................................................
+...................................................... 5
+
+2.1. Existing Site Conditions .......................................................................................................... 5
+2.2. Proposed Site Conditions ...................................................................................................... 5
+3.0 Domestic and firefighting Water Supply ................................................................
+....................................................................
+.................................... 5
+3.1. Existing Water Supply ............................................................................................................. 5
+3.2. Proposed Water Supply ......................................................................................................... 5
+4.0 Sanitary Servicing ................................................................
+................................................................................................
+................................................................................
+................................................6
+4.1. Existing Sanitary Servicing.................................................................................................... 6
+4.2. Proposed Sanitary Servicing ................................................................................................ 6
+5.0 Stormwater Management ................................................................
+................................................................................................
+.................................................................
+................................. 7
+5.1. Design Criteria ............................................................................................................................. 7
+5.2. Quantity Control......................................................................................................................... 7
+5.2.1. Existing Conditions .................................................................................................................................... 7
+5.2.2. Proposed Conditions ................................................................................................................................ 8
+
+5.3.
+5.4.
+5.5.
+5.6.
+6.0
+
+Water Balance / Erosion Control ....................................................................................... 8
+Quality Control ............................................................................................................................ 9
+Erosion and Sediment Control ............................................................................................ 9
+Proposed Storm Discharge Location .............................................................................. 9
+Conclusions and Recommendations ................................................................
+..........................................................................
+.......................................... 10
+
+APPENDICES
+Appendix A – Supporting Documentation
+Appendix B – Water Supply Design
+Appendix C – Sanitary Design
+Appendix D – Stormwater Management Design
+Appendix E – Engineering Plans
+
+FIGURES
+Figure 1: Aerial View (Source: Google Maps Imagery 2018 ……………………………….……. 4
+TABLES
+Table 1: Pre-development input parameters ........................................................................... 7
+Table 2: Post-Development Storage/Discharge Summary.............................................. 8
+
+APLIN & MARTIN CONSULTANTS LTD.
+PROJECT NO. 17-1419
+
+PAGE 3
+SEPTEMBER 28, 2018
+
+336 KING STREET, TOWN OF CALEDON
+PREPARED FOR: 336 KINGS RIDGE INC.
+
+1.0
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT REPORT
+
+INTRODUCTION
+
+Aplin Martin has been retained by 336 Kings Ridge Inc. to prepare a Functional
+Servicing Report and Stormwater Management Report (FSR & SWM) in support of a
+private 16-unit townhouse development. The proposed 0.26 ha site is located in the
+Humber River watershed within the Toronto and Region Conservation Authority
+(TRCA) jurisdiction.
+This report has been prepared in support of a Site Plan Application to assess and
+demonstrate that the proposed development can be sustained by the existing
+municipal infrastructure. It contains a SWM section that identifies the SWM design
+details by quantifying the erosion, water balance and quality control measures
+employed, in accordance with the applicable guidelines.
+
+Figure 1: – Aerial View (Source: Google Maps Imagery 2017)
+
+APLIN & MARTIN CONSULTANTS LTD.
+PROJECT NO. 17-1419
+
+PAGE 4
+SEPTEMBER 28, 2018
+
+336 KING STREET, TOWN OF CALEDON
+PREPARED FOR: 336 KINGS RIDGE INC.
+
+2.0
+
+SITE CONDITIONS
+
+2.1.
+
+Existing Site Conditions
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT REPORT
+
+The site is currently occupied by one detached residential building with a paved
+roundabout driveway that provides access to King Street East. The subject lands are
+bound by King Street East to the north, existing residential developments to the east
+and west, and the Humber River to the south. Given the site’s close proximity to the
+Humber River, the southern portion of the site is encroached by the regional floodplain.
+Refer to Figure 1 for an aerial photo of the site under current conditions and
+Appendix A for the site’s topographic survey.
+Although two storm sewer networks exist on King Street East, the existing
+development is not serviced by these networks. A small portion of the site drains
+towards King Street East with the remainder of the runoff being conveyed in a southwesterly direction towards the Humber River.
+
+2.2.
+
+Proposed Site Conditions
+
+The subject site consists of two townhouse blocks totaling sixteen (16) units. Each row
+consists of 8, 4-storey units complete with private driveways and rear lots.
+The proposed development is equipped with a dead-end private condominium laneway
+providing access to King Street East. All townhouse units will have at-grade parking
+and landscape features. A total of 3 visitor parking stalls are proposed and one garbage
+truck loading area along the east limit of the proposed roadway. Refer to Appendix A
+for the site plan prepared by Kirkor Architects + Planners.
+
+3.0
+
+DOMESTIC AND FIREFIGHTING WATER SUPPLY
+
+3.1.
+
+Existing Water Supply
+
+Domestic water supply is provided to the site by an existing 150 mm diameter
+watermain located within the south boulevard of King Street East. An existing fire
+hydrant is located approximately 50 m to the west of the proposed entrance to the
+subject site.
+
+3.2.
+
+Proposed Water Supply
+
+The design of the proposed watermain within the road allowance will be in accordance
+with the Region of Peel Standards and specification. A proposed 150 mm diameter
+watermain connection to the municipal main will provide domestic and firefighting
+supply to the proposed residential buildings. The water demands have been determined
+
+APLIN & MARTIN CONSULTANTS LTD.
+PROJECT NO. 17-1419
+
+PAGE 5
+SEPTEMBER 28, 2018
+
+336 KING STREET, TOWN OF CALEDON
+PREPARED FOR: 336 KINGS RIDGE INC.
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT REPORT
+
+in accordance with Region of Peel’s design criteria and as per the Fire Underwriter’s
+Survey (FUS) design criteria.
+The projected domestic water demand under maximum day and peak hour flows are
+estimated to be 0.28 L/s and 0.42 L/s,
+L/s respectively. Firefighting demands for the
+development are estimated to be 66.70 L/s.
+L/s Refer to Appendix B for the detailed
+calculations.
+Water metering shall be accomplished by private domestic water meters located in
+each unit of the two townhouse blocks. Each unit will be serviced via a private 50mm
+diameter water service connection. A fire hydrant and isolation valves are proposed at
+the end of the Road ‘A’ which will provide the required coverage to service the
+development. Refer to Appendix E for the Site Servicing drawing (17-1419-C03).
+Fire hydrant flow testing for this site using the nearest fire hydrants on King Street East.
+The King Street East results have determined that at a minimum pressure of 20 psi the
+theoretical flowrate within the municipal main is approximately 76.40 L/s.
+L/s.
+Therefore, there is sufficient flow to meet the fire flow demand for the proposed
+development. Refer to Appendix B for the Fire Hydrant Flow Test Report prepared by
+Jackson Waterworks.
+
+4.0
+
+SANITARY SERVICING
+
+4.1.
+
+Existing Sanitary Servicing
+
+Based on the as-built information provided by the Region of Peel, an existing 250 mm
+diameter sanitary sewer system is located within the north boulevard on King Street
+East and conveys flows in a westerly direction.
+
+4.2.
+
+Proposed Sanitary Servicing
+
+Sanitary servicing will be achieved by a 250 mm diameter regional sanitary within the
+road allowance and ultimately connecting to the existing sanitary sewer within King
+Street East. Each unit will be serviced via a 125mm diameter service connection at a
+minimum 1% slope. For details of the proposed sanitary sewer refer to Appendix D for
+the Sanitary Profile drawing (17-1419-C05).
+The peak sanitary flow from the subject site has been determined in accordance with
+the Region of Peel design guidelines, using the following design criteria:
+•
+•
+
+Domestic sewage flow of 302.8 L/cap/day for residential areas.
+Infiltration flow of 0.2 L/sec/ha.
+
+APLIN & MARTIN CONSULTANTS LTD.
+PROJECT NO. 17-1419
+
+PAGE 6
+SEPTEMBER 28, 2018
+
+336 KING STREET, TOWN OF CALEDON
+PREPARED FOR: 336 KINGS RIDGE INC.
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT REPORT
+
+The resulting peak residential sanitary discharge flow rate is estimated to be 0.66
+0.66 L/s.
+L/s
+Refer to Appendix C for the sewer design sheet.
+
+5.0
+
+STORMWATER MANAGEMENT
+
+5.1.
+
+Design Criteria
+
+Stormwater Management for the proposed development will be designed in
+accordance with the criteria outlined in the Town’s Stormwater Design Guidelines as
+well as those in the TRCA’s Stormwater Management Criteria. A summary of the
+Stormwater Management criteria applicable to this project follows:
+
+
+Quantity Control – Quantity controls are not required for this development
+if site flows discharge to the Humber River. However, the design proposes a
+connection to the King Street East storm sewer network a thus controls are
+proposed to achieve 100-year post-development flows to the 10-year
+pre-development levels.
+Water Balance - The TRCA requires the site to retain a minimum of 5 mm
+across the site area through infiltration, evapotranspiration or water re-use
+techniques.
+Erosion Control – As required for all watercourses within TRCA’s jurisdiction,
+the first 5mm of every storm event must be retained on-site.
+Quality Control–
+Control– The site shall treat stormwater runoff to enhanced level
+protection achieving 80% Total Suspended Solids (TSS) removal.
+
+
+
+
+
+5.2.
+
+Quantity Control
+
+5.2.1.
+
+Existing Conditions
+
+Under existing conditions, the site encounters split drainage with a portion of the site
+draining towards King Street East (A1 Pre) and the remainder towards the Humber
+River (A2 Pre). Rational method calculations were performed using the Township of
+Caledon’s intensity-duration-frequency (IDF) parameters to determine the target
+release rate for this development. Refer to Table 1 below for a summary of input
+parameters and target release rate established for the development.
+Drainage Area
+ID
+
+Area (ha)
+
+Runoff
+Coefficient
+
+Intensity
+(mm/hour)
+
+A1 Pre
+A2 Pre
+
+0.05
+0.20
+
+0.48
+0.32
+
+68.91
+
+10-Year Peak
+Flow Rate
+(L/s)
+7.9
+19.4
+
+Table 1: PrePre-development input parameters
+
+APLIN & MARTIN CONSULTANTS LTD.
+PROJECT NO. 17-1419
+
+PAGE 7
+SEPTEMBER 28, 2018
+
+336 KING STREET, TOWN OF CALEDON
+PREPARED FOR: 336 KINGS RIDGE INC.
+
+5.2.2.
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT REPORT
+
+Proposed Conditions
+
+The subject site is located within the Humber River watershed where quantity controls
+are not required if site flows are discharged to the watercourse. However, the Slope
+Stability Investigation by DS Consultants Ltd. dated August 9, 2018 recommends that
+site flows are not discharged over the slope. Therefore, the design proposes to
+discharge the site runoff to the existing storm sewer network along King Street East.
+As per the direction from the Region, 100-year post-development flows must be
+controlled to the 10-year pre-development levels for the area conveyed to the network
+under existing conditions. To achieve this target release rate, the below control
+measures are proposed:
+
+
+93.1 m3 of quantity storage provided in underground storage chambers
+within the proposed condominium laneway.
+A 75SVHV-1 vertical vortex flow regulator located in manhole D1 downstream
+of the proposed storage chambers.
+
+
+
+Modified Ration Method (MRM) calculations were performed using the same IDF
+parameters as pre-development conditions to quantify the required storage for this
+development. See Table 2 below for a summary of the proposed SWM strategy.
+Storm
+Event
+
+Area (ha)
+
+2-Year
+5-Year
+100-Year
+
+0.25
+
+Required
+Storage
+(m3)
+32.4
+45.1
+91.7
+
+Storage
+Provided
+(m3)
+93.1
+
+Controlled
+Release
+Rate (L/s)
+2.9
+4.3
+6.6
+
+Target
+Release
+Rate (L/s)
+7.9
+
+Table 2: PostPost-Development Storage/Discharge Summary
+
+As indicated above, the proposed SWM scheme achieves the required target release
+rate to King Street East. This is accomplished by restricting flows using a vertical flow
+regulator and providing 93.1 m3 of storage in 40 DC-780 Stormtech Chambers. Given
+the depth of the storm system the Stormtech DC-780 chambers were selected due to
+their ability to handle a large cover. Refer to Appendix D for detailed quantity control
+calculations and Figure 3 for the control device selection.
+
+5.3.
+
+Water Balance / Erosion Control
+
+As required by the MOECC, an annual hydrologic budget is required to demonstrate
+that the pre-development infiltration volumes are maintained in post-development
+conditions. This post-to-pre-analysis was completed using climate data collected from
+the Toronto Region Source Protection Act (TRSPA) water balance tool and the Albion
+Field Centre weather station. This analysis concluded that the site experiences an
+
+APLIN & MARTIN CONSULTANTS LTD.
+PROJECT NO. 17-1419
+
+PAGE 8
+SEPTEMBER 28, 2018
+
+336 KING STREET, TOWN OF CALEDON
+PREPARED FOR: 336 KINGS RIDGE INC.
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT REPORT
+
+infiltration deficit of 108 m3/year in post-development conditions. This infiltration deficit
+can be offset by retaining 70 mm/year which corresponds to less than 5 mm as per the
+Albion Field Centre normal climate data. Therefore, it is concluded that retention of the
+5 mm event is more conservative and achieves erosion control criteria as well.
+Retention of the 5 mm event results in a retention volume of 12.6 m3. After accounting
+for initial abstraction on pervious and impervious surfaces, the remaining retention
+volume for design is 6.3 m3. Infiltration of this volume is achieved through the 230 mm
+stone layer below the chambers which maintains 1.0 m separation from the
+groundwater elevations presented in the Geotechnical Investigation prepared by DS
+Consultants Ltd. dated May 28, 2018. Refer to Appendix D for detailed calculations and
+excerpts from DS Consultants Ltd. reports.
+
+5.4.
+
+Quality Control
+
+As stated above, the water quality objective for the site is to achieve 80% TSS removal.
+This is accomplished by using a Jellyfish Unit (JF4-1-1) that has been sized to achieve
+the minimum 80% TSS removal. All impervious areas of the site are directed through
+the Jellyfish Unit proposed upstream of the storage chambers to minimize the
+maintenance frequency on the chambers. A small portion of landscaped area along the
+northern limit of the site enters directly into the chambers without receiving treatment.
+This is not of concern given that landscaped areas are considered inherently clean due
+to its natural ability to filter out sediment. See detailed calculations and sizing report
+in Appendix D.
+
+5.5.
+
+Erosion and Sediment Control
+
+Sediment control measures will be installed for all phases and activities during
+construction. To reduce the sediment-landed runoff and minimize damages to natural
+downstream system; the following process shall be implemented:
+
+
+
+
+Contain sediment on site by using cut-off swales, silt fences and sediment
+traps on existing and proposed catch basins.
+Provide a gravel mud mat at the entrance of the site.
+Conduct regular inspections of erosion and sediment control measures.
+
+Once all phases of construction have been completed, removal of the erosion and
+sediment control measures can take place.
+
+5.6.
+
+Proposed Storm Discharge Location
+
+The proposed townhouse development will discharge its storm runoff through onsite
+storm sewers and an onsite detention system that will ultimately connect into the
+existing 450mm diameter storm sewer within King Street East. The storm sewers and
+
+APLIN & MARTIN CONSULTANTS LTD.
+PROJECT NO. 17-1419
+
+PAGE 9
+SEPTEMBER 28, 2018
+
+336 KING STREET, TOWN OF CALEDON
+PREPARED FOR: 336 KINGS RIDGE INC.
+
+FUNCTIONAL SERVICING AND STORMWATER MANAGEMENT REPORT
+
+appurtenances will be designed in accordance with the Township of Caledon’s design
+guidelines. Refer to Appendix E for the proposed storm servicing design on the Site
+Servicing drawing (17-1419-C03).
+
+6.0
+
+CONCLUSIONS AND RECOMMENDATIONS
+
+Based on our reflection of the proposed development and supporting documentation,
+the following conclusions and recommendations are made:
+
+
+
+
+
+
+
+
+A 250 mm diameter sanitary sewer will provide sanitary servicing for the
+proposed development.
+Each townhouse unit will have a private 125 mm diameter sanitary lateral
+connection coming off the sanitary main.
+Water supply will be provided by a proposed 150 mm diameter watermain.
+All townhouse units will have a private 50 mm diameter water service
+connection and an internal water meter.
+SWM quantity controls storage will be provided via 40 Stormtech chambers
+and a 75SVHV-1 vertical flow regulator located at manhole D1.
+SWM quality control is achieved by using a Jellyfish unit (JF4-1-1) approved
+for 80% TSS removal.
+SWM water balance and erosion control criteria is achieved via infiltration
+through the stone layer below the Stormtech chambers.
+
+APLIN & MARTIN CONSULTANTS LTD.
+PROJECT NO. 17-1419
+
+PAGE 10
+SEPTEMBER 28, 2018
+
+APPENDIX A
+SUPPORTING
+DOCUMENTATION
+
+CONCEPT SITE PLAN
+
+336 KINGS RIDGE INC.
+PROPOSED RESIDENTIAL DEVELOPMENT
+PROJECT NO. 18-018-10
+JUNE 22, 2018
+SCALE 1:250
+
+16 TOWNHOUSE UNITS
+336 KING STREET EAST, BOLTON, ONTARIO
+
+TYPICAL UNIT AREA = 2,014 FT2
+TOTAL GFA
+= 30,210 FT2
+
+APPENDIX B
+WATER SUPPLY
+DESIGN
+
+AM Proj #
+Project Title:
+Project Location:
+Developer:
+
+17-1419
+Residential Development
+336 King Street East, Caledon ON
+336 Kings Ridge Inc.
+
+Domestic Water Demand
+
+Average Day
+Connsumption [1]
+
+280
+
+L/capita/day
+
+Site Statistics
+Denisty
+
+Occupancy Data
+No. of Units
+
+Population Density
+
+Population
+
+people/unit
+Residential
+
+Townhouse
+
+16.00
+
+2.70
+
+L/day
+43.20
+
+Peaking Factors [1]
+Land Use
+
+Peak Hour
+
+Maximum Day
+
+Residential
+
+3
+
+2
+
+Peak Flows
+Factors
+
+L/s
+
+Max Day
+
+0.28
+
+Peak Hour
+
+0.42
+
+Water Demand
+
+[1] Population denisties and peaking factors is basd on the Region of Peel Public Works Design,
+Specifications & Procedures Manual.
+
+12096.00
+
+Fire Flow Estimate
+Date: 28-Sep-18
+By: RJT
+Checked: CAB
+A&M File No.: 17-1419
+
+Residential Development
+336 King Street East, Bolton
+Development Type: Residential
+
+Fire Area Considered:
+Type of Construction:
+
+Wood Frame
+
+C=
+
+1.5
+
+Area Calculation: Total of all floor areas
+Building B
+Floor 1
+Floor 2
+Floor 3
+Floor 4
+Total Applicable Floor Area:
+Fire Flow From Formula (a):
+
+Occupancy:
+
+121.33
+121.33
+121.33
+121.33
+485.33
+220C(A^1/2) =
+
+m2
+220
+
+1.5
+
+x
+
+Non-Combustible
+
+Automatic Sprinklers:
+
+( 485.333 ^1/2)
+=
+Round off to the nearest 1,000 L/min =
+
+Add/Sub: -25.00 %
+
+yes
+
+Subtract:
+
+50
+
+7269.9931 L/min
+7000
+L/min
+-1750
+
+Subtotal(b)
+
+5250
+-2625
+
+L/min
+
+Subtotal
+
+2625
+
+L/min
+
+% x (b) =
+
+Exposures:
+Direction
+Side 1
+Rear
+Side 2
+Front
+
+N
+E
+S
+W
+
+Separation
+(Minimum)
+68.0
+24.0
+18.0
+
+4000
+60
+
+Charge Limit
+
+Applied Charge
+
+(i.e. Charge not to Exceed)
+
+0
+10
+15
+
+L/min
+s
+
+Add
+Add
+Add
+Add
+Total
+Use
+
+=
+
+66.67
+
+0
+8
+11
+19
+19
+
+%
+%
+%
+%
+%
+%xb=+
+Total
+Fire Flow Required
+
+L
+s
+
+Notes:
+1. Fire flow calculation template is based on Fire Underwriter's Survey 1999
+2. Building information provided by Kirkor Architects & Planners
+3. Floor area calculations assume that each building will have two fire walls spaced every two units
+
+997.50
+3622.50
+4000
+
+L/min
+L/min
+
+.
+
+Mr. Andrew Farina
+Aplin Martin
+55 St. Clair Avenuje West, Suite 405
+Toronto Ontario
+M4V 2Y7
+
+12 July 2018
+
+Jackson Waterworks has recently completed fire hydrant flow testing at 336 King Street East in Bolton.
+We define the Test Hydrant as the one being flowed, and the Base Hydrant as the one where static and
+residual pressures are recorded. Wherever possible, we inspect the secondary valve for the Test Hydrant to
+make sure it is in the fully open position. Likewise, we count the number of turns needed to open the Test
+Hydrant (to make sure it is opening completely).
+The secondary valve for the Test Hydrant could not be inspected at the time of the test.
+Testing was completed in accordance with NFPA 291 guidelines.
+An irregularity was observed during the test, in that the residual pressure dropped substantially from the static
+pressure when the first nozzle port was opened. This is normally indicative of a supply problem, where the
+distribution system is kept at a high static pressure for normal demand. Supply collapses under high demand.
+The theoretical flow calculation is based on the first pitot and residual measurements, and is obviously not
+accurate as the actual flow rate was well above the theoretical flow rate once the second nozzle port was
+opened. While not our normal practice, we have plotted the graph and used two lines to illustrate the difference.
+At the time of the test, the theoretical flow rate provided in the report can be taken as a minimum value.
+
+Trusting this meets with your approval, we are...
+Yours truly,
+
+Mark Schmidt
+Jackson Waterworks
+
+APPENDIX C
+SANITARY DESIGN
+
+SANITARY SYSTEM DESIGN - CALCULATION SHEET
+A&M Proj #
+
+17-1419
+
+Page:
+
+1 of 1
+
+Designed by:
+
+ADF
+
+Checked by:
+
+CAB
+
+AVERAGE DAILY FLOW
+Project Title:
+
+Residential Development
+
+Project Location:
+
+Residential= 302.8 L/cap/day
+
+336 King Street East
+
+MANNINGS "n"
+
+Caledon, ON
+
+Developer:
+
+Inflow & Infiltration
+
+336 Kings Ridge Inc.
+
+0.013
+0.2 L/s/ha
+
+Street
+From
+
+To
+
+Road A
+
+S1
+
+S2
+
+King Street East
+
+S2
+
+S3
+
+SubCatchment
+No.
+
+Area
+
+Cum
+Area
+
+Land Usage
+
+A
+(ha)
+
+(ha)
+
+A
+
+0.26
+
+0.26
+
+Residential
+
+B
+
+0.02
+
+0.28
+
+Residential
+
+Density Pop Rate
+
+Flow Calculations
+Population
+
+Cum. Pop Usage Level Avg Flow
+
+2.70
+2.70
+
+43.20
+
+Peaking
+Factor
+
+Cum
+Peak
+Flow
+PDWF
+(L/s)
+
+Pipe Parameters
+
+Results
+Flow Ratio
+
+Partial
+Velocity
+
+Qcap
+
+Q/Qcap
+
+Vact
+
+Full Flow
+Velocity
+Check
+Vact ≥
+
+m/s
+
+(L/s)
+
+%
+
+(m/s)
+
+0.60 (m/s)
+
+d/D
+%
+
+Inflow &
+Infiltration
+
+Design
+Flow
+
+I&I
+(L/s)
+
+Q
+(L/s)
+
+S
+%
+
+DIA
+mm
+
+L
+m
+
+Vcap
+
+Sewer Design
+
+Depth of
+Flow
+
+L/cap/day
+
+ADWF
+(L/s)
+
+Pf
+
+43.20
+
+303
+
+0.151
+
+4.00
+
+0.61
+
+0.05
+
+0.66
+
+1.00
+
+250
+
+44.80
+
+1.21
+
+59.47
+
+1%
+
+0.40
+
+OK
+
+7%
+
+43.20
+
+303
+
+0.151
+
+4.00
+
+0.61
+
+0.06
+
+0.66
+
+1.00
+
+250
+
+25.20
+
+1.21
+
+59.47
+
+1%
+
+0.40
+
+OK
+
+7%
+
+(units) (cap/unit)
+16
+
+July-06-18
+
+Date:
+
+Sub-Catchments
+Manhole
+
+APLIN MARTIN
+
+Peaking Factor = Harmon Equation
+
+Locations
+
+17-1419 Sanitary Sewer
+
+Consultant:
+
+APLIN MARTIN
+
+APPENDIX D
+STORMWATER
+MANAGEMENT
+DESIGN
+
+PRE-DEVELOPMENT
+DRAINAGE AREA PLAN
+
+336 KINGS RIDGE INC.
+1175 MEYERSIDE DRIVE, SUITE 2
+MISSISSAUGA, ON L5T 1H3
+
+Aplin & Martin Consultants Ltd.
+405 - 55 St. Clair Ave. West, O.N. Canada M4V 2Y7
+Tel: (416) 644-1900, Fax: (416) 644-1889, Email: general@aplinmartin.com
+
+TOWNHOUSE DEVELOPMENT
+
+17-1419
+
+SEPTEMBER, 2018
+
+FIG-01
+
+1:250
+
+336 KING STREET EAST, CALEDON, ONTARIO
+
+POST-DEVELOPMENT
+DRAINAGE AREA PLAN
+
+336 KINGS RIDGE INC.
+1175 MEYERSIDE DRIVE, SUITE 2
+MISSISSAUGA, ON L5T 1H3
+
+Aplin & Martin Consultants Ltd.
+405 - 55 St. Clair Ave. West, O.N. Canada M4V 2Y7
+Tel: (416) 644-1900, Fax: (416) 644-1889, Email: general@aplinmartin.com
+
+TOWNHOUSE DEVELOPMENT
+
+17-1419
+
+SEPTEMBER, 2018
+
+FIG-02
+
+1:250
+
+336 KING STREET EAST, CALEDON, ONTARIO
+
+AM Proj #
+Project Title:
+Project Location:
+Developer:
+
+17-1419
+Townhouse Development
+336 King Street East
+336 Kings Ridge Inc.
+Pre-Development Runoff Coefficient
+A1Pre
+
+Total Area
+Pervious
+Impervious
+
+0.05
+0.03
+0.02
+Composite 'C'
+
+C
+0.20
+0.90
+0.48
+
+A2Pre
+
+Total Area
+Pervious
+Impervious
+
+0.20
+0.16
+0.03
+Composite 'C'
+
+C
+0.20
+0.90
+0.32
+
+Pre-Development Peak Flows
+Area ID
+
+A
+
+C
+
+(ha)
+A1
+A2
+Total
+
+Tc
+(min)
+
+0.05
+0.20
+0.25
+
+0.48
+0.32
+0.35
+
+15.00
+15.00
+15.00
+
+IDF Data : Town of Caledon
+Storm Frequency
+(Yr)
+2
+5
+10
+25
+50
+100
+
+a
+
+b
+
+c
+
+1070.0
+1593.0
+2221.0
+3158.0
+3886.0
+4688.0
+
+0.8759
+0.8789
+0.9080
+0.9335
+0.9495
+0.9624
+
+7.9
+11.0
+12.0
+15.0
+16.0
+17.0
+
+I
+(mm/hr)
+68.91
+68.91
+
+(m /s)
+0.00
+0.01
+
+I
+(mm/hr)
+90.91
+90.91
+
+(m /s)
+0.01
+0.02
+
+I
+(mm/hr)
+111.40
+111.40
+
+(m3/s)
+0.01
+0.02
+
+I
+(mm/hr)
+131.98
+131.98
+
+(m /s)
+0.01
+0.02
+
+I
+(mm/hr)
+149.09
+149.09
+
+(m /s)
+0.01
+0.03
+
+I
+(mm/hr)
+166.89
+166.89
+
+(m3/s)
+0.01
+0.03
+
+Storm Frequency:
+
+2 Year
+
+Area ID
+
+AC
+
+A1
+A2
+
+0.03
+0.06
+
+Storm Frequency:
+
+Q
+3
+
+Q
+(L/s)
+4.88
+12.01
+
+5 Year
+
+Area ID
+
+AC
+
+A1
+A2
+
+0.03
+0.06
+
+Storm Frequency:
+
+Q
+3
+
+Q
+(L/s)
+6.44
+15.85
+
+10 Year
+
+Area ID
+
+AC
+
+A1
+A2
+
+0.03
+0.06
+
+Storm Frequency:
+
+Q
+
+Q
+(L/s)
+7.89
+19.42
+
+25 Year
+
+Area ID
+
+AC
+
+A1
+A2
+
+0.03
+0.06
+
+Storm Frequency:
+
+Q
+3
+
+Q
+(L/s)
+9.35
+23.01
+
+50 Year
+
+Area ID
+
+AC
+
+A1
+A2
+
+0.03
+0.06
+
+Storm Frequency:
+
+Q
+3
+
+Q
+(L/s)
+10.56
+25.99
+
+100 Year
+
+Area ID
+
+AC
+
+A1
+A2
+
+0.03
+0.06
+
+Q
+
+Q
+(L/s)
+11.82
+29.09
+
+AM Proj #
+Project Title:
+Project Location:
+Developer:
+
+17-1419
+Townhouse Development
+336 King Street East
+336 Kings Ridge Inc.
+Post-Development Runoff Coefficient
+
+A1Post
+
+Total Area
+Impervious
+Pervious
+
+0.25
+0.16
+0.09
+Composite 'C'
+
+C
+0.90
+0.20
+0.64
+
+2 Year Peak Flow Calculations
+Tc
+QPre
+QTarget
+QPost
+
+Runoff
+Coefficient
+
+Area
+
+Intensity
+
+n
+
+min
+15.00
+
+0.35
+
+Ha
+0.25
+
+mm
+68.9
+
+0.00278
+
+10.00
+
+0.64
+
+0.25
+
+85.5
+
+0.00278
+
+Q
+cms
+0.017
+0.008
+0.038
+
+Storage Volume Required (Modified Rational Method)
+Area
+RC
+AC
+Required Storage
+Head
+Actual Release Rate
+
+A1 Post
+0.25
+0.64
+0.16
+32.4
+0.28
+0.0029
+
+ha
+
+Orifice
+Tank Bottom
+Head
+Elevation
+
+3
+
+m
+m
+3
+m /s
+
+221.22
+221.27
+0.33
+221.55
+
+m
+m
+m
+m
+
+Rainfall Duration
+Tr
+
+Rainfall Intensity
+I
+
+Storm Runoff
+
+Runoff Volume
+
+Released
+Volume
+
+Storage Volume
+
+Storage Depth
+
+min
+5
+10
+15
+20
+25
+30
+35
+40
+45
+50
+55
+60
+65
+70
+75
+80
+85
+90
+95
+100
+105
+110
+115
+120
+125
+130
+135
+140
+145
+150
+155
+160
+165
+170
+175
+180
+185
+190
+195
+200
+205
+210
+215
+220
+225
+230
+235
+
+mm/hour
+113.9
+85.5
+68.9
+58.0
+50.2
+44.3
+39.8
+36.1
+33.1
+30.6
+28.4
+26.6
+25.0
+23.6
+22.3
+21.2
+20.2
+19.3
+18.5
+17.7
+17.0
+16.4
+15.8
+15.3
+14.8
+14.3
+13.9
+13.4
+13.1
+12.7
+12.4
+12.0
+11.7
+11.4
+11.2
+10.9
+10.7
+10.4
+10.2
+10.0
+9.8
+9.6
+9.4
+9.2
+9.0
+8.9
+8.7
+
+cms
+0.051
+0.038
+0.031
+0.026
+0.022
+0.020
+0.018
+0.016
+0.015
+0.014
+0.013
+0.012
+0.011
+0.011
+0.010
+0.009
+0.009
+0.009
+0.008
+0.008
+0.008
+0.007
+0.007
+0.007
+0.007
+0.006
+0.006
+0.006
+0.006
+0.006
+0.006
+0.005
+0.005
+0.005
+0.005
+0.005
+0.005
+0.005
+0.005
+0.004
+0.004
+0.004
+0.004
+0.004
+0.004
+0.004
+0.004
+
+cms
+15.3
+22.9
+27.7
+31.1
+33.6
+35.7
+37.3
+38.7
+39.9
+41.0
+41.9
+42.8
+43.6
+44.3
+44.9
+45.5
+46.1
+46.6
+47.1
+47.5
+48.0
+48.4
+48.8
+49.1
+49.5
+49.8
+50.2
+50.5
+50.8
+51.1
+51.4
+51.6
+51.9
+52.1
+52.4
+52.6
+52.9
+53.1
+53.3
+53.5
+53.7
+53.9
+54.1
+54.3
+54.5
+54.7
+54.9
+
+cm
+0.9
+1.7
+2.6
+3.5
+4.3
+5.2
+6.1
+6.9
+7.8
+8.7
+9.5
+10.4
+11.3
+12.1
+13.0
+13.9
+14.7
+15.6
+16.5
+17.3
+18.2
+19.1
+19.9
+20.8
+21.7
+22.5
+23.4
+24.3
+25.1
+26.0
+26.9
+27.7
+28.6
+29.5
+30.3
+31.2
+32.1
+32.9
+33.8
+34.7
+35.5
+36.4
+37.3
+38.1
+39.0
+39.9
+40.7
+
+cm
+14.4
+21.2
+25.1
+27.6
+29.3
+30.4
+31.2
+31.8
+32.1
+32.3
+32.4
+32.4
+32.3
+32.1
+31.9
+31.6
+31.3
+31.0
+30.6
+30.2
+29.8
+29.3
+28.8
+28.3
+27.8
+27.3
+26.8
+26.2
+25.6
+25.1
+24.5
+23.9
+23.3
+22.7
+22.0
+21.4
+20.8
+20.1
+19.5
+18.8
+18.2
+17.5
+16.8
+16.2
+15.5
+14.8
+14.1
+
+m
+0.12
+0.18
+0.22
+0.24
+0.26
+0.27
+0.27
+0.28
+0.28
+0.28
+0.28
+0.28
+0.28
+0.28
+0.28
+0.28
+0.27
+0.27
+0.27
+0.26
+0.26
+0.26
+0.25
+0.25
+0.24
+0.24
+0.23
+0.23
+0.22
+0.22
+0.21
+0.21
+0.20
+0.20
+0.19
+0.19
+0.18
+0.17
+0.17
+0.16
+0.16
+0.15
+0.15
+0.14
+0.13
+0.13
+0.12
+
+5 Year Peak Flow Calculations
+Tc
+QPre
+QTarget
+QPost
+
+min
+15.00
+10.00
+
+Runoff
+Coefficient
+
+Area
+
+Intensity
+
+0.35
+
+Ha
+0.25
+
+mm
+90.9
+
+n
+0.00278
+
+0.64
+
+0.25
+
+109.7
+
+0.00278
+
+Q
+cms
+0.022
+0.008
+0.049
+
+Storage Volume Required (Modified Rational Method)
+
+Area
+RC
+AC
+Storage
+Head
+Actual Release Rate
+Rainfall Duration
+Tr
+min
+5
+10
+15
+20
+25
+30
+35
+40
+45
+50
+55
+60
+65
+70
+75
+80
+85
+90
+95
+100
+105
+110
+115
+120
+125
+130
+135
+140
+145
+150
+155
+160
+165
+170
+175
+180
+185
+190
+195
+200
+205
+210
+215
+220
+225
+230
+235
+
+Rainfall
+Intensity
+I
+mm/hour
+139.3
+109.7
+90.9
+77.9
+68.3
+60.9
+55.1
+50.3
+46.3
+43.0
+40.1
+37.6
+35.4
+33.5
+31.8
+30.2
+28.8
+27.6
+26.4
+25.4
+24.4
+23.5
+22.7
+21.9
+21.2
+20.6
+20.0
+19.4
+18.8
+18.3
+17.8
+17.4
+16.9
+16.5
+16.1
+15.8
+15.4
+15.1
+14.7
+14.4
+14.1
+13.9
+13.6
+13.3
+13.1
+12.8
+12.6
+
+A1 Post
+0.25
+0.64
+0.16
+45.1
+0.40
+0.0043
+
+ha
+
+Orifice
+Tank Bottom
+Head
+Elevation
+
+m3
+m
+m3/s
+
+Storm Runoff
+
+Runoff Volume
+
+Released
+Volume
+
+cms
+0.062
+0.049
+0.041
+0.035
+0.031
+0.027
+0.025
+0.022
+0.021
+0.019
+0.018
+0.017
+0.016
+0.015
+0.014
+0.014
+0.013
+0.012
+0.012
+0.011
+0.011
+0.011
+0.010
+0.010
+0.009
+0.009
+0.009
+0.009
+0.008
+0.008
+0.008
+0.008
+0.008
+0.007
+0.007
+0.007
+0.007
+0.007
+0.007
+0.006
+0.006
+0.006
+0.006
+0.006
+0.006
+0.006
+0.006
+
+cms
+18.7
+29.4
+36.6
+41.8
+45.8
+49.0
+51.7
+53.9
+55.9
+57.6
+59.1
+60.5
+61.7
+62.8
+63.9
+64.8
+65.7
+66.6
+67.3
+68.1
+68.7
+69.4
+70.0
+70.6
+71.2
+71.7
+72.2
+72.7
+73.2
+73.6
+74.1
+74.5
+74.9
+75.3
+75.7
+76.0
+76.4
+76.7
+77.1
+77.4
+77.7
+78.0
+78.3
+78.6
+78.9
+79.2
+79.5
+
+cm
+1.3
+2.6
+3.8
+5.1
+6.4
+7.7
+9.0
+10.2
+11.5
+12.8
+14.1
+15.4
+16.6
+17.9
+19.2
+20.5
+21.8
+23.0
+24.3
+25.6
+26.9
+28.2
+29.4
+30.7
+32.0
+33.3
+34.6
+35.8
+37.1
+38.4
+39.7
+41.0
+42.3
+43.5
+44.8
+46.1
+47.4
+48.7
+49.9
+51.2
+52.5
+53.8
+55.1
+56.3
+57.6
+58.9
+60.2
+
+221.22
+221.27
+0.45
+221.67
+
+m
+m
+m
+m
+
+Storage Volume Storage Depth
+cm
+17.4
+26.8
+32.7
+36.6
+39.4
+41.3
+42.7
+43.7
+44.4
+44.8
+45.0
+45.1
+45.1
+44.9
+44.7
+44.3
+44.0
+43.5
+43.0
+42.5
+41.9
+41.2
+40.6
+39.9
+39.2
+38.4
+37.6
+36.9
+36.0
+35.2
+34.4
+33.5
+32.6
+31.8
+30.9
+29.9
+29.0
+28.1
+27.1
+26.2
+25.2
+24.3
+23.3
+22.3
+21.3
+20.3
+19.3
+
+m
+0.15
+0.23
+0.29
+0.32
+0.35
+0.37
+0.38
+0.39
+0.40
+0.40
+0.40
+0.40
+0.40
+0.40
+0.40
+0.40
+0.39
+0.39
+0.38
+0.38
+0.37
+0.37
+0.36
+0.35
+0.35
+0.34
+0.33
+0.33
+0.32
+0.31
+0.30
+0.29
+0.29
+0.28
+0.27
+0.26
+0.25
+0.25
+0.24
+0.23
+0.22
+0.21
+0.20
+0.19
+0.18
+0.18
+0.17
+
+100 Year Peak Flow Calculations
+Tc
+QPre
+QTarget
+QPost
+
+min
+15.00
+10.00
+
+Runoff
+Coefficient
+
+Area
+
+Intensity
+
+0.35
+
+Ha
+0.25
+
+mm
+166.9
+
+n
+0.00278
+
+0.64
+
+0.25
+
+196.5
+
+0.00278
+
+Q
+cms
+0.041
+0.008
+0.088
+
+Storage Volume Required (Modified Rational Method)
+
+Area
+RC
+AC
+Required Storage
+Storage Depth
+Actual Release Rate
+Rainfall Duration
+Tr
+min
+5
+10
+15
+20
+25
+30
+35
+40
+45
+50
+55
+60
+65
+70
+75
+80
+85
+90
+95
+100
+105
+110
+115
+120
+125
+130
+135
+140
+145
+150
+155
+160
+165
+170
+175
+180
+185
+190
+195
+200
+205
+210
+215
+220
+225
+230
+235
+
+Rainfall
+Intensity
+I
+mm/hour
+239.4
+196.5
+166.9
+145.1
+128.5
+115.3
+104.6
+95.7
+88.3
+82.0
+76.5
+71.7
+67.5
+63.7
+60.4
+57.4
+54.7
+52.2
+50.0
+47.9
+46.0
+44.3
+42.7
+41.2
+39.8
+38.5
+37.3
+36.1
+35.0
+34.0
+33.1
+32.2
+31.3
+30.5
+29.8
+29.0
+28.3
+27.7
+27.0
+26.4
+25.9
+25.3
+24.8
+24.3
+23.8
+23.3
+22.9
+
+A1 Post
+0.25
+0.64
+0.16
+91.7
+1.04
+0.0066
+
+ha
+
+Orifice
+Tank Bottom
+Head
+Elevation
+
+3
+
+m
+m
+m3/s
+
+221.22
+221.27
+1.09
+222.31
+
+m
+m
+m
+m
+
+Storm Runoff
+
+Runoff Volume
+
+Released
+Volume
+
+Storage Volume
+
+Storage Depth
+
+cms
+0.107
+0.088
+0.075
+0.065
+0.057
+0.052
+0.047
+0.043
+0.039
+0.037
+0.034
+0.032
+0.030
+0.028
+0.027
+0.026
+0.024
+0.023
+0.022
+0.021
+0.021
+0.020
+0.019
+0.018
+0.018
+0.017
+0.017
+0.016
+0.016
+0.015
+0.015
+0.014
+0.014
+0.014
+0.013
+0.013
+0.013
+0.012
+0.012
+0.012
+0.012
+0.011
+0.011
+0.011
+0.011
+0.010
+0.010
+
+cms
+32.1
+52.7
+67.1
+77.8
+86.1
+92.7
+98.1
+102.7
+106.5
+109.9
+112.8
+115.3
+117.6
+119.6
+121.5
+123.1
+124.6
+126.0
+127.3
+128.5
+129.6
+130.6
+131.6
+132.5
+133.3
+134.1
+134.8
+135.5
+136.2
+136.8
+137.5
+138.0
+138.6
+139.1
+139.6
+140.1
+140.5
+141.0
+141.4
+141.8
+142.2
+142.6
+143.0
+143.3
+143.6
+144.0
+144.3
+
+cm
+2.0
+4.0
+6.0
+8.0
+10.0
+12.0
+13.9
+15.9
+17.9
+19.9
+21.9
+23.9
+25.9
+27.9
+29.9
+31.9
+33.9
+35.9
+37.8
+39.8
+41.8
+43.8
+45.8
+47.8
+49.8
+51.8
+53.8
+55.8
+57.8
+59.8
+61.7
+63.7
+65.7
+67.7
+69.7
+71.7
+73.7
+75.7
+77.7
+79.7
+81.7
+83.7
+85.7
+87.6
+89.6
+91.6
+93.6
+
+cm
+30.1
+48.7
+61.1
+69.9
+76.1
+80.8
+84.2
+86.7
+88.6
+89.9
+90.9
+91.4
+91.7
+91.7
+91.6
+91.2
+90.8
+90.2
+89.5
+88.7
+87.8
+86.8
+85.8
+84.7
+83.5
+82.3
+81.1
+79.8
+78.5
+77.1
+75.7
+74.3
+72.8
+71.4
+69.9
+68.4
+66.8
+65.3
+63.7
+62.1
+60.5
+58.9
+57.3
+55.7
+54.0
+52.3
+50.7
+
+m
+0.26
+0.44
+0.57
+0.68
+0.77
+0.85
+0.91
+0.96
+0.99
+1.01
+1.03
+1.04
+1.04
+1.04
+1.04
+1.04
+1.03
+1.02
+1.00
+0.99
+0.98
+0.96
+0.94
+0.92
+0.90
+0.88
+0.86
+0.84
+0.81
+0.79
+0.77
+0.74
+0.72
+0.70
+0.68
+0.66
+0.64
+0.62
+0.60
+0.58
+0.56
+0.55
+0.53
+0.51
+0.49
+0.48
+0.46
+
+Project:
+
+336 King Street East
+
+Chamber Model Units -
+
+SC-740
+Metric
+
+Click Here for Imperial
+
+Number of chambers Voids in the stone (porosity) Base of Stone Elevation Amount of Stone Above Chambers Amount of Stone Below Chambers Area of system -
+
+40
+40
+100.00
+300
+230
+144.935
+
+%
+m
+mm
+mm
+sq.meters
+
+Include Perimeter Stone in Calculations
+
+Min. Area -
+
+125.62 sq.meters
+
+StormTech SC-740 Cumulative Storage Volumes
+Height of
+System
+(mm)
+1295
+1270
+1245
+1219
+1194
+1168
+1143
+1118
+1092
+1067
+1041
+1016
+991
+965
+940
+914
+889
+864
+838
+813
+787
+762
+737
+711
+686
+660
+635
+610
+584
+559
+533
+508
+483
+457
+432
+406
+381
+356
+330
+305
+279
+254
+229
+203
+178
+152
+127
+102
+76
+51
+25
+
+Incremental Single
+Incremental
+Chamber
+Total Chamber
+(cubic meters)
+(cubic meters)
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.06
+0.00
+0.18
+0.01
+0.32
+0.02
+0.68
+0.02
+0.91
+0.03
+1.08
+0.03
+1.22
+0.03
+1.34
+0.04
+1.43
+0.04
+1.53
+0.04
+1.65
+0.04
+1.73
+0.04
+1.79
+0.05
+1.86
+0.05
+1.92
+0.05
+1.99
+0.05
+2.04
+0.05
+2.10
+0.05
+2.14
+0.05
+2.19
+0.06
+2.24
+0.06
+2.28
+0.06
+2.32
+0.06
+2.35
+0.06
+2.38
+0.06
+2.41
+0.06
+2.44
+0.06
+2.47
+0.06
+2.49
+0.06
+2.50
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+
+Incremental Incremental Ch Cumulative
+Stone
+& St
+Chamber
+(cubic meters) (cubic meters) (cubic meters)
+1.47
+1.47
+106.32
+1.47
+1.47
+104.85
+1.47
+1.47
+103.38
+1.47
+1.47
+101.91
+1.47
+1.47
+100.43
+1.47
+1.47
+98.96
+1.47
+1.47
+97.49
+1.47
+1.47
+96.02
+1.47
+1.47
+94.54
+1.47
+1.47
+93.07
+1.47
+1.47
+91.60
+1.47
+1.47
+90.13
+1.45
+1.51
+88.65
+1.40
+1.58
+87.15
+1.34
+1.66
+85.56
+1.20
+1.88
+83.90
+1.11
+2.02
+82.01
+1.04
+2.12
+80.00
+0.99
+2.20
+77.88
+0.94
+2.27
+75.68
+0.90
+2.33
+73.40
+0.86
+2.39
+71.07
+0.81
+2.46
+68.68
+0.78
+2.51
+66.21
+0.76
+2.55
+63.71
+0.73
+2.59
+61.16
+0.70
+2.63
+58.57
+0.68
+2.66
+55.94
+0.66
+2.70
+53.28
+0.63
+2.73
+50.58
+0.61
+2.76
+47.85
+0.60
+2.79
+45.09
+0.58
+2.81
+42.30
+0.56
+2.84
+39.49
+0.55
+2.86
+36.65
+0.53
+2.88
+33.79
+0.52
+2.90
+30.90
+0.51
+2.92
+28.00
+0.50
+2.94
+25.08
+0.49
+2.95
+22.14
+0.48
+2.97
+19.19
+0.47
+2.97
+16.22
+1.47
+1.47
+13.25
+1.47
+1.47
+11.78
+1.47
+1.47
+10.31
+1.47
+1.47
+8.83
+1.47
+1.47
+7.36
+1.47
+1.47
+5.89
+1.47
+1.47
+4.42
+1.47
+1.47
+2.94
+1.47
+1.47
+1.47
+
+Elevation
+(meters)
+101.30
+101.27
+101.24
+101.22
+101.19
+101.17
+101.14
+101.12
+101.09
+101.07
+101.04
+101.02
+100.99
+100.97
+100.94
+100.91
+100.89
+100.86
+100.84
+100.81
+100.79
+100.76
+100.74
+100.71
+100.69
+100.66
+100.64
+100.61
+100.58
+100.56
+100.53
+100.51
+100.48
+100.46
+100.43
+100.41
+100.38
+100.36
+100.33
+100.30
+100.28
+100.25
+100.23
+100.20
+100.18
+100.15
+100.13
+100.10
+100.08
+100.05
+100.03
+
+336 KINGS RIDGE INC.
+
+DISCHARGE SUMMARY
+
+1175 MEYERSIDE DRIVE, SUITE 2
+MISSISSAUGA, ON L5T 1H3
+
+Aplin & Martin Consultants Ltd.
+405 - 55 St. Clair Ave. West, O.N. Canada M4V 2Y7
+Tel: (416) 644-1900, Fax: (416) 644-1889, Email: general@aplinmartin.com
+
+TOWNHOUSE DEVELOPMENT
+
+17-1419
+
+SEPTEMBER, 2018
+
+FIG-03
+
+N.T.S.
+1:250
+
+336 KING STREET EAST, CALEDON, ONTARIO
+
+DRAINAGE SYSTEM DESIGN - RATIONAL METHOD CALCULATION SHEET
+Municipal Proj #
+Project Title:
+
+N/A
+
+Storm Sewer Design Criteria
+
+Residential Development
+
+Project Location:
+
+Developer:
+
+MANNINGS "n"
+
+0.013
+
+Town of Caledon
+
+Q10/100=RAIN
+
+N=0.00278
+
+336 Kings Ridge Inc.
+
+Street
+
+Street A
+
+From
+
+To
+
+1
+
+3
+
+3
+
+SubCatchment
+No.
+
+A
+
+Time of
+Concentration
+
+Rain Fall
+Int. "I"
+
+AxR
+(ha)
+
+(ha)
+
+Inlet
+(min)
+
+Total
+(min)
+
+I
+(mm/hr)
+
+(L/s)
+
+0.25
+
+0.75
+
+0.19
+
+0.19
+
+10.0
+
+10.0
+
+134.2
+
+69.5
+
+0.94
+
+0.23
+
+0.23
+
+196.5
+
+127.3
+
+134.2
+
+69.5
+
+196.5
+
+127.3
+
+134.0
+
+69.5
+
+196.4
+
+127.2
+
+133.0
+
+69.9
+
+195.1
+
+128.1
+
+132.9
+
+69.8
+
+194.9
+
+128.0
+
+R
+
+0.19
+
+4
+
+10.0
+
+10.0
+
+4
+
+0.19
+
+Tank
+
+10.0
+
+10.2
+
+0.23
+Street A
+
+Street A
+
+Tank
+
+5
+
+5
+
+6
+
+B
+
+0.01
+
+0.25
+
+0.00
+
+0.19
+
+0.31
+
+0.00
+
+0.24
+0.19
+0.24
+
+17-1419 - Storm Sewer DesignBT
+
+10.2
+
+10.2
+
+10.2
+
+10.3
+
+17-1419
+
+Page:
+
+1 of 1
+
+Designed by:
+
+RJT
+
+Checked by:
+
+CAB
+
+Date:
+
+Sep-18
+
+Pipe Parameters
+
+Q10
+Q100
+
+SUM
+AxR
+
+Tributary Area
+A
+(ha)
+
+Flow Calculations
+
+0.23
+Street A
+
+APLIN MARTIN
+
+TOWN OF CALEDON - RAINFALL INTENSITY
+
+Sub-Catchments
+
+Manhole
+
+Consultant:
+
+10 YEAR / 100 YEAR
+
+336 King Street East
+
+Locations
+
+Street A
+
+Design Return Period:
+
+A&M Proj #
+
+Travel
+Time
+
+Sewer Design
+S
+%
+
+DIA
+mm
+
+L
+m
+
+Vcap
+
+Qcap
+
+m/s
+
+(L/s)
+
+0.50
+
+375
+
+1.6
+
+1.12
+
+0.50
+
+375
+
+12.3
+
+0.50
+
+375
+
+0.50
+
+1.00
+
+Comments
+Flow Ratios
+
+Hydraulic
+Slope
+
+Remarks
+
+Q10/Qcap
+
+Q100/Qcap
+
+Q100
+
+(min)
+
+%
+
+%
+
+%
+
+10 YEAR
+FLOW ROUTES
+
+124.0
+
+0.0
+
+56%
+
+103%
+
+0.53%
+
+IN PIPE
+
+1.12
+
+124.0
+
+0.2
+
+56%
+
+103%
+
+0.53%
+
+IN PIPE
+
+1.5
+
+1.12
+
+124.0
+
+0.0
+
+56%
+
+103%
+
+0.53%
+
+IN PIPE
+
+375
+
+6.4
+
+1.12
+
+124.0
+
+0.1
+
+56%
+
+103%
+
+0.53%
+
+IN PIPE
+
+375
+
+23.7
+
+1.59
+
+175.3
+
+0.2
+
+40%
+
+73%
+
+0.53%
+
+IN PIPE
+
+APLIN MARTIN
+
+17-1419
+Townhouse Development
+336 King Street East
+336 Kings Ridge Inc.
+
+AM Proj #
+Project Title:
+Project Location:
+Developer:
+
+Annual Hydrologic Budget
+PRE-DEV
+Existing Landuse
+Hydrologic Soil Group (HSG)
+Infiltration Factor
+Pervious
+0.20
+852
+643
+209
+104.5
+104.5
+
+Area (ha)
+Precipitation (mm)
+ET (mm)
+Surplus (mm)
+Infiltration (mm)
+Runoff (mm)
+
+Urban Lawns
+C
+0.5
+Impervious
+0.05
+852
+170.4
+681.6
+0
+681.6
+
+Total
+0.25
+
+Volumes
+ET (m3)
+Infiltration (m3)
+Runoff(m3)
+
+1267
+206
+206
+
+93
+0
+370
+
+1359
+206
+576
+
+POST-DEV
+Proposed Landuse
+Hydrologic Soil Group (HSG)
+Infiltration Factor
+Pervious
+0.09
+852
+643
+209
+104.5
+104.5
+
+Area (ha)
+Precipitation (mm)
+ET (mm)
+Surplus (mm)
+Infiltration (mm)
+Runoff (mm)
+
+Urban Lawns
+C
+0.5
+Impervious
+0.16
+852
+170.4
+681.6
+0
+681.6
+
+Total
+0.25
+
+Volumes
+ET (m3)
+
+600
+
+269
+
+869
+
+Infiltration (m3)
+Runoff(m3)
+
+97
+97
+
+0
+1077
+
+97
+1174
+
+POST-DEV WITH MITIGATION
+Pervious
+0.09
+852
+643
+209
+104.5
+104.5
+
+Area (ha)
+Precipitation (mm)
+ET (mm)
+Surplus (mm)
+Infiltration (mm)
+Runoff (mm)
+
+Impervious
+0.16
+852
+170.4
+681.6
+70
+611.6
+
+Total
+0.25
+
+600
+
+269
+
+869
+
+97
+97
+
+111
+966
+
+208
+1064
+
+Infiltration
+206
+97
+208
+1%
+
+Runoff
+576
+1174
+1064
+85%
+
+Volumes
+ET (m3)
+3
+
+Infiltration (m )
+Runoff(m3)
+
+SUMMARY
+Scenario
+Pre-Development (1)
+Post-Development (2)
+Post-Development w Mitigation (3)
+Percent Difference (1 and 3)
+
+ET
+1359
+869
+869
+-36%
+
+Albion Field Centre - Normal Data
+Storm Depth (mm)
+0.2
+5
+10
+25
+
+April
+9.90
+4.20
+2.00
+0.37
+Storm Depth
+(mm)
+0.2
+5
+10
+25
+
+May
+10.30
+5.00
+2.30
+0.53
+
+Total # of days
+60
+27.5
+15.1
+3.5
+
+Number of Days
+June
+10.20
+4.40
+2.90
+0.61
+
+July
+9.00
+4.90
+2.60
+0.68
+
+August
+9.80
+4.50
+2.80
+0.63
+
+Runoff
+Coefficient
+
+Equivalent Depth (mm)
+
+0.64
+
+7.7
+88.0
+96.7
+56.0
+
+September
+10.80
+4.50
+2.50
+0.68
+
+AM Proj #
+Project Title:
+Project Location:
+Developer:
+
+17-1419
+Residential Development
+336 King Street East, Caledon ON
+336 King's Ridge Inc.
+Water Balance
+
+Site Area (ha)
+0.25
+
+Depth (mm)
+5.0
+IA Volume
+Remaining Retention Volume
+
+3
+
+Volume (m )
+12.6
+6.2
+6.3
+
+Initial Abstraction
+Pervious
+Impervious
+
+Depth (mm)
+5.0
+1.0
+
+Area (ha) Volume (m3)
+0.09
+4.7
+0.16
+1.6
+Sum
+6.2
+
+Test Pit Location
+
+Hydraulic Conductivity From HydroG
+(cm/s)
+
+Infiltration Rate*
+(mm/hour)
+
+Correction
+Factor **
+
+Design Infiltration Rate
+(mm/hour)
+
+BH3
+
+0.000001
+
+13.49
+
+2.50
+
+5.40
+
+* Infiltration Rate calculated using Figure C11 from TRCA SWM Criteria
+**Correction Factor based on Table C3 from TRCA SWM Criteria
+
+Reference - CVC & TRCA LID SWM Guidelines
+Drawdown Time
+3
+m
+6.3
+Volume (V)
+Percolation Rate (P)
+mm/hr
+5.4
+1000
+Porosity (n)
+0.4
+
+
+48.0
+Time (T)
+hr
+2
+
+m
+61.0
+Area (A)
+
+1000
+Max. Depth (d)
+m
+0.65
+
+Infiltration Trench Design
+144.9
+Provided Area (A)
+Provided Depth (d)
+0.23
+Porosity (n)
+0.4
+13.33
+Provided Volume (V)
+
+Therefore, a minimum of 61.0 m2 is required to infiltrate the water within 48 hours. The proposed design
+incorporates approximately 145 m2 of infiltration area and can accommodate 13 m3 of retention volume.
+
+2
+
+m
+m
+
+3
+
+m
+
+AM Proj #
+Project Title:
+Project Location:
+Developer:
+
+17-1419
+Townhouse Development
+336 King Street East, Caledon ON
+336 King's Ridge Inc.
+Water Quality
+
+Surface
+
+Proccess
+
+Asphalt
+Rooftop
+Landscape
+
+Jellyfish (JF4-1-1)
+Inherent
+Inherent
+
+TSS Removal
+Efficciency
+(%)
+80
+80
+80
+Total
+
+Area of Site
+
+% Area of Site
+
+TSS Removal
+
+(ha)
+0.09
+0.07
+0.09
+0.25
+
+(%)
+34
+29
+37
+100
+
+(%)
+27
+23
+30
+80
+
+STANDARD OFFLINE
+Jellyfish Filter Sizing Report
+Project Information
+Date
+Project Name
+Project Number
+Location
+
+Friday, June 29, 2018
+336 King St. E
+Bolton
+
+Jellyfish Filter Design Overview
+This report provides information for the sizing and specification of the Jellyfish Filter. When
+designed properly in accordance to the guidelines detailed in the Jellyfish Filter Technical Manual,
+the Jellyfish Filter will exceed the performance and longevity of conventional horizontal bed and
+granular media filters.
+Please see www.ImbriumSystems.com for more information.
+
+Jellyfish Filter System Recommendation
+The Jellyfish Filter model JF4-1-1 is recommended to meet the water quality objective by treating a
+flow of 7.6 L/s, which meets or exceeds 90% of the average annual rainfall runoff volume based on
+18 years of TORONTO CENTRAL rainfall data for this site. This model has a sediment capacity of
+85 kg, which meets or exceeds the estimated average annual sediment load.
+Jellyfish
+Model
+
+Number of
+High-Flo
+Cartridges
+
+Number of
+Draindown
+Cartridges
+
+JF4-1-1
+
+1
+
+1
+
+Manhole Treatment
+Sediment
+Diameter Flow Rate Capacity (kg)
+(L/s)
+(m)
+1.2
+7.6
+85
+
+The Jellyfish Filter System
+The patented Jellyfish Filter is an engineered stormwater quality treatment technology featuring
+unique membrane filtration in a compact stand-alone treatment system that removes a high level
+and wide variety of stormwater pollutants. Exceptional pollutant removal is achieved at high
+treatment flow rates with minimal head loss and low maintenance costs. Each lightweight Jellyfish
+Filter cartridge contains an extraordinarily large amount of membrane surface area, resulting in
+superior flow capacity and pollutant removal capacity.
+
+Maintenance
+Regular scheduled inspections and maintenance is necessary to assure proper functioning of the
+Jellyfish Filter. The maintenance interval is designed to be a minimum of 12 months, but this will
+vary depending on site loading conditions and upstream pretreatment measures. Quarterly
+inspections and inspections after all storms beyond the 5-year event are recommended until enough
+historical performance data has been logged to comfortably initiate an alternative inspection interval.
+Please see www.ImbriumSystems.com for more information.
+
+Thank you for the opportunity to present this information to you and your client.
+
+CDN/Int'l: 1 (800) 565-4801 | US: 1 (888) 279-8826
+
+1
+
+www.ImbriumSystems.com
+
+Performance
+Jellyfish efficiently captures a high level of Stormwater pollutants, including:
+ 89% of the total suspended solids (TSS) load, including particles less than 5 microns
+ 59% TP removal & 51% TN removal
+ 90% Total Copper, 81% Total Lead, 70% Total Zinc
+ Particulate-bound pollutants such as nutrients, toxic metals, hydrocarbons and bacteria
+ Free oil, Floatable trash and debris
+
+Field Proven Peformance
+The Jellyfish filter has been field-tested on an urban site with 25 TARP qualifying rain events and
+field monitored according to the TARP field test protocol, demonstrating:
+l A median TSS removal efficiency of 89%, and a median SSC removal of 99%;
+l The ability to capture fine particles as indicated by an effluent d50 median of 3 microns
+for all monitotred storm events, and a median effluent turbidity of 5 NTUs;
+l A median Total Phosphorus removal of 59%, and a median Total Nitrogen removal of
+51%.
+
+Jellyfish Filter Treatment Functions
+
+Pre-treatment and Membrane Filtration
+
+CDN/Int'l: 1 (800) 565-4801 | US: 1 (888) 279-8826
+
+2
+
+www.ImbriumSystems.com
+
+Project Information
+
+Rainfall
+
+Date:
+Project Name:
+Project Number:
+Location:
+
+Designer Information
+
+Name:
+State:
+ID:
+Record:
+Co-ords:
+
+Company:
+Contact:
+Phone #:
+
+Total Area:
+Runoff Coefficient:
+
+Friday, June 29, 2018
+336 King St. E
+Bolton
+
+TORONTO CENTRAL
+ON
+100
+1982 to 1999
+45°30'N, 90°30'W
+
+Drainage Area
+
+Aplin & Martin Consultants Ltd.
+Rebecca Turbitt
+
+Notes
+
+0.26 ha
+0.65
+
+Upstream Detention
+Peak Release Rate:
+Pretreatment Credit:
+
+n/a
+n/a
+
+Design System Requirements
+Flow
+90% of the Average Annual Runoff based on 18 years
+Loading of TORONTO CENTRAL rainfall data:
+Treating 90% of the average annual runoff volume,
+Sediment
+1005 m³, with a suspended sediment concentration of
+Loading
+60 mg/L.
+
+5.5 L/s
+60 kg
+
+Recommendation
+The Jellyfish Filter model JF4-1-1 is recommended to meet the water quality objective by treating a
+flow of 7.6 L/s, which meets or exceeds 90% of the average annual rainfall runoff volume based on
+18 years of TORONTO CENTRAL rainfall data for this site. This model has a sediment capacity of
+85 kg, which meets or exceeds the estimated average annual sediment load.
+Manhole Wet Vol
+Sump
+Diameter Below Deck Storage
+(L)
+(m)
+(m³)
+JF4-1-1
+1
+1
+1.2
+2313
+0.34
+JF4-2-1
+2
+1
+1.2
+2313
+0.34
+JF6-3-1
+3
+1
+1.8
+5205
+0.79
+JF6-4-1
+4
+1
+1.8
+5205
+0.79
+JF6-5-1
+5
+1
+1.8
+5205
+0.79
+JF6-6-1
+6
+1
+1.8
+5205
+0.79
+JF8-6-2
+6
+2
+2.4
+9252
+1.42
+JF8-7-2
+7
+2
+2.4
+9252
+1.42
+JF8-8-2
+8
+2
+2.4
+9252
+1.42
+JF8-9-2
+9
+2
+2.4
+9252
+1.42
+JF8-10-2
+10
+2
+2.4
+9252
+1.42
+JF10-11-3
+11
+3
+3.0
+14456
+2.21
+JF10-12-3
+12
+3
+3.0
+14456
+2.21
+JF10-12-4
+12
+4
+3.0
+14456
+2.21
+JF10-13-4
+13
+4
+3.0
+14456
+2.21
+JF10-14-4
+14
+4
+3.0
+14456
+2.21
+JF10-15-4
+15
+4
+3.0
+14456
+2.21
+JF10-16-4
+16
+4
+3.0
+14456
+2.21
+JF10-17-4
+17
+4
+3.0
+14456
+2.21
+JF10-18-4
+18
+4
+3.0
+14456
+2.21
+JF10-19-4
+19
+4
+3.0
+14456
+2.21
+JF12-20-5
+20
+5
+3.6
+20820
+3.2
+JF12-21-5
+21
+5
+3.6
+20820
+3.2
+JF12-22-5
+22
+5
+3.6
+20820
+3.2
+JF12-23-5
+23
+5
+3.6
+20820
+3.2
+JF12-24-5
+24
+5
+3.6
+20820
+3.2
+JF12-25-5
+25
+5
+3.6
+20820
+3.2
+JF12-26-5
+26
+5
+3.6
+20820
+3.2
+JF12-27-5
+27
+5
+3.6
+20820
+3.2
+CDN/Int'l: 1 (800) 565-4801 | US: 1 (888) 279-8826
+3
+Jellyfish
+Model
+
+Number of
+High-Flo
+Cartridges
+
+Number of
+Draindown
+Cartridges
+
+Oil
+Treatment Sediment
+Capacity Flow Rate Capacity
+(kg)
+(L/s)
+(L)
+379
+7.6
+85
+379
+12.6
+142
+848
+17.7
+199
+848
+22.7
+256
+848
+27.8
+313
+848
+28.6
+370
+1469
+35.3
+398
+1469
+40.4
+455
+1469
+45.4
+512
+1469
+50.5
+569
+1469
+50.5
+626
+2302
+63.1
+711
+2302
+68.2
+768
+2302
+70.7
+796
+2302
+75.7
+853
+2302
+78.9
+910
+2302
+78.9
+967
+2302
+78.9
+1024
+2302
+78.9
+1081
+2302
+78.9
+1138
+2302
+78.9
+1195
+2771
+113.6
+1280
+2771
+113.7
+1337
+2771
+113.7
+1394
+2771
+113.7
+1451
+2771
+113.7
+1508
+2771
+113.7
+1565
+2771
+113.7
+1622
+2771
+113.7
+1679
+www.ImbriumSystems.com
+
+Jellyfish Filter Design Notes
+l Typically the Jellyfish Filter is designed in an offline configuration, as all stormwater filter systems
+
+will perform for a longer duration between required maintenance services when designed and
+applied in off-line configurations. Depending on the design parameters, an optional internal bypass
+may be incorporated into the Jellyfish Filter, however note the inspection and maintenance
+frequency should be expected to increase above that of an off-line system. Speak to your local
+representative for more information.
+
+Jellyfish Filter Typical Layout
+l Typically, 18 inches (457 mm) of driving head is designed into the system, calculated as the
+
+difference in elevation between the top of the diversion structure weir and the invert of the Jellyfish
+Filter outlet pipe. Alternative driving head values can be designed as 12 to 24 inches (305 to
+610mm) depending on specific site requirements, requiring additional sizing and design assistance.
+l Typically, the Jellyfish Filter is designed with the inlet pipe configured 6 inches (150 mm) above the
+outlet invert elevation. However, depending on site parameters this can vary to an optional
+configuration of the inlet pipe entering the unit below the outlet invert elevation.
+l The Jellyfish Filter can accommodate multiple inlet pipes within certain restrictions.
+l While the optional inlet below deck configuration offers 0 to 360 degree flexibility between the inlet
+and outlet pipe, typical systems conform to the following:
+Model Diameter (m)
+1.2
+1.8
+2.4
+3.0
+3.6
+
+Minimum Angle
+Inlet / Outlet Pipes
+62º
+59º
+52º
+48º
+40º
+
+Minimum Inlet Pipe
+Diameter (mm)
+
+Minimum Outlet Pipe
+Diameter (mm)
+
+150
+200
+250
+300
+300
+
+200
+250
+300
+450
+450
+
+l The Jellyfish Filter can be built at all depths of cover generally associated with conventional
+
+stormwater conveyance systems. For sites that require minimal depth of cover for the stormwater
+infrastructure, the Jellyfish Filter can be applied in a shallow application using a hatch cover. The
+general minimum depth of cover is 36 inches (915 mm) from top of the underslab to outlet invert.
+l If driving head caclulations account for water elevation during submerged conditions the Jellyfish
+Filter will function effectively under submerged condtions.
+l Jellyfish Filter systems may incorporate grated inlets depending on system configuration.
+l For sites with water quality treatment flow rates or mass loadings that exceed the design flow rate of
+the largest standard Jellyfish Filter manhole models, systems can be designed that hydraulically
+connect multiple Jellyfish Filters in series or alternatively Jellyfish Vault units can be designed.
+CDN/Int'l: 1 (800) 565-4801 | US: 1 (888) 279-8826
+
+4
+
+www.ImbriumSystems.com
+
+APPENDIX E
+ENGINEERING
+PLANS
+
+KINGS RIDGE
+
+TOWN OF CALEDON PUBLIC WORKS
+AND ENGINEERING DEPARTMENT
+CRAIG CAMPBELL, C.E.T. DIRECTOR
+
+COMMON ELEMENT CONDOMINIUM TOWNHOUSE DEVELOPMENT
+336 KING STREET EAST, CALEDON ON
+
+KENTBRID
+G
+
+E COURT
+
+AN
+
+EV
+SR
+E
+IDG
+
+REGIONAL MUNICIPALITY OF PEEL
+ENVIRONMENTAL, TRANSPORTATION,
+AND PLANNING SERVICES
+MITCH ZAMOJE, COMMISSIONER
+S
+ER
+
+RM
+FA
+NE
+LA
+
+SI
+IVER
+
+KI
+NG
+
+ST
+R
+
+EE
+
+T
+
+EA
+
+ST
+
+TE
+ER R
+
+HUMB
+
+Aplin & Martin Consultants Ltd.
+405 - 55 St. Clair Ave. West, O.N. Canada M4V 2Y7
+Tel: (416) 644-1900, Fax: (416) 644-1889, Email: general@aplinmartin.com
+
+OLD
+
+KIN
+
+GR
+
+OA
+D
+
+LIST OF DRAWINGS
+17-1419-C01
+
+COVER SHEET
+
+17-1419-C02
+
+SITE GRADING PLAN
+
+17-1419-C03
+
+SITE SERVICING PLAN
+
+17-1419-C04
+
+STORM DETENTION DETAILS
+
+17-1419-C05
+
+STORM SEWER & ROAD WORKS ROAD A
+
+17-1419-C06
+
+WATERWORKS & SANITARY SEWERS ROAD A
+
+17-1419-C06
+
+EROSION AND SEDIMENT CONTROL PLAN
+
+17-1419-C08
+
+STANDARD NOTES
+
+336 KING'S RIDGE INC.
+1175 MEYERSIDE DRIVE, SUITE 2
+MISSISSAUGA, ON L5T 1H3
+
+

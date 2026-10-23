@@ -1,0 +1,5585 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+FUNCTIONAL SERVICING AND STORMWATER
+MANAGEMENT REPORT
+10819 HIGHWAY 9
+TOWN OF CALEDON
+REGION OF PEEL
+
+PREPARED FOR:
+LIONS GROUP INC.
+PREPARED BY:
+C.F. CROZIER & ASSOCIATES INC.
+211 YONGE STREET, SUITE 301
+TORONTO, ON M5B 1M4
+MAY 2020
+
+CFCA FILE NO. 1651-5095
+
+The material in this report reflects best judgment in light of the
+information available at the time of preparation. Any use which
+a third party makes of this report, or any reliance on or decisions
+made based on it, are the responsibilities of such third parties.
+C.F. Crozier & Associates Inc. accepts no responsibility for
+damages, if any, suffered by any third party as a result of
+decisions made or actions based on this report.
+
+TOWN OF CALEDON
+Lions Group Inc.
+PLANNING
+10819 Highway 9, Town of Caledon
+RECEIVED
+
+Functional Servicing and Stormwater Management Report
+May 2020
+
+Revision Number
+
+Date
+
+Comments
+
+Rev. 1
+
+October 28, 2019
+May 8, 2020
+
+Issued for Temporary ZBA (Not Submitted)
+Issued for Temporary ZBA
+
+Jul 15,
+Rev. 0 2020
+
+C.F. Crozier & Associates Inc.
+Project No. 1651-5095
+
+TOWN OF CALEDON
+Lions Group Inc.
+PLANNING
+10819 Highway 9, Town of Caledon
+RECEIVED
+
+Functional Servicing and Stormwater Management Report
+May 2020
+
+TABLE OF CONTENTS
+
+Jul1.015,INTRODUCTION
+2020 .........................................................................................................................1
+2.0
+
+SITE DESCRIPTION .....................................................................................................................1
+
+3.0
+
+SANITARY SERVICING ..............................................................................................................1
+3.1
+3.2
+3.3
+
+4.0
+
+Existing Sanitary Servicing ................................................................................................1
+Design Sanitary Flow .........................................................................................................1
+Proposed Sanitary Servicing ............................................................................................1
+WATER SERVICING ....................................................................................................................2
+
+4.1
+4.2
+4.3
+4.4
+5.0
+
+Existing Water Servicing ....................................................................................................2
+Design Water Demand ......................................................................................................2
+Fire Flow Demand ..............................................................................................................2
+Proposed Water Servicing ................................................................................................3
+DRAINAGE CONDITIONS .........................................................................................................3
+
+5.1
+5.2
+6.0
+
+Existing Drainage ...............................................................................................................3
+Proposed Drainage ...........................................................................................................3
+STORMWATER MANAGEMENT .................................................................................................4
+
+6.1
+6.2
+
+Stormwater Quantity Control............................................................................................4
+Stormwater Quality Control ..............................................................................................5
+
+7.0
+
+EROSION AND SEDIMENT CONTROLS DURING CONSTRUCTION .........................................5
+
+8.0
+
+CONCLUSIONS AND RECOMMENDATIONS...........................................................................6
+
+C.F. Crozier & Associates Inc.
+Project No. 1651-5095
+
+TOWN OF CALEDON
+Lions Group Inc.
+PLANNING
+10819 Highway 9, Town of Caledon
+RECEIVED
+
+Functional Servicing and Stormwater Management Report
+May 2020
+
+LIST OF TABLES
+
+1:
+Estimated Sanitary Design Flows
+JulTable
+15,
+2020
+Table 2:
+Estimated Design Water Demand
+Table 3:
+
+Estimated Fire Demand Flows
+
+Table 4:
+
+Land Area Comparison
+
+Table 5:
+
+Comparison of Pre- and Post-Development Runoff Coefficients and Flow Rates
+
+Table 6:
+
+Summary of Rooftop Control Calculations
+
+LIST OF APPENDICES
+Appendix A:
+
+Sanitary Flow Calculations
+
+Appendix B:
+
+Water Demand Calculations
+
+Appendix C:
+
+Stormwater Management Design Calculations
+
+LIST OF FIGURES
+Figure 1:
+
+Removals Plan and Erosion & Sediment Control Plan
+
+Figure 2:
+
+Site Servicing Plan
+
+Figure 3:
+
+Site Grading Plan
+
+Figure 4:
+
+Sections
+
+Figure 5:
+
+Pre- and Post-Development Drainage Plans
+
+C.F. Crozier & Associates Inc.
+Project No. 1651-5095
+
+TOWN OF CALEDON
+Lions Group Inc.
+PLANNING
+10819 Highway 9, Town of Caledon
+RECEIVED
+1.0
+
+Functional Servicing and Stormwater Management Report
+May 2020
+
+Introduction
+
+Crozier
+& Associates Inc. (Crozier) was retained by Lions Group Inc. to prepare a Functional
+JulC.F.15,
+2020
+Servicing & Stormwater Management Report to support the Zoning By-Law Amendment for the
+property located at 10819 Highway 9 in the Town of Caledon.
+
+The purpose of this report is to demonstrate that the proposed site can be developed in
+accordance with the Town of Caledon and Region of Peel guidelines from a functional servicing &
+stormwater management perspective.
+
+2.0
+
+Site Description
+
+The site covers an area of approximately 0.64 ha and is currently occupied by an automotive
+service building, residential dwelling, associated surface parking, and landscape areas. The site is
+located in an extractive industrial and rural zoned neighbourhood in the Town of Caledon and is
+bound by Highway 9 to the north, rural residential properties to the east and west, and an Oak
+Ridges Moraine environmental policy area to the south.
+According to the Site Plan provided by Glen Schnarr & Associates Inc. dated May 23, 2019, the
+proposed development will consist of a gas station with associated convenience building, an
+above-ground parking area, and landscaped areas.
+
+3.0
+
+Sanitary Servicing
+
+3.1
+
+Existing Sanitary Servicing
+
+The site is currently serviced by a septic system, which will be decommissioned prior to construction.
+3.2
+
+Design Sanitary Flow
+
+Design sanitary demand for the subject property was calculated using the Ontario Building Code. A
+summary of the results is presented in Table 1 and detailed calculations are provided in Appendix C.
+Table 1: Estimated Sanitary Design Flows
+Standard
+
+Type of Building
+
+Average Flow
+(L/day)
+
+Ontario Building Code Act
+
+Gas Station
+
+5260
+
+The proposed sanitary sewage treatment system must be designed for a septic flow of 5260 L/day
+for the development, as determined by the Ontario Building Code table 8.2.1.3.B. This flow rate was
+determined based on an assumption of 6 fuel outlets and 2 washrooms for the site.
+3.3
+
+Proposed Sanitary Servicing
+
+A septic system is proposed for the sanitary servicing of the gas station. The proposed septic system
+will have a design capacity of 5260 L/day and include an anaerobic digester tank with pump
+
+C.F. Crozier & Associates Inc.
+Project No. 1651-5095
+
+Page 1 of 6
+
+TOWN OF CALEDON
+Lions Group Inc.
+PLANNING
+10819 Highway 9, Town of Caledon
+RECEIVED
+
+Functional Servicing and Stormwater Management Report
+May 2020
+
+chamber, a Waterloo Biofilter treatment system, and a Type A dispersal bed for the distribution of
+the treated wastewater effluent. The proposed anaerobic digester will hold the sewage long
+enough to allow the solids to sink and the oil and grease to float. The effluent will then be pumped
+into the proposed Waterloo Biofilter Wire Mesh Basket Model 50 or approved equivalent for
+treatment. The treated effluent will then be pumped into the Type A dispersal bed with a 660 m2
+sand layer footprint and a 110 m2 stone layer footprint. The detailed septic system calculations are
+presented in Appendix B.
+
+Jul 15, 2020
+
+The Site Servicing Plan (Figure 2) and the Site Grading Plan (Figure 3) illustrate the location of the
+proposed septic system and service connections for sanitary servicing for the development. Details
+of the septic system are found in Figure 4. The internal sanitary plumbing within the building will be
+designed by the mechanical engineer in accordance with the Ontario Building Code (OBC).
+
+4.0
+
+Water Servicing
+
+4.1
+
+Existing Water Servicing
+
+A review of the Ontario Water Resources Commission Act’s Water Well Record dated May 30, 1968
+indicates that there is an existing well located on the subject property. Further information on the
+existing well is provided in Appendix A, where a copy of the well record is provided.
+4.2
+
+Design Water Demand
+
+The water demand for the proposed development was calculated assuming that the sanitary flows
+from the site are equivalent to the water demand. As such, a water demand of 5260 L/day, or
+0.06L/s, was used to calculate the water demand for the development. Peaking factors were used
+with reference to the Region of Peel Public Works Watermain Design Criteria (June 2010). Refer to
+Appendix B for detailed water demand calculations.
+
+Standard
+
+OBC/Region of Peel
+
+Table 2: Estimated Design Water Demand
+Maximum
+Average
+Peak Hour
+Maximum
+Daily
+Daily
+Demand
+Daily
+Demand
+Demand
+Peaking
+Demand
+Peaking
+(L/s)
+Factor
+(L/s)
+Factor
+0.06
+
+1.4
+
+3.0
+
+0.09
+
+Peak Hourly
+Demand
+(L/s)
+0.18
+
+Using the Ontario Building Code Table 8.2.1.3.B. and the Region of Peel Design Criteria for domestic
+water demand, the projected daily demand and peak hourly flows for the site will be 0.06 L/s and
+0.18 L/s, respectively.
+4.3
+
+Fire Flow Demand
+
+The Fire Underwriters Survey method was used to estimate the fire flow requirements for the
+proposed development. This calculation estimates the flow rate required to service the
+development. The proposed convenience store building is assumed to be of ordinary construction
+and to have no sprinkler system.
+
+C.F. Crozier & Associates Inc.
+Project No. 1651-5095
+
+Page 2 of 6
+
+TOWN OF CALEDON
+Lions Group Inc.
+PLANNING
+10819 Highway 9, Town of Caledon
+RECEIVED
+
+Functional Servicing and Stormwater Management Report
+May 2020
+
+Table 3 summarizes the required fire flow and duration to meet fire protection for the proposed
+development. Refer to Appendix B for detailed fire flow calculations.
+
+Jul 15, 2020
+
+Method
+
+Table 3: Estimated Fire Demand Flows
+Demand Flow
+Duration
+(L/s)
+(h)
+
+Fire Underwriter’s Survey (1999)
+
+50
+
+1.25
+
+Volume
+(m3)
+225
+
+A fire cistern with a volume of 225 m3 is proposed to accommodate a fire flow of 50 L/s for a
+duration of 1.25 hours.
+Please note that the Fire Underwriters Survey value is a conservative estimate for comparison
+purposes only. The mechanical engineer for this development will complete the required analyses
+for fire protection and the architect will design fire separation methods per the determined fire flow
+rate.
+4.4
+
+Proposed Water Servicing
+
+The existing well on-site will conflict with the proposed site plan, and as such will be
+decommissioned. The development is proposed to be serviced by a new well located on-site for
+domestic water demand, and a proposed 225 m3 cistern for fire water demand. Please refer to
+Figure 1 for approximate location of proposed water servicing. The exact location of this proposed
+well will be coordinated with a hydrogeological engineer at detailed design stage.
+
+5.0
+
+Drainage Conditions
+
+The subject property is part of the Nottawasaga Valley Conservation Authority (NVCA), therefore
+the stormwater management design will adhere to the NVCA Stormwater Technical Guide
+(December 2013) guidelines.
+5.1
+
+Existing Drainage
+
+The subject property currently consists of asphalt, grass, tree cover, and two buildings, with property
+access via Highway 9. According to the Cole Sherman drawing dated March 10, 2000, an existing
+minor system on-site drains to a 150 mm diameter CSP culvert beneath Highway 9 which outlets to a
+ditch located north of the road. Figure 2 illustrates the existing storm sewer and manhole locations. A
+review of the topographic survey prepared by Avanti Surveying Inc. (January 22, 2019) indicates
+that stormwater runoff from the property drains from the south property line to the catchbasins
+located at the north property line.
+5.2
+
+Proposed Drainage
+
+The proposed development consists of a gas station complete with gas pumps, a gas bar, parking,
+and landscaped areas. Upon development, the minor storm event will be collected by catchbasins
+located within the paved area at the north end of the site. These catchbasins will discharge to the
+existing culvert located beneath Highway 9, which drains to the ditch along the north boulevard of
+Highway 9.
+
+C.F. Crozier & Associates Inc.
+Project No. 1651-5095
+
+Page 3 of 6
+
+TOWN OF CALEDON
+Lions Group Inc.
+PLANNING
+10819 Highway 9, Town of Caledon
+RECEIVED
+
+Functional Servicing and Stormwater Management Report
+May 2020
+
+The Preliminary Site Servicing and Site Grading Plans (Figure 2 and Figure 3) illustrate the proposed
+site drainage, the location and design of the storm sewer, and all connections. Please refer to
+Figure 5 which highlights the pre- and post-development pervious and impervious areas for the site.
+Table 4 summarizes the results.
+
+Jul 15, 2020
+
+Conditions
+
+Table 4: Land Area Comparison
+MTO
+Impervious
+Pervious
+Setback
+Area
+Area
+Area
+(m2)
+(m2)
+(m2)
+
+Total Area
+(m2)
+
+Runoff
+Coefficient
+
+Pre-Development
+
+1861
+
+4539
+
+-
+
+6400
+
+0.46
+
+Post-Development
+
+1429
+
+3599
+
+1375
+
+6400
+
+0.43
+
+6.0
+
+Stormwater Management
+
+A review of the stormwater management criteria and drainage plans for the subject property was
+completed to establish the required on-site stormwater management controls.
+6.1
+
+Stormwater Quantity Control
+
+The pre-development runoff coefficient for the site was determined to be 0.46. The proposed
+commercial development includes a gas station with a convenience store and parking area. The
+post-development runoff coefficient for the commercial development was determined to be 0.43.
+As shown in Table 5, post-development peak flows decrease from pre-development peak flows. Site
+grading constraints limit the ability to use an underground storage chamber to store and control the
+increase in flow. Rooftop control measures will be used to control the flow rate from the roof to 1.4
+L/s based on the roof drain release rate of 42L/s/ha. This further limits the increase in flow rate from
+pre-development to post-development. Based on the pre-development flows exceeding the postdevelopment flow rates, no further quantity control measures are proposed for the site. Detailed
+stormwater management calculations are located in Appendix C.
+Table 5: Comparison of Pre- and Post-Development Runoff Coefficients and Flow Rates
+Post-Dev.
+Pre-Dev.
+Post-Dev.
+Pre-Dev. Peak
+Site Area
+Design storm
+Peak Flow
+Runoff
+Runoff
+Flow Rate
+(ha)
+event
+Rate
+Coefficient
+Coefficient
+(L/s)
+(L/s)
+2
+52
+47
+5
+69
+62
+10
+81
+72
+0.53
+0.46
+0.43
+25
+95
+84
+50
+105
+94
+100
+115
+103
+Note: Post-Development peak flow rates represent both uncontrolled flows and flow rates from the site draining to the
+proposed catchbasins, including a rooftop flow rate of 1.1 L/s. Rooftop flow rate calculations are shown in Table 6.
+
+C.F. Crozier & Associates Inc.
+Project No. 1651-5095
+
+Page 4 of 6
+
+TOWN OF CALEDON
+Lions Group Inc.
+PLANNING
+10819 Highway 9, Town of Caledon
+RECEIVED
+
+Functional Servicing and Stormwater Management Report
+May 2020
+
+6: Summary of Rooftop Control Calculations
+Jul Runoff
+15,Coefficient
+2020 (100-YrTable
+Storm Event)
+
+0.9
+
+Rooftop Area (ha)
+
+0.026
+
+Rooftop unit release rate (L/s/ha)1
+
+42
+
+Rooftop release rate (L/s)
+
+1.1
+
+Notes:
+1.
+
+6.2
+
+Release rate determined assuming a roof drain standard controlled release rate of 10 GPM (0.63 L/s/in), 6 in
+of depth, and the The Ontario Building Code (2006) standard which requires at least 1 drain per 900 m 2,
+equivalent to 11.11 drains/ha * 6 in * 0.63L/s/in = 42 L/s
+
+Stormwater Quality Control
+
+The stormwater quality criteria outlined in the Region of Peel Public Works Stormwater Design Criteria
+and Procedural Manual requires Level 1 enhanced treatment through the long-term removal of 80%
+total suspended solids (TSS). As such, a Stormceptor model EFO4 oil and grit separator was selected.
+EFO models provide enhanced oil capture and removal compared to STC and EF models, and as
+such was selected for the proposed gas station. The Stormceptor EFO4 will provide 63% TSS removal
+for the site. Rooftop flows bypass the proposed oil and grit separator and are assumed to be clean
+(80% TSS removal).
+
+7.0
+
+Erosion and Sediment Controls During Construction
+
+Erosion and sediment controls will be installed prior to the beginning of any construction activities.
+They will be maintained until the site is stabilized or as directed by the Site Engineer and/or Town of
+Caledon. The Preliminary Erosion & Sediment Control Plan (Figure 1) identifies the location of the
+recommended controls. Controls will be inspected after each significant rainfall event and
+maintained in proper working condition.
+The following erosion and sediment controls will be included during construction on the site:
+Heavy Duty Silt Fencing
+Silt fencing will be installed on the perimeter of the site to intercept sheet flow. Additional silt fence
+may be added based on field decisions by the Site Engineer and Owner, prior to, during and
+following construction.
+Rock Mud Mat
+A rock mud mat will be installed at the entrance to the construction zone to prevent mud tracking
+from the site onto surrounding lands and the perimeter roadway network. All construction traffic will
+be restricted to this access only.
+
+C.F. Crozier & Associates Inc.
+Project No. 1651-5095
+
+Page 5 of 6
+
+TOWN OF CALEDON
+Lions Group Inc.
+PLANNING
+10819 Highway 9, Town of Caledon
+RECEIVED
+8.0
+
+Functional Servicing and Stormwater Management Report
+May 2020
+
+Conclusions and Recommendations
+
+proposed
+development can be serviced for water, sanitary, and stormwater in accordance
+JulThe15,
+2020
+with the Town of Caledon and Region of Peel requirements and standards. Our conclusions and
+recommendations include:
+
+1. The existing well on-site will be decommissioned and a new well is proposed to provide the
+water demand for the proposed development. The average daily water demand and peak
+hour water demand for the subject property are 0.06 L/s and 0.18 L/s, respectively.
+2. Fire protection will be provided through a proposed 225 m3 fire water cistern for the fire
+demand flow of 50 L/s for a duration of 1.25 hours.
+3. Sanitary servicing for the proposed development will be provided by a septic system. The
+sanitary flow for the subject property is 5260 L/day.
+4. Stormwater conveyance for the subject property will be provided through a storm sewer
+connection to the existing 150 mm culvert beneath Highway 9.
+5. Stormwater quality control for the site will be provided by a Stormceptor model EFO4 oil and
+grit separator for the site surface and “clean” rooftop area.
+6. Erosion and sediment controls will be implemented on-site during construction and will be
+maintained until the site is stabilized.
+Based on the above conclusions, we recommend the approval of the Zoning By-Law Amendment,
+from the perspective of functional servicing and preliminary stormwater management.
+C.F. CROZIER & ASSOCIATES INC.
+
+C.F. CROZIER & ASSOCIATES INC.
+
+James Boyd, E.I.T.
+Civil
+
+Ashish Shukla, P.Eng.
+Associate, Civil
+
+/kw
+N:\1600\1651-Lions Group Inc\5095-10795&10819 Highway 9\Reports\2020.03.13_FSR&SWM.docx
+
+C.F. Crozier & Associates Inc.
+Project No. 1651-5095
+
+Page 6 of 6
+
+TOWN OF CALEDON
+Lions Group Inc.
+PLANNING
+10819 Highway 9, Town of Caledon
+RECEIVED
+
+Functional Servicing and Stormwater Management Report
+May 2020
+
+Jul 15, 2020
+
+APPENDIX A
+Sanitary Flow Calculations
+
+C.F. Crozier & Associates Inc.
+Project No. 1651-5095
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+
+Project:
+Project No.:
+
+10819 Highway 9
+1651-5095
+
+Design by:
+Check by:
+
+KW
+MC
+
+Date:
+Updated:
+
+2019-08-21
+2020-03-13
+
+SANITARY FLOW CALCULATIONS (OBC)
+10819 Highway 9, Caledon
+Max 150 mm
+
+References/Notes
+
+PROPOSED SANITARY FLOW
+Development Concept
+Plan Proposed Gas Bar,
+GSAI, May 23, 2019
+
+GAS BAR
+Assuming 2 water closets (WC) and 6 fuel outlets
+950 L/WC
+
+560 L/fuel outlet
+
+2 WC
+
+6 fuel outlets
+
+1900 L/day
+TOTAL
+
+3360 L/day
+5260 L/Day
+
+Building Code Act,
+1992 Table 8.2.1.3.B.
+
+0.0609 L/s
+
+TOTAL SANITARY FLOW
+
+5260 L/day
+0.0609 L/s
+
+N:\1600\1651-Lions Group Inc\5095-10795&10819 Highway 9\Design\Civil_Water\2019.08.21 Sanitary & Septic
+
+MOE ECA Permit
+Required for demand
+of 10,000 L/day or
+greater
+
+Page 1 of 1
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+
+Project:
+Project No.:
+
+10819 Highway 9
+1651-5095
+
+Design by:
+Check by:
+
+KW
+MC
+
+Date:
+Updated:
+
+2019-08-21
+2020-03-13
+
+COMMERCIAL SEPTIC DESIGN (OBC)
+10819 Highway 9, Caledon
+References/Notes
+Anaerobic Digester (Waterloo Biofilter)
+
+Design Flow
+
+5260 L/day
+
+Minimum Tank Capacity
+
+15780 L
+
+DISPOSAL & TREATMENT SYSTEM
+
+Treatment: Waterloo Biofilter Wire Mesh Basket Model BA75
+
+Waterloo biofilter
+Designer Manual
+Version 1.4 (May 2017)
+
+Disposal: Type A Dispersal Bed
+
+SAND LAYER
+Soil T-time T
+Total San Flow Q
+Septic Area A =
+Required Sand Area=
+
+50 mins/cm
+5260 L/day
+Q*T/400
+658 sq. m
+
+L=
+
+30.0 m
+
+W=
+
+22.0 m
+
+Provided Sand Area=
+
+Soil T-time assumed to
+be 50 mins/cm
+
+Building Code Act,
+1992 Section 8.7.7.1
+
+660.0 sq. m
+
+STONE LAYER
+Total San Flow Q
+
+5260 L/day
+
+B
+
+50
+
+Stone Area A=
+
+Q/B
+
+Required Stone Area=
+
+105 sq. m
+
+L=
+
+11.0 m
+
+W=
+
+10.0 m
+
+Provided Stone Area=
+
+Building Code Act,
+1992 Section 8.7.7.1
+
+110.0 sq. m
+
+Minimum sand depth = 600mm
+
+OBC 8.7.7.1 (4b)
+
+Minimum stone depth = 300mm
+
+OBC 8.7.7.1 (6B)
+
+GROSS FLOOR AREA (GFA)
+GAS BAR
+
+2795.0 sq ft
+259.66 sq m
+
+TOTAL GFA
+
+2795.0 sq ft
+259.66 sq m
+
+N:\1600\1651-Lions Group Inc\5095-10795&10819 Highway 9\Design\Civil_Water\2019.08.21 Sanitary & Septic
+
+Page 1 of 1
+
+TOWN OF CALEDON
+Lions Group Inc.
+PLANNING
+10819 Highway 9, Town of Caledon
+RECEIVED
+
+Functional Servicing and Stormwater Management Report
+May 2020
+
+Jul 15, 2020
+
+APPENDIX B
+Water and Septic Calculations
+
+C.F. Crozier & Associates Inc.
+Project No. 1651-5095
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+
+Project:
+Project No.:
+
+10819 Highway 9
+1651-5095
+
+Design by:
+Check by:
+
+KW
+MC
+
+Date:
+Updated:
+
+2019-08-23
+2020-03-13
+
+WATER DEMAND CALCULATIONS (OBC and Region of Peel)
+10819 Highway 9, Caledon
+Max 150 mm
+
+PROPOSED WATER DEMAND
+
+Commercial Average Daily Demand
+
+5260 L/d
+
+References/Notes
+
+Building Code Act,
+1992 Table 8.2.1.3.B.
+(See Sanitary Flow
+Calculations)
+
+PEAKING FACTORS
+
+Maximum Daily Demand:
+
+1.40
+
+Peak Hour Demand:
+
+3.00
+
+Region of Peel Design
+Criteria Manual Watermain Design
+Section 2.3 Water
+Demands
+
+FLOWS
+
+(L/day)
+
+(L/s)
+
+Average Daily Demand:
+
+5260
+
+0.06
+
+Maximum Daily Demand:
+
+7364
+
+0.09
+
+Peak Hour Demand:
+
+15780
+
+0.18
+
+N:\1600\1651-Lions Group Inc\5095-10795&10819 Highway 9\Design\Civil_Water\2019.08.21 Sanitary & Septic
+
+Page 1 of 1
+
+TOWN OF CALEDON
+PLANNING
+10819 Highway 9
+RECEIVED
+Fire Protection Volume Calculation
+Jul 15, 2020
+
+Date: 2019-08-30
+Design: KW
+
+CFCA File: 1651-5095
+
+Check: JH
+
+Water Supply for Public Fire Protection - 1999
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+1. An estimate of fire flow required for a given area may be determined by the formula:
+F = 220 * C * sqrt A
+where
+F = the required fire flow in litres per minute
+C = coefficient related to the type of construction:
+=
+1.5
+for wood frame construction (structure essentially all combustible)
+=
+1.0
+for ordinary construction (brick or other masonry walls, combustible floor and interior)
+=
+0.8
+for non-combustible construction (unprotected metal structural components)
+=
+0.6
+for fire-resistive construction (fully protected frame, floors, roof)
+A = The total floor area in square metres (including all storeys, but excluding basements at least
+50 percent below grade) in the building considered.
+Proposed Buildings
+
+Building Area =
+C=
+
+1.0
+
+Therefore F =
+
+260.0 sq.m
+
+Assume ordinary construction
+
+3,547 L/min
+
+Fire flow determined above shall not exceed:
+30,000 L/min for wood frame construction
+30,000 L/min for ordinary construction
+25,000 L/min for non-combustible construction
+25,000 L/min for fire-resistive construction
+
+2. Values obtained in No. 1 may be reduced by as much as 25% for occupancies having low contents fire hazard or may
+be increased by up to 25% surcharge for occupancies having a high fire hazard.
+Non-Combustible
+Limited Combustible
+Combustible
+
+-25%
+-15%
+0% (No Change)
+
+Non-Combustible
+
+Free Burning
+Rapid Burning
+
+15%
+25%
+
+-25%
+-887 L/min
+2,661 L/min
+
+Note: Flow determined shall not be less than 2,000 L/min
+3. Sprinklers - The value obtained in No. 2 above maybe reduced by up to 50% for complete automatic sprinkler protection.
+The credit for the system will be a maximum of 30% for an adequately designed system conforming to NFPA 13 and other
+NFPA sprinkler standards.
+As part of this analysis, building is assumed to have no sprinkler protection (no reduction),
+0 L/min reduction
+
+TOWN OF CALEDON
+PLANNING
+10819 Highway 9
+RECEIVED
+Fire Protection Volume Calculation
+
+Designed By: KW
+
+CFCA File: 1651-5095
+
+Checked By: JH
+
+Date: 2019-08-30
+
+Jul 15, 2020
+
+Page 2
+
+Water Supply for Public Fire Protection - 1999
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+4. Exposure - To the value obtained in No. 2, a percentage should be added for structures exposed within 45 metres
+by the fire area under consideration. The percentage shall depend upon the height, area, and construction of the
+building(s) being exposed, the separation, openings in the exposed building(s), the length and height of exposure,
+the provision of automatic sprinklers and/or outside sprinklers in the building(s) exposed, the occupancy of the
+exposed building(s) and the effect of hillside locations on the possible spread of fire.
+Separation
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+
+Charge
+25%
+20%
+15%
+
+Separation
+20.1 to 30 m
+30.1 to 45 m
+
+Charge
+10%
+5%
+
+Exposed buildings
+Name
+North
+South
+East
+West
+
+Distance (m)
+N/A
+N/A
+N/A
+Adjacent Dwelling
+
+40
+
+Charge Surcharge
+(%)
+(L/s)
+FALSE
+0.0
+FALSE
+0.0
+FALSE
+0.0
+5%
+221.7
+222 L/min Surcharge
+
+Determine Required Fire Flow
+No.1
+No. 2
+No. 3
+No. 4
+Required Flow:
+Rounded to nearest 1000 L/min:
+Total Volume Required:
+
+3,547
+-887 reduction
+0 reduction
+222 surcharge
+2,882 L/min
+3,000 L/min
+225000 L
+
+or
+
+50.0 L/s
+793 USGPM
+
+Required Duration of Fire Flow
+Flow Required
+Duration
+L/min
+(hours)
+2,000 or less
+1.0
+3,000
+1.25
+4,000
+1.5
+5,000
+1.75
+6,000
+2.0
+8,000
+2.0
+10,000
+2.0
+12,000
+2.5
+14,000
+3.0
+16,000
+3.5
+18,000
+4.0
+20,000
+4.5
+22,000
+5.0
+24,000
+5.5
+26,000
+6.0
+28,000
+6.5
+30,000
+7.0
+32,000
+7.5
+34,000
+8.0
+36,000
+8.5
+38,000
+9.0
+40,000 and over
+9.5
+
+TOWN OF CALEDON
+PLANNING
+22,500
+LITRE PRECAST WASTEWATER HOLDING TANK MODEL H22.5S
+RECEIVED
+
+W I L K I N S O N H E AV Y P R E C A S T L I M I T E D
+DUNDAS, ONTARIO
+
+CONSTRUCTION DETAILS *
+
+Jul 15, 2020
+
+Concrete: 35 MPa at 28 Days, 5 to 8% Air Entrainment.
+Reinforcing: 10 M bars at 300 mm centres each way in roof, walls and
+ﬂoor; horizonally in top section partition.
+Four extra 15 M bars around roof access opening.
+Minimum cover over reinforcing steel - 25 mm.
+Weight:
+
+905-628-5611
+
+www.wilkinsonheavyprecast.com
+
+Actual Capacity:
+
+9778 Litres Per Vertical Metre.
+22,489 Litres to Underside of Roof Slab.
+
+NOTES
+1. Large 685 mm diameter roof access openings facilitate tank maintenance.
+Unless otherwise speciﬁed/ordered this tank will be shipped with 840 mm
+diameter concrete hatch covers. Please note that each cover weighs approximately 125 kg and must be handled only with suitable mechanical lifting
+equipment. See Access Riser section for available options.
+2. Close tolerance of tongue and groove joint and ﬁbrous mastic sealant ensures
+a solid structural and water-tight seal. Primer and Mastic Band are supplied
+with each tank for application to the external surface of the tank over the
+joint between the tank sections. This band is to be applied by the installing
+contractor.
+3. Flexible watertight inlet pipe connector to accommodate 100 mm diameter
+PVC pipe. Size and position of inlet void can be modiﬁed at customer's request.
+Consult with the factory as to how this will affect the liquid capacity of this tank.
+4. Top section lifting points four places.
+5. Bottom section lifting points four places.
+6. The partition is cast monolithically with the walls and horizontal slab of top
+section.
+7. Knee wall each side of bottom section is cast monolithically with the walls and
+horizontal slab.
+
+Top Section
+8421 kg
+Bottom Section
+7981 kg
+Total 16,402 kg
+
+Side Wall Knockouts Accommodate
+Side Entry of 100 mm Dia. PVC
+Inlet Pipes (Use Mastic Sealant
+To Provide Flexible Watertight Seal)
+
+Tank CL
+
+400
+Precast Concrete Hatch Cover
+With 13 mm Dia. Steel Handles 2 Places
+
+Note 4
+Note 1
+
+Note 3
+
+125
+
+Inlet
+C
+L
+
+1150
+
+Note 6
+
+2550
+2275
+
+90
+
+75
+
+Note 2
+
+90
+Note 7
+
+Note 7
+
+1150
+
+Note 5
+
+4800
+
+* Commensurate with a 1.2 Metre burial over the top slab in ﬁrm soil away from any area of vehicular trafﬁc.
+WARNING !
+
+2150
+
+125
+
+125
+
+1470
+
+125
+
+145
+
+125
+
+125
+2935
+
+Dimensions in mm
+N.T.S.
+
+2400
+
+For recommended installation procedures refer to Wilkinson
+Installation Guidelines and Lifting and Assembly Instructions.
+
+IMPROPER INSTALLATION ESPECIALLY IN UNSTABLE SOILS CAN RESULT IN THE STRUCTURAL FAILURE OF THIS PRODUCT
+
+9 May, 2009
+
+TOWN OF CALEDON
+Lions Group Inc.
+PLANNING
+10819 Highway 9, Town of Caledon
+RECEIVED
+
+Functional Servicing and Stormwater Management Report
+May 2020
+
+Jul 15, 2020
+
+APPENDIX C
+Stormwater Management Calculations
+
+C.F. Crozier & Associates Inc.
+Project No. 1651-5095
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+Project: 10819 Highway 9
+Project No.: 1651-5095
+
+Created By: KW
+Checked By: JB
+
+Date: 2019-08-21
+Updated: 2020-03-13
+
+Modified Rational Calculations - Input Parameters
+Storm Data:
+
+MTO
+Tc = 0.16667
+
+Time of Concentration:
+
+min
+
+=
+
+10 mins
+
+I
+
+Return Period
+
+A
+
+B
+
+C
+
+2 yr
+
+22.00
+
+-0.70
+
+0.00
+
+76.98
+
+5 yr
+
+29.10
+
+-0.70
+
+0.00
+
+101.82
+
+10 yr
+
+33.80
+
+-0.70
+
+0.00
+
+118.26
+
+25 yr
+
+39.70
+
+-0.70
+
+0.00
+
+138.91
+
+50 yr
+100 yr
+
+44.10
+48.40
+
+-0.70
+-0.70
+
+0.00
+0.00
+
+154.30
+169.35
+
+(mm/hr)
+
+Pre - Development Conditions
+Catchment
+
+Land Use
+
+Pervious
+Impervious
+Pervious
+101 (External)
+Pervious
+102
+Impervious
+Total
+Pervious
+103
+(uncontrolled)
+Impervious
+Total Site
+100
+
+Total Site (Minus MTO Setback)
+
+Area
+
+Area
+
+(ha)
+
+(m2)
+
+0.39
+0.18
+0.02
+0.00
+0.03
+0.63
+0.03
+0.01
+0.67
+0.53
+
+3938
+1801
+247
+14.35
+296.65
+6297
+314
+57
+6668
+5293
+
+C
+0.25
+0.9
+0.25
+0.25
+0.9
+0.25
+0.9
+-
+
+Weighted
+Average C
+
+1
+
+0.15
+0.24
+0.01
+0.00
+0.04
+0.44
+0.01
+0.01
+0.46
+0.46
+
+Post - Development Conditions
+Catchment
+
+200
+201 (External)
+
+Area
+
+Area
+
+(ha)
+
+(m2)
+
+Pervious
+
+0.30
+
+2975
+
+0.25
+
+Weighted
+Average C
+0.18
+
+Impervious
+
+0.12
+
+1169
+
+0.9
+
+0.25
+
+Total
+
+0.41
+
+4144
+
+-
+
+0.43
+
+Pervious
+
+0.02
+
+247
+
+0.25
+
+0.25
+
+Total
+
+0.02
+
+4391
+
+-
+
+0.25
+
+Impervious
+
+Land Use
+
+C
+
+0.03
+
+260
+
+0.9
+
+0.90
+
+203 (Uncontrolled) Pervious
+
+0.05
+
+528
+
+0.25
+
+0.25
+
+204 (Uncontrolled) Pervious
+Total Site
+
+0.01
+0.53
+
+114
+5293
+
+0.25
+-
+
+0.25
+0.43
+
+202 (Roof)
+
+N:\1600\1651-Lions Group Inc\5095-10795&10819 Highway 9\Design\Civil_Water\5095_Modified Rational_2019.07.12
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+Project: 10819 Highway 9
+Project No.: 1651-5095
+
+Created By: KW
+Checked By: JB
+
+Date: 2019-08-21
+Updated: 2020-03-13
+
+Modified Rational Calculations - Peak Flows Summary
+Peak Flows
+(m3/s)
+
+Return
+Period
+2 yr
+5 yr
+10 yr
+25 yr
+50 yr
+100 yr
+
+Adjusted
+Cpre
+0.460
+0.460
+0.460
+0.460
+0.460
+0.460
+
+Adjusted
+Cpost
+0.425
+0.425
+0.425
+0.425
+0.425
+0.425
+
+Qpre
+
+Qunc
+
+Qpost
+
+Qtotal
+
+0.052
+0.069
+0.081
+0.095
+0.105
+0.115
+
+0.003
+0.005
+0.005
+0.006
+0.007
+0.008
+
+0.046
+0.061
+0.071
+0.083
+0.093
+0.102
+
+0.047
+0.062
+0.072
+0.084
+0.094
+0.103
+
+Equations:
+
+N:\1600\1651-Lions Group Inc\5095-10795&10819 Highway 9\Design\Civil_Water\5095_Modified Rational_2019.07.12
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+Project: 10819 Highway 9
+Project No.: 1651-5095
+
+Created By: KW
+Checked By: JB
+
+Date: 2019-08-21
+Updated: 2020-03-13
+
+Modified Rational Calculations - 100-Year Storm Event
+Control Criteria
+100 yr: Control Post-Development Peak Flows to Pre-Development Peak Flow
+
+100 yr: Uncontrolled Post-Development Flow:
+Qpost =
+
+0.008
+
+m3/s
+
+0.115
+
+m3/s
+
+100 yr: Pre-Development Flow:
+Qpre =
+
+Storage Volume Determination
+Td
+
+i
+
+Td
+
+QUncont
+
+Sd
+(m3)
+
+(min)
+
+(mm/hr)
+
+(sec)
+
+(m3/s)
+
+5
+10
+
+274.91
+169.35
+
+300
+600
+
+0.173
+0.107
+
+0.1
+-5.2
+
+15
+
+127.55
+
+900
+
+0.080
+
+-14.2
+
+20
+
+104.32
+
+1200
+
+0.066
+
+-25.0
+
+25
+
+89.25
+
+1500
+
+0.056
+
+-36.8
+
+30
+
+78.57
+
+1800
+
+0.050
+
+-49.4
+
+35
+
+70.55
+
+2100
+
+0.044
+
+-62.4
+
+40
+
+64.26
+
+2400
+
+0.041
+
+-75.9
+
+45
+
+59.18
+
+2700
+
+0.037
+
+-89.7
+
+50
+
+54.98
+
+3000
+
+0.035
+
+-103.8
+
+55
+
+51.44
+
+3300
+
+0.032
+
+-118.1
+
+60
+
+48.40
+
+3600
+
+0.031
+
+-132.6
+
+65
+
+45.77
+
+3900
+
+0.029
+
+-147.2
+
+70
+
+43.46
+
+4200
+
+0.027
+
+-162.0
+
+75
+
+41.41
+
+4500
+
+0.026
+
+-176.9
+
+80
+85
+
+39.58
+
+4800
+5100
+
+0.025
+
+-191.9
+
+0.024
+
+-207.0
+0.1
+
+37.94
+Required Storage Volume:
+
+Qa
+
+Tc
+
+Td
+
+N:\1600\1651-Lions Group Inc\5095-10795&10819 Highway 9\Design\Civil_Water\5095_Modified Rational_2019.07.12
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+Project: 10819 Highway 9
+Project No.: 1651-5095
+
+Created By: KW
+Checked By: JB
+
+Date: 2019-08-21
+Updated: 2020-03-13
+
+Modified Rational Calculations - 50-Year Storm Event
+Control Criteria
+50 yr: Control Post-Development Peak Flows to Pre-Development Peak Flow
+
+50 yr: Uncontrolled Post-Development Flow:
+Qpost =
+
+0.003
+
+m3/s
+
+0.105
+
+m3/s
+
+50 yr: Pre-Development Flow:
+Qpre=
+
+Storage Volume Determination
+Td
+
+i
+
+Td
+
+QUncont
+
+Sd
+(m3)
+
+(min)
+
+(mm/hr)
+
+(sec)
+
+(m3/s)
+
+5
+10
+
+250.49
+154.30
+
+300
+600
+
+0.158
+0.097
+
+0.0
+-4.7
+
+15
+
+116.22
+
+900
+
+0.073
+
+-12.9
+
+20
+
+95.05
+
+1200
+
+0.060
+
+-22.8
+
+25
+
+81.32
+
+1500
+
+0.051
+
+-33.5
+
+30
+
+71.59
+
+1800
+
+0.045
+
+-45.0
+
+35
+
+64.28
+
+2100
+
+0.041
+
+-56.9
+
+40
+
+58.55
+
+2400
+
+0.037
+
+-69.2
+
+45
+
+53.92
+
+2700
+
+0.034
+
+-81.8
+
+50
+
+50.09
+
+3000
+
+0.032
+
+-94.6
+
+55
+
+46.87
+
+3300
+
+0.030
+
+-107.6
+
+60
+
+44.10
+
+3600
+
+0.028
+
+-120.8
+
+65
+
+41.70
+
+3900
+
+0.026
+
+-134.1
+
+70
+
+39.60
+
+4200
+
+0.025
+
+-147.6
+
+75
+
+37.73
+
+4500
+
+0.024
+
+-161.2
+
+80
+85
+
+36.07
+
+4800
+5100
+
+0.023
+
+-174.9
+
+0.022
+
+-188.6
+0.0
+
+34.57
+Required Storage Volume:
+
+Qa
+
+Tc
+
+Td
+
+N:\1600\1651-Lions Group Inc\5095-10795&10819 Highway 9\Design\Civil_Water\5095_Modified Rational_2019.07.12
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+Project: 10819 Highway 9
+Project No.: 1651-5095
+
+Created By: KW
+Checked By: JB
+
+Date: 2019-08-21
+Updated: 2020-03-13
+
+Modified Rational Calculations - 25-Year Storm Event
+Control Criteria
+25 yr: Control Post-Development Peak Flows to Pre-Development Peak Flow
+
+25 yr: Uncontrolled Post-Development Flow:
+Qpost=
+
+0.083
+
+m3/s
+
+0.095
+
+m3/s
+
+25 yr: Pre-Development Flow:
+Qpre=
+
+Storage Volume Determination
+Td
+
+i
+
+Td
+
+QUncont
+
+Sd
+(m3)
+
+(min)
+
+(mm/hr)
+
+(sec)
+
+(m3/s)
+
+5
+10
+
+225.50
+138.91
+
+300
+600
+
+0.142
+0.088
+
+0.0
+-4.3
+
+15
+
+104.62
+
+900
+
+0.066
+
+-11.7
+
+20
+
+85.57
+
+1200
+
+0.054
+
+-20.5
+
+25
+
+73.21
+
+1500
+
+0.046
+
+-30.2
+
+30
+
+64.45
+
+1800
+
+0.041
+
+-40.5
+
+35
+
+57.86
+
+2100
+
+0.036
+
+-51.2
+
+40
+
+52.71
+
+2400
+
+0.033
+
+-62.3
+
+45
+
+48.54
+
+2700
+
+0.031
+
+-73.6
+
+50
+
+45.10
+
+3000
+
+0.028
+
+-85.2
+
+55
+
+42.19
+
+3300
+
+0.027
+
+-96.9
+
+60
+
+39.70
+
+3600
+
+0.025
+
+-108.8
+
+65
+
+37.54
+
+3900
+
+0.024
+
+-120.8
+
+70
+
+35.64
+
+4200
+
+0.022
+
+-132.9
+
+75
+
+33.97
+
+4500
+
+0.021
+
+-145.1
+
+80
+85
+
+32.47
+
+4800
+5100
+
+0.020
+
+-157.4
+
+0.020
+
+-169.8
+0.0
+
+31.12
+Required Storage Volume:
+
+Qa
+
+Tc
+
+Td
+
+N:\1600\1651-Lions Group Inc\5095-10795&10819 Highway 9\Design\Civil_Water\5095_Modified Rational_2019.07.12
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+Project: 10819 Highway 9
+Project No.: 1651-5095
+
+Created By: KW
+Checked By: JB
+
+Date: 2019-08-21
+Updated: 2020-03-13
+
+Modified Rational Calculations - 10-Year Storm Event
+Control Criteria
+10 yr: Control Post-Development Peak Flows to Pre-Development Peak Flow
+
+10 yr: Uncontrolled Post-Development Flow:
+Qpost =
+
+0.071
+
+m3/s
+
+0.081
+
+m3/s
+
+10 yr: Pre-Development Flow:
+Qpre =
+
+Storage Volume Determination
+Td
+
+i
+
+Td
+
+QUncont
+
+Sd
+(m3)
+
+(min)
+
+(mm/hr)
+
+(sec)
+
+(m3/s)
+
+5
+10
+
+191.98
+118.26
+
+300
+600
+
+0.121
+0.075
+
+0.0
+-3.6
+
+15
+
+89.08
+
+900
+
+0.056
+
+-9.9
+
+20
+
+72.85
+
+1200
+
+0.046
+
+-17.4
+
+25
+
+62.33
+
+1500
+
+0.039
+
+-25.7
+
+30
+
+54.87
+
+1800
+
+0.035
+
+-34.5
+
+35
+
+49.27
+
+2100
+
+0.031
+
+-43.6
+
+40
+
+44.88
+
+2400
+
+0.028
+
+-53.0
+
+45
+
+41.33
+
+2700
+
+0.026
+
+-62.7
+
+50
+
+38.39
+
+3000
+
+0.024
+
+-72.5
+
+55
+
+35.92
+
+3300
+
+0.023
+
+-82.5
+
+60
+
+33.80
+
+3600
+
+0.021
+
+-92.6
+
+65
+
+31.96
+
+3900
+
+0.020
+
+-102.8
+
+70
+
+30.35
+
+4200
+
+0.019
+
+-113.1
+
+75
+
+28.92
+
+4500
+
+0.018
+
+-123.5
+
+80
+85
+
+27.64
+
+4800
+5100
+
+0.017
+
+-134.0
+
+0.017
+
+-144.6
+0.0
+
+26.50
+Required Storage Volume:
+
+Qa
+
+Tc
+
+Td
+
+N:\1600\1651-Lions Group Inc\5095-10795&10819 Highway 9\Design\Civil_Water\5095_Modified Rational_2019.07.12
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+Project: 10819 Highway 9
+Project No.: 1651-5095
+
+Created By: KW
+Checked By: JB
+
+Date: 2019-08-21
+Updated: 2020-03-13
+
+Modified Rational Calculations - 5-Year Storm Event
+Control Criteria
+5 yr: Control Post-Development Peak Flows to Pre-Development Peak Flow
+
+5 yr: Uncontrolled Post-Development Flow:
+Qpost =
+
+0.061
+
+m3/s
+
+0.069
+
+m3/s
+
+5 yr: Pre-Development Flow:
+Qpre=
+
+Storage Volume Determination
+Td
+
+i
+
+Td
+
+QUncont
+
+Sd
+(m3)
+
+(min)
+
+(mm/hr)
+
+(sec)
+
+(m3/s)
+
+5
+10
+
+165.29
+101.82
+
+300
+600
+
+0.104
+0.064
+
+0.0
+-3.1
+
+15
+
+76.69
+
+900
+
+0.048
+
+-8.5
+
+20
+
+62.72
+
+1200
+
+0.040
+
+-15.0
+
+25
+
+53.66
+
+1500
+
+0.034
+
+-22.1
+
+30
+
+47.24
+
+1800
+
+0.030
+
+-29.7
+
+35
+
+42.41
+
+2100
+
+0.027
+
+-37.5
+
+40
+
+38.63
+
+2400
+
+0.024
+
+-45.7
+
+45
+
+35.58
+
+2700
+
+0.022
+
+-54.0
+
+50
+
+33.06
+
+3000
+
+0.021
+
+-62.4
+
+55
+
+30.92
+
+3300
+
+0.020
+
+-71.0
+
+60
+
+29.10
+
+3600
+
+0.018
+
+-79.7
+
+65
+
+27.52
+
+3900
+
+0.017
+
+-88.5
+
+70
+
+26.13
+
+4200
+
+0.016
+
+-97.4
+
+75
+
+24.90
+
+4500
+
+0.016
+
+-106.4
+
+80
+85
+
+23.80
+
+4800
+5100
+
+0.015
+
+-115.4
+
+0.014
+
+-124.5
+0.0
+
+22.81
+Required Storage Volume:
+
+Qa
+
+Tc
+
+Td
+
+N:\1600\1651-Lions Group Inc\5095-10795&10819 Highway 9\Design\Civil_Water\5095_Modified Rational_2019.07.12
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+Project: 10819 Highway 9
+Project No.: 1651-5095
+
+Created By: KW
+Checked By: JB
+
+Date: 2019-08-21
+Updated: 2020-03-13
+
+Modified Rational Calculations - 2-Year Storm Event
+Control Criteria
+2 yr: Control Post-Development Peak Flows to Pre-Development Peak Flow
+
+2 yr: Uncontrolled Post-Development Flow:
+Qpost=
+
+0.046
+
+m3/s
+
+0.052
+
+m3/s
+
+2 yr: Pre-Development Flow:
+Qpre =
+
+Storage Volume Determination
+Td
+
+i
+
+Td
+
+QUncont
+
+Sd
+(m3)
+
+(min)
+
+(mm/hr)
+
+(sec)
+
+(m3/s)
+
+5
+10
+
+124.96
+76.98
+
+300
+600
+
+0.079
+0.049
+
+0.0
+-2.4
+
+15
+
+57.98
+
+900
+
+0.037
+
+-6.5
+
+20
+
+47.42
+
+1200
+
+0.030
+
+-11.4
+
+25
+
+40.57
+
+1500
+
+0.026
+
+-16.7
+
+30
+
+35.71
+
+1800
+
+0.023
+
+-22.4
+
+35
+
+32.07
+
+2100
+
+0.020
+
+-28.4
+
+40
+
+29.21
+
+2400
+
+0.018
+
+-34.5
+
+45
+
+26.90
+
+2700
+
+0.017
+
+-40.8
+
+50
+
+24.99
+
+3000
+
+0.016
+
+-47.2
+
+55
+
+23.38
+
+3300
+
+0.015
+
+-53.7
+
+60
+
+22.00
+
+3600
+
+0.014
+
+-60.3
+
+65
+
+20.80
+
+3900
+
+0.013
+
+-66.9
+
+70
+
+19.75
+
+4200
+
+0.012
+
+-73.6
+
+75
+
+18.82
+
+4500
+
+0.012
+
+-80.4
+
+80
+85
+
+17.99
+
+4800
+5100
+
+0.011
+
+-87.2
+
+0.011
+
+-94.1
+0.0
+
+17.25
+Required Storage Volume:
+
+Qa
+
+Tc
+
+Td
+
+N:\1600\1651-Lions Group Inc\5095-10795&10819 Highway 9\Design\Civil_Water\5095_Modified Rational_2019.07.12
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+Project: 10819 Highway 9
+Project No.: 1651-5095
+
+Created By: KW
+Checked By: JB
+
+Date: 2019-08-21
+Updated: 2020-03-13
+
+Modified Rational Calculations - Summary
+
+Peak Flow Rate
+Storm Event
+(yr)
+
+PreDevelopment
+
+Post-Development1
+(L/s)
+
+Required
+Storage
+(m3)
+
+(L/s)
+
+Uncontrolled
+
+Controlled
+
+2
+
+0.052
+
+0.003
+
+0.047
+
+0.0
+
+5
+
+0.069
+
+0.005
+
+0.062
+
+0.0
+
+10
+
+0.081
+
+0.005
+
+0.072
+
+0.0
+
+25
+
+0.095
+
+0.006
+
+0.084
+
+0.0
+
+50
+
+0.105
+
+0.007
+
+0.094
+
+0.0
+
+100
+
+0.115
+
+0.008
+
+0.103
+
+0.1
+
+N:\1600\1651-Lions Group Inc\5095-10795&10819 Highway 9\Design\Civil_Water\5095_Modified Rational_2019.07.12
+
+8/30/2019
+TOWN
+OF CALEDON
+PLANNING
+RECEIVED
+
+IDF Curve Look-up - Ministry of Transportation
+
+Active coordinate
+
+Jul 15, 2020
+
+43° 59' 15" N, 79° 47' 45" W (43.987500,-79.795833)
+Retrieved: Fri, 30 Aug 2019 20:07:53 GMT
+
+Report
+a map
+error
+Map data
+©2019
+Google
+
+Location summary
+These are the locations in the selection.
+IDF Curve: 43° 59' 15" N, 79° 47' 45" W (43.987500,-79.795833)
+
+Results
+An IDF curve was found.
+Coordinate: 43.987500, -79.795833
+IDF curve year: 2010
+100-yr
+50-yr
+25-yr
+100
+
+10-yr
+
+Intensity (mm /hr)
+
+5-yr
+2-yr
+
+10
+
+10
+
+100
+
+1,000
+
+Duration (mins)
+
+www.mto.gov.on.ca/IDF_Curves/results_out.shtml?coords=43.985227,-79.796036
+
+1/2
+
+8/30/2019
+IDF Curve Look-up - Ministry of Transportation
+TOWN
+OF CALEDON
+Coefficient
+summary
+PLANNING
+IDF Curve:
+43° 59' 15" N, 79° 47' 45" W (43.987500,-79.795833)
+RECEIVED
+
+Retrieved: Fri, 30 Aug 2019 20:07:53 GMT
+
+Jul 15, 2020
+
+Data year: 2010
+IDF curve year: 2010
+
+2-yr
+
+5-yr
+
+A
+
+22.0
+
+B
+
+-0.699
+
+Return period
+
+10-yr
+
+25-yr
+
+50-yr
+
+100-yr
+
+29.1
+
+33.8
+
+39.7
+
+44.1
+
+48.4
+
+-0.699
+
+-0.699
+
+-0.699
+
+-0.699
+
+-0.699
+
+Statistics
+Rainfall intensity (mm hr-1)
+
+Duration
+
+5-min
+
+10-min
+
+15-min
+
+30-min
+
+1-hr
+
+2-hr
+
+6-hr
+
+12-hr
+
+24-hr
+
+2-yr
+
+125.0
+
+77.0
+
+58.0
+
+35.7
+
+22.0
+
+13.6
+
+6.3
+
+3.9
+
+2.4
+
+5-yr
+
+165.3
+
+101.8
+
+76.7
+
+47.2
+
+29.1
+
+17.9
+
+8.3
+
+5.1
+
+3.2
+
+10-yr
+
+192.0
+
+118.3
+
+89.1
+
+54.9
+
+33.8
+
+20.8
+
+9.7
+
+6.0
+
+3.7
+
+25-yr
+
+225.5
+
+138.9
+
+104.6
+
+64.4
+
+39.7
+
+24.5
+
+11.3
+
+7.0
+
+4.3
+
+50-yr
+
+250.5
+
+154.3
+
+116.2
+
+71.6
+
+44.1
+
+27.2
+
+12.6
+
+7.8
+
+4.8
+
+100-yr
+
+274.9
+
+169.3
+
+127.6
+
+78.6
+
+48.4
+
+29.8
+
+13.8
+
+8.5
+
+5.2
+
+Duration
+
+5-min
+
+10-min
+
+15-min
+
+30-min
+
+1-hr
+
+2-hr
+
+6-hr
+
+12-hr
+
+24-hr
+
+2-yr
+
+10.4
+
+12.8
+
+14.5
+
+17.9
+
+22.0
+
+27.1
+
+37.7
+
+46.5
+
+57.3
+
+5-yr
+
+13.8
+
+17.0
+
+19.2
+
+23.6
+
+29.1
+
+35.9
+
+49.9
+
+61.5
+
+75.7
+
+10-yr
+
+16.0
+
+19.7
+
+22.3
+
+27.4
+
+33.8
+
+41.6
+
+58.0
+
+71.4
+
+88.0
+
+25-yr
+
+18.8
+
+23.2
+
+26.2
+
+32.2
+
+39.7
+
+48.9
+
+68.1
+
+83.9
+
+103.3
+
+50-yr
+
+20.9
+
+25.7
+
+29.1
+
+35.8
+
+44.1
+
+54.3
+
+75.6
+
+93.2
+
+114.8
+
+100-yr
+
+22.9
+
+28.2
+
+31.9
+
+39.3
+
+48.4
+
+59.6
+
+83.0
+
+102.3
+
+126.0
+
+Rainfall depth (mm)
+
+Terms of Use
+You agree to the Terms of Use of this site by reviewing, using, or interpreting these data.
+Ontario Ministry of Transportation | Terms and Conditions | About
+Last Modified: September 2016
+
+www.mto.gov.on.ca/IDF_Curves/results_out.shtml?coords=43.985227,-79.796036
+
+2/2
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+
+ESTIMATED NET ANNNUAL SEDIMENT (TSS) LOAD
+REDUCTION STORMCEPTOR®
+
+Province :
+
+Ontario
+
+Project Name :
+
+10819 Highway 9
+
+City :
+
+Caledon
+
+Project Number :
+
+19540
+
+Nearest Rainfall Station :
+
+TORONTO CENTRAL
+
+Designer Name :
+
+Katrina Weel
+
+NCDC Rainfall Station Id :
+
+0100
+
+Designer Company :
+
+CF Crozier & Associates
+
+Years Of Rainfall Data :
+
+18
+
+Designer Email/Phone : kweel@cfcrozier.ca
+EOR Name :
+
+Drainage Area (ha) :
+% Imperviousness :
+
+EOR Company :
+
+0.64
+
+48.0
+Runoff Coefficient 'c' :
+
+Partical Size Distribution :
+
+CA ETV
+
+Target TSS Removal (%) :
+
+50.0
+
+EOR Email/Phone :
+0.58
+
+Net Annual Sediment
+(TSS) Load Reduction
+Sizing Summary
+
+Require Hydrocarbon Spill Capture?
+
+Yes
+
+Upstream Flow Control?
+
+No
+
+Stormceptor TSS Removal
+Model
+Provided (%)
+
+Required Water Quality Runoff Volume Capture (%) :
+
+EFO4
+
+63
+
+EFO6
+
+67
+
+EFO8
+
+69
+
+Peak Conveyance (maximum) Flow Rate (L/s) :
+
+EFO10
+
+70
+
+Site Sediment Transport Rate (kg/ha/yr) :
+
+EFO12
+
+70
+
+info@imbriumsystems.com
+
+Recommended Stormceptor EFO Model :
+
+EFO4
+
+Estimated Net Annual Sediment (TSS) Load Reduction (%) :
+
+63
+
+Page 1
+
+www.imbriumsystems.com
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+THIRD-PARTY TESTING AND VERIFICATION
+Jul
+15,
+2020
+ŹStormceptor® EF and Stormceptor® EFO are the latest evolutions in the Stormceptor® oil-grit separator (OGS) technology
+series, and are designed to remove a wide variety of pollutants from stormwater and snowmelt runoff. These technologies have
+been third-party tested in accordance with the Canadian ETV Procedure for Laboratory Testing of Oil-Grit Separators and
+performance has been third-party verified in accordance with the ISO 14034 Environmental Technology Verification (ETV)
+protocol.
+
+PERFORMANCE
+ŹStormceptor® EF and EFO remove stormwater pollutants through gravity separation and floatation, and feature a patentpending design that generates positive removal of total suspended solids (TSS) throughout each storm event, including highintensity storms. Captured pollutants include sediment, free oils, and sediment-bound pollutants such as nutrients, heavy metals,
+and petroleum hydrocarbons. Stormceptor is sized to remove a high level of TSS fromthe frequent rainfall events that contribute
+the vast majority of annualrunoff volume and pollutant load. The technology incorporates an internal bypass to convey excessive
+stormwater flows from high-intensity storms through the device without resuspension and washout (scour) of previously
+captured pollutants. Proper routine maintenance ensures high pollutant removal performance and protection of downstream
+waterways.
+
+PARTICAL SIZE DISTRIBUTION (PSD)
+ŹThe Canadian ETV PSD shown in the table below was used, or in part, for this sizing. This is the identical PSD that is referenced
+in the Canadian ETV Procedure for Laboratory Testing of Oil-Grit Separators for both sediment removal testing and scour testing.
+The Canadian ETV PSD contains a wide range of particle sizes in the sand and silt fractions, and is considered reasonably
+representative of the particle size fractions found in typical urban stormwater runoff.
+
+info@imbriumsystems.com
+
+Page 2
+
+www.imbriumsystems.com
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Cumulative
+Jul 15, 2020
+Percent
+RainFall
+Intensity
+(mm / hr)
+
+Rainfall
+Volume
+(%)
+
+Rainfall
+Volume
+(%)
+
+Flow Rate
+(L/s)
+
+Flow Rate
+(L/min)
+
+Surface
+Removal
+Loading
+Efficiency
+Rate
+(%)
+(L/min/m²)
+
+Incremental
+Removal
+(%)
+
+Cumulative
+Removal
+(%)
+
+1
+
+53.7
+
+53.7
+
+1.05
+
+63.0
+
+52.0
+
+69
+
+36.9
+
+36.9
+
+2
+
+16.9
+
+70.6
+
+2.09
+
+126.0
+
+105.0
+
+62
+
+10.5
+
+47.5
+
+3
+
+8.6
+
+79.2
+
+3.14
+
+188.0
+
+157.0
+
+58
+
+5.0
+
+52.5
+
+4
+
+6.4
+
+85.6
+
+4.18
+
+251.0
+
+209.0
+
+54
+
+3.4
+
+55.9
+
+5
+
+3.1
+
+88.7
+
+5.23
+
+314.0
+
+262.0
+
+52
+
+1.6
+
+57.5
+
+6
+
+2.0
+
+90.7
+
+6.28
+
+377.0
+
+314.0
+
+51
+
+1.0
+
+58.6
+
+7
+
+1.5
+
+92.2
+
+7.32
+
+439.0
+
+366.0
+
+49
+
+0.7
+
+59.3
+
+8
+
+0.7
+
+92.9
+
+8.37
+
+502.0
+
+418.0
+
+48
+
+0.3
+
+59.6
+
+9
+
+1.8
+
+94.7
+
+9.42
+
+565.0
+
+471.0
+
+46
+
+0.8
+
+60.4
+
+10
+
+1.3
+
+96.0
+
+10.46
+
+628.0
+
+523.0
+
+44
+
+0.6
+
+61.0
+
+11
+
+0.9
+
+96.9
+
+11.51
+
+690.0
+
+575.0
+
+43
+
+0.4
+
+61.4
+
+12
+
+0.4
+
+97.3
+
+12.55
+
+753.0
+
+628.0
+
+42
+
+0.2
+
+61.6
+
+13
+
+0.4
+
+97.7
+
+13.60
+
+816.0
+
+680.0
+
+42
+
+0.2
+
+61.7
+
+14
+
+0.4
+
+98.1
+
+14.65
+
+879.0
+
+732.0
+
+41
+
+0.2
+
+61.9
+
+15
+
+0.2
+
+98.3
+
+15.69
+
+942.0
+
+785.0
+
+41
+
+0.1
+
+62.0
+
+16
+
+0.0
+
+98.3
+
+16.74
+
+1004.0
+
+837.0
+
+41
+
+0.0
+
+62.0
+
+17
+
+0.0
+
+98.3
+
+17.78
+
+1067.0
+
+889.0
+
+41
+
+0.0
+
+62.0
+
+18
+
+0.2
+
+98.5
+
+18.83
+
+1130.0
+
+942.0
+
+40
+
+0.1
+
+62.1
+
+19
+
+0.0
+
+98.5
+
+19.88
+
+1193.0
+
+994.0
+
+40
+
+0.0
+
+62.1
+
+20
+
+0.0
+
+98.5
+
+20.92
+
+1255.0
+
+1046.0
+
+39
+
+0.0
+
+62.1
+
+21
+
+0.0
+
+98.5
+
+21.97
+
+1318.0
+
+1098.0
+
+39
+
+0.0
+
+62.1
+
+22
+
+0.0
+
+98.5
+
+23.02
+
+1381.0
+
+1151.0
+
+38
+
+0.0
+
+62.1
+
+23
+
+0.0
+
+98.5
+
+24.06
+
+1444.0
+
+1203.0
+
+37
+
+0.0
+
+62.1
+
+24
+
+0.4
+
+98.9
+
+25.11
+
+1506.0
+
+1255.0
+
+36
+
+0.1
+
+62.2
+
+25
+
+0.0
+
+98.9
+
+26.15
+
+1569.0
+
+1308.0
+
+36
+
+0.0
+
+62.2
+
+info@imbriumsystems.com
+
+Page 3
+
+www.imbriumsystems.com
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Cumulative
+Rainfall
+Volume
+(%)
+
+Flow Rate
+(L/s)
+
+0.2
+
+99.1
+
+27.20
+
+1632.0
+
+1360.0
+
+27
+
+0.0
+
+99.1
+
+28.25
+
+1695.0
+
+28
+
+0.0
+
+99.1
+
+29.29
+
+29
+
+0.2
+
+99.3
+
+30
+
+0.0
+
+31
+
+RainFall
+Intensity
+(mm / hr)
+
+Percent
+Rainfall
+Volume
+(%)
+
+Incremental
+Removal
+(%)
+
+Cumulative
+Removal
+(%)
+
+26
+
+35
+
+0.1
+
+62.3
+
+1412.0
+
+34
+
+0.0
+
+62.3
+
+1758.0
+
+1465.0
+
+33
+
+0.0
+
+62.3
+
+30.34
+
+1820.0
+
+1517.0
+
+32
+
+0.1
+
+62.4
+
+99.3
+
+31.39
+
+1883.0
+
+1569.0
+
+30
+
+0.0
+
+62.4
+
+0.0
+
+99.3
+
+32.43
+
+1946.0
+
+1622.0
+
+29
+
+0.0
+
+62.4
+
+32
+
+0.2
+
+99.5
+
+33.48
+
+2009.0
+
+1674.0
+
+29
+
+0.1
+
+62.4
+
+33
+
+0.2
+
+99.7
+
+34.52
+
+2071.0
+
+1726.0
+
+28
+
+0.1
+
+62.5
+
+34
+
+0.0
+
+99.7
+
+35.57
+
+2134.0
+
+1778.0
+
+27
+
+0.0
+
+62.5
+
+35
+
+0.0
+
+99.7
+
+36.62
+
+2197.0
+
+1831.0
+
+26
+
+0.0
+
+62.5
+
+36
+
+0.0
+
+99.7
+
+37.66
+
+2260.0
+
+1883.0
+
+25
+
+0.0
+
+62.5
+
+37
+
+0.0
+
+99.7
+
+38.71
+
+2322.0
+
+1935.0
+
+25
+
+0.0
+
+62.5
+
+38
+
+0.0
+
+99.7
+
+39.75
+
+2385.0
+
+1988.0
+
+24
+
+0.0
+
+62.5
+
+39
+
+0.0
+
+99.7
+
+40.80
+
+2448.0
+
+2040.0
+
+23
+
+0.0
+
+62.5
+
+40
+
+0.0
+
+99.7
+
+41.85
+
+2511.0
+
+2092.0
+
+23
+
+0.0
+
+62.5
+
+41
+
+0.0
+
+99.7
+
+42.89
+
+2574.0
+
+2145.0
+
+22
+
+0.0
+
+62.5
+
+42
+
+0.0
+
+99.7
+
+43.94
+
+2636.0
+
+2197.0
+
+22
+
+0.0
+
+62.5
+
+43
+
+0.0
+
+99.7
+
+44.99
+
+2699.0
+
+2249.0
+
+21
+
+0.0
+
+62.5
+
+44
+
+0.0
+
+99.7
+
+46.03
+
+2762.0
+
+2302.0
+
+21
+
+0.0
+
+62.5
+
+45
+
+0.0
+
+99.7
+
+47.08
+
+2825.0
+
+2354.0
+
+20
+
+0.0
+
+62.5
+
+46
+
+0.0
+
+99.7
+
+48.12
+
+2887.0
+
+2406.0
+
+20
+
+0.0
+
+62.5
+
+47
+
+0.2
+
+99.9
+
+49.17
+
+2950.0
+
+2458.0
+
+19
+
+0.0
+
+62.5
+
+48
+
+0.0
+
+99.9
+
+50.22
+
+3013.0
+
+2511.0
+
+19
+
+0.0
+
+62.5
+
+49
+
+0.0
+
+99.9
+
+51.26
+
+3076.0
+
+2563.0
+
+19
+
+0.0
+
+62.5
+
+50
+
+0.0
+
+99.9
+
+52.31
+
+3139.0
+
+2615.0
+
+18
+
+0.0
+
+62.5
+
+Jul 15, 2020
+
+Flow Rate
+(L/min)
+
+Surface
+Removal
+Loading
+Efficiency
+Rate
+(%)
+(L/min/m²)
+
+Estimated Net Annual Sediment (TSS) Load Reduction =
+
+info@imbriumsystems.com
+
+Page 4
+
+62 %
+
+www.imbriumsystems.com
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+
+RAINFALL DATA FROM TORONTO CENTRAL RAINFALL STATION
+
+INCREMENTAL AND CUMULATIVE TSS REMOVAL
+FOR THE RECOMMENDED STORMCEPTOR® MODEL
+
+info@imbriumsystems.com
+
+Page 5
+
+www.imbriumsystems.com
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Stormceptor
+Jul
+15, 2020
+Model Diameter
+EF / EFO
+
+Maximum Pipe Diameter / Peak Conveyance
+Min Angle Inlet /
+Outlet Pipes
+
+Max Inlet Pipe
+Diameter
+
+Max Outlet Pipe
+Diameter
+
+Peak Conveyance
+Flow Rate
+
+(mm)
+
+(in)
+
+(mm)
+
+(in)
+
+(L/s)
+
+(cfs)
+
+(m)
+
+(ft)
+
+EF4 / EFO4
+
+1.2
+
+4
+
+90
+
+609
+
+24
+
+609
+
+24
+
+425
+
+15
+
+EF6 / EFO6
+
+1.8
+
+6
+
+90
+
+914
+
+36
+
+914
+
+36
+
+990
+
+35
+
+EF8 / EFO8
+
+2.4
+
+8
+
+90
+
+1219
+
+48
+
+1219
+
+48
+
+1700
+
+60
+
+EF10 / EFO10
+
+3.0
+
+10
+
+90
+
+1828
+
+72
+
+1828
+
+72
+
+2830
+
+100
+
+EF12 / EFO12
+
+3.6
+
+12
+
+90
+
+1828
+
+72
+
+1828
+
+72
+
+2830
+
+100
+
+SCOUR PREVENTION AND ONLINE CONFIGURATION
+ŹStormceptor® EF and EFO feature an internal bypass and superior scour prevention technology that have been demonstrated
+in third-party testing according to the scour testing provisions of the Canadian ETV Procedure for Laboratory Testing of Oil-Grit
+Separators, and the exceptional scour test performance has been third-party verified in accordance with the ISO 14034 ETV
+protocol. As a result, Stormceptor EF and EFO are approved for online installation, eliminating the need for costly additional
+bypass structures, piping, and installation expense.
+
+DESIGN FLEXIBILITY
+ŹStormceptor® EF and EFO offers design flexibility in one simplified platform, accepting stormwater flow from a single inlet pipe
+or multiple inlet pipes, and/or surface runoff through an inlet grate. The device can also serve as a junction structure,
+accommodate a 90-degree inlet-to-outlet bend angle, and can be modified to ensure performance in submerged conditions.
+
+OIL CAPTURE AND RETENTION
+ŹWhile Stormceptor® EF will capture and retain oil from dry weather spills and low intensity runoff, Stormceptor® EFO has
+demonstrated superior oil capture and greater than 99% oil retention in third-party testing according to the light liquid reentrainment testing provisions of the Canadian ETV Procedure for Laboratory Testing of Oil-Grit Separators. Stormceptor EFO is
+recommended for sites where oil capture and retention is a requirement.
+
+info@imbriumsystems.com
+
+Page 6
+
+www.imbriumsystems.com
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+INLET-TO-OUTLET DROP
+
+Jul 15, 2020
+
+Elevation differential between inlet and outlet pipe inverts is dictated by the angle
+at which the inlet pipe(s) enters the unit.
+0(degree)-45(degree):The inlet pipe is 1-inch (25mm) higher than the outlet pipe.
+45(degree)-90(degree):The inlet pipe is 2-inches (50mm) higher than the outlet
+pipe.
+HEAD LOSS
+The head loss through Stormceptor EF is similar to that of a 60-degree bend
+structure. The applicable K value for calculating minor losses through the unit is 1.1.
+For submerged conditions the applicable K value is 3.0.
+
+Pollutant Capacity
+Stormceptor
+EF / EFO
+
+Model
+Diameter
+
+Depth (Outlet
+Pipe Invert to
+Sump Floor)
+
+Oil Volume
+
+Recommended
+Maximum
+Maximum
+Sediment
+Sediment Volume *
+Sediment Mass **
+Maintenance Depth *
+
+(m)
+
+(ft)
+
+(m)
+
+(ft)
+
+(L)
+
+(Gal)
+
+(mm)
+
+(in)
+
+(L)
+
+(ft³)
+
+(kg)
+
+(lb)
+
+EF4 / EFO4
+
+1.2
+
+4
+
+1.52
+
+5.0
+
+197
+
+52
+
+203
+
+8
+
+1190
+
+42
+
+1904
+
+5250
+
+EF6 / EFO6
+
+1.8
+
+6
+
+1.93
+
+6.3
+
+348
+
+92
+
+305
+
+12
+
+3470
+
+123
+
+5552
+
+15375
+
+EF8 / EFO8
+EF10 / EFO10
+
+2.4
+3.0
+
+8
+10
+
+2.59
+3.25
+
+8.5
+10.7
+
+545
+874
+
+144
+231
+
+610
+610
+
+24
+24
+
+8780
+17790
+
+310
+628
+
+14048
+28464
+
+38750
+78500
+
+EF12 / EFO12
+
+3.6
+
+12
+
+3.89
+
+12.8
+
+1219
+
+322
+
+610
+
+24
+
+31220
+
+1103
+
+49952
+
+137875
+
+*Increased sump depth may be added to increase sediment storage capacity
+** Average density of wet packed sediment in sump = 1.6 kg/L (100 lb/ft³ )
+
+STANDARD STORMCEPTOR EF/EFO DRAWINGS
+For standard details, please visit http://www.imbriumsystems.com/stormwater-treatment-solutions/stormceptor-ef
+
+STANDARD STORMCEPTOR EF/EFO SPECIFICATION
+For specifications, please visit http://www.imbriumsystems.com/stormwater-treatment-solutions/stormceptor-ef
+
+info@imbriumsystems.com
+
+Page 7
+
+www.imbriumsystems.com
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Table of TSS Removal vs Surface Loading Rate Based on Third-Party Test Results
+Jul 15, 2020
+Stormceptor® EFO
+
+SLR
+(L/min/m²)
+
+TSS %
+REMOVAL
+
+SLR
+(L/min/m²)
+
+TSS %
+REMOVAL
+
+SLR
+(L/min/m²)
+
+TSS %
+REMOVAL
+
+SLR
+(L/min/m²)
+
+TSS %
+REMOVAL
+
+1
+
+70
+
+660
+
+46
+
+1320
+
+48
+
+1980
+
+35
+
+30
+
+70
+
+690
+
+46
+
+1350
+
+48
+
+2010
+
+34
+
+60
+
+67
+
+720
+
+45
+
+1380
+
+49
+
+2040
+
+34
+
+90
+
+63
+
+750
+
+45
+
+1410
+
+49
+
+2070
+
+33
+
+120
+
+61
+
+780
+
+45
+
+1440
+
+48
+
+2100
+
+33
+
+150
+
+58
+
+810
+
+45
+
+1470
+
+47
+
+2130
+
+32
+
+180
+
+56
+
+840
+
+45
+
+1500
+
+46
+
+2160
+
+32
+
+210
+
+54
+
+870
+
+45
+
+1530
+
+45
+
+2190
+
+31
+
+240
+
+53
+
+900
+
+45
+
+1560
+
+44
+
+2220
+
+31
+
+270
+
+52
+
+930
+
+44
+
+1590
+
+43
+
+2250
+
+30
+
+300
+
+51
+
+960
+
+44
+
+1620
+
+42
+
+2280
+
+30
+
+330
+
+50
+
+990
+
+44
+
+1650
+
+42
+
+2310
+
+30
+
+360
+
+49
+
+1020
+
+44
+
+1680
+
+41
+
+2340
+
+29
+
+390
+
+48
+
+1050
+
+45
+
+1710
+
+40
+
+2370
+
+29
+
+420
+
+48
+
+1080
+
+45
+
+1740
+
+39
+
+2400
+
+29
+
+450
+
+48
+
+1110
+
+45
+
+1770
+
+39
+
+2430
+
+28
+
+480
+
+47
+
+1140
+
+46
+
+1800
+
+38
+
+2460
+
+28
+
+510
+
+47
+
+1170
+
+46
+
+1830
+
+37
+
+2490
+
+28
+
+540
+
+47
+
+1200
+
+47
+
+1860
+
+37
+
+2520
+
+27
+
+570
+
+46
+
+1230
+
+47
+
+1890
+
+36
+
+2550
+
+27
+
+600
+
+46
+
+1260
+
+47
+
+1920
+
+36
+
+2580
+
+27
+
+630
+
+46
+
+1290
+
+48
+
+1950
+
+35
+
+info@imbriumsystems.com
+
+Page 8
+
+www.imbriumsystems.com
+
+TOWN OF CALEDON
+Lions Group Inc.
+PLANNING
+10819 Highway 9, Town of Caledon
+RECEIVED
+
+Functional Servicing and Stormwater Management Report
+May 2020
+
+Jul 15, 2020
+
+FIGURES
+
+C.F. Crozier & Associates Inc.
+Project No. 1651-5095
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+KEY PLAN
+SCALE: N.T.S.
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jul 15, 2020
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+
+

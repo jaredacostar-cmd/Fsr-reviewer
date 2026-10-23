@@ -1,0 +1,8944 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+October 8, 2024
+
+F U N C T I O N AL S E R V I C I N G AN D S T O R M W AT E R M AN AG E M E N T R E P O R T
+
+RESIDENTIAL DEVELOPMENT
+4 STOREY RESIDENTIAL BUILDING
+15, 21, 27 SHORE STREET
+TOWN OF CALEDON
+APPLICATION FILE NUMBERS:
+TOWN: PRE-2023-0116
+PRE-2023-0274
+Project No.: 24-0002CA
+Revision
+0
+1
+2
+
+Date
+SEP 2024
+
+Urbanworks Engineering Corporation
+1945 Dundas St E | Mississauga, Ontario | L4X 2T8
+Unit 200 | Email: general@urbanworkseng.com
+
+September 2024
+
+Description
+First Submission
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+Table of Contents
+PAGE
+1.0 INTRODUCTION ................................................................................................................ 1
+1.1 Study Objectives and Location ..................................................................................... 1
+1.2 Existing Conditions....................................................................................................... 1
+1.3 Proposed Development ................................................................................................ 2
+1.3.1 Internal Works ......................................................................................................... 2
+1.3.2 External Works ........................................................................................................ 2
+1.4 Proposed Design Populations ...................................................................................... 3
+1.5 Background References ............................................................................................... 6
+2.0 Stormwater Management.................................................................................................. 7
+2.1 Existing Conditions....................................................................................................... 7
+2.1.1 Internal Works Topography and Drainage ............................................................... 7
+2.1.2 Existing Storm Drainage Infrastructure .................................................................... 7
+2.1.3 External Works Topography and Drainage .............................................................. 7
+2.1.4 Soil Conditions ........................................................................................................ 8
+2.2 Stormwater Management Design Criteria ..................................................................... 8
+2.3 Proposed Site Grading and Drainage ..........................................................................11
+2.3.1 Internal Works ........................................................................................................11
+2.3.2 External Works .......................................................................................................11
+2.4 Proposed Stormwater Management Plan ....................................................................12
+2.5 Internal Works Water Quantity Control ........................................................................12
+2.5.1 Pre-development Flows..........................................................................................13
+2.5.2 Post Development Flows ........................................................................................14
+2.5.3 Water Quantity Plan ...............................................................................................16
+2.5.4 Extended Detention Control ...................................................................................18
+2.6 External Works Water Quantity Plan ...........................................................................19
+2.7 Internal Works Water Quality Control ..........................................................................19
+2.8 External Works Water Quality Control .........................................................................19
+3.0 Sanitary Servicing ............................................................................................................22
+3.1 Existing Sanitary Sewers.............................................................................................22
+3.2 Proposed Sanitary Servicing .......................................................................................22
+3.3 Design Criteria ............................................................................................................22
+3.4 Sanitary Development Demands .................................................................................23
+4.0 Water Supply Servicing ...................................................................................................25
+4.1 Existing Water Supply Infrastructure ...........................................................................25
+24-0002CA- September 2024
+
+i
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+4.2 Proposed Water Supply Servicing ...............................................................................25
+4.3 Design Criteria ............................................................................................................26
+4.4 Domestic Water Demands ..........................................................................................27
+4.5 Fire Flow Demands .....................................................................................................27
+4.6 Total Water Demand ...................................................................................................29
+5.0 Erosion & Sediment Control Measures ..........................................................................30
+6.0 SUMMARY ........................................................................................................................31
+
+List of Tables
+Table 1-1: Population Estimate .................................................................................................. 3
+Table 2-1: Town of Caledon IDF Curve Parameters ................................................................... 9
+Table 2-2: Pre-development land use Summary .......................................................................13
+Table 2-3: Pre-development Peak Runoff Rate .........................................................................14
+Table 2-4: Post-development land use summary ......................................................................15
+Table 2-5: Post-development Peak Runoff Rate .......................................................................16
+Table 2-6: Allowable Release Rate ...........................................................................................16
+Table 2-7: Orifice Control and Required Storage.......................................................................17
+Table 2-8: Water Quantity Storage Summary ............................................................................17
+Table 2-9: Summary of Extended Detention..............................................................................18
+Table 3-1: Proposed Sanitary Design Parameters ....................................................................23
+Table 3-2: Shore Street Sanitary Sewer – Existing Conditions ..................................................24
+Table 3-3: Proposed Site Sanitary Flow Estimate .....................................................................24
+Table 3-4: Shore Street Sanitary Sewer - Proposed Conditions ................................................24
+Table 4-1: Proposed Watermain Design Parameters ................................................................26
+Table 4-2: Proposed Domestic Water Demand .........................................................................27
+Table 4-3: Proposed Fire Flow Demand ....................................................................................28
+Table 4-4: Total Water Supply Demands...................................................................................29
+
+List of Figures
+Figure 1-1: Site Location Plan .................................................................................................... 4
+Figure 1-2: Proposed Site Plan .................................................................................................. 5
+Figure 2-1: Existing Drainage Plan ............................................................................................10
+Figure 2-2: Proposed Drainage Plan .........................................................................................20
+Figure 2-3: Shore Street Proposed Drainage Plan ....................................................................21
+
+Appendices
+Appendix A:
+Appendix B:
+Appendix C:
+Appendix D:
+Appendix E:
+Appendix F:
+
+Site Plan, Topographic survey, and Region As-built
+Geotechnical Report
+Water Demand Calculations
+Sanitary Demand Calculations and Single Use Demand Table
+Stormwater Management Calculations
+Engineering Drawings
+
+24-0002CA- September 2024
+
+ii
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+1.0
+
+INTRODUCTION
+
+1.1
+
+Study Objectives and Location
+
+This Functional Servicing and Stormwater Management Report has been prepared in support of
+a 4-storey apartment building with a basement on 15, 21, 27 Shore Street, located west of Queen
+Street South (Highway #50) and north of Elwood Drive West. The site can be legally described
+as being located within Registered Plan BOL-7, with the following parts:
+•
+
+Municipal No. 27 – PIN 14322-0319(LT)
+
+•
+
+Municipal No. 21 – PIN 14322-0320(LT)
+
+•
+
+Municipal No. 15 – PIN 14322-0321 (LT)
+
+The subject property is bounded by Shore Street to the South, Oak Street to the West, Queen
+Street South to the East, and William Street to the North. A site location plan is provided in Figure
+1-1.
+The following report provided information regarding site servicing and stormwater management
+for the subject development while ensuring compatibility with surrounding lands. The report will
+also address concerns and comments raised by Regulatory Agencies (i.e Town of Caledon
+(Town), Region of Peel (Region), Toronto & Region Conservation Authority (TRCA), Ministry of
+Environment (MOE)
+
+1.2
+
+Existing Conditions
+
+The site is roughly a rectangular shape covering a total area of 0.21 ha. Currently the site is
+occupied by 3 single-family residential homes, one for each municipal address mentioned above.
+The current properties consist of asphalt driveways, landscaping features, sheds, grassed area,
+and minor retaining walls internal to the property.
+In general, vehicle access to the site is provided by existing driveway entrances fronting Shore
+Street. The subject property only has fronting on Shore Street and Shore Street is bounded by
+Oak Street to the West and Highway 50 to the east.
+The subject property is bounded by residential lands to the north adjacent to the property,
+residential lands to the west across Oak Street, commercial lands to the east adjacent to the
+property, and commercial lands to the south across Shore Street.
+Shore Street is currently an un-urbanized 6.7 m wide road within an approximately 15 m right-of24-0002CA- September 2024
+
+1
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+way. Shore Street has a roadside ditch and driveway culverts on the north side and no road side
+ditch on the south side. No sidewalk exists on Shore Street on either side. The nearest sidewalk
+is where Shore Street intersects Highway 50.
+The existing property is currently split drainage with the front half of the lots draining to the
+roadside ditches uncontrolled and the back yards drainage towards the north property line and
+being conveyed from there by existing means.
+
+1.3
+
+Proposed Development
+
+The proposed development will consist of development of the subject property (Internal Works)
+and urbanization of Shore Street (External Works).
+
+1.3.1 Internal Works
+The internal works will involve removing all internal aboveground structures, underground
+structures, pavement structures, retaining walls internal to the property, fencing, underground
+servicing, landscaping, accessory structures, and any other underground utilities as required.
+Once all removed, the proposed development will consist of constructing a 4-storey residential
+apartment building (19 residential units) with a basement, a new surface parking lot, retaining
+walls, storm sewer infrastructure, sanitary servicing, and watermain servicing, and landscaping
+features.
+The main vehicle access to the propose development will be provided by two new 6.0 m wide
+driveways fronting Shore Street. Pedestrian access will be provided by constructing a new 1.5
+m wide sidewalk as part of external works. Please refer to Site Plan prepared by FC Architects in
+Appendix A for more details.
+The Shore Street right-of-way External works are described in Section 1.3.2 below.
+
+1.3.2 External Works
+The external works will consist of urbanizing Shore Street in its entirety to be a curb and gutter
+road with its own minor storm sewer system including catch basins and storm sewer mains. The
+new road will be as per Town Standard Drawing 202. The new road will have an edge of
+pavement width of 7.9 m and come with a new 1.5 m wide concrete sidewalk on the north side
+along the subject property line connecting to the existing sidewalk on Highway 50.
+24-0002CA- September 2024
+
+2
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+A new storm sewer main will be installed to convey the storm run-off for the 5 year storm event
+from the new right-of-way and to convey the controlled storm run-off from the subject property.
+All storm above beyond the 5-year storm event will be conveyed by the major overland flow
+route towards Highway 50.
+It is to be noted that the external works will involve a 1.5 m widening of the right-of-way on the
+north property line. As such the ultimate property line is to be 1.5 m away from the existing
+property line.
+The limit of the urbanization will be from Oak Street to the existing curb and gutter on Highway
+50. As shown in the Site Grading Plan in Appendix F
+
+1.4
+
+Proposed Design Populations
+
+Based on the site plan, the site is to remain entirely residential. The proposed development design
+population as per Region of Peel criteria is provided below in Table 1-1. The total proposed design
+population considered for 15, 21, 27 Shore Street is 52 persons.
+Table 1-1: Population Estimate
+Land Use
+
+Site
+Area**
+
+Population
+Density
+(Large)
+
+Population
+Density
+(Small)
+
+Large
+Unit
+
+Small
+Unit
+
+Design
+Population*
+
+Residential
+
+0.21
+
+3.1 / large
+unit
+
+1.7 / small
+unit
+
+14
+
+5
+
+52
+
+Total
+Design
+Population
+
+0.21
+
+3.1 / large
+unit
+
+1.7 / small
+unit
+
+14
+
+5
+
+52
+
+*Population and unit estimates are based on the population densities set out by the Region of Peel - Linear Waste
+Water Standards (2023) - Section 2.1.2. The resulting populations have been used for engineering design capacity
+purposes only, and therefore may not be consistent with proposed planning populations for the development.
+**Unit Counts based on the latest Site Plan.
+
+24-0002CA- September 2024
+
+3
+
+N
+
+REET
+
+SHORE STREET
+
+ELLW
+
+OOD
+
+DRIV
+
+E WE
+
+LEGEND
+SITE BOUNDARY
+
+urbanworks
+ENGINEERING CORPORATION
+1945 Dundas Street E., Unit 200, Mississauga, ON, L4X 2T8
+
+general@urbanworkseng.com | www.urbanworkseng.com 905-901-0224
+|
+
+QUEEN STREET SOUTH
+(HWY #50)
+
+OAK STREET
+
+WILLIAM ST
+
+ST
+
+FIGURE 1-1
+SITE LOCATION PLAN
+4-STOREY RESIDENTIAL BUILDING
+15, 21, 27 SHORE STREET
+CALEDON, ON
+24-0002CA
+JULY 2024
+N.T.S.
+
+QUEEN STREET SOUTH
+(HWY #50)
+
+DS
+
+DS
+
+OAK STREET
+
+N
+DS
+
+DS
+
+SHORE STREET
+
+urbanworks
+ENGINEERING CORPORATION
+1945 Dundas Street E., Unit 200, Mississauga, ON, L4X 2T8
+
+general@urbanworkseng.com | www.urbanworkseng.com 905-901-0224
+|
+
+FIGURE 1-2
+SITE DEVELOPMENT PLAN
+4-STOREY RESIDENTIAL BUILDING
+15, 21, 27 SHORE STREET
+CALEDON, ON
+24-0001BR
+
+JULY 2024
+
+SCALE 1:350
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+1.5
+
+Residential Development
+Functional Servicing and SWM Report
+
+Background References
+
+The following material has been reviewed during the preparation of this report:
+▪
+
+Guido Papa Surveying, Topographic Survey, dated August 11, 2023
+
+▪
+
+Fausto Cortese Architects., Site Plan dated August, 2024
+
+▪
+
+Soil Engineers Ltd., Geotechnical Report dated July 2024
+
+▪
+
+Toronto and Region Conservation Authority, Stormwater Management Criteria,
+August 2012.
+
+▪
+
+Toronto and Region Conservation Authority/Credit Valley Conservation, Low Impact
+Development Stormwater Management Planning and Design Guide, 2010.
+
+▪
+
+Ministry of the Environment, Stormwater Management Planning and Design Manual,
+dated March 2003.
+
+▪
+
+Region of Peel, Linear Waste Water Standards, dated March 2024
+
+▪
+
+Region of Peel, Linear Infrastructure – Watermain Design Criteria, dated June 2010
+
+▪
+
+Town of Caledon – Development Standards Manual, Version 5.0, dated 2019.
+
+24-0002CA- September 2024
+
+6
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+2.0
+
+Stormwater Management
+
+2.1
+
+Existing Conditions
+
+Residential Development
+Functional Servicing and SWM Report
+
+2.1.1 Internal Works Topography and Drainage
+In general, the existing site is graded to be split drainage. The front half of the existing houses
+drain via overland sheet flow into the roadside ditch along the north side of Shore Street and
+while the backyard drain via overland sheet flow towards the north property line and are
+conveyed away once outside the subject property limits. All of the site’s overland sheet flows
+are ultimately captured by storm inlets at the intersection of Shore Street and Highway 50, as
+shown in the Engineering Drawings in Appendix F. The major overland flow route for Shore
+Street drains into Highway 50 to the east.
+The site is relatively flat with and average slope of 2.4% for the rear of lots from the back of the
+houses to the north east property corner and an average slope of 1.6% from the front of the
+houses towards Shore Street.
+Based on available topographic information, the existing site drainage area has been delineated
+and presented on Figure 2-1.
+
+2.1.2 Existing Storm Drainage Infrastructure
+As-builts drawings were obtained through Region of Peel and were used to identify the following
+stormwater infrastructure in proximity of the site.
+•
+
+There is no existing storm sewer infrastructure within the Shore Street right-of-way
+
+•
+
+A 375 mm diameter concrete storm sewer that extends from Highway 50 towards Shore
+Street and terminate at CBMH RR050-347
+
+2.1.3 External Works Topography and Drainage
+Shore Street is a relatively flat road that is graded at approximately 0.75% to the east towards
+Shore Street. There is no existing storm sewer infrastructure within Shore Street and all storm
+run-off drains via overland sheet flow into the CBMH RR050-0347 and CB RR050-0247 (as
+referenced by the Region’s External Peel Asset Locator) at the northwest corner of Shore Street
+and Highway 50 intersection.
+
+24-0002CA- September 2024
+
+7
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+2.1.4 Soil Conditions
+A Geotechnical Report was prepared by Soil Engineers Ltd, dated July 2024. As part of the
+report / investigation a series of boreholes and groundwater monitoring wells were installed onsite. Based on the results of the monitoring period, groundwater elevations were found to range
+between 1.1 metres below ground surface (mbgs) to 5.5 mbgs consistent with elevations 253.0
+m to 248.6 m depending on the monitoring well location. Furthermore, hydraulic in-situ values
+and percolation times were calculated for the soils screened. The coefficient of permeability was
+calculated to be 1𝑥10−7 cm / s. The percolation time for the soils within the subject property limit
+was 100 min / cm which translate to a drawdown rate of 6 mm / hour.
+
+Based on the field investigations, soil types on site ranged from earth fill near the surface to
+primarily silty clay / silty clay till across the entire site. Please refer to the geotechnical report in
+Appendix B for more details.
+
+2.2
+
+Stormwater Management Design Criteria
+
+The stormwater management design criteria applicable to the proposed development was
+established through a review of regulatory agency design standards. The relevant stormwater
+management design criteria and regulatory bodies are summarized in this section.
+Town of Caledon Criteria
+•
+
+Quantity Control - Post-development runoff at the proposed discharge location shall be
+limited to the 5-year pre-development conditions or to within the existing capacity of the
+receiving storm sewer, which ever is less..
+
+•
+
+Quality Control – To be provided in accordance with MECP, and Town requirements. For
+residential developments, on-site quality control to be provided via an Jellyfish Oil grit
+separator located just upstream of the property line manhole. 80% TSS removal required
+for water quality protection.
+
+•
+
+Rainfall intensities should be derived from the IDF curves as outlined in Town Standard
+No. 103 with information as presented in the following table:
+
+24-0002CA- September 2024
+
+8
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+Table 2-1: Town of Caledon IDF Curve Parameters
+RETURN
+PERIOD
+2-Year
+5-Year
+10-Year
+25-Year
+50-Year
+100-Year
+
+A
+
+B
+
+C
+
+1070
+1593
+2221
+3158
+3886
+4688
+
+0.8759
+0.8789
+0.9080
+0.9335
+0.9495
+0.9624
+
+7.85
+11
+12
+15
+16
+17
+
+*Values as per Town Std No 103.
+
+The average rainfall intensity shall be calculated using the equation:
+
+Where:
+𝑖
+𝑡
+
+24-0002CA- September 2024
+
+(𝑖 = 𝐴 ∗ 𝐵 / (𝑡 + 𝑐))
+=
+=
+
+rainfall intensity (mm/hr)
+Time of concentration (hours)
+
+9
+
+OAK STREET
+
+QUEEN STREET SOUTH
+(HWY #50)
+
+N
+SHORE STREET
+
+LEGEND
+
+urbanworks
+ENGINEERING CORPORATION
+1945 Dundas Street E., Unit 200, Mississauga, ON, L4X 2T8
+
+general@urbanworkseng.com | www.urbanworkseng.com 905-901-0224
+|
+
+DEVELOPMENT BOUNDARY
+DRAINAGE BOUNDARY
+EXISTING STM. SEWER
+
+EMERGENCY OVERLAND
+FLOW ROUTE
+
+FIGURE 2-1
+EX. SITE STORM
+DRAINAGE PLAN
+
+DRAINAGE AREA
+
+4-STOREY RESIDENTIAL BUILDING
+15, 21, 27 SHORE STREET
+CALEDON, ON
+24-0001BR
+
+JULY 2024
+
+SCALE 1:350
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+2.3
+
+Residential Development
+Functional Servicing and SWM Report
+
+Proposed Site Grading and Drainage
+
+2.3.1 Internal Works
+The predevelopment drainage conditions are to be altered to have the site be self contained and
+reduce the run-off being directed to the north property line.
+To achieve a self contained site the north property line grades will be raised via the use of retaining
+walls. All run-off will be directed to the minor storm conveyance system within the site and major
+flow will be towards Shore Street via the east driveway entrance. The site promotes a major flow
+route towards Shore Street with a maximum ponding depth of 0.30 m.
+The at-grade areas will be captured and drained via catch basins or catch basin manholes to a
+control manhole with an orifice plate where flows will be attenuated before draining off-site to the
+future Shore Street storm sewer. A jellyfish filter unit, will be provided upstream of the site control
+manhole, located inside the property line. Note that the proposed storm sewer system within
+Shore Street has been designed as part of external works as discussed earlier in this report.
+The roof runoff from proposed building will drain underground into rainwater harvesting cisterns
+(Graf Platin 3000 L x 3) and in the event the cisterns are full, the roof run-off will drain into the
+site’s control manhole via an overflow pipe. All downspouts will come equipped with a leaf filter,
+an overflow pipe and an aboveground splash pad as a safeguard.
+
+2.3.2 External Works
+As part of the urbanization of Shore Street a minor storm sewer system is proposed within the
+Shore Street right-of-way to convey the minor flows ( up to the 5-year event) from the Shore
+Street roadway drainage area and the controlled flows from subject property.
+The proposed storm sewer system size will match the existing 375 mm storm sewer’s size that
+extends from Highway 50 towards Shore Street and will connect to the existing CBMH RR050347.
+The major overland flow route for Shore Street is to be maintained and will continue to drain
+towards Highway 50. The proposed grading for the urbanization proposes a maximum ponding
+depth 0.30 m for the major overland flow route as per Town of Caledon design criteria.
+
+24-0002CA- September 2024
+
+11
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+Please refer to Figure 2-3 for the proposed drainage area plan for the proposed storm sewer
+with in the Shore Street right-of-way
+
+2.4
+
+Proposed Stormwater Management Plan
+
+The proposed stormwater management system will be designed in accordance with Town of
+Caledon and TRCA guidelines. The intent of the design is to maintain existing drainage conditions
+to the extent possible, while adhering to the quantity control criteria set out by both the
+aforementioned criteria.
+During the design process, low impact development (LID) measures were evaluated as part of
+the storm water management strategy; the TRCA LID SWM planning and Design Guide was used
+as a reference. The following LID measure is being utilized:
+•
+
+Surface Storage: All required quantity storage to attenuate the 100-year post-development
+to the 5-year pre-development will be provided via surface storage. The surface storage
+will have a maximum ponding depth of 0.30 m and the limits of the surface storage are
+shown within the Site Grading Plan in Appendix F.
+
+•
+
+Rainwater Harvesting: To provide the erosion control volume / 5 mm retention on site,
+rainwater harvesting is proposed. All roof-runoff will drain into the rainwater harvesting
+cisterns before being re-used on site.
+
+Other LID options such as , green roofs, permeable pavement, and swales were not utilized given
+the development design and space constraints.
+
+2.5
+
+Internal Works Water Quantity Control
+
+In accordance with the Town design criteria, it is proposed to control site post development flows
+to match pre-development levels for all storm events up to and including the 100-year event.
+Each storm event scenario from the 2-year to the 100-year was modelled using the Rational
+Method and using the Town IDF curves as per Town Std No. 103. This was done in order to
+establish the site’s maximum permissible post-development rate into the proposed storm sewer
+system.
+
+24-0002CA- September 2024
+
+12
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+2.5.1 Pre-development Flows
+The existing drainage pattern within the proposed development limits is characterized by three
+(3) drainage areas: Area 101, 102, and 103
+Area 101 consists of the 3 detached single family homes, accessory structures, surface asphalt
+parking, and landscaped area. Area 101 represents the area that currently drains uncontrolled
+to Shore Streeet and will be self-contained and controlled in the proposed condition
+Area 102 consists of asphalt parking and landscaped area. This area will continue to drain
+uncontrolled into the Shore Street right-of-way in post-development conditions.
+Area 103 consists of all landscaped area. This area will continue to drain uncontrolled towards
+the north property line in post-development conditions.
+Please see Figure 2-1 for the pre-development drainage area plan. The 0.21 ha subject
+property is currently serviced via overland sheet flow drainage towards the neighbouring
+municipal right-of-ways.
+A summary of the pre-development land cover is provided below in Table 2-2.
+Table 2-2: Pre-development land use Summary
+Area 101
+
+Area 102
+
+Area 103
+
+(m2)
+
+(m2)
+
+(m2)
+
+Asphalt
+
+171.00
+
+19.30
+
+0
+
+9.2%
+
+Roof
+
+372.60
+
+0
+
+17.16
+
+18.9%
+
+Hardscape
+
+36.00
+
+0
+
+79.36
+
+5.6%
+
+Landscape
+
+522.62
+
+37.0
+
+811.78
+
+66.3%
+
+% Impervius
+
+53%
+
+34%
+
+11%
+
+34%
+
+Runoff Coefficient
+
+0.59
+
+0.47
+
+0.32
+
+0.47
+
+Surface
+
+Total Coverage
+
+The total imperviousness of the existing site was calculated to be 34% and the corresponding
+runoff coefficient was calculated to be 0.47 based on Town of Caledon Engineering Standards.
+For more detailed calculations please see Appendix E.
+
+24-0002CA- September 2024
+
+13
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+IDF parameters from the Town Standard No. 103 were used to calculate the existing site’s peak
+runoff. These IDF curves are a function of the time of concentration; the minimum time of
+concentration of 10 minutes was used for the development area.
+The pre-development peak runoff flows determined for Catchment 101 based on the above model
+parameters are summarized in Table 2-3.
+Table 2-3: Pre-development Peak Runoff Rate
+Area 101 – Runoff
+
+Area 102 – Runoff
+
+Area 101 – Runoff
+
+Intensity
+
+Aea = 0.195ha
+(C=0.46)
+
+Aea = 0.006 ha
+(C=0.47)
+
+Aea = 0.006 ha
+(C=0.25)
+
+(mm/hr)
+
+(L/s)
+
+(L/s)
+
+(L/s)
+
+2-yr
+
+52.5
+
+9.5
+
+0.4
+
+4.2
+
+5-yr
+
+66.7
+
+12.1
+
+0.5
+
+5.4
+
+10-yr
+
+91.7
+
+16.6
+
+0.7
+
+7.4
+
+25-yr
+
+117.9
+
+21.4
+
+0.9
+
+9.5
+
+50-yr
+
+141.9
+
+25.7
+
+1.1
+
+11.4
+
+100-yr
+
+167.1
+
+30.3
+
+1.2
+
+13.5
+
+Return
+Period
+
+2.5.2 Post Development Flows
+The proposed drainage pattern within the proposed development is characterized by three (3)
+drainage areas. Area 201, 202, and 203.
+Area 201 consists of the 4-storey residential building, surface parking, landscaped areas,
+concrete walkways, and retaining walls. This area is self-contained is controlled before being
+discharged into the proposed Shore Street Storm Serwer.
+Area 202 consists of concrete walkways and landscaped area and drains uncontrolled to the
+Shore Street right-of-way. The uncontrolled flow from this area is reduced from 1.2 L/s to 0.9 L/s
+during the 100-year storm event.
+Area 203 consists of all landscaped area. This area continues to drain uncontrolled to the north
+property line. In the proposed condition, the area draining uncontrolled to the North Property
+Line is reduced from 0.9 ha to 0.06 ha. This represents a decrease in the uncontrolled flow from
+13.5 L/s in pre-development condition to 0.7 L/s in the post-development condition during the
+24-0002CA- September 2024
+
+14
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+100-year storm event.
+The proposed development will be serviced by a minor storm system that has been sized to the
+capture and convey the 5-year storm event and drain into the proposed storm sewer with in
+Shore Street part of the external works.
+A summary of the post-development land cover is provided below is Table 2-4.
+Table 2-4: Post-development land use summary
+Area 201
+
+Area 202
+
+Area 203
+
+(m2)
+
+(m2)
+
+(m2)
+
+Asphalt
+
+1055.04
+
+0
+
+0
+
+51.0%
+
+Roof
+
+423.43
+
+0
+
+0
+
+20.5%
+
+Hardscape
+
+114.8
+
+8.0
+
+0
+
+5.9%
+
+Landscape
+
+358.74
+
+48.60
+
+58.83
+
+22.6%
+
+% Impervius
+
+82%
+
+14%
+
+0%
+
+77%
+
+Runoff Coefficient
+
+0.78
+
+0.34
+
+0.25
+
+0.75
+
+Surface
+
+Total Coverage
+
+The total imperviousness of the proposed site was calculated to be 77% and the corresponding
+runoff coefficient was calculated to be 0.75 based on Town of Caledon Engineering Standards. .
+For more detailed calculations please see Appendix E.
+IDF parameters from the Town Standard No. 103 were used to calculate the existing site’s peak
+runoff. These IDF curves are a function of the time of concentration; the minimum time of
+concentration of 10 minutes was used for the development area.
+The post-development peak runoff flows determined for all drainage areas based on the above
+parameters are summarized in Table 2-5.
+
+24-0002CA- September 2024
+
+15
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+Table 2-5: Post-development Peak Runoff Rate
+Area 201 – Runoff
+
+Area 202 – Runoff
+
+Area 203 – Runoff
+
+Intensity
+
+Aea = 0.195ha
+(C=0.78)*
+
+Aea = 0.006 ha
+(C=0.34)
+
+Aea = 0.006 ha
+(C=0.25)
+
+(mm/hr)
+
+(L/s)
+
+(L/s)
+
+(L/s)
+
+2-yr
+
+52.5
+
+22.2
+
+0.3
+
+0.2
+
+5-yr
+
+66.7
+
+28.2
+
+0.4
+
+0.3
+
+10-yr
+
+91.7
+
+38.8
+
+0.5
+
+0.4
+
+25-yr
+
+117.9
+
+49.9
+
+0.6
+
+0.5
+
+50-yr
+
+141.9
+
+60.1
+
+0.8
+
+0.6
+
+100-yr
+
+167.1
+
+70.7
+
+0.9
+
+0.7
+
+Return
+Period
+
+*Note: Post-dev. flows are to be attenuated to the 5-year pre-development level for this catchment.
+
+The post development peak flows presented in Table 2-5 represent the target peak flows to be
+maintained for each of the target design storm events to proposed storm sewer system from the
+proposed development area. As a result, surface storage is being proposed to attenuate the 100year post development flows to the 5-year pre-development flows.
+
+2.5.3 Water Quantity Plan
+Based on the pre-development flows outlined in Table 2-3, the post development 100-year flow
+rate will be controlled to the 5-year predevelopment flow rate, as summarised in Table 2-6
+below.
+Table 2-6: Allowable Release Rate
+Post Development
+Flow (100-year)
+(L/s)
+
+Pre-Development
+Flows to Shore Street
+(5-year) (L/s)
+
+Post-Development
+Uncontrolled Flows to
+Shore Street (L/s)
+
+Allowable Post
+Development Release
+Rate (L/s)
+
+70.7 (Area 201)
+
+12.6 (Areas 101+102)
+
+0.9 (Area 202)
+
+11.7
+
+The 100-year event post-development flow of 70.7 L/s will be controlled to the maximum release
+rate of 11.7 L/s.
+
+24-0002CA- September 2024
+
+16
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+To attenuate the 100-year post development flow to the 5-year pre-development flow, an orifice
+plate will be utilized on the control manhole upstream of the Jellyfish Filter unit. An orifice
+diameter of 65 mm with a debris screen is proposed and will require water storage of
+approximately 55.39 cubic metres.
+Table 2-7 demonstrates the provided post-development flow and required water quantity
+storage within the underground stormwater management facility.
+Please see Appendix E for detailed calculations.
+Table 2-7: Orifice Control and Required Storage
+Post
+Development
+Flow (100-year)
+(L/s)
+
+Allowable Post
+Development
+Release Rate
+(L/s)
+
+Orifice Diameter
+(mm)
+
+70.7
+
+11.7
+
+65
+
+Actual Provided
+Post-development
+flow (L/s)
+
+Required
+Water Quantity
+Storage (m3)
+
+10.4
+
+55.39
+
+The required water quantity storage will be provided by surface storage. The site has been
+graded to provide the required 55.39 cubic metres within asphalt parking area with a maximum
+ponding depth of 0.30 m.
+Please see Table 2-8 below for the Water Quantity Storage Summary. Detailed calculations for
+the facility stage storage are provided in Appendix E and refer to the Site Grading Plan in
+Appendix F for more details.
+
+Table 2-8: Water Quantity Storage Summary
+
+Structure
+
+Top of
+Grate Elev.
+
+Max Ponding
+Elev.
+
+Total Surface
+Storage
+Area(m2)
+
+Provided Water
+Quantity Storage
+(m3)
+
+Required
+Water Quantity
+Storage
+(m3)
+
+CB1
+
+254.15
+
+254.25
+
+194.50
+
+6.5
+
+-
+
+CBMH 1
+
+254.00
+
+254.25
+
+295.04
+
+24.6
+
+-
+
+CBMH 2 (w/
+Orifice)
+
+253.95
+
+254.25
+
+243.83
+
+24.4
+
+-
+
+Total
+
+-
+
+254.25
+
+733.37
+
+55.45
+
+55.39
+
+24-0002CA- September 2024
+
+17
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+2.5.4 Extended Detention Control
+As per TRCA criteria, urban developments are to provide a minimum extended detention of the
+5mm rainfall event over the entire site.
+Given the total post development impervious site area of 0.16 ha an extended detention volume
+of 8.0 cubic metres will be required for the 5 mm rainfall event.
+`
+Extended detention will be provided by the underground rainwater harvesting cisterns that will
+only collect roof-runoff. Table 2-9 summarises the extended detention volume within the
+cisterns. Please refer to Appendix E for detailed calculations.
+Table 2-9: Summary of Extended Detention
+Drainage
+Area
+
+Required
+Detention
+Storage
+(m3)*
+
+Cistern
+Volume
+
+0.16 ha
+
+8.0
+
+3.0
+
+Cistern
+Count
+
+(m3)
+
+3
+
+Provided Extended
+Detention Storage.
+(m3)
+
+9.0
+
+*5mm Volume = Imp. Area (ha) x 5mm x 10 (conversion factor)
+
+The water stored within the rainwater cistern will be re-used on site in one of the following two
+ways.
+1. Landscaping / irrigation
+2. Grey-water re-use
+The details of the water re-use application will be determined during detailed design.
+As the Geotechnical report identified silty clay soils with a high ground water table and a n
+infiltration rate of 6 mm / hour. As per the TRCA’s August 2012 Stormwater design guidelines,
+infiltration-based LIDs are suitable for sites where the infiltration rate is at least 12 mm/hr. As a
+result of the anticipated soil’s performance with respect to the percolation of site runoff, infiltration
+measures were not considered feasible for the subject property.
+
+24-0002CA- September 2024
+
+18
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+2.6
+
+Residential Development
+Functional Servicing and SWM Report
+
+External Works Water Quantity Plan
+
+As the existing storm run-off is conveyed uncontrolled to the inlets at CBMH RR050-347 and CB
+RR050-247 and the major overland flow drains towards the east to the Highway 50 right-of-way.
+No quantity controlled are proposed the right-of-way storm sewer and the major overland flow
+route will continue to drain towards highway 50. Please refer to Figure 2-3 for the Shore Street
+drainage area plan.
+The proposed Shore Street storm sewer has been sized to convey the 5-year storm event.
+A storm sewer design sheet for the proposed Shore Street sewer has been provided in Appendix
+E for reference.
+
+2.7
+
+Internal Works Water Quality Control
+
+As per the Town of Caledon design criteria, site runoff must be treated to meet an enhanced level
+of quality control (removal of 80% TSS). The proposed site will consist of a combination of roof,
+driveable paved surfaces, pervious landscaped areas, and concrete walkways.
+The proposed treatment to obtain the required water quality control consists of a Jellfyfish (JF41-1) OGS unit sized to provide the 80% TSS removal for the entire site before being discharged
+into the proposed storm sewer with Shore Street right-of-way.
+
+2.8
+
+External Works Water Quality Control
+
+As the existing storm run-off is conveyed untreated to the inlets at CBMH RR050-347 and CB
+RR050-247 and the major overland flow drains towards the east to the Highway 50 right-of-way.
+No quality controlled are proposed the right-of-way storm sewer and the major overland flow route
+will continue to drain towards highway 50. Please refer to Figure 2-3 for the Shore Street drainage
+area plan.
+
+24-0002CA- September 2024
+
+19
+
+QUEEN STREET SOUTH
+(HWY #50)
+
+DS
+
+DS
+
+OAK STREET
+
+N
+DS
+
+DS
+
+SHORE STREET
+
+LEGEND
+
+urbanworks
+ENGINEERING CORPORATION
+1945 Dundas Street E., Unit 200, Mississauga, ON, L4X 2T8
+
+general@urbanworkseng.com | www.urbanworkseng.com 905-901-0224
+|
+
+DEVELOPMENT BOUNDARY
+DRAINAGE BOUNDARY
+EXISTING STM. SEWER
+PROPOSED STM. SEWER
+
+EMERGENCY OVERLAND
+FLOW ROUTE
+
+FIGURE 2-2
+PR. SITE STORM
+DRAINAGE PLAN
+
+DRAINAGE AREA
+
+4-STOREY RESIDENTIAL BUILDING
+15, 21, 27 SHORE STREET
+CALEDON, ON
+24-0001BR
+
+JULY 2024
+
+SCALE 1:350
+
+DS
+
+DS
+
+QUEEN STREET SOUTH
+(HWY #50)
+
+OAK STREET
+
+N
+DS
+
+DS
+
+∅
+∅
+
+SHORE STREET
+
+LEGEND
+
+urbanworks
+ENGINEERING CORPORATION
+1945 Dundas Street E., Unit 200, Mississauga, ON, L4X 2T8
+
+general@urbanworkseng.com | www.urbanworkseng.com 905-901-0224
+|
+
+DEVELOPMENT BOUNDARY
+DRAINAGE BOUNDARY
+EXISTING STM. SEWER
+PROPOSED STM. SEWER
+
+EMERGENCY OVERLAND
+FLOW ROUTE
+RESIDENTIAL AREA
+COMMERCIAL AREA
+
+DRAINAGE AREA
+
+FIGURE 2-3
+SHORE STREET STORM
+DRAINAGE PLAN
+4-STOREY RESIDENTIAL BUILDING
+15, 21, 27 SHORE STREET
+CALEDON, ON
+24-0001BR
+
+JULY 2024
+
+SCALE 1:500
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+3.0
+
+Sanitary Servicing
+
+3.1
+
+Existing Sanitary Sewers
+
+Residential Development
+Functional Servicing and SWM Report
+
+Region records were used to identify any existing Region wastewater infrastructure adjacent to
+the proposed development.
+•
+
+A 200 mm diameter Sanitary Sewer within the Shore Street right-of-way. As shown in
+Region As-built Drawing #22534-D
+
+•
+
+The 200 mm diameter Sanitary Sewer in Shore Street connects to a 300 mm diameter
+Sanitary Sewer within the Highway 50 right-of-way.
+
+Region As-built Drawing #22534-D has been provided in Appendix A for reference.
+
+3.2
+
+Proposed Sanitary Servicing
+
+Sanitary servicing for the proposed development will be provided by connection a new 150 mm
+diameter sanitary service lateral to the existing 200 mm diameter sanitary sewer within the Shore
+Street right-of-way. The new sanitary service will come with sanitary sampling manhole at the
+ultimate property line as per Region Standard Drawing 2-5-3. The proposed 150 mm diameter
+sanitary service will utilize a minimum slope of 2%.
+Refer to Drawing SS-01 for the Site Servicing Plan in Appendix F for the proposed sanitary
+servicing design.
+
+3.3
+
+Design Criteria
+
+The sanitary design parameters, as outlined in Table 3-1, for the proposed development are
+based on the municipal design criteria as outlined in Region of Peel, Linear Wastewater
+Standards, dated March 2023:
+
+24-0002CA- September 2024
+
+22
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+Table 3-1: Proposed Sanitary Design Parameters
+
+3.4
+
+Parameter
+
+Value
+
+Population Density
+(Large Apartment)
+
+3.1 person / large unit
+
+Population Density
+(Small Apartment)
+
+1.7 person / small unit
+
+Large Unit Count
+
+14
+
+Small Unit Count
+
+5
+
+Site Area
+
+0.21 ha
+
+Total Institutional Population
+
+52
+
+Unit Institutional Flow Rates
+
+270 L/cap/day
+
+Infiltration Rate
+
+0.26 L/s/ha
+
+Extraneous Flow
+
+0.28 L/s/mh
+
+Minimum Actual Flow Velocity
+
+0.75 m/s
+
+Maximum Full Flow Velocity
+
+3.0 m/s
+
+Minimum Sewer Lateral Grade
+
+2.00%
+
+Minimum Sewer Depth of Cover
+
+2.3m
+
+Sanitary Development Demands
+
+The Sanitary demands for existing and proposed conditions have been calculated using Region
+of Peel, Linear Wastewater Standards, dated March 2023, and the results are summarized below
+in Table 3-2 and Table 3-3
+A capacity analysis on the existing 200 mm diameter sanitary sewer within the Shore Street rightof-way was completed under pre-development conditions to assess available flow capacity.
+
+24-0002CA- September 2024
+
+23
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+Table 3-2: Shore Street Sanitary Sewer – Existing Conditions
+Land
+Use
+
+Area
+(ha)
+
+Pop.
+
+Average
+Flow
+(L/s)
+
+Mixed
+
+0.93
+
+42
+
+0.14
+
+Peak
+Factor
+
+Peak
+Flow
+(L/s)
+
+Infiltration+
+Extran.
+Flows (L/s)
+
+Total
+Sanitary
+Peak
+Flow
+(L/s)
+
+% Full
+
+4.00
+
+0.54
+
+0.52
+
+1.07
+
+2.7
+
+In existing conditions, the existing 200 mm diameter sanitary sewer experience a total design flow
+of 1.07 L/s. Detailed Sanitary calculations can be found in the Sanitary Sewer Design Sheet –
+Existing Conditions provided in Appendix D
+Table 3-3: Proposed Site Sanitary Flow Estimate
+Land Use
+
+Area (ha)
+
+Population
+
+Average
+Flow
+(L/s)
+
+Residential
+
+0.21
+
+42
+
+0.18
+
+Peak
+Factor
+
+Peak
+Flow
+(L/s)
+
+Infiltration
++Extran.
+Flows
+(L/s)
+
+Total
+Sanitary
+Peak Flow
+(L/s)
+
+4.00
+
+0.70
+
+0.05
+
+1.03
+
+The proposed development will produce a total sanitary demand of 1.03 L/s in the proposed
+condition. Detailed Sanitary calculations can be found in the Sanitary Sewer Design Sheet –
+Proposed Conditions provided in Appendix D
+
+Table 3-4: Shore Street Sanitary Sewer - Proposed Conditions
+
+Land
+Use
+
+Area
+(ha)
+
+Pop.
+
+Average
+Flow
+(L/s)
+
+Mixed
+
+0.93
+
+81
+
+0.27
+
+Peak
+Factor
+
+Peak
+Flow
+(L/s)
+
+Infiltration+
+Extran.
+Flows (L/s)
+
+Total
+Sanitary
+Peak
+Flow
+(L/s)
+
+% Full
+
+4.00
+
+1.07
+
+0.52
+
+1.59
+
+4.1
+
+With the construction of the proposed development and the removal of the 3 single-family homes,
+the existing 200 mm diameter sanitary sewer on Shore Street will experience a total peak flow of
+1.59 L/s versus the 1.07 L/s in pre-development conditions. This will increase its percent full from
+2.7% in existing conditions to 4.1% in proposed conditions. Based on these calculations, no
+upgrades to the existing sanitary sewer infrastructure will be required.
+24-0002CA- September 2024
+24
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+4.0
+
+Water Supply Servicing
+
+4.1
+
+Existing Water Supply Infrastructure
+
+Region records were used to identify any existing Region Water infrastructure adjacent to the
+proposed development. Based on the as-built information, the existing municipal watermain
+infrastructure adjacent to the proposed development is as follows:
+•
+
+A 150mm diameter watermain within the Shore Street right-of-way
+
+•
+
+Existing 20 mm diameter water service laterals for each of the 3 lots within the Subject
+property limits.
+
+Existing fire hydrant location near the subject property is as follows:
+•
+
+Fire hydrant (#6513625) located in the north boulevard of Shore Street and located
+approximately 18 m west of the south west property corner. This existing fire hydrant is
+connected to the existing 150 mm diameter watermain within Shore Street.
+
+•
+
+4.2
+
+Fire hydrant (#309549) located in the north boulevard of Shore Street and located
+approximately 25 m west of the south east property corner. This extisting fire hydrant is
+connected to the existing 150 mm diameter watermain within Shore Street.
+
+Proposed Water Supply Servicing
+
+Proposed domestic and fire water servicing for the subject property will be provided by connecting
+a new fire water service and domestic water service for to the existing 150 mm diameter
+watermain within Shore Street. The existing water service laterals are to be abandoned as per
+Region requirements.
+The fire water service will be 150 mm diameter and be installed as per Region Standard Drawing
+1-8-3 and connect to the existing 150 mm diameter watermain within Shore Street with a cut-inplace tee. The proposed fire water service design will also consist of a detector check valve in
+chamber, a private fire hydrant, and valves at the ultimate property line. The fire water service will
+be capped 1.0 m away from the building foundation for continuation by others.
+Domestic water supply will be provided by a 100 mm diameter domestic water service that tees
+24-0002CA- September 2024
+
+25
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+off the 150 mm fire water service lateral as per Region Standard Drawing 1-8-3. Thedomestic
+water service will be capped 1.0 m away from the building foundation for continuation by others.
+A fire hydrant is proposed within the subject property to provide the required 90m fire hydrant
+coverage for all building perimeters. The proposed hydrant will connect to the internal 150mm fire
+water service with a 150mm fire hydrant lead, be privately owned, and be privately maintained.
+The proposed fire hydrant will be a maximum of 8.8 m away from the furthest Siamese connection.
+Please refer to Drawing SS-01 in Appendix F for the proposed water servicing layout.
+
+4.3
+
+Design Criteria
+
+The water main design parameters, as outlined in Table 4-1, for the proposed development are
+based on the municipal design criteria as outlined in Region of Peel, Linear Infrastructure –
+Watermain Design Criteria, dated June 2010
+Table 4-1: Proposed Watermain Design Parameters
+Parameter
+
+Value
+
+Population Density (Large
+Apartment)
+
+3.1 persons / unit
+
+Population Density (Small
+Apartment)
+
+1.7 persons / unit
+
+Large Apartments
+
+14
+
+Small Apartment
+
+5
+
+Site Area
+
+0.21 ha
+
+Total Residential Population
+
+52
+
+Unit Institutional Demand Rates
+
+280 L/cap/day
+
+Maximum Day Factor
+
+2.0
+
+24-0002CA- September 2024
+
+26
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+4.4
+
+Residential Development
+Functional Servicing and SWM Report
+
+Domestic Water Demands
+
+The design criteria outlined above was used to determine to total domestic water demand for the
+subject property in proposed conditions.
+Average day demand (ADD), Maximum day demand (MDD), and Peak Hour Demand (PHD)
+factors were calculated using demand peaking factors and population values as outlined above.
+The estimated domestic water demand for the proposed development of the subject property are
+summarised below in Table 4-2.
+Table 4-2: Proposed Domestic Water Demand
+Parameter
+
+Value
+
+Population Density (Large
+Aparment)
+
+3.1 persons / unit
+
+Population Density (Small
+Apartment)
+
+1.7 persons / unit
+
+Large Apartments
+
+14
+
+Small Apartments
+
+5
+
+Site Area
+
+0.21 ha
+
+Total Institutional Population
+
+52
+
+Unit Institutional Demand Rates
+
+280 L/cap/day
+
+Average Daily Demand
+
+10.09 L/min (0.17 L/s)
+
+Maximum Day Demand
+
+20.18 L/min (0.34 L/s)
+
+Peak Hour Demand
+
+30.28 L/min (0.50 L/s)
+
+A detailed breakdown of the calculated demand can be found in Appendix C.
+
+4.5
+
+Fire Flow Demands
+
+Fire flow demands have been calculated using Water Supply for Public Fire Protection (2020)
+prepared by the Fire Underwriters Survey (FUS).
+
+24-0002CA- September 2024
+
+27
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+Fire flow demands were calculated for the proposed 4-storey apartment building. As part of the
+FUS calculations, the following construction factors were assumed for the proposed 4-storey
+apartment building.
+•
+
+Type III Ordinary Construction – C value of 1.0
+
+•
+
+Limited Combustible Occupancy – 15% reduction to the base fire flow
+
+•
+
+Sprinkler system with standard water supply – 40% reduction to the base fire flow
+
+•
+
+Calculated exposure factor of 14%
+
+Detailed fire flow calculations are provided in Appendix C and summarized below in Table 4-3.
+Table 4-3: Proposed Fire Flow Demand
+
+Building
+
+Fire Flow Demand (5)
+
+Fire Flow Demand (5)
+
+(L/min)
+
+(L/s)
+
+5000
+
+83.33
+
+Proposed 4 storey apartment
+building
+
+From the fire flow calculations, it was determined that the recommended fire flow of 5000 L/min
+83.33 L/s) is required for the proposed development.
+A hydrant flow test was conducted by BA Fire Safety on June 21, 2024, at 1:30 PM on existing
+fire hydrant #6513625. The results indicate an available maximum flow of 4163 GPM (262.6 L/s)
+at a residual pressure of 20 psi. This is higher than the calculated required fire flow demand of
+83.33 L/s.
+Therefore, sufficient fire flow is available for the proposed development. The results of the hydrant
+flow test can be found in Appendix C.
+
+24-0002CA- September 2024
+
+28
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+4.6
+
+Residential Development
+Functional Servicing and SWM Report
+
+Total Water Demand
+
+Based on the total water demand and the fire flow requirements, the proposed demand will be
+the Maximum Day Demand plus the Fire Flow demand. Table 4-3 below outlines the total water
+demand for the proposed development, detailed calculations can be found in Appendix C.
+Table 4-4: Total Water Supply Demands
+
+Land Use
+
+Expected
+Population
+(1)
+
+Residential
+
+52
+
+Average Day
+Demand (2)
+(L/s)
+
+Peak Hour
+Demand (3)
+(L/s)
+
+Max. Day
+Demand (4)
+(L/s)
+
+Fire Flow
+Demand
+
+Max Day
++ Fire
+
+(L/s)
+
+(L/s)
+
+0.17
+
+0.50
+
+0.37
+
+83.33
+
+83.67
+
+Note:
+(1)
+(2)
+(3)
+(4)
+
+Expected population based on population estimate in Section 1.4
+Based on average day consumption rate as 280 l/cap/day
+Based on peak hour factor as 3
+Based on maximum day factor as 2
+
+Based on the assessment of the calculated total water demand (83.67 L/s) and the hydrant flow
+test, it is confirmed that the existing 150mm diameter watermain on Shore Street has sufficient
+pressure and flow to service the proposed development.
+
+24-0002CA- September 2024
+
+29
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+5.0
+
+Residential Development
+Functional Servicing and SWM Report
+
+Erosion & Sediment Control Measures
+
+A preliminary Erosion and Sediment Control (ESC) Plan for the proposed development will be
+prepared in accordance with TRCA and City requirements as part of the detailed design phase.
+The proposed erosion and sediment control works during construction will consider of the
+following:
+•
+
+temporary silt fences;
+
+•
+
+individual catch basin silt sacks, within the subject property and on Guru Nanak Street:
+
+•
+
+mud mats at the construction access point;
+
+•
+
+one (1) topsoil stockpile, equipped with silt fencing;
+
+•
+
+one (1) equipment staging and refuelling area, equipped with silt fencing
+
+•
+
+Siltsoxx check dams
+
+24-0002CA- September 2024
+
+30
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+6.0
+
+Residential Development
+Functional Servicing and SWM Report
+
+SUMMARY
+
+This report outlines the desired stormwater management and servicing scheme for the proposed
+development at 15, 21, 27 Shore Street, Caledon, ON. The following summarizes the conclusions
+and recommendations of this report:
+Stormwater Management
+•
+
+Control of captured post development site flows to the 5-year pre-development level for
+all storm events up to and including the 100-year storm is proposed to meet site quantity
+control criteria in accordance with Town SWM criteria. Detention storage is required to
+achieve this requirement and will be provided using surface storage.
+
+•
+
+Retention of 5 mm of rainfall for erosion control through rainwater harvesting
+
+•
+
+Quality control will be provided by a Jellyfish Filter unit (JF4-1-1).
+
+Sanitary Servicing
+•
+
+Sanitary servicing to be provided by a 150mm sanitary service lateral connecting to the
+existing 200 mm sanitary sewer within Shore Street. A new sanitary sampling manhole
+is provided for the proposed building at the ultimate property line.
+
+Water Supply Servicing
+•
+
+Domestic water service will be provided by a new 100m m domestic water service for the
+proposed 4 storey apartment building. The domestic water service will tee off the 150
+mm diameter fire water service as per Region Standard drawing 1-8-3.
+
+•
+
+Fire water service will be provided by a 150mm fire water service that will connect to the
+existing 150 mm diameter watermain within Shore Street with a cut-in-place tee and
+valve.
+
+•
+
+Private hydrant is to be installed within the subject property limits and is approximately
+8.8 m away from the Siamese Connection and provides 90m hydrant coverage to all
+building perimeters within the subject property.
+
+24-0002CA- September 2024
+
+31
+
+15, 21, 27 Shore Street
+Town of Caledon
+
+Residential Development
+Functional Servicing and SWM Report
+
+We believe that the above study and materials are satisfactory to address the concerns of
+reviewing agencies with this proposed development. Should there be any comments regarding
+the materials of this report, please contact the undersigned.
+
+Respectfully Submitted,
+Urbanworks Engineering Corporation
+
+Sep, 24, 2024
+
+Giancarlo Volpe, P.Eng., M.Eng.
+Project Engineer
+
+24-0002CA- September 2024
+
+Deven Verma, EIT
+Project Manager
+
+32
+
+APPENDIX A
+SITE PLAN, TOPOGRAPHIC SURVEY, AND REGION AS-BUILT
+
+SITE PLAN
+
+TOPOGRAPHIC SURVEY
+
+REGION AS-BUILT
+
+22534_D.DGN 12/05/04 10:46:56 AM
+
+APPENDIX B
+GEOTECHNICAL REPORT
+
+GEOTECHNICAL REPORT
+
+A REPORT TO
+BOLTON SHORE HOLDINGS LTD.
+A GEOTECHNICAL INVESTIGATION FOR
+PROPOSED 4-STOREY BUILDING WITH BASEMENT
+15, 21 AND 27 SHORE STREET
+TOWN OF CALEDON
+
+REFERENCE NO. 2404-S107
+JULY 2024
+
+DISTRIBUTION
+Digital copy - Bolton Shore Holdings Ltd.
+Digital copy - Blackthorn Development Corp.
+
+Reference No. 2404-S107
+
+ii
+
+TABLE OF CONTENTS
+1.0 INTRODUCTION .............................................................................................................1
+2.0 SITE AND PROJECT DESCRIPTION ............................................................................ 1
+3.0 FIELD WORK ...................................................................................................................1
+4.0 SUBSURFACE CONDITIONS ........................................................................................2
+4.1 Topsoil ...................................................................................................................2
+4.2 Earth Fill ................................................................................................................2
+4.3 Silty Clay/Silty Clay Till .......................................................................................3
+5.0 GROUNDWATER CONDITIONS .................................................................................. 3
+6.0 DISCUSSION AND RECOMMENDATIONS ................................................................4
+6.1 Site Preparation ......................................................................................................5
+6.2 Foundation .............................................................................................................5
+6.3 Basement Structure ................................................................................................6
+6.4 Underground Services............................................................................................6
+6.5 Backfilling in Trenches and Excavated Areas ....................................................... 7
+6.6 Pavement Design ...................................................................................................8
+6.7 Soil Parameters ......................................................................................................8
+6.8 Excavation .............................................................................................................9
+7.0 LIMITATIONS OF REPORT .........................................................................................10
+TABLES
+Table 1 - Groundwater Levels in Monitoring Wells ................................................................. 4
+Table 2 - Pavement Design ........................................................................................................ 8
+Table 3 - Soil Parameters........................................................................................................... 9
+Table 4 - Classification of Soils for Excavation ........................................................................ 9
+ENCLOSURES
+Borehole Logs..................................................................................
+Grain Size Distribution Graphs ......................................................
+Borehole and Monitoring Well Location Plan ................................
+Subsurface Profile............................................................................
+Details of Perimeter Drainage System.............................................
+
+Figures 1 to 4
+Figures 5 and 6
+Drawing No. 1
+Drawing No. 2
+Drawing No. 3
+
+Reference No. 2404-S107
+1.0
+
+1
+
+INTRODUCTION
+In accordance with a written authorization dated April 19, 2024, from Mr. Mark Cancian of
+Bolton Shore Holdings Ltd., a geotechnical investigation was carried out at 15, 21 and 27
+Shore Street in the Town of Caledon.
+The purpose of the investigation was to reveal the subsurface conditions and determine the
+engineering properties of the disclosed soils for the construction of a 4-storey apartment
+building with a basement. The geotechnical findings and recommendations for the proposed
+development are presented in this report.
+
+2.0
+
+SITE AND PROJECT DESCRIPTION
+The site is situated on Halton till plain, where the drift dominates the soil stratigraphy. In
+places, lacustrine sand, silt, clay and drift which has been reworked by the water action of Peel
+Ponding (glacial lake) have modified the drift stratigraphy.
+The investigation was carried out within the properties of 15, 21 and 27 Shore Street in the
+Town of Caledon. The combined property consists of 3 residential dwellings with associated
+driveway and landscape areas. The grading within the study area is relatively flat.
+A review of the Site Plan prepared by Fausto Cortese Architects dated March 8, 2024,
+indicates that the existing dwellings will be demolished to make way for a new 4-storey
+building with basement. It will be provided with on-grade parking, access driveway and
+landscape areas.
+
+3.0
+
+FIELD WORK
+The field work, consisted of 4 boreholes extending to depths of 8.1 and 8.5 m below grade,
+was completed on May 29 and 30, 2024, at the locations shown on the Borehole and
+Monitoring Well Location Plan, Drawing No. 1.
+The boreholes were advanced at intervals to the sampling depths by a compact trackmounted drill rig equipped with solid stem augers and split spoons for soil sampling.
+Standard Penetration Tests, using the procedures described on the enclosed “List of
+Abbreviations and Terms”, were performed at the sampling depths. The results are recorded
+as the Standard Penetration Resistance (or ‘N’ values) of the subsoil. The relative density of
+
+Reference No. 2404-S107
+
+2
+
+the non-cohesive strata and the consistency of the cohesive strata are inferred from the ‘N’
+values. Split-spoon samples were recovered for soil classification and laboratory testing.
+Upon completion of borehole drilling, monitoring wells were installed in 3 of the 4 boreholes
+to facilitate a hydrogeological assessment. Details of the monitoring wells are presented in
+the borehole logs.
+The field work was supervised and the findings were recorded by a Geotechnical Technician.
+The ground elevation at each of the borehole location was obtained using the Global
+Navigation Satellite System (GNSS).
+4.0
+
+SUBSURFACE CONDITIONS
+Detailed descriptions of the subsurface conditions are presented on the Borehole Logs,
+comprising Figures 1 to 4 inclusive. The revealed stratigraphy is plotted in the Subsurface
+Profiles, Drawing No. 2. The engineering properties of the disclosed soils are discussed
+herein.
+The investigation has disclosed that beneath the topsoil and a layer of earth fill, the site is
+generally underlain by a stratum of silty clay, with a localized deposit of silty clay till.
+
+4.1
+
+Topsoil
+The revealed topsoil is approximately 8 to 10 cm in thickness. Thicker topsoil layers may be
+contacted beyond the borehole locations. The topsoil is void of engineering value and must
+be stripped for site development.
+
+4.2 Earth Fill
+A layer of earth fill, extending to a depth of 0.8 m below the prevailing ground surface, was
+encountered in all boreholes. It is dark brown in colour and consists of silty clay, with a
+variable amount of topsoil and rootlets.
+The natural water content of the samples was determined and the results are plotted on the
+Borehole Logs; the values range from 23% to 33%, with a median of 28%. The high water
+content value indicates the presence of topsoil.
+
+Reference No. 2404-S107
+
+3
+
+The obtained ‘N’ values range from 5 to 10, with a median of 8 blows per 30 cm of
+penetration, indicating that the fill was likely placed with non-uniform compaction.
+Due to its unknown history and non-uniform density, the earth fill is not suitable to support
+any structures sensitive to settlement. It must be subexcavated, sorted free of deleterious
+material and organics and properly recompacted in layers.
+4.3 Silty Clay/Silty Clay Till
+The silty clay is the predominant soil in the revealed stratigraphy. It contains traces of sand
+and gravel, with occasional silt seams. The silty clay till was encountered beneath the topsoil
+and earth fill, overlying the silty clay in Borehole 3. It consists of a random mixture of
+particle sizes ranging from clay to gravel, with the silt and clay being the dominant fraction.
+A grain size analysis was performed on a representative sample each of the silty clay and
+silty clay till. The results are plotted on Figures 5 and 6, respectively.
+The obtained ‘N’ values range from 8 to 45 blows per 30 cm of penetration, with a median of
+23 blows per 30 cm of penetration, indicating the clay/clay till is stiff to hard, being
+generally very stiff in consistency. The ‘N’ values of 8 and 9 were encountered near the
+ground surface where the soil has been weathered.
+Atterberg Limits were determined on a sample each of the clay till and clay sample. The till
+sample has liquid limit of 34% and plastic limit of 18%, while the clay has a liquid limit of
+41% and plastic limit of 21%, indicating the clay till is low in plasticity while the clay is
+medium in plasticity.
+The natural water content of the soil samples ranges between 16% and 29%, at a median of
+22%, showing a moist to very moist, generally moist condition.
+The engineering properties of the clay till deposit are given below:
+
+
+
+5.0
+
+High frost susceptibility and low water erodibility.
+The clay till will be stable in relatively steep slopes; however, prolonged exposure will
+allow the sand seams to slough, which may lead to local sliding.
+
+GROUNDWATER CONDITION
+All boreholes remained dry upon completion of the field work.
+
+Reference No. 2404-S107
+
+4
+
+Monitoring wells were installed at Boreholes 1, 2 and 3. Two rounds of stabilized
+groundwater levels were recorded in the monitoring wells and are summarized in Table 1.
+Table 1 - Groundwater Levels in Monitoring Wells
+Measured Groundwater Level
+Ground Well
+Borehole Elevation Depth
+No.
+(m)
+(m)
+
+Jun 11, 2024
+Depth
+El.
+(m)
+(m)
+
+Jun 24, 2024
+Depth
+El.
+(m)
+(m)
+
+July 9, 2024
+Depth
+El.
+(m)
+(m)
+
+1
+
+254.1
+
+7.6
+
+5.5
+
+248.6
+
+4.6
+
+249.5
+
+2.6
+
+251.5
+
+2
+
+254.1
+
+7.6
+
+1.3
+
+252.8
+
+1.1
+
+253.0
+
+1.4
+
+252.7
+
+3
+
+254.5
+
+7.6
+
+1.8
+
+252.7
+
+1.8
+
+252.7
+
+1.9
+
+252.6
+
+The groundwater level recorded in the monitoring wells ranges from 1.1 to 5.5 m below the
+ground surface, or El. 248.6 to 253.0 m.
+Additional groundwater assessment will be presented in the hydrogeological assessment
+report, to be presented under separate cover.
+6.0
+
+DISCUSSION AND RECOMMENDATIONS
+The investigation has disclosed that beneath the topsoil and a layer of earth fill extending to a
+depth of 0.8 m below the prevailing ground surface, the site is underlain by a stratum of silty
+clay, stiff to hard consistency. A localized deposit of very stiff silty clay till was also
+encountered overlying the silty clay at one borehole.
+All boreholes remained dry on completion of the field work. Three rounds of groundwater
+levels in the monitoring wells were recorded and the results range from El. 248.6 to 253.0 m.
+Further groundwater assessment will be presented in the hydrogeological assessment report,
+to be provided under separate cover.
+The proposed development will consist of a 4-storey apartment building with a conventional
+basement. The geotechnical recommendations appropriate for the design and construction of
+the development are presented herein. One must be aware that the subsurface conditions
+may vary between boreholes. Should subsurface variances become apparent during
+construction, a geotechnical engineer must be consulted.
+
+Reference No. 2404-S107
+
+5
+
+6.1 Site Preparation
+The existing topsoil and earth fill must be removed for site development.
+After demolition of the existing structures, the debris must be removed and disposed of offsite. The cavity must be inspected by the geotechnical engineer before building construction.
+Any disturbed soils and earth fill should also be removed. Where it is free of topsoil
+inclusions and deleterious materials, it can be stockpiled on site for reuse. It should be
+compacted to 98% Standard Proctor Dry Density (SPDD).
+6.2 Foundation
+The proposed development will consist of a 4-storey building with a conventional basement.
+The basement elevation will likely be approximately 3.0 m below the prevailing ground
+surface. The new building foundation placed on sound, natural soil with conventional spread
+and strip footings can be designed using the following net bearing pressures:
+
+
+
+Maximum Bearing Pressure at Serviceability Limit State (SLS) = 250 kPa
+Factored Bearing Pressure at Ultimate Limit State (ULS) = 400 kPa
+
+The total and differential settlements of structures designed using the bearing pressure at
+SLS are estimated within 25 mm and 20 mm, respectively.
+During construction, the foundation subgrade should be inspected by the geotechnical
+engineer or a senior geotechnical technician to ensure that the revealed conditions are
+compatible with the foundation design requirements.
+Foundations exposed to weathering should have at least 1.2 m of earth cover for protection
+against frost action.
+If groundwater seepage is encountered in excavation, the foundation must be poured
+immediately after subgrade inspection or the subgrade should be protected by a concrete mudslab immediately after exposure. This will prevent construction disturbance and costly
+rectification of the bearing subsoil.
+The building foundation should meet the requirements specified in the latest Ontario
+Building Code and the structures should be designed to resist an earthquake force using Site
+Classification ‘D’ (stiff soil).
+
+Reference No. 2404-S107
+
+6
+
+6.3 Basement Structure
+The perimeter walls should be designed to sustain a lateral earth pressure calculated using
+the soil parameters stated in Section 6.7. Any applicable surcharge loads adjacent to the
+basement must also be considered in the wall design.
+Due to the low permeability of the silty clay and clay till, the basement floor of the proposed
+building can be dampproofed and provided with a drainage system (Drawing No. 3). If
+groundwater is encountered during basement excavation, floor subdrains will be required,
+and a vapour barrier should be placed at the crown level of the subdrain to prevent
+upfiltration of soil moisture that may wet the floor. All the subdrain should be encased in a
+fabric filter to protect them against blockage by silting. These measures can be further
+assessed during construction.
+The subgrade should consist of sound native soils or well compacted earth fill, the floor slab
+should be constructed on a granular base of at least 15 cm thick, consisting of 19-mm
+Crusher-Run Limestone (CRL), or equivalent, compacted to 100% SPDD.
+The elevator pit, which normally extends below the floor level, should be designed as a
+submerged ‘tank’ structure with waterproofed pit walls and pit floor.
+The grading around the building structure must be such that it directs runoff away from the
+structure.
+6.4 Underground Services
+The underground services should be founded on sound native soil or properly compacted
+inorganic earth fill. Where weathered soil is encountered, it should be subexcavated and
+replaced with the bedding material, compacted to at least 98% SPDD.
+A Class ‘B’ bedding is recommended for the underground services construction. It should
+consist of compacted 19-mm CRL, or equivalent, as approved by a geotechnical engineer.
+The pipe joints into the manholes and catch basins must be leak-proof to prevent the
+migration of fines through the joints. Openings to subdrains and catch basins should be
+shielded with a fabric filter to prevent blockage by silting.
+
+Reference No. 2404-S107
+
+7
+
+A soil cover having a thickness at least equal to the diameter of the pipe should be in place at
+all times after pipe installation, to prevent pipe floatation when the trench is deluged with
+water derived from precipitation.
+6.5 Backfilling in Trenches and Excavated Areas
+The backfill in service trenches should be compacted to at least 98% SPDD, particularly
+below concrete floor subgrade and in the zone within 1.0 m below the pavement. The
+material should be compacted with the water content at 2% to 3% drier than the optimum.
+The lifts must be limited to 20 cm or less (before compaction).
+As a general guide, the typical water content values of the revealed soils for Standard Proctor
+compaction are presented in Table 2.
+Table 2 - Estimated Water Content for Compaction of On-Site Material
+Water Content (%) for
+Standard Proctor Compaction
+
+Soil Type
+
+Determined Natural
+Water Content (%) 100% (optimum) Range for 95% or +
+
+Earth Fill
+
+23 to 33 (median 28)
+
+15
+
+13 to 20
+
+Silty Clay Till/Silty Clay
+
+16 to 29 (median 22)
+
+15 to 21
+
+13 to 25
+
+The in-situ clay and clay till are generally suitable for use as trench backfill. Where they are
+too wet, they will require aeration by spreading them thinly in dry, warm weather. The till
+should be sorted free of oversized boulders (over 15 cm in size) before use as backfill. The
+existing fill must be sorted free of topsoil inclusions and deleterious materials, if any, prior to
+its use as structural backfill.
+In normal construction practice, the problem areas of pavement settlement largely occur
+adjacent to manholes, catch basins, services crossings, foundation walls and columns, it is
+recommended that a sand backfill should be used.
+The narrow trenches for services crossings should be cut at 1 vertical:2 horizontal so that the
+backfill in the trenches can be effectively compacted. Otherwise, soil arching in the trenches
+will prevent achievement of the proper compaction. In confined areas where the desired
+slope cannot be achieved or the operation of a proper kneading-type roller cannot be
+facilitated, imported sand fill, which can be appropriately compacted by using a smaller
+vibratory compactor, must be used.
+
+Reference No. 2404-S107
+
+8
+
+6.6 Pavement Design
+The pavement design for the parking area and fire route is presented in Table 3.
+Table 3 - Pavement Design
+Course
+
+Thickness (mm)
+
+OPS Specifications
+
+Asphalt Surface
+
+40
+
+HL3
+
+Asphalt Binder
+
+65
+
+HL8
+
+Granular Base
+
+150
+
+Granular ‘A’
+
+Granular Sub-base
+Light-Duty/Parking
+Heavy-Duty/Fire Route
+
+300
+450
+
+Granular ‘B’
+
+In preparation of pavement subgrade, all compressible material should be removed. The
+final subgrade must be proof-rolled. Any soft spot identified must be rectified by
+subexcavation and replacing with selected dry inorganic material. The subgrade within
+1.0 m below the underside of the granular sub-base must be compacted to at least 98%
+SPDD, with the water content at 2% to 3% drier than its optimum.
+All the granular bases should be compacted in 150 to 200 mm lifts to 100% SPDD.
+An intercept subdrain system should be installed along the perimeter of the parking area
+where surface runoff may drain onto the pavement. In paved areas, catch basins with stub
+drains in all four directions should be provided. The stub drains and subdrains should drain
+into the catch basin through filter-sleeved weepers. The invert of the subdrains should be at
+least 0.4 m beneath the underside of the granular sub-base and should be backfilled with
+free-draining granular material.
+6.7
+
+Soil Parameters
+The recommended soil parameters for the project design are given in Table 4.
+
+Reference No. 2404-S107
+
+9
+
+Table 4 - Soil Parameters
+Unit Weight and Bulk Factor
+
+Estimated
+Bulk Factor
+
+Bulk Unit Weight
+γ (kN/m3)
+
+Loose
+
+Compacted
+
+Silty Clay Till
+
+22.0
+
+1.30
+
+1.05
+
+Earth Fill/Silty Clay
+
+20.5
+
+1.25
+
+1.00
+
+Active
+Ka
+
+At Rest
+Ko
+
+Passive
+Kp
+
+Silty Clay
+
+0.39
+
+0.56
+
+2.56
+
+Silty Clay Till
+
+0.33
+
+0.50
+
+3.00
+
+Lateral Earth Pressure Coefficients
+
+Effective Shear Strength Parameters
+
+Cohesion
+c’ (kPa)
+
+Angle of
+Internal Friction, ’
+
+Silty Clay
+
+5
+
+26°
+
+Silty Clay Till
+
+5
+
+30°
+
+Coefficient of Permeability (K) and Percolation Time (T)
+
+Silty Clay/Silty Clay Till
+
+K
+(cm/sec)
+
+T
+(min/cm)
+
+10-7
+
+100
+
+Coefficients of Friction
+
+6.8
+
+Between Concrete and Granular Base
+
+0.50
+
+Between Concrete and Sound Native Soils
+
+0.35
+
+Excavation
+Excavation should be carried out in accordance with Ontario Regulation 213/91. The types
+of soils are classified in Table 4.
+Table 5 - Classification of Soils for Excavation
+Material
+
+Type
+
+Sound Silty Clay/Silty Clay Till
+
+2
+
+Earth Fill and Weathered Soils
+
+3
+
+LIST OF ABBREVIATIONS AND DESCRIPTION OF TERMS
+The abbreviations and terms commonly employed on the borehole logs and figures, and in the text of the
+report, are as follows:
+
+SAMPLE TYPES
+
+SOIL DESCRIPTION
+
+AS
+CS
+DO
+DS
+FS
+RC
+
+Cohesionless Soils:
+
+Auger sample
+Chunk sample
+Drive open (split spoon)
+Denison type sample
+Foil sample
+Rock core (with size and percentage
+recovery)
+ST Slotted tube
+TO Thin-walled, open
+TP Thin-walled, piston
+WS Wash sample
+
+‘N’ (blows/30 cm) Relative Density
+0
+4
+10
+30
+
+to
+to
+to
+to
+
+4
+10
+30
+50
+>50
+
+Cohesive Soils:
+Undrained Shear
+Strength (kPa)
+
+PENETRATION RESISTANCE
+Standard Penetration Resistance or ‘N’ Value:
+The number of blows of a 63.5 kg hammer
+falling from a height of 76 cm required to
+advance a 51 mm outer diameter drive open
+sampler 30 cm into undisturbed soil, after
+an initial penetration of 15 cm.
+Plotted as ‘’
+
+very loose
+loose
+compact
+dense
+very dense
+
+12
+25
+50
+100
+
+<12
+to < 25
+to < 50
+to < 100
+to 200
+>200
+
+‘N’
+(blows/30 cm)
+
+Consistency
+
+<2
+to < 4
+to < 8
+to < 15
+to 30
+>30
+
+very soft
+soft
+firm
+stiff
+very stiff
+hard
+
+2
+4
+8
+15
+
+Method of Determination of Undrained
+Shear Strength of Cohesive Soils:
+
+x 0.0 Field vane test in borehole; the number
+denotes the sensitivity to remoulding
+A continuous profile showing the number of
+Laboratory vane test
+blows per each 30 cm of penetration of a
+51 mm diameter, 90° point cone driven by a
+63.5 kg hammer falling from a height of
+METRIC CONVERSION FACTORS
+76 cm.
+Plotted as ‘  ’
+1 ft
+= 0.3048 m
+
+Dynamic Cone Penetration Resistance:
+
+WH
+PH
+PM
+NP
+
+Sampler advanced by static weight
+Sampler advanced by hydraulic pressure
+Sampler advanced by manual pressure
+No penetration
+
+1 inch = 25.4 mm
+1 lb = 0.454 kg
+1 ksf = 47.88 kPa
+
+Soil Engineers Ltd.
+
+
+
+
+
+
+JOB NO.: 2404-S107
+
+LOG OF BOREHOLE:
+
+PROJECT DESCRIPTION:
+
+Proposed 4-Storey Apartment with Basement
+
+1
+
+DO
+
+7
+
+2
+
+DO
+
+8
+
+3
+
+DO
+
+31
+
+Solid-Stem Augers
+
+Dynamic Cone (blows/30 cm)
+30
+
+50
+
+70
+
+90
+
+Atterberg Limits
+PL
+LL
+
+Shear Strength (kN/m2)
+50
+
+100
+
+150
+
+200
+
+Penetration Resistance
+(blows/30 cm)
+10
+
+30
+
+50
+
+70
+
+Moisture Content (%)
+90
+
+10
+
+20
+
+0
+
+EARTH FILL
+silty clay
+occ. rootlets and topsoil inclusions
+Stiff to hard
+
+1
+
+DRILLING DATE: May 30, 2024
+
+10
+
+Depth Scale (m)
+
+N-Value
+
+253.3
+0.8
+
+Ground Surface
+7.6
+cm TOPSOIL
+Dark brown
+
+Type
+
+254.1
+0.0
+
+Number
+
+SOIL
+DESCRIPTION
+
+Depth
+(m)
+
+METHOD OF BORING:
+
+15, 21 and 27 Shore Street, Town of Caledon
+
+SAMPLES
+El.
+(m)
+
+FIGURE NO.:
+
+30
+
+40
+
+WATER LEVEL
+
+PROJECT LOCATION:
+
+1
+
+24
+
+23
+1
+20
+2
+21
+DO
+
+39
+3
+
+SILTY CLAY
+
+5
+
+DO
+
+21
+
+45
+
+4
+brown
+grey
+
+21
+6
+
+DO
+
+Dry on completion
+
+4
+
+20
+5
+
+traces of sand and gravel
+occ. silt seams
+
+6
+25
+7
+
+DO
+
+20
+
+7
+
+245.6
+8.5
+
+8
+
+DO
+
+28
+
+9
+
+DO
+
+25
+
+8
+
+19
+
+END OF BOREHOLE
+Installed 50 mm Ø monitoring well to 7.6 m
+completed with 3.1 m screen
+Sand backfill from 4.0 m to 7.6 m
+Bentonite seal from 0.0 m to 4.0 m
+Provided with a steel monument casing
+
+9
+
+10
+
+Soil Engineers Ltd.
+
+Page: 1 of 1
+
+JOB NO.: 2404-S107
+
+LOG OF BOREHOLE:
+
+PROJECT DESCRIPTION:
+
+Proposed 4-Storey Apartment with Basement
+
+1
+
+DO
+
+10
+
+2
+
+DO
+
+9
+
+3
+
+DO
+
+24
+
+Solid-Stem Augers
+
+Dynamic Cone (blows/30 cm)
+30
+
+50
+
+70
+
+90
+
+Atterberg Limits
+PL
+LL
+
+Shear Strength (kN/m2)
+50
+
+100
+
+150
+
+200
+
+Penetration Resistance
+(blows/30 cm)
+10
+
+30
+
+50
+
+70
+
+Moisture Content (%)
+90
+
+10
+
+20
+
+30
+
+0
+
+EARTH FILL
+silty clay
+occ. rootlets and topsoil inclusions
+Stiff to hard
+
+2
+
+DRILLING DATE: May 29, 2024
+
+10
+
+Depth Scale (m)
+
+N-Value
+
+253.3
+0.8
+
+Ground Surface
+7.6
+cm TOPSOIL
+Dark brown
+
+Type
+
+254.1
+0.0
+
+Number
+
+SOIL
+DESCRIPTION
+
+Depth
+(m)
+
+METHOD OF BORING:
+
+15, 21 and 27 Shore Street, Town of Caledon
+
+SAMPLES
+El.
+(m)
+
+FIGURE NO.:
+
+40
+
+WATER LEVEL
+
+PROJECT LOCATION:
+
+2
+
+29
+
+25
+1
+20
+2
+23
+DO
+
+26
+3
+
+SILTY CLAY
+
+5
+
+DO
+
+21
+
+37
+
+4
+
+25
+6
+
+DO
+
+Dry on completion
+
+4
+
+22
+5
+
+traces of sand and gravel
+occ. silt seams
+
+6
+
+brown
+grey
+
+29
+7
+
+DO
+
+14
+
+7
+
+20
+8
+246.0
+8.1
+
+DO
+
+21
+
+8
+
+END OF BOREHOLE
+Installed 50 mm Ø monitoring well to 7.6 m
+completed with 3.1 m screen
+Sand backfill from 4.0 m to 7.6 m
+Bentonite seal from 0.0 m to 4.0 m
+Provided with a steel monument casing
+
+9
+
+10
+
+Soil Engineers Ltd.
+
+Page: 1 of 1
+
+JOB NO.: 2404-S107
+
+LOG OF BOREHOLE:
+
+PROJECT DESCRIPTION:
+
+Proposed 4-Storey Apartment with Basement
+
+253.0
+0.8
+
+1B DO
+
+5
+
+2
+
+DO
+
+21
+
+3
+
+DO
+
+28
+
+Ground Surface
+10 cm TOPSOIL
+
+Solid-Stem Augers
+
+Dynamic Cone (blows/30 cm)
+30
+
+50
+
+70
+
+90
+
+Atterberg Limits
+PL
+LL
+
+Shear Strength (kN/m2)
+50
+
+100
+
+150
+
+200
+
+Penetration Resistance
+(blows/30 cm)
+10
+
+30
+
+50
+
+70
+
+Moisture Content (%)
+90
+
+10
+
+20
+
+0
+
+Dark brown
+EARTH FILL
+silty clay
+occ. rootlets and topsoil inclusions
+Brown, very stiff
+SILTY CLAY TILL
+some sand, a trace of gravel
+
+3
+
+DRILLING DATE: May 29, 2024
+
+10
+
+Depth Scale (m)
+
+N-Value
+
+253.7
+0.8
+
+Type
+
+254.5
+0.0
+
+Number
+
+SOIL
+DESCRIPTION
+
+Depth
+(m)
+
+METHOD OF BORING:
+
+15, 21 and 27 Shore Street, Town of Caledon
+
+SAMPLES
+El.
+(m)
+
+FIGURE NO.:
+
+30
+
+40
+
+WATER LEVEL
+
+PROJECT LOCATION:
+
+3
+
+23
+
+16
+1
+22
+
+Very stiff to hard
+
+2
+21
+DO
+
+42
+3
+
+5
+
+DO
+
+22
+
+35
+
+SILTY CLAY
+
+4
+brown
+grey
+
+24
+6
+
+DO
+
+Dry on completion
+
+4
+
+23
+5
+
+traces of sand and gravel
+occ. silt seams
+
+6
+22
+7
+
+DO
+
+23
+
+7
+
+28
+8
+246.4
+8.1
+
+DO
+
+22
+
+8
+
+END OF BOREHOLE
+Installed 50 mm Ø monitoring well to 7.6 m
+completed with 3.1 m screen
+Sand backfill from 4.0 m to 7.6 m
+Bentonite seal from 0.0 m to 4.0 m
+Provided with a flush mounted cover
+
+9
+
+10
+
+Soil Engineers Ltd.
+
+Page: 1 of 1
+
+JOB NO.: 2404-S107
+
+LOG OF BOREHOLE:
+
+PROJECT DESCRIPTION:
+
+Proposed 4-Storey Apartment with Basement
+
+1
+
+DO
+
+8
+
+2
+
+DO
+
+29
+
+3
+
+DO
+
+31
+
+Solid-Stem Augers
+
+Dynamic Cone (blows/30 cm)
+30
+
+50
+
+70
+
+90
+
+Atterberg Limits
+PL
+LL
+
+Shear Strength (kN/m2)
+50
+
+100
+
+150
+
+200
+
+Penetration Resistance
+(blows/30 cm)
+10
+
+30
+
+50
+
+70
+
+Moisture Content (%)
+90
+
+10
+
+20
+
+30
+
+0
+
+EARTH FILL
+silty clay
+occ. rootlets and topsoil inclusions
+Very stiff to hard
+
+4
+
+DRILLING DATE: May 29, 2024
+
+10
+
+Depth Scale (m)
+
+N-Value
+
+253.5
+0.8
+
+Ground Surface
+7.6
+cm TOPSOIL
+Dark brown
+
+Type
+
+254.3
+0.0
+
+Number
+
+SOIL
+DESCRIPTION
+
+Depth
+(m)
+
+METHOD OF BORING:
+
+15, 21 and 27 Shore Street, Town of Caledon
+
+SAMPLES
+El.
+(m)
+
+FIGURE NO.:
+
+40
+
+WATER LEVEL
+
+PROJECT LOCATION:
+
+4
+
+33
+
+20
+1
+22
+2
+23
+DO
+
+26
+3
+
+SILTY CLAY
+
+5
+
+DO
+
+25
+
+22
+
+4
+
+25
+6
+
+DO
+
+Dry on completion
+
+4
+
+23
+5
+
+traces of sand and gravel
+occ. silt seams
+
+6
+
+brown
+grey
+
+26
+7
+
+DO
+
+20
+
+7
+
+21
+8
+246.2
+8.1
+
+DO
+
+23
+
+8
+
+END OF BOREHOLE
+
+9
+
+10
+
+Soil Engineers Ltd.
+
+Page: 1 of 1
+
+Soil Engineers Ltd.
+
+GRAIN SIZE DISTRIBUTION
+
+Reference No: 2404-S107
+
+U.S. BUREAU OF SOILS CLASSIFICATION
+GRAVEL
+
+SAND
+
+COARSE
+
+FINE
+
+COARSE
+
+SILT
+
+V. FINE
+
+FINE
+
+MEDIUM
+
+CLAY
+
+UNIFIED SOIL CLASSIFICATION
+GRAVEL
+
+SAND
+FINE
+
+COARSE
+3" 2-1/2" 2"
+
+100
+
+1-1/2"
+
+1"
+
+3/4"
+
+1/2"
+
+3/8"
+
+MEDIUM
+
+COARSE
+4
+
+8
+
+10
+
+16
+
+20
+
+SILT & CLAY
+
+FINE
+30
+
+40
+
+50
+
+60
+
+100
+
+140
+
+200
+
+270 325
+
+90
+80
+70
+60
+50
+40
+
+Percent Passing
+
+30
+20
+10
+0
+
+100
+
+Grain Size in millimeters
+
+10
+
+1
+
+Project:
+
+Proposed 4-Storey Apartment with Basement
+
+Location:
+
+15, 21 and 27 Shore Street, Town of Caledon
+
+0.1
+
+0.01
+
+0.001
+
+Liquid Limit (%) =
+
+41
+
+Plastic Limit (%) =
+
+21
+
+2
+
+Plasticity Index (%) =
+
+20
+
+Sample No:
+
+7
+
+Moisture Content (%) =
+
+29
+
+Depth (m):
+
+6.4
+
+Estimated Permeability
+
+Elevation (m):
+
+247.7
+
+Classification of Sample [& Group Symbol]:
+
+(cm./sec.) =
+SILTY CLAY
+a trace of fine sand
+
+10-7
+
+Figure: 5
+
+Borehole No:
+
+Soil Engineers Ltd.
+
+GRAIN SIZE DISTRIBUTION
+
+Reference No: 2404-S107
+
+U.S. BUREAU OF SOILS CLASSIFICATION
+GRAVEL
+
+SAND
+
+COARSE
+
+FINE
+
+COARSE
+
+SILT
+
+V. FINE
+
+FINE
+
+MEDIUM
+
+CLAY
+
+UNIFIED SOIL CLASSIFICATION
+GRAVEL
+
+SAND
+FINE
+
+COARSE
+3" 2-1/2" 2"
+
+100
+
+1-1/2"
+
+1"
+
+3/4"
+
+1/2"
+
+3/8"
+
+MEDIUM
+
+COARSE
+4
+
+8
+
+10
+
+16
+
+20
+
+SILT & CLAY
+
+FINE
+30
+
+40
+
+50
+
+60
+
+100
+
+140
+
+200
+
+270 325
+
+90
+80
+70
+60
+50
+40
+
+Percent Passing
+
+30
+20
+10
+0
+
+100
+
+Grain Size in millimeters
+
+10
+
+1
+
+Project:
+
+Proposed 4-Storey Apartment with Basement
+
+Location:
+
+15, 21 and 27 Shore Street, Town of Caledon
+
+0.1
+
+0.01
+
+0.001
+
+Liquid Limit (%) =
+
+34
+
+Plastic Limit (%) =
+
+18
+
+3
+
+Plasticity Index (%) =
+
+16
+
+Sample No:
+
+2
+
+Moisture Content (%) =
+
+16
+
+Depth (m):
+
+1.0
+
+Estimated Permeability
+
+Elevation (m):
+
+253.5
+
+Classification of Sample [& Group Symbol]:
+
+(cm./sec.) =
+SILTY CLAY TILL
+some sand, a trace of gravel
+
+10-7
+
+Figure: 6
+
+Borehole No:
+
+BH/MW.1
+
+BH/MW.3
+
+BH/MW.2
+
+BH.4
+
+Soil Engineers Ltd.
+
+LEGEND
+
+CONSULTING ENGINEERS
+GEOTECHNICAL | ENVIRONMENTAL | HYDROGEOLOGICAL | BUILDING SCIENCE
+
+-
+
+-
+
+Borehole with
+monitoring well
+
+90 WEST BEAVER CREEK ROAD, SUITE #100, RICHMOND HILL, ONTARIO L4B 1E7 · TEL: (416) 754-8515 · FAX: (905) 881-8335
+
+BOREHOLE AND MONITORING WELL LOCATION PLAN
+
+Borehole
+SITE: 15, 21 and 27 Shore Street, Town of Caledon
+DESIGNED BY: SCALE: 1:400
+
+CHECKED BY: REF. NO.:
+
+2404-S107
+
+DWG NO.:
+DATE: June 2024
+
+1
+REV
+-
+
+7
+2
+
+3
+
+Pea Gravel/
+19-mm clear stone
+
+Impermeable Seal
+Exterior Grading Sloping
+
+5
+
+Ground Floor
+
+9
+
+Sand Filter
+6
+
+Basement Wall
+
+Dampproofing of
+Basement Wall
+
+Slab-On-Grade 5 & 10
+On-Site Material
+(if approved)
+4
+
+1
+
+Free Draining Backfill
+(Can be omitted if prefabricated
+wall drains are used)
+8
+
+Drainage Tile
+
+Moisture Barrier
+
+Prefabricated Core Drain
+
+100 mm Diameter Solid PVC Pipe
+Connected to Flange
+
+11
+
+Underfloor Drains
+100 mm Solid Collector Pipe,
+Leading to Frost Free Sump
+
+Geotextile Filter Fabric
+Minimum 100 mm of overlap
+in front of the core drain
+
+NOTES:
+1. Drainage tile: consists of 100 mm (4") diameter weeping tile or equivalent perforated pipe leading to a positive sump or outlet.
+Invert to be at minimum of 150 mm (6") below underside of basement floor slab.
+2. Pea gravel: at 150 mm (6") on the top and sides of drain. If drain is not placed on concrete footing, provide 100 mm (4") of pea gravel below drain.
+The pea gravel may be replaced by 19-mm clear stone provided that the drain is covered by a porous geotextile membrane of
+Terrafix 270R or equivalent.
+3. Filter material: consists of C.S.A. fine concrete aggregate. A minimum of 300 mm (12") on the top and sides of gravel.
+This may be replaced by an approved porous geotextile membrane of Terrafix 270R or equivalent.
+4. Free-draining backfill: OPSS Granular 'B' or equivalent, compacted to 95% to 98% (maximum) Standard Proctor dry density.
+Do not compact closer than 1.8 m (6') from wall with heavy equipment.
+This may be replaced by on-site material if prefabricated wall drains (Miradrain) extending from the finished grade to
+the bottom of the basement wall are used.
+5. Do not backfill until the wall is supported by the basement floor slab and ground floor framing, or adequate bracing.
+6. Dampproofing of the basement wall is required before backfilling
+7. Impermeable backfill seal of compacted clay, clayey silt or equivalent. If the original soil in the vicinity is a free-draining sand, the seal may be omitted.
+8. Moisture barrier: 19-mm CRL or equivalent. The thickness of this layer should be 150 mm (6") minimum.
+9. Exterior Grade: slope away from basement wall on all the sides of the building.
+10. Slab-On-Grade should not be structurally connected to walls or foundations.
+11. Underfloor drains* should be placed in parallel rows at 6 to 8 m (20'-25') centre, on 100 mm (4") of pea gravel with 150 mm (6") of pea gravel
+on top and sides. The spacing should be at least 300 mm (12") between the underside of the floor slab and the top of the pipe.
+The drains should be connected to positive sumps or outlets. Do not connect the underfloor drains to the perimeter drains.
+*
+
+Underfloor drains can be deleted where not required.
+
+Soil Engineers Ltd.
+CONSULTING ENGINEERS
+GEOTECHNICAL | ENVIRONMENTAL | HYDROGEOLOGICAL | BUILDING SCIENCE
+90 WEST BEAVER CREEK ROAD, SUITE #100, RICHMOND HILL, ONTARIO L4B 1E7 · TEL: (416) 754-8515 · FAX: (905) 881-8335
+
+Permanent Perimeter Drainage System
+SITE: 15, 21 and 27 Shore Street, Town of Caledon
+DESIGNED BY: K.L.
+SCALE: N.T.S.
+
+CHECKED BY: B.L.
+REF. NO.:
+
+2404-S107
+
+DWG NO.:
+DATE: June 2024
+
+3
+REV
+-
+
+APPENDIX C
+WATER DEMAND CALCULATIONS
+
+WATER SUPPLY CALCULATION
+
+PROJECT:
+15,21,27 Shore Street, Caledon
+24-0002CA
+FILE No.:
+DATE:
+2024-06-11
+PREPARED BY: DV
+
+Fire Flow (residential)
+Demand (residential)
+Max Day Factor
+Peak Hour Factor
+Units (Large)
+Units (Small)
+Density (Large)
+Density (Small
+Population
+
+83.33 L/s
+280 L/cap/day *
+2*
+3*
+14
+5
+3.1 cap / unit *
+1.7 cap / unit *
+52
+
+Calculated as per FUS 2020
+
+* Per Region of Peel Water Main Design Criteria (June 2010) - Table 1
+
+AVERAGE-DAY DEMAND
+Land Use
+Residential
+
+Units
+
+Units
+
+Density
+
+Density
+
+(Large)
+
+(small)
+
+(large p/unit)
+
+(small p/unit)
+
+14
+
+5
+
+3.1 p/unit
+
+1.7 p/unit
+
+Population
+
+Avg. Day Demand
+(L/s)
+
+52
+
+0.17
+
+MAXIMUM-DAY DEMAND + FIRE FLOW
+Land Use
+
+Avg. Day
+Demand (L/s)
+
+Peak Hour
+Demand Factor*
+
+Peak Hour
+Demand (L/s)
+
+0.17
+3.0
+0.50
+Residential
+* Per Region of Peel Water Main Design Criteria (June 2010) - Table 1
+
+Max. Day
+Max. Day Demand
+Demand Factor*
+(L/s)
+
+2.0
+
+0.34
+
+Max. Day Demand
++ Fire Flow (L/s)
+
+83.67
+
+FIRE FLOW CALCULATION
+PROJECT:
+FILE No.:
+DATE:
+PREPARED BY:
+
+15,21,27 Shore Street, Caledon
+24-0002CA
+2024-06-11
+DV
+
+Calculation of required fire flow is based on the Fire Underwriters Survey (FUS), Water Supply for
+Fire Protection publication, 2020
+
+F = 220𝐶√𝐴
+
+Where: F = Requied fire flow (L/min.)
+C = Coefficient related to the type of construction
+1.5
+
+Type V
+
+Wood Frame Construction
+
+0.8
+
+Type IV-A
+
+Mass Timber Construction
+
+0.9
+
+Type IV-B
+
+Mass Timber Construction
+
+1.0
+
+Type IV-C
+
+Mass Timber Construction
+
+1.5
+
+Type IV-D
+
+Mass Timber Construction
+
+1.0
+
+Type III
+
+Ordinary Construction
+
+0.8
+
+Type II
+
+Noncombustible Construction
+
+0.6
+
+Type I
+
+Fire Resistive Construction
+2
+
+A = Total floor area (m )
+Includes all storeys, but excluding basements at least 50% below grade.
+
+*
+
+For fire-resistive buildings, consider the 2 largest adjoining floors plus 50% of each of any floors immediately above up to 8, when vertical openings are inadequately protected.
+If the vertical openings and exterior vertical communications are properly protected (one hour rating), consider only the area of the largest floor plus 25% of eachh of the 2 immediately adjoining floors.
+
+Adjustments to the calculated fire flow can be made based on occupancy, sprinkler protection and exposure to other structures. The table below summarizes
+the adjustments made to the basic fire flow demand.
+
+Building
+
+Area "A"
+
+1
+Base Fire Flow
+
+C
+
+(m2)
+Site
+
+1557.4
+
+1
+
+2
+Occupancy
+
+(L/min)
+
+(L/s)
+
+%
+
+8682
+
+144.7
+
+-15
+
+3
+Sprinkler
+
+Fire Flow Adjusted
+Adjustme
+Flow
+nt (L/min) (L/min)
+-1302
+
+7380
+
+4
+Exposure
+
+Final Adjusted
+Fire Flow
+
+%
+
+Fire Flow
+Adjustment
+(L/min)
+
+%
+
+Fire Flow
+Adjustment
+(L/min)
+
+Final Fire
+Flow
+(L/min)
+
+Rounded
+Fire Flow
+(L/min)
+
+(L/s)
+
+-40
+
+-2952
+
+14%
+
+1033
+
+5461
+
+5000
+
+83.33
+
+Note - Total GFA = 1557.4 square metres
+GFA estimated based on site plan prepared by FC Architects Inc., dated February 20, 2024
+(2) Occupancy
+Non-Combustible
+
+(3) Spinkler
+-25%
+
+Limited Combustible
+-15%
+Combustible
+no change
+Free Burning
+15%
+Rapid Burning
+25%
+
+It is assumed that the building will have a
+Sprinkler system (-30%)
+Additional credit for standard water supply (-10%)
+
+(4) Exposure - Type III - Unprotected
+Length Height Exposure
+Face
+Distance
+Factor
+Factor
+North
+30+m
+0%
+92
+East
+10.1 to 20 m
+6%
+69
+South
+20.1 to 30 m
+5%
+92
+69
+West
+20.1 to 30 m
+3%
+Total Exposure (max 75%)
+14%
+Calculate for all sides and all buildings.
+
+Distance
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+20.1 to 30 m
+30.1+m
+
+Max
+25%
+20%
+15%
+10%
+0%
+
+HYDRANT FLOW TEST REPORT
+
+GENERAL INFORMATION:
+PROJECT ID
+CLIENT NAME
+BUILDING ADDRESS
+
+1527SS
+Deven Verma
+15-27 Shore Street
+Caledon, Ontario
+
+WATER MAIN INFORMATION:
+MAIN SIZE / MATERIAL NA
+CONFIGURATION
+Looped
+
+HYDRANT LOCATION:
+
+TESTED BY: AA
+DATE June 21-24
+TIME 1:30:00 PM
+
+LEGEND:
+
+STATIC HYDRANT
+
+RESIDUAL HYDRANT
+
+FINAL RESULTS:
+Test #
+
+Static
+1
+2
+
+Number Orifice
+Pitot
+Equivlnt
+Total Projected Gauge Discharg
+flow at Pressure e Coef'nt
+of
+Size (in) Reading
+Flow
+Flow
+20psi
+(psig)
+Outlets
+(psig)
+(usgpm) (usgpm)
+(usgpm)
+N/A
+1
+2
+
+N/A
+2.47
+2.47
+
+N/A
+34
+22
+
+N/A
+849
+683
+
+0
+849
+1366
+
+N/A
+4163
+3700
+
+58
+56
+52
+
+N/A
+0.8
+0.8
+
+100
+90
+80
+
+Pressure, psig
+
+70
+
+0, 58
+
+60
+
+849, 56
+
+1366, 52
+
+50
+40
+30
+20
+10
+0
+
+0
+
+500
+
+1000
+Flow, gpm
+
+Note: Report is in accordance with applicable bylaw standards and NFPA 291
+Recommended Practice for Water Flow Testing and Marking of Hydrants
+
+1500
+
+APPENDIX D
+SANITARY DEMAND CALCULATIONS AND SINGLE USE DEMAND TABLE
+
+SANITARY DEMAND CALCULATIONS
+
+Sheet 1 of 2
+
+Region of Peel
+SANITARY SEWER DESIGN SHEET - EXISTING CONDITIONS
+Project / Subdivision : 15,21,27 Shore Street, Caledon
+
+Prepared by: Deven Verma
+
+Last Revised: June 11, 2024
+
+Consulting Engineer : Urbanworks Engineering Corporation
+
+Checked by: Taras Dumyn, P. Eng
+
+Project No.: 24-0002CA
+
+Design Parameters
+Manning 'n' =
+
+Design Equations
+Residential Flow Rate
+
+0.013
+
+Infiltration flow =
+
+0.28 L/s/mh
+
+Region of Peel - Linear Waste Water Standards (2023) - Section 2.5.2
+
+Extran. Flow (i)=
+
+0.26 L/s/ha
+
+Region of Peel - Linear Waste Water Standards (2023) - Section 2.5.2
+
+Density (Detached)
+
+4.2 person / unit Region of Peel - Linear Waste Water Standards (2023) - Table 2-2
+
+Density (large apartment)
+
+3.1 person / unit Region of Peel - Linear Waste Water Standards (2023) - Table 2-2
+
+Density (small apartment)
+
+1.7 person / unit Region of Peel - Linear Waste Water Standards (2023) - Table 2-2
+
+Density (Commercial)
+
+50 person / ha
+
+Non-Residential Flow Rate
+
+290 L/cap/day (Region)
+270 L/cap/day (Region)
+
+SANDS 01/06
+
+peak population flow
+
+Q(i)= number of mh * 0.28 l/s/mh
+
+peak infiltration flow
+
+Q(e)= area (ha) * 0.26 l/s/ha
+
+peak extraneous flow
+
+Q(d) = Q(p) + Q(e) + Q(i)
+
+peak design flow
+
+Qcap = 1/n x A x R0.67S0.5
+
+Manning's Equation
+
+M=1+
+
+14
+4 + (P/1000)0.5
+
+min =
+max =
+
+2
+4
+
+References: Town of Newmarket, Engineering Design Standards and Criteria, August 2019
+
+Cumulative Values
+
+Sewer Data
+
+(cap)
+
+cap
+
+Ha
+
+M
+
+Q(c)
+
+1651195
+
+309324
+
+0.93
+
+0.42
+
+5
+
+-
+
+-
+
+21
+
+21
+
+21
+
+21
+
+42
+
+0.93
+
+4.00
+
+24-0002CA - 15-27 Shore Street, Caledon - Sanitary Design Sheet
+
+0.26
+
+Q(r)
+
+0.28
+
+Q ( i)
+
+Q(e)
+
+Q(d)
+
+(m)
+
+(mm)
+
+0.28
+
+0.24
+
+1.07
+
+120.00
+
+200
+
+PVC
+
+%Full
+
+Peak
+Commercial
+Flow (L/s)
+
+(ea.)
+
+Actual Velocity
+
+Peaking Factor
+
+(cap)
+
+Full Flow
+Velocity
+
+Area
+
+(cap)
+
+Full Flow
+Capacity (Qcap)
+
+Total Population
+
+(ea.)
+
+Grade
+
+Residential
+Population
+
+(ea.)
+
+Type of Pipe
+
+Commercial
+Population
+
+(ea.)
+
+Pipe
+Size
+
+Residential
+Population
+
+(Ha)
+
+Length
+
+Commercial
+Population
+
+(Ha)
+
+Total Design
+Flow (L/s)
+
+Small Aparments
+
+MH #
+
+Peak Extraneous
+Flow (L/s)
+
+Large
+Apartments
+
+MH #
+
+Peak Infiltration
+Flow (L/s)
+
+To
+
+Peak Residential
+Flow (L/s)
+
+From
+
+Detached Units
+
+Flow Data
+
+Commercial area
+
+Individual Values
+Gross Area
+
+Location
+
+Shore Street
+
+Q (P)= (P x q x M) / 86.4
+
+Region of Peel - Linear Waste Water Standards (2023) - Section 2.1.2
+
+Notes/Comments:
+
+Street
+
+Q(P) = peak population flow (L/s)
+
+(%)
+
+(L/s)
+
+(m/s)
+
+(m/s)
+
+%
+
+1.40
+
+38.81
+
+1.24
+
+0.53
+
+2.7
+
+Printed:2024-06-11
+
+Sheet 2 of 2
+
+Region of Peel
+SANITARY SEWER DESIGN SHEET - PROPOSED CONDITIONS
+Project / Subdivision : 15,21,27 Shore Street, Caledon
+
+Prepared by: Deven Verma
+
+Last Revised: June 11, 2024
+
+Consulting Engineer : Urbanworks Engineering Corporation
+
+Checked by: Taras Dumyn, P. Eng
+
+Project No.: 24-0002CA
+
+Design Parameters
+Manning 'n' =
+Infiltration flow =
+
+Design Equations
+
+0.28 L/s/mh
+
+Region of Peel - Linear Waste Water Standards (2023) - Section 2.5.2
+
+Extran. Flow (i)=
+Density (Detached)
+
+0.26 L/s/ha
+4.2 person / unit Region of Peel - Linear Waste Water Standards (2023) - Table 2-2
+
+Density (large apartment)
+
+3.1 person / unit Region of Peel - Linear Waste Water Standards (2023) - Table 2-2
+
+Density (small apartment)
+
+1.7 person / unit Region of Peel - Linear Waste Water Standards (2023) - Table 2-2
+
+Density (Commercial)
+
+Residential Flow Rate
+
+290 L/cap/day (Region)
+
+Non-Residential Flow Rate
+
+270 L/cap/day (Region)
+
+0.013
+Region of Peel - Linear Waste Water Standards (2023) - Section 2.5.2
+
+50 person / ha
+
+peak population flow
+
+Q(i)= number of mh * 0.28 l/s/mh
+
+peak infiltration flow
+
+Q(e)= area (ha) * 0.26 l/s/ha
+
+peak extraneous flow
+
+Q(d) = Q(p) + Q(e) + Q(i)
+
+peak design flow
+
+Qcap = 1/n x A x R0.67S0.5
+
+Manning's Equation
+
+M=1+
+
+14
+0.5
+4 + (P/1000)
+
+min =
+max =
+
+2
+4
+
+References: Town of Newmarket, Engineering Design Standards and Criteria, August 2019
+
+Cumulative Values
+
+Sewer Data
+
+Commercial
+Population
+
+Residential
+Population
+
+Total Population
+
+Area
+
+Peaking Factor
+
+Peak
+Commercial
+Flow (L/s)
+
+Peak Residential
+Flow (L/s)
+
+Peak Infiltration
+Flow (L/s)
+
+Peak Extraneous
+Flow (L/s)
+
+Total Design
+Flow (L/s)
+
+Length
+
+Pipe
+Size
+
+(ea.)
+
+(ea.)
+
+(ea.)
+
+(cap)
+
+(cap)
+
+(ea.)
+
+(cap)
+
+cap
+
+Ha
+
+M
+
+Q(c)
+
+Q(r)
+
+Q ( i)
+
+Q(e)
+
+Q(d)
+
+(m)
+
+(mm)
+
+BLDG
+Inspection MH
+1651195
+
+Inspection MH
+Main
+309324
+
+0.21
+0.72
+
+0.42
+
+2
+
+14
+-
+
+5
+-
+
+21
+
+52
+8
+
+21
+
+52
+52
+60
+
+52
+52
+81
+
+0.21
+0.21
+0.93
+
+4.00
+4.00
+4.00
+
+0.26
+
+0.70
+0.70
+0.81
+
+0.28
+0.28
+0.28
+
+0.05
+0.05
+0.24
+
+1.03
+1.03
+1.59
+
+4.00
+9.00
+120.00
+
+150
+150
+200
+
+PVC
+PVC
+PVC
+
+%Full
+
+Residential
+Population
+
+(Ha)
+
+Actual Velocity
+
+Commercial
+Population
+
+(Ha)
+
+Full Flow
+Velocity
+
+Small Aparments
+
+MH #
+
+Full Flow
+Capacity (Qcap)
+
+Large
+Apartments
+
+MH #
+
+Grade
+
+To
+
+Type of Pipe
+
+From
+
+Detached Units
+
+Flow Data
+
+Commercial area
+
+Individual Values
+Gross Area
+
+Location
+
+Proposed Development
+Proposed Development
+Shore Street
+
+Q (P)= (P x q x M) / 86.4
+
+Region of Peel - Linear Waste Water Standards (2023) - Section 2.1.2
+
+Notes/Comments:
+
+Street
+
+Q(P) = peak population flow (L/s)
+
+(%)
+
+(L/s)
+
+(m/s)
+
+(m/s)
+
+%
+
+2.00
+2.00
+1.40
+
+21.54
+21.54
+38.81
+
+1.22
+1.22
+1.24
+
+0.62
+0.62
+0.60
+
+4.8
+4.8
+4.1
+
+=proposed sewer
+=existing sewer
+
+SANDS 01/06
+
+24-0002CA - 15-27 Shore Street, Caledon - Sanitary Design Sheet
+
+Printed:2024-06-11
+
+SINGLE USE DEMAND TABLE
+
+Water and Wastewater Modelling Demand Table - Site Plan applications
+
+Version - January 2023
+
+Proposed Residential
+
+units
+
+persons
+
+0
+0
+14
+5
+
+0
+0
+
+1)
+
+Singles/Semis
+townhouses
+large apartments (>750sqft)
+small apartments (<=750sqft)
+
+44
+8
+52
+
+Total Proposed Residential
+Proposed Institutional Population2)
+Proposed Employment Population
+
+n/a
+
+3)
+
+n/a
+52
+
+Total
+Proposed GFA (commercial/retail) (sqm)
+
+n/a
+
+WATER CONNECTION
+Hydrant flow test
+Hydrant flow test locations 4)
+
+Minimum water pressure
+Maximum water pressure
+
+FH (#6513625) on Shore Street, Caledon
+
+Pressure
+(kPa)
+386.1
+400
+Water demands
+
+No.
+
+Demand type
+1 Average day flow
+2 Maximum day flow
+3 Peak hour flow
+5)
+4 Fire flow
+Analysis
+5 Maximum day plus fire flow
+
+Use 1
+0.17
+
+1)
+
+Time
+
+53.36
+
+June 21, 2024 1:30 PM
+
+0
+
+June 21, 2024 1:30 PM
+
+Demand (in l/s)
+Use 2 6)
+Use 3 6)
+
+0.34
+0.50
+
+83.33
+83.67
+
+WASTEWATER CONNECTION
+6
+7
+8
+9
+
+6)
+
+Flow (in l/s)
+
+Wastewater sewer effluent (in l/s)
+Wastewater sewer effluent (in l/s)
+Wastewater sewer effluent (in l/s)
+Total Wastewater sewer effluent (in l/s)
+
+Total
+0.17
+0.34
+0.50
+83.33
+83.67
+
+Discharge Location7)
+
+new connection between EX. MH 1651195 and 309324
+
+Flow
+1.03
+1.03
+
+For the design flow calculations, please consider the following PPU’s, which are found in the Region of
+Peel 2020 DC Background Study
+☐Singles/Semi – 4.2
+
+☐Multiples (Townhouses) – 3.4
+☐Large Apartments (larger than 750 square feet) – 3.0
+☐Small Apartments (equal to or less than 750 square feet) – 1.6
+2)
+refer to Region of Peel design criteria
+3)
+For the commercial and industrial design flow calculations, please use your site specific estimated
+population or the most current Ontario Building Code Occupant Load determination
+4)
+Please include the graphs associated with the hydrant flow test information table
+4)
+Hydrant flow tests should be performed within 2 years of submisison to the Region.
+The Region will not permit hydrant flow tests during the winter, please check with the Region for scheduling
+5)
+Please reference the Fire Underwriters Survey Document
+6)
+Please identify the flows for each use type, if applicable
+7)
+Please include drainage plan for mutliple discharge locations
+The calculations should be based on the development proposal
+All required calculations must be submitted with the demand table submission
+Table shall include Professional Engineer's signature and stamp
+Site servicing concept shall be included
+
+This table will be deemed complete when all the above is submitted and/or included.
+Modelling will commence with a complete table.
+
+APPENDIX E
+STORMWATER MANAGEMENT CALCULATIONS AND JELLYFISH SIZING REPORT
+
+SITE CHARACTERISTICS
+PROJECT:
+FILE No.:
+DATE:
+PREPARED BY:
+
+15,21,27 Shore Street, Caledon
+24-0002CA
+2024-09-23
+DV
+
+Pre-Development
+
+Land Use
+Asphalt Driveway
+Roof
+Hardscape
+Landscape
+Total
+
+Impervious
+Ratio (I)
+1
+1
+1
+0
+
+Impervious Ratio
+Runoff coefficient = (0.25*( 1- i )+ 0.9i) =
+
+Area 101 (m2)
+
+Area 102 (m2)
+
+Area 103 (m2)
+
+Total Drainage Area (m2)
+
+% Coverage
+
+171.00
+372.60
+36.00
+522.62
+1102.22
+1102.22
+0.53
+0.59
+
+19.30
+0
+0
+37
+56.60
+
+0.00
+17.16
+79.36
+811.78
+908.30
+
+190.30
+389.76
+115.36
+1371.40
+2067.12
+
+9.2%
+18.9%
+5.6%
+66.3%
+100%
+
+0.34
+0.47
+
+0.11
+0.32
+
+0.34
+0.47
+
+Area 201 (m2)
+
+Area 202 (m2)
+
+Area 203 (m2)
+
+Total Drainage Area (m2)
+
+% Coverage
+
+1055.04
+423.43
+114.48
+358.74
+1951.69
+
+0
+0
+8.00
+48.60
+56.60
+
+0.00
+0.00
+0.00
+58.83
+58.83
+
+1055.04
+423.43
+122.48
+466.17
+2067.12
+
+51.0%
+20.5%
+5.9%
+22.6%
+100.0%
+
+0.82
+0.78
+
+0.14
+0.34
+
+0.00
+0.25
+
+0.77
+0.75
+
+Post-Development
+
+Land Use
+Asphalt Driveway
+Roof
+Hardscape
+Landscape
+Total
+
+Impervious
+Ratio (I)
+1
+1
+1
+0
+
+Impervious Ratio
+Runoff coefficient = (0.25 * ( 1- i )+ 0.9i ) =
+
+PEAK FLOW CALCULATION: RATIONAL METHOD
+PRE-DEVELOPMENT CONDITION
+PROJECT:
+FILE No.:
+DATE:
+PREPARED BY:
+
+15,21,27 Shore Street, Caledon
+24-0002CA
+2024-09-23
+DV
+
+IDF DATA SET:
+STORM
+EVENT
+A
+2 YR.
+1070
+5 YR.
+1593
+10 YR.
+2221
+25 YR.
+3158
+50 YR.
+3886
+100 YR.
+4688
+
+Town Std. No. 103
+COEFFICIENTS
+B
+C
+0.8759
+7.85
+0.8789
+11
+0.908
+12
+0.9335
+15
+0.9495
+16
+0.9624
+17
+
+STORM
+EVENT
+
+AREA
+I.D.
+
+AREA
+(ha)
+
+C
+
+2 YR.
+
+101
+
+0.1102
+
+0.59
+
+5 YR.
+
+101
+
+0.1102
+
+10 YR.
+
+101
+
+25 YR.
+
+AxC
+
+Rainfall Intensity:
+Peak Flow:
+Min. Inlet Time:
+
+I = A * B / (t c + C )
+Q = 0.00278 * (C ∙ I ∙ A)
+Tc = 10.0min.
+
+Tc
+(min.)
+
+I
+(mm/hr)
+
+Q
+(m /s)
+
+Q
+(L/s)
+
+0.065
+
+10.0
+
+52.5
+
+0.0095
+
+9.5
+
+0.59
+
+0.065
+
+10.0
+
+66.7
+
+0.0121
+
+12.1
+
+0.1102
+
+0.59
+
+0.065
+
+10.0
+
+91.7
+
+0.0166
+
+16.6
+
+101
+
+0.1102
+
+0.59
+
+0.065
+
+10.0
+
+117.9
+
+0.0214
+
+21.4
+
+50 YR.
+
+101
+
+0.1102
+
+0.59
+
+0.065
+
+10.0
+
+141.9
+
+0.0257
+
+25.7
+
+100 YR.
+
+101
+
+0.1102
+
+0.59
+
+0.065
+
+10.0
+
+167.1
+
+0.0303
+
+30.3
+
+STORM
+EVENT
+
+AREA
+I.D.
+
+AREA
+(ha)
+
+C
+
+AxC
+
+Tc
+(min.)
+
+I
+(mm/hr)
+
+Q
+(m /s)
+
+Q
+(L/s)
+
+2 YR.
+
+102
+
+0.0057
+
+0.47
+
+0.003
+
+10.0
+
+52.5
+
+0.000
+
+0.4
+
+5 YR.
+
+102
+
+0.0057
+
+0.47
+
+0.003
+
+10.0
+
+66.7
+
+0.000
+
+0.5
+
+10 YR.
+
+102
+
+0.0057
+
+0.47
+
+0.003
+
+10.0
+
+91.7
+
+0.001
+
+0.7
+
+25 YR.
+
+102
+
+0.0057
+
+0.47
+
+0.003
+
+10.0
+
+117.9
+
+0.001
+
+0.9
+
+50 YR.
+
+102
+
+0.0057
+
+0.47
+
+0.003
+
+10.0
+
+141.9
+
+0.001
+
+1.1
+
+100 YR.
+
+102
+
+0.0057
+
+0.47
+
+0.003
+
+10.0
+
+167.1
+
+0.001
+
+1.2
+
+3
+
+3
+
+STORM
+EVENT
+
+AREA
+I.D.
+
+AREA
+(ha)
+
+C
+
+2 YR.
+
+103
+
+0.0908
+
+0.32
+
+5 YR.
+
+103
+
+0.0908
+
+10 YR.
+
+103
+
+25 YR.
+
+AxC
+
+Tc
+(min.)
+
+I
+(mm/hr)
+
+Q
+(m /s)
+
+Q
+(L/s)
+
+0.029
+
+10.0
+
+52.5
+
+0.0042
+
+4.2
+
+0.32
+
+0.029
+
+10.0
+
+66.7
+
+0.0054
+
+5.4
+
+0.0908
+
+0.32
+
+0.029
+
+10.0
+
+91.7
+
+0.0074
+
+7.4
+
+103
+
+0.0908
+
+0.32
+
+0.029
+
+10.0
+
+117.9
+
+0.0095
+
+9.5
+
+50 YR.
+
+103
+
+0.0908
+
+0.32
+
+0.029
+
+10.0
+
+141.9
+
+0.0114
+
+11.4
+
+100 YR.
+
+103
+
+0.0908
+
+0.32
+
+0.029
+
+10.0
+
+167.1
+
+0.0135
+
+13.5
+
+3
+
+PEAK FLOW CALCULATION: RATIONAL METHOD
+POST-DEVELOPMENT CONDITION
+PROJECT:
+FILE No.:
+DATE:
+PREPARED BY:
+
+15,21,27 Shore Street, Caledon
+24-0002CA
+2024-09-23
+DV
+
+IDF DATA SET:
+STORM
+EVENT
+A
+2 YR.
+1070
+5 YR.
+1593
+10 YR.
+2221
+25 YR.
+3158
+50 YR.
+3886
+100 YR.
+4688
+
+Town Std. No. 103
+COEFFICIENTS
+B
+C
+0.8759
+7.85
+0.8789
+11
+0.908
+12
+0.9335
+15
+0.9495
+16
+0.9624
+17
+
+STORM
+EVENT
+
+AREA
+I.D.
+
+AREA
+(ha)
+
+C
+
+2 YR.
+
+201
+
+0.1952
+
+0.78
+
+5 YR.
+
+201
+
+0.1952
+
+10 YR.
+
+201
+
+25 YR.
+
+AxC
+
+Rainfall Intensity:
+Peak Flow:
+Min. Inlet Time:
+
+I = A * B / (t c + C )
+Q = 0.00278 * (C ∙ I ∙ A)
+Tc = 10.0min.
+
+Tc
+(min.)
+
+I
+(mm/hr)
+
+Q
+(m /s)
+
+Q
+(L/s)
+
+0.152
+
+10.0
+
+52.5
+
+0.0222
+
+22.2
+
+0.78
+
+0.152
+
+10.0
+
+66.7
+
+0.0282
+
+28.2
+
+0.1952
+
+0.78
+
+0.152
+
+10.0
+
+91.7
+
+0.0388
+
+38.8
+
+201
+
+0.1952
+
+0.78
+
+0.152
+
+10.0
+
+117.9
+
+0.0499
+
+49.9
+
+50 YR.
+
+201
+
+0.1952
+
+0.78
+
+0.152
+
+10.0
+
+141.9
+
+0.0601
+
+60.1
+
+100 YR.
+
+201
+
+0.1952
+
+0.78
+
+0.152
+
+10.0
+
+167.1
+
+0.0707
+
+70.7
+
+STORM
+EVENT
+
+AREA
+I.D.
+
+AREA
+(ha)
+
+C
+
+AxC
+
+Tc
+(min.)
+
+I
+(mm/hr)
+
+Q
+(m /s)
+
+Q
+(L/s)
+
+2 YR.
+
+202
+
+0.0057
+
+0.34
+
+0.002
+
+10.0
+
+52.5
+
+0.000
+
+0.3
+
+5 YR.
+
+202
+
+0.0057
+
+0.34
+
+0.002
+
+10.0
+
+66.7
+
+0.000
+
+0.4
+
+10 YR.
+
+202
+
+0.0057
+
+0.34
+
+0.002
+
+10.0
+
+91.7
+
+0.000
+
+0.5
+
+25 YR.
+
+202
+
+0.0057
+
+0.34
+
+0.002
+
+10.0
+
+117.9
+
+0.001
+
+0.6
+
+50 YR.
+
+202
+
+0.0057
+
+0.34
+
+0.002
+
+10.0
+
+141.9
+
+0.001
+
+0.8
+
+100 YR.
+
+202
+
+0.0057
+
+0.34
+
+0.002
+
+10.0
+
+167.1
+
+0.001
+
+0.9
+
+3
+
+3
+
+STORM
+EVENT
+
+AREA
+I.D.
+
+AREA
+(ha)
+
+C
+
+2 YR.
+
+203
+
+0.0059
+
+0.25
+
+5 YR.
+
+203
+
+0.0059
+
+10 YR.
+
+203
+
+25 YR.
+
+AxC
+
+Tc
+(min.)
+
+I
+(mm/hr)
+
+Q
+(m /s)
+
+Q
+(L/s)
+
+0.001
+
+10.0
+
+52.5
+
+0.0002
+
+0.2
+
+0.25
+
+0.001
+
+10.0
+
+66.7
+
+0.0003
+
+0.3
+
+0.0059
+
+0.25
+
+0.001
+
+10.0
+
+91.7
+
+0.0004
+
+0.4
+
+203
+
+0.0059
+
+0.25
+
+0.001
+
+10.0
+
+117.9
+
+0.0005
+
+0.5
+
+50 YR.
+
+203
+
+0.0059
+
+0.25
+
+0.001
+
+10.0
+
+141.9
+
+0.0006
+
+0.6
+
+100 YR.
+
+203
+
+0.0059
+
+0.25
+
+0.001
+
+10.0
+
+167.1
+
+0.0007
+
+0.7
+
+3
+
+ALLOWABLEL RELEASE RATE CALCULATION: RATIONAL METHOD
+Uncontrolled Flow
+PROJECT:
+FILE No.:
+DATE:
+PREPARED BY:
+
+15,21,27 Shore Street, Caledon
+24-0002CA
+2024-09-23
+DV
+
+=Total Target Flow rate in
+proposed conditions
+
+Existing Conditions - All existing areas are uncontrolled
+
+Return Period
+2
+5
+10
+25*
+50*
+100*
+
+To Shore Street
+
+To Shore Street
+
+To North P/L
+
+Area A101 (L/s)
+9.5
+12.1
+16.6
+21.4
+25.7
+30.3
+
+Area A102 (L/s)
+0.4
+0.5
+0.7
+0.9
+1.1
+1.2
+
+Area A103 (L/s)
+4.2
+5.4
+7.4
+9.5
+11.4
+13.5
+
+To Shore Street
+
+To Shore Street
+Uncontrolled
+
+To North P/L
+Uncontrolled
+
+Area A201 (L/s)
+22.2
+28.2
+38.8
+49.9
+60.1
+70.7
+
+Area A202 (L/s)
+0.3
+0.4
+0.5
+0.6
+0.8
+0.9
+
+Area A203 (L/s)
+0.2
+0.3
+0.4
+0.5
+0.6
+0.7
+
+Total Flow (L/s)
+14.1
+17.9
+24.7
+31.7
+38.2
+45.0
+
+Proposed Conditions
+
+Return Period
+2
+5
+10
+25*
+50*
+100*
+
+Total Flow (L/s)
+22.5
+28.6
+39.3
+50.5
+60.8
+71.6
+
+Allowable Release Rate
+
+Q = QPRE - QU
+
+Where: Q = Allowable Post-Development Release Rate(100-Year)
+QPRE = Pre-Development Flow
+
+(5-Year)
+
+QU = Post-Development Uncontrolled Flow
+
+(100-Year)
+
+Pre-Development Flow to Shore Street (Areao Post-Development Uncontrolled Flows to
+Shore Street (Area 202)
+101 + 102)
+12.6
+
+Allowable Post-Dev. Release Rate
+
+0.9
+
+Area 202 and 203 will remain uncontrolled and Area 201 will be controlled to a max of 11.7 L/s
+
+Q (L/s)
+11.7
+
+ORIFICE CONTROL SIZING CALCULATION
+
+PROJECT:
+FILE No.:
+DATE:
+PREPARED BY:
+
+15,21,27 Shore Street, Caledon
+24-0002CA
+2024-09-23
+DV
+
+Orifice Control Equation
+
+Q = C • A • (2gh)0.5
+
+Where: Q = Flow Rate
+C = Discharge Coefficient
+C (tube) = 0.80
+C (plate) = 0.62
+A = Orifice Area
+g = Acceleration Due to Gravity = 9.81 m/s 2
+h = Head
+
+Orifice Diameter (mm)
+
+65
+
+High Water Elev. (m)
+
+254.250
+
+Orifice Invert Elev. (m)
+
+252.910
+
+Required
+
+11.7
+
+Provided
+
+10.4
+
+Flow Rate (L/s)
+
+Orifice Center Elev. (m)
+Head (m)
+C
+Orifice Area (m 2 )
+
+252.94
+1.308
+0.62
+0.0033
+
+Orifice to come with debris screen (welded wire
+cage)
+
+STORMWATER STORAGE & RELEASE CALCULATION
+100-YEAR STORM
+PROJECT:
+FILE No.:
+DATE:
+PREPARED BY:
+
+15,21,27 Shore Street, Caledon
+24-0002CA
+2024-09-23
+DV
+
+DRAINAGE AREA I.D.
+DRAINAGE AREA (ha)
+RUNOFF COEFF. (C)
+AxC
+TOTAL A x C
+TIME OF CONCENTRATION
+TIME STEP
+CONTROLLED RELEASE RATE (QC)
+
+201
+0.195
+0.78
+0.152
+0.152
+10.0
+min.
+1.0
+min.
+m3/s
+0.0104
+
+MAX. STORAGE REQUIRED
+
+55.39
+
+T
+
+I = A * B / (tc + C)
+
+TIME
+
+RAINFALL INTENSITY
+
+(min.)
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+
+(mm/hr)
+167.1
+161.1
+155.6
+150.4
+145.5
+141.0
+136.7
+132.7
+128.9
+125.3
+121.9
+118.7
+115.7
+112.8
+110.0
+107.4
+104.9
+102.5
+100.3
+98.1
+96.0
+94.0
+92.1
+90.2
+88.5
+86.8
+85.1
+83.6
+82.0
+80.6
+79.2
+77.8
+76.5
+75.2
+74.0
+72.8
+71.6
+70.5
+69.4
+68.4
+
+Q R =(C∙I∙A)*0
+.00278
+RUNOFF
+(m3/s)
+0.071
+0.068
+0.066
+0.064
+0.062
+0.060
+0.058
+0.056
+0.055
+0.053
+0.052
+0.050
+0.049
+0.048
+0.047
+0.045
+0.044
+0.043
+0.042
+0.042
+0.041
+0.040
+0.039
+0.038
+0.037
+0.037
+0.036
+0.035
+0.035
+0.034
+0.033
+0.033
+0.032
+0.032
+0.031
+0.031
+0.030
+0.030
+0.029
+0.029
+
+m3
+
+IDF DATA SET:
+STORM
+EVENT
+A
+2 YR.
+1070
+5 YR.
+1593
+10 YR
+2221
+25 YR.
+3158
+50 YR.
+3886
+
+Town Std. No. 103
+COEFFICIENTS
+B
+C
+0.8759
+7.85
+0.8789
+11
+0.908
+12
+0.9335
+15
+0.9495
+16
+
+100 YR.
+
+0.9624
+
+4688
+
+17
+
+V R = Q R ∙ T ∙ 60
+
+V C = Q C ∙ T ∙ 60
+
+V=VR -VC
+
+RUNOFF VOL.
+
+CONTROLLED RELEASE
+
+(m3)
+42.43
+45.00
+47.40
+49.64
+51.73
+53.69
+55.54
+57.27
+58.91
+60.46
+61.92
+63.30
+64.62
+65.87
+67.05
+68.18
+69.26
+70.29
+71.27
+72.22
+73.12
+73.98
+74.81
+75.60
+76.37
+77.10
+77.81
+78.49
+79.14
+79.77
+80.38
+80.97
+81.54
+82.09
+82.63
+83.14
+83.64
+84.12
+84.59
+85.04
+
+VOL. (m3)
+6.25
+6.88
+7.50
+8.13
+8.75
+9.38
+10.00
+10.63
+11.25
+11.88
+12.50
+13.13
+13.75
+14.38
+15.01
+15.63
+16.26
+16.88
+17.51
+18.13
+18.76
+19.38
+20.01
+20.63
+21.26
+21.88
+22.51
+23.13
+23.76
+24.38
+25.01
+25.63
+26.26
+26.88
+27.51
+28.13
+28.76
+29.39
+30.01
+30.64
+
+STORAGE VOL.
+(m3)
+36.17
+38.12
+39.90
+41.51
+42.98
+44.32
+45.54
+46.65
+47.66
+48.58
+49.41
+50.17
+50.86
+51.49
+52.05
+52.55
+53.01
+53.41
+53.77
+54.08
+54.36
+54.60
+54.80
+54.97
+55.11
+55.22
+55.30
+55.35
+55.38
+55.39
+55.38
+55.34
+55.28
+55.21
+55.12
+55.01
+54.88
+54.74
+54.58
+54.41
+
+PROVIDED UNDERGROUND STORAGE CALCULATION
+
+PROJECT:
+FILE No.:
+DATE:
+PREPARED BY:
+
+15,21,27 Shore Street, Caledon
+24-0002CA
+2024-09-23
+DV
+
+100-YEAR MAX. STORAGE REQUIRED
+
+55.39
+
+100-YEAR SURFACE STORAGE PROVIDED
+
+55.45
+
+m
+
+3
+
+m
+
+3
+
+Structure ID
+
+CB1
+
+CBMH1
+
+CBMH2
+
+Top of Grate
+
+254.15
+
+254.00
+
+253.95
+
+Max Ponding Elev.
+
+254.25
+
+254.25
+
+254.25
+
+Max Ponding Depth
+
+0.10
+
+0.25
+
+0.30
+
+Max Ponding Area (m2)
+
+194.50
+
+295.04
+
+243.83
+
+CB1
+
+CBMH1
+
+CBMH2
+
+Flood Elev.
+
+Surface Storage
+Volume
+
+(m)
+253.950
+253.960
+253.970
+253.980
+253.990
+254.000
+254.010
+254.020
+254.030
+254.040
+254.050
+254.060
+254.070
+254.080
+254.090
+254.100
+254.110
+254.120
+254.130
+254.140
+254.150
+254.160
+254.170
+254.180
+254.190
+254.200
+254.210
+254.220
+254.230
+254.240
+254.250
+
+(m3)
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.6
+1.3
+1.9
+2.6
+3.2
+3.9
+4.5
+5.2
+5.8
+6.5
+
+Surface Storage Surface Storage
+Volume
+Volume
+(m3)
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+1.0
+2.0
+3.0
+3.9
+4.9
+5.9
+6.9
+7.9
+8.9
+9.8
+10.8
+11.8
+12.8
+13.8
+14.8
+15.7
+16.7
+17.7
+18.7
+19.7
+20.7
+21.6
+22.6
+23.6
+24.6
+
+(m3)
+0.0
+0.8
+1.6
+2.4
+3.3
+4.1
+4.9
+5.7
+6.5
+7.3
+8.1
+8.9
+9.8
+10.6
+11.4
+12.2
+13.0
+13.8
+14.6
+15.4
+16.3
+17.1
+17.9
+18.7
+19.5
+20.3
+21.1
+21.9
+22.8
+23.6
+24.4
+
+Note:
+Underground pipe and structure
+(ELEV. 254.25) storage not used in surface storage
+calculations
+(100 Year)
+
+Total Surface
+Storage Volume
+(m3)
+0.00
+0.81
+1.63
+2.44
+3.25
+4.06
+5.86
+7.66
+9.45
+11.25
+13.05
+14.84
+16.64
+18.43
+20.23
+22.03
+23.82
+25.62
+27.42
+29.21
+31.01
+33.45
+35.90
+38.34
+40.79
+43.23
+45.68
+48.12
+50.56
+53.01
+55.45
+
+Notes
+
+100-Year Storage Level
+
+EROSION CONTROL / INFILTRATION CALCULATIONS
+PROJECT:
+FILE No.:
+DATE:
+PREPARED BY:
+
+15,21,27 Shore Street, Caledon
+24-0002CA
+2024-09-23
+DV
+
+Erosion Control / Infiltration Target Volume Calculations
+Minimum 5mm volume from the new impervious areas is required to be infiltrated throughout the development
+Runoff from roof leaders to be directed to infiltration facility
+
+Post-development impervious surfaces =
+
+1593.0 m2
+
+Erosion Control Volume Required = Total Impervious Drainage Area X 5mm
+Erosion Control Volume Required =
+8.0 m3
+Total Volume Retained On Site = LID Storage
+
+Storage provided by Undergronud Tank =
+
+9.0 m3
+
+Total Volume Retained =
+
+9.0 m3
+
+Storage Facility LID Volume Calculations - Landscaping / Irrigation Use
+Drawdown Time
+I = infiltration rate* =
+
+6 mm/hr
+*As reported by Geotechnical Report by Soil Engineers Ltd, dated
+July 19, 2024
+
+Infitlration rate is insufficient to support any infiltration measure within the site. Erosion Control to be accomplished with
+water re-use.
+d = height of chambers =
+350 mm
+Vr = storage void ratio =
+0.96
+t=
+t=
+
+d Vr / i
+56.00
+
+hours
+more than the maximum draw down time of 48 hours.
+
+Rain Water Harvesting - Landscaping/Irrigation or Grey Water Re-use
+Graf Platin 3000 L (x3) Rainwater Cistern=
+
+3
+
+9m
+
+Higher than the required Erosion Control Volume of 8.0 m3
+
+STORM SEWER DESIGN SHEET
+15, 21, 27 SHORE STREET
+TOWN OF CALEDON
+PROJECT No.: 24-0002CA
+DATE: 2024-09-23
+DESIGNED BY: Deven Verma
+CHECKED BY: Giancarlo Volpe
+
+Rainfall Intensity:
+Design Flow:
+
+I = A * B / (tc + C)
+Q = (C ∙ I ∙ A)*2.778
+
+Coeff.
+a
+
+5-Year
+1593
+
+Pipe Roughness:
+Min. Inlet Time:
+
+n = 0.013
+
+b
+
+0.8789
+
+t = 10.0min.
+
+c
+
+11.000
+
+AREA I.D.
+
+STRUCTURE
+
+LOCATION
+
+SITE
+
+5 year Storm
+
+: Indicates controlled flow after orifice in outlet structure
+
+DESIGN FLOWS
+5-YEAR
+FLOW
+
+TOTAL
+
+AREA
+
+RUNOFF
+
+AREA
+
+RUNOFF
+
+Tc
+
+RAINFALL
+
+(ha)
+
+COEFF.
+
+RUNOFF
+
+ACCUM.
+
+(min.)
+
+INT.(mm/hr)
+
+Q5
+
+QTOTAL
+
+i5
+
+(m3/s)
+
+66.67
+64.56
+63.13
+62.24
+
+0.017
+0.022
+0.010
+0.010
+
+FROM
+
+TO
+
+A
+
+C5
+
+A x C5
+
+A x C5
+
+CB1
+CBMH1
+CBMH2 (CONTROL)
+DIVERSION MH
+
+CBMH1
+CBMH2 (CONTROL)
+DIVERSION MH
+PR. STM MH 2
+
+0.11
+0.05
+0.05
+
+0.82
+0.74
+0.64
+
+0.089
+0.035
+0.030
+
+0.089
+0.124
+0.154
+0.154
+
+Urbanworks Engineering Corporation
+1945 Dundas Str. E., Suite 200, Mississauga, ON L4X 2T8
+t. 416.503.4500 | e. general@urbanworkseng.com
+
+System to be designed for
+
+10
+10.69
+11.18
+11.49
+
+PIPE DATA
+LENGTH
+
+SIZE
+
+(m3/s)
+
+(m)
+
+(mm)
+
+0.017
+0.022
+0.010
+0.010
+
+30.4
+19.5
+12.6
+12.2
+
+200
+250
+250
+250
+
+PIPE MAT.
+
+PVC
+PVC
+PVC
+PVC
+
+TIME
+
+CAPACITY
+
+TOTAL
+
+CHECK
+
+TIME
+
+TIME
+
+(min.)
+
+(min.)
+
+QDESIGN /
+QFULL
+
+10.69
+11.18
+11.49
+11.80
+
+71.2%
+68.2%
+31.9%
+31.9%
+
+SECT.
+
+GRADE
+
+QFULL
+
+VFULL
+
+VACTUAL
+
+(%)
+
+(m3/s)
+
+(m/s)
+
+(m/s
+
+0.50
+0.30
+0.30
+0.30
+
+0.023
+0.033
+0.033
+0.033
+
+0.74
+0.66
+0.66
+0.66
+
+0.83
+0.74
+0.53
+0.53
+
+0.69
+0.49
+0.32
+0.31
+
+COMMENTS
+
+FLOW CONTROLLED TO 10.4 L/s AFTER ORIFICE PLATE
+
+Page 1 of 2
+
+STORM SEWER DESIGN SHEET
+SHORE STREET
+TOWN OF CALEDON
+PROJECT No.: 24-0002CA
+DATE: 2024-09-23
+DESIGNED BY: Deven Verma
+CHECKED BY: Giancarlo Volpe
+
+Rainfall Intensity:
+Design Flow:
+
+I = A * B / (tc + C)
+Q = (C ∙ I ∙ A)*2.778
+
+Coeff.
+a
+
+5-Year
+1593
+
+Pipe Roughness:
+Min. Inlet Time:
+
+n = 0.013
+
+b
+
+0.8789
+
+t = 10.0min.
+
+c
+
+11.000
+
+AREA I.D.
+
+STRUCTURE
+
+System to be designed for
+
+5 year Storm
+
+: Indicates controlled flow after orifice in outlet structure
+
+DESIGN FLOWS
+5-YEAR
+FLOW
+
+TOTAL
+
+INT.(mm/hr)
+
+Q5
+
+QTOTAL
+
+i5
+
+(m3/s)
+
+AREA
+
+RUNOFF
+
+AREA
+
+RUNOFF
+
+Tc
+
+RAINFALL
+
+(ha)
+
+COEFF.
+
+RUNOFF
+
+ACCUM.
+
+(min.)
+
+PIPE DATA
+LENGTH
+
+SIZE
+
+(m3/s)
+
+(m)
+
+(mm)
+
+PIPE MAT.
+
+TIME
+
+GRADE
+
+QFULL
+
+VFULL
+
+VACTUAL
+
+(%)
+
+(m3/s)
+
+(m/s)
+
+(m/s
+
+CAPACITY
+
+TOTAL
+
+CHECK
+
+TIME
+
+TIME
+
+(min.)
+
+(min.)
+
+QDESIGN /
+QFULL
+
+SECT.
+
+FROM
+
+TO
+
+A
+
+C5
+
+A x C5
+
+A x C5
+
+301 SHORE STREET
+
+PR. STM MH 1
+
+PR. STM MH 2
+
+0.37
+
+0.77
+
+0.286
+
+0.286
+
+10
+
+66.67
+
+0.053
+
+0.053
+
+82.1
+
+375
+
+PVC
+
+0.35
+
+0.104
+
+0.94
+
+0.95
+
+1.46
+
+11.46
+
+51.0%
+
+302 SUBJECT PROPERTY
+303 SHORE STREET
+
+SITE
+PR. STM MH 2
+
+PR. STM MH2
+CBMH RR050-0347
+
+0.21
+0.34
+
+0.77
+
+0.261
+
+0.547
+
+11.46
+
+62.34
+
+0.010
+0.105
+
+0.010
+0.105
+
+12.2
+39.5
+
+250
+375
+
+PVC
+PVC
+
+0.30
+0.40
+
+0.033
+0.111
+
+0.66
+1.00
+
+0.53
+1.10
+
+0.66
+
+12.11
+
+31.9%
+94.8%
+
+LOCATION
+
+Urbanworks Engineering Corporation
+1945 Dundas Str. E., Suite 200, Mississauga, ON L4X 2T8
+t. 416.503.4500 | e. general@urbanworkseng.com
+
+COMMENTS
+
+Flow from subject property controlled to 10.4 L/s
+
+Page 2 of 2
+
+JELLYFISH SIZING REPORT
+
+STANDARD OFFLINE
+Jellyfish Filter Sizing Report
+Project Information
+Date
+Project Name
+Project Number
+Location
+
+Thursday, September 12, 2024
+15, 21, 27 Shore St.
+24-0002CA
+Caledon
+
+Jellyfish Filter Design Overview
+This report provides information for the sizing and specification of the Jellyfish Filter. When
+designed properly in accordance to the guidelines detailed in the Jellyfish Filter Technical Manual,
+the Jellyfish Filter will exceed the performance and longevity of conventional horizontal bed and
+granular media filters.
+Please see www.ImbriumSystems.com for more information.
+
+Jellyfish Filter System Recommendation
+The Jellyfish Filter model JF4-1-1 is recommended to meet the water quality objective by treating a
+flow of 7.6 L/s, which meets or exceeds 90% of the average annual rainfall runoff volume based on
+18 years of TORONTO CENTRAL rainfall data for this site. This model has a sediment capacity of
+85 kg, which meets or exceeds the estimated average annual sediment load.
+Jellyfish
+Model
+
+Number of
+High-Flo
+Cartridges
+
+Number of
+Draindown
+Cartridges
+
+JF4-1-1
+
+1
+
+1
+
+Manhole Treatment
+Sediment
+Diameter Flow Rate Capacity (kg)
+(L/s)
+(m)
+1.2
+7.6
+85
+
+The Jellyfish Filter System
+The patented Jellyfish Filter is an engineered stormwater quality treatment technology featuring
+unique membrane filtration in a compact stand-alone treatment system that removes a high level
+and wide variety of stormwater pollutants. Exceptional pollutant removal is achieved at high
+treatment flow rates with minimal head loss and low maintenance costs. Each lightweight Jellyfish
+Filter cartridge contains an extraordinarily large amount of membrane surface area, resulting in
+superior flow capacity and pollutant removal capacity.
+
+Maintenance
+Regular scheduled inspections and maintenance is necessary to assure proper functioning of the
+Jellyfish Filter. The maintenance interval is designed to be a minimum of 12 months, but this will
+vary depending on site loading conditions and upstream pretreatment measures. Quarterly
+inspections and inspections after all storms beyond the 5-year event are recommended until enough
+historical performance data has been logged to comfortably initiate an alternative inspection interval.
+Please see www.ImbriumSystems.com for more information.
+
+Thank you for the opportunity to present this information to you and your client.
+
+CDN/Int'l: 1 (800) 565-4801 | US: 1 (888) 279-8826
+
+1
+
+www.ImbriumSystems.com
+
+Performance
+Jellyfish efficiently captures a high level of Stormwater pollutants, including:
+ 89% of the total suspended solids (TSS) load, including particles less than 5 microns
+ 77% TP removal & 51% TN removal
+ 90% Total Copper, 81% Total Lead, 70% Total Zinc
+ Particulate-bound pollutants such as nutrients, toxic metals, hydrocarbons and bacteria
+ Free oil, Floatable trash and debris
+
+Field Proven Peformance
+The Jellyfish filter has been field-tested on an urban site with 25 TAPE qualifying rain events and
+field monitored according to the TAPE field test protocol, demonstrating:
+l A median TSS removal efficiency of 90%, and a median SSC removal of 99%;
+l The ability to capture fine particles as indicated by an effluent d50 median of 3 microns
+for all monitotred storm events, and a median effluent turbidity of 5 NTUs;
+l A median Total Phosphorus removal of 77%, and a median Total Nitrogen removal of
+51%.
+
+Jellyfish Filter Treatment Functions
+
+Pre-treatment and Membrane Filtration
+
+CDN/Int'l: 1 (800) 565-4801 | US: 1 (888) 279-8826
+
+2
+
+www.ImbriumSystems.com
+
+Project Information
+
+Rainfall
+
+Date:
+Project Name:
+Project Number:
+Location:
+
+Designer Information
+
+Name:
+State:
+ID:
+Record:
+Co-ords:
+
+Company:
+Contact:
+Phone #:
+
+Total Area:
+Imperviousness:
+
+Thursday, September 12, 2024
+15, 21, 27 Shore St.
+24-0002CA
+Caledon
+
+TORONTO CENTRAL
+ON
+100
+1982 to 1999
+45°30'N, 90°30'W
+
+Drainage Area
+
+Urbanworks Engineering Corp.
+Deven Verma
+
+Notes
+
+0.2 ha
+82%
+
+Upstream Detention
+Peak Release Rate:
+Pretreatment Credit:
+
+n/a
+n/a
+
+Design System Requirements
+Flow
+90% of the Average Annual Runoff based on 18 years
+Loading of TORONTO CENTRAL rainfall data:
+Treating 90% of the average annual runoff volume,
+Sediment
+988 m³, with a suspended sediment concentration of
+Loading
+60 mg/L.
+
+5.2 L/s
+59 kg
+
+Recommendation
+The Jellyfish Filter model JF4-1-1 is recommended to meet the water quality objective by treating a
+flow of 7.6 L/s, which meets or exceeds 90% of the average annual rainfall runoff volume based on
+18 years of TORONTO CENTRAL rainfall data for this site. This model has a sediment capacity of
+85 kg, which meets or exceeds the estimated average annual sediment load.
+Manhole Wet Vol
+Sump
+Diameter Below Deck Storage
+(L)
+(m)
+(m³)
+JF4-1-1
+1
+1
+1.2
+2313
+0.34
+JF4-2-1
+2
+1
+1.2
+2313
+0.34
+JF6-3-1
+3
+1
+1.8
+5205
+0.79
+JF6-4-1
+4
+1
+1.8
+5205
+0.79
+JF6-5-1
+5
+1
+1.8
+5205
+0.79
+JF6-6-1
+6
+1
+1.8
+5205
+0.79
+JF8-6-2
+6
+2
+2.4
+9252
+1.42
+JF8-7-2
+7
+2
+2.4
+9252
+1.42
+JF8-8-2
+8
+2
+2.4
+9252
+1.42
+JF8-9-2
+9
+2
+2.4
+9252
+1.42
+JF8-10-2
+10
+2
+2.4
+9252
+1.42
+JF10-11-3
+11
+3
+3.0
+14456
+2.21
+JF10-12-3
+12
+3
+3.0
+14456
+2.21
+JF10-12-4
+12
+4
+3.0
+14456
+2.21
+JF10-13-4
+13
+4
+3.0
+14456
+2.21
+JF10-14-4
+14
+4
+3.0
+14456
+2.21
+JF10-15-4
+15
+4
+3.0
+14456
+2.21
+JF10-16-4
+16
+4
+3.0
+14456
+2.21
+JF10-17-4
+17
+4
+3.0
+14456
+2.21
+JF10-18-4
+18
+4
+3.0
+14456
+2.21
+JF10-19-4
+19
+4
+3.0
+14456
+2.21
+JF12-20-5
+20
+5
+3.6
+20820
+3.2
+JF12-21-5
+21
+5
+3.6
+20820
+3.2
+JF12-22-5
+22
+5
+3.6
+20820
+3.2
+JF12-23-5
+23
+5
+3.6
+20820
+3.2
+JF12-24-5
+24
+5
+3.6
+20820
+3.2
+JF12-25-5
+25
+5
+3.6
+20820
+3.2
+JF12-26-5
+26
+5
+3.6
+20820
+3.2
+JF12-27-5
+27
+5
+3.6
+20820
+3.2
+CDN/Int'l: 1 (800) 565-4801 | US: 1 (888) 279-8826
+3
+Jellyfish
+Model
+
+Number of
+High-Flo
+Cartridges
+
+Number of
+Draindown
+Cartridges
+
+Oil
+Treatment Sediment
+Capacity Flow Rate Capacity
+(kg)
+(L/s)
+(L)
+379
+7.6
+85
+379
+12.6
+142
+848
+17.7
+199
+848
+22.7
+256
+848
+27.8
+313
+848
+28.6
+370
+1469
+35.3
+398
+1469
+40.4
+455
+1469
+45.4
+512
+1469
+50.5
+569
+1469
+50.5
+626
+2302
+63.1
+711
+2302
+68.2
+768
+2302
+70.7
+796
+2302
+75.7
+853
+2302
+78.9
+910
+2302
+78.9
+967
+2302
+78.9
+1024
+2302
+78.9
+1081
+2302
+78.9
+1138
+2302
+78.9
+1195
+2771
+113.6
+1280
+2771
+113.7
+1337
+2771
+113.7
+1394
+2771
+113.7
+1451
+2771
+113.7
+1508
+2771
+113.7
+1565
+2771
+113.7
+1622
+2771
+113.7
+1679
+www.ImbriumSystems.com
+
+Jellyfish Filter Design Notes
+l Typically the Jellyfish Filter is designed in an offline configuration, as all stormwater filter systems
+
+will perform for a longer duration between required maintenance services when designed and
+applied in off-line configurations. Depending on the design parameters, an optional internal bypass
+may be incorporated into the Jellyfish Filter, however note the inspection and maintenance
+frequency should be expected to increase above that of an off-line system. Speak to your local
+representative for more information.
+
+Jellyfish Filter Typical Layout
+l Typically, 18 inches (457 mm) of driving head is designed into the system, calculated as the
+
+difference in elevation between the top of the diversion structure weir and the invert of the Jellyfish
+Filter outlet pipe. Alternative driving head values can be designed as 12 to 24 inches (305 to
+610mm) depending on specific site requirements, requiring additional sizing and design assistance.
+l Typically, the Jellyfish Filter is designed with the inlet pipe configured 6 inches (150 mm) above the
+outlet invert elevation. However, depending on site parameters this can vary to an optional
+configuration of the inlet pipe entering the unit below the outlet invert elevation.
+l The Jellyfish Filter can accommodate multiple inlet pipes within certain restrictions.
+l While the optional inlet below deck configuration offers 0 to 360 degree flexibility between the inlet
+and outlet pipe, typical systems conform to the following:
+Model Diameter (m)
+1.2
+1.8
+2.4
+3.0
+3.6
+
+Minimum Angle
+Inlet / Outlet Pipes
+62º
+59º
+52º
+48º
+40º
+
+Minimum Inlet Pipe
+Diameter (mm)
+
+Minimum Outlet Pipe
+Diameter (mm)
+
+150
+200
+250
+300
+300
+
+200
+250
+300
+450
+450
+
+l The Jellyfish Filter can be built at all depths of cover generally associated with conventional
+
+stormwater conveyance systems. For sites that require minimal depth of cover for the stormwater
+infrastructure, the Jellyfish Filter can be applied in a shallow application using a hatch cover. The
+general minimum depth of cover is 36 inches (915 mm) from top of the underslab to outlet invert.
+l If driving head caclulations account for water elevation during submerged conditions the Jellyfish
+Filter will function effectively under submerged condtions.
+l Jellyfish Filter systems may incorporate grated inlets depending on system configuration.
+l For sites with water quality treatment flow rates or mass loadings that exceed the design flow rate of
+the largest standard Jellyfish Filter manhole models, systems can be designed that hydraulically
+connect multiple Jellyfish Filters in series or alternatively Jellyfish Vault units can be designed.
+CDN/Int'l: 1 (800) 565-4801 | US: 1 (888) 279-8826
+
+4
+
+www.ImbriumSystems.com
+
+GENERAL NOTES:
+
+GRADING NOTES:
+
+N
+
+SUBMISSION
+DRAWING
+
+RESTORATION NOTES:
+
+NOT TO BE USED FOR CONSTRUCTION
+
+SITE
+
+STORM SEWER NOTES:
+
+·
+·
+·
+
+TREE PRESERVATION NOTES:
+
+ROADS, SIDEWALK, AND WALKWAY NOTES:
+
+CONSULTANT
+
+“
+
+MUNICIPAL APPROVAL
+
+”
+
+urbanworks
+ENGINEERING CORPORATION
+1945 Dundas Street E., Unit 200, Mississauga, ON, L4X 2T8
+
+general@urbanworkseng.com | www.urbanworkseng.com 905-901-0224
+|
+
+MULTI-UNIT RESIDENTIAL DEVELOPMENT
+SHORE STREET URBANIZATION
+15,21,27 SHORE STREET, CALEDON
+
+GENERAL NOTES
+PRE-2023-0116
+PRE-2023-0274
+
+24-0002CA
+
+GN-01
+
+N
+
+N
+
+N
+
+SUBMISSION
+DRAWING
+
+NOT TO BE USED FOR CONSTRUCTION
+
+REGIONAL ROAD #50
+(HIGHWAY #50)
+
+OAK STREET
+
+SITE
+
+DS
+
+SHORE STREET
+CONSULTANT
+
+MUNICIPAL APPROVAL
+
+urbanworks
+ENGINEERING CORPORATION
+1945 Dundas Street E., Unit 200, Mississauga, ON, L4X 2T8
+
+general@urbanworkseng.com | www.urbanworkseng.com 905-901-0224
+|
+
+MULTI-UNIT RESIDENTIAL DEVELOPMENT
+SHORE STREET URBANIZATION
+15,21,27 SHORE STREET, CALEDON
+
+REMOVALS PLAN
+PRE-2023-0116
+PRE-2023-0274
+
+24-0002CA
+
+RE-01
+
+N
+
+N
+
+N
+
+SUBMISSION
+DRAWING
+
+NOT TO BE USED FOR CONSTRUCTION
+
+DS
+
+REGIONAL ROAD #50
+(HIGHWAY #50)
+
+DS
+
+DS
+
+DS
+
+OAK STREET
+
+SITE
+
+DS
+
+SHORE STREET
+GENERAL NOTES:
+
+SERVICING NOTE:
+
+GRADING NOTES:
+
+CONSULTANT
+
+MUNICIPAL APPROVAL
+
+urbanworks
+ENGINEERING CORPORATION
+1945 Dundas Street E., Unit 200, Mississauga, ON, L4X 2T8
+
+general@urbanworkseng.com | www.urbanworkseng.com 905-901-0224
+|
+
+MULTI-UNIT RESIDENTIAL DEVELOPMENT
+SHORE STREET URBANIZATION
+15,21,27 SHORE STREET, CALEDON
+
+CL
+
+VARIES
+
+2.0%
+
+VARIES
+
+2.0%
+
+3.0%
+
+3.0%
+
+SITE GRADING PLAN
+PRE-2023-0116
+PRE-2023-0274
+
+TYPICAL ROAD SECTION
+SCALE 1:100
+
+24-0002CA
+
+SG-01
+
+N
+
+N
+
+SUBMISSION
+DRAWING
+NOT TO BE USED FOR CONSTRUCTION
+
+D
+
+CS01
+
+C
+
+CS01
+
+A
+
+A
+
+CS01
+
+CS01
+
+DS
+
+B
+
+CS01
+
+DS
+
+REGIONAL ROAD #50
+HIGHWAY 50
+
+DS
+
+DS
+
+OAK STREET
+
+SITE
+
+DS
+
+B
+
+CS01
+
+D
+
+CS01
+
+C
+
+CS01
+
+SHORE STREET
+
+CONSULTANT
+
+MUNICIPAL APPROVAL
+
+urbanworks
+ENGINEERING CORPORATION
+1945 Dundas Street E., Unit 200, Mississauga, ON, L4X 2T8
+
+general@urbanworkseng.com | www.urbanworkseng.com 905-901-0224
+|
+
+MULTI-UNIT RESIDENTIAL DEVELOPMENT
+SHORE STREET URBANIZATION
+15,21,27 SHORE STREET, CALEDON
+
+SITE SERVICING PLAN
+PRE-2023-0116
+PRE-2023-0274
+
+24-0002CA
+
+SS-01
+
+N
+
+SUBMISSION
+DRAWING
+NOT TO BE USED FOR CONSTRUCTION
+
+SITE
+
+SECTION A-A : RAIN WATER STORAGE FACILITY
+H SCALE: 1:150 V SCALE : 1:30
+
+SECTION B-B : SANITARY SERVICE
+H SCALE: 1:150 V SCALE : 1:30
+
+SECTION C-C: WATER SERVICE
+H SCALE: 1:150 V SCALE : 1:30
+
+CONSULTANT
+
+MUNICIPAL APPROVAL
+
+urbanworks
+ENGINEERING CORPORATION
+1945 Dundas Street E., Unit 200, Mississauga, ON, L4X 2T8
+
+general@urbanworkseng.com | www.urbanworkseng.com 905-901-0224
+|
+
+MULTI-UNIT RESIDENTIAL DEVELOPMENT
+SHORE STREET URBANIZATION
+15,21,27 SHORE STREET, CALEDON
+
+CROSS SECTIONS
+
+SECTION D-D : STORM SERVICE
+H SCALE: 1:150 V SCALE : 1:30
+
+PRE-2023-0116
+PRE-2023-0274
+
+24-0002CA
+
+CS-01
+
+N
+
+N
+
+SUBMISSION
+DRAWING
+NOT TO BE USED FOR CONSTRUCTION
+
+DS
+
+REGIONAL ROAD #50
+HIGHWAY 50
+
+DS
+
+DS
+
+DS
+
+OAK STREET
+
+SITE
+
+DS
+
+SHORE STREET
+
+CONSULTANT
+
+MUNICIPAL APPROVAL
+
+urbanworks
+ENGINEERING CORPORATION
+1945 Dundas Street E., Unit 200, Mississauga, ON, L4X 2T8
+
+general@urbanworkseng.com | www.urbanworkseng.com 905-901-0224
+|
+
+MULTI-UNIT RESIDENTIAL DEVELOPMENT
+SHORE STREET URBANIZATION
+15,21,27 SHORE STREET, CALEDON
+
+SHORE STREET PLAN AND PROFILE
+STA: 0+000.00 TO 0+164.00
+PRE-2023-0116
+PRE-2023-0274
+
+24-0002CA
+
+PP-01
+
+N
+
+N
+
+SUBMISSION
+DRAWING
+NOT TO BE USED FOR CONSTRUCTION
+
+DS
+
+REGIONAL ROAD #50
+HIGHWAY 50
+
+DS
+
+DS
+
+DS
+
+OAK STREET
+
+SITE
+
+DS
+
+SHORE STREET
+PAVEMENT MARKING NOTE:3
+ALL PAVEMENT MARKING AND LINE PAINTINGS TO BE AS PER
+OTM BOOK 11 - PAVEMENT, HAZARD, AND DELINEATION MARKINGS
+CONSULTANT
+
+MUNICIPAL APPROVAL
+
+urbanworks
+ENGINEERING CORPORATION
+1945 Dundas Street E., Unit 200, Mississauga, ON, L4X 2T8
+
+general@urbanworkseng.com | www.urbanworkseng.com 905-901-0224
+|
+
+MULTI-UNIT RESIDENTIAL DEVELOPMENT
+SHORE STREET URBANIZATION
+15,21,27 SHORE STREET, CALEDON
+
+PAVEMENT MARKING PLAN
+PRE-2023-0116
+PRE-2023-0274
+
+24-0002CA
+
+PM-01
+
+APPENDIX F
+ENGINEERING DRAWINGS
+
+

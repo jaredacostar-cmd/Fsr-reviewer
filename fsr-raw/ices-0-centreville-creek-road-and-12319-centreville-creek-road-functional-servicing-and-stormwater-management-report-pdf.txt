@@ -1,0 +1,14049 @@
+Cavallino Estates - Wildfield
+Town of Caledon
+Functional Servicing and Stormwater
+Management Brief
+November 2025
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+November 14, 2025
+
+Submitted by:
+SCS Consulting Group Ltd
+30 Centurian Drive, Suite 100
+Markham, ON L3R 8B8
+Phone 905 475 1900
+Fax 905 475 8335
+Project Number: 2831
+
+File #:
+
+2831
+
+Date:
+
+November 7, 2025
+
+Toula Nessinis
+Cavallino Estates Inc.
+8600 Dufferin Street
+Vaughan, Ontario, L4K 5P5
+Dear Ms. Nessinis:
+
+Re:
+
+Functional Servicing and Stormwater Management Brief
+Cavalino Estates – Wildfield Village
+Town of Caledon
+
+SCS Consulting Group Ltd. has been retained by Cavallino Estates Inc. to prepare a Functional
+Servicing and Stormwater Management Brief (FSSB) for a proposed development (referenced as
+the “Subject Lands”), in the Town of Caledon. The Subject Lands are located at the east side of
+Centreville Creek Road, approximately 950 m north of Mayfield Road and are situated within
+the Wildfield Village Secondary Plan (WVSP) Area as shown on Figure 1. The Subject Lands
+consist primarily of agricultural lands with an existing residence. The Subject Lands are within
+the West Humber River watershed.
+The owner is an active member of the Wildfield Village Landowners’ Group (“LOG”). In
+December 2024, the LOG submitted an Official Plan Amendment (“OPA”) to establish a
+Secondary Plan for the area. The Wildfield Village Secondary Plan (“WV Secondary Plan”) was
+adopted by Town Council in July 2025 (OPA 285). Subsequent to this, the Town of Caledon
+Official Plan was adopted on October 22, 2025. Both establish a land use planning, urban
+design, transportation, and infrastructure framework to guide development in the Secondary
+Plan area, which is planned to accommodate a population of over 22,000 residents. Through a
+comprehensive Secondary Planning process, the location of parks, schools, and stormwater
+management facilities have been established.
+As part of the WV Secondary Plan supporting studies a Local Subwatershed Study (LSS) has
+been initiated. At this time, the Phase 1 LSS (SCS and GEI, November 2024) which characterizes
+the existing conditions of the WVSP Area and Phase 2 LSS (SCS and GEI, January 2025) which
+determines the impacts of the proposed conditions associated with development within the
+WVSP Area, have been prepared and submitted with comments issued by the Town, Region
+and TRCA in February and March, 2025. The Phase 3 LSS will follow addressing the
+implementation, monitoring and adaptative management recommendations to mitigate the
+impacts identified in Phase 2.
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Re: Functional Servicing and Stormwater Management Brief
+Cavalino Estates – Wildfield Village
+Town of Caledon
+
+File #: 2831
+November 7, 2025
+Page 2 of 12
+
+SCS Consulting Group Ltd. and GEI Consulting are currently addressing the comments received
+by the Town, Region and TRCA staff for the Phase 1 and 2 LSS, along with undergoing the
+Comprehensive Servicing and Stormwater Management Study (CSSS) for the WVSP Area. The
+purpose of the CSSS is to provide an overall servicing, grading and stormwater management
+strategy that will form the basis for future Draft Plan submissions of lands with the WVSP Area,
+and ensure non-participating lands can be serviced.
+This FSSB has been prepared in support of a Draft Plan Application for the Subject Lands, within
+the WVSP Area. The proposed Draft Plan has been included as Attachment A. The purpose of
+this report is to provide an overview of the preliminary servicing and stormwater management
+(SWM) of the development, until the details on how the site will be serviced is determined
+through the CSSS. A more detailed Functional Servicing and SWM Report (FSSR) outlining the
+servicing and grading for the subject lands will be completed, in combination with the
+Comprehensive Servicing and SWM Study (CSSS) as required by the Secondary Plan policies. The
+FSSR and CSSS are expected to be completed and provided to the Town in January 2026.
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Re: Functional Servicing and Stormwater Management Brief
+Cavalino Estates – Wildfield Village
+Town of Caledon
+
+File #: 2831
+November 7, 2025
+Page 3 of 12
+
+Figure 1 – Site Location
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Re: Functional Servicing and Stormwater Management Brief
+Cavalino Estates – Wildfield Village
+Town of Caledon
+
+File #: 2831
+November 7, 2025
+Page 4 of 12
+
+Existing Topography and Drainage
+As noted above, the Subject Lands are within the West Humber River watershed. The drainage
+within the Subject Lands and external drainage areas, is generally split between two outlets,
+identified as Outlet 1 and 5 through the LSS, as shown on Figure 2:
+•
+•
+
+Outlet 1: Culvert # 6 as identified in the Phase 1 and 2 LSS, crossing under Centreville
+Creek Road (refer to Catchments 101, EXT1 and EXT2 on Figure 2), and
+Outlet 5: Culvert #11 as identified in the Phase 1 and 2 LSS, crossing under The Gore
+Road (refer to Catchments 102 and EXT3 on Figure 2).
+
+Proposed Storm Drainage
+In proposed conditions, the drainage will continue to be split between Outlets 1 and 5, in order
+to maintain the existing drainage conditions as closely as possible. Stormwater conveyance will
+be provided through a combination of municipal storm sewers sized to convey the 10 year
+storm and an overland flow system within the municipal right-of-way (ROW) and easements, if
+necessary, to convey up to the Regional (Hurricane Hazel) storm event. Ultimately, the Subject
+Lands will drain to one of two proposed stormwater management (SWM) facilities, which were
+identified through the LSS, and referred to as SWM Facility 1 and 5 as shown on Figure 3.
+SWMF 1 ultimately will service a total area of 55.67 ha (refer to Catchment 201, EXT1 and EXT2
+on Figure 3), which includes the Subject Lands, and discharges to Culvert #6, crossing under
+Centreville Creek Road at Outlet 1. If the Subject Lands are to proceed prior to the buildout of
+the neighboring properties and SWMF 1. An interim onsite SWM facility will be required, and
+will outlet to the existing ditch along Centreville Creek Road, where flows will continue to drain
+southerly to Culvert #6 as in existing conditions.
+As discussed in the Functional Servicing and Stormwater Management Brief, Trinity Field –
+Wildfield Village (SCS, October 2025), SWMF 5 services a total area of 56.41 ha, which includes
+the Subject Lands. As noted above, if the subject lands are intended to proceed ahead of the
+neighboring properties, an interim onsite SWM facility will be required to provide SWM,
+discharging towards Outlet 5, where flows will follow the existing drainage patterns and be
+picked up by the proposed storm sewer system within the Trinity Field development, and
+conveyed to SWMF 5.
+As noted above, an FSSR will be completed to outline the ultimate strategy to convey
+stormwater from the Subject Lands to SWMF 1 and 5 in more detail, as the servicing and
+grading for the WVSP area becomes available through the CSSS, and is expected to be
+completed and provided to the Town of Caledon in January 2026.
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Re: Functional Servicing and Stormwater Management Brief
+Cavalino Estates – Wildfield Village
+Town of Caledon
+
+File #: 2831
+November 7, 2025
+Page 5 of 12
+
+Stormwater Management
+SWM will be provided for the site, and external lands, per the Ministry of Environment,
+Conservation, and Parks (MECP), TRCA, and the Town of Caledon design criteria, as established
+through the Phase 1 and 2 LSS.
+The ultimate SWMF 1 and 5 are to be located offsite of the Subject Lands, and will provide
+water quality, erosion and quantity control for the areas serviced by these ponds. For quantity
+control, the off-site SWM facilities will control post development flows to the targets
+established in the Phase 1 and 2 LSS for the 2 through 100 year and Regional storm events.
+The CSSS, will provide the ultimate stormwater management strategy for the lands serviced by
+SWMF 1, which include the Subject Lands. The Trinity Field – Wildfield, Functional Servicing and
+Stormwater Management Report (SCS, October 2025) has been prepared and provides
+discussion on the design of SWMF 5 and has accommodated the Subject Lands, based on the
+proposed Draft Plan included in Appendix A.
+The quantity, type, location and sizing of Low Impact Development (LID) measures will be
+investigated through the FSSR. LID measures will be a part of a treatment train, providing
+quality and erosion control, as well as water balance benefits in accordance with the LSS
+requirements. The LID measures may include increased topsoil depth, roof drains to grassed
+areas and/or soak-away pits, infiltration trenches, bioretention areas, etc.
+As noted above, an FSSR will be completed to outline the ultimate SWM strategy for the
+Subject Lands, illustrating that SWMF 1 and 5 will be sized appropriately to provide adequate
+SWM controls. The FSSR and CSSS are expected to be completed and provided to the Town of
+Caledon in January 2026.
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Re: Functional Servicing and Stormwater Management Brief
+Cavalino Estates – Wildfield Village
+Town of Caledon
+
+File #: 2831
+November 7, 2025
+Page 6 of 12
+
+End of Pipe SWM Facility
+Quality Control
+Quality controls will be provided off site through a permanent pool within SWMF 1 and 5.
+These SWM facilities will be sized in order to accommodate the proposed drainage from
+Catchments 201 and 202, and provide adequate quality control.
+The purpose of the permanent pool is to provide sediment removal for the stormwater
+conveyed to the pond. The SWM Facilities will be sized to provide an ‘Enhanced’ level of
+protection (80% TSS removal) based on Table 3.2 of the MOE Stormwater Management
+Planning and Design Manual (SWMP Manual, 2003).
+Further details on the permanent pool requirements for SWMF 1 will be provided through the
+forthcoming FSSR for the Subject Lands and ongoing CSSS for the WVSP Area, and will be
+provided to the Town for review January 2026.
+The Trinity Field – Wildfield, Functional Servicing and Stormwater Management Report (SCS,
+October 2025) has been prepared and provides discussion on the design of SWMF 5 and has
+accommodated the Subject Lands, and provides the required quality control.
+As noted above, LID measures will help provide quality controls under the interim conditions, as
+part of a treatment train, until SWMF 1 and 5 are constructed.
+Erosion Control
+To mitigate the potential for increases in erosion, attenuation of the extended detention
+volume within the proposed SWM Facilities 1 and 5 will be required to provide erosion
+protection for the receiving downstream watercourses.
+Analysis to determine the extended detention duration within SWMF 1 and 5 to mitigate the
+increase of erosion occurrences and duration within the receiving watercourses will be
+completed as part of the CSSS.
+Further details on the extended detention volume requirements for SWMF 1 will be provided
+through the forthcoming FSSR for the Subject Lands and ongoing CSSS for the WVSP Area, and
+will be provided to the Town for review January 2026.
+The Trinity Field – Wildfield, Functional Servicing and Stormwater Management Report, (SCS,
+October 2025) has been prepared and provides discussion on the design of SWMF 5, which has
+accommodated the Subject Lands, and providing the required extended detention volumes for
+erosion control.
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Re: Functional Servicing and Stormwater Management Brief
+Cavalino Estates – Wildfield Village
+Town of Caledon
+
+File #: 2831
+November 7, 2025
+Page 7 of 12
+
+As noted above, LID measures will help provide erosion controls as part of a treatment train
+until such a time as SWMF 1 and 5 are constructed.
+Quantity Control
+As established in the Phase 2 LSS (SCS and GEI, January 2025), the proposed conditions
+uncontrolled peak flows for each outlet exceed the existing conditions; therefore, SWM
+controls for the 2 through 100 year and Regional storm events are required to mitigate
+downstream impacts.
+As noted above, an interim onsite SWM facility is required to control proposed runoff from the
+Subject Lands to Outlets 1 and 5 should the lands proceed ahead of the neighboring properties.
+For each interim onsite SWM facility, the target flows for the 2 through 100 year storm events
+are determined using Equation F of the TRCA unit flow relationship for the Humber River and
+the existing drainage area to each outlet within the subject lands. Through the Phase 1 LSS (SCS
+and GEI, November 2024) a target unit release rate for each sub catchment of the Humber
+River watershed within the WVSP Area was established for the Regional storm event. The unit
+rate established for SWMF 1 is 0.070 m3/s/ha and 0.077m3/s/ha for SWMF 5.
+As noted above, an interim onsite SWM facility is required to control proposed runoff from the
+Subject Lands to Outlets 1 and 5, until such a time that the neighboring properties develop and
+flows can be conveyed to SWM Facilities 1 and 5. The target release rates for each interim
+onsite SWM facility are summarized below in Table 3.
+Table 3 – Interim Stormwater Management Facility Target Flow Rates1 (m3/s)
+201
+
+202
+
+Existing Area (ha)
+
+4.62
+
+5.22
+
+Proposed Area (ha)
+
+4.80
+
+5.04
+
+2-yr
+0.039
+0.043
+5-yr
+0.060
+0.067
+10-yr
+0.073
+0.082
+25-yr
+0.092
+0.103
+50-yr
+0.108
+0.121
+100-yr
+0.122
+0.136
+Reg.
+0.323
+0.402
+1 Refer to Attachment B for target flow calculations
+The interim onsite SWM facilities will control the flows from the proposed development to the
+target flow rates discharging toward Outlets 1 and 5. Proposed hydrologic modelling was
+completed using the Visual Otthymo model (Version 6.2) to determine the proposed release
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Re: Functional Servicing and Stormwater Management Brief
+Cavalino Estates – Wildfield Village
+Town of Caledon
+
+File #: 2831
+November 7, 2025
+Page 8 of 12
+
+rates and required storage volumes within the interim onsite SWM facilities for the 2 through
+100 year and Regional storm events. Refer to the File Safe Cloud Link provided in Attachment C
+to download the VO hydrology model files.
+Table 4 – Stormwater Management Facility Summary (m3/s)1
+Interim Onsite SWMF 1
+Area (ha)
+
+Target
+Flow Rate
+
+Required
+Storage2
+
+Interim Onsite SWMF 2
+Target
+Flow Rate
+
+1,074
+2-yr
+0.039
+0.043
+1,495
+5-yr
+0.060
+0.067
+1,741
+10-yr
+0.073
+0.082
+2,044
+25-yr
+0.092
+0.103
+2,257
+50-yr
+0.108
+0.121
+2,465
+100-yr
+0.122
+0.136
+1
+Reg.
+0.323
+5,362
+0.402
+1 Refer to Attachment C for modelling outputs.
+2 12 Hour AES Distribution is summarized.
+
+Required
+Storage2
+1,084
+1,520
+1,770
+2,076
+2,289
+2,502
+5,051
+
+The outlet for the interim onsite SWM facilities will be sized to allow for the external areas to
+pass through the site uncontrolled, and continue to follow the existing drainage patterns to
+Outlet 1 and 5.
+At this time, the Trinity Field – Wildfield, Functional Servicing and Stormwater Management
+Report (SCS, October 2025) has been prepared, and provides further detail for the SWM
+controls provided for SWMF 5.
+No further detail on SWMF 1 is available at this time, further discussion on the ultimate
+conditions will be provided through the forthcoming FSSR and ongoing CSSS for the WVSP Area,
+which is to be provided to the Town January 2026. Through the ongoing CSSS work, the
+servicing strategy to convey flows from the Subject Lands to SWMF 1 and 5, through the nonparticipating lands will be provided.
+
+Sanitary Servicing
+As noted in the Phase 1 LSS (SCS and GEI, November 2024), there are no existing sanitary
+sewers within the WVSP Area or on the arterial roads immediately surrounding the WVSP Area.
+There is also an existing sanitary sewer (size to be confirmed) located on McVean Drive at the
+intersection with Countryside Drive approximately 1.25 km south of the WV Secondary Plan
+area.
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Re: Functional Servicing and Stormwater Management Brief
+Cavalino Estates – Wildfield Village
+Town of Caledon
+
+File #: 2831
+November 7, 2025
+Page 9 of 12
+
+Through the Phase 2 LSS (SCS and GEI, January 2025) it was indicated that the WV Secondary
+Plan area will be serviced via several connections to the future wastewater main on Mayfield
+Road as illustrated on Figure 5.2 of the Phase LSS (SCS and GEI, January 2025) included in
+Attachment D. The internal alignment and location of the stubs for the proposed sanitary
+sewers are preliminary only and subject to change. No external drainage is proposed to be
+conveyed through the WV Secondary Plan area in accordance with the latest Region of Peel
+Draft DC Project Mapping (2024), included in Attachment D.
+The subject lands will be serviced through the sanitary sewers within the WVSP Area are
+anticipated to have slopes ranging between 0.5% and 2% (typically). Preliminary sanitary sewer
+schematic is illustrated on Figure 5.2 of the Phase 2 LSS (SCS and GEI, January 2024) included in
+Attachment D.
+Slopes of less than 0.5% may be required for trunk sanitary sewers to limit the depth of trunk
+infrastructure while meeting minimum velocity criteria. The alignment and invert design of the
+trunk infrastructure is preliminary only and will be refined further through a more detailed
+Functional Servicing and Stormwater Management Report.
+The sanitary sewer system will be designed in accordance with the Region of Peel and MECP
+criteria, including but not limited to:
+Residential Sanitary Generation Rate: 290 L/c/d,
+Commercial Sanitary Generation Rate: 270 L/emp/ha
+Population Density:
+o Single detached: 4.2 person/unit,
+o Semi-detached: 4.2 person/unit,
+o Townhouse: 3.4 person/unit,
+o Large Apartment (greater than 1 bedroom): 3.1 person/unit,
+o Small Apartment (less than or equal to 1 bedroom): 1.7 person/unit,
+Peaking Factor: Harmon (Max. 4.0),
+Infiltration Rate: 0.26 L/s/ha,
+Minimum Pipe Size: 200 mm diameter,
+Minimum Pipe Cover: 2.5 m below centerline road elevation,
+Minimum Actual Velocity: 0.75 m/s, and
+Maximum Velocity: 3.0 m/s.
+Through the ongoing CSSS work and forthcoming FSSR in January 2026, the servicing strategy to
+convey sanitary flows from the Subject Lands through the non-participating lands to the
+proposed sanitary sewers will be provided.
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Re: Functional Servicing and Stormwater Management Brief
+Cavalino Estates – Wildfield Village
+Town of Caledon
+
+File #: 2831
+November 7, 2025
+Page 10 of 12
+
+Water Servicing
+As noted in the Phase 1 LSS (SCS and GEI, November 2024), there are existing watermains on
+several arterial roads surrounding the WVSP area including: a 200 mm diameter watermain on
+Centreville Creek Road, Healey Road, and The Gore Road; and a 300 mm diameter watermain,
+600 mm diameter watermain (Pressure Zone 5), and 750 mm diameter watermain (Pressure
+Zone 6) on Mayfield Road.
+Servicing for the Subject Lands will be provided by the distribution mains planned by the Region
+with connections to the existing distribution mains on Mayfield Road and the future
+distribution main on Centreville Creek Road. Refer to Figure 5.4 from the Phase 2 LSS (SCS and
+GEI, January 2025) included in Attachment D.
+The watermain system will be designed in accordance with the Region of Peel and MECP
+criteria including:
+Residential water usage rate: 280 L/c/d,
+Commercial water usage rate: 300 L/emp/ha,
+Population Density:
+o Single detached: 4.2 person/unit,
+o Semi-detached: 4.2 person/unit,
+o Townhouse: 3.4 person/unit,
+o Large Apartment (greater than 1 bedroom): 3.1 person/unit,
+o Small Apartment (less than or equal to 1 bedroom): 1.7 person/unit,
+Minimum Pipe Size: 150 mm diameter,
+Minimum Pipe Depth: 1.7 m, and
+Maximum Hydrant Spacing: 150 m.
+Refer to Figure 5.4 of the Phase 2 LSS (SCS and GEI, January 2025) included as Attachment D, to
+illustrated the general water servicing strategy of the WVSP Area.
+Through the ongoing CSSS work and forthcoming FSSR in January 2026, the servicing strategy to
+provide water servicing for the Subject Lands will be provided, including a watermain hydraulic
+model to provide watermain sizes and confirm sufficient supply and pressure for the site.
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Re: Functional Servicing and Stormwater Management Brief
+Cavalino Estates – Wildfield Village
+Town of Caledon
+
+File #: 2831
+November 7, 2025
+Page 11 of 12
+
+Summary
+This FSSB has been prepared in support of the Draft Plan application for the proposed
+residential development within the WVSP Area in the Town of Caledon. This brief outlines the
+means by which the proposed development can be serviced and provide stormwater
+management controls in the interim and ultimate conditions, in accordance with MECP, TRCA,
+and the Town of Caledon design criteria and policies, as established through the Phase 1 and 2
+LSS.
+Minor and major system storm drainage from the Subject Lands will be directed by a storm
+sewer system and overland flow routes, respectively, towards the proposed interim onsite
+SWM facilities discharging to existing grade where flows will follow existing drainage patterns
+to existing culverts crossing under Centreville Creek Road and Mayfield Road. Ultimately,
+drainage from this site will be conveyed to one of two SWM facilities, further details for the
+major and minor storm systems will be provided through the ongoing CSSS work.
+The Subject Lands will ultimately contribute to SWMF 1 and 5, the ongoing CSSS will provide
+further details on the SWM controls provided in SWMF 1. The Trinity Field – Wildfield,
+Functional Servicing and Stormwater Management Report (SCS, October 2025) provides further
+detail for the SWM controls provided for SWMF 5.
+This FSSB has shown that the site can be serviced from the municipal wastewater and water
+systems through the current existing and planned infrastructure located adjacent to the site
+and WVSP Area. A more detailed Functional Servicing and SWM Report (FSSR) outlining the
+servicing and grading for the subject lands will be completed, in combination with the
+Comprehensive Servicing and SWM Study (CSSS) as required by the Secondary Plan policies. The
+FSSR and CSSS are expected to be completed and provided to the Town in January 2026.
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Re: Functional Servicing and Stormwater Management Brief
+Cavalino Estates – Wildfield Village
+Town of Caledon
+
+File #: 2831
+November 7, 2025
+Page 12 of 12
+
+Please contact the undersigned if you have any questions or require additional information.
+Sincerely,
+
+S
+OFES IONAL
+PR
+E
+
+ER
+INE
+NG
+
+L ICEN
+SE
+D
+
+SCS Consulting Group Ltd.
+
+R. R. BROCKIE
+100504181
+
+PR
+
+O
+
+IO
+
+NOV 7/2025
+VI
+
+NC
+
+E OF ON
+
+Ryan Brockie, P. Eng.
+rbrockie@scsconsultinggroup.com
+
+TA
+
+R
+
+Andrea Keeping, P. Eng.
+akeeping@scsconsultinggroup.com
+
+Encl.
+Attachment A: Preliminary Draft Plan
+Attachment B: Quality Control Calculations
+Attachment C: Hydrologic Modelling Files & Outputs
+Attachment D: Phase 1 & 2 LSS Figures & Background Information
+P:\2831 Wildfield - Trinison - Cavallino\Correspondence\Letters\2025 11(Nov) 11 - Preliminary Servicing and SWM
+Report\2831 - Preliminary Servicing and SWM Brief- 07 November 2025.docx
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Figures
+
+Attachments
+
+EXT1
+24.65 ha
+
+ONKAR INVESTMENT INC.
+
+LEGEND:
+
+REFER TO FIGURE 4.2 OF THE PHASE 1 LSS
+(SCS AND GEI, NOVEMBER 2024) FOR TOTAL
+EXTERNAL DRAINAGE AREA BOUNDARIES.
+
+CAVALLINO
+ESTATES INC.
+
+LIMIT OF SUBJECT LANDS
+LIMIT OF WILDFIELD VILLAGE
+SECONDARY PLAN
+
+GLOBAL PROPERTIES INC.
+CULVERT #14
+EXISTING 1300mm CULVERT
+W INV. = 222.12m
+E INV. = 221.10m
+
+CAVALLINO ESTATES INC.
+
+101
+4.62 ha
+
+102
+5.22 ha
+
+EXISTING CONTOUR
+AND ELEVATION
+CAROZZ
+
+STORM DRAINAGE BOUNDARY
+
+CULVERT #13
+EXISTING 650mm CULVERT
+W INV. = 222.08m
+E INV. = 221.37m
+
+EXTERNAL STORM
+DRAINAGE BOUNDARY
+WATERCOURSE (TRCA, 2018)
+OVERLAND FLOW DIRECTION
+EXISTING CULVERT
+
+NOVAMARK HOLDINGS LTD.
+
+EXT3
+48.90 ha
+
+EXT2
+26.21 ha
+
+CATCHMENT ID
+
+101
+7.32 ha
+
+DRAINAGE AREA (HECTARES)
+
+EXT1
+20.67 ha
+
+ONE VALUE LTD.
+AVTAR & MANJIT KALKAT
+
+CATCHMENT ID
+
+EXTERNAL STORM DRAINAGE
+AREA (HECTARES)
+
+GIOGIA & TERESA VESCIO
+
+OUTLET ID
+CULVERT #12
+EXISTING 350mm CSP CULVERT
+W INV. = 222.30m
+E INV. = 222.47m
+
+CHARLES SPANO
+GIUSEPPE SPANO
+
+TRINITY FIELD INC.
+
+CULVERT #7
+EXISTING 600mm CULVERT
+W INV. = 226.59m
+E INV. = 226.90m
+
+DIEGO SPANO
+
+CULVERT #8
+EXISTING 450mm CULVERT
+N INV. = 227.03
+S INV. = 227.03
+
+& SARBJIT G
+SUKHVINDER
+
+LESLIE FARKAS
+
+GIGLIO
+
+BAGA
+RANJIT KAUR RAI & DILBAGH
+SINGH
+
+CULVERT #6
+EXISTING 750mm CULVERT
+W INV. = 227.94m
+E INV. = 228.30m
+
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+ILL
+
+CULVERT #5
+EXISTING 900mm CULVERT
+W INV. = 229.72m
+E INV. = 229.80m
+
+*NOTE: LAYOUT IS SCHEMATIC ONLY, DETAILS TO BE
+PROVIDED AT DETAILED DESIGN STAGE.
+
+MAYFIELD GORE
+DEVELOPMENTS INC.
+
+CULVERT #11
+EXISTING 1500mm CSP CULVERT
+W INV. = 217.53
+E INV. = 217.27
+
+WILDFIELD - CAVALLINO
+ESTATES
+
+KALIRAO
+
+PSSB
+CHIODO
+
+7072A HOLDINGS LTD.
+
+EXISTING STORM
+DRAINAGE PLAN
+
+NEW TIME MOTORS LTD.
+BARBERI
+LE DONNE
+
+GILL
+
+CULVERT #9
+EXISTING 1000mm CSP CULVERT
+N INV. = 221.32
+S INV. = 220.65
+
+CULVERT #10
+EXISTING 950mm CSP CULVERT
+N INV. = 218.65
+S INV. = 217.92
+
+DESIGNED BY:
+
+R.B.
+
+CHECKED BY:
+
+SCALE:
+
+1:5000
+
+DATE:
+
+PROJECT No:
+
+E.K.
+
+AUGUST 2025
+
+FIGURE No:
+
+2831
+
+2
+
+EXT1
+24.65 ha
+
+201
+4.80 ha 81%
+
+LEGEND:
+
+REFER TO FIGURE 4.2 OF THE PHASE 1 LSS
+(SCS AND GEI, NOVEMBER 2024) FOR TOTAL
+EXTERNAL DRAINAGE AREA BOUNDARIES.
+
+LIMIT OF SUBJECT LANDS
+LIMIT OF WILDFIELD VILLAGE
+SECONDARY PLAN
+EXISTING CONTOUR
+AND ELEVATION
+
+202
+5.04 ha 84%
+
+STORM DRAINAGE BOUNDARY
+
+CULVERT #14
+EXISTING 1300mm CULVERT
+W INV. = 222.12m
+E INV. = 221.10m
+
+EXT3
+51.37 ha
+
+EXT2
+26.21 ha
+
+EXTERNAL STORM
+DRAINAGE BOUNDARY
+WATERCOURSE (TRCA, 2018)
+
+CULVERT #13
+EXISTING 650mm CULVERT
+W INV. = 222.08m
+E INV. = 221.37m
+
+OVERLAND FLOW DIRECTION
+EXISTING CULVERT
+CATCHMENT ID
+
+201
+20.15 ha 76%
+
+FUTURE EXTERNAL DRAINAGE
+AREAS TO BE CONFIRMED
+THROUGH THE ONGOING
+COMPREHENSIVE STORMWATER
+AND SERVICING PLAN FOR THE
+WVSP AREA.
+
+PERCENT (%) IMPERVIOUS
+DRAINAGE AREA (HECTARES)
+CATCHMENT ID
+
+EXT1
+24.65 ha
+
+EXTERNAL STORM DRAINAGE
+AREA (HECTARES)
+STORMWATER
+MANAGEMENT FACILITY
+BLOCK
+OUTLET ID
+
+CULVERT #12
+EXISTING 350mm CSP CULVERT
+*NOTE:
+LAYOUT IS SCHEMATIC ONLY, DETAILS TO BE
+= 222.30m
+W INV.
+PROVIDED
+= 222.47m AT DETAILED DESIGN STAGE.
+E INV.
+SWMF #5
+N.W.L. = 221.80
+TOP OF POND = 224.30
+
+CULVERT #5
+EXISTING 900mm CULVERT
+W INV. = 229.72m
+E INV. = 229.80m
+
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+CULVERT #6
+EXISTING 750mm CULVERT
+W INV. = 227.94m
+E INV. = 228.30m
+
+WILDFIELD - CAVALLINO
+ESTATES
+
+POTENTIAL SWMF #1
+FACILITY BLOCK LOCATION
+
+CULVERT #7
+EXISTING 600mm CULVERT
+W INV. = 226.59m
+E INV. = 226.90m
+
+CULVERT #11
+EXISTING 1500mm CSP CULVERT
+W INV. = 217.53
+E INV. = 217.27
+
+CULVERT #8
+EXISTING 450mm CULVERT
+N INV. = 227.03
+S INV. = 227.03
+
+PSSB
+PROPOSED STORM
+DRAINAGE PLAN
+
+SWMF #4
+
+CULVERT #9
+EXISTING 1000mm CSP CULVERT
+N INV. = 221.32
+S INV. = 220.65
+
+CULVERT #10
+EXISTING 950mm CSP CULVERT
+N INV. = 218.65
+S INV. = 217.92
+
+DESIGNED BY:
+
+R.B.
+
+CHECKED BY:
+
+SCALE:
+
+1:5000
+
+DATE:
+
+PROJECT No:
+
+E.K.
+
+AUGUST 2025
+
+FIGURE No:
+
+2831
+
+3
+
+Attachment A Preliminary Draft Plan
+
+N
+
+SOLMAR DRAFT PLAN
+
+36
+
+BLOCK 37
+ROAD
+WIDENING
+BLOCK
+0.150ha
+
+00"E
+
+04'
+
+N38°
+
+N38°04'05"E
+
+N38°
+
+268.67
+
+89.05
+
+48'
+
+45"E
+
+N38°
+
+188.66
+
+30'
+
+50"E
+
+134.36
+
+4.0
+
+33.5
+
+34.44
+N41°33
+'45"W
+
+66.42
+N47°07'45"W
+
+53.51
+
+0"W
+
+STREET 'F'
+
+'
+STREET 'C
+
+STREET 'B'
+
+26.2
+
+45.72
+107.64
+
+STREET 'I'
+
+298.26
+
+N44°31'2
+
+6.1m OSTH
+0.104 ha
+5 units
+
+31.4
+
+35.5
+
+30.1
+
+30.0
+
+BLOCK 31
+31.1
+
+48.4
+
+55"E
+
+18
+
+6.1m OSTH
+0.106 ha
+5 units
+
+7.9
+
+33.5
+
+29.4
+
+5
+
+BLOCK 30
+
+18
+
+30.0
+
+STREET 'K'
+
+BLOCK 34
+FUTURE
+DEVELOPMENT
+BLOCK
+0.009 ha
+
+BLOCK 35
+FUTURE
+DEVELOPMENT
+BLOCK
+0.016 ha
+
+4.0
+
+33.5
+
+35.5
+
+30.7
+
+48.2
+
+6.1m DFTH
+0.101 ha
+5 units
+
+18
+
+03'
+
+BLOCK 18
+
+6.1m DFTH
+0.121 ha
+6 units
+
+6.1m OSTH
+0.142 ha
+7 units
+
+24.3
+
+N39°
+
+8.
+
+6.5
+
+33.5
+
+BLOCK 17
+
+5
+8.
+
+77.4
+
+35.4
+
+BLOCK 29
+24.1
+
+18
+
+6.1m OSTH
+0.139 ha
+7 units
+
+29.5
+
+23.5
+
+36.9
+
+162.41
+
+42.5
+
+BLOCK 28
+22.9
+
+6.1m OSTH
+0.100 ha
+5 units
+
+42.2
+
+18.0
+
+5
+
+STREET 'H'
+
+8.
+
+5
+
+21.5
+
+30"E
+
+39.6
+
+8.
+
+BLOCK 27
+27.6
+
+12'
+
+27.7
+
+27.8
+
+N38°
+
+215.14
+
+39.6
+
+39.6
+
+6.1m OSTH
+0.109 ha
+6 units
+
+31.0
+
+5
+8.
+
+42.2
+
+42.5
+
+5
+8.
+
+BLOCK 26
+
+6.1m DFTH
+0.141 ha
+7 units
+
+18.0
+
+BLOCK 25
+
+BLOCK 14
+
+6.1m DFTH
+0.142 ha
+7 units
+
+STREET 'J'
+
+5
+8.
+
+18
+
+BLOCK 24
+
+BLOCK 13
+
+18
+
+BLOCK 23
+
+39.6
+
+5
+8.
+
+39.6
+
+6.1m OSTH
+0.110 ha
+6 units
+
+18.0
+
+18
+
+39.6
+
+27.9
+
+28.3
+
+N45°39'10"W
+
+39.6
+
+18
+
+K ROAD
+
+22.2
+
+6.1m DFTH
+0.116 ha
+6 units
+
+35.5
+
+18
+
+5
+
+8.
+
+30.0
+
+18
+
+39.6
+
+6.1m OSTH
+0.110 ha
+6 units
+
+5
+8.
+
+39.1
+
+39.6
+
+6.1m OSTH
+0.111 ha
+6 units
+
+6.1m DFTH
+0.132 ha
+6 units
+
+45.7
+
+STREET 'E'
+
+44.7
+
+10"E
+
+6.1m DFTH
+0.137 ha
+7 units
+
+45.7
+
+45.7
+
+35.5
+
+6.1m OSTH
+0.121 ha
+6 units
+
+30.0
+
+30.0
+
+30.0
+
+6.1m DFTH
+0.137 ha
+7 units
+
+5
+
+6.1m DFTH
+0.137 ha
+7 units
+
+8.
+
+6.1m DFTH
+0.150 ha
+7 units
+
+BLOCK 10
+
+18
+
+BLOCK 9
+
+42.3
+
+30.0
+
+BLOCK 8
+
+18
+
+BLOCK 7
+
+STREET 'G'
+42.5
+
+5
+8.
+
+18.0
+
+BLOCK 6
+
+BLOCK 33
+MEDIUM
+DENSITY
+BLOCK
+0.956 ha
+
+118.6
+
+45.7
+
+117.7
+
+45.7
+
+BLOCK 22
+
+27.7
+
+39.2
+
+45.7
+
+46.7
+
+9
+8.
+
+18
+
+18
+
+STREET 'D'
+
+43.4
+
+0
+
+CENTREV
+ILLE CREE
+
+8.0
+
+30.0
+
+6.1m DFTH
+0.121 ha
+6 units
+
+5
+8.
+
+8.
+
+42.4
+
+42.5
+
+BLOCK 16
+30.0
+
+18
+
+4.9
+
+39.6
+
+BLOCK 15
+18.0
+
+6.1m DFTH
+0.142 ha
+7 units
+
+18.0
+
+BLOCK 12
+
+6.1m DFTH
+0.142 ha
+7 units
+
+5
+
+5
+8.
+
+5
+8.
+
+39.0
+
+45.7
+
+45.7
+
+18
+
+23.5
+
+BLOCK 11
+
+35.4
+
+5
+8.
+
+5
+8.
+
+6.1m DFTH
+0.131 ha
+6 units
+
+18.0
+
+6.1m DFTH
+0.137 ha
+7 units
+
+18.0
+
+30.0
+
+30.0
+
+30.0
+
+6.1m DFTH
+0.137 ha
+7 units
+
+5
+
+6.1m DFTH
+0.137 ha
+7 units
+
+42.5
+
+42.5
+
+5
+8.
+
+8.
+
+6.1m DFTH
+0.134 ha
+6 units
+
+26
+
+26
+
+BLOCK 5
+
+65.1
+
+5
+
+8.
+
+5
+8.
+
+BLOCK 4
+
+8.
+
+41'
+
+6.1m OSTH
+0.118 ha
+6 units
+
+23.0
+
+N37°
+
+BLOCK 3
+
+9
+8.
+
+41.2
+
+44.6
+
+77.7
+
+BLOCK 2
+
+45.7
+
+STREET 'A'
+
+1.7
+
+BLOCK 21
+
+5.7
+
+BLOCK 1
+
+41.7
+
+18.2
+
+27.5
+
+39.6
+
+39.6
+
+6.1m OSTH
+0.109 ha
+6 units
+
+39.1
+
+18
+
+BLOCK 20
+126.2
+
+112.2
+
+BLOCK 32
+MEDIUM
+DENSITY
+BLOCK
+0.973 ha
+
+45.7
+
+0
+8.
+
+27.5
+
+18
+39.1
+
+42.1
+
+6.1m OSTH
+0.118 ha
+6 units
+
+45.7
+
+30.0
+
+BLOCK 19
+
+18.2
+
+.3
+22
+
+N38°04'00"E
+3.07
+
+45.7
+
+38.3
+
+9
+8.
+
+0
+8.
+
+21.7
+
+63.5
+
+26
+
+STREET 'A'
+
+26
+
+N45°39'10"W
+
+23.6
+
+BLOCK 36
+FUTURE
+DEVELOPMENT
+BLOCK
+0.018 ha
+
+36
+
+LEGEND
+Subject Property
+
+NOTES
+
+ADDITIONAL INFORMATION
+REQUIRED UNDER SECTION 51(17)
+OF THE PLANNING ACT
+
+SURVEYOR'S CERTIFICATE
+I certify that: the boundaries of the lands to be subdivided and their
+relationship to the adjacent lands are correctly shown.
+
+A, B, E, F, G, J, L - As Shown on Plan
+
+All dimensions are in metres.
+All area measurements are computer generated.
+All elevations refer to Geodetic Datum.
+
+C. Additional lands owned by the applicant as
+shown on the key plan.
+D. On-Street Townhouses, Double Frontage Townhouses,
+Medium Density Blocks, Roads and Road Widening.
+H. Piped water to be provided.
+I. Clay loam soil.
+K. Sanitary & storm sewers to be provided.
+
+S. Goonewardena, O.L.S.
+R-PE Surveying Ltd.
+
+KEYPLAN
+
+0
+
+5 10
+
+25
+
+Month
+
+Year
+
+(GEOGRAPHIC TOWNSHIP OF ALBION)
+
+TOWN OF CALEDON
+OWNER'S AUTHORIZATION
+I/we, CAVALLINO ESTATES INC.
+being the registered owner(s) of the subject lands hereby authorize
+to prepare and submit a
+BOUSFIELDs INC.
+draft plan of subdivision for approval.
+
+Mauro Baldassarra
+15
+
+Day
+
+DRAFT PLAN OF
+PROPOSED SUBDIVISION
+PART OF LOT 2
+CONCESSION 3
+
+Day
+
+Month
+
+BOUSFIELDs INC.
+3 Church Street, Suite 200
+Toronto, Ontario M5E 1M2
+P (416) 947-9744
+F (416) 947-0781
+
+Year
+
+50
+m
+
+October 14, 2025
+
+1 : 1250
+Scale
+
+Date
+
+24107-4A 12dp
+Drawing Number
+
+Attachment B
+
+Release Rate Calculations
+
+Drainage Area Characteristics and
+Release Rate Calculation
+
+Project Number: 2709
+Date: August 2025
+Designer Initials: R.R.B.
+
+Weighted Impervious Calculation
+Catchment ID
+
+Landues
+
+Total Area
+
+Runoff Coefficient
+
+(ha)
+Townhouses
+201
+
+202
+
+Imperviousness
+
+Impervious Area
+
+(%)
+
+(ha)
+
+79%
+
+3.16
+
+4.02
+
+0.75
+
+Medium Density Block
+
+0.78
+
+0.85
+
+93%
+
+0.72
+
+Total
+
+4.80
+
+-
+
+81%
+
+3.88
+
+Townhouses
+
+3.27
+
+0.75
+
+79%
+
+2.57
+
+Medium Density Block
+
+1.77
+
+0.85
+
+93%
+
+1.64
+
+Total
+
+5.04
+
+-
+
+84%
+
+4.21
+
+Allowable Release Rate
+Storm
+
+Target Release Rate
+(202)
+(m3/s)
+
+Target Release Rate (201)
+3
+
+(m /s)
+Pre-Development Area (ha)
+
+4.62
+
+2 Year
+5 Year
+10 Year
+25 Year
+50 Year
+100 Year
+
+0.039
+0.060
+0.073
+0.092
+0.108
+0.122
+
+Regional
+
+0.323
+
+5.22
+Based on the Humber
+River Watershed Unit Flow
+Relationship Equation F
+(Pre-Development
+Drainage Area to Culvert
+#6)
+Based on Phase 1 LSS
+Regional Flow Unit Release
+Rate for 36.11 (0.070 m3/s
+per hectare of Proposed
+Drainage Area to Culvert
+#6)
+
+0.043
+0.067
+0.082
+0.103
+0.121
+0.136
+
+0.402
+
+Based on the Humber
+River Watershed Unit
+Flow Relationship
+Equation F (PreDevelopment Drainage
+Area to Culvert #10)
+Based on Phase 1 LSS
+Regional Flow Unit
+Release Rate for 38.04
+(0.077 m3/s per hectare
+of Proposed Drainage
+Area to Culvert #10)
+
+P:\2831 Wildfield - Trinison - Cavallino\Design\SWM\FSP\Design Calculations\SWM Pond Design\2025 08(Aug) 07 - Preliminary Servicing & SWM Brief\2831 PercentImpervious.xlsx
+
+SIMCOE
+DUFFERIN
+
+Aurora
+
+Y 9
+HW
+
+0
+
+Mono
+
+e
+Yong
+
+40
+HWY
+
+Adjala
+
+St
+
+Rd
+
+n St
+
+Ch
+
+ur
+
+ch
+
+7
+
+or
+t
+
+R
+
+King
+
+Ol
+d
+
+irp
+
+H
+W
+Y
+
+d
+
+Ca
+st
+led
+er
+g
+
+Si
+de
+ro
+
+ad
+
+PEEL
+Legend
+River / Stream
+
+Th
+e
+
+G
+
+or
+e
+
+I
+
+50
+
+Approximate WVSP Area
+Rd
+
+Richmond
+Hill
+
+St
+
+Vaughan
+D
+nzie
+acke
+M
+r
+Majo
+
+Caledon
+
+Unit Flow Relationships
+
+Dufferi
+
+HWY 2
+
+A
+
+King
+
+Equation A (Sub Basin 4)
+
+YORK
+
+r
+
+Dr
+
+Equation B (Sub Basin 6)
+
+Equation F (Sub Basin 36)
+
+Contact TRCA Staff
+
+H
+
+W
+Y
+
+ay
+f
+
+R
+
+d
+
+Brampton
+
+4 Kms
+
+St
+Q
+ue
+
+en
+
+00
+
+Bo
+va
+ird
+
+HWY 4
+
+427
+
+Humber River Stormwater Management
+Quantity Control Release Rates
+
+d
+R
+
+Dr
+
+2
+
+t
+or
+rp
+
+1
+
+07
+Y4
+HW
+
+Ai
+
+Quantity Flood Control Not Required
+0
+
+Y7
+HW
+
+10
+
+01
+Y4
+HW
+
+407
+
+Equation G (Sub Basin 46)
+
+ak
+e
+
+HW
+Y
+
+Equation E (Sub Basin 19A)
+
+M
+
+H
+ea
+rt
+L
+
+Equation D (Sub Basin 15)
+
+iel
+d
+
+Equation C (Sub Basin 10)
+
+HWY 409
+
+W
+Y
+
+41
+0
+
+Y
+HW
+
+1
+40
+
+27
+Y 4
+HW
+
+H
+
+To r o n t o
+
+Attachment C
+
+Hydrologic Modelling Files & Outputs
+
+The following secure link is being provided by SCS Consulting Group Ltd. to share the
+hydrologic modelling files related to the Preliminary Servicing and Stormwater
+Management Brief for Callvino Estates:
+https://filesafecloud.scsconsultinggroup.com/url/muzazkbjmr7krnmt
+Please click on the link and download all files from this location.
+Hydrology Models – Visual Otthymo
+
+Proposed Conditions Modelling Schematic
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+********************************
+Interim Onsite SWM Facility 1
+** SIMULATION:2.1 2yr-12hr
+**
+2 - 100 Year Storm Output
+********************************
+-------------------| CALIB
+|
+| STANDHYD ( 7630)|
+Area
+(ha)=
+4.80
+|ID= 1 DT= 5.0 min |
+Total Imp(%)= 84.00
+Dir. Conn.(%)= 67.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+4.03
+0.77
+Dep. Storage
+(mm)=
+1.00
+2.00
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+178.89
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.083
+0.167
+0.250
+0.333
+0.417
+0.500
+0.583
+0.667
+0.750
+0.833
+0.917
+1.000
+1.083
+1.167
+1.250
+1.333
+1.417
+1.500
+1.583
+1.667
+1.750
+1.833
+1.917
+2.000
+2.083
+2.167
+2.250
+2.333
+2.417
+2.500
+2.583
+2.667
+2.750
+2.833
+2.917
+3.000
+3.083
+3.167
+3.250
+3.333
+3.417
+3.500
+3.583
+3.667
+3.750
+3.833
+3.917
+4.000
+4.083
+4.167
+4.250
+4.333
+4.417
+4.500
+4.583
+4.667
+4.750
+4.833
+4.917
+5.000
+5.083
+5.167
+5.250
+
+5.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+0.00 | 6.167
+1.41 |12.250
+3.06 | 18.33
+0.00 | 6.250
+1.41 |12.333
+1.65 | 18.42
+0.00 | 6.333
+4.00 |12.417
+1.65 | 18.50
+0.24 | 6.417
+4.00 |12.500
+1.65 | 18.58
+0.24 | 6.500
+4.00 |12.583
+1.65 | 18.67
+0.24 | 6.583
+4.00 |12.667
+1.65 | 18.75
+0.24 | 6.667
+4.00 |12.750
+1.65 | 18.83
+0.24 | 6.750
+4.00 |12.833
+1.65 | 18.92
+0.24 | 6.833
+4.00 |12.917
+1.65 | 19.00
+0.24 | 6.917
+4.00 |13.000
+1.65 | 19.08
+0.24 | 7.000
+4.00 |13.083
+1.65 | 19.17
+0.24 | 7.083
+4.00 |13.167
+1.65 | 19.25
+0.24 | 7.167
+4.00 |13.250
+1.65 | 19.33
+0.24 | 7.250
+4.00 |13.333
+1.65 | 19.42
+0.24 | 7.333
+4.00 |13.417
+1.65 | 19.50
+0.24 | 7.417
+4.00 |13.500
+1.65 | 19.58
+0.24 | 7.500
+4.00 |13.583
+1.65 | 19.67
+0.24 | 7.583
+4.00 |13.667
+1.65 | 19.75
+0.24 | 7.667
+4.00 |13.750
+1.65 | 19.83
+0.24 | 7.750
+4.00 |13.833
+1.65 | 19.92
+0.24 | 7.833
+4.00 |13.917
+1.65 | 20.00
+0.24 | 7.917
+4.00 |14.000
+1.65 | 20.08
+0.24 | 8.000
+4.00 |14.083
+1.65 | 20.17
+0.24 | 8.083
+4.00 |14.167
+1.65 | 20.25
+0.24 | 8.167
+4.00 |14.250
+1.65 | 20.33
+0.24 | 8.250
+4.00 |14.333
+0.94 | 20.42
+0.24 | 8.333
+10.81 |14.417
+0.94 | 20.50
+0.24 | 8.417
+10.81 |14.500
+0.94 | 20.58
+0.24 | 8.500
+10.81 |14.583
+0.94 | 20.67
+0.24 | 8.583
+10.81 |14.667
+0.94 | 20.75
+0.24 | 8.667
+10.81 |14.750
+0.94 | 20.83
+0.24 | 8.750
+10.81 |14.833
+0.94 | 20.92
+0.24 | 8.833
+10.81 |14.917
+0.94 | 21.00
+0.24 | 8.917
+10.81 |15.000
+0.94 | 21.08
+0.24 | 9.000
+10.81 |15.083
+0.94 | 21.17
+0.24 | 9.083
+10.81 |15.167
+0.94 | 21.25
+0.24 | 9.167
+10.81 |15.250
+0.94 | 21.33
+0.24 | 9.250
+10.81 |15.333
+0.94 | 21.42
+0.24 | 9.333
+10.81 |15.417
+0.94 | 21.50
+0.24 | 9.417
+10.81 |15.500
+0.94 | 21.58
+0.24 | 9.500
+10.81 |15.583
+0.94 | 21.67
+0.24 | 9.583
+10.81 |15.667
+0.94 | 21.75
+0.24 | 9.667
+10.81 |15.750
+0.94 | 21.83
+0.24 | 9.750
+10.81 |15.833
+0.94 | 21.92
+0.24 | 9.833
+10.81 |15.917
+0.94 | 22.00
+0.24 | 9.917
+10.81 |16.000
+0.94 | 22.08
+0.24 |10.000
+10.81 |16.083
+0.94 | 22.17
+0.24 |10.083
+10.81 |16.167
+0.94 | 22.25
+0.24 |10.167
+10.81 |16.250
+0.94 | 22.33
+0.24 |10.250
+10.81 |16.333
+0.47 | 22.42
+0.24 |10.333
+3.06 |16.417
+0.47 | 22.50
+1.41 |10.417
+3.06 |16.500
+0.47 | 22.58
+1.41 |10.500
+3.06 |16.583
+0.47 | 22.67
+1.41 |10.583
+3.06 |16.667
+0.47 | 22.75
+1.41 |10.667
+3.06 |16.750
+0.47 | 22.83
+1.41 |10.750
+3.06 |16.833
+0.47 | 22.92
+1.41 |10.833
+3.06 |16.917
+0.47 | 23.00
+1.41 |10.917
+3.06 |17.000
+0.47 | 23.08
+1.41 |11.000
+3.06 |17.083
+0.47 | 23.17
+1.41 |11.083
+3.06 |17.167
+0.47 | 23.25
+1.41 |11.167
+3.06 |17.250
+0.47 | 23.33
+1.41 |11.250
+3.06 |17.333
+0.47 | 23.42
+1.41 |11.333
+3.06 |17.417
+0.47 | 23.50
+
+RAIN
+mm/hr
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+
+5.333
+5.417
+5.500
+5.583
+5.667
+5.750
+5.833
+5.917
+6.000
+6.083
+
+1.41 |11.417
+1.41 |11.500
+1.41 |11.583
+1.41 |11.667
+1.41 |11.750
+1.41 |11.833
+1.41 |11.917
+1.41 |12.000
+1.41 |12.083
+1.41 |12.167
+
+3.06 |17.500
+3.06 |17.583
+3.06 |17.667
+3.06 |17.750
+3.06 |17.833
+3.06 |17.917
+3.06 |18.000
+3.06 |18.083
+3.06 |18.167
+3.06 |18.250
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+10.81
+10.00
+8.82 (ii)
+10.00
+0.12
+
+17.47
+25.00
+23.00 (ii)
+25.00
+0.05
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.10
+10.25
+46.08
+47.08
+0.98
+
+0.03
+10.25
+29.07
+47.08
+0.62
+
+0.47 | 23.58
+0.47 | 23.67
+0.47 | 23.75
+0.47 | 23.83
+0.47 | 23.92
+0.47 | 24.00
+0.47 | 24.08
+0.47 | 24.17
+0.47 | 24.25
+0.47 |
+
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+
+*TOTALS*
+0.131 (iii)
+10.25
+40.46
+47.08
+0.86
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 82.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 7702)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 5.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.0920
+0.2100
+0.0390
+0.1100
+|
+0.1080
+0.2300
+0.0600
+0.1500
+|
+0.1220
+0.2500
+0.0730
+0.1800
+|
+0.3230
+0.4800
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+7630)
+7702)
+
+AREA
+(ha)
+4.800
+4.800
+
+QPEAK
+(cms)
+0.131
+0.038
+
+TPEAK
+(hrs)
+10.25
+12.25
+
+R.V.
+(mm)
+40.46
+40.31
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 28.95
+TIME SHIFT OF PEAK FLOW
+(min)=120.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.1074
+------------------------------------------------------------------------------********************************
+** SIMULATION:2.2 5yr-12hr
+**
+********************************
+-------------------| CALIB
+|
+| STANDHYD ( 7630)|
+Area
+(ha)=
+4.80
+|ID= 1 DT= 5.0 min |
+Total Imp(%)= 84.00
+Dir. Conn.(%)= 67.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+4.03
+0.77
+Dep. Storage
+(mm)=
+1.00
+2.00
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+178.89
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.083
+0.167
+0.250
+0.333
+0.417
+0.500
+0.583
+0.667
+0.750
+0.833
+0.917
+1.000
+
+5.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+0.00 | 3.167
+3.26 | 6.250
+7.07 | 9.33
+0.00 | 3.250
+3.26 | 6.333
+3.81 | 9.42
+0.00 | 3.333
+9.25 | 6.417
+3.81 | 9.50
+0.54 | 3.417
+9.25 | 6.500
+3.81 | 9.58
+0.54 | 3.500
+9.25 | 6.583
+3.81 | 9.67
+0.54 | 3.583
+9.25 | 6.667
+3.81 | 9.75
+0.54 | 3.667
+9.25 | 6.750
+3.81 | 9.83
+0.54 | 3.750
+9.25 | 6.833
+3.81 | 9.92
+0.54 | 3.833
+9.25 | 6.917
+3.81 | 10.00
+0.54 | 3.917
+9.25 | 7.000
+3.81 | 10.08
+0.54 | 4.000
+9.25 | 7.083
+3.81 | 10.17
+0.54 | 4.083
+9.25 | 7.167
+3.81 | 10.25
+
+RAIN
+mm/hr
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+
+1.083
+1.167
+1.250
+1.333
+1.417
+1.500
+1.583
+1.667
+1.750
+1.833
+1.917
+2.000
+2.083
+2.167
+2.250
+2.333
+2.417
+2.500
+2.583
+2.667
+2.750
+2.833
+2.917
+3.000
+3.083
+
+0.54 | 4.167
+0.54 | 4.250
+0.54 | 4.333
+0.54 | 4.417
+0.54 | 4.500
+0.54 | 4.583
+0.54 | 4.667
+0.54 | 4.750
+0.54 | 4.833
+0.54 | 4.917
+0.54 | 5.000
+0.54 | 5.083
+0.54 | 5.167
+0.54 | 5.250
+0.54 | 5.333
+3.26 | 5.417
+3.26 | 5.500
+3.26 | 5.583
+3.26 | 5.667
+3.26 | 5.750
+3.26 | 5.833
+3.26 | 5.917
+3.26 | 6.000
+3.26 | 6.083
+3.26 | 6.167
+
+9.25 | 7.250
+9.25 | 7.333
+25.02 | 7.417
+25.02 | 7.500
+25.02 | 7.583
+25.02 | 7.667
+25.02 | 7.750
+25.02 | 7.833
+25.02 | 7.917
+25.02 | 8.000
+25.02 | 8.083
+25.02 | 8.167
+25.02 | 8.250
+25.02 | 8.333
+7.07 | 8.417
+7.07 | 8.500
+7.07 | 8.583
+7.07 | 8.667
+7.07 | 8.750
+7.07 | 8.833
+7.07 | 8.917
+7.07 | 9.000
+7.07 | 9.083
+7.07 | 9.167
+7.07 | 9.250
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+25.02
+5.00
+6.30 (ii)
+5.00
+0.19
+
+41.97
+20.00
+16.29 (ii)
+20.00
+0.06
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.22
+5.25
+53.38
+54.38
+0.98
+
+0.08
+5.25
+35.46
+54.38
+0.65
+
+3.81 | 10.33
+2.18 | 10.42
+2.18 | 10.50
+2.18 | 10.58
+2.18 | 10.67
+2.18 | 10.75
+2.18 | 10.83
+2.18 | 10.92
+2.18 | 11.00
+2.18 | 11.08
+2.18 | 11.17
+2.18 | 11.25
+2.18 | 11.33
+1.09 | 11.42
+1.09 | 11.50
+1.09 | 11.58
+1.09 | 11.67
+1.09 | 11.75
+1.09 | 11.83
+1.09 | 11.92
+1.09 | 12.00
+1.09 | 12.08
+1.09 | 12.17
+1.09 | 12.25
+1.09 |
+
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+
+*TOTALS*
+0.303 (iii)
+5.25
+47.46
+54.38
+0.87
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 82.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 7702)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 5.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.0920
+0.2100
+0.0390
+0.1100
+|
+0.1080
+0.2300
+0.0600
+0.1500
+|
+0.1220
+0.2500
+0.0730
+0.1800
+|
+0.3230
+0.4800
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+7630)
+7702)
+
+AREA
+(ha)
+4.800
+4.800
+
+QPEAK
+(cms)
+0.303
+0.060
+
+TPEAK
+(hrs)
+5.25
+6.50
+
+R.V.
+(mm)
+47.46
+47.32
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 19.69
+TIME SHIFT OF PEAK FLOW
+(min)= 75.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.1495
+------------------------------------------------------------------------------********************************
+** SIMULATION:2.3 10yr-12hr
+**
+********************************
+-------------------| CALIB
+|
+| STANDHYD ( 7630)|
+Area
+(ha)=
+4.80
+|ID= 1 DT= 5.0 min |
+Total Imp(%)= 84.00
+Dir. Conn.(%)= 67.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+4.03
+0.77
+Dep. Storage
+(mm)=
+1.00
+2.00
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+178.89
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+5.0 MIN. TIME STEP.
+
+TIME
+hrs
+0.083
+0.167
+0.250
+0.333
+0.417
+0.500
+0.583
+0.667
+0.750
+0.833
+0.917
+1.000
+1.083
+1.167
+1.250
+1.333
+1.417
+1.500
+1.583
+1.667
+1.750
+1.833
+1.917
+2.000
+2.083
+2.167
+2.250
+2.333
+2.417
+2.500
+2.583
+2.667
+2.750
+2.833
+2.917
+3.000
+3.083
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+0.00 | 3.167
+3.76 | 6.250
+8.15 | 9.33
+0.00 | 3.250
+3.76 | 6.333
+4.39 | 9.42
+0.00 | 3.333
+10.66 | 6.417
+4.39 | 9.50
+0.63 | 3.417
+10.66 | 6.500
+4.39 | 9.58
+0.63 | 3.500
+10.66 | 6.583
+4.39 | 9.67
+0.63 | 3.583
+10.66 | 6.667
+4.39 | 9.75
+0.63 | 3.667
+10.66 | 6.750
+4.39 | 9.83
+0.63 | 3.750
+10.66 | 6.833
+4.39 | 9.92
+0.63 | 3.833
+10.66 | 6.917
+4.39 | 10.00
+0.63 | 3.917
+10.66 | 7.000
+4.39 | 10.08
+0.63 | 4.000
+10.66 | 7.083
+4.39 | 10.17
+0.63 | 4.083
+10.66 | 7.167
+4.39 | 10.25
+0.63 | 4.167
+10.66 | 7.250
+4.39 | 10.33
+0.63 | 4.250
+10.66 | 7.333
+2.51 | 10.42
+0.63 | 4.333
+28.84 | 7.417
+2.51 | 10.50
+0.63 | 4.417
+28.84 | 7.500
+2.51 | 10.58
+0.63 | 4.500
+28.84 | 7.583
+2.51 | 10.67
+0.63 | 4.583
+28.84 | 7.667
+2.51 | 10.75
+0.63 | 4.667
+28.84 | 7.750
+2.51 | 10.83
+0.63 | 4.750
+28.84 | 7.833
+2.51 | 10.92
+0.63 | 4.833
+28.84 | 7.917
+2.51 | 11.00
+0.63 | 4.917
+28.84 | 8.000
+2.51 | 11.08
+0.63 | 5.000
+28.84 | 8.083
+2.51 | 11.17
+0.63 | 5.083
+28.84 | 8.167
+2.51 | 11.25
+0.63 | 5.167
+28.84 | 8.250
+2.51 | 11.33
+0.63 | 5.250
+28.84 | 8.333
+1.25 | 11.42
+0.63 | 5.333
+8.15 | 8.417
+1.25 | 11.50
+3.76 | 5.417
+8.15 | 8.500
+1.25 | 11.58
+3.76 | 5.500
+8.15 | 8.583
+1.25 | 11.67
+3.76 | 5.583
+8.15 | 8.667
+1.25 | 11.75
+3.76 | 5.667
+8.15 | 8.750
+1.25 | 11.83
+3.76 | 5.750
+8.15 | 8.833
+1.25 | 11.92
+3.76 | 5.833
+8.15 | 8.917
+1.25 | 12.00
+3.76 | 5.917
+8.15 | 9.000
+1.25 | 12.08
+3.76 | 6.000
+8.15 | 9.083
+1.25 | 12.17
+3.76 | 6.083
+8.15 | 9.167
+1.25 | 12.25
+3.76 | 6.167
+8.15 | 9.250
+1.25 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+28.84
+5.00
+5.96 (ii)
+5.00
+0.19
+
+50.12
+20.00
+15.26 (ii)
+20.00
+0.07
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.26
+5.25
+61.71
+62.71
+0.98
+
+0.10
+5.25
+42.94
+62.71
+0.68
+
+RAIN
+mm/hr
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+
+*TOTALS*
+0.355 (iii)
+5.25
+55.51
+62.71
+0.89
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 82.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 7702)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 5.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.0920
+0.2100
+0.0390
+0.1100
+|
+0.1080
+0.2300
+0.0600
+0.1500
+|
+0.1220
+0.2500
+0.0730
+0.1800
+|
+0.3230
+0.4800
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+7630)
+7702)
+
+AREA
+(ha)
+4.800
+4.800
+
+QPEAK
+(cms)
+0.355
+0.070
+
+TPEAK
+(hrs)
+5.25
+6.50
+
+R.V.
+(mm)
+55.51
+55.37
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 19.85
+TIME SHIFT OF PEAK FLOW
+(min)= 75.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.1741
+------------------------------------------------------------------------------********************************
+** SIMULATION:2.4 25yr-12hr
+**
+********************************
+
+-------------------| CALIB
+|
+| STANDHYD ( 7630)|
+|ID= 1 DT= 5.0 min |
+-------------------Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+NOTE:
+
+Area
+(ha)=
+Total Imp(%)=
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+4.80
+84.00
+
+IMPERVIOUS
+4.03
+1.00
+1.00
+178.89
+0.013
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.083
+0.167
+0.250
+0.333
+0.417
+0.500
+0.583
+0.667
+0.750
+0.833
+0.917
+1.000
+1.083
+1.167
+1.250
+1.333
+1.417
+1.500
+1.583
+1.667
+1.750
+1.833
+1.917
+2.000
+2.083
+2.167
+2.250
+2.333
+2.417
+2.500
+2.583
+2.667
+2.750
+2.833
+2.917
+3.000
+3.083
+
+Dir. Conn.(%)=
+
+67.00
+
+PERVIOUS (i)
+0.77
+2.00
+2.00
+40.00
+0.250
+5.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+0.00 | 3.167
+4.39 | 6.250
+9.50 | 9.33
+0.00 | 3.250
+4.39 | 6.333
+5.12 | 9.42
+0.00 | 3.333
+12.43 | 6.417
+5.12 | 9.50
+0.73 | 3.417
+12.43 | 6.500
+5.12 | 9.58
+0.73 | 3.500
+12.43 | 6.583
+5.12 | 9.67
+0.73 | 3.583
+12.43 | 6.667
+5.12 | 9.75
+0.73 | 3.667
+12.43 | 6.750
+5.12 | 9.83
+0.73 | 3.750
+12.43 | 6.833
+5.12 | 9.92
+0.73 | 3.833
+12.43 | 6.917
+5.12 | 10.00
+0.73 | 3.917
+12.43 | 7.000
+5.12 | 10.08
+0.73 | 4.000
+12.43 | 7.083
+5.12 | 10.17
+0.73 | 4.083
+12.43 | 7.167
+5.12 | 10.25
+0.73 | 4.167
+12.43 | 7.250
+5.12 | 10.33
+0.73 | 4.250
+12.43 | 7.333
+2.92 | 10.42
+0.73 | 4.333
+33.63 | 7.417
+2.92 | 10.50
+0.73 | 4.417
+33.63 | 7.500
+2.92 | 10.58
+0.73 | 4.500
+33.63 | 7.583
+2.92 | 10.67
+0.73 | 4.583
+33.63 | 7.667
+2.92 | 10.75
+0.73 | 4.667
+33.63 | 7.750
+2.92 | 10.83
+0.73 | 4.750
+33.63 | 7.833
+2.92 | 10.92
+0.73 | 4.833
+33.63 | 7.917
+2.92 | 11.00
+0.73 | 4.917
+33.63 | 8.000
+2.92 | 11.08
+0.73 | 5.000
+33.63 | 8.083
+2.92 | 11.17
+0.73 | 5.083
+33.63 | 8.167
+2.92 | 11.25
+0.73 | 5.167
+33.63 | 8.250
+2.92 | 11.33
+0.73 | 5.250
+33.63 | 8.333
+1.46 | 11.42
+0.73 | 5.333
+9.50 | 8.417
+1.46 | 11.50
+4.39 | 5.417
+9.50 | 8.500
+1.46 | 11.58
+4.39 | 5.500
+9.50 | 8.583
+1.46 | 11.67
+4.39 | 5.583
+9.50 | 8.667
+1.46 | 11.75
+4.39 | 5.667
+9.50 | 8.750
+1.46 | 11.83
+4.39 | 5.750
+9.50 | 8.833
+1.46 | 11.92
+4.39 | 5.833
+9.50 | 8.917
+1.46 | 12.00
+4.39 | 5.917
+9.50 | 9.000
+1.46 | 12.08
+4.39 | 6.000
+9.50 | 9.083
+1.46 | 12.17
+4.39 | 6.083
+9.50 | 9.167
+1.46 | 12.25
+4.39 | 6.167
+9.50 | 9.250
+1.46 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+33.63
+5.00
+5.60 (ii)
+5.00
+0.20
+
+60.38
+15.00
+14.24 (ii)
+15.00
+0.08
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.30
+5.25
+72.10
+73.10
+0.99
+
+0.12
+5.25
+52.47
+73.10
+0.72
+
+RAIN
+mm/hr
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+
+*TOTALS*
+0.422 (iii)
+5.25
+65.62
+73.10
+0.90
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 82.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 7702)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 5.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.0920
+0.2100
+0.0390
+0.1100
+|
+0.1080
+0.2300
+0.0600
+0.1500
+|
+0.1220
+0.2500
+
+0.0730
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+7630)
+7702)
+
+AREA
+(ha)
+4.800
+4.800
+
+0.1800
+
+|
+
+QPEAK
+(cms)
+0.422
+0.088
+
+0.3230
+TPEAK
+(hrs)
+5.25
+6.42
+
+0.4800
+R.V.
+(mm)
+65.62
+65.47
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 20.98
+TIME SHIFT OF PEAK FLOW
+(min)= 70.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.2044
+------------------------------------------------------------------------------********************************
+** SIMULATION:2.5 50yr-12hr
+**
+********************************
+-------------------| CALIB
+|
+| STANDHYD ( 7630)|
+Area
+(ha)=
+4.80
+|ID= 1 DT= 5.0 min |
+Total Imp(%)= 84.00
+Dir. Conn.(%)= 67.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+4.03
+0.77
+Dep. Storage
+(mm)=
+1.00
+2.00
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+178.89
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.083
+0.167
+0.250
+0.333
+0.417
+0.500
+0.583
+0.667
+0.750
+0.833
+0.917
+1.000
+1.083
+1.167
+1.250
+1.333
+1.417
+1.500
+1.583
+1.667
+1.750
+1.833
+1.917
+2.000
+2.083
+2.167
+2.250
+2.333
+2.417
+2.500
+2.583
+2.667
+2.750
+2.833
+2.917
+3.000
+3.083
+
+5.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+0.00 | 3.167
+4.85 | 6.250
+10.50 | 9.33
+0.00 | 3.250
+4.85 | 6.333
+5.66 | 9.42
+0.00 | 3.333
+13.74 | 6.417
+5.66 | 9.50
+0.81 | 3.417
+13.74 | 6.500
+5.66 | 9.58
+0.81 | 3.500
+13.74 | 6.583
+5.66 | 9.67
+0.81 | 3.583
+13.74 | 6.667
+5.66 | 9.75
+0.81 | 3.667
+13.74 | 6.750
+5.66 | 9.83
+0.81 | 3.750
+13.74 | 6.833
+5.66 | 9.92
+0.81 | 3.833
+13.74 | 6.917
+5.66 | 10.00
+0.81 | 3.917
+13.74 | 7.000
+5.66 | 10.08
+0.81 | 4.000
+13.74 | 7.083
+5.66 | 10.17
+0.81 | 4.083
+13.74 | 7.167
+5.66 | 10.25
+0.81 | 4.167
+13.74 | 7.250
+5.66 | 10.33
+0.81 | 4.250
+13.74 | 7.333
+3.23 | 10.42
+0.81 | 4.333
+37.17 | 7.417
+3.23 | 10.50
+0.81 | 4.417
+37.17 | 7.500
+3.23 | 10.58
+0.81 | 4.500
+37.17 | 7.583
+3.23 | 10.67
+0.81 | 4.583
+37.17 | 7.667
+3.23 | 10.75
+0.81 | 4.667
+37.17 | 7.750
+3.23 | 10.83
+0.81 | 4.750
+37.17 | 7.833
+3.23 | 10.92
+0.81 | 4.833
+37.17 | 7.917
+3.23 | 11.00
+0.81 | 4.917
+37.17 | 8.000
+3.23 | 11.08
+0.81 | 5.000
+37.17 | 8.083
+3.23 | 11.17
+0.81 | 5.083
+37.17 | 8.167
+3.23 | 11.25
+0.81 | 5.167
+37.17 | 8.250
+3.23 | 11.33
+0.81 | 5.250
+37.17 | 8.333
+1.62 | 11.42
+0.81 | 5.333
+10.50 | 8.417
+1.62 | 11.50
+4.85 | 5.417
+10.50 | 8.500
+1.62 | 11.58
+4.85 | 5.500
+10.50 | 8.583
+1.62 | 11.67
+4.85 | 5.583
+10.50 | 8.667
+1.62 | 11.75
+4.85 | 5.667
+10.50 | 8.750
+1.62 | 11.83
+4.85 | 5.750
+10.50 | 8.833
+1.62 | 11.92
+4.85 | 5.833
+10.50 | 8.917
+1.62 | 12.00
+4.85 | 5.917
+10.50 | 9.000
+1.62 | 12.08
+4.85 | 6.000
+10.50 | 9.083
+1.62 | 12.17
+4.85 | 6.083
+10.50 | 9.167
+1.62 | 12.25
+4.85 | 6.167
+10.50 | 9.250
+1.62 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+37.17
+5.00
+5.38 (ii)
+5.00
+0.21
+
+67.97
+15.00
+13.62 (ii)
+15.00
+0.08
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.33
+5.25
+79.82
+80.82
+0.99
+
+0.14
+5.25
+59.65
+80.82
+0.74
+
+*TOTALS*
+0.470 (iii)
+5.25
+73.16
+80.82
+0.91
+
+RAIN
+mm/hr
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 82.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 7702)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 5.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.0920
+0.2100
+0.0390
+0.1100
+|
+0.1080
+0.2300
+0.0600
+0.1500
+|
+0.1220
+0.2500
+0.0730
+0.1800
+|
+0.3230
+0.4800
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+7630)
+7702)
+
+AREA
+(ha)
+4.800
+4.800
+
+QPEAK
+(cms)
+0.470
+0.104
+
+TPEAK
+(hrs)
+5.25
+6.33
+
+R.V.
+(mm)
+73.16
+73.02
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 22.25
+TIME SHIFT OF PEAK FLOW
+(min)= 65.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.2257
+------------------------------------------------------------------------------********************************
+** SIMULATION:2.6 100yr-12hr **
+********************************
+-------------------| CALIB
+|
+| STANDHYD ( 7630)|
+Area
+(ha)=
+4.80
+|ID= 1 DT= 5.0 min |
+Total Imp(%)= 84.00
+Dir. Conn.(%)= 67.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+4.03
+0.77
+Dep. Storage
+(mm)=
+1.00
+2.00
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+178.89
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.083
+0.167
+0.250
+0.333
+0.417
+0.500
+0.583
+0.667
+0.750
+0.833
+0.917
+1.000
+1.083
+1.167
+1.250
+1.333
+1.417
+1.500
+1.583
+1.667
+1.750
+1.833
+1.917
+2.000
+2.083
+2.167
+2.250
+2.333
+2.417
+2.500
+2.583
+2.667
+2.750
+2.833
+2.917
+3.000
+
+5.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+0.00 | 3.167
+5.31 | 6.250
+11.51 | 9.33
+0.00 | 3.250
+5.31 | 6.333
+6.20 | 9.42
+0.00 | 3.333
+15.05 | 6.417
+6.20 | 9.50
+0.89 | 3.417
+15.05 | 6.500
+6.20 | 9.58
+0.89 | 3.500
+15.05 | 6.583
+6.20 | 9.67
+0.89 | 3.583
+15.05 | 6.667
+6.20 | 9.75
+0.89 | 3.667
+15.05 | 6.750
+6.20 | 9.83
+0.89 | 3.750
+15.05 | 6.833
+6.20 | 9.92
+0.89 | 3.833
+15.05 | 6.917
+6.20 | 10.00
+0.89 | 3.917
+15.05 | 7.000
+6.20 | 10.08
+0.89 | 4.000
+15.05 | 7.083
+6.20 | 10.17
+0.89 | 4.083
+15.05 | 7.167
+6.20 | 10.25
+0.89 | 4.167
+15.05 | 7.250
+6.20 | 10.33
+0.89 | 4.250
+15.05 | 7.333
+3.54 | 10.42
+0.89 | 4.333
+40.71 | 7.417
+3.54 | 10.50
+0.89 | 4.417
+40.71 | 7.500
+3.54 | 10.58
+0.89 | 4.500
+40.71 | 7.583
+3.54 | 10.67
+0.89 | 4.583
+40.71 | 7.667
+3.54 | 10.75
+0.89 | 4.667
+40.71 | 7.750
+3.54 | 10.83
+0.89 | 4.750
+40.71 | 7.833
+3.54 | 10.92
+0.89 | 4.833
+40.71 | 7.917
+3.54 | 11.00
+0.89 | 4.917
+40.71 | 8.000
+3.54 | 11.08
+0.89 | 5.000
+40.71 | 8.083
+3.54 | 11.17
+0.89 | 5.083
+40.71 | 8.167
+3.54 | 11.25
+0.89 | 5.167
+40.71 | 8.250
+3.54 | 11.33
+0.89 | 5.250
+40.71 | 8.333
+1.77 | 11.42
+0.89 | 5.333
+11.51 | 8.417
+1.77 | 11.50
+5.31 | 5.417
+11.51 | 8.500
+1.77 | 11.58
+5.31 | 5.500
+11.51 | 8.583
+1.77 | 11.67
+5.31 | 5.583
+11.51 | 8.667
+1.77 | 11.75
+5.31 | 5.667
+11.51 | 8.750
+1.77 | 11.83
+5.31 | 5.750
+11.51 | 8.833
+1.77 | 11.92
+5.31 | 5.833
+11.51 | 8.917
+1.77 | 12.00
+5.31 | 5.917
+11.51 | 9.000
+1.77 | 12.08
+5.31 | 6.000
+11.51 | 9.083
+1.77 | 12.17
+5.31 | 6.083
+11.51 | 9.167
+1.77 | 12.25
+
+RAIN
+mm/hr
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+
+3.083
+
+5.31 | 6.167
+
+11.51 | 9.250
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+40.71
+5.00
+5.19 (ii)
+5.00
+0.21
+
+75.56
+15.00
+13.08 (ii)
+15.00
+0.08
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.36
+5.25
+87.54
+88.54
+0.99
+
+0.15
+5.25
+66.91
+88.54
+0.76
+
+1.77 |
+
+*TOTALS*
+0.518 (iii)
+5.25
+80.73
+88.54
+0.91
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 82.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 7702)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 5.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.0920
+0.2100
+0.0390
+0.1100
+|
+0.1080
+0.2300
+0.0600
+0.1500
+|
+0.1220
+0.2500
+0.0730
+0.1800
+|
+0.3230
+0.4800
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+7630)
+7702)
+
+AREA
+(ha)
+4.800
+4.800
+
+QPEAK
+(cms)
+0.518
+0.120
+
+TPEAK
+(hrs)
+5.25
+6.33
+
+R.V.
+(mm)
+80.73
+80.58
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 23.09
+TIME SHIFT OF PEAK FLOW
+(min)= 65.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.2465
+-------------------------------------------------------------------------------
+
+********************************
+** SIMULATION:2.1 2yr-12hr
+**
+********************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+| Ptotal= 47.08 mm |
+-------------------TIME
+hrs
+0.00
+0.25
+0.50
+0.75
+1.00
+1.25
+1.50
+1.75
+2.00
+2.25
+2.50
+2.75
+3.00
+3.25
+3.50
+3.75
+4.00
+4.25
+4.50
+4.75
+5.00
+5.25
+5.50
+5.75
+6.00
+
+Interim Onsite SWM Facility 2
+2 - 100 Year Storm Output
+
+Filename: C:\Users\rbrockie\AppD
+ata\Local\Temp\
+6e980299-db7c-4159-a488-249fb4cd0286\6fb9f58c
+Comments: 2 Year 24 Hour AES (Bloor, TRCA)
+RAIN | TIME
+mm/hr |
+hrs
+0.00 | 6.25
+0.24 | 6.50
+0.24 | 6.75
+0.24 | 7.00
+0.24 | 7.25
+0.24 | 7.50
+0.24 | 7.75
+0.24 | 8.00
+0.24 | 8.25
+0.24 | 8.50
+0.24 | 8.75
+0.24 | 9.00
+0.24 | 9.25
+0.24 | 9.50
+0.24 | 9.75
+0.24 | 10.00
+0.24 | 10.25
+1.41 | 10.50
+1.41 | 10.75
+1.41 | 11.00
+1.41 | 11.25
+1.41 | 11.50
+1.41 | 11.75
+1.41 | 12.00
+1.41 | 12.25
+
+RAIN |' TIME
+mm/hr |'
+hrs
+4.00 | 12.50
+4.00 | 12.75
+4.00 | 13.00
+4.00 | 13.25
+4.00 | 13.50
+4.00 | 13.75
+4.00 | 14.00
+4.00 | 14.25
+10.81 | 14.50
+10.81 | 14.75
+10.81 | 15.00
+10.81 | 15.25
+10.81 | 15.50
+10.81 | 15.75
+10.81 | 16.00
+10.81 | 16.25
+3.06 | 16.50
+3.06 | 16.75
+3.06 | 17.00
+3.06 | 17.25
+3.06 | 17.50
+3.06 | 17.75
+3.06 | 18.00
+3.06 | 18.25
+1.65 | 18.50
+
+RAIN | TIME
+mm/hr |
+hrs
+1.65 | 18.75
+1.65 | 19.00
+1.65 | 19.25
+1.65 | 19.50
+1.65 | 19.75
+1.65 | 20.00
+1.65 | 20.25
+0.94 | 20.50
+0.94 | 20.75
+0.94 | 21.00
+0.94 | 21.25
+0.94 | 21.50
+0.94 | 21.75
+0.94 | 22.00
+0.94 | 22.25
+0.47 | 22.50
+0.47 | 22.75
+0.47 | 23.00
+0.47 | 23.25
+0.47 | 23.50
+0.47 | 23.75
+0.47 | 24.00
+0.47 |
+0.24 |
+0.24 |
+
+RAIN
+mm/hr
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+
+-------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 7732)|
+|ID= 1 DT= 5.0 min |
+-------------------Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+NOTE:
+
+Area
+(ha)=
+Total Imp(%)=
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+5.04
+81.00
+
+IMPERVIOUS
+4.08
+1.00
+1.00
+183.30
+0.013
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.083
+0.167
+0.250
+0.333
+0.417
+0.500
+0.583
+0.667
+0.750
+0.833
+0.917
+1.000
+1.083
+1.167
+1.250
+1.333
+1.417
+1.500
+1.583
+1.667
+1.750
+1.833
+1.917
+2.000
+2.083
+2.167
+
+Dir. Conn.(%)=
+
+65.00
+
+PERVIOUS (i)
+0.96
+2.00
+2.00
+40.00
+0.250
+5.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+0.00 | 6.167
+1.41 |12.250
+3.06 | 18.33
+0.00 | 6.250
+1.41 |12.333
+1.65 | 18.42
+0.00 | 6.333
+4.00 |12.417
+1.65 | 18.50
+0.24 | 6.417
+4.00 |12.500
+1.65 | 18.58
+0.24 | 6.500
+4.00 |12.583
+1.65 | 18.67
+0.24 | 6.583
+4.00 |12.667
+1.65 | 18.75
+0.24 | 6.667
+4.00 |12.750
+1.65 | 18.83
+0.24 | 6.750
+4.00 |12.833
+1.65 | 18.92
+0.24 | 6.833
+4.00 |12.917
+1.65 | 19.00
+0.24 | 6.917
+4.00 |13.000
+1.65 | 19.08
+0.24 | 7.000
+4.00 |13.083
+1.65 | 19.17
+0.24 | 7.083
+4.00 |13.167
+1.65 | 19.25
+0.24 | 7.167
+4.00 |13.250
+1.65 | 19.33
+0.24 | 7.250
+4.00 |13.333
+1.65 | 19.42
+0.24 | 7.333
+4.00 |13.417
+1.65 | 19.50
+0.24 | 7.417
+4.00 |13.500
+1.65 | 19.58
+0.24 | 7.500
+4.00 |13.583
+1.65 | 19.67
+0.24 | 7.583
+4.00 |13.667
+1.65 | 19.75
+0.24 | 7.667
+4.00 |13.750
+1.65 | 19.83
+0.24 | 7.750
+4.00 |13.833
+1.65 | 19.92
+0.24 | 7.833
+4.00 |13.917
+1.65 | 20.00
+0.24 | 7.917
+4.00 |14.000
+1.65 | 20.08
+0.24 | 8.000
+4.00 |14.083
+1.65 | 20.17
+0.24 | 8.083
+4.00 |14.167
+1.65 | 20.25
+0.24 | 8.167
+4.00 |14.250
+1.65 | 20.33
+0.24 | 8.250
+4.00 |14.333
+0.94 | 20.42
+
+RAIN
+mm/hr
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+
+2.250
+2.333
+2.417
+2.500
+2.583
+2.667
+2.750
+2.833
+2.917
+3.000
+3.083
+3.167
+3.250
+3.333
+3.417
+3.500
+3.583
+3.667
+3.750
+3.833
+3.917
+4.000
+4.083
+4.167
+4.250
+4.333
+4.417
+4.500
+4.583
+4.667
+4.750
+4.833
+4.917
+5.000
+5.083
+5.167
+5.250
+5.333
+5.417
+5.500
+5.583
+5.667
+5.750
+5.833
+5.917
+6.000
+6.083
+
+0.24 | 8.333
+0.24 | 8.417
+0.24 | 8.500
+0.24 | 8.583
+0.24 | 8.667
+0.24 | 8.750
+0.24 | 8.833
+0.24 | 8.917
+0.24 | 9.000
+0.24 | 9.083
+0.24 | 9.167
+0.24 | 9.250
+0.24 | 9.333
+0.24 | 9.417
+0.24 | 9.500
+0.24 | 9.583
+0.24 | 9.667
+0.24 | 9.750
+0.24 | 9.833
+0.24 | 9.917
+0.24 |10.000
+0.24 |10.083
+0.24 |10.167
+0.24 |10.250
+0.24 |10.333
+1.41 |10.417
+1.41 |10.500
+1.41 |10.583
+1.41 |10.667
+1.41 |10.750
+1.41 |10.833
+1.41 |10.917
+1.41 |11.000
+1.41 |11.083
+1.41 |11.167
+1.41 |11.250
+1.41 |11.333
+1.41 |11.417
+1.41 |11.500
+1.41 |11.583
+1.41 |11.667
+1.41 |11.750
+1.41 |11.833
+1.41 |11.917
+1.41 |12.000
+1.41 |12.083
+1.41 |12.167
+
+10.81 |14.417
+10.81 |14.500
+10.81 |14.583
+10.81 |14.667
+10.81 |14.750
+10.81 |14.833
+10.81 |14.917
+10.81 |15.000
+10.81 |15.083
+10.81 |15.167
+10.81 |15.250
+10.81 |15.333
+10.81 |15.417
+10.81 |15.500
+10.81 |15.583
+10.81 |15.667
+10.81 |15.750
+10.81 |15.833
+10.81 |15.917
+10.81 |16.000
+10.81 |16.083
+10.81 |16.167
+10.81 |16.250
+10.81 |16.333
+3.06 |16.417
+3.06 |16.500
+3.06 |16.583
+3.06 |16.667
+3.06 |16.750
+3.06 |16.833
+3.06 |16.917
+3.06 |17.000
+3.06 |17.083
+3.06 |17.167
+3.06 |17.250
+3.06 |17.333
+3.06 |17.417
+3.06 |17.500
+3.06 |17.583
+3.06 |17.667
+3.06 |17.750
+3.06 |17.833
+3.06 |17.917
+3.06 |18.000
+3.06 |18.083
+3.06 |18.167
+3.06 |18.250
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+10.81
+10.00
+8.95 (ii)
+10.00
+0.12
+
+15.72
+25.00
+23.74 (ii)
+25.00
+0.05
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.10
+10.25
+46.08
+47.08
+0.98
+
+0.04
+10.25
+29.28
+47.08
+0.62
+
+0.94 | 20.50
+0.94 | 20.58
+0.94 | 20.67
+0.94 | 20.75
+0.94 | 20.83
+0.94 | 20.92
+0.94 | 21.00
+0.94 | 21.08
+0.94 | 21.17
+0.94 | 21.25
+0.94 | 21.33
+0.94 | 21.42
+0.94 | 21.50
+0.94 | 21.58
+0.94 | 21.67
+0.94 | 21.75
+0.94 | 21.83
+0.94 | 21.92
+0.94 | 22.00
+0.94 | 22.08
+0.94 | 22.17
+0.94 | 22.25
+0.94 | 22.33
+0.47 | 22.42
+0.47 | 22.50
+0.47 | 22.58
+0.47 | 22.67
+0.47 | 22.75
+0.47 | 22.83
+0.47 | 22.92
+0.47 | 23.00
+0.47 | 23.08
+0.47 | 23.17
+0.47 | 23.25
+0.47 | 23.33
+0.47 | 23.42
+0.47 | 23.50
+0.47 | 23.58
+0.47 | 23.67
+0.47 | 23.75
+0.47 | 23.83
+0.47 | 23.92
+0.47 | 24.00
+0.47 | 24.08
+0.47 | 24.17
+0.47 | 24.25
+0.47 |
+
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+0.24
+
+*TOTALS*
+0.137 (iii)
+10.25
+40.20
+47.08
+0.85
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 84.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 7705)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 5.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.1030
+0.2100
+0.0430
+0.1100
+|
+0.1210
+0.2300
+0.0670
+0.1500
+|
+0.1360
+0.2500
+0.0820
+0.1800
+|
+0.4020
+0.6200
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+7732)
+7705)
+
+PEAK
+
+FLOW
+
+AREA
+(ha)
+5.040
+5.040
+
+QPEAK
+(cms)
+0.137
+0.042
+
+TPEAK
+(hrs)
+10.25
+11.42
+
+R.V.
+(mm)
+40.20
+40.07
+
+REDUCTION [Qout/Qin](%)= 30.82
+
+TIME SHIFT OF PEAK FLOW
+MAXIMUM STORAGE
+USED
+
+(min)= 70.00
+(ha.m.)= 0.1084
+
+------------------------------------------------------------------------------********************************
+** SIMULATION:2.2 5yr-12hr
+**
+********************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+| Ptotal= 54.38 mm |
+-------------------TIME
+hrs
+0.00
+0.25
+0.50
+0.75
+1.00
+1.25
+1.50
+1.75
+2.00
+2.25
+2.50
+2.75
+3.00
+
+Filename: C:\Users\rbrockie\AppD
+ata\Local\Temp\
+6e980299-db7c-4159-a488-249fb4cd0286\369eff41
+Comments: 5 Year 12 Hour AES (Bloor, TRCA)
+RAIN |
+mm/hr |
+0.00 |
+0.54 |
+0.54 |
+0.54 |
+0.54 |
+0.54 |
+0.54 |
+0.54 |
+0.54 |
+3.26 |
+3.26 |
+3.26 |
+3.26 |
+
+TIME
+hrs
+3.25
+3.50
+3.75
+4.00
+4.25
+4.50
+4.75
+5.00
+5.25
+5.50
+5.75
+6.00
+6.25
+
+RAIN |' TIME
+mm/hr |'
+hrs
+9.25 | 6.50
+9.25 | 6.75
+9.25 | 7.00
+9.25 | 7.25
+25.02 | 7.50
+25.02 | 7.75
+25.02 | 8.00
+25.02 | 8.25
+7.07 | 8.50
+7.07 | 8.75
+7.07 | 9.00
+7.07 | 9.25
+3.81 | 9.50
+
+RAIN | TIME
+mm/hr |
+hrs
+3.81 | 9.75
+3.81 | 10.00
+3.81 | 10.25
+2.18 | 10.50
+2.18 | 10.75
+2.18 | 11.00
+2.18 | 11.25
+1.09 | 11.50
+1.09 | 11.75
+1.09 | 12.00
+1.09 |
+0.54 |
+0.54 |
+
+RAIN
+mm/hr
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+
+-------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 7732)|
+|ID= 1 DT= 5.0 min |
+-------------------Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+NOTE:
+
+Area
+(ha)=
+Total Imp(%)=
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+5.04
+81.00
+
+IMPERVIOUS
+4.08
+1.00
+1.00
+183.30
+0.013
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.083
+0.167
+0.250
+0.333
+0.417
+0.500
+0.583
+0.667
+0.750
+0.833
+0.917
+1.000
+1.083
+1.167
+1.250
+1.333
+1.417
+1.500
+1.583
+1.667
+1.750
+1.833
+1.917
+2.000
+2.083
+2.167
+2.250
+2.333
+2.417
+2.500
+2.583
+2.667
+2.750
+2.833
+
+Dir. Conn.(%)=
+
+65.00
+
+PERVIOUS (i)
+0.96
+2.00
+2.00
+40.00
+0.250
+5.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+0.00 | 3.167
+3.26 | 6.250
+7.07 | 9.33
+0.00 | 3.250
+3.26 | 6.333
+3.81 | 9.42
+0.00 | 3.333
+9.25 | 6.417
+3.81 | 9.50
+0.54 | 3.417
+9.25 | 6.500
+3.81 | 9.58
+0.54 | 3.500
+9.25 | 6.583
+3.81 | 9.67
+0.54 | 3.583
+9.25 | 6.667
+3.81 | 9.75
+0.54 | 3.667
+9.25 | 6.750
+3.81 | 9.83
+0.54 | 3.750
+9.25 | 6.833
+3.81 | 9.92
+0.54 | 3.833
+9.25 | 6.917
+3.81 | 10.00
+0.54 | 3.917
+9.25 | 7.000
+3.81 | 10.08
+0.54 | 4.000
+9.25 | 7.083
+3.81 | 10.17
+0.54 | 4.083
+9.25 | 7.167
+3.81 | 10.25
+0.54 | 4.167
+9.25 | 7.250
+3.81 | 10.33
+0.54 | 4.250
+9.25 | 7.333
+2.18 | 10.42
+0.54 | 4.333
+25.02 | 7.417
+2.18 | 10.50
+0.54 | 4.417
+25.02 | 7.500
+2.18 | 10.58
+0.54 | 4.500
+25.02 | 7.583
+2.18 | 10.67
+0.54 | 4.583
+25.02 | 7.667
+2.18 | 10.75
+0.54 | 4.667
+25.02 | 7.750
+2.18 | 10.83
+0.54 | 4.750
+25.02 | 7.833
+2.18 | 10.92
+0.54 | 4.833
+25.02 | 7.917
+2.18 | 11.00
+0.54 | 4.917
+25.02 | 8.000
+2.18 | 11.08
+0.54 | 5.000
+25.02 | 8.083
+2.18 | 11.17
+0.54 | 5.083
+25.02 | 8.167
+2.18 | 11.25
+0.54 | 5.167
+25.02 | 8.250
+2.18 | 11.33
+0.54 | 5.250
+25.02 | 8.333
+1.09 | 11.42
+0.54 | 5.333
+7.07 | 8.417
+1.09 | 11.50
+3.26 | 5.417
+7.07 | 8.500
+1.09 | 11.58
+3.26 | 5.500
+7.07 | 8.583
+1.09 | 11.67
+3.26 | 5.583
+7.07 | 8.667
+1.09 | 11.75
+3.26 | 5.667
+7.07 | 8.750
+1.09 | 11.83
+3.26 | 5.750
+7.07 | 8.833
+1.09 | 11.92
+3.26 | 5.833
+7.07 | 8.917
+1.09 | 12.00
+3.26 | 5.917
+7.07 | 9.000
+1.09 | 12.08
+
+RAIN
+mm/hr
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+0.54
+
+2.917
+3.000
+3.083
+
+3.26 | 6.000
+3.26 | 6.083
+3.26 | 6.167
+
+7.07 | 9.083
+7.07 | 9.167
+7.07 | 9.250
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+25.02
+5.00
+6.40 (ii)
+5.00
+0.18
+
+37.43
+20.00
+16.85 (ii)
+20.00
+0.06
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.23
+5.25
+53.38
+54.38
+0.98
+
+0.09
+5.25
+35.70
+54.38
+0.66
+
+1.09 | 12.17
+1.09 | 12.25
+1.09 |
+
+0.54
+0.54
+
+*TOTALS*
+0.317 (iii)
+5.25
+47.19
+54.38
+0.87
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 84.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 7705)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 5.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.1030
+0.2100
+0.0430
+0.1100
+|
+0.1210
+0.2300
+0.0670
+0.1500
+|
+0.1360
+0.2500
+0.0820
+0.1800
+|
+0.4020
+0.6200
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+AREA
+(ha)
+5.040
+5.040
+
+7732)
+7705)
+
+QPEAK
+(cms)
+0.317
+0.068
+
+TPEAK
+(hrs)
+5.25
+6.42
+
+R.V.
+(mm)
+47.19
+47.06
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 21.45
+TIME SHIFT OF PEAK FLOW
+(min)= 70.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.1520
+------------------------------------------------------------------------------********************************
+** SIMULATION:2.3 10yr-12hr
+**
+********************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+| Ptotal= 62.71 mm |
+-------------------TIME
+hrs
+0.00
+0.25
+0.50
+0.75
+1.00
+1.25
+1.50
+1.75
+2.00
+2.25
+2.50
+2.75
+3.00
+
+Filename: C:\Users\rbrockie\AppD
+ata\Local\Temp\
+6e980299-db7c-4159-a488-249fb4cd0286\23cb3106
+Comments: 10 Year 12 Hour AES (Bloor, TRCA)
+RAIN |
+mm/hr |
+0.00 |
+0.63 |
+0.63 |
+0.63 |
+0.63 |
+0.63 |
+0.63 |
+0.63 |
+0.63 |
+3.76 |
+3.76 |
+3.76 |
+3.76 |
+
+TIME
+hrs
+3.25
+3.50
+3.75
+4.00
+4.25
+4.50
+4.75
+5.00
+5.25
+5.50
+5.75
+6.00
+6.25
+
+RAIN |' TIME
+mm/hr |'
+hrs
+10.66 | 6.50
+10.66 | 6.75
+10.66 | 7.00
+10.66 | 7.25
+28.84 | 7.50
+28.84 | 7.75
+28.84 | 8.00
+28.84 | 8.25
+8.15 | 8.50
+8.15 | 8.75
+8.15 | 9.00
+8.15 | 9.25
+4.39 | 9.50
+
+RAIN | TIME
+mm/hr |
+hrs
+4.39 | 9.75
+4.39 | 10.00
+4.39 | 10.25
+2.51 | 10.50
+2.51 | 10.75
+2.51 | 11.00
+2.51 | 11.25
+1.25 | 11.50
+1.25 | 11.75
+1.25 | 12.00
+1.25 |
+0.63 |
+0.63 |
+
+RAIN
+mm/hr
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+
+-------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 7732)|
+|ID= 1 DT= 5.0 min |
+-------------------Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+
+Area
+(ha)=
+Total Imp(%)=
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+5.04
+81.00
+
+IMPERVIOUS
+4.08
+1.00
+1.00
+183.30
+0.013
+
+Dir. Conn.(%)=
+PERVIOUS (i)
+0.96
+2.00
+2.00
+40.00
+0.250
+
+65.00
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.083
+0.167
+0.250
+0.333
+0.417
+0.500
+0.583
+0.667
+0.750
+0.833
+0.917
+1.000
+1.083
+1.167
+1.250
+1.333
+1.417
+1.500
+1.583
+1.667
+1.750
+1.833
+1.917
+2.000
+2.083
+2.167
+2.250
+2.333
+2.417
+2.500
+2.583
+2.667
+2.750
+2.833
+2.917
+3.000
+3.083
+
+5.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+0.00 | 3.167
+3.76 | 6.250
+8.15 | 9.33
+0.00 | 3.250
+3.76 | 6.333
+4.39 | 9.42
+0.00 | 3.333
+10.66 | 6.417
+4.39 | 9.50
+0.63 | 3.417
+10.66 | 6.500
+4.39 | 9.58
+0.63 | 3.500
+10.66 | 6.583
+4.39 | 9.67
+0.63 | 3.583
+10.66 | 6.667
+4.39 | 9.75
+0.63 | 3.667
+10.66 | 6.750
+4.39 | 9.83
+0.63 | 3.750
+10.66 | 6.833
+4.39 | 9.92
+0.63 | 3.833
+10.66 | 6.917
+4.39 | 10.00
+0.63 | 3.917
+10.66 | 7.000
+4.39 | 10.08
+0.63 | 4.000
+10.66 | 7.083
+4.39 | 10.17
+0.63 | 4.083
+10.66 | 7.167
+4.39 | 10.25
+0.63 | 4.167
+10.66 | 7.250
+4.39 | 10.33
+0.63 | 4.250
+10.66 | 7.333
+2.51 | 10.42
+0.63 | 4.333
+28.84 | 7.417
+2.51 | 10.50
+0.63 | 4.417
+28.84 | 7.500
+2.51 | 10.58
+0.63 | 4.500
+28.84 | 7.583
+2.51 | 10.67
+0.63 | 4.583
+28.84 | 7.667
+2.51 | 10.75
+0.63 | 4.667
+28.84 | 7.750
+2.51 | 10.83
+0.63 | 4.750
+28.84 | 7.833
+2.51 | 10.92
+0.63 | 4.833
+28.84 | 7.917
+2.51 | 11.00
+0.63 | 4.917
+28.84 | 8.000
+2.51 | 11.08
+0.63 | 5.000
+28.84 | 8.083
+2.51 | 11.17
+0.63 | 5.083
+28.84 | 8.167
+2.51 | 11.25
+0.63 | 5.167
+28.84 | 8.250
+2.51 | 11.33
+0.63 | 5.250
+28.84 | 8.333
+1.25 | 11.42
+0.63 | 5.333
+8.15 | 8.417
+1.25 | 11.50
+3.76 | 5.417
+8.15 | 8.500
+1.25 | 11.58
+3.76 | 5.500
+8.15 | 8.583
+1.25 | 11.67
+3.76 | 5.583
+8.15 | 8.667
+1.25 | 11.75
+3.76 | 5.667
+8.15 | 8.750
+1.25 | 11.83
+3.76 | 5.750
+8.15 | 8.833
+1.25 | 11.92
+3.76 | 5.833
+8.15 | 8.917
+1.25 | 12.00
+3.76 | 5.917
+8.15 | 9.000
+1.25 | 12.08
+3.76 | 6.000
+8.15 | 9.083
+1.25 | 12.17
+3.76 | 6.083
+8.15 | 9.167
+1.25 | 12.25
+3.76 | 6.167
+8.15 | 9.250
+1.25 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+28.84
+5.00
+6.04 (ii)
+5.00
+0.19
+
+45.02
+20.00
+15.75 (ii)
+20.00
+0.07
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.26
+5.25
+61.71
+62.71
+0.98
+
+0.11
+5.25
+43.21
+62.71
+0.69
+
+RAIN
+mm/hr
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+
+*TOTALS*
+0.371 (iii)
+5.25
+55.23
+62.71
+0.88
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 84.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 7705)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 5.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.1030
+0.2100
+0.0430
+0.1100
+|
+0.1210
+0.2300
+0.0670
+0.1500
+|
+0.1360
+0.2500
+0.0820
+0.1800
+|
+0.4020
+0.6200
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+7732)
+7705)
+
+AREA
+(ha)
+5.040
+5.040
+
+QPEAK
+(cms)
+0.371
+0.081
+
+TPEAK
+(hrs)
+5.25
+6.42
+
+R.V.
+(mm)
+55.23
+55.10
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 21.69
+TIME SHIFT OF PEAK FLOW
+(min)= 70.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.1770
+-------------------------------------------------------------------------------
+
+********************************
+** SIMULATION:2.4 25yr-12hr
+**
+********************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+| Ptotal= 73.10 mm |
+-------------------TIME
+hrs
+0.00
+0.25
+0.50
+0.75
+1.00
+1.25
+1.50
+1.75
+2.00
+2.25
+2.50
+2.75
+3.00
+
+Filename: C:\Users\rbrockie\AppD
+ata\Local\Temp\
+6e980299-db7c-4159-a488-249fb4cd0286\2c6efae9
+Comments: 25 Year 12 Hour AES (Bloor, TRCA)
+RAIN |
+mm/hr |
+0.00 |
+0.73 |
+0.73 |
+0.73 |
+0.73 |
+0.73 |
+0.73 |
+0.73 |
+0.73 |
+4.39 |
+4.39 |
+4.39 |
+4.39 |
+
+TIME
+hrs
+3.25
+3.50
+3.75
+4.00
+4.25
+4.50
+4.75
+5.00
+5.25
+5.50
+5.75
+6.00
+6.25
+
+RAIN |' TIME
+mm/hr |'
+hrs
+12.43 | 6.50
+12.43 | 6.75
+12.43 | 7.00
+12.43 | 7.25
+33.63 | 7.50
+33.63 | 7.75
+33.63 | 8.00
+33.63 | 8.25
+9.50 | 8.50
+9.50 | 8.75
+9.50 | 9.00
+9.50 | 9.25
+5.12 | 9.50
+
+RAIN | TIME
+mm/hr |
+hrs
+5.12 | 9.75
+5.12 | 10.00
+5.12 | 10.25
+2.92 | 10.50
+2.92 | 10.75
+2.92 | 11.00
+2.92 | 11.25
+1.46 | 11.50
+1.46 | 11.75
+1.46 | 12.00
+1.46 |
+0.73 |
+0.73 |
+
+RAIN
+mm/hr
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+
+-------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 7732)|
+|ID= 1 DT= 5.0 min |
+-------------------Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+NOTE:
+
+Area
+(ha)=
+Total Imp(%)=
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+5.04
+81.00
+
+IMPERVIOUS
+4.08
+1.00
+1.00
+183.30
+0.013
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.083
+0.167
+0.250
+0.333
+0.417
+0.500
+0.583
+0.667
+0.750
+0.833
+0.917
+1.000
+1.083
+1.167
+1.250
+1.333
+1.417
+1.500
+1.583
+1.667
+1.750
+1.833
+1.917
+2.000
+2.083
+2.167
+2.250
+2.333
+2.417
+2.500
+2.583
+2.667
+2.750
+2.833
+2.917
+3.000
+3.083
+
+Dir. Conn.(%)=
+
+65.00
+
+PERVIOUS (i)
+0.96
+2.00
+2.00
+40.00
+0.250
+5.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+0.00 | 3.167
+4.39 | 6.250
+9.50 | 9.33
+0.00 | 3.250
+4.39 | 6.333
+5.12 | 9.42
+0.00 | 3.333
+12.43 | 6.417
+5.12 | 9.50
+0.73 | 3.417
+12.43 | 6.500
+5.12 | 9.58
+0.73 | 3.500
+12.43 | 6.583
+5.12 | 9.67
+0.73 | 3.583
+12.43 | 6.667
+5.12 | 9.75
+0.73 | 3.667
+12.43 | 6.750
+5.12 | 9.83
+0.73 | 3.750
+12.43 | 6.833
+5.12 | 9.92
+0.73 | 3.833
+12.43 | 6.917
+5.12 | 10.00
+0.73 | 3.917
+12.43 | 7.000
+5.12 | 10.08
+0.73 | 4.000
+12.43 | 7.083
+5.12 | 10.17
+0.73 | 4.083
+12.43 | 7.167
+5.12 | 10.25
+0.73 | 4.167
+12.43 | 7.250
+5.12 | 10.33
+0.73 | 4.250
+12.43 | 7.333
+2.92 | 10.42
+0.73 | 4.333
+33.63 | 7.417
+2.92 | 10.50
+0.73 | 4.417
+33.63 | 7.500
+2.92 | 10.58
+0.73 | 4.500
+33.63 | 7.583
+2.92 | 10.67
+0.73 | 4.583
+33.63 | 7.667
+2.92 | 10.75
+0.73 | 4.667
+33.63 | 7.750
+2.92 | 10.83
+0.73 | 4.750
+33.63 | 7.833
+2.92 | 10.92
+0.73 | 4.833
+33.63 | 7.917
+2.92 | 11.00
+0.73 | 4.917
+33.63 | 8.000
+2.92 | 11.08
+0.73 | 5.000
+33.63 | 8.083
+2.92 | 11.17
+0.73 | 5.083
+33.63 | 8.167
+2.92 | 11.25
+0.73 | 5.167
+33.63 | 8.250
+2.92 | 11.33
+0.73 | 5.250
+33.63 | 8.333
+1.46 | 11.42
+0.73 | 5.333
+9.50 | 8.417
+1.46 | 11.50
+4.39 | 5.417
+9.50 | 8.500
+1.46 | 11.58
+4.39 | 5.500
+9.50 | 8.583
+1.46 | 11.67
+4.39 | 5.583
+9.50 | 8.667
+1.46 | 11.75
+4.39 | 5.667
+9.50 | 8.750
+1.46 | 11.83
+4.39 | 5.750
+9.50 | 8.833
+1.46 | 11.92
+4.39 | 5.833
+9.50 | 8.917
+1.46 | 12.00
+4.39 | 5.917
+9.50 | 9.000
+1.46 | 12.08
+4.39 | 6.000
+9.50 | 9.083
+1.46 | 12.17
+4.39 | 6.083
+9.50 | 9.167
+1.46 | 12.25
+4.39 | 6.167
+9.50 | 9.250
+1.46 |
+
+RAIN
+mm/hr
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+0.73
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+33.63
+5.00
+5.68 (ii)
+5.00
+0.20
+
+54.20
+15.00
+14.70 (ii)
+15.00
+0.08
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.31
+5.25
+72.10
+73.10
+0.99
+
+0.14
+5.25
+52.77
+73.10
+0.72
+
+*TOTALS*
+0.441 (iii)
+5.25
+65.33
+73.10
+0.89
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 84.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 7705)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 5.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.1030
+0.2100
+0.0430
+0.1100
+|
+0.1210
+0.2300
+0.0670
+0.1500
+|
+0.1360
+0.2500
+0.0820
+0.1800
+|
+0.4020
+0.6200
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+AREA
+(ha)
+5.040
+5.040
+
+7732)
+7705)
+
+QPEAK
+(cms)
+0.441
+0.101
+
+TPEAK
+(hrs)
+5.25
+6.33
+
+R.V.
+(mm)
+65.33
+65.20
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 22.96
+TIME SHIFT OF PEAK FLOW
+(min)= 65.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.2076
+------------------------------------------------------------------------------********************************
+** SIMULATION:2.5 50yr-12hr
+**
+********************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+| Ptotal= 80.82 mm |
+-------------------TIME
+hrs
+0.00
+0.25
+0.50
+0.75
+1.00
+1.25
+1.50
+1.75
+2.00
+2.25
+2.50
+2.75
+3.00
+
+Filename: C:\Users\rbrockie\AppD
+ata\Local\Temp\
+6e980299-db7c-4159-a488-249fb4cd0286\4a30faeb
+Comments: 50 Year 12 Hour AES (Bloor, TRCA)
+RAIN |
+mm/hr |
+0.00 |
+0.81 |
+0.81 |
+0.81 |
+0.81 |
+0.81 |
+0.81 |
+0.81 |
+0.81 |
+4.85 |
+4.85 |
+4.85 |
+4.85 |
+
+TIME
+hrs
+3.25
+3.50
+3.75
+4.00
+4.25
+4.50
+4.75
+5.00
+5.25
+5.50
+5.75
+6.00
+6.25
+
+RAIN |' TIME
+mm/hr |'
+hrs
+13.74 | 6.50
+13.74 | 6.75
+13.74 | 7.00
+13.74 | 7.25
+37.17 | 7.50
+37.17 | 7.75
+37.17 | 8.00
+37.17 | 8.25
+10.50 | 8.50
+10.50 | 8.75
+10.50 | 9.00
+10.50 | 9.25
+5.66 | 9.50
+
+RAIN | TIME
+mm/hr |
+hrs
+5.66 | 9.75
+5.66 | 10.00
+5.66 | 10.25
+3.23 | 10.50
+3.23 | 10.75
+3.23 | 11.00
+3.23 | 11.25
+1.62 | 11.50
+1.62 | 11.75
+1.62 | 12.00
+1.62 |
+0.81 |
+0.81 |
+
+RAIN
+mm/hr
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+
+-------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 7732)|
+|ID= 1 DT= 5.0 min |
+-------------------Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+NOTE:
+
+Area
+(ha)=
+Total Imp(%)=
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+5.04
+81.00
+
+IMPERVIOUS
+4.08
+1.00
+1.00
+183.30
+0.013
+
+RAINFALL WAS TRANSFORMED TO
+
+Dir. Conn.(%)=
+
+65.00
+
+PERVIOUS (i)
+0.96
+2.00
+2.00
+40.00
+0.250
+5.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ----
+
+TIME
+hrs
+0.083
+0.167
+0.250
+0.333
+0.417
+0.500
+0.583
+0.667
+0.750
+0.833
+0.917
+1.000
+1.083
+1.167
+1.250
+1.333
+1.417
+1.500
+1.583
+1.667
+1.750
+1.833
+1.917
+2.000
+2.083
+2.167
+2.250
+2.333
+2.417
+2.500
+2.583
+2.667
+2.750
+2.833
+2.917
+3.000
+3.083
+
+RAIN | TIME
+mm/hr |
+hrs
+0.00 | 3.167
+0.00 | 3.250
+0.00 | 3.333
+0.81 | 3.417
+0.81 | 3.500
+0.81 | 3.583
+0.81 | 3.667
+0.81 | 3.750
+0.81 | 3.833
+0.81 | 3.917
+0.81 | 4.000
+0.81 | 4.083
+0.81 | 4.167
+0.81 | 4.250
+0.81 | 4.333
+0.81 | 4.417
+0.81 | 4.500
+0.81 | 4.583
+0.81 | 4.667
+0.81 | 4.750
+0.81 | 4.833
+0.81 | 4.917
+0.81 | 5.000
+0.81 | 5.083
+0.81 | 5.167
+0.81 | 5.250
+0.81 | 5.333
+4.85 | 5.417
+4.85 | 5.500
+4.85 | 5.583
+4.85 | 5.667
+4.85 | 5.750
+4.85 | 5.833
+4.85 | 5.917
+4.85 | 6.000
+4.85 | 6.083
+4.85 | 6.167
+
+RAIN |' TIME
+mm/hr |'
+hrs
+4.85 | 6.250
+4.85 | 6.333
+13.74 | 6.417
+13.74 | 6.500
+13.74 | 6.583
+13.74 | 6.667
+13.74 | 6.750
+13.74 | 6.833
+13.74 | 6.917
+13.74 | 7.000
+13.74 | 7.083
+13.74 | 7.167
+13.74 | 7.250
+13.74 | 7.333
+37.17 | 7.417
+37.17 | 7.500
+37.17 | 7.583
+37.17 | 7.667
+37.17 | 7.750
+37.17 | 7.833
+37.17 | 7.917
+37.17 | 8.000
+37.17 | 8.083
+37.17 | 8.167
+37.17 | 8.250
+37.17 | 8.333
+10.50 | 8.417
+10.50 | 8.500
+10.50 | 8.583
+10.50 | 8.667
+10.50 | 8.750
+10.50 | 8.833
+10.50 | 8.917
+10.50 | 9.000
+10.50 | 9.083
+10.50 | 9.167
+10.50 | 9.250
+
+RAIN | TIME
+mm/hr |
+hrs
+10.50 | 9.33
+5.66 | 9.42
+5.66 | 9.50
+5.66 | 9.58
+5.66 | 9.67
+5.66 | 9.75
+5.66 | 9.83
+5.66 | 9.92
+5.66 | 10.00
+5.66 | 10.08
+5.66 | 10.17
+5.66 | 10.25
+5.66 | 10.33
+3.23 | 10.42
+3.23 | 10.50
+3.23 | 10.58
+3.23 | 10.67
+3.23 | 10.75
+3.23 | 10.83
+3.23 | 10.92
+3.23 | 11.00
+3.23 | 11.08
+3.23 | 11.17
+3.23 | 11.25
+3.23 | 11.33
+1.62 | 11.42
+1.62 | 11.50
+1.62 | 11.58
+1.62 | 11.67
+1.62 | 11.75
+1.62 | 11.83
+1.62 | 11.92
+1.62 | 12.00
+1.62 | 12.08
+1.62 | 12.17
+1.62 | 12.25
+1.62 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+37.17
+5.00
+5.46 (ii)
+5.00
+0.20
+
+60.98
+15.00
+14.06 (ii)
+15.00
+0.08
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.34
+5.25
+79.82
+80.82
+0.99
+
+0.15
+5.25
+59.98
+80.82
+0.74
+
+RAIN
+mm/hr
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+0.81
+
+*TOTALS*
+0.492 (iii)
+5.25
+72.87
+80.82
+0.90
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 84.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 7705)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 5.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.1030
+0.2100
+0.0430
+0.1100
+|
+0.1210
+0.2300
+0.0670
+0.1500
+|
+0.1360
+0.2500
+0.0820
+0.1800
+|
+0.4020
+0.6200
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+7732)
+7705)
+
+AREA
+(ha)
+5.040
+5.040
+
+QPEAK
+(cms)
+0.492
+0.120
+
+TPEAK
+(hrs)
+5.25
+6.33
+
+R.V.
+(mm)
+72.87
+72.75
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 24.38
+TIME SHIFT OF PEAK FLOW
+(min)= 65.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.2289
+------------------------------------------------------------------------------********************************
+** SIMULATION:2.6 100yr-12hr **
+********************************
+
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+| Ptotal= 88.54 mm |
+-------------------TIME
+hrs
+0.00
+0.25
+0.50
+0.75
+1.00
+1.25
+1.50
+1.75
+2.00
+2.25
+2.50
+2.75
+3.00
+
+Filename: C:\Users\rbrockie\AppD
+ata\Local\Temp\
+6e980299-db7c-4159-a488-249fb4cd0286\eb7441f0
+Comments: 100 Year 12 Hour AES (Bloor, TRCA)
+RAIN |
+mm/hr |
+0.00 |
+0.89 |
+0.89 |
+0.89 |
+0.89 |
+0.89 |
+0.89 |
+0.89 |
+0.89 |
+5.31 |
+5.31 |
+5.31 |
+5.31 |
+
+TIME
+hrs
+3.25
+3.50
+3.75
+4.00
+4.25
+4.50
+4.75
+5.00
+5.25
+5.50
+5.75
+6.00
+6.25
+
+RAIN |' TIME
+mm/hr |'
+hrs
+15.05 | 6.50
+15.05 | 6.75
+15.05 | 7.00
+15.05 | 7.25
+40.71 | 7.50
+40.71 | 7.75
+40.71 | 8.00
+40.71 | 8.25
+11.51 | 8.50
+11.51 | 8.75
+11.51 | 9.00
+11.51 | 9.25
+6.20 | 9.50
+
+RAIN | TIME
+mm/hr |
+hrs
+6.20 | 9.75
+6.20 | 10.00
+6.20 | 10.25
+3.54 | 10.50
+3.54 | 10.75
+3.54 | 11.00
+3.54 | 11.25
+1.77 | 11.50
+1.77 | 11.75
+1.77 | 12.00
+1.77 |
+0.89 |
+0.89 |
+
+RAIN
+mm/hr
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+
+-------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 7732)|
+|ID= 1 DT= 5.0 min |
+-------------------Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+NOTE:
+
+Area
+(ha)=
+Total Imp(%)=
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+5.04
+81.00
+
+IMPERVIOUS
+4.08
+1.00
+1.00
+183.30
+0.013
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.083
+0.167
+0.250
+0.333
+0.417
+0.500
+0.583
+0.667
+0.750
+0.833
+0.917
+1.000
+1.083
+1.167
+1.250
+1.333
+1.417
+1.500
+1.583
+1.667
+1.750
+1.833
+1.917
+2.000
+2.083
+2.167
+2.250
+2.333
+2.417
+2.500
+2.583
+2.667
+2.750
+2.833
+2.917
+3.000
+3.083
+
+Dir. Conn.(%)=
+
+65.00
+
+PERVIOUS (i)
+0.96
+2.00
+2.00
+40.00
+0.250
+5.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+0.00 | 3.167
+5.31 | 6.250
+11.51 | 9.33
+0.00 | 3.250
+5.31 | 6.333
+6.20 | 9.42
+0.00 | 3.333
+15.05 | 6.417
+6.20 | 9.50
+0.89 | 3.417
+15.05 | 6.500
+6.20 | 9.58
+0.89 | 3.500
+15.05 | 6.583
+6.20 | 9.67
+0.89 | 3.583
+15.05 | 6.667
+6.20 | 9.75
+0.89 | 3.667
+15.05 | 6.750
+6.20 | 9.83
+0.89 | 3.750
+15.05 | 6.833
+6.20 | 9.92
+0.89 | 3.833
+15.05 | 6.917
+6.20 | 10.00
+0.89 | 3.917
+15.05 | 7.000
+6.20 | 10.08
+0.89 | 4.000
+15.05 | 7.083
+6.20 | 10.17
+0.89 | 4.083
+15.05 | 7.167
+6.20 | 10.25
+0.89 | 4.167
+15.05 | 7.250
+6.20 | 10.33
+0.89 | 4.250
+15.05 | 7.333
+3.54 | 10.42
+0.89 | 4.333
+40.71 | 7.417
+3.54 | 10.50
+0.89 | 4.417
+40.71 | 7.500
+3.54 | 10.58
+0.89 | 4.500
+40.71 | 7.583
+3.54 | 10.67
+0.89 | 4.583
+40.71 | 7.667
+3.54 | 10.75
+0.89 | 4.667
+40.71 | 7.750
+3.54 | 10.83
+0.89 | 4.750
+40.71 | 7.833
+3.54 | 10.92
+0.89 | 4.833
+40.71 | 7.917
+3.54 | 11.00
+0.89 | 4.917
+40.71 | 8.000
+3.54 | 11.08
+0.89 | 5.000
+40.71 | 8.083
+3.54 | 11.17
+0.89 | 5.083
+40.71 | 8.167
+3.54 | 11.25
+0.89 | 5.167
+40.71 | 8.250
+3.54 | 11.33
+0.89 | 5.250
+40.71 | 8.333
+1.77 | 11.42
+0.89 | 5.333
+11.51 | 8.417
+1.77 | 11.50
+5.31 | 5.417
+11.51 | 8.500
+1.77 | 11.58
+5.31 | 5.500
+11.51 | 8.583
+1.77 | 11.67
+5.31 | 5.583
+11.51 | 8.667
+1.77 | 11.75
+5.31 | 5.667
+11.51 | 8.750
+1.77 | 11.83
+5.31 | 5.750
+11.51 | 8.833
+1.77 | 11.92
+5.31 | 5.833
+11.51 | 8.917
+1.77 | 12.00
+5.31 | 5.917
+11.51 | 9.000
+1.77 | 12.08
+5.31 | 6.000
+11.51 | 9.083
+1.77 | 12.17
+5.31 | 6.083
+11.51 | 9.167
+1.77 | 12.25
+5.31 | 6.167
+11.51 | 9.250
+1.77 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+
+40.71
+5.00
+5.26 (ii)
+5.00
+
+67.76
+15.00
+13.51 (ii)
+15.00
+
+RAIN
+mm/hr
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+
+Unit Hyd. peak
+
+(cms)=
+
+0.21
+
+0.08
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.37
+5.25
+87.54
+88.54
+0.99
+
+0.17
+5.25
+67.26
+88.54
+0.76
+
+*TOTALS*
+0.542 (iii)
+5.25
+80.44
+88.54
+0.91
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 84.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 7705)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 5.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.1030
+0.2100
+0.0430
+0.1100
+|
+0.1210
+0.2300
+0.0670
+0.1500
+|
+0.1360
+0.2500
+0.0820
+0.1800
+|
+0.4020
+0.6200
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+7732)
+7705)
+
+AREA
+(ha)
+5.040
+5.040
+
+QPEAK
+(cms)
+0.542
+0.136
+
+TPEAK
+(hrs)
+5.25
+6.33
+
+R.V.
+(mm)
+80.44
+80.31
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 25.08
+TIME SHIFT OF PEAK FLOW
+(min)= 65.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.2502
+-------------------------------------------------------------------------------
+
+********************************
+** SIMULATION:Hazel1000
+**
+********************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+| Ptotal=212.00 mm |
+-------------------TIME
+hrs
+0.00
+1.00
+2.00
+
+Interim Onsite SWM Facility 1
+Regional Storm Output
+
+Filename: C:\Users\rbrockie\AppD
+ata\Local\Temp\
+46d12564-3938-4d2e-bb42-4b5c5892ce03\7713d240
+Comments:
+RAIN |
+mm/hr |
+6.00 |
+4.00 |
+6.00 |
+
+TIME
+hrs
+3.00
+4.00
+5.00
+
+RAIN |' TIME
+mm/hr |'
+hrs
+13.00 | 6.00
+17.00 | 7.00
+13.00 | 8.00
+
+RAIN | TIME
+mm/hr |
+hrs
+23.00 | 9.00
+13.00 | 10.00
+13.00 | 11.00
+
+RAIN
+mm/hr
+53.00
+38.00
+13.00
+
+-------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 7728)|
+|ID= 1 DT= 5.0 min |
+-------------------Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+NOTE:
+
+Area
+(ha)=
+Total Imp(%)=
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+4.80
+84.00
+
+IMPERVIOUS
+4.03
+1.00
+1.00
+178.89
+0.013
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.083
+0.167
+0.250
+0.333
+0.417
+0.500
+0.583
+0.667
+0.750
+0.833
+0.917
+1.000
+1.083
+1.167
+1.250
+1.333
+1.417
+1.500
+1.583
+1.667
+1.750
+1.833
+1.917
+2.000
+2.083
+2.167
+2.250
+2.333
+2.417
+2.500
+2.583
+2.667
+2.750
+2.833
+2.917
+3.000
+
+Dir. Conn.(%)=
+
+67.00
+
+PERVIOUS (i)
+0.77
+2.00
+2.00
+40.00
+0.250
+5.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+6.00 | 3.083
+13.00 | 6.083
+23.00 | 9.08
+6.00 | 3.167
+13.00 | 6.167
+23.00 | 9.17
+6.00 | 3.250
+13.00 | 6.250
+23.00 | 9.25
+6.00 | 3.333
+13.00 | 6.333
+23.00 | 9.33
+6.00 | 3.417
+13.00 | 6.417
+23.00 | 9.42
+6.00 | 3.500
+13.00 | 6.500
+23.00 | 9.50
+6.00 | 3.583
+13.00 | 6.583
+23.00 | 9.58
+6.00 | 3.667
+13.00 | 6.667
+23.00 | 9.67
+6.00 | 3.750
+13.00 | 6.750
+23.00 | 9.75
+6.00 | 3.833
+13.00 | 6.833
+23.00 | 9.83
+6.00 | 3.917
+13.00 | 6.917
+23.00 | 9.92
+6.00 | 4.000
+13.00 | 7.000
+23.00 | 10.00
+4.00 | 4.083
+17.00 | 7.083
+13.00 | 10.08
+4.00 | 4.167
+17.00 | 7.167
+13.00 | 10.17
+4.00 | 4.250
+17.00 | 7.250
+13.00 | 10.25
+4.00 | 4.333
+17.00 | 7.333
+13.00 | 10.33
+4.00 | 4.417
+17.00 | 7.417
+13.00 | 10.42
+4.00 | 4.500
+17.00 | 7.500
+13.00 | 10.50
+4.00 | 4.583
+17.00 | 7.583
+13.00 | 10.58
+4.00 | 4.667
+17.00 | 7.667
+13.00 | 10.67
+4.00 | 4.750
+17.00 | 7.750
+13.00 | 10.75
+4.00 | 4.833
+17.00 | 7.833
+13.00 | 10.83
+4.00 | 4.917
+17.00 | 7.917
+13.00 | 10.92
+4.00 | 5.000
+17.00 | 8.000
+13.00 | 11.00
+6.00 | 5.083
+13.00 | 8.083
+13.00 | 11.08
+6.00 | 5.167
+13.00 | 8.167
+13.00 | 11.17
+6.00 | 5.250
+13.00 | 8.250
+13.00 | 11.25
+6.00 | 5.333
+13.00 | 8.333
+13.00 | 11.33
+6.00 | 5.417
+13.00 | 8.417
+13.00 | 11.42
+6.00 | 5.500
+13.00 | 8.500
+13.00 | 11.50
+6.00 | 5.583
+13.00 | 8.583
+13.00 | 11.58
+6.00 | 5.667
+13.00 | 8.667
+13.00 | 11.67
+6.00 | 5.750
+13.00 | 8.750
+13.00 | 11.75
+6.00 | 5.833
+13.00 | 8.833
+13.00 | 11.83
+6.00 | 5.917
+13.00 | 8.917
+13.00 | 11.92
+6.00 | 6.000
+13.00 | 9.000
+13.00 | 12.00
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+53.00
+5.00
+4.67 (ii)
+5.00
+0.22
+
+109.14
+15.00
+11.48 (ii)
+15.00
+0.09
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.47
+10.00
+211.00
+212.00
+1.00
+
+0.23
+10.00
+204.74
+212.00
+0.97
+
+RAIN
+mm/hr
+53.00
+53.00
+53.00
+53.00
+53.00
+53.00
+53.00
+53.00
+53.00
+53.00
+53.00
+53.00
+38.00
+38.00
+38.00
+38.00
+38.00
+38.00
+38.00
+38.00
+38.00
+38.00
+38.00
+38.00
+13.00
+13.00
+13.00
+13.00
+13.00
+13.00
+13.00
+13.00
+13.00
+13.00
+13.00
+13.00
+
+*TOTALS*
+0.705 (iii)
+10.00
+208.93
+212.00
+0.99
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 95.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 7704)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 5.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.0920
+0.2100
+0.0390
+0.1100
+|
+0.1080
+0.2300
+0.0600
+0.1500
+|
+0.1220
+0.2500
+0.0730
+0.1800
+|
+0.3230
+0.5400
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+7728)
+7704)
+
+AREA
+(ha)
+4.800
+4.800
+
+QPEAK
+(cms)
+0.705
+0.320
+
+TPEAK
+(hrs)
+10.00
+11.08
+
+R.V.
+(mm)
+208.93
+208.78
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 45.43
+TIME SHIFT OF PEAK FLOW
+(min)= 65.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.5362
+-------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 7732)|
+Area
+(ha)=
+5.04
+|ID= 1 DT= 5.0 min |
+Total Imp(%)= 81.00
+Dir. Conn.(%)= 65.00 Interim Onsite SWM Facility 2
+-------------------Regional Storm Output
+IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+4.08
+0.96
+Dep. Storage
+(mm)=
+1.00
+2.00
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+183.30
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.083
+0.167
+0.250
+0.333
+0.417
+0.500
+0.583
+0.667
+0.750
+0.833
+0.917
+1.000
+1.083
+1.167
+1.250
+1.333
+1.417
+1.500
+1.583
+1.667
+1.750
+1.833
+1.917
+2.000
+2.083
+2.167
+2.250
+2.333
+2.417
+2.500
+2.583
+2.667
+2.750
+2.833
+2.917
+3.000
+
+5.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+6.00 | 3.083
+13.00 | 6.083
+23.00 | 9.08
+6.00 | 3.167
+13.00 | 6.167
+23.00 | 9.17
+6.00 | 3.250
+13.00 | 6.250
+23.00 | 9.25
+6.00 | 3.333
+13.00 | 6.333
+23.00 | 9.33
+6.00 | 3.417
+13.00 | 6.417
+23.00 | 9.42
+6.00 | 3.500
+13.00 | 6.500
+23.00 | 9.50
+6.00 | 3.583
+13.00 | 6.583
+23.00 | 9.58
+6.00 | 3.667
+13.00 | 6.667
+23.00 | 9.67
+6.00 | 3.750
+13.00 | 6.750
+23.00 | 9.75
+6.00 | 3.833
+13.00 | 6.833
+23.00 | 9.83
+6.00 | 3.917
+13.00 | 6.917
+23.00 | 9.92
+6.00 | 4.000
+13.00 | 7.000
+23.00 | 10.00
+4.00 | 4.083
+17.00 | 7.083
+13.00 | 10.08
+4.00 | 4.167
+17.00 | 7.167
+13.00 | 10.17
+4.00 | 4.250
+17.00 | 7.250
+13.00 | 10.25
+4.00 | 4.333
+17.00 | 7.333
+13.00 | 10.33
+4.00 | 4.417
+17.00 | 7.417
+13.00 | 10.42
+4.00 | 4.500
+17.00 | 7.500
+13.00 | 10.50
+4.00 | 4.583
+17.00 | 7.583
+13.00 | 10.58
+4.00 | 4.667
+17.00 | 7.667
+13.00 | 10.67
+4.00 | 4.750
+17.00 | 7.750
+13.00 | 10.75
+4.00 | 4.833
+17.00 | 7.833
+13.00 | 10.83
+4.00 | 4.917
+17.00 | 7.917
+13.00 | 10.92
+4.00 | 5.000
+17.00 | 8.000
+13.00 | 11.00
+6.00 | 5.083
+13.00 | 8.083
+13.00 | 11.08
+6.00 | 5.167
+13.00 | 8.167
+13.00 | 11.17
+6.00 | 5.250
+13.00 | 8.250
+13.00 | 11.25
+6.00 | 5.333
+13.00 | 8.333
+13.00 | 11.33
+6.00 | 5.417
+13.00 | 8.417
+13.00 | 11.42
+6.00 | 5.500
+13.00 | 8.500
+13.00 | 11.50
+6.00 | 5.583
+13.00 | 8.583
+13.00 | 11.58
+6.00 | 5.667
+13.00 | 8.667
+13.00 | 11.67
+6.00 | 5.750
+13.00 | 8.750
+13.00 | 11.75
+6.00 | 5.833
+13.00 | 8.833
+13.00 | 11.83
+6.00 | 5.917
+13.00 | 8.917
+13.00 | 11.92
+6.00 | 6.000
+13.00 | 9.000
+13.00 | 12.00
+
+RAIN
+mm/hr
+53.00
+53.00
+53.00
+53.00
+53.00
+53.00
+53.00
+53.00
+53.00
+53.00
+53.00
+53.00
+38.00
+38.00
+38.00
+38.00
+38.00
+38.00
+38.00
+38.00
+38.00
+38.00
+38.00
+38.00
+13.00
+13.00
+13.00
+13.00
+13.00
+13.00
+13.00
+13.00
+13.00
+13.00
+13.00
+13.00
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+53.00
+5.00
+4.74 (ii)
+5.00
+0.22
+
+97.25
+15.00
+11.87 (ii)
+15.00
+0.09
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.48
+10.00
+211.00
+212.00
+1.00
+
+0.26
+10.00
+201.02
+212.00
+0.95
+
+*TOTALS*
+0.739 (iii)
+10.00
+207.51
+212.00
+0.98
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 93.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 7705)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 5.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.1030
+0.2100
+0.0430
+0.1100
+|
+0.1210
+0.2300
+0.0670
+0.1500
+|
+0.1360
+0.2500
+0.0820
+0.1800
+|
+0.4020
+0.5100
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+7732)
+7705)
+
+AREA
+(ha)
+5.040
+5.040
+
+QPEAK
+(cms)
+0.739
+0.397
+
+TPEAK
+(hrs)
+10.00
+11.08
+
+R.V.
+(mm)
+207.51
+207.38
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 53.70
+TIME SHIFT OF PEAK FLOW
+(min)= 65.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.5051
+-------------------------------------------------------------------------------
+
+Attachment D LSS Figures & Background Information
+
+CULVERT #23
+EXISTING 450mm CULVERT
+W INV. = 252.40m
+E INV. = 252.23m
+
+REFER TO FIGURE 4.2 OF THE PHASE
+1 LSS (SCS & GEI, NOVEMBER 2024)
+FOR CATCHMENTS EXTERNAL TO
+THE WVSP AREA
+
+36.10.4
+19.97ha
+
+HEALEY ROAD
+
+CULVERT #20
+EXISTING 600mm CULVERT
+W INV. = 247.66m
+E INV. = 247.60m
+
+CENTERVILL
+E CREEK ROA
+D
+
+CULVERT #1
+EXISTING 600mm CULVERT
+W INV. = 248.30m
+E INV. = 248.15m
+
+OAD
+
+CULVERT #22
+EXISTING 600mm CULVERT
+W INV. = 248.17m
+E INV. = 247.97m
+
+36.10.2
+19.68ha
+
+THE GORE R
+
+36.10.3
+5.27ha
+
+HEALEY ROAD
+
+CULVERT #21
+EXISTING GABION CULVERT
+W INV. = 228.19m
+E INV. 227.06m
+
+38.07
+293.26ha
+
+CULVERT #19
+EXISTING 4500mm CULVERT
+W INV. = 222.26m
+E INV. = 222.41m
+
+CULVERT #2
+EXISTING 450mm CULVERT
+W INV. = 248.53m
+E INV. = 248.36m
+
+36.10.1
+36.78ha 71%
+
+36.06
+19.01ha
+CULVERT #18
+OUTLET LOCATION #12
+EXISTING 380mm CULVERT
+
+CULVERT #3
+EXISTING 1000mm CULVERT
+W INV. = 238.16m
+E INV. = 238.05m
+
+38.06.21
+21.92ha 71%
+
+36.10
+257.91ha
+CULVERT #4
+EXISTING 480mm CULVERT
+INV. = 237.70m
+
+CULVERT #17
+EXISTING 950mm CULVERT
+W INV. = 233.28m
+E INV. = 232.74m
+
+38.06.22
+3.65ha 71%
+
+THE GORE R
+OAD
+
+38.06.11
+42.12ha 75%
+36.11.3
+22.49ha 74%
+
+CULVERT #16
+EXISTING 600mm CSP CULVERT
+W INV. = 232.02m
+E INV. = 231.50m
+
+WEST HUMBER RIVER
+
+38.06.20
+35.80ha 71%
+
+EAST TRIBUTARY TO
+WEST HUMBER RIVER
+
+TO R
+Y
+AR RIVE
+T
+IBU BER
+R
+TT M
+ES T HU
+W ES
+W
+
+revise area
+
+38.06.30
+26.64ha 76%
+
+CULVERT #15
+EXISTING 1000mm CULVERT
+W INV. = 228.42m
+E INV. = 228.18m
+
+DRAINAGE FROM
+SUBCATCHMENT 36.11.1
+FLOWS IN CENTREVILLE
+CREEK ROAD DITCH TO
+CULVERT #5
+
+38.04.20
+54.88ha 76%
+36.11.1
+24.85ha 81%
+
+CENTERVILL
+
+36.11
+91.09ha
+
+E CREEK ROA
+
+D
+
+38.06.10
+19.52ha 79%
+
+CULVERT #14
+EXISTING 1300mm CULVERT
+W INV. = 222.12m
+E INV. = 221.10m
+CULVERT #13
+EXISTING 650mm CULVERT
+W INV. = 222.08m
+E INV. = 221.37m
+
+38.05.10
+5.80ha 71%
+
+38.06
+5.08ha
+
+38.05
+41.63ha
+
+CULVERT #12
+EXISTING 350mm CSP CULVERT
+W INV. = 222.30m
+E INV. = 222.47m
+
+38.04.10
+20.62ha 73%
+
+CULVERT #6
+EXISTING 750mm CULVERT
+W INV. = 227.94m
+E INV. = 228.30m
+CULVERT #7
+EXISTING 600mm CULVERT
+W INV. = 226.59m
+E INV. = 226.90m
+
+RY
+TA /S3
+IBU S2
+TR S1/
+H5
+
+CULVERT #5
+EXISTING 900mm CULVERT
+W INV. = 229.72m
+E INV. = 229.80m
+
+38.04.11
+18.75ha 76%
+
+36.11.2
+8.14ha 82%
+
+38.04.12
+9.24ha 84%
+
+38.04.30
+2.52ha 71%
+CULVERT #11
+EXISTING 1500mm CSP CULVERT
+W INV. = 217.53m
+E INV. = 217.27m
+
+CULVERT #8
+EXISTING 450mm CULVERT
+N INV. = 227.03
+S INV. = 227.03
+
+CULVERT #10
+EXISTING 950mm CSP CULVERT
+N INV. = 218.65m
+S INV. = 217.76m
+
+CULVERT #9
+EXISTING 1000mm CULVERT
+N INV. = 221.32m
+S INV. = 220.65m
+
+MAYFIELD ROAD
+
+MAYFIELD ROAD
+
+*NOTE: LAYOUT IS SCHEMATIC ONLY, DETAILS TO BE PROVIDED AT DETAILED DESIGN STAGE
+DRAINAGE AREAS
+
+LEGEND:
+
+OUTLET 1
+LIMIT OF DEVELOPMENT
+STORM DRAINAGE
+BOUNDARY
+
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+EXISTING CULVERT
+EXTERNAL STORM
+DRAINAGE BOUNDARY
+
+OUTLET 6
+
+OUTLET 2
+
+OUTLET 7
+
+OUTLET 3
+
+OUTLET 8
+
+OUTLET 4
+
+OUTLET 9
+
+OUTLET 5
+
+OUTLET 10
+
+OUTLET 3 EXTERNAL
+OUTLET 9 EXTERNAL
+OUTLET ID
+
+36.10.2
+19.68ha
+36.10.1
+36.78ha 71%
+
+CATCHMENT ID
+
+WILDFIELD VILLAGE
+
+EXTERNAL
+DRAINAGE AREA
+(HECTARES)
+
+CATCHMENT ID
+PERCENT (%) IMPERVIOUS
+DRAINAGE AREA (HECTARES)
+
+DESIGNED BY:
+
+A.T.
+
+CHECKED BY:
+
+SCALE:
+
+1:4000
+
+DATE:
+
+A.R.K.
+
+JANUARY 2025
+
+PROPOSED CONDITIONS STORM
+DRAINAGE PLAN
+PROJECT No:
+
+FIGURE No:
+
+2630
+
+4.1
+
+HEALEY ROADCULVERT #20
+CULVERT #23
+EXISTING 450mm CULVERT
+W INV. = 252.40m
+E INV. = 252.23m
+
+36.10.4
+19.97 ha
+
+HEALEY ROAD
+
+AD
+
+41.08
+362.27ha
+
+THE GORE R
+O
+
+CREEK ROAD
+
+CULVERT #22
+EXISTING 600mm CULVERT
+W INV. = 248.17m
+E INV. = 247.97m
+
+36.10.2
+19.68 ha
+
+CENTERVILL
+E
+
+36.10.3
+5.27 ha
+CULVERT #1
+EXISTING 600mm CULVERT
+W INV. = 248.30m
+E INV. = 248.15m
+
+EXISTING 600mm CULVERT
+W INV. = 247.66m
+E INV. = 247.60m
+
+CULVERT #21
+EXISTING GABION CULVERT
+W INV. = 228.19m
+E INV. 227.06m
+
+BURSTEIN FAMILY
+GORD DENNIS
+
+CULVERT #19
+EXISTING 4500mm CULVERT
+W INV. = 222.26m
+E INV. = 222.41m
+
+36.10
+256.26 ha
+
+WE
+
+CULVERT #2
+EXISTING 450mm CULVERT
+W INV. = 248.53m
+E INV. = 248.36m
+
+ST
+H
+
+TAMMAO
+SIDHU
+GIGLIOTTI
+DHALIWAL
+CIARALLO
+MOHIL
+SAHOTA
+
+UM
+
+BE
+
+36.06
+19.01 ha
+
+36.10.1
+38.43 ha
+
+RR
+
+IVE
+
+R
+
+38.07
+293.26 ha
+
+CULVERT #18
+OUTLET LOCATION #12
+EXISTING 380mm CULVERT
+
+GLOBAL
+PROPERTIES (2) INC.
+38.06.21
+21.92 ha
+CULVERT #3
+EXISTING 1000mm CULVERT
+W INV. = 238.16m
+E INV. = 238.05m
+
+PIERCY,
+BROOK, EZARD
+
+WEST HUMBER RIVER
+
+BADWAL
+PESCITELLI
+CHANA SINGH
+ANTHONY
+
+CULVERT #17
+EXISTING 950mm CULVERT
+W INV. = 233.28m
+E INV. = 232.74m
+
+CULVERT #4
+EXISTING 480mm CULVERT
+INV. = 237.70m
+
+38.06.20
+35.80 ha
+
+36.11.3
+20.84 ha
+
+CULVERT #16
+EXISTING 600mm CSP CULVERT
+W INV. = 232.02m
+E INV. = 231.50m
+
+GLOBAL
+PROPERTIES INC.
+
+GLOBAL
+PROPERTIES (1) INC.
+
+THE GORE R
+
+COLLURA
+
+CALCE
+COPETTI
+FOSAROLLI
+
+EAST TRIBUTARY TO
+WEST HUMBER RIVER
+
+38.06.11
+42.12 ha
+
+SAHOTA
+GULLUSCI
+GRECO
+
+OAD
+
+TO R
+Y
+AR RIVE
+T
+IBU BER
+R
+T T UM
+S
+E
+W EST H
+W
+
+38.06.22
+3.65 ha
+
+38.06.30
+26.64 ha
+
+CULVERT #15
+EXISTING 1000mm CULVERT
+W INV. = 228.42m
+E INV. = 228.18m
+
+TONY &
+GINA ABELLA
+
+DOIRON
+
+ONKAR
+INVESTMENT INC.
+GLOBAL
+38.06.10
+PROPERTIES INC.
+
+PIERCEY
+
+CREEK ROAD
+
+38.04.20
+54.55 ha
+
+NOVAMARK
+HOLDINGS LTD.
+CULVERT #13
+EXISTING 650mm CULVERT
+W INV. = 222.08m
+E INV. = 221.37m
+
+36.11.1
+24.85 ha
+
+DRAINAGE FROM
+SUBCATCHMENT 36.11.1
+FLOWS IN CENTREVILLE
+CREEK ROAD DITCH TO
+CULVERT #5
+
+ONE VALUE LTD.
+AVTAR & MANJIT KALKAT
+GIOGIA &
+TERESA VESCIO
+
+DIEGO
+SPANO
+
+7072A
+HOLDINGS
+LTD.
+
+SUKHVINDE
+R&
+SARBJIT GILL
+
+LESLIE
+FARKAS
+
+GIGLIO
+
+RANJIT KAUR RAI &
+DILBAGH SINGH
+
+TRINITY FIELD INC.
+
+38.05
+41.63 ha
+
+38.04.11
+MIKE RASO
+18.75 ha
+
+D'ALESSANDRO
+COLAVITA
+
+KALIRAO
+
+38.04.12
+9.24 ha
+
+CHIODO
+
+NEW TIME
+MOTORS LTD.
+LE DONNE
+
+BARBERI
+
+GILL
+CULVERT #8
+EXISTING 450mm CULVERT
+N INV. = 227.03
+S INV. = 227.03
+
+CULVERT #12
+EXISTING 350mm CSP CULVERT
+W INV. = 222.30m
+E INV. = 222.47m
+
+RY
+TA S3
+IBU S2/
+TR S1/
+H5
+
+CULVERT #7
+EXISTING 600mm CULVERT
+W INV. = 226.59m
+E INV. = 226.90m
+
+36.11.2
+BAGA
+8.14 ha
+
+38.06
+5.08 ha
+
+225.88EX @ EDGE OF PAVEMENT
+OF THE GORE ROAD
+
+38.04.10
+20.62 ha
+
+CULVERT #5
+EXISTING 900mm CULVERT
+W INV. = 229.72m
+E INV. = 229.80m
+
+CAPPIELLO
+LAVA KALOGERAKOS
+
+38.05.10
+5.80 ha
+
+CHARLES SPANO
+GIUSEPPE SPANO
+
+CULVERT #6
+EXISTING 750mm CULVERT
+W INV. = 227.94m
+E INV. = 228.30m
+
+ESHOO AZIZ
+AMATO
+
+CAROZZA
+
+CULVERT #14
+EXISTING 1300mm CULVERT
+W INV. = 222.12m
+E INV. = 221.10m
+
+CENTERVILL
+E
+
+36.11
+92.74 ha
+
+19.52 ha
+
+CAVALLINO
+ESTATES INC.
+
+38.04.30
+2.52 ha
+CULVERT #11
+EXISTING 1500mm CSP CULVERT
+W INV. = 217.53m
+E INV. = 217.27m
+
+MAYFIELD ROAD
+
+CULVERT #10
+EXISTING 950mm CSP CULVERT
+N INV. = 218.65m
+S INV. = 217.76m
+
+38.04
+39.22 ha
+
+CULVERT #9
+EXISTING 1000mm CULVERT
+N INV. = 221.32m
+S INV. = 220.65m
+
+MAYFIELD ROAD
+40 20 0
+
+LEGEND:
+WILDFIELD VILLAGE SECONDARY
+PLAN (WVSP) AREA LIMITS
+SUBCATCHMENT BOUNDARY
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+EXTERNAL CATCHMENT BOUNDARY
+WATERCOURSE (TRCA, 2018)
+
+FLOW DIRECTION
+SUBCATCHMENT ID
+
+38.06.10
+19.52 ha
+
+DRAINAGE AREA
+(HECTARES)
+
+38.06
+5.08 ha
+
+EXTERNAL
+CATCHMENT ID
+
+WILDFIELD VILLAGE
+
+EXTERNAL
+DRAINAGE AREA
+(HECTARES)
+
+DESIGNED BY:
+
+R.R.B.
+
+CHECKED BY:
+
+EXISTING CULVERT
+
+SCALE:
+
+1:4000
+
+DATE:
+
+A.R.K.
+
+NOVEMBER 2024
+
+40
+
+80
+
+120
+
+160
+
+200
+
+240
+
+280
+
+EXISTING HUMBER RIVER
+SUBCATCHMENTS
+PROJECT No:
+
+FIGURE No:
+
+2630
+
+4.2
+
+320
+
+HEALEY ROAD
+
+BURSTEIN FAMILY
+GORD DENNIS
+
+TAMMAO
+SIDHU
+GIGLIOTTI
+DHALIWAL
+CIARALLO
+MOHIL
+SAHOTA
+
+GLOBAL
+PROPERTIES (2) INC.
+NO EXTERNAL SANITARY DRAINAGE
+IS CONVEYED TO THE WILDFIELD
+VILLAGE SECONDARY PLAN FROM
+FUTURE DEVELOPMENT
+
+BADWAL
+PESCITELLI
+CHANA SINGH
+ANTHONY
+
+154.88ha
+17,456 101
+
+PIERCY,
+BROOK, EZARD
+
+SAHOTA
+GULLUSCI
+GRECO
+
+GLOBAL
+PROPERTIES INC.
+GLOBAL
+PROPERTIES (1) INC.
+7.75ha
+945 102
+
+COLLURA
+
+OUTLET 1 - 600mm Ø
+plug @0.30%
+
+CALCE
+
+COPETTI
+FOSAROLLI
+
+TONY &
+GINA ABELLA
+
+ONKAR
+INVESTMENT INC.
+
+THE GORE R
+
+OAD
+
+DOIRON
+
+50.87ha
+9,008 103
+
+GLOBAL
+PROPERTIES INC.
+
+PIERCEY
+
+CAVALLINO
+ESTATES INC.
+
+12.47ha
+1,520 104
+OUTLET 2 - 525mm Ø
+plug @0.30%
+
+ESHOO AZIZ
+AMATO
+
+CENTREVILLE
+
+CREEK ROAD
+
+CAROZZA
+
+NOVAMARK
+
+37.22ha
+HOLDINGS LTD.
+4,545 105
+
+CAPPIELLO
+LAVA KALOGERAKOS
+OUTLET 3 - 375mm Ø
+plug @0.30%
+
+ONE VALUE LTD.
+AVTAR & MANJIT KALKAT
+GIOGIA &
+TERESA VESCIO
+CHARLES SPANO
+GIUSEPPE SPANO
+
+DIEGO
+SPANO
+
+SUKHVINDE
+R&
+SARBJIT GILL
+
+LESLIE
+FARKAS
+
+GIGLIO
+
+BAGA
+RANJIT KAUR RAI &
+DILBAGH SINGH
+
+TRINITY FIELD INC.
+MIKE RASO 82.74ha
+
+D'ALESSANDRO
+COLAVITA
+
+12,499 106
+
+KALIRAO
+
+7072A
+HOLDINGS
+LTD.
+
+CHIODO
+BARBERI
+
+GILL
+
+1.72ha
+107 210
+
+NEW TIME
+MOTORS LTD.
+LE DONNE
+
+OUTLET 4 - 525mm Ø
+plug @0.30%
+
+MAYFIELD ROAD
+
+*NOTE: LAYOUT IS SCHEMATIC ONLY, DETAILS TO BE PROVIDED AT DETAILED DESIGN STAGE
+
+LEGEND:
+
+FUTURE 750mmØ SANITARY SEWER
+AND MAINTENANCE HOLE
+
+WILDFIELD VILLAGE SECONDARY
+PLAN (WVSP) AREA LIMITS
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+SANITARY DRAINAGE BOUNDARY
+PROPOSED SANITARY SEWER AND
+MAINTENANCE HOLE
+
+82.71ha
+14,887 406
+
+WILDFIELD VILLAGE
+
+DRAINAGE AREA (HECTARES)
+CATCHMENT ID
+
+DESIGNED BY:
+
+A.T.
+
+CHECKED BY:
+
+POPULATION
+
+SCALE:
+
+1:4000
+
+DATE:
+
+A.R.K.
+
+JANUARY 2025
+
+PROPOSED SANITARY
+DRAINAGE PLAN
+PROJECT No:
+
+FIGURE No:
+
+2630
+
+5.2
+
+HEALEY ROAD
+EX. 200Ø PVC WATERMAIN
+FUTURE. 900Ø PVC WATERMAIN
+
+WATERMAIN
+
+EX. 200Ø PV
+C WATERMA
+
+IN
+
+PROP. 400Ø PVC WATERMAIN
+
+EX. 200Ø PV
+C
+
+BURSTEIN FAMILY
+GORD DENNIS
+
+TR HIGH
+AN W
+SPO AY
+RT 413
+AT
+ION PLAN
+CO NED
+OR
+IDO
+R
+
+30.02ha
+3,659 8
+
+TAMMAO
+SIDHU
+GIGLIOTTI
+DHALIWAL
+CIARALLO
+MOHIL
+SAHOTA
+
+GLOBAL
+PROPERTIES (2) INC.
+
+15.03ha
+1,832 2
+
+13.71ha
+1,671 1
+
+FUTURE. 60
+
+16.00ha
+1,950 3
+
+IN
+C WATERMA
+
+35.79ha
+4,362 9
+
+EX. 200Ø PV
+
+PIERCY,
+BROOK, EZARD
+
+0Ø PVC WA
+TERMAIN
+
+EX. 200Ø PV
+
+C WATERMA
+
+IN
+
+BADWAL
+PESCITELLI
+CHANA SINGH
+ANTHONY
+
+SAHOTA
+GULLUSCI
+GRECO
+
+16.85ha
+2,054 4
+
+GLOBAL
+PROPERTIES INC.
+GLOBAL
+PROPERTIES (1) INC.
+COLLURA
+CALCE
+
+COPETTI
+FOSAROLLI
+
+14.87ha
+2,491 5
+
+15.05ha
+2,422 6
+
+TONY &
+GINA ABELLA
+
+20.22ha
+2,465 16
+
+14.70ha
+2,329 7
+
+DOIRON
+OAD
+
+15.20ha
+2,499 11
+
+16.17ha
+2,937 10
+
+THE GORE R
+
+C WATERMA
+IN
+
+CAROZZA
+
+EX. 200Ø PV
+
+IN
+C WATERMA
+
+PROP. 400Ø
+
+CAVALLINO
+ESTATES INC.
+
+ESHOO AZIZ
+AMATO
+
+17.11ha
+2,802 12
+
+NOVAMARK
+HOLDINGS LTD.
+
+CENTREVILLE
+
+CREEK ROAD
+
+PVC WATER
+
+PIERCEY
+
+GLOBAL
+PROPERTIES INC.
+
+EX. 200Ø PV
+
+MAIN
+
+ONKAR
+INVESTMENT INC.
+
+CAPPIELLO
+LAVA KALOGERAKOS
+
+ONE VALUE LTD.
+AVTAR & MANJIT KALKAT
+GIOGIA &
+TERESA VESCIO
+CHARLES SPANO
+26.60ha
+GIUSEPPE
+SPANO
+5,235
+13
+
+28.41ha
+3,947 15
+
+TRINITY FIELD INC.
+
+IN
+
+LESLIE
+FARKAS
+
+C WATERMA
+EX. 200Ø PV
+
+PROP. 400Ø
+
+PVC WATER
+MAIN
+
+DIEGO
+SPANO
+
+C WATERMA
+
+MIKE RASO
+
+EX. 200Ø PV
+
+GIGLIO
+
+BAGA
+RANJIT KAUR RAI &
+DILBAGH SINGH
+
+SUKHVINDE
+R&
+SARBJIT GILL
+
+IN
+
+24.53ha
+3,316 14
+
+D'ALESSANDRO
+COLAVITA
+
+KALIRAO
+
+7072A
+HOLDINGS
+LTD.
+
+1.72ha
+210 17
+
+CHIODO
+
+NEW TIME
+MOTORS LTD.
+LE DONNE
+
+BARBERI
+
+GILL
+
+EX. PD5 600Ø PVC WATERMAIN
+EX. PD6 750Ø PVC WATERMAIN
+EX. PD6 300Ø PVC WATERMAIN
+
+EX. PD6 300Ø PVC WATERMAIN
+EX. PD6 750Ø PVC WATERMAIN
+
+MAYFIELD ROAD
+
+McVEAN
+DRIVE
+
+EX. PD5 600Ø PVC WATERMAIN
+
+*NOTE: LAYOUT IS SCHEMATIC ONLY, DETAILS TO BE PROVIDED AT DETAILED DESIGN STAGE
+
+LEGEND:
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+WILDFIELD VILLAGE SECONDARY
+PLAN (WVSP) AREA LIMITS
+PROPOSED LOCAL DISTRIBUTION
+WATERMAIN
+400Ø PROPOSED DISTRIBUTION
+WATERMAIN
+600Ø FUTURE DISTRIBUTION
+WATERMAIN
+
+900Ø FUTURE TRANSMISSION
+WATERMAIN
+200Ø EXISTING WATERMAIN
+300Ø EXISTING WATERMAIN
+600Ø EXISTING WATERMAIN
+750Ø EXISTING WATERMAIN
+
+APPROXIMATE EXTENT OF PRESSURE
+ZONE 5 (182.4 - 236.2m)
+APPROXIMATE EXTENT OF PRESSURE
+ZONE 6E (214.5 - 259.1m)
+
+28.99ha
+3878 15
+
+DRAINAGE AREA (HECTARES)
+
+DESIGNED BY:
+
+A.T.
+
+CHECKED BY:
+
+SCALE:
+
+1:4000
+
+DATE:
+
+A.R.K.
+
+BLOCK NUMBER
+POPULATION
+
+MASTER WATER
+SERVICING PLAN
+
+WILDFIELD VILLAGE
+
+JANUARY 2025
+
+PROJECT No:
+
+FIGURE No:
+
+2630
+
+5.4
+
+Li
+
+136
+
+S
+a
+nita
+ry PumpingS
+ta
+tions
+Decommissioning
+D-2026 (52841)
+262978
+C-2028 (52842)
+
+525
+600
+
+675
+
+McVean Dr
+
+675
+375
+
+375
+
+675
+
+Coleraine Dr
+
+2024
+51650
+24-2193
+
+600
+
+2027
+53983
+27-2191
+2026
+51646
+26-2190
+
+2024
+51914
+23-2270
+750
+
+5
+
+450
+
+d
+Mayfield R
+
+37
+5
+
+2025
+32064
+25-2171
+
+37
+5
+
+50
+
+y
+
+150
+
+50
+H
+
+10
+
+2027
+3768
+27-2178
+
+Coleraine Dr
+
+525
+
+Clarkway Dr
+
+2025
+30725
+25-2170
+
+Dr
+
+2027
+3769
+27-2177
+
+375
+
+Countryside
+
+2025
+3772
+24-2176
+
+14
+
+2024
+56963
+23-2174
+
+2025
+56177
+23-2126
+600 Elia Rd
+
+2026
+56728
+25-2124
+
+8
+
+2025
+3827
+25-2175
+
+375
+
+rent
+o
+
+Dr
+
+8
+
+Sor
+
+P
+
+e
+at
+riv
+
+0
+45
+
+2024
+56964
+375
+23-2174
+
+Castlemore
+
+Rd
+
+37
+5
+
+375
+
+Hurontario St
+
+2024
+3770
+23-2272
+
+E
+
+14
+
+750
+
+750
+
+1200
+
+d
+Steeles R
+
+2026
+24608
+24-2273
+
+2027
+57076
+25-2256
+
+15
+
+Rd
+
+2027
+52663
+25-2268
+15
+00
+
+Approved Infrastructure 2024
+
+Existing Wastewater Infrastructure
+
+Sewer Pumping Station
+
+Sanitary Pumping Station
+
+Odour Control Facility
+
+Existing Wastewater Main
+TechnicallyPreferred
+
+Wastewater Treatment Plant
+Approved Local Wastewater Main 2024
+Approved Primary Wastewater Main 2024
+Proposed Infrastructure 2025-2041
+Sewer Pumping Station
+
+Highway 413
+Watercourse
+Greenbelt Boundary
+Urban Boundary
+Municipal Boundary
+
+Odour Control Facility
+
+Ward Boundary
+
+Wastewater Treatment Plant
+Proposed Local Wastewater Main > 2024
+Proposed Primary Wastewater Main > 2024
+Proposed Force Main
+
+L
+a
+be l L
+eg
+e nd
+
+2031 - Construction Year
+30713 - Component Number
+25-2199 - Project Number
+
+L
+a
+k e vie w Villag
+e
+2025 2025
+31570 32163
+25-2123 25-2123
+
+2025
+53951
+25-2121
+450
+
+Rd
+
+4
+
+2025
+53953
+25-2121
+
+2025
+53954
+25-2121
+
+2025
+53952
+25-2121
+
+2025
+53957
+25-2121
+
+675
+
+675
+
+675
+
+4
+
+Humber Station Rd
+
+Coleraine Dr
+
+450
+
+600
+
+Finch
+
+2027
+57079
+25-2256
+
+G.
+E.BoothWaste w ate r T re atme nt Plant
+Automa ti on Cons ol i da ti on
+192924
+C-2024 (56106)
+C-2025 (56107)
+Odour Control
+Improvements
+202961
+C-2024 (38871)
+Pl a nt 2 Bl ower Repl a cement
+222923
+C-2024 (53410)
+New Outfa l l
+D-2025 (56297)
+222944
+C-2027 (51949)
+As h Ma na gement Fa ci l i ty
+D-2024 (52833)
+242942
+C-2026 (52834)
+Admi ni s tra ti on Bui l di ng
+D-2026 (51946)
+262943
+C-2028 (51947)
+Trea tment Expa ns i on
+D-2025 (38620)
+252945
+D-2027 (38621)
+C-2027 (51944)
+C-2028 (51945)
+C-2029 (52838)
+Bi os ol i ds Expa ns i on
+292599
+EA-2029 (38619)
+292999
+D-2032 (51950)
+D-2032 (51952)
+D-2036 (51951)
+Sta ndby Power Expa ns i on
+282999
+D-2028 (52214)
+C-2030 (52215)
+As h Ma na gement Fa ci l i ty
+282999
+C-2032 (37812)
+C-2034 (37813)
+Bi os ol i ds Expa ns i on
+C-2034 (51953)
+292999
+C-2036 (35964)
+As h Berm Rel oca ti on
+D-2024 (56879)
+292947
+C-2025 (56880)
+Ca pa ci ty Res tora ti on
+D-2024 (56890)
+192940
+C-2024 (56891)
+Di ges ters a nd Benefi ci a l
+Ga s Reus e
+D-2025 (56886)
+252941
+C-2028 (56887)
+Ul ta vi ol et Di s i nfecti on
+252949
+D-2025 (56888)
+C-2028 (56889)
+Trea tment Expa ns i on
+EA-2025 (57067)
+252563
+D-2033 (38620)
+292999
+D-2033 (38621)
+C-2036 (51944)
+C-2036 (51945)
+C-2036 (52838)
+
+2
+
+150
+
+750
+
+375
+
+675
+675
+750
+
+750
+
+450
+
+1800
+
+1800
+
+1200
+
+450
+
+375
+
+525
+
+600
+
+450
+
+525
+
+2400
+
+0
+
+9
+
+2024
+51916
+23-2271
+
+750
+
+The Gore Rd
+
+750
+
+1800
+
+525
+
+Dixie Rd
+
+450
+
+Cawthra Rd
+
+Be a
+c
+hS
+tre e t S
+a
+nita
+ry PumpingS
+ta
+tion
+Upgrades
+D-2024 (52754)
+242971
+C-2026 (52755)
+
+D-2025 (27417)
+C-2027 (27418)
+
+2026
+54023
+24-2196
+
+2026
+2031 5
+1650
+51648
+29-2198
+242193
+
+525
+
+1200
+
+1500
+
+600
+
+375
+1200
+
+375
+
+1500
+
+675
+
+Tucan a Ct
+
+375
+450
+
+3000
+3000
+
+G.E. Booth
+
+Beach Street
+Elmwood
+Lakeview Village
+Hiawatha
+Ben Machree
+
+J
+a
+c
+k Da
+rling3S
+e w e r PumpingS
+ta
+tion
+New Pumping Station
+D-2024 (53565)
+242980
+C-2026 (53012)
+
+ob
+
+Brama
+le aGO
+
+2030
+57086
+28-2153
+
+Pr
+Rd
+
+375
+
+375
+
+2026
+d
+57000
+Wanita R
+24-2115
+St
+L a rence Dr Elmwood
+w
+l
+Carlis P
+
+4
+
+L
+a
+k e vie w Villa
+g
+e
+New Sewage Pumping
+Station
+252982
+
+2030
+57084
+28-2153
+
+675
+
+2027
+51654
+27-2192
+
+Hig
+hw a
+y 427I
+ndustria
+l(
+S
+P
+A47)
+
+Acorn Pl
+
+d Rd S
+
+5
+450 52
+
+d
+Cor
+
+2024
+56051
+23-2192
+
+2026
+56955
+24-2274
+
+ivate
+
+2024
+56179
+23-2126
+
+2026
+54025
+24-2196
+
+600
+
+2027
+51656
+27-2193
+
+2026
+51660
+24-2194
+
+Healey Rd
+
+Mississa
+ug
+aUptow n
+
+450
+
+e Dr
+Watersid
+
+2027
+55714
+26-2120
+
+Elmwoo
+
+1
+
+2026
+57012
+24-2125 2026
+57010
+24-2125
+
+20
+
+Rd
+
+525
+
+2400
+
+Rd
+
+n
+Woodlaw
+
+Rd N
+
+Watersedge
+
+Elmwood
+
+Green GL
+
+d Rd
+
+Clarkson
+
+Jack
+Silverbirch Darling 2
+
+2026
+57002
+24-2115
+Port St E
+
+401
+
+ore R d E
+
+525
+
+19
+
+Richard
+Memorial
+
+Lakesh
+
+Rd
+
+0
+180
+
+Stonehaven
+
+Darling 1
+
+2026
+33590
+22-2255
+E
+Queensway
+
+Rosemere
+2024
+Port Credit
+50093 Front St 375
+Beechwood
+
+19-2215
+
+3
+
+Private
+
+2026
+34863
+22-2256
+
+17
+
+Indian Road
+
+2024
+Jack 53564
+Darling 3 19-2215
+Jack 2400
+
+450
+2026
+57008
+24-2115
+
+2025
+54180
+18-2252
+
+1800
+
+Pinetree
+
+tS
+
+2
+
+2024
+56174
+23-2129
+
+W
+Queensw ay
+
+Helene S
+
+QEW
+
+7
+
+4
+
+2025
+33593
+22-2254
+
+2024
+50093
+19-2215
+
+Di
+xo
+n
+
+v
+Forest A
+Rosewoo
+
+525
+
+Shardawn Mews
+
+2027
+15615
+25-2219
+
+tN
+
+20
+
+Mississauga Uptown
+
+St S
+
+6
+
+D-2029 (35364)
+P-2029 (35221)
+C-2030 (34285)
+
+1
+
+2029
+3988
+29-2198
+
+2026
+57004
+24-2115
+
+450
+
+Erin Mills Py
+
+S
+tre e tsville
+New Facility
+292960
+
+7
+
+Ann St
+
+403
+
+O'Niel Ct
+
+Cla
+Primary
+rk son Thickening
+Wa
+ste w a
+te r T re a
+tme nt Pla
+nt
+Facility
+C-2024 (56232)
+202951
+
+New Operations
+Building
+262959 Expansion
+Treatment
+252564
+
+3
+
+4
+
+450
+
+E
+
+409
+
+St E
+Park
+375
+2026
+57006
+24-2115
+High St E
+
+Streetsville
+
+Fifeshire
+
+8
+
+Va
+rious DosingS
+ta
+tions
+New Dosing Stations
+D-2029 (35383)
+252960
+P-2029 (35224)
+C-2030 (34287)
+
+Standby Power
+Expansion
+292999 Expansion
+Biosolids
+232952
+
+Port Cre dit
+
+Elizabeth
+
+2025
+52388
+1 19-2208
+
+2024
+57349
+19-2205
+
+C-2024 (56108)
+C-2025 (56109)
+D-2025 (51956)
+C-2024 (51958)
+C-2025 (51959)
+C-2026 (53368)
+D-2029 (52214)
+C-2031 (52215)
+D-2024(56234)
+D-2025(56235)
+C-2026(54572)
+C-2028(56236)
+C2026(56237)
+C-2026(56884)
+D-2028(56885)
+EA-2025(57068)
+
+410
+
+2030
+57088
+28-2153
+
+dW
+
+2026
+57035
+427
+25-2122
+
+5
+
+Meadowvale
+
+Britannia
+Leachate
+
+403
+
+Automation
+Consolidation
+192934
+Treatment Expansion
+222950
+
+W
+
+Derry Rd
+
+Helene S
+
+10
+
+d
+Britannia R
+
+Eglinton R
+
+5
+
+401
+
+2025
+52386
+19-2208
+
+Torbram
+
+r
+sT
+
+9
+
+Ninth Line Lands
+
+2
+
+7
+
+ent
+Re g
+
+11
+
+W
+Derry Rd
+
+D-2029 (35358)
+P-2029 (35223)
+C-2030 (34286)
+
+5
+
+Bramalea GO
+
+0
+
+401
+
+Churc
+hS
+tre e t
+New Facility
+292960
+
+1200
+
+2026
+50941
+23-2261
+
+2024
+55585
+19-2158
+
+d
+
+15
+
+15
+
+0
+15
+
+2031
+35811
+29-2299
+
+4
+
+50
+
+450 Orenda Rd
+
+450
+
+Harvestview
+
+Highway 427 Industrial (SPA47)
+
+Gore Road
+
+8
+
+Ct
+
+R
+
+2025
+54197
+25-2159
+
+2027
+56227
+25-2263
+
+450
+
+2026
+31568
+26-2168
+
+Intermodal
+
+2027
+55717
+25-2269
+
+a
+
+Mullet Creek
+
+407
+
+15
+
+Church Street
+
+1
+
+dW
+Steeles R
+
+18
+
+dE
+Steeles R
+
+107
+
+2033
+51662
+29-2198
+
+d
+Mayfield R
+
+2024
+McVean 56181
+23-2165
+
+2400
+
+1200
+
+525
+15
+
+2024
+53950
+24-2106
+
+2031
+35814
+29-2299
+
+3
+
+2030
+57082
+28-2257
+
+2027
+57079
+25-2256
+
+Central Brampton
+
+16
+
+Mavis
+
+900
+
+4
+
+2024
+56964
+23-2174
+
+2026
+34033
+24-2196
+
+2026
+51658
+24-2194
+
+9
+
+2025
+3827
+25-2175
+15
+00
+
+C-2024 (55680)
+C-2024 (56671)
+
+8
+
+E
+Queen St
+
+2024
+55834
+23-2150
+
+900
+
+7
+
+2024
+56963
+23-2174
+
+Rd
+
+375
+
+Bram West (SPA40)
+
+410
+
+2027
+56229
+25-2264
+
+2027
+52666
+25-2269
+
+7
+
+2028
+29443
+26-2252
+
+375
+
+6
+
+1
+
+16
+
+450
+
+2025
+57071
+24-2141
+
+450
+
+2028
+2028
+34521 29450
+26-2253 26-2253
+
+375
+
+Bolton
+
+2032
+56994
+29-2199
+
+King St
+
+2029
+51664
+29-2198
+
+2027
+3768
+27-2178
+
+Bramalea
+
+Queen St W
+
+d
+Embleton R
+
+We st Bolton
+
+150
+
+2025
+32064
+25-2171
+
+10
+
+Mc
+Ve a
+n
+Sewage Pumping
+Station Expansion
+182976
+
+14
+
+Bolton
+North
+Hill
+
+King St E
+
+50
+
+2027
+3769
+2025 27-2177
+3772
+24-2176
+
+2025
+30725
+5
+25-2170 37
+
+2027
+52663
+25-2268
+
+1500
+
+Lakelands
+
+Kennedy Rd S
+
+5
+37
+
+450
+
+107
+
+5
+
+2025
+57073
+24-2142
+
+1500
+
+Kennedy Rd N
+
+750
+
+Thomas St
+
+19
+
+525
+
+r W
+Bovaird D
+
+60
+0
+
+37
+5
+
+2031
+52677
+29-2199
+
+Dr
+
+2032
+56996
+29-2199
+
+525
+
+Bolton Camp
+
+2025
+56053
+23-2192
+
+2024
+3770
+23-2272
+
+8
+
+Castlemore
+
+St W
+
+5
+
+2024
+51914
+23-2270
+
+2026
+24608
+24-2273
+
+10
+
+2032
+35803
+29-2299
+
+4
+
+Bovaird Dr E
+
+450
+
+8
+
+2026
+56955
+24-2274
+
+525
+
+600
+
+9
+
+2
+
+1200
+
+825
+
+6
+
+450
+2025
+56675 Mayfield Rd
+24-2182
+
+2029
+56883
+27-2255
+
+14
+
+WVSP AREA
+
+450
+
+525
+
+King
+
+600
+
+Mayfield
+
+2029
+35584
+27-2254
+
+600
+675
+
+525
+407
+
+450
+
+675
+
+600
+900
+
+600
+
+600
+3
+
+W
+
+525
+
+Mississauga Rd
+
+Winston Chur chill Bv
+
+45
+0
+
+2029
+51638
+29-2198
+
+450
+
+675
+
+525
+
+750
+
+2031
+51640
+29-2199
+
+Dougall
+
+2031
+56982
+29-2199
+
+2032
+56984
+29-2199
+
+2033
+56970
+29-2199
+
+0
+45
+
+Northwest Brampton
+(SPA52, SPA53)
+
+2033
+56966
+29-2199
+
+McLaughlin
+
+2032
+56986
+29-2199
+
+2032
+56988
+29-2199
+
+19
+
+375
+
+600
+
+Countryside Village (SPA48)
+and Tullamore Industrial Area
+
+2025
+54205
+24-2183
+
+2035
+56957
+29-2299
+
+2032
+35808
+29-2299
+
+0
+60
+
+Ninth Li
+
+D-2024 (57359)
+C-2026 (57360)
+
+2033
+56972
+29-2199
+
+600
+
+525
+
+6
+
+2026
+56805
+24-2192
+
+375
+2026
+56803
+Deer
+Valley Dr 24-2191
+
+9
+
+375
+
+525
+
+2
+
+Mayfield West Phase 3
+
+450
+
+525
+375
+
+Mc
+L
+a
+ug
+hlin
+New Sewage Pumping
+Station
+242985
+
+2033
+56968
+29-2199
+
+2033
+56976
+29-2199
+
+525
+
+2026
+56801
+2026
+24-2195
+56689
+2026
+24-2197 150 56685
+West Bolton
+24-2197
+9
+
+4
+
+2033
+56974
+29-2199
+
+C-2024 (56676)
+P-2024 (56677)
+C-2026 (56678)
+
+Humber
+
+Airport Rd
+
+9
+
+1
+
+2024
+54062
+24-2105
+
+Chinguacousy
+Leachate
+
+King St
+
+2024
+54058
+24-2103
+
+450
+
+Hurontario St
+
+525
+
+2024
+54070
+24-2151
+
+3
+
+7
+
+2024
+54072
+24-2151
+
+NinthL
+ine L
+ands
+
+2024
+54060
+24-2104
+
+12
+
+Bv
+
+450
+
+Dr
+
+St
+
+Line Rd
+Olde Base
+
+600
+
+Rutherford Rd S
+
+Heritage Rd
+
+375
+e
+
+2031
+52679
+29-2199
+
+b Py
+
+l
+Financia
+
+ar
+en
+c
+
+rk
+
+Humbe r
+New Sewage Pumping
+Station
+242984
+
+12
+
+2024
+54082
+24-2151
+
+d
+
+Mayfield Rd
+
+Kol
+Emil
+
+375
+
+2028
+21558
+28-2132
+
+Inglewood
+
+410
+
+da
+R
+
+14
+
+50
+
+ill oe
+R d H se sh
+r
+Ho
+
+Cl
+
+2024
+54080
+24-2151
+Cla
+
+2024
+54068
+24-2151
+
+2026
+52675
+24-2166
+
+2026
+3849
+26-2152
+
+2032
+56978
+29-2199
+
+2033
+52681
+29-2198
+
+8
+
+2024
+1
+54078
+24-2151
+
+2024
+54066
+24-2151
+
+450
+
+2026
+33725
+24-2167
+
+2032
+35808
+29-2299
+
+Countryside
+
+Queen St E
+
+19
+
+2025
+57304
+2026 25-2190
+3845
+26-2155
+
+2032
+56980
+29-2199
+
+450
+
+675
+
+2024
+2024
+54076
+54074
+24-2151
+24-2151
+
+2033
+34020
+29-2198
+
+2033
+51642
+29-2198
+
+600
+
+900
+
+2031
+51666
+29-2198
+
+Caledon East
+
+22
+
+2033
+56992
+29-2199
+
+7
+
+2033
+51644
+29-2198
+
+2031
+Mayfield 53961
+29-2199
+525 2025
+5820
+25-2157
+
+Rd
+
+450
+
+50
+
+7
+
+Old Church
+
+Or
+en
+
+2027
+21559
+25-2135
+
+it Rd
+of the Cred
+F o r ks
+
+675
+
+2032
+56951
+29-2198
+
+0
+60
+
+2027
+56229
+25-2264
+
+5
+37
+
+450
+
+11
+
+4
+
+2032
+56949
+29-2198
+
+525
+
+2032
+56990
+29-2199
+
+Innis Lake Rd
+
+2026
+2026
+51918
+56953
+24-2185 24-2185
+
+Healey Rd
+
+School Rd
+
+2025
+53955
+25-2121
+
+8
+Kilometres
+
+450
+
+750
+
+Lakeview
+2025
+Village
+53958
+25-2121
+
+2025
+53956
+25-2121
+
+600
+
+525
+
+Old
+
+0
+45
+
+2029
+21553
+29-2198
+2029
+2029
+45 21555
+0 29-2198 21556
+29-2198
+
+Winston Churchill Bv
+
+Countryside Villag
+e (
+S
+P48)andT ullamore I
+ndustrialAre a
+
+2025
+33586
+25-2189
+
+Centra
+l Brampton
+
+Bram We st (
+S
+P
+A40)
+
+2028
+21557
+28-2134
+
+Ma
+in
+
+St
+
+21061
+27-2221
+
+Embleton Rd
+
+Old
+
+Bush St
+
+2029
+2029
+21062 21063
+illiams Py
+27-2221 27-2221 W
+750
+
+7
+2029 50
+
+Document Path: E:\Program_Planning\Team GIS Files and Maps\3871-WW-DC Wastewater Map 2024.mxd
+
+McLaughlin
+
+2030
+36246
+28-2181
+
+2030
+21060
+28-2222
+
+2029
+375
+21054
+29-2198
+
+Britannia Rd
+
+2035
+51624
+29-2199
+
+19
+
+750
+
+rW
+Bovaird D
+
+107
+
+Mississauga Rd
+
+2026
+50346
+24-2223
+
+2033
+51626
+29-2198
+
+2026
+51632
+24-2188
+
+525
+
+2031
+21043
+29-2198
+
+1
+
+2029
+21051
+29-2198
+600
+2030
+21044
+28-2222
+
+375
+
+2033
+51628
+29-2198
+
+Dra
+ft –Not Approve dby Counc
+il
+
+2033
+51634
+29-2198
+
+600
+
+1
+
+24
+
+525
+
+8
+
+Goreway Dr
+
+R
+Charleston S24
+
+2033
+51630
+29-2198
+
+The Gore Rd
+
+450
+
+Heritage Rd
+
+2033
+21042
+29-2299
+
+7
+
+Queen St N
+
+900
+
+136
+
+2033
+56968
+29-2199
+l Rd 525
+Old Schoo
+
+450
+
+825
+
+2031
+21050
+29-2198
+
+Wa
+ste w a
+te r S
+e rvic
+ingI
+nfra
+struc
+ture
+T re a
+tme nt a
+ndT runk S
+e w e rS
+yste m
+20242041De ve lopme nt Cha
+rg
+es
+
+2033
+56966
+29-2199
+
+McLaughlin Rd
+
+2031
+21058
+29-2299
+
+Chinguacousy Rd
+
+2033
+21041
+29-2299
+
+Ma
+yfie ldWe st Phase 3
+
+y
+
+1800
+
+900
+
+750
+
+2035
+21030
+29-2299
+
+Main St
+
+Wanless Dr
+
+2031
+21057
+29-2299
+
+9H
+
+900
+
+600
+
+600
+
+2033
+21056
+29-2299
+
+2034
+21038
+29-2199
+
+2033
+21021
+29-2198
+
+Wastewater Development
+Charges
+2024
+
+Queen St S
+
+2033
+21055
+29-2299
+
+2034
+21036
+29-2199
+
+2033
+21022
+29-2198
+
+675
+2032
+56984
+29-2199
+
+Bramalea Rd
+
+d
+Mayfield R
+
+14
+
+Winston Churchill Bv
+
+2032
+56988
+29-2199
+
+Porterfield Rd
+
+Northw e st Brampton (
+S
+P
+A52,
+S
+P
+A53)
+
+Airport Rd
+
+axa Town
+
+Torbram Rd
+
+23
+Garafr
+Caledon-E
+
+October 2023
+Water & Wastewater Planning, Public Works
+Map ID: 3871-WW-DC Wastewater Map 2024
+Data Source: Region of Peel
+Scale: 1:68,000 | NAD83 UTM zone 17N
+
+DISCLAIMER
+The proposed capital projects shown on this map are subject to annual review and approval by
+Regional Council. As such, project schedules and project scopes are subject to change.
+
+Bram West (
+S
+P
+A40)
+Northw est Bram pton(
+S
+P
+A52,
+S
+P
+A53)
+
+2035
+20759
+29-1199
+
+2033
+20753
+29-1199
+
+Main St
+
+il
+400
+
+403
+
+2029
+53973
+27-1115
+
+2029
+53965
+27-1115
+
+2027
+35360
+25-1124
+
+Queensway
+
+750
+2025
+2027
+56097
+53553
+23-1227
+25-1220
+1500
+
+Rd W
+
+1
+
+17
+
+2031
+34224
+29-1199
+
+4
+
+Lakeview Village
+
+750
+
+600
+
+400
+
+Arthur P.
+Kennedy
+
+Lorne Park
+
+Bloo
+
+Arthur P.
+Kennedy
+Reservoir Expansion
+211923
+Lake Ontario Monitoring
+System
+221924
+Standby Power Expansion
+271982
+Waste Building Expansion
+291997
+New Intake
+291995
+291997
+T rea
+tm ent E
+xpa
+nsi
+on
+
+1500
+
+Coleraine Dr
+
+400
+
+Coleraine Dr
+
+600
+
+D-2026 (54120)
+C-2027 (54121)
+
+Elevated Tank
+
+Standpipe
+
+Well
+
+Well
+
+Water Treatment Plant
+
+Water Pumping Station
+
+750
+
+2027
+54575
+25-1220
+
+2027
+52644
+25-1126
+
+Watercourse
+Highway 413
+Greenbelt Boundary
+
+Reservoir
+
+2027
+33348
+25-1220
+
+Urban Boundary
+
+Elevated Tank
+
+2027
+52654
+25-1121
+
+Municipal Boundary
+Ward Boundary
+
+tE
+D unda s S
+
+Proposed Distribution Feeder Main Post 2024
+Proposed Transmission Main Post 2024
+
+750
+
+L
+a
+k evi
+ew Vi
+llage
+
+750
+
+2027
+53553
+25-1220
+
+20
+
+Water Main
+Watercourse
+
+Pumping Station
+
+EA-2029 (23451)
+
+DISCLAIMER
+The proposed capital projects shown on this map are subject to annual review and approval by
+Regional Council. As such, project schedules and project scopes are subject to change.
+2
+4
+8
+Kilometres
+
+Hy
+
+Elevated Tank
+
+Water Treatment Plant
+
+D-2024 (23395)
+C-2026 (23396)
+C-2024 (54097)
+
+EA-2025 (50380)
+D-2028 (32975)
+P-2028 (32976)
+C-2030 (32977)
+
+40
+0
+
+Reservoir
+
+Well
+
+D-2037 (23452)
+C-2039 (23453)
+
+50
+
+Reservoir
+
+Proposed Infrastructure 2025-2041
+
+C-2023 (54397)
+
+D-2027 (53560)
+C-2028 (53561)
+C-2029 (53562)
+D-2031 (23404)
+C-2033 (23405)
+
+50
+
+Existing Water Infrastructure
+
+Approved Transmission Main 2024
+
+Tomken Rd
+
+S
+i
+lverthorn
+Transient Protection
+Expansion
+231994
+Reservoir Expansion
+261941
+
+2025
+20920
+25-1178
+
+2025
+53946
+23-1227
+E
+1500
+Queensway
+
+Mo
+
+First St
+
+2031
+34224
+29-1199
+
+Arthur P.
+Kennedy
+
+Lak es ho
+
+2025
+54190
+22-1125
+
+2025
+52642
+22-1125
+
+Private
+Rd
+
+0
+
+150
+
+40
+2027 0
+20922
+27-1179
+
+2027
+52656
+27-1173
+
+Approved Distribution Feeder Main 2024
+
+2027
+33346
+25-1220
+
+251575
+281925
+
+19
+
+r St
+
+West Rd
+
+2
+
+750
+
+2024
+54188
+19-1120
+
+Dundas Corridor
+
+E
+
+QEW
+
+2031
+29681
+29-1199
+
+2027
+52654
+25-1121
+
+2028
+52711
+26-1172
+
+Pumping Station
+
+750
+
+20
+
+2027
+52644
+25-1126
+
+900
+
+7
+
+Silverthorn
+
+C ou
+
+400
+
+ntryside Dr
+
+Approved Infrastructure 2024
+
+Greaves Rd
+
+2025
+56209
+12-1420
+
+Erin Mills Py
+
+Herridge
+
+3
+
+750
+
+600
+
+400
+
+1500
+
+400
+
+b eck Cr
+
+2024
+29698
+12-1420
+
+4
+
+Cawthra Rd
+
+2029
+27414
+27-1228
+
+1
+
+EA-2025 (51085)
+D-2032 (32978)
+P-2032 (32979)
+C-2034 (32980)
+
+Vie
+
+nt
+
+C-2039 (54396)
+
+6
+
+400
+
+900
+
+403
+
+2100
+
+8
+
+D-2028 (54304)
+C-2030 (54305)
+
+Centre
+
+400
+
+2029
+53969
+27-1115
+
+2029
+53971
+27-1115
+
+Rathburn
+
+Mi
+ssi
+ssa
+ug aCi
+ty Centre
+
+Dunda
+s Corri
+dor
+
+Mississauga City Centre
+
+Duffys Ln
+
+Em
+
+d
+ate R
+P riv
+
+2029
+35875
+27-1115
+
+409
+
+2029
+35876
+27-1115
+
+Silverthorn
+
+2035
+33582
+29-1199
+
+750
+
+2025
+52658
+24-1176
+
+2031 - Construction Year
+30713 - Component Number
+25-2199 - Project Number
+
+re Rd E
+
+2025
+52713
+25-1129
+
+600
+
+L
+a
+belL
+egend
+
+Hydro Rd
+
+401
+
+2025
+28911
+24-1170
+
+2025
+20915
+24-1171
+
+Dr
+
+2028
+23446
+26-1123
+
+2024
+20918
+23-1174
+
+2027
+52660
+20-1175
+
+Bv
+
+C-2025 (54315)
+EA-2031 (22673)
+D-2033 (35617)
+C-2035 (35618)
+
+40
+0
+
+14
+
+Derry R d E
+
+2029
+53967
+27-1115
+
+750
+
+403
+
+2024
+51601
+23-1196
+
+d
+Mayfield R
+
+2
+
+2029
+35874
+27-1115
+
+400
+
+Ha
+nla
+nWest
+New Pumping Station
+221992
+New Reservoir
+291599
+291999
+
+8
+
+400
+
+Hanlan West
+
+3
+
+D-2027 (56934)
+C-2029 (56937)
+D-2027 (56938)
+C-2029 (56939)
+
+Rd
+
+2028
+23444
+26-1123
+
+400
+
+D-2028 (54294)
+50
+C-2030 (54295)
+
+427
+
+Hanlan
+
+2025
+32596
+25-1197
+
+w
+
+4
+
+410
+
+C-2026 (54339)
+
+Streetsville
+
+C-2024 (54099)
+
+October 2023
+Water & Wastewater Planning, Public Works
+Map ID: 3870-W-DC Water Map 2024_2
+Data Source: Region of Peel
+Scale: 1:68,000 | NAD83 UTM zone 17N
+
+5
+
+D-2028 (54298)
+C-2030 (54299)
+D-2031 (23582)
+C-2033 (23585)
+
+600
+
+5
+
+2025
+56812
+21-1430
+
+400
+
+Dixie Rd
+
+D-2029 (52045)
+C-2030 (52046)
+
+2025
+31850
+23-1127
+
+Healey Rd
+
+Hi
+g hw a
+y 427I
+ndustri
+a
+l(
+S
+P
+A47)
+
+15
+
+7
+
+2038
+52650
+29-1199
+
+600
+
+18
+
+2032
+51599
+29-1198
+
+2025
+35705
+23-1162
+
+600
+2025
+35703
+23-1160
+
+2024
+51313
+22-1161
+
+Duke of York
+
+W
+
+15
+
+150
+
+Pm
+
+2038
+52648
+29-1199
+
+1800
+
+2038
+52652
+29-1199
+
+107
+
+2024
+32598
+23-1195
+
+2032
+51597
+29-1198
+
+8
+
+E
+Steeles Rd
+
+750
+
+Rangevie
+
+Lakef r ont
+
+D-2024 (54083)
+C-2024 (54084)
+
+W
+
+Beckett
+Sproule
+
+400
+
+40
+0
+
+Ai
+rport Roa
+d
+Transient Protection
+Expansion
+221988
+Transient Protection
+Expansion
+281995
+Pumping Station Expansion
+271965
+
+8
+
+2031
+31459
+29-1299
+
+2026
+57150
+24-1192
+
+2024
+2024
+57193
+32588 24-1198
+24-1267
+
+Clarkway Dr
+
+d
+Steeles R
+
+D-2028 (54296)
+C-2030 (54297)
+
+5
+
+3
+
+E
+Queen St
+
+7
+
+4
+
+750
+
+ate
+Station G
+
+2029
+32002
+27-1229
+
+3
+
+Document Path: E:\Program_Planning\Team GIS Files and Maps\3870-W-DC Water Map 2024_2.mxd
+
+C-2024 (54248)
+
+Ha
+nla
+n
+Transient Protection
+Expansion
+281995
+Pumping Station Expansion
+401
+291999
+
+d
+Britannia R
+
+L
+ornePa
+rk
+Lake Ontario Monitoring
+System
+221934
+Transient Protection
+Expansion
+241540
+Transients/Protection
+Expansion
+281995
+Treatment Expansion
+251575
+291997
+
+C-2024 (33336)
+
+11
+
+W
+Derry Rd
+
+10
+
+600
+
+4
+
+Bec
+k ett S
+proule
+Pumping Station Expansion
+211974
+Improvements and
+Upgrades
+211978
+Transient Protection
+Expansion
+28995
+11
+Training and Logistics
+Facility
+24-1980
+Pumping Station 407
+Expansion
+29-1999
+
+2027
+50393
+14-1240
+
+2024
+56872
+14-1240
+
+55240
+29-1199
+600
+
+14
+
+West Bolton
+
+2026
+32592
+24-1194
+
+900
+
+Kin
+gS
+tW
+
+East Bolton
+
+2026
+32590
+24-1194
+
+2033
+51603
+29-1198
+2026
+37579
+24-1268
+
+2026
+53990
+24-1266
+
+2029
+32594
+27-1191
+
+2033
+51607
+29-1198
+
+400
+
+7
+
+410
+
+2025
+2024
+37588
+53820
+19-1156 24-1157
+
+2035
+38604
+29-1199
+
+2033
+51609
+29-1198
+
+9
+
+Highway
+427 Industrial (SPA47)
+8
+
+Airport Road
+
+2027
+2024 50395
+56873 14-1257
+14-1257
+2038
+
+2026
+57101
+24-1193
+
+2033
+51605
+29-1198
+
+North Bolton
+
+0
+60
+
+Tullamore
+
+East Brampton
+
+2026
+29885
+14-1256
+
+6
+
+14
+
+2033
+37596
+29-1198
+
+5
+
+Bolton South
+
+50
+
+10
+
+10
+
+Bovaird Dr E
+
+1
+
+2026
+37577
+24-1183
+
+2031
+31462
+29-1299
+
+9
+
+2030
+57050
+28-1259
+
+D-2024 (54302)
+C-2026 (54303)
+
+2028
+35355
+26-1258
+
+900
+
+2033
+51595
+29-1198
+
+400
+
+9
+
+2033
+52709 600
+29-1199
+
+2032
+51613
+29-1198
+
+4
+
+C-2026 (32269)
+
+2035
+34697
+29-1199
+
+2033
+51611
+29-1199
+
+2024
+56208
+18-1158
+
+D-2024 (54336)
+C-2026 (54337)
+
+16
+
+107
+
+2024
+30025
+19-1156
+
+2031
+51593
+29-1199
+
+D-2027 (56932)
+C-2029 (56933)
+
+West Bolton
+
+750
+
+900 400
+
+2026
+2026
+57150
+30976
+24-1192
+24-1269
+2026
+2033
+57153
+57059
+24-1197
+29-1198
+
+East Bolton
+
+900
+
+401
+
+2
+
+5
+
+60
+0
+1500
+1800
+
+D-2028 (54300)
+C-2030 (54301)
+
+NorthBra
+m pton
+Transient Protection
+Expansion
+221987
+
+900
+
+Mavis Rd
+
+400
+
+2028
+29891
+14-1256
+
+West Brampton
+
+Meadowvale
+North
+
+14
+
+W
+Bovaird Dr
+
+2033
+51591
+29-1198
+
+2029
+51589
+29-1198
+400
+
+North
+Brampton
+
+E
+a
+st Bra
+m pton
+Reservoir Improvements
+and Upgrades
+261954
+Transients Protection
+Expansion
+241985
+
+750
+
+15
+
+Snelgrove
+
+6
+
+W
+Queen St
+
+2025
+56871
+18-1184
+
+51621
+24-1187
+
+d
+Mayfield R
+
+400
+
+2027
+3634
+27-1131
+
+2029
+57198
+29-1198
+
+T ulla
+m ore
+
+2033
+37594
+29-1198
+400
+
+King S t W
+
+2034
+56914
+29-1199
+
+2026
+56947
+24-1191
+
+2026
+53992
+24-1190
+King St
+750
+
+2034
+56914
+29-1199
+
+9
+
+400
+
+The Gore Rd
+
+1
+
+2029
+57196
+29-1198 2026
+
+2026
+57096
+26-1188
+
+400
+19
+
+5
+
+400
+
+400
+
+2
+
+2026
+37579
+24-1268
+
+31436
+29-1299
+
+Pumping Station Expansion
+271964
+
+Py
+
+2026
+54019 150
+27-1199
+2035
+0
+31817
+60
+29-1299
+
+2026
+54019
+24-1191
+
+2026
+54021
+24-1191
+
+City Centre Dr
+
+600
+
+400
+
+107
+
+400
+
+C-2026 (54335)
+
+Alloa
+
+0
+
+2032
+56831
+29-1299
+
+Mea
+dow va
+leNorth
+Transient Protection
+Expansion
+221986
+Transient Protection
+Expansion
+281995
+
+2026
+57092
+26-1186
+
+2026
+57094
+26-1187
+
+750
+
+2033
+53963
+29-1199
+
+2031
+51587
+29-1199
+
+2028
+51585
+26-1189
+
+2034
+56914
+29-1199
+
+8
+
+WVSP2031
+AREA
+
+2025
+53551
+19-1189
+400
+
+600
+
+900
+
+9
+
+900
+
+750
+
+1200
+
+0
+150
+
+D-2031 (25259)
+C-2033 (26196)
+D-2026 (23391)
+C-2027 (23392)
+D-2029 (34485)
+C-2030 (16350)
+D-2034 (23389)
+C-2035 (23390)
+
+2026
+53977
+24-1182
+
+West Caledon
+
+600 750
+
+750
+
+Winston Churchill Bv
+
+EA-2028 (22428)
+D-2030 (37130)
+P-2030 (37131)
+C-2032 (37132)
+
+750 40
+
+14
+
+900
+
+West Bra
+m pton
+Reservoir Expansion
+281999
+Pumping Station Expansion
+261962
+Pumping Station Expansion
+281999
+Pumping Station Expansion
+281999
+
+C-2024 (32270)
+
+400
+
+2028
+51583
+26-1189
+
+750
+
+Bram West (SPA40)
+Northwest Brampton (SPA52,SPA53)
+
+D-2024 (20692)
+C-2026 (20685)
+
+2026
+53975
+24-1180
+
+2026
+57090
+24-1185
+
+4
+
+2031
+38605
+29-1199
+
+West Ca
+ledon
+New Elevated Tank
+231941
+1
+
+19
+
+S
+nelg rove
+Decommissioning Elevated
+Tank
+211951
+New E
+leva
+tedT a
+nk
+281581
+291999
+
+Mayfield West
+
+9
+
+2026
+30703
+24-1180
+2026
+20697
+24-1270
+
+King St
+
+Sandhill
+
+600
+
+North Bolton
+
+Coleraine Dr
+
+Victoria
+
+2035
+31823
+29-1299
+
+6
+
+7
+
+600
+
+6
+
+EA-2026 (22350)
+D-2028 (23447)
+C-2030 (23448)
+
+2032
+2033
+31439
+30042
+29-1299
+29-1199
+
+2033
+31820
+29-1299
+
+S
+a
+ndhi
+ll
+New Reservoir and Pumping EA-2027 (35850)
+Station
+D-2029 (38087)
+271582
+P-2029 (38088)
+291999
+C-2031 (38089)
+9 C-2031 (38090)
+
+Ko l b
+
+Castlederg
+
+150
+
+600 400
+
+tW
+
+Vi
+c
+tori
+a
+New Pum pi
+ng S
+ta
+ti
+on
+261580
+281963
+
+Rd
+Embleton
+
+2025
+3634
+25-1131
+
+West Bolton
+
+Macville
+
+EA-2031 (22677)
+D-2033 (35614)
+P-2033 (35615)
+C-2035 (35616)
+
+50
+
+400
+
+Queen S
+
+EA-2031 (34474)
+D-2033 (32972)
+P-2033 (32973)
+C-2035 (32974)
+
+EA-2028 (22514)
+8
+D-2030 (30682)
+P-2030 (32702)
+C-2032 (32010)
+
+400
+
+Cheltenham
+
+Heritage Road
+
+3
+
+Ca
+stlederg
+New Elevated Tank
+251599
+291999
+
+750
+
+2029
+21137
+29-1198
+
+Heri
+ta
+g eRoa
+d
+New E
+leva
+tedT a
+nk
+291599
+291999
+
+Ma
+c
+vi
+lle
+New Elevate Tank
+281583
+291999
+
+South Albion
+
+12
+
+Kennedy Rd S
+
+0
+40
+
+2028
+21141
+26-1132
+
+12
+
+22
+
+Humber Station Rd
+
+Mississauga Rd
+
+1500
+
+19
+
+Inglewood
+
+2028
+29891
+14-1256
+
+Rd
+
+D-2024 (30686)
+P-2024 (32574)
+C-2026 (32573)
+
+600
+
+1
+
+2028
+21136
+26-1138
+19
+
+y
+Williams P
+
+Old Church
+
+NorthBolton
+Booster Pumping Station
+241969
+
+400
+
+900
+
+Caledon East
+
+Castlederg
+
+Airport Rd
+
+2028
+21135
+26-1133
+
+60
+0
+
+2032
+56831
+29-1299
+
+West Bolton
+
+7
+
+S
+outhAlbi
+on
+New Reservoir and Pumping EA-2029 (22574)
+Station
+D-2031 (35752)
+291599
+P-2031 (35753)
+291999
+C-2033 (35754)
+C-2033 (35755)
+New Elevated Tank
+EA-2033 (38092)
+291599
+D-2035 (35756)
+291999
+P-2035 (35757)
+C-2037 (35758)
+
+D-2025 (52801)
+C-2027 (52302)
+
+Inglewood
+
+West Brampton
+
+C-2026 (52300)
+
+Humber Station Rd
+
+r
+
+I
+nglew ood
+New Groundwater Well
+221831
+
+Palgrave
+
+Caledon East
+
+400
+
+tte
+
+900
+
+Rd
+
+C-2024 (52304)
+C-2025 (57301)
+
+East Rd
+
+11
+
+2028
+32336
+26-1134
+
+New Groundw a
+ter Well
+231830
+
+Hurontario St
+
+r W 750
+Bovaird D
+
+Ca
+ledonE
+a
+st
+
+Palgrave
+
+Queen St N
+
+Cr
+
+o
+James P
+
+Ma
+in
+
+St
+
+2031
+20735
+29-1199
+
+1
+
+Old
+
+2026
+Bush St
+20733
+24-1130
+
+4
+
+Pa
+lg ra
+ve
+New Groundwater Well
+221832
+
+50
+
+Queen St S
+
+1
+
+40
+0
+
+19
+
+24
+
+600
+
+2024
+56315
+23-1137
+
+600
+
+400
+
+400
+
+Dra
+ft –Not Approvedby Counc
+i
+l
+
+24
+
+1800
+
+2028
+21919
+26-1136
+
+8
+
+W
+
+1500
+
+600
+
+2028
+20749
+26-1135
+
+2031
+30717
+29-1198
+
+107
+
+136
+
+ood Py
+Sandalw
+
+900
+
+Heritage Rd
+
+2033
+51940
+29-1198
+
+900
+
+2030
+20742
+29-1198
+
+7
+
+Wa
+ter S
+ervi
+c
+i
+ng I
+nfra
+struc
+ture
+Wa
+ter Produc
+ti
+on,
+T ra
+nsm i
+ssi
+onS
+ystem s
+a
+ndDi
+stri
+buti
+onS
+ystem s
+20242041De
+velopm ent Cha
+rg es
+
+600
+
+2033
+20751
+29-1199
+
+y
+
+Caledon Village
+
+600
+
+Winston Churchill Bv
+
+400
+
+2031
+20745
+29-1198
+
+9H
+
+r
+ss D
+Wanle
+
+Rd
+
+2035
+20755
+29-1199
+
+Mono Mills
+
+Alton
+
+The Gore Rd
+
+750
+
+2037
+32142
+29-1199
+
+2031
+32585
+29-1198
+
+1500
+
+400
+
+2035
+20767
+29-1199
+
+1200
+
+2035
+53979
+29-1199
+
+Water Development
+Charges
+2024
+
+136
+
+Porterfield Rd
+
+400
+
+Alloa
+
+ed
+itvi
+ew
+
+14
+
+750
+
+750
+
+Mississauga Rd
+
+2037
+32033
+29-1199
+
+d
+Mayfield R
+
+2026
+20697
+24-1270
+
+2026
+57090
+24-1185
+
+2035
+31996
+29-1199
+750
+
+2035
+31823
+29-1299
+
+2037
+32600
+29-1199
+400
+
+23
+
+2025
+32031
+25-1129
+
+2025
+30981
+25-1129
+
+w Rd
+2025
+37966
+25-1129
+
+400
+
+

@@ -1,0 +1,5667 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+December 5, 2025
+
+PROPOSED TRANSPORTATION DEPOT
+12363 DIXIE ROAD, TOWN OF CALENDON
+Functional Servicing &
+Stormwater Management Report
+Town of Caledon, ON
+June 16, 2023
+
+Project: 22011
+
+Civil Consultant:
+
+15955 Airport Road, Suite 304, Caledon East, Ontario, Canada, L7C 1H9
+TEL: 905 584-1458 FAX: 905 584-1461 E-MAIL: urbanwater@grnland.com
+WEBSITE: www.grnland.com
+
+PROPOSED TRANSPORTATION DEPOT
+12363 DIXIE ROAD, Caledon, Ontario
+TABLE OF CONTENTS
+1.0
+INTRODUCTION .................................................................................................................................... 1
+2.0
+SANITARY SERVICING ........................................................................................................................ 2
+2.1
+Existing Sanitary Servicing ......................................................................................................... 2
+2.2
+Proposed Sanitary Servicing and Peak Discharge Rates ........................................................ 2
+3.0
+WATER SERVICING ............................................................................................................................. 3
+3.1
+Existing Water Services .............................................................................................................. 3
+3.2
+Proposed Water Services & Peak Water Demands .................................................................. 3
+3.2.1
+Domestic Flow ............................................................................................................................ 3
+3.2.2
+Fire Flow Demands .................................................................................................................... 4
+4.0
+STORMWATER MANAGEMENT .......................................................................................................... 5
+4.1
+Stormwater Management Criteria ............................................................................................... 5
+4.2
+Site Statistics ................................................................................................................................ 5
+4.3
+Native Soils Conditions and Water Table Elevations ............................................................... 7
+4.4
+Flood Protection ........................................................................................................................... 7
+4.4.1
+SWM Detention Volumes ........................................................................................................... 9
+4.5
+Stormwater Volume and Erosion Control.................................................................................. 9
+4.5.1
+5mm Retention Strategy .......................................................................................................... 10
+4.5.2
+24 to 48 hour Extended Detention ........................................................................................... 10
+4.6
+SWM Control Structure Sizing .................................................................................................. 11
+4.7
+Water Quality Control ................................................................................................................ 12
+4.7.1
+Oil Grit Separator ..................................................................................................................... 12
+4.7.2
+Forebay Pre-Treatment ............................................................................................................ 12
+4.7.3
+Infiltration Basin ........................................................................................................................ 13
+4.7.4
+Suspended Solids Removal ..................................................................................................... 14
+4.7.5
+Construction Phase Erosion and Sediment Control................................................................. 14
+4.8
+Water Balance Analysis............................................................................................................. 15
+4.8.1
+Pre-Development Conditions ................................................................................................... 15
+4.8.2
+Mitigation Plan .......................................................................................................................... 16
+4.9
+Catchbasin Inlet Capacity Analysis ......................................................................................... 16
+4.10
+Inspection & Maintenance ......................................................................................................... 17
+5.0
+CLOSURE ............................................................................................................................................ 18
+TECHNICAL APPENDICES
+Appendix A:
+
+Record Drawings for Dixie Road
+
+Appendix B:
+
+Connection Demand Table
+
+Appendix C:
+
+Hydrogeological Report Excerpts
+
+Appendix D:
+
+Figure No. 4 to 10 - Modified Rational Method Calculations
+
+Appendix E:
+
+SWM Facility Design Calculations
+
+Appendix F:
+
+Oil Grit Separator Specifications
+
+Appendix G:
+
+Thornthwaite-Mather Water Balance Calculations
+
+ii
+
+Functional Servicing & Stormwater Management Report
+PROPOSED TRANSPORTATION DEPOT
+
+1.0 INTRODUCTION
+The following Functional Servicing and Stormwater Management Report has been prepared by Urban
+Watershed Group Limited. (UWGL), in support of the Proposed Transportation Depot located on 12363 Dixie
+Road in the Town of Caledon, Region of Peel. The 9.15 hectare property is located north of the Dixie Road,
+between Mayfield Road and Old School Road (See Figure No. 1), and is legally described as Part of Lot 19,
+Concession 4, in the Geographic Township of Chinguacousy.
+The property is bounded by existing residential properties to the north, agricultural lands to the east, a
+landscape/garden center to the south, and Dixie Road to the west. The subject site is currently under active
+agricultural use, and proposed to be rezoned to permit the proposed commercial/ industrial development.
+A tributary of the West Humber River watershed and its associated flood plain traverses the property and
+bisects the lot. To preserve the Environmental Protection Areas associated with the watercourse, the rear
+7.98 ha of the total parcel shall be left as existing agricultural and natural feature land uses. The remaining
+1.17 ha parcel of land outside of the Green Belt shall be the subject of the proposed development plan.
+It is proposed to construct one one-storey industrial Building (office & repair building) along with 190 parking
+spaces which will comprise the Transportation Depot. The proposed building gross floor area is
+approximately 616 sq.m, of which one quarter will be office space, and the remaining area will be for the
+truck service/repair bays and storage space. At the front of the development truck trailer parking will be
+provided on an asphalt surface. Additional parking for truck cabs will be provided on a gravel surface located
+near the rear of the development site. Site access will be provided onto Dixie Road through a proposed
+commercial/ industrial driveway.
+This report aims to identify the existing municipal services (storm, sanitary and water) available, and
+demonstrate there is sufficient capacity to accommodate the proposed development. As well, this report
+puts forward a stormwater management (SWM) plan which adheres to the criteria set out by the governing
+agencies (Town of Caledon, Toronto and Region Conservation Authority (TRCA) and Peel Region).
+
+1
+
+SITE
+
+SITE LOCATION PLAN
+
+15955 AIRPORT ROAD, SUITE 304
+CALEDON EAST, ONTARIO, L7C 1H9
+PHONE: (905) 584-1458 FAX: (905) 584-1461
+
+PROPOSED TRANSPORTATION DEPOT
+
+rban Watershed Group Ltd.
+
+12363 DIXIE ROAD
+TOWN OF CALEDON, ONTARIO
+
+XXX
+
+A Member of the
+GREENLAND Group of Companies
+urbanwater@grnland.com
+
+FIG1
+
+2.0
+
+SANITARY SERVICING
+
+2.1
+
+Existing Sanitary Servicing
+
+The site is currently vacant and believed to be un-serviced through either private septic or municipal sanitary
+sewers. Drawings provided by the Region of Peel indicate an existing 600mm concrete southerly flowing
+sanitary sewer is located within the west boulevard of Dixie Road. Plan and profiles of the existing municipal
+sewers can be found in Appendix A.
+
+2.2
+
+Proposed Sanitary Servicing and Peak Discharge Rates
+
+Sanitary servicing is to be provided consistent with the Region of Peel Public Works Sanitary Sewer Design
+Criteria (2017). It is proposed to connect the property to the existing 600mm diameter municipal sanitary
+sewer on Dixie Road. A new connection is proposed via a 150mm diameter PVC sanitary lateral at minimum
+2% slope complete with sampling manhole located at the limit of the road widening.
+
+The general
+
+arrangement of the proposed sanitary sewer has been indicated on the Site Servicing & Grading Plan
+(Drawing 22011-SS1).
+The proposed peak sanitary discharge generated from the development has been calculated in accordance
+with Region of Peel Design Criteria as follows:
+Proposed Sanitary Peak Discharge
+Population
+Site Area
+Equivalent Population
+
+= 50 persons/hectare
+= 1.17 hectares
+= 50 persons/hectare x 1.17 hectares
+= 58.5 (59) persons
+
+Domestic sewage flow is based upon a unit rate of 302.8 L/capita/day, therefore:
+Domestic Sewage Flow = 59 persons x 302.8L/capita/day
+= 17,865.2 L/day
+= 0.207 L/sec
+The Harmon Peaking Factor (M) must be applied for Dry Weather Flows, and for a population below 450
+persons is restricted to a maximum of 4.0:
+M
+
+Maximum Dry Weather Flow
+
+Infiltration Amount
+
+= 1 + 14 / (4 + P 0.5)
+= 1 + 14 / (4 + (59/1000) 0.5)
+= 4.30
+= 0.207 L/sec x 4
+= 0.827 L/sec
+= 0.0002 m3 /sec/ha x 1.17 ha
+= 0.000234 m3 /sec
+= 0.234 L/sec
+2
+
+Total Prop. Peak Discharge
+
+= Commercial Flow + Infiltration Amount
+= 0.827 L/sec + 0.234 L/sec
+= 1.061 L/sec
+
+The internal 150mm diameter pipe with a minimum fall of 2.0% has a capacity of 22.5 l/sec, and will be more
+than sufficient to convey the proposed flows to the municipal sewers. A Connection Demand Table has been
+included in Appendix B, in which a more detailed analysis of water and wastewater demand from the
+proposed development has been completed.
+
+3.0
+
+WATER SERVICING
+
+3.1
+
+Existing Water Services
+
+The property does not have an existing municipal water service or private well. Drawings provided by the
+Region of Peel indicate there is an existing 400mm diameter PVC municipal feeder watermain and a 150mm
+diameter PVC local watermain on Dixie Road. Municipal hydrants are connected to the 400mm diameter
+watermain. Plan and profiles of the existing municipal watermain can be found in Appendix A.
+
+3.2
+
+Proposed Water Services & Peak Water Demands
+
+It is proposed to provide a new fireline/domestic connection per Region of Peel Standard 1-6-4. A new
+connection to the 150mm diameter municipal watermain of Dixie Road is proposed via a 150mm diameter
+PVC water service installed cut in tee. The proposed domestic service size is 50mm, and will branch off the
+proposed 150mm diameter water service connection immediately before the limit of the road widening. A
+new water meter shall be provided within the mechanical room of the building. The general arrangement of
+the fire and domestic water services has been indicated on the Site Servicing & Grading Plan (Drawing
+22011-SS1).
+3.2.1
+
+Domestic Flow
+
+Domestic water demands have been estimated using the Region of Peel Public Works Watermain Design
+Criteria (2010). For the 59 persons (calculated for proposed peak sanitary flow), average ICI consumption
+rate of 300 L/day/cap has been used. A max day factor of 1.4 and a peak hour factor of 3.0 have been
+applied.
+Peak Water Demand
+Daily Water Consumption
+
+= 59 persons x 300 L/capita/day
+= 17,700L/day
+= 0.205 L/sec
+
+Maximum Daily Demand
+
+= Daily Water Consumption x Max Day Factor
+= 17,700 L/day x 1.4
+= 24,780 L/day
+= 0.287 L/s
+3
+
+Peak Hourly Demand
+
+3.2.2
+
+= Daily Water Consumption x Peak Hour Factor
+= 17,700 L/day x 3.0 / 24 hours/day
+= 2,212.5 L/hour
+= 0.615 L/s
+
+Fire Flow Demands
+
+Regional standards require watermains to be sized to meet a minimum pressure of 140 KPA (20 PSI) under
+the maximum day demand plus fire flow.
+
+The fire flow requirements for the building have been estimated
+
+using the NFPA Fire Underwriters Survey’s Water Supply for Public Fire Protection (1999). The proposed
+736 sq.m gross floor area, has been used in calculation of fire flow requirements for combustible building
+construction with a high occupancy hazard classification (repair garage) and a fully supervised sprinkler
+system. The total required fire flow demand has been calculated as 4,255 L/min (70.91 L/s). Detailed
+calculations of the fire flow demand are included in Appendix B, along with a Connection Demand Table.
+The proposed development shall be connected to the local 150mm diameter municipal watermain. Hydrant
+flow testing of this local watermain is not possible, as the existing hydrants are connected to the 400mm
+diameter municipal feeder main in front of the site. Region of Peel staff should confirm the adequacy of the
+watermain to service the development based on regional watermain modelling.
+
+4
+
+4.0 STORMWATER MANAGEMENT
+4.1
+
+Stormwater Management Criteria
+
+The property is located within a regulated area of the Toronto and Region Conservation Authority (TRCA)
+Watershed. A portion of the property is within the Regulatory floodplain of a tributary of the West Humber
+River at an elevation of 256.80 metres. The existing runoff from the property is primarily conveyed by sheet
+flow directly into the watercourse across the agricultural lands.
+The proposed structure will have a finished floor elevation of 263.15, and therefore be sufficiently situated
+above the Regional Floodplain elevation.
+The policies set out in the TRCA Stormwater Management Criteria (August 2012), outline the below
+applicable SWM criteria for the development which are to be followed:
+•
+
+Flood Protection
+
+•
+
+o Post to Pre for up to and including 100-year storms (Town of Caledon)
+o Unit Flow Rates for pre-development conditions (TRCA)
+Erosion Control
+
+•
+
+o Extended detention of 25mm event for 48 hours (TRCA)
+o At minimum retain 5mm on site (TRCA and Town of Caledon)
+Water Quality
+o
+
+Enhanced Level of Protection (80% Total Suspended Solids Removal) per MECP criteria
+(TRCA and Town of Caledon)
+
+•
+
+Water Balance / Groundwater Recharge
+o
+
+Site specific water balance analyses and maintenance of recharge
+(TRCA and Town of Caledon)
+
+The criteria above will be defined in detail and addressed within the succeeding sections of the report.
+
+4.2
+
+Site Statistics
+
+The total development area outside of the Greenbelt is 1.17 ha and is comprised of agricultural land. The
+land generally slopes in a north easterly direction, across a change in grade of approximately 3.25 meters
+with an average slope of 2.7%. The existing time of concentration using the airport method is considered
+approximately 30 minutes.
+The proposed 0.11 ha SWM Facility will be located within the Greenbelt limits, but outside of any site specific
+environmental or natural hazard features identified. In the existing conditions, the SWM facility has a total
+0.46 ha catchment area of agricultural land within the Greenbelt which shall be considered as such for the
+purposes of the SWM analysis.
+
+5
+
+The drainage characteristics and imperviousness of the remaining lot outside the development limits will not
+be altered, and are therefore excluded from the SWM analysis. Runoff from the 1,554 sq.m north and east
+perimeter landscape area identified on the post-development drainage area plan (Figure No. 3), is to be
+conveyed via sheet flow directly toward the watercourse at an uncontrolled rate, and similarly will not be
+considered in the catchment area as they will not generate an increase in runoff from the existing conditions.
+The proposed SWM Facility has been considered to have a runoff coefficient of 1.0 during all storm events.
+An external drainage of 0.23 ha from the adjacent lot to the south is also observed to traverses the subject
+property, will be allowed to flow through the site overland unimpeded.
+
+The external area has been
+
+considered in SWM analysis were doing so will not result in a non-conformant condition for the property
+should the neighbouring site self-contain this drainage.
+The subject site’s existing and proposed conditions have been summarized in the following tables:
+Existing Condition (Figure No. 2)
+Land Use
+
+Area
+
+C
+
+AC
+
+Development Area
+
+11,769
+
+0.25
+
+2,942.3
+
+SWM Facility Ex. Catchment Area
+
+4,622
+
+0.25
+
+1,155.5
+
+External Drainage Area
+
+2,344
+
+0.25
+
+586.0
+
+Total Existing Conditions Area
+
+18,735
+
+0.25
+
+4,683.8
+
+Proposed Conditions (Figure No. 3)
+Land Use
+Building Area
+Impervious Area
+Pervious Area
+SWM Facility Area
+SWM Facility Ex. Catchment Area
+External Drainage Area
+
+Area
+
+C
+
+AC
+
+616
+8,536
+942
+1,120
+3,502
+2,344
+
+0.90
+0.90
+0.25
+1.00
+0.25
+0.25
+
+554.4
+7,682.4
+235.5
+1,120.0
+875.5
+586.0
+
+Total Catchment Area
+Uncontrolled Pervious Area
+
+17,060
+1,675
+
+0.65
+0.25
+
+11,053.8
+418.8
+
+Total Proposed Conditions Area
+
+18,735
+
+0.61
+
+11,472.6
+
+% Impervious of Catchment Area
+
+= (616 + 8,536 + 1,120) / 17,060
+= 10,272 sq.m / 17,060 sq.m
+= 60.2%
+
+TRCA and Town criteria require runoff controls be implemented to maintain the peak flow rate generated
+from the property under existing conditions.
+
+6
+
+FUTURE DEVELOPMENT
+(EXISTING AGRICULTURAL)
+
+FIGURE 2
+
+PROPOSED TRANSPORTATION DEPOT
+12363 DIXIE RD
+CALEDON, ONTARIO
+
+15955 AIRPORT ROAD, SUITE 304
+CALEDON EAST, ONTARIO, L7C 1H9
+PHONE: (905) 584-1458 FAX: (905) 584-1461
+
+rban Watershed Group Ltd.
+A Member of the
+GREENLAND Group of Companies
+urbanwater@grnland.com
+
+PRE DEVELOPMENT
+DRAINAGE AREA PLAN
+SCALE 1:750
+
+FUTURE DEVELOPMENT
+(EXISTING AGRICULTURAL)
+
+FIGURE 3
+
+PROPOSED TRANSPORTATION DEPOT
+12363 DIXIE RD
+CALEDON, ONTARIO
+
+15955 AIRPORT ROAD, SUITE 304
+CALEDON EAST, ONTARIO, L7C 1H9
+PHONE: (905) 584-1458 FAX: (905) 584-1461
+
+rban Watershed Group Ltd.
+A Member of the
+GREENLAND Group of Companies
+urbanwater@grnland.com
+
+POST DEVELOPMENT
+DRAINAGE AREA PLAN
+SCALE 1:750
+
+4.3
+
+Native Soils Conditions and Water Table Elevations
+
+The native soil generally comprises an average 150 topsoil layer underlain by a native sandy silt deposit (up
+to depths of 0.05 to 0.8mbgs). A sandy silt till to sandy clayey silt was encountered beneath the sandy silt
+and extending to the full exploration depth (4.5 to 6.0 mbgs), as described in the Small-Scale
+Hydrogeological Assessment (May 2023) by A & A Environmental Consultants Inc. Excerpts from this report
+have been included in Appendix C. Three (3) monitoring wells were installed on site at depths between 4.5
+and 6.0 meters. Groundwater was observed in monitoring well MW-1, MW-2 and MW-3 at depths of 1.71
+and 0.411 and 0.61 meters respectively, on January 13, 2023 after a 3 month period.
+Based on literature the estimated coefficient of permeability for the native silt and clay material is
+10-5 cm/sec. Using the correlation of hydraulic conductivity to percolation time presented in Appendix C of the
+CVC Low Impact Development Stormwater Management Planning and Design Guide, an infiltration rate for
+the native soils can be calculated as follows:
+Hydraulic Conductivity = 6e-11 x (Infiltration Rate)3.7363
+Infiltration Rate
+= (HC / 6e-11)1/3.7363
+= (10-5 / 6e-11)1/3.7363
+= 30 mm/hr
+Design Infiltration Rate = Measured Infiltration Rate / Safety Factor
+= 30 mm/hr / 2.5
+= 12 mm/hr
+The design infiltration rate of 12 mm/hr is near the MECP recommended 15mm/hr for infiltration SWM
+facilities, and shall be used for LID sizing calculations, where applicable.
+
+4.4
+
+Flood Protection
+
+As per the TRCA’s Stormwater Management Criteria, the subject site falls within the Sub-Basin 36 of the
+Humber River watershed, and the formulas presented in Table E.1 shall be used. The 0.23 ha external
+drainage area shall be excluded from allowable release rate calculations to ensure the SWM control devices
+do not become oversized should the drainage patterns on the adjacent land be altered in the future. The
+100-year allowable flow rate for the 14,716 sq.m (17,060 sq.m – 2,344 sq.m) total catchment area located
+within the property limits has been calculated below:
+Q100-YR = [29.912 – 2.316ln(A)] x A
+= [29.912 – 2.316ln(1.4716 ha)] x 1.4716 ha
+= 29.02 L/s/ha x 1.4716 ha
+= 42.7 L/s
+
+7
+
+The unitary flow rates for the 2-year to 100-year events have also been calculated using the provided
+formulas and are summarized below:
+Return
+Period
+100-Year
+
+Unit Flow
+Rate Equation
+Q= 29.912-2.316*ln(A) x A
+
+Unit Flow
+Rate
+42.7 L/s
+
+50-Year
+
+Q= 26.566-2.082*ln(A) x A
+
+37.9 L/s
+
+25-Year
+
+Q= 22.639-1.741*ln(A) x A
+
+32.3 L/s
+
+10-Year
+
+Q= 17.957-1.373*ln(A) x A
+
+25.6 L/s
+
+5-Year
+
+Q= 14.652-1.136*ln(A) x A
+
+20.9 L/s
+
+2-Year
+
+Q= 9.506-0.719*ln(A) x A
+
+13.6 L/s
+
+The 2-year existing release rates from the subject development has also been calculated below utilizing the
+Town of Caledon IDF curve (Guelph O.A.C) and a 30 minute time of concentration for comparison.
+I 2-YEAR
+
+= 1070 / (t + 7.85)0.8759
+= 1070 / (30 + 7.85)0.8759
+= 44.4 mm/hr
+
+Q 2-YR, PRE
+
+= CIA / 3600
+= 0.25 x 44.4 mm/hr x 14,716 sq.m / 3600
+= 45.4 L/s
+
+As with the unit flow rates, the 2-year to 100-year existing release rates, are also summarized below:
+Return
+Period
+100-Year
+50-Year
+25-Year
+10-Year
+5-Year
+2-Year
+
+Rainfall
+Intensity
+115.3 mm/hr
+102.5 mm/hr
+90.4 mm/hr
+74.6 mm/hr
+60.9 mm/hr
+44.4 mm/hr
+
+Existing Peak
+Flow Rate
+117.8 L/s
+104.7 L/s
+92.4 L/s
+76.2 L/s
+62.3 L/s
+45.4 L/s
+
+The catchment area must be controlled to no more than a peak release rate of 13.6 L/s under a 2-year storm
+event, and 42.7 L/s under a 100-year storm event in accordance with the TRCA’s SWM criteria. The TRCA
+Unit Flow Rate criteria yield a lower peak flow rate for each design storm, and therefore meeting this criterion
+will satisfy the Town requirements as well.
+Runoff from the site is to be collected by proposed catchbasins, and controlled by a proposed standpipe
+upstream of the proposed outfall. Detention storage will be provided on the surface above the proposed
+catchbasin tops for the required reduction is peak flow rates as discussed in the following sections.
+
+8
+
+4.4.1
+
+SWM Detention Volumes
+
+Detention storage volumes will be provided within a proposed flood protection pool of the dry pond
+component in the SWM facility. The Modified Rational Method has been utilized to determine the required
+stormwater detention volumes to satisfy the peak flow rate control criteria developed above. Refer to
+Appendix D - Figure Nos. 4 to 10 for the 2-year through 100-year storm event calculations. Detention
+storage requirements to be provided as part of the proposed design are as follows:
+
+4.5
+
+Design
+
+TRCA
+
+Town of Caledon
+
+Provided
+
+Storm
+
+Storage Requirement
+
+Storage Requirement
+
+Storage Volume
+
+2-year
+
+284.8 cu.m
+
+200.2 cu.m
+
+406.5 cu.m
+
+5-year
+
+403.7 cu.m
+
+284.8 cu.m
+
+520.7 cu.m
+
+10-year
+
+483.1 cu.m
+
+345.3 cu.m
+
+625.5 cu.m
+
+25-year
+
+590.6 cu.m
+
+426.2 cu.m
+
+696.0 cu.m
+
+50-year
+
+661.8 cu.m
+
+483.5 cu.m
+
+703.6 cu.m
+
+100-year
+
+743.7 cu.m
+
+545.0 cu.m
+
+748.3 cu.m
+
+Stormwater Volume and Erosion Control
+
+TRCA criteria require stormwater runoff from a 25mm rainfall event volume be captured and retained on site
+through infiltration, evapotranspiration, re-use, etc to the maximum extent practical with a minimum of 5mm.
+Any remaining volume from the 25mm event must be detained on site for a period of 48 hours. For the
+11,769 sq.m development site the minimum required retention and detention volumes are calculated as
+follows:
+25mm Erosion Control Volume = 11,769 sq.m x 25mm
+= 294.2 cu.m
+5mm Retention Volume
+
+= 11,769 sq.m x 5mm
+= 58.8 cu.m
+
+Any proposed infiltration features on site will be drastically constrained by the existing shallow groundwater
+table, believed to be within less than 1 meter of existing grade in the vicinity of the proposed SWM Facility as
+discussed in Section 4.3. Extended detention is proposed to be utilized per TRCA’s erosion control criteria
+to overcome the sites reduced retention potential.
+
+9
+
+4.5.1
+
+5mm Retention Strategy
+
+Impervious surfaces, such as the building roof and asphalt parking, can be commonly considered to
+evaporate up to 20% of frequent rainfall events (rainfall events 5mm or less comprises roughly 50% of the
+average annual rainfall volume). The first 1mm (5mm x 20%) of rainfall onto impervious surfaces will be
+considered to evaporate as follows:
+Impervious Surface Evaporation Volume
+
+= Building Roof Area + Asphalt Parking x 1mm
+= (616 sq.m + 8,536 sq.m) x 1mm
+= 9.1 cu.m
+
+Pervious surfaces, such as landscaping/ sod, are also considered to retain frequent rainfall events through
+evapotranspiration and infiltration.
+
+The additional retention volume provided from these surfaces is
+
+calculated as follows:
+Pervious Surface Retention Volume
+
+= Landscaped Area x 5mm
+= (942 sq.m + 1,675 sq.m) x 5mm
+= 13.1 cu.m
+
+The initial abstraction volume available on site is thus calculated as 22.2 cu.m (9.1 cu.m + 13.1 cu.m). An
+additional 37.0 cu.m of stormwater retention is provided from the proposed infiltration basin (refer to
+Section 4.6.3). Therefore, a total of 59.2 cu.m (22.2 cu.m + 37.0 cu.m) will be retained on site to meet the
+5mm criteria.
+4.5.2
+
+24 to 48 hour Extended Detention
+
+The remaining runoff volume from a 25mm rainfall event which is not retained on site must be collected and
+controlled on site for a gradual release over a 48 hour period. The required extended detention volume has
+been calculated as 294.2 cu.m.
+The falling head equation for a constant storage area (Equation 4.10 of the 2003 MOE Stormwater Planning
+and Design Manual), has been used to verify the extended detention criteria will be met based on the
+proposed SWM Facility geometry. Detailed calculations have been included in Appendix E, and concluded
+the proposed stand pipe must be made up of five (5) 25mm diameter orifices at an equal elevation to achieve
+a 46.3 hour extended detention period. To achieve the necessary volumes and draw down time the active
+storage within the SWM Pond facility must have a constant surface area of 1,120 sq.m at a total depth of
+0.26m.
+
+10
+
+4.6
+
+SWM Control Structure Sizing
+
+The proposed SWM facility must provide the required 2-year through 100-year peak flow rate controls
+developed in Section 4.3, and 48 hour extended detention for the volume from the 25mm event per the
+volume reduction criteria developed in Section 4.4.
+The stand pipe structure configuration necessary to achieve the extended detention criteria was found to limit
+the release rates below the 2-year allowable of 13.6 L/s, and a larger diameter orifice has been provided
+above the extended detention pool to achieve the flood protection criteria. An additional overland flow weir
+has been provided above the 10-year ponding elevation to allow larger storms to discharge at a higher rate.
+A stage storage discharge table (Appendix E) has been prepared to identify the total release rate from the
+SWM facility and associate water level during each design storm.
+The extended detention pool will be provided within the bottom portion of the dry pond, between the
+elevations 259.20 and 259.46m. The bottom of the extended detention pool will start above the spring line of
+the five (5) 25mm diameter perforations on the proposed stand pipe.
+
+The 2-year to 10-year storage will be provided below the overflow weir between the elevations 259.46 and
+259.78m. The open top of the 125mm diameter standpipe will be installed at the elevation 259.50m and act
+as the secondary orifice.
+
+The 25-year to 100-year storage will be provided above the overflow weir between the elevations 259.78m
+and 259.80m.
+
+The top of proposed SWM Facility berm shall be constructed to a minimum elevation
+
+260.00m.
+
+The stand pipe outlet will discharge to existing grade at an elevation of 258.28 and will be above the 100year floodplain of the downstream watercourse, which is at an elevation of 256.03m.
+
+11
+
+4.7
+
+Water Quality Control
+
+Storm drainage for this site discharges to the natural environment via the SWM facility outlet to the West
+Humber River. A multi-component analysis has been developed for the proposed site to meet the TRCA and
+Town water quality objectives. The overall site shall provide an Enhanced Level (80% TSS Removal) of
+treatment per MECP criteria. Runoff from the proposed parking lot shall be pre-treated by an Oil Grit
+Separator to removal any spilled oils or grease, and to provide initial TSS removal. The proposed SWM
+Facility will provide final polishing via a sediment forebay and infiltration facility.
+4.7.1
+
+Oil Grit Separator
+
+An Oil Grit Separator (OGS) has been proposed to treat stormwater runoff from the proposed storm sewer
+prior to discharge into the SWM Facility to ensure spilled oils or grease is adequately contained. A proposed
+FD-5HC OGS unit has been certified through ETV testing protocols to provide a TSS removal efficiency of
+45% minimum and capture of >90% of annual runoff volumes. A detailed size report for this system has
+been included in Appendix F.
+4.7.2
+
+Forebay Pre-Treatment
+
+A sediment forebay is proposed at the upstream end of the SWM facility to promote the settling of sediments,
+and reduce long-term maintenance requirements for the remainder of the SWM facility. The forebay will
+have a maximum permanent depth of 0.85 metres. The minimum recommended forebay length is calculated
+utilizing by determining the settling length per Equation 4.5 of the 2003 MOE Stormwater Planning and
+Design Manual. A 25mm design storm shall be considered for forebay sizing, the resulting rainfall intensity
+and peak flow rate determine utilizing Equation 4.9.
+I25mm
+
+= 43(C) + 5.9
+= 43(0.65) + 5.9
+= 33.9 mm.hr
+
+Q25mm
+
+= CIA / 3600
+= 0.65 x 33.9 mm/hr x 17,060 sq.m / 3600
+= 161 L/s
+
+r = length-to-width ratio of forebay (minimum 2:1)
+Qp = peak flow rate from pond during design quality storm
+Vs = particle settling velocity (recommended 0.0003 m/s)
+Minimum Forebay Settling Distance
+
+= √rQp/Vs
+= (3 x 0.161 / 0.0003)1/2
+= 32.8 m
+
+A total volume of the forebay has been design to accommodate 10-years of sediment accumulation based on
+the contributing drainage area and Table 6.3 of the 2003 MOE Stormwater Planning and Design Manual.
+For the contributing drainage area with an overall imperviousness of 60.2% the forebay will accumulate and
+annual loading of 2.2 cu.m/ ha. Thus, total forebay volume of 37.4 cu.m (2.2 cu.m/ha x 1.7 ha x 10 yrs), is
+required.
+
+12
+
+The proposed forebay geometry will be 33m long, 0.85m deep with a top and bottom width of 16m and 4m,
+respectively, and the available volume is calculated below:
+Forebay Volume
+
+= [(4m + 16m)/2] x 0.85m /2 x 33m
+= 140 cu.m
+
+Therefore, to proposed forebay will provide more than adequate settling length and volume to provide the
+necessary pre-treatment to the SWM facility.
+4.7.3
+
+Infiltration Basin
+
+The proposed infiltration basin has been designed to reduce the flow of sediment latent runoff from the site to
+achieve 80% TSS removal from captured stormwater runoff. The water quality storage requirements have
+for the proposed facility have been determined utilizing Table 3.2 of the MOE Stormwater Planning and
+Design Manual (2003). For the 1.7 ha contributing drainage area with an overall imperviousness of 60.2%
+the infiltration basin can provide 70% TSS removal if 21.7 cu.m/ha of storage is provided. The provided
+infiltration basin must have a volume of 36.9 cu.m (21.7 cu.m/ha x 1.70 ha).
+To achieve the desired water quality objectives the infiltration facility will be filled with 150mm deep layer of
+50mm clear stone beneath a 100mm deep sand filter layer. The total volume of the 528 sq.m infiltration
+facility is calculated below:
+Infiltration Basin Storage Volume = (Clear Stone Depth x Void Ratio + Sand Filter Depth x Void Ratio)
+…x Infiltration Basin Footprint
+= (150mm x 0.40 + 100mm x 0.10) x 528 sq.m
+= 37.0 cu.m
+The draw down time and footprint of the infiltration basin have also been checked to verify the facility will
+operate as intended.
+P = infiltration rate (mm/hr), t = draw down time (hrs), V = Retention volume (m3) n = void ratio
+Equation 4.2
+
+depth
+
+= Pt
+= 12 mm/hr x 20.8 hr
+= 250 mm
+
+Equation 4.3
+
+Area
+
+= 1000V / (Pnt),
+= 1000 x 36.9 / (12 x 0.28 x 24)
+= 458 sq.m
+
+Therefore, the proposed 250mm deep and 528 sq.m infiltration basin will infiltrate the full 36.9 cu.m within a
+20.8 hour period. The infiltration basin will be provided beneath the extended detention pool between the
+elevations 258.95 and 259.20m.
+The observed seasonal high water table elevation in the vicinity of the SWM Facility was recorded as
+258.60masl. Due to constraints to maintain the existing grade on site, further raising the bottom of the facility
+to provide additional vertical separation above the water table is not feasible.
+
+13
+
+4.7.4
+
+Suspended Solids Removal
+
+The combined TSS removal rate for two features which operate in series (R = A + B – (A x B)), has been
+utilized in to determine the net TSS removal efficiency of the site and verify the net 80% TSS removal criteria
+will be met for the proposed development.
+Water Quality Device
+Oil Grit Separator
+Infiltration Basin
+Net TSS Removal
+
+TSS Removal
+Efficiency
+45%
+70%
+83.5%
+
+Notes
+per ETV Certification
+per MOE Table 3.2
+
+The proposed treatment train for the site will provide an 83.5% reduction is the annual post-development
+sediment loading.
+4.7.5
+
+Construction Phase Erosion and Sediment Control
+
+A temporary silt fence as per OPSD 219.130 is to be installed along all property lines where there is a risk of
+sediment runoff onto the adjacent property during construction. Double row silt fence shall be provided along
+the limits of the development site where runoff may discharge directly to the watercourse. This fencing shall
+be installed prior to site grading and shall be maintained throughout the construction period. A mud mat per
+Town standards shall be constructed at the onset of the works at proposed site entrance to prevent sediment
+from being tracked onto the street, and street sweeping shall be carried out as necessary. A concrete
+washout station shall be set up by the contractor to manage waste water from the cleaning of tools and
+equipment
+Temporary interceptor swales (complete with sock check dams) are to be used to capture and convey runoff
+from the destabilized site into sediment basins (sized to provide 125 cu.m/ha settling storage volume). The
+complete erosion control plan has been illustrated on Dwg. 22011-ESC1, and shall be inspected and
+maintained until all exposed soil is stabilized on the site.
+
+14
+
+4.8
+
+Water Balance Analysis
+
+4.8.1
+
+Pre-Development Conditions
+
+The existing level of groundwater recharge for the proposed 11,769 sq.m development area has been
+estimated using the model presented in the Ministry of the Environment’s (MOE), Stormwater Management
+Planning and Design Manual (2003), and calibrated for rainfall data from the Bowmanville Mostert weather
+station and local ground cover.
+Station Information: Orangeville MOE, Ontario
+Latitude:
+
+43°55'06 N
+
+Longitude:
+
+Climate ID:
+
+6155790
+
+WMO ID:
+
+80°05'11 W
+
+Elevation:
+TC ID:
+
+Average Annual Precipitation
+Annual Events > 5mm
+
+57
+
+411.50 m
+
+901.5 mm
+
+Annual Events 0 – 5mm
+
+94
+
+Total Annual Events
+
+151
+
+The Thornthwaite-Mather methodology has been applied to determine the potential evapotranspiration,
+infiltration and runoff from the site, considering the local climate and land use types. To determine the
+developments effects on the water balance pre- and post- development models have been prepared with the
+following consideration:
+•
+
+The pre- and post-development topography of pervious areas is flat at an average 2-4% slope;
+
+•
+
+The native soil underlying the site are understood to be predominately a silt and clay till material of
+decent drainage qualities. In-situ soils investigations completed are further discussed in Section 4.3;
+
+•
+
+The land use type of the site considered cultivated; and,
+
+•
+
+Impervious areas will contribute no infiltration, and be subject to a 20% evaporation factor.
+
+Hydrological cycle component values used to calculate the pre- and post-development water balance are
+summarized below. Detailed calculations of each value are included in Appendix G.
+
+Pre/Post-Development Pervious Surfaces
+
+901.6
+
+Evapotranspiration
+472.3
+
+Impervious Surfaces (Buildings, Driveway, etc.)
+
+901.6
+
+180.3
+
+Hydrological Cycle Component Values
+
+Precipitation
+
+Runoff
+
+Infiltration
+
+171.7
+
+257.6
+
+721.3
+
+0.0
+
+The average annual pre-development infiltration loss is then calculated as:
+Pre-Development Infiltration
+
+= Pervious Area x Average Annual Infiltration Depth
+= 11,769 sq.m x 0.2576 m
+= 3,032 cu.m
+
+Post-Development Infiltration
+
+= Pervious Area x Average Annual Infiltration Depth
+= 2,617 sq.m x 0.2576 m
+= 674 cu.m
+
+Infiltration Deficit
+
+= 3,032 cu.m – 674 cu.m
+= 2,357 cu.m/ year
+15
+
+Therefore, the infiltration deficit volume of 2,357 cu.m per year must be restored in the post-development
+scenario through Low Impact Development (LID) techniques. To offset the reduction in infiltration levels, an
+infiltration trench is proposed within the SWM facility. This feature will allow stormwater runoff from frequent
+storm events to infiltrate into the ground surface to mitigate the impacts to the annual water balance.
+4.8.2
+
+Mitigation Plan
+
+The available volume of from impervious surface towards the SWM facility has been calculated below,
+considering the total pavement and building area of 9,152 sq.m is captured and conveyed to the facility via
+the storm sewer system.
+
+Runoff Available for Infiltration
+
+= [Total Impervious Area x Annual Rainfall Depth x Evaporation Factor]
+= [9,152 sq.m x 0.9016m x 0.80]
+= 6,601 cu.m / yr
+
+By capturing and infiltrating 36% (2,357 cu.m / 6,601 cu.m) of this net surplus, the infiltration deficit for the
+site will be sufficiently offset. A 2.5mm rainfall event is consider approximately 36% of average annual
+rainfall (based on the Percentage of Rainfall VS Daily Rainfall Depth relationship for the Toronto area), and
+will meet this criterion. Therefore, to ensure sufficient retention storage within the SWM facility, a retention
+volume of 22.9 cu.m (9,152 sq.m x 0.0025m), must be provided.
+The proposed infiltration trench within the SWM Facility has a retention volume of 37 cu.m and will be
+adequate to meet the groundwater recharge criteria.
+
+4.9
+
+Catchbasin Inlet Capacity Analysis
+
+The inlet capacity of the proposed catchbasin frames has been analyzed during a 100-year storm event
+based on the typical OPSD 400.020 configuration (0.121 sq.m inlet area), and assuming 50% of the inlet
+area is blocked to ensure the proposed storm sewer system can adequately capture and convey runoff to the
+SWM Facility. The maximum ponding depths overtop each catchbasin are summarized below based on the
+contributing drainage area.
+Drainage
+Area
+
+100-year Peak
+Flow Rate
+
+(sq.m)
+
+CB1
+
+(L/s)
+
+Maximum
+Ponding
+Depth (cm)
+
+50%
+Blockage
+Depth (cm)
+
+108
+
+6
+
+0.0
+
+0.1
+
+CB2
+
+1,234
+
+67
+
+3.9
+
+15.4
+
+DCB3
+
+1,590
+
+87
+
+1.6
+
+6.4
+
+DCB4
+
+3,050
+
+166
+
+5.9
+
+23.6
+
+CBMH1
+
+740
+
+40
+
+1.4
+
+5.5
+
+CBMH2
+
+840
+
+46
+
+1.8
+
+7.1
+
+CB5
+
+980
+
+53
+
+2.4
+
+9.7
+
+Structure
+ID
+
+16
+
+4.10
+
+Inspection & Maintenance
+
+It is encouraged that emergent species of vegetation (tall grasses which can withstand prolonged wet
+periods) be incorporated within the SWM facility, to increase survivability and reduce the need for regular
+trimming.
+
+Vegetation density should be maintained at a minimum of 80% coverage and replanted as
+
+necessary. Regular watering may be required during the first two years to establish the desired vegetation
+coverage.
+The owner is to carry out annual inspections of the SWM facilities (during the early spring or late fall), for
+erosion or accumulated sediment and debris. Removal of sediment, regrading and replanting is to occur
+during a dry period immediately in any areas which are observed to be inundated with sediment
+(accumulated depth greater than 100mm). Cleaning of the sediment forebay is recommended when the
+depth of accumulated sediment results in a forebay depth below 0.5m.
+Inspection of the outlet weir and standpipe should also be completed at the same time for blockage or
+obstructions. Additional inspections of all facilities should be carried out following periods of intense rainfall
+(>25mm in 24 hours). Signs of erosion are to be repaired with appropriate measures (such as rip-rap or
+replanting), during a dry period immediately upon being observed.
+The infiltration basin sub-drain should be inspected from the provided clean-outs for accumulated sediment
+and flushed via hydro-vacuum truck if depth of sediment greater then 25mm are observed. A maintenance
+valve connecting the infiltration basin sub-drain to the SWM facility outlet has been provided to help facilitate
+draining the pond during maintenance activities. The valve should be kept in the closed position during
+normal operating conditions.
+Vehicle and equipment access to the SWM facility can be provided through the proposed curb depression. A
+temporary mud-mat and access road can be constructed between the asphalt surface and work area to use
+of permit heavy equipment and prevent sediment tracking off-site as required. Future work within the SWM
+facility needs to be pre-approved and permitted by TRCA, and all site conditions should be returned to the
+approved conditions upon completion.
+
+17
+
+5.0 CLOSURE
+The proposed Stormwater Management Plan demonstrates that the development will meet the established
+criteria with respect to stormwater management set forth in governing documents. The SWM facility will
+control the release rate to the existing levels for all storms up to and including the 100-year event. On-site
+stormwater detention storage has been provided up to a quantity of 748.3 cu.m in order to facilitate the
+proposed SWM controls, included peak flow control and 24 hour extended detention of the first 25mm of any
+rainfall event. Water quality control is to be primarily provided by the infiltration basin which receives runoff
+from the proposed impervious surfaces, and will be augmented by an oil grit separator for spill protection.
+Water balance criteria will be achieved through infiltration which occurs within the infiltration basin of the
+SWM facility.
+The existing municipal water supply will be utilized to provide domestic and fire water servicing to the
+proposed building. A proposed sanitary service connection to existing municipal infrastructure constructed to
+address sanitary wastewater generated from the development.
+In conclusion, the proposed servicing and stormwater management plan demonstrates that the development
+will meet the established criteria set forth in governing documents and the sufficient infrastructure will be
+provided to support the site.
+
+Please do not hesitate to contact us with any questions pertaining to the enclosed.
+
+Yours truly,
+
+Urban Watershed Group Limited
+
+18
+
+Appendix A
+Record Drawings for Dixie Road
+
+SITE
+
+SITE
+
+SITE
+
+Appendix B
+Connection Demand Table
+
+Connection Demand Table
+WATER CONNECTION
+Connection point 3)
+
+12363 Dixie Road
+Pressure zone of connection point
+Total equivalent population to be serviced 1)
+Total lands to be serviced
+Hydrant flow test
+Hydrant flow test location
+TBD
+Pressure
+(kPa)
+TBD
+Minimum water pressure
+TBD
+Maximum water pressure
+Water demands
+Demand type
+Demand
+1 Average day flow
+0.205
+2 Maximum day flow
+0.287
+3 Peak hour flow
+0.615
+2)
+70.91
+4 Fire flow
+Analysis
+71.197
+5 Maximum day plus fire flow
+No.
+
+WASTEWATER CONNECTION
+Connection point 4)
+Total equivalent population to be serviced 1)
+Total lands to be serviced
+6 Wastewater sewer effluent (in l/s)
+
+Pressure Zone 7
+59 (50 cap/ha)
+1.17 ha
+
+Flow (in l/s)
+
+TBD
+TBD
+
+Time
+
+TBD
+TBD
+
+Units
+l/s
+l/s
+l/s
+l/s
+
+l/s
+
+150mm PVC
+96
+1.17 ha
+1.061 l/s
+
+1)
+
+Please refer to design criteria for population equivencies
+Please reference the Fire Underwriters Survey Document
+3)
+Please specify the connection point ID
+4)
+Please specify the connection point (wastewater line or manhole ID)
+Also, the "total equivalent popopulation to be serviced" and the "total lands
+to be serviced" should reference the connection point. (The FSR should contain one
+copy of Site Servicing Plan)
+2)
+
+Please include the graphs associated with the hydrant flow test information table
+Please provide Professional Engineer's signature and stamp on the demand table
+All required calculations must be submitted with the demand table submission.
+
+WATER SUPPLY FOR PUBLIC FIRE PROTECTION ‐ 1999
+FIRE UNDERWRITERS SURVEY
+
+Job No.: 22011
+Date: 12/05/2023
+
+DIXIE TRANSPORT DEPOT – PROPOSED INDUSTRIAL BUILDING
+1. Required Fire Flow Calculation
+
+F=220C(A)^0.5
+
+F=
+
+F= the required fire flow in litres per minute
+C= coefficient related to the type of construction
+
+Type of Construction =
+
+= 1.5 for wood frame construction (structure essentially all combustible)
+
+5968 l/min
+
+Both
+C= 1.0
+
+= 1.0 for ordinary construction (brick or other masonry walls, combustible floor and interior)
+= 0.8 for non‐combustible construction (unprotected metal structural components, masonry or metal walls)
+
+Total GFA =
+
+= 0.6 for fire resistive construction (fully protected frame, floors, roof)
+
+736 m²
+
+A= the total floor area in square metres in the buidling being considered
+
+2. Determine if occupancy type has a low contents fire hazard or high contents fire hazard.
+
+F=
+Contents Classification
+1) Non‐Combustible
+2) Limited Combustible
+3) Combustible
+4) Free Burning
+5) Rapid Burning
+
+6863 l/min
+
+Repair Garage Occupancy is Considered High Fire Hazard
+0
+0%
+0
+0%
+0
+0%
+1
+15%
+0
+0%
+Total
+15%
+
+‐25%
+‐15%
+0%
+15%
+25%
+
+3. Automatic Sprinkler Protection Reduction
+
+F=
+Sprinkler Reduction Ratings
+1) Sprinkler System Conforms to NFPA 13 and other NFPA Sprinkler Standards
+2) Water supply standard for both the sprinkler system and fire department hose lines
+3) Fully supervised sprinkler system
+
+‐30%
+‐10%
+‐5%
+
+‐3088 l/min
+
+Sprinkler Reduction Ratings ‐ Building is Sprinklered
+1
+‐30%
+1
+‐10%
+1
+‐5%
+Total
+‐45%
+
+4. Exposure to adjacent buildings
+
+F=
+Separation
+1) 0 to 3.0m
+2) 3.1 to 10.0m
+3) 10.1 to 20.0m
+4) 20.1 to 30.0m
+5) 30.1 to 45.0m
+
+Charge
+25%
+20%
+15%
+10%
+5%
+
+343 l/min
+
+Number of Walls within Exposure Limits
+0
+0%
+0
+0%
+0
+0%
+0
+0%
+1
+5%
+Total
+5%
+
+The total % shall be the sum of the % of all sides but shall not exceed 75%.
+
+THEREFORE TOTAL FIRE FLOW REQUIRED =
+or
+
+4255 l/min
+70.91 l/s
+
+Appendix C
+Hydrogeological Report Excerpts
+
+S m a l l - S c al e H yd r o g e o l o gi c a l A s s e s s m en t
+‘ 0 ’ Di x i e R o a d , C al ed o n , O n t a r i o
+Figure 5 – Groundwater Contour Map
+
+Report #6765 – Gill Caledon
+
+P a ge 4 4
+
+S m a l l - S c al e H yd r o g e o l o gi c a l A s s e s s m en t
+‘ 0 ’ Di x i e R o a d , C al ed o n , O n t a r i o
+
+Page 13
+
+table level tape. The total depth of each well was measured and recorded. The groundwater
+elevations are shown in the well logs (see Tables 1-2 below). These show the highest elevation
+near MW-1 near the south end of the site and the lowest at MW-4 near the middle of the subject
+site.
+Groundwater flow direction was determined using the groundwater elevation on site from the
+January 13, 2023 groundwater monitoring event.
+Table 1 – Monitoring Well Details January 13, 2023
+Project #6765-Gill Caledon
+0' Dixie Road, Caledon, Ontario
+Date Logged: January 13, 2023
+Monitoring Well #
+Location
+
+Logged by: J. Osborne
+
+MW-1
+
+MW-2
+
+MW-4
+
+Southeast Area
+of Subject Site
+
+Northeast Area of
+the Subject Site
+
+North Middle Area
+of the Subject Site
+
+51
+17T
+596423
+4847045
+262.849
+1.713
+261.136
+6.548
+
+30.5
+17T
+596428
+4847184
+259.622
+0.411
+259.211
+4.964
+
+30.5
+17T
+596603
+4847276
+259.437
+0.606
+258.831
+6.728
+
+Pipe Size (mm)
+UTM Zone
+Easting
+Northing
+Top of Pipe (masl)
+Water Level (m)
+Water Level (masl)
+Total Depth (m)
+
+BM = 264.00 masl, Ground surface near Fire Hydrant, South Corner of Subject Site
+
+Table 2 – Groundwater Monitoring Program Levels
+Groundwater Elevations (masl)
+
+Monitoring
+Well
+
+Elevation
+(masl)
+
+22-Oct-22
+
+10-Nov-22
+
+02-Dec-22
+
+16-Dec-22
+
+29-Dec-22
+
+13-Jan-23
+
+MW-1
+MW-2
+MW-4
+
+262.849
+259.622
+259.437
+
+258.715
+258.187
+258.034
+
+258.835
+258.243
+258.309
+
+258.910
+258.271
+258.361
+
+259.055
+258.714
+258.632
+
+259.114
+258.864
+258.594
+
+261.136
+259.211
+258.831
+
+The seasonal change in groundwater hydraulic gradient due to rainfall and spring runoff have a
+significant influence on the groundwater flow velocities. The groundwater flow velocities were
+calculated using a hydraulic gradient of 0.0136 m/m (MW-1 to MW-4), using January 13, 2023
+groundwater elevation and the hydraulic conductivity of 1 x 10-5 cm/s for silt and clay materials,
+
+Report #6765 – Gill Caledon
+
+PROJECT: Geotech/hydroGeo
+
+BH LOCATION: Within industrial building footprint
+
+PROJECT NO: 6765
+
+LOCATION: 0 Dixie Road, Caledon ON
+
+PROJECT MANAGER: T. Demers
+
+BOREHOLE NO: BH/MW1
+
+COMPANY NAME: A&A Environmental Consutants Inc
+
+SAMPLE TYPE
+
+SHELBY TUBE
+
+CORE SAMPLE
+
+SPT SAMPLE
+
+GRAB SAMPLE
+
+NO RECOVERY
+
+BACKFILL TYPE
+
+BENTONITE
+
+PEA GRAVEL
+
+SLOUGH
+
+GROUT
+
+DRILL CUTTINGS
+
+20
+
+30
+
+40
+
+50
+
+Monitoring Well
+
+Notes
+
+PPM
+100
+
+200
+
+300
+
+400
+
+1
+2
+
+1.0
+
+7
+9
+
+3
+
+4.0
+
+Flush Mount
+
+3.0
+
+10
+
+Concrete
+Bentonite Seal
+
+2.0
+
+BLOWS
+/ 150
+mm
+
+Ground Surface
+Topsoil
+Silty clay
+Medium brown, Damp, No
+odour, Some gravel
+
+1.0
+
+SAMPLE NO
+
+0.0
+
+Soil
+Description
+
+SAMPLE TYPE
+
+DEPTH (m)
+
+0.0
+
+SOIL PROFILE
+
+DEPTH (ft)
+
+Blowcount
+
+Silty Clay
+Trace Gravel
+
+6.0
+
+Silica Sand
+
+4
+
+5.0
+
+9
+11
+
+5
+
+2.0
+
+7.0
+
+6
+
+8.0
+
+12
+16
+
+7
+9.0
+10.0
+
+8
+
+3.0
+
+10
+
+11.0
+
+9
+
+12.0
+
+10
+4.0
+
+14
+18
+
+11
+
+10 ft Well Screen
+
+13.0
+
+15
+
+14.0
+12
+
+15.0
+
+Silty Clay
+Grey, Moist, Trace Gravel
+
+16.0
+5.0
+
+17.0
+
+5
+
+13
+
+13
+
+14
+
+Silty Clay
+Wet
+
+18.0
+
+15
+
+16
+17
+
+19.0
+6.0
+
+20.0
+
+16
+
+End of Log
+
+21.0
+22.0
+23.0
+
+7.0
+
+24.0
+25.0
+LOGGED BY: E. Fulsom
+
+16 Young Street Woodstock, ON
+
+COMPLETION DEPTH: 20ft
+
+REVIEWED BY: A. Rasoul
+
+DRILL METHOD: Split spoon/HSA
+
+DRILL DATE: Oct 3, 2022
+
+PAGE:
+
+1 of 1
+
+PROJECT: Geotech/hydroGeo
+
+BH LOCATION: Central W boundary
+
+PROJECT NO: 6765
+
+LOCATION: 0 Dixie Road, Caledon ON
+
+PROJECT MANAGER: T. Demers
+
+BOREHOLE NO: BH/MW2
+
+COMPANY NAME: A&A Environmental Consutants Inc
+
+SAMPLE TYPE
+
+SHELBY TUBE
+
+CORE SAMPLE
+
+SPT SAMPLE
+
+GRAB SAMPLE
+
+NO RECOVERY
+
+BACKFILL TYPE
+
+BENTONITE
+
+PEA GRAVEL
+
+SLOUGH
+
+GROUT
+
+DRILL CUTTINGS
+
+BLOWS
+/ 150
+mm
+
+10
+
+20
+
+30
+
+40
+
+50
+
+Monitoring Well
+
+Notes
+
+PPM
+100
+
+200
+
+300
+
+400
+
+1
+
+2.0
+2
+3.0
+
+8
+
+1.0
+
+3
+
+Flush Mount
+
+Concrete
+Bentonite Seal
+
+Ground Surface
+Topsoil
+Silty clay
+Grey/Brown, Damp, Trace
+Gravel
+
+1.0
+
+SAMPLE NO
+
+0.0
+
+Soil
+Description
+
+SAMPLE TYPE
+
+DEPTH (m)
+
+0.0
+
+SOIL PROFILE
+
+DEPTH (ft)
+
+Blowcount
+
+9
+
+4.0
+
+Silty Clay
+Brown, Trace Gravel
+
+6.0
+
+6
+
+5
+
+10
+
+2.0
+
+7.0
+6
+8.0
+
+Silica Sand
+
+4
+
+5.0
+
+9
+12
+
+10ft Well Screen
+
+7
+9.0
+
+10.0
+
+8
+
+3.0
+
+11.0
+
+9
+
+12.0
+10
+13.0
+
+4.0
+
+11
+14.0
+12
+
+15.0
+
+End of Log
+
+16.0
+5.0
+
+17.0
+
+18.0
+LOGGED BY: E. Fulsom
+
+16 Young Street Woodstock, ON
+
+COMPLETION DEPTH: 15
+
+REVIEWED BY: A. Rasoul
+
+DRILL METHOD: Split spoon/HSA
+
+DRILL DATE: Oct 3, 2022
+
+PAGE:
+
+1 of 1
+
+PROJECT: Geotech/hydroGeo
+
+BH LOCATION: Proposed truck/trailer parking
+
+PROJECT NO: 6765
+
+LOCATION: 0 Dixie Road, Caledon ON
+
+PROJECT MANAGER: T. Demers
+
+BOREHOLE NO: BH/MW4
+
+COMPANY NAME: A&A Environmental Consutants Inc
+
+SAMPLE TYPE
+
+SHELBY TUBE
+
+CORE SAMPLE
+
+SPT SAMPLE
+
+GRAB SAMPLE
+
+NO RECOVERY
+
+BACKFILL TYPE
+
+BENTONITE
+
+PEA GRAVEL
+
+SLOUGH
+
+GROUT
+
+DRILL CUTTINGS
+
+20
+
+30
+
+40
+
+50
+
+Monitoring Well
+
+Notes
+
+PPM
+100
+
+200
+
+300
+
+400
+
+2
+1.0
+
+3
+
+8
+9
+
+4.0
+
+Flush Mount
+
+1
+
+4
+
+5.0
+
+Silty Clay
+Trace Gravel
+
+6.0
+
+5
+
+15
+15
+
+2.0
+
+7.0
+
+6
+
+8.0
+7
+
+Silica Sand
+
+3.0
+
+10
+
+Concrete
+Bentonite Seal
+
+2.0
+
+BLOWS
+/ 150
+mm
+
+Ground Surface
+Topsoil
+Silty clay
+Brown/Grey, Damp, No
+odour
+
+1.0
+
+SAMPLE NO
+
+0.0
+
+Soil
+Description
+
+SAMPLE TYPE
+
+DEPTH (m)
+
+0.0
+
+SOIL PROFILE
+
+DEPTH (ft)
+
+Blowcount
+
+8
+11
+
+9.0
+8
+
+3.0
+
+11.0
+
+9
+
+12.0
+13.0
+
+10
+4.0
+
+10 ft Well Screen
+
+10.0
+
+11
+14.0
+12
+
+15.0
+
+Silty Clay
+Grey, Mosit, Some silt
+
+16.0
+5.0
+
+17.0
+
+13
+14
+
+Silty Clay
+Moist to wet
+
+18.0
+
+15
+
+19.0
+6.0
+
+20.0
+
+16
+
+End of Log
+
+21.0
+22.0
+23.0
+
+7.0
+
+24.0
+25.0
+LOGGED BY: E. Fulsom
+
+16 Young Street Woodstock, ON
+
+COMPLETION DEPTH: 20ft
+
+REVIEWED BY: A. Rasoul
+
+DRILL METHOD: Split spoon/HSA
+
+DRILL DATE: Oct 3, 2022
+
+PAGE:
+
+1 of 1
+
+Appendix D
+Figure No. 4 to 10
+Modified Rational Method Calculations
+
+STORMWATER MANAGEMENT ANALYSIS - FIGURE No. 4
+PROJECT NUMBER:
+CLIENT:
+LOCATION:
+IDF STATION:
+
+22011
+DIXIE TRANSPORT DEPOT
+12363 Dixie Road
+Guelph O.A.C.
+
+SITE INFORMATION
+Number of Catchment Areas:
+
+1
+
+This Analysis is for Subcatchment Area:
+
+1
+
+AREA (m2)
+616.0
+8,536.0
+942.0
+1,120.0
+3,502.0
+2,344.0
+17,060.0
+
+RUNOFF
+COEFFICIENT
+0.90
+0.90
+0.25
+1.00
+0.25
+0.25
+0.65
+
+Allowable 2-yr Release Rate =
+Allowable 5-yr Release Rate =
+Allowable 10-yr Release Rate =
+Allowable 25-yr Release Rate =
+Allowable 50-yr Release Rate =
+Allowable 100-yr Release Rate =
+
+TRCA
+13.6 L/s
+20.9 L/s
+25.6 L/s
+32.3 L/s
+37.9 L/s
+42.7 L/s
+
+Town of Caledon
+45.4 L/s
+62.3 L/s
+76.2 L/s
+92.4 L/s
+104.7 L/s
+117.8 L/s
+
+Time of Concentration (tc) =
+
+10.00 min
+
+Building Area
+Impervious Area
+Pervious Area
+SWM Facility Area
+Undeveloped Area
+External Area
+Total Sub-Catchment Area
+
+DETERMINATION OF NECESSARY STORAGE VOLUME - FIGURE No. 5
+This Analysis is for Sub-Catchment Area #1
+Modified Rational Method used to determine storage volume:
+Q=CiA/360, i= A / (t/60)^B
+and for: A = 1070, B = 0.8759, C = 7.85 2-YR
+DURATION
+
+i
+
+INFLOW
+(m3/sec)
+
+(t)
+
+(mm/hr)
+
+(Q=CiA/360)
+
+(MIN.)
+
+100-YR
+
+100-Yr
+
+100-Yr
+
+TRCA
+
+Caledon
+
+TRCA
+
+Caledon
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+15
+20
+25
+30
+35
+40
+50
+60
+90
+120
+240
+360
+720
+1440
+
+158.5
+144.3
+132.6
+122.7
+114.3
+107.1
+100.7
+95.1
+90.2
+85.7
+69.0
+58.1
+50.2
+44.4
+39.8
+36.1
+30.6
+26.6
+19.3
+15.3
+8.6
+6.1
+3.3
+1.8
+
+0.487
+0.443
+0.407
+0.377
+0.351
+0.329
+0.309
+0.292
+0.277
+0.263
+0.212
+0.178
+0.154
+0.136
+0.122
+0.111
+0.094
+0.082
+0.059
+0.047
+0.026
+0.019
+0.010
+0.006
+
+29.2
+53.2
+73.3
+90.4
+105.3
+118.3
+129.9
+140.2
+149.5
+157.9
+190.8
+213.9
+231.4
+245.3
+256.7
+266.3
+281.9
+294.2
+320.2
+337.8
+378.3
+401.6
+441.8
+483.8
+
+4.5
+4.9
+5.3
+5.7
+6.1
+6.5
+6.9
+7.3
+7.8
+8.2
+10.2
+12.2
+14.3
+16.3
+18.4
+20.4
+24.5
+28.6
+40.8
+53.0
+102.0
+151.0
+297.8
+591.6
+
+15.0
+16.3
+17.7
+19.1
+20.4
+21.8
+23.2
+24.5
+25.9
+27.2
+34.1
+40.9
+47.7
+54.5
+61.3
+68.1
+81.7
+95.3
+136.2
+177.1
+340.5
+503.9
+994.3
+1974.9
+
+24.7
+48.3
+68.0
+84.7
+99.2
+111.8
+122.9
+132.8
+141.7
+149.8
+180.6
+201.7
+217.1
+228.9
+238.3
+245.9
+257.4
+265.6
+279.4
+284.8
+276.3
+250.6
+143.9
+0.0
+
+14.2
+36.8
+55.6
+71.4
+84.9
+96.5
+106.7
+115.7
+123.6
+130.7
+156.8
+173.1
+183.7
+190.8
+195.4
+198.2
+200.2
+198.9
+184.0
+160.7
+37.8
+0.0
+0.0
+0.0
+
+ACCUMULATED RUNOFF
+ALLOWABLE
+VOLUME (m3)
+RELEASE VOL. (m3)
+(Vacc = Q x tc)
+(Vrel = Q100yr x (t + tc)/2
+
+REQ'D
+STORAGE (m3)
+(Vreq'd = Vacc - Vrel)
+
+DETERMINATION OF NECESSARY STORAGE VOLUME - FIGURE No. 6
+This Analysis is for Sub-Catchment Area #1
+Modified Rational Method used to determine storage volume:
+Q=CiA/360, i= A / (t/60)^B
+and for: A = 1593, B = 0.8789, C = 11 5-YR
+DURATION
+
+i
+
+INFLOW
+(m3/sec)
+
+(t)
+
+(mm/hr)
+
+(Q=CiA/360)
+
+(MIN.)
+
+100-YR
+
+100-Yr
+
+100-Yr
+
+TRCA
+
+Caledon
+
+TRCA
+
+Caledon
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+15
+20
+25
+30
+35
+40
+50
+60
+90
+120
+240
+360
+720
+1440
+
+179.4
+167.2
+156.6
+147.4
+139.3
+132.1
+125.6
+119.8
+114.5
+109.7
+90.9
+77.9
+68.3
+60.9
+55.1
+50.3
+43.0
+37.6
+27.6
+21.9
+12.4
+8.8
+4.8
+2.7
+
+0.551
+0.513
+0.481
+0.453
+0.428
+0.405
+0.386
+0.368
+0.352
+0.337
+0.279
+0.239
+0.210
+0.187
+0.169
+0.154
+0.132
+0.115
+0.085
+0.067
+0.038
+0.027
+0.015
+0.008
+
+33.0
+61.6
+86.6
+108.6
+128.3
+146.0
+162.0
+176.5
+189.8
+202.1
+251.2
+287.0
+314.5
+336.7
+355.0
+370.6
+395.7
+415.6
+457.3
+485.2
+547.9
+583.0
+642.4
+703.3
+
+6.9
+7.5
+8.2
+8.8
+9.4
+10.0
+10.7
+11.3
+11.9
+12.5
+15.7
+18.8
+21.9
+25.1
+28.2
+31.4
+37.6
+43.9
+62.7
+81.5
+156.8
+232.0
+457.7
+909.2
+
+20.6
+22.4
+24.3
+26.2
+28.0
+29.9
+31.8
+33.6
+35.5
+37.4
+46.7
+56.1
+65.4
+74.8
+84.1
+93.5
+112.1
+130.8
+186.9
+243.0
+467.3
+691.5
+1364.4
+2710.1
+
+26.1
+54.1
+78.4
+99.9
+118.9
+135.9
+151.3
+165.2
+177.9
+189.5
+235.5
+268.2
+292.6
+311.6
+326.8
+339.2
+358.1
+371.7
+394.6
+403.7
+391.2
+351.0
+184.7
+0.0
+
+12.5
+39.2
+62.3
+82.5
+100.3
+116.1
+130.2
+142.9
+154.3
+164.7
+204.5
+230.9
+249.1
+261.9
+270.9
+277.1
+283.6
+284.8
+270.4
+242.2
+80.7
+0.0
+0.0
+0.0
+
+ACCUMULATED RUNOFF
+ALLOWABLE
+VOLUME (m3)
+RELEASE VOL. (m3)
+(Vacc = Q x tc)
+(Vrel = Q100yr x (t + tc)/2
+
+REQ'D
+STORAGE (m3)
+(Vreq'd = Vacc - Vrel)
+
+DETERMINATION OF NECESSARY STORAGE VOLUME - FIGURE No. 7
+This Analysis is for Sub-Catchment Area #1
+Modified Rational Method used to determine storage volume:
+Q=CiA/360, i= A / (t/60)^B
+and for: A = 2221, B = 0.908, C = 12 10-YR
+DURATION
+
+i
+
+INFLOW
+(m3/sec)
+
+(t)
+
+(mm/hr)
+
+(Q=CiA/360)
+
+(MIN.)
+
+100-YR
+
+100-Yr
+
+100-Yr
+
+TRCA
+
+Caledon
+
+TRCA
+
+Caledon
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+15
+20
+25
+30
+35
+40
+50
+60
+90
+120
+240
+360
+720
+1440
+
+216.3
+202.2
+190.0
+179.1
+169.6
+161.0
+153.3
+146.3
+140.0
+134.2
+111.4
+95.5
+83.7
+74.6
+67.3
+61.4
+52.4
+45.7
+33.3
+26.4
+14.7
+10.3
+5.6
+3.0
+
+0.664
+0.621
+0.583
+0.550
+0.521
+0.494
+0.471
+0.449
+0.430
+0.412
+0.342
+0.293
+0.257
+0.229
+0.207
+0.189
+0.161
+0.140
+0.102
+0.081
+0.045
+0.032
+0.017
+0.009
+
+39.9
+74.5
+105.0
+132.0
+156.2
+177.9
+197.7
+215.6
+232.0
+247.2
+307.8
+351.8
+385.4
+412.2
+434.2
+452.7
+482.4
+505.4
+552.5
+582.9
+648.1
+682.6
+738.4
+792.9
+
+8.4
+9.2
+10.0
+10.8
+11.5
+12.3
+13.1
+13.8
+14.6
+15.4
+19.2
+23.0
+26.9
+30.7
+34.6
+38.4
+46.1
+53.8
+76.8
+99.8
+192.0
+284.2
+560.6
+1113.6
+
+25.1
+27.4
+29.7
+32.0
+34.3
+36.6
+38.9
+41.1
+43.4
+45.7
+57.2
+68.6
+80.0
+91.4
+102.9
+114.3
+137.2
+160.0
+228.6
+297.2
+571.5
+845.8
+1668.8
+3314.7
+
+31.4
+65.3
+95.0
+121.3
+144.7
+165.7
+184.6
+201.8
+217.5
+231.8
+288.6
+328.7
+358.5
+381.5
+399.7
+414.3
+436.3
+451.6
+475.7
+483.1
+456.1
+398.4
+177.7
+0.0
+
+14.7
+47.1
+75.3
+100.0
+121.9
+141.4
+158.8
+174.5
+188.6
+201.4
+250.7
+283.2
+305.4
+320.8
+331.4
+338.4
+345.2
+345.3
+323.9
+285.7
+76.6
+0.0
+0.0
+0.0
+
+ACCUMULATED RUNOFF
+ALLOWABLE
+VOLUME (m3)
+RELEASE VOL. (m3)
+(Vacc = Q x tc)
+(Vrel = Q100yr x (t + tc)/2
+
+REQ'D
+STORAGE (m3)
+(Vreq'd = Vacc - Vrel)
+
+DETERMINATION OF NECESSARY STORAGE VOLUME - FIGURE No. 8
+This Analysis is for Sub-Catchment Area #1
+Modified Rational Method used to determine storage volume:
+Q=CiA/360, i= A / (t/60)^B
+and for: A = 3158, B = 0.9335, C = 15 25-YR
+DURATION
+
+i
+
+INFLOW
+(m3/sec)
+
+(t)
+
+(mm/hr)
+
+(Q=CiA/360)
+
+(MIN.)
+
+100-YR
+
+100-Yr
+
+100-Yr
+
+TRCA
+
+Caledon
+
+TRCA
+
+Caledon
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+15
+20
+25
+30
+35
+40
+50
+60
+90
+120
+240
+360
+720
+1440
+
+237.3
+224.3
+212.6
+202.2
+192.7
+184.1
+176.3
+169.1
+162.5
+156.5
+132.0
+114.3
+100.9
+90.4
+81.9
+75.0
+64.1
+56.1
+41.0
+32.4
+17.9
+12.5
+6.7
+3.5
+
+0.729
+0.689
+0.653
+0.621
+0.592
+0.565
+0.541
+0.519
+0.499
+0.480
+0.405
+0.351
+0.310
+0.278
+0.252
+0.230
+0.197
+0.172
+0.126
+0.100
+0.055
+0.038
+0.020
+0.011
+
+43.7
+82.6
+117.5
+149.0
+177.5
+203.5
+227.4
+249.3
+269.5
+288.3
+364.7
+421.1
+464.7
+499.6
+528.3
+552.3
+590.7
+620.2
+679.6
+716.6
+791.6
+828.4
+883.9
+934.5
+
+10.7
+11.6
+12.6
+13.6
+14.5
+15.5
+16.5
+17.4
+18.4
+19.4
+24.2
+29.1
+33.9
+38.8
+43.6
+48.5
+58.1
+67.8
+96.9
+126.0
+242.3
+358.5
+707.4
+1405.1
+
+30.5
+33.3
+36.0
+38.8
+41.6
+44.4
+47.1
+49.9
+52.7
+55.4
+69.3
+83.2
+97.0
+110.9
+124.7
+138.6
+166.3
+194.0
+277.2
+360.4
+693.0
+1025.6
+2023.6
+4019.4
+
+33.1
+71.0
+104.9
+135.4
+163.0
+188.0
+210.9
+231.8
+251.1
+268.9
+340.5
+392.1
+430.8
+460.8
+484.7
+503.9
+532.6
+552.4
+582.7
+590.6
+549.3
+469.8
+176.6
+0.0
+
+13.2
+49.4
+81.5
+110.2
+135.9
+159.2
+180.2
+199.4
+216.9
+232.8
+295.4
+338.0
+367.7
+388.7
+403.5
+413.7
+424.4
+426.2
+402.4
+356.3
+98.6
+0.0
+0.0
+0.0
+
+ACCUMULATED RUNOFF
+ALLOWABLE
+VOLUME (m3)
+RELEASE VOL. (m3)
+(Vacc = Q x tc)
+(Vrel = Q100yr x (t + tc)/2
+
+REQ'D
+STORAGE (m3)
+(Vreq'd = Vacc - Vrel)
+
+DETERMINATION OF NECESSARY STORAGE VOLUME - FIGURE No. 9
+This Analysis is for Sub-Catchment Area #1
+Modified Rational Method used to determine storage volume:
+Q=CiA/360, i= A / (t/60)^B
+and for: A = 3886, B = 0.9495, C = 16 50-YR
+DURATION
+
+i
+
+INFLOW
+(m3/sec)
+
+(t)
+
+(mm/hr)
+
+(Q=CiA/360)
+
+(MIN.)
+
+100-YR
+
+100-Yr
+
+100-Yr
+
+TRCA
+
+Caledon
+
+TRCA
+
+Caledon
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+15
+20
+25
+30
+35
+40
+50
+60
+90
+120
+240
+360
+720
+1440
+
+263.7
+249.8
+237.3
+226.0
+215.8
+206.5
+197.9
+190.1
+182.9
+176.2
+149.1
+129.4
+114.3
+102.5
+92.9
+85.0
+72.8
+63.6
+46.4
+36.6
+20.1
+13.9
+7.4
+3.9
+
+0.810
+0.767
+0.729
+0.694
+0.663
+0.634
+0.608
+0.584
+0.562
+0.541
+0.458
+0.397
+0.351
+0.315
+0.285
+0.261
+0.223
+0.195
+0.142
+0.112
+0.062
+0.043
+0.023
+0.012
+
+48.6
+92.0
+131.2
+166.6
+198.8
+228.2
+255.3
+280.2
+303.2
+324.6
+412.0
+476.6
+526.6
+566.5
+599.2
+626.6
+670.2
+703.4
+769.3
+809.6
+888.1
+924.8
+977.5
+1022.8
+
+12.5
+13.6
+14.8
+15.9
+17.1
+18.2
+19.3
+20.5
+21.6
+22.7
+28.4
+34.1
+39.8
+45.5
+51.2
+56.9
+68.2
+79.6
+113.7
+147.8
+284.3
+420.7
+830.0
+1648.7
+
+34.6
+37.7
+40.8
+44.0
+47.1
+50.3
+53.4
+56.5
+59.7
+62.8
+78.5
+94.2
+109.9
+125.6
+141.3
+157.1
+188.5
+219.9
+314.1
+408.3
+785.3
+1162.2
+2292.9
+4554.5
+
+36.1
+78.4
+116.4
+150.7
+181.7
+210.0
+235.9
+259.7
+281.6
+301.9
+383.6
+442.5
+486.8
+521.0
+548.1
+569.8
+601.9
+623.8
+655.6
+661.8
+603.8
+504.1
+147.4
+0.0
+
+14.0
+54.4
+90.3
+122.6
+151.7
+178.0
+201.9
+223.6
+243.5
+261.8
+333.5
+382.4
+416.6
+440.9
+457.9
+469.6
+481.7
+483.5
+455.2
+401.2
+102.8
+0.0
+0.0
+0.0
+
+ACCUMULATED RUNOFF
+ALLOWABLE
+VOLUME (m3)
+RELEASE VOL. (m3)
+(Vacc = Q x tc)
+(Vrel = Q100yr x (t + tc)/2
+
+REQ'D
+STORAGE (m3)
+(Vreq'd = Vacc - Vrel)
+
+DETERMINATION OF NECESSARY STORAGE VOLUME - FIGURE No. 10
+This Analysis is for Sub-Catchment Area #1
+Modified Rational Method used to determine storage volume:
+Q=CiA/360, i= A / (t/60)^B
+and for: A = 4688, B = 0.9624, C = 17 100-YR
+DURATION
+
+i
+
+INFLOW
+(m3/sec)
+
+(t)
+
+(mm/hr)
+
+(Q=CiA/360)
+
+(MIN.)
+
+100-YR
+
+100-Yr
+
+100-Yr
+
+TRCA
+
+Caledon
+
+TRCA
+
+Caledon
+
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+15
+20
+25
+30
+35
+40
+50
+60
+90
+120
+240
+360
+720
+1440
+
+290.3
+275.6
+262.3
+250.3
+239.4
+229.3
+220.1
+211.6
+203.8
+196.5
+166.9
+145.1
+128.5
+115.3
+104.6
+95.7
+82.0
+71.7
+52.2
+41.2
+22.5
+15.5
+8.2
+4.2
+
+0.892
+0.846
+0.806
+0.769
+0.735
+0.704
+0.676
+0.650
+0.626
+0.603
+0.512
+0.446
+0.394
+0.354
+0.321
+0.294
+0.252
+0.220
+0.160
+0.126
+0.069
+0.048
+0.025
+0.013
+
+53.5
+101.6
+145.0
+184.5
+220.5
+253.5
+283.9
+311.9
+337.9
+362.1
+461.2
+534.7
+591.7
+637.2
+674.4
+705.6
+754.9
+792.4
+866.0
+910.2
+993.7
+1030.8
+1081.5
+1122.5
+
+14.1
+15.4
+16.7
+17.9
+19.2
+20.5
+21.8
+23.1
+24.3
+25.6
+32.0
+38.4
+44.8
+51.2
+57.6
+64.1
+76.9
+89.7
+128.1
+166.5
+320.3
+474.0
+935.1
+1857.5
+
+38.9
+42.4
+45.9
+49.5
+53.0
+56.5
+60.1
+63.6
+67.1
+70.7
+88.4
+106.0
+123.7
+141.4
+159.0
+176.7
+212.0
+247.4
+353.4
+459.4
+883.5
+1307.6
+2579.8
+5124.3
+
+39.4
+86.2
+128.3
+166.5
+201.3
+233.0
+262.1
+288.9
+313.6
+336.5
+429.2
+496.3
+546.8
+585.9
+616.8
+641.5
+678.1
+702.7
+737.9
+743.7
+673.4
+556.8
+146.4
+0.0
+
+14.6
+59.1
+99.1
+135.0
+167.5
+197.0
+223.8
+248.3
+270.8
+291.4
+372.8
+428.7
+468.0
+495.8
+515.4
+528.9
+542.9
+545.0
+512.6
+450.8
+110.2
+0.0
+0.0
+0.0
+
+ACCUMULATED RUNOFF
+ALLOWABLE
+VOLUME (m3)
+RELEASE VOL. (m3)
+(Vacc = Q x tc)
+(Vrel = Q100yr x (t + tc)/2
+
+REQ'D
+STORAGE (m3)
+(Vreq'd = Vacc - Vrel)
+
+Appendix E
+SWM Facility Design Calculations
+
+Falling Head Orifice Equation for
+Constant Storage Area (eq 4.10)
+t = 2As / (CAo(2g)^0.5 x (h1^0.5 - h2^0.5)
+
+As = storage area footprint (sq.m)
+Cd = coefficient of discharge
+Do = orifice diameter (mm)
+Ao = cross sectional area of orifice (sq.m)
+g = gravitational constant (9.81 m/s2)
+h1 = starting height of water over orifice centroid (m)
+h2 = ending height of water over orifice centroid (m)
+
+Variable
+As:
+Cd:
+Do:
+Ao:
+#O:
+AO:
+h1:
+h2:
+
+Value
+1120.0
+0.63
+25
+0.0005
+5
+0.0025
+0.26
+0.00
+
+Unit
+sq.m
+
+t:
+
+166765
+46.3
+
+seconds
+hours
+
+mm
+sq.m
+sq.m
+m
+m
+
+SWM FACILITY - Control Structure Discharge Curve
+
+Water Depth
+(m)
+
+h1
+(m)
+
+Orifice 1
+dh1
+(m)
+
+Cd1
+
+h2
+(m)
+
+Orifice 2
+dh2
+(m)
+
+Cd2
+
+Outlet / Storage Type
+
+Elevation
+(masl)
+
+Overflow Weir
+hw
+v
+(m)
+(m/s)
+
+Q1
+(L/s)
+
+Q2
+(L/s)
+
+Qweir
+(L/s)
+
+Total Flow
+(L/s)
+
+Storage
+(cu.m)
+
+Orifice 1 (Invert)
+Orifice 1 (Springline)
+Orifice 1 / Bottom of Storage
+Orifice 1 / Extended Detention
+Orifice 1 / Extended Detention
+Orifice 1 / Extended Detention
+Orifice 1 / Extended Detention
+Orifice 1 / Extended Detention
+Orifice 1 & Orifice 2 (Centroid)
+Orifice 1 & 2/ Flood Protection
+Orifice 1 & 2/ Flood Protection
+Orifice 1 & 2/ Flood Protection
+Orifice 1, 2 & Overflow Weir
+Orifice 1, 2 & Weir / Flood Protection
+Orifice 1, 2 & Weir / Flood Protection
+Orifice 1, 2 & Weir / Flood Protection
+
+259.19
+259.20
+259.20
+259.25
+259.30
+259.35
+259.40
+259.46
+259.50
+259.55
+259.64
+259.73
+259.78
+259.79
+259.79
+259.80
+
+‐0.01
+0.00
+0.00
+0.05
+0.10
+0.15
+0.20
+0.26
+0.30
+0.35
+0.44
+0.53
+0.58
+0.59
+0.59
+0.60
+
+0.00
+0.01
+0.01
+0.06
+0.11
+0.16
+0.21
+0.27
+0.31
+0.36
+0.45
+0.54
+0.59
+0.60
+0.61
+0.61
+
+FALSE
+FALSE
+FALSE
+0.05
+0.10
+0.15
+0.20
+0.26
+0.30
+0.35
+0.44
+0.53
+0.58
+0.59
+0.59
+0.60
+
+0.56
+0.58
+0.58
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+0.63
+
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+0.00
+0.05
+0.14
+0.23
+0.28
+0.29
+0.29
+0.30
+
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+0.05
+0.14
+0.23
+0.28
+0.29
+0.29
+0.30
+
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+0.56
+0.80
+0.80
+0.80
+0.80
+0.80
+0.80
+0.80
+
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+0.00
+0.01
+0.01
+0.02
+
+0.00
+0.14
+0.14
+1.53
+2.17
+2.65
+3.06
+3.49
+3.75
+4.04
+4.55
+4.96
+5.22
+5.25
+5.28
+5.30
+
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+9.56
+16.35
+20.64
+23.01
+23.32
+23.56
+23.73
+
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+0.00
+3.73
+9.06
+13.67
+
+0.00
+0.14
+0.14
+1.53
+2.17
+2.65
+3.06
+3.49
+3.75
+13.60
+20.90
+25.60
+28.23
+32.30
+37.90
+42.70
+
+0.0
+0.0
+0.0
+56.3
+113.1
+170.5
+228.4
+298.6
+345.9
+403.5
+515.8
+618.6
+686.6
+696.0
+703.6
+748.3
+
+25 mm x5
+125 mm
+
+Orifice 1 Cd:
+Orifice 2 Cd:
+
+0.63
+0.80
+
+1m
+4m
+
+Weir Coef.
+kt
+
+2.6
+1
+
+Weir Discharge Below Centroid
+
+Q = Cd((10.12(h/d)^1.975 ‐ 2.66(h/d)^3.78))d^(5/2)
+Q = Discharge rate through circular weir (L/s)
+Cd = coefficient of discharge = 0.555 + (1/110(h/d)) + 0.041(h/d)
+h = height of water over weir bottom (m)
+d = diameter of circular weir (m)
+
+Orifice Discharge Above Centroid
+
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+FALSE
+0.12
+0.17
+0.19
+
+Extended Detention
+2yr Allowable
+5yr Allowable
+10yr Allowable
+25yr Allowable
+50yr Allowable
+100yr Allowable
+
+Input Parameters
+
+Orifice 1 diameter:
+Orifice 2 diameter:
+Weir Breadth:
+Weir Length:
+
+Q = Cd*Ao*SQRT(2g*h)
+Q = discharge rate through orifice (L/s)
+Cd = coefficient of discharge (0.63 for orifice plate or 0.80 for orifice tube)
+Ao = cross sectional area of orifice (sq.m)
+g = gravitational constant (9.81 m/s2)
+dh = height of water over orifice centroid (m)
+
+Bottom of storage elevation:
+Invert of Orifice 1 elevation:
+Invert of Orifice 2 elevation:
+Overflow weir elevation:
+
+259.20 masl
+259.19 masl
+259.50 masl
+259.78 masl
+
+Calculated Parameters
+
+Broad Crest Weir Discharge
+
+Notes
+
+Q = 0.55 x C x L x H^1.5 x kt x 1000
+Q = Discharge over broad crest weir (L/s)
+Cw = Weir Coefficient
+L = Weir Length (m)
+H = upstream water level over weir (m)
+
+Orifice 1 Springline:
+Orifice 2 Centroid:
+Orifice 1 Area:
+Orifice 2 Area:
+
+259.20 masl
+259.50 masl
+0.0025 sq.m
+0.0123 sq.m
+
+Dry pond storage footprint =
+Dry pond storage water surface =
+Storage depth =
+Storage porosity =
+
+1120.0 sq.m
+1296.0 sq.m
+0.80 m
+N/A
+
+Appendix F
+Oil Grit Separator Specifications
+
+Hydro First Defense® - HC
+Rev. 12.2
+Project Name: Dixie Transport Depot
+Street: 12363 Dixie Road
+Province: ON
+Designer:
+Treatment Parameters:
+Structure ID: FD-6HC
+TSS Goal:
+50 % Removal
+TSS Particle Size:
+ETV
+Area:
+1.0094 ha
+Percent Impervious:
+91%
+Calc. Cn
+Rational C value:
+0.85
+Rainfall Station: Toronto, ONT
+Peak Storm Flow:
+467 L/s
+Model Specification:
+Model:
+Diameter:
+
+FD-5HC
+1500 mm
+
+Peak Flow Capacity: 566.00 L/s
+3
+Sediment Storage:
+0.84 m
+Oil Storage: 1136.00 L
+Installation Configuration:
+Placement: Online
+Outlet Pipe Size:
+450 mm OK
+Inlet Pipe 1 Size:
+375 mm OK
+Inlet Pipe 2 Size:
+375 mm OK
+Inlet Pipe 3 Size:
+mm OK
+Rim Level: 261.100 m
+Outlet Pipe Invert: 259.350 m
+Invert Pipe 1: 259.430 m
+Invert Pipe 2: 259.430 m
+Invert Pipe 3:
+m
+Designer Notes:
+
+Net Annual Removal Model: FD-5HC
+Paste
+
+Report Date:
+City: Caledon
+Country: CA
+email:
+
+Intensity(1)
+
+RESULTS SUMMARY
+
+MAP
+
+Model
+FD-3HC
+FD-4HC
+FD-5HC
+FD-6HC
+FD-8HC
+FD-10HC
+
+TSS
+39.0%
+43.0%
+45.0%
+48.0%
+51.0%
+54.0%
+
+Volume
+>90%
+>90%
+>90%
+>90%
+>90%
+>90%
+
+(mm/hr)
+0.50
+1.00
+1.50
+2.00
+2.50
+3.00
+3.50
+4.00
+4.50
+5.00
+6.00
+7.00
+8.00
+9.00
+10.00
+20.00
+30.00
+40.00
+50.00
+100.00
+150.00
+200.00
+
+Fraction of
+(1)
+
+Rainfall
+
+(%)
+0.2%
+14.8%
+15.1%
+13.6%
+3.9%
+1.3%
+8.9%
+5.3%
+1.2%
+5.2%
+4.2%
+4.6%
+3.1%
+2.3%
+2.2%
+9.3%
+2.7%
+1.1%
+0.5%
+0.6%
+0.1%
+0.0%
+
+FD-5HC
+Removal
+Efficiency(2)
+
+Weighted Net
+Annual
+Efficiency
+
+(%)
+64.8%
+59.8%
+56.9%
+54.8%
+53.2%
+51.9%
+50.7%
+49.8%
+48.9%
+48.2%
+46.9%
+45.8%
+44.8%
+43.9%
+43.2%
+0.0%
+0.0%
+0.0%
+0.0%
+0.0%
+0.0%
+0.0%
+
+(%)
+0.1%
+8.8%
+8.6%
+7.5%
+2.1%
+0.7%
+4.5%
+2.6%
+0.6%
+2.5%
+2.0%
+2.1%
+1.4%
+1.0%
+1.0%
+0.0%
+0.0%
+0.0%
+0.0%
+0.0%
+0.0%
+0.0%
+
+Total Net Annual Removal Efficiency:
+Total Annual Runoff Volume Treated:
+1. Rainfall Data: 1953:2007, HLY03, Toronto , ON, 6158350 & 6158355
+
+Calc Invs.
+
+2. Canada ETV PSD & Test Protocols - ISO14034 Certifed
+
+OK
+OK
+OK
+
+3. Rainfall adjusted to 5 min peak intensity based on hourly average.
+
+45.0%
+>90%
+
+Hydro First Defense® - HC
+
+Rim Level: 261.100
+
+1750 mm
+Invert Inlet 1: 259.430
+Invert Inlet 2: 259.430
+Invert Inlet 3:
+
+Outlet Invert: 259.350
+
+1800 mm
+
+All drawing elevations are metres.
+
+1
+2
+3
+4
+5
+6
+7
+
+FD-5HC Specification
+Vortex Chamber Diameter
+Inlet Pipe Diameter
+Oil Storage Capacity
+Min. Provided Sediment Storage Capacity
+Outlet Pipe Diameter
+Height(Final Grade to Outlet Invert)
+Sump Depth(Outlet Invert to Sump)
+Total Depth
+
+1500 mm
+375 mm
+1136.00 L
+3
+0.84 m
+450 mm
+1750 mm
+1800 mm
+3550 mm
+
+Notes:
+Extend oil port to minimum 260.00
+
+Operation and Maintenance Manual
+
+First Defense® and First Defense®High Capacity
+Vortex Separator for Stormwater Treatment
+
+First Defense® Operation and Maintenance Manual
+
+Page | 2
+
+Table of Contents
+3
+
+- Operation
+- Pollutant Capture and Retention
+Model Sizes & Configurations
+- First Defense® Components
+5
+
+I. First Defense® by Hydro International
+
+First Defense® by Hydro International
+- Introduction
+
+4
+
+First Defense® Operation and Maintenance Manual
+
+Page | 3
+
+Maintenance
+- Overview
+
+Introduction
+
+The First Defense is an enhanced vortex separator
+that combines an effective and economical stormwater
+treatment chamber with an integral peak flow bypass. It
+efficiently removes total suspended solids (TSS), trash and
+hydrocarbons from stormwater runoff without washing out
+previously captured pollutants. The First Defense® is available
+in several model configurations (refer to Section II. Model
+Sizes & Configurations, page 4) to accommodate a wide
+range of pipe sizes, peak flows and depth constraints.
+®
+
+- Maintenance Equipment Considerations
+- Determining Your Maintenance Schedule
+6
+
+Maintenance Procedures
+- Inspection
+- Floatables and Sediment Clean Out
+
+8
+
+First Defense® Installation Log
+
+9
+
+First Defense® Inspection and Maintenance Log
+
+Operation
+The First Defense® operates on simple fluid hydraulics. It is selfactivating, has no moving parts, no external power requirement
+and is fabricated with durable non-corrosive components.
+No manual procedures are required to operate the unit and
+maintenance is limited to monitoring accumulations of stored
+pollutants and periodic clean-outs. The First Defense® has
+been designed to allow for easy and safe access for inspection,
+monitoring and clean-out procedures. Neither entry into the
+unit nor removal of the internal components is necessary for
+maintenance, thus safety concerns related to confined-spaceentry are avoided.
+
+Applications
+• Stormwater treatment at the point of entry into the drainage line
+• Sites constrained by space, topography or drainage profiles
+with limited slope and depth of cover
+• Retrofit installations where stormwater treatment is placed on or
+tied into an existing storm drain line
+• Pretreatment for filters, infiltration and storage
+
+Advantages
+• Inlet options include surface grate or multiple inlet pipes
+• Integral high capacity bypass conveys large peak flows without
+the need for “offline” arrangements using separate junction
+manholes
+• Proven to prevent pollutant washout at up to 500% of its
+treatment flow
+• Long flow path through the device ensures a long residence
+time within the treatment chamber, enhancing pollutant settling
+• Delivered to site pre-assembled and ready for installation
+
+Pollutant Capture and Retention
+The internal components of the First Defense® have been
+designed to optimize pollutant capture. Sediment is captured
+and retained in the base of the unit, while oil and floatables
+are stored on the water surface in the inner volume (Fig.1).
+COPYRIGHT STATEMENT: The contents of this manual, including the graphics contained herein, are intended for the use of the recipient to whom the
+document and all associated information are directed. Hydro International plc owns the copyright of this document, which is supplied in confidence. It
+must not be used for any purpose other than that for which it is supplied and must not be reproduced, in whole or in part stored in a retrieval system or
+transmitted in any form or by any means without prior permission in writing from Hydro International plc. First Defense® is a trademarked hydrodynamic
+vortex separation device of Hydro International plc. A patent covering the First Defense® has been granted.
+
+DISCLAIMER: Information and data contained in this manual is exclusively for the purpose of assisting in the operation and maintenance of Hydro
+International plc’s First Defense®. No warranty is given nor can liability be accepted for use of this information for any other purpose. Hydro International
+plc has a policy of continuous product development and reserves the right to amend specifications without notice.
+
+The pollutant storage volumes are isolated from the built-in
+bypass chamber to prevent washout during high-flow storm
+
+Oil
+
+Max Oil
+Storage Depth
+
+Sediment
+
+Sediment
+Storage
+
+events. The sump of the First Defense® retains a standing
+water level between storm events. This ensures a quiescent
+flow regime at the onset of a storm, preventing resuspension
+and washout of pollutants captured during previous events.
+Accessories such as oil absorbent pads are available for
+enhanced oil removal and storage. Due to the separation
+of the oil and floatable storage volume from the outlet, the
+potential for washout of stored pollutants between clean-outs
+is minimized.
+
+Fig.1 Pollutant storage volumes in the First Defense®.
+
+First Defense® Operation and Maintenance Manual
+
+Page | 4
+
+II. Model Sizes & Configurations
+
+III. Maintenance
+
+The First Defense inlet and internal bypass arrangements are available in several model sizes and configurations. The components
+of the First Defense®-4HC and First Defense®-6HC have modified geometries as to allow greater design flexibility needed to
+accommodate various site constraints.
+®
+
+All First Defense® models include the internal components that are designed to remove and retain total suspended solids (TSS),
+gross solids, floatable trash and hydrocarbons (Fig.2a - 2b). First Defense® model parameters and design criteria are shown in
+Table 1.
+
+First Defense® Components
+1.   Built-In Bypass
+
+4.   Floatables Draw-off Port
+
+2.   Inlet Pipe
+
+5. Outlet Pipe
+
+3.   Inlet Chute
+
+6.   Floatables Storage
+
+8.   Inlet Grate or Cover
+
+5
+
+5
+
+3
+
+6
+
+7
+
+a.
+
+are reached, the First Defense® will no longer be able to store removed sediment and oil. Maximum pollutant storage capacities are
+provided in Table 1.
+
+Maintenance Equipment Considerations
+
+1
+
+4 (not pictured)
+
+4
+
+these captured pollutants is essential to the continuous, long-term functioning of the First Defense®. The First Defense® will capture
+and retain sediment and oil until the sediment and oil storage volumes are full to capacity. When sediment and oil storage capacities
+
+entry into the First Defense®, nor do they require the internal components of the First Defense® to be removed. In the case of
+inspection and floatables removal, a vactor truck is not required. However, a vactor truck is required if the maintenance event is to
+include oil removal and/or sediment removal.
+
+1
+3
+
+The First Defense® protects the environment by removing a wide range of pollutants from stormwater runoff. Periodic removal of
+
+Maintenance events may include Inspection, Oil & Floatables Removal, and Sediment Removal. Maintenance events do not require
+
+8
+
+2
+
+Overview
+
+The First Defense® allows for easy and safe inspection, monitoring and clean-out procedures. A commercially or municipally owned
+sump-vac is used to remove captured sediment and floatables. Access ports are located in the top of the manhole.
+
+7.   Sediment Storage
+
+8
+
+2
+
+First Defense® Operation and Maintenance Manual
+
+Page | 5
+
+6
+
+The internal components of the First Defense®-HC have a centrally located circular shaft through which the sediment storage sump
+can be accessed with a sump vac hose. The open diameter of this access shaft is 15 inches in diameter (Fig.3). Therefore, the nozzle
+fitting of any vactor hose used for maintenance should be less than 15 inches in diameter.
+15-in Maintenance Access
+
+7
+
+b.
+
+Fig.2a) First Defense®-4 and First Defense®-6; b) First Defense®-4HC and First Defense®-6HC, with higher capacity dual internal
+bypass and larger maximum pipe diameter.
+Fig.3 The central opening to the sump of the First Defense®-HC is 15 inches in diameter.
+First Defense
+High Capacity
+Model
+Number
+
+®
+
+1
+2
+
+Diameter
+
+Typical
+TSS
+Treatment
+Flow Rates
+NJDEP
+Certified
+
+Peak
+Online
+Flow Rate
+
+Typical
+Maximum
+Oil Storage Sediment
+Pipe
+Capacity
+Storage
+Diameter1
+Capacity2
+
+Chamber
+Depth
+
+(ft / m)
+
+(cfs / L/s)
+
+(cfs / L/s)
+
+(in / mm)
+
+(gal / L)
+
+(yd3 / m3)
+
+(ft / m)
+
+(ft / m)
+
+FD-3HC
+
+3 / 0.9
+
+0.85 / 24.0
+
+15 / 424
+
+18 / 457
+
+125 / 473
+
+0.4 / 0.3
+
+2.0 - 3.5 / 0.6 - 1.0
+
+3.75 / 1.14
+
+FD-4HC
+
+4 / 1.2
+
+1.50 / 42.4
+
+18 / 510
+
+24 / 600
+
+191 / 723
+
+0.7 / 0.5
+
+2.3 - 3.9 / 0.7 - 1.2
+
+5.00 / 1.52
+
+FD-5HC
+
+5 / 1.5
+
+2.35 / 66.2
+
+20 / 566
+
+24 / 609
+
+300 / 1135
+
+1.1 / .84
+
+2.5 - 4.5 / 0.7 - 1.3
+
+5.25 / 1.60
+
+FD-6HC
+
+6 / 1.8
+
+3.38 / 95.7
+
+32 / 906
+
+30 / 750
+
+496 / 1878
+
+1.6 / 1.2
+
+3.0 - 5.1 / 0.9 - 1.6
+
+6.25 / 1.90
+
+FD-7HC
+
+7 / 2.1
+
+4.60 / 130.2
+
+40 / 1133
+
+42 / 1067
+
+750 / 2839
+
+2.1 / 1.9
+
+3.0 - 5.5 / 0.9 - 1.7
+
+7.25 / 2.20
+
+FD-8HC
+
+8 / 2.4
+
+6.00 / 169.9
+
+50 / 1,415
+
+48 / 1219
+
+1120 / 4239
+
+2.8 / 2.1
+
+3.0 - 6.0 / 0.9 -1.8
+
+8.00 / 2.43
+
+Contact Hydro International when larger pipe sizes are required.
+Contact Hydro International when custom sediment storage capacity is required.
+
+3
+
+Minimum
+Distance from
+Outlet Invert to
+Top of Rim3
+
+Minimum distance for models depends on pipe diameter.
+
+Determining Your Maintenance Schedule
+The frequency of clean out is determined in the field after installation. During the first year of operation, the unit should be inspected
+every six months to determine the rate of sediment and floatables accumulation. A simple probe such as a Sludge-Judge® can be
+used to determine the level of accumulated solids stored in the sump. This information can be recorded in the maintenance log (see
+page 9) to establish a routine maintenance schedule.
+The vactor procedure, including both sediment and oil / flotables removal, for a 6-ft First Defense® typically takes less than 30 minutes
+and removes a combined water/oil volume of about 765 gallons.
+
+Page | 6
+
+First Defense® Operation and Maintenance Manual
+
+Inspection Procedures
+
+Page | 7
+
+First Defense® Operation and Maintenance Manual
+
+Floatables and sediment Clean Out Procedures
+
+1. Set up any necessary safety equipment around the access
+port or grate of the First Defense® as stipulated by
+local ordinances. Safety equipment should notify passing
+pedestrian and road traffic that work is being done.
+
+1. Set up any necessary safety equipment around the access
+port or grate of the First Defense® as stipulated by
+local ordinances. Safety equipment should notify passing
+pedestrian and road traffic that work is being done.
+
+2. Remove the grate or lid to the manhole.
+
+2. Remove the grate or lid to the manhole.
+
+3. Without entering the vessel, look down into the chamber to
+inspect the inside. Make note of any irregularities. Fig.4
+shows the standing water level that should be observed.
+
+3. Without entering the vessel, look down into the chamber to
+inspect the inside. Make note of any irregularities.
+4. Remove oil and floatables stored on the surface of the water
+with the vactor hose (Fig.5) or with the skimmer or net (not
+pictured).
+
+4. Without entering the vessel, use the pole with the skimmer net
+to remove floatables and loose debris from the components
+and water surface.
+
+5. Using a sediment probe such as a Sludge Judge®, measure
+the depth of sediment that has collected in the sump of the
+vessel and record it in the Maintenance Log (page 9).
+
+5. Using a sediment probe such as a Sludge Judge®, measure
+the depth of sediment that has collected in the sump of the
+vessel.
+
+6. Once all floatables have been removed, drop the vactor hose
+to the base of the sump. Vactor out the sediment and gross
+debris off the sump floor (Fig.5).
+
+6. On the Maintenance Log (see page 9), record the date, unit
+location, estimated volume of floatables and gross debris
+removed, and the depth of sediment measured. Also note
+any apparent irregularities such as damaged components or
+blockages.
+
+7. Retract the vactor hose from the vessel.
+
+7. Securely replace the grate or lid.
+8. Take down safety equipment.
+9. Notify Hydro International of any irregularities noted during
+inspection.
+
+Fig.4 Floatables are removed with a vactor hose (First Defense
+model FD-4, shown).
+
+Floatables and Sediment Clean Out
+Floatables clean out is typically done in conjunction with
+sediment removal. A commercially or municipally owned sumpvac is used to remove captured sediment and floatables (Fig.5).
+Floatables and loose debris can also be netted with a skimmer
+and pole. The access port located at the top of the manhole
+provides unobstructed access for a vactor hose and skimmer
+pole to be lowered to the base of the sump.
+
+Scheduling
+• Floatables and sump clean out are typically conducted once
+a year during any season.
+• Floatables and sump clean out should occur as soon as
+possible following a spill in the contributing drainage area.
+
+Recommended Equipment
+• Safety Equipment (traffic cones, etc)
+• Crow bar or other tool to remove grate or lid
+• Pole with skimmer or net (if only floatables are being removed)
+• Sediment probe (such as a Sludge Judge®)
+• Vactor truck (flexible hose recommended)
+• First Defense Maintenance Log
+®
+
+8. On the Maintenance Log provided by Hydro International,
+record the date, unit location, estimated volume of floatables
+and gross debris removed, and the depth of sediment
+measured. Also note any apparent irregularities such as
+damaged components, blockages, or irregularly high or low
+water levels.
+
+Fig.5 Sediment is removed with a vactor hose (First Defense
+model FD-4, shown).
+
+9. Securely replace the grate or lid.
+
+Maintenance at a Glance
+Inspection
+
+Activity
+
+		
+
+- Regularly during first year of installation
+- Frequency
+Every 6 months after the first year of installation
+
+Oil and Floatables
+Removal
+
+- Once per year, with sediment removal
+- Following a spill in the drainage area
+
+Sediment Removal
+
+- Once per year or as needed
+- Following a spill in the drainage area
+
+NOTE: For most clean outs the entire volume of liquid does not need to be removed from the manhole. Only remove the
+first few inches of oils and floatables from the water surface to reduce the total volume of liquid removed during a clean out.
+
+First Defense® Installation Log
+
+First Defense® Inspection and Maintenance Log
+Date
+
+HYDRO INTERNATIONAL REFERENCE NUMBER:
+
+Initials
+
+Depth of
+Floatables
+and Oils
+
+Sediment
+Depth
+Measured
+
+Volume of
+Sediment
+Removed
+
+SITE NAME:
+
+SITE LOCATION:
+
+OWNER:							
+
+CONTRACTOR:
+
+CONTACT NAME:					
+
+CONTACT NAME:
+
+COMPANY NAME:					
+
+COMPANY NAME:
+
+ADDRESS:						
+
+ADDRESS:
+
+TELEPHONE:						
+
+TELEPHONE:
+
+FAX:							
+
+FAX:
+
+INSTALLATION DATE:        /       /        
+
+MODEL SIZE (CIRCLE ONE):
+
+FD-4
+
+FD-4HC
+
+INLET (CIRCLE ALL THAT APPLY):    GRATED INLET (CATCH BASIN)
+
+Hydro International (Stormwater), 94 Hutchins Drive, Portland ME 04102
+Tel: (207) 756-6200 Fax: (207) 756-6212 Web: www.hydro-int.com
+
+FD-6
+
+FD-6HC
+
+INLET PIPE (FLOW THROUGH)
+
+Hydro International (Stormwater), 94 Hutchins Drive, Portland ME 04102
+Tel: (207) 756-6200 Fax: (207) 756-6212 Web: www.hydro-int.com
+
+Site Activity and
+Comments
+
+First Defense® Operation and Maintenance Manual
+NOTES
+
+Notes
+First Defense® Operation and Maintenance Manual
+
+Stormwater Solutions
+94 Hutchins Drive
+Portland, ME 04102
+Tel: (207) 756-6200
+Fax: (207) 756-6212
+stormwaterinquiry@hydro-int.com
+
+www.hydro-int.com
+
+Turning Water Around...®
+FDHC_O+M_H_1703
+
+Appendix G
+Thornthwaite-Mather Water Balance Calculation
+
+Month
+January
+February
+March
+April
+May
+June
+July
+August
+September
+October
+November
+December
+Total
+
+Avg. Monthly
+Temparture (C)
+-7.5
+-6.5
+-2.1
+5.3
+11.7
+16.9
+19.4
+18.4
+14.3
+7.8
+2.0
+-4.1
+
+Potential Evapotransipiration - Orangeville MOE
+Potential
+Daylight
+Adjusted
+Heat Index
+ET (mm)
+Correction
+PET (mm)
+0.0
+0.0
+0.81
+0.0
+0.0
+0.0
+0.81
+0.0
+0.0
+0.0
+1.02
+0.0
+1.1
+25.9
+1.12
+29.0
+3.6
+58.4
+1.27
+74.2
+6.3
+85.1
+1.29
+109.8
+7.8
+98.1
+1.30
+127.5
+7.2
+92.9
+1.20
+111.5
+4.9
+71.7
+1.04
+74.6
+2.0
+38.5
+0.95
+36.6
+0.2
+9.5
+0.80
+7.6
+0.0
+0.0
+0.74
+0.0
+33.1
+480.2
+570.9
+
+alpha =
+Average Annual Percp. (mm)
+Annual Events > 25mm
+Annual Events > 10mm
+
+1.03
+
+Percipitation
+(mm)
+64.3
+54.5
+60.9
+70.1
+86.6
+81.3
+80.8
+88.2
+87.0
+76.6
+87.1
+64.2
+901.6
+
+Surplus
+(mm)
+64.3
+54.5
+60.9
+41.1
+12.4
+0.0
+0.0
+0.0
+12.4
+40.0
+79.5
+64.2
+429.3
+
+WATER SURPLUS =
+901.6
+4.5
+25
+
+Annual Events > 5mm
+Annual Events 0 - 5mm
+Total Annual Events
+
+Deficit
+(mm)
+0.0
+0.0
+0.0
+0.0
+0.0
+28.5
+46.7
+23.3
+0.0
+0.0
+0.0
+0.0
+98.6
+
+429.3 mm
+57
+94
+151
+
+Catchment Designation
+Area (sq.m)
+Pervious (sq.m)
+Impervious (sq.m)
+Infiltration Factors
+Topography Infiltration Factor
+Soil Infiltration Factor
+Land Cover Infiltration Factor
+MECP Infiltration Factor
+Runoff Coefficient
+Impervious Surface Evaporation Factor
+Inputs (per Unit Area)
+Percipitation (mm/yr)
+Total Inputs (mm/yr)
+Outputs (per Unit Area)
+Percipitation Surplus (mm/yr)
+Net Suplus (mm/yr)
+Evapotransipration (mm/yr)
+Infiltration (mm/yr)
+Secondary Infiltration (mm/yr)
+Total Infiltration (mm/yr)
+Total Runoff (mm/yr)
+Total Outputs (mm/yr)
+difference (inputs - outputs)
+Inputs (Volume)
+Percipitation (cu.m/yr)
+Total Inputs (cu.m/yr)
+Outputs (Volume)
+Percipitation Surplus (cu.m/yr)
+Net Suplus (mm/yr)
+Evapotransipration (cu.m/yr)
+Infiltration (cu.m/yr)
+Secondary Infiltration (cu.m/yr)
+Total Infiltration (cu.m/yr)
+Total Runoff (cu.m/yr)
+Total Outputs (cu.m/yr)
+difference (inputs - outputs)
+
+Water Balance Assement
+PRE
+Agricultural
+Total
+11,769.0
+11,769.0
+11,769.0
+0.0
+
+0.30
+0.20
+0.10
+0.60
+0.40
+0.00
+
+POST
+Lawn
+2,617.0
+
+Paved
+
+Building
+11,769.0
+
+8,536.0
+
+616.0
+
+0.30
+0.20
+0.10
+0.60
+0.40
+0.00
+
+0.00
+1.00
+0.20
+
+0.00
+1.00
+0.20
+
+Total
+
+Pre to Post
+Difference
+
+2,617.0
+9,152.0
+
+901.6
+901.6
+
+901.6
+901.6
+
+901.6
+901.6
+
+901.6
+901.6
+
+901.6
+901.6
+
+901.6
+901.6
+
+429.3
+429.3
+472.3
+257.6
+0.0
+257.6
+171.7
+901.6
+0
+
+429.3
+429.3
+472.3
+257.6
+0.0
+257.6
+171.7
+901.6
+0
+
+429.3
+429.3
+472.3
+257.6
+0.0
+257.6
+171.7
+901.6
+0
+
+721.3
+721.3
+180.3
+0.0
+0.0
+0.0
+721.3
+901.6
+0
+
+721.3
+721.3
+180.3
+0.0
+0.0
+0.0
+721.3
+901.6
+0
+
+656.4
+656.4
+245.2
+57.3
+0.0
+57.3
+599.1
+901.6
+0
+
+10,611
+10,611
+
+10,611
+10,611
+
+2,359
+2,359
+
+7,696
+7,696
+
+555
+555
+
+10,611
+10,611
+
+5,053
+5,053
+5,558
+3,032
+0
+3,032
+2,021
+10,611
+0
+
+5,053
+5,053
+5,558
+3,032
+0
+3,032
+2,021
+10,611
+0
+
+1,124
+1,124
+1,236
+674
+0
+674
+449
+2,359
+0
+
+6,157
+6,157
+1,539
+0
+0
+0
+6,157
+7,696
+0
+
+444
+444
+111
+0
+0
+0
+444
+555
+0
+
+7,725
+7,725
+2,886
+674
+0
+674
+7,051
+10,611
+0
+
+227.0
+227.0
+-227.0
+-200.3
+0.0
+-200.3
+427.4
+0.0
+
+2,672
+2,672
+-2,672
+-2,357
+0
+-2,357
+5,030
+0
+
+

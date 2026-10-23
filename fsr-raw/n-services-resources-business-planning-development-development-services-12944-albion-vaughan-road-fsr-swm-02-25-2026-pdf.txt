@@ -1,0 +1,3038 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+March 12, 2026
+
+SERVICING DESIGN BRIEF AND
+STORMWATER MANAGEMENT REPORT
+
+PROPOSED COMMON ELEMENT RESIDENTIAL
+TOWNHOUSE DEVELOPMENT
+QUEENSGATE (MOSAIK) INC.
+12944 QUEENSGATE BOULEVARD
+TOWN OF CALEDON
+REGION OF PEEL
+
+February 25, 2026
+
+PROJECT NO. W25040
+TEL (905) 794-0600
+
+FAX (905) 794-0611
+
+12944 Queensgate Boulevard, Town of Caledon
+Proposed Residential Townhouse Development
+Servicing Design Brief and SWM Report
+
+TABLE OF CONTENTS
+1
+
+INTRODUCTION
+
+1
+
+1.1
+
+Study Area
+
+1
+
+1.2
+
+Objective
+
+1
+
+2
+
+PROPOSED DEVELOPMENT PLAN
+
+3
+
+3
+
+EXISTING CONDITIONS – BACKGROUND INFORMATION
+
+3
+
+3.1
+
+General
+
+3
+
+3.2
+
+Existing Topography, Drainage and Natural Features
+
+3
+
+3.3
+
+Geotechnical Information
+
+4
+
+3.4
+
+Existing Water
+
+4
+
+3.5
+
+Existing Sanitary
+
+4
+
+3.6
+
+Existing Storm Drainage
+
+5
+
+4
+
+PROPOSED SERVICING
+
+7
+
+4.1
+
+General
+
+7
+
+4.2
+
+Grading
+
+7
+
+4.3
+
+Proposed Water Service (Domestic and Firemain)
+
+7
+
+4.4
+
+Proposed Sanitary Drainage
+
+8
+
+4.5
+
+Storm Drainage and Stormwater Management
+
+9
+
+4.5.1 Stormwater Management Criteria
+
+9
+
+4.5.2 Existing Conditions
+
+9
+
+4.5.3 Storm Drainage
+
+10
+
+4.6
+
+Stormwater Quality
+
+10
+
+4.7
+
+Stormwater Quantity
+
+10
+
+4.8
+
+Water Balance/Erosion Control
+
+13
+
+5
+
+SEDIMENT AND EROSION CONTROL
+
+14
+
+6
+
+SUMMARY AND COMPLIANCE DECLARATION
+
+15
+
+6.1
+
+15
+
+Summary
+
+i
+
+Proj. No. W25040
+February 2026
+
+12944 Queensgate Boulevard, Town of Caledon
+Proposed Residential Townhouse Development
+Servicing Design Brief and SWM Report
+
+FIGURES
+FIGURE 1
+
+Location Plan
+
+FIGURE 2
+
+Pre-Development Drainage Area Plan
+
+FIGURE 3
+
+Post-Development Drainage Area Plan
+
+APPENDICES
+APPENDIX "A"
+
+Reference Drawings
+Site Plan – SP-100 prepared by RN Design, dated November 6, 2025
+(Project No.: 24080)
+
+APPENDIX "B"
+
+Domestic Water Demand and Fire Demand Calculations
+Sanitary Demand Calculations
+Region Demand Table
+
+APPENDIX “C”
+
+Stormwater Storage Calculations
+
+DRAWINGS
+DRAWING SS-1
+
+Site Servicing Plan – Queensgate (Mosaik), Town of Caledon
+(Candevcon Group Inc., Project No. W25040)
+
+DRAWING GR-1
+
+Grading Plan – Queensgate (Mosaik), Town of Caledon
+(Candevcon Group Inc., Project No. W25040)
+
+DRAWING ESC-1
+
+Erosion and Sediment Control Plan – Queensgate (Mosaik), Town of Caledon
+(Candevcon Group Inc., Project No. W25040)
+
+ii
+
+Proj. No. W25040
+February 2026
+
+12944 Queensgate Boulevard, Town of Caledon
+Proposed Residential Townhouse Development
+Servicing Design Brief and SWM Report
+
+1
+
+INTRODUCTION
+Candevcon Group Inc. has been retained by Queensgate Mosaik Inc. to provide engineering
+design services related to the site servicing (storm, sanitary, watermains and roadworks) and the
+on-site stormwater management strategy (quantity, quality and water balance) for the proposed
+residential common element townhouse development in the Town of Caledon and Region of
+Peel.
+
+1.1
+
+Study Area
+The property is located at the northwest corner of Albion – Vaughan Road and Queensgate
+Boulevard in the Town of Caledon with a municipal address of 12944 Queensgate Boulevard.
+The property is currently occupied by a single family home with a detached garage.
+The location of the property is shown on Figure 1 – Location Plan.
+Legal Description of the property:
+Block 40, Plan 43M-1281 and Part Lot 5 Concession 7 and Part of the original Road Allowance
+between Lots 5 and 6, Concession 7 (Geographic Township of Albion), Town of Caledon,
+Regional Municipality of Peel
+
+1.2
+
+Objective
+This Servicing Design Brief and Stormwater Management Report is intended to illustrate the
+proposed servicing of the subject townhouse site plan development in terms of sanitary
+drainage, storm drainage, water supply and road construction. The report also addresses the
+proposed stormwater management measures implemented to meet the overall stormwater
+management objective for the site including quantity control, quality control and
+infiltration/water balance requirements. This report will be submitted to the Town, Region and
+other approval authorities along with the detailed site servicing and grading design drawings for
+servicing design and construction approvals.
+
+Page 1 of 15
+
+Proj. No. W25040
+February 2026
+
+5
+AD
+RO
+E
+SI
+D
+
+ION
+
+ALB
+
+QU
+
+HA
+RV
+E
+
+ST
+
+EE
+N
+
+S
+
+VI
+EW
+
+D
+OA
+
+GA
+TE
+
+AV
+E
+
+NR
+
+BO
+U
+
+NU
+E
+
+HA
+UG
+
+LE
+VA
+RD
+
+VA
+
+D
+
+AR
+
+V
+LE
+
+OU
+
+F
+NT
+
+SA
+
+B
+TE
+
+S
+EN
+
+GA
+
+E
+
+M
+AR
+
+QU
+
+IVE
+DR
+
+SITE
+
+RY
+
+BU
+
+CH
+
+AR
+
+GE
+
+ID
+BR
+
+CLE
+
+DS
+
+CIR
+
+LAN
+STR
+EET
+
+CANDEVCON GROUP INC.
+CONSULTING ENGINEERS AND PLANNERS
+
+9358 GOREWAY DRIVE
+BRAMPTON ON. L6P-0M7
+
+TEL (905) 794-0600
+FAX (905) 794-0611
+
+12944 Queensgate Boulevard, Town of Caledon
+Proposed Residential Townhouse Development
+Servicing Design Brief and SWM Report
+
+2
+
+PROPOSED DEVELOPMENT PLAN
+The property has an area of 0.98 ha and is bounded by a former road allowance (between Part of
+Lot 5 and 6, Concession 7 (Albion)), vacant land and existing single detached residential use
+lands to the north, Albion – Vaughan Road to the east, Queensgate Boulevard to the south and
+single detached residential lands to the west.
+The proposed development comprises a 49-unit common element townhouse development
+consisting of 30 ‘back-to-back’ towns and 19 ‘front load’ towns. A 6.0m wide private laneway
+connects the townhouse condominium complex to Queensgate Boulevard. Twelve visitor
+parking spots are distributed throughout the site.
+The proposed site plan for the subject site was prepared by RN Design dated November 6, 2025
+and is included in Appendix “A” for reference.
+
+3
+3.1
+
+EXISTING CONDITIONS – BACKGROUND INFORMATION
+General
+The proposed site was previously envisioned as a continuation of the existing residential
+development from the north with the extension of Esposito Drive to the site boundary complete
+with sanitary, storm and water services. The development direction for the proposed property
+has been revised, along with some recent sanitary sewer infrastructure improvements along
+Queensgate Boulevard by the Region of Peel and additional stormwater drainage improvements
+by the Town of Caledon along Queensgate Boulevard and Albion Vaughan Road. Therefore, the
+site servicing strategies outlined in the report form the basis to accommodate the above noted
+changes for the proposed site.
+
+3.2
+
+Existing Topography, Drainage and Natural Features
+Under existing conditions, the property contains a single family residential building with a
+detached garage and access to Albion-Vaughan Road. A portion of the lands are tree covered
+however have not been classified as a woodlot.
+The topography of the site is sloped south and east to existing drainage ditches (along the south
+and east boundaries of the site) which confluence at a 600mm diameter steel culvert which
+conveys stormwater beneath the Albion-Vaughan Road to the east. The average grade of the site
+slopes from north to south at approximately 4.8% and from west to east at approximately 1.3%.
+Page 3 of 15
+
+Proj. No. W25040
+February 2026
+
+12944 Queensgate Boulevard, Town of Caledon
+Proposed Residential Townhouse Development
+Servicing Design Brief and SWM Report
+
+The existing site has an average geodetic elevation of approximately 205.0m with the southeast
+corner of the site approximately 2m below the Albion-Vaughan Road and Queensgate
+Boulevard intersection. This area will require fill to provide positive drainage and cover over
+the proposed storm sewer system.
+Existing storm drainage from a portion of the external lands to the north-east currently drain
+toward the subject property and is captured in the existing ditch at the east boundary within the
+Albion-Vaughan Road Allowance. The existing ditch will remain and serve to accommodate
+this external drainage. Please refer to Figure 2 – Pre Development Drainage Area Plan for
+details of the existing drainage patterns.
+
+3.3
+
+Geotechnical Information
+A geotechnical investigation was conducted by Soil Engineers Limited dated November 2017.
+Based on findings from the Soil Engineers Limited study, the site’s surficial soils consist of a
+topsoil layer overlying fill material. Underneath the fill material native soil consists of silty clay.
+Groundwater levels were measured at depths ranging from 238.06m – 241.08m.
+
+3.4
+
+Existing Water
+There are two existing watermain surrounding the subject site.
+- 150mm diameter watermain located on Queensgate Boulevard
+- 150mm diameter watermain located on Esposito Drive
+
+3.5
+
+Existing Sanitary
+There are three Region sanitary sewers surrounding the subject site.
+-
+
+Existing 900mm diameter CPP sanitary sewer on Albion-Vaughan Road
+
+-
+
+Existing 375mm diameter PVC sanitary sewer on Queensgate Boulevard
+
+-
+
+Existing 250mm diameter PVC sanitary sewer on Esposito Drive
+
+Page 4 of 15
+
+Proj. No. W25040
+February 2026
+
+12944 Queensgate Boulevard, Town of Caledon
+Proposed Residential Townhouse Development
+Servicing Design Brief and SWM Report
+
+3.6
+
+Existing Storm Drainage
+There is an existing 900mm diameter storm connection at the south of the site which captures
+drainage from the west portion of the site.
+There is an existing 600mm diameter steel culvert located at the southeast corner of the site
+which captures drainage from the east portion of the site and external drainage areas to the
+north.
+There is an existing 450mm diameter storm sewer to the north of the site at Esposito Drive.
+Refer to Figure 2 – Pre-Development Drainage Area Plan for details of the existing storm
+services surrounding the subject site.
+The site was previously accounted for in the design of the existing downstream Stormwater
+Management Ponds #2 and #3. A design runoff coefficient, C=0.45 and a time of concentration,
+Tc=10 minutes was assumed in the design. Due to the proposed site plan having a higher
+imperviousness, additional stormwater management controls will be required.
+
+Page 5 of 15
+
+Proj. No. W25040
+February 2026
+
+EXISTING 450mm STM
+
+EXISTING 900mm STM
+EXISTING 600mm STM
+
+CANDEVCON GROUP INC.
+CONSULTING ENGINEERS AND PLANNERS
+
+9358 GOREWAY DRIVE
+BRAMPTON ON. L6P-0M7
+
+TEL (905) 794-0600
+FAX (905) 794-0611
+
+DATE: DECEMBER 16, 2025 JOB No. W25070
+DESIGN:
+
+S.A
+
+SCALE:
+
+N.T.S
+
+FIG. No.
+
+12944 Queensgate Boulevard, Town of Caledon
+Proposed Residential Townhouse Development
+Servicing Design Brief and SWM Report
+
+4
+4.1
+
+PROPOSED SERVICING
+General
+Storm and sanitary for the proposed development will be provided by connecting to existing
+storm and sanitary sewers on Queensgate Boulevard.
+Water supply for domestic use and fire protection will be provided by connecting to the existing
+watermain on Queensgate Boulevard and Esposito Drive.
+Proposed grading and servicing (water, sanitary and storm) required for the proposed
+development site is provided below in greater detail.
+
+4.2
+
+Grading
+The proposed grading for the site plan is designed to match into the existing elevations at the
+site boundaries as necessary. Retaining walls will be required as necessary to accommodate any
+elevation differential along the perimeter of the site adjacent to the existing residential area and
+the existing road right-of-ways.
+The proposed grading is designed to direct major overland flow toward Queensgate Boulevard.
+The proposed grading is shown on Drawing GR-1 – Grading Plan and included with this
+report for reference.
+
+4.3
+
+Proposed Water Service (Domestic and Firemain)
+As shown on Drawing SS-1 – Site Servicing Plan, water supply to the proposed site will be
+provided by installing a 150mm diameter PVC water service and connecting to the existing
+watermain on Queensgate Boulevard and on Esposito Drive.
+The anticipated water demand is summarized in Table 1 - Anticipated Water Demand shown
+below.
+
+Page 7 of 15
+
+Proj. No. W25040
+February 2026
+
+12944 Queensgate Boulevard, Town of Caledon
+Proposed Residential Townhouse Development
+Servicing Design Brief and SWM Report
+
+Table 1 – Anticipated Water Demand
+UNIT TYPE
+
+Pop/UNIT Pop/m2
+
+UNITS/Area
+
+Townhouse unit C
+
+3.4
+
+49
+
+POPULATION
+166.6
+
+TOTAL POPULATION
+Avg day
+
+167
+
+A
+
+Max day
+Peak hour
+
+FACTOR
+
+FLOW (L/s)
+
+1.0
+
+0.54
+
+2.0 (Residential)
+1.4 (ICI)
+3.0
+
+1.08
+1.62
+
+Fire flow B
+
+50.0
+
+Fire flow + Max Day
+
+51.1
+
+A
+
+Based on 280 L/cap/day, 300 L/Employee/day consumption rates for residential and ICI
+Based on Fire Underwriters Survey - Water Supply for Public Fire Protection in Canada 2020
+C
+Based on Region of Peel Linear Wastewater Standards November 2022, Table 2-2
+B
+
+Domestic Water and Fire Flow Demand Calculations are included for reference in Appendix
+“B”.
+As shown in Table 1, the required water demand (max day + fire flow) for the proposed
+development is 51.1 L/s.
+
+4.4
+
+Proposed Sanitary Drainage
+As shown on Drawing SS-1 – Site Servicing Plan, the proposed townhouse site plan will be
+serviced by a proposed 250mm diameter sanitary service which connects to the existing 375mm
+diameter sanitary sewer on Queensgate Boulevard.
+The sanitary service invert is 239.49m. Sanitary demand calculations and Peel Region MultiUse Demand Table are included in Appendix “B” for reference.
+The anticipated sanitary flows are summarized in Table 2 – Anticipated Sanitary Flows below.
+The total peak sanitary flow for the proposed development is 2.58 L/s.
+
+Page 8 of 15
+
+Proj. No. W25040
+February 2026
+
+12944 Queensgate Boulevard, Town of Caledon
+Proposed Residential Townhouse Development
+Servicing Design Brief and SWM Report
+
+Table 2 – Anticipated Sanitary flows
+UNIT TYPE
+Townhouse
+
+D
+
+POP/UNIT
+
+UNITS
+
+3.4
+
+49
+
+TOTAL POPULATION
+
+POPULATION
+166.6
+167
+
+Average day (L/s) A
+
+0.56
+
+Peak factor B
+
+4.18
+
+Peak sanitary flow (L/s)
+
+2.34
+
+Infiltration (L/s) C
+
+0.24
+
+Total peak Sanitary Flow (L/s)
+
+2.58
+
+A
+
+Based on 290L/cap/day
+PF=1 + 14/(4+P0.5)
+C
+Based on I&I rate of 0.26 L/s/ha
+D
+Based on Region of Peel Linear Wastewater Standards November 2022, Table 2-2
+B
+
+4.5
+
+Storm Drainage and Stormwater Management
+4.5.1
+
+Stormwater Management Criteria
+
+Stormwater quality and quantity controls for the site are provided by an external downstream
+stormwater management (SWM Pond #3) facility located to the south. Since the proposed
+imperviousness of the development is higher than previously designed, additional stormwater
+quantity and quality controls will be required.
+The internal storm sewers will be designed to meet the Town of Caledon’s criteria for storm sewer
+design, based on Town of Caledon’s Rainfall Intensity Curves (Standard Drawing No: 104) and
+a time of concentration of ten (10) minutes.
+4.5.2
+
+Existing Conditions
+
+Stormwater drainage patterns are shown on Figure 2 – Pre-Development Drainage Area Plan.
+Stormwater from the site is captured and conveyed through a 600mm diameter culvert beneath
+the Albion-Vaughan Road.
+An external drainage area to the north of the subject site currently drains along the AlbionVaughan Road to the existing culvert crossing.
+
+Page 9 of 15
+
+Proj. No. W25040
+February 2026
+
+12944 Queensgate Boulevard, Town of Caledon
+Proposed Residential Townhouse Development
+Servicing Design Brief and SWM Report
+
+4.5.3
+
+Storm Drainage
+
+The proposed storm sewers within the proposed development site are designed to convey the
+10-year storm event. Storm drainage from the 10-year to 100-year storm events exceeding the
+pipe capacity will be directed overland to Queensgate Boulevard. Storm drainage from the 100year storm for a portion of the site, specifically the rear yards of Block 4 and Block 5, will be
+captured and conveyed to the underground storm tank due to grading constraints. A 525mm
+diameter storm service connection is proposed for the site. The connection will convey
+stormwater externally to the existing SWM Pond #3.
+Existing external storm drainage will continue to drain to the culvert crossing Albion-Vaughan
+Road.
+The downstream sewer and stormwater management pond were designed to accommodate the
+site area with a composite runoff coefficient of C=0.45. The design composite runoff coefficient
+for the site is C=0.75, therefore stormwater quantity and quality controls will be required to
+make up this difference. Water quality and water quality controls will be discussed further in the
+following sections. The post development drainage area plan is shown in Figure 3 – Post
+Development Storm Drainage Area Plan.
+
+4.6
+
+Stormwater Quality
+The existing stormwater management pond #3 was designed to treat runoff from the site with
+C=0.45. Due to the increased imperviousness of the proposed development, increased runoff is
+anticipated. A hydrodynamic separator will be provided to meet the additional runoff resulting
+from the increased imperviousness of the site (C=0.75-0.45 or C=0.30). Please refer to
+Appendix “C” for Stormceptor sizing calculations.
+
+4.7
+
+Stormwater Quantity
+Stormwater quantity controls will be required to match the design peak flows for the site. The
+storm sewer was designed for a 10-year storm with a runoff C=0.75, and the allowable release
+rate for the site is 164 L/s.
+The modified rational method was used to calculate the maximum storage volume required to
+control post-development peak flow rates for the 100-year storm to the allowable 164 L/s. The
+maximum storage required is 160.2m3.
+Refer to Appendix “C” for stormwater management calculations.
+The required stormwater storage volume will be provided using an underground storage tank.
+Details of the underground storage tank are provided on Drawing SS-1 – Site Servicing Plan.
+Page 10 of 15
+
+Proj. No. W25040
+February 2026
+
+12944 Queensgate Boulevard, Town of Caledon
+Proposed Residential Townhouse Development
+Servicing Design Brief and SWM Report
+
+Overland flow will be directed to southerly towards Queensgate Boulevard. The 10-year
+through 100-year storm events will be conveyed to the Humber River through the existing
+600mm culvert.
+
+Page 11 of 15
+
+Proj. No. W25040
+February 2026
+
+AL
+
+0
+
+UG
+HA
+N
+
+NVA
+
+BIO
+
+=2
+4
+
+ATE
+.E.
+
+7.5
+
+EEN
+SG
+F.F
+
+H
+
+.E.
+
+5
+
+7.7
+
+=2
+4
+
+0
+
+RO
+AD
+
+F.F
+
+HH
+
+7.4
+
+H
+
+=2
+4
+
+.E.
+
+F.F
+
+H
+
+H
+
+H
+
+QU
+
+.E.
+
+F.F
+
+47
+.00
+
+=2
+
+.E.
+
+.70
+
+HH
+
+=2
+47
+
+HH
+
+.E.
+
+F.F
+
+HH
+
+5
+
+7.3
+
+=2
+4
+
+HH
+
+HH
+
+HH
+
+F.F
+
+H
+
+H
+
+47
+.96
+
+=2
+
+.E.
+
+F.F
+
+47
+.92
+
+=2
+
+.E.
+
+F.F
+
+47
+.92
+
+=2
+
+.E.
+
+F.F
+
+F.F
+T.W .E.=
+B.S .E.= 247.0
+.E. 246 0
+=2
+44 .70
+.25
+
+HH
+
+F.F
+T.W .E.=
+B.S .E.= 246.8
+.E. 246 0
+=2
+44 .50
+.05
+
+F.F
+T.W .E.=
+B.S .E.= 247.4
+.E. 247 0
+=2
+44 .10
+.65
+
+H
+
+H
+
+HH
+
+HH
+
+H
+
+BO
+U
+
+1A
+
+LEV
+ARD
+
+9358 GOREWAY DRIVE
+BRAMPTON ON. L6P-0M7
+
+CANDEVCON GROUP INC.
+CONSULTING ENGINEERS AND PLANNERS
+
+DESIGN:
+S.A
+
+SCALE:
+N.T.S
+
+TEL (905) 794-0600
+FAX (905) 794-0611
+
+DATE: DECEMBER 16, 2025 JOB No. W25070
+FIG. No.
+
+ES
+PO
+DR SIT
+IVE O
+
+12944 Queensgate Boulevard, Town of Caledon
+Proposed Residential Townhouse Development
+Servicing Design Brief and SWM Report
+
+4.8
+
+Water Balance/Erosion Control
+In accordance with the current requirements of TRCA, the first 5mm of rainfall from
+impervious surfaces is to be retained on site for infiltration and re-use. The erosion control
+volume required is determined below;
+Impervious Area = 7350 m2
+Erosion Control Volume = 5 mm
+Volume Requirements = 7350 m2 x 5 mm
+= 36.8 m3
+Infiltration gallery
+An infiltration gallery comprised of clear stone with a void ratio of 0.4 is proposed to infiltrate
+rainwater runoff from the rear yard and rooftops. A total volume of 36.8 m3 is required to be
+captured and directed to the infiltration galleries at the east and west of the site.
+The proposed infiltration galleries consist of a 45.0m and a 78.0m long, 1.0m wide and 1.0m
+deep infiltration gallery (trench) complete with a 150mm diameter perforated subdrain pipe at
+0.00% slope. Based on this configuration, the proposed infiltration gallery provides 49.2 m3 of
+storage as shown on Drawing SS-1 – Site Servicing Plan.
+Required Infiltration Storage Volume = 36.8 m3
+Provided Infiltration Storage Volume = 49.2 m3
+
+Page 13 of 15
+
+Proj. No. W25040
+February 2026
+
+12944 Queensgate Boulevard, Town of Caledon
+Proposed Residential Townhouse Development
+Servicing Design Brief and SWM Report
+
+5
+
+SEDIMENT AND EROSION CONTROL
+Erosion and sediment control measures will be provided as shown on the Erosion and Sediment
+Control Plan drawing ESC-1.
+Erosion and sediment control measures may consist of the following;
+Stage 1 – Pre-Construction and Topsoil Stripping:
+•
+
+Installation of perimeter sediment fence and any tree preservation fencing
+
+•
+
+Construct mud mat at the proposed construction access
+
+•
+
+Install silt traps at all catch basins.
+
+•
+
+Regular Review by Environmental Monitor and after significant rainfall events.
+
+•
+
+Demolition and removal of all structures and debris on the site.
+
+•
+
+Strip topsoil and remove from site.
+
+Stage 2 – Pre-Grading and Underground Servicing:
+•
+
+Complete the required cut and fill operations.
+
+•
+
+Restore and stabilize all disturbed areas, outside noted limits, with 300mm topsoil and
+seed as soon as practical.
+
+•
+
+Decommission/remove/fill temporary ditching, outlets and traps as drainage works
+replace temporary works.
+
+•
+
+Base roadworks construction and paving.
+
+•
+
+Install sediment traps at all catchbasins as they are installed and at existing structures on
+the adjacent roadway.
+
+Stage 3 – Post Servicing and Building Construction:
+•
+
+Complete landscaping as soon as practical.
+
+•
+
+Maintain sediment control devices as required.
+
+•
+
+Maintain roads in clean condition.
+
+•
+
+Remove catch basin siltation controls when top course asphalt is laid.
+
+•
+
+Monitor site conditions during building construction operations
+
+Sediment and erosion control works are illustrated on Drawing ESC-1 - Erosion and Sediment
+Control Plan.
+
+Page 14 of 15
+
+Proj. No. W25040
+February 2026
+
+APPENDIX “A”
+Reference Drawings
+Site Plan – SP-100 prepared by RN Design, dated November 6, 2025
+(Project No.: 24080)
+
+Proj. No. W25040
+February 2026
+
+THESE DRAWINGS ARE NOT TO BE SCALED:
+ALB
+
+ALL DIMENSIONS MUST BE VERIFIED BY CONTRACTOR PRIOR TO
+COMMENCEMENT OF ANY WORK. ANY DISCREPANCIES MUST BE
+REPORTED DIRECTLY TO ARCHITECT.
+
+-VA
+ION
+UG
+N
+HA
+
+PROJECT CONSULTANTS:
+
+RD.
+
+SUBJECT SITE
+SA
+N
+
+TF
+AR
+
+M
+
+BL
+
+VD
+
+G
+
+-V
+ION
+
+NS
+EE
+
+E
+AT
+
+ALB
+
+DR
+
+HA
+
+AUG
+
+QU
+
+D.
+NR
+
+KEY PLAN - NTS
+
+SITE STATISTICS
+0.98 Ha
+
+2.42 Ac
+
+30
+
+3 STRY FL TOWNS
+19
+49
+TOTAL NO. OF UNITS
+20 UPAc
+DENSITY
+50 UPH
+VISITOR PARKING
+0.24/UNIT
+12 NOs.
+
+1.36
+
+5.80
+
+6.05
+
+3 STRY B2B TOWNS
+
+2.09
+
+LOT AREA
+
+5.95
+
+13.40
+
+6.05
+
+5.80
+
+6.05
+
+0.65
+
+ISSUED OR REVISION COMMENTS
+
+6.00
+
+5.80
+
+11.90
+
+V8
+
+H
+
+3.03
+
+H
+
+5.75
+
+4.55
+
+HH
+
+3.10
+
+1.54
+
+6.05
+
+5.75
+
+HH
+
+H
+
+1.55
+
+2.47
+
+2.75
+
+7
+1.1
+
+2.27
+
+3.05
+
+4.55
+
+2.75
+
+V10
+
+V11
+
+6.20
+
+1.93
+
+6.20
+
+6.05
+5.75
+
+V12
+
+DWN CHK
+
+RP
+21-11-2024 PP
+ISSUED FOR REVIEW
+ISSUED FOR PRECON
+22-11-2024 PP
+RP
+22-JUL-25 AG RP
+ISSUED FOR REVIEW
+29-JUL-25 PP AG
+ISSUED FOR REVIEW
+REV PER ENGG COMMENTS 26-AUG-25AG
+ISSUED FOR COORDINATION 06-NOV-25AG
+
+H
+
+0.65
+
+V7
+
+24.00
+
+V5
+
+1
+2
+3
+4
+5
+6
+
+DATE
+
+DESCRIPTION
+
+NO.
+
+6.05
+
+ACOU
+STIC FE
+N
+
+1.50
+
+HH
+
+4.55
+
+CE
+
+5.75
+
+HH
+
+6.00
+
+1.50
+
+6.00
+
+6.00
+
+HH
+
+HH
+
+1.50
+
+6.00
+6.00
+
+WWW.RNDESIGN.COM
+T:905-738-3177
+
+HH
+
+WWW.THEPLUSGROUP.CA
+
+HH
+HH
+
+HH
+
+5.74
+
+5.71
+
+4.55
+6.05
+
+H
+
+1.50
+
+CLIENT
+
+2.75
+
+PROJECT/LOCATION
+
+ALBION-VAUGHAN
+DRAWING
+
+SITE PLAN
+DATE
+
+SCALE
+
+1:300
+
+DRAWN BY
+
+CHECKED BY
+
+PP
+
+RP
+
+PROJECT NUMBER
+
+DRAWING NUMBER
+
+24080
+
+SP-100
+
+----
+
+30-11-2024
+
+XX
+
+4.25
+
+MOSAIK
+
+MMM DD/YY
+
+XX
+1:250
+
+1.52
+
+2.20
+
+V1
+
+5.75
+
+6.00
+H
+
+2.48
+
+6.57
+
+4.09
+
+XXX
+
+XXX
+
+XXX
+
+XXX
+
+XXX
+
+6.19
+
+XXX
+
+NCE
+
+STIC FE
+
+H
+
+H
+
+2.66
+
+ACOU
+
+XXX
+
+V4
+
+2
+1.8
+
+H
+
+1.75
+
+XXX
+XXX
+
+10.05
+
+5.75
+
+8.57
+
+4.25
+2.75
+
+10.05
+
+H
+
+2.75
+
+14.30
+
+6.15
+H
+
+3.05
+
+XXX
+
+6.05
+
+5.75
+
+SP100-ALT
+
+XXX
+
+XXX
+
+XXX
+
+XXX
+
+XXX
+
+APPENDIX “B”
+Domestic Water Demand and Fire Demand Calculations
+Sanitary Calculations
+Region of Peel Connection Multi-Use Demand Table
+
+Proj. No. W25040
+February 2026
+
+Mosaik Homes, Caledon
+
+Water Demands
+Project Number
+Site Area 0.98
+UNIT TYPE
+Townhouse Unit
+
+Population/Unit
+3.4
+
+C
+
+Area (ha)
+49
+
+POPULATION
+166.6
+
+TOTAL POPULATION
+
+167
+FACTOR
+
+Avg day A
+Max day
+
+1.0
+2.0 (Residential)
+
+FLOW
+(L/s)
+0.54
+0.76
+
+1.4 (ICI)
+Peak hour
+
+3.0
+
+1.62
+
+Fire flow B
+
+83.3
+
+Fire flow + Max day
+
+84.1
+
+A
+
+Based on 280 L/cap/day, 300 L/Employee/day consumption rates for residential and ICI
+
+B
+
+Based on Fire Underwriters Survey - Water Supply for Public Fire Protection in Canada 2020
+
+C
+
+Based on Region of Peel Linear Wastewater Standards November 2022, Table 2-2
+
+W25040
+
+Project: W25040
+
+FIRE FLOW CALCULATION
+Project: Plan of Condominium - Mosaik Homes, Bolton
+1
+
+F = 220 C √A
+
+Using Fire Underwriter Survey Methodology, an estimate of the Fire Flow is give by the Formula:
+where:
+F=
+C=
+A=
+
+Required Fire Flow in L/min
+Coefficient related to the type of construction
+The total floor area in m2 (including all storeys but excluding basements at least 50% below grade)
+Note: For fire resistive buildings, consider the two largest adjoining floor plus 50% of the remaining floors up to eight, when openings are inadequately
+protected. For adequately protected vertical openings consider only the area of the largest floor plus 25% of each of the two immediately
+adjoining floors.
+
+Type of Construction:
+F=
+F=
+2
+
+Fire Resistive
+7,349
+7,000
+
+L/min
+L/min
+
+F=
+
+Total Floor Area:
+
+Adequately Protected Vertical Openings:
+
+Limited Combustible
+5,950
+
+Factor:
+
+-15
+
+1,116
+
+m2
+
+Yes
+
+%
+
+L/min
+
+Determine the decrease, if any, for automatic sprinkler protection and adjust the value in No. 2:
+NFPA 13 Sprinkler
+Standard Water Supply
+Fully Supervised
+
+5
+
+1.00
+
+Determine the increase / decrease for occupancy and adjust the value in No. 1:
+Occupany Contents:
+
+3
+
+Coefficient:
+
+No
+Yes
+No
+
+Reduction:
+Reduction:
+Reduction:
+
+0
+10
+0
+
+%
+%
+%
+
+Total Reduction:
+Sprinkler Reduction:
+
+10
+595
+
+%
+L/min
+
+4
+
+Adjust the value in No. 2 for exposure:
+
+North
+South
+East
+West
+
+Separation (m)
+> 45m
+> 45m
+> 45m
+> 45m
+
+Increase
+0
+0
+0
+0
+
+%
+%
+%
+%
+
+Total Increase:
+Exposure Increase:
+
+0
+0
+
+%
+L/min
+
+Prepared by:
+Checked by:
+
+SAA
+SDL
+
+Estimated Fire Flow is value in No. 2 minus Sprinkler Reduction plus Exposure Increase and rounded to nearest 1000:
+F=
+F=
+
+5,355
+5,000
+83.33
+
+L/min
+L/min
+L/s
+
+J:\CDC-2025 WEST - Files\W25040 Mosaik Bolton Towns (12944 Queensgate Blvd)\SWM Brief\WAT\[W25040 FUS Calculation.xlsx]Water Demands
+
+Water and Wastewater Modelling
+Demand Table
+Site Plan Applications
+Version
+
+Date
+
+Description of Revision
+
+1
+
+January 10 2023
+
+Posted to Peel Website
+
+2
+
+August 30 2024
+
+Reflects 2023 Linear Wastewater Standards and ICI population
+estimates as per Peel 2020 DC background study
+
+Project Number: W25040
+
+WATER AND WASTEWATER MODELLING DEMAND TABLE
+
+Introduction
+Water and wastewater modelling may be required as a condition of the development approval
+process or prior to regional site servicing connection approval where intensification is
+proposed, where a possible increase in water demand or wastewater discharge is identified or
+where deemed necessary by Regional staff.
+A completed table includes the Professional Engineer’s signature and stamp as well as a site
+servicing concept. The table will be deemed complete once all the information below is
+submitted and/or included. Modelling will commence once the information is deemed
+complete. All required calculations must be submitted with the completed demand table.
+The calculations shall be based on the specific development proposal.
+
+Application Information
+Application Number:
+Address:
+Consulting Engineer:
+Date Prepared:
+
+PRE-2024-0255
+12944 Albion Vaughan Road, Caledon
+Candevcon Group Inc.
+December 16, 2025
+
+Population
+Existing
+Units
+1
+
+Residential 8)
+
+2
+
+Institutional/Employment 8)
+
+3
+
+Total
+
+2
+
+Persons
+7
+0
+
+2
+
+7
+
+1
+
+WATER AND WASTEWATER MODELLING DEMAND TABLE
+Proposed
+Units
+4
+
+Residential 1)
+
+Persons
+
+singles/semis (4.2 ppu)
+
+0
+
+0
+
+5
+
+Townhomes (3.4 ppu)
+
+49
+
+166.6
+
+6
+
+Large apartments (>1
+
+0
+
+0
+
+0
+
+0
+
+0
+
+166.6
+
+bedroom – 3.1 ppu)
+7
+
+Small apartments (<=1
+bedroom – 1.7 ppu)
+
+8
+
+Total proposed residential
+
+9
+
+Proposed Institutional2)
+
+0
+
+10
+
+Proposed employment 3)
+
+0
+
+11
+
+Total Proposed
+
+167
+
+Other
+12
+
+Existing gross floor area for commercial and/or retail (sqm)
+
+0
+
+13
+
+Proposed gross floor area for commercial and/or retail (sqm)
+
+0
+
+14
+
+Land area (ha)
+
+0.98
+
+Water Connection
+Hydrant flow test 4)
+15
+
+Location 1
+
+TBD
+
+16
+
+Location 2
+
+TBD
+
+2
+
+WATER AND WASTEWATER MODELLING DEMAND TABLE
+Pressure (kPa)
+
+Flow (L/s)
+
+Time (hh:mm)
+TBD
+
+17
+
+Minimum water pressure
+
+TBD
+
+TBD
+
+18
+
+Maximum water pressure
+
+TBD
+
+TBD
+
+Water Demands (L/s)
+Use 1 6)
+
+Use 2 6)
+
+Use 3 6)
+
+Total
+
+19
+
+Existing fire flow 5) 8)
+
+20
+
+Proposed average day flow
+
+0.5
+
+0.0
+
+0.5
+
+21
+
+Proposed maximum day flow
+
+0.9
+
+0.0
+
+0.9
+
+22
+
+Proposed peak hour flow
+
+1.6
+
+0.0
+
+1.6
+
+23
+
+Proposed fire flow 5)
+
+n/a
+
+83.3
+
+Water calculations
+Please use the following updated typical water demand criteria as per Peel’s 2020 Development
+Charges background study.
+Population Type
+
+Residential
+Institutional/Commercial/
+Industrial
+
+Unit
+
+Average Consumption
+
+Max Day
+
+Peak Hour
+
+Rate
+
+Factor
+
+Factor
+
+L/cap/d
+
+270
+
+1.8
+
+3
+
+L/emp/d
+
+250
+
+1.4
+
+3
+
+3
+
+WATER AND WASTEWATER MODELLING DEMAND TABLE
+
+Wastewater Connection
+Wastewater Effluent (L/s)
+Discharge location 7)
+
+Flow
+
+24
+
+Existing effluent 8)
+
+n/a
+
+0.00
+
+25
+
+Proposed effluent
+
+Queensgate Boulevard
+
+0.56
+
+26
+
+Proposed effluent
+
+Inflow + Infiltration
+
+0.25
+
+27
+
+Proposed effluent
+
+-
+
+28
+
+Proposed additional effluent 8)
+
+-
+
+29
+
+Other proposed effluent*
+
+n/a
+
+30
+
+Total proposed effluent
+
+0.82
+
+*Please specify other proposed effluent (ex. occasional tank purges, off peak discharge, pool
+drainage)
+Wastewater calculations
+Please use the following updated daily per capita as per 2023 Peel Linear Wastewater
+Standards
+Population Type
+
+Unit
+
+Average Day
+
+Min Peaking
+
+Demand
+
+Factor
+
+Factor
+
+Infiltration**
+
+Max Peaking
+
+Inflow and
+
+Residential
+
+L/cap/d
+
+290
+
+2
+
+4
+
+0.26L/s/Ha
+
+Non-residential
+
+L/emp/d
+
+270
+
+2
+
+4
+
+0.26L/s/Ha
+
+4
+
+WATER AND WASTEWATER MODELLING DEMAND TABLE
+
+**For maintenance holes that are flood prone or located in low lying areas, an extra 0.28 L/s
+per maintenance hole may be added to the I&I calculation.
+
+Notes
+1) In accordance with Peel Linear Wastewater Standards and Region of Peel 2020 DC
+background Study
+2) refer to Peel Linear Wastewater Standards
+3) For the commercial and industrial design flow calculations, please refer to Schedule 8b
+on page A-9 of the Region of Peel 2020 DC background Study to determine population.
+4) Please include the graphs associated with the hydrant flow test data. Hydrant flow tests
+should be performed within 2 years of submission to the Region. The Region will not
+permit hydrant flow tests during the winter, please contact Region Water Operations for
+scheduling. The Region reserves the right to request an updated hydrant flow test as
+required at any time.
+5) Please reference the Fire Underwriters Survey Document
+6) Please identify the flows for each use type, if applicable
+7) Please include drainage plan for multiple discharge locations
+8) For Intensification, sites with additions to buildings or additional buildings please
+provide existing flow for existing buildings and the added flows for the new proposal, if
+applicable
+
+5
+
+APPENDIX “C”
+Stormwater Storage Calculations
+
+Proj. No. W25040
+February 2026
+
+Storage Calculations
+
+100-year Post to 10-year Pre
+TIME
+minutes
+
+100-year
+INTENSITY
+mm/hr
+
+Q
+100-year
+m3/s
+
+Control
+Q (Allow)
+m3/s
+
+0
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+
+0.0
+196.5
+189.8
+183.5
+177.6
+172.1
+166.9
+162.0
+157.4
+153.1
+149.0
+145.1
+141.5
+138.0
+
+0.000
+0.401
+0.387
+0.375
+0.363
+0.351
+0.341
+0.331
+0.321
+0.313
+0.304
+0.296
+0.289
+0.282
+
+0.164
+0.164
+0.164
+0.164
+0.164
+0.164
+0.164
+0.164
+0.164
+0.164
+0.164
+0.164
+0.164
+0.164
+
+Project No.: W25040
+
+Q Stored
+m3/s
+
+STORAGE
+m3
+
+Site - Controlled
+Area (ha)
+
+Post Storm
+Return Period 100-year
+Intensity
+i = a x T^b (mm/hr)
+where,
+c = 0.9624
+b = 17
+a = 4688
+
+0.237
+0.223
+0.210
+0.198
+0.187
+0.176
+0.166
+0.157
+0.148
+0.140
+0.132
+0.124
+0.117
+
+142.2
+147.3
+151.4
+154.6
+157.1
+158.8
+159.8
+160.2
+160.1
+159.5
+158.4
+156.8
+154.9
+
+0.9800
+
+Allowable Flow
+Area (ha)
+0.9800
+R
+0.45
+Tc (min)
+10.00
+Intensity mm/hr
+134.2
+Qc
+0.164
+less uncontrolled
+(see below left)
+Qcontrol
+
+0.000
+0.164
+
+Post-Development
+R
+0.75
+Time Incr.
+1.0
+
+Storage Volume
+162.0
+160.0
+158.0
+156.0
+
+Site - Uncontrolled
+Area (ha)
+R
+Tc (min)
+Intensity mm/hr
+
+0.000
+0.75
+10.00
+196.5
+
+Qun-control
+
+0.000
+
+Volume (c.m.)
+
+154.0
+152.0
+150.0
+148.0
+146.0
+
+Pre Storm
+Return Period 10-year
+Intensity
+i = a x T^b (mm/hr)
+where,
+c = 0.9080
+b = 12
+a = 2221
+
+144.0
+
+142.0
+140.0
+0
+
+5
+
+10
+
+15
+
+Time (min.)
+
+CANDEVCON LIMITED
+
+20
+
+25
+
+DRAWINGS
+DRAWING SS-1
+
+Site Servicing Plan – Queensgate (Mosaik), Town of Caledon
+(Candevcon Group Inc., Project No. W25040)
+
+DRAWING GR-1
+
+Grading Plan – Queensgate (Mosaik), Town of Caledon
+(Candevcon Group Inc., Project No. W25040)
+
+DRAWING ESC-1
+
+Erosion and Sediment Control Plan – Queensgate (Mosaik), Caledon
+(Candevcon Group Inc., Project No. W25040)
+
+Proj. No. W25040
+February 2026
+
+ES
+PO
+DR SIT
+IVE O
+
+N
+
+KEY PLAN
+
+F.F
+T.W .E.=
+B.S .E.= 247.0
+.E. 246 0
+=2
+44 .70
+. 25
+
+H
+
+H
+
+F.F
+T.W .E.=
+B.S .E.= 247.4
+.E. 247 0
+=2
+44 .10
+.65
+
+CATCHBASIN INFORMATION
+
+.E.
+=2
+47
+.96
+
+H
+
+H
+
+HH
+
+HH
+
+HH
+
+.E.
+=
+
+F.F
+
+F.F
+
+.E.
+=2
+47
+.00
+
+HH
+
+H
+
+HH
+
+24
+7.7
+0
+
+F.F
+.
+
+HH
+
+HH
+
+E.=
+24
+
+7.3
+
+5
+
+F.F
+T.W .E.=
+B.S .E.= 246.8
+.E. 246 0
+=2
+44 .50
+.05
+
+F.F
+
+.E.
+=2
+47
+.9
+
+2
+
+F.F
+
+F.F
+
+HH
+
+HH
+
+.E.
+=2
+
+47
+.92
+
+STORM SEWER INFORMATION
+
+D
+NR
+OA
+
+F.F
+
+HH
+
+HA
+
+H
+
+F.F
+
+H
+
+.E.
+=2
+4
+
+H
+
+7.4
+
+0
+
+.E.
+=2
+
+47
+.75
+
+H
+
+UG
+BIO
+AL
+
+F.F
+.
+
+E.=
+
+N-
+
+24
+
+7.5
+
+0
+
+VA
+
+H
+
+QU
+EEN
+SG
+ATE
+
+SANITARY SEWER INFORMATION
+
+BO
+ULE
+
+VAR
+
+D
+
+GENERAL NOTES - STORM SEWERS:
+
+SOLID COVER
+
+SOLID COVER
+
+CATCHBASIN
+
+1.45m MIN.
+
+1.2m MIN.
+
+CATCHBASIN
+
+1.2m MIN.
+
+WATERMAINS:
+
+CB LEAD
+INFILTRATION SUBDRAINS TO BE
+CAPPED DURING CONSTRUCTION
+AND THE CAPS REMOVED ONCE THE
+AREA HAS BEEN SODDED (TYP)
+
+0.03m (MAX.)
+TYP.
+INFILTRATION TRENCH
+(SEE DETAIL)
+PERFORATED SUBDRAIN
+CONNECTED TO CB
+
+1m
+
+1m
+
+SOLID
+PIPE
+
+SOLID
+PIPE
+
+OUTLET
+PIPE
+
+1m
+
+1m
+
+SOLID
+PIPE
+
+SOLID
+PIPE
+
+INFILTRATION TRENCH
+(SEE DETAIL)
+PERFORATED SUBDRAIN
+CONNECTED TO CB
+
+INLET PIPE FROM
+ROOF DRAINS
+
+SANITARY SEWERS:
+2026-01-30
+
+MOSAIK HOMES
+REGION OF PEEL-GENERAL:
+
+PROPOSED
+RESIDENTIAL DEVELOPMENT
+
+SOLID COVER
+
+12944 QUEENSGATE BOULEVARD
+TOWN OF CALEDON
+
+PARKING SURFACE
+PERFORATED
+SUBDRAIN
+
+1.2m MIN.
+
+1.45m MIN.
+
+CATCHBASIN
+
+50mm CLEAR STONE
+CB LEAD
+INFILTRATION SUBDRAINS TO BE
+CAPPED DURING CONSTRUCTION
+AND THE CAPS REMOVED ONCE THE
+AREA HAS BEEN SODDED (TYP)
+
+0.03m (MAX.)
+TYP.
+INFILTRATION TRENCH
+(SEE DETAIL)
+PERFORATED SUBDRAIN
+CONNECTED TO CB
+
+1m
+
+1m
+
+1m
+
+1m
+
+SOLID
+PIPE
+
+SOLID
+PIPE
+
+SOLID
+PIPE
+
+SOLID
+PIPE
+
+TOWN FILE No.
+
+REGION FILE No.
+
+TERRAFIX
+270R
+GEOTEXTILE
+
+INFILTRATION TRENCH
+(SEE DETAIL)
+PERFORATED SUBDRAIN
+CONNECTED TO CB
+
+W25040
+
+BO
+
+E
+
+BIO
+
+AL
+
+VA
+
+N-
+
+0
+
+47
+.5
+
+=2
+
+.E.
+
+ATE
+F.F
+
+HA
+NR
+
+F
+UG
+
+H
+
+QU
+EEN
+SG
+
+ULE
+VAR
+D
+
+OA
+
+.E.
+=2
+47
+.7
+
+D
+
+F.F
+
+BL
+O
+6 U CK
+NIT 4
+S
+
+HH
+
+.E.
+=2
+47
+.40
+
+H
+
+F.F
+
+H
+
+5
+
+H
+
+H
+
+F.F
+
+.E.
+=2
+47
+.00
+
+HH
+
+.E.
+=2
+47
+.70
+
+HH
+
+BL
+14 OCK
+UN 3
+ITS
+
+F.F
+
+HH
+
+HH
+
+.E.
+=2
+47
+.35
+
+BL
+14 OCK
+UN 2
+ITS
+
+HH
+
+HH
+
+H
+
+F.F
+
+H
+
+H
+
+.E.
+=2
+47
+.92
+
+.E.
+=2
+47
+.96
+
+BL
+O
+6 U CK
+NIT 5
+S
+F.F
+
+24
+7.9
+2
+
+.E.
+=
+
+F.F
+
+F.F
+
+HH
+
+BL
+O
+7 U CK
+NIT 1
+S
+
+F.F
+T.W .E.=
+B.S .E.= 247.4
+.E. 247 0
+=2
+44 .10
+.65
+
+H
+
+HH
+
+F.F
+T.W .E.=
+B.S .E.= 247.0
+.E. 246 0
+=2
+44 .70
+.25
+
+H
+H
+
+G
+
+HH
+
+F.F
+T.W .E.=
+B.S .E.= 246.8
+.E. 246 0
+=2
+44 .50
+.05
+
+ES
+PO
+DR SIT
+IV E O
+
+BLOCK 5
+
+N
+
+KEY PLAN
+
+A
+
+C
+
+B
+
+BLOCK 1
+
+SECTION G
+
+BLOCK 1
+
+D
+
+GRADING NOTES:
+BLOCK 4
+
+BLOCK 3
+
+2026-01-30
+
+MOSAIK HOMES
+
+BLOCK 4
+
+PROPOSED
+RESIDENTIAL DEVELOPMENT
+12944 QUEENSGATE BOULEVARD
+TOWN OF CALEDON
+
+TOWN FILE No.
+
+NOTE:
+
+ALL CURBS SHALL BE 0.15m HIGH
+UNLESS SHOWN OTHERWISE
+
+GRADING NOTE:
+MATCH EXISTING GRADES AT ALL
+PROPERTY LINES UNLESS NOTED
+OTHERWISE
+
+REGION FILE No.
+
+·
+
+·
+
+·
+
+·
+
+W25040
+
+N
+
+KEY PLAN
+
+2026-01-30
+
+INSTALLATION DETAIL
+
+STANDARD EROSION AND SEDIMENT CONTROL NOTES:
+
+SITE SPECIFIC NOTES:
+
+MOSAIK HOMES
+PROPOSED
+RESIDENTIAL DEVELOPMENT
+12944 QUEENSGATE BOULEVARD
+TOWN OF CALEDON
+TOWN FILE No.
+
+REGION FILE No.
+
+BAG DETAIL
+
+CONSTRUCTION ACCESS
+PROPOSED CATCBASIN SEDIMENT BARRIER
+(SILT BAG DETAIL)
+
+W25040
+
+

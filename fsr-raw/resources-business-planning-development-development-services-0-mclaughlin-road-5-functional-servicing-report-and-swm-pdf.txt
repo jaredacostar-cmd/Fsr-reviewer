@@ -1,0 +1,14239 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+May 28th, 2024
+
+FUNCTIONAL SERVICING STUDY
+
+15544 McLAUGHLIN ROAD
+VILLAGE OF INGELWOOD
+
+TOWN OF CALEDON
+
+May 2024
+
+May,28,2024
+
+MAY 28, 2024
+
+PROJECT NO: W22002
+
+Contents
+
+1.
+
+INTRODUCTION..................................................................................................................................... 3
+
+2.
+
+BACKGROUND TECHNICAL STUDIES ..................................................................................................... 1
+2.1
+
+3.
+
+Inglewood Village Water and Wastewater Servicing Plan............................................................ 1
+
+EXISTING CONDITIONS .......................................................................................................................... 2
+3.1 General ............................................................................................................................................... 2
+3.2 Topography, Drainage and Natural Features.................................................................................... 2
+3.3 Physiography and Geotechnical Conditions ..................................................................................... 2
+
+4.
+
+SANITARY AND WATER SERVICING ....................................................................................................... 6
+4.1
+
+Sanitary ........................................................................................................................................... 6
+
+4.1.1 Existing Sanitary Sewers .............................................................................................................. 6
+4.1.2 Proposed Sanitary Sewer System ................................................................................................ 6
+4.2 Water ................................................................................................................................................ 8
+4.2.1 Existing and Planned Watermains ............................................................................................. 8
+4.2.2 Proposed Watermain System ...................................................................................................... 8
+5.
+
+STORM DRAINAGE and STORM WATER MANAGEMENT.................................................................... 10
+5.1 General–Related Background Studies and Design Guidelines.......................................................... 10
+5.2
+
+Storm Sewer design .................................................................................................................... 10
+
+5.3 Stormwater Management Design Criteria........................................................................................ 11
+5.4
+
+Proposed Stormwater Measures ............................................................................................ 11
+
+5.4.1
+
+Water Quantity Control ...................................................................................................... 11
+
+5.4.2
+
+Water Quality Control......................................................................................................... 13
+
+5.4.3
+
+Phosphorus Budget ............................................................................................................. 13
+
+5.4.4
+
+Water Balance..................................................................................................................... 15
+
+5.4.6
+
+CLI ECA Performance Criteria ............................................................................................. 16
+
+6
+
+EROSION AND SEDIMENT CONTROL .................................................................................................... 17
+
+7
+
+SUMMARY AND COMPLIANCE DECLARATION ................................................................................. 19
+7.1
+
+Summary ..................................................................................................................................... 19
+
+7.2
+
+Compliance Declaration.............................................................................................................. 19
+
+FIGURES
+FIGURE 1
+
+Location Plan
+APPENDICES
+
+APPENDIX “A”
+
+Sanitary Sewer Design Sheet and Region of Peel Connection
+Multi-Use Demand Table
+
+APPENDIX “B”
+
+Storm Sewer Design Sheets
+
+APPENDIX “C”
+
+Preliminary Storm Water Management Calculations
+
+APPENDIX “D”
+
+Preliminary Geotechnical Investigation Report
+
+APPENDIX “E”
+
+Preliminary Hydrogeological Report
+
+REFERENCE DRAWINGS
+DRAWING S-155-13/P5
+
+Kaufman Road, STN 0+000 to STN 0+256.554
+
+DRAWING 06-2720
+
+McKenzie Street, STA 0+180 to STA 0+320
+
+DRAWINGS
+DRAWING PL-1
+
+Draft Plan
+
+DRAWING PS-1
+
+Preliminary Servicing Plan
+
+DRAWING PG-1
+
+Preliminary Grading Plan
+
+DRAWING STMDR -1
+
+Pre Development Drainage Area Plan
+
+DRAWING STMDR-2
+
+Post Development Drainage Plan
+
+DRAWING SANDR-1
+
+Sanitary Drainage Area Plan
+
+DRAWING WD-1
+
+Water Distribution Plan
+
+DRAWING PSWM-1
+
+Storm Water Management Pond Plan and Sections
+
+DRAWING IT-1
+
+Infiltration Trench Plan
+
+DRAWING ESC-1
+
+Erosion and Sediment Control plan
+
+1.
+
+INTRODUCTION
+This Study has been prepared as a technical document in support of the Draft Plan application for
+the subject subdivision located at 15544 Mclaughlin Road and addresses sanitary, storm and water
+servicing and stormwater management.
+
+The proposed subdivision is located in the Village of Inglewood, in the Town of Caledon and is
+bounded by agricultural lands to the south and west and existing residential lands to the north and
+east.
+
+The subdivision, as illustrated on the Draft Plan (copy attached) comprises an area of 4.02 ha and
+includes:
+
+
+Thirteen (13) Detached Residential Lots;
+
+
+
+One (1) Parkette Block;
+
+
+
+Two (2) Open Space Blocks;
+
+
+
+One (1) SWM Block;
+
+
+
+One (1) storm easement Block;
+
+The report describes the existing site conditions, and the proposed sanitary, storm and water
+systems, as well as the stormwater management infrastructure. The report includes preliminary
+grading information and outlines the required Erosion and Sediment Control Measures.
+
+HURONTARIO ST
+.R.
+C.P
+
+CA
+
+LE
+D
+
+ON
+
+I
+A
+TR
+
+ROAD
+
+AY
+
+LW
+
+McLAUGHLIN
+
+SITE
+
+E RD
+
+SE LIN
+A
+B
+E
+D
+L
+O
+
+2868577 ONTARIO INC.
+PROPOSED RESIDENTIAL SUBDIVISION
+15544 MCLAUGHLIN ROAD
+
+CANDEVCON LIMITED
+CONSULTING ENGINEERS AND PLANNERS
+
+9358 GOREWAY DRIVE
+TEL.(905) 794-0600
+DRAWN BY:
+
+VILLAGE OF INGLEWOOD
+TOWN FILE No. PRE-2029-0197
+
+REGION FILE No.
+
+LOCATION PLAN
+
+SCALE:
+
+DATE:
+
+Y.D.N.
+N.T.S.
+
+AUGUST 15th., 2023
+
+BRAMPTON, ONTARIO L6P 0M7
+FAX (905) 794-0611
+JOB No.
+
+W22002
+
+SKETCH No.
+
+FIG-1
+
+2.
+
+BACKGROUND TECHNICAL STUDIES
+The subject subdivision is located in the Village of Inglewood in the Town of Caledon. The
+following applicable Studies were reviewed which are relevant to the development servicing of the
+subject subdivision.
+
+2.1
+
+Inglewood Village Water and Wastewater Servicing Plan1
+
+The Town of Caledon and the Region of Peel commissioned a study of the water and
+wastewater capacity in the village of Inglewood in 1999. The report reviewed both existing
+and proposed sanitary and water demands for the area. The report included the subject lands
+in their analysis. The report recommended the following;
+
+WATER
+•
+
+Connect McDonald Street watermain with Balmer Heights area
+
+•
+
+New permit to take water to increase capacity from existing wells
+
+•
+
+New pressure reducing valve at West Village drive and Mclaughlin road
+
+•
+
+Expansion of the existing reservoir
+
+WASTEWATER
+•
+
+New sanitary sewers on Mclaughlin Road, McDonald street, McKenzie Street,
+Louise Street Victoria Street and Lorne Street
+
+•
+
+New wastewater treatment plant
+
+1
+
+Inglewood Village Water and Wastewater Servicing Plans, prepared for The Town of Caledon, Credit Valley
+Conservation, Region of Peel, dated June 1999, prepared by XCG
+
+1
+
+3. EXISTING CONDITIONS
+3.1 General
+The subject lands are currently agricultural lands.
+As part of the Planning process for the subject subdivision the following Studies were
+completed:
+-
+
+Preliminary Geotechnical Investigation2
+
+-
+
+Preliminary Hydrogeological Investigation3
+
+3.2 Topography, Drainage and Natural Features
+As noted above, the lands are currently agricultural lands and generally drain from north to
+south toward an existing creek located south of the subject lands.
+
+3.3 Physiography and Geotechnical Conditions
+The preliminary Geotechnical Investigation (copy of report included in Appendix “D”)
+indicated topsoil depths of 0.15 to 0.30m overlaying earth fill to depths up to 2.2m. The
+earth fill overlays a layer of silt, sandy silt and silty sand. The boreholes also encountered
+sand and gravel in the eastern portion of the site.
+
+Falling Head tests were conducted to determine soil conductivity (K) values of the soils.
+Based on the testing the average K value was calculated to be between 6 x 10-7 to 1.7 x10-6
+m/s. A copy of the hydrogeological report is included in Appendix “E”.
+
+2
+
+Report to 2868577 Ontario Inc., Geotechnical Investigation for Proposed Residential Development,
+15544 McLaughlin Road, Town of Caledon, Prepared by Soil Engineers reference number 2301S042, Dated March 2024
+
+3
+
+Report to 2868577 Ontario Inc., Hydrogeological Assessment for Proposed Residential
+Development, 15544 McLaughlin Road, Town of Caledon, Prepared by Soil Engineers reference
+number 2301-W042, Dated August 2023, Revised on April 9, 2024
+
+2
+
+4. SANITARY AND WATER SERVICING
+4.1
+
+Sanitary
+4.1.1 Existing Sanitary Sewers
+The existing sewers in the vicinity of the subdivision consists of a 250mm sanitary sewer
+on MacKenzie Street.
+
+4.1.2 Proposed Sanitary Sewer System
+The subject subdivision is proposed to drain to the existing sanitary sewer on MacKenzie
+Street via a proposed 250mm sanitary sewer.
+
+The drainage areas for the sanitary sewer system are shown on Drawing SA-1, and the
+Sanitary Sewer Design Sheets are included in Appendix “A”.
+
+The sewer system will be designed in accordance with the Region of Peel Criteria and
+Standards. A copy of the Region of Peel Connection Multi-Use Demand Table for the
+subdivision is included in Appendix “A”. The sanitary design population/ha for different
+land uses is provided in Table 4.1.
+
+TABLE 4.1 SANITARY DESIGN POPULATIONS PER HECTARE
+Density
+Single family (greater than 10m frontage)
+
+Pop. /Hectare
+50 persons/hectare
+
+6
+
+The anticipated sanitary flows from the development, based on actual unit types and number of units are
+given in Table 4.3.
+
+TABLE 4.2 SANITARY DESIGN POPULATIONS PER UNIT TYPE
+Unit Type
+Single detached
+
+Population/Unit
+4.20
+
+TABLE 4.3 SANITARY FLOWS BASED ON UNIT TYPE
+Developable Area(ha)
+
+1.24
+
+Unit Type
+
+Units
+
+Single Detached
+
+13
+4.2
+total population
+0.183
+4.307
+0.322
+1.112
+
+Average Day (L/s)
+Peak Factor
+Infiltration
+Total Peak Sanitary Flow (Ls)
+
+7
+
+Pop/Unit
+
+Population
+54.6
+54.6
+
+A copy of the Region of Peel Connection Multi-Use Demand Table for the subdivision
+is included in Appendix “A” and is based on the values shown in Table 4.2.
+
+The downstream sanitary sewers were reviewed to confirm capacity exists for the
+proposed development, based on a sanitary design prepared by RJ Burnside for
+Inglewood Village. The review shows that there is capacity within the existing sewers
+for the proposed development. A copy of the calculation sheet is included in Appendix
+“A”
+
+4.2 Water
+
+4.2.1 Existing and Planned Watermains
+The proposed subdivision is located within Region of Peel water pressure Zone IN-7.
+There are existing 150mm watermains on Kaufman Road and MacKenzie Street adjacent
+to the site.
+
+4.2.2 Proposed Watermain System
+It is proposed that the subdivision be serviced via a 150m watermain that will connect to
+the existing watermains located on Kaufman Road and MacKenzie Street.
+
+The anticipated water demands for the subject lands are summarized in Tables 4.4.
+
+8
+
+TABLE 4.4 WATER DEMAND BASED ON UNIT TYPE
+
+Unit Type
+
+Units
+
+Pop/Unit
+
+Single detached
+
+13
+4.2
+Total Population
+
+Average Day (L/s)
+Max Day (L/s)
+Peak Hour (L/s)
+Max Day Plus Fire (L/s)
+
+0.177
+0.354
+0.531
+133.690
+
+9
+
+Population
+54.6
+54.6
+
+5. STORM DRAINAGE and STORM WATER MANAGEMENT
+
+5.1 General–Related Background Studies and Design Guidelines
+The following reports and documentation were consulted to establish
+stormwater management design criteria for the proposed development.
+•
+•
+•
+•
+
+•
+•
+•
+•
+•
+
+Inglewood Village Community Design Guidelines, Town of Caledon,
+Credit Valley Conservation & Regional of Peel, dated July 12th, 1999.
+Tributary Study, Village of Inglewood, Town of Caledon, dated May
+1999.
+Inglewood Village Environmental Management Plan, Town of Caledon,
+Credit Valley Conservation & Regional of Peel, dated June 1999.
+Characterization Report, East Credit Sub Watershed Study (Sub
+watershed 13), Town of Caledon, Credit Valley Conservation &
+Regional of Peel, dated July 2007.
+Stormwater Management Guideline, Credit Valley Conservation, dated
+July 2022.
+Low Impact Development Stormwater Management Planning and
+Design Guide, Credit Valley Conservation Authority (2010).
+Ministry of Environment (MOE), Stormwater Management Planning
+and Design Manual, March 2003.
+Town of Caledon, Development Standards Manual, Version 5.0, 2019.
+Environmental Compliance Approval for a Municipal Stormwater
+System, ECA Number: 324-S701.
+
+5.2 Storm Sewer design
+Storm sewers shall be designed in accordance with the current Town of Caledon
+Development Standards Manual. Storm sewers will be designed to accommodate a 10year storm with footing drains connected to the storm sewer. The proposed storm sewer
+design is shown on drawing STMDR -1 and PS-1. In the event of a storm greater than the
+10-year event, the proposed storm sewer will surcharge, forcing stormwater to the surface.
+The site will be graded so that the major storm runoff will be conveyed via overland flow
+route (roads) and will enter the dry pond.
+
+10
+
+5.3 Stormwater Management Design Criteria
+The proposed development will meet the design standards set out in the MOE
+Stormwater Management Planning, Inglewood Studies by Town of Caledon
+and CVC engineering standards. A brief summary of the design criteria is
+provided below;
+•
+
+For proposed development, the return frequency for design shall be 10year for the Minor System (Storm sewers) and 100-year for the Major
+System.
+
+•
+
+The Town of Caledon Rainfall Intensity Curves is to be used for the
+design of the Minor System.
+
+•
+
+Water Quantity Control: Post-development flows to pre-development
+levels.
+
+•
+
+Water Quality Control: Level 1 (Enhanced level protection – 80% TSS
+Removal) and Phosphorous Removal is required.
+
+•
+
+The Rainfall data used for VO modelling is Toronto Pearson Int Airport
+IDF values for SCS Type II storm.
+
+5.4 Proposed Stormwater Measures
+5.4.1 Water Quantity Control
+The release of stormwater from the development assumes that “postdevelopment flows will be equal to or less than the pre-development flows”. For
+this development, the predevelopment runoff was estimated through Visual
+Otthymo Modelling. The Toronto Pearson Int’l Airport parameters were used
+to determine the storm intensity values and the following 2, 5, 10, 25, 50 and
+100-year pre- and post-development release rates have been calculated. The
+allowable peak flows for the proposed development will be determined using
+the pre-development flows as shown in Table I. VO modelling results can be
+found in Appendix A.
+TABLE I
+Pre-Development Peak Flows
+Drainage Area = 1.76 ha (including 0.13 ha External Drainage from North)
+Composite Runoff C = 0.25
+Storm Event
+
+2-Year
+Storm
+
+5-Year
+Storm
+
+10-Year
+Storm
+
+25-Year
+Storm
+
+50-Year
+Storm
+
+100-Year
+Storm
+
+VO Flows
+(m3/s)
+
+0.108
+
+0.166
+
+0.211
+
+0.266
+
+0.314
+
+0.362
+
+11
+
+The post-development drainage replicates the existing drainage patterns and
+will convey the flows from the site to the proposed Dry Pond for quantity
+control before release. The proposed storm drainage system is shown on
+Drawing STMDR -1. Table II below summarizes post-development peak
+flows and demonstrates that the post-development flows for all storm events
+are equal to or less than the pre-development peak flows.
+TABLE II
+Post-Development Peak Flows
+POST - DEVELOPMENT SCENARIO
+Total Site Development Area 1.76 ha
+Controlled Site Area = 1.60 ha
+External Drainage Area = 0.13 ha
+0.03 ha (Open Space draining directly to the
+Un-Controlled Area =
+Valley in the South)
+Total Area to Dry Pond = 1.73 ha
+Time of Concentration (min) = 10 min
+Composite Runoff C = 0.55
+VO Uncontrolled Peak Flows (Area = 0.03 Ha)
+Storm Event
+
+2-Year
+Storm
+
+5-Year
+Storm
+
+10-Year
+Storm
+
+25-Year
+Storm
+
+50-Year
+Storm
+
+100-Year
+Storm
+
+VO Flows (m3/s) –
+NHYD 5
+
+0.002
+
+0.003
+
+0.004
+
+0.005
+
+0.005
+
+0.006
+
+0.145
+
+0.151
+
+Peak Flows from Dry Pond (Area = 1.73 Ha)
+3
+
+VO Flows (m /s) NHYD 4
+
+0.100
+
+0.117
+
+0.126
+
+0.139
+
+Comparison between Pre and Post Flows from Site
+Pre
+Post (Total Flows from
+Site) -NHYD 6
+
+0.108
+
+0.166
+
+0.211
+
+0.266
+
+0.314
+
+0.362
+
+0.101
+
+0.119
+
+0.129
+
+0.142
+
+0.149
+
+0.156
+
+Dry Pond Design
+The proposed dry pond is designed with 4:1 side slope and a 100-year storage
+capacity of 579 m3 at an elevation of 276.69m within the pond. The top of the
+berm elevation is 276.75m. A 245 mm diameter orifice plate located within a
+Hickenbottom outlet structure of the pond will control outflow from the pond
+and reduce it to pre-development values. The dry pond has been designed to
+provide quantity control for all storm events up to and including the 100-year
+12
+
+storm event. The following table summarizes the dry pond stage storage
+discharge (detailed calculations located in Appendix “C”).
+TABLE II
+Dry Pond – Stage-Storage-Discharge
+Orifice Plate Diameter (mm) =
+
+245 mm (Flow Control), Invert = 275.35m
+
+Storm Event
+
+2 - Year
+
+5 - Year
+
+10 - Year
+
+25 - Year
+
+50 - Year
+
+100 – Year
+
+VO Storage
+Required (m3)
+
+193
+
+265
+
+330
+
+436
+
+503
+
+572
+
+Storage provided
+in Dry Pond (m3) *
+
+203
+
+269
+
+349
+
+438
+
+552
+
+579
+
+Discharge (m3/s) *
+
+0.106
+
+0.118
+
+0.129
+
+0.139
+
+0.150
+
+0.152
+
+Elevation (m)
+
+276.00
+
+276.15
+
+276.31
+
+276.47
+
+276.65
+
+276.69
+
+* Refer to Dry Pond Orifice Calcs
+
+5.4.2
+
+Water Quality Control
+In accordance with the MOE SWM planning and Design Manual for this site,
+stormwater should be treated to an Enhanced Protection Level (Level 1) which
+is 80% TSS (Total Suspended Solids) Removal.
+Major storm event stormwater flows from the site will be conveyed via overland
+flow into the dry pond. The Dry Pond will provide Basic Level (60%) suspended
+solid removal. Following the discharge from the (SWM) dry pond, the
+stormwater will pass through a filtration unit before outletting the headwall.
+Based on the manufacturer’s modelling software, Jellyfish unit JF6-6-1 has been
+designed to provide the removal of approximately 90% of the Total Suspended
+Solids. For a detailed sizing report of the JellyFish unit refer to Appendix “C”.
+
+5.4.3
+
+Phosphorus Budget
+Inglewood Village Studies has identified the importance of reducing the phosphorus
+level in the watercourses in these areas. The MOE Phosphorus Loading Development
+tool4 has been utilized to determine Pre and Post Development Phosphorus conditions.
+i.
+
+Pre-Development Phosphorus Loading
+
+4
+
+Hutchinson Environmental Sciences Ltd., Phosphorus Budget Tool in Support of Sustainable Development for the
+Lake Simcoe Watershed, prepared for Ontario Ministry of the Environment, Dated: March 30 th, 2012, Version 2.
+
+13
+
+The Pre-Development phosphorus loading was calculated based on the
+existing conditions from the site survey. The Pre-Development land use
+consists of vacant agricultural fields. The Pre-Development phosphorous
+loading for the 1.76 ha area was calculated to be 0.21 Kg/year with no Best
+Management Practices (BMPs).
+
+ii.
+
+Post-Development Phosphorus Loading
+The Post-Development land use for the subject site consists of residential
+development [Refer to Draft Plan prepared by Candevcon Ltd.]. The PostDevelopment phosphorus loading, with no BMPs, was calculated to be 3.08
+Kg/year.
+To minimize the amount of phosphorus being discharged from the site, a
+treatment train approach is proposed. Runoff from the site will be treated by
+dry pond and Jellyfish unit prior to release. The following Table IV represents
+the anticipated phosphorus loading and treatment process results.
+TABLE IV
+Pre and Post Phosphorus Loading and Mitigation
+Pre-development phosphorus loading = 0.21 Kg/Year
+
+Post-development phosphorus loading (with No BMP) = 2.32 Kg/Year
+Treatment Train Approach through LIDs
+LID Type
+
+% Phosphorus
+Removal as per
+MOE
+
+Phosphorus
+Removed
+(Kg/Year)
+
+Site
+(Residential)
+
+Dry Pond
+
+10%
+
+0.23
+
+Site
+(Residential)
+
+Filtration Unit
+(Jellyfish)
+
+77.5%
+
+2.28
+
+Treatment
+ID
+
+Run-off
+From
+
+1
+2
+
+Total Post-development phosphorus loading =
+
+14
+
+0.33 Kg/Year
+(86% P removal)
+
+5.4.4
+
+Water Balance
+Since the post-development condition will increase the imperviousness of the
+site the pre and post infiltration volumes were calculated to assess the infiltration
+deficit and the proposed mitigation measures were evaluated to demonstrate the
+pre-development infiltration can be matched in the post-development condition.
+Site climatic conditions were calculated using the Thornthwaite method
+utilizing meteorological data obtained from Environmental Canada historical
+weather data for Toronto Lester B. Pearson, ON (Climate Id: 6158733) weather
+station. Monthly precipitation averages were obtained over the period of 1981
+to 2010.
+Site conditions have been summarized as follows:
+•
+
+Precipitation
+
+786 mm/yr
+
+•
+
+Evapotranspiration
+
+625.1 mm/yr
+
+•
+
+Water Surplus
+
+160.9 mm/yr
+
+•
+
+Infiltration
+
+96.6 mm/yr
+
+•
+
+Run-off
+
+64.4 mm/yr
+
+Infiltration rates were determined based on infiltration guideline sub-factors
+provided within the “MOEE Hydrogeological Technical Information
+Requirements for Land Development Application”, (MOEE, 1995).
+Based on the noted climate and soil conditions of the Subject Site it is expected
+that the increase in impervious areas will result in a groundwater infiltration
+deficit following development. The Water Balance calculations are provided in
+Appendix “C”. As shown in the calculations, the proposed development without
+mitigation would result in an infiltration deficit of 895m3/year. To balance this
+infiltration deficit, StormTech underground infiltration chambers will be
+utilized to meet the volume requirements. The sizing and design specifications
+of infiltration chambers will be finalized during detailed design stage.
+
+15
+
+5.4.6
+
+CLI ECA Performance Criteria
+The stormwater management design of the site aligns with the standards set forth in the
+CLI ECA Stormwater Management criteria. Below is a detailed description of the
+criteria and how they are met:
+
+TABLE V
+SUMMARY OF CLI ECA STORMWATER MANAGEMENT PERFORMANCE
+Control
+
+Criteria
+
+SWM Strategy
+
+Enhanced Level Suspended Solids Removal
+Water
+Quality
+
+Erosion
+Control
+
+Water
+Quantity
+
+Flood
+Control
+Water
+Balance
+
+Phosphorus Removal
+
+25mm Storm Event
+
+Stormwater volumes generated from the
+geographically specific 90th percentile rainfall
+event on an annual average basis from all
+surfaces on
+the entire site is targeted for control. Control
+is in the following hierarchical order, with
+each step exhausted before proceeding to the
+next:
+1) retention (infiltration, reuse, or
+evapotranspiration),
+2) LID filtration, and
+3) conventional Stormwater management.
+Step 3, conventional Stormwater
+management, should proceed only once
+Maximum Extent Possible* has been attained
+for Steps 1 and 2 for retention and
+filtration.
+Manage peak flow control as per
+watershed/sub watershed plans, municipal
+criteria being a minimum 100-year return
+storm
+Control the recharge to meet PreDevelopment conditions
+
+16
+
+1. Rear yard and roof will drain to
+Infiltration galleries proposed in
+ROW.
+2. Dry Pond will provide basic 60%
+TSS Removal.
+3. Jellyfish filtration unit will further
+provide 89% TSS removal and 77.5%
+Phosphorus Removal
+Dry Pond is designed for 25mm
+rainfall event volume and further
+erosion control will be provided with
+engineered low flow channel at
+outlet
+
+Building roof will drain to Infiltration
+galleries proposed in ROW which will
+promote storage and support
+infiltration.
+2 to 100-Year Storm Event storage
+will be provided in Dry Pond.
+
+Check
+
+Criteria is
+Met
+
+Criteria is
+Met
+
+Criteria is
+Met
+
+* Dry Pond volume includes roof
+drainage.
+
+Post Development Flows controlled
+to Pre-Development Flows for 2 to
+100-Year Storm Events
+
+Criteria is
+Met
+
+Roofs downspout to connect to
+Infiltration chambers in ROW to
+achieve infiltration deficit volume
+
+Criteria is
+Met
+
+* Maximum Extent Possible means maximum achievable Stormwater volume control through retention and
+LID filtration engineered/landscaped/technical Stormwater practices, given the site constraints
+
+6
+
+EROSION AND SEDIMENT CONTROL
+Erosion and sedimentation are naturally occurring processes that involve particle detachment,
+sediment transport and deposition of soil particles. Construction activities commonly alter the
+landscapes where they are located, exacerbating these natural processes. One of the most
+significant alterations encountered during construction is the removal of the vegetation that
+stabilizes the subsoil. In the absence of the vegetation, the underlying soils are fully or partially
+exposed to various natural forces such as rain, flowing water, wind, and gravity.5
+
+The discharge of high sediment loads to natural watercourses has significant impacts on receiving
+waters and aquatic habitat. Some specific examples include:
+
+
+Degradation of water quality;
+
+
+
+Damage or destruction of fish habitat;
+
+
+
+Increased flooding.
+
+In consideration of the above, it is necessary as part of the Final Design and implementation of
+infrastructure and development servicing to incorporate a comprehensive Erosion and Sediment
+Control Plan. The objectives are:
+
+(i)
+
+Minimize wherever possible the extent of vegetation removal;
+
+(ii)
+
+Provide appropriate sediment control measures to minimize the off-site transport of
+sediment;
+
+5
+
+(iii)
+
+Minimize the extent of time that sites are devoid of stabilizing vegetation;
+
+(iv)
+
+Provide interim erosion control measures where permanent restoration is not feasible.
+
+(v)
+
+Provide permanent restoration to eliminate future erosion.
+
+Erosion and Sediment Control Guidelines for Urban Construction, December 2006, Greater
+Horseshoe Conservation Authorities.
+
+17
+
+The Erosion and Sediment Control Plan should consider the specific characteristics of each
+development site and address the requirements relating to the following typical construction
+stages:
+∙
+
+Topsoil Stripping and Site Pre-Grading
+
+∙
+
+Infrastructure Servicing
+
+∙
+
+Building Construction
+A “treatment train” approach is recommended in the development of an appropriate Erosion and
+Sediment Control Plan in compliance with the Erosion and Sediment Control Guidelines for
+Urban Construction. Typical sediment control measures include:
+
+∙
+
+Installation of double silt fencing along the boundary of work areas adjacent to the NHS;
+
+∙
+
+Construction of vegetated cut off swales including sediment traps and rock check dams;
+
+∙
+
+Stabilization of temporary sediment traps and provision of vegetated filter strips adjacent
+to the NHS;
+
+∙
+
+Provision of catch basin sediment controls.
+
+Inherent in the Erosion and Sediment Control Plan is a monitoring program with an Action Plan
+to implement remedial measures in a timely manner where required.
+
+As part of the final engineering design, the Sediment and Erosion Control Plan will be prepared
+including sizing of temporary sedimentation ponds and sediment traps.
+
+18
+
+7
+
+SUMMARY AND COMPLIANCE DECLARATION
+
+7.1
+
+Summary
+Based on the findings of this report, the conclusions and recommendations are as follows:
+(i)
+
+Sanitary sewer servicing can be achieved by connecting to the existing Sanitary
+sewers on Mackenzie Street.
+
+(ii)
+
+Water supply can be achieved by connecting to the existing watermains on
+Kaufman Road and MacKenzie Street.
+
+(iii)
+
+Storm water management will be provided by a dry pond to be located on Block 3
+as well as by a filtration system.
+
+7.2
+
+(iv)
+
+It should be noted that the details of the stormwater management systems will be
+finalized during the detailed design stage of the Subdivision;
+
+(v)
+
+Erosion and sediment control measures will be installed as recommended.
+
+Compliance Declaration
+
+The undersigned hereby confirm that:
+(i)
+
+The Functional Servicing/Stormwater Management Study complies with the Town
+of Caledon current edition of the Subdivision Design Manual
+
+(ii)
+
+The drainage of the adjacent lands will not be adversely affected by the proposed
+stormwater management provisions.
+
+_____________________________________
+
+___________________________________
+
+Scott Lang, P. Eng
+
+Shuchi Singh, P.Eng.
+
+19
+
+REFERENCE DRAWINGS
+DRAWING S-155-13/P5
+
+Kaufman Road, STN 0+000 to STN 0+256.554
+
+DRAWING 06-2720
+
+McKenzie Street, STA 0+180 to STA 0+320
+
+DRAWINGS
+DRAWING PL-1
+
+Draft Plan
+
+DRAWING PS-1
+
+Preliminary Servicing Plan
+
+DRAWING PG-1
+
+Preliminary Grading Plan
+
+DRAWING STMDR -1
+
+Storm Drainage Area Plan
+
+DRAWING SANDR-1
+
+Sanitary Drainage Area Plan
+
+DRAWING WM-1
+
+Water Distribution Plan
+
+DRAWING SWM-G5
+
+Storm Water Management Pond Plan and
+Sections
+
+APPENDIX A
+SANITARY SEWER CALCULATIONS AND MULTI USE TABLES
+
+Subdivision:
+File No.:
+Consultant:
+Drainage Area Plan:
+
+15544 MClAUGHLIN ROAD
+Pre 2020-0106
+Candevcon Limited
+SA-1
+
+LOCATION
+
+STREET
+
+1
+
+AREA
+ID
+
+CITY OF BRAMPTON
+SANITARY DRAINAGE
+
+Project No.:
+Date:
+Prepared By:
+Checked By:
+
+W22002
+April 30, 2024
+YDN
+SDL
+
+SECTION AREA (Ha)
+
+MAINTANANCE HOLES
+
+2
+
+Upstream
+3
+
+Downstream
+4
+
+1
+
+MH1A
+
+MH2A
+
+2
+
+MH2A
+
+MH3A
+
+3
+
+MH3A
+
+OUTLET
+
+Executive
+Residential
+
+POPULATION
+
+Low Density
+
+Low /
+Medium
+Density
+
+Medium
+Density
+
+High
+Density
+
+Commercial
+/Retail
+
+FLOWS
+
+REMARKS
+
+DESIGN FLOW /
+FULL FLOW
+%
+Junior School
+
+Senior School
+
+High School
+
+Residential
+
+Commercial
+
+School
+
+TOTAL
+POP
+
+ACCUM.
+POP.
+
+AREA
+
+ACCUM.
+AREA
+(ha)
+21
+
+PK. DAY
+FLOW
+(m3/s)
+
+INFILT.
+
+SIZE
+
+SLOPE
+
+CAPACITY
+
+(mm)
+25
+
+(%)
+26
+
+(m3/s)
+
+23
+
+TOTAL
+FLOW
+(m3/s)
+24
+
+22
+
+27
+
+28
+
+29
+
+(m3/s)
+
+VELOCITY
+FULL FLOW ACT. FLOW
+(m/s)
+(m/s)
+
+14
+
+15
+
+16
+
+17
+
+18
+
+(ha)
+20
+
+0.917
+
+46
+
+0.00
+
+0.00
+
+46
+
+46
+
+0.92
+
+0.92
+
+0.013
+
+0.000
+
+0.013
+
+250
+
+5.40%
+
+0.138
+
+2.82
+
+1.08
+
+9
+
+0.164
+
+8
+
+0.00
+
+0.00
+
+8
+
+54
+
+0.16
+
+1.08
+
+0.013
+
+0.000
+
+0.013
+
+250
+
+2.50%
+
+0.094
+
+1.92
+
+0.90
+
+14
+
+0.000
+
+0
+
+0.00
+
+0.00
+
+0
+
+54
+
+0.00
+
+1.08
+
+0.013
+
+0.000
+
+0.013
+
+250
+
+2.10%
+
+0.086
+
+1.76
+
+0.90
+
+15
+
+5
+
+6
+
+7
+
+8
+
+9
+
+10
+
+11
+
+12
+
+13
+
+30
+
+REGION OF PEEL DESIGN CRITERIA
+equivalent populations
+Executive residential
+low density (greater than 10m frontage)
+Low density (less than 10m frontage)
+Low/medium density
+Medium density
+High density
+Junior school
+Senior School
+High School
+Commercial/retail
+
+people/ha
+10
+50
+70
+123
+175
+475
+pop/3
+pop/2
+(pop x 2)/3
+50
+
+Average Day Flow:
+Peaking Factor:
+Infiltration:
+Manning's Co-eff.:
+
+302.8 Lpcd
+
+Pipes:
+
+1+14/(4+(P)^0.5)
+0.0002 m3/s/ha
+0.000028 m3/s/m
+n=
+
+P = Pop. in 1000's
+
+0.013
+
+Page 1 of 1
+
+15544 MCLAUGHLIN ROAD
+Connection Multi Use Demand Table
+WATER CONNECTION
+Connection point 3)
+
+Pressure zone of connection point
+Total equivalent population to be serviced
+
+5
+1)
+
+0
+
+Total lands to be serviced
+
+1.24
+
+Hydrant flow test
+Hydrant flow test location
+
+Pressure
+(kPa)
+
+Flow (in l/s)
+
+Time
+
+Minimum water pressure
+Maximum water pressure
+Water demands
+No.
+
+Demand (in l/s)
+Demand type
+Use 1
+
+5)
+
+Use 2
+
+5)
+
+Total
+
+1
+
+Average day flow
+
+0.18
+
+0.18
+
+2
+
+Maximum day flow
+
+0.35
+
+0.35
+
+3
+
+Peak hour flow
+
+0.53
+
+0.53
+
+4
+
+Fire flow
+
+100.00
+
+100.00
+
+100.35
+
+100.35
+
+2)
+
+Analysis
+5
+
+Maximum day plus fire flow
+
+WASTEWATER CONNECTION
+Total
+Connection point
+
+4)
+
+Total equivalent population to be serviced 1)
+
+0
+
+0
+
+Total lands to be serviced
+
+1.24
+
+1.240
+
+1.1
+
+1.1
+
+6
+
+Wastewater sewer effluent (in l/s)
+
+1)
+
+The calculations should be based on the development estimated population (employment and/or residential).
+
+2)
+
+fire flow based on Table 8.1, Fire Flow requirements, MOE Design Guidelines For Drinking Water Systems
+
+3)
+
+Please specify the connection point ID
+
+4)
+
+Please specify the connection point (wastewater line or manhole ID)
+
+Also, the "total equivalent popopulation to be serviced" and the "total lands
+to be serviced" should reference the connection point. (The FSR should contain one copy of Site Servicing Plan)
+5)
+
+Please complete as many uses are necessary for the development. (Please specify the use)
+
+Population
+area (Ha)
+land use
+total population
+Unit Count Sanitary Flows Based on Unit Type
+unit type
+single detached
+semi detached
+townhouse
+large apartment (greater than 1 bedroom)
+small apartment (less than or equal to 1 bedroom)
+Medium density (ha)
+reserve (ha)
+commercial/industrial (ha)
+
+1.24
+residential
+54.6
+
+units
+13
+
+pop/unit
+4.2
+4.2
+3.4
+3.1
+1.7
+175
+50
+50
+
+pop/sm
+
+population
+54.6
+0
+0
+
+residential population
+non-residential population
+total population
+
+0
+0
+0
+54.6
+0
+54.6
+
+Water Demand
+demand type
+
+factor
+
+demand
+
+ave day
+
+1
+
+0.177
+
+max day
+peak hour
+
+2
+3
+
+0.354
+0.531
+
+Residential per capita sanitary
+demand(lpcd)
+Non-Residential per capita
+sanitary demand(lpcd)
+
+Residential per capita sanitary
+demand(lpcd)
+Non-Residential per capita
+sanitary demand(lpcd)
+
+Sanitary Demand
+Average day (l/s)
+
+0.183
+
+peak factor
+infiltration
+total peak sanitary flow (l/s)
+
+4.307
+0.322
+1.112
+
+280
+300
+
+290
+270
+
+*calculated using emiprical formula
+infiltration (l/sec/ha)
+
+0.26
+
+6000
+
+SINGLE DETACHED
+
+Fire Flow
+Unit Type
+Residential
+F
+F
+C
+
+A
+
+Required flow (L/s)
+100.000
+
+Suggested flow (L/min)
+
+.5
+
+(220CA^ )/60
+the required fire flow in litres per secound
+= coefficient related to the type of construction.
+= 1.5 for wood frame construction (structure essentially all combustible).
+= 1.0 for ordinary construction (brick or other masonry walls, combustible floor and interior).
+= 0.8 for non-combustible construction (unprotected metal structural components, masonry or metal
+walls).
+= 0.6 for fire-resistive construction (fully protected frame, floors, roof).
+The total floor area in square metres (including all storeys, but excluding basements at least 50 percent
+below grade) in the building being considered.
+For fire-resistive buildings, consider the two largest adjoining floors plus 50 percent of each of any floors
+immediately above them up to eight, when the vertical openings are inadequately protected. If the vertical
+openings and exterior vertical communications are properly protected (one hour rating), consider only the
+area of the largest floor plus 25 percent of each of the two immediately adjoining floors.
+
+1. To the value obtained above a percentage should be added for structures exposed within 45 metres
+by the fire area under consideration. This percentage shall depend upon the height, area, and construction
+of the building(s) being exposed, the separation, openings in the exposed building(s), the length and
+height of exposure, the provision of automatic sprinklers and/or outside sprinklers in the building(s)
+exposed, the occupancy of the exposed building(s), and the effect of hillside locations on the possible
+spread of fire.
+The charge for any one side generally should not exceed the following limits for the separation:
+Separation Charge
+
+Separation Charge
+
+0 to 3m 25%
+3.1 to 10m 20%
+
+20.1 to 30 m 10%
+30.1 to 45m 5%
+
+The total percentage shall be the sum of the percentage for all sides, but shall not exceed 75 %.
+The fire flow shall not exceed 45,000 L/min nor be less than 2,000 L/min.
+
+Note E:
+
+Fire Walls: - In determining floor areas, a fire wall that meets or exceeds the requirements of the current edition of the National Building Code of
+Canada (provided this necessitates a fire resistance rating of 2 or more hours) may be deemed to subdivide the building into more than one area
+or may, as a party wall, separate the building from an adjoining building.
+Normally any unpierced party wall considered to form a boundary when determining floor areas may warrant up to a 10% exposure charge.
+
+Note F:
+
+High one storey buildings: When a building is stated as 1=2, or more storeys, the number of storeys to be used in the formula depends upon the
+use being made of the building. For example, consider a 1=3 storey building. If the building is being used for high piled stock, or for rack storage,
+the building would probably be considered as 3 storeys and, in addition, an occupancy percentage increase may be warranted.
+However, if the building is being used for steel fabrication and the extra height is provided only to facilitate movement of objects by a crane, the
+building would probably be considered as a one storey building and an occupancy credit percentage may be warranted.
+
+Note G:
+
+If a building is exposed within 45 metres, normally some surcharge for exposure will be made.
+
+Note H:
+
+Where wood shingle or shake roofs could contribute to spreading fires, add 2,000 L/min to 4,000 L/min in accordance with extent and condition.
+
+Note I:
+
+Any non-combustible building is considered to warrant a 0.8 coefficient.
+
+Note J:
+
+Dwellings: For groupings of detached one family and small two family dwellings not exceeding 2 stories in height, the following short method may
+be used. (For other residential buildings, the regular method should be used.)
+
+Exposure distances
+
+sugested fire flow
+Masonry or Brick
+
+See Note "D"
+6,000 L/min
+4,000 L/min
+3 to 10m
+3,000 L/min
+4,000 L/min
+10.1 to 30m
+2,000 L/min
+3,000 L/min
+Over 30m
+2,000 L/min
+If the buildings are contiguous, use a minimum of 8,000 L/min. Also consider Note H.
+Less than 3m
+
+OUTLINE OF PROCEDURE
+A.
+
+Determine the type of construction.
+
+B.
+
+Determine the ground floor area.
+
+C.
+
+Determine the height in storeys. Using the fire flow formula, determine the required fire flow to the nearest 1,000 L/min.
+
+E.
+
+Determine the increase or decrease for occupancy and apply to the value obtained in D above. Do not round off the answer.
+
+F.
+
+Determine the decrease, if any, for automatic sprinkler protection. Do not round off the value.
+
+G.
+
+Determine the total increase for exposures, Do not round off the value.
+
+H.
+
+To the answer obtained in E, subtract the value obtained in F and add the value obtained in G. The final figure is customarily rounded off to the
+nearest 1,000 L/min.
+
+APPENDIX B
+STORM SEWER CALCULATIONS
+
+Subdivision:
+File No.:
+Consultant:
+Drainage Area Plan:
+
+15544 MCLAUGHLIN
+REGION:21T-XX / CITY: PRE-2029-0197
+Candevcon Limited
+STM 1
+Parks
+Single/Semi
+Multiple/Inst.
+Industrial/Com.
+
+Area
+No.
+
+Upstream
+
+Downstream
+
+Contributing Area (ha)
+
+Node
+
+Node
+
+In Area Control
+
+Total
+
+0.25
+
+EXT-1
+1
+
+EXT1
+CB
+
+CB
+MH1
+
+0.05
+0.25
+
+0.00
+0.05
+
+0.05
+0.30
+
+0.05
+
+EXT-2
+2
+3
+
+EXT2
+MH1
+CB
+
+CB
+CB
+MH2
+
+0.05
+0.41
+0.12
+
+0.00
+0.35
+0.76
+
+0.05
+0.76
+0.88
+
+0.05
+
+EXT-3 EXT3
+4
+MH2
+5
+CBMH3
+6
+MH5
+
+CB
+CBMH3
+MH5
+POND
+
+0.03
+0.39
+0.03
+0.40
+
+0.00
+0.92
+1.31
+1.34
+
+0.03
+1.31
+1.34
+1.74
+
+0.03
+
+TOTAL
+
+1.74
+
+W22002
+April 30, 2024
+SDL
+A
+
+B
+
+C
+
+For 2-yr storm I2
+
+=
+
+1070
+
+0.8759
+
+7.85
+
+For 5-yr storm I5
+
+=
+
+1593
+
+0.8789
+
+11
+
+For 10-yr storm I10
+
+=
+
+2221
+
+0.908
+
+12
+
+For 100-yr storm I100 =
+
+4688
+
+0.9624
+
+17
+
+0.90
+
+Breakdown of Areas
+
+0.50
+
+FILE NUMBER:
+DATE:
+PREPARED BY:
+CHECKED BY:
+
+0.25
+0.50
+0.75
+0.90
+
+Roads
+Core
+System
+
+TOWN OF CALEDON
+STORM DRAINAGE
+
+0.75
+
+0.90
+
+Area x Storm Co-eff
+
+C
+
+Time (min)
+
+Total
+
+Cummulative
+
+AxC
+
+AxC
+
+In Area
+
+Total
+
+I2
+
+I5
+
+I10
+
+FLOW
+Q=
+2.78AC
+I/1000
+
+PIPE
+
+Qdesign
+
+Length
+(m)
+
+Size
+(mm)
+
+Grade
+(%)
+
+Capacity
+(m3/sec)
+
+Velocity
+(m/s)
+
+Time
+(min)
+
+% Full
+
+133.9
+
+0.042
+
+4.0
+
+250
+
+2.00
+
+0.084
+
+1.71
+
+0.04
+
+50%
+
+107.9
+107.4
+
+132.0
+131.4
+
+0.107
+0.124
+
+66.0
+24.0
+
+300
+300
+
+5.30
+5.30
+
+0.223
+0.223
+
+3.15
+3.15
+
+0.35
+0.13
+
+48%
+
+106.6
+106.2
+106.0
+
+130.5
+130.0
+129.7
+
+0.183
+0.187
+0.245
+
+38.0
+10.0
+6.0
+
+375
+450
+525
+
+5.20
+1.00
+1.00
+
+0.400
+0.285
+0.430
+
+3.62
+1.79
+1.99
+
+0.17
+0.09
+0.05
+
+46%
+
+0.25
+
+0.50
+
+0.75
+
+0.90
+
+0.25
+
+0.01
+0.00
+
+0.00
+0.13
+
+0.00
+0.00
+
+0.00
+0.00
+
+0.25
+0.50
+
+0.01
+0.13
+
+0.01
+0.14
+
+10.00
+
+10.0
+
+85.6
+
+109.5
+
+0.41
+0.12
+
+0.01
+0.00
+0.00
+
+0.00
+0.21
+0.06
+
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+
+0.25
+0.50
+0.50
+
+0.01
+0.21
+0.06
+
+0.01
+0.36
+0.42
+
+10.04
+10.39
+
+10.4
+10.5
+
+84.1
+83.6
+
+0.39
+0.03
+0.40
+
+0.01
+0.00
+0.00
+0.00
+
+0.00
+0.20
+0.02
+0.20
+
+0.00
+0.00
+0.00
+0.00
+
+0.00
+0.00
+0.00
+0.00
+
+0.25
+0.50
+0.50
+0.50
+
+0.01
+0.20
+0.02
+0.20
+
+0.01
+0.62
+0.63
+0.83
+
+10.52
+10.69
+10.78
+
+10.7
+10.8
+10.8
+
+82.9
+82.6
+82.4
+
+POND G5
+
+56%
+
+66%
+57%
+
+APPENDIX "C"
+
+STORMWATER MANAGEMENT
+CALCULATIONS
+
+Existing Site Conditions for Pre-Development Model
+
+SUBJECT SITE
+
+Total Site Area =
+
+1.64 Ha
+
+Current Site Condition = farmland, where the surrounding land use includes; a water course flowing
+south of the site, wooded areas, situated immediate to the south-west, and existing
+residential properties to the north, north-east and north-west of the subject site
+Current Drainage Condition = At present, the entire site drains from the north to the south-east corner of the site towards
+existing Ditch
+Stormwater Management Design Criteria applicable for Subject Site ;
+
+- SWM Measures for Quality, Quantity and Erosion Control will be provided as per
+Town of Caledon & CVC recommendations
+
+- As per Pre-consultation meeting comments, proposed SWM Design should be in accordance with the
+CVC’s Stormwater Management Guideline (July 2022)
+
+- The Storm Servicing Criteria is to address the previously completed Inglewood Village Studies.
+Stormwater Management Recommendations from Inglewood Village Studies ;
+Tributary 3 of Credit River is located south of subject site
+Water Quality Control :
+- Level 1 (Enhanced- 80% TSS Removal) as per MOEE Guidelines for Storage Requirement
+- Phosphorous Control is required
+Erosion Control :
+- 25mm Rainfall event stored over 24 hours*
+- * Releasing over longer duration is recommended to prevent further erosion damage
+Water Quantity Control :
+- Post Development Flows to Pre-Development Levels
+- Regional Storm - Hurricane Hazel
+Rainfall/ IDF Data Used :
+- Toronto Pearson International Airport
+- 24hours SCS Type II for Pond Design
+- Chicago Storm for Culvert, Sewers and Channel Design
+Infiltration & Water Balance :
+- Structural IT measures are suited due to till soil present throughout the area
+- Lot Level & Conveyance Controls recommended
+
+Sheet : 1
+
+CVC Water Quantity/Flood Control Criteria (Ref: Stormwater Management Guidelines. 2022)
+
+Subject Site Watershed
+Boundary belongs to No. 20
+for Flood Control Criteria
+
+Sheet : 2
+
+Rainfall Data & IDF Curves Information
+The IDF equations parameters are based on MTO IDF Curve Lookup Tool
+
+Sheet: 3
+
+Pre-Development VO Model Scenario
+For VO Model, the storm files for 2 to 100-year are generated using 24-Hour SCS type II design storm distribution
+
+Pre-Development Model Parameters ;
+Total Site Area =
+
+1.76 Ha (Site Area + External Drainage to Site from North)
+
+TABLE I ( PRE-DEVELOPMENT VO MODEL PARAMETERS)
+Farm Land/ Green
+
+NHYD
+1
+
+DT (min)
+10
+
+Area (Ha)
+1.76
+
+CN
+80
+
+IA (mm)
+5
+
+N
+3
+
+Tp (hr)
+0.2
+
+Pre-Development (Hydrograph Results) ;
+TABLE II (PRE-DEVEVELOPMENT VO OUTPUT RESULTS)
+NHYD
+
+Flow Type
+
+DT (Hr)
+
+Area (Ha)
+
+PKFW (m3/s)
+
+TP (hr)
+
+RV (mm)
+
+2yr 24hr 10min SCS Type II (MTO)
+
+1
+
+Outflow
+
+0.167
+
+1.76
+
+0.108
+
+12.167
+
+23.211
+
+5yr 24hr 10min SCS Type II (MTO)
+
+1
+
+Outflow
+
+0.167
+
+1.76
+
+0.166
+
+12.167
+
+35.299
+
+10yr 24hr 10min SCS Type II (MTO)
+
+1
+
+Outflow
+
+0.167
+
+1.76
+
+0.211
+
+12.167
+
+44.539
+
+25yr 24hr 10min SCS Type II (MTO)
+
+1
+
+Outflow
+
+0.167
+
+1.76
+
+0.266
+
+12.167
+
+56.115
+
+50yr 24hr 10min SCS Type II (MTO)
+
+1
+
+Outflow
+
+0.167
+
+1.76
+
+0.314
+
+12.167
+
+66.076
+
+100yr 24hr 10min SCS Type II (MTO)
+
+1
+
+Outflow
+
+0.167
+
+1.76
+
+0.362
+
+12.167
+
+76.263
+
+Sheet : 4
+
+Post-Development VO Model Scenario
+TABLE III ( POST-DEVELOPMENT DRAINAGE AREA VS IMPERVIOUSNESS)
+Catchment Type
+
+Typical
+Imperviousness
+
+Typical Run-Off
+"C"
+
+Area (Ha)
+
+Area - 1
+
+60%
+
+0.50
+
+0.25
+
+Area - 2
+
+60%
+
+0.50
+
+0.41
+
+Area - 3
+
+60%
+
+0.50
+
+0.12
+
+Area - 4
+
+80%
+
+0.75
+
+0.39
+
+Area - 5
+
+60%
+
+0.50
+
+0.03
+
+Area - 6
+
+60%
+
+0.50
+
+0.40
+
+External Drainage from
+North (EXT 1 to 3)
+
+10%
+
+0.25
+
+0.13
+
+Uncontrolled Drainage
+from Site (101)
+
+Total Area to Dry Pond =
+
+1.73
+
+Composite Imperviousness =
+
+61%
+
+Composite Runoff C =
+
+0.54
+
+10%
+
+0.25
+
+0.03
+
+Total Drainage Area =
+
+Total Area draining to Proposed Dry Pond =
+
+1.73
+
+Ha
+
+1.76
+
+Ha
+
+Ha *(Includes External drainage from North)
+** (Excludes Uncontrolled drainage area)
+
+Flows Generated by Uncontrolled Drainage Area ;
+
+TABLE IV ( POST-DEVELOPMENT - VO FLOWS GENERATED BY UNCONTROLLED DRAINAGE AREA)
+NHYD
+
+Flow Type
+
+DT (Hr)
+
+Area (Ha)
+
+PKFW (m3/s)
+
+TP (hr)
+
+RV (mm)
+
+2yr 24hr 10min SCS
+Type II (MTO)
+
+5
+
+Outflow
+
+0.167
+
+0.030
+
+0.002
+
+12.167
+
+23.186
+
+5yr 24hr 10min SCS
+Type II (MTO)
+
+5
+
+Outflow
+
+0.167
+
+0.030
+
+0.003
+
+12.167
+
+35.288
+
+10yr 24hr 10min SCS
+Type II (MTO)
+
+5
+
+Outflow
+
+0.167
+
+0.030
+
+0.004
+
+12.167
+
+44.526
+
+25yr 24hr 10min SCS
+Type II (MTO)
+
+5
+
+Outflow
+
+0.167
+
+0.030
+
+0.005
+
+12.167
+
+56.099
+
+50yr 24hr 10min SCS
+Type II (MTO)
+
+5
+
+Outflow
+
+0.167
+
+0.030
+
+0.005
+
+12.167
+
+66.057
+
+100yr 24hr 10min
+SCS Type II (MTO)
+
+5
+
+Outflow
+
+0.167
+
+0.030
+
+0.006
+
+12.167
+
+76.242
+
+TABLE V DRY POND (SWM ) RELEASE RATE TARGETS
+
+Storm Event
+
+PreDevelopment
+Release Rates
+(m3/s)
+
+2-Year
+
+0.108
+
+0.002
+
+0.106
+
+5-Year
+
+0.166
+
+0.003
+
+0.163
+
+10-Year
+
+0.211
+
+0.004
+
+0.207
+
+25-Year
+
+0.266
+
+0.005
+
+0.261
+
+50-Year
+
+0.314
+
+0.005
+
+0.309
+
+100-Year
+
+0.362
+
+0.006
+
+0.356
+
+Uncontrolled
+Dry Pond
+Release Rates Release Rate
+(m3/s)
+Targets (m3/s)
+
+VO MODEL Schematic - Post
+Development
+TABLE VI SUMMARY OF FLOWS FROM SITE
+
+Storm Event
+
+Flow Targets for Dry
+Pond
+
+Flows from Dry
+pond Orifice
+
+Uncontrolled
+Flows (NHYD 5)
+
+Total Flows
+from Site
+(NHYD 6)
+
+Storage
+Required in
+Facility
+
+2-Year
+5-Year
+10-Year
+25-Year
+50-Year
+100-Year
+
+m3/s
+0.106
+0.163
+0.207
+0.261
+0.309
+0.356
+
+m3/s
+0.100
+0.117
+0.126
+0.139
+0.145
+0.151
+
+m3/s
+0.002
+0.003
+0.004
+0.005
+0.005
+0.006
+
+m3/s
+0.101
+0.119
+0.129
+0.142
+0.149
+0.156
+
+(m3)
+197
+265
+330
+436
+503
+572
+
+Total Storage available in Dry Detention Pond =
+
+621
+
+Post flow
+comparison
+with Pre
+4.72
+26.99
+37.68
+45.59
+51.78
+56.18
+
+% (less than Pre)
+% (less than Pre)
+% (less than Pre)
+% (less than Pre)
+% (less than Pre)
+% (less than Pre)
+
+m3 (at Elv = 276.75m)
+
+Orifice Control No. 1
+Orifice Plate Diameter =
+
+0.245 m
+245 mm
+0.0471 m2
+0.63
+275.35 m
+
+Opening Area =
+Orifice Coeff. ( C )=
+Invert =
+
+Submerged Orifice Equation = Qo = 0.63 x A x [2 x g x H]1/2
+Where,
+
+3
+
+Q = Flow rate (m /s)
+C = Constant
+2
+
+A = Area of opening (m )
+H = Net head above the orifice (m)
+g = Acceleration due to gravity (m/s)
+
+TABLE VII VO RATING CURVE DESIGN (STAGE VS STORAGE VS FLOWS)
+Stage (m):
+
+0.10
+
+Elevation
+
+Depth above orifice
+(m)
+
+Orifice No.1 Flow Storage in Dry Pond Total Flow
+(m3/s)
+0
+
+(m3)
+0
+
+(m3/s)
+0.000
+
+275.25
+
+0
+
+275.35
+
+0
+
+0
+
+15
+
+0.000
+
+275.45
+
+0.10
+
+0.042
+
+33
+
+0.042
+
+275.55
+
+0.20
+
+0.059
+
+56
+
+0.059
+
+275.60
+
+0.25
+
+0.066
+
+57
+
+0.066
+
+275.65
+
+0.30
+
+0.072
+
+82
+
+0.072
+
+275.75
+
+0.40
+
+0.083
+
+112
+
+0.083
+
+275.85
+
+0.50
+
+0.093
+
+145
+
+0.093
+
+275.95
+
+0.60
+
+0.102
+
+183
+
+0.102
+
+276.00
+
+0.65
+
+0.106
+
+203
+
+0.106
+
+276.05
+
+0.70
+
+0.110
+
+224
+
+0.110
+
+276.10
+
+0.75
+
+0.114
+
+246
+
+0.114
+
+276.15
+
+0.80
+
+0.118
+
+269
+
+0.118
+
+5-Year
+
+276.20
+
+0.85
+
+0.121
+
+293
+
+0.121
+
+25mm
+
+276.25
+
+0.90
+
+0.125
+
+317
+
+0.125
+
+276.30
+
+0.95
+
+0.128
+
+343
+
+0.128
+
+276.31
+
+0.96
+
+0.129
+
+349
+
+0.129
+
+276.35
+
+1.00
+
+0.132
+
+370
+
+0.132
+
+276.45
+
+1.10
+
+0.138
+
+426
+
+0.138
+
+276.47
+
+1.12
+
+0.139
+
+438
+
+0.139
+
+276.55
+
+1.20
+
+0.144
+
+487
+
+0.144
+
+276.65
+
+1.30
+
+0.150
+
+552
+
+0.150
+
+50-Yr
+
+276.69
+
+1.34
+
+0.152
+
+579
+
+0.152
+
+100-Yr
+
+276.75
+
+1.40
+
+0.156
+
+621
+
+0.156
+
+2-Year
+
+10-Yr
+
+25-Yr
+
+Water Quality and 25mm Erosion Volume Design ;
+Contributing Drainage Area (ha) =
+As per MOE Table 3.2 (Basic 60% TSS Removal) =
+Storage Required =
+Storage Provided =
+
+1.73 Ha
+170.00 (m3/ha)
+294.10 m3
+621.00 m3
+
+25mm 4Hr Chicago Post Development Runoff Volume in Depth =
+
+16.705 mm
+(Refer to 25mm VO Results)
+( R. V x Drainage Area)
+25mm 4Hr Chicago Post Development Storage Required in Pond =
+289 m3
+Storage Provided =
+293 m3 @ Elv = 276.20m
+
+TABLE VIII Summary of Visual Otthymo Results for 2 to 100-Year , 24hr SCS Type II Storm (Toronto Pearson IDF) - Dry Pond
+Storm Event
+Target Rate (m3/s)
+Peak Flows Generated (m3/s)
+VO Release Rate (m3/s)
+
+2-Year
+0.106
+0.223
+0.100
+
+5-Year
+0.163
+0.314
+0.117
+
+10-Year
+0.207
+0.373
+0.126
+
+25-Year
+0.261
+0.487
+0.138
+
+50-Year
+0.309
+0.555
+0.145
+
+100-Year
+0.356
+0.623
+0.151
+
+Sheet: 6
+
+VISUAL OTTHYMO
+MODELLING RESULTS
+
+PRE-DEVELOPMENT VO LAYOUT
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 2yr 24hr 10min SCS Type II (M **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+b3dc59f526f6\9ca73161
+| Ptotal= 57.60 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+1.04
+0.17
+1.04
+0.33
+1.04
+0.50
+1.04
+0.67
+1.04
+0.83
+1.04
+1.00
+1.04
+1.17
+1.04
+1.33
+1.04
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+873ef3e2-bf5d-4277-89d5Comments: 2yr 24hr 10min SCS Type II (MTO)-Toronto
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+6.17
+
+1.04 | 12.33
+
+8.29 | 18.50
+
+0.63 |
+
+6.33
+
+1.04 | 12.50
+
+8.29 | 18.67
+
+0.63 |
+
+6.50
+
+1.04 | 12.67
+
+4.26 | 18.83
+
+0.63 |
+
+6.67
+
+1.04 | 12.83
+
+4.26 | 19.00
+
+0.63 |
+
+6.83
+
+1.04 | 13.00
+
+4.26 | 19.17
+
+0.63 |
+
+7.00
+
+1.04 | 13.17
+
+3.11 | 19.33
+
+0.63 |
+
+7.17
+
+1.27 | 13.33
+
+3.11 | 19.50
+
+0.63 |
+
+7.33
+
+1.27 | 13.50
+
+3.11 | 19.67
+
+0.63 |
+
+7.50
+
+1.27 | 13.67
+
+2.42 | 19.83
+
+1.04
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+
+1.50
+
+0.63 |
+
+7.67
+
+1.27 | 13.83
+
+2.42 | 20.00
+
+1.67
+
+0.63 |
+
+7.83
+
+1.27 | 14.00
+
+2.42 | 20.17
+
+1.83
+
+0.63 |
+
+8.00
+
+1.27 | 14.17
+
+1.73 | 20.33
+
+2.00
+
+0.63 |
+
+8.17
+
+1.50 | 14.33
+
+1.73 | 20.50
+
+2.17
+
+0.75 |
+
+8.33
+
+1.50 | 14.50
+
+1.73 | 20.67
+
+2.33
+
+0.75 |
+
+8.50
+
+1.50 | 14.67
+
+1.73 | 20.83
+
+2.50
+
+0.75 |
+
+8.67
+
+1.61 | 14.83
+
+1.73 | 21.00
+
+2.67
+
+0.75 |
+
+8.83
+
+1.61 | 15.00
+
+1.73 | 21.17
+
+2.83
+
+0.75 |
+
+9.00
+
+1.61 | 15.17
+
+1.73 | 21.33
+
+3.00
+
+0.75 |
+
+9.17
+
+1.84 | 15.33
+
+1.73 | 21.50
+
+3.17
+
+0.75 |
+
+9.33
+
+1.84 | 15.50
+
+1.73 | 21.67
+
+3.33
+
+0.75 |
+
+9.50
+
+1.84 | 15.67
+
+1.73 | 21.83
+
+3.50
+
+0.75 |
+
+9.67
+
+2.07 | 15.83
+
+1.73 | 22.00
+
+3.67
+
+0.75 |
+
+9.83
+
+2.07 | 16.00
+
+1.73 | 22.17
+
+3.83
+
+0.75 | 10.00
+
+2.07 | 16.17
+
+1.04 | 22.33
+
+4.00
+
+0.75 | 10.17
+
+2.65 | 16.33
+
+1.04 | 22.50
+
+4.17
+
+0.92 | 10.33
+
+2.65 | 16.50
+
+1.04 | 22.67
+
+4.33
+
+0.92 | 10.50
+
+2.65 | 16.67
+
+1.04 | 22.83
+
+4.50
+
+0.92 | 10.67
+
+3.57 | 16.83
+
+1.04 | 23.00
+
+4.67
+
+0.92 | 10.83
+
+3.57 | 17.00
+
+1.04 | 23.17
+
+4.83
+
+0.92 | 11.00
+
+3.57 | 17.17
+
+1.04 | 23.33
+
+5.00
+
+0.92 | 11.17
+
+5.53 | 17.33
+
+1.04 | 23.50
+
+5.17
+
+0.92 | 11.33
+
+5.53 | 17.50
+
+1.04 | 23.67
+
+5.33
+
+0.92 | 11.50
+
+5.53 | 17.67
+
+1.04 | 23.83
+
+5.50
+
+0.92 | 11.67
+
+17.05 | 17.83
+
+1.04 | 24.00
+
+5.67
+5.83
+6.00
+
+0.92 | 11.83
+0.92 | 12.00
+0.92 | 12.17
+
+43.78 | 18.00
+70.50 | 18.17
+8.29 | 18.33
+
+1.04 |
+1.04 |
+1.04 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0001)|
+|ID= 1 DT=10.0 min |
+-------------------Unit Hyd Qpeak
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+1.76
+5.00
+0.20
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+
+0.336
+0.108 (i)
+12.167
+23.211
+57.600
+0.403
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-----------------------------------------------------------------------------FINISH
+==========================================================================
+=================================
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 5yr 24hr 10min SCS Type II (M **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+b3dc59f526f6\955bcef0
+| Ptotal= 74.40 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+1.34
+0.17
+1.34
+0.33
+1.34
+0.50
+1.34
+0.67
+1.34
+0.83
+1.34
+1.00
+1.34
+1.17
+1.34
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+873ef3e2-bf5d-4277-89d5Comments: 5yr 24hr 10min SCS Type II (MTO)-Toronto
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+6.17
+
+1.34 | 12.33
+
+10.71 | 18.50
+
+0.82 |
+
+6.33
+
+1.34 | 12.50
+
+10.71 | 18.67
+
+0.82 |
+
+6.50
+
+1.34 | 12.67
+
+5.51 | 18.83
+
+0.82 |
+
+6.67
+
+1.34 | 12.83
+
+5.51 | 19.00
+
+0.82 |
+
+6.83
+
+1.34 | 13.00
+
+5.51 | 19.17
+
+0.82 |
+
+7.00
+
+1.34 | 13.17
+
+4.02 | 19.33
+
+0.82 |
+
+7.17
+
+1.64 | 13.33
+
+4.02 | 19.50
+
+0.82 |
+
+7.33
+
+1.64 | 13.50
+
+4.02 | 19.67
+
+1.34
+1.34
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+
+1.33
+
+0.82 |
+
+7.50
+
+1.64 | 13.67
+
+3.12 | 19.83
+
+1.50
+
+0.82 |
+
+7.67
+
+1.64 | 13.83
+
+3.12 | 20.00
+
+1.67
+
+0.82 |
+
+7.83
+
+1.64 | 14.00
+
+3.12 | 20.17
+
+1.83
+
+0.82 |
+
+8.00
+
+1.64 | 14.17
+
+2.23 | 20.33
+
+2.00
+
+0.82 |
+
+8.17
+
+1.93 | 14.33
+
+2.23 | 20.50
+
+2.17
+
+0.97 |
+
+8.33
+
+1.93 | 14.50
+
+2.23 | 20.67
+
+2.33
+
+0.97 |
+
+8.50
+
+1.93 | 14.67
+
+2.23 | 20.83
+
+2.50
+
+0.97 |
+
+8.67
+
+2.08 | 14.83
+
+2.23 | 21.00
+
+2.67
+
+0.97 |
+
+8.83
+
+2.08 | 15.00
+
+2.23 | 21.17
+
+2.83
+
+0.97 |
+
+9.00
+
+2.08 | 15.17
+
+2.23 | 21.33
+
+3.00
+
+0.97 |
+
+9.17
+
+2.38 | 15.33
+
+2.23 | 21.50
+
+3.17
+
+0.97 |
+
+9.33
+
+2.38 | 15.50
+
+2.23 | 21.67
+
+3.33
+
+0.97 |
+
+9.50
+
+2.38 | 15.67
+
+2.23 | 21.83
+
+3.50
+
+0.97 |
+
+9.67
+
+2.68 | 15.83
+
+2.23 | 22.00
+
+3.67
+
+0.97 |
+
+9.83
+
+2.68 | 16.00
+
+2.23 | 22.17
+
+3.83
+
+0.97 | 10.00
+
+2.68 | 16.17
+
+1.34 | 22.33
+
+4.00
+
+0.97 | 10.17
+
+3.42 | 16.33
+
+1.34 | 22.50
+
+4.17
+
+1.19 | 10.33
+
+3.42 | 16.50
+
+1.34 | 22.67
+
+4.33
+
+1.19 | 10.50
+
+3.42 | 16.67
+
+1.34 | 22.83
+
+4.50
+
+1.19 | 10.67
+
+4.61 | 16.83
+
+1.34 | 23.00
+
+4.67
+
+1.19 | 10.83
+
+4.61 | 17.00
+
+1.34 | 23.17
+
+4.83
+
+1.19 | 11.00
+
+4.61 | 17.17
+
+1.34 | 23.33
+
+5.00
+
+1.19 | 11.17
+
+7.14 | 17.33
+
+1.34 | 23.50
+
+5.17
+
+1.19 | 11.33
+
+7.14 | 17.50
+
+1.34 | 23.67
+
+5.33
+
+1.19 | 11.50
+
+7.14 | 17.67
+
+1.34 | 23.83
+
+5.50
+
+1.19 | 11.67
+
+22.02 | 17.83
+
+1.34 | 24.00
+
+5.67
+5.83
+
+1.19 | 11.83
+1.19 | 12.00
+
+56.54 | 18.00
+91.07 | 18.17
+
+1.34 |
+1.34 |
+
+6.00
+
+1.19 | 12.17
+
+10.71 | 18.33
+
+1.34 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0001)|
+|ID= 1 DT=10.0 min |
+-------------------Unit Hyd Qpeak
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+1.76
+5.00
+0.20
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+
+0.336
+0.166 (i)
+12.167
+35.299
+74.400
+0.474
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 10yr 24hr 10min SCS Type II ( **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+b3dc59f526f6\ca7e1ce8
+| Ptotal= 86.40 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+1.56
+0.17
+1.56
+0.33
+1.56
+0.50
+1.56
+0.67
+1.56
+0.83
+1.56
+1.00
+1.56
+1.17
+1.56
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+873ef3e2-bf5d-4277-89d5Comments: 10yr 24hr 10min SCS Type II (MTO)-Toront
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+6.17
+
+1.56 | 12.33
+
+12.44 | 18.50
+
+0.95 |
+
+6.33
+
+1.56 | 12.50
+
+12.44 | 18.67
+
+0.95 |
+
+6.50
+
+1.56 | 12.67
+
+6.39 | 18.83
+
+0.95 |
+
+6.67
+
+1.56 | 12.83
+
+6.39 | 19.00
+
+0.95 |
+
+6.83
+
+1.56 | 13.00
+
+6.39 | 19.17
+
+0.95 |
+
+7.00
+
+1.56 | 13.17
+
+4.67 | 19.33
+
+0.95 |
+
+7.17
+
+1.90 | 13.33
+
+4.67 | 19.50
+
+0.95 |
+
+7.33
+
+1.90 | 13.50
+
+4.67 | 19.67
+
+1.56
+1.56
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+
+1.33
+
+0.95 |
+
+7.50
+
+1.90 | 13.67
+
+3.63 | 19.83
+
+1.50
+
+0.95 |
+
+7.67
+
+1.90 | 13.83
+
+3.63 | 20.00
+
+1.67
+
+0.95 |
+
+7.83
+
+1.90 | 14.00
+
+3.63 | 20.17
+
+1.83
+
+0.95 |
+
+8.00
+
+1.90 | 14.17
+
+2.59 | 20.33
+
+2.00
+
+0.95 |
+
+8.17
+
+2.25 | 14.33
+
+2.59 | 20.50
+
+2.17
+
+1.12 |
+
+8.33
+
+2.25 | 14.50
+
+2.59 | 20.67
+
+2.33
+
+1.12 |
+
+8.50
+
+2.25 | 14.67
+
+2.59 | 20.83
+
+2.50
+
+1.12 |
+
+8.67
+
+2.42 | 14.83
+
+2.59 | 21.00
+
+2.67
+
+1.12 |
+
+8.83
+
+2.42 | 15.00
+
+2.59 | 21.17
+
+2.83
+
+1.12 |
+
+9.00
+
+2.42 | 15.17
+
+2.59 | 21.33
+
+3.00
+
+1.12 |
+
+9.17
+
+2.76 | 15.33
+
+2.59 | 21.50
+
+3.17
+
+1.12 |
+
+9.33
+
+2.76 | 15.50
+
+2.59 | 21.67
+
+3.33
+
+1.12 |
+
+9.50
+
+2.76 | 15.67
+
+2.59 | 21.83
+
+3.50
+
+1.12 |
+
+9.67
+
+3.11 | 15.83
+
+2.59 | 22.00
+
+3.67
+
+1.12 |
+
+9.83
+
+3.11 | 16.00
+
+2.59 | 22.17
+
+3.83
+
+1.12 | 10.00
+
+3.11 | 16.17
+
+1.56 | 22.33
+
+4.00
+
+1.12 | 10.17
+
+3.97 | 16.33
+
+1.56 | 22.50
+
+4.17
+
+1.38 | 10.33
+
+3.97 | 16.50
+
+1.56 | 22.67
+
+4.33
+
+1.38 | 10.50
+
+3.97 | 16.67
+
+1.56 | 22.83
+
+4.50
+
+1.38 | 10.67
+
+5.36 | 16.83
+
+1.56 | 23.00
+
+4.67
+
+1.38 | 10.83
+
+5.36 | 17.00
+
+1.56 | 23.17
+
+4.83
+
+1.38 | 11.00
+
+5.36 | 17.17
+
+1.56 | 23.33
+
+5.00
+
+1.38 | 11.17
+
+8.29 | 17.33
+
+1.56 | 23.50
+
+5.17
+
+1.38 | 11.33
+
+8.29 | 17.50
+
+1.56 | 23.67
+
+5.33
+
+1.38 | 11.50
+
+8.29 | 17.67
+
+1.56 | 23.83
+
+5.50
+
+1.38 | 11.67
+
+25.57 | 17.83
+
+1.56 | 24.00
+
+5.67
+5.83
+
+1.38 | 11.83
+1.38 | 12.00
+
+65.66 | 18.00
+105.75 | 18.17
+
+1.56 |
+1.56 |
+
+6.00
+
+1.38 | 12.17
+
+12.44 | 18.33
+
+1.56 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0001)|
+|ID= 1 DT=10.0 min |
+-------------------Unit Hyd Qpeak
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+1.76
+5.00
+0.20
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+
+0.336
+0.211 (i)
+12.167
+44.539
+86.400
+0.516
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 25yr 24hr 10min SCS Type II ( **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+b3dc59f526f6\0d9dafb1
+| Ptotal=100.80 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+1.81
+0.17
+1.81
+0.33
+1.81
+0.50
+1.81
+0.67
+1.81
+0.83
+1.81
+1.00
+1.81
+1.17
+1.81
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+873ef3e2-bf5d-4277-89d5Comments: 25yr 24hr 10min SCS Type II (MTO)-Toront
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+6.17
+
+1.81 | 12.33
+
+14.52 | 18.50
+
+1.11 |
+
+6.33
+
+1.81 | 12.50
+
+14.52 | 18.67
+
+1.11 |
+
+6.50
+
+1.81 | 12.67
+
+7.46 | 18.83
+
+1.11 |
+
+6.67
+
+1.81 | 12.83
+
+7.46 | 19.00
+
+1.11 |
+
+6.83
+
+1.81 | 13.00
+
+7.46 | 19.17
+
+1.11 |
+
+7.00
+
+1.81 | 13.17
+
+5.44 | 19.33
+
+1.11 |
+
+7.17
+
+2.22 | 13.33
+
+5.44 | 19.50
+
+1.11 |
+
+7.33
+
+2.22 | 13.50
+
+5.44 | 19.67
+
+1.81
+1.81
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+
+1.33
+
+1.11 |
+
+7.50
+
+2.22 | 13.67
+
+4.23 | 19.83
+
+1.50
+
+1.11 |
+
+7.67
+
+2.22 | 13.83
+
+4.23 | 20.00
+
+1.67
+
+1.11 |
+
+7.83
+
+2.22 | 14.00
+
+4.23 | 20.17
+
+1.83
+
+1.11 |
+
+8.00
+
+2.22 | 14.17
+
+3.02 | 20.33
+
+2.00
+
+1.11 |
+
+8.17
+
+2.62 | 14.33
+
+3.02 | 20.50
+
+2.17
+
+1.31 |
+
+8.33
+
+2.62 | 14.50
+
+3.02 | 20.67
+
+2.33
+
+1.31 |
+
+8.50
+
+2.62 | 14.67
+
+3.02 | 20.83
+
+2.50
+
+1.31 |
+
+8.67
+
+2.82 | 14.83
+
+3.02 | 21.00
+
+2.67
+
+1.31 |
+
+8.83
+
+2.82 | 15.00
+
+3.02 | 21.17
+
+2.83
+
+1.31 |
+
+9.00
+
+2.82 | 15.17
+
+3.02 | 21.33
+
+3.00
+
+1.31 |
+
+9.17
+
+3.23 | 15.33
+
+3.02 | 21.50
+
+3.17
+
+1.31 |
+
+9.33
+
+3.23 | 15.50
+
+3.02 | 21.67
+
+3.33
+
+1.31 |
+
+9.50
+
+3.23 | 15.67
+
+3.02 | 21.83
+
+3.50
+
+1.31 |
+
+9.67
+
+3.63 | 15.83
+
+3.02 | 22.00
+
+3.67
+
+1.31 |
+
+9.83
+
+3.63 | 16.00
+
+3.02 | 22.17
+
+3.83
+
+1.31 | 10.00
+
+3.63 | 16.17
+
+1.81 | 22.33
+
+4.00
+
+1.31 | 10.17
+
+4.64 | 16.33
+
+1.81 | 22.50
+
+4.17
+
+1.61 | 10.33
+
+4.64 | 16.50
+
+1.81 | 22.67
+
+4.33
+
+1.61 | 10.50
+
+4.64 | 16.67
+
+1.81 | 22.83
+
+4.50
+
+1.61 | 10.67
+
+6.25 | 16.83
+
+1.81 | 23.00
+
+4.67
+
+1.61 | 10.83
+
+6.25 | 17.00
+
+1.81 | 23.17
+
+4.83
+
+1.61 | 11.00
+
+6.25 | 17.17
+
+1.81 | 23.33
+
+5.00
+
+1.61 | 11.17
+
+9.68 | 17.33
+
+1.81 | 23.50
+
+5.17
+
+1.61 | 11.33
+
+9.68 | 17.50
+
+1.81 | 23.67
+
+5.33
+
+1.61 | 11.50
+
+9.68 | 17.67
+
+1.81 | 23.83
+
+5.50
+
+1.61 | 11.67
+
+29.84 | 17.83
+
+1.81 | 24.00
+
+5.67
+5.83
+
+1.61 | 11.83
+1.61 | 12.00
+
+76.61 | 18.00
+123.38 | 18.17
+
+1.81 |
+1.81 |
+
+6.00
+
+1.61 | 12.17
+
+14.52 | 18.33
+
+1.81 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0001)|
+|ID= 1 DT=10.0 min |
+-------------------Unit Hyd Qpeak
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+(cms)=
+
+1.76
+5.00
+0.20
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+
+0.336
+
+PEAK FLOW
+(cms)=
+0.266 (i)
+TIME TO PEAK
+(hrs)= 12.167
+RUNOFF VOLUME
+(mm)= 56.115
+TOTAL RAINFALL
+(mm)= 100.800
+RUNOFF COEFFICIENT
+=
+0.557
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 50yr 24hr 10min SCS Type II ( **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+b3dc59f526f6\c5ab3b65
+| Ptotal=112.80 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+2.03
+0.17
+2.03
+0.33
+2.03
+0.50
+2.03
+0.67
+2.03
+0.83
+2.03
+1.00
+2.03
+1.17
+2.03
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+873ef3e2-bf5d-4277-89d5Comments: 50yr 24hr 10min SCS Type II (MTO)-Toront
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+6.17
+
+2.03 | 12.33
+
+16.24 | 18.50
+
+1.24 |
+
+6.33
+
+2.03 | 12.50
+
+16.24 | 18.67
+
+1.24 |
+
+6.50
+
+2.03 | 12.67
+
+8.35 | 18.83
+
+1.24 |
+
+6.67
+
+2.03 | 12.83
+
+8.35 | 19.00
+
+1.24 |
+
+6.83
+
+2.03 | 13.00
+
+8.35 | 19.17
+
+1.24 |
+
+7.00
+
+2.03 | 13.17
+
+6.09 | 19.33
+
+1.24 |
+
+7.17
+
+2.48 | 13.33
+
+6.09 | 19.50
+
+1.24 |
+
+7.33
+
+2.48 | 13.50
+
+6.09 | 19.67
+
+2.03
+2.03
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+
+1.33
+
+1.24 |
+
+7.50
+
+2.48 | 13.67
+
+4.74 | 19.83
+
+1.50
+
+1.24 |
+
+7.67
+
+2.48 | 13.83
+
+4.74 | 20.00
+
+1.67
+
+1.24 |
+
+7.83
+
+2.48 | 14.00
+
+4.74 | 20.17
+
+1.83
+
+1.24 |
+
+8.00
+
+2.48 | 14.17
+
+3.38 | 20.33
+
+2.00
+
+1.24 |
+
+8.17
+
+2.93 | 14.33
+
+3.38 | 20.50
+
+2.17
+
+1.47 |
+
+8.33
+
+2.93 | 14.50
+
+3.38 | 20.67
+
+2.33
+
+1.47 |
+
+8.50
+
+2.93 | 14.67
+
+3.38 | 20.83
+
+2.50
+
+1.47 |
+
+8.67
+
+3.16 | 14.83
+
+3.38 | 21.00
+
+2.67
+
+1.47 |
+
+8.83
+
+3.16 | 15.00
+
+3.38 | 21.17
+
+2.83
+
+1.47 |
+
+9.00
+
+3.16 | 15.17
+
+3.38 | 21.33
+
+3.00
+
+1.47 |
+
+9.17
+
+3.61 | 15.33
+
+3.38 | 21.50
+
+3.17
+
+1.47 |
+
+9.33
+
+3.61 | 15.50
+
+3.38 | 21.67
+
+3.33
+
+1.47 |
+
+9.50
+
+3.61 | 15.67
+
+3.38 | 21.83
+
+3.50
+
+1.47 |
+
+9.67
+
+4.06 | 15.83
+
+3.38 | 22.00
+
+3.67
+
+1.47 |
+
+9.83
+
+4.06 | 16.00
+
+3.38 | 22.17
+
+3.83
+
+1.47 | 10.00
+
+4.06 | 16.17
+
+2.03 | 22.33
+
+4.00
+
+1.47 | 10.17
+
+5.19 | 16.33
+
+2.03 | 22.50
+
+4.17
+
+1.80 | 10.33
+
+5.19 | 16.50
+
+2.03 | 22.67
+
+4.33
+
+1.80 | 10.50
+
+5.19 | 16.67
+
+2.03 | 22.83
+
+4.50
+
+1.80 | 10.67
+
+6.99 | 16.83
+
+2.03 | 23.00
+
+4.67
+
+1.80 | 10.83
+
+6.99 | 17.00
+
+2.03 | 23.17
+
+4.83
+
+1.80 | 11.00
+
+6.99 | 17.17
+
+2.03 | 23.33
+
+5.00
+
+1.80 | 11.17
+
+10.83 | 17.33
+
+2.03 | 23.50
+
+5.17
+
+1.80 | 11.33
+
+10.83 | 17.50
+
+2.03 | 23.67
+
+5.33
+
+1.80 | 11.50
+
+10.83 | 17.67
+
+2.03 | 23.83
+
+5.50
+
+1.80 | 11.67
+
+33.39 | 17.83
+
+2.03 | 24.00
+
+5.67
+5.83
+
+1.80 | 11.83
+1.80 | 12.00
+
+85.73 | 18.00
+138.07 | 18.17
+
+2.03 |
+2.03 |
+
+6.00
+
+1.80 | 12.17
+
+16.24 | 18.33
+
+2.03 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0001)|
+|ID= 1 DT=10.0 min |
+-------------------Unit Hyd Qpeak
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+(cms)=
+
+1.76
+5.00
+0.20
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+
+0.336
+
+PEAK FLOW
+(cms)=
+0.314 (i)
+TIME TO PEAK
+(hrs)= 12.167
+RUNOFF VOLUME
+(mm)= 66.076
+TOTAL RAINFALL
+(mm)= 112.800
+RUNOFF COEFFICIENT
+=
+0.586
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 100yr 24hr 10min SCS Type II **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+b3dc59f526f6\40ec4445
+| Ptotal=124.80 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+2.25
+0.17
+2.25
+0.33
+2.25
+0.50
+2.25
+0.67
+2.25
+0.83
+2.25
+1.00
+2.25
+1.17
+2.25
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+873ef3e2-bf5d-4277-89d5Comments: 100yr 24hr 10min SCS Type II (MTO)-Toron
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+6.17
+
+2.25 | 12.33
+
+17.97 | 18.50
+
+1.37 |
+
+6.33
+
+2.25 | 12.50
+
+17.97 | 18.67
+
+1.37 |
+
+6.50
+
+2.25 | 12.67
+
+9.24 | 18.83
+
+1.37 |
+
+6.67
+
+2.25 | 12.83
+
+9.24 | 19.00
+
+1.37 |
+
+6.83
+
+2.25 | 13.00
+
+9.24 | 19.17
+
+1.37 |
+
+7.00
+
+2.25 | 13.17
+
+6.74 | 19.33
+
+1.37 |
+
+7.17
+
+2.75 | 13.33
+
+6.74 | 19.50
+
+1.37 |
+
+7.33
+
+2.75 | 13.50
+
+6.74 | 19.67
+
+2.25
+2.25
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+
+1.33
+
+1.37 |
+
+7.50
+
+2.75 | 13.67
+
+5.24 | 19.83
+
+1.50
+
+1.37 |
+
+7.67
+
+2.75 | 13.83
+
+5.24 | 20.00
+
+1.67
+
+1.37 |
+
+7.83
+
+2.75 | 14.00
+
+5.24 | 20.17
+
+1.83
+
+1.37 |
+
+8.00
+
+2.75 | 14.17
+
+3.74 | 20.33
+
+2.00
+
+1.37 |
+
+8.17
+
+3.24 | 14.33
+
+3.74 | 20.50
+
+2.17
+
+1.62 |
+
+8.33
+
+3.24 | 14.50
+
+3.74 | 20.67
+
+2.33
+
+1.62 |
+
+8.50
+
+3.24 | 14.67
+
+3.74 | 20.83
+
+2.50
+
+1.62 |
+
+8.67
+
+3.49 | 14.83
+
+3.74 | 21.00
+
+2.67
+
+1.62 |
+
+8.83
+
+3.49 | 15.00
+
+3.74 | 21.17
+
+2.83
+
+1.62 |
+
+9.00
+
+3.49 | 15.17
+
+3.74 | 21.33
+
+3.00
+
+1.62 |
+
+9.17
+
+3.99 | 15.33
+
+3.74 | 21.50
+
+3.17
+
+1.62 |
+
+9.33
+
+3.99 | 15.50
+
+3.74 | 21.67
+
+3.33
+
+1.62 |
+
+9.50
+
+3.99 | 15.67
+
+3.74 | 21.83
+
+3.50
+
+1.62 |
+
+9.67
+
+4.49 | 15.83
+
+3.74 | 22.00
+
+3.67
+
+1.62 |
+
+9.83
+
+4.49 | 16.00
+
+3.74 | 22.17
+
+3.83
+
+1.62 | 10.00
+
+4.49 | 16.17
+
+2.25 | 22.33
+
+4.00
+
+1.62 | 10.17
+
+5.74 | 16.33
+
+2.25 | 22.50
+
+4.17
+
+2.00 | 10.33
+
+5.74 | 16.50
+
+2.25 | 22.67
+
+4.33
+
+2.00 | 10.50
+
+5.74 | 16.67
+
+2.25 | 22.83
+
+4.50
+
+2.00 | 10.67
+
+7.74 | 16.83
+
+2.25 | 23.00
+
+4.67
+
+2.00 | 10.83
+
+7.74 | 17.00
+
+2.25 | 23.17
+
+4.83
+
+2.00 | 11.00
+
+7.74 | 17.17
+
+2.25 | 23.33
+
+5.00
+
+2.00 | 11.17
+
+11.98 | 17.33
+
+2.25 | 23.50
+
+5.17
+
+2.00 | 11.33
+
+11.98 | 17.50
+
+2.25 | 23.67
+
+5.33
+
+2.00 | 11.50
+
+11.98 | 17.67
+
+2.25 | 23.83
+
+5.50
+
+2.00 | 11.67
+
+36.94 | 17.83
+
+2.25 | 24.00
+
+5.67
+5.83
+
+2.00 | 11.83
+2.00 | 12.00
+
+94.85 | 18.00
+152.76 | 18.17
+
+2.25 |
+2.25 |
+
+6.00
+
+2.00 | 12.17
+
+17.97 | 18.33
+
+2.25 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0001)|
+|ID= 1 DT=10.0 min |
+-------------------Unit Hyd Qpeak
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+(cms)=
+
+1.76
+5.00
+0.20
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+
+0.336
+
+PEAK FLOW
+(cms)=
+0.362 (i)
+TIME TO PEAK
+(hrs)= 12.167
+RUNOFF VOLUME
+(mm)= 76.263
+TOTAL RAINFALL
+(mm)= 124.800
+RUNOFF COEFFICIENT
+=
+0.611
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------
+
+POST-DEVELOPMENT VO RESULTS
+
+2 to 100-Year Storm Events VO Layout
+
+25mm Storm Event VO Layout
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 25mm Chicago Storm
+**
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+e3da1b5550e1\35b5a328
+| Ptotal= 25.00 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+1.97
+0.08
+1.89
+0.17
+1.82
+0.25
+1.75
+0.33
+1.69
+0.42
+1.64
+0.50
+1.59
+0.58
+1.54
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+fa713a13-5efc-404a-8020Comments: 25mm Chicago Storm
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+1.43 |
+
+1.00
+
+6.03 |
+
+2.00
+
+4.18 |
+
+3.00
+
+1.52 |
+
+1.08
+
+8.92 |
+
+2.08
+
+3.80 |
+
+3.08
+
+1.62 |
+
+1.17
+
+17.69 |
+
+2.17
+
+3.48 |
+
+3.17
+
+1.73 |
+
+1.25
+
+87.18 |
+
+2.25
+
+3.22 |
+
+3.25
+
+1.87 |
+
+1.33
+
+34.64 |
+
+2.33
+
+3.00 |
+
+3.33
+
+2.03 |
+
+1.42
+
+17.96 |
+
+2.42
+
+2.80 |
+
+3.42
+
+2.22 |
+
+1.50
+
+12.02 |
+
+2.50
+
+2.64 |
+
+3.50
+
+2.46 |
+
+1.58
+
+9.05 |
+
+2.58
+
+2.49 |
+
+3.58
+
+1.49
+1.45
+1.41
+1.37
+
+0.67
+
+2.77 |
+
+1.67
+
+7.28 |
+
+2.67
+
+2.36 |
+
+3.67
+
+0.75
+
+3.18 |
+
+1.75
+
+6.11 |
+
+2.75
+
+2.25 |
+
+3.75
+
+0.83
+
+3.74 |
+
+1.83
+
+5.28 |
+
+2.83
+
+2.15 |
+
+3.83
+
+0.92
+
+4.60 |
+
+1.92
+
+4.66 |
+
+2.92
+
+2.05 |
+
+3.92
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0002)|
+|ID= 1 DT=10.0 min |
+-------------------NOTE:
+
+RAIN
+mm/hr
+1.93
+1.79
+1.66
+1.57
+1.47
+1.39
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+
+0.13
+5.00
+0.20
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+1.47 | 1.167
+
+7.48 | 2.167
+
+3.99 |
+
+3.17
+
+0.333
+
+1.67 | 1.333
+
+52.44 | 2.333
+
+3.35 |
+
+3.33
+
+0.500
+
+1.95 | 1.500
+
+26.30 | 2.500
+
+2.90 |
+
+3.50
+
+0.667
+
+2.34 | 1.667
+
+10.54 | 2.667
+
+2.57 |
+
+3.67
+
+0.833
+
+2.98 | 1.833
+
+6.69 | 2.833
+
+2.31 |
+
+3.83
+
+1.000
+
+4.17 | 2.000
+
+4.97 | 3.000
+
+2.10 |
+
+4.00
+
+Unit Hyd Qpeak
+
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.025
+0.002 (i)
+1.500
+4.664
+25.002
+0.187
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)=
+1.60
+
+|ID= 1 DT=10.0 min |
+-------------------Surface Area
+Dep. Storage
+Average Slope
+Length
+Mannings n
+NOTE:
+
+RAIN
+mm/hr
+1.93
+1.79
+1.66
+1.57
+1.47
+1.39
+
+Total Imp(%)=
+(ha)=
+(mm)=
+(%)=
+(m)=
+=
+
+61.00
+
+IMPERVIOUS
+0.98
+1.00
+1.00
+103.28
+0.013
+
+RAIN |
+
+hrs
+
+mm/hr |
+
+60.00
+
+PERVIOUS (i)
+0.62
+1.50
+2.00
+40.00
+0.250
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+
+Dir. Conn.(%)=
+
+10.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---TIME
+RAIN |' TIME
+RAIN |
+hrs
+
+mm/hr |'
+
+TIME
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.167
+
+1.47 | 1.167
+
+7.48 | 2.167
+
+3.99 |
+
+3.17
+
+0.333
+
+1.67 | 1.333
+
+52.44 | 2.333
+
+3.35 |
+
+3.33
+
+0.500
+
+1.95 | 1.500
+
+26.30 | 2.500
+
+2.90 |
+
+3.50
+
+0.667
+
+2.34 | 1.667
+
+10.54 | 2.667
+
+2.57 |
+
+3.67
+
+0.833
+
+2.98 | 1.833
+
+6.69 | 2.833
+
+2.31 |
+
+3.83
+
+1.000
+
+4.17 | 2.000
+
+4.97 | 3.000
+
+2.10 |
+
+4.00
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+52.44
+10.00
+3.37 (ii)
+10.00
+0.16
+
+11.93
+20.00
+19.89 (ii)
+20.00
+0.06
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.13
+1.33
+24.00
+25.00
+0.96
+
+0.01
+1.67
+8.24
+25.00
+0.33
+
+*
+
+TOTALS*
+0.138 (iii)
+1.33
+17.69
+25.00
+0.71
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 85.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------
+
+| ADD HYD ( 0003)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0001):
+1.60
+0.138
+1.33
+17.69
++ ID2= 2 ( 0002):
+0.13
+0.002
+1.50
+4.66
+====================================================
+ID = 3 ( 0003):
+1.73
+0.138
+1.33
+16.71
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+-----------------------------------------------------------------------------FINISH
+==========================================================================
+=================================
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 2yr 24hr 10min SCS Type II (M **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+41444193f4ef\9fa91462
+| Ptotal= 57.60 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+1.04
+0.17
+1.04
+0.33
+1.04
+0.50
+1.04
+0.67
+1.04
+0.83
+1.04
+1.00
+1.04
+1.17
+1.04
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+a0fd72d0-0518-4658-b701Comments: 2yr 24hr 10min SCS Type II (MTO)-Toronto
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+6.17
+
+1.04 | 12.33
+
+8.29 | 18.50
+
+0.63 |
+
+6.33
+
+1.04 | 12.50
+
+8.29 | 18.67
+
+0.63 |
+
+6.50
+
+1.04 | 12.67
+
+4.26 | 18.83
+
+0.63 |
+
+6.67
+
+1.04 | 12.83
+
+4.26 | 19.00
+
+0.63 |
+
+6.83
+
+1.04 | 13.00
+
+4.26 | 19.17
+
+0.63 |
+
+7.00
+
+1.04 | 13.17
+
+3.11 | 19.33
+
+0.63 |
+
+7.17
+
+1.27 | 13.33
+
+3.11 | 19.50
+
+0.63 |
+
+7.33
+
+1.27 | 13.50
+
+3.11 | 19.67
+
+1.04
+1.04
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+0.69
+
+1.33
+
+0.63 |
+
+7.50
+
+1.27 | 13.67
+
+2.42 | 19.83
+
+1.50
+
+0.63 |
+
+7.67
+
+1.27 | 13.83
+
+2.42 | 20.00
+
+1.67
+
+0.63 |
+
+7.83
+
+1.27 | 14.00
+
+2.42 | 20.17
+
+1.83
+
+0.63 |
+
+8.00
+
+1.27 | 14.17
+
+1.73 | 20.33
+
+2.00
+
+0.63 |
+
+8.17
+
+1.50 | 14.33
+
+1.73 | 20.50
+
+2.17
+
+0.75 |
+
+8.33
+
+1.50 | 14.50
+
+1.73 | 20.67
+
+2.33
+
+0.75 |
+
+8.50
+
+1.50 | 14.67
+
+1.73 | 20.83
+
+2.50
+
+0.75 |
+
+8.67
+
+1.61 | 14.83
+
+1.73 | 21.00
+
+2.67
+
+0.75 |
+
+8.83
+
+1.61 | 15.00
+
+1.73 | 21.17
+
+2.83
+
+0.75 |
+
+9.00
+
+1.61 | 15.17
+
+1.73 | 21.33
+
+3.00
+
+0.75 |
+
+9.17
+
+1.84 | 15.33
+
+1.73 | 21.50
+
+3.17
+
+0.75 |
+
+9.33
+
+1.84 | 15.50
+
+1.73 | 21.67
+
+3.33
+
+0.75 |
+
+9.50
+
+1.84 | 15.67
+
+1.73 | 21.83
+
+3.50
+
+0.75 |
+
+9.67
+
+2.07 | 15.83
+
+1.73 | 22.00
+
+3.67
+
+0.75 |
+
+9.83
+
+2.07 | 16.00
+
+1.73 | 22.17
+
+3.83
+
+0.75 | 10.00
+
+2.07 | 16.17
+
+1.04 | 22.33
+
+4.00
+
+0.75 | 10.17
+
+2.65 | 16.33
+
+1.04 | 22.50
+
+4.17
+
+0.92 | 10.33
+
+2.65 | 16.50
+
+1.04 | 22.67
+
+4.33
+
+0.92 | 10.50
+
+2.65 | 16.67
+
+1.04 | 22.83
+
+4.50
+
+0.92 | 10.67
+
+3.57 | 16.83
+
+1.04 | 23.00
+
+4.67
+
+0.92 | 10.83
+
+3.57 | 17.00
+
+1.04 | 23.17
+
+4.83
+
+0.92 | 11.00
+
+3.57 | 17.17
+
+1.04 | 23.33
+
+5.00
+
+0.92 | 11.17
+
+5.53 | 17.33
+
+1.04 | 23.50
+
+5.17
+
+0.92 | 11.33
+
+5.53 | 17.50
+
+1.04 | 23.67
+
+5.33
+
+0.92 | 11.50
+
+5.53 | 17.67
+
+1.04 | 23.83
+
+5.50
+
+0.92 | 11.67
+
+17.05 | 17.83
+
+1.04 | 24.00
+
+5.67
+5.83
+
+0.92 | 11.83
+0.92 | 12.00
+
+43.78 | 18.00
+70.50 | 18.17
+
+1.04 |
+1.04 |
+
+6.00
+
+0.92 | 12.17
+
+8.29 | 18.33
+
+1.04 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0005)|
+|ID= 1 DT=10.0 min |
+-------------------Unit Hyd Qpeak
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.03
+5.00
+0.20
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+
+0.006
+0.002 (i)
+12.167
+23.186
+57.600
+0.403
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0002)|
+Area
+(ha)=
+0.13
+Curve Number
+(CN)= 80.0
+|ID= 1 DT=10.0 min |
+Ia
+(mm)=
+5.00
+# of Linear Res.(N)= 3.00
+-------------------U.H. Tp(hrs)=
+0.20
+Unit Hyd Qpeak
+
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.025
+0.008 (i)
+12.167
+23.209
+57.600
+0.403
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)=
+1.60
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 61.00
+Dir. Conn.(%)= 60.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.98
+0.62
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+103.28
+40.00
+Mannings n
+=
+0.013
+0.250
+Max.Eff.Inten.(mm/hr)=
+
+70.50
+
+47.31
+
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+10.00
+3.00 (ii)
+10.00
+0.16
+
+20.00
+12.52 (ii)
+20.00
+0.07
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.19
+12.17
+56.60
+57.60
+0.98
+
+0.05
+12.33
+31.56
+57.60
+0.55
+
+*
+
+TOTALS*
+0.225 (iii)
+12.17
+46.58
+57.60
+0.81
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 85.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0003)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0001):
+1.60
+0.225
+12.17
+46.58
++ ID2= 2 ( 0002):
+0.13
+0.008
+12.17
+23.21
+====================================================
+ID = 3 ( 0003):
+1.73
+0.233
+12.17
+44.82
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| RESERVOIR( 0004)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.1390
+0.0432
+0.1060
+0.0203
+|
+0.1500
+0.0552
+0.1180
+0.0269
+|
+0.1520
+0.0579
+0.1290
+0.0349
+|
+0.0000
+0.0000
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0003)
+0004)
+
+AREA
+(ha)
+1.730
+1.730
+
+QPEAK
+(cms)
+0.233
+0.100
+
+TPEAK
+(hrs)
+12.17
+12.33
+
+R.V.
+(mm)
+44.82
+44.80
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 42.96
+TIME SHIFT OF PEAK FLOW
+(min)= 10.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.0197
+
+------------------------------------------------------------------------------------------------| ADD HYD ( 0006)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0004):
+1.73
+0.100
+12.33
+44.80
++ ID2= 2 ( 0005):
+0.03
+0.002
+12.17
+23.19
+====================================================
+ID = 3 ( 0006):
+1.76
+0.101
+12.33
+44.43
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 5yr 24hr 10min SCS Type II (M **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+41444193f4ef\c5c83801
+| Ptotal= 74.40 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+1.34
+0.17
+1.34
+0.33
+1.34
+0.50
+1.34
+0.67
+1.34
+0.83
+1.34
+1.00
+1.34
+1.17
+1.34
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+a0fd72d0-0518-4658-b701Comments: 5yr 24hr 10min SCS Type II (MTO)-Toronto
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+6.17
+
+1.34 | 12.33
+
+10.71 | 18.50
+
+0.82 |
+
+6.33
+
+1.34 | 12.50
+
+10.71 | 18.67
+
+0.82 |
+
+6.50
+
+1.34 | 12.67
+
+5.51 | 18.83
+
+0.82 |
+
+6.67
+
+1.34 | 12.83
+
+5.51 | 19.00
+
+0.82 |
+
+6.83
+
+1.34 | 13.00
+
+5.51 | 19.17
+
+0.82 |
+
+7.00
+
+1.34 | 13.17
+
+4.02 | 19.33
+
+0.82 |
+
+7.17
+
+1.64 | 13.33
+
+4.02 | 19.50
+
+0.82 |
+
+7.33
+
+1.64 | 13.50
+
+4.02 | 19.67
+
+1.34
+1.34
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+0.89
+
+1.33
+
+0.82 |
+
+7.50
+
+1.64 | 13.67
+
+3.12 | 19.83
+
+1.50
+
+0.82 |
+
+7.67
+
+1.64 | 13.83
+
+3.12 | 20.00
+
+1.67
+
+0.82 |
+
+7.83
+
+1.64 | 14.00
+
+3.12 | 20.17
+
+1.83
+
+0.82 |
+
+8.00
+
+1.64 | 14.17
+
+2.23 | 20.33
+
+2.00
+
+0.82 |
+
+8.17
+
+1.93 | 14.33
+
+2.23 | 20.50
+
+2.17
+
+0.97 |
+
+8.33
+
+1.93 | 14.50
+
+2.23 | 20.67
+
+2.33
+
+0.97 |
+
+8.50
+
+1.93 | 14.67
+
+2.23 | 20.83
+
+2.50
+
+0.97 |
+
+8.67
+
+2.08 | 14.83
+
+2.23 | 21.00
+
+2.67
+
+0.97 |
+
+8.83
+
+2.08 | 15.00
+
+2.23 | 21.17
+
+2.83
+
+0.97 |
+
+9.00
+
+2.08 | 15.17
+
+2.23 | 21.33
+
+3.00
+
+0.97 |
+
+9.17
+
+2.38 | 15.33
+
+2.23 | 21.50
+
+3.17
+
+0.97 |
+
+9.33
+
+2.38 | 15.50
+
+2.23 | 21.67
+
+3.33
+
+0.97 |
+
+9.50
+
+2.38 | 15.67
+
+2.23 | 21.83
+
+3.50
+
+0.97 |
+
+9.67
+
+2.68 | 15.83
+
+2.23 | 22.00
+
+3.67
+
+0.97 |
+
+9.83
+
+2.68 | 16.00
+
+2.23 | 22.17
+
+3.83
+
+0.97 | 10.00
+
+2.68 | 16.17
+
+1.34 | 22.33
+
+4.00
+
+0.97 | 10.17
+
+3.42 | 16.33
+
+1.34 | 22.50
+
+4.17
+
+1.19 | 10.33
+
+3.42 | 16.50
+
+1.34 | 22.67
+
+4.33
+
+1.19 | 10.50
+
+3.42 | 16.67
+
+1.34 | 22.83
+
+4.50
+
+1.19 | 10.67
+
+4.61 | 16.83
+
+1.34 | 23.00
+
+4.67
+
+1.19 | 10.83
+
+4.61 | 17.00
+
+1.34 | 23.17
+
+4.83
+
+1.19 | 11.00
+
+4.61 | 17.17
+
+1.34 | 23.33
+
+5.00
+
+1.19 | 11.17
+
+7.14 | 17.33
+
+1.34 | 23.50
+
+5.17
+
+1.19 | 11.33
+
+7.14 | 17.50
+
+1.34 | 23.67
+
+5.33
+
+1.19 | 11.50
+
+7.14 | 17.67
+
+1.34 | 23.83
+
+5.50
+
+1.19 | 11.67
+
+22.02 | 17.83
+
+1.34 | 24.00
+
+5.67
+5.83
+
+1.19 | 11.83
+1.19 | 12.00
+
+56.54 | 18.00
+91.07 | 18.17
+
+1.34 |
+1.34 |
+
+6.00
+
+1.19 | 12.17
+
+10.71 | 18.33
+
+1.34 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0005)|
+|ID= 1 DT=10.0 min |
+-------------------Unit Hyd Qpeak
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.03
+5.00
+0.20
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+
+0.006
+0.003 (i)
+12.167
+35.288
+74.400
+0.474
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0002)|
+Area
+(ha)=
+0.13
+Curve Number
+(CN)= 80.0
+|ID= 1 DT=10.0 min |
+Ia
+(mm)=
+5.00
+# of Linear Res.(N)= 3.00
+-------------------U.H. Tp(hrs)=
+0.20
+Unit Hyd Qpeak
+
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.025
+0.012 (i)
+12.167
+35.296
+74.400
+0.474
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)=
+1.60
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 61.00
+Dir. Conn.(%)= 60.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.98
+0.62
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+103.28
+40.00
+Mannings n
+=
+0.013
+0.250
+Max.Eff.Inten.(mm/hr)=
+
+91.07
+
+67.90
+
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+10.00
+2.70 (ii)
+10.00
+0.17
+
+20.00
+10.94 (ii)
+20.00
+0.08
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.24
+12.17
+73.40
+74.40
+0.99
+
+0.07
+12.33
+45.61
+74.40
+0.61
+
+*
+
+TOTALS*
+0.301 (iii)
+12.17
+62.28
+74.40
+0.84
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 85.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0003)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0001):
+1.60
+0.301
+12.17
+62.28
++ ID2= 2 ( 0002):
+0.13
+0.012
+12.17
+35.30
+====================================================
+ID = 3 ( 0003):
+1.73
+0.314
+12.17
+60.25
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| RESERVOIR( 0004)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.1390
+0.0432
+0.1060
+0.0203
+|
+0.1500
+0.0552
+0.1180
+0.0269
+|
+0.1520
+0.0579
+0.1290
+0.0349
+|
+0.0000
+0.0000
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0003)
+0004)
+
+AREA
+(ha)
+1.730
+1.730
+
+QPEAK
+(cms)
+0.314
+0.117
+
+TPEAK
+(hrs)
+12.17
+12.33
+
+R.V.
+(mm)
+60.25
+60.23
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 37.36
+TIME SHIFT OF PEAK FLOW
+(min)= 10.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.0265
+
+------------------------------------------------------------------------------------------------| ADD HYD ( 0006)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0004):
+1.73
+0.117
+12.33
+60.23
++ ID2= 2 ( 0005):
+0.03
+0.003
+12.17
+35.29
+====================================================
+ID = 3 ( 0006):
+1.76
+0.119
+12.33
+59.80
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+*****
+
+D E T A I L E D
+
+TM
+
+O U T P U T *****
+
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 10yr 24hr 10min SCS Type II ( **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+41444193f4ef\664e8d69
+| Ptotal= 86.40 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+1.56
+0.17
+1.56
+0.33
+1.56
+0.50
+1.56
+0.67
+1.56
+0.83
+1.56
+1.00
+1.56
+1.17
+1.56
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+a0fd72d0-0518-4658-b701Comments: 10yr 24hr 10min SCS Type II (MTO)-Toront
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+6.17
+
+1.56 | 12.33
+
+12.44 | 18.50
+
+0.95 |
+
+6.33
+
+1.56 | 12.50
+
+12.44 | 18.67
+
+0.95 |
+
+6.50
+
+1.56 | 12.67
+
+6.39 | 18.83
+
+0.95 |
+
+6.67
+
+1.56 | 12.83
+
+6.39 | 19.00
+
+0.95 |
+
+6.83
+
+1.56 | 13.00
+
+6.39 | 19.17
+
+0.95 |
+
+7.00
+
+1.56 | 13.17
+
+4.67 | 19.33
+
+0.95 |
+
+7.17
+
+1.90 | 13.33
+
+4.67 | 19.50
+
+0.95 |
+
+7.33
+
+1.90 | 13.50
+
+4.67 | 19.67
+
+1.56
+1.56
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+1.04
+
+1.33
+
+0.95 |
+
+7.50
+
+1.90 | 13.67
+
+3.63 | 19.83
+
+1.50
+
+0.95 |
+
+7.67
+
+1.90 | 13.83
+
+3.63 | 20.00
+
+1.67
+
+0.95 |
+
+7.83
+
+1.90 | 14.00
+
+3.63 | 20.17
+
+1.83
+
+0.95 |
+
+8.00
+
+1.90 | 14.17
+
+2.59 | 20.33
+
+2.00
+
+0.95 |
+
+8.17
+
+2.25 | 14.33
+
+2.59 | 20.50
+
+2.17
+
+1.12 |
+
+8.33
+
+2.25 | 14.50
+
+2.59 | 20.67
+
+2.33
+
+1.12 |
+
+8.50
+
+2.25 | 14.67
+
+2.59 | 20.83
+
+2.50
+
+1.12 |
+
+8.67
+
+2.42 | 14.83
+
+2.59 | 21.00
+
+2.67
+
+1.12 |
+
+8.83
+
+2.42 | 15.00
+
+2.59 | 21.17
+
+2.83
+
+1.12 |
+
+9.00
+
+2.42 | 15.17
+
+2.59 | 21.33
+
+3.00
+
+1.12 |
+
+9.17
+
+2.76 | 15.33
+
+2.59 | 21.50
+
+3.17
+
+1.12 |
+
+9.33
+
+2.76 | 15.50
+
+2.59 | 21.67
+
+3.33
+
+1.12 |
+
+9.50
+
+2.76 | 15.67
+
+2.59 | 21.83
+
+3.50
+
+1.12 |
+
+9.67
+
+3.11 | 15.83
+
+2.59 | 22.00
+
+3.67
+
+1.12 |
+
+9.83
+
+3.11 | 16.00
+
+2.59 | 22.17
+
+3.83
+
+1.12 | 10.00
+
+3.11 | 16.17
+
+1.56 | 22.33
+
+4.00
+
+1.12 | 10.17
+
+3.97 | 16.33
+
+1.56 | 22.50
+
+4.17
+
+1.38 | 10.33
+
+3.97 | 16.50
+
+1.56 | 22.67
+
+4.33
+
+1.38 | 10.50
+
+3.97 | 16.67
+
+1.56 | 22.83
+
+4.50
+
+1.38 | 10.67
+
+5.36 | 16.83
+
+1.56 | 23.00
+
+4.67
+
+1.38 | 10.83
+
+5.36 | 17.00
+
+1.56 | 23.17
+
+4.83
+
+1.38 | 11.00
+
+5.36 | 17.17
+
+1.56 | 23.33
+
+5.00
+
+1.38 | 11.17
+
+8.29 | 17.33
+
+1.56 | 23.50
+
+5.17
+
+1.38 | 11.33
+
+8.29 | 17.50
+
+1.56 | 23.67
+
+5.33
+
+1.38 | 11.50
+
+8.29 | 17.67
+
+1.56 | 23.83
+
+5.50
+
+1.38 | 11.67
+
+25.57 | 17.83
+
+1.56 | 24.00
+
+5.67
+5.83
+
+1.38 | 11.83
+1.38 | 12.00
+
+65.66 | 18.00
+105.75 | 18.17
+
+1.56 |
+1.56 |
+
+6.00
+
+1.38 | 12.17
+
+12.44 | 18.33
+
+1.56 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0005)|
+|ID= 1 DT=10.0 min |
+-------------------Unit Hyd Qpeak
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.03
+5.00
+0.20
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+
+0.006
+0.004 (i)
+12.167
+44.526
+86.400
+0.515
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0002)|
+Area
+(ha)=
+0.13
+Curve Number
+(CN)= 80.0
+|ID= 1 DT=10.0 min |
+Ia
+(mm)=
+5.00
+# of Linear Res.(N)= 3.00
+-------------------U.H. Tp(hrs)=
+0.20
+Unit Hyd Qpeak
+
+(cms)=
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.025
+0.016 (i)
+12.167
+44.536
+86.400
+0.515
+
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)=
+1.60
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 61.00
+Dir. Conn.(%)= 60.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.98
+0.62
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+103.28
+40.00
+Mannings n
+=
+0.013
+0.250
+Max.Eff.Inten.(mm/hr)=
+
+105.75
+
+83.05
+
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+10.00
+2.55 (ii)
+10.00
+0.17
+
+20.00
+10.15 (ii)
+20.00
+0.08
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.28
+12.17
+85.40
+86.40
+0.99
+
+0.09
+12.33
+56.08
+86.40
+0.65
+
+*
+
+TOTALS*
+0.357 (iii)
+12.17
+73.67
+86.40
+0.85
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 85.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0003)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0001):
+1.60
+0.357
+12.17
+73.67
++ ID2= 2 ( 0002):
+0.13
+0.016
+12.17
+44.54
+====================================================
+ID = 3 ( 0003):
+1.73
+0.373
+12.17
+71.48
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| RESERVOIR( 0004)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.1390
+0.0432
+0.1060
+0.0203
+|
+0.1500
+0.0552
+0.1180
+0.0269
+|
+0.1520
+0.0579
+0.1290
+0.0349
+|
+0.0000
+0.0000
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0003)
+0004)
+
+AREA
+(ha)
+1.730
+1.730
+
+QPEAK
+(cms)
+0.373
+0.126
+
+TPEAK
+(hrs)
+12.17
+12.33
+
+R.V.
+(mm)
+71.48
+71.46
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 33.77
+TIME SHIFT OF PEAK FLOW
+(min)= 10.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.0330
+
+------------------------------------------------------------------------------------------------| ADD HYD ( 0006)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0004):
+1.73
+0.126
+12.33
+71.46
++ ID2= 2 ( 0005):
+0.03
+0.004
+12.17
+44.53
+====================================================
+ID = 3 ( 0006):
+1.76
+0.129
+12.33
+71.00
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 25yr 24hr 10min SCS Type II ( **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+41444193f4ef\6fd937b5
+| Ptotal=100.80 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+1.81
+0.17
+1.81
+0.33
+1.81
+0.50
+1.81
+0.67
+1.81
+0.83
+1.81
+1.00
+1.81
+1.17
+1.81
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+a0fd72d0-0518-4658-b701Comments: 25yr 24hr 10min SCS Type II (MTO)-Toront
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+6.17
+
+1.81 | 12.33
+
+14.52 | 18.50
+
+1.11 |
+
+6.33
+
+1.81 | 12.50
+
+14.52 | 18.67
+
+1.11 |
+
+6.50
+
+1.81 | 12.67
+
+7.46 | 18.83
+
+1.11 |
+
+6.67
+
+1.81 | 12.83
+
+7.46 | 19.00
+
+1.11 |
+
+6.83
+
+1.81 | 13.00
+
+7.46 | 19.17
+
+1.11 |
+
+7.00
+
+1.81 | 13.17
+
+5.44 | 19.33
+
+1.11 |
+
+7.17
+
+2.22 | 13.33
+
+5.44 | 19.50
+
+1.11 |
+
+7.33
+
+2.22 | 13.50
+
+5.44 | 19.67
+
+1.81
+1.81
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+1.21
+
+1.33
+
+1.11 |
+
+7.50
+
+2.22 | 13.67
+
+4.23 | 19.83
+
+1.50
+
+1.11 |
+
+7.67
+
+2.22 | 13.83
+
+4.23 | 20.00
+
+1.67
+
+1.11 |
+
+7.83
+
+2.22 | 14.00
+
+4.23 | 20.17
+
+1.83
+
+1.11 |
+
+8.00
+
+2.22 | 14.17
+
+3.02 | 20.33
+
+2.00
+
+1.11 |
+
+8.17
+
+2.62 | 14.33
+
+3.02 | 20.50
+
+2.17
+
+1.31 |
+
+8.33
+
+2.62 | 14.50
+
+3.02 | 20.67
+
+2.33
+
+1.31 |
+
+8.50
+
+2.62 | 14.67
+
+3.02 | 20.83
+
+2.50
+
+1.31 |
+
+8.67
+
+2.82 | 14.83
+
+3.02 | 21.00
+
+2.67
+
+1.31 |
+
+8.83
+
+2.82 | 15.00
+
+3.02 | 21.17
+
+2.83
+
+1.31 |
+
+9.00
+
+2.82 | 15.17
+
+3.02 | 21.33
+
+3.00
+
+1.31 |
+
+9.17
+
+3.23 | 15.33
+
+3.02 | 21.50
+
+3.17
+
+1.31 |
+
+9.33
+
+3.23 | 15.50
+
+3.02 | 21.67
+
+3.33
+
+1.31 |
+
+9.50
+
+3.23 | 15.67
+
+3.02 | 21.83
+
+3.50
+
+1.31 |
+
+9.67
+
+3.63 | 15.83
+
+3.02 | 22.00
+
+3.67
+
+1.31 |
+
+9.83
+
+3.63 | 16.00
+
+3.02 | 22.17
+
+3.83
+
+1.31 | 10.00
+
+3.63 | 16.17
+
+1.81 | 22.33
+
+4.00
+
+1.31 | 10.17
+
+4.64 | 16.33
+
+1.81 | 22.50
+
+4.17
+
+1.61 | 10.33
+
+4.64 | 16.50
+
+1.81 | 22.67
+
+4.33
+
+1.61 | 10.50
+
+4.64 | 16.67
+
+1.81 | 22.83
+
+4.50
+
+1.61 | 10.67
+
+6.25 | 16.83
+
+1.81 | 23.00
+
+4.67
+
+1.61 | 10.83
+
+6.25 | 17.00
+
+1.81 | 23.17
+
+4.83
+
+1.61 | 11.00
+
+6.25 | 17.17
+
+1.81 | 23.33
+
+5.00
+
+1.61 | 11.17
+
+9.68 | 17.33
+
+1.81 | 23.50
+
+5.17
+
+1.61 | 11.33
+
+9.68 | 17.50
+
+1.81 | 23.67
+
+5.33
+
+1.61 | 11.50
+
+9.68 | 17.67
+
+1.81 | 23.83
+
+5.50
+
+1.61 | 11.67
+
+29.84 | 17.83
+
+1.81 | 24.00
+
+5.67
+5.83
+
+1.61 | 11.83
+1.61 | 12.00
+
+76.61 | 18.00
+123.38 | 18.17
+
+1.81 |
+1.81 |
+
+6.00
+
+1.61 | 12.17
+
+14.52 | 18.33
+
+1.81 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0005)|
+|ID= 1 DT=10.0 min |
+-------------------Unit Hyd Qpeak
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+(cms)=
+
+0.03
+5.00
+0.20
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+
+0.006
+
+PEAK FLOW
+(cms)=
+0.005 (i)
+TIME TO PEAK
+(hrs)= 12.167
+RUNOFF VOLUME
+(mm)= 56.099
+TOTAL RAINFALL
+(mm)= 100.800
+RUNOFF COEFFICIENT
+=
+0.557
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0002)|
+Area
+(ha)=
+0.13
+Curve Number
+(CN)= 80.0
+|ID= 1 DT=10.0 min |
+Ia
+(mm)=
+5.00
+# of Linear Res.(N)= 3.00
+-------------------U.H. Tp(hrs)=
+0.20
+Unit Hyd Qpeak
+
+(cms)=
+
+0.025
+
+PEAK FLOW
+(cms)=
+0.020 (i)
+TIME TO PEAK
+(hrs)= 12.167
+RUNOFF VOLUME
+(mm)= 56.111
+TOTAL RAINFALL
+(mm)= 100.800
+RUNOFF COEFFICIENT
+=
+0.557
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)=
+1.60
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 61.00
+Dir. Conn.(%)= 60.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.98
+0.62
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+103.28
+40.00
+Mannings n
+=
+0.013
+0.250
+Max.Eff.Inten.(mm/hr)=
+
+123.38
+
+101.51
+
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+10.00
+2.39 (ii)
+10.00
+0.17
+
+10.00
+9.41 (ii)
+10.00
+0.11
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.33
+12.17
+99.80
+100.80
+0.99
+
+0.14
+12.17
+68.99
+100.80
+0.68
+
+*
+
+TOTALS*
+0.467 (iii)
+12.17
+87.47
+100.80
+0.87
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 85.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0003)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0001):
+1.60
+0.467
+12.17
+87.47
++ ID2= 2 ( 0002):
+0.13
+0.020
+12.17
+56.11
+====================================================
+ID = 3 ( 0003):
+1.73
+0.487
+12.17
+85.11
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| RESERVOIR( 0004)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.1390
+0.0432
+0.1060
+0.0203
+|
+0.1500
+0.0552
+0.1180
+0.0269
+|
+0.1520
+0.0579
+0.1290
+0.0349
+|
+0.0000
+0.0000
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0003)
+0004)
+
+AREA
+(ha)
+1.730
+1.730
+
+QPEAK
+(cms)
+0.487
+0.139
+
+TPEAK
+(hrs)
+12.17
+12.33
+
+R.V.
+(mm)
+85.11
+85.09
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 28.49
+TIME SHIFT OF PEAK FLOW
+(min)= 10.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.0436
+
+------------------------------------------------------------------------------------------------| ADD HYD ( 0006)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0004):
+1.73
+0.139
+12.33
+85.09
++ ID2= 2 ( 0005):
+0.03
+0.005
+12.17
+56.10
+====================================================
+ID = 3 ( 0006):
+1.76
+0.142
+12.33
+84.60
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 50yr 24hr 10min SCS Type II ( **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+41444193f4ef\afcb7b4a
+| Ptotal=112.80 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+2.03
+0.17
+2.03
+0.33
+2.03
+0.50
+2.03
+0.67
+2.03
+0.83
+2.03
+1.00
+2.03
+1.17
+2.03
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+a0fd72d0-0518-4658-b701Comments: 50yr 24hr 10min SCS Type II (MTO)-Toront
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+6.17
+
+2.03 | 12.33
+
+16.24 | 18.50
+
+1.24 |
+
+6.33
+
+2.03 | 12.50
+
+16.24 | 18.67
+
+1.24 |
+
+6.50
+
+2.03 | 12.67
+
+8.35 | 18.83
+
+1.24 |
+
+6.67
+
+2.03 | 12.83
+
+8.35 | 19.00
+
+1.24 |
+
+6.83
+
+2.03 | 13.00
+
+8.35 | 19.17
+
+1.24 |
+
+7.00
+
+2.03 | 13.17
+
+6.09 | 19.33
+
+1.24 |
+
+7.17
+
+2.48 | 13.33
+
+6.09 | 19.50
+
+1.24 |
+
+7.33
+
+2.48 | 13.50
+
+6.09 | 19.67
+
+2.03
+2.03
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+1.35
+
+1.33
+
+1.24 |
+
+7.50
+
+2.48 | 13.67
+
+4.74 | 19.83
+
+1.50
+
+1.24 |
+
+7.67
+
+2.48 | 13.83
+
+4.74 | 20.00
+
+1.67
+
+1.24 |
+
+7.83
+
+2.48 | 14.00
+
+4.74 | 20.17
+
+1.83
+
+1.24 |
+
+8.00
+
+2.48 | 14.17
+
+3.38 | 20.33
+
+2.00
+
+1.24 |
+
+8.17
+
+2.93 | 14.33
+
+3.38 | 20.50
+
+2.17
+
+1.47 |
+
+8.33
+
+2.93 | 14.50
+
+3.38 | 20.67
+
+2.33
+
+1.47 |
+
+8.50
+
+2.93 | 14.67
+
+3.38 | 20.83
+
+2.50
+
+1.47 |
+
+8.67
+
+3.16 | 14.83
+
+3.38 | 21.00
+
+2.67
+
+1.47 |
+
+8.83
+
+3.16 | 15.00
+
+3.38 | 21.17
+
+2.83
+
+1.47 |
+
+9.00
+
+3.16 | 15.17
+
+3.38 | 21.33
+
+3.00
+
+1.47 |
+
+9.17
+
+3.61 | 15.33
+
+3.38 | 21.50
+
+3.17
+
+1.47 |
+
+9.33
+
+3.61 | 15.50
+
+3.38 | 21.67
+
+3.33
+
+1.47 |
+
+9.50
+
+3.61 | 15.67
+
+3.38 | 21.83
+
+3.50
+
+1.47 |
+
+9.67
+
+4.06 | 15.83
+
+3.38 | 22.00
+
+3.67
+
+1.47 |
+
+9.83
+
+4.06 | 16.00
+
+3.38 | 22.17
+
+3.83
+
+1.47 | 10.00
+
+4.06 | 16.17
+
+2.03 | 22.33
+
+4.00
+
+1.47 | 10.17
+
+5.19 | 16.33
+
+2.03 | 22.50
+
+4.17
+
+1.80 | 10.33
+
+5.19 | 16.50
+
+2.03 | 22.67
+
+4.33
+
+1.80 | 10.50
+
+5.19 | 16.67
+
+2.03 | 22.83
+
+4.50
+
+1.80 | 10.67
+
+6.99 | 16.83
+
+2.03 | 23.00
+
+4.67
+
+1.80 | 10.83
+
+6.99 | 17.00
+
+2.03 | 23.17
+
+4.83
+
+1.80 | 11.00
+
+6.99 | 17.17
+
+2.03 | 23.33
+
+5.00
+
+1.80 | 11.17
+
+10.83 | 17.33
+
+2.03 | 23.50
+
+5.17
+
+1.80 | 11.33
+
+10.83 | 17.50
+
+2.03 | 23.67
+
+5.33
+
+1.80 | 11.50
+
+10.83 | 17.67
+
+2.03 | 23.83
+
+5.50
+
+1.80 | 11.67
+
+33.39 | 17.83
+
+2.03 | 24.00
+
+5.67
+5.83
+
+1.80 | 11.83
+1.80 | 12.00
+
+85.73 | 18.00
+138.07 | 18.17
+
+2.03 |
+2.03 |
+
+6.00
+
+1.80 | 12.17
+
+16.24 | 18.33
+
+2.03 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0005)|
+|ID= 1 DT=10.0 min |
+-------------------Unit Hyd Qpeak
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+(cms)=
+
+0.03
+5.00
+0.20
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+
+0.006
+
+PEAK FLOW
+(cms)=
+0.005 (i)
+TIME TO PEAK
+(hrs)= 12.167
+RUNOFF VOLUME
+(mm)= 66.057
+TOTAL RAINFALL
+(mm)= 112.800
+RUNOFF COEFFICIENT
+=
+0.586
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0002)|
+Area
+(ha)=
+0.13
+Curve Number
+(CN)= 80.0
+|ID= 1 DT=10.0 min |
+Ia
+(mm)=
+5.00
+# of Linear Res.(N)= 3.00
+-------------------U.H. Tp(hrs)=
+0.20
+Unit Hyd Qpeak
+
+(cms)=
+
+0.025
+
+PEAK FLOW
+(cms)=
+0.023 (i)
+TIME TO PEAK
+(hrs)= 12.167
+RUNOFF VOLUME
+(mm)= 66.071
+TOTAL RAINFALL
+(mm)= 112.800
+RUNOFF COEFFICIENT
+=
+0.586
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)=
+1.60
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 61.00
+Dir. Conn.(%)= 60.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.98
+0.62
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+103.28
+40.00
+Mannings n
+=
+0.013
+0.250
+Max.Eff.Inten.(mm/hr)=
+
+138.07
+
+117.03
+
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+10.00
+2.29 (ii)
+10.00
+0.17
+
+10.00
+8.92 (ii)
+10.00
+0.11
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.37
+12.17
+111.80
+112.80
+0.99
+
+0.16
+12.17
+79.95
+112.80
+0.71
+
+*
+
+TOTALS*
+0.531 (iii)
+12.17
+99.06
+112.80
+0.88
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 85.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0003)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0001):
+1.60
+0.531
+12.17
+99.06
++ ID2= 2 ( 0002):
+0.13
+0.023
+12.17
+66.07
+====================================================
+ID = 3 ( 0003):
+1.73
+0.555
+12.17
+96.58
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| RESERVOIR( 0004)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.1390
+0.0432
+0.1060
+0.0203
+|
+0.1500
+0.0552
+0.1180
+0.0269
+|
+0.1520
+0.0579
+0.1290
+0.0349
+|
+0.0000
+0.0000
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0003)
+0004)
+
+AREA
+(ha)
+1.730
+1.730
+
+QPEAK
+(cms)
+0.555
+0.145
+
+TPEAK
+(hrs)
+12.17
+12.33
+
+R.V.
+(mm)
+96.58
+96.56
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 26.19
+TIME SHIFT OF PEAK FLOW
+(min)= 10.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.0503
+
+------------------------------------------------------------------------------------------------| ADD HYD ( 0006)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0004):
+1.73
+0.145
+12.33
+96.56
++ ID2= 2 ( 0005):
+0.03
+0.005
+12.17
+66.06
+====================================================
+ID = 3 ( 0006):
+1.76
+0.149
+12.33
+96.04
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------
+
+==========================================================================
+=================================
+V
+V
+
+V
+V
+VV
+
+V
+V
+V
+V
+
+I
+I
+I
+I
+I
+
+SSSSS
+SS
+SS
+SS
+SSSSS
+
+U
+U
+U
+U
+U
+U
+U
+U
+UUUUU
+
+A
+A A
+AAAAA
+A
+A
+A
+A
+
+L
+L
+L
+L
+LLLLL
+
+(v 6.2.2015)
+
+OOO
+TTTTT TTTTT H
+H Y
+Y M
+M
+OOO
+O
+T
+T
+H
+H
+Y Y
+MM MM O
+O
+O
+T
+T
+H
+H
+Y
+M
+M O
+O
+OOO
+T
+T
+H
+H
+Y
+M
+M
+OOO
+Developed and Distributed by Smart City Water Inc
+Copyright 2007 - 2022 Smart City Water Inc
+All rights reserved.
+O
+O
+
+TM
+
+***** D E T A I L E D
+O U T P U T *****
+---------------------------------------------------------------------------------------------------------************************************************
+** SIMULATION : 100yr 24hr 10min SCS Type II **
+************************************************
+-------------------|
+READ STORM
+|
+|
+|
+|
+|
+41444193f4ef\d268efaa
+| Ptotal=124.80 mm |
+-------------------TIME
+RAIN
+hrs
+mm/hr
+0.00
+2.25
+0.17
+2.25
+0.33
+2.25
+0.50
+2.25
+0.67
+2.25
+0.83
+2.25
+1.00
+2.25
+1.17
+2.25
+
+Filename: C:\Users\shuchi\AppD
+ata\Local\Temp\
+a0fd72d0-0518-4658-b701Comments: 100yr 24hr 10min SCS Type II (MTO)-Toron
+RAIN |
+
+TIME
+
+RAIN |'
+
+TIME
+
+RAIN |
+
+TIME
+
+mm/hr |
+
+hrs
+
+mm/hr |'
+
+hrs
+
+mm/hr |
+
+hrs
+
+0.00 |
+
+6.17
+
+2.25 | 12.33
+
+17.97 | 18.50
+
+1.37 |
+
+6.33
+
+2.25 | 12.50
+
+17.97 | 18.67
+
+1.37 |
+
+6.50
+
+2.25 | 12.67
+
+9.24 | 18.83
+
+1.37 |
+
+6.67
+
+2.25 | 12.83
+
+9.24 | 19.00
+
+1.37 |
+
+6.83
+
+2.25 | 13.00
+
+9.24 | 19.17
+
+1.37 |
+
+7.00
+
+2.25 | 13.17
+
+6.74 | 19.33
+
+1.37 |
+
+7.17
+
+2.75 | 13.33
+
+6.74 | 19.50
+
+1.37 |
+
+7.33
+
+2.75 | 13.50
+
+6.74 | 19.67
+
+2.25
+2.25
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+1.50
+
+1.33
+
+1.37 |
+
+7.50
+
+2.75 | 13.67
+
+5.24 | 19.83
+
+1.50
+
+1.37 |
+
+7.67
+
+2.75 | 13.83
+
+5.24 | 20.00
+
+1.67
+
+1.37 |
+
+7.83
+
+2.75 | 14.00
+
+5.24 | 20.17
+
+1.83
+
+1.37 |
+
+8.00
+
+2.75 | 14.17
+
+3.74 | 20.33
+
+2.00
+
+1.37 |
+
+8.17
+
+3.24 | 14.33
+
+3.74 | 20.50
+
+2.17
+
+1.62 |
+
+8.33
+
+3.24 | 14.50
+
+3.74 | 20.67
+
+2.33
+
+1.62 |
+
+8.50
+
+3.24 | 14.67
+
+3.74 | 20.83
+
+2.50
+
+1.62 |
+
+8.67
+
+3.49 | 14.83
+
+3.74 | 21.00
+
+2.67
+
+1.62 |
+
+8.83
+
+3.49 | 15.00
+
+3.74 | 21.17
+
+2.83
+
+1.62 |
+
+9.00
+
+3.49 | 15.17
+
+3.74 | 21.33
+
+3.00
+
+1.62 |
+
+9.17
+
+3.99 | 15.33
+
+3.74 | 21.50
+
+3.17
+
+1.62 |
+
+9.33
+
+3.99 | 15.50
+
+3.74 | 21.67
+
+3.33
+
+1.62 |
+
+9.50
+
+3.99 | 15.67
+
+3.74 | 21.83
+
+3.50
+
+1.62 |
+
+9.67
+
+4.49 | 15.83
+
+3.74 | 22.00
+
+3.67
+
+1.62 |
+
+9.83
+
+4.49 | 16.00
+
+3.74 | 22.17
+
+3.83
+
+1.62 | 10.00
+
+4.49 | 16.17
+
+2.25 | 22.33
+
+4.00
+
+1.62 | 10.17
+
+5.74 | 16.33
+
+2.25 | 22.50
+
+4.17
+
+2.00 | 10.33
+
+5.74 | 16.50
+
+2.25 | 22.67
+
+4.33
+
+2.00 | 10.50
+
+5.74 | 16.67
+
+2.25 | 22.83
+
+4.50
+
+2.00 | 10.67
+
+7.74 | 16.83
+
+2.25 | 23.00
+
+4.67
+
+2.00 | 10.83
+
+7.74 | 17.00
+
+2.25 | 23.17
+
+4.83
+
+2.00 | 11.00
+
+7.74 | 17.17
+
+2.25 | 23.33
+
+5.00
+
+2.00 | 11.17
+
+11.98 | 17.33
+
+2.25 | 23.50
+
+5.17
+
+2.00 | 11.33
+
+11.98 | 17.50
+
+2.25 | 23.67
+
+5.33
+
+2.00 | 11.50
+
+11.98 | 17.67
+
+2.25 | 23.83
+
+5.50
+
+2.00 | 11.67
+
+36.94 | 17.83
+
+2.25 | 24.00
+
+5.67
+5.83
+
+2.00 | 11.83
+2.00 | 12.00
+
+94.85 | 18.00
+152.76 | 18.17
+
+2.25 |
+2.25 |
+
+6.00
+
+2.00 | 12.17
+
+17.97 | 18.33
+
+2.25 |
+
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0005)|
+|ID= 1 DT=10.0 min |
+-------------------Unit Hyd Qpeak
+
+Area
+(ha)=
+Ia
+(mm)=
+U.H. Tp(hrs)=
+(cms)=
+
+0.03
+5.00
+0.20
+
+Curve Number
+(CN)= 80.0
+# of Linear Res.(N)= 3.00
+
+0.006
+
+PEAK FLOW
+(cms)=
+0.006 (i)
+TIME TO PEAK
+(hrs)= 12.167
+RUNOFF VOLUME
+(mm)= 76.242
+TOTAL RAINFALL
+(mm)= 124.800
+RUNOFF COEFFICIENT
+=
+0.611
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| NASHYD
+( 0002)|
+Area
+(ha)=
+0.13
+Curve Number
+(CN)= 80.0
+|ID= 1 DT=10.0 min |
+Ia
+(mm)=
+5.00
+# of Linear Res.(N)= 3.00
+-------------------U.H. Tp(hrs)=
+0.20
+Unit Hyd Qpeak
+
+(cms)=
+
+0.025
+
+PEAK FLOW
+(cms)=
+0.027 (i)
+TIME TO PEAK
+(hrs)= 12.167
+RUNOFF VOLUME
+(mm)= 76.258
+TOTAL RAINFALL
+(mm)= 124.800
+RUNOFF COEFFICIENT
+=
+0.611
+(i) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)=
+1.60
+|ID= 1 DT=10.0 min |
+Total Imp(%)= 61.00
+Dir. Conn.(%)= 60.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.98
+0.62
+Dep. Storage
+(mm)=
+1.00
+1.50
+Average Slope
+(%)=
+1.00
+2.00
+Length
+(m)=
+103.28
+40.00
+Mannings n
+=
+0.013
+0.250
+Max.Eff.Inten.(mm/hr)=
+
+152.76
+
+132.62
+
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+10.00
+2.20 (ii)
+10.00
+0.17
+
+10.00
+8.50 (ii)
+10.00
+0.12
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.41
+12.17
+123.80
+124.80
+0.99
+
+0.19
+12.17
+91.07
+124.80
+0.73
+
+*
+
+TOTALS*
+0.596 (iii)
+12.17
+110.70
+124.80
+0.89
+
+***** WARNING: STORAGE COEFF. IS SMALLER THAN TIME STEP!
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 85.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+------------------------------------------------------------------------------------------------| ADD HYD ( 0003)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0001):
+1.60
+0.596
+12.17
+110.70
++ ID2= 2 ( 0002):
+0.13
+0.027
+12.17
+76.26
+====================================================
+ID = 3 ( 0003):
+1.73
+0.623
+12.17
+108.12
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------------------------| RESERVOIR( 0004)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 10.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.1390
+0.0432
+0.1060
+0.0203
+|
+0.1500
+0.0552
+0.1180
+0.0269
+|
+0.1520
+0.0579
+0.1290
+0.0349
+|
+0.0000
+0.0000
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0003)
+0004)
+
+AREA
+(ha)
+1.730
+1.730
+
+QPEAK
+(cms)
+0.623
+0.151
+
+TPEAK
+(hrs)
+12.17
+12.33
+
+R.V.
+(mm)
+108.12
+108.10
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 24.32
+TIME SHIFT OF PEAK FLOW
+(min)= 10.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.0572
+
+------------------------------------------------------------------------------------------------| ADD HYD ( 0006)|
+|
+1 + 2 = 3
+|
+AREA
+QPEAK
+TPEAK
+R.V.
+-------------------(ha)
+(cms)
+(hrs)
+(mm)
+ID1= 1 ( 0004):
+1.73
+0.151
+12.33
+108.10
++ ID2= 2 ( 0005):
+0.03
+0.006
+12.17
+76.24
+====================================================
+ID = 3 ( 0006):
+1.76
+0.156
+12.33
+107.55
+NOTE: PEAK FLOWS DO NOT INCLUDE BASEFLOWS IF ANY.
+------------------------------------------------------------------------------
+
+WATER QUALITY - JELLYFISH FILTRATION
+TREATMENT DESIGN REPORT
+
+STANDARD OFFLINE
+Jellyfish Filter Sizing Report
+Project Information
+Date
+Project Name
+Project Number
+Location
+
+Friday, May 24, 2024
+Kaufman Rd.
+W22002
+W22002
+
+Jellyfish Filter Design Overview
+This report provides information for the sizing and specification of the Jellyfish Filter. When
+designed properly in accordance to the guidelines detailed in the Jellyfish Filter Technical Manual,
+the Jellyfish Filter will exceed the performance and longevity of conventional horizontal bed and
+granular media filters.
+Please see www.ImbriumSystems.com for more information.
+
+Jellyfish Filter System Recommendation
+The Jellyfish Filter model JF8-6-2 is recommended to meet the water quality objective by treating a
+flow of 35.3 L/s, which meets or exceeds 90% of the average annual rainfall runoff volume based on
+18 years of TORONTO CENTRAL rainfall data for this site. This model has a sediment capacity of
+398 kg, which meets or exceeds the estimated average annual sediment load.
+Jellyfish
+Model
+
+Number of
+High-Flo
+Cartridges
+
+Number of
+Draindown
+Cartridges
+
+JF8-6-2
+
+6
+
+2
+
+Manhole Treatment
+Sediment
+Diameter Flow Rate Capacity (kg)
+(L/s)
+(m)
+2.4
+35.3
+398
+
+The Jellyfish Filter System
+The patented Jellyfish Filter is an engineered stormwater quality treatment technology featuring
+unique membrane filtration in a compact stand-alone treatment system that removes a high level
+and wide variety of stormwater pollutants. Exceptional pollutant removal is achieved at high
+treatment flow rates with minimal head loss and low maintenance costs. Each lightweight Jellyfish
+Filter cartridge contains an extraordinarily large amount of membrane surface area, resulting in
+superior flow capacity and pollutant removal capacity.
+
+Maintenance
+Regular scheduled inspections and maintenance is necessary to assure proper functioning of the
+Jellyfish Filter. The maintenance interval is designed to be a minimum of 12 months, but this will
+vary depending on site loading conditions and upstream pretreatment measures. Quarterly
+inspections and inspections after all storms beyond the 5-year event are recommended until enough
+historical performance data has been logged to comfortably initiate an alternative inspection interval.
+Please see www.ImbriumSystems.com for more information.
+
+Thank you for the opportunity to present this information to you and your client.
+
+CDN/Int'l: 1 (800) 565-4801 | US: 1 (888) 279-8826
+
+1
+
+www.ImbriumSystems.com
+
+Performance
+Jellyfish efficiently captures a high level of Stormwater pollutants, including:
+ 89% of the total suspended solids (TSS) load, including particles less than 5 microns
+ 77% TP removal & 51% TN removal
+ 90% Total Copper, 81% Total Lead, 70% Total Zinc
+ Particulate-bound pollutants such as nutrients, toxic metals, hydrocarbons and bacteria
+ Free oil, Floatable trash and debris
+
+Field Proven Peformance
+The Jellyfish filter has been field-tested on an urban site with 25 TAPE qualifying rain events and
+field monitored according to the TAPE field test protocol, demonstrating:
+l A median TSS removal efficiency of 90%, and a median SSC removal of 99%;
+l The ability to capture fine particles as indicated by an effluent d50 median of 3 microns
+for all monitotred storm events, and a median effluent turbidity of 5 NTUs;
+l A median Total Phosphorus removal of 77%, and a median Total Nitrogen removal of
+51%.
+
+Jellyfish Filter Treatment Functions
+
+Pre-treatment and Membrane Filtration
+
+CDN/Int'l: 1 (800) 565-4801 | US: 1 (888) 279-8826
+
+2
+
+www.ImbriumSystems.com
+
+Project Information
+
+Rainfall
+
+Date:
+Project Name:
+Project Number:
+Location:
+
+Designer Information
+
+Name:
+State:
+ID:
+Record:
+Co-ords:
+
+Company:
+Contact:
+Phone #:
+
+Total Area:
+Imperviousness:
+
+Friday, May 24, 2024
+Kaufman Rd.
+W22002
+W22002
+
+TORONTO CENTRAL
+ON
+100
+1982 to 1999
+45°30'N, 90°30'W
+
+Drainage Area
+
+Candevcon Ltd.
+Shuchi Singh
+
+Notes
+
+1.73 ha
+61%
+
+Upstream Detention
+Peak Release Rate:
+Pretreatment Credit:
+
+n/a
+n/a
+
+Design System Requirements
+Flow
+90% of the Average Annual Runoff based on 18 years
+Loading of TORONTO CENTRAL rainfall data:
+Treating 90% of the average annual runoff volume,
+Sediment
+6311 m³, with a suspended sediment concentration of
+Loading
+60 mg/L.
+
+29.2 L/s
+379 kg
+
+Recommendation
+The Jellyfish Filter model JF8-6-2 is recommended to meet the water quality objective by treating a
+flow of 35.3 L/s, which meets or exceeds 90% of the average annual rainfall runoff volume based on
+18 years of TORONTO CENTRAL rainfall data for this site. This model has a sediment capacity of
+398 kg, which meets or exceeds the estimated average annual sediment load.
+Manhole Wet Vol
+Sump
+Diameter Below Deck Storage
+(L)
+(m)
+(m³)
+JF4-1-1
+1
+1
+1.2
+2313
+0.34
+JF4-2-1
+2
+1
+1.2
+2313
+0.34
+JF6-3-1
+3
+1
+1.8
+5205
+0.79
+JF6-4-1
+4
+1
+1.8
+5205
+0.79
+JF6-5-1
+5
+1
+1.8
+5205
+0.79
+JF6-6-1
+6
+1
+1.8
+5205
+0.79
+JF8-6-2
+6
+2
+2.4
+9252
+1.42
+JF8-7-2
+7
+2
+2.4
+9252
+1.42
+JF8-8-2
+8
+2
+2.4
+9252
+1.42
+JF8-9-2
+9
+2
+2.4
+9252
+1.42
+JF8-10-2
+10
+2
+2.4
+9252
+1.42
+JF10-11-3
+11
+3
+3.0
+14456
+2.21
+JF10-12-3
+12
+3
+3.0
+14456
+2.21
+JF10-12-4
+12
+4
+3.0
+14456
+2.21
+JF10-13-4
+13
+4
+3.0
+14456
+2.21
+JF10-14-4
+14
+4
+3.0
+14456
+2.21
+JF10-15-4
+15
+4
+3.0
+14456
+2.21
+JF10-16-4
+16
+4
+3.0
+14456
+2.21
+JF10-17-4
+17
+4
+3.0
+14456
+2.21
+JF10-18-4
+18
+4
+3.0
+14456
+2.21
+JF10-19-4
+19
+4
+3.0
+14456
+2.21
+JF12-20-5
+20
+5
+3.6
+20820
+3.2
+JF12-21-5
+21
+5
+3.6
+20820
+3.2
+JF12-22-5
+22
+5
+3.6
+20820
+3.2
+JF12-23-5
+23
+5
+3.6
+20820
+3.2
+JF12-24-5
+24
+5
+3.6
+20820
+3.2
+JF12-25-5
+25
+5
+3.6
+20820
+3.2
+JF12-26-5
+26
+5
+3.6
+20820
+3.2
+JF12-27-5
+27
+5
+3.6
+20820
+3.2
+CDN/Int'l: 1 (800) 565-4801 | US: 1 (888) 279-8826
+3
+Jellyfish
+Model
+
+Number of
+High-Flo
+Cartridges
+
+Number of
+Draindown
+Cartridges
+
+Oil
+Treatment Sediment
+Capacity Flow Rate Capacity
+(kg)
+(L/s)
+(L)
+379
+7.6
+85
+379
+12.6
+142
+848
+17.7
+199
+848
+22.7
+256
+848
+27.8
+313
+848
+28.6
+370
+1469
+35.3
+398
+1469
+40.4
+455
+1469
+45.4
+512
+1469
+50.5
+569
+1469
+50.5
+626
+2302
+63.1
+711
+2302
+68.2
+768
+2302
+70.7
+796
+2302
+75.7
+853
+2302
+78.9
+910
+2302
+78.9
+967
+2302
+78.9
+1024
+2302
+78.9
+1081
+2302
+78.9
+1138
+2302
+78.9
+1195
+2771
+113.6
+1280
+2771
+113.7
+1337
+2771
+113.7
+1394
+2771
+113.7
+1451
+2771
+113.7
+1508
+2771
+113.7
+1565
+2771
+113.7
+1622
+2771
+113.7
+1679
+www.ImbriumSystems.com
+
+Jellyfish Filter Design Notes
+l Typically the Jellyfish Filter is designed in an offline configuration, as all stormwater filter systems
+
+will perform for a longer duration between required maintenance services when designed and
+applied in off-line configurations. Depending on the design parameters, an optional internal bypass
+may be incorporated into the Jellyfish Filter, however note the inspection and maintenance
+frequency should be expected to increase above that of an off-line system. Speak to your local
+representative for more information.
+
+Jellyfish Filter Typical Layout
+l Typically, 18 inches (457 mm) of driving head is designed into the system, calculated as the
+
+difference in elevation between the top of the diversion structure weir and the invert of the Jellyfish
+Filter outlet pipe. Alternative driving head values can be designed as 12 to 24 inches (305 to
+610mm) depending on specific site requirements, requiring additional sizing and design assistance.
+l Typically, the Jellyfish Filter is designed with the inlet pipe configured 6 inches (150 mm) above the
+outlet invert elevation. However, depending on site parameters this can vary to an optional
+configuration of the inlet pipe entering the unit below the outlet invert elevation.
+l The Jellyfish Filter can accommodate multiple inlet pipes within certain restrictions.
+l While the optional inlet below deck configuration offers 0 to 360 degree flexibility between the inlet
+and outlet pipe, typical systems conform to the following:
+Model Diameter (m)
+1.2
+1.8
+2.4
+3.0
+3.6
+
+Minimum Angle
+Inlet / Outlet Pipes
+62º
+59º
+52º
+48º
+40º
+
+Minimum Inlet Pipe
+Diameter (mm)
+
+Minimum Outlet Pipe
+Diameter (mm)
+
+150
+200
+250
+300
+300
+
+200
+250
+300
+450
+450
+
+l The Jellyfish Filter can be built at all depths of cover generally associated with conventional
+
+stormwater conveyance systems. For sites that require minimal depth of cover for the stormwater
+infrastructure, the Jellyfish Filter can be applied in a shallow application using a hatch cover. The
+general minimum depth of cover is 36 inches (915 mm) from top of the underslab to outlet invert.
+l If driving head caclulations account for water elevation during submerged conditions the Jellyfish
+Filter will function effectively under submerged condtions.
+l Jellyfish Filter systems may incorporate grated inlets depending on system configuration.
+l For sites with water quality treatment flow rates or mass loadings that exceed the design flow rate of
+the largest standard Jellyfish Filter manhole models, systems can be designed that hydraulically
+connect multiple Jellyfish Filters in series or alternatively Jellyfish Vault units can be designed.
+CDN/Int'l: 1 (800) 565-4801 | US: 1 (888) 279-8826
+
+4
+
+www.ImbriumSystems.com
+
+STANDARD PERFORMANCE SPECIFICATION
+STORMWATER QUALITY – MEMBRANE FILTRATION TREATMENT DEVICE
+PART 1 – GENERAL
+1.1 WORK INCLUDED
+This section specifies requirements for selecting, sizing, and designing an underground stormwater
+quality membrane filtration treatment device that removes pollutants from stormwater runoff
+through the unit operations of sedimentation, floatation, and membrane filtration.
+1.2 REFERENCE STANDARDS & PROCEDURES
+ISO 14034:2016 Environmental Management – Environmental Technology Verification (ETV)
+1.3 SUBMITTALS
+1.3.1
+
+All submittals, including sizing reports & shop drawings, shall be submitted upon
+request with each order to the contractor then forwarded to the Engineer of Record
+for review and acceptance. Shop drawings shall detail all OGS components,
+elevations, and sequence of construction.
+
+1.3.2
+
+Alternative devices shall have features identical to or greater than the specified
+device, including: filtration surface area, treatment chamber diameter, treatment
+chamber wet volume, sediment storage volume, and oil storage volume.
+
+1.3.3
+
+Unless directed otherwise by the Engineer of Record, filtration treatment device
+product substitutions or alternatives submitted within ten days prior to project bid
+shall not be accepted. All alternatives or substitutions submitted shall be signed
+and sealed by a local registered Professional Engineer, based on the exact same
+criteria detailed in Section 3, in entirety, subject to review and approval by the
+Engineer of Record.
+
+PART 2 – PRODUCTS
+2.1 GENERAL
+2.1.1
+
+Maintenance Access to Captured Pollutants The filter device shall contain an
+opening(s) that provides maintenance access for removal of accumulated floatable
+pollutants and sediment, removal of and replacement of filter cartridges, cleaning
+of the sump, and rinsing of the internal components. Access shall have a minimum
+clear vertical clear space over all of the filter cartridges. Filter cartridges shall be
+able to be lifted straight vertically out of their installed placement for the entire
+length of the cartridge.
+
+2.1.2
+
+Pollutant Storage: The Filter device shall include a sump for sediment storage,
+and a protected volume for the capture and storage of petroleum hydrocarbons
+and buoyant gross pollutants.
+
+PART 3 – PERFORMANCE
+
+Imbrium Systems
+www.imbriumsystems.com
+
+Ph 888-279-8826
+Ph 416-960-9900
+
+Page 1 of 2
+
+3.1 GENERAL
+3.1.1
+
+Verification – The stormwater quality filter treatment device shall have been field
+tested in accordance with either TARP Tier II Protocol (TARP, 2003) and New Jersey
+Tier II Stormwater Test Requirements – Amendments to TARP Tier II Protocol
+(NJDEP, 2009) or Washington State Technology Assessment Protocol – Ecology
+(TAPE), 2011 or later version. The field test shall have been verified in accordance
+with ISO 14034:2016 Environmental Management – Environmental Technology
+Verification (ETV). See Section 3.2 of this specification for field test performance
+requirements.
+
+3.2 FIELD TEST PERFORMANCE
+The field test (as specified in section 3.1.1)shall have monitored a minimum of twenty (20) TARP
+or TAPE qualifying storm events, and report at minimum the following results:
+3.2.1
+
+Suspended Solids Removal - The stormwater quality filter treatment device shall have
+ISO 14034 ETV verified load based median TSS removal efficiency of at least 85%
+and load based median SSC removal efficiency of at least 98%.
+
+3.2.2
+
+Runoff Volume – The stormwater quality filter treatment device shall be engineered,
+designed, and sized to treat a minimum of 90 percent of the annual runoff volume
+determined from use of a minimum 15-year rainfall data set.
+
+3.2.3
+
+Fine Particle Removal - The stormwater quality filter treatment device shall have
+demonstrated the ability to capture fine particles as indicated by a minimum median
+removal efficiency of 75% for the particle fraction less than 25 microns, and an
+effluent d50 of 15 microns or lower for all monitored storm events.
+
+3.2.4
+
+Turbidity Reduction - The stormwater quality filter treatment device shall have
+demonstrated the ability to reduce turbidity such that effluent turbidity is 15 NTU or
+lower.
+
+3.2.5
+
+Nutrients & Metals – The stormwater quality filter treatment device shall have ISO
+14034 ETV Verified minimum load based removal efficiencies for the following:
+
+3.2.5.1 Total Phosphorus (TP) Removal - Median TP removal efficiency of at least 49%.
+3.2.5.2 Total Nitrogen (TN) Removal - Median TN removal efficiency of at least 39%.
+3.2.5.3 Total Zinc (Zn) Removal - Median Zn removal efficiency of at least 69%.
+3.2.5.4 Total Copper (Cu) Removal - Median Cu removal efficiency of at least 91%.
+
+END OF SECTION
+
+Imbrium Systems
+www.imbriumsystems.com
+
+Ph 888-279-8826
+Ph 416-960-9900
+
+Page 2 of 2
+
+STANDARD PERFORMANCE SPECIFICATION
+STORMWATER QUALITY – MEMBRANE FILTRATION TREATMENT DEVICE
+PART 1 – GENERAL
+1.1 WORK INCLUDED
+This section specifies requirements for selecting, sizing, and designing an underground stormwater
+quality membrane filtration treatment device that removes pollutants from stormwater runoff
+through the unit operations of sedimentation, floatation, and membrane filtration.
+1.2 REFERENCE STANDARDS & PROCEDURES
+ISO 14034:2016 Environmental Management – Environmental Technology Verification (ETV)
+1.3 SUBMITTALS
+1.3.1
+
+All submittals, including sizing reports & shop drawings, shall be submitted upon
+request with each order to the contractor then forwarded to the Engineer of Record
+for review and acceptance. Shop drawings shall detail all OGS components,
+elevations, and sequence of construction.
+
+1.3.2
+
+Alternative devices shall have features identical to or greater than the specified
+device, including: filtration surface area, treatment chamber diameter, treatment
+chamber wet volume, sediment storage volume, and oil storage volume.
+
+1.3.3
+
+Unless directed otherwise by the Engineer of Record, filtration treatment device
+product substitutions or alternatives submitted within ten days prior to project bid
+shall not be accepted. All alternatives or substitutions submitted shall be signed
+and sealed by a local registered Professional Engineer, based on the exact same
+criteria detailed in Section 3, in entirety, subject to review and approval by the
+Engineer of Record.
+
+PART 2 – PRODUCTS
+2.1 GENERAL
+2.1.1
+
+Maintenance Access to Captured Pollutants The filter device shall contain an
+opening(s) that provides maintenance access for removal of accumulated floatable
+pollutants and sediment, removal of and replacement of filter cartridges, cleaning
+of the sump, and rinsing of the internal components. Access shall have a minimum
+clear vertical clear space over all of the filter cartridges. Filter cartridges shall be
+able to be lifted straight vertically out of their installed placement for the entire
+length of the cartridge.
+
+2.1.2
+
+Pollutant Storage: The Filter device shall include a sump for sediment storage,
+and a protected volume for the capture and storage of petroleum hydrocarbons
+and buoyant gross pollutants.
+
+PART 3 – PERFORMANCE
+
+Imbrium Systems
+www.imbriumsystems.com
+
+Ph 888-279-8826
+Ph 416-960-9900
+
+Page 1 of 2
+
+3.1 GENERAL
+3.1.1
+
+Verification – The stormwater quality filter treatment device shall have been field
+tested in accordance with either TARP Tier II Protocol (TARP, 2003) and New Jersey
+Tier II Stormwater Test Requirements – Amendments to TARP Tier II Protocol
+(NJDEP, 2009) or Washington State Technology Assessment Protocol – Ecology
+(TAPE), 2011 or later version. The field test shall have been verified in accordance
+with ISO 14034:2016 Environmental Management – Environmental Technology
+Verification (ETV). See Section 3.2 of this specification for field test performance
+requirements.
+
+3.2 FIELD TEST PERFORMANCE
+The field test (as specified in section 3.1.1)shall have monitored a minimum of twenty (20) TARP
+or TAPE qualifying storm events, and report at minimum the following results:
+3.2.1
+
+Suspended Solids Removal - The stormwater quality filter treatment device shall have
+ISO 14034 ETV verified load based median TSS removal efficiency of at least 85%
+and load based median SSC removal efficiency of at least 98%.
+
+3.2.2
+
+Runoff Volume – The stormwater quality filter treatment device shall be engineered,
+designed, and sized to treat a minimum of 90 percent of the annual runoff volume
+determined from use of a minimum 15-year rainfall data set.
+
+3.2.3
+
+Fine Particle Removal - The stormwater quality filter treatment device shall have
+demonstrated the ability to capture fine particles as indicated by a minimum median
+removal efficiency of 75% for the particle fraction less than 25 microns, and an
+effluent d50 of 15 microns or lower for all monitored storm events.
+
+3.2.4
+
+Turbidity Reduction - The stormwater quality filter treatment device shall have
+demonstrated the ability to reduce turbidity such that effluent turbidity is 15 NTU or
+lower.
+
+3.2.5
+
+Nutrients & Metals – The stormwater quality filter treatment device shall have ISO
+14034 ETV Verified minimum load based removal efficiencies for the following:
+
+3.2.5.1 Total Phosphorus (TP) Removal - Median TP removal efficiency of at least 49%.
+3.2.5.2 Total Nitrogen (TN) Removal - Median TN removal efficiency of at least 39%.
+3.2.5.3 Total Zinc (Zn) Removal - Median Zn removal efficiency of at least 69%.
+3.2.5.4 Total Copper (Cu) Removal - Median Cu removal efficiency of at least 91%.
+
+END OF SECTION
+
+Imbrium Systems
+www.imbriumsystems.com
+
+Ph 888-279-8826
+Ph 416-960-9900
+
+Page 2 of 2
+
+PHOSPHORUS LOADING
+&
+WATER BALANCE
+CALCULATIONS
+
+Reference Pages from Inglewood Studies for Water Quality
+
+Complete Report is
+attached in Appendix"F"
+
+PROJECT NO. : W22002
+PROJECT NAME : 15544 McLaughlin, Caledon
+PREPARED BY : S.S
+CHECKED BY : DKH
+DATE : 5/22/2024
+
+Phosphorus Budget Tool in Support of Sustainable Development
+NOTE : In the absence of a references
+available from CVC for phosphorus removal
+calculations, analysis is conducted using
+Phosphorus Budget Tool in Support of
+Sustainable Development for the Lake
+Simcoe Watershed (Prepared for Ontario
+Ministry of the Environment) . Attached
+reference documents are provided for
+review purposes.
+
+(Pre-Development Scenario)
+Existing Site Condition:
+- At present the site is vacant and covered with grass.
+- Refer to Pre-Development Plan attached for Existing Site Condition
+
+Pre-Development Condition (Overall Site)
+Residential
+
+Commercial /Industrial
+/Institutional
+
+1.32
+0.00
+0.00
+
+1.82
+0.000
+0.000
+
+Phosphorus Export (kg/ha/year)
+Area (Ha)
+Total P (kg/Year)
+
+Hay &
+Pasture
+Fields
+0.12
+1.76
+0.21
+
+Total Pre-Development P (kg/yr) =
+
+Forest
+0.10
+0
+0
+
+Phosphorous Export values are taken
+from Table 2 of the reference report.
+
+0.21
+
+(Post-Development Scenario)
+Proposed Site Condition:
+- Under the proposed condition, the subject site will be built with Single Family Residential Lots
+- The land use of the proposed development will fall under residential for P Coefficient
+- Refer to Storm Drainage Area Plan for the proposed development plan
+
+Post-Development Condition (Catchment Area) with NO BMP
+
+Residential
+
+Commercial /Industrial
+/Institutional
+
+Hay &
+Pasture
+Fields
+
+Forest
+
+1.32
+
+1.82
+
+0.12
+
+0.10
+
+1.73
+2.28
+
+0.00
+0.00
+
+0.00
+0.00
+
+0.00
+0.00
+
+Phosphorus Export (kg/ha/year)
+Untreated Area (Ha)
+Total (P) Kg/yr.
+
+Total Post-Development (without BMPs) P =
+
+2.28
+
+Kg/Yr
+
+Post-Development Condition (Uncontrolled Runoff)
+Untreated Areas (Draining directly to Valley)
+Residential
+
+Commercial/Industrial
+/Institutional
+
+Hay &
+Pasture
+Fields
+
+Forest
+
+1.32
+0.03
+0.04
+
+1.82
+0.00
+0.00
+
+0.12
+0.00
+0.00
+
+0.10
+0.00
+0.00
+
+Phosphorus Export (kg/ha/year)
+Untreated Area (Ha)
+Total (P) Kg/yr.
+
+Total Post-Development (without BMPs) P =
+
+0.04
+
+Kg/Yr
+
+Post-Development Condition (With BMPS)
+1. Areas draining through Filtration Treatment (Jellyfish Unit) :
+
+Areas to (Jellyfish Unit)
+
+Export (kg/ha/year)
+Area (ha)
+Total (P) Kg/yr.
+
+Residential
+
+Institutional
+
+Pasture
+
+Forest
+
+1.32
+1.73
+2.28
+
+1.82
+0.00
+0.00
+
+0.12
+0.0
+0.0
+
+0.10
+0.0
+0.0
+
+Pasture
+0.12
+0.0
+0.0
+
+Forest
+0.10
+0.0
+0.0
+
+(Jellyfish)Treatment
+Jellyfish Proficiency (%):
+77.5
+(As per ETV Statement)
+P Removed (kg):
+1.77
+P Remaining (kg):
+(2.28 - 1.77)
+0.51
+
+2. Areas draining through Dry Pond :
+
+Export (kg/ha/year)
+Area (ha)
+Total (P) Kg/yr.
+
+Areas to (Dry Pond)
+Residential
+1.32
+1.73
+2.28
+
+Institutional
+1.82
+0.00
+0.00
+
+(Dry Pond)Treatment
+Dry Pond Proficiency (%):
+10
+( As per LSRCA Reference Doc)
+P Removed (kg):
+0.23
+P Remaining (kg):
+(0.51 - 0.23)
+0.29
+Total Pre-Development P Load =
+
+0.21
+
+Kg/Yr
+
+Total Post-Development Load (without BMPs) =
+
+2.28
+
+Kg/Yr
+
+Total Post-Development Load (with BMPs) =
+
+0.29
+
+Kg/Yr
+
+Uncontrolled Runoff Load =
+
+0.04
+
+Kg/Yr
+
+Total P Load from Site =
+
+0.33
+
+Kg/Yr (0.29 + 0.06)
+
+Phosphorus Rate reduces up to 86% with
+the use of BMPs.
+
+Sheet: 7
+
+WATER BALANCE CALCULATION
+
+THORNTHWAITE WATER BALANCE MODEL
+Location :
+Latitude :
+
+TORONTO LESTER B.
+PEARSON INT'L A * ONTARIO
+43°40'38.000" N
+
+Longitude : 79°37'50.000" W
+
+Elevation :
+
+173.40 m
+
+Climate Id:
+
+6158733
+
+WMO Id:
+
+71624
+
+CLIMATE NORMAL 1981 - 2010 CANADIAN CLIMATE NORMALS STATION DATA ( TORONTO)
+Site Climatic conditions were calculated using the "Thornthwaite Method" utilizing meterological data available from
+Environmental Canada historical weather data for Toronto Lester B. Pearson Int'l A. Pearson Station is within the closest proximity of Site
+Month
+
+January
+February
+March
+April
+May
+June
+July
+August
+September
+October
+November
+December
+
+Mean
+Temperature
+(°C)
+-5.5
+-4.5
+0.1
+7.1
+13.1
+18.6
+21.5
+20.6
+16.2
+9.5
+3.7
+-2.2
+Overall (I) =
+a=
+
+Heat
+Index*
+(i)
+0
+0
+0
+1.7
+4.2
+7.2
+8.9
+8.4
+5.8
+2.6
+0.6
+0
+39.47
+1.12
+
+Potential
+Evapotranspiration
+(PET) (mm)
+0
+0
+0
+30.9
+61.4
+91.0
+107.0
+102.0
+77.9
+42.8
+14.9
+0
+
+Daylight
+Correction
+Value for Toronto
+0.81
+0.81
+1.02
+1.12
+1.27
+1.29
+1.3
+1.2
+1.04
+0.95
+0.8
+0.74
+Total Water Surplus =
+
+Adjusted
+Evapotranspiration
+(mm)
+0.0
+0.0
+0.0
+34.6
+78.0
+117.3
+139.1
+122.4
+81.0
+40.7
+11.9
+0
+625.1
+160.9
+
+Total
+Precipitation
+(mm)
+51.8
+47.7
+49.8
+68.5
+74.3
+71.5
+75.7
+78.1
+74.5
+61.1
+75.1
+57.9
+786
+mm/year
+
+Water
+Surplus
+(mm)
+51.8
+47.7
+49.8
+33.9
+0.0
+0.0
+0.0
+0.0
+0.0
+20.4
+63.2
+57.9
+324.7
+
+NOTE : PET estimation is obtained for each month, considering a month is 30 days long and there are 12 theoretical sunshine hours per day.
+
+Where,
+
+(HEAT INDEX)
+
+1. Climate Information :
+Precipitation =
+Evapotranspiration =
+Water Surplus =
+
+786 mm/yr
+625.1 mm/yr
+160.9 mm/yr
+
+2. Infiltration Rates :
+" Infiltration Rates were determined based on infiltration guidelines sub-factors provided within the "MOEE Hydrogeological Technical Information
+required for Land Development Application" - Refer to MOEE, 1995 - Chapter-4,Table 2 & 3 (Page - 4-63)
+Table 2 : Infiltration Factors (from MOEE)
+Description of Area/Development of Site
+TOPOGRAPHY
+Flat land, average slope not exceeding 0.6m per km
+Rolling land, average slope of 2.8m to 3.8m to 3.8m
+per km
+Hilly land, average slope of 28m to 47m per km
+
+Value of Infiltration Factor
+0.30
+0.20
+0.10
+
+SOIL
+Tight impervious clay
+Medium Combination of Clay and Loam
+Open and Sandy Loam
+
+0.10
+0.20
+0.40
+
+COVER
+Cultivated Lands
+Woodland
+
+0.10
+0.20
+0.60
+
+Factor Total =
+Infiltration per year =
+Runoff per year =
+
+( 0.60 x 160.9) =
+(160.9 - 96.6) =
+
+The Values for Infiltration
+Factor are selected based
+on the results from
+Geotechnical Report
+prepared by Soil Eng. The
+report describes existing
+Site and Soil Characterstics.
+
+96.6
+64.4
+
+mm/yr
+mm/yr
+
+Sheet: 8
+
+WATER BUDGET - PRE-DEVELOPMENT CONDITION
+Total Area of Development =
+
+1.63 Hectares (Excludes External Drainage)
+
+NOTE : Subject Site consisted of Weed-covered lot and treelines along east and north boundaries
+Catchment Designation
+(Land Use)
+Pervious Areas (m2)
+Impervious Areas (m2)
+
+Topography Infiltration Factor
+Soil Infiltration Factor
+Land Cover Infiltration Factor
+MOE Infiltration Factor
+Actual Infiltration Factor
+Run-off Coefficient
+Run-off from Impervious Surfaces*
+Precipitation (mm/yr)
+Run-On (mm/yr)
+Other Inputs (mm/yr)
+Total Inputs (mm/yr)
+Precipitation Surplus (mm/yr)
+Net Surplus (mm/yr)
+Evapotranspiration (mm/yr)
+Infiltration (mm/yr)
+Roof Infiltration (mm/yr)
+Total Infiltration (mm/yr)
+Runoff Pervious Areas
+Runoff Impervious Areas
+Total Runoff (mm/yr)
+Total Output (mm/yr)
+Difference (Input - Output) =
+3
+
+Precipitation (m /yr)
+Run-on (m3/yr)
+3
+Other Inputs (m /yr)
+3
+
+Grassed Areas
+16,300
+0
+Infiltration Factors
+0.30
+0.20
+0.10
+0.60
+0.60
+0.40
+0
+Inputs (per Unit Area)
+786.0
+0
+0
+786.0
+Outputs (per Unit Area)
+160.9
+160.9
+625.1
+96.6
+0
+96.6
+64.4
+0
+64.4
+786.0
+0.0
+Input (Volumes)
+12811.8
+0
+12811.8
+Output (Volumes)
+
+Site
+Paved Surfaces
+0
+0
+
+Total
+16,300 (Site is 100% pervious)
+0
+
+0.30
+0.20
+0.00
+0
+0.0
+1.0
+0.80
+
+(From MOE Table 3.1 for Flat lands)
+(From MOE Table 3.1 for Medium combinations of clay and loam)
+
+786.0
+0
+0
+786.0
+
+786.0
+0
+0
+786.0
+
+628.8
+628.8
+157.2
+0
+0
+0
+0
+628.8
+628.8
+786.0
+0.0
+
+160.9
+160.9
+625.1
+96.6
+0
+96.6
+64.4
+0.0
+64.4
+786.0
+0.0
+
+0.0
+0
+0.0
+
+12811.8
+0
+12811.8
+
+Precipitation Surplus (m /yr)
+3
+Net Surplus (m /yr)
+3
+Evapotranspiration (m /yr)
+3
+Infiltration (m /yr)
+3
+Roof Infiltration (m /yr)
+
+2623.2
+2623.2
+10188.6
+1573.9
+0
+
+0.0
+0.0
+0.0
+0
+0
+
+2623.2
+2623.2
+10188.6
+1573.9
+0
+
+Total Infiltration (m3/yr)
+
+1573.9
+
+0.0
+
+1573.9
+
+Runoff Pervious Areas (m3/yr)
+
+1049.3
+
+0
+
+1049.3
+
+0
+
+0.0
+
+0.0
+
+Total Runoff (m3/yr)
+
+1049.3
+
+0.0
+
+1049.3
+
+Total Output (m3/yr)
+Difference (Input - Output) =
+
+12811.8
+
+0.0
+
+12811.8
+
+0.0
+
+0.0
+
+0.0
+
+Runoff Impervious Areas (m3/yr)
+
+* Evaporation from impervious areas
+was assumed to be 20% of precipitation
+
+Sheet: 9
+
+WATER BUDGET - POST-DEVELOPMENT CONDITION
+(WITH NO INFILTRATION)
+Total Area of Subdivision Development =
+1.63 Hectares
+(Refer to Storm Drainage Area Plans prepared by Candevcon)
+Catchment Designation
+(Land Use)
+Pervious Areas (m2)
+Impervious Areas (m2)
+Topography Infiltration Factor
+Soil Infiltration Factor
+Land Cover Infiltration Factor
+MOE Infiltration Factor
+Actual Infiltration Factor
+Run-off Coefficient
+Run-off from Impervious Surfaces*
+Precipitation (mm/yr)
+Run-On (mm/yr)
+Other Inputs (mm/yr)
+Total Inputs (mm/yr)
+
+Parks/Green Spaces
+7,030
+0
+Infiltration Factors
+0.30
+0.20
+0.10
+0.60
+0.60
+0.40
+0
+Inputs (per Unit Area)
+786.0
+0
+0
+786.0
+Outputs (per Unit Area)
+160.9
+160.9
+625.1
+96.6
+0
+96.6
+64.4
+0
+64.4
+786.0
+0.0
+Input (Volumes)
+5525.5
+0
+5525.5
+Output (Volumes)
+
+Site
+Paved Surface
+0
+9,279
+
+Total
+7,030
+9,279
+
+0.30
+0.20
+0.00
+0
+0.0
+1.0
+0.80
+786.0
+0
+0
+786.0
+
+786.0
+0
+0
+786.0
+
+628.8
+628.8
+157.2
+0
+0
+0
+0
+628.8
+628.8
+786.0
+0.0
+
+394.9
+394.9
+391.1
+48.3
+0
+48.3
+32.2
+314.4
+346.6
+786.0
+0.0
+
+5525.5
+0
+5525.5
+
+11050.9
+0
+11050.9
+
+1131.3
+1131.3
+4394.1
+678.8
+0
+
+5834.7
+5834.7
+1458.7
+0
+0
+
+6966.0
+6966.0
+5852.8
+678.8
+0
+
+Total Infiltration (m /yr)
+
+678.8
+
+0.0
+
+678.8
+
+Runoff Pervious Areas (m 3/yr)
+
+452.5
+
+0
+
+452.5
+
+0
+
+5834.7
+
+5834.7
+
+Total Runoff (m3/yr)
+
+452.5
+
+5834.7
+
+6287.2
+
+Total Output (m3/yr)
+Difference (Input - Output) =
+
+5525.5
+
+7293.3
+
+12818.8
+
+0.0
+
+1767.9
+
+1767.9
+
+Precipitation Surplus (mm/yr)
+Net Surplus (mm/yr)
+Evapotranspiration (mm/yr)
+Infiltration (mm/yr)
+Roof Infiltration (mm/yr)
+Total Infiltration (mm/yr)
+Runoff Pervious Areas
+Runoff Impervious Areas
+Total Runoff (mm/yr)
+Total Output (mm/yr)
+Difference (Input - Output) =
+3
+
+Precipitation (m /yr)
+3
+Run-on (m /yr)
+3
+Other Inputs (m /yr)
+3
+
+Precipitation Surplus (m /yr)
+3
+Net Surplus (m /yr)
+Evapotranspiration (m 3/yr)
+3
+Infiltration (m /yr)
+Roof Infiltration (m3/yr)
+3
+
+Runoff Impervious Areas (m 3/yr)
+
+* Evaporation from impervious areas
+was assumed to be 20% of precipitation
+
+Comparison Between Pre- Development to Post-Development
+
+Pre-Development
+Post-Development
+
+Precipitation (m3/yr)
+2623.19
+1131.33
+
+Evapotranspiration (m3/yr)
+10188.61
+4394.13
+
+Estimated Post-Development Infiltration Deficit =
+
+Infiltration (m3/yr)
+1573.9
+678.8
+
+Run-off (m3/yr)
+1049.28
+6287.2
+
+895 m3/yr
+56.87 %
+
+Sheet: 10
+
+Roof Top Infiltration to Infiltration Trenches :
+-
+
+Assume infiltration chambers to collect runoff from roofs
+Assume infiltration media = clear stone with 40% void ratio
+To follow CLI ECA Criteria the chamber will be provided in ROW
+
+Total Roof Area draining to Chambers =
+
+0.5993 Ha
+
+Rainfall data for below calculations is extracted from Environmental Canada historical weather data for Toronto Lester B. Pearson Int'L
+Station Id : 6158733
+
+Storm Events
+
+mm
+0.2
+5.0
+10.0
+25.0
+
+To Storm Events
+
+mm
+5
+10
+25
+50
+
+-
+
+Average
+Depth of
+Events
+(mm)
+2.6
+7.5
+17.5
+37.5
+
+Trench
+No. of Events
+(1971-2000) Infiltration Infiltration
+Depth
+Volume
+per event per event
+mm
+(m3)
+145.5
+2.60
+15.58
+49.2
+7.50
+44.94
+24.8
+17.50
+104.87
+4.6
+37.50
+224.72
+
+Cumulative
+Infiltration Infiltration Infiltration
+Volume
+Volume
+Volume
+per event per Year per Year
+(m3)
+15.58
+60.52
+165.39
+390.11
+
+(m3)
+2267
+2211
+1835
+1034
+
+(m3)
+2,267
+4,478
+6,313
+7,347
+
+Swale
+overflow
+mm
+0
+0
+0
+0
+
+Satisfies Infiltration
+Deficit Targets of
+895 m3/year
+
+Average Depth of 10mm of rainfall is required to achieve the Infiltration targets of 895m3/year. In case of rainfall events higher than 10mm
+the Chamber will overflow to the proposed Dry Pond. Dry Pond is designed for volume including Roof Areas
+Annual Rainfall Depth Required
+Required Rainfall Depth =
+
+10 mm
+
+(From Post Development Water Balance)
+
+Storage volume required for rainfall events of 10mm to Rooftop Infiltration Gallery
+Roof Top Area
+Rainfall Depth
+Storage Volume Required in Chambers
+
+5992.5 m2
+10 mm
+A
+x
+5992.5
+x
+3
+59.925 m
+
+=
+=
+=
+=
+=
+
+D
+10
+
+The governing 10mm Storm Event over the Site Area as per Water Balance Calculations :
+Site Area (A) =
+Rainfall Depth (R) =
+
+1.73 Ha
+10 mm
+
+Volume Required =
+=
+
+AxR
+173 m3
+
+Design Infiltration Rate :
+Infiltration Rate at the bottom of the BMP =
+
+52 mm/hr
+
+Infiltration Rate at the bottom of the BMP =
+
+52 mm/hr
+
+Ratio of Mean Measured Infiltration Rates =
+
+1.0
+
+(In-situ infiltration rates to be confimed prior to construction)
+
+Based on CVC SWM Guide, 2022
+
+2.5
+
+Safety Factor =
+Design Infiltration Rate (i) =
+
+52
+2.5
+20.8
+
+mm/Hr
+
+Calculate Maximum Allowable Infiltration Chamber Depth :
+Design Infiltration Rate (i) =
+Drawdown Time (T) =
+Stone Porosity/Void Ratio (Vr) =
+
+20.8 mm/Hr
+48 Hr
+0.40 (Clear Stone)
+
+Maximum Depth Required (Dr max) =
+
+=
+
+2496 mm
+
+Depth Provided =
+
+1250 mm
+
+Therefore, StormTech Infiltration chambers for the site will achieve infiltration targets and meet the requirements for a
+drawdown time of 48 hours.
+
+Sheet: 11
+
+APPENDIX D
+GEOTECHNICAL REPORT
+
+A REPORT TO
+2868577 ONTARIO INC.
+A GEOTECHNICAL INVESTIGATION FOR
+PROPOSED RESIDENTIAL DEVELOPMENT
+15544 MCLAUGHLIN ROAD
+TOWN OF CALEDON
+
+REFERENCE NO. 2301-S042
+MARCH 2023
+
+DISTRIBUTION
+1 Copy - 2868577 Ontario Inc.
+1 Copy - Soil Engineers Ltd. (Richmond Hill)
+
+Reference No. 2301-S042
+
+ii
+
+TABLE OF CONTENTS
+1.0
+2.0
+3.0
+4.0
+
+5.0
+6.0
+
+7.0
+
+INTRODUCTION ........................................................................................................ 1
+SITE AND PROJECT DESCRIPTION ....................................................................... 1
+FIELD WORK.............................................................................................................. 1
+SUBSURFACE CONDITIONS ................................................................................... 2
+4.1 Topsoil .............................................................................................................. 2
+4.2 Earth Fill ........................................................................................................... 2
+4.3 Silt, Sandy Silt and Silty Sand .......................................................................... 3
+4.4 Sand and Gravel ................................................................................................ 3
+4.5 Sandy Silt Till/Silty Sand Till ........................................................................... 4
+4.6 Silty Clay Till.................................................................................................... 4
+4.7 Shale.................................................................................................................. 5
+4.8 Compaction Characteristics of the Revealed Soils ........................................... 5
+GROUNDWATER CONDITION................................................................................ 6
+DISCUSSION AND RECOMMENDATIONS ........................................................... 6
+6.1 Site Preparation ................................................................................................. 7
+6.2 Foundations ....................................................................................................... 8
+6.3 Basement Structure and Slab-On-Grade Construction ..................................... 9
+6.4 Underground Services ....................................................................................... 10
+6.5 Backfilling in Trenches and Excavated Areas .................................................. 10
+6.6 Pavement Design .............................................................................................. 11
+6.7 Soil Parameters ................................................................................................. 12
+6.8 Excavation......................................................................................................... 13
+LIMITATIONS OF REPORT ...................................................................................... 13
+
+TABLES
+Table 1 - Estimated Water Content for Compaction ............................................................. 5
+Table 2 - Groundwater Levels (Upon Completion of Drilling) ............................................. 6
+Table 3 - Pavement Design for Local Road ........................................................................... 11
+Table 4 - Soil Parameters ....................................................................................................... 12
+Table 5 - Classification of Soils for Excavation .................................................................... 13
+ENCLOSURES
+Logs of Boreholes ................................................................................. Figures 1 to 5
+Grain Size Distribution Graphs ............................................................. Figures 6 to 9
+Borehole Location Plan......................................................................... Drawing No. 1
+Subsurface Profile ................................................................................. Drawing No. 2
+Details of Perimeter Drainage System .................................................. Drawing No. 3
+
+Reference No. 2301-S042
+1.0
+
+1
+
+INTRODUCTION
+In accordance with written authorization dated January 3, 2023, from Mr. Manoj Sharma of
+2868577 Ontario Inc., a geotechnical investigation was carried out on a vacant area within
+15544 McLaughlin Road in the Town of Caledon.
+The purpose of this investigation was to reveal the subsurface conditions and determine the
+engineering properties of the disclosed soils for the design and construction of a proposed
+residential development. The geotechnical findings and resulting recommendations are
+presented in this Report.
+
+2.0
+
+SITE AND PROJECT DESCRIPTION
+The Town of Caledon is situated on Halton-Peel till plain where the drift dominates the soil
+stratigraphy. In places, lacustrine sand, silt and clay, which has been reworked by the water
+action of Peel Ponding (glacial lake), have modified the drift stratigraphy.
+The investigated area, being part of 15544 McLaughlin Road, is located approximately
+200 m west of McLaughlin Road and approximately 470 m north of Old Base Line Road, at
+the terminus of Kaufman Road. The area is currently a vacant lot. The site gradient generally
+slopes towards east with a grade difference of almost 9 m.
+Based on the preliminary development plan prepared by Candevcon Limited, the area will be
+developed into 13 single detached dwelling lots and a parkette. Access to the lots will be
+provided by extension of Kaufman Road, and will be connected to Victoria Street and
+McKenzie Street.
+
+3.0
+
+FIELD WORK
+The field work, consisting of five (5) sampled boreholes extending to depths of 6.2 to 6.6 m,
+was performed on January 24, 2023. Upon the completion of borehole drilling and sampling,
+monitoring wells were installed in all boreholes to facilitate groundwater monitoring. Details
+of the monitoring wells are included in the corresponding borehole logs. The locations of the
+boreholes and monitoring wells are shown on the Borehole and Monitoring Well Location
+Plan, Drawing No. 1.
+The boreholes were advanced at intervals to the sampling depths by a track-mounted
+machine using solid stem auger, and equipped with split spoon sampler for soil sampling.
+Split-spoon samples were recovered for soil classification and laboratory testing. Standard
+
+Reference No. 2301-S042
+
+2
+
+Penetration Tests, using the procedures described on the enclosed “List of Abbreviations and
+Terms,” were performed at the sampling depths. The test results are recorded as the Standard
+Penetration Resistance (or ‘N’ values) of the subsoil. The relative density of the noncohesive strata and the consistency of the cohesive strata are inferred from the ‘N’ values.
+The field work was supervised and the findings were recorded by a Geotechnical
+Technician.
+The ground elevation at each borehole location was determined using a hand-held Global
+Navigation Satellite System (GNSS) equipment.
+4.0
+
+SUBSURFACE CONDITIONS
+The investigation revealed that beneath a layer of topsoil veneer, and a layer of earth fill or
+weathered soil, the site is underlain by strata of silt, silty sand, sandy silt, silty sand till,
+sandy silt till and silty clay till. Weathered shale was observed in one of the boreholes at
+deeper elevation.
+Detailed descriptions of the encountered subsurface conditions from the boreholes are
+presented on the Borehole Logs, comprising Figures 1 to 5, inclusive. The revealed
+stratigraphy is plotted on the Subsurface Profile, Drawing No. 2. The engineering properties
+of the disclosed soils are discussed herein.
+
+4.1
+
+Topsoil (All boreholes)
+All boreholes were carried out on the vacant field where the ground surface is covered with a
+layer of topsoil, approximately 15 to 30 cm in thickness. Thicker topsoil may be encountered
+beyond the borehole locations.
+
+4.2
+
+Earth Fill (Boreholes 3, 4 and 5)
+Beneath the topsoil layer, a layer of earth fill, consisting of a mixture of sand, silt and clay,
+was encountered in three of the boreholes, extending to depths of 1.5 to 2.2 m below the
+prevailing ground surface.
+The obtained ‘N’ values of the earth fill range from 3 to 6 blows per 30 cm of penetration,
+indicating that the fill is loosely placed with nominal compaction.
+The natural water content of the earth fill was determined at a range from 3% to 24%, with a
+median of 16%, indicating generally moist conditions.
+
+

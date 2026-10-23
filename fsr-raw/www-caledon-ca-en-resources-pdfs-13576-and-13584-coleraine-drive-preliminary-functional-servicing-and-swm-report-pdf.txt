@@ -1,0 +1,2008 @@
+PRELIMINARY
+FUNCTIONAL SERVICING AND
+STORMWATER MANAGEMENT REPORT
+for
+JACK KENNEY COURT
+
+Draft Report Prepared for:
+1361605 ONTARIO LIMITED
+39 Abbeywood Gate
+Thornhill, Ontario
+L4J 8P1
+
+Prepared by:
+
+May 2017
+Reference: 09-193
+
+Civil - Environmental - Water Resources
+T (905)857-7600 E calder@caldereng.com W www.caldereng.com
+
+1361605 Ontario Limited
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+TABLE OF CONTENTS
+SECTION
+
+PAGE
+
+1.0
+
+Introduction................................................................................................................. 1
+
+2.0
+
+Study Area................................................................................................................... 3
+2.1
+2.2
+
+2.3
+2.4
+2.5
+3.0
+
+Stormwater Management ........................................................................................... 8
+3.1
+
+3.2
+
+3.3
+
+4.0
+
+General ............................................................................................................. 3
+Existing Conditions ........................................................................................... 3
+2.2.1 Surficial Soils......................................................................................... 3
+2.2.2 Pre-Development Drainage Patterns .................................................... 3
+Proposed Conditions ........................................................................................ 6
+Background Studies and Reports ..................................................................... 6
+Environmental Considerations .......................................................................... 7
+
+Stormwater Management Requirements .......................................................... 8
+3.1.1 Quantity Control .................................................................................... 8
+3.1.2 Quality Control ...................................................................................... 8
+Post-Development Drainage Plan .................................................................... 8
+3.2.1 Proposed Property Drainage................................................................. 8
+3.2.2 On-Site Controls.................................................................................. 11
+3.2.3 External Drainage Areas ..................................................................... 11
+Analysis .......................................................................................................... 13
+3.3.1 Peak Flows - Rational Method ............................................................ 13
+3.3.2 Emergency Overland Flow Route and 100-year ponding ................... 13
+3.3.2 Water Balance..................................................................................... 14
+
+Sanitary and Water Servicing Plan ......................................................................... 16
+4.1
+4.2
+
+Sanitary Servicing Plan................................................................................... 16
+Water Servicing Plan ...................................................................................... 16
+4.2.1 Water Demand .................................................................................... 16
+4.2.2 Water Supply and Distribution............................................................. 16
+4.2.3 Water Services .................................................................................... 17
+
+5.0
+
+Road Reconstruction ............................................................................................... 18
+
+6.0
+
+Erosion and Sediment Control ................................................................................ 19
+6.1
+6.2
+6.3
+
+General ........................................................................................................... 19
+Topsoil Management ...................................................................................... 20
+Emergency Contact Information ..................................................................... 20
+
+7.0
+
+Summary ................................................................................................................... 22
+
+7.0
+
+References ................................................................................................................ 24
+
+Appendix A: Preliminary Engineering Drawings
+Appendix B: Stormwater Management Calculations Supporting Information
+
+May 2017
+
+i
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+1.0
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+INTRODUCTION
+
+Calder Engineering Ltd. has been retained by 1361605 Ontario Limited to complete a
+Preliminary Functional Servicing and Stormwater Management Report for a proposed infill
+residential development on Jack Kenny Court, in Bolton, in the Town of Caledon. The report
+is supporting documentation for the respective development Draft Plan approval application.
+The location of the subject site is shown on Figure 1.1. The site is bounded by existing
+residential uses on three sides (south, east and west) and a stormwater management pond
+to the north. The legal description of the property is Part of Lot 8, Concession 5 (ALB) and
+Part of Block 307 on 43M-1324 (ALB), Town of Caledon Regional Municipality of Peel.
+The site comprises approximately 0.3 hectares (ha). It is currently zoned A1-Agricultural. It
+is proposed to re-zone the site to residential use and develop it into 7 single dwelling lots with
+municipal storm, sanitary and water services. Drainage and stormwater would be managed
+with the application of Low Impact Development (LID) practices. A future private access
+would be preserved between Lots 2 and 3 for the lands to the east of the subdivision
+(fronting on Coleraine Drive).
+The objective of this report is to identify proposed methods for site sanitary and water
+servicing, and the plan for drainage and stormwater management. The information provided
+herein is preliminary and subject to detailed design. Detailed design of site sanitary and
+water services, and drainage and stormwater management infrastructure would be
+undertaken following Draft Plan Approval.
+
+May 2017
+
+1
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+2.0
+
+STUDY AREA
+
+2.1
+
+General
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+The site is located in the community of Bolton in the Town of Caledon on Jack Kenny Court.
+It is bounded by an existing residential uses on three sides (south, east and west) and an
+existing stormwater management pond to the north. The legal description of the property is
+Part of Lot 8, Concession 5 (ALB) and Part of Block 307 on 43M-1324 (ALB), Town of
+Caledon Regional Municipality of Peel..
+The overall site comprises approximately 0.3 hectares (ha). It is proposed to re-zone the site
+to residential use and develop it into 7 single dwelling lots with municipal storm, sanitary and
+water services. Drainage and stormwater would be managed with the application of Low
+Impact Development (LID) practices. A Conceptual Site Plan showing the proposed lotting is
+shown on Figure 2.1. All the proposed lots would front onto the existing Jack Kenny Court
+cul-de-sac. Space for a future access for the lands fronting on Coleraine Drive would be left
+between Lots 2 and 3.
+
+2.2
+
+Existing Conditions
+
+2.2.1
+
+Surficial Soils
+
+A geotechnical investigation was performed by Soil Engineers Limited (2013). This
+investigation comprised 4 boreholes each to a depth of 6.6 metres. Generally, the site
+consists of a 40 to 150 millimetre layer of topsoil, which overlays fill or a silty clay till.
+Borehole information is provided on the preliminary engineering drawings (Appendix A).
+2.2.2
+
+Pre-Development Drainage Patterns
+
+The site is located in the Humber River Watershed. Existing drainage patterns are shown on
+Figure 2.2.
+Drainage from the site and adjacent lands to the east is currently to an existing 1000mm
+culvert at the north end of the adjacent property. The culvert drains to the outlet of the
+existing stormwater management pond.
+Drainage from the existing residential area on Jack Kenny Court is conveyed to the
+stormwater management pond via the municipal storm sewer system. For minor events, flow
+is directed through the municipal sewers along Jack Kenny Court and Grapevine Road to the
+SWM pond. For major events, flow is conveyed from a double catchbasin at the end of the
+cul-de-sac to the SWM pond via 750mm diameter pipe in an easement between two homes
+on Jack Kenny Court. Jack Kenny Court slopes down from Grapevine Road towards the end
+of the cul-de-sac and the stormwater management pond.
+
+May 2017
+
+3
+
+Calder Engineering Ltd.
+
+Calder Engineering Ltd.
+
+LOT
+
+LOT AREA (sq.m.)
+
+1
+2
+3
+4
+5
+6
+7
+
+634.2
+471.9
+321.0
+321.1
+321.1
+409.8
+628.5
+
+1361605 ONTARIO LIMITED
+JACK KENNY COURT
+
+5m
+
+0
+
+5
+
+10m
+
+FIGURE 2.1
+CONCEPTUAL SITE PLAN
+
+1361605 Ontario Limited
+
+2.3
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+Proposed Conditions
+
+The proposed development would consist of seven (7) single dwelling lots fronting on Jack
+Kenny Court with municipal storm, sanitary and water services. Drainage and stormwater
+would be managed with the application of Low Impact Development (LID) practices. Post
+development drainage patterns are discussed in Section 3.2.
+A Preliminary Grading Plan has been prepared and is included in Appendix A (Drawing 09193-02).
+The proposed development site generally slopes away from Jack Kenny Court, with existing
+elevations at the rear property line of the proposed lots up to 6.5m less than those at the
+existing edge of pavement. Correspondence (Appendix B) with the Toronto and Region
+Conservation Authority (TRCA) indicated that this depression is the remnants of a larger
+valley corridor that has since been filled with subdivision development and a stormwater
+management pond. The TRCA has indicated that the size and composition of the “valley
+feature” does not warrant its retention. As such, it is proposed to fill the depression per the
+attached Preliminary Grading Plan (Drawing 09-103-02) and Cross Sections (Drawing 09103-04) to facilitate the development of residential lots fronting on Jack Kenny Court.
+Details on the proposed lots are presented in Table 2.1.
+TABLE 2.1: PROPOSED LOT AREAS
+Lot
+
+Total Area
+sq.m
+
+Approximate
+Frontage (m)
+
+Estimated
+Building Area
+sq.m
+158.6
+118.0
+80.3
+80.3
+80.3
+102.5
+157.1
+776.9
+
+Estimated
+Driveway Area
+sq.m.
+30
+30
+30
+30
+30
+30
+30
+210.0
+
+1
+634.2
+10.7
+2
+471.9
+10.7
+3
+321.0
+10.7
+4
+321.1
+10.7
+5
+321.1
+10.7
+6
+409.8
+10.7
+7
+628.5
+10.8
+Total
+3107.6
+Notes:
+1.
+Building areas assumed to be 25% of the total lot area.
+2.
+Driveway areas based on a 5m wide driveway.
+3.
+Refer to Drawing 09-193-01 for the lot fabric and preliminary building and
+driveway layout.
+
+2.4
+
+Background Studies and Reports
+
+The following background reports have been prepared as supporting documentation for the
+subdivision Draft Plan approval application and should be review in conjunction with this
+report:
+
+
+
+Draft Plan prepared by Paul King
+Preliminary Engineering Drawings (Appendix A) by Calder Engineering Ltd.
+
+May 2017
+
+6
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+
+
+
+
+
+
+
+
+2.5
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+Soil Investigation for Proposed Residential Development, 13576 and 13584 Coleraine
+Drive, dated May 2013, prepared by Soil Engineers Ltd;
+Environmental Noise and Vibration Impact Study for Proposed Residential
+Development, Jack Kenny Court, revised April 13, 2017, prepared by Aercoustics
+Engineering Ltd.
+Phase 1 Environmental Site Assessment for Proposed Residential Development,
+East of Jack Kenny Court, North of Grapevine Road, dated July 9, 2013, prepared by
+Soil Engineers Ltd.
+Scoped Environmental Impact Study for Jack Kenny Court, July 2013 (updated April
+2016), prepared by Savanta Inc.
+Tree Inventory/Assessment, prepared by Sunarts Design.
+
+Environmental Considerations
+
+A scoped Environmental Impact Study (EIS) was prepared by Savanta. The scoped EIS was
+based on inventories and analyses carried out in 2013, including an ecological land
+classification, botanical surveys, calling amphibian surveys and a breeding bird survey. The
+ecological land classification of the subject site was cultural meadow and cultural woodland.
+On the property, the EIS identified no wetlands, significant woodlands, significant valley
+lands, endangered or threatened species or their habitat, areas of natural and scientific
+interest, fish habitat or significant wetland habitat, as defined in the Natural Heritage
+Reference Manual for Policy 2.1 of the Provincial Policy Statement.
+The report concluded that conversion of the subject site to residential use would have
+minimal impact on the terrestrial functions of the site and that impacts can be partially
+mitigated through standard design and best management practices. It was suggested that
+the adjacent stormwater management pond be considered as a planting location to provide
+compensation for loss of vegetation cover on the subject property.
+
+May 2017
+
+7
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+3.0
+
+STORMWATER MANAGEMENT
+
+3.1
+
+Stormwater Management Requirements
+
+3.1.1
+
+Quantity Control
+
+The Toronto and Region Conservation Stormwater Management Criteria (Toronto and
+Region Conservation, 2012) presents unit flow relationships for use in determining
+requirements for quantity control in the Humber River Watershed. Based on review of the
+“Humber River Stormwater Management Quantity Control Release Rates” Map from
+Appendix A of the SWM criteria, the subject area drains to the main branch of the Humber
+River and no quantity control is required under TRCA guidelines. A copy of the map with the
+approximate site location is provided in Appendix B of this report. Additionally, it is our
+understanding that the existing stormwater management facility was designed to provide
+quantity and quality control for the future development of the subject property.
+3.1.2
+
+Quality Control
+
+Based on review of Toronto and Region Conservation Stormwater Management Criteria
+(Toronto and Region Conservation, 2012), quality control is proposed by a combination of
+retaining the first 5 millimetres (mm) of precipitation on site and implementation of Low
+Impact Development (LID) practices. Additionally, it is our understanding that the existing
+stormwater management facility was designed to provide quantity and quality control for the
+future development of the subject property.
+
+3.2
+
+Post-Development Drainage Plan
+
+Pre-development drainage patterns have been described in Section 2.2 and are shown in
+Figure 2.2. Figure 3.1 illustrates the post-development drainage boundaries.
+3.2.1
+
+Proposed Property Drainage
+
+In general, back-to-front drainage is proposed for the property. Drainage is proposed to:
+1. Existing storm sewer and overland flow system on Jack Kenny Court
+With the exception of parts of Lots 1 and 2, drainage from every lot is proposed to be
+directed to existing stormwater management infrastructure of Jack Kenny Court.
+Swales are proposed in the side yards of each lot and a rear lot catchbasin is
+proposed on Lot 7. On Jack Kenny Court, major events are conveyed via a double
+catchbasin at the bulb of Jack Kenny Court and a 750mm diameter storm sewer to
+the stormwater management pond. Minor events are conveyed through the municipal
+storm sewer along Jack Kenny Court and Grapevine Road to the stormwater
+management pond.
+2. Existing stormwater management pond
+
+May 2017
+
+8
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+A portion of the rear yard areas of Lots 1 and 2 are proposed to drain via a rear yard
+swale and subdrain directly to the stormwater management pond.
+
+May 2017
+
+9
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+3.2.2
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+On-Site Controls
+
+Lot level controls and Low Impact Development (LID) practices are proposed for
+implementation, where feasible, to reduce the volume of runoff, and provide, as far as
+practical, a natural hydrologic response.
+With respect to meeting the water quality requirement of retaining the first 5 mm of
+precipitation, it is proposed to incorporate in the site design the following features:
+
+
+
+recharge of residential roof and driveway stormwater by direction to grassed areas to
+promote filtering and natural infiltration; and
+rear yard swales enhanced with granular storage and a perforated pipe system.
+
+It is assumed that pervious areas will naturally retain the first 5 millimetres of precipitation.
+With respect to impervious areas, it was calculated that approximately 5.6 cubic metres of
+additional storage capacity would be required to provide an equivalent storage volume for
+retention of the first 5 mm of rainfall across impervious areas. This figure is based on an
+assumed total site impervious area of approximately 987 square metres (an assumed
+driveway area of 30 sq.m. for each lot and a maximum of 25% of the lot area for roof areas).
+Subject to detailed design, storage volume is proposed to be provided in the granular
+materials on Lots 1 and 7. Available storage volume associated with the dry swale on Lot 7
+is estimated as 8.1 cubic metres (13.5 m length x 1.5 m width x 1 m depth x 0.4 void ratio).
+The estimated storage volume associated with the rear yard swale on Lot 1 is 2.6 cubic
+metres (16.5 m length x 1 m width x 0.4 m depth x 0.4 void ratio). Provided on-site is a
+storage volume of approximately 10.7 cubic metres within the granular media on Lots 1 and
+7.
+Preliminary cross-sections of the dry swales on Lots 1 and 7 are shown on Figure 3.2 and
+Drawing 09-193-05 (Appendix A).
+3.2.3
+
+External Drainage Areas
+
+There are no external drainage areas to the subject lands.
+
+May 2017
+
+11
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+3.3
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+Analysis
+
+For sizing of site stormwater infrastructure, the Rational Method with Town of Caledon
+parameters was used. Analysis was completed for the 10 and 100-yr return period event.
+For water balance comparisons, a “desk-top” accounting approach was used to calculate the
+typical depth of rainfall that would be retained on-site.
+Post-development catchment areas are shown on Figure 3.1.
+3.3.1
+
+Peak Flows - Rational Method
+
+The Rational Method was used to compute post-development peak flows and size site
+stormwater infrastructure. Computations were completed for the 10 and 100-year return
+period with Town of Caledon IDF parameters and an inlet time of 15 minutes consistent with
+Town of Caledon standards for suburban residential. Consistent with Town standards for
+single family suburban, a runoff coefficient of 0.40 was used for contributing drainage areas.
+Peak flows to existing external stormwater infrastructure, including the 750mm storm sewer
+on Jack Kenny Court and 1000mm culvert on adjacent property, were also calculated.
+A summary of the estimated peak flows and capacities for the existing 1000mm culvert and
+the existing 750mm pipe under the 100 year return period event are presented in Table 3.1.
+Storm sewer design sheets are provided in Appendix B.
+Based on the included storm sewer design sheets, the existing storm sewers on Jack Kenny
+Court have the capacity to handle the 10-year return period event, and the existing 750mm
+storm sewer and 1000mm culvert have capacity for the 100-year return period event.
+TABLE 3.1: ESTIMATED PEAK FLOWS (100-YR RETURN PERIOD)
+Location
+
+Description
+
+Calculated
+Capacity
+(LPS)
+
+Estimated
+Peak Flow
+(LPS)
+
+% Full
+
+Ex. Culvert to SWM Pond
+Ex. 1000mm culvert3
+1520
+89
+5.9%
+Outlet
+Ex. DCB on Jack Kenny Court
+Ex. 750mm @ 2.20%
+1650
+181
+11.0%
+to SWM Pond
+Notes:
+1. Units: LPS – litres per second
+2. Capacities were calculated using Manning’s equation and peak flows were calculated using
+the Rational Method.
+3. Slope of existing 1000mm diameter culvert unknown. A conservative slope of 0.4% was
+assumed to estimate the capacity; 0.4% is the minimum slope permissible per Town of
+Caledon Standards
+
+3.3.2
+
+Emergency Overland Flow Route
+
+An overland flow route was identified for three areas of the properties: the area draining to
+DICB1 (future development lands fronting on Coleraine Drive), the area draining to
+
+May 2017
+
+13
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+catchbasin 2 in the rear yard of Lot 7, and the area draining overland to the existing
+stormwater management pond from Lot 1.
+Ditch Inlet Catchbasin 1
+The AES 24-hr duration 100-year return period rainfall depth is 95.92mm. If this entire
+volume is converted to runoff, a total volume of approximately 460 cubic metres would be
+generated from the area draining to ditch inlet catchbasin 1. If the ditch inlet catchbasin is
+blocked and no outflow occurs, this volume would cause ponding up to approximately
+252.91m as illustrated on the General Plan, Drawing 09-193-01 (Appendix A). The low point
+on the side yard line between the Coleraine property and the stormwater management facility
+is approximately 254.5m, approximately 1.4m below the lowest elevation at the rear existing
+buildings fronting on Coleraine Drive.
+Catchbasin 2
+The area draining to catchbasin 2 will spill between the Lot 7 house and the rear yards of the
+existing residential homes starting at elevation 256.20. The lowest surveyed elevation along
+the shared lot line between the existing residences and Lot 7 is 14cm higher than the
+proposed overflow elevation at 256.34.
+Lots 1 and 2
+Portions of the rear yards of Lots 1 and 2 are proposed to drain overland directly to the
+existing stormwater management facility via a rear yard swale.
+3.3.2
+
+Water Balance
+
+The water balance related stormwater management criteria is retention of storm runoff from
+the first 5 millimetres (mm) of rainfall through infiltration, evapotranspiration, and/or reuse.
+This is proposed to be achieved through the use of combination of source, and conveyance
+measures. As far as practical, stormwater from the lots will be directed to grassed areas to
+promote infiltration and evapotranspiration.
+A “desktop” accounting approach was used to calculate the typical depth of rainfall that
+would be retained on site. The site was partitioned according to surface condition and an
+effective initial abstraction assumed for each surface condition. The effective initial
+abstraction was assumed based on information provided in the Wet Weather Flow
+Management Guidelines (City of Toronto, 2006). With this approach, each initial abstraction
+value is multiplied by respective percent of site total area to determine the initial abstraction
+value for each surface condition. The sum of all initial abstraction values for each surface
+condition is equal to the initial abstraction over the site.
+Summarized in Table 3.2 are the various types of surface conditions and flow paths, and the
+assumed initial abstraction values. Provided in Table 3.3 are computations for the site initial
+abstraction. Based on this approach, the calculated site initial abstraction is 5.9 mm. This
+
+May 2017
+
+14
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+indicates that retention of storm water from the first 5 mm of rainfall can be achieved with the
+proposed stormwater management approach.
+TABLE 3.2: SUMMARY OF SURFACE CONDITIONS AND ASSUMED INITIAL
+ABSTRACTION
+Surface Condition and Flow Path
+
+Driveway areas draining to Jack Kenny Court
+Roof areas draining to grassed areas
+Roof areas draining to underground granular storage
+Grassed areas draining to Jack Kenny Court
+Grassed areas draining to underground granular storage
+
+Surface
+Condition
+Type
+1
+2
+3
+4
+5
+
+Initial
+Abstraction
+(mm)
+0.5
+3.5
+6.5
+5
+10
+
+Notes:
+1. Units: mm - millimetres
+
+TABLE 3.3: SITE WATER BALANCE COMPUTATION AND ESTIMATION OF
+OVERALL INITIAL ABSTRACTION
+Surface
+Condition Type
+
+Area
+(sq.m.)
+
+1
+2
+3
+4
+5
+Totals
+
+416.7
+598.7
+125.9
+978.9
+987.4
+3107.6
+
+Percent of Site
+Area
+(%)
+13.4
+19.3
+4.1
+31.5
+31.8
+100%
+
+Effective Initial
+Abstraction
+(mm)
+0.5
+3.5
+6.5
+5
+10
+
+Overall Initial
+Abstraction
+(mm)
+0.1
+0.7
+0.3
+1.6
+3.2
+5.9
+
+Notes:
+1. Units: mm – millimetres; sq.m. – square metres
+
+May 2017
+
+15
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+4.0
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+SANITARY AND WATER SERVICING PLAN
+
+A servicing plan has been prepared and is included in Appendix A as Drawing 09-193-01.
+
+4.1
+
+Sanitary Servicing Plan
+
+Subject to detailed design, it is proposed that each of the seven residential lots would
+connect to the existing 250mm diameter sanitary sewer on Jack Kenney Court. Sanitary
+service connections will be supplied and installed in general conformance with the Region of
+Peel Public Works Design, Specifications and Procedures Manual (2013).
+The total area drainage area of this sanitary sewer is 0.8 ha including the existing residential
+properties and the proposed 0.3 ha site. Based on the Region of Peel Guidelines for lots
+with frontage greater than 10m, the population for design purposes is 56 people. Based on
+Region of Peel Guidelines, the domestic sewage flow for a population less than 1000 is to be
+taken as 0.013 cubic metres/second. This value is approximately 30% of the 0.044 cubic
+metre/second capacity of the pipe calculated using Manning’s equation. The existing 250mm
+diameter sanitary sewer is at reported 0.55% slope.
+Subject to detailed design, sanitary pre-servicing from Jack Kenny Court to the Coleraine
+lands is proposed via a 10.3m long 250mm diameter sanitary sewer stub at minimum 2%.
+The stub is proposed to connect to an existing sanitary manhole on Jack Kenny Court and
+terminate just inside the streetline.
+
+4.2
+
+Water Servicing Plan
+
+4.2.1
+
+Water Demand
+
+The proposed subdivision comprises 7 residential lots.
+summarized in Table 4.1.
+
+The estimated water demand is
+
+TABLE 4.1
+ESTIMATED WATER DEMAND
+JACK KENNY COURT
+Population
+Type
+
+Number
+of Units
+
+Population
+Density
+
+Average
+Rate
+(L/cap/day)
+
+Subdivision
+Average
+Day
+(L/day)
+5,320
+
+Subdivision
+Max. Day
+(L/day)
+
+Subdivision
+Peak Hour
+(L/day)
+
+Residential
+7
+2.7
+280
+10,640
+15,960
+Note:
+1. Units: L/cap/day – litres per capita per day; L/day – litres per day; L/hour – litres per hour.
+2. Consumption values determined by rounding the total subdivision population to 19 people.
+
+4.2.2
+
+Water Supply and Distribution
+
+It is proposed that the seven lots be serviced by municipal water. There is an existing
+150mm and 50mm diameter watermain on Jack Kenney Court.
+
+May 2017
+
+16
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+Subject to detailed design, a portion of the 50mm watermain on Jack Kenny Court is
+proposed to be replaced with 150mm watermain to facilitate pre-servicing of the Coleraine
+lands from Jack Kenny Court. A 4m long 150mm diameter stub is proposed to connect to
+the new 150mm watermain. This stub will terminate in the boulevard, approximately 2m
+short of the streetline. It is our understanding that the Region of Peel is not in support of
+water pre-servicing where the future usage date is not known and the length of the preservice is greater than 5m. It is not possible to bring the water stub to the streetline with a
+5m length of pipe.
+Subject to detailed design, it is proposed that the homes in the seven lot subdivision connect
+directly to the existing and proposed 150mm and 50mm watermains.
+4.2.3
+
+Water Services
+
+All water services will be single service connections that are supplied and installed in general
+conformance with the Region of Peel Public Works Design, Specifications and Procedures
+Manual (2012). Subject to detailed design it is proposed that the water service size be 25
+millimetres.
+
+May 2017
+
+17
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+5.0
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+ROAD RECONSTRUCTION
+
+It is proposed that the section of Jack Kenny Road where services are being installed
+(nominally from the south limit of Lot 7 to the bulb of the cul-de-sac) be repaved in
+accordance with current Town of Caledon standards.
+In addition to the notes on Drawing 09-193-01, the requirements of the road occupancy //
+road closure // PUCC permit will be followed.
+During construction and road restoration, a minimum of one lane must be available at all
+times for emergency access as per the OTM guidelines. Access to the existing residences
+on Jack Kenny Court must be maintained at all times.
+Unshrinkable fill is to be used as the backfill material to the frost line in all trench installations
+within the Town road allowance to the bottom of the Granular ‘A’. The trenches are to be
+mechanically compacted in accordance with the recommendations of a qualified
+geotechnical consultant.
+The top and base course asphalt is to be removed for the entire road width from the south
+limit of Lot 7 to the bulb of the cul-de-sac and the road base compacted, fine graded and
+proof-rolled prior to the placement of the base course with additional granular material
+brought in where necessary to bring the pavement structure to current Town Standards. The
+proposed pavement will be at minimum 40mm HL3 and 65mm HL8 or as recommended by a
+qualified geotechnical consultant. Final asphalt grades are to match existing asphalt grades.
+A diagonal joint between the old and new asphalt is to be used across the travelled portion of
+the roadway and top course cold joints are to be sealed with T-bond hot mix asphalt joint
+tape from McAsphalt or Denso Brand by Denso applied in accordance with the
+manufacturer’s recommendations.
+All curb and gutter fronting on proposed Lots 1-7 is to be removed and replaced per OPSD
+600.040. Subdrains are to remain intact and at grade during construction and road
+restoration.
+
+May 2017
+
+18
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+6.0
+
+EROSION AND SEDIMENT CONTROL
+
+6.1
+
+General
+
+Subject to detailed design, an Erosion and Sediment Control Plan was prepared and is
+included in Appendix A as Drawings 09-193-03A and 09-193-03B. The Erosion and
+Sediment Control Plan was prepared consistent with the Town of Caledon Development
+Standards, Policies & Guidelines (2009) and the Erosion & Sediment Control Guideline for
+Urban Construction prepared by the Greater Golden Horseshoe Area Conservation
+Authorities (2006).
+For project construction, the key items will be limiting construction activities to defined
+working areas and managing surface runoff. Summarized in Table 5.1 are general
+procedures and mitigation measures to be implemented to limit impacts.
+TABLE 6.1: GENERAL PROCEDURES AND MITIGATION MEASURES FOR EROSION
+AND SEDIMENT CONTROL
+Principle No.
+
+Description
+
+1.
+
+Prepare an Erosion and Sediment Control Plan for the project construction.
+Install temporary sediment controls prior to the start of construction per the typical
+details on the Erosion and Sediment Control Plan.
+Delineate the working area prior to the start of construction and confine operations to
+the defined area.
+Enclose temporary topsoil and subsoil stockpile areas with sediment control fence.
+Maintain construction accesses, working areas, and temporary material storage areas
+in good repair.
+Operate machinery in a manner that minimizes disturbance to the environment:
+- protect entrances at machinery access points (e.g., using swamp mats, log mats, or
+rock pads), and establish single site entry and exit points
+- construction equipment and machinery to arrive on site in a clean condition and be
+maintained free of fluid leaks
+- keep an emergency spill kit on site in case of fluid leaks or spills
+Inspect, maintain, and repair sediment controls until completion of construction and
+site restoration.
+Keep additional erosion and sediment materials, such as sediment control fencing and
+clearstone, on-site for emergencies and repairs.
+Remove and dispose temporary sediment controls following completion of construction
+and site restoration.
+Vegetate any disturbed areas by planting and seeding preferably with native grasses
+and cover such areas with mulch to prevent soil erosion and to help seeds germinate.
+If there is insufficient time remaining in the growing season, the site should be
+stabilized (e.g., cover exposed areas with mulch, straw, or erosion control blankets to
+keep the soil in place and prevent erosion) and vegetated the following growing
+season.
+
+2.
+3.
+4.
+5.
+
+6.
+
+7.
+8.
+9.
+
+10.
+
+The erosion and sediment controls comprise management actions and measures to be
+implemented prior to any land grading or construction activities on the site. Consistent with
+the Town of Caledon Development Standards, Policies & Guidelines (2009), erosion and
+
+May 2017
+
+19
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+temporary sediment controls would be inspected on a weekly basis and after each rain event
+10 millimetres or greater or a significant snow melt. These inspections would ensure that the
+controls are in proper working condition and maintained. A permanent record of these
+inspections is required to be forwarded to the Town of Caledon Public Works and
+Engineering Department within five days of the inspection.
+All disturbed ground left inactive, including topsoil stockpiles, would be stabilized by seeding,
+sodding, mulching or covering, or equivalent control measures. The period of time of
+inactivity shall not exceed 30 days, unless otherwise authorized by the Project Manager.
+
+6.2
+
+Topsoil Management
+
+The Geotechnical Report for the project prepared by Soil Engineers Ltd. (2013) has identified
+a 40 to 150mm layer of topsoil on the site. Development of the site will involve stripping and
+stockpiling topsoil to facilitate regrading of the property.
+Based on an assumed average topsoil depth of 100mm, it is estimated that the volume of
+topsoil to be managed is approximately 400 cubic metres. This volume would stockpiled on
+site or adjacent property owned by the applicant.
+At this stage, it is anticipated that no topsoil will be either imported to the site or exported
+from the site.
+The maximum side-slopes for topsoil stockpiles shall be 1.5 horizontal to 1.0 vertical. The
+maximum height of a stockpile is 4.5 metres. Location of topsoil stockpiles on lands to be
+dedicated to the public is prohibited. Topsoil stockpiles shall be located, where possible, on
+private lands between houses and on rear yards.
+Subject to detailed design, it is proposed to locate the topsoil stockpile on the adjacent
+property owned by the applicant as shown on the preliminary erosion and sediment control
+plan during the fill and pre-grade operations, and on the access block between lots 2 and 3
+during home construction. For erosion and sediment control planning, it would be specified
+that any stockpiles remaining at the end of the season will be seeded with a native seed
+mixture and closed off with full perimeter siltation fencing.
+
+6.3
+
+Emergency Contact Information
+
+As part of the erosion and sediment control planning process, a copy of emergency contact
+numbers would be kept on-site and readily available. An example emergency contact list is
+provided in Table 5.2. The applicable contacts would be confirmed at the detailed design
+stage following Draft Plan approval and information provided on the Erosion and Sediment
+Control Plan.
+
+May 2017
+
+20
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+TABLE 6.2: EMERGENCY CONTACT LIST
+Name/Agency
+
+Phone Number
+
+Town of Caledon
+
+905-584-2272
+
+Toronto and Region Conservation
+
+416-661-6600
+
+Ministry of Environment Spills Reporting
+
+416-325-3000
+
+Toronto Water 24 hour Spills Reporting
+
+416-338-8888
+
+Owner
+
+-
+
+Project Engineer – Calder Engineering Ltd.
+
+May 2017
+
+905-857-7600
+
+21
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+7.0
+
+SUMMARY
+
+1.
+
+Calder Engineering Ltd. has been retained by 1361605 Ontario Limited to complete a
+Preliminary Functional Servicing Report for a proposed residential infill development
+on Jack Kenny Court in Bolton in the Town of Caledon. The report is supporting
+documentation for the respective subdivision Draft Plan application.
+
+2.
+
+The overall site comprises approximately 0.3 ha. It is proposed to rezone the
+property from A1 – Agricultural and develop the site with 7 single dwelling lots fronting
+on Jack Kenny Court with municipal water, sanitary and storm services. Drainage
+and storm water would be managed with the application of Low Impact Development
+(LID) practices.
+
+3.
+
+The site generally drains northward to an existing culvert that drains to the outlet of
+an existing stormwater management pond. Drainage is ultimately to a branch of the
+Humber River. As such, the site falls under the jurisdiction of the Toronto and Region
+Conservation Authority (TRCA).
+
+4.
+
+Lot level controls and Low Impact Development (LID) practices are recommended for
+implementation, wherever feasible, to reduce the volume of runoff and provide, as far
+as practical, a natural hydrologic response. Such measures are as follows:
+
+
+5.
+
+Recharge of residential roof and driveway stormwater by direction to grassed
+areas, and where possible the rear-yard grassed areas and swale system, to
+promote filtering and natural infiltration;
+ Rear yard swales enhanced with granular storage and a perforated pipe system.
+Peak flow calculations were completed using the Rational Method with Town of
+Caledon parameters. Calculations show that the expected peak flows are within the
+capacity of the proposed site stormwater infrastructure. As the site drains to a branch
+of the Humber River it is Calder Engineering Ltd.’s understanding that no quantity
+control is required under TRCA guidelines. Additionally, it is our understanding that
+the existing stormwater management pond was designed to provide quantity and
+quality control for the future development of this property.
+
+6.
+
+For water balance, it was computed that the proposed development would yield an
+initial abstraction of 5.9 mm indicating that retention of the first 5 mm of rainfall on site
+is achievable. Additionally, provided on site is an estimated 10.7 cu.m. of storage
+capacity within the granular storage areas under the proposed swales on Lots 1 and
+7.
+
+7.
+
+It is proposed that development be serviced by municipal sanitary sewers. There is
+an existing 250mm diameter sanitary sewer on Jack Kenny Court. It is proposed that
+each lot be serviced by this existing sewer.
+
+8.
+
+It is proposed that development be serviced by municipal water. There is an existing
+50 and 150 millimetre diameter watermain on Jack Kenny Court. It is proposed that
+the development will be serviced by municipal water by connecting to watermains on
+Jack Kenny Court.
+
+9.
+
+Water and sanitary pre-servicing for the Coleraine lands are proposed. Subject to
+detailed design, it is proposed to replace a portion of the existing 50mm watermain on
+Jack Kenny Court with a 150mm diameter watermain and construct a 4m watermain
+stub terminating in the boulevard approximately 2 metres short of the streetline.
+Subject to detailed design, it is proposed that a 250mm diameter 10.3m long sanitary
+
+May 2017
+
+22
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+stub be constructed from the streetline to an existing sanitary manhole on Jack Kenny
+Court.
+10.
+
+Considerations were provided for road construction of Jack Kenny Court.
+reconstruction notes are included on Drawing 09-193-01.
+
+11.
+
+Considerations were provided for erosion and sediment control planning. An Erosion
+and Sediment Control Plan was prepared (Drawings 09-193-03A and 09-193-03B).
+The Erosion and Sediment Control Plan was prepared consistent with the Town of
+Caledon Development Standards, Policies & Guidelines (2009) and the Erosion &
+Sediment Control Guideline for Urban Construction prepared by the Greater Golden
+Horseshoe Area Conservation Authorities (2006).
+
+May 2017
+
+23
+
+Road
+
+Calder Engineering Ltd.
+
+1361605 Ontario Limited
+
+7.0
+
+Preliminary Functional Servicing and Stormwater Management Report
+Jack Kenny Court, Bolton, Town of Caledon
+
+REFERENCES
+
+Aercoustics Engineering Ltd. (July 11 2013, revised April 13, 2017). Environmental Noise
+and Vibration Study for Proposed Residential Development, Jack Kenny Court.
+Greater Golden Horseshoe Area Conservation Authorities. (2006). Erosion and Sediment
+Control Guidelines for Urban Construction.
+Paul King. (2017) Draft Plan.
+Region of Peel. (2013). Region of Peel Public Works Design, Specifications and Procedures
+Manual.
+Savanta Inc. (July 2013, revised April 2016). Scoped Environmental Impact Study for Jack
+Kenny Court, Town of Caledon, Ontario.
+Soil Engineers Ltd. (May 2013). Soil Investigation for Proposed Residential Development,
+13576 and 13584 Coleraine Drive.
+Soil Engineers Ltd. (July 9, 2013). Phase 1 Environmental Site Assessment, East of Jack
+Kenny Court, North of Grapevine Road, Town of Caledon.
+Sunarts Design (2017). Tree Inventory/Assessment.
+Town of Caledon. (2009). Town of Caledon Development Standards, Policies and
+Guidelines.
+
+May 2017
+
+24
+
+Calder Engineering Ltd.
+
+APPENDIX A
+PRELIMINARY DRAWINGS
+
+May 2017
+
+Calder Engineering Ltd.
+
+APPENDIX B
+STORMWATER MANAGEMENT
+
+May 2017
+
+Calder Engineering Ltd.
+
+SIMCOE
+DUFFERIN
+
+Aurora
+
+Y 9
+HW
+
+0
+
+Mono
+
+e
+Yong
+
+40
+HWY
+
+Adjala
+
+St
+
+Rd
+
+n St
+
+Ch
+
+ur
+
+ch
+
+7
+
+or
+t
+
+R
+
+King
+
+Ol
+d
+
+irp
+
+H
+W
+Y
+
+d
+
+Ca
+st
+led
+er
+g
+
+Si
+de
+ro
+
+ad
+
+PEEL
+Legend
+River / Stream
+
+Th
+e
+
+G
+
+or
+e
+
+I
+
+50
+
+Rd
+
+Vaughan
+D
+nzie
+acke
+M
+r
+Majo
+
+Approximate Site Location
+
+Equation A (Sub Basin 4)
+
+Richmond
+Hill
+
+St
+
+Caledon
+
+Unit Flow Relationships
+
+Dufferi
+
+HWY 2
+
+A
+
+King
+
+YORK
+
+r
+
+Dr
+
+Equation B (Sub Basin 6)
+
+Equation F (Sub Basin 36)
+
+Contact TRCA Staff
+
+H
+
+W
+Y
+
+ay
+f
+
+R
+
+d
+
+Brampton
+
+4 Kms
+
+St
+Q
+ue
+
+en
+
+00
+
+Bo
+va
+ird
+
+HWY 4
+
+427
+
+Humber River Stormwater Management
+Quantity Control Release Rates
+
+d
+R
+
+Dr
+
+2
+
+t
+or
+rp
+
+1
+
+07
+Y4
+HW
+
+Ai
+
+Quantity Flood Control Not Required
+0
+
+Y7
+HW
+
+10
+
+01
+Y4
+HW
+
+407
+
+Equation G (Sub Basin 46)
+
+ak
+e
+
+HW
+Y
+
+Equation E (Sub Basin 19A)
+
+M
+
+H
+ea
+rt
+L
+
+Equation D (Sub Basin 15)
+
+iel
+d
+
+Equation C (Sub Basin 10)
+
+HWY 409
+
+W
+Y
+
+41
+0
+
+Y
+HW
+
+1
+40
+
+27
+Y 4
+HW
+
+H
+
+To r o n t o
+
+Runoff
+
+Pipe Flow
+
+Acc. A
+I
+AxC
+xC
+Tc (min) (mm/hr) Q (L/s)
+0.18632 0.18632
+15.00
+111.40
+57.65
+0.128 0.31432 15.37
+110.01
+96.05
+
+Pipe Length (m)
+
+Pipe Diameter (m)
+
+Pipe Slope (%)
+
+Full Flow Capacity (L/s)
+
+Full Flow Velocity (m/s)
+
+Time of flow (min.)
+
+10 YEAR STORM DESIGN SHEET
+Location
+
+Drainage Area
+
+24
+42.8
+
+0.300
+0.375
+
+0.61
+0.35
+
+75.5
+103.7
+
+1.1
+0.9
+
+0.37
+0.76
+
+% full
+76.3%
+92.6%
+
+From MH
+Ex. DCB
+Ex. MHA
+
+To MH
+Ex. MHA
+Ex. MHB
+
+A
+(ha)
+0.47
+0.32
+
+CB2
+MH2
+
+MH2
+Ex. MHB
+
+0.05
+0.00
+
+0.40
+
+0.02
+
+0.02
+0.02
+
+15.00
+
+111.40
+
+6.19
+6.19
+
+38.3
+10
+
+0.3
+0.3
+
+1
+1
+
+96.7
+96.7
+
+1.4
+1.4
+
+0.47
+0.12
+
+6.4%
+6.4%
+
+Jack Kenny Court
+
+Ex. MHB
+
+Ex. MHC
+
+0.14
+
+0.40
+
+0.056
+
+0.39032
+
+16.13
+
+107.31
+
+116.35
+
+44.0
+
+0.450
+
+0.25
+
+142.6
+
+0.9
+
+0.82
+
+81.6%
+
+Jack Kenny Court
+
+Ex. DCB
+
+SWM
+
+0.98
+
+0.40
+
+0.39032 0.39032
+
+15.00
+
+111.40
+
+120.78
+
+48.4
+
+0.750
+
+2.20
+
+1651.3
+
+3.7
+
+0.22
+
+7.3%
+
+Coleraine property
+Coleraine property
+
+DICB1
+MH1
+
+MH1
+SWM
+
+0.48
+0.00
+
+0.40
+
+0.192
+
+15.00
+
+111.40
+
+59.41
+59.41
+
+10.0
+
+0.300
+1.000
+
+2.00
+0.40
+
+136.8
+1516.4
+
+1.9
+1.9
+
+0.09
+0.00
+
+43.4%
+3.9%
+
+Street
+Jack Kenny Court
+Jack Kenny Court
+Lot 7
+Lot 7
+
+Notes
+Manning's n =
+
+where:
+
+0.192
+0.192
+
+CONSULTANT: Calder Engineering Ltd.
+PROJECT: Jack Kenny Court
+PROJECT NO: 09‐193
+LOCATION: Town of Caledon
+
+0.013
+
+A=
+B=
+C=
+
+C
+0.40
+0.40
+
+2221
+12
+0.908
+
+Runoff
+
+Pipe Flow
+
+Acc. A
+I
+AxC
+xC
+Tc (min) (mm/hr) Q (L/s)
+0.18632 0.18632
+15.00
+166.89
+86.38
+0.128 0.31432 15.37
+165.03 144.09
+
+Pipe Length (m)
+
+Pipe Diameter (m)
+
+Pipe Slope (%)
+
+Full Flow Capacity (L/s)
+
+Full Flow Velocity (m/s)
+
+Time of flow (min.)
+
+100 YEAR STORM DESIGN SHEET
+Location
+
+Drainage Area
+
+24
+42.8
+
+0.300
+0.375
+
+0.61
+0.35
+
+75.5
+103.7
+
+1.1
+0.9
+
+0.37
+0.76
+
+% full
+114.4%
+138.9%
+
+From MH
+Ex. DCB
+Ex. MHA
+
+To MH
+Ex. MHA
+Ex. MHB
+
+A
+(ha)
+0.47
+0.32
+
+CB2
+MH2
+
+MH2
+Ex. MHB
+
+0.05
+0.00
+
+0.40
+
+0.02
+
+0.02
+0.02
+
+15.00
+
+166.89
+
+9.27
+9.27
+
+38.3
+10
+
+0.3
+0.3
+
+1
+1
+
+96.7
+96.7
+
+1.4
+1.4
+
+0.47
+0.12
+
+9.6%
+9.6%
+
+Jack Kenny Court
+
+Ex. MHB
+
+Ex. MHC
+
+0.14
+
+0.40
+
+0.056
+
+0.39032
+
+16.13
+
+161.39
+
+174.98
+
+44.0
+
+0.450
+
+0.25
+
+142.6
+
+0.9
+
+0.82
+
+122.7%
+
+Jack Kenny Court
+
+Ex. DCB
+
+SWM
+
+0.98
+
+0.40
+
+0.39032 0.39032
+
+15.00
+
+166.89
+
+180.95
+
+48.4
+
+0.750
+
+2.20
+
+1651.3
+
+3.7
+
+0.22
+
+11.0%
+
+Coleraine property
+Coleraine property
+
+DICB1
+MH1
+
+MH1
+SWM
+
+0.48
+0.00
+
+0.40
+
+0.192
+
+15.00
+
+166.89
+
+89.01
+89.01
+
+10.0
+
+0.300
+1.000
+
+2.00
+0.40
+
+136.8
+1516.4
+
+1.9
+1.9
+
+0.09
+0.00
+
+65.1%
+5.9%
+
+Street
+Jack Kenny Court
+Jack Kenny Court
+Lot 7
+Lot 7
+
+Notes
+Manning's n =
+
+where:
+
+0.192
+0.192
+
+CONSULTANT: Calder Engineering Ltd.
+PROJECT: Jack Kenny Court
+PROJECT NO: 09‐193
+LOCATION: Town of Caledon
+
+0.013
+
+A=
+B=
+C=
+
+C
+0.40
+0.40
+
+4688
+17
+0.9624
+
+

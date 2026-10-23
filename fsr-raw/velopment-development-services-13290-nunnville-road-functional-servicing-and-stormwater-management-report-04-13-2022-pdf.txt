@@ -1,0 +1,4360 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+May 2, 2022
+
+FUNCTIONAL SERVICING
+&
+STORMWATER MANAGEMENT REPORT
+13290 NUNNVILLE ROAD
+TOWN OF CALEDON
+
+PREPARED FOR:
+BOLTON SUMMIT DEVELOPMENTS INC.
+
+PREPARED BY:
+C.F. CROZIER & ASSOCIATES INC.
+2800 HIGH POINT DRIVE, SUITE 100
+MILTON, ON L9T 6P4
+APRIL 2022
+CFCA FILE NO. 649-6278
+
+The material in this report reflects best judgment in light of the
+information available at the time of preparation. Any use which
+a third party makes of this report, or any reliance on or decisions
+made based on it, are the responsibilities of such third parties.
+C.F. Crozier & Associates Inc. accepts no responsibility for
+damages, if any, suffered by any third party as a result of
+decisions made or actions based on this report.
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+Revision Number
+
+Date
+
+Comments
+
+Rev 0
+
+April 13, 2022
+
+Issued for 1st Submission
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+ii
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+TABLE OF CONTENTS
+1.0
+
+INTRODUCTION .........................................................................................................................1
+
+2.0
+
+SITE DESCRIPTION ........................................................................................................................................ 1
+
+3.0
+
+WATER SERVICING ....................................................................................................................................... 1
+3.1
+3.2
+3.3
+3.4
+
+4.0
+
+Existing Water Servicing ...................................................................................................................... 1
+Design Water Demand ........................................................................................................................ 1
+Fire Flow Demand ................................................................................................................................ 2
+Proposed Water Servicing .................................................................................................................. 2
+SANITARY SERVICING ................................................................................................................................. 3
+
+4.1
+4.2
+4.3
+5.0
+
+Existing Sanitary Servicing .................................................................................................................. 3
+Design Sanitary Flow ........................................................................................................................... 3
+Proposed Sanitary Servicing .............................................................................................................. 3
+DRAINAGE CONDITIONS ............................................................................................................................ 3
+
+5.1
+5.2
+6.0
+
+Existing Drainage Conditions ............................................................................................................. 3
+Proposed Drainage Conditions ......................................................................................................... 4
+STORMWATER MANAGEMENT ................................................................................................................... 5
+
+6.1
+6.2
+6.3
+
+Stormwater Quantity Control ............................................................................................................. 5
+Stormwater Quality Control ................................................................................................................ 6
+Water Balance ...................................................................................................................................... 7
+
+7.0
+
+EROSION AND SEDIMENT CONTROLS DURING CONSTRUCTION .......................................................... 7
+
+8.0
+
+CONCLUSIONS & RECOMMENDATIONS .................................................................................................. 8
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+iii
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+LIST OF TABLES
+Table 1:
+
+Equivalent Population Estimate
+
+Table 2:
+
+Estimated Design Water Demand
+
+Table 3:
+
+Estimated Design Sanitary Demand
+
+Table 4:
+
+Summary of Stormwater Management Criteria
+
+Table 5:
+
+Summary of Peak Flow Rates (To TRCA EPA Regulated Lands)
+
+Table 6:
+
+Summary of Target Peak Flow Rates and Storage Volumes
+
+Table 7:
+
+Area Breakdown and Associated TSS Removal
+
+LIST OF APPENDICES
+Appendix A:
+
+Water Demand Calculations
+
+Appendix B:
+
+Sanitary Demand Calculations
+
+Appendix C:
+
+Stormwater Design Calculations
+
+LIST OF DRAWINGS
+Drawing C101:
+
+Erosion & Sediment Control Plan
+
+Drawing C102:
+
+Preliminary Site Servicing Plan
+
+Drawing C103:
+
+Preliminary Site Grading Plan
+
+LIST OF FIGURES
+Figure 1:
+
+Pre-Development Drainage Plan
+
+Figure 2:
+
+Post-Development Drainage Plan
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+iv
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+1.0
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+Introduction
+
+C.F. Crozier & Associates Inc. (Crozier) was retained by Bolton Summit Developments Inc. (BSDI)
+to prepare a Functional Servicing and Stormwater Management Report in support of the Zoning
+By- Law Amendment and Official Plan Amendment for the proposed development located at
+13290 Nunnville Road in the Town of Caledon.
+This report demonstrates how the proposed development’s functional servicing and stormwater
+management will integrate with the area’s existing water, sanitary and stormwater infrastructure.
+
+2.0
+
+Site Description
+
+The proposed development is part of an established residential area in Bolton. The property is
+located at 13290 Nunnville Road. The site currently consists of one existing residential building
+surrounded by a forested area. The proposed development covers an area of approximately
+0.85 ha. The developable area is proposed to include 15 multi-unit townhouses comprised of
+3 (three)separate blocks, a private road, and associated landscaped areas. The remainder of the
+site is environmentally sensitive and is regulated by the Toronto and Region Conservation
+Authority (TRCA).
+The subject property is bounded by:
+
+3.0
+
+•
+
+A TRCA Regulated Environmental Protection Area (EPA) to the north and west.
+
+•
+
+Nunnville Road to the east and south.
+
+•
+
+An Existing residential property to the south.
+
+Water Servicing
+
+The Region of Peel is responsible for the operation and maintenance of the public water supply and
+treatment system in the Town of Caledon. Any local water supply system will connect to the existing
+or proposed Region’s municipal water network.
+3.1
+
+Existing Water Servicing
+
+According to Berkshire Homes Development as-constructed drawing 36209-D
+(A.M. Candaras Associates, May 2006), there is an existing 150 mm diameter PVC watermain
+along Nunnville Road with a plug and blowoff valve located at the northwest corner of
+Bateman Lane and Nunnville Road. An existing fire hydrant is also located at the northwest
+corner of Bateman Lane and Nunnville Road.
+3.2
+
+Design Water Demand
+
+The population density, provided by the Region of Peel, was used to determine an equivalent
+population estimate for the proposed residential development. The results are provided in Table 1
+and detailed calculations along with email correspondences regarding the population density are
+provided in Appendix A.
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+Page 1 of 9
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+Number of Units
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+Table 1: Equivalent Population Estimate
+Persons/Unit
+
+15
+
+Total Persons
+
+3.4
+
+51
+
+The Region of Peel Watermain Design Criteria (June 2010) was used to determine the maximum
+domestic water demand generated by the proposed development based on the equivalent
+population estimate for the site. Table 2 summarizes the estimated design water demand.
+Appendix A contains detailed calculations for the required water demand.
+
+Standard
+
+Table 2: Estimated Design Water Demand
+Average Daily
+Maximum Daily
+Demand
+Demand
+(L/s)
+(L/s)
+
+Region of Peel
+Watermain Design Criteria
+(June 2010)
+
+0.17
+
+0.33
+
+Peak Hourly
+Demand
+(L/s)
+0.50
+
+The domestic water service will be designed to convey a peak domestic design water demand
+of 0.50 L/s.
+3.3
+
+Fire Flow Demand
+
+The Fire Underwriters Survey method (1999) was used to estimate the fire flow demand for the
+proposed development. Based on dwelling gross floor area and exposure distance (WSP, March
+2022), the preliminary fire demand using this method is 150 L/s for a minimum duration of 2 hours.
+Detailed calculations are provided in Appendix A. The calculation is based on the assumptions that
+the proposed building will be made from ordinary construction material, potential to contain rapid
+burning fire hazards, and will not have an automatic sprinkler system.
+Hydrant flow testing was carried out on April 18, 2019, by Aquazition on the existing 150 mm
+diameter municipal watermain on Nunnville Road. Based on the hydrant test results, at 276 kPa
+(40 psi) residual pressure, a minimum of 171 L/s (2,708 US GPM) projected flow is available within the
+150 mm diameter municipal watermain on Nunnville Road. Detailed results of the hydrant flow test
+and projected fire flows are provided in Appendix A.
+3.4
+
+Proposed Water Servicing
+
+The proposed development will be serviced by the existing 150 mm diameter PVC watermain
+located on Nunnville Road. The existing watermain will be extended from the plug located at the
+northwest corner of Nunnville Road and Bateman Lane to the proposed development. The
+proposed development will be serviced with a 150 mm diameter PVC watermain within the private
+site. The units will be serviced by a 25 mm diameter domestic water services which will connect to
+the proposed watermain within the private road. Two (2) fire hydrants are also proposed to provide
+the required fire suppression coverage for the proposed development.
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+Page 2 of 9
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+4.0
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+Sanitary Servicing
+
+The Region of Peel is responsible for the operation and maintenance of the public sewage
+collection and treatment system in the Town of Caledon. Any local sewage system will connect
+to the Region’s municipal sanitary sewage network.
+4.1
+
+Existing Sanitary Servicing
+
+According to Southridge Estates Phase 7 as-constructed drawing 25231-D (Falby Burnside &
+Associates, May 1997) there is an existing 250 mm diameter sanitary sewer flowing south on Nunnville
+Road. Additionally, according Nunnville Road issued for construction drawings 69958-D (Region of
+Peel, July 2018) there is a proposed 900 mm diameter trunk sanitary sewer flowing south on Nunnville
+Road which will connect to the existing trunk sanitary sewer on Albion-Vaughan Road. According to
+the issued for construction drawings, a 250 mm diameter sanitary sewer is proposed to provide
+sanitary service from the site to the trunk sewer.
+4.2
+
+Design Sanitary Flow
+
+The Region of Peel Sanitary Design Criteria (March 2017) and the equivalent population estimate
+from Section 3.2, were used to determine the estimated design sanitary flow for the proposed
+development. Estimated design sanitary calculations are provided in Table 3, and detailed
+calculations are provided in Appendix B.
+
+Standard
+
+Table 3: Estimated Design Sanitary Demand
+Average Day
+Peaking
+Infiltration Flow
+(L/s)
+Factor
+(L/s)
+
+Region of Peel
+Sanitary Design Criteria
+(March 2017)
+
+0.18
+
+4.00
+
+0.08
+
+Total Flow
+(L/s)
+0.80
+
+The proposed sanitary service must convey a total design sanitary demand of 0.80 L/s determined
+according to the Region of Peel Sanitary Design Criteria (March 2017).
+4.3
+
+Proposed Sanitary Servicing
+
+The proposed development will be serviced by a 200 mm diameter sanitary sewer at a minimum
+slope of 1% which will connect to the future 250 mm diameter sanitary sewer (completed by others)
+within Nunnville Road.
+
+5.0
+
+Drainage Conditions
+
+5.1
+
+Existing Drainage Conditions
+
+According to the topographic survey (R-PE Surveying Ltd., February 2022) the site slopes from south
+to north and existing stormwater flows are conveyed overland to the TRCA Environmental Protection
+Area (EPA) Regulated Lands and towards adjacent properties on Old King Road and Deer Hollow
+Court, ultimately to the Humber River.
+•
+
+Catchment 101 (A = 0.77 ha; RC = 0.30) demonstrates drainage from the south of the site
+discharging uncontrolled to the TRCA EPA regulated land that surrounds the site.
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+Page 3 of 9
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+• Catchment 102 (A = 0.08 ha; RC = 0.25) demonstrates drainage form the southeast corner
+of the site discharging uncontrolled minor flows towards a catch basin located on the
+southeast portion of the property. Flows are discharges to a headwall adjacent to the
+Nunnville Road pedestrian walkway towards Old King Road within the TRCA EPA regulated
+land. Major flows also drain to the TRCA EPA regulated land that surrounds the site.
+Figure 1 illustrates the delineation of the drainage areas and existing drainage conditions. The
+existing residential building is connected to the municipal stormwater infrastructure.
+5.2
+
+Proposed Drainage Conditions
+
+The developable area is proposed to include 15 multi-unit townhouses comprised of 3 (three)
+separate blocks, a private road, and associated landscaped areas. Stormwater flows within the
+total property area will be considered for this analysis. Lands outside the development limit will
+maintain their existing drainage patterns.
+The proposed development has been divided into three post-development stormwater catchment
+areas as shown on Figure 2 Post-Development Drainage Plan. The grading of the proposed
+development results in the following post-development drainage catchments:
+•
+
+Catchment UC1 (A = 0.51 ha; RC = 0.25) discharges uncontrolled to the TRCA EPA regulated
+lands and adjacent properties on Old King Road and Deer Hollow Court, ultimately to the
+Humber River following existing drainage patterns. Post-development uncontrolled peak
+flows will be equal to or less than pre-development peak flows.
+
+•
+
+Catchment 201 (A = 0.32 ha; RC = 0.77) minor flows will be controlled using an orifice tube
+and a superpipe for stormwater storage. Minor flows will be conveyed to the existing storm
+sewer system on Nunnville Road which discharge via a headwall to the existing concrete
+channel adjacent to the Nunnville Road walkway within the TRCA EPA regulated land,
+ultimately draining to Old King Road and then the Humber River. Emergency flows will be
+conveyed to the ditch on Nunnville Road within the TRCA EPA regulated land, ultimately
+draining to Old King Road and then the Humber River.
+
+•
+
+Catchment 202 (A = 0.02 ha; RC = 0.53) minor flows will be conveyed to the relocated catch
+basin located in the southeast corner of the site (previously conveyed Catchment 102 minor
+flows) and major flows will be directed to a ditch on Nunnville Road within the TRCA EPA
+regulated land, ultimately draining to Old King Road and then the Humber River.
+
+In accordance with Town of Caledon standards, stormwater flows will be attenuated so the postdevelopment peak flows for all storm events match or are less than the pre-development peak flows
+for all storm events. The controlled catchment 201 will be controlled by a 150 mm diameter orifice
+tube downstream of a proposed 1200 mm diameter storm sewer superpipe which will be used to
+attenuate excess flows.
+Emergency flows will be directed to the TRCA EPA regulated lands that surround the site. The
+overland flow route for an emergency flow scenario is outlined in Figure 2.
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+Page 4 of 9
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+6.0
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+Stormwater Management
+
+The proposed stormwater management design must comply with the Town of Caledon
+Development Standards Manual (V5, 2019). Table 4 provides a summary of the stormwater
+management criteria based on the stormwater management design guidelines.
+
+Control Parameter
+Quantity Control
+Quality Control
+
+Table 4: Summary of Stormwater Management Criteria
+Catchment 202
+Post-development peak stormwater flows must be equal to or less than
+pre-development peak stormwater flows.
+Achieve Ontario Ministry of the Environment, Conservation and Parks (MECP.)
+Enhanced Level of protection (80% total suspended solids (TSS) removal).
+
+Water Balance
+
+Retain 5 mm rainfall event on-site.
+
+Erosion and
+Sediment Controls
+
+Provided during construction and until the site is stabilized.
+
+6.1
+
+Stormwater Quantity Control
+
+The Modified Rational Method was used to determine the pre-development and
+post-development flow rates for the site using the Town’s IDF rainfall data according to Town
+Standard Drawing No. 103. The peak flow rates were then used to determine if any stormwater
+quantity control was required for the proposed development. Detailed Modified Rational
+Method calculations are included in Appendix C.
+The following section will consider one outlet, which is the TRCA EPA regulated lands. The outlet to
+the regulated lands includes pre-development Catchment 101 and 102, and post-development
+Catchments UC1, 201, and 202. Table 5 summarizes the pre-and post-development peak flows to
+the TRCA EPA regulated lands.
+Table 5: Summary of Peak Flow Rates
+Flow Rates (L/s)
+Pre-Development
+
+Storm Event
+(yr)
+
+Post-Development
+
+Uncontrolled
+
+Uncontrolled
+
+Controlled
+Q201 – 150 mm
+
+Q101
+
+Q102
+
+Qtotal
+
+QUC1
+
+Q202
+
+2-yr
+
+55
+
+5
+
+60
+
+31
+
+3
+
+27
+
+60
+
+5-yr
+
+71
+
+6
+
+77
+
+39
+
+3
+
+34
+
+77
+
+10-yr
+
+87
+
+8
+
+94
+
+48
+
+4
+
+41
+
+93
+
+25-yr
+
+101
+
+9
+
+110
+
+56
+
+5
+
+47
+
+107
+
+50-yr
+
+114
+
+10
+
+124
+
+63
+
+5
+
+51
+
+120
+
+100-yr
+
+127
+
+11
+
+138
+
+70
+
+6
+
+56
+
+132
+
+orifice
+
+Qtotal
+
+As presented in Table 5, the post-development peak flows to the regulated lands are equal to or less
+than the pre-development peak flows. Therefore, the stormwater quantity control criterion to this
+outlet is satisfied.
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+Page 5 of 9
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+Controlled stormwater from Catchment 201 will be conveyed to the existing 375 mm diameter storm
+sewer located on Nunnville Road. A 150 mm diameter orifice tube downstream of a 97 m long 1200
+mm diameter storm sewer superpipe network which will restrict peak flow to achieve the quantity
+control criterion. The superpipe will retain the attenuated peak flows from the 2-year to 100-year
+storm events.
+A summary of the target peak flows and subsequent required storage volumes is presented
+in Table 6.
+
+Storm Event
+(yr)
+
+2-yr
+5-yr
+10-yr
+25-yr
+50-yr
+100-yr
+
+Table 6: Summary of Target Peak Flow Rates and Storage Volumes
+Catchment 201
+(150mm Orifice Tube)
+Target
+Required
+Flow Rate
+Flowrate
+Storage
+(L/s)
+Q201 = Q101 + Q102 (L/s)
+(m3)
+QUC1 - Q202
+27
+27
+24
+35
+34
+35
+42
+41
+44
+49
+47
+56
+56
+51
+66
+62
+56
+77
+
+Provided
+Storage
+(m3)
+
+110
+
+As shown in Table 6, a 150 mm diameter orifice tube is required for Catchment 201 to control
+post-development peak flows to pre-development peak flows and meet the quantity control
+criteria. A 97 m long 1200 mm diameter storm sewer superpipe network, upstream of the 150 mm
+diameter orifice tube, will provide storage for the attenuated flows up to the 100-year storm event.
+The 100-year high-water level will be contained within the pipe. The system will be designed to
+detain 110h m3 therefore satisfying the storage requirement outlined in Table 6.
+6.2
+
+Stormwater Quality Control
+
+Stormwater quality controls for the site must incorporate measures to provide an Enhanced Level of
+Protection (Level 1) according to the MECP (March 2003) guidelines. Enhanced water quality
+protection involves the removal of at least 80% of total suspended solids (TSS) from 90% of the annual
+runoff volume. An area breakdown and associated TSS removal rate is provided in Table 7.
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+Page 6 of 9
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+Table 7: Area Breakdown and Associated TSS Removal
+% of Total
+Area
+TSS Removal
+Catchment
+Development
+(ha)
+Efficiency
+Area
+
+Total TSS
+Removal
+
+Catchment UC1
+
+Landscape
+
+0.51
+
+60%
+
+80%
+
+48%
+
+Catchment 201
+
+Jellyfish Filter
+
+0.32
+
+38%
+
+89%
+
+34%
+
+Catchment 202
+
+Partial Landscape
+
+0.02
+
+2%
+
+40%
+
+1%
+
+Total Site
+
+0.85
+
+100.0%
+
+-
+
+83%
+
+Catchment UC1, which discharges uncontrolled to the TRCA EPA regulated lands, are landscaped
+areas that naturally achieve 80% TSS removal efficiency. Catchment 202, discharges to the existing
+storm sewer network on Nunnville Road partially treated as the portion of landscaped area will
+naturally achieve 80% TSS removal efficiency and the remaining road area will discharge untreated.
+A Jellyfish Filter will be used to treat the controlled discharge from Catchment 201 and will apply 89%
+TSS Removal Efficiency. The resulting combined TSS removal efficiency for the site is 83%, therefore
+the quality control criterion is achieved.
+6.3
+
+Water Balance
+
+The minimum volume requirement to promote water balance is the retention of a 5 mm rainfall
+event. The water balance retention volume was calculated considering initial abstraction of runoff
+based on various surface types.
+Water balance for the proposed development will be achieved through attenuation of stormwater
+runoff over the natural landscaped area with a 150 mm enhanced topsoil layer. Water balance for
+the impervious areas of the site (Catchment 201) will be achieved by providing a total topsoil depth
+of 300 mm over the landscaped areas per the Town of Caledon Development Standards Manual
+(V5, 2019). A storage volume of approximately 12.5 m3 is required to achieve the water balance
+criteria (5mm x 0.25 ha of impervious area in Catchment 201).
+The total water balance volume will be stored in the topsoil of the landscaped area in Catchment
+201 (0.06 ha). Using typical topsoil parameters (soil porosity = 0.47; soil field capacity = 0.32), the first
+150 mm of topsoil is available for initial abstraction and has approximately 13.50 m3 of capacity for
+rainfall storage. Since the capacity of storage in the topsoil and the physical volume of rainfall
+exceed the required storage volume, we conclude that a total topsoil depth of 300 mm will
+successfully retain 12.5 m3 of rainfall volume. Detailed calculations for the topsoil retention are
+included in Appendix C.
+
+7.0
+
+Erosion and Sediment Controls During Construction
+
+Erosion and sediment controls (ESC) will be installed prior to the start of any construction activities
+and will be maintained until the site is stabilized or as directed by the Site Engineer or the Town of
+Caledon. The contractor will inspect the ESC after each significant rainfall event to ensure they are
+maintained in proper working condition.
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+Page 7 of 9
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+Sediment Control Fencing
+Sediment control fencing in accordance with Town standard drawing 304 will be installed on the
+perimeter of the site to intercept sheet flow. Adjacent to the sensitive EPA lands, double silt fence
+with straw bales will be installed for additional protection. Based on field decisions, the Site Engineer
+and the Owner may add additional sediment control fencing prior to, during, and following
+construction.
+Rock Mud Mat
+A rock mud mat will be installed at the entrance to the construction zone to prevent mud tracking
+from the site onto the surrounding lands and perimeter roadway network. All construction traffic will
+be restricted to this access only.
+Sediment Control for Catchbasins
+Sediment control device will be installed in the existing nearby storm sewer catch basins. The
+sediment control device will provide sediment control to prevent silt and sediment from entering the
+stormwater system.
+
+8.0
+
+Conclusions & Recommendations
+
+The proposed development can be serviced for water, sanitary, and stormwater in accordance
+with the Town of Caledon requirements and standards. Our conclusions and recommendations
+include:
+1. Water demand for the proposed development will be provided using individual 25 mm
+domestic water services connected to the proposed 150 mm diameter PVC watermain
+within the private road. The proposed watermain will connect to an extension of the
+existing 150 mm diameter watermain on Nunnville Road.
+2. Two (2) fire hydrants are proposed to provide fire suppression coverage for the
+development.
+3. Sanitary servicing for the proposed development will be provided using a 200 mm diameter
+sanitary sewer, which connects to the future 250mm diameter sanitary sewer located on
+Nunnville Road.
+4. Stormwater runoff from Catchment UC1 and 202 will flow uncontrolled to the TRCA EPA
+regulated lands outlet. Stormwater runoff from Catchment 201 will flow controlled to the
+existing storm sewer system located on Nunnville Road.
+5. Stormwater quantity control has been provided using a 200 mm diameter orifice tube and
+a 97 m long 1200 mm diameter storm sewer superpipe which is sized to contain the
+attenuated post-development peak flows up to the 100-year storm event.
+6. A combination of landscaped areas and a Jellyfish filter will provide an enhanced level of
+protection (83% TSS removal for total site) for stormwater quality control for Catchment 201.
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+Page 8 of 9
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+7. Water balance for the proposed development will be achieved using enhanced topsoil over
+the landscaped area in Catchment 201, providing 13.5 m3 of storage.
+8. Erosion and Sediment Controls will be implemented on-site during construction and will be
+maintained until the site is stabilized.
+Based on the above conclusions we support the proposed development application from the
+perspective of water supply, sanitary servicing, and stormwater management.
+Respectfully submitted,
+C.F. CROZIER & ASSOCIATES INC.
+
+C.F. CROZIER & ASSOCIATES INC.
+
+Jayesh Boily, E.I.T.
+Land Development
+
+Peter Smuczak, P.Eng.
+Project Engineer
+
+OS/cj
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville Rd\Reports\2022.04.22_(0649-6278)_6278_
+FSRSWM.docx
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+Page 9 of 9
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+APPENDIX
+
+A
+
+Water Demand Calculations
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+Revised: 2022.04.22
+
+Connection Demand Table
+WATER CONNECTION
+Connection point 3)
+Existing 150mm diameter watermain on Nunnville Road
+ID: WND6569890-WND6569891
+Pressure zone of connection point
+6
+Total equivalent population to be serviced 1) 51 persons
+Total lands to be serviced
+0.41 ha
+Hydrant flow test
+Hydrant flow test location
+Nunnville Road
+
+Minimum water pressure
+Maximum water pressure
+
+Pressure
+(kPa)
+
+Flow (in l/s)
+
+379
+448
+
+92
+55
+
+Water Demand
+Demand type
+Demand
+1
+Average day flow
+0.17
+2
+Maximum day flow
+0.33
+3
+Peak hour flow
+0.50
+4
+Fire flow 2)
+150.00
+Analysis
+5
+Maximum day plus fire
+150.50
+flow
+
+No.
+
+Time
+
+Units
+l/s
+l/s
+l/s
+l/s
+l/s
+
+WASTEWATER CONNECTION
+Phase 1
+Connection point 4)
+Future 250mm diameter PVC sanitary sewer on Nunnville Road
+Wastewater Line ID: SMH6579831-SMH6579832
+Total equivalent population to be serviced 51 persons
+Total lands to be serviced
+0.41 ha
+6
+Wastewater sewer effluent (l/s)
+0.80
+1) Please refer to design criteria for population equivalencies
+2) Please reference the Fire Underwriters Survey Document
+3) Please specify the connection point ID
+4) Please specify the connection point (wastewater line or manhole ID)
+
+Also, the “total equivalent population to be serviced” and the “total lands
+to be serviced” should reference the connection point. (the FSR should contain one
+copy of Site Servicing Plan)
+Please include the graphs associated with the hydrant flow test information table
+Please provide Professional Engineer's signature and stamp on the demand table
+All required calculations must be submitted with the demand table submission.
+
+2022.04.22
+649-5291
+
+Project: 13290 Nunnville Rd
+Project No.: 649-6278
+Prepared By: OS
+Checked By: JB/PS
+Date: 2022.03.30
+Updated: 2022.04.22
+
+WATER DEMAND CALCULATIONS
+13290 Nunnville Road, Town of Caledon
+Note: Based on Concept Plan provided by WSP Global Inc. dated April 5,
+2022.
+Population Density
+Number of Units
+Total Population
+Average Daily Demand
+
+Maximum Daily Demand Peaking Factor
+Maximum Hourly Demand Peaking Factor
+
+3.4 persons/unit
+15
+51
+
+References
+
+Population density as per email
+corespondence with Iwona Frandsen from
+the Region of Peel.
+
+persons
+
+280 L/cap/day
+14,280.00 L/day
+0.17 L/s
+
+2.0
+3.0
+
+Maximum Daily Flow
+
+28,560.00 L/day
+0.33 L/s
+
+Peak Hour Flow
+
+42,840.00 L/day
+0.50 L/s
+
+Region of Peel Public Works Design,
+Specifications & Procedures Manual, Linear
+Infrastructure, Watermain Design Criteria,
+Table 1, Section 2.3 (Revised June 2010)
+
+Region of Peel Public Works Design,
+Specifications & Procedures Manual, Linear
+Infrastructure, Watermain Design Criteria,
+Table 1, Section 2.3 (Revised June 2010)
+
+13290 Nunnville Road, Town of Caledon
+Fire Flow Calculation, North Block (6 Units)
+
+Date: 2022.03.07
+Designed By: OS
+Checked By: JB/PS
+Updated: 2022.04.13
+
+Water Supply for Public Fire Protection
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+1. An estimate of fire flow required for a given area may be determined by the formula:
+F = 220 * C * sqrt A
+where
+F = the required fire flow in litres per minute
+C = coefficient related to the type of construction:
+=
+1.5
+for wood frame construction (structure essentially all combustible)
+=
+1.0
+for ordinary construction (brick or other masonry walls, combustible floor and interior)
+=
+0.8
+for non-combustible construction (unprotected metal structural components)
+=
+0.6
+for fire-resistive construction (fully protected frame, floors, roof)
+A = The total floor area in square metres (including all storeys, but excluding basements at least
+50 percent below grade) in the building considered.
+Proposed Buildings
+Area of North Block (6 Units):
+A=
+C=
+
+567 sq.m.
+1.0
+
+Therefore F =
+
+567.3 sq.m
+
+ordinary construction
+
+Based on Concept
+Plan provided by
+WSP Global Inc.
+dated March 23,
+2022.
+
+5,240 L/min
+
+Fire flow determined above shall not exceed:
+30,000 L/min for wood frame construction
+30,000 L/min for ordinary construction
+25,000 L/min for non-combustible construction
+25,000 L/min for fire-resistive construction
+
+2. Values obtained in No. 1 may be reduced by as much as 25% for occupancies having low contents fire hazard or may
+be increased by up to 25% surcharge for occupancies having a high fire hazard.
+Non-Combustible
+Limited Combustible
+Combustible
+
+-25%
+-15%
+0% (No Change)
+
+Rapid Burning
+
+Free Burning
+Rapid Burning
+
+15%
+25%
+
+25%
+1,310 L/min reduction
+6,550 L/min
+
+Note: Flow determined shall not be less than 2,000 L/min
+3. Sprinklers - The value obtained in No. 2 above maybe reduced by up to 50% for complete automatic sprinkler protection.
+The credit for the system will be a maximum of 30% for an adequately designed system conforming to NFPA 13 and other
+NFPA sprinkler standards. 10% may be granted if the water supply is standard for both the system and fire departement
+hose lines required. Additional credit of up to 10% may be given for a fully supervised system.
+Building will not have automatic sprinklers per NFPA 13 (typical 30% reduction)
+0 L/min reduction
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville Rd\Design\Civil_Water\2022.04.13_Fire Flow Calculation
+
+2022-04-13
+
+9:51 AM
+
+13290 Nunnville Road, Town of Caledon
+Fire Flow Calculation, North Block (6 Units)
+Page 2
+
+Water Supply for Public Fire Protection
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+4. Exposure - To the value obtained in No. 2, a percentage should be added for structures exposed within 45 metres
+by the fire area under consideration. The percentage shall depend upon the height, area, and construction of the
+building(s) being exposed, the separation, openings in the exposed building(s), the length and height of exposure,
+the provision of automatic sprinklers and/or outside sprinklers in the building(s) exposed, the occupancy of the
+exposed building(s) and the effect of hillside locations on the possible spread of fire.
+Separation
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+
+Name
+North
+East
+South
+West
+
+Charge
+25%
+20%
+15%
+
+Separation
+20.1 to 30 m
+30.1 to 45 m
+> 45 m
+
+Exposed buildings
+Description
+Distance
+Forest
+> 45 m
+East Block
+15 m
+South Block
+19 m
+Forest
+> 45 m
+
+0%
+15%
+15%
+0%
+
+Charge
+10%
+5%
+0%
+
+0.00
+589.50
+589.50
+0.00
+1,179 L/min Surcharge
+
+Required Duration of Fire Flow
+Duration
+(hours)
+
+Determine Required Fire Flow
+
+Flow Required
+
+No.1
+No. 2
+No. 3
+No. 4
+
+5,240
+1,310 reduction
+0 reduction
+1,179 surcharge
+
+Required Flow:
+Rounded to nearest 1000 L/min:
+
+7,729 L/min
+8,000 L/min or
+
+Required Flow (L/s):
+Duration (hr):
+
+L/min
+2,000 or less
+
+3,000
+4,000
+5,000
+6,000
+8,000
+10,000
+12,000
+14,000
+16,000
+18,000
+20,000
+22,000
+24,000
+26,000
+28,000
+30,000
+32,000
+34,000
+36,000
+38,000
+
+133.3 L/s
+2,113 USGPM
+
+134
+2.00
+
+40,000 and over
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville Rd\Design\Civil_Water\2022.04.13_Fire Flow Calculation
+
+1.0
+1.25
+1.5
+1.75
+2.0
+2.0
+2.0
+2.5
+3.0
+3.5
+4.0
+4.5
+5.0
+5.5
+6.0
+6.5
+7.0
+7.5
+8.0
+8.5
+9.0
+9.5
+
+2022-04-13
+
+9:51 AM
+
+13290 Nunnville Road, Town of Caledon
+Fire Flow Calculation, East Block (3 Units)
+
+Date: 2022.03.07
+Designed By: OS
+Checked By: JB/PS
+Updated: 2022.03.25
+
+Water Supply for Public Fire Protection
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+1. An estimate of fire flow required for a given area may be determined by the formula:
+F = 220 * C * sqrt A
+where
+F = the required fire flow in litres per minute
+C = coefficient related to the type of construction:
+=
+1.5
+for wood frame construction (structure essentially all combustible)
+=
+1.0
+for ordinary construction (brick or other masonry walls, combustible floor and interior)
+=
+0.8
+for non-combustible construction (unprotected metal structural components)
+=
+0.6
+for fire-resistive construction (fully protected frame, floors, roof)
+A = The total floor area in square metres (including all storeys, but excluding basements at least
+50 percent below grade) in the building considered.
+Proposed Buildings
+Area of East Block (3 Units):
+A=
+C=
+
+284 sq.m.
+1.0
+
+Therefore F =
+
+283.65 sq.m
+
+ordinary construction
+
+Based on Concept
+Plan provided by
+WSP Global Inc.
+dated March 23,
+2022.
+
+3,705 L/min
+
+Fire flow determined above shall not exceed:
+30,000 L/min for wood frame construction
+30,000 L/min for ordinary construction
+25,000 L/min for non-combustible construction
+25,000 L/min for fire-resistive construction
+
+2. Values obtained in No. 1 may be reduced by as much as 25% for occupancies having low contents fire hazard or may
+be increased by up to 25% surcharge for occupancies having a high fire hazard.
+Non-Combustible
+Limited Combustible
+Combustible
+
+-25%
+-15%
+0% (No Change)
+
+Rapid Burning
+
+Free Burning
+Rapid Burning
+
+15%
+25%
+
+25%
+926 L/min reduction
+4,632 L/min
+
+Note: Flow determined shall not be less than 2,000 L/min
+3. Sprinklers - The value obtained in No. 2 above maybe reduced by up to 50% for complete automatic sprinkler protection.
+The credit for the system will be a maximum of 30% for an adequately designed system conforming to NFPA 13 and other
+NFPA sprinkler standards. 10% may be granted if the water supply is standard for both the system and fire departement
+hose lines required. Additional credit of up to 10% may be given for a fully supervised system.
+Building will not have automatic sprinklers per NFPA 13 (typical 30% reduction)
+0 L/min reduction
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville Rd\Design\Civil_Water\2022.04.13_Fire Flow Calculation
+
+2022-04-13
+
+9:51 AM
+
+13290 Nunnville Road, Town of Caledon
+Fire Flow Calculation, East Block (3 Units)
+Page 2
+
+Water Supply for Public Fire Protection
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+4. Exposure - To the value obtained in No. 2, a percentage should be added for structures exposed within 45 metres
+by the fire area under consideration. The percentage shall depend upon the height, area, and construction of the
+building(s) being exposed, the separation, openings in the exposed building(s), the length and height of exposure,
+the provision of automatic sprinklers and/or outside sprinklers in the building(s) exposed, the occupancy of the
+exposed building(s) and the effect of hillside locations on the possible spread of fire.
+Separation
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+
+Name
+North
+East
+South
+West
+
+Charge
+25%
+20%
+15%
+
+Separation
+20.1 to 30 m
+30.1 to 45 m
+> 45 m
+
+Exposed buildings
+Description
+Distance
+Nunnville Road
+> 45 m
+Residential Building
+8m
+South Block
+26 m
+North Block
+15 m
+
+0%
+20%
+10%
+15%
+
+Charge
+10%
+5%
+0%
+
+0.00
+555.78
+277.89
+416.84
+1,251 L/min Surcharge
+
+Determine Required Fire Flow
+
+Required Duration of Fire Flow
+Duration
+L/min
+(hours)
+2,000 or less
+1.0
+3,000
+1.25
+4,000
+1.5
+5,000
+1.75
+6,000
+2.0
+8,000
+2.0
+10,000
+2.0
+12,000
+2.5
+14,000
+3.0
+16,000
+3.5
+18,000
+4.0
+20,000
+4.5
+22,000
+5.0
+24,000
+5.5
+26,000
+6.0
+28,000
+6.5
+30,000
+7.0
+32,000
+7.5
+34,000
+8.0
+36,000
+8.5
+38,000
+9.0
+40,000 and over
+9.5
+
+Flow Required
+
+No.1
+No. 2
+No. 3
+No. 4
+
+3,705
+926 reduction
+0 reduction
+1,251 surcharge
+
+Required Flow:
+Rounded to nearest 1000 L/min:
+
+5,882 L/min
+6,000 L/min or
+
+Required Flow (L/s):
+Duration (hr):
+
+100
+2.00
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville Rd\Design\Civil_Water\2022.04.13_Fire Flow Calculation
+
+100.0 L/s
+1,585 USGPM
+
+2022-04-13
+
+9:51 AM
+
+13290 Nunnville Road, Town of Caledon
+Fire Flow Calculation, South Block (6 Units)
+
+Date: 2022.03.07
+Designed By: OS
+Checked By: JB/PS
+Updated: 2022.03.25
+
+Water Supply for Public Fire Protection
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+1. An estimate of fire flow required for a given area may be determined by the formula:
+F = 220 * C * sqrt A
+where
+F = the required fire flow in litres per minute
+C = coefficient related to the type of construction:
+=
+1.5
+for wood frame construction (structure essentially all combustible)
+=
+1.0
+for ordinary construction (brick or other masonry walls, combustible floor and interior)
+=
+0.8
+for non-combustible construction (unprotected metal structural components)
+=
+0.6
+for fire-resistive construction (fully protected frame, floors, roof)
+A = The total floor area in square metres (including all storeys, but excluding basements at least
+50 percent below grade) in the building considered.
+Proposed Buildings
+Area of South Block (6 Units):
+A=
+C=
+
+567 sq.m.
+1.0
+
+Therefore F =
+
+ordinary construction
+
+567.3 sq.m
+
+Based on Concept
+Plan provided by
+WSP Global Inc.
+dated March 23,
+2022.
+
+5,240 L/min
+
+Fire flow determined above shall not exceed:
+30,000 L/min for wood frame construction
+30,000 L/min for ordinary construction
+25,000 L/min for non-combustible construction
+25,000 L/min for fire-resistive construction
+
+2. Values obtained in No. 1 may be reduced by as much as 25% for occupancies having low contents fire hazard or may
+be increased by up to 25% surcharge for occupancies having a high fire hazard.
+Non-Combustible
+Limited Combustible
+Combustible
+
+-25%
+-15%
+0% (No Change)
+
+Rapid Burning
+
+Free Burning
+Rapid Burning
+
+15%
+25%
+
+25%
+1,310 L/min reduction
+6,550 L/min
+
+Note: Flow determined shall not be less than 2,000 L/min
+3. Sprinklers - The value obtained in No. 2 above maybe reduced by up to 50% for complete automatic sprinkler protection.
+The credit for the system will be a maximum of 30% for an adequately designed system conforming to NFPA 13 and other
+NFPA sprinkler standards. 10% may be granted if the water supply is standard for both the system and fire departement
+hose lines required. Additional credit of up to 10% may be given for a fully supervised system.
+Building will not have automatic sprinklers per NFPA 13 (typical 30% reduction)
+0 L/min reduction
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville Rd\Design\Civil_Water\2022.04.13_Fire Flow Calculation
+
+2022-04-13
+
+9:51 AM
+
+13290 Nunnville Road, Town of Caledon
+Fire Flow Calculation, South Block (6 Units)
+Page 2
+
+Water Supply for Public Fire Protection
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+4. Exposure - To the value obtained in No. 2, a percentage should be added for structures exposed within 45 metres
+by the fire area under consideration. The percentage shall depend upon the height, area, and construction of the
+building(s) being exposed, the separation, openings in the exposed building(s), the length and height of exposure,
+the provision of automatic sprinklers and/or outside sprinklers in the building(s) exposed, the occupancy of the
+exposed building(s) and the effect of hillside locations on the possible spread of fire.
+Separation
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+
+Name
+North
+East
+South
+West
+
+Charge
+25%
+20%
+15%
+
+Separation
+20.1 to 30 m
+30.1 to 45 m
+> 45 m
+
+Exposed buildings
+Description
+Distance
+North Block
+19 m
+East Block
+26 m
+Residential Building
+8m
+Forest
+> 45 m
+
+15%
+10%
+20%
+0%
+
+Charge
+10%
+5%
+0%
+
+589.50
+393.00
+786.00
+0.00
+1,768 L/min Surcharge
+
+Determine Required Fire Flow
+
+Required Duration of Fire Flow
+Duration
+L/min
+(hours)
+2,000 or less
+1.0
+3,000
+1.25
+4,000
+1.5
+5,000
+1.75
+6,000
+2.0
+8,000
+2.0
+10,000
+2.0
+12,000
+2.5
+14,000
+3.0
+16,000
+3.5
+18,000
+4.0
+20,000
+4.5
+22,000
+5.0
+24,000
+5.5
+26,000
+6.0
+28,000
+6.5
+30,000
+7.0
+32,000
+7.5
+34,000
+8.0
+36,000
+8.5
+38,000
+9.0
+40,000 and over
+9.5
+
+Flow Required
+
+No.1
+No. 2
+No. 3
+No. 4
+
+5,240
+1,310 reduction
+0 reduction
+1,768 surcharge
+
+Required Flow:
+Rounded to nearest 1000 L/min:
+
+8,318 L/min
+9,000 L/min or
+
+Required Flow (L/s):
+Duration (hr):
+
+150
+2.00
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville Rd\Design\Civil_Water\2022.04.13_Fire Flow Calculation
+
+150.0 L/s
+2,378 USGPM
+
+2022-04-13
+
+9:51 AM
+
+13290 Nunnville Road, Town of Caledon
+Fire Flow Calculation, Summary
+
+Date: 2022.03.07
+Designed By: OS
+Checked By: JB/PS
+Updated: 2022.03.25
+
+Fire Underwriters Survey Summary
+Block
+Required Fire Flow Duration
+(L/s)
+(hr)
+North
+134
+2.00
+East
+100
+2.00
+South
+150
+2.00
+
+PROJECT: Nunnville Road
+PROJECT No.: 649-6278
+DATE: 2019.04.23
+UPDATE: 2022.04.13
+DESIGN: JB
+CHECK: PS
+Projected Fire Flow Calculations - 1
+
+Test
+
+Hydrant Location / ID
+
+Static
+Pressure
+Ps
+(psi)
+
+1
+2
+
+Nunnville Road
+Qr = Qt x ((Ps - Pr)/(Ps - Pt))0.54
+
+NOTE:
+
+67
+
+Residual
+Flow from
+Pressure
+Hydrant Test
+during Test
+Pt
+Qt
+(psi)
+(USGPM)
+65
+870
+62
+1207
+
+Desired
+Residual
+Pressure*
+Pr
+(psi)
+
+Projected Fire Flow Available at 20 psi
+
+40
+
+Qr
+(USGPM)
+3,547
+3,001
+
+Formula to determine available flow as per AWWA M17 (1989)
+
+Projected fire flows are calculated on the basis of hydrant tests carried out by Aqualization on April 18, 2019 at
+12:15 pm.
+Note Region of peel operation pressures 40-100 psi
+
+L/s
+224
+189
+
+PROJECT: Nunnville Road
+PROJECT No.: 649-6278
+DATE: 2019.04.23
+UPDATE: 2022.04.13
+DESIGN: JB
+CHECK: PS
+Projected Fire Flow Calculations - 2
+
+Test
+
+Hydrant Location / ID
+
+Static
+Pressure
+Ps
+(psi)
+
+1
+2
+
+Nunnville Road
+
+Qr = Qt x ((Ps - Pr)/(Ps - Pt))0.54
+NOTE:
+
+62
+
+Residual
+Flow from
+Pressure
+Hydrant Test
+during Test
+Pt
+Qt
+(psi)
+(USGPM)
+61
+870
+55
+1459
+
+Desired
+Residual
+Pressure*
+Pr
+(psi)
+
+Projected Fire Flow Available at 20 psi
+
+40
+
+Qr
+USGPM
+4,618
+2,708
+
+Formula to determine available flow as per AWWA M17 (1989)
+
+Projected fire flows are calculated on the basis of hydrant tests carried out by Aqualization on April 18, 2019 at
+12:15 pm.
+Note Region of peel operation pressures 40-100 psi
+
+L/s
+291
+171
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+APPENDIX B
+Sanitary Demand Calculations
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Prepared By: OS
+Checked By: JB
+Date: 2022.03.30
+Updated: 2022.04.22
+
+SANITARY FLOW CALCULATIONS
+13290 Nunnville Road, Town of Caledon
+Note: Based on Concept Plan provided by WSP Global Inc. dated April 5, 2022.
+Total Site Area
+Population Density
+Number of Units
+Total Population
+
+0.41 ha
+3.4 persons/unit
+15
+
+302.8 L/person/day
+
+Harmon Peaking Factor (M)
+
+4.00 (Max Harmon Peaking
+Factor of 4.00)
+
+Average Daily Flow
+
+15,442.80 L/day
+0.18 L/s
+
+Peak Flow
+
+61,771.20 L/day
+0.71 L/s
+
+Infiltration
+
+0.20 L/s/ha
+0.08 L/s
+
+Total Sanitary Flow
+
+Population density as per email
+corespondence with Iwona Frandsen from the
+Region of Peel.
+
+51 persons
+
+Average daily demand
+
+M = 1+(14/(4+p^0.5))
+
+References
+
+0.80 L/s
+
+Region of Peel 2013 Water and Wastewater
+Master Plan for the Lake-Based System,
+Volume IV - Wastewater master Plan,
+Table 4.1, Section 2.1.1. (March 31, 2014)
+Region of Peel Public Works Design,
+Specifications & Procedures Manual, Linear
+Infrastructure, Sanitary Sewer Design Criteria,
+Sectin 2.2 (Modified March 2017).
+
+Region of Peel 2013 Water and Wastewater
+Master Plan for the Lake-Based System,
+Volume IV - Wastewater master Plan, Section
+2.1.3. (March 31, 2014)
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+APPENDIX C
+Stormwater Design Calculations
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Created By: OS
+Reviewed By: JB/PS
+Date: 2022.03.09
+Updated: 2022.04.13
+
+Modified Rational Calculations - Input Parameters
+13290 Nunnville Road, Town of Caledon
+Caledon
+
+Storm Data:
+Time of Concentration:
+
+Tc =
+
+Return Period
+
+B
+
+A
+
+10
+
+C
+
+min
+
+(per Town of Caledon standards)
+
+I
+(mm/hr)
+
+2 yr
+
+1070
+
+8
+
+0.8759
+
+85.72
+
+5 yr
+
+1593
+
+11
+
+0.8789
+
+109.68
+
+10 yr
+
+2221
+
+12
+
+0.9080
+
+134.16
+
+25 yr
+
+3158
+
+15
+
+0.9335
+
+156.47
+
+50 yr
+
+3886
+
+16
+
+0.9495
+
+176.19
+
+100 yr
+
+4688
+
+17
+
+0.9624
+
+196.54
+
+Pre - Development Conditions
+Catchment ID
+
+Area
+(ha)
+
+Area
+(m2)
+
+Weighted
+Average C
+
+101
+102
+Total Site
+
+0.77
+0.08
+0.85
+
+7,700
+800
+8,500
+
+0.30
+0.25
+0.30
+
+Post- Development Conditions
+Area
+Area
+Weighted
+Catchment ID
+Average C
+(ha)
+(m2)
+UC1
+0.51
+5,100
+0.25
+201
+0.32
+3,200
+0.77
+202
+0.02
+200
+0.53
+Total Site 0.85
+0.45
+8,500
+
+Equations:
+Peak Flow
+Qpost = 0.0028 • Cpost • i(Td) • A
+
+Intensity
+i(Td) = A / (T + B)^C
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville Rd\Design\Civil_Water\2022.04.13_MRM Calculations
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Created By: OS
+Reviewed By: JB/PS
+Date: 2022.03.09
+Updated: 2022.04.13
+
+2022.03.29
+
+Target Flow Rates Summary
+
+Flow Rates (L/s)
+Post-Development Flows
+
+Storm Event
+(yr)
+
+Pre-Development Flows
+Uncontrolled Flows
+
+Target Control Flow
+
+Control Flow
+
+Total Outlet Flow
+
+Q101
+
+Q102
+
+Qpre-total
+
+QUC1
+
+Q202
+
+Q201 = Qpre - QUC1 - Q202
+
+Q201 - 150 mm orifice
+
+Qpost-total
+
+2
+5
+10
+25
+50
+100
+
+55
+71
+87
+101
+114
+127
+
+5
+6
+8
+9
+10
+11
+
+60
+77
+94
+110
+124
+138
+
+31
+39
+48
+56
+63
+70
+
+3
+3
+4
+5
+5
+6
+
+27
+35
+42
+49
+56
+62
+
+27
+34
+41
+47
+51
+56
+
+60
+77
+93
+107
+120
+132
+
+Storm Event
+(yr)
+
+Target Flow Rate
+
+Catchment 201 (150mm Orifice Tube)
+
+2
+5
+10
+25
+50
+100
+
+Q201 = Qpre QUC1 - Q202
+27
+35
+42
+49
+56
+62
+
+Flowrate
+
+Required Storage
+
+Provided Storage
+
+L/s
+
+m
+
+3
+
+m3
+
+27
+34
+41
+47
+51
+56
+
+24
+35
+44
+56
+66
+77
+
+110
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville Rd\Design\Civil_Water\2022.04.13_MRM Calculations
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Created By: OS
+Reviewed By: JB/PS
+Date: 2022.03.09
+Updated: 2022.04.13
+
+2022.03.29
+
+Modified Rational Calculations - 2 -Year Storm Event
+Control Criteria
+2 yr: Uncontrolled Post-Development Flow:
+QUC1 =
+
+31
+
+L/s
+
+Q202 =
+
+3
+
+L/s
+
+Q101 =
+
+55
+
+L/s
+
+Q102 =
+
+5
+
+2 yr: Target Flow Rate:
+
+Qtarget 201 =
+
+27
+
+L/s
+
+Qorifice 202=
+
+27
+
+L/s
+
+(150 mm orifice)
+
+Storage Volume Determination
+Td
+
+i
+
+Td
+
+QPost
+
+Sd
+(m3)
+
+(min)
+10
+
+(mm/hr)
+85.72
+
+(sec)
+600
+
+(m3/s)
+0.059
+
+19.4
+
+20
+
+58.06
+
+1200
+
+0.040
+
+23.9
+
+30
+
+44.38
+
+1800
+
+0.031
+
+22.9
+
+40
+
+36.14
+
+2400
+
+0.025
+
+19.6
+
+50
+
+30.60
+
+3000
+
+0.021
+
+15.0
+
+60
+
+26.62
+
+3600
+
+0.018
+
+9.7
+
+70
+
+23.60
+
+4200
+
+0.016
+
+3.9
+
+80
+
+21.23
+
+4800
+
+0.015
+
+-2.2
+
+90
+
+19.31
+
+5400
+
+0.013
+
+-8.6
+
+100
+
+17.74
+
+6000
+
+0.012
+
+-15.2
+
+110
+
+16.41
+
+6600
+
+0.011
+
+-21.9
+
+120
+
+15.28
+
+7200
+
+0.011
+
+-28.8
+
+130
+
+14.30
+
+7800
+
+0.010
+
+-35.8
+
+140
+
+13.45
+
+8400
+
+0.009
+
+-42.9
+
+150
+
+12.70
+
+9000
+
+0.009
+
+-50.0
+
+160
+
+12.04
+
+9600
+
+0.008
+
+-57.2
+
+Required Storage Volume:
+
+Peak Flow
+484
+Qpost = 0.0028 • Cpost • i(Td) •
+
+Storage
+Sd = Qpost • Td - Qtarget (Td + Tc) / 2
+
+Qa
+
+Tc
+
+Td
+
+23.9
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville Rd\Design\Civil_Water\2022.04.13_MRM Calculations
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Created By: OS
+Reviewed By: JB/PS
+Date: 2022.03.09
+Updated: 2022.04.13
+
+2022.03.29
+
+Modified Rational Calculations - 5 -Year Storm Event
+Control Criteria
+5 yr: Uncontrolled Post-Development Flow:
+QUC1 =
+
+39
+
+L/s
+
+Q202 =
+
+3
+
+L/s
+
+5 yr: Target Flow Rate:
+Q101 =
+
+71
+
+L/s
+
+Q102 =
+
+6
+
+L/s
+
+Qtarget 202 =
+
+35
+
+L/s
+
+Qorifice 202=
+
+34
+
+L/s
+
+(150 mm orifice)
+
+Storage Volume Determination
+Td
+
+i
+
+Td
+
+QPost
+
+Sd
+(m3)
+
+(min)
+10
+
+(mm/hr)
+109.68
+
+(sec)
+600
+
+(m3/s)
+0.076
+
+24.8
+
+20
+
+77.89
+
+1200
+
+0.054
+
+33.6
+
+30
+
+60.92
+
+1800
+
+0.042
+
+34.5
+
+40
+
+50.28
+
+2400
+
+0.035
+
+31.9
+
+50
+
+42.96
+
+3000
+
+0.030
+
+27.2
+
+60
+
+37.60
+
+3600
+
+0.026
+
+21.4
+
+70
+
+33.48
+
+4200
+
+0.023
+
+14.8
+
+80
+
+30.23
+
+4800
+
+0.021
+
+7.6
+
+90
+
+27.58
+
+5400
+
+0.019
+
+0.0
+
+100
+
+25.39
+
+6000
+
+0.018
+
+-8.0
+
+110
+
+23.53
+
+6600
+
+0.016
+
+-16.2
+
+120
+
+21.95
+
+7200
+
+0.015
+
+-24.6
+
+130
+
+20.57
+
+7800
+
+0.014
+
+-33.2
+
+140
+
+19.37
+
+8400
+
+0.013
+
+-41.9
+
+150
+
+18.31
+
+9000
+
+0.013
+
+-50.8
+
+160
+
+17.36
+
+9600
+
+0.012
+
+-59.8
+
+Required Storage Volume:
+
+Peak Flow
+484
+Qpost = 0.0028 • Cpost • i(Td) •
+
+Storage
+Sd = Qpost • Td - Qtarget (Td + Tc) / 2
+
+Qa
+
+Tc
+
+Td
+
+34.5
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville Rd\Design\Civil_Water\2022.04.13_MRM Calculations
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Created By: OS
+Reviewed By: JB/PS
+Date: 2022.03.08
+Updated: 2022.04.13
+
+2022.03.29
+
+Modified Rational Calculations - 10 -Year Storm Event
+Control Criteria
+10 yr: Uncontrolled Post-Development Flow:
+QUC1 =
+
+48
+
+L/s
+
+Q202 =
+
+4
+
+L/s
+
+10 yr: Target Flow Rate:
+Q101 =
+
+87
+
+L/s
+
+Q102 =
+
+8
+
+L/s
+
+Qtarget 202 =
+
+42
+
+L/s
+
+Qorifice 202=
+
+41
+
+L/s
+
+(150 mm orifice)
+
+Storage Volume Determination
+Td
+
+i
+
+Td
+
+QPost
+
+Sd
+(m3)
+
+(min)
+10
+
+(mm/hr)
+134.16
+
+(sec)
+600
+
+(m3/s)
+0.093
+
+31.1
+
+20
+
+95.47
+
+1200
+
+0.066
+
+42.4
+
+30
+
+74.58
+
+1800
+
+0.051
+
+43.7
+
+40
+
+61.44
+
+2400
+
+0.042
+
+40.6
+
+50
+
+52.37
+
+3000
+
+0.036
+
+35.0
+
+60
+
+45.72
+
+3600
+
+0.032
+
+28.0
+
+70
+
+40.63
+
+4200
+
+0.028
+
+19.9
+
+80
+
+36.60
+
+4800
+
+0.025
+
+11.2
+
+90
+
+33.32
+
+5400
+
+0.023
+
+1.9
+
+100
+
+30.61
+
+6000
+
+0.021
+
+-7.8
+
+110
+
+28.32
+
+6600
+
+0.020
+
+-17.8
+
+120
+
+26.37
+
+7200
+
+0.018
+
+-28.0
+
+130
+
+24.68
+
+7800
+
+0.017
+
+-38.4
+
+140
+
+23.20
+
+8400
+
+0.016
+
+-49.0
+
+150
+
+21.89
+
+9000
+
+0.015
+
+-59.7
+
+160
+
+20.73
+
+9600
+
+0.014
+
+-70.5
+
+Required Storage Volume:
+
+Peak Flow
+484
+Qpost = 0.0028 • Cpost • i(Td) •
+
+Storage
+Sd = Qpost • Td - Qtarget (Td + Tc) / 2
+
+Qa
+
+Tc
+
+Td
+
+43.7
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville Rd\Design\Civil_Water\2022.04.13_MRM Calculations
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Created By: OS
+Reviewed By: JB/PS
+Date: 2022.03.09
+Updated: 2022.04.13
+
+2022.03.29
+
+Modified Rational Calculations - 25 -Year Storm Event
+Control Criteria
+25 yr: Uncontrolled Post-Development Flow:
+QUC1 =
+
+56
+
+L/s
+
+Q202 =
+
+5
+
+L/s
+
+25 yr: Target Flow Rate:
+Q101 =
+
+101
+
+L/s
+
+Q102 =
+
+9
+
+L/s
+
+Qtarget 202 =
+
+49
+
+L/s
+
+Qorifice 202=
+
+47
+
+L/s
+
+(150 mm orifice)
+
+Storage Volume Determination
+Td
+
+i
+
+Td
+
+QPost
+
+Sd
+(m3)
+
+(min)
+10
+
+(mm/hr)
+156.47
+
+(sec)
+600
+
+(m3/s)
+0.108
+
+36.6
+
+20
+
+114.29
+
+1200
+
+0.079
+
+52.3
+
+30
+
+90.39
+
+1800
+
+0.062
+
+55.9
+
+40
+
+74.95
+
+2400
+
+0.052
+
+53.6
+
+50
+
+64.13
+
+3000
+
+0.044
+
+48.1
+
+60
+
+56.11
+
+3600
+
+0.039
+
+40.7
+
+70
+
+49.92
+
+4200
+
+0.034
+
+31.9
+
+80
+
+45.00
+
+4800
+
+0.031
+
+22.1
+
+90
+
+40.99
+
+5400
+
+0.028
+
+11.7
+
+100
+
+37.65
+
+6000
+
+0.026
+
+0.8
+
+110
+
+34.83
+
+6600
+
+0.024
+
+-10.6
+
+120
+
+32.41
+
+7200
+
+0.022
+
+-22.3
+
+130
+
+30.32
+
+7800
+
+0.021
+
+-34.2
+
+140
+
+28.49
+
+8400
+
+0.020
+
+-46.3
+
+150
+
+26.88
+
+9000
+
+0.019
+
+-58.7
+
+160
+
+25.44
+
+9600
+
+0.018
+
+-71.2
+
+Required Storage Volume:
+
+Peak Flow
+484
+Qpost = 0.0028 • Cpost • i(Td) •
+
+Storage
+Sd = Qpost • Td - Qtarget (Td + Tc) / 2
+
+Qa
+
+Tc
+
+Td
+
+55.9
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville Rd\Design\Civil_Water\2022.04.13_MRM Calculations
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Created By: OS
+Reviewed By: JB/PS
+Date: 2022.03.09
+Updated: 2022.04.13
+
+2022.03.29
+
+Modified Rational Calculations - 50 -Year Storm Event
+Control Criteria
+50 yr: Uncontrolled Post-Development Flow:
+QUC1 =
+
+63
+
+L/s
+
+Q202 =
+
+5
+
+L/s
+
+50 yr: Target Flow Rate:
+Q101 =
+
+114
+
+L/s
+
+Q102 =
+
+10
+
+L/s
+
+Qtarget 202 =
+
+56
+
+L/s
+
+Qorifice 202=
+
+51
+
+L/s
+
+(150 mm orifice)
+
+Storage Volume Determination
+Td
+
+i
+
+Td
+
+QPost
+
+Sd
+(m3)
+
+(min)
+10
+
+(mm/hr)
+176.19
+
+(sec)
+600
+
+(m3/s)
+0.122
+
+42.1
+
+20
+
+129.36
+
+1200
+
+0.089
+
+60.8
+
+30
+
+102.50
+
+1800
+
+0.071
+
+65.6
+
+40
+
+85.04
+
+2400
+
+0.059
+
+63.7
+
+50
+
+72.75
+
+3000
+
+0.050
+
+58.0
+
+60
+
+63.63
+
+3600
+
+0.044
+
+50.1
+
+70
+
+56.58
+
+4200
+
+0.039
+
+40.6
+
+80
+
+50.97
+
+4800
+
+0.035
+
+30.0
+
+90
+
+46.40
+
+5400
+
+0.032
+
+18.6
+
+100
+
+42.59
+
+6000
+
+0.029
+
+6.6
+
+110
+
+39.37
+
+6600
+
+0.027
+
+-5.8
+
+120
+
+36.62
+
+7200
+
+0.025
+
+-18.6
+
+130
+
+34.23
+
+7800
+
+0.024
+
+-31.7
+
+140
+
+32.15
+
+8400
+
+0.022
+
+-45.1
+
+150
+
+30.30
+
+9000
+
+0.021
+
+-58.6
+
+160
+
+28.67
+
+9600
+
+0.020
+
+-72.3
+
+Required Storage Volume:
+
+Peak Flow
+484
+Qpost = 0.0028 • Cpost • i(Td) •
+
+Storage
+Sd = Qpost • Td - Qtarget (Td + Tc) / 2
+
+Qa
+
+Tc
+
+Td
+
+65.6
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville Rd\Design\Civil_Water\2022.04.13_MRM Calculations
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Created By: OS
+Reviewed By: JB/PS
+Date: 2022.03.09
+Updated: 2022.04.13
+
+2022.03.29
+
+Modified Rational Calculations - 100 -Year Storm Event
+Control Criteria
+100 yr: Uncontrolled Post-Development Flow:
+QUC1 =
+
+70
+
+L/s
+
+Q202 =
+
+6
+
+L/s
+
+100 yr: Target Flow Rate:
+Q101 =
+
+127
+
+L/s
+
+Q102 =
+
+11
+
+L/s
+
+Qtarget 202 =
+
+62
+
+L/s
+
+Qorifice 202=
+
+56
+
+L/s
+
+(150 mm orifice)
+
+Storage Volume Determination
+Td
+
+i
+
+Td
+
+QPost
+
+Sd
+(m3)
+
+(min)
+10
+
+(mm/hr)
+196.54
+
+(sec)
+600
+
+(m3/s)
+0.136
+
+47.8
+
+20
+
+145.13
+
+1200
+
+0.100
+
+69.9
+
+30
+
+115.28
+
+1800
+
+0.080
+
+76.1
+
+40
+
+95.75
+
+2400
+
+0.066
+
+74.8
+
+50
+
+81.95
+
+3000
+
+0.057
+
+69.1
+
+60
+
+71.69
+
+3600
+
+0.049
+
+60.8
+
+70
+
+63.74
+
+4200
+
+0.044
+
+50.6
+
+80
+
+57.40
+
+4800
+
+0.040
+
+39.3
+
+90
+
+52.23
+
+5400
+
+0.036
+
+27.0
+
+100
+
+47.93
+
+6000
+
+0.033
+
+14.1
+
+110
+
+44.29
+
+6600
+
+0.031
+
+0.6
+
+120
+
+41.17
+
+7200
+
+0.028
+
+-13.3
+
+130
+
+38.47
+
+7800
+
+0.027
+
+-27.5
+
+140
+
+36.11
+
+8400
+
+0.025
+
+-42.0
+
+150
+
+34.03
+
+9000
+
+0.023
+
+-56.8
+
+160
+
+32.18
+
+9600
+
+0.022
+
+-71.7
+
+Required Storage Volume:
+
+Peak Flow
+484
+Qpost = 0.0028 • Cpost • i(Td) •
+
+Storage
+Sd = Qpost • Td - Qtarget (Td + Tc) / 2
+
+Qa
+
+Tc
+
+Td
+
+76.1
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville Rd\Design\Civil_Water\2022.04.13_MRM Calculations
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Created By: OS
+Reviewed By: JB/PS
+Date: 2022.03.09
+2022.03.29 2022.04.13
+Orifice Design Summary - 2 Year Storm Event
+Orifice Type =
+Invert Elevation =
+Diameter of Orifice =
+Area of Orifice (A) =
+Orifice Coefficient (Cd) =
+
+Tube
+241.08
+150
+0.0177
+0.820
+
+m
+mm
+sq.m
+
+Calculation of Head
+Centroid Elevation =
+Water Elevation =
+Upstream Head*, (h) =
+
+241.16
+241.33
+0.18
+
+m
+m
+m
+
+Qa =
+(Cd)(A)(2gh)^0.5
+Actual Controlled Discharge, Qa =
+0.02685
+cms
+Qa =
+26.85
+L/s
+*Head is based upon orifice area @ orifice face not Vena Contracta
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Created By: OS
+Reviewed By: JB/PS
+Date: 2022.03.09
+2022.03.29 2022.04.13
+Orifice Design Summary - 5 Year Storm Event
+Orifice Type =
+Invert Elevation =
+Diameter of Orifice =
+Area of Orifice (A) =
+Orifice Coefficient (Cd) =
+
+Tube
+241.08
+150
+0.0177
+0.820
+
+m
+mm
+sq.m
+
+Calculation of Head
+Centroid Elevation =
+Water Elevation =
+Upstream Head*, (h) =
+
+241.16
+241.44
+0.28
+
+m
+m
+m
+
+Qa =
+(Cd)(A)(2gh)^0.5
+Actual Controlled Discharge, Qa =
+0.03427
+cms
+Qa =
+34.27
+L/s
+*Head is based upon orifice area @ orifice face not Vena Contracta
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Created By: OS
+Reviewed By: JB/PS
+Date: 2022.03.09
+2022.03.29 2022.04.13
+Orifice Design Summary - 10 Year Storm Event
+Orifice Type =
+Invert Elevation =
+Diameter of Orifice =
+Area of Orifice (A) =
+Orifice Coefficient (Cd) =
+
+Tube
+241.08
+150
+0.0177
+0.820
+
+m
+mm
+sq.m
+
+Calculation of Head
+Centroid Elevation =
+Water Elevation =
+Upstream Head*, (h) =
+
+241.16
+241.56
+0.40
+
+m
+m
+m
+
+Qa =
+(Cd)(A)(2gh)^0.5
+Actual Controlled Discharge, Qa =
+0.04076
+cms
+Qa =
+40.76
+L/s
+*Head is based upon orifice area @ orifice face not Vena Contracta
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Created By: OS
+Reviewed By: JB/PS
+Date: 2022.03.09
+2022.03.29 2022.04.13
+Orifice Design Summary - 25 Year Storm Event
+Orifice Type =
+Invert Elevation =
+Diameter of Orifice =
+Area of Orifice (A) =
+Orifice Coefficient (Cd) =
+
+Tube
+241.08
+150
+0.0177
+0.820
+
+m
+mm
+sq.m
+
+Calculation of Head
+Centroid Elevation =
+Water Elevation =
+Upstream Head*, (h) =
+
+241.16
+241.69
+0.54
+
+m
+m
+m
+
+Qa =
+(Cd)(A)(2gh)^0.5
+Actual Controlled Discharge, Qa =
+0.04699
+cms
+Qa =
+46.99
+L/s
+*Head is based upon orifice area @ orifice face not Vena Contracta
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Created By: OS
+Reviewed By: JB/PS
+Date: 2022.03.09
+2022.03.29 2022.04.13
+Orifice Design Summary - 50 Year Storm Event
+Orifice Type =
+Invert Elevation =
+Diameter of Orifice =
+Area of Orifice (A) =
+Orifice Coefficient (Cd) =
+
+Tube
+241.08
+150
+0.0177
+0.820
+
+m
+mm
+sq.m
+
+Calculation of Head
+Centroid Elevation =
+Water Elevation =
+Upstream Head*, (h) =
+
+241.16
+241.80
+0.64
+
+m
+m
+m
+
+Qa =
+(Cd)(A)(2gh)^0.5
+Actual Controlled Discharge, Qa =
+0.05141
+cms
+Qa =
+51.41
+L/s
+*Head is based upon orifice area @ orifice face not Vena Contracta
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Created By: OS
+Reviewed By: JB/PS
+Date: 2022.03.09
+2022.03.29 2022.04.13
+Orifice Design Summary - 100 Year Storm Event
+Orifice Type =
+Invert Elevation =
+Diameter of Orifice =
+Area of Orifice (A) =
+Orifice Coefficient (Cd) =
+
+Tube
+241.08
+150
+0.0177
+0.820
+
+m
+mm
+sq.m
+
+Calculation of Head
+Centroid Elevation =
+Water Elevation =
+Upstream Head*, (h) =
+
+241.16
+241.91
+0.76
+
+m
+m
+m
+
+Qa =
+(Cd)(A)(2gh)^0.5
+Actual Controlled Discharge, Qa =
+0.05585
+cms
+Qa =
+55.85
+L/s
+*Head is based upon orifice area @ orifice face not Vena Contracta
+
+Project: 13290 Nunnville Road
+Project No.: 649-6278
+Created By: OS
+Reviewed By: JB/PS
+Date: 2022.03.09
+Update: 2022.04.13
+
+Provided Storage
+Diameter of Pipe
+(mm)
+1200
+
+Length of
+Pipe
+(m)
+97
+
+Cross Sectional
+Area of Pipe
+2
+(m )
+1.13
+
+Provided
+Storage
+3
+(m )
+109.7
+
+Super Pipe Summary
+Storm Event (yr)
+2
+5
+10
+25
+50
+100
+
+Storage
+Storage Provided
+Required
+Percent Full HWL (m)
+(m3)
+(m3)
+23.90
+109.70
+22%
+241.33
+34.53
+109.70
+31%
+241.44
+43.71
+109.70
+40%
+241.56
+55.86
+109.70
+51%
+241.69
+65.59
+109.70
+60%
+241.80
+76.14
+109.70
+69%
+241.91
+
+Project:
+13290 Nunnville Road
+Project No.: 0649-6278
+
+Date:
+Designed By:
+Checked By:
+Updated:
+
+2022.03.28
+OS
+JB/PS
+2022.04.13
+
+Enhanced Topsoil Design
+
+Storage Required
+
+m3
+12.50
+
+Extra Topsoil
+Total Area of
+Soil
+Soil Field
+Soil Volume
+Additional Topsoil
+Porosity Capacity
+Depth1
+ha
+
+mm
+
+m3
+
+0.06
+
+150.00
+
+90.00
+
+Avalable
+Storage
+Volume2
+m3
+
+0.47
+
+0.32
+
+13.50
+
+1. Topsoil depth in addition to the 150mm minimum covering the site, total topsoil depth = 300mm
+(150mm + 150mm = 300mm topsoil)
+2. Water volume that can be stored for a given soil = (soil volume) x (soil porosity – soil field capacity)
+Total Contributing Area
+
+0.25 ha
+
+Allowable Infiltration Rainfall Depth:
+
+5 mm
+
+Available Runoff Volume to be infiltrated:
+
+12.50 m3
+
+I:\600\649 - Bolton Gateway Developments Inc\6278- 13290 Nunnville
+Rd\Design\Civil_Water\2022.04.13_WB_Topsoil
+
+Bolton Summit Developments Inc.
+13290 Nunnville Road, Town of Caledon
+
+Functional Servicing & Stormwater Management Report
+April 2022
+
+DRAWINGS AND FIGURES
+
+C.F. Crozier & Associates Inc.
+Project No. 0649-6278
+
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+
+2800 High Point Drive
+Suite 100
+Milton, ON L9T 6P4
+905-875-0026 T
+905-875-4915 F
+www.cfcrozier.ca
+
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+
+2800 High Point Drive
+Suite 100
+Milton, ON L9T 6P4
+905-875-0026 T
+905-875-4915 F
+www.cfcrozier.ca
+
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+
+2800 High Point Drive
+Suite 100
+Milton, ON L9T 6P4
+905-875-0026 T
+905-875-4915 F
+www.cfcrozier.ca
+
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+
+2800 High Point Drive
+Suite 100
+Milton, ON L9T 6P4
+905-875-0026 T
+905-875-4915 F
+www.cfcrozier.ca
+
+KEY PLAN
+SCALE: N.T.S.
+
+LEGEND
+
+2800 High Point Drive
+Suite 100
+Milton, ON L9T 6P4
+905-875-0026 T
+905-875-4915 F
+www.cfcrozier.ca
+
+

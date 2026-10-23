@@ -1,0 +1,6170 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+FUNCTIONAL SERVICING &
+PRELIMINARY STORMWATER
+MANAGEMENT REPORT
+18314 & 18309 HURONTARIO STREET
+RESIDENTIAL DEVELOPMENT
+TOWN OF CALEDON
+REGION OF PEEL
+
+PREPARED FOR:
+JANNETT AND RICHARD NICOLSON & 2683894
+ONTARIO INC.
+
+PREPARED BY:
+C.F. CROZIER & ASSOCIATES INC.
+57 JOHN STREET WEST
+BRADFORD, ON L3Z 2B4
+DECEMBER 2020
+CFCA FILE NO. 1610-5023
+The material in this report reflects best judgment in light of the
+information available at the time of preparation. Any use which
+a third party makes of this report, or any reliance on or decisions
+made based on it, are the responsibilities of such third parties.
+C.F. Crozier & Associates Inc. accepts no responsibility for
+damages, if any, suffered by any third party as a result of
+decisions made or actions based on this report.
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+Revision Number
+
+Date
+
+Comments
+
+Rev. 0
+
+December 2020
+
+Issued for Zoning By-Law Amendment Application
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+TABLE OF CONTENTS
+1.0
+
+INTRODUCTION .........................................................................................................................1
+
+2.0
+
+SITE DESCRIPTION .....................................................................................................................1
+
+3.0
+
+ROAD STANDARD .....................................................................................................................2
+
+4.0
+
+SANITARY SERVICING ..............................................................................................................2
+4.1
+4.2
+4.3
+4.4
+
+5.0
+
+Existing Sanitary Servicing ................................................................................................2
+Design Sanitary Flow .........................................................................................................2
+Proposed Sanitary Servicing ............................................................................................3
+Proximity to Existing Wells .................................................................................................4
+WATER SERVICING ....................................................................................................................5
+
+5.1
+5.2
+5.3
+5.4
+
+Existing Water Servicing ....................................................................................................5
+Design Water Demand ......................................................................................................5
+Fire Flow Demand ..............................................................................................................5
+Proposed Water Servicing ................................................................................................5
+
+6.0
+
+GRADING AND CIVIL DESIGN .................................................................................................6
+
+7.0
+
+DRAINAGE CONDITIONS .........................................................................................................6
+7.1
+7.2
+
+8.0
+
+Existing Drainage Conditions ...........................................................................................6
+Proposed Drainage Conditions .......................................................................................7
+STORMWATER MANAGEMENT .................................................................................................8
+
+8.1
+8.2
+8.3
+
+Stormwater Quantity Control............................................................................................8
+Stormwater Quality Control ..............................................................................................9
+Water Balance ...................................................................................................................9
+
+9.0
+
+EROSION AND SEDIMENT CONTROLS DURING CONSTRUCTION ....................................... 10
+
+10.0
+
+CONCLUSIONS AND RECOMMENDATIONS......................................................................... 11
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+LIST OF TABLES
+Table 1:
+
+Estimated Sanitary Sewage Design Flows
+
+Table 2:
+
+Proposed Effluent Objectives
+
+Table 3:
+
+Estimated Water Demand Flows
+
+Table 4:
+
+Estimated Fire Demand Flows
+
+Table 5:
+
+Pre-Development Land Areas and Runoff Coefficients
+
+Table 6:
+
+Post-Development Land Areas and Runoff Coefficients
+
+Table 7:
+
+Pre- and Post-Development Flow Rates and Required Storage Volumes
+
+LIST OF APPENDICES
+Appendix A:
+
+Sanitary Flow Calculations
+
+Appendix B:
+
+Fire Flow Demand Calculations
+
+Appendix C:
+
+Stormwater Management Calculations
+
+LIST OF FIGURES
+Drawing C101:
+
+Preliminary Site Servicing Plan
+
+Drawing C102:
+
+Preliminary Site Grading Plan
+
+Drawing C103:
+
+Pre-Development Drainage Plan
+
+Drawing C104:
+
+Post-Development Drainage Plan
+
+Drawing C105:
+
+Erosion & Sediment Control Plan
+
+Drawing C106:
+
+Standard Details
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+1.0
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+Introduction
+
+C.F. Crozier & Associates Inc. (Crozier) was retained by Rizmi Holdings Limited to prepare a Functional
+Servicing & Preliminary Stormwater Management Report to support the Plan of Condominium and
+Zoning By-Law Amendment Application for the site located at 18314 & 18309 Hurontario Street in the
+Town of Caledon, Region of Peel.
+The purpose of this report is to demonstrate that the proposed site can be developed in accordance
+with the Town of Caledon (Town), Region of Peel, and Credit Valley Conservation (CVC) guidelines
+from a functional servicing & preliminary stormwater management perspective.
+The following reports and design standards were referenced during the preparation of this report:
+
+2.0
+
+•
+
+Town of Caledon Development Standards Manual, Version 5, 2019
+
+•
+
+Region of Peel Watermain Design Criteria, Revised June 2010
+
+•
+
+Region of Peel Sanitary Sewer Design Criteria, Revised July 2009, Modified March 2017
+
+•
+
+Office of the Fire Marshall – Fire Protection Water Supply Guideline for Part 3 In the Ontario
+Building Code
+
+•
+
+Fire Underwriters Survey – Water Supply for Public Fire Protection, 1999
+
+•
+
+Ontario Building Code (OBC) O.Reg 191/14, January 1, 2016
+
+•
+
+Credit Valley Conservation Stormwater Management Criteria, August 2012
+
+•
+
+Ministry of the Environment Stormwater Management Planning and Design Manual, March
+2003
+
+•
+
+Ministry of the Environment Design Guidelines for Drinking-Water Systems, 2008
+
+•
+
+Low Impact Development Stormwater Management Planning and Design Guide by the
+Credit Valley Conservation Authority and the Toronto and Region Conservation Authority,
+2010
+
+•
+
+Caledon Creek and Credit River Subwatershed Study (Subwatersheds 16 & 18) Phase I:
+Characterization Report, November 1998
+
+Site Description
+
+The lands are municipally known as 18314 and 18309 Hurontario Street in the Town of Caledon.
+The subject property is approximately 1.37 ha and is located west of Hurontario Street (Highway 10)
+between James Street and Travelled Road. 18314 and 18309 Hurontario Street are both designated
+as residential in the Town of Caledon’s Official Plan Schedule E.
+The subject property consists of an existing residential heritage building and open/undeveloped land.
+The topography of the subject property slopes from northwest to east toward Hurontario Street. Per
+the Preliminary Geotechnical Investigation and Soil Percolation Tests Report by Sirati & Partners
+Consultants Ltd. (August 2, 2019), the native soils consist of sand, silt, and gravel. The Geotechnical
+Report also indicates the on-site groundwater level elevations vary between 412.4 and 413.9.
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+The property is bounded by:
+•
+
+Hurontario Street (Highway 10) to the northeast
+
+•
+
+Existing residential dwellings to the northwest
+
+•
+
+Existing residential dwellings to the southeast
+
+•
+
+Cultivated lands to the southwest
+
+Based on the Site Plan prepared by Lucas & Associates (dated November 5, 2020), the proposed
+residential development consists of a seven (7) block, thirty (30) townhouse unit development with an
+internal roadway and ten (10) above-ground visitor parking spaces. It is understood that the existing
+heritage building will remain. As such, the proposed development will consist of thirty (30) townhouse
+units and one (1) heritage building for a total of thirty-one (31) units.
+
+3.0
+
+Road Standard
+
+Two (2) access routes to the development will be provided from the proposed Brock Street roadway
+at the northwest limit of the property (Site Plan by Lucas & Associates dated November 5, 2020). The
+Brock Street road alignment and design will be determined by others. Based on the present
+configuration of the site plan, the proponent will have to verify a connection for Brock Road to the
+existing municipal right of way.
+The internal roadway will be designed to provide emergency vehicle access routes and has a width
+of 6.0 m. Ten (10) above ground visitor parking spaces are provided.
+
+4.0
+
+Sanitary Servicing
+
+4.1
+
+Existing Sanitary Servicing
+
+A review of the Hurontario Street as-constructed drawings, prepared by the Region of Peel
+(September, 2007, Plan No: 35299-D), indicate that no sanitary sewer infrastructure exists within the
+right-of-way. It is assumed that the existing heritage building on the subject property is serviced by a
+private onsite sewage system.
+4.2
+
+Design Sanitary Flow
+
+Part 8 of the Ontario Building Code (2017) was referenced to estimate the sanitary design flows for the
+proposed development. Table 1 presents a summary of the estimated design flows.
+Table 1: Estimated Sanitary Sewage Design Flows
+Unit Type
+
+Number of
+Bedrooms
+
+Finished
+Unit Floor
+Area
+
+Number
+of Fixture
+Units
+
+Base
+Flow
+(L/day)
+
+Additional
+Flow –
+Floor Area
+(L/day)
+
+Additional
+Flow –
+Fixture
+Units
+(L/day)
+
+Total
+Number
+of Units
+
+TH-30-1
+
+3
+
+200
+
+22
+
+1,600
+
+0
+
+100
+
+6
+
+TH-30-2
+
+3
+
+225
+
+25
+
+1,600
+
+300
+
+250
+
+24
+
+Existing
+Heritage
+Building*
+
+3
+
+370
+
+25
+
+1,600
+
+1,700
+
+250
+
+1
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+Total Flow
+(L/day)
+
+59,100
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+Per the Ontario Building Code, the sanitary sewage design flow from each unit type consists of the
+base flow allocated for the number of bedrooms and the greater additional flow generated by the
+gross floor area and number of fixture units. The additional flows for Unit TH-30-1 and TH-30-2 were
+calculated based on floor plans by RN Design Ltd. (October 23, 2018). It is assumed that the existing
+heritage building is a three-bedroom dwelling. The floor area was obtained from approximate
+measurements of the available topographic survey by RS Geomatics Ltd. (dated November 12, 2018),
+and is considered to be conservative. Thus, the total daily sanitary sewage design flow was calculated
+to be 59,100 L/day for the proposed development.
+Properties with a total daily design sanitary sewage flow exceeding 10,000 L/day are subject to
+Section 53 of the Ontario Water Resources Act, and require an Environmental Compliance Approval
+(ECA) issued by the Ministry of Environment, Conservation and Parks (MECP). The ECA application will
+need to address all sewage flows from the property, including the existing heritage building. If the
+onsite sewage system for the existing heritage building is expected to be maintained a functional and
+condition assessment will be required prior to the ECA application.
+Sanitary Design Flow Calculations can be found in Appendix A.
+4.3
+
+Proposed Sanitary Servicing
+
+One (1) onsite sewage system is proposed to service the proposed development. The proposed onsite
+sewage system design includes a collection system, a sewage lift station and a centralized package
+sewage treatment system. Treated effluent will be discharged to a large subsurface disposal system
+constructed as a Type A Dispersal Bed.
+As noted above, the proposed sewage treatment system will require an ECA issued by the Ministry of
+Environment. Large subsurface disposal systems must demonstrate that Reasonable Use guidelines
+can be met at the property boundary. The critical contaminant of concern for groundwater receivers
+is nitrate nitrogen. The maximum allowable concentration of nitrate-nitrogen at the property
+boundary is 2.5 mg/L. At this time, a detailed impact assessment of the proposed sewage system has
+not been completed. However, given the constraints of the site i.e. high flows and a small
+contaminant attenuation zone, it is expected that best available technology will be required to meet
+Reasonable Use. The following effluent criteria are proposed for the proposed sewage system.
+Table 2: Proposed Effluent Objectives
+Proposed Effluent
+Parameter
+Objective
+Carbonaceous
+Biochemical
+10 mg/L
+Oxygen
+Demand
+Total Suspended
+10 mg/L
+Solids
+Total Ammonia
+< 1 mg/L
+Nitrogen
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+Total Nitrogen
+
+< 5 mg/L
+
+pH
+
+6.5 – 8.5
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+Three (3) onsite sewage treatment system suppliers were contacted to obtain preliminary treatment
+schematics and footprints. The three manufacturers contacted were Waterloo Biofilter Systems, BNA
+Inc., and Newterra Ltd. All three manufacturers provide package onsite sewage treatment system
+components which can meet the effluent objectives noted above.
+Given the constraints of the site, the recommended supplier is Newterra Ltd. Newterra package
+Membrane Bioreactor (MBR) plants have a very compact footprint. The proposed system consists of
+a below grade equalization tank, an above grade treatment module, and a below grade effluent
+dosing chamber. A schematic of the proposed Newterra MBR system dated March 22, 2019, can be
+found in Appendix A.
+The sanitary flows will be collected and conveyed by a 250mm diameter PVC (polyvinyl chloride)
+gravity sewer, to the septic tanks and treatment system located within the landscaped area to the
+south of Unit 20. Treated effluent will discharge to effluent dosing chamber and be pumped to the
+leaching bed located at the center of the proposed development.
+Gunnell Engineering supervised the excavation of seven (7) test pits over the northern portion of the
+property in 2018. Test pits were excavated to a depth of approximately 1.8 m below grade. Soils
+encountered consisted of approximately 0.3 m of topsoil, underlain by silty sand. The silty sand was
+underlain by sandy soils with cobbles. No groundwater was encountered. According to Gunnell, a
+grain size analysis classified the soils as a gravelly sand soil with little to no fines with an assigned
+percolation rate of 6 min/cm.
+Sirati & Partners Consultants Ltd. Also completed a Geotechnical report for the entirety of the site
+(August 2, 2019), The results of their report are consistent with the Gunnell report. Native soils located
+beneath the proposed leaching bed location consist of well draining silty sand & sand and silt soils.
+The report indicates local infiltration rates of 3.51 and 4.38 min/cm can be anticipated within the
+proposed dispersal bed area.
+Based on the two reports, a conservative T-time of 10 min/cm has been assigned for the purposes of
+preliminary leaching bed sizing.
+A Type A dispersal bed is proposed as the leaching bed. A Type A dispersal bed consists of a layer of
+stone underlain by a layer of imported sand. Based on the total design flow of 59,100 L/day, the
+required Type A bed footprints for the stone and sand layer are 1182 m 2 and 695.3 m2, respectively.
+The proposed disposal bed will consist of an approximately 1268.3 m2 stone layer footprint and a
+1305.0 m2 sand layer footprint. Thus, the dispersal bed footprint requirements are met.
+The onsite sewage system design calculations can be found in Appendix A and the Site Servicing Plan
+(Drawing C101) illustrates the location of the proposed onsite sewage system for sanitary servicing of
+the proposed development.
+4.4
+
+Proximity to Existing Wells
+
+Part 8 of the Ontario Building Code requires a minimum horizontal separation distance of 15 m (50 ft)
+between wells with a watertight casing extend to 6 m below grade and onsite sewage system
+components. Using provincial well records, it was determined that the locations of the proposed
+treatment system and leaching bed satisfy the minimum separation distances required by the
+Province of Ontario.
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+5.0
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+Water Servicing
+
+The Region of Peel is responsible for the distribution, treatment and storage of the municipal water
+supply surrounding the site.
+5.1
+
+Existing Water Servicing
+
+A review of the Hurontario Street as-constructed drawings, prepared by Region of Peel (September,
+2007, Plan No: 35299-D) indicate that the existing heritage building within the 18314 Hurontario Street
+property is serviced by connection to a 300 mm diameter watermain along the Hurontario Street
+roadway. In addition, a servicing stub has not been provided for the 18309 Hurontario Street property.
+5.2
+
+Design Water Demand
+
+The design water demand for the proposed site can be expected to be of similar scale to the sanitary
+design flow, as summarized in Section 4.2. Through the application of peaking factors, which are
+included in the Region of Peel Watermain Design Criteria, the following peak flows can be determined
+for the development’s water demand. Table 3 summarizes the calculated maximum day and hour
+demand flows.
+Table 3: Estimated Water Demand Flows
+
+5.3
+
+Design Flow
+(L/day)
+
+Design Flow
+(L/s)
+
+Maximum Day
+Peak Factor
+
+Maximum Day
+Demand Flow
+(L/s)
+
+Maximum
+Hour Peak
+Factor
+
+Maximum
+Hour Demand
+Flow (L/s)
+
+59,100
+
+0.68
+
+2.00
+
+1.37
+
+3.00
+
+2.05
+
+Fire Flow Demand
+
+The Fire Underwriters Survey (FUS) was used to determine the fire flow requirements for the proposed
+development. The block containing units 25 to 30, at the northwest corner of the proposed
+development, is anticipated to require the largest fire flow and was used for calculations. The building
+block is anticipated to be of ordinary construction with a total unit floor area of 1250 m2. Table 4
+summarizes the estimated fire flow and duration to meet fire protection requirements for the proposed
+development.
+Table 4: Estimated Fire Demand Flows
+Demand Flow
+Demand Flow
+Method
+FUS
+
+(L/s)
+
+(L/min)
+
+183.3
+
+11,000
+
+The proposed service is required to accommodate a design fire flow of 11,000 L/min, or 183.3 L/s at
+20 psi residual pressure.
+A hydrant flow test will be carried out during future submissions or the detailed design stages to confirm
+adequate flows and pressures are met.
+The design water demand and fire flow calculations can be found in Appendix B.
+5.4
+
+Proposed Water Servicing
+
+The development is proposed to be serviced by connection to the existing 300mm diameter
+watermain within the Hurontario Street right-of-way. A 300mm to 150mm diameter pipe reducer will
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+be installed near the property limits to provide an internal 150 mm diameter PVC water service
+throughout the proposed development. As per the latest version of the Ministry of the Environment
+Design Guidelines for Drinking-Water Systems, the water service mainline is required to maintain a
+minimum ground level pressure of 20 psi under maximum day demand and fire flow demand
+simultaneously. With a maximum demand day flow of 1.37 L/s and a fire demand flow of 183.3 L/s, the
+mainline will be required to maintain a pressure of 20 psi while supplying a total water flow of 183.3
+L/s. The watermain, with individual service connections for each unit, will follow the alignment of the
+internal roadway and loop through the proposed Brock Street roadway. The preliminary watermain
+design is illustrated in the Preliminary Site Servicing Plan (Drawing C101).
+
+6.0
+
+Grading and Civil Design
+
+Based on the Topographic Survey by RS Geomatics Ltd. dated November 12, 2018, the existing
+elevation across the southern four-fifths of the property are generally flat. However, a steep incline is
+observed near the north-western property limits that causes approximately 4.5m of longitudinal fall
+across the property. Given that access to the proposed development will be provided by
+connection to the proposed Brock Street roadway (alignment and design to be done by others) the
+internal roadway grades, and the associated proposed buildings grades, must be raised to match
+the existing grades along the northern-western property limits.
+Retaining walls will be required to match existing grades along the north-western, southern and
+south-eastern property limits. Walk-out and Look-out townhouse units are proposed to reduce the
+amount of engineered fill required as well as reduce the height of the required retaining walls. 3:1
+slopes are proposed South-east of Unit 20, between Units 24 and 25, and north-west of Unit 30 to
+transition the higher front yard grades to the lower rear-yard grades.
+It is proposed to match the existing concrete sidewalk grades along Hurontario Street and to grade
+up 2% to establish new property line grades along the eastern property limits. This strategy will
+facilitate a smooth grade transition along the rear-yard of Units 4 to 12. The property limit grades to
+the east of Unit 12 will transition down to match existing grade.
+Drawing C102 illustrates the proposed Preliminary Site Grading Plan.
+
+7.0
+
+Drainage Conditions
+
+Based on previous correspondence with the CVC, it was confirmed that the subject site is not located
+in a CVC regulated area; however, the site plan must still adhere to the CVC guidelines. The drainage
+for pre-development and post-development conditions are outlined in the following sections.
+7.1
+
+Existing Drainage Conditions
+
+The subject development site currently consists of two (2) properties. The 18314 Hurontario Street
+property includes an existing heritage building and empty, vegetated land. The 18309 Hurontario
+Street property is located to the southeast of the first property and consists of agricultural lands. The
+two properties have a collective area of 1.37 ha.
+A review of the topographic survey indicates that stormwater runoff within the properties drains
+uncontrolled via sheet flow from the northwest to the east towards the drainage ditch that runs
+southerly along Hurontario Street. There is an elevation change of approximately 4.5 m across the
+developable portion of the property. Refer to the Pre-Development Drainage Plan (Drawing C103) for
+existing drainage patterns.
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+Table 5 summarizes the pre-development land areas and weighted runoff coefficients. The
+stormwater management calculations are included in Appendix C.
+Table 5: Pre-Development Land Areas and Runoff Coefficients
+Catchment ID
+
+Description
+
+Pervious
+Area (ha)
+
+Impervious
+Area (ha)
+
+Total Area
+(ha)
+
+Weighted
+Runoff
+Coefficient
+
+101
+
+Pre-Development Site
+
+1.35
+
+0.02
+
+1.37
+
+0.26
+
+7.2
+
+Proposed Drainage Conditions
+
+As previously noted, the proposed development consists of a seven (7) block, thirty (30) townhouse
+unit complex and an internal roadway with ten (10) above ground parking spaces. The heritage
+building will be preserved and is to remain in the proposed development conditions. The proposed
+grading and stormwater management strategy for the site has been designed to meet the drainage
+criteria of the Town of Caledon, Region of Peel and Credit Valley Conservation.
+Stormwater runoff generated within the internal roadway, roofs, and other impervious areas will be
+captured by catch basin manholes within the reverse-crowned internal roadway. The flows will be
+conveyed by 1200 mm diameter concrete superpipes to a stormwater infiltration chamber located
+at the southeast corner of the property. Once the stormwater infiltration chamber is full, water within
+the orifice control manhole will spill at an elevation of 414.64 and be conveyed to the existing 900mm
+diameter storm sewer within the Hurontario Street Roadway. The conveyance of runoff from lawns will
+be facilitated by side-yard and rear-yard drainage swales. The drainage swales will convey flows
+overland to rear-yard catch basins and catch basin manholes within the internal roadway. Storm
+Catch Basin (STM CB) 1 and STM CB2 will convey captured flows to the superpipe storage system,
+while STM CB3 will convey captured flows to the proposed infiltration chamber.
+Table 6 provides details of the catchment areas, and runoff coefficients for post-development
+conditions. Appendix C contains the stormwater management calculations.
+Table 6: Post-Development Land Areas and Runoff Coefficients
+Catchment ID
+
+Description
+
+Pervious
+Area (ha)
+
+Impervious
+Area (ha)
+
+Total Area
+(ha)
+
+Weighted
+Runoff
+Coefficient
+
+201
+
+Post-Development Site
+
+0.60
+
+0.77
+
+1.37
+
+0.62
+
+The Post-Development Drainage Plan (Drawing C104), Preliminary Site Servicing Plan (Drawing C01),
+Preliminary Site Grading Plan (Drawing C102) illustrate the proposed drainage of the site and the
+internal storm sewer system.
+In the event of a greater than 100-year storm, the overland flow route will follow the alignment of the
+internal roadway to STM CBMH1, pool and spill at a top of curb elevation of 417.76. The emergency
+overland flows will drain to the south-eastern property limits and discharge to the existing drainage
+ditch along Hurontario Street matching the pre-development emergency flow conditions.
+The drainage along the rear-yard of units 20 to 30 will be captured by STM CB1 and STM CB2. In the
+event that STM CB1 and STM CB2 are clogged during a greater than 100-year storm, overland flows
+will spill over the southern retaining wall at an elevation of 416.80m.
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+8.0
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+Stormwater Management
+
+Stormwater management design criteria were established through a review of the Credit Valley
+Conservation Stormwater Management Criteria (August 2012).
+The stormwater management criteria are as follows:
+•
+
+Stormwater Quantity Control: Provide post-development to pre-development peak flow
+control for all design storms (2, 5, 10, 25, 50 and 100-year)
+
+•
+
+Stormwater Quality Control: “Enhanced” protection level for the developed portion of the site
+(80% Total Suspended Solids (TSS) Removal)
+
+•
+
+Water Balance/Volume Control: At a minimum, retain onsite a stormwater runoff volume
+equivalent to 5 mm of rain over the total development site, and make every feasible effort to
+maintain pre-development annual infiltration volume
+
+8.1
+
+Stormwater Quantity Control
+
+Stormwater quantity control requirements for the site include providing post-development to predevelopment control for all storms including the 2, 5, 10, 25, 50 and 100-year design storm events. The
+Modified Rational Method and the Town of Caledon intensity-duration-frequency (IDF) data, as per
+the Town of Caledon General Standards (2000), were used to determine the pre-development and
+post-development peak flow rates for site stormwater runoff.
+Weighted runoff coefficients were calculated based on the amount of impervious and pervious areas
+for both pre- and post-development conditions, and were determined to be 0.26 and 0.62,
+respectively.
+Please refer to Appendix C for complete stormwater calculations, including the preliminary
+stormwater superpipe storage, orifice control, and infiltration chamber design. The detailed design of
+the orifice control and infiltration chamber will be completed during the detailed design stage. The
+Preliminary Site Servicing Plan (Drawing C101) illustrates the locations of the super pipe storage system,
+orifice control and infiltration chamber.
+A summary of site flows and required storage volumes is provided in Table 7.
+
+Storm
+
+Table 7: Pre- and Post-Development Flow Rates and Required Storage Volumes
+PostPre-Development Post-Development
+Max. Storage Max. Storage
+Development
+Uncontrolled
+Uncontrolled Peak
+Volume
+Volume
+Controlled
+Peak Flow Rate
+Flow Rate
+Required
+Provided
+Peak Flow Rate
+3
+3
+3
+3
+(m /s)
+
+(m /s)
+
+(m )
+
+(m3/s)
+
+(m )
+
+2-yr
+
+0.086
+
+0.203
+
+0.086
+
+87.9
+
+88.9
+
+5-yr
+
+0.110
+
+0.259
+
+0.099
+
+140.5
+
+146.7
+
+10-yr
+
+0.135
+
+0.317
+
+0.109
+
+187.3
+
+193.5
+
+25-yr
+
+0.157
+
+0.370
+
+0.122
+
+242.4
+
+244.4
+
+50-yr
+
+0.177
+
+0.417
+
+0.137
+
+277.1
+
+277.4
+
+100-yr
+
+0.197
+
+0.465
+
+0.161
+
+302.1
+
+303.8
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+The results provided in Table 7 demonstrate that the controlled post-development stormwater flow
+rates for all storm events up to and including the 100-year storm are less than the pre-development
+flow rates.
+The proposed stormwater quantity control will be provided by a 215 mm diameter orifice plate with
+and invert of 414.78m and storm sewer superpipes. The proposed storm sewer superpipe system was
+sized to provide a total of 250.5 m3 of storage within the pipes. An additional 55.6 m3 of storage will be
+provided within the proposed 1800mm diameter catch basin manholes within the internal roadway
+at a maximum water level of 417.48m. Therefore, a total storage volume of 306.1 m3 will be provided
+for the proposed development. Based on the Modified Rational Method, a total of 302.1 m3 of storage
+is required for the 100-year storm event; therefore, the stormwater quantity volume requirement is
+achieved. Detailed storage calculations are provided in Appendix C.
+8.2
+
+Stormwater Quality Control
+
+Stormwater quality control is required for the proposed development to meet the enhanced level of
+protection (80% total suspended solids removal) as per the 2003 MOE SWMPD Manual. Per the Credit
+Valley Conservation Authority and the Toronto and Region Conservation Authority dated 2010, the
+proposed stormwater infiltration chamber will provide 80% long-term suspended solids removal. The
+proposed development is 56% impervious and 1.37 ha in size, it was determined that an infiltration
+volume of 30.3 m3 is required. This requirement was calculated using linear interpolation and the water
+quality storage requirements in Figure 7-1 of the CVC Stormwater Management Criteria. The proposed
+stormwater infiltration chamber was designed to provide a storage volume of 38 m3 and the top of
+the chamber was set at the site outlet invert elevation. This ensures the stormwater chamber will be
+fully utilized prior to spilling at the outlet invert elevation and discharging from the site, thus water
+quality storage requirements are met. An isolator row will be included in the final design in order to
+provide pre-treatment for this system. The drawdown time calculations determined that a detention
+time of 2.2 hours will be required. Detailed drawdown time calculations are provided in Appendix C.
+Per the Preliminary Geotechnical Investigation Report by Sirati & Partners Consultants Ltd. (August 2,
+2019), the existing groundwater level is approximately 412.4m in the location of the proposed
+stormwater infiltration chamber. The proposed chamber is designed to have a bottom elevation of
+413.5m, thus a groundwater separation of 1.1m is provided and the 1m minimum groundwater
+separation requirement is met.
+8.3
+
+Water Balance
+
+As per the CVC stormwater management criteria, a site-specific water balance is required if the site
+is found within a medium, high, significant or ecologically significant groundwater recharge area.
+Figure 8.19 in the Caledon Creek and Credit River Subwatershed Study (Subwatersheds 16 & 18) Phase
+I: Characterization Report, dated November 1998, establishes that subcatchment 1614, which
+includes the proposed development site, is a significant groundwater recharge area. Due to the site’s
+recharge status, a site-specific water balance is required.
+The 6 mm storm event was determined to be the design storm event for the subject property.
+Retention of 6 mm of rainfall across the total roof areas amounts to a required infiltration volume of
+29m3. The CVC also requires retention of 5mm of rainfall across the total impervious areas, amounting
+to a required infiltration volume of 35m3. The stormwater infiltration chamber provides an infiltration
+volume of 38m3, thus water balance criteria are met.
+Water balance calculations can be found in Appendix C.
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+9.0
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+Erosion and Sediment Controls During Construction
+
+Erosion and sediment controls will be installed prior to the beginning of any construction activities.
+They will be maintained until the site is stabilized or as directed by the Site Engineer and/or Town of
+Caledon. Controls will be inspected after each significant rainfall event and maintained in proper
+working condition.
+The following erosion and sediment controls will be included during construction on the site:
+Heavy Duty Silt Fencing: Silt fencing will be installed on the perimeter of the site to intercept sheet flow.
+Additional silt fence may be added based on field decisions by the Site Engineer and Owner, prior to,
+during and following construction.
+Rock Mud Mat: A rock mud mat will be installed at the entrance to the construction zone to prevent
+mud tracking from the site onto surrounding lands and the perimeter roadway network. All
+construction traffic will be restricted to this access only.
+Sediment Control Devices: Sediment control devices will be installed on all catch basins along
+Hurontario Street adjacent to the subject property.
+The proposed erosion and sediment controls are illustrated on Drawing C105.
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+10.0
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+Conclusions and Recommendations
+
+The proposed development consists of a 7-block, 30-unit townhouse condominium with an internal
+private roadway connecting to the proposed Brock Street and associated surface parking areas. The
+existing heritage building is to remain on the site for a total of thirty-one (31) units.
+Based on the information offered in this report, we provide the following conclusions:
+•
+
+Water demand for the proposed development will be met using a 150 mm diameter water
+service. The proposed watermain will connect into the existing municipal watermain along
+Hurontario Street
+
+•
+
+Municipal sanitary services do not exist within the proximity of the proposed development. The
+site will be serviced by a proposed 250 mm diameter internal sanitary sewer system that
+connects to an onsite sewage treatment and disposal system
+
+•
+
+Stormwater Quantity controls are to be provided by oversized storm sewers and an orifice
+control
+
+•
+
+Sufficient Stormwater Quality control and Water Balance are to be provided by an on-site
+infiltration chamber
+
+Based on the above conclusions, we recommend the approval of the Zoning By-Law Amendment
+and Plan of Subdivision and Condominium, from the perspective of functional servicing and
+preliminary stormwater management.
+Respectfully submitted,
+C.F. CROZIER & ASSOCIATES INC.
+
+C.F. CROZIER & ASSOCIATES INC.
+
+Danny Pham, B.Eng.
+Land Development
+
+Geoff Masotti, P.Eng.
+Branch Manager, Bradford
+
+/jc/dp
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Reports\2019.02.14 FSR-SWM Final Report
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+APPENDIX
+
+A
+
+Sanitary Flow Calculations
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+Project: 18314 & 18309 Hurontario Street, Town of Caledon
+Project No.: 1610-5023
+
+Created By: DP
+Checked By: KR
+
+Date: 2020-12-10
+Updated: 2020-12-10
+
+Residential Disposal Bed Design
+Data Inputs:
+
+Unit Type TH-30-1
+
+Existing
+Heritage
+Building
+
+TH-30-2
+
+Number of Bedrooms
+
+3
+
+3
+
+Finished Unit Floor Area
+
+199.93
+
+224.92
+
+3
+
+Number of Fixture Units
+
+22
+
+25
+
+25 units
+
+See attached fixture unit worksheet
+
+Soil Percolation Rate ('T' Time)
+
+10
+
+10
+
+10 min/cm
+
+Design percolation rate
+
+Base Flow
+
+1,600
+
+1,600
+
+Additional Flow
+
+0
+
+0
+
+0
+
+0
+
+0 L/day
+
+0
+
+300
+
+1,700 L/day
+
+sq.m above 200 sq.m, 100 L/d per 10 sq.m (Rounded to nearest 100)
+
+0
+
+0
+
+0 L/day
+
+sq.m above 400 sq.m, 75 L/d per 10 sq.m (Rounded to nearest 100)
+
+0
+
+0
+
+0 L/day
+
+sq.m above 600 sq.m, 50 L/d per 10 sq.m (Rounded to nearest 100)
+
+0
+
+300
+
+1,700 L/day
+
+Additional Fixture Units
+
+100
+
+250
+
+250 L/day
+
+Q=
+
+1,700
+
+1,900
+
+3,300 L/day
+
+Total Number of Units
+
+6
+
+24
+
+1
+
+Number of bed rooms
+2
+
+370.54 m
+
+w/o finished basement and open areas
+
+Design Flow, Q:
++
+or +
+
+or +
+
+Additional Floor Area
+
+Total Q =
+
+1,600 L/day
+0 Number of Bedrooms over 5
+
+59,100
+
+Total Additional Floor Area Flow L/d
+Fixtures above 20 Fixtures
+Each Unit Design Flow (Rounded to nearest 100)
+
+Σ 31
+L/day
+
+Total Design Daily Flow for 31 Units
+
+Septic Tank Sizing:
+Size for two times the daily flow of
+
+59,100
+
+L/day
+
+Required septic tank size
+
+118,200
+
+Litres
+
+39,001
+
+Imp. Gal.
+
+2X sanitary flow for residential occupancy and
+3X sanitary flow for other occupancy per OBC
+8.2.2.3
+
+Disposal System
+Stone Layer:
+min. depth =
+min. area =
+=
+Provided:
+
+200 mm
+Q/50
+
+Based on Q>3,000L
+
+1182.0 sq.m
+44.0 m
+
+Length
+
+28.0 m
+
+Width
+
+1232.0 sq.m
+
+Area
+
+Sand Layer:
+min. depth =
+min. area =
+
+Provided:
+
+300 mm
+QT/850
+
+Since native T is 15 min/cm or less
+
+695.3 sq.m
+
+Mantle need not be extended
+
+45.0 m
+
+Length
+
+29.0 m
+
+Width
+
+1305.0 sq.m
+
+Area
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02_Septic Design
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+PROJECT NUMBER
+
+NOTES
+
+PHONE:
+(800) 420-4056
+
+CROZIER
+
+TITLE AND LOCATION
+
+PRELIMINARY LAYOUT
+Hurontario St. WWTP
+
+www.newterra.com
+LEVEL
+THIS INFORMATION IS THE PROPERTY OF newterra AND CANNOT BE REUSED OR REPRODUCED WITHOUT THE WRITTEN CONSENT OF newterra
+
+CUSTOMER
+
+1905797
+
+REVISION
+
+DATE
+(yyyy-mm-dd)
+
+BY
+
+DRAWN BY
+
+DATE
+
+2019-03-22
+
+SHEET SHEETS
+
+1
+
+1
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+APPENDIX
+
+B
+
+Water & Fire Flow Demand Calculations
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+File: 1610-5023
+Date: June 2, 2020
+By: DP
+Check By: GM
+
+18314 & 18309 Hurontario Street Residential Water Demand
+Average Residential Daily Volume
+
+59,100.00
+
+L/day
+
+Total Domestic Water Design Flows
+Average Residential Daily Flow
+
+0.68
+
+L/sec
+
+Max Day Peak Factor
+Max Day Demand Flow
+
+2.00
+1.37 L/sec
+
+Max Day Demand Volume
+
+118
+
+Peak Hour Factor
+Peak Hour Flow
+
+3.00
+2.05 L/sec
+
+References
+The Total Daily Water Flow is anticipated to be of similar scale to the
+Total Daily Sanitary Flow
+
+Region of Peel Watermain Design Criteria, 2009 (Section 2.3)
+
+m3/day
+
+Region of Peel Watermain Design Criteria, 2009 (Section 2.3)
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02 FUS & WAT
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+18314 Hurontario Street Residential - Bungalows
+Fire Protection Volume Calculation
+CFCA File: 1610-5023
+
+June 2, 2020
+
+Page 1
+
+Water Supply for Public Fire Protection - 1999
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+1. An estimate of fire flow required for a given area may be determined by the formula:
+F = 220 * C * sqrt A
+where
+F = the required fire flow in litres per minute
+C = coefficient related to the type of construction
+= 1.5 for wood frame construction (structure essentially all combustible)
+= 1.0 for ordinary construction (brick or other masonry walls, combustible floor and interior)
+= 0.8 for non-combustible construction (unprotected metal structural components)
+= 0.6 for fire-resistive construction (fully protected frame, floors, roof)
+A = The total floor area in square metres (including all storeys, but excluding basements at least
+50 percent below grade) in the building considered.
+Proposed Buildings
+
+End Units
+2 number of units
+225 sq.m. floor area
+450 sq.m. total floor area
+
+Therefore F=
+
+Middle Units
+4 number of units
+199.93 sq.m. floor area
+799.72 sq.m. total floor area
+
+Ordinary Construction
+1.0
+Average GFA for townhouse units per
+Michael Ferri e-mail dated March
+9,2020
+
+8,000 L/min (rounded to nearest 1000 L/min)
+
+Fire flow determined above shall not exceed:
+30,000 L/min for wood frame construction
+30,000 L/min for ordinary construction
+25,000 L/min for non-combustible construction
+25,000 L/min for fire-resistive construction
+
+2. Values obtained in No. 1 may be reduced by as much as 25% for occupancies having low contents fire hazard or may
+be increased by up to 25% surcharge for occupancies having a high fire hazard.
+Non-Combustible
+Limited Combustible
+Combustible
+
+-25%
+-15%
+No Charge
+
+Low fire Hazard occupancy for dwellings
+0 L/min reduction
+
+Free Burning
+Rapid Buring
+
+15%
+25%
+
+0% reduction
+
+Note: Flow determined shall not be less than 2,000 L/min
+3. Sprinklers - The value obtained in No. 2 above maybe reduce by up to 50% for complete automatic sprinkler
+protection.
+Buildings will not have automatic sprinklers (typical 30% reduction)
+0 L/min reduction
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02 FUS & WAT
+
+2020-06-02
+
+10:34 AM
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+18314 Hurontario Street Residential - Bungalows
+Fire Protection Volume Calculation
+CFCA File: 1610-5023
+
+June 2, 2020
+
+Page 2
+
+Water Supply for Public Fire Protection - 1999
+Fire Underwriters Survey
+Part II - Guide for Determination of Required Fire Flow
+4. Exposure - To the value obtained in No. 2, a percentage should be added for structures exposed within 45 metres
+by the fire area under consideration. The percentage shall depend upon the height, area, and construction of the
+building(s) being exposed, the separation, openings in the exposed building(s), the length and height of exposure,
+the provision of automatic sprinklers and/or outside sprinklers in the building(s) esposed, the occupancy of the
+exposed building(s) and the effect of hillside locations on the possible spread of fire.
+Separation
+0 to 3 m
+3.1 to 10 m
+10.1 to 20 m
+
+Charge
+25%
+20%
+15%
+
+Exposed buildings
+Name
+Front
+Adjacent Dwelling
+Back
+Adjacent Dwelling
+Left
+Adjacent Dwelling
+Right
+Adjacent Dwelling
+
+Distance
+12.87
+4.5
+
+Separation
+20.1 to 30 m
+30.1 to 45 m
+
+15%
+0%
+0%
+20%
+
+Charge
+10%
+5%
+
+1200
+0
+0
+1600
+2,800 L/min Surcharge
+
+Determine Required Fire Flow
+No.1
+No. 2
+No. 3
+No. 4
+Required Flow:
+Rounded to nearest 1000l/min:
+
+8,000
+0 reduction
+0 reduction
+2,800 surcharge
+10,800 L/min
+11,000 L/min
+
+or
+
+183.3 L/s
+2,906 USGPM
+
+Determine Required Fire Storage Volume
+Flow from above
+
+11,000 L/min
+
+Required duration
+
+2.25 hours
+
+Therefore:
+
+1,485,000 Litres or
+1,485 cu.m. is the required fire storage volume.
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02 FUS & WAT
+
+Required Duration of Fire Flow
+Flow Required
+Duration
+L/min
+(hours)
+2,000 or less
+1.0
+3,000
+1.25
+4,000
+1.5
+5,000
+1.75
+6,000
+2.0
+8,000
+2.0
+10,000
+2.0
+12,000
+2.5
+14,000
+3.0
+16,000
+3.5
+18,000
+4.0
+20,000
+4.5
+22,000
+5.0
+24,000
+5.5
+26,000
+6.0
+28,000
+6.5
+30,000
+7.0
+32,000
+7.5
+34,000
+8.0
+36,000
+8.5
+38,000
+9.0
+40,000 and over
+9.5
+
+2020-06-02
+
+10:34 AM
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+APPENDIX
+
+C
+
+Stormwater Management Calculations
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+Project: 18314 & 18309 Hurontario Street
+Project No.: 1610-5023
+File: Runoff Coef.
+Date: 2020-06-02
+Revised: 2020-06-02
+
+PRE-DEVELOPMENT RUNOFF COEFFICIENT
+Drainage
+Area
+Total Site
+
+Land Use
+
+Area (ha)
+
+Runoff Coef.
+
+AxC
+
+Runoff Coef.
+Range
+
+Impervious
+Lawn (<2%)
+
+0.023
+1.35
+
+0.90
+0.25
+
+0.02
+0.34
+
+0.9
+0.25
+
+Total Area (ha) = 1.37
+Runoff Coef. = 0.26
+POST-DEVELOPMENT RUNOFF COEFFICIENT
+Drainage
+Area
+Total Site
+
+Land Use
+
+Area (ha)
+
+Runoff Coef.
+
+AxC
+
+Runoff Coef.
+Range
+
+Impervious
+Lawn (<2%)
+
+0.77
+0.60
+
+0.90
+0.25
+
+0.69
+0.15
+
+0.9
+0.25
+
+Total Area (ha) =
+Runoff Coef. =
+Note: 1) Runoff coefficients per Town of Caledon Development Standards Manual Version 5.0 dated 2019.
+
+1.37
+0.62
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+Project: 18314 & 18309 Hurontario Street
+Project No: 1610-5023
+Created By: DP
+Date: 6-2-2020
+Revised: 6-2-2020
+
+MODIFIED RATIONAL CALCULATIONS
+Storm Data:
+
+Town of Caledon Intensity Parameters
+Tc=
+
+Time of Concentration:
+Return Period
+2 yr
+5 yr
+10 yr
+25 yr
+50 yr
+100 yr
+
+A
+
+10
+B
+
+1070.000
+1593.000
+2221.000
+3158.000
+3886.000
+4688.000
+
+7.850
+11.000
+12.000
+15.000
+16.000
+17.000
+
+min
+C
+0.876
+0.879
+0.908
+0.934
+0.950
+0.962
+
+i
+mm/hr
+85.72
+109.68
+134.16
+156.47
+176.19
+196.54
+
+PRE-DEVELOPMENT/EXISTING CONDITIONS WEIGHTED RUNOFF COEFFICIENT
+Return Period
+
+Adjustment
+Factor2
+
+Adjusted
+RC
+
+2 yr
+
+1.00
+
+0.26
+
+Weight
+RC
+
+5 yr
+10 yr
+
+1.00
+1.00
+
+0.26
+0.26
+
+0.02
+
+0.02
+
+25 yr
+
+1.00
+
+0.26
+
+1.35
+1.37
+
+0.25
+0.26
+
+50 yr
+100 yr
+
+1.00
+1.00
+
+0.26
+0.26
+
+2 yr
+5 yr
+10 yr
+25 yr
+
+Adjustment
+2
+Factor
+1.00
+1.00
+1.00
+1.00
+
+Adjsuted
+RC
+0.62
+0.62
+0.62
+0.62
+
+50 yr
+
+1.00
+
+0.62
+
+100 yr
+
+1.00
+
+0.62
+
+C
+
+A
+(ha)
+
+Impervious
+
+0.90
+
+Lawn (<2%)
+TOTAL
+
+0.25
+
+POST-DEVELOPMENT WEIGHTED RUNOFF COEFFICIENT
+
+C
+
+Impervious
+Lawn (<2%)
+TOTAL
+
+Equations:
+
+Intensity
+i(Td) = A /(T+B) ^c
+
+0.90
+0.25
+
+A
+(ha)
+0.77
+0.60
+1.37
+
+Weight
+RC
+0.51
+0.11
+0.62
+
+Return Period
+
+Notes:1) Runoff coefficients per Town of Caledon Development Standards Manual Version 5.0 dated 2019.
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+Project: 18314 & 18309 Hurontario Street
+Project No: 1610-5023
+Created By: DP
+Date: 6-2-2020
+Revised: 6-2-2020
+
+MODIFIED RATIONAL CALCULATIONS
+EXISTING CONDITIONS/PRE-DEVELOPMENT PEAK FLOW
+Return Period
+2 yr
+5 yr
+10 yr
+25 yr
+50 yr
+100 yr
+
+Peak flow, Q
+m3/s
+L/s
+0.086
+86.0
+0.110
+110.0
+0.135
+134.6
+0.157
+156.9
+0.177
+176.7
+0.197
+197.1
+
+PROPOSED CONDITIONS/POST-DEVELOPMENT PEAK FLOW
+Return Period
+2 yr
+5 yr
+10 yr
+25 yr
+50 yr
+100 yr
+
+Peak flow, Q
+3
+m /s
+L/s
+0.203
+202.7
+0.259
+259.4
+0.317
+317.3
+0.370
+370.0
+0.417
+416.6
+0.465
+464.8
+
+Equations:
+Intensity
+i(Td) = A /(T+B) ^c
+
+Peak Flow
+Qpost = 0.0028 • Cpost • i(Td) • A
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+Project: 18314 & 18309 Hurontario Street
+Project No: 1610-5023
+Created By: DP
+Date: 6-2-2020
+Revised: 6-2-2020
+
+MODIFIED RATIONAL CALCULATIONS
+POST-DEVELOPMENT
+100 yr Uncontrolled Post-Development Flow:
+3
+Qpost = 0.465 m /s
+100 yr Uncontrolled Pre-Development Flow
+3
+Qpre = 0.197 m /s
+100 yr Controlled Orifice Post-Development Flow:
+3
+Qpre = 0.161 m /s
+Storage Volume Determination (Detailed)
+Td
+Td
+QUncont
+Sd
+i
+min
+10
+15
+20
+25
+30
+35
+40
+45
+50
+55
+60
+65
+70
+75
+80
+85
+
+mm/hr
+196.54
+166.89
+145.13
+128.46
+115.28
+104.59
+95.75
+88.31
+81.95
+76.47
+71.69
+67.47
+63.74
+60.40
+57.40
+54.69
+
+sec
+600
+900
+1200
+1500
+1800
+2100
+2400
+2700
+3000
+3300
+3600
+3900
+4200
+4500
+4800
+5100
+
+m3/s
+0.465
+0.395
+0.343
+0.304
+0.273
+0.247
+0.226
+0.209
+0.194
+0.181
+0.170
+0.160
+0.151
+0.143
+0.136
+0.129
+
+REQUIRED STORAGE VOLUME:
+
+Equations:
+Peak Flow
+Qpost = 0.0028 • Cpost • i(Td) • A
+Storage
+Sd = Qpost • Td - Qpre (Td + Tc) / 2
+
+m3
+182.3
+234.4
+266.9
+286.6
+297.5
+302.1
+301.9
+298.2
+291.6
+282.8
+272.2
+260.0
+246.6
+232.2
+216.8
+200.7
+302.1
+
+3
+
+m
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+Project: 18314 & 18309 Hurontario Street
+Project No: 1610-5023
+Created By: DP
+Date: 6-2-2020
+Revised: 6-2-2020
+
+MODIFIED RATIONAL CALCULATIONS
+POST-DEVELOPMENT
+50 yr Uncontrolled Post-Development Flow:
+3
+Qpost = 0.417 m /s
+50 yr Uncontrolled Pre-Development Flow:
+3
+Qpre = 0.177 m /s
+50 yr Controlled Orifice Post-Development Flow:
+3
+Q = 0.137 m /s
+Storage Volume Determination (Detailed)
+Td
+Td
+QUncont
+Sd
+i
+3
+
+m
+167.8
+214.6
+243.8
+261.7
+271.9
+276.5
+277.1
+274.5
+269.5
+262.5
+254.0
+244.1
+233.2
+221.3
+208.7
+195.4
+
+REQUIRED STORAGE VOLUME:
+
+277.1
+
+min
+10
+15
+20
+25
+30
+35
+40
+45
+50
+55
+60
+65
+70
+75
+80
+85
+
+mm/hr
+176.19
+149.09
+129.36
+114.33
+102.50
+92.93
+85.04
+78.40
+72.75
+67.88
+63.63
+59.90
+56.58
+53.63
+50.97
+48.57
+
+sec
+600
+900
+1200
+1500
+1800
+2100
+2400
+2700
+3000
+3300
+3600
+3900
+4200
+4500
+4800
+5100
+
+Equations:
+Peak Flow
+Qpost = 0.0028 • Cpost • i(Td) • A
+Storage
+Sd = Qpost • Td - Qpre (Td + Tc) / 2
+
+m /s
+0.417
+0.353
+0.306
+0.270
+0.242
+0.220
+0.201
+0.185
+0.172
+0.161
+0.150
+0.142
+0.134
+0.127
+0.121
+0.115
+
+3
+
+m3
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+Project: 18314 & 18309 Hurontario Street
+Project No: 1610-5023
+Created By: DP
+Date: 6-2-2020
+Revised: 6-2-2020
+
+MODIFIED RATIONAL CALCULATIONS
+POST-DEVELOPMENT
+25 yr Uncontrolled Post-Development Flow:
+3
+Qpost = 0.37 m /s
+25 yr Uncontrolled Pre-Development Flow:
+3
+Qpre = 0.157 m /s
+25 yr Controlled Orifice Post-Development Flow:
+Q = 0.122 m3/s
+Storage Volume Determination (Detailed)
+Td
+Td
+QUncont
+Sd
+i
+3
+
+m
+148.8
+189.4
+214.5
+229.8
+238.4
+242.1
+242.4
+239.9
+235.3
+229.1
+221.5
+212.7
+203.0
+192.5
+181.4
+169.6
+
+REQUIRED STORAGE VOLUME:
+
+242.4
+
+min
+10
+15
+20
+25
+30
+35
+40
+45
+50
+55
+60
+65
+70
+75
+80
+85
+
+mm/hr
+156.47
+131.98
+114.29
+100.90
+90.39
+81.93
+74.95
+69.10
+64.13
+59.84
+56.11
+52.83
+49.92
+47.33
+45.00
+42.90
+
+sec
+600
+900
+1200
+1500
+1800
+2100
+2400
+2700
+3000
+3300
+3600
+3900
+4200
+4500
+4800
+5100
+
+Equations:
+Peak Flow
+Qpost = 0.0028 • Cpost • i(Td) • A
+
+Storage
+Sd = Qpost • Td - Qpre (Td + Tc) / 2
+
+m /s
+0.370
+0.312
+0.270
+0.239
+0.214
+0.194
+0.177
+0.163
+0.152
+0.142
+0.133
+0.125
+0.118
+0.112
+0.106
+0.101
+
+3
+
+m3
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+Project: 18314 & 18309 Hurontario Street
+Project No: 1610-5023
+Created By: DP
+Date: 6-2-2020
+Revised: 6-2-2020
+
+MODIFIED RATIONAL CALCULATIONS
+POST-DEVELOPMENT
+10 yr Uncontrolled Post-Development Flow:
+3
+Qpost = 0.317 m /s
+10 yr Uncontrolled Pre-Development Flow:
+3
+Qpre = 0.135 m /s
+10 yr Controlled Orifice Post-Development Flow:
+Q = 0.109 m3/s
+Storage Volume Determination (Detailed)
+Td
+Td
+QUncont
+Sd
+i
+min
+10
+15
+20
+25
+30
+35
+40
+45
+50
+55
+60
+65
+70
+75
+80
+85
+
+mm/hr
+134.16
+111.40
+95.47
+83.68
+74.58
+67.34
+61.44
+56.52
+52.37
+48.81
+45.72
+43.01
+40.63
+38.50
+36.60
+34.88
+
+sec
+600
+900
+1200
+1500
+1800
+2100
+2400
+2700
+3000
+3300
+3600
+3900
+4200
+4500
+4800
+5100
+
+m3/s
+0.317
+0.263
+0.226
+0.198
+0.176
+0.159
+0.145
+0.134
+0.124
+0.115
+0.108
+0.102
+0.096
+0.091
+0.087
+0.082
+
+REQUIRED STORAGE VOLUME:
+
+Equations:
+Peak Flow
+Qpost = 0.0028 • Cpost • i(Td) • A
+
+Storage
+Sd = Qpost • Td - Qpre (Td + Tc) / 2
+
+m3
+125.0
+155.3
+172.8
+182.4
+186.7
+187.3
+185.2
+181.0
+175.3
+168.3
+160.3
+151.4
+141.9
+131.7
+121.1
+110.0
+187.3
+
+m3
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+Project: 18314 & 18309 Hurontario Street
+Project No: 1610-5023
+Created By: DP
+Date: 6-2-2020
+Revised: 6-2-2020
+
+MODIFIED RATIONAL CALCULATIONS
+POST-DEVELOPMENT
+5 yr Uncontrolled Post-Development Flow:
+3
+Qpost = 0.259 m /s
+5 yr Uncontrolled Pre-Development Flow:
+3
+Qpre = 0.110 m /s
+5 yr Controlled Orifice Post-Development Flow:
+Q = 0.099 m3/s
+Storage Volume Determination (Detailed)
+Td
+Td
+QUncont
+Sd
+i
+min
+10
+15
+20
+25
+30
+35
+40
+45
+50
+55
+60
+65
+70
+75
+80
+85
+
+mm/hr
+109.68
+90.91
+77.89
+68.29
+60.92
+55.06
+50.28
+46.32
+42.96
+40.09
+37.60
+35.41
+33.48
+31.77
+30.23
+28.84
+
+sec
+600
+900
+1200
+1500
+1800
+2100
+2400
+2700
+3000
+3300
+3600
+3900
+4200
+4500
+4800
+5100
+
+m3/s
+0.259
+0.215
+0.184
+0.161
+0.144
+0.130
+0.119
+0.110
+0.102
+0.095
+0.089
+0.084
+0.079
+0.075
+0.071
+0.068
+
+REQUIRED STORAGE VOLUME:
+
+Equations:
+Peak Flow
+Qpost = 0.0028 • Cpost • i(Td) • A
+Storage
+Sd = Qpost • Td - Qpre (Td + Tc) / 2
+
+m3
+96.2
+119.2
+131.9
+138.3
+140.5
+139.8
+136.9
+132.4
+126.6
+119.8
+112.2
+103.8
+95.0
+85.6
+75.8
+65.7
+140.5
+
+m3
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+Project: 18314 & 18309 Hurontario Street
+Project No: 1610-5023
+Created By: DP
+Date: 6-2-2020
+Revised: 6-2-2020
+
+MODIFIED RATIONAL CALCULATIONS
+POST-DEVELOPMENT
+2 yr Uncontrolled Post-Development Flow:
+3
+Qpost = 0.203 m /s
+2 yr Uncontrolled Pre-Development Flow:
+3
+Qpre = 0.086 m /s
+2 yr Controlled Orifice Post-Development Flow:
+3
+Qpre = 0.086 m /s
+Storage Volume Determination (Detailed)
+Td
+Td
+QUncont
+Sd
+i
+min
+10
+15
+20
+25
+30
+35
+40
+45
+50
+55
+60
+65
+70
+75
+80
+85
+
+mm/hr
+85.72
+69.05
+58.06
+50.24
+44.38
+39.81
+36.14
+33.13
+30.60
+28.46
+26.62
+25.01
+23.60
+22.34
+21.23
+20.22
+
+sec
+600
+900
+1200
+1500
+1800
+2100
+2400
+2700
+3000
+3300
+3600
+3900
+4200
+4500
+4800
+5100
+
+m3/s
+0.203
+0.163
+0.137
+0.119
+0.105
+0.094
+0.085
+0.078
+0.072
+0.067
+0.063
+0.059
+0.056
+0.053
+0.050
+0.048
+
+REQUIRED STORAGE VOLUME:
+
+Equations:
+Peak Flow
+Qpost = 0.0028 • Cpost • i(Td) • A
+Storage
+Sd = Qpost • Td - Qpre (Td + Tc) / 2
+
+m3
+70.0
+82.4
+87.3
+87.9
+85.7
+81.6
+76.1
+69.6
+62.3
+54.4
+46.0
+37.1
+27.9
+18.5
+8.7
+-1.2
+87.9
+
+3
+
+m
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+18314 & 18309
+Project: Hurontario Street
+Project No.: 1610-5023
+Date: 2020-06-02
+Updated: 2020-06-02
+Created By: DP
+Checked By: RA
+
+Orifice Rating Curve
+Orifice Parameters
+
+Orifice Tube
+
+Diameter Ø (m) = 0.215
+2
+Area (A) (m ) = 0.036
+
+Discharge, Q = CA x sqrt(2gh)
+
+Coefficient (C) = 0.62
+Orifice Invert = 414.78
+Centroid (h) = 414.89
+Control MH # = U/G SWM Storage
+A. Rating Table
+Elevation
+(m)
+
+Discharge
+(m3/s)
+
+Active Storage Volume
+(m3)
+
+Target Discharge
+(m3/s)
+
+414.78
+
+0.000
+
+Provided1
+0.0
+
+414.88
+
+0.000
+
+0.3
+
+414.98
+
+0.030
+
+2.1
+
+415.08
+
+0.044
+
+6.4
+
+415.18
+
+0.054
+
+12.9
+
+415.28
+
+0.062
+
+23.2
+
+415.38
+
+0.070
+
+36.8
+
+415.48
+
+0.077
+
+55.0
+
+415.58
+
+0.083
+
+415.64
+
+0.086
+
+415.68
+
+0.089
+
+415.78
+
+0.094
+
+415.88
+
+0.099
+
+415.98
+
+0.104
+
+416.08
+
+0.109
+
+416.18
+
+0.113
+
+416.28
+
+0.118
+
+416.38
+
+0.122
+
+416.48
+
+0.126
+
+255.8
+
+416.58
+
+0.130
+
+264.4
+
+416.68
+
+0.133
+
+416.78
+
+0.137
+
+416.88
+
+0.141
+
+282.4
+
+416.98
+
+0.144
+
+286.6
+
+417.08
+
+0.148
+
+290.7
+
+417.18
+
+0.151
+
+294.6
+
+417.28
+
+0.154
+
+298.2
+
+417.38
+
+0.157
+
+417.48
+
+0.161
+
+Required
+
+75.6
+0.086
+
+88.9
+
+87.9
+
+2-year
+
+140.5
+
+5-year
+
+187.3
+
+10-year
+
+242.4
+
+25-year
+
+277.1
+
+50-year
+
+302.1
+
+100-year
+
+97.7
+121.9
+0.110
+
+146.7
+171.0
+
+0.135
+
+193.5
+212.9
+229.9
+
+0.157
+
+244.4
+
+271.2
+0.177
+
+277.4
+
+301.3
+0.197
+
+303.8
+
+417.56
+0.163
+306.1
+Notes:
+1. Superpipe storage volume within each sewer leg is approximated by multiplying the average
+water-filled area along the sewer by the sewer length. Detailed calculations are provided in the Superpipe
+Storage Calculation sheet.
+
+TOP OF GROUND
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02_Pipe Storage
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+18314 & 18309 Hurontario
+Project: Street
+Project No.: 1610-5023
+
+Created By: DP
+Checked By: RA
+
+Date:
+Updated:
+
+Superpipe Storage Calculations - Page 1
+Storm Sewer Network Parameters
+Sewer #
+#1
+#2
+#3
+#4
+#5
+#6
+#7
+#8
+
+Sewer #
+
+To
+CBMH8
+CBMH4
+CBMH 5
+CBMH6
+CBMH5
+CBMH 8
+CBMH1
+CBMH2
+
+From
+CBMH4
+CBMH5
+CBMH 6
+CBMH7
+CBMH9
+CBMH1
+CBMH2
+CBMH3
+
+Length (m)
+6.6
+25.9
+35
+57.3
+16.3
+7.2
+42.5
+30.7
+
+Slope
+0.5
+0.5
+0.5
+0.5
+0.5
+0.5
+0.5
+0.5
+
+DS Invert
+414.86
+414.90
+415.16
+415.36
+416.16
+414.86
+414.95
+415.18
+
+Water Depth at DS Invert of Sewer (m) for each Storm Event
+
+US Invert
+414.89
+415.03
+415.34
+415.65
+416.24
+414.90
+415.16
+415.33
+
+Size (mm)
+1200
+1200
+1200
+1200
+1200
+1200
+1200
+1200
+
+Water Depth at US Invert of Sewer (m) for each Storm Event
+
+2-yr
+5-yr
+10-yr
+25-yr
+50-yr
+100-yr
+2-yr
+5-yr
+10-yr
+25-yr
+50-yr
+Return Period
+Elevation (m)
+415.64
+415.88
+416.08
+416.38
+416.78
+417.48
+415.64
+415.88
+416.08
+416.38
+416.78
+#1
+0.78
+1.02
+1.22
+1.52
+1.92
+2.62
+0.75
+0.99
+1.19
+1.49
+1.89
+#2
+0.74
+0.98
+1.18
+1.48
+1.88
+2.58
+0.61
+0.85
+1.05
+1.35
+1.75
+#3
+0.48
+0.72
+0.92
+1.22
+1.62
+2.32
+0.30
+0.54
+0.74
+1.04
+1.44
+#4
+0.28
+0.52
+0.72
+1.02
+1.42
+2.12
+0.00
+0.23
+0.43
+0.73
+1.13
+#5
+0.00
+0.00
+0.00
+0.22
+0.62
+1.32
+0.00
+0.00
+0.00
+0.14
+0.54
+#6
+0.78
+1.02
+1.22
+1.52
+1.92
+2.62
+0.74
+0.98
+1.18
+1.48
+1.88
+#7
+0.69
+0.93
+1.13
+1.43
+1.83
+2.53
+0.48
+0.72
+0.92
+1.22
+1.62
+#8
+0.46
+0.70
+0.90
+1.20
+1.60
+2.30
+0.31
+0.55
+0.75
+1.05
+1.45
+Note: Water Depth in each sewer is calculated as Storm Event Water Elevation - Invert Elevation (DS or US). In cases where the sewer invert is above the storm water elevation, the water depth is equal to 0.
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02_Pipe Storage
+
+100-yr
+417.48
+2.59
+2.45
+2.14
+1.83
+1.24
+2.58
+2.32
+2.15
+
+2020-06-02
+2020-06-02
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+18314 & 18309 Hurontario
+Project: Street
+Project No.: 1610-5023
+
+Created By: DP
+Checked By: RA
+
+Date:
+Updated:
+
+Superpipe Storage Calculations - Page 2
+Sewer #
+
+Water-Filled Area at DS Invert of Sewer (m2) for each Storm Event
+
+2-yr
+5-yr
+10-yr
+25-yr
+50-yr
+100-yr
+2-yr
+Return Period
+Elevation (m)
+415.64
+415.88
+416.08
+416.38
+416.78
+417.48
+415.64
+#1
+0.78
+1.02
+1.13
+1.13
+1.13
+1.13
+0.74
+#2
+0.73
+0.99
+1.13
+1.13
+1.13
+1.13
+0.58
+#3
+0.42
+0.71
+0.93
+1.13
+1.13
+1.13
+0.23
+#4
+0.20
+0.47
+0.71
+1.02
+1.13
+1.13
+0.00
+#5
+0.00
+0.00
+0.00
+0.14
+0.59
+1.13
+0.00
+#6
+0.78
+1.02
+1.13
+1.13
+1.13
+1.13
+0.74
+#7
+0.67
+0.94
+1.10
+1.13
+1.13
+1.13
+0.42
+#8
+0.40
+0.68
+0.91
+1.13
+1.13
+1.13
+0.23
+Note: Water-Filled Areas are calculated using the following equation, where R = Sewer radius (m) and h = Water depth in sewer (m):
+2
+In cases where the sewer cross-section is full, the Water-Filled Area is calculated as π*R .
+Sewer #
+
+Water-Filled Area at US Invert of Sewer (m2) for each Storm Event
+5-yr
+415.88
+1.00
+0.86
+0.50
+0.15
+0.00
+0.99
+0.71
+0.50
+
+10-yr
+416.08
+1.13
+1.05
+0.74
+0.37
+0.00
+1.13
+0.93
+0.74
+
+25-yr
+416.38
+1.13
+1.13
+1.05
+0.72
+0.07
+1.13
+1.13
+1.05
+
+50-yr
+416.78
+1.13
+1.13
+1.13
+1.11
+0.49
+1.13
+1.13
+1.13
+
+Storage Volume in Sewer (m3) for each Storm Event
+
+2-yr
+5-yr
+10-yr
+25-yr
+50-yr
+100-yr
+Return Period
+Elevation (m)
+415.64
+415.88
+416.08
+416.38
+416.78
+417.48
+#1
+5.0
+6.7
+7.5
+7.5
+7.5
+7.5
+#2
+17.0
+23.9
+28.2
+29.3
+29.3
+29.3
+#3
+11.4
+21.1
+29.2
+38.1
+39.6
+39.6
+#4
+5.7
+17.9
+30.9
+50.1
+64.1
+64.8
+#5
+0.0
+0.0
+0.0
+1.8
+8.8
+18.4
+#6
+5.5
+7.3
+8.1
+8.1
+8.1
+8.1
+#7
+23.2
+35.0
+43.2
+48.1
+48.1
+48.1
+#8
+9.6
+18.2
+25.3
+33.4
+34.7
+34.7
+TOTAL
+77.4
+130.1
+172.3
+216.3
+240.2
+250.5
+Note: Storage Volume is calculated as the Sewer Length multiplied by the average of the DS and US Water-Filled Areas. Total Storage in the system is calculated as the sum of the storage volume in each sewer.
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02_Pipe Storage
+
+100-yr
+417.48
+1.13
+1.13
+1.13
+1.13
+1.13
+1.13
+1.13
+1.13
+
+2020-06-02
+2020-06-02
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+18314 & 18309 Hurontario
+Project: Street
+Project No.: 1610-5023
+
+Created By: DP
+Checked By: RA
+
+Manhole Storage Calculations - Page 3
+
+Storm Sewer Network Parameters
+Manhole #
+#1
+#2
+#3
+#4
+#5
+#6
+#7
+#8
+#9
+
+To
+CBMH8
+CBMH4
+CBMH5
+CBMH6
+CBMH7
+CBMH9
+CBMH1
+CBMH2
+CBMH3
+
+Manhole #
+Return Period
+Elevation (m)
+#1
+#2
+#3
+#4
+#5
+#6
+#7
+#8
+#9
+TOTAL
+
+2-yr
+415.64
+2.2
+1.9
+1.4
+0.8
+0.0
+1.0
+1.9
+1.2
+0.8
+11.2
+
+Size (mm)
+1800
+1800
+1800
+1800
+1800
+1800
+1800
+1800
+1800
+
+Area (m2)
+2.54
+2.54
+2.54
+2.54
+2.54
+2.54
+2.54
+2.54
+2.54
+
+Invert
+414.8
+414.9
+415.1
+415.3
+415.7
+415.2
+414.9
+415.2
+415.3
+
+Storage Volume in Manholes (m3) for each Storm Event
+5-yr
+10-yr
+25-yr
+50-yr
+415.88
+416.08
+416.38
+416.78
+2.8
+3.3
+4.1
+5.1
+2.5
+3.0
+3.8
+4.8
+2.0
+2.5
+3.3
+4.3
+1.4
+1.9
+2.6
+3.7
+0.6
+1.1
+1.9
+2.9
+1.6
+2.1
+2.9
+3.9
+2.5
+3.0
+3.8
+4.8
+1.8
+2.3
+3.1
+4.1
+1.4
+1.9
+2.7
+3.7
+16.6
+21.2
+28.1
+37.3
+
+100-yr
+417.48
+6.9
+6.6
+6.1
+5.4
+4.7
+5.7
+6.6
+5.9
+5.5
+53.3
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02_Pipe Storage
+
+Date:
+Updated:
+
+2020-06-02
+2020-06-02
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+Project Name: 18314 Hurontario Street
+Project No: 1610-5023
+Modelled By: DP
+Checked By: RA
+Date: 2-Jun-2020
+
+Climatic Water Budget - Thornthwaite Method
+Project Name: 18314 Hurontario Street
+ORANGEVILLE MOE - Climate Normals 1981-2010 Station Data
+Month
+January
+February
+March
+April
+May
+June
+July
+August
+September
+October
+November
+December
+Totals
+
+Mean
+Temperature
+(◦C)
+-7.5
+-6.5
+-2.1
+5.3
+11.7
+16.9
+19.4
+18.4
+14.3
+7.8
+2.0
+-4.1
+
+Heat
+index
+
+"a"
+
+0.0
+0.0
+0.0
+1.1
+3.6
+6.3
+7.8
+7.2
+4.9
+2.0
+0.2
+0.0
+33.1
+
+0.49
+0.49
+0.49
+0.51
+0.56
+0.60
+0.63
+0.62
+0.58
+0.53
+0.50
+0.49
+1.03
+
+PET - Potential
+Evapotranspiration
+(mm)
+0.0
+0.0
+0.0
+25.9
+58.4
+85.1
+98.1
+92.9
+71.7
+38.5
+9.5
+0.0
+
+Daily
+Correction
+Value
+0.77
+0.88
+0.99
+1.11
+1.22
+1.28
+1.26
+1.17
+1.05
+0.92
+0.81
+0.75
+
+Adjusted PET - Potential
+Evapotranspiration (mm)
+0.0
+0.0
+0.0
+28.8
+71.2
+109.0
+123.6
+108.7
+75.3
+35.4
+7.7
+0.0
+559.8
+
+Total
+Precipitation
+(mm)
+64.3
+54.5
+60.9
+70.1
+86.6
+81.3
+80.8
+88.2
+87.0
+76.6
+87.1
+64.2
+901.6
+
+TOTAL WATER DEFICIT =
+TOTAL WATER SURPLUS (SURPLUS - DEFICIT) =
+Precipitation Adjustment Factor :
+NOTES:
+1. Water budget adjusted for latitude and daylight.
+2. (◦C) - Represents calculated mean of daily temperatures for the month.
+3. Precipitation and Temperature data from theORANGEVILLE MOE (Station No.6155790 ) Environment Canada Station Data
+4. Total Water Surplus (Thornthwaite, 1948) is calculated as total precipitation minus adjusted potential evapostranspiration.
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02- WATER BALANCE
+
+Surplus (mm)
+
+Deficit
+(mm)
+
+64.3
+54.5
+60.9
+41.3
+15.4
+0.0
+0.0
+0.0
+11.7
+41.2
+79.4
+64.2
+432.8
+
+0.0
+0.0
+0.0
+0.0
+0.0
+27.7
+42.8
+20.5
+0.0
+0.0
+0.0
+0.0
+91.0
+
+91.0 mm
+341.8 mm
+none
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+Project Name: 18314 Hurontario Street
+Project No: 1610-5023
+Modelled By: DP
+Checked By: RA
+Date: 2-Jun-2020
+
+Water Budget - Pre-Development
+Project Name: 18314 Hurontario Street
+Water Balance/Water Budget Assessment
+Pre-development area available for infiltration (landscaped/lawn area considered to infiltrate)
+Pre-development area not available for infiltration (total site area less landscaped area noted above)
+Remaining Impervious area (e.g. parking asphalt area, building/rooftop area)
+Note: site land use areas consistent with Pre-Development SWM hydrologic modeling & calculations
+Catchment Designation
+
+Lawn & Trees
+
+Site - Pre-Development
+Impervious
+Roof Area
+
+Totals
+
+Area (m2)
+
+13500
+
+200
+
+0
+
+13700
+
+Pervious Area (m2)
+Impervious Area (m2)
+
+13500
+
+0
+200
+
+0
+0
+
+13500
+200
+
+Topography Infiltration Factor
+Soil Infiltration Factor
+Land Cover Infiltration Factor
+MOE Infiltration Factor
+Actual Infiltration Factor
+Run-off Coefficient
+Runoff from Impervious Surfaces *
+Precipitation (mm/yr)
+Run-On (mm/yr)
+Other Inputs (mm/yr)
+Total Inputs (mm/yr)
+Precipitation Surplus (mm/yr)
+Net Surplus (mm/yr)
+Evapotranspiration (mm/yr) *
+Infiltration (mm/yr)
+Soakaway Infiltration (mm/yr)
+Total Infiltration (mm/yr)
+Runoff Pervious Areas (mm/yr)
+Runoff Impervious Areas (mm/yr)
+Total Runoff (mm/yr)
+Total Outputs (mm/yr)
+Difference (Inputs- Outputs)
+
+Infiltration Factors
+0.2
+0.2
+0.1
+0.1
+0.1
+0
+0.4
+0
+0.4
+0
+0.25
+0.9
+0
+0.8
+Inputs (per Unit Area)
+902
+902
+0
+0
+0
+0
+902
+902
+Outputs (per Unit Area)
+342
+721
+342
+721
+560
+180
+137
+0
+0
+0
+137
+0
+205
+0
+0
+721
+205
+721
+902
+902
+0
+0
+Inputs (Volumes)
+
+0.2
+0.1
+0
+0
+0
+0.90
+0.8
+902
+0
+0
+902
+
+902
+0
+0
+902
+
+721
+721
+180
+0
+0
+0
+0
+721
+721
+902
+0
+
+347
+347
+554
+135
+0
+135
+202
+11
+213
+902
+0
+
+Precipitation (m3/yr)
+
+12172
+
+180
+
+0
+
+12352
+
+Run-On (m3/yr)
+Other Inputs (m3/yr)
+
+0
+0
+
+0
+0
+
+0
+0
+
+0
+0
+
+12172
+180
+Outputs (Volumes)
+
+0
+
+12352
+
+Precipitation Surplus (m3/yr)
+
+4615
+
+144
+
+0
+
+4759
+
+Net Surplus (m3/yr)
+
+4615
+
+144
+
+0
+
+4759
+
+Evapotranspiration (m /yr) *
+
+7557
+
+36
+
+0
+
+7593
+
+3
+
+1846
+
+0
+
+0
+
+1846
+
+0
+
+0
+
+0
+
+0
+
+1846
+
+0
+
+0
+
+1846
+
+Total Inputs (m3/yr)
+
+3
+
+Infiltration (m /yr)
+3
+
+Soakaway Infiltration (m /yr)
+3
+
+Total Infiltration (m /yr)
+3
+
+Runoff Pervious Areas (m /yr)
+
+2769
+
+0
+
+0
+
+2769
+
+Runoff Impervious Areas (m3/yr)
+Total Runoff (m3/yr)
+
+0
+2769
+
+144
+144
+
+0
+0
+
+144
+2913
+
+12172
+0
+
+180
+0
+
+0
+0
+
+12352
+0
+
+3
+
+Total Outputs (m /yr)
+Difference (Inputs- Outputs)
+
+NOTES:
+* Evaporation from impervious areas was assumed to be 20% of precipitation.
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02- WATER BALANCE
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+Project Name: 18314 Hurontario Street
+Project No: 1610-5023
+Modelled By: DP
+Checked By: RA
+Date: 2-Jun-2020
+
+Water Budget - Post-Development without Mitigation
+Project Name: 18314 Hurontario Street
+Water Balance/Water Budget Assessment
+Post-development area available for infiltration (landscaped/lawn area considered to infiltrate)
+Post-development area not available for infiltration (total site area less landscaped area noted above)
+Remaining Impervious area (e.g. parking asphalt area, building/rooftop area)
+Note: site land use areas consistent with Post-Development SWM hydrologic modeling & calculations
+Catchment Designation
+
+Lawn
+
+Area (m2)
+
+5988
+
+Pervious Area (m2)
+Impervious Area (m2)
+
+Site - Post-Development
+Impervious
+Roof Area
+
+Totals
+
+5361
+
+13700
+
+5988
+0
+0
+2351
+Infiltration Factors
+0.2
+0.2
+0.1
+0.1
+0.1
+0
+0.4
+0
+0.4
+0
+0.25
+0.9
+0
+0.8
+Inputs (per Unit Area)
+902
+902
+0
+0
+0
+0
+902
+902
+Outputs (per Unit Area)
+342
+721
+342
+721
+560
+180
+137
+0
+0
+0
+137
+0
+205
+0
+0
+721
+205
+721
+902
+902
+0
+0
+Inputs (Volumes)
+
+0
+5361
+
+5988
+7712
+
+Precipitation (m3/yr)
+
+5399
+
+Run-On (m3/yr)
+Other Inputs (m3/yr)
+
+0
+0
+
+Topography Infiltration Factor
+Soil Infiltration Factor
+Land Cover Infiltration Factor
+MOE Infiltration Factor
+Actual Infiltration Factor
+Run-off Coefficient
+Runoff from Impervious Surfaces *
+Precipitation (mm/yr)
+Run-On (mm/yr)
+Other Inputs (mm/yr)
+Total Inputs (mm/yr)
+
+2351
+
+0.2
+0.1
+0
+0
+0
+0.90
+0.8
+902
+0
+0
+902
+
+902
+0
+0
+902
+
+721
+721
+180
+0
+0
+0
+0
+721
+721
+902
+0
+
+555
+555
+346
+60
+0
+60
+90
+406
+496
+902
+0
+
+2120
+
+4834
+
+12352
+
+0
+0
+
+0
+0
+
+0
+0
+
+5399
+2120
+Outputs (Volumes)
+
+4834
+
+12352
+
+Precipitation Surplus (m3/yr)
+
+2047
+
+1696
+
+3867
+
+7609
+
+Net Surplus (m3/yr)
+
+2047
+
+1696
+
+3867
+
+7609
+
+Evapotranspiration (m /yr) *
+
+3352
+
+424
+
+967
+
+4742
+
+3
+
+819
+
+0
+
+0
+
+819
+
+0
+
+0
+
+0
+
+0
+
+819
+
+0
+
+0
+
+819
+
+Runoff Pervious Areas (m /yr)
+
+1228
+
+0
+
+0
+
+1228
+
+3
+
+0
+1228
+
+1696
+1696
+
+3867
+3867
+
+5563
+6791
+
+Total Outputs (m /yr)
+Difference (Inputs- Outputs)
+
+5399
+0
+
+2120
+0
+
+4834
+0
+
+12352
+0
+
+Precipitation Surplus (mm/yr)
+Net Surplus (mm/yr)
+Evapotranspiration (mm/yr) *
+Infiltration (mm/yr)
+Soakaway Infiltration (mm/yr)
+Total Infiltration (mm/yr)
+Runoff Pervious Areas (mm/yr)
+Runoff Impervious Areas (mm/yr)
+Total Runoff (mm/yr)
+Total Outputs (mm/yr)
+Difference (Inputs- Outputs)
+
+Total Inputs (m3/yr)
+
+3
+
+Infiltration (m /yr)
+3
+
+Soakaway Infiltration (m /yr)
+3
+
+Total Infiltration (m /yr)
+3
+
+Runoff Impervious Areas (m /yr)
+Total Runoff (m3/yr)
+3
+
+Pre-Development Total Infiltration:
+1846
+
+NOTES:
+* Evaporation from impervious areas was assumed to be 20% of precipitation.
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02- WATER BALANCE
+
+m3/yr
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+Project Name: 18314 Hurontario Street
+Project No: 1610-5023
+Modelled By: DP
+Checked By: RA
+Date: 2-Jun-2020
+
+Water Budget - Post-Development with Mitigation
+Project Name: 18314 Hurontario Street
+Water Balance/Water Budget Assessment
+Post-development area available for infiltration (lawn/landscaped area considered to infiltrate, BLDG. A roof area (clean water) directed to Infiltration Trench
+via non-perforated sub-drains. Sub-drains designed to be connected to building roof drains/downspouts (refer to Crozier Engineering Drawings).
+Post-development area not available/directed to infiltrate (total site area less lawn/landscaped and BLDG. A roof area noted above)
+Remaining Impervious area (e.g. parking area)
+
+Catchment Designation
+Area (m2)
+2
+
+Pervious Area (m )
+Impervious Area (m2)
+Topography Infiltration Factor
+Soil Infiltration Factor
+Land Cover Infiltration Factor
+MOE Infiltration Factor
+Actual Infiltration Factor
+Run-off Coefficient
+Runoff from Impervious Surfaces *
+Precipitation (mm/yr)
+Run-On (mm/yr)
+Other Inputs (mm/yr)
+Total Inputs (mm/yr)
+Precipitation Surplus (mm/yr)
+Net Surplus (mm/yr)
+Evapotranspiration (mm/yr) *
+Infiltration (mm/yr)
+Soakaway Infiltration (mm/yr)
+Total Infiltration (mm/yr)
+Runoff Pervious Areas (mm/yr)
+Runoff Impervious Areas (mm/yr)
+Total Runoff (mm/yr)
+Total Outputs (mm/yr)
+Difference (Inputs- Outputs)
+
+Site - Post-Development
+Lawn
+
+Impervious
+
+Roof Area
+
+Totals
+
+5988
+
+2351
+
+5361
+
+13700
+
+5988
+0
+0
+2351
+Infiltration Factors
+0.2
+0.2
+0.1
+0.1
+0.1
+0
+0.4
+0
+0.4
+0
+0.25
+0.90
+0
+0.8
+Inputs (per Unit Area)
+902
+902
+0
+0
+0
+0
+902
+902
+Outputs (per Unit Area)
+342
+721
+342
+721
+560
+180
+137
+0
+0
+0
+137
+0
+205
+0
+0
+721
+205
+721
+902
+902
+0
+0
+Inputs (Volumes)
+
+0
+5361
+
+5988
+7712
+
+0.2
+0.1
+0
+0
+0
+0.90
+0.8
+902
+0
+0
+902
+
+902
+0
+0
+902
+
+721
+721
+180
+0
+192
+192
+0
+529
+529
+902
+0
+
+555
+555
+346
+60
+75
+135
+90
+331
+421
+902
+0
+
+Precipitation (m3/yr)
+
+5399
+
+2120
+
+4834
+
+12352
+
+Run-On (m3/yr)
+Other Inputs (m3/yr)
+
+0
+0
+
+0
+0
+
+0
+0
+
+0
+0
+
+4834
+
+12352
+
+3
+
+Total Inputs (m /yr)
+
+5399
+2120
+Outputs (Volumes)
+3
+
+Precipitation Surplus (m /yr)
+
+2047
+
+1696
+
+3867
+
+7609
+
+Net Surplus (m3/yr)
+
+2047
+
+1696
+
+3867
+
+7609
+
+Evapotranspiration (m /yr) *
+
+3352
+
+424
+
+967
+
+4742
+
+3
+
+819
+
+0
+
+0
+
+819
+
+0
+
+0
+
+1029
+
+1029
+
+Total Infiltration (m /yr)
+
+819
+
+0
+
+1029
+
+1848
+
+Runoff Pervious Areas (m3/yr)
+
+1228
+
+0
+
+0
+
+1228
+
+Runoff Impervious Areas (m3/yr)
+Total Runoff (m3/yr)
+
+0
+1228
+
+1696
+1696
+
+2838
+2838
+
+4533
+5761
+
+Total Outputs (m3/yr)
+Difference (Inputs- Outputs)
+
+5399
+0
+
+2120
+0
+
+4834
+0
+
+12352
+0
+
+3
+
+Infiltration (m /yr)
+3
+
+Soakaway Infiltration (m /yr)
+3
+
+Proposed Infiltration via Mitigation
+Pre-Development Total Infiltration:
+135
+mm/yr
+
+Note:
+570.6 mm
+Precipitation available between Apr-Oct
+(non-winter months). Therefore available
+for infiltration into non-frozen soil
+
+Pre-Development Total Infiltration:
+1846
+
+m3/yr
+
+NOTES:
+* Evaporation from impervious areas was assumed to be 20% of precipitation.
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02- WATER BALANCE
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+Project: 18314 Hurontario Street
+Project No: 1610-5023
+Modelled By: DP
+Checked By: RA
+Date: 2-Jun-2020
+
+Water Budget Summary
+Project Name: 18314 Hurontario Street
+Water Balance/Water Budget Assessment
+Site
+Characteristic
+
+Pre-Development Post-Development
+
+Precipitation (m 3/yr)
+Run-On (m 3/yr)
+Other inputs (m 3/yr)
+
+12352
+0
+0
+
+12352
+0
+0
+
+Total Inputs (m3/yr)
+
+12352
+
+12352
+
+Precipitation Surplus (m 3/yr)
+Net Surplus (m 3/yr)
+Evapotranspiration (m 3/yr)
+Infiltration (m 3/yr)
+Soakaway Infiltration (m 3/yr)
+Total Infiltration (m 3/yr)
+Runoff Pervious Areas (m 3/yr)
+Runoff Impervious Areas (m 3/yr)
+Total Runoff (m 3/yr)
+
+4759
+4759
+7593
+1846
+0
+1846
+2769
+144
+2913
+
+Total Outputs (m3/yr)
+
+12352
+
+Post-Development
+with Mitigation
+
+Inputs (Volumes)
+12352
+0
+0
+
+Change (Pre to Post)
+
+Change (Pre to Post)
+with Mititgation
+
+0%
+0%
+0%
+
+0%
+0%
+0%
+
+0
+
+0
+
+7609
+7609
+4742
+819
+0
+819
+1228
+5563
+6791
+
+12352
+Outputs (Volumes)
+7609
+7609
+4742
+819
+1029
+1848
+1228
+4533
+5761
+
+60%
+60%
+-38%
+-56%
+-56%
+-56%
+133%
+
+60%
+60%
+-38%
+-56%
+1029 m3/yr
+0%
+-56%
+98%
+
+12352
+
+12352
+
+0%
+
+0%
+
+NOTES:
+Months contributing to Water Balance (winter months not considered due to freezing effects) - April, May, June, July, August, September, October = 7 months
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02- WATER BALANCE
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+Project: 18314 Hurontario Street
+Project No: 1610-5023
+Modelled By: DP
+Date: 6-2-2020
+
+Design Storm Determination
+Project Name: 18314 Hurontario Street
+Water Balance/Water Budget Assessment
+Days with Precipitation (From Climate Data)
+Apr
+May
+Jun
+12.2
+12.9
+11.9
+>= 0.2 mm
+4.7
+5.4
+4.9
+>= 5 mm
+2.2
+2.9
+2.9
+>= 10 mm
+0.23
+0.69
+0.46
+>= 25 mm
+
+Jul
+10.5
+4.4
+2.8
+0.69
+
+Aug
+11.9
+4.8
+3.2
+0.58
+
+Sep
+12.2
+4.7
+2.9
+0.73
+
+Oct
+14.3
+5.3
+2.5
+0.24
+
+Available Precipitation
+Storm
+Event
+(mm)
+0.2
+5
+10
+25
+Total
+
+Total
+Days
+Per
+Year
+86
+34
+19
+4
+143
+
+Infiltration Deficit Target:
+Runoff Coefficient for Impervious Area:
+Design Precipitation:
+Therefore Design Storm:
+
+Incremental Cummulative
+Precipitation Precipitation
+(mm/yr)
+(mm/yr)
+17.2
+171.0
+194.0
+90.5
+472.7
+
+17.2
+188.2
+382.2
+472.7
+
+192 mm/yr
+0.90
+213 mm/yr
+
+(Design Infiltration / Contributing RC)
+
+6 mm
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02- WATER BALANCE
+
+Total
+86
+34
+19
+4
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+Project: 18314 Hurontario Street
+Project No: 1610-5023
+Modelled By: DP
+Date: 6-2-2020
+
+Mitigation Sizing
+Project Name: 18314 Hurontario Street
+Water Balance/Water Budget Assessment
+Site Specific Water Balance Target
+Total Contributing Drainage Area:
+Runoff Coefficient:
+Design Storm:
+Design Runoff/Infiltration Volume Required:
+
+5361 m2
+0.90
+6 mm
+3
+29 m
+
+5mm Across the Impervious Area Water Balance Target
+Total Contributing Drainage Area:
+Design Rainfall Depth
+Design Rainfall Depth
+Design Runoff/Infiltration Volume Required:
+
+7712 m2
+0.90
+5 mm
+3
+35 m
+
+Design Runoff/Infiltration Volume Target:
+
+35
+
+Design Runoff/Infiltration Volume Provided:
+
+38 m
+
+3
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02- WATER BALANCE
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+Project:
+
+18314 & 18309
+Hurontario Street
+
+Project No.: 1610-5023
+
+Created By: DP
+
+Date: 2020-06-02
+
+Checked By: RA
+
+Updated: 2020-06-02
+
+Infiltration Chamber Drawdown Time Calculations
+Notes & References
+Assume: Full infiltration.
+A. Maximum Infiltration Depth
+
+Based on Soil Peroclation Tests Report, prepared by
+Sirati & Partners Consultants Ltd., August 2, 2019
+
+P = Percolation Rate (native soils)
+
+360.7
+
+mm/hr
+
+T = Drawdown Time
+
+48
+17.3
+
+hours
+
+d = Maximum allowable depth of infiltration
+
+m
+
+MOE SWMP Manual, Equation 4.2
+
+B. Minimum Footprint Surface Area
+V = Runoff Volume to be Infiltrated
+P = Percolation Rate (native soils)
+n = porosity of storage media
+T = Drawdown Time
+Minimum footprint area
+
+35
+360.7
+0.4
+48
+5
+
+m3
+mm/hr
+
+Site Impervious area (ha) x 25mm
+
+Footprint Area
+
+112
+
+m2
+
+2.2
+
+hr
+
+C. Provided Design and Detention Time
+Detention Time
+
+d =
+
+PT
+1000
+
+A=
+
+1000V
+PnT
+
+Storage provided by
+hours
+m2
+
+MOE SWMP Manual, Equation 4.3
+
+A=
+D. Design Summary
+Required Infiltration Volume:
+
+35
+
+m3
+
+Provided Storage:
+
+38
+
+m3
+
+1000V
+PnT
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\Design\Civil_Water\Revised FSRSWM\2020.06.02_Drawdown Time
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+Storage Chamber Design
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+Project:
+
+18314 & 18309 Hurontario Street
+
+Chamber Model Units -
+
+DC-780
+Metric
+
+Number of chambers Voids in the stone (porosity) Base of Stone Elevation Amount of Stone Above Chambers Amount of Stone Below Chambers -
+
+13
+40
+413.50
+152
+230
+152
+61
+
+Click Here for Imperial
+
+%
+m
+mm
+mm
+
+Include Perimeter Stone in Calculations
+
+sq.meters
+
+Min. Area -
+
+40.82 sq.meters
+
+StormTech DC-780 Cumulative Storage Volumes
+Height of
+System
+(mm)
+1143
+1118
+1092
+1067
+1041
+1016
+991
+965
+940
+914
+889
+864
+838
+813
+787
+762
+737
+711
+686
+660
+635
+610
+584
+559
+533
+508
+483
+457
+432
+406
+381
+356
+330
+305
+279
+254
+229
+203
+178
+152
+127
+102
+76
+51
+25
+
+Incremental Single
+Incremental
+Incremental Incremental Ch
+Cumulative
+Chamber
+Total Chamber
+Stone
+& St
+Chamber
+(cubic meters)
+(cubic meters) (cubic meters) (cubic meters) (cubic meters)
+0.00
+0.00
+0.62
+0.62
+38.126
+0.00
+0.00
+0.62
+0.62
+37.505
+0.00
+0.00
+0.62
+0.62
+36.885
+0.00
+0.00
+0.62
+0.62
+36.265
+0.00
+0.00
+0.62
+0.62
+35.645
+0.00
+0.00
+0.62
+0.62
+35.025
+0.00
+0.02
+0.61
+0.63
+34.405
+0.00
+0.06
+0.60
+0.66
+33.772
+0.01
+0.11
+0.58
+0.68
+33.115
+0.02
+0.22
+0.53
+0.76
+32.431
+0.02
+0.30
+0.50
+0.80
+31.676
+0.03
+0.35
+0.48
+0.83
+30.877
+0.03
+0.40
+0.46
+0.86
+30.045
+0.03
+0.44
+0.45
+0.88
+29.186
+0.04
+0.47
+0.43
+0.90
+28.303
+0.04
+0.50
+0.42
+0.92
+27.402
+0.04
+0.54
+0.41
+0.94
+26.480
+0.04
+0.56
+0.40
+0.96
+25.539
+0.05
+0.59
+0.39
+0.97
+24.582
+0.05
+0.61
+0.38
+0.98
+23.610
+0.05
+0.63
+0.37
+1.00
+22.625
+0.05
+0.65
+0.36
+1.01
+21.628
+0.05
+0.67
+0.35
+1.02
+20.618
+0.05
+0.68
+0.35
+1.03
+19.598
+0.05
+0.70
+0.34
+1.04
+18.567
+0.06
+0.72
+0.33
+1.05
+17.526
+0.06
+0.73
+0.33
+1.06
+16.476
+0.06
+0.74
+0.32
+1.07
+15.417
+0.06
+0.76
+0.32
+1.07
+14.350
+0.06
+0.77
+0.31
+1.08
+13.276
+0.06
+0.78
+0.31
+1.09
+12.195
+0.06
+0.79
+0.30
+1.09
+11.107
+0.06
+0.80
+0.30
+1.10
+10.012
+0.06
+0.81
+0.30
+1.11
+8.912
+0.06
+0.82
+0.29
+1.11
+7.807
+0.06
+0.83
+0.29
+1.12
+6.697
+0.00
+0.00
+0.62
+0.62
+5.581
+0.00
+0.00
+0.62
+0.62
+4.961
+0.00
+0.00
+0.62
+0.62
+4.341
+0.00
+0.00
+0.62
+0.62
+3.721
+0.00
+0.00
+0.62
+0.62
+3.101
+0.00
+0.00
+0.62
+0.62
+2.481
+0.00
+0.00
+0.62
+0.62
+1.860
+0.00
+0.00
+0.62
+0.62
+1.240
+0.00
+0.00
+0.62
+0.62
+0.620
+
+Elevation
+(meters)
+414.64
+414.62
+414.59
+414.57
+414.54
+414.52
+414.49
+414.47
+414.44
+414.41
+414.39
+414.36
+414.34
+414.31
+414.29
+414.26
+414.24
+414.21
+414.19
+414.16
+414.14
+414.11
+414.08
+414.06
+414.03
+414.01
+413.98
+413.96
+413.93
+413.91
+413.88
+413.86
+413.83
+413.80
+413.78
+413.75
+413.73
+413.70
+413.68
+413.65
+413.63
+413.60
+413.58
+413.55
+413.53
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021 Jannett & Richard Nicolson & 2683894 Ontario Inc.
+18314 & 18309 Hurontario Street, Town of Caledon
+
+Functional Servicing and Preliminary Stormwater Management Report
+December 2020
+
+DRAWINGS
+Drawing C101:
+
+Preliminary Site Servicing Plan
+
+Drawing C102:
+
+Preliminary Site Grading Plan
+
+Drawing C103:
+
+Pre-Development Drainage Plan
+
+Drawing C104:
+
+Post-Development Drainage Plan
+
+Drawing C105:
+
+Erosion & Sediment Control Plan
+
+Drawing C106:
+
+Standard Details
+
+C.F. Crozier & Associates Inc.
+Project No. 1610-5023
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+4
+
+5
+
+6
+
+8
+
+7
+
+11
+
+10
+
+9
+
+12
+³
+
+16
+
+3
+
+13
+
+2
+
+14
+
+1
+
+30
+
+17
+
+18
+19
+
+15
+
+29
+
+28
+
+27
+
+26
+
+25
+
+24
+
+23
+
+22
+
+21
+
+20
+
+57 John Street West
+P.O. Box 1011
+Bradford, ON L3Z 2B4
+905-952-3111 T
+www.cfcrozier.ca
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+4
+
+5
+
+6
+
+8
+
+7
+
+11
+
+10
+
+9
+
+12
+
+16
+
+3
+
+13
+
+18
+
+14
+
+2
+1
+
+30
+
+17
+
+19
+
+15
+
+29
+
+28
+
+27
+
+26
+
+25
+
+24
+
+23
+
+22
+
+21
+
+20
+
+57 John Street West
+P.O. Box 1011
+Bradford, ON L3Z 2B4
+905-952-3111 T
+www.cfcrozier.ca
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+57 John Street West
+P.O. Box 1011
+Bradford, ON L3Z 2B4
+905-952-3111 T
+www.cfcrozier.ca
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+4
+
+5
+
+6
+
+8
+
+7
+
+11
+
+10
+
+9
+
+12
+³
+
+16
+
+3
+
+13
+
+18
+
+14
+
+2
+1
+
+30
+
+17
+
+19
+
+15
+
+29
+
+28
+
+27
+
+26
+
+25
+
+24
+
+23
+
+22
+
+21
+
+20
+
+57 John Street West
+P.O. Box 1011
+Bradford, ON L3Z 2B4
+905-952-3111 T
+www.cfcrozier.ca
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+Jan 06, 2021
+
+SUBJECT
+PROPERTY
+
+KEY PLAN
+SCALE: N.T.S.
+
+4
+
+5
+
+6
+
+8
+
+7
+
+12
+
+11
+
+10
+
+9
+
+16
+17
+13
+
+3
+
+14
+
+2
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\CAD\Civil\_Sheets\C105&106_ESC and Details.dwg, 2020-12-10 1:27:08 PM
+
+19
+
+15
+
+1
+
+30
+
+18
+
+29
+
+28
+
+27
+
+26
+
+25
+
+24
+
+23
+
+22
+
+21
+
+20
+
+57 John Street West
+P.O. Box 1011
+Bradford, ON L3Z 2B4
+905-952-3111 T
+www.cfcrozier.ca
+
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+Q:\1600\1610-Richard Nicholson\5023-18314 Hurontario St\CAD\Civil\_Sheets\C105&106_ESC and Details.dwg, 2020-12-10 1:27:11 PM
+
+Jan 06, 2021
+
+57 John Street West
+P.O. Box 1011
+Bradford, ON L3Z 2B4
+905-952-3111 T
+www.cfcrozier.ca
+
+

@@ -1,0 +1,15485 @@
+Caledon 410 Developments
+
+Functional Servicing
+Report
+VERSION 2 ▪ AUGUST 2019
+
+REPORT PREPARED FOR
+
+Caledon 410 Developments Ltd.
+5400 YONGE STREET, 5TH FLOOR
+TORONTO, ONTARIO
+M2N 5R5
+
+REPORT PREPARED BY
+
+THE MUNICIPAL
+INFRASTRUCTURE GROUP LTD.
+8800 DUFFERIN STREET, SUITE 200
+VAUGHAN, ON L4K 0C5
+(905) 738-5700
+
+TMIG PROJECT NUMBER 16109
+
+this report has been formatted for double-sided printing
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+August 2019 __________________________________________________________________________________________________________________
+
+Contents
+1
+
+INTRODUCTION......................................................................5
+
+2
+
+BACKGROUND INFORMATION .................................................6
+2.1 PREVIOUS REPORTS .......................................................6
+2.2 SITE CONSTRAINTS/EXISTING CONDITIONS ......................6
+
+3
+
+PROPOSED CONDITIONS/PROPOSED DEVELOPMENT ..............7
+3.1 PROPOSED DEVELOPMENT .............................................7
+
+4
+
+GRADING PLAN ...................................................................11
+4.1 GRADING DESIGN .........................................................11
+
+5
+
+MUNICIPAL SERVICING ........................................................12
+5.1 WATER SERVICES ........................................................12
+5.2 SANITARY SERVICES.....................................................13
+5.3 STORMWATER TREATMENT AND DRAINAGE ....................15
+
+6
+
+CONCLUSIONS ....................................................................17
+
+Appendices
+Appendix A:
+
+Background- Urbantech FSR Excerpts
+
+Appendix B:
+
+Municipal Servicing
+
+Appendix C:
+
+Preliminary Grading Plan
+
+List of Tables
+Table 3-1 Proposed Land Use Areas ..........................7
+Table 5-1 Existing Sewer Outlets servicing
+Caledon 410 ..............................................................13
+Table 5-2 Population density for various land
+uses ...........................................................................13
+Table 5-3 Existing Sewer Outlets servicing
+Caledon 410 ..............................................................14
+Table 5-4 SWM Pond Tributary Areas - Ultimate
+Condition ...................................................................15
+Table 5-5 SWM Pond Tributary Areas- Interim
+Condition ...................................................................16
+
+List of Figures
+Figure 1-1: Location Plan.............................................5
+Figure 3-1: Proposed Draft Plan ..................................9
+
+THE MUNICIPAL INFRASTRUCTURE GROUP LTD ___________________________________________________________________________ PAGE iii
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+__________________________________________________________________________________________________________________ August 2019
+
+PAGE iv ____________________________________________________________________________ THE MUNICIPAL INFRASTRUCTURE GROUP LTD
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+August 2019 __________________________________________________________________________________________________________________
+
+1 Introduction
+The Municipal Infrastructure Group (TMIG) has been retained by Caledon 410 Developments
+Ltd. to prepare a Functional Servicing Report (FSR) in support of their Draft Plan of Subdivision
+application. The Caledon 410 site is a proposed 36.16ha residential and commercial
+development within the Mayfield West Phase 2 Secondary Plan Area, in the Town of Caledon.
+The proposed development is located west of Hurontario Street, east of the OrangevilleBrampton Railway (OBRY) and north of the existing subdivision as shown on Figure 1-1.
+Figure 1-1: Location Plan
+
+HWY 410
+Hurontario St
+
+McLaughlin Rd
+Mayfield Rd
+
+THE MUNICIPAL INFRASTRUCTURE GROUP LTD ___________________________________________________________________________ PAGE 5
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+__________________________________________________________________________________________________________________ August 2019
+
+2
+2.1
+
+Background Information
+Previous Reports
+The information contained within this report is based on the Functional Servicing Report for
+Mayfield West Phase 2 Secondary Plan Area (MW2 FSR), dated December 2018 prepared by
+Urbantech.
+The MW2 FSR outlined the stormwater, sanitary and water servicing, a grading strategy,
+environmental constraints and mitigation measures, hydrogeology and the geotechnical
+guidelines for future developments. This FSR Report is consistent with the strategies outlined
+in the MW2 FSR and the standards of the regulatory agencies (Town, TRCA and MOECC).
+This report is to be read in conjunction with other related reports supporting the proposed draft
+plan including:
+
+2.2
+
+
+
+MW2 Functional Servicing Report (FSR) prepared by Urbantech, dated December 2018
+
+
+
+Environmental Impact Statement (EIS) prepared by Hensel, dated March 2019
+
+
+
+Geotechnical Report prepared by Terraprobe, dated June 2017
+
+
+
+Feature Based Water Budget Assessment prepared by PECG, dated April 2018, and
+
+
+
+Caledon 410 Stormwater Management Report prepared by TMIG, dated July 2019
+
+Site Constraints/Existing Conditions
+
+Existing Topography and Natural Heritage System
+The existing topography within the proposed development ranges in elevation from 239.00m to
+231.00m. Existing topography falls generally from northwest to southeast from a ridge north of
+the subject site. The topography ranges in slope from 2% to 3%.
+The existing land use is predominantly agricultural and rural in nature.
+There are two natural heritage systems (NHS) located within the subject site. Two wetlands
+referred to as northeast wetland and southeast (TRCA wetland) in the Urbantech MW2 FSR are
+located along the western and southwestern boundary of the site i.e. Block 259 and Block 260
+of the Draft Plan.
+The draft plan of subdivision as shown on Figure 3-1 illustrates the proposed development in
+the context of the site’s NHS. For information on the detailed NHS and the width of the applied
+buffer, the corresponding Environmental Impact Statement (EIS) report should be reviewed.
+
+PAGE 6 ____________________________________________________________________________ THE MUNICIPAL INFRASTRUCTURE GROUP LTD
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+August 2019 __________________________________________________________________________________________________________________
+
+3 Proposed Conditions/Proposed Development
+3.1
+
+Proposed Development
+The proposed development land uses include low density residential, medium density
+residential, a transit hub block, roads, a stormwater management (SWM) facility, park, open
+space, Commercial lands and Natural Heritage System (NHS).
+Table 3-1 summarize the proposed land uses and corresponding development areas. The
+proposed road network and lot layout is based on the Draft Plan of Subdivision prepared by
+Glen Schnarr & Associates Inc., dated July 3, 2019.
+Table 3-1 Proposed Land Use Areas
+Land Use
+
+Area (ha)
+
+Low Density
+
+7.07
+
+Medium Density
+
+5.10
+
+Commercial
+
+5.63
+
+Transit
+
+0.59
+
+Institutional
+
+0.49
+
+Park
+
+0.25
+
+Environmental Policy Area
+
+6.92
+
+Greenway Corridor
+
+0.21
+
+Open Space
+
+0.28
+
+SWM Pond
+
+1.93
+
+Roads
+
+6.92
+
+MTO Reserve Block
+
+0.76
+
+THE MUNICIPAL INFRASTRUCTURE GROUP LTD ___________________________________________________________________________ PAGE 7
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+__________________________________________________________________________________________________________________ August 2019
+
+PAGE 8 ____________________________________________________________________________ THE MUNICIPAL INFRASTRUCTURE GROUP LTD
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+August 2019 __________________________________________________________________________________________________________________
+
+Figure 3-1: Proposed Draft Plan
+
+THE MUNICIPAL INFRASTRUCTURE GROUP LTD ___________________________________________________________________________ PAGE 9
+
+EXISTING
+WOODLOT &
+WETLAND
+
+BLOCK 270
+0.3m RESERVE
+
+2
+
+1
+
+FUTURE
+PARK
+
+BLK 241 B
+LK 240
+4 UNITS 5
+UNITS
+
+138
+
+132
+
+139
+
+131
+
+140
+
+TEMPORARY
+CUL-DE-SAC
+LOCATION
+
+129
+
+126
+
+141
+
+142
+143
+144
+145
+
+125
+
+146
+
+124
+
+147
+
+123
+
+148
+
+122
+
+149
+
+121
+
+BLOCK 246
+7 UNITS
+
+171
+
+172
+
+170
+
+173
+
+169
+
+174
+
+168
+
+175
+
+167
+
+176
+
+166
+
+177
+
+165
+
+178
+
+164
+
+179
+
+163
+
+180
+
+162
+
+181
+
+BLOCK 218
+6 UNITS
+
+BLOCK 217
+7 UNITS
+
+BLOCK 216
+7 UNITS
+
+BLOCK 215
+7 UNITS
+
+LANE 'D'
+
+BLOCK 228
+6 UNITS
+
+BLOCK 229
+6 UNITS
+
+BLOCK 230
+7 UNITS
+
+(TIM MANLE
+Y
+
+BLOCK 237
+6 UNITS
+
+BLOCK 236
+6 UNITS
+
+BLOCK 247
+7 UNITS
+
+LANE 'B'
+
+BLOCK 231
+7 UNITS
+
+182 1831841
+
+85186187188
+
+BLOCK 232
+7 UNITS
+
+BLOCK 235
+7 UNITS
+
+BLOCK 234
+7 UNITS
+
+BLOCK 249
+6 UNITS
+
+BLOCK 250
+6 UNITS
+
+BLOCK 204
+7 UNITS
+
+BLOCK 203
+7 UNITS
+
+BLOCK 251
+6 UNITS
+
+BLOCK 202
+7 UNITS
+
+1891901911
+
+92193194195
+19619719819
+9 200 201
+
+160
+159
+
+157
+
+EXISTING
+RESIDENTIAL
+VIRGINIA DR.
+
+JACK EISENBERGER, ASO
+
+SURVEYORS CERTIFICATE
+FUTURE
+COMMERCIAL
+
+STREET 'B'
+
+151 152153154155 156
+
+SIGNED _________________________
+J. D. BARNES LIMITED
+401 WHEELABRATOR WAY, SUITE A
+MILTON, ON, L9T 3C1
+PHONE: 905-875-9955
+EMAIL: tsalb@jdbarnes.com
+
+ADDITIONAL INFORMATION
+(UNDER SECTION 51(17) OF THE PLANNING ACT) INFORMATION REQUIRED BY
+CLAUSES A,B,C,D,E,F,G, & J ARE SHOWN ON THE DRAFT AND KEY PLANS.
+H) MUNICIPAL AND PIPED WATER TO BE PROVIDED
+I) SANDY LOAM AND CLAY LOAM
+K) SANITARY AND STORM SEWERS TO BE PROVIDED
+
+NOTES
+- LANEWAY TO LOCAL / COLLECTORE TRIANGLE - 3.0m x 3.0m
+- LOCAL TO LOCAL RADII - 5.0m
+- LOCAL TO SPINE ROAD TRIANGLE - 7.5m x 7.5m
+- COLLECTOR TO SPINE ROAD TRIANGLE - 10m x 10m
+- PAVEMENT ILLUSTRATION IS DIAGRAMATTIC
+
+LAND USE
+
+LOTS / BLOCKS
+
+DETACHED - WIDE SHALLOW
+TOWNHOUSES - 6.1m (20')
+
+6.81
+
+16.83
+
+197
+
+105,106,119,120
+
+0.26
+
+0.64
+
+4
+
+0.86
+
+2.13
+
+46
+
+210-251
+
+4.03
+
+9.96
+
+262
+
+BACK TO BACK TOWNHOUSES - 7.62m (25')
+
+252-254
+
+0.21
+
+0.52
+
+18
+
+255
+
+5.63
+
+13.91
+
+* PROPOSED HIGHWAY 410 & HURONTARIO STREET INTERSECTION INFO. OBTAINED
+FROM WOOD DATED DECEMBER, 2018
+
+256
+0.59
+1.46
+ROAD
+HIGHWOOD
+
+INSTITUTIONAL
+
+257
+
+0.49
+
+1.21
+
+258
+
+0.25
+
+0.62
+
+ENVIRONMENTAL POLICY AREA
+
+259,260
+
+6.92
+
+17.10
+
+GREENWAY CORRIDOR
+
+261,262
+
+0.21
+
+0.52
+
+OPEN SPACE
+
+263-266
+
+0.28
+
+0.69
+
+SWM POND
+
+267
+
+1.93
+
+4.77
+
+268
+
+0.76
+
+1.88
+
+269-272
+
+0.01
+
+0.02
+
+0.75
+
+1.85
+
+18.0m LOCAL R.O.W. - (2,703m Length)
+
+4.89
+
+12.08
+
+22.0m COLLECTOR R.O.W. - (584m Length)
+
+1.28
+
+3.16
+
+36.16
+
+89.35
+
+PARK
+
+M.T.O. R.O.W. BLOCK
+0.3m RESERVE
+8.0m LANEWAY R.O.W. - (939m Length)
+
+LAKEFIELD RD.
+
+1-104,107-118,121-201
+202-209
+
+TRANSIT HUB
+
+EXISTING
+RESIDENTIAL
+
+AREA AREA
+(ha)
+(ac) UNITS
+
+REAR LANE TOWNHOUSES - 6.1m (20')
+COMMERCIAL
+
+COLLINGWOOD AVENUE
+
+DATE: July 10, 2019
+
+THOMAS SALB, OLS
+
+SURPLUS
+M.T.O. LANDS
+
+DETACHED - 11.60m (38')
+
+BLOCK 272
+0.3m RESERVE
+
+I HEREBY CERTIFY THAT THE BOUNDARIES OF THE LANDS TO BE SUBDIVIDED AS
+SHOWN ON THIS PLAN AND THEIR RELATIONSHIP TO ADJACENT LANDS ARE
+CORRECTLY AND ACCURATELY SHOWN.
+
+PROPOSED HIGHWAY 410
+& HURONTARIO STREET
+INTERSECTION*
+
+LAND USE SCHEDULE
+
+EXISTING
+RESIDENTIAL
+
+DATE: Sept. 26, 2017
+
+CALEDON 410 DEVELOPMENTS LTD.
+
+BLOCK 257
+INSTITUTIONAL
+0.49ha (1.21ac)
+TOTAL AREA:
+3.58ha (8.85ac)
+(TOTAL AREA IS
+INCLUSIVE OF
+SURPLUS
+M.T.O. LANDS)
+
+150
+
+BLOCK 271
+0.3m RESERVE
+
+SIGNED _________________________
+
+FUTURE
+INSTITUTIONAL
+
+BLOCK 267
+SWM POND
+1.93ha (4.77ac)
+
+158
+
+BLOCK 256
+TRANSIT HUB
+0.59ha (1.46ac)
+TOTAL AREA:
+0.81ha (2.00ac)
+
+FUTURE
+TRANSIT
+HUB
+
+I HEREBY AUTHORIZE GLEN SCHNARR & ASSOCIATES INC. TO PREPARE AND SUBMIT
+THIS DRAFT PLAN OF SUBDIVISION TO THE TOWN OF CALEDON FOR APPROVAL.
+
+BLOCK 268
+M.T.O. R.O.W. BLOCK
+0.76ha (1.88ac)
+
+BLOCK 233
+7 UNITS
+
+STREET 'G'
+
+161
+
+OWNERS CERTIFICATE
+
+)
+
+BLOCK 248
+6 UNITS
+
+BLOCK 205
+7 UNITS
+
+BLOCK 214
+7 UNITS
+
+PART OF LOT 19, CONCESSION 1,
+WEST OF HURONTARIO STREET
+(GEOGRAPHIC TOWNSHIP OF CHINGUACOUSY)
+MAYFIELD WEST PHASE 2
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+
+BLOCK 269
+0.3m RESERVE
+0.01ha (0.02ac)
+
+BOULEVARD
+
+STREET 'H'
+BLOCK 206
+7 UNITS
+
+BLOCK 213
+7 UNITS
+
+LANE 'E'
+
+BLOCK 210
+7 UNITS
+
+STREET 'I'
+
+BLOCK 212
+6 UNITS
+
+90
+
+BLOCK 211
+6 UNITS
+
+89
+
+STREET 'N'
+
+88
+
+BLK 252 BL
+K 253 BLK
+254
+6 UNITS 6 U
+NITS 6 UNIT
+S
+
+92
+
+87
+
+STREET 'M'
+
+101
+
+BLK 207
+BLK 208 BL
+K 209
+4 UNITS 3
+UNITS 4 U
+NITS
+
+93
+
+STREET 'L'
+
+STREET 'K'
+
+100
+
+86
+
+HUMBERSIDE AVE.
+
+BLOCK 266
+OPEN SPACE
+0.02ha (0.05ac)
+
+130
+
+127
+
+117
+
+120
+
+BLOCK 245
+7 UNITS
+
+STREET 'C'
+
+STREET 'E'
+
+AY
+
+AILW
+
+133
+
+ROBERTSON DAVIES DRIVE
+
+YR
+OBR
+
+137
+
+128
+
+115
+116
+118
+
+94
+
+136
+
+134
+
+109
+
+114
+
+BLOCK 244
+7 UNITS
+
+135
+
+108
+
+113
+
+99
+
+BLOCK 239
+BLOCK 238
+6 UNITS
+6 UNITS
+
+STREET 'D'
+
+107
+
+112
+
+95
+
+BLOCK 219
+6 UNITS
+
+STREET 'F'
+
+BLOCK 243
+6 UNITS
+
+111
+
+98
+
+BLOCK 226 B
+LOCK 227
+6 UNITS
+6 UNITS
+
+LANE 'A'
+
+110
+
+96
+
+FILE # 21T-17007C & RZ 17-11
+FIELDGATE DEVELOPMENTS
+(CALEDON 410 DEVELOPMENTS LTD.)
+
+ET
+
+BLOCK 225
+5 UNITS
+
+BLOCK 255
+COMMERCIAL
+5.63ha (13.91ac)
+TOTAL AREA:
+5.99ha (14.80ac)
+
+BLOCK
+68 67 66 65 64 63 62 61 60 59 58 57 56 55 54 53 52
+258
+PARK
+0.25ha
+69 70 71 72 73 74 75 76 77 78 79 80 81 82 83 84 85
+(0.62ac)
+
+SPINE ROAD
+
+BLK 242
+5 UNITS
+
+BLOCK 265
+OPEN SPACE
+0.26ha (0.64ac)
+
+STREET 'O'
+
+97
+
+DRAFT PLAN OF SUBDIVISION
+
+RIO STRE
+
+LANE 'C'
+
+BLOCK 220
+6 UNITS
+
+51
+
+HURONTA
+
+BLOCK 221
+7 UNITS
+
+BLOCK 223
+BLK 224
+5 UNITS
+4 UNITS
+
+36
+
+91
+
+ST. 'J'
+
+BLOCK 222
+6 UNITS
+
+37 38 39 40 41 42 43 44 45 46 47 48 49 50
+
+10
+
+102
+
+STREET 'I'
+
+35
+
+STREET 'K'
+
+103
+
+105
+
+KEY PLAN
+
+32 31 30 29 28 27 26 25 24 23 22 21 20 19 18
+
+Y4
+
+106
+
+BLOCK 261
+GREENLAND
+CORRIDOR
+0.04ha
+(0.10ac)
+
+119
+
+9 10 11 12 13 14 15 16 17
+
+A
+HW
+
+BLOCK 264
+OPEN
+SPACE
+0.004ha
+(0.01ac)
+
+BLOCK 263
+OPEN
+SPACE
+0.003ha
+(0.01ac)
+
+104
+
+EXISTING
+WOODLOT &
+WETLAND
+
+8
+
+HIG
+
+BLOCK 262
+GREENLAND
+CORRIDOR
+0.17ha
+(0.42ac)
+
+BLOCK 260
+ENVIRONMENTAL
+POLICY AREA
+(WOODLOT,
+WETLANDS &
+BUFFERS)
+2.58ha (6.38ac)
+
+7
+
+6
+
+5
+
+34
+
+BLOCK 259
+ENVIRONMENTAL POLICY AREA
+(WOODLOT, WETLANDS &
+BUFFERS)
+4.34ha (10.72ac)
+
+FUTURE
+SECONDARY
+SCHOOL
+
+4
+
+3
+
+STREET 'O'
+33
+
+FUTURE
+RESIDENTIAL
+
+SUBJECT
+LANDS
+
+FUTURE
+EMPLOYMENT
+
+FUTURE
+EMPLOYMENT
+
+TOTAL
+
+272
+
+SCALE 1:1500
+(24 x 36)
+
+JULY 3, 2019
+527
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+__________________________________________________________________________________________________________________ August 2019
+
+PAGE 10 ___________________________________________________________________________ THE MUNICIPAL INFRASTRUCTURE GROUP LTD
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+August 2019 __________________________________________________________________________________________________________________
+
+4 Grading Plan
+4.1
+
+Grading Design
+This section summarizes the grading constraints identified for the Caledon 410 lands and the
+grading methodology considered in the development of the grading plan (GR01 in Appendix C):
+
+
+Proposed grades will match existing elevations along the property limits and will not encroach
+into adjacent properties. This also the:
+o
+
+Existing residential subdivision to the south of the site,
+
+o
+
+Peel Regional Police lands southeast of the site, and
+
+o
+
+Future employment lands to the north of the site
+
+
+
+Proposed road centerline elevations will match the Spine road design being prepared by
+Urbantech, while accounting for the design of the Hurontario 410 intersection design by M.T.O.
+
+
+
+General grading constraints include conforming to the Town’s road grading and lot grading
+criteria. The Town’s standard minimum road grade is 0.75% for all ROW types, however, it is
+understood that the Town is willing to accept 0.5% minimum road grades for the Caledon 410
+lands as stated in the Functional Servicing Report for Mayfield West Phase 2 Secondary Plan
+Area (MW2 FSR), dated December 2019 prepared by Urbantech.
+
+
+
+The roads have been graded to ensure positive drainage of major system flows towards the
+SWM pond. In general, the major system drainage can be directed overland to the SWM pond;
+however, in south end of the site at Street ‘C’ and ‘E’ as shown on STM01 in Appendix B3,
+major system capture into the minor system is proposed to prevent overland drainage south into
+City of Brampton.
+
+
+
+The setbacks and existing ground elevations along the existing woodlots and wetlands were
+maintained to ensure adequate protection of features and to maintain drainage patterns in / out
+of the natural areas. Some grading is required within the buffer Block 259 as shown on the
+grading plans to transition to the proposed development grades and to accommodate trails and
+LID measures. The grading within the buffers conforms to the FSR prepared by Urbantech.
+
+THE MUNICIPAL INFRASTRUCTURE GROUP LTD __________________________________________________________________________ PAGE 11
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+__________________________________________________________________________________________________________________ August 2019
+
+5 Municipal Servicing
+5.1
+
+Water Services
+This section summarizes the existing and planned water infrastructure servicing the subject
+lands, as well as the proposed services internal to the Caledon 410 lands required to support
+the development. The Caledon 410 lands are located within Pressure Zone 7, which is part of
+the Region of Peel’s Lake Based water distribution network. Appendix B1 which conforms with
+the MW2 FSR, dated December 2018 prepared by Urbantech, illustrates the existing and
+planned water distribution infrastructure:
+
+
+Existing watermain connections at the following locations:
+o
+
+300mm and 150mm watermains within the residential area to the south in
+City of Brampton lands.
+
+o
+
+300mm watermain along Hurontario Street
+
+
+
+Future 400mm and 200mm watermain along the Caledon 410 Spine Road from
+McLaughlin Road to Hurontario Street (Region DC project #17-1186 as per the MW2
+FSR prepared by Urbantech) constructed as a part of the Spine servicing works.
+
+
+
+Future 400mm watermain along the Hurontario Street from the Caledon 410 Spine
+Road to south of Old School Road
+
+
+
+Preliminary internal 300mm trunk watermains within the Caledon 410 development.
+
+
+
+Future 600mm watermain from Spine Road from Mayfield.
+
+The internal infrastructure will be evaluated during detailed design using the Region’s water
+distribution model and the MOE and Region water demand / fire flow criteria. It has been
+previously confirmed by the Region that the existing watermain infrastructure can support
+construction in the Caledon 410 Lands, which conforms with the MW2 FSR prepared by
+Urbantech.
+Watermains greater than or equal to 400mm will be considered as Development Charge
+infrastructure as identified in Urbantech FSR. For the Caledon 410 Development, the proposed
+400mm watermain running along Spine Road ‘A’ is DC eligible. The preliminary layout of the
+proposed watermain, DC Credit eligible pipes, future and existing infrastructure can be found in
+WM01 in Appendix B1.
+
+PAGE 12 ___________________________________________________________________________ THE MUNICIPAL INFRASTRUCTURE GROUP LTD
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+August 2019 __________________________________________________________________________________________________________________
+
+5.2
+
+Sanitary Services
+The proposed Caledon 410 lands development is tributary to the South Peel Wastewater
+System. The proposed conveyance system for the sanitary flow from the Caledon 410 lands
+are the Etobicoke Creek Trunk Sewer. Sanitary flow discharged to the Etobicoke Creek Trunk
+Sewer ultimately discharges to the Lakeview WPCP.
+
+5.2.1 Existing Sanitary Infrastructure
+As presented in Urbantech’s Functional Servicing Report (December 2018), there are two
+existing sanitary outfalls available to service Caledon 410, which are shown on figure SAN01 in
+Appendix B2 and summarized in Table 5-1.
+Table 5-1 Existing Sewer Outlets servicing Caledon 410
+Outlet
+
+Location
+
+Description
+
+Invert
+(m)
+
+Available Capacity (L/s)
+
+Receiving
+System
+
+3
+
+Northern limit of
+Robertson Davies Drive
+
+Existing 250mm
+diameter
+sanitary sewer
+
+254.70
+
+16.1 L/s (based on Region of Peel
+monitoring)
+
+Etobicoke
+Creek Trunk
+Sewer
+
+4
+
+Highwood Road east of
+Hurontario Street
+
+Existing 300mm
+diameter
+sanitary sewer
+
+252.75
+
+68.8 L/s (approved design
+capacity)
+
+Etobicoke
+Creek Trunk
+Sewer
+
+5.2.2 Sanitary Sewer Design Criteria
+The proposed sanitary sewer infrastructure within Caledon 410 was designed according to the
+Region of Peel’s Sanitary Sewer Design Criteria (March 2017). The Region’s criteria for
+population density for various land uses are summarized in Table 5-2.
+Based on the calculated populations contributing to each sewer, the peak sanitary flows and
+pipe sizes in the design sheets provided in Appendix B2 were determined using the Region’s
+design standards for flow generation rates (302.8 L/c/d), sanitary flow peaking factors (based
+on Harmon Formula) and infiltration/inflow rate (0.2 L/s/ha) as per the Region’s Standard
+Drawing 2-9-2.
+The Region’s sanitary sewer design criteria specifies a minimum grade of 0.40% for pipes
+250mm in diameter, and 0.35% for pipes 300mm in diameter. The starting legs for local sanitary
+sewers have been designed at a minimum grade of 1.00%. The minimum velocity
+recommended by the Region is 0.75m/s. The Regions standard of minimum cover requirement
+of 2.5m on the sanitary sewers has been met for all sanitary sewers.
+Table 5-2 Population density for various land uses
+Density
+
+Persons/Hectare
+
+Single family (greater than 10m frontage)
+
+50
+
+Single family (less than 10m frontage)
+
+70
+
+Semi detached
+
+70
+
+Row dwellings
+
+175
+
+Apartments
+
+475
+
+Light industrial
+
+70
+
+Commercial
+
+50
+
+Schools
+
+900 (Senior Public School)
+
+600 (Junior Public School)
+1,500 (Secondary School)
+
+THE MUNICIPAL INFRASTRUCTURE GROUP LTD __________________________________________________________________________ PAGE 13
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+__________________________________________________________________________________________________________________ August 2019
+
+Drops across manholes have been used to determine the pipe inverts. The following drops were
+applied:
+
+
+0° - 0.03m
+
+
+
+45° - 0.06m
+
+
+
+90° - 0.09m
+
+5.2.3 Proposed Sanitary Sewer Design
+The existing sanitary Outlets 3 and 4 as described in Table 5-1 have sufficient capacity.
+SAN01 in Appendix B2 illustrates the local and trunk sanitary within the Caledon 410 lands
+including the contributing areas, populations, pipe obverts and ground elevations to
+demonstrate that sufficient cover has been provided. As well, the sanitary sewers pass through
+a 8.0m wide easement within Block 267 and Block 257 to connect to existing 300mm diameter
+sewer on Highwood road. The pipe slopes used conforms with the MW2 FSR, dated December
+2018 prepared by Urbantech.
+The design sheets in Appendix B2 demonstrate that the peak sanitary flows generated in the
+Caledon 410 Lands can be accommodated in the existing / future external infrastructure. The
+proposed sanitary flows at each outlet is presented in Table 5-3.
+The flows that will be generated from the Future Employments to the north of the Caledon 410
+Developments have also been considered in the design. The area and population for the future
+development were taken from the Urbantech MW2 FSR and Stub 1-3A has been provided to
+allow the development to connect to the Caledon 410 sanitary system.
+The trunk sewers greater than or equal to 375mm will be considered as Development Charge
+infrastructure. The DC sewers have been agreed upon by the Region as per the Urbantech
+MW2 FSR.
+Table 5-3 Existing Sewer Outlets servicing Caledon 410
+Outlet
+
+Location
+
+Description
+
+Available Capacity
+(L/s)
+
+Proposed
+Flow (L/s)
+
+3
+
+Northern limit of
+Robertson Davies
+Drive
+
+A relatively small area in Stage 1 east of
+the OBRY south of the Spine Road will
+drain to Outlet 3.
+
+16.1 L/s (based on
+Region of Peel
+monitoring)
+
+14.1 L/s
+
+4
+
+Highwood Road
+east of Hurontario
+Street
+
+The remaining Stage 1 and Stage 2
+lands between the OBRY and Hurontario
+Street will drain to Outlet 4.
+
+68.8 L/s (approved
+design capacity)
+
+57.5 L/s
+See Note 1
+
+Note 1: Servicing and grading constraints related to the Caledon 410 Developments Limited
+lands prevent the extension of the existing sanitary outlet pipe size (300mm) and slope (0.50%)
+from Outlet 4 into the subject lands. The sewer slopes upstream of Outlet 4 are restricted to
+0.30% and therefore a larger diameter (375mm) is required to convey the estimated MW2 flows
+to the existing 300mm sanitary connection. Permission from the Region of Peel will be required
+to implement this servicing solution (i.e., to connect a 375mm sewer to the existing 300mm
+sewer, which is not standard practice). This conforms with Drawing 802 in Appendix A from
+the MW2 FSR prepared by Urbantech.
+
+PAGE 14 ___________________________________________________________________________ THE MUNICIPAL INFRASTRUCTURE GROUP LTD
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+August 2019 __________________________________________________________________________________________________________________
+
+5.3
+
+Stormwater Treatment and Drainage
+This section describes the proposed storm drainage and related infrastructure within the
+Caledon 410 lands. Drawing 501A and Drawing 501B in Appendix A from the MW2 FSR
+prepared by Urbantech, dated December 2018, illustrate the interim and ultimate overall
+drainage areas (respectively). These drawings also show the storm trunk sewer alignments and
+major system flow path. The minor headwater reaches along the Etobicoke Creek valley will be
+utilized for the Etobicoke Creek SWM facility outfalls and others will be maintained to continue
+to provide surface conveyance; although with reduced contributing drainage areas. The major
+and minor drainage systems for the subject lands have been designed to convey storm runoff
+to the proposed SWM facilities prior to discharge to the Etobicoke Creek outlets.
+Pond 9 – Under interim conditions, a large undeveloped external area drains to this facility.
+Since the total interim drainage area is larger than the ultimate drainage area, the interim
+conditions were assessed to ensure that Pond 9 will be adequately sized for both interim and
+ultimate conditions.
+The storm trunk (minor) system is designed to accommodate flow from the 1:10 year storm
+without surcharging in accordance with the Town’s standards and IDF parameters. For the south
+west end of the site, 1:100-year storm runoff will be captured as illustrated on drawing STM01
+in Appendix B3.
+The overland flow blocks accommodate the storm sewers directed into the SWM facilities. In
+addition to the major system conveyance capacity requirements, the blocks were sized
+according to the Town’s recommended widths based on pipe size and depth where applicable.
+The storm sewer system inverts were established based on the permanent pool elevation of the
+end-of-pipe SWM facilities. The storm sewer design drawing and design sheet are included in
+Appendix B3.
+
+Minor System
+Internally within the development, drainage will be collected within a dual major/minor drainage
+network. The storm sewers within the proposed development will be designed to convey the runoff
+from a 10-year storm event and are designed as per the Town Standards.
+Runoff within the Caledon 410 Lands will be conveyed to the Pond 9 within the proposed development
+area. The breakdown of drainage areas from these lands for to the pond is as noted in Table 5-4 and
+Table 5-5. The proposed storm sewer layout drawing STM01 and the storm design sheets can be
+found in Appendix B3. Sump pumps will be required within the subdivision and will be equipped with
+backflow prevention devices to protect against hydraulic grade line impacts.
+LID measures will be implemented on the subject site per recommendations of Environmental Impact
+Statement (EIS) prepared by Hensel and the Feature Based Water Budget Assessment prepared by
+PECG, dated April 2018. See Appendix A for the drawings showing LID locations.
+LID measures include:
+
+
+Infiltration galleries in rear lots as per Urbantech figure 507 in Appendix A,
+
+
+
+Infiltration galleries/swales along the wetland as per Urbantech figure 507 in Appendix A,
+
+
+
+Directing drainage from park Block 258 to Wetland Block 259 to maintain water balance,
+and,
+
+
+
+Directing rooftop clean water to wetland in Blocks 258 and 260 to maintain water balance.
+
+Table 5-4 SWM Pond Tributary Areas - Ultimate Condition
+Tributary Area (ha)
+
+Comment
+
+39.34
+
+From this draft plan
+
+6.96
+
+External Area
+
+THE MUNICIPAL INFRASTRUCTURE GROUP LTD __________________________________________________________________________ PAGE 15
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+__________________________________________________________________________________________________________________ August 2019
+
+Table 5-5 SWM Pond Tributary Areas- Interim Condition
+Tributary Area (ha)
+
+Comment
+
+36.05
+
+From this draft plan
+
+16.15
+
+External Area
+
+Drops across manholes have been used to determine the pipe inverts. The following drops were
+applied, as per Town of Caledon standards:
+
+
+0° - 0.03m
+
+
+
+45° - 0.05m
+
+
+
+90° - 0.08m
+
+Major System
+Runoff from events greater than the 10-year event will be directed overland along the internal
+road network to the established low points adjacent to the proposed stormwater management
+pond. Overland flows will be directed via appropriately sized inlet conveyances into the pond.
+The major system overland flow routes shall be designed to safely convey the 100-year peak
+overland flow into the facility and will be designed as per the Town Standards. The site has
+been graded to ensure positive drainage to the intended major system outlet such that the depth
+of ponding under 100-year event does not exceed 0.3m. For the south-west end of the site,
+1:100-year storm runoff will be captured in the minor system to prevent overland drainage south
+into City of Brampton as illustrated on drawing STM01 in Appendix B3.
+
+PAGE 16 ___________________________________________________________________________ THE MUNICIPAL INFRASTRUCTURE GROUP LTD
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+August 2019 __________________________________________________________________________________________________________________
+
+6 Conclusions
+Based on our review and analysis, we conclude that the proposed development can be serviced
+by existing and proposed infrastructure based on the Town of Caledon and Region of Peel
+Criteria, MW2 Functional Servicing Report (FSR) prepared by Urbantech, dated August 2017
+A summary of our findings are as follows;
+
+
+Proposed site grading conforms to the Town’s road grading and lot grading criteria. It is
+understood that the Town is willing to accept 0.5% minimum road grades.
+
+
+
+The internal watermain network will be connected to proposed watermain connections at a
+300mm watermain along Hurontario Street, proposed 400mm and 200mm watermains along the
+Spine, and a future 300mm watermain to the north of the site. There will also be two (2) existing
+watermain connections a 300mm and 150 mm watermains at the existing residential subdivision
+to the south. It has been previously confirmed by the Region that the existing watermain
+infrastructure can support development of in the Caledon 410 Lands. The internal infrastructure
+will be evaluated during detailed design using the Region’s water distribution model and the
+MOE and Region water demand / fire flow criteria.
+
+
+
+Sanitary servicing of the site will be achieved with a conventional pipe network. The proposed
+sanitary system will outfall to two (2) separate outlets as described in Table 5-1 where capacity
+is available for the proposed development. The sewer slopes upstream of Outlet 4 are restricted
+to 0.30% and therefore a larger diameter (375mm) is required to convey the estimated MW2
+flows to the existing 300mm sanitary connection. Permission from the Region of Peel will be
+required to implement this servicing solution (i.e., to connect a 375mm sewer to the existing
+300mm sewer, which is not standard practice).
+
+
+
+Storm sewer servicing can be achieved with a conventional 10-year minor pipe network and
+(+10) year major system overland flow conveyance to SWM pond 9. However, in the south west
+corner of the site, major system capture into the minor system is required. Sump pumps will be
+required and will be equipped with backflow prevention devices to protect against hydraulic
+grade line impacts.
+
+
+
+This report is to be read in conjunction with other related reports supporting the proposed draft
+plan including
+o
+
+MW2 Functional Servicing Report (FSR)
+
+o
+
+Environmental Impact Statement (EIS) prepared by Hensel
+
+o
+
+Geotechnical Report prepared by Terraprobe
+
+o
+
+Feature Based Water Budget Assessment prepared by PECG
+
+o
+
+Caledon 410 Stormwater Management Report prepared by TMIG
+
+We trust you will find the contents of this report satisfactory. Should you have any questions or
+comments please do not hesitate to contact the undersigned.
+Sincerely,
+
+THE MUNICIPAL INFRASTRUCTURE GROUP LTD.
+Reviewed By:
+
+Abdul Ahmadzai, P.Eng
+Project Manager
+
+THE MUNICIPAL INFRASTRUCTURE GROUP LTD __________________________________________________________________________ PAGE 17
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+__________________________________________________________________________________________________________________ August 2019
+
+PAGE 18 ___________________________________________________________________________ THE MUNICIPAL INFRASTRUCTURE GROUP LTD
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+August 2019 __________________________________________________________________________________________________________________
+
+APPENDIX A
+Background Information
+
+THE MUNICIPAL INFRASTRUCTURE GROUP LTD __________________________________________________________________________ PAGE 19
+
+GREENBELT PLAN AREA
+GREENBELT PLAN AREA
+
+EX. 6000mm x 2500mm
+OPEN BOTTOM CULVERT
+IN INV. 255.94
+OUT INV. 255.86
+
+EEK
+
+1D6
+E
+AGPON
+T
+S M
+SW
+
+1200x1800mm CONC.
+BOX STM.
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+1200mm STM.
+
+7.45ha
+61%
+
+14.3ha
+0%
+
+SHANONTOWN
+NORTH EAST
+WETLAND
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+CALEDON
+DEVELOPMENT GENERAL 8.56ha
+PARTNER LTD
+62%
+(FUTURE STAGE 2)
+
+VILLAGE
+SQUARE
+NO. 1
+
+1200x2400mm
+1500x2400mm CONC. CONC. BOX
+2454229 ONTARIO
+INCSTM.
+STM.
+BOX
+
+MEDIUM DENSITY
+
+EX. CULVERT
+IN INV. 256.04
+OUT INV. 255.96
+
+SWM POND 1
+(NWL 253.50
+HWL 255.70)
+
+3.83ha
+100%
+
+BOX STM.
+
+1500x3000mm CONC.
+BOX STM.
+
+1200x1800mm CONC.
+BOX STM.
+750mm STM.
+COMMERCIAL
+
+525mm STM.
+
+SWM
+POND 3
+
+LORMER JOINT
+VENTURE
+INC
+
+0.30ha
+50%
+
+1500x3000mm
+CONC. BOX STM.
+
+3.40ha
+100%SWM POND 2
+
+7.5ha
+70%
+
+2.80ha
+100%
+
+0.30ha
+50%
+EXISTING
+CHURCH
+
+975mm STM.
+
+1.30ha
+SWM
+100%
+POND 4
+
+TEMP. 2.4m x 1.5m BOX
+CULVERT @ 0.20%
+(SEE NOTES THIS DWG.)
+
+EX. 800∅ CSP
+CULVERT MF7
+IN INV. 254.65 EX.DITCH AND STORM SEWER
+OUT INV. 254.57 FOR TEMPORARY EXTERNAL
+DRAINAGE CONVEYANCE TO
+DOWNSTREAM POND F-4
+(BLOCK 51-2)
+FUTURE
+DEVELOPMENT
+
+EX. 800∅ CSP
+CULVERT MF8
+IN INV. 255.08
+OUT INV. 254.99
+
+EXISTING
+DEVELOPMENT
+
+PROPOSED EAST
+CHANNEL (BY
+BLOCK 51-2)
+
+PROPOSED OPEN BOTTOM
+CULVERT (B.O.)
+7.32m x 1.75m
+INV. 253.30
+OUT INV. 253.00
+(CLEAN PIPE INV. 253.10)
+
+LEGEND:
+
+M.
+
+0 ST
+EX. 150∅
+
+DEVELOPMENT
+
+FUTURE
+DEVELOPMENT
+
+EX. CHANNEL
+
+PROPOSED
+2400mm x 1500mm BOX
+CULVERT FOR SWM POND 3
+DISCHARGE TO
+EXISTING CHANNEL
+EXISTING(SEE NOTES THIS DWG.)
+
+EXISTING
+EX. BOX CULVERT DEVELOPMENT
+3000mm x 1500mm
+IN INV. 253.30
+OUT INV. 253.20
+EX. CHANNEL
+
+EXISTING
+DEVELOPMENT
+
+EXISTING STORM SEWER ALIGNMENT
+
+PROPOSED MAJOR SYSTEM FLOW DIRECTION
+
+*
+EXISTING DITCH WITHIN THE
+HOLDOUT PROPERTY TO SERVE AS A
+TEMPORARY EMERGENCY OUTLET IN
+CASE OF A SPILL AT THE PROPOSED
+SPINE ROAD LOW POINT/ 100 YEAR
+FLOW CAPTURE (SHANONTOWN
+DEVELOPMENT).
+
+*
+REFER TO DRAWINGS THE 600
+SERIES DRAWINGS FOR STAGE 1
+SWM POND DETAILS. SWM PONDS 1
+6 AND 8, WHICH ARE REQUIRED FOR
+STAGE 1 SERVICING, ARE LOCATED
+OUTSIDE OF THE STAGE 1 LIMITS
+AND WITHIN FUTURE STAGE 2.
+
+EXTEND EX.
+2400mm x 1200mm
+BOX CULVERT FOR
+CONVEYANCE OF POND 4
+DISCHARGE
+
+*
+REFER TO DRAWING 507 FOR
+STAGE 1 LID MAP AND PROPOSED
+LID MEASURE DETAILS.
+
+EX. BOX CULVERT
+2400mm x 1200mm
+IN INV. 252.05
+OUT INV. 252.01
+
+PRE-DEVELOPMENT
+DRAINAGE BOUNDARY
+
+STAGE 1 CONTRIBUTING
+DRAINAGE AREA TO POND 3
+
+STAGE 1 CONTRIBUTING
+DRAINAGE AREA TO POND 6
+
+STAGE 1 CONTRIBUTING
+30.6ha
+DRAINAGE AREA TO POND 9 70%
+
+STAGE 1 CONTRIBUTING
+DRAINAGE AREA TO POND
+STAGE 1 IMPERVIOUSNESS
+
+STAGE 1 CONTRIBUTING
+DRAINAGE AREA TO POND 1
+
+STAGE 2 PRE-DEVELOPMENT
+CONTRIBUTING DRAINAGE
+AREA TO POND 3
+
+STAGE 2 PRE-DEVELOPMENT
+CONTRIBUTING DRAINAGE
+AREA TO POND 6
+
+STAGE 2 PRE-DEVELOPMNET
+CONTRIBUTING DRAINAGE 0.65ha
+60%
+AREA TO POND 9
+
+REAR YARD AREA
+DISCHARGE TO POND
+IMPERVIOUSNESS
+
+STAGE 1 CONTRIBUTING
+DRAINAGE AREA TO POND 8
+
+3.83ha
+TEMPORARY CUT-OFF SWALE 100%
+
+STAGE 2 PRE-DEVELOPMENT
+CONTRIBUTING DRAINAGE
+AREA TO POND 1
+
+PROPOSED STORM SEWER ALIGNMENT
+TEMPORARY STORM SEWER ALIGNMENT
+
+*
+IF REQUIRED, DUE TO THE
+TIMING OF THE HOLDOUT PROPERTY
+DEVELOPMENT, A TEMPORARY
+STORM OUTFALL TO BE
+CONSTRUCTED BY MW2 FOR SWM
+POND 3 DISCHARGE TO EXISTING
+McLAUGHLIN CHANNEL. TEMPORARY
+OUTFALL ALIGNMENT TO BE
+LOCATED WITHIN FUTURE MAYFIELD
+ROAD WIDENING, AND TO BE
+PLACED AT LOCATION APPROVED BY
+REGION OF PEEL. TEMPORARY
+OUTFALL INSTALLATION,
+MAINTENANCE AND
+DECOMMISSIONING WILL BE SOLE
+RESPONSIBILITY OF MW2
+LANDOWNER'S GROUP.
+
+*
+REFER TO DRAWINGS 301-312
+FOR PROPOSED GRADING DETAILS.
+
+MW2 STAGE 1 LIMIT
+EXISTING OVERLAND FLOW DIRECTION
+
+*
+IF REQUIRED, DUE TO THE
+TIMING OF THE DOWNSTREAM
+CHANNEL IMPROVEMENTS, A
+TEMPORARY STORM OUTFALL TO BE
+CONSTRUCTED FOR SWM POND 2
+DISCHARGE TO EXISTING
+McLAUGHLIN CHANNEL. TEMPORARY
+OUTFALL ALIGNMENT TO BE
+LOCATED WITHIN EXISTING
+MAYFILED ROW, AND TO BE PLACED
+AT LOCATION APPROVED BY REGION
+OF PEEL. TEMPORARY OUTFALL
+INSTALLATION, MAINTENANCE AND
+DECOMMISSIONING WILL BE SOLE
+RESPONSIBILITY OF MW2
+LANDOWNER'S GROUP.
+
+*
+REFER TO DRAWINGS 502-504
+FOR MINOR AND MAJOR SYSTEM
+DRAINAGE AREAS AND FLOW
+CAPTURE.
+
+EXISTING
+DEVELOPMENT
+
+TEMPORARY CHANNEL
+AND SWM POND 2
+OUTLET TO
+EXISTING CHANNEL
+IF CONSTRUCTION
+PROCEEDS PRIOR TO
+DOWNSTREAM CREEK
+REALIGNMENT AND
+LOWERING WITHIN
+BLOCK 51-2
+
+*
+PARTIAL STAGE 2
+EARTHWORKS MAY OCCUR IN
+CONJUNCTION WITH THE STAGE 1
+DEVELOPMENT. DEVELOPER TO
+ENSURE CLEAN SURFACE WATER
+DISCHARGE FROM THE DISTURBED
+STAGE 2 LANDS TO THE STAGE 1
+PONDS OR TO THE EXISTING STAGE
+2 OUTLETS (CULVERTS OR
+CHANNELS). CLEAN WATER SWALES
+TO BE IMPLEMENTED FOR THE
+PRE-DEVELOPMENT SURFACE
+DRAINAGE CONVEYANCE.
+
+*
+PRE-DEVELOPMENT DRAINAGE
+DISCHARGE TO BE MAINTAINED TO
+ALL EXISTING FEATURES DURING
+ANY PROPOSED WORKS WITHIN
+BOTH STAGES 1
+AND 2.
+
+Neigh.Park
+No. 3
+
+1200mm
+STM.
+
+1500x3000mm CONC.
+BOX STM.
+
+PROPOSED OPEN BOTTOM
+CULVERT (B.O.)
+3.6m x 1.75m
+INV. 253.30
+FUTURE
+DEVELOPMENT OUT INV. 253.00
+PROPOSED NE
+CHANNEL (BY
+BLOCK 51-2)
+
+OR)
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+A-MAJOR
+HOMES
+
+COMMUNITY
+PARK NO. 3
+
+EXISTING
+DEVELOPMENT
+
+.
+
+ST
+M.
+
+GB (MAYFIELD)
+INC
+
+37.9ha
+70%
+
+SOUTH EAST
+WETLAND (CVC)
+
+GR
+(CEHENL
+AN AND
+NE S
+L) A
+
+GREENLANDS A
+(CHANNEL)
+
+%
+
+. 30
+V
+IN54.
+2
+
+CALEDON
+WEST 25 INC
+
+REMOVE EX. DICB.MH.
+AND INSTALL MANHOLE TO
+CONNECT POND 9 STORM
+OUTFALL (OUT INV. 254.35)
+
+EX. 1200
+∅ STM. AT 0.30%
+
+1.8m x 0.9m
+BOX CULVERT
+
+13
+50
+mm
+
+EX. 600∅ CULVERT
+
+SOUTH EAST
+WETLAND (CVC)
+
+PUBLIC
+ELEMENTARY SCHOOL
+
+1500x2400mm CONC.
+BOX STM.
+
+TEMPORARY DRAINAGE CHANNEL FOR STAGE 1
+STORM SEWER CONVEYANCE TO EXTERNAL SWM
+POND 1 PRIOR TO COMPLETION OF COLLECTOR
+ROAD "C" WITHIN STAGE 2;
+DIVERSION CHANNEL CROSS SECTION SHOULD
+CONSIST OF 1.0m BOTTOM WIDTH, 3:1 SIDE
+SLOPES AND MAXIMUM 1.5m DEPTH;
+THE DIVERSION CHANNEL ALIGNMENT MUST BE
+CHOSEN TO THE SATISFACTION OF MAYFIELD
+STATION DEVELOPMENTS INC., AND TO ENSURE
+UNINTERRUPTED SERVICE DURING STAGE 2
+WORKS.
+
+EXISTING PEEL REGIONAL
+POLICE FACILITY
+
+EXISTING
+DEVELOPMENT
+
+MAYFIELD
+McLAUGHLIN
+DEVELOPMENTS
+INC
+
+1200mm
+STM.
+
+2.14ha
+100%
+
+PEEL
+REGIONAL
+POLICE
+FACILITY
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+1050mm
+STM.
+
+1.8m x 0.9m
+BOX CULVERT
+
+G ENLAN
+D
+(GREERNEW
+AY CORSRBID
+OR)
+
+14.4ha
+0%
+
+7.9ha
+25%
+
+SOUTH EAST
+WETLAND (CVC)
+
+SWM
+POND 9
+
+48.4ha
+70%
+
+1.8m x 0.9m
+BOX CULVERT
+
+COMM N
+ELEMENT
+(ENH OC
+LID
+ED VEG
+SWALAEN
+ETATED
+)
+
+MAYFIELD STATION
+DEVELOPMENTS INC.
+(FUTURE STAGE 2)
+
+APPROX3
+.1
+
+EXISTING
+DRAINAGE
+DIVIDE
+
+0m @ 0.3
+0
+
+V. 5
+N
+I 5.2
+25
+
+SOUTH EAST
+WETLAND (TRCA)
+
+1200x1800mm CONC.
+BOX STM.
+
+GREENL
+NDS
+(CHANA
+NEL) A
+
+G ENLAN
+D
+(GREERNEW
+AY CORSRBID
+
+COMMUNITY
+PARK NO. 1
+
+1200x240
+0
+
+SEPARATE
+ELEMENTARY SCHOOL
+
+OR)
+
+BOX STM.
+
+MAYFIELD STATION
+DEVELOPMENTS
+INC
+
+0.18ha 1200x2400mm
+60% CONC. BOX STM.
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+FUTURE PUBLIC
+SECONDARY SCHOOL
+
+CALEDON
+DEVELOPMENT
+GENERAL PARTNER
+LTD
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+mm CONC
+.
+
+32.9ha
+0%
+
+SOUTH WEST
+WETLAND
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+EXISTING CHANNEL TO
+PROVIDE EMERGENCY
+OUTLET IN CASE OF
+UPSTREAM STAGE 1
+STORM SEWER
+BLOCKAGE
+
+11.1ha
+0%
+
+m CONC.
+
+20.7ha
+70%
+
+1200x2400mm CONC.
+BOX STM.
+
+FUTURE COMMUNITY PARK /
+RECREATION CENTRE
+
+1500x???m
+
+900x1800mm
+CONC. BOX STM.
+
+.
+
+COMMERCIAL
+
+MEDIUM DENSITY
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+SOUTH WEST
+WETLAND
+
+1050mm S
+TM
+
+1200x1800mm CONC.
+BOX STM.
+
+0 STM
+EX. 150∅
+
+SOUTH WEST
+WETLAND
+
+MAYFIELD
+DEVELOPMENTS
+INC
+MAINTAIN EXISTING
+PRE-DEVELOPMENT DRAINAGE
+DISCHARGE TO EXISTING CULVERT MF7;
+IF PARTIAL STAGE 2 EARTHWORKS ARE
+PROPOSED IN CONJUNCTION WITH THE
+STAGE 1 CONSTRUCTION, SOME STAGE 2
+DRAINAGE CAN BE DIVERTED TO SWM
+POND 1 VIA TEMPORARY CLEAN SWALES
+
+MEDIUM
+DENSITY
+
+TRANSIT
+HUB
+
+OR)
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+1350mm
+STM.
+
+MAYFIELD
+DEVELOPMENTS INC.
+(FUTURE STAGE 2)
+
+VILLAGE
+SQUARE
+NO. 2
+
+675mm STM.
+
+GREEN
+(GREENW LANDS B
+AY CORRID
+
+HIGH DENSITY
+RESIDENTIAL
+
+3.4ha
+0%
+
+525mm
+STM.
+
+COMM N
+ELEMENT
+(ENH OC
+LID
+ED VEG
+SWALAEN
+ETATED
+)
+
+TEMPORARY 450
+CONC.
+CULVERT TO MAINTAIN
+PRE-DEVELOPMENT
+DRAINAGE TO EXISTING
+SOUTH WEST WETLAND
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+G ENLAN
+D
+(GREERNEW
+AY CORSRBID
+
+EXISTING
+DRAINAGE
+DIVIDE
+
+CALEDON 410
+DEVELOPMENTS
+LIMITED
+
+32.58ha
+60%
+
+SHANONTOWN
+
+COMM N
+ELEMENT
+(ENH OC
+LID
+ED VEG
+SWALAEN
+ETATED
+)
+
+EXISTING
+DRAINAGE
+DIVIDE
+
+NORTH EAST
+WETLAND
+
+FUTURE RO
+AD CONNE
+CTION
+
+CREEK
+ETOBICOKE
+
+NOTES:
+
+*
+PROPOSED MAYFIELD
+CROSSINGS MUST BE IN PLACE FOR
+SERVICING OF THE STAGE 1 PONDS
+(1 TO 4). EXISTING MAYFIELD
+CULVERTS CANNOT BE UTILIZED FOR
+STAGE 1 POND DISCHARGE DUE TO
+INADEQUATE SIZE AND HIGH
+INVERT.
+
+COMMON ELEMENT LID
+(INFILTRATION TRENCH)
+
+m
+675m .
+STM
+
+FP MAYFIELD
+WEST
+(CALEDON) INC
+
+17.43ha
+0%
+
+EXISTING BRAMPTON
+CHRISTIAN SCHOOL
+
+8
+
+SHANONTOWN
+(FUTURE STAGE 2)
+
+1.05ha
+0%
+
+EXISTING
+DRAINAGE
+DIVIDE
+
+3.26ha
+0%
+
+SW ST
+M AG
+PO E 1
+ND
+
+1.06ha
+100%
+
+GREEN
+(GREENW LANDS B
+AY CORRID
+OR)
+
+KE C
+R
+
+SHANONTOWN
+(FUTURE STAGE 2)
+TEMPORARY STAGE 2
+PRE-DEVELOMENT
+DRAINAGE CONVEYANCE
+TO SWM POND 3
+
+GREENBELT PLAN AREA
+
+K
+EE
+
+R
+
+KE C
+O
+C
+I
+B
+ETO
+
+BIC
+O
+
+0.35ha
+0%
+
+CR
+
+ETO
+
+EEK
+
+KE
+O
+
+MAINTAIN EXISTING STAGE 2
+PRE-DEVELOPMENT
+DRAINAGE DISCHARGE TO
+ETOBICOKE CREEK;
+IF PARTIAL STAGE 2
+EARTHWORKS ARE PROPOSED
+IN CONJUNCTION WITH THE
+STAGE 1 CONSTRUCTION,
+STAGE 2 DRAINAGE CAN BE
+DIVERTED TO SWM POND 8
+VIA TEMPORARY CLEAN
+SWALES
+
+MAINTAIN EXISTING STAGE 2
+PRE-DEVELOPMENT
+DRAINAGE DISCHARGE TO
+ETOBICOKE CREEK;
+IF PARTIAL STAGE 2
+EARTHWORKS ARE PROPOSED
+IN CONJUNCTION WITH THE
+STAGE 1 CONSTRUCTION,
+SOME STAGE 2 DRAINAGE
+CAN BE DIVERTED TO SWM
+POND 6 VIA TEMPORARY
+CLEAN SWALES
+
+REEK
+
+C
+BI
+O
+ET
+
+FP MAYFIELD
+WEST
+(CALEDON) INC
+
+2.23ha
+100%
+
+COKE C
+
+EX. ROAD CROSSINGEX. RAILWAY
+EX. CREEK
+CROSSING
+INV. 253.18
+GREENBELT PLAN AREA
+
+REEK
+ETOBICOKE C
+
+GREENBELT PLAN AREA
+
+ETOBI
+
+STAGE 1 CONTRIBUTING
+DRAINAGE AREA TO POND 2
+
+STAGE 1 CONTRIBUTING
+DRAINAGE AREA TO POND 4
+
+STAGE 2 PRE-DEVELOPMNET
+CONTRIBUTING DRAINAGE
+AREA TO POND 8
+
+FOR RE-DIRECTION OF
+PRE-DEVELOPMENT STAGE 2
+SURFACE DRAINAGE TO
+11.0ha
+STAGE 1 SWM PONDS
+75%
+
+Urbantech Consulting, A Division of Leighton-Zec Ltd.
+3760 14th Avenue, Suite 301, Markham, Ontario L3R 3T7
+tel: 905.946.9461 fax: 905.946.9595
+www.urbantech.com
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+MAYFIELD WEST PHASE 2
+
+POND BLOCK AREA
+POND IMPERVIOUSNESS
+
+INTERIM DRAINAGE TO STAGE 1
+STORMWATER MANAGEMENT
+STAGE 2 CONTRIBUTING
+PONDS
+DRAINAGE AREA TO POND
+SURVEYED BY:
+
+STAGE 2 IMPERVIOUSNESS
+
+DRAWN BY:
+DESIGNED BY:
+SCALE:
+
+R.P.E.
+V.P.
+D.Z.
+1:3000
+
+15-483
+
+DATE:
+
+2015
+
+JOB NO.
+
+CHECKED BY:
+
+D.Z.
+
+DRAWING NO.
+
+D.Z.
+
+501A
+
+CHECKED BY:
+DATE:
+
+DECEMBER 2018
+
+SHEET NO.
+
+File: P:\Projects\15-483\FSR-EIR\Drawings\05 - STORM SERVICING\501A-MW2 Interim Drainage to Stage 1 SWM Ponds.dwg - Revised by <DZEC> : Wed, Jan 02 2019 - 11:25am
+
+USY ROA
+D
+
+GREENBELT PLAN AREA
+
+REEK
+
+K
+
+17.43ha
+CALEDON 70%
+
+DEVELOPMENT
+GENERAL PARTNER
+LTD
+
+SHANONTOWN
+
+VILLAGE
+SQUARE
+NO. 1
+
+MEDIUM DENSITY
+
+2454229 ONTARIO INC
+
+SWM POND 1
+
+1050mm STM.
+
+3.83ha
+100%
+
+GB (MAYFIELD)
+INC
+
+0.18ha1200x2400mm
+BOX
+60% CONC.STM.
+
+COMMERCIAL
+
+HOLDOUT
+
+SWM POND 3 PROPERTY
+
+SWM POND 2
+
+0.30ha
+50%
+
+EXISTING
+CHURCH
+
+1200x1800mm
+CONC. BOX
+STM.
+
+EXISTING PEEL REGIONAL
+POLICE FACILITY
+
+*
+REFER TO DRAWINGS 502-504
+FOR MINOR AND MAJOR SYSTEM
+DRAIANAGE AREAS AND FLOW
+CAPTURE.
+
+975mm STM.
+
+EXISTING
+DEVELOPMENT
+
+VIRGINIA
+DRIVE
+
+COLLINGWOOD AVENUE
+
+REMOVE EX. DICB.MH.
+AND INSTALL MANHOLE TO
+CONNECT POND 9 STORM
+OUTFALL (OUT INV. 254.35)
+
+EX. 1200
+∅ STM. AT 0.30%
+
+WAY
+
+LORMER JOINT
+VENTURE
+INC
+
+FUTURE PEEL
+REGIONAL
+POLICE
+FACILITY
+
+2.14ha
+100%
+
+HUMBERSIDE AVENUE
+
+'E'
+
+0.30ha
+COLLECTOR ROAD 'G' 50%
+
+1500x3000mm CONC.
+BOX STM.
+
+2.90ha
+100%
+
+3.40ha
+100%
+
+7.5ha
+70%
+
+OBRY RAIL
+
+1500x3000mm CONC.
+BOX STM.
+
+Neigh.Park
+No. 3
+
+OR)
+
+A-MAJOR
+HOMES
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+G ENLAN
+D
+(GREERNEW
+AY CORSRBID
+
+D
+
+51.9ha
+70%
+
+COMM N
+ELEMENT
+(ENH OC
+LID
+ED VEG
+SWALAEN
+ETATED
+)
+
+1.8m x 0.9m
+BOX CULVERT
+
+EXISTING
+DEVELOPMENT
+
+SOUTH EAST
+WETLAND (CVC)
+
+OR ROAD
+
+COMMUNITY
+PARK NO. 3
+
+COLLECTOR ROAD 'B'
+
+FUTURE RO
+AD CO
+(SU
+CT TO NANNECTION
+EXPROPBRJE
+D
+IATION BLY
+TOWN)
+
+1200mm STM.
+
+COMMERCIAL
+
+GR
+(CEHENL
+AN AND
+NE S
+L) A
+
+GREENLANDS A
+(CHANNEL)
+
+0.65ha
+50%
+
+MAYFIELD
+McLAUGHLIN
+DEVELOPMENTS
+INC
+
+1500x2400mm CONC.
+BOX STM.
+
+CALEDON
+WEST 25 INC
+COLLECTOR ROAD 'D'
+
+36.9ha
+65%
+
+PUBLIC
+ELEMENTARY SCHOOL
+
+1.8m x 0.9m
+BOX CULVERT
+
+G ENLAN
+D
+(GREERNEW
+AY CORSRBID
+OR)
+
+MAYFIELD STATION
+DEVELOPMENTS
+INC
+
+COMM N
+ELEMENT
+(ENH OC
+LID
+ED VEG
+SWALAEN
+ETATED
+)
+
+COLLECTOR ROAD 'B'
+
+SOUTH EAST
+WETLAND (CVC)
+
+McLAUG
+
+1.8m x 0.9m
+BOX CULVERT
+
+*
+A ROOF DRAIN COLLECTION
+SYSTEM TO BE INSTALLED WITH
+FUTURE STAGE 2 TO MAINTAIN
+CLEAN SURFACE WATER DISCHARG
+TO EXISTING SOUTH-WEST
+WETLAND UNDER
+POST-DEVELOPMENT CONDITION.
+REFER TO DRAWING 501A AND
+GRADING PLAN 305 FOR INTERIM
+DRAINAGE SOLUTION PRIOR TO
+STAGE 2 DEVELOPMENT.
+
+900mm STM.
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+1500x300
+0mm
+BOX STM. CONC.
+
+GREENL
+NDS
+(CHANA
+NEL) A
+
+OR)
+G ENLAN
+D
+(GREERNEW
+AY CORSRBID
+
+COMMUNITY
+PARK NO. 1
+
+TRANSIT
+HUB
+
+SWM
+POND 9
+
+1200x1800mm CONC.
+BOX STM.
+
+SEPARATE
+ELEMENTARY SCHOOL
+
+SOUTH EAST
+WETLAND (TRCA)
+
+SOUTH EAST
+WETLAND (CVC)
+
+HLIN ROA
+
+SOUTH WEST
+WETLAND
+
+'C'
+
+COLLECT
+
+1200x240
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+OR ROAD
+
+M.
+C. BOX ST
+0mm CON
+
+OAD
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+CALEDON
+DEVELOPMENT
+GENERAL PARTNER
+LTD
+
+SOUTH WEST
+WETLAND
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+FUTURE COMMUNITY PARK /
+RECREATION CENTRE
+
+48.4ha
+70%
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+19.8ha
+70%
+
+COUSY R
+
+MEDIUM DENSITY
+
+45.79ha
+64%
+
+M.
+
+0 ST
+EX. 150∅
+
+EXISTING
+DEVELOPMENT
+
+Y ROAD
+
+BUSHBERR
+
+EXTEND EX.
+2400mm x 1200mm
+BOX CULVERT FOR
+CONVEYANCE OF POND 4
+DISCHARGE
+
+1.30ha
+SWM 100%
+
+POND 4
+
+*
+ULTIMATE MAYFIELD ROAD
+DRAINAGE TO BE SELF CONTAINED
+AND SHALL NOT RELY ON
+DISCHARGE TO MW2 SWM PONDS.
+OIL GRIT SEPARATORS AND LID
+INFILTRATION GALERIES WILL BE
+IMPLEMENTED WITHIN THE
+MAYFIELD ROAD ROW FOR QUALIT
+CONTROL PRIOR TO DISCHARGE TO
+DOWNSTREAM CHANNELS. REFER T
+REGION DRAWINGS BY IBI GROUP
+FOR DETAIL ROAD DRAINAGE
+DESIGN.
+
+*
+CLEAN WATER PIPE ALONG
+MAYFIELD ROAD WILL BE REQUIRE
+FOR CONVEYANCE OF THE EXTERNA
+FLOWS WEST OF CHINGUACOUSY
+ROAD TO THE EXISTING EAST
+CHANNEL IN BLOCK 51-2 (CITY OF
+BRAMPTON). CLEAN WATER PIPE T
+BE INSTALLED AS PART OF THE
+MAYFIELD ROAD WIDENING BY
+REGION, OR EARLIER IF THE MW2
+STAGE 2 LANDS PROCEED WITH
+DEVELOPMENT PRIOR TO
+COMPLETION OF THE ROAD
+WIDENING. AS PER PREVIOUS
+AGREEMENT WITH THE REGION, TH
+BLOCK 51-2 LANDOWNER'S GROUP
+(SOUTH OF MAYFILED ROAD) WILL
+BE FULLY RESPONSIBLE FOR THE
+CLEAN WATER PIPE INSTALLATION
+REFER TO DRAWING 325 FOR
+PRELIMINARY CLEAN WATER PIPE
+PROFILE.
+
+PUBLIC SECONDARY
+SCHOOL
+
+COMMERCIAL
+
+SOUTH WEST
+WETLAND
+
+MAYFIELD
+DEVELOPMENTS
+INC
+
+CHINGUA
+
+MEDIUM
+DENSITY
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+NORTH EAST
+WETLAND
+
+FUTURE
+EMPLOYMENT
+
+SPINE ROAD
+
+1500x2400mm CONC.
+BOX STM.
+
+COLLECT
+
+1050mm STM.
+
+SPINE ROAD
+
+1500x3000mm CONC.
+BOX STM.
+
+EX. CULVERT
+IN INV. 256.04
+OUT INV. 255.96
+
+VILLAGE
+SQUARE
+NO. 2
+
+CALEDON 410
+DEVELOPMENTS
+LIMITED
+
+COLLECT
+OR
+ROAD 'F'
+(SOUTH L
+EG)
+
+3.00ha
+70%
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+ROBERTSON DAVIES DRIVE
+
+FUTURE STAGE 2
+ROOF DRAIN COLLECTOR
+(SEE NOTES THIS DWG.)
+
+HIGH DENSITY
+RESIDENTIAL
+
+NORTH EAST
+WETLAND
+
+0 STM.
+EX. 150∅
+
+2.4ha
+70%
+
+COLLECTOR ROAD 'F'
+(NORTH LEG)
+
+McLAUG
+HLIN ROA
+D
+
+POND 5
+(NO REGIONAL CONTROL
+REQUIRED)
+
+COLLECT
+OR ROAD
+
+GREENLANDS B
+(GREENWAY CORRIDOR)
+
+11.0ha
+FUTURE STAGE 2
+70% DRAINAGE
+AREA TO
+
+FUTURE STAGE 2
+DRAINAGE AREA TO
+POND 5
+(NO REGIONAL CONTROL
+REQUIRED)
+
+SHANONTOWN
+
+SHANONTOWN
+
+Y
+LWA
+RAI
+
+(FUTURE POND 5 TO PROVIDE REGIONAL CONTROL
+FOR 4.3ha OF STAGE 2 DRAINAGE AND
+OVERCONTROL FOR 2.1ha OF UNCONTROLLED
+STAGE 2 DISCHARGE TO ETOBICOKE)CREEK
+
+7.45ha
+61%
+
+'
+D 'A
+ROA
+
+PUBLIC
+ELEMENTARY
+SCHOOL
+
+8.56ha
+62%
+
+OR
+ECT
+
+FUT.SWM POND 5
+
+R
+TO
+C
+LLE D 'A'
+O
+C OA
+R
+
+Y
+OBR
+
+COMMUNITY
+PARK NO. 2
+
+'A'
+
+L
+COL
+
+2.4ha
+100%
+
+'D'
+
+OR ROAD
+
+CREEK
+ETOBICOKE
+
+EX. 600∅
+CULVERT
+
+FUTURE
+EMPLOYMENT
+
+COMMON ELEMENT LID
+(INFILTRATION TRENCH)
+
+GREEN
+(GREENW LANDS B
+AY CORRID
+OR)
+
+COLLECT
+
+FUTURE STAGE 2
+DRAINAGE AREA TO
+POND 5
+(POND TO RROVIDE
+REGIONAL CONTROL)
+
+18.6ha
+0%
+
+15.5ha
+80%
+
+1200x1800mm CONC.
+BOX STM.
+
+4.3ha
+70%
+
+EXTERNAL DRAINAGE
+AREA CONTRIBUTION
+TO CLEAN WATER PIPE
+(PIPE TO BE UTILIZED
+IN THE FUTURE AS THE
+ULTIMATE
+DEVELOPMENT / SWM
+POND OUTLET)
+
+COMMON ELEMENT LID
+(ENHANCED VEGETATED
+SWALE)
+
+*
+REFER TO DRAWINGS 301-312
+FOR PROPOSED GRADING DETAILS
+
+EET
+
+FP MAYFIELD
+WEST
+(CALEDON) INC
+
+FUTURE STAGE 2
+DRAINAGE AREA TO
+POND 8
+(NO REGIONAL CONTROL
+REQUIRED)
+
+EXISTING BRAMPTON
+CHRISTIAN SCHOOL
+
+ARIO STR
+
+M 6
+W
+S ND
+PO
+
+1200mm STM.
+
+'F'
+
+HURONT
+
+B
+ETO
+
+K
+REE
+C
+E
+ICOK
+
+9.2ha
+75%
+
+OAD
+R
+R
+O
+T
+COLLEC TH LEG)
+(NOR
+
+SWM
+POND 8
+
+NOTES:
+
+FUTURE
+EMPLOYMENT
+
+GREEN
+(GREENW LANDS B
+AY CORRID
+OR)
+
+KE C
+REE
+K
+
+3.05ha
+75%
+
+GREENBELT PLAN AREA
+
+1.06ha
+100%
+
+EE
+CR
+
+FUTURE STAGE 2
+DRAINAGE AREA TO
+POND 7
+(NO REGIONAL CONTROL
+REQUIRED)
+
+FUTURE STAGE 2
+DRAINAGE AREA TO
+POND 6
+(NO REGIONAL CONTROL
+REQUIRED)
+
+BIC
+O
+
+KE
+
+EX. 6000mm x 2500mm
+OPEN BOTTOM CULVERT
+IN INV. 255.94
+OUT INV. 255.86
+
+ETO
+
+0.56ha
+75%
+
+FUTS
+. WM
+POND 7
+
+2.23ha
+100%
+
+GREENBELT PLAN AREA
+
+FUT. SWM POND 10 (B.O.)
+NWL ~257.50
+
+CO
+
+FUT. STAGE 2
+UNCONTROLLED
+DRAINAGE
+AREA
+DISCHARGE
+TO ETOBICOKE
+CREEK
+
+A
+DSL)
+N
+A E
+NL NN
+E
+A
+E H
+GR (C
+
+0.80ha
+100%
+
+BI
+O
+
+WEST
+(CALEDON) INC
+
+REEK
+
+GREENBELT PLAN AREA
+
+ET
+
+2.1ha
+70% FP MAYFIELD
+
+COKE C
+
+EX. ROAD CROSSING
+EX. CREEK
+INV. 253.18
+
+McLAUG
+
+ETOBICOKE C
+
+ETOBI
+
+COLLECTOR ROAD 'F' (NORTH LEG)
+
+HLIN ROA
+D
+
+CHINGUA
+CO
+
+GREENBELT PLAN AREA
+
+*
+REFER TO THE 600 SERIES
+DRAWINGS FOR MW2 STAGE 1 SWM
+POND DETAILS. PONDS 1, 6 AND 8,
+WHICH ARE REQUIRED FOR STAGE
+SERVICING, ARE LOCATED OUTSID
+OF THE STAGE 1 LIMITS AND WITH
+STAGE 2.
+
+*
+THE PROPOSED POND 6 AND 8
+FOOTPRINTS WILL RESPECT THE
+GREENBELT DEVELOPMENT LIMIT
+ENCROACHMENTS AS APPROVED BY
+TRCA. MORE DETAIL CONTRIBUTIN
+DRAINAGE AREA BREAKDOWN AND
+GREENBELT POND 6 AND 8 LAYOUT
+ARE SHOWN ON DRAWING 502A.
+*
+REFER TO LID MAP AND
+PROPOSED LID MEASURE DETAILS
+ON DRAWING 507.
+
+MAYFIELD ROAD
+
+LEGEND:
+MW2 STAGE 1 LIMIT
+PROPOSED STORM SEWER ALIGNMENT
+PROPOSED CLEAN WATER PIPE ALIGNMENT
+ALONG MAYFIELD ROAD
+EXISTING STORM SEWER ALIGNMENT
+
+PROPOSED NE
+CHANNEL (BY
+BLOCK 51-2)
+
+FUTURE
+DEVELOPMENT
+
+EXISTING
+DEVELOPMENT
+
+EX. CHANNEL
+
+EX. BOX CULVERT
+3000mm x 1500mm
+IN INV. 253.30
+OUT INV. 253.20
+
+EX. CHANNEL
+
+WAY
+
+PROPOSED
+2400mm x 1500mm BOX
+CULVERT FOR SWM POND 3
+DISCHARGE TO
+EXISTING CHANNEL
+
+ALTERNATIVE SWM POND 3
+OUTFALL LOCATION IF LAND
+EXPROPRIATION AND ROAD
+CONSTRUCTION OCCUR
+EXISTING
+PRIOR TO POND OUTFALL
+DEVELOPMENT
+CONSTRUCTION
+
+OBRY RAIL
+
+PROPOSED OPEN BOTTOM
+CULVERT (B.O.)
+7.32m x 1.75m
+INV. 253.30
+OUT INV. 253.00
+(CLEAN PIPE INV. 253.30)
+
+VAN KIRK DRIVE
+
+EXISTING
+DEVELOPMENT
+
+PROPOSED EAST
+CHANNEL (BY
+BLOCK 51-2)
+
+IN ROAD
+
+MAYFIELD ROAD
+
+EXISTING
+CHANNEL
+
+PROPOSED OPEN BOTTOM
+CULVERT (B.O.)
+FUTURE
+3.6m x 1.75m
+DEVELOPMENT
+INV. 253.30
+OUT INV. 253.00
+
+McLAUG
+HL
+
+VE
+
+EDENBR
+
+OOK DRI
+
+1200mm x 900mm BOX
+CULVERT CLEAN @ 0.20% FOR
+EXTERNAL CLEAN WATER
+DRAINAGE CONVEYANCE
+(SEE NOTES THIS DWG.)
+
+CHINGUA
+
+COUSY R
+
+INTERCEPT EXISTING
+EXTERNAL DRAINAGE
+AND CONVEY TO
+PROPOSED EAST
+CHANNEL
+(BLOCK 51-2)
+
+OAD
+
+EXISTING
+DEVELOPMENT
+
+EX. BOX CULVERT
+2400mm x 1200mm
+IN INV. 252.05
+OUT INV. 252.01
+
+30.6ha
+70%
+
+STAGE 1 CONTRIBUTING
+DRAINAGE AREA TO POND
+STAGE 1 IMPERVIOUSNESS
+
+STAGE 1 CONTRIBUTING
+DRAINAGE AREA TO POND 1
+
+STAGE 1 CONTRIBUTING
+DRAINAGE AREA TO POND 3
+
+STAGE 1 CONTRIBUTING
+DRAINAGE AREA TO POND 8
+
+STAGE 2 CONTRIBUTING DRAINAGE
+AREA TO FUTURE STAGE 2 PONDS
+
+0.65ha
+60%
+
+REAR YARD AREA
+DISCHARGE TO POND
+IMPERVIOUSNESS
+
+FUT. STAGE 2 CONTRIBUTING
+DRAINAGE AREA TO POND 1
+
+STAGE 1 CONTRIBUTING
+DRAINAGE AREA TO POND 4
+
+FUT. STAGE 2 CONTRIBUTING
+DRAINAGE AREA TO POND 8
+
+CONTRIBUTING DRAINAGE AREA TO
+MAYFIELD ROAD CLEAN WATER PIPE
+
+POND BLOCK AREA
+
+STAGE 1 CONTRIBUTING
+DRAINAGE AREA TO POND 2
+
+STAGE 1 CONTRIBUTING
+DRAINAGE AREA TO POND 6
+
+STAGE 1 CONTRIBUTING
+DRAINAGE AREA TO POND 9
+
+FUT. STAGE 2 CONTRIBUTING
+DRAINAGE AREA TO POND 2
+
+FUT. STAGE 2 CONTRIBUTING
+DRAINAGE AREA TO POND 6
+
+3.83ha
+100%
+
+EXISTING OVERLAND FLOW DIRECTION
+11.0ha
+PROPOSED MAJOR SYSTEM FLOW DIRECTION 75%
+
+POND IMPERVIOUSNESS
+STAGE 2 CONTRIBUTING
+DRAINAGE AREA TO POND
+STAGE 2 IMPERVIOUSNESS
+
+Urbantech Consulting, A Division of Leighton-Zec Ltd.
+3760 14th Avenue, Suite 301, Markham, Ontario L3R 3T7
+tel: 905.946.9461 fax: 905.946.9595
+www.urbantech.com
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+MAYFIELD WEST PHASE 2
+
+ULTIMATE CONTRIBUTING
+DRAINAGE AREAS
+TO SWM PONDS
+SURVEYED BY:
+
+R.P.E.
+
+DRAWN BY:
+
+V.P.
+
+DESIGNED BY:
+SCALE:
+
+D.Z.
+1:3000
+
+15-483
+
+DATE:
+
+2016
+
+JOB NO.
+
+CHECKED BY:
+
+D.Z.
+
+DRAWING NO.
+
+D.Z.
+
+501B
+
+CHECKED BY:
+DATE:
+
+DECEMBER 2018
+
+SHEET NO.
+
+File: P:\Projects\15-483\FSR-EIR\Drawings\05 - STORM SERVICING\501B-MW2 Ultimate Contributing Drainage to SWM Ponds.dwg - Revised by <DZEC> : Wed, Jan 02 2019 - 11:47am
+
+TARIO S
+TREET
+HURON
+
+CHINGU
+
+McLAUG
+HLIN RO
+A
+
+D
+
+ACOUSY
+
+R OA D
+
+OBRY R
+AIL
+
+WAY
+
+OLD SCHOOL ROAD
+
+MAYFIELD ROAD
+
+SANITARY DRAINAGE AREA
+BOUNDARY
+LOCAL SEWER ALIGNMENT
+
+TRUNK SEWER ALIGNMENT
+COMMERCIAL / INSTITUTIONAL
+SANITARY OUTLET
+CONNECTION POINT
+DENSITY
+(PERSONS/HECTARE)
+
+SWM POND NO. 7
+
+P/Ha
+
+AREA
+
+POP
+
+50
+
+9.10ha
+
+455
+
+80
+
+-
+
+-
+
+175
+
+-
+
+-
+
+MH ID
+TOP OF MH ELEVATION
+SANITARY SEWER INVERT
+
+MH 100B
+
+TOP EL. 261.50
+SW 258.50
+
+108.3m
+-5
+SAN.@0 25mm
+.30%
+
+250mm
+m50.0m- 1.00%
+m
+0
+5
+2
+m
+m 53.5 .@0.50% SAN.@
+50m
+N
+A
+2
+S
+m
+62.6 .@0.50%
+MH 400B
+N
+A
+S
+
+B
+
+152.6m-250mm SAN.@0.50%
+
+MH 4
+
+50
+70
+175
+
+1.85ha
+4.27ha
+
+93
+748
+
+MH 449B
+
+MH 459B
+
+MH 467
+
+8.0m SANITARY
+EASEMENT WITHIN
+THE POND BLOCK
+
+MH 409A
+TOP EL.256.15m
+SW 249.24m
+NE 251.09m
+SE 249.16m
+
+MH
+5A
+40
+
+MH 407A
+
+110.0m-450mm
+SAN.@0.30%
+
+1.73ha
+-
+
+87
+-
+
+110.0m-450mm
+SAN.@0.30%
+
+MH 607B
+B
+
+100.0m2
+SAN.@0.550mm
+0% MH 609B 99.6m-250
+SAN.@0.5 mm
+0%MH 608
+
+MH 505B
+
+50mm SA
+153.0m-2
+H
+M
+
+MH 619B
+TOP EL.258.90m
+NE 255.87m
+
+65.6m-250mm MH 503B
+SAN.@0.50%
+46.0m-250mm
+SAN.@0.50%
+
+120.0m-2
+50
+SAN.@0.5 mm
+0%
+
+86.1m-250mm
+SAN.@1.00%
+
+B
+
+117.7m-250mm 17.9m-250mm
+SAN.@0.50% SAN.@0.50%
+MH 620B
+
+50
+
+MH 615B
+TOP EL.259.26m
+SW 256.43m
+
+115.3m-375mm
+SAN.@0.35%
+
+83.3m-250mm
+SAN.@1.00%
+
+2B
+
+TRANSIT
+HUB
+
+MH 616B
+
+MH 621
+B
+
+MH 618
+
+H 501B
+
+N.@0.50%M
+
+MH
+
+55.3m-2
+5
+SAN.@1.00mm
+0%
+
+74.0m-250mm
+SAN.@0.50%
+17.3m-250mm
+SAN.@0.50%
+
+MH 500B
+TOP EL.260.08m
+SW 256.78m
+
+COMMERCIAL
+
+16.6m-375mm
+PEEL REGIONAL
+SAN.@0.35% POLICE FACILITY
+MH 622B
+TOP EL.254.91m
+NW 254.26m
+SE 254.23m
+SW 254.30m
+
+SWM
+POND
+NO.9
+
+7.5m SANITARY
+EASEMENT WITHIN
+POND BLOCK
+
+MH 623B
+
+EX. MH.
+INV. 254.70
+EX. 250
+∅
+SAN PIPE
+
+P/Ha AREA POP
+50
+70
+175
+
+4.62ha
+-
+
+GREE
+(GREENWNLANDS B
+AY CORR
+IDOR)
+
+WAY
+
+MH 461B
+
+231
+OUTLET 4
+A = 53.15ha
+P = 4,138
+
+91.1m-375mm
+SAN.@0.30%
+
+119.5m-375mm
+SAN.@0.30%
+
+109.5m-375mm
+
+MH 624B SAN.@0.30%
+
+7.5m SANITARY
+EASEMENT WITHIN
+PEEL POLICE LAND
+
+EXISTING
+DEVELOPMENT
+
+FLOW = 58.8l/s
+
+MH 625B
+
+ORTH LEG)
+
+82.9m-250mm
+SAN.@0.50%
+
+ROAD 'F' (N
+
+GREENL
+ANDS
+(GREENW
+AY CORRB
+IDOR)
+
+81.9m-2
+5
+SAN.@0.50mm
+0%
+
+MH 614B
+
+54.8m-375mm
+SAN.@0.30%
+
+EX. MH.
+INV. 252.75
+MH 626B
+TOP EL.253.49m
+NW 252.97m
+NE 252.89m
+
+HIGHWOOD
+ROAD
+
+48.3m-375mm
+SAN.@0.30%
+
+EX. 300
+∅ SAN PIPE
+@ 0.50%
+MH 627B
+TOP EL.253.26m
+SW 252.75m
+
+HIGHWOOD ROAD OUTLET NOTE:
+DUE TO THE GRADING AND SERVICING
+CONSTRAINTS WITHIN THE CALEDON 410
+DEVELOPMENTS LIMITED LANDS, A LARGER
+DIAMETER PIPE (375∅ @ 0.30%) HAS BEEN
+PROPOSED WITHIN THE FUTURE PEEL POLICE
+FACILITY EASEMENT FOR CONNECTION TO THE
+EXISTING 300∅ SANITARY OUTFALL AT HIGHWOOD
+ROAD. PROPOSED SUBDIVISION SANITARY
+OUTFALL CANNOT BE MAINTAINED AS A 300∅ PIPE
+AT 0.50% TO ACHIEVE REQUIRED CONVEYANCE
+CAPACITY WHILE MEETING THE EXISTING
+HIGHWOOD ROAD OUTFALL INVERT ELEVATION.
+
+OBRY RAIL
+
+MH 465B
+TOP EL.257.02m
+NE 252.48m
+S 252.45m
+
+112.0m-250mm MH 464B
+SAN.@0.50%
+
+53.7m-250mm
+SAN.@0.50%
+
+B
+
+MH 466B
+SWM POND
+NO. 3
+
+B
+
+455
+-
+
+OR)
+
+20.9m-250mm
+SAN.@0.50%
+
+COMMERCIAL
+
+42.9m-450mm
+SAN.@0.30%
+
+70.3m-250
+m
+SAN.@0.50 m
+%
+
+50 1.83ha 92
+50 5.43ha 272
+70 2.52ha 177
+175
+0 0.45ha 0
+
+MH 462B
+
+MH 450B
+
+COM.
+RES.
+RES.
+RES.
+PARK
+
+73.5m-25
+SAN.@0.50mm
+0%
+
+OR R
+
+OAD 'E'
+120.0m
+-250mm
+SAN.@0
+.50%
+
+TYPE P/HaAREA POP
+
+EXISTING
+CHURCH
+
+MH 403A
+TOP EL.259.06m
+NW 251.11m
+SE 251.02m
+SW 251.53m
+NE 251.33m
+
+P/Ha AREA POP
+50
+70
+175
+
+118.2m-250mm
+SAN.@0.50%
+
+LORMER JOINT
+VENTURE INC
+
+12.0m STORM AND
+SANITARY EASEMENT
+
+17.4m-450mm
+SAN.@0.30%
+
+MH 406A
+TOP EL.256.75m
+W 250.34m
+NE 250.26m
+
+MH 460B
+
+MH 452B
+
+94.3m-250mm
+SAN.@0.50%
+
+MH 613
+
+9.10ha
+-
+
+GREE
+(GREENWNLANDS B
+AY CORR
+ID
+
+MH 453B
+
+74.1m-250mm
+SAN.@0.50%
+
+75.7m-250mm
+SAN.@0.50%
+
+79.0m-250mm
+SAN.@0.50%
+
+SWM POND
+NO. 4
+
+82.7m-250mm
+SAN.@0.50%
+MH 468B
+
+MH 408A
+
+97.5m-450mm
+SAN.@0.30%
+MH 410A
+TOP EL.255.99m
+NW 249.10m
+
+EX.MH.
+450∅ OBV. 247.60
+
+EX. 450
+∅ SAN PIPE
+@ 0.30%
+
+VAN KIRK DRIVE
+
+SAN.@0
+.3
+450mm
+127.4m-
+
+MH 404A
+
+MH 451B
+TOP EL.257.81m
+NW 253.10m
+SW 253.07m
+
+NEIGH.PARK
+NO. 3
+
+MH 4
+
+0%
+
+MH 454B
+
+MH 458B
+TOP EL.259.31m
+NE 256.18m
+
+63B
+71.7m250mm
+SAN.@0
+.50%
+
+MH 457B
+
+57.4m-250mm
+SAN.@0.50%
+
+448
+494
+
+COLLECTOR ROAD 'G'
+
+93.0m-250mm
+SAN.@1.00%
+
+COLLECT
+
+6.39ha
+2.82ha
+
+80.1m-250mm
+SAN.@0.50%
+
+MH 448B
+TOP EL.259.73m
+SE 255.12m
+
+97.3m-2
+SAN.@1 50mm
+.00%
+
+AD
+HLIN RO
+
+MH
+
+50
+70
+175
+
+77.3m2
+SAN.@0 50mm
+.50%
+
+MH
+
+P/Ha AREA POP
+
+81.2m-2
+5
+SAN.@0.50mm
+0%
+
+50
+80
+175
+
+FLOW = 14.2 l/s
+
+COLLECTOR ROAD 'B'
+
+A-MAJOR
+HOMES
+
+402A
+103.6m-4
+5
+0
+m
+m
+SAN.@0.3
+0%
+
+2.31ha
+
+405
+
+McLAUG
+
+105.4m4
+SAN.@0.350mm
+0%
+401A
+105.0m450mm
+SAN.@0
+.30%
+
+AREA POP
+
+73.3m-250mm
+SAN.@0.50%
+
+MH 617B
+TOP EL.259.74m
+NW 254.94m
+SW 254.94m
+SE 254.75m
+NE 254.94m
+
+OUTLET 3
+A = 6.03ha
+P = 498
+
+P/Ha AREA POP
+
+MH 446B
+TOP EL.260.71m
+SW 254.17m
+NW 254.20m
+
+MH 612B
+
+ROBERTSON DAVIES DRIVE
+
+47B
+80.8m-2
+50mm
+SAN.@0
+.50%
+
+MH 509B
+TOP EL.255.16m
+NW 254.70m
+
+39.1m-250mm
+SAN.@1.00%
+
+286
+232
+924
+
+P/Ha AREA POP
+
+HURONT
+
+MH 446BB
+
+M
+
+MH 508B
+TOP EL.258.63m
+NW 254.96m
+SE 254.93m
+NE 254.96m
+
+92.8m-250mm
+SAN.@0.50%
+
+PUBLIC
+ELEMENTARY SCHOOL
+
+MH 408B
+
+EXISTING
+WETLAND/WOODLOT
+
+PUBLIC
+SECONDARY SCHOOL
+
+MH 445B
+
+MH 400A
+TOP EL.261.10m
+SE 252.15m
+SW 252.48m
+NW 257.35m
+NE 252.48m
+
+B
+
+6.44ha 1500
+
+MH 447BB
+
+MH 444B
+
+190
+56
+252
+
+518
+
+B
+MH 434
+
+91.3m-2
+5
+SAN.@0.50mm
+0%
+
+49.2m-250mm
+SAN.@0.50%
+40.3m-250mm
+SAN.@0.50%
+70.9m-250mm
+
+409
+
+3.79ha
+0.80ha
+1.44ha
+
+P/Ha AREA POP
+-
+
+MH 605B
+
+mm
+2500%
+m
+57.4N.@0.5
+SA
+MH 407B
+
+PUBLIC
+SECONDARY SCHOOL
+
+299
+
+H 433B
+112.3m250mm
+SAN.@0.5
+0%
+
+2.96ha
+
+50
+70
+175
+
+70.7m-2
+5
+SAN.@0.50mm
+0%
+
+B
+
+109.8m2
+SAN.@1 50mm
+.00%
+
+5.97ha
+
+P/Ha AREA POP
+175
+
+6B
+
+P/Ha AREA POP
+
+P/Ha AREA POP
+
+MENT GENERAL
+
+52.5m-250mm
+SAN.@0.50%
+
+COMMUNITY PARK /
+RECREATION CENTRE
+
+50
+
+108.3m
+SAN.@ -250mm
+1.00%
+
+OR ROAD
+
+MH 432B
+TOP EL.263.05m
+SE 259.53m
+
+63.9m-300mm
+SAN.@0.35%
+
+72.9m-250mm
+SAN.@1.00%
+
+506B
+95.7m-2
+SAN.@0 50mm
+.50%
+
+21.7m-375mm
+SAN.@0.30%
+
+5.72ha
+3.31ha
+5.28ha
+
+MH 611B
+TOP EL.261.04m
+NE 256.92m
+
+MH 504B
+TOP EL.261.71m
+NE 257.24m
+
+COLLECT
+
+COMMERCIAL
+
+B
+
+SAN.@0 0mm
+.35%
+
+PUBLIC
+SECONDARY SCHOOL
+
+MH 431B
+TOP EL.263.35m
+NE 253.91m
+SW 253.88m
+NW 254.08m
+
+TOP EL.263.04m
+
+405
+
+MH 412B 71.8m-30
+
+SPINE ROAD
+
+50
+70
+175
+
+NEIGH.
+PARK
+NO. 5
+
+'F' (SOUT
+H LEG)
+
+93.5m-300mm
+SAN.@0.35%
+
+P/Ha AREA POP
+
+EXISTING
+WETLAND/WOODLOT
+
+MH 507
+
+35.4m-375mm
+SAN.@0.30%
+
+73.0m-250mm
+SAN.@0.50%
+
+COMMERCIAL
+
+0
+
+VILLAGE
+SQUARE
+NO. 2
+
+MH
+MH 410B
+
+MH 420B
+
+CALEDON 410
+DEVELOPMENTS
+LIMITED
+
+41
+
+MH 100B
+TOP EL.262.90m
+SW 258.64m
+
+MH
+
+C
+
+50mm
+56.8m-2 .50%
+SAN.@0
+88.0m-250mm
+SAN.@0.50%
+
+MH 411B
+TOP EL.262.17m
+NW 256.34m
+SW 256.24m
+
+120.3m-300mm
+SAN.@0.35%
+
+NEIGH.
+PARK
+NO. 4
+
+COLLECTO
+R
+
+O
+CT
+E
+L
+OL
+
+B
+
+417
+
+MH
+
+MH 418B
+
+41.9m-250mm
+SAN.@0.50%
+
+98.1m-25
+0
+SAN.@0.5 mm
+0%
+
+B
+
+416
+
+40
+MH
+
+mm
+250 %
+m
+0
+82.3N.@0.5
+SA
+
+41.2m-250mm
+SAN.@0.50%
+
+MH 413B
+TOP EL.261.83m
+SW 255.71m
+NE 255.74m
+
+100.0m-250mm
+SAN.@0.50%
+
+47.7m-250mm
+SAN.@0.50%
+
+SHANONTOWN
+DEVELOPMENT
+
+86.2m-600mm
+SAN.@0.30%
+
+m
+-600m
+m
+5
+.
+2
+%
+11
+0.30
+SAN.@
+
+m
+50m
+2
+m
+0%
+82.0N.@0.5
+A
+S
+
+404
+
+82 N.@1
+SA
+MH
+
+MH 4
+
+246
+251
+611
+
+AY
+
+107.9m-375mm
+SAN.@0.30%
+
+7B
+MH 42
+
+MH 419B
+TOP EL.262.09m
+NE 255.29m
+SW 255.26m
+NW 256.04m
+
+FUTURE
+EMPLOYMENT
+
+W
+
+107.9m-300mm
+SAN.@0.35%
+
+2454229 ONTARIO INC
+
+MH 107A
+
+MH
+
+92.0m-250mm
+SAN.@0.50%
+
+4.91ha
+3.58ha
+3.49ha
+
+FUTURE
+EMPLOYMENT
+
+GH
+
+LIVE / WORKS
+
+VILLAGE
+SQUARE
+NO. 1
+
+MH 426B
+TOP EL.261.94m
+NE 254.52m
+SW 254.37m
+NW 254.59m
+
+50
+70
+175
+
+25.12ha 2010
+
+80
+
+HI
+
+107.0m-250mm
+SAN.@0.50%
+
+67.2m-250mm
+SAN.@1.00%
+
+mm
+'A'
+2500%
+D
+m
+0
+A
+5
+.
+.
+O
+77 N.@0
+RR
+SA
+
+69.6m-2
+5
+SAN.@1 0mm
+.00%
+22B
+88.3m-2
+SAN.@0 50mm
+.50%
+
+104.5m
+-2
+SAN.@1 50mm
+.00%
+HIGH DENSITY
+RESIDENTIAL
+
+MH 106A
+TOP EL.263.25m
+NW 253.44m
+SW 252.86m
+NE 253.82m
+
+50 4.29ha 215
+70 2.57ha 180
+175 6.28ha 1099
+475 1.93ha 917
+Neigh.
+Park
+No. 2
+
+117.1m-250mm
+SAN.@0.50%
+48.9m-250mm
+SAN.@0.50%
+
+96.8m-525mm
+SAN.@0.30%
+
+m
+-250m
+%
+100.5m
+0.50
+101B
+SAN.@
+
+RES.
+RES.
+RES.
+RES.
+
+MH 424B
+
+413
+
+TYPE P/HaAREA POP
+
+MH 425B
+
+2.36ha
+
+LLE
+O
+C
+
+48.9m-2
+5
+SAN.@0 0mm
+.50%
+MH 423B
+
+MH 430B
+
+50
+70
+175
+
+MH 429
+B
+
+120.0m5
+SAN.@0.325mm
+0% MH 103A
+MH 104A
+
+SAN.@0 25mm
+.30%
+
+MH 105
+A 120.0m-5
+
+P/Ha AREA POP
+
+RR
+O
+T
+C
+
+MH 421B
+TOP EL.264.29m
+SE 256.80m
+
+P/Ha AREA POP
+
+Y
+
+324
+163
+903
+
+'A'
+D
+OA
+
+LWA
+RAI
+
+P/Ha AREA POP
+
+B
+mm
+415
+2500%
+MH
+m
+.8
+.0
+
+MH 428B
+TOP EL.264.51m
+SE 256.31m
+
+Y
+OBR
+
+37.5m-250mm
+SAN.@1.00%
+
+P/Ha AREA POP
+
+MH
+
+133.3m
+-525mm
+S
+
+MH 414B
+TOP EL.263.64m
+E 258.51m
+
+MH 104B
+
+78.7m-250mm
+SAN.@0.50%
+67.6m-250mm
+SAN.@1.00%
+
+FUTURE
+EMPLOYMENT
+
+EET
+
+0%
+
+MH 403B
+TOP EL.262.56m
+NE 259.56m
+E 259.23m
+
+AN.@0.3
+
+MH
+
+TOP EL.263.39m
+SW 260.70m
+
+MH 600B
+TOP EL.262.81m
+NE 259.90m
+
+ARIO STR
+
+330
+
+m
+50m
+2
+m
+0%
+84.0 .@0.5
+N
+SA
+
+SHANONTOWN
+DEVELOPMENT
+FUT. STAGE 2
+
+4.12ha
+
+COLLECTOR ROAD 'F' (NORTH LEG)
+
+120.0m5
+SAN.@0.325mm
+0%
+
+80
+
+1B
+MH 40
+
+B
+
+2
+MH 40
+
+75
+SA .0mN.@ 25
+60
+0.5 0mm
+2B
+0%
+
+m
+0m
+-25 %
+2m .50
+85. N.@0
+SA
+
+MH 102A
+
+P/Ha AREA POP
+
+TOR
+COLLEC
+
+MH
+
+04B
+
+OAD 'A'
+
+REFER TO DWG. 803
+
+666
+
+B
+
+MH 601
+
+6
+MH
+
+MH 103B
+TOP EL.264.20m
+SW 258.09m
+
+LLECTOR
+R
+
+6.47ha
+2.32ha
+5.16ha
+
+8.32ha
+
+LEG)
+
+67.7m-2
+SAN.@0 50mm
+.50%
+
+m
+m
+50 %
+-2 .50
+0m 0
+3B
+0. N.@
+10 SA
+
+16.17ha 1294
+
+105B
+75.8m-2
+5
+0
+m
+m
+SAN.@0
+.50%
+
+80
+
+ORTH
+N
+(
+'
+'F
+D
+ROA
+
+50mm
+83.1m-2 .00%
+SAN.@1
+
+60
+
+AREA POP
+
+P/Ha AREA POP
+
+NO. 8
+
+D
+SWM PON
+
+H
+M
+
+CALEDON
+DEVELOPMENT GENERAL
+PARTNER LTD
+1.19ha
+FUTURE STAGE 2 0 0
+
+SHANONTOWN
+DEVELOPMENT
+FUT. STAGE 2
+
+GREEN
+(GREENWLANDS B
+AY CORR
+IDOR)
+
+MH 101A
+
+EMPLOYMENT
+
+MH 606B
+
+MH 100A
+TOP EL.261.47m
+SE 255.68m
+
+POPULATION
+
+96.2m-250mm
+SAN.@0.50%
+17.9m-450mm
+SAN.@0.30%
+
+MAYFIELD ROAD
+
+OUTLET 2
+
+A = 65.06ha
+P = 6,551
+FLOW = 85.0 l/s
+
+Urbantech Consulting, A Division of Leighton-Zec Ltd.
+3760 14th Avenue, Suite 301, Markham, Ontario L3R 3T7
+tel: 905.946.9461 fax: 905.946.9595
+www.urbantech.com
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+MAYFIELD WEST PHASE 2
+
+SANITARY DRAINAGE PLAN 1
+(EAST SIDE)
+15-483
+
+SURVEYED BY:
+
+R.P.E.
+
+DATE:
+
+2015
+
+JOB NO.
+
+DRAWN BY:
+
+T.L.
+
+CHECKED BY:
+
+D.Z.
+
+DRAWING NO.
+
+DESIGNED BY:
+
+D.Z.
+
+CHECKED BY:
+
+D.Z.
+
+802
+
+SCALE:
+
+1:2000
+
+DATE:
+
+DECEMBER 2018
+
+SHEET NO.
+
+File: P:\Projects\15-483\FSR-EIR\Drawings\08 - SANITARY SERVICING\802_803-Sanitary Drainage Plan.dwg - Revised by <JBLANUSA> : Wed, Nov 21 2018 - 3
+
+K-plan
+
+HURONTA
+RIO
+
+STAGE 1:
+*SPINE ROAD (400mm WATERMAIN FROM
+CHINGUACOUSY TO HURONTARIO)
+*CHINGUACOUSY ROAD (600mm WATERMAIN FROM
+MAYFIELD TO SPINE)
+*McLAUGHLIN ROAD (400mm WATERMAN FROM
+MAYFIELD TO COLLECTOR A)
+
+ROAD
+
+FOLLOWING TRUNK WATERMAINS HAVE BEEN
+IDENTIFIED IN THE REGION DC BACKGROUND STUDY
+(SHOWN IN RED ON THIS DRAWING):
+
+McLAUGH
+LIN
+
+CHINGUA
+COUSY R
+OAD
+
+DEVELOPMENT CHARGE
+INFRASTRUCTURE NOTES:
+
+STREET
+
+OBRY RA
+ILWAY
+
+OLD SCHOOL
+
+MAYFIELD ROAD
+
+LEGEND:
+MW2 STAGE 1 LIMIT
+
+STAGE 2:
+*McLAUGHLIN ROAD (400mm WATERMAIN FROM
+COLLECTOR A TO MW2 NORTH LIMIT
+*CHINGUACOUSY ROAD (600mm WATERMAIN FROM
+SPINE ROAD TO MW2 NORTH LIMIT)
+
+EXISTING PRESSURE ZONE 7
+TRUNK WATERMAIN
+PROPOSED STAGE 1 PRESSURE ZONE 7
+TRUNK WATERMAIN
+FUTURE STAGE 2 PRESSURE ZONE 7
+TRUNK WATERMAIN
+EXISTING PRESSURE ZONE 7
+300mm DIA WATERMAIN
+
+FUTURE DEVELO
+PMENT
+LANDS
+(SUBJECT TO MR
+REQUIREMENTS C
+)
+
+PROPOSED STAGE 1 PRESSURE ZONE 7
+300mm DIA WATERMAIN
+
+300Ø
+
+CALEDON 410
+DEVELOPMENTS
+LIMITED
+
+MAYFIELD ROAD
+
+AN
+PL
+RE T
+EN
+BE
+
+GREE
+ST
+TARIO
+HURON
+
+EX. 300Ø
+
+400Ø
+SPINE R
+
+300Ø
+
+1.
+
+HYDRAULIC ANALYSIS FOR LOCAL WATERMAIN
+NETWORK SIZING TO BE COMPLETED BY
+INDIVIDUAL LANDOWNERS AS PART OF THEIR
+DEVELOPMENT APPLICATIONS.
+
+2.
+
+EXTENSION OF TRUNK∅600
+WATERMAIN ALONG
+CHINGUACOUSY ROAD AND NORTH OF SPINE
+ROAD WILL BE REQUIRED FOR FUTURE
+DEVELOPMENTS OUTSIDE OF THE MW2
+FRAMEWORK PLAN; THEREFORE, A LOCAL
+WATERMAIN NETWORK CREEK CROSSING WILL
+BE NEEDED TO SERVICE FUTURE STAGE 2 MW2
+LANDS NORTH OF THE ETOBICOKE CREEK.
+
+3.
+
+A STUB CONNECTION FROM THE 400mm TRUNK
+WATERMAIN PROPOSED ALONG SPINE ROAD
+SHOULD BE PROVIDED FOR FUTURE PEEL
+REGIONAL POLICE LAND SERVICING.
+
+PEEL REGIONAL
+POLICE FACILITY
+(SEE NOTE 3
+THIS DRAWING)
+
+EX. 300Ø
+
+EX. 300Ø
+
+TARIO
+
+STR
+60EE
+
+0ØT(B.O.)
+
+EXISTING
+DEVELOPMENT
+
+EX. 300Ø
+
+EX. 300Ø
+
+SWM POND
+NO. 9
+
+NOTES:
+
+400Ø
+
+OAD
+
+EX. 400Ø
+EX. 600Ø
+
+COMMERCIAL
+
+TRANSIT
+HUB
+
+SWM POND
+NO. 4
+
+SWM POND NO. 3
+
+EX. 600Ø
+
+400Ø
+
+NEIGH.
+PARK
+NO. 5
+
+HURON
+
+OBRY R
+A
+
+ILWAY
+
+OR)
+
+300Ø
+
+EXISTING
+CHURCH
+
+COLLECT
+OR ROAD
+(SOUTH
+'F'
+LEG)
+ROBERTSON DAVIES DRIVE
+
+GREENLAN
+(GREENWDS B
+CORRIDOAY
+R)
+
+EX. 150Ø
+
+COLLEC
+TOR RO
+AD 'E'
+
+400Ø
+CIAL
+
+COMMER
+
+SWM POND
+NO. 2
+
+400Ø
+
+COLLECTOR ROAD 'G'
+
+GREENLAN
+DS B
+(GREENW
+AY CORRID
+OR)
+
+'F'
+
+400Ø
+
+400Ø
+AD
+HLIN RO
+
+McLAUG
+
+LORMEL JOINT
+VENTURE INC.
+
+NORTH EAST
+WETLAND
+
+COLLECTOR ROAD
+'F'
+(NOFTH LEG)
+
+AD
+HLIN RO
+
+400Ø
+
+300Ø
+
+D
+RO)A
+R
+O
+G
+T
+LECFTH LE
+L
+O
+C (NO
+
+AD 'D'
+TOR RO
+
+300Ø
+
+300Ø
+
+300Ø
+
+GREENLA
+NDS A
+(CHANNEL
+)
+
+GRE
+E
+(CH NLAN
+ANN DS A
+EL)
+
+'D'
+
+COLLECTR
+OR
+OA
+D
+
+GREE
+(GREENW NLANDS B
+AY CORR
+IDOR)
+
+COLLECTOR ROAD 'D'
+COLLEC
+
+300Ø
+
+300Ø
+300Ø
+
+GREENLANDS A
+(CHANNEL)
+
+GREENLANDS B
+(FUT.GREENWAY
+CORRIDOR)
+
+AD 'C'
+
+COLLECTOR R
+O
+
+COLLECTOR ROAD 'C'
+
+600Ø
+
+McLAUG
+
+KE
+CO
+E
+CRX. E
+EE TO
+K BI
+
+600Ø
+600Ø
+600Ø
+ROAD
+CHINGU
+ACOUSY
+
+300Ø
+
+NEIGH.PARK
+NO. 3
+
+NORTH EAST
+WETLAND
+
+FUTURE DEVELOPMENT LANDS
+NORTH OF MW2 AND ETOBICOKE CREEK
+(SUBJECT TO MRC REQUIREMENTS)
+
+0
+
+A-MAJOR HOMES
+(ONTARIO) INC
+
+FUTURE
+EMPLOYMENT
+
+PROPOSED SWM POND
+
+41
+
+COLLECTOR ROAD 'B'
+
+FUTURE
+EMPLOYMENT
+
+PROPOSED OPEN SPACE
+
+AY
+
+GR
+E
+ELEMENTARY COMMUNITY
+(C ENL
+HA AN
+PARK NO. 3
+NN DS SCHOOL
+EL A
+)
+
+SOUTH EAST
+WETLAND (CVC)
+
+300Ø
+
+EXISTING WOODLOT/WETLAND
+
+HW
+
+McLAUGHLIN
+DEVELOPMENTS
+INC
+PUBLIC
+
+300Ø
+
+NON PARTICIPATING LANDOWNERS
+
+G
+HI
+
+R
+TOROAD 'B'
+C
+E
+OLL MAYFIELD
+
+MAYFIELD ROAD
+
+SOUTH EAST
+WETLAND (CVC)
+
+Y
+WA
+
+MAYFIELD ROAD
+
+EX. 600Ø
+
+CALEDON
+DEVELOPMENT
+GENERAL
+PARTNER LTD
+
+SOUTH EAST
+WETLAND (TRCA)
+
+AIL
+YR
+
+SWM POND NO. 1
+
+OBR
+
+GB (MAYFIELD)
+INC
+CALEDON
+WEST 25 INC
+
+FUTURE COMMUNITY PARK /
+FUTURE PUBLIC
+RECREATION CENTRE
+SECONDARY SCHOOL
+
+300Ø
+
+C
+
+SPINE ROAD
+
+INC
+
+COMMERCIAL
+
+MEDIUM
+DENSITY
+
+Y
+
+MAYFIELD
+STATION
+DEVELOPMENTS
+INC
+
+400Ø
+
+NEIGH.
+PARK
+NO. 4
+
+SHANONTOWN
+
+WA
+
+COLLECTOR ROAD 'B' 300Ø
+
+LIVE / WORKS
+
+EXISTING BRAMPTON
+CHRISTIAN SCHOOL
+
+AIL
+
+300Ø
+
+COMMUNITY
+PARK NO. 1
+
+400Ø
+
+VILLAGE
+SQUARE
+NO. 1
+
+VILLAGE 2454229
+SQUARE ONTARIO
+NO. 2
+
+MEDIUM
+DENSITY
+
+SOUTH WEST
+WETLAND
+
+SHANONTOWN
+HIGH DENSITY
+RESIDENTIAL
+
+MEDIUM
+DENSITY
+
+YR
+
+SOUTH WEST
+WETLAND
+
+Neigh.
+Park
+No. 2
+
+'A'
+
+MAYFIELD ROAD
+
+400Ø
+
+CALEDON
+DEVELOPMENT
+GENERAL
+PARTNER LTD
+
+Ø
+
+OBR
+
+EX. 600Ø
+
+EX. 600Ø
+
+SPINE ROAD
+
+400Ø
+
+SEPARATE
+ELEMENTARY SCHOOL
+
+COMMERCIAL
+
+FUTURE
+PUBLIC
+ELEMENTARY
+SCHOOL
+
+300
+
+OAD
+
+MAYFIELD
+DEVELOPMENTS
+INC
+
+300Ø
+
+'A'
+
+RR
+
+FUT. SWM
+POND NO. 5
+
+SPINE ROAD
+
+ALLOA RESERVOIR
+& PUMPING STATION
+(UNDER CONSTRUCTION)
+
+CALEDON
+DEVELOPMENT
+GENERAL
+PARTNER LTD
+
+OR ROAD
+
+TO
+LEC
+COL
+
+FUTURE
+COMMUNITY
+PARK NO. 2
+
+300Ø
+
+FUT.
+NEIGHBOURHOOD
+PARK NO. 1
+
+COLLECT
+
+R
+CTO'
+E
+L
+'A
+L
+CO OAD
+R
+
+FUTURE
+EMPLOYMENT
+
+300Ø
+
+GREENL
+(GREENW ANDS B
+AY CORRID
+
+CHINGU
+
+FP MAYFIELD
+WEST (CALEDON)
+INC
+
+KE
+
+SWM POND
+NO. 6
+
+EX. ETOBICOKE
+CREEK
+
+400Ø
+
+CALEDON
+DEVELOPMENT
+GENERAL
+PARTNER LTD
+
+FUT. SWM POND
+NO. 10
+
+SHANONTOWN
+
+SHANONTOWN
+
+AILWAY
+
+A
+E DS
+URAN EL)
+T
+L
+FUEN ANN
+E H
+GR (C
+
+KE
+
+CO
+
+EX. E
+T
+CRE
+EK OBICO
+
+GREENBELT PLAN AREA
+
+SWM POND
+NO. 8
+
+OBRY R
+
+GREENBELT PLAN AREA
+
+SEE NOTE 2
+THIS DRAWING
+
+KE
+CO
+BI
+O
+T
+.E K
+EXREE
+C
+
+BI
+TO
+. E EK
+EX RE
+C
+
+FUT. SWM
+POND NO. 7
+CREEK
+EX. ETOBICOKE
+
+EX. ET
+CREEKOBICOKE
+
+GREENBELT PLAN AREA
+
+GREENBELT PLAN AREA
+
+EXISTING GREENBELT
+
+LT
+
+EX. ETOBICOKE
+CREEK
+
+CO
+BI
+O EK
+T
+E RE
+X. C
+
+EX. 300Ø
+
+ACOUSY
+
+KE
+
+E
+
+FUTURE STAGE 2 PRESSURE ZONE 7
+LOCAL WATERMAIN
+
+AR
+EA
+
+ROAD
+
+FUTURE STAGE 2 PRESSURE ZONE 7
+300mm DIA WATERMAIN
+
+EX. 400Ø
+
+MAYFIELD ROAD
+Urbantech Consulting, A Division of Leighton-Zec Ltd.
+3760 14th Avenue, Suite 301, Markham, Ontario L3R 3T7
+tel: 905.946.9461 fax: 905.946.9595
+www.urbantech.com
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+MAYFIELD WEST PHASE 2
+TRUNK WATERMAINS
+SURVEYED BY:
+
+R.P.E.
+
+DATE:
+
+2015
+
+JOB NO.
+
+15-483
+
+DRAWN BY:
+
+D.L.
+
+CHECKED BY:
+
+D.Z.
+
+DRAWING NO.
+
+DESIGNED BY:
+
+D.Z.
+
+CHECKED BY:
+
+D.Z.
+
+901
+
+SCALE:
+
+1:7000
+
+DATE:
+
+DECEMBER 2018
+
+SHEET NO.
+
+File: P:\Projects\15-483\FSR-EIR\Drawings\09 - WATER SERVICING\901-Trunk Watermains.dwg - Revised by <JBLANUSA> : Wed, No
+
+treet
+
+PL22
+
+PL20
+
+Chinguacou
+
+SE(CVC)-S1
+CE14
+
+CE1
+
+CE12
+
+PL04
+
+PL31
+
+SE(CVC)-S2
+
+SE(TRCA)
+PL28
+-S1
+PL27
+CE9
+
+PL05
+CE5
+
+CE4
+
+CE2
+
+PL15
+
+PL30
+
+CE3
+
+PL14
+CE6
+
+PL01
+
+PL16
+
+PL13
+
+PL10 PL11 PL12
+
+PL02
+PL07
+
+CE4
+
+CE15
+PL17
+
+PL18
+
+CE16
+
+PL03
+Mayfield Road
+
+PREPARED BY:
+
+Project: Mayfield West FBWB
+DRAWN: S.K.F.
+
+CHECKED: J. Cole
+PROJECT NO.: 160581
+
+DATE: Apr 27, 2018
+
+Document Path: C:\Users\Samantha Feist\Documents\GSAI Mayfield\LID-GradingBasedwgs.mxd
+
+LEGEND
+
+Mayfield West Phase 2 Stage 1
+Development Plan
+Catchment Area
+Public LID
+
+Private LID
+
+SCALE 1:8,000
+
+o
+
+Client: GSAI
+
+CE8
+
+0
+
+100
+
+DATA SOURCES: Property boundaries
+provided by Urbantech Consulting.
+
+200
+
+300
+METRES
+
+400
+
+500
+
+Study Area Development
+Plan with LID Locations
+
+FIGURE 32
+
+PL24
+PL25
+
+PL26
+
+0
+
+PL29
+
+CE10
+
+SW-S1
+
+PL06
+
+CE7
+
+41
+
+SW-S1
+
+PL23
+
+ay
+
+PL08
+
+NE-S3
+
+PL21
+
+PL19
+
+NE-S1
+
+w
+gh
+Hi
+
+sy Road
+
+PL09
+
+CE11
+
+NE-S2
+
+SE(TRCA)-S1
+
+PL32
+
+Hurontario S
+
+oad
+McLaughlin
+R
+
+CE11
+
+Greenbelt Plan Area
+
+K-plan
+
+STREET
+HURONTA
+RIO
+
+Greenbelt Plan Area
+
+McLAUGH
+LIN ROAD
+
+CHINGUA
+COUSY R
+OAD
+
+OBRY RA
+ILW
+
+AY
+
+OLD SCHOOL
+
+MAYFIELD ROAD
+
+M
+
+LEGEND:
+
+30
+-R
+EC
+
+MAYFIELD WEST 2
+FRAMEWORK PLAN LIMIT
+EXISTING ETOBICOKE CREEK
+
+ME
+
+0
+-11
+
+MEC-115
+
+DIRECTION OF SURFACE FLOW
+CONTRIBUTING TO LID FEATURE
+
+12
+
+1
+11
+
+C-1
+
+CME
+
+6
+
+ME
+
+0
+C-1
+
+PUBLIC LID FEATURE
+
+SHANONTOWN
+
+YR
+OBR
+
+PL20
+
+NE-S3
+PARK
+
+AILW
+
+PA
+
+PL21
+
+NORTH EAST
+WETLAND
+
+AY
+
+RK
+
+02
+
+C-1
+ME
+
+PL23
+
+MEC-101
+
+PL24
+PL08
+
+SHANONTOWN
+
+CE8
+
+CE10
+
+SPINE ROAD
+
+AD
+O
+R
+E
+N
+I
+P
+S
+
+PL28
+
+PARK
+
+SOUTH EAST
+WETLAND
+(TRCA)
+
+SE(CVC)S2
+
+SCHOOL
+
+PARK
+
+PL01
+
+CE6
+
+CE4
+PL07
+
+PL03
+
+PL15
+PL13
+
+PL14
+
+CE15
+
+PL16
+PL10
+
+PL11
+PL17
+
+CE3
+
+PL02
+
+POND 1
+
+A-MAJOR
+HOMES
+
+CE3
+
+LORMER JOINT
+VENTURE
+CE16
+INC
+
+MAYFIELD
+McLAUGHLIN
+DEVELOPMENTS
+INC
+
+PL12
+
+CALEDON
+WEST 25 INC
+
+POND 2
+
+POND 3
+
+PL18
+
+EET
+
+CE5
+
+CE12
+
+SOUTH EAST
+WETLAND (CVC)
+
+POND 9
+
+ARIO STR
+
+PL30
+
+MAYFIELD STATIONPARK
+DEVELOPMENTS
+INC
+
+GB (MAYFIELD)
+INC
+
+* ALTERNATIVE INFILTRATION TRENCH
+DETAIL MAY BE EXPLORED AT DETAIL
+DESIGN.
+* PERFORATED HDPE PIPE TO BE
+CONNECTED TO A RLCB FOR
+OVERFLOW.
+
+HURONT
+
+CE3
+
+CE14
+
+CE9
+
+WAY
+
+CE2
+
+CE3
+
+NOTES:
+
+PL26
+
+OBRY RA
+IL
+
+CALEDON
+DEVELOPMENT
+GENERAL PARTNER
+LTD
+
+LIN ROAD
+
+PL05
+
+PL27
+
+SE(TRCA)S1
+
+McLAUGH
+
+SOUTH WEST
+WETLAND
+
+AD
+
+SE(CVC)S1
+
+SCHOOL
+
+PL04
+
+CE4
+
+PL25
+CALEDON 410
+DEVELOPMENTS
+LIMITED
+
+SE(TRCA)S1
+
+CE1
+
+PL31
+
+CE7
+
+PL29
+
+PL19
+
+SPINE RO
+
+MAYFIELD PL06
+DEVELOPMENTS
+INC
+
+OAD
+
+PROPOSED GREEN CORRIDOR
+
+DIRECTION OF SURFACE FLOW ENTERING AND
+WITHIN OPEN SPACE BLOCKS
+
+PL09
+
+SWS1
+
+COUSY R
+
+MEC-117
+
+NE-S2
+
+PL32
+
+MAYFIELD STATION
+DEVELOPMENTS INC.
+(FUTURE STAGE 2)
+
+116
+
+CE11
+
+PL22
+
+PRE AND POST STAGE 2
+DEVELOPMENTDRAINAGE TO
+BE MAINTAINED TO
+EXISTING SW WETLAND
+
+MAYFIELD
+DEVELOPMENTS INC.
+(FUTURE STAGE 2)
+
+MAYFIELD WEST 2 STAGE 1 LIMIT
+
+PROPOSED DRAINAGE BOUNDARY
+TO LID FEATURE
+
+SHANONTOWN
+(FUTURE STAGE 2)
+
+CALEDON
+DEVELOPMENT GENERAL
+PARTNER LTD
+(FUTURE STAGE 2)
+
+SPINE ROAD
+
+CHINGUA
+
+SHANONTOWN
+(FUTURE STAGE 2)
+
+08
+C-1
+ME
+
+07
+
+C
+ME
+
+C-1
+
+D
+N
+PO
+
+POND 8
+
+MEC-
+
+EXISTING FLETCHERS/ETOBICOKE CREEK
+WATERSHED BOUNDARY
+
+PRIVATE LID FEATURE
+
+-105
+
+03
+C-1
+ME
+
+MEC-100
+
+6
+
+MEC-11
+4
+
+MEC-109
+
+ME
+
+ME
+
+MEC
+
+04
+C-1
+ME
+
+7
+R0
+C
+ME
+
+Greenbelt Plan Area
+
+3
+
+11
+C-
+
+POND 4
+
+Urbantech Consulting, A Division of Leighton-Zec Ltd.
+3760 14th Avenue, Suite 301, Markham, Ontario L3R 3T7
+tel: 905.946.9461 fax: 905.946.9595
+www.urbantech.com
+
+TOWN OF CALEDON
+REGIONAL MUNICIPALITY OF PEEL
+MAYFIELD WEST PHASE 2
+
+MAYFIELD ROAD
+MAYFIELD ROAD
+
+MW2 STAGE 1
+LID MAP
+SURVEYED BY:
+
+R.P.E.
+
+DRAWN BY:
+
+D.L.
+
+DESIGNED BY:
+
+D.Z.
+
+SCALE:
+
+1:4000
+
+15-483
+
+DATE:
+
+2015
+
+JOB NO.
+
+CHECKED BY:
+
+D.Z.
+
+DRAWING NO.
+
+CHECKED BY:
+DATE:
+
+D.Z.
+MAY 2018
+
+SHEET NO.
+
+507
+
+File: P:\Projects\15-483\FSR-EIR\Drawings\05 - STORM SERVICING\507_LID Map.dwg - Revised by <DZEC> : Sun, May 13 2018
+
+Figure 18
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+__________________________________________________________________________________________________________________ August 2019
+
+APPENDIX B
+Municipal Servicing
+
+PAGE 20 ___________________________________________________________________________ THE MUNICIPAL INFRASTRUCTURE GROUP LTD
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+August 2019 __________________________________________________________________________________________________________________
+
+APPENDIX B1
+Watermain Servicing
+
+THE MUNICIPAL INFRASTRUCTURE GROUP LTD __________________________________________________________________________ PAGE 21
+
+EXISTING WOODLOT & WETLAND
+
+FUT 300mm WATERMAIN (BY OTHERS)
+
+150mm Ø PVC
+
+STREET 'O'
+
+150mm Ø PVC
+
+FUT 400mm Ø
+
+STREET 'B'
+
+LANE 'E'
+
+STREET 'N
+
+'
+
+STREET 'M
+
+'
+
+STREET 'L'
+
+150mm Ø P
+VC
+
+ST. 'J'
+
+CONNECT
+T
+PROVIDED O PLUG
+SERVICIN BY SPINE
+G WORKS
+
+EDIT ELIGIB
+
+LE)
+
+(DC CREDIT
+
+BLOW-OFF
+
+HYDRANT
+
+VARD)
+
+200mm Ø P
+
+WATERMA
+IN W
+TO BE CO ITHIN SPINE ROA
+MAYFIELD NSTRUCTED BY T D
+HE
+WE
+GROUP A ST LANDOWNERS
+S A PART
+SERVICIN OF SPINE
+G WORKS
+
+VC
+
+150mm Ø P
+
+VC
+
+150mm Ø P
+
+EDIT ELIGIB
+
+LE)
+
+CONNECT
+PROVIDED TO PLUG
+B
+SERVICIN Y SPINE
+G WORKS
+
+VC
+
+VC
+
+BLOCK 257
+(INSTITUTIONAL)
+
+'
+
+STREET 'F'
+
+'
+
+AY
+
+STREET 'C
+
+AIN (BY OT
+H
+
+150mm Ø P
+VC
+
+150mm Ø P
+
+ILW
+
+STREET 'E
+
+Ø WATERM
+
+ERS)
+
+LANE 'B'
+
+STREET 'H
+'
+
+150mm Ø P
+
+FUT 400mm
+
+VC
+
+BLOCK 260
+(ENVIRONMENTAL
+POLICY AREA)
+
+EXISTING
+WOODLOT &
+WETLAND
+
+PP (DC CR
+
+FUTURE
+COMMERCIAL
+
+VC
+
+VC
+
+Y RA
+
+OBR
+
+STREET 'G
+'
+
+PROPOSED
+HIGHWAY 410 &
+HURONTARIO
+STREET
+INTERSECTION
+(BY OTHERS)
+
+150mm Ø P
+
+VC
+
+FUTURE
+INSTITUTIONAL
+
+SURPLUS
+M.T.O. LANDS
+
+LEGEND
+
+300mm Ø P
+
+BLOCK 267
+(SWM POND NO.9)
+
+PROPOSED VALVE CHAMBER
+
+CONNECT TO EXISTING
+WATERMAIN
+
+PROPOSED WATER VALVE
+PROPOSED 150Ø WATERMAIN
+
+EX 300mm
+WATERMAIN
+
+BLOCK 272
+(0.3m RESERVE)
+
+ROBERTSON
+DAVIES DR.
+
+VIRGINIA DR.
+
+BLOCK 266
+(OPEN SPACE)
+
+BLOCK 271
+(0.3m RESERVE)
+
+PROPOSED HYDRANT
+
+150mm Ø PVC
+
+VC
+
+CONNECT TO EXISTING
+WATERMAIN
+
+EX 150mm
+WATERMAIN
+
+Date :Aug 01, 2019 - 3:44pm, Edit By : akhan
+
+LEY BOULE
+
+400mm Ø C
+
+300mm Ø P
+
+STREET 'D'
+
+File : G:\Projects\2016\16109 - Caledon 410 - Fieldgate\DRAWINGS\Servicing\2019 07 10 - Pipes Figure.dwg, Layout : WM
+
+D (TIM MAN
+
+FUTURE
+TRANSIT
+HUB
+
+150mm Ø PVC
+
+BLOCK 265
+(OPEN
+SPACE)
+
+CONNECT
+PROVIDED TO PLUG
+B
+SERVICIN Y SPINE
+G WORKS
+
+SPINE ROA
+
+CONNECT
+PROVIDED TO PLUG
+B
+SERVICIN Y SPINE
+G WORKS
+LANE 'A'
+
+BLOCK 261
+(GREENLAND
+CORRIDOR)
+
+LANE 'D'
+
+ELIGIBLE)
+
+VC
+
+150mm Ø P
+VC
+
+PVC
+
+200mm Ø P
+
+BLOCK 256
+(TRANSIT HUB)
+
+150mm Ø
+
+400mm Ø C
+PP
+
+300mm Ø P
+
+PP (DC CR
+
+150mm Ø P
+VC
+
+EX 300mm Ø WATERMAIN
+
+LANE 'C'
+400mm Ø C
+
+150mm Ø P
+VC
+STREET 'I'
+
+FUT 600mm Ø WATERMAIN
+(BY OTHERS)
+
+VC
+
+C
+
+HURONTARIO STREET
+
+150mm Ø P
+
+150mm Ø
+PV
+
+300mm Ø P
+VC
+
+VC
+
+BLOCK 268
+(M.T.O. R.O.W. BLOCK)
+
+300mm Ø P
+VC
+
+150mm Ø P
+
+150mm Ø P
+VC
+
+STREET 'I'
+
+150mm Ø
+
+HYDRANT
+
+PVC
+
+150mm Ø P
+
+VC
+
+STREET 'K'
+
+BLOW-OFF
+
+10
+
+EX 300mm Ø WATERMAIN
+
+Y4
+
+150mm Ø PVC
+
+WA
+
+150mm Ø PVC
+
+150mm Ø PVC
+STREET 'K'
+
+150mm Ø PVC
+
+H
+HIG
+
+BLOCK 269
+(0.3m RESERVE)
+
+BLOCK 264
+(OPEN
+SPACE)
+
+BLOCK 263
+(OPEN
+SPACE)
+
+OTHERS
+
+BLOCK
+258
+(PARK)
+
+WATERMAIN B
+Y
+
+BLOCK 262
+(GREENLAND
+CORRIDOR)
+
+BLOCK 255
+(COMMERCIAL)
+
+300mm Ø PVC
+
+BLOCK 259
+ENVIRONMENTAL POLICY AREA
+
+FUTURE
+RESIDENTIAL
+
+BLOW-OFF HYDRANT
+
+300mm Ø PVC
+
+STREET 'O'
+
+300mm Ø PVC
+
+FUTURE
+PARK
+
+TEMP 300mm WM PLUG
+
+BLOCK 270 (0.3m RESERVE)
+
+PROPOSED 200Ø WATERMAIN
+
+PROPOSED 8.0m WIDE EASEMENT
+FOR SANITARY SEWER
+
+EXISTING
+RESIDENTIAL
+
+PROPOSED 300Ø WATERMAIN
+PROPOSED 400Ø WATERMAIN
+EXISTING WATERMAIN
+
+EX 300mm WATERMAIN
+
+FUTURE WATERMAIN
+
+COLLINGWOOD AVENUE
+
+8800 Dufferin Street,
+Suite 200
+Vaughan, ON
+L4K 0C5
+p: 905.738.5700
+.............................................................................................
+The Municipal Infrastructure Group Ltd f: 905.738.0065
+
+SITE BOUNDARY
+PROJECT No.
+
+SCALE: 1:1250
+
+WATER SERVICING PLAN
+FUNCTIONAL SERVICING REPORT
+CALEDON 410 DEVELOPMENT - MAYFIELD WEST PHASE 2, TOWN OF CALEDON
+
+DATE:
+
+16109
+
+AUGUST 2019
+
+DESIGNED BY: CT
+
+DRAWN BY:
+
+CT
+
+CHECKED BY: AK
+
+CHECKED BY: AK
+
+FIGURE No.
+
+WM01
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+__________________________________________________________________________________________________________________ August 2019
+
+APPENDIX B2
+Sanitary Servicing
+
+PAGE 22 ___________________________________________________________________________ THE MUNICIPAL INFRASTRUCTURE GROUP LTD
+
+BLOCK 270 (0.3m RESERVE)
+
+261.67
+258.40
+3.27
+
+MH1-8A
+
+261.30
+258.01
+3.29
+
+STREET 'N MH
+'
+1-21A
+86.2m - 250
+mmØ @ 1.0
+0%
+
+261.34
+257.25
+4.07
+
+259.29
+256.40
+2.98
+258.53
+255.87
+2.64
+
+%
+
+STREET 'B
+'
+
+120.0m - 250
+
+mmØ @ 0.5
+
+259.76
+256.05
+3.71
+%
+
+258.55
+255.21
+3.34
+
+MH1-35A
+
+STREET 'G
+
+'
+
+100.0m - 250
+
+mmØ @ 0.5
+
+0%
+
+0%
+
+259.44
+254.91
+4.53
+
+mmØ @ 1.0
+
+258.93
+255.74
+3.19
+
+258.98
+254.61
+4.37
+
+MH1-36A
+120.0m - 250
+
+mmØ @ 0.5
+
+20.0m - 250m
+mØ @ 1.00%
+
+258.83
+255.97
+2.86
+
+89.8m - 250
+
+mmØ @ 0.5
+
+BLOCK 267
+(SWM POND NO.9)
+
+13.7m - 250mmØ @ 0.50%
+
+EX. 250mmØ SAN PIPE
+
+ROBERTSON
+DAVIES DR.
+
+258.06
+254.95
+3.08
+
+20.2m - 250mmØ @ 0.50%
+OUTLET NO. 3
+EX MH
+EX PIPE = 250mmØ
+EX DOWNSTREAM INV. = 254.70m
+AVAILABLE CAPACITY = 16.1 L/s
+AS PER URBANTECH SANITARY DRAINAGE FIGURE 802
+AND SANITARY DESIGN SHEET DATED DECEMBER 2018
+
+MH1-24A
+mmØ @ 1.0
+0%
+
+BLOCK 257
+(INSTITUTIONAL)
+
+PROPOSED
+HIGHWAY 410 &
+HURONTARIO
+STREET
+INTERSECTION
+(BY OTHERS)
+
+258.98
+254.53
+4.45
+FUTURE
+INSTITUTIONAL
+
+Ø @ 0.30%
+
+EXISTING
+RESIDENTIAL
+
+MH1-25A
+
+260.10
+255.66
+4.44
+
+258.68
+254.21
+4.47
+
+BLOCK 257 AND FUT.
+INSTITUTIONAL FLOWS
+DISCHARGE INTO MH1-40A
+
+SANITARY MAINTENANCE HOLE
+SANITARY SEWER
+TRIBUTARY AREA
+
+44.2m - 375mmØ @ 0.3%
+
+100.3m - 375mmØ @ 0.30%
+
+POPULATION
+
+258.67
+253.49
+5.18
+
+258.74
+253.88
+4.86
+MH1-40A
+
+MH1-41A
+
+PROPOSED 8.0m WIDE EASEMENT
+FOR SANITARY SEWER
+100.3m - 375mmØ @ 0.30%
+
+LEGEND
+
+SURPLUS
+M.T.O. LANDS
+
+MH1-38A
+
+MH1-39A
+
+BLOCK 272
+(0.3m RESERVE)
+
+0%
+
+81.7m - 250
+
+0%
+
+6.0m - 375mm
+
+MH2-16A
+0.50%
+@
+65.5m - 250mmØ
+
+30.4m - 250mmØ @ 0.50%
+
+256.51
+3.20
+
+SANITARY SEWER WITHIN SPINE
+ROAD TO BE CONSTRUCTED BY
+THE MAYFIELD WEST
+LANDOWNERS GROUP AS A PART
+OF SPINE SERVICING WORKS
+
+MH2-17A
+
+258.50
+255.11
+3.77
+
+MH1-4A
+
+mmØ @ 0.5
+79.9m - 300
+
+STREET 'H
+'
+
+MH1-32A
+
+20.0m - 250
+
+FUTURE 25
+9.74
+COMMERCIAL
+
+80.1m - 375mmØ
+@ 0.35%
+MH1-33A
+
+MH2-13A
+
+258.68
+255.74
+2.94
+
+0%
+
+259.47
+256.63
+2.84
+
+MH1-34A
+
+260.04
+255.22
+4.82
+
+LANE 'B'
+
+120.0m - 25
+0mmØ @ 0.5
+
+MH1-31A
+
+FUTURE
+TRANSIT
+HUB
+
+MH1-37A
+
+259.67
+256.68
+2.99
+
+mØ @ 1.0%
+
+MH2-14A
+
+MH1-30A
+
+260.42
+256.96
+3.46
+
+0%
+
+68.0m - 375mmØ @ 0.35%
+
+260.46
+257.46
+3.00
+
+260.02
+255.62
+4.40
+
+MH1-29A
+
+mmØ @ 0.5
+
+261.02
+257.59
+3.43
+
+BLOCK 256 AND FUT.
+TRANSIT HUB FLOWS
+DISCHARGE INTO
+MH1-23A.
+FUT. COMMERCIAL
+FLOWS DISCHARGE
+INTO MH1-24A.
+
+MH1-28A
+
+0%
+
+MH2-1A
+
+260.08
+257.65
+2.48
+
+VARD)
+120.0m - 250
+
+mmØ @ 0.5
+
+0%
+mmØ @ 0.5
+
+259.11
+255.32
+3.77
+
+LEY BOULE
+
+mmØ @ 0.5
+
+94.8m - 250
+
+%
+74.9m - 250
+mmØ @ 0.5
+0
+
+'
+STREET 'C
+
+MH2-12A
+
+259.80
+255.73
+4.07
+
+74.9m - 250
+
+0mmØ @ 0
+
+.40%
+
+MH2-5A
+
+2-2
+A
+
+260.65
+256.65
+4.00
+
+260.47
+257.49
+2.96
+
+MH
+
+260.61
+256.13
+3.42
+
+D (TIM MAN
+
+BLOCK 256
+(TRANSIT HUB)
+
+%
+
+mØ @ 0.50%
+
+120.0m - 250
+
+74.8m - 250m
+
+mØ @ 0.50%
+
+109.5m - 25
+
+STREET 'E'
+MH2-4A
+
+43.5m - 250mmØ @ 0.40%
+
+' MH2-11A
+
+60.3m - 250
+m
+
+261.21
+257.15
+4.09
+
+MH2-3A
+
+23.2m - 250mmØ @ 0.40%
+
+STREET 'D
+
+mØ @ 1.00%
+
+0%
+
+BLOCK 268
+(M.T.O. R.O.W. BLOCK)
+
+MH1-23A
+
+STREET 'M M
+' H1-19A
+83.8m - 250
+mmØ @ 1.0
+0%
+
+MH1-17A
+mmØ @ 1.0
+0%
+78.5m - 250
+
+STREET 'L'
+
+LANE 'E'
+
+mmØ @ 1.0
+
+MH1-22A
+
+42.9m - 250m
+
+SPINE ROA
+
+MH1-27A
+
+68.6m - 250m
+
+STREET 'F'
+
+MH2-7A
+
+MH2-18A
+
+MH2-6A
+
+VIRGINIA DR.
+
+Date :Aug 01, 2019 - 3:46pm, Edit By : akhan
+
+74.0m - 250
+
+MH1-20A
+
+LANE 'D'
+
+MH2-15A
+
+260.74
+256.52
+4.22
+
+AY
+ILW
+
+Y RA
+OBR
+
+File : G:\Projects\2016\16109 - Caledon 410 - Fieldgate\DRAWINGS\Servicing\2019 07 10 - Pipes Figure.dwg, Layout : SAN
+
+mØ @ 0.50%
+
+LANE 'A'
+
+17.5m - 250m
+mØ
+@ 0.40%
+BLOCK 260
+(ENVIRONMENTAL
+POLICY AREA)
+
+p: 905.738.5700
+.............................................................................................
+The Municipal Infrastructure Group Ltd f: 905.738.0065
+
+0%
+
+STREET 'I'
+
+260.74
+257.00
+3.74
+
+MH1-26A
+
+80.1m - 250m
+
+35.6m - 250m
+mØ @ 1.00%
+
+BLOCK 261
+(GREENLAND
+CORRIDOR)
+39.4m - 250m
+mØ @ 1.00%
+265
+BLOCK
+(OPEN
+260.88
+SPACE)
+
+8800 Dufferin Street,
+Suite 200
+Vaughan, ON
+L4K 0C5
+
+mmØ @ 0.5
+
+MH2-9A
+
+261.68
+258.68
+3.00
+
+BLOCK 266
+(OPEN SPACE)
+
+MH1-18A
+
+261.31
+258.31
+3.00
+
+MH2-10A
+mØ @ 0.50%
+
+BLOCK 271
+(0.3m RESERVE)
+
+73.1m - 250
+
+260.16
+256.36
+3.80
+
+260.53
+257.31
+3.22
+
+74.9m - 375mmØ @ 0.3%
+
+ST. 'J'
+
+261.37
+257.77
+3.60
+87.0m - 250m
+
+8.5m - 250mmØ
+@ 1.00%
+
+mØ @ 0.50%
+
+261.11
+257.39
+3.72
+
+LANE 'C'
+
+MH2-8A
+
+EXISTING
+WOODLOT &
+WETLAND
+
+72.9m - 250m
+MH1-16A
+
+261.58
+258.29
+3.29
+
+257.88
+3.00
+
+0%
+
+mØ @ 1.00
+%
+
+MH1-15A
+
+mmØ @ 0.5
+
+68.8m - 250
+m
+
+STREET 'K
+'
+
+262.05
+259.05
+3.00
+
+260.38
+256.60
+3.78
+
+260.75
+257.53
+3.22
+
+10
+
+20.0m - 250
+
+MH1-14A
+
+261.13
+257.87
+3.26
+
+Y4
+
+33.2m - 250m
+mØ
+@ 1.00%
+
+STREET 'I' 1
+
+120.0m - 250mmØ @ 0.50%
+
+MH1-11A
+
+STREET 'K'
+
+261.88
+258.69
+3.19
+
+BLOCK 269
+(0.3m RESERVE)
+
+WA
+
+(OPEN
+SPACE)
+
+BLOCK 263
+(OPEN
+SPACE)
+
+MH1-13A
+
+98.2m - 250mmØ @ 1.0%
+
+MH1-10A
+
+260.61
+256.20
+4.41
+
+H
+HIG
+
+261.38
+258.17
+BLOCK 264
+3.21
+
+260.94
+257.38
+3.56
+
+261.39
+258.39
+3.00
+
+HURONTARIO STREET
+
+BLOCK
+258
+(PARK)
+
+BLOCK 255
+(COMMERCIAL)
+
+.50% MH1-12A
+
+BLOCK 262
+(GREENLAND
+CORRIDOR)
+
+260.96
+256.49
+4.47
+
+257.00
+253.26
+3.74
+
+COLLINGWOOD AVENUE
+
+MH1-42A
+
+@ 0.3%
+
+261.91
+258.58
+3.33
+
+BLOCK 255 FLOWS DISCHARGE
+INTO MH1-12A.
+
+75mmØ
+
+MH1-7A
+
+120.0m - 250mmØ @ 0.50%
+72.2m - 250mmØ @ 0.40%
+
+11.3m - 250mmØ @ 0.50%
+
+STREET 'O'
+
+33.3m - 250mmØ @ 0.50%
+
+MH1-9A
+
+MH1-5
+A
+
+108.1m - 250mmØ @ 0.50%
+
+FUTURE
+RESIDENTIAL
+
+73.0m - 250mmØ @ 0.40%
+
+261.38
+256.81
+4.54
+
+262.26
+259.26
+3.00
+
+MH1-6
+A
+
+262.05
+258.70
+3.35
+
+STREET 'O'
+
+0mmØ @ 0
+
+MH1-2A
+
+49.2m - 250mmØ @ 1.00%
+
+BLOCK 259
+ENVIRONMENTAL POLICY AREA
+
+120.0m - 250mmØ @ 0.50%
+
+111.2m - 30
+
+262.25
+259.25
+3.00
+
+EXT FLOWS NO. 1
+AREA = 25.12ha
+TOTAL POP. = 2010
+DESIGN FLOW = 30.2 L/s
+AS PER URBANTECH SANITARY DRAINAGE FIGURE 802
+AND SANITARY DESIGN SHEET DATED DEC 2018
+
+262.84
+257.01
+5.84
+
+82.6m - 250mmØ @ 1.00%
+
+MH1-1A
+
+STUB 1-3A
+
+48.5m - 3
+
+EXISTING WOODLOT & WETLAND
+
+FUTURE
+PARK
+
+AREA SIZE
+
+EXTERNAL FLOWS
+
+OUTLET NO. 4
+EX MH
+EX PIPE = 300mmØ
+EX DOWNSTREAM INV. = 252.75m
+AVAILABLE CAPACITY = 68.6 L/s
+AS PER URBANTECH SANITARY
+DRAINAGE DRAWING 802 AND
+SANITARY DESIGN SHEET DATED
+DECEMBER 2018
+
+253.26
+250.26
+3.0
+
+PROPOSED TOP OF GROUND (m)
+PROPOSED DOWNSTREAM
+SANITARY OBVERT (m)
+COVER (m)
+SITE BOUNDARY
+
+PROJECT No.
+
+SCALE: 1:1250
+
+SANITARY DRAINAGE PLAN
+FUNCTIONAL SERVICING REPORT
+CALEDON 410 DEVELOPMENT - MAYFIELD WEST PHASE 2, TOWN OF CALEDON
+
+DATE:
+
+16109
+
+AUGUST 2019
+
+DESIGNED BY: AK
+
+DRAWN BY:
+
+AK
+
+CHECKED BY: AA
+
+CHECKED BY: AA
+
+FIGURE No.
+
+SAN01
+
+TOWN OF CALEDON
+TMIG Ltd
+8800 Dufferin Street
+Suite 200, Vaughan
+L4K 0C5
+
+MH1‐4A
+MH1‐9A
+
+MH1‐5A
+MH1‐6A
+MH1‐7A
+MH1‐8A
+
+MH1‐6A
+MH1‐7A
+MH1‐8A
+MH1‐9A
+
+STREET B
+
+MH1‐9A
+
+MH1‐12A
+
+STREET K
+
+MH1‐10A
+MH1‐11A
+
+MH1‐11A
+MH1‐12A
+
+STREET B
+
+MH1‐12A
+
+MH1‐23A
+
+0.44
+
+78
+
+STREET I
+
+MH1‐13A
+MH1‐14A
+
+MH1‐14A
+MH1‐16A
+
+0.32
+0.68
+
+56
+119
+
+STREET K
+
+MH1‐15A
+
+MH1‐16A
+
+STREET I
+
+MH1‐16A
+
+MH1‐18A
+
+STREET L
+
+MH1‐17A
+
+MH1‐18A
+
+STREET I
+
+MH1‐18A
+
+MH1‐20A
+
+0.35
+
+STREET M
+
+MH1‐19A
+
+MH1‐20A
+
+STREET I
+
+MH1‐20A
+
+STREET N
+
+P
+
+Actual
+Velocity at
+Design Flow
+
+STUB 1‐3A
+MH1‐4A
+
+Area (ha)
+
+Population Area (ha) Population
+
+Full Flow
+Velocity
+
+25.120
+
+Section Area (ha)
+
+Full Flow
+Capacity
+
+STUB 1‐3A
+
+Population
+
+16109
+
+Grade
+
+MH605B
+
+Inv
+
+Road / Park
+
+FILE NO:
+Sewer Data
+Pipe
+Diameter
+
+MH1‐2A
+MH1‐4A
+
+MH#
+
+Commercial
+
+Flow Data
+Length
+
+MH1‐1A
+MH1‐2A
+
+Street O
+
+Inv
+
+Miscellaneous Area
+
+AUG 2019
+
+Total Design
+Flow (L/s)
+
+Row Dwellings
+
+Commercial
+
+DATE:
+
+Infiltration
+Flow
+
+Single Family (greater
+than 10m frontage)
+
+To
+
+Section
+Area (ha)
+0.650
+0.810
+
+MH#
+
+AA
+
+Total Area
+
+Residential
+
+Total
+Population
+
+905-738-5700
+
+From
+
+CHECKED BY:
+
+CALEDON 410 - FIELDGATE
+Sanitary Network 1
+
+Location
+
+Street
+
+AK
+
+Minimum
+Residential
+Flow
+
+PHONE:
+
+SANITARY SEWER DESIGN
+
+PREPARED BY:
+
+Residential
+Flow
+
+ADDRESS:
+
+Peaking
+Factor
+
+CONSULTING FIRM:
+
+Percent
+Full
+
+(L/s)
+
+(L/s)
+
+(ha)
+
+(L/s)
+
+(L/s)
+
+(m)
+
+(mm)
+
+(%)
+
+(L/s)
+
+(m/s)
+
+(m/s)
+
+%
+
+82.6
+120.0
+
+250
+250
+
+1.00
+0.50
+
+59.5
+42.0
+
+1.2
+0.9
+
+1.0
+0.8
+
+22.1%
+31.6%
+
+33
+41
+
+33
+74
+
+4.0
+4.0
+
+0.5
+1.0
+
+13.0
+13.0
+
+0.65
+1.46
+
+0.1
+0.3
+
+13.1
+13.3
+
+2010
+
+2010
+
+3.6
+
+25.2
+
+25.1
+
+25.12
+
+5.0
+
+30.2
+
+2010
+2084
+
+3.6
+3.6
+
+25.2
+26.1
+
+25.1
+25.1
+
+25.19
+26.80
+
+5.0
+5.4
+
+30.3
+31.4
+
+33.3
+73.0
+
+250
+250
+
+0.50
+0.40
+
+42.0
+37.6
+
+0.9
+0.8
+
+0.0
+0.9
+
+72.0%
+83.6%
+
+13
+13
+46
+87
+
+4.0
+4.0
+4.0
+4.0
+
+0.2
+0.2
+0.6
+1.2
+
+13.0
+13.0
+13.0
+13.0
+
+0.26
+0.30
+0.95
+1.77
+
+0.1
+0.1
+0.2
+0.4
+
+13.1
+13.1
+13.2
+13.4
+
+49.2
+11.3
+108.1
+120.0
+
+250
+250
+250
+250
+
+1.00
+0.50
+0.50
+0.50
+
+59.5
+42.0
+42.0
+42.0
+
+1.2
+0.9
+0.9
+0.9
+
+1.0
+0.8
+0.8
+0.8
+
+21.9%
+31.1%
+31.4%
+31.8%
+
+0.15
+
+2171
+
+3.6
+
+27.1
+
+25.1
+
+28.71
+
+5.7
+
+32.8
+
+72.2
+
+250
+
+0.40
+
+37.6
+
+0.8
+
+0.9
+
+87.2%
+
+0.25
+
+27
+53
+
+4.0
+4.0
+
+0.4
+0.7
+
+13.0
+13.0
+
+0.78
+1.29
+
+0.2
+0.3
+
+13.2
+13.3
+
+98.2
+120.0
+
+250
+250
+
+1.00
+0.50
+
+59.5
+42.0
+
+1.2
+0.9
+
+1.0
+0.8
+
+22.1%
+31.5%
+
+2584
+
+3.5
+
+31.7
+
+29.6
+
+36.09
+
+7.2
+
+38.9
+
+111.2
+
+300
+
+0.50
+
+68.4
+
+1.0
+
+1.0
+
+56.9%
+
+56
+175
+
+4.0
+4.0
+
+0.8
+2.5
+
+13.0
+13.0
+
+0.32
+1.00
+
+0.1
+0.2
+
+13.1
+13.2
+
+33.2
+120.0
+
+250
+250
+
+1.00
+0.50
+
+59.5
+42.0
+
+1.2
+0.9
+
+1.0
+0.8
+
+22.0%
+31.4%
+
+22
+
+4.0
+
+0.3
+
+13.0
+
+0.43
+
+0.1
+
+13.1
+
+68.8
+
+250
+
+1.00
+
+59.5
+
+1.2
+
+1.0
+
+22.0%
+
+253
+
+4.0
+
+3.5
+
+13.0
+
+1.75
+
+0.4
+
+13.4
+
+72.9
+
+250
+
+0.50
+
+42.0
+
+0.9
+
+0.8
+
+31.7%
+
+27
+
+4.0
+
+0.4
+
+13.0
+
+0.54
+
+0.1
+
+13.1
+
+78.5
+
+250
+
+1.00
+
+59.5
+
+1.2
+
+1.0
+
+22.0%
+
+61
+
+341
+
+4.0
+
+4.8
+
+13.0
+
+2.64
+
+0.5
+
+13.5
+
+73.1
+
+250
+
+0.50
+
+42.0
+
+0.9
+
+0.8
+
+32.2%
+
+0.47
+
+82
+
+82
+
+4.0
+
+1.1
+
+13.0
+
+0.47
+
+0.1
+
+13.1
+
+83.8
+
+250
+
+1.00
+
+59.5
+
+1.2
+
+1.0
+
+22.0%
+
+MH1‐22A
+
+0.21
+
+37
+
+460
+
+4.0
+
+6.4
+
+13.0
+
+3.32
+
+0.7
+
+13.7
+
+42.9
+
+250
+
+0.50
+
+42.0
+
+0.9
+
+0.8
+
+32.5%
+
+MH1‐21A
+
+MH1‐22A
+
+0.46
+
+81
+
+81
+
+4.0
+
+1.1
+
+13.0
+
+0.46
+
+0.1
+
+13.1
+
+86.2
+
+250
+
+1.00
+
+59.5
+
+1.2
+
+1.0
+
+22.0%
+
+STREET I
+
+MH1‐22A
+
+MH1‐23A
+
+0.38
+
+67
+
+608
+
+3.9
+
+8.4
+
+13.0
+
+4.16
+
+0.8
+
+13.8
+
+74.0
+
+250
+
+1.00
+
+59.5
+
+1.2
+
+1.0
+
+23.3%
+
+STREET B
+
+MH1‐23A
+
+MH1‐29A
+
+0.81
+
+41
+
+0.14
+
+3233
+
+3.4
+
+38.7
+
+36.1
+
+41.20
+
+8.2
+
+46.9
+
+79.9
+
+300
+
+0.50
+
+68.4
+
+1.0
+
+1.0
+
+68.6%
+
+SPINE ROAD (TIM MANLEY BLVD)
+
+MH1‐24A
+MH1‐25A
+
+MH1‐25A
+MH1‐29A
+
+0.36
+
+18
+
+0.45
+0.36
+
+18
+18
+
+4.0
+4.0
+
+0.3
+0.3
+
+13.0
+13.0
+
+0.81
+1.17
+
+0.2
+0.2
+
+13.2
+13.2
+
+81.7
+89.8
+
+250
+250
+
+1.00
+0.50
+
+59.5
+42.0
+
+1.2
+0.9
+
+1.0
+0.8
+
+22.1%
+31.5%
+
+SPINE ROAD (TIM MANLEY BLVD)
+
+MH1‐26A
+MH1‐27A
+MH1‐28A
+
+MH1‐27A
+MH1‐28A
+MH1‐29A
+
+124
+308
+481
+
+4.0
+4.0
+4.0
+
+1.7
+4.3
+6.7
+
+13.0
+13.0
+13.0
+
+0.71
+1.76
+2.75
+
+0.1
+0.4
+0.6
+
+13.1
+13.4
+13.6
+
+68.6
+120.0
+120.0
+
+250
+250
+250
+
+1.00
+0.50
+0.50
+
+59.5
+42.0
+42.0
+
+1.2
+0.9
+0.9
+
+1.0
+0.8
+0.8
+
+22.1%
+31.8%
+32.2%
+
+STREET B
+
+MH1‐29A
+
+MH1‐33A
+
+3732
+
+3.4
+
+43.9
+
+41.5
+
+45.23
+
+9.0
+
+53.0
+
+80.1
+
+375
+
+0.35
+
+103.7
+
+0.9
+
+0.9
+
+51.1%
+
+STREET H
+
+MH1‐30A
+MH1‐31A
+MH1‐32A
+
+MH1‐31A
+MH1‐32A
+MH1‐33A
+
+58
+207
+338
+
+4.0
+4.0
+4.0
+
+0.8
+2.9
+4.7
+
+13.0
+13.0
+13.0
+
+0.33
+1.18
+1.93
+
+0.1
+0.2
+0.4
+
+13.1
+13.2
+13.4
+
+74.8
+120.0
+120.0
+
+250
+250
+250
+
+1.00
+0.50
+0.50
+
+59.5
+42.0
+42.0
+
+1.2
+0.9
+0.9
+
+1.0
+0.8
+0.8
+
+22.0%
+31.5%
+31.8%
+
+INFORMATION FROM URBANTECH FSR SAN DESIGN SHEET DEC 2018
+EXTERNAL FLOWS NO. 1
+URBANTECH MH605B TO STUB
+80 POP / HA
+STREET B
+STREET O
+
+0.07
+0.15
+0.260
+
+13
+0.04
+
+0.650
+0.820
+
+0.530
+0.510
+
+0.430
+
+33
+41
+
+27
+26
+282
+
+22
+0.32
+
+0.540
+
+5.64
+
+56
+
+27
+
+0.71
+1.05
+0.99
+
+124
+184
+173
+0.11
+
+0.33
+0.85
+0.75
+
+58
+149
+131
+
+G:\Projects\2016\16109 ‐ Caledon 410 ‐ Fieldgate\Design\Sanitary\2019 08 01 ‐ 16109 ‐ SAN Design Sheet.xlsx
+
+Page 1
+
+TOWN OF CALEDON
+TMIG Ltd
+8800 Dufferin Street
+Suite 200, Vaughan
+L4K 0C5
+
+Area (ha)
+
+P
+
+0.12
+
+4070
+
+Population Area (ha) Population
+
+Actual
+Velocity at
+Design Flow
+
+Section Area (ha)
+
+Full Flow
+Velocity
+
+Population
+
+Full Flow
+Capacity
+
+Section
+Area (ha)
+
+16109
+
+Grade
+
+Inv
+
+Road / Park
+
+FILE NO:
+Sewer Data
+Pipe
+Diameter
+
+MH#
+
+Commercial
+
+Flow Data
+Length
+
+Inv
+
+Row Dwellings
+
+Miscellaneous Area
+
+AUG 2019
+
+Total Design
+Flow (L/s)
+
+Single Family (greater
+than 10m frontage)
+
+To
+
+Commercial
+
+DATE:
+
+Infiltration
+Flow
+
+MH#
+
+AA
+
+Total Area
+
+Residential
+
+Total
+Population
+
+905-738-5700
+
+From
+
+CHECKED BY:
+
+CALEDON 410 - FIELDGATE
+Sanitary Network 1
+
+Location
+
+Street
+
+AK
+
+Minimum
+Residential
+Flow
+
+PHONE:
+
+SANITARY SEWER DESIGN
+
+PREPARED BY:
+
+Residential
+Flow
+
+ADDRESS:
+
+Percent
+Full
+
+(L/s)
+
+(L/s)
+
+(ha)
+
+(L/s)
+
+(L/s)
+
+(m)
+
+(mm)
+
+(%)
+
+(L/s)
+
+(m/s)
+
+(m/s)
+
+%
+
+3.3
+
+47.4
+
+46.7
+
+47.28
+
+9.5
+
+56.9
+
+68.0
+
+375
+
+0.35
+
+103.7
+
+0.9
+
+1.0
+
+54.9%
+
+6
+30
+56
+
+4.0
+4.0
+4.0
+
+0.1
+0.4
+0.8
+
+13.0
+13.0
+13.0
+
+0.11
+0.58
+1.09
+
+0.0
+0.1
+0.2
+
+13.0
+13.1
+13.2
+
+20.0
+100.0
+120.0
+
+250
+250
+250
+
+1.00
+0.50
+0.50
+
+59.5
+42.0
+42.0
+
+1.2
+0.9
+0.9
+
+1.0
+0.8
+0.8
+
+21.9%
+31.2%
+31.4%
+
+Peaking
+Factor
+
+CONSULTING FIRM:
+
+STREET B
+
+MH1‐33A
+
+MH1‐37A
+
+STREET G
+
+MH1‐34A
+MH1‐35A
+MH1‐36A
+
+MH1‐35A
+MH1‐36A
+MH1‐37A
+
+STREET B
+
+MH1‐37A
+
+MH1‐38A
+
+0.00
+
+4126
+
+3.3
+
+48.0
+
+46.7
+
+48.37
+
+9.7
+
+57.7
+
+6.0
+
+375
+
+0.30
+
+96.0
+
+0.9
+
+0.9
+
+60.1%
+
+PROPOSED 8M WIDE EASEMENT
+
+MH1‐38A
+MH1‐39A
+MH1‐40A
+
+MH1‐39A
+MH1‐40A
+MH1‐41A
+
+0.05
+0.09
+0.08
+
+4126
+4126
+4298
+
+3.3
+3.3
+3.3
+
+48.0
+48.0
+49.8
+
+46.7
+46.7
+49.2
+
+48.42
+48.51
+52.02
+
+9.7
+9.7
+10.4
+
+57.7
+57.7
+60.2
+
+74.9
+100.3
+100.3
+
+375
+375
+375
+
+0.30
+0.30
+0.30
+
+96.0
+96.0
+96.0
+
+0.9
+0.9
+0.9
+
+0.9
+0.9
+0.9
+
+60.1%
+60.1%
+62.7%
+
+MH1‐41A
+MH1‐42A
+
+MH1‐42A
+Outlet NO. 4
+
+0.02
+0.01
+
+4298
+4298
+
+3.3
+3.3
+
+49.8
+49.8
+
+49.2
+49.2
+
+52.04
+52.05
+
+10.4
+10.4
+
+60.2
+60.2
+
+48.5
+44.2
+
+375
+375
+
+0.30
+0.30
+
+96.0
+96.0
+
+0.9
+0.9
+
+0.9
+0.9
+
+62.7%
+62.7%
+
+HURONTARIO STREET
+HIGHWOOD ROAD
+
+0.11
+0.47
+0.51
+
+3.43
+
+172
+
+NOTES
+
+Region of Peel standards
+
+Single Family (greater than 10m frontage) = 50 persons/ha
+Single Family (less than 10m frontage) / Semi Detached = 70 persons/ha
+Row Dwellings = 175 persons/ha
+Apartments = 475 persons/ha
+Residential Flows = 302.8 L/c/d
+Commercial = 50 persons/ha
+Light Industrial = 70 persons/ha
+Institutional (Junior Public School) = 600 persons/ha
+Institutional (Senior Public School) = 900 persons/ha
+Institutional (Secondary School) = 1500 persons/ha
+
+6
+24
+26
+
+P.F. = 1 + 1 +
+
+14
+
+TOWN OF CALEDON
+
+4 + (pop) ^ 0.5
+
+Residential Flows
+Domestic Sewage Flows for <1000 ppl
+Extraneous Flows
+
+302.8 L/c/d
+0.013 m3/s
+0.2 L/ha/s
+
+SANITARY SEWER DESIGN SHEET
+
+NO.
+
+2 SECOND SUBMISSION
+1 FIRST SUBMISSION
+REVISION
+
+G:\Projects\2016\16109 ‐ Caledon 410 ‐ Fieldgate\Design\Sanitary\2019 08 01 ‐ 16109 ‐ SAN Design Sheet.xlsx
+
+Aug-19
+Dec-17
+
+DATE
+
+SCALE: N.T.S.
+AUTH
+
+DRAWN BY: AK
+
+Date:
+FILE: 16109
+
+8/1/2019
+DWG NO: SAN
+
+Page 2
+
+TOWN OF CALEDON
+CONSULTING FIRM:
+
+TMIG Ltd
+8800 Dufferin Street
+Suite 200, Vaughan
+L4K 0C5
+
+SANITARY SEWER DESIGN
+
+Area (ha)
+
+P
+
+STREET E
+
+MH2‐1A
+MH2‐2A
+MH2‐3A
+MH2‐4A
+MH2‐5A
+
+MH2‐2A
+MH2‐3A
+MH2‐4A
+MH2‐5A
+MH2‐7A
+
+STREET D
+
+MH2‐6A
+MH2‐7A
+
+MH2‐7A
+MH2‐11A
+
+0.14
+0.20
+
+SPINE ROAD (TIM MANLEY BLVD)
+
+MH2‐8A
+MH2‐9A
+
+MH2‐9A
+MH2‐10A
+
+0.28
+0.74
+
+STREET C
+
+MH2‐10A
+MH2‐11A
+MH2‐12A
+
+MH2‐11A
+MH2‐12A
+MH2‐17A
+
+0.50
+0.56
+
+STREET F
+
+MH2‐13A
+MH2‐14A
+MH2‐15A
+MH2‐16A
+MH2‐17A
+
+MH2‐14A
+MH2‐15A
+MH2‐16A
+MH2‐17A
+MH2‐18A
+
+STREET C
+
+MH2‐18A
+
+Outlet NO.3
+
+4
+14
+7
+45
+
+Actual
+Velocity at
+Design Flow
+
+Area (ha) Population
+
+Full Flow
+Velocity
+
+Section Area
+Population
+(ha)
+
+Full Flow
+Capacity
+
+Population
+
+Road
+
+Grade
+
+Section
+Area (ha)
+0.08
+0.28
+0.14
+0.89
+
+Commercial
+
+16109
+
+Pipe
+Diameter
+
+Inv
+
+Row Dwellings
+
+FILE NO:
+Sewer Data
+Length
+
+MH#
+
+Flow Data
+Total Design
+Flow (L/s)
+
+Inv
+
+Miscellaneous Area
+
+AUG 2019
+
+Infiltration
+Flow
+
+MH#
+
+Single Family (greater
+than 10m frontage)
+
+To
+
+Commercial
+
+DATE:
+
+Total Area
+
+Residential
+
+From
+
+AA
+
+Minimum
+Residential
+Flow
+
+Street
+
+CHECKED BY:
+
+Residential
+Flow
+
+Location
+
+Total
+Population
+
+905-738-5700
+
+PHONE:
+
+AK
+
+CALEDON 410 - FIELDGATE
+Sanitary Network 2
+
+Peaking
+Factor
+
+ADDRESS:
+
+PREPARED BY:
+
+Percent
+Full
+
+(L/s)
+
+(L/s)
+
+(ha)
+
+(L/s)
+
+(L/s)
+
+(m)
+
+(mm)
+
+(%)
+
+(L/s)
+
+(m/s)
+
+(m/s)
+
+%
+
+4
+18
+25
+70
+70
+
+4.0
+4.0
+4.0
+4.0
+4.0
+
+0.1
+0.3
+0.4
+1.0
+1.0
+
+13.0
+13.0
+13.0
+13.0
+13.0
+
+0.08
+0.36
+0.50
+1.39
+1.39
+
+0.0
+0.1
+0.1
+0.3
+0.3
+
+13.0
+13.1
+13.1
+13.3
+13.3
+
+8.5
+43.5
+23.2
+109.5
+17.5
+
+250
+250
+250
+250
+250
+
+1.0
+0.4
+0.4
+0.4
+0.4
+
+59.5
+37.6
+37.6
+37.6
+37.6
+
+1.2
+0.8
+0.8
+0.8
+0.8
+
+1.0
+0.7
+0.7
+0.7
+0.7
+
+21.9%
+34.8%
+34.8%
+35.3%
+35.3%
+
+25
+35
+
+25
+130
+
+4.0
+4.0
+
+0.4
+1.8
+
+13.0
+13.0
+
+0.14
+1.74
+
+0.0
+0.3
+
+13.0
+13.3
+
+39.4
+60.3
+
+250
+250
+
+1.0
+0.5
+
+59.5
+42.0
+
+1.2
+0.9
+
+1.0
+0.8
+
+21.9%
+31.7%
+
+49
+130
+
+49
+179
+
+4.0
+4.0
+
+0.7
+2.5
+
+13.0
+13.0
+
+0.28
+1.02
+
+0.1
+0.2
+
+13.1
+13.2
+
+35.6
+87
+
+250
+250
+
+1.0
+0.5
+
+59.5
+42.0
+
+1.2
+0.9
+
+1.0
+0.8
+
+22.0%
+31.4%
+
+25
+28
+
+179
+334
+362
+
+4.0
+4.0
+4.0
+
+2.5
+4.7
+5.1
+
+13.0
+13.0
+13.0
+
+1.16
+3.40
+3.96
+
+0.2
+0.7
+0.8
+
+13.2
+13.7
+13.8
+
+80.1
+74.9
+74.9
+
+250
+250
+250
+
+0.5
+0.5
+0.5
+
+42.0
+42.0
+42.0
+
+0.9
+0.9
+0.9
+
+0.8
+0.8
+0.8
+
+31.5%
+32.5%
+32.8%
+
+0.12
+0.64
+0.17
+0.29
+0.13
+
+6
+32
+9
+14
+7
+
+6
+38
+47
+61
+430
+
+4.0
+4.0
+4.0
+4.0
+4.0
+
+0.1
+0.5
+0.7
+0.9
+6.0
+
+13.0
+13.0
+13.0
+13.0
+13.0
+
+0.12
+0.76
+0.93
+1.22
+5.30
+
+0.0
+0.2
+0.2
+0.2
+1.1
+
+13.0
+13.2
+13.2
+13.2
+14.1
+
+20
+94.8
+13.7
+65.5
+30.4
+
+250
+250
+250
+250
+250
+
+1.0
+0.5
+0.5
+0.5
+0.5
+
+59.5
+42.0
+42.0
+42.0
+42.0
+
+1.2
+0.9
+0.9
+0.9
+0.9
+
+1.0
+0.8
+0.8
+0.8
+0.8
+
+21.9%
+31.3%
+31.4%
+31.5%
+33.4%
+
+0.09
+
+5
+
+435
+
+4.0
+
+6.1
+
+13.0
+
+5.39
+
+1.1
+
+14.1
+
+20.2
+
+250
+
+0.5
+
+42.0
+
+0.9
+
+0.8
+
+33.5%
+
+0.14
+
+Region of Peel standards
+
+Single Family (greater than 10m frontage) = 50 persons/ha
+Single Family (less than 10m frontage) / Semi Detached = 70 persons/ha
+Row Dwellings = 175 persons/ha
+Apartments = 475 persons/ha
+Residential Flows = 302.8 L/c/d
+Commercial = 50 persons/ha
+Light Industrial = 70 persons/ha
+Institutional (Junior Public School) = 600 persons/ha
+Institutional (Senior Public School) = 900 persons/ha
+Institutional (Secondary School) = 1500 persons/ha
+
+TOWN OF CALEDON
+
+SANITARY SEWER DESIGN SHEET
+
+NO.
+
+2 SECOND SUBMISSION
+1 FIRST SUBMISSION
+REVISION
+
+G:\Projects\2016\16109 ‐ Caledon 410 ‐ Fieldgate\Design\Sanitary\2019 08 01 ‐ 16109 ‐ SAN Design Sheet.xlsx
+
+Aug-19
+Dec-17
+
+DATE
+
+SCALE: N.T.S.
+AUTH
+
+DRAWN BY: AK
+
+Date:
+FILE: 16109
+
+8/1/2019
+DWG NO: SAN
+
+Page 3
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+August 2019 __________________________________________________________________________________________________________________
+
+APPENDIX B3
+Stormwater Management
+
+THE MUNICIPAL INFRASTRUCTURE GROUP LTD __________________________________________________________________________ PAGE 23
+
+92.3m - 450mmØ @ 0.40%
+
+92.5m - 105
+
+MH2-2
+
+27.2m - 375m
+
+mØ @ 0.50%
+
+100 YEAR
+CAPTURE
+AREA
+
+p: 905.738.5700
+.............................................................................................
+The Municipal Infrastructure Group Ltd f: 905.738.0065
+
+VIRGINIA DR.
+
+MH2-1
+
+EXISTING 375mmØ
+STM PIPE @ 0.50%
+
+8800 Dufferin Street,
+Suite 200
+Vaughan, ON
+L4K 0C5
+
+11.1m - 600m
+
+mØ @ 0.50%
+
+BLOCK 272
+(0.3m RESERVE)
+
+259.71
+257.78
+258.50
+1.93
+2
+56.84
+MH2-17
+1.66
+
+9.5m - 525mmØ @ 0.50%
+
+MH2-9
+
+MH1-45
+
+0.5%
+
+258.85
+257.49
+1.36
+MH1-57
+mmØ @ 0.3
+0%
+
+259.83
+258.38
+1.45
+
+MH2-24
+
+110.0m - 75
+
+HEADWALL
+
+0mmØ @ 0
+
+258.37
+257.23
+1.12
+
+MH2-20
+
+258.31
+257.04
+1.68
+
+MH2-19
+
+23.4m - 375mmØ @ 0.30%
+
+70.5m - 900mmØ @ 0.40%
+MH1-11
+
+MH1-15
+STREET 'B
+
+'
+
+mØ @ 0.30
+%
+LANE 'E'
+MH1-26
+
+258.97
+257.26
+1.71
+
+258.46
+256.96
+1.66
+
+MH1-58
+
+mmØ @ 0.3
+
+0%
+
+7:1
+4:1
+HEADWALL
+
+1
+
+0%
+
+47.5m - 240
+0
+CONC. BO x1200
+X @ 0.50%
+
+mmØ @ 0.3
+
+260.09
+258.48
+1.61
+
+0%MH1-38
+
+259.80
+258.65
+1.15
+
+MH1-29
+
+BLOCK 257
+(INSTITUTIONAL)
+
+259.29
+257.70
+1.59
+
+STORM SEWER WITHIN SPINE
+ROAD TO BE CONSTRUCTED BY
+THE MAYFIELD WEST
+LANDOWNERS GROUP AS A PART
+54.8m - 240
+OF SPINE SERVICING WORKS
+0
+CONC. BO x1200
+X @ 0.50%
+
+259.12
+257.38
+1.74
+
+14.9m - 24
+0
+CONC. BO 0x1200
+X @ 0.50%
+15.4m - 24
+0
+CONC. BO 0x1200
+X @ 0.50%
+25
+
+MH1-60
+
+2
+
+SEDIMENT
+DRYING
+AREA
+(1700m²)
+
+4:1
+
+MH1-39
+57.3m - 600
+
+mmØ @ 0.3
+
+40.6m - 240
+0
+CONC. BO x1200
+X @ 0.50%
+
+33.1m 2400x1200
+CONC. BO
+X@
+0.50%
+MH1-55
+MH1-54
+
+13.6m - 975mmØ
+BLOCK 267
+WET CELL (SWM POND NO.9)
+@ 0.40%
+
+LEGEND
+PROPOSED
+HIGHWAY 410 &
+HURONTARIO
+STREET
+INTERSECTION
+(BY OTHERS)
+
+EXISTING 300mmØ STM PIPE @ 1.00%
+
+37.0m - 975mmØ
+@ 0.40%
+29.1m - 750mmØ
+@ 0.30%
+
+EXISTING
+RESIDENTIAL
+
+EMERGENCY
+SPILLWAY
+
+EXISTING 1200mmØ STORM
+SEWER @ 0.3%
+
+STORM SEWER
+TRIBUTARY AREA
+CATCHBASIN
+
+FUTURE
+INSTITUTIONAL
+
+100 YEAR FLOW CAPTURE AREA
+
+SURPLUS
+M.T.O. LANDS
+
+9.9m - 240
+0
+CONC. BO x1200
+X @ 0.50%
+
+AREA
+RUN OFF COEFFICIENT
+
+BLOCK 257 AND FUTURE
+INSTITUTIONAL LANDS WILL
+DRAIN TO THE SWM POND IN THE
+SUBJECT SITE UNDER INTERIM
+AND ULTIMATE CONDITIONS.
+FLOWS DISCHARGE INTO MH1-53.
+
+EXTERNAL FLOWS
+
+253.26
+250.26
+3.0
+
+5.0m ACCESS ROAD(258.50m)
+
+258.67
+256.86
+1.81
+
+STORM MAINTENANCE HOLE
+
+7.65
+256.91
+0.74
+
+7:1
+4:1
+
+9.3m - 375mmØ @ 0.30%
+
+259.08
+257.11
+1.97
+
+89.3m - 37
+5m
+
+MH1-51
+0mmØ @
+0.30%
+
+Ø @ 0.30%
+
+258.94
+257.09
+1.85
+
+FUTURE
+TRANSIT
+HUB
+FUTURE
+COMMERCIAL
+
+259.49
+257.94
+1.55
+
+11.7m - 75
+
+'
+
+259.73
+258.39
+1.34
+
+.30%
+
+MH2-18
+
+57.1m - 750mmØ @ 0.30%
+MH2-21
+MH2-22
+
+MH1-47
+.40%
+
+259.21
+257.74
+1.47
+
+MH1-50
+
+89.4m - 525
+
+4:1
+
+0%
+
+mmØ @ 0
+
+STREET 'G
+
+FUT COMMERCIAL BLOCK
+WILL DRAIN TO THE SWM
+POND IN THE SUBJECT
+SITE UNDER INTERIM AND
+ULTIMATE CONDITIONS.
+FLOWS DISCHARGE INTO
+MH1-39.
+
+BLOCK 256
+(TRANSIT HUB)
+
+92.8m - 825
+
+mmØ @ 0.4
+
+7.6m - 450
+
+258.74
+257.26
+1.48
+
+31.5m 2400x120
+0
+CONC. BO
+@ 0.40% X
+
+260.12
+258.20
+1.92
+
+259.40
+257.97
+1.43
+
+89.7m - 450
+
+15.4m - 52
+5mm
+
+76.6m - 450
+
+258.33
+256.78
+1.55
+
+.40%
+
+BLOCK 268
+(M.T.O. R.O.W. BLOCK)
+
+39.8m - 24
+00x1
+CONC. BO 200
+X@
+0
+.4
+0
+%
+116.3m - 12
+00mmØ @
+MH1-44
+0.40%
+
+mmØ @ 0.4
+0% MH1
+-46
+LANE 'B'
+
+259.76
+258.12
+1.64
+
+257.65
+256.58
+1.07
+
+86.5m - 45
+0mmØ @ 0
+.30%
+STREET 'N
+' MH
+1-24
+
+' MH1-22
+
+0%
+mmØ @ 0.3
+
+mmØ @ 0
+
+MH1-43
+
+259.92
+258.55
+1.37
+
+MH1-36
+
+.40%
+
+BLOCK 256 AND FUT TRANSIT
+HUB WILL DRAIN TO THE SWM
+POND IN THE SUBJECT SITE
+UNDER INTERIM AND ULTIMATE
+CONDITIONS.
+FLOWS DISCHARGE INTO
+MH1-39.
+
+113.5m - 1800x900 CONC.
+BOX @ 0.40%
+
+MH1-28
+
+259.65
+258.43
+1.22
+
+9.7m - 525
+
+0.40%
+
+260.32
+258.77
+1.55
+
+MH1-56
+
+5mmØ @ 0
+
+97.4m - 375
+
+258.45
+1.27
+
+MH2-23
+
+110.0m - 52
+
+LEVARD)
+
+FOREBAY
+12.4m - 825mmØ
+@ 0.50%
+
+83.2m - 45
+0
+
+260.18
+258.90
+1.28
+
+51.4m - 750
+mmØ @ 0.5
+0%
+MH2-12
+MH2-13
+MH1-49
+MH2-16
+STREET 'H
+'
+110.0m - 60
+MH2-14
+13.0m 0mmØ @ 0
+.30%
+750mmØ
+259.72
+@ 0.50%
+
+259.54
+257.42
+2.12
+
+STREET 'M
+
+77.6 - 450m
+mØ @ 0.40
+%
+STREET 'L
+' MH1-20
+
+' MH1
+-18
+
+259.79
+257.48
+2.31
+
+.40%
+
+260.49
+259.00
+1.49
+
+12.5m - 1050mmØ @ 0.30%
+
+259.80
+258.59
+1.21
+
+MH1-27
+
+MH1-35
+
+260.42
+258.70
+1.72
+
+100.6m - 30
+0mmØ @ 0
+.50%
+13.3m - 375m
+mØ @ 1.25%
+
+25mmØ @
+
+'
+
+.0%
+
+260.69
+259.13
+1.58
+
+259.04
+257.13
+1.88
+
+00mmØ @
+
+260.07
+258.72
+1.35
+
+MH1-25
+
+NLEY BOU
+
+120.0m - 12
+
+260.32
+258.99
+1.33
+
+37.0m - 10
+5
+28.2m - 10 0mmØ @ 0.30%
+50mmØ @
+0.30%
+
+0mmØ @ 0
+
+AD (TIM M
+A
+
+260.25
+258.86
+1.39
+
+MH1-23
+
+0.30%
+
+110.0m - 45
+
+SPINE RO
+
+MH1-42
+
+260.45
+258.87
+1.64
+
+105.6m - 8
+
+260.50
+258.46
+2.04
+
+0mmØ @ 1
+
+261.38
+259.00
+2.38
+
+STREET 'K
+
+Ø @ 0.40%
+
+0%
+
+64.5m - 45
+
+17.9m - 450m
+mØ @ 0.50%
+
+LANE 'D'
+
+0.40%
+
+260.48
+257.79
+2.69
+
+MH2-11
+
+mmØ @ 0.5
+
+MH2-3
+
+261.27
+258.91
+2.36
+
+BLOCK 271
+(0.3m RESERVE)
+
+79.4m - 675
+
+MH2-10
+
+STREET 'C
+
+'
+
+EXISTING
+WOODLOT &
+WETLAND
+
+'
+
+MH2-4
+
+mØ @ 0.50%
+
+260.64
+257.96
+2.68
+
+STREET 'D
+
+80.0m - 60
+
+STREET 'E
+
+261.06
+258.67
+2.39
+
+50mmØ @
+
+.25%
+L
+A
+28.5m - 375m NE 'A'
+mØ @ 1.25%
+
+0%
+
+BLOCK 260
+(ENVIRONMENTAL
+POLICY AREA)
+
+WAY
+
+RAIL
+
+Date :Aug 01, 2019 - 5:46pm, Edit By : akhan
+
+Y
+OBR
+
+MH2-5
+
+260.66
+258.24
+2.42
+
+120.0m - 10
+
+0mmØ @ 1
+
+MH2-7
+
+MH2-6
+
+47.1m - 525m
+
+BLOCK 266
+(OPEN SPACE)
+
+103.1m - 30
+
+34.4m - 300mmØ @ 2.00%
+
+260.93
+258.87
+2.06
+
+File : G:\Projects\2016\16109 - Caledon 410 - Fieldgate\DRAWINGS\Servicing\2019 07 10 - Pipes Figure.dwg, Layout : STM
+
+MH2-8
+
+0mmØ @ 0
+.5
+
+BLOCK 265
+(OPEN
+SPACE)
+
+260.71
+258.19
+2.52
+
+0%
+
+261.02
+259.21
+1.81
+
+260.78
+258.36
+2.42
+
+ROBERTSON
+DAVIES DR.
+
+BLOCK 261
+(GREENLAND
+CORRIDOR)
+
+.40%
+
+%
+
+S
+43.0m - 10 TREET 'I'
+50mmØ @
+
+MH1-34
+
+mmØ @ 0.4
+
+5mmØ @ 1
+
+261.24
+259.65
+1.59
+
+mmØ @ 0.3
+
+MH1-41
+
+0mmØ @ 0
+
+261.77
+260.09
+1.68
+
+110.0m - 45
+0
+
+261.29
+259.81
+1.48
+
+73.0m - 975
+
+7.4m - 600mmØ @ 0.30%
+
+MH1-37
+
+MH1-40
+
+260.72
+259.34
+1.38
+
+MH1-33
+
+0%
+
+261.38
+259.69
+1.69
+
+MH1-21
+73.0m - 900
+mmØ @ 0.3
+0%
+
+261.72
+259.74
+1.98
+
+260.52
+259.12
+1.40
+
+BLOCK 255
+(COMMERCIAL)
+OVERLAND FLOWS FROM BLOCK 268 DRAIN TO THE EAST UNDER
+EXISTING CONDITIONS. UNDER ULTIMATE BUILD OUT
+CONDITIONS, THIS BLOCK WILL BE PART OF M.T.O. R.O.W. AND
+SERVICED THROUGH THEIR STORM SEWER SYSTEM.
+THEREFORE, DRAINAGE FROM THIS BLOCK DOES NOT IMPACT
+THE PROPOSED STORM SEWER SYSTEM IN THE SUBJECT SITE.
+BLOCK 269
+(0.3m RESERVE)
+
+260.42
+259.03
+1.39
+
+MH1-14
+
+MH1-48
+
+mØ @ 0.40%
+
+%MH1
+-19
+
+260.74
+259.27
+1.47
+
+260.47
+259.02
+1.45
+
+260.84
+259.50
+1.34
+
+MH1-13
+
+STREET 'K'
+
+260.83
+259.24
+1.59
+
+mØ @ 0.30
+
+114.6m - 600mmØ @ 0.30%
+
+MH1-52
+
+11.9 - 300m
+
+EXTERNAL
+FLOWS NO
+.2
+TO
+TOTAL AR
+EA x RUNO TAL AREA = 4.86 ha
+FF COEFF
+Q (10 YEA ICIE=N3T.23
+T
+R) = 1.07 m
+IM
+E
+O
+F
+CO
+FROM URB
+ANTECH F NCENTRATION =13 ³/s
+.2
+SR DATED
+DECEMBE min
+R 2018
+
+LANE 'C'
+mmØ @ 0.4
+
+80.5m - 325
+
+260.92
+259.40
+1.52
+
+MH1-12
+
+261.11
+259.55
+1.56
+
+MH1-10
+
+MH1-53
+
+MH1-32
+
+2.1m - 825m
+
+261.48
+259.84
+1.64
+
+MH1-59
+
+MH1-31
+
+0%
+
+BLOCK
+258
+(PARK)
+
+.0%
+
+261.80
+260.18
+1.62
+
+261.65
+260.13
+1.52
+
+mmØ @ 0.4
+
+ST. 'J'
+
+MH1-30
+
+mmØ @ 0.4
+0%
+
+MH1-17 9
+
+68.3m - 37
+
+15.2m - 300
+
+57.0m - 375
+
+261.20
+259.46
+1.74
+
+STREET 'I'
+
+261.94
+260.35
+1.59
+
+'
+
+MH1-16
+
+72.2m - 45
+0mm
+
+262.03
+259.96
+2.07
+
+110.0m - 675mmØ @ 0.30%
+
+9.0m - 675mmØ @ 0.30%
+
+110m - 450mmØ @ 0.40%
+
+STREET 'F
+
+261.85
+260.29
+1.56
+
+109.8m - 525mmØ @ 0.40% STREET 'O'
+MH1-9
+
+261.20
+259.81
+1.39
+
+410
+AY
+HW
+
+BLOCK 263
+(OPEN
+SPACE)
+
+260.77
+259.53
+1.24
+
+261.31
+259.91
+1.40
+
+BLOCK 255 WILL DRAIN TO THE SWM POND IN THE
+SUBJECT SITE UNDER INTERIM AND ULTIMATE
+CONDITIONS. FLOWS DISCHARGE INTO MH1-15.
+FLOWS DISCHARGING INTO MH1-15 ARE
+RESTRICTED TO AN OUTFLOW OF 0.68m³/s AS PER
+TMIG SWM REPORT.
+
+HIG
+
+BLOCK 264
+(OPEN
+SPACE)
+
+MH1-3
+
+12.4m - 600mmØ @ 0.40%
+
+MH1-8
+
+261.40
+259.75
+1.65
+
+MH2-15
+
+FUTURE
+RESIDENTIAL
+
+MH1-2
+
+MH1-6
+
+MH1-7
+
+BLOCK 262
+(GREENLAND
+CORRIDOR)
+
+110.0m - 600mmØ @ 0.40%
+
+262.08
+260.41
+1.64
+
+BLOCK 259
+ENVIRONMENTAL POLICY AREA
+
+BLOCK 259 WILL DRAIN TO THE SWM
+POND IN THE SUBJECT SITE UNDER
+INTERIM AND ULTIMATE
+CONDITIONS. LANDS TO BE
+CAPTURED BY A DICB THAT INLETS
+INTO MANHOLE 1-17. TIME OF
+CONCENTRATION = 14.2 MIN.
+
+STREET 'O'
+
+MH1-1
+
+50.8m - 375mmØ @
+0.40%
+
+14.2m - 375mmØ @
+0.40%
+
+261.12
+259.86
+1.26
+
+EXT INTERIM FLOWS NO. 1
+TOTAL AREA = 9.19 ha
+RUNOFF COEFFICIENT = 0.27
+TIME OF CONCENTRATION = 19 MIN.
+Q (10 YEAR) = 0.93 m³/s
+DRAINAGE AREA DRAWN FOLLOWING URBANTECH
+FIGURE 501A DATED DECEMBER 2018
+STORM SERVICING FOR LANDS NORTH OF THE SUBJECT SITE IN THE ULTIMATE
+CONDITION WILL BE PROVIDED THROUGH PONDS NORTH OF THE SUBJECT SITE AS
+SHOWN ON THE URBANTECH DRAWINGS.
+
+MH1-5
+
+262.19
+260.64
+1.55
+
+44.5m - 600mmØ @ 2.50%
+
+261.69
+260.33
+1.36
+
+72.1m - 900mmØ @ 0.65%
+
+262.43
+260.70
+1.73
+
+MH1-4
+
+BLOCK 270 (0.3m RESERVE)
+
+HURONTARIO STREET
+
+EXISTING WOODLOT & WETLAND
+
+FUTURE
+PARK
+
+262.80
+260.93
+1.56
+
+12.7m - 2400x1200
+257.65
+CONC. BOX @ 0.50% 256.81
+
+PROPOSED 8.0m WIDE EASEMENT
+FOR SANITARY SEWER
+
+PROPOSED TOP OF GROUND (m)
+PROPOSED STORM
+DOWNSTREAM OBVERT (m)
+COVER (m)
+SITE BOUNDARY
+
+0.84
+
+PROJECT No.
+
+SCALE: 1:1250
+
+STORM DRAINAGE PLAN
+FUNCTIONAL SERVICING REPORT
+CALEDON 410 DEVELOPMENT - MAYFIELD WEST PHASE 2, TOWN OF CALEDON
+
+DATE:
+
+16109
+
+AUGUST 2019
+
+DESIGNED BY: AK
+
+DRAWN BY:
+
+AK
+
+CHECKED BY: AA
+
+CHECKED BY: AA
+
+FIGURE No.
+
+STM01
+
+TOWN OF CALEDON
+TOWN OF CALEDON
+CONSULTING FIRM:
+
+TMIG LTD
+
+ADDRESS:
+
+8800 Dufferin Street, Suite 200
+Vaughan, ONT
+L4K 0C5
+
+PHONE:
+
+STORM SEWER DESIGN (10 YEAR AND 100 YEAR STORM EVENT)
+
+PREPARED BY:
+
+AK
+
+CHECKED BY:
+
+AA
+
+CALEDON 410 FIELDGATE
+Storm Sewer System 1
+
+AUGUST 2019
+
+DATE:
+
+905-738-5700
+
+16109
+
+FILE NO:
+
+STREET
+
+Upstream
+Manhole
+
+Downstream
+Manhole
+
+STREET O
+
+MH1-1
+MH1-2
+MH1-3
+
+MH1-2
+MH1-3
+MH1-5
+
+EXTERNAL INTERIM DESIGN FLOWS NO. 1 (STREET B)
+
+EXT FLOWS NO. 1
+MH1-4
+
+MH1-4
+MH1-5
+
+STREET B
+
+MH1-5
+
+MH1-11
+
+STREET O
+
+MH1-6
+MH1-7
+MH1-8
+MH1-9
+MH1-10
+
+MH1-7
+MH1-8
+MH1-9
+MH1-10
+MH1-11
+
+STREET B
+
+MH1-11
+
+MH1-15
+
+STREET K
+
+MH1-12
+MH1-13
+MH1-14
+
+MH1-13
+MH1-14
+MH1-15
+
+BLOCK 255 - COMMERCIAL BLOCK FLOWS
+OUTFLOW RATE = 680 L/s
+
+BLOCK 255
+
+MH1-15
+
+STREET B
+
+MH1-15
+
+MH1-29
+
+EXTERNAL NHS FLOWS
+STREET I
+
+NHS
+MH1-16
+MH1-17
+
+MH1-17
+MH1-17
+MH1-19
+
+STREET K
+
+MH1-18
+
+MH1-19
+
+STREET I
+
+MH1-19
+
+MH1-21
+
+STREET L
+
+MH1-20
+
+MH1-21
+
+Area (A) of
+P/RY/C > 4 ha
+(ha) C=0.27
+
+Area (A) of
+P/RY/C < 4 ha
+(ha) C=0.27
+
+Area (A) of
+Area (A) of
+Single Fam.
+Semi Det.
+(ha) C=0.65 (ha) C=0.65
+0.65
+0.79
+
+Area (A) of
+Area (A) of
+Row Dewl. Roads / Comm.
+(ha) C=0.75
+(ha) C=0.9
+
+Runoff
+Coefficient
+0.65
+0.65
+
+9.19
+
+AxR
+this section
+(ha)
+0.422
+0.514
+0.000
+
+Acc. AR
+(ha)
+
+t
+(min)
+
+I (10yr)
+(mm/hr)
+
+Q (10yr)
+(l/s)
+
+I (100yr)
+(mm/hr)
+
+Q (100yr)
+(l/s)
+
+Pipe
+
+Pipe
+(mm)
+
+Grade
+(%)
+
+Capacity
+(l/s)
+
+Velocity
+(m/s)
+
+Length
+(m)
+
+Time
+(min)
+
+Total Time
+(min)
+
+% Capacity
+(10 year)
+
+0.422
+0.936
+0.936
+
+10.00
+11.36
+12.69
+
+134.16
+127.07
+120.81
+
+158.69
+332.99
+316.60
+
+196.54
+187.48
+179.36
+
+232.47
+491.31
+470.03
+
+METRIC
+METRIC
+METRIC
+
+450
+600
+600
+
+0.40
+0.40
+0.40
+
+180.32
+388.34
+388.34
+
+1.13
+1.37
+1.37
+
+92.3
+110.0
+12.4
+
+1.36
+1.33
+0.15
+
+11.36
+12.69
+12.84
+
+88.0%
+85.7%
+81.5%
+
+0.10
+
+0.27
+0.90
+
+2.481
+0.090
+
+2.481
+2.571
+
+19.00
+19.00
+
+98.26
+98.26
+
+682.70
+707.46
+
+149.01
+149.01
+
+1035.24
+1072.79
+
+METRIC
+METRIC
+
+600
+
+2.50
+
+970.84
+
+3.43
+
+44.5
+
+0.22
+
+19.00
+19.22
+
+72.9%
+
+0.15
+
+0.90
+
+0.132
+
+3.640
+
+19.22
+
+97.65
+
+995.11
+
+148.15
+
+1509.80
+
+METRIC
+
+900
+
+0.40
+
+1144.94
+
+1.80
+
+70.5
+
+0.65
+
+19.87
+
+86.9%
+
+0.25
+
+0.65
+
+0.65
+0.82
+
+0.65
+0.65
+
+0.165
+0.000
+0.423
+0.536
+0.000
+
+0.165
+0.165
+0.588
+1.124
+1.124
+
+10.00
+10.84
+11.08
+12.54
+13.96
+
+134.16
+129.66
+128.45
+121.51
+115.44
+
+62.13
+60.05
+211.45
+382.33
+363.22
+
+196.54
+190.80
+189.26
+180.27
+172.28
+
+91.02
+88.36
+311.55
+567.21
+542.07
+
+METRIC
+METRIC
+METRIC
+METRIC
+METRIC
+
+375
+375
+525
+675
+675
+
+0.40
+0.40
+0.40
+0.30
+0.30
+
+110.89
+110.89
+272.00
+460.41
+460.41
+
+1.00
+1.00
+1.26
+1.29
+1.29
+
+50.8
+14.2
+109.8
+110.0
+9.0
+
+0.84
+0.24
+1.46
+1.42
+0.12
+
+10.84
+11.08
+12.54
+13.96
+14.08
+
+56.0%
+54.2%
+77.7%
+83.0%
+78.9%
+
+0.15
+
+0.90
+
+0.132
+
+4.896
+
+19.87
+
+95.83
+
+1313.65
+
+145.62
+
+1996.28
+
+METRIC
+
+900
+
+0.65
+
+1459.52
+
+2.29
+
+72.1
+
+0.52
+
+20.39
+
+90.0%
+
+0.65
+0.65
+
+0.329
+0.333
+0.000
+
+0.329
+0.662
+0.662
+
+10.00
+11.62
+13.22
+
+134.16
+125.79
+118.50
+
+123.55
+233.04
+219.53
+
+196.54
+185.84
+176.32
+
+180.99
+344.28
+326.66
+
+METRIC
+METRIC
+METRIC
+
+450
+600
+600
+
+0.40
+0.30
+0.30
+
+180.32
+336.31
+336.31
+
+1.13
+1.19
+1.19
+
+110.0
+114.6
+7.4
+
+1.62
+1.61
+0.10
+
+11.62
+13.22
+13.33
+
+68.5%
+69.3%
+65.3%
+
+0.45
+
+0.75
+
+0.338
+
+5.895
+
+20.39
+
+94.42
+
+2238.49
+
+143.66
+
+2371.26
+
+METRIC
+
+1800X900
+
+0.40
+
+3246.08
+
+2.11
+
+113.5
+
+0.90
+
+21.29
+
+69.0%
+
+0.26
+0.31
+
+0.27
+0.75
+0.75
+
+1.782
+0.195
+0.233
+
+1.782
+0.195
+2.210
+
+14.20
+10.00
+14.20
+
+114.48
+134.16
+114.48
+
+571.21
+73.25
+708.24
+
+171.01
+196.54
+171.01
+
+853.26
+107.31
+1057.95
+
+METRIC
+METRIC
+METRIC
+
+66.1%
+90.1%
+
+0.65
+
+0.299
+
+0.299
+
+10.00
+
+134.16
+
+112.32
+
+196.54
+
+164.54
+
+METRIC
+
+450
+
+62.3%
+
+0.75
+
+0.180
+
+2.689
+
+15.24
+
+110.49
+
+831.76
+
+165.68
+
+1247.18
+
+METRIC
+
+900
+
+0.65
+
+0.358
+
+0.358
+
+10.00
+
+134.16
+
+134.30
+
+196.54
+
+196.73
+
+METRIC
+
+450
+
+0.51
+0.51
+
+5.57
+
+6.60
+
+0.46
+0.24
+0.55
+
+680.00
+
+375
+825
+
+110.89
+786.22
+
+1.00
+1.47
+
+57.0
+92.1
+
+0.95
+1.04
+
+14.20
+10.95
+15.24
+
+0.40
+
+180.32
+
+1.13
+
+72.2
+
+1.06
+
+11.06
+
+0.30
+
+991.55
+
+1.56
+
+73.0
+
+0.78
+
+16.02
+
+83.9%
+
+0.40
+
+180.32
+
+1.13
+
+77.6
+
+1.14
+
+11.14
+
+74.5%
+79.4%
+
+0.40
+0.30
+
+STREET I
+
+MH1-21
+
+MH1-23
+
+0.25
+
+0.75
+
+0.188
+
+3.234
+
+16.02
+
+107.69
+
+975.03
+
+161.91
+
+1465.86
+
+METRIC
+
+975
+
+0.30
+
+1227.48
+
+1.64
+
+73.0
+
+0.74
+
+16.76
+
+STREET M
+
+MH1-22
+
+MH1-23
+
+0.47
+
+0.75
+
+0.353
+
+0.353
+
+10.00
+
+134.16
+
+132.42
+
+196.54
+
+193.98
+
+METRIC
+
+450
+
+0.30
+
+156.16
+
+0.98
+
+83.2
+
+1.41
+
+11.41
+
+84.8%
+
+STREET I
+
+MH1-23
+
+MH1-25
+
+0.14
+
+0.75
+
+0.105
+
+3.691
+
+16.76
+
+105.17
+
+1086.95
+
+158.49
+
+1637.95
+
+METRIC
+
+1050
+
+0.30
+
+1495.68
+
+1.73
+
+43.0
+
+0.41
+
+17.18
+
+72.7%
+
+STREET N
+
+MH1-24
+
+MH1-25
+
+0.47
+
+0.75
+
+0.353
+
+0.353
+
+10.00
+
+134.16
+
+132.42
+
+196.54
+
+193.98
+
+METRIC
+
+450
+
+0.30
+
+156.16
+
+0.98
+
+86.5
+
+1.47
+
+11.47
+
+84.8%
+
+STREET I
+
+MH1-25
+
+MH1-27
+
+0.11
+
+0.75
+
+0.083
+
+4.126
+
+17.18
+
+103.82
+
+1199.36
+
+156.64
+
+1809.60
+
+METRIC
+
+1050
+
+0.30
+
+1495.68
+
+1.73
+
+37.0
+
+0.36
+
+17.54
+
+80.2%
+
+LANE E
+
+MH1-26
+
+MH1-27
+
+0.18
+
+0.75
+
+0.135
+
+0.135
+
+10.00
+
+134.16
+
+50.71
+
+196.54
+
+74.29
+
+METRIC
+
+375
+
+0.30
+
+96.03
+
+0.87
+
+89.3
+
+1.71
+
+11.71
+
+52.8%
+
+STREET I
+
+MH1-27
+MH1-28
+MH1-29
+
+MH1-28
+MH1-29
+MH1-37
+
+0.09
+
+0.75
+
+0.068
+0.000
+0.062
+
+4.329
+4.329
+10.285
+
+17.54
+17.81
+21.29
+
+102.68
+101.82
+92.11
+
+1244.40
+1234.09
+3332.52
+
+155.08
+153.91
+140.42
+
+1879.52
+1865.38
+4043.87
+
+METRIC
+METRIC
+METRIC
+
+1050
+1050
+2400x1200
+
+0.30
+0.30
+0.40
+
+1495.68
+1495.68
+7257.63
+
+1.73
+1.73
+2.59
+
+28.2
+12.5
+31.5
+
+0.27
+0.12
+0.20
+
+17.81
+17.93
+21.49
+
+83.2%
+82.5%
+45.9%
+
+MH1-30
+MH1-31
+MH1-32
+MH1-33
+MH1-34
+MH1-35
+MH1-36
+MH1-37
+
+MH1-31
+MH1-32
+MH1-33
+MH1-34
+MH1-35
+MH1-36
+MH1-37
+MH1-44
+
+0.018
+0.033
+0.160
+0.318
+0.483
+0.648
+0.648
+11.023
+
+10.00
+10.29
+10.52
+11.86
+13.48
+15.09
+16.55
+21.49
+
+134.16
+132.56
+131.34
+124.64
+117.43
+111.05
+105.89
+91.60
+
+6.76
+12.19
+58.97
+110.93
+158.77
+201.44
+192.07
+3507.19
+
+196.54
+194.51
+192.95
+184.34
+174.92
+166.43
+159.46
+139.71
+
+9.91
+17.89
+86.63
+164.06
+236.49
+301.90
+289.25
+4312.02
+
+METRIC
+METRIC
+METRIC
+METRIC
+METRIC
+METRIC
+METRIC
+METRIC
+
+300
+300
+375
+450
+450
+525
+525
+2400x1200
+
+0.40
+0.40
+0.40
+0.40
+0.40
+0.40
+0.40
+0.40
+
+61.16
+61.16
+110.89
+180.32
+180.32
+272.00
+272.00
+7257.63
+
+0.87
+0.87
+1.00
+1.13
+1.13
+1.26
+1.26
+2.59
+
+15.2
+11.9
+80.5
+110.0
+110.0
+110.0
+9.7
+39.8
+
+0.29
+0.23
+1.34
+1.62
+1.62
+1.46
+0.13
+0.26
+
+10.29
+10.52
+11.86
+13.48
+15.09
+16.55
+16.68
+21.75
+
+11.1%
+19.9%
+53.2%
+61.5%
+88.0%
+74.1%
+70.6%
+48.3%
+
+STREET A (SPINE ROAD)
+
+MH1-38
+MH1-39
+
+MH1-39
+MH1-44
+
+*FROM URBANTECH FSR
+STREET A (SPINE ROAD)
+
+EXT FLOWS NO. 2 MH9-08
+MH1-40
+MH1-41
+MH1-42
+MH1-43
+
+MH1-40
+MH1-41
+MH1-42
+MH1-43
+MH1-44
+
+STREET B
+
+MH1-44
+
+MH1-48
+
+LANE B
+
+MH1-45
+MH1-46
+MH1-47
+
+MH1-46
+MH1-47
+MH1-48
+
+STREET B
+LANE C
+
+LANE D
+
+STEEET B
+
+STREET B
+
+MH1-48
+
+MH1-52
+
+STREET H
+
+MH1-49
+MH1-50
+MH1-51
+
+MH1-50
+MH1-51
+MH1-52
+
+0.07
+
+0.90
+
+0.02
+0.02
+
+0.90
+0.90
+0.75
+0.75
+0.75
+0.75
+
+0.10
+
+0.90
+
+0.018
+0.015
+0.128
+0.158
+0.165
+0.165
+0.000
+0.090
+
+0.79
+1.14
+
+0.90
+0.90
+
+0.711
+1.026
+
+0.711
+1.737
+
+10.00
+10.80
+
+134.16
+129.87
+
+267.09
+631.61
+
+196.54
+191.07
+
+391.26
+929.29
+
+METRIC
+METRIC
+
+600
+825
+
+0.30
+0.30
+
+336.31
+786.22
+
+1.19
+1.47
+
+57.3
+92.8
+
+0.80
+1.05
+
+10.80
+11.85
+
+79.4%
+80.3%
+
+0.75
+0.75
+0.75
+0.75
+
+0.495
+0.638
+0.593
+0.548
+
+3.230
+3.725
+4.363
+4.955
+5.503
+
+13.18
+13.80
+14.58
+15.58
+16.50
+
+118.68
+116.08
+113.01
+109.27
+106.07
+
+1073.37
+1210.67
+1380.37
+1516.00
+1634.23
+
+176.57
+173.12
+169.04
+164.03
+159.71
+
+1596.86
+1805.68
+2064.86
+2275.79
+2460.61
+
+METRIC
+METRIC
+METRIC
+METRIC
+METRIC
+
+900
+1050
+1050
+1200
+1200
+
+0.50
+0.40
+0.40
+0.40
+0.40
+
+1280.09
+1727.07
+1727.07
+2465.78
+2465.78
+
+2.01
+1.99
+1.99
+2.18
+2.18
+
+75.3
+92.5
+120.0
+120.0
+116.3
+
+0.62
+0.77
+1.00
+0.92
+0.89
+
+13.80
+14.58
+15.58
+16.50
+17.39
+
+83.9%
+70.1%
+79.9%
+61.5%
+66.3%
+
+0.90
+
+0.090
+
+18.353
+
+21.75
+
+90.97
+
+5354.64
+
+138.82
+
+7133.55
+
+METRIC
+
+2400x1200
+
+0.50
+
+8114.28
+
+2.90
+
+47.5
+
+0.27
+
+22.02
+
+66.0%
+
+0.75
+0.75
+
+0.165
+0.135
+0.000
+
+0.165
+0.300
+0.300
+
+10.00
+11.62
+12.94
+
+134.16
+125.79
+119.74
+
+61.98
+105.67
+100.58
+
+196.54
+185.84
+177.95
+
+90.80
+156.10
+149.48
+
+METRIC
+METRIC
+METRIC
+
+375
+450
+450
+
+0.40
+0.40
+0.40
+
+110.89
+180.32
+180.32
+
+1.00
+1.13
+1.13
+
+97.4
+89.7
+7.6
+
+1.62
+1.32
+0.11
+
+11.62
+12.94
+13.05
+
+55.9%
+58.6%
+55.8%
+
+0.90
+
+0.063
+
+18.716
+
+22.02
+
+90.31
+
+5412.33
+
+137.88
+
+7225.63
+
+METRIC
+
+2400x1200
+
+0.50
+
+8114.28
+
+2.90
+
+40.6
+
+0.23
+
+22.26
+
+66.7%
+
+0.75
+0.75
+
+0.585
+0.503
+0.000
+
+0.585
+1.088
+1.088
+
+10.00
+11.54
+12.87
+
+134.16
+126.16
+120.03
+
+219.76
+384.16
+365.48
+
+196.54
+186.31
+178.33
+
+321.93
+567.32
+543.02
+
+METRIC
+METRIC
+METRIC
+
+600
+750
+750
+
+0.30
+0.30
+0.30
+
+336.31
+609.77
+609.77
+
+1.19
+1.38
+1.38
+
+110.0
+110.0
+11.7
+
+1.54
+1.33
+0.14
+
+11.54
+12.87
+13.01
+
+65.3%
+63.0%
+59.9%
+
+0.17
+0.21
+0.22
+0.22
+
+0.66
+0.85
+0.79
+0.73
+0.10
+0.22
+0.18
+
+0.07
+0.78
+0.67
+
+G:\Projects\2016\16109 - Caledon 410 - Fieldgate\Design\Storm\2019 08 01 - 16109 - Caledon 410 - Fieldgate - STM Design Sheet.xls
+
+Page 1 of 3
+
+TOWN OF CALEDON
+TOWN OF CALEDON
+CONSULTING FIRM:
+
+TMIG LTD
+
+ADDRESS:
+
+8800 Dufferin Street, Suite 200
+Vaughan, ONT
+L4K 0C5
+
+PHONE:
+
+STORM SEWER DESIGN (10 YEAR AND 100 YEAR STORM EVENT)
+
+PREPARED BY:
+
+AK
+
+CHECKED BY:
+
+AA
+
+CALEDON 410 FIELDGATE
+Storm Sewer System 1
+
+AUGUST 2019
+
+DATE:
+
+905-738-5700
+
+16109
+
+FILE NO:
+
+STREET
+
+Upstream
+Manhole
+
+Downstream
+Manhole
+
+STREET B
+
+MH1-52
+MH1-53
+MH1-54
+MH1-55
+
+MH1-53
+MH1-54
+MH1-55
+MH1-59
+
+STREET G
+
+MH1-56
+MH1-57
+MH1-58
+
+MH1-57
+MH1-58
+MH1-59
+
+SWMPOND 9
+
+MH1-59
+MH1-60
+
+MH1-60
+Headwall 1
+
+Area (A) of
+P/RY/C > 4 ha
+(ha) C=0.27
+
+Area (A) of
+P/RY/C < 4 ha
+(ha) C=0.27
+
+Area (A) of
+Single Fam.
+(ha) C=0.65
+
+Area (A) of
+Semi Det.
+(ha) C=0.65
+
+Area (A) of
+Area (A) of
+Row Dewl. Roads / Comm.
+(ha) C=0.75
+(ha) C=0.9
+0.10
+3.33
+
+Runoff
+Coefficient
+0.90
+
+0.24
+
+0.65
+
+0.43
+0.42
+
+0.65
+0.65
+
+AxR
+this section
+(ha)
+0.090
+2.997
+0.156
+0.000
+
+Acc. AR
+(ha)
+
+t
+(min)
+
+I (10yr)
+(mm/hr)
+
+Q (10yr)
+(l/s)
+
+I (100yr)
+(mm/hr)
+
+Q (100yr)
+(l/s)
+
+Pipe
+
+Pipe
+(mm)
+
+Grade
+(%)
+
+Capacity
+(l/s)
+
+Velocity
+(m/s)
+
+Length
+(m)
+
+Time
+(min)
+
+Total Time
+(min)
+
+% Capacity
+(10 year)
+
+19.893
+22.890
+23.046
+23.046
+
+22.26
+22.57
+22.66
+22.85
+
+89.75
+89.00
+88.80
+88.36
+
+5678.92
+6384.41
+6410.39
+6381.95
+
+137.09
+136.04
+135.76
+135.14
+
+7636.26
+8719.34
+8760.51
+8720.23
+
+METRIC
+METRIC
+METRIC
+METRIC
+
+2400x1200
+2400x1200
+2400X1200
+2400x1200
+
+0.50
+0.50
+0.50
+0.50
+
+8114.28
+8114.28
+8114.28
+8114.28
+
+2.90
+2.90
+2.90
+2.90
+
+54.8
+14.9
+33.1
+15.4
+
+0.32
+0.09
+0.19
+0.09
+
+22.57
+22.66
+22.85
+22.94
+
+70.0%
+78.7%
+79.0%
+78.7%
+
+0.280
+0.273
+0.000
+
+0.280
+0.553
+0.553
+
+10.00
+11.30
+12.67
+
+134.16
+127.35
+120.91
+
+104.99
+197.00
+187.05
+
+196.54
+187.84
+179.49
+
+153.81
+290.59
+277.67
+
+METRIC
+METRIC
+METRIC
+
+450
+525
+525
+
+0.30
+0.30
+0.30
+
+156.16
+235.56
+235.56
+
+0.98
+1.09
+1.09
+
+76.6
+89.4
+15.4
+
+1.30
+1.37
+0.24
+
+11.30
+12.67
+12.91
+
+67.2%
+83.6%
+79.4%
+
+0.000
+0.000
+
+23.599
+23.599
+
+22.94
+22.99
+
+88.16
+88.03
+
+6505.21
+6496.60
+
+134.85
+134.66
+
+8910.22
+8898.01
+
+METRIC
+METRIC
+
+2400x1200
+2400x1200
+
+0.50
+0.50
+
+8114.28
+8114.28
+
+2.90
+2.90
+
+9.9
+12.7
+
+0.06
+0.07
+
+22.99
+23.07
+
+80.2%
+80.1%
+
+.
+
+TOWN OF CALEDON
+
+RUNOFF COEFFICIENTS ( R )
+
+DIVISION
+0.27: PARK - RAILYARDS - CEMETERIES (OVER 4 HA)
+0.65: SINGLE FAMILY RESIDENTIAL (SUBURBAN)
+0.65: SEMI DETACHED (SUBURBAN)
+
+0.75: ROW DWELLINGS
+0.76: SCHOOL
+0.90: ROAD - COMMERCIAL
+
+STORM SEWER DESIGN SHEET
+2
+1
+NO.
+
+Second Submission
+First Submission
+REVISION
+
+G:\Projects\2016\16109 - Caledon 410 - Fieldgate\Design\Storm\2019 08 01 - 16109 - Caledon 410 - Fieldgate - STM Design Sheet.xls
+
+Aug-19
+Dec-17
+DATE
+
+AUTH
+
+SCALE: N.T.S.
+DRAWN BY: AK
+
+16109
+
+DATE: AUGUST 2019
+DWG. NO.: STM
+
+Page 2 of 3
+
+TOWN OF CALEDON
+CONSULTING FIRM:
+
+TMIG LTD
+
+ADDRESS:
+
+8800 Dufferin Street, Suite 200
+Vaughan, ONT
+L4K 0C5
+
+PHONE:
+
+STORM SEWER DESIGN (10 YEAR AND 100 YEAR STORM EVENT)
+
+PREPARED BY:
+
+AK
+
+CHECKED BY:
+
+AA
+
+DATE:
+
+CALEDON 410 FIELDGATE
+Storm Sewer System 2
+
+905-738-5700
+Upstream
+Manhole
+
+Downstream
+Manhole
+
+STREET E (100 year capture)
+100 - 10 YEAR FLOW FROM MH2-1 TO MH2-2
+
+MH2-1
+
+MH2-2
+
+MH2-2
+MH2-3
+MH2-4
+MH2-5
+
+MH2-3
+MH2-4
+MH2-5
+MH2-7
+
+MH2-6
+
+MH2-7
+
+STREET D
+
+16109
+
+FILE NO:
+
+STREET
+
+STREET E
+
+AUGUST 2019
+
+Area (A) of Area (A) of Area (A) of
+Area (A) of
+P/RY/C P/RY/C < 4 Single Fam.
+Semi Det.
+(ha)
+ha (ha)
+(ha) C=0.65 (ha) C=0.65
+0.30
+
+Area (A) of
+Row Dewl.
+(ha) C=0.75
+
+Area (A) of
+Road / Comm
+(ha) C=0.9
+
+Runoff
+Coefficient
+0.65
+
+AxR
+this section
+(ha)
+0.197
+
+Acc. AR
+(ha)
+
+t
+(min)
+
+I (10yr)
+(mm/hr)
+
+0.65
+0.65
+0.65
+
+0.118
+0.173
+0.409
+0.000
+
+0.315
+0.488
+0.897
+0.897
+
+10.40
+10.64
+11.20
+12.07
+
+131.96
+130.72
+127.86
+123.66
+
+74.01
+34.41
+150.67
+212.85
+355.50
+344.96
+
+0.13
+
+0.75
+
+0.098
+
+0.098
+
+10.00
+
+134.16
+
+36.63
+
+0.18
+0.27
+0.63
+
+0.197
+
+10.00
+
+134.16
+
+Q (10yr)
+(l/s)
+
+I (100yr)
+(mm/hr)
+
+Q (100yr)
+(l/s)
+
+Pipe
+
+Pipe
+(mm)
+
+Grade
+(%)
+
+Capacity
+(l/s)
+
+Velocity
+(m/s)
+
+Length
+(m)
+
+Time
+(min)
+
+Total Time
+(min)
+
+% Capacity
+(10 year)
+
+196.54
+
+108.41
+
+METRIC
+
+375
+
+0.50
+
+123.98
+
+1.12
+
+27.2
+
+0.40
+
+10.40
+
+59.7%
+
+193.75
+192.16
+188.50
+183.07
+
+170.69
+262.32
+473.38
+459.76
+
+METRIC
+METRIC
+METRIC
+METRIC
+
+450
+525
+600
+600
+
+0.50
+0.50
+0.50
+0.50
+
+201.60
+304.10
+434.17
+434.17
+
+1.27
+1.40
+1.54
+1.54
+
+17.9
+47.1
+80.0
+11.1
+
+0.24
+0.56
+0.87
+0.12
+
+10.64
+11.20
+12.07
+12.19
+
+74.7%
+70.0%
+81.9%
+79.5%
+
+196.54
+
+53.65
+
+METRIC
+
+300
+
+2.00
+
+136.76
+
+1.93
+
+34.4
+
+0.30
+
+10.30
+
+26.8%
+
+MH2-7
+
+MH2-12
+
+0.25
+
+0.75
+
+0.188
+
+1.182
+
+12.19
+
+123.10
+
+441.80
+
+182.35
+
+603.45
+
+METRIC
+
+675
+
+0.50
+
+594.39
+
+1.66
+
+79.4
+
+0.80
+
+12.98
+
+74.3%
+
+LANE A
+
+MH2-8
+
+MH2-10
+
+0.19
+
+0.75
+
+0.143
+
+0.143
+
+10.00
+
+134.16
+
+53.53
+
+196.54
+
+78.42
+
+METRIC
+
+300
+
+1.25
+
+108.11
+
+1.53
+
+103.1
+
+1.12
+
+11.12
+
+49.5%
+
+LANE B
+
+MH2-9
+
+MH2-10
+
+0.21
+
+0.75
+
+0.158
+
+0.158
+
+10.00
+
+134.16
+
+59.17
+
+196.54
+
+86.67
+
+METRIC
+
+300
+
+0.50
+
+68.38
+
+0.97
+
+100.6
+
+1.73
+
+11.73
+
+86.5%
+
+STREET C
+
+MH2-10
+MH2-11
+
+MH2-11
+MH2-12
+
+0.90
+
+0.117
+0.000
+
+0.417
+0.417
+
+11.73
+12.00
+
+125.23
+123.97
+
+146.29
+144.81
+
+185.11
+183.47
+
+216.23
+214.31
+
+METRIC
+METRIC
+
+375
+375
+
+1.25
+1.25
+
+196.03
+196.03
+
+1.77
+1.77
+
+28.5
+13.3
+
+0.27
+0.12
+
+12.00
+12.13
+
+74.6%
+73.9%
+
+STREET D
+
+MH2-12
+MH2-13
+MH2-14
+MH2-15
+
+MH2-13
+MH2-14
+MH2-15
+MH2-23
+
+0.75
+
+0.203
+0.000
+0.390
+0.000
+
+1.802
+1.802
+2.192
+2.192
+
+12.98
+13.46
+13.59
+14.51
+
+119.53
+117.48
+116.97
+113.26
+
+637.38
+627.04
+752.22
+729.39
+
+177.68
+174.98
+174.31
+169.38
+
+896.31
+882.69
+1069.66
+1039.36
+
+METRIC
+METRIC
+METRIC
+METRIC
+
+750
+750
+825
+825
+
+0.50
+0.50
+0.50
+0.50
+
+787.21
+787.21
+1015.01
+1015.01
+
+1.78
+1.78
+1.90
+1.90
+
+51.4
+13.0
+105.6
+12.4
+
+0.48
+0.12
+0.93
+0.11
+
+13.46
+13.59
+14.51
+14.62
+
+81.0%
+79.7%
+74.1%
+71.9%
+
+STREET C
+
+MH2-16
+MH2-17
+MH2-18
+
+STREET C (100 year capture)
+100 - 10 YEAR FLOW FROM MH2-19 TO MH2-20
+
+STREET F
+
+0.13
+
+0.27
+0.60
+
+0.65
+
+MH2-17
+MH2-18
+MH2-21
+
+0.58
+0.40
+
+0.65
+0.65
+
+0.375
+0.260
+0.000
+
+0.375
+0.635
+0.635
+
+10.00
+10.72
+11.32
+
+134.16
+130.31
+127.26
+
+140.79
+231.62
+226.20
+
+196.54
+191.64
+187.73
+
+206.25
+340.62
+333.68
+
+METRIC
+METRIC
+METRIC
+
+375
+450
+525
+
+1.00
+1.00
+0.50
+
+175.33
+285.11
+304.10
+
+1.59
+1.79
+1.40
+
+68.3
+64.5
+9.5
+
+0.72
+0.60
+0.11
+
+10.72
+11.32
+11.43
+
+80.3%
+81.2%
+74.4%
+
+MH2-19
+
+MH2-20
+
+0.24
+
+0.65
+
+0.156
+
+0.156
+
+10.00
+
+134.16
+
+196.54
+
+85.85
+
+METRIC
+
+375
+
+0.30
+
+96.03
+
+0.87
+
+23.4
+
+0.45
+
+10.45
+
+61.0%
+
+MH2-20
+
+MH2-21
+
+0.000
+
+0.156
+
+10.45
+
+131.73
+
+58.60
+27.25
+57.54
+
+193.44
+
+84.50
+
+METRIC
+
+375
+
+0.30
+
+96.03
+
+0.87
+
+9.3
+
+0.18
+
+10.63
+
+59.9%
+
+STREET F
+
+MH2-21
+MH2-22
+
+MH2-22
+MH2-23
+
+0.286
+0.137
+
+1.077
+1.213
+
+11.43
+12.12
+
+126.71
+123.41
+
+409.27
+446.51
+
+187.02
+182.75
+
+563.86
+620.85
+
+METRIC
+METRIC
+
+750
+750
+
+0.30
+0.30
+
+609.77
+609.77
+
+1.38
+1.38
+
+57.1
+29.1
+
+0.69
+0.35
+
+12.12
+12.47
+
+67.1%
+73.2%
+
+SWM POND 9
+
+MH2-23
+MH2-24
+
+MH2-24
+Headwall 2
+
+0.000
+0.000
+
+3.405
+3.405
+
+14.62
+14.95
+
+112.83
+111.60
+
+1137.38
+1125.59
+
+168.81
+167.16
+
+1609.42
+1593.66
+
+METRIC
+METRIC
+
+975
+975
+
+0.40
+0.40
+
+1417.37
+1417.37
+
+1.90
+1.90
+
+37.0
+13.6
+
+0.33
+0.12
+
+14.95
+15.07
+
+80.2%
+79.4%
+
+0.44
+0.21
+
+0.65
+0.65
+
+TOWN OF CALEDON
+RUNOFF COEFFICIENTS ( R )
+0.27: PARK - RAILYARDS - CEMETERIES (OVER 4 HA)
+0.65: SINGLE FAMILY RESIDENTIAL (SUBURBAN)
+0.65: SEMI DETACHED (SUBURBAN)
+
+DIVISION
+0.75: ROW DWELLINGS
+0.76: SCHOOL
+0.90: ROAD - COMMERCIAL
+
+STORM SEWER DESIGN SHEET
+2
+1
+NO.
+
+Second Submission
+First Submission
+REVISION
+
+G:\Projects\2016\16109 - Caledon 410 - Fieldgate\Design\Storm\2019 08 01 - 16109 - Caledon 410 - Fieldgate - STM Design Sheet.xls
+
+Aug-19
+Dec-17
+DATE
+
+AUTH
+
+SCALE: N.T.S.
+DRAWN BY: AK
+
+16109
+
+DATE: AUGUST 2019
+DWG. NO.: STM
+
+Page 3 of 3
+
+Caledon 410
+Mayfield West Phase 2 – Town of Caledon
+__________________________________________________________________________________________________________________ August 2019
+
+APPENDIX C
+Preliminary Grading Plan
+
+PAGE 24 ___________________________________________________________________________ THE MUNICIPAL INFRASTRUCTURE GROUP LTD
+
+FUTURE EMPLOYMENT LAND (BY OTHERS)
+
+EXISTING WOODLOT & WETLAND
+
+FUTURE
+PARK
+
+BLOCK 270 (0.3m RESERVE)
+
+262.83
+262.41
+
+HP
+%
+
+261.42
+262.98
+STREET 'O' 0.5%
+
+1.8%
+
+1.0
+
+262.03
+261.77
+
+262.35
+262.35
+
+%
+
+5%
+
+0.
+
+0.5%
+
+0.
+5%
+
+262.25
+261.86
+
+262.00
+261.46
+
+4.5%
+
+262.45
+261.58
+
+262.23
+262.23
+
+1.0
+
+261.50
+261.90
+261.12
+262.23
+0.5%
+
+0.5%
+
+261.29
+261.91
+
+BLOCK 259
+ENVIRONMENTAL POLICY AREA
+
+261.79
+261.72
+
+261.26
+261.11
+
+1.0
+
+260.93
+261.19
+
+0.5%
+
+%
+
+261.74
+261.21
+
+5%
+0.
+
+0.5%
+
+261.46
+262.54
+
+STREET 'O'
+
+BLOCK 255
+(COMMERCIAL)
+
+260.75
+261.06
+
+0.5%
+
+0.5%
+
+0%
+
+0.5%
+
+p: 905.738.5700
+
+The Municipal Infrastructure Group Ltd f: 905.738.0065
+
+HP
+259.67
+258.55
+
+0.5%
+1.0%
+
+0.
+5%
+0.5%
+
+LANE 'E'
+
+'
+
+0.5%
+
+STREET 'B
+
+'
+STREET 'N
+
+0.6%
+
+259.70
+259.28
+1.1%
+
+0.5%
+
+259.58
+258.50
+
+0.5%
+
+0.5%
+
+STREET 'H
+
+LP
+
+259.69
+259.47
+
+259.95
+259.57
+
+LANE 'B'
+
+259.63
+258.56
+0.5%
+
+259.99
+258.94
+
+259.38
+258.94
+
+'
+
+HP
+
+0.5%
+
+259.52
+258.51
+
+STREET 'F
+
+259.36
+258.67
+
+258.76
+258.14
+258.96
+258.78
+
+'
+
+259.70
+258.22
+
+0.5%
+
+259.75
+259.10
+
+258.75
+258.75
+
+258.60
+258.39
+
+258.43
+258.39
+
+0.5%
+
+HP
+
+0.5%
+
+0.5%
+
+STREET 'G
+0.5%
+
+258.91
+258.19
+
+'
+
+LP
+
+259.76
+259.47
+
+259.65
+259.36
+
+260.17
+260.56
+
+HP
+
+258.42
+257.89
+
+0.5%
+0.5%
+
+259.67
+258.95
+0.5%
+
+260.15
+258.59
+
+LP
+
+1.5%
+
+259.56
+259.08
+
+BLOCK 257
+(INSTITUTIONAL)
+
+SPINE ROAD TO BE
+CONSTRUCTED BY THE
+MAYFIELD WEST LANDOWNERS
+GROUP AS A PART OF SPINE
+SERVICING WORKS
+
+258.85
+258.40
+258.61
+258.07
+0.5%
+
+FUTURE
+COMMERCIAL259.85
+259.48
+
+260.34
+260.24
+
+0.5%
+
+259.20
+259.21
+
+0.5%
+
+FUTURE
+TRANSIT
+HUB
+
+260.15
+259.51
+
+259.38
+259.22
+
+0.5%
+
+1.0%
+
+1.2%
+
+STREET 'C
+5.0%
+
+260.38
+259.57
+
+0.5%
+
+260.50
+258.79
+
+259.08
+258.45
+
+260.24
+259.08
+
+LP
+
+1.2%
+
+0.5%
+
+VARD)
+
+260.77
+258.73
+
+260.64
+258.87
+
+259.01
+258.44
+258.90
+258.30
+
+LEY BOULE
+
+259.90
+259.28
+
+LP
+
+260.10
+259.98
+
+260.40
+260.08
+
+259.09
+258.72
+
+PROPOSED
+HIGHWAY 410 &
+HURONTARIO
+STREET
+INTERSECTION
+(BY OTHERS)
+PROPOSED HURONTARIO INTERSECTION
+ELEVATION OF 260.15 AS PER EA PREPARED BY
+WOOD
+
+%
+
+1.0
+
+FUTURE
+INSTITUTIONAL
+
+LEGEND
+SURPLUS
+M.T.O. LANDS
+
+OVERLAND FLOW
+
+LP
+1.
+
+0%
+
+BLOCK 267
+(SWM POND NO.9)
+
+HP
+LP
+
+HIGH POINT
+
+0.5%
+
+SLOPE (%)
+
+258.67
+257.92
+
+245.10
+249.91
+
+258.41
+258.41
+
+OVERLAND FLOWS DURING 100-YR STORMS FROM THIS SECTION
+WILL BE CAPTURED IN CATCHBASINS AND CONVEYED TO THE SWM EXISTING
+RESIDENTIAL
+POND. SEE DRAWING STM01 FOR DETAILS
+
+LOW POINT
+
+3:1 SLOPING
+
+5.0m ACCESS ROAD(258.50m)
+ROBERTSON
+DAVIES DR.
+
+BLOCK 272
+(0.3m RESERVE)
+
+258.33
+258.33
+
+D (TIM MAN
+
+0.5%
+
+HP
+
+%
+4.1
+
+260.10
+260.10
+
+SPINE ROA
+
+259.92
+258.93
+
+259.62
+260.41
+
+0.5%
+
+1.2%
+
+LP
+
+260.76
+259.97
+
+0.5%
+
+260.46
+258.74
+
+'
+
+%
+
+' 0.5
+STREET 'E
+0.5%
+
+0.5%
+
+261.23
+259.60
+
+HP
+
+VIRGINIA DR.
+
+Date :Aug 01, 2019 - 3:47pm, Edit By : akhan
+
+AY
+ILW
+
+Y RA
+OBR
+
+261.01
+259.83
+
+0.5%
+
+.............................................................................................
+
+260.64
+258.77
+
+0.5%
+
+STREET 'D
+'
+
+BIOSWALE
+
+8800 Dufferin Street,
+Suite 200
+Vaughan, ON
+L4K 0C5
+
+260.91
+259.02
+
+260.46
+258.70
+
+260.63
+259.94
+
+261.37
+259.90
+
+BLOCK 266
+(OPEN SPACE)
+
+0.5%
+
+260.64
+259.09
+
+260.78
+259.90
+0.5%
+
+BLOCK 260
+(ENVIRONMENTAL
+POLICY AREA)
+
+BLOCK 271
+(0.3m RESERVE)
+
+0.5%
+
+0.5%
+
+OVERLAND FLOWS DURING
+100-YR STORMS FROM THIS
+SECTION WILL BE CAPTURED IN
+CATCHBASINS AND CONVEYED
+TO THE SWM POND. SEE
+DRAWING STM01 FOR DETAILS
+
+EXISTING
+WOODLOT &
+WETLAND
+
+HP
+
+BLOCK 256
+(TRANSIT HUB)
+
+259.81
+260.26
+
+0.5%
+
+261.00
+259.06
+
+260.81
+260.62
+
+5%
+0.
+
+260.93
+259.14
+
+0.5%
+
+LANE 'A' 0.9%
+
+260.90
+260.12
+
+File : G:\Projects\2016\16109 - Caledon 410 - Fieldgate\DRAWINGS\Grading\2019-07-22 - Grading Figure.dwg, Layout : GR01
+
+260.83
+258.94
+
+1.
+
+BLOCK 265
+(OPEN
+SPACE)
+
+261.06
+260.15
+
+HP
+
+%
+1.0
+
+0.7%
+
+BLOCK 261
+(GREENLAND
+CORRIDOR)
+
+261.37
+259.93
+
+3.0%
+
+260.97
+259.03
+
+LANE 'D'
+
+259.78
+260.59
+
+0.5%
+
+LP
+
+1.0%
+
+260.04
+260.24
+
+0.5%
+
+261.44
+259.03
+
+0.5%
+
+261.12
+259.80
+
+260.43
+260.65
+
+260.19
+260.44
+
+1.2%
+
+3.0%
+
+260.97
+259.10
+
+0.5%
+
+261.21
+260.18
+
+0.5%
+
+0.5%
+
+261.23
+258.88
+
+259.98
+260.32
+
+0.5%
+
+260.80
+259.82
+
+260.76
+259.34
+
+BLOCK 268
+(M.T.O. R.O.W. BLOCK)
+
+260.52
+260.86
+
+259.89
+260.51
+
+260.22
+260.62
+
+0.5%
+
+261.36
+260.37
+
+260.33
+260.42
+
+1.0%
+
+0.5%
+
+STREET 'I'
+
+3.0%
+
+261.76
+260.42
+
+0.6%
+1.8%
+
+262.13
+262.13
+
+261.27
+259.59
+
+0.5%
+
+261.63
+260.67
+
+LANE 'C'
+
+3.0%
+
+0.6%
+
+261.12
+259.48
+
+260.07
+260.96
+
+0.5%
+
+261.41
+260.02
+
+ST. 'J'
+
+0.5%
+%
+1.0
+
+261.79
+260.91
+
+260.28
+260.78
+
+5%
+0.
+
+1.2%
+
+0.9%
+
+260.65
+259.98
+
+261.17
+259.62
+
+261.02
+261.04
+
+0.5%
+
+261.43
+260.48
+
+0.5%
+
+260.31
+260.91
+
+260.92
+262.12
+
+0.5%
+
+STREET 'I'
+
+260.90
+261.65
+
+0.5%
+
+HP
+
+260.51
+261.36
+
+0.6%
+
+0.6%
+
+0.6%
+
+%
+
+260.73
+260.75
+
+'
+
+261.12
+260.62
+
+261.01
+259.66
+
+0.5%
+
+1.0
+
+0.5%
+
+260.56
+260.41
+
+STREET 'M
+
+BIOSWALE
+
+261.56
+260.56
+
+0.5%
+
+STREET 'K'
+
+262.02
+261.08
+
+261.85
+261.04
+
+0.5%
+
+5%
+0.
+
+BLOCK 269
+(0.3m RESERVE)
+
+0.5%
+
+0.5%
+
+0.
+5%
+
+0.5%
+
+0.5%
+
+STREET 'L'
+
+HP
+
+%
+
+1.0
+
+STREET 'K
+'
+
+SHANNONTOWN
+
+261.37
+260.91
+
+260.51
+260.55
+
+10
+
+BLOCK 263
+(OPEN
+SPACE)
+
+260.69
+261.06
+
+260.38
+260.46
+
+4
+AY
+HW
+
+261.28
+260.76
+
+261.58
+261.01
+BLOCK 264
+(OPEN
+SPACE)
+
+260.91
+260.93
+
+HIG
+
+FUTURE
+RESIDENTIAL
+
+BLOCK
+258
+(PARK)
+
+0.5%
+
+BLOCK 262
+(GREENLAND
+CORRIDOR)
+
+261.46
+260.87
+
+HURONTARIO STREET
+
+262.03
+262.11
+
+261.54
+262.29
+
+5%
+0.
+
+PROPOSED ELEVATION (m)
+EXISTING ELEVATION (m)
+BIO SWALE
+
+EMERGENCY OVERFLOW
+ELEVATION 285.15m
+
+PROPOSED 8.0m WIDE EASEMENT
+FOR SANITARY SEWER
+
+SITE BOUNDARY
+
+100 YEAR FLOW CAPTURE AREA
+
+PROJECT No.
+
+SCALE: 1:1250
+
+GRADING PLAN
+FUNCTIONAL SERVICING REPORT
+CALEDON 410 DEVELOPMENT - MAYFIELD WEST PHASE 2, TOWN OF CALEDON
+
+DATE:
+
+16109
+
+AUGUST 2019
+
+DESIGNED BY: AK
+
+DRAWN BY:
+
+CHECKED BY:
+
+CHECKED BY: AA
+
+AA
+
+AK
+
+FIGURE No.
+
+GR01
+
+

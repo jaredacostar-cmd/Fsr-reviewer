@@ -1,0 +1,3075 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+December 13th, 2022
+
+SITE SERVICING
+AND
+STORMWATER MANAGEMENT REPORT
+Proposed Travel Stop Development
+(TOWN FILE # SPA 2019‐0065)
+AT
+NE Corner of Hurontario Street & King Street
+Town of Caledon
+Prepared for
+Glen Schnarr & Associates Inc.
+
+Sep 25, 2022
+Nov 26, 2019
+REVISIONS
+
+Issued for 2nd SPA Submission
+Issued for 1st SPA Submission
+
+1109 BRITANNIA ROAD EAST, MISSISSAUGA, ON, L4W 3X1
+TEL: (647)496‐8055
+www.floradesigns.net
+_________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+18372_SS‐SWMR_BVD Caledon_Sep 25, 2022
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+TABLE OF CONTENTS
+1.0
+
+INTRODUCTION
+
+2.0
+
+SITE DESCRIPTION
+
+3.0
+
+SITE PROPOSAL
+
+4.0
+
+STORMWATER MANAGEMENT AND DRAINAGE
+4.1
+Design Criteria
+4.2
+Existing Conditions
+4.3
+Stormwater Management
+4.3.1 Quantity Control
+4.3.2 Quality Control
+4.4
+Down Stream Capacity
+
+5.0
+
+EROSION AND SEDIMENT CONTROL DURING CONSTRUCTION
+5.1
+Control Measures
+5.2
+Construction Sequencing
+5.3
+Inspection & Maintenance
+
+6.0
+
+SANITARY DRAINAGE SYSTEM
+
+7.0
+
+WATER SUPPLY SYSTEM
+7.1
+Proposed Water Supply Requirements
+7.2
+Proposed Water Service
+
+8.0
+
+CONCLUSIONS AND RECOMMENDATIONS
+8.1
+Storm
+8.2
+Sanitary
+8.3
+Water
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 2 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+TABLE OF CONTENTS...... (Continued)
+LIST OF APPENDICES
+Appendix "A" Plans
+ Location Map
+ Site Survey Drawing
+ Architectural Site Plan
+Appendix "B" Stormwater Management
+ IDF Curve – Town of Caledon
+ Runoff Coefficient Calculations
+ Existing Storm Drainage Plan
+ Pre‐Development Peak Flow Calculations
+ Proposed Storm Drainage Plan
+ Proposed Sub‐Catchment Area Plan
+ Post‐Development Peak Flow Calculations
+ Stage Storage Calculations – Pond SU‐1
+ Stage Storage Calculations – Site Area
+ Post‐Development Site Flow and Storage Used Summary – 5‐Year Storm
+ Post‐Development Site Flow and Storage Used Summary – 100‐Year Storm
+ Orifice‐Weir Rating Calculations
+ Storm Sewer Design Sheet
+ Perforated CSP Pipe Calculations (Outlet‐1)
+ CDS Design Summary
+ CDS Model 2020 – Typical Drawing
+Appendix "C" Water Supply System
+ Post‐development Population Density Calculations
+ Post‐development Water Supply Requirement Calculations
+ Post‐development Fire Flow Requirement Calculations
+Appendix "D" Statement of Limiting Conditions and Assumptions
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 3 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+1.0
+
+INTRODUCTION
+
+Flora Designs Inc. has been retained by Glen Schnarr & Associates Inc. (the "Consultant") to
+prepare a Site Servicing and Stormwater Management Report for a proposed Travel Stop
+development, located at NE Corner of Hurontario Street & King Street, Town of Caledon, Ontario
+(Appendix "A"), in accordance with the Engineering Design Standards provided by the Town of
+Caledon, Region of Peel, and MOE Stormwater Management Planning and Design Manual 2003
+(SWMPD).
+This report is prepared in support of a Site Plan Application (SPA) by Glen Schnarr & Associates
+Inc. acting on behalf of the Owner. The purpose of this report is to provide site‐specific
+information for the Town and Region’s review with respect to the infrastructure required to
+support the proposed development regarding storm drainage, sanitary drainage and water
+supply.
+An inventory of the existing infrastructure in the area of proposed development was carried out.
+This report discusses the existing services together with the servicing requirements for the
+proposed development.
+2.0
+
+SITE DESCRIPTION
+
+The proposed development site is located at NE Corner of Hurontario Street & King Street, Town
+of Caledon, Ontario (Appendix "A"). The site is bounded as follows:
+ An existing residential development East,
+ King Street to the South,
+ Hurontario Street to the West, and
+ Undeveloped agricultural lands to the North.
+The subject site is approximately 32,125 m2 (3.21 hectares) in size. Currently the property is
+vacant.
+3.0
+
+SITE PROPOSAL
+
+The Site Plan Application proposes Card Lock Fuelling Stations, Retail Gas Fuelling Stations,
+Convenient Store, Three standalone restaurants and associated parking lot. A reduced version of
+the architectural site plan is included in Appendix "A". Please refer to the building and site
+statistics provided by Antrix Architects Inc.
+In the post‐development development condition, the stormwater runoff from the building roofs
+and site area will be conveyed to the on‐site stormwater dry pond facility through the on‐site
+private sewer network. The entire major and minor system flows from the site will be discharged
+to an existing municipal culvert located across King Street in compliance with the pre‐
+development drainage pattern.
+An on‐site subsurface disposal facility will be provided for sanitary drainage system. Please refer
+to the design documents prepared by Envision Consultants Ltd. for MECP Sewage Treatment and
+Disposal System Design.
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 4 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+The water supply requirements for this development will be fulfilled by an existing 300 mm dia
+watermain located with the municipal allowance of King Street through an existing 300 mm dia
+fire and domestic combined service provided by the Region to serve future development on this
+land.
+4.0
+
+STORMWATER MANAGEMENT AND DRAINAGE
+4.1
+
+Design Criteria
+The proposed development will meet the Province of Ontario standards as set out
+in the MOE Stormwater Management Planning and Design Manual 2003
+(SWMPD), Region of Peel Design Guidelines and local engineering standards
+provided by the Town of Caledon in the Development Standards, Policies &
+Guidelines Manual. A brief summary of the design criteria are as follows;
+ For new developments, return frequency values for design shall be 5‐year for
+Minor System and 100‐year for Major System.
+ Town of Caledon Rainfall Intensity Curves provided in the Standards No.104
+are to be used for analysis (Appendix "B").
+ The post‐development peak flows for all events from the site up to and
+including 100‐year rainfall event should be controlled to the peak flow
+resulting from the target pre‐development conditions during respective
+rainfall events.
+ The on‐site storm sewer network is sized to convey minor system flows.
+ Overland flow route shall be provided to direct runoff in excess of the 100‐
+year storm event to a safe outlet.
+ Maximum detention depth in parking areas during the 100‐year storm event
+is not to exceed 300mm.
+ Stormwater should be treated to Enhanced Protection level as defined in the
+MOE SWM Planning & Design Manual (2003).
+
+4.2
+
+Existing Conditions
+Currently the property is vacant with an abandoned residential house. Based on
+review of the topographic survey and a site visit, we have concluded that, the site
+area drains towards the South property limits through overland sheet flow, which
+subsequently generates uncontrolled discharge to an existing municipal culvert
+and an unnamed municipal stream. In addition to this property, a small portion of
+upstream external lands to the North drains through this property that generates
+uncontrolled discharge to the same municipal culvert. The pre‐development
+surface condition and drainage area for this site has been illustrated in Appendix
+"B".
+For calculating the pre‐development discharge rates and runoff for the 5‐Year and
+100‐Year storm events, Inlet time of Concentration (Tc) is based on the minimum
+Tc provided by the Town of Caledon. The value for the pre‐development weighted
+runoff coefficient C=0.26 is calculated based on actual surface conditions for this
+site. Input parameters used to model the target pre‐development condition are
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 5 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+provided in Table‐1 below and detailed calculations have been illustrated in
+Appendix "B".
+Table‐1 Pre‐development Input Parameters
+Drainage
+Catchment
+Drainage
+System
+#
+Area
+(ha)
+Uncontrolled
+CA‐1‐Pre
+3.21
+TOTAL
+3.21
+
+Runoff
+Coefficient
+(C)
+0.26
+0.26
+
+Time of
+Concentration
+(Tc)
+10
+10
+
+The pre‐development peak flow was simulated using the Town of Caledon Rainfall
+Intensity Curves using the Rational Method. The results of the pre‐development
+peak flow calculations are provided in Table‐2 below, and detailed calculations
+have been illustrated in Appendix "B".
+Table‐2 Pre‐development Peak Flows
+Catchment
+#
+CA‐1‐Pre
+4.3
+
+Peak Flow
+(m3/s)
+5‐year
+0.254
+
+100‐year
+0.456
+
+Stormwater Management
+In the post‐development condition, the site grading is designed to restrict
+stormwater flow from the upstream lands from entering to this site. A bypass
+swale is provided along west property line to divert upstream flow to the existing
+municipal culvert across King Street. Therefore, only the lands occupied by this
+site is considered for the stormwater management design for this development
+proposal. There are uncontrolled site areas contributing to the total storm
+discharge from the site. Therefore, the site is divided into two primary drainage
+systems; “Controlled” (CA‐1‐Post) and “Uncontrolled” (CA‐2‐Post). The post‐
+development drainage areas have been illustrated in Appendix "B".
+For calculating the post‐development discharge rates and runoff for 5‐Year and
+100‐Year storm events, Inlet time of Concentration (Tc) and weighted runoff
+coefficient (C) is calculated similar to the pre‐development calculations. Input
+parameters used to model the target pre‐development condition are provided in
+Table‐3 below and detailed calculations have been illustrated in Appendix "B".
+Table‐3 Post‐development Input Parameters
+Drainage
+Catchment
+Drainage
+System
+#
+Area
+(ha)
+Controlled
+CA‐1‐Post
+2.95
+Uncontrolled
+CA‐2‐Post
+0.27
+TOTAL
+3.21
+
+Runoff
+Coefficient
+(C)
+0.65
+0.33
+0.62
+
+Time of
+Concentration
+(Tc)
+10
+10
+10
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 6 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Results of the post‐development peak flow calculations by considering minimum
+Tc and IDF data similar to the pre‐development flow calculations are provided in
+Table‐4 below, and detailed post‐development flow calculations have been
+illustrated in Appendix "B".
+Table‐4 Post‐development Peak Flows
+Catchment
+#
+CA‐1‐Post
+CA‐2‐Post
+
+Peak Flow
+(m3/s)
+5‐year
+0.585
+0.027
+
+100‐year
+1.048
+0.049
+
+The post‐development peak flow targets will be achieved using a combination of
+surface storage, detention storage in the storm sewer system and an on‐site End‐
+of‐Pipe Dry Storage facility (SU‐1). Site grading for the controlled portion of the
+site area (CA‐1‐Post) has been designed to capture runoff from the site using a
+series of on‐site catch basins. When the incoming flow is greater than the
+allowable peak discharge rate through an orifice plate and a weir installed at the
+dry pond Outlet‐1, the storm sewer system will surcharge and the excess runoff
+volume will be stored within the storm sewer pipes and dry storage facility (SU‐1).
+A summary of the stage and storage volumes available on site are provided in
+Table‐5 below and detailed calculations have been illustrated in Appendix "B".
+Table‐5 Available Stage Storage Summary
+Stage Storage Volume (m3)
+Stage
+Elevation
+CB‐MH
+Pipe
+Surface
+SU‐1
+286.75
+1.62
+20.10
+0.00
+361.81
+287.50
+11.00
+62.14
+0.00
+967.87
+287.75
+14.83
+63.11
+148.23
+1229.48
+
+Total
+383.53
+1041.01
+1455.65
+
+The post‐development Stormwater Management will be justified by discussing
+the following stormwater controls:
+4.3.1 Quantity Control
+Stormwater quantity control is typically implemented to minimise the
+potential for downstream flooding, stream bank erosion and overflow of
+infrastructure. As per minimum standards provided by the Town of
+Caledon, the post‐development peak flows for all events from the site
+should be controlled in line with the respective peak flow resulting from
+the target pre‐development condition during 5‐year to 100‐year storm
+events.
+The site grading is designed such that, no external areas from the
+adjoining properties shall affect the stormwater flow from this site.
+Modified Rational Method calculations were undertaken to determine the
+peak flows and required storage volume from the proposed site during 5‐
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 7 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Year and 100‐Year storm events. This method calculates the storage
+volume using the composite runoff coefficient and the allowable release
+rate based on rainfall intensities over a three‐hour storm event. A
+summary of the post‐development quantity control analysis is provided in
+Table‐6 below and detailed calculations have been illustrated in Appendix
+"B".
+Table‐6 Post‐development Peak Flow and Quantity Control Analysis
+Storm
+Event
+
+5‐year
+100‐year
+
+Allowable
+Runoff
+Release
+from
+Rate
+Controlled
+(m3/s)
+Area
+(m3/s)
+0.254
+0.047
+0.456
+0.103
+
+Runoff
+from
+Uncont.
+Area
+(m3/s)
+0.027
+0.049
+
+Total
+Peak
+Runoff
+(m3/s)
+
+Available
+Storage
+Volume
+(m3)
+
+Storage
+Volume
+Used
+(m3)
+
+Water
+Surface
+Elevation
+(m)
+
+0.074
+0.152
+
+1041.01
+1455.65
+
+553.90
+1003.43
+
+286.97
+287.46
+
+The post‐development peak flow targets will be achieved by controlling
+discharge from the site area using a combination of 150mm dia orifice
+plate and 500mm(w) X 400mm(d) rectangle weir installed in the
+perforated CSP outlet structure (Outlet‐1). Detailed calculations for
+orifice‐weir ratings and stage storage in the dry storage facility have been
+illustrated in Appendix "B".
+4.3.2 Quality Control
+In accordance with the MOE SWM Planning & Design Manual, various
+levels of treatment are defined with a goal of maintain or enhance existing
+aquatic habitat based on the total suspended solids (TSS) removal
+efficiency. For this development, based on the Town standards, enhanced
+(Level 1) quality protection is typically implemented to treat the runoff.
+The quality control for the site is provided by a multiple component
+treatment train consisting of a dry, end‐of‐pipe, detention storage facility
+and CDS oil and grit separator unit. In the post‐development condition,
+the site area occupied by CA‐2‐Post are mainly consists of grassed area
+which generates uncontrolled discharge to the municipal culvert and
+unnamed municipal stream. Considering, this portion of the site area does
+not have any vehicular traffic, it is excluded from the quality control
+modelling. Therefore, only 2.95 ha site area occupied by CA‐1‐Post having
+61.50 % imperviousness that contributes to the proposed quality control
+unit are accounted in the quality control modelling.
+CDS model PMSU 20‐20 oil grit separator unit is proposed at downstream
+of the Outlet‐1 structure. The CDS unit will receive controlled release
+through the orifice / weir installed at the Outlet‐1 and hence it will not
+operate in a surcharged condition.
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 8 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Please refer to Appendix "B" for the design summary of CDS model PMSU
+20‐20 oil grit separator unit provided by Echelon Environmental. Proposed
+water quality unit will treat 98.40% of average annual rainfall volume and
+remove 80.50% of TSS prior to discharging from the site. This is concluded
+by considering the controlled portion of the site area that discharges to
+the dry pond facilities and contributing to the proposed quality control
+unit. The option for upstream attenuation and storage‐discharge
+relationship for dry pond facility SU‐1 is used to access TSS removal by the
+CDS system.
+An ongoing maintenance program, consisting of periodic inspection and
+cleaning of the CDS and on‐site catch basins are recommended (minimum
+once per year).
+4.4
+
+5.0
+
+Downstream Capacity
+The site area occupied by this development is contributing to the existing
+municipal culvert and an unnamed stream located at the south property limits in
+the pre‐development condition. Since, the post‐development peak flows from
+this site are controlled in line with the respective peak flow resulting from the
+target pre‐development condition during 5‐year to 100‐year storm events, the
+total release from the site will be less then the pre‐development condition.
+Hence, there will be no need to map downstream capacity of existing municipal
+conveyance system.
+
+EROSION AND SEDIMENT CONTROL DURING CONSTRUCTION
+
+Construction activity, especially operations involving the handling of earthen material,
+dramatically increases the availability of particulate matter for erosion and transport by surface
+drainage. In order to mitigate the adverse environmental impacts caused by the release of silt‐‐
+laden stormwater runoff into receiving watercourses, measures for erosion and sediment
+control are required for construction sites.
+The impact of construction on the environment is recognized by the Greater Golden Horseshoe
+Area Conservation Authorities. “Erosion & Sediment Control Guidelines for Urban Construction”
+released by Authority in December 2006, provides guidance for the preparation of effective
+erosion and sediment control plans. Control measures must be selected in light of the erosion
+potential of the site. It is important to have implementations and modifications on a staged basis
+to reflect the site's activities. Furthermore, the effectiveness of control measures decreases with
+sediment loading as a result inspection and maintenance is recommended. The selection,
+implementation, inspection, and maintenance of the control features are summarized as
+follows:
+5.1
+
+Control Measures
+On relatively small sites, measures for erosion and sediment control typically
+include the use of silt fencing, mud mats and sediment traps. The description of
+the sediment controls to be implemented on the subject site is as follows.
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 9 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+
+
+
+
+Installation of Silt Fences adjacent to all property limits subject to drainage
+from the development area prior to topsoil stripping and in other locations,
+such as at the bases of topsoil stockpiles.
+Installation of Mud Mats at all construction entrances prior to commencing
+earthworks to minimize the tracking of mud onto municipal roads.
+Installation of Sediment Traps at all catch basins and area drain locations once
+the storm sewer system has been constructed to prevent silt‐laden runoff
+from entering the municipal storm sewer system.
+
+5.2
+
+Construction Sequencing
+The schedule of construction activities with respect to sediment controls is as
+follows:
+ Installation of the silt fences prior to any other activities on the site.
+ Construction of temporary mud mats at all construction access.
+ Installation of site servicing and underground utilities.
+ Construction of building foundations and disposal of all the surplus excavated
+materials off site.
+ Construction of building, parking lot and driveways.
+ Restoration / re‐vegetation of disturbed areas either with temporary
+measures such as mulch or seeding or with final landscape and paving.
+ Removal of the sediment controls following stabilization of disturbed areas.
+
+5.3
+
+Inspection & Maintenance
+In order to ensure that the erosion and sediment control measures operate
+effectively, regular monitoring together with periodic cleaning (e.g. removal of
+accumulated silt), maintenance and/or re‐construction is strongly recommended.
+Inspections of all the erosion and sediment controls on the construction site
+should be undertaken with the following frequency:
+ On a weekly basis
+ After every rainfall event
+ After significant snow melt events
+ Prior to forecasted rainfall events
+
+If damaged control measures are found, they should be repaired and/or replaced within 48
+hours. Site inspection staff and construction managers should refer to the Erosion and Sediment
+Control Inspection Guide (2008) prepared by the Greater Golden Horseshoe Area Conservation
+Authorities. This Inspection Guide provides information related to the inspection reporting,
+problem response and proper installation techniques. Infiltration Gallery shall be kept offline
+until the site has been stabilised.
+6.0
+
+SANITARY DRAINAGE SYSTEM
+
+The Owner has retained Envision Consultants Ltd. to prepare design documents for private on‐
+site sub‐surface disposal facility in accordance with the MECP design guidelines.
+The Envision Consultant is working with MECP regional and head office and already filed an ECA
+Application for the approval of proposed Sewage Treatment and Disposal System.
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 10 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Please refer to the design documents prepared by Envision Consultants Ltd. for MECP Sewage
+Treatment and Disposal System Design.
+7.0
+
+WATER SUPPLY SYSTEM
+
+Currently the property is vacant with an abandoned residential house. An existing 300mm dia
+watermain located within the municipal allowance of King Street is available to serve the future
+development on this site. The region of Peel has provided a 300 mm dia fire and domestic
+combined service to serve future development on this land.
+7.1
+
+Proposed Water Supply Requirements
+The post‐development water supply requirement is calculated in accordance with
+the Watermain Linear Design Manual provided by the Region of Peel. This manual
+provides peaking factors to calculate peak hour and maximum day based on
+Ministry of Environment Guidelines.
+The estimated water consumption of approximately 0.78 L/s with a peak hourly
+demand of 1.68 L/s will be required to service proposed development with
+domestic water based on population density calculated for this site and proposed
+land use. Detailed calculations have been illustrated in Appendix "C".
+The Town of Caledon and Region of Peel requires the fire flow calculations based
+on the Water Supply for Public Fire Protection Guidelines provided by the Fire
+Underwriters Survey (FUS). The fire flow required for the proposed Travel Stop
+development is estimated at 100.00 L/s for 4 hours, delivered with a residual
+pressure of not less then 140 kilopascals. Detailed calculations have been
+illustrated in Appendix "C".
+A flow and pressure test will be performed on the nearest hydrant to the site
+prior to the building permit application to determine compliance for minimum
+suppression outlined in the FUS and Town’s guidelines.
+
+7.2
+
+Proposed Water Service
+This development application proposes to make use of the existing 300mm dia
+fire and domestic combines service provided by the Region of Peel from the
+existing 300mm dia municipal watermain located within road allowance of King
+Street. The proposed combined service will split at the property line into fire and
+domestic services. An internal network of 150 mm dia fire main and 100 mm dia
+domestic watermain are proposed in accordance with the Region of Peel
+Standard Drawing 1‐8‐5A to serve future development.
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 11 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+8.0
+
+CONCLUSIONS AND RECOMMENDATIONS
+
+This report is to be read in conjunction with the submission materials for the project proposal
+known as proposed Travel Stop development, located at NE Corner of Hurontario Street & King
+Street, Town of Caledon, Ontario.
+8.1
+
+STORM
+1. The site is divided into two primary drainage systems; “Controlled” (CA‐1‐
+Post) and “Uncontrolled” (CA‐2‐Post).
+2. The post‐development peak flow targets will be achieved using detention
+storage within an on‐site End‐of‐Pipe Dry Storage facility (SU‐1).
+3. The post‐development peak flow targets will be achieved by controlling
+discharge from the site area using a combination of 150mm dia orifice plate
+and 500mm(w) X 400mm(d) rectangle weir installed in the perforated CSP
+outlet structure (Outlet‐1).
+4. Total 1,003.43 m3 of storage is used out of 1,455.65 m3 storage volume
+provided during 100‐year storm event.
+5. The quality control for the site is provided by a multiple component
+treatment train consisting of a dry, end‐of‐pipe, detention storage facility and
+CDS oil and grit separator unit.
+6. Proposed water quality unit will treat 98.40% of average annual rainfall
+volume and remove 80.50% of TSS prior to discharging from the site.
+7. An ongoing maintenance program consists of periodic inspection and
+cleaning of the Stormceptor and Catch basins are recommended (minimum
+once per year).
+8. Erosion and Sediment controls are to be implemented during construction to
+prevent silt‐laden runoff from leaving the site in accordance with the "Erosion
+& Sediment Control Guidelines for Urban Construction".
+
+8.2
+
+SANITARY
+1. The Envision Consultants Ltd. is working with MECP regional and head office
+and already filed an ECA Application for the approval of proposed Sewage
+Treatment and Disposal System.
+2. Please refer to the design documents prepared by Envision Consultants Ltd.
+for MECP Sewage Treatment and Disposal System Design.
+
+8.3
+
+WATER
+1. The estimated water consumption of approximately 0.78 L/s with a peak
+hourly demand of 1.68 L/s will be required to service the proposed
+development with domestic water.
+2. The fire flow required for proposed development is estimated at 100.00 L/s
+for 4 hours, delivered with a residual pressure of not less then 140
+kilopascals.
+3. This development application proposes to make use of the existing 300mm
+dia fire and domestic combines service provided by the Region of Peel from
+the existing 300mm dia municipal watermain located within road allowance
+of King Street.
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 12 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+4.
+5.
+
+The proposed combined service will split at the property line into fire and
+domestic services.
+A flow and pressure test will be performed on the nearest hydrant to the site
+prior to the building permit application to determine compliance for
+minimum suppression outlined in the FUS and Town’s guidelines.
+
+We trust that this report satisfies the requirements of the Town of Caledon and Region of Peel
+with respect to the subject development. Should you have any questions, please feel free to
+contact the undersigned.
+Yours truly,
+FLORA DESIGNS INC.
+
+Chirag C. Patel, P.Eng, PMP
+Senior Project Manager
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 13 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Appendix "A"
+
+
+
+
+Plans
+
+Location Map
+Site Survey Drawing
+Architectural Site Plan
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 14 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+LOCATION MAP
+
+(NTS)
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 15 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+SITE SURVEY DRAWING
+
+(NTS)
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 16 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+ARCHITECTURAL SITE PLAN
+
+(NTS)
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 17 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Appendix "B"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Stormwater Management
+IDF Curve – Town of Caledon
+Runoff Coefficient Calculations
+Existing Storm Drainage Plan
+Pre‐Development Peak Flow Calculations
+Proposed Storm Drainage Plan
+Proposed Sub‐Catchment Area Plan
+Post‐Development Peak Flow Calculations
+Stage Storage Calculations – Pond SU‐1
+Stage Storage Calculations – Site Area
+Post‐Development Site Flow and Storage Used Summary – 5‐Year Storm
+Post‐Development Site Flow and Storage Used Summary – 100‐Year Storm
+Orifice‐Weir Rating Calculations
+Storm Sewer Design Sheet
+Perforated CSP Pipe Calculations (Outlet‐1)
+CDS Design Summary
+CDS Model 2020 – Typical Drawing
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 18 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+IDF CURVE ‐ TOWN OF CALEDON
+(Standard No. 104)
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 19 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+RUNOFF COEFFICIENT CALCULATIONS
+In Accordance with STD No.104, Development Standards, Policies & Guidelines Manual
+Runoff
+Character of Surface
+Coeff. "C"
+Parks (Under 4 Ha)
+0.25
+Asphalt, Concrete, Roof Areas
+0.90
+Pre-Development Drainage Area
+Catchment
+Type
+
+Catchment #
+
+Area (m2)
+
+Area (ha)
+
+Impervious
+
+Total
+
+Impervious
+
+Total
+
+%
+Impervious
+
+509.55
+509.55
+
+32125.68
+32125.68
+
+0.05
+0.05
+
+3.21
+3.21
+
+1.59
+1.59
+
+Uncontrolled
+CA-1-Pre
+Total Site
+
+Runoff
+Coeff.
+"C"
+0.26
+0.26
+
+Post-Development Drainage Area
+Catchment
+Type
+
+Area (m2)
+
+Catchment #
+
+Controlled
+CA-1-Post
+Uncontrolled
+CA-2-Post
+Total Site
+
+Area (ha)
+
+Runoff
+Coeff.
+"C"
+0.65
+0.33
+0.62
+
+% Imp.
+
+Imp.
+
+Total
+
+Imp.
+
+Total
+
+18113.44
+346.19
+18459.63
+
+29450.94
+2674.74
+32125.68
+
+1.81
+0.03
+1.85
+
+2.95
+0.27
+3.21
+
+61.50
+12.94
+57.46
+
+Runoff Coefficient ( C )
+C = 0.9 i + 0.25 (1 - i), Where i = Imperviousness Ratio
+
+Sub-Catchment Area of CA-1-Post
+Catchment
+Type
+
+Inlet Location
+
+CB-1
+CB-2
+Canopy-Retail
+CBMH-3
+Canopy-Comm
+DCB-3
+CB-4
+CB-5
+Bldg-A Roof
+Bldg-B Roof
+Controlled
+CBMH-6
+Bldg-C Roof
+Bldg-D Roof
+DCB-6
+CBMH-8
+CB-7
+CB-8
+CB-9
+CB-10
+POND
+Sub Total - Controlled
+
+Area (m2)
+
+Area (ha)
+
+Impervious
+
+Total
+
+Impervious
+
+Total
+
+%
+Impervious
+
+1522.77
+781.58
+216.87
+1773.13
+238.06
+2186.59
+619.64
+966.81
+548.75
+298.00
+182.72
+334.96
+334.96
+1582.79
+2406.13
+0.00
+1306.49
+1665.64
+325.01
+822.54
+18113.44
+
+1875.90
+896.03
+216.87
+3113.34
+238.06
+2327.44
+789.41
+1207.97
+548.75
+298.00
+232.17
+334.96
+334.96
+2057.62
+2453.53
+4683.35
+1552.77
+1665.64
+325.01
+4299.16
+29450.94
+
+0.15
+0.08
+0.02
+0.18
+0.02
+0.22
+0.06
+0.10
+0.05
+0.03
+0.02
+0.03
+0.03
+0.16
+0.24
+0.00
+0.13
+0.17
+0.03
+0.08
+1.81
+
+0.19
+0.09
+0.02
+0.31
+0.02
+0.23
+0.08
+0.12
+0.05
+0.03
+0.02
+0.03
+0.03
+0.21
+0.25
+0.47
+0.16
+0.17
+0.03
+0.43
+2.95
+
+81.18
+87.23
+100.00
+56.95
+100.00
+93.95
+78.49
+80.04
+100.00
+100.00
+78.70
+100.00
+100.00
+76.92
+98.07
+0.00
+84.14
+100.00
+100.00
+19.13
+61.50
+
+Runoff
+Coeff.
+"C"
+0.78
+0.82
+0.90
+0.62
+0.90
+0.86
+0.76
+0.77
+0.90
+0.90
+0.76
+0.90
+0.90
+0.75
+0.89
+0.25
+0.80
+0.90
+0.90
+0.37
+0.65
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 20 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+EXISTING STORM DRAINAGE PLAN
+
+(NTS)
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 21 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+PRE‐DEVELOPMENT PEAK FLOW CALCULATIONS
+
+Catchment #
+CA-1-Pre
+
+Drainage Area
+
+Runoff
+Coefficient
+
+Time of
+Concentration
+
+"A" in Hector
+3.21
+
+"C"
+0.26
+
+"Tc" in Minute
+10
+
+Where:
+
+Q = Runoff Quantity (Flow) in litre/sec
+A = Drainage Area in Hectors
+C = Runoff Coefficient
+I = Average Rainfall Intensity - mm/h
+IDF Data Set, Town of Caledon
+Coefficient, a =
+Coefficient, b =
+Exponent, c =
+
+Event 5 yr
+
+( I ) = a * (Tc + b)^c
+
+Catchment #
+CA-1-Pre
+
+A
+(ha)
+3.21
+
+I
+(mm/h)
+109.68
+
+Event 100 yr
+
+CA-1-Pre
+
+0.26
+
+Q
+(L/s)
+254.47
+
+IDF Data Set, Town of Caledon
+Coefficient, a =
+Coefficient, b =
+Exponent, c =
+
+( I ) = a * (Tc + b)^c
+Catchment #
+
+C
+
+A
+(ha)
+3.21
+
+I
+(mm/h)
+196.54
+
+C
+0.26
+
+Q
+(L/s)
+456.00
+
+1593.00
+11.00
+-0.879
+Q
+(m3/s)
+0.254
+
+4688.00
+17.00
+-0.962
+Q
+(m3/s)
+0.456
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 22 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+PROPOSED STORM DRAINAGE PLAN
+
+(NTS)
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 23 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+PROPOSED SUB‐CATCHMENT AREA PLAN
+
+(NTS)
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 24 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+POST‐DEVELOPMENT PEAK FLOW CALCULATIONS
+
+Catchment #
+
+Drainage
+Area
+
+Runoff
+Coefficient
+
+Time of
+Concentration
+
+CA-1-Post
+CA-2-Post
+
+"A" in Hector
+2.95
+0.27
+
+"C"
+0.65
+0.33
+
+"Tc" in Minute
+10
+10
+
+Where:
+
+Q = Runoff Quantity (Flow) in litre/sec
+A = Drainage Area in Hectors
+C = Runoff Coefficient
+I = Average Rainfall Intensity - mm/h
+IDF Data Set, Town of Caledon
+Coefficient, a =
+Coefficient, b =
+Exponent, c =
+
+Event 5 yr
+
+( I ) = a * (Tc + b)^c
+
+Catchment #
+CA-1-Post
+CA-2-Post
+
+A
+(ha)
+2.95
+0.27
+
+I
+(mm/h)
+109.68
+109.68
+
+Event 100 yr
+
+CA-1-Post
+CA-2-Post
+
+0.65
+0.33
+
+Q
+(L/s)
+584.65
+27.17
+
+IDF Data Set, Town of Caledon
+Coefficient, a =
+Coefficient, b =
+Exponent, c =
+
+( I ) = a * (Tc + b)^c
+Catchment #
+
+C
+
+A
+(ha)
+2.95
+0.27
+
+I
+(mm/h)
+196.54
+196.54
+
+C
+0.65
+0.33
+
+Q
+(L/s)
+1047.67
+48.68
+
+1593.00
+11.00
+-0.879
+Q
+(m3/s)
+0.585
+0.027
+
+4688.00
+17.00
+-0.962
+Q
+(m3/s)
+1.048
+0.049
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 25 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+STAGE STORAGE CALCULATIONS – POND SU‐1
+Bottom Elevation, Base =
+286.00
+Stage-Storage Information:
+POND STORAGE (SU-1)
+Elevation
+Stage
+Surface
+Area
+
+m
+
+Incremental
+Storage
+Volume
+(POND)
+
+Incremental
+Storage
+Volume
+(SITE)
+
+Cumulative
+Storage
+Volume
+
+(m3)
+-0.00
+5.01
+8.35
+8.35
+17.14
+17.14
+17.14
+153.04
+
+(m3)
+0.00
+21.19
+90.06
+225.11
+383.53
+575.66
+794.30
+1041.01
+1455.65
+
+V=[(A1+A2)/2]d
+
+Base
+
+Top
+
+(m)
+286.00
+286.10
+286.25
+286.50
+286.75
+287.00
+287.25
+287.50
+287.75
+
+(m)
+0.00
+0.10
+0.25
+0.50
+0.75
+1.00
+1.25
+1.50
+1.75
+
+(m2)
+34.10
+389.76
+461.64
+551.95
+648.54
+751.42
+860.57
+976.01
+1116.80
+
+(m3)
+-21.19
+63.85
+126.70
+150.06
+175.00
+201.50
+229.57
+261.60
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 26 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+STAGE STORAGE CALCULATIONS – SITE AREA
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 27 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 28 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 29 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+POST‐DEVELOPMENT SITE FLOW AND STORAGE USED SUMMARY ‐ 5‐YEAR STORM
+Actual Release Rate (RR)
+Actual Release Volume per 5-min. Interval
+5-year Design Storm
+a=
+1593.00
+b=
+11.00
+c=
+-0.879
+i = a * (Tc + b)^c
+1
+
+Time
+(min.)
+
+10
+15
+20
+25
+30
+35
+40
+45
+50
+55
+60
+65
+70
+75
+80
+85
+90
+95
+100
+105
+110
+115
+120
+125
+130
+135
+140
+145
+150
+155
+160
+165
+170
+175
+180
+
+2
+
+0.047
+
+m3/s
+
+13.98
+
+m3
+
+Catchment #
+
+CA-1-Post
+
+Area (ha) =
+C=
+Tc (min.)=
+
+2.95
+0.65
+10
+
+3
+
+4
+
+5
+
+6
+
+Rainfall
+Intensity
+(mm/hr)
+
+Storm
+Runoff
+(m3/s)
+
+Storm
+Runoff
+Volume
+(m3)
+
+Released
+Volume
+(m3)
+
+Storage
+Volume
+(m3)
+
+(2)=a*((1))^b
+
+(3)=[(2)*A*C]/360
+
+(4)=(3)*(1)*60
+
+(5)=(RR)*(1)*60
+
+(6)=(4)-(5)
+
+109.68
+90.91
+77.89
+68.29
+60.92
+55.06
+50.28
+46.32
+42.96
+40.09
+37.60
+35.41
+33.48
+31.77
+30.23
+28.84
+27.58
+26.43
+25.39
+24.42
+23.53
+22.71
+21.95
+21.23
+20.57
+19.95
+19.37
+18.82
+18.31
+17.82
+17.36
+16.93
+16.52
+16.13
+15.75
+
+0.584
+0.484
+0.415
+0.364
+0.324
+0.293
+0.268
+0.247
+0.229
+0.214
+0.200
+0.189
+0.178
+0.169
+0.161
+0.154
+0.147
+0.141
+0.135
+0.130
+0.125
+0.121
+0.117
+0.113
+0.110
+0.106
+0.103
+0.100
+0.098
+0.095
+0.092
+0.090
+0.088
+0.086
+0.084
+
+350.51
+435.78
+497.82
+545.64
+584.04
+615.84
+642.80
+666.09
+686.50
+704.64
+720.91
+735.64
+749.08
+761.43
+772.84
+783.43
+793.31
+802.57
+811.27
+819.48
+827.24
+834.61
+841.61
+848.29
+854.66
+860.76
+866.61
+872.23
+877.63
+882.83
+887.85
+892.69
+897.38
+901.91
+906.30
+
+27.96
+41.94
+55.92
+69.90
+83.88
+97.86
+111.84
+125.82
+139.80
+153.78
+167.76
+181.74
+195.72
+209.70
+223.68
+237.66
+251.64
+265.62
+279.60
+293.58
+307.56
+321.54
+335.52
+349.50
+363.48
+377.46
+391.44
+405.42
+419.40
+433.38
+447.36
+461.34
+475.32
+489.30
+503.28
+
+322.55
+393.84
+441.90
+475.74
+500.16
+517.98
+530.96
+540.27
+546.70
+550.86
+553.15
+553.90
+553.36
+551.73
+549.16
+545.77
+541.67
+536.95
+531.67
+525.90
+519.68
+513.07
+506.09
+498.79
+491.18
+483.30
+475.17
+466.81
+458.23
+449.45
+440.49
+431.35
+422.06
+412.61
+403.02
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 30 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+POST‐DEVELOPMENT SITE FLOW AND STORAGE USED SUMMARY ‐ 100‐YEAR STORM
+Actual Release Rate (RR)
+Actual Release Volume per 5-min. Interval
+100-year Design Storm
+a=
+4688.00
+b=
+17.00
+c=
+-0.962
+i = a * (Tc + b)^c
+1
+
+Time
+(min.)
+
+10
+15
+20
+25
+30
+35
+40
+45
+50
+55
+60
+65
+70
+75
+80
+85
+90
+95
+100
+105
+110
+115
+120
+125
+130
+135
+140
+145
+150
+155
+160
+165
+170
+175
+180
+
+2
+
+0.103
+
+m3/s
+
+30.97
+
+m3
+
+Catchment #
+
+CA-1-Post
+
+Area (ha) =
+C=
+Tc (min.)=
+
+2.95
+0.65
+10
+
+3
+
+4
+
+5
+
+6
+
+Rainfall
+Intensity
+(mm/hr)
+
+Storm
+Runoff
+(m3/s)
+
+Storm
+Runoff
+Volume
+(m3)
+
+Released
+Volume
+(m3)
+
+Storage
+Volume
+(m3)
+
+(2)=a*((1))^b
+
+(3)=[(2)*A*C]/360
+
+(4)=(3)*(1)*60
+
+(5)=(RR)*(1)*60
+
+(6)=(4)-(5)
+
+196.54
+166.89
+145.13
+128.46
+115.28
+104.59
+95.75
+88.31
+81.95
+76.47
+71.69
+67.47
+63.74
+60.40
+57.40
+54.69
+52.23
+49.98
+47.93
+46.03
+44.29
+42.67
+41.17
+39.78
+38.47
+37.25
+36.11
+35.04
+34.03
+33.08
+32.18
+31.33
+30.52
+29.75
+29.03
+
+1.047
+0.889
+0.773
+0.684
+0.614
+0.557
+0.510
+0.470
+0.437
+0.407
+0.382
+0.359
+0.339
+0.322
+0.306
+0.291
+0.278
+0.266
+0.255
+0.245
+0.236
+0.227
+0.219
+0.212
+0.205
+0.198
+0.192
+0.187
+0.181
+0.176
+0.171
+0.167
+0.163
+0.158
+0.155
+
+628.10
+800.03
+927.61
+1026.35
+1105.26
+1169.93
+1223.99
+1269.95
+1309.57
+1344.12
+1374.56
+1401.62
+1425.86
+1447.72
+1467.55
+1485.64
+1502.23
+1517.50
+1531.62
+1544.71
+1556.91
+1568.30
+1578.97
+1588.98
+1598.41
+1607.31
+1615.72
+1623.69
+1631.25
+1638.44
+1645.29
+1651.82
+1658.06
+1664.03
+1669.74
+
+61.94
+92.92
+123.89
+154.86
+185.83
+216.80
+247.78
+278.75
+309.72
+340.69
+371.66
+402.64
+433.61
+464.58
+495.55
+526.52
+557.50
+588.47
+619.44
+650.41
+681.38
+712.36
+743.33
+774.30
+805.27
+836.24
+867.22
+898.19
+929.16
+960.13
+991.10
+1022.08
+1053.05
+1084.02
+1114.99
+
+566.15
+707.11
+803.72
+871.49
+919.43
+953.12
+976.21
+991.20
+999.85
+1003.43
+1002.90
+998.99
+992.25
+983.14
+972.00
+959.12
+944.73
+929.03
+912.18
+894.30
+875.53
+855.94
+835.64
+814.68
+793.14
+771.06
+748.50
+725.50
+702.09
+678.31
+654.19
+629.74
+605.01
+580.01
+554.75
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 31 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+ORIFICE‐WEIR RATING CALCULATIONS
+Active Storage Stage‐Orifice Flow Relationship: (Dry Pond Outlet‐1)
+Elevation
+Stage
+Cumulative
+Flow
+(m)
+(m)
+Storage
+Orifice‐1
+Volume
+(m3/s)
+3
+(m )
+Base
+
+Top
+
+286.00
+286.10
+286.25
+286.50
+286.75
+287.00
+287.25
+287.50
+287.75
+
+0.00
+0.10
+0.25
+0.50
+0.75
+1.00
+1.25
+1.50
+1.75
+
+0.00
+21.19
+90.06
+225.11
+383.53
+575.66
+794.30
+1041.01
+1455.65
+
+Orifice‐1
+
+0.000
+0.008
+0.021
+0.032
+0.040
+0.047
+0.053
+0.059
+0.064
+
+Weir‐1
+Orifice Invert =
+
+286.00
+
+m
+
+Flow
+Weir‐1
+(m3/s)
+
+Total Flow
+(m3/s)
+
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.000
+0.053
+0.232
+
+0.000
+0.008
+0.021
+0.032
+0.040
+0.047
+0.053
+0.112
+0.296
+
+(Sharp Crested Rectangular)
+Weir Invert =
+
+287.35
+
+Weir Characteristics:
+QP =
+Cw * b * (h)3/2
+where,
+Weir Coefficient, Cw =
+
+1.837
+
+Orifice Characteristics:
+QP =
+CAO(2ghCL)0.5
+where,
+Orifice Coefficient, C =
+
+0.63
+
+Orifice Plate Diameter, DO =
+
+150
+
+mm
+
+Orifice sectional area, AO =
+
+0.01766
+
+2
+
+m
+
+Downstream Headwater, hs =
+
+Nan
+
+Elev at Centre of Orifice =
+
+286.08
+
+m
+
+Width of the Weir, b =
+
+0.50
+
+Acceleration ‐ gravity, g =
+
+9.81
+
+m/s2
+
+Max. Depth of the Weir, d =
+
+0.40
+
+Elev at Centre of Orifice =
+
+0.14
+
+m
+
+Head on the Weir, h =
+
+Per Stage
+
+m
+
+m
+m
+m
+m
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 32 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+STORM SEWER DESIGN SHEET
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 33 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+PERFORATED CSP PIPE CALCULATIONS (OUTLET‐1)
+Pipe Diameter =
+Perforated Pipe Length =
+Pipe Circumference =
+
+1500
+1.75
+4.710
+
+mm
+m
+m
+
+Perforation Diameter =
+Perforation Spacing =
+Perforation Area =
+
+# of Perforations per Row (Pipe Circumference)
+=
+# of Rows per Perforated Pipe Length =
+Total # of Perforations in Pipe =
+
+37
+13
+481
+
+Total Perforated Area of Pipe =
+
+0.944
+
+50
+125
+0.00196
+
+mm
+mm (center to center)
+m2
+
+m2
+
+NOTE:
+The perforated portion of the outlet pipe is designed to provide sufficient flow to the downstream
+orifice plate even under a 75% blockage condition of the perforated pipe.
+The perforated area of the outlet pipe provides a minimum opening area that is four (4) times
+greater than the cross‐sectional area of the proposed orifice plate located downstream.
+Orifice / Weir Characteristics:
+Orifice‐1
+150
+Size
+Area
+0.018
+
+Weir‐1
+mm
+m2
+
+500
+
+4 x Orifice/Weir Area =
+Total Perforated Area of Pipe >
+
+400
+0.200
+
+0.871
+
+mm
+m2
+
+m2
+
+4 x Orifice/Weir Area
+
+……….…O.K.
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 34 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+CDS DESIGN SUMMARY
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 35 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+CDS MODEL 2020 ‐ TYPICAL DRAWING
+
+(NTS)
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 36 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Appendix "C"
+
+
+
+
+Water Supply System
+
+Post‐development Population Density Calculations
+Post‐development Water Supply Requirement Calculations
+Post‐development Fire Flow Requirement Calculations
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 37 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+POST‐DEVELOPMENT POPULATION DENSITY CALCULATIONS
+(According to the Sanitary Sewer Design Criteria, Region of Peel)
+Development Type
+
+Equivalent
+Population
+Density
+(Persons/ha)
+
+Area of Site
+(ha)
+
+Population
+(Persons)
+
+Commercial
+
+50
+
+3.21
+
+161
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 38 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+POST‐DEVELOPMENT WATER SUPPLY REQUIREMENT CALCULATIONS
+Typical Water Demand Criteria (According to the Watermain Design Criteria, Region of Peel)
+Average
+Peak Hour
+Population Type
+Unit
+Consumption
+Max Day Factor
+Factor
+Rate
+ICI
+L / Employee . D
+300
+1.4
+3.0
+
+Post-development Water Supply Requirements
+Development Type
+Commercial
+Eq. Population Density
+161
+No.
+Demand Type
+1
+Average day flow
+2
+Maximum day flow
+3
+Peak hour flow
+4
+Fire flow
+Analysis
+5
+Maximum day plus fire flow
+6
+Peak hour flow
+7
+Maximum demand flow
+
+Demand
+0.56
+0.78
+1.68
+100.00
+
+Units
+L/Sec
+L/Sec
+L/Sec
+L/Sec
+
+100.78
+1.68
+100.78
+
+L/Sec
+L/Sec
+L/Sec
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 39 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+POST‐DEVELOPMENT FIRE FLOW REQUIREMENT CALCULATIONS
+The Fire Underwriters Survey requires that a minimum water supply source "F" be provided at 140 kPa.
+Estimate of Required Fire Flow
+1
+
+F = 220 * C * (A)^0.5
+Where =>
+
+F=
+C=
+A=
+
+Required Fire Flow (L/min)
+Coefficient related to construction
+Total Area (m2)
+
+Determining "C"
+C=
+
+0.8
+
+For non-combustible construction
+
+Determining "A"
+A=
+
+So that,
+2
+
+So that,
+3
+
+4
+
+Total floor area of all storeys in
+the building
+
+For non-combustible construction
+
+Largest Floor Area =
+1st adjoining Floor Area =
+2nd adjoining Floor Area =
+A=
+
+548.75
+0.00
+0.00
+548.75
+
+m2
+m2
+m2
+m2
+
+Building-A
+
+F=
+
+4,000.00
+
+L/min.
+
+(Rounded per FUS Guide Page # 20)
+
+Addition / Reduction for occupancy type
+Increased by
+25%
+F=
+Reduction for sprinkler system
+No Charge
+
+5,000.00
+
+0%
+
+For the occupancies having high contents of fire hazard
+L/min.
+
+No sprinkler system
+
+Addition for structures exposed within distance of fire area
+Side
+Distance (m)
+% Addition
+North
+None
+0%
+South
+14.51
+15%
+East
+None
+0%
+West
+None
+0%
+Total
+15%
+
+Shall not exceed 75%
+
+Net Reduction / Addition for step 3 & 4
+Increased by
+15%
+So that,
+N.B. -
+
+F=
+
+6000.00
+
+L/min.
+
+(Rounded per FUS Guide Page # 20)
+
+As per FUS requirements fire flow shall not exceed 45000 L/min nor be less than 2000 L/min.
+
+Therefore, the fire flow required is =
+
+6000.00
+100.00
+1585.03
+1320.86
+
+L/min.
+L/sec
+USGPM
+Imp. GPM
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 40 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+REGION OF PEEL DEMAND TABLE
+Project :
+Project Address :
+SPA No. :
+WATER CONNECTION
+Connection Point :
+
+Proposed Travel Stop
+NW Corner of Hurontario Street & King Street
+2019-0065
+
+Approximate 38.0m west of centerline of Hurontario Street from the
+existing 300mm dia watermain located within road allowance of King
+Street
+
+Pressure zone of connection point
+Total equivalent population to be serviced 1)
+Total lands to be serviced
+Hydrant Flow Test:
+To be performed
+Hydrant flow test location
+Hydrant residual test location
+
+161
+3.21 ha
+
+Pitot Pressure
+(kPa)
+
+Time
+
+Minimum water pressure
+Maximum water pressure
+WATER DEMANDS
+No.
+Demand Type
+1
+Average day flow
+2
+Maximum day flow
+3
+Peak hour flow
+4
+Fire flow 2)
+Analysis
+5
+Maximum day plus fire flow
+WASTEWATER CONNECTION
+Connection Point 3):
+
+2)
+3)
+4)
+
+Units
+
+100.78
+
+L/Sec
+
+L/Sec
+L/Sec
+L/Sec
+L/Sec
+
+Private on-site sub-surface disposal facility
+
+Total equivalent population to be serviced 1)
+Total lands to be serviced
+6
+Wastewater sewer effluent
+1)
+
+Demand
+0.56
+0.78
+1.68
+100.00
+
+N.A.
+
+161
+3.21 ha
+L/Sec
+
+The calculations should be based on the development estimated population (employment or
+residential).
+Please reference the Fire Underwriters Survey Document
+Please specify the connection point ID
+Please specify the connection point (wastewater line of manhole ID)
+Also, the ``total equivalent population to be serviced`` and the ``total lands to be serviced should
+reference the connection point (The FSR should contain one copy of Site Servicing Plan)
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 41 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Appendix "D"
+
+Statement of Limiting Conditions and
+Assumptions
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 42 of 43
+
+Site Servicing and Stormwater Management Report
+Proposed Travel Stop, NE Corner of Hurontario St. & King St., Town of Caledon, ON
+
+Town File # SPA 2019‐0065
+FD Project # 18372
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Statement of Limiting Conditions and Assumptions
+1.
+
+This Report/Study (the "Work") has been prepared at the request of, and for the exclusive use of, the Owner,
+and its affiliates (the "Intended Users"). No one other then the intended users have the right to use and rely on
+the work without first obtaining the written authorization of FLORA DESIGNS INC. and its Owners. All concerned
+governing authorities and reviewing agencies are permitted to use all engineering design documents prepared
+for this project.
+2. The comments, recommendations and material in this report reflect Flora Designs best judgement in light of
+the information available to it at the time of preparation of this report. It is not qualified to and is not providing
+legal or planning advice in this work.
+3. Flora Designs expressly excludes liability to any third party except the Intended Users for any use of, and/or
+reliance upon, the work.
+4. Flora Designs notes that the following assumptions were made in completing the work
+a) The land use description(s) supplied to Flora Designs are correct
+b) The surveys and other data supplied to Flora Designs by the Owner are accurate
+c) Market timing, approval delivery and secondary information is within the control of parties other then
+Flora Designs
+d) There are no encroachments, leases, covenants, binding agreements, restrictions, pledges, charges, liens or
+special assessments outstanding, or encumbrances, which would significantly affect the use or servicing
+Investigations have not carried out to verify these assumptions. Flora Designs deems the sources of data and
+statistical information contained herein to be reliable, but we extend no guarantee of accuracy in these
+respects.
+5. All the plans, photographs, and sketches prepared and presented in this report/study are included solely to aid
+the visualizing the location of the property, the boundaries of the site, and the relative position of the
+improvements on the said lands are based on information provided by Owner
+6. Flora Designs accepts no responsibility for legal interpretations, questions of survey, opinion of title, hidden or
+inconspicuous conditions of the property, toxic wastes or contaminated materials, soil or sub soil conditions,
+environmental, engineering or other factual and technical matters disclosed by the owner, the clients, or any
+public agency, which by their nature, may change the outcome of the work.
+7. In the preparation of this report, Flora Designs have made investigations from secondary sources as
+documented in the work, but did not checked compliance with by‐laws, codes, agency and government
+regulations, etc., unless specifically noted in the work.
+8. The value of proposed improvements should apply only with regard to the purpose and function of the work, as
+outlined in the body of this work. Any cost estimated set out in the work based on construction averages and
+subject to change.
+9. Neither possession of Work, nor a copy of it, carries the right of publication. All copyright in the work reserved
+to Flora Designs and considered confidential by Flora Designs. The Work shall not be disclosed, reproduced,
+quoted from, or referred to, in whole or in part, or published in any manner, without the express written
+consent of Flora Designs and the Owner.
+10. The work is only valid if it bears the Professional Engineer's seal and original signature of author, and if
+considered in its entity. Responsibility for unauthorised alteration to the Work is denied.
+
+© COPYRIGHT 2022
+Flora Designs Inc.
+
+________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+
+Page 43 of 43
+
+

@@ -1,0 +1,2947 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+June 16, 2026
+
+FUNCTIONAL SERVICING REPORT
+12933 BRAMALEA ROAD
+
+TOWN OF CALEDON
+REGION OF PEEL
+
+PREPARED FOR
+TACC DEVELOPMENTS
+Urbantech File No.: 22-725
+
+1ST SUBMISSION – JUNE 2026
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+TABLE OF CONTENTS
+1
+
+INTRODUCTION ................................................................................................................... 5
+1.1. STUDY PURPOSE .......................................................................................................... 5
+1.2. BACKGROUND & SUBWATERSHED STUDIES .......................................................... 5
+1.2.1. MAYFIELD TULLAMORE LOCAL SUBWATERSHED STUDY ...................................................... 5
+1.2.2. BACKGROUND DOCUMENTS ............................................................................................... 6
+1.3. SITE DESCRIPTION ...................................................................................................... 6
+1.4. PROPOSED DEVELOPMENT......................................................................................... 6
+
+2
+
+PRELIMINARY GRADING .................................................................................................... 8
+2.1.
+2.2.
+
+3
+
+PROPOSED GRADING .................................................................................................. 8
+BOUNDARY GRADES AND DEVELOPMENT INTERFACES ........................................................ 9
+
+STORMWATER MANAGEMENT STRATEGY ..................................................................... 10
+3.1. EXISTING CONDITIONS............................................................................................ 10
+3.1.1. GEOTECHNICAL / HYDROGEOLOGICAL CONSIDERATIONS ................................................. 10
+3.2. PROPOSED DRAINAGE ..................................................................................................... 12
+3.2.1. MINOR SYSTEM ............................................................................................................... 12
+3.2.2. MAJOR SYSTEM ............................................................................................................... 12
+3.3. STORMWATER MANAGEMENT STRATEGY .......................................................................... 12
+3.3.1. IMPERVIOUSNESS............................................................................................................ 13
+3.3.2. STORMWATER MANAGEMENT CRITERIA ........................................................................... 15
+3.3.3. THERMAL MITIGATION REQUIREMENTS ........................................................................... 17
+3.4. SWM POND DESIGN ....................................................................................................... 17
+3.4.1. SWM POND STAGE-STORAGE-DISCHARGE CHARACTERISTICS ........................................ 18
+3.4.2. DRAWDOWN TIME........................................................................................................... 19
+3.4.3. DOWNSTREAM ASSESSMENT / EXTERNAL SWM FACILITIES............................................. 20
+3.4.4. SWM POND INLET AND OUTLET DESIGN ......................................................................... 22
+3.4.5. POND NATURALIZATION .................................................................................................. 23
+3.4.6. THERMAL MITIGATION MEASURES .................................................................................. 24
+3.5. SITE WATER BALANCE AND LOW IMPACT DEVELOPMENT ................................. 25
+3.5.1. SITE WATER BALANCE..................................................................................................... 25
+3.5.2. LOW IMPACT DEVELOPMENT (LID) PLAN ........................................................................ 26
+
+4
+
+CHANNEL HYDRAULICS / CHANNEL CORRIDORS ....................................................... 28
+
+5
+
+SANITARY SERVICING ...................................................................................................... 30
+5.1.
+5.2.
+5.3.
+5.4.
+
+6
+
+EXISTING SANITARY SERVICING AND REGIONAL SYSTEM CAPACITY ................................ 30
+BACKGROUND AND GUIDING STUDIES FOR SANITARY SERVICING ................................... 30
+PROPOSED SANITARY SERVICING STRATEGY ................................................................... 31
+SANITARY DESIGN CRITERIA AND WASTEWATER GENERATION RATES............................. 31
+
+WATER SERVICING ............................................................................................................ 34
+2
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+6.1.
+6.2.
+6.3.
+6.4.
+6.5.
+6.6.
+6.7.
+6.8.
+7
+
+ROADS .................................................................................................................................. 38
+7.1.
+7.2.
+7.3.
+7.4.
+
+8
+
+ROAD NETWORK......................................................................................................... 38
+ROAD RIGHTS-OF-WAY ............................................................................................ 38
+FUTURE ROAD IMPROVMENTS AND CROSSINGS ................................................ 39
+TRAILS.......................................................................................................................... 39
+
+DEVELOPMENT STAGING AND ESC PLANNING ............................................................ 41
+8.1.
+
+9
+
+WATER DISTRIBUTION ............................................................................................. 34
+EXISTING SYSTEM ........................................................................................................... 34
+PROPOSED WATER SERVICING ........................................................................................ 35
+DESIGN CRITERIA ........................................................................................................... 35
+WATER DEMAND ESTIMATES ........................................................................................... 35
+HYDRAULIC ANALYSIS RESULTS ...................................................................................... 36
+STORAGE AND PUMPING CONSIDERATIONS ..................................................................... 36
+SUMMARY AND RECOMMENDATIONS ................................................................................ 37
+
+EROSION AND SEDIMENT CONTROL PLAN DURING CONSTRUCTION .................................. 41
+
+CONCLUSION ...................................................................................................................... 43
+
+3
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+APPENDICES
+Appendix A – Drawings and Figures
+Figure 1.1
+Draft Plan
+Drawing 2.1
+Preliminary Grading Plan
+Drawing 7.4.1
+8.0 m ROW
+Drawing 7.4.2
+18.0 m ROW
+Drawing 7.4.3
+20.0 m ROW
+Drawing 7.4.4
+23.5 m ROW
+Drawing 7.4.5
+26.0 m ROW
+Drawing 3.1
+Pre-Development Drainage Plan
+Drawing 3.3
+SWMF Drainage Plan
+Drawing 3.5
+LID Plan
+Drawing 3.4
+SWM Pond Plan
+Drawing 5.1
+Sanitary Drainage Plan
+Drawing 6.1
+Watermain Servicing Plan
+Drawing 3.2
+Storm Drainage Plan
+Appendix B – Geotechnical / Hydrogeological Studies
+Appendix C – Storm & Sanitary Design Sheets / Water Distribution Report
+Appendix D – Hydrology, SWM Pond Modelling & Calculations
+Appendix E – Hydraulic Modelling (HEC-RAS)
+
+4
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+1
+
+INTRODUCTION
+1.1. STUDY PURPOSE
+
+This Functional Servicing Report (FSR) has been prepared in support of the 12933 Bramalea Road
+Draft Plan and associated Zoning By-Law Amendment planning application to allow for the proposed
+development of a residential community on the lands located east of Bramalea Road and south of
+Old School Road in the Town of Caledon. The 12933 Bramalea Road lands, also referred to as the
+‘Subject Lands’ in this report, are illustrated in Figure 1.1.
+The Subject Lands includes a portion of the larger Mayfield Tullamore Secondary Plan (MTSP) Area,
+which extends south to Mayfield Road and east to Torbram Road. Preparation of the 12933 Bramalea
+Road Draft Plan has been synchronized with the adjacent 12580 and 12552 Torbram Road
+properties (currently Mayfield Golf Club), also within the Mayfield Tullamore Secondary Plan.
+Functional servicing design of the Subject Lands and adjacent properties were coordinated with the
+adjacent properties, referencing the 12580 and 12552 Torbram Road FSR (dated February 2026),
+prepared by SCS Consulting.
+This FSR, prepared by Urbantech Consulting, provides the grading, servicing, and stormwater
+management design required to support the Draft Plan of Subdivision for the Subject Lands. The
+purpose of this report is to demonstrate that the development can be graded and serviced in
+accordance with the Town of Caledon, TRCA, and MECP design criteria.
+1.2. BACKGROUND & SUBWATERSHED STUDIES
+1.2.1. Mayfield Tullamore Local Subwatershed Study
+The MTSP Area consists of approximately 612 ha within the Peel Region’s Settlement Area
+Boundary Expansion (SABE) Study Area. The participating landowners make up approximately 438
+ha (71.5%) of the total MTSP Area. The Town of Caledon is undertaking the Mayfield Tullamore
+Local Subwatershed Study (MTLSWS) in support of the planning framework and urban structure
+proposed for the MTSP Area within the West Humber River subwatershed.
+While the MTLSWS is ongoing, the Phase 1 and Phase 2 reports are available to inform FSR work
+at the Draft Plan level. The Phase 1 Report, prepared in February 2025, characterized existing
+conditions, including natural heritage features, hydrologic features, and surface / groundwater
+systems within study area. The Phase 2 Report prepared in April 2025 introduced the preferred land
+use plan (of the MTSP) and included analysis, impact assessment, mitigation, and recommendations
+for stormwater management requirements for future SWM facilities on major reaches in the West
+Humber River subwatershed.
+This FSR builds on the recommendations of the MTLSWS Phase 2 report, including quantity, quality,
+erosion control, and water balance criteria. The Phase 3 report will develop the detailed SWM
+strategy, including end-of-pipe facilities and low impact development (LID) measures to meet these
+objectives. When the Phase 3 report is available, its recommendations will be assessed and the
+12933 Bramalea Road FSR will be updated as needed.
+5
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+1.2.2. Background Documents
+In preparation of the 12933 Bramalea Road FSR, the following background documents, reports,
+standards, and criteria were reviewed:
+•
+•
+•
+•
+•
+•
+•
+
+Mayfield Tullamore Local Subwatershed Study – Phase 1: Subwatershed Characterization
+and Integration Report, prepared by GEI Consultants, February 2025;
+Mayfield Tullamore Local Subwatershed Study – Phase 2: Subwatershed Impact
+Assessment Assessment, prepared by GEI Consultants, April 2025.
+Mayfield Golf Club Functional Servicing and Stormwater Management Report, prepared by
+SCS Consulting, February 2026 (Second Submsision);
+Region of Peel Development Charges Background Study – November 2020;
+Region of Peel Water and Wastewater Master Plan for the Lake-Based System, 2020;
+Region of Peel Wastewater Development Charges Mapping, 2026;
+Region of Peel Water Development Charges Mapping, 2026;
+
+This report has been prepared to satisfy the applicable requirements of the following standards,
+criteria, and guidelines:
+•
+•
+•
+•
+•
+•
+
+Town of Caledon Development Standards Manual, 2019;
+Peel Public Works Stormwater Design Criteria and Procedures Manual, June 2019;
+Consolidated Linear Infrastructure Environmental Compliance Approval Stormwater
+Management Criteria, September 2022;
+Region of Peel Public Works Watermain Design Criteria, June 2010;
+Region of Peel Public Works Linear Wastewater Standards, March 2023; and
+Toronto and Region Conservation Authority and Credit Valley Conservation stormwater
+management, water balance, and natural heritage guidelines, as applicable.
+
+1.3. SITE DESCRIPTION
+The Subject Lands encompass approximately 69.9 ha east of Bramalea Road and south of Old
+School Road, as illustrated in Figure 1.1. Adjacent future developments within the MTSP Area
+include DG Group Sentinel Holdings to the east and Mayfield Golf Course Inc. to the southeast.
+Smaller future developments and holdout properties are also northeast, west, and south of the
+Subject Lands. A property ownership map is provided in Figure 1.3.
+The Subject lands lie within the West Humber subwatershed, with tributary 4(3)4-2 and 4(3)2-1
+traversing north to south through the site on the western and eastern portions, respectively. The existing
+land use consists mainly of agricultural lands and a few rural residential properties at the northern limit.
+1.4. PROPOSED DEVELOPMENT
+The 12933 Bramalea Road Draft Plan, prepared by GSAI, is illustrated in Figure 1.1. It has been
+prepared in accordance with the land uses and policies in the MTSP and coordinated with the
+adjacent landowners Mayfield Golf Course Inc. and DG Group, as well as the retained consultants
+(SCS Consulting).
+6
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+The proposed land use structure includes two collector roads, Street B and Street C. Street B
+provides a north to south connection from Old School Road as envisaged by the MTSP. Street C
+provides a west to east connection, crossing over the Natural Heritage System (NHS) corridor of
+tributary 4(3)4-2, also consistent with the MTSP.
+As illustrated in Figure 1.1, the proposed Draft Plan land uses are generally consistent with the land
+use structure provided in the MTSP. The proposed Draft Plan consists mostly of low density and
+medium density residential lots, with a mixed-use block at the northwestern corner, fronting the
+Bramalea Road / Old School Road intersection. Two public park blocks and a public elementary
+school block are also included, with the latter in a central location with frontage on Street B. The
+West Humber River tributaries are maintained with the required natural feature buffers.
+
+7
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+2
+
+PRELIMINARY GRADING
+2.1. PROPOSED GRADING
+
+The proposed grading strategy for the Subject Lands has been developed to provide a coordinated
+grading framework that supports future development, conforms to applicable Town standards, and
+maintains positive drainage to the designated stormwater management facilities and downstream
+outlets. The proposed grading framework, including road grades, development limit tie-ins, overland
+flow routes, and servicing considerations, is illustrated on Drawing 2.1 (Preliminary Grading Plan).
+As shown on Drawing 2.1, the proposed grading strategy has been developed with consideration
+for the following requirements and constraints:
+•
+•
+•
+•
+•
+•
+•
+•
+•
+•
+
+Conformance with the Town’s grading criteria and development standards;
+Matching existing and/or proposed grades (where applicable) along the boundary roads,
+including Bramalea Road to the west and Old School Road to the north, where feasible;
+Providing compatible grades at the limits of development, including the interface with the
+Mayfield Golf Club Inc. lands to the southeast, adjacent lands, natural heritage features and
+associated buffers, and other grading limits identified through the constraint mapping;
+Maintaining positive drainage to the designated stormwater management facilities, storm
+sewer outlets, overland flow routes, and downstream receiving systems;
+Considering downstream stormwater outlet invert elevations, which influence storm sewer
+depths, serviceable drainage areas, and the normal water levels of proposed stormwater
+management facilities;
+Maintaining existing drainage patterns, where feasible;
+Providing adequate cover over proposed municipal servicing, including confirmation of
+sufficient depth for the proposed sanitary sewer crossing below West Humber Tributary
+4(3)4-1;
+Accommodating logical future grading and servicing connections for adjacent development
+lands;
+Avoiding unnecessary retaining walls, excessive grade transitions, and isolated low points;
+and
+Providing safe and continuous overland flow conveyance under major storm conditions.
+
+The proposed grading strategy shown on Drawing 2.1 maintains the existing drainage intent of the
+lands, while directing runoff to the proposed storm sewer system, stormwater management facilities,
+designated overland flow routes, and downstream receiving systems. Grading at the development
+limits has been established to provide suitable tie-ins to Bramalea Road, Old School Road, adjacent
+lands, constraint areas, and the Mayfield Golf Club Inc. lands, while avoiding adverse impacts to
+surrounding properties.
+The proposed grades were reviewed in relation to the sanitary servicing strategy, including the
+proposed sanitary sewer crossing below West Humber Tributary 4(3)4-1. This review confirmed that
+the grading framework can accommodate the required servicing depth and cover, while maintaining
+compatibility with the proposed road grading and stormwater management strategy.
+8
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+Proposed internal road grades are shown conceptually on Drawing 2.1 and will be designed in
+accordance with Town standards. Road grades meet the Town’s minimum and maximum grade
+requirements, provide adequate servicing depth, maintain positive drainage, and support future
+development connections.
+Overall, the proposed grading framework provides a functional and coordinated approach for
+development of the Subject Lands, while maintaining compatibility with boundary roads, adjacent
+lands, constraint areas, municipal servicing, and the overall stormwater management strategy.
+2.2. Boundary Grades and Development Interfaces
+The Subject Lands are bounded by Bramalea Road to the west, Old School Road to the north, and
+the Mayfield Golf Club Inc. lands to the southeast. The proposed development grading must be
+compatible with these boundary conditions to ensure appropriate road, lot, servicing, and drainage
+connections. These grading interfaces are shown on Drawing 2.1.
+The grading approach for each boundary condition is summarized below:
+•
+
+Bramalea Road: Proposed grades along the west limit of the Subject Lands will be
+coordinated with existing and/or future Bramalea Road grades. The grading shown on
+Drawing 2.1 provides suitable road, servicing, and drainage connections while maintaining
+positive drainage to the designated outlets.
+
+•
+
+Old School Road: Proposed grades along the north limit of the Subject Lands will be
+coordinated with existing and/or future Old School Road grades. The grading shown on
+Drawing 2.1 provides appropriate tie-ins to the road corridor and maintains positive drainage
+for both minor and major storm conditions.
+
+•
+
+Mayfield Golf Club Inc. lands: The southeast interface with the Mayfield Golf Club Inc. lands
+will be graded to provide a compatible transition between the development lands and
+adjacent lands. As shown on Drawing 2.1, the grading considers existing and proposed
+grades, servicing requirements, stormwater management objectives, and the need to
+accommodate future development without creating drainage constraints.
+
+Where final adjacent grades or road improvement details are not yet available, the proposed grading
+shown on Drawing 2.1 has been developed to provide flexibility for future refinement, while
+maintaining positive drainage, adequate servicing depth, and compatibility with the planned
+development framework. Further coordination will be required through subsequent design stages to
+confirm final boundary tie-ins, servicing depths, overland flow routes, and servicing crossings.
+
+9
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+3
+
+STORMWATER MANAGEMENT STRATEGY
+3.1. EXISTING CONDITIONS
+
+Existing (pre-development) overland flow within the subject site is split between the West Humber
+Tributaries 4(3)4-1 and 4(3)2-1, within the TRCA Humber River subwatershed, Basin 36.
+The West Portion of the site drains to the West Humber River Tributary 4(3)4-1. The North/Central
+portion of the site drains through an existing 450mm culvert and overland to West Humber Tributary
+4(3)2-4.
+The East portion of the site drainage to West Humber Tributary 4(3)3-1. West Humber River
+Tributaries 4(3)2-4 and 4(3)3-1 converge and discharge to Tributary 4(3)2-1.
+Tributary 4(3)2-1 subsequently joins Tributary 4(3), which conveys flows downstream toward
+Tributaries 4(2) and 4(1), together with the City of Brampton Block 48-2 Tributary E.
+Pre-development drainage catchments, overland flow direction and ultimate discharge locations are
+shown on Drawing 3.1.
+TRCA originally created the Humber River Watershed Hydrology model (Visual OTTHYMO). GEI
+Consultants conducted a local subwatershed study, in collaboration with SCS Consulting Group in
+2025, and provided the LSS Visual OTTHYMO model for the study area to the TACC Caledon study
+team (Urbantech Consulting) in 2026. This model forms the basis of the hydrologic analysis.
+3.1.1.Geotechnical / Hydrogeological considerations
+GEI Consultants Canada Ltd. completed a Geotechnical Investigation and Report dated March 25,
+2026 and a Hydrogeological Investigation dated June 10, 2026. These studies were prepared in
+support of the subject lands and provide preliminary geotechnical and hydrogeological
+recommendations for the Subject Lands. Refer to Appendix B for the GEI reports.
+Geotechnical Conditions
+The geotechnical report indicates that the site is generally underlain by topsoil, cohesive glacial till,
+layered clay and silt, cohesionless sand/silt/gravel deposits, and lower cohesionless glacial till. These
+conditions are generally considered manageable for the proposed subdivision development;
+however, several geotechnical and constructability considerations will need to be addressed through
+detailed design.
+Key geotechnical considerations include the depth and constructability of the proposed sanitary
+servicing, particularly the deep trunk sanitary sewer and the crossing below West Humber Tributary
+4(3)4-1. The sanitary sewer may be located at significant depths below existing grade, and the
+tributary crossing may require specialized construction methods, potentially including trenchless
+10
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+installation. Further coordination with GEI will be required as the sanitary sewer alignment, crossing
+geometry, and road grades are refined.
+The report also identifies that deeper excavations may encounter wet cohesionless soils, cobbles,
+boulders, and groundwater-bearing deposits. These conditions could affect excavation stability,
+groundwater control, crossing design, bedding requirements, trench support, and construction
+sequencing. As such, dewatering requirements, excavation methods, and temporary support
+systems will need to be reviewed further during detailed design.
+The proposed stormwater management facility is another key consideration. Depending on the final
+pond location, depth, groundwater conditions, and permanent pool elevation, a liner may be required
+to limit groundwater interaction and maintain the intended pond function. Additional subsurface
+investigation may be required within the final pond footprint to confirm liner requirements, uplift
+considerations, and pond constructability.
+From a cost and schedule perspective, the main geotechnical considerations include potential
+requirements for additional boreholes, groundwater control, specialized sewer crossing construction,
+trench support, and SWM pond liner systems.
+.
+Hydrogeological Conditions
+The hydrogeological report indicates that groundwater levels vary across the site, with local
+groundwater flow generally toward the southeast, toward tributaries of the West Humber River. The
+site is within the jurisdiction of the TRCA and the CTC Source Protection Region.
+From a source water protection perspective, the GEI report indicates that the site is not located within
+a Wellhead Protection Area or Intake Protection Zone. However, the northwestern portion of the site
+is partially located within a Highly Vulnerable Aquifer area, and the site is located within a Significant
+Groundwater Recharge Area. These designations do not prevent development, but they require
+appropriate consideration of groundwater recharge, water quality protection, infiltration feasibility,
+and construction-phase groundwater management.
+Construction dewatering is expected to be required for portions of the development, particularly for
+deeper servicing, the SWM facility, and the sanitary sewer crossing. The hydrogeological report
+identifies preliminary dewatering rates and notes that dewatering approvals may be required
+depending on final construction methods, excavation depths, groundwater levels, and anticipated
+pumping rates. Dewatering discharge may also require quality monitoring and potential treatment
+prior to discharge, subject to final discharge location and applicable approval requirements.
+The hydrogeological report also includes a preliminary water balance assessment. The assessment
+indicates that, without mitigation, post-development conditions would reduce infiltration and increase
+runoff relative to existing conditions.
+As a result, stormwater management and low impact development (LID) measures may be required
+to maintain water balance objectives, where feasible. A preliminary LID plan to address the infiltration
+deficit under post-development conditions is discussed further in Section 3.5.
+11
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+Potential LID measures may include amended topsoil, rooftop runoff disconnection, infiltration
+galleries, bioswales, soakaway systems, or other measures, subject to final grading, servicing, soil
+permeability, groundwater separation, source water protection requirements, and Town/TRCA
+approval.
+Overall, the geotechnical and hydrogeological reports do not identify any single constraint that
+precludes development of the Subject Lands. However, they identify several items that will require
+continued coordination during detailed design, including deep sanitary sewer construction, the
+tributary crossing, construction dewatering, SWM pond liner requirements, groundwater protection,
+and water balance/LID requirements.
+3.2. Proposed Drainage
+The proposed drainage system for the Subject Lands consists of a minor storm sewer system and a
+major overland flow system. The proposed storm sewer and overland flow drainage patterns are
+illustrated on Drawing 3.2. The storm sewer design sheets are provided in Appendix C.
+3.2.1.Minor System
+The minor storm sewer system has been designed to convey the 10-year storm event in accordance
+with the Town of Caledon design standards and the applicable IDF parameters. Flows in excess of
+the 10-year storm event will be conveyed overland through the major drainage system to the
+designated stormwater management (SWM) facilities and outlet locations.
+The storm sewer inverts at the SWM facility inlets will be established such that the storm sewer
+system is not surcharged during the 10-year storm event, taking into consideration the corresponding
+extended detention water level in the receiving SWM facility. This will be confirmed during detailed
+design through a hydraulic grade line analysis.
+3.2.2.Major System
+The major drainage system will consist of the proposed internal road network and overland flow
+routes. The road network will be graded to safely convey excess runoff up to the 100-year storm
+event within the proposed right-of-way limits and toward the designated SWM facilities and outlet
+locations.
+The major system flow routes and drainage directions are shown on Drawing 2.1 and Drawing 7.1.
+The capacity of the major system will be confirmed during detailed design through overland flow
+analysis, once final grading and servicing plans are available. The major system flow width will not
+impact capacity, since the drainage areas are relatively small and additional capture can be provided
+to ensure that the road capacity is not exceeded.
+3.3. Stormwater Management Strategy
+As shown on Drawing 3.3 and Drawing 7.1, three stormwater management facilities are proposed
+to provide stormwater controls for the proposed neighbourhood/residential development areas. The
+12
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+SWM facilities are located within the West Humber River watershed and will be designed to satisfy
+the applicable stormwater management criteria established through the Mayfield Tullamore Local
+Subwatershed Study.
+The proposed SWM facility locations have been selected based on the following considerations:
+•
+•
+•
+•
+•
+•
+
+utilizing existing and natural low points to minimize earthworks and maintain existing
+drainage patterns, where feasible;
+providing permanent pool storage with outlets to the designated receiving watercourse;
+maintaining existing flow input locations along the receiving watercourse, where feasible;
+minimizing storm sewer depths, lengths, and pipe sizes;
+efficiently using land while maximizing the serviceable drainage area; and
+maintaining positive drainage to the designated stormwater management outlets.
+
+One SWM facility, identified as SWM Facility 1, is proposed within the TACC Caledon lands. Two
+additional SWM facilities, identified as SWM Facilities 3 and 4, are located south of the Subject Lands
+and will receive drainage from portions of the TACC Caledon lands. The design of SWM Facilities 3
+and 4 was prepared under separate cover by SCS Consulting, as part of the Mayfield Golf Club Inc.
+Functional Servicing and Stormwater Management Report, dated February 2026.
+SWM Facilities 3 and 4 were designed using allowable release rates for the 2-year through 100-year
+storm events, based on the u
+nit flow equation for Humber River Sub-Basin 36. Regional storm controls were also established to
+control proposed Regional Storm flows to existing conditions.
+The SCS Consulting hydrologic modelling included preliminary assumptions for the contributing
+drainage area and imperviousness from the TACC Caledon lands. The current hydrologic modelling
+completed by Urbantech Consulting has refined the drainage areas and imperviousness values
+based on the most current development concept, grading, and servicing information. Urbantech’s
+modelling will be used to confirm whether SWM Facilities 3 and 4 (designed by others) provide
+sufficient storage for the updated drainage conditions.
+The functional design of SWM Facility 1, located in the northwest portion of the Subject Lands, has
+been completed by Urbantech Consulting.
+3.3.1.Imperviousness
+The preliminary SWM facility sizing requires an estimate of the imperviousness for each contributing
+drainage area. The catchment imperviousness is a parameter used in the VO6 hydrologic model in
+order to determine proposed peak flow rates and required SWM storage volumes.
+The imperviousness value for each drainage catchment was determined based on the proposed
+Draft Plan land use composition within each drainage area. The imperviousness assumptions for
+each land use were generally adopted from the Mayfield Golf Club Inc. Functional Servicing and
+Stormwater Management Report, prepared by SCS Consulting, to maintain consistency with the
+modelling parameters used for SWM Facilities 3 and 4. The adopted imperviousness values are
+summarized in Table 3.1.
+13
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+Table 3.1: Percent Imperviousness by Land Use
+Land Use Type
+
+Percent Imperviousness
+
+Single Detached
+
+63%
+
+Street Townhouse
+
+65%
+
+Back-to-Back Townhouse
+
+90%*
+
+Rear-Lane Townhouse
+
+90%*
+
+Mixed Use / Retail
+
+90%
+
+School
+
+77%
+
+Park
+
+15%
+
+Walkway
+
+15%**
+
+Buffer / Open Space
+
+0%
+
+SWM Pond
+
+50%
+
+NHS
+
+0%
+
+Residential Reserve
+
+65%***
+
+Road Widening
+
+100%
+
+Road ROW
+
+100%
+
+* Assumed to be equivalent to “Laneway Townhouses” in the imperviousness table from the Mayfield Golf Club Inc. FSR.
+** Assumed to be equivalent to “Parks/Vista Blocks” in the imperviousness table from the Mayfield Golf Club Inc. FSR.
+*** Assumed to be equivalent to “Townhouses” in the imperviousness table from the Mayfield Golf Club Inc. FSR.
+
+The catchment areas draining to the proposed SWM facilities are shown on Drawing 3.3 and the
+corresponding weighted imperviousness values are summarized in Table 3.2.
+Table 3.2: Pond Catchment Areas and Imperviousness
+Catchment
+
+Total Area (ha)
+
+Impervious Area (ha)
+
+Imperviousness (%)
+
+SWM Pond 1
+
+8.79
+
+7.09
+
+80.7
+
+SWM Pond 3
+
+79.40
+
+56.46
+
+71.1
+
+SWM Pond 4
+
+14.76
+
+8.52
+
+57.7
+
+14
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+3.3.2.Stormwater Management Criteria
+The stormwater management requirements for the Subject Lands are based on the criteria
+established through the Mayfield Tullamore Local Subwatershed Study and applicable TRCA, Town
+of Caledon, and CLI-ECA requirements.
+The Subject Lands ultimately outlet to the West Humber River system, including West Humber
+Tributary 4(3)4-1, Tributary 4(3)3-1, and Tributary 4(3)2-1, where the TRCA criteria for Humber River
+subwatershed Basin 36 applies.
+The applicable criteria include water quality control, erosion control, quantity control, Regional Storm
+control, and water balance requirements, as summarized below.
+Water Quality Control
+The West Humber River tributaries require Enhanced Level 1 water quality control, equivalent to
+long-term removal of 80% total suspended solids, in accordance with the MOE Stormwater
+Management Planning and Design Manual, 2003.
+For the Subject Lands, water quality control will be provided through a treatment train approach,
+including end-of-pipe SWM facilities and LID measures, where feasible. The proposed strategy will
+also consider the Town of Caledon’s CLI-ECA stormwater management criteria, which prioritizes
+retention, LID filtration, and conventional stormwater management in that order.
+Erosion Control
+Erosion control targets for the West Humber River were established through the Mayfield Tullamore
+Local Subwatershed Study. The erosion control criteria is to release the 25 mm runoff volume from
+the proposed SWM pond over an extended detention of 48 hours. As per the TRCA SWM criteria
+and the Mayfield Tullamore LSWS, an additional on-site retention of 5 mm is required for erosion
+control.
+Quantity Control
+As identified in the Phase 1 Mayfield Tullamore Local Subwatershed Study, prepared by GEI
+Consultants, the Subject Lands are located within the Humber River watershed, Sub-Basin 36.
+The Humber River hydrology assessment considered both the 6-hour and 12-hour AES storm
+distributions for the 2-year through 100-year storm events. The 6-hour AES storm distribution was
+adopted for quantity control design, as it resulted in more conservative peak flows and larger quantity
+control requirements. The Regional Storm was assessed using the last 12 hours of the Hurricane
+Hazel storm distribution under AMC III conditions.
+The allowable release rates for the 2-year through 100-year storm events were established based
+on Unit Flow Equation F for Humber River Sub-Basin 36, as identified in Table E.1 of the TRCA
+Stormwater Management Criteria. The Regional Storm allowable release rate was established based
+on the existing Regional Storm peak flow rate to each outlet.
+15
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+The following three downstream outlet locations were identified for the Subject Lands, as shown on
+Drawing 3.1:
+•
+
+Outlet 1, located on tributary 4(3)4-1 south of SWM Pond 1 and south of existing drainage
+catchments 201B and 202B.
+
+•
+
+Outlet 3, located on tributary 4(3)2-1 south of SWM Pond 3 and south of existing catchment
+103.
+
+•
+
+Outlet 4, located on tributary 4(3)2-1 south of SWM Pond 4 and south of existing catchment
+105, upstream of the confluence of tributaries 4(3)2-1 and 4(3)2-4.
+
+The existing / target Regional Storm peak flows from the Subject Lands to the outlet locations are
+summarized below in Table 3.3.
+Table 3.3: Pond Catchment Areas and Imperviousness
+Design Storm
+
+Outlet 1
+
+Outlet 3
+
+Outlet 4
+
+Regional Storm
+
+8.55 m³/s
+
+12.75 m³/s
+
+1.99 m³/s
+
+For the portion of the Subject Lands draining to SWM Facility 1, the applicable TRCA quantity control
+targets are summarized below in Table 3.4.
+Table 3.4: Pond Catchment Areas and Imperviousness
+Design Storm
+
+Sub-Basin 36 Unit Flow Rate Equation
+
+Unit Flow Rate
+
+2-Year Storm
+5-Year Storm
+10-Year Storm
+25-Year Storm
+50-Year Storm
+100-Year Storm
+Regional Storm, Outlet 1
+
+9.506 - 0.719 ln(A)
+14.652 - 1.136 ln(A)
+17.957 - 1.373 ln(A)
+22.639 - 1.741 ln(A)
+26.566 - 2.082 ln(A)
+29.912 - 2.316 ln(A)
+Existing Regional Storm peak flow
+
+0.0079 m³/s/ha
+0.0122 m³/s/ha
+0.0150 m³/s/ha
+0.0189 m³/s/ha
+0.0220 m³/s/ha
+0.0249 m³/s/ha
+8.55 m³/s
+
+The proposed SWM facilities will be designed to control post-development flows to the applicable
+allowable release rates for the 2-year through 100-year storm events and to the existing Regional
+Storm peak flow rates.
+CLI-ECA Stormwater Management Requirements
+
+16
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+The proposed stormwater management strategy will also be designed to address the Town of
+Caledon’s Consolidated Linear Infrastructure Environmental Compliance Approval stormwater
+management criteria.
+For water quality control, the CLI-ECA criteria require control of the 90th percentile storm event.
+Where conventional end-of-pipe stormwater management facilities are required, Enhanced Level 1
+protection, equivalent to 80% TSS removal, is to be provided.
+The CLI-ECA criteria establish the following hierarchy for water quality control:
+1. Retention through infiltration, reuse, or evapotranspiration;
+2. LID filtration; and
+3. Conventional stormwater management.
+The CLI-ECA also requires that post-development annual groundwater recharge be controlled to
+meet pre-development recharge conditions. Any infiltration deficit must be addressed through
+infiltration-based measures.
+3.3.3.Thermal Mitigation Requirements
+Thermal mitigation practices are recommended in the Subwatershed Study for Mayfield Tullamore
+Local Subwatershed Study. Thermal mitigation can be achieved by implementing effective
+stormwater management facility measures (shading, orientation, outlet design, floating islands, etc.),
+including LIDs. Thermal mitigation options will be further refined through Draft Plans and detailed
+design and will reference CVC’s Thermal Impacts of Urbanization including Preventative and
+Mitigation Techniques” (draft, December 2010).
+3.4. SWM Pond Design
+The proposed SWM ponds are designed as wet pond facilities incorporating a wet forebay and
+subsequent wet cell. Flow between the forebay and wet cell is routed via a submerged weir. The
+proposed SWM ponds are able to meet or exceed all the SWM pond criteria discussed previously in
+Section 3.3.2. SWM pond configuration and design has respected the guidelines as set out by the
+Ontario Ministry of the Environment’s (MOE) Stormwater Management Planning and Design Manual
+(March 2003).
+The preliminary designs of the SWM ponds include:
+•
+
+The side slopes within the ponds are 4:1 from the bottom of the permanent pool to 0.5 m below
+the normal water level, and from 0.5 m above the normal water level to the top of pond. 7:1
+slopes are provided from 0.5 m below the normal water level to 0.5 m above the normal water
+level.
+
+•
+
+The side slopes on the outside of the pond are 4:1 and were graded to match the proposed
+grades at the pond block boundaries.
+
+•
+
+Grades around pond blocks are set to match the proposed development grades.
+
+•
+
+The access roads are currently located around the SWM facility at the free board elevation and
+17
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+extend to reach the headwalls, outlet structures and sediment drying areas.
+•
+
+The width of the access road is 5.0 m. The purpose of the access road is to provide a suitable
+road for machinery at the time of maintenance to reach the outlet/inlet structures and the bottom
+of the sediment forebays in order to be properly cleaned.
+
+•
+
+A 0.3 m freeboard is established above the active storage water level.
+
+•
+
+Invert elevations of inlet pipes in the SWM facilities were assumed at the permanent pool
+elevation.
+
+•
+
+The pond outlets discharge to the nearest watercourse. Ponds located adjacent to Mayfield Road
+are proposed to discharge to the culverts that are proposed to be constructed by the Region.
+
+•
+
+Further detailed design will be completed in accordance with the Town of Caledon and the
+Ontario Ministry of Environment (MOE) Design Criteria. Refinements will be made to the inlet
+and outlet structures, access roads and emergency overflow spillways.
+
+•
+
+Overall minimum facility length-to-width ratio of 3:1.
+
+•
+
+Minimum forebay length-to-width ratio of 2:1.
+
+•
+
+Maximum permanent pool depth of 3 m.
+
+•
+
+Maximum active storage depth of 2.3 m.
+
+All reasonable assumptions have been made based on standard current engineering practice. Outfall
+configurations have only preliminarily been sited and will require further site investigation and design
+considerations.
+The preliminary designs of the SWM ponds have been completed to establish the required size of
+each of the SWM blocks to ensure sufficient lands are provided. The initial drafting process of the
+SWM ponds was iterative and attempted to optimize use of the SWM blocks and minimize impacts
+to the surrounding lands.
+3.4.1.SWM Pond Stage-Storage-Discharge Characteristics
+The preceding sections provide the storage volume and flow targets for the 2 to 100-year and
+Regional storm events, based on the SWM criteria from the Subwatershed Studies.
+The permanent pool volume for each of the proposed SWM facilities was sized according to Table
+3.2 in the MOE’s Stormwater Planning and Design Manual (2003). The quality control sizing
+calculations for the proposed SWM facility are provided in Appendix D.
+The 6-hour AES storm distribution was used as it resulted in more conservative volumes compared
+to the 12-hour AES storm distribution.
+The preliminary stage-storage-discharge curves based on the proposed grading, and release rate
+requirements, were developed for proposed SWM facility 1 using VO6, as summarized in Table 3.5
+below.
+18
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+Table 3.5: SWM Pond 1 Stage-Storage-Discharge Relationship
+Storm Event
+
+Required
+Volume (m3)
+
+Provided
+Volume (m3)
+
+Stage (m)
+
+Target Release
+Rate (m3/s)
+
+Permanent Pool
+
+1,798
+
+3,650
+
+264.70
+
+N/A
+
+1,766
+
+1,864
+
+265.20
+
+0.017
+
+2,139
+
+2,344
+
+265.30
+
+0.070
+
+5-Year
+
+2,779
+
+2,836
+
+265.40
+
+0.107
+
+10-Year
+
+3,230
+
+3,342
+
+265.50
+
+0.132
+
+25-Year
+
+3,804
+
+3,860
+
+265.60
+
+0.166
+
+50-Year
+
+4,228
+
+4,391
+
+265.70
+
+0.194
+
+100-Year
+
+4,653
+
+4,662
+
+265.75
+
+0.219
+
+Regional
+
+7,190
+
+7,240
+
+266.20
+
+0.923
+
+Extended
+Detention
+2-Year
+
+The stage-storage-discharge data for SWM Facility 1 provided in Table 3.5 is subject to change
+based on the detailed outlet structure design for the proposed SWM pond facility. However, the target
+storage volumes and discharge rates will be maintained, unless the proposed drainage areas are
+revised at detailed design. Rating curves for SWM facilities 3 & 4 used in the VO6 model were
+maintained, per the Mayfield Golfclub VO6 model provided by SCS Consulting, for consistency. The
+VO model output in shown in Appendix D.
+3.4.2.Drawdown Time
+Preliminary orifice sizing was completed to determine the drawdown time of the extended detention
+volume in SWM Pond 1. As discussed in Section 3.3.2, the erosion control criteria is to release the
+25 mm runoff volume from the proposed SWM pond over an extended detention of 48 hours.
+Table 3.6: Extended Detention Orifice Sizing
+SWM Pond
+SWM Pond 1
+
+Extended
+Detention
+Volume (m3)
+
+Extended Detention
+Release Rate (m3/s)
+
+Orifice Size (mm)
+
+1,766
+
+0.017
+
+110
+
+As per the drawdown time calculations provided in Appendix D, the drawdown time for the proposed
+pond is 2 days (48.8 hours), which meets the erosion criteria.
+
+19
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+3.4.3.Downstream assessment / External SWM Facilities
+A comparison of peak flows was completed to confirm that the proposed SWM controls, including
+Regional control, will mitigate any increase in downstream peak flows at selected outlet locations
+resulting from the subject development. The three outlet locations were compared in the existing and
+proposed conditions VO6 model scenarios in order to measure impacts of the subject development
+on downstream peak flows.
+The following tables summarize the peak flow comparison at the outlets for existing and proposed
+scenarios.
+Table 3.7: Outlet 1 (NHYD 41) Peak Flow Comparison
+Storm
+
+Existing Peak Flow (m3/s)
+
+Proposed Peak Flow (m3/s)
+
+2-Year
+
+0.737
+
+0.773
+
+5-Year
+
+1.248
+
+1.292
+
+10-Year
+
+1.626
+
+1.673
+
+25-Year
+
+2.133
+
+2.182
+
+50-Year
+
+2.532
+
+2.581
+
+100-Year
+
+2.937
+
+2.986
+
+Regional
+
+8.545
+
+8.439
+
+Table 3.8: Outlet 3 (NHYD 62) Peak Flow Comparison
+Storm
+
+Existing Peak Flow (m3/s)
+
+Proposed Peak Flow (m3/s)
+
+2-Year
+
+1.447
+
+0.583
+
+5-Year
+
+2.524
+
+0.821
+
+10-Year
+
+3.345
+
+1.053
+
+25-Year
+
+4.463
+
+1.626
+
+50-Year
+
+5.351
+
+2.140
+
+100-Year
+
+6.265
+
+2.672
+
+Regional
+
+12.747
+
+11.458
+
+20
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+Table 3.9: Outlet 4 (NHYD 26) Peak Flow Comparison
+Storm
+
+Existing Peak Flow (m3/s)
+
+Proposed Peak Flow (m3/s)
+
+2-Year
+
+0.185
+
+0.051
+
+5-Year
+
+0.328
+
+0.119
+
+10-Year
+
+0.440
+
+0.180
+
+25-Year
+
+0.594
+
+0.260
+
+50-Year
+
+0.718
+
+0.329
+
+100-Year
+
+0.847
+
+0.399
+
+Regional
+
+1.997
+
+1.385
+
+The results demonstrate that there is a reduction in peak flow at the selected outlet locations under
+post-development conditions, confirming that appropriate mitigation has been provided in the
+proposed SWM facilities.
+As per the Mayfield Golf Club FSSR (February 2026) prepared by SCS, Ponds 3 and 4 did not have
+explicit volumes designated for the various return period events. However, based on the storage
+requirements determined with the VO6 hydrology model and the maximum volume provided, per the
+FSSR by SCS, it was confirmed that Ponds 3 and 4 are sufficiently sized to manage the drainage
+from the subject lands.
+Table 3.10: Pond 3 Required Volumes
+Pond 3 Design Events
+
+Volume Required (m3)
+
+2-Year
+
+17,254
+
+5-Year
+
+23,957
+
+10-Year
+
+28,117
+
+25-Year
+
+32,564
+
+50-Year
+
+35,733
+
+100-Year
+
+38,818
+
+Regional
+
+61,053
+
+Maximum Storage Provided
+
+66,842
+
+21
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+Table 3.11: Pond 4 Required Volumes
+Pond 4 Design Events
+
+Volume Required (m3)
+
+2-Year
+
+2,980
+
+5-Year
+
+3,928
+
+10-Year
+
+4,505
+
+25-Year
+
+5,246
+
+50-Year
+
+5,797
+
+100-Year
+
+6,338
+
+Regional
+
+12,430
+
+Maximum Storage Provided
+
+13,300
+
+Refer to Appendix D for the digital model files and results.
+3.4.4.SWM Pond Inlet and Outlet Design
+Inlet and outlet size and locations for each pond are shown on Drawing 7.1. The size of inlet pipes
+has been minimized where possible; however, box culverts are preferred as they can provide greater
+conveyance capacity with less pipe depth in locations where cover is limited.
+The proposed pond inlet structures will be designed according to the Town standards and will
+discharge into the pond forebay. The forebay will be designed according to the settling and dispersion
+length equations provided in Section 4.6.2 of the MOE SWM Planning and Design Manual (2003).
+The SWM pond facilities will have multiple outlet components, including extended detention, flood
+flows, emergency spillway and a maintenance drawdown pipe or sump (where applicable). The pond
+outlet details will be determined at the detailed design stage.
+The extended detention pipe will consist of a reverse-slope bottom draw pipe extending from the
+bottom of the pond to an orifice plate on the control structure. The submerged end of the proposed
+bottom draw pipe will be fitted with a perforated pipe section of sufficient area of opening and will be
+protected by a gravel jacket. The orifice plate will be sized to meet the required extended detention
+flows and required drawdown time. The orifice plate will be bolted onto the outlet structure with the
+invert set at the permanent pool water level. To prevent potential blockage of the extended detention
+control by debris, etc., a minimum orifice size of 75 mm is desirable.
+A series of orifices or a compound weir knock-out will be designed at the detailed design stage for
+the pond outlet control structure in order to achieve the quantity control target flows.
+The conveyance of emergency flows (i.e., uncontrolled Regional flows) through the SWM pond
+facilities will be accommodated by emergency outlet structures within the pond set above the
+Regional pond operating water level, in the event that all outlet structures within the SWM pond are
+blocked. The emergency conveyance details will be provided at the detailed design stage for the
+proposed SWM facilities.
+22
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+If the grading and pond design permit, maintenance sumps or drawdown pipes will be provided to
+drain the facilities for the purpose of maintenance works. These operations and maintenance
+structures will also connect to the pond outfall structures.
+The proposed outfall headwalls for the pond outlets will be designed to Town Standards.
+3.4.5.Pond Naturalization
+The main purpose of stormwater management is to maintain watershed hydrology and protect the
+ecological health and integrity of downstream waterbodies by providing the flood, erosion and water
+quality controls necessary to protect downstream ecosystems. In addition to these functions, SWM
+facilities can complement and support adjacent natural heritage systems and their ecological
+functions. As this green infrastructure is typically constructed adjacent to valley and creek corridors
+which form part of natural heritage systems, they can enhance linkage and buffering functions and
+opportunities to improve the condition quality of adjacent natural features. Many of these functions
+can be achieved by naturalizing components of the SWM facilities by planting a diversity of locally
+native trees, shrubs and groundcovers.
+The use of native species in naturalization is beneficial to maintaining and enhancing local
+biodiversity. Often times, adjacent natural heritage systems are in a degraded ecological state and
+have lost much of their native biodiversity, so providing a source of native seed nearby can help to
+restore these systems.
+Consistent with the Stormwater Management Facility Planting Guidelines (CVC 2003) and Thermal
+Impacts of Urbanization including Preventative and Mitigation Techniques (CVC 2011), it is
+recommended that locally native tree, shrub and groundcover species be utilized for landscaping the
+proposed SWM facilities.
+The purpose of inlet and outlet plantings is two-fold:
+•
+
+To provide shading of incoming and outgoing water; and
+
+•
+
+To help prevent substrate erosion.
+
+Numerous native trees and shrubs can be utilized for these areas including, trembling aspen, largetoothed aspen, red maple, sugar maple, speckled alder, red-osier and grey dogwood, nannyberry,
+and numerous native species of willow.
+Landscaping plans for the proposed SWM pond facility will be prepared at detailed design.
+The timing of SWM pond landscaping is dependent on timing of development. Plant species that are
+dependent on the permanent pool elevation will not be installed until it is confirmed that the SWM
+facility functionally maintains the permanent pool elevations. Further, no planting of any proposed
+aquatic species in the sediment forebay and/or areas of the permanent pool will be undertaken until
+after initial cleaning and subsequent assumption.
+
+23
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+3.4.6.Thermal Mitigation Measures
+A number of mitigation measures were considered in this study, including mitigation measures that
+research suggests will have an impact on reduction of water temperature (where feasible).
+Of specific interest is the CVC study “Thermal Impacts of Urbanization including Preventative and
+Mitigation Techniques” (draft, December 2010), which indicated that an east-west pond orientation
+can reduce the hours of potential solar radiation, although a north-south orientation is preferable for
+narrow SWM facilities. Similarly, orienting the long side of the facility perpendicular to the prevailing
+wind direction (west) can assist in reducing thermal impacts.
+The Draft CVC Thermal Impacts report identified five “zones” where thermal mitigation measures
+can be implemented. These include:
+•
+•
+•
+•
+•
+
+Zone 1 – Up-gradient (i.e., pond catchment area)
+Zone 2 – SWM facility inlet
+Zone 3 – SWM facility
+Zone 4 – SWM facility outlet
+Zone 5 – Riparian corridor
+
+Table 3.12: Thermal Mitigation Measures
+SWM Facility Feature
+
+Zone
+
+Energy transfer between warm storm runoff and
+cool sub-surface storm sewers
+
+Zone 1
+
+LID measures
+
+Zone 1
+
+Roof colour
+
+Zone 1
+
+Downspout disconnection
+
+Zone 1
+
+Up-gradient plantings
+
+Zone 1
+
+Buried inlet pipe
+
+Zone 2
+
+Inlet cooling trench
+
+Zone 2
+
+Inlet plantings
+Shading of open water areas by maximizing
+canopy
+Artificial shade systems
+
+Zone 2
+
+Floating island
+
+Zone 3
+
+Reduce open water area
+
+Zone 3
+
+Increased L:W ratio
+
+Zone 3
+
+Zone 3
+Zone 3
+
+24
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+SWM Facility Feature
+
+Zone
+
+Pond orientation to reduce solar inputs
+
+Zone 3
+
+Pond orientation to increase exposure to
+prevailing wind
+
+Zone 3
+
+Landscaped jetties for shading
+
+Zone 3
+
+Sub-surface SWM ponds
+
+Zone 3
+
+Outlet sub-surface cooling trench and shading
+
+Zone 4
+
+Concrete outlet pipe
+
+Zone 4
+
+Introduce cool water at SWM pond outlets such
+as foundation drain collectors (FDC), where
+feasible
+
+Zone 4
+
+Reversed slope submerged pond outlet and extra
+permanent pool depth at outlet
+
+Zone 4
+
+As shown on Drawing 3.5, thermal mitigation is provided in SWM Pond 1 by the 3 m-deep permanent
+pool in the pond wet cell.
+3.5. SITE WATER BALANCE AND LOW IMPACT DEVELOPMENT
+In addition to meeting the quantity, quality, and erosion control targets, the proposed SWM strategy
+will address water balance requirements for the subject lands. The site water balance aims to mimic
+pre-development groundwater recharge rates in order to maintain groundwater as a source of flow.
+3.5.1.Site Water Balance
+A site water balance assessment was conducted by GEI as part of the Hydrogeological Investigation
+(dated June 2026), in order to determine local pre-development annual infiltration volumes, impacts
+of proposed development to annual infiltration volumes, and the impact of potential mitigation
+measures to preserve annual groundwater recharge under post-development conditions.
+Development of an area affects the natural water balance. The most significant difference is the
+addition of impervious surfaces as a type of surface cover (i.e., roads, parking lots, driveways, and
+rooftops). Impervious surfaces prevent infiltration of water into the soils and the removal of the
+vegetation removes the evapotranspiration component of the natural water balance. The evaporation
+component from impervious surfaces is relatively minor compared to the evapotranspiration
+component that occurs with a healthy vegetation cover. The net effect of the development of a
+property is expected to be an increase in the water surplus resulting in a decrease in infiltration and
+an increase in runoff.
+Per the water balance assessment prepared by GEI, the subject development will result in a
+decreased annual infiltration of 63,487 m3/year (-66%), as compared to pre-development conditions.
+25
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+The Hydrogeological Investigation by GEI, including the water balance assessment, is included in
+Appendix B.
+3.5.2.Low Impact Development (LID) Plan
+LID measures are recommended, where practical, in order to promote infiltration and mitigate the
+overall infiltration deficit resulting from post-development conditions. While end of pipe facilities
+provide the minimum required SWM controls, the use of LID (Low Impact Design) stormwater
+management measures can be helpful to reduce the amount of runoff by increasing on-site retention,
+infiltration, and evapotranspiration. The use of LIDs in a “treatment train” approach has long been
+endorsed by the TRCA.
+There are many LID measures available for use. Techniques to maximize the water availability in
+pervious areas, such as designing grades to direct roof runoff towards open space areas throughout
+the development, where possible (e.g., yards, boulevards, landscaped areas, swales, green space
+in parking lots, etc.), which can increase recharge in the developed area. Where possible, increasing
+topsoil depths in the pervious areas to retain more water in storage can also assist to reduce runoff
+volumes and increase the potential for infiltration. Other engineered LID measures such as infiltration
+and/or exfiltration trenches, HDFs, enhanced grass swales, and bioswales can be used to reduce
+runoff volumes and increase the potential for infiltration.
+Drawing 3.5 shows the interpreted depth of groundwater throughout the subject lands, as well as
+preliminary preferred locations for LID measures. LID placement is typically best in areas where
+groundwater is at least 2+ m below proposed grade. As shown on Drawing 3.5, there are areas
+within the subject lands where high groundwater restricts potential locations for LID measures.
+The preliminary water balance mitigation plan includes the following LID measures:
+•
+
+Park LID: An infiltration gallery is proposed within the northeast park, as shown on Drawing
+3.5. These are rectangular trenches lined with geotextile fabric, filled with clean granular
+stone or void-forming materials. A void ratio of 40% is assumed for the proposed infiltration
+gallery. Storm runoff from the storm sewer within the ROW adjacent to the park block is to
+be diverted to the infiltration gallery.
+
+•
+
+SWM Pond LID: Infiltration chambers are proposed within the SWM Pond 1 block, as shown
+on Drawing 3.5. Infiltration chambers provide large volume of underground void space, all
+the while maintaining the necessary structural stability for sub-surface Best Management
+Practices (BMPs). They consist of a variety of proprietary modular structures that can be
+installed beneath paved parking lots or landscaped areas. Typically featuring open bottoms,
+perforated side walls, and optional stone-filled reservoirs below, these chambers are
+versatile in treating runoff from roofs, walkways, parking lots, and roads, given proper
+sedimentation pre-treatment measures. Due to their significant storage capacity, this
+technology is often utilized in areas where little to no space is available for other stormwater
+BMP solutions. Storm runoff from the storm sewer discharging to SWM Pond 1 is to be
+diverted to the infiltration chambers.
+26
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+The water balance mitigation proposed as part of the preliminary LID plan is summarized in Table
+3.13 below.
+Table 3.13: Preliminary LID plan
+Infiltration Galleries
+
+Pond Block LID
+
+Park LID
+
+Total Drainage Area (ha)
+
+7.40
+
+0.88
+
+Total Impervious Area (ha)
+
+6.04
+
+0.28
+
+LID footprint (m2)
+
+525
+
+280
+
+LID depth (m)
+
+1.40
+
+1.00
+
+Total LID volume (m3)
+
+735
+
+280
+
+LID infiltration volume (m3)
+
+735
+
+112
+
+As per the Hydrogeological Investigation by GEI, the proposed water balance mitigation reduces the
+infiltration deficit from -60% to -26%. Subject to Town approval, if the proposed public LIDs are not
+feasible due to maintenance constraints, opportunities to incorporate LIDs on private lots (i.e.,
+infiltration trenches) can be investigated.
+
+27
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+4
+
+CHANNEL HYDRAULICS / CHANNEL CORRIDORS
+
+The TRCA HEC-RAS model for West Humber Creek Tributary 4(3)4-1 was received and used as the
+basis for the hydraulic assessment of the proposed road crossing. No changes to the existing channel
+grading, channel alignment, or overbank grading are proposed as part of the development.
+Accordingly, the existing HEC-RAS geometry was maintained, with the exception of adding the
+proposed road crossing. This model was used to establish the Draft Plan development limits /
+setbacks from the various hazards.
+The proposed crossing was modelled as a box culvert with a clear opening of 4.2 m width by 1.8 m
+height. The purpose of the assessment was to confirm the hydraulic impacts associated with the
+proposed crossing relative to existing conditions. The resulting existing and proposed water surface
+elevations are summarized below at the cross-sections that are upstream and downstream of the
+subject lands. As shown in Table 4.1, while there are local impacts due to the crossing, there are no
+impacts upstream or downstream of the subject lands.
+
+Table 4.1: HECRAS Existing and Proposed WSEL
+Station
+
+Existing WSEL (m)
+
+Proposed WSEL (m)
+
+Difference
+
+1765.97
+
+270.91
+
+270.91
+
+0.00
+
+Old School Road
+1738.95
+
+269.19
+
+269.19
+
+0.00
+
+1711.76
+
+268.71
+
+268.70
+
+-0.01
+
+1674.27
+
+268.32
+
+268.32
+
+0.00
+
+1674.27
+
+268.25
+
+268.25
+
+0.00
+
+1652.33
+
+268.22
+
+268.22
+
+0.00
+
+1631.53
+
+268.20
+
+268.21
+
+0.01
+
+1597.70
+
+268.20
+
+268.20
+
+0.00
+
+1564.39
+
+268.20
+
+268.20
+
+0.00
+
+1550.30
+
+266.80
+
+266.79
+
+-0.01
+
+1531.80
+
+266.42
+
+266.79
+
+0.37
+
+1531.80
+
+265.93
+
+266.43
+
+0.50
+
+1511.74
+
+265.16
+
+265.90
+
+0.74
+
+1474.21
+
+264.85
+
+265.90
+
+1.05
+28
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+Station
+
+Existing WSEL (m)
+
+Proposed WSEL (m)
+
+Difference
+
+1407.88
+
+265.16
+
+265.19
+
+0.03
+
+1370.19
+
+264.85
+
+264.74
+
+-0.11
+
+1304.98*
+
+264.43
+Proposed 4.2 m W × 1.8 m H
+Box Culvert
+
+1284.50
+
+264.02
+
+264.15
+
+0.13
+
+1257.27
+
+263.66
+
+263.75
+
+0.09
+
+1237.27*
+
+263.44
+
+1205.23
+
+262.97
+
+262.97
+
+0.00
+
+1148.69
+
+262.26
+
+262.26
+
+0.00
+
+1089.95
+
+261.54
+
+261.54
+
+0.00
+
+1039.45
+
+260.28
+
+260.28
+
+0.00
+
+*Station added in Proposed model
+
+The following are recommendations for the implementation and construction of the proposed crossing:
+•
+
+Construction should be carried out within the existing channel during low-flow conditions
+and as regulated by the fisheries timing window, or as dictated by the Conservation
+Authority.
+
+•
+
+The design elements are unique and as such, the designer or representative should be part
+of construction supervision to ensure proper installation and function of the design elements.
+Onsite supervision will ensure a rapid response to construction issues.
+
+•
+
+Dewatering discharge should be pumped at least 30 m from the channel through a filter bag
+prior to release on the floodplain. The water should be dispersed across the floodplain through
+straw bales or Filtrexx Silt Soxx.
+
+•
+
+All materials and equipment used in the construction should be maintained to prevent
+deleterious substances from entering the water. A staging area, with appropriate erosion
+controls, should be placed away from the work area. All re-fuelling and maintenance should
+be conducted in the staging area.
+
+29
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+5
+
+SANITARY SERVICING
+5.1. Existing Sanitary Servicing and Regional System Capacity
+
+The subject lands are serviced by the Region of Peel’s lake-based wastewater system, which collects
+wastewater from the Town of Caledon, City of Brampton, and City of Mississauga. The lake-based
+system consists of the G.E. Booth wastewater treatment facility and a network of gravity sewers (both
+trunk and local).
+Wastewater generated from the development area will be conveyed south / south east, via the
+proposed sanitary trunk sewer crossing of the West Humber Tributary 4(3)2-1 extended through the
+proposed Mayfield Golf Course Inc. development.
+•
+
+Wastewater generated from the lands east of Bramalea Road / west of the West Humber
+Tributary 4(3)4-1 will cross beneath the tributary at Street C, for connection to the trunk along
+Street B for ultimate tie in to the future sewer connection.
+
+•
+
+Wastewater generated from the balance of the subject lands will also drain towards the
+connection at Street B.
+
+The entire development relies on the proposed connection to the sanitary trunk through the Mayfield
+Golf Course Inc. lands. This trunk is identified on the Region’s water/wastewater master plan as a
+750mm diameter sewer, scheduled for completion in 2032 (component number 56949 / project
+number 31-2198).
+If required to accommodate development timing, the landowner/developer group, including the
+Mayfield Golf Course Inc. lands, may enter into a front-ending agreement with the Region for delivery
+of necessary Regional infrastructure ahead of the capital program planning schedule (subject to
+budget availability/approval).
+5.2. Background and Guiding Studies for Sanitary Servicing
+The sanitary servicing design for the subject lands has been prepared in accordance with the
+strategies put forth in the following higher-level planning documents:
+•
+•
+•
+•
+
+Region of Peel DC Infrastructure study (2026)
+Peel Public Works Linear Wastewater Standards (March, 2023)
+Mayfield Golf Club Inc. FSSR (SCS, February 2026)
+Regional DC Infrastructure Capital Program and associated mapping ([Year])
+
+The proposed sanitary servicing strategy outlined in this FSR has been prepared in accordance with
+the servicing concepts established in the SCS FSSR and is consistent with the Regional Master
+Servicing Plan and Region standards.
+
+30
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+5.3. Proposed Sanitary Servicing Strategy
+Drawing 5.1 shows the proposed sanitary servicing strategy for the subject lands, including all
+existing and future Regional service connections. The development area is intended to be serviced
+by a series of local sub-trunk sewers, generally draining from north to south / west to east, connecting
+into the planned trunk sewer on the Mayfield Golf Course Inc. lands.
+The Mayfield Golf Course Inc. FSSR by SCS indicated a 600mm sanitary trunk downstream of the
+subject lands. The sanitary connection through the Mayfield Golf Course Inc. lands was not sized in
+the SCS FSSR, but based on the drainage area / population approaching the connection at Street
+B, a minimum size of 675mm is required for the connection, with a larger trunk downstream (likely
+750mm as suggested by the Region’s DC study).
+Internal sanitary sewers are generally 200mm, with sub-trunks extending to capture external
+drainage areas from the west and east in the range of 450mm to 675mm.
+Sufficient level of detail regarding the sanitary sewer design was completed at this FSR stage to
+ensure that both internal lands and external lands can be serviced to meet Municipal and Regional
+standards. The sanitary sewer design demonstrates servicing viability without placing undue
+restrictions on the following external areas:
+•
+
+Ext-1A - north of Old School Road with an area and population of 64.44 ha / 4,511 people,
+respectively (connection at MH246 on Street B)
+
+•
+
+Ext-2A – west of Street X / east of West Humber Tributary 4(3)4-1 with area and population
+of 3.48 ha / 244 people, respectively (connection at MH66A on Street DD)
+
+•
+
+Ext-3A – west of Bramalea Road (sewer extension by others), with area and population of
+187.29 ha / 16,701 people, respectively (connection at MH70A on Street X).
+
+Servicing of the subject lands ensures sufficient sewer depth and sewer size to accommodate future
+connections.
+5.4. Sanitary Design Criteria and Wastewater Generation Rates
+Regional wastewater design criteria and design standards are taken from the Peel Public Works
+Linear Wastewater Standards (March 2023). Pipe size, slope, and depth will follow the current Design
+Manual.
+Table 5.1: Regional Wastewater Generation Design Criteria
+Population
+Average Dry Weather Flow
+Peaking
+Type
+(L/cap/day)
+Factor
+Harmon
+Residential
+290
+Formula
+
+Inflow & Infiltration
+(L/s/ha)
+0.260
+
+The Harmon Formula is applied as follows:
+31
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+PF = 1 + 14 / (4 + (P/1000)0.5)
+Where PF = Peaking Factor (minimum 2.0, maximum 4.0) and P = Tributary equivalent population.
+The extraneous flow (inflow and infiltration - I&I), is used as an allowance to account for any infiltration
+and inflow that makes its way into the wastewater system over the lifespan of the infrastructure. The
+I&I rate of 0.26 L/s/ha generally applies to the gross area of all lands (all land use types) at the FSR
+stage.
+The design flow is determined as:
+Design flow = (DWF × PF) + I&I
+Where:
+• DWF = Dry weather flow based on Daily per Capita Flow × Equivalent Population
+• I&I = 0.26 L/s/ha × Gross Tributary Area (ha)
+Populations were calculated based on the following Regional criteria:
+Table 5.2: Population Densities
+Housing /
+Density
+Land Use Type
+(persons/ha)
+Single Family (≥ 10 m frontage)
+50
+Single Family (< 10 m frontage)
+70
+Semi-Detached
+70
+Townhouses
+175
+Apartment Buildings
+475
+Light Industrial
+70
+Commercial
+50
+Notes:
+• Where the proposed population equivalent for apartments exceeds 475 persons/hectare, the
+design population shall be calculated based on 2.7 persons per unit × No. of Units / Area.
+• For institutional uses: Junior Public Schools = 1/3 × students (600 minimum); Senior Public
+Schools = 1/2 × students (900 minimum); Secondary Schools = 2/3 × students (1,500
+minimum); Hospitals = 3 persons/bed.
+• For future/external lands where unit counts are not yet available, use the persons-perhectare method with appropriate density for the anticipated land use.
+• Population densities taken from the Peel Linear Wastewater Standards and the Region's
+latest DC Background Study. These values may be superseded by future updates to
+Regional standards.
+Pipe sizing is determined using Manning's formula. The Region’s minimum pipe size is 200 mm
+diameter. Additional pipe design criteria per the Regional Linear Wastewater Standards:
+32
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+Parameter
+Coefficient of roughness (Manning's n)
+Minimum grade – starting legs
+Minimum grade – 250 mm pipes
+Minimum grade – 300 mm pipes
+Minimum grade – pipes > 300 mm
+Minimum velocity
+Maximum velocity
+Maximum d/D at design flow
+Pipes 200 mm to 525 mm
+Pipes ≥ 600 mm
+
+Requirement
+0.013 (all pipes)
+1.00%
+0.40%
+0.35%
+0.30%
+0.6 m/s (0.75 m/s per some Regions)
+3.0 m/s
+70%
+Non-pressure designed
+Pressure designed (hydrostatic test to 345 kPa /
+50 psi)
+
+Refer to the Sanitary Sewer Design Sheet in Appendix C and Drawing 5.1 in Appendix C.
+
+33
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+6
+
+WATER SERVICING
+6.1. WATER DISTRIBUTION
+
+The subject lands are serviced by the Region of Peel’s lake-based water system, which distributes
+water from (Lake Ontario to the Town of Caledon, through the City of Mississauga and City of
+Brampton). The Region's lake-based system consists of treatment facilities, pumping stations /
+reservoirs, and distribution systems.
+Water service to the development will be provided from the Region of Peel's Pressure Zone 7 system.
+AECOM Canada ULC completed a detailed hydraulic analysis of the proposed water servicing (West
+Tullamore Water Servicing Hydraulic Analysis, September 2025, Final). The findings of that study
+form the basis of this section.
+6.2. Existing System
+The existing Zone 7 water system in the vicinity of the subject lands is supplied primarily by the
+Mayfield Elevated Tank (Zone 7C), which receives water from the North Brampton Pumping Station
+and the Alloa Pumping Station. Currently, no dedicated pumping station or storage facility exists in
+the Zone 7 East (7E) sub-area where the development is situated.
+According to the AECOM study, key regional infrastructure planned under the Region's Development
+Charges (DC) Master Plan includes:
+•
+
+A 400 mm watermain on Old School Road (Zone 7) — Project No. 31-1199, C-2034
+(Components 58494, 58496);
+
+•
+
+A 400 mm watermain distribution extension (within the subject lands) running from Dixie
+Road to Bramalea Road, south of Old School Road — DC Project No. 51591, currently
+planned for 2033;
+
+•
+
+The Victoria Reservoir — Project No. 10-1966, C-2026 (Component 58652);
+
+•
+
+The Victoria Pumping Station (Zone 7) — Project No. 28-1580, EA-2028 (Component
+22350); Project No. 30-1963, D-2030 (Component 23447); C-2032 (Component 23448);
+
+•
+
+The West Caledon Elevated Tank (Zone 7) — D-2026 (Component 58668); Project No. 231941, C-2028 (Component 20685); and
+
+•
+
+A 300 mm local distribution watermain on Torbram Road (by others) — Project No. 31-1198,
+C-2032 (Component 58508), with a future connection to the subject lands. While this main
+provides an additional point of connection, it is not anticipated to be required for system
+pressure or fire flow adequacy based on the hydraulic analysis results.
+
+While the West Caledon Elevated Tank is not located in close proximity to the subject lands, the
+AECOM study confirmed that it provides additional storage capacity to the Zone 7 system as a whole.
+34
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+Under the 2031 scenario with the West Caledon Elevated Tank, Mayfield Elevated Tank, Victoria
+Elevated Tank, and Victoria Reservoir/Pumping Station all in service, the Zone 7 system maintains
+normal storage fluctuation, satisfactory pressures (40–100 psi), and available fire flows exceeding
+100 L/s at all nodes within the development area.
+6.3. Proposed Water Servicing
+The development will connect to the Zone 7 system via the proposed 400 mm watermain on Old
+School Road and along Street C, as well as the 300mm watermain proposed on the Mayfield Golf
+Course Inc. lands at Street B. Future connections by others are proposed to the Torbram Road
+distribution main at Street C and the 300mm extension at Bramalea Road.
+The local watermains will be sized through additional water distribution analysis at detailed design.
+Refer to Drawing 6.1 for the proposed water distribution system.
+6.4. Design Criteria
+The hydraulic modelling evaluation was conducted in accordance with the Ministry of the
+Environment, Conservation and Parks (MECP) guidelines and the Region of Peel's linear design
+standards (March 2023). The following criteria were applied:
+Parameter
+Normal operating pressure
+Minimum pressure under fire flow
+Maximum pipe velocity (normal conditions)
+Minimum available fire flow
+
+Requirement
+40–100 psi
+20 psi
+2.0 m/s
+100 L/s at each node
+
+6.5. Water Demand Estimates
+Water demands were calculated by AECOM using the Region of Peel's current consumption rates
+(average day demand and maximum day demand) and peaking factors, as summarized below. Note
+that the AECOM study, dated 2025, may represent a slightly different area and population compared
+to the more recent sanitary analysis.
+Land Use
+
+Area
+(ha)
+
+Detached / Street
+25.81
+Townhouse
+Rear Lane
+6.29
+Townhouse
+Back to Back
+1.51
+Townhouse
+Mixed Use
+1.04
+Park / Open Space 3.39
+
+Density
+Population
+(ppl/ha)
+
+Consumption
+(L/cap/d)
+
+ADD
+(L/s)
+
+Peaking
+Factor
+
+MDD
+(L/s)
+
+70
+
+1,807
+
+250
+
+5.23
+
+1.8
+
+9.41
+
+175
+
+1,101
+
+250
+
+3.19
+
+1.8
+
+5.73
+
+175
+
+264
+
+250
+
+0.76
+
+1.8
+
+1.38
+
+70
+80
+
+73
+271
+
+250
+210
+
+0.21
+0.66
+
+1.8
+1.4
+
+0.38
+0.92
+35
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+Land Use
+School
+Total
+
+Area
+(ha)
+2.84
+40.88
+
+Density
+Population
+(ppl/ha)
+80
+227
+—
+3,743
+
+Consumption
+(L/cap/d)
+210
+—
+
+ADD
+(L/s)
+0.55
+10.60
+
+Peaking
+Factor
+1.4
+—
+
+MDD
+(L/s)
+0.77
+18.59
+
+The total residential Maximum Day Demand (MDD) is 16.9 L/s and the employment MDD is 1.69 L/s,
+for a combined study area MDD of 18.59 L/s and an Average Day Demand (ADD) of 10.60 L/s.
+6.6. Hydraulic Analysis Results
+AECOM updated the Region of Peel's hydraulic model with the latest master planning demands and
+DC infrastructure corresponding to scenario years 2026, 2028, and 2031. Key results are
+summarized below:
+2026 MDD Scenario:
+• System pressures meet the 40–100 psi requirement under normal conditions.
+• Available fire flows are insufficient when the development is served only via the Old School
+Road watermain.
+• With the advancement of DC Project #51591 (400 mm watermain from Dixie Road to
+Bramalea Road) to 2026, and the addition of the 400 mm Bramalea Road connection, fire
+flows meet the 100 L/s minimum at all nodes and system redundancy is achieved.
+2028 MDD Scenario:
+• System pressures meet all requirements.
+• Available fire flows meet the minimum 100 L/s criteria even without the Bramalea Road
+connection.
+• The Mayfield Elevated Tank exhibits a draining pattern under base conditions due to
+inadequate pumping to Zone 7 — a system-wide deficiency not attributable to the subject
+development. Advancement of the Victoria Pumping Station to 2028 resolves this issue and
+restores normal tank level fluctuation.
+2031 MDD Scenario:
+• All key infrastructure (Mayfield ET, Victoria ET, Victoria PS, West Caledon ET) is in service.
+• System pressures and fire flows meet all design criteria.
+• Storage levels at all Zone 6 and Zone 7 facilities fluctuate normally.
+6.7. Storage and Pumping Considerations
+A desktop storage and pumping capacity analysis determined that the Mayfield Elevated Tank (Zone
+7C) has an existing storage deficit relative to MECP requirements for emergency, fire, and
+equalization volumes, even without the subject development considered. The following servicing
+strategy has been identified to address this deficit:
+•
+
+2026: Transfer Zone 7C equalization volume to Alloa Reservoir and North Brampton
+Reservoir.
+36
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+•
+
+2028: Expedite construction of the Victoria Reservoir and Pumping Station.
+
+•
+
+Post-2028: Transfer Zone 7C fire storage from Mayfield ET to Victoria Reservoir; restore
+equalization storage to Mayfield ET.
+
+Implementation of this strategy results in satisfactory storage conditions across all pressure zones
+through 2030. The pumping capacity analysis confirms that North Brampton PS, Alloa PS, and
+Victoria PS (once operational) can collectively service forecasted Zone 7 demands.
+6.8. Summary and Recommendations
+Based on the hydraulic analysis, the proposed development can be adequately serviced through the
+Region of Peel's Pressure Zone 7 system, subject to the following:
+•
+
+Advancement of DC Project #51591 — The 400 mm watermain south of Old School Road
+(Dixie Road to Bramalea Road) should be advanced from 2033 to 2026 to enable the
+Bramalea Road looping connection and satisfy fire flow requirements under initial build-out
+conditions.
+
+•
+
+Advancement of Victoria Pumping Station — The Zone 7 Victoria Pumping Station should
+be advanced from 2030 to 2028 to address system-wide pumping deficiency and maintain
+normal storage fluctuation at Mayfield ET.
+
+•
+
+Internal Distribution — The internal watermain network shall consist of a 400 mm loop
+connecting to both Old School Road and Bramalea Road, providing adequate capacity and
+redundancy for domestic and fire protection demands.
+
+The detailed hydraulic analysis is appended to this report in Appendix C (AECOM, West Tullamore
+Water Servicing Hydraulic Analysis, Project No. 60748510, September 2025, Final).
+
+37
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+7
+
+ROADS
+7.1. ROAD NETWORK
+
+The Subject Lands are located within the broader Mayfield Tullamore Secondary Plan study area
+reviewed in the Transportation Impact Study Update prepared by BA Group, dated February 11,
+2026. The proposed road network for the Subject Lands has therefore been developed to integrate
+with the broader planned transportation framework, while also providing appropriate access, grading,
+servicing, stormwater management, and development connectivity for the Subject Lands.
+The proposed road pattern generally aligns with the Mayfield Tullamore Secondary Plan framework
+and the road network assumptions reviewed through the Traffic Impact Study Update. The broader
+transportation network is based on the use of the existing arterial road network for access to and
+from the community, supplemented by an internal collector and local road system. The collector road
+network is intended to provide primary vehicular access to the boundary road network, support future
+transit access, and form the primary internal cycling spine for the community. Local roads are
+intended to provide access within the planned development areas and are to be designed as
+accessible, low-speed streets that are safe for all road users.
+The Transportation Impact Study Update notes that the collector road network has been refined
+through discussions with the Town of Caledon and is generally consistent with the Town’s January
+2026 Multi-Modal Transportation Master Plan Addendum. Within the broader Secondary Plan study
+area, the collector road network includes two east-west urban corridors and residential collector
+roads that provide north-south and internal circulation. The proposed road framework for the Subject
+Lands has been coordinated with this broader network to support permeability, connectivity to
+boundary roads, active transportation, and future transit access.
+7.2. ROAD RIGHTS-OF-WAY
+The proposed internal road network is shown on Drawing 2.1 – Preliminary Grading Plan, and the
+corresponding right-of-way cross-sections are provided on Drawing 7.4.1 to Drawing 7.4.5. The
+proposed road sections are based on applicable Town of Caledon standard road cross-sections and
+include the following:
+Drawing 7.4.1: 8.0 m laneway right-of-way;
+Drawing 7.4.2: 18.0 m local road right-of-way;
+Drawing 7.4.3: 20.0 m neighbourhood collector right-of-way;
+Drawing 7.4.4: 23.5 m residential collector right-of-way with multi-use path; and
+Drawing 7.4.5: 26.0 m urban collector right-of-way.
+The Transportation Impact Study Update identifies that 26.0 m rights-of-way are proposed for urban
+corridors, consistent with the recommendations of the MMTMP Addendum, and that 23.5 m rightsof-way are proposed for residential collector roads. The report also notes that the Town requires the
+local road right-of-way to follow the Town’s standard local road section, that the 23.5 m minor
+collector section accommodates on-street parking and multi-use paths, and that a 26.0 m major
+38
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+collector right-of-way is considered sufficient. The proposed road cross-sections have been prepared
+to reflect the agreed Town requirements and will be refined, as required, through subsequent detailed
+design.
+7.3. FUTURE ROAD IMPROVMENTS AND CROSSINGS
+The broader transportation study also identifies planned improvements (by others) to the surrounding
+road network, including widening and urbanization of Old School Road, Bramalea Road, and
+Torbram Road by the Town of Caledon. Highway 413 is also planned north of Old School Road, with
+a planned interchange at Bramalea Road. The proposed road network for the Subject Lands has
+been developed with regard for these future boundary road and regional transportation
+improvements.
+One road crossing of West Humber Tributary 4(3)4-1 is proposed within the subject lands. The
+crossing has been located to support the planned road network and maintain connectivity through
+the development, while coordinating with grading, servicing, stormwater management, and
+environmental constraints. The detailed design of the crossing will be completed in accordance with
+applicable Town, Region, and conservation authority requirements, including hydraulic,
+environmental, grading, servicing, and erosion protection considerations.
+The proposed road network has been coordinated with the grading and servicing strategy to maintain
+positive drainage to the designated storm sewer system, stormwater management facilities, and
+overland flow routes. Road grades have been developed to match boundary conditions,
+accommodate future development connections, maintain servicing cover, and avoid isolated low
+points. Final road profiles, intersection grading, transit stop locations, active transportation facilities,
+and traffic control requirements will be confirmed through subsequent detailed design and
+transportation review.
+7.4. TRAILS
+The active transportation network for the Subject Lands will be provided primarily through sidewalks
+within the proposed road rights-of-way. The sidewalk network is intended to provide safe and
+continuous pedestrian connections throughout the development, including connections to internal
+roads, future development blocks, community destinations, boundary roads, and transit
+opportunities.
+Sidewalks will be provided in accordance with the applicable Town of Caledon standards and will be
+coordinated with the proposed road cross-sections, grading, servicing, utilities, and stormwater
+management infrastructure. The sidewalk network will also support pedestrian access to the broader
+active transportation system planned for the surrounding area.
+No trails are proposed within the Natural Heritage System as part of the Subject Lands. It is noted
+that the Town of Caledon Active Transportation Master Plan (June 2024) identifies broader active
+transportation opportunities in the vicinity of the Subject Lands, including potential opportunities
+39
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+within the Natural Heritage System east of the site and along Bramalea Road. These broader
+opportunities are external to the Subject Lands and would be completed by others, if implemented.
+The proposed active transportation approach for the Subject Lands is therefore limited to sidewalks
+within the planned road network. Final sidewalk locations, widths, grading, and connections will be
+confirmed through subsequent detailed design in accordance with Town standards.
+
+40
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+8
+
+DEVELOPMENT STAGING and ESC PLANNING
+
+Preliminary development staging and sub-phases have not yet been determined, and may be subject
+to the timing of the external infrastructure works.
+If required to accommodate development timing and phasing, the proponent and adjacent
+developments may enter into a front-ending agreement with Peel Region to deliver necessary
+regional infrastructure ahead of the capital program planning schedule. This will be further discussed
+as planning proceeds.
+Considerations for interim phasing of stormwater management, water, sanitary and floodplain
+channelization will be reviewed, as required, with the Planning Authorities at an appropriate time in
+the process. Coordination will be necessary to ensure adequate site access, servicing, etc.
+8.1. Erosion and Sediment Control Plan During Construction
+Rigorous erosion and sediment control measures will be designed, implemented and maintained
+throughout the construction period. At detailed design, an Erosion and Sediment Control Plan will be
+prepared and designed in conformance with the Town and Conservation Authority guidelines (e.g.,
+Erosion and Sediment Control Guide for Urban Construction (2019)).
+Erosion and sediment control will be implemented for all construction activities including topsoil
+stripping, earthworks, foundation excavation and stockpiling of materials and will remain in place and
+functional until bare surfaces are stabilized.
+The following erosion and sediment control measures are typical for this type of development:
+•
+
+Natural features will be staked, and temporary fencing provided to keep machinery out of
+sensitive areas.
+
+•
+
+Sediment control fence and snow fence will be placed prior to earthworks.
+
+•
+
+Logistics/construction plan will be implemented to limit the size of disturbed areas, minimizing
+the non-essential clearing and grading areas.
+
+•
+
+Temporary sediment ponds
+
+•
+
+Rock check-dams and cut-off swales will be provided, where required, in order to control, slow
+down and direct runoff to sediment basins.
+
+•
+
+Sediment traps will be provided.
+
+•
+
+Gravel mud mats will be installed at construction vehicle access points to minimize off-site
+tracking of sediments.
+
+•
+
+All temporary erosion and sediment control measures will be routinely inspected / monitored
+and repaired during construction. Temporary controls will not be removed until the areas they
+serve are restored and stable.
+41
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+•
+
+The “multiple barrier approach” will be applied to all construction stages to ensure erosion is
+prevented rather than reduced. Recommended measures are to be installed prior to the initiation
+of the earthworks and grading.
+
+Permit applications will be prepared to support any grading works within and adjacent to TRCA
+regulation limits. Temporary sediment control ponds will be constructed at locations of the ultimate
+SWM pond. E&SC measures will be implemented to protect diversion channels and watercourses at
+all times during construction, including tunnelling operations and road crossings.
+
+42
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+9
+
+CONCLUSION
+
+This Functional Servicing Report has been prepared in support of the proposed development at
+12933 Bramalea Road in the Town of Caledon. The report confirms, at a functional level, that the
+Subject Lands can be graded, serviced, and provided with stormwater management infrastructure in
+accordance with applicable Town of Caledon, Region of Peel, TRCA, CLI-ECA, and Mayfield
+Tullamore Local Subwatershed Study requirements.
+•
+
+The proposed grading strategy provides a coordinated framework for development of the
+Subject Lands. The preliminary grading has been developed to maintain positive drainage,
+match existing and future boundary conditions along Bramalea Road and Old School Road,
+provide suitable interfaces with adjacent lands including the Mayfield Golf Club Inc. lands,
+and accommodate municipal servicing, stormwater management, overland flow routes, and
+future development connections.
+
+•
+
+The geotechnical and hydrogeological investigations completed by GEI Consultants Canada
+Ltd. identify no single constraint that precludes development of the Subject Lands. However,
+the reports identify several items requiring further review through detailed design, including
+deep sanitary sewer construction, the sanitary sewer crossing below West Humber Tributary
+4(3)4-1, construction dewatering, SWM pond liner requirements, groundwater protection,
+and water balance/LID requirements. Additional coordination with GEI is ongoing with
+respect to the site water balance, which may inform the final LID strategy, including the type,
+location, feasibility, and sizing of infiltration or retention-based measures.
+
+•
+
+The proposed storm drainage system consists of a minor storm sewer system and a major
+overland flow system. The minor system has been designed to convey the 10-year storm
+event, while flows exceeding the minor system capacity will be conveyed overland through
+the proposed road network to the designated stormwater management facilities and outlet
+locations. The major system capacity, storm sewer hydraulic grade line, and final inlet/outlet
+elevations will be confirmed through detailed design.
+
+•
+
+The stormwater management strategy includes three SWM facilities serving the Subject
+Lands and contributing external drainage areas. SWM Facility 1 is located within the Subject
+Lands, while SWM Facilities 3 and 4 are located to the south within the Mayfield Golf Club
+Inc. lands and were previously designed by SCS Consulting. Urbantech’s current modelling
+has refined the drainage area and imperviousness assumptions for the TACC Caledon lands
+and confirms that the proposed SWM strategy is intended to provide the required water
+quality, erosion, quantity, Regional Storm, thermal mitigation, and CLI-ECA water balance
+controls.
+
+•
+
+SWM Facility 1 has been functionally designed as a wet pond facility and provides the
+required permanent pool, extended detention, and active storage volumes for the applicable
+storm events. The proposed pond outlet controls have been sized to meet the required
+erosion and quantity control release rates, and the proposed drawdown time satisfies the
+erosion control target. The proposed SWM strategy also demonstrates that postdevelopment peak flows are controlled at the identified downstream outlet locations.
+43
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+•
+
+The TRCA HEC-RAS model for West Humber Tributary 4(3)4-1 was used to assess the
+proposed road crossing. No changes to the existing channel grading, alignment, or overbank
+grading are proposed. The model was updated only to include the proposed road crossing,
+represented as a 4.2 m wide by 1.8 m high box culvert. The results indicate that hydraulic
+impacts are localized to the immediate vicinity of the proposed crossing, with no impacts to
+water surface elevations at the upstream or downstream limits of the assessed reach.
+
+•
+
+Sanitary servicing for the Subject Lands will be provided by a local and sub-trunk sewer
+network conveying flows toward the planned sanitary trunk sewer through the Mayfield Golf
+Club Inc. lands. The proposed sanitary design confirms that the Subject Lands can be
+serviced and that future/external drainage areas can be accommodated without placing
+undue restrictions on adjacent lands. The timing of downstream Regional sanitary
+infrastructure will require continued coordination with the Region of Peel and adjacent
+landowners. If required, front-ending of Regional infrastructure may be considered to support
+development timing.
+
+•
+
+Water servicing will be provided from the Region of Peel Zone 7 lake-based water system.
+The proposed water servicing strategy relies on planned Regional watermain infrastructure,
+including the Old School Road watermain and future internal and external watermain
+connections. Based on the supporting hydraulic analysis completed by AECOM, the Zone 7
+system is expected to provide adequate pressures and fire flow under the planned
+infrastructure scenario. Final watermain sizing and detailed hydraulic confirmation will be
+completed through detailed design.
+
+•
+
+The proposed road network has been coordinated with the broader Mayfield Tullamore
+Secondary Plan transportation framework and the Traffic Impact Study Update. The internal
+road network, right-of-way sections, active transportation provisions, and proposed crossing
+of West Humber Tributary 4(3)4-1 will be refined through detailed design in coordination with
+the Town, Region, TRCA, and adjacent landowners, where required.
+
+•
+
+Erosion and sediment control measures will be implemented during construction to protect
+downstream watercourses, natural heritage features, storm infrastructure, and adjacent
+lands. Detailed erosion and sediment control plans will be prepared as part of subsequent
+design submissions.
+
+Based on the analyses completed to date, the proposed development can be supported from a
+functional servicing, grading, stormwater management, sanitary servicing, water servicing, and road
+infrastructure perspective. Further refinements will be completed during detailed design to confirm
+final grading, servicing alignments, hydraulic grade lines, SWM facility details, LID requirements,
+dewatering requirements, crossing design, utility coordination, and agency approval requirements.
+
+44
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+Report prepared by:
+Urbantech Consulting
+
+06/11/2026
+
+06/11/2026
+
+Jordan Strauss, P.Eng., PMP
+Design Project Manager
+
+Kate Rothwell, M.Eng., P. Eng.
+Associate, Water Resources
+
+45
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+APPENDIX A
+DRAWINGS AND FIGURES
+
+46
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+APPENDIX B
+
+47
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+APPENDIX C
+
+48
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+APPENDIX D
+
+49
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+APPENDIX E
+
+50
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+APPENDIX F
+
+51
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+TACC DEVELOPMENTS - FSR
+Town of Caledon, Region of Peel
+June 2026
+
+APPENDIX G
+
+52
+
+Urbantech® Consulting, A Division of Leighton-Zec Ltd. | 3760 14th Avenue, Suite 301・Markham・ON・L3R 3T7 | 905.946.9461
+urbantech.com
+
+

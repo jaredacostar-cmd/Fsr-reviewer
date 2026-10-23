@@ -1,0 +1,10344 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+April 20, 2026
+
+4848 Mayfield Road
+
+Functional Servicing and Stormwater
+Management Report
+VERSION 1 ▪ SEPTEMBER 2023
+
+REPORT PREPARED FOR
+
+2738183 Canada Inc.
+
+REPORT PREPARED BY
+
+T.Y. LIN
+INTERNATIONAL
+CANADA INC.
+8800 DUFFERIN STREET, SUITE 200,
+VAUGHAN, ON L4K 0C5
+(905) 738-5700
+
+TYLin PROJECT NUMBER 10722
+
+4848 Mayfield Road
+Functional Servicing and Stormwater Management Report
+VERSION 1 • SEPTEMBER 2023
+
+CONTENTS
+1 INTRODUCTION ............................................................ 1
+1.1
+Background Information ......................................................... 4
+2 EXISTING CONDITIONS ................................................ 5
+3 SITE GRADING .............................................................. 6
+3.1
+Grading Design ...................................................................... 6
+4 STORMWATER MANAGEMENT AND SERVICING...... 7
+4.1
+Drainage Strategy .................................................................. 7
+4.2
+Peak Flow and Storage Requirements .................................. 7
+4.3
+Water Balance and Erosion Control ....................................... 9
+4.4
+Low Impact Development (LID) Technologies ....................... 9
+5 MUNICIPAL SERVICES ............................................... 11
+6 EROSION AND SEDIMENT CONTROL....................... 11
+7 UTILITIES ..................................................................... 11
+8 CONCLUSIONS ........................................................... 12
+
+TYLin PROJECT NUMBER 10722
+
+PAGE i
+
+4848 Mayfield Road
+Functional Servicing and Stormwater Management Report
+VERSION 1 • SEPTEMBER 2023
+
+APPENDICES
+APPENDIX A – AS-BUILT DRWAINGS AND TRCA HUMBER RIVER
+MAPS
+APPENDIX B – VISUAL OTTHYMO (VO) MODEL
+APPENDIX C – CULTEC CONCEPTUAL DESIGN
+APPENDIX D – ENGINEERING DRAWINGS
+APPENDIX E – CIVIL ENGINEERING SERVICES COST ESTIMATE
+
+FIGURES
+Figure 1-1: Location Plan........................................................................ 2
+Figure 1-2: Concept Plan ........................................................................ 3
+Figure 4-1: Potential Bioretention Facility ............................................. 9
+
+TABLES
+Table 4-1: Humber River “Equation F” Release Rates ......................... 8
+Table 4-2: Humber River "Equation F" Release Rates ......................... 8
+
+TYLin PROJECT NUMBER 10722
+
+PAGE ii
+
+4848 Mayfield Road
+Functional Servicing and Stormwater Management Report
+VERSION 1 • SEPTEMBER 2023
+
+1
+
+INTRODUCTION
+
+TYLin has been retained by 2738183 Ontario Inc. for civil consulting engineering services in support of a
+Temporary Zoning By-Law Amendment (TZBA) at 4848 Mayfield Road, Caledon, Ontario, herein referred
+to as the ‘site’. This Functional Servicing and Stormwater Management Report has been prepared in
+support of the TZBA process.
+The site is currently occupied by a two-storey residential dwelling, a detached steel building, several
+smaller sheds, a gravel driveway with access onto Mayfield Road, and a gravel parking area. Figure 1-1
+shows the location plan of the site in relation to the adjacent roads. The Cambells Cross Creek, which is a
+tributary to West Humber River, flows through the northern quadrant of the site and is regulated by the
+Toronto and Region Conservation Authority (TRCA). Per the Town of Caledon Zoning Map 5 (By-Law
+2006-50) the site is currently zoned A1 (Agricultural) with a portion of the site zoned EPA2 (Environmental
+Protection Area) where the creek traverses the site.
+The site is bounded by Mayfield Road to the south-east, agricultural lands to the south-west, and a tributary
+of the West Humber River to the north-west and north-east.
+The proposed development involves amending the site for trailer storage by constructing a gravel parking
+lot that provides parking for up to 15 trucks and trailers. A stormwater management tank will be constructed
+to meet Humber River release rate targets set out by the TRCA. The improved parking lot will meet the
+Town and Region’s engineering standards, and the parking lot layout is depicted on the conceptual site
+plan Figure 1-2.
+The purpose of this report is to provide a brief of the proposed servicing, grading, and stormwater
+management strategy for the proposed development, which includes the following:
+•
+•
+•
+•
+
+Preliminary site grading plan;
+Preliminary site servicing plan;
+Preliminary stormwater management plan; and
+Preliminary erosion and sediment control plan.
+
+TYLin PROJECT NUMBER 10722
+
+PAGE 1
+
+4848 Mayfield Road
+Functional Servicing and Stormwater Management Report
+VERSION 1 • SEPTEMBER 2023
+
+Figure 1-1: Location Plan
+
+Image Sourced from Google Earth Pro
+
+TYLin PROJECT NUMBER 10722
+
+PAGE 2
+
+4848 Mayfield Road
+Functional Servicing and Stormwater Management Report
+VERSION 1 • SEPTEMBER 2023
+
+Figure 1-2: Concept Plan
+
+Image By Glen Schnarr & Associates Inc.
+
+TYLin PROJECT NUMBER 10722
+
+PAGE 3
+
+4848 Mayfield Road
+Functional Servicing and Stormwater Management Report
+VERSION 1 • SEPTEMBER 2023
+
+1.1
+
+Background Information
+
+The following design criteria was used in the preparation of this report:
+• Town of Caledon - Development Standards Manual Version 5.0 (2019)
+• Toronto and Region Conservation Authority - Storm Water Management Criteria Version 1.0 (2012)
+• Region of Peel - Public Works Design, Specifications & Procedures Manual – Regional Roads and
+Traffic (February 2010)
+The following historical drawings of the subject area were used in the preparation of the report and are
+included in Appendix A:
+• Region of Peel Mayfield Road Reconstruction Drawings
+• TRCA Humber River Watershed Map
+• TRCA Hum-137 (HEQRAS Model)
+The following information was used in the preparation of the report:
+• Topographic survey prepared by Tarasick McMillan Kubicki Ltd. (November 18, 2022), included in
+Appendix A.
+• Natural Environmental Limits prepared by Dillion Consulting Ltd. (June 2023)
+
+TYLin PROJECT NUMBER 10722
+
+PAGE 4
+
+4848 Mayfield Road
+Functional Servicing and Stormwater Management Report
+VERSION 1 • SEPTEMBER 2023
+
+2
+
+EXISTING CONDITIONS
+
+4848 Mayfield Road is located approximately 200m southeast of the Mayfield Road and Bramalea Road
+intersection. Mayfield Road was recently widened in this area and there is an existing asphalt driveway
+which is connected to the north side of Mayfield Road. The site lies directly west of an existing culvert
+crossing of Mayfield Road and the creek that traverses the site drains through the culvert.
+Per the as-built record drawings received from Peel Region, the widening of Mayfield Road works included
+the construction of a storm sewer network. This existing storm sewer network collects drainage from
+Mayfield Road and discharges at the existing culvert located to the north-east of the site. Mayfield Road
+additionally has utility poles, with overhead hydro and bell lines, and an existing 750mm watermain within
+the right-of-way. The as-built record drawings referenced are provided in Appendix A.
+The entire site is approximately 2.78 Ha, of which approximately 1.64 Ha of the site sits atop an existing
+slope creating a local plateau above the creek. Approximately 0.30 Ha of the site, located on the local
+plateau, is proposed to be developed with the proposed truck parking area. At the bottom of the slope lies
+the floodplain to the Cambells Cross Creek, tributary to West Humber River.
+This existing slope of the local plateau varies from 4V:1H to the northeast and is steeper at 2V:1H to the
+northwestern edge. The sites existing table lands drains from the southwestern property line to the crest of
+the slope typically between 2% and 5%. The southwestern property line is acting as a highpoint with the
+neighbouring property, as such the site is not accepting external drainage from the adjacent property.
+There is an existing 2-storey residential building and steel building located north-east of the existing
+entrance and a steel building located along the south-west property line near the existing gravel parking lot.
+Based on the topographic survey identifying a two separate well covers, it is assumed that the existing 2storey building is serviced privately through a well and septic system. This existing residential dwelling, well
+and septic system are proposed to remain. Additionally per the as-built drawings, there are no water or
+wastewater service connections to the existing building on site.
+
+TYLin PROJECT NUMBER 10722
+
+PAGE 5
+
+4848 Mayfield Road
+Functional Servicing and Stormwater Management Report
+VERSION 1 • SEPTEMBER 2023
+
+3
+
+SITE GRADING
+
+A preliminary site grading plan for the site is shown on drawing GR01 in Appendix D.
+Per the Town of Caledon’s grading criteria, relevant grading criteria includes:
+•
+•
+•
+•
+
+3.1
+
+Provide proper surface drainage, preserve existing trees, and direct flow away from houses
+Driveways must slope away from dwellings (2% - 6%)
+Swale depths (Min. 150mm, Preferred 250mm, Max. 450mm)
+Design details of walls over 0.6m are to be submitted with grading plans and stamped by a
+Professional Engineer.
+Grading Design
+
+For most of the site, the existing grading and drainage pattern will remain, where current storm runoff
+reaches the edge of the table lands and then flows to the creek. Near the southwest corner of the proposed
+parking lot, the existing steel building and drainage patterns will remain.
+The parking lot area will be regraded to promote drainage towards the southeastern edge of the parking lot.
+Along the southeast edge, a bioretention facility with catch basins within is proposed that is connected to a
+storm water management tank. The storm water management tank and bioretention facility are further
+detailed in section 4.0 of this report. The bioretention facility will have 3:1 side slopes and match the
+existing grades on the opposite side of the parking lot. The parking lot is generally graded to promote
+drainage to the proposed bioretention facility.
+The northeastern and northwestern corners of the parking lot will be required to be raised to promote
+positive drainage towards the proposed storm sewer system and bioretention facility. In the north-east
+corner of the parking lot a 6.6m long toe wall is proposed to raise the parking lot and promote drainage to
+the storm sewer system. There is a minor encroachment into the 10m dripline buffer of 13.5m2 in the area
+of the toe wall. To balance the small area encroaching the dripline buffer, Dillon Consulting Ltd., is
+proposing to offer compensation to the dripline in other localized areas. Refer to the Environmental Impact
+Study, prepared by Dillon Consulting, for more information pertaining to the environmental limits,
+encroachment and compensation.
+
+TYLin PROJECT NUMBER 10722
+
+PAGE 6
+
+4848 Mayfield Road
+Functional Servicing and Stormwater Management Report
+VERSION 1 • SEPTEMBER 2023
+
+4
+
+STORMWATER MANAGEMENT AND SERVICING
+
+The storm water management servicing plan is presented in drawing SS01 in Appendix D.
+As the proposed stormwater outlet for the development is directed to the TRCA regulated creek, the
+proposed stormwater management strategy for the site is based on TRCA criteria.
+The design criteria for the site are as follows:
+
+4.1
+
+•
+
+Water Quality: “Enhanced” level of protection (80%) TSS Removal.
+
+•
+
+Water Quantity: Control Post development to pre-development flows per the Humber River
+watershed Sub Basin 36 (Equation F) of Table E.1 (Appendix A – TRCA Stormwater Management
+Criteria August 2012)
+
+•
+
+Erosion Control and Water Balance: 5.0mm of on-site retention for impervious areas, with no
+initial abstraction for impervious areas.
+Drainage Strategy
+
+The parking lot will be graded to flow to a series of catch basins located within a bioretention facility that
+drain to a stormwater storage system that provides the storage required to meet the quantity control. Prior
+to entering the storage tank, the stormwater will be cleaned with an oil-grit-separator or other approved
+equivalent. A treatment train approach is achieved through the bioretention facility and the oil grit separator
+prior to being released to the creek to achieve the target 80% TSS removal. The flow out of the storage
+tank will be controlled with an orifice plate/weir wall prior to discharging through a headwall that will be
+placed above the 100-year floodline elevation. The 100-year floodline elevation was determined by TRCA’s
+HEQ-RAS modelling for the creek, in conjunction with the site-specific topographic survey, and is included
+in Appendix A. The relevant TRCA HEQ-RAS cross section information is shown on Drawing No. GR01
+and SS01.
+There is a potential for the storage tank to have an open bottom to allow for infiltration opportunities. We
+acknowledge that at the time of writing of this report the soils infiltration rate is unknown. A
+geotechnical/hydrogeology study will be required to confirm infiltration rates and seasonally high
+groundwater level to ensure adequate infiltration opportunities and inform the detailed design of infiltration
+facilities.
+4.2
+
+Peak Flow and Storage Requirements
+
+The site lies within the Humber River Sub Basin 36, and the post development is required to match flow
+rates determined by ‘Equation F’ determined by the TRCA. The watershed map is included in Appendix A.
+Approximately 0.30 Ha of the site is being developed to support the parking lot, and the release rates for
+this area for the 2-to-100-year storm event are, per equation F, are presented in Table 4-1:
+
+TYLin PROJECT NUMBER 10722
+
+PAGE 7
+
+4848 Mayfield Road
+Functional Servicing and Stormwater Management Report
+VERSION 1 • SEPTEMBER 2023
+
+Table 4-1: Humber River “Equation F” Release Rates
+Return Period
+
+Target Unit Release Rate
+(L/s/Ha)
+
+Target Release Rate
+Development Area = 0.30
+Ha
+(L/s)
+
+Target Release Rate
+(m3/s)
+
+2
+
+9.91
+
+3.1
+
+0.003
+
+5
+
+15.29
+
+4.8
+
+0.005
+
+10
+
+18.73
+
+5.9
+
+0.006
+
+25
+
+23.62
+
+7.4
+
+0.007
+
+50
+
+27.74
+
+8.7
+
+0.009
+
+100
+
+31.21
+
+9.8
+
+0.010
+
+A Visual OTTHYMO (VO) model was performed to determine the storage requirements to meet the target
+release rates. The Town of Caldeon IDF rainfall curve data (Town Standard Drawing No. 103) was used in
+the analysis. The VO analysis was performed with the input that 0.30 Ha of the site being developed with
+gravel having an increased runoff coefficient of 0.90 per Town of Caledon standards. The predevelopment
+runoff coefficient for the area was taken as 0.25.
+The VO Model has been in Appendix B. The VO model results are presented in Table 4-2.
+Table 4-2: Humber River "Equation F" Release Rates
+Return Period
+
+Peak Discharge
+(m3/s)
+
+Peak Storage
+(m3)
+
+2
+
+0.0077
+
+77
+
+5
+
+0.011
+
+110
+
+10
+
+0.0132
+
+132
+
+25
+
+0.0163
+
+163
+
+50
+
+0.0183
+
+183
+
+100
+
+0.0206
+
+206
+
+Based on the results of the VO Model, the site will require a peak storage of 206 m3 in the 100-year storm
+event. Based on this requirement, a storage tank, such as a CULTEC (or equivalent) is the most
+appropriate solution.
+A conceptual design report for a CULTEC system using a Recharger 360HD model is included in
+Appendix C and its layout is demonstrated on Drawing No. SS01 and SS02 in Appendix D. This
+preliminary design exceeds the storage requirement and provides 122.2 m3 within the chambers and
+TYLin PROJECT NUMBER 10722
+
+PAGE 8
+
+4848 Mayfield Road
+Functional Servicing and Stormwater Management Report
+VERSION 1 • SEPTEMBER 2023
+
+provides an additional 102.3 m3 of storage within the porous stones with a porosity ratio of 0.40. The
+methods to achieve the storage and quantity control targets will be further refined at the detailed design
+stage of the development.
+4.3
+
+Water Balance and Erosion Control
+
+Per TRCA requirements, the site at a minimum must retain 5.0mm onsite retention for all impervious areas
+for erosion storage and water balance.
+With 3,000 m2 of the site becoming impervious, 15.0 m3 of storage is required to retain the 5mm rainfall
+event on site. The bottom stone layer of the CULTEC storage tank, with a porosity ratio of 0.40, can provide
+40.9 m3 of dead storage, which is sufficient to meet the requirement. Additionally, the bioretention facility
+inlet area accepting drainage from the parking lot can be designed to provide additional water balance
+volume and erosion opportunities.
+4.4
+
+Low Impact Development (LID) Technologies
+
+The site has the potential to utilize low impact development (LID) technologies with a bioretention facility.
+LID technologies can provide additional infiltration opportunities, should the soils on the site be suitable. At
+the time of writing this servicing and stormwater management report, a hydrogeological and geotechnical
+investigation has not been completed. The site also has a private well, which will affect the locations of
+where LID technologies can be utilized within the site, as they require a 30m infiltration setback per TRCA
+SWM criteria.
+The ditched area that the parking lot drains to has the potential to become a bioretention facility. A similar
+bioretention facility used within the Greater Toronto Area is demonstrated in Figure 4.1 for illustration
+purposes.
+Figure 4-1: Potential Bioretention Facility
+
+TYLin PROJECT NUMBER 10722
+
+PAGE 9
+
+4848 Mayfield Road
+Functional Servicing and Stormwater Management Report
+VERSION 1 • SEPTEMBER 2023
+
+The bioretention facility can provide improved infiltration and act as the initial stage of a treatment train for
+quality control purposes of storm water. The filer media depth and other modifications (such as having the
+overflow pipe being perforated) can be made to adjust the sites specific criteria. To promote infiltration in
+the bioretention facility, there is potential for the catch basins lids to be raised and allow for ponding prior to
+entering the storm sewer system. This allows for minor storm events to have an opportunity to infiltrate prior
+entering the stormwater tank and being released to the creek.
+
+TYLin PROJECT NUMBER 10722
+
+PAGE 10
+
+4848 Mayfield Road
+Functional Servicing and Stormwater Management Report
+VERSION 1 • SEPTEMBER 2023
+
+5
+
+MUNICIPAL SERVICES
+
+Based on the as-built drawings, the site currently has no municipal services and it is assumed the existing
+dwelling utilizes a private well and septic tank for water and wastewater. The existing private services will
+be maintained. As shown on Drawing No. SS01, the existing private services are not anticipated to conflict
+with the construction activities with the parking lot improvements.
+
+6
+
+EROSION AND SEDIMENT CONTROL
+
+During construction, silt fences will be placed around the work area along with double row silt fences
+parallel to the existing slope on the site. The silt fences shall be cleaned after every rainfall event or when
+silt accumulates to 50% height of the fences. A construction mud mat will be provided at the edge of the
+existing asphalt driveway. Once constructed, the silt fence will required to be installed around the
+bioretention facility to keep silts from entering the system while the remainder of the parking lot is
+constructed to final grade.
+Refer to the Erosion and Sediment Control Plan ESC01 provided in Appendix D.
+
+7
+
+UTILITIES
+
+A preliminary utility investigation was made for existing underground utility infrastructure in Mayfield Road.
+This information is for reference purposes only and further utility coordination is outside the scope of this
+report.
+It was found that within Mayfield Road the following utilities and civil services are present:
+•
+
+Watermain, Storm Sewers, and an abandoned Sanitary Sewer
+
+•
+
+Abandoned and active gas lines (within southern side of road centreline)
+
+•
+
+Existing buried and aerial Rogers and Bell cables
+
+•
+
+Hydro One aerial cables
+
+•
+
+Alectra buried duct banks
+
+As the area of work is internal to the site, approximately 150m from Mayfield Road, no public utility conflicts
+are anticipated. Internal electrical cables to the existing steel building is unknown and the contractor shall
+perform onsite locates prior to construction.
+
+TYLin PROJECT NUMBER 10722
+
+PAGE 11
+
+4848 Mayfield Road
+Functional Servicing and Stormwater Management Report
+VERSION 1 • SEPTEMBER 2023
+
+8
+
+CONCLUSIONS
+
+Based on this review and analysis, it can be concluded that the proposed development meets the TRCA’s
+criteria for release rates to the Humber River Sub Basin 36 and applicable erosion storage and water
+balance criteria.
+A summary of our findings are as follows:
+•
+
+The parking lot can be graded to maintain the existing property line elevations and graded to drain
+to an internal stormwater sewer system and bioretention facility.
+
+•
+
+The proposed internal storm system meets the applicable TRCA criteria for providing quality and
+quantity control.
+
+•
+
+The site will require quantity control storage to match the TRCA release rate requirements. For the
+100-year storm event, 206 m3 of storage is required and is being provided via underground an
+storage tank.
+
+We trust you find the contents of this report satisfactory. Should you have any questions or comments
+please do not hesitate to contact the undersigned. Sincerely,
+T.Y.Lin International Canada Inc.
+
+Monica Ruiz, P.Eng., PMP
+Director of Development
+
+TYLin PROJECT NUMBER 10722
+
+Caleb Donald
+Project Manager
+
+PAGE 12
+
+T.Y. LIN INTERNATIONAL CANADA INC.
+
+APPENDIX A
+As-Built Drawings and
+TRCA Humber River Maps
+
+www.tylin.com
+
+8800 Dufferin Street, Suite 200, Vaughan, Ontario L4K 0C5
+
+T 905.738.5700
+
+29029_d.dgn 12/05/04 12:59:14 PM
+
+SERVICE DATA
+
++940.0
+
+0
+0
+2
+
+0
+10
+
+7
+
+7
+
+4
+
+4
+
+8
+
+8
+
+4
+
+4
+
+ON
+CONSTRUCTI
+NORTH
+
+0
+0
+9
+7
+9
+5
+E
+
+N
+
+N
+
+0
+0
+8
+7
+9
+5
+E
+
+TEMPORARY EASEMENT
+
+H
+T
+R
+O
+N
+
+INIT.
+
+DATE
+
+SERVICE
+
+SERVICE
+
+SAN SEWERS
+
+GAS MAINS
+
+STORM SEWERS
+
+BELL U/G CABLE
+
+WATERMAINS
+
+HYDRO U/G CABLE
+
+TRANSIT
+
+HYDRO ONE
+
+PARKS & REC.
+
+CTV
+
+ONT. CLEAN WATER
+
+COMMUNIC. CABLES
+
+E
+U
+R
+T
+
+DATE
+
+INIT.
+
+REVISIONS
+DATE
+
+JUNE 25, 2013
+
+DETAILS
+
+INIT.
+
+AS-BUILT
+
+TY
+
+REVISON No. 1
+
+DEC 12, 2016
+
+JK
+
+WM
+
+WM
+
+WM
+
+525
+
+50
+1
+375
+
+250
+HP
+
+G
+
+G
+
+0m
+2.
+
+RIP RAP
+3x3
+
+GAS (
+1
+00mm
+G
+
+G
+
+CBMH
+
+G
+
+450 HP
+
+42
+
+XHP)
+G
+
+N.T.S.
+
+NOTE
+1. SUPPLY AND INSTALL 1-4.9m FARM GATE AND
+1-1.2m WALK GATE.
+
+300
+
+44
+HP
+
+1
+50
+
+150
+
+B
+
+B
+
+B
+
+B
+
+30
+1
+2.
+91
+OPSD-
+
+G
+
+G
+
+KEY PL
+AN
+
+235
+2.
+91
+OPSD-
+
+OGS3
+
+G
+
+BRAMALEA
+ROAD
+
+RO AD
+DI
+XI
+E
+
+BC
+3.50
+
+G
+
+G
+
+G
+
+CBMH
+
+)
+TYP.
+430(
+2.
+91
+OPSD-
+
+5
+2
+G5
+
+TS
+
+B
+
+CBMH
+FENCE
+RE
+POST AND WI
+
+HP
+
+1.0m SPLASH PAD
+
+BOTTOM
+ATDE FL
+WI
+
+1.0m SPLASH PAD
+
+TCH,SODDED
+DI
+
+01
+1
+.
+971
+OPSD-
+
+22
+P RAP 2x
+RI
+
+EXI
+ST.ROW
+RIP RAP
+3x6
+
++905.0
+
+4
+8
+4
+7
+0
+0
+0
+
+0
+0
+9
+7
+9
+5
+E
+
+E
+D
+G
+E
+
+EXIST. ROW
++959.0
+
++882.4
+
+e
+nc
+tra
+En
+
+B
+
+300
+
+B
+B
+
+GAS (19m m
+G
+
+d Entrance
+el
+Fi
+
+36
+
+CBMH
+
+G
+
+MATCH LI
+NE STA 12+100
+
+WM
+
+x
+
+4 50
+
+WM
+
+GRAV EL
+
+50
+1
+
+G
+
+39
+
+BOTTOM OF DITCH
+G
+
+O
+
+F
+
+B
+A
+N
+K
+
+PERMANENT EASEMENT
+
+LIMIT OF
+GRADING
+
++064.0
+
+WM
+
+N
+
++856.5
+
+G
+
+B
+
+WM
+
+CONCRETE
+
+50
+1
+
+TH-35
+
+040
+600.
+SDOP
+G
+G
+
+B
+
+Fi
+el
+d E
+ntra
+nce
+
+WM
+
+01
+1
+.
+971
+OPSD-
+
+G
+
+XHP)
+G
+
+00mm
+1
+GAS (
+G
+
++046.0
+
+G
+
+01
+1
+.
+971
+OPSD-
+
+X
+
+OGS2
+
+7
+.
+0
+2
+ONDED
+D5
+AN
+B
+N A
+NG GAS MAI
+STI
+EXI
+
++028.0
+
+WM
+
+375
+
+G
+
+G
+
+L
+DERAI
+STEEL BEAM GUI
+
+CBMH
+
+BELL 9
+30
+1
+2.
+SD- 1
+O
+BP
+HP) PED
+
+0
+.
+1
+R=
+
+5
+0
+
+WM
+
+G
+
+HP
+
+B
+32
+5
+22.
+9
+OPSD00mm
+1
+GAS (
+
+B
+
+B
+
+B
+MULTI-USE TRAIL
+3.0m
+
+450
+
+00
+1
+2+
+1
+0
+.
+1
+R=
+
+45
+0
+
+WM
+
+HP
+
+375
+
+33
+
+8 CSP
+
+50
+3.
+
+BH
+
+G
+
+B
+
+00
+2.
+
+000
+2+
+1
+
+G
+
+BELL
+PED
+
+B
+
+B
+
+B
+
+B
+
+B
+
+BELL
+PED
+
+3
+50 x 6.
+040
+.
+0
+604
+OPSD-
+
++010.0
+
+WM
+
+50
+1
+
+32
+
+G
+
+B
+
+B
+
+B
+
+B
+
++047.0
+
++020.0
+
++856.0
+
+WM
+
+HP
+
+RE FENCE
+POST AND WI
+
+75mm)
+(
+Y
+R
+L
+A
+AI
+T
+R
+I
+E
+D
+I
+U
+GN
+STEEL BEAMSA
+
+4
+
+WM
+
+30
+
+CBMH
+
+TEST
+
+300
+
+M
+
+ASPHALT
+
+B
+
+W
+
+ST XHP)
+G
+
+WM
+
+WM
+
+WM
+
+MATC H LI
+NE STA 11+800
+
+B
+WM
+
+150
+
+B
+
+B.
+.
+I
+S.
+
+RE FENCE
+POST AND WI
+
+040
+600.
+OPSD-
+
+G
+
+G
+
+WM
+
+CBMH
+
+G
+
+G
+
+G
+
+G
+
+BELL
+
+G
+
+B
+
+G
+
+G
+
+06 CSP
+x 9.
+G
+G
+
+TS
+
+TS
+
+23 CSP
+450 x 9.
+G
+
+BOTTOM OF DITCH
+0mm XHP)
+0
+1
+GAS (
+G
+G
+
+TS
+
+25
+6.
+1
+GV
+450
+
+50
+3.
+1
+
+N ABANDONDED
+NG GAS MAI
+STI
+EXI
+
+41
+B
+
+450
+
+150
+B
+
+B
+
+TS
+
+GRAVEL
+
+ADJUST
+B
+
+TS
+
+50
+5.
+1
+
+B
+
+B
+
+B
+
+750mm)
+N (
+WATERMAI
+
+8
+4 .9
+
+040
+600.
+OPSD-
+
+WM
+
+75
+2.
+
+B
+
+5
+0.
+R=
+R=
+20
+
+WM
+
+800
++
+1
+1
+
+B
+
+75
+2.
+
+WM
+
+900
++
+1
+1
+
+BH
+
+B
+
+75
+3.
+
+WM
+
+750mm)
+N (
+WATERMAI
+
+5
+7
+3.
+B
+
+B
+
+B
+
+00 34
+4.
+1
+
+30
+1
+2.
+91
+OPSD-
+
+40
+
+B
+
+BOTTOM OF DI
+TCH
+B
+
+UST TEST
+ADJ
+TH-3
+M
+B
+D
+L
+BUI
+E
+& R
+
+37
+
+WM
+
+50 3.
+2.
+75
+
+31
+
+750 W/M
+
+B
+
+B
+
+B
+
+675mm)
+TORM (
+S
+BELL
+
+B
+
+B
+
+75mm)
+TARY (
+ABANDONED SANI
+
+BELL
+
+B
+
+B
+
+UST
+ADJ
+
+WM
+
+B
+H
+TCB
+BOTTOM OF DI
+
+B
+
+B
+
+B
+TEST
+BELL
+
+B
+
+B VC
+
+WM
+
+W
+
+BELL
+
+B
+
+B
+
+2
+0 x
+210
+0 x
+t
+ver
+360
+C ul
+
+750 W/M
+W
+
+B
+
+040
+600.
+OPSD-
+
+0 CSP
+1
+600 x 9.
+
+375
+
+29
+
+71CSP
+9.
+450 x 1
+
+B
+
+B
+
+B
+
+B
+
+GRAVEL
+
+PED
+
+WM
+
+B
+
+B
+
+B
+
+B
+
+B
+
+TH-2 BELL
+
+BELL
+150
+
+WM
+
+B
+
+B
+
+RE FENCE
+POST AND WI
+CBMH
+
+STM
+
+BELL
+PED
+
+43
+
+RE FENCE
+POST AND WI
+
+WM
+
+150
+
+CBMH
+
+B
+
+B
+
+B
+
+B
+
+B
+
+CBMH
+B
+
+150
+B
+
+B
+
+B
+
+WM
+
+375
+
+B
+
+5.00
+
+150
+
+B
+
+B
+
+B
+
+M
+T
+
+BBELL
+B
+B
+BELL
+B
+B.
+.
+I
+RE FENCE S.
+POST AND WI
+PED
+PED
+
+B
+
+BTEST
+
+S
+
+B
+
+B
+
+B
+
+B
+B
+VD.
+L
+00 B
+.
+4
+
+B
+
+150
+
+TH-1BELL
+
+150 B
+
+B
+
+B
+
+50
+BELL 2
+
+HP
+
+WM
+
+0
+0
+0
+B
+
+B
+
+BB
+
+BB
+
+B
+
+B
+HP
+
+BELL
+
+30
+1
+2.
+91
+OPSD-
+
+38
+
+0
+01
+0.
+31
+OPSD-
+
+30
+3.
+
+SPLASH PAD
+
+01
+1
+.
+971
+OPSD-
+
+RIP RAP 2x4.7
+
+35
+
+1.0m
+
+MAYFI
+EL
+D ROAD
+
+B
+
+B
+
+B
+
+B
+
+B
+
+B
+
+B
+
+B
+
+B
+
+B
+
+B
+
+B
+
+B
+
+EXI
+ST.ROW
+
+5.
+00
+BELL
+
+2x24
+
+EXI
+ST.ROW
+
+235
+2.
+91
+OPSD-
+
+BELL
+PED
+
+235
+2.
+,91
+531
+2.
+91
+OPSD-
+
+WM
+
+7
+
+EXI
+ST.ROW
+
+D ROAD
+EL
+MAYFI
+PED
+
+1.3mm
+
+5.00
+
+SEE NOTE
+
+WM
+
+4
+
+01
+1
+.
+971
+OPSD-
+
+12m
+500 CSP
+
+WM
+
+8
+
++908.0
+
+4
+
++920.0
+
+N
+
+2.440
+VERT
+CUL
+
+RIP RAP
+
+3.25
+
++030.0
+
+37m
+668x
+0.
+1
+
+0
+0
+0
+8
+9
+5
+E
+
+4
+N
+4
+8
+
+29
+
+11+825.0
+
+11.01
+
+LT
+
+701.010 **
+
+400.081
+
+253.280
+
+251.000
+
+30
+
+11+823.0
+
+14.76
+
+RT
+
+701.010
+
+400.081
+
+253.234
+
+251.068
+
+31
+
+11+890.0
+
+11.01
+
+LT
+
+701.010 **
+
+400.081
+
+252.078
+
+249.910
+
+32
+
+EL 253.670
+
+PVI11+833.310
+
+MH 29
+
+T/cover
+
+Low Invert
+Elevation
+
+11+890.0
+
+14.76
+
+RT
+
+701.010
+
+400.081
+
+252.003
+
+11+941.0
+
+14.76
+
+RT
+
+701.011
+
+400.081x2
+
+250.787
+
+248.009
+
+34
+
+11+950.6
+
+10.37
+
+LT
+
+EXISTING
+
+EXISTING
+
+250.570
+
+EXISTING
+
+11+941.0
+
+14.76
+
+LT
+
+705.020
+
+400.081x2
+
+250.787
+
+249.000
+
+OGS2
+
+11+941.0
+
+20.92
+
+RT
+
+PMSU2020
+
+PMSU2020
+
+250.406
+
+247.929
+
+36
+
+11+990.0
+
+14.76
+
+RT
+
+705.010
+
+400.110
+
+250.261
+
+248.600
+
+W INV 251.020
+
+No. Station
+
+Cover
+(OPSD)
+
+Structure
+(OPSD)
+
+T/cover
+
+Low Invert
+Elevation
+
+37
+
+11+990.0
+
+14.76
+
+LT
+
+705.010
+
+400.081
+
+250.261
+
+248.600
+
+38
+
+11+997.7
+
+14.76
+
+LT
+
+701.011
+
+400.081x2
+
+250.250
+
+248.400
+
+39
+
+11+997.7
+
+14.76
+
+RT
+
+701.011
+
+400.110
+
+250.250
+
+248.230
+
+All Driveways ASPHALT Unless Otherwise Noted.
+
+40
+
+11+969.9
+
+11.50
+
+LT
+
+EXISTING
+
+EXISTING
+
+250.305
+
+EXISTING
+
+All Service Locations Are Approximate And Must Be
+
+41
+
+12+052.2
+
+11.55
+
+LT
+
+EXISTING
+
+EXISTING
+
+250.546
+
+EXISTING
+
+42
+
+12+019.0
+
+15.38
+
+RT
+
+701.011
+
+400.081
+
+250.312
+
+247.601
+
+OGS3
+
+12+014.9
+
+21.00
+
+RT
+
+PMSU2025
+
+PMSU2025
+
+250.400
+
+247.376
+
+43
+
+12+065.0
+
+14.80
+
+LT
+
+701.010
+
+400.081
+
+250.739
+
+248.633
+
+44
+
+12+065.0
+
+18.30
+
+RT
+
+701.011
+
+400.081
+
+250.669
+
+248.415
+
+General Notes
+
+Located Accurately In The Field
+Denotes Building - Not Located
+Denotes Building Located
+Type 'B' Bedding Unless Otherwise Noted (SAN)
+
+** TO BE CONSTRUCTED WITH A MINIMUM OF 3 ADJUSTMENT UNITS.
+
+E INV 251.000
+
+254
+
+Offset to
+structure
+
+249.344
+
+33
+
+35
+
+0
+10
+
+No. Station
+
+Cover
+(OPSD)
+
+Structure
+(OPSD)
+
+7
+
+TEMPORARY EASEMENT
+Offset to
+structure
+
+Elev.
+
+B.M. No.
+
+The Contractor Is Responsible For Locating And Protecting All
+Existing Utilities Prior To And During Construction Location of
+Existing Utilities Approximate Only, To Be Verified In Field By Contractor.
+
+253
+
+253
+
+MH 31
+
+K=70
+
+W INV 249.960
+L=154.14
+
+IBI GROUP
+100-175 Galaxy Boulevard
+
+K=30
+
+Toronto ON M9W 0C9 Canada
+
+PROFILE CONTROL AT C
+L
+
+S INV 249.910
+
+tel 416 679 1930 fax 416 675 4620 ibigroup.com
+
+251
+
+49.
+5m375m
+STM
+mØ
+@ 1
+.
+52%
+
+2.
+60%
+65m
+375m
+mØ
+
+43m375m
+mØ
+STM
+@ 1
+.
+23%
+
+250
+
+MH 30
+
+STM
+@ 1
+.
+60%
+
+SUBGRADE
+
+845
+
+67m
+375
+mm
+Ø S
+TM
+@ 2
+.
+00%
+
+MH 43
+E INV 248.713
+S INV 248.633
+
+MH 38
+
+%
+91
+0.
++
+
+CB 37
+
+W INV 248.500
+
+E INV 248.600
+
+S INV 248.400
+
+E INV 251.068
+EX
+I
+ST
+I
+NG
+
+75
+0m
+
+51
+m45
+0m
+mØ
+STM
+m
+
+Ø
+
+W
+M
+
+Chkd.
+
+50%
+@ 0.
+450mmØ STM
+40m-
+
+8m-250mmØ
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+STM @ 3.00%
+
+E INV 248.600
+
+STM @ 0.83%
+
+249
+
+21
+m375mmØ
+STM @ 0
+.
+80%
+
+CB 36
+
+5m-525mmØ
+
+@ 2
+.
+50%
+
+OGS 2
+
+N INV 249.404
+
+0%
+1
+.
+M @ 1
+mØ ST
+m
+0
+0
+3
+40m-
+
+90%
+@ 0.
+Ø STM
+450mm
+46m-
+
+INV
+
+W INV 249.728
+
+N INV 247.959
+
+E INV 249.344
+
+S INV 247.929
+
+248
+
+247.889
+PE
+TORM PI
+EX.675mmØ S
+
+MH 33
+N INV 248.400
+
+247
+6m-450mmØ
+
+7m-450mmØ
+
+MH 44
+
+STM @ 6.00%
+
+STM @ 2.86%
+
+E INV 248.600
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+BELL CANADA
+
+ROGERS CABLE
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ALLSTREAM
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+PSN (PUBLIC SECTOR NETWORK)
+
+ONTARIO CLEAN WATER AGENCY
+
+FUTUREWAY (FCI BROADBAND)
+
+HYDRO ONE BRAMPTON
+
+1Om
+
+20
+
+10
+
+0
+
+30m
+
+W INV 248.415
+
+MH 42
+
+MH 39
+
+246
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+ENERSOURCE, HYDRO MISSISSAUGA
+
+INV 247.016
+
+S INV 248.009
+
+THE REGIONAL MUNICIPALITY OF PEEL
+
+HYDRO ONE NETWORKS
+
+W INV 248.069
+
+247
+
+Designed by
+
+Designed by
+
+250
+
+MH 32
+
+248
+
+251
+
+8m-250mmØ
+STM @ 1.25%
+
+EX.
+75m
+mØ
+SAN
+F/M
+(
+ABA
+NDO
+NED
+)
+
+249
+
+252
+
+ORIGINAL GROUND
+
+W INV 251.088
+D G N $S P EC *12 3 4 5 67 8 90 12 3 4 5 67 8 90 12 3 4 5 67 8 90 12
+
+PVI11+972.470
+
+252
+
+EL 250.049
+
+L=105.47
+
+N INV 248.310
+
+OGS 3
+
+W INV 248.062
+
+W INV 248.360
+
+N INV 247.401
+
+E INV 248.001
+
+E INV 248.230
+
+S INV 247.376
+
+S INV 247.601
+
+HORIZONTAL SCALE
+
+N INV 248.435
+
+246
+
+1m
+
+0
+
+2
+
+1
+
+3m
+
+VERTICAL SCALE
+
+245
+
+245
+
+EXIST 3600X2100 CULVERT
+
+$$$$D AT E$$$$
+
+$$$$U S ER N AM E$$$$
+
+OPEN FOOTING
+
+244
+
+N INV = 245.76
+
+244
+
+S INV = 245.56
+
+MAYFIELD ROAD
+(FROM EAST OF DIXIE ROAD
+TO EAST OF BRAMALEA ROAD)
+
+NEW CONSTRUCTION
+STA. 11+800
+253.666
+253.830
+
+11+800
+
+253.433
+253.559
+
+11+820
+
+253.142
+253.181
+
+11+840
+
+252.794
+252.720
+
+11+860
+
+252.389
+252.185
+
+11+880
+
+251.927
+251.622
+
+11+900
+
+251.414
+251.091
+
+11+920
+
+250.962
+250.676
+
+11+940
+
+250.644
+250.317
+
+11+960
+
+250.458
+250.197
+
+11+980
+
+250.406
+250.216
+
+12+000
+
+250.488
+250.344
+
+12+020
+
+250.666
+250.529
+
+12+040
+
+250.849
+250.772
+
+12+060
+
+251.031
+
+251.214
+
+Area
+
+CAD Area
+C
+LPROP EL.
+
+251.000
+
+251.286
+
+C
+LEXIST EL.
+
+12+080
+
+12+100
+
+CHAINAGE
+
+Checked by
+
+Date
+
+J.K
+
+MAY 08, 2013
+
+B-30/C-06
+
+Drawn by
+
+Sheet
+
+TO STA. 12+100
+Project No.
+
+S.Y
+ANU
+
+12 of
+
+52
+
+Plan No.
+
+04-4060
+06-4040
+
+58282-D
+
+SERVICE DATA
+
+const
+r
+uct
+i
+on
+nor
+t
+h
+
+B
+
+B
+
+7285
+
+28515
+
+TH1
+
+BELL
+
+BELL
+
+B
+
+B
+TEST
+
+B
+
+B
+
+B
+
+B
+
+BELL
+
+WM
+
+WM
+
+WM
+
+WM
+
+WM
+
+WM
+
+WM
+
+3750
+
+B
+
+TH3
+
+ONT. HYDRO
+
+PARKS & REC.
+
+CTV
+
+INIT.
+
+DETAILS
+AS-BUILT
+
+AMS
+
+GENERAL NOTES
+DESIGN CODE : CHBDC CAN/CSA-S6-06
+%
+1
+9
+.
+0
+
+WM
+
+B
+
+TEST
+
+BM
+
+B
+
+STORM (
+675mm)
+
+BELL
+
+B
+
+CHAMBER (TO BE
+REBUILT)
+
+BELL
+
+B
+
+B
+
+VC
+
+B
+
+B
+TEST
+
+B
+
+B
+
+B
+
+P
+R
+OF
+I
+L
+EC
+ONT
+R
+OL
+T
+OP OF P
+A
+V
+E
+ME
+NT
+
+CLASS OF CONCRETE
+ALL CONCRETE....................................35 MPa
+(UNLESS NOTED OTHERWISE)
+
+VPI11+ 972.
+470
+El
+ev 250.
+049
+
+BELL
+
+EXISTING VALVE
+
+K=30
+L=105.47
+
+EXISTING 675mm DIA STORM PIPE
+
+TH2
+
+B
+
+B
+
+B
+
+3750
+
+RSS
+
+B
+
+HYDRO U/G CABLE
+
+TRANSIT
+
+DEC 12, 2016
+
+LIMIT OF STRUCTURE
+
+2
+.
+6
+0
+%
+
+B
+
+3350
+
+RSS
+
+B
+
+B
+
+B
+
+46700
+
+10900
+
+BELL U/G CABLE
+
+WATERMAINS
+
+INIT.
+
+DATE
+
+REVISIONS
+
+B
+
+100
+
+CULVERT
+C
+L
+
+B
+
+STORM SEWERS
+
+DATE
+
+EVC 12+ 025.
+205
+El
+ev 250.
+531
+
+B
+
+SERVICE
+GAS MAINS
+
+ONT. CLEAN WATER
+
+BVC 11+ 919.
+735
+El
+ev 251.
+421
+
+1
+
+EAST
+
+WEST
+
+INIT.
+
+DATE
+
+SERVICE
+SAN SEWERS
+
+CLEAR COVER TO REINFORCING STEEL
+
+WATERMAI
+N (
+750mm)
+
+EXISTING 750mm DIA WATERMAIN
+
+2750
+
+11+ 940
+
+2750
+
+10.668 x 2.745 OPEN
+
+WP No.1
+STA. 11+959.748
+N 4847102.4015
+E 597890.9656
+BH
+EL. 250.647
+
+11+960
+
+11+980
+
+BAR MARKS WITH PREFIX 'C' DENOTE COATED BARS.
+BAR MARKS WITH PREFIX 'S' DENOTE STAINLESS STEEL BARS.
+
+12+000
+AZ 37 22'36"
+
+ROAD
+C
+LMAYFIELD
+
+STAINLESS REINFORCING STEEL SHALL BE TYPE 316LN, DUPLEX
+2205 AND HAVE A MINIMUM YIELD STRENGTH OF 500 MPa,
+UNLESS OTHERWISE SPECIFIED.
+
+ON
+I
+T
+C
+E
+OT
+R
+YP
+R
+A
+OR
+MP
+E
+T
+
+UNLESS SHOWN OTHERWISE, TENSION LAP SPLICES SHALL
+BE CLASS B.
+
+PL-2
+
+NT
+OI
+ON J
+I
+T
+C
+U
+R
+T
+ONS
+C
+
+3750
+
+CONSTRUCTION
+JOINT
+
+36400
+
+E
+X
+I
+S
+T
+I
+NG C
+U
+L
+V
+E
+R
+TT
+O B
+E
+REMOVED
+
+NORTH
+
+17450
+
+SOUTH
+
+18950
+
+GAS (
+1
+00mm
+
+BELL
+
+G
+
+G
+
+G
+
+TEST
+
+XHP)
+
+G
+
+G
+
+CONCRETE
+PARAPET WALL
+
+TH35
+
+350
+
+1500
+
+100
+
+SIDE
+WALK
+
+500
+
+3750
+
+3750
+
+3750
+
+LANE
+
+LANE
+
+LANE
+
+150 (TYP)
+
+3750
+
+3750
+
+3750
+
+LANE
+
+LANE
+
+LANE
+
+2%
+
+500
+
+FUTURE
+
+ASPHALT AND
+
+CONCRETE
+
+WATERPROOFING
+L
+A
+OT
+mm T
+0
+9
+M,
+E
+T
+S
+Y
+S
+
+MEDIAN
+1075
+
+4850
+
+2750
+
+2%
+
+3000
+
+350
+
+RETAINED SOIL SYSTEM WALLS SHALL HAVE THE FOLLOWING
+ATTRIBUTES:
+
+MULTI
+USE
+TRAIL
+
+100
+
+PERFORMANCE : HIGH
+
+2%
+
+2%
+
+APPLICATION : VERTICAL WALL
+APPEARANCE : HIGH
+
+1-75 mm DIA
+DUCT (TYP.)
+
+CONSTRUCTION NOTES
+
+1400
+
+252
+
+2750
+
+HFL
+EL. 248.830
+
+WITH RAILING
+(TYP.)
+
+RETAINED SOIL SYSTEM
+
+1000
+
+1000
+
+14500
+
+3750
+
+BAR HOOKS SHALL HAVE STANDARD HOOK DIMENSIONS USING
+MINIMUM BEND DIAMETERS, WHILE STIRRUPS AND TIES SHALL
+HAVE MINIMUM HOOK DIMENSIONS. ALL HOOKS SHALL BE IN
+ACCORDANCE WITH THE STRUCTURAL STANDARD DRAWINGS
+SS12-1 AND SS12-2 UNLESS INDICATED OTHERWISE.
+
+C
+LMAYFIELD ROAD
+
+STEEL BEAM GUIDERAIL
+
+G
+
+REINFORCING STEEL SHALL BE GRADE 400W UNLESS OTHERWISE
+SPECIFIED.
+
+PROFILE OF MAYFIELD ROAD
+HORIZONTAL SCALE 1:500
+VERTICAL SCALE 1:50
+
+98
+24 .
+
+BOTTOM PRECAST
+CULVERT
+
+75mm)
+TARY (
+SANI
+
+ABANDONED SANITARY (75mm)
+
+11 49'53"
+
+3750
+
+36400
+
+0 x
+210
+0 x
+t
+360
+ver
+C ul
+
+3750
+
+REINFORCING STEEL
+
+REMOVAL OF CULVERT AND ANY IN-WATER WORK IS
+PERMITED ONLY BETWEEN JULY 1 AND SEPTEMBER 15
+UNLESS OTHERWISE GRANTED IN WRITING BY MNR.
+
+100
+
+6155
+
+RSS
+
+1-50 mm DIA
+PVC DUCT
+
+)
+.
+P
+Y
+T
+L(
+NE
+A
+KP
+L
+WA
+E
+D
+I
+S
+.
+ONC
+C
+
+RSS
+55700
+
+G
+
+G
+
+246
+
+EXISTING 675mm
+
+244
+
+42"
+32'
+
+42"
+32'
+
+1
+
+G
+
+G
+
+GAS (
+1
+00mm
+
+DIA. STORM PIPE
+
+XHP)
+
+INV.
+EL. 246.884±
+
+FOR LIGHTING
+
+APPROXIMATELY THE SAME. AT NO TIME SHALL THE DIFFERENCE
+
+(TYP.)
+
+IN ELEVATION BE GREATER THAN 500mm.
+THE CROSS SECTION OF THE ROAD SHOWN ON THIS DRAWING
+REPRESENTS ULTIMATE CONFIGURATION OF THE LANES.
+SEE ROAD DRAWINGS FOR PRESENT CONFIGURATION OF LANES.
+
+G
+242
+
+-
+
+BACKFILL SHALL BE PLACED SIMULTANEOUSLY BEHIND BOTH
+SIDES OF CULVERT KEEPING THE HEIGHT OF THE BACKFILL
+
+NT
+OI
+ON J
+I
+T
+C
+U
+R
+T
+ONS
+C
+
+GRANULAR FILL
+
+SECTION
+
+0
+10
+47
+48
+N
+
+00
+79
+9
+E5
+
+15
+AZ 1
+
+G
+
+1m KILL STRIP
+
+1m KILL STRIP
+7155±
+
+248
+
+38645
+
+10900
+
+15
+AZ 1
+
+1:200
+
+THE CONTRACTOR SHALL VERIFY ALL DIMENSIONS AND ELEVATIONS
+
+1
+
+OF THE EXISTING WORK AND ALL DETAILS ON SITE AND REPORT
+
+-
+
+DISCREPANCIES TO THE CONTRACT ADMINISTRATOR BEFORE
+PROCEEDING WITH THE WORK.
+
+APPLICABLE STANDARD DRAWINGS
+OPSD 803.010
+
+PLAN
+1:200
+
+BACKFILL AND COVER FOR CONCRETE CULVERTS
+
+OPSD 3419.100 BARRIERS AND RAILINGS, STEEL BEAM, GUIDE RAIL
+AND CHANNEL ANCHORAGE
+
+C
+LMAYFIELD ROAD
+
+NORTH
+
+SOUTH
+
+C
+LCULVERT
+
+WEST
+GUIDE RAIL
+
+6155
+
+24910
+
+10900
+
+38645
+
+HFL
+EL. 248.830
+
+AND CHANNEL
+ANCHORAGE
+252
+
+EAST
+
+55700
+
+5960
+
+L
+L
+TWA
+E
+P
+A
+R
+A
+EP
+T
+E
+R
+ONC
+C
+WITH RAILING
+
+(TYP.)
+
+18950
+
+1200
+
+3500
+
+3500
+
+SHLD.
+
+LANE
+
+LANE
+
+500630430
+SHLD.
+
+DGN$SPEC*12345678901234567890123456789012
+
+250
+
+14500
+CONSTRUCTION ZONE
+650 WORK
+SPACE
+
+250
+
+IBI GROUP
+
+248
+
+TOP OF
+RETAINED
+SOILSYSTEM
+
+246
+
+244
+
+150mm DIA. PERFORATED
+SUBDRAIN (TYP.)
+
+ORIGINAL
+INVERT
+
+E
+X
+I
+S
+T
+I
+NG C
+U
+L
+V
+E
+R
+T
+
+EL. 246.535
+
+10.668 x 2.745 OPEN
+
+100-175 Galaxy Boulevard
+
+EXISTING
+
+TEMPORARY
+
+CULVERT
+
+PROTECTION
+
+Toronto ON M9W 0C9 Canada
+tel 416 679 1930 fax 416 675 4620 ibigroup.com
+
+R
+E
+T
+A
+I
+NE
+D S
+OI
+LS
+Y
+S
+T
+E
+M
+
+GROUND
+
+BOTTOM PRECAST
+242
+
+CULVERT
+
+SOUTH ELEVATION
+1:200
+
+1
+
+STAGE 1
+
+-
+
+1:100
+
+C
+LCULVERT
+
+SOUTH
+
+WEST
+28515
+
+10900
+
+L
+L
+TWA
+E
+P
+A
+R
+A
+EP
+T
+E
+R
+ONC
+C
+WITH RAILING
+
+E
+X
+I
+S
+T
+I
+NG C
+U
+L
+V
+E
+R
+T
+
+36400
+
+7285
+HFL
+
+GUIDE
+
+EL. 248.830
+
+RAIL AND
+
+17450
+
+18950
+
+CHANNEL
+ANCHORAGE
+(TYP.)
+
+250
+
+1420 630 500
+
+21900
+
+SHLD.
+
+$$$$USERNAME$$$$
+$$$$TIME$$$$ $$$$DATE$$$$
+
+EAST
+
+252
+
+C
+LMAYFIELD ROAD
+
+NORTH
+
+46700
+
+CONSTRUCTION ZONE
+
+3500
+
+3500
+
+LANE
+
+LANE
+
+500 1000
+
+3000
+
+350
+
+248
+
+246
+
+RETAINED
+244
+
+SOIL SYSTEM
+
+ORIGINAL
+
+RETAINED
+
+GROUND
+
+SOIL SYSTEM
+
+150mm DIA. PERFORATED
+
+EL. 246.674
+
+MAYFIELD ROAD
+
+SUBDRAIN (TYP.)
+242
+
+EXISTING 675mm
+DIA. STORM PIPE
+
+10.668 x 2.745 OPEN
+BOTTOM PRECAST
+CULVERT
+
+INVERT
+
+NORTH ELEVATION
+1:200
+
+C
+ONS
+T
+R
+U
+C
+T
+I
+ON J
+OI
+NT
+
+BRIDGE AT 11+960
+WE
+S
+TOF B
+R
+A
+MA
+L
+E
+AR
+OA
+D (
+H3
+)
+
+2
+
+STAGE 2
+
+-
+
+1:100
+
+GENERAL ARRANGEMENT
+
+Area
+
+CAD Area
+Checked by
+
+Date
+
+R.W.
+
+MAY 08, 2013
+
+B-30/C06
+
+Drawn by
+
+Sheet
+
+Project No.
+
+S.Z.
+25 of 52
+
+Plan No.
+
+04-4060
+06-4040
+58295-D
+
+SIMCOE
+DUFFERIN
+
+Aurora
+
+Y 9
+HW
+
+0
+
+Mono
+
+e
+Yong
+
+40
+HWY
+
+Adjala
+
+St
+
+Rd
+
+n St
+
+Ch
+
+ur
+
+ch
+
+7
+
+or
+t
+
+R
+
+King
+
+Ol
+d
+
+irp
+
+H
+W
+Y
+
+d
+
+Si
+de
+ro
+
+ad
+
+PEEL
+Ca
+st
+led
+er
+g
+
+4848 MAYFIELD ROAD
+Legend
+River / Stream
+
+Th
+e
+
+G
+
+or
+e
+
+Richmond
+Hill
+
+St
+
+I
+
+50
+
+Rd
+
+Vaughan
+D
+nzie
+acke
+M
+r
+Majo
+
+Caledon
+
+Unit Flow Relationships
+
+Dufferi
+
+HWY 2
+
+A
+
+King
+
+Equation A (Sub Basin 4)
+
+YORK
+
+r
+
+Dr
+
+Equation B (Sub Basin 6)
+
+Equation F (Sub Basin 36)
+
+Contact TRCA Staff
+
+H
+
+W
+Y
+
+ay
+f
+
+R
+
+d
+
+Brampton
+
+4 Kms
+
+St
+Q
+ue
+
+en
+
+00
+
+Bo
+va
+ird
+
+HWY 4
+
+427
+
+Humber River Stormwater Management
+Quantity Control Release Rates
+
+d
+R
+
+Dr
+
+2
+
+t
+or
+rp
+
+1
+
+07
+Y4
+HW
+
+Ai
+
+Quantity Flood Control Not Required
+0
+
+Y7
+HW
+
+10
+
+01
+Y4
+HW
+
+407
+
+Equation G (Sub Basin 46)
+
+ak
+e
+
+HW
+Y
+
+Equation E (Sub Basin 19A)
+
+M
+
+H
+ea
+rt
+L
+
+Equation D (Sub Basin 15)
+
+iel
+d
+
+Equation C (Sub Basin 10)
+
+HWY 409
+
+W
+Y
+
+41
+0
+
+Y
+HW
+
+1
+40
+
+27
+Y 4
+HW
+
+H
+
+To r o n t o
+
+4 847 700 m N
+
+4 847 700 m N
+598 000 m
+
+596 000 m
+
+E
+
+E
+
+255.33
+
+254.46
+
+7029.45
+
+7029.44
+
+253.98
+
+254.66
+
+7029.43
+
+253.78
+E.
+H
+.
+S.
+
+253.25
+
+7029.46
+
+256.19
+
+260.8
+
+E.
+H
+.
+S.
+
+255.58
+
+252.84
+
+0
+26
+
+260
+
+260.8
+
+7029.42
+
+251.94
+
+252.23
+
+7029.41
+
+251.29
+250.89
+
+7029.4
+
+250.21
+
+250.84
+
+E.
+H
+.
+S.
+
+259.4
+
+259.7
+
+255
+C
+O
+N
+.4
+
+259.5
+
+7029.483
+
+E.
+H
+.
+S.
+
+CULTIVATED AREA
+
+259.4
+
+7029.39
+
+248.75
+
+250.83
+
+7029.38
+
+248.29
+
+248.13
+
+257.2
+
+250.82
+
+C
+O
+N
+.4
+
+257.14
+
+C
+O
+N
+.4
+
+C
+O
+N
+.4
+
+7029.48
+
+257.81
+
+252.7
+
+19
+254.8
+
+7029.36
+
+246.72
+ORCHARD
+
+254.1
+254.6
+
+LO
+T
+
+19
+
+257.7
+
+247.89
+
+253.9
+
+253.9
+
+18
+
+255.2
+
+253.6
+
+252.1
+253.7
+251.9
+
+W/L
+
+252.7
+
+0
+25
+
+257.8
+
+259.5
+
+255.9
+257.7
+
+250
+
+IE
+IX
+D
+
+251.6
+
+256.9
+
+257.1
+
+249.1
+
+D
+R
+
+252.5
+
+251.2
+
+250.7
+
+247.9
+
+249.6
+
+256.7
+256.1
+
+ORCHARD
+
+247.4
+
+260.9
+
+250
+249.4
+
+20
+
+W/L
+
+5
+
+254.4
+
+255.1
+
+254.2
+
+.4
+N
+O
+C
+
+253.6
+
+ORCHARD
+
+255.1
+
+RI
+VE
+R
+
+254.9
+
+246.2
+
+2
+5
+5
+
+.
+.S
+.H
+E
+
+.3
+N
+O
+C
+
+W/L
+246.5
+
+255.1
+
+HU
+MB
+ER
+
+257.5
+
+250.3
+
+MA
+TC
+HL
+I
+NE
+
+254.7
+
+262.1
+
+5
+
+254.6
+
+2
+5
+0
+
+2
+
+255
+
+256.18
+
+W/L
+
+M
+
+5
+
+250
+
+257.5
+
+247.7
+
+C
+O
+N
+.4
+
+20
+
+256.78
+
+W/L
+
+7029.47
+
+247.3
+
+248.1
+
+W/L
+
+C
+O
+N
+.4
+
+T
+LO
+
+6
+0
+
+247.9
+
+255.2
+
+2
+
+249.3
+
+AY
+FI
+EL
+D
+
+T
+LO
+
+2
+
+W/L 257.5
+
+250.1
+
+255.7
+
+R
+D
+.
+
+250.7
+
+260
+
+W/L
+246.5
+254.6
+
+254.1
+253.4
+
+LO
+T
+
+253.3
+
+W/L
+CHIMNEY
+
+259.65
+
+251.7
+
+250.8
+
+LO
+T
+
+C
+O
+N
+.4
+
+C
+O
+N
+.4
+
+264.2
+
+17
+
+257.29
+
+254.5
+
+18
+
+7029.481
+
+E.
+H
+.
+S.
+
+.
+.S
+.H
+E
+
+257.81
+
+E.
+H
+.
+S.
+
+ORCHARD
+
+SH
+EE
+T1
+36
+
+248.1
+
+252.5
+
+256.1
+
+0
+
+248.8
+
+256.7
+
+E.
+H
+.
+S.
+
+257.5
+
+ORCHARD
+
+249.6
+
+250.2
+256.2
+
+260.1
+
+W/L
+
+252.5
+
+E.
+H
+.
+S.
+
+VER SHEET 138
+NE HUMBER RI
+MATCHLI
+
+252.2
+253.5
+
+LO
+T
+
+LO
+T
+
+20
+
+2
+5
+5
+
+LO
+T
+
+ORCHARD
+
+253.1
+
+258.5
+
+260.2
+
+254.7
+
+255
+252.2
+
+253.2
+
+7029.363
+
+247.86
+
+255.4
+
+253.1
+
+261.3
+
+7029.37
+
+250.82
+
+257.6
+
+257.48
+
+ORCHARD
+255.3
+
+7029.49
+254.2
+
+LO
+T
+
+LO
+T
+
+263.8
+
+18
+
+19
+
+257.86
+
+251.9
+
+TOWN OF CALEDON
+
+4848
+Mayfield
+Road
+
+TOWN OF CALEDON
+
+4 846 700 m N
+
+4 846 700 m N
+598 000 m
+
+596 000 m
+
+E
+
+E
+
+R E V I S I O N S
+
+LEGEND
+BY
+
+DATE
+5
+0
+
+Contour, Index
+
+Road, Hard Surface, with Median
+
+4
+8
+
+,Intermediate
+
+,Driveway, or Loose Surface
+,Farm Lane, Cart Track, Wagon Road
+
+,Supplementary
+
+FLOOD PLAIN
+
+,Footpath, Trail
+
+,Approximate
+
+Bridge, Footbridge
+
+,Depression
+Spot Elevation, Water Level
+
+Fence
+
+River, Stream, Canal
+
+Cliff, Cut and Fill
+
+,Approximate Alignment
+
+Culvert
+
+,Disappearing
+
+Dam, Beaver Dam
+
+,Split
+
+Pipeline
+
+X
+
+This map was compiled photogrammetrically from
+BD
+
+LEGEND
+l
+e
+b
+a
+nL
+o
+i
+t
+c
+e
+S
+s
+s
+o
+r
+C
+
+Cross-Section
+Leader Line
+
+The vertical datum is mean sea level as established
+L
+
+Lake
+
+D
+R
+
+H
+
+RES
+
+Hedge
+
+Reservoir
+F
+
+F
+
+w
+
+Falls
+
+Wall
+
+Building, Garage, Shed
+
+Regulatory Flood Line
+
+Reprojected to NAD 83 in 2007
+
+100
+
+E. I. GRAHAM
+
+200
+
+Le
+ng
+t
+h
+
+,Under Construction, Foundation
+
+U/C
+
+,Ruins
+
+RUIN
+
+PLEASE NOTE:
+FLOODLINE ELEVATIONS ARE SUBJECT TO
+CHANGE DUE TO REVISED INFORMATION.
+
+PLEASE NOTE:
+THE PROFESSIONAL ENGINEER’S
+STAMP VERIFIES THE FLOOD
+LINE AND ASSOCIATED DATA
+NOT THE MAP DATA
+UNLESS OTHERWISE NOTED
+
+0
+
+100
+
+Metres
+
+O
+
+200
+
+400
+
+600
+
+V
+
+R
+A
+IN
+NT
+CE
+OF O
+
+FLOODLINE APPROVED DATE:
+
+800
+
+1000
+Feet
+
+Feet
+
+O
+
+HU
+MB
+E
+RR
+I
+V
+E
+R
+
+200
+
+Metres
+
+EER
+IN
+
+Grid Interval 100 metres.
+
+R
+P
+
+ON
+I
+T
+A
+V
+E
+L
+OOD E
+L
+YF
+OR
+T
+A
+L
+GU
+E
+R
+WO
+HE T
+R OF T
+GHE
+HE HI
+ST
+I
+D
+E
+Y
+A
+L
+P
+S
+I
+ONS D
+I
+T
+A
+V
+E
+L
+E
+
+172.00
+
+Chimney
+
+Rapids
+
+Scale 1:2000
+G
+N
+E
+
+m)
+n(
+o
+i
+t
+a
+v
+e
+l
+dE
+o
+o
+l
+gF
+n
+i
+t
+s
+i
+x
+E
+r
+a
+e
+0Y
+0
+1
+
+Cr
+os
+sSe
+ct
+i
+on
+
+Downsview Ontario M3N 1S4 (416) 661-6600
+
+ON
+FESSI
+A
+RO
+L
+P
+
+Zone 17, Central Meridian 81 W.
+
+Wooded Area
+
+R
+
+0
+0
+.
+2
+7
+1
+
+North American Datum 1927, U.T.M. 6 projection
+
+Railway
+
+Marsh, Swamp
+
+0
+6
+0
+.
+4
+1
+
+5 Shoreham Drive
+
+IN 2001.
+
+Airport Runway
+by the Geodetic Survey of Canada.
+
+Ditch, Drain
+
+r
+e
+mb
+nNu
+o
+i
+t
+c
+e
+S
+s
+s
+o
+r
+C
+
+MAPPING PROGRAM
+
+Power Transmission Line, with Poles, with Pylons
+
+F/L
+
+Flooded Land
+
+m)
+n(
+o
+i
+t
+a
+v
+e
+l
+dE
+o
+o
+l
+F
+l
+a
+n
+o
+i
+g
+e
+R
+
+1/10 000 aerial photograhy exposed in April 1977.
+P
+
+:
+E
+E NOT
+S
+A
+E
+L
+P
+Y
+L
+L
+NA
+GI
+I
+S OR
+P WA
+S MA
+HI
+T
+N
+I
+L
+K
+C
+LMA
+L
+HA
+S
+R
+Y MA
+D B
+E
+L
+I
+OMP
+C
+S
+P WA
+S MA
+HI
+T
+.
+7
+7
+9
+N 1
+I
+.
+D
+T
+N L
+GHA
+MONA
+.
+NC
+SI
+C
+HI
+P
+A
+OGR
+P GE
+Y QS
+D B
+E
+Z
+I
+T
+GI
+I
+D
+
+IO
+
+DESCRIPTION
+
+L IC E
+NS
+E
+D
+
+NO.
+
+S
+HE
+E
+TNo
+.
+
+2006-04-05
+CONTOUR INTERVAL 1.0 METRES:
+
+137
+
+T.Y. LIN INTERNATIONAL CANADA INC.
+
+APPENDIX B
+VISUAL OTTHYMO (VO) MODEL
+
+www.tylin.com
+
+8800 Dufferin Street, Suite 200, Vaughan, Ontario L4K 0C5
+
+T 905.738.5700
+
+10722 – Caledon – 4848 Mayfield Rd
+December 2022
+
+Hydrologic Model Output (Proposed Conditions 3 HR Chicago 2–100 YR storms)
+
+VO Output
+
+VO Schematic
+
+******************************************
+** SIMULATION:Caloden_100yr-3hr-Chicago **
+******************************************
+-------------------| CHICAGO STORM
+|
+IDF curve parameters: A=4688.000
+| Ptotal= 87.03 mm |
+B= 17.000
+-------------------C=
+0.962
+used in:
+INTENSITY = A / (t + B)^C
+Duration of storm = 3.00 hrs
+Storm time step
+= 10.00 min
+Time to peak ratio = 0.33
+TIME
+hrs
+0.00
+0.17
+0.33
+0.50
+0.67
+
+RAIN |
+mm/hr |
+4.88 |
+6.96 |
+11.02 |
+21.03 |
+62.12 |
+
+TIME
+hrs
+0.83
+1.00
+1.17
+1.33
+1.50
+
+RAIN |' TIME
+mm/hr |'
+hrs
+196.54 | 1.67
+83.09 | 1.83
+41.25 | 2.00
+25.07 | 2.17
+17.06 | 2.33
+
+RAIN | TIME
+mm/hr |
+hrs
+12.48 | 2.50
+9.60 | 2.67
+7.66 | 2.83
+6.29 |
+5.28 |
+
+RAIN
+mm/hr
+4.51
+3.91
+3.44
+
+-------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)=
+0.57
+|ID= 1 DT= 1.0 min |
+Total Imp(%)= 70.00
+Dir. Conn.(%)= 70.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.40
+0.17
+Dep. Storage
+(mm)=
+1.00
+5.00
+Average Slope
+(%)=
+2.00
+2.00
+Length
+(m)=
+61.64
+40.00
+Mannings n
+=
+0.013
+0.250
+
+1
+
+10722 – Caledon – 4848 Mayfield Rd
+December 2022
+
+Hydrologic Model Output (Proposed Conditions 3 HR Chicago 2–100 YR storms)
+
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.017
+0.033
+0.050
+0.067
+0.083
+0.100
+0.117
+0.133
+0.150
+0.167
+0.183
+0.200
+0.217
+0.233
+0.250
+0.267
+0.283
+0.300
+0.317
+0.333
+0.350
+0.367
+0.383
+0.400
+0.417
+0.433
+0.450
+0.467
+0.483
+0.500
+0.517
+0.533
+0.550
+0.567
+0.583
+0.600
+0.617
+0.633
+0.650
+0.667
+0.683
+0.700
+0.717
+0.733
+0.750
+
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+4.88 | 0.767
+62.12 | 1.517
+17.06 | 2.27
+4.88 | 0.783
+62.12 | 1.533
+17.06 | 2.28
+4.88 | 0.800
+62.12 | 1.550
+17.06 | 2.30
+4.88 | 0.817
+62.12 | 1.567
+17.06 | 2.32
+4.88 | 0.833
+62.12 | 1.583
+17.06 | 2.33
+4.88 | 0.850 196.53 | 1.600
+17.06 | 2.35
+4.88 | 0.867 196.54 | 1.617
+17.06 | 2.37
+4.88 | 0.883 196.54 | 1.633
+17.06 | 2.38
+4.88 | 0.900 196.54 | 1.650
+17.06 | 2.40
+4.88 | 0.917 196.54 | 1.667
+17.06 | 2.42
+6.96 | 0.933 196.54 | 1.683
+12.48 | 2.43
+6.96 | 0.950 196.54 | 1.700
+12.48 | 2.45
+6.96 | 0.967 196.54 | 1.717
+12.48 | 2.47
+6.96 | 0.983 196.54 | 1.733
+12.48 | 2.48
+6.96 | 1.000 196.54 | 1.750
+12.48 | 2.50
+6.96 | 1.017
+83.09 | 1.767
+12.48 | 2.52
+6.96 | 1.033
+83.09 | 1.783
+12.48 | 2.53
+6.96 | 1.050
+83.09 | 1.800
+12.48 | 2.55
+6.96 | 1.067
+83.09 | 1.817
+12.48 | 2.57
+6.96 | 1.083
+83.09 | 1.833
+12.48 | 2.58
+11.02 | 1.100
+83.09 | 1.850
+9.60 | 2.60
+11.02 | 1.117
+83.09 | 1.867
+9.60 | 2.62
+11.02 | 1.133
+83.09 | 1.883
+9.60 | 2.63
+11.02 | 1.150
+83.09 | 1.900
+9.60 | 2.65
+11.02 | 1.167
+83.09 | 1.917
+9.60 | 2.67
+11.02 | 1.183
+41.25 | 1.933
+9.60 | 2.68
+11.02 | 1.200
+41.25 | 1.950
+9.60 | 2.70
+11.02 | 1.217
+41.25 | 1.967
+9.60 | 2.72
+11.02 | 1.233
+41.25 | 1.983
+9.60 | 2.73
+11.02 | 1.250
+41.25 | 2.000
+9.60 | 2.75
+21.03 | 1.267
+41.25 | 2.017
+7.66 | 2.77
+21.03 | 1.283
+41.25 | 2.033
+7.66 | 2.78
+21.03 | 1.300
+41.25 | 2.050
+7.66 | 2.80
+21.03 | 1.317
+41.25 | 2.067
+7.66 | 2.82
+21.03 | 1.333
+41.25 | 2.083
+7.66 | 2.83
+21.03 | 1.350
+25.07 | 2.100
+7.66 | 2.85
+21.03 | 1.367
+25.07 | 2.117
+7.66 | 2.87
+21.03 | 1.383
+25.07 | 2.133
+7.66 | 2.88
+21.03 | 1.400
+25.07 | 2.150
+7.66 | 2.90
+21.03 | 1.417
+25.07 | 2.167
+7.66 | 2.92
+62.12 | 1.433
+25.07 | 2.183
+6.29 | 2.93
+62.12 | 1.450
+25.07 | 2.200
+6.29 | 2.95
+62.12 | 1.467
+25.07 | 2.217
+6.29 | 2.97
+62.12 | 1.483
+25.07 | 2.233
+6.29 | 2.98
+62.12 | 1.500
+25.07 | 2.250
+6.29 | 3.00
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+196.54
+5.00
+1.18 (ii)
+5.00
+0.45
+
+112.16
+6.00
+5.02 (ii)
+6.00
+0.21
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.22
+1.00
+86.03
+87.03
+0.99
+
+0.05
+1.05
+50.19
+87.03
+0.58
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 83.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+
+*TOTALS*
+0.258 (iii)
+1.00
+75.27
+87.03
+0.86
+
+RAIN
+mm/hr
+6.29
+6.29
+6.29
+6.29
+6.29
+5.28
+5.28
+5.28
+5.28
+5.28
+5.28
+5.28
+5.28
+5.28
+5.28
+4.51
+4.51
+4.51
+4.51
+4.51
+4.51
+4.51
+4.51
+4.51
+4.51
+3.91
+3.91
+3.91
+3.91
+3.91
+3.91
+3.91
+3.91
+3.91
+3.91
+3.44
+3.44
+3.44
+3.44
+3.44
+3.44
+3.44
+3.44
+3.44
+3.44
+
+-------------------------------------------------------------------------------------------------| RESERVOIR( 0002)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 1.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.0130
+0.0260
+0.0056
+0.0110
+|
+0.0160
+0.0290
+0.0090
+0.0170
+|
+0.0180
+0.0340
+0.0110
+0.0200
+|
+0.0000
+0.0000
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0001)
+0002)
+
+AREA
+(ha)
+0.570
+0.570
+
+QPEAK
+(cms)
+0.258
+0.018
+
+TPEAK
+(hrs)
+1.00
+1.88
+
+R.V.
+(mm)
+75.27
+74.40
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 6.90
+TIME SHIFT OF PEAK FLOW
+(min)= 53.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.0335
+------------------------------------------------------------------------------*****************************************
+** SIMULATION:Caloden_10yr-3hr-Chicago **
+*****************************************
+-------------------| CHICAGO STORM
+|
+IDF curve parameters: A=2221.000
+| Ptotal= 56.26 mm |
+B= 12.000
+-------------------C=
+0.908
+used in:
+INTENSITY = A / (t + B)^C
+Duration of storm = 3.00 hrs
+Storm time step
+= 10.00 min
+Time to peak ratio = 0.33
+TIME
+hrs
+0.00
+0.17
+0.33
+0.50
+0.67
+
+RAIN |
+mm/hr |
+3.65 |
+4.89 |
+7.23 |
+12.87 |
+37.17 |
+
+TIME
+hrs
+0.83
+1.00
+1.17
+1.33
+1.50
+
+RAIN |' TIME
+mm/hr |'
+hrs
+134.16 | 1.67
+50.03 | 1.83
+24.37 | 2.00
+15.14 | 2.17
+10.64 | 2.33
+
+RAIN | TIME
+mm/hr |
+hrs
+8.06 | 2.50
+6.42 | 2.67
+5.30 | 2.83
+4.50 |
+3.89 |
+
+RAIN
+mm/hr
+3.42
+3.05
+2.75
+
+-------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)=
+0.57
+|ID= 1 DT= 1.0 min |
+Total Imp(%)= 70.00
+Dir. Conn.(%)= 70.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.40
+0.17
+Dep. Storage
+(mm)=
+1.00
+5.00
+Average Slope
+(%)=
+2.00
+2.00
+Length
+(m)=
+61.64
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.017
+0.033
+0.050
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+3.65 | 0.767
+37.17 | 1.517
+10.64 | 2.27
+3.65 | 0.783
+37.17 | 1.533
+10.64 | 2.28
+3.65 | 0.800
+37.17 | 1.550
+10.64 | 2.30
+
+RAIN
+mm/hr
+4.50
+4.50
+4.50
+
+2
+
+10722 – Caledon – 4848 Mayfield Rd
+December 2022
+
+Hydrologic Model Output (Proposed Conditions 3 HR Chicago 2–100 YR storms)
+
+0.067
+0.083
+0.100
+0.117
+0.133
+0.150
+0.167
+0.183
+0.200
+0.217
+0.233
+0.250
+0.267
+0.283
+0.300
+0.317
+0.333
+0.350
+0.367
+0.383
+0.400
+0.417
+0.433
+0.450
+0.467
+0.483
+0.500
+0.517
+0.533
+0.550
+0.567
+0.583
+0.600
+0.617
+0.633
+0.650
+0.667
+0.683
+0.700
+0.717
+0.733
+0.750
+
+3.65 | 0.817
+3.65 | 0.833
+3.65 | 0.850
+3.65 | 0.867
+3.65 | 0.883
+3.65 | 0.900
+3.65 | 0.917
+4.89 | 0.933
+4.89 | 0.950
+4.89 | 0.967
+4.89 | 0.983
+4.89 | 1.000
+4.89 | 1.017
+4.89 | 1.033
+4.89 | 1.050
+4.89 | 1.067
+4.89 | 1.083
+7.23 | 1.100
+7.23 | 1.117
+7.23 | 1.133
+7.23 | 1.150
+7.23 | 1.167
+7.23 | 1.183
+7.23 | 1.200
+7.23 | 1.217
+7.23 | 1.233
+7.23 | 1.250
+12.87 | 1.267
+12.87 | 1.283
+12.87 | 1.300
+12.87 | 1.317
+12.87 | 1.333
+12.87 | 1.350
+12.87 | 1.367
+12.87 | 1.383
+12.87 | 1.400
+12.87 | 1.417
+37.17 | 1.433
+37.17 | 1.450
+37.17 | 1.467
+37.17 | 1.483
+37.17 | 1.500
+
+37.17 | 1.567
+37.17 | 1.583
+134.16 | 1.600
+134.16 | 1.617
+134.16 | 1.633
+134.16 | 1.650
+134.16 | 1.667
+134.16 | 1.683
+134.16 | 1.700
+134.16 | 1.717
+134.16 | 1.733
+134.16 | 1.750
+50.04 | 1.767
+50.03 | 1.783
+50.03 | 1.800
+50.03 | 1.817
+50.03 | 1.833
+50.03 | 1.850
+50.03 | 1.867
+50.03 | 1.883
+50.03 | 1.900
+50.03 | 1.917
+24.37 | 1.933
+24.37 | 1.950
+24.37 | 1.967
+24.37 | 1.983
+24.37 | 2.000
+24.37 | 2.017
+24.37 | 2.033
+24.37 | 2.050
+24.37 | 2.067
+24.37 | 2.083
+15.14 | 2.100
+15.14 | 2.117
+15.14 | 2.133
+15.14 | 2.150
+15.14 | 2.167
+15.14 | 2.183
+15.14 | 2.200
+15.14 | 2.217
+15.14 | 2.233
+15.14 | 2.250
+
+10.64 |
+10.64 |
+10.64 |
+10.64 |
+10.64 |
+10.64 |
+10.64 |
+8.06 |
+8.06 |
+8.06 |
+8.06 |
+8.06 |
+8.06 |
+8.06 |
+8.06 |
+8.06 |
+8.06 |
+6.42 |
+6.42 |
+6.42 |
+6.42 |
+6.42 |
+6.42 |
+6.42 |
+6.42 |
+6.42 |
+6.42 |
+5.30 |
+5.30 |
+5.30 |
+5.30 |
+5.30 |
+5.30 |
+5.30 |
+5.30 |
+5.30 |
+5.30 |
+4.50 |
+4.50 |
+4.50 |
+4.50 |
+4.50 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+134.16
+5.00
+1.38 (ii)
+5.00
+0.43
+
+56.24
+6.00
+5.85 (ii)
+6.00
+0.19
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.15
+1.00
+55.26
+56.26
+0.98
+
+0.02
+1.07
+25.44
+56.26
+0.45
+
+2.32
+2.33
+2.35
+2.37
+2.38
+2.40
+2.42
+2.43
+2.45
+2.47
+2.48
+2.50
+2.52
+2.53
+2.55
+2.57
+2.58
+2.60
+2.62
+2.63
+2.65
+2.67
+2.68
+2.70
+2.72
+2.73
+2.75
+2.77
+2.78
+2.80
+2.82
+2.83
+2.85
+2.87
+2.88
+2.90
+2.92
+2.93
+2.95
+2.97
+2.98
+3.00
+
+4.50
+4.50
+3.89
+3.89
+3.89
+3.89
+3.89
+3.89
+3.89
+3.89
+3.89
+3.89
+3.42
+3.42
+3.42
+3.42
+3.42
+3.42
+3.42
+3.42
+3.42
+3.42
+3.05
+3.05
+3.05
+3.05
+3.05
+3.05
+3.05
+3.05
+3.05
+3.05
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+2.75
+
+*TOTALS*
+0.166 (iii)
+1.00
+46.31
+56.26
+0.82
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 83.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 0002)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 1.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+
+0.0000
+0.0056
+0.0090
+0.0110
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0001)
+0002)
+
+0.0000
+0.0110
+0.0170
+0.0200
+
+AREA
+(ha)
+0.570
+0.570
+
+|
+|
+|
+|
+
+QPEAK
+(cms)
+0.166
+0.011
+
+0.0130
+0.0160
+0.0180
+0.0000
+
+0.0260
+0.0290
+0.0340
+0.0000
+
+TPEAK
+(hrs)
+1.00
+1.88
+
+R.V.
+(mm)
+46.31
+45.43
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 6.67
+TIME SHIFT OF PEAK FLOW
+(min)= 53.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.0203
+------------------------------------------------------------------------------*****************************************
+** SIMULATION:Caloden_25yr-3hr-Chicago **
+*****************************************
+-------------------| CHICAGO STORM
+|
+IDF curve parameters: A=3158.000
+| Ptotal= 68.95 mm |
+B= 15.000
+-------------------C=
+0.933
+used in:
+INTENSITY = A / (t + B)^C
+Duration of storm = 3.00 hrs
+Storm time step
+= 10.00 min
+Time to peak ratio = 0.33
+TIME
+hrs
+0.00
+0.17
+0.33
+0.50
+0.67
+
+RAIN |
+mm/hr |
+4.28 |
+5.90 |
+9.00 |
+16.53 |
+47.76 |
+
+TIME
+hrs
+0.83
+1.00
+1.17
+1.33
+1.50
+
+RAIN |' TIME
+mm/hr |'
+hrs
+156.47 | 1.67
+63.86 | 1.83
+31.72 | 2.00
+19.56 | 2.17
+13.56 | 2.33
+
+RAIN | TIME
+mm/hr |
+hrs
+10.11 | 2.50
+7.92 | 2.67
+6.44 | 2.83
+5.38 |
+4.59 |
+
+RAIN
+mm/hr
+3.99
+3.51
+3.13
+
+-------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)=
+0.57
+|ID= 1 DT= 1.0 min |
+Total Imp(%)= 70.00
+Dir. Conn.(%)= 70.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.40
+0.17
+Dep. Storage
+(mm)=
+1.00
+5.00
+Average Slope
+(%)=
+2.00
+2.00
+Length
+(m)=
+61.64
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.017
+0.033
+0.050
+0.067
+0.083
+0.100
+0.117
+0.133
+0.150
+0.167
+0.183
+0.200
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+4.28 | 0.767
+47.76 | 1.517
+13.56 | 2.27
+4.28 | 0.783
+47.76 | 1.533
+13.56 | 2.28
+4.28 | 0.800
+47.76 | 1.550
+13.56 | 2.30
+4.28 | 0.817
+47.76 | 1.567
+13.56 | 2.32
+4.28 | 0.833
+47.76 | 1.583
+13.56 | 2.33
+4.28 | 0.850 156.47 | 1.600
+13.56 | 2.35
+4.28 | 0.867 156.47 | 1.617
+13.56 | 2.37
+4.28 | 0.883 156.47 | 1.633
+13.56 | 2.38
+4.28 | 0.900 156.47 | 1.650
+13.56 | 2.40
+4.28 | 0.917 156.47 | 1.667
+13.56 | 2.42
+5.90 | 0.933 156.47 | 1.683
+10.11 | 2.43
+5.90 | 0.950 156.47 | 1.700
+10.11 | 2.45
+
+RAIN
+mm/hr
+5.38
+5.38
+5.38
+5.38
+5.38
+4.59
+4.59
+4.59
+4.59
+4.59
+4.59
+4.59
+
+3
+
+10722 – Caledon – 4848 Mayfield Rd
+December 2022
+
+Hydrologic Model Output (Proposed Conditions 3 HR Chicago 2–100 YR storms)
+
+0.217
+0.233
+0.250
+0.267
+0.283
+0.300
+0.317
+0.333
+0.350
+0.367
+0.383
+0.400
+0.417
+0.433
+0.450
+0.467
+0.483
+0.500
+0.517
+0.533
+0.550
+0.567
+0.583
+0.600
+0.617
+0.633
+0.650
+0.667
+0.683
+0.700
+0.717
+0.733
+0.750
+
+5.90 | 0.967
+5.90 | 0.983
+5.90 | 1.000
+5.90 | 1.017
+5.90 | 1.033
+5.90 | 1.050
+5.90 | 1.067
+5.90 | 1.083
+9.00 | 1.100
+9.00 | 1.117
+9.00 | 1.133
+9.00 | 1.150
+9.00 | 1.167
+9.00 | 1.183
+9.00 | 1.200
+9.00 | 1.217
+9.00 | 1.233
+9.00 | 1.250
+16.53 | 1.267
+16.53 | 1.283
+16.53 | 1.300
+16.53 | 1.317
+16.53 | 1.333
+16.53 | 1.350
+16.53 | 1.367
+16.53 | 1.383
+16.53 | 1.400
+16.53 | 1.417
+47.76 | 1.433
+47.76 | 1.450
+47.76 | 1.467
+47.76 | 1.483
+47.76 | 1.500
+
+156.47 | 1.717
+156.47 | 1.733
+156.47 | 1.750
+63.86 | 1.767
+63.86 | 1.783
+63.86 | 1.800
+63.86 | 1.817
+63.86 | 1.833
+63.86 | 1.850
+63.86 | 1.867
+63.86 | 1.883
+63.86 | 1.900
+63.86 | 1.917
+31.72 | 1.933
+31.72 | 1.950
+31.72 | 1.967
+31.72 | 1.983
+31.72 | 2.000
+31.72 | 2.017
+31.72 | 2.033
+31.72 | 2.050
+31.72 | 2.067
+31.72 | 2.083
+19.56 | 2.100
+19.56 | 2.117
+19.56 | 2.133
+19.56 | 2.150
+19.56 | 2.167
+19.56 | 2.183
+19.56 | 2.200
+19.56 | 2.217
+19.56 | 2.233
+19.56 | 2.250
+
+10.11 |
+10.11 |
+10.11 |
+10.11 |
+10.11 |
+10.11 |
+10.11 |
+10.11 |
+7.92 |
+7.92 |
+7.92 |
+7.92 |
+7.92 |
+7.92 |
+7.92 |
+7.92 |
+7.92 |
+7.92 |
+6.44 |
+6.44 |
+6.44 |
+6.44 |
+6.44 |
+6.44 |
+6.44 |
+6.44 |
+6.44 |
+6.44 |
+5.38 |
+5.38 |
+5.38 |
+5.38 |
+5.38 |
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+156.47
+5.00
+1.30 (ii)
+5.00
+0.44
+
+76.60
+6.00
+5.50 (ii)
+6.00
+0.20
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.17
+1.00
+67.95
+68.95
+0.99
+
+0.03
+1.05
+35.26
+68.95
+0.51
+
+2.47
+2.48
+2.50
+2.52
+2.53
+2.55
+2.57
+2.58
+2.60
+2.62
+2.63
+2.65
+2.67
+2.68
+2.70
+2.72
+2.73
+2.75
+2.77
+2.78
+2.80
+2.82
+2.83
+2.85
+2.87
+2.88
+2.90
+2.92
+2.93
+2.95
+2.97
+2.98
+3.00
+
+4.59
+4.59
+4.59
+3.99
+3.99
+3.99
+3.99
+3.99
+3.99
+3.99
+3.99
+3.99
+3.99
+3.51
+3.51
+3.51
+3.51
+3.51
+3.51
+3.51
+3.51
+3.51
+3.51
+3.13
+3.13
+3.13
+3.13
+3.13
+3.13
+3.13
+3.13
+3.13
+3.13
+
+*TOTALS*
+0.199 (iii)
+1.00
+58.14
+68.95
+0.84
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 83.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 0002)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 1.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.0130
+0.0260
+0.0056
+0.0110
+|
+0.0160
+0.0290
+0.0090
+0.0170
+|
+0.0180
+0.0340
+0.0110
+0.0200
+|
+0.0000
+0.0000
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0001)
+0002)
+
+AREA
+(ha)
+0.570
+0.570
+
+QPEAK
+(cms)
+0.199
+0.013
+
+TPEAK
+(hrs)
+1.00
+1.92
+
+R.V.
+(mm)
+58.14
+57.26
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 6.49
+TIME SHIFT OF PEAK FLOW
+(min)= 55.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.0258
+------------------------------------------------------------------------------****************************************
+** SIMULATION:Caloden_2yr-3hr-Chicago **
+****************************************
+-------------------| CHICAGO STORM
+|
+IDF curve parameters: A=1070.000
+| Ptotal= 32.71 mm |
+B=
+7.850
+-------------------C=
+0.876
+used in:
+INTENSITY = A / (t + B)^C
+Duration of storm = 3.00 hrs
+Storm time step
+= 10.00 min
+Time to peak ratio = 0.33
+TIME
+hrs
+0.00
+0.17
+0.33
+0.50
+0.67
+
+RAIN |
+mm/hr |
+2.22 |
+2.87 |
+4.06 |
+6.86 |
+19.60 |
+
+TIME
+hrs
+0.83
+1.00
+1.17
+1.33
+1.50
+
+RAIN |' TIME
+mm/hr |'
+hrs
+85.72 | 1.67
+26.59 | 1.83
+12.64 | 2.00
+7.99 | 2.17
+5.76 | 2.33
+
+RAIN | TIME
+mm/hr |
+hrs
+4.48 | 2.50
+3.65 | 2.67
+3.08 | 2.83
+2.66 |
+2.34 |
+
+RAIN
+mm/hr
+2.10
+1.89
+1.73
+
+-------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)=
+0.57
+|ID= 1 DT= 1.0 min |
+Total Imp(%)= 70.00
+Dir. Conn.(%)= 70.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.40
+0.17
+Dep. Storage
+(mm)=
+1.00
+5.00
+Average Slope
+(%)=
+2.00
+2.00
+Length
+(m)=
+61.64
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.017
+0.033
+0.050
+0.067
+0.083
+0.100
+0.117
+0.133
+0.150
+0.167
+0.183
+0.200
+0.217
+0.233
+0.250
+0.267
+0.283
+0.300
+0.317
+0.333
+0.350
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+2.22 | 0.767
+19.60 | 1.517
+5.76 | 2.27
+2.22 | 0.783
+19.60 | 1.533
+5.76 | 2.28
+2.22 | 0.800
+19.60 | 1.550
+5.76 | 2.30
+2.22 | 0.817
+19.60 | 1.567
+5.76 | 2.32
+2.22 | 0.833
+19.60 | 1.583
+5.76 | 2.33
+2.22 | 0.850
+85.72 | 1.600
+5.76 | 2.35
+2.22 | 0.867
+85.72 | 1.617
+5.76 | 2.37
+2.22 | 0.883
+85.72 | 1.633
+5.76 | 2.38
+2.22 | 0.900
+85.72 | 1.650
+5.76 | 2.40
+2.22 | 0.917
+85.72 | 1.667
+5.76 | 2.42
+2.87 | 0.933
+85.72 | 1.683
+4.48 | 2.43
+2.87 | 0.950
+85.72 | 1.700
+4.48 | 2.45
+2.87 | 0.967
+85.72 | 1.717
+4.48 | 2.47
+2.87 | 0.983
+85.72 | 1.733
+4.48 | 2.48
+2.87 | 1.000
+85.72 | 1.750
+4.48 | 2.50
+2.87 | 1.017
+26.59 | 1.767
+4.48 | 2.52
+2.87 | 1.033
+26.59 | 1.783
+4.48 | 2.53
+2.87 | 1.050
+26.59 | 1.800
+4.48 | 2.55
+2.87 | 1.067
+26.59 | 1.817
+4.48 | 2.57
+2.87 | 1.083
+26.59 | 1.833
+4.48 | 2.58
+4.06 | 1.100
+26.59 | 1.850
+3.65 | 2.60
+
+RAIN
+mm/hr
+2.66
+2.66
+2.66
+2.66
+2.66
+2.34
+2.34
+2.34
+2.34
+2.34
+2.34
+2.34
+2.34
+2.34
+2.34
+2.10
+2.10
+2.10
+2.10
+2.10
+2.10
+
+4
+
+10722 – Caledon – 4848 Mayfield Rd
+December 2022
+
+Hydrologic Model Output (Proposed Conditions 3 HR Chicago 2–100 YR storms)
+
+0.367
+0.383
+0.400
+0.417
+0.433
+0.450
+0.467
+0.483
+0.500
+0.517
+0.533
+0.550
+0.567
+0.583
+0.600
+0.617
+0.633
+0.650
+0.667
+0.683
+0.700
+0.717
+0.733
+0.750
+
+4.06 | 1.117
+4.06 | 1.133
+4.06 | 1.150
+4.06 | 1.167
+4.06 | 1.183
+4.06 | 1.200
+4.06 | 1.217
+4.06 | 1.233
+4.06 | 1.250
+6.86 | 1.267
+6.86 | 1.283
+6.86 | 1.300
+6.86 | 1.317
+6.86 | 1.333
+6.86 | 1.350
+6.86 | 1.367
+6.86 | 1.383
+6.86 | 1.400
+6.86 | 1.417
+19.60 | 1.433
+19.60 | 1.450
+19.60 | 1.467
+19.60 | 1.483
+19.60 | 1.500
+
+26.59 | 1.867
+26.59 | 1.883
+26.59 | 1.900
+26.59 | 1.917
+12.64 | 1.933
+12.64 | 1.950
+12.64 | 1.967
+12.64 | 1.983
+12.64 | 2.000
+12.64 | 2.017
+12.64 | 2.033
+12.64 | 2.050
+12.64 | 2.067
+12.64 | 2.083
+7.99 | 2.100
+7.99 | 2.117
+7.99 | 2.133
+7.99 | 2.150
+7.99 | 2.167
+7.99 | 2.183
+7.99 | 2.200
+7.99 | 2.217
+7.99 | 2.233
+7.99 | 2.250
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+85.72
+5.00
+1.65 (ii)
+5.00
+0.40
+
+21.30
+7.00
+7.00 (ii)
+7.00
+0.16
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.09
+1.00
+31.71
+32.71
+0.97
+
+0.01
+1.08
+9.63
+32.71
+0.29
+
+3.65 |
+3.65 |
+3.65 |
+3.65 |
+3.65 |
+3.65 |
+3.65 |
+3.65 |
+3.65 |
+3.08 |
+3.08 |
+3.08 |
+3.08 |
+3.08 |
+3.08 |
+3.08 |
+3.08 |
+3.08 |
+3.08 |
+2.66 |
+2.66 |
+2.66 |
+2.66 |
+2.66 |
+
+2.62
+2.63
+2.65
+2.67
+2.68
+2.70
+2.72
+2.73
+2.75
+2.77
+2.78
+2.80
+2.82
+2.83
+2.85
+2.87
+2.88
+2.90
+2.92
+2.93
+2.95
+2.97
+2.98
+3.00
+
+2.10
+2.10
+2.10
+2.10
+1.89
+1.89
+1.89
+1.89
+1.89
+1.89
+1.89
+1.89
+1.89
+1.89
+1.73
+1.73
+1.73
+1.73
+1.73
+1.73
+1.73
+1.73
+1.73
+1.73
+
+*TOTALS*
+0.099 (iii)
+1.00
+25.08
+32.71
+0.77
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 83.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 0002)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 1.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.0130
+0.0260
+0.0056
+0.0110
+|
+0.0160
+0.0290
+0.0090
+0.0170
+|
+0.0180
+0.0340
+0.0110
+0.0200
+|
+0.0000
+0.0000
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0001)
+0002)
+
+AREA
+(ha)
+0.570
+0.570
+
+QPEAK
+(cms)
+0.099
+0.006
+
+TPEAK
+(hrs)
+1.00
+1.92
+
+R.V.
+(mm)
+25.08
+24.20
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 5.67
+TIME SHIFT OF PEAK FLOW
+(min)= 55.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.0110
+------------------------------------------------------------------------------****************************************
+** SIMULATION:Caloden_50yr-3hrChicago **
+****************************************
+
+-------------------| CHICAGO STORM
+|
+| Ptotal= 77.60 mm |
+--------------------
+
+IDF curve parameters: A=3886.000
+B= 16.000
+C=
+0.950
+used in:
+INTENSITY = A / (t + B)^C
+Duration of storm = 3.00 hrs
+Storm time step
+= 10.00 min
+Time to peak ratio = 0.33
+
+TIME
+hrs
+0.00
+0.17
+0.33
+0.50
+0.67
+
+RAIN |
+mm/hr |
+4.54 |
+6.37 |
+9.92 |
+18.63 |
+54.62 |
+
+TIME
+hrs
+0.83
+1.00
+1.17
+1.33
+1.50
+
+RAIN |' TIME
+mm/hr |'
+hrs
+176.19 | 1.67
+73.10 | 1.83
+36.22 | 2.00
+22.14 | 2.17
+15.18 | 2.33
+
+RAIN | TIME
+mm/hr |
+hrs
+11.20 | 2.50
+8.68 | 2.67
+6.99 | 2.83
+5.78 |
+4.89 |
+
+RAIN
+mm/hr
+4.21
+3.68
+3.25
+
+-------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)=
+0.57
+|ID= 1 DT= 1.0 min |
+Total Imp(%)= 70.00
+Dir. Conn.(%)= 70.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.40
+0.17
+Dep. Storage
+(mm)=
+1.00
+5.00
+Average Slope
+(%)=
+2.00
+2.00
+Length
+(m)=
+61.64
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.017
+0.033
+0.050
+0.067
+0.083
+0.100
+0.117
+0.133
+0.150
+0.167
+0.183
+0.200
+0.217
+0.233
+0.250
+0.267
+0.283
+0.300
+0.317
+0.333
+0.350
+0.367
+0.383
+0.400
+0.417
+0.433
+0.450
+0.467
+0.483
+0.500
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+4.54 | 0.767
+54.62 | 1.517
+15.18 | 2.27
+4.54 | 0.783
+54.62 | 1.533
+15.18 | 2.28
+4.54 | 0.800
+54.62 | 1.550
+15.18 | 2.30
+4.54 | 0.817
+54.62 | 1.567
+15.18 | 2.32
+4.54 | 0.833
+54.62 | 1.583
+15.18 | 2.33
+4.54 | 0.850 176.19 | 1.600
+15.18 | 2.35
+4.54 | 0.867 176.19 | 1.617
+15.18 | 2.37
+4.54 | 0.883 176.19 | 1.633
+15.18 | 2.38
+4.54 | 0.900 176.19 | 1.650
+15.18 | 2.40
+4.54 | 0.917 176.19 | 1.667
+15.18 | 2.42
+6.37 | 0.933 176.19 | 1.683
+11.20 | 2.43
+6.37 | 0.950 176.19 | 1.700
+11.20 | 2.45
+6.37 | 0.967 176.19 | 1.717
+11.20 | 2.47
+6.37 | 0.983 176.19 | 1.733
+11.20 | 2.48
+6.37 | 1.000 176.19 | 1.750
+11.20 | 2.50
+6.37 | 1.017
+73.10 | 1.767
+11.20 | 2.52
+6.37 | 1.033
+73.10 | 1.783
+11.20 | 2.53
+6.37 | 1.050
+73.10 | 1.800
+11.20 | 2.55
+6.37 | 1.067
+73.10 | 1.817
+11.20 | 2.57
+6.37 | 1.083
+73.10 | 1.833
+11.20 | 2.58
+9.92 | 1.100
+73.10 | 1.850
+8.68 | 2.60
+9.92 | 1.117
+73.10 | 1.867
+8.68 | 2.62
+9.92 | 1.133
+73.10 | 1.883
+8.68 | 2.63
+9.92 | 1.150
+73.10 | 1.900
+8.68 | 2.65
+9.92 | 1.167
+73.10 | 1.917
+8.68 | 2.67
+9.92 | 1.183
+36.22 | 1.933
+8.68 | 2.68
+9.92 | 1.200
+36.22 | 1.950
+8.68 | 2.70
+9.92 | 1.217
+36.22 | 1.967
+8.68 | 2.72
+9.92 | 1.233
+36.22 | 1.983
+8.68 | 2.73
+9.92 | 1.250
+36.22 | 2.000
+8.68 | 2.75
+
+RAIN
+mm/hr
+5.78
+5.78
+5.78
+5.78
+5.78
+4.89
+4.89
+4.89
+4.89
+4.89
+4.89
+4.89
+4.89
+4.89
+4.89
+4.21
+4.21
+4.21
+4.21
+4.21
+4.21
+4.21
+4.21
+4.21
+4.21
+3.68
+3.68
+3.68
+3.68
+3.68
+
+5
+
+10722 – Caledon – 4848 Mayfield Rd
+December 2022
+
+Hydrologic Model Output (Proposed Conditions 3 HR Chicago 2–100 YR storms)
+
+0.517
+0.533
+0.550
+0.567
+0.583
+0.600
+0.617
+0.633
+0.650
+0.667
+0.683
+0.700
+0.717
+0.733
+0.750
+
+18.63 | 1.267
+18.63 | 1.283
+18.63 | 1.300
+18.63 | 1.317
+18.63 | 1.333
+18.63 | 1.350
+18.63 | 1.367
+18.63 | 1.383
+18.63 | 1.400
+18.63 | 1.417
+54.62 | 1.433
+54.62 | 1.450
+54.62 | 1.467
+54.62 | 1.483
+54.62 | 1.500
+
+36.22 | 2.017
+36.22 | 2.033
+36.22 | 2.050
+36.22 | 2.067
+36.22 | 2.083
+22.14 | 2.100
+22.14 | 2.117
+22.14 | 2.133
+22.14 | 2.150
+22.14 | 2.167
+22.14 | 2.183
+22.14 | 2.200
+22.14 | 2.217
+22.14 | 2.233
+22.14 | 2.250
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+176.19
+5.00
+1.24 (ii)
+5.00
+0.45
+
+93.59
+6.00
+5.25 (ii)
+6.00
+0.21
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.19
+1.00
+76.60
+77.60
+0.99
+
+0.04
+1.05
+42.29
+77.60
+0.55
+
+6.99 |
+6.99 |
+6.99 |
+6.99 |
+6.99 |
+6.99 |
+6.99 |
+6.99 |
+6.99 |
+6.99 |
+5.78 |
+5.78 |
+5.78 |
+5.78 |
+5.78 |
+
+2.77
+2.78
+2.80
+2.82
+2.83
+2.85
+2.87
+2.88
+2.90
+2.92
+2.93
+2.95
+2.97
+2.98
+3.00
+
+3.68
+3.68
+3.68
+3.68
+3.68
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+3.25
+
+*TOTALS*
+0.228 (iii)
+1.00
+66.30
+77.60
+0.85
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 83.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 0002)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 1.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.0130
+0.0260
+0.0056
+0.0110
+|
+0.0160
+0.0290
+0.0090
+0.0170
+|
+0.0180
+0.0340
+0.0110
+0.0200
+|
+0.0000
+0.0000
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0001)
+0002)
+
+AREA
+(ha)
+0.570
+0.570
+
+QPEAK
+(cms)
+0.228
+0.016
+
+TPEAK
+(hrs)
+1.00
+1.88
+
+R.V.
+(mm)
+66.30
+65.43
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 7.09
+TIME SHIFT OF PEAK FLOW
+(min)= 53.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.0294
+------------------------------------------------------------------------------****************************************
+** SIMULATION:Caloden_5yr-3hr-Chicago **
+****************************************
+-------------------| CHICAGO STORM
+|
+IDF curve parameters: A=1593.000
+| Ptotal= 47.24 mm |
+B= 11.000
+-------------------C=
+0.879
+used in:
+INTENSITY = A / (t + B)^C
+Duration of storm = 3.00 hrs
+Storm time step
+= 10.00 min
+Time to peak ratio = 0.33
+
+TIME
+hrs
+0.00
+0.17
+0.33
+0.50
+0.67
+
+RAIN |
+mm/hr |
+3.46 |
+4.52 |
+6.48 |
+11.07 |
+30.47 |
+
+TIME
+hrs
+0.83
+1.00
+1.17
+1.33
+1.50
+
+RAIN |' TIME
+mm/hr |'
+hrs
+109.68 | 1.67
+40.71 | 1.83
+20.28 | 2.00
+12.91 | 2.17
+9.28 | 2.33
+
+RAIN | TIME
+mm/hr |
+hrs
+7.17 | 2.50
+5.81 | 2.67
+4.87 | 2.83
+4.19 |
+3.67 |
+
+RAIN
+mm/hr
+3.26
+2.93
+2.67
+
+-------------------------------------------------------------------------------------------------| CALIB
+|
+| STANDHYD ( 0001)|
+Area
+(ha)=
+0.57
+|ID= 1 DT= 1.0 min |
+Total Imp(%)= 70.00
+Dir. Conn.(%)= 70.00
+-------------------IMPERVIOUS
+PERVIOUS (i)
+Surface Area
+(ha)=
+0.40
+0.17
+Dep. Storage
+(mm)=
+1.00
+5.00
+Average Slope
+(%)=
+2.00
+2.00
+Length
+(m)=
+61.64
+40.00
+Mannings n
+=
+0.013
+0.250
+NOTE:
+
+RAINFALL WAS TRANSFORMED TO
+
+TIME
+hrs
+0.017
+0.033
+0.050
+0.067
+0.083
+0.100
+0.117
+0.133
+0.150
+0.167
+0.183
+0.200
+0.217
+0.233
+0.250
+0.267
+0.283
+0.300
+0.317
+0.333
+0.350
+0.367
+0.383
+0.400
+0.417
+0.433
+0.450
+0.467
+0.483
+0.500
+0.517
+0.533
+0.550
+0.567
+0.583
+0.600
+0.617
+0.633
+0.650
+
+1.0 MIN. TIME STEP.
+
+---- TRANSFORMED HYETOGRAPH ---RAIN | TIME
+RAIN |' TIME
+RAIN | TIME
+mm/hr |
+hrs
+mm/hr |'
+hrs
+mm/hr |
+hrs
+3.46 | 0.767
+30.47 | 1.517
+9.28 | 2.27
+3.46 | 0.783
+30.47 | 1.533
+9.28 | 2.28
+3.46 | 0.800
+30.47 | 1.550
+9.28 | 2.30
+3.46 | 0.817
+30.47 | 1.567
+9.28 | 2.32
+3.46 | 0.833
+30.47 | 1.583
+9.28 | 2.33
+3.46 | 0.850 109.68 | 1.600
+9.28 | 2.35
+3.46 | 0.867 109.68 | 1.617
+9.28 | 2.37
+3.46 | 0.883 109.68 | 1.633
+9.28 | 2.38
+3.46 | 0.900 109.68 | 1.650
+9.28 | 2.40
+3.46 | 0.917 109.68 | 1.667
+9.28 | 2.42
+4.52 | 0.933 109.68 | 1.683
+7.17 | 2.43
+4.52 | 0.950 109.68 | 1.700
+7.17 | 2.45
+4.52 | 0.967 109.68 | 1.717
+7.17 | 2.47
+4.52 | 0.983 109.68 | 1.733
+7.17 | 2.48
+4.52 | 1.000 109.68 | 1.750
+7.17 | 2.50
+4.52 | 1.017
+40.71 | 1.767
+7.17 | 2.52
+4.52 | 1.033
+40.71 | 1.783
+7.17 | 2.53
+4.52 | 1.050
+40.71 | 1.800
+7.17 | 2.55
+4.52 | 1.067
+40.71 | 1.817
+7.17 | 2.57
+4.52 | 1.083
+40.71 | 1.833
+7.17 | 2.58
+6.48 | 1.100
+40.71 | 1.850
+5.81 | 2.60
+6.48 | 1.117
+40.71 | 1.867
+5.81 | 2.62
+6.48 | 1.133
+40.71 | 1.883
+5.81 | 2.63
+6.48 | 1.150
+40.71 | 1.900
+5.81 | 2.65
+6.48 | 1.167
+40.71 | 1.917
+5.81 | 2.67
+6.48 | 1.183
+20.28 | 1.933
+5.81 | 2.68
+6.48 | 1.200
+20.28 | 1.950
+5.81 | 2.70
+6.48 | 1.217
+20.28 | 1.967
+5.81 | 2.72
+6.48 | 1.233
+20.28 | 1.983
+5.81 | 2.73
+6.48 | 1.250
+20.28 | 2.000
+5.81 | 2.75
+11.07 | 1.267
+20.28 | 2.017
+4.87 | 2.77
+11.07 | 1.283
+20.28 | 2.033
+4.87 | 2.78
+11.07 | 1.300
+20.28 | 2.050
+4.87 | 2.80
+11.07 | 1.317
+20.28 | 2.067
+4.87 | 2.82
+11.07 | 1.333
+20.28 | 2.083
+4.87 | 2.83
+11.07 | 1.350
+12.91 | 2.100
+4.87 | 2.85
+11.07 | 1.367
+12.91 | 2.117
+4.87 | 2.87
+11.07 | 1.383
+12.91 | 2.133
+4.87 | 2.88
+11.07 | 1.400
+12.91 | 2.150
+4.87 | 2.90
+
+RAIN
+mm/hr
+4.19
+4.19
+4.19
+4.19
+4.19
+3.67
+3.67
+3.67
+3.67
+3.67
+3.67
+3.67
+3.67
+3.67
+3.67
+3.26
+3.26
+3.26
+3.26
+3.26
+3.26
+3.26
+3.26
+3.26
+3.26
+2.93
+2.93
+2.93
+2.93
+2.93
+2.93
+2.93
+2.93
+2.93
+2.93
+2.67
+2.67
+2.67
+2.67
+
+6
+
+10722 – Caledon – 4848 Mayfield Rd
+December 2022
+
+Hydrologic Model Output (Proposed Conditions 3 HR Chicago 2–100 YR storms)
+
+0.667
+0.683
+0.700
+0.717
+0.733
+0.750
+
+11.07 | 1.417
+30.47 | 1.433
+30.47 | 1.450
+30.47 | 1.467
+30.47 | 1.483
+30.47 | 1.500
+
+12.91 | 2.167
+12.91 | 2.183
+12.91 | 2.200
+12.91 | 2.217
+12.91 | 2.233
+12.91 | 2.250
+
+Max.Eff.Inten.(mm/hr)=
+over (min)
+Storage Coeff. (min)=
+Unit Hyd. Tpeak (min)=
+Unit Hyd. peak (cms)=
+
+109.68
+5.00
+1.50 (ii)
+5.00
+0.42
+
+39.30
+7.00
+6.34 (ii)
+7.00
+0.17
+
+PEAK FLOW
+(cms)=
+TIME TO PEAK
+(hrs)=
+RUNOFF VOLUME
+(mm)=
+TOTAL RAINFALL
+(mm)=
+RUNOFF COEFFICIENT
+=
+
+0.12
+1.00
+46.24
+47.24
+0.98
+
+0.02
+1.08
+18.93
+47.24
+0.40
+
+4.87 |
+4.19 |
+4.19 |
+4.19 |
+4.19 |
+4.19 |
+
+2.92
+2.93
+2.95
+2.97
+2.98
+3.00
+
+2.67
+2.67
+2.67
+2.67
+2.67
+2.67
+
+*TOTALS*
+0.132 (iii)
+1.00
+38.04
+47.24
+0.81
+
+(i) CN PROCEDURE SELECTED FOR PERVIOUS LOSSES:
+CN* = 83.0
+Ia = Dep. Storage (Above)
+(ii) TIME STEP (DT) SHOULD BE SMALLER OR EQUAL
+THAN THE STORAGE COEFFICIENT.
+(iii) PEAK FLOW DOES NOT INCLUDE BASEFLOW IF ANY.
+-------------------------------------------------------------------------------------------------| RESERVOIR( 0002)|
+OVERFLOW IS OFF
+| IN= 2---> OUT= 1 |
+| DT= 1.0 min
+|
+OUTFLOW
+STORAGE
+| OUTFLOW
+STORAGE
+-------------------(cms)
+(ha.m.)
+|
+(cms)
+(ha.m.)
+0.0000
+0.0000
+|
+0.0130
+0.0260
+0.0056
+0.0110
+|
+0.0160
+0.0290
+0.0090
+0.0170
+|
+0.0180
+0.0340
+0.0110
+0.0200
+|
+0.0000
+0.0000
+
+INFLOW : ID= 2 (
+OUTFLOW: ID= 1 (
+
+0001)
+0002)
+
+AREA
+(ha)
+0.570
+0.570
+
+QPEAK
+(cms)
+0.132
+0.009
+
+TPEAK
+(hrs)
+1.00
+1.95
+
+R.V.
+(mm)
+38.04
+37.16
+
+PEAK
+FLOW
+REDUCTION [Qout/Qin](%)= 6.63
+TIME SHIFT OF PEAK FLOW
+(min)= 57.00
+MAXIMUM STORAGE
+USED
+(ha.m.)= 0.0165
+-------------------------------------------------------------------------------
+
+7
+
+T.Y. LIN INTERNATIONAL CANADA INC.
+
+APPENDIX C
+CULTECT Conceptual Design
+
+www.tylin.com
+
+8800 Dufferin Street, Suite 200, Vaughan, Ontario L4K 0C5
+
+T 905.738.5700
+
+CULTEC Stormwater Design Calculator
+December 15, 2022
+
+Date:
+
+Project Number:
+
+Project Information:
+
+10722
+
+Calculations Performed By:
+
+10722 - 4848 Mayfield Road
+
+Heikki Loorand
+
+4848 Mayfield
+
+TYLin
+
+Caledon
+Ontario
+Canada
+
+Recharger 360HD
+Chamber Specifications
+
+Breakdown of Storage Provided by
+Recharger 360HD Stormwater System
+
+Height
+
+914
+
+Width
+
+1524
+
+mm
+mm
+
+Length
+
+1.27
+
+meters
+
+Installed Length
+
+1.12
+
+meters
+
+Bare Chamber Volume
+
+1.04
+
+cu. meters
+
+Installed Chamber Volume
+
+1.76
+
+cu. meters
+
+Within Chambers
+Within Feed Connectors
+
+205.34
+0.58
+
+cu. meters
+cu. meters
+
+Within Stone
+Total Storage Provided
+
+161.16
+367.1
+
+cu. meters
+cu. meters
+
+Total Storage Required
+
+340.00 cu. meters
+
+Materials List
+Recharger 360HD
+pieces
+
+Total Number of Chambers Required
+Separator Row Chambers
+
+192
+12
+
+pieces
+
+Separator Row Qty Included in Total
+
+Chamber Units
+End Caps
+HVLV FC-48 Feed Connectors
+
+192
+32
+30
+
+pieces
+pieces
+pieces
+
+Based on 2 Internal Manifolds
+
+CULTEC No. 410 Non-Woven Geotextile
+
+1208
+
+sq. meters
+
+CULTEC No. 4800 Woven Geotextile
+
+61
+
+meters
+
+Stone
+
+403
+
+cu. meters
+
+Bed Detail
+
+Bed Layout Information
+Number of Rows Wide
+
+16
+
+pieces
+
+Number of Chambers Long
+Chamber Row Width
+
+12
+27.81
+
+pieces
+meters
+
+Chamber Row Length
+
+14.19
+
+meters
+
+Bed Width
+
+28.42
+
+meters
+
+Bed Length
+
+14.79
+
+meters
+
+Bed Area Required
+
+420.51
+
+sq. meters
+
+Length of Separator Row
+
+14.19
+
+meters
+
+Bed detail for reference only. Not project specific. Not to scale.
+
+Conceptual graphic only. Not job specific.
+
+Cross Section Table Reference
+
+CULTEC, Inc.
+P.O. Box 280
+Brookfield, CT 06804 USA
+
+A
+
+Depth of Stone Base
+
+B
+C
+D
+E
+F
+G
+H
+I
+
+Chamber Height
+Depth of Stone Above Units
+Depth of 95% Compacted Fill
+Max. Depth Allowed Above the Chamber
+Chamber Width
+Center to Center Spacing
+Effective Depth
+Bed Depth
+
+Phone: 203-775-4416
+www.cultec.com
+tech@cultec.com
+
+229
+914
+305
+305
+3.66
+1524
+1.75
+1.45
+1.75
+
+mm
+mm
+mm
+mm
+meters
+mm
+meters
+meters
+meters
+
+Created on : 12/15/2022
+
+CULTEC Stage-Storage Calculations
+Date:
+
+December 15, 2022
+
+Project Number:
+
+Project Information:
+10722 - 4848 Mayfield Road
+
+10722
+
+4848 Mayfield
+Caledon
+Ontario
+Canada
+Chamber Model -
+
+Recharger 360HD
+
+Number of Rows-
+
+16
+
+units
+
+Total Number of Chambers -
+
+192
+
+units
+
+HVLV FC-24 Feed Connectors-
+
+30
+
+units
+
+Stone Void -
+
+40
+
+%
+
+Stone Base -
+
+229
+305
+
+mm
+mm
+
+420.51
+249.50
+
+m2
+
+Stone Above Units Area Base of Stone Elevation -
+
+Recharger 360HD Incremental Storage Volumes
+Height of System
+
+Chamber Volume
+
+HVLV Feed Connector Volume
+
+Stone Volume
+
+in
+
+mm
+
+ft
+
+3
+
+m
+
+3
+
+ft3
+
+m3
+
+ft
+
+3
+
+m
+
+57.0
+56.0
+55.0
+54.0
+53.0
+52.0
+51.0
+50.0
+49.0
+48.0
+47.0
+46.0
+45.0
+44.0
+43.0
+42.0
+41.0
+40.0
+39.0
+38.0
+37.0
+36.0
+35.0
+34.0
+33.0
+32.0
+31.0
+30.0
+29.0
+28.0
+27.0
+26.0
+25.0
+24.0
+23.0
+22.0
+21.0
+20.0
+19.0
+18.0
+17.0
+16.0
+15.0
+14.0
+13.0
+12.0
+11.0
+10.0
+9.0
+8.0
+7.0
+6.0
+5.0
+4.0
+3.0
+2.0
+1.0
+0.0
+-1.0
+-2.0
+-3.0
+-4.0
+-5.0
+-6.0
+-7.0
+-8.0
+-9.0
+-10.0
+-11.0
+-12.0
+-13.0
+-14.0
+-15.0
+-16.0
+-17.0
+-18.0
+
+1448
+1422
+1397
+1372
+1346
+1321
+1295
+1270
+1245
+1219
+1194
+1168
+1143
+1118
+1092
+1067
+1041
+1016
+991
+965
+940
+914
+889
+864
+838
+813
+787
+762
+737
+711
+686
+660
+635
+610
+584
+559
+533
+508
+483
+457
+432
+406
+381
+356
+330
+305
+279
+254
+229
+203
+178
+152
+127
+102
+76
+51
+25
+0
+-25
+-51
+-76
+-102
+-127
+-152
+-178
+-203
+-229
+-254
+-279
+-305
+-330
+-356
+-381
+-406
+-432
+-457
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+15.7
+33.3
+49.6
+83.6
+105.6
+122.1
+135.9
+147.9
+158.5
+168.0
+176.8
+184.7
+192.4
+199.2
+205.5
+211.5
+217.0
+222.2
+227.1
+231.5
+235.9
+240.1
+244.0
+247.7
+251.0
+254.3
+257.6
+260.3
+263.2
+265.9
+268.5
+270.6
+273.0
+274.8
+276.9
+279.5
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.4
+0.9
+1.4
+2.4
+3.0
+3.5
+3.8
+4.2
+4.5
+4.8
+5.0
+5.2
+5.4
+5.6
+5.8
+6.0
+6.1
+6.3
+6.4
+6.6
+6.7
+6.8
+6.9
+7.0
+7.1
+7.2
+7.3
+7.4
+7.5
+7.5
+7.6
+7.7
+7.7
+7.8
+7.8
+7.9
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+0.0
+
+150.9
+150.9
+150.9
+150.9
+150.9
+150.9
+150.9
+150.9
+150.9
+150.9
+150.9
+150.9
+144.6
+137.5
+131.1
+117.4
+108.7
+102.0
+96.5
+91.7
+87.5
+83.7
+80.2
+77.0
+73.9
+71.2
+68.7
+66.3
+64.1
+62.0
+60.0
+58.3
+56.5
+54.9
+53.3
+51.8
+50.5
+49.1
+47.9
+46.8
+45.6
+44.5
+43.5
+42.6
+41.7
+40.9
+40.1
+39.1
+150.9
+150.9
+150.9
+150.9
+150.9
+150.9
+150.9
+150.9
+150.9
+0.0
+
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.1
+3.9
+3.7
+3.3
+3.1
+2.9
+2.7
+2.6
+2.5
+2.4
+2.3
+2.2
+2.1
+2.0
+1.9
+1.9
+1.8
+1.8
+1.7
+1.7
+1.6
+1.6
+1.5
+1.5
+1.4
+1.4
+1.4
+1.3
+1.3
+1.3
+1.2
+1.2
+1.2
+1.2
+1.1
+1.1
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+0.0
+
+3
+
+Cumulative Storage
+Volume
+
+Total Cumulative
+Storage Volume
+
+Elevation
+
+ft
+
+3
+
+m
+
+3
+
+ft
+
+3
+
+m
+
+3
+
+ft
+
+m
+
+150.879
+150.879
+150.879
+150.879
+150.879
+150.879
+150.879
+150.879
+150.879
+150.879
+150.879
+150.879
+160.318
+170.876
+180.615
+201.043
+214.218
+224.142
+232.417
+239.596
+245.969
+251.707
+256.938
+261.719
+266.323
+270.412
+274.202
+277.749
+281.077
+284.210
+287.158
+289.763
+292.400
+294.909
+297.281
+299.525
+301.462
+303.488
+305.409
+307.047
+308.772
+310.417
+311.970
+313.261
+314.652
+315.782
+317.046
+318.579
+150.879
+150.879
+150.879
+150.879
+150.879
+150.879
+150.879
+150.879
+150.879
+0.000
+
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.5
+4.8
+5.1
+5.7
+6.1
+6.3
+6.6
+6.8
+7.0
+7.1
+7.3
+7.4
+7.5
+7.7
+7.8
+7.9
+8.0
+8.0
+8.1
+8.2
+8.3
+8.4
+8.4
+8.5
+8.5
+8.6
+8.6
+8.7
+8.7
+8.8
+8.8
+8.9
+8.9
+8.9
+9.0
+9.0
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+4.3
+0.0
+
+12950.90
+12800.02
+12649.14
+12498.27
+12347.39
+12196.51
+12045.63
+11894.75
+11743.87
+11592.99
+11442.12
+11291.24
+11140.36
+10980.04
+10809.17
+10628.55
+10427.51
+10213.29
+9989.15
+9756.73
+9517.13
+9271.16
+9019.46
+8762.52
+8500.80
+8234.48
+7964.07
+7689.86
+7412.11
+7131.04
+6846.83
+6559.67
+6269.91
+5977.51
+5682.60
+5385.32
+5085.79
+4784.33
+4480.84
+4175.43
+3868.39
+3559.61
+3249.20
+2937.23
+2623.97
+2309.31
+1993.53
+1676.49
+1357.91
+1207.03
+1056.15
+905.27
+754.39
+603.51
+452.64
+301.76
+150.88
+0.00
+
+366.73
+362.46
+358.18
+353.91
+349.64
+345.37
+341.09
+336.82
+332.55
+328.28
+324.00
+319.73
+315.46
+310.92
+306.08
+300.97
+295.27
+289.21
+282.86
+276.28
+269.49
+262.53
+255.40
+248.13
+240.72
+233.17
+225.52
+217.75
+209.89
+201.93
+193.88
+185.75
+177.54
+169.26
+160.91
+152.49
+144.01
+135.48
+126.88
+118.23
+109.54
+100.80
+92.01
+83.17
+74.30
+65.39
+56.45
+47.47
+38.45
+34.18
+29.91
+25.63
+21.36
+17.09
+12.82
+8.54
+4.27
+0.00
+
+4.750
+4.670
+4.580
+4.500
+4.420
+4.330
+4.250
+4.170
+4.080
+4.000
+3.920
+3.830
+3.750
+3.670
+3.580
+3.500
+3.420
+3.330
+3.250
+3.170
+3.080
+3.000
+2.920
+2.830
+2.750
+2.670
+2.580
+2.500
+2.420
+2.330
+2.250
+2.170
+2.080
+2.000
+1.920
+1.830
+1.750
+1.670
+1.580
+1.500
+1.420
+1.330
+1.250
+1.170
+1.080
+1.000
+0.920
+0.830
+0.750
+0.670
+0.580
+0.500
+0.420
+0.330
+0.250
+0.170
+0.080
+0.000
+
+250.95
+250.92
+250.90
+250.87
+250.85
+250.82
+250.80
+250.77
+250.74
+250.72
+250.69
+250.67
+250.64
+250.62
+250.59
+250.57
+250.54
+250.52
+250.49
+250.47
+250.44
+250.41
+250.39
+250.36
+250.34
+250.31
+250.29
+250.26
+250.24
+250.21
+250.19
+250.16
+250.14
+250.11
+250.08
+250.06
+250.03
+250.01
+249.98
+249.96
+249.93
+249.91
+249.88
+249.86
+249.83
+249.80
+249.78
+249.75
+249.73
+249.70
+249.68
+249.65
+249.63
+249.60
+249.58
+249.55
+249.53
+249.50
+
+Top of Stone Elevation
+
+Top of Chamber Elevation
+
+Bottom of Chamber Elevation
+
+Bottom of Stone Elevation
+
+CULTEC, Inc.
+P.O. Box 280
+Brookfield, CT 06804
+
+Phone: 203-775-4416
+www.cultec.com
+tech@cultec.com
+
+Created on: 12/15/2022
+
+Recharger 360HD Incremental Storage Volumes
+Height of System
+
+in
+
+mm
+
+-19.0
+-20.0
+-21.0
+-22.0
+-23.0
+-24.0
+-25.0
+-26.0
+-27.0
+-28.0
+-29.0
+-30.0
+-31.0
+-32.0
+-33.0
+-34.0
+-35.0
+-36.0
+-37.0
+-38.0
+-39.0
+-40.0
+-41.0
+-42.0
+-43.0
+-44.0
+-45.0
+-46.0
+-47.0
+-48.0
+-49.0
+-50.0
+-51.0
+-52.0
+-53.0
+-54.0
+-55.0
+-56.0
+-57.0
+-58.0
+-59.0
+-60.0
+-61.0
+-62.0
+-63.0
+-64.0
+-65.0
+-66.0
+-67.0
+
+-483
+-508
+-533
+-559
+-584
+-610
+-635
+-660
+-686
+-711
+-737
+-762
+-787
+-813
+-838
+-864
+-889
+-914
+-940
+-965
+-991
+-1016
+-1041
+-1067
+-1092
+-1118
+-1143
+-1168
+-1194
+-1219
+-1245
+-1270
+-1295
+-1321
+-1346
+-1372
+-1397
+-1422
+-1448
+-1473
+-1499
+-1524
+-1549
+-1575
+-1600
+-1626
+-1651
+-1676
+-1702
+
+Chamber Volume
+
+3
+
+ft
+
+m
+
+3
+
+HVLV Feed Connector Volume
+
+ft3
+
+m3
+
+Stone Volume
+
+3
+
+ft
+
+m
+
+3
+
+Cumulative Storage
+Volume
+3
+
+ft
+
+m
+
+3
+
+Total Cumulative
+Storage Volume
+3
+
+ft
+
+m
+
+Elevation
+
+3
+
+ft
+
+m
+
+CULTEC, Inc.
+P.O. Box 280
+Brookfield, CT 06804
+
+Phone: 203-775-4416
+www.cultec.com
+tech@cultec.com
+
+Created on: 12/15/2022
+
+T.Y. LIN INTERNATIONAL CANADA INC.
+
+APPENDIX D
+Engineering Drawings
+
+www.tylin.com
+
+8800 Dufferin Street, Suite 200, Vaughan, Ontario L4K 0C5
+
+T 905.738.5700
+
+Date :Sep 06, 2023 - 3:34pm, Edit By : caleb.donald
+File : G:\Projects\2022\10722 - 4848 Mayfield Road\600_CADD\FSR\Design Drawings\Erosion\10722 - Erosion Plan.dwg, Layout : ESC01 - 24x36
+
+NOT FOR CONSTRUCTION
+8800 Dufferin Street,
+Suite 200
+Vaughan, ON
+L4K 0C5
+p: 905.738.5700
+f: 905.738.0065
+
+4848 Mayfield Road
+Temporary Zoning By-Law Amendment
+EROSION CONTROL PLAN
+
+PROJECT No.
+
+SCALE:
+
+1:250
+
+DATE:
+
+AUGUST 2023
+
+DESIGNED BY: C.D.
+
+DRAWN BY: C.D.,H.L.
+
+CHECKED BY: M.R.
+
+CHECKED BY: M.R.
+
+10722
+FIGURE No.
+
+ESC 01
+
+EX:252.39
+
+EX:251.58
+EX:251.61
+
+EX:251.85
+
+EX:251.70
+EX:251.75
+
+EX:252.02
+
+EX:252.07
+EX:252.24
+
+File : G:\Projects\2022\10722 - 4848 Mayfield Road\600_CADD\FSR\Design Drawings\Grading\10722 - Grading (latest).dwg, Layout : GR01 - 24x36
+
+Date :Sep 06, 2023 - 3:25pm, Edit By : caleb.donald
+
+EX:251.89
+EX:251.90
+EX:252.00
+
+EX:252.79
+
+EX:252.07
+
+EX:252.19
+
+EX:252.20
+
+EX:252.34
+
+EX:253.57
+
+EX:253.59
+
+EX:253.64
+
+EX:254.14
+EX:254.27
+EX:253.26
+
+EX:253.72
+
+EX:254.43
+
+EX:254.49
+EX:253.07
+EX:252.96
+
+EX:253.90
+
+EX:254.31
+
+EX:254.74
+
+EX:254.43
+EX:253.14
+
+EX:254.40
+
+EX:254.22
+
+EX:254.18
+
+EX:254.00
+
+EX:253.74
+
+EX:254.01
+
+NOT FOR CONSTRUCTION
+8800 Dufferin Street,
+Suite 200
+Vaughan, ON
+L4K 0C5
+p: 905.738.5700
+f: 905.738.0065
+
+4848 Mayfield Road
+Temporary Zoning By-Law Amendment
+SITE GRADING PLAN
+
+PROJECT No.
+
+SCALE:
+
+1:250
+
+DATE:
+
+AUGUST 2023
+
+DESIGNED BY: C.D.
+
+DRAWN BY: C.D.,H.L.
+
+CHECKED BY: M.R.
+
+CHECKED BY: M.R.
+
+10722
+FIGURE No.
+
+GR 01
+
+A
+A
+
+Date :Sep 06, 2023 - 3:22pm, Edit By : caleb.donald
+File : G:\Projects\2022\10722 - 4848 Mayfield Road\600_CADD\FSR\Design Drawings\General Plan\10722 - General Plan.dwg, Layout : SS01 - 24x36
+
+B
+
+B
+
+NOT FOR CONSTRUCTION
+8800 Dufferin Street,
+Suite 200
+Vaughan, ON
+L4K 0C5
+p: 905.738.5700
+f: 905.738.0065
+
+4848 Mayfield Road
+Temporary Zoning By-Law Amendment
+SITE SERVICING PLAN
+
+PROJECT No.
+
+SCALE:
+
+1:250
+
+DATE:
+
+AUGUST 2023
+
+DESIGNED BY: C.D.
+
+DRAWN BY: C.D.,H.L.
+
+CHECKED BY: M.R.
+
+CHECKED BY: M.R.
+
+10722
+FIGURE No.
+
+SS 01
+
+Date :Sep 06, 2023 - 3:23pm, Edit By : caleb.donald
+File : G:\Projects\2022\10722 - 4848 Mayfield Road\600_CADD\FSR\Design Drawings\General Plan\10722 - General Plan.dwg, Layout : SS02 - 24x36
+
+NOT FOR CONSTRUCTION
+8800 Dufferin Street,
+Suite 200
+Vaughan, ON
+L4K 0C5
+p: 905.738.5700
+f: 905.738.0065
+
+4848 Mayfield Road
+Temporary Zoning By-Law Amendment
+SITE SERVICING PLAN
+
+PROJECT No.
+
+SCALE:
+
+1:250
+
+DATE:
+
+AUGUST 2023
+
+DESIGNED BY: C.D.
+
+DRAWN BY: C.D.,H.L.
+
+CHECKED BY: M.R.
+
+CHECKED BY: M.R.
+
+10722
+FIGURE No.
+
+SS 01
+
+Date :Sep 06, 2023 - 3:32pm, Edit By : caleb.donald
+File : G:\Projects\2022\10722 - 4848 Mayfield Road\600_CADD\FSR\Design Drawings\Drainage\10722 - Predevelopment.dwg, Layout : PREDEVELOPMENT
+
+NOT FOR CONSTRUCTION
+8800 Dufferin Street,
+Suite 200
+Vaughan, ON
+L4K 0C5
+p: 905.738.5700
+f: 905.738.0065
+
+4848 Mayfield Road
+Temporary Zoning By-Law Amendment
+PRE DEVELOPMENT DRAINAGE AREAS
+
+PROJECT No.
+
+SCALE:
+
+1:250
+
+DATE:
+
+AUGUST 2023
+
+DESIGNED BY: C.D.
+
+DRAWN BY: C.D.,H.L.
+
+CHECKED BY: M.R.
+
+CHECKED BY: M.R.
+
+10722
+FIGURE No.
+
+STM 01
+
+Date :Sep 06, 2023 - 3:33pm, Edit By : caleb.donald
+File : G:\Projects\2022\10722 - 4848 Mayfield Road\600_CADD\FSR\Design Drawings\Drainage\10722 - Postdevelopment.dwg, Layout : POSTDEVELOPMENT
+
+NOT FOR CONSTRUCTION
+8800 Dufferin Street,
+Suite 200
+Vaughan, ON
+L4K 0C5
+p: 905.738.5700
+f: 905.738.0065
+
+4848 Mayfield Road
+Temporary Zoning By-Law Amendment
+POST DEVELOPMENT DRAINAGE AREAS
+
+PROJECT No.
+
+SCALE:
+
+1:250
+
+DATE:
+
+AUGUST 2023
+
+DESIGNED BY: C.D.
+
+DRAWN BY: C.D.,H.L.
+
+CHECKED BY: M.R.
+
+CHECKED BY: M.R.
+
+10722
+FIGURE No.
+
+STM 02
+
+T.Y. LIN INTERNATIONAL CANADA INC.
+
+APPENDIX E
+Civil Engineering Services Cost Estimate
+
+www.tylin.com
+
+8800 Dufferin Street, Suite 200, Vaughan, Ontario L4K 0C5
+
+T 905.738.5700
+
+4848 MAYFIELD ROAD
+SITE SERVICING AND PARKING
+TOWN OF CALEDON
+
+PROJECT NO. 10722
+
+LETTER OF CREDIT COST ESTIMATE
+PART
+
+DESCRIPTION
+
+TOTAL
+
+A
+
+GENERAL AND EROSION CONTROL
+
+$
+
+27,625.00
+
+B
+
+STORM SEWERS
+
+$
+
+13,359.00
+
+C
+
+STORM STRUCTURES
+
+$
+
+275,500.00
+
+D
+
+GRAVEL PARKING LOT
+
+$
+
+44,242.50
+
+$
+
+360,726.50
+
+15% CONTINGENCY $
+H.S.T. $
+
+54,108.98
+53,928.61
+
+SUB-TOTAL
+
+TOTAL ESTIMATE
+
+September 06, 2023
+
+$
+
+468,764.09
+
+CONTRACT NO.:
+Item
+No.
+
+Spec.
+Code
+
+Item
+Description
+
+Unit
+
+Quantity
+
+Unit
+Price
+
+10722
+
+Total
+
+PART 'A'
+GENERAL AND EROSION CONTROL
+
+A1
+
+Mobilization and Demobalization
+
+LS
+
+1.0
+
+$ 10,000.00
+
+$
+
+10,000.00
+
+A2
+
+Layout
+
+LS
+
+1.0
+
+$
+
+5,000.00
+
+$
+
+5,000.00
+
+ESC
+
+A3
+
+Singel Row Silt Fence
+
+m
+
+190.0
+
+$
+
+25.00
+
+$
+
+4,750.00
+
+A4
+
+Double Row Silt Fence
+
+m
+
+225.0
+
+$
+
+35.00
+
+$
+
+7,875.00
+
+$
+
+27,625.00
+
+TOTAL PART 'B'
+STORM SEWERS
+
+September 06, 2023
+
+CONTRACT NO.:
+Item
+No.
+
+Spec.
+Code
+
+Item
+Description
+
+10722
+
+Unit
+Price
+
+Unit
+
+Quantity
+
+Total
+
+B1
+
+MH 1 to MH 2
+300mm Perforated PVC
+Avg. Depth 2.4m
+
+m
+
+20.2
+
+$
+
+250.00
+
+$
+
+5,050.00
+
+B2
+
+MH 2 to MH 4
+375mm PVC
+Avg. Depth 3.0m
+
+m
+
+5.6
+
+$
+
+270.00
+
+$
+
+1,512.00
+
+B3
+
+MH 4 to Cultec
+375mm PVC
+Avg. Depth 3.3m
+
+m
+
+1.3
+
+$
+
+270.00
+
+$
+
+351.00
+
+B4
+
+Cultec to MH 5
+300mm PVC
+Avg. Depth 3.1m
+
+m
+
+1.9
+
+$
+
+260.00
+
+$
+
+494.00
+
+B5
+
+MH 5 to HW1
+300mm PVC
+Avg. Depth 1.8m
+
+m
+
+24.8
+
+$
+
+240.00
+
+$
+
+5,952.00
+
+$
+
+13,359.00
+
+PART 'B'
+STORM SEWERS
+
+TOTAL PART 'B'
+STORM SEWERS
+
+September 06, 2023
+
+CONTRACT NO.:
+Item
+No.
+
+Spec.
+Code
+
+Item
+Description
+
+10722
+
+Unit
+Price
+
+Unit
+
+Quantity
+
+Total
+
+C1
+
+MH 1 - 1200mm dia.
+OPSD 701.010 Incl. DICB Grate
+2.1m depth
+
+LS
+
+1
+
+$
+
+6,500.00
+
+$
+
+6,500.00
+
+C2
+
+MH 2 - 1200mm dia.
+OPSD 701.010 Incl. DICB Grate
+2.7m depth
+
+LS
+
+1
+
+$
+
+6,500.00
+
+$
+
+6,500.00
+
+C3
+
+MH 4 - 1200mm dia. OGS
+OPSD 701.010
+3.3m depth
+
+LS
+
+1
+
+$ 45,000.00
+
+$
+
+45,000.00
+
+C4
+
+MH 5 - 1200mm dia.
+OPSD 701.010 Incl. Orifice Plate and Weir
+2.7m depth
+
+LS
+
+1
+
+$
+
+8,000.00
+
+$
+
+8,000.00
+
+C5
+
+Headwall
+OPSD 804.030 c/w rip-rap
+
+LS
+
+1
+
+$ 27,000.00
+
+$
+
+27,000.00
+
+C6
+
+Cultec
+Volume:225m3
+
+LS
+
+1
+
+$ 157,500.00
+
+$ 157,500.00
+
+C7
+
+Bioretention Facility
+
+LS
+
+1
+
+$ 25,000.00
+
+$
+
+PART 'C'
+STORM STRUCTURES
+
+PART 'C'
+STORM STRUCTURES
+
+September 06, 2023
+
+25,000.00
+
+$ 275,500.00
+
+CONTRACT NO.:
+Item
+No.
+
+Spec.
+Code
+
+Item
+Description
+
+Unit
+
+Quantity
+
+10722
+
+Unit
+Price
+
+Total
+
+PART 'D'
+GRAVEL PARKING LOT
+
+D1
+
+Fine Grade and Compact Subgrade
+
+m2
+
+2,125.0
+
+$
+
+1.50
+
+$
+
+3,187.50
+
+D2
+
+Supply and Place 19mm Clearstone
+300mm Compacted Depth
+
+m2
+
+2,125.0
+
+$
+
+18.00
+
+$
+
+38,250.00
+
+D3
+
+Retaining Wall / Toe Wall c/w Railing
+per OPSD 3120.100
+
+m
+
+6.6
+
+$
+
+425.00
+
+$
+
+2,805.00
+
+$
+
+44,242.50
+
+TOTAL PART 'D'
+GRAVEL PARKING LOT
+
+September 06, 2023
+
+

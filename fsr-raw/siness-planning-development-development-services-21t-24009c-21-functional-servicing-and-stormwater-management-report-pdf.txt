@@ -1,0 +1,1916 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+
+January 13, 2025
+
+FUNCTIONAL SERVICING AND
+STORMWATER MANAGEMENT
+REPORT
+15441 MOUNT PLEASANT ROAD
+RESIDENTIAL DEVELOPMENT
+TOWN OF CALEDON
+REGION OF PEEL
+
+PREPARED FOR:
+2818963 ONTARIO INC.
+PREPARED BY:
+C.F. CROZIER & ASSOCIATES INC.
+2800 HIGH POINT DRIVE, SUITE 100
+MILTON, ON L9T 6P4
+JULY 2024
+CFCA FILE NO. 2227-6259
+
+The material in this report reflects best judgment in light of the
+information available at the time of preparation. Any use which a
+third party makes of this report, or any reliance on or decisions
+made based on it, are the responsibilities of such third parties. C.F.
+Crozier & Associates Inc. accepts no responsibility for damages, if
+any, suffered by any third party as a result of decisions made or
+actions based on this report.
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+Revision Number
+
+Date
+
+Comments
+
+Rev. 0
+
+July 2024
+
+Issued for First Submission
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+ii
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+TABLE OF CONTENTS
+1.0
+
+Introduction ...........................................................................................................................................1
+1.0
+
+2.0
+
+Site Description ...............................................................................................................................1
+Water Servicing .....................................................................................................................................3
+
+2.1
+2.2
+2.3
+2.4
+3.0
+
+Existing Water Servicing .................................................................................................................3
+Domestic Water Demand Calculations .......................................................................................3
+Fire Flow Calculations ....................................................................................................................4
+Proposed Water Servicing .............................................................................................................4
+Sanitary Servicing .................................................................................................................................4
+
+3.1
+3.2
+
+Design Sanitary Flow ......................................................................................................................5
+Proposed Sanitary Servicing .........................................................................................................5
+
+4.0
+
+Hydrogeological Investigation............................................................................................................6
+
+5.0
+
+Drainage Conditions ............................................................................................................................6
+5.1
+5.2
+5.2.1
+5.2.2
+
+6.0
+
+Existing Drainage Conditions ........................................................................................................6
+Proposed Drainage Conditions ....................................................................................................7
+Grading Compliance with Town of Caledon Official Plan Policies 7.1.9.3 and 7.1.9.37 .......7
+Post-Development Drainage Catchment Areas ........................................................................7
+
+Stormwater Management ....................................................................................................................9
+6.1
+6.2
+6.3
+6.4
+
+Visual OTTHYMO (VO) Model Set-up and Hydrologic Parameters ........................................10
+Stormwater Quality Control .........................................................................................................11
+Water Balance and Erosion Control ...........................................................................................12
+Stormwater Quantity Controls .....................................................................................................14
+
+7.0
+
+Erosion and Sediment Controls During Construction ......................................................................15
+
+8.0
+
+Conclusions & Recommendations ...................................................................................................16
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+iii
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+LIST OF TABLES
+Table 1:
+
+Proposed Domestic Water Demand
+
+Table 2:
+
+Proposed Fire Flow Demand
+
+Table 3:
+
+Preliminary Sewage System Design Flows
+
+Table 4:
+
+Preliminary Type A Bed Sizing
+
+Table 5:
+
+Pre-Development Catchment Areas’ Imperviousness and Drainage Outlet
+
+Table 6:
+
+Post-Development Catchment Areas’ Imperviousness and Drainage Outlet
+
+Table 7:
+
+Pre-Development Hydrologic Parameters
+
+Table 8:
+
+Post-Development Hydrologic Parameters
+
+Table 9:
+
+Provided Water Quality Storage to Achieve Enhanced Water Quality Protection
+
+Table 10:
+
+27 mm Runoff Volumes and Corresponding Storage Provided
+
+Table 11:
+
+4-Hour Chicago Peak Flows (West Wetland Outlet)
+
+Table 12:
+
+4-Hour Chicago Peak Flows (West Pond Outlet)
+
+LIST OF APPENDICES
+Appendix A:
+
+As-Constructed Drawings & Background Material
+
+Appendix B:
+
+Water and Sanitary Servicing Calculations
+
+Appendix C:
+
+Stormwater Servicing Calculations
+
+LIST OF DRAWINGS
+Drawing C101:
+
+Preliminary Erosion and Sediment Control Plan
+
+Drawing C102:
+
+Preliminary Site Grading and Servicing Plan
+
+Drawing C103:
+
+Sections and Details
+
+Drawing C104:
+
+Preliminary Site Bioswale Profile
+
+Drawing OSS101: Onsite Sewage Servicing Schematic
+Drawing OSS102: Onsite Sewage Servicing Schematic
+
+LIST OF FIGURES
+Figure 1:
+
+Site Location
+
+Figure 2:
+
+Pre-Development Drainage Plan
+
+Figure 3:
+
+Post-Development Drainage Plan
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+iv
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+1.0
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+Introduction
+
+C.F. Crozier & Associates Inc. (Crozier) was retained by 2818963 Ontario Inc. (Owner) to prepare
+a Functional Servicing and Stormwater Management Report in support of the Plan of Subdivision
+Application for the proposed residential development located at 15441 Mount Pleasant Road in the
+Town of Caledon. The purpose of this report is to demonstrate that the proposed development is
+feasible from a functional servicing and stormwater management perspective and conforms with
+the requirements of the Town of Caledon (Town), Region of Peel (Region), and the Toronto Region
+Conservation Authority (TRCA).
+This report has been completed in accordance with the guidelines and Development Application
+Review Team meeting notes dated October 21, 2021. The relevant background studies and
+reports include:
+•
+
+Region of Peel 2020 Water Master Plan
+
+•
+
+Region of Peel Watermain Design Criteria (June 2010)
+
+•
+
+Region of Peel Linear Wastewater Standards (March 2023)
+
+•
+
+Town of Caledon As-Constructed Drawings (Drawing No. 50321-D, 50322-D, 50323-D & 50324D) (May 2012)
+
+•
+
+Geotechnical Report prepared by AllRock Consulting Ltd. (February 14, 2024)
+
+•
+
+Hydrogeological Report (Crozier, July 5, 2024)
+
+•
+
+Sustainable Technologies Evaluation Program (November 2022)
+
+•
+
+Ministry of Environment Stormwater Management Planning and Design Manual (March 2003)
+
+•
+
+CVC/TRCA Low Impact Development SWM Planning Design Guide (Version 1.0, 2010)
+
+This report adheres to the applicable criteria, guidelines and site-specific information presented in
+the above-noted documents.
+1.1
+
+Site Description
+
+The Site encompasses an area of 22.9 hectares with an ultimate developable area of approximately
+2.90 hectares, due to a variety of environmental constraints and their respective setbacks. The Site
+currently consists of greenspace, natural heritage area, and open water. The Site is located in a rural
+neighbourhood in the Town of Caledon, bounded by Mount Pleasant Road to the west, residential
+estate properties to the north and south, and wetlands to the east (see Figure 1). The Site is currently
+zoned Environmental Policy Area 2 – Oak Ridges Moraine (ORM), Estate Residential – ORM, and
+Open Space – ORM.
+According to the Concept Plan prepared by Design Plan Services Inc. (dated April 12, 2024, see
+Appendix A), it is understood that development plans for the Site will include:
+•
+
+Five (5) single detached residential lots, serviced via individual onsite sewage systems.
+
+•
+
+Internal 20.0 m municipal right-of-way, two cul-de-sacs and access to Mount Pleasant Road
+opposite Mulloy Court.
+
+•
+
+Open Space associated with natural heritage, floodplain and respective buffers.
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 1 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+Figure 1: Site Location
+
+2.0
+
+Geotechnical and Hydrogeological Investigation
+
+AllRock Consulting Ltd. (AllRock) was retained by the Client to complete a geotechnical
+investigation for the proposed development, which included the advancement of ten (10)
+boreholes to depths between 8.5 and 9.1 m below ground surface (bgs) in November 2023. Three (3)
+of the boreholes were instrumented as monitoring wells to support the hydrogeological investigation
+(completed by Crozier). According to AllRock, subsurface conditions generally consisted of a
+surficial layer of topsoil (approximately 100 mm thick), underlain by native deposits of silts with
+varying amounts of clay, sand, and gravel to the maximum depth of investigation. Refer to the
+Geotechnical Report (AllRock, 2024), provided under separate cover, for additional details. Based
+on the borehole logs, the predominant soil type is consistent with a “ML” soil per the Unified Soil
+Classification System (USCS). According to Supplementary Standard SB-6 of the Ontario Building
+Code (OBC), ML soils have a percolation time between 20 and 50 min/cm. Given the varying
+percentages of silt and clay, a percolation rate of 50 min/cm was conservatively considered of the
+onsite sewage system design.
+As part of the hydrogeological investigation, Crozier has initiated the following field studies:
+•
+
+Groundwater monitoring;
+
+•
+
+Groundwater quality sampling;
+
+•
+
+Hydraulic conductivity testing;
+
+•
+
+Door-to-door survey.
+
+Preliminary results are summarized in a stand-alone report referred to as Hydrogeological
+Investigation Report (Crozier, July 2024). Information from this report has been used to support the
+onsite sewage system design and determine the optimum locations for bioswale, described in the
+following sections.
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 2 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+3.0
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+Water Servicing
+
+The Region of Peel is responsible for the operation and maintenance of the public watermain system
+surrounding the property. The existing and proposed water servicing are discussed in the
+following sections.
+3.1
+
+Existing Water Servicing
+
+The existing water servicing infrastructure close to the Site include:
+•
+
+A 300 mm diameter polyvinyl chloride (PVC) municipal watermain located on the south side
+of Mount Pleasant Road (Region of Peel As-Constructed Drawing (50323-D), December
+2012).
+
+•
+
+A 200 mm diameter PVC municipal watermain located on the west side of Mulloy Court
+(Region of Peel As-Constructed Drawing (50321-D), December 2012).
+
+•
+
+The proposed development is located within the Water Pressure Zone 8 supply system.
+
+The as-constructed drawings for the water servicing infrastructure are provided in Appendix A.
+3.2
+
+Domestic Water Demand Calculations
+
+The domestic water demand for the proposed residential development was calculated with
+reference to the Region of Peel Linear Infrastructure Watermain Design Criteria (June 2010). The
+Region of Peel design criteria requires an average daily water demand of 280 L/capita/day for
+residential uses. A unit-based population density of six (6) persons per unit, based on similar
+developments in the Town of Caledon, was used along with the peaking factors outlined in the
+Region of Peel Watermain Design Criteria to obtain the estimated maximum daily demand and
+peak hourly demand for the proposed development.
+Table 1 summarizes the overall domestic water demand for the Site. Appendix B contains the
+detailed domestic water demand calculations.
+Table 1: Proposed Domestic Water Demand
+Standard
+
+Type
+
+Average Daily
+Water Demand
+(L/s)
+
+Maximum Daily
+Water Demand
+(L/s)
+
+Peak Hourly
+Water Demand
+(L/s)
+
+Region of Peel
+
+Residential
+
+0.10
+
+0.19
+
+0.29
+
+Note: References to design guidelines are provided in the detailed domestic water demand calculations in
+Appendix B.
+
+Using the Region of Peel design criteria for domestic water demand, the estimated average daily
+demand, maximum daily demand, and peak hourly demand for the proposed development
+are 0.10 L/s, 0.19 L/s, and 0.29 L/s, respectively.
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 3 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+3.3
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+Fire Flow Calculations
+
+The Fire Underwriters Survey (FUS) method was used to estimate the preliminary fire flow requirements
+for the proposed residential development. This calculation is based on the building type assumption
+of wood frame construction. The estimated fire flow requirement is used to estimate the watermain
+size required to service the development.
+Table 2 summarizes the estimated fire flow demand and duration necessary to meet fire protection
+for the proposed development. Appendix B contains the Fire Underwriters Survey calculations.
+Table 2: Proposed Fire Flow Demand
+Method
+
+Total Effective Floor Area
+(m2)
+
+Fire Flow
+(L/s)
+
+Duration
+(hrs)
+
+Fire Underwriters Survey
+
+720
+
+133
+
+2.00
+
+Note: Proposed Fire Flow Demand is based on the building located in Lot 2 due to the building’s proximity to
+adjacent lot structures.
+
+Based on the fire flow calculations and total effective floor area of 720 m2, the required fire flow for
+the development was calculated to be 133 L/s for a duration of 2.00 hours.
+It should be noted that the fire flows determined from the FUS method is a conservative estimate for
+comparison purposes only. The Mechanical Engineer for the development will complete the
+required analysis for fire protection and the Architect will design fire separation methods per the
+determined fire flow rate to meet municipally available flows and pressures. Based on the estimated
+peak hourly domestic water demand (0.3 L/s) and fire flow demand (133 L/s) summarized in Table 1
+and Table 2, the total design flow for the internal water distribution system is approximately 133 L/s.
+A contractor has been retained to conduct a hydrant flow test to determine the existing available
+pressures and flows within the municipal watermain on Stinson Street. These results will be used to
+confirm that the existing system has the capacity to service the proposed development.
+3.4
+
+Proposed Water Servicing
+
+A 150 mm diameter PVC watermain is proposed to service the Site with a 50 mm diameter copper
+watermain looped at the cul-de-sacs on Street A and Street B. The proposed watermain is located
+within the proposed municipal right-of-way and will connect to the existing 300 mm PVC watermain
+along Mount Pleasant Road, bounding the Site to the southwest. All residential lots will be serviced
+with domestic water services connecting to the proposed internal watermain. The Preliminary
+Servicing Plan (Drawing C102) illustrates the location and design of the proposed watermain.
+Hydrants are proposed throughout the development with a maximum spacing of 150 m in
+accordance with Region of Peel Watermain Design Criteria (June 2010) and a maximum distance of
+90 m to the perimeter of each building in accordance with the Ontario Building Code (OBC).
+
+4.0
+
+Sanitary Servicing
+
+There are no municipal sanitary services in the vicinity of the Site and the surrounding properties are
+serviced via private onsite sewage systems. Similarly, private onsite sewage systems are proposed to
+provide sanitary servicing for this development as the Region of Peel does not have plans to provide
+sanitary servicing in this area in the near future.
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 4 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+4.1
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+Design Sanitary Flow
+
+Part 8 of the OBC was referenced to estimate the sanitary design flows generated by the proposed
+estate residential development. The development will consist of five (5) residential lots, which will
+each contain one (1) dwelling per the Concept Plan prepared by Design Plan Services Inc. (dated
+April 12, 2024). It is Crozier’s understanding that each dwelling may be up to thirteen (13) bedrooms
+with approximately 720 m2 of floor area. Preliminary sewage system design flows were calculated for
+a typical thirteen (13) bedroom dwelling with 720 m2 of finished floor area, ten (10) bathroom groups
+and additional fixtures of a total of 93 fixture units. The preliminary sewage system design flow for
+each dwelling is summarized in Table 3.
+Table 3: Preliminary Sewage System Design Flows
+Unit Type
+
+Number
+of
+Bedrooms
+
+Floor
+Area
+(m2)
+
+Number
+of Fixture
+Units
+
+Base
+Flow
+(L/day)
+
+Additional
+Flow – Floor
+Area
+(L/day)
+
+Additional
+Flow – Fixture
+Units
+(L/day)
+
+Total
+Flow
+Per Unit
+(L/day)
+
+720 m2
+Residential
+Dwelling
+
+13
+
+720
+
+93
+
+2,500
+
+4,100
+
+3,650
+
+6,600
+
+As shown, the preliminary sewage system design flow for a typical unit is 6,600 L/day.
+These flows were calculated based on the information available at the time of this report. If details of
+the proposed dwellings change (e.g., number of bedrooms, fixtures, and floor area) during detailed
+design, the sewage system design flows might change, which may affect the size of the onsite
+sewage systems and the serviceability of the development.
+The detailed design of the onsite sewage systems will be confirmed during the building permit
+stage and building permits will be required for each sewage system prior to construction. Properties
+with a total daily design sanitary sewage flow exceeding 10,000 L/day are subject to Section 53 of
+the Ontario Water Resources Act and require an Environmental Compliance Approval (ECA) issued
+by the Ministry of Environment, Conservation and Parks. Given the preliminary sewage system
+design flow is less than 10,000 L/day per individual lot, an ECA is not required.
+4.2
+
+Proposed Sanitary Servicing
+
+Sanitary servicing for the development will be provided through individual Class 4 onsite sewage
+systems. Each onsite sewage system will consist of an advanced treatment system discharging to a
+leaching bed constructed as a Type ‘A’ Dispersal Bed, designed in accordance with the OBC.
+The advanced treatment system will consist of a Level IV treatment unit meeting the CAN/BNQ 3680600 standard, sized based on the sewage system design flow. The treatment unit proposed is a
+Waterloo Biofilter recirculating basket system. Sewage will flow from the dwelling to a Waterloo
+Biofilter anaerobic digester tank. Effluent from the digester tank is pumped to the Waterloo Biofilter
+basket tank, which is equipped with a patented foam media that effectively treats wastewater prior
+to discharge to the leaching bed. Note the Waterloo Biofilter configuration is shown for conceptual
+purposes only, any Level IV CAN/BNQ certified system may be considered.
+Treated effluent will be directed to the leaching bed, which will be constructed as a Type ‘A’
+dispersal bed for final polishing and dispersal. Table 4 summarizes the preliminary sizing of the Type
+‘A’ Dispersal Bed, based on a T-time of 50 min/cm.
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 5 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+Table 4: Preliminary Type A Bed Sizing
+Unit Type
+
+Total Flow
+Per Unit
+(L/day)
+
+Minimum
+Stone Area (m2)
+
+Minimum
+Sand Area
+(m2)
+
+Provided
+Footprint
+(m2)
+
+720 m2
+Residential
+Dwelling
+
+6,600
+
+132
+
+825
+
+840
+
+Drawings OSS101 and OSS102 found in Appendix D, illustrate the proposed onsite sewage servicing
+for the development. A total of 840 m2 has been allocated per lot. The details, size, and location of
+the onsite sewage systems will be confirmed once individual home designs and building permit
+applications are prepared.
+
+5.0
+
+Drainage Conditions
+
+The drainage conditions for the Site in both pre-development and post-development conditions
+are outlined in the following sections.
+5.1
+
+Existing Drainage Conditions
+
+According to the topographic survey (Guido Papa Surveying - J.D. Barnes Limited, May 13, 2022),
+the Site currently consists of greenspace, forested area, and open water.. The Site generally slopes
+from east to west and is separated into five (5) catchments as shown on the Pre-development
+Drainage Plan (Figure 2). The existing drainage catchments and their respective outlets may be
+described as follows:
+•
+
+Catchment 101 consists of woodlots, vegetated areas, existing wetland (west wetland) and
+gravel driveway. Catchment 101 drains to the west wetland.
+
+•
+
+Catchment 102 consists of woodlot, vegetated areas and a natural pond (west pond) and
+drains to the west pond. Should the pond fill, it will drain the wetland within Catchment 101.
+
+•
+
+Catchment 103 consists of woodlot, vegetated areas and a natural pond (east pond) and
+drains to the east pond. The pond is hydraulically connected to the existing east wetland
+within Catchment 105.
+
+•
+
+Catchment 104 consists of woodlot and vegetated areas and drains to an external pond
+west of the Site’s property limits.
+
+•
+
+Catchment 105 consists of woodlots, vegetated areas, existing wetland (east wetland) and
+drains to the east wetland.
+
+Table 5 summarizes the pre-development catchment areas. Figure 2 illustrates their configuration
+and the overall drainage direction.
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 6 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+Table 5: Pre-Development Catchment Areas, Imperviousness and Drainage Outlet
+Land-Use
+Description
+
+Catchment ID
+
+101
+
+102
+
+103
+104
+105
+
+Existing gravel
+roadway, woodlot,
+wetland and
+meadow
+Existing woodlot,
+wetland, and
+meadow
+Existing woodlot,
+wetland, and
+meadow
+Existing woodlot
+and meadow
+Existing woodlot,
+wetland, and
+meadow
+Total Area (ha) =
+
+5.2
+
+Impervious
+Area
+(ha)
+
+Pervious
+Area
+(ha)
+
+Percent
+Impervious
+(%)
+
+Outlet
+
+0.09
+
+2.57
+
+3.4
+
+West Wetland
+
+0.21
+
+1.26
+
+15
+
+West Pond
+
+-
+
+1.38
+
+0
+
+East Pond
+
+-
+
+1.15
+
+0.0
+
+External Pond
+
+-
+
+14.61
+
+0.0
+
+East Wetland
+
+21.27
+
+Proposed Drainage Conditions
+
+Based on the Concept Plan prepared by Design Plan Services Inc. (dated April 12, 2024), the
+proposed development will consist of five (5) single detached residential lots, a paved internal
+roadway, and open spaces (non-developable). Access to the Site will be via Mount Pleasant Road.
+5.2.1
+
+Grading Compliance with Town of Caledon Official Plan Policies 7.1.9.3 and 7.1.9.37
+
+According to the Town of Caledon Official Plan Policies 7.1.9.3 and 7.1.9.37, the Site must be graded
+to accommodate proposed buildings, associated driveways, provide sufficient area for individual
+leaching beds, and amenity space. Lot Grading should be accommodated within the Structure
+Envelope but some grading outside of the envelope (e.g., along the lot line) may be permitted for
+stormwater management purposes. This grading will ensure that runoff from multiple lots is
+adequately conveyed to a proper outlet.
+The Grading Plan included in this submission aims to satisfy the Official Plan policies referenced
+above.
+5.2.2
+
+Post-Development Drainage Catchment Areas
+
+The proposed Site grading divides the Site into eleven (11) drainage catchment areas as shown on
+the Post-Development Drainage Plan (Figure 3):
+•
+
+Catchment 201 (A = 2.51 ha) closely mimics the pre-development conditions of Catchment
+101 with the drainage from the woodlot and vegetated areas being conveyed to the
+existing west wetland.
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 7 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+•
+
+Catchment 202 (A = 0.82 ha) drains into the existing west pond within the Catchment. A
+600mm diameter CSP culvert is proposed under Street B to allow the pond to overflow to the
+west wetland within Catchment 101 if necessary. It is not expected that an overflow
+condition will occur very often.
+
+•
+
+Catchment 203 (A = 1.81 ha) drains into the existing pond in the Catchment and is
+hydraulically connected to the wetland in Catchment 205.
+
+•
+
+Catchment 204 (A = 1.74 ha) consists of Lot 5 and drains into the existing pond to the west of
+the Catchment.
+
+•
+
+Catchment 205 (A = 13.64 ha) closely mimics the pre-development conditions of Catchment
+105 with drainage from the woodlot and vegetated areas being conveyed to the existing
+east wetland.
+
+•
+
+Catchment 206 (A = 1.04 ha) consists of drainage from Lots 1 and 2 and half of Street B.
+Runoff from this catchment will be subject to treatment through a series of
+bioswales/enhanced grass swales. The swales will convey the treated drainage to the
+existing west wetland within Catchment 201.
+
+•
+
+Catchment 207 (A = 0.18 ha) drains along Street B and into the proposed
+bioswales/enhanced grass swales through a curb on the east side of the R.O.W. The swales
+then convey the drainage to the existing west pond within Catchment 202. If the west pond
+fills up, there will be a 600 mm diameter CSP culvert under Street B to allow for overflow.
+
+•
+
+Catchment 208 (A = 0.13 ha) drains along Street A and into the proposed
+bioswales/enhanced grass swales through a curb on the west side of the R.O.W. The swales
+then convey the drainage to the existing west pond within Catchment 202. Similar to
+Catchment 207, the west pond can spill to the west wetland via a proposed 600 mm
+diameter CSP culvert within Street B.
+
+•
+
+Catchment 209 (A = 0.12 ha) drains along Street A and into the proposed
+bioswales/enhanced grass swales through a curb on the west side of the R.O.W. The swales
+then convey the drainage to the existing west wetland within Catchment 201.
+
+•
+
+Catchment 210 (A = 0.78 ha) consists of the front yard of Lot 4 and drains along Street A and
+into the proposed bioswales/enhanced grass swales through a curb on the east side of the
+R.O.W. The swales then convey the drainage to the existing ditch along Mount Pleasant
+Road and ultimately to the west wetland within Catchment 101.
+
+•
+
+Catchment 211 (A = 0.09 ha) drains along Street B and into the proposed
+bioswales/enhanced grass swales through a curb outlet on the west side of the R.O.W. The
+swales then convey the drainage to the existing west wetland within Catchment 201 through
+a 600 mm diameter CSP culvert with Street B.
+
+Table 6 summarizes the main attributes of the post-development catchment areas. Figure 3
+illustrates their configuration and the overall drainage direction.
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 8 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+Table 6: Post-Development Catchment Areas’ Imperviousness and Drainage Outlet
+Impervious
+Percent
+Catchment
+Pervious Area
+Land-Use Description
+Area
+Impervious
+Outlet
+ID
+(ha)
+(ha)
+(%)
+Existing Woodlot and
+201
+0
+1.60
+0
+West Wetland
+Meadow
+Existing woodlot,
+202
+wetland,
+0.21
+0.61
+26
+West Pond
+and meadow
+Existing woodlot,
+203
+wetland,
+0.02
+1.09
+2
+East Pond
+and meadow
+Existing woodlot,
+meadow, and
+204
+0.04
+0.84
+5
+External Pond
+proposed lot
+rear yard
+Existing woodlot,
+205
+wetland, meadow,
+0.04
+14.49
+0
+East Wetland
+and Lot 5
+Lots 1 & 2 Front Yard
+206
+0.24
+0.80
+23
+West Wetland
+and Street ‘B’ R.O.W.
+207
+Street ‘B’ R.O.W.
+0.09
+0.09
+48
+West Pond
+208
+Street ‘A’ R.O.W.
+0.09
+0.04
+69
+West Pond
+209
+Street ‘A’ R.O.W.
+0.06
+0.06
+50
+West Wetland
+Lot 4 Front Yard and
+210
+0.21
+0.57
+27
+West Wetland
+Street ‘A’ R.O.W.
+211
+Street ‘B’ R.O.W.
+0.04
+0.05
+44
+West Wetland
+Total Area (ha) =
+
+6.0
+
+21.27
+
+Stormwater Management
+
+Stormwater management and Site drainage for the proposed development must adhere to the
+policies and standards of the Town of Caledon, Toronto and Region Conservation Authority (TRCA),
+and the Ministry of Environment, Conservation and Parks (MECP). It is important to note that efforts
+have been made to preserve and maintain the rural character of the property and passive
+stormwater management practices have been incorporated throughout the design.
+The stormwater management criteria for the development is summarized below:
+Water Quality Control
+Provide at least 80% removal of Total Suspended Solids in accordance with “Enhanced Protection”
+in Table 3.2 (Ministry of the Environment, Planning, and Stormwater Management Manual, MOE
+2003).
+Water Balance and Erosion Control
+The objective of the Water Balance is to maintain pre-development infiltration volumes. Having
+worked in Caledon, it is our understanding that capturing and infiltrating storm events up to 27 mm
+will ensure that infiltration volumes are preserved. This was the target for the infiltration design
+described in the following sections.
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 9 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+For Erosion Control, the minimum requirement is the retention of the first 5 mm of rainwater event
+over the area of the proposed development, according to CVC/TRCA Low Impact Development
+SWM Planning Design Guide (Version 1.0, 2010). Given that the Water Balance requirements are
+much more stringent, the focus of water retention will be detailed in the Water Balance and Water
+Quality sections.
+Water Quantity Control
+According to the Town of Caledon Development Standards Manual (2019), water quantity
+controls are required for the Site. The water quantity requirements include controlling the
+post-development peak flow event to the respective pre-development peak flow event for design
+storms up
+to and including the 100-year event.
+6.1
+
+Visual OTTHYMO (VO) Model Set-up and Hydrologic Parameters
+
+The TRCA, Town of Caledon, and Ministry of Transportation guidelines were referenced to determine
+the hydrologic parameters for the various catchment areas within the Site. The topographic survey
+(Guido Papa Surveying - J.D. Barnes Limited, May 13, 2022) for the Site was referenced to
+understand the land cover and drainage patterns under the existing Site conditions.
+The Geotechnical Investigation prepared by AllRock (February 14, 2024) was reviewed to determine
+the on-site soil conditions.
+Based on the above, the hydrologic parameters for the pre-development and post-development
+conditions were determined and are summarized in Tables 7 and 8 respectively. The detailed
+hydrologic parameter sheets for each catchment area are provided in Appendix C.
+Table 7: Pre-Development Hydrologic Parameters
+Catchment Characteristics
+
+101
+
+102
+
+103
+
+104
+
+105
+
+Drainage Area (ha), Total Area = 21.27 ha
+
+2.66
+
+1.47
+
+1.38
+
+1.15
+
+14.61
+
+Total Imperviousness (%)
+
+3
+
+15
+
+0
+
+0
+
+0
+
+Hydrologic Soil Type
+
+Silt Loam - BC
+
+Composite Curve Number (CN)1
+
+66.13
+
+69.80
+
+65.00
+
+65.00
+
+59.97
+
+Initial Abstraction (mm)
+
+8.56
+
+7.81
+
+8.32
+
+8.31
+
+11.66
+
+Time to Peak (hrs)
+
+0.23
+
+0.11
+
+0.14
+
+0.23
+
+0.18
+
+1. Composite Curve Numbers (CN) have been adjusted using the Modified Curve Number (CN*) method in VO
+and the total 100-year precipitation volume.
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 10 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+Table 8: Post-Development Hydrologic Parameters
+Catchment
+ID
+
+Drainage
+Area
+(ha)
+
+Total
+Imperviousness (%)
+
+201
+
+1.60
+
+2022
+
+1.
+2.
+
+Composite
+Curve Number
+(CN)1
+
+Initial
+Abstraction
+(mm)
+
+0
+
+65.69
+
+8.38
+
+0.82
+
+26
+
+65.00
+
+8.00
+
+203
+
+1.10
+
+2
+
+65.84
+
+7.60
+
+0.15
+
+204
+
+0.88
+
+5
+
+67.98
+
+6.85
+
+0.47
+
+205
+
+14.53
+
+0
+
+60.07
+
+11.56
+
+2062
+
+1.04
+
+23
+
+68.00
+
+5.00
+
+2072
+
+0.18
+
+48
+
+68.00
+
+5.00
+
+2082
+
+0.13
+
+69
+
+68.00
+
+5.00
+
+2092
+
+0.12
+
+50
+
+68.00
+
+5.00
+
+2102
+
+0.78
+
+27
+
+68.00
+
+5.00
+
+2112
+
+0.09
+
+44
+
+68.00
+
+5.00
+
+Hydrologic
+Soil Type
+
+Silt Loam BC
+
+Time to
+Peak
+(hrs)
+0.21
+-
+
+0.18
+-
+
+Composite Curve Numbers (CN) have been adjusted using the Modified Curve Number (CN*) method
+in VO and the total 100-year precipitation volume.
+Catchments 202, 206-211 are considered STANDHYD and therefore will not have a time to peak (t p) provided.
+
+Visual OTTHYMO (VO) was used to simulate pre-development and post-development runoff
+conditions. The Town of Caledon’s intensity-duration frequency (IDF) curves were used to derive the
+4-hour Chicago design storm. The VO results from the 4-hour Chicago design storm is provided in
+Appendix C. While 6-hour and 12-hour AES Storms were considered, the ‘storm duration is selected
+in relation to basin physical characteristics’ according to Hydrology of Floods in Canada, a Guide to
+Planning and Design (Watt, 1989). The storm duration ‘is taken as equal to or greater than the time
+of concentration’. Because the time of concentration for the site is very small (less than one hour),
+a Chicago distribution, which offers flexible storm durations more consistent with the time of
+concentration, was used for this investigation.
+6.2
+
+Stormwater Quality Control
+
+Stormwater quality controls for the proposed development will be achieved by retaining, treating,
+and infiltrating runoff in roadside bioswale/enhanced grass swale systems. The treatment systems will
+capture runoff from the majority of hard surfaces. Runoff from the remainder of the Site consists of
+natural heritage and landscaped/pervious areas and is therefore not subject to water quality
+treatment requirements.
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 11 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+Table 9 summarizes the water quality storage requirements in accordance with Table 3.2 of the
+Stormwater Management Planning and Design manual (MOE, 2003) and the storage provided
+within the bioswale/enhanced grass swale systems on each side of the roadway.
+Table 9: Provided Water Quality Storage to Achieve Enhanced Water Quality Protection
+Catchment ID
+
+Required Treatment Volume
+Per Table 3.2 (MOE, 2003)
+(m3)
+
+Provided Treatment Volume2
+(m3)
+
+201
+
+N/A – Uncontrolled Landscaped Area
+
+202
+
+N/A – Uncontrolled Landscaped Area
+
+203
+
+N/A – Uncontrolled Landscaped Area
+
+204
+
+N/A – Uncontrolled Landscaped Area
+
+205
+
+N/A – Uncontrolled Landscaped Area
+
+206
+
+23
+
+45
+
+207
+
+5.1
+
+27
+
+208
+
+4.5
+
+21
+
+209
+
+3.5
+
+N/A
+
+210
+
+17.9
+
+35
+
+211
+
+2.5
+
+N/A
+
+Total
+
+57
+
+128
+
+1. Catchments 208-210 consist of ditches along the Street ‘A’ R.O.W.
+2. Catchments 206, 207 and 211 consist of ditches along Street ‘B’ R.O.W.
+3. Catchments 209 and 211 will consist of enhanced grass swales and discharge to the West Wetland. The
+provided treatment volumes above are based on the treated volume from the bioswales.
+4. The provided treatment volume is assumed to be equally distributed between the roadside ditches on
+either side of the proposed internal roadway.
+
+At a minimum, a total of 57 m3 of runoff is required to be treated and infiltrated to remove 80% of TSS
+and achieve “Enhanced Protection”. The proposed bioswale system exceeds this requirement,
+having capacity to treat and infiltrate a total of approximately 128 m3 of runoff.
+Water quality controls are not provided for Catchments 201-205 as they remain relatively
+unchanged between pre-development and post-development conditions with no directly
+connected impervious areas.
+6.3
+
+Water Balance and Erosion Control
+
+The purpose of a Water Balance is to ensure that existing infiltration volumes are maintained on an
+annual basis. The stormwater management design for the subject site incorporates linear bioswales
+to capture, treat and infiltrate runoff to achieve this goal.
+The bioswale/enhanced grass swale systems were sized based on the runoff generated by a 27 mm
+design storm. This design storm was used recently for a Water Balance study in the Palgrave area
+and provided favourable results.
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 12 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+The roadside bioswale/enhanced grass swale systems consist of four (4) main elements including:
+•
+
+Curb gutter outlets;
+
+•
+
+Roadside ditches;
+
+•
+
+Rock check dams;
+
+•
+
+Filter media and gravel storage;
+
+The bioswale systems will accept road runoff via curb gutter outlets along Streets ‘A’ and ‘B’. From
+each curb gutter outlet, the runoff will be directed to conveyance systems to be infiltrated.
+To encourage the runoff to infiltrate, rock check dams will be placed strategically along the ditches
+or swales to reduce flow velocity. The ponded runoff will infiltrate into the high performance
+bioswale filter media, and the treated water will then be stored in the gravel layer below and
+allowed to infiltrate into the native soils. in
+The bioswale systems’ treatment capacity is governed by the surface ponding volume and the
+infiltration volume of the bioswales. The gravel storage layer has been conservatively sized to
+provide storage that is greater than, or equal to, the surface storage required for the 27 mm event.
+Design calculations for the bioswale and drawdown are provided in Appendix C. Additional details
+are provided on Drawing C103, and C104.
+The bioswale design aims to maintain a minimum separation to groundwater of 1.0 m or more.
+According to preliminary results provided in the AllRock Geotechnical Report (February 14, 2024),
+bioswales can be accommodated within the proposed right-of-way and meet this separation
+requirement. In areas where 1.0 m of separation is not possible, enhanced grass swales are
+proposed.
+Table 10 summarizes the water balance requirements on a catchment basis and the corresponding
+storage volumes provided. By capturing and infiltrating the runoff volume for a 27 mm rainfall, it is
+understood that the annual infiltration volumes can be maintained.
+Table 10: 27 mm Runoff Volumes and Corresponding Storage Provided
+
+Catchment ID
+
+201
+202
+203
+204
+205
+206
+207
+208
+209
+210
+211
+Total
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Required Treatment
+Volume
+Per 27 mm Event
+(m3)
+
+Provided Treatment Volume2
+(m3)
+
+N/A – Uncontrolled Landscaped Area
+N/A – Uncontrolled Landscaped Area
+N/A – Uncontrolled Landscaped Area
+N/A – Uncontrolled Landscaped Area
+N/A – Uncontrolled Landscaped Area
+45
+45
+11
+27
+12
+21
+7.8
+N/A
+35
+35
+5.3
+N/A
+117
+128
+
+Page 13 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+From Table 10, it is apparent that there is sufficient storage provided in the bioswale system to
+capture and infiltrate the runoff from the 27 mm rainfall event.
+6.4
+
+Stormwater Quantity Controls
+
+The 4-hour Chicago storm distribution was simulated in Visual OTTHYMO (VO) to calculate the 2-Year
+through 100 Year flood event runoff rates for predevelopment and post development conditions.
+The site drains to two existing wet areas, the West Pond and the West Wetland. While an overflow
+culvert has been included in the design to connect the two wet areas, it is unlikely that surface
+water would overflow from the West Pond into the West Wetland. Therefore, the VO modelling
+treats the two as different outlets.
+The results of flow modelling for the predevelopment and post development conditions are
+presented in Table 11 and Table 12.
+Table 11: 4-Hour Chicago Peak Flows (West Wetland Outlet)
+4-Hour Chicago Storm Event
+
+Pre-Dev. Peak
+Flow Rate1
+(L/s)
+
+Post-Dev. Peak
+Flow Rate2
+(L/s)
+
+% Change
+
+2-year
+
+31
+
+26
+
+-16.1%
+
+5-year
+
+72
+
+67
+
+-6.94%
+
+10-year
+
+110
+
+109
+
+-0.91%
+
+25-year
+
+166
+
+181
+
+9.04%
+
+50-year
+
+211
+
+245
+
+16.1%
+
+100-year
+
+262
+
+309
+
+17.9%
+
+1. Includes runoff directed to West Wetland Outlet (Catchment 101) A = 2.66 ha.
+2. Includes runoff from Catchments 201, 206, 209 and 210 directed to the West Wetland Outlet A = 3.54 ha.
+
+Based on the results shown above, the West Wetland Outlet experiences a minimal change in peak
+flows from pre- to post-development conditions. This is due to the Site remaining mostly pervious in
+post development conditions (large residential lots). The minor change in peak flows will be naturally
+attenuated by the surrounding low-lying areas.
+Table 12 below summarizes the changes in peak flow to the West Pond.
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 14 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+Table 12: 4-Hour Chicago Peak Flows (West Pond Outlet)
+4-Hour Chicago Storm Event
+
+Pre-Dev. Peak
+Flow Rate1
+(L/s)
+
+Post-Dev. Peak
+Flow Rate2
+(L/s)
+
+% Change
+
+2-year
+
+29
+
+27
+
+-6.90%
+
+5-year
+
+66
+
+59
+
+-10.6%
+
+10-year
+
+100
+
+92
+
+-8.00%
+
+25-year
+
+146
+
+138
+
+-5.48%
+
+50-year
+
+185
+
+174
+
+-5.95%
+
+100-year
+
+229
+
+215
+
+-6.11%
+
+1. Includes runoff directed to West Pond Outlet (Catchment 102) A= 1.47 ha.
+2. Includes runoff from Catchments 202, 207, 208 and 211 directed to the West Pond Outlet = 1.22 ha.
+
+Within the West Pond Outlet, the peak flows are lower in post-development conditions than predevelopment conditions. This can be attributed to a smaller catchment area outletting to the West
+Pond and a minimal change in imperviousness.
+It is noted that flood flows were not routed through the bioretention system in the VO model, and this
+would further reduce post development flows. Therefore, no specific flood control measures are
+proposed for the five (5) lot development.
+
+7.0
+
+Erosion and Sediment Controls During Construction
+
+Erosion and sediment controls will be implemented prior to the commencement of any site servicing
+works for the development and will be maintained throughout construction until the Site is stabilized
+or as directed by the Site Engineer and/or Town of Caledon.
+Controls will be inspected after each significant rainfall event and maintained in proper
+working condition. A Preliminary Erosion and Sediment Control Plan (Drawing C101) has been
+prepared for the development outlining the site-specific erosion and sediment controls. This plan
+includes silt fencing, a mud mat, and more robust measures, such as check dams, in areas of
+concentrated flow.
+Further details on the erosion and control measures have been summarized below:
+Sediment Control Silt Fence
+Sediment Control Silt Fence will be installed on the perimeter of the Site to intercept sheet flow.
+Additional Sediment Control Silt Fence may be added based on field decisions by the Site Engineer
+and Owner prior to, during, and following construction.
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 15 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+Mud Mat
+A rock mud mat will be installed at the entrance to the Site off Mount Pleasant Road. The rock mud
+mat will help to prevent mud tracking. All construction traffic will be restricted to the construction
+entrance as indicated on the Preliminary Erosion and Sediment Control Plan (Drawing C101).
+Rock Check Dams
+Rock check dams installed according to OPSD 219.210 should be installed in the proposed swale to
+protect from erosion conveyance during construction.
+
+8.0
+
+Conclusions & Recommendations
+
+This report was prepared in support of the Zoning By-Law Amendment Application for the property
+located at 15441 Mount Pleasant Road, in the Town of Caledon. The proposed development can
+be serviced for water, sanitary, and stormwater management in accordance with the Town of
+Caledon, Region of Peel, and Toronto and Region Conservation Authority requirements and
+standards. Our conclusions and recommendations include:
+Proposed Water Services
+1. The domestic peak hourly water demand for the proposed development is 0.29 L/s.
+The design fire flow is 133 L/s for 2.00 hours.
+2. Water servicing for the proposed development will be met by installing and connecting
+a 150 mm diameter PVC watermain to the existing 300 mm diameter PVC watermain on
+Mount Pleasant Road. The proposed 150 mm diameter PVC watermain will be looped
+throughout the development at the respective Street A and Street B cul-de-sac bulbs and
+provide municipal water servicing to each residential lot.
+Proposed Sanitary Services
+1. Sanitary servicing for the proposed development will consist of private individual lot on-site
+sewage systems.
+2. The preliminary sewage system design flows for each lot is 6,600 L/day. Given that the design
+flows are less than 10,000 L/day, an ECA with the MECP is not required. Building permits be
+required to permit construction of each sewage system.
+3. Each onsite sewage system will consist of an advanced treatment system discharging to a
+leaching bed constructed as a Type A dispersal bed. Each leaching bed footprint is
+approximately 840 m2.
+Stormwater Management
+1. A passive stormwater management approach is proposed to preserve and maintain the rural
+character of the property using bioswale systems.
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 16 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+2. Water quality controls, erosion protection, and water balance for the proposed
+development will be provided by roadside bioswale and enhanced grass swale systems. The
+roadside bioswale systems will provide water quality treatment that exceeds the “Enhanced
+Protection” criteria by retaining, treating, and infiltrating runoff volume equal to, or greater
+than, the runoff volume recommended in the Stormwater Management Planning and Design
+manual (MOE 2003).
+3. The bioswale system is designed to capture and infiltrate all rainfall events up to 27 mm,
+therefore maintaining predevelopment infiltration volumes,
+4. VO modelling of flood events suggests only minor increases in peak flows, so no specific flood
+storage facilities are proposed. The nature of the development (low imperviousness), the
+distributed runoff and the presence of abundant low lying areas will ensure that any changes
+will be naturally assimilated.
+Respectfully submitted,
+C.F. CROZIER & ASSOCIATES INC.
+
+C.F. CROZIER & ASSOCIATES INC.
+
+Matthew Baldesarra
+Engineering Intern, Land Development
+
+Tony Elias, P.Eng.
+Senior Project Manager, Land Development
+
+MJB/stm
+J:\2200\2227- 2818963 Ontario Inc\6259- 15441 Mount Pleasant Rd\Reports\Civil\2024.07.05_FSRSWM_Draft.docx
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+Page 17 of 17
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+APPENDIX
+
+A
+
+As-Constructed Drawings & Background Material
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+APPENDIX
+
+B
+
+Water and Sanitary Servicing Calculations
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+APPENDIX
+
+C
+
+Stormwater Servicing Calculation
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+DRAWINGS
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+2818963 Ontario Inc.
+15441 Mount Pleasant Road, Town of Caledon
+
+Functional Servicing and Stormwater Management Report
+July 2024
+
+FIGURES
+
+C.F. Crozier & Associates Inc.
+Project No. 2227-6259
+
+

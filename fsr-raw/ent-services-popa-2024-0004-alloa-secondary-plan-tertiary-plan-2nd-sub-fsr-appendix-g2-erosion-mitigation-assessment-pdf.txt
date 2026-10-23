@@ -1,0 +1,1015 @@
+March 16, 2026
+Alloa Landowners Group
+c/o Glen Schnarr & Associates Inc.
+700-10 Kingsbridge Garden Circle
+Mississauga, Ontario, L5R 3K6
+Attn:
+
+Jason Afonso, MCIP, RPP
+Partner
+
+Re:
+
+Erosion Mitigation Assessment
+Alloa Secondary Plan Area - Phase 1 Lands
+Town of Caledon, Ontario
+GEO Morphix Project No. PN24018
+
+GEO Morphix Ltd. (GEO Morphix) was retained to complete a geomorphological assessment in support
+of Phase 1 of the Alloa Secondary Plan Area in the Town of Caledon, Ontario. This letter provides a
+summary of previously determined erosion thresholds for the receiving watercourses and an erosion
+exceedance analysis along a section of Etobicoke Creek downstream of the subject lands. The overall
+objective of this assessment is to evaluate changes in downstream erosion potential that may occur as
+a result of the land use changes associated with the proposed development.
+The Phase 1 Lands, hereafter referred to as the subject lands, are generally bounded by the future
+Highway 413 right-of-way to the north, Mayfield Road to the south, Creditview Road to the west, and
+Chinguacousy Road to the east. The subject lands are located within the Etobicoke Creek watershed and
+the Credit River watershed. The Alloa Drain flows generally northeastward through the central portion
+of the subject lands and drains into Etobicoke Creek downstream of Chinguacousy Road. The headwaters
+of a subwatershed of the Credit River, Fletchers Creek, are located in the southern extent of the subject
+lands. Headwater drainage features generally flow from northwest to southeast, exiting the subject
+lands at Mayfield Road.
+The following activities were completed as part of the erosion exceedance analysis:
+•
+•
+•
+
+Review of previously completed studies and compilation of previously accepted erosion
+thresholds along the relevant watercourses downstream of the Phase 1 lands
+Delineation of representative cross-sections along relevant reaches using a LiDAR-derived digital
+terrain model (DTM)
+Erosion exceedance analysis for the relevant locations downstream of the subject lands to assess
+post-development changes in erosion potential and inform stormwater mitigation strategies to
+address erosion mitigation requirements
+
+Summary of Previous Studies
+Currently accepted erosion thresholds and unit discharge rates for reaches along Etobicoke Creek and
+Fletchers Creek downstream of the subject lands were determined through multiple studies, including:
+•
+•
+
+Environmental Implementation Report Mount Pleasant Sub-Area EIR 51-1 within the Mount
+Pleasant Secondary Plan Area Northwest Brampton (Stonybrook Consulting et al., 2011)
+Mayfield West, Phase 2 Secondary Plan Comprehensive Environmental Impact Study and
+Management Plan, Part A: Existing Conditions and Characterization, Final Report, Town of
+Caledon, December 2014 (AMEC, 2014)
+
+Reaches MEC-R05 and MEC-R02 along Etobicoke Creek and Reach SW4 along Fletchers Creek are
+located downstream of the subject lands. These reaches were selected for the assessment as they were
+previously determined to be erosion-sensitive reaches downstream of the proposed development
+(Stonybrook Consulting et al., 2011; AMEC, 2014). Erosion thresholds for Reaches MEC-R05 and MEC-
+
+R02 were determined through the Mayfield West Phase 2 Secondary Plan EISMP (AMEC, 2014). A unit
+discharge rate was determined for Reach SW4 through the Mount Pleasant Sub-Area 51-1 EIR
+(Stonybrook Consulting et al., 2011). A map showing the locations of these previously accepted channel
+erosion threshold sites in relation to the subject lands is provided in Appendix A, Figure 1.
+In the context of the present study, an erosion threshold is defined as the theoretical value, typically
+expressed as a critical discharge or shear stress, at which entrainment of sediment would occur based
+on the morphology of the channel and characteristics of the bed and bank materials. A theoretical
+erosion threshold is an inherently conservative value as it represents the force required to initiate
+sediment motion rather than the force needed for systemic erosion of the bed and/or banks of the
+channel (Chow, 1959; Fischenich, 2001; Julien, 1994; Komar, 1987; Miller et al., 1977). Channel
+characteristics and erosion thresholds measured and modelled for Reaches MEC-05 and MEC-02
+through previous studies are provided in Table 1 below.
+Table 1: Bankfull channel characteristics and erosion threshold results
+Channel Parameter
+
+Etobicoke Creek Watershed
+MEC-R05*
+
+MEC-R02*
+
+Average bankfull width (m)
+
+6.94
+
+5.92
+
+Average bankfull depth (m)
+
+0.45
+
+0.70
+
+Channel gradient (%)
+
+0.04
+
+0.14
+
+D50 (mm)
+
+1.6
+
+3
+
+D84 (mm)
+
+8
+
+17.8
+
+Manning’s n roughness coefficient
+
+0.025
+
+0.029
+
+Average bankfull discharge (m3/s)
+
+1.59
+
+5.18
+
+Average bankfull velocity (m/s)
+
+0.41
+
+0.92
+
+Drainage area (h)
+
+2161†
+
+2373†
+
+Material
+
+Fine bed sediments
+
+Fine bed sediments
+
+Reference
+
+N/A
+
+N/A
+
+Critical velocity (m/s)
+
+0.41
+
+0.72
+
+Threshold shear stress (N/m2)
+
+1.56††
+
+5.26††
+
+Threshold depth (m)
+
+0.39††
+
+0.38††
+
+Critical discharge (m3/s)
+
+0.56
+
+0.68
+
+0.000259
+
+0.000287
+
+Unitary threshold (m3/s/ha)
+
+* Mayfield West Phase 2 Secondary Plan EIS-MP Part A (AMEC, 2014)
+† Drainage area provided by Urbantech, 2026
+†† Calculated based on channel morphological characteristics
+
+The unitary threshold values for MEC-R05 and MEC-R02 are estimated to be 0.000259 m3/s/ha and
+0.000287 m3/s/ha, respectively. These values are comparable to those accepted for nearby
+watercourses with similar characteristics within neighbouring conservation authority jurisdictions, such
+as the Credit River and the Humber River. A pre-development and post-development erosion exceedance
+analysis is presented below to further assess whether proposed conceptual stormwater mitigation
+strategies and erosion mitigation measures are sufficient to address potential downstream impacts along
+Etobicoke Creek.
+In contrast to receiving reaches immediately downstream and to the east of the Phase 1 lands (Etobicoke
+Creek watershed), the reaches immediately downstream and to the south of the Phase 1 lands (i.e.,
+Fletchers Creek watershed) have undergone channel realignment and restoration associated with
+previous development to the south of Mayfield Road and to the east and west of Chinguacousy Road.
+
+PN24018
+
+2
+
+Restoration of these receiving reaches included hydraulically-sized substrate for increased erosion
+resistance and to accommodate post-development flows. The nearest previously defined unit discharge
+rate for an erosion-sensitive reach within the receiving watercourses is located approximately 5,500 m
+downstream of the Phase 1 Lands along Fletchers Creek immediately south of Highway 7 (i.e., Reach
+SW4). A unit discharge rate for Reach SW4 of 0.000409 m3/s/ha was determined from a range of fieldmeasured discharges, as detailed in the Mount Pleasant EIR 51-1 report (Stonybrook Consulting, 2011).
+This value was used to guide erosion mitigation strategies for proposed SWM facilities outletting to
+Fletchers Creek and its tributaries.
+Erosion Exceedance Analysis – Etobicoke Creek Watershed
+In support of the proposed SWM Plan, an erosion exceedance analysis was completed for the receiving
+watercourse (CVC, 2015; TRCA, 2012). The application of erosion threshold analysis for evaluating the
+effectiveness of SWM facilities in mitigating changes in downstream erosion potential is a concept
+developed with support from a co-author of the present report (P. Villard) and detailed in the guidelines
+prepared on behalf of the Credit Valley Conservation Authority and Toronto and Region Conservation
+Authority and in Villard and Parish (2003).
+Our understanding is that runoff will largely be directed to Etobicoke Creek via four (4) SWM Ponds
+discharging to Alloa Drain within the Phase 1 Lands. The remaining runoff will be directed to Fletcher’s
+Creek and will consist of less than 10% of the total drainage area at the crossing with Highway 7. The
+relatively minor contributions and the hydraulically sized substrate within the realigned corridors indicate
+that development within the Phase 1 Lands is unlikely to alter erosion processes within Fletchers Creek.
+Additionally, flows to Fletchers Creek will be controlled according to a unit discharge rate previously
+defined as part of the East Huttonville Creek and Fletcher’s Creek EIRs for the Mount Pleasant SubAreas 51-1 and 52-1 (Stonybrook Consulting et al., 2011). Thus, an erosion exceedance assessment
+was not necessary for the Fletchers Creek Subwatershed.
+The proposed SWM strategy for the ponds directing flow to Etobicoke Creek includes interception and
+infiltration of runoff via LIDs and constructed offline wetlands. The post-development scenario includes
+7.6 mm of initial abstraction over the impervious area for the Phase 1 Lands to account for the
+interception of volumetric storage provided by the offline wetlands. Continuous hydrological data for
+reaches MEC-R02 and MEC-R05 along Etobicoke Creek were provided by Urbantech (2026) at 15minute increments over 40 years from 1960-1999 (Urbantech, 2026). To account for potential
+uncertainty in the uncalibrated catchment-wide continuous hydrological model, a sensitivity analysis
+was undertaken to analyze hydrological conditions under a high runoff scenario (runoff coefficient of
+0.47), a baseline scenario (runoff coefficient of 0.28) and a low runoff scenario (runoff coefficient of
+0.11).
+Using the previously described erosion thresholds for Reaches MEC-R05 and MEC-R02 and the results
+from the aforementioned hydrological simulation modelling (Urbantech, 2026), an erosion exceedance
+analysis was conducted to evaluate pre- to post-development changes in erosion potential within the
+receiving watercourses. The exceedance analysis was completed using our in-house erosion exceedance
+model. This numerical model generates a series of hydrologic and geomorphic indices that are useful
+for evaluating how changes in hydrology may alter the magnitude of erosion within a channel. The key
+metrics used for assessing erosion potential are summarized below:
+1)
+2)
+3)
+4)
+
+Cumulative time of exceedance
+Number of exceedance events
+Cumulative effective discharge volume
+Cumulative effective work index (i.e. cumulative effective stream power)
+
+These indices have been applied elsewhere in numerous jurisdictions, such as Conservation Halton and
+Toronto and Region Conservation Authority and have been widely accepted by Ontario Conservation
+Authorities. They provide an evaluation of the number, duration, and magnitude of exceedance events.
+We note that the most relevant indicator is the cumulative effective work index, as this value reflects
+both the duration and magnitude of erosion exceedance events.
+
+PN24018
+
+3
+
+Time of exceedance, number of exceedances, and cumulative effective discharge volume can be
+calculated from the discharge record and the established critical discharge value (i.e., erosion
+threshold). The cumulative time of exceedance is simply the summed duration of time where discharge
+exceeds the established erosion threshold, and the number of exceedances is the count of erosion
+exceedance events throughout the discharge record. The cumulative effective discharge represents the
+average magnitude of discharge exceeding the erosion threshold during a given erosion event, whereas
+the cumulative effective volume represents the total discharge volume that exceeds the erosion
+threshold throughout the modelled discharge record. Specific details about how each of these key
+erosion metrics are calculated are provided in the following subsection.
+For more relevant indicators, namely the cumulative effective work index, hydraulic information is
+required. Our model applies pre- and post-development discharges to a characteristic cross-section.
+Using Manning’s approach, the discharge at each time step in the continuous hydrological model is
+converted into a velocity, depth of flow, shear stress, and/or stream power. This provides analysis that
+is appropriate to the specific site conditions.
+The post- and pre-development hydrological modelling reflects changes in the hydrological regime
+resulting from changes in land use within the catchment. Continuous flow data were provided by
+Urbantech (2026) at 15-minute intervals from 1960 to 1999 for existing and future conditions with
+proposed LID mitigation measures. The hydrological modelling was analyzed to calculate the erosion
+indices and identify changes in erosion potential within the erosion-sensitive reaches MEC-R02 and
+MEC-R05 of the receiving watercourse. A selection of pre- and post-development hydrographs overlain
+with the respective erosion thresholds is provided in Appendix B.
+Methods
+To calculate erosion indices, both velocity and shear stress were calculated at each time step during the
+model simulation. Through an iterative process, water depth and velocity were calculated for each
+discharge passing through a representative cross-section. Cross-sections for Reaches MEC-R05 and
+MEC-R02 were delineated using a LiDAR-derived DTM obtained from a publicly available dataset
+maintained by OMNRF (2014/2016). Representative cross-sections were delineated by sampling
+elevation values from the DTM at intervals of 0.5 m horizontally across the watercourse in the vicinity
+of the erosion threshold locations for each respective reach. A map of the watercourse in the vicinity of
+MEC-05 and MEC-02 overlayed on a hillshade model generated using the DTM is provided in Appendix
+A, Figure 2.
+The cross-section that the calculated discharge passes through in the model is divided into floodplain
+and bankfull sections. The cross-section is further broken into panels. Velocity, U, is calculated for each
+panel using Manning’s approach. This is a conservative approach as it allows dissipation of flood energy
+in the floodplain. The total discharge, QT at each time step is based on the summation of the discharge
+of all panels, Qi, such that:
+𝑄𝑇= ∑ 𝑄𝑖
+
+[Eq. 1]
+
+Qi is discharge through a panel (which is set at 10 percent of the cross-section). Qi is defined as:
+𝑄𝑖 = 𝑈𝑖 𝑤𝑖 𝑑𝑖
+
+[Eq. 2]
+
+where, wi and di are width and depth of each panel. The discharge from each panel was then summed
+to obtain the total discharge. This is more accurate than using average cross-sectional dimensions for a
+simple trapezoidal channel, since the bed is usually irregular, and a panel approach better represents
+the true cross-sectional area.
+For each event, the discharge is converted into a maximum depth and average velocity. The maximum
+depth is used to calculate a maximum bed shear stress, 𝜏𝑜max based on:
+𝜏𝑜max = 𝑑max 𝜌𝑔𝑆bed
+
+PN24018
+
+[Eq. 3]
+
+4
+
+where, dmax is the maximum water depth, ρ is water density, g is acceleration due to gravity, and Sbed
+is the channel bed slope.
+Cumulative total work, ɷtot is defined as:
+ɷtot = ∑ 𝜏0max . 𝑈avg . ∆𝑡
+
+[Eq. 4]
+
+where, Uavg is average velocity (Qtot/Atot, where Atot is wetted area), while cumulative effective work
+index (ɷeff) is defined by:
+ɷeff = ∑ 𝜏 − 𝜏𝑐𝑟 . 𝑈. ∆𝑡, ɷ < 0 = 0
+
+[Eq. 5]
+
+where, cr is the critical shear stress.
+Time of exceedance tex defined as:
+𝑡ex = ∑ ∆𝑡 for (𝑄𝑇 > 𝑄threshold )
+
+[Eq. 6]
+
+where, Qthreshold is the discharge at the erosion threshold.
+The cumulative effective discharge volume (CEV) is defined as:
+CEV = ∑ 𝑄 (for Q > Qthreshold)
+
+[Eq. 7]
+
+Similarly, the cumulative effective discharge (CED) is defined as:
+CED = CEV/𝑡𝑒𝑥
+
+[Eq. 8]
+
+Results
+Erosion exceedance modelling results indicate that the proposed SWM plan for the Phase 1 Lands,
+including LID strategies, effectively mitigates the risk of increases in erosion potential within the
+receiving watercourse. The erosion exceedance modelling results indicate a negligible decrease in
+erosion potential under the high runoff and baseline scenarios, and a minor increase in erosion potential
+under the low runoff scenario for both assessed reaches. We note that the cumulative effective work
+index (ɷeff; CEWI) is considered the most relevant index for erosion potential, as it reflects both the
+flow magnitude and exceedance duration of a given erosion event. Results over ±5% are potentially
+significant enough to result in a measurable change in erosion potential within the receiving watercourse
+when the absolute change in the erosion metric is significant. Relative changes in erosion potential of
+approximately ±5% are within the uncertainty envelope of the modeling approach and should therefore
+be interpreted as no meaningful change. Of secondary relevance is the cumulative effective discharge
+volume (CEV) indicator, representing the total discharge volume that exceeds the established critical
+discharge throughout the modelling record. A representative selection of pre-development and postdevelopment hydrographs is included in Appendix B. Table 2 and Table 3 summarize the erosion
+exceedance assessments for reaches MEC-R02 and MEC-R05, respectively, under all three assessed
+runoff conditions (i.e., low, baseline and high flow scenarios).
+
+PN24018
+
+5
+
+Table 2. Erosion exceedance results for Reach MEC-R02
+MEC-R02
+Scenario
+Cumulative (1960-1999)
+(PRE)
+Baseline
+
+High runoff
+
+Low runoff
+
+(POST)
+
+CEV (m3)
+
+ɷeff (N/m)
+
+tex (hrs)
+
+# Of
+Exceedances
+
+6.00E+07
+
+24,032
+
+8,361
+
+857
+
+5.96E+07
+
+24,017
+
+8,639
+
+838
+
+Change (%)
+
+-0.84
+
+-0.06
+
+3.32
+
+-2.22
+
+(PRE)
+
+1.55E+08
+
+58,224
+
+16,008
+
+1,449
+
+(POST)
+
+1.49E+08
+
+56,588
+
+16,161
+
+1,412
+
+Change (%)
+
+-3.77
+
+-2.81
+
+0.96
+
+-2.55
+
+(PRE)
+
+1.39E+07
+
+6,081
+
+2,939
+
+351
+
+(POST)
+
+1.53E+07
+
+6,716
+
+3,372
+
+369
+
+Change (%)
+
+9.70
+
+10.44
+
+14.72
+
+5.13
+
+The cumulative effective discharge volume (CEV) and cumulative effective work index (CEWI) modelled
+using the baseline runoff scenario demonstrate decreases of 0.84% and 0.06%, respectively. The
+number of exceedances is also predicted to decrease by 2.22%, while the duration of exceedances
+increases by 3.32%. These results are within 5% of existing conditions for all four erosion indices,
+demonstrating that under baseline runoff conditions, changes in erosion potential within Etobicoke Creek
+at the downstream flow node (MEC-R02) are not anticipated.
+A sensitivity analysis using the high- and low-runoff scenarios was also conducted to account for
+uncertainty in the catchment-wide continuous hydrological simulation model. Results from the high
+runoff exceedance modelling are consistent with those from the baseline scenario, with CEV and CEWI
+remaining within 5% of existing conditions, indicating that changes in erosion potential at MEC-R02 are
+not predicted under post-development conditions. Conversely, results from the low runoff scenario
+demonstrate a minor increase in CEV and CEWI of 10%. While the relative modelled increases in CEV
+and CEWI under post-development conditions exceed 5%, the absolute increases in CEWI over the 40
+modelled years are minor compared to the baseline and high runoff scenarios, accounting for
+approximately 16 N/m2 per year. Therefore, results from the sensitivity analysis indicate that, across a
+broad range of hydrological scenarios, the proposed development within the Phase 1 Lands is not
+expected to negatively affect erosion processes at MEC-R02.
+Results from Reach MEC-R05 are generally consistent with those from MEC-R02, with the baseline
+scenario effectively addressing potential increases in erosion resulting from the proposed development.
+Table 3 summarises the results of the erosion exceedance assessment for MEC-R05.
+
+Table 3. Erosion exceedance results for Reach MEC-R05
+MEC-R05
+Scenario
+Cumulative (1960-1999)
+(PRE)
+Baseline
+(POST)
+
+High runoff
+
+Low runoff
+
+PN24018
+
+CEV (m3)
+
+ɷeff (N/m)
+
+tex (hrs)
+
+5.90E+07
+
+5,972
+
+8,084
+
+# Of
+Exceedances
+963
+
+5.83E+07
+
+5,948
+
+8,560
+
+951
+
+Change (%)
+
+-1.27
+
+-0.40
+
+5.88
+
+-1.25
+
+(PRE)
+
+1.5E+08
+
+14,073
+
+14,929
+
+1,604
+
+(POST)
+
+1.44E+08
+
+13,648
+
+15,310
+
+1,558
+
+Change (%)
+
+-4.27
+
+-3.02
+
+2.55
+
+-2.87
+
+(PRE)
+
+1.41E+07
+
+1,531
+
+3,066
+
+421
+
+(POST)
+
+1.55E+07
+
+1,695
+
+3,661
+
+453
+
+Change (%)
+
+9.86
+
+10.69
+
+19.41
+
+7.60
+
+6
+
+The cumulative effective discharge volume (CEV) and cumulative effective work index (CEWI) modelled
+using the baseline runoff scenario demonstrate decreases of 1.27% and 0.40%, respectively. The
+number of exceedances will decrease by 1.25%, and the duration of exceedance will increase by 5.88%.
+The two most relevant erosion indices, CEV and CEWI, are within 5% of existing conditions. These
+results demonstrate that erosion potential within MEC-R05 will remain unchanged under postdevelopment conditions.
+The two sensitivity scenarios (high and low runoff) were also analyzed for MEC-R05, with results
+consistent with those for MEC-R02. Negligible decreases in CEV and CEWI within 5% of existing
+conditions are anticipated under the high runoff scenarios, demonstrating no detectable change in
+erosion potential. Under the low runoff scenario, CEV will increase by 10% and CEWI will increase by
+11%. The relative increases in post-development erosion potential under the low runoff scenario are
+associated with an additional 4 N/m annually. Thus, the minor relative increase in erosion potential is
+not expected to alter the pattern and rates of erosion along MEC-R05.
+Overall, results from the erosion exceedance modelling demonstrate that development within the Phase
+1 Lands is not expected to impact channel form and function within the receiving reaches of Etobicoke
+Creek. The baseline and high runoff scenarios result in negligible changes in erosion potential under
+post-development conditions. The low runoff scenario results in minor increases in cumulative effective
+work of up to 16 N/m per year, which are not anticipated to alter geomorphic processes within the
+watercourse.
+We note that the baseline scenario, with a runoff coefficient of 0.28, is the most representative of
+existing conditions as previous studies conducted in Caledon demonstrate that typical runoff coefficients
+for sites located on agricultural fields with surficial geology consisting of clay to silt-textured till range
+from 0.25 to 0.55 (Chapi et al., 2015; IBI, 2021; MTO, 2023). While runoff coefficients vary throughout
+the year, an average coefficient of 0.11 (low-flow scenario) is considered low and likely unrepresentative
+of actual conditions in the Etobicoke Creek Subwatershed. Additionally, a review of the 2025 monitoring
+data demonstrated that peak flows within Alloa Drain (upstream at Chinguacousy Road) align more
+closely with the baseline scenario than the low runoff scenario. Peak flows within the Alloa drain ranged
+from 0.54 m3/s in the fall to 6.43 m3/s in the spring, and modelled average annual peak flows derived
+from the baseline scenario within Etobicoke Creek were approximately 14.38 m3/s. Note, that 2025 was
+a very dry year, and that average annual peak flows are likely higher. Conversely, over the modelling
+period (1960-1999) the average annual peak flow under the low runoff scenario was approximately 6.95
+m3/s at MEC-R05 under existing conditions. The drainage area to Etobicoke Creek at MEC-R05 is
+significantly larger than that to the downstream monitoring station along Alloa Drain (i.e., 2161 ha vs.
+981 ha). Thus, peak flows of a similar magnitude in Alloa Drain and Etobicoke Creek are unrealistic
+given the differences in drainage areas. Thus, further supporting the idea that the predicted streamflows
+from the baseline scenario are likely more representative than those from the low-flow scenario.
+Based on the flow comparison and runoff coefficients for sites with similar characteristics, the low runoff
+scenario is considered overly conservative and reliance on it to guide SWM would likely result in
+overcontrol of post-development runoff. Daily rainfall data was collected by GEO Morphix from March
+2025 to December 2025, and a total precipitation of 476.5 mm. A review of historical rainfall data from
+1962 to 1993 at the Brampton MOE Station, approximately 10 km southeast of the subject lands,
+showed an average rainfall of 695 mm from March to November. This further supports that the low
+runoff scenario is not representative of the average hydrological conditions within the modelled
+catchment, with peak flows lower than those measured in the upstream Alloa Drain during a very dry
+year. Therefore, in the absence of a calibrated hydrological simulation model, the results from the low
+runoff scenario provide a lower-bound estimate of the runoff from the modelled catchment. In sum, our
+analysis indicates that this lower-bound condition is not representative of the existing average
+hydrological conditions along the receiving watercourse and would therefore be overly conservative for
+use in pre- to post-development erosion exceedance analysis and optimization of SWM facilities to
+mitigate downstream erosion risk.
+
+PN24018
+
+7
+
+Summary and Recommendations
+This letter summarizes the erosion exceedance analysis completed to support stormwater management
+and erosion mitigation strategies for Phase 1 of the Alloa Secondary Plan Area in the Town of Caledon,
+Ontario. Currently accepted erosion threshold values and flows modelled under pre-development and
+proposed post-development conditions were used to evaluate changes in erosion potential at locations
+along Etobicoke Creek downstream of the subject lands, to determine whether stormwater mitigation
+strategies and erosion mitigation measures are sufficient to address potential downstream impacts. A
+unit discharge rate was previously defined for the tributaries of Fletchers Creek, which can be used to
+guide release rate planning for the proposed SWM facilities outletting to the realigned headwater
+tributaries of Fletchers Creek.
+Results of the erosion exceedance analysis for the reaches downstream and to the east of the Phase 1
+Lands, Etobicoke Creek, show that the proposed stormwater management plan is effective in mitigating
+downstream erosion impacts within the receiving watercourse under the three assessed runoff scenarios.
+Specifically, results show that post-development erosion potential within the receiving watercourse
+remains unchanged under the baseline and high runoff scenarios, with negligible absolute increases in
+CEWI under the low runoff scenario. A review of peak flows in the Alloa Drain and local runoff coefficients
+suggests that the baseline scenario best represents existing conditions. Thus, the erosion exceedance
+analysis demonstrates that the stormwater mitigation measures are sufficient to mitigate downstream
+impacts associated with the development.
+We trust this letter meets your current requirements. Should you have any questions or concerns, please
+contact the undersigned.
+Respectfully submitted,
+
+Paul Villard, Ph.D., P.Geo., CAN-CISEC, EP, CERP
+Director, Principal Geomorphologist
+
+PN24018
+
+Jan Franssen, Ph.D.
+Senior Watershed Scientist
+
+8
+
+References
+AMEC Environment and Infrastructure ( AMEC), Dougan and Associates, C. Portt and Associates,
+Blackport and Associates, Parish Geomorphic and Terraprobe Inc. 2014a. Mayfield West, Phase 2
+Secondary Plan Comprehensive Environmental Impact Study and Management Plan Part A: Existing
+Conditions and Characterization.
+Chapi, K., Rudra, R. P., Ahmed, S. I., Dickinson, W. T., & Goel, P. K. 2015. Spatial-Temporal Dynamics
+of Runoff Generation Areas in Small Agricultural Watersheds.
+Chow, V.T. 1959. Open channel hydraulics. McGraw Hill, New York.
+Credit Valley Conservation (CVC). 2015. Credit Valley Conservation Fluvial Geomorphic Guidelines.
+Environmental Implementation Report Mount Pleasant Sub-Area EIR 51-1 within the Mount Pleasant
+Secondary Plan Area Northwest Brampton, 2011, Stonybrook Consulting
+Fischenich, C. 2001. Stability Thresholds for Stream Restoration Materials. EMRRP Technical Notes
+Collection (ERDC TN-EMRRP-SR-29), U.S. Army Engineer Research and Development Center, Vicksburg,
+MS.
+IBI Group. 2021. Stormwater Management Report, 12304 Heart Lake Road, Caledon.
+Julien, P. Y. 1994. Erosion and Sedimentation (1st ed.). Cambridge University Press.
+Komar, P.D. 1987. Selective gravel entrainment and the empirical evaluation of flow competence.
+Sedimentology, 34: 1165-1176.
+Mayfield West, Phase 2 Secondary Plan Comprehensive Environmental Impact Study and Management
+Plan, Part A: Existing Conditions and Characterization, Final Report, Town of Caledon, December 2014,
+AMEC
+Miller, M.C., McCave, I.N. and Komar, P.D. 1977. Threshold of sediment erosion under unidirectional
+currents. Sedimentology, 24: 507-527.
+Ontario Ministry of Natural Resources (MNRF). 2023. Ontario Digital Terrain Model (LiDAR-Derived).
+Ontario Ministry of Transportation (MTO). 2023. Hydrotechnical Design Charts.
+Ontario Watershed Information Tool. 2024.
+https://www.lioapplications.lrc.gov.on.ca/OWIT/Index.html?viewer=OWIT.OWIT&locale=en-ca
+Stonybrook Consulting Inc., Urbantech Consulting, R.J. Burnside and Associates Limited, Savanta Inc.,
+JTB Environmental Systems, G+L Urban Planners Ltd. and STLA Inc. 2011. Final Environmental
+Implementation Report, Mont Pleasant Sub-Area 51-1 within the Mount pleasant Secondary Plan Area,
+Northwest Brampton.
+Toronto and Region Conservation Authority (TRCA). 2012. Stormwater Management Criteria.
+Villard, P.V., and Ness, R. (2006). Stormwater Management and Significant Channel Flows Below the
+Two-Year Return. In: Monograph 15, CHI.
+Villard, P. V. and Parish, J. D. 2003. A Geomorphic-based protocol for assessing stream sensitivity and
+erosion thresholds: A tool for stormwater management. In 16th Canadian Hydrotechnical Conference.
+Canadian Society for Civil Engineers, October 22-24, 2003, Burlington, ON, 10 p.
+
+PN24018
+
+9
+
+Appendix A:
+Figures
+
+Old School Road
+
+in
+
+Figure 1
+
+Proposed Stormwater
+Management Ponds and
+Established Erosion
+Threshold Locations
+
+on
+Ly
+
+Fraser Dra
+
+MEC-R05
+
+Caledon, Ontario
+
+MEC-R02
+in
+
+ra
+sD
+
+Legend
+Erosion Threshold Location
+(Urbantech, 2016)
+Erosion Threshold Location
+(Wood, 2022)
+
+Alloa Drain
+
+Erosion Threshold Location
+(AMEC, 2014)
+
+sy Road
+
+Road
+
+Chingaucou
+
+Creditview
+
+McLaughlin
+Road
+
+Watercourse
+Headwater Drainage Feature
+Municipal Drain
+Tile Drain
+Municipal Drain Not Field
+Assessed
+
+Wanless Drive
+
+Not Field Assessed
+Constructed Corridor
+
+Fletchers C
+reek
+
+West reek
+C
+nville
+
+eek
+
+ille Cr
+
+uttonv
+
+Hutto
+
+HV09
+
+East H
+
+a Road
+
+Mississaug
+
+Mayfield Road
+
+Proposed Stormwater
+Management Pond
+OHN Waterbody
+Participating Properties
+Non-Participating Properties,
+Access
+
+Sandalwood Parkway
+
+Non-Participating Property, No
+Access
+
+HV04
+
+Phase 1 Lands
+Phase 2 Lands
+Alloa Secondary Plan Area and
+Primary Study Area
+
+SW4
+
+Highway 7
+
+Highway 7
+
+±
+0
+Williams Parkway
+EM10
+
+750
+
+1,500
+
+Metres
+Imagery: Google Earth, 2022. Waterbody, Watercourse: MNRF, 2023. Alloa
+Phase 1 & 2 Lands, Alloa Secondary Plan Area:Crozier, 2024. HDFs,
+Watercourse, Surface Water Quality Monitoring Station:
+GEO Morphix Ltd., 2024. 1 m Contour: Peel Region, 2022.
+Print Date: December 2025. PN24009. Drawn By: G.U., M.O., S.S.O.
+
+Figure 2
+
+Terrain Analysis and Established
+Erosion Threshold Locations
+
+Phase 1 Alloa Secondary Plan Area
+Caledon, Ontario
+
+Hurontario
+Street
+
+Legend
+
+Erosion Threshold Locations
+(AMEC, 2014)
+Watercourse
+Headwater Drainage Feature
+
+MEC-R05
+
+MEC-R02
+
+Eto
+b
+
+ico
+k
+
+Not Field Assessed
+
+eC
+
+ree
+k
+
+McLaughlin
+Ro a d
+
+±
+
+0
+
+200
+
+400
+
+Metres
+Imagery: Google Earth, 2022. Waterbody, Watercourse: MNRF,
+2023. HDFs, Watercourse: GEO Morphix Ltd., 2024.
+Hillshade: MNRF, 2014-2016.
+ET Locations: Urgantech, 2016 and AMEC, 2014.
+Print Date: September 2024. PN24009. Drawn By: M.O., K.Se.
+
+Appendix B:
+Erosion Exceedance Hydrographs
+
+MEC-R02 Cross-section
+
+MEC-R02
+Baseline Scenario
+
+Average year (1980)
+
+PN 24018
+
+1
+
+Low flow year (1971)
+
+High flow year (1992)
+
+PN 24018
+
+2
+
+MEC-R02
+High Runoff Scenario
+
+Average year (1980)
+
+Low flow year (1971)
+
+PN 24018
+
+3
+
+High flow year (1992)
+MEC-R02
+Low Runoff Scenario
+
+Average year (1980)
+
+PN 24018
+
+4
+
+Low flow year (1971)
+
+High flow year (1992)
+
+PN 24018
+
+5
+
+MEC-R05 Cross Section
+
+MEC-R05
+Baseline Scenario
+
+Average year (1980)
+
+PN 24018
+
+6
+
+Low flow year (1971)
+
+High flow year (1992)
+
+PN 24018
+
+7
+
+MEC-R05
+High Runoff Scenario
+
+Average year (1980)
+
+Low flow year (1971)
+
+PN 24018
+
+8
+
+High flow year (1992)
+MEC-R05
+Low Runoff Scenario
+
+Average year (1980)
+
+PN 24018
+
+9
+
+Low flow year (1971)
+
+High flow year (1992)
+
+PN 24018
+
+10
+
+

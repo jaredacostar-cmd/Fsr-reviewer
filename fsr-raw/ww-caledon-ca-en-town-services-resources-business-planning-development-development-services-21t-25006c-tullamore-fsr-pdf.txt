@@ -1,0 +1,3833 @@
+TOWN OF CALEDON
+PLANNING
+RECEIVED
+February 28, 2025
+
+Tullamore Secondary Plan Area, Town of Caledon
+Functional Servicing Report
+February 2025
+The Jones Consulting Group Ltd.
+#1-229 Mapleview Drive East, Barrie ON L4N 0W5
+CAL-13304(70)
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+I
+
+Distribution List
+No. Of Hard
+Copies
+2
+
+PDF
+
+Email
+
+Organization
+
+1
+
+Town of Caledon
+
+-
+
+1
+
+Toronto and Region Conservation Authority
+
+-
+
+1
+
+Region of Peel
+
+1
+
+1
+
+Client
+
+Record of Revisions
+Rev. No.
+-
+
+Date
+March 2016
+
+Description
+FSR/SWMR Submission
+
+1
+
+March 2024
+
+Draft Plan Approval
+
+2
+
+February 2025
+
+Revised Draft Plan Approval
+
+Disclaimer
+This Report was prepared by The Jones Consulting Group Ltd. For the Tullamore Secondary Plan Area
+Landowners and the Town of Caledon. The material in the Report reflects The Jones Consulting Group
+Ltd.’s best judgment in light of the information available at the time of the Report preparation. Any use
+which a third party makes of this Report, or any reliance on or decisions to be made based on it, are the
+responsibility of such third parties. The Jones Consulting Group Ltd. accepts no responsibility for
+damages, if any, suffered by any third party as a result of decisions made or actions based on this Report.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+I
+
+Table of Contents
+
+Page
+
+1.
+
+Executive Summary ...................................................................................................................... 1
+
+2.
+
+Introduction ................................................................................................................................. 3
+2.1.
+2.2.
+2.3.
+2.4.
+2.5.
+2.6.
+2.7.
+
+3.
+
+Approval Agencies and Design Criteria ....................................................................................... 24
+3.1.
+3.2.
+3.3.
+3.4.
+3.5.
+
+4.
+
+External Water Servicing ..................................................................................................... 43
+Proposed Watermain System .............................................................................................. 43
+Water System Analysis ........................................................................................................ 44
+
+Grading and Landform ................................................................................................................ 45
+7.1.
+7.2.
+7.3.
+
+8.
+
+External Wastewater Servicing Framework ........................................................................ 33
+Allocated and Projected Populations .................................................................................. 33
+Allocated and Projected Wastewater Flows........................................................................ 36
+Proposed Sanitary Servicing Scenario ................................................................................. 41
+
+Water Servicing .......................................................................................................................... 43
+6.1.
+6.2.
+6.3.
+
+7.
+
+Existing Drainage Conditions ............................................................................................... 28
+Stormwater Management Plan ........................................................................................... 29
+Proposed Drainage System.................................................................................................. 29
+Water Balance ..................................................................................................................... 30
+Erosion and Sediment Control ............................................................................................. 31
+
+Wastewater Servicing ................................................................................................................. 33
+5.1.
+5.2.
+5.3.
+5.4.
+
+6.
+
+Town of Caledon .................................................................................................................. 24
+Region of Peel ...................................................................................................................... 24
+Toronto and Region Conservation Authority ...................................................................... 25
+Ministry of Natural Resources and Forestry ........................................................................ 26
+Ministry of the Environment, Conservation and Parks ....................................................... 26
+
+Stormwater Servicing ................................................................................................................. 28
+4.1.
+4.2.
+4.3.
+4.4.
+4.5.
+
+5.
+
+Appointment ......................................................................................................................... 4
+Study Area Description .......................................................................................................... 4
+Current Site Conditions ......................................................................................................... 6
+Proposed Land Use ................................................................................................................ 8
+Soils Information ................................................................................................................. 12
+Overview of Municipal Infrastructure ................................................................................. 15
+Summary of Background Reports ........................................................................................ 17
+
+Existing Conditions .............................................................................................................. 45
+Proposed Grading Scenario ................................................................................................. 45
+Proposed Roadway Geometric Vertical Curve Design Review ............................................ 45
+
+Transportation............................................................................................................................ 48
+8.1.
+8.2.
+
+External Road Network........................................................................................................ 48
+Mayfield Road Widening ..................................................................................................... 48
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+II
+
+8.3.
+9.
+
+Utilities, Street Lighting and Traffic Signals ................................................................................. 50
+9.1.
+9.2.
+9.3.
+9.4.
+9.5.
+9.6.
+
+10.
+
+Transportation Study ........................................................................................................... 48
+
+Gas ....................................................................................................................................... 50
+Hydro ................................................................................................................................... 50
+Rogers .................................................................................................................................. 51
+Bell ....................................................................................................................................... 51
+Street Lighting ..................................................................................................................... 51
+Traffic Signals ....................................................................................................................... 52
+
+Conclusions ................................................................................................................................ 53
+
+References ............................................................................................................................................. 53
+
+List of Figures
+
+Page
+
+Figure 1: Study Area Key Plan
+
+1
+
+Figure 2: Tullamore Secondary Plan Study Area Map
+
+3
+
+Figure 3: Existing Study Area Property’s
+
+5
+
+Figure 4: Existing Study Area Site Conditions
+
+8
+
+Figure 5: OP Schedule N – Tullamore Land Use Plan (2008)
+
+8
+
+Figure 6: OP Schedule N – Tullamore Land Use Plan (2015)
+
+9
+
+Figure 7: Proposed Study Area Concept Plan
+
+10
+
+Figure 8: Proposed SmartCentres Site Plan
+
+11
+
+Figure 9: Existing Soils Map Key Plan
+
+12
+
+Figure 10: Existing Elliptical Culvert at Mayfield Road and Maisonneuve Boulevard
+
+16
+
+Figure 11: Master Environmental Servicing Plan Area (2000)
+
+17
+
+Figure 12: Vitrans Logistics Warehouse
+
+18
+
+Figure 13: Mayport Distribution Facility
+
+18
+
+Figure 14: Existing Developments
+
+19
+
+Figure 15: Tullamore Industrial Park Lands
+
+19
+
+Figure 16: Vales of Castlemore North Secondary Plan
+
+20
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+III
+
+Figure 17: Mayfield Road EA Study Area
+
+20
+
+Figure 18: Mayfield Road EA SWMF-1 Location
+
+21
+
+Figure 19: Mayfield Road Improvements - 60% Design Drawing
+
+21
+
+Figure 20: Tullamore Community Design Guidelines Plan
+
+22
+
+Figure 21: TRCA Humber River Watershed Map
+
+23
+
+Figure 22: Regional Road Map
+
+48
+
+Figure 23: Transportation Study Map
+
+48
+
+Figure 24: Mayfield Road and Maisonneuve Boulevard Intersection
+
+50
+
+Figure 25: Airport Road and Mayfield Road Intersection
+
+52
+
+List of Tables
+
+Page
+
+Table 1:
+
+Study Area Property Information and Statistics
+
+6
+
+Table 2:
+
+Study Area Official Plan (2018) Land Use Areas and Designations
+
+9
+
+Table 3:
+
+Concept Plan Land Use Areas and Designations
+
+11
+
+Table 4:
+
+Wastewater Catchment Areas and Population Statistics
+
+35
+
+Table 5:
+
+Wastewater Flows Based on Projected Population
+
+37
+
+Table 6:
+
+Region’s Standard Drawing 2-5-2 (Sewage Flows - Excluding Infiltration) Summary
+
+38
+
+Table 7:
+
+East Catchment Wastewater Flows Based on Light Industrial Demands
+
+39
+
+Table 8:
+
+Existing Downstream Sanitary Sewer Flow Capacities
+
+40
+
+List of Appendices
+Appendix A
+
+External Reports and Drawings, Maps and Design Criteria
+
+Appendix A.1
+
+Maps, Engineering Drawings, Road Standards, Tullamore Design Guidelines
+
+Appendix A.2
+
+Planning Documents, Criteria, Standards and Maps
+
+Appendix A.3
+
+Soils Information
+
+Appendix A.4
+
+Stormwater Management Information
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+IV
+
+Appendix A.5
+
+Water and Wastewater (Sanitary) Maps, Standards, and Design Criteria
+
+Appendix A.6
+
+Grading Design Standards
+
+Appendix A.7
+
+Traffic Information
+
+Appendix A.8
+
+Utility, Traffic Signal, and Street Lighting Information and Standards
+
+Appendix B
+
+Functional Servicing Figures and Drawings
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+V
+
+Functional Servicing Report
+Tullamore Secondary Plan Area
+Part of Lot 1, Concession 1, Geographic Township of Albion,
+Town of Caledon, Regional Municipality of Peel
+1. Executive Summary
+The Tullamore Secondary Plan Area Landowners
+have prepared a proposed Draft Plan of Subdivision
+and completed the supporting background studies
+for Tullamore Secondary Plan Area’s remaining
+undeveloped lands along the east side of Airport
+Road.
+
+The studies determined the preferred
+
+alternative for water and wastewater servicing,
+stormwater management, street lighting, traffic
+signals, utilities, and the road layout for the
+
+Figure 1: Study Area Key Plan
+
+subdivision through consultation with the owners and the approval agencies. This Functional Servicing
+Report has been prepared in support of the Draft Plan to confirm that the Town of Caledon and Region of
+Peel infrastructure is available to support the build-out of the lands and to identify any constraints.
+The Study Area is generally rectangular in shape, bordered on the west by Airport Road (Regional Road 7),
+to the south by Mayfield Road (Regional Road 14), Salt Creek (a tributary of the East Humber River subwatershed) to the east and an existing commercial-industrial development (now Ryder Logistics,
+previously Vitrans Logistics warehouse facility) to the north.
+The Study Area includes thirteen property owners, spanning across approximately 57 hectares (141
+acres), who have previously failed to reach agreement on servicing by Plan of Subdivision. As a result of a
+recent application by SmartCentres to develop portion of the Study Area’s south-west corner
+independently from the remaining lands, and a large portion of the lands being used for truck storage, the
+current group of owners has decided to take the lead role and complete the necessary background
+studies to ensure that the remaining lands can be developed in a timely manner and in accordance with
+the approval agency policies.
+The following summarizes the Functional Servicing Report’s recommendation:
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+1
+
+•
+
+The post-development stormwater runoff from the Study Area lands and the portion of Mayfield
+Road fronting onto the site can be accommodated by the construction of two on-site stormwater
+quality and quantity control facilities (ponds).
+
+•
+
+Base flow to the Environmental Policy Area and culvert crossing Mayfield Road at Maisonneuve
+Boulevard can be maintained by constructing an environmentally protected corridor and
+discharging the future phases along the east side of the EP corridor building’s roof-leaders via a
+third-pipe system.
+
+•
+
+The Study Area’s grading, landform, future road profile, and environmentally protected corridor
+center line elevations can accommodate the sanitary and storm sewer servicing crossing
+constraints imposed by the channel that will separate the Study Area into east and west portions.
+
+•
+
+The Region of Peel’s wastewater (sanitary sewers) and water infrastructure within Airport Road
+and Mayfield Road (Maisonneuve Boulevard) can accommodate the sanitary effluent and the
+potable and fire flow demand from the Study Area’s full build-out.
+
+•
+
+The Study Area’s ultimate road network connections at Airport Road and Mayfield Road can
+accommodate the developments traffic demands by installing traffic signals at both locations.
+
+•
+
+The Study Area’s landscaping, street lighting and boulevard features will be designed in
+accordance with the Tullamore Community Design Guidelines, and
+
+•
+
+The existing hydro, gas, telephone and cable networks within Airport Road and Mayfield Road
+can accommodate the Study Area’s future utility requirements.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+2
+
+2. Introduction
+The entire Tullamore Secondary Plan Area covers approximately 118 hectares (292 acres) of land primarily
+located in the northeast quadrant of Airport Road and Mayfield Road, in the south part of the Town of
+Caledon (Town), adjacent to the City of Brampton’s Vales of Castlemore North Secondary Plan. The
+Tullamore Secondary Plan Area is the largest of the three Caledon Industrial / Commercial Centres,
+established by Official Plan Amendment (OPA) 114. The Tullamore Study Area and limits of the Secondary
+Plan Boundary with the Town’s previous conceptual road pattern are shown on Figure 2.
+
+Figure 2: Tullamore Secondary Plan Study Area Map
+
+Various commercial and industrial developments have proceeded throughout the Secondary Plan
+independently. The lands west of Airport Road are municipally serviced and partially developed with
+access from Airport Road and Perdue Court. The undeveloped lands in this area have been sub-divided by
+a reference plan. The north-eastern limits of the Secondary Plan have also been built-out, housing two
+large warehouse facilities with stormwater management (SWM) ponds and municipal services off Airport
+Road. Therefore, the lands along the west side of Airport Road and the existing developments on the east
+side of Airport Road are not located within the landowner’s current Tullamore Secondary Plan Area Study
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+3
+
+Limits. The current Study Area is in the south-eastern corner of the Planning Area and covers an area of
+approximately 57 hectares.
+This Functional Servicing Report (FSR), along with the Transportation Study (TS), Preliminary Stormwater
+Management Report (PSWMR) and Natural Heritage Existing Conditions Report (NHR) have been used to
+select the preferred road, Environmental Protection Area, and servicing layout for the Study Area.
+
+2.1.
+
+Appointment
+
+The Jones Consulting Group Ltd. (TJCGL) has been retained by the Tullamore Secondary Plan Area
+landowner group to provide preliminary civil-municipal engineering services in support of the Study Area’s
+Draft Plan of Subdiviion submission.
+The purpose of the FSR is to summarize the previous studies and investigations completed for the Study
+Area and adjacent lands and develop a servicing design and strategy to obtain review comments from the
+approval agencies.
+
+The report will ultimately set the Site Plan Application (SPA) development
+
+requirements for the future Study Area development blocks.
+The following sections summarize the preliminary design of the proposed municipal infrastructure
+(watermains, wastewater (sanitary) collection system, storm sewers, stormwater management facilities,
+stormwater conveyance for minor and major flows), roadways and access, grading, lot-level Low Impact
+Development (LID) controls, street lighting, traffic signals and utilities.
+
+2.2.
+
+Study Area Description
+
+The Study Area is generally rectangular in shape, with a total area of approximately 57.6 hectares. The
+site is located at the northeast corner of the intersection of Mayfield Road and Airport Road, in the Town
+of Caledon, Region of Peel. The site is bounded to the north by an existing distribution warehouse
+development, to the east by Salt Creek, to the west by 600 m of municipal right-of-way frontage on
+Airport Road, and to the south by 1,200 m of frontage on Mayfield Road. The Study Area consists of
+thirteen (13) separate properties with varying sizes and shapes. Figure 3 illustrates each property’s
+location and orientation, and Table 1 summarizes the property’s information and statistics.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+4
+
+Figure 3: Existing Study Area Property’s
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+5
+
+Table 1: Study Area Property Information and Statistics
+Property
+Ref. No.
+
+Municipal Address / Legal
+Description
+
+1
+
+12151 Airport Road
+
+2
+
+12117 Airport Road
+
+3
+
+Part 3 Plan 43R-36141
+
+4
+
+Existing / Proposed
+Development Name / Owner
+
+Area
+(hectares)
+
+Participating
+Landowner
+
+6.38
+
+Yes
+
+4.47
+
+No
+
+Preet Transport Carrier Inc.
+
+1.82
+
+No
+
+12101 Airport Road
+
+Motorway Sales and Service /
+Infinity Indian Cuisine
+
+0.31
+
+No
+
+5
+
+0 Airport Road
+Part 1 Plan 43R-34197
+
+SmartCentres
+
+3.81
+
+No
+
+6
+
+6034 Mayfield Road
+
+SmartCentres
+
+5.63
+
+No
+
+5.11
+
+Yes
+
+4.92
+
+Yes
+
+6.66
+
+Yes
+
+Millennium Tire
+Airport 12151 Inc.
+Fateh Transport
+Formerly Laidlaw Transit
+
+7
+
+6086 Mayfield Road
+
+8
+
+6186 Mayfield Road
+
+9
+
+6230 Mayfield Road
+Part 1 Plan 43R11401
+
+Falcon Express Group Inc.
+6086 Mayfield Inc.
+2652876 Ontario Ltd.
+M&M Carriers
+Millenium Tire
+6230 Mayfield Inc.
+
+10
+
+PT LT 1 CON 1 Albion
+
+Tullamore Industrial Park
+
+12.02
+
+No
+
+11
+
+6206 Mayfield Road
+
+Residential Dwelling
+
+0.33
+
+Yes
+
+12
+
+6296 Mayfield Road
+
+Residential Dwelling
+
+0.14
+
+No
+
+13
+
+6340 Mayfield Road
+
+Residential Dwelling / Farm
+
+6.01
+
+No
+
+Total
+
+2.3.
+
+57.60
+
+Current Site Conditions
+
+Currently, the Study Area is partly developed (some non-permitted developments) and being utilized for
+industrial usages (i.e. trucking operations) at 12151 Airport Road, 12117 Airport Road, 6086 Mayfield
+Road, 6186 Mayfield Road and 6230 Mayfield Road. The non-permitted developments are not in the
+ultimate conditions and the current state of the sites have no bearing on the future ultimate development
+of the subdivision. Lands not in compliance with the Draft Plan of Subdivision will be required to go
+through the formal site plan process once the final draft plan conditions are approved. There are also four
+(4) residential/farmhouse dwellings fronting on Mayfield Road and a commercial plaza (car lot,
+convenience store) fronting on Airport Road.
+The trucking operation sites at 12151 and 12117 Airport Road are accessed from Davis Lane and generally
+consist of an office building surrounded by gravel parking lots. The 6086, 6186, and 6230 Mayfield Road
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+6
+
+sites are similar with access from Mayfield Road and the residential dwellings converted to office
+buildings. The remainder of the site is undeveloped, consisting of highly disturbed meadows communities
+that were formerly agricultural and/or treed lands.
+Davis Lane is a gravel laneway owned by the Town with ditches that provides access to three (3) private
+properties know as Fateh Transport (formerly Laidlaw Transit Ltd.) at 12117 Airport Road, Millenium Tire
+at 12151 Airport Road, and Preet Transport Carriers at Part 3 Plan 43R-36141 (Property No. 3). The Fateh
+Transport property has sanitary and water services from Airport Road and a stormwater management
+pond at the south-eastern limit of the development that was constructed through the site plan approval
+process with the Town.
+There are several small drainage courses within the Study Area that collect local stormwater runoff and
+ultimately drain to a tributary of Salt Creek south of the site, adjacent to Maisonneuve Boulevard. As the
+downstream limits of the tributary is known to contain habitat for Redside Dace, the existing on-site
+watercourse will be partially preserved and extended with a proposed environmentally protected (EP)
+channel, dividing the Study Area into west and east portions. Previous on-site reviews with staff from the
+consultant team, Ministry of Natural Resources and Forestry (MNRF), Toronto and Region Conservation
+Authority (TRCA) and Town confirmed that the portion of the tributary within the Study Area does not
+contain Redside Dace.
+A detailed Natural Hazards Assessment has been completed by the TRCA for Salt Creek, and as such, the
+development setback limits have been established at the east side of the site adjacent to the creek.
+Further reference to the Study Area within this Report shall mean the developable area outside of the Salt
+Creek setback limits. The relevant TRCA flood mapping information is provided in Appendix A.4. Further
+descriptions of the existing servicing infrastructure, drainage conditions and soils information are
+described in a subsequent section of this report. The Study Area’s existing conditions are shown in Figure
+4.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+7
+
+Figure 4: Existing Study Area Site Conditions
+
+For a full description of the Study Area’s existing natural features refer to the Natural Heritage Existing
+Conditions Report (NHR) prepared by Azimuth Environmental Consulting Inc. submitted concurrently with
+this FSR.
+
+2.4.
+
+Proposed Land Use
+
+Town of Caledon Official Plan
+The Tullamore Secondary Plan Area is the largest of the
+three Caledon Industrial / Commercial Centres, established
+by Official Plan Amendment (OPA) 114.
+
+The Town’s
+
+commercial development’s policies primary focus is to
+provide commercial services to the travelling public and
+local residences. The OP further specifies that the directive
+of the industrial areas is to concentrate industrial activities
+and employment opportunities within the Town; maximize
+use of available sanitary, water, and transportation
+infrastructure; and provide locations for industrial growth
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+Figure 5: OP Schedule N
+Tullamore Land Use Area (2008)
+
+8
+
+proximate to larger markets to the south and east.
+The entire Tullamore Secondary Plan Area covers approximately 118
+hectares (292 acres) of land primarily located in the northeast quadrant
+of Airport Road and Mayfield Road, in the south part of the Town of
+Caledon, adjacent to the City of Brampton’s Vales of Castlemore North
+Secondary Plan. The Secondary Plan Area is bounded on the east and
+west sides by Salt Creek and a western branch of the West Branch of the
+Humber River reach, respectively.
+
+Figure 6: OP Schedule N
+Tullamore Land Use Area (2024)
+
+The Town’s Official Plan (OP) Schedule N - Tullamore Land Use Area
+shows the site is zoned a mix of prestige industrial, general industrial, highway commercial, with an
+environmental policy area over the existing ditch that outlets to Mayfield Road. The OP specifies that
+Tullamore has a historical established population of 50. The 2008 OP Schedule N showed the eastern
+portion of the area with an internal network of three (3) roadways looping through the subdivision
+connecting to Mayfield Road at Maisonneuve Boulevard and two (2) connections to Airport Road; refer to
+Figure 5.
+Since the initial OP was established two (2) large commercial warehouses, Vitrans Logistics (12203 Airport
+Road) and the Mayport Distribution Facility (12333 Airport Road), have been developed in the north-east
+quadrant of the Secondary Plan, eliminating the possibility of a northern loop road. As a result, the Town
+updated the OP Schedule N in March 2024 to eliminate the northern road loop; refer to Figure 6. Table 2
+generally summarizes the Study Area’s OP land use areas and designations.
+
+Table 2: Study Area Official Plan (2024) Land Use Areas and Designations
+Land Use
+
+Area (hectares)
+
+Highway Commercial
+
+13.5
+
+Prestige Industrial
+
+9.5
+
+General Industrial
+
+27.6
+
+Roads (26 m ROW)
+
+0
+
+Environmental Policy Area
+
+1.2
+
+Salt Creek Flood Plain
+
+4.8
+
+Total
+
+57.6
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+9
+
+The Town’s Zone Map 4 (By-Law 2006-05) showing the Study Area’s individual zoning designations and
+current hold restrictions has been attached in Appendix A.2 for reference. The Town’s commercial and
+industrial zoning by-law standards have also been included.
+
+Proposed Study Area Concept Plan and Draft Plan
+The latest Concept Plan (Drawing No. CP-1 attached in Appendix B) for the Study Area has been created
+using the landowners Draft Plan of Subdivision with the Town’s 26 meter Local Industrial Standard
+(Standard No. 211). The plan’s internal road layout has gone through various iterations to accommodate
+the future municipal services, EP channel and road connection locations through consultation with the
+landowners, Town, MNRF, and TRCA. The most notable change from previous layouts is the EP channel
+extension and alignment along the future Davis Lane (Street A) to match the Town’s latest Schedule N.
+The Concept Plan illustrates the internal
+road
+
+providing
+
+access
+
+to
+
+several
+
+subdivided blocks, an EP channel dividing
+the site into west and east portions, and
+two (2) stormwater management blocks
+for the proposed extended detention
+wet ponds. Davis Lane (Street A) will
+extend
+
+through
+
+the
+
+Study
+
+Area,
+
+connecting Airport Road to Mayfield
+Road at Maisonneuve Boulevard.
+
+The
+
+roadway will extend east from Airport Road
+then run south to the Smart Centre lands
+
+Figure 7: Proposed Study Area Concept Plan
+
+north limits, head eastwards again and then finally south to Mayfield Road. A second right-of-way (Street
+B) running east-west will connect to the eastern side of Street A and end at a cul-de-sac.
+The latest Draft Plan of Subdivision (DPOS) and Concept Plan have separated the current phase of works
+from the future external phases based on the participating landowners. The current phase of works are
+numbered as Block 1 through 20 and the future external areas are labeled as Block 101 through 120. The
+plans include a temporary turning circle on the east side of SmartCentre lands within Block 4. The
+temporary turning circle will be utilized until the future road connection between Davis Lane (Street A) is
+extended through SmartCentres. The existing Davis Lane roadway connection will continue to serve as the
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+10
+
+access point for the northern properties. Table 3 summarizes the latest Concept Plan’s land use areas and
+designations.
+
+Table 3: Concept Plan Land Use Areas and Designations
+Land Use
+
+Area (hectares)
+
+Highway Commercial
+
+12.0
+
+Prestige Industrial
+
+5.2
+
+General Industrial
+
+27.6
+
+Roads (26 m ROW)
+
+3.4
+
+Environmentally Protected Channel
+
+0.9
+
+Stormwater Management Pond 1
+
+2.1
+
+Stormwater Management Pond 2
+
+1.1
+
+Mayfield Road Widening
+
+0.9
+
+Salt Creek Flood Plain
+
+4.4
+
+Total
+
+57.6
+
+The Concept Plan does not currently show any developments; however, the future Site Plan Applications
+will consist of commercial and industrial lots mainly covered by buildings, parking lots and landscaped
+areas.
+
+These applications must conform to the Town’s latest commercial and industrial planning
+
+standards. Each lot will be serviced by gas, hydro, watermains, sanitary sewers, and storm sewers located
+within the proposed road right-of-ways (ROW).
+
+SmartCentres (Property No. 5 and 6) OPA and
+ZBL Applications for 0 Airport Road and 6034
+Mayfield Road
+Based on the Town’s April 21, 2022, Notice of
+Public Meeting SmartCentres submitted Official
+Plan Amendment and Zoning By-law Amendment
+applications
+
+in
+
+support
+
+of
+
+a
+
+site
+
+plan
+
+development at 6034 Airport Road and 0 Airport
+Road. The Site Plan proposes two (2) industrial
+Figure 8: Proposed SmartCentres Site Plan
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+11
+
+buildings, parking, and private entrances to Airport Road and Mayfield Road. A copy of the Site Plan
+(Drawing A1.0, prepared by Ware Malcomb, dated July 26, 2021), Notice, and Submission Cover Letter has
+been attached in Appendix A.1.
+The development will be serviced internally by watermains and sanitary and storm sewers. The sanitary
+sewers will outlet to Airport Road. The on-site stormwater system (underground sewers and tanks,
+rooftop storage) will outlet at the existing Mayfield Road northern ditch. This ditch drains eastwards and
+crosses Mayfield Road at a road crossing culvert and eventually outlets at Salt Creek. The proposed
+servicing and grading information is illustrated on the Preliminary Site Servicing Figure and Preliminary
+Grading Figure (Sheet Number 4 and 5 respectively, prepared by WSP, dated July 22, 2021) attached in
+Appendix A.1. To ensure that the FSR and accompanying drawings are based on the latest information,
+SmartCentres was contacted to confirm if an updated development plan was available but no additional
+information was provided.
+
+2.5.
+
+Soils Information
+
+Soil Map of Peel County, Ontario - Report No. 18
+The Study Area consists mainly of
+Chinguacousy Clay Loam (SCS Group C)
+with pockets of Peel Clay (SCS Group D)
+and Oneida Clay Loam (SCS Group D), as
+shown on the Soil Map of Peel County,
+Ontario - Report No. 18. An excerpt from
+the soils maps is provided in Appendix
+A.3. These soils typically are assigned the
+Soil Group of CD for assigning Curve
+Numbers (CN) and Runoff Coefficients
+(RC).
+Physiography of Southern Ontario Map – P.2715
+
+Figure 9: Soils Map Key Plan
+
+The Ontario Geological Survey map of the Physiography of Southern Ontario indicates that the study area
+is situated within the South Slope physiographic region which extends from the Niagara Escarpment to
+the Trent River. Conditions in the region vary greatly. The location in which the Study Area lies is
+described as a ground moraine with irregular knolls and hollows. The South Slope lies across the
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+12
+
+limestones of the Verulam and Lindsay Formations, the grey shales of the Georgian Bay Formation and
+the reddish shales of the Queenston Formation. A till consisting nearly of red and grey shale is reached
+west of the Credit River. The soil is only slightly acidic, ranging from sandy in the east to clayey in the
+west. A copy of the map has been attached in Appendix A.3 for reference.
+SmartCentres Geotechnical Investigation (Property No. 5 and 6)
+As part of the SmartCentres initial submission package a Preliminary Geotechnical Investigation Report
+was completed by Golder Associates in February 2012 and a Phase 1 Environmental Site Assessment by
+Barenco Inc. in December 2010. The geotech investigation determined the general subsurface soil and
+groundwater conditions at the site by advancing eight (8) boreholes to depths between 6.5 and 9.6
+meters. Two (2) piezometers (standpipes) were installed in EX. BH 5 and EX. BH 7 and during a site visit on
+July 7, 2011 (about one week after the boreholes were drilled) water was observed in the boreholes at
+depths of 4.5 meters and 7.0 meters below the existing grounds surface elevations, respectively.
+The report generally summarized the site as having a 250 mm to 480 mm thick topsoil layer over native
+silty clay. Shallow deposits of clayey silt were found in all boreholes below the topsoil and discontinuous
+deposits of glacial till were encountered interbedded in the silty clay in a few boreholes. A copy of the
+geotechnical report’s borehole data has been provided in Appendix A.3.
+Tullamore Industrial Park Soil Survey and Agricultural Report (Property No. 9 and 10)
+In March 1989 Ecoplans Limited completed a Soil Survey and Agricultural Report for the Tullamore
+Industrial Park lands. The report determined that the soil material generally consists of calcareous clay
+tills containing few stones. Surface soils consist of loam with 20% clay content. The three (3) underlying
+soils mapped on the property consist of Oneida, Chinguacousy and Jeddo. Oneida soils are well drained
+and vary in slope from 4% to 20%. The Chinguacousy soils are imperfectly drained with very gentle slope
+of 1% to 2%. Jeddo soils occupy the drainage channels dissecting the properties. These soils are level and
+saturated most of the year. Poor drainage on the Jeddo is due to the slow runoff rates. A copy of the
+reports Soil Survey Map has been provided in Appendix A.3.
+Tullamore Business Park (Vitrans Logistics) Existing Soil Conditions
+A Geotechnical Investigation and Report was completed by Golder and Associates Ltd. as part of the
+Urbacon Buildings Group’s Stormwater Management Plan Report prepare by Counterpoint Engineering
+Inc., dated August 2005. The geotech investigation advanced 21 boreholes in February 2005. The report
+summarized the site as having a 150 mm to 460 mm thick topsoil layer over native clayey silt till,
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+13
+
+transitioning to silty clay till at depths below 1.5 meters to 4.6 meters. Shale bedrock was encountered
+below the silty clay till in several boreholes. No significant groundwater seepage was observed during the
+advance of the boreholes and the shallowest groundwater depth was 2.9 meters.
+6086, 6186, 6230 Mayfield Road and 12151 Airport Road Geotechnical Investigation
+A Geotechnical Investigation and groundwater assessment for 6086, 6186, 6230 Mayfield Road and 12151
+Airport Road property’s future roads, stormwater management ponds (SWMPs) and EP channel was
+completed by Soil Engineers Ltd., dated September 2023. The investigation completed 24 boreholes
+between August 3 and 9, 2023. The report summarized that beneath the granular fill, a topsoil veneer and
+a layer of earth fill in places, the site is underlain by strata of silt, silty clay, silty clay till and sandy silt till.
+Shale bedrock is contacted near the termination depth of Borehole 20. A detailed summary of the
+existing conditions is provided below.
+•
+
+A layer of topsoil, approximately 30 cm to 35 cm in thickness, was encountered at the ground
+surface of Boreholes 1, 2, 19 and 20.
+
+•
+
+Boreholes 6, 16, 18, 22, 24 were carried out on the asphalt pavement, which consists of a layer of
+asphalt, approximately 30 mm to 100 mm in thickness, and a layer of granular fill, approximately
+280 to 450 mm in thickness. Other boreholes were carried out on unpaved gravel surface, having
+a layer of granular fill with thickness ranging from 150 mm to 600 mm.
+
+•
+
+Beneath the surface cover, a layer of earth fill was contacted in Boreholes 1, 4, 5, 8, 9, 11, 13, 15,
+16, 18, 22, 23, and 24, extending to a depth of 0.8 to 2.0 m below the ground surface. The fill
+consists of a mixture of silty clay and sandy silt with gravel, organics, and topsoil inclusions. Shale
+fragments were occasionally found within the earth fill.
+
+•
+
+A layer of sandy silt till deposit was contacted at various depth of Boreholes 14, 18 and 19. The
+till consists of a mixture of clay and gravel, with silt and sand being the dominant fraction.
+
+•
+
+The silty clay till deposit was contacted within the investigated depths of all boreholes except
+Borehole 15. Localized silt and sand layers were occasionally contacted in the lower stratigraphy
+of the till deposit. The silty clay till consists of a random mixture of particle sizes with clay or silt
+being the dominant fraction.
+
+•
+
+Similar to the silty clay till, the native silty clay stratum was contacted at various depths in most
+of the boreholes.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+14
+
+•
+
+A layer of silt deposit was contacted beneath the silty clay till in Borehole 4 extending to a depth
+from 2.6 m to 4.1 m below the ground surface.
+
+•
+
+Weathered shale was observed at the lower stratigraphy within the investigated depth of
+Borehole 20.
+
+•
+
+The report noted that upon the completion of drilling the groundwater ranged from 3.1 m to 4.9
+m below ground surface in Boreholes 4, 11, 17 and 24.
+
+•
+
+On August 18, 2023, approximately 2 weeks after well installation, groundwater level was
+measured from the monitoring wells at the depths ranging from 0.5 to 6.1 m below the
+prevailing ground surface, or between El. 222.4 m and El. 236.3 m, which is subject to seasonal
+fluctuations.
+
+A copy of the report has been included in Appendix A.3.
+
+2.6.
+
+Overview of Municipal Infrastructure
+2.6.1
+
+Stormwater Servicing
+
+The TRCA watershed map shows that the Secondary Plan Area and surround lands are in the Humber
+River Watershed, part of the Main Humber tributary. Salt Creek borders the area, running along the
+eastern boundary.
+Internal System
+The site’s topography contains average slopes ranging from 1-2%, generally draining in a southeast
+direction towards the tributary of Salt Creek adjacent to Maisonneuve Blvd. There are two (2) main
+intermittent drainage courses which convey the internal site drainage to two (2) existing culverts on
+Mayfield Road.
+There is an existing stormwater management pond servicing the parking lot area central to the site. This
+pond was designed only to be temporary and is to be removed once the stormwater management pond
+for the Study Area is constructed. The existing pond discharges to one of the intermittent drainage
+courses and eventually drains to the culvert in the vicinity of Maisonneuve Boulevard.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+15
+
+External Systems
+Two (2) existing culverts within Mayfield Road currently
+convey the majority of the Study Area’s stormwater runoff
+to the south. A 1,200mm diameter CSP culvert and a
+1800x2500mm elliptical culvert. There are also a few smaller
+pockets of land which drain directly to Airport Road or to
+Salt Creek. The culvert in the vicinity of Maisonneuve
+Boulevard will serve as the main stormwater outlet for the
+site in the post-development condition.
+
+Figure 10: Existing Elliptical Culvert at
+Mayfield Rd and Maisonneuve Blvd
+
+The Airport Road storm sewer system collects runoff from the right-of-way and conveys it south and then
+west at Mayfield Road intersection. This system outlets to the Humber River West Branch tributary.
+External Drainage
+There is only a small external area that drains through the site from the 12203 Airport Road warehouse
+development. A small ditch was created along the Study Area’s northern boundary when the warehouse
+was constructed to convey runoff from a landscaped area to the Study Area’s eastern limits.
+
+2.6.2
+
+Wastewater Servicing
+
+The Region’s Wastewater Master Plan (2014) illustrates that the Study Area is in the northern limits of the
+East Trunk Sewer drainage catchment area that outlets to the G. E. Booth Wastewater Pollution Control
+Plant. The nearest trunk sewer servicing the Study Area and surrounding lands is located within west side
+of Airport Road. This 750 mm diameter concrete sewer slopes from the north to the south and is at an
+approximate depth of 6 meters to 7 meters along the Study Area limits. A copy of the Region’s existing
+wastewater infrastructure has been included in Appendix A.5.
+The Study Area’s wastewater will discharge to the municipal system at two (2) locations, Airport Road and
+Davis Lane, and the proposed Davis Lane (Street A) and Maisonneuve Boulevard.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+16
+
+2.6.3
+
+Water Servicing
+
+The Region’s Water Master Plan (2014) illustrates that the Study Area is in the East Trunk System’s
+Pressure Zone 6.
+
+This zone is serviced from the interconnected Lakeview and Lorne Park Water
+
+Treatment Plants. The Tullamore Reservoir and Pumping Station facility is located adjacent to the Study
+Area, across Salt Creek, on Innis Lake Road. A copy of the Region’s existing water infrastructure map has
+been included in Appendix A.5.
+The Study Area’s internal watermains will connect to the existing system at the two (2) locations, Airport
+Road and Davis Lane, and proposed Davis Lane (Street A) and Maisonneuve Boulevard.
+
+2.7.
+
+Summary of Background Reports
+
+The following summarizes the previous reports and background studies completed for the Tullamore
+Secondary Plan Area lands along the east side of Airport Road and the Castlemore North Secondary Plan
+located south of the Study Area.
+
+2.7.1
+
+Tullamore Secondary Plan Area Master Environmental Servicing Plan
+
+The Town retained AGRA Earth & Environmental Ltd.
+and Giffels Associates Ltd. to complete a Master
+Environmental Servicing Plan (MESP), dated June
+2000, for the entire Tullamore Secondary Plan Area.
+The
+
+MESP
+
+provides
+
+an
+
+overview
+
+of
+
+natural
+
+environmental and stormwater management issues
+for the entire 118 hectare Secondary Plan.
+
+The
+
+document includes baseline information on the
+natural environment, including terrestrial, wildlife and
+aquatic resources, as well as surface water drainage
+
+Figure 11: MESP Area (2000)
+
+and stormwater management options. Subsequent reports, including the Vitrans Logistics warehouse
+development along the north side of the Study Area and the Preliminary Stormwater Management Report
+(PSWMR) submitted under separate cover, refer to this document to form the basis of the design.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+17
+
+2.7.2
+
+Tullamore Business Park (Vitrans Logistics) Stormwater Management Plan
+
+The Urbacon Buildings Group retained Counterpoint
+Engineering
+
+Inc.
+
+to
+
+complete
+
+a
+
+Stormwater
+
+Management Plan, dated August 2005 and updated in
+November 2005, to address the SWM design for part of
+the Tullamore Secondary Plan Area located immediately
+north of the Study Area (12203 Airport Road). The
+industrial warehouse development (formerly Vitrans
+
+Figure 12: Vitrans Logistics Warehouse
+
+Logistics, now Loblaws) consists of approximately 27.0 hectares and includes rooftop storage and an
+extended detention wet pond for SWM quantity and quality control at the properties south-east corner.
+The area represents part of the 58.6 hectare drainage area defined in the MESP draining to pond 1. The
+southern site entrance is a right-in only entrance from Airport Road. The facility’s road network continues
+eastward around the building and then back to Airport Road where it also services the Mayport
+Distribution Facility development. The development is services with water and wastewater connections
+directly from Airport Road. The approval and construction of this development split the east side of the
+Tullamore Secondary Plan Areas north and south limits and necessitated the re-alignment of the future
+Study Area roads.
+
+2.7.3
+
+Airport Road Distribution Facility (Mayport Distribution Facility) Functional Servicing
+Report and Stormwater Management Report
+
+Hopewell Development Corp. retained JSW+ Associates
+to complete a Functional Servicing Report and
+Stormwater Management Report, dated August 2013,
+for the Airport Road Distribution Facility located at
+12333 Airport Road (north side of the Vitrans Logistics
+development development). The report references the
+MESP as well as the SWMR by Counterpoint
+Engineering, as the lands were included in the design of
+
+Figure 13: Mayport Distribution Facility
+
+the existing SWM pond north of the Study Area (pond 1). The site is services with water and wastewater
+connections directly from Airport Road.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+18
+
+2.7.4
+
+Existing Study Area Commercial / Industrial Developments
+
+There are six (6) existing commercial / industrial
+developments within the Study Area located at 12151,
+12117, and 12101 Airport Road, and 6086, 6186 and 6230
+Mayfield Road. 12101 Airport Road is a commercial plaza,
+while the other sites are generally used for trucking
+operations.
+
+The trucking operation sites at 12151 and
+
+12117 Airport Road (and the norther portion of 6230
+Mayfield Road) are accessed from Davis Lane and consist of
+an office building surrounded by gravel parking lots. The
+
+Figure 14: Existing Developments
+
+6086, 6186, and 6230 Mayfield Road sites are similar with
+access from Mayfield Road and the residential dwellings converted to office buildings.
+The 12117 Airport Road development currently has Site Plan Approval and the Laidlaw Transit Site
+Servicing and Grading Plan prepared by EMC Group Ltd., dated February 2003, shows that the operations
+building is serviced with sanitary and water connections from Airport Road. There is also a stormwater
+management pond located at the properties south-east corner.
+
+2.7.5
+
+Tullamore Industrial Park Functional Servicing Report (Property No. 9 and 10)
+
+The former Tullamore South Landowners
+group retained IBI Group Inc. to complete a
+Functional Servicing Report, dated February
+5, 2009, to address the preliminary design
+for the municipal roads and services for the
+development of a large portion of the Study
+Area’s eastern lands. The report outlines
+preliminary
+
+servicing
+
+recommendations
+
+given that no specific draft plan of
+subdivision existed at the time. With regards
+
+Figure 15: Tullamore Industrial Park Lands
+
+to SWM, the report references the MESP for the proposed SWM pond location, minor/major storm
+runoff, controls for roof areas, and allowable parking lot ponding. The report also provides preliminary
+estimates for the developments sanitary (wastewater) flows and water demands.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+Region
+
+19
+
+correspondence, dated November 20, 2006, confirms that (at the time of the review) there is available
+capacity in the Zone 6 water distribution system and in the Maisonneuve Boulevard (Vales of Castlemore
+North Secondary Plan) wastewater sewer. A copy of the Region’s correspondence has been included in
+Appendix A.5.
+
+2.7.6
+
+Castlemore North Secondary Plan – City of Brampton
+
+The City of Brampton’s Vales of Castlemore North
+Secondary Plan (Area 49) is located along the
+Study Area’s southern boundary. Area 49 is an
+established
+
+subdivision
+
+housing
+
+residential,
+
+institutional
+
+and
+
+a
+
+mix
+
+of
+
+commercial
+
+developments, generally spanning from Mayfield
+Road to Country Side Drive and Airport Road to
+Goreway Drive.
+The detailed engineering plans prepared by
+Candevcon Ltd. shows an existing wastewater
+(sanitary) sewer for future extension into the
+
+Figure 16: Castlemore North Secondary Plan
+
+Study Area. There is also an existing 35 meter wide Open Space block along the east side of the Mayfield
+Road and Maisonneuve Boulevard intersection that will be extended into the Study Area. A copy of the
+subdivisions sanitary drainage area plans, and sewer design sheets have been attached in Appendix A.5.
+
+2.7.7
+
+Mayfield Road Improvements Class Environmental Assessment Study Report
+
+The Region retained Stantec Consulting Ltd. to
+complete a Municipal Class Environmental
+Assessment
+
+(MCEA)
+
+Environmental
+
+Study
+
+Report (ESR) for Mayfield Road Improvements,
+from Airport Road to Coleraine Drive. The ESR,
+dated April 2013, provides the interim and
+ultimate framework for the Mayfield Road
+configuration and identifies a recommended
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+Figure 17: Mayfield Road EA Study Area
+
+20
+
+alternative design concept for equal road widenings to minimize property impacts.
+With regards to the Study Area limits, the ESR provides
+recommendations for replacing two (2) of the existing
+road crossing culverts along the southern limit of the
+site, a conceptual road connection at the existing
+Mayfield
+
+Road
+
+and
+
+Maisonneuve
+
+Boulevard
+
+intersection, and the construction of a stormwater
+management facility (SWMF 1) to control the right-ofway runoff adjacent to the future road connection. The
+ESR also recommends re-aligning the existing creek to
+suit the culvert extension.
+The preliminary design of the stormwater management
+pond for the site accounts for this additional drainage area
+
+Figure 18: Mayfield Rd EA SWMF-1 Location
+
+from Mayfield Road. A copy of the preferred alternative road alignment drawings across the Study Area
+have been attached in Appendix A.1.
+
+2.7.8
+
+Mayfield Road Improvements Detailed Design
+
+The Region retained the IBI Group Inc. to complete
+the detailed design for the Mayfield Road
+improvements project, from Airport Road to
+Coleraine Drive.
+
+The design was completed in
+
+accordance with the Region’s Mayfield Road EA
+Study Report recommendations with adjustments
+based on actual field measurements.
+The Region reviewed various stormwater control
+options within the future right-of-way limits,
+including underground storage and infiltration, to
+eliminate the need for any external stormwater
+management facilities (ponds), as shown in the
+
+Figure 19: Mayfield Road Improvements - 60% Design
+Drawing
+
+Mayfield Road EA Study Report. The intention would be to reduce cost and scheduling delays for land
+acquisition and to allow the project to move forward independently of the Tullamore Study Area project.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+21
+
+The Region’s design drawings illustrate a storm sewer system that collects most of the roadways hard
+surface area runoff and outlets to an oil-grit-separator and a 385 cu.m bio-swale storage pond at the
+Study Area’s proposed west pond location. The ROW’s northern ditch and catchment area west of the
+road crossing culvert at 6186 Mayfield Road will by-pass the system, draining across the road to a sewer
+system that outlets to the Maisonneuve Boulevard EP channel. This catchment includes the SmartCentres
+lands at 0 Airport Road and 6034 Mayfield Road. The current Study Area Concept Plan and stormwater
+management system has accounted for the Mayfield Road.
+The Region’s website notes that the Mayfield Road works are planned to start in early 2026 with utility
+relocation scheduled for 2025. A request was made to the Region for a copy of the latest submission
+drawings. The Region provided copies of the 60-90% plan and profile progress submission drawings. A
+review of the design confirmed that the sewers can convey the stormwater to the proposed Tullamore
+SWM facility with some adjustments to the proposed design. The Mayfield Road storm system outlet
+invert will need to be raised by either insulating the pipe, adjusting the pipe type to elliptical pipes, raising
+the future Mayfield Road crossing culvert inverts or adjusting the Mayfield Road culvert dimensions.
+Additional requirements will be confirmed during the detailed design. A copy of the progress drawings are
+attached in Appendix A.1. Copies of the plan and profiles for the roadways existing conditions have also
+been attached.
+
+2.7.9
+
+Tullamore Community Design Guidelines
+
+The Town retained Paul Cosburn and Associates Ltd. to
+prepare the Tullamore Community Design Guidelines,
+dated May 2000, which outlines the streetscape design
+components to be incorporated into the Study Area’s
+detailed design. The report specifies that the subdivision
+shall have a primary entrance feature located at the
+intersection of the Airport Road and Mayfield Road and
+the Davis Lane and Airport Road and Mayfield Road and
+Maisonneuve Boulevard intersections/entrances are both
+to have secondary entrance features. These landscape
+design components and features will be coordinated with
+the parks and planning departments during the projects
+Figure 20: Tullamore Community Design
+Guidelines Plan
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+22
+
+detailed design. A copy of the reports site map, general guidelines and entrance feature requirement has
+been attached in Appendix A.1.
+
+2.7.10
+
+Toronto Region Conservation Authority Watershed Mapping
+
+The TRCA watershed map shows that the Study
+Area is in the Humber River Watershed, part of the
+Main Humber tributary. Salt Creek borders the
+area, running along the eastern boundary. The
+TRACA Flood Plain Mapping Program identifies this
+section of Salt Creek as HUM. 132. The TRCA Map
+Output does not show the EP designation over the
+existing ditch draining to the road crossing culvert
+at Maisonneuve Boulevard.
+
+Further, Mayfield
+
+Figure 21: TRCA Humber River Watershed Map
+
+Road Improvements Class Environmental Study drawing labels the ditch to be “Re-align Creek to Suit
+Culvert Extension”; refer to Figure 18. Through consultation with the TRCA we have obtained copies of
+the Salt Creek HUM watershed mapping data to establish the Study Area eastern development limits.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+23
+
+3. Approval Agencies and Design Criteria
+The Study Area is subject to the policies and requirements of the Town, Region, TRCA, the MNRF, and the
+Ministry of the Environment, Conservation and Parks (MOECP) with respect to municipal servicing (water,
+wastewater, roads, street lighting and traffic signals), stormwater management (quantity, quality, erosion
+control and water balance) and utility servicing (gas, hydro, phone, cable and internet).
+
+3.1.
+
+Town of Caledon
+
+The municipal services, roads, utilities, grading and stormwater
+drainage design must conform to the Town’s Development Standards
+Manual (Version 5 - 2019). The Town’s document is intended as a guideline for new land development
+and provides technical requirements specific to sewers, site grading, street lighting, erosion and sediment
+control, and stormwater quantity and quality control techniques, among other topics.
+The Town has been granted a Consolidated Linear Infrastructure Environmental Compliance Approval 324S701 (CLI ECA) authorizing the Town to approve alterations to the municipal wastewater (sanitary) and
+storm sewers and stormwater management facilities (ponds). The subject lands will be required to meet
+all the conditions of the Town’s CLI ECA along with the associated Design Criteria. Once the detailed
+design for the development has been completed, this FSR and the SWMR will be updated and submitted
+to the Town in support of an application for an CLI/ECA.
+
+3.2.
+
+Region of Peel
+
+The Region reviews all water and wastewater (sanitary) works for
+new developments.
+
+The water and wastewater works must
+
+conform to the Region’s Linear Wastewater Standards (2023) (previously the Public Works Design,
+Specifications & Procedures Manual – Linear Infrastructure, Sanitary Sewer Design Criteria and Watermain
+Design Criteria (revised 2009 and 2011, respectively). Since the Study Area’s build-out will have major
+impacts on Airport Road and Mayfield Road, the Region is also the review and approval authority for the
+traffic study’s recommendations for intersection improvements and traffic signals.
+Further, the stormwater management plan may involve the inclusion of drainage from the future
+widening works on Mayfield Road (Regional Road No. 14). The Region will therefore be involved in the
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+24
+
+design and review of the proposed stormwater management facilities and storm sewers conveying
+drainage from this road. As a general rule, the Region will require that Post-Development flows must be
+equal to or less than Pre-Development levels for all lands that drain to a Regional road storm system. .
+Where necessary, the design of the subject site with respect to stormwater drainage will conform to the
+Region of Peel’s Public Works Stormwater Design Criteria and Procedural Manual (June 2019),
+Consolidated Linear Infrastructure Environmental Compliance Approval (CLI ECA) Stormwater
+Management Criteria (September 2022), and Region of Peel Stormwater Management Report (December
+2022).
+
+3.3.
+
+Toronto and Region Conservation Authority
+
+The Study Area is located within the Humber River Watershed
+within the TRCA’s jurisdiction. It is expected that the TRCA will
+require the stormwater management plan to adhere to the TRCA’s Stormwater Management Criteria
+(Version 1.0, August 2012) as well as conform to the recommendations of the MOECP Stormwater
+Management Planning and Design Manual (March 2003). The TRCA criteria provides guidance in the
+planning and design of stormwater management infrastructure to address flooding, water quality,
+erosion, water balance, and natural heritage.
+
+3.4.
+
+Master Environmental Servicing Plan
+
+Master Environmental Servicing Plans (MESP) are required by municipalities to support new
+developments and re-developments within a secondary plan area. The TRCA is responsible for the
+technical clearance of the MESP’s as the governing conservation authority (CA). Under the Planning Act
+and Environmental Assessment Act the CA represents the Provincial interest for Natural Hazards of the
+Provincial Policy Statement.
+The TRCA will review the technical aspects of water management, natural hazards and natural heritage
+that have been addressed through the MESP. Under Phase 1 of the Characterization of the Natural System
+the TRCA will require a review of 1) Existing studies and projects 2) Surface Water which would include
+Watershed Hydrology and Flood Plain Mapping/Hydraulics 3) Erosion including Fluvial Geomorphology
+and Geotechnical 3) Groundwater assessment 4) Natural Heritage 5) Water Balance. Phase 2 outlines the
+impact of the proposed development in regard to Stormwater Management and Low Impact Strategies,
+above and below ground servicing. Identify applicable Valley and Stream crossings and trails. Providing
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+25
+
+Preliminary grading plans identifying existing and proposed grades and demonstrating the proposed
+design will adhere to municipal and regional standards and respecting the limits of the Natural System.
+
+3.5.
+
+Ministry of Natural Resources and Forestry
+
+The Study Area is located adjacent to Salt Creek, which has been
+identified as an ecologically important watercourse due to the
+presence of Redside Dace Habitat. The watercourse adjacent to Maisonneuve Boulevard, which will serve
+as the outlet for stormwater runoff from the site, drains into Salt Creek. Through previous consultation
+with the MNRF, the stormwater management pond design must incorporate thermal mitigation measures
+to reduce the threat to Redside Dace. Specifically, these measures include the following:
+•
+
+Average permanent pool depth, of the open water component of the SWM facility, excluding the
+forebay area and other shallow water features, is to be minimum 3.0 meters deep.
+
+•
+
+Bottom draw outlet are to be located a minimum of 2.5 meters below the permanent pool
+elevation.
+
+•
+
+The perimeter of the pond at the permanent pool elevation is to include a minimum 3.0 meter
+wide flat shelf, 0.3 meter deep, as a wetland planting area. The shelf will include a 30 cm layer of
+topsoil and planted with native emergent species (cattail and bulrushes) suited for fluctuating
+water levels.
+
+•
+
+Side slopes below the normal water level of the permanent pool are to be 4:1 (max).
+
+•
+
+The volume of water in the permanent pool between the depths of 1.5 meters to 3.0 meters is to
+be at least equivalent to the volume of runoff generated by a 10 mm storm event. The calculated
+volume below the 1.5 meter depth is to be discharged over a minimum 24 hour period.
+
+3.6.
+
+Ministry of the Environment, Conservation and Parks
+
+An Environmental Compliance Approval (ECA) will be required from
+the MOECP for the proposed wastewater (sanitary) and storm
+sewers and stormwater management facilities (ponds). Once the
+detailed design for the site has been completed, this FSR and the
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+26
+
+SWMR will be updated and submitted to the Town for the MOECP ECA. Stormwater drainage proposals
+are to be consistent with the guidelines of the MOECP’s Stormwater Management Planning and Design
+Manual (March 2003).
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+27
+
+4. Stormwater Servicing
+A Preliminary Stormwater Management Report (PSWMR) has been completed as part of the TJCGL
+appointment and scope of work for the Study Area. The PSWMR has been submitted concurrently with
+this FSR and the following is a brief overview of the report.
+The PSWMR has outlined a design for the Study Area’s future stormwater management system to meet
+the compulsory post-development quantity and quality requirements imposed by the Town, Region,
+TRCA, MNRF and MOECP.
+
+During the Study Area’s detailed design stage, a (detailed) Stormwater
+
+Management Report will be completed in support of the storm system and facilities Town/MOECP ECA
+Certificates and TRCA Application for Development, Interference with Wetlands and Alterations to
+Shorelines and Watercourses (Pursuant to Ontario Regulation 166/06) permit.
+
+4.1.
+
+Existing Drainage Conditions
+
+The Study Area consists of approximately 57 hectares of land that is partially developed mainly for
+trucking uses while the remaining area is highly disturbed meadows communities that were formerly
+agricultural and/or treed lands .
+The site’s topography contains average slopes ranging from 1-2%, generally draining in a southeast
+direction towards the tributary of Salt Creek adjacent to Maisonneuve Boulevard. There are intermittent
+drainage courses which convey the local site drainage to two (2) existing culverts on Mayfield Road. One
+of these culverts, a 1200mm diameter CSP, drains an area of approximately 9.49 hectares to the south
+side of Mayfield Road, which is conveyed via a roadside ditch to the tributary adjacent to Maisonneuve
+Boulevard. The second culvert is an 1800x2500mm elliptical culvert, located immediately upstream of the
+tributary and drains most of the site (approximately 41.67 hectares) directly to the tributary. There are
+also smaller pockets of land which drain directly to Airport Road or to Salt Creek. The culvert in the vicinity
+of Maisonneuve Boulevard will serve as the main stormwater outlet for the site in the post-development
+condition.
+There is an existing SWMP servicing the Laidlaw parking lot area central to the site. This pond was
+designed only to be temporary and is to be removed once the stormwater management ponds for the
+overall Study Area are constructed. The existing pond discharges to one of the intermittent drainage
+courses described above and eventually drains to the culvert in the vicinity of Maisonneuve Boulevard.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+28
+
+The preliminary design confirms that the existing ponds outlet elevations can be accommodated by the
+proposed storm sewer system until the block is re-developed.
+There is only a small external area that drains through the site from the 12203 Airport Road development.
+A ditch was created along the Study Area’s northern boundary when the warehouse was constructed to
+convey a landscaped area to the Study Area’s eastern limits. The Pre-Development Storm Drainage Plan
+(Drawing No. STM-1) attached in Appendix B illustrates the Study Area’s current drainage conditions.
+
+4.2.
+
+Stormwater Management Plan
+
+The stormwater management plan is intended to provide an environmentally sound approach to
+stormwater issues. The issues can be divided into four main categories: stormwater quality control,
+stormwater quantity control, water balance, and erosion and sediment control.
+To provide the required stormwater quality and quantity control for the site two (2) extended detention
+wet ponds and Low Impact Development (LID) devices are proposed. The ponds, referred herein as the
+west and east ponds, are divided by a proposed 35 meter wide EP channel extending from the tributary of
+Salt Creek along the east side of Mayfield Road. The channel is the discharge location for the pond outlets
+and for all other stormwater runoff from the site. The proposed ponds are located generally at the
+southeast corner of the Study Area.
+
+4.3.
+
+Proposed Drainage System
+
+Development of the Study Area will consist of several commercial lots, an internal looped roadway to be
+built to the Town’s 26.0 meter Local Industrial Road (Standard No. 211), an EP drainage channel, and two
+(2) stormwater management extended detention wet ponds. Each individual lot will be developed with
+buildings, driveways, parking lots, and landscaped areas. The lots future coverage areas must conform to
+the Town’s commercial and industrial planning policies (attached in Appendix A.2). The lot grading will
+direct the stormwater runoff to the internal road network and the Mayfield Road northern boulevard (for
+the 6086 and 6186 Mayfield Rd property drainage), which will contain a proposed storm sewer system to
+convey minor flow to the proposed ponds. The roads and boulevard will also convey the major overland
+flow within the right-of-way. The proposed end-of-pipe SWM facilities are extended detention wet ponds,
+providing stormwater quantity and quality control. All proposed buildings will require rooftop controls, as
+per the recommendations of the MESP. The stormwater runoff from the future development lands
+building’s rooftops on the west side of the proposed Street A extension are proposed to drain to a 3rd pipe
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+29
+
+system and conveyed and discharged directly to the EP channel. This channel will drain into the tributary
+of the Salt Creek within the Vales of Castlemore Secondary Plan, bypassing the proposed ponds. The 3rd
+pipe system is sized to convey the 100-year storm event peak flow controlled to a rate of 40 L/s/ha of
+building area. The location of the 3rd pipe within the future external ROW will be determined during the
+detailed design.
+The proposed site grading and drainage design will maintain the culvert drainage at the southwest portion
+of the Study Area. This drainage, per the Region’s latest design drawings, will continue to be conveyed
+across the road. The planned future roadworks will pipe the flows to the Maisonneuve Boulevard
+intersection, and to the creek.
+In general, the PSWMR results demonstrate that the proposed stormwater management ponds will
+provide the required quantity control to reduce the Study Area’s built-out post-development peak flows
+to the allowable release rates identified in the MESP which references TRCA’s Unit Flow Relationships for
+the Humber River Watershed. A copy of the TRCA Unit Flow Relationship map is attached in Appendix
+A.4.
+The Post-Development Storm Drainage Plan (Drawing No. STM-2) with the accompanying SWMP figures
+(Drawing No. PND-1, 2, and 3) illustrates the proposed drainage scenario and are attached in Appendix B.
+For a full description of the proposed drainage works refer to the PSWMR submitted concurrently with
+this FSR.
+
+4.4.
+
+Water Balance
+
+The water balance assessment outlined in the Town’s CLI/ECA criteria stipulates any drainage area greater
+than 0.1 ha will require a water balance assessment study of the development area. The assessment
+reports may include a Source Protection Plan, Master Stormwater Management Plan, Master
+Environmental Servicing Plan or Class EA all assessment studies shall conform to the Ministry policies. If
+assessment studies are not available, then stormwater volumes are to be controlled and recharged
+(infiltration) to meet the site’s Pre-development runoff volume or control runoff from the 90th percentile
+storm event. In the event that site’s pre-development water balance cannot be achieved and every effort
+has been exhausted through the use of retention and LID filtration stormwater practices the Lake Simcoe
+and Region Conservation Authority (LSRCA) recharge compensation program may be used. The TRCA has
+completed modeling and mapping identifying important groundwater recharge areas. According to TRCA
+mapping (provided in Appendix A.4), the subject site falls under a Low Volume Groundwater Recharge
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+30
+
+Area (LGRA). As such, a site-specific water balance is not required, and best efforts should be made via the
+SWM plan to maintain groundwater recharge. Refer to the PSWMR for additional details.
+
+4.5.
+
+Erosion and Sediment Control
+
+An Erosion and Sediment Control Report (ESCR) has been completed as part of the TJCGL appointment and
+scope of work for the Study Area. The ESCR has been submitted concurrently with this FSR and the
+following is a brief overview of the report.
+During construction, the majority of the Study Area’s natural features will be removed and the topsoil
+stripped within the development area. The exposed surface will be susceptible to erosion, increasing the
+potential for sediment runoff. To minimize local and downstream impacts from erosion and
+sedimentation during construction, the following measures have been recommended:
+•
+
+Excess earth and topsoil is to be stockpiled away from established drainage areas and/or
+removed from site. Stockpiles shall be seeded or covered with erosion control if left for periods
+of greater than 30 days.
+
+•
+
+Temporary sediment control fencing should be erected around the perimeter of all grading
+activities.
+
+•
+
+Temporary sediment fabric and stone filters should be installed on catch basins until surface
+cover has been stabilized.
+
+•
+
+Temporary rock flow check dams should be installed within drainage cut-off swales.
+
+•
+
+A temporary construction access mud mat should be installed at the construction accesses to
+reduce the amount of materials that may be transported off site.
+
+•
+
+Temporary erosion and sediment control basins are to be constructed (during the site plan
+development stage), complete with a Hickenbottom outlet control structure and overflow weir.
+The basins’ purpose is to detain runoff long enough to allow most soil particles to settle out of
+suspension.
+
+•
+
+Construction during drier months should be monitored for wind-borne transport of sediments. At
+the direction of the engineer, the contractor may be directed to water down exposed earth areas
+with an aqueous solution of calcium chloride.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+31
+
+•
+
+All disturbed areas not under immediate construction for 30 days, or not intended for building
+activities within a 3-month time period, should be stabilized with seeding.
+
+An Erosion and Sediment Control Plan (Drawing No. ESC-1) has been included with the ESCR and attached
+in Appendix B for ease of review.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+32
+
+5. Wastewater Servicing
+5.1.
+
+External Wastewater Servicing Framework
+
+The Study Area is part of the Region’s East Trunk Sewer drainage catchment area that outlets to the G. E.
+Booth Wastewater Pollution Control Plant located on the shore of Lake Ontario. The closest trunk sewer
+servicing the Study Area and surrounding lands is located within west side of Airport Road. The Airport
+Road, New Construction, Plan No. 38362-D and No. 38363-D (dated January 2010) plan and profile’s (P&P)
+illustrates that there is an existing 750 mm diameter sanitary sewer within the roadway’s western
+boulevard at an approximate depth of 6 meters to 7.5 meters along the Study Area limits. The Region’s
+Wastewater DC Map (2014) shows this sewer draining south along Airport Road until it eventually outlets
+to the McVean Pump Station at Queen Street in the City of Brampton.
+The Highlands of Castlemore, Maisonneuve Boulevard, Plan and Profile No. 34313-D (dated July 2002)
+illustrates an existing 250 mm diameter sanitary sewer that terminates at the intersection of Mayfield
+Road at an approximate depth of 4.75 meters. This local sewer drains south through the Castlemore
+Secondary Plan and eventually outlets to the east trunk system. All the existing municipal services directly
+surrounding the Study Area are shown on the Existing Servicing Plan (Drawing No. GEN-1) attached in
+Appendix B.
+
+5.2.
+
+Allocated and Projected Populations
+
+The Region’s Linear Wastewater Standards (2023) (formerly the Public Works Design, Specifications &
+Procedures Manual – Linear Infrastructure, Sanitary Sewer Design Criteria (July 2009)) provides theoretical
+design criteria for future developments and their projected sanitary loading demands. Specifically, the
+guidelines provide design criteria for commercial and industrial developments based on land use
+population equivalents. The population equivalents for the Study Area are:
+•
+
+Industrial (light): 70 persons per hectare (70 PPH)
+
+•
+
+Commercial: 50 persons per hectare (50 PPH)
+
+A copy of the Region’s sanitary sewer design criteria has been attached in Appendix A.5.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+33
+
+Allocated Population
+Correspondence with the Region determined that the wastewater servicing and the allocation in the
+existing Airport Road servicing framework would be determined based on the Study Area’s topography,
+the Region’s sanitary servicing standards, and the depth of the Airport Road sewer.
+
+Prior to the
+
+commencement of the Study Area’s design works it was noted that the land was not specifically
+accommodated in the Airport Road sewers catchment area. A copy of the Region’s correspondence has
+been attached in Appendix A.5. However, the Region’s Trunk Catchment System Maps (Sheet 3, 14, 18
+and 21) dated March 2014, shows that the Study Area is located within catchment ER_Sub1.
+Portion of the Study Area’s eastern limits have been accommodated in the Highlands of Castlemore
+subdivisions design located south of the Study Area.
+
+The extension of the sanitary sewer within
+
+Maisonneuve Boulevard to the southern limit of Mayfield Road was coordinate by the Tullamore
+Industrial Park development (Property Owners No. 9 and 10). The Sanitary Drainage Area Plan, Sheet No.
+D.2 (dated July 2002) and accompanying Sanitary Sewer Design Sheet 3 (dated January 2003) shows an
+external drainage area of 20.71 hectares (20.23 from Area ID EXT plus an additional 0.48 hectares), a
+population density of 50 PPH and a total equivalent population of 1,035.5 people, or flow of 0.018142
+cu.m/s, draining to the Maisonneuve Boulevard sewer system from the Study Area (20.71 ha x 50 PPH =
+1,035.5 people). However, Sanitary Sewer Design Sheet 12’s bottom row indicates that “flow based on
+population equivalent of 70 for Future areas west of Country Brook and North of Mayfield Rd =
+20.23+15.5=38.8”. For the EXT area of 20.23 hectares this equates to a total equivalent population of
+1,416.1 people. Since this note does not reflect the Sheet 3 data the initial allocation of 50 PPH
+(conservative allocation scenario) has been used as the governing allocated population.
+Projected Design Population
+The Study Area Concept Plan has a total land area of 53.2 hectares excluding the Salt Creek floodplain
+lands (refer to Table 3). For wastewater flow estimates the total developable land (commercial and
+industrial blocks) is 44.8 hectares, with 8.4 hectares used for the future roadways, EP channel and SWM
+pond blocks.
+Based on the Study Area topography and Region’s sanitary sewer design criteria for commercial/industrial
+areas (sewer obvert shall be located 3.5 meters below the centre line of the road allowance where
+possible) the lands have been broken down into two (2) main catchments referred to as the west
+catchment and the east catchment. The west catchment will gravity drain to the Airport Road sewer
+system and the east catchment will gravity drain to the Maisonneuve Boulevard sewer. The catchment
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+34
+
+areas are shown on the Sanitary Drainage Area Plan (Drawing No. SAN-1) attached in Appendix B. The
+west and east catchment area and statistics and projected population based on land uses have been
+summarized in Table 4.
+
+Table 4: Wastewater Catchment Areas and Population Statistics
+Area (hectares)
+
+Population
+
+West
+Catchment
+
+East
+Catchment
+
+West
+Catchment
+
+East
+Catchment
+
+Highway Commercial (50 PPH)
+
+12.0
+
+0.0
+
+598.8
+
+0.0
+
+Prestige Industrial (70 PPH)
+
+0.0
+
+5.2
+
+0.0
+
+364.2
+
+General Industrial (70 PPH)
+
+5.8
+
+21.8
+
+402.5
+
+1,527.5
+
+Roads (26 m ROW)
+
+1.0
+
+2.3
+
+Environmentally Protected Channel
+
+0.0
+
+0.9
+
+Stormwater Management Pond 1
+
+0.0
+
+2.1
+
+Stormwater Management Pond 2
+
+0.0
+
+1.1
+
+Mayfield Road Widening
+
+0.2
+
+0.7
+
+Salt Creek Flood Plain
+
+0.0
+
+4.4
+
+Sub-Totals
+
+19.0
+
+38.6
+
+1,001.3
+
+1,891.7
+
+Land Use
+
+Total
+
+57.6
+
+2893.0
+
+Note: The above areas are based on the Study Area land uses with SmartCentres re-zoning designations. Refer to
+Drawing No. LU-1 attached in Appendix B for the land uses.
+
+Excluding the non-developable lands (roads, EP channel, SWM ponds, road widenings, Salt Creek flood
+plain lands) the total developable area for the west and east catchments are 19.0 hectares and 28.6
+hectares, respectively. Based on these areas and the Region’s population equivalent for commercial and
+industrial developments the west and east catchments will have a total equivalent population of 1,001.03
+persons and 1,891.7 persons, respectively.
+The east catchment area’s developable land of 28.6 hectares is greater than the Highlands of Castlemore’s
+sanitary sewer design sheet estimate of 20.7 hectares and the catchments developable lands are all
+industrial resulting in projected population of 1,891.7 people which is 856.2 people greater than the
+originally EXT area population of 1,035.5 people if based on the allowable commercial areas projected
+population density (50 PPH), and is 475.6 people higher than the EXT area population of 1,416.1 people if
+based on the allowable industrial areas project population density (70 PPH). If the east catchments actual
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+35
+
+developable area was restricted to the Highlands of Castlemore’s sanitary sewer design sheet population
+this corresponds to an allowable PPH density of approximately 36.2 (1,035.5/28.6).
+To confirm that the east catchments additional population and resulting sanitary flow rate can be
+accommodated in the downstream sewer network the projected wastewater flows have been estimated
+to compare against the sewer networks excess flow capacity.
+
+5.3.
+
+Allocated and Projected Wastewater Flows
+
+Allocated Wastewater Flows
+As previously mentioned, portion of the Study Area’s eastern limits have been accommodated in the
+Highlands of Castlemore subdivisions design. The Sanitary Drainage Area Plan, Sheet No. D.2 (dated July
+2002) and accompanying Sanitary Sewer Design Sheet 3 (dated January 2003) show an external drainage
+area of 20.71 hectares that equates to a sewage flow of 0.014 cubic meters per second (m3/sec) and
+infiltration flows of 0.00414 m3/sec for a total flow rate of 0.01814 m3/sec.
+Design Criteria
+For detailed design the Region’s Sanitary Sewer Design Criteria Standard Drawing 2-5-5 Sewage Flows
+(Excluding Infiltration) uses an average daily domestic sewage flow rate (q) of 302.8 liters per capita per
+day (lpcd) for estimating projected sanitary loading demands. The Region’s Linear Wastewater Standards
+A Section 2.3 notes that the daily per capita sanitary flow rate shall be 270 L/employee/per day for nonresidential and 290 lpcd for residential. Since the number of employees for the development lands is
+unknown the more stringent flow of 302.8 lpcd has been utilized.
+The infiltration (extraneous) sewage flow rate of 0.00026 cubic meter per second per hectare (0.0026
+m3/sec/ha or 0.26 L/sec/ha) is used for all types of lands (developable and non-developable) within the
+sanitary catchment boundary. An additional allowance for maintenance hole inflow of 0.00028
+m3/sec/maintenance hole or 0.000028 m3/sec/meter of sewer length is also used for detailed design
+calculations.
+To confirm that the existing outfall sewers have the capacity to convey the Study Area’s future
+wastewater the peak projected sanitary flows have been calculated using the site’s design population
+with the Peak Domestic Sewage Flow equation and the Harmon Formula provided below.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+36
+
+Peak Domestic Sewage Flow
+
+Qp = P x q x M / 86.4 + I x A
+Where:
+
+Qp = peak residential sanitary sewage flow, including extraneous flow
+(L/s), P = design population in thousands, q = average domestic flow per
+capita (litres/day/person), M = Peaking factor (no less than 2 and not
+greater than 4), I = Peak extraneous flow (litres/second/hectare), A =
+tributary area (hectares)
+
+Harmon Formula
+Where:
+
+M = 1 + 14/(4 + P1/2)
+M = ratio of peak flow to average flow, P = tributary population in thousands
+
+Projected Wastewater Flows
+Using the above equations with the development areas and land use types, the Study Area’s total peak
+wastewater flows have been summarized in the following table.
+
+Table 5: Wastewater Flows Based on Projected Population
+Wastewater Flow (cu.m/s)
+
+Sub-Totals
+
+West
+Catchment
+
+East
+Catchment
+
+West
+Catchment
+
+East
+Catchment
+
+(cu.m/s)
+
+Total Population
+
+1,001.3
+
+1,891.7
+
+0.01333
+
+0.0239
+
+0.03723
+
+Total Area for Infiltration (ha)
+
+19.0
+
+34.2
+
+0.00493
+
+0.00890
+
+0.01383
+
+0.01826
+
+0.03280
+
+Sub-Totals
+Total Peak Wastewater Flows
+
+0.05106
+
+Based on the above table, the total peak flow (including infiltration) for the west and east catchments is
+0.03997 m3/s and 0.0328 m3/s, respectively. The peak flows are consistent with the Region’s Standard
+Drawing 2-5-2 (Sewage Flows - Excluding Infiltration) for the development area populations. Drawing 2-52’s applicable population and domestic flows have been summarized in the following table.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+37
+
+Table 6: Region’s Standard Drawing 2-5-2 (Sewage Flows - Excluding Infiltration) Summary
+Population
+
+Peak Wastewater Flow
+(cu.m/s)
+
+1,200
+
+0.0157
+
+1,300
+
+0.0169
+
+1,400
+
+0.0181
+
+2,600
+
+0.0318
+
+2,800
+
+0.0340
+
+The Region’s Standard Drawing 2-5-2 (Sewage Flows - Excluding Infiltration) illustrates that the actual
+combined flows from both catchments will be less than when calculated separately due to the decreased
+peaking factor. The peaking factor for the west and east catchments when calculated separately are 3.8
+and 3.6, respectively. The combined population’s peaking factor decreases to 3.46, or a reduction of 9%.
+A summary version of the Region’s Standard Drawings No. 2-5-1 (Sanitary Sewer Design Sheet) has been
+prepared using the populations and areas identified in the above tables. A copy of the design sheet has
+been attached in Appendix A.5 showing the detailed calculations. The design sheet will be updated
+during the detailed design when the subdivision lotting has been finalized with the land owners.
+Based on the above information, the Study Area’s east catchment will generate an excess peak sanitary
+flow of 0.014658 m3/s (0.0328 - 0.018142; proposed - allowable) or 14.66 l/s.
+These flows are conservatively based on the Region’s peak light industrial population equivalents when
+actual industrial sewage flows will vary greatly with the types of industries, the provision of in-plant
+treatment or regulation of flows. For instance, the current land use for trucking and storage could reduce
+the actual sanitary flow from these projected rates.
+The MOECC Guidelines for the Design of Water Storage Facilities, Water Distribution Systems, Sanitary
+Sewage Systems and Storm Sewers, (May 1979) and the Design Guidelines for Drinking-Water Systems
+(2008) both recommend using a light industrial average day demand wastewater/water flow allowance of
+35 m3/ha-day (excluding infiltration). A typical peaking factor of 2 to 4 is applied to this rate depending on
+the type of industry and production schedule. A copy of the design guidelines have been attached in
+Appendix A.5.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+38
+
+Based on the light industrial flow allowance of 35 m3/ha-day and a peaking factor of 2 to 4 the east
+catchments peak wastewater flows have been estimated and summarized in the following table.
+
+Table 7: East Catchment Wastewater Flows Based on Light Industrial Demands
+Average Wastewater
+Flow
+
+Peak Wastewater Flow
+(cu.m/s)
+
+(cu.m/d)
+
+(cu.m/s)
+
+PF=2
+
+PF=4
+
+Developable Area Flow based on 27.0 ha at 35
+cu.m/da-ha
+
+945.9
+
+0.01095
+
+0.02189
+
+0.04379
+
+Infiltration Flow based on 34.2 ha at 0.0026
+cu.m/sec/ha
+
+768.9
+
+0.0089
+
+0.0089
+
+0.0089
+
+1,714.78
+
+0.01985
+
+0.03079
+
+0.05269
+
+Totals
+
+The above table confirms that the Region’s standards for calculating sewage waste flows are consistent
+with the MOECP standards.
+Excess Wastewater Flows
+As noted above, the Study Area’s east catchment will generate an excess peak sanitary flow of 0.014658
+m3/s, which is 80.8% greater than the allowable discharge rate (0.014658/0.018142*100).
+
+5.3.1.
+
+Sanitary Sewer Capacity Check
+
+To confirm that the Study Area’s east catchment’s additional population and resulting sanitary flow rate
+can be accommodated in the downstream sewer network the excess 0.014658 m3/s flow rate was
+reviewed against the Highlands of Castlemore subdivisions Sanitary Sewer Design Sheet’s 1 through 12
+downstream sewers Total Flow (Sewage Flow plus Infiltration Flow) to confirm if the increased flow rate
+can be added to the system without surcharging the Capacity of each of the sewers.
+The locations of the existing sewer systems minimum excess flow capacities from each of the Highlands of
+Castlemore subdivisions Sanitary Sewer Design Sheet’s 2 through 12 have been summarized in the
+following table. Note: The sanitary discharges actual route from the Study Area’s east catchment through
+the existing system to the pump station will need to be confirmed as all the sanitary drainage plans where
+not available at the time of the FSR’s completion.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+39
+
+Table 8: Existing Downstream Sanitary Sewer Flow Capacities
+
+No.
+
+Location
+
+Pipe
+Diam.
+(mm)
+
+Slope Sewer Flow
+(%)
+(cu.m/s)
+
+Sewer
+Capacity
+(cu.m/s)
+
+Excess Capacity
+(cu.m/s)
+
+East Catch.
+Flow
+(cu.m/s)
+
+Surcharge Rate
+(cu.m/s)
+
+1
+
+Sheet 2
+Street B Easement
+MH6A to MH5A
+
+250
+
+0.40
+
+0.019604
+
+0.038
+
+0.018396
+
+0.014658
+
+0
+
+Sheet 2
+Street B Easement
+MH5A to MH4A
+
+300
+
+0.40
+
+0.030144
+
+0.061
+
+0.030856
+
+0.014658
+
+0
+
+3
+
+Sheet 3
+Street I
+MH34A to MH33A
+
+250
+
+0.50
+
+0.042
+
+0.022554
+
+0.014658
+
+0
+
+4
+
+Sheet 4
+Street D
+MH41A to MH40A
+
+250
+
+0.50
+
+0.013774
+
+0.042
+
+0.028226
+
+0.014658
+
+0
+
+5
+
+Sheet 5
+Street H
+MH25A to MH26A
+
+250
+
+0.50
+
+0.014426
+
+0.042
+
+0.029488
+
+0.014658
+
+0
+
+6
+
+Sheet 6
+Street D
+MH28A to
+
+250
+
+0.50
+
+0.029166
+
+0.042
+
+0.012834
+
+0.014658
+
+0.001824
+
+2
+
+0.019446
+
+MH111A
+
+7
+
+Sheet 7
+Street L
+MH85A to MH86A
+
+250
+
+0.50
+
+0.040984
+
+0.042
+
+0.001016
+
+0.014658
+
+0.013642
+
+8
+
+Sheet 8
+Easement
+MH116A to MH8A
+
+250
+
+0.50
+
+0.032316
+
+0.042
+
+0.009684
+
+0.014658
+
+0.004974
+
+9
+
+Sheet 9
+Street C
+
+250
+
+0.50
+
+0.014542
+
+0.042
+
+0.027458
+
+0.014658
+
+0
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+40
+
+No.
+
+Location
+
+Pipe
+Diam.
+(mm)
+
+Slope Sewer Flow
+(%)
+(cu.m/s)
+
+Sewer
+Capacity
+(cu.m/s)
+
+Excess Capacity
+(cu.m/s)
+
+East Catch.
+Flow
+(cu.m/s)
+
+Surcharge Rate
+(cu.m/s)
+
+MH48A to MH20A
+
+10
+
+Sheet 10
+Street G
+MH5A to MH4A
+
+250
+
+0.50
+
+0.019698
+
+0.042
+
+0.022302
+
+0.014658
+
+0
+
+11
+
+Sheet 11
+Street D
+MH10A to MH9A
+
+250
+
+0.50
+
+0.02326
+
+0.042
+
+0.01874
+
+0.013858
+
+0
+
+12
+
+Sheet 12
+Street O
+MH85A to MH96A
+
+300
+
+0.50
+
+0.063486
+
+0.068
+
+0.004514
+
+0.013858
+
+0.010144
+
+0.0917
+
+0.097
+
+0.0053
+
+0.013858
+
+0.009358
+
+13
+
+Sheet 12
+Last Row
+
+300
+
+Based on the above table the proposed Study Area’s east catchment sanitary flows would create a
+potential capacity issue at five (5) locations; refer to row no. 6, 7, 8, 12 and 13. The greatest surcharge
+rate occurs in row 7 at a rate of 0.013642 cu.m/s (13.6 l/s).
+If the increased population is added to the Highlands of Castlemore subdivisions Sanitary Sewer Design
+Sheets the higher population would reduce the peaking factor and result in an even lower surcharge rate.
+If the Region requires the peak flows to be reduce to the allocated levels options such as flow
+equalizations restrictions and/or off-peak discharge facilities can be implemented during the detailed
+design. Further some of the actual site plans will likely consist of truck yards and storage which would
+reduce the actual sanitary flows from these projected rates. Due to the relatively small increase in flows
+to the Region’s overall system, we anticipate that there will not be any issues, and the excess flow rate
+can be accommodated by the existing infrastructure.
+
+5.4.
+
+Proposed Sanitary Servicing Scenario
+
+The Study Area will construct an internal gravity sanitary sewer network that will discharge to the
+municipal system at two (2) locations; Airport Road and Davis Lane (approx. 6 meter deep sewer
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+41
+
+connection) and the proposed Davis Lane (Street A) and Maisonneuve Boulevard (approx. 4.75 meter
+deep sewer connection).
+The future right-of-way sewers will be installed 3.5 meters below the centre line of the road allowance,
+where possible.
+
+However, to accommodate the restricted allowable sanitary discharge to the
+
+Maisonneuve Boulevard sewer system, sections of the sanitary sewers are set at a depth of 2.0 meters.
+Refer to the preliminary Plan and Profiles (Drawing No. PP-1 and PP-2) attached in Appendix B for the
+depth and location of the proposed sewers. The sewers will generally be located 1.5 meters north or east
+of the centerline of the roadways. The future property blocks will have individual services stubbed at the
+limit of the right-of-way. The exact service locations will be confirmed during the detailed design when
+the subdivisions draft plan has been created with consultation from the landowners.
+The Study Area’s sanitary sewers will be constructed in accordance with the Region and Town’s
+Engineering Standards and the MOECP guidelines. The proposed sewer network will consist of PVC, DR35
+pipe with a minimum diameter of 250mm. The design will ensure that the minimum and maximum
+velocities are maintained under full flow conditions.
+Refer to the Sanitary Drainage Area Plan (Drawing No. SAN-1) attached in Appendix B for the future
+sanitary sewer locations and the Sanitary Sewer Design Sheet attached in Appendix A.5 for the flows and
+velocities. All the existing external and proposed Study Area municipal services are shown on the General
+Servicing Plan (Drawing No. GEN-2).
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+42
+
+6. Water Servicing
+6.1.
+
+External Water Servicing
+
+The Study Area is in the Region’s East Trunk System’s Pressure Zone 6. This zone is serviced from the
+interconnected Lakeview and Lorne Park Water Treatment Plans, both of which are located on the shore
+of Lake Ontario. The zone has a serviceable elevation range of 227.3 meters to 259.1 meters with a top
+water level of 297.2 meters. The Tullamore Reservoir and Pumping Station facility is located adjacent to
+the Study Area, across Salt Creek, off Innis Lake Road.
+The Airport Road, New Construction, Plan No. 38362-D and No. 38363-D (dated January 2010) P&P shows
+that there is an existing 300 mm diameter watermain within the roadway’s eastern asphalt, at an
+approximate depth of 2 meters. This main connects to the existing 300 mm diameter main within
+Mayfield Road’s northern boulevard and is shown on the Mayfield Road, Tullamore Transmission Main,
+Contract No. 2, Plan No. 48180-D. This contract drawing set also shows existing 1050 mm diameter and a
+750 mm diameter transmission watermains within Mayfield Road. Plan No. 48182-D shows the 300 mm
+diameter main reduced to a 200 mm main in front of the Maisonneuve Boulevard intersection before
+continuing to Innis Lake Road. The Mayfield Road Prop. 300 mm Watermain Relocation, Plan 68322-D to
+68324, IFC, stamped date of July 26, 2019, illustrate that the 200 mm diameter reducer and main were
+removed and upgraded with a 300 mm diameter main. All the existing municipal services surrounding the
+Study Area are shown on the Existing Servicing Plan (Drawing No. GEN-1) in Appendix B. A copy of the
+Region’s existing water infrastructure information has been included in Appendix A.5.
+
+6.2.
+
+Proposed Watermain System
+
+The Study Area’s proposed 300 mm diameter watermains will connect to the existing system at two (2)
+locations; Airport Road and Davis Lane and at the proposed Davis Lane (Street A) extension to
+Maisonneuve Boulevard/Mayfield Road. The Airport Road connection will be fed from the existing 300
+mm diameter main running along Airport Road’s eastern boulevard. The Davis Lane and Maisonneuve
+Boulevard/Mayfield Road connection will connect to the exiting 300 mm diameter main.
+The proposed internal watermain system will be looped and include potable and fire water services
+stubbed at the limit of the right-of-way for each individual property / block. The exact service locations
+will be confirmed during the detailed design. The mains will be installed at the minimum depth of cover
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+43
+
+(1.7 meter within ROW boulevards, 1.4 meters beneath the centerline of ditch crossings) and fire hydrants
+will be spaced at 100 meter intervals in accordance with Town and Region’s industrial standards.
+Refer to the General Servicing Plan (Drawing No. GEN-2) attached in Appendix B for the location of the
+existing external watermains, future connection points and internal subdivision layout.
+
+6.3.
+
+Water System Analysis
+
+During the project’s initial background data collection and review the Region indicated that they have
+completed preliminary modelling for the Study Area’s future water system demands.
+
+However, if
+
+requested by the Region, a Water System Analysis (WSA) will be completed for the Study Area’s proposed
+water distribution system during the detailed design stage. The WSA will demonstrate how the future
+development blocks can achieve the minimum standards in the MOECP, Town, Ontario Building Code
+(OBC) and Region guidelines for water distribution systems. The model will also examine the effect of the
+Study Area’s demands on the adjacent municipal system.
+Based on the location of the Study Area and proximity to the Region’s pumping station there should not
+be any issues meeting minimum potable and fire system standards for flow and pressure.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+44
+
+7. Grading and Landform
+7.1.
+
+Existing Conditions
+
+The existing site conditions and surrounding municipal infrastructure data was initially provided by the
+Region’s GIS department. The overall Study area existing contour data was primarily obtained through
+the First Base Solutions On-Line Mapping Data Warehouse. Further, the Tullamore Industrial Park’s
+(Property 10) topographical and legal survey plan (dated February 2007), the Davis Lane legal survey
+(dated February 2014), the SmartCentres (Property 5 and 6), and the 6086 and 6230 Mayfield Road
+(Property 7 and 8) topographical survey were obtained and overlaid into the Study Area’s digital base
+plan. Using the initial base data, the internal and external elevations and infrastructure locations were
+confirmed through survey spot checking.
+
+7.2.
+
+Proposed Grading Scenario
+
+The proposed grading scenario is based on the latest Concept Plan’s right-of-way, EP channel and SWMP
+locations and the Town’s grading standards. The Concept Plan proposes a 26-meter industrial collector
+roadway network (Street A / Davis Lane) approximately 1,400 meter in length connecting Airport Road at
+Davis Lane to Mayfield Road at the Maisonneuve Boulevard intersection. Street B will be 170 m in length
+located on the east side of Street / Davis Lane terminating at a cul-de-sac.
+Generally, the grading design has been completed in accordance with the Town’s industrial development
+standards, including the minimum road grade of 0.75%, maximum road grade of 6%, minimum K values of
+25 (sag and crest) (where achievable) and the minimum intersection crown slope of 2%.
+Additionally, the future lot grades are currently proposed at a minimum of 0.5% (standard is 2%
+minimum) to meet the Town’s engineering standards for individual lots to drain to a single outlet/ROW
+location for the minor and major overland flow routes. The road and subdivision blocks grading will
+match into the existing Study Area perimeter elevations. The perimeter of some blocks will require
+sloping (3:1 max used) to ensure the block’s future stormwater is directed to the ROW’s and ultimately to
+the SWM ponds.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+45
+
+7.3.
+
+Proposed Roadway Vertical Curve Geometric Design Review
+
+The Town’s Standards Section 1.5.2. Geometric Design, Table 1.2 notes that a 26.0 m Industrial Collector
+with an Average Daily Traffic (ADT) of 1,000 to 3,000 and a posted speed of 70 km/h requires a minimum
+vertical curve (K) in a sag and crest of 25. Due to the development’s existing elevation and proposed
+stormwater design constraints, the proposed Street A connection at Mayfield Road K values deviate from
+the Town’s criteria by proposing a minimum vertical sag K of 8 and a minimum vertical crest K of 13.
+Refer to the Plan and Profile drawings (PP-1 and PP-2) attached in Appendix B for an illustration of the
+proposed roadway profile details. The following road vertical curve geometric design review has been
+completed to illustrate that the proposed road K values meet or exceed the Ministry of Transportation
+(MTO) Geometric Design Standards for Ontario Highways minimum design criteria.
+As part of the Draft Plan of Subdivision development requirements a Transportation Study was prepared
+by CGE Transportation Consulting (CGE), dated December 16, 2024. A copy of the Transportation Study
+has been attached in Appendix A.7.
+
+The study provides a high-level assessment of the proposed
+
+developments anticipated traffic impacts to the surrounding roadways. CGE’s proposed site trip
+generation data identifies the total amount of traffic during weekday morning peak hour, and two-way
+trips during afternoon peak hour, and has been summarized below.
+•
+•
+
+310 two-way trips (221 in and 89 out) – Weekday morning peak hour
+445 two-way trips (174 in and 271 out) – Afternoon peak hour
+
+A total of 755 trips is anticipated for the development. The proposed ADT of 755 is lower than the ADT for
+an Industrial Collector R.O.W. (1,000 to 3,000) and is more in line with a Local Industrial R.O.W. (<1,000).
+As such the development’s design speed will presumably have a posted design speed of 50 km/h. The
+Town’s Standards Section 1.5.2. Geometric Design, Table 1.2 notes that the posted design speed of
+50km/h based on an ADT of <1,000 requires a minimum vertical curve K in a sag and crest of 18 and 15,
+respectively.
+To direct the post-development major overland flow to the proposed SWM facility a high point is required
+at Street A, north of the Mayfield Road intersection. This high point ensures that the major storm event
+runoff spills to the SWM facility for quantity control before draining south to Mayfield Road. The roadway
+high point and matching into the Mayfield Road asphalt 3% cross-fall, imposes a deviation in the road K
+values from the Town’s criteria by requiring a vertical sag of 8 and a vertical crest of 13.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+46
+
+The MTO Geometric Design Standards for Ontario Highways is the governing document from which most
+municipalities roadway design standards are based on. Chapter C – Alignment, Section C.4 provides
+vertical alignment component design requirements, including the minimum sag and crest curvature, and
+is summarized below in Table C4-5 K - Standard Vertical Curve Values, and Table C4-8 Sag Curvature,
+Comfort.
+
+The above tables illustrate that the minimum curvature for a crest and sag with a design speed of 50 km/h
+is 4 and 5, respectively. The proposed Street A roadway profile minimum crest and sage K of 13 and 8,
+respectively, both exceed the MTO minimum geometric design requirements.
+Refer to the Grading Plan (Drawing No. LG-1) and preliminary Plan and Profiles (Drawing No.’s PP-1
+through PP-6) attached in Appendix B for the proposed road and lot elevations and details.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+47
+
+8. Transportation
+8.1.
+
+External Road Network
+
+The Study Area borders onto two (2) Regional roads: Airport
+Road (Regional Road 7) along the western boundary and
+Mayfield Road (Regional Road 14) along the southern
+boundary. Both are considered arterial collector roads. A
+copy of the Region’s Road Map is attached in Appendix A.7.
+
+8.2.
+
+Mayfield Road Widening
+
+The Region’s Mayfield Road improvements project, from
+
+Figure 22: Regional Road Map
+
+Airport Road to Colerain Drive, is expected to commence in 2026. The design and construction works will
+accommodate the Study Area’s entrance location at the Davis Lane extension to the Mayfield Road and
+Maisonneuve Boulevard intersection. This subdivision entrance will ultimately require traffic signals to
+accommodate Study Area’s commercial and industrial transportation demands on the surrounding
+roadways.
+
+8.3.
+
+Transportation Study
+
+As part of the Study Area’s preliminary design
+a Transportation Study (TS) has been
+completed by CGE Transportation Consulting,
+dated December 16, 2024, to provide a high
+level assessment for the impact of the future
+Study Area traffic on the adjacent roadways
+and
+
+to
+
+provide
+
+recommendations
+
+to
+
+accommodate the traffic in a safe and
+efficient manner. The TS reflects the early
+
+Figure 23: Transportation Study Map
+
+planning stages of the development and was prepared in advance of the site Traffic Impact Study (TIS) and
+the Functional Internal Traffic Study (FITS). Note that the TS and the SmartCentres TIS and Demand
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+48
+
+Management Plan are complementing each other to address the traffic impacts and site accesses to the
+various developments located within this quadrant.
+In general, the TS has reviewed and addressed the proposed access locations and traffic scenarios with
+recommendations for the planned intersections. For a full description of the transportation requirements
+refer to the TS attached in Appendix A.7.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+49
+
+9. Utilities, Street Lighting and Traffic Signals
+The Study Area will be serviced by secondary utilities including hydro, gas, phone, cable, internet,
+streetlights, and Canada Post for mail. At this time there are no known encumbrances with the utilities
+and the specific servicing needs for the subdivision blocks will be determined during the project’s detailed
+design process. The following provides a summary for the existing utility provider’s plant data, street
+lighting and traffic signals information surrounding the Study Area.
+
+9.1.
+
+Gas
+
+The Enbridge Atlas Tile Mapping data shows there are four (4) inch PE mains within Airport Road’s eastern
+boulevard, Mayfield Road’s southern boulevard and running along the west side of Maisonneuve
+Boulevard. A copy of the mapping data has been included in Appendix A.8.
+New gas mains will connect to the existing service at the Study Area entrances and loop through the
+future right-of-ways. The proposed mains actual size will be determined during the detailed designs
+stage. A composite utility plan (CUP) will summarize all the utility design and construction works for the
+Study Area.
+
+9.2.
+
+Hydro
+
+Hydro One Networks Inc. (HONI) currently
+services the existing developments within the
+Study Area and surrounding the site.
+
+The
+
+HONI servicing map shows three (3) phase
+primary overhead lines (16/27.6 KV) and poles
+running
+
+along
+
+Airport
+
+Road’s
+
+eastern
+
+boulevard and Mayfield Road’s northern
+boulevard. A site visit confirmed that there is
+a second set of hydro poles and lines running
+
+Figure 24: Mayfield Road and Maisonneuve Boulevard
+Intersection
+
+along Mayfield Road’s southern boulevard. A copy of the mapping data has been included in Appendix
+A.8.
+The existing hydro network will service the Study Area by connecting to the grid at the future site
+entrances and installing underground cables and pad mounted transformers that will loop through the
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+50
+
+future right-of-ways. The primary and secondary hydro servicing specifics for the future commercial and
+industrial blocks will be determined through consultation with HONI during the detailed designs stage.
+
+9.3.
+
+Rogers
+
+Rogers was contacted to obtain their networks utility information surrounding the Study Area, but it was
+not made available at the time of this report’s preparation. Based on the other utilities that are available
+in the area it is assumed that there will be no encumbrances to equip the site with Rogers services.
+
+9.4.
+
+Bell
+
+Bell currently has buried cable and conduit servicing the properties surrounding the Study Area. There
+are services running along both side of Airport Road and Mayfield Road. These services will be extended
+through the Study Area to service the individual blocks. A copy of the Bell mark-up mapping data has
+been included in Appendix A.8.
+
+9.5.
+
+Street Lighting
+
+Airport Road is currently equipped with streetlights along both sides of the right-of-way. These lights are
+operated by the Region. Mayfield Road only has lighting at the intersection of Maisonneuve Boulevard.
+New streetlights will be installed throughout the Study Area in accordance with the Town and HONI’s
+latest standards for industrial subdivisions. All lighting will be approved by the Electrical Safety Authority
+(ESA) before being energized and assumed into the Town’s streetlighting inventory.
+
+For new
+
+development LED lighting sources are typically required with 6 Lux at 3:1 illumination ratios, spaced at 55
+– 60 meter intervals for industrial collector roads but will be confirmed during the detailed design. A copy
+of the Town’s applicable street lighting standards has been attached in Appendix A.8.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+51
+
+9.6.
+
+Traffic Signals
+
+The Airport Road and Mayfield Road
+intersection is currently equipped with
+traffic control signals operated by the
+Region. There are also existing signals at
+the intersection of Airport Road and the
+Mayport Distribution Facility entrance
+(referred to as Street A). A copy of the
+existing signal diagrams are attached in
+
+Figure 25: Airport Road and Mayfield Road Intersection
+
+Appendix A.8.
+The Study Area’s ultimate build-out will require traffic signals at the Davis Lane and Airport Road
+intersection and at the Davis Lane, Mayfield Road, and Maisonneuve Boulevard intersection. The traffic
+created from the Study Area developments and neighbouring growth demands will warrant the traffic
+signal installation timing. The design and installation timing for the traffic signals will be coordinated with
+the Region and the Town during the detailed design. Further details for the traffic signal construction
+timing and triggers have been described in the TIS prepared for the Study Area.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+52
+
+10.Conclusions
+This Functional Servicing Report identifies the recommended servicing design for the Tullamore
+Secondary Plan Study Area. This Report in conjunction with the preliminary civil engineering drawings,
+Preliminary Stormwater Management Report and Transportation Study outlines the proposed
+infrastructure required to service the site for water, wastewater, roads, stormwater management quality
+control, quantity control, water balance, and erosion and sediment control, conventional utilities, street
+lighting and traffic signals.
+In particular, this Report has recommended the following:
+•
+
+The post-development stormwater runoff from the Study Area lands and the portion of Mayfield
+Road fronting onto the site can be accommodated by the construction of two on-site stormwater
+quality and quantity control facilities (ponds).
+
+•
+
+Base flow to the existing Environmental Policy Area and culvert crossing Mayfield Road at
+Maisonneuve Boulevard can be maintained by constructing an environmentally protected
+corridor and discharging the future phases of the development’s building roof-leaders via a thirdpipe system.
+
+•
+
+The Study Area’s grading, landform, future road profile and environmentally protected corridor
+center line elevations can accommodate the sanitary and storm sewer servicing crossing
+constraints.
+
+•
+
+The Region of Peel’s wastewater (sanitary sewers) infrastructure within Airport Road and
+Mayfield Road (Maisonneuve Boulevard) can accommodate the effluent from the Study Area’s
+full build-out.
+
+•
+
+The Study Area’s ultimate road network connections at Airport Road and Mayfield Road can
+accommodate the developments traffic demands by installing traffic signals at both locations.
+
+•
+
+The Study Area’s landscaping, street lighting and boulevard features will be designed in
+accordance with the Tullamore Community Design Guidelines.
+
+•
+
+The existing hydro, gas, telephone and cable networks within Airport Road and Mayfield Road
+can accommodate the Study Area’s future utility requirements.
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+53
+
+•
+
+The preliminary designs works are consistent with the Town of Caledon, Region of Peel, Ministry
+of Natural Resources and Forestry, Ministry of the Environment and Climate Chance, and the
+Toronto and Region Conservation Authority standards and development criteria.
+
+All costs incurred to facilitate servicing the initial phase and any subsequent phases of the Study Area will
+be recovered from all benefitting property owners. The lands benefitting from the works will be required
+to commute the balance of the area specific assessment owing on those lands prior to finalizing any
+future site plan agreement to develop the said lands. The costs for recovery and timing will be dependent
+on the project’s progress.
+We trust the enclosed is appropriate for the Study Area’s preliminary design. It is recommended that this
+Report be accepted as demonstrating a functional servicing approach for the Study Area.
+
+All of which is respectfully submitted,
+THE JONES CONSULTING GROUP LTD.
+
+2025/02/14
+
+Jim Parker, P.Eng.
+Consulting Engineer
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+54
+
+References
+•
+
+Town of Caledon, Development Standards Manual (Version 5), 2019
+
+•
+
+Town of Caledon, Official Plan, April 2018 Consolidation
+
+•
+
+Region of Peel, Linear Wastewater Standards, 2023
+
+•
+
+Region of Peel, Public Works Design, Specifications & Procedures Manual – Linear Infrastructure,
+Sanitary Sewer Design Criteria, July 2009
+
+•
+
+Region of Peel, Public Works Design, Specifications & Procedures Manual – Linear Infrastructure,
+Watermain Design Criteria, June 2011
+
+•
+
+Region of Peel Public Work Stormwater Design Criteria and Procedural Manual, June 2019
+
+•
+
+Toronto and Region Conservation Authority, Stormwater Management Criteria (Version 1.0),
+August 2012
+
+•
+
+Toronto Region Conservation Authority, Watershed Mapping, 2022
+
+•
+
+Ministry of Natural Resources and Forestry Guidance for Development Activities in Reside Dace
+Protected Habitat (Draft), February 2011
+
+•
+
+Ministry of the Environment, Stormwater Management Planning and Design Manual, March
+2003
+
+•
+
+Ministry of the Environment, Design Guidelines for Sewage Works, 2008
+
+•
+
+Ministry of the Environment, Design Guidelines for Drinking-Water Systems, 2008
+
+•
+
+Ministry of the Environment, Guidelines for the Design of Water Storage Facilities, Water
+Distribution Systems, Sanitary Sewage Systems and Storm Sewers, May 1979
+
+•
+
+Ministry of Transportation, Drainage Management Manual, 1997
+
+•
+
+Transportation Study, Proposed Tullamore Industrial Development, Town of Caledon, CGE
+Transportation Consultants, March 24, 2023
+
+•
+
+Natural Heritage Existing Conditions Report, Six Properties within the Tullamore Secondary Plan
+Area, Town of Caledon, Azimuth Environmental Consulting Inc., November 2022
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+55
+
+•
+
+Soil Map of Peel County, Ontario - Report No. 18, 1953
+
+•
+
+Preliminary Geotechnical Investigation, Proposed Commercial Development, Airport Road and
+Mayfield Road, Caledon, Ontario, Golder Associates, February 2012
+
+•
+
+Phase 1 Environmental Site Assessment, 6034 Mayfield Road, Barenco Inc., December 2010
+
+•
+
+Tullamore Industrial Park Soil Survey and Agricultural Report, Ecoplans Limited, March 1989
+
+•
+
+The Physiography of Southern Ontario (Third Edition), Ontario Geological Survey, Special Report
+#2, Ontario Ministry of Natural Resources, Toronto, Chapman, L.J. & D.F. Putnam, 1984
+
+•
+
+Geotechnical Investigation, Proposed Industrial/Commercial Development, 6086, 6186, 6230
+Mayfield Road and 12151 Airport Road, Town of Caledon, Soil Engineers Ltd., September 2023
+
+•
+
+Tullamore Secondary Plan Area Master Environmental Servicing Plan, AGRA Earth &
+Environmental and Giffels Associates Ltd., June 2000
+
+•
+
+Tullamore Business Park Stormwater Management Plan, Counterpoint Engineering, November
+2005
+
+•
+
+Airport Road Distribution Facility Functional Servicing Report and Stormwater Management
+Report, JSW + Associates, August 2013
+
+•
+
+Brentview Construction Ltd. Development (Laidlaw Transit) Site Servicing and grading Plan, EMC
+Group Limited, February 2003
+
+•
+
+Tullamore Industrial Park Functional Servicing Report, IBI Group Inc., February 2009
+
+•
+
+Castlemore North Secondary Plan (Area 49), City of Brampton, Office Consolidated July 2014
+
+•
+
+Mayfield Road Improvements Class Environmental Assessment Study Report, Stantec Consulting
+Ltd., April 2013
+
+•
+
+Mayfield Road Improvements Detailed Design, IBI Group Inc., April 2015
+
+•
+
+Tullamore Community Design Guidelines, Paul Cosburn and Associates Ltd., May 2000
+
+•
+
+Airport Road, New Construction, Plan No. 38362-D to No. 38366-D, Plan No. 38115-D and 38116D, Giffels Associates Limited, January 2010
+
+•
+
+Highlands of Castlemore, Maisonneuve Boulevard, Plan and Profile No. 34313-D and 34314-D,
+Candevcon Limited, July 2002
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+56
+
+•
+
+Sanitary Drainage Area Plan, Sheet No. D.2, Candevcon Limited, July 2002 and accompanying
+Sanitary Sewer Design Sheet 3, January 2003
+
+•
+
+Mayfield Road, Tullamore Transmission Main, Contract No. 2, Plan No. 48180-D to 4815,
+CH2MHILL, January 2011
+
+•
+
+Mayfield Road, Proposed 750mm Bolton Feeder Main, Plan No. 29038-D and 29039-D, Plan No.
+29043-D and 29044-D, KMK Consultants Limited, August 2001
+
+•
+
+17th Sideroad (Regional Road 14), 300 mm Watermain, Plan No. 4683-D and 4684-D, Region of
+Peel, July 1981
+
+•
+
+Water and Wastewater DC Map(s), Region of Peel, January 2014
+
+•
+
+Water Master Plan for the Lake-Based Systems, Volume IV, Figure 3.2, Appendix 3G, Region of
+Peel, BluePlan, Aecom, March 2014
+
+•
+
+Wastewater Master Plan for the Lake-Based Systems, Volume IV, Figure 4.2, Sheet 3, Sheet 14,
+Sheet 15, Sheet 18, Sheet 21, Appendix 4I, Region of Peel, BluePlan, Aecom, March 2014
+
+•
+
+Water System Policy and Criteria (Page 6), Water and Wastewater Master Plan for the LakeBased Systems, Volume III, Region of Peel, BluePlan, Aecom, March 2014
+
+•
+
+Wastewater System Policy and Criteria (Page 6 and 7), Water and Wastewater Master Plan for
+the Lake-Based Systems, Volume IV, Region of Peel, BluePlan, Aecom, March 2014
+
+•
+
+Water Distribution System, Infrastructure Capacity Review, Figure 8, City of Brampton, Aecom,
+April 2009
+
+•
+
+Wastewater Collection System, Infrastructure Capacity Review, Figure 9, City of Brampton,
+Aecom, April 2009
+
+Tullamore Secondary Plan Area
+Functional Servicing Report, February 2025
+CAL-13304(70)
+
+57
+
+Appendix A
+External Reports and Drawings, Maps and Design Criteria
+
+Tullamore Secondary Plan Area
+Functional Servicing Report
+CAL-13304(70)
+
+Appendix A.1
+Maps, Engineering Drawings, Road Standards, Tullamore Design
+Guidelines, Meeting Minutes
+
+Tullamore Secondary Plan Area
+Functional Servicing Report
+CAL-13304(70)
+
+s)
+
+ty
+
+tic
+
+Fa
+ci
+li
+
+gi
+s
+
+\
+
+Lo
+
+M
+12 ay
+33 po
+3 rt
+A Di
+irp s
+or trib
+tR u
+oa tion
+d
+
+an
+s
+
+V
+
+(V
+itr
+
+10
+
+Legend
+
+k
+
+T
+12 ulla
+20 m
+3 or
+A e
+irp B
+or us
+t R ine
+oa ss
+d P
+ar
+
+Owners
+
+13
+12
+
+9
+1
+2
+
+8
+
+V
+
+7
+V
+
+3
+%
+
+6
+4
+
+f
+
+A
+
+5
+
+11
+co
+n V
+C da ale
+ity r s
+y
+of P No
+B lan rth
+ra (
+m Ar
+pt e
+on a 4
+9)
+
+• 'V
+
+Participating Owners
+SmartCentres
+
+Se
+
+V
+
+Property
+Owners
+
+Data Source:
+Parcel Fabric- Teranet
+Protected by Copyright - May Not
+be Reproduced without Permission
+THIS IS NOT A PLAN OF SURVEY
+Ortho-imagery May 2013
+Copyright First Base Solutions
+Please note for illustrative purposes only.
+
+T O W N OF C A L E D O N
+
+0
+
+• ™ -
+
+0.1
+
+0.2
+Km
+
+Storm catchment area
+
+Overland flow Direction
+Storm sewer flow direction
+
+Ex. Ditch flow direction
+
+approximate
+outlet from
+smartcentres
+
+Storm catchment area
+
+Overland flow Direction
+Storm sewer flow direction
+
+Ex. Ditch flow direction
+
+Storm catchment area
+
+Overland flow Direction
+Storm sewer flow direction
+
+Ex. Ditch flow direction
+
+Storm catchment area
+
+50124
+ 14 8
+
+01234
+
+134
+
+698-
+
+0134
+
+514 1
+
+5124 1
+
+14 1
+
+67
+78 1
+
+1034
+134
+
+124  88
+886)3244
+6 
+
+124  88
+886)3244
+6 
+
+5+ '$+
+012345678
+6429:
+;1<<:
+
+0134
+
+698-
+
+5+ '$+
+14 1
+
+1034
+
+01234
+
+67
+78 1
+012345678
+6429:
+;1<<:
+
+8876"
+7! 
+
+ 
+1 7767 88 72141
+5198 78 88 7141
+1 9!8 786"88 697#7877 78 
+$2 44  
+244 6"
+3244 !78 87%8%
+$3244 !78 87%"%
+$1 "8767#78  2244  8 6 7761
+31 7 "86 8  78768 688 1
+
+9 86
+50124 6 78 7
+$134 78698. 14 8 /
+
+01 7 ! & 77876 9 86  8 68761
+1 !  22 681"'678 (9  7 8
+" 86)87876 9  8 6876 15*1
+*1"'!7868"8 6 8 3+ 11618
+   7  1
+197"8 6 "8 6  78 
+781
+21124 886 "8 7 6 7 87876 9
+86  8 6876 15*1
+1 !6   78 77 "878  7 1
+
+$ & 8 67
+6  8 6 & 7
+5 6  8 68 7
+ 6  6) 6 152 9 5
+
+1
+
+7
+
+87 876
+,8 12
+,2* 6789
+, 2*
+
+876 68 
+
+11
+
+, 2*
+8 11
+1
+
+68 
+
+ 8 6876 15
+
+28/10/2022, 10:00
+
+Notice of Public Meeting: 0 Airport and 6034 Mayfield Road - Town of Caledon
+
+Notice of Public Meeting: 0 Airport and 6034
+Mayfield Road
+Posted on Thursday, April 21, 2022
+
+A Public Meeting will be held to consider proposed Official Plan Amendment and Zoning
+By-law Amendment applications. Your input and insight will inform and shape plans that
+meet the needs of our community.
+The Town of Caledon is offering a hybrid meeting model offering many ways for you to
+engage with Council. To participate in-person or virtually, complete the participation
+form by registering here.
+Meeting date: May 3, 2022 | Meeting start time: 7 p.m.
+
+How to participate
+Members of the public may participate and learn more about proposed applications and
+can provide direct input.
+
+How to attend
+
+https://www.caledon.ca/en/news/notice-of-public-meeting-0-airport-and-6034-mayfield-road.aspx
+
+1/5
+
+

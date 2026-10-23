@@ -1,0 +1,16822 @@
+File #:
+Date:
+
+2630
+December 20, 2024
+
+Town of Caledon
+c/o MHBC
+113 Collier Street
+Barrie, ON, L4M 1H2
+
+Re:
+
+Functional Servicing Report in Support of OPA
+Wildfield Village Secondary Plan
+Town of Caledon, Region of Peel
+
+The following analysis has been prepared to provide a summary of the existing and planned sanitary and
+water distribution systems and associated improvements located throughout the Region of Peel and Town
+of Caledon, that support the development of the Wildfield Village Secondary Plan (WVSP) area. It also
+includes a summary of the ongoing stormwater management (SWM) analysis that is current underway as
+part of the WVSP Local Subwatershed Study (LSS).
+The WVSP area is part of the future development areas identified in the Region Official Plan (2022) and
+Town of Caledon Official Plan (2024). The WVSP area is approximately 358.1 hectares (ha) in size, and is
+bound by Centreville Creek Road to the west, Mayfield Road to the south, the planned Highway 413
+Transportation Corridor to the north and the West Humber River to the east (refer to Figure 1).
+
+Sanitary Sewer Servicing
+Existing and Planned Sanitary Servicing
+There are no existing sanitary sewers within the WVSP area or on the arterial roads immediately
+surrounding the WVSP area. An existing 1200 mm diameter sanitary sewer is located on The Gore Road
+approximately 615 m south of Mayfield Road. There is also an existing sanitary sewer (size to be
+confirmed) located on McVean Drive at the intersection with Countryside Drive approximately 1.25 km
+south of the WVSP area.
+The planned sanitary servicing improvements in the Region of Peel and Town of Caledon have been
+determined through the Region of Peel Water and Wastewater Master Plan (2020), Region of Peel
+Settlement Boundary Expansion (SABE) Water and Wastewater Servicing Analysis (2022), and ongoing
+coordination with Region of Peel staff. The WVSP area is identified as Secondary Plan Area G2 in the Town
+of Caledon Official Plan (2024). Relevant figures from the Region documents and coordination noted above
+are provided in Attachment A. Through the documents and discussions outlined above, it has been
+confirmed that the WVSP has been accounted for by the Region with regard to wastewater servicing
+through the extension of existing services.
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Re: Functional Servicing Report in Support of OPA
+Wildfield Village Secondary Plan
+Town of Caledon, Region of Peel
+
+File #: 2630
+December 20, 2024
+Page 2 of 6
+
+The Region of Peel Water and Wastewater Master Plan (2020) identifies the servicing needs of future
+development to 2041. The Master Plan projects proposed in this document include watermain and sanitary
+sewer projects throughout the Region, including the planned growth areas in Caledon north of Mayfield
+Road and in west Bolton, but do not include the development area surrounding the anticipated Bolton GO
+station. Several wastewater projects are noted in the immediate vicinity of the WVSP including: T-085 (The
+Gore Road from current termination to Mayfield Road) and ST-256 (McVean Drive from current termination
+to Mayfield Road).
+
+The Region of Peel SABE Water and Wastewater Servicing Analysis (2022) identifies the servicing needs
+of the anticipated growth areas in Caledon from 2041 to 2051 including the development area
+surrounding the anticipated Bolton GO Station. The analysis focused on conveyance infrastructure and
+did not include a summary of water treatment plant and wastewater treatment plant improvements
+required beyond those identified in the Region of Peel Water and Wastewater Master Plan (2020). The
+WVSP area was identified as part of Sanitary Servicing Area 3. No additional wastewater projects were
+noted in the immediate vicinity of the WVSP beyond those identified in the Region of Peel Water and
+Wastewater Master Plan (2020).
+Draft Development Charge (DC) Project Mapping (2024) was obtained from Region of Peel staff which
+illustrates preliminary sanitary projects to support the full buildout of the SABE including the WVSP. It
+should be noted that the projects and construction timing shown are preliminary only and subject to
+change. The Draft DC Project Mapping (2024) shows The Gore Road Trunk Sewer (T-085) extending
+north of Mayfield Road to King Street and the McVean Drive trunk sewer extending north of Mayfield
+Road on Centreville Creek Drive to immediately south of the planned Highway 413 (refer to
+Attachment A).
+A first submission of the detailed design of project T-085 has been completed by Schaeffers and
+Associates Limited and reviewed by Region of Peel staff. The proposed 1200 mm diameter concrete
+sanitary sewer will extend north on The Gore Road from the current termination point approximately
+80 m north of Beamish Court to immediately south of the planned Highway 413. The design drawings
+show individual plugs at the proposed maintenance hole structures to accept sanitary flows from the
+WVSP area at the anticipated collector road locations and at the intersection with Mayfield Road. The
+latest version of the design drawings has been provided in Attachment B for reference.
+Proposed Sanitary Servicing
+The Master Sanitary Drainage Plan (refer to Figure 2) shows local wastewater mains (i.e. sanitary trunk
+sewers) and drainage boundaries per the latest Region of Peel Draft DC Project Mapping (2024). As
+shown, the WVSP area will be serviced via several connections to the future wastewater main on The
+Gore Road (project T-085) at each of the proposed collector road intersections. The internal alignment
+and location of the stubs for the proposed sanitary sewers are preliminary only and subject to change
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Re: Functional Servicing Report in Support of OPA
+Wildfield Village Secondary Plan
+Town of Caledon, Region of Peel
+
+File #: 2630
+December 20, 2024
+Page 3 of 6
+
+at the Draft Plan of Subdivision stage. No external drainage is proposed to be conveyed through the
+WVSP area in accordance with the latest Region of Peel Draft DC Project Mapping (2024).
+The sanitary sewers within the WVSP area are anticipated to have slopes ranging between 0.5% and
+2% (typically). Slopes of less than 0.5% may be required for trunk sanitary sewers to limit the depth of
+trunk infrastructure while meeting minimum velocity criteria. Preliminary grades and inverts will be
+provided as part of the Phase 2 LSS which is currently underway.
+The sanitary sewer system will be designed in accordance with the Region of Peel and MECP criteria,
+including but not limited to:
+Residential Sanitary Generation Rate: 290 L/c/d,
+Commercial Sanitary Generation Rate: 270 L/emp/ha
+Population Density:
+o Single detached: 4.2 person/unit,
+o Semi-detached: 4.2 person/unit,
+o Townhouse: 3.4 person/unit,
+o Large Apartment (greater than 1 bedroom): 3.1 person/unit,
+o Small Apartment (less than or equal to 1 bedroom): 1.7 person/unit,
+Peaking Factor: Harmon (Max. 4.0),
+Infiltration Rate: 0.26 L/s/ha,
+Minimum Pipe Size: 200 mm diameter,
+Minimum Pipe Cover: 2.5 m below centerline road elevation,
+Minimum Actual Velocity: 0.75 m/s, and
+Maximum Velocity: 3.0 m/s.
+A preliminary sanitary design sheet has been prepared based on the proposed Land Use Plan for the
+WVSP area and assumed land-use statistics. The sanitary design sheet and Land Use Plan are provided
+in Attachment C. The WVSP area sanitary drainage boundaries, defined by the preliminary limits of the
+Natural Heritage System (NHS) as determined in the Phase 1 LSS (SCS Consulting Group Ltd. and GEI,
+November 2024), will be refined through the Secondary Plan and Draft Plan approval processes.
+Therefore, the populations and design flows are preliminary only and are subject to change.
+Based on the preliminary design flows to each of the outlet locations to The Gore Road wastewater
+main, the plug sizes shown on the first submission project T-085 detailed design drawings prepared by
+Schaeffers and Associates Ltd. will need to be increased.
+Preliminary grading and servicing obvert design will be provided as part of the Phase 2 Local
+Subwatershed Study.
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Re: Functional Servicing Report in Support of OPA
+Wildfield Village Secondary Plan
+Town of Caledon, Region of Peel
+
+File #: 2630
+December 20, 2024
+Page 4 of 6
+
+Water Supply and Distribution
+Existing and Planned Water Servicing
+There are existing watermains on several arterial roads surrounding the WVSP area including 200 mm
+diameter watermains on Centreville Creek Road, Healey Road, and The Gore Road; and, a 300 mm diameter
+watermain, 600 mm diameter watermain (Pressure Zone 5), and 750 mm diameter watermain (Pressure
+Zone 6) on Mayfield Road (refer to Figure 3). The WVSP area is located entirely within Pressure Zone 6
+which has a serviceable elevation of 214.5 m to 259.1 m. The WVSP is located within the East Region of
+Peel transmission system. The system is fed from Lake Ontario and treated at the Arthur P. Kennedy
+Water Treatment Plant (HLP1C, HLP2C). Water storage and distribution for the WVSP area is provided
+by the Tullamore Reservoir (ES4) and Pumping Station (LLP5E, HLP6E) and the Bolton Elevated Tanks
+(BS6).
+The planned water servicing improvements in the Region of Peel and Town of Caledon have been
+determined through the Region of Peel Water and Wastewater Master Plan (2020), and the Region of Peel
+SABE Water and Wastewater Servicing Analysis (2022). The WVSP area is identified as Secondary Plan Area
+G2 in the Town of Caledon Official Plan (OP, 2024). Relevant figures from the Region documents and Town
+OP are provided in Attachment A. Through the documents and discussions outlined above, it has been
+confirmed that the WVSP area has been accounted for by the Region with regard to water servicing
+through the extension of existing services and planned water servicing improvements.
+The Region of Peel Water and Wastewater Master Plan (2020) identifies the servicing needs of future
+development to 2041. Several water projects are noted in the immediate vicinity of the Secondary Plan
+including: D-085 (Mayfield Road from Centreville Creek Road to the Gore Road), and D-184 (Centreville
+Creek Road from Mayfield Road to a mid-block connection). Per correspondence with Region of Peel staff,
+it is understood that project D-085 has been completed.
+
+The Region of Peel SABE Water and Wastewater Servicing Analysis (2022) identifies the servicing needs
+of the anticipated growth areas in Caledon from 2041 to 2051 including the development area
+surrounding the anticipated Bolton GO Station. The WVSP Area was identified as part of water
+pressure subzone 6E. No additional water projects were noted in the immediate vicinity of the WVSP
+beyond those identified in the Region of Peel Water and Wastewater Master Plan (2020).
+Draft DC Project Mapping (2024) was obtained from Region of Peel staff which illustrates preliminary
+watermain projects to support the full buildout of the SABE including the WVSP. It should be noted
+that the projects and construction timing shown are preliminary only and subject to change. The Draft
+DC Mapping shows a proposed 600 mm distribution main on The Gore Road extending north of
+Mayfield Road to Healey Road and a mid-block distribution main from Centreville Creek Drive to The
+Gore Road. A 400 mm diameter distribution main and 900 mm diameter transmission main are
+proposed on Healey Road; however, these projects are located outside of the WVSP Area (refer to
+Attachment A).
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+Re: Functional Servicing Report in Support of OPA
+Wildfield Village Secondary Plan
+Town of Caledon, Region of Peel
+
+File #: 2630
+December 20, 2024
+Page 5 of 6
+
+A first submission of the detailed design of the distribution mains on Centreville Creek Road and The
+Gore Road has been completed by Schaeffers and Associates Limited and reviewed by Region of Peel
+staff. The proposed 400 mm diameter PVC watermain on Centreville Creek Road will extend north from
+Mayfield Road to the future mid-block collector road. The proposed 600 mm diameter concrete
+pressure pipe watermain on The Gore Road will extend north from Mayfield Road to the future midblock collector road. The design drawings show proposed chambers for future connections from the
+WVSP area at anticipated collector road locations. The latest version of the design drawings has been
+provided in Attachment B for reference.
+Proposed Water Servicing
+
+The Master Water Servicing Plan (Figure 3) shows proposed local distribution mains and future
+Regional distribution and transmission mains per the latest Region of Peel Draft DC Project Mapping
+(2024), and the approximate pressure zone boundaries. As noted above, the WVSP area is located in
+Pressure Zone 6.
+Servicing for the WVSP area will be provided by the distribution mains planned by the Region with
+connections to the existing distribution mains on Mayfield Road and the future distribution mains on
+Centreville Creek Road and The Gore Road.
+The watermain system will be designed in accordance with the Region of Peel and MECP criteria
+including:
+Residential water usage rate: 280 L/c/d,
+Commercial water usage rate: 300 L/emp/ha,
+Population Density:
+o Single detached: 4.2 person/unit,
+o Semi-detached: 4.2 person/unit,
+o Townhouse: 3.4 person/unit,
+o Large Apartment (greater than 1 bedroom): 3.1 person/unit,
+o Small Apartment (less than or equal to 1 bedroom): 1.7 person/unit,
+Minimum Pipe Size: 150 mm diameter,
+Minimum Pipe Depth: 1.7 m, and
+Maximum Hydrant Spacing: 150 m.
+Preliminary population estimates for the development blocks of the WVSP area have been prepared
+based on the proposed Land Use Plan for the WVSP area and assumed land-use statistics. The Land Use
+Plan and preliminary population estimates are provided in Attachment C, noting that the estimates are
+to be incorporated into the Region of Peel water model. The WVSP area boundaries as defined by the
+preliminary limits of the NHS described in the Phase 1 LSS (SCS Consulting Group Ltd. and GEI,
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+File #: 2630
+December 20, 2024
+Page 6 of 6
+
+Re: Functional Servicing Report in Support of OPA
+Wildfield Village Secondary Plan
+Town of Caledon, Region of Peel
+
+November 2024), will be refined through the Secondary Plan and Draft Plan approval process.
+Therefore, the populations are preliminary only and are subject to change.
+
+Storm Servicing and Stormwater Management
+Storm servicing, including the establishment of stormwater management (SWM) criteria and preliminary
+SWM facility locations, will be determined through the ongoing LSS being prepared by SCS Consulting
+Group and GEI in support of the WVSP. The SWM design for the Secondary Plan will meet all relevant
+quantity, quality and erosion control, temperature mitigation, water balance, and conveyance criteria.
+SWM facilities will generally be located at the existing low points throughout the WVSP area adjacent to
+existing conveyance features and watercourses to provide a suitable outlet. Refer to the Wildfield Village
+Land Use Concept Plan provided in Attachment C for preliminary SWM facility locations.
+
+Please contact the undersigned if you have any questions or require any additional information.
+Sincerely,
+OFESSIONAL
+PR
+E
+
+INEER
+NG
+
+N. D. MCINTOSH
+
+LICENS
+ED
+
+SCS Consulting Group Ltd.
+
+A. R. KEEPING
+
+100230564
+
+100041334
+
+Dec. 20, 2024
+
+Dec. 20. 2024
+
+Nicholas McIntosh, M.A.Sc., P. Eng.
+nmcintosh@scsconsultinggroup.com
+
+IO
+
+PR
+
+OV
+R
+INCE ONTA
+OF
+
+Andrea Keeping, P.Eng.
+akeeping@scsconsultinggroup.com
+
+Attachments
+Figure 1 – Site Location Plan
+Figure 2 – Master Sanitary Drainage Plan
+Figure 3 – Master Water Servicing Plan
+Attachment A – Region of Peel Documents
+Attachment B – Detailed Design Drawings
+Attachment C – Preliminary Population Estimates and Sanitary Design Sheet
+c.
+
+Mr. Glenn Pitura, Arutip Engineering Ltd.
+Mr. Paul Lowes, SGL Planning & Design Inc.
+
+P:\2630 Wildfield Village\Design\Reports\Servicing Investigation\2024 12(Dec) 20 Preliminary Servicing Brief for OPA\Wildfield OPA-Preliminary
+Servicing.docx
+
+30 Centurian Drive, Suite 100 Markham, Ontario L3R 8B8 Phone 905 475 1900
+www.scsconsultinggroup.com
+
+Fax 905 475 8335
+
+KING STREET
+
+KING STREE
+
+HEALEY ROAD
+WEST TRIBUTARY TO
+WEST HUMBER RIVER
+
+COLERAINE D
+
+HUMBER STA
+
+RIVE
+
+TION ROAD
+
+OAD
+THE GORE R
+
+CENTERVILLE
+
+INNIS LAKE R
+
+AIRPORT RO
+
+AD
+
+OAD
+
+CREEK ROAD
+
+T
+
+HEALEY ROAD
+
+WEST HUMBER RIVER
+
+WILDFIELD VILLAGE
+SECONDARY PLAN
+(WVSP) AREA
+
+EAST TRIBUTARY TO
+WEST HUMBER RIVER
+TRIBUTARY
+H5S1/S2/S3
+THE GORE
+ROAD
+
+McVEAN
+DRIVE
+
+MAYFIELD ROAD
+
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+MAYFIELD ROAD
+
+WILDFIELD VILLAGE
+KEY PLAN
+
+DESIGNED BY:
+
+R.R.B.
+
+CHECKED BY:
+
+SCALE:
+
+N.T.S.
+
+DATE:
+
+A.R.K.
+
+DECEMBER 2024
+
+PROJECT No:
+
+2630
+
+FIGURE No:
+
+1
+
+HEALEY ROAD
+
+BURSTEIN FAMILY
+GORD DENNIS
+
+TAMMAO
+SIDHU
+GIGLIOTTI
+DHALIWAL
+CIARALLO
+MOHIL
+SAHOTA
+
+GLOBAL
+PROPERTIES (2) INC.
+BADWAL
+PESCITELLI
+CHANA SINGH
+ANTHONY
+
+154.88ha
+17,456 101
+
+PIERCY,
+BROOK, EZARD
+
+SAHOTA
+GULLUSCI
+GRECO
+
+GLOBAL
+PROPERTIES INC.
+GLOBAL
+PROPERTIES (1) INC.
+7.75ha
+945 102
+
+COLLURA
+
+OUTLET 1 - 600mm Ø
+plug @0.30%
+
+CALCE
+
+COPETTI
+FOSAROLLI
+
+TONY &
+GINA ABELLA
+
+GLOBAL
+PROPERTIES INC.
+
+PIERCEY
+
+12.47ha
+1,520 104
+
+OAD
+
+50.87ha
+9,008 103
+
+CAVALLINO
+ESTATES INC.
+
+OUTLET 2 - 525mm Ø
+plug @0.30%
+
+ESHOO AZIZ
+AMATO
+
+CENTREVILLE
+
+CREEK ROAD
+
+CAROZZA
+
+THE GORE R
+
+ONKAR
+INVESTMENT INC.
+
+DOIRON
+
+NOVAMARK
+
+37.22ha
+HOLDINGS LTD.
+4,545 105
+
+CAPPIELLO
+LAVA KALOGERAKOS
+OUTLET 3 - 375mm Ø
+plug @0.30%
+
+ONE VALUE LTD.
+AVTAR & MANJIT KALKAT
+GIOGIA &
+TERESA VESCIO
+CHARLES SPANO
+GIUSEPPE SPANO
+
+DIEGO
+SPANO
+
+SUKHVINDE
+R&
+SARBJIT GILL
+
+LESLIE
+FARKAS
+
+GIGLIO
+
+BAGA
+RANJIT KAUR RAI &
+DILBAGH SINGH
+
+TRINITY FIELD INC.
+MIKE RASO 82.74ha
+
+D'ALESSANDRO
+COLAVITA
+
+12,499 106
+
+KALIRAO
+
+7072A
+HOLDINGS
+LTD.
+
+CHIODO
+BARBERI
+
+GILL
+
+1.72ha
+107 210
+
+NEW TIME
+MOTORS LTD.
+LE DONNE
+
+OUTLET 4 - 525mm Ø
+plug @0.30%
+
+MAYFIELD ROAD
+
+*NOTE: LAYOUT IS SCHEMATIC ONLY, DETAILS TO BE PROVIDED AT DETAILED DESIGN STAGE
+
+LEGEND:
+
+FUTURE 750mmØ SANITARY SEWER
+AND MAINTENANCE HOLE
+
+WILDFIELD VILLAGE SECONDARY
+PLAN (WVSP) AREA LIMITS
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+SANITARY DRAINAGE BOUNDARY
+PROPOSED SANITARY SEWER AND
+MAINTENANCE HOLE
+
+82.71ha
+14,887 406
+
+WILDFIELD VILLAGE
+
+DRAINAGE AREA (HECTARES)
+CATCHMENT ID
+
+DESIGNED BY:
+
+A.T.
+
+CHECKED BY:
+
+POPULATION
+
+SCALE:
+
+1:4000
+
+DATE:
+
+A.R.K.
+
+DECEMBER 2024
+
+PROPOSED SANITARY
+DRAINAGE PLAN
+PROJECT No:
+
+FIGURE No:
+
+2630
+
+2
+
+HEALEY ROAD
+
+WATERMAIN
+
+EX. 200Ø PV
+C WATERMA
+
+IN
+
+EX. 200Ø PVC WATERMAIN
+FUTURE. 900Ø PVC WATERMAIN
+PROP. 400Ø PVC WATERMAIN
+
+EX. 200Ø PV
+C
+
+BURSTEIN FAMILY
+GORD DENNIS
+
+TR HIGH
+AN W
+SPO AY
+RT 413
+AT
+ION PLAN
+CO NED
+OR
+IDO
+R
+
+30.02ha
+3,659 8
+
+TAMMAO
+SIDHU
+GIGLIOTTI
+DHALIWAL
+CIARALLO
+MOHIL
+SAHOTA
+
+GLOBAL
+PROPERTIES (2) INC.
+
+15.03ha
+1,832 2
+
+13.71ha
+1,671 1
+
+FUTURE. 60
+
+16.00ha
+1,950 3
+
+IN
+C WATERMA
+
+35.79ha
+4,362 9
+
+EX. 200Ø PV
+
+PIERCY,
+BROOK, EZARD
+
+0Ø PVC WA
+TERMAIN
+
+EX. 200Ø PV
+
+C WATERMA
+
+IN
+
+BADWAL
+PESCITELLI
+CHANA SINGH
+ANTHONY
+
+SAHOTA
+GULLUSCI
+GRECO
+
+16.85ha
+2,054 4
+
+GLOBAL
+PROPERTIES INC.
+GLOBAL
+PROPERTIES (1) INC.
+COLLURA
+CALCE
+
+COPETTI
+FOSAROLLI
+
+14.87ha
+2,491 5
+
+15.05ha
+2,422 6
+
+TONY &
+GINA ABELLA
+
+20.22ha
+2,465 16
+
+14.70ha
+2,329 7
+
+DOIRON
+
+C WATERMA
+IN
+
+CAROZZA
+
+15.20ha
+2,499 11
+
+16.17ha
+2,937 10
+
+EX. 200Ø PV
+
+IN
+C WATERMA
+
+PROP. 400Ø
+
+CAVALLINO
+ESTATES INC.
+
+ESHOO AZIZ
+AMATO
+
+17.11ha
+2,802 12
+
+NOVAMARK
+HOLDINGS LTD.
+
+CENTREVILLE
+
+CREEK ROAD
+
+PVC WATER
+
+PIERCEY
+
+GLOBAL
+PROPERTIES INC.
+
+EX. 200Ø PV
+
+MAIN
+
+MID-BLOCK LOCATION
+TO BE DETERMINED
+
+THE GORE R
+
+OAD
+
+ONKAR
+INVESTMENT INC.
+
+CAPPIELLO
+LAVA KALOGERAKOS
+
+ONE VALUE LTD.
+AVTAR & MANJIT KALKAT
+GIOGIA &
+TERESA VESCIO
+CHARLES SPANO
+26.60ha
+GIUSEPPE
+SPANO
+5,235
+13
+
+28.41ha
+3,947 15
+
+TRINITY FIELD INC.
+
+IN
+
+LESLIE
+FARKAS
+
+C WATERMA
+EX. 200Ø PV
+
+PROP. 400Ø
+
+PVC WATER
+MAIN
+
+DIEGO
+SPANO
+
+C WATERMA
+
+MIKE RASO
+
+EX. 200Ø PV
+
+GIGLIO
+
+BAGA
+RANJIT KAUR RAI &
+DILBAGH SINGH
+
+SUKHVINDE
+R&
+SARBJIT GILL
+
+IN
+
+24.53ha
+3,316 14
+
+D'ALESSANDRO
+COLAVITA
+
+KALIRAO
+
+7072A
+HOLDINGS
+LTD.
+
+1.72ha
+210 17
+
+CHIODO
+
+NEW TIME
+MOTORS LTD.
+LE DONNE
+
+BARBERI
+
+GILL
+
+EX. PD5 600Ø PVC WATERMAIN
+EX. PD6 750Ø PVC WATERMAIN
+EX. PD6 300Ø PVC WATERMAIN
+
+EX. PD6 300Ø PVC WATERMAIN
+EX. PD6 750Ø PVC WATERMAIN
+
+MAYFIELD ROAD
+
+McVEAN
+DRIVE
+
+EX. PD5 600Ø PVC WATERMAIN
+
+*NOTE: LAYOUT IS SCHEMATIC ONLY, DETAILS TO BE PROVIDED AT DETAILED DESIGN STAGE
+
+LEGEND:
+30 CENTURIAN DRIVE, SUITE 100
+MARKHAM, ONTARIO L3R 8B8
+TEL: (905) 475-1900
+FAX: (905) 475-8335
+
+WILDFIELD VILLAGE SECONDARY
+PLAN (WVSP) AREA LIMITS
+PROPOSED LOCAL DISTRIBUTION
+WATERMAIN
+400Ø PROPOSED DISTRIBUTION
+WATERMAIN
+600Ø FUTURE DISTRIBUTION
+WATERMAIN
+
+900Ø FUTURE TRANSMISSION
+WATERMAIN
+200Ø EXISTING WATERMAIN
+300Ø EXISTING WATERMAIN
+600Ø EXISTING WATERMAIN
+750Ø EXISTING WATERMAIN
+
+APPROXIMATE EXTENT OF PRESSURE
+ZONE 5 (182.4 - 236.2m)
+APPROXIMATE EXTENT OF PRESSURE
+ZONE 6E (214.5 - 259.1m)
+
+28.99ha
+3878 15
+
+DRAINAGE AREA (HECTARES)
+
+DESIGNED BY:
+
+A.T.
+
+CHECKED BY:
+
+SCALE:
+
+1:4000
+
+DATE:
+
+A.R.K.
+
+BLOCK NUMBER
+POPULATION
+
+MASTER WATER
+SERVICING PLAN
+
+WILDFIELD VILLAGE
+
+DECEMBER 2024
+
+PROJECT No:
+
+FIGURE No:
+
+2630
+
+3
+
+ATTACHMENT A
+REGION OF PEEL DOCUMENTS
+
+VOLUME 4 – WASTEWATER MASTER PLAN
+CONTEXT
+
+WVSP AREA
+
+Figure 36 – Preferred wastewater servicing strategy capital program for the lake-based system.
+
+Region of Peel – 2020 Water and Wastewater Master Plan for the Lake-Based Systems
+
+79
+
+VOLUME 3 – WATER MASTER PLAN
+CONTEXT
+
+WVSP AREA
+
+Region of Peel – 2020 Water and Wastewater Master Plan for the Lake-Based Systems
+
+68
+
+Figure 25 – Preferred water servicing strategy capital program for the lake-based system.
+
+Region of Peel – 2020 Water and Wastewater Master Plan for the Lake-Based Systems
+
+68
+
+WVSP AREA
+
+WVSP AREA
+
+WVSP AREA
+
+Li
+
+136
+
+S
+a
+nita
+ry PumpingS
+ta
+tions
+Decommissioning
+D-2026 (52841)
+262978
+C-2028 (52842)
+
+525
+600
+
+675
+
+McVean Dr
+
+675
+375
+
+375
+
+675
+
+Coleraine Dr
+
+2024
+51650
+24-2193
+
+600
+
+2027
+53983
+27-2191
+2026
+51646
+26-2190
+
+2024
+51914
+23-2270
+750
+
+5
+
+450
+
+d
+Mayfield R
+
+37
+5
+
+2025
+32064
+25-2171
+
+37
+5
+
+50
+
+y
+
+150
+
+50
+H
+
+10
+
+2027
+3768
+27-2178
+
+Coleraine Dr
+
+525
+
+Clarkway Dr
+
+2025
+30725
+25-2170
+
+Dr
+
+2027
+3769
+27-2177
+
+375
+
+Countryside
+
+2025
+3772
+24-2176
+
+14
+
+2024
+56963
+23-2174
+
+2025
+56177
+23-2126
+600 Elia Rd
+
+2026
+56728
+25-2124
+
+8
+
+2025
+3827
+25-2175
+
+375
+
+rent
+o
+
+Dr
+
+8
+
+Sor
+
+P
+
+e
+at
+riv
+
+0
+45
+
+2024
+56964
+375
+23-2174
+
+Castlemore
+
+Rd
+
+37
+5
+
+375
+
+Hurontario St
+
+2024
+3770
+23-2272
+
+E
+
+14
+
+750
+
+750
+
+1200
+
+d
+Steeles R
+
+2026
+24608
+24-2273
+
+2027
+57076
+25-2256
+
+15
+
+Rd
+
+2027
+52663
+25-2268
+15
+00
+
+Approved Infrastructure 2024
+
+Existing Wastewater Infrastructure
+
+Sewer Pumping Station
+
+Sanitary Pumping Station
+
+Odour Control Facility
+
+Existing Wastewater Main
+TechnicallyPreferred
+
+Wastewater Treatment Plant
+Approved Local Wastewater Main 2024
+Approved Primary Wastewater Main 2024
+Proposed Infrastructure 2025-2041
+Sewer Pumping Station
+
+Highway 413
+Watercourse
+Greenbelt Boundary
+Urban Boundary
+Municipal Boundary
+
+Odour Control Facility
+
+Ward Boundary
+
+Wastewater Treatment Plant
+Proposed Local Wastewater Main > 2024
+Proposed Primary Wastewater Main > 2024
+Proposed Force Main
+
+L
+a
+be l L
+eg
+e nd
+
+2031 - Construction Year
+30713 - Component Number
+25-2199 - Project Number
+
+L
+a
+k e vie w Villag
+e
+2025 2025
+31570 32163
+25-2123 25-2123
+
+2025
+53951
+25-2121
+450
+
+Rd
+
+4
+
+2025
+53953
+25-2121
+
+2025
+53954
+25-2121
+
+2025
+53952
+25-2121
+
+2025
+53957
+25-2121
+
+675
+
+675
+
+675
+
+4
+
+Humber Station Rd
+
+Coleraine Dr
+
+450
+
+600
+
+Finch
+
+2027
+57079
+25-2256
+
+G.
+E.BoothWaste w ate r T re atme nt Plant
+Automa ti on Cons ol i da ti on
+192924
+C-2024 (56106)
+C-2025 (56107)
+Odour Control
+Improvements
+202961
+C-2024 (38871)
+Pl a nt 2 Bl ower Repl a cement
+222923
+C-2024 (53410)
+New Outfa l l
+D-2025 (56297)
+222944
+C-2027 (51949)
+As h Ma na gement Fa ci l i ty
+D-2024 (52833)
+242942
+C-2026 (52834)
+Admi ni s tra ti on Bui l di ng
+D-2026 (51946)
+262943
+C-2028 (51947)
+Trea tment Expa ns i on
+D-2025 (38620)
+252945
+D-2027 (38621)
+C-2027 (51944)
+C-2028 (51945)
+C-2029 (52838)
+Bi os ol i ds Expa ns i on
+292599
+EA-2029 (38619)
+292999
+D-2032 (51950)
+D-2032 (51952)
+D-2036 (51951)
+Sta ndby Power Expa ns i on
+282999
+D-2028 (52214)
+C-2030 (52215)
+As h Ma na gement Fa ci l i ty
+282999
+C-2032 (37812)
+C-2034 (37813)
+Bi os ol i ds Expa ns i on
+C-2034 (51953)
+292999
+C-2036 (35964)
+As h Berm Rel oca ti on
+D-2024 (56879)
+292947
+C-2025 (56880)
+Ca pa ci ty Res tora ti on
+D-2024 (56890)
+192940
+C-2024 (56891)
+Di ges ters a nd Benefi ci a l
+Ga s Reus e
+D-2025 (56886)
+252941
+C-2028 (56887)
+Ul ta vi ol et Di s i nfecti on
+252949
+D-2025 (56888)
+C-2028 (56889)
+Trea tment Expa ns i on
+EA-2025 (57067)
+252563
+D-2033 (38620)
+292999
+D-2033 (38621)
+C-2036 (51944)
+C-2036 (51945)
+C-2036 (52838)
+
+2
+
+150
+
+750
+
+375
+
+675
+675
+750
+
+750
+
+450
+
+1800
+
+1800
+
+1200
+
+450
+
+375
+
+525
+
+600
+
+450
+
+525
+
+2400
+
+0
+
+9
+
+2024
+51916
+23-2271
+
+750
+
+The Gore Rd
+
+750
+
+1800
+
+525
+
+Dixie Rd
+
+450
+
+Cawthra Rd
+
+Be a
+c
+hS
+tre e t S
+a
+nita
+ry PumpingS
+ta
+tion
+Upgrades
+D-2024 (52754)
+242971
+C-2026 (52755)
+
+D-2025 (27417)
+C-2027 (27418)
+
+2026
+54023
+24-2196
+
+2026
+2031 5
+1650
+51648
+29-2198
+242193
+
+525
+
+1200
+
+1500
+
+600
+
+375
+1200
+
+375
+
+1500
+
+675
+
+Tucan a Ct
+
+375
+450
+
+3000
+3000
+
+G.E. Booth
+
+Beach Street
+Elmwood
+Lakeview Village
+Hiawatha
+Ben Machree
+
+J
+a
+c
+k Da
+rling3S
+e w e r PumpingS
+ta
+tion
+New Pumping Station
+D-2024 (53565)
+242980
+C-2026 (53012)
+
+ob
+
+Brama
+le aGO
+
+2030
+57086
+28-2153
+
+Pr
+Rd
+
+375
+
+375
+
+2026
+d
+57000
+Wanita R
+24-2115
+St
+L a rence Dr Elmwood
+w
+l
+Carlis P
+
+4
+
+L
+a
+k e vie w Villa
+g
+e
+New Sewage Pumping
+Station
+252982
+
+2030
+57084
+28-2153
+
+675
+
+2027
+51654
+27-2192
+
+Hig
+hw a
+y 427I
+ndustria
+l(
+S
+P
+A47)
+
+Acorn Pl
+
+d Rd S
+
+5
+450 52
+
+d
+Cor
+
+2024
+56051
+23-2192
+
+2026
+56955
+24-2274
+
+ivate
+
+2024
+56179
+23-2126
+
+2026
+54025
+24-2196
+
+600
+
+2027
+51656
+27-2193
+
+2026
+51660
+24-2194
+
+Healey Rd
+
+Mississa
+ug
+aUptow n
+
+450
+
+e Dr
+Watersid
+
+2027
+55714
+26-2120
+
+Elmwoo
+
+1
+
+2026
+57012
+24-2125 2026
+57010
+24-2125
+
+20
+
+Rd
+
+525
+
+2400
+
+Rd
+
+n
+Woodlaw
+
+Rd N
+
+Watersedge
+
+Elmwood
+
+Green GL
+
+d Rd
+
+Clarkson
+
+Jack
+Silverbirch Darling 2
+
+2026
+57002
+24-2115
+Port St E
+
+401
+
+ore R d E
+
+525
+
+19
+
+Richard
+Memorial
+
+Lakesh
+
+Rd
+
+0
+180
+
+Stonehaven
+
+Darling 1
+
+2026
+33590
+22-2255
+E
+Queensway
+
+Rosemere
+2024
+Port Credit
+50093 Front St 375
+Beechwood
+
+19-2215
+
+3
+
+Private
+
+2026
+34863
+22-2256
+
+17
+
+Indian Road
+
+2024
+Jack 53564
+Darling 3 19-2215
+Jack 2400
+
+450
+2026
+57008
+24-2115
+
+2025
+54180
+18-2252
+
+1800
+
+Pinetree
+
+tS
+
+2
+
+2024
+56174
+23-2129
+
+W
+Queensw ay
+
+Helene S
+
+QEW
+
+7
+
+4
+
+2025
+33593
+22-2254
+
+2024
+50093
+19-2215
+
+Di
+xo
+n
+
+v
+Forest A
+Rosewoo
+
+525
+
+Shardawn Mews
+
+2027
+15615
+25-2219
+
+tN
+
+20
+
+Mississauga Uptown
+
+St S
+
+6
+
+D-2029 (35364)
+P-2029 (35221)
+C-2030 (34285)
+
+1
+
+2029
+3988
+29-2198
+
+2026
+57004
+24-2115
+
+450
+
+Erin Mills Py
+
+S
+tre e tsville
+New Facility
+292960
+
+7
+
+Ann St
+
+403
+
+O'Niel Ct
+
+Cla
+Primary
+rk son Thickening
+Wa
+ste w a
+te r T re a
+tme nt Pla
+nt
+Facility
+C-2024 (56232)
+202951
+
+New Operations
+Building
+262959 Expansion
+Treatment
+252564
+
+3
+
+4
+
+450
+
+E
+
+409
+
+St E
+Park
+375
+2026
+57006
+24-2115
+High St E
+
+Streetsville
+
+Fifeshire
+
+8
+
+Va
+rious DosingS
+ta
+tions
+New Dosing Stations
+D-2029 (35383)
+252960
+P-2029 (35224)
+C-2030 (34287)
+
+Standby Power
+Expansion
+292999 Expansion
+Biosolids
+232952
+
+Port Cre dit
+
+Elizabeth
+
+2025
+52388
+1 19-2208
+
+2024
+57349
+19-2205
+
+C-2024 (56108)
+C-2025 (56109)
+D-2025 (51956)
+C-2024 (51958)
+C-2025 (51959)
+C-2026 (53368)
+D-2029 (52214)
+C-2031 (52215)
+D-2024(56234)
+D-2025(56235)
+C-2026(54572)
+C-2028(56236)
+C2026(56237)
+C-2026(56884)
+D-2028(56885)
+EA-2025(57068)
+
+410
+
+2030
+57088
+28-2153
+
+dW
+
+2026
+57035
+427
+25-2122
+
+5
+
+Meadowvale
+
+Britannia
+Leachate
+
+403
+
+Automation
+Consolidation
+192934
+Treatment Expansion
+222950
+
+W
+
+Derry Rd
+
+Helene S
+
+10
+
+d
+Britannia R
+
+Eglinton R
+
+5
+
+401
+
+2025
+52386
+19-2208
+
+Torbram
+
+r
+sT
+
+9
+
+Ninth Line Lands
+
+2
+
+7
+
+ent
+Re g
+
+11
+
+W
+Derry Rd
+
+D-2029 (35358)
+P-2029 (35223)
+C-2030 (34286)
+
+5
+
+Bramalea GO
+
+0
+
+401
+
+Churc
+hS
+tre e t
+New Facility
+292960
+
+1200
+
+2026
+50941
+23-2261
+
+2024
+55585
+19-2158
+
+d
+
+15
+
+15
+
+0
+15
+
+2031
+35811
+29-2299
+
+4
+
+50
+
+450 Orenda Rd
+
+450
+
+Harvestview
+
+Highway 427 Industrial (SPA47)
+
+Gore Road
+
+8
+
+Ct
+
+R
+
+2025
+54197
+25-2159
+
+2027
+56227
+25-2263
+
+450
+
+2026
+31568
+26-2168
+
+Intermodal
+
+2027
+55717
+25-2269
+
+a
+
+Mullet Creek
+
+407
+
+15
+
+Church Street
+
+1
+
+dW
+Steeles R
+
+18
+
+dE
+Steeles R
+
+107
+
+2033
+51662
+29-2198
+
+d
+Mayfield R
+
+2024
+McVean 56181
+23-2165
+
+2400
+
+1200
+
+525
+15
+
+2024
+53950
+24-2106
+
+2031
+35814
+29-2299
+
+3
+
+2030
+57082
+28-2257
+
+2027
+57079
+25-2256
+
+Central Brampton
+
+16
+
+Mavis
+
+900
+
+4
+
+2024
+56964
+23-2174
+
+2026
+34033
+24-2196
+
+2026
+51658
+24-2194
+
+9
+
+2025
+3827
+25-2175
+15
+00
+
+C-2024 (55680)
+C-2024 (56671)
+
+8
+
+E
+Queen St
+
+2024
+55834
+23-2150
+
+900
+
+7
+
+2024
+56963
+23-2174
+
+Rd
+
+375
+
+Bram West (SPA40)
+
+410
+
+2027
+56229
+25-2264
+
+2027
+52666
+25-2269
+
+7
+
+2028
+29443
+26-2252
+
+375
+
+6
+
+1
+
+16
+
+450
+
+2025
+57071
+24-2141
+
+450
+
+2028
+2028
+34521 29450
+26-2253 26-2253
+
+375
+
+Bolton
+
+2032
+56994
+29-2199
+
+King St
+
+2029
+51664
+29-2198
+
+2027
+3768
+27-2178
+
+Bramalea
+
+Queen St W
+
+d
+Embleton R
+
+We st Bolton
+
+150
+
+2025
+32064
+25-2171
+
+10
+
+Mc
+Ve a
+n
+Sewage Pumping
+Station Expansion
+182976
+
+14
+
+Bolton
+North
+Hill
+
+King St E
+
+50
+
+2027
+3769
+2025 27-2177
+3772
+24-2176
+
+2025
+30725
+5
+25-2170 37
+
+2027
+52663
+25-2268
+
+1500
+
+Lakelands
+
+Kennedy Rd S
+
+5
+37
+
+450
+
+107
+
+5
+
+2025
+57073
+24-2142
+
+1500
+
+Kennedy Rd N
+
+750
+
+Thomas St
+
+19
+
+525
+
+r W
+Bovaird D
+
+60
+0
+
+37
+5
+
+2031
+52677
+29-2199
+
+Dr
+
+2032
+56996
+29-2199
+
+525
+
+Bolton Camp
+
+2025
+56053
+23-2192
+
+2024
+3770
+23-2272
+
+8
+
+Castlemore
+
+St W
+
+5
+
+2024
+51914
+23-2270
+
+2026
+24608
+24-2273
+
+10
+
+2032
+35803
+29-2299
+
+4
+
+Bovaird Dr E
+
+450
+
+8
+
+2026
+56955
+24-2274
+
+525
+
+600
+
+9
+
+2
+
+1200
+
+825
+
+6
+
+450
+2025
+56675 Mayfield Rd
+24-2182
+
+2029
+56883
+27-2255
+
+14
+
+WVSP AREA
+
+450
+
+525
+
+King
+
+600
+
+Mayfield
+
+2029
+35584
+27-2254
+
+600
+675
+
+525
+407
+
+450
+
+675
+
+600
+900
+
+600
+
+600
+3
+
+W
+
+525
+
+Mississauga Rd
+
+Winston Chur chill Bv
+
+45
+0
+
+2029
+51638
+29-2198
+
+450
+
+675
+
+525
+
+750
+
+2031
+51640
+29-2199
+
+Dougall
+
+2031
+56982
+29-2199
+
+2032
+56984
+29-2199
+
+2033
+56970
+29-2199
+
+0
+45
+
+Northwest Brampton
+(SPA52, SPA53)
+
+2033
+56966
+29-2199
+
+McLaughlin
+
+2032
+56986
+29-2199
+
+2032
+56988
+29-2199
+
+19
+
+375
+
+600
+
+Countryside Village (SPA48)
+and Tullamore Industrial Area
+
+2025
+54205
+24-2183
+
+2035
+56957
+29-2299
+
+2032
+35808
+29-2299
+
+0
+60
+
+Ninth Li
+
+D-2024 (57359)
+C-2026 (57360)
+
+2033
+56972
+29-2199
+
+600
+
+525
+
+6
+
+2026
+56805
+24-2192
+
+375
+2026
+56803
+Deer
+Valley Dr 24-2191
+
+9
+
+375
+
+525
+
+2
+
+Mayfield West Phase 3
+
+450
+
+525
+375
+
+Mc
+L
+a
+ug
+hlin
+New Sewage Pumping
+Station
+242985
+
+2033
+56968
+29-2199
+
+2033
+56976
+29-2199
+
+525
+
+2026
+56801
+2026
+24-2195
+56689
+2026
+24-2197 150 56685
+West Bolton
+24-2197
+9
+
+4
+
+2033
+56974
+29-2199
+
+C-2024 (56676)
+P-2024 (56677)
+C-2026 (56678)
+
+Humber
+
+Airport Rd
+
+9
+
+1
+
+2024
+54062
+24-2105
+
+Chinguacousy
+Leachate
+
+King St
+
+2024
+54058
+24-2103
+
+450
+
+Hurontario St
+
+525
+
+2024
+54070
+24-2151
+
+3
+
+7
+
+2024
+54072
+24-2151
+
+NinthL
+ine L
+ands
+
+2024
+54060
+24-2104
+
+12
+
+Bv
+
+450
+
+Dr
+
+St
+
+Line Rd
+Olde Base
+
+600
+
+Rutherford Rd S
+
+Heritage Rd
+
+375
+e
+
+2031
+52679
+29-2199
+
+b Py
+
+l
+Financia
+
+ar
+en
+c
+
+rk
+
+Humbe r
+New Sewage Pumping
+Station
+242984
+
+12
+
+2024
+54082
+24-2151
+
+d
+
+Mayfield Rd
+
+Kol
+Emil
+
+375
+
+2028
+21558
+28-2132
+
+Inglewood
+
+410
+
+da
+R
+
+14
+
+50
+
+ill oe
+R d H se sh
+r
+Ho
+
+Cl
+
+2024
+54080
+24-2151
+Cla
+
+2024
+54068
+24-2151
+
+2026
+52675
+24-2166
+
+2026
+3849
+26-2152
+
+2032
+56978
+29-2199
+
+2033
+52681
+29-2198
+
+8
+
+2024
+1
+54078
+24-2151
+
+2024
+54066
+24-2151
+
+450
+
+2026
+33725
+24-2167
+
+2032
+35808
+29-2299
+
+Countryside
+
+Queen St E
+
+19
+
+2025
+57304
+2026 25-2190
+3845
+26-2155
+
+2032
+56980
+29-2199
+
+450
+
+675
+
+2024
+2024
+54076
+54074
+24-2151
+24-2151
+
+2033
+34020
+29-2198
+
+2033
+51642
+29-2198
+
+600
+
+900
+
+2031
+51666
+29-2198
+
+Caledon East
+
+22
+
+2033
+56992
+29-2199
+
+7
+
+2033
+51644
+29-2198
+
+2031
+Mayfield 53961
+29-2199
+525 2025
+5820
+25-2157
+
+Rd
+
+450
+
+50
+
+7
+
+Old Church
+
+Or
+en
+
+2027
+21559
+25-2135
+
+it Rd
+of the Cred
+F o r ks
+
+675
+
+2032
+56951
+29-2198
+
+0
+60
+
+2027
+56229
+25-2264
+
+5
+37
+
+450
+
+11
+
+4
+
+2032
+56949
+29-2198
+
+525
+
+2032
+56990
+29-2199
+
+Innis Lake Rd
+
+2026
+2026
+51918
+56953
+24-2185 24-2185
+
+Healey Rd
+
+School Rd
+
+2025
+53955
+25-2121
+
+8
+Kilometres
+
+450
+
+750
+
+Lakeview
+2025
+Village
+53958
+25-2121
+
+2025
+53956
+25-2121
+
+600
+
+525
+
+Old
+
+0
+45
+
+2029
+21553
+29-2198
+2029
+2029
+45 21555
+0 29-2198 21556
+29-2198
+
+Winston Churchill Bv
+
+Countryside Villag
+e (
+S
+P48)andT ullamore I
+ndustrialAre a
+
+2025
+33586
+25-2189
+
+Centra
+l Brampton
+
+Bram We st (
+S
+P
+A40)
+
+2028
+21557
+28-2134
+
+Ma
+in
+
+St
+
+21061
+27-2221
+
+Embleton Rd
+
+Old
+
+Bush St
+
+2029
+2029
+21062 21063
+illiams Py
+27-2221 27-2221 W
+750
+
+7
+2029 50
+
+Document Path: E:\Program_Planning\Team GIS Files and Maps\3871-WW-DC Wastewater Map 2024.mxd
+
+McLaughlin
+
+2030
+36246
+28-2181
+
+2030
+21060
+28-2222
+
+2029
+375
+21054
+29-2198
+
+Britannia Rd
+
+2035
+51624
+29-2199
+
+19
+
+750
+
+rW
+Bovaird D
+
+107
+
+Mississauga Rd
+
+2026
+50346
+24-2223
+
+2033
+51626
+29-2198
+
+2026
+51632
+24-2188
+
+525
+
+2031
+21043
+29-2198
+
+1
+
+2029
+21051
+29-2198
+600
+2030
+21044
+28-2222
+
+375
+
+2033
+51628
+29-2198
+
+Dra
+ft –Not Approve dby Counc
+il
+
+2033
+51634
+29-2198
+
+600
+
+1
+
+24
+
+525
+
+8
+
+Goreway Dr
+
+R
+Charleston S24
+
+2033
+51630
+29-2198
+
+The Gore Rd
+
+450
+
+Heritage Rd
+
+2033
+21042
+29-2299
+
+7
+
+Queen St N
+
+900
+
+136
+
+2033
+56968
+29-2199
+l Rd 525
+Old Schoo
+
+450
+
+825
+
+2031
+21050
+29-2198
+
+Wa
+ste w a
+te r S
+e rvic
+ingI
+nfra
+struc
+ture
+T re a
+tme nt a
+ndT runk S
+e w e rS
+yste m
+20242041De ve lopme nt Cha
+rg
+es
+
+2033
+56966
+29-2199
+
+McLaughlin Rd
+
+2031
+21058
+29-2299
+
+Chinguacousy Rd
+
+2033
+21041
+29-2299
+
+Ma
+yfie ldWe st Phase 3
+
+y
+
+1800
+
+900
+
+750
+
+2035
+21030
+29-2299
+
+Main St
+
+Wanless Dr
+
+2031
+21057
+29-2299
+
+9H
+
+900
+
+600
+
+600
+
+2033
+21056
+29-2299
+
+2034
+21038
+29-2199
+
+2033
+21021
+29-2198
+
+Wastewater Development
+Charges
+2024
+
+Queen St S
+
+2033
+21055
+29-2299
+
+2034
+21036
+29-2199
+
+2033
+21022
+29-2198
+
+675
+2032
+56984
+29-2199
+
+Bramalea Rd
+
+d
+Mayfield R
+
+14
+
+Winston Churchill Bv
+
+2032
+56988
+29-2199
+
+Porterfield Rd
+
+Northw e st Brampton (
+S
+P
+A52,
+S
+P
+A53)
+
+Airport Rd
+
+axa Town
+
+Torbram Rd
+
+23
+Garafr
+Caledon-E
+
+October 2023
+Water & Wastewater Planning, Public Works
+Map ID: 3871-WW-DC Wastewater Map 2024
+Data Source: Region of Peel
+Scale: 1:68,000 | NAD83 UTM zone 17N
+
+DISCLAIMER
+The proposed capital projects shown on this map are subject to annual review and approval by
+Regional Council. As such, project schedules and project scopes are subject to change.
+
+Bram West (
+S
+P
+A40)
+Northw est Bram pton(
+S
+P
+A52,
+S
+P
+A53)
+
+2035
+20759
+29-1199
+
+2033
+20753
+29-1199
+
+Main St
+
+il
+400
+
+403
+
+2029
+53973
+27-1115
+
+2029
+53965
+27-1115
+
+2027
+35360
+25-1124
+
+Queensway
+
+750
+2025
+2027
+56097
+53553
+23-1227
+25-1220
+1500
+
+Rd W
+
+1
+
+17
+
+2031
+34224
+29-1199
+
+4
+
+Lakeview Village
+
+750
+
+600
+
+400
+
+Arthur P.
+Kennedy
+
+Lorne Park
+
+Bloo
+
+Arthur P.
+Kennedy
+Reservoir Expansion
+211923
+Lake Ontario Monitoring
+System
+221924
+Standby Power Expansion
+271982
+Waste Building Expansion
+291997
+New Intake
+291995
+291997
+T rea
+tm ent E
+xpa
+nsi
+on
+
+1500
+
+Coleraine Dr
+
+400
+
+Coleraine Dr
+
+600
+
+D-2026 (54120)
+C-2027 (54121)
+
+Elevated Tank
+
+Standpipe
+
+Well
+
+Well
+
+Water Treatment Plant
+
+Water Pumping Station
+
+750
+
+2027
+54575
+25-1220
+
+2027
+52644
+25-1126
+
+Watercourse
+Highway 413
+Greenbelt Boundary
+
+Reservoir
+
+2027
+33348
+25-1220
+
+Urban Boundary
+
+Elevated Tank
+
+2027
+52654
+25-1121
+
+Municipal Boundary
+Ward Boundary
+
+tE
+D unda s S
+
+Proposed Distribution Feeder Main Post 2024
+Proposed Transmission Main Post 2024
+
+750
+
+L
+a
+k evi
+ew Vi
+llage
+
+750
+
+2027
+53553
+25-1220
+
+20
+
+Water Main
+Watercourse
+
+Pumping Station
+
+EA-2029 (23451)
+
+DISCLAIMER
+The proposed capital projects shown on this map are subject to annual review and approval by
+Regional Council. As such, project schedules and project scopes are subject to change.
+2
+4
+8
+Kilometres
+
+Hy
+
+Elevated Tank
+
+Water Treatment Plant
+
+D-2024 (23395)
+C-2026 (23396)
+C-2024 (54097)
+
+EA-2025 (50380)
+D-2028 (32975)
+P-2028 (32976)
+C-2030 (32977)
+
+40
+0
+
+Reservoir
+
+Well
+
+D-2037 (23452)
+C-2039 (23453)
+
+50
+
+Reservoir
+
+Proposed Infrastructure 2025-2041
+
+C-2023 (54397)
+
+D-2027 (53560)
+C-2028 (53561)
+C-2029 (53562)
+D-2031 (23404)
+C-2033 (23405)
+
+50
+
+Existing Water Infrastructure
+
+Approved Transmission Main 2024
+
+Tomken Rd
+
+S
+i
+lverthorn
+Transient Protection
+Expansion
+231994
+Reservoir Expansion
+261941
+
+2025
+20920
+25-1178
+
+2025
+53946
+23-1227
+E
+1500
+Queensway
+
+Mo
+
+First St
+
+2031
+34224
+29-1199
+
+Arthur P.
+Kennedy
+
+Lak es ho
+
+2025
+54190
+22-1125
+
+2025
+52642
+22-1125
+
+Private
+Rd
+
+0
+
+150
+
+40
+2027 0
+20922
+27-1179
+
+2027
+52656
+27-1173
+
+Approved Distribution Feeder Main 2024
+
+2027
+33346
+25-1220
+
+251575
+281925
+
+19
+
+r St
+
+West Rd
+
+2
+
+750
+
+2024
+54188
+19-1120
+
+Dundas Corridor
+
+E
+
+QEW
+
+2031
+29681
+29-1199
+
+2027
+52654
+25-1121
+
+2028
+52711
+26-1172
+
+Pumping Station
+
+750
+
+20
+
+2027
+52644
+25-1126
+
+900
+
+7
+
+Silverthorn
+
+C ou
+
+400
+
+ntryside Dr
+
+Approved Infrastructure 2024
+
+Greaves Rd
+
+2025
+56209
+12-1420
+
+Erin Mills Py
+
+Herridge
+
+3
+
+750
+
+600
+
+400
+
+1500
+
+400
+
+b eck Cr
+
+2024
+29698
+12-1420
+
+4
+
+Cawthra Rd
+
+2029
+27414
+27-1228
+
+1
+
+EA-2025 (51085)
+D-2032 (32978)
+P-2032 (32979)
+C-2034 (32980)
+
+Vie
+
+nt
+
+C-2039 (54396)
+
+6
+
+400
+
+900
+
+403
+
+2100
+
+8
+
+D-2028 (54304)
+C-2030 (54305)
+
+Centre
+
+400
+
+2029
+53969
+27-1115
+
+2029
+53971
+27-1115
+
+Rathburn
+
+Mi
+ssi
+ssa
+ug aCi
+ty Centre
+
+Dunda
+s Corri
+dor
+
+Mississauga City Centre
+
+Duffys Ln
+
+Em
+
+d
+ate R
+P riv
+
+2029
+35875
+27-1115
+
+409
+
+2029
+35876
+27-1115
+
+Silverthorn
+
+2035
+33582
+29-1199
+
+750
+
+2025
+52658
+24-1176
+
+2031 - Construction Year
+30713 - Component Number
+25-2199 - Project Number
+
+re Rd E
+
+2025
+52713
+25-1129
+
+600
+
+L
+a
+belL
+egend
+
+Hydro Rd
+
+401
+
+2025
+28911
+24-1170
+
+2025
+20915
+24-1171
+
+Dr
+
+2028
+23446
+26-1123
+
+2024
+20918
+23-1174
+
+2027
+52660
+20-1175
+
+Bv
+
+C-2025 (54315)
+EA-2031 (22673)
+D-2033 (35617)
+C-2035 (35618)
+
+40
+0
+
+14
+
+Derry R d E
+
+2029
+53967
+27-1115
+
+750
+
+403
+
+2024
+51601
+23-1196
+
+d
+Mayfield R
+
+2
+
+2029
+35874
+27-1115
+
+400
+
+Ha
+nla
+nWest
+New Pumping Station
+221992
+New Reservoir
+291599
+291999
+
+8
+
+400
+
+Hanlan West
+
+3
+
+D-2027 (56934)
+C-2029 (56937)
+D-2027 (56938)
+C-2029 (56939)
+
+Rd
+
+2028
+23444
+26-1123
+
+400
+
+D-2028 (54294)
+50
+C-2030 (54295)
+
+427
+
+Hanlan
+
+2025
+32596
+25-1197
+
+w
+
+4
+
+410
+
+C-2026 (54339)
+
+Streetsville
+
+C-2024 (54099)
+
+October 2023
+Water & Wastewater Planning, Public Works
+Map ID: 3870-W-DC Water Map 2024_2
+Data Source: Region of Peel
+Scale: 1:68,000 | NAD83 UTM zone 17N
+
+5
+
+D-2028 (54298)
+C-2030 (54299)
+D-2031 (23582)
+C-2033 (23585)
+
+600
+
+5
+
+2025
+56812
+21-1430
+
+400
+
+Dixie Rd
+
+D-2029 (52045)
+C-2030 (52046)
+
+2025
+31850
+23-1127
+
+Healey Rd
+
+Hi
+g hw a
+y 427I
+ndustri
+a
+l(
+S
+P
+A47)
+
+15
+
+7
+
+2038
+52650
+29-1199
+
+600
+
+18
+
+2032
+51599
+29-1198
+
+2025
+35705
+23-1162
+
+600
+2025
+35703
+23-1160
+
+2024
+51313
+22-1161
+
+Duke of York
+
+W
+
+15
+
+150
+
+Pm
+
+2038
+52648
+29-1199
+
+1800
+
+2038
+52652
+29-1199
+
+107
+
+2024
+32598
+23-1195
+
+2032
+51597
+29-1198
+
+8
+
+E
+Steeles Rd
+
+750
+
+Rangevie
+
+Lakef r ont
+
+D-2024 (54083)
+C-2024 (54084)
+
+W
+
+Beckett
+Sproule
+
+400
+
+40
+0
+
+Ai
+rport Roa
+d
+Transient Protection
+Expansion
+221988
+Transient Protection
+Expansion
+281995
+Pumping Station Expansion
+271965
+
+8
+
+2031
+31459
+29-1299
+
+2026
+57150
+24-1192
+
+2024
+2024
+57193
+32588 24-1198
+24-1267
+
+Clarkway Dr
+
+d
+Steeles R
+
+D-2028 (54296)
+C-2030 (54297)
+
+5
+
+3
+
+E
+Queen St
+
+7
+
+4
+
+750
+
+ate
+Station G
+
+2029
+32002
+27-1229
+
+3
+
+Document Path: E:\Program_Planning\Team GIS Files and Maps\3870-W-DC Water Map 2024_2.mxd
+
+C-2024 (54248)
+
+Ha
+nla
+n
+Transient Protection
+Expansion
+281995
+Pumping Station Expansion
+401
+291999
+
+d
+Britannia R
+
+L
+ornePa
+rk
+Lake Ontario Monitoring
+System
+221934
+Transient Protection
+Expansion
+241540
+Transients/Protection
+Expansion
+281995
+Treatment Expansion
+251575
+291997
+
+C-2024 (33336)
+
+11
+
+W
+Derry Rd
+
+10
+
+600
+
+4
+
+Bec
+k ett S
+proule
+Pumping Station Expansion
+211974
+Improvements and
+Upgrades
+211978
+Transient Protection
+Expansion
+28995
+11
+Training and Logistics
+Facility
+24-1980
+Pumping Station 407
+Expansion
+29-1999
+
+2027
+50393
+14-1240
+
+2024
+56872
+14-1240
+
+55240
+29-1199
+600
+
+14
+
+West Bolton
+
+2026
+32592
+24-1194
+
+900
+
+Kin
+gS
+tW
+
+East Bolton
+
+2026
+32590
+24-1194
+
+2033
+51603
+29-1198
+2026
+37579
+24-1268
+
+2026
+53990
+24-1266
+
+2029
+32594
+27-1191
+
+2033
+51607
+29-1198
+
+400
+
+7
+
+410
+
+2025
+2024
+37588
+53820
+19-1156 24-1157
+
+2035
+38604
+29-1199
+
+2033
+51609
+29-1198
+
+9
+
+Highway
+427 Industrial (SPA47)
+8
+
+Airport Road
+
+2027
+2024 50395
+56873 14-1257
+14-1257
+2038
+
+2026
+57101
+24-1193
+
+2033
+51605
+29-1198
+
+North Bolton
+
+0
+60
+
+Tullamore
+
+East Brampton
+
+2026
+29885
+14-1256
+
+6
+
+14
+
+2033
+37596
+29-1198
+
+5
+
+Bolton South
+
+50
+
+10
+
+10
+
+Bovaird Dr E
+
+1
+
+2026
+37577
+24-1183
+
+2031
+31462
+29-1299
+
+9
+
+2030
+57050
+28-1259
+
+D-2024 (54302)
+C-2026 (54303)
+
+2028
+35355
+26-1258
+
+900
+
+2033
+51595
+29-1198
+
+400
+
+9
+
+2033
+52709 600
+29-1199
+
+2032
+51613
+29-1198
+
+4
+
+C-2026 (32269)
+
+2035
+34697
+29-1199
+
+2033
+51611
+29-1199
+
+2024
+56208
+18-1158
+
+D-2024 (54336)
+C-2026 (54337)
+
+16
+
+107
+
+2024
+30025
+19-1156
+
+2031
+51593
+29-1199
+
+D-2027 (56932)
+C-2029 (56933)
+
+West Bolton
+
+750
+
+900 400
+
+2026
+2026
+57150
+30976
+24-1192
+24-1269
+2026
+2033
+57153
+57059
+24-1197
+29-1198
+
+East Bolton
+
+900
+
+401
+
+2
+
+5
+
+60
+0
+1500
+1800
+
+D-2028 (54300)
+C-2030 (54301)
+
+NorthBra
+m pton
+Transient Protection
+Expansion
+221987
+
+900
+
+Mavis Rd
+
+400
+
+2028
+29891
+14-1256
+
+West Brampton
+
+Meadowvale
+North
+
+14
+
+W
+Bovaird Dr
+
+2033
+51591
+29-1198
+
+2029
+51589
+29-1198
+400
+
+North
+Brampton
+
+E
+a
+st Bra
+m pton
+Reservoir Improvements
+and Upgrades
+261954
+Transients Protection
+Expansion
+241985
+
+750
+
+15
+
+Snelgrove
+
+6
+
+W
+Queen St
+
+2025
+56871
+18-1184
+
+51621
+24-1187
+
+d
+Mayfield R
+
+400
+
+2027
+3634
+27-1131
+
+2029
+57198
+29-1198
+
+T ulla
+m ore
+
+2033
+37594
+29-1198
+400
+
+King S t W
+
+2034
+56914
+29-1199
+
+2026
+56947
+24-1191
+
+2026
+53992
+24-1190
+King St
+750
+
+2034
+56914
+29-1199
+
+9
+
+400
+
+The Gore Rd
+
+1
+
+2029
+57196
+29-1198 2026
+
+2026
+57096
+26-1188
+
+400
+19
+
+5
+
+400
+
+400
+
+2
+
+2026
+37579
+24-1268
+
+31436
+29-1299
+
+Pumping Station Expansion
+271964
+
+Py
+
+2026
+54019 150
+27-1199
+2035
+0
+31817
+60
+29-1299
+
+2026
+54019
+24-1191
+
+2026
+54021
+24-1191
+
+City Centre Dr
+
+600
+
+400
+
+107
+
+400
+
+C-2026 (54335)
+
+Alloa
+
+0
+
+2032
+56831
+29-1299
+
+Mea
+dow va
+leNorth
+Transient Protection
+Expansion
+221986
+Transient Protection
+Expansion
+281995
+
+2026
+57092
+26-1186
+
+2026
+57094
+26-1187
+
+750
+
+2033
+53963
+29-1199
+
+2031
+51587
+29-1199
+
+2028
+51585
+26-1189
+
+2034
+56914
+29-1199
+
+8
+
+WVSP2031
+AREA
+
+2025
+53551
+19-1189
+400
+
+600
+
+900
+
+9
+
+900
+
+750
+
+1200
+
+0
+150
+
+D-2031 (25259)
+C-2033 (26196)
+D-2026 (23391)
+C-2027 (23392)
+D-2029 (34485)
+C-2030 (16350)
+D-2034 (23389)
+C-2035 (23390)
+
+2026
+53977
+24-1182
+
+West Caledon
+
+600 750
+
+750
+
+Winston Churchill Bv
+
+EA-2028 (22428)
+D-2030 (37130)
+P-2030 (37131)
+C-2032 (37132)
+
+750 40
+
+14
+
+900
+
+West Bra
+m pton
+Reservoir Expansion
+281999
+Pumping Station Expansion
+261962
+Pumping Station Expansion
+281999
+Pumping Station Expansion
+281999
+
+C-2024 (32270)
+
+400
+
+2028
+51583
+26-1189
+
+750
+
+Bram West (SPA40)
+Northwest Brampton (SPA52,SPA53)
+
+D-2024 (20692)
+C-2026 (20685)
+
+2026
+53975
+24-1180
+
+2026
+57090
+24-1185
+
+4
+
+2031
+38605
+29-1199
+
+West Ca
+ledon
+New Elevated Tank
+231941
+1
+
+19
+
+S
+nelg rove
+Decommissioning Elevated
+Tank
+211951
+New E
+leva
+tedT a
+nk
+281581
+291999
+
+Mayfield West
+
+9
+
+2026
+30703
+24-1180
+2026
+20697
+24-1270
+
+King St
+
+Sandhill
+
+600
+
+North Bolton
+
+Coleraine Dr
+
+Victoria
+
+2035
+31823
+29-1299
+
+6
+
+7
+
+600
+
+6
+
+EA-2026 (22350)
+D-2028 (23447)
+C-2030 (23448)
+
+2032
+2033
+31439
+30042
+29-1299
+29-1199
+
+2033
+31820
+29-1299
+
+S
+a
+ndhi
+ll
+New Reservoir and Pumping EA-2027 (35850)
+Station
+D-2029 (38087)
+271582
+P-2029 (38088)
+291999
+C-2031 (38089)
+9 C-2031 (38090)
+
+Ko l b
+
+Castlederg
+
+150
+
+600 400
+
+tW
+
+Vi
+c
+tori
+a
+New Pum pi
+ng S
+ta
+ti
+on
+261580
+281963
+
+Rd
+Embleton
+
+2025
+3634
+25-1131
+
+West Bolton
+
+Macville
+
+EA-2031 (22677)
+D-2033 (35614)
+P-2033 (35615)
+C-2035 (35616)
+
+50
+
+400
+
+Queen S
+
+EA-2031 (34474)
+D-2033 (32972)
+P-2033 (32973)
+C-2035 (32974)
+
+EA-2028 (22514)
+8
+D-2030 (30682)
+P-2030 (32702)
+C-2032 (32010)
+
+400
+
+Cheltenham
+
+Heritage Road
+
+3
+
+Ca
+stlederg
+New Elevated Tank
+251599
+291999
+
+750
+
+2029
+21137
+29-1198
+
+Heri
+ta
+g eRoa
+d
+New E
+leva
+tedT a
+nk
+291599
+291999
+
+Ma
+c
+vi
+lle
+New Elevate Tank
+281583
+291999
+
+South Albion
+
+12
+
+Kennedy Rd S
+
+0
+40
+
+2028
+21141
+26-1132
+
+12
+
+22
+
+Humber Station Rd
+
+Mississauga Rd
+
+1500
+
+19
+
+Inglewood
+
+2028
+29891
+14-1256
+
+Rd
+
+D-2024 (30686)
+P-2024 (32574)
+C-2026 (32573)
+
+600
+
+1
+
+2028
+21136
+26-1138
+19
+
+y
+Williams P
+
+Old Church
+
+NorthBolton
+Booster Pumping Station
+241969
+
+400
+
+900
+
+Caledon East
+
+Castlederg
+
+Airport Rd
+
+2028
+21135
+26-1133
+
+60
+0
+
+2032
+56831
+29-1299
+
+West Bolton
+
+7
+
+S
+outhAlbi
+on
+New Reservoir and Pumping EA-2029 (22574)
+Station
+D-2031 (35752)
+291599
+P-2031 (35753)
+291999
+C-2033 (35754)
+C-2033 (35755)
+New Elevated Tank
+EA-2033 (38092)
+291599
+D-2035 (35756)
+291999
+P-2035 (35757)
+C-2037 (35758)
+
+D-2025 (52801)
+C-2027 (52302)
+
+Inglewood
+
+West Brampton
+
+C-2026 (52300)
+
+Humber Station Rd
+
+r
+
+I
+nglew ood
+New Groundwater Well
+221831
+
+Palgrave
+
+Caledon East
+
+400
+
+tte
+
+900
+
+Rd
+
+C-2024 (52304)
+C-2025 (57301)
+
+East Rd
+
+11
+
+2028
+32336
+26-1134
+
+New Groundw a
+ter Well
+231830
+
+Hurontario St
+
+r W 750
+Bovaird D
+
+Ca
+ledonE
+a
+st
+
+Palgrave
+
+Queen St N
+
+Cr
+
+o
+James P
+
+Ma
+in
+
+St
+
+2031
+20735
+29-1199
+
+1
+
+Old
+
+2026
+Bush St
+20733
+24-1130
+
+4
+
+Pa
+lg ra
+ve
+New Groundwater Well
+221832
+
+50
+
+Queen St S
+
+1
+
+40
+0
+
+19
+
+24
+
+600
+
+2024
+56315
+23-1137
+
+600
+
+400
+
+400
+
+Dra
+ft –Not Approvedby Counc
+i
+l
+
+24
+
+1800
+
+2028
+21919
+26-1136
+
+8
+
+W
+
+1500
+
+600
+
+2028
+20749
+26-1135
+
+2031
+30717
+29-1198
+
+107
+
+136
+
+ood Py
+Sandalw
+
+900
+
+Heritage Rd
+
+2033
+51940
+29-1198
+
+900
+
+2030
+20742
+29-1198
+
+7
+
+Wa
+ter S
+ervi
+c
+i
+ng I
+nfra
+struc
+ture
+Wa
+ter Produc
+ti
+on,
+T ra
+nsm i
+ssi
+onS
+ystem s
+a
+ndDi
+stri
+buti
+onS
+ystem s
+20242041De
+velopm ent Cha
+rg es
+
+600
+
+2033
+20751
+29-1199
+
+y
+
+Caledon Village
+
+600
+
+Winston Churchill Bv
+
+400
+
+2031
+20745
+29-1198
+
+9H
+
+r
+ss D
+Wanle
+
+Rd
+
+2035
+20755
+29-1199
+
+Mono Mills
+
+Alton
+
+The Gore Rd
+
+750
+
+2037
+32142
+29-1199
+
+2031
+32585
+29-1198
+
+1500
+
+400
+
+2035
+20767
+29-1199
+
+1200
+
+2035
+53979
+29-1199
+
+Water Development
+Charges
+2024
+
+136
+
+Porterfield Rd
+
+400
+
+Alloa
+
+ed
+itvi
+ew
+
+14
+
+750
+
+750
+
+Mississauga Rd
+
+2037
+32033
+29-1199
+
+d
+Mayfield R
+
+2026
+20697
+24-1270
+
+2026
+57090
+24-1185
+
+2035
+31996
+29-1199
+750
+
+2035
+31823
+29-1299
+
+2037
+32600
+29-1199
+400
+
+23
+
+2025
+32031
+25-1129
+
+2025
+30981
+25-1129
+
+w Rd
+2025
+37966
+25-1129
+
+400
+
+ATTACHMENT B
+DETAILED DESIGN DRAWINGS
+
+SERVICE DATA
+
+BEAMISH
+COURT
+
+PROP. SAN MT SENDING SHAFT 1
+
+THIS DRAWING TO BE USED FOR
+SANITARY SEWER CONSTRUCTION ONLY
+
+PROP. SAN. MH.1A
+APPROXIMATE 20X70m MT
+COMPOUND AREA
+
+THE GORE ROAD
+
+INIT.
+
+DATE
+
+SERVICE
+
+REVISIONS
+DATE
+
+DETAILS
+
+INIT.
+
+2024-09-16
+
+ISSUED FOR 30% SUBMISSION
+
+N.L.
+
+HEALEY RD
+
+RD.
+
+14
+
+REFER TO DWG. No. PP02-D
+
+MAYFIELD
+
+PROP. 1200 SAN
+
+LIS DR.
+SQUIRE EL
+
+THE GORE RD.
+
+.
+
+R.O.W
+
+CENTREVILLE CREEK RD.
+
+BEAMISH
+COURT
+
+DR.
+
+THE GORE RD.
+
+STR
+ALOVERA
+
+R.O.W
+
+IDE
+COUNTRYS
+
+11.2m
+8
+
+4.8m
+
+INIT.
+
+DATE
+
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+WEST HUMBER RIVER
+
+4.4m
+
+STA 13+280
+
+SERVICE
+SAN SEWERS
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+MCVEAN DR.
+
+KEY PLAN
+(N.T.S.)
+
+NOTES:
+1.
+
+2.
+
+ALOVERA
+STREET
+
+MATCH LINE
+
+3.
+
+R.O.W
+
+CONNECT TO EX. SANITARY SEWER
+THE EXACT LOCATION AND ELEVATION TO BE
+VERIFIED IN THE FIELD BY CONTRACTOR
+
+4.
+5.
+6.
+7.
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR SHAFT COMPOUNDS DETAILS AND TEMPORARY WORK TO MAINTAIN LOCAL
+TRAFFIC ONLY, REFER TO DRAWINGS TC1-D TO TC6-D.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM4-D
+
+LEGEND:
+DENOTES SANITARY MANHOLE
+DENOTES STORM MANHOLE
+DENOTES SINGLE/DOUBLE CATCHBASIN
+PROP. 1200 SAN
+
+SANITARY SEWER PROPOSED
+SANITARY SEWER EXISTING
+DENOTES PROPOSED WATERMAIN
+DENOTES EXISTING WATERMAIN
+DENOTES EXISTING STORM SEWER
+
+226
+
+226
+
+225
+
+225
+
+DENOTES ROGERS
+DENOTES EXISTING GAS MAIN
+DENOTES EXISTING AERIAL CABLES
+DENOTES LIMIT OF TRCA REGULATION AREA
+
+General Notes
+224
+
+224
+
+BEAMISH COURT
+C/L
+
+223
+
+223
+
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+222
+PROP.SAN.MH.1A
+(STD. 2-7-5, 2400Ø)
+
+222
+221
+220
+219
+218
+
+Agency:
+B.M. No. 44
+Elev. 227.660 (Geodetic)
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+221
+220
+219
+218
+
+217
+
+217
+
+216
+
+216
+
+Designed by
+
+Approved by
+Chkd.
+
+PROP. SAN MT
+SENDING SHAFT 1
+ID=7.0m
+
+215
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+215
+214
+
+214
+
+213
+
+213
+
+THE REGIONAL MUNICIPALITY OF PEEL
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+ONTARIO CLEAN WATER AGENCY
+
+212
+
+212
+
+PSN (PUBLIC SECTOR NETWORK)
+
+HYDRO ONE NETWORKS
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+
+TRANS NORTHERN PIPELINE
+
+211
+
+211
+
+210
+
+210
+
+209
+
+209
+
+UNION GAS
+
+10m
+
+EX. PLUG TO BE REMOVED AND
+CONNECT TO EX. 1200 SAN
+MICRO-TUNNELLING PIPE
+
+208
+
+0
+
+10
+
+2m
+
+0
+
+VERTICAL SCALE
+1:100
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+CONSULTING ENGINEERS
+
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+204
+
+203
+
+203
+
+PROP. SAN MH1AX
+STD. 2-7-5
+NW. INV. 203.184
+SE. INV. 203.134
+
+PROP. 354.1m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+201
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+205
+
+204
+
+202
+
+6m
+
+206
+
+PROP. 2.4m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+205
+
+30m
+
+4
+
+2
+
+207
+
+206
+
+20
+
+HORIZONTAL SCALE
+1:500
+
+208
+
+207
+
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+
+202
+201
+
+THE GORE ROAD
+(FROM COUNTRYSIDE DRIVE TO MAYFIELD ROAD )
+
+200
+
+200
+
+PROP. 1200mm SANITARY SEWER
+STA. 13+020 TO STA. 13+280
+
+RESTRAINED JOINTS
+
+216.61
+
+216.51
+
+216.45
+
+216.43
+
+216.48
+
+216.54
+
+216.62
+
+216.73
+
+216.84
+
+216.91
+
+216.93
+
+216.87
+
+216.77
+
+13+280
+
+13+260
+
+13+240
+
+13+220
+
+13+200
+
+13+180
+
+13+160
+
+13+140
+
+13+120
+
+13+100
+
+13+080
+
+13+060
+
+13+040
+
+13+020
+
+BOT.EL. OF WM.
+
+CAD Area
+
+X-XX
+
+Area
+
+EX. ROAD ELEV.
+
+Checked by
+
+N.L.
+
+Drawn by
+
+ROAD CHAINAGE
+
+Date
+
+JULY 2024
+
+Sheet
+
+X-XX
+
+Project No.
+
+242273/ 241193
+
+A.L.
+4 of 31
+
+Plan No.
+
+PP01-D
+
+f:\5375\5375-PLAN-PROFILES\The Gore Road\5375-Gore Rd.-PP-1.dwg, 2024-09-16 2:55:26 PM, AutoCAD PDF (General Documentation).pc3
+
+SERVICE DATA
+
+THIS DRAWING TO BE USED FOR
+SERVICE
+SANITARY SEWER CONSTRUCTION ONLY
+SAN SEWERS
+
+INIT.
+
+DATE
+
+SERVICE
+
+INIT.
+
+DATE
+
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+REVISIONS
+N.L.
+
+THE EXISTING WATER SERVICE CONNECTION
+IS TO BE LOCATED ON FIELD BY
+CONTRACTOR DURING CONSTRUCTION AND
+TO BE ADJUSTED OR PROTECTED AS NEEDED
+
+STR
+
+DR.
+
+ALOVERA
+
+IDE
+COUNTRYS
+
+MAYFIELD
+
+REFER TO DWG No. PP01-D
+
+MCVEAN DR.
+
+KEY PLAN
+(N.T.S.)
+
+NOTES:
+1.
+
+MATCH LINE
+
+R.O.W
+
+14
+
+CENTREVILLE CREEK RD.
+
+2.
+
+D
+S
+I
+L
+L
+E
+E
+R
+I
+SQU
+
+MATCH LINE
+
+R.
+
+REFER TO DWG. No. PP03-D
+
+PROP. 1200 SAN
+
+THE GORE RD.
+RD.
+
+PROP. 1200 SAN
+
+THE GORE RD.
+
+8
+.
+
+5.1m R.O.W
+
+HEALEY RD
+
+R.O.W
+
+BEAMISH
+COURT
+
+WEST HUMBER RIVER
+
+STA 13+280
+
+STA 13+540
+
+INIT.
+
+THE GORE ROAD
+4.7m
+
+HAGERMAN ROAD
+
+DETAILS
+ISSUED FOR 30% SUBMISSION
+
+LIS DR.
+SQUIRE EL
+
+PROP. SAN MT
+RECEIVING SHAFT 2
+PROP. SAN. MH.2A
+
+DATE
+2024-09-16
+
+3.
+
+4.
+5.
+6.
+7.
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR SHAFT COMPOUNDS DETAILS AND TEMPORARY WORK TO MAINTAIN LOCAL
+TRAFFIC ONLY, REFER TO DRAWINGS TC1-D TO TC6-D.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM4-D
+
+LEGEND:
+DENOTES SANITARY MANHOLE
+DENOTES STORM MANHOLE
+DENOTES SINGLE/DOUBLE CATCHBASIN
+PROP. 1200 SAN
+
+SANITARY SEWER PROPOSED
+SANITARY SEWER EXISTING
+DENOTES PROPOSED WATERMAIN
+DENOTES EXISTING WATERMAIN
+DENOTES EXISTING STORM SEWER
+
+226
+
+226
+
+225
+
+225
+
+DENOTES ROGERS
+DENOTES EXISTING GAS MAIN
+DENOTES EXISTING AERIAL CABLES
+DENOTES LIMIT OF TRCA REGULATION AREA
+
+General Notes
+224
+PROP.SAN.MH.2A
+(STD. 2-7-5, 2400Ø)
+
+224
+223
+222
+221
+
+223
+222
+
+Agency:
+B.M. No. 44
+Elev. 227.660 (Geodetic)
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+221
+
+220
+
+220
+
+219
+
+219
+
+218
+
+218
+PROP. SAN MT
+RECEIVING SHAFT 2
+ID=5.0m
+
+217
+
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+217
+
+Designed by
+
+Approved by
+Chkd.
+
+216
+
+216
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+215
+
+215
+
+214
+
+214
+
+213
+
+213
+
+THE REGIONAL MUNICIPALITY OF PEEL
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+ONTARIO CLEAN WATER AGENCY
+
+212
+
+212
+
+PSN (PUBLIC SECTOR NETWORK)
+
+HYDRO ONE NETWORKS
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+
+TRANS NORTHERN PIPELINE
+
+211
+
+211
+
+210
+
+210
+
+209
+
+209
+
+208
+
+208
+
+207
+
+207
+
+206
+
+206
+
+205
+
+205
+
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+UNION GAS
+
+10m
+
+0
+
+10
+
+20
+
+30m
+HORIZONTAL SCALE
+1:500
+
+2m
+
+0
+
+4
+
+2
+
+6m
+VERTICAL SCALE
+1:100
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+CONSULTING ENGINEERS
+
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+204
+
+204
+
+PROP. SAN MH2A
+STD. 2-7-5
+NW. INV. 204.276
+SE. INV. 204.247
+
+203
+
+203
+202
+
+202
+201
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+PROP. 541.7m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+PROP. 354.1m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+200
+
+201
+
+THE GORE ROAD
+
+200
+
+(FROM COUNTRYSIDE DRIVE TO MAYFIELD ROAD )
+
+PROP. 1200mm SANITARY SEWER
+STA. 13+280 TO STA. 13+540
+
+RESTRAINED JOINTS
+BOT.EL. OF WM.
+
+CAD Area
+
+X-XX
+
+Area
+
+Checked by
+
+N.L.
+
+Drawn by
+
+218.99
+
+219.04
+
+218.96
+
+218.82
+
+218.65
+
+218.42
+
+218.22
+
+217.99
+
+217.75
+
+217.62
+
+217.38
+
+217.06
+
+216.78
+
+216.61
+
+EX. ROAD ELEV.
+
+13+540
+
+13+520
+
+13+500
+
+13+480
+
+13+460
+
+13+440
+
+13+420
+
+13+400
+
+13+380
+
+13+360
+
+13+340
+
+13+320
+
+13+300
+
+13+280
+
+ROAD CHAINAGE
+
+Date
+
+JULY 2024
+
+Sheet
+
+X-XX
+
+Project No.
+
+242273/ 241193
+
+A.L.
+5 of 31
+
+Plan No.
+
+PP02-D
+
+f:\5375\5375-PLAN-PROFILES\The Gore Road\5375-Gore Rd.-PP-2.dwg, 2024-09-16 2:55:35 PM, AutoCAD PDF (General Documentation).pc3
+
+SERVICE DATA
+SERVICE
+
+INIT.
+
+DATE
+
+SAN SEWERS
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+THIS DRAWING TO BE USED FOR
+SANITARY SEWER CONSTRUCTION ONLY
+
+SERVICE
+
+INIT.
+
+DATE
+
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+STA 13+800
+
+REVISIONS
+DATE
+
+DETAILS
+
+INIT.
+
+2024-09-16
+
+ISSUED FOR 30% SUBMISSION
+
+N.L.
+
+REFER TO DWG No. PP02-D
+
+CENTREVILLE CREEK RD.
+
+BEAMISH
+COURT
+
+DR.
+
+STR
+ALOVERA
+
+NOTES:
+1.
+
+2.
+3.
+
+4.
+5.
+6.
+7.
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR SHAFT COMPOUNDS DETAILS AND TEMPORARY WORK TO MAINTAIN LOCAL
+TRAFFIC ONLY, REFER TO DRAWINGS TC1-D TO TC6-D.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM4-D
+
+LEGEND:
+
+HAGERMAN ROAD
+
+THE EXISTING WATER SERVICE CONNECTION
+IS TO BE LOCATED ON FIELD BY
+CONTRACTOR DURING CONSTRUCTION AND
+TO BE ADJUSTED OR PROTECTED AS NEEDED
+
+MCVEAN DR.
+
+KEY PLAN
+(N.T.S.)
+
+MATCH LINE
+
+R.O.W
+
+14
+
+IDE
+COUNTRYS
+
+REFER TO DWG No. PP04-D
+MATCH LINE
+
+R.O.W
+
+LIS DR.
+SQUIRE EL
+
+PROP. 1200 SAN
+
+PROP. 1200 SAN
+
+PROP. 1200 SAN
+
+THE GORE RD.
+RD.
+
+R.O.W
+
+4.5m
+
+MAYFIELD
+
+4.5m
+
+THE GORE RD.
+
+8
+.
+
+THE GORE ROAD
+
+7.0m
+
+HEALEY RD
+
+R.O.W
+
+STA 13+540
+
+WEST HUMBER RIVER
+
+DENOTES SANITARY MANHOLE
+DENOTES STORM MANHOLE
+DENOTES SINGLE/DOUBLE CATCHBASIN
+PROP. 1200 SAN
+
+SANITARY SEWER PROPOSED
+SANITARY SEWER EXISTING
+DENOTES PROPOSED WATERMAIN
+DENOTES EXISTING WATERMAIN
+DENOTES EXISTING STORM SEWER
+
+227
+
+227
+
+226
+
+226
+
+DENOTES ROGERS
+DENOTES EXISTING GAS MAIN
+DENOTES EXISTING AERIAL CABLES
+DENOTES LIMIT OF TRCA REGULATION AREA
+
+General Notes
+225
+
+225
+
+224
+
+224
+
+223
+
+223
+
+222
+
+222
+
+221
+
+221
+
+220
+
+220
+
+219
+
+219
+
+218
+
+218
+
+217
+
+217
+
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+Agency:
+B.M. No. 44
+Elev. 227.660 (Geodetic)
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+Designed by
+
+Approved by
+Chkd.
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+216
+
+216
+
+215
+
+215
+
+214
+
+214
+
+THE REGIONAL MUNICIPALITY OF PEEL
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+ONTARIO CLEAN WATER AGENCY
+
+213
+
+213
+
+PSN (PUBLIC SECTOR NETWORK)
+
+HYDRO ONE NETWORKS
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+
+TRANS NORTHERN PIPELINE
+
+212
+
+212
+
+211
+
+211
+
+UNION GAS
+
+APPROXIMATELY 5.4m
+CLEARANCE FROM
+CREEK BOTTOM
+
+10m
+
+210
+209
+208
+207
+
+210
+
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+
+0
+
+10
+
+20
+
+30m
+HORIZONTAL SCALE
+1:500
+
+2m
+
+0
+
+4
+
+2
+
+6m
+VERTICAL SCALE
+1:100
+
+209
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+CONSULTING ENGINEERS
+
+208
+207
+
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+206
+
+206
+
+205
+
+205
+
+204
+
+204
+
+203
+
+203
+
+PROP. 541.7m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+202
+201
+
+202
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+THE GORE ROAD
+
+201
+
+(FROM COUNTRYSIDE DRIVE TO MAYFIELD ROAD)
+
+PROP. 1200mm SANITARY SEWER
+STA. 13+540 TO STA. 13+800
+
+RESTRAINED JOINTS
+BOT.EL. OF WM.
+
+CAD Area
+
+X-XX
+
+Area
+
+Checked by
+
+N.L.
+
+Drawn by
+
+214.47
+
+214.13
+
+214.01
+
+214.12
+
+214.54
+
+215.15
+
+215.90
+
+216.66
+
+217.32
+
+217.85
+
+218.30
+
+218.60
+
+218.82
+
+218.99
+
+EX. ROAD ELEV.
+
+13+800
+
+13+780
+
+13+760
+
+13+740
+
+13+720
+
+13+700
+
+13+680
+
+13+660
+
+13+640
+
+13+620
+
+13+600
+
+13+580
+
+13+560
+
+13+540
+
+ROAD CHAINAGE
+
+Date
+
+JULY 2024
+
+Sheet
+
+X-XX
+
+Project No.
+
+242273/ 241193
+
+A.L.
+6 of 31
+
+Plan No.
+
+PP03-D
+
+f:\5375\5375-PLAN-PROFILES\The Gore Road\5375-Gore Rd.-PP-3.dwg, 2024-09-16 2:55:45 PM, AutoCAD PDF (General Documentation).pc3
+
+SERVICE DATA
+
+THIS DRAWING TO BE USED FOR
+SERVICE
+SANITARY SEWER CONSTRUCTION ONLYSAN SEWERS
+
+RD.
+
+14
+
+CENTREVILLE CREEK RD.
+
+BEAMISH
+COURT
+
+DR.
+
+STR
+ALOVERA
+
+LIS DR.
+SQUIRE EL
+
+THE GORE RD.
+
+IDE
+COUNTRYS
+
+THE GORE RD.
+
+MAYFIELD
+
+REFER TO DWG No. PP03-D
+
+MATCH LINE
+
+N.L.
+
+8
+
+MCVEAN DR.
+
+KEY PLAN
+(N.T.S.)
+
+NOTES:
+1.
+
+2.
+3.
+
+MATCH LINE
+
+200 SAN
+PROP. 1
+
+INIT.
+
+ISSUED FOR 30% SUBMISSION
+
+WEST HUMBER RIVER
+
+5.5m
+
+PROP. 1200 SAN
+
+DETAILS
+
+2024-09-16
+
+.
+
+8.8m
+
+DATE
+
+HEALEY RD
+
+THE GORER.O.W
+ROAD
+
+STA 13+800
+
+STA 13+980
+
+INIT.
+
+DATE
+
+REVISIONS
+
+R.O.W
+
+REFER TO DWG No. PP05-D
+
+SERVICE
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+300m MIN. RADIUS FOR
+SANITARY MICRO- TUNNEULING
+
+4.
+5.
+6.
+7.
+
+R.O.W
+
+INIT.
+
+DATE
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR SHAFT COMPOUNDS DETAILS AND TEMPORARY WORK TO MAINTAIN LOCAL
+TRAFFIC ONLY, REFER TO DRAWINGS TC1-D TO TC6-D.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM4-D
+
+LEGEND:
+
+R.O.W
+
+DENOTES SANITARY MANHOLE
+
+THE EXISTING WATER SERVICE CONNECTION
+IS TO BE LOCATED ON FIELD BY
+CONTRACTOR DURING CONSTRUCTION AND
+TO BE ADJUSTED OR PROTECTED AS NEEDED
+
+DENOTES STORM MANHOLE
+DENOTES SINGLE/DOUBLE CATCHBASIN
+PROP. 1200 SAN
+
+SANITARY SEWER PROPOSED
+SANITARY SEWER EXISTING
+DENOTES PROPOSED WATERMAIN
+DENOTES EXISTING WATERMAIN
+DENOTES EXISTING STORM SEWER
+
+225
+
+225
+
+224
+
+224
+
+DENOTES ROGERS
+DENOTES EXISTING GAS MAIN
+DENOTES EXISTING AERIAL CABLES
+DENOTES LIMIT OF TRCA REGULATION AREA
+
+General Notes
+223
+
+223
+
+222
+
+222
+
+221
+
+221
+
+220
+
+220
+
+219
+
+219
+
+218
+
+218
+
+217
+
+217
+
+216
+
+216
+
+215
+
+215
+
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+Agency:
+B.M. No. 44
+Elev. 227.660 (Geodetic)
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+Designed by
+
+Approved by
+Chkd.
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+214
+
+214
+
+213
+
+213
+
+212
+
+212
+
+THE REGIONAL MUNICIPALITY OF PEEL
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+ONTARIO CLEAN WATER AGENCY
+
+211
+
+211
+
+PSN (PUBLIC SECTOR NETWORK)
+
+HYDRO ONE NETWORKS
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+
+TRANS NORTHERN PIPELINE
+
+210
+
+210
+
+209
+
+209
+
+208
+
+208
+
+207
+
+207
+
+206
+
+206
+
+205
+
+205
+
+204
+
+204
+
+203
+
+203
+
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+UNION GAS
+
+10m
+
+0
+
+10
+
+20
+
+30m
+HORIZONTAL SCALE
+1:500
+
+2m
+
+0
+
+4
+
+2
+
+6m
+VERTICAL SCALE
+1:100
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+CONSULTING ENGINEERS
+
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+PROP. 541.7m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+202
+201
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+202
+201
+
+THE GORE ROAD
+
+200
+
+200
+
+(FROM COUNTRYSIDE DRIVE TO MAYFIELD ROAD)
+199
+
+199
+
+PROP. 1200mm SANITARY SEWER
+STA. 13+800 TO STA. 13+980
+
+RESTRAINED JOINTS
+BOT.EL. OF WM.
+
+CAD Area
+
+X-XX
+
+Area
+
+Checked by
+
+N.L.
+
+Drawn by
+
+221.02
+
+221.03
+
+220.85
+
+220.29
+
+219.45
+
+218.21
+
+216.99
+
+215.90
+
+215.05
+
+214.47
+
+EX. ROAD ELEV.
+
+13+980
+
+13+960
+
+13+940
+
+13+920
+
+13+900
+
+13+880
+
+13+860
+
+13+840
+
+13+820
+
+13+800
+
+ROAD CHAINAGE
+
+Date
+
+JULY 2024
+
+Sheet
+
+X-XX
+
+Project No.
+
+242273/ 241193
+
+A.L.
+
+7 of 31
+
+Plan No.
+
+PP04-D
+
+f:\5375\5375-PLAN-PROFILES\The Gore Road\5375-Gore Rd.-PP-4.dwg, 2024-09-16 2:55:55 PM, AutoCAD PDF (General Documentation).pc3
+
+. 1200
+
+SAN
+
+INIT.
+
+ISSUED FOR 30% SUBMISSION
+
+N.L.
+
+7.3m
+
+THE GORE RD.
+
+14
+
+CENTREVILLE CREEK RD.
+
+BEAMISH
+COURT
+
+DR.
+
+STR
+ALOVERA
+
+THE GORE RD.
+
+8
+
+IDE
+COUNTRYS
+
+PROP
+
+DETAILS
+
+2024-09-16
+
+WEST HUMBER RIVER
+
+(REG
+
+PROP. 1200 SAN
+
+REVISIONS
+
+LIS DR.
+SQUIRE EL
+
+R.O.W
+
+INIT.
+
+DATE
+
+RD.
+
+10.7m
+
+SERVICE
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+MAYFIELD
+
+PROP. 18° HORIZ./
+45° VERT. BEND
+
+R.O.W
+
+INIT.
+
+DATE
+
+DATE
+
+.
+
+PROP. 45° VERT. BEND
+
+SERVICE
+SAN SEWERS
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+HEALEY RD
+
+PROP. 600x300 REDUCER
+PROP. 600mm CPP WM
+
+R.O.W
+
+REFER TO DWG No. PP06-D
+
+AD
+O
+R
+D
+L
+FIEROAD No. 14)
+MAY
+IONAL
+
+PROP. 300mm WM
+
+THE EXISTING WATER SERVICE CONNECTION
+IS TO BE LOCATED ON FIELD BY
+CONTRACTOR DURING CONSTRUCTION AND
+TO BE ADJUSTED OR PROTECTED AS NEEDED
+
+SERVICE DATA
+
+STA 13+980
+
+REFER TO DWG. SEC1-D FOR
+THE DETAIL OF SECTION A-A
+
+STA 14+220
+
+300m MIN. RADIUS FOR
+SANITARY MICRO- TUNNEULING
+
+PROP. CONNECTION TO EX. 300 PVC
+WATERMAIN WITH 600x300 REDUCER AND
+300x300 CUT-IN TEE
+
+THE GORE ROAD
+
+THIS DRAWING TO BE USED FOR
+SANITARY SEWER AND WATERMAIN
+CONSTRUCTION ONLY
+
+MCVEAN DR.
+
+KEY PLAN
+(N.T.S.)
+
+PROP. 600 CPP WM
+
+PROP. 28° HORIZ. BEND
+
+LINE VALVE CHAMBER VC01-D
+c/w DOUBLE DRAIN VALVE
+(STD. 1-3-21)
+
+PR
+OP
+. 12
+
+PROP. 600 CPP WM
+
+00
+
+PROP. 28° HORIZ. BEND
+
+EX. ROGERS AND BELL TO BE
+SUPPORTED (BY OTHERS)
+
+R.O
+
+SAN
+P. 1200
+
+PRO
+
+SA
+N
+
+6.3m
+
+.W
+
+EX. DITCH LINE TO BE REALIGNED
+TEMPORARILY FOR DURATION OF
+CONSTRUCTION TIME
+
+EX. HYDRANT TO BE
+SUPPORTED DURING THE
+CONSTRUCTION
+
+R.O.W
+
+PROP. SAN MT
+SENDING SHAFT 3
+
+PROP. SAN. MH.3A
+PROP. SAN. VORTEX DROP STRUCTURE
+PROP. 300 SAN
+PROP. SAN. MH.3AX
+
+300m MIN. RADIUS FOR
+SANITARY MICRO- TUNNEULING
+
+1.
+
+REFER TO DWG No. PP04-D
+
+6.8m
+
+MATCH LINE
+
+MATCH LINE
+
+NOTES:
+R.O.W
+
+PROP. 300 SAN
+PROP. SAN. PLUG
+R.O.W
+
+2.
+3.
+
+4.
+5.
+6.
+7.
+
+DV
+
+600 WM
+
+BV
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR SHAFT COMPOUNDS DETAILS AND TEMPORARY WORK TO MAINTAIN LOCAL
+TRAFFIC ONLY, REFER TO DRAWINGS TC1-D TO TC6-D.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM4-D
+
+DV
+
+600 WM
+
+LEGEND:
+DENOTES SANITARY MANHOLE
+DENOTES STORM MANHOLE
+DENOTES SINGLE/DOUBLE CATCHBASIN
+PROP. 1200 SAN
+
+SANITARY SEWER PROPOSED
+
+VENT PIPE
+
+APPROXIMATE 20X70m MT
+COMPOUND AREA
+
+SANITARY SEWER EXISTING
+DENOTES PROPOSED WATERMAIN
+DENOTES EXISTING WATERMAIN
+DENOTES EXISTING STORM SEWER
+
+226
+225
+LINE VALVE CHAMBER VC01-G
+c/w DOUBLE DRAIN VALVE
+(STD. 1-3-21)
+
+224
+
+PROP. 300 WM
+
+223
+
+MAYFIEL ROAD
+C/L
+
+PROP.SAN.MH.3AX
+(STD. 2-5-4, 1500Ø)
+
+PROP.SAN.MH.3A
+(STD. 2-7-5, 2400Ø)
+
+LINE VALVE CHAMBER VC01-G
+(c/w DOUBLE DRAIN VALVE)
+SCHEMATIC
+
+226
+
+General Notes
+PROP. CONNECTION TO EX. 300 PVC
+WATERMAIN WITH 600x300 REDUCER AND
+300x300 CUT-IN TEE
+
+225
+224
+
+EX. 1500 CULVERT TO BE
+SUPPORTED DURING
+CONSTRUCTION
+
+221
+2.6m
+
+PROP. 600 AWWA
+C30X CPP WM
+
+220
+
+Agency:
+B.M. No. 44
+Elev. 227.660 (Geodetic)
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+222
+221
+220
+
+1.8m
+
+0.5m
+0.7m
+
+219
+
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+223
+
+PROP. 600x300 REDUCER
+
+222
+
+DENOTES ROGERS
+DENOTES EXISTING GAS MAIN
+DENOTES EXISTING AERIAL CABLES
+DENOTES LIMIT OF TRCA REGULATION AREA
+
+219
+
+PROP. 600 AWWA C30X CPP WM
+2.7m
+
+218
+
+218
+217
+
+P WM
+
+216
+
+PROP. WM TO BE INSULATED
+REFER TO STD. 1-5-8 ON D1-D
+FOR THE DETAIL
+
+215
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+PROP. 600 AWWA C30X CP
+
+216
+
+Approved by
+Chkd.
+
+0.5m MIN.
+
+217
+
+Designed by
+
+215
+
+214
+
+214
+
+PROP. SAN MT
+SENDING SHAFT 3
+ID=7.0m
+
+213
+
+PROP. SAN. PLUG
+
+213
+
+PROP. 6.4m- 300 PVC
+SAN @ 0.50%
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+211
+
+212
+
+HYDRO ONE NETWORKS
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+UNION GAS
+
+10m
+
+0
+
+10
+
+20
+
+30m
+
+211
+210
+
+210
+
+VORTEX DROP STRUCTURE
+REFER TO DETAIL ON DWG.
+D1-D
+
+PROP. SAN MH3A
+STD. 2-7-5
+NW. INV. 205.951
+SE. INV. 205.901
+
+PSN (PUBLIC SECTOR NETWORK)
+
+TRANS NORTHERN PIPELINE
+
+PROP. 1.6m- 300 PVC
+SAN @ 1.00%
+
+208
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+ONTARIO CLEAN WATER AGENCY
+
+212
+
+209
+
+THE REGIONAL MUNICIPALITY OF PEEL
+CITY OF MISSISSAUGA WORKS DEPT.
+
+HORIZONTAL SCALE
+1:500
+2m
+
+0
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+CONSULTING ENGINEERS
+
+208
+207
+
+206
+
+206
+
+6m
+VERTICAL SCALE
+1:100
+
+209
+
+207
+
+4
+
+2
+
+PROP. 284.6m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+202
+201
+
+14+029.8 600x300
+REDUCER
+
+203
+
+14+054.6
+45° VERT. BEND
+
+204
+
+14+091.9
+PROP. 28° HORIZ.
+BEND
+
+14+123.0
+PROP. 28° HORIZ.
+BEND
+
+205
+
+14+056.6
+PROP. 18° HORIZ./
+45° VERT. BEND
+
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+205
+204
+203
+
+PROP. 541.7m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+202
+
+THE GORE ROAD
+(FROM MAYFIELD ROAD TO HEALEY ROAD)
+
+201
+
+PROP. 1200mm SANITARY SEWER
+PROP. 600mm WATERMAIN
+STA. 13+980 TO STA. 14+220
+
+218.44
+
+218.22
+
+218.09
+
+217.66
+
+216.42
+
+215.74
+
+215.88
+
+216.01
+
+216.14
+
+218.33
+
+CAD Area
+
+X-XX
+
+Area
+
+222.29
+
+222.25
+
+222.12
+
+221.82
+
+221.29
+
+220.86
+
+220.67
+
+220.65
+
+220.72
+
+220.91
+
+220.98
+
+221.12
+
+221.02
+
+Checked by
+
+N.L.
+
+Drawn by
+
+14+220
+
+14+200
+
+14+180
+
+14+160
+
+14+140
+
+14+120
+
+14+100
+
+14+080
+
+14+060
+
+14+040
+
+14+020
+
+14+000
+
+13+980
+
+Date
+
+JULY 2024
+
+Sheet
+
+X-XX
+
+Project No. 242273/ 242274/ 241193
+
+A.L.
+8 of 31
+
+Plan No.
+
+PP05-D
+
+f:\5375\5375-PLAN-PROFILES\The Gore Road\5375-Gore Rd.-PP-5.dwg, 2024-09-16 2:56:05 PM, AutoCAD PDF (General Documentation).pc3
+
+SERVICE DATA
+SERVICE
+
+INIT.
+
+DATE
+
+SAN SEWERS
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+SERVICE
+
+INIT.
+
+DATE
+
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+R.O.W
+
+2.2m
+
+CENTREVILLE CREEK RD.
+
+PROP. 600 CPP WM
+
+INTERSECTION CHAMBER VC02-D
+c/w DRAIN VALVE AND AIR RELEASE VALVE
+(STD. 1-3-22)
+BY-PASS FOR FUTURE SIDE
+STREET CONNECTION
+(SIZE TO BE CONFIRMED)
+
+THIS DRAWING TO BE USED FOR
+SANITARY SEWER AND WATERMAIN
+CONSTRUCTION ONLY
+
+DV
+600 WATERMAIN
+
+R.O.W
+
+BV
+
+6.6m
+
+BEAMISH
+COURT
+
+DR.
+
+STR
+ALOVERA
+
+NOTES:
+1.
+
+2.
+
+PROP. 600 CPP WM
+
+MCVEAN DR.
+
+KEY PLAN
+(N.T.S.)
+
+R.O.W
+
+2.2m
+
+14
+
+IDE
+COUNTRYS
+
+PROP. 1200 SAN
+
+PROP. 1200 SAN
+
+PROP. 1200 SAN
+
+.
+
+R.O.W
+
+LIS DR.
+SQUIRE EL
+
+7.4m
+
+THE GORE RD.
+RD.
+
+R.O.W
+
+THE GORE RD.
+
+MAYFIELD
+
+THE GORE ROAD
+
+R.O.W
+
+N.L.
+
+HEALEY RD
+
+7.5m
+
+9.5m
+
+MATCH LINE
+
+R.O.W
+
+PROP. SAN MT
+INTERMEDIATE SHAFT 4
+
+INIT.
+
+ISSUED FOR 30% SUBMISSION
+
+8
+
+REFER TO DWG. No. PP05-D
+
+PROP. SAN. PLUG
+
+DETAILS
+
+2024-09-16
+
+WEST HUMBER RIVER
+
+STA 14+220
+
+PROP. SAN. MH.4AX
+PROP. 300 SAN
+PROP. SAN. VORTEX DROP STRUCTURE
+PROP. SAN. MH.4A
+
+PROP. 300 SAN
+
+MATCH LINE
+
+REFER TO DWG. No. PP07-D
+
+STA 14+480
+
+REVISIONS
+DATE
+
+3.
+
+4.
+5.
+
+AV
+6.
+
+600 WATERMAIN
+
+7.
+
+GV
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR SHAFT COMPOUNDS DETAILS AND TEMPORARY WORK TO MAINTAIN LOCAL
+TRAFFIC ONLY, REFER TO DRAWINGS TC1-D TO TC6-D.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM4-D
+
+LEGEND:
+DENOTES SANITARY MANHOLE
+
+BY-PASS FOR FUTURE
+SIDE STREET
+CONNECTION
+
+VENT PIPE
+
+THE EXISTING WATER SERVICE CONNECTION
+IS TO BE LOCATED ON FIELD BY
+CONTRACTOR DURING CONSTRUCTION AND
+TO BE ADJUSTED OR PROTECTED AS NEEDED
+
+DENOTES STORM MANHOLE
+DENOTES SINGLE/DOUBLE CATCHBASIN
+PROP. 1200 SAN
+
+SANITARY SEWER PROPOSED
+
+INTERSECTION CHAMBER VC02-G
+c/w DRAIN VALVE AND AIR RELEASE VALVE
+(STD. 1-3-22)
+
+227
+226
+225
+
+SANITARY SEWER EXISTING
+DENOTES PROPOSED WATERMAIN
+DENOTES EXISTING WATERMAIN
+DENOTES EXISTING STORM SEWER
+
+PROP.SAN.MH.4A
+(STD. 2-7-5, 2400Ø)
+
+PROP.SAN.MH.4AX
+(STD. 2-5-4, 1500Ø)
+
+TYPICAL INTERSECTION CHAMBER
+VC02-G / VC05-G
+(c/w DRAIN AND AIR RELEASE )
+SCHEMATIC
+
+DENOTES ROGERS
+DENOTES EXISTING GAS MAIN
+DENOTES EXISTING AERIAL CABLES
+DENOTES LIMIT OF TRCA REGULATION AREA
+
+227
+226
+
+General Notes
+225
+224
+
+224
+223
+
+223
+
+222
+
+222
+
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+Agency:
+B.M. No. 44
+Elev. 227.660 (Geodetic)
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+221
+
+221
+2.5m
+
+220
+
+220
+PROP. 600 AWWA C30X CPP WM
+
+PROP. 600 AWWA C30X CPP WM
+
+219
+
+219
+
+PROP. SAN MT
+INTERMEDIATE SHAFT 4,
+ID=5.0m
+
+218
+
+218
+217
+216
+
+PROP. 300 SAN @0.50%
+WITH PLUG
+
+214
+
+215
+214
+
+PROP. 6.9m- 300 PVC
+SAN @ 1.00%
+
+213
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+216
+215
+
+Approved by
+Chkd.
+
+BY-PASS FOR FUTURE SIDE
+STREET CONNECTION
+(SIZE TO BE CONFIRMED)
+
+217
+
+Designed by
+
+THE REGIONAL MUNICIPALITY OF PEEL
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+ONTARIO CLEAN WATER AGENCY
+
+213
+
+PSN (PUBLIC SECTOR NETWORK)
+
+HYDRO ONE NETWORKS
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+
+TRANS NORTHERN PIPELINE
+
+212
+
+212
+
+VORTEX DROP STRUCTURE
+REFER TO DETAIL ON DWG.
+D1-D
+
+211
+
+10m
+
+210
+
+209
+
+209
+
+208
+
+208
+
+207
+
+207
+
+PROP. SAN MH4A
+STD. 2-7-5
+NW. INV. 206.851
+SE. INV. 206.821
+
+205
+
+203
+
+219.18
+
+219.19
+
+219.20
+
+219.21
+
+219.21
+
+PROP. 284.6m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+219.22
+
+219.20
+
+219.18
+
+219.16
+
+30m
+HORIZONTAL SCALE
+1:500
+
+2m
+
+0
+
+4
+
+2
+
+6m
+VERTICAL SCALE
+1:100
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+CONSULTING ENGINEERS
+
+202
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+THE GORE ROAD
+(FROM MAYFIELD ROAD TO HEALEY ROAD)
+
+201
+
+PROP. 1200mm SANITARY SEWER
+PROP. 600mm WATERMAIN
+STA. 14+220 TO STA. 14+480
+
+RESTRAINED JOINTS
+219.17
+
+20
+
+205
+
+203
+
+201
+
+10
+
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+204
+
+PROP. 337.9m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+0
+
+206
+
+204
+
+202
+
+UNION GAS
+
+211
+
+210
+
+206
+
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+
+219.10
+
+219.04
+
+218.76
+
+218.44
+
+BOT.EL. OF WM.
+
+CAD Area
+
+X-XX
+
+Area
+
+Checked by
+
+N.L.
+
+Drawn by
+
+224.11
+
+224.77
+
+225.06
+
+224.94
+
+224.70
+
+224.40
+
+224.01
+
+223.64
+
+223.23
+
+223.03
+
+222.90
+
+222.67
+
+222.45
+
+222.29
+
+EX. ROAD ELEV.
+
+14+480
+
+14+460
+
+14+440
+
+14+420
+
+14+400
+
+14+380
+
+14+360
+
+14+340
+
+14+320
+
+14+300
+
+14+280
+
+14+260
+
+14+240
+
+14+220
+
+ROAD CHAINAGE
+
+Date
+
+JULY 2024
+
+Sheet
+
+X-XX
+
+Project No.
+
+242274/
+242273/ 241193
+
+A.L.
+9 of 31
+
+Plan No.
+
+PP06-D
+
+f:\5375\5375-PLAN-PROFILES\The Gore Road\5375-Gore Rd.-PP-6.dwg, 2024-09-16 2:56:15 PM, AutoCAD PDF (General Documentation).pc3
+
+SERVICE DATA
+SERVICE
+
+THIS DRAWING TO BE USED FOR
+SANITARY SEWER AND WATERMAIN
+CONSTRUCTION ONLY
+
+THE GORE ROAD
+
+INTERSECTION CHAMBER VC03-G
+c/w DOUBLE AIR RELEASE VALVE
+(STD. 1-3-22)
+
+PROP. 600 CPP WM
+
+EX. BELL TO BE
+SUPPORTED (BY OTHERS)
+
+REFER TO DWG. SEC1-D FOR
+THE DETAIL OF SECTION B-B
+
+EX. HYDRO POLE TO BE
+SUPPORTED (BY OTHERS)
+
+N.L.
+
+AV
+
+BV
+
+BEAMISH
+COURT
+
+DR.
+
+14
+
+IDE
+COUNTRYS
+
+STR
+ALOVERA
+
+LIS DR.
+SQUIRE EL
+
+THE GORE RD.
+
+MCVEAN DR.
+
+KEY PLAN
+(N.T.S.)
+
+AV
+
+600 WATERMAIN
+
+NOTES:
+1.
+
+GV
+2.
+
+VENT PIPE
+
+BY-PASS FOR FUTURE
+SIDE STREET
+CONNECTION
+
+3.
+
+4.
+
+BY-PASS FOR FUTURE SIDE
+STREET CONNECTION
+(SIZE TO BE CONFIRMED)
+
+THE GORE RD.
+
+CENTREVILLE CREEK RD.
+
+600 WATERMAIN
+
+2.2m
+
+EX. HYDRANT TO BE
+PROTECTED DURING
+CONSTRUCTION
+
+INIT.
+
+ISSUED FOR 30% SUBMISSION
+
+8
+
+MATCH LINE
+
+MATCH LINE
+
+EX. 350 CSP CULVERT TO BE
+SUPPORTED DURING CONSTRUCTION
+
+DETAILS
+
+2024-09-16
+
+RD.
+
+PROP. 1200 SAN
+
+PROP. 1200 SAN
+
+R.O.W
+
+REVISIONS
+
+MAYFIELD
+
+7.4m
+
+2.2m
+
+INIT.
+
+DATE
+
+WEST HUMBER RIVER
+
+7.4m
+
+PROP. 1200 SAN
+
+SERVICE
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+DATE
+
+.
+
+R.O.W
+
+THE EXISTING WATER SERVICE CONNECTION
+IS TO BE LOCATED ON FIELD BY
+CONTRACTOR DURING CONSTRUCTION AND
+TO BE ADJUSTED OR PROTECTED AS NEEDED
+
+HEALEY RD
+
+EX. HYDRO POLE TO BE
+SUPPORTED (BY OTHERS)
+
+STA 14+480
+
+PROP. SAN. MH.5A
+PROP. SAN. VORTEX DROP STRUCTURE
+PROP. 300 SAN
+PROP. SAN. MH.5AX
+PROP. 300 SAN
+PROP. SAN. PLUG
+
+STA 14+700
+REFER TO DWG. No. PP08-D
+
+TEMP. 12.40m -525mm HDPE
+CULVERT @ 0.32%
+
+REFER TO DWG. No. PP06-D
+
+PROP. SAN MT
+RECEIVING SHAFT 5
+
+INIT.
+
+DATE
+
+SAN SEWERS
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+TYPICAL INTERSECTION CHAMBER
+VC03-G
+(c/w DOUBLE AIR RELEASE )
+SCHEMATIC
+
+5.
+6.
+7.
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR SHAFT COMPOUNDS DETAILS AND TEMPORARY WORK TO MAINTAIN LOCAL
+TRAFFIC ONLY, REFER TO DRAWINGS TC1-D TO TC6-D.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM4-D
+
+LEGEND:
+DENOTES SANITARY MANHOLE
+DENOTES STORM MANHOLE
+
+234
+
+234
+
+DENOTES SINGLE/DOUBLE CATCHBASIN
+
+233
+
+233
+
+232
+
+232
+
+INTERSECTION CHAMBER VC03-G
+c/w DOUBLE AIR RELEASE VALVE
+(STD. 1-3-22)
+
+230
+229
+228
+227
+
+SANITARY SEWER PROPOSED
+SANITARY SEWER EXISTING
+DENOTES PROPOSED WATERMAIN
+DENOTES EXISTING WATERMAIN
+DENOTES EXISTING STORM SEWER
+
+231
+
+PROP.SAN.MH.5AX
+(STD. 2-5-4, 1500Ø)
+
+PROP.SAN.MH.5A
+(STD. 2-7-5, 2400Ø)
+
+231
+
+PROP. 1200 SAN
+
+DENOTES ROGERS
+DENOTES EXISTING GAS MAIN
+DENOTES EXISTING AERIAL CABLES
+DENOTES LIMIT OF TRCA REGULATION AREA
+
+230
+229
+
+General Notes
+228
+
+EX. 375 CULVERT TO BE
+SUPPORTED DURING
+CONSTRUCTION
+
+227
+
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+226
+
+226
+225
+
+Agency:
+B.M. No. 44
+Elev. 227.660 (Geodetic)
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+225
+
+2.9m
+2.7m
+
+224
+
+224
+223
+
+223
+
+PROP. 600 AWWA C30X CPP WM
+
+PRO
+
+222
+
+222
+
+P. 60
+
+221
+220
+
+WA
+
+C30X
+
+CPP
+
+WM
+
+221
+
+2.4m
+
+BY-PASS FOR FUTURE SIDE
+STREET CONNECTION
+(SIZE TO BE CONFIRMED)
+
+PROP. SAN MT
+RECEIVING SHAFT 5,
+ID=5.0m
+
+219
+
+0 AW
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+218
+
+PROP. SAN. PLUG
+PROP. 4.2m- 300 PVC
+SAN @ 0.50%
+
+217
+
+Approved by
+Chkd.
+
+220
+219
+
+218
+
+Designed by
+
+217
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+THE REGIONAL MUNICIPALITY OF PEEL
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+ONTARIO CLEAN WATER AGENCY
+
+216
+
+216
+
+PSN (PUBLIC SECTOR NETWORK)
+
+HYDRO ONE NETWORKS
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+
+TRANS NORTHERN PIPELINE
+
+215
+
+215
+PROP. 20.3m- 300 PVC
+SAN @ 1.00%
+
+214
+
+214
+213
+
+213
+
+VORTEX DROP STRUCTURE
+REFER TO DETAIL ON DWG.
+D1-D
+
+212
+
+UNION GAS
+
+10m
+
+0
+
+10
+
+211
+
+210
+
+210
+
+209
+
+209
+
+208
+
+208
+
+20
+
+30m
+HORIZONTAL SCALE
+1:500
+
+2m
+
+0
+
+4
+
+2
+
+6m
+VERTICAL SCALE
+1:100
+
+212
+
+211
+
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+CONSULTING ENGINEERS
+
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+PROP. SAN MH5A
+STD. 2-7-5
+NW. INV. 207.819
+SE. INV. 207.789
+
+207
+206
+
+207
+206
+
+205
+
+THE GORE ROAD
+
+205
+
+PROP. 388.9m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+204
+
+PROP. 337.9m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+(FROM MAYFIELD ROAD TO HEALEY ROAD)
+204
+
+PROP. 1200mm SANITARY SEWER
+PROP. 600mm WATERMAIN
+STA. 14+480 TO STA. 14+700
+
+RESTRAINED JOINTS
+222.40
+
+222.42
+
+222.44
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+222.44
+
+222.38
+
+222.33
+
+222.27
+
+221.81
+
+220.85
+
+219.70
+
+219.16
+
+219.17
+
+BOT.EL. OF WM.
+
+CAD Area
+
+X-XX
+
+Area
+
+Checked by
+
+N.L.
+
+Drawn by
+
+226.03
+
+226.19
+
+226.18
+
+226.07
+
+225.97
+
+225.92
+
+225.89
+
+225.66
+
+224.95
+
+224.16
+
+223.76
+
+224.11
+
+EX. ROAD ELEV.
+
+14+700
+
+14+680
+
+14+660
+
+14+640
+
+14+620
+
+14+600
+
+14+580
+
+14+560
+
+14+540
+
+14+520
+
+14+500
+
+14+480
+
+ROAD CHAINAGE
+
+Date
+
+JULY 2024
+
+Sheet
+
+X-XX
+
+Project No. 242274/ 241193
+
+A.L.
+10 of 31
+
+Plan No.
+
+PP07-D
+
+f:\5375\5375-PLAN-PROFILES\The Gore Road\5375-Gore Rd.-PP-7.dwg, 2024-09-16 2:56:26 PM, AutoCAD PDF (General Documentation).pc3
+
+SERVICE DATA
+SERVICE
+
+DV
+600 WATERMAIN
+
+THIS DRAWING TO BE USED FOR
+SANITARY SEWER AND WATERMAIN
+CONSTRUCTION ONLY
+
+PROP. 1200 SAN
+
+225
+. 00
+OU
+T. I
+NV
+.
+
+2.2m
+
+7.4m
+
+EX. HYDRANT TO BE
+PROTECTED DURING
+CONSTRUCTION
+4.50m -1300mm CSP PIPE
+EXTENSION TO BE CONNECTED
+ON EXISTING CULVERT @ 222.12
+
+BEAMISH
+COURT
+
+DR.
+
+.
+HEALEY RD
+
+STR
+ALOVERA
+
+STA 14+700
+
+LIS DR.
+SQUIRE EL
+
+MCVEAN DR.
+
+NOTES:
+1.
+
+3.
+
+4.
+5.
+6.
+7.
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR SHAFT COMPOUNDS DETAILS AND TEMPORARY WORK TO MAINTAIN LOCAL
+TRAFFIC ONLY, REFER TO DRAWINGS TC1-D TO TC6-D.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM4-D
+
+LEGEND:
+DENOTES STORM MANHOLE
+
+3.00m -650mm CSP PIPE
+EXTENSION TO BE CONNECTED ON
+EXISTING CULVERT @ 222.08
+
+DENOTES SINGLE/DOUBLE CATCHBASIN
+PROP. 1200 SAN
+
+SANITARY SEWER PROPOSED
+SANITARY SEWER EXISTING
+DENOTES PROPOSED WATERMAIN
+DENOTES EXISTING WATERMAIN
+DENOTES EXISTING STORM SEWER
+
+TEMP. 9.20m -525mm
+HDPE CULVERT @ 1.09%
+
+230
+
+DENOTES ROGERS
+DENOTES EXISTING GAS MAIN
+DENOTES EXISTING AERIAL CABLES
+DENOTES LIMIT OF TRCA REGULATION AREA
+
+230
+EX. 1300 CULVERT TO BE
+SUPPORTED DURING
+CONSTRUCTION
+
+229
+INV. 227.00
+
+228
+
+14
+
+DENOTES SANITARY MANHOLE
+
+EX. ROGERS AND BELL TO BE
+SUPPORTED (BY OTHERS)
+
+THE EXISTING WATER SERVICE CONNECTION
+IS TO BE LOCATED ON FIELD BY
+CONTRACTOR DURING CONSTRUCTION AND
+TO BE ADJUSTED OR PROTECTED AS NEEDED
+
+THE GORE RD.
+
+KEY PLAN
+(N.T.S.)
+
+EX. DITCH LINE TO BE REALIGNED
+TEMPORARILY FOR DURATION OF
+CONSTRUCTION TIME
+
+SIGNLE DRAIN VALVE
+CHAMBER VC04-G
+(STD. 1-3-28, 1500mm)
+
+THE GORE RD.
+
+CENTREVILLE CREEK RD.
+
+2.
+
+PROP. 600 CPP WM
+225.
+20
+IN. I
+NV.
+
+227.10
+IN INV.
+
+227.00
+OUT INV.
+
+PROP. 1200 SAN
+
+EX. DITCH LINE TO BE REALIGNED
+TEMPORARILY FOR DURATION OF
+CONSTRUCTION TIME
+
+N.L.
+
+IDE
+COUNTRYS
+
+PROP. 1200 SAN
+
+TEMP. 9.20m -525mm HDPE
+CULVERT @ 1.09%
+
+INIT.
+
+ISSUED FOR 30% SUBMISSION
+
+MAYFIELD
+
+1.8m
+
+REFER TO DWG. No. PP08-D
+
+Ex. CULVERT TO
+BE SUPPORTED
+
+3.6m
+
+TEMP. 8.90m -525mm HDPE
+CULVERT @ 2.25%
+
+DETAILS
+
+2024-09-16
+
+8
+
+MATCH LINE
+
+STA 14+960
+
+THE GORE ROAD
+
+R.O.W
+
+MATCH LINE
+
+REFER TO DWG. No. PP08-D
+
+EX. 650 CSP CULVERT TO BE
+REMOVED AND REPLACED AFTER
+CONSTRUCTION COMPLETION
+R.O.W
+
+R.O.W
+
+DATE
+
+WEST HUMBER RIVER
+
+EX.ROGERS TO BE
+SUPPORTED (BY OTHERS)
+
+2.3m
+
+INIT.
+
+DATE
+
+REVISIONS
+
+VALVE CHAMBER VC04-G
+(DRAIN VALVE)
+SCHEMATIC
+EX. 600 CSP CULVERT TO BE
+REMOVED AND REPLACED AFTER
+CONSTRUCTION COMPLETION
+
+SERVICE
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+RD.
+
+600 WATERMAIN
+
+INIT.
+
+DATE
+
+SAN SEWERS
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+229
+
+General Notes
+228
+
+TEMP. 8.90m -525mm
+HDPE CULVERT @ 2.25%
+
+INV. 227.10
+
+227
+
+4.50m -1300mm CSP PIPE
+EXTENSION TO BE
+CONNECTED ON EXISTING
+CULVERT @ 222.12
+
+INV. 225.20
+226
+225
+
+INV. 225.00
+
+227
+
+3.00m -650mm CSP PIPE
+EXTENSION TO BE CONNECTED ON
+EXISTING CULVERT @ 222.08
+
+EX. 650 CULVERT TO BE
+SUPPORTED DURING
+CONSTRUCTION
+SIGNLE DRAIN
+CHAMBER VC04-G
+(STD. 1-3-28, 1500mm)
+
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+226
+
+Agency:
+B.M. No. 44
+Elev. 227.660 (Geodetic)
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+225
+224
+
+224
+2.3m
+
+223
+
+223
+INV. 222.31
+PROP.
+60
+
+222
+
+0 AWW
+
+221
+
+A C30X
+
+0.5m
+MIN.
+
+CPP WM
+
+0
+P. 60
+
+EX. 600 CSP CULVERT TO BE
+REMOVED AND REPLACED AFTER
+CONSTRUCTION COMPLETION
+
+219
+
+222
+
+WM
+
+221
+
+Approved by
+Chkd.
+
+220
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+Ex. CULVERT TO
+BE SUPPORTED
+
+PROP. WM TO BE INSULATED
+REFER TO STD. 1-5-8 ON D1-D
+FOR THE DETAIL
+
+218
+
+219
+218
+
+EX. 650 CSP CULVERT TO BE
+REMOVED AND REPLACED AFTER
+CONSTRUCTION COMPLETION
+
+217
+
+Designed by
+
+PRO
+
+2.5m
+
+220
+
+PP
+0X C
+3
+C
+A
+AWW
+
+217
+
+THE REGIONAL MUNICIPALITY OF PEEL
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+ONTARIO CLEAN WATER AGENCY
+
+216
+
+216
+
+PSN (PUBLIC SECTOR NETWORK)
+
+HYDRO ONE NETWORKS
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+
+TRANS NORTHERN PIPELINE
+
+215
+
+215
+
+214
+
+214
+
+213
+
+213
+
+212
+
+212
+
+211
+
+211
+
+210
+
+210
+
+209
+
+209
+
+208
+
+208
+
+207
+
+207
+
+206
+
+206
+
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+UNION GAS
+
+10m
+
+0
+
+10
+
+20
+
+30m
+HORIZONTAL SCALE
+1:500
+
+2m
+
+0
+
+4
+
+2
+
+6m
+VERTICAL SCALE
+1:100
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+CONSULTING ENGINEERS
+
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+205
+
+THE GORE ROAD
+
+205
+
+PROP. 388.9m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+204
+
+(FROM MAYFIELD ROAD TO HEALEY ROAD)
+204
+
+PROP. 1200mm SANITARY SEWER
+PROP. 600mm WATERMAIN
+STA. 14+700 TO STA. 14+960
+
+RESTRAINED JOINTS
+223.59
+
+223.03
+
+222.37
+
+221.77
+
+221.23
+
+220.69
+
+220.15
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+219.60
+
+219.06
+
+218.97
+
+219.52
+
+220.56
+
+221.72
+
+222.40
+
+BOT.EL. OF WM.
+
+CAD Area
+
+X-XX
+
+Area
+
+Checked by
+
+N.L.
+
+Drawn by
+
+227.89
+
+227.72
+
+227.35
+
+226.64
+
+225.71
+
+224.90
+
+224.30
+
+223.97
+
+223.70
+
+223.58
+
+223.67
+
+224.48
+
+225.39
+
+226.03
+
+EX. ROAD ELEV.
+
+14+960
+
+14+940
+
+14+920
+
+14+900
+
+14+880
+
+14+860
+
+14+840
+
+14+820
+
+14+800
+
+14+780
+
+14+760
+
+14+740
+
+14+720
+
+14+700
+
+ROAD CHAINAGE
+
+Date
+
+JULY 2024
+
+Sheet
+
+X-XX
+
+Project No.
+
+242274/
+242273/241193
+241193
+
+A.L.
+11 of 31
+
+Plan No.
+
+PP08-D
+
+f:\5375\5375-PLAN-PROFILES\The Gore Road\5375-Gore Rd.-PP-8.dwg, 2024-09-16 2:56:37 PM, AutoCAD PDF (General Documentation).pc3
+
+SERVICE DATA
+DV
+600 WATERMAIN
+
+BV
+
+SERVICE
+
+AV
+
+THIS DRAWING TO BE USED FOR
+SANITARY SEWER AND WATERMAIN
+CONSTRUCTION ONLY
+
+600 WATERMAIN
+
+GV
+
+INIT.
+
+DATE
+
+SAN SEWERS
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+SERVICE
+
+INIT.
+
+DATE
+
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+REVISIONS
+
+PROP. 1200 SAN
+
+THE EXISTING WATER SERVICE CONNECTION
+IS TO BE LOCATED ON FIELD BY
+CONTRACTOR DURING CONSTRUCTION AND
+TO BE ADJUSTED OR PROTECTED AS NEEDED
+
+TEMP. 9.20m -525mm HDPE
+CULVERT @ 0.54%
+
+BY-PASS FOR FUTURE SIDE
+EX. BELL TO BE
+STREET CONNECTION
+SUPPORTED
+(BY OTHERS)
+(SIZE TO BE CONFIRMED)
+
+2.
+3.
+
+4.
+
+EX. HYDRANT TO BE PROTECTED
+DURING CONSTRUCTION
+
+PROP. 22.5°
+HORIZ. BEND
+
+BEAMISH
+COURT
+
+DR.
+
+STR
+ALOVERA
+
+LIS DR.
+SQUIRE EL
+
+RD.
+
+MCVEAN DR.
+
+NOTES:
+
+MATCH LINE
+
+2.2m
+
+PROP. 600mm WM PLUG & B.O.
+INTERSECTION CHAMBER VC05-G c/w DRAIN
+VALVE AND AIR RELEASE VALVE
+(STD. 1-3-22)
+
+227.45
+OUT IN
+V.
+
+EX. DITCH LINE TO BE REALIGNED
+TEMPORARILY FOR DURATION OF
+CONSTRUCTION TIME
+
+5.2m
+
+14
+
+KEY PLAN
+(N.T.S.)
+
+1.
+
+2.2m
+
+THE GORE RD.
+
+CENTREVILLE CREEK RD.
+
+PROP. 600 CPP WM
+R.O.W
+
+THE GORE RD.
+
+MAYFIELD
+
+R.O.W
+
+PROP. 1200 SAN
+
+WEST HUMBER RIVER
+
+8
+
+3.4m
+
+PROP. 1200 SAN
+
+N.L.
+
+IDE
+COUNTRYS
+
+EX. 350 CSP CULVERT TO BE
+REMOVED AND REPLACED AFTER
+CONSTRUCTION COMPLETION
+
+PROP. SAN MT
+INTERMEDIATE SHAFT 6
+
+INIT.
+
+ISSUED FOR 30% SUBMISSION
+
+.
+
+THE GORE ROAD
+
+DETAILS
+
+2024-09-16
+
+HEALEY RD
+
+PROP. 300 SAN
+PROP. SAN. PLUG
+
+22
+IN 7.5
+IN 0
+V.
+
+MATCH LINE
+
+6.5m
+
+PROP. SAN. MH.6AX
+PROP. 300 SAN
+PROP. SAN. VORTEX DROP STRUCTURE
+PROP. SAN. MH.6A
+
+REFER TO DWG. No. PP08-D
+
+TYPICAL INTERSECTION CHAMBER
+VC02-G / VC05-G
+(c/w DRAIN AND AIR RELEASE )
+SCHEMATIC
+
+REFER TO DWG. No. PP08-D
+
+STA 15+220
+
+VENT PIPE
+
+DATE
+STA 14+960
+
+BY-PASS FOR FUTURE
+SIDE STREET
+CONNECTION
+
+5.
+6.
+
+EX. WATER SERVICE TO BE
+PROTECTED DURING CONSTRUCTION
+
+7.
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR SHAFT COMPOUNDS DETAILS AND TEMPORARY WORK TO MAINTAIN LOCAL
+TRAFFIC ONLY, REFER TO DRAWINGS TC1-D TO TC6-D.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM4-D
+
+LEGEND:
+DENOTES SANITARY MANHOLE
+
+234
+
+DENOTES STORM MANHOLE
+
+234
+
+233
+232
+
+INTERSECTION CHAMBER VC05-G
+c/w DRAIN VALVE AND AIR RELEASE VALVE
+(STD. 1-3-22)
+
+231
+230
+
+PROP.SAN.MH.6A
+(STD. 2-7-5, 2400Ø)
+
+PROP.SAN.MH.6AX
+(STD. 2-5-4, 1500Ø)
+
+DENOTES SINGLE/DOUBLE CATCHBASIN
+
+233
+
+EX. 350 CSP CULVERT TO BE REMOVED
+AND REPLACED AFTER CONSTRUCTION
+TEMP. 9.20m -525mm
+COMPLETION
+
+230
+
+General Notes
+228
+227
+
+227
+
+2.5m
+
+PROP. 600 WM
+PLUG & B.O.
+
+WA C30X CPP
+
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+226
+
+2.5m
+
+AWWA C30
+X CPP WM
+
+PROP. 600 AW
+
+DENOTES ROGERS
+DENOTES EXISTING GAS MAIN
+DENOTES EXISTING AERIAL CABLES
+DENOTES LIMIT OF TRCA REGULATION AREA
+
+229
+
+INV.
+227.45
+
+228
+
+225
+
+SANITARY SEWER EXISTING
+DENOTES PROPOSED WATERMAIN
+DENOTES EXISTING WATERMAIN
+DENOTES EXISTING STORM SEWER
+
+231
+
+HDPE CULVERT @ 0.54%
+INV.
+227.50
+
+PROP. 600
+
+SANITARY SEWER PROPOSED
+
+232
+
+229
+
+226
+
+PROP. 1200 SAN
+
+Agency:
+B.M. No. 44
+Elev. 227.660 (Geodetic)
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+225
+
+WM
+224
+
+224
+223
+
+223
+
+BY-PASS FOR FUTURE SIDE
+STREET CONNECTION
+(SIZE TO BE CONFIRMED)
+
+222
+
+222
+
+PROP. SAN MT
+INTERMEDIATE SHAFT 6,
+ID=5.0m
+
+221
+
+221
+
+Designed by
+
+Approved by
+Chkd.
+
+220
+
+220
+
+PROP. 300 SAN @0.50%
+WITH PLUG
+
+219
+
+219
+
+218
+
+218
+PROP. 5.3m- 300 PVC
+SAN @ 1.00%
+
+217
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+VORTEX DROP STRUCTURE
+REFER TO DETAIL ON DWG.
+D1-D
+
+216
+
+217
+
+THE REGIONAL MUNICIPALITY OF PEEL
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+ONTARIO CLEAN WATER AGENCY
+
+216
+
+PSN (PUBLIC SECTOR NETWORK)
+
+HYDRO ONE NETWORKS
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+
+TRANS NORTHERN PIPELINE
+
+215
+
+215
+
+214
+
+214
+
+213
+
+213
+
+212
+211
+
+UNION GAS
+
+10m
+
+0
+
+10
+
+2m
+
+0
+
+210
+
+209
+
+209
+
+30m
+
+4
+
+2
+
+6m
+VERTICAL SCALE
+1:100
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+CONSULTING ENGINEERS
+
+211
+
+210
+
+20
+
+HORIZONTAL SCALE
+1:500
+
+212
+
+PROP. SAN MH6A
+STD. 2-7-5
+NW. INV. 209.092
+SE. INV. 209.062
+
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+
+208
+207
+206
+205
+
+PROP. 353.8m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+204
+
+15+052.8 22.5° HORIZ.
+BENDS (WEST 600 WM)
+
+15+060.0 22.5° HORIZ.
+BENDS (WEST 600 WM)
+
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+208
+207
+206
+
+THE GORE ROAD
+
+205
+
+PROP. 388.9m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+(FROM MAYFIELD ROAD TO HEALEY ROAD)
+204
+
+PROP. 1200mm SANITARY SEWER
+PROP. 600mm WATERMAIN
+STA. 14+960 TO STA. 15+220
+
+RESTRAINED JOINTS
+225.67
+
+225.30
+
+224.90
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+224.55
+
+224.23
+
+223.91
+
+223.59
+
+BOT.EL. OF WM.
+
+CAD Area
+
+X-XX
+
+Area
+
+Checked by
+
+N.L.
+
+Drawn by
+
+230.95
+
+230.75
+
+230.54
+
+230.30
+
+230.05
+
+229.83
+
+229.63
+
+229.33
+
+228.96
+
+228.61
+
+228.36
+
+228.15
+
+227.98
+
+227.89
+
+EX. ROAD ELEV.
+
+15+220
+
+15+200
+
+15+180
+
+15+160
+
+15+140
+
+15+120
+
+15+100
+
+15+080
+
+15+060
+
+15+040
+
+15+020
+
+15+000
+
+14+980
+
+14+960
+
+ROAD CHAINAGE
+
+Date
+
+JULY 2024
+
+Sheet
+
+X-XX
+
+Project No. 242274/ 241193
+
+A.L.
+12 of 31
+
+Plan No.
+
+PP09-D
+
+f:\5375\5375-PLAN-PROFILES\The Gore Road\5375-Gore Rd.-PP-9.dwg, 2024-09-16 2:56:48 PM, AutoCAD PDF (General Documentation).pc3
+
+SERVICE DATA
+
+THIS DRAWING TO BE USED FOR
+SANITARY SEWER CONSTRUCTION ONLY
+STA 15+220
+
+R.O.W
+
+R.O.W
+APPROXIMATE 20X70m MT
+COMPOUND AREA
+(OPTIONAL IF REQUIRED)
+
+INIT.
+
+ISSUED FOR 30% SUBMISSION
+
+N.L.
+
+3.
+
+4.
+
+239
+PROP.SAN.MH.7A
+(STD. 2-7-5, 2400Ø)
+
+PROP.SAN.MH.7AX
+(STD. 2-5-4, 1500Ø)
+
+5.
+
+236
+
+238
+237
+236
+
+6.
+7.
+
+DR.
+
+STR
+ALOVERA
+
+IDE
+COUNTRYS
+
+LIS DR.
+SQUIRE EL
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR SHAFT COMPOUNDS DETAILS AND TEMPORARY WORK TO MAINTAIN LOCAL
+TRAFFIC ONLY, REFER TO DRAWINGS TC1-D TO TC6-D.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM4-D
+
+LEGEND:
+DENOTES SANITARY MANHOLE
+DENOTES STORM MANHOLE
+
+235
+
+235
+
+MCVEAN DR.
+
+NOTES:
+2.
+
+237
+
+14
+
+KEY PLAN
+(N.T.S.)
+
+1.
+
+238
+
+THE GORE RD.
+
+CENTREVILLE CREEK RD.
+
+THE EXISTING WATER SERVICE CONNECTION
+IS TO BE LOCATED ON FIELD BY
+CONTRACTOR DURING CONSTRUCTION AND
+TO BE ADJUSTED OR PROTECTED AS NEEDED
+239
+
+THE GORE RD.
+
+8
+
+BEAMISH
+COURT
+
+WEST HUMBER RIVER
+
+MATCH LINE
+
+PROP. 300 SAN
+PROP. SAN. PLUG
+
+DETAILS
+
+2024-09-16
+
+RD.
+
+PROP. 1200 SA
+
+INIT.
+
+DATE
+
+MAYFIELD
+
+6.5m
+
+PROP. 1200 SAN
+
+SERVICE
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+REVISIONS
+
+.
+
+6.7m
+
+R.O.W
+
+INIT.
+
+DATE
+
+DATE
+
+HEALEY RD
+
+PROP. SAN MT SENDING SHAFT 7
+
+R.O.W
+
+PROP. 1200 SAN
+
+THE GORE ROAD
+
+8.5m
+
+REFER TO DWG. No. PP08-D
+
+PROP. SAN. MH.7AX
+PROP. 300 SAN
+PROP. SAN. VORTEX DROP STRUCTURE
+PROP. SAN. MH.7A
+
+MATCH LINE
+
+REFER TO DWG. No. PP11-D
+
+STA 15+480
+
+SERVICE
+SAN SEWERS
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+DENOTES SINGLE/DOUBLE CATCHBASIN
+
+234
+
+234
+
+233
+
+233
+
+232
+
+232
+
+231
+
+231
+
+230
+
+SANITARY SEWER PROPOSED
+SANITARY SEWER EXISTING
+DENOTES PROPOSED WATERMAIN
+DENOTES EXISTING WATERMAIN
+DENOTES EXISTING STORM SEWER
+DENOTES ROGERS
+DENOTES EXISTING GAS MAIN
+DENOTES EXISTING AERIAL CABLES
+DENOTES LIMIT OF TRCA REGULATION AREA
+
+230
+
+PROP. SAN MT
+SENDING SHAFT 7,
+ID=7.0m
+
+229
+
+PROP. 1200 SAN
+
+General Notes
+229
+228
+
+228
+
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+227
+
+227
+
+Agency:
+B.M. No. 44
+Elev. 227.660 (Geodetic)
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+226
+
+226
+
+PROP. 300 SAN @0.50%
+WITH PLUG
+
+225
+
+225
+224
+
+224
+PROP. 1.5m- 300 PVC
+SAN @ 1.00%
+
+223
+
+223
+VORTEX DROP STRUCTURE
+REFER TO DETAIL ON DWG.
+D1-D
+
+222
+
+222
+
+Designed by
+
+Approved by
+Chkd.
+
+221
+
+221
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+220
+
+220
+
+219
+
+219
+
+218
+
+218
+
+THE REGIONAL MUNICIPALITY OF PEEL
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+ONTARIO CLEAN WATER AGENCY
+
+217
+
+217
+
+PSN (PUBLIC SECTOR NETWORK)
+
+HYDRO ONE NETWORKS
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+
+TRANS NORTHERN PIPELINE
+
+216
+
+216
+
+215
+
+215
+
+214
+
+214
+
+213
+
+213
+
+212
+
+212
+
+211
+
+211
+
+PROP. SAN MH7A
+STD. 2-7-5
+NW. INV. 210.185
+SE. INV. 210.135
+
+210
+
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+UNION GAS
+
+10m
+
+0
+
+10
+
+20
+
+30m
+HORIZONTAL SCALE
+1:500
+
+2m
+
+0
+
+4
+
+2
+
+6m
+VERTICAL SCALE
+1:100
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+CONSULTING ENGINEERS
+
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+210
+
+209
+
+209
+
+208
+
+208
+
+207
+
+207
+
+206
+
+206
+
+THE GORE ROAD
+
+204
+
+(FROM MAYFIELD ROAD TO HEALEY ROAD)
+
+PROP. 353.8m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+PROP. 310.2m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+204
+
+PROP. 1200mm SANITARY SEWER
+STA. 15+220 TO STA. 15+480
+
+RESTRAINED JOINTS
+BOT.EL. OF WM.
+
+CAD Area
+
+X-XX
+
+Area
+
+Checked by
+
+N.L.
+
+Drawn by
+
+233.44
+
+233.28
+
+233.10
+
+232.93
+
+232.74
+
+232.53
+
+232.33
+
+232.13
+
+231.94
+
+231.75
+
+231.53
+
+231.32
+
+231.11
+
+230.95
+
+EX. ROAD ELEV.
+
+15+480
+
+15+460
+
+15+440
+
+15+420
+
+15+400
+
+15+380
+
+15+360
+
+15+340
+
+15+320
+
+15+300
+
+15+280
+
+15+260
+
+15+240
+
+15+220
+
+ROAD CHAINAGE
+
+Date
+
+JULY 2024
+
+Sheet
+
+X-XX
+
+Project No. 242274/ 241193
+
+A.L.
+13 of 31
+
+Plan No.
+
+PP10-D
+
+f:\5375\5375-PLAN-PROFILES\The Gore Road\5375-Gore Rd.-PP-10.dwg, 2024-09-16 2:56:58 PM, AutoCAD PDF (General Documentation).pc3
+
+SERVICE DATA
+
+THIS DRAWING TO BE USED FOR
+SANITARY SEWER CONSTRUCTION ONLY
+
+SERVICE
+STA 15+480
+
+N.L.
+
+DR.
+
+KEY PLAN
+(N.T.S.)
+
+1.
+
+2.
+3.
+
+4.
+
+240
+PROP.SAN.MH.8A
+(STD. 2-7-5, 2400Ø)
+
+5.
+
+237
+
+MCVEAN DR.
+
+NOTES:
+
+240
+
+238
+
+STR
+ALOVERA
+
+14
+
+CENTREVILLE CREEK RD.
+
+THE EXISTING WATER SERVICE CONNECTION
+IS TO BE LOCATED ON FIELD BY
+CONTRACTOR DURING CONSTRUCTION AND
+TO BE ADJUSTED OR PROTECTED AS NEEDED
+
+239
+
+LIS DR.
+SQUIRE EL
+
+THE GORE RD.
+
+IDE
+COUNTRYS
+
+THE GORE RD.
+
+8
+
+BEAMISH
+COURT
+
+WEST HUMBER RIVER
+
+MATCH LINE
+
+PROP. 1200 SAN
+
+INIT.
+
+ISSUED FOR 30% SUBMISSION
+
+RD.
+
+6.5m
+
+PROP. 1200 SAN
+
+DETAILS
+
+2024-09-16
+
+MAYFIELD
+
+6.6m
+
+PROP. 1200 SAN
+
+INIT.
+
+DATE
+
+REVISIONS
+
+.
+
+THE GORE ROAD
+
+SERVICE
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+DATE
+
+HEALEY RD
+
+LIMIT OF CONSTRUCTION
+
+PROP. SAN MT RECEIVING SHAFT 8
+
+REFER TO DWG. No. PP10-D
+
+PROP. SAN. MH.8A
+
+INIT.
+
+DATE
+
+SAN SEWERS
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+239
+
+6.
+7.
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR SHAFT COMPOUNDS DETAILS AND TEMPORARY WORK TO MAINTAIN LOCAL
+TRAFFIC ONLY, REFER TO DRAWINGS TC1-D TO TC6-D.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM4-D
+
+238
+237
+
+236
+
+LEGEND:
+DENOTES SANITARY MANHOLE
+DENOTES STORM MANHOLE
+
+236
+
+DENOTES SINGLE/DOUBLE CATCHBASIN
+
+235
+
+235
+
+234
+
+234
+
+233
+
+233
+
+232
+
+232
+
+231
+
+231
+
+PROP. 1200 SAN
+
+SANITARY SEWER PROPOSED
+SANITARY SEWER EXISTING
+DENOTES PROPOSED WATERMAIN
+DENOTES EXISTING WATERMAIN
+DENOTES EXISTING STORM SEWER
+DENOTES ROGERS
+DENOTES EXISTING GAS MAIN
+DENOTES EXISTING AERIAL CABLES
+DENOTES LIMIT OF TRCA REGULATION AREA
+
+General Notes
+230
+
+230
+
+229
+
+229
+
+PROP. SAN MT
+RECEIVING SHAFT 8,
+ID=5.0m
+
+228
+
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+228
+
+227
+
+227
+
+226
+
+226
+
+225
+
+225
+
+224
+
+224
+
+223
+
+223
+
+222
+
+222
+
+Agency:
+B.M. No. 44
+Elev. 227.660 (Geodetic)
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+Designed by
+
+Approved by
+Chkd.
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+221
+
+221
+
+220
+
+220
+
+219
+
+219
+
+THE REGIONAL MUNICIPALITY OF PEEL
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+ONTARIO CLEAN WATER AGENCY
+
+218
+
+218
+
+PSN (PUBLIC SECTOR NETWORK)
+
+HYDRO ONE NETWORKS
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+
+TRANS NORTHERN PIPELINE
+
+217
+
+217
+
+216
+
+216
+
+215
+
+215
+
+214
+
+214
+
+213
+
+213
+
+212
+
+212
+
+211
+
+211
+
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+UNION GAS
+
+10m
+
+0
+
+10
+
+20
+
+30m
+HORIZONTAL SCALE
+1:500
+
+2m
+
+0
+
+4
+
+2
+
+6m
+VERTICAL SCALE
+1:100
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+CONSULTING ENGINEERS
+
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+PROP. SAN MH8A
+STD. 2-7-5
+SE. INV. 211.115
+
+210
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+210
+
+209
+
+209
+
+208
+
+208
+
+PROP. 310.2m- 1200 CPP SAN
+AWWA C30X MT PIPE @ 0.30% c/w
+PROTECTIVE LINING BY MICRO-TUNNELING
+
+207
+206
+
+207
+
+THE GORE ROAD
+
+206
+
+(FROM MAYFIELD ROAD TO HEALEY ROAD)
+
+PROP. 1200mm SANITARY SEWER
+RESTRAINED JOINTS
+
+STA. 15+480 TO STA. 15+760
+
+BOT.EL. OF WM.
+
+CAD Area
+
+X-XX
+
+Area
+
+Checked by
+
+N.L.
+
+Drawn by
+
+235.43
+
+235.22
+
+235.01
+
+234.82
+
+234.64
+
+234.51
+
+234.40
+
+234.29
+
+234.14
+
+233.99
+
+233.85
+
+233.74
+
+233.63
+
+233.56
+
+233.44
+
+EX. ROAD ELEV.
+
+15+760
+
+15+740
+
+15+720
+
+15+700
+
+15+680
+
+15+660
+
+15+640
+
+15+620
+
+15+600
+
+15+580
+
+15+560
+
+15+540
+
+15+520
+
+15+500
+
+15+480
+
+ROAD CHAINAGE
+
+Date
+
+JULY 2024
+
+Sheet
+
+X-XX
+
+Project No. 242274/ 241193
+
+A.L.
+14 of 31
+
+Plan No.
+
+PP11-D
+
+f:\5375\5375-PLAN-PROFILES\The Gore Road\5375-Gore Rd.-PP-11.dwg, 2024-09-16 2:57:08 PM, AutoCAD PDF (General Documentation).pc3
+
+SERVICE DATA
+SERVICE
+
+INIT.
+
+ISSUED FOR 30% SUBMISSION
+
+C.Z.
+
+(REGIO
+
+R.O.W
+
+DETAILS
+
+2024-09-16
+
+PROP. 300mm WM
+PROP. 400x300 REDUCER
+PROP. 400 PVC WM
+
+8
+THE GORE RD.
+
+DR.
+
+RD.
+
+THE GORE RD.
+
+14
+
+COUNTRYS
+
+IDE
+
+MAYFIELD
+
+PROP. 400 PVC WM
+
+R.O.W
+
+REFER TO DWG. No. PP02-D
+
+INIT.
+
+DATE
+
+REVISIONS
+
+.
+
+CENTREVILLE CREEK ROAD
+
+SERVICE
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+DATE
+
+HEALEY RD
+
+STA 0+220
+
+PROP. CONNECTION TO EX. 300 PVC
+WATERMAIN WITH 400x300 REDUCER AND
+300x300 CUT-IN TEE c/w 2 COUPLINGS (AFTER
+TESTING AND CHLORINATION PROP. 400 WM)
+P.I. No. 1 (SEE DETAIL 'A' ON THIS DRAWING)
+
+LINE VALVE CHAMBER VC01-C
+c/w DRAIN VALVE AND AIR RELEASE VALVE
+(STD. 1-3-26)
+
+IEL
+MAYNF
+AL ROAD N
+
+THIS DRAWING TO BE USED FOR
+WATERMAIN CONSTRUCTION ONLY
+
+INIT.
+
+DATE
+
+SAN SEWERS
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+CENTREVILLE CREEK RD.
+
+MCVEAN DR.
+
+13.1m
+KEY PLAN
+(N.T.S.)
+
+7.0m
+
+NOTES:
+1.
+
+MCVEAN DR.
+
+2.
+3.
+
+MATCH LINE
+
+4.
+
+R.O.W
+
+5.
+6.
+
+BV
+
+LEGEND:
+
+DV
+
+400 WATERMAIN
+
+R.O.W
+
+DV
+400 WATERMAIN
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM2-D
+
+DENOTES PROPOSED WATERMAIN
+DENOTES EXISTING WATERMAIN
+DENOTES EXISTING STORM SEWER
+DENOTES ROGERS
+
+VENT PIPE
+
+DENOTES EXISTING GAS MAIN
+DENOTES EXISTING AERIAL CABLES
+
+TYPICAL LINE VALVE CHAMBER
+VC01-C
+(c/w DRAIN)
+SCHEMATIC
+
+THE EXISTING WATER SERVICE CONNECTION
+IS TO BE LOCATED ON FIELD BY
+CONTRACTOR DURING CONSTRUCTION AND
+TO BE ADJUSTED OR PROTECTED AS NEEDED
+
+DENOTES LIMIT OF TRCA REGULATION AREA
+DENOTES SINGLE/DOUBLE CATCHBASIN
+
+General Notes
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+241
+
+241
+
+240
+
+240
+
+239
+
+239
+
+238
+
+238
+
+237
+
+237
+
+236
+
+236
+
+PROP. CONNECTION TO EX. 300 PVC
+WATERMAIN WITH 400x300 REDUCER AND
+300x300 CUT-IN TEE c/w 2 COUPLINGS (AFTER
+TESTING AND CHLORINATION PROP. 400 WM)
+P.I. No. 1 (SEE DETAIL 'A' ON THIS DRAWING)
+
+235
+234
+233
+
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+Designed by
+
+Approved by
+Chkd.
+
+235
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+234
+233
+
+LINE VALVE CHAMBER c/w
+DRAIN VALVE
+(STD. 1-3-26)
+
+232
+
+Agency:
+B.M. No.
+Elev. XXX.XXX (Geodetic)
+
+232
+
+THE REGIONAL MUNICIPALITY OF PEEL
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+ONTARIO CLEAN WATER AGENCY
+
+231
+
+231
+
+PSN (PUBLIC SECTOR NETWORK)
+
+HYDRO ONE NETWORKS
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+
+TRANS NORTHERN PIPELINE
+
+230
+
+230
+
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+UNION GAS
+
+229
+
+229
+2.9m
+
+228
+
+228
+3.0m
+
+227
+
+2.1m
+
+PROP. 400 AWWA C900 PVC DR18 WM
+
+10m
+
+0
+
+10
+
+226
+
+2m
+
+0
+
+0 PVC DR
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+
+0+007.1 400x300
+REDUCER
+
+PROP. WM TO BE INSULATED
+REFER TO STD. 1-5-8 ON D1-D
+FOR THE DETAIL
+PROP. 400 AWWA C900 PVC DR18 WM
+PROP. 400x300 REDUCER
+
+221
+
+CONSULTING ENGINEERS
+
+18 WM
+
+224
+
+222
+
+6m
+VERTICAL SCALE
+1:100
+
+227
+
+225
+
+223
+
+4
+
+2
+
+226
+
+WWA C90
+
+30m
+HORIZONTAL SCALE
+1:500
+
+0.5m MIN.
+
+PROP. 40
+0A
+
+20
+
+225
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+224
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+223
+222
+221
+
+PROP. 300 WM
+
+220
+
+220
+
+THE CENTREVILLE CREEK
+(FROM MAYFIELD ROAD TO HEALEY ROAD)
+
+219
+
+219
+
+PROP. 400mm WATERMAIN
+STA. 0+000 TO STA. 0+220
+
+RESTRAINED JOINTS
+226.90
+
+226.86
+
+226.82
+
+226.77
+
+226.72
+
+226.68
+
+226.63
+
+226.58
+
+226.54
+
+226.49
+
+226.40
+
+226.29
+
+226.19
+
+226.08
+
+225.97
+
+225.87
+
+225.76
+
+225.65
+
+225.59
+
+225.67
+
+225.75
+
+225.83
+
+BOT.EL. OF WM.
+
+CAD Area
+
+X-XX
+
+Area
+
+EX. ROAD ELEV.
+
+Checked by
+
+N.L.
+
+Drawn by
+
+A.L.
+
+Sheet
+
+4 of 14
+
+229.91
+
+229.94
+
+229.97
+
+230.00
+
+229.99
+
+229.92
+
+229.88
+
+229.86
+
+229.81
+
+229.76
+
+229.71
+
+229.61
+
+229.46
+
+229.31
+
+229.15
+
+228.90
+
+228.71
+
+228.52
+
+228.38
+
+228.25
+
+228.10
+
+228.19
+
+0+220
+
+0+210
+
+0+200
+
+0+190
+
+0+180
+
+0+170
+
+0+160
+
+0+150
+
+0+140
+
+0+130
+
+0+120
+
+0+110
+
+0+100
+
+0+090
+
+0+080
+
+0+070
+
+0+060
+
+0+050
+
+0+040
+
+0+030
+
+0+020
+
+0+010
+
+0+000
+
+ROAD CHAINAGE
+
+Date
+
+JULY 2024
+
+X-XX
+
+Project No.
+
+291199
+
+Plan No.
+
+PP01-D
+
+f:\5375\5375-PLAN-PROFILES\The Centreville Creek Road\5375-Centreville-PP-1.dwg, 2024-09-16 4:11:00 PM, AutoCAD PDF (General Documentation).pc3
+
+SERVICE DATA
+SERVICE
+
+INIT.
+
+DATE
+
+SERVICE
+
+SAN SEWERS
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+THIS DRAWING TO BE USED FOR
+WATERMAIN CONSTRUCTION ONLY
+
+INIT.
+
+DATE
+
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+REVISIONS
+DATE
+
+DETAILS
+
+INIT.
+
+2024-09-16
+
+ISSUED FOR 30% SUBMISSION
+
+C.Z.
+
+LINE VALVE CHAMBER VC02-C
+c/w DRAIN VALVE AND AIR RELEASE VALVE
+(STD. 1-3-21, 2400x3000mm)
+8
+
+7.0m
+
+IDE
+COUNTRYS
+
+CENTREVILLE CREEK RD.
+
+R.O.W
+
+MATCH LINE
+
+MCVEAN DR.
+
+KEY PLAN
+(N.T.S.)
+
+NOTES:
+1.
+
+2.
+3.
+
+4.
+5.
+
+MATCH LINE
+
+R.O.W
+
+REFER TO DWG. No. PP01-D
+
+R.O.W
+
+DR.
+
+THE GORE RD.
+
+14
+
+MAYFIELD
+
+RD.
+
+.
+
+7.0m
+
+R.O.W
+
+THE GORE RD.
+
+HEALEY RD
+
+STA 0+180
+
+CENTREVILLE CREEK ROAD
+
+REFER TO DWG. No. PP03-D
+
+STA 0+480
+
+BY-PASS FOR FUTURE SIDE
+STREET CONNECTION
+(SIZE TO BE CONFIRMED)
+
+6.
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM2-D
+
+LEGEND:
+DV
+
+BV
+
+AV
+
+400 WATERMAIN
+
+400 WATERMAIN
+
+DENOTES PROPOSED WATERMAIN
+DENOTES EXISTING WATERMAIN
+DENOTES EXISTING STORM SEWER
+DENOTES ROGERS
+DENOTES EXISTING GAS MAIN
+
+VENT PIPE
+
+DENOTES EXISTING AERIAL CABLES
+DENOTES LIMIT OF TRCA REGULATION AREA
+
+TYPICAL LINE VALVE CHAMBER
+VC02-C / VC03-C / VC04-C / VC05-C
+(c/w DRAIN AND AIR RELEASE )
+SCHEMATIC
+
+THE EXISTING WATER SERVICE CONNECTION
+IS TO BE LOCATED ON FIELD BY
+CONTRACTOR DURING CONSTRUCTION AND
+TO BE ADJUSTED OR PROTECTED AS NEEDED
+
+DENOTES SINGLE/DOUBLE CATCHBASIN
+
+General Notes
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+241
+
+241
+
+240
+
+240
+
+239
+
+239
+
+238
+
+238
+
+237
+
+237
+
+236
+
+236
+
+235
+
+235
+
+Agency:
+B.M. No.
+Elev. XXX.XXX (Geodetic)
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+Designed by
+
+Approved by
+Chkd.
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+234
+
+234
+LINE VALVE CHAMBER c/w
+DRAIN/ AIR RELEASE VALVE
+(STD. 1-3-26)
+
+BY-PASS FOR FUTURE SIDE
+STREET CONNECTION
+(SIZE TO BE CONFIRMED)
+
+233
+
+233
+232
+
+232
+
+THE REGIONAL MUNICIPALITY OF PEEL
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+ONTARIO CLEAN WATER AGENCY
+
+231
+
+231
+
+PSN (PUBLIC SECTOR NETWORK)
+
+HYDRO ONE NETWORKS
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+
+TRANS NORTHERN PIPELINE
+
+230
+
+230
+
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+UNION GAS
+
+2.6m
+
+229
+
+229
+PROP. 400 AWWA C900 PV
+
+228
+
+0
+
+10
+
+228
+
+0.5m
+
+PROP. 400 AWWA C900 PVC DR18 WM
+
+PROP. WM TO BE INSULATED
+REFER TO STD. 1-5-8 ON D1-D
+FOR THE DETAIL
+
+0+460.0
+PROP. 400 TEE c/w
+VALVE AND PLUG
+
+PROP. WM TO BE INSULATED
+REFER TO STD. 1-5-8 ON D1-D
+FOR THE DETAIL
+
+225
+224
+223
+222
+
+30m
+HORIZONTAL SCALE
+1:500
+
+2m
+
+0
+
+4
+
+2
+
+6m
+VERTICAL SCALE
+1:100
+
+227
+
+227
+226
+
+20
+
+2.5m
+
+0.5m
+MIN.
+
+C DR18 WM
+
+10m
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+
+226
+
+CONSULTING ENGINEERS
+
+225
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+224
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+223
+222
+
+221
+
+221
+
+220
+
+220
+
+219
+
+219
+
+THE CENTREVILLE CREEK ROAD
+(FROM MAYFIELD ROAD TO HEALEY ROAD)
+
+PROP. 400mm WATERMAIN
+STA. 0+220 TO STA. 0+480
+
+RESTRAINED JOINTS
+228.93
+
+228.84
+
+228.76
+
+228.67
+
+228.59
+
+228.50
+
+228.41
+
+228.33
+
+228.24
+
+228.14
+
+227.99
+
+227.85
+
+227.70
+
+227.55
+
+227.41
+
+227.26
+
+227.14
+
+227.13
+
+227.12
+
+227.11
+
+227.10
+
+227.09
+
+227.05
+
+227.01
+
+226.98
+
+226.94
+
+226.90
+
+BOT.EL. OF WM.
+
+CAD Area
+
+X-XX
+
+Area
+
+Checked by
+
+N.L.
+
+Drawn by
+
+A.L.
+
+Sheet
+
+5 of 14
+
+231.77
+
+231.74
+
+231.70
+
+231.64
+
+231.53
+
+231.40
+
+231.27
+
+231.19
+
+231.11
+
+231.01
+
+230.92
+
+230.88
+
+230.72
+
+230.62
+
+230.51
+
+230.40
+
+230.34
+
+230.30
+
+230.27
+
+230.20
+
+230.11
+
+230.01
+
+229.91
+
+229.91
+
+229.91
+
+229.88
+
+229.91
+
+EX. ROAD ELEV.
+
+0+480
+
+0+470
+
+0+460
+
+0+450
+
+0+440
+
+0+430
+
+0+420
+
+0+410
+
+0+400
+
+0+390
+
+0+380
+
+0+370
+
+0+360
+
+0+350
+
+0+340
+
+0+330
+
+0+320
+
+0+310
+
+0+300
+
+0+290
+
+0+280
+
+0+270
+
+0+260
+
+0+250
+
+0+240
+
+0+230
+
+0+220
+
+ROAD CHAINAGE
+
+Date
+
+JULY 2024
+
+X-XX
+
+Project No.
+
+291199
+
+Plan No.
+
+PP02-D
+
+f:\5375\5375-PLAN-PROFILES\The Centreville Creek Road\5375-Centreville-PP-2.dwg, 2024-09-16 4:11:18 PM, AutoCAD PDF (General Documentation).pc3
+
+SERVICE DATA
+SERVICE
+
+INIT.
+
+DATE
+
+SAN SEWERS
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+THIS DRAWING TO BE USED FOR
+WATERMAIN CONSTRUCTION ONLY
+
+SERVICE
+
+INIT.
+
+DATE
+
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+REVISIONS
+
+7.0m
+
+MATCHLINE
+
+DR.
+
+THE GORE RD.
+
+14
+
+IDE
+
+MAYFIELD
+
+RD.
+
+THE GORE RD.
+
+CENTREVILLE CREEK RD.
+
+MCVEAN DR.
+
+KEY PLAN
+(N.T.S.)
+
+NOTES:
+1.
+
+2.
+3.
+
+MATCH LINE
+
+7.0m
+
+C.Z.
+
+COUNTRYS
+
+CENTREVILLE CREEK ROAD
+
+INIT.
+
+ISSUED FOR 30% SUBMISSION
+
+.
+HEALEY RD
+
+LINE VALVE CHAMBER VC03-C
+c/w DRAIN VALVE AND AIR RELEASE VALVE
+(STD. 1-3-26)
+
+REFER TO DWG. No. PP02-D
+
+STA 0+760
+REFER TO DWG. No. PP03-D
+
+PROP. 400 PVC WM
+
+PROP. 400 PVC WM
+
+DETAILS
+
+2024-09-16
+
+8
+
+STA 0+480
+
+PROP. 400 PVC WM
+
+TEE, VALVE & BOX, PLUG
+CONNECTION FOR FUTURE SIDE
+STREET BY-PASS
+(SIZE TO BE CONFIRMED)
+
+DATE
+
+4.
+5.
+6.
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM2-D
+
+LEGEND:
+DV
+
+BV
+
+400 WATERMAIN
+
+AV
+DENOTES PROPOSED WATERMAIN
+
+400 WATERMAIN
+
+DENOTES EXISTING WATERMAIN
+DENOTES EXISTING STORM SEWER
+DENOTES ROGERS
+DENOTES EXISTING GAS MAIN
+
+VENT PIPE
+
+THE EXISTING WATER SERVICE CONNECTION
+IS TO BE LOCATED ON FIELD BY
+CONTRACTOR DURING CONSTRUCTION AND
+TO BE ADJUSTED OR PROTECTED AS NEEDED
+
+DENOTES EXISTING AERIAL CABLES
+DENOTES LIMIT OF TRCA REGULATION AREA
+
+TYPICAL LINE VALVE CHAMBER
+VC02-C / VC03-C / VC04-C / VC05-C
+(c/w DRAIN AND AIR RELEASE )
+SCHEMATIC
+
+DENOTES SINGLE/DOUBLE CATCHBASIN
+
+General Notes
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+241
+
+241
+
+240
+
+240
+
+239
+
+239
+
+238
+
+238
+
+237
+
+237
+LINE VALVE CHAMBER c/w DRAIN /
+AIR RELEASE VALVE
+(STD. 1-3-26)
+
+236
+235
+
+236
+
+Agency:
+B.M. No.
+Elev. XXX.XXX (Geodetic)
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+Designed by
+
+Approved by
+Chkd.
+
+235
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+234
+
+234
+233
+
+233
+
+2.7m
+
+232
+
+232
+
+THE REGIONAL MUNICIPALITY OF PEEL
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+ONTARIO CLEAN WATER AGENCY
+
+2.5m
+
+231
+
+231
+
+0+740.0
+PROP. 400 TEE c/w
+VALVE AND PLUG
+
+PROP. 400 AWWA C900 PVC DR18 WM
+
+230
+229
+228
+227
+
+PSN (PUBLIC SECTOR NETWORK)
+
+HYDRO ONE NETWORKS
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+
+TRANS NORTHERN PIPELINE
+
+BY-PASS FOR FUTURE SIDE
+STREET CONNECTION
+(SIZE TO BE CONFIRMED)
+
+230
+
+PROP. 400 AWWA C900
+PV
+
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+UNION GAS
+
+C DR18 WM
+
+229
+228
+
+10m
+
+0
+
+10
+
+20
+
+30m
+HORIZONTAL SCALE
+1:500
+
+2m
+
+0
+
+4
+
+2
+
+6m
+VERTICAL SCALE
+1:100
+
+227
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+
+226
+
+226
+
+225
+
+225
+
+224
+
+224
+
+223
+
+223
+
+222
+
+222
+
+221
+
+221
+
+220
+
+220
+
+THE CENTREVILLE CREEK
+
+219
+
+219
+
+(FROM MAYFIELD ROAD TO HEALEY ROAD)
+
+CONSULTING ENGINEERS
+
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+PROP. 400mm WATERMAIN
+STA. 0+480 TO STA. 0+760
+
+RESTRAINED JOINTS
+230.84
+
+230.75
+
+230.67
+
+230.62
+
+230.56
+
+230.51
+
+230.46
+
+230.40
+
+230.35
+
+230.30
+
+230.24
+
+230.19
+
+230.14
+
+230.08
+
+230.03
+
+229.98
+
+229.92
+
+229.84
+
+229.76
+
+229.68
+
+229.60
+
+229.52
+
+229.44
+
+229.35
+
+229.27
+
+229.19
+
+229.10
+
+229.02
+
+228.93
+
+BOT.EL. OF WM.
+
+CAD Area
+
+X-XX
+
+Area
+
+Checked by
+
+N.L.
+
+Drawn by
+
+A.L.
+
+Sheet
+
+6 of 14
+
+234.01
+
+233.92
+
+233.82
+
+233.71
+
+233.66
+
+233.63
+
+233.59
+
+233.52
+
+233.44
+
+233.34
+
+233.21
+
+233.14
+
+233.08
+
+233.00
+
+232.96
+
+232.90
+
+232.81
+
+232.72
+
+232.62
+
+232.48
+
+232.38
+
+232.29
+
+232.26
+
+232.17
+
+232.10
+
+232.03
+
+231.95
+
+231.82
+
+231.77
+
+EX. ROAD ELEV.
+
+0+760
+
+0+750
+
+0+740
+
+0+730
+
+0+720
+
+0+710
+
+0+700
+
+0+690
+
+0+680
+
+0+670
+
+0+660
+
+0+650
+
+0+640
+
+0+630
+
+0+620
+
+0+610
+
+0+600
+
+0+590
+
+0+580
+
+0+570
+
+0+560
+
+0+550
+
+0+540
+
+0+530
+
+0+520
+
+0+510
+
+0+500
+
+0+490
+
+0+480
+
+ROAD CHAINAGE
+
+Date
+
+JULY 2024
+
+X-XX
+
+Project No.
+
+291199
+
+Plan No.
+
+PP03-D
+
+f:\5375\5375-PLAN-PROFILES\The Centreville Creek Road\5375-Centreville-PP-3.dwg, 2024-09-16 4:11:29 PM, AutoCAD PDF (General Documentation).pc3
+
+SERVICE DATA
+SERVICE
+
+INIT.
+
+DATE
+
+SERVICE
+
+SAN SEWERS
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+THIS DRAWING TO BE USED FOR
+WATERMAIN CONSTRUCTION ONLY
+
+INIT.
+
+DATE
+
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+REFER TO DWG. No. PP05-D
+
+7.0m
+
+C.Z.
+
+BV
+
+DR.
+
+.
+HEALEY RD
+
+RD.
+
+MCVEAN DR.
+
+KEY PLAN
+(N.T.S.)
+
+NOTES:
+1.
+
+2.
+
+MATCH LINE
+
+MATCH LINE
+
+DV
+
+THE GORE RD.
+
+14
+
+CENTREVILLE CREEK RD.
+
+3.
+
+4.
+5.
+6.
+
+AV
+
+400 WATERMAIN
+
+THE GORE RD.
+
+IDE
+COUNTRYS
+
+7.0m
+
+PROP. 400 PVC WM
+
+PROP. 400 PVC WM
+
+INIT.
+
+ISSUED FOR 30% SUBMISSION
+
+MAYFIELD
+
+CENTREVILLE CREEK ROAD
+
+R.O.W
+
+DETAILS
+
+2024-09-16
+
+8
+
+REFER TO DWG. No. PP03-D
+
+LINE VALVE CHAMBER VC04-C
+c/w DRAIN VALVE AND AIR RELEASE VALVE
+(STD. 1-3-26)
+
+PROP. 400 PVC WM
+STA 1+020
+
+STA 0+720
+
+REVISIONS
+DATE
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM2-D
+
+LEGEND:
+
+400 WATERMAIN
+
+DENOTES PROPOSED WATERMAIN
+DENOTES EXISTING WATERMAIN
+DENOTES EXISTING STORM SEWER
+DENOTES ROGERS
+
+VENT PIPE
+
+DENOTES EXISTING GAS MAIN
+
+TYPICAL LINE VALVE CHAMBER
+VC02-C / VC03-C / VC04-C / VC05-C
+(c/w DRAIN AND AIR RELEASE )
+SCHEMATIC
+
+DENOTES EXISTING AERIAL CABLES
+DENOTES LIMIT OF TRCA REGULATION AREA
+
+THE EXISTING WATER SERVICE CONNECTION
+IS TO BE LOCATED ON FIELD BY
+CONTRACTOR DURING CONSTRUCTION AND
+TO BE ADJUSTED OR PROTECTED AS NEEDED
+
+DENOTES SINGLE/DOUBLE CATCHBASIN
+
+General Notes
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+246
+
+246
+
+245
+
+245
+
+244
+
+244
+
+243
+
+243
+
+242
+
+242
+
+241
+
+241
+
+240
+
+240
+
+Agency:
+B.M. No.
+Elev. XXX.XXX (Geodetic)
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+Designed by
+
+Approved by
+Chkd.
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+239
+
+239
+
+LINE VALVE CHAMBER c/w DRAIN /
+AIR RELEASE VALVE
+(STD. 1-3-26)
+
+238
+
+238
+237
+
+237
+
+THE REGIONAL MUNICIPALITY OF PEEL
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+ONTARIO CLEAN WATER AGENCY
+
+PSN (PUBLIC SECTOR NETWORK)
+
+HYDRO ONE NETWORKS
+
+236
+
+236
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+
+TRANS NORTHERN PIPELINE
+
+235
+
+235
+
+2.7m
+
+UNION GAS
+
+10m
+
+234
+
+PROP. 400 AWWA C900
+
+PVC DR18 WM
+
+PROP. 400 AWWA C900 PV
+
+233
+
+C DR18 WM
+
+232
+
+0
+
+10
+
+20
+
+30m
+HORIZONTAL SCALE
+1:500
+
+234
+
+2.5m
+
+233
+
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+
+2m
+
+0
+
+231
+
+231
+
+230
+
+230
+
+229
+
+229
+
+228
+
+228
+
+227
+
+227
+
+226
+
+226
+
+225
+
+225
+
+224
+
+224
+
+6m
+VERTICAL SCALE
+1:100
+
+232
+
+PROP. 400 AWWA C900 PVC DR
+18 WM
+
+4
+
+2
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+CONSULTING ENGINEERS
+
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+THE CENTREVILLE CREEK
+(FROM MAYFIELD ROAD TO HEALEY ROAD)
+
+PROP. 400mm WATERMAIN
+STA. 0+720 TO STA. 1+020
+
+RESTRAINED JOINTS
+233.07
+
+232.94
+
+232.87
+
+232.80
+
+232.73
+
+232.65
+
+232.58
+
+232.49
+
+232.40
+
+232.32
+
+232.23
+
+232.15
+
+232.06
+
+231.97
+
+231.89
+
+231.80
+
+231.72
+
+231.63
+
+231.54
+
+231.46
+
+231.37
+
+231.28
+
+231.19
+
+231.10
+
+231.02
+
+230.93
+
+230.84
+
+BOT.EL. OF WM.
+
+CAD Area
+
+X-XX
+
+Area
+
+Checked by
+
+N.L.
+
+Drawn by
+
+A.L.
+
+Sheet
+
+7 of 14
+
+236.00
+
+235.92
+
+235.84
+
+235.73
+
+235.67
+
+235.54
+
+235.39
+
+235.25
+
+235.14
+
+235.01
+
+234.97
+
+234.91
+
+234.83
+
+234.77
+
+234.75
+
+234.70
+
+234.64
+
+234.57
+
+234.47
+
+234.44
+
+234.35
+
+234.30
+
+234.25
+
+234.15
+
+234.13
+
+234.08
+
+234.01
+
+EX. ROAD ELEV.
+
+1+020
+
+1+010
+
+1+000
+
+0+990
+
+0+980
+
+0+970
+
+0+960
+
+0+950
+8
+
+0+940
+
+0+930
+
+0+920
+
+0+910
+
+0+900
+
+0+890
+
+0+880
+
+0+870
+
+0+860
+
+0+850
+
+0+840
+
+0+830
+
+0+820
+
+0+810
+
+0+800
+
+0+790
+
+0+780
+
+0+770
+
+0+760
+
+ROAD CHAINAGE
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+Date
+
+JULY 2024
+
+X-XX
+
+Project No.
+
+291199
+
+Plan No.
+
+PP04-D
+
+f:\5375\5375-PLAN-PROFILES\The Centreville Creek Road\5375-Centreville-PP-4.dwg, 2024-09-16 4:11:40 PM, AutoCAD PDF (General Documentation).pc3
+
+SERVICE DATA
+SERVICE
+
+INIT.
+
+DATE
+
+SERVICE
+
+SAN SEWERS
+STORM SEWERS
+WATERMAINS
+TRANSIT
+PARKS & REC.
+ONT. CLEAN WATER
+
+THIS DRAWING TO BE USED FOR
+WATERMAIN CONSTRUCTION ONLY
+
+INIT.
+
+DATE
+
+GAS MAINS
+BELL U/G CABLE
+HYDRO U/G CABLE
+HYDRO ONE
+CTV
+COMMUNIC. CABLES
+
+REVISIONS
+DATE
+
+DETAILS
+
+INIT.
+
+2024-09-16
+
+ISSUED FOR 30% SUBMISSION
+
+C.Z.
+
+LINE VALVE CHAMBER VC05-C
+c/w DRAIN VALVE AND AIR RELEASE VALVE
+(STD. 1-3-26)
+8
+DR.
+
+RD.
+
+IDE
+
+MAYFIELD
+
+HEALEY RD
+
+THE GORE RD.
+
+14
+
+COUNTRYS
+
+PROP. 400 WM PLUG & B.O.
+
+STA 1+020
+
+CENTREVILLE CREEK ROAD
+
+THE GORE RD.
+
+.
+
+TEE, VALVE & BOX, PLUG
+CONNECTION FOR FUTURE SIDE
+STREET BY-PASS
+(SIZE TO BE CONFIRMED)
+
+7.0m
+CENTREVILLE CREEK RD.
+
+REFER TO DWG. No. PP04-D
+
+PROP. 400 PVC WM
+R.O.W
+
+PROP. 400 PVC WM
+
+KEY PLAN
+(N.T.S.)
+
+NOTES:
+1.
+
+2.
+3.
+
+R.O.W
+
+MATCH LINE
+
+4.
+
+LIMIT OF WATERMAIN CONSTRUCTION
+
+MCVEAN DR.
+
+5.
+6.
+
+INVERTS, SIZE AND LOCATION FOR ALL SERVICES AND UTILITIES TO BE VERIFIED
+BY CONTRACTOR PRIOR TO EXCAVATION AND PROTECTED/SUPPORTED
+ACCORDINGLY DURING CONSTRUCTION.
+LOCAL ACCESS TO RESIDENTS IS TO BE PROVIDED AT ALL TIMES DURING
+CONSTRUCTION.
+THE VALVE CHAMBER SCHEMATICS SHOWN IN THE PLAN AND PROFILE
+DRAWINGS. REFER TO THE REGION OF PEEL STANDARD DRAWINGS TO
+DETERMINE THE NECESSARY VALVING TYPE/CONFIGURATION DETAILS.
+FOR RELOCATION OF THE EX. 200 WATERMAIN WITH LENGTH EXCEEDING 6.0m
+FLUSHING AND DISINFECTION IS REQUIRED.
+ALL EX. DITCHES RELOCATED WITHIN COMPOUND AREA TO BE REINSTATED TO
+ORIGINAL ALIGNMENT.
+FOR TREE REMOVALS/PROTECTION REFER TO RM1-D TO RM2-D
+
+LEGEND:
+DENOTES PROPOSED WATERMAIN
+
+DV
+400 WATERMAIN
+
+BV
+
+AV
+
+DENOTES EXISTING WATERMAIN
+
+400 WATERMAIN
+DENOTES EXISTING STORM SEWER
+DENOTES ROGERS
+DENOTES EXISTING GAS MAIN
+DENOTES EXISTING AERIAL CABLES
+
+VENT PIPE
+
+THE EXISTING WATER SERVICE CONNECTION
+IS TO BE LOCATED ON FIELD BY
+CONTRACTOR DURING CONSTRUCTION AND
+TO BE ADJUSTED OR PROTECTED AS NEEDED
+
+DENOTES LIMIT OF TRCA REGULATION AREA
+DENOTES SINGLE/DOUBLE CATCHBASIN
+
+TYPICAL LINE VALVE CHAMBER
+VC02-C / VC03-C / VC04-C / VC05-C
+(c/w DRAIN AND AIR RELEASE )
+SCHEMATIC
+
+General Notes
+All Measurements Are In Meters(m) Unless Otherwise Noted
+All Driveways Are ASPHALT Unless Otherwise Noted
+All Water And Sanitary Service Locations Are Approximate
+And Must Be Located Accurately In The Field
+All Horizontal And Vertical Bends Are In Degrees
+
+246
+
+246
+
+245
+
+245
+
+244
+
+244
+
+243
+
+243
+
+242
+
+242
+241
+
+241
+LINE VALVE CHAMBER c/w DRAIN /
+AIR RELEASE VALVE
+(STD. 1-3-26)
+
+240
+
+Agency:
+B.M. No.
+Elev. XXX.XXX (Geodetic)
+Coordinate System: UTM NAD83 (Original)
+The Contractor Is Responsible For Locating
+And Protecting All Existing Utilities Prior To
+And During Construction. Location Of
+Existing Utilities Approximate Only,
+To Be Verified In Field By Contractor.
+
+Designed by
+
+Approved by
+Chkd.
+
+240
+
+NOTICE TO CONTRACTOR
+48 HOURS PRIOR TO COMMENCING WORK NOTIFY THE FOLLOWING
+
+239
+
+239
+
+238
+
+238
+
+237
+
+237
+
+THE REGIONAL MUNICIPALITY OF PEEL
+
+CABLE TELEVISION/FIBREOPTIC PROVIDERS:
+
+CITY OF MISSISSAUGA WORKS DEPT.
+
+BELL CANADA
+
+CITY OF BRAMPTON WORKS DEPT.
+
+ENERSOURCE TELECOM
+
+TOWN OF CALEDON WORKS DEPT.
+
+HYDRO ONE TELECOM
+
+ENBRIDGE INCORPORATED-GAS DISTRIBUTION
+
+ROGERS CABLE
+
+ONTARIO MINISTRY OF TRANSPORTATION
+
+ALLSTREAM (ZAYO)
+
+ONTARIO CLEAN WATER AGENCY
+
+2.6m
+
+PSN (PUBLIC SECTOR NETWORK)
+
+HYDRO ONE NETWORKS
+
+236
+
+236
+
+2.7m
+
+FUTUREWAY (FCI BROADBAND)
+
+ALECTRA UTILITIES
+
+GT FIBER/360 NETWORK INC.
+
+TRANS NORTHERN PIPELINE
+
+235
+
+235
+
+PROP. 400 AWWA C900
+234
+
+PVC DR18 WM
+
+233
+
+PROP. 400 AWWA
+C900
+
+PVC DR18 WM
+
+233
+
+229
+228
+
+20
+
+30m
+HORIZONTAL SCALE
+1:500
+
+2m
+
+0
+
+4
+
+2
+
+6m
+VERTICAL SCALE
+1:100
+
+Ronrose Drive, Concord,
+SCHAEFFERS 6Ontario
+L4K 4R3
+CONSULTING ENGINEERS
+
+231
+
+1+132.3
+PROP. 400 TEE c/w
+VALVE AND PLUG
+
+230
+
+10
+
+232
+
+BY-PASS FOR FUTURE SIDE STREET
+CONNECTION
+(SIZE TO BE CONFIRMED)
+
+231
+
+0
+
+234
+
+PROP. 400 AWWA
+C900 PVC DR18 WM
+
+232
+
+UNION GAS
+
+10m
+
+PROP. 400 WM
+PLUG & B.O.
+
+TELUS COMMUNICATION
+
+PEARSON INTERNATIONAL FUEL FACILITIES CORP.
+
+230
+S C H A E F F E R & A S S O C I A T E S L T D.
+
+Tel: (905) 738-6100
+Fax: (905) 738-6875
+E-mail:
+design@schaeffers.com
+
+229
+228
+
+227
+
+227
+
+226
+
+226
+
+225
+
+225
+
+224
+
+224
+
+THE CENTREVILLE CREEK
+(FROM MAYFIELD ROAD TO HEALEY ROAD)
+
+PROP. 400mm WATERMAIN
+STA. 1+020 TO STA. 1+280
+
+RESTRAINED JOINTS
+234.45
+
+1+280
+
+1+270
+
+1+260
+
+1+250
+
+1+240
+
+1+230
+
+1+220
+
+1+210
+
+1+200
+
+1+190
+
+1+180
+
+1+170
+
+1+160
+
+1+150
+
+234.43
+
+234.34
+
+234.21
+
+234.08
+
+233.96
+
+233.83
+
+233.70
+
+233.58
+
+233.45
+
+233.32
+
+233.19
+
+233.07
+
+BOT.EL. OF WM.
+
+CAD Area
+
+X-XX
+
+Area
+
+Checked by
+
+N.L.
+
+Drawn by
+
+A.L.
+
+Sheet
+
+8 of 14
+
+237.51
+
+237.46
+
+237.35
+
+237.20
+
+237.06
+
+236.94
+
+236.80
+
+236.65
+
+236.44
+
+236.30
+
+236.17
+
+236.08
+
+236.00
+
+EX. ROAD ELEV.
+
+1+140
+
+1+130
+
+1+120
+
+1+110
+
+1+100
+
+1+090
+
+1+080
+
+1+070
+
+1+060
+
+1+050
+
+1+040
+
+1+030
+
+1+020
+
+ROAD CHAINAGE
+
+Date
+
+JULY 2024
+
+X-XX
+
+Project No.
+
+291199
+
+Plan No.
+
+PP05-D
+
+f:\5375\5375-PLAN-PROFILES\The Centreville Creek Road\5375-Centreville-PP-5.dwg, 2024-09-16 4:11:50 PM, AutoCAD PDF (General Documentation).pc3
+
+ATTACHMENT C
+PRELIMINARY POPULATION ESTIMATES AND SANITARY DESIGN SHEET
+
+LEGEND
+WILDFIELD VILLAGE
+SECONDARY PLAN
+AREA
+
+GLOBAL PROPERTIES
+(2) INC.
+
+E.S
+
+NEIGHBOURHOOD
+
+N.P
+
+CENTRE
+
+URBAN
+CORRIDOR (100m)
+
+E.S
+
+GLOBAL
+PROPERTIES (1)
+INC.
+
+OAD
+
+GLOBAL
+PROPERTIES
+INC.
+
+N.P
+
+N.P
+
+E.S
+
+E.S
+
+GLOBAL
+PROPERTIES
+INC.
+
+THE GORE R
+
+CENTREVILL
+E CREEK RO
+
+AD
+
+NEIGHBOURHOOD
+AREA
+
+N.P
+
+NEIGHBOURHOOD
+PARK
+
+C.P
+
+COMMUNITY PARK
+STORMWATER
+MANAGEMENT
+FACILITY
+
+C.P
+
+CAVALLINO
+ESTATES INC.
+
+N.P
+
+ELEMENTARY
+SCHOOL
+
+ENVIRONMENTAL
+FEATURE
+GREENBELT
+PROPOSED
+COLLECTOR ROAD
+HIGHWAY 413
+ALIGNMENT
+HIGHWAY 413 FOCUS
+AREA
+
+E.S
+TRINITY FIELD INC.
+
+G. & T. VESCIO
+
+N.P
+
+C. & G.SPANO
+
+M. RASO
+
+C. & G.SPANO
+
+MAYFIELD ROAD
+
+WILDFIELD VILLAGE | LAND USE CONCEPT PLAN
+
+Date: October 16, 2024
+
+Sanitary Design Sheet
+Wildfield Village
+Phase 1
+Town of Caledon, Region of Peel
+Minimum Sewer Diameter (mm) =
+
+200
+
+Avg. Domestic Flow (l/cap/day) =
+
+290
+
+Mannings n =
+
+0.013
+
+Infiltration Rate (l/s/ha) =
+
+0.26
+
+Minimum Velocity (m/s) =
+
+0.75
+
+Max. Harmon Peaking Factor =
+
+4.0
+
+Maximum Velocity (m/s) =
+
+3
+
+Min. Harmon Peaking Factor =
+
+2.0
+
+Minimum Pipe Slope (%) =
+
+0.50
+
+NOMINAL PIPE SIZE USED
+
+Project No. 2630
+Date: 20-Dec-24
+Note: Population density per sanitary population calculations in this appendix.
+
+Reviewed By: N.D.M.
+
+RESIDENTIAL
+MANHOLE
+
+FROM
+
+INDUSTRIAL/COMMERCIAL/INSTITUTIONAL
+
+DENSITY
+ACCUM.
+AREA
+
+UNITS
+
+(ha)
+
+(ha)
+
+(#)
+
+STREET
+
+Designed By: D.V.
+
+P:\2630 Wildfield Village\Design\Pipe Design\Sanitary\[2630 - Sanitary Sheet Design - External Trunk Sanitary Sizing.xlsm]Design
+
+LOCATION
+
+AREA
+
+Project: Wildfield Village
+
+PER UNIT
+
+PER HA
+
+(p/unit)
+
+(p/ha)
+
+RESIDENTIAL
+POPULATION
+
+ACCUM.
+RESIDENTIAL
+POPULATION
+
+AREA
+
+ACCUM.
+AREA
+
+POPULATION
+DENSITY
+
+FLOW
+RATE
+
+(ha)
+
+(ha)
+
+(p/ha)
+
+(l/s/ha)
+
+FLOW CALCULATIONS
+
+ACCUM.
+EQUIV.
+POPULATION
+
+INFILTRATION
+
+TOTAL
+ACCUM.
+POPULATION
+
+AVG.
+DOMESTIC
+FLOW
+
+ACCUM. AVG.
+DOMESTIC
+FLOW
+
+(L/s)
+
+(L/s)
+
+PEAKING
+FACTOR
+
+PIPE DATA
+PEAKED
+RESIDENTIAL
+FLOW
+
+ICI
+FLOW
+
+TOTAL
+FLOW
+
+LENGTH
+
+PIPE
+DIAMETER
+
+SLOPE
+
+(L/s)
+
+(L/s)
+
+(L/s)
+
+(m)
+
+(mm)
+
+(%)
+
+(L/s)
+
+(m/s)
+
+FULL FLOW FULL FLOW
+CAPACITY
+VELOCITY
+
+TO
+(L/s)
+
+Catchment 101
+
+101
+
+MH1
+
+154.88
+
+154.88
+
+0
+
+112.7
+
+17456
+
+17456
+
+0
+
+0
+
+0
+
+0
+
+0
+
+40.3
+
+17456
+
+58.6
+
+58.6
+
+2.71
+
+158.9
+
+0.0
+
+199.2
+
+100.0
+
+525
+
+0.50
+
+303.9
+
+1.40
+
+Catchment 102
+
+102
+
+MH1
+
+7.75
+
+7.75
+
+0
+
+121.9
+
+945
+
+945
+
+0
+
+0
+
+0
+
+0
+
+0
+
+2.0
+
+945
+
+3.2
+
+3.2
+
+3.82
+
+12.1
+
+0.0
+
+14.1
+
+100.0
+
+200
+
+0.50
+
+23.2
+
+UNDER
+
+The Gore Road
+
+MH1
+
+Plug 1
+
+0
+
+162.63
+
+0
+
+0
+
+18401
+
+0
+
+0
+
+0
+
+0
+
+0
+
+42.3
+
+18401
+
+0.0
+
+61.8
+
+2.69
+
+166.1
+
+0.0
+
+208.4
+
+100.0
+
+600
+
+0.30
+
+336.1
+
+1.19
+
+Catchment 103
+
+103
+
+MH2
+
+50.87
+
+50.87
+
+0
+
+177.1
+
+9008
+
+9008
+
+0
+
+0
+
+0
+
+0
+
+0
+
+13.2
+
+9008
+
+30.2
+
+30.2
+
+3.00
+
+90.7
+
+0.0
+
+103.9
+
+100.0
+
+450
+
+0.50
+
+201.5
+
+1.27
+
+Catchment 104
+
+104
+
+MH2
+
+12.47
+
+12.47
+
+0
+
+121.9
+
+1520
+
+1520
+
+0
+
+0
+
+0
+
+0
+
+0
+
+3.2
+
+1520
+
+5.1
+
+5.1
+
+3.68
+
+18.8
+
+0.0
+
+22.0
+
+100.0
+
+250
+
+0.50
+
+42.0
+
+0.86
+
+The Gore Road
+
+MH2
+
+Plug 2
+
+0
+
+63.34
+
+0
+
+0
+
+10528
+
+0
+
+0
+
+0
+
+0
+
+0
+
+16.5
+
+10528
+
+0.0
+
+35.3
+
+2.93
+
+103.6
+
+0.0
+
+120.1
+
+100.0
+
+525
+
+0.30
+
+235.4
+
+1.09
+
+Catchment 105
+
+105
+
+MH3
+
+37.22
+
+37.22
+
+0
+
+4545
+
+4545
+
+0
+
+0
+
+0
+
+0
+
+0
+
+9.7
+
+4545
+
+15.3
+
+15.3
+
+3.28
+
+50.1
+
+0.0
+
+59.8
+
+100.0
+
+375
+
+0.50
+
+123.9
+
+1.12
+
+The Gore Road
+
+MH3
+
+Plug 3
+
+0
+
+37.22
+
+0
+
+0
+
+4545
+
+0
+
+0
+
+0
+
+0
+
+0
+
+9.7
+
+4545
+
+0.0
+
+15.3
+
+3.28
+
+50.1
+
+0.0
+
+59.8
+
+100.0
+
+375
+
+0.30
+
+96.0
+
+0.87
+
+Catchment 106
+
+106
+
+MH4
+
+82.74
+
+82.74
+
+0
+
+151.1
+
+12499
+
+12499
+
+0
+
+0
+
+0
+
+0
+
+0
+
+21.5
+
+12499
+
+42.0
+
+42.0
+
+2.86
+
+119.9
+
+0.0
+
+141.4
+
+100.0
+
+450
+
+0.50
+
+201.5
+
+1.27
+
+Catchment 107
+
+107
+
+MH4
+
+1.72
+
+1.72
+
+0
+
+122.1
+
+210
+
+210
+
+0
+
+0
+
+0
+
+0
+
+0
+
+0.4
+
+210
+
+0.7
+
+0.7
+
+4.00
+
+2.8
+
+0.0
+
+3.3
+
+100.0
+
+200
+
+0.50
+
+23.2
+
+UNDER
+
+The Gore Road
+
+MH4
+
+Plug 4
+
+0
+
+84.46
+
+0
+
+0
+
+12709
+
+0
+
+0
+
+0
+
+0
+
+0
+
+22.0
+
+12709
+
+0.0
+
+42.7
+
+2.85
+
+121.6
+
+0.0
+
+143.6
+
+100.0
+
+525
+
+0.30
+
+235.4
+
+1.09
+
+122.1
+
+1 of 1
+
+Sanitary Population Calculations
+
+Wildfield Village
+Project Number: 2630
+Date: December 2024
+Designer Initials: D.V.
+
+Catchments draining to Outlet 1:
+Catchment 101
+Land Use
+Neighbourhood Area
+
+Area (ha)
+143.21
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Land Use
+Collector Road
+
+Area (ha)
+11.67
+
+Catchment 102
+Land Use
+Neighbourhood Area
+
+Area (ha)
+7.75
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+121.73
+21.48
+
+Area (ha)
+6.59
+1.16
+
+Units/ha
+Population/Unit
+Population
+27
+4.2
+13804
+50
+3.4
+3652
+Total Equivalent Population
+
+Units/ha
+Population/Unit
+Population
+27
+4.2
+747
+50
+3.4
+198
+Total Equivalent Population
+
+Total Population to Outlet 1 =
+
+17456
+
+945
+18401
+
+Catchments draining to Outlet 2:
+Catchment 103
+Land Use
+Neighbourhood Area
+
+Area (ha)
+12.08
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Land Use
+Urban Corridor
+
+Area (ha)
+30.41
+
+Unit Type Mix
+Townhouses
+Stacked Towns
+Apartments
+
+Unit Mix
+60%
+30%
+10%
+
+Land Use
+Collector Road
+
+Area (ha)
+8.38
+
+Catchment 104
+Land Use
+Neighbourhood Area
+
+Area (ha)
+12.47
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+10.27
+1.81
+
+Area (ha)
+18.25
+9.12
+3.04
+
+Area (ha)
+10.5995
+1.87
+
+Units/ha
+Population/Unit
+Population
+27
+4.2
+1164
+50
+3.4
+308
+Total Equivalent Population
+
+1472
+
+Units/ha
+Population/Unit
+Population
+50
+3.4
+3102
+90
+3.4
+2792
+225
+2.4
+1642
+Total Equivalent Population
+
+7536
+
+Units/ha
+Population/Unit
+Population
+27
+4.2
+1202
+50
+3.4
+318
+Total Equivalent Population
+
+Total Population to Outlet 2 =
+
+P:\2630 Wildfield Village\Design\Pipe Design\Sanitary\2630-Sanitary Populations.xlsm
+
+1520
+10528
+
+Wildfield Village
+Project Number: 2630
+Date: December 2024
+Designer Initials: D.V.
+
+Sanitary Population Calculations
+
+Catchments draining to Outlet 3:
+Catchment 105
+Land Use
+
+Area (ha)
+
+Neighbourhood Area
+
+32.39
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Land Use
+Collector Road
+
+Area (ha)
+2.42
+
+Land Use
+Urban Corridor
+
+Area (ha)
+2.41
+
+Unit Type Mix
+Townhouses
+Stacked Towns
+Apartments
+
+Unit Mix
+60%
+30%
+10%
+
+Area (ha)
+27.53
+4.86
+
+Area (ha)
+1.45
+0.72
+0.24
+
+Units/ha
+Population/Unit
+Population
+27
+4.2
+3122
+50
+3.4
+826
+Total Equivalent Population
+
+Units/ha
+Population/Unit
+Population
+50
+3.4
+246
+90
+3.4
+221
+225
+2.4
+130
+Total Equivalent Population
+
+Total Population to Outlet 3 =
+
+3948
+
+597
+4545
+
+Catchments draining to Outlet 4:
+Catchment 106
+Land Use
+Neighbourhood Area
+
+Area (ha)
+57.11
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Land Use
+Neighbourhood Centre
+
+Area (ha)
+6.66
+
+Unit Type Mix
+Apartments
+Retail
+
+Unit Mix
+50%
+50%
+
+Land Use
+Urban Corridor
+
+Area (ha)
+13.61
+
+Unit Type Mix
+Townhouses
+Stacked Towns
+Apartments
+
+Unit Mix
+60%
+30%
+10%
+
+Land Use
+Collector Road
+
+Area (ha)
+3.22
+
+Land Use
+Environmental Feature
+
+Area (ha)
+2.16
+
+Catchment 107
+Land Use
+Neighbourhood Area
+
+Area (ha)
+1.72
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+48.54
+8.57
+
+Units/ha
+Population/Unit
+Population
+27
+4.2
+5505
+50
+3.4
+1456
+Total Equivalent Population
+
+Area (ha)
+3.33
+3.33
+
+P/ha
+50
+
+Area (ha)
+8.17
+4.08
+1.36
+
+Units/ha
+Population/Unit
+Population
+50
+3.4
+1388
+90
+3.4
+1249
+225
+2.4
+735
+Total Equivalent Population
+
+Area (ha)
+1.46
+0.26
+
+Units/ha
+250
+-
+
+6961
+
+Population/Unit
+Population
+2.4
+1998
+0
+167
+Total Equivalent Population
+2165
+
+Units/ha
+Population/Unit
+Population
+27
+4.2
+166
+50
+3.4
+44
+Total Equivalent Population
+
+Total Population to Outlet 4 =
+
+P:\2630 Wildfield Village\Design\Pipe Design\Sanitary\2630-Sanitary Populations.xlsm
+
+3373
+
+210
+12708
+
+Wildfield Village
+Project Number: 2630
+Date: December 2024
+Designer Initials: D.V.
+
+Sanitary Population Calculations
+
+SUBJECT LANDS SUMMARY
+Land Use
+Neighbourhood Area
+Neighbourhood Centre
+Urban Corridor
+Total Area (ha)
+
+Area (ha) Population
+266.73
+32512
+6.66
+2165
+46.43
+11505
+319.82
+46182
+
+Land Use
+Collector Road
+
+Area (ha)
+25.69
+
+Note: Land Use Population Densities per Population counts provided by Arutip in April 2024
+Note: Sanitary Populations do not include park or school blocks to be conservative while not having up to date areas for the blocks.
+
+P:\2630 Wildfield Village\Design\Pipe Design\Sanitary\2630-Sanitary Populations.xlsm
+
+Population
+0
+
+Wildfield Village
+Project Number: 2630
+Date: December 2024
+Designer Initials: D.V.
+
+Watermain Demand Calculations
+
+Block 1
+Land Use
+Neighbourhood Area
+
+Area (ha)
+13.71
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+11.65
+2.06
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+1322
+350
+
+Total Equivalent Population
+Total Population Block 1 =
+
+1671
+1671
+
+Block 2
+Land Use
+Neighbourhood Area
+
+Area (ha)
+15.03
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+12.78
+2.25
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+1449
+383
+
+Total Equivalent Population
+Total Population Block 2 =
+
+1832
+1832
+
+Block 3
+Land Use
+Neighbourhood Area
+
+Area (ha)
+16.00
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+13.60
+2.40
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+1542
+408
+
+Total Equivalent Population
+Total Population Block 3 =
+
+1950
+1950
+
+Block 4
+Land Use
+Neighbourhood Area
+
+Area (ha)
+16.85
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+14.32
+2.53
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+1624
+430
+
+Total Equivalent Population
+Total Population Block 4 =
+
+2054
+2054
+
+Block 5
+Land Use
+Neighbourhood Area
+
+Area (ha)
+9.48
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+8.06
+1.42
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+914
+242
+
+Total Equivalent Population
+
+1156
+
+Land Use
+Urban Corridor
+
+Area (ha)
+5.39
+
+Unit Type Mix
+Townhouses
+Stacked Towns
+Apartments
+
+Unit Mix
+60%
+30%
+10%
+
+Total Population Block 5 =
+
+Area (ha)
+3.23
+1.62
+0.54
+
+Units/ha
+Population/Unit
+Population
+50
+3.4
+550
+90
+3.4
+495
+225
+2.4
+291
+Total Equivalent Population
+
+1336
+2491
+
+P:\2630 Wildfield Village\Design\SWM\Local Subwatershed Study (LSS)\Design Calculations\Watermain Demand\2630- Watermain Calculations.xlsm
+
+Wildfield Village
+Project Number: 2630
+Date: December 2024
+Designer Initials: D.V.
+
+Watermain Demand Calculations
+
+Block 6
+Land Use
+Neighbourhood Area
+
+Area (ha)
+10.38
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+8.82
+1.56
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+1001
+265
+
+Total Equivalent Population
+
+1265
+
+Land Use
+Urban Corridor
+
+Area (ha)
+4.67
+
+Unit Type Mix
+Townhouses
+Stacked Towns
+Apartments
+
+Unit Mix
+60%
+30%
+10%
+
+Area (ha)
+2.80
+1.40
+0.47
+
+Units/ha
+Population/Unit
+Population
+50
+3.4
+476
+90
+3.4
+429
+225
+2.4
+252
+Total Equivalent Population
+
+Total Population Block 6 =
+
+1157
+2422
+
+Block 7
+Land Use
+Neighbourhood Area
+
+Area (ha)
+10.43
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+8.87
+1.56
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+1005
+266
+
+Total Equivalent Population
+
+1271
+
+Land Use
+Urban Corridor
+
+Area (ha)
+4.27
+
+Unit Type Mix
+Townhouses
+Stacked Towns
+Apartments
+
+Unit Mix
+60%
+30%
+10%
+
+Area (ha)
+2.56
+1.28
+0.43
+
+Units/ha
+Population/Unit
+Population
+50
+3.4
+436
+90
+3.4
+392
+225
+2.4
+231
+Total Equivalent Population
+
+Total Population Block 7 =
+
+1058
+2329
+
+Block 8
+Land Use
+Neighbourhood Area
+
+Area (ha)
+30.02
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+25.52
+4.50
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+2894
+766
+
+Total Equivalent Population
+Total Population Block 8 =
+
+3659
+3659
+
+Block 9
+Land Use
+Neighbourhood Area
+
+Area (ha)
+35.79
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Total Equivalent Population
+Total Population Block 9 =
+
+Area (ha)
+30.42
+5.37
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+3450
+913
+4362
+4362
+
+P:\2630 Wildfield Village\Design\SWM\Local Subwatershed Study (LSS)\Design Calculations\Watermain Demand\2630- Watermain Calculations.xlsm
+
+Wildfield Village
+Project Number: 2630
+Date: December 2024
+Designer Initials: D.V.
+
+Watermain Demand Calculations
+
+Block 10
+Land Use
+Neighbourhood Area
+
+Area (ha)
+8.50
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+7.23
+1.28
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+819
+217
+
+Total Equivalent Population
+
+1036
+
+Land Use
+Urban Corridor
+
+Area (ha)
+7.67
+
+Unit Type Mix
+Townhouses
+Stacked Towns
+Apartments
+
+Unit Mix
+60%
+30%
+10%
+
+Area (ha)
+4.60
+2.30
+0.77
+
+Units/ha
+Population/Unit
+Population
+50
+3.4
+782
+90
+3.4
+704
+225
+2.4
+414
+Total Equivalent Population
+
+Total Population Block 10 =
+
+1901
+2937
+
+Block 11
+Land Use
+Neighbourhood Area
+
+Area (ha)
+10.07
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+8.56
+1.51
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+971
+257
+
+Total Equivalent Population
+
+1227
+
+Land Use
+Urban Corridor
+
+Area (ha)
+5.13
+
+Unit Type Mix
+Townhouses
+Stacked Towns
+Apartments
+
+Unit Mix
+60%
+30%
+10%
+
+Area (ha)
+3.08
+1.54
+0.51
+
+Units/ha
+Population/Unit
+Population
+50
+3.4
+523
+90
+3.4
+471
+225
+2.4
+277
+Total Equivalent Population
+
+Total Population Block 11 =
+
+1271
+2499
+
+Block 12
+Land Use
+Neighbourhood Area
+
+Area (ha)
+11.42
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+9.71
+1.71
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+1101
+291
+
+Total Equivalent Population
+
+1392
+
+Land Use
+Urban Corridor
+
+Area (ha)
+5.69
+
+Unit Type Mix
+Townhouses
+Stacked Towns
+Apartments
+
+Unit Mix
+60%
+30%
+10%
+
+Total Population Block 10 =
+
+Area (ha)
+3.41
+1.71
+0.57
+
+Units/ha
+Population/Unit
+Population
+50
+3.4
+580
+90
+3.4
+522
+225
+2.4
+307
+Total Equivalent Population
+
+1410
+2802
+
+P:\2630 Wildfield Village\Design\SWM\Local Subwatershed Study (LSS)\Design Calculations\Watermain Demand\2630- Watermain Calculations.xlsm
+
+Wildfield Village
+Project Number: 2630
+Date: December 2024
+Designer Initials: D.V.
+
+Watermain Demand Calculations
+
+Block 13
+Land Use
+Neighbourhood Area
+
+Area (ha)
+14.86
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+12.63
+2.23
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+1432
+379
+
+Total Equivalent Population
+
+1811
+
+Land Use
+Urban Corridor
+
+Area (ha)
+5.08
+
+Unit Type Mix
+Townhouses
+Stacked Towns
+Apartments
+
+Unit Mix
+60%
+30%
+10%
+
+Land Use
+Neighboorhood Centre
+
+Area (ha)
+6.66
+
+Unit Type Mix
+Apartments
+Retail
+
+Unit Mix
+50%
+50%
+
+Area (ha)
+3.05
+1.52
+0.51
+
+Units/ha
+Population/Unit
+Population
+50
+3.4
+518
+90
+3.4
+466
+225
+2.4
+274
+Total Equivalent Population
+
+Area (ha)
+3.33
+3.33
+
+P/ha
+50
+
+Units/ha
+250
+-
+
+Area (ha)
+15.90
+2.81
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Total Population Block 13 =
+
+1259
+
+Population/Unit
+Population
+2.4
+1998
+0
+167
+Total Equivalent Population
+2165
+5235
+
+Block 14
+Land Use
+Neighbourhood Area
+
+Area (ha)
+18.71
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Population
+1803
+477
+
+Total Equivalent Population
+
+2281
+
+Land Use
+Urban Corridor
+
+Area (ha)
+4.18
+
+Unit Type Mix
+Townhouses
+Stacked Towns
+Apartments
+
+Unit Mix
+60%
+30%
+10%
+
+Land Use
+Environmental Feature
+Total Population Block 14 =
+
+Area (ha)
+2.51
+1.25
+0.42
+
+Units/ha
+Population/Unit
+Population
+50
+3.4
+426
+90
+3.4
+384
+225
+2.4
+226
+Total Equivalent Population
+
+1036
+
+Area (ha)
+1.64
+3316
+
+P:\2630 Wildfield Village\Design\SWM\Local Subwatershed Study (LSS)\Design Calculations\Watermain Demand\2630- Watermain Calculations.xlsm
+
+Wildfield Village
+Project Number: 2630
+Date: December 2024
+Designer Initials: D.V.
+
+Watermain Demand Calculations
+
+Block 15
+Land Use
+Neighbourhood Area
+
+Area (ha)
+23.54
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+20.01
+3.53
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+2269
+600
+
+Total Equivalent Population
+
+2869
+
+Land Use
+Urban Corridor
+
+Area (ha)
+4.35
+
+Unit Type Mix
+Townhouses
+Stacked Towns
+Apartments
+
+Unit Mix
+60%
+30%
+10%
+
+Land Use
+Environmental Feature
+Total Population Block 15 =
+
+Area (ha)
+2.61
+1.31
+0.44
+
+Units/ha
+Population/Unit
+Population
+50
+3.4
+444
+90
+3.4
+399
+225
+2.4
+235
+Total Equivalent Population
+
+1078
+
+Area (ha)
+0.52
+3947
+
+Block 16
+Land Use
+Neighbourhood Area
+
+Area (ha)
+20.22
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+17.19
+3.03
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+1949
+516
+
+Total Equivalent Population
+Total Population Block 16 =
+
+2465
+2465
+
+Block 17
+Land Use
+Neighbourhood Area
+
+Area (ha)
+1.72
+
+Unit Type Mix
+Singles
+Towns
+
+Unit Mix
+85%
+15%
+
+Area (ha)
+1.46
+0.26
+
+Units/ha
+27
+50
+
+Population/Unit
+4.2
+3.4
+
+Population
+166
+44
+
+Total Equivalent Population
+Total Population Block 17 =
+
+210
+210
+
+SUBJECT LANDS SUMMARY
+Land Use
+Area (ha) Population
+Neighbourhood Area
+266.73
+32512
+Neighbourhood Centre
+6.66
+2165
+Urban Corridor
+46.43
+11505
+Total Area (ha)
+319.82
+46182
+Note: Land Use Population Densities per Population counts provided by Arutip in April 2024
+Note: Watermain Populations do not include park or school blocks to be conservative while not having up to date areas for the blocks.
+
+P:\2630 Wildfield Village\Design\SWM\Local Subwatershed Study (LSS)\Design Calculations\Watermain Demand\2630- Watermain Calculations.xlsm
+
+
