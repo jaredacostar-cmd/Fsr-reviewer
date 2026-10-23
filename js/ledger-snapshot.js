@@ -100,7 +100,7 @@
   function toCSV(s) {
     const readme = [
       `Pipeline ledger snapshot ${s.name} (template ${s.template}). ${s.disclaimer}`,
-      `Source data as of ${s.sourceDate || 'n/a'}; frozen ${s.frozenAt || 'n/a'}. Scope: ${s.scope}.`,
+      `Source data as of ${s.sourceDate || 'n/a'}; ${s.frozenAt ? `frozen ${s.frozenAt}` : 'not frozen (an export)'}. Scope: ${s.scope}.`,
       'Committed (the Peel rule): a water / wastewater site servicing permit (the whole development) or a building permit (the units it covers), filed or issued. Units are left to build: built units are not in the ledger.',
       ...s.notes,
       'Columns:',
