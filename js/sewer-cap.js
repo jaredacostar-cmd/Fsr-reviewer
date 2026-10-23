@@ -176,15 +176,18 @@
   // criteria, with I&I on its own site area. 'none' = existing only; 'today' = + built since; a year
   // or null (build-out) adds approved and proposed growth as phased in Horizon years; 'committed' =
   // existing + built + the growth the Peel rule commits (a site servicing or building permit, in
-  // approved and in proposed: the commitment ladder; the treatment plants keep MECP D-5-1).
-  function pipeFlow(i, y) {
+  // approved and in proposed: the commitment ladder; the treatment plants keep MECP D-5-1). all: every
+  // load counted whatever the Wastewater loads switches in Layers show (the Sewer designer's Room
+  // downstream: the same answer on every screen).
+  function pipeFlow(i, y, all = false) {
+    const on = k => all || MM().wwOn(k);
     const p = MM().SEW.data.pipes[i], G0 = sewerGrowth(), c = App().state.criteria, E = c.employment;
     const G = y === 'committed' ? { ...G0, approved: G0.cpA, proposed: G0.cpP } : G0;
     let { fa, fp, fb: fy = 1 } = y === 'none' || y === 'today' ? { fa: 0, fp: 0 } : y === 'committed' ? { fa: 1, fp: 1 } : y == null ? { fa: 1, fp: 1 } : MA().hzFrac(y);
-    const fb = (y === 'none' ? 0 : fy) * (MM().wwOn('built') ? 1 : 0);
-    if (!MM().wwOn('approved')) fa = 0; if (!MM().wwOn('proposed')) fp = 0;
+    const fb = (y === 'none' ? 0 : fy) * (on('built') ? 1 : 0);
+    if (!on('approved')) fa = 0; if (!on('proposed')) fp = 0;
     const M = App().state.svcModel, f = M && M.fOf ? M.fOf(MM().SEW.data.plants[p[6]]) || 1 : 1;
-    const exist = MM().wwOn('existing') ? p[4] * c.wastewater.avg / 86400 * f * D.residentialPeaking(p[4], c.wastewater) : 0;
+    const exist = on('existing') ? p[4] * c.wastewater.avg / 86400 * f * D.residentialPeaking(p[4], c.wastewater) : 0;
     const gp = fb * G.built.pop[i] + fa * G.approved.pop[i] + fp * G.proposed.pop[i];
     const gj = fb * G.built.jobs[i] + fa * G.approved.jobs[i] + fp * G.proposed.jobs[i];
     const gh = fb * G.built.ha[i] + fa * G.approved.ha[i] + fp * G.proposed.ha[i];
@@ -201,9 +204,9 @@
   const pipeColour = r => r == null || isNaN(r) ? token('--nodata') : token((MM().PIPE_CLS.find(([t]) => r * 100 < t) || MM().PIPE_CLS[MM().PIPE_CLS.length - 1])[1]);
   // Phase 4: an explicit year (null = build-out) lets the "Tightest pipes" section rank
   // pipes at build-out whatever the scenario year is; existing callers keep capYear.
-  function pipeStats(i, y) {
+  function pipeStats(i, y, all = false) {
     const p = MM().SEW.data.pipes[i], cap = p[2];
-    const today = pipeFlow(i, 'today'), then = pipeFlow(i, y === undefined ? MA().getCapYear() : y);
+    const today = pipeFlow(i, 'today', all), then = pipeFlow(i, y === undefined ? MA().getCapYear() : y, all);
     // A published slope under 0.01% (6 trunks, e.g. a 3048 mm main at 0.002%) is a data error,
     // not a flat pipe: its capacity isn't trusted (shown as no reliable slope, like a missing one).
     const ok = cap && p[1] >= 0.0001;
