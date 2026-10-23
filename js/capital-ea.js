@@ -536,13 +536,16 @@
 
   // ---- Exports: GeoJSON for both layers; sheets for the workbook (js/exports.js). No people. ----------
   const exportProps = () => ({ ...(U.DISCLAIMER_PROPS || {}), generated: new Date().toISOString() });
+  // The collections (null until loaded); the shapefile export (js/exports.js) uses them too.
+  const consGeoJSON = () => (data.capital ? M.capitalGeoJSON(data.capital.records, { ...exportProps(), asOf: data.capital.source && data.capital.source.latestLastUpdate }) : null);
+  const easGeoJSON = () => (data.eas ? M.easGeoJSON(data.eas.eas, { ...exportProps(), asOf: data.eas.generatedAt }) : null);
   function exportConsGeoJSON() {
     if (!data.capital || !window.PeelExports) return;
-    window.PeelExports.download('peel-capital-projects.geojson', JSON.stringify(M.capitalGeoJSON(data.capital.records, { ...exportProps(), asOf: data.capital.source && data.capital.source.latestLastUpdate })), 'application/geo+json');
+    window.PeelExports.download('peel-capital-projects.geojson', JSON.stringify(consGeoJSON()), 'application/geo+json');
   }
   function exportEasGeoJSON() {
     if (!data.eas || !window.PeelExports) return;
-    window.PeelExports.download('peel-environmental-assessments.geojson', JSON.stringify(M.easGeoJSON(data.eas.eas, { ...exportProps(), asOf: data.eas.generatedAt })), 'application/geo+json');
+    window.PeelExports.download('peel-environmental-assessments.geojson', JSON.stringify(easGeoJSON()), 'application/geo+json');
   }
   const workbookSheets = () => [
     ...(data.capital ? [['Capital', capitalRows(null)], ['Capital to check', M.watchSheetRows(M.watchList({ capital: data.capital, eas: (data.eas && data.eas.eas) || [], contracts: data.contracts, today: today(), asOf: capAsOf() }), capAsOf())]] : []),
@@ -558,6 +561,6 @@
 
   // Stage 1 #9: a DC project's status in the capital records (null when it has no record).
   const dcStatusOf = proj => (proj && data.capital ? dcIndex().get(proj) || null : null);
-  const api = { projectsPanelSpec, easPanelSpec, siteEaCount, siteBriefCount, siteBriefFor, siteBriefText, siteBriefHTML, watchList, dcStatusOf, statusText: s => M.statusLabel(s), renderEaTab, eaTabHTML, renderIfChanged, exportConsGeoJSON, exportEasGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
+  const api = { projectsPanelSpec, easPanelSpec, siteEaCount, siteBriefCount, siteBriefFor, siteBriefText, siteBriefHTML, watchList, dcStatusOf, statusText: s => M.statusLabel(s), renderEaTab, eaTabHTML, renderIfChanged, exportConsGeoJSON, exportEasGeoJSON, consGeoJSON, easGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
   root.PeelCapitalEA = api;
 })(typeof window !== 'undefined' ? window : globalThis);

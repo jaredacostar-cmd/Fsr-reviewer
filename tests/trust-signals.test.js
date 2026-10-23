@@ -31,7 +31,7 @@ test('every CSV, GeoJSON and model file carries the disclaimer, the note and the
   assert.deepEqual(Object.keys(U.DISCLAIMER_PROPS), ['disclaimer', 'screening', 'criteria']);
   const ex = src('js/exports.js');
   assert.match(ex, /function exportDevsCSV\(list, name = 'peel-developments\.csv'\) \{[\s\S]*?download\(name, CSV_DISCLAIMER \+/);
-  assert.equal((ex.match(/\.\.\.DISCLAIMER_PROPS/g) || []).length, 2, 'developments and servicing-area GeoJSON');
+  assert.equal((ex.match(/\.\.\.DISCLAIMER_PROPS/g) || []).length, 3, 'developments and servicing-area GeoJSON, shapefile README.txt');
   assert.match(src('js/dc-infra.js'), /properties: \{ \.\.\.window\.PeelUtil\.DISCLAIMER_PROPS/);
   assert.match(src('js/demand-ui.js'), /\.csv`, root\.PeelUtil\.CSV_DISCLAIMER \+ lines/);
   assert.match(src('js/tools-corridor.js'), /window\.PeelUtil\.CSV_DISCLAIMER\) \|\| ''\) \+ rows/);
