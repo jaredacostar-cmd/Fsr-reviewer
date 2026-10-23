@@ -64,15 +64,15 @@ test('unit mix columns are detected and carried to the project', () => {
   assert.deepEqual(D.unitSplit(p), { single: 4, town: 6, apartment: 200, unknown: 0 });
 });
 
-test('committed capacity: growth (planned on an application) that is approved or permitted, not yet completed', () => {
+test('MECP D-5-1 (d51): growth (planned on an application) that is approved or permitted, not yet completed', () => {
   const bo = (planned, permitted, completed) => ({ planned, permitted, completed, remaining: Math.max(0, planned - permitted), unbuilt: Math.max(planned, permitted) - completed });
   const p = (phase, units, buildout) => ({ phase, units, buildout, types: ['Townhouse'], description: '' });
-  assert.equal(D.unitsFor(p('review', 300, bo(300, 0, 0)), 'committed'), 0, 'under review is proposed, not committed');
-  assert.equal(D.unitsFor(p('approved', 300, bo(300, 0, 0)), 'committed'), 300);
-  assert.equal(D.unitsFor(p('construction', 300, bo(300, 120, 50)), 'committed'), 250);
-  assert.equal(D.unitsFor(p('permit', 4, null), 'committed'), 0, 'a permit with no planning application is not growth');
-  assert.equal(D.unitsFor(p('completed', 4, null), 'committed'), 0);
-  assert.equal(D.unitsFor(p('cancelled', 40, null), 'committed'), 0);
+  assert.equal(D.unitsFor(p('review', 300, bo(300, 0, 0)), 'd51'), 0, 'under review is proposed, not committed');
+  assert.equal(D.unitsFor(p('approved', 300, bo(300, 0, 0)), 'd51'), 300);
+  assert.equal(D.unitsFor(p('construction', 300, bo(300, 120, 50)), 'd51'), 250);
+  assert.equal(D.unitsFor(p('permit', 4, null), 'd51'), 0, 'a permit with no planning application is not growth');
+  assert.equal(D.unitsFor(p('completed', 4, null), 'd51'), 0);
+  assert.equal(D.unitsFor(p('cancelled', 40, null), 'd51'), 0);
 });
 
 test('I&I: 0.26 L/s/ha on the site area, prorated by units; estimated from units without a boundary', () => {
@@ -113,7 +113,8 @@ test('employment counted by phase and added to residential', () => {
   assert.equal(all.employment.jobs, 700);
   assert.equal(all.employment.area.ha, 10);
   assert.ok(Math.abs(all.employment.wastewater.infiltration - 2.6) < 1e-9);
-  assert.equal(D.estimate([ind, done], D.DEFAULT_CRITERIA, 'committed', jobsOf).employment.jobs, 500);
+  assert.equal(D.estimate([ind, done], D.DEFAULT_CRITERIA, 'd51', jobsOf).employment.jobs, 500);
+  assert.equal(D.estimate([ind, done], D.DEFAULT_CRITERIA, 'committed', jobsOf).employment.jobs, 0, 'approved, no permit: not committed (the Peel rule)');
   assert.equal(D.estimate([ind, done], D.DEFAULT_CRITERIA, 'completed', jobsOf).employment.jobs, 200);
   assert.equal(D.estimate([ind, done], D.DEFAULT_CRITERIA, 'remaining', jobsOf).employment.jobs, 500);
   // Without jobsOf, residential only (backwards compatible).

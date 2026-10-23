@@ -42,7 +42,7 @@
     if (G && !on && G.load) G.load();
     return { commit: 'peel', gateOf: on ? p => G.rowOf(p) : null, asOf: snap && snap.generatedAt ? Date.parse(snap.generatedAt) : Date.now() };
   }
-  const BASIS_LABEL = { all: 'all units', committed: 'committed units only (approved, not yet built)', remaining: 'units left to build only (not yet completed)' };
+  const BASIS_LABEL = { all: 'all units', committed: 'committed units only (a site servicing or building permit, not yet built)', remaining: 'units left to build only (not yet completed)' };
   const demandBasis = () => App().state.basis;
   // What the demand covers: the phases picked in the filter panel, then any other filters.
   // (Stage 2: pumping stations are part of Servicing › Network — #pane-pumpstations in index.html.)
@@ -320,7 +320,7 @@
   // ---- Public contract ----
   // Units and people completed before census day (the Existing layer of js/layers.js totals): already
   // in the 2021 Census, so "would add" leaves them out. Only the bases that count completed units take
-  // anything out: every stage ('all') and build-out ('buildout'); approved only ('committed') and left
+  // anything out: every stage ('all') and build-out ('buildout'); committed only ('committed', the Peel rule) and left
   // to build ('remaining') count none.
   const preCensus = (t, basis) => (t && (basis === 'all' || basis === 'buildout') ? { units: (t.units && t.units.existing) || 0, people: (t.people && t.people.existing) || 0 } : { units: 0, people: 0 });
   const api = { allocBoxHTML, commitOpts, preCensus, MUNIS, freshness, validationRows, freshnessHTML, checksHTML, renderQuality, sourcesPageHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, wwTile, miniBar, wwInfoLine, numberConventionsHTML, modelSectionsHTML };

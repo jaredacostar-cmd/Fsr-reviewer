@@ -46,5 +46,5 @@ test('growth: the census context is the filtered area\'s; the largest unbuilt pa
   const pr = src('js/plan-rollup.js');
   assert.match(pr, /const pre = t\.scope === 'total' \? 0 : m\.existing \|\| 0, grow = m\.planned - pre;/);
   assert.match(pr, /pctCommitted: base \? \(m\.committed - pre\) \/ base : null, pctTotal: base \? grow \/ base : null,\n        gap: base \? base - grow : null,/);
-  assert.match(src('js/plan-tables.js'), /existing: t\.planned > 0 \? L\.existing : 0 \};/);
+  assert.match(src('js/plan-tables.js'), /existing: on \? L\.existing : 0 \};/);
 });
