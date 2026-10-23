@@ -1238,7 +1238,14 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .ef-t th { text-align: left; font-weight: 600; padding: 2px 6px 2px 0; border-bottom: 1px solid var(--border); }
 .ef-t .num { text-align: right; white-space: nowrap; }
 .ef-tag { font-size: var(--fs-1); padding: 0 4px; border-radius: 3px; background: color-mix(in srgb, var(--cap-tight) 22%, transparent); }
-.ef .pt-actions { display: flex; flex-wrap: wrap; gap: var(--space-1); margin: var(--space-1) 0; }
+.ef .pt-actions, .ef-units-sect .pt-actions { display: flex; flex-wrap: wrap; gap: var(--space-1); margin: var(--space-1) 0; }
+.ef-sw { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 4px; vertical-align: -1px; }
+.ef-years td.ef-ch { font-weight: 600; }
+.ef-d { display: block; font-size: var(--fs-1); color: var(--text-muted); font-weight: 400; }
+.ef-parcel { margin: var(--space-1) 0; } .ef-parcel > summary { cursor: pointer; }
+.ef-parcel tr.muted td { color: var(--text-muted); }
+.ef-t td:first-child, .ef-t .tr-ref { white-space: nowrap; }
+.leaflet-tooltip.ef-lbl { font-weight: 700; }
 .why-stall { padding: var(--space-1) var(--space-2); border-radius: 4px; background: color-mix(in srgb, var(--cap-tight) 18%, transparent); }
 .c-kind { font-size: var(--fs-1); color: var(--text-muted); }
 .c-out { font-size: var(--fs-1); font-weight: 500; padding: 0 var(--space-2); border-radius: 999px; background: var(--surface-2); }

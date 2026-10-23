@@ -69,3 +69,49 @@ test('yearOfRef', () => {
   assert.equal(EF.yearOfRef('PRE17.035'), 2017);
   assert.equal(EF.yearOfRef('C04W14.009'), null);
 });
+
+test('statedOf: an explicit total adds up its home counts; else the app reading', () => {
+  assert.equal(EF.statedOf(app('PRE-2020-0098', { precUnits: 1055, description: 'Proposal for three (3) stacked townhouse blocks. A total of 36 stacked townhouse units, 1016 residential condominium units, and 850 square metres of retail space are being proposed.' })).units, 1052);
+  assert.equal(EF.statedOf(app('SPA-2022-0225', { description: 'Phased residential development with ground floor commercial uses and total of 1062 units. Revised resubmission.' })).units, 1062);
+  const s = EF.statedOf(app('SP17-105.000', { units: 245, unitsFromText: true, description: 'two 12 storey buildings with 245 units' }));
+  assert.equal(s.units, 245); assert.equal(s.how, 'the description');
+  assert.equal(EF.statedOf(app('SP16-088.000', { description: 'NEW COMMERCIAL PLAZA' })).units, null);
+});
+
+test('revisionOf: a count changed inside a description', () => {
+  const r = EF.revisionOf(app('SPA-2022-0225', { description: 'Total of 1062 units. Revised resubmission for phase 1 includes reduction in units proposed for Tower B (from 353 to 298) and modifications.' }));
+  assert.deepEqual([r.from, r.to, r.delta], [353, 298, -55]);
+  assert.equal(EF.revisionOf(app('X', { description: 'Parking changed from 3 to 1 levels.' })), null);
+});
+
+test('unitsOverTime: parcels by land, the latest count on a parcel stands, parcels add up, built from permits', () => {
+  const base = app('SP83-006.000', { statusRaw: 'Transferred', poly: sq(0, 0, 0.02, 0.01) });
+  // Parcel 1: townhouses, built in 2016, the condominium filed after.
+  const th = app('C04W14.009', { stage: 'condo', units: 195, events: [ev('2017-06-22')], poly: sq(0.001, 0.001, 0.006, 0.009) });
+  const permit = (lng, lat, at) => ({ uid: `bp${at}${lng}`, kind: 'permit', municipality: 'Brampton', lng, lat, phase: 'completed', type: 'Residential', description: 'New townhouse dwelling', events: [ev(at)] });
+  // Parcel 2: a plaza, then towers proposed: the latest count stands, a resubmission changes it.
+  const plaza = app('SP16-088.000', { events: [ev('2016-11-29')], description: 'NEW COMMERCIAL PLAZA', poly: sq(0.012, 0.001, 0.019, 0.009) });
+  const precon = app('PRE-2020-0098', { stage: 'precon', phase: 'inception', precUnits: 1055, events: [ev('2020-08-18')], poly: sq(0.012, 0.001, 0.018, 0.009), description: 'A total of 36 stacked townhouse units, 1016 residential condominium units.' });
+  const inactive = app('PRE18.001', { stage: 'precon', phase: 'cancelled', statusRaw: 'Inactive', precUnits: 190, events: [ev('2018-01-19')], poly: sq(0.012, 0.001, 0.019, 0.009) });
+  const towers = app('SPA-2022-0225', { events: [ev('2022-12-16')], poly: sq(0.013, 0.002, 0.018, 0.008), description: 'Residential towers, total of 1062 units. Reduction in units for Tower B (from 353 to 298).' });
+  // A pre-consultation over both parcels sets no count.
+  const wide = app('PRE17.035', { stage: 'precon', phase: 'inception', precUnits: 400, events: [ev('2017-04-12')], poly: sq(0.003, 0.002, 0.016, 0.008) });
+  const p = { key: 'a', title: 'Townhouses', units: 195, records: [base, th, permit(0.003, 0.005, '2016-06-06')] };
+  const q = { key: 'b', title: 'Towers', units: 1055, records: [plaza, precon, inactive, towers] }, w = { key: 'c', title: 'W', units: 0, records: [wide] };
+  const u = EF.unitsOverTime(p, [p, q, w], Date.UTC(2026, 9, 23));
+  assert.equal(u.parcels.length, 2);
+  const on = r => u.parcels.find(pc => pc.files.some(x => x.r === r)), A = on(th), B = on(plaza);
+  assert.equal(A.count, 195); assert.equal(A.built.year, 2016);
+  assert.equal(B.count, 1007); assert.equal(B.total.units, 1062); assert.equal(B.built, null);
+  assert.ok(B.steps.find(s => s.r === inactive && !s.counted), 'an inactive file does not count');
+  assert.deepEqual(u.spans.map(s => s.x.r.ref), ['PRE17.035']);
+  const y = Object.fromEntries(u.years.map(r => [r.year, r]));
+  assert.equal(y[2016].land, 195, 'built before its condominium file: the homes stand from 2016');
+  assert.equal(y[2020].land, 195 + 1052);
+  assert.equal(y[2022].land, 195 + 1007);
+  assert.equal(y[2026].built, 195);
+  const text = u.flags.map(f => f.text).join('\n');
+  assert.match(text, /the app counts 1,055 homes; the latest file states 1,062, ≈1,007 after its resubmission/);
+  assert.match(text, /PRE-2020-0098 states 1,052 \(the total stated\); the app reads 1,055/);
+  assert.match(EF.unitsSummary(u), /^195 homes built on 1 parcel .*≈1,007–1,062 more on parcel/);
+});

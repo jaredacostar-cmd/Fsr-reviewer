@@ -57,7 +57,17 @@ C04W14.001–.008, a file or registered plan named in a description, a legacy "T
 dates) and lists every planning file with at least half its land inside the site's widest file, on
 this site or another, with what differs (later files reaching past the original land, the homes
 stated against the homes counted). *Look up the earlier files* fetches them live with no date filter;
-*Show the layers on the map* draws the original land, the later files and the earlier ones.
+*Show the layers on the map* draws the original land, each parcel in its colour with its homes, and the earlier ones.
+
+**Units on the land over time** (the development's Growth tab, *Units on this land over time*). The files on
+the original land fall into parcels by their land: a file at least half inside another of no more than
+3× its size is the same parcel; a pre-consultation over several parcels sets no count. On a parcel the
+latest file stating a count replaces the earlier ones (a withdrawn or inactive file doesn't count), and
+parcels add up; a parcel is built when its new-dwelling permits (from 3 years before the file that set
+its count) are all closed. The table gives each parcel's count at the end of each year, the land's
+total and what is built, then each parcel's files with the count each states, and flags where the
+app's count differs from the latest file, a site plan and its condominium disagree, or a description
+changes a count (a resubmission).
 
 ## Run it
 
