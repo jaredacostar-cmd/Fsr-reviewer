@@ -711,6 +711,11 @@
     // (units exact; people and jobs to the nearest hundred, as Home and the panels: one rounding rule)
     const m = n.m, n0 = v => fmtNum(Math.round(v)), p0 = v => fmtNum(U.roundPop ? U.roundPop(v) : Math.round(v));
     const anb = stage ? stage.rows.filter(x => x.key === 'approved' || x.key === 'permitted').reduce((t, x) => t + x.units, 0) : 0;
+    // What's coming (Growth › Ledger) counts these as committed + approved, and adds the units the Peel
+    // rule commits ahead of planning approval: in review here, with a site servicing or building permit.
+    const LGr = root.PeelLedger, DUi = root.PeelDemandUI, co = DUi && DUi.commitOpts ? DUi.commitOpts() : null;
+    const ahead = LGr && LGr.aheadOfApproval && co ? items.reduce((t, { p, share }) => t + LGr.aheadOfApproval(p, co.gateOf ? co.gateOf(p) : null, co.asOf) * share, 0) : 0;
+    const aheadCtx = ahead >= 0.5 ? ` · What’s coming adds ${n0(ahead)} in review with a permit to its committed + approved` : '';
     const f2031 = atPeel && tm && tm.figures ? tm.figures.find(f => /2031/.test(f.label)) : null;
     // The next level down (municipalities, plans, precincts and sub-areas), each opening its own level.
     const kids = n.children.filter(c => c.m.planned >= 0.5 || c.m.jobs >= 0.5).sort((x, y) => y.m.planned - x.m.planned);
@@ -802,7 +807,7 @@
       figures: [
         // (units and jobs at the Scenario's counting basis, as the people and the Overview: one basis)
         basis === 'all' ? { v: n0(m.planned), u: 'units', label: 'planned', ctx: `${n0(m.left)} left to build` } : { v: n0(m.counted), u: 'units', label: G.basisUnits(basis), ctx: `of ${n0(m.planned)} planned` },
-        { v: n0(anb), u: 'units', label: 'approved, not yet built', ctx: 'past their first planning approval' },
+        { v: n0(anb), u: 'units', label: 'approved, not yet built', ctx: `past their first planning approval${aheadCtx}` },
         { v: p0(m.people), u: 'people', label: 'at build-out', ctx: 'Peel design criteria' },
         basis === 'all' ? { v: p0(emp.jobs >= 0.5 ? emp.jobs : m.jobs), u: 'jobs', label: 'employment', ctx: emp.planned >= 1 ? `${n0(emp.planned)} m² of floor area` : 'no employment floor area stated' } : { v: p0(m.jobs), u: 'jobs', label: 'employment', ctx: G.basisUnits(basis) },
       ],
@@ -815,7 +820,7 @@
         ...(atPeel ? (pl.lists || []).filter(l => /municipality/i.test(l.title)) : []),
       ],
       map: { svg: mapSvg, attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' }, label: `Show ${n.name} on the map`, caption: ring ? `<span class="hm-key hm-key-area"></span> ${esc(n.name)} <span class="hm-key hm-key-dev"></span> its developments (sized by units)` : '<span class="hm-key hm-key-dev"></span> developments of 50+ units (sized by units) · municipal outlines', after: treemap },
-      method: `${pl.method} Drill-down: Growth › Areas' plan tree (Peel, municipality, secondary plan or character area, precinct or sub-area, then "not in a plan" and "elsewhere in the plan"); every level equals the sum of the levels under it, and a site split between plans counts its share. The stages follow a file: pre-application (pre-consultation, block or precinct plan), in review, approved (draft or site plan approved; split on whether its building permits are issued), built since the 2021 census. Estimated counts: a file's units left to build that are not stated on it (found online, a pre-consultation estimate, an estimate from the wording, or counted from building permits), the hatching on the stage bars. A file with more than one kind of estimate has its estimate split between the kinds in proportion to their units. Employment: the floor area the applications state and the jobs it holds at Peel's floor space per job.${tm && atPeel ? ` ${tm.method}` : ''}`,
+      method: `${pl.method} Drill-down: Growth › Areas' plan tree (Peel, municipality, secondary plan or character area, precinct or sub-area, then "not in a plan" and "elsewhere in the plan"); every level equals the sum of the levels under it, and a site split between plans counts its share. The stages follow a file: pre-application (pre-consultation, block or precinct plan), in review, approved (draft or site plan approved; split on whether its building permits are issued), built since the 2021 census. Approved, not yet built follows MECP D-5-1 (the planning stage); What’s coming’s committed + approved follows the Peel rule, which also commits a development still in review once it has a site servicing permit (the whole development) or a building permit (the units it covers), so it is larger by those units (named under the figure). Estimated counts: a file's units left to build that are not stated on it (found online, a pre-consultation estimate, an estimate from the wording, or counted from building permits), the hatching on the stage bars. A file with more than one kind of estimate has its estimate split between the kinds in proportion to their units. Employment: the floor area the applications state and the jobs it holds at Peel's floor space per job.${tm && atPeel ? ` ${tm.method}` : ''}`,
       sources: pl.sources,
       actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'Show on the map', attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } }, !atPeel ? { label: '↑ Up a level', attrs: { 'data-ws-drill': n.parent || 'peel' } } : null] });
   }

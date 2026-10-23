@@ -71,6 +71,18 @@
     return p.phase === 'review' ? 'review' : 'early';
   }
 
+  // Units the Peel rule commits ahead of planning approval: a development still in review or earlier
+  // (not MECP D-5-1 committed) with a site servicing or building permit. They are the gap between the
+  // ledger's committed + approved and Growth in an area's "approved, not yet built" (D-5-1), which
+  // keeps them in review; both pages say so. As rows(): a lapsed servicing permit commits nothing.
+  function aheadOfApproval(p, gate = null, asOf = Date.now()) {
+    const D = Dm();
+    if (!p || p.phase === 'cancelled' || p.phase === 'completed' || D.isCommitted(p)) return 0;
+    const c = D.committedPeelUnits(p, gate);
+    if (c.by === 'servicing') { const l = lapseOf(gate, D.buildingPermitsOf(p), asOf); if (l && l.why === 'old') return 0; }
+    return c.units;
+  }
+
   // Shares of a development's homes in each milestone bucket, from { year: units } (any scale; a
   // forecast that times only some of them leaves the rest after 2051 or not timed). after: units the
   // forecast places beyond its last year; total: what the forecast set out to time (0: none).
@@ -177,6 +189,8 @@
         stage: p.phase, stageDate: ymd(ms[p.phase]),
         committedPeel: D.isCommittedPeel(p, gate), committedD51: D.isCommitted(p),
         commitBy: c.by, unitsEstimated: c.estimated,
+        // (committed ahead of planning approval: in Growth in an area's "In review", not its approved)
+        aheadOfApproval: aheadOfApproval(p, gate, asOf),
         capacityStage: STAGES.find(s => units[s] > 0) || rest,
         registered: { yes: reg.length > 0, date: regDate.length ? ymd(Math.max(...regDate)) : null },
         servicing: { bucket: gate ? gate.bucket : null, applied: gate ? gate.servicingApplied || null : null, issued: sspIssued[0] || null },
@@ -288,7 +302,7 @@
     return t;
   }
 
-  const api = { TIERS, QUIET_YEARS, opaOnly, tierOf, STAGES, STAGE_LABEL, CUTOFFS, BUCKETS, LAPSE_YEARS, DISCLAIMER, lapseOf, bucketShares, bucketOf, rows, rollup, sumOf, totals };
+  const api = { TIERS, QUIET_YEARS, opaOnly, tierOf, STAGES, STAGE_LABEL, CUTOFFS, BUCKETS, LAPSE_YEARS, DISCLAIMER, lapseOf, aheadOfApproval, bucketShares, bucketOf, rows, rollup, sumOf, totals };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLedger = api;
 })(typeof window !== 'undefined' ? window : globalThis);
