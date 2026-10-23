@@ -22,7 +22,7 @@ const fs = require('fs');
 const path = require('path');
 const { execFileSync } = require('child_process');
 
-const MAX_PAGES = 120, MAX_MB = 60;
+const MAX_PAGES = 120, MAX_MB = 250;
 
 // ---- Reading a report --------------------------------------------------------------------------
 const SUFFIX = 'Road|Rd|Street|St|Avenue|Ave|Drive|Dr|Boulevard|Blvd|Way|Crescent|Cres|Lane|Ln|Line|Sideroad|Side Road|Parkway|Pkwy|Court|Ct|Trail|Gate|Circle|Place|Pl|Terrace|Highway|Hwy';
@@ -32,9 +32,14 @@ const OUTLET_VERB = /\b(connect\w*|discharg\w*|outlet\w*|convey\w*|tie[sd]?[- ]i
 const OFF = /\b(storm(?:water)?|watermain|water\s*main|domestic water|fire\s*(?:line|service)|swm|culvert|catch\s*basin)\b/i;
 const INTERNAL = /\b(internal|on-?site|private|within the (?:site|subject|development)|proposed internal)\b/i;
 const sentences = page => page.replace(/-\n(?=[a-z])/g, '').replace(/\s*\n\s*/g, ' ').split(/(?<=[.;:])\s+(?=[A-Z(])/).map(s => s.trim()).filter(s => s.length > 25 && s.length < 700);
+// No municipal sewer: a septic system or other private sewage system.
+const SEPTIC = /\bseptic\b|private (?:sewage|wastewater)|subsurface (?:disposal|sewage)|no municipal sanitary|tertiary treatment|on-?site sewage/i;
 function score(s) {
-  if (!/\bsanitary\b/i.test(s)) return 0;
+  if (!/\bsanitary\b/i.test(s) && !SEPTIC.test(s)) return 0;
   let v = 2;
+  // (a drawing legend, a statistics block or a flow table read as one long run of text)
+  if (/\bDENOTES\b|\bSTATISTICS\b|FLOW CALCULATIONS|References\/Notes/.test(s) || (s.match(/\b[A-Z]{3,}\b/g) || []).length > 12) v -= 4;
+  if (s.length > 450) v -= 1;
   if (OUTLET_VERB.test(s)) v += 3;
   if (/\bsewers?\b/i.test(s)) v += 1;
   if (/\d{3,4}\s*(?:mm|millimet)/i.test(s)) v += 2;
@@ -46,17 +51,39 @@ function score(s) {
   if (/\bL\/s\b|\bpeak\b|\bpopulation\b|\bper capita\b|\bdesign flow/i.test(s)) v -= 1;
   return v;
 }
-// The outlet a sentence names: { mm, street, status, mh, project }.
+// The outlet a sentence names: { mm, street, status, mh, project } (status 'septic': no municipal sewer).
+// The size: of the sewer flows go TO (after "connect to", "discharge to", "existing …"), before the
+// words sanitary / sewer / trunk; not a site's lateral or service connection, a watermain or a storm pipe.
+// The street: the one the sewer is on / along / within, after that size first.
+const WORDS = 'Stormwater|Management|Report|Servicing|Functional|Preliminary|Final|Planning|Received|Sanitary|Storm|Sewer|Sewers|Trunk|Existing|Proposed|Future|Municipal|Local|The|An?|To|And|Of|Town|City|Region|Drawing|Appendix|Table|Section|Figure|Plan|Site';
+const LEAD = new RegExp(`^(?:(?:${WORDS}|Regional(?!\\s+Road\\s*\\d)|[A-Z]{2,}(?=\\s+[A-Z][a-z]))\\s+)+`);
 function readOutlet(s) {
-  const at = s.search(/\bsanitary\b/i);
-  const sizes = [...s.matchAll(MM)].map(m => ({ mm: +m[1], i: m.index })).filter(m => m.mm >= 100 && m.mm <= 3600);
-  // (the size nearest the word "sanitary", after it first)
-  const mm = sizes.length ? sizes.sort((a, b) => Math.abs(a.i - at) - Math.abs(b.i - at))[0].mm : null;
-  const streets = [...s.matchAll(STREET)].map(m => m[0].replace(/^(?:(?:The|An?|Existing|Proposed|Future|Regional(?!\s+Road\s*\d)|Municipal|Sanitary|Sewer|Trunk)\s+)+/i, '').trim()).filter(x => !/^(?:Functional|Servicing|Sanitary|Storm|Region|Town|City)\b/i.test(x));
-  const status = /\b(future|planned|proposed (?:regional|trunk))\b/i.test(s) ? 'future' : /\bexisting\b/i.test(s) ? 'existing' : /\bproposed\b/i.test(s) ? 'proposed' : null;
+  const sizes = [...s.matchAll(MM)].map(m => ({ mm: +m[1], i: m.index, end: m.index + m[0].length })).filter(m => m.mm >= 100 && m.mm <= 3600).map(m => {
+    const before = s.slice(Math.max(0, m.i - 60), m.i), after = s.slice(m.end, m.end + 45);
+    let v = 0;
+    if (/^\s*(?:\w+\s+){0,3}?(sanitary|san\b|sewer|trunk)/i.test(after)) v += 2;
+    if (/(connect\w*|discharg\w*|outlet\w*|convey\w*|tie[sd]?[- ]in|drain\w*|carried by|serviced by|available from|discharging to|connection to)\s+(?:\w+\s+){0,4}$/i.test(before)) v += 3;
+    if (/\b(existing|future|ultimate)\s+(?:\w+\s+){0,2}$/i.test(before)) v += 2;
+    if (/^\s*(?:\w+\s+){0,3}?(service\s+(?:connection|lateral)|lateral|watermain|water\s*main|storm|forcemain|force\s*main|culvert|CSP|catch)/i.test(after)) v -= 4;
+    if (/\b(internal|local|on-?site|private|new)\s+(?:\w+\s+){0,1}$/i.test(before)) v -= 2;
+    // (further down the chain: "…, which drains to a 375 mm sewer", "ultimately to the 1200 mm trunk")
+    if (/\b(which|that)\s+(drains?|flows?|discharges?|conveys?|connects?)\b|\bdownstream\b|\bultimate(?:ly)?\b|\bvia twin\b/i.test(before)) v -= 3;
+    return { ...m, v };
+  });
+  const best = sizes.sort((a, b) => b.v - a.v || a.i - b.i)[0] || null, mm = best && best.v > -2 ? best.mm : null;
+  const clean = x => x.replace(LEAD, '').trim();
+  const streets = [...s.matchAll(STREET)].map(m => ({ name: clean(m[0]), i: m.index, prep: /\b(on|along|within|in|at|of|fronting|beneath|under|across)\s+(?:the\s+)?(?:existing\s+|future\s+)?$/i.test(s.slice(Math.max(0, m.index - 22), m.index)) }))
+    .filter(x => x.name && !/^(?:Functional|Servicing|Sanitary|Storm|Region|Town|City|Report|Management)\b/i.test(x.name) && /\s/.test(x.name));
+  const from = best ? best.i : 0;
+  const street = (streets.find(x => x.prep && x.i >= from) || streets.find(x => x.prep) || streets.find(x => x.i >= from) || streets[0] || {}).name || null;
+  // (the status written next to the sewer: "existing 250 mm sanitary sewer", "the future trunk")
+  const near = w => new RegExp(`\\b${w}\\s+(?:\\S+\\s+){0,6}?(sanitary|san\\b|sewer|trunk)`, 'i').test(s);
+  const septic = SEPTIC.test(s) && (!/\bsanitary sewer\b/i.test(s) || /\bno (?:municipal )?sanitary\b/i.test(s));
+  if (septic) return { mm: null, street: null, status: 'septic', mh: null, project: null };
+  const status = septic ? 'septic' : near('(?:future|planned|ultimate)') ? 'future' : near('existing') ? 'existing' : near('proposed') ? 'proposed' : null;
   const mh = (/\b(?:MH|SMH|manhole)\s*(?:no\.?|#)?\s*-?\s*([A-Z]?\d+[A-Z]?)\b/i.exec(s) || [])[1] || null;
   const project = (/\b(\d{2}-\d{4})\b/.exec(s) || [])[1] || null;
-  return { mm, street: streets[0] || null, status, mh, project };
+  return { mm, street, status, mh, project };
 }
 // A report's text (pages split by form feeds) → { outlet, quotes: [{ page, text, score }], confidence } | null.
 function findOutlet(text, keep = 3) {
@@ -66,7 +93,7 @@ function findOutlet(text, keep = 3) {
   // (the same sentence repeated (an executive summary and its section): once, at its first page)
   const seen = new Set(), quotes = found.sort((a, b) => b.score - a.score || a.page - b.page).filter(q => { const k = q.text.toLowerCase().replace(/\W+/g, ' ').slice(0, 120); if (seen.has(k)) return false; seen.add(k); return true; }).slice(0, keep);
   const outlet = readOutlet(quotes[0].text);
-  const confidence = quotes[0].score >= 10 && outlet.mm && outlet.street ? 'high' : quotes[0].score >= 8 && (outlet.mm || outlet.street) ? 'medium' : 'low';
+  const confidence = outlet.status === 'septic' ? (quotes[0].score >= 5 ? 'medium' : 'low') : quotes[0].score >= 10 && outlet.mm && outlet.street ? 'high' : quotes[0].score >= 8 && (outlet.mm || outlet.street) ? 'medium' : 'low';
   return { outlet, quotes, confidence };
 }
 

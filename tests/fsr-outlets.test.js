@@ -14,6 +14,16 @@ test('readOutlet: size, street, status, manhole, Region project', () => {
   assert.equal(f.status, 'future'); assert.equal(f.project, '25-2267'); assert.equal(f.mm, 525);
   assert.equal(readOutlet('The site will discharge to the existing sanitary sewer on Hurontario Street North.').street, 'Hurontario Street North');
   assert.equal(readOutlet('Flows discharge to the 300 mm sanitary sewer on Regional Road 50.').street, 'Regional Road 50');
+  // (from real reports) the receiving sewer, not the site's lateral, nor one further down the chain
+  assert.equal(readOutlet('Sanitary servicing will be provided by connection a new 150 mm diameter sanitary service lateral to the existing 200 mm sanitary sewer on Shore Street.').mm, 200);
+  const chain = readOutlet('Along the south property frontage, there is an existing 300 mm diameter sanitary sewer extended within Highwood Road, which drains to a 375 mm sanitary sewer immediately downstream of the site.');
+  assert.equal(chain.mm, 300); assert.equal(chain.street, 'Highwood Road');
+  assert.equal(readOutlet('The site will be serviced by local 250 mm sanitary sewers that is proposed to connect to the 1200 mm Kennedy sewer.').mm, 1200);
+  // a report title is not a street
+  assert.equal(readOutlet('Preliminary Functional Servicing and Stormwater Management Report Jack Kenny Court, Bolton. There is an existing 250 mm sanitary sewer on Jack Kenny Court.').street, 'Jack Kenny Court');
+  // no municipal sewer
+  assert.equal(readOutlet('A 150mm watermain on Barbara Place. Sanitary No municipal sanitary sewer system is available in this part of the Town and all lots are provided with individual septic system.').status, 'septic');
+  assert.equal(readOutlet('A septic system is proposed for the sanitary servicing of the gas station.').status, 'septic');
 });
 
 test('findOutlet: the outlet sentence over storm, water, internal pipes and flow calculations', () => {

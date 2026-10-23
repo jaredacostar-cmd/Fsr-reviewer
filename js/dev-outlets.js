@@ -109,6 +109,7 @@
   function fsrCheck(f, c) {
     if (!f || !f.outlet || !c) return null;
     const o = f.outlet, pg = f.quotes && f.quotes[0] ? ` (p. ${f.quotes[0].page})` : '', said = [o.mm ? `${o.mm} mm` : '', o.street ? `on ${o.street}` : '', o.project || ''].filter(Boolean).join(' ') || 'an outlet';
+    if (o.status === 'septic') return { k: 'fsr', tone: 'warn', text: `The FSR says a septic system, no municipal sewer${pg}` };
     if (o.project && c.project === o.project) return { k: 'fsr', tone: 'ok', text: `The FSR names this project${pg}` };
     const mm = o.mm && c.mm ? o.mm === c.mm : null, st = o.street && c.street ? normStreet(o.street) === normStreet(c.street) : null;
     if (mm === null && st === null) return { k: 'fsr', tone: 'unk', text: `The FSR names ${said}${pg}` };

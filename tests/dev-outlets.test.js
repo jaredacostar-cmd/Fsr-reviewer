@@ -151,6 +151,7 @@ test('fsrCheck: does an outlet match what the FSR says', () => {
   assert.equal(tone(f({ mm: 250, street: null }), { kind: 'sewer', mm: 250, street: null }), 'ok');
   assert.equal(tone(f({ mm: null, street: 'Mayfield Road', project: '25-2267' }), { kind: 'dc', project: '25-2267' }), 'ok', 'the same Region project');
   assert.equal(tone(f({ mm: 525, street: 'Mayfield Road' }), { kind: 'dc', mm: null, street: null, project: '28-2139' }), 'unk', 'nothing to compare');
+  assert.equal(tone(f({ status: 'septic' }, 'medium'), { kind: 'sewer', mm: 250, street: 'Dixie Road' }), 'warn', 'the FSR says septic');
   assert.equal(fsrCheck(null, { kind: 'sewer' }), null);
 });
 
