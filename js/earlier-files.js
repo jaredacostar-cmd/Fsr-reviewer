@@ -331,9 +331,17 @@
     }
     // What disagrees.
     const flags = [];
+    // A development holding several parcels (one application, merged) counts them together: one
+    // land-wide comparison, not one per parcel.
+    const ownsMany = d => parcels.filter(pc => pc.app && pc.app.dev === d).length > 1;
+    const shared = [...new Set(parcels.map(pc => pc.app && pc.app.dev).filter(d => d && ownsMany(d)))];
+    for (const d of shared) {
+      const land = parcels.filter(pc => pc.app && pc.app.dev === d).reduce((t, pc) => t + (pc.count || 0), 0);
+      flags.push({ kind: (d.units || 0) === land ? 'info' : 'warn', parcel: null, text: `${d.title || d.key} is one development for its ${parcels.filter(pc => pc.app && pc.app.dev === d).length} parcels: it counts ${num(d.units || 0)} homes; the parcels' latest files add up to ${num(land)}.` });
+    }
     for (const pc of parcels) {
       const L = `${pc.letter} (${pc.name})`;
-      if (pc.app && pc.count != null && pc.app.units !== pc.count && pc.app.units !== pc.stated) flags.push({ kind: 'warn', parcel: pc.letter, text: `${L}: the app counts ${num(pc.app.units)} homes; the latest files state ${num(pc.stated)}${pc.stated !== pc.count ? `, ≈${num(pc.count)} after ${pc.steps.some(x => x.revised) ? 'its resubmission' : 'later additions'}` : ''}.` });
+      if (pc.app && !shared.includes(pc.app.dev) && pc.count != null && pc.app.units !== pc.count && pc.app.units !== pc.stated) flags.push({ kind: 'warn', parcel: pc.letter, text: `${L}: the app counts ${num(pc.app.units)} homes; the latest files state ${num(pc.stated)}${pc.stated !== pc.count ? `, ≈${num(pc.count)} after ${pc.steps.some(x => x.revised) ? 'its resubmission' : 'later additions'}` : ''}.` });
       if (pc.devs.length > 1) flags.push({ kind: 'warn', parcel: pc.letter, text: `${L}: its files are split across ${pc.devs.length} developments in the app (${pc.devs.map(d => `${d.title || d.key}, ${num(d.units || 0)}`).join('; ')}): open any of them to see the whole land here.` });
       const sp = pc.steps.filter(s => s.counted && !s.revised && s.r.stage === 'siteplan').pop(), co = pc.steps.filter(s => s.counted && s.r.stage === 'condo').pop();
       if (sp && co && sp.units !== co.units) flags.push({ kind: 'info', parcel: pc.letter, text: `${L}: the site plan states ${num(sp.units)}, the condominium ${num(co.units)} (${co.units > sp.units ? '+' : ''}${num(co.units - sp.units)}).` });
