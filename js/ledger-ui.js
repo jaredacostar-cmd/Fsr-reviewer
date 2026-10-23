@@ -53,7 +53,7 @@
     const yr = yearsOfFn();
     // (the projection still loading: look again shortly, while the view is on screen)
     if ((!yr.timed || !yr.homes) && !compute.retry && typeof setTimeout === 'function') compute.retry = setTimeout(() => { compute.retry = null; if (isOn()) rerender(); }, 3000);
-    const key = [set.length, set.reduce((t, p) => t + (p.units || 0) + (p.lat || 0), 0), gateOn, yr.timed, !!A.state.servicing, JSON.stringify(A.state.criteria && A.state.criteria.ppu)].join('|');
+    const key = [set.length, set.reduce((t, p) => t + (p.units || 0) + (p.lat || 0), 0), gateOn, yr.timed, !!A.state.servicing, set.reduce((t, p) => t + (p.pz ? 1 : 0) + (p.dr ? 1 : 0), 0), JSON.stringify(A.state.criteria && A.state.criteria.ppu)].join('|');
     if (cache.key === key) return cache;
     const crit = A.state.criteria, SD = root.PeelSvcData, MM = root.PeelMapMarkers;
     const asOf = A.state.snapshot && A.state.snapshot.generatedAt ? Date.parse(A.state.snapshot.generatedAt) : Date.now();
@@ -221,7 +221,52 @@
     return `${controlsHTML()}${legendHTML()}${tableHTML(m.r)}
       ${m.notes.length ? `<ul class="ldg-notes small muted">${m.notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}
       ${tiersHTML(m.rows)}
-      ${listHTML(m.rows, onPage)}`;
+      ${listHTML(m.rows, onPage)}
+      ${sinceHTML(m.rows)}`;
+  }
+
+  // ---- The annual snapshot (Phase 5: js/ledger-snapshot.js, scripts/build-ledger.js) -------------
+  const LS = () => root.PeelLedgerSnapshot;
+  // Export › Pipeline snapshot (CSV): the rows shown, in the snapshot's fixed template, now (not frozen).
+  function exportSnapshotCSV() {
+    const m = model(), X = root.PeelExports; if (!m || !LS() || !X) return;
+    const A = App(), snap = A.state.snapshot, src = snap && snap.generatedAt ? snap.generatedAt.slice(0, 10) : null, today = new Date().toISOString().slice(0, 10);
+    const s = LS().snapshot(m.rows, { name: `export-${today}`, sourceDate: src, frozenAt: null, scope: `${m.scope}, the developments shown on the map${unfiltered() ? ' (no filters)' : ' (with the filters set)'}`, notes: ['An export of the app, not a frozen annual snapshot: those are written by scripts/build-ledger.js (data/ledger/).'] });
+    X.download(`peel-pipeline-snapshot-${today}.csv`, LS().toCSV(s), 'text/csv');
+  }
+  // Peel with no filters: the set a frozen snapshot is taken on (scripts/build-ledger.js appSet).
+  function unfiltered() {
+    const A = App(); if (!A || !A.state || !DU()) return false;
+    const st = A.state;
+    return DU().overviewSet().length === st.projects.filter(p => p.phase !== 'cancelled' && (p.kinds || []).includes('application') && p.newBuild).length;
+  }
+  // "Since the last snapshot": the latest frozen snapshot (data/ledger/index.json) against today's rows.
+  const SNAP = { index: undefined, last: null, loading: false };
+  function loadSnapshots() {
+    if (SNAP.index !== undefined || SNAP.loading || typeof fetch !== 'function') return;
+    SNAP.loading = true;
+    fetch('data/ledger/index.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(idx => {
+      const list = (idx && idx.snapshots) || [], latest = list[list.length - 1];
+      SNAP.index = list;
+      if (!latest) { SNAP.loading = false; if (isOn()) rerender(); return null; }
+      return fetch(`data/ledger/${encodeURIComponent(latest.name)}.json`).then(r => (r.ok ? r.json() : null)).catch(() => null).then(s => { SNAP.last = s; SNAP.loading = false; if (isOn()) rerender(); });
+    });
+  }
+  function sinceHTML(rows) {
+    loadSnapshots();
+    if (!LS()) return '';
+    if (SNAP.index === undefined) return '<p class="small muted">Looking for the last frozen snapshot…</p>';
+    const head = '<h3 class="sub-title">Since the last snapshot</h3>';
+    if (!SNAP.last) return `${head}<p class="small muted">No frozen snapshot yet. The first is written with <code>node scripts/build-ledger.js</code> (docs/ledger/annual-procedure.md).</p>`;
+    if (!unfiltered()) return `${head}<p class="small muted">Against the ${esc(SNAP.last.name)} snapshot (data as of ${esc(SNAP.last.sourceDate || '–')}): clear the filters to compare, as snapshots are taken on all of Peel.</p>`;
+    const d = LS().diff(SNAP.last, LS().snapshot(rows, {})), B = L().BUCKETS, bl = k => (B.find(b => b.key === k) || {}).label || k;
+    const li = (r, extra = '') => `<li><button type="button" class="btn small link" data-pnl-dev="${esc(r.id || r.row.id)}">${esc(r.name || r.row.name)}</button> <span class="muted">${esc(r.municipality || r.row.municipality)}</span>${extra}</li>`;
+    const part = (title, list, f) => (list.length ? `<details class="pnl-fold"><summary>${esc(title)} (${fmtNum(list.length)})</summary><ul class="small ldg-diff">${list.slice(0, 60).map(f).join('')}</ul>${list.length > 60 ? `<p class="small muted">+ ${fmtNum(list.length - 60)} more in the CSV.</p>` : ''}</details>` : '');
+    return `${head}<p class="small">Against <strong>${esc(SNAP.last.name)}</strong> (data as of ${esc(SNAP.last.sourceDate || '–')}): <strong>${fmtNum(d.counts.new)}</strong> new, <strong>${fmtNum(d.counts.dropped)}</strong> dropped (built, withdrawn or held aside), <strong>${fmtNum(d.counts.moved)}</strong> moved milestone, <strong>${fmtNum(d.counts.tier)}</strong> changed tier; units left to build ${d.unitsDelta >= 0 ? '+' : '−'}${fmtNum(Math.abs(Math.round(d.unitsDelta)))}.</p>
+      ${part('New', d.new, r => li(r))}${part('Dropped', d.dropped, r => li(r))}
+      ${part('Moved milestone', d.moved, x => li(x, ` <small>${esc(bl(x.from))} → ${esc(bl(x.to))}</small>`))}
+      ${part('Changed tier', d.tier, x => li(x, ` <small>${esc(x.from)} → ${esc(x.to)}</small>`))}
+      <p class="small muted">${esc(L().DISCLAIMER)}</p>`;
   }
 
   const isOn = () => { const AT = root.PeelAnalysisTabs; return !!(AT && AT.getFootTab() === 'growth' && AT.getGSub() === 'ledger') || !!(root.PeelWorkspaces && root.PeelWorkspaces.mode && root.PeelWorkspaces.mode() === 'home' && root.PeelWorkspaces.page && root.PeelWorkspaces.page() === 'coming'); };
@@ -261,7 +306,7 @@
     });
   }
 
-  const api = { render, page, model, compute, settings: S, isOn };
+  const api = { render, page, model, compute, settings: S, isOn, exportSnapshotCSV, unfiltered };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLedgerUI = api;
 })(typeof window !== 'undefined' ? window : globalThis);
