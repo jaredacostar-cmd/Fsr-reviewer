@@ -288,7 +288,8 @@
   function psCons(a) {
     const M = App().state.svcModel, sp = SD().spsOf(a), l = M && MA().psLoads(a); if (!sp || !l) return null;
     const flow = ll => (M.pdwf(ll, 1) + M.ii(ll)) * 1e6 / 86400;
-    const at = y => y === 'today' ? { ...l, approved: 0, proposed: 0, japproved: 0, jproposed: 0 } : y === 'committed' ? { ...l, proposed: 0, jproposed: 0 } : MA().atYear(l, y);
+    // (committed: the Peel rule, a site servicing or building permit; the commitment ladder)
+    const at = y => y === 'today' ? { ...l, approved: 0, proposed: 0, japproved: 0, jproposed: 0 } : y === 'committed' ? MA().committedLoad(l, MA().ruleOf('ps')) : MA().atYear(l, y);
     const q = y => flow(at(y)), cap = sp.firmLs, com = at('committed'), room = cap - flow(com);
     const people = peopleFor(room, x => flow({ ...com, approved: com.approved + x }) - flow(com));
     const words = s => SD().spsKey(s).replace(/\b(sewer|sanitary|sewage|pumping|station|ps|\d+)\b/g, ' ').replace(/\s+/g, ' ').trim();
@@ -377,12 +378,13 @@
       sub: `governing ${fmtNum(cap)} kg/d (${row.governedBy}; 2020 Master Plan, Vol. 4, Table 9) · plan 2021 loading + growth at 75 g/person, 37.5 g/job + high-strength users${di ? ` · ${di.on ? 'with' : 'without'} the diversion; ${alt.on ? 'with' : 'without'} it, capacity is reached ${yTxt(alt.out)}` : ''}`,
       cap, unit: 'kg/d', util: { today: q('today') / cap, com: com / cap, bo: q(null) / cap }, room, people: room / perPerson, out: runOut(q, () => cap), relief, q, alt, devSet: new Set(g.devs) };
   }
-  // Water: max day of a set of zones by year (ML/d).
-  function zonesMax(ids, y) {
+  // Water: max day of a set of zones by year (ML/d). rule: the committed horizon's (the water treatment
+  // plants keep MECP D-5-1; supply into a zone, the Peel rule).
+  function zonesMax(ids, y, rule = 'peel') {
     const M = App().state.svcModel; let t = 0;
     for (const id of ids) {
       const l = M.zones.get(id); if (!l) continue;
-      const ll = y === 'today' ? { ...l, approved: 0, proposed: 0, japproved: 0, jproposed: 0 } : y === 'committed' ? { ...l, proposed: 0, jproposed: 0 } : MA().atYear(l, y);
+      const ll = y === 'today' ? { ...l, approved: 0, proposed: 0, japproved: 0, jproposed: 0 } : y === 'committed' ? MA().committedLoad(l, rule) : MA().atYear(l, y);
       t += M.wMax(M.total(ll), M.jobs(ll));
     }
     return t;
@@ -396,7 +398,7 @@
     if (wellSystem[zone.zone]) {
       const s = R.water.caledon.find(x => x.name === wellSystem[zone.zone]); if (!s) return null;
       const ids = [zone.id], base = s.maxDayM3d / 1000, rated = s.ratedM3d / 1000, lim = PLANT_TRIGGER * rated;
-      const q = y => base + zonesMax(ids, y) - zonesMax(ids, 'today');
+      const q = y => base + zonesMax(ids, y, MA().ruleOf('wplant')) - zonesMax(ids, 'today');
       const room = lim - q('committed');
       const wells = App().state.dcInfra ? App().state.dcInfra.water.facilities.filter(f => f.kind === 'well' && s.communities.includes(f.name)) : [];
       return { id: `wsys:${s.name}`, sys: 'water', kind: 'wplant', name: `${s.name} wells`, sub: `rated ${fmt1(rated)} ML/d · 2025 max day ${fmt1(base)} ML/d + growth`, cap: lim, unit: 'ML/d', zones: ids,
@@ -406,7 +408,7 @@
     // Before the zones are in the servicing lookup there is no growth to add: not a result (it would
     // read 2025 max day alone, 48% → 48%, and stay cached for this model).
     if (!ids.length) return null;
-    const q = y => sp.maxDayMLd + zonesMax(ids, y) - zonesMax(ids, 'today');
+    const q = y => sp.maxDayMLd + zonesMax(ids, y, MA().ruleOf('wplant')) - zonesMax(ids, 'today');
     const room = lim - q('committed');
     const facs = App().state.dcInfra ? App().state.dcInfra.water.facilities.filter(f => f.kind === 'plant') : [];
     return { id: 'wsys:southPeel', sys: 'water', kind: 'wplant', name: 'South Peel water treatment (A.P. Kennedy + Lorne Park)', sub: `rated ${fmt1(rated)} ML/d · 2025 max day ≤ ${fmt1(sp.maxDayMLd)} ML/d (incl. York supply) + growth`, cap: lim, unit: 'ML/d', zones: ids,
@@ -433,7 +435,7 @@
   // zone at level L and above (rough: 1.5 m/s, valves and pumping not modelled).
   function supplyCons(b) {
     const L = zLevel(b.upper), ids = lakeZones().filter(id => zLevel(SD().svcById.get(id).zone) >= L);
-    const q = y => zonesMax(ids, y), cap = b.capMLd, room = cap - q('committed');
+    const q = y => zonesMax(ids, y, MA().ruleOf('supply')), cap = b.capMLd, room = cap - q('committed');
     const lines = App().state.dcInfra ? App().state.dcInfra.water.lines.filter(ln => ln.y && ln.y >= MM().THIS_YEAR && (ln.k === 'transmission') && (() => {
       let lo = false, hi = false; for (let k = 0; k < ln.g.length; k += 3) { const z = Areas().locate(App().state.servicing.zones, ln.g[k][0], ln.g[k][1])[0]; const lv = z && zLevel(SD().svcById.get(z).zone); if (lv === L - 1 || SD().svcById.get(z || '')?.zone === b.lower) lo = true; if (lv === L) hi = true; } return lo && hi;
     })()) : [];
@@ -494,7 +496,8 @@
     const v = {};
     for (const s of ['W', 'C', 'E']) {
       const devs = groups[s], gr = Areas().growthSince(devs, {}, bc.date, App().state.criteria), j = SvcTab().svcJobs(devs, bc.date);
-      v[s] = { devs, level, built: M.wMax(gr.built.population, j.jbuilt || 0), approved: M.wMax(gr.approved.population, j.japproved || 0), proposed: M.wMax(gr.proposed.population, j.jproposed || 0) };
+      v[s] = { devs, level, built: M.wMax(gr.built.population, j.jbuilt || 0), approved: M.wMax(gr.approved.population, j.japproved || 0), proposed: M.wMax(gr.proposed.population, j.jproposed || 0),
+        committed: M.wMax(gr.committed.approved.population + gr.committed.proposed.population, (j.jcpA || 0) + (j.jcpP || 0)) };
     }
     mpSystemGrowth.key = key; mpSystemGrowth.v = v;
     return v;
@@ -502,10 +505,11 @@
   function trunkCons(t) {
     const G = mpSystemGrowth(); if (!G) return null;
     const pool = trunkPool(t), k = trunkShare(t), Y0 = MM().THIS_YEAR, sum = f => pool.reduce((a, s) => a + f(G[s]), 0);
-    const x = { built: sum(g => g.built) * k, approved: sum(g => g.approved) * k, proposed: sum(g => g.proposed) * k };
+    const x = { built: sum(g => g.built) * k, approved: sum(g => g.approved) * k, proposed: sum(g => g.proposed) * k, committed: sum(g => g.committed) * k };
     // York agreement flow on the trunks that carry it, by year (2021 is already in the plan's figure).
     const york = y => (t.carriesYork ? yorkAt(y) - yorkAt(2021) : 0);
-    const today = t.demandMLd[0] + x.built + york(Y0), com = today + x.approved, bo = com + x.proposed + york(SP().hz.end) - york(Y0);
+    // (committed: the Peel rule, a site servicing or building permit; build-out still adds all of both)
+    const today = t.demandMLd[0] + x.built + york(Y0), com = today + x.committed, bo = today + x.approved + x.proposed + york(SP().hz.end) - york(Y0);
     const q = y => { if (y === 'today') return today; if (y === 'committed') return com; if (y == null) return bo; const { fa, fp } = MA().hzFrac(y); return t.demandMLd[0] + x.built + york(y) + x.approved * fa + x.proposed * fp; };
     const capY = y => trunkCapAt(t, y === 'today' ? Y0 : y), cap = capY(Y0);
     const room = cap > 0 ? cap - com : null;

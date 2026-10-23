@@ -229,7 +229,7 @@
   const LAYERS = [
     ['existing', 'On the system', 'what the 2021 census counted, scaled to the measured flow'],
     ['built', 'Built since 2021', 'occupancy since the census'],
-    ['committed', 'Approved, not yet built', 'committed under D-5-1: draft-approved or registered subdivisions, site plan approvals, permits'],
+    ['committed', 'Committed', 'at the treatment plants, past plan approval (MECP D-5-1: draft-approved or registered subdivisions, site plan approvals, permits); at every other facility, a site servicing or building permit (the Peel rule)'],
     ['proposed', 'In review', 'and, when the Scenario includes it, Pre-application'],
   ];
   function capacityHTML(row) {
@@ -362,7 +362,7 @@
   // by municipality and year), times ([{ stage, size, n, median, left5 }] from the time-in-stage
   // curves), fc ({ by2031, by2041, low2031, high2031, after, endYear, perYear: [[year, likely]] }, Peel),
   // oldThisYear (the old method's homes in the first year) }. Every part is optional (Node, loading).
-  const STAGE_WORD = { inception: 'Pre-application', review: 'In review', approved: 'Approved, no permit yet', permit: 'Permit issued', construction: 'Under construction' };
+  const STAGE_WORD = { inception: 'Pre-application', review: 'In review', approved: 'Plan approved', permit: 'Building permit', construction: 'Under construction' };
   const SIZE_WORD = { S: 'Under 10 units', M: '10–99 units', L: '100+ units' };
   function completionsRecord(activity, from = 2016, to = 2025) {
     const A = activity || {}, rows = [];

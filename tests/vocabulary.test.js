@@ -13,7 +13,7 @@ const P = require('../js/phases.js');
 const B = require('../js/layer-bar.js');
 
 test('one stage name per development, the same words as the counting stages', () => {
-  assert.deepEqual(plain(P.ALL_PHASES.map(p => p.label)), ['Pre-application', 'In review', 'Approved, no permit yet', 'Permit issued', 'Under construction', 'Built', 'Withdrawn / refused']);
+  assert.deepEqual(plain(P.ALL_PHASES.map(p => p.label)), ['Pre-application', 'In review', 'Plan approved', 'Building permit', 'Under construction', 'Built', 'Withdrawn / refused']);
   // The counting stages use the same words (Pre-application, In review); "Approved" never alone.
   assert.equal(B.LABEL.anticipated, P.PHASE_BY_KEY.inception.label);
   assert.equal(B.LABEL.proposed, P.PHASE_BY_KEY.review.label);

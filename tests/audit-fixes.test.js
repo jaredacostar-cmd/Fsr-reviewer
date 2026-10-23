@@ -120,7 +120,7 @@ test('the empty-list helper leaves the filters and their controls as they were',
   const f = src('js/filter-ui.js');
   assert.match(f, /lyr: App\(\)\.state\.lyr \? new Set\(App\(\)\.state\.lyr\) : null, ss: App\(\)\.state\.ss, tf: TL\(\)\.tFrom\.value, tt: TL\(\)\.tTo\.value/);
   assert.match(f, /SF\(\)\.syncFilterControls\(\); PA\(\)\.showArea\(\); SD\(\)\.showSvcArea\(\);/);
-  assert.match(f, /\(!App\(\)\.state\.lyr \|\| App\(\)\.state\.lyr\.has\(App\(\)\.layerOf\(p\)\)\)/);
+  assert.match(f, /\(!App\(\)\.state\.lyr \|\| App\(\)\.state\.lyr\.has\(App\(\)\.rungOf\(p\)\)\)/);
 });
 
 test('dedupe keeps a text-read unit count marked as one', () => {
