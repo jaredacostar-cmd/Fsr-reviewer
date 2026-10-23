@@ -450,9 +450,9 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(!!a.key && a.k != null && !a.rec, `a development open with its automatic outlet (${a.key}, pipe ${a.k})`);
     await page.click('#home [data-dvo="start"]'); await wait(500);
     expect(await ev(() => !!document.querySelector('#home [data-dvo-map].picking')), 'the map is in pick mode');
-    // a real tap on the site: it snaps to the sewer it already discharges to (the tap reaches the ground)
-    const box = await (await page.$('#home [data-dvo-map] .hm-dvo-site')).boundingBox();
-    await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2); await wait(800);
+    // a real tap where the site's connector meets its sewer: it snaps to that sewer (the tap reaches the ground)
+    const at = await ev(() => { const c = document.querySelector('#home [data-dvo-map] .hm-dvo-conn'), svg = c.ownerSVGElement, q = c.getPointAtLength(c.getTotalLength()), pt = svg.createSVGPoint(); pt.x = q.x; pt.y = q.y; const s = pt.matrixTransform(c.getScreenCTM()); return [s.x, s.y]; });
+    await page.mouse.click(at[0], at[1]); await wait(800);
     const b = await st();
     expect(b.mode === 'preview' && b.cand && b.cand.kind === 'sewer' && b.cand.k === a.k, `the tap picks its own sewer (${JSON.stringify(b.cand)})`);
     expect(await ev(() => /Preview/.test(document.querySelector('#home .dvo-panel').textContent)), 'a preview before saving');
