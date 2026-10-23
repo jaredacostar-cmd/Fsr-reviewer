@@ -49,6 +49,26 @@ create one (a second suite); a second suite is new homes, but not a site plan bu
 doesn't set a site plan's phase. A change to these rules is recorded in
 `data/history.json` as a re-read (marked `rules`), not as a phase change on the ground.
 
+**Original application and later files on its land.** The app loads files from 2016 on, so a site
+built on an older application (before pre-consultation was required) only shows the files filed on
+top of it. A development's Overview names the earlier files its own files point to (a Brampton site
+plan revision such as SP13-080.002 → SP13-080.000, the earlier files on a concession lot such as
+C04W14.001–.008, a file or registered plan named in a description, a legacy "Transferred" file with no
+dates) and lists every planning file with at least half its land inside the site's widest file, on
+this site or another, with what differs (later files reaching past the original land, the homes
+stated against the homes counted). *Look up the earlier files* fetches them live with no date filter;
+*Show the layers on the map* draws the original land, each parcel in its colour with its homes, and the earlier ones.
+
+**Units on the land over time** (the development's Growth tab, *Units on this land over time*). The files on
+the original land fall into parcels by their land: a file at least half inside another of no more than
+3× its size is the same parcel; a pre-consultation over several parcels sets no count. On a parcel the
+latest file stating a count replaces the earlier ones (a withdrawn or inactive file doesn't count), and
+parcels add up; a parcel is built when its new-dwelling permits (from 3 years before the file that set
+its count) are all closed. The table gives each parcel's count at the end of each year, the land's
+total and what is built, then each parcel's files with the count each states, and flags where the
+app's count differs from the latest file, a site plan and its condominium disagree, or a description
+changes a count (a resubmission).
+
 ## Run it
 
 It's a static site with no build step:

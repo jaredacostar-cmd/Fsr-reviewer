@@ -396,7 +396,7 @@
       <div class="seg tl-toggle" role="group" aria-label="Events shown"><button type="button" class="btn small on" data-dt-tl="key">Key events</button><button type="button" class="btn small" data-dt-tl="all">All dated events (${fmtNum(all.length)})</button></div>
       <p class="tl-only small" hidden>Only <b data-tl-only-name></b> events · <button type="button" class="btn small link" data-tl-type="">Show all</button></p>
       <div data-dt-tlv="key">${evListHTML(key)}</div><div data-dt-tlv="all" hidden>${evListHTML(all)}</div></details>`;
-    const inner = `${about}<div id="devtab-recs">${chart}${tOpts.foot ? `<div class="tr">${tOpts.foot}</div>` : ''}</div>${events}
+    const inner = `${about}<div id="devtab-recs">${chart}${tOpts.foot ? `<div class="tr">${tOpts.foot}</div>` : ''}</div>${root.PeelEarlierFiles ? root.PeelEarlierFiles.html(p) : ''}${events}
       <p class="small muted">Stage changes from the weekly check; council and committee items that name the files (${st2 && st2.council ? 'agendas and minutes since 2019' : 'loading'}); file and permit dates and every field from the municipal records.</p>`;
     evRecs = null;
     return wrap

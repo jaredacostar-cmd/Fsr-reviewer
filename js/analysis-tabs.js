@@ -12,7 +12,7 @@
   // per tab, one chip row under the tab bar (TABSUBS). Overview has none.
   //   Growth:    Pipeline · Areas · Timing · Ledger (the pipeline ledger, js/ledger-ui.js)
   //   Servicing: Capacity · Network · Allocations · Checks   (water and wastewater together)
-  //   Capital:   Timing · Projects · EAs (+ Funding while its Labs switch is on)
+  //   Capital:   Timing · DC projects · Projects · EAs (the Funding lab's screen sits in DC projects)
   //   Records:   Sources · Checks · Files
   // footPref: the tab last picked (kept); each tab's sub-view last picked is kept too. Old tab and
   // sub-view names (share links, stored prefs) migrate onto these (migrateTabKey / migrateSub).
@@ -22,7 +22,7 @@
     ww: { plants: 'capacity', catchments: 'network', alloc: 'alloc', pumpstations: 'network' },
     water: { capacity: 'capacity', zones: 'network', facilities: 'checks', hydro: 'checks' },
     growth: { pipeline: 'pipeline', census2051: 'areas', byplan: 'areas', timing: 'timing', areas: 'areas', ledger: 'ledger' },
-    dca: { timing: 'timing', build: 'projects', projects: 'projects', eas: 'eas', recommendations: 'funding', funding: 'funding' },
+    dca: { timing: 'timing', build: 'projects', dcproj: 'dcproj', projects: 'projects', eas: 'eas', recommendations: 'dcproj', funding: 'dcproj' },
   };
   // A tab key from a link or a stored pref (with its sub-view, when the old key named one).
   const migrateTabKey = (t, sub) => {
@@ -44,13 +44,12 @@
   gSub = SUB_MAP.growth[gSub] || 'pipeline'; dcSub = SUB_MAP.dca[dcSub] || 'timing';
   // (a stored 'ww' / 'water' tab keeps the Servicing sub-view stored with it; only 'plants' names one)
   { const old = footPref, m = migrateTabKey(footPref); footPref = m.tab; if (m.gSub) gSub = m.gSub; if (m.svcSub && old !== 'ww' && old !== 'water') svcSub = m.svcSub; }
-  // Labs (Settings › Labs) can add a sub-view: Capital › Funding. Never a fifth chip elsewhere.
-  const labOn = id => !!(root.PeelLabs && root.PeelLabs.on(id));
+  // (Labs add no sub-view: the Funding lab's screen sits in Capital › DC projects, js/dc-projects.js.)
   // Sub-view state per tab: the chip data-attribute, the store key, the valid values, get / set.
   const TABSUBS = {
     growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'areas', 'timing', 'ledger'], get: () => gSub, set: v => { gSub = v; } },
     svc: { attr: 'svcsub', store: 'svcSub', valid: ['capacity', 'network', 'alloc', 'checks'], get: () => svcSub, set: v => { svcSub = v; } },
-    dca: { attr: 'dcasub', store: 'dcSub', valid: ['timing', 'projects', 'eas', 'funding'], get: () => dcSub, set: v => { dcSub = v; } },
+    dca: { attr: 'dcasub', store: 'dcSub', valid: ['timing', 'dcproj', 'projects', 'eas'], get: () => dcSub, set: v => { dcSub = v; } },
     records: { attr: 'rsub', store: 'rSub', valid: ['sources', 'checks', 'files'], get: () => rSub, set: v => { rSub = v; } },
   };
   for (const s of Object.values(TABSUBS)) if (!s.valid.includes(s.get())) s.set(s.valid[0]);
@@ -60,15 +59,13 @@
   // At a site, Capital › Timing is the site's DC projects (the projects it relies on); the Projects
   // list is Region-wide, so it is hidden there.
   const HIDDEN = {
-    site: { growth: ['areas', 'timing', 'ledger'], svc: ['capacity', 'alloc', 'checks'], dca: ['projects', 'funding'], records: ['sources', 'checks'] },
+    site: { growth: ['areas', 'timing', 'ledger'], svc: ['capacity', 'alloc', 'checks'], dca: ['dcproj', 'projects'], records: ['sources', 'checks'] },
     area: { records: ['files'] },
   };
   const SITE_HIDDEN = HIDDEN.site;
   // Sub-views that are empty at a site are hidden too: EAs with none near the site.
   const EMPTY_AT_SITE = { 'dca:eas': () => !!(root.PeelCapitalEA && root.PeelCapitalEA.siteBriefCount && root.PeelCapitalEA.siteBriefCount() === 0) };
-  // Capital › Funding: only while its Labs switch is on, and never in the public version.
-  const isPublic = () => !!(root.PeelUtil && root.PeelUtil.isPublic && root.PeelUtil.isPublic());
-  const hiddenAt = (scope, tab, sub) => !!((HIDDEN[scope] || {})[tab] && HIDDEN[scope][tab].includes(sub)) || (tab === 'dca' && sub === 'funding' && (!labOn('funding') || isPublic()))
+  const hiddenAt = (scope, tab, sub) => !!((HIDDEN[scope] || {})[tab] && HIDDEN[scope][tab].includes(sub))
     || (scope === 'site' && !!(EMPTY_AT_SITE[`${tab}:${sub}`] && root.DevScope && root.DevScope.current() && EMPTY_AT_SITE[`${tab}:${sub}`]()));
   const siteHidden = (tab, sub) => hiddenAt('site', tab, sub);
   // The sub-view a tab shows: the one picked, else (hidden at this scope) the first that is not.

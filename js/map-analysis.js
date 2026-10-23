@@ -174,6 +174,15 @@
   const hzFrac = y => { const f = (start, n) => Math.min(1, Math.max(0, (y - start + 1) / Math.max(1, n))); return { fa: f(SP().hz.aStart, SP().hz.aYears), fp: f(SP().hz.pStart, SP().hz.pYears), fb: builtShare(y) }; };
   const atYear = (l, y) => { if (y == null || !l) return l; const { fa, fp, fb } = hzFrac(y); return { ...l, built: l.built * fb, jbuilt: (l.jbuilt || 0) * fb, approved: l.approved * fa, proposed: l.proposed * fp, japproved: (l.japproved || 0) * fa, jproposed: (l.jproposed || 0) * fp }; };
   const censusOnly = l => ({ census: l.census, built: 0, approved: 0, proposed: 0, jbuilt: 0, japproved: 0, jproposed: 0, ha: l.ha });
+  // The committed horizon of a load (the commitment ladder, js/layers.js): MECP D-5-1 for the treatment
+  // plants ('d51': all of approved, none of proposed); the Peel rule for every other facility ('peel':
+  // the growth a site servicing or building permit commits, in approved and in proposed: cpA, cpP). A
+  // load built without the split (no cpA) keeps D-5-1.
+  const COMMIT_RULE = { plant: 'd51', wplant: 'd51', bod: 'd51' };
+  const ruleOf = kind => COMMIT_RULE[kind] || 'peel';
+  const committedLoad = (l, rule = 'peel') => (!l ? l : rule === 'd51' || l.cpA == null
+    ? { ...l, proposed: 0, jproposed: 0 }
+    : { ...l, approved: l.cpA || 0, proposed: l.cpP || 0, japproved: l.jcpA || 0, jproposed: l.jcpP || 0 });
   // Build-out flows of a drainage area (design flows, as for pumping station firm capacity).
   // A pumping station's load when its sewershed isn't one of the catchments (blocks): what the
   // pipe arriving at it carries, from the sewer network: census people upstream, growth by layer
@@ -192,7 +201,7 @@
   function psCum(a) {
     const k = stationPipe(a); if (k < 0) return null;
     const p = MM().SEW.data.pipes[k], G = SC().sewerGrowth();
-    return { census: p[4], built: G.built.pop[k], approved: G.approved.pop[k], proposed: G.proposed.pop[k], jbuilt: G.built.jobs[k], japproved: G.approved.jobs[k], jproposed: G.proposed.jobs[k], ha: p[5] + G.built.ha[k] + G.approved.ha[k] + G.proposed.ha[k], pipe: k };
+    return { census: p[4], built: G.built.pop[k], approved: G.approved.pop[k], proposed: G.proposed.pop[k], jbuilt: G.built.jobs[k], japproved: G.approved.jobs[k], jproposed: G.proposed.jobs[k], cpA: G.cpA.pop[k], cpP: G.cpP.pop[k], jcpA: G.cpA.jobs[k], jcpP: G.cpP.jobs[k], ha: p[5] + G.built.ha[k] + G.approved.ha[k] + G.proposed.ha[k], pipe: k };
   }
   const psLoads = a => (App().state.svcModel && App().state.svcModel.cum.get(a.id)) || psCum(a);
   function psLoad(a, y = null) {
@@ -377,7 +386,7 @@
     }
     // (Permit issued and Under construction share a colour, and a row: as in the sidebar.)
     if (MM().mstyle.color === 'phase') parts.push(`<div class="lg-t">Stage</div><ul>${P.ALL_PHASES.filter(p => App().state.phases.has(p.key) && !(p.key === 'construction' && App().state.phases.has('permit'))).map(p => `<li data-info="phase-${p.key}">${dot(p.key)}${esc(p.key === 'permit' && App().state.phases.has('construction') ? 'Permit issued / under construction' : p.key === 'completed' ? 'Built' : p.label)}</li>`).join('')}</ul>`);
-    if (MM().mstyle.color === 'layer') parts.push(`<div class="lg-t">Developments</div><ul>${Object.entries(MM().LAYER_NAME).filter(([k]) => k !== 'out').map(([k, t]) => sw(MM().layerColors()[k], t)).join('')}</ul>`);
+    if (MM().mstyle.color === 'layer') parts.push(`<div class="lg-t">Developments, by rung</div><ul>${window.PeelLayers.RUNG_VIEW.map(r => sw(window.PeelLayers.RUNG_COLOR[r.key], r.label)).join('')}</ul>`);
     if (MM().mstyle.color === 'timing') parts.push(`<div class="lg-t">Servicing timing (2026 DC draft)</div><ul>${Object.values(MM().TIMING).map(([c, t]) => sw(c, t)).join('')}</ul>`);
     if (MM().mstyle.color === 'quality') parts.push(`<div class="lg-t">Data quality</div><ul>${Object.values(MM().QUALITY).map(([c, t]) => sw(c, t)).join('')}</ul>`);
     if (MM().mstyle.color === 'plant') parts.push(`<div class="lg-t">Receiving plant</div><ul>${['Lakeview', 'Clarkson', 'Inglewood', 'Toronto'].map(k => sw(`var(${SD().PLANT_TOKEN[k]})`, SD().PLANT_SHORT[k])).join('')}${sw('var(--nodata)', 'No traced catchment')}</ul>`);
@@ -411,7 +420,7 @@
     setCapYear(v) { capYear = v; },
     renderCapLayer, renderLegend, renderSavedViews, saveCurrentView, deleteSavedView,
     savedViews,
-    openSavedView, atYear, hzFrac, censusOnly, censusYr, stationPipe,
+    openSavedView, atYear, hzFrac, censusOnly, committedLoad, ruleOf, COMMIT_RULE, censusYr, stationPipe,
     phoneMap, timebarEl, psCum,
     psLoad, psLoads, fitLegend, layoutMapBoxes, yearText, currentMapSettings,
   };

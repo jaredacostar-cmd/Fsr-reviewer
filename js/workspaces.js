@@ -28,6 +28,8 @@
     { id: 'study', label: 'Study area', group: 'Planning', tab: 'overview', sub: '', scope: 'drawn', view: 'planning', what: 'Draw an area: its growth and servicing' },
     { id: 'projects', label: 'DC projects', group: 'Capital', tab: 'dca', sub: 'timing', scope: 'area', view: 'dc', what: 'Is each DC project in time?' },
     { id: 'eaflow', label: 'EA to construction', group: 'Capital', tab: 'dca', sub: 'eas', scope: 'area', view: 'dc', what: 'Each EA and the construction after it' },
+    // QA/QC (decided with the user): where each development discharges, confirmed or set on the map (js/dev-outlets.js).
+    { id: 'outlets', label: 'Review outlets', group: 'QA/QC', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Check and fix where developments discharge' },
     { id: 'pipes', label: 'Old pipes', group: 'Asset Management', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Old sewers that carry the most growth' },
     // The pipeline ledger (docs/pipeline-ledger-plan.md, Phase 2): Growth › Ledger on a page.
     { id: 'coming', label: 'What\u2019s coming', group: 'Planning', tab: 'growth', sub: 'ledger', scope: 'area', view: 'planning', what: 'Homes and people by stage and milestone' },
@@ -46,6 +48,7 @@
     projects: ['dcw', 'cons'],                      // planned DC works, Region construction
     eaflow: ['ea', 'cons'],                         // EA study areas, Region construction
     pipes: [],                                      // the old pipes only (drawn by this module)
+    outlets: ['devs', 'ex-sanitary'],               // developments, existing sewers
     week: ['devs'],
     coming: ['devs'],
   };
@@ -71,6 +74,7 @@
   const GROUPS = [
     ['Planning', ['explore', 'tight', 'coming']],
     ['Capital', ['capital']],
+    ['QA/QC', ['outlets']],
     ['Asset Management', ['pipes']],
   ];
   // Reference pages (Home's layout, no map, not a workspace): listed last in Home's sidebar.
@@ -83,7 +87,7 @@
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Servicing › Model checks / Records › Data checks,
   // Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.
-  const SUB_NAME = { capacity: 'Capacity', network: 'Network', alloc: 'Allocations', 'svc:checks': 'Model checks', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', ledger: 'Ledger', 'dca:timing': 'DC timing', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
+  const SUB_NAME = { capacity: 'Capacity', network: 'Network', alloc: 'Allocations', 'svc:checks': 'Model checks', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', ledger: 'Ledger', 'dca:timing': 'DC timing', dcproj: 'DC projects', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
   const tabPath = (tab, sub) => [TAB_NAME[tab] || tab, sub ? SUB_NAME[`${tab}:${sub}`] || SUB_NAME[sub] || sub : ''].filter(Boolean).join(' › ');
   // What a chip does: the tab, sub-view, scope and preset; closeScopes = area chips leave a site.
   function plan(id, ctx = {}) {
