@@ -16,6 +16,10 @@ const Aerial = () => root.PeelAerial;
   const ORIENTATIONS = { grid: 'Road grid', north: 'North up' };
   let orientation = ORIENTATIONS[store.get('orientation', 'grid')] ? store.get('orientation', 'grid') : 'grid';
   const canRotate = !!(L.Map.prototype.setBearing);
+  // A press on the map focuses it (for the arrow keys). Leaflet's focus() scrolls the map into view and
+  // puts back only the window's scroll, so on a page that scrolls inside itself (the Sewer designer's,
+  // the study area's) the whole page jumped as the map was dragged: focus without scrolling.
+  if (L.Map.Keyboard) L.Map.Keyboard.prototype._onMouseDown = function () { if (!this._focused) this._map._container.focus({ preventScroll: true }); };
   // Stacked canvases: only the top canvas gets taps and hovers, so one the development dots are
   // drawn on would swallow those meant for the sewer pipes or catchments drawn below it. The top
   // canvas hands what it doesn't hit itself to the canvases below, topmost first.

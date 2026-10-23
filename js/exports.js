@@ -1,5 +1,5 @@
 /* js/exports.js — data exports UI (Phase 6 extraction).
- * CSV/GeoJSON of developments & areas, download helper, and the Excel workbook
+ * CSV/GeoJSON of developments & areas, shapefiles of the map layers, download helper, and the Excel workbook
  * export (top-bar Export menu).
  * Extracted verbatim from js/app.js (lines 3506-3575, 5267-5343, 5352-5403);
  * lines 5344-5351 (dead appVersion, shadowed by the live one in js/reports.js)
@@ -109,13 +109,33 @@
     const cell = v => window.PeelUtil.csvCell(v);
     download(name, CSV_DISCLAIMER + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
   }
-  function exportDevsGeoJSON() {
+  function devsGeoJSON() {
     const rows = exportRows();
     const fc = { type: 'FeatureCollection', features: rows.filter(r => r.lat).map(r => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [+r.lng, +r.lat] }, properties: r })) };
     fc.properties = { ...DISCLAIMER_PROPS, scenario: App().state.svcModel ? ST().scenarioText() : '', generated: new Date().toISOString() };
-    download('peel-developments.geojson', JSON.stringify(fc), 'application/geo+json');
+    return fc;
   }
+  function exportDevsGeoJSON() { download('peel-developments.geojson', JSON.stringify(devsGeoJSON()), 'application/geo+json'); }
   function exportAreasGeoJSON() { const fc = areasGeoJSON(); if (fc) download('peel-servicing-areas.geojson', JSON.stringify(fc), 'application/geo+json'); }
+  // The map layers as shapefiles in one zip, for ArcMap / ArcGIS Pro (js/export-shapefile.js):
+  // the same features and fields as the GeoJSON exports; a layer not loaded yet is listed in README.txt.
+  async function exportShapefiles() {
+    const SH = root.PeelShapefile, CE = root.PeelCapitalEA;
+    if (!SH) { alert('The shapefile writer failed to load; use GeoJSON instead.'); return; }
+    const layers = [
+      { name: 'peel_developments', title: 'Developments shown', fc: devsGeoJSON() },
+      { name: 'peel_servicing_areas', title: 'Servicing areas (pressure zones and catchments)', fc: areasGeoJSON() },
+      { name: 'peel_dc_planned_works', title: 'Planned works (2026 DC)', fc: App().state.dcInfra ? DI().dcGeoJSON() : null },
+      // Capital projects only once the layer is published (as in the Export menu).
+      ...(CE && CE.data.capital ? [{ name: 'peel_capital_projects', title: 'Capital projects', fc: CE.consGeoJSON() }] : []),
+      { name: 'peel_environmental_assessments', title: 'Environmental assessments', fc: CE ? CE.easGeoJSON() : null },
+    ];
+    const { bytes } = await SH.buildShapefileZip(layers, {
+      title: 'Peel Growth Pipeline (unofficial) - shapefile export',
+      props: { ...DISCLAIMER_PROPS, filters: FI().activeFilters().map(f => f.label).join(', ') || 'none', scenario: App().state.svcModel ? ST().scenarioText() : '', generated: new Date().toISOString() },
+    });
+    download('peel-growth-pipeline-shapefiles.zip', bytes, 'application/zip');
+  }
 
 /* ---- app.js lines 5267-5343 ---- */
   // ---- Export: an Excel workbook of what is on screen (top-bar Export menu) ----
@@ -255,7 +275,7 @@
   // export); the per-panel PDF / Excel buttons are gone, so exportPDF is dead.
 
   // ---- Public contract ----
-  const api = { exportRows, download, exportDevsCSV, exportDevsGeoJSON, exportAreasGeoJSON, areasGeoJSON, exportWorkbook, reportMeta, criteriaExportRow, criteriaTableHTML };
+  const api = { exportRows, download, exportDevsCSV, exportDevsGeoJSON, exportAreasGeoJSON, exportShapefiles, devsGeoJSON, areasGeoJSON, exportWorkbook, reportMeta, criteriaExportRow, criteriaTableHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelExports = api;
 })(typeof window !== 'undefined' ? window : globalThis);

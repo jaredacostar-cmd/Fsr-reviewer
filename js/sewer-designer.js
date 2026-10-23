@@ -64,18 +64,34 @@
     const grows = R.every(r => into(r.from).every(x => (x.dmm || d.dmm) <= (r.dmm || d.dmm)));
     const sizeTxt = sizes.length > 1 ? `${sizes[0]}–${sizes[sizes.length - 1]} mm, into ${conn.dmm} mm` : `${sizes[0]} mm into ${conn.dmm} mm`;
     const c = (t, pass, val) => ({ t, pass, val });
+    // The chosen slopes (the designer's setting): every reach within them, the inlet invert to the
+    // millimetre (at most 1 mm over a reach steeper than the steepest).
+    const rg = d.slopes, held = R.filter(r => r.held), pct = s => `${f2(s * 100)}%`;
+    const inRange = rg && R.every(r => r.S >= rg[0] - 1e-9 && r.S <= rg[1] + 0.0011 / r.L);
+    const sMinR = Math.min(...R.map(r => r.S)), sMaxR = Math.max(...R.map(r => r.S));
+    const needs = held.map(r => r.sVel).filter(x => x != null);
     return [
+      ...(rg ? [c(`Slopes (${pct(rg[0])}–${pct(rg[1])}, the range chosen)`, inRange, pct(sMinR) === pct(sMaxR) ? pct(sMinR) : `${pct(sMinR)}–${pct(sMaxR)}`)] : []),
       c(`Pipe size (200 mm minimum, no larger than the existing sewer${R.length > 1 && sizes.length > 1 ? ', never a larger pipe into a smaller one' : ''})`, sizes[0] >= 200 && sizes[sizes.length - 1] <= conn.dmm && grows, sizeTxt),
-      c('Velocity at the design flow (0.75 m/s or more)', vmin >= 0.75 - 1e-6, `${f2(vmin)} m/s at the slowest`),
+      c('Velocity at the design flow (0.75 m/s or more)', vmin >= 0.75 - 1e-6, `${f2(vmin)} m/s at the slowest${held.length ? `; ${held.length} reach${held.length === 1 ? '' : 'es'} held at ${pct(rg[1])}, the steepest chosen${needs.length ? ` (0.75 m/s needs ${pct(Math.max(...needs))})` : ''}` : ''}`),
       c('Velocity flowing full (3.0 m/s or less)', vmax <= 3.0 + 1e-6, `${f2(vmax)} m/s at the fastest`),
       c('Flow ratio, design flow to full flow (0.7 or less)', qr <= 0.7 + 1e-6, qr.toFixed(2)),
-      c(`The last leg, at the upstream end${first.length > 1 ? ' of each branch' : ''} (1.00% or more)`, first.every(r => r.S >= 0.01 - 1e-9), `${f2(Math.min(...first.map(r => r.S)) * 100)}%${first.length > 1 ? ' at the least' : ''}`),
+      c(`The last leg, at the upstream end${first.length > 1 ? ' of each branch' : ''} (1.00% or more)`, first.every(r => r.S >= 0.01 - 1e-8), `${f2(Math.min(...first.map(r => r.S)) * 100)}%${first.length > 1 ? ' at the least' : ''}`),
       c(`Cover over the pipe (${d.cover} m or more)`, minCover >= d.cover - 0.01, `${f2(minCover)} m at the least`),
       c('Trench (8.0 m or less)', trench <= 8.0 + 1e-6, `${f2(trench)} m at the deepest`),
       c(`Maintenance holes (${sp} m apart or less)`, spOK, `${n0(Lmax)} m at the longest`),
       c('Drops through the maintenance holes (0.03–0.20 m, obverts matched where the size grows, or a drop structure from 0.9 m)', dropOK, `${d.structures} drop structure${d.structures === 1 ? '' : 's'}`),
       c('Connection (the new obvert at or above the existing one)', connOK, c0.drop ? `${f2(c0.drop)} m drop${c0.structure ? ' (drop structure)' : ''}` : 'obverts matched'),
     ];
+  }
+  // The slope range typed in the form (%): [lo, hi] as fractions, null (both blank: the standard's
+  // own limits), or { msg } when it can't be used.
+  function slopeRange(f) {
+    const blank = x => x == null || String(x).trim() === '', lo = +f.sLo, hi = +f.sHi;
+    if (blank(f.sLo) && blank(f.sHi)) return null;
+    if (blank(f.sLo) || blank(f.sHi) || !(lo > 0) || !(hi > 0)) return { msg: 'Type both slopes (%), or leave both blank for the standard\'s own limits.' };
+    if (lo > hi) return { msg: 'The flattest slope is more than the steepest: swap them.' };
+    return [lo / 100, hi / 100];
   }
   // ---- Crossings: where a new reach crosses an existing watermain or storm sewer ---------------------
   // Peel's Linear Wastewater Standards s. 3.4.2.1: 0.5 m vertical clearance, outside to outside. The
@@ -113,18 +129,182 @@
     return out.sort((a, b) => a.reach - b.reach || a.along - b.along);
   }
 
+  // ---- Room downstream: the design flow added to the Region sewer it joins, down to the plant ------
+  // pipes: data/sewers.json's (each [diameter mm, slope, capacity L/s, next, …, lengthM at 14]); k:
+  // the pipe it joins; q: the design flow (L/s), added in full to every pipe down the chain (no
+  // re-peaking with the rest, no attenuation: the most it can add); at(i) → { q, cap }: the pipe's
+  // flow without it (at the demand year) and its trusted full-flow capacity (0: none, e.g. no
+  // reliable slope). Rows down the chain, the tightest after, and the pipes whose state changes
+  // (85% near full, 100% surcharged; PeelMapMarkers.PIPE_CLS).
+  function downstream(pipes, k, q, at) {
+    const rows = [], seen = new Set();
+    let dist = 0;
+    for (let i = k; i != null && i >= 0 && !seen.has(i) && rows.length < 5000; i = pipes[i][3]) {
+      seen.add(i);
+      const p = pipes[i], a = at(i), cap = a.cap > 0 ? a.cap : 0;
+      rows.push({ i, dmm: p[0], year: p[7] || null, dist, len: p[14] || 0, cap, before: a.q, after: a.q + q, r0: cap ? a.q / cap : null, r1: cap ? (a.q + q) / cap : null });
+      dist += p[14] || 0;
+    }
+    const capd = rows.filter(r => r.cap);
+    const tight = capd.reduce((b, r) => (!b || r.r1 > b.r1 ? r : b), null);
+    return {
+      rows, q, recv: rows[0] || null, tight, length: dist,
+      over: capd.filter(r => r.r0 < 1 && r.r1 >= 1), near: capd.filter(r => r.r0 < 0.85 && r.r1 >= 0.85 && r.r1 < 1),
+      already: capd.filter(r => r.r0 >= 1), unchecked: rows.length - capd.length,
+    };
+  }
+  // ---- Quantities (no costs): pipe by size, trench by depth, trench volume -------------------------
+  // d: designNet()'s result (ok); net: its network. The depth is to the invert, along each reach
+  // between the ground samples (as the cover check reads them). Trench volume: width = the pipe's
+  // nominal size + 0.6 m (0.3 m working room each side; the wall is not counted), from the ground to
+  // the bedding (0.15 m under the invert); vertical walls (no slope back or benching). The depth
+  // bands: under 3 m, 3–5 m, 5–8 m, over 8 m.
+  const QBANDS = [[3, 'under 3 m'], [5, '3–5 m'], [8, '5–8 m'], [Infinity, 'over 8 m']];
+  const QWORK = 0.6;
+  function quantities(d, net, r = d.rules || { bedding: 0.15 }) {
+    const bySize = new Map(), byBand = QBANDS.map(([, t]) => ({ band: t, m: 0 }));
+    let L = 0, vol = 0, depthLen = 0, maxDepth = 0;
+    d.reaches.forEach((rc, i) => {
+      const NR = net.reaches[i], D = (rc.dmm || d.dmm) / 1000, W = D + QWORK;
+      const pts = [{ d: 0, g: net.nodes[rc.from].g }, ...NR.pts.filter(p => p.d > 0 && p.d < NR.L), { d: NR.L, g: net.nodes[rc.to].g }];
+      const dep = p => p.g - (rc.inv_up - rc.S * p.d);
+      for (let k = 1; k < pts.length; k++) {
+        const dx = pts[k].d - pts[k - 1].d, d0 = dep(pts[k - 1]), d1 = dep(pts[k]), dm = (d0 + d1) / 2;
+        byBand[QBANDS.findIndex(([t]) => dm < t)].m += dx;
+        vol += dx * W * (dm + r.bedding); depthLen += dx * dm; maxDepth = Math.max(maxDepth, d0, d1);
+      }
+      bySize.set(rc.dmm || d.dmm, (bySize.get(rc.dmm || d.dmm) || 0) + rc.L); L += rc.L;
+    });
+    return {
+      length: L, bySize: [...bySize].sort((a, b) => a[0] - b[0]).map(([dmm, m]) => ({ dmm, m })), byBand, volume: vol,
+      avgDepth: L ? depthLen / L : 0, maxDepth, mhs: d.mhs.length, structures: d.structures || 0, work: QWORK,
+    };
+  }
+  // ---- A design in a link (#…&sd=…): the drawn lines and the form, re-designed when opened --------
+  // { pts: [{ lat, lng }] (the main line, its end on the sewer), branches: [{ pts, form }], form,
+  // roads }. The points to 1e-6° (about 0.1 m), as differences; base64url JSON. Only the form's own
+  // fields travel, each as its kind (a number as text, a switch as a flag).
+  const FORM_TXT = ['q', 'pop', 'jobs', 'ha', 'spacing', 'ww', 'sLo', 'sHi', 'dmm', 'fmdmm'], FORM_BOOL = ['ici', 'avoid', 'vfd'], BR_TXT = ['q', 'pop', 'jobs', 'ha'];
+  // (btoa / atob: browsers, and Node from 16)
+  const b64e = t => btoa(t).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const b64d = t => atob(String(t).replace(/-/g, '+').replace(/_/g, '/'));
+  const packPts = pts => { let la = 0, ln = 0; return pts.map(p => { const a = Math.round(p.lat * 1e6), b = Math.round(p.lng * 1e6), o = [a - la, b - ln]; la = a; ln = b; return o; }); };
+  const unpackPts = arr => { let la = 0, ln = 0; return arr.map(([a, b]) => { la += a; ln += b; return { lat: la / 1e6, lng: ln / 1e6 }; }); };
+  const txtOf = (f, keys) => Object.fromEntries(keys.filter(k => f && f[k] != null && String(f[k]).trim() !== '').map(k => [k, String(f[k]).trim()]));
+  function encodeDesign({ pts, branches = [], form = {}, roads = false }) {
+    // (slopes both blank, the standard's own limits, travel as std: the form's 0.3–1% isn't them)
+    const blankS = !txtOf(form, ['sLo', 'sHi']).sLo && !txtOf(form, ['sLo', 'sHi']).sHi;
+    const f = { ...txtOf(form, FORM_TXT), ...Object.fromEntries(FORM_BOOL.filter(k => form[k]).map(k => [k, 1])), ...(form.mode === 'pumped' ? { mode: 'p' } : {}), ...(blankS ? { std: 1 } : {}) };
+    return b64e(JSON.stringify({ v: 1, m: packPts(pts), b: branches.map(b => [packPts(b.pts), txtOf(b.form, BR_TXT)]), f, ...(roads ? { r: 1 } : {}) }));
+  }
+  // null when it can't be read, or isn't a design (points out of range, too many of them, a field of
+  // the wrong kind).
+  function decodeDesign(str) {
+    let o; try { o = JSON.parse(b64d(str)); } catch (e) { return null; }
+    const okPts = a => Array.isArray(a) && a.length >= 2 && a.length <= 5000 && a.every(x => Array.isArray(x) && x.length === 2 && x.every(Number.isInteger));
+    const inRange = P => P.every(p => Math.abs(p.lat) <= 90 && Math.abs(p.lng) <= 180);
+    const num = v => typeof v === 'string' && v.length <= 12 && /^-?\d*\.?\d*$/.test(v);
+    const formOf = (f, keys) => (f && typeof f === 'object' ? Object.fromEntries(keys.filter(k => num(f[k])).map(k => [k, f[k]])) : {});
+    if (!o || o.v !== 1 || !okPts(o.m) || !Array.isArray(o.b || []) || (o.b || []).length > 20) return null;
+    const pts = unpackPts(o.m); if (!inRange(pts)) return null;
+    const branches = [];
+    for (const b of o.b || []) { if (!Array.isArray(b) || !okPts(b[0])) return null; const bp = unpackPts(b[0]); if (!inRange(bp)) return null; branches.push({ pts: bp, form: formOf(b[1], BR_TXT) }); }
+    const f = o.f && typeof o.f === 'object' ? o.f : {};
+    return { pts, branches, roads: o.r === 1, form: { ...formOf(f, FORM_TXT), ...(f.std === 1 ? { sLo: '', sHi: '' } : {}), ...Object.fromEntries(FORM_BOOL.map(k => [k, f[k] === 1])), mode: f.mode === 'p' ? 'pumped' : 'gravity' } };
+  }
+
+  // ---- Exports: GeoJSON and KML (WGS 84), DXF (NAD83 / UTM zone 17N, metres) ----------------------
+  // The maintenance holes (designer's labels, at their ll) and the reaches between them, as designed.
+  const mhLabel = (m, i) => m.label || `MH ${i + 1}`;
+  const rmLabel = (r, d) => `${r.dmm || d.dmm} mm @ ${(r.S * 100).toFixed(2)}%, ${r.L.toFixed(1)} m`;
+  const r2 = v => (v == null ? null : Math.round(v * 100) / 100), r6 = v => Math.round(v * 1e6) / 1e6;
+  function toGeoJSON(d, conn, meta = {}) {
+    const ll = m => [r6(m.ll.lng), r6(m.ll.lat)];
+    const feats = [
+      ...d.reaches.map(r => ({ type: 'Feature', geometry: { type: 'LineString', coordinates: [ll(d.mhs[r.from]), ll(d.mhs[r.to])] },
+        properties: { kind: 'reach', reach: `${mhLabel(d.mhs[r.from], r.from)} to ${mhLabel(d.mhs[r.to], r.to)}`, diameter_mm: r.dmm || d.dmm, length_m: r2(r.L), slope_pct: Math.round(r.S * 1e5) / 1e3, invert_up_m: r2(r.inv_up), invert_down_m: r2(r.inv_dn), flow_ls: r2(r.q != null ? r.q : d.q), capacity_full_ls: r2(r.qFull), velocity_design_ms: r2(r.v) } })),
+      ...d.mhs.map((m, i) => ({ type: 'Feature', geometry: { type: 'Point', coordinates: ll(m) },
+        properties: { kind: 'maintenance hole', name: mhLabel(m, i), ground_m: r2(m.g), invert_in_m: m.ins && m.ins.length ? m.ins.map(x => r2(x.inv)) : null, invert_out_m: r2(m.inv_out), depth_m: r2(m.depth), drop_m: r2(m.drop || 0), drop_structure: !!m.structure } })),
+    ];
+    if (conn) feats.push({ type: 'Feature', geometry: { type: 'Point', coordinates: [r6(conn.lng), r6(conn.lat)] }, properties: { kind: 'connection', existing_sewer_mm: conn.dmm, existing_sewer_id: conn.id || null, existing_invert_m: r2(conn.invert) } });
+    return JSON.stringify({ type: 'FeatureCollection', name: meta.name || 'Preliminary sanitary sewer', description: meta.note || '', features: feats }, null, 1);
+  }
+  const xml = t => String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  function toKML(d, conn, meta = {}) {
+    const c = m => `${r6(m.ll.lng)},${r6(m.ll.lat)},0`;
+    const pm = (name, desc, geom, style) => `<Placemark><name>${xml(name)}</name><description>${xml(desc)}</description><styleUrl>#${style}</styleUrl>${geom}</Placemark>`;
+    const items = [
+      ...d.reaches.map(r => pm(`${mhLabel(d.mhs[r.from], r.from)} to ${mhLabel(d.mhs[r.to], r.to)}`, `${rmLabel(r, d)}; inverts ${r.inv_up.toFixed(2)} to ${r.inv_dn.toFixed(2)} m`, `<LineString><tessellate>1</tessellate><coordinates>${c(d.mhs[r.from])} ${c(d.mhs[r.to])}</coordinates></LineString>`, 'pipe')),
+      ...d.mhs.map((m, i) => pm(mhLabel(m, i), `ground ${m.g.toFixed(2)} m; depth ${m.depth.toFixed(2)} m${m.inv_out != null ? `; invert out ${m.inv_out.toFixed(2)} m` : ''}${m.structure ? '; drop structure' : ''}`, `<Point><coordinates>${c(m)}</coordinates></Point>`, 'mh')),
+    ];
+    if (conn) items.push(pm('Connection', `${conn.dmm} mm existing sewer${conn.id ? ` ${conn.id}` : ''}, invert ${conn.invert.toFixed(2)} m`, `<Point><coordinates>${r6(conn.lng)},${r6(conn.lat)},0</coordinates></Point>`, 'conn'));
+    return `<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>${xml(meta.name || 'Preliminary sanitary sewer')}</name><description>${xml(meta.note || '')}</description>`
+      + '<Style id="pipe"><LineStyle><color>ff2a52be</color><width>4</width></LineStyle></Style><Style id="mh"><IconStyle><scale>0.7</scale></IconStyle></Style><Style id="conn"><IconStyle><scale>0.9</scale></IconStyle></Style>'
+      + `${items.join('')}</Document></kml>\n`;
+  }
+  // NAD83 / UTM zone 17N (EPSG:26917): transverse Mercator on GRS 80, central meridian 81° W,
+  // scale 0.9996, false easting 500 km (Snyder, Map Projections — A Working Manual, eq. 8-9 to 8-11).
+  // The WGS 84 points are taken as NAD83 (within about 1–2 m in Peel: screening).
+  function utm17(lat, lng) {
+    const a = 6378137, f = 1 / 298.257222101, e2 = f * (2 - f), ep2 = e2 / (1 - e2), k0 = 0.9996, lon0 = -81 * Math.PI / 180;
+    const ph = lat * Math.PI / 180, N = a / Math.sqrt(1 - e2 * Math.sin(ph) ** 2), T = Math.tan(ph) ** 2, C = ep2 * Math.cos(ph) ** 2, A = Math.cos(ph) * (lng * Math.PI / 180 - lon0);
+    const M = a * ((1 - e2 / 4 - 3 * e2 ** 2 / 64 - 5 * e2 ** 3 / 256) * ph - (3 * e2 / 8 + 3 * e2 ** 2 / 32 + 45 * e2 ** 3 / 1024) * Math.sin(2 * ph) + (15 * e2 ** 2 / 256 + 45 * e2 ** 3 / 1024) * Math.sin(4 * ph) - (35 * e2 ** 3 / 3072) * Math.sin(6 * ph));
+    const E = 500000 + k0 * N * (A + (1 - T + C) * A ** 3 / 6 + (5 - 18 * T + T * T + 72 * C - 58 * ep2) * A ** 5 / 120);
+    const Nn = k0 * (M + N * Math.tan(ph) * (A * A / 2 + (5 - T + 9 * C + 4 * C * C) * A ** 4 / 24 + (61 - 58 * T + T * T + 600 * C - 330 * ep2) * A ** 6 / 720));
+    return [E, Nn];
+  }
+  // DXF (R12, entities only): the reaches as 3D lines (Z: the inverts) on SAN-NEW, maintenance holes
+  // as 0.6 m circles on SAN-MH (Z: the ground), labels on SAN-TEXT, the connection on SAN-EXIST.
+  function toDXF(d, conn) {
+    const out = [], g = (code, v) => out.push(String(code), String(v)), f3 = v => (+v).toFixed(3);
+    const P = m => utm17(m.ll.lat, m.ll.lng);
+    g(0, 'SECTION'); g(2, 'ENTITIES');
+    d.reaches.forEach(r => {
+      const a = P(d.mhs[r.from]), b = P(d.mhs[r.to]);
+      g(0, 'LINE'); g(8, 'SAN-NEW'); g(10, f3(a[0])); g(20, f3(a[1])); g(30, f3(r.inv_up)); g(11, f3(b[0])); g(21, f3(b[1])); g(31, f3(r.inv_dn));
+      const ang = Math.atan2(b[1] - a[1], b[0] - a[0]) * 180 / Math.PI, up = ang > 90 || ang < -90 ? ang + 180 : ang;
+      g(0, 'TEXT'); g(8, 'SAN-TEXT'); g(10, f3((a[0] + b[0]) / 2)); g(20, f3((a[1] + b[1]) / 2)); g(30, '0'); g(40, '1.5'); g(1, rmLabel(r, d)); g(50, up.toFixed(2)); g(72, 1); g(11, f3((a[0] + b[0]) / 2)); g(21, f3((a[1] + b[1]) / 2)); g(31, '0');
+    });
+    d.mhs.forEach((m, i) => {
+      const p = P(m);
+      g(0, 'CIRCLE'); g(8, 'SAN-MH'); g(10, f3(p[0])); g(20, f3(p[1])); g(30, f3(m.g)); g(40, '0.6');
+      g(0, 'TEXT'); g(8, 'SAN-TEXT'); g(10, f3(p[0] + 1.2)); g(20, f3(p[1] + 1.2)); g(30, '0'); g(40, '1.8'); g(1, `${mhLabel(m, i)} G ${m.g.toFixed(2)} D ${m.depth.toFixed(2)}`);
+    });
+    if (conn) { const p = utm17(conn.lat, conn.lng); g(0, 'CIRCLE'); g(8, 'SAN-EXIST'); g(10, f3(p[0])); g(20, f3(p[1])); g(30, f3(conn.invert)); g(40, '1.0'); }
+    if (conn && conn.g) for (let k = 1; k < conn.g.length; k++) { const a = utm17(conn.g[k - 1][1], conn.g[k - 1][0]), b = utm17(conn.g[k][1], conn.g[k][0]); g(0, 'LINE'); g(8, 'SAN-EXIST'); g(10, f3(a[0])); g(20, f3(a[1])); g(30, '0'); g(11, f3(b[0])); g(21, f3(b[1])); g(31, '0'); }
+    g(0, 'ENDSEC'); g(0, 'EOF');
+    return `${out.join('\n')}\n`;
+  }
   // The design as CSV: the maintenance holes, then the reaches.
   function csv(d) {
     const f2 = v => (v == null ? '' : (+v).toFixed(2)), lines = ['Maintenance hole,Chainage (m),Ground (m),Invert in (m),Invert out (m),Depth to invert (m),Drop (m),Drop structure,On'];
     d.mhs.forEach((m, i) => lines.push([m.label || `MH ${i + 1}${i === d.mhs.length - 1 ? ' (connection)' : ''}`, f2(m.x), f2(m.g), m.ins && m.ins.length > 1 ? `"${m.ins.map(x => f2(x.inv)).join(' / ')}"` : f2(m.inv_in), f2(m.inv_out), f2(m.depth), f2(m.drop), m.structure ? 'yes' : '', m.run ? `branch ${m.run + 1}` : 'main line'].join(',')));
     lines.push('', 'Reach,Diameter (mm),Length (m),Slope (%),Invert up (m),Invert down (m),Full-flow capacity (L/s),Flow ratio,Velocity at design flow (m/s),Velocity full (m/s),Depth ratio,Froude,Design flow (L/s)');
     d.reaches.forEach(r => lines.push([`MH ${r.from + 1} to MH ${r.to + 1}`, r.dmm || d.dmm, f2(r.L), (r.S * 100).toFixed(3), f2(r.inv_up), f2(r.inv_dn), f2(r.qFull), r.qRatio.toFixed(2), f2(r.v), f2(r.vFull), r.depthRatio.toFixed(2), r.froude.toFixed(2), f2(r.q != null ? r.q : d.q)].join(',')));
-    lines.push('', `Design flow (L/s),${f2(d.q)}`, `Cover over the pipe (m),${d.cover}`, `Rules,"${d.source}"`, '"General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results."');
+    if (d.qty) {
+      const q = d.qty, sd = d.qtyStd;
+      lines.push('', `Quantities,This design${sd ? ',Peel\'s standard slopes' : ''}`);
+      const row = (t, a, b) => lines.push(`"${t}",${a}${sd ? `,${b}` : ''}`);
+      row('Pipe (m)', f2(q.length), sd && f2(sd.length));
+      for (const s of [...new Set([...q.bySize.map(x => x.dmm), ...(sd ? sd.bySize.map(x => x.dmm) : [])])].sort((a, b) => a - b)) row(`  ${s} mm (m)`, f2((q.bySize.find(x => x.dmm === s) || { m: 0 }).m), sd && f2((sd.bySize.find(x => x.dmm === s) || { m: 0 }).m));
+      q.byBand.forEach((b, i) => row(`  Depth to invert ${b.band} (m)`, f2(b.m), sd && f2(sd.byBand[i].m)));
+      row(`Trench volume (m³; pipe + ${q.work} m wide; vertical walls)`, f2(q.volume), sd && f2(sd.volume));
+      row('Average depth to invert (m)', f2(q.avgDepth), sd && f2(sd.avgDepth));
+      row('Deepest (m)', f2(q.maxDepth), sd && f2(sd.maxDepth));
+      row('Maintenance holes', q.mhs, sd && sd.mhs);
+      row('Drop structures', q.structures, sd && sd.structures);
+    }
+    if (d.down && d.down.res) {
+      const dn = d.down, pc = r => (r == null ? '' : `${Math.round(r * 100)}%`);
+      lines.push('', `Room downstream (${dn.yearLabel}),Pipe,Km down,Capacity (L/s),Without this sewer (L/s),With it (L/s),Full without,Full with`);
+      for (const r of dn.list) lines.push([`"${r.role}"`, `${r.dmm} mm`, (r.dist / 1000).toFixed(2), f2(r.cap || null), f2(r.before), f2(r.after), pc(r.r0), pc(r.r1)].join(','));
+    }
+    lines.push('', `Design flow (L/s),${f2(d.q)}`, `Cover over the pipe (m),${d.cover}`, ...(d.slopes ? [`Slopes chosen (%),${f2(d.slopes[0] * 100)}–${f2(d.slopes[1] * 100)}`] : []), `Rules,"${d.source}"`, '"General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results."');
     return lines.join('\n');
   }
 
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
-    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, connBend, pointAt, checks, csv, crossings, CROSS };
+    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, connBend, pointAt, checks, csv, crossings, CROSS, slopeRange, downstream, quantities, QBANDS, encodeDesign, decodeDesign, toGeoJSON, toKML, toDXF, utm17 };
     return;
   }
   // ---- Browser ---------------------------------------------------------------------------------
@@ -135,7 +315,7 @@
   // The main line (pts, xs, ground) runs from the site to the connection; each branch ({ pts, xs,
   // ground, join: { to (the line it joins), x }, form }) runs from its own start to a point on the main line or an
   // earlier branch. drawing: 0 while the main line is drawn, k while branch k is.
-  const S = { pts: [], legs: [], roads: false, roadsUsed: false, findMode: false, corridor: null, cw: null, conn: null, net: null, d: null, busy: false, msg: '', branches: [], drawing: 0, view: 0, form: { q: '', pop: '', jobs: '', ha: '', ici: false, avoid: false, spacing: 190, mode: 'gravity', vfd: false, ww: '', dmm: '', fmdmm: '' } };
+  const S = { pts: [], legs: [], roads: false, roadsUsed: false, findMode: false, corridor: null, cw: null, conn: null, net: null, d: null, busy: false, msg: '', branches: [], drawing: 0, view: 0, form: { q: '', pop: '', jobs: '', ha: '', ici: false, avoid: false, spacing: 190, mode: 'gravity', vfd: false, ww: '', sLo: '0.3', sHi: '1.0', dmm: '', fmdmm: '' } };
   const cur = () => (S.drawing ? S.branches[S.drawing - 1].pts : S.pts);
   const curRun = () => (S.drawing ? S.branches[S.drawing - 1] : S);
   const narrow = () => !!(root.PeelDataTab && root.PeelDataTab.shellNarrow && root.PeelDataTab.shellNarrow());
@@ -364,6 +544,7 @@
       if (!(flow.q > 0)) { S.fm = null; S.formMsg = 'Type a design flow, or the population, jobs and area it serves.'; return openResult(); }
       S.flow = flow;
       S.fm = FM().design(S.ground.map(({ x, g }) => ({ x, g })), S.conn, flow.q, { vfd: f.vfd, ici: f.ici, wwDepth: +f.ww || 0, dmm: +f.fmdmm || null });
+      if (S.fm.ok) findDownstream(S.fm, flow.q);
       openResult(); drawLine(); return;
     }
     S.fm = null;
@@ -372,8 +553,10 @@
     if (missing >= 0) { S.d = null; S.formMsg = missing ? `Type a flow, or the population, jobs and area, for branch ${missing + 1}.` : 'Type a design flow, or the population, jobs and area it serves.'; return openResult(); }
     S.flow = flowSum(flows);
     const spacing = Math.min(200, Math.max(20, +f.spacing || 190));
+    const sl = slopeRange(f);
+    if (sl && sl.msg) { S.d = null; S.formMsg = sl.msg; return openResult(); }
     S.net = buildNet(spacing);
-    S.d = SW().designNet(S.net.net, S.conn, { ici: f.ici, avoidStructures: f.avoid, dmm: +f.dmm || null });
+    S.d = SW().designNet(S.net.net, S.conn, { ici: f.ici, avoidStructures: f.avoid, dmm: +f.dmm || null, slopes: sl });
     if (S.d.ok) {
       const nb = S.net, d = S.d, rootN = d.root;
       d.mhs.forEach((m, i) => {
@@ -384,7 +567,12 @@
       d.reaches.forEach((r, i) => { r.run = nb.rmeta[i].run; });
       d.q = d.mhs[rootN].ins.reduce((t, x) => t + d.reaches[x.reach].q, 0);
       S.view = Math.min(S.view, rs.length - 1);
+      d.qty = quantities(d, nb.net);
+      // The same route at Peel's standard slopes (only when a range is chosen; at the size chosen, if
+      // one is): what the range costs.
+      if (d.slopes) { const std = SW().designNet(nb.net, S.conn, { ici: f.ici, avoidStructures: f.avoid, dmm: +f.dmm || null }); d.qtyStd = std.ok ? quantities(std, nb.net) : null; d.stdWhy = std.ok ? '' : std.why; d.stdSizes = std.ok ? [...new Set(std.reaches.map(r => r.dmm))].sort((a, b) => a - b) : null; }
       findCrossings();
+      findDownstream(d, d.q);
     }
     openResult(); drawLine();
   }
@@ -422,6 +610,75 @@
     const box = document.querySelector('[data-sd-xings]'); if (box) box.innerHTML = xingsHTML();
     drawLine();
     const pr = document.querySelector('[data-sd-profile]'); if (pr) pr.innerHTML = profileSVG(lineView(S.view));
+  }
+  // ---- Room downstream (downstream()): the Region sewer data (data/sewers.json, 300 mm and more)
+  // and its loads at the map's demand year, as the Sewer pipe capacity layer reads them.
+  let dSeq = 0;
+  const SC = () => root.PeelSewerCap, MA = () => root.PeelMapAnalysis;
+  async function findDownstream(d, q) {
+    const seq = ++dSeq, c = S.conn;
+    S.down = { busy: true }; d.down = null;
+    try { await Promise.resolve(SC() && SC().loadSewers()); } catch (e) { /* (below) */ }
+    if (seq !== dSeq || (S.d !== d && S.fm !== d)) return;
+    const data = root.PeelMapMarkers && root.PeelMapMarkers.SEW && root.PeelMapMarkers.SEW.data;
+    if (!data || !SC()) S.down = { err: 'the Region sewer capacity data did not load' };
+    else {
+      // The pipe it joins: the same pipe (300 mm and more), or from a smaller local sewer the
+      // nearest Region trunk of 300 mm or more, as each development joins one (Sewer pipe capacity).
+      const big = c.dmm >= 300, k = SC().nearestPipe(c.lng, c.lat, big ? 30 : 400, 300);
+      if (k < 0) S.down = { err: big ? 'the sewer it joins is not in the Region capacity data' : 'no Region sewer of 300 mm or more within 400 m of the connection' };
+      else {
+        const yr = MA() && MA().getCapYear ? MA().getCapYear() : null;
+        const res = downstream(data.pipes, k, q, i => { const st = SC().pipeStats(i, yr, true); return { q: st.then.q, cap: st.cap }; });
+        const role = new Map(), add = (r, t) => { if (r && !role.has(r.i)) role.set(r.i, t); };
+        add(res.recv, big ? 'The sewer it joins' : 'The first Region trunk (300 mm+)');
+        res.over.forEach(r => add(r, 'Goes over 100%')); res.near.forEach(r => add(r, 'Goes over 85%')); add(res.tight, 'The tightest down to the plant');
+        const list = res.rows.filter(r => role.has(r.i)).slice(0, 10).map(r => ({ ...r, role: role.get(r.i) }));
+        const k0 = data.pipes[k], m = big ? 0 : Math.round(root.PeelDcInfra && root.PeelDcInfra.dcDist ? root.PeelDcInfra.dcDist([c.lng, c.lat], SC().pipeCoords(k0)) : 0);
+        S.down = { res, list, yearLabel: yr == null ? 'build-out' : String(yr), plant: data.plants[k0[6]] || '', big, m };
+      }
+    }
+    d.down = S.down.res ? S.down : null;
+    const box = document.querySelector('[data-sd-down]'); if (box) box.innerHTML = downHTML();
+  }
+  function downHTML() {
+    const D = S.down;
+    if (!D || D.busy) return '<p class="small muted">Adding the flow to the Region sewers downstream…</p>';
+    if (D.err) return `<p class="small muted">Room downstream not checked: ${esc(D.err)}.</p>`;
+    const r = D.res, pc = x => (x == null ? '–' : `${Math.round(x * 100)}%`), km = m => `${(m / 1000).toFixed(m < 10000 ? 1 : 0)} km`;
+    const plant = D.plant === 'Toronto' ? 'the City of Toronto system' : D.plant ? `the ${esc(D.plant)} plant` : 'the end of the data';
+    const chip = r.over.length ? `<span class="pnl-chip t-over">${r.over.length} pipe${r.over.length === 1 ? '' : 's'} go${r.over.length === 1 ? 'es' : ''} over 100%</span>` : r.near.length ? `<span class="pnl-chip t-tight">${r.near.length} pipe${r.near.length === 1 ? '' : 's'} go${r.near.length === 1 ? 'es' : ''} over 85%</span>` : '<span class="pnl-chip t-room">Room downstream</span>';
+    const rc = r.recv, t = r.tight;
+    const recv = rc.cap ? `The ${fmtNum(rc.dmm)} mm sewer it ${D.big ? 'joins' : `reaches (the nearest of 300 mm or more, ${fmtNum(D.m)} m from the connection)`} goes from <strong>${pc(rc.r0)} to ${pc(rc.r1)}</strong> full (${fmt1(rc.before)} → ${fmt1(rc.after)} L/s of ${fmtNum(Math.round(rc.cap))} L/s).` : `The ${fmtNum(rc.dmm)} mm sewer it ${D.big ? 'joins' : 'reaches'} has no reliable published slope: its capacity is not known.`;
+    const tt = t && t !== rc ? ` Down to ${plant} (${fmtNum(r.rows.length)} pipes, ${km(r.length)}), the tightest is a ${fmtNum(t.dmm)} mm pipe ${km(t.dist)} down: ${pc(t.r0)} → <strong>${pc(t.r1)}</strong>.` : ` Down to ${plant} (${fmtNum(r.rows.length)} pipes, ${km(r.length)}), no pipe is tighter.`;
+    const already = r.already.length ? ` ${fmtNum(r.already.length)} pipe${r.already.length === 1 ? ' is' : 's are'} already over 100% without this sewer.` : '';
+    const st = x => { const s2 = root.PeelMapMarkers && root.PeelMapMarkers.pipeState ? root.PeelMapMarkers.pipeState(x) : null; return s2 ? `<span class="pipe-st-dot" style="--st:var(${s2[1]})"></span>${esc(s2[3])}` : 'n/a'; };
+    const rows = D.list.map(x => `<tr><th scope="row">${esc(x.role)}</th><td class="n">${fmtNum(x.dmm)} mm${x.year ? ` <small>${x.year}</small>` : ''}</td><td class="n">${(x.dist / 1000).toFixed(2)}</td><td class="n">${x.cap ? fmtNum(Math.round(x.cap)) : '–'}</td><td class="n">${pc(x.r0)}</td><td class="n">${pc(x.r1)}</td><td>${st(x.r1)}</td></tr>`).join('');
+    return `<p>${chip} ${recv}${tt}${already}</p>
+      <div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">Pipe</th><th scope="col" class="n">Size</th><th scope="col" class="n">Km down</th><th scope="col" class="n">Capacity (L/s)</th><th scope="col" class="n">Full without</th><th scope="col" class="n">Full with</th><th scope="col">With it</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <p class="small muted">At ${D.yearLabel === 'build-out' ? 'build-out' : esc(D.yearLabel)} (the Demand year on the map), each Region pipe of 300 mm or more loaded as the Sewer pipe capacity layer loads it, with every load counted whatever the Wastewater loads switches in Layers show: the census population at the plant's measured rate, and the growth built since 2021, approved and proposed at Peel design criteria (approved and proposed as phased in Horizon years). This sewer's ${fmt1(r.q)} L/s design flow is added in full to every pipe down to the plant (not re-peaked with the rest, no attenuation). If the sewer serves a development already in the pipeline, its flow is in the load already and is counted twice here. Full-pipe capacity by Manning (n 0.013) on the published slope${r.unchecked ? `; ${fmtNum(r.unchecked)} pipe${r.unchecked === 1 ? ' has' : 's have'} no reliable slope and ${r.unchecked === 1 ? 'is' : 'are'} not checked` : ''}. A screen, not a hydraulic model.</p>`;
+  }
+  // Quantities (quantities()): this design, and the same route at Peel's standard slopes when a
+  // slope range is chosen.
+  function qtyHTML(d) {
+    const q = d.qty, sd = d.qtyStd, n0 = x => fmtNum(Math.round(x));
+    const sizes = [...new Set([...q.bySize.map(x => x.dmm), ...(sd ? sd.bySize.map(x => x.dmm) : [])])].sort((a, b) => a - b);
+    const m = (arr, k) => (arr.find(x => x.dmm === k) || { m: 0 }).m;
+    // (no difference: none at the precision shown)
+    const dif = (a, b, f = n0) => { const x = a - b, fx = f(Math.abs(x)); return fx === f(0) ? '–' : `${x > 0 ? '+' : '−'}${fx}`; };
+    const row = (t, a, b, f = n0, cls = '') => `<tr${cls ? ` class="${cls}"` : ''}><th scope="row">${t}</th><td class="n">${f(a)}</td>${sd ? `<td class="n">${f(b)}</td><td class="n">${dif(a, b, f)}</td>` : ''}</tr>`;
+    const rows = [row('Pipe (m)', q.length, sd && sd.length),
+      ...sizes.map(k => row(`<span class="sd-ind">${fmtNum(k)} mm</span>`, m(q.bySize, k), sd && m(sd.bySize, k))),
+      ...q.byBand.map((b, i) => row(`<span class="sd-ind">deep ${esc(b.band)}</span>`, b.m, sd && sd.byBand[i].m)),
+      row('Trench volume (m³)', q.volume, sd && sd.volume, n0, 'sd-qty-key'),
+      row('Average depth (m)', q.avgDepth, sd && sd.avgDepth, x => fmt2(x)),
+      row('Deepest (m)', q.maxDepth, sd && sd.maxDepth, x => fmt2(x)),
+      row('Maintenance holes', q.mhs, sd && sd.mhs), row('Drop structures', q.structures, sd && sd.structures)].join('');
+    const rg = d.slopes ? `${fmt2(d.slopes[0] * 100)}–${fmt2(d.slopes[1] * 100)}%` : '';
+    const head = `<th scope="col"></th><th scope="col" class="n">This design${rg ? ` <small>${rg}</small>` : ''}</th>${sd ? '<th scope="col" class="n">Standard slopes</th><th scope="col" class="n">Difference</th>' : ''}`;
+    const cmp = d.slopes && !sd ? `<p class="small muted">At Peel's standard slopes the same route finds no design: ${esc(d.stdWhy || 'no size works')}.</p>` : sd ? `<p class="small">${Math.abs(q.volume - sd.volume) < 0.5 ? 'The chosen slopes dig the same as the standard\'s.' : `The chosen slopes dig <strong>${fmtNum(Math.round(Math.abs(q.volume - sd.volume)))} m³ ${q.volume > sd.volume ? 'more' : 'less'}</strong> than the standard's own (${Math.round(Math.abs(q.volume / sd.volume - 1) * 100)}%)${d.stdSizes && d.stdSizes.join() !== [...new Set(d.reaches.map(r => r.dmm))].sort((a, b) => a - b).join() ? `, and the standard's design is ${d.stdSizes.map(x => `${fmtNum(x)} mm`).join('–')}` : ''}.`}</p>` : '';
+    return `${cmp}<div class="table-wrap"><table class="dt small sd-t sd-qty"><thead><tr>${head}</tr></thead><tbody>${rows}</tbody></table></div>
+      <p class="small muted">Pipe by size and by depth to the invert along the reaches (the ground as the design reads it). Trench volume: from the ground to the bedding (0.15 m under the invert), the pipe's nominal size + ${q.work} m wide (0.3 m working room each side; the wall not counted), vertical walls: no slope back, benching or shoring counted. Quantities only: no costs. ${d.slopes && sd ? 'Standard slopes: the same route, flow and settings designed to the standard\'s own limits (0.75 m/s at the design flow to 3.0 m/s full).' : ''}</p>`;
   }
   function xingsHTML() {
     if (S.xingsBusy) return '<p class="small muted">Looking for the watermains and storm sewers the sewer crosses…</p>';
@@ -464,8 +721,10 @@
       <fieldset class="sd-mode"><legend class="label">Design</legend><label class="chk"><input type="radio" name="sd-mode" data-sd="mode" value="gravity"${f.mode !== 'pumped' ? ' checked' : ''}> Gravity sewer</label><label class="chk"><input type="radio" name="sd-mode" data-sd="mode" value="pumped"${f.mode === 'pumped' ? ' checked' : ''}> Pumped: a station at the start, a forcemain to the sewer</label></fieldset>
       ${f.mode === 'pumped' ? `<div class="sd-row">${sizeField('fmdmm', FM().SIZES.filter(d => d >= FM().RULES.dMin), 'Largest in the velocity range')}<label class="field"><span class="label">Wet well low level (m below ground)</span><input type="number" min="0" step="0.1" data-sd="ww" value="${v('ww')}" placeholder="the incoming sewer"></label>
       <label class="chk"><input type="checkbox" data-sd="vfd"${f.vfd ? ' checked' : ''}> Variable speed pumps (0.8 m/s, with 1.0 m/s flushing weekly)</label><label class="chk"><input type="checkbox" data-sd="ici"${f.ici ? ' checked' : ''}> Industrial / commercial (3.5 m of cover, else 2.5 m)</label></div>` : `<div class="sd-row">${sizeField('dmm', SW().SIZES.filter(d => d >= SW().RULES.dMin && (!S.conn || d <= S.conn.dmm)), 'Smallest that works')}<label class="field"><span class="label">Maintenance holes at most (m apart)</span><input type="number" min="20" max="200" step="5" data-sd="spacing" value="${v('spacing')}"></label>
+      <label class="field"><span class="label">Slopes from (%)</span><input type="number" min="0.05" max="10" step="0.05" data-sd="sLo" value="${v('sLo')}" placeholder="the standard's"></label><label class="field"><span class="label">to (%)</span><input type="number" min="0.05" max="10" step="0.05" data-sd="sHi" value="${v('sHi')}" placeholder="the standard's"></label>
       <label class="chk"><input type="checkbox" data-sd="ici"${f.ici ? ' checked' : ''}> Industrial / commercial (3.5 m of cover, else 2.5 m)</label>
-      <label class="chk"><input type="checkbox" data-sd="avoid"${f.avoid ? ' checked' : ''}> Avoid drop structures</label></div>`}
+      <label class="chk"><input type="checkbox" data-sd="avoid"${f.avoid ? ' checked' : ''}> Avoid drop structures</label></div>
+      <p class="small muted">Every reach between these slopes (both blank: the standard's own limits, 0.75 m/s at the design flow to 3.0 m/s full). Where 0.75 m/s needs a steeper slope than the range, the reach is held at the steepest and the velocity check says so.</p>`}
       <p><button type="button" class="btn small primary" data-sd-act="design">Design</button> <button type="button" class="btn small" data-sd-act="edit">Edit the route</button> <button type="button" class="btn small link" data-sd-act="clear">Clear</button></p>
       ${S.formMsg ? `<p class="small t-tight">${esc(S.formMsg)}</p>` : ''}</form>`;
   }
@@ -495,19 +754,23 @@
     const deepest = SW().deepest(d, S.net.net).depth, s = d.reaches.map(r => r.S * 100), sizes = [...new Set(d.reaches.map(r => r.dmm))].sort((a, b) => a - b), nRuns = runs().length;
     const ok = c => `<li class="${c.pass ? 'sd-ok' : 'sd-no'}"><span aria-hidden="true">${c.pass ? '✓' : '✗'}</span> ${esc(c.t)}: <strong>${esc(c.val)}</strong></li>`;
     const checkList = checks(d, S.net.net, S.conn).map(ok);
-    const froudeHi = d.reaches.filter(r => r.froude >= 1).length;
+    const froudeHi = d.reaches.filter(r => r.froude >= 1).length, heldN = d.reaches.filter(r => r.held).length;
     const where = m => (m.run ? `branch ${m.run + 1}` : 'main');
     const mhRows = d.mhs.map(m => `<tr><th scope="row">${esc(m.label.replace(/ \((.+)\)$/, ''))}${/\(/.test(m.label) ? ` <small>${esc(/\((.+)\)$/.exec(m.label)[1])}</small>` : ''}</th><td>${where(m)} ${fmtNum(Math.round(m.x))} m</td><td class="n">${fmt2(m.g)}</td><td class="n">${m.ins.length ? m.ins.map(x => fmt2(x.inv)).join(' / ') : '–'}</td><td class="n">${m.inv_out == null ? '–' : fmt2(m.inv_out)}</td><td class="n">${fmt2(m.depth)}</td><td class="n">${m.ins.some(x => x.drop) ? m.ins.map(x => `${fmt2(x.drop)}${x.structure ? ' <small>structure</small>' : ''}`).join(' / ') : '–'}</td></tr>`).join('');
     const rRows = d.reaches.map(r => `<tr><th scope="row">${r.from + 1} → ${r.to + 1}</th><td class="n">${r.dmm}</td><td class="n">${fmt1(r.q)}</td><td class="n">${fmt1(r.L)}</td><td class="n">${(r.S * 100).toFixed(2)}</td><td class="n">${fmt1(r.qFull)}</td><td class="n">${r.qRatio.toFixed(2)}</td><td class="n">${fmt2(r.v)}</td><td class="n">${fmt2(r.vFull)}</td><td class="n">${r.froude.toFixed(2)}</td></tr>`).join('');
     const sizeTxt = sizes.length > 1 ? `${fmtNum(sizes[0])}–${fmtNum(sizes[sizes.length - 1])} mm` : `${fmtNum(sizes[0])} mm`;
     const views = nRuns > 1 ? `<p class="sd-views" role="group" aria-label="Profile of">${runs().map((_, ri) => `<button type="button" class="btn small${ri === S.view ? ' on' : ''}" data-sd-view="${ri}" aria-pressed="${ri === S.view}">${ri ? `Branch ${ri + 1}` : 'Main line'}</button>`).join('')}</p>` : '';
-    return `<p><span class="pnl-chip t-room">Gravity design</span> A <strong>${sizeTxt}</strong> sewer${nRuns > 1 ? ` (the main line and ${nRuns - 1} branch${nRuns === 2 ? '' : 'es'})` : ''} at ${fmt2(Math.min(...s))}–${fmt2(Math.max(...s))}%, ${fmtNum(d.mhs.length)} maintenance holes, ${fmt1(d.mhs[0].depth)} m deep at the start and ${fmt1(deepest)} m at the deepest, for ${fmt1(d.q)} L/s${nRuns > 1 ? ' at the connection' : ''}${S.flow && !S.flow.typed && S.flow.peak != null && nRuns === 1 ? ` (${fmt1(S.flow.peak)} L/s peak dry + ${fmt1(S.flow.ii)} L/s I&amp;I)` : ''}. ${S.form.dmm ? `At the ${fmtNum(+S.form.dmm)} mm you chose: the least excavation the rules allow at that size.` : 'The smallest size that works, at the least excavation the rules allow.'}</p>
+    return `<p><span class="pnl-chip t-room">Gravity design</span> A <strong>${sizeTxt}</strong> sewer${nRuns > 1 ? ` (the main line and ${nRuns - 1} branch${nRuns === 2 ? '' : 'es'})` : ''} at ${fmt2(Math.min(...s)) === fmt2(Math.max(...s)) ? fmt2(s[0]) : `${fmt2(Math.min(...s))}–${fmt2(Math.max(...s))}`}%, ${fmtNum(d.mhs.length)} maintenance holes, ${fmt1(d.mhs[0].depth)} m deep at the start and ${fmt1(deepest)} m at the deepest, for ${fmt1(d.q)} L/s${nRuns > 1 ? ' at the connection' : ''}${S.flow && !S.flow.typed && S.flow.peak != null && nRuns === 1 ? ` (${fmt1(S.flow.peak)} L/s peak dry + ${fmt1(S.flow.ii)} L/s I&amp;I)` : ''}. ${S.form.dmm ? `At the ${fmtNum(+S.form.dmm)} mm you chose: the least excavation the rules allow at that size` : 'The smallest size that works, at the least excavation the rules allow'}${d.slopes ? ` within ${fmt2(d.slopes[0] * 100)}–${fmt2(d.slopes[1] * 100)}%` : ''}.${heldN ? ` <span class="pnl-chip t-tight">Under 0.75 m/s</span> ${heldN} reach${heldN === 1 ? '' : 'es'} at the steepest slope chosen, still under 0.75 m/s at the design flow (see the rules checked).` : ''}</p>
       <h4 class="sd-h">Profile${nRuns > 1 ? ` · ${S.view ? `branch ${S.view + 1} to the connection` : 'the main line'}` : ''}</h4>${views}<div data-sd-profile>${profileSVG(lineView(S.view))}</div>
       <h4 class="sd-h">Rules checked</h4><ul class="sd-checks small">${checkList.join('')}</ul>${froudeHi ? `<p class="small t-tight">${froudeHi} reach${froudeHi === 1 ? '' : 'es'} with supercritical flow (Froude 1 or more): the standard asks for subcritical flow where possible (s. 2.9.1).</p>` : ''}
+      <h4 class="sd-h">Room downstream</h4><div data-sd-down>${downHTML()}</div>
       <h4 class="sd-h">Crossings</h4><div data-sd-xings>${xingsHTML()}</div>
       <h4 class="sd-h">Maintenance holes</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">MH</th><th scope="col">On</th><th scope="col" class="n">Ground (m)</th><th scope="col" class="n">Invert in</th><th scope="col" class="n">Invert out</th><th scope="col" class="n">Depth</th><th scope="col" class="n">Drop</th></tr></thead><tbody>${mhRows}</tbody></table></div>
       <h4 class="sd-h">Reaches · ${sizeTxt}</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">Reach</th><th scope="col" class="n">Size (mm)</th><th scope="col" class="n">Flow (L/s)</th><th scope="col" class="n">Length (m)</th><th scope="col" class="n">Slope (%)</th><th scope="col" class="n">Full flow (L/s)</th><th scope="col" class="n">Flow ratio</th><th scope="col" class="n">V design (m/s)</th><th scope="col" class="n">V full (m/s)</th><th scope="col" class="n">Froude</th></tr></thead><tbody>${rRows}</tbody></table></div>
-      <p><button type="button" class="btn small" data-sd-act="print">Print plan and profile (11×17)</button> <button type="button" class="btn small" data-sd-act="csv">Download the design (CSV)</button></p>`;
+      ${d.qty ? `<h4 class="sd-h">Quantities</h4>${qtyHTML(d)}` : ''}
+      <p><button type="button" class="btn small" data-sd-act="print">Print plan and profile (11×17)</button> <button type="button" class="btn small" data-sd-act="csv">Download the design (CSV)</button></p>
+      <p class="sd-share"><button type="button" class="btn small" data-sd-act="link">Copy a link to this design</button> <span class="small muted">Download for GIS or CAD:</span> <button type="button" class="btn small" data-sd-act="geojson">GeoJSON</button> <button type="button" class="btn small" data-sd-act="kml">KML</button> <button type="button" class="btn small" data-sd-act="dxf" title="NAD83 / UTM zone 17N, metres; the pipe lines carry the inverts as Z">DXF (UTM 17N)</button></p>
+      <p class="small muted">The link keeps the route, the branches and the form: opened, it re-designs from today's sewer, ground and Region data, so the numbers can change. GeoJSON and KML are in WGS 84; the DXF is in NAD83 / UTM zone 17N (metres), with the inverts as the pipe lines' Z.</p>`;
   }
   // The profile of a line view (lineView()): the ground, the cover line, the pipe (obvert and
   // invert), the maintenance holes, the existing sewer at the connection; or the main line's ground
@@ -555,7 +818,8 @@
     return `${head}
       <h4 class="sd-h">Pump duty</h4>${duty}${curveSVG(f)}
       <h4 class="sd-h">Profile</h4>${fmProfileSVG(f)}
-      <h4 class="sd-h">Rules checked</h4><ul class="sd-checks small">${f.checks.map(ok).join('')}</ul>
+      <h4 class="sd-h">Rules checked</h4><ul class="sd-checks small">${f.checks.map(ok).join('')}</ul>${f.ok ? `
+      <h4 class="sd-h">Room downstream</h4><div data-sd-down>${downHTML()}</div>` : ''}
       <h4 class="sd-h">Sizes at ${fmt1(f.q)} L/s</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">Forcemain</th><th scope="col" class="n">Velocity (m/s)</th><th scope="col" class="n">Friction (m per km)</th><th scope="col" class="n">Total head (m)</th><th scope="col">1.0–3.0 m/s</th><th scope="col"><span class="sr-only">Choose</span></th></tr></thead><tbody>${sizes}</tbody></table></div>
       <div class="sd-ps small"><strong>The pumping station is not sized here.</strong> Size it to Peel's Sewage Pumping Station Design Standard: the wet well and its operating range, the number of pumps and firm capacity, standby power, and the forcemain's redundancy (twinning, s. 4.3.1). A transient analysis is mandatory for every forcemain (s. 4.3.6); fittings, valves and station pipework add head not counted here.</div>
       <p><button type="button" class="btn small" data-sd-act="fm-csv">Download the forcemain (CSV)</button></p>`;
@@ -599,6 +863,57 @@
     lines.push('', `Forcemain (mm),${f.dmm}`, `Length (m),${f.L.toFixed(1)}`, `Design flow (L/s),${f.q.toFixed(2)}`, `Velocity (m/s),${f.v.toFixed(2)}`, `Static lift (m),${f.lift.toFixed(2)}`, `Friction (m),${f.hf.toFixed(2)}`, `Total head (m),${f.tdh.toFixed(2)}`, `Outlet invert (m),${f.outletInv.toFixed(2)}`, `Rules,"${f.source}"`, '"The pumping station is not sized: size it to Peel\'s Sewage Pumping Station Design Standard. A transient analysis is mandatory (s. 4.3.6)."', '"General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results."');
     E.download('peel-forcemain.csv', lines.join('\n'), 'text/csv');
   }
+  // ---- The link and the GIS / CAD downloads ------------------------------------------------------
+  const designMeta = () => ({ name: `Preliminary sanitary sewer${S.conn ? ` to the ${S.conn.dmm} mm sewer${S.conn.id ? ` ${S.conn.id}` : ''}` : ''}`, note: 'Preliminary design for screening, not for construction. General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results.' });
+  function downloadGeo(kind) {
+    if (!S.d || !S.d.ok) return;
+    const E = root.PeelExports; if (!E || !E.download) return;
+    if (kind === 'geojson') E.download('peel-sewer-design.geojson', toGeoJSON(S.d, S.conn, designMeta()), 'application/geo+json');
+    else if (kind === 'kml') E.download('peel-sewer-design.kml', toKML(S.d, S.conn, designMeta()), 'application/vnd.google-earth.kml+xml');
+    else E.download('peel-sewer-design-utm17n.dxf', toDXF(S.d, S.conn), 'application/dxf');
+  }
+  const designLink = () => {
+    const base = root.PeelShare && root.PeelShare.viewLink ? root.PeelShare.viewLink.url() : `${location.origin}${location.pathname}#`;
+    const sd = encodeDesign({ pts: S.pts, branches: done().map(b => ({ pts: b.pts, form: b.form })), form: S.form, roads: S.roadsUsed });
+    return `${base}${/#$/.test(base) ? '' : '&'}sd=${sd}`;
+  };
+  async function copyDesignLink() {
+    const url = designLink(), U = root.PeelUtil || {};
+    try { await navigator.clipboard.writeText(url); if (U.toast) U.toast('Link copied: it opens this sewer design, re-designed with the data of the day'); }
+    catch (e) { if (typeof prompt === 'function') prompt('Copy this link:', url); }
+  }
+  // A link with sd=…: the Sewer designer (turned on in Labs if it's off), the drawn lines put back,
+  // Finish (the end snaps to the sewer again), each branch, then the form and Design.
+  // (a link made on its Labs page, w=p:sewer, opens there: the page itself falls back to Home while the
+  // switch is off, so it is opened again once the switch is on)
+  const linkQ = (() => { try { return new URLSearchParams(location.hash.slice(1)); } catch (e) { return null; } })();
+  const linked = linkQ && linkQ.get('sd'), linkedPage = !!linkQ && linkQ.get('w') === 'p:sewer';
+  async function openLinked(str) {
+    const D0 = decodeDesign(str), U = root.PeelUtil || {}, A = root.PeelApp && root.PeelApp.scope;
+    if (!D0) { if (U.toast) U.toast('The sewer design in this link could not be read'); return; }
+    const Lb = root.PeelLabs; if (Lb && !Lb.on('sewer')) Lb.set('sewer', true);
+    const W = root.PeelWorkspaces;
+    if (linkedPage && W && W.openPage && !onPage()) { W.openPage('sewer'); for (let k = 0; k < 30 && !onPage(); k++) await new Promise(r => setTimeout(r, 100)); }
+    clearAll();
+    if (T().active() !== 'sewer' && A && A.setTool) A.setTool('sewer');
+    S.pts = D0.pts; S.legs = D0.pts.map(() => 1); S.roadsUsed = D0.roads;
+    const all = [...D0.pts, ...D0.branches.flatMap(b => b.pts)];
+    try { map().fitBounds(all.map(p => [p.lat, p.lng]), { padding: [40, 40], maxZoom: 17 }); } catch (e) { /* (no map yet) */ }
+    drawLine();
+    await finish(); if (!S.conn) return;
+    for (const b of D0.branches) {
+      S.branches.push({ pts: b.pts, legs: b.pts.map(() => 1), form: { q: '', pop: '', jobs: '', ha: '', ...b.form }, done: false }); S.drawing = S.branches.length;
+      await finishBranch(); if (!S.branches[S.branches.length - 1].done) return;
+    }
+    S.form = { ...S.form, ...D0.form };
+    run();
+    if (U.toast) U.toast('Opened the sewer design from the link, re-designed with today\'s data');
+  }
+  if (linked) {
+    // (once the app, its tools and the map are up; 2 minutes at most)
+    const t0 = Date.now(), go = () => { const A = root.PeelApp && root.PeelApp.scope; if (A && A.setTool && map() && (root.PeelApp.fullSnapshotReady ? root.PeelApp.fullSnapshotReady() : true)) setTimeout(() => openLinked(linked), 400); else if (Date.now() - t0 < 120000) setTimeout(go, 500); };
+    setTimeout(go, 0);
+  }
   function downloadCSV() {
     if (!S.d || !S.d.ok) return;
     const E = root.PeelExports, text = csv(S.d);
@@ -621,7 +936,7 @@
     P.open({
       d: S.d, view: v, nodes: v.nodes, ground: v.ground, pts: [...S.pts, ...done().flatMap(b => b.pts)], conn: S.conn, mains, flow: S.flow, groundLabel: S.groundLabel,
       plan: { lls, reaches: S.d.reaches, labels: S.d.mhs.map((m, i) => `MH ${i + 1}`), start: S.pts[0], branches: done().map(b => b.pts[0]) },
-      xings: S.xings || null, checks: checks(S.d, S.net.net, S.conn), deepest: SW().deepest(S.d, S.net.net), froudeHi: S.d.reaches.filter(x => x.froude >= 1).length,
+      xings: S.xings || null, down: S.d.down || null, qty: S.d.qty || null, qtyStd: S.d.qtyStd || null, checks: checks(S.d, S.net.net, S.conn), deepest: SW().deepest(S.d, S.net.net), froudeHi: S.d.reaches.filter(x => x.froude >= 1).length,
       where: dev && dev.title ? `From ${dev.title}` : `From ${st.lat.toFixed(5)}, ${st.lng.toFixed(5)}`,
       date: new Date().toLocaleDateString('en-CA', { year: 'numeric', month: 'long', day: 'numeric' }),
       version: RP && RP.appVersion ? RP.appVersion() : 'dev', unofficial: Ut.UNOFFICIAL || 'Unofficial prototype · public data only · not a Region of Peel product',
@@ -629,7 +944,7 @@
     });
   }
   function clearAll() { xSeq++; S.res = false; S.xings = null; S.legs = []; S.roadsUsed = false; S.findMode = false; S.corridor = null; S.pts = []; S.conn = null; S.net = null; S.d = null; S.fm = null; S.msg = ''; S.branches = []; S.drawing = 0; S.view = 0; if (layer) layer.clearLayers(); }
-  const reset = () => { S.res = false; S.d = null; S.fm = null; S.net = null; S.xings = null; S.xingsErr = ''; S.xingsBusy = false; xSeq++; };
+  const reset = () => { S.res = false; S.d = null; S.fm = null; S.net = null; S.xings = null; S.xingsErr = ''; S.xingsBusy = false; xSeq++; S.down = null; dSeq++; };
 
   // The form and its buttons (in the result panel).
   const setField = i => {
@@ -646,6 +961,8 @@
     const act = b.dataset.sdAct, A = root.PeelApp && root.PeelApp.scope;
     if (act === 'design') run();
     else if (act === 'csv') downloadCSV();
+    else if (act === 'link') copyDesignLink();
+    else if (act === 'geojson' || act === 'kml' || act === 'dxf') downloadGeo(act);
     else if (act === 'print') printSheet();
     else if (act === 'pumped') { S.form.mode = 'pumped'; run(); }
     else if (act === 'auto-size') { S.form.dmm = ''; run(); }
@@ -699,7 +1016,7 @@
       const d = S.d, sz = [...new Set(d.reaches.map(r => r.dmm))].sort((a, b) => a - b), sl = d.reaches.map(r => r.S * 100), L = d.reaches.reduce((t, r) => t + r.L, 0);
       const ck = checks(d, S.net.net, S.conn), pass = ck.filter(c => c.pass).length, deep = SW().deepest(d, S.net.net).depth;
       F = [
-        { v: sz.length > 1 ? `${sz[0]}–${sz[sz.length - 1]}` : `${sz[0]}`, u: 'mm', label: 'Pipe size', ctx: `${fmt2(Math.min(...sl))}–${fmt2(Math.max(...sl))}% slope · into the ${fmtNum(S.conn.dmm)} mm sewer` },
+        { v: sz.length > 1 ? `${sz[0]}–${sz[sz.length - 1]}` : `${sz[0]}`, u: 'mm', label: 'Pipe size', ctx: `${fmt2(Math.min(...sl)) === fmt2(Math.max(...sl)) ? fmt2(sl[0]) : `${fmt2(Math.min(...sl))}–${fmt2(Math.max(...sl))}`}% slope · into the ${fmtNum(S.conn.dmm)} mm sewer` },
         { v: fmtNum(Math.round(L)), u: 'm', label: 'New sewer', ctx: `${fmtNum(d.reaches.length)} reach${d.reaches.length === 1 ? '' : 'es'} · ${fmt1(d.q)} L/s design flow` },
         { v: fmtNum(d.mhs.length), u: '', label: 'Maintenance holes', ctx: `${fmt1(deep)} m at the deepest · ${fmtNum(d.structures)} drop structure${d.structures === 1 ? '' : 's'}` },
         { v: `${pass}/${ck.length}`, u: '', label: 'Rules met', tone: pass === ck.length ? 'room' : 'over', ctx: pass === ck.length ? 'Linear Wastewater Standards' : `${ck.length - pass} to resolve: see Rules checked` },
@@ -786,5 +1103,5 @@
       if (act === 'sd-finish') { if (S.drawing) finishBranch(); else finish(); }
     },
   });
-  root.PeelSewerDesigner = { page, fitPage, state: () => S, finish, finishBranch, run, clearAll, printSheet, downloadFmCSV, lineView, chainage, bends, checks, csv };
+  root.PeelSewerDesigner = { page, fitPage, state: () => S, finish, finishBranch, run, clearAll, printSheet, downloadFmCSV, lineView, chainage, bends, checks, csv, designLink, openLinked };
 })(typeof window !== 'undefined' ? window : globalThis);

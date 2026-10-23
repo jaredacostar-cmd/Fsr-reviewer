@@ -63,8 +63,8 @@
   const SIDE = {
     explore: { label: 'Explore', what: 'A site, a plan or an area you draw: growth, servicing, capital, files, FSR' },
     capital: { label: 'Capital', what: 'DC timing, EA to construction, projects, EAs' },
-    // Reference (step 5): Help, How it works, the Glossary and Data sources, one entry.
-    reference: { label: 'Reference', what: 'Help, how it works, the glossary, data sources and checks' },
+    // Reference (step 5): Help, How it works, the Glossary, How the app decides and Data sources, one entry.
+    reference: { label: 'Reference', what: 'Help, how it works, the glossary, the app’s rules, data sources and checks' },
   };
   // A site's page: the live map beside its sections, at the site, with what is around it: existing
   // water, sanitary and storm mains (from street zoom), the 2026 DC works, Region construction and the
@@ -78,7 +78,7 @@
     ['Asset Management', ['pipes']],
   ];
   // Reference pages (Home's layout, no map, not a workspace): listed last in Home's sidebar.
-  const REF = { help: { label: 'Help', what: 'Start here, guides, the tour, what’s new' }, guides: { label: 'How it works', what: 'Nine guides: approvals, flows, capacity, the forecast…' }, glossary: { label: 'Glossary', what: 'The terms in plain words' }, data: { label: 'Data sources', what: 'Every source, its date, and the data checks' } };
+  const REF = { help: { label: 'Help', what: 'Start here, guides, the tour, what’s new' }, guides: { label: 'How it works', what: 'Nine guides: approvals, flows, capacity, the forecast…' }, glossary: { label: 'Glossary', what: 'The terms in plain words' }, logic: { label: 'How the app decides', what: 'The data rules, gates and decisions behind the figures' }, data: { label: 'Data sources', what: 'Every source, its date, and the data checks' } };
   // The guides (js/reference.js): pages of their own, listed on How it works, not in the sidebar.
   // Labs pages (Settings › Labs): a tool with a page of its own in Home's sidebar while its switch is on
   // (the page itself: the tool's module, e.g. js/sewer-designer.js page()).

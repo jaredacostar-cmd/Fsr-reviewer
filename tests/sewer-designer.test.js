@@ -40,7 +40,7 @@ test('wired: a Labs switch, a tool on the rail (hidden while off), the last tap 
   assert.match(s, /T\(\)\.register\('sewer', \{/);
   assert.match(s, /\(await MS\(\)\.mainsNear\(end\.lat, end\.lng, 40\)\)\.filter\(m => !m\.fm && m\.up > 0 && m\.dn > 0 && m\.d > 0\)/);
   assert.match(s, /const atUp = along <= 15, atDn = glen - along <= 15/);
-  assert.match(s, /SW\(\)\.designNet\(S\.net\.net, S\.conn, \{ ici: f\.ici, avoidStructures: f\.avoid, dmm: \+f\.dmm \|\| null \}\)/);
+  assert.match(s, /SW\(\)\.designNet\(S\.net\.net, S\.conn, \{ ici: f\.ici, avoidStructures: f\.avoid, dmm: \+f\.dmm \|\| null, slopes: sl \}\)/);
   // (the flow is typed: nothing is designed until it is, for the main line and every branch)
   assert.match(s, /S\.formMsg = missing \? `Type a flow, or the population, jobs and area, for branch \$\{missing \+ 1\}\.` : 'Type a design flow/);
   for (const f of ['js/sewer-designer.js']) { assert.ok(src('index.html').includes(`<script src="${f}?v=__BUILD__"></script>`)); assert.ok(src('sw.js').includes(`'${f}',`)); }
@@ -102,7 +102,7 @@ test('crossings: a watermain at its assumed depth checked for 0.5 m, a storm sew
 
 test('wired: crossings looked up after each design, Follow roads on the banner, the road network loaded before the designer', () => {
   const s = src('js/sewer-designer.js');
-  assert.match(s, /findCrossings\(\);\n    \}\n    openResult\(\); drawLine\(\);/);
+  assert.match(s, /findCrossings\(\);\n      findDownstream\(d, d\.q\);\n    \}\n    openResult\(\); drawLine\(\);/);
   assert.match(s, /for \(const kind of \['water', 'storm'\]\) for \(const src of EP\.EXIST\[kind\]\)/);
   assert.match(s, /data-ptool-act="sd-roads"/);
   assert.match(s, /const r = await RN\.routeBetween\(last, ll\);/);
@@ -180,6 +180,194 @@ test('a 90° bend into the existing sewer: the velocity head rule\'s least drop 
   assert.ok(bent.cost > straight.cost);
 });
 
+test('the slope range typed in the form: 0.3–1% by default, both blank the standard\'s, else a message', () => {
+  assert.deepEqual(SDR.slopeRange({ sLo: '0.3', sHi: '1.0' }), [0.003, 0.01]);
+  assert.equal(SDR.slopeRange({ sLo: '', sHi: ' ' }), null);
+  assert.match(SDR.slopeRange({ sLo: '0.3', sHi: '' }).msg, /both slopes/);
+  assert.match(SDR.slopeRange({ sLo: '1', sHi: '0.5' }).msg, /swap/);
+  assert.match(SDR.slopeRange({ sLo: '-1', sHi: '1' }).msg, /both slopes/);
+  // the designer's form starts at 0.3–1% and passes it to the design
+  const s = src('js/sewer-designer.js');
+  assert.match(s, /sLo: '0\.3', sHi: '1\.0'/);
+  assert.match(s, /designNet\(S\.net\.net, S\.conn, \{ ici: f\.ici, avoidStructures: f\.avoid, dmm: \+f\.dmm \|\| null, slopes: sl \}\)/);
+  // the Gravity check (design()) keeps the standard's slopes
+  assert.doesNotMatch(src('js/lab-checks.js'), /slopes:/);
+});
+
+test('the rules checked within a range: the slopes row, and a reach held at the steepest flagged on velocity', () => {
+  const gf = x => 200 - x * 0.03, rt = { nodes: SD.placeMHs([0, 360], 120).map(x => ({ x, g: gf(x), bend: 0 })), samples: Array.from({ length: 36 }, (_, k) => ({ x: k * 10 + 5, g: gf(k * 10 + 5) })) };
+  const net = SD.lineNet(rt, 3), conn = { invert: gf(360) - 6, dmm: 600 }, d = SD.designNet(net, conn, { slopes: [0.003, 0.01] });
+  assert.ok(d.ok, d.why);
+  const c = SDR.checks(d, net, conn);
+  assert.equal(c.length, 11);
+  assert.match(c[0].t, /^Slopes \(0\.30%–1\.00%, the range chosen\)$/);
+  assert.ok(c[0].pass);
+  const v = c.find(x => /^Velocity at the design flow/.test(x.t));
+  assert.ok(!v.pass);
+  assert.match(v.val, /3 reaches held at 1\.00%, the steepest chosen \(0\.75 m\/s needs \d\.\d\d%\)/);
+  assert.match(SDR.csv(d), /Slopes chosen \(%\),0\.30–1\.00/);
+  // without a range: no slopes row (ten rules, as before)
+  assert.equal(SDR.checks(SD.designNet(net, conn), net, conn).length, 10);
+});
+
+test('room downstream: the design flow added in full down the chain; the pipe it joins, the tightest, the pipes that change state', () => {
+  // a chain 0 → 1 → 2 → 3 (end); [d, slope, cap, next, …, lengthM at 14]
+  const P = (d, next, len) => { const p = [d, 0.003, 0, next]; p[14] = len; return p; };
+  const pipes = [P(450, 1, 100), P(525, 2, 250), P(600, 3, 400), P(675, -1, 50), P(300, -1, 10)];
+  const base = [{ q: 70, cap: 100 }, { q: 80, cap: 100 }, { q: 99, cap: 100 }, { q: 50, cap: 0 }, { q: 1, cap: 10 }];
+  const r = SDR.downstream(pipes, 0, 12, i => base[i]);
+  assert.equal(r.rows.length, 4);
+  assert.deepEqual(r.rows.map(x => x.dist), [0, 100, 350, 750]);
+  assert.equal(r.length, 800);
+  assert.ok(near(r.recv.r0, 0.70, 1e-12) && near(r.recv.r1, 0.82, 1e-12));
+  assert.equal(r.tight.i, 2);
+  assert.ok(near(r.tight.r1, 1.11, 1e-12));
+  assert.deepEqual(r.over.map(x => x.i), [2], 'over 100% because of this sewer');
+  assert.deepEqual(r.near.map(x => x.i), [1], 'over 85% because of this sewer');
+  assert.deepEqual(r.already, []);
+  assert.equal(r.unchecked, 1, 'no reliable slope: not checked');
+  assert.equal(r.rows[3].r1, null);
+  // a pipe already over 100% is not "goes over"
+  const r2 = SDR.downstream(pipes, 0, 1, i => (i === 2 ? { q: 120, cap: 100 } : base[i]));
+  assert.deepEqual(r2.already.map(x => x.i), [2]);
+  assert.deepEqual(r2.over, []);
+  // a loop in the data stops the walk
+  const loop = [P(300, 1, 10), P(300, 0, 10)];
+  assert.equal(SDR.downstream(loop, 0, 1, () => ({ q: 1, cap: 10 })).rows.length, 2);
+});
+
+test('room downstream: in the CSV, and wired after each design (gravity and pumped)', () => {
+  const route = { nodes: SD.placeMHs([0, 240], 120).map(x => ({ x, g: 180, bend: 0 })), samples: [] };
+  const d = SD.design(route, { invert: 174, dmm: 375 }, 8);
+  const P = (dd, next, len) => { const p = [dd, 0.003, 0, next]; p[14] = len; return p; };
+  const res = SDR.downstream([P(450, 1, 100), P(525, -1, 250)], 0, 8, i => [{ q: 70, cap: 100 }, { q: 95, cap: 100 }][i]);
+  d.down = { res, yearLabel: 'build-out', list: [{ ...res.rows[0], role: 'The sewer it joins' }, { ...res.rows[1], role: 'Goes over 100%' }] };
+  const c = SDR.csv(d);
+  assert.match(c, /^Room downstream \(build-out\),Pipe,Km down,Capacity \(L\/s\),Without this sewer \(L\/s\),With it \(L\/s\),Full without,Full with$/m);
+  assert.match(c, /^"The sewer it joins",450 mm,0\.00,100\.00,70\.00,78\.00,70%,78%$/m);
+  assert.match(c, /^"Goes over 100%",525 mm,0\.10,100\.00,95\.00,103\.00,95%,103%$/m);
+  const s = src('js/sewer-designer.js');
+  assert.match(s, /findCrossings\(\);\n\s+findDownstream\(d, d\.q\);/);
+  assert.match(s, /if \(S\.fm\.ok\) findDownstream\(S\.fm, flow\.q\);/);
+  assert.match(s, /SC\(\)\.nearestPipe\(c\.lng, c\.lat, big \? 30 : 400, 300\)/);
+  assert.match(s, /SC\(\)\.pipeStats\(i, yr, true\)/);
+  // every load counted, whatever the Layers switches show (the same answer on the map and on the Labs page)
+  const cap = src('js/sewer-cap.js');
+  assert.match(cap, /function pipeFlow\(i, y, all = false\) \{\n {4}const on = k => all \|\| MM\(\)\.wwOn\(k\);/);
+  assert.match(cap, /const today = pipeFlow\(i, 'today', all\), then = pipeFlow\(i, y === undefined \? MA\(\)\.getCapYear\(\) : y, all\);/);
+  assert.doesNotMatch(cap.slice(cap.indexOf('function pipeFlow'), cap.indexOf('function pipeSummary')), /MM\(\)\.wwOn\('/);
+  assert.match(src('js/sewer-print.js'), /Room downstream \(\$\{e\(dt\.down\.yearLabel\)\}\)/);
+});
+
+test('quantities: pipe by size, trench by depth band, the trench volume at the pipe + 0.6 m wide to the bedding', () => {
+  // one 100 m reach of 300 mm at 1% under flat ground at 180: 3.0 m deep at the top to 4.0 m at the bottom
+  const net = { nodes: [{ g: 180 }, { g: 180 }], reaches: [{ from: 0, to: 1, L: 100, q: 10, pts: Array.from({ length: 9 }, (_, k) => ({ d: (k + 1) * 10, g: 180 })) }] };
+  const d = { reaches: [{ from: 0, to: 1, L: 100, S: 0.01, inv_up: 177, dmm: 300 }], mhs: [{}, {}], structures: 0, rules: SD.RULES };
+  const q = SDR.quantities(d, net);
+  assert.equal(q.length, 100);
+  assert.deepEqual(q.bySize, [{ dmm: 300, m: 100 }]);
+  assert.deepEqual(q.byBand.map(b => [b.band, b.m]), [['under 3 m', 0], ['3–5 m', 100], ['5–8 m', 0], ['over 8 m', 0]]);
+  assert.ok(near(q.avgDepth, 3.5, 1e-9) && near(q.maxDepth, 4, 1e-9));
+  assert.ok(near(q.volume, 100 * (0.3 + 0.6) * (3.5 + 0.15), 1e-9), `${q.volume}`);
+  assert.equal(q.mhs, 2);
+  // two sizes and a band split: a second reach of 450 mm, 7 m deep
+  net.nodes.push({ g: 183 }); net.reaches.push({ from: 1, to: 2, L: 50, q: 40, pts: [] });
+  d.reaches.push({ from: 1, to: 2, L: 50, S: 0, inv_up: 176, dmm: 450 });
+  const q2 = SDR.quantities(d, net);
+  assert.deepEqual(q2.bySize, [{ dmm: 300, m: 100 }, { dmm: 450, m: 50 }]);
+  assert.equal(q2.byBand[2].m, 50, '4 → 7 m deep: 5.5 m on average, in 5–8 m');
+});
+
+test('quantities: on a real design, the CSV block with the standard\'s slopes beside it; wired in the panel and the print sheet', () => {
+  const gf = x => 232 - x * 0.012 + Math.sin(x / 60) * 0.8;
+  const rt = { nodes: SD.placeMHs([0, 418], 120).map(x => ({ x, g: gf(x), bend: 0 })), samples: Array.from({ length: 41 }, (_, k) => ({ x: k * 10 + 5, g: gf(k * 10 + 5) })) };
+  const net = SD.lineNet(rt, 47), conn = { invert: gf(418) - 6, dmm: 450 };
+  const a = SD.designNet(net, conn, { slopes: [0.003, 0.01] }), b = SD.designNet(net, conn);
+  assert.ok(a.ok && b.ok);
+  a.qty = SDR.quantities(a, net); a.qtyStd = SDR.quantities(b, net);
+  const tot = x => x.byBand.reduce((t, y) => t + y.m, 0);
+  assert.ok(near(tot(a.qty), 418, 1e-6) && near(tot(a.qtyStd), 418, 1e-6), 'every metre in a band');
+  a.mhs.forEach((m, i) => { m.x = i; m.label = `MH ${i + 1}`; });
+  const c = SDR.csv(a);
+  assert.match(c, /^Quantities,This design,Peel's standard slopes$/m);
+  assert.match(c, /^"Pipe \(m\)",418\.00,418\.00$/m);
+  assert.match(c, /^" {2}300 mm \(m\)",418\.00,0\.00$/m);
+  assert.match(c, /^" {2}250 mm \(m\)",0\.00,418\.00$/m);
+  assert.match(c, /^"Trench volume \(m³; pipe \+ 0\.6 m wide; vertical walls\)",\d+\.\d\d,\d+\.\d\d$/m);
+  assert.match(c, /^"Drop structures",\d+,\d+$/m);
+  const s = src('js/sewer-designer.js');
+  assert.match(s, /d\.qty = quantities\(d, nb\.net\);/);
+  assert.match(s, /if \(d\.slopes\) \{ const std = SW\(\)\.designNet\(nb\.net, S\.conn, \{ ici: f\.ici, avoidStructures: f\.avoid, dmm: \+f\.dmm \|\| null \}\);/);
+  assert.match(src('js/sewer-print.js'), /<h2>Quantities<\/h2>/);
+});
+
+test('a design in a link: the lines (to about 0.1 m), the branches and the form travel; anything else is refused', () => {
+  const pts = [{ lat: 43.700001, lng: -79.700002 }, { lat: 43.70123, lng: -79.69876 }, { lat: 43.7021, lng: -79.6977 }];
+  const br = [{ pts: [{ lat: 43.71, lng: -79.7 }, { lat: 43.70123, lng: -79.69876 }], form: { pop: '200', ha: '3', junk: 'x' } }];
+  const form = { q: '', pop: '3200', jobs: '', ha: '40', ici: true, avoid: false, spacing: 190, mode: 'gravity', vfd: false, ww: '', sLo: '0.3', sHi: '1.0', dmm: '375', fmdmm: '', extra: '<b>' };
+  const s = SDR.encodeDesign({ pts, branches: br, form, roads: true });
+  assert.match(s, /^[A-Za-z0-9_-]+$/, 'base64url: safe in a link');
+  const d = SDR.decodeDesign(s);
+  d.pts.forEach((p, i) => { assert.ok(near(p.lat, pts[i].lat, 1e-6) && near(p.lng, pts[i].lng, 1e-6)); });
+  assert.deepEqual(d.branches[0].form, { pop: '200', ha: '3' });
+  assert.equal(d.roads, true);
+  assert.deepEqual(d.form, { pop: '3200', ha: '40', spacing: '190', sLo: '0.3', sHi: '1.0', dmm: '375', ici: true, avoid: false, vfd: false, mode: 'gravity' });
+  // the standard's own slopes (both blank) come back blank, not as the form's 0.3–1%
+  const s2 = SDR.decodeDesign(SDR.encodeDesign({ pts, form: { ...form, sLo: '', sHi: '', mode: 'pumped', vfd: true } }));
+  assert.equal(s2.form.sLo, ''); assert.equal(s2.form.sHi, ''); assert.equal(s2.form.mode, 'pumped'); assert.equal(s2.form.vfd, true);
+  // refused: not base64, not a design, out of range, a field of the wrong kind dropped
+  assert.equal(SDR.decodeDesign('%%%'), null);
+  assert.equal(SDR.decodeDesign(btoa(JSON.stringify({ v: 2, m: [[1, 2], [3, 4]] }))), null);
+  assert.equal(SDR.decodeDesign(btoa(JSON.stringify({ v: 1, m: [[1, 2]] }))), null, 'one point is not a line');
+  assert.equal(SDR.decodeDesign(btoa(JSON.stringify({ v: 1, m: [[95000000, 0], [1, 1]] }))), null, 'latitude over 90');
+  const x = SDR.decodeDesign(btoa(JSON.stringify({ v: 1, m: [[43700000, -79700000], [10, 10]], f: { pop: '<script>', ha: 12 } })));
+  assert.deepEqual([x.form.pop, x.form.ha], [undefined, undefined], 'only numbers as text');
+});
+
+test('exports: NAD83 / UTM zone 17N; GeoJSON, KML and DXF of the reaches, maintenance holes and the connection', () => {
+  // UTM: on the central meridian (81° W) at the equator, and at 45° N (k0 × the meridian arc)
+  assert.deepEqual(SDR.utm17(0, -81).map(v => Math.round(v * 1000) / 1000), [500000, 0]);
+  assert.ok(near(SDR.utm17(45, -81)[1], 4982950.40, 0.01));
+  const [E, N] = SDR.utm17(43.642566, -79.387057);   // CN Tower: about 630,090 E 4,833,439 N
+  assert.ok(near(E, 630090, 15) && near(N, 4833439, 15), `${E} ${N}`);
+  const ll = (lat, lng) => ({ lat, lng });
+  const d = { dmm: 200, q: 3.5, reaches: [{ from: 0, to: 1, dmm: 200, L: 100.1, S: 0.01, inv_up: 229.2, inv_dn: 228.2, q: 3.5, qFull: 32.8, v: 0.68 }],
+    mhs: [{ ll: ll(43.7, -79.7), label: 'MH 1 (start)', g: 232, depth: 2.8, inv_out: 229.2, ins: [] }, { ll: ll(43.7009, -79.7), label: 'MH 2 (connection) <&>', g: 231.6, depth: 3.4, inv_out: null, ins: [{ inv: 228.2 }], drop: 0.03 }] };
+  const conn = { lat: 43.7009, lng: -79.7, dmm: 450, id: 'SAN-1', invert: 227.9, g: [[-79.7, 43.7], [-79.7, 43.702]] };
+  const gj = JSON.parse(SDR.toGeoJSON(d, conn, { note: 'screening' }));
+  assert.equal(gj.type, 'FeatureCollection');
+  assert.deepEqual(gj.features.map(f => f.properties.kind), ['reach', 'maintenance hole', 'maintenance hole', 'connection']);
+  assert.deepEqual(gj.features[0].geometry.coordinates, [[-79.7, 43.7], [-79.7, 43.7009]]);
+  assert.equal(gj.features[0].properties.slope_pct, 1);
+  assert.deepEqual(gj.features[2].properties.invert_in_m, [228.2]);
+  const kml = SDR.toKML(d, conn, {});
+  assert.match(kml, /^<\?xml version="1\.0" encoding="UTF-8"\?>\n<kml xmlns="http:\/\/www\.opengis\.net\/kml\/2\.2">/);
+  assert.match(kml, /<name>MH 2 \(connection\) &lt;&amp;&gt;<\/name>/, 'escaped');
+  assert.match(kml, /<LineString><tessellate>1<\/tessellate><coordinates>-79\.7,43\.7,0 -79\.7,43\.7009,0<\/coordinates><\/LineString>/);
+  const dxf = SDR.toDXF(d, conn), L = dxf.split('\n');
+  assert.equal(L[0], '0'); assert.equal(L[1], 'SECTION'); assert.equal(L[3], 'ENTITIES');
+  assert.equal(L[L.length - 2], 'EOF');
+  const ent = t => L.filter((v, i) => i % 2 === 1 && v === t && L[i - 1] === '0').length;
+  assert.equal(ent('LINE'), 1 + 1, 'the reach, and the existing sewer');
+  assert.equal(ent('CIRCLE'), 2 + 1, 'the maintenance holes, and the connection');
+  assert.equal(ent('TEXT'), 1 + 2);
+  const li = L.indexOf('SAN-NEW'), z = k => +L[L.indexOf(k, li) + 1];
+  assert.equal(z('30'), 229.2); assert.equal(z('31'), 228.2);
+  assert.ok(near(+L[L.indexOf('10', li) + 1], SDR.utm17(43.7, -79.7)[0], 0.001));
+});
+
+test('wired: the link and the downloads on the result, and a link opens the design', () => {
+  const s = src('js/sewer-designer.js');
+  for (const a of ['link', 'geojson', 'kml', 'dxf']) assert.match(s, new RegExp(`data-sd-act="${a}"`));
+  assert.match(s, /return `\$\{base\}\$\{\/#\$\/\.test\(base\) \? '' : '&'\}sd=\$\{sd\}`;/);
+  assert.match(s, /const linked = linkQ && linkQ\.get\('sd'\)/);
+  assert.match(s, /if \(Lb && !Lb\.on\('sewer'\)\) Lb\.set\('sewer', true\);/);
+  assert.match(s, /await finish\(\); if \(!S\.conn\) return;/);
+  // a link made on the Labs page opens on the page (its switch turned on first)
+  assert.match(s, /linkedPage = !!linkQ && linkQ\.get\('w'\) === 'p:sewer'/);
+  assert.match(s, /if \(linkedPage && W && W\.openPage && !onPage\(\)\) \{ W\.openPage\('sewer'\);/);
+});
+
 test('Labs › Sewer designer: a page of its own in Home’s sidebar while its switch is on', () => {
   const W = require('../js/workspaces.js');
   assert.equal(W.LAB_PAGES.sewer.lab, 'sewer');
@@ -236,6 +424,6 @@ test('a size chosen: every reach at that size, or why not; the forcemain at the 
   assert.match(at.checks[0].t, /as chosen/);
   assert.equal(at.checks[0].pass, at.sizes.find(c => c.dmm === 200).ok);
   const s = src('js/sewer-designer.js');
-  assert.match(s, /SW\(\)\.designNet\(S\.net\.net, S\.conn, \{ ici: f\.ici, avoidStructures: f\.avoid, dmm: \+f\.dmm \|\| null \}\)/);
+  assert.match(s, /SW\(\)\.designNet\(S\.net\.net, S\.conn, \{ ici: f\.ici, avoidStructures: f\.avoid, dmm: \+f\.dmm \|\| null, slopes: sl \}\)/);
   assert.match(s, /sizeField\('dmm', SW\(\)\.SIZES\.filter\(d => d >= SW\(\)\.RULES\.dMin && \(!S\.conn \|\| d <= S\.conn\.dmm\)\), 'Smallest that works'\)/);
 });

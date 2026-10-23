@@ -866,7 +866,7 @@
   }
   const iso = t => (t == null || !isFinite(t) ? null : new Date(t).toISOString().slice(0, 10));
 
-  const api = { ROLES, T, RANK, buildingsOf, homeKinds, replaceVerdict, CHRONO_ALL, yearOf, chronology, classifyRole, fileNodes, buildTrees, countTree, lookupOf, growthKind, planAmendments, tagAreas, opaTargets, PRECINCT, isOpa, sameLandVerdict, shareInside, bboxOf, dateOrder, confidence };
+  const api = { ROLES, T, RANK, buildingsOf, homeKinds, replaceVerdict, CHRONO_ALL, yearOf, chronology, classifyRole, fileNodes, buildTrees, countTree, lookupOf, growthKind, planAmendments, tagAreas, opaTargets, PRECINCT, isOpa, sameLandVerdict, shareInside, bboxOf, dateOrder, confidence, REF_MAX_M };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTree = api;
 })(typeof window !== 'undefined' ? window : globalThis);

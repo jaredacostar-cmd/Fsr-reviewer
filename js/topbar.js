@@ -265,6 +265,7 @@
       // Capital projects only once the layer is published (held until Peel GIS confirms).
       (window.PeelCapitalEA && window.PeelCapitalEA.data.capital ? '<button type="button" role="menuitem" data-tbx="cons">Capital projects (GeoJSON)</button>' : '') +
       '<button type="button" role="menuitem" data-tbx="eas">Environmental assessments (GeoJSON)</button>' +
+      '<button type="button" role="menuitem" data-tbx="shp">Shapefiles (.zip) \u2014 all map layers, for ArcMap / ArcGIS Pro</button>' +
       `<button type="button" role="menuitem" data-tbx="swmm"${swmmOk ? '' : ' disabled title="The wastewater servicing data is not loaded yet"'}>SWMM model (.inp) \u2014 wastewater blocks</button>` +
       '<button type="button" role="menuitem" data-tbx="workbook">Excel workbook (.xlsx)</button>' +
       // (the pipeline ledger's rows in the annual snapshot's template: js/ledger-snapshot.js)
@@ -283,7 +284,7 @@
     const item = e.target.closest('[role="menuitem"]'); if (!item || item.disabled) return;
     closeTbMenus();
     const b = e.target.closest('[data-tbx]'); if (!b) return;
-    const fn = { saveview: () => MA().saveCurrentView(), csv: PE().exportDevsCSV, geojson: PE().exportDevsGeoJSON, areas: PE().exportAreasGeoJSON, dc: DCT().exportDcGeoJSON, cons: () => window.PeelCapitalEA && window.PeelCapitalEA.exportConsGeoJSON(), eas: () => window.PeelCapitalEA && window.PeelCapitalEA.exportEasGeoJSON(), swmm: SC().exportSwmmModel, workbook: PE().exportWorkbook, ledger: () => window.PeelLedgerUI && window.PeelLedgerUI.exportSnapshotCSV(), print: TS().printMap, brief: RP().briefingPDF, memo: () => { if (Nav().getCurrentProject()) RP().devMemo(Nav().getCurrentProject()); }, comparepdf: () => { if (typeof RP().comparisonPDF === 'function') RP().comparisonPDF(); }, inquiry: draftInquiryResponse }[b.dataset.tbx];
+    const fn = { saveview: () => MA().saveCurrentView(), csv: PE().exportDevsCSV, geojson: PE().exportDevsGeoJSON, areas: PE().exportAreasGeoJSON, shp: PE().exportShapefiles, dc: DCT().exportDcGeoJSON, cons: () => window.PeelCapitalEA && window.PeelCapitalEA.exportConsGeoJSON(), eas: () => window.PeelCapitalEA && window.PeelCapitalEA.exportEasGeoJSON(), swmm: SC().exportSwmmModel, workbook: PE().exportWorkbook, ledger: () => window.PeelLedgerUI && window.PeelLedgerUI.exportSnapshotCSV(), print: TS().printMap, brief: RP().briefingPDF, memo: () => { if (Nav().getCurrentProject()) RP().devMemo(Nav().getCurrentProject()); }, comparepdf: () => { if (typeof RP().comparisonPDF === 'function') RP().comparisonPDF(); }, inquiry: draftInquiryResponse }[b.dataset.tbx];
     if (fn) fn();
   });
   function renderGearMenu() {

@@ -65,7 +65,7 @@
     // (Labs › Sewer designer: the Region's mains, the terrain and the roads, read live)
     sewer: [],
     data: [],
-    guides: [], roles: [], approvals: [], glossary: [], help: [],
+    guides: [], roles: [], approvals: [], glossary: [], logic: [], help: [],
     flows: ['peel-reports.json'], network: ['servicing.json', 'peel-reports.json', 'water-facilities.json', 'ww-facilities.json'],
     capacity: ['peel-reports.json', 'plant-flows.json', 'water-facilities.json', 'ww-facilities.json'],
     fsrguide: ['fsr.json'], capital: ['capital.json', 'eas.json', 'dc-infra.json'],
