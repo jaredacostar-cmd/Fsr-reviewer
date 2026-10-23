@@ -224,6 +224,22 @@
       "refresh": "yearly",
       "method": "Pipe capacity from the published diameter and slope (Manning); census population by area overlap."
     },
+    "sewers-local.json": {
+      "title": "Local sanitary sewers (under 300 mm) near developments",
+      "kind": "open-data",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "Wastewater Main (waterwastWater layer 10)",
+          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/waterwastWater/FeatureServer/10"
+        }
+      ],
+      "dateField": "generatedAt",
+      "script": "scripts/build-sewer-capacity.js",
+      "refresh": "yearly",
+      "optional": true,
+      "method": "Gravity mains under 300 mm within 300 m of a development in the pipeline, each with the trunk (sewers.json) it drains to; for picking a development's outlet (QA/QC › Review outlets). Written by the sewer-build run (probe-sources, mode sewer-build)."
+    },
     "watermains.json": {
       "title": "Watermains (300 mm and larger)",
       "kind": "open-data",

@@ -3042,7 +3042,7 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .dvo-map.picking svg { cursor: crosshair; outline: 2px solid var(--select); outline-offset: -2px; border-radius: 8px; }
 .dvo-banner { position: absolute; left: 8px; right: 8px; top: 8px; margin: 0; padding: 6px 10px; border-radius: 6px; background: var(--select); color: var(--on-accent); z-index: 1; }
 .home-map-svg .hm-sw { fill: none; stroke: var(--pipe-sanitary); opacity: 0.75; }
-.home-map-svg .hm-sw-s { stroke-width: 1; } .home-map-svg .hm-sw-m { stroke-width: 1.8; } .home-map-svg .hm-sw-l { stroke-width: 2.8; }
+.home-map-svg .hm-sw-x { stroke-width: 0.6; opacity: 0.55; } .home-map-svg .hm-sw-s { stroke-width: 1; } .home-map-svg .hm-sw-m { stroke-width: 1.8; } .home-map-svg .hm-sw-l { stroke-width: 2.8; }
 .home-map-svg .hm-dvo-route { fill: none; stroke: var(--accent); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
 .home-map-svg .hm-dvo-alt { fill: none; stroke: var(--cap-tight); stroke-width: 3.5; stroke-dasharray: 6 4; stroke-linecap: round; }
 .home-map-svg .hm-dvo-conn { fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-dasharray: 3 3; }

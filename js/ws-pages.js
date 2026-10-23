@@ -1098,6 +1098,8 @@
     const f = frame(360, 300, bb); if (!f) return '';
     outletFrame = f;
     const inBB = g => g.some(([x, y]) => x >= bb[0] && x <= bb[2] && y >= bb[1] && y <= bb[3]), out = [];
+    // (the local sewers under 300 mm first, thinner: data/sewers-local.json)
+    if (SC.localLoaded && SC.localLoaded()) for (const { i } of SC.localNear(p.lng, p.lat, 1100)) { const g = SC.localCoords(i); if (inBB(g)) out.push(`<path d="${f.line(g)}" class="hm-sw hm-sw-x"/>`); }
     for (const pp of pipes) { const g = pipePts(pp[10]); if (!inBB(g)) continue; out.push(`<path d="${f.line(g)}" class="hm-sw ${pp[0] >= 900 ? 'hm-sw-l' : pp[0] >= 450 ? 'hm-sw-m' : 'hm-sw-s'}"/>`); }
     const di = App() && App().state.dcInfra;
     if (di) for (const ln of di.wastewater.lines) if (inBB(ln.g)) out.push(`<path d="${f.line(ln.g)}" class="hm-dc hm-dc-wastewater"><title>${esc(ln.p || ln.c || '')}${ln.y ? ` · ${ln.y}` : ''}</title></path>`);
@@ -1144,7 +1146,8 @@
       const path = setR && setR !== 'sewer' ? setR : !setR && !(p.dr && p.dr.length) && root.PeelSewerTrace ? root.PeelSewerTrace.dcSewerPath(p) : null;
       const at = path ? path.coords[0] : k != null && k >= 0 ? DO.nearestOn([p.lng, p.lat], root.PeelSewerCap.pipeCoords(pipes[k])) : null;
       const distM = at ? Math.round(root.PeelDcInfra.dcM([p.lng, p.lat], at)) : null, st = at ? streetAtPt(at[0], at[1]) : '';
-      const what = rec && rec.mode === 'set' && rec.kind === 'cap' ? `New sanitary sewer ${esc(rec.project || '')}, being built`
+      const what = rec && rec.mode === 'set' && rec.kind === 'local' ? `${rec.mm ? `${rec.mm} mm ` : ''}local sanitary sewer${rec.at && streetAtPt(rec.at[0], rec.at[1]) ? ` on ${esc(streetAtPt(rec.at[0], rec.at[1]))}` : ''}, draining to the ${k != null && k >= 0 ? `${pipes[k][0]} mm` : ''} trunk`
+        : rec && rec.mode === 'set' && rec.kind === 'cap' ? `New sanitary sewer ${esc(rec.project || '')}, being built`
         : path && path.first.cap ? `Along the new sanitary sewer ${esc(path.first.p || '')} (being built)`
         : path ? `Along the planned DC main ${esc(path.first.p || path.first.c)}${path.first.d ? ` (${path.first.d} mm)` : ''}` : k != null && k >= 0 ? `${pipes[k][0]} mm sanitary sewer${st ? ` on ${esc(st)}` : ''}` : 'No sewer within reach';
       const why = rec && rec.mode === 'set' ? DO.recText(rec) : path ? `off the existing sewers: its route along the planned mains${rec ? ` · ${DO.recText(rec)}` : ' · not checked'}` : `the nearest sewer of 300 mm or more${distM != null ? `, ${fmtNum(distM)} m from the site` : ''}${rec ? ` · ${DO.recText(rec)}` : ' · not checked'}`;
@@ -1170,7 +1173,7 @@
       const evHTML = list => `<ul class="dvo-ev">${list.map(e => `<li class="ev-${e.tone}"><span aria-hidden="true">${EV_ICON[e.tone]}</span>${esc(e.text)}</li>`).join('')}</ul>`;
       const curC = DO.currentCand(p, { k, path }), checks = S.cand ? DO.checksFor(p, S.cand, sel.first) : DO.checksFor(p, curC, sel.first);
       const nearHTML = S.mode === 'idle' ? '' : near.length ? `<h4>Nearby infrastructure</h4><ol class="dvo-near">${near.map((c, i) => {
-        const on = DO.sameOutlet(S.cand, c), now = DO.isCurrent(c, { k, path });
+        const on = DO.sameOutlet(S.cand, c), now = DO.sameOutlet(curC, c);
         return `<li><button type="button" class="dvo-near-b${on ? ' on' : ''} fit-${c.fit || 'ok'}" data-dvo="near:${i}" aria-pressed="${on}"><span class="dvo-near-n">${i + 1}</span><span>${esc(c.label)}<small>${esc(c.status || '')}${c.kind === 'sewer' && c.mm < 300 ? ' · local sewer' : ''}${now ? ' · <b>its outlet now</b>' : ''}</small>${(() => { const e = (c.checks || []).find(x => x.tone === 'bad') || (c.checks || []).find(x => x.tone === 'warn'); return e ? `<small class="ev-${e.tone}">${EV_ICON[e.tone]} ${esc(e.text)}</small>` : ''; })()}</span><b class="dvo-near-m">${fmtNum(Math.round(c.m))} m</b></button></li>`;
       }).join('')}</ol>` : '<p class="small muted">No sewer or planned main within 400 m: tap the map.</p>';
       panel = `<section class="dvo-panel" data-psec="list"><div class="pnl-list-h"><h3>${esc(p.title)}</h3><button type="button" class="btn small link" data-pnl-dev="${esc(p.key)}">Open the development ›</button></div>
@@ -1181,7 +1184,7 @@
         ${S.mode !== 'pick' ? src : ''}${btns}
         ${DO.edits() ? `<p class="small"><button type="button" class="btn small link" data-dvo="export">Export ${fmtNum(DO.edits())} edit${DO.edits() === 1 ? '' : 's'} (dev-outlets.json)</button> <span class="muted">to commit, so everyone sees them</span></p>` : ''}</section>`;
       map = `<div class="dvo-map${S.mode === 'pick' ? ' picking' : ''}" data-dvo-map>${S.mode === 'pick' ? '<p class="dvo-banner small" role="status">Pick from the list, or tap the sewer (existing, being built or planned) it discharges to (Esc to cancel)</p>' : ''}${outletMap(p, { k, path, at }, S.cand, near)}</div>`;
-      cap = `<span class="hm-key hm-key-dvo-route"></span> its route now ${S.cand ? '<span class="hm-key hm-key-dvo-alt"></span> the new route ' : ''}<span class="hm-key hm-key-pipe"></span> sanitary sewers (thicker: larger) <span class="hm-key hm-dc-wastewater"></span> planned DC mains <span class="hm-key hm-key-cap"></span> sewers being built${near.length ? ' · numbers: the nearby list' : ''}`;
+      cap = `<span class="hm-key hm-key-dvo-route"></span> its route now ${S.cand ? '<span class="hm-key hm-key-dvo-alt"></span> the new route ' : ''}<span class="hm-key hm-key-pipe"></span> sanitary sewers (thicker: larger; thinnest: local, under 300 mm) <span class="hm-key hm-dc-wastewater"></span> planned DC mains <span class="hm-key hm-key-cap"></span> sewers being built${near.length ? ' · numbers: the nearby list' : ''}`;
     }
     return { id: 'outlets', eyebrow: eyebrow('outlets'), name: 'Where does each development discharge?',
       status: nRec.length ? { tone: 'stage', text: `${fmtNum(nRec.length)} reviewed` } : null,
@@ -1195,7 +1198,7 @@
       ],
       lists: [{ html: panel }, { html: filters }, { title: 'To review, largest first', rows, total: rows.length, all: S.all, see: { 'data-dvo': 'all' } }],
       map: sel ? { title: 'Where it discharges', html: map, caption: cap } : null,
-      method: 'A development discharges to the nearest sanitary sewer of 300 mm or more (Region sewer records), or, off the existing sewers, along the planned DC mains to an existing sewer. A reviewed outlet replaces that: confirmed (checked, unchanged) or set by hand (a sewer picked from the nearby list: existing sewers of any size, sewers being built (the Region’s capital projects, tendered or further) and planned DC mains within 400 m, or tapped on the map; kept as its point and size so it survives a data rebuild). The sewer loads, the trace and the DC projects allocation (js/dc-impact.js) follow it. Each outlet is checked against the development: its stage (built: a sewer in service; a building or site servicing permit: in service or being built, not a DC main still to tender; earlier: anything), in service by first homes (the whole route, the DC mains it needs downstream included), a sewer installed after the development was built (or with it: likely its own), gravity (the lidar ground at the site, 1.5 m down and 0.5 % fall, over the sewer’s invert; datum shift 0.41 m) and the drainage area. The checks flag, never block. Edits stay in this browser until exported and committed as data/dev-outlets.json.',
+      method: 'A development discharges to the nearest sanitary sewer of 300 mm or more (Region sewer records), or, off the existing sewers, along the planned DC mains to an existing sewer. A reviewed outlet replaces that: confirmed (checked, unchanged) or set by hand (a sewer picked from the nearby list: existing sewers (trunks of 300 mm+, and local sewers under 300 mm from data/sewers-local.json), sewers being built (the Region’s capital projects, tendered or further) and planned DC mains within 400 m, or tapped on the map; kept as its point and size so it survives a data rebuild). The sewer loads, the trace and the DC projects allocation (js/dc-impact.js) follow it. Each outlet is checked against the development: its stage (built: a sewer in service; a building or site servicing permit: in service or being built, not a DC main still to tender; earlier: anything), in service by first homes (the whole route, the DC mains it needs downstream included), a sewer installed after the development was built (or with it: likely its own), gravity (the lidar ground at the site, 1.5 m down and 0.5 % fall, over the sewer’s invert; datum shift 0.41 m) and the drainage area. The checks flag, never block. Edits stay in this browser until exported and committed as data/dev-outlets.json.',
       sources: 'Region of Peel sanitary sewers; 2026 DC capital maps (draft); the municipal application records; reviewers’ sources (FSRs, site servicing permits).',
       actions: [{ label: DO.edits() ? `Export ${fmtNum(DO.edits())} edit${DO.edits() === 1 ? '' : 's'}` : 'Export (nothing yet)', attrs: { 'data-dvo': 'export' }, primary: !!DO.edits() }] };
   }

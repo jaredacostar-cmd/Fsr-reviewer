@@ -2,7 +2,8 @@
  * The app sends a development's sewage into the nearest sanitary sewer of 300 mm or more (js/sewer-cap.js
  * sewerGrowth), or, off the existing network, along the planned DC mains (js/sewer-trace.js
  * dcSewerPath). A reviewer can confirm that outlet, or set another: an existing sewer, or a planned DC
- * main, or a sewer being built (a capital project's new sewer, js/dc-joins.js capLines). Reviewed outlets: data/dev-outlets.json (committed) plus this browser's edits (store
+ * main, a sewer being built (a capital project's new sewer, js/dc-joins.js capLines), or a local sewer
+ * under 300 mm (data/sewers-local.json: it drains to a trunk, which the load model follows). Reviewed outlets: data/dev-outlets.json (committed) plus this browser's edits (store
  * 'devOutletEdits'), by development key and system. An outlet is kept as a point and the pipe's size,
  * not a pipe number, so it survives a rebuild of the sewer data. The load model, the trace and the DC
  * impact model (js/dc-impact.js) follow a set outlet; every place that shows it says it was set by hand.
@@ -20,7 +21,7 @@
   const today = () => new Date().toISOString().slice(0, 10);
 
   // ---- Pure: the records ----------------------------------------------------------------------------
-  // A record: { key, sys, mode: 'confirmed' | 'set', kind: 'sewer' | 'dc' | 'cap', at: [lng, lat], mm, project,
+  // A record: { key, sys, mode: 'confirmed' | 'set', kind: 'sewer' | 'local' | 'dc' | 'cap', at: [lng, lat], mm, project,
   // src, by, date }. A local edit with auto: true drops a committed record (back to the automatic outlet).
   const idOf = r => `${r.sys || 'wastewater'}|${r.key}`;
   function merge(shipped, edits) {
@@ -31,7 +32,7 @@
   }
   // The committed file, from the merged records (local marks dropped).
   function exportJSON(recs) {
-    return { version: 1, note: 'Reviewed development outlets (js/dev-outlets.js, QA/QC › Review outlets). key: the development; sys: wastewater (or water); mode: confirmed (the automatic outlet, checked) or set (by hand); kind: sewer (an existing sanitary sewer), cap (a sewer being built: a capital project) or dc (a planned DC main); at: the point it joins; mm: that pipe\'s size; project: the DC project (or the capital project); src: what says so; date: when.',
+    return { version: 1, note: 'Reviewed development outlets (js/dev-outlets.js, QA/QC › Review outlets). key: the development; sys: wastewater (or water); mode: confirmed (the automatic outlet, checked) or set (by hand); kind: sewer (an existing sanitary sewer, 300 mm+), local (an existing local sewer under 300 mm), cap (a sewer being built: a capital project) or dc (a planned DC main); at: the point it joins; mm: that pipe\'s size; project: the DC project (or the capital project); src: what says so; date: when.',
       outlets: [...recs.values()].map(({ key, sys, mode, kind, at, mm, project, src, by, date }) => ({ key, sys: sys || 'wastewater', mode, ...(kind ? { kind } : {}), ...(at ? { at } : {}), ...(mm ? { mm } : {}), ...(project ? { project } : {}), ...(src ? { src } : {}), ...(by ? { by } : {}), ...(date ? { date } : {}) })) };
   }
   // Which projects a candidate puts on the path and what that does to the gate: { add, drop, gate }.
@@ -109,6 +110,7 @@
     if (O.loading) return O.loading;
     const get = u => (typeof fetch === 'function' ? fetch(u).then(r => (r.ok ? r.json() : null)).catch(() => null) : Promise.resolve(null));
     if (DJ() && DJ().load) DJ().load().then(refresh);     // (the capital projects' new sewers)
+    if (SC() && SC().loadLocalSewers) SC().loadLocalSewers().then(() => { nearCache.key = null; pipeCache.clear(); refresh(); });     // (the local sewers)
     O.loading = get('data/dev-outlets.json').then(d => { if (d && Array.isArray(d.outlets)) O.shipped = d.outlets; recs = merge(O.shipped, O.edits); O.v++; pipeCache.clear(); refresh(); return d; });
     return O.loading;
   }
@@ -138,6 +140,8 @@
     const path = r.kind === 'dc' || r.kind === 'cap' ? routeFrom(r.kind, r.at) : null;
     if (path) k = path.exit;
     else if (r.kind === 'dc') k = null;
+    // (a local sewer: the trunk it drains to; not found, the trunk nearest it)
+    else if (r.kind === 'local') { const l = SC().localNear(r.at[0], r.at[1], 15), x = l.find(y => SC().localPipe(y.i)[0] === r.mm) || l[0], t = x ? SC().localPipe(x.i)[4] : -1; const s = t >= 0 ? t : SC().nearestPipe(r.at[0], r.at[1], 600); k = s >= 0 ? s : null; }
     // (a sewer being built with no route traced on from it: the existing sewer nearest where it was set)
     else if (r.kind === 'cap') { const s = SC().nearestPipe(r.at[0], r.at[1], 600); k = s >= 0 ? s : null; }
     else { let s = SC().nearestPipe(r.at[0], r.at[1], 15, r.mm || 0); if (s < 0) s = SC().nearestPipe(r.at[0], r.at[1], 15); k = s >= 0 ? s : null; }
@@ -149,7 +153,7 @@
   // route on from it (a planned main downstream still counts), else 'sewer' (it joins the existing ones).
   function dcRouteFor(p) {
     const r = recordOf(p); if (!r || r.mode !== 'set') return null;
-    if (r.kind === 'sewer') return 'sewer';
+    if (r.kind === 'sewer' || r.kind === 'local') return 'sewer';
     return routeFrom(r.kind, r.at) || (r.kind === 'cap' ? 'sewer' : null);
   }
   const version = () => O.v;
@@ -166,7 +170,7 @@
     const m = IM().model(); if (!m || !cand) return [];
     const out = [], seen = new Set();
     const add = (key, tier) => { if (seen.has(key)) return; seen.add(key); const pr = m.projects.get(`wastewater:${key}`); out.push({ key, tier, y: pr ? pr.y1 : null }); };
-    let k = cand.k;
+    let k = cand.k;     // (a local sewer: the trunk it drains to)
     if (cand.kind === 'dc' || cand.kind === 'cap') {
       const path = routeFrom(cand.kind, cand.at);
       // (a capital project's sewer on the route is not a DC project)
@@ -209,6 +213,11 @@
     const proj = ln.p || ln.c, st = dcStatus(proj);
     return { kind: 'dc', at: r6(nearestOn(pt, ln.g)), mm: ln.d || null, project: proj, raw: st ? st.raw : null, status: st ? `planned · ${st.word}` : 'planned', label: `${ln.d ? `${ln.d} mm ` : ''}planned DC main ${proj}` };
   }
+  // A local sewer (under 300 mm, data/sewers-local.json); k: the trunk it drains to.
+  function localCand(i, pt, street) {
+    const lp = SC().localPipe(i), into = lp[4], k = into >= 0 ? into : SC().nearestPipe(pt[0], pt[1], 600);
+    return { kind: 'local', i, k: k >= 0 ? k : null, at: r6(nearestOn(pt, SC().localCoords(i))), mm: lp[0], status: 'existing · local sewer', label: `${lp[0]} mm local sanitary sewer${street ? ` on ${street}` : ''}` };
+  }
   // A capital project's new sewer (tendered or further: js/dc-joins.js capLines).
   const capWord = s => (/complete/.test(s) ? 'recently built' : s);
   function capCand(ln, pt) {
@@ -218,8 +227,8 @@
   // A tap on the map while picking: the nearest existing sewer or planned DC main within r metres.
   function pickAt(lng, lat, r) {
     if (S.mode !== 'pick' && S.mode !== 'preview') return;
-    const pt = [lng, lat], k = SC().nearestPipe(lng, lat, r), dc = DI().dcNearest('wastewater', pt, r), cp = capNear(pt, r)[0];
-    const opts = [k >= 0 ? { m: DI().dcDist(pt, SC().pipeCoords(MM().SEW.data.pipes[k])), c: () => sewerCand(k, pt) } : null,
+    const pt = [lng, lat], k = SC().nearestPipe(lng, lat, r), dc = DI().dcNearest('wastewater', pt, r), cp = capNear(pt, r)[0], lc = SC().localNear ? SC().localNear(lng, lat, r)[0] : null;
+    const opts = [k >= 0 ? { m: DI().dcDist(pt, SC().pipeCoords(MM().SEW.data.pipes[k])), c: () => sewerCand(k, pt) } : null, lc ? { m: lc.m, c: () => localCand(lc.i, pt) } : null,
       dc ? { m: dc.m, c: () => dcCand(dc.ln, pt) } : null, cp ? { m: cp.m, c: () => capCand(cp.ln, pt) } : null].filter(Boolean).sort((a, b) => a.m - b.m);
     if (!opts.length) { if (U.toast) U.toast('No sewer or planned main there: tap closer to one'); return; }
     S.cand = opts[0].c();
@@ -238,10 +247,10 @@
     return undefined;
   }
   // A sewer's invert where a point meets it, between its upstream and downstream inverts (coords run downstream).
-  function invertAt(k, at) {
-    const pp = MM().SEW.data.pipes[k], up = pp[12], dn = pp[13];
+  const invertAt = (k, at) => { const pp = MM().SEW.data.pipes[k]; return invertAlong(SC().pipeCoords(pp), pp[12], pp[13], at); };
+  function invertAlong(g, up, dn, at) {
     if (!(up > 0) || !(dn > 0)) return null;
-    const g = SC().pipeCoords(pp); let tot = 0, here = 0, bd = Infinity;
+    let tot = 0, here = 0, bd = Infinity;
     for (let i = 1; i < g.length; i++) {
       const L = DI().dcM(g[i - 1], g[i]), q = nearestOn(at, [g[i - 1], g[i]]), d = DI().dcM(q, at);
       if (d < bd) { bd = d; here = tot + DI().dcM(g[i - 1], q); }
@@ -253,6 +262,7 @@
   // needs to connect (tier A) included; via: those not tendered)
   function outletOf(c) {
     if (c.kind === 'sewer') return { cls: 'existing', install: MM().SEW.data.pipes[c.k][7] || null, invert: invertAt(c.k, c.at) };
+    if (c.kind === 'local') { const lp = SC().localPipe(c.i); return { cls: 'existing', install: lp[1] || null, invert: invertAlong(SC().localCoords(c.i), lp[2], lp[3], c.at) }; }
     const route = projectsFor(c).filter(x => x.tier === 'A' && x.key !== c.project);
     const via = route.filter(x => !dcStatus(x.key)).map(x => x.key), late = route.filter(x => x.y).sort((a, b) => b.y - a.y)[0];
     const withRoute = (o, own) => (late && (!own || late.y > own) ? { ...o, ready: late.y, readyBy: late.key, via } : { ...o, ready: own, via });
@@ -273,6 +283,7 @@
   function currentCand(p, cur) {
     const r = recordOf(p), site = [p.lng, p.lat];
     if (r && r.mode === 'set' && r.at) {
+      if (r.kind === 'local' && SC().localNear) { const l = SC().localNear(r.at[0], r.at[1], 15), x = l.find(y => SC().localPipe(y.i)[0] === r.mm) || l[0]; if (x) return localCand(x.i, r.at); }
       if (r.kind === 'cap') { const l = capNear(r.at, 30), x = l.find(y => y.ln.p === r.project) || l[0]; if (x) return capCand(x.ln, r.at); }
       if (r.kind === 'dc') { const n = DI().dcNearest('wastewater', r.at, 30); if (n) return dcCand(n.ln, r.at); }
       if (r.kind === 'sewer' && cur && cur.k != null && cur.k >= 0) return sewerCand(cur.k, r.at);
@@ -311,9 +322,9 @@
     }
     return out.sort((a, b) => a.m - b.m);
   }
-  function nearby(p, { r = 400, sewers = 6, mains = 4, streetOf = null, first = null } = {}) {     // (mains: of each, planned and being built)
+  function nearby(p, { r = 400, sewers = 6, locals = 4, mains = 4, streetOf = null, first = null } = {}) {     // (mains: of each, planned and being built)
     if (!p || p.lat == null || !MM().SEW.data || !MM().SEW.grid) return [];
-    const key = `${p.key}|${r}|${O.v}|${App() && App().state.dcInfra ? 1 : 0}|${App() && App().state.addressPoints ? 1 : 0}|${DJ() && DJ().capReady && DJ().capReady() ? 1 : 0}|${App() && App().state.capital ? 1 : 0}|${first}|${DG() && DG().loaded && DG().loaded() ? 1 : 0}`; // (street names arrive later)
+    const key = `${p.key}|${r}|${O.v}|${App() && App().state.dcInfra ? 1 : 0}|${App() && App().state.addressPoints ? 1 : 0}|${DJ() && DJ().capReady && DJ().capReady() ? 1 : 0}|${App() && App().state.capital ? 1 : 0}|${first}|${DG() && DG().loaded && DG().loaded() ? 1 : 0}|${SC().localLoaded && SC().localLoaded() ? 1 : 0}`; // (street names arrive later)
     if (nearCache.key === key) return nearCache.list;
     const pt = [p.lng, p.lat], pipes = MM().SEW.data.pipes, grid = MM().SEW.grid;
     const gx = Math.floor(pt[0] / 0.004), gy = Math.floor(pt[1] / 0.003), R = Math.ceil(r / 300), seen = new Set(), sw = [];
@@ -328,6 +339,11 @@
     const named = sw.map(x => { const c = sewerCand(x.k, pt), st = streetOf ? streetOf(c.at[0], c.at[1]) : ''; return { ...(st ? sewerCand(x.k, pt, st) : c), st, m: x.m }; });
     const sameSewer = (a, b) => a.mm === b.mm && ((a.st && a.st === b.st) || down(a.k, b.k) || down(b.k, a.k));
     const out = distinct(named, sameSewer, sewers).map(({ st, ...c }) => c);
+    // (local sewers: one per size and street, or per size and the trunk it drains to)
+    if (SC().localNear) {
+      const ln = SC().localNear(pt[0], pt[1], r).map(x => { const c = localCand(x.i, pt), st = streetOf ? streetOf(c.at[0], c.at[1]) : ''; return { ...(st ? localCand(x.i, pt, st) : c), st, m: x.m }; });
+      for (const { st, ...c } of distinct(ln, (a, b) => a.mm === b.mm && (a.st ? a.st === b.st : a.k === b.k), locals)) out.push(c);
+    }
     const di = App() && App().state.dcInfra;
     if (di) {
       const dl = di.wastewater.lines.map(ln => ({ ln, m: DI().dcDist(pt, ln.g) })).filter(x => x.m <= r).sort((a, b) => a.m - b.m);
@@ -341,7 +357,7 @@
     return out;
   }
   // Two candidates on the same pipe (sewer) or the same project (planned main).
-  const sameOutlet = (a, b) => !!a && !!b && a.kind === b.kind && (a.kind === 'sewer' ? a.k === b.k : a.project === b.project);
+  const sameOutlet = (a, b) => !!a && !!b && a.kind === b.kind && (a.kind === 'sewer' ? a.k === b.k : a.kind === 'local' ? a.i === b.i : a.project === b.project);
   // Is a candidate the outlet in use now? (cur: { k, path } as the page shows it)
   const isCurrent = (c, cur) => !!cur && (c.kind === 'sewer' ? !cur.path && cur.k === c.k : !!(cur.path && !!cur.path.first.cap === (c.kind === 'cap') && (cur.path.first.p || cur.path.first.c) === c.project));
   // The nearest point on a polyline (flat, local).

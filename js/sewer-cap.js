@@ -47,6 +47,37 @@
     }).catch(() => null);
     return MM().SEW.loading;
   }
+  // Local sewers (under 300 mm) near the developments (data/sewers-local.json, scripts/build-sewer-capacity.js):
+  // only for picking an outlet (js/dev-outlets.js); each names the trunk it drains to (into: a sewers.json index).
+  // Pipe: [diameterMm, installYear, invertUp, invertDown, into, coords × scale].
+  const LOC = { data: null, grid: null, loading: null, coords: [] };
+  function loadLocalSewers() {
+    if (LOC.data || LOC.loading) return LOC.loading || Promise.resolve(LOC.data);
+    LOC.loading = fetch('data/sewers-local.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(d => {
+      if (d && Array.isArray(d.pipes)) setLocalSewers(d);
+      LOC.loading = null; return LOC.data;
+    });
+    return LOC.loading;
+  }
+  function setLocalSewers(d) {
+    const sc = d.scale || 1e5, grid = new Map();
+    LOC.coords = d.pipes.map(p => { const c = p[5], o = []; for (let k = 0; k < c.length; k += 2) o.push([c[k] / sc, c[k + 1] / sc]); return o; });
+    LOC.coords.forEach((g, i) => { for (const [x, y] of g) { const key = `${Math.floor(x / 0.004)},${Math.floor(y / 0.003)}`; const l = grid.get(key) || grid.set(key, []).get(key); if (l[l.length - 1] !== i) l.push(i); } });
+    LOC.data = d; LOC.grid = grid;
+  }
+  // The local sewers within r metres of a point, nearest first: [{ i, m }].
+  function localNear(lng, lat, r = 400) {
+    if (!LOC.grid) return [];
+    const gx = Math.floor(lng / 0.004), gy = Math.floor(lat / 0.003), R = Math.ceil(r / 300), seen = new Set(), out = [];
+    for (let i = -R; i <= R; i++) for (let j = -R; j <= R; j++) for (const k of LOC.grid.get(`${gx + i},${gy + j}`) || []) {
+      if (seen.has(k)) continue; seen.add(k);
+      const m = DI().dcDist([lng, lat], LOC.coords[k]); if (m <= r) out.push({ i: k, m });
+    }
+    return out.sort((a, b) => a.m - b.m);
+  }
+  const localPipe = i => (LOC.data ? LOC.data.pipes[i] : null);
+  const localCoords = i => LOC.coords[i] || null;
+  const localLoaded = () => !!LOC.data;
   // (kept per pipe: the nearest-pipe search reads the same pipes for every development)
   const coordsOf = new WeakMap();
   const boxOf = new WeakMap();
@@ -392,7 +423,7 @@
   }
 
   const api = {
-    loadSewers, pipeCoords, nearestPipe, sewerGrowth, pipeFlow, pipeSummary,
+    loadSewers, pipeCoords, nearestPipe, loadLocalSewers, setLocalSewers, localNear, localPipe, localCoords, localLoaded, sewerGrowth, pipeFlow, pipeSummary,
     pipeColour, pipeStats, depthRatio, freeboard, fbText, pipeTip,
     renderPipes, pathPipes, pipeCalcHTML, showPipeLoads, exportSwmmModel,
     swmmInp, chicago,
