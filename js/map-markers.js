@@ -135,6 +135,7 @@
         <div class="mo-sec"><div class="mo-h">Pipes and works</div>
           <div class="mo-chips">${chip('id="opt-pipelbl"', pipeLbl, '<b class="pl-sw">300</b>Size labels', 'pipe-labels')}</div>
           <div class="mo-row" data-info="dc-works"><span class="mo-k">DC works</span><div class="mo-chips">${[['water', 'Water', '--dc-w-feed'], ['wastewater', 'Wastewater', '--dc-ww-main']].map(([k, t, c]) => chip(`data-dcsys="${k}"`, dcOn.on && (dcOn.sys === 'both' || dcOn.sys === k), `<i class="lg-line" style="background:var(${c})"></i>${t}`)).join('')}</div></div>
+          <div class="mo-chips">${chip('id="opt-dcjoins"', !!(window.PeelDcJoins && window.PeelDcJoins.isOn()), `<i class="lg-dot" style="background:var(--cap-tight)"></i>DC joins${window.PeelDcJoins && window.PeelDcJoins.editCount() ? ` <small class="dcj-count">· ${window.PeelDcJoins.editCount()} edited</small>` : ''}`, 'dc-joins')}</div>
           <button type="button" class="btn small link mo-dct" data-info="dc-needs" id="opt-dctiming">DC timing: capacity vs DC projects →</button>
         </div>
         </details>
@@ -151,6 +152,7 @@
       el.querySelector('#opt-basemap').onchange = e => { MC().setBasemap(e.target.value); store.set('basemap', e.target.value); MC().setTiles(); CA().restyleDa(); };
       el.querySelector('#opt-labels').onchange = e => { ML().setLabelMode(e.target.value); store.set('labelMode', e.target.value); ML().updateLabels(); };
       el.querySelector('#opt-pipelbl').onchange = e => { pipeLbl = e.target.checked; store.set('pipeLabels', pipeLbl); EP().renderExisting(); if (mstyle.cap === 'pipes') MA().renderCapLayer(); };
+      el.querySelector('#opt-dcjoins').onchange = e => { if (window.PeelDcJoins) window.PeelDcJoins.setOn(e.target.checked); };
       el.querySelector('#opt-dctiming').onclick = () => { if (typeof MP().showDcTiming === 'function') { SC().loadSewers(); MP().showDcTiming(); } };
       el.querySelectorAll('[data-dcsys]').forEach(c => { c.onchange = () => {
         const on = k => document.querySelector(`[data-dcsys="${k}"]`).checked, w = on('water'), ww = on('wastewater');
@@ -197,7 +199,7 @@
       const w = new Map(), col = new Map();
       let tot = 0;
       for (const m of kids) { const v = !sized ? 1 : byUnits ? m.options.units || 0 : m.options.pop || 0; tot += v; w.set(m.options.cat, (w.get(m.options.cat) || 0) + v); col.set(m.options.cat, m.options.col); }
-      const order = mstyle.color === 'phase' ? P.ALL_PHASES.map(p => p.key) : mstyle.color === 'layer' ? Object.keys(LAYER_NAME) : mstyle.color === 'quality' ? Object.keys(QUALITY) : mstyle.color === 'timing' ? Object.keys(TIMING) : [...w.keys()].sort();
+      const order = mstyle.color === 'phase' ? P.ALL_PHASES.map(p => p.key) : mstyle.color === 'layer' ? [...window.PeelLayers.RUNG_VIEW.map(r => r.key), 'out'] : mstyle.color === 'quality' ? Object.keys(QUALITY) : mstyle.color === 'timing' ? Object.keys(TIMING) : [...w.keys()].sort();
       let acc = 0; const stops = [];
       for (const k of order) {
         const n = w.get(k); if (!n) continue;
@@ -346,7 +348,7 @@
   const iconFor = phase => iconCache[phase] || (iconCache[phase] = L.divIcon({ className: 'pm pm-hit', iconSize: [32, 32], html: dot(phase) }));
   // ---- Marker style (map options): colour by phase, servicing layer or receiving plant; size
   // the same or by build-out people + jobs; clusters show the mix and, when sized, the total.
-  const LAYER_NAME = { existing: 'Existing (built before the census)', built: 'Built since the census', approved: 'Committed (draft plan or site plan approved)', proposed: 'Proposed (in review)', out: 'Withdrawn / refused' };
+  const LAYER_NAME = { existing: 'Existing (built before the census)', built: 'Built since the census', approved: 'Past plan approval (MECP D-5-1)', proposed: 'Proposed (in review)', out: 'Withdrawn / refused' };
   // The layer tokens (SPEC §2): one hue, lightness = certainty.
   const layerColors = () => ({ existing: 'var(--ly-existing)', built: 'var(--ly-built)', approved: 'var(--ly-committed)', proposed: 'var(--ly-proposed)', out: 'var(--nodata)' });
   // Servicing layer of a development, as in the Water / Wastewater tables.
@@ -386,7 +388,8 @@
   function markerCat(p) {
     if (mstyle.color === 'timing') { const k = App().state.dcInfra ? timingOf(p) : 'none'; return [k, TIMING[k][0]]; }
     if (mstyle.color === 'quality') { const k = qualityOf(p); return [k, QUALITY[k][0]]; }
-    if (mstyle.color === 'layer') { const k = svcLayerOf(p); return [k, layerColors()[k]]; }
+    // (Counted as: its rung of the commitment ladder, js/layers.js rungKeyOf)
+    if (mstyle.color === 'layer') { const k = App().rungOf(p) || 'out'; return [k, k === 'out' ? 'var(--nodata)' : window.PeelLayers.RUNG_COLOR[k]]; }
     if (mstyle.color === 'plant') { const k = plantOfDev(p); return [k, `var(${SD().PLANT_TOKEN[k] || '--nodata'})`]; }
     return [p.phase, `var(--ph-${p.phase})`];
   }

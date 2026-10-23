@@ -22,9 +22,9 @@ function loadTabs() {
 // What each sub-view shows at a development's scope (the audit of 0 Heritage Rd, Brampton; Stage 2).
 // (Capital › EAs is also hidden at a site with no EA mapped near it: EMPTY_AT_SITE.)
 const AT_SITE = {
-  growth: { pipeline: 'show', areas: 'hide', timing: 'hide' },
+  growth: { pipeline: 'show', areas: 'hide', timing: 'hide', ledger: 'hide' },
   svc: { capacity: 'hide', network: 'show', alloc: 'hide', checks: 'hide' },
-  dca: { timing: 'show', projects: 'hide', eas: 'show', funding: 'hide' },
+  dca: { timing: 'show', dcproj: 'hide', projects: 'hide', eas: 'show' },
   records: { sources: 'hide', checks: 'hide', files: 'show' },
 };
 

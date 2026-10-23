@@ -150,12 +150,20 @@
    *  - approved: growth that is approved or permitted and not yet completed (committed);
    *  - proposed: growth on applications still in pre-consultation or review, not yet built
    *    (with approved, the full build-out of the planning applications);
-   * each with the population they add at the design persons-per-unit.
+   * each with the population they add at the design persons-per-unit;
+   *  - committed: the part of approved and of proposed the Peel rule commits (a site servicing or
+   *    building permit, js/layers.js rungsOf): the committed horizon of every facility but the treatment
+   *    plants, which keep MECP D-5-1 (all of approved, none of proposed).
+   * commit: { gateOf, asOf } (default: the app's, js/demand-ui.js commitOpts).
    */
-  function growthSince(projects, g, censusDate, criteria = D.DEFAULT_CRITERIA) {
+  const LY = () => root.PeelLayers || (typeof require === 'function' ? require('./layers.js') : null);
+  function growthSince(projects, g, censusDate, criteria = D.DEFAULT_CRITERIA, commit = null) {
     const since = +new Date(`${censusDate}T00:00:00Z`);
     const built = [], approved = [];
-    const proposed = [];
+    const proposed = [], cpA = [], cpP = [];
+    const co = commit || (root.PeelDemandUI && root.PeelDemandUI.commitOpts ? root.PeelDemandUI.commitOpts() : {});
+    const committedOf = p => { const L = LY(); return L && L.rungsOf ? L.rungsOf(p, co).committed : 0; };
+    let cpAUnits = 0, cpPUnits = 0, cpAProjects = 0, cpPProjects = 0;
     let builtUnits = 0, approvedUnits = 0, builtProjects = 0, approvedProjects = 0, estimated = 0, proposedUnits = 0, proposedProjects = 0;
     for (const p of projects) {
       if (p.phase === 'cancelled' || !inGeo(g, { muni: p.municipality, sp: p.sp, mtsa: p.mtsa })) continue;
@@ -169,6 +177,9 @@
       if (c > 0) { approved.push(part(c)); approvedUnits += c; approvedProjects++; }
       const q = PROPOSED_PHASES.has(p.phase) && !D.isCommitted(p) && p.buildout ? p.buildout.unbuilt : 0;
       if (q > 0) { proposed.push(part(q)); proposedUnits += q; proposedProjects++; }
+      const cu = c > 0 || q > 0 ? committedOf(p) : 0;
+      if (c > 0 && cu > 0) { const k = Math.min(c, cu); cpA.push(part(k)); cpAUnits += k; cpAProjects++; }
+      if (q > 0 && cu > 0) { const k = Math.min(q, cu); cpP.push(part(k)); cpPUnits += k; cpPProjects++; }
     }
     const layer = (list, units, projects) => {
       const e = D.estimate(list, criteria, 'all');
@@ -178,6 +189,7 @@
       built: { ...layer(built, builtUnits, builtProjects), estimatedDates: estimated > 0 },
       approved: layer(approved, approvedUnits, approvedProjects),
       proposed: layer(proposed, proposedUnits, proposedProjects),
+      committed: { approved: layer(cpA, cpAUnits, cpAProjects), proposed: layer(cpP, cpPUnits, cpPProjects) },
     };
   }
 

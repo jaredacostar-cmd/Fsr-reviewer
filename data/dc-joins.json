@@ -1,0 +1,90 @@
+{
+ "version": 1,
+ "note": "Reviewed joins of the 2026 DC planned mains onto the existing network (js/dc-joins.js). end: the planned main's end; to: the point it joins (null: an open end); into: what it joins (sewer, watermain, dc: a planned or capital project main, facility: through a station, reservoir or tank); name, note: what and why; by, at: who reviewed it, when. Export from the DC joins layer and commit here.",
+ "joins": [
+  {
+   "sys": "water",
+   "end": [
+    -79.836541,
+    43.849898
+   ],
+   "to": [
+    -79.835552,
+    43.854425
+   ],
+   "into": "facility",
+   "name": "South Albion (planned)",
+   "note": "1200 mm transmission main (31-1299) feeds the planned South Albion reservoir, 510 m off: the DC map places the facility box approximately",
+   "by": "Reviewed with Claude Code",
+   "at": "2026-10-22"
+  },
+  {
+   "sys": "water",
+   "end": [
+    -79.873237,
+    43.77454
+   ],
+   "to": [
+    -79.875894,
+    43.776526
+   ],
+   "into": "facility",
+   "name": "Victoria (planned)",
+   "note": "900 mm feeder (28-1181) runs out of the planned Victoria pumping station, 307 m off",
+   "by": "Reviewed with Claude Code",
+   "at": "2026-10-22"
+  },
+  {
+   "sys": "water",
+   "end": [
+    -79.847185,
+    43.732595
+   ],
+   "to": null,
+   "into": null,
+   "note": "Open end: 400 mm feeder (24-1187) stops in greenfield land, nothing within 1.5 km (future growth)",
+   "by": "Reviewed with Claude Code",
+   "at": "2026-10-22"
+  },
+  {
+   "sys": "water",
+   "end": [
+    -79.840451,
+    43.666514
+   ],
+   "to": null,
+   "into": null,
+   "note": "Open end: 400 mm feeder (28-1130) stops in greenfield land, nothing within 1.5 km (future growth)",
+   "by": "Reviewed with Claude Code",
+   "at": "2026-10-22"
+  },
+  {
+   "sys": "water",
+   "end": [
+    -79.765189,
+    43.847414
+   ],
+   "to": null,
+   "into": null,
+   "note": "Open end: 400 mm feeder (31-1199) stops in greenfield land, nothing within 2 km (future growth)",
+   "by": "Reviewed with Claude Code",
+   "at": "2026-10-22"
+  },
+  {
+   "sys": "wastewater",
+   "end": [
+    -79.854224,
+    43.72004
+   ],
+   "to": [
+    -79.854812,
+    43.720504
+   ],
+   "into": "dc",
+   "name": "capital project 18-2182",
+   "note": "525 mm local main (25-2181) joins the completed sewer of capital project 18-2182 (East-West Spine Rd), 70 m off",
+   "by": "Reviewed with Claude Code",
+   "at": "2026-10-22"
+  }
+ ]
+}

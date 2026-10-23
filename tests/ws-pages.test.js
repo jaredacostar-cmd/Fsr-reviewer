@@ -101,7 +101,7 @@ test('Review an FSR coverage: what an FSR covers and what the app can check', ()
 
 test('every workspace has a page builder; pages open from Home, chips and the map view', () => {
   const s = src('js/ws-pages.js'), w = src('js/workspaces.js');
-  assert.match(s, /const BUILD = \{ home, tight, site, growth, outlook, projects, eaflow, week, fsr, pipes, study, sewer, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, logic, help, data \};/, "every workspace, Labs › Sewer designer, and the Reference pages: How it works and its guides, the Glossary, How the app decides and Help");
+  assert.match(s, /const BUILD = \{ home, tight, site, growth, outlook, coming, projects, eaflow, week, fsr, pipes, outlets, study, sewer, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, logic, help, data \};/, "every workspace, Labs › Sewer designer, and the Reference pages: How it works and its guides, the Glossary, How the app decides and Help");
   // A page's map buttons open the workspace's map view; Full map is the all-tools map; the map view has
   // a way back to the page.
   assert.match(w, /const pg = e\.target\.closest\('\[data-ws-page\]'\);\s*if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage\); return; \}/);
@@ -116,28 +116,42 @@ test('every workspace has a page builder; pages open from Home, chips and the ma
   assert.doesNotMatch(s + w, /Getting tight/);
 });
 
-test('Growth: the pipeline by stage, in the order a file moves; approved split on its permits', () => {
-  assert.deepEqual(plain(WP.STAGES.map(s => s[1])), ['Pre-application', 'In review', 'Approved, no permit yet', 'Permit issued or under construction', 'Built since 2021']);
-  const L = { a: { layer: 'anticipated', parts: { anticipated: 100 }, toPermit: 100 }, b: { layer: 'proposed', parts: { proposed: 400 }, toPermit: 400 },
-    c: { layer: 'committed', parts: { committed: 300 }, toPermit: 120 }, d: { layer: 'committed', parts: { committed: 50 }, toPermit: 50 }, e: { layer: 'built', parts: { built: 30, existing: 10 }, toPermit: 0 }, x: { layer: null, parts: {} } };
+test('Growth: the pipeline by stage, the commitment ladder in order, then built since 2021', () => {
+  const LY = require('../js/layers.js');
+  assert.deepEqual(plain(WP.STAGES.map(s => s[1])), ['Pre-application', 'In review', 'Zoning approved', 'Plan approved', 'Servicing permit', 'Building permit', 'Under construction', 'Built since 2021']);
+  assert.deepEqual(plain(WP.STAGES.slice(0, -1).map(s => s[0])), plain(LY.LADDER.map(r => r.key)), 'the ladder’s rungs, one set of names');
+  assert.deepEqual(plain(WP.COMMITTED_STAGES), plain(LY.COMMITTED_RUNGS));
+  const R = (rungs, o = {}) => ({ rungs: { early: 0, review: 0, zoning: 0, plan: 0, servicing: 0, building: 0, construction: 0, ...rungs }, built: 0, existing: 0, estimated: 0, left: Object.values(rungs).reduce((t, v) => t + v, 0), ...o });
+  const L = { a: R({ early: 100 }), b: R({ review: 400 }), z: R({ zoning: 60 }), c: R({ plan: 170, building: 130 }), d: R({ servicing: 50 }), e: R({}, { built: 30, existing: 10 }), x: null };
   const st = WP.stageRows(Object.keys(L), k => L[k]);
-  assert.deepEqual(plain(st.rows.map(r => [r.key, r.units])), [['anticipated', 100], ['proposed', 400], ['approved', 170], ['permitted', 180], ['built', 30]]);
-  assert.equal(st.total, 880, 'the census (existing) part of a site is not in the pipeline');
-  const h = WP.stageChartHTML(st, 1760);
-  assert.deepEqual([...h.matchAll(/<span class="stg-l" role="cell">([^<]+)</g)].map(m => m[1]), ['Pre-application', 'In review', 'Approved, no permit yet', 'Permit issued or under construction', 'Built since 2021']);
-  assert.match(h, /<i class="stg-fill ly-proposed" style="width:100\.0%"><\/i><\/span><b class="stg-v" role="cell">400<\/b><span class="stg-p muted" role="cell">45%<\/span>/, 'scaled to the largest stage, labelled directly');
-  assert.match(h, /880 dwellings in the pipeline would add about <strong>50%<\/strong> to the 1,760 dwellings on the system \(2021 census\)/);
+  assert.deepEqual(plain(st.rows.map(r => [r.key, r.units])), [['early', 100], ['review', 400], ['zoning', 60], ['plan', 170], ['servicing', 50], ['building', 130], ['construction', 0], ['built', 30]]);
+  assert.equal(st.total, 940, 'the census (existing) part of a site is not in the pipeline');
+  assert.equal(st.committed, 180, 'committed: Servicing permit and up');
+  const h = WP.stageChartHTML(st, 1880);
+  assert.deepEqual([...h.matchAll(/<span class="stg-l" role="cell">([^<]+)</g)].map(m => m[1]), plain(WP.STAGES.map(s => s[1])));
+  assert.match(h, /<i class="stg-fill ly-proposed" style="width:100\.0%"><\/i><\/span><b class="stg-v" role="cell">400<\/b><span class="stg-p muted" role="cell">43%<\/span>/, 'scaled to the largest stage, labelled directly');
+  assert.match(h, /940 dwellings in the pipeline would add about <strong>50%<\/strong> to the 1,880 dwellings on the system \(2021 census\)/);
+  assert.match(h, /<strong>180<\/strong> committed \(Servicing permit and up: the Peel rule\)/);
   assert.match(src('js/ws-pages.js'), /chart: stage \? stageChartHTML\(stage, census\) : pl\.chart,/);
+  // Every stage has a colour, the same on the chart, the table and the treemap.
+  assert.deepEqual(plain(Object.keys(WP.STAGE_CLS)), plain(WP.STAGES.map(s => s[0])));
+  assert.deepEqual(plain(require('../js/dev-table.js').STAGE_CLS), plain(WP.STAGE_CLS));
 });
 
 test('the layers in plain words, across the app; capacity bars keep the most-certain-first order', () => {
   const B = require('../js/layer-bar.js');
-  assert.deepEqual(plain(B.LABEL), { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Approved, not yet built (committed)', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' });
-  assert.deepEqual(plain(B.SHORT), { existing: 'On the system', built: 'Built since 2021', committed: 'Approved, not yet built', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' }, '"Approved" never alone');
+  assert.deepEqual(plain(B.LABEL), { existing: 'On the system (2021 census)', built: 'Built since 2021', committed: 'Past plan approval (MECP D-5-1)', commitPeel: 'Committed (site servicing or building permit)', approved: 'Plan approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' });
+  assert.deepEqual(plain(B.SHORT), { existing: 'On the system', built: 'Built since 2021', committed: 'Past plan approval', commitPeel: 'Committed', approved: 'Plan approved, not committed', proposed: 'In review', anticipated: 'Pre-application', to2051: 'To 2051' }, '"Approved" never alone');
   assert.deepEqual(plain(require('../js/layers.js').LABEL), plain(B.LABEL), 'one set of names');
   // A capacity bar stacks from the base: on the system, built, approved, in review.
-  assert.match(src('js/svc-capacity.js'), /segments: \[seg\('existing', r\.existing\), seg\('built', r\.built\), seg\('committed', [^)]+\)\), seg\('proposed',/);
-  assert.match(src('js/svc-capacity.js'), /\$\{pctTxt\(r\.pctCom\)\} with approved → \$\{pctTxt\(r\.pctBo\)\} at build-out/);
+  const seg = (layer, value) => ({ layer, value, title: `${B.LABEL[layer]}: ${value}` });
+  const k = { existing: 50, built: 10, committed: 80, buildout: 100 };
+  assert.deepEqual(plain(B.commitSegs({ ...k, rule: 'd51' }, seg).map(s => [s.layer, s.value])), [['existing', 50], ['built', 10], ['committed', 20], ['proposed', 20]], 'a treatment plant: past plan approval (MECP D-5-1)');
+  const peel = B.commitSegs({ ...k, rule: 'peel' }, seg);
+  assert.deepEqual(plain(peel.map(s => s.layer)), ['existing', 'built', 'commitPeel', 'proposed'], 'elsewhere: a site servicing or building permit');
+  assert.match(peel[3].title, /^Not committed yet \(plan approved without a permit, or in review\): 20$/);
+  assert.match(src('js/svc-capacity.js'), /segments: LB\(\)\.commitSegs \? LB\(\)\.commitSegs\(\{ \.\.\.r, rule: ruleOf\(r\) \}, seg\)/);
+  assert.match(src('js/svc-capacity.js'), /\$\{pctTxt\(r\.pctCom\)\} \$\{comWords\(r\)\} → \$\{pctTxt\(r\.pctBo\)\} at build-out/);
 });
 
 test('Growth drill-down: Peel → municipality → plan → precinct / sub-area → its files by stage; employment', () => {
@@ -163,15 +177,16 @@ test('Growth drill-down: Peel → municipality → plan → precinct / sub-area 
   assert.match(s, /after: treemap \}/);
 });
 
-test('a development’s stage on the chart: its layer; an approved one by whether most of it is permitted', () => {
-  assert.equal(WP.stageOf({ layer: 'anticipated', parts: {} }), 'anticipated');
-  assert.equal(WP.stageOf({ layer: 'committed', parts: { committed: 100 }, toPermit: 100 }), 'approved');
-  assert.equal(WP.stageOf({ layer: 'committed', parts: { committed: 100 }, toPermit: 20 }), 'permitted');
-  assert.equal(WP.stageOf({ layer: 'existing', parts: {} }), 'built');
-  assert.equal(WP.stageOf({ layer: null }), null);
-  // Shares: a site split between two plans counts its share in each.
-  const st = WP.stageRows([{ p: 'a', share: 0.25 }], () => ({ layer: 'proposed', parts: { proposed: 400 }, toPermit: 400 }));
-  assert.equal(st.rows.find(r => r.key === 'proposed').units, 100);
+test('a development’s stage on the chart: the rung holding most of its units; built once none are left', () => {
+  assert.equal(WP.stageOf({ top: 'plan', built: 0, existing: 0 }), 'plan');
+  assert.equal(WP.stageOf({ top: null, built: 30, existing: 0 }), 'built');
+  assert.equal(WP.stageOf({ top: null, built: 0, existing: 10 }), 'built');
+  assert.equal(WP.stageOf({ top: null, built: 0, existing: 0 }), null);
+  assert.equal(WP.stageOf(null), null);
+  // Shares: a site split between two plans counts its share in each; an estimate spreads over its rungs.
+  const st = WP.stageRows([{ p: 'a', share: 0.25 }], () => ({ rungs: { review: 300, servicing: 100 }, built: 0, existing: 0, estimated: 200, left: 400 }));
+  assert.equal(st.rows.find(r => r.key === 'review').units, 75);
+  assert.deepEqual([st.rows.find(r => r.key === 'review').est, st.rows.find(r => r.key === 'servicing').est], [37.5, 12.5]);
 });
 
 test('estimated counts: a file’s units left to build not stated on it, its share, split over its kinds', () => {
@@ -189,7 +204,7 @@ test('estimated counts: a file’s units left to build not stated on it, its sha
   // On the Growth page: a list at every level, at the chosen stage, its rows open Check a site.
   const s = src('js/ws-pages.js');
   assert.match(s, /estRows\.length \? \{ title: gStage === 'all' \? 'Estimated counts: files to confirm'/);
-  assert.match(s, /items\.filter\(\(\{ p \}\) => gStage === 'all' \|\| stageOf\(Ly\.ofDev\(p\)\) === gStage\)/);
+  assert.match(s, /items\.filter\(\(\{ p \}\) => gStage === 'all' \|\| stageOf\(rOf\(p\)\) === gStage\), rOf\)/);
   assert.match(s, /\.\.\.es\.files\.map\(x => \(\{ attrs: \{ 'data-ws-pick': x\.p\.key, 'data-ws-as': 'site'/);
   // The area kind sits on the detail line, not after the name (where it wrapped with a stray dot).
   assert.match(s, /<span class="pnl-r-name">\$\{esc\(c\.name\)\}<\/span>.*<small class="pnl-r-line">\$\{esc\(kind\(c\)\)\} · /);

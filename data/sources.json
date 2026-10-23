@@ -224,6 +224,22 @@
       "refresh": "yearly",
       "method": "Pipe capacity from the published diameter and slope (Manning); census population by area overlap."
     },
+    "sewers-local.json": {
+      "title": "Local sanitary sewers (under 300 mm) near developments",
+      "kind": "open-data",
+      "publisher": "Region of Peel",
+      "links": [
+        {
+          "label": "Wastewater Main (waterwastWater layer 10)",
+          "url": "https://services6.arcgis.com/ONZht79c8QWuX759/arcgis/rest/services/waterwastWater/FeatureServer/10"
+        }
+      ],
+      "dateField": "generatedAt",
+      "script": "scripts/build-sewer-capacity.js",
+      "refresh": "yearly",
+      "optional": true,
+      "method": "Gravity mains under 300 mm within 300 m of a development in the pipeline, each with the trunk (sewers.json) it drains to; for picking a development's outlet (QA/QC › Review outlets). Written by the sewer-build run (probe-sources, mode sewer-build)."
+    },
     "watermains.json": {
       "title": "Watermains (300 mm and larger)",
       "kind": "open-data",
@@ -373,6 +389,35 @@
       "published": "2020-09-18",
       "script": "scripts/build-dc-costs.py",
       "refresh": "each DC study"
+    },
+    "dev-outlets.json": {
+      "title": "Reviewed development outlets",
+      "kind": "derived",
+      "script": "js/dev-outlets.js",
+      "refresh": "when an outlet is reviewed",
+      "dateNote": "Each outlet carries the date it was reviewed (date).",
+      "method": "Exported from QA/QC › Review outlets: a development's outlet confirmed, or set by hand onto an existing sanitary sewer or a planned DC main, with its source. The sewer loads, the trace and the DC projects allocation follow these in place of the nearest sewer.",
+      "from": [
+        "sewers.json",
+        "dc-infra.json",
+        "snapshot.json"
+      ],
+      "check": "Hand-reviewed outlets of developments; the nearest 300 mm+ sewer (or the route along the planned mains) applies elsewhere."
+    },
+    "dc-joins.json": {
+      "title": "Reviewed joins of the 2026 DC planned mains",
+      "kind": "derived",
+      "script": "js/dc-joins.js",
+      "refresh": "when a join is reviewed",
+      "dateNote": "Each join carries the date it was set (at).",
+      "method": "Exported from the DC joins map layer: a planned main's end and the point it joins (or none, an open end). The sewer and water traces follow these in place of the automatic join.",
+      "from": [
+        "dc-infra.json",
+        "sewers.json",
+        "watermains.json",
+        "capital.json"
+      ],
+      "check": "Hand-set joins of planned DC mains onto the existing network; the automatic join applies elsewhere."
     },
     "dc-infra.json": {
       "title": "2026 DC capital maps (draft)",

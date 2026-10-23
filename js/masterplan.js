@@ -252,20 +252,15 @@
   }
   const constructionYear = items => { const ys = items.flatMap(i => i.phases.filter(ph => ph[0] === 'C').map(ph => ph[1])).filter(y => y >= MM().THIS_YEAR - 1); return ys.length ? Math.min(...ys) : null; };
 
-  // Wastewater: the DC main running along an existing sewer (half its length within 150 m) — a
-  // twin or replacement.
+  // Wastewater: the DC main relieving an existing sewer (a twin, replacement or upsizing): along
+  // half of it within 150 m, sized and placed like relief for it (js/dc-relief.js).
   function pipeReliefOf(i) {
     if (!DCN.pipeRelief) DCN.pipeRelief = new Map();
     if (DCN.pipeRelief.has(i)) return DCN.pipeRelief.get(i);
-    const c = MM().SEW.data.pipes[i][10], pts = []; for (let k = 0; k < c.length; k += 2) pts.push([c[k], c[k + 1]]);
-    const mid = pts[Math.floor(pts.length / 2)], r = 150, dLng = 300 / (111320 * Math.cos(mid[1] * Math.PI / 180)), dLat = 300 / 111320;
-    let best = null;
-    for (const ln of App().state.dcInfra.wastewater.lines) {
-      const b = ln.bbox; if (mid[0] < b[0] - dLng || mid[0] > b[2] + dLng || mid[1] < b[1] - dLat || mid[1] > b[3] + dLat) continue;
-      const near = pts.filter(pt => DI().dcDist(pt, ln.g) <= r).length / pts.length;
-      if (near >= 0.5 && (!best || near > best.near || (near === best.near && (ln.d || 0) > (best.ln.d || 0)))) best = { ln, near };
-    }
-    const out = best ? best.ln : null;
+    const p = MM().SEW.data.pipes[i], c = p[10], pts = []; for (let k = 0; k < c.length; k += 2) pts.push([c[k], c[k + 1]]);
+    const mid = pts[Math.floor(pts.length / 2)], dLng = 300 / (111320 * Math.cos(mid[1] * Math.PI / 180)), dLat = 300 / 111320;
+    const near = App().state.dcInfra.wastewater.lines.filter(({ bbox: b }) => !(mid[0] < b[0] - dLng || mid[0] > b[2] + dLng || mid[1] < b[1] - dLat || mid[1] > b[3] + dLat));
+    const out = window.PeelDcRelief.pickRelief(p[0], pts, near, DI().dcDist);
     DCN.pipeRelief.set(i, out);
     return out;
   }
@@ -293,7 +288,8 @@
   function psCons(a) {
     const M = App().state.svcModel, sp = SD().spsOf(a), l = M && MA().psLoads(a); if (!sp || !l) return null;
     const flow = ll => (M.pdwf(ll, 1) + M.ii(ll)) * 1e6 / 86400;
-    const at = y => y === 'today' ? { ...l, approved: 0, proposed: 0, japproved: 0, jproposed: 0 } : y === 'committed' ? { ...l, proposed: 0, jproposed: 0 } : MA().atYear(l, y);
+    // (committed: the Peel rule, a site servicing or building permit; the commitment ladder)
+    const at = y => y === 'today' ? { ...l, approved: 0, proposed: 0, japproved: 0, jproposed: 0 } : y === 'committed' ? MA().committedLoad(l, MA().ruleOf('ps')) : MA().atYear(l, y);
     const q = y => flow(at(y)), cap = sp.firmLs, com = at('committed'), room = cap - flow(com);
     const people = peopleFor(room, x => flow({ ...com, approved: com.approved + x }) - flow(com));
     const words = s => SD().spsKey(s).replace(/\b(sewer|sanitary|sewage|pumping|station|ps|\d+)\b/g, ' ').replace(/\s+/g, ' ').trim();
@@ -382,12 +378,13 @@
       sub: `governing ${fmtNum(cap)} kg/d (${row.governedBy}; 2020 Master Plan, Vol. 4, Table 9) · plan 2021 loading + growth at 75 g/person, 37.5 g/job + high-strength users${di ? ` · ${di.on ? 'with' : 'without'} the diversion; ${alt.on ? 'with' : 'without'} it, capacity is reached ${yTxt(alt.out)}` : ''}`,
       cap, unit: 'kg/d', util: { today: q('today') / cap, com: com / cap, bo: q(null) / cap }, room, people: room / perPerson, out: runOut(q, () => cap), relief, q, alt, devSet: new Set(g.devs) };
   }
-  // Water: max day of a set of zones by year (ML/d).
-  function zonesMax(ids, y) {
+  // Water: max day of a set of zones by year (ML/d). rule: the committed horizon's (the water treatment
+  // plants keep MECP D-5-1; supply into a zone, the Peel rule).
+  function zonesMax(ids, y, rule = 'peel') {
     const M = App().state.svcModel; let t = 0;
     for (const id of ids) {
       const l = M.zones.get(id); if (!l) continue;
-      const ll = y === 'today' ? { ...l, approved: 0, proposed: 0, japproved: 0, jproposed: 0 } : y === 'committed' ? { ...l, proposed: 0, jproposed: 0 } : MA().atYear(l, y);
+      const ll = y === 'today' ? { ...l, approved: 0, proposed: 0, japproved: 0, jproposed: 0 } : y === 'committed' ? MA().committedLoad(l, rule) : MA().atYear(l, y);
       t += M.wMax(M.total(ll), M.jobs(ll));
     }
     return t;
@@ -401,7 +398,7 @@
     if (wellSystem[zone.zone]) {
       const s = R.water.caledon.find(x => x.name === wellSystem[zone.zone]); if (!s) return null;
       const ids = [zone.id], base = s.maxDayM3d / 1000, rated = s.ratedM3d / 1000, lim = PLANT_TRIGGER * rated;
-      const q = y => base + zonesMax(ids, y) - zonesMax(ids, 'today');
+      const q = y => base + zonesMax(ids, y, MA().ruleOf('wplant')) - zonesMax(ids, 'today');
       const room = lim - q('committed');
       const wells = App().state.dcInfra ? App().state.dcInfra.water.facilities.filter(f => f.kind === 'well' && s.communities.includes(f.name)) : [];
       return { id: `wsys:${s.name}`, sys: 'water', kind: 'wplant', name: `${s.name} wells`, sub: `rated ${fmt1(rated)} ML/d · 2025 max day ${fmt1(base)} ML/d + growth`, cap: lim, unit: 'ML/d', zones: ids,
@@ -411,7 +408,7 @@
     // Before the zones are in the servicing lookup there is no growth to add: not a result (it would
     // read 2025 max day alone, 48% → 48%, and stay cached for this model).
     if (!ids.length) return null;
-    const q = y => sp.maxDayMLd + zonesMax(ids, y) - zonesMax(ids, 'today');
+    const q = y => sp.maxDayMLd + zonesMax(ids, y, MA().ruleOf('wplant')) - zonesMax(ids, 'today');
     const room = lim - q('committed');
     const facs = App().state.dcInfra ? App().state.dcInfra.water.facilities.filter(f => f.kind === 'plant') : [];
     return { id: 'wsys:southPeel', sys: 'water', kind: 'wplant', name: 'South Peel water treatment (A.P. Kennedy + Lorne Park)', sub: `rated ${fmt1(rated)} ML/d · 2025 max day ≤ ${fmt1(sp.maxDayMLd)} ML/d (incl. York supply) + growth`, cap: lim, unit: 'ML/d', zones: ids,
@@ -438,7 +435,7 @@
   // zone at level L and above (rough: 1.5 m/s, valves and pumping not modelled).
   function supplyCons(b) {
     const L = zLevel(b.upper), ids = lakeZones().filter(id => zLevel(SD().svcById.get(id).zone) >= L);
-    const q = y => zonesMax(ids, y), cap = b.capMLd, room = cap - q('committed');
+    const q = y => zonesMax(ids, y, MA().ruleOf('supply')), cap = b.capMLd, room = cap - q('committed');
     const lines = App().state.dcInfra ? App().state.dcInfra.water.lines.filter(ln => ln.y && ln.y >= MM().THIS_YEAR && (ln.k === 'transmission') && (() => {
       let lo = false, hi = false; for (let k = 0; k < ln.g.length; k += 3) { const z = Areas().locate(App().state.servicing.zones, ln.g[k][0], ln.g[k][1])[0]; const lv = z && zLevel(SD().svcById.get(z).zone); if (lv === L - 1 || SD().svcById.get(z || '')?.zone === b.lower) lo = true; if (lv === L) hi = true; } return lo && hi;
     })()) : [];
@@ -499,7 +496,8 @@
     const v = {};
     for (const s of ['W', 'C', 'E']) {
       const devs = groups[s], gr = Areas().growthSince(devs, {}, bc.date, App().state.criteria), j = SvcTab().svcJobs(devs, bc.date);
-      v[s] = { devs, level, built: M.wMax(gr.built.population, j.jbuilt || 0), approved: M.wMax(gr.approved.population, j.japproved || 0), proposed: M.wMax(gr.proposed.population, j.jproposed || 0) };
+      v[s] = { devs, level, built: M.wMax(gr.built.population, j.jbuilt || 0), approved: M.wMax(gr.approved.population, j.japproved || 0), proposed: M.wMax(gr.proposed.population, j.jproposed || 0),
+        committed: M.wMax(gr.committed.approved.population + gr.committed.proposed.population, (j.jcpA || 0) + (j.jcpP || 0)) };
     }
     mpSystemGrowth.key = key; mpSystemGrowth.v = v;
     return v;
@@ -507,10 +505,11 @@
   function trunkCons(t) {
     const G = mpSystemGrowth(); if (!G) return null;
     const pool = trunkPool(t), k = trunkShare(t), Y0 = MM().THIS_YEAR, sum = f => pool.reduce((a, s) => a + f(G[s]), 0);
-    const x = { built: sum(g => g.built) * k, approved: sum(g => g.approved) * k, proposed: sum(g => g.proposed) * k };
+    const x = { built: sum(g => g.built) * k, approved: sum(g => g.approved) * k, proposed: sum(g => g.proposed) * k, committed: sum(g => g.committed) * k };
     // York agreement flow on the trunks that carry it, by year (2021 is already in the plan's figure).
     const york = y => (t.carriesYork ? yorkAt(y) - yorkAt(2021) : 0);
-    const today = t.demandMLd[0] + x.built + york(Y0), com = today + x.approved, bo = com + x.proposed + york(SP().hz.end) - york(Y0);
+    // (committed: the Peel rule, a site servicing or building permit; build-out still adds all of both)
+    const today = t.demandMLd[0] + x.built + york(Y0), com = today + x.committed, bo = today + x.approved + x.proposed + york(SP().hz.end) - york(Y0);
     const q = y => { if (y === 'today') return today; if (y === 'committed') return com; if (y == null) return bo; const { fa, fp } = MA().hzFrac(y); return t.demandMLd[0] + x.built + york(y) + x.approved * fa + x.proposed * fp; };
     const capY = y => trunkCapAt(t, y === 'today' ? Y0 : y), cap = capY(Y0);
     const room = cap > 0 ? cap - com : null;
@@ -651,17 +650,20 @@
     }
     return rows.sort((a, b) => b.q - a.q);
   }
-  function consDevsHTML(cs, extra = []) {
+  // A development's site servicing permit (js/dc-gate.js 'counted'): it is connecting to the
+  // existing network now, under its own permit.
+  const permitOf = p => { const G = window.PeelDcGate, r = G && G.rowOf ? G.rowOf(p) : null; return r && r.bucket === 'counted' ? r : null; };
+  function consDevsHTML(cs, extra = [], opts = {}) {
     const seen = new Map();
     for (const c of cs) for (const r of consDevs(c)) if (!seen.has(r.p.key)) seen.set(r.p.key, r);
     for (const r of extra) if (!seen.has(r.p.key)) seen.set(r.p.key, r);
     const rows = [...seen.values()].sort((a, b) => b.q - a.q), LIMIT = 60, water = cs.length && cs.every(c => c.sys === 'water');
-    if (!rows.length) return '<p class="small muted">No development since the census relies on it.</p>';
-    const by = k => rows.filter(r => r.lay === k);
-    return `<div class="chips">${['built', 'approved', 'proposed'].map(k => `<span class="chip"><span class="lg-sw" style="--mk:${MM().layerColors()[k]}"></span>${esc(MM().LAYER_NAME[k])} ${fmtNum(by(k).length)} · ${fmtNum(roundPop(by(k).reduce((t, r) => t + r.e.population, 0)))} people</span>`).join('')}</div>
-      <table class="dt loads-table"><caption>${fmtNum(rows.length)} developments relying on it, largest ${water ? 'max day' : 'peak wet weather'} first</caption>
+    if (!rows.length) return `<p class="small muted">${opts.none || 'No development since the census relies on it.'}</p>`;
+    const by = k => rows.filter(r => r.lay === k), permitted = rows.filter(r => permitOf(r.p));
+    return `<div class="chips">${['built', 'approved', 'proposed'].map(k => `<span class="chip"><span class="lg-sw" style="--mk:${MM().layerColors()[k]}"></span>${esc(MM().LAYER_NAME[k])} ${fmtNum(by(k).length)} · ${fmtNum(roundPop(by(k).reduce((t, r) => t + r.e.population, 0)))} people</span>`).join('')}${permitted.length ? `<span class="chip">Site servicing permit ${fmtNum(permitted.length)}</span>` : ''}</div>
+      <table class="dt loads-table"><caption>${fmtNum(rows.length)} ${opts.caption || 'developments relying on it'}, largest ${water ? 'max day' : 'peak wet weather'} first</caption>
         <thead><tr><th>Development</th><th>People + jobs</th><th>${water ? 'Max day' : 'Peak wet'}</th></tr></thead>
-        <tbody>${rows.slice(0, LIMIT).map(r => `<tr class="ld-row" data-dev="${esc(r.p.key)}" tabindex="0"><td>${dot(r.p.phase)} ${esc(r.p.title)}<small><span class="lg-sw" style="--mk:${MM().layerColors()[r.lay]}"></span>${esc(MM().LAYER_NAME[r.lay])} · ${esc(r.p.municipality)}${r.conn ? ' · connects to it' : ''}</small></td><td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.q)}</td></tr>`).join('')}</tbody></table>
+        <tbody>${rows.slice(0, LIMIT).map(r => `<tr class="ld-row" data-dev="${esc(r.p.key)}" tabindex="0"><td>${dot(r.p.phase)} ${esc(r.p.title)}<small><span class="lg-sw" style="--mk:${MM().layerColors()[r.lay]}"></span>${esc(MM().LAYER_NAME[r.lay])} · ${esc(r.p.municipality)}${r.conn ? ' · connects to it' : ''}${permitOf(r.p) ? ` · site servicing permit${permitOf(r.p).servicingApplied ? ` ${esc(permitOf(r.p).servicingApplied)}` : ''}: connecting to the existing network` : ''}</small></td><td>${fmtNum(roundPop(r.e.population + r.e.employment.jobs))}</td><td>${uLs(r.q)}</td></tr>`).join('')}</tbody></table>
       ${rows.length > LIMIT ? `<p class="small muted">+ ${fmtNum(rows.length - LIMIT)} smaller developments.</p>` : ''}`;
   }
   const reg = c => { (DCN.reg || (DCN.reg = new Map())).set(c.id, c); return c; };
@@ -719,8 +721,18 @@
       ${cs.length ? `${needsTable(cs, ppu)}<p class="small muted">Room in units at ${ppu} persons per unit (apartment).</p>` : `<p class="small muted">${it.ln && it.ln.sys === 'wastewater' ? 'It does not run along an existing sanitary sewer of 300 mm or more (a new trunk or a local main).' : 'No tabled capacity matched to it.'}</p>`}
       ${conn.length ? `<p class="small"><strong>${fmtNum(conn.length)} development${conn.length === 1 ? '' : 's'}</strong> outside the existing network would connect to it.</p>` : ''}
       ${zoneNote}
-      <h3 class="sub-title">Developments relying on it</h3>
-      ${consDevsHTML(cs.filter(c => c.kind !== 'wplant' || cs.length === 1), [...conn, ...zoneRows])}`;
+      ${devsOfDcHTML(cs.filter(c => c.kind !== 'wplant' || cs.length === 1), conn, zoneRows)}`;
+  }
+  // Who relies on a DC project. Through an existing pipe or facility it relieves only where that
+  // runs short (a sewer with room to build-out needs no relief: the developments draining through
+  // it don't rely on the project, and their sewer trace runs through the existing pipe); and every
+  // development outside the network that would connect to the planned main itself.
+  function devsOfDcHTML(cs, conn, zoneRows) {
+    const short = cs.filter(c => c.status !== 'ok'), roomy = cs.filter(c => c.status === 'ok');
+    const relying = consDevsHTML(short, [...conn, ...zoneRows], { none: roomy.length ? 'None for capacity: what it relieves has room to build-out.' : undefined });
+    const through = roomy.length ? `<details class="dcn-more"><summary class="small">Developments draining through ${roomy.length === 1 ? `the ${esc(roomy[0].name)}` : 'what'} it relieves, which has room to build-out (they don't need this project)</summary>
+      ${consDevsHTML(roomy, [], { caption: `developments draining through ${roomy.length === 1 ? 'it' : 'them'}` })}</details>` : '';
+    return `<h3 class="sub-title">Developments relying on it</h3>${relying}${through}`;
   }
   // Panel for a planned main (tap on the map or a relief link).
   function showDcLine(ln) {
@@ -900,6 +912,7 @@
     lakeZones,
     ppuOf,
     dcNeedsSection,
+    pipeReliefOf,
     dcItemCons,
     reliefAdd,
     capWith,

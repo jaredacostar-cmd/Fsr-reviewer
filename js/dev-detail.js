@@ -439,7 +439,7 @@
       for (const s of f.sps) if (s.wet >= s.firm) out.push(chipGo(`${esc(psName(s.a))} ${Math.round(s.wet / s.firm * 100)}% of firm`, 'warn', { 'data-ss': s.a.id }, 'The pumping station: what loads it, and relief'));
       if (f.cap) {
         if (f.reserve <= 0) out.push(chipGo(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} over rated capacity`, 'warn', { 'data-ss': `plant:${f.pl}` }, 'The plant: its limit and relief'));
-        else if (f.cap.committed / f.cap.rated >= trigger() / 100) out.push(chipGo(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} ≥${trigger()}% with approved`, 'warn', { 'data-ss': `plant:${f.pl}` }, 'The plant: its limit and relief'));
+        else if (f.cap.committed / f.cap.rated >= trigger() / 100) out.push(chipGo(`${esc(SV().PLANT_SHORT[f.pl] || f.pl)} ≥${trigger()}% past plan approval (MECP D-5-1)`, 'warn', { 'data-ss': `plant:${f.pl}` }, 'The plant: its limit and relief'));
       }
     }
     return out;

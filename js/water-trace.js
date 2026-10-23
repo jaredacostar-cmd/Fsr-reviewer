@@ -7,6 +7,7 @@
   const MA = () => window.PeelMapAnalysis;
   const ST = () => window.PeelSewerTrace;
   const DI = () => window.PeelDcInfra;
+  const DJ = () => window.PeelDcJoins;
   const SD = () => window.PeelSvcData;
   const MP = () => window.PeelMasterPlan;
   const AS = () => window.PeelAreaSelect;
@@ -100,16 +101,18 @@
   // firm where modelled) against the design maximum day of zone n and every zone above it.
   function waterLayers(M, ids) {
     M = M || App().state.svcModel;
-    const o = { census: 0, built: 0, approved: 0, proposed: 0, jbuilt: 0, japproved: 0, jproposed: 0 };
+    const o = { census: 0, built: 0, approved: 0, proposed: 0, jbuilt: 0, japproved: 0, jproposed: 0, cpA: 0, cpP: 0, jcpA: 0, jcpP: 0 };
     for (const id of ids) { const l = M.zones.get(id); if (l) for (const k in o) o[k] += l[k] || 0; }
     const w = (p, j) => M.wMax(p, j);
-    return { o, v: [w(o.census, 0), w(o.built, o.jbuilt), w(o.approved, o.japproved), w(o.proposed, o.jproposed)] };
+    // vPeel: the growth the Peel rule commits (a site servicing or building permit, in approved and in
+    // proposed): the committed horizon of the pumping; the water treatment plants keep v[2] (MECP D-5-1).
+    return { o, v: [w(o.census, 0), w(o.built, o.jbuilt), w(o.approved, o.japproved), w(o.proposed, o.jproposed)], vPeel: w(o.cpA + o.cpP, o.jcpA + o.jcpP) };
   }
   function waterCapRow(M, name, ids, rated, base, note, capWord) {
-    const { o, v } = waterLayers(M, ids); if (!(rated > 0)) return null;
+    const { o, v, vPeel } = waterLayers(M, ids); if (!(rated > 0)) return null;
     if (base != null) { const today = v[0] + v[1], k = today > 0 ? base / today : 1; v[0] *= k; v[1] *= k; }
     const popToday = o.census + o.built, perPerson = popToday > 0 ? (v[0] + v[1]) * 1e6 / popToday : 0;
-    return { name: esc(name), rated, v, extMld: 0, perPerson, popToday, note, capWord };
+    return { name: esc(name), rated, v, vPeel, extMld: 0, perPerson, popToday, note, capWord };
   }
   // Pump groups between zones: source level (the site's reservoir zone, 0 at a plant), target
   // level (the zone number in LLPnX / HLPnX), capacity (actual firm where modelled, else firm).
@@ -250,7 +253,7 @@
     return WM.loading;
   }
   function wmGraph() {
-    const dcKey = App().state.dcInfra ? App().state.dcInfra.water.lines.length : 0;
+    const dcKey = `${App().state.dcInfra ? App().state.dcInfra.water.lines.length : 0}:${DJ() ? DJ().version() : 0}:${WF.data ? 1 : 0}:${App().state.servicing ? 1 : 0}`;
     if (WM.g && WM.dcKey === dcKey) return WM.g;
     const d = WM.data, xs = [], ys = [], E = [];
     for (let i = 0, x = 0, y = 0; i < d.xy.length; i += 2) { x += d.xy[i]; y += d.xy[i + 1]; xs.push(x / 1e5); ys.push(y / 1e5); }
@@ -274,24 +277,118 @@
       return out;
     };
     // Planned DC water mains: their vertices join the network, their ends the nearest node of
-    // another main within 300 m.
-    const planned = [];
-    if (App().state.dcInfra) for (const ln of App().state.dcInfra.water.lines) {
+    // another main within 300 m: of a main at least half their size when there is one, else any main
+    // within 60 m (a 1200 mm transmission main doesn't feed off a 300 mm local main). Water moves
+    // between pressure zones only through a station, reservoir or tank: a join stays in the zone of
+    // the end, unless the end is at a facility (within 150 m: existing, or planned on the DC map).
+    // A reviewed join (js/dc-joins.js) replaces the automatic one: the main it was set onto, or none.
+    const planned = [], n0 = xs.length, dOf = new Float64Array(n0), lnOf = [];
+    for (const [a, b, dm] of E) { dOf[a] = Math.max(dOf[a], dm); dOf[b] = Math.max(dOf[b], dm); }
+    // (with the capital projects' new watermains, built since the network data or being built: js/dc-joins.js)
+    if (App().state.dcInfra) for (const ln of [...App().state.dcInfra.water.lines, ...(DJ() ? DJ().capLines('water') : [])]) {
       const a = xs.length;
-      ln.g.forEach(([x, y], k) => { xs.push(x); ys.push(y); if (k) E.push([a + k - 1, a + k, ln.d || 0, ln]); });
+      ln.g.forEach(([x, y], k) => { xs.push(x); ys.push(y); lnOf.push(ln); if (k) E.push([a + k - 1, a + k, ln.d || 0, ln]); });
       planned.push([a, xs.length - 1, ln]);
     }
-    const n0 = d.nodes;
-    // A planned main joins an existing one wherever it runs within 25 m of it (twinning, crossings).
-    for (const [a, b, ln] of planned) for (let t = a; t <= b; t++) { const n = near([xs[t], ys[t]], 25, i => i >= n0); if (n) E.push([t, n.i, 0, ln]); }
+    const nEp = E.length;
+    const ZL = App().state.servicing && App().state.servicing.zones, zMemo = new Map();
+    // A point's zones: those within 50 m of it (a main along a boundary road serves both sides; the
+    // zone outlines are drawn to the road, not to the main).
+    const ZT = 50 / 111320;
+    const zonesOf = i => {
+      if (!ZL) return null;
+      if (!zMemo.has(i)) {
+        const kx = ZT / Math.cos(ys[i] * Math.PI / 180), set = new Set();
+        for (const [dx, dy] of [[0, 0], [kx, 0], [-kx, 0], [0, ZT], [0, -ZT]]) for (const id of Areas().locate(ZL, xs[i] + dx, ys[i] + dy)) set.add(id);
+        zMemo.set(i, set);
+      }
+      return zMemo.get(i);
+    };
+    const zoneOf = i => { const z = zonesOf(i); if (!z || !z.size) return null; const at = Areas().locate(ZL, xs[i], ys[i])[0]; return at || [...z][0]; };
+    const sameZone = (t, i) => { const a = zonesOf(t), b = zonesOf(i); return !a || !b || !a.size || !b.size || [...a].some(z => b.has(z)); };
+    const facs = [
+      ...(WF.data ? WF.data.facilities.filter(f => f.lnglat).map(f => ({ g: f.lnglat, name: f.name })) : []),
+      ...(App().state.dcInfra ? App().state.dcInfra.water.facilities.filter(f => f.g && f.kind !== 'program').map(f => ({ g: f.g, name: `${f.name} (planned)` })) : []),
+    ];
+    const facAt = pt => { let best = null, bd = 150; for (const f of facs) { const m = DI().dcM(pt, f.g); if (m < bd) { bd = m; best = f; } } return best; };
+    // Mains are straight between their vertices, often hundreds of metres: a planned main drawn onto
+    // one joins it there, not at its nearest vertex. tap(): the nearest point on a main within maxM
+    // (ok(a, b, d, line): a test on its ends, size and planned line; by default existing mains only);
+    // the join then runs to both ends of that piece, each costed along it from the tap point.
+    const nE0 = d.e.length / 3, segGrid = new Map();     // (the existing mains: the first edges, then the planned ones)
+    for (let k = 0; k < nEp; k++) {
+      const [a, b] = E[k], cx0 = Math.floor(Math.min(xs[a], xs[b]) / CELL), cx1 = Math.floor(Math.max(xs[a], xs[b]) / CELL), cy0 = Math.floor(Math.min(ys[a], ys[b]) / CELL), cy1 = Math.floor(Math.max(ys[a], ys[b]) / CELL);
+      for (let cx = cx0; cx <= cx1; cx++) for (let cy = cy0; cy <= cy1; cy++) { const key = `${cx},${cy}`; (segGrid.get(key) || segGrid.set(key, []).get(key)).push(k); }
+    }
+    const tap = (pt, maxM, ok) => {
+      const r = Math.ceil(maxM / (CELL * 80000)) + 1, cx = Math.floor(pt[0] / CELL), cy = Math.floor(pt[1] / CELL), seen = new Set();
+      const kx = 111320 * Math.cos(pt[1] * Math.PI / 180), ky = 111320;
+      let best = null;
+      for (let dx = -r; dx <= r; dx++) for (let dy = -r; dy <= r; dy++) for (const k of segGrid.get(`${cx + dx},${cy + dy}`) || []) {
+        if (seen.has(k)) continue; seen.add(k);
+        const [a, b, dm, ln] = E[k]; if (ok ? !ok(a, b, dm, ln) : ln) continue;
+        const ax = (xs[a] - pt[0]) * kx, ay = (ys[a] - pt[1]) * ky, bx = (xs[b] - pt[0]) * kx, by = (ys[b] - pt[1]) * ky;
+        const ddx = bx - ax, ddy = by - ay, L2 = ddx * ddx + ddy * ddy, u = L2 ? Math.max(0, Math.min(1, -(ax * ddx + ay * ddy) / L2)) : 0;
+        const m = Math.hypot(ax + u * ddx, ay + u * ddy);
+        if (m <= maxM && (!best || m < best.m)) best = { k, a, b, dm, ln, m, q: [xs[a] + (xs[b] - xs[a]) * u, ys[a] + (ys[b] - ys[a]) * u] };
+      }
+      return best;
+    };
+    // Join edges from a planned node through a tap point: [node, end of the main, 0, line, length, tap point, reviewed join].
+    const joinTap = (t, tp, ln, ov = null) => { for (const e of [tp.a, tp.b]) E.push([t, e, 0, ln, tp.m + DI().dcM(tp.q, [xs[e], ys[e]]), tp.q, ov]); };
+    // A planned main joins an existing one wherever it runs within 25 m of it in the same zone
+    // (twinning, crossings; a transmission main passing through another zone isn't tapped there).
+    const along = new Map();
+    for (const [a, b, ln] of planned) for (let t = a; t <= b; t++) {
+      const tp = tap([xs[t], ys[t]], 25, (p, q, dm, l) => !l && (sameZone(t, p) || sameZone(t, q)));
+      if (tp) { joinTap(t, tp, ln); along.set(ln, (along.get(ln) || 0) + 1); }
+    }
     for (const [a, b] of planned) for (let i = a; i <= b; i++) put(i);
-    for (const [a, b, ln] of planned) for (const t of [a, b]) { const n = near([xs[t], ys[t]], 300, i => i >= a && i <= b); if (n) E.push([t, n.i, 0, ln]); }
+    const lineAt = i => (i < n0 ? null : lnOf[i - n0]);
+    const joins = [];
+    for (const [a, b, ln] of planned) for (const t of [a, b]) {
+      const pt = [xs[t], ys[t]], ov = DJ() ? DJ().override('water', pt) : null;
+      const own = i => i >= a && i <= b;
+      let fac = facAt(pt);
+      let n = null, tp = null, auto = true, zoneBlocked = null, sizeBlocked = null;
+      const zOk = i => fac || sameZone(t, i);
+      // The nearer of a planned main's node and a tap on an existing main.
+      const pick = (maxM, sized) => {
+        const need = sized ? (ln.d || 0) / 2 : 0;
+        // (a planned main with no size on the map is allowed)
+        tp = tap(pt, maxM, (p, q, dm, l) => l !== ln && !(l && l.cap) && (zOk(p) || zOk(q)) && (l ? (l.d || Infinity) : dm) >= need);
+        // (a capital project's new main only where drawn onto it)
+        const tc = tap(pt, Math.min(maxM, DJ() ? DJ().CAP_REACH_M : 60), (p, q, dm, l) => l !== ln && l && l.cap && (zOk(p) || zOk(q)));
+        if (tc && (!tp || tc.m < tp.m)) tp = tc;
+        return tp;
+      };
+      if (ov) {
+        auto = false;
+        // Set through a facility: the main joins the network at it (any main within 300 m of it).
+        if (ov.into === 'facility' && ov.to) { fac = { name: ov.name || 'the facility' }; const tt = tap(ov.to, 300, (p, q, dm, l) => l !== ln); if (tt) tp = { ...tt, m: DI().dcM(pt, tt.q) }; }
+        else if (ov.to) { n = near(ov.to, 15, own); const tt = tap(ov.to, 15); if (tt && (!n || tt.m < n.m)) { n = null; tp = { ...tt, m: DI().dcM(pt, tt.q) }; } else if (n) n = { i: n.i, m: DI().dcM(pt, [xs[n.i], ys[n.i]]) }; }
+      } else {
+        pick(300, true) || pick(60, false);
+        // Not joined, flagged for review: the only main in reach is across a zone boundary, or in the
+        // zone but under half the planned main's size.
+        if (!n && !tp) {
+          const x = tap(pt, 300, (p, q, dm, l) => l !== ln);
+          if (x && !zOk(x.a) && !zOk(x.b)) zoneBlocked = { m: x.m, zone: zoneOf(x.a) };
+          else if (x) sizeBlocked = { m: x.m, d: x.ln ? x.ln.d || 0 : x.dm };
+        }
+      }
+      if (n) E.push([t, n.i, 0, ln, undefined, undefined, ov]);
+      if (tp) joinTap(t, tp, ln, ov);
+      const into = tp ? (tp.ln ? { kind: 'dc', ln: tp.ln } : { kind: 'watermain', d: tp.dm }) : n ? (n.i < n0 ? { kind: 'watermain', d: dOf[n.i] } : { kind: 'dc', ln: lineAt(n.i) }) : null;
+      if (!ln.cap) joins.push({ sys: 'water', ln, pt, to: tp ? tp.q : n ? [xs[n.i], ys[n.i]] : null, m: tp ? tp.m : n ? n.m : null, into, auto, ov,
+        zone: zoneOf(t), fac: fac ? fac.name : null, zoneBlocked, sizeBlocked, along: along.get(ln) || 0 });
+    }
     const adj = Array.from({ length: xs.length }, () => []);
     E.forEach(([a, b], k) => { adj[a].push(k); adj[b].push(k); });
-    const len = E.map(([a, b]) => DI().dcM([xs[a], ys[a]], [xs[b], ys[b]]));
+    const len = E.map(([a, b, , , l]) => l ?? DI().dcM([xs[a], ys[a]], [xs[b], ys[b]]));
     // Cost: length, less on large mains, more on planned ones and on joins.
     const cost = E.map(([, , dm, ln], k) => len[k] * (dm >= 750 ? 0.7 : dm >= 400 ? 0.85 : dm ? 1 : 1.5) * (ln ? 1.2 : 1));
-    WM.g = { xs, ys, E, adj, len, cost, near, within }; WM.dcKey = dcKey;
+    WM.g = { xs, ys, E, adj, len, cost, near, within, tap, joins, n0 }; WM.dcKey = dcKey;
     return WM.g;
   }
   // Shortest path from a point to a point: starting from any node near A (the distance to it counted
@@ -323,7 +420,7 @@
     // Stops from the plant to the site.
     const site = [p.lng, p.lat], stops = [...t.steps.slice().reverse().map(s => ({ pt: s.f.lnglat, s })), { pt: site, site: true }];
     const bd = L.latLngBounds([[p.lat, p.lng]]);
-    let kmE = 0, kmP = 0, kmS = 0, kmL = 0, maxD = 0; const dcLines = new Map(), straight = [];
+    let kmE = 0, kmP = 0, kmS = 0, kmL = 0, maxD = 0; const dcLines = new Map(), straight = [], edited = new Set();
     let joinM = null;
     const link = (a, b, cls) => { if (cls === 'wtrace-link') kmL += DI().dcM(a, b) / 1000; L.polyline([[a[1], a[0]], [b[1], b[0]]], { className: cls, interactive: false, renderer: SD().flowRenderer }).addTo(L_); bd.extend([a[1], a[0]]).extend([b[1], b[0]]); };
     const flow = [];   // the whole route, plant → site, for the arrows
@@ -338,14 +435,17 @@
       let run = [at(na.i)], kind = null, dm = 0;
       const flush = () => {
         if (run.length < 2) return;
-        if (kind && kind.ln) L.polyline(run.map(([x, y]) => [y, x]), { className: 'wtrace-plan', renderer: SD().flowRenderer }).bindTooltip(`<strong>Planned ${esc(DI().DC_KIND[kind.ln.k] ? DI().DC_KIND[kind.ln.k][0].toLowerCase() : 'water main')}</strong>${kind.ln.d ? ` · ${kind.ln.d} mm` : ''}<br>2026 DC capital map${kind.ln.y ? ` · ${kind.ln.y}` : ''}${kind.ln.p ? ` · project ${esc(kind.ln.p)}` : ''}`, { sticky: true, className: 'pt' }).addTo(L_);
+        if (kind && kind.ln && kind.ln.cap) L.polyline(run.map(([x, y]) => [y, x]), { className: 'wtrace-main', weight: 5, renderer: SD().flowRenderer }).bindTooltip(`<strong>${esc(DI().dcLineText(kind.ln))}</strong>`, { sticky: true, className: 'pt' }).addTo(L_);
+        else if (kind && kind.ln) L.polyline(run.map(([x, y]) => [y, x]), { className: 'wtrace-plan', renderer: SD().flowRenderer }).bindTooltip(`<strong>Planned ${esc(DI().DC_KIND[kind.ln.k] ? DI().DC_KIND[kind.ln.k][0].toLowerCase() : 'water main')}</strong>${kind.ln.d ? ` · ${kind.ln.d} mm` : ''}<br>2026 DC capital map${kind.ln.y ? ` · ${kind.ln.y}` : ''}${kind.ln.p ? ` · project ${esc(kind.ln.p)}` : ''}`, { sticky: true, className: 'pt' }).addTo(L_);
         else L.polyline(run.map(([x, y]) => [y, x]), { className: 'wtrace-main', weight: dm >= 900 ? 8 : dm >= 600 ? 7 : dm >= 400 ? 6 : 5, renderer: SD().flowRenderer }).bindTooltip(`<strong>Existing watermain</strong>${dm ? ` · ${dm} mm` : ''}`, { sticky: true, className: 'pt' }).addTo(L_);
       };
       for (const [k, v] of path) {
         const [, , d, ln] = G.E[k], kk = { ln }, sameKind = kind && !!kind.ln === !!ln && (!ln || kind.ln === ln);
         if (!sameKind || (!ln && d && d !== dm)) { flush(); run = [run[run.length - 1]]; kind = kk; if (d) dm = d; }
+        const via = G.E[k][5]; if (via) { run.push(via); flow.push(via); }
         run.push(at(v)); bd.extend([G.ys[v], G.xs[v]]); flow.push(at(v));
-        if (ln) { kmP += G.len[k] / 1000; dcLines.set(ln, true); } else { kmE += G.len[k] / 1000; maxD = Math.max(maxD, d); }
+        if (G.E[k][6]) edited.add(G.E[k][6]);
+        if (ln && !ln.cap) { kmP += G.len[k] / 1000; dcLines.set(ln, true); } else { kmE += G.len[k] / 1000; maxD = Math.max(maxD, d); }
       }
       flush();
       if (nb.m > 5) link(at(nb.i), B, 'wtrace-link');
@@ -369,7 +469,7 @@
     });
     ST().addFlowMarker(); ST().syncPathMode(); AS().syncClearBtn();
     ST().fitClear(bd);
-    const res = { t, kmE, kmP, kmS, kmL, maxD, dc: [...dcLines.keys()], straight, joinM, net: !!G };
+    const res = { t, kmE, kmP, kmS, kmL, maxD, dc: [...dcLines.keys()], straight, joinM, net: !!G, edited: [...edited] };
     ST().WTRACE.last = res;
     return res;
   }
@@ -380,6 +480,7 @@
     const yrs = [...new Set(r.dc.map(ln => ln.y).filter(Boolean))].sort();
     return `${SCREEN_NOTE}${t.est ? zoneEstHTML(t.est) : ''}<ul class="why-list trace-sum">
       <li class="why-ok"><span>From <strong>${esc(first.name)}</strong> ${t.gw ? 'wells and treatment' : first.kind === 'plant' ? 'treatment plant' : ''}: <strong>${(r.kmE + r.kmP + r.kmS + r.kmL).toFixed(1)} km</strong> to the site${r.kmE >= 0.05 ? `, ${r.kmE.toFixed(1)} km along existing watermains${r.maxD ? ` (up to ${fmtNum(r.maxD)} mm)` : ''}` : ''}${r.kmP >= 0.05 ? `, <strong>${r.kmP.toFixed(1)} km along planned DC mains</strong>${yrs.length ? ` (${yrs.join(', ')})` : ''}` : ''}.</span></li>
+      ${r.edited && r.edited.length && DJ() ? `<li class="why-stall"><span>${DJ().editedHTML(r.edited)}</span></li>` : ''}
       ${rows.filter(s => s.pump && s.f.kind !== 'plant').length ? `<li class="why-ok"><span>Pumping on the way: ${rows.filter(s => s.pump && s.f.kind !== 'plant').map(s => `${esc(s.f.name)} <span class="muted">(${esc(s.pump.zone)}, ${fmtNum(s.pump.cap)} ML/d firm → zone ${s.to})</span>`).join(', ')}.</span></li>` : ''}
       ${r.joinM != null ? `<li class="why-ok"><span>The site is ${fmtNum(Math.round(r.joinM / 10) * 10)} m from the nearest main of 300 mm+ on the route${t.z ? ` · ${zn(t.z.name)}` : ''}.</span></li>` : ''}
       ${zr ? `<li class="${zr.b > 1 ? 'why-stall' : 'why-ok'}"><span>Pumping into zone ${zr.n} and above: <strong>${Math.round(zr.c * 100)}%</strong> of firm capacity with existing + built + approved, ${Math.round(zr.b * 100)}% at build-out.</span></li>` : ''}
@@ -417,6 +518,8 @@
     waterTraceHTML,
     clearWaterTrace,
     traceWater,
+    loadWatermains,
+    wmGraph,
     waterTraceSummaryHTML,
     wfKinds,
     wfWorks,

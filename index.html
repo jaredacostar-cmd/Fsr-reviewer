@@ -248,7 +248,7 @@
         <div id="ov-dev" class="ov-dev" hidden><div class="dev-subtabs" role="tablist" aria-label="Development views"><button type="button" data-devsub="about" aria-selected="true">About</button><button type="button" data-devsub="files" aria-selected="false">Files &amp; history</button><button type="button" data-devsub="site" aria-selected="false">Site</button></div><div id="pane-dev-body"></div></div>
       </section>
 
-      <div class="f-pane f-subtabs" data-pane="growth" hidden role="group" aria-label="Growth view"><button type="button" class="btn small" data-gsub="pipeline">Pipeline</button><button type="button" class="btn small" data-gsub="areas">Areas</button><button type="button" class="btn small" data-gsub="timing">Forecast</button></div>
+      <div class="f-pane f-subtabs" data-pane="growth" hidden role="group" aria-label="Growth view"><button type="button" class="btn small" data-gsub="pipeline">Pipeline</button><button type="button" class="btn small" data-gsub="areas">Areas</button><button type="button" class="btn small" data-gsub="timing">Forecast</button><button type="button" class="btn small" data-gsub="ledger">Ledger</button></div>
       <section class="f-pane pnl-host" id="pnl-growth" data-pane="growth" aria-labelledby="ftab-growth" hidden></section>
       <section class="f-pane" id="pane-growth-pipeline" data-pane="growth" data-sub="pipeline" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="growth-pipeline-body"></div></section>
       <!-- Areas: one drill-down, Peel → municipality → plan (the plan tables), then the 2051 comparison,
@@ -256,6 +256,7 @@
       <section class="f-pane" id="pane-growth-byplan" data-pane="growth" data-sub="areas" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="byplan-body"></div></section>
       <section class="f-pane" id="pane-growth-census" data-pane="growth" data-sub="areas" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="growth-census-body"></div></section>
       <section class="f-pane" id="pane-growth-timing" data-pane="growth" data-sub="timing" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="timing-body"></div></section>
+      <section class="f-pane" id="pane-growth-ledger" data-pane="growth" data-sub="ledger" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="ledger-body"></div></section>
 
       <div class="f-pane f-subtabs svc-subtabs" data-pane="svc" hidden role="group" aria-label="Servicing view">
         <button type="button" class="btn small" data-svcsub="capacity">Capacity</button>
@@ -309,13 +310,15 @@
         <div id="hyd-box"></div>
       </section>
 
-      <div class="f-pane f-subtabs" data-pane="dca" hidden role="group" aria-label="Capital view"><button type="button" class="btn small" data-dcasub="timing">DC timing</button><button type="button" class="btn small" data-dcasub="projects">Projects</button><button type="button" class="btn small" data-dcasub="eas">EAs</button><button type="button" class="btn small lab-chip pv-hide" data-dcasub="funding">Funding <small>Labs</small></button></div>
+      <div class="f-pane f-subtabs" data-pane="dca" hidden role="group" aria-label="Capital view"><button type="button" class="btn small" data-dcasub="timing">DC timing</button><button type="button" class="btn small" data-dcasub="dcproj">DC projects</button><button type="button" class="btn small" data-dcasub="projects">Projects</button><button type="button" class="btn small" data-dcasub="eas">EAs</button></div>
       <section class="f-pane pnl-host" id="pnl-dca" data-pane="dca" aria-labelledby="ftab-dca" hidden></section>
       <section class="f-pane" id="pane-dca-timing" data-pane="dca" data-sub="timing" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-timing-body"></div></section>
+      <section class="f-pane" id="pane-dca-dcproj" data-pane="dca" data-sub="dcproj" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-dcproj-body"></div></section>
       <section class="f-pane" id="pane-dca-build" data-pane="dca" data-sub="projects" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-build-body"></div></section>
       <section class="f-pane" id="pane-dca-eas" data-pane="dca" data-sub="eas" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-eas-body"></div></section>
-      <section class="f-pane" id="pane-dca-rec" data-pane="dca" data-sub="funding" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-rec-body"></div></section>
-      <section class="f-pane" id="pane-dca-funding" data-pane="dca" data-sub="funding" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-funding-body"></div></section>
+      <!-- The Funding lab (Settings › Labs) adds the funding screen and funding levels to DC projects. -->
+      <section class="f-pane lab-funding-pane pv-hide" id="pane-dca-rec" data-pane="dca" data-sub="dcproj" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-rec-body"></div></section>
+      <section class="f-pane lab-funding-pane pv-hide" id="pane-dca-funding" data-pane="dca" data-sub="dcproj" role="tabpanel" aria-labelledby="ftab-dca" hidden><div id="dca-funding-body"></div></section>
 
       <div class="f-pane f-subtabs" data-pane="records" hidden role="group" aria-label="Records view"><button type="button" class="btn small" data-rsub="sources">Sources</button><button type="button" class="btn small" data-rsub="checks">Data checks</button><button type="button" class="btn small" data-rsub="files">Files</button></div>
       <section class="f-pane pnl-host" id="pnl-records" data-pane="records" aria-labelledby="ftab-records" hidden></section>
@@ -443,6 +446,8 @@
   <script src="js/aerial.js?v=__BUILD__"></script>
   <script src="js/areas.js?v=__BUILD__"></script>
   <script src="js/growth.js?v=__BUILD__"></script>
+  <script src="js/ledger.js?v=__BUILD__"></script>
+  <script src="js/ledger-ui.js?v=__BUILD__"></script>
   <script src="js/employment.js?v=__BUILD__"></script>
   <script src="js/brief.js?v=__BUILD__"></script>
   <script src="js/info.js?v=__BUILD__"></script>
@@ -457,6 +462,7 @@
   <script src="js/design.js?v=__BUILD__"></script>
   <script src="js/devscope.js?v=__BUILD__"></script>
   <script src="js/dev-gantt.js?v=__BUILD__"></script>
+  <script src="js/earlier-files.js?v=__BUILD__"></script>
   <script src="js/devtab.js?v=__BUILD__"></script>
   <script src="js/tools.js?v=__BUILD__"></script>
   <script src="js/upstream.js?v=__BUILD__"></script>
@@ -533,7 +539,9 @@
   <script src="js/road-net.js?v=__BUILD__"></script>
   <script src="js/corridor-finder.js?v=__BUILD__"></script>
   <script src="js/sewer-designer.js?v=__BUILD__"></script>
+  <script src="js/dc-relief.js?v=__BUILD__"></script>
   <script src="js/dc-infra.js?v=__BUILD__"></script>
+  <script src="js/dc-joins.js?v=__BUILD__"></script>
   <script src="js/sewer-cap.js?v=__BUILD__"></script>
   <script src="js/exist-pipes.js?v=__BUILD__"></script>
   <script src="js/constraint-geo.js?v=__BUILD__"></script>
@@ -543,6 +551,9 @@
   <script src="js/water-trace.js?v=__BUILD__"></script>
   <script src="js/water-tab.js?v=__BUILD__"></script>
   <script src="js/masterplan.js?v=__BUILD__"></script>
+  <script src="js/dc-impact.js?v=__BUILD__"></script>
+  <script src="js/dc-projects.js?v=__BUILD__"></script>
+  <script src="js/dev-outlets.js?v=__BUILD__"></script>
   <script src="js/capacity.js?v=__BUILD__"></script>
   <script src="js/zone-of.js?v=__BUILD__"></script>
   <script src="js/layers.js?v=__BUILD__"></script>

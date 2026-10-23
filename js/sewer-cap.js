@@ -47,6 +47,37 @@
     }).catch(() => null);
     return MM().SEW.loading;
   }
+  // Local sewers (under 300 mm) near the developments (data/sewers-local.json, scripts/build-sewer-capacity.js):
+  // only for picking an outlet (js/dev-outlets.js); each names the trunk it drains to (into: a sewers.json index).
+  // Pipe: [diameterMm, installYear, invertUp, invertDown, into, coords × scale].
+  const LOC = { data: null, grid: null, loading: null, coords: [] };
+  function loadLocalSewers() {
+    if (LOC.data || LOC.loading) return LOC.loading || Promise.resolve(LOC.data);
+    LOC.loading = fetch('data/sewers-local.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(d => {
+      if (d && Array.isArray(d.pipes)) setLocalSewers(d);
+      LOC.loading = null; return LOC.data;
+    });
+    return LOC.loading;
+  }
+  function setLocalSewers(d) {
+    const sc = d.scale || 1e5, grid = new Map();
+    LOC.coords = d.pipes.map(p => { const c = p[5], o = []; for (let k = 0; k < c.length; k += 2) o.push([c[k] / sc, c[k + 1] / sc]); return o; });
+    LOC.coords.forEach((g, i) => { for (const [x, y] of g) { const key = `${Math.floor(x / 0.004)},${Math.floor(y / 0.003)}`; const l = grid.get(key) || grid.set(key, []).get(key); if (l[l.length - 1] !== i) l.push(i); } });
+    LOC.data = d; LOC.grid = grid;
+  }
+  // The local sewers within r metres of a point, nearest first: [{ i, m }].
+  function localNear(lng, lat, r = 400) {
+    if (!LOC.grid) return [];
+    const gx = Math.floor(lng / 0.004), gy = Math.floor(lat / 0.003), R = Math.ceil(r / 300), seen = new Set(), out = [];
+    for (let i = -R; i <= R; i++) for (let j = -R; j <= R; j++) for (const k of LOC.grid.get(`${gx + i},${gy + j}`) || []) {
+      if (seen.has(k)) continue; seen.add(k);
+      const m = DI().dcDist([lng, lat], LOC.coords[k]); if (m <= r) out.push({ i: k, m });
+    }
+    return out.sort((a, b) => a.m - b.m);
+  }
+  const localPipe = i => (LOC.data ? LOC.data.pipes[i] : null);
+  const localCoords = i => LOC.coords[i] || null;
+  const localLoaded = () => !!LOC.data;
   // (kept per pipe: the nearest-pipe search reads the same pipes for every development)
   const coordsOf = new WeakMap();
   const boxOf = new WeakMap();
@@ -100,9 +131,13 @@
     // (the developments and test sites themselves, not their count: a unit edit or a moved test site
     // keeps the count; and the census the Built layer is counted from, and the jobs settings)
     const U = root.PeelUtil, bc = root.PeelCensusAreas && root.PeelCensusAreas.baselineCensus();
-    const key = `${JSON.stringify(App().state.criteria)}|${U.idOf(App().state.projects)}|${App().state.projects.length}|${U.idOf(App().state.whatifs)}|${(App().state.whatifs || []).length}|${bc ? bc.date : ''}|${App().state.empGen || 0}`;
+    const key = `${JSON.stringify(App().state.criteria)}|${U.idOf(App().state.projects)}|${App().state.projects.length}|${U.idOf(App().state.whatifs)}|${(App().state.whatifs || []).length}|${bc ? bc.date : ''}|${App().state.empGen || 0}|${root.PeelDcGate && root.PeelDcGate.loaded && root.PeelDcGate.loaded() ? 1 : 0}|${window.PeelDevOutlets ? window.PeelDevOutlets.version() : 0}`;
     if (MM().SEW.growth && MM().SEW.key === key) return MM().SEW.growth;
-    const n = MM().SEW.data.pipes.length, L = ['built', 'approved', 'proposed'];
+    // (cpA, cpP: the part of approved and of proposed the Peel rule commits, js/layers.js rungsOf: the
+    // pipes' committed horizon)
+    const n = MM().SEW.data.pipes.length, L = ['built', 'approved', 'proposed', 'cpA', 'cpP'];
+    const LY = root.PeelLayers, co = root.PeelDemandUI && root.PeelDemandUI.commitOpts ? root.PeelDemandUI.commitOpts() : {};
+    const cpShare = p => { const R = LY && LY.rungsOf ? LY.rungsOf(p, co) : null; return R && R.left > 0 ? R.committed / R.left : 0; };
     const g = Object.fromEntries(L.map(k => [k, { pop: new Float64Array(n), jobs: new Float64Array(n), ha: new Float64Array(n), units: new Float64Array(n) }]));
     const devPipe = new Map(), pipes = MM().SEW.data.pipes, { order, out } = flowOrder(MM().SEW.data);
     // Each development's load goes in at its pipe, then one pass down the network (upstream first) carries
@@ -114,11 +149,19 @@
       if (!L.includes(lay) || p.lat == null) continue;
       const e = D.estimate([p], App().state.criteria, 'all', App().jobsOf);
       if (!(e.population > 0 || e.employment.jobs > 0)) continue;
-      const k = nearestPipe(p.lng, p.lat); if (k < 0) continue;
+      // (a reviewed outlet set by hand, QA/QC › Review outlets: js/dev-outlets.js; else the nearest 300 mm+ sewer)
+      const set = window.PeelDevOutlets ? window.PeelDevOutlets.pipeFor(p) : null;
+      const k = set != null ? set : nearestPipe(p.lng, p.lat); if (k < 0) continue;
       devPipe.set(p, k);
-      const ha = e.area.ha + (e.employment.area ? e.employment.area.ha : 0), t = out[k] ? start[lay] : g[lay];
-      if (out[k]) { t.pop[k] += e.population; t.jobs[k] += e.employment.jobs; t.ha[k] += ha; t.units[k] += e.totalUnits || 0; continue; }
-      for (let i = k, hop = 0; i >= 0 && hop < 2000; i = pipes[i][3], hop++) { t.pop[i] += e.population; t.jobs[i] += e.employment.jobs; t.ha[i] += ha; t.units[i] += e.totalUnits || 0; }
+      const ha = e.area.ha + (e.employment.area ? e.employment.area.ha : 0);
+      const put = (ly, f) => {
+        if (!(f > 0)) return;
+        const t = out[k] ? start[ly] : g[ly];
+        if (out[k]) { t.pop[k] += e.population * f; t.jobs[k] += e.employment.jobs * f; t.ha[k] += ha * f; t.units[k] += (e.totalUnits || 0) * f; return; }
+        for (let i = k, hop = 0; i >= 0 && hop < 2000; i = pipes[i][3], hop++) { t.pop[i] += e.population * f; t.jobs[i] += e.employment.jobs * f; t.ha[i] += ha * f; t.units[i] += (e.totalUnits || 0) * f; }
+      };
+      put(lay, 1);
+      if (lay === 'approved' || lay === 'proposed') put(lay === 'approved' ? 'cpA' : 'cpP', cpShare(p));
     }
     for (const lay of L) for (const f of ['pop', 'jobs', 'ha', 'units']) {
       const s = start[lay][f], a = g[lay][f];
@@ -132,10 +175,12 @@
   // overstate today's flows several times. Growth since the census: peak wet weather at Peel design
   // criteria, with I&I on its own site area. 'none' = existing only; 'today' = + built since; a year
   // or null (build-out) adds approved and proposed growth as phased in Horizon years; 'committed' =
-  // existing + built + all approved.
+  // existing + built + the growth the Peel rule commits (a site servicing or building permit, in
+  // approved and in proposed: the commitment ladder; the treatment plants keep MECP D-5-1).
   function pipeFlow(i, y) {
-    const p = MM().SEW.data.pipes[i], G = sewerGrowth(), c = App().state.criteria, E = c.employment;
-    let { fa, fp, fb: fy = 1 } = y === 'none' || y === 'today' ? { fa: 0, fp: 0 } : y === 'committed' ? { fa: 1, fp: 0 } : y == null ? { fa: 1, fp: 1 } : MA().hzFrac(y);
+    const p = MM().SEW.data.pipes[i], G0 = sewerGrowth(), c = App().state.criteria, E = c.employment;
+    const G = y === 'committed' ? { ...G0, approved: G0.cpA, proposed: G0.cpP } : G0;
+    let { fa, fp, fb: fy = 1 } = y === 'none' || y === 'today' ? { fa: 0, fp: 0 } : y === 'committed' ? { fa: 1, fp: 1 } : y == null ? { fa: 1, fp: 1 } : MA().hzFrac(y);
     const fb = (y === 'none' ? 0 : fy) * (MM().wwOn('built') ? 1 : 0);
     if (!MM().wwOn('approved')) fa = 0; if (!MM().wwOn('proposed')) fp = 0;
     const M = App().state.svcModel, f = M && M.fOf ? M.fOf(MM().SEW.data.plants[p[6]]) || 1 : 1;
@@ -390,7 +435,7 @@
   }
 
   const api = {
-    loadSewers, pipeCoords, nearestPipe, sewerGrowth, pipeFlow, pipeSummary,
+    loadSewers, pipeCoords, nearestPipe, loadLocalSewers, setLocalSewers, localNear, localPipe, localCoords, localLoaded, sewerGrowth, pipeFlow, pipeSummary,
     pipeColour, pipeStats, depthRatio, freeboard, fbText, pipeTip,
     renderPipes, pathPipes, pipeCalcHTML, showPipeLoads, exportSwmmModel,
     swmmInp, chicago,

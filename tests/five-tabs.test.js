@@ -37,7 +37,7 @@ test('Records follows the scope: Sources and Checks at Peel; a development its f
 
 test('no placeholder sub-views at site scope; one disclaimer per panel', () => {
   const at = src('js/analysis-tabs.js');
-  assert.match(at, /site: \{ growth: \['areas', 'timing'\], svc: \['capacity', 'alloc', 'checks'\], dca: \['projects', 'funding'\], records: \['sources', 'checks'\] \}/);
+  assert.match(at, /site: \{ growth: \['areas', 'timing', 'ledger'\], svc: \['capacity', 'alloc', 'checks'\], dca: \['dcproj', 'projects'\], records: \['sources', 'checks'\] \}/);
   assert.match(at, /const v = subFor\(tk, s\.get\(\), null, scopeOf\(tk\)\); if \(v !== s\.get\(\)\) \{ if \(areaPick\[tk\] == null\) areaPick\[tk\] = s\.get\(\); s\.set\(v\); \}/, 'a hidden sub-view falls back (tests/four-tabs.test.js)');
   const css = src('css/app.css');
   assert.ok(css.includes('.f-subtabs .site-off, #analysis.site-scope #screen-note-top { display: none !important; }'));
@@ -103,7 +103,8 @@ test('Overview "would add": units and people completed before census day (Existi
   assert.match(o, /const pre = DU\(\)\.preCensus\(lyT, basis\);/);
   assert.match(o, /e\.population - pre\.people/);
   assert.match(o, /unitsAll - pre\.units/);
-  assert.match(o, /\['existing', 'built', 'committed', 'proposed', 'anticipated'\]/, 'the tile parts include Existing, so they add up');
+  assert.match(o, /ks = root\.PeelLayers\.KEYS\.peel\.filter/, 'the tile parts: the Peel rule\'s stages');
+  assert.deepEqual([...require('../js/layers.js').KEYS.peel], ['existing', 'built', 'commitPeel', 'approved', 'proposed', 'anticipated'], 'the tile parts include Existing, so they add up');
   assert.match(src('js/reports.js'), /e\.population - pre\.people/, 'the briefing says the same');
 });
 

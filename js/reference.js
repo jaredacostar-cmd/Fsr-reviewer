@@ -229,7 +229,7 @@
   const LAYERS = [
     ['existing', 'On the system', 'what the 2021 census counted, scaled to the measured flow'],
     ['built', 'Built since 2021', 'occupancy since the census'],
-    ['committed', 'Approved, not yet built', 'committed under D-5-1: draft-approved or registered subdivisions, site plan approvals, permits'],
+    ['committed', 'Committed', 'at the treatment plants, past plan approval (MECP D-5-1: draft-approved or registered subdivisions, site plan approvals, permits); at every other facility, a site servicing or building permit (the Peel rule)'],
     ['proposed', 'In review', 'and, when the Scenario includes it, Pre-application'],
   ];
   function capacityHTML(row) {
@@ -362,7 +362,7 @@
   // by municipality and year), times ([{ stage, size, n, median, left5 }] from the time-in-stage
   // curves), fc ({ by2031, by2041, low2031, high2031, after, endYear, perYear: [[year, likely]] }, Peel),
   // oldThisYear (the old method's homes in the first year) }. Every part is optional (Node, loading).
-  const STAGE_WORD = { inception: 'Pre-application', review: 'In review', approved: 'Approved, no permit yet', permit: 'Permit issued', construction: 'Under construction' };
+  const STAGE_WORD = { inception: 'Pre-application', review: 'In review', approved: 'Plan approved', permit: 'Building permit', construction: 'Under construction' };
   const SIZE_WORD = { S: 'Under 10 units', M: '10–99 units', L: '100+ units' };
   function completionsRecord(activity, from = 2016, to = 2025) {
     const A = activity || {}, rows = [];
@@ -387,7 +387,7 @@
     ], 'The three steps of the forecast');
     const why = `<p>The forecast used to add the <strong>average time</strong> each remaining stage takes to the date the site entered its stage. For most of the pipeline that finish date was already in the past, so it was moved to this year${x.oldThisYear ? `: about <strong>${num(kRound(x.oldThisYear))}</strong> homes in ${esc(fc && fc.perYear && fc.perYear[0] ? fc.perYear[0][0] : 'the first year')}` : ''}, against ${rec.avg ? `about <strong>${num(kRound(rec.avg))}</strong>` : 'a few thousand'} completed in a typical year. The averages were also too short: they come mostly from houses, which finish quickly, and they only count the sites that finished, so the slow ones were missing.</p>`;
     const timesRows = (x.times || []).filter(r => r.n > 0).map(r => [STAGE_WORD[r.stage] || r.stage, SIZE_WORD[r.size] || r.size, num(r.n), r.median == null ? 'more than half not finished yet' : `${num(r.median)} months`, r.left5 == null ? '–' : `${Math.round(r.left5 * 100)}%`]);
-    const stage = `<p>Every unbuilt site is compared with the sites of the same <strong>stage</strong> and <strong>size</strong> (under 10, 10–99, 100+ units) that entered that stage since 2016. For a site that has already waited, say, three years in review, only the sites that were <em>still</em> in review after three years count, and the question is how much longer they took. This is a survival table (Kaplan–Meier): sites still waiting today count too, as "not finished yet", so the slow ones are not lost.</p>
+    const stage = `<p>Every unbuilt site is compared with the sites of the same <strong>stage</strong> and <strong>size</strong> (under 10, 10–99, 100+ units) that entered that stage since 2016. For a site that has already waited, say, three years in review, only the sites that were <em>still</em> in review after three years count, and the question is how much longer they took. This is a survival table (Kaplan–Meier): sites still waiting today count too, as "not finished yet", so the slow ones are not lost. The sites compared come from the municipalities that date their completions (Mississauga): Brampton and Caledon publish no completion date, so their finished sites would drop out and only the ones still waiting would count. Their sites are timed with Mississauga's.</p>
       <ul class="rf-ul"><li><strong>Likely</strong>: the time by which half of those similar sites had finished.</li><li><strong>High</strong> (fast): a quarter had finished. <strong>Low</strong> (slow): three quarters.</li><li>The share of sites approved and the share of permits completed (2016–2019 files) still scale each site's units, as before.</li><li>Review uses the pre-application table and construction the permit table where a stage has too few dated entries (fewer than 30).</li></ul>
       ${timesRows.length ? tableHTML(['Stage', 'Size', 'Sites', 'Half finished after', 'Still unfinished after 5 years'], timesRows, 'From entering a stage to the first completion') : ''}`;
     const hy = homes ? [2026, 2027, 2028, 2029, 2031, 2036, 2041, 2051].filter(y => y <= (homes.lastYear || 2051)) : [];
@@ -427,7 +427,7 @@
       mid: sec('steps', 'The three steps', steps) + sec('why', 'Why not the average time per stage', why) + sec('stage', 'Step 1 · Time already in the stage', stage)
         + sec('beyond', 'Step 2 · When the history runs out', beyond) + sec('build', 'Step 3 · Building out', build) + sec('chart', 'Reading the forecast chart', chart)
         + sec('record', 'Checked against what was built', history) + sec('cmhc', 'Which completions count', cmhc) + sec('limits', 'What it does not know', limits),
-      method: `Time in stage: Kaplan–Meier tables by stage and size from the dated application and permit events since 2016 (to a site's first completion); approval and completion rates from the 2016–2019 files. Beyond the history: the Ministry of Finance projection for Peel (July 1 population) over the people per new home in the Region's 2051 allocation, split by its new homes. Decided with the app's owner on 2026-10-17. ${NOTE_TAIL}`,
+      method: `Time in stage: Kaplan–Meier tables by stage and size from the dated application and permit events since 2016 (to a site's first completion), in the municipalities that date completions (Mississauga; decided 2026-10-22); approval and completion rates from the 2016–2019 files. Beyond the history: the Ministry of Finance projection for Peel (July 1 population) over the people per new home in the Region's 2051 allocation, split by its new homes. Decided with the app's owner on 2026-10-17. ${NOTE_TAIL}`,
       sources: 'The application and permit records on the map (Mississauga, Brampton, Caledon); Ontario Ministry of Finance population projections 2025–2051; Region of Peel, Land Needs Assessment Report Update, appendices (August 2024, draft); Region of Peel housing construction activity (CMHC Starts and Completions Survey); CMHC Housing Market Information Portal.',
       actions: [{ label: 'Growth in an area', attrs: { 'data-ws-page': 'growth' }, primary: true }, { label: 'Growth targets and forecasts', attrs: { 'data-ws-page': 'targets' } }],
     });

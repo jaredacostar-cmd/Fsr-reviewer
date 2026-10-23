@@ -16,8 +16,8 @@
   const PHASES = [
     { key: 'inception',    rank: 0, label: 'Pre-application',    short: '1', desc: 'Pre-consultation, or an application received with no review milestone yet (the municipalities call this inception or intake)' },
     { key: 'review',       rank: 1, label: 'In review',          short: '2', desc: 'Circulation, public meeting, appeal; includes zoning / official plan approved (a passed zoning by-law) with no draft plan or site plan approval yet' },
-    { key: 'approved',     rank: 2, label: 'Approved, no permit yet', short: '3', desc: 'Draft plan of subdivision or site plan approved, or plan registered (building permits can follow). Zoning or official plan approval alone stays under review' },
-    { key: 'permit',       rank: 3, label: 'Permit issued',      short: '4', desc: 'Building permit issued' },
+    { key: 'approved',     rank: 2, label: 'Plan approved', short: '3', desc: 'Draft plan of subdivision or site plan approved, or plan registered (building permits can follow). Zoning or official plan approval alone stays under review' },
+    { key: 'permit',       rank: 3, label: 'Building permit',     short: '4', desc: 'Building permit issued' },
     { key: 'construction', rank: 4, label: 'Under construction', short: '5', desc: 'Inspections underway' },
     { key: 'completed',    rank: 5, label: 'Built',              short: '✓', desc: 'Occupancy, final inspection or permit closed' },
   ];

@@ -56,10 +56,10 @@ test('Stage: one row per stage (permit and construction share one), then Built (
   assert.match(r, /\{ keys: pc\.map\(x => x\.key\), label: 'Permit \/ under construction' \}/);
 });
 
-test('Counts as: a layer filter (js/layers.js) in the filter, the chips, the reset and the link', () => {
+test('Counts as: a rung of the commitment ladder (js/layers.js) in the filter, the chips, the reset and the link', () => {
   const a = src('js/app.js');
   assert.match(a, /lyr: null,/);
-  assert.match(a, /state\.filtered = base\.filter\(p => state\.phases\.has\(p\.phase\) && \(!state\.lyr \|\| state\.lyr\.has\(layerOf\(p\)\)\)\);/);
+  assert.match(a, /state\.filtered = base\.filter\(p => state\.phases\.has\(p\.phase\) && \(!state\.lyr \|\| state\.lyr\.has\(rungOf\(p\)\)\)\);/);
   assert.match(src('js/render-list.js'), /function renderLayerChips\(base\)/);
   assert.match(src('js/filter-ui.js'), /ss: null, lyr: null,/);
   const sh = src('js/share.js');

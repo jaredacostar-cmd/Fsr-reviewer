@@ -16,11 +16,11 @@ const plain = o => JSON.parse(JSON.stringify(o));
 const W = (() => { const ctx = { module: { exports: {} }, URLSearchParams }; ctx.globalThis = ctx; vm.runInNewContext(src('js/workspaces.js'), ctx); return ctx.module.exports; })();
 
 test('1. the chips, in the brief\'s order, and Home\'s groups', () => {
-  assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Servicing capacity', 'Growth in an area', 'Review an FSR', 'Forecast', 'Study area', 'DC projects', 'EA to construction', 'Old pipes', 'This week']);
+  assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Servicing capacity', 'Growth in an area', 'Review an FSR', 'Forecast', 'Study area', 'DC projects', 'EA to construction', 'Review outlets', 'Old pipes', 'What’s coming', 'This week']);
   // Home's sidebar: This week under Home (bundle 6), then Planning (Servicing capacity with it),
-  // Capital, Asset Management; then Full map.
+  // Capital, QA/QC (Review outlets), Asset Management; then Full map.
   // Explore (step 3): Growth in an area, Check a site, Review an FSR, Forecast and Study area are one entry.
-  assert.deepEqual(plain(W.GROUPS), [['Planning', ['explore', 'tight']], ['Capital', ['capital']], ['Asset Management', ['pipes']]]);
+  assert.deepEqual(plain(W.GROUPS), [['Planning', ['explore', 'tight', 'coming']], ['Capital', ['capital']], ['QA/QC', ['outlets']], ['Asset Management', ['pipes']]]);
   assert.deepEqual(plain(W.CAPITAL), ['projects', 'eaflow']);
   assert.deepEqual(plain(W.EXPLORE), ['growth', 'site', 'fsr', 'outlook', 'study']);
   assert.match(fs.readFileSync(path.join(__dirname, '..', 'js', 'workspaces.js'), 'utf8'), /<ul>\$\{item\('home', 'The briefing'\)\}\$\{item\('week', BY_ID\.week\.what\)\}<\/ul>/);
@@ -34,6 +34,7 @@ test('1. each chip opens the stated tab and scope (and the layer preset)', () =>
     site: ['overview', '', 'find', 'planning'], tight: ['svc', 'capacity', 'area', 'wastewater'], growth: ['growth', 'areas', 'area', 'planning'],
     fsr: ['svc', 'network', 'find', 'wastewater'], study: ['overview', '', 'drawn', 'planning'], projects: ['dca', 'timing', 'area', 'dc'],
     pipes: ['svc', 'network', 'area', 'wastewater'], outlook: ['growth', 'timing', 'area', 'planning'], eaflow: ['dca', 'eas', 'area', 'dc'], week: ['overview', '', 'area', 'planning'],
+    coming: ['growth', 'ledger', 'area', 'planning'],
   };
   for (const [id, [tab, sub, scope, view]] of Object.entries(want)) {
     const p = W.plan(id, { site: false });
@@ -78,7 +79,7 @@ test('Old pipes: 50+ years old or moderate risk, carrying 100+ units at build-ou
   const runs = W.pipeRuns(list, data);
   assert.deepEqual(plain(runs.map(r => [r.i, r.n, r.lengthM, r.units])), [[1, 2, 220, 5200], [2, 1, 80, 150], [6, 1, 90, 100]]);
   // The units carried come from the same per-pipe accumulation as the sewer loads (js/sewer-cap.js).
-  assert.match(src('js/sewer-cap.js'), /t\.units\[k\] \+= e\.totalUnits \|\| 0;/);
+  assert.match(src('js/sewer-cap.js'), /t\.units\[k\] \+= \(e\.totalUnits \|\| 0\) \* f;/);
   assert.deepEqual(plain(W.OLD), { age: 50, minUnits: 100, risk: 'MODERATE' });
 });
 
@@ -225,7 +226,7 @@ test('picking a chip closes the map\u2019s Layers panel; the full map gets it ba
 
 test('each chip\u2019s map is lean (1–2 layers); the full map gets its own layers back, unsaved by the workspace', () => {
   // The decided sets: only what the task reads.
-  assert.deepEqual(plain(W.LAYERS), { site: ['devs', 'hov'], tight: ['cap', 'bk'], growth: ['devs', 'sp'], fsr: ['devs', 'ex-sanitary', 'ex-water'], study: ['devs'], outlook: ['devs'], projects: ['dcw', 'cons'], eaflow: ['ea', 'cons'], pipes: [], week: ['devs'] });
+  assert.deepEqual(plain(W.LAYERS), { site: ['devs', 'hov'], tight: ['cap', 'bk'], growth: ['devs', 'sp'], fsr: ['devs', 'ex-sanitary', 'ex-water'], study: ['devs'], outlook: ['devs'], projects: ['dcw', 'cons'], eaflow: ['ea', 'cons'], pipes: [], outlets: ['devs', 'ex-sanitary'], week: ['devs'], coming: ['devs'] });
   for (const id of Object.keys(W.LAYERS)) assert.ok(W.LAYERS[id].length <= 3 && W.BY_ID[id], id);
   // Every key is a real layer switch.
   const lg = src('js/layer-groups.js');

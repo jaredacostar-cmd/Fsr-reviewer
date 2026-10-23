@@ -28,7 +28,11 @@
     { id: 'study', label: 'Study area', group: 'Planning', tab: 'overview', sub: '', scope: 'drawn', view: 'planning', what: 'Draw an area: its growth and servicing' },
     { id: 'projects', label: 'DC projects', group: 'Capital', tab: 'dca', sub: 'timing', scope: 'area', view: 'dc', what: 'Is each DC project in time?' },
     { id: 'eaflow', label: 'EA to construction', group: 'Capital', tab: 'dca', sub: 'eas', scope: 'area', view: 'dc', what: 'Each EA and the construction after it' },
+    // QA/QC (decided with the user): where each development discharges, confirmed or set on the map (js/dev-outlets.js).
+    { id: 'outlets', label: 'Review outlets', group: 'QA/QC', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Check and fix where developments discharge' },
     { id: 'pipes', label: 'Old pipes', group: 'Asset Management', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Old sewers that carry the most growth' },
+    // The pipeline ledger (docs/pipeline-ledger-plan.md, Phase 2): Growth › Ledger on a page.
+    { id: 'coming', label: 'What\u2019s coming', group: 'Planning', tab: 'growth', sub: 'ledger', scope: 'area', view: 'planning', what: 'Homes and people by stage and milestone' },
     { id: 'week', label: 'This week', group: 'Planning', tab: 'overview', sub: '', scope: 'area', view: 'planning', what: 'Files moved, new files, capital and EA dates' },
   ];
   const BY_ID = Object.fromEntries(WS.map(w => [w.id, w]));
@@ -44,7 +48,9 @@
     projects: ['dcw', 'cons'],                      // planned DC works, Region construction
     eaflow: ['ea', 'cons'],                         // EA study areas, Region construction
     pipes: [],                                      // the old pipes only (drawn by this module)
+    outlets: ['devs', 'ex-sanitary'],               // developments, existing sewers
     week: ['devs'],
+    coming: ['devs'],
   };
   // Explore (step 3 of the page plan): Growth in an area, Check a site, Review an FSR, Forecast and
   // Study area are the views of one workspace, one entry in Home's sidebar. A site picked from an area
@@ -66,8 +72,9 @@
   const SITE_MAP = ['devs', 'ex-water', 'ex-sanitary', 'ex-storm', 'dcw', 'cons', 'ea'];
   // Home's sidebar: by team (Servicing capacity with Planning), then Full map.
   const GROUPS = [
-    ['Planning', ['explore', 'tight']],
+    ['Planning', ['explore', 'tight', 'coming']],
     ['Capital', ['capital']],
+    ['QA/QC', ['outlets']],
     ['Asset Management', ['pipes']],
   ];
   // Reference pages (Home's layout, no map, not a workspace): listed last in Home's sidebar.
@@ -80,7 +87,7 @@
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Servicing › Model checks / Records › Data checks,
   // Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.
-  const SUB_NAME = { capacity: 'Capacity', network: 'Network', alloc: 'Allocations', 'svc:checks': 'Model checks', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', 'dca:timing': 'DC timing', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
+  const SUB_NAME = { capacity: 'Capacity', network: 'Network', alloc: 'Allocations', 'svc:checks': 'Model checks', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', ledger: 'Ledger', 'dca:timing': 'DC timing', dcproj: 'DC projects', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
   const tabPath = (tab, sub) => [TAB_NAME[tab] || tab, sub ? SUB_NAME[`${tab}:${sub}`] || SUB_NAME[sub] || sub : ''].filter(Boolean).join(' › ');
   // What a chip does: the tab, sub-view, scope and preset; closeScopes = area chips leave a site.
   function plan(id, ctx = {}) {
@@ -303,15 +310,15 @@
   // Bundle 6: the filters that stay on while you are on a page or in a workspace, as chips with
   // Reset, so a filtered page never reads as the whole of Peel.
   function filterChipsHTML() {
-    const F = root.PeelFilterUI, list = F && F.activeFilters ? F.activeFilters() : [];
-    if (!list.length) return '';
-    return `<div class="page-filters small" role="group" aria-label="Filters on"><span class="muted">Filters on:</span> ${list.map((f, i) => `<button type="button" class="chip on removable" data-pf-i="${i}" title="Remove this filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('')}<button type="button" class="btn small link" data-pf-reset>Reset ${list.length === 1 ? 'it' : `all ${list.length}`}</button></div>`;
+    const F = root.PeelFilterUI, list = F && F.activeFilters ? F.activeFilters() : [], old = F && F.oldLinkNote ? F.oldLinkNote() : '';
+    if (!list.length) return old ? `<div class="page-filters small" role="group" aria-label="Filters on">${old}</div>` : '';
+    return `<div class="page-filters small" role="group" aria-label="Filters on"><span class="muted">Filters on:</span> ${list.map((f, i) => `<button type="button" class="chip on removable" data-pf-i="${i}" title="Remove this filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('')}<button type="button" class="btn small link" data-pf-reset>Reset ${list.length === 1 ? 'it' : `all ${list.length}`}</button>${old}</div>`;
   }
   document.addEventListener('click', e => {
     const F = root.PeelFilterUI; if (!F || !e.target.closest) return;
-    const r = e.target.closest('[data-pf-reset]'), c = e.target.closest('[data-pf-i]'); if (!r && !c) return;
+    const r = e.target.closest('[data-pf-reset]'), c = e.target.closest('[data-pf-i]'), o = e.target.closest('.page-filters [data-include-completed]'); if (!r && !c && !o) return;
     e.preventDefault();
-    if (r) F.resetAllFilters(); else { const f = F.activeFilters()[+c.dataset.pfI]; if (f) { f.clear(); App().applyFilters(); } }
+    if (o) F.includeCompleted(); else if (r) F.resetAllFilters(); else { const f = F.activeFilters()[+c.dataset.pfI]; if (f) { f.clear(); App().applyFilters(); } }
     renderChips(); if (mode === 'home') renderPage(true);
   });
   function renderChips() {

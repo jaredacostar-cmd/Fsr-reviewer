@@ -83,6 +83,8 @@
 
   // The stage selector narrows the phases when the pick is neither the default active set
   // nor every phase (a chip then offers one tap back to all phases).
+  // A rung's name (the commitment ladder, js/layers.js RUNG_VIEW).
+  const rungName = k => ((window.PeelLayers && window.PeelLayers.RUNG_VIEW || []).find(r => r.key === k) || { label: k }).label;
   const phaseFilterActive = () => App().state.phases.size < P.ALL_PHASES.length && !App().sameSet(App().state.phases, App().DEFAULT_PHASES());
   // The years narrow the view when they are not the default span (all years): the default is the
   // starting view, not a filter, so it has no chip and Reset leaves nothing behind.
@@ -117,7 +119,7 @@
       out.push({ label: from === to ? `${from}` : `${from}–${to}`, clear: () => TL().setDefaultYears() });
     }
     if (!App().state.newOnly) out.push({ label: 'Including alterations', clear: () => { App().state.newOnly = true; const el = $('#f-new'); if (el) el.checked = true; } });
-    if (App().state.lyr) out.push({ label: `Counts as ${[...App().state.lyr].map(k => (window.PeelLayerBar ? window.PeelLayerBar.LABEL[k] : k)).join(' + ')}`, clear: () => { App().state.lyr = null; } });
+    if (App().state.lyr) out.push({ label: `Counts as ${[...App().state.lyr].map(rungName).join(' + ')}`, clear: () => { App().state.lyr = null; } });
     return out;
   }
   let activeList = [];
@@ -144,10 +146,18 @@
     set('#fv-what', [S.minUnits ? sel('#f-size') : 'any size', S.dwelling ? sel('#f-dwelling') : 'any dwelling', S.landuse !== App().DEFAULT_LANDUSE ? sel('#f-landuse') : 'any land use', S.dcgate ? `site servicing permit: ${sel('#f-dcgate')}` : '', S.kind !== App().DEFAULT_KIND ? kindT[S.kind] || '' : '', S.newOnly ? '' : 'incl. alterations'].filter(Boolean).join(' · ').replace(/^./, c => c.toUpperCase()));
     const from = S.yearFrom ?? S.yearMin, to = S.yearTo ?? S.yearMax;
     set('#fv-when', `${App().timeActive() ? (from === to ? `${from}` : `${from}–${to}`) : 'All years'} · ${S.yearMode === 'any' ? 'any milestone' : sel('#f-milestone')}`);
-    set('#fv-counts', S.lyr ? [...S.lyr].map(k => (window.PeelLayerBar ? window.PeelLayerBar.LABEL[k] : k)).join(' + ') : 'Every stage');
+    set('#fv-counts', S.lyr ? [...S.lyr].map(rungName).join(' + ') : 'Every stage');
     const fl = PF.FLAG_META.filter(([k]) => S.flags[k]).map(([, l]) => l);
     set('#fv-flags', fl.length ? fl.join(', ') : 'None');
     for (const [id, on] of [['#fr-where', S.muni || S.plant || areas.length], ['#fr-what', S.minUnits || S.dwelling || S.landuse !== App().DEFAULT_LANDUSE || S.dcgate || S.kind !== App().DEFAULT_KIND || !S.newOnly], ['#fr-when', App().timeActive() || S.yearMode !== 'any'], ['#fr-counts', !!S.lyr], ['#fr-flags', fl.length]]) { const el = $(id); if (el) el.classList.toggle('active', !!on); }
+  }
+  // A link from before Completed was shown by default opens without it (js/share.js): a line where the
+  // filters are, with the one tap that adds it back, while Completed is still off.
+  const oldLinkNote = () => (App().state.oldLink && !App().state.phases.has('completed')
+    ? '<span class="old-link-note">Opened from an older link: Completed is hidden, so the totals are lower than a fresh open. <button type="button" class="btn small link" data-include-completed>Include Completed</button></span>' : '');
+  function includeCompleted() {
+    App().state.phases = new Set([...App().state.phases, 'completed']); App().state.oldLink = false;
+    App().applyFilters();
   }
   // One line saying what the map shows and why.
   function renderShowing() {
@@ -162,9 +172,10 @@
     // Site activity held aside (js/sites.js): files that only alter what stands on a site.
     const sx = App().state.projects.siteActivity || [];
     const siteLine = sx.length ? ` · <button type="button" class="btn small link" data-site-activity title="Files that only alter what stands on a site (a patio, a unit fit-out, a new door), with no proposal of their own: each development's page lists them under On this site">${App().state.showSiteActivity ? `Including ${fmtNum(sx.length)} site activity · leave it out` : `${fmtNum(sx.length)} site activity left out · include`}</button>` : '';
-    $('#f-showing').innerHTML = `<span class="find-count"><b>${fmtNum(App().state.filtered.length)}</b> developments</span> <span class="muted">${esc(what)} · ${esc(years)} · ${esc(App().state.muni || 'all of Peel')}${App().state.search ? ` · matching “${esc(App().state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''}</span> · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>${dormLine}${siteLine}`;
+    $('#f-showing').innerHTML = `<span class="find-count"><b>${fmtNum(App().state.filtered.length)}</b> developments</span> <span class="muted">${esc(what)} · ${esc(years)} · ${esc(App().state.muni || 'all of Peel')}${App().state.search ? ` · matching “${esc(App().state.search)}”` : ''}${extra > 0 ? ` · ${extra} more filter${extra === 1 ? '' : 's'}` : ''}</span> · <button type="button" class="btn small link" data-area-report="shown" title="A printable report on the developments shown">Report</button>${dormLine}${siteLine}${oldLinkNote()}`;
   }
   $('#f-showing').addEventListener('click', e => {
+    if (e.target.closest('[data-include-completed]')) { includeCompleted(); return; }
     if (e.target.closest('[data-site-activity]')) { App().state.showSiteActivity = !App().state.showSiteActivity; App().rehold(); return; }
     if (!e.target.closest('[data-dormant]')) return;
     App().state.showDormant = !App().state.showDormant;
@@ -212,7 +223,7 @@
   // controls are put back in step with it once; "Counts as" is tested too, as applyFilters applies it)
   function findBlockingFilter() {
     const saved = snapshotFilterState();
-    const shows = () => App().state.projects.some(p => App().matches(p, false, false, false) && (!App().state.lyr || App().state.lyr.has(App().layerOf(p))));
+    const shows = () => App().state.projects.some(p => App().matches(p, false, false, false) && (!App().state.lyr || App().state.lyr.has(App().rungOf(p))));
     let found = null;
     for (const f of activeList) {
       f.clear();
@@ -245,7 +256,7 @@
   const api = {
     FLAG_TESTS, ALL_PHASE_KEYS, PLANNING_PHASES, YEAR_MS, appUnits, renderFlagChips,
     toggleFlag, activeFilters, renderFilterUI, resetAllFilters, renderEmptyMsg,
-    currentPhaseView,
+    currentPhaseView, oldLinkNote, includeCompleted,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelFilterUI = api;

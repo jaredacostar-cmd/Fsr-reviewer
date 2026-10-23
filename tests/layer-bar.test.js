@@ -12,7 +12,7 @@ const widths = html => [...html.matchAll(/class="ly-seg ly-(\w+)" style="left:([
 test('segments stack in order, proportional to value', () => {
   const h = B.barHTML({ segments: [{ layer: 'existing', value: 50 }, { layer: 'committed', value: 25 }, { layer: 'proposed', value: 25 }], max: 100 });
   assert.deepEqual(widths(h), [['existing', 0, 50], ['committed', 50, 25], ['proposed', 75, 25]]);
-  assert.match(h, /role="img" aria-label="On the system \(2021 census\) 50, Approved, not yet built \(committed\) 25, In review 25"/);
+  assert.match(h, /role="img" aria-label="On the system \(2021 census\) 50, Past plan approval \(MECP D-5-1\) 25, In review 25"/);
 });
 
 test('rated: grey tick at 100%, white tick at the trigger, red hatch only beyond rated', () => {
@@ -35,7 +35,7 @@ test('zero or unknown layers draw nothing; values escape in tooltips', () => {
 });
 
 test('the site badge: phase and layer together, with what is left to permit', () => {
-  assert.match(B.badgeHTML('5 · under construction', { layer: 'committed', units: 537, toPermit: 343 }), /counts as Approved, not yet built · 343 left/);
+  assert.match(B.badgeHTML('5 · under construction', { layer: 'committed', units: 537, toPermit: 343 }), /counts as Past plan approval · 343 left/);
   assert.match(B.badgeHTML('2 · under review · zoning approved', { layer: 'proposed', units: 9862, toPermit: 9862 }), /counts as In review<\/span>/);
 });
 
