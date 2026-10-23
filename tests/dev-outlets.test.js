@@ -7,7 +7,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { merge, exportJSON, diff, nearestOn } = require('../js/dev-outlets.js');
+const { merge, exportJSON, diff, nearestOn, distinct, isCurrent } = require('../js/dev-outlets.js');
 
 const src = f => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
 
@@ -53,6 +53,21 @@ test('nearestOn: the point on a sewer nearest the site', () => {
   const q = nearestOn([-79.695, 43.701], g);
   assert.ok(Math.abs(q[0] + 79.695) < 1e-9 && Math.abs(q[1] - 43.70) < 1e-9);
   assert.deepEqual(nearestOn([-79.71, 43.70], g), [-79.70, 43.70], 'past an end: the end');
+});
+
+test('distinct: the nearby list shows each sewer run and each DC project once, nearest first', () => {
+  const items = [{ id: 1, run: 'a', m: 5 }, { id: 2, run: 'a', m: 20 }, { id: 3, run: 'b', m: 40 }, { id: 4, run: 'c', m: 60 }, { id: 5, run: 'b', m: 80 }];
+  const same = (x, y) => x.run === y.run;
+  assert.deepEqual(distinct(items, same).map(x => x.id), [1, 3, 4]);
+  assert.deepEqual(distinct(items, same, 2).map(x => x.id), [1, 3], 'up to max');
+});
+
+test('isCurrent: the candidate that is the outlet in use now', () => {
+  assert.equal(isCurrent({ kind: 'sewer', k: 7 }, { k: 7, path: null }), true);
+  assert.equal(isCurrent({ kind: 'sewer', k: 7 }, { k: 8, path: null }), false);
+  assert.equal(isCurrent({ kind: 'sewer', k: 7 }, { k: 7, path: { first: { p: '25-2267' } } }), false, 'routed along a planned main: not the sewer');
+  assert.equal(isCurrent({ kind: 'dc', project: '25-2267' }, { k: 7, path: { first: { p: '25-2267' } } }), true);
+  assert.equal(isCurrent({ kind: 'dc', project: '25-2267' }, null), false);
 });
 
 test('wired in: the page, the models and the offline shell', () => {

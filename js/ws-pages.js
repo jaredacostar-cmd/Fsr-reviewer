@@ -1090,7 +1090,7 @@
   // that changes, then save it with its source (js/dev-outlets.js keeps the records).
   let outletFrame = null, outletWait = 0;
   const pipePts = c => { const o = []; for (let k = 0; k < c.length; k += 2) o.push([c[k], c[k + 1]]); return o; };
-  function outletMap(p, cur, cand) {
+  function outletMap(p, cur, cand, near = []) {
     const DO = root.PeelDevOutlets, SC = root.PeelSewerCap, DIF = root.PeelDcInfra, S = MM().SEW, pipes = S.data.pipes;
     const kx = Math.cos(p.lat * Math.PI / 180), dy = 0.0065, dx = dy / kx;
     let bb = [p.lng - dx, p.lat - dy, p.lng + dx, p.lat + dy];
@@ -1114,6 +1114,8 @@
       const path = cand.kind === 'dc' && root.PeelSewerTrace ? root.PeelSewerTrace.dcSewerPath({ lng: cand.at[0], lat: cand.at[1] }) : null;
       out.push(route(cand.kind === 'dc' ? (path ? path.exit : null) : cand.k, path, 'hm-dvo-alt')); out.push(conn(cand.at, 'hm-dvo-conn-alt'));
     }
+    // (the nearby list's numbers, where each joins its pipe)
+    near.forEach((c, i) => { if (!inBB([c.at])) return; const [x, y] = f.pt(c.at[0], c.at[1]), on = root.PeelDevOutlets.sameOutlet(cand, c); out.push(`<g class="hm-dvo-near${on ? ' on' : ''}" data-dvo="near:${i}"><circle cx="${x}" cy="${y}" r="7"/><text x="${x}" y="${y + 3.5}" text-anchor="middle">${i + 1}</text><title>${esc(c.label)}</title></g>`); });
     const [sx, sy] = f.pt(p.lng, p.lat);
     out.push(`<circle cx="${sx}" cy="${sy}" r="6" class="hm-dvo-site"><title>${esc(p.title)}</title></circle>`);
     return f.svg(out.join(''), `The sewers and planned DC mains around ${p.title}, with its route to the plant`, mapLabels(f, [{ lng: p.lng, lat: p.lat, name: shortName(p.title, 26) }]));
@@ -1155,15 +1157,21 @@
       const btns = S.mode === 'preview' ? `<div class="pnl-acts"><button type="button" class="btn small pnl-primary" data-dvo="save">Save outlet</button><button type="button" class="btn small" data-dvo="cancel">Cancel</button></div>`
         : S.mode === 'pick' ? `<div class="pnl-acts"><button type="button" class="btn small" data-dvo="cancel">Cancel</button></div>`
         : `<div class="pnl-acts"><button type="button" class="btn small pnl-primary" data-dvo="confirm">${rec && rec.mode === 'confirmed' ? 'Confirmed ✓' : 'Confirm outlet'}</button><button type="button" class="btn small" data-dvo="start">Set where it discharges</button><button type="button" class="btn small" data-dvo="auto"${rec ? '' : ' disabled'}>Automatic</button></div>`;
+      // Pick from the list (or tap the map): the sewers and planned mains near the site.
+      const near = S.mode !== 'idle' ? DO.nearby(p, { streetOf: streetAtPt }) : [];
+      const nearHTML = S.mode === 'idle' ? '' : near.length ? `<h4>Nearby infrastructure</h4><ol class="dvo-near">${near.map((c, i) => {
+        const on = DO.sameOutlet(S.cand, c), now = DO.isCurrent(c, { k, path });
+        return `<li><button type="button" class="dvo-near-b${on ? ' on' : ''}" data-dvo="near:${i}" aria-pressed="${on}"><span class="dvo-near-n">${i + 1}</span><span>${esc(c.label)}<small>${c.kind === 'dc' ? 'planned' : 'existing'}${c.kind === 'sewer' && c.mm < 300 ? ' · local sewer' : ''}${now ? ' · <b>its outlet now</b>' : ''}</small></span><b class="dvo-near-m">${fmtNum(Math.round(c.m))} m</b></button></li>`;
+      }).join('')}</ol>` : '<p class="small muted">No sewer or planned main within 400 m: tap the map.</p>';
       panel = `<section class="dvo-panel" data-psec="list"><div class="pnl-list-h"><h3>${esc(p.title)}</h3><button type="button" class="btn small link" data-pnl-dev="${esc(p.key)}">Open the development ›</button></div>
         <p class="small muted">${esc(p.municipality)} · ${fmtNum(Math.round(sel.units))} units${sel.first ? ` · first homes ≈${sel.first}` : ''}</p>
-        <h4>Discharges to</h4>${S.cand ? '' : `<div class="dvo-out"><b>${what}</b> ${chip(rec)}<small>${why}</small></div>`}${previewHTML}
+        <h4>Discharges to</h4>${S.cand ? '' : `<div class="dvo-out"><b>${what}</b> ${chip(rec)}<small>${why}</small></div>`}${previewHTML}${nearHTML}
         <h4>DC projects on its path${S.cand ? ' (with the new outlet)' : ''}</h4>${projHTML}
         ${sel.gate && !S.cand ? `<p class="small">Gate year ${sel.gate.y} (${esc(sel.gate.key)})${sel.first ? ` · first homes ≈${sel.first}: ${sel.gap ? '<span class="t-over">before it is built</span>' : 'in time'}` : ''}.</p>` : ''}
         ${S.mode !== 'pick' ? src : ''}${btns}
         ${DO.edits() ? `<p class="small"><button type="button" class="btn small link" data-dvo="export">Export ${fmtNum(DO.edits())} edit${DO.edits() === 1 ? '' : 's'} (dev-outlets.json)</button> <span class="muted">to commit, so everyone sees them</span></p>` : ''}</section>`;
-      map = `<div class="dvo-map${S.mode === 'pick' ? ' picking' : ''}" data-dvo-map>${S.mode === 'pick' ? '<p class="dvo-banner small" role="status">Tap the sewer or planned main it discharges to (Esc to cancel)</p>' : ''}${outletMap(p, { k, path, at }, S.cand)}</div>`;
-      cap = `<span class="hm-key hm-key-dvo-route"></span> its route now ${S.cand ? '<span class="hm-key hm-key-dvo-alt"></span> the new route ' : ''}<span class="hm-key hm-key-pipe"></span> sanitary sewers (thicker: larger) <span class="hm-key hm-dc-wastewater"></span> planned DC mains`;
+      map = `<div class="dvo-map${S.mode === 'pick' ? ' picking' : ''}" data-dvo-map>${S.mode === 'pick' ? '<p class="dvo-banner small" role="status">Pick from the list, or tap the sewer or planned main it discharges to (Esc to cancel)</p>' : ''}${outletMap(p, { k, path, at }, S.cand, near)}</div>`;
+      cap = `<span class="hm-key hm-key-dvo-route"></span> its route now ${S.cand ? '<span class="hm-key hm-key-dvo-alt"></span> the new route ' : ''}<span class="hm-key hm-key-pipe"></span> sanitary sewers (thicker: larger) <span class="hm-key hm-dc-wastewater"></span> planned DC mains${near.length ? ' · numbers: the nearby list' : ''}`;
     }
     return { id: 'outlets', eyebrow: eyebrow('outlets'), name: 'Where does each development discharge?',
       status: nRec.length ? { tone: 'stage', text: `${fmtNum(nRec.length)} reviewed` } : null,
@@ -1177,14 +1185,14 @@
       ],
       lists: [{ html: panel }, { title: 'To review, largest first', rows, total: rows.length, all: S.all, see: { 'data-dvo': 'all' } }],
       map: sel ? { title: 'Where it discharges', html: map, caption: cap } : null,
-      method: 'A development discharges to the nearest sanitary sewer of 300 mm or more (Region sewer records), or, off the existing sewers, along the planned DC mains to an existing sewer. A reviewed outlet replaces that: confirmed (checked, unchanged) or set by hand (a tapped sewer or planned main, kept as its point and size so it survives a data rebuild). The sewer loads, the trace and the DC projects allocation (js/dc-impact.js) follow it. Edits stay in this browser until exported and committed as data/dev-outlets.json.',
+      method: 'A development discharges to the nearest sanitary sewer of 300 mm or more (Region sewer records), or, off the existing sewers, along the planned DC mains to an existing sewer. A reviewed outlet replaces that: confirmed (checked, unchanged) or set by hand (a sewer or planned main picked from the nearby list, existing sewers of any size and planned mains within 400 m, or tapped on the map; kept as its point and size so it survives a data rebuild). The sewer loads, the trace and the DC projects allocation (js/dc-impact.js) follow it. Edits stay in this browser until exported and committed as data/dev-outlets.json.',
       sources: 'Region of Peel sanitary sewers; 2026 DC capital maps (draft); the municipal application records; reviewers’ sources (FSRs, site servicing permits).',
       actions: [{ label: DO.edits() ? `Export ${fmtNum(DO.edits())} edit${DO.edits() === 1 ? '' : 's'}` : 'Export (nothing yet)', attrs: { 'data-dvo': 'export' }, primary: !!DO.edits() }] };
   }
   // A tap on the outlet map while picking: back to the ground, snapped within 14 px.
   if (typeof document !== 'undefined') document.addEventListener('click', e => {
     const svg = e.target.closest && e.target.closest('[data-dvo-map] svg'), DO = root.PeelDevOutlets;
-    if (!svg || !DO || DO.state.mode !== 'pick' || !outletFrame || !svg.getScreenCTM) return;
+    if (!svg || !DO || (DO.state.mode !== 'pick' && DO.state.mode !== 'preview') || e.target.closest('[data-dvo]') || !outletFrame || !svg.getScreenCTM) return;
     const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
     const loc = pt.matrixTransform(svg.getScreenCTM().inverse()), [lng, lat] = outletFrame.inv(loc.x, loc.y);
     DO.pickAt(lng, lat, Math.max(15, 14 * 111320 / outletFrame.sc));
