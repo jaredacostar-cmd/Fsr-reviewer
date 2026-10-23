@@ -101,7 +101,9 @@
     const unit = pr.sys === 'wastewater' ? 'L/s peak wet' : 'L/s max day', q = c.reduce((t, x) => t + x.q, 0);
     const devRow = x => {
       const f = first(x), gap = f && pr.y1 && f < pr.y1 && m.gateTiers.includes(x.tier);
-      const how = x.tier === 'A' ? `${x.how.joinM != null ? `${fmtNum(Math.round(x.how.joinM))} m from it` : ''}${x.how.km ? ` · ${x.how.km.toFixed(1)} km along planned mains` : ''}` : x.how.mm ? `joins a ${x.how.mm} mm sewer upstream` : '';
+      const how0 = x.tier === 'A' ? `${x.how.joinM != null ? `${fmtNum(Math.round(x.how.joinM))} m from it` : ''}${x.how.km ? ` · ${x.how.km.toFixed(1)} km along planned mains` : ''}` : x.how.mm ? `joins a ${x.how.mm} mm sewer upstream` : '';
+      // (a reviewed outlet says so: QA/QC › Review outlets, js/dev-outlets.js)
+      const DO = root.PeelDevOutlets, rec = DO && pr.sys === 'wastewater' ? DO.recordOf(x.p) : null, how = [how0, rec ? DO.recText(rec) : ''].filter(Boolean).join(' · ');
       return { tone: gap ? 'over' : null, attrs: { 'data-pnl-dev': x.p.key },
         html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.p.title)}<small>${esc(x.p.municipality)}${how ? ` · ${esc(how)}` : ''}</small></span><span class="pnl-r-fig">${x.units >= 0.5 || !(x.e.employment.jobs > 0) ? `${fmtNum(Math.round(x.units))}<small>units</small>` : `${fmtNum(Math.round(x.e.employment.jobs))}<small>jobs</small>`}</span></div>
           <small class="pnl-r-line">${f ? (gap ? `<span class="t-over">first homes ≈${f}, before it is built (${pr.y1})</span>` : `first homes ≈${f}`) : 'no forecast year'} · ${x.q.toFixed(1)} ${unit}</small>` };

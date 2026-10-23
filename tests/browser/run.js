@@ -436,6 +436,32 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     await page.click('#home [data-dcproj-back]'); await wait(800);
   });
 
+  await check('QA/QC › Review outlets: open a development, tap the map to set its outlet, save it with its source, back to automatic', browser, {}, async ({ page, ev }, expect) => {
+    await ev(() => { PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage('outlets'); });
+    await page.waitForSelector('#home [data-dvo="start"]', { timeout: 120000 }); await wait(800);
+    const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
+    expect(side.includes('outlets'), `Review outlets is in Home's sidebar (${side.join()})`);
+    const st = () => ev(() => { const S = PeelDevOutlets.state, sel = PeelDevOutlets.selected(), p = sel && sel.p; return { key: p && p.key, k: p ? PeelSewerCap.sewerGrowth().devPipe.get(p) : null, rec: p ? PeelDevOutlets.recordOf(p) : null, mode: S.mode, cand: S.cand && { kind: S.cand.kind, k: S.cand.k } }; });
+    const a = await st();
+    expect(!!a.key && a.k != null && !a.rec, `a development open with its automatic outlet (${a.key}, pipe ${a.k})`);
+    await page.click('#home [data-dvo="start"]'); await wait(500);
+    expect(await ev(() => !!document.querySelector('#home [data-dvo-map].picking')), 'the map is in pick mode');
+    // a real tap on the site: it snaps to the sewer it already discharges to (the tap reaches the ground)
+    const box = await (await page.$('#home [data-dvo-map] .hm-dvo-site')).boundingBox();
+    await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2); await wait(800);
+    const b = await st();
+    expect(b.mode === 'preview' && b.cand && b.cand.kind === 'sewer' && b.cand.k === a.k, `the tap picks its own sewer (${JSON.stringify(b.cand)})`);
+    expect(await ev(() => /Preview/.test(document.querySelector('#home .dvo-panel').textContent)), 'a preview before saving');
+    await page.fill('#home [data-dvo-src]', 'browser path'); await page.click('#home [data-dvo="save"]'); await wait(1500);
+    const c = await st();
+    expect(c.rec && c.rec.mode === 'set' && c.rec.src === 'browser path' && c.k === a.k, `saved, with its source, and the load model uses it (pipe ${c.k})`);
+    expect(await ev(() => /Set by hand/.test(document.querySelector('#home .dvo-panel').textContent) && !!document.querySelector('#home [data-dvo="export"]')), 'the panel says set by hand, with Export');
+    await page.click('#home .dvo-panel [data-dvo="auto"]'); await wait(1500);
+    const d = await st();
+    expect(!d.rec && d.k === a.k, 'Automatic drops it');
+    await ev(() => localStorage.removeItem('peel-dev:devOutletEdits'));
+  });
+
   await browser.close(); srv.close();
   for (const r of results) console.log(`${r.ok ? 'ok  ' : 'FAIL'} ${r.name} (${(r.ms / 1000).toFixed(1)} s)${r.ok ? '' : `\n       - ${r.fails.join('\n       - ')}`}`);
   const bad = results.filter(r => !r.ok).length;

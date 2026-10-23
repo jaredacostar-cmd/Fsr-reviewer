@@ -374,6 +374,20 @@
       "script": "scripts/build-dc-costs.py",
       "refresh": "each DC study"
     },
+    "dev-outlets.json": {
+      "title": "Reviewed development outlets",
+      "kind": "derived",
+      "script": "js/dev-outlets.js",
+      "refresh": "when an outlet is reviewed",
+      "dateNote": "Each outlet carries the date it was reviewed (date).",
+      "method": "Exported from QA/QC › Review outlets: a development's outlet confirmed, or set by hand onto an existing sanitary sewer or a planned DC main, with its source. The sewer loads, the trace and the DC projects allocation follow these in place of the nearest sewer.",
+      "from": [
+        "sewers.json",
+        "dc-infra.json",
+        "snapshot.json"
+      ],
+      "check": "Hand-reviewed outlets of developments; the nearest 300 mm+ sewer (or the route along the planned mains) applies elsewhere."
+    },
     "dc-joins.json": {
       "title": "Reviewed joins of the 2026 DC planned mains",
       "kind": "derived",
