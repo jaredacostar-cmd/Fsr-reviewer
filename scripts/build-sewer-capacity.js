@@ -14,6 +14,9 @@
  *  4. Output: every gravity pipe of 300 mm or more with its downstream pipe in the output, so the
  *     app can add growth from a development down its path; with its upstream / downstream inverts
  *     (m, where published and plausible) and length, for the sewer profile.
+ *  5. Local sewers (under 300 mm) near the developments in the pipeline, to data/sewers-local.json:
+ *     a site often connects to one of these, not a trunk (QA/QC › Review outlets, js/dev-outlets.js).
+ *     Each carries the trunk it drains to (its index in sewers.json), so the load model can follow it.
  *
  *   node scripts/build-sewer-capacity.js --raw <dir with wwMains.json.gz from fetch-linework-raw.js> [--out data]
  */
@@ -43,6 +46,31 @@ function pip(x, y, ring) {
     if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) inside = !inside;
   }
   return inside;
+}
+
+// ---- 5. Local sewers -----------------------------------------------------------------------------
+// Developments in the pipeline (data/snapshot.json: not built, not cancelled) and the local sewers
+// (gravity, under MIN_D) within LOCAL_R m of one. into(b): the trunk pipe (sewers.json index) the
+// sewer drains to, following the network from its downstream manhole (-1: none found).
+const LOCAL_R = 300, LOCAL_MAX_MB = 8;
+function devPoints(records) {
+  return (records || []).filter(r => r.lat != null && r.lng != null && r.phase !== 'completed' && r.phase !== 'cancelled' && (r.newBuild || r.units > 0)).map(r => toM([r.lng, r.lat]));
+}
+function localSewers(list, { devs, into, r = LOCAL_R }) {
+  const grid = new Map(), cell = r, key = (x, y) => `${Math.floor(x / cell)},${Math.floor(y / cell)}`;
+  for (const p of devs) { const k = key(p[0], p[1]); (grid.get(k) || grid.set(k, []).get(k)).push(p); }
+  const nearDev = q => { const [x, y] = toM(q), cx = Math.floor(x / cell), cy = Math.floor(y / cell); for (let i = -1; i <= 1; i++) for (let j = -1; j <= 1; j++) for (const p of grid.get(`${cx + i},${cy + j}`) || []) if (Math.hypot(p[0] - x, p[1] - y) <= r) return true; return false; };
+  const ri = v => Math.round(v * 1e5);
+  const out = [];
+  for (const { b, f } of list) {
+    const P = f.p, d = P.Diameter || 0;
+    if (!(d > 0 && d < MIN_D) || P.MainType === 'FM' || !f.g || f.g.length < 2) continue;
+    const g = f.g.length > 3 ? [f.g[0], f.g[Math.floor(f.g.length / 2)], f.g[f.g.length - 1]] : f.g;
+    if (!g.some(nearDev)) continue;
+    const yr = P.InstallationDate && P.InstallationDate < 4e12 ? new Date(P.InstallationDate).getUTCFullYear() : 0;
+    out.push([d, yr, validInv(P.InvertUp) ? Math.round(P.InvertUp * 100) / 100 : null, validInv(P.InvertDown) ? Math.round(P.InvertDown * 100) / 100 : null, into(b), g.flatMap(([x, y]) => [ri(x), ri(y)])]);
+  }
+  return out;
 }
 
 function main() {
@@ -222,6 +250,24 @@ function main() {
     plants: PLANTS, materials: MATS, risks: RISKS, pipes,
   };
   fs.writeFileSync(path.join(outDir, 'sewers.json'), JSON.stringify(out));
+
+  // ---- 5. Local sewers near the developments ---------------------------------------------
+  const into = b => { let cur = b; const seen = new Set(); while (cur && !seen.has(cur)) { if (mainOut.has(cur)) return mainOut.get(cur); seen.add(cur); cur = down.get(cur); } return -1; };
+  const snap = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'snapshot.json'), 'utf8'));
+  const devs = devPoints(snap.records), list = [];
+  for (const [, l] of outs) for (const e of l) if (e.f) list.push(e);
+  let R = LOCAL_R, local, txt;
+  // (kept under LOCAL_MAX_MB: a smaller reach if the file grows past it)
+  for (;;) {
+    local = localSewers(list, { devs, into, r: R });
+    txt = JSON.stringify({ version: 1, generatedAt: out.generatedAt, reachM: R, scale: 1e5,
+      source: 'Region of Peel Wastewater Main (waterwastWater/FeatureServer/10), gravity mains under 300 mm within reachM of a development in the pipeline (data/snapshot.json).',
+      fields: ['diameterMm', 'installYear', 'invertUp', 'invertDown', 'into', 'coords'], note: 'into: the sewers.json pipe it drains to (-1: none found). coords: [lng, lat] × scale, upstream first.', pipes: local });
+    if (txt.length / 1e6 <= LOCAL_MAX_MB || R <= 100) break;
+    R -= 50;
+  }
+  fs.writeFileSync(path.join(outDir, 'sewers-local.json'), txt);
+  console.log(`local sewers (under ${MIN_D} mm) within ${R} m of ${devs.length} pipeline developments: ${local.length}, ${local.filter(p => p[4] < 0).length} with no trunk found; ${(txt.length / 1e6).toFixed(2)} MB`);
   const tot = das.das.reduce((t, d) => t + (d[1] || 0), 0);
   console.log(`pipes >= ${MIN_D} mm: ${pipes.length} (no slope ${noSlope}); DAs in polygon ${daHit}, nearest ${daNear}; census ${Math.round(tot)} people; ${cells} ha within 150 m; ${(fs.statSync(path.join(outDir, 'sewers.json')).size / 1e6).toFixed(2)} MB`);
   // Sanity: the largest pipes near each plant and their upstream population.
@@ -230,4 +276,5 @@ function main() {
     if (top) console.log(`  ${pl}: largest upstream population ${top[0][4]} on a ${top[0][0]} mm pipe, capacity ${top[0][2]} L/s`);
   }
 }
-main();
+if (require.main === module) main();
+else module.exports = { localSewers, devPoints, LOCAL_R, MIN_D };
