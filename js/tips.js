@@ -157,7 +157,7 @@
       ['Committed', 'Committed: a site servicing or building permit (the Peel rule), everywhere but the treatment plants, which count past plan approval (MECP D-5-1); never "Approved" alone.'],
       ['Proposed', 'In review.'],
       ['Anticipated', 'Pre-application.'],
-      ['Stage names: Inception · Under review · Draft / site plan approved · Completed', 'One set everywhere: Pre-application · In review · Approved, no permit yet · Built. Each file keeps the municipality\u2019s own status wording.'],
+      ['Stage names: Inception · Under review · Draft / site plan approved · Completed', 'One set everywhere, the commitment ladder: Pre-application · In review · Zoning approved · Plan approved · Servicing permit · Building permit · Under construction · Built. Each file keeps the municipality\u2019s own status wording.'],
       ['Separate Permit issued and Construction rows (sidebar Stage)', 'One row, Permit / under construction (one stage); the bar above keeps both colours.'],
       ['"Under review → In review" on rows and badges', 'The stage once ("In review"); Built says since 2021 or before the census.'],
       ['Colour sites by Phase | Layer', 'Colour sites by Stage | Counted as.'],

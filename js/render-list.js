@@ -60,16 +60,17 @@
     FU().renderFlagChips();
   }
 
-  // "Counts as" (SPEC §4): layer chips with their counts (by the phase mapping, js/layers.js), a
-  // filter like the stage; the counts are over the same base as the stage (every phase).
-  const LY = ['built', 'committed', 'proposed', 'anticipated', 'existing'];
+  // "Counts as" (SPEC §4): a chip per rung of the commitment ladder (js/layers.js RUNG_VIEW: each
+  // development on the rung holding most of its units), with its count, a filter like the stage; the
+  // counts are over the same base as the stage (every phase).
   function renderLayerChips(base) {
-    const el = $('#f-layers'); if (!el || !window.PeelLayers) return;
-    const n = {}; for (const p of base) { const l = App().layerOf(p); if (l) n[l] = (n[l] || 0) + 1; }
-    const sel = App().state.lyr, LB = window.PeelLayerBar;
-    el.innerHTML = LY.filter(k => n[k]).map(k => {
-      const on = !sel || sel.has(k), hidden = !App().state.filtered.some(p => App().layerOf(p) === k) && on;
-      return `<button type="button" class="chip${sel && sel.has(k) ? ' on' : ''}" data-ly="${k}" aria-pressed="${!!(sel && sel.has(k))}" title="${esc(window.PeelLayers.NOTE[k])}"><span class="ly-sw ly-${k}"></span>${esc(LB ? LB.LABEL[k] : k)} ${fmtNum(n[k])}${hidden ? ' <span class="muted">· hidden by stage</span>' : ''}</button>`;
+    const el = $('#f-layers'); if (!el || !window.PeelLayers || !window.PeelLayers.RUNG_VIEW) return;
+    const LY = window.PeelLayers, n = {};
+    for (const p of base) { const k = App().rungOf(p); if (k) n[k] = (n[k] || 0) + 1; }
+    const sel = App().state.lyr;
+    el.innerHTML = LY.RUNG_VIEW.filter(r => n[r.key]).map(({ key: k, label, note }) => {
+      const on = !sel || sel.has(k), hidden = !App().state.filtered.some(p => App().rungOf(p) === k) && on;
+      return `<button type="button" class="chip${sel && sel.has(k) ? ' on' : ''}" data-ly="${k}" aria-pressed="${!!(sel && sel.has(k))}" title="${esc(note)}"><span class="ly-sw" style="background:${LY.RUNG_COLOR[k]}"></span>${esc(label)} ${fmtNum(n[k])}${hidden ? ' <span class="muted">· hidden by stage</span>' : ''}</button>`;
     }).join('');
   }
   $('#f-layers').addEventListener('click', e => {

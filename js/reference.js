@@ -362,7 +362,7 @@
   // by municipality and year), times ([{ stage, size, n, median, left5 }] from the time-in-stage
   // curves), fc ({ by2031, by2041, low2031, high2031, after, endYear, perYear: [[year, likely]] }, Peel),
   // oldThisYear (the old method's homes in the first year) }. Every part is optional (Node, loading).
-  const STAGE_WORD = { inception: 'Pre-application', review: 'In review', approved: 'Approved, no permit yet', permit: 'Permit issued', construction: 'Under construction' };
+  const STAGE_WORD = { inception: 'Pre-application', review: 'In review', approved: 'Plan approved', permit: 'Building permit', construction: 'Under construction' };
   const SIZE_WORD = { S: 'Under 10 units', M: '10–99 units', L: '100+ units' };
   function completionsRecord(activity, from = 2016, to = 2025) {
     const A = activity || {}, rows = [];

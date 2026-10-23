@@ -42,6 +42,15 @@ elsewhere, where the rest of build-out is "Not committed yet". `js/map-analysis.
 `committedLoad(l, rule)` and `ruleOf(kind)` are the one place that says which facilities keep D-5-1.
 Build-out is the same under both rules.
 
+## On the map and in the filters
+
+- **Counts as** (Find › Counts as) has a chip per rung, plus Built since 2021 and On the system;
+  each development sits on the rung holding most of its units left to build (`rungKeyOf`; one with
+  no units stated takes the rung of its stage and permits). Share links carry the rung keys (`ly=`).
+- **Colour sites by › Counted as** colours each development by that rung, with the rungs in the legend.
+- **Stage** (the process view, one row per planning phase) uses the same names: Pre-application,
+  In review, Plan approved, Building permit, Under construction, Built.
+
 ## How the figures reconcile (Oct 2026 data, every development)
 
 | | Units |

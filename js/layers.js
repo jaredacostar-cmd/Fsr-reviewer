@@ -228,6 +228,33 @@
     for (const r of LADDER) if (rungs[r.key] >= best && rungs[r.key] > 0) { best = rungs[r.key]; out.top = r.key; }
     return out;
   }
+  // A development's rung on the map and in the filters (one per development): the rung holding most of
+  // its units left to build; once none are left, Built since 2021 or On the system (the 2021 Census).
+  // RUNG_VIEW: those keys in order, with their names, notes and colours (the --ly-* tokens).
+  const RUNG_VIEW = [
+    ...LADDER.map(r => ({ key: r.key, label: r.label, note: r.note })),
+    { key: 'built', label: 'Built since 2021', note: 'completed since census day, not in the census yet' },
+    { key: 'existing', label: 'On the system (2021 census)', note: 'completed before census day: in the 2021 Census' },
+  ];
+  const RUNG_COLOR = {
+    early: 'var(--ly-anticipated)', review: 'var(--ly-proposed)', zoning: 'color-mix(in srgb, var(--ly-committed) 30%, var(--ly-proposed))',
+    plan: 'var(--ly-approved)', servicing: 'color-mix(in srgb, var(--ly-committed) 80%, var(--surface-2))', building: 'var(--ly-committed)',
+    construction: 'color-mix(in srgb, var(--ly-committed) 55%, var(--ly-built))', built: 'var(--ly-built)', existing: 'var(--ly-existing)',
+  };
+  function rungKeyOf(p, opts = {}) {
+    if (!p || p.phase === 'cancelled') return null;
+    const R = rungsOf(p, opts);
+    if (R.top) return R.top;
+    if (R.built > 0) return 'built';
+    if (R.existing > 0) return 'existing';
+    // (no units stated: its rung from its stage and permits alone)
+    const l = layerOf(p, opts);
+    if (l === 'built' || l === 'existing' || !l) return l || null;
+    const gate = opts.gateOf ? opts.gateOf(p) || null : null;
+    if (D().isCommittedPeel(p, gate)) return gate && gate.bucket === 'counted' && !D().buildingPermitsOf(p).length ? 'servicing' : p.phase === 'construction' ? 'construction' : 'building';
+    if (D().isCommitted(p)) return 'plan';
+    return p.zoningApproved ? 'zoning' : p.phase === 'review' ? 'review' : 'early';
+  }
   /** rungsOf summed over developments (an { p, share } item counts its share). */
   function ladderTotals(devs, opts = {}) {
     const t = { rungs: Object.fromEntries(LADDER.map(r => [r.key, 0])), built: 0, existing: 0, left: 0, committed: 0, planApproved: 0, permitAhead: 0, registered: 0 };
@@ -388,7 +415,7 @@
     return `About ${strong(r(pl.total))} homes are in the planning pipeline${where}${split}. About ${r(pl.notBuilt)} are not yet built.${plus}`;
   }
 
-  const api = { LADDER, RUNG, COMMIT_RUNG, COMMITTED_RUNGS, throughText, rungsOf, ladderTotals, LAYERS, KEYS, LABEL, NOTE, PHASE_LAYER, CENSUS_DATE, layerOfPhase, layerOf, ofDev, ofFile, totals, byType, toTarget, confidenceOf, MOVED_SINCE, movedSince, pipeline, roundHeadline, headlineText, infill, cmhcUnderConstruction, permittedNotCompleted };
+  const api = { LADDER, RUNG, COMMIT_RUNG, COMMITTED_RUNGS, RUNG_VIEW, RUNG_COLOR, throughText, rungsOf, rungKeyOf, ladderTotals, LAYERS, KEYS, LABEL, NOTE, PHASE_LAYER, CENSUS_DATE, layerOfPhase, layerOf, ofDev, ofFile, totals, byType, toTarget, confidenceOf, MOVED_SINCE, movedSince, pipeline, roundHeadline, headlineText, infill, cmhcUnderConstruction, permittedNotCompleted };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLayers = api;
 })(typeof window !== 'undefined' ? window : globalThis);

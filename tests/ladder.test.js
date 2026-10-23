@@ -70,3 +70,21 @@ test('real data: the ladder reconciles with the ledger and with MECP D-5-1', { s
   close(t.planApproved, set.reduce((s, p) => s + (LY.ofDev(p).parts.committed || 0), 0), 'D-5-1 = the layers\' committed');
   close(t.planApproved + t.permitAhead, led.units.committed + led.units.approved, 'committed + approved = D-5-1 + permits ahead of approval');
 });
+
+test('a development\'s rung on the map and in Counts as: the rung with most of its units; built and on the system once none are left', () => {
+  assert.deepEqual(LY.RUNG_VIEW.map(r => r.key), ['early', 'review', 'zoning', 'plan', 'servicing', 'building', 'construction', 'built', 'existing']);
+  assert.ok(LY.RUNG_VIEW.every(r => LY.RUNG_COLOR[r.key]), 'every rung has a colour');
+  assert.equal(LY.rungKeyOf(dev('permit', 300, [bp('BP 1', 120)]), { asOf }), 'plan');
+  assert.equal(LY.rungKeyOf(dev('review', 80), { gateOf: () => counted, asOf }), 'servicing');
+  assert.equal(LY.rungKeyOf({ ...dev('cancelled', 10), phase: 'cancelled' }), null);
+});
+
+test('no units stated: its rung from its stage and permits alone', () => {
+  const none = (phase, permits = [], extra = {}) => ({ ...dev(phase, 0, permits, extra), buildout: null });
+  assert.equal(LY.rungKeyOf(none('inception')), 'early');
+  assert.equal(LY.rungKeyOf(none('review')), 'review');
+  assert.equal(LY.rungKeyOf(none('review', [], { zoningApproved: { bylaws: ['ZBL 1'] } })), 'zoning');
+  assert.equal(LY.rungKeyOf(none('approved')), 'plan');
+  assert.equal(LY.rungKeyOf(none('review'), { gateOf: () => counted, asOf }), 'servicing');
+  assert.equal(LY.rungKeyOf(none('permit', [bp('BP 1', 0)])), 'building');
+});

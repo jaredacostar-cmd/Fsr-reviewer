@@ -386,7 +386,7 @@
     }
     // (Permit issued and Under construction share a colour, and a row: as in the sidebar.)
     if (MM().mstyle.color === 'phase') parts.push(`<div class="lg-t">Stage</div><ul>${P.ALL_PHASES.filter(p => App().state.phases.has(p.key) && !(p.key === 'construction' && App().state.phases.has('permit'))).map(p => `<li data-info="phase-${p.key}">${dot(p.key)}${esc(p.key === 'permit' && App().state.phases.has('construction') ? 'Permit issued / under construction' : p.key === 'completed' ? 'Built' : p.label)}</li>`).join('')}</ul>`);
-    if (MM().mstyle.color === 'layer') parts.push(`<div class="lg-t">Developments</div><ul>${Object.entries(MM().LAYER_NAME).filter(([k]) => k !== 'out').map(([k, t]) => sw(MM().layerColors()[k], t)).join('')}</ul>`);
+    if (MM().mstyle.color === 'layer') parts.push(`<div class="lg-t">Developments, by rung</div><ul>${window.PeelLayers.RUNG_VIEW.map(r => sw(window.PeelLayers.RUNG_COLOR[r.key], r.label)).join('')}</ul>`);
     if (MM().mstyle.color === 'timing') parts.push(`<div class="lg-t">Servicing timing (2026 DC draft)</div><ul>${Object.values(MM().TIMING).map(([c, t]) => sw(c, t)).join('')}</ul>`);
     if (MM().mstyle.color === 'quality') parts.push(`<div class="lg-t">Data quality</div><ul>${Object.values(MM().QUALITY).map(([c, t]) => sw(c, t)).join('')}</ul>`);
     if (MM().mstyle.color === 'plant') parts.push(`<div class="lg-t">Receiving plant</div><ul>${['Lakeview', 'Clarkson', 'Inglewood', 'Toronto'].map(k => sw(`var(${SD().PLANT_TOKEN[k]})`, SD().PLANT_SHORT[k])).join('')}${sw('var(--nodata)', 'No traced catchment')}</ul>`);

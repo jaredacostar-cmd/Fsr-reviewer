@@ -199,7 +199,7 @@
       const w = new Map(), col = new Map();
       let tot = 0;
       for (const m of kids) { const v = !sized ? 1 : byUnits ? m.options.units || 0 : m.options.pop || 0; tot += v; w.set(m.options.cat, (w.get(m.options.cat) || 0) + v); col.set(m.options.cat, m.options.col); }
-      const order = mstyle.color === 'phase' ? P.ALL_PHASES.map(p => p.key) : mstyle.color === 'layer' ? Object.keys(LAYER_NAME) : mstyle.color === 'quality' ? Object.keys(QUALITY) : mstyle.color === 'timing' ? Object.keys(TIMING) : [...w.keys()].sort();
+      const order = mstyle.color === 'phase' ? P.ALL_PHASES.map(p => p.key) : mstyle.color === 'layer' ? [...window.PeelLayers.RUNG_VIEW.map(r => r.key), 'out'] : mstyle.color === 'quality' ? Object.keys(QUALITY) : mstyle.color === 'timing' ? Object.keys(TIMING) : [...w.keys()].sort();
       let acc = 0; const stops = [];
       for (const k of order) {
         const n = w.get(k); if (!n) continue;
@@ -348,7 +348,7 @@
   const iconFor = phase => iconCache[phase] || (iconCache[phase] = L.divIcon({ className: 'pm pm-hit', iconSize: [32, 32], html: dot(phase) }));
   // ---- Marker style (map options): colour by phase, servicing layer or receiving plant; size
   // the same or by build-out people + jobs; clusters show the mix and, when sized, the total.
-  const LAYER_NAME = { existing: 'Existing (built before the census)', built: 'Built since the census', approved: 'Committed (draft plan or site plan approved)', proposed: 'Proposed (in review)', out: 'Withdrawn / refused' };
+  const LAYER_NAME = { existing: 'Existing (built before the census)', built: 'Built since the census', approved: 'Past plan approval (MECP D-5-1)', proposed: 'Proposed (in review)', out: 'Withdrawn / refused' };
   // The layer tokens (SPEC §2): one hue, lightness = certainty.
   const layerColors = () => ({ existing: 'var(--ly-existing)', built: 'var(--ly-built)', approved: 'var(--ly-committed)', proposed: 'var(--ly-proposed)', out: 'var(--nodata)' });
   // Servicing layer of a development, as in the Water / Wastewater tables.
@@ -388,7 +388,8 @@
   function markerCat(p) {
     if (mstyle.color === 'timing') { const k = App().state.dcInfra ? timingOf(p) : 'none'; return [k, TIMING[k][0]]; }
     if (mstyle.color === 'quality') { const k = qualityOf(p); return [k, QUALITY[k][0]]; }
-    if (mstyle.color === 'layer') { const k = svcLayerOf(p); return [k, layerColors()[k]]; }
+    // (Counted as: its rung of the commitment ladder, js/layers.js rungKeyOf)
+    if (mstyle.color === 'layer') { const k = App().rungOf(p) || 'out'; return [k, k === 'out' ? 'var(--nodata)' : window.PeelLayers.RUNG_COLOR[k]]; }
     if (mstyle.color === 'plant') { const k = plantOfDev(p); return [k, `var(${SD().PLANT_TOKEN[k] || '--nodata'})`]; }
     return [p.phase, `var(--ph-${p.phase})`];
   }
