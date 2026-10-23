@@ -3441,6 +3441,19 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .rf-tab th, .rf-tab td { text-align: left; vertical-align: top; padding: 6px var(--space-2) 6px 0; border-bottom: 1px solid var(--border); }
 .rf-tab thead th { font-weight: 600; color: var(--text-secondary); font-size: var(--fs-1); }
 .rf-tab tbody th { font-weight: 600; min-width: 140px; }
+/* How the app decides (js/logic.js): the value column reads as the figure; the code location stays quiet. */
+.lg-tab .lg-v { font-variant-numeric: tabular-nums; min-width: 140px; width: 28%; }
+.lg-tab .lg-at { display: block; margin-top: 4px; color: var(--text-secondary); font-size: var(--fs-1); }
+.lg-tab .lg-at code { font-size: inherit; }
+.lg-toc .btn { white-space: nowrap; }
+.rf[id^="lg-"] { scroll-margin-top: var(--space-4); }
+@media (max-width: 700px) {
+  .lg-tab thead { display: none; }
+  .lg-tab, .lg-tab tbody { display: block; }
+  .lg-tab tr { display: block; padding: var(--space-2) 0; border-bottom: 1px solid var(--border); }
+  .lg-tab th, .lg-tab td { display: block; border: 0; padding: 2px 0; width: auto; min-width: 0; }
+  .lg-tab .lg-v { font-weight: 600; width: auto; min-width: 0; }
+}
 /* Every data file's receipt (js/sources.js): the source links wrap, the notes sit under the name. */
 .src-table td { font-size: var(--fs-2); }
 .src-table td:first-child { min-width: 260px; max-width: 420px; }

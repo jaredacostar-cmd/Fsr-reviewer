@@ -61,7 +61,7 @@
     const cards = GUIDES.map(([id, label, q, line], i) => `<li><button type="button" class="rf-card" data-ws-page="${id}"><span class="rf-n">${i + 1}</span><strong>${esc(label)}</strong><span>${esc(q)}</span><small>${esc(line)}</small></button></li>`).join('');
     return { id: 'guides', eyebrow: 'Reference', name: 'How does servicing for growth work in Peel?',
       answer: 'Eight short guides: who decides, how a development is approved, how its homes become water and sewage flows, where those flows go, how capacity is checked, what a <strong>functional servicing report</strong> covers, how the Region builds the works, and how much growth is planned. Each one says how the app reads it, and where it simplifies.',
-      mid: sec('guides', '', `<ol class="rf-index">${cards}</ol>`) + sec('more', 'More reference', `<p>${go('glossary', 'Glossary: the terms in plain words')} ${go('help', 'Help: how to use the app')}</p>`),
+      mid: sec('guides', '', `<ol class="rf-index">${cards}</ol>`) + sec('more', 'More reference', `<p>${go('glossary', 'Glossary: the terms in plain words')} ${go('logic', 'How the app decides: the data rules and gates')} ${go('help', 'Help: how to use the app')}</p>`),
       actions: [{ label: `Start: ${GUIDES[0][1]}`, attrs: { 'data-ws-page': GUIDES[0][0] }, primary: true }, { label: 'Full map', attrs: { 'data-ws-full': '' } }] };
   }
 
