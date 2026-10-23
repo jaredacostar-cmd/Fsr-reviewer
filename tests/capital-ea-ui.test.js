@@ -310,8 +310,10 @@ test('Capital tab: Projects and EAs views (public too), screening note in This w
   assert.match(html, /id="pane-dca-build" data-pane="dca" data-sub="projects"/);
   assert.match(html, /id="pane-dca-eas" data-pane="dca" data-sub="eas"/);
   assert.match(html, /id="ce-week-panel"[\s\S]{0,400}General screening results only/);
-  // Only Funding is held back in the public version (and behind its Labs switch).
-  assert.match(src('js/analysis-tabs.js'), /tab === 'dca' && sub === 'funding' && \(!labOn\('funding'\) \|\| isPublic\(\)\)/);
+  // Only the funding screen is held back in the public version (and behind its Labs switch): its panes
+  // in DC projects, and the panel's Funding folds (js/dc-projects.js).
+  assert.match(html, /class="f-pane lab-funding-pane pv-hide" id="pane-dca-rec"/);
+  assert.match(src('js/dc-projects.js'), /const funding = \(\) => !!\(root\.PeelLabs && root\.PeelLabs\.on\('funding'\) && !\(U\.isPublic && U\.isPublic\(\)\)\);/);
   assert.match(src('js/overview-tab.js'), /dca: 'Capital'/);
   assert.match(src('js/dca-tab.js'), /PeelCapitalEA\.dcActualHTML\(/);
 });

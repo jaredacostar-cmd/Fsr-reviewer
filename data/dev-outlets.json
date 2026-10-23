@@ -1,0 +1,5 @@
+{
+ "version": 1,
+ "note": "Reviewed development outlets (js/dev-outlets.js, QA/QC › Review outlets). key: the development; sys: wastewater (or water); mode: confirmed (the automatic outlet, checked) or set (by hand); kind: sewer (an existing sanitary sewer) or dc (a planned DC main); at: the point it joins; mm: that pipe's size; project: the DC project; src: what says so; date: when. Export from Review outlets and commit here.",
+ "outlets": []
+}

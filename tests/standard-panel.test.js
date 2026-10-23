@@ -168,13 +168,13 @@ test('4. panel figures equal full-table figures for the same scope (Servicing �
   // The largest impact figure is the table's Impact cell for that facility.
   const big = spec.figures.find(x => x.label === 'largest impact');
   assert.equal(`${big.v} ${big.u}`, '155.4 ML/d'); assert.match(big.ctx, /^G\.E\. Booth: over the 90% trigger at build-out$/);
-  // Each panel row's with-approved → build-out % equals the table's for that facility.
+  // Each panel row's committed → build-out % equals the table's for that facility.
   const tablePct = {};
-  for (const m of table.matchAll(/<tr data-basis="\w+" class="t-\w*"><th scope="row" class="ft-pin" data-l="Facility">([^<]+)<small>[\s\S]*?<td class="n" data-l="With approved %">(\d+%|–)<\/td><td class="n" data-l="Build-out %"><strong>(\d+%|–)<\/strong>/g)) tablePct[m[1]] = [m[2], m[3]];
+  for (const m of table.matchAll(/<tr data-basis="\w+" class="t-\w*"><th scope="row" class="ft-pin" data-l="Facility">([^<]+)<small>[\s\S]*?<td class="n" data-l="Committed %">(\d+%|–)<\/td><td class="n" data-l="Build-out %"><strong>(\d+%|–)<\/strong>/g)) tablePct[m[1]] = [m[2], m[3]];
   const listRows = spec.lists[0].rows;
   assert.equal(listRows.length, 5);
   for (const r of listRows) {
-    const m = r.html.match(/<span class="pnl-r-name">(?:💧 )?([^<]+)<\/span>[\s\S]*?· (\d+%|–) with approved → (\d+%|–) at build-out/);
+    const m = r.html.match(/<span class="pnl-r-name">(?:💧 )?([^<]+)<\/span>[\s\S]*?· (\d+%|–) (?:with past plan approval \(MECP D-5-1\)|committed \(a servicing or building permit\)) → (\d+%|–) at build-out/);
     assert.ok(m, r.html);
     assert.deepEqual([m[2], m[3]], tablePct[m[1]], m[1]);
   }

@@ -183,6 +183,8 @@
           ...(da && set.length > 1 ? [{ title: `In its 2021 census area (${fmtNum(set.length)} developments)`, rows: areaRows, total: areaRows.length, seeAll: { 'data-full-table': 'growth' } }] : []),
           ...(emp.planned ? [{ title: 'Employment in its census area', rows: [PN.kv('Floor area planned', `${fmtNum(Math.round(emp.planned))} m² · ≈${fmtNum(roundPop(emp.jobs))} jobs`), PN.kv('Left to build', `${fmtNum(Math.round(emp.left))} m²`)], total: 2 }] : []),
         ],
+        // The units on the land the site was built on, year by year and by parcel (js/earlier-files.js).
+        folds: [{ title: 'Units on this land over time', id: 'ef-units-fold', open: true, html: root.PeelEarlierFiles ? root.PeelEarlierFiles.unitsHTML(p, { fold: true }) : '' }],
         method: 'The site: its applications\u2019 planned units (net of homes demolished), with permitted and completed from its building permits. Its census area: the 2021 Census dissemination area its point falls in, and every development located in it (the full table counts these). People and jobs at Peel design criteria.',
         sources: 'The municipal applications and building permits on the map (Records › Sources has each source and its date); Statistics Canada 2021 Census dissemination areas.',
         foot: { primary: { label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, title: 'A printable report for the developments in its census area' } },

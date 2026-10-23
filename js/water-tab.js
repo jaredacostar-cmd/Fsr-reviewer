@@ -210,7 +210,8 @@
     for (const z of App().state.servicing.zones) { const s = MP().wellSystem[z.zone] && R.water.caledon.find(x => x.name === MP().wellSystem[z.zone]); if (s) treat.push(WT().waterCapRow(M, `${s.name} wells`, [z.id], s.ratedM3d / 1000, s.maxDayM3d / 1000, `2025 maximum day ${fmt1(s.maxDayM3d / 1000)} ML/d`)); }
     const pump = pumpRows(M);
     const boPct = r => r.v.reduce((a, b) => a + b, 0) / r.rated * 100;
-    const tight = [...treat, ...pump].filter(Boolean).map(r => ({ r, c: (r.v[0] + r.v[1] + r.v[2]) / r.rated, b: boPct(r) / 100 })).sort((a, b) => b.b - a.b)[0];
+    // (committed: the treatment plants MECP D-5-1, all of approved; the pumping the Peel rule, vPeel)
+    const tight = [...treat.filter(Boolean).map(r => ({ r, com: r.v[2], d51: true })), ...pump.map(r => ({ r, com: r.vPeel != null ? r.vPeel : r.v[2] }))].map(({ r, com, d51 }) => ({ r, d51, c: (r.v[0] + r.v[1] + com) / r.rated, b: boPct(r) / 100 })).sort((a, b) => b.b - a.b)[0];
     const tightPump = pump.map(r => ({ r, b: boPct(r) })).sort((a, b) => b.b - a.b)[0];
     const mp = R.masterPlan, stor = mp && mp.storage ? mp.storage : [];
     const shortMl = stor.reduce((t, s) => t + Math.max(0, s.required[s.required.length - 1] - s.available[s.available.length - 1]), 0);
@@ -222,7 +223,7 @@
       <div class="ov-tiles">${wTile(`${Math.round(boPct(treat[0]))}%`, 'of rated', 'South Peel treatment at build-out', `rated ${fmtNum(treat[0].rated)} ML/d`)}${tightPump ? wTile(`${Math.round(tightPump.b)}%`, 'of firm capacity', 'Tightest pumping at build-out', tightPump.r.name) : ''}${wTile(fmt1(M.wMax(dPop, dJobs)), 'ML/d', 'maximum day demand at build-out', 'all pressure zones')}${wTile(shortMl > 0 ? fmtNum(Math.round(shortMl)) : '0', 'ML', 'storage short by 2041', 'Master Plan assessment')}</div>
       ${waterDemandFlowsHTML(M)}
       <h3 class="svc-sub">Water capacity by growth layer</h3>
-      ${tight ? `<p class="small">Tightest: <strong>${tight.r.name}</strong>, ${Math.round(tight.c * 100)}% of its ${tight.r.capWord || 'rated'} capacity with existing + built + approved, ${Math.round(tight.b * 100)}% at build-out.</p>` : ''}
+      ${tight ? `<p class="small">Tightest: <strong>${tight.r.name}</strong>, ${Math.round(tight.c * 100)}% of its ${tight.r.capWord || 'rated'} capacity with existing + built + ${tight.d51 ? 'plan approved (MECP D-5-1)' : 'committed (a site servicing or building permit)'}, ${Math.round(tight.b * 100)}% at build-out.</p>` : ''}
       ${SP().capChartHTML(treat.filter(Boolean), Y, { basis: 'metered', title: 'Treatment', sub: 'maximum day as a % of rated capacity · 2025 measured, plus growth at Peel criteria (as in the Overview)', baseLabel: `Existing (${Y} Census; treatment scaled to the 2025 measured maximum day)`, capLegend: 'Capacity: rated (treatment) or firm (pumping)', noPop100: true, legend: true })}
       <details class="wcap-pump" open><summary class="svc-sub">Pumping into each pressure zone <span class="muted small">${SvcTab().wMaxDayLabel()} as a % of firm pumping capacity (actual firm where the 2020 Master Plan models it)</span></summary>
       ${SP().capChartHTML(pump, Y, { basis: 'design', title: ' ', noPop100: true, noPeople: true, legend: false })}
