@@ -562,6 +562,19 @@
       "refresh": "weekly",
       "check": "Brampton’s reports are public on BramPlanOnline but not linked per file: each Brampton file links the portal’s search, with its file number."
     },
+    "fsr-outlets.json": {
+      "title": "Sanitary outlets read from the FSRs",
+      "kind": "derived",
+      "dateField": "generatedAt",
+      "script": "scripts/build-fsr-outlets.js",
+      "refresh": "on request",
+      "optional": true,
+      "from": [
+        "fsr.json"
+      ],
+      "itemLinks": "Each report links its PDF and gives the page of each quote.",
+      "method": "Each FSR linked in fsr.json, as text (pdftotext); the sentences about the sanitary outlet scored, the best read for the pipe size, street, status, manhole and Region project. Read by machine: a reviewer confirms it (QA/QC › Review outlets). Probe data sources, mode fsr-outlets."
+    },
     "housing.json": {
       "title": "Housing targets, CMHC starts and completions, population projections",
       "kind": "open-data",
