@@ -72,13 +72,17 @@
   // Jobs on development sites, by layer: built = completed since census day, approved =
   // committed (approved to under construction), proposed = in pre-consultation or review.
   // Existing employment is not in the census baseline.
+  // jcpA / jcpP: the jobs the Peel rule commits (a site servicing or building permit) within approved
+  // and proposed, in proportion to the units it commits (js/areas.js growthSince committed).
   function svcJobs(devs, censusDate) {
-    const since = +new Date(`${censusDate}T00:00:00Z`), j = { jbuilt: 0, japproved: 0, jproposed: 0 };
+    const since = +new Date(`${censusDate}T00:00:00Z`), j = { jbuilt: 0, japproved: 0, jproposed: 0, jcpA: 0, jcpP: 0 };
+    const LY = window.PeelLayers, co = DUI() && DUI().commitOpts ? DUI().commitOpts() : {};
+    const share = p => { const R = LY && LY.rungsOf ? LY.rungsOf(p, co) : null; return R && R.left > 0 ? R.committed / R.left : 0; };
     for (const p of devs) {
       const n = App().jobsOf(p); if (!(n > 0)) continue;
       if (p.phase === 'completed') { if (+p.milestones.completed >= since) j.jbuilt += n; }
-      else if (D.isCommitted(p)) j.japproved += n;
-      else if (p.phase === 'inception' || p.phase === 'review') j.jproposed += n;
+      else if (D.isCommitted(p)) { j.japproved += n; j.jcpA += n * share(p); }
+      else if (p.phase === 'inception' || p.phase === 'review') { j.jproposed += n; j.jcpP += n * share(p); }
     }
     return j;
   }
@@ -94,12 +98,13 @@
     const devs = svcIdx ? svcIdx[key].get(a.id) || [] : SD().svcDevs().filter(p => p.phase !== 'cancelled' && SD().svcIds(p, key).includes(a.id));
     const gr = Areas().growthSince(devs, {}, bc.date, App().state.criteria);
     return { census: svcCensusPop(bc).get(a.id) || 0, built: gr.built.population, approved: gr.approved.population, proposed: gr.proposed.population,
+      cpA: gr.committed.approved.population, cpP: gr.committed.proposed.population,
       ...svcJobs(devs, bc.date),
       // Developments = sites with a planning application (stand-alone permits still count in Built since).
       units: gr.built.units + gr.approved.units + gr.proposed.units, devs: devs.filter(p => p.kinds.includes('application')).length,
       near: devs.filter(p => p.kinds.includes('application') && SD().nearOf(p, key)).length };
   }
-  const SUM_KEYS = ['census', 'built', 'approved', 'proposed', 'jbuilt', 'japproved', 'jproposed', 'units', 'devs', 'near'];
+  const SUM_KEYS = ['census', 'built', 'approved', 'proposed', 'jbuilt', 'japproved', 'jproposed', 'cpA', 'cpP', 'jcpA', 'jcpP', 'units', 'devs', 'near'];
   // Developments cell: count, and how many are outside the area and assigned to it as the nearest.
   const devCell = l => `<td>${uDev(l.devs)}${l.near ? `<small>${fmtNum(l.near)} nearest</small>` : ''}</td>`;
   const nearNote = (n, what) => `<p class="small muted">${svcOpt.nr === 'on'
@@ -152,7 +157,7 @@
     const units = `<div class="svc-switch" role="group" aria-label="Units"><span class="muted small">Units</span>${[['all', 'All'], ['remaining', 'Left to build']].map(([v, t]) =>
       `<button type="button" class="btn small${(b === 'remaining') === (v === 'remaining') ? ' on' : ''}" data-svcopt="basis" data-v="${v === 'all' ? cur : v}" aria-pressed="${(b === 'remaining') === (v === 'remaining')}">${t}</button>`).join('')}</div>`;
     const A = root.PeelLayers && root.PeelLayers.NOTE;
-    const def = A ? `<p class="small muted ly-def">Approved, not yet built (committed): ${esc(A.committed)}. In review: ${esc(A.proposed)}. Pre-application: ${esc(A.anticipated)}.</p>` : '';
+    const def = A ? `<p class="small muted ly-def">Approved (MECP D-5-1): ${esc(A.committed)}. In review: ${esc(A.proposed)}. Pre-application: ${esc(A.anticipated)}. Committed, at every facility but the treatment plants: ${esc(A.commitPeel)}.</p>` : '';
     return count + units + def;
   };
   // Results for year: the year the capacity colours, pipe loads and station loads are worked
@@ -387,7 +392,9 @@
     const st = App().state, bc = CA().baselineCensus(), TC = root.PeelTreeCounts;
     return JSON.stringify([idOf(st.projects), st.projects.length, idOf(st.whatifs), (st.whatifs || []).map(w => w.key), st.criteria, svcOpt, idOf(bc), bc && bc.year,
       idOf(st.servicing), idOf(st.reports), idOf(st.compliance), idOf(st.dcInfra), st.basis, st.empGen || 0, SD().svcById.size, SP() && SP().hz,
-      MM().SEW && idOf(MM().SEW.data), MA().getCapYear(), MM().getWwLay(), TC && TC.mode ? TC.mode() : '']);
+      MM().SEW && idOf(MM().SEW.data), MA().getCapYear(), MM().getWwLay(), TC && TC.mode ? TC.mode() : '',
+      // (the committed horizon counts site servicing permits once data/dc-gate.json is in)
+      !!(root.PeelDcGate && root.PeelDcGate.loaded && root.PeelDcGate.loaded())]);
   }
   /** The servicing model, current: rebuilt (with the tab) only when what it is built from changed. */
   // The Peel-wide Water and Wastewater bodies of the last build, before a site replaced them.

@@ -12,8 +12,10 @@
   //             'wsys:southPeel', 'wsys:<well system>', 'ps:<drainage area id>'.
   //
   // Definitions, used everywhere:
-  //   reserve = capacity − (existing + built + committed): the uncommitted reserve (MECP D-5-1),
-  //             to 100% of rated (plants) or firm (pumping stations);
+  //   committed = MECP D-5-1 at the treatment plants (past plan approval), the Peel rule at the pumping
+  //             stations (a site servicing or building permit): the commitment ladder, rule: 'd51' | 'peel';
+  //   reserve = capacity − (existing + built + committed): the uncommitted reserve (MECP D-5-1 at the
+  //             plants), to 100% of rated (plants) or firm (pumping stations);
   //   room    = trigger × rated − committed: room to the 90% expansion trigger (2020 Master Plan),
   //             named "room to the trigger", never "reserve";
   //   pct*    = always % of rated (plants, water treatment) or of firm (pumping stations), never
@@ -50,19 +52,19 @@
       const [kind, id] = String(ref).split(/:(.*)/s);
       if (kind === 'plant') {
         const c = M.plantCap(id), k = MP().cached(`plant:${id}`, () => MP().plantCons(id)); if (!c) return null;
-        return { ref, kind: 'plant', name: c.name, unit: 'ML/d', ...compute({ rated: c.rated, existing: c.existing, built: 0, committed: c.committed, buildout: c.buildout, triggerYear: k ? k.out : null }),
+        return { ref, kind: 'plant', rule: 'd51', name: c.name, unit: 'ML/d', ...compute({ rated: c.rated, existing: c.existing, built: 0, committed: c.committed, buildout: c.buildout, triggerYear: k ? k.out : null }),
           builtInExisting: true, census: c.census != null ? c.census : null, perPerson: c.perPerson, popToday: c.popToday, f: c.f };
       }
       if (kind === 'wsys') {
         const zone = id === 'southPeel' ? { zone: '1' } : { zone: Object.keys(MP().wellSystem || {}).find(z => MP().wellSystem[z] === id) || id, id: (A.state.servicing.zones.find(z => z.zone === Object.keys(MP().wellSystem || {}).find(k => MP().wellSystem[k] === id)) || {}).id };
         const w = MP().cached(id === 'southPeel' ? 'wsys:lake' : `wsys:${id}`, () => MP().waterPlantCons(zone)); if (!w) return null;
         const rated = w.cap / TRIGGER;
-        return { ref, kind: 'wplant', name: w.name, unit: 'ML/d', ...compute({ rated, existing: w.q('today'), built: 0, committed: w.q('committed'), buildout: w.q(null), triggerYear: w.out }), builtInExisting: true, zones: w.zones };
+        return { ref, kind: 'wplant', rule: 'd51', name: w.name, unit: 'ML/d', ...compute({ rated, existing: w.q('today'), built: 0, committed: w.q('committed'), buildout: w.q(null), triggerYear: w.out }), builtInExisting: true, zones: w.zones };
       }
       if (kind === 'ps') {
         // The traced pumping-station sewersheds (servicing.psAreas: the drainage list holds the blocks).
         const a = [...(A.state.servicing.psAreas || []), ...(A.state.servicing.drainage || [])].find(d => d.id === id); const k = a && MP().psCons(a); if (!k) return null;
-        return { ref, kind: 'ps', name: k.name, unit: 'L/s', ...compute({ firm: k.cap, existing: k.q('today'), built: 0, committed: k.util.com * k.cap, buildout: k.q(null), triggerYear: k.out }) };
+        return { ref, kind: 'ps', rule: 'peel', name: k.name, unit: 'L/s', ...compute({ firm: k.cap, existing: k.q('today'), built: 0, committed: k.util.com * k.cap, buildout: k.q(null), triggerYear: k.out }) };
       }
       return null;
     });

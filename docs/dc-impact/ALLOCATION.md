@@ -194,7 +194,8 @@ development many times. So for money:
 developments relying on a DC project and do one of two things:
 - **confirm** the automatic outlet (the nearest 300 mm+ sewer, or the route along the planned mains);
 - **set** the right outlet, picked from a list of what is nearby or tapped on the map, after a preview
-  of the DC projects and gate year it would give. The list covers existing sewers of any size, sewers
+  of the DC projects and gate year it would give. The list covers existing sewers (300 mm+ trunks, and local sewers under 300 mm near the
+  developments, `data/sewers-local.json`, each draining to a trunk the load model follows), sewers
   being built (the Region's capital projects, tendered or further) and planned DC mains, within 400 m.
 
 Each outlet is checked against the development. The checks flag; they never block:

@@ -80,6 +80,8 @@
       const A = root.PeelApp; if (A && A.state && A.state.dcgate && A.applyFilters) A.applyFilters();
       // (a Home page drawn before the permits loaded: drawn again with them)
       const W = root.PeelWorkspaces; if (W && W.mode && W.mode() === 'home' && W.renderPage) W.renderPage(true);
+      // (the servicing model's committed horizon, by the Peel rule, likewise: js/svc-tab.js modelKey has the gate in it)
+      const ST = root.PeelSvcTab; if (ST && ST.ensureSvcModel && A && A.state && A.state.servicing && A.state.svcModel) ST.ensureSvcModel();
       // (the Overview's committed, by the Peel rule, was drawn on building permits alone: again with the servicing permits)
       const OV = root.PeelOverviewTab; if (OV && OV.renderOverview && A && A.state && (A.state.projects || []).length) OV.renderOverview();
       return G.data;

@@ -47,23 +47,18 @@ test('wired in: header chip, filter select, share link, offline shell', () => {
   assert.match(src('sw.js'), /'js\/dc-gate\.js',/);
 });
 
-test('stage bars: site servicing permit units per stage, stages unchanged', () => {
-  const WP = require('../js/ws-pages.js');
-  const devs = [{ key: 'a' }, { key: 'b' }, { p: { key: 'c' }, share: 0.5 }];
-  const L = { a: { layer: 'committed', parts: { committed: 100 }, toPermit: 100 }, b: { layer: 'proposed', parts: { proposed: 40 } }, c: { layer: 'committed', parts: { committed: 60 }, toPermit: 0 } };
-  const ofDev = p => L[p.key], moved = () => true;
-  const without = WP.stageRows(devs, ofDev, moved);
-  const withSsp = WP.stageRows(devs, ofDev, moved, p => p.key !== 'b');
-  assert.deepEqual(withSsp.rows.map(r => r.units), without.rows.map(r => r.units), 'the stages stay on building permits');
-  const by = k => withSsp.rows.find(r => r.key === k).ssp;
-  assert.equal(by('approved'), 100);
-  assert.equal(by('permitted'), 30, 'a split site counts its share');
-  assert.equal(by('proposed'), 0);
-  assert.equal(withSsp.ssp, 130);
-  assert.equal(without.ssp, null, 'no band when the permits are not loaded');
-  const html = WP.stageChartHTML({ ...withSsp, click: false }, 0);
-  assert.match(html, /100 with a site servicing permit/);
-  assert.match(html, /class="stg-ssp"/);
+test('stage bars: a site servicing permit is its own stage (the ladder), above plan approved', () => {
+  const WP = require('../js/ws-pages.js'), LY = require('../js/layers.js');
+  const counted = { bucket: 'counted', evidence: [{ kind: 'site', ref: 'D 1', issued: '2025-02-01', services: ['water'] }] };
+  const app = { kind: 'application', ref: 'SP 1', units: 100, phase: 'approved', events: [{ phase: 'approved', date: new Date('2024-01-01') }] };
+  const mk = (key, phase) => ({ key, title: key, municipality: 'Brampton', phase, units: 100, milestones: {}, types: [], description: '', records: [app] });
+  const a = mk('a', 'approved'), b = mk('b', 'approved');
+  const st = WP.stageRows([a, { p: b, share: 0.5 }], p => LY.rungsOf(p, { gateOf: q => (q === a ? counted : null), asOf: Date.parse('2026-10-21') }), () => true);
+  const by = k => st.rows.find(r => r.key === k).units;
+  assert.equal(by('servicing'), 100, 'the whole development, on its servicing permit');
+  assert.equal(by('plan'), 50, 'a split site counts its share');
+  assert.equal(st.committed, 100);
+  assert.doesNotMatch(WP.stageChartHTML({ ...st, click: false }, 0), /stg-ssp/, 'no separate band: the stage carries it');
 });
 
 test('file tree: site servicing permits go under the file they follow, the rest after the history', () => {

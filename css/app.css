@@ -3056,7 +3056,7 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .dvo-map.picking svg { cursor: crosshair; outline: 2px solid var(--select); outline-offset: -2px; border-radius: 8px; }
 .dvo-banner { position: absolute; left: 8px; right: 8px; top: 8px; margin: 0; padding: 6px 10px; border-radius: 6px; background: var(--select); color: var(--on-accent); z-index: 1; }
 .home-map-svg .hm-sw { fill: none; stroke: var(--pipe-sanitary); opacity: 0.75; }
-.home-map-svg .hm-sw-s { stroke-width: 1; } .home-map-svg .hm-sw-m { stroke-width: 1.8; } .home-map-svg .hm-sw-l { stroke-width: 2.8; }
+.home-map-svg .hm-sw-x { stroke-width: 0.6; opacity: 0.55; } .home-map-svg .hm-sw-s { stroke-width: 1; } .home-map-svg .hm-sw-m { stroke-width: 1.8; } .home-map-svg .hm-sw-l { stroke-width: 2.8; }
 .home-map-svg .hm-dvo-route { fill: none; stroke: var(--accent); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
 .home-map-svg .hm-dvo-alt { fill: none; stroke: var(--cap-tight); stroke-width: 3.5; stroke-dasharray: 6 4; stroke-linecap: round; }
 .home-map-svg .hm-dvo-conn { fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-dasharray: 3 3; }
@@ -3102,7 +3102,10 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .stg-nm { position: absolute; top: 1px; bottom: 1px; border: 1.5px dashed var(--text-primary); border-radius: 2px; background: transparent; pointer-events: auto; }
 .stg-nm-key { display: inline-block; width: 14px; height: 9px; border: 1.5px dashed var(--text-primary); border-radius: 2px; vertical-align: -1px; }
 .stg-approved { background: color-mix(in srgb, var(--ly-committed) 60%, var(--surface-2)); }
+.stg-zoning { background: color-mix(in srgb, var(--ly-committed) 30%, var(--ly-proposed)); }
+.stg-servicing { background: color-mix(in srgb, var(--ly-committed) 80%, var(--surface-2)); }
 .stg-permitted { background: var(--ly-committed); }
+.stg-construction { background: color-mix(in srgb, var(--ly-committed) 55%, var(--ly-built)); }
 /* (Built since 2021 in the completed grey: told apart from Approved, no permit yet at a glance) */
 .stg-built { background: var(--ph-completed); }
 .stg-v { text-align: right; }
@@ -3838,9 +3841,6 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 /* In a narrow panel (the map's side panel, a phone): a narrower label column, every other year */
 @container (max-width: 560px) { .gt-row { --gt-l: 9.5rem; } .gt-yr:nth-child(even) { display: none; } .gt-body { margin-left: 0; } }
 /* Site servicing permits on the stage bars (js/ws-pages.js stageChartHTML): a band along the bottom */
-.stg-ssp { position: absolute; left: 0; bottom: 0; height: 5px; background: var(--pnl-room); pointer-events: auto; }
-.stg-ssp-t { display: block; font-size: var(--fs-1); color: var(--pnl-room); line-height: 1.2; }
-.stg-ssp-key { display: inline-block; width: 14px; height: 5px; background: var(--pnl-room); vertical-align: 1px; }
 .dcg-steps { list-style: none; margin: var(--space-2) 0; padding: 0 0 0 10px; border-left: 2px solid var(--border); display: grid; gap: 2px; }
 .dcg-steps li { position: relative; }
 .dcg-steps li::before { content: ''; position: absolute; left: -15px; top: 0.5em; width: 8px; height: 8px; border-radius: 50%; background: var(--text-muted); }

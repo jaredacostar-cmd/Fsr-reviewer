@@ -119,53 +119,49 @@
     for (const p of projects) { const k = rankOf(p); if (k >= approvedRank && k < completedRank) { const l = leftOf(p); if (l > 0) { u += l; n++; } } }
     return { units: u, n };
   }
-  // Growth in an area: the pipeline by stage, in the order a file moves (decided with the user): pre-
-  // application → in review → approved, no permit yet → permit issued or under construction → built since
-  // 2021. The approved layer (committed, D-5-1) splits on what is still to permit. ofDev: js/layers.js.
+  // Growth in an area: the pipeline by stage, the commitment ladder's rungs in order (js/layers.js
+  // LADDER, decided with the user Oct 23, 2026), then built since 2021. A development's units left to
+  // build sit on the highest rung they have reached: a site servicing permit lifts the whole development,
+  // a building permit the units it covers. Committed (the Peel rule) is Servicing permit and up.
   const STAGES = [
-    ['anticipated', 'Pre-application', 'pre-consultation, block or precinct plan: no formal file yet'],
-    ['proposed', 'In review', 'under formal review, not approved'],
-    ['approved', 'Approved, no permit yet', 'draft or site plan approved; no building permit for these units yet'],
-    ['permitted', 'Permit issued or under construction', 'approved, with building permits issued; not yet completed'],
+    ['early', 'Pre-application', 'pre-consultation, block or precinct plan: no formal file yet'],
+    ['review', 'In review', 'zoning, official plan, draft plan or site plan in review'],
+    ['zoning', 'Zoning approved', 'zoning approved (or under appeal), no draft or site plan approval yet'],
+    ['plan', 'Plan approved', 'draft or site plan approved, no site servicing or building permit yet: approved, not committed'],
+    ['servicing', 'Servicing permit', 'a water or wastewater site servicing permit filed or issued: commits the whole development'],
+    ['building', 'Building permit', 'a building permit filed or issued: commits the units it covers'],
+    ['construction', 'Under construction', 'a building permit, and its permits’ history says it is being built'],
     ['built', 'Built since 2021', 'completed since census day, not in the census yet'],
   ];
-  // nm: the units of developments that haven't moved since 2020 (js/layers.js movedSince), per stage;
-  // existing: units completed before the 2021 Census (in the census, so not a stage here) — the bars
-  // plus existing are the headline total.
-  // sspOf(p): the development has a site servicing permit (water / wastewater) applied for or issued
-  // (js/dc-gate.js): its units in each stage are also counted in ssp, drawn as a band on the bar. The
-  // stages themselves stay on building permits.
-  function stageRows(devs, ofDev, movedOf = (root.PeelLayers && root.PeelLayers.movedSince) || (() => true), sspOf = null) {
-    const ssp = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 };
-    const u = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 }, est = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 }, nm = { anticipated: 0, proposed: 0, approved: 0, permitted: 0, built: 0 };
+  const COMMITTED_STAGES = ['servicing', 'building', 'construction'];
+  // rungsOf(p): js/layers.js rungsOf ({ rungs, built, existing, estimated, left }); nm: the units of
+  // developments that haven't moved since 2020 (js/layers.js movedSince), per stage; existing: units
+  // completed before the 2021 Census (in the census, so not a stage here) — the bars plus existing are
+  // the headline total. An estimated count (the hatching) is spread over the stages its units are on.
+  function stageRows(devs, rungsOf, movedOf = (root.PeelLayers && root.PeelLayers.movedSince) || (() => true)) {
+    const zero = () => Object.fromEntries(STAGES.map(([k]) => [k, 0]));
+    const u = zero(), est = zero(), nm = zero();
     let existing = 0, nmExisting = 0;
     for (const it of devs) {
       // (an area's developments come as { p, share }: a site split between plans counts its share)
       const p = it && it.p ? it.p : it, sh = it && it.p ? it.share : 1;
-      const L = ofDev(p); if (!L || !L.layer) continue;
-      u.built += (L.parts.built || 0) * sh; u.proposed += (L.parts.proposed || 0) * sh; u.anticipated += (L.parts.anticipated || 0) * sh;
-      const c = L.parts.committed || 0, noPermit = Math.min(c, Math.max(0, L.toPermit || 0));
-      u.approved += noPermit * sh; u.permitted += (c - noPermit) * sh;
-      existing += (L.parts.existing || 0) * sh;
-      if (sspOf && sspOf(p)) {
-        ssp.built += (L.parts.built || 0) * sh; ssp.proposed += (L.parts.proposed || 0) * sh; ssp.anticipated += (L.parts.anticipated || 0) * sh;
-        ssp.approved += noPermit * sh; ssp.permitted += (c - noPermit) * sh;
-      }
-      if (!movedOf(p)) {
-        nm.built += (L.parts.built || 0) * sh; nm.proposed += (L.parts.proposed || 0) * sh; nm.anticipated += (L.parts.anticipated || 0) * sh;
-        nm.approved += noPermit * sh; nm.permitted += (c - noPermit) * sh; nmExisting += (L.parts.existing || 0) * sh;
-      }
-      if (L.estimated > 0) { const k = L.layer === 'committed' ? (noPermit >= c - noPermit ? 'approved' : 'permitted') : L.layer; if (k in est) est[k] += sh * Math.min(L.estimated, k === 'approved' ? noPermit : k === 'permitted' ? c - noPermit : L.parts[k] || 0); }
+      const R = rungsOf(p); if (!R) continue;
+      const parts = { ...R.rungs, built: R.built || 0 };
+      const moved = movedOf(p);
+      for (const k in u) { const v = (parts[k] || 0) * sh; u[k] += v; if (!moved) nm[k] += v; if (R.estimated > 0 && R.left > 0 && k !== 'built') est[k] += R.estimated * (parts[k] || 0) / R.left * sh; }
+      existing += (R.existing || 0) * sh; if (!moved) nmExisting += (R.existing || 0) * sh;
     }
     const total = Object.values(u).reduce((a, b) => a + b, 0);
     const notMoved = Object.values(nm).reduce((a, b) => a + b, 0);
-    return { rows: STAGES.map(([key, label, note]) => ({ key, label, note, units: u[key], est: est[key], nm: nm[key], ssp: ssp[key], pct: total > 0 ? u[key] / total * 100 : 0 })), total, existing, notMoved, nmExisting, ssp: sspOf ? Object.values(ssp).reduce((a, b) => a + b, 0) : null };
+    const committed = COMMITTED_STAGES.reduce((t, k) => t + u[k], 0);
+    return { rows: STAGES.map(([key, label, note]) => ({ key, label, note, units: u[key], est: est[key], nm: nm[key], pct: total > 0 ? u[key] / total * 100 : 0 })), total, existing, notMoved, nmExisting, committed };
   }
-  // A development's stage on this chart (its layer; an approved one by whether most of it is permitted).
-  function stageOf(L) {
-    if (!L || !L.layer) return null;
-    if (L.layer === 'committed') { const c = L.parts.committed || 0; return Math.min(c, L.toPermit || 0) >= c / 2 ? 'approved' : 'permitted'; }
-    return L.layer === 'existing' ? 'built' : L.layer;
+  // A development's stage on this chart: the rung holding most of its units left to build (the higher
+  // on a tie); built since 2021 once none are left.
+  function stageOf(R) {
+    if (!R) return null;
+    if (R.top) return R.top;
+    return R.built > 0 || R.existing > 0 ? 'built' : null;
   }
   // Estimated counts (the hatching): a file whose units are not stated on it but found online, from a
   // pre-consultation, from the wording or from building permits (js/layers.js ESTIMATED). Each file's
@@ -201,12 +197,13 @@
   function dormantNote(d) {
     return d && d.n ? ` Not counted: <strong>${fmtNum(Math.round(d.units))}</strong> homes in ${fmtNum(d.n)} dormant development${d.n === 1 ? '' : 's'} (no activity for 3+ years; 5 in review), included with the Find switch.` : '';
   }
+  const STAGE_CLS = { early: 'ly-anticipated', review: 'ly-proposed', zoning: 'stg-zoning', plan: 'stg-approved', servicing: 'stg-servicing', building: 'stg-permitted', construction: 'stg-construction', built: 'stg-built' };
   function stageChartHTML(st, census) {
-    const max = Math.max(1, ...st.rows.map(r => r.units)), cls = { anticipated: 'ly-anticipated', proposed: 'ly-proposed', approved: 'stg-approved', permitted: 'stg-permitted', built: 'stg-built' };
+    const max = Math.max(1, ...st.rows.map(r => r.units)), cls = STAGE_CLS;
     return `<div class="stg" role="table" aria-label="The pipeline by stage, in the order a file moves">
       <p class="stg-h small pnl-chart-t"><strong>The pipeline by stage, in the order a file moves</strong> <span class="pnl-chart-u">(dwellings)</span></p>
-      ${st.rows.map(r => `<div class="stg-row${st.on === r.key ? ' on' : ''}" role="row" title="${esc(r.label)}: ${esc(r.note)}"${st.click && r.units >= 0.5 ? ` data-ws-stage="${r.key}" tabindex="0"` : ''}><span class="stg-l" role="cell">${esc(r.label)}${st.ssp != null && r.ssp >= 0.5 && r.key !== 'built' ? `<small class="stg-ssp-t">${fmtNum(Math.round(r.ssp))} with a site servicing permit</small>` : ''}</span><span class="stg-track" role="cell"><i class="stg-fill ${cls[r.key]}" style="width:${(r.units / max * 100).toFixed(1)}%"></i>${st.ssp != null && r.ssp >= 0.5 && r.key !== 'built' ? `<i class="stg-ssp" style="width:${(Math.min(r.ssp, r.units) / max * 100).toFixed(1)}%" title="${fmtNum(Math.round(r.ssp))} of ${fmtNum(Math.round(r.units))} in developments with a site servicing permit applied for or issued"></i>` : ''}${r.est > 0 ? `<i class="stg-est" style="width:${(Math.min(r.est, r.units) / max * 100).toFixed(1)}%"></i>` : ''}${r.nm >= 0.5 ? `<i class="stg-nm" style="left:${(Math.max(0, r.units - r.nm) / max * 100).toFixed(1)}%;width:${(Math.min(r.nm, r.units) / max * 100).toFixed(1)}%" title="${fmtNum(Math.round(r.nm))} haven\u2019t moved since 2020"></i>` : ''}</span><b class="stg-v" role="cell">${fmtNum(Math.round(r.units))}</b><span class="stg-p muted" role="cell">${r.units > 0 && r.pct < 0.5 ? '&lt;1' : Math.round(r.pct)}%</span></div>`).join('')}
-      <p class="stg-foot small muted">${fmtNum(Math.round(st.total))} dwellings in the pipeline${census > 0 ? ` would add about <strong>${Math.round(st.total / census * 100)}%</strong> to the ${fmtNum(Math.round(census))} dwellings on the system (2021 census)` : ''}.${st.existing >= 0.5 ? ` With the ${fmtNum(Math.round(st.existing))} completed before the 2021 Census (already in it), <strong>${fmtNum(Math.round(st.total + st.existing))}</strong> in all.` : ''}${st.rows.some(r => r.est > 0) ? ' Hatched: counts estimated from the application (no unit count stated).' : ''}${st.ssp != null && st.ssp >= 0.5 ? ` <span class="stg-ssp-key" aria-hidden="true"></span> Green band: units in developments with a site servicing permit (water or wastewater) applied for or issued; the stage is still set by the building permit.` : ''}${dormantNote(st.dormant)}${st.notMoved >= 0.5 ? ` <span class="stg-nm-key" aria-hidden="true"></span> Outlined: ${fmtNum(Math.round(st.notMoved + (st.nmExisting || 0)))} in developments that haven\u2019t moved since 2020.` : ''}</p>
+      ${st.rows.map(r => `<div class="stg-row${st.on === r.key ? ' on' : ''}" role="row" title="${esc(r.label)}: ${esc(r.note)}"${st.click && r.units >= 0.5 ? ` data-ws-stage="${r.key}" tabindex="0"` : ''}><span class="stg-l" role="cell">${esc(r.label)}</span><span class="stg-track" role="cell"><i class="stg-fill ${cls[r.key]}" style="width:${(r.units / max * 100).toFixed(1)}%"></i>${r.est > 0 ? `<i class="stg-est" style="width:${(Math.min(r.est, r.units) / max * 100).toFixed(1)}%"></i>` : ''}${r.nm >= 0.5 ? `<i class="stg-nm" style="left:${(Math.max(0, r.units - r.nm) / max * 100).toFixed(1)}%;width:${(Math.min(r.nm, r.units) / max * 100).toFixed(1)}%" title="${fmtNum(Math.round(r.nm))} haven\u2019t moved since 2020"></i>` : ''}</span><b class="stg-v" role="cell">${fmtNum(Math.round(r.units))}</b><span class="stg-p muted" role="cell">${r.units > 0 && r.pct < 0.5 ? '&lt;1' : Math.round(r.pct)}%</span></div>`).join('')}
+      <p class="stg-foot small muted">${fmtNum(Math.round(st.total))} dwellings in the pipeline${census > 0 ? ` would add about <strong>${Math.round(st.total / census * 100)}%</strong> to the ${fmtNum(Math.round(census))} dwellings on the system (2021 census)` : ''}.${st.existing >= 0.5 ? ` With the ${fmtNum(Math.round(st.existing))} completed before the 2021 Census (already in it), <strong>${fmtNum(Math.round(st.total + st.existing))}</strong> in all.` : ''}${st.rows.some(r => r.est > 0) ? ' Hatched: counts estimated from the application (no unit count stated).' : ''}${st.committed >= 0.5 ? ` <strong>${fmtNum(Math.round(st.committed))}</strong> committed (Servicing permit and up: the Peel rule).` : ''}${dormantNote(st.dormant)}${st.notMoved >= 0.5 ? ` <span class="stg-nm-key" aria-hidden="true"></span> Outlined: ${fmtNum(Math.round(st.notMoved + (st.nmExisting || 0)))} in developments that haven\u2019t moved since 2020.` : ''}</p>
     </div>`;
   }
   // Review an FSR: what an FSR covers (Region of Peel, Functional Servicing Report Requirements, 2009)
@@ -221,7 +218,7 @@
     ['Fire flow (Fire Underwriters Survey) and pressures', 'eye', 'Not modelled here'],
   ];
 
-  const api = { pageHTML, sectionsOf, briefing, listHTML, reserveRows, pipeGrid, likeOf, consOf, LIKE, CONS, approvedNotBuilt, COVERAGE, STAGES, stageRows, stageOf, stageChartHTML, EST_KINDS, estimateRows };
+  const api = { pageHTML, sectionsOf, briefing, listHTML, reserveRows, pipeGrid, likeOf, consOf, LIKE, CONS, approvedNotBuilt, COVERAGE, STAGES, COMMITTED_STAGES, STAGE_CLS, stageRows, stageOf, stageChartHTML, EST_KINDS, estimateRows };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -723,8 +720,10 @@
     const trail = []; for (let x = n; x; x = x.parent ? r.nodes.get(x.parent) : null) trail.unshift(x);
     const crumbs = trail.map((x, i) => (i < trail.length - 1 ? `<button type="button" class="btn small link" data-ws-drill="${esc(x.id)}">${esc(x.name)}</button>` : `<strong>${esc(x.name)}</strong>`)).join(' <span aria-hidden="true">›</span> ');
     // The stages, for this area.
-    const DGs = root.PeelDcGate, sspOf = DGs && DGs.loaded() ? q => { const g = DGs.rowOf(q); return !!g && g.bucket === 'counted'; } : null;
-    const stage = Ly && Ly.ofDev ? stageRows(items, q => Ly.ofDev(q), undefined, sspOf) : null;
+    // (the rungs: the Peel rule with each development's site servicing permits, once data/dc-gate.json is in)
+    const DUi = root.PeelDemandUI, co = DUi && DUi.commitOpts ? DUi.commitOpts() : {};
+    const rOf = Ly && Ly.rungsOf ? q => Ly.rungsOf(q, co) : null;
+    const stage = rOf ? stageRows(items, rOf) : null;
     if (stage) { stage.click = true; stage.on = gStage; if (atPeel || n.kind === 'municipality') stage.dormant = dormantFor(atPeel ? App().state.muni : n.name); }
     const CAr = root.PeelCensusAreas, bc = atPeel && CAr && CAr.baselineCensus ? CAr.baselineCensus() : null;
     // (the area the developments are filtered to: a municipality filter at the Peel node is not all of Peel)
@@ -735,7 +734,7 @@
     if (G && G.aggregateTypes && deps) for (const { p, share } of items) { const e = G.aggregateTypes([p], deps).emp; for (const k in emp) emp[k] += (e[k] || 0) * share; }
     // (units exact; people and jobs to the nearest hundred, as Home and the panels: one rounding rule)
     const m = n.m, n0 = v => fmtNum(Math.round(v)), p0 = v => fmtNum(U.roundPop ? U.roundPop(v) : Math.round(v));
-    const anb = stage ? stage.rows.filter(x => x.key === 'approved' || x.key === 'permitted').reduce((t, x) => t + x.units, 0) : 0;
+    const com = stage ? stage.committed : 0, planU = stage ? (stage.rows.find(x => x.key === 'plan') || {}).units || 0 : 0;
     const f2031 = atPeel && tm && tm.figures ? tm.figures.find(f => /2031/.test(f.label)) : null;
     // The next level down (municipalities, plans, precincts and sub-areas), each opening its own level.
     const kids = n.children.filter(c => c.m.planned >= 0.5 || c.m.jobs >= 0.5).sort((x, y) => y.m.planned - x.m.planned);
@@ -746,11 +745,11 @@
     const STG = Object.fromEntries(STAGES.map(([k, l]) => [k, l]));
     const tools = `<div class="seg" role="group" aria-label="Stage"><button type="button" class="btn small${gStage === 'all' ? ' on' : ''}" data-ws-stage="all" aria-pressed="${gStage === 'all'}">All</button>${STAGES.map(([k, l]) => `<button type="button" class="btn small${gStage === k ? ' on' : ''}" data-ws-stage="${k}" aria-pressed="${gStage === k}">${esc(l.replace(' or under construction', ' / building'))}</button>`).join('')}</div>`;
     // Estimated counts in this area (at the chosen stage): how much of the pipeline is not stated on a file.
-    const es = Ly && Ly.ofDev ? estimateRows(items.filter(({ p }) => gStage === 'all' || stageOf(Ly.ofDev(p)) === gStage), q => Ly.ofDev(q)) : null;
+    const es = rOf ? estimateRows(items.filter(({ p }) => gStage === 'all' || stageOf(rOf(p)) === gStage), rOf) : null;
     const pipeU = stage ? (gStage === 'all' ? stage.total : (stage.rows.find(x => x.key === gStage) || {}).units || 0) : 0;
     const estRows = es && es.files.length ? [
       { kv: true, html: `<span><strong>${n0(es.units)}</strong> of ${n0(pipeU)} dwellings${pipeU > 0 ? ` (${Math.round(es.units / pipeU * 100)}%)` : ''} are estimated, in ${fmtNum(es.files.length)} ${es.files.length === 1 ? 'file' : 'files'} with no unit count stated: ${Object.entries(es.byKind).sort((a, b) => b[1] - a[1]).map(([k, v]) => `${n0(v)} ${esc(EST_KINDS[k])}`).join(', ')}. ${es.files.some(x => Object.keys(x.kinds).length > 1) ? ' A file with more than one kind of estimate is split between them in proportion to their units.' : ''} Confirm these counts with the municipality.</span>` },
-      ...es.files.map(x => ({ attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.est)} est.</span></div><small class="pnl-r-line">${Object.keys(x.kinds).length > 1 ? `${esc(Object.entries(x.kinds).map(([k, v]) => `${n0(v)} ${EST_KINDS[k]}`).join(' + '))} (split in proportion)` : esc(EST_KINDS[Object.keys(x.kinds)[0]] || '')} · ${esc(STG[stageOf(Ly.ofDev(x.p))] || '')} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}</small>${estFileHTML(x.p)}` })),
+      ...es.files.map(x => ({ attrs: { 'data-ws-pick': x.p.key, 'data-ws-as': 'site', title: `Check ${x.p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.p.title)}</span><span class="pnl-r-year">${n0(x.est)} est.</span></div><small class="pnl-r-line">${Object.keys(x.kinds).length > 1 ? `${esc(Object.entries(x.kinds).map(([k, v]) => `${n0(v)} ${EST_KINDS[k]}`).join(' + '))} (split in proportion)` : esc(EST_KINDS[Object.keys(x.kinds)[0]] || '')} · ${esc(STG[stageOf(rOf(x.p))] || '')} · ${esc(x.p.municipality)}${x.share < 0.99 ? ` · ${Math.round(x.share * 100)}% in this area` : ''}</small>${estFileHTML(x.p)}` })),
     ] : [];
     // Site servicing permits (js/dc-gate.js, data/dc-gate.json): the area's pipeline units by whether a
     // site servicing permit (each city's own name for it) has been applied for. The DC count's rule.
@@ -794,7 +793,7 @@
     const whereOf = new Map();
     const kidDevs = kids.map(c => { const cm = nodeDevs(c); for (const [p, sh] of cm) { const w = whereOf.get(p); if (!w || sh > w[1]) whereOf.set(p, [c.name, sh]); } return [c, cm]; });
     const devRow = (p, share) => {
-      const st = Ly ? stageOf(Ly.ofDev(p)) : null;
+      const st = rOf ? stageOf(rOf(p)) : null;
       if (!st || !((p.units || 0) > 0) || (gStage !== 'all' && st !== gStage)) return null;
       const g = DG && DG.loaded() ? DG.rowOf(p) : null, pt = f && p.lat != null ? f.pt(p.lng, p.lat) : null;
       return { key: p.key, title: p.title, st, share, units: p.units * share, left: (Ph && Ph.unbuiltOf ? Ph.unbuiltOf(p) : 0) * share, ss: g ? g.bucket : null, last: lastOf(p), quiet: !moved(p),
@@ -821,13 +820,13 @@
     const treemap = DT ? DT.treemapHTML(boxes, { stageLabel: stLabel, caption: `${gStage === 'built' ? 'Homes built since 2021' : 'Homes left to build'}: ${kids.length ? `a box per ${levelWord.toLowerCase()}, ` : ''}a tile per development (colour: its stage). Hover one to find it on the map; click to open it.` }) : '';
     const answer = atPeel
       ? `${pl.answer}${f2031 ? ` About <strong>${f2031.v}</strong> units are expected by 2031 (${f2031.ctx}).` : ''}${svcLine}`
-      : `<strong>${esc(n.name)}</strong> ${trail[1] && trail[1] !== n ? ` (${esc(trail[1].name)})` : ''} holds <strong>${n0(m.planned)}</strong> planned units, ${p0(m.people)} people${m.jobs >= 0.5 ? ` and ${p0(m.jobs)} jobs` : ''} at build-out; ${n0(anb)} approved, not yet built, ${n0(m.left)} left to build.${svcLine}`;
+      : `<strong>${esc(n.name)}</strong> ${trail[1] && trail[1] !== n ? ` (${esc(trail[1].name)})` : ''} holds <strong>${n0(m.planned)}</strong> planned units, ${p0(m.people)} people${m.jobs >= 0.5 ? ` and ${p0(m.jobs)} jobs` : ''} at build-out; ${n0(m.left)} left to build, ${n0(com)} of them committed (a site servicing or building permit) and ${n0(planU)} more plan approved, not committed.${svcLine}`;
     return areaSection(atPeel ? (App().state.muni || '') : n.name, { id: 'growth', eyebrow: `${esc(label('growth'))} · ${crumbs}${atPeel ? '' : ` <span class="page-kind">${esc(kind(n))}</span>`}`, name: atPeel ? 'How much is coming, where, and how fast?' : n.name, status: null, identity: atPeel ? esc(`${App().state.muni || 'Peel'} · ${fmtNum(plans.length)} plans with planned units`) : esc(`${fmtNum(dm.size)} developments${trail.length > 2 ? ` · in ${trail[trail.length - 2].name}` : ''}`), scen: scen(), answer,
       top: `${exploreBar('')}${root.PeelSections ? sectionBar(root.PeelSections.AREA, gSec, 'data-ws-asec') : ''}`,
       figures: [
         // (units and jobs at the Scenario's counting basis, as the people and the Overview: one basis)
         basis === 'all' ? { v: n0(m.planned), u: 'units', label: 'planned', ctx: `${n0(m.left)} left to build` } : { v: n0(m.counted), u: 'units', label: G.basisUnits(basis), ctx: `of ${n0(m.planned)} planned` },
-        { v: n0(anb), u: 'units', label: 'approved, not yet built', ctx: 'past their first planning approval' },
+        { v: n0(com), u: 'units', label: 'committed', ctx: `${Ly && Ly.throughText ? Ly.throughText(Ly.COMMIT_RUNG) : 'servicing or building permit'} · ${n0(planU)} more plan approved, not committed` },
         { v: p0(m.people), u: 'people', label: 'at build-out', ctx: 'Peel design criteria' },
         basis === 'all' ? { v: p0(emp.jobs >= 0.5 ? emp.jobs : m.jobs), u: 'jobs', label: 'employment', ctx: emp.planned >= 1 ? `${n0(emp.planned)} m² of floor area` : 'no employment floor area stated' } : { v: p0(m.jobs), u: 'jobs', label: 'employment', ctx: G.basisUnits(basis) },
       ],
@@ -840,7 +839,7 @@
         ...(atPeel ? (pl.lists || []).filter(l => /municipality/i.test(l.title)) : []),
       ],
       map: { svg: mapSvg, attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' }, label: `Show ${n.name} on the map`, caption: ring ? `<span class="hm-key hm-key-area"></span> ${esc(n.name)} <span class="hm-key hm-key-dev"></span> its developments (sized by units)` : '<span class="hm-key hm-key-dev"></span> developments of 50+ units (sized by units) · municipal outlines', after: treemap },
-      method: `${pl.method} Drill-down: Growth › Areas' plan tree (Peel, municipality, secondary plan or character area, precinct or sub-area, then "not in a plan" and "elsewhere in the plan"); every level equals the sum of the levels under it, and a site split between plans counts its share. The stages follow a file: pre-application (pre-consultation, block or precinct plan), in review, approved (draft or site plan approved; split on whether its building permits are issued), built since the 2021 census. Estimated counts: a file's units left to build that are not stated on it (found online, a pre-consultation estimate, an estimate from the wording, or counted from building permits), the hatching on the stage bars. A file with more than one kind of estimate has its estimate split between the kinds in proportion to their units. Employment: the floor area the applications state and the jobs it holds at Peel's floor space per job.${tm && atPeel ? ` ${tm.method}` : ''}`,
+      method: `${pl.method} Drill-down: Growth › Areas' plan tree (Peel, municipality, secondary plan or character area, precinct or sub-area, then "not in a plan" and "elsewhere in the plan"); every level equals the sum of the levels under it, and a site split between plans counts its share. The stages are the commitment ladder (one set of names on every screen): pre-application, in review, zoning approved, plan approved (draft or site plan, MECP D-5-1), servicing permit, building permit, under construction, then built since the 2021 census. A development's units left to build sit on the highest rung they have reached: a water or wastewater site servicing permit (filed or issued) lifts the whole development, a building permit only the units it covers, and the rest stay on its planning rung. Committed (the Peel rule, the default everywhere but the treatment plants' reserve) is Servicing permit and up; a permit can come before the plan approval. A servicing permit issued 3 or more years ago with no building permit since (possibly lapsed) commits nothing. Estimated counts: a file's units left to build that are not stated on it (found online, a pre-consultation estimate, an estimate from the wording, or counted from building permits), the hatching on the stage bars. A file with more than one kind of estimate has its estimate split between the kinds in proportion to their units. Employment: the floor area the applications state and the jobs it holds at Peel's floor space per job.${tm && atPeel ? ` ${tm.method}` : ''}`,
       sources: pl.sources,
       actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'Show on the map', attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } }, !atPeel ? { label: '↑ Up a level', attrs: { 'data-ws-drill': n.parent || 'peel' } } : null] });
   }
@@ -1098,6 +1097,8 @@
     const f = frame(360, 300, bb); if (!f) return '';
     outletFrame = f;
     const inBB = g => g.some(([x, y]) => x >= bb[0] && x <= bb[2] && y >= bb[1] && y <= bb[3]), out = [];
+    // (the local sewers under 300 mm first, thinner: data/sewers-local.json)
+    if (SC.localLoaded && SC.localLoaded()) for (const { i } of SC.localNear(p.lng, p.lat, 1100)) { const g = SC.localCoords(i); if (inBB(g)) out.push(`<path d="${f.line(g)}" class="hm-sw hm-sw-x"/>`); }
     for (const pp of pipes) { const g = pipePts(pp[10]); if (!inBB(g)) continue; out.push(`<path d="${f.line(g)}" class="hm-sw ${pp[0] >= 900 ? 'hm-sw-l' : pp[0] >= 450 ? 'hm-sw-m' : 'hm-sw-s'}"/>`); }
     const di = App() && App().state.dcInfra;
     if (di) for (const ln of di.wastewater.lines) if (inBB(ln.g)) out.push(`<path d="${f.line(ln.g)}" class="hm-dc hm-dc-wastewater"><title>${esc(ln.p || ln.c || '')}${ln.y ? ` · ${ln.y}` : ''}</title></path>`);
@@ -1144,7 +1145,8 @@
       const path = setR && setR !== 'sewer' ? setR : !setR && !(p.dr && p.dr.length) && root.PeelSewerTrace ? root.PeelSewerTrace.dcSewerPath(p) : null;
       const at = path ? path.coords[0] : k != null && k >= 0 ? DO.nearestOn([p.lng, p.lat], root.PeelSewerCap.pipeCoords(pipes[k])) : null;
       const distM = at ? Math.round(root.PeelDcInfra.dcM([p.lng, p.lat], at)) : null, st = at ? streetAtPt(at[0], at[1]) : '';
-      const what = rec && rec.mode === 'set' && rec.kind === 'cap' ? `New sanitary sewer ${esc(rec.project || '')}, being built`
+      const what = rec && rec.mode === 'set' && rec.kind === 'local' ? `${rec.mm ? `${rec.mm} mm ` : ''}local sanitary sewer${rec.at && streetAtPt(rec.at[0], rec.at[1]) ? ` on ${esc(streetAtPt(rec.at[0], rec.at[1]))}` : ''}, draining to the ${k != null && k >= 0 ? `${pipes[k][0]} mm` : ''} trunk`
+        : rec && rec.mode === 'set' && rec.kind === 'cap' ? `New sanitary sewer ${esc(rec.project || '')}, being built`
         : path && path.first.cap ? `Along the new sanitary sewer ${esc(path.first.p || '')} (being built)`
         : path ? `Along the planned DC main ${esc(path.first.p || path.first.c)}${path.first.d ? ` (${path.first.d} mm)` : ''}` : k != null && k >= 0 ? `${pipes[k][0]} mm sanitary sewer${st ? ` on ${esc(st)}` : ''}` : 'No sewer within reach';
       const why = rec && rec.mode === 'set' ? DO.recText(rec) : path ? `off the existing sewers: its route along the planned mains${rec ? ` · ${DO.recText(rec)}` : ' · not checked'}` : `the nearest sewer of 300 mm or more${distM != null ? `, ${fmtNum(distM)} m from the site` : ''}${rec ? ` · ${DO.recText(rec)}` : ' · not checked'}`;
@@ -1170,7 +1172,7 @@
       const evHTML = list => `<ul class="dvo-ev">${list.map(e => `<li class="ev-${e.tone}"><span aria-hidden="true">${EV_ICON[e.tone]}</span>${esc(e.text)}</li>`).join('')}</ul>`;
       const curC = DO.currentCand(p, { k, path }), checks = S.cand ? DO.checksFor(p, S.cand, sel.first) : DO.checksFor(p, curC, sel.first);
       const nearHTML = S.mode === 'idle' ? '' : near.length ? `<h4>Nearby infrastructure</h4><ol class="dvo-near">${near.map((c, i) => {
-        const on = DO.sameOutlet(S.cand, c), now = DO.isCurrent(c, { k, path });
+        const on = DO.sameOutlet(S.cand, c), now = DO.sameOutlet(curC, c);
         return `<li><button type="button" class="dvo-near-b${on ? ' on' : ''} fit-${c.fit || 'ok'}" data-dvo="near:${i}" aria-pressed="${on}"><span class="dvo-near-n">${i + 1}</span><span>${esc(c.label)}<small>${esc(c.status || '')}${c.kind === 'sewer' && c.mm < 300 ? ' · local sewer' : ''}${now ? ' · <b>its outlet now</b>' : ''}</small>${(() => { const e = (c.checks || []).find(x => x.tone === 'bad') || (c.checks || []).find(x => x.tone === 'warn'); return e ? `<small class="ev-${e.tone}">${EV_ICON[e.tone]} ${esc(e.text)}</small>` : ''; })()}</span><b class="dvo-near-m">${fmtNum(Math.round(c.m))} m</b></button></li>`;
       }).join('')}</ol>` : '<p class="small muted">No sewer or planned main within 400 m: tap the map.</p>';
       panel = `<section class="dvo-panel" data-psec="list"><div class="pnl-list-h"><h3>${esc(p.title)}</h3><button type="button" class="btn small link" data-pnl-dev="${esc(p.key)}">Open the development ›</button></div>
@@ -1181,7 +1183,7 @@
         ${S.mode !== 'pick' ? src : ''}${btns}
         ${DO.edits() ? `<p class="small"><button type="button" class="btn small link" data-dvo="export">Export ${fmtNum(DO.edits())} edit${DO.edits() === 1 ? '' : 's'} (dev-outlets.json)</button> <span class="muted">to commit, so everyone sees them</span></p>` : ''}</section>`;
       map = `<div class="dvo-map${S.mode === 'pick' ? ' picking' : ''}" data-dvo-map>${S.mode === 'pick' ? '<p class="dvo-banner small" role="status">Pick from the list, or tap the sewer (existing, being built or planned) it discharges to (Esc to cancel)</p>' : ''}${outletMap(p, { k, path, at }, S.cand, near)}</div>`;
-      cap = `<span class="hm-key hm-key-dvo-route"></span> its route now ${S.cand ? '<span class="hm-key hm-key-dvo-alt"></span> the new route ' : ''}<span class="hm-key hm-key-pipe"></span> sanitary sewers (thicker: larger) <span class="hm-key hm-dc-wastewater"></span> planned DC mains <span class="hm-key hm-key-cap"></span> sewers being built${near.length ? ' · numbers: the nearby list' : ''}`;
+      cap = `<span class="hm-key hm-key-dvo-route"></span> its route now ${S.cand ? '<span class="hm-key hm-key-dvo-alt"></span> the new route ' : ''}<span class="hm-key hm-key-pipe"></span> sanitary sewers (thicker: larger; thinnest: local, under 300 mm) <span class="hm-key hm-dc-wastewater"></span> planned DC mains <span class="hm-key hm-key-cap"></span> sewers being built${near.length ? ' · numbers: the nearby list' : ''}`;
     }
     return { id: 'outlets', eyebrow: eyebrow('outlets'), name: 'Where does each development discharge?',
       status: nRec.length ? { tone: 'stage', text: `${fmtNum(nRec.length)} reviewed` } : null,
@@ -1195,7 +1197,7 @@
       ],
       lists: [{ html: panel }, { html: filters }, { title: 'To review, largest first', rows, total: rows.length, all: S.all, see: { 'data-dvo': 'all' } }],
       map: sel ? { title: 'Where it discharges', html: map, caption: cap } : null,
-      method: 'A development discharges to the nearest sanitary sewer of 300 mm or more (Region sewer records), or, off the existing sewers, along the planned DC mains to an existing sewer. A reviewed outlet replaces that: confirmed (checked, unchanged) or set by hand (a sewer picked from the nearby list: existing sewers of any size, sewers being built (the Region’s capital projects, tendered or further) and planned DC mains within 400 m, or tapped on the map; kept as its point and size so it survives a data rebuild). The sewer loads, the trace and the DC projects allocation (js/dc-impact.js) follow it. Each outlet is checked against the development: its stage (built: a sewer in service; a building or site servicing permit: in service or being built, not a DC main still to tender; earlier: anything), in service by first homes (the whole route, the DC mains it needs downstream included), a sewer installed after the development was built (or with it: likely its own), gravity (the lidar ground at the site, 1.5 m down and 0.5 % fall, over the sewer’s invert; datum shift 0.41 m) and the drainage area. The checks flag, never block. Edits stay in this browser until exported and committed as data/dev-outlets.json.',
+      method: 'A development discharges to the nearest sanitary sewer of 300 mm or more (Region sewer records), or, off the existing sewers, along the planned DC mains to an existing sewer. A reviewed outlet replaces that: confirmed (checked, unchanged) or set by hand (a sewer picked from the nearby list: existing sewers (trunks of 300 mm+, and local sewers under 300 mm from data/sewers-local.json), sewers being built (the Region’s capital projects, tendered or further) and planned DC mains within 400 m, or tapped on the map; kept as its point and size so it survives a data rebuild). The sewer loads, the trace and the DC projects allocation (js/dc-impact.js) follow it. Each outlet is checked against the development: its stage (built: a sewer in service; a building or site servicing permit: in service or being built, not a DC main still to tender; earlier: anything), in service by first homes (the whole route, the DC mains it needs downstream included), a sewer installed after the development was built (or with it: likely its own), gravity (the lidar ground at the site, 1.5 m down and 0.5 % fall, over the sewer’s invert; datum shift 0.41 m) and the drainage area. The checks flag, never block. Edits stay in this browser until exported and committed as data/dev-outlets.json.',
       sources: 'Region of Peel sanitary sewers; 2026 DC capital maps (draft); the municipal application records; reviewers’ sources (FSRs, site servicing permits).',
       actions: [{ label: DO.edits() ? `Export ${fmtNum(DO.edits())} edit${DO.edits() === 1 ? '' : 's'}` : 'Export (nothing yet)', attrs: { 'data-dvo': 'export' }, primary: !!DO.edits() }] };
   }
