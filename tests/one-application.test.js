@@ -82,3 +82,10 @@ test('real data: the split applications are one development each, each building 
     assert.equal((d.c || []).reduce((t, x) => t + x[1], 0), d.u, `${g.key}: parts add up`);
   }
 });
+
+test('hasUnits: the Overview link and the Growth table follow the same test', () => {
+  assert.equal(EF.hasUnits(null), false);
+  assert.equal(EF.hasUnits({ years: [{}], parcels: [{ count: null }] }), false, 'no stated count: no table, so no link');
+  assert.equal(EF.hasUnits({ years: [{}], parcels: [{ count: 195 }] }), true, 'one parcel with a count: a table');
+  assert.equal(EF.unitsSummary({ years: [{}], parcels: [{ count: null, steps: [] }] }), '', 'no link text without a table');
+});

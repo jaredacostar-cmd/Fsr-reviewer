@@ -354,9 +354,12 @@
     const last = years[years.length - 1] || { land: 0, built: 0 };
     return { base, parcels, spans: ownSpans, years, flags, totals: { land: last.land, built: last.built } };
   }
+  /** Whether the land has a units table: a parcel stating a count, and years to show it in. The
+   *  Overview's link and the Growth fold both follow it (a link to a table that isn't there opens nothing). */
+  const hasUnits = u => !!(u && u.years.length && u.parcels.some(pc => pc.count > 0));
   /** One sentence: built, and what is proposed on top (a range where a resubmission changed it). */
   function unitsSummary(u) {
-    if (!u || !u.parcels.length) return '';
+    if (!hasUnits(u)) return '';
     const built = u.parcels.filter(pc => pc.built), open = u.parcels.filter(pc => !pc.built && pc.count > 0);
     const rng = pc => (pc.stated != null && pc.stated !== pc.count ? `≈${num(Math.min(pc.count, pc.stated))}–${num(Math.max(pc.count, pc.stated))}` : num(pc.count));
     const b = built.length ? `${num(built.reduce((t, pc) => t + pc.count, 0))} homes built on ${built.length} parcel${built.length === 1 ? '' : 's'} (${built.map(pc => `${pc.letter} ${num(pc.count)}`).join(' + ')})` : 'No homes built on this land yet';
@@ -430,7 +433,9 @@
     const missing = implied(p, known(), since);
     const rows = layered(p, allProjects(), base);
     const later = rows.filter(x => x.r !== base);
-    if (!missing.length && !later.some(x => !x.own)) return '';
+    // (also when the count on the land has a story: two parcels or more, or a count that changed)
+    const uu = unitsOf(p), story = hasUnits(uu) && (uu.parcels.filter(pc => pc.count > 0).length > 1 || uu.parcels.some(pc => pc.steps.filter(s => s.counted).length > 1));
+    if (!missing.length && !later.some(x => !x.own) && !story) return '';
     const diffs = discrepancies(p, base, later, missing);
     const live = found.get(p.key);
     const canLook = missing.some(m => m.kind === 'revision' || m.kind === 'lot' || m.kind === 'named');
@@ -466,8 +471,7 @@
    *  parcel's files in order with the count each states. */
   function unitsHTML(p, opts = {}) {
     if (!p || p.parent) return '';
-    const u = unitsOf(p); if (!u || !u.parcels.length || !u.years.length) return '';
-    if (u.parcels.length < 2 && !u.parcels.some(pc => pc.steps.filter(s => s.counted).length > 1)) return '';
+    const u = unitsOf(p); if (!hasUnits(u)) return '';
     const ps = u.parcels;
     const head = `<tr><th>Year</th>${ps.map(pc => `<th class="num" title="${esc(pc.name)}${pc.key ? ` · ${esc(pc.key)}` : ''}">${sw(pc)}${esc(pc.letter)}</th>`).join('')}<th class="num">On the land</th><th class="num">Built</th></tr>`;
     const body = u.years.map((y, i) => {
@@ -533,7 +537,11 @@
   if (!isNode && typeof document !== 'undefined') document.addEventListener('click', e => {
     const t = e.target.closest && e.target.closest('[data-ef-lookup],[data-ef-map],[data-ef-open],[data-ef-growth]'); if (!t) return;
     const k = t.dataset.efLookup || t.dataset.efMap || t.dataset.efOpen || t.dataset.efGrowth, p = projectByKey(k); if (!p) return;
-    if (t.dataset.efGrowth) { const AT = root.PeelAnalysisTabs; if (AT && AT.openTab) AT.openTab('growth', 'pipeline'); setTimeout(() => { const f = document.getElementById('ef-units-fold'), el = document.getElementById('ef-units'); if (f) f.open = true; if (el) el.scrollIntoView({ block: 'start' }); }, 50); return; }
+    if (t.dataset.efGrowth) {
+      const AT = root.PeelAnalysisTabs, DT = root.PeelDataTab; if (AT && AT.openTab) AT.openTab('growth', 'pipeline');
+      // (on a phone the bottom sheet opens full, so the table is in view, not under the map)
+      if (DT && DT.shellNarrow && DT.shellNarrow() && App() && App().setAnalysisSnap) App().setAnalysisSnap('full');
+      setTimeout(() => { const f = document.getElementById('ef-units-fold'), el = document.getElementById('ef-units'); if (f) f.open = true; if (el) el.scrollIntoView({ block: 'start' }); }, 50); return; }
     if (t.dataset.efOpen) { const DN = root.PeelDevNav; if (DN && DN.showDetail) DN.showDetail(p); return; }
     if (t.dataset.efMap) { showOnMap(p); return; }
     const st = App() && App().state, since = (st && Number(st.sinceYear)) || null;
@@ -544,7 +552,7 @@
       .then(() => { rerender(); if (mapKey === p.key) { mapKey = null; showOnMap(p); } });
   });
 
-  const api = { implied, baseOf, layered, discrepancies, lookup, html, yearOfRef, showOnMap, statedOf, revisionOf, addOf, frameOf, unitsOverTime, unitsSummary, unitsHTML };
+  const api = { implied, baseOf, layered, discrepancies, lookup, html, yearOfRef, showOnMap, statedOf, revisionOf, addOf, frameOf, unitsOverTime, unitsSummary, unitsHTML, hasUnits };
   if (isNode) module.exports = api;
   else root.PeelEarlierFiles = api;
 })(typeof window !== 'undefined' ? window : globalThis);

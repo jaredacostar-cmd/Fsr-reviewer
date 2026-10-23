@@ -787,7 +787,7 @@
     // ---- newly exposed core internals (used cross-module) ----
     applyFilters, matches, layerOf, scheduleRebuild, recount, loadSource, showLoading, saveSources,
     applySnapshot, jobsOf, empOf, clearEmp, mergeCriteria, setUserUnits,
-    timeActive, yearsOf, setSheetH, refreshTheme,
+    timeActive, yearsOf, setSheetH, refreshTheme, setAnalysisSnap,
     // Phase 6: full-snapshot load state (startup index paints first; the detail
     // view awaits the full records).
     fullSnapshotReady: () => fullLoaded, whenFullSnapshot: () => loadFullSnapshot(),
