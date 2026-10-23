@@ -301,6 +301,73 @@ test('quantities: on a real design, the CSV block with the standard\'s slopes be
   assert.match(src('js/sewer-print.js'), /<h2>Quantities<\/h2>/);
 });
 
+test('a design in a link: the lines (to about 0.1 m), the branches and the form travel; anything else is refused', () => {
+  const pts = [{ lat: 43.700001, lng: -79.700002 }, { lat: 43.70123, lng: -79.69876 }, { lat: 43.7021, lng: -79.6977 }];
+  const br = [{ pts: [{ lat: 43.71, lng: -79.7 }, { lat: 43.70123, lng: -79.69876 }], form: { pop: '200', ha: '3', junk: 'x' } }];
+  const form = { q: '', pop: '3200', jobs: '', ha: '40', ici: true, avoid: false, spacing: 190, mode: 'gravity', vfd: false, ww: '', sLo: '0.3', sHi: '1.0', dmm: '375', fmdmm: '', extra: '<b>' };
+  const s = SDR.encodeDesign({ pts, branches: br, form, roads: true });
+  assert.match(s, /^[A-Za-z0-9_-]+$/, 'base64url: safe in a link');
+  const d = SDR.decodeDesign(s);
+  d.pts.forEach((p, i) => { assert.ok(near(p.lat, pts[i].lat, 1e-6) && near(p.lng, pts[i].lng, 1e-6)); });
+  assert.deepEqual(d.branches[0].form, { pop: '200', ha: '3' });
+  assert.equal(d.roads, true);
+  assert.deepEqual(d.form, { pop: '3200', ha: '40', spacing: '190', sLo: '0.3', sHi: '1.0', dmm: '375', ici: true, avoid: false, vfd: false, mode: 'gravity' });
+  // the standard's own slopes (both blank) come back blank, not as the form's 0.3–1%
+  const s2 = SDR.decodeDesign(SDR.encodeDesign({ pts, form: { ...form, sLo: '', sHi: '', mode: 'pumped', vfd: true } }));
+  assert.equal(s2.form.sLo, ''); assert.equal(s2.form.sHi, ''); assert.equal(s2.form.mode, 'pumped'); assert.equal(s2.form.vfd, true);
+  // refused: not base64, not a design, out of range, a field of the wrong kind dropped
+  assert.equal(SDR.decodeDesign('%%%'), null);
+  assert.equal(SDR.decodeDesign(btoa(JSON.stringify({ v: 2, m: [[1, 2], [3, 4]] }))), null);
+  assert.equal(SDR.decodeDesign(btoa(JSON.stringify({ v: 1, m: [[1, 2]] }))), null, 'one point is not a line');
+  assert.equal(SDR.decodeDesign(btoa(JSON.stringify({ v: 1, m: [[95000000, 0], [1, 1]] }))), null, 'latitude over 90');
+  const x = SDR.decodeDesign(btoa(JSON.stringify({ v: 1, m: [[43700000, -79700000], [10, 10]], f: { pop: '<script>', ha: 12 } })));
+  assert.deepEqual([x.form.pop, x.form.ha], [undefined, undefined], 'only numbers as text');
+});
+
+test('exports: NAD83 / UTM zone 17N; GeoJSON, KML and DXF of the reaches, maintenance holes and the connection', () => {
+  // UTM: on the central meridian (81° W) at the equator, and at 45° N (k0 × the meridian arc)
+  assert.deepEqual(SDR.utm17(0, -81).map(v => Math.round(v * 1000) / 1000), [500000, 0]);
+  assert.ok(near(SDR.utm17(45, -81)[1], 4982950.40, 0.01));
+  const [E, N] = SDR.utm17(43.642566, -79.387057);   // CN Tower: about 630,090 E 4,833,439 N
+  assert.ok(near(E, 630090, 15) && near(N, 4833439, 15), `${E} ${N}`);
+  const ll = (lat, lng) => ({ lat, lng });
+  const d = { dmm: 200, q: 3.5, reaches: [{ from: 0, to: 1, dmm: 200, L: 100.1, S: 0.01, inv_up: 229.2, inv_dn: 228.2, q: 3.5, qFull: 32.8, v: 0.68 }],
+    mhs: [{ ll: ll(43.7, -79.7), label: 'MH 1 (start)', g: 232, depth: 2.8, inv_out: 229.2, ins: [] }, { ll: ll(43.7009, -79.7), label: 'MH 2 (connection) <&>', g: 231.6, depth: 3.4, inv_out: null, ins: [{ inv: 228.2 }], drop: 0.03 }] };
+  const conn = { lat: 43.7009, lng: -79.7, dmm: 450, id: 'SAN-1', invert: 227.9, g: [[-79.7, 43.7], [-79.7, 43.702]] };
+  const gj = JSON.parse(SDR.toGeoJSON(d, conn, { note: 'screening' }));
+  assert.equal(gj.type, 'FeatureCollection');
+  assert.deepEqual(gj.features.map(f => f.properties.kind), ['reach', 'maintenance hole', 'maintenance hole', 'connection']);
+  assert.deepEqual(gj.features[0].geometry.coordinates, [[-79.7, 43.7], [-79.7, 43.7009]]);
+  assert.equal(gj.features[0].properties.slope_pct, 1);
+  assert.deepEqual(gj.features[2].properties.invert_in_m, [228.2]);
+  const kml = SDR.toKML(d, conn, {});
+  assert.match(kml, /^<\?xml version="1\.0" encoding="UTF-8"\?>\n<kml xmlns="http:\/\/www\.opengis\.net\/kml\/2\.2">/);
+  assert.match(kml, /<name>MH 2 \(connection\) &lt;&amp;&gt;<\/name>/, 'escaped');
+  assert.match(kml, /<LineString><tessellate>1<\/tessellate><coordinates>-79\.7,43\.7,0 -79\.7,43\.7009,0<\/coordinates><\/LineString>/);
+  const dxf = SDR.toDXF(d, conn), L = dxf.split('\n');
+  assert.equal(L[0], '0'); assert.equal(L[1], 'SECTION'); assert.equal(L[3], 'ENTITIES');
+  assert.equal(L[L.length - 2], 'EOF');
+  const ent = t => L.filter((v, i) => i % 2 === 1 && v === t && L[i - 1] === '0').length;
+  assert.equal(ent('LINE'), 1 + 1, 'the reach, and the existing sewer');
+  assert.equal(ent('CIRCLE'), 2 + 1, 'the maintenance holes, and the connection');
+  assert.equal(ent('TEXT'), 1 + 2);
+  const li = L.indexOf('SAN-NEW'), z = k => +L[L.indexOf(k, li) + 1];
+  assert.equal(z('30'), 229.2); assert.equal(z('31'), 228.2);
+  assert.ok(near(+L[L.indexOf('10', li) + 1], SDR.utm17(43.7, -79.7)[0], 0.001));
+});
+
+test('wired: the link and the downloads on the result, and a link opens the design', () => {
+  const s = src('js/sewer-designer.js');
+  for (const a of ['link', 'geojson', 'kml', 'dxf']) assert.match(s, new RegExp(`data-sd-act="${a}"`));
+  assert.match(s, /return `\$\{base\}\$\{\/#\$\/\.test\(base\) \? '' : '&'\}sd=\$\{sd\}`;/);
+  assert.match(s, /const linked = linkQ && linkQ\.get\('sd'\)/);
+  assert.match(s, /if \(Lb && !Lb\.on\('sewer'\)\) Lb\.set\('sewer', true\);/);
+  assert.match(s, /await finish\(\); if \(!S\.conn\) return;/);
+  // a link made on the Labs page opens on the page (its switch turned on first)
+  assert.match(s, /linkedPage = !!linkQ && linkQ\.get\('w'\) === 'p:sewer'/);
+  assert.match(s, /if \(linkedPage && W && W\.openPage && !onPage\(\)\) \{ W\.openPage\('sewer'\);/);
+});
+
 test('Labs › Sewer designer: a page of its own in Home’s sidebar while its switch is on', () => {
   const W = require('../js/workspaces.js');
   assert.equal(W.LAB_PAGES.sewer.lab, 'sewer');

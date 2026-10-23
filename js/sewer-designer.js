@@ -180,6 +180,101 @@
       avgDepth: L ? depthLen / L : 0, maxDepth, mhs: d.mhs.length, structures: d.structures || 0, work: QWORK,
     };
   }
+  // ---- A design in a link (#…&sd=…): the drawn lines and the form, re-designed when opened --------
+  // { pts: [{ lat, lng }] (the main line, its end on the sewer), branches: [{ pts, form }], form,
+  // roads }. The points to 1e-6° (about 0.1 m), as differences; base64url JSON. Only the form's own
+  // fields travel, each as its kind (a number as text, a switch as a flag).
+  const FORM_TXT = ['q', 'pop', 'jobs', 'ha', 'spacing', 'ww', 'sLo', 'sHi', 'dmm', 'fmdmm'], FORM_BOOL = ['ici', 'avoid', 'vfd'], BR_TXT = ['q', 'pop', 'jobs', 'ha'];
+  // (btoa / atob: browsers, and Node from 16)
+  const b64e = t => btoa(t).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  const b64d = t => atob(String(t).replace(/-/g, '+').replace(/_/g, '/'));
+  const packPts = pts => { let la = 0, ln = 0; return pts.map(p => { const a = Math.round(p.lat * 1e6), b = Math.round(p.lng * 1e6), o = [a - la, b - ln]; la = a; ln = b; return o; }); };
+  const unpackPts = arr => { let la = 0, ln = 0; return arr.map(([a, b]) => { la += a; ln += b; return { lat: la / 1e6, lng: ln / 1e6 }; }); };
+  const txtOf = (f, keys) => Object.fromEntries(keys.filter(k => f && f[k] != null && String(f[k]).trim() !== '').map(k => [k, String(f[k]).trim()]));
+  function encodeDesign({ pts, branches = [], form = {}, roads = false }) {
+    // (slopes both blank, the standard's own limits, travel as std: the form's 0.3–1% isn't them)
+    const blankS = !txtOf(form, ['sLo', 'sHi']).sLo && !txtOf(form, ['sLo', 'sHi']).sHi;
+    const f = { ...txtOf(form, FORM_TXT), ...Object.fromEntries(FORM_BOOL.filter(k => form[k]).map(k => [k, 1])), ...(form.mode === 'pumped' ? { mode: 'p' } : {}), ...(blankS ? { std: 1 } : {}) };
+    return b64e(JSON.stringify({ v: 1, m: packPts(pts), b: branches.map(b => [packPts(b.pts), txtOf(b.form, BR_TXT)]), f, ...(roads ? { r: 1 } : {}) }));
+  }
+  // null when it can't be read, or isn't a design (points out of range, too many of them, a field of
+  // the wrong kind).
+  function decodeDesign(str) {
+    let o; try { o = JSON.parse(b64d(str)); } catch (e) { return null; }
+    const okPts = a => Array.isArray(a) && a.length >= 2 && a.length <= 5000 && a.every(x => Array.isArray(x) && x.length === 2 && x.every(Number.isInteger));
+    const inRange = P => P.every(p => Math.abs(p.lat) <= 90 && Math.abs(p.lng) <= 180);
+    const num = v => typeof v === 'string' && v.length <= 12 && /^-?\d*\.?\d*$/.test(v);
+    const formOf = (f, keys) => (f && typeof f === 'object' ? Object.fromEntries(keys.filter(k => num(f[k])).map(k => [k, f[k]])) : {});
+    if (!o || o.v !== 1 || !okPts(o.m) || !Array.isArray(o.b || []) || (o.b || []).length > 20) return null;
+    const pts = unpackPts(o.m); if (!inRange(pts)) return null;
+    const branches = [];
+    for (const b of o.b || []) { if (!Array.isArray(b) || !okPts(b[0])) return null; const bp = unpackPts(b[0]); if (!inRange(bp)) return null; branches.push({ pts: bp, form: formOf(b[1], BR_TXT) }); }
+    const f = o.f && typeof o.f === 'object' ? o.f : {};
+    return { pts, branches, roads: o.r === 1, form: { ...formOf(f, FORM_TXT), ...(f.std === 1 ? { sLo: '', sHi: '' } : {}), ...Object.fromEntries(FORM_BOOL.map(k => [k, f[k] === 1])), mode: f.mode === 'p' ? 'pumped' : 'gravity' } };
+  }
+
+  // ---- Exports: GeoJSON and KML (WGS 84), DXF (NAD83 / UTM zone 17N, metres) ----------------------
+  // The maintenance holes (designer's labels, at their ll) and the reaches between them, as designed.
+  const mhLabel = (m, i) => m.label || `MH ${i + 1}`;
+  const rmLabel = (r, d) => `${r.dmm || d.dmm} mm @ ${(r.S * 100).toFixed(2)}%, ${r.L.toFixed(1)} m`;
+  const r2 = v => (v == null ? null : Math.round(v * 100) / 100), r6 = v => Math.round(v * 1e6) / 1e6;
+  function toGeoJSON(d, conn, meta = {}) {
+    const ll = m => [r6(m.ll.lng), r6(m.ll.lat)];
+    const feats = [
+      ...d.reaches.map(r => ({ type: 'Feature', geometry: { type: 'LineString', coordinates: [ll(d.mhs[r.from]), ll(d.mhs[r.to])] },
+        properties: { kind: 'reach', reach: `${mhLabel(d.mhs[r.from], r.from)} to ${mhLabel(d.mhs[r.to], r.to)}`, diameter_mm: r.dmm || d.dmm, length_m: r2(r.L), slope_pct: Math.round(r.S * 1e5) / 1e3, invert_up_m: r2(r.inv_up), invert_down_m: r2(r.inv_dn), flow_ls: r2(r.q != null ? r.q : d.q), capacity_full_ls: r2(r.qFull), velocity_design_ms: r2(r.v) } })),
+      ...d.mhs.map((m, i) => ({ type: 'Feature', geometry: { type: 'Point', coordinates: ll(m) },
+        properties: { kind: 'maintenance hole', name: mhLabel(m, i), ground_m: r2(m.g), invert_in_m: m.ins && m.ins.length ? m.ins.map(x => r2(x.inv)) : null, invert_out_m: r2(m.inv_out), depth_m: r2(m.depth), drop_m: r2(m.drop || 0), drop_structure: !!m.structure } })),
+    ];
+    if (conn) feats.push({ type: 'Feature', geometry: { type: 'Point', coordinates: [r6(conn.lng), r6(conn.lat)] }, properties: { kind: 'connection', existing_sewer_mm: conn.dmm, existing_sewer_id: conn.id || null, existing_invert_m: r2(conn.invert) } });
+    return JSON.stringify({ type: 'FeatureCollection', name: meta.name || 'Preliminary sanitary sewer', description: meta.note || '', features: feats }, null, 1);
+  }
+  const xml = t => String(t == null ? '' : t).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  function toKML(d, conn, meta = {}) {
+    const c = m => `${r6(m.ll.lng)},${r6(m.ll.lat)},0`;
+    const pm = (name, desc, geom, style) => `<Placemark><name>${xml(name)}</name><description>${xml(desc)}</description><styleUrl>#${style}</styleUrl>${geom}</Placemark>`;
+    const items = [
+      ...d.reaches.map(r => pm(`${mhLabel(d.mhs[r.from], r.from)} to ${mhLabel(d.mhs[r.to], r.to)}`, `${rmLabel(r, d)}; inverts ${r.inv_up.toFixed(2)} to ${r.inv_dn.toFixed(2)} m`, `<LineString><tessellate>1</tessellate><coordinates>${c(d.mhs[r.from])} ${c(d.mhs[r.to])}</coordinates></LineString>`, 'pipe')),
+      ...d.mhs.map((m, i) => pm(mhLabel(m, i), `ground ${m.g.toFixed(2)} m; depth ${m.depth.toFixed(2)} m${m.inv_out != null ? `; invert out ${m.inv_out.toFixed(2)} m` : ''}${m.structure ? '; drop structure' : ''}`, `<Point><coordinates>${c(m)}</coordinates></Point>`, 'mh')),
+    ];
+    if (conn) items.push(pm('Connection', `${conn.dmm} mm existing sewer${conn.id ? ` ${conn.id}` : ''}, invert ${conn.invert.toFixed(2)} m`, `<Point><coordinates>${r6(conn.lng)},${r6(conn.lat)},0</coordinates></Point>`, 'conn'));
+    return `<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2"><Document><name>${xml(meta.name || 'Preliminary sanitary sewer')}</name><description>${xml(meta.note || '')}</description>`
+      + '<Style id="pipe"><LineStyle><color>ff2a52be</color><width>4</width></LineStyle></Style><Style id="mh"><IconStyle><scale>0.7</scale></IconStyle></Style><Style id="conn"><IconStyle><scale>0.9</scale></IconStyle></Style>'
+      + `${items.join('')}</Document></kml>\n`;
+  }
+  // NAD83 / UTM zone 17N (EPSG:26917): transverse Mercator on GRS 80, central meridian 81° W,
+  // scale 0.9996, false easting 500 km (Snyder, Map Projections — A Working Manual, eq. 8-9 to 8-11).
+  // The WGS 84 points are taken as NAD83 (within about 1–2 m in Peel: screening).
+  function utm17(lat, lng) {
+    const a = 6378137, f = 1 / 298.257222101, e2 = f * (2 - f), ep2 = e2 / (1 - e2), k0 = 0.9996, lon0 = -81 * Math.PI / 180;
+    const ph = lat * Math.PI / 180, N = a / Math.sqrt(1 - e2 * Math.sin(ph) ** 2), T = Math.tan(ph) ** 2, C = ep2 * Math.cos(ph) ** 2, A = Math.cos(ph) * (lng * Math.PI / 180 - lon0);
+    const M = a * ((1 - e2 / 4 - 3 * e2 ** 2 / 64 - 5 * e2 ** 3 / 256) * ph - (3 * e2 / 8 + 3 * e2 ** 2 / 32 + 45 * e2 ** 3 / 1024) * Math.sin(2 * ph) + (15 * e2 ** 2 / 256 + 45 * e2 ** 3 / 1024) * Math.sin(4 * ph) - (35 * e2 ** 3 / 3072) * Math.sin(6 * ph));
+    const E = 500000 + k0 * N * (A + (1 - T + C) * A ** 3 / 6 + (5 - 18 * T + T * T + 72 * C - 58 * ep2) * A ** 5 / 120);
+    const Nn = k0 * (M + N * Math.tan(ph) * (A * A / 2 + (5 - T + 9 * C + 4 * C * C) * A ** 4 / 24 + (61 - 58 * T + T * T + 600 * C - 330 * ep2) * A ** 6 / 720));
+    return [E, Nn];
+  }
+  // DXF (R12, entities only): the reaches as 3D lines (Z: the inverts) on SAN-NEW, maintenance holes
+  // as 0.6 m circles on SAN-MH (Z: the ground), labels on SAN-TEXT, the connection on SAN-EXIST.
+  function toDXF(d, conn) {
+    const out = [], g = (code, v) => out.push(String(code), String(v)), f3 = v => (+v).toFixed(3);
+    const P = m => utm17(m.ll.lat, m.ll.lng);
+    g(0, 'SECTION'); g(2, 'ENTITIES');
+    d.reaches.forEach(r => {
+      const a = P(d.mhs[r.from]), b = P(d.mhs[r.to]);
+      g(0, 'LINE'); g(8, 'SAN-NEW'); g(10, f3(a[0])); g(20, f3(a[1])); g(30, f3(r.inv_up)); g(11, f3(b[0])); g(21, f3(b[1])); g(31, f3(r.inv_dn));
+      const ang = Math.atan2(b[1] - a[1], b[0] - a[0]) * 180 / Math.PI, up = ang > 90 || ang < -90 ? ang + 180 : ang;
+      g(0, 'TEXT'); g(8, 'SAN-TEXT'); g(10, f3((a[0] + b[0]) / 2)); g(20, f3((a[1] + b[1]) / 2)); g(30, '0'); g(40, '1.5'); g(1, rmLabel(r, d)); g(50, up.toFixed(2)); g(72, 1); g(11, f3((a[0] + b[0]) / 2)); g(21, f3((a[1] + b[1]) / 2)); g(31, '0');
+    });
+    d.mhs.forEach((m, i) => {
+      const p = P(m);
+      g(0, 'CIRCLE'); g(8, 'SAN-MH'); g(10, f3(p[0])); g(20, f3(p[1])); g(30, f3(m.g)); g(40, '0.6');
+      g(0, 'TEXT'); g(8, 'SAN-TEXT'); g(10, f3(p[0] + 1.2)); g(20, f3(p[1] + 1.2)); g(30, '0'); g(40, '1.8'); g(1, `${mhLabel(m, i)} G ${m.g.toFixed(2)} D ${m.depth.toFixed(2)}`);
+    });
+    if (conn) { const p = utm17(conn.lat, conn.lng); g(0, 'CIRCLE'); g(8, 'SAN-EXIST'); g(10, f3(p[0])); g(20, f3(p[1])); g(30, f3(conn.invert)); g(40, '1.0'); }
+    if (conn && conn.g) for (let k = 1; k < conn.g.length; k++) { const a = utm17(conn.g[k - 1][1], conn.g[k - 1][0]), b = utm17(conn.g[k][1], conn.g[k][0]); g(0, 'LINE'); g(8, 'SAN-EXIST'); g(10, f3(a[0])); g(20, f3(a[1])); g(30, '0'); g(11, f3(b[0])); g(21, f3(b[1])); g(31, '0'); }
+    g(0, 'ENDSEC'); g(0, 'EOF');
+    return `${out.join('\n')}\n`;
+  }
   // The design as CSV: the maintenance holes, then the reaches.
   function csv(d) {
     const f2 = v => (v == null ? '' : (+v).toFixed(2)), lines = ['Maintenance hole,Chainage (m),Ground (m),Invert in (m),Invert out (m),Depth to invert (m),Drop (m),Drop structure,On'];
@@ -209,7 +304,7 @@
   }
 
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
-    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, connBend, pointAt, checks, csv, crossings, CROSS, slopeRange, downstream, quantities, QBANDS };
+    if (typeof module !== 'undefined' && module.exports) module.exports = { metres, chainage, bends, connBend, pointAt, checks, csv, crossings, CROSS, slopeRange, downstream, quantities, QBANDS, encodeDesign, decodeDesign, toGeoJSON, toKML, toDXF, utm17 };
     return;
   }
   // ---- Browser ---------------------------------------------------------------------------------
@@ -673,7 +768,9 @@
       <h4 class="sd-h">Maintenance holes</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">MH</th><th scope="col">On</th><th scope="col" class="n">Ground (m)</th><th scope="col" class="n">Invert in</th><th scope="col" class="n">Invert out</th><th scope="col" class="n">Depth</th><th scope="col" class="n">Drop</th></tr></thead><tbody>${mhRows}</tbody></table></div>
       <h4 class="sd-h">Reaches · ${sizeTxt}</h4><div class="table-wrap"><table class="dt small sd-t"><thead><tr><th scope="col">Reach</th><th scope="col" class="n">Size (mm)</th><th scope="col" class="n">Flow (L/s)</th><th scope="col" class="n">Length (m)</th><th scope="col" class="n">Slope (%)</th><th scope="col" class="n">Full flow (L/s)</th><th scope="col" class="n">Flow ratio</th><th scope="col" class="n">V design (m/s)</th><th scope="col" class="n">V full (m/s)</th><th scope="col" class="n">Froude</th></tr></thead><tbody>${rRows}</tbody></table></div>
       ${d.qty ? `<h4 class="sd-h">Quantities</h4>${qtyHTML(d)}` : ''}
-      <p><button type="button" class="btn small" data-sd-act="print">Print plan and profile (11×17)</button> <button type="button" class="btn small" data-sd-act="csv">Download the design (CSV)</button></p>`;
+      <p><button type="button" class="btn small" data-sd-act="print">Print plan and profile (11×17)</button> <button type="button" class="btn small" data-sd-act="csv">Download the design (CSV)</button></p>
+      <p class="sd-share"><button type="button" class="btn small" data-sd-act="link">Copy a link to this design</button> <span class="small muted">Download for GIS or CAD:</span> <button type="button" class="btn small" data-sd-act="geojson">GeoJSON</button> <button type="button" class="btn small" data-sd-act="kml">KML</button> <button type="button" class="btn small" data-sd-act="dxf" title="NAD83 / UTM zone 17N, metres; the pipe lines carry the inverts as Z">DXF (UTM 17N)</button></p>
+      <p class="small muted">The link keeps the route, the branches and the form: opened, it re-designs from today's sewer, ground and Region data, so the numbers can change. GeoJSON and KML are in WGS 84; the DXF is in NAD83 / UTM zone 17N (metres), with the inverts as the pipe lines' Z.</p>`;
   }
   // The profile of a line view (lineView()): the ground, the cover line, the pipe (obvert and
   // invert), the maintenance holes, the existing sewer at the connection; or the main line's ground
@@ -766,6 +863,57 @@
     lines.push('', `Forcemain (mm),${f.dmm}`, `Length (m),${f.L.toFixed(1)}`, `Design flow (L/s),${f.q.toFixed(2)}`, `Velocity (m/s),${f.v.toFixed(2)}`, `Static lift (m),${f.lift.toFixed(2)}`, `Friction (m),${f.hf.toFixed(2)}`, `Total head (m),${f.tdh.toFixed(2)}`, `Outlet invert (m),${f.outletInv.toFixed(2)}`, `Rules,"${f.source}"`, '"The pumping station is not sized: size it to Peel\'s Sewage Pumping Station Design Standard. A transient analysis is mandatory (s. 4.3.6)."', '"General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results."');
     E.download('peel-forcemain.csv', lines.join('\n'), 'text/csv');
   }
+  // ---- The link and the GIS / CAD downloads ------------------------------------------------------
+  const designMeta = () => ({ name: `Preliminary sanitary sewer${S.conn ? ` to the ${S.conn.dmm} mm sewer${S.conn.id ? ` ${S.conn.id}` : ''}` : ''}`, note: 'Preliminary design for screening, not for construction. General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results.' });
+  function downloadGeo(kind) {
+    if (!S.d || !S.d.ok) return;
+    const E = root.PeelExports; if (!E || !E.download) return;
+    if (kind === 'geojson') E.download('peel-sewer-design.geojson', toGeoJSON(S.d, S.conn, designMeta()), 'application/geo+json');
+    else if (kind === 'kml') E.download('peel-sewer-design.kml', toKML(S.d, S.conn, designMeta()), 'application/vnd.google-earth.kml+xml');
+    else E.download('peel-sewer-design-utm17n.dxf', toDXF(S.d, S.conn), 'application/dxf');
+  }
+  const designLink = () => {
+    const base = root.PeelShare && root.PeelShare.viewLink ? root.PeelShare.viewLink.url() : `${location.origin}${location.pathname}#`;
+    const sd = encodeDesign({ pts: S.pts, branches: done().map(b => ({ pts: b.pts, form: b.form })), form: S.form, roads: S.roadsUsed });
+    return `${base}${/#$/.test(base) ? '' : '&'}sd=${sd}`;
+  };
+  async function copyDesignLink() {
+    const url = designLink(), U = root.PeelUtil || {};
+    try { await navigator.clipboard.writeText(url); if (U.toast) U.toast('Link copied: it opens this sewer design, re-designed with the data of the day'); }
+    catch (e) { if (typeof prompt === 'function') prompt('Copy this link:', url); }
+  }
+  // A link with sd=…: the Sewer designer (turned on in Labs if it's off), the drawn lines put back,
+  // Finish (the end snaps to the sewer again), each branch, then the form and Design.
+  // (a link made on its Labs page, w=p:sewer, opens there: the page itself falls back to Home while the
+  // switch is off, so it is opened again once the switch is on)
+  const linkQ = (() => { try { return new URLSearchParams(location.hash.slice(1)); } catch (e) { return null; } })();
+  const linked = linkQ && linkQ.get('sd'), linkedPage = !!linkQ && linkQ.get('w') === 'p:sewer';
+  async function openLinked(str) {
+    const D0 = decodeDesign(str), U = root.PeelUtil || {}, A = root.PeelApp && root.PeelApp.scope;
+    if (!D0) { if (U.toast) U.toast('The sewer design in this link could not be read'); return; }
+    const Lb = root.PeelLabs; if (Lb && !Lb.on('sewer')) Lb.set('sewer', true);
+    const W = root.PeelWorkspaces;
+    if (linkedPage && W && W.openPage && !onPage()) { W.openPage('sewer'); for (let k = 0; k < 30 && !onPage(); k++) await new Promise(r => setTimeout(r, 100)); }
+    clearAll();
+    if (T().active() !== 'sewer' && A && A.setTool) A.setTool('sewer');
+    S.pts = D0.pts; S.legs = D0.pts.map(() => 1); S.roadsUsed = D0.roads;
+    const all = [...D0.pts, ...D0.branches.flatMap(b => b.pts)];
+    try { map().fitBounds(all.map(p => [p.lat, p.lng]), { padding: [40, 40], maxZoom: 17 }); } catch (e) { /* (no map yet) */ }
+    drawLine();
+    await finish(); if (!S.conn) return;
+    for (const b of D0.branches) {
+      S.branches.push({ pts: b.pts, legs: b.pts.map(() => 1), form: { q: '', pop: '', jobs: '', ha: '', ...b.form }, done: false }); S.drawing = S.branches.length;
+      await finishBranch(); if (!S.branches[S.branches.length - 1].done) return;
+    }
+    S.form = { ...S.form, ...D0.form };
+    run();
+    if (U.toast) U.toast('Opened the sewer design from the link, re-designed with today\'s data');
+  }
+  if (linked) {
+    // (once the app, its tools and the map are up; 2 minutes at most)
+    const t0 = Date.now(), go = () => { const A = root.PeelApp && root.PeelApp.scope; if (A && A.setTool && map() && (root.PeelApp.fullSnapshotReady ? root.PeelApp.fullSnapshotReady() : true)) setTimeout(() => openLinked(linked), 400); else if (Date.now() - t0 < 120000) setTimeout(go, 500); };
+    setTimeout(go, 0);
+  }
   function downloadCSV() {
     if (!S.d || !S.d.ok) return;
     const E = root.PeelExports, text = csv(S.d);
@@ -813,6 +961,8 @@
     const act = b.dataset.sdAct, A = root.PeelApp && root.PeelApp.scope;
     if (act === 'design') run();
     else if (act === 'csv') downloadCSV();
+    else if (act === 'link') copyDesignLink();
+    else if (act === 'geojson' || act === 'kml' || act === 'dxf') downloadGeo(act);
     else if (act === 'print') printSheet();
     else if (act === 'pumped') { S.form.mode = 'pumped'; run(); }
     else if (act === 'auto-size') { S.form.dmm = ''; run(); }
@@ -953,5 +1103,5 @@
       if (act === 'sd-finish') { if (S.drawing) finishBranch(); else finish(); }
     },
   });
-  root.PeelSewerDesigner = { page, fitPage, state: () => S, finish, finishBranch, run, clearAll, printSheet, downloadFmCSV, lineView, chainage, bends, checks, csv };
+  root.PeelSewerDesigner = { page, fitPage, state: () => S, finish, finishBranch, run, clearAll, printSheet, downloadFmCSV, lineView, chainage, bends, checks, csv, designLink, openLinked };
 })(typeof window !== 'undefined' ? window : globalThis);
