@@ -7,7 +7,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { merge, exportJSON, diff, nearestOn, distinct, isCurrent } = require('../js/dev-outlets.js');
+const { merge, exportJSON, diff, nearestOn, distinct, isCurrent, sameOutlet } = require('../js/dev-outlets.js');
 
 const src = f => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
 
@@ -68,6 +68,16 @@ test('isCurrent: the candidate that is the outlet in use now', () => {
   assert.equal(isCurrent({ kind: 'sewer', k: 7 }, { k: 7, path: { first: { p: '25-2267' } } }), false, 'routed along a planned main: not the sewer');
   assert.equal(isCurrent({ kind: 'dc', project: '25-2267' }, { k: 7, path: { first: { p: '25-2267' } } }), true);
   assert.equal(isCurrent({ kind: 'dc', project: '25-2267' }, null), false);
+  // a sewer being built (a capital project): current where its route starts on that project's sewer
+  assert.equal(isCurrent({ kind: 'cap', project: '16-2291' }, { k: 7, path: { first: { cap: true, p: '16-2291' } } }), true);
+  assert.equal(isCurrent({ kind: 'dc', project: '16-2291' }, { k: 7, path: { first: { cap: true, p: '16-2291' } } }), false, 'a DC main is not the capital sewer');
+});
+
+test('sameOutlet: one pipe (existing) or one project (planned or being built)', () => {
+  assert.equal(sameOutlet({ kind: 'sewer', k: 3, at: [0, 0] }, { kind: 'sewer', k: 3, at: [1, 1] }), true);
+  assert.equal(sameOutlet({ kind: 'cap', project: '16-2291' }, { kind: 'cap', project: '16-2291' }), true);
+  assert.equal(sameOutlet({ kind: 'cap', project: '16-2291' }, { kind: 'dc', project: '16-2291' }), false);
+  assert.equal(sameOutlet(null, { kind: 'sewer', k: 3 }), false);
 });
 
 test('wired in: the page, the models and the offline shell', () => {
@@ -75,6 +85,7 @@ test('wired in: the page, the models and the offline shell', () => {
   assert.match(src('js/sewer-cap.js'), /window\.PeelDevOutlets \? window\.PeelDevOutlets\.version\(\) : 0/, 'the load model re-runs when an outlet changes');
   assert.match(src('js/dc-impact.js'), /DO\.dcRouteFor\(d\.p\)/);
   assert.match(src('js/sewer-trace.js'), /DO\.dcRouteFor\(p\)/);
+  assert.match(src('js/sewer-trace.js'), /opts\.cap \? capNearest/, 'a route can start on a sewer being built');
   const html = src('index.html');
   assert.ok(html.indexOf('js/dev-outlets.js') > html.indexOf('js/dc-impact.js'));
   assert.match(src('sw.js'), /'js\/dev-outlets\.js',/);

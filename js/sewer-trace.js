@@ -275,12 +275,19 @@
     DCW.g = { xs, ys, E, adj, len, cost, exit, lineOf, joins }; DCW.v = DJ() ? DJ().version() : 0;
     return DCW.g;
   }
-  function dcSewerPath(p) {
+  // opts.cap: start on the capital project's new sewer nearest the point (within 60 m), not the
+  // nearest planned main (an outlet set onto a sewer being built: js/dev-outlets.js).
+  function capNearest(pt, r) {
+    let best = null;
+    for (const ln of DJ() ? DJ().capLines('wastewater') : []) { const m = DI().dcDist(pt, ln.g); if (m <= r && (!best || m < best.m)) best = { ln, m }; }
+    return best;
+  }
+  function dcSewerPath(p, opts = {}) {
     const G = dcSewerNet(); if (!G) return null;
-    const n = DI().dcNearest('wastewater', [p.lng, p.lat], DI().DC_CONNECT_M); if (!n) return null;
+    const n = opts.cap ? capNearest([p.lng, p.lat], 60) : DI().dcNearest('wastewater', [p.lng, p.lat], DI().DC_CONNECT_M); if (!n || !n.ln._n) return null;
     const [a, b] = n.ln._n; let s = a, sd = Infinity;
     for (let i = a; i <= b; i++) { const m = DI().dcM([p.lng, p.lat], [G.xs[i], G.ys[i]]); if (m < sd) { sd = m; s = i; } }
-    const target = DI().dcTarget(n.ln), inTarget = new Map();
+    const target = n.ln.cap ? null : DI().dcTarget(n.ln), inTarget = new Map();
     const pipeIn = k => { if (!inTarget.has(k)) { const c = SC().pipeCoords(MM().SEW.data.pipes[k])[0]; inTarget.set(k, !target || Areas().locate(App().state.servicing.drainage, c[0], c[1]).includes(target)); } return inTarget.get(k); };
     // Same size or bigger first; where no such sewer is in reach, at least half the size.
     const search = strict => {
