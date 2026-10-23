@@ -31,6 +31,7 @@ const TG = require('../js/tree-groups.js');
 const P = require('../js/phases.js');
 const T = require('../js/tree.js');
 const S = require('../js/sites.js');
+const EF = require('../js/earlier-files.js');
 
 const ROOT = path.join(__dirname, '..');
 const readJSON = f => { try { return JSON.parse(fs.readFileSync(f, 'utf8')); } catch (e) { return null; } };
@@ -57,6 +58,61 @@ function planAreas(areasFile) {
     if (best) parentOf.set(a.id, best.b.id);
   }
   return { list, parentOf };
+}
+
+// 3·. One application, one development. An application later split into pieces (a site plan over a
+// whole strip, then townhouses and two towers on its blocks, each its own tree) is one development:
+// the pieces whose frame (js/earlier-files.js frameOf: the largest planning file, up to 15 ha,
+// holding at least half the piece's land) is the same file, when two or more of them have homes.
+// Its count is the land's, parcel by parcel (unitsOverTime: the latest count on each parcel, added
+// up), so a building revised in a second tree is counted once. The pieces' keys resolve to the one
+// kept (merged), the key of the piece holding the frame file, else the one with the most homes.
+function mergeApplications(devs, files, records, codes) {
+  const muniOf = k => k.slice(0, k.indexOf('|'));
+  const filesOf = list => { const out = {}; list.forEach((d, i) => { for (const row of d.n || []) out[`${muniOf(d.k)}|${row[8]}`] = i; }); return out; };
+  TG.setData({ version: 2, devs, files, permits: {}, codes });
+  const ps = P.buildProjects(records, { regroup: x => TG.regroup(x, { canonRef: P.canonRef, ringsArea: P.ringsArea }) });
+  TC.apply(ps, { mode: 'tree', data: { snapshotAt: '', devs }, canonRef: P.canonRef });
+  const at = new Map(devs.map((d, i) => [d.k, i]));
+  const cands = ps.filter(p => at.has(p.key) && !devs[at.get(p.key)].sa && p.records.some(r => r.kind === 'application' && r.poly));
+  const byFrame = new Map();
+  for (const p of cands) { const f = EF.frameOf(p, cands); if (f) (byFrame.get(f) || byFrame.set(f, []).get(f)).push(p); }
+  const merged = {}, groups = [], gone = new Set();
+  for (const [frame, members] of byFrame) {
+    if (members.filter(p => p.phase !== 'cancelled' && p.units > 0).length < 2) continue;
+    const u = EF.unitsOverTime(members[0], cands);
+    if (!u || !(u.totals.land > 0)) continue;
+    members.sort((a, b) => (b.records.includes(frame) - a.records.includes(frame)) || (b.units || 0) - (a.units || 0) || String(a.key).localeCompare(String(b.key)));
+    const keep = devs[at.get(members[0].key)], n = [];
+    for (const p of members) {
+      const d = devs[at.get(p.key)], off = n.length;
+      for (const row of d.n || []) { const r = row.slice(); r[2] = row[2] >= 0 ? row[2] + off : -1; n.push(r); }
+      if (d !== keep) { merged[d.k] = keep.k; gone.add(d); }
+    }
+    // The count: each piece keeps its own (the tree's, with its overrides and the counts found
+    // online), except a piece whose every counted file was revised by a later file of the same
+    // building in another piece (a count within 25%: the same towers resubmitted) counts nothing,
+    // and a piece holding the latest files of buildings on separate parcels counts them all.
+    const tracks = u.parcels.flatMap(pc => pc.tracks.filter(k => k.units > 0).map((k, i) => ({ ...k, parcel: pc.letter, label: `parcel ${pc.letter}${pc.tracks.length > 1 ? `, building ${i + 1}` : ''}` })));
+    const pieceOf = ref => members.find(p => p.records.some(r => r.kind === 'application' && r.ref === ref));
+    const kind = k => (k.stage === 'precon' ? 'precon' : k.stage === 'condo' ? 'condo' : 'stated');
+    const parts = [], why = [];
+    for (const p of members) {
+      const d = devs[at.get(p.key)], own = d.u || 0;
+      const finals = tracks.filter(k => pieceOf(k.ref) === p), touched = tracks.filter(k => k.refs.some(ref => pieceOf(ref) === p));
+      if (touched.length && !finals.length) { if (own > 0) why.push(`${d.root} ${own}: revised in ${[...new Set(touched.map(k => k.ref))].join(', ')}`); continue; }
+      const sum = finals.reduce((t, k) => t + k.units, 0);
+      // (raised only by buildings on separate parcels: two counts on one parcel may be phases of one proposal)
+      if (sum > own && new Set(finals.map(k => k.parcel)).size === finals.length) { for (const k of finals) parts.push([k.ref, k.units, kind(k), `${k.label} of ${frame.ref}`]); why.push(`${d.root} ${own} → ${sum}: the latest files of ${finals.length} buildings`); continue; }
+      if (own > 0) parts.push(...(d.c && d.c.length ? d.c.map(x => x.slice()) : [[d.root, own, 'stated', null]]));
+    }
+    keep.n = n; keep.u = parts.reduce((t, x) => t + x[1], 0); keep.c = parts;
+    keep.t = [[keep.root, keep.u, `one application on ${frame.ref}'s land: its ${members.length} pieces' counts added up${why.length ? `, ${why.join('; ')}` : ''}`, parts.some(x => x[2] === 'precon') ? 'estimate (pre-consultation)' : '']];
+    groups.push({ frame: `${frame.municipality}|${frame.ref}`, key: keep.k, pieces: members.map(p => p.key), before: members.reduce((t, p) => t + (p.units || 0), 0), after: keep.u });
+  }
+  const out = devs.filter(d => !gone.has(d));
+  for (const d of out) if (d.st && merged[d.st]) d.st = merged[d.st];
+  return { devs: out, files: filesOf(out), merged, groups };
 }
 
 function build(res, overridesFile, records, areasFile) {
@@ -154,11 +210,16 @@ function build(res, overridesFile, records, areasFile) {
       ...(x.sa ? { sa: 1 } : {}), ...(siteKey(x) ? { st: siteKey(x) } : {}) });
     for (const i of x.t.nodes) files[nodes[i].id] = d;
   }
+  // 3·. One application, one development.
+  const mg = mergeApplications(devs, files, records, { rules, roles });
+  devs.length = 0; devs.push(...mg.devs);
+  for (const k of Object.keys(files)) delete files[k];
+  Object.assign(files, mg.files);
   // 4. Permits: where the tree placed them, recorded only when that differs from where the rest of
   // their site goes (the regroup default).
   const desired = new Map();
-  for (const [i, list] of built.permitOf) for (const { r } of list) desired.set(r.uid, files[nodes[i].id]);
-  const data = { version: 2, devs, files, permits: {}, codes: { rules, roles },
+  for (const [i, list] of built.permitOf) for (const { r } of list) if (files[nodes[i].id] != null) desired.set(r.uid, files[nodes[i].id]);
+  const data = { version: 2, devs, files, permits: {}, codes: { rules, roles }, ...(Object.keys(mg.merged).length ? { merged: mg.merged } : {}),
     areas: PA.list.map(a => ({ id: a.id, name: a.name, municipality: a.municipality, kind: a.kind, parent: PA.parentOf.get(a.id) || null })) };
   TG.setData(data);
   let parts = null;
@@ -186,7 +247,7 @@ function build(res, overridesFile, records, areasFile) {
     goneKeys: [...oldKeys].filter(k => !byKey.has(k)).length,
     splits: [...keyMap.values()].filter(s => s.size > 1).length,
   };
-  return { data, totals, overridden, check: { dupKeys, missing, developments: after.length }, changes, keyMap };
+  return { data, totals, overridden, check: { dupKeys, missing, developments: after.length }, changes, keyMap, mergedGroups: mg.groups };
 }
 
 async function main() {
@@ -201,12 +262,12 @@ async function main() {
     note: 'Steps B1–B2: the trees as the developments (js/tree-groups.js) and their counts (js/tree-counts.js). Rules: js/tree.js countTree with the chronology rules approved 2026-10-15; decisions from data/tree-overrides.json. Rebuilt with the snapshot by scripts/build-tree-counts.js.',
     generatedAt: new Date().toISOString(), snapshotAt: recs.generatedAt,
     rules: (ovFile && ovFile.rules) ? Object.keys(ovFile.rules) : [], overrides: b.overridden,
-    totals: b.totals, keyChanges: b.changes,
+    totals: b.totals, keyChanges: b.changes, mergedApplications: b.mergedGroups,
   };
   fs.mkdirSync(outDir, { recursive: true });
   fs.writeFileSync(path.join(outDir, 'tree-counts.json'), JSON.stringify(doc));
   const t = b.totals.Peel;
-  console.log(`tree developments: ${b.data.devs.length} trees · live ${t.developmentsBefore} → ${t.developments} · Peel previous ${t.previous} → tree ${t.tree} · keys kept ${b.changes.kept}, new ${b.changes.newKeys}, gone ${b.changes.goneKeys}, split ${b.changes.splits} · ${Object.keys(b.data.permits).length} permits placed by the tree · ${b.overridden} overrides`);
+  console.log(`tree developments: ${b.data.devs.length} trees · live ${t.developmentsBefore} → ${t.developments} · Peel previous ${t.previous} → tree ${t.tree} · keys kept ${b.changes.kept}, new ${b.changes.newKeys}, gone ${b.changes.goneKeys}, split ${b.changes.splits} · ${Object.keys(b.data.permits).length} permits placed by the tree · ${b.overridden} overrides · ${b.mergedGroups.length} split applications merged`);
 }
 if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
 module.exports = { build };

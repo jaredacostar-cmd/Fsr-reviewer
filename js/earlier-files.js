@@ -152,7 +152,10 @@
     const app = r.units > 0 ? r.units : r.precUnits > 0 ? r.precUnits : null;
     for (const s of sentences(r.description)) {
       const i = s.search(/\btotal\s+of\b/i); if (i < 0) continue;
-      let n = 0; for (const m of s.slice(i).matchAll(HOME_UNITS)) n += toNum(m[1]);
+      // The counts listed one after another ("36 stacked townhouse units, 1016 residential condominium
+      // units"); a count further on ("…, which are distributed as 67 units in each building") is not added.
+      let n = 0, end = -1;
+      for (const m of s.slice(i).matchAll(HOME_UNITS)) { if (end >= 0 && !/^[\s,]*(?:and\s+)?$/i.test(s.slice(i).slice(end, m.index))) break; n += toNum(m[1]); end = m.index + m[0].length; }
       if (n > 0) return { units: n, app, how: 'the total stated' };
     }
     return { units: app, app, how: app ? (r.unitsFromText || r.precUnits ? 'the description' : 'the units field') : null };
@@ -184,15 +187,20 @@
   // The building heights a file names ("40-storey", "21 storey"): how a file over a whole block is
   // matched to the building it is for.
   const storeysOf = r => new Set([...String(r.description || '').matchAll(/(\d{1,3})\s*[- ]?\s*(?:storeys?|stories|story|sty)\b/gi)].map(m => Number(m[1])));
+  const phaseOf = r => { const m = String(r.description || '').match(/\bphase\s*(\d+)\b/i); return m ? Number(m[1]) : null; };
+  // A file for another building beside what stands ("24 residential units addition to the existing retail plaza").
+  const ADDITION = /\bunits?\s+addition\b|\baddition\s+to\s+the\s+existing\b/i;
+  const CITY_FILE = /^CI\s*\d/i;   // a city-initiated policy file (a development permit area, a study): not an application
   const FRAME_MAX = 150000;   // m²: the whole application a site was split from, not a block or secondary plan
-  /** The whole application the site's land was split from: the largest planning file (up to 15 ha)
-   *  holding at least half the site's widest file, on this site or another; else the site's widest. */
+  /** The whole application the site's land was split from: the largest planning file (up to 15 ha,
+   *  not a city-initiated policy file) holding at least half the site's widest file, on this site or
+   *  another; else the site's widest. */
   function frameOf(p, projects) {
     const w = baseOf(p); if (!w) return null;
     let best = w, ba = area(w.poly);
     const wb = boxOf(w.poly);
     for (const q of projects || []) for (const r of q.records || []) {
-      if (r.kind !== 'application' || !r.poly || r.municipality !== w.municipality || r.stage === 'precon' || !meet(boxOf(r.poly), wb)) continue;
+      if (r.kind !== 'application' || !r.poly || r.municipality !== w.municipality || r.stage === 'precon' || CITY_FILE.test(r.ref || '') || !meet(boxOf(r.poly), wb)) continue;
       const a = area(r.poly);
       if (a > ba && a <= FRAME_MAX && share(w.poly, r.poly) >= INSIDE) { best = r; ba = a; }
     }
@@ -246,22 +254,47 @@
     const byTime = (a, b) => (a.at == null) - (b.at == null) || (a.at || 0) - (b.at || 0);
     const parcels = groups.map(g => {
       g.sort(byTime);
-      const steps = []; let count = null, setAt = null, prev = null;
+      // Buildings (tracks) on the parcel: a file replaces the count of the building it revises; one
+      // for another building (another phase, an addition, other heights and a count 25%+ apart) adds.
+      const steps = [], tracks = []; let setAt = null;
+      const sum = () => tracks.reduce((t, k) => t + k.units, 0);
+      const near = (a, b) => Math.abs(a - b) <= 0.25 * Math.max(a, b);
+      const meets = (a, b) => [...a].some(n => b.has(n));
+      const trackFor = (r, units) => {
+        const sx = storeysOf(r), ph = phaseOf(r);
+        if (ADDITION.test(r.description || '')) return null;
+        // The same building: a count within 25%, or a rough pre-consultation count made firm by a formal file.
+        const alike = tracks.filter(k => (ph != null && k.phase != null ? ph === k.phase : true) && (near(units, k.units) || (k.stage === 'precon' && r.stage !== 'precon')));
+        if (!alike.length) return null;
+        return alike.find(k => sx.size && meets(sx, k.storeys)) || alike.find(k => near(units, k.units)) || alike[alike.length - 1];
+      };
       for (const x of [...g, ...extra.get(g)].sort(byTime)) {
         const r = x.r, st = statedOf(r), out = r.phase === 'cancelled', add = !out && addOf(r);
         const over = x.why ? `whole-block file, counted here (${x.why})` : '';
-        if (add && count != null) {
-          // An addition to the count, not a new total.
-          steps.push({ x, r, at: x.at, units: count + add, counted: true, change: add, added: true, note: [`adds ${num(add)} unit${add === 1 ? '' : 's'}`, over].filter(Boolean).join(' · ') });
-          prev = count = count + add; setAt = x.at; continue;
+        const before = sum();
+        if (add && tracks.length) {
+          // An addition to a building's count, not a new total.
+          const sx = storeysOf(r), k = tracks.find(t => sx.size && meets(sx, t.storeys)) || tracks[tracks.length - 1];
+          k.units += add; k.ref = r.ref; k.stage = r.stage; k.refs.push(r.ref); setAt = x.at;
+          steps.push({ x, r, at: x.at, units: k.units, total: sum(), counted: true, change: add, added: true, note: [`adds ${num(add)} unit${add === 1 ? '' : 's'}`, over].filter(Boolean).join(' · ') });
+          continue;
         }
         const counted = !out && st.units > 0;
-        steps.push({ x, r, at: x.at, units: st.units, app: st.app, how: st.how, counted, change: counted && prev != null ? st.units - prev : null, over: !!x.why,
-          note: [out ? `${r.statusRaw || 'withdrawn'}: not counted` : st.units > 0 ? '' : 'states no homes', over].filter(Boolean).join(' · ') });
-        if (counted) { prev = count = st.units; setAt = x.at; }
+        let k = null, fresh = false, trackPrev = null;
+        if (counted) {
+          k = trackFor(r, st.units);
+          if (k) { trackPrev = k.units; k.units = st.units; k.ref = r.ref; k.stage = r.stage; k.refs.push(r.ref); for (const n of storeysOf(r)) k.storeys.add(n); if (phaseOf(r) != null) k.phase = phaseOf(r); }
+          else { fresh = tracks.length > 0; k = { units: st.units, ref: r.ref, stage: r.stage, storeys: storeysOf(r), phase: phaseOf(r), refs: [r.ref] }; tracks.push(k); }
+          setAt = x.at;
+        }
+        steps.push({ x, r, at: x.at, units: st.units, total: counted ? sum() : null, app: st.app, how: st.how, counted, change: counted && (trackPrev != null || fresh) ? sum() - before : null, trackPrev, newTrack: fresh, over: !!x.why,
+          note: [out ? `${r.statusRaw || 'withdrawn'}: not counted` : st.units > 0 ? (fresh ? 'another building on the parcel: added' : '') : 'states no homes', over].filter(Boolean).join(' · ') });
         const rv = !out && revisionOf(r);
-        if (rv && count != null && x.at === setAt) { steps.push({ x, r, at: x.at, revised: true, units: count + rv.delta, counted: true, change: rv.delta, note: `resubmission: ${rv.text}` }); prev = count = count + rv.delta; }
+        if (rv && k && counted) { const b2 = sum(); k.units += rv.delta; steps.push({ x, r, at: x.at, revised: true, units: k.units, total: sum(), counted: true, change: sum() - b2, note: `resubmission: ${rv.text}` }); }
       }
+      const count = tracks.length ? sum() : null;
+      // What the files state, before resubmissions and additions written in their descriptions.
+      const stated = tracks.length ? tracks.reduce((t, k) => { const s = steps.filter(z => z.counted && !z.revised && !z.added && z.r.ref === k.ref).pop(); return t + (s ? s.units : k.units); }, 0) : null;
       // Named by its address (a minor file's, such as a garbage-bin change, last) and the file that set its count.
       const named = [...g].reverse(), lead = named.find(x => x.r.stage !== 'precon' && !x.r.minor && x.r.address) || named.find(x => x.r.address) || g[g.length - 1];
       // Built: the dwelling permits from 3 years before the file that set the count.
@@ -274,18 +307,18 @@
       const ownLast = counted.filter(s => !s.x.why).pop(), owner = ownLast ? ownLast.x.dev : last ? last.x.dev : g[0].dev;
       const devs = [...new Set(steps.filter(s => s.counted).map(s => s.x.dev).filter(Boolean))];
       const title = t => String(t || '').toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase()).replace(/\b(Rd|Dr|St|Ave|Pkwy|Cres|Blvd)\b/g, w => w);
-      return { files: g, extra: extra.get(g), steps, count, setAt, name: title(lead.r.address || (lead.dev && lead.dev.title) || lead.r.ref), key: last ? last.r.ref : null, area: Math.max(...g.map(x => ar.get(x) || 0)),
+      return { files: g, extra: extra.get(g), steps, count, stated, tracks: tracks.map(k => ({ units: k.units, ref: k.ref, stage: k.stage, refs: k.refs })), setAt, name: title(lead.r.address || (lead.dev && lead.dev.title) || lead.r.ref), key: last ? last.r.ref : null, area: Math.max(...g.map(x => ar.get(x) || 0)),
         permits, built: done && count > 0 ? { at: builtAt, year: yearOf(builtAt) } : null, underway: !done && permits.length > 0,
         first: g.find(x => x.at != null), app: owner ? { dev: owner, units: owner.units || 0 } : null, devs,
-        total: counted.filter(s => !s.revised && !s.added).slice(-1)[0] || null };
+      };
     }).filter(pc => pc.steps.some(s => s.units > 0) || pc.files.some(x => x.r.stage !== 'precon'));
     parcels.sort((a, b) => (a.first ? a.first.at : Infinity) - (b.first ? b.first.at : Infinity));
     parcels.forEach((pc, i) => { pc.letter = LETTERS[i] || String(i + 1); pc.token = PARCEL_TOKENS[i % PARCEL_TOKENS.length]; });
     // Year by year: each parcel's count at the end of the year, the land's total and what is built.
     const atYear = (pc, y) => {
-      let v = null; for (const s of pc.steps) if (s.counted && s.at != null && yearOf(s.at) <= y) v = s.units;
+      let v = null; for (const s of pc.steps) if (s.counted && s.at != null && yearOf(s.at) <= y) v = s.total;
       // (built before the file that states its count, such as a condominium registered after: the homes stand from then)
-      if (v == null && pc.built && pc.built.year <= y) { const s = pc.steps.find(x => x.counted); v = s ? s.units : null; }
+      if (v == null && pc.built && pc.built.year <= y) { const s = pc.steps.find(x => x.counted); v = s ? s.total : null; }
       return v;
     };
     const y0 = Math.min(...parcels.flatMap(pc => pc.steps.filter(s => s.at != null).map(s => yearOf(s.at))), ...parcels.filter(pc => pc.built).map(pc => pc.built.year));
@@ -300,14 +333,15 @@
     const flags = [];
     for (const pc of parcels) {
       const L = `${pc.letter} (${pc.name})`;
-      if (pc.app && pc.count != null && pc.app.units !== pc.count && !(pc.total && pc.app.units === pc.total.units)) flags.push({ kind: 'warn', parcel: pc.letter, text: `${L}: the app counts ${num(pc.app.units)} homes; the latest file states ${num(pc.total ? pc.total.units : pc.count)}${pc.total && pc.total.units !== pc.count ? `, ≈${num(pc.count)} after ${pc.steps.some(x => x.revised) ? 'its resubmission' : 'later additions'}` : ''}.` });
+      if (pc.app && pc.count != null && pc.app.units !== pc.count && pc.app.units !== pc.stated) flags.push({ kind: 'warn', parcel: pc.letter, text: `${L}: the app counts ${num(pc.app.units)} homes; the latest files state ${num(pc.stated)}${pc.stated !== pc.count ? `, ≈${num(pc.count)} after ${pc.steps.some(x => x.revised) ? 'its resubmission' : 'later additions'}` : ''}.` });
       if (pc.devs.length > 1) flags.push({ kind: 'warn', parcel: pc.letter, text: `${L}: its files are split across ${pc.devs.length} developments in the app (${pc.devs.map(d => `${d.title || d.key}, ${num(d.units || 0)}`).join('; ')}): open any of them to see the whole land here.` });
       const sp = pc.steps.filter(s => s.counted && !s.revised && s.r.stage === 'siteplan').pop(), co = pc.steps.filter(s => s.counted && s.r.stage === 'condo').pop();
       if (sp && co && sp.units !== co.units) flags.push({ kind: 'info', parcel: pc.letter, text: `${L}: the site plan states ${num(sp.units)}, the condominium ${num(co.units)} (${co.units > sp.units ? '+' : ''}${num(co.units - sp.units)}).` });
       for (const s of pc.steps) if (s.added) flags.push({ kind: 'info', parcel: pc.letter, text: `${L}: ${s.r.ref} adds ${num(s.change)} unit${s.change === 1 ? '' : 's'} to the count (${num(s.units - s.change)} → ${num(s.units)}).` });
       for (const s of pc.steps) if (s.revised) flags.push({ kind: 'warn', parcel: pc.letter, text: `${L}: ${s.r.ref} changes its count in its description (${s.change > 0 ? '+' : ''}${num(s.change)}): ${s.note.replace(/^resubmission: /, '')}` });
       for (const s of pc.steps) if (s.counted && s.app && s.units !== s.app && !s.revised && !s.added) flags.push({ kind: 'warn', parcel: pc.letter, text: `${L}: ${s.r.ref} states ${num(s.units)} (${s.how}); the app reads ${num(s.app)}.` });
-      for (const s of pc.steps) if (s.counted && s.change != null && !s.revised && !s.added && Math.abs(s.change) > 0.1 * Math.max(1, s.units - s.change)) flags.push({ kind: 'info', parcel: pc.letter, text: `${L}: ${s.r.ref} ${s.change > 0 ? 'raised' : 'cut'} the count from ${num(s.units - s.change)} to ${num(s.units)}.` });
+      for (const s of pc.steps) if (s.counted && s.trackPrev != null && Math.abs(s.units - s.trackPrev) > 0.1 * Math.max(1, s.trackPrev)) flags.push({ kind: 'info', parcel: pc.letter, text: `${L}: ${s.r.ref} ${s.units > s.trackPrev ? 'raised' : 'cut'} the count from ${num(s.trackPrev)} to ${num(s.units)}.` });
+      for (const s of pc.steps) if (s.newTrack) flags.push({ kind: 'info', parcel: pc.letter, text: `${L}: ${s.r.ref} is another building on the parcel (${num(s.units)}), added to it rather than replacing the earlier count.` });
     }
     const last = years[years.length - 1] || { land: 0, built: 0 };
     return { base, parcels, spans: ownSpans, years, flags, totals: { land: last.land, built: last.built } };
@@ -316,7 +350,7 @@
   function unitsSummary(u) {
     if (!u || !u.parcels.length) return '';
     const built = u.parcels.filter(pc => pc.built), open = u.parcels.filter(pc => !pc.built && pc.count > 0);
-    const rng = pc => (pc.total && pc.total.units !== pc.count ? `≈${num(Math.min(pc.count, pc.total.units))}–${num(Math.max(pc.count, pc.total.units))}` : num(pc.count));
+    const rng = pc => (pc.stated != null && pc.stated !== pc.count ? `≈${num(Math.min(pc.count, pc.stated))}–${num(Math.max(pc.count, pc.stated))}` : num(pc.count));
     const b = built.length ? `${num(built.reduce((t, pc) => t + pc.count, 0))} homes built on ${built.length} parcel${built.length === 1 ? '' : 's'} (${built.map(pc => `${pc.letter} ${num(pc.count)}`).join(' + ')})` : 'No homes built on this land yet';
     const o = open.map(pc => { const s = pc.steps.find(x => x.counted); return `${rng(pc)} more on parcel ${pc.letter} (${pc.name})${s && s.at != null ? `, first proposed in ${yearOf(s.at)}` : ''}${pc.underway ? ', permits issued' : ''}`; });
     return `${b}${o.length ? `; ${o.join('; ')}` : ''}.`;
