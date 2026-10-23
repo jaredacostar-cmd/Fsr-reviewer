@@ -60,6 +60,7 @@
     week: ['snapshot.json', 'history.json', 'capital.json', 'eas.json', 'council.json'],
     fsr: ['fsr.json', ...DEV, ...SVC],
     pipes: ['sewers.json', 'servicing.json', 'snapshot.json'],
+    outlets: ['dev-outlets.json', 'sewers.json', 'dc-infra.json', 'dc-joins.json', 'servicing.json', 'snapshot.json'],
     study: [...DEV, ...SVC],
     // (Labs › Sewer designer: the Region's mains, the terrain and the roads, read live)
     sewer: [],

@@ -436,6 +436,36 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     await page.click('#home [data-dcproj-back]'); await wait(800);
   });
 
+  await check('QA/QC › Review outlets: open a development, tap the map to set its outlet, save it with its source, back to automatic', browser, {}, async ({ page, ev }, expect) => {
+    await ev(() => { PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage('outlets'); });
+    await page.waitForSelector('#home [data-dvo="start"]', { timeout: 120000 }); await wait(800);
+    const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
+    expect(side.includes('outlets'), `Review outlets is in Home's sidebar (${side.join()})`);
+    // (a development on the existing sewers, so a tap at its site lands on its own sewer)
+    await ev(() => { const q = PeelDevOutlets.queue(), G = PeelSewerCap.sewerGrowth(), x = q.rows.find(r => r.p.dr && r.p.dr.length && G.devPipe.get(r.p) != null); PeelDevOutlets.state.sel = x.p.key; PeelWorkspaces.renderPage(true); });
+    await wait(800);
+    expect(await ev(() => PeelDevOutlets.queue().all.every(x => x.links.length && x.links.every(l => l.sys === 'wastewater'))), 'the queue: developments relying on a DC wastewater project');
+    const st = () => ev(() => { const S = PeelDevOutlets.state, sel = PeelDevOutlets.selected(), p = sel && sel.p; return { key: p && p.key, k: p ? PeelSewerCap.sewerGrowth().devPipe.get(p) : null, rec: p ? PeelDevOutlets.recordOf(p) : null, mode: S.mode, cand: S.cand && { kind: S.cand.kind, k: S.cand.k } }; });
+    const a = await st();
+    expect(!!a.key && a.k != null && !a.rec, `a development open with its automatic outlet (${a.key}, pipe ${a.k})`);
+    await page.click('#home [data-dvo="start"]'); await wait(500);
+    expect(await ev(() => !!document.querySelector('#home [data-dvo-map].picking')), 'the map is in pick mode');
+    // a real tap where the site's connector meets its sewer: it snaps to that sewer (the tap reaches the ground)
+    const at = await ev(() => { const c = document.querySelector('#home [data-dvo-map] .hm-dvo-conn'), svg = c.ownerSVGElement, q = c.getPointAtLength(c.getTotalLength()), pt = svg.createSVGPoint(); pt.x = q.x; pt.y = q.y; const s = pt.matrixTransform(c.getScreenCTM()); return [s.x, s.y]; });
+    await page.mouse.click(at[0], at[1]); await wait(800);
+    const b = await st();
+    expect(b.mode === 'preview' && b.cand && b.cand.kind === 'sewer' && b.cand.k === a.k, `the tap picks its own sewer (${JSON.stringify(b.cand)})`);
+    expect(await ev(() => /Preview/.test(document.querySelector('#home .dvo-panel').textContent)), 'a preview before saving');
+    await page.fill('#home [data-dvo-src]', 'browser path'); await page.click('#home [data-dvo="save"]'); await wait(1500);
+    const c = await st();
+    expect(c.rec && c.rec.mode === 'set' && c.rec.src === 'browser path' && c.k === a.k, `saved, with its source, and the load model uses it (pipe ${c.k})`);
+    expect(await ev(() => /Set by hand/.test(document.querySelector('#home .dvo-panel').textContent) && !!document.querySelector('#home [data-dvo="export"]')), 'the panel says set by hand, with Export');
+    await page.click('#home .dvo-panel [data-dvo="auto"]'); await wait(1500);
+    const d = await st();
+    expect(!d.rec && d.k === a.k, 'Automatic drops it');
+    await ev(() => localStorage.removeItem('peel-dev:devOutletEdits'));
+  });
+
   await browser.close(); srv.close();
   for (const r of results) console.log(`${r.ok ? 'ok  ' : 'FAIL'} ${r.name} (${(r.ms / 1000).toFixed(1)} s)${r.ok ? '' : `\n       - ${r.fails.join('\n       - ')}`}`);
   const bad = results.filter(r => !r.ok).length;

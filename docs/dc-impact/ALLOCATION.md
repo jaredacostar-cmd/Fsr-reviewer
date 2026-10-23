@@ -190,6 +190,17 @@ development many times. So for money:
 
 ## How we'll know it's right
 
+**In the app: QA/QC › Review outlets** (`js/dev-outlets.js`). Reviewers can work through the
+developments relying on a DC project and do one of two things:
+- **confirm** the automatic outlet (the nearest 300 mm+ sewer, or the route along the planned mains);
+- **set** the right sewer or planned main by tapping it on the map, after a preview of the DC projects
+  and gate year it would give.
+
+Each record carries its source (FSR page, permit, Region). The sewer loads, the trace and this
+allocation all follow a set outlet. Records live in this browser until exported and committed as
+`data/dev-outlets.json`. Water connections use the same records (`sys: 'water'`), next.
+
+
 1. **Rerun after the step 3 fix.** Done (see step 3): 26-2117 and 26-2128 dropped out and the
    2034 gate went.
 2. **FSRs as ground truth.** `data/fsr.json` links 66 functional servicing reports. Read a sample

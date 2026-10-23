@@ -100,7 +100,7 @@
     // (the developments and test sites themselves, not their count: a unit edit or a moved test site
     // keeps the count; and the census the Built layer is counted from, and the jobs settings)
     const U = root.PeelUtil, bc = root.PeelCensusAreas && root.PeelCensusAreas.baselineCensus();
-    const key = `${JSON.stringify(App().state.criteria)}|${U.idOf(App().state.projects)}|${App().state.projects.length}|${U.idOf(App().state.whatifs)}|${(App().state.whatifs || []).length}|${bc ? bc.date : ''}|${App().state.empGen || 0}`;
+    const key = `${JSON.stringify(App().state.criteria)}|${U.idOf(App().state.projects)}|${App().state.projects.length}|${U.idOf(App().state.whatifs)}|${(App().state.whatifs || []).length}|${bc ? bc.date : ''}|${App().state.empGen || 0}|${window.PeelDevOutlets ? window.PeelDevOutlets.version() : 0}`;
     if (MM().SEW.growth && MM().SEW.key === key) return MM().SEW.growth;
     const n = MM().SEW.data.pipes.length, L = ['built', 'approved', 'proposed'];
     const g = Object.fromEntries(L.map(k => [k, { pop: new Float64Array(n), jobs: new Float64Array(n), ha: new Float64Array(n), units: new Float64Array(n) }]));
@@ -114,7 +114,9 @@
       if (!L.includes(lay) || p.lat == null) continue;
       const e = D.estimate([p], App().state.criteria, 'all', App().jobsOf);
       if (!(e.population > 0 || e.employment.jobs > 0)) continue;
-      const k = nearestPipe(p.lng, p.lat); if (k < 0) continue;
+      // (a reviewed outlet set by hand, QA/QC › Review outlets: js/dev-outlets.js; else the nearest 300 mm+ sewer)
+      const set = window.PeelDevOutlets ? window.PeelDevOutlets.pipeFor(p) : null;
+      const k = set != null ? set : nearestPipe(p.lng, p.lat); if (k < 0) continue;
       devPipe.set(p, k);
       const ha = e.area.ha + (e.employment.area ? e.employment.area.ha : 0), t = out[k] ? start[lay] : g[lay];
       if (out[k]) { t.pop[k] += e.population; t.jobs[k] += e.employment.jobs; t.ha[k] += ha; t.units[k] += e.totalUnits || 0; continue; }

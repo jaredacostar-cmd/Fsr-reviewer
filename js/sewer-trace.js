@@ -322,7 +322,9 @@
     // Outside the traced catchments: along the planned DC mains first, when one is within 1 km.
     // Also where the site has no existing sewer of 300 mm+ within 400 m (greenfield in a mapped catchment).
     const G = SC().sewerGrowth(), k0 = G.devPipe.get(p) ?? SC().nearestPipe(p.lng, p.lat);
-    const outside = !(p.dr && p.dr.length) || k0 < 0, pl = outside ? dcSewerPath(p) : null;
+    // (an outlet set by hand: onto an existing sewer, that sewer; onto a planned main, its route: js/dev-outlets.js)
+    const DO = window.PeelDevOutlets, setR = DO ? DO.dcRouteFor(p) : null;
+    const outside = setR ? setR !== 'sewer' : !(p.dr && p.dr.length) || k0 < 0, pl = setR && setR !== 'sewer' ? setR : outside ? dcSewerPath(p) : null;
     // No planned path either: the nearest existing sewer within 3 km, joined straight.
     const far = !pl && k0 < 0 ? SC().nearestPipe(p.lng, p.lat, 3000) : -1;
     const k = pl ? pl.exit : k0 >= 0 ? k0 : far;
