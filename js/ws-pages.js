@@ -1101,6 +1101,9 @@
     for (const pp of pipes) { const g = pipePts(pp[10]); if (!inBB(g)) continue; out.push(`<path d="${f.line(g)}" class="hm-sw ${pp[0] >= 900 ? 'hm-sw-l' : pp[0] >= 450 ? 'hm-sw-m' : 'hm-sw-s'}"/>`); }
     const di = App() && App().state.dcInfra;
     if (di) for (const ln of di.wastewater.lines) if (inBB(ln.g)) out.push(`<path d="${f.line(ln.g)}" class="hm-dc hm-dc-wastewater"><title>${esc(ln.p || ln.c || '')}${ln.y ? ` · ${ln.y}` : ''}</title></path>`);
+    // (sewers being built: the capital projects' new sewers, js/dc-joins.js)
+    const DJ = root.PeelDcJoins;
+    if (DJ && DJ.capReady && DJ.capReady()) for (const ln of DJ.capLines('wastewater')) if (inBB(ln.g)) out.push(`<path d="${f.line(ln.g)}" class="hm-cap"><title>${esc(ln.n || '')} (${esc(ln.p || '')}) · ${esc(ln.s || '')}</title></path>`);
     // A route: from a pipe down the network while it is on the map (and along the planned mains first).
     const route = (k, path, cls) => {
       const parts = [];
@@ -1111,8 +1114,8 @@
     const conn = (to, cls) => (to ? `<path d="${f.line([[p.lng, p.lat], to])}" class="${cls}"/>` : '');
     if (cur) { out.push(route(cur.k, cur.path, 'hm-dvo-route')); out.push(conn(cur.at, 'hm-dvo-conn')); }
     if (cand) {
-      const path = cand.kind === 'dc' && root.PeelSewerTrace ? root.PeelSewerTrace.dcSewerPath({ lng: cand.at[0], lat: cand.at[1] }) : null;
-      out.push(route(cand.kind === 'dc' ? (path ? path.exit : null) : cand.k, path, 'hm-dvo-alt')); out.push(conn(cand.at, 'hm-dvo-conn-alt'));
+      const path = cand.kind !== 'sewer' ? DO.routeFrom(cand.kind, cand.at) : null;
+      out.push(route(cand.kind === 'sewer' ? cand.k : path ? path.exit : cand.kind === 'cap' ? SC.nearestPipe(cand.at[0], cand.at[1], 600) : null, path, 'hm-dvo-alt')); out.push(conn(cand.at, 'hm-dvo-conn-alt'));
     }
     // (the nearby list's numbers, where each joins its pipe)
     near.forEach((c, i) => { if (!inBB([c.at])) return; const [x, y] = f.pt(c.at[0], c.at[1]), on = root.PeelDevOutlets.sameOutlet(cand, c); out.push(`<g class="hm-dvo-near${on ? ' on' : ''}" data-dvo="near:${i}"><circle cx="${x}" cy="${y}" r="7"/><text x="${x}" y="${y + 3.5}" text-anchor="middle">${i + 1}</text><title>${esc(c.label)}</title></g>`); });
@@ -1132,7 +1135,8 @@
     const chip = r => (!r ? '<span class="pnl-chip t-stage">Automatic</span>' : r.mode === 'set' ? '<span class="pnl-chip t-tight">Set by hand</span>' : '<span class="pnl-chip t-room">Confirmed</span>');
     const rows = q.rows.map(x => ({ attrs: { 'data-dvo': 'pick-dev', 'data-dvo-key': x.p.key }, tone: sel && x.p.key === sel.p.key ? 'stage' : null,
       html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.p.title)}<small>${esc(x.p.municipality)} · ${fmtNum(Math.round(x.units))} units${x.gate ? ` · gate ${x.gate.y} (${esc(x.gate.key)})` : ''}</small></span>${chip(x.rec)}</div>${x.gap ? `<small class="pnl-r-line t-over">first homes ≈${x.first}, before ${x.gate.y}</small>` : ''}` }));
-    const filters = `<div class="dvo-filters" role="group" aria-label="Queue">${[['all', `All (${fmtNum(q.all.length)})`], ['gap', `Homes before the project (${fmtNum(q.all.filter(x => x.gap).length)})`], ['todo', 'Not reviewed'], ['done', 'Reviewed']].map(([k, t]) => `<button type="button" class="btn small${S.filter === k ? ' on' : ''}" data-dvo="filter:${k}" aria-pressed="${S.filter === k}">${t}</button>`).join('')}</div>`;
+    // (above the queue: the page's own filters slot holds the app's filter chips, js/workspaces.js)
+    const filters = `<div class="dvo-filters" role="group" aria-label="Queue">${[['all', `All (${fmtNum(q.all.length)})`], ['gap', `Homes before the project (${fmtNum(q.all.filter(x => x.gap).length)})`], ['misfit', `Doesn’t fit its stage (${fmtNum(q.all.filter(DO.misfit).length)})`], ['todo', 'Not reviewed'], ['done', 'Reviewed']].map(([k, t]) => `<button type="button" class="btn small${S.filter === k ? ' on' : ''}" data-dvo="filter:${k}" aria-pressed="${S.filter === k}">${t}</button>`).join('')}</div>`;
     let panel = '', map = '', cap = '';
     if (sel) {
       const p = sel.p, rec = DO.recordOf(p), G = SC.sewerGrowth(), k = G.devPipe.get(p), pipes = MM().SEW.data.pipes;
@@ -1140,7 +1144,9 @@
       const path = setR && setR !== 'sewer' ? setR : !setR && !(p.dr && p.dr.length) && root.PeelSewerTrace ? root.PeelSewerTrace.dcSewerPath(p) : null;
       const at = path ? path.coords[0] : k != null && k >= 0 ? DO.nearestOn([p.lng, p.lat], root.PeelSewerCap.pipeCoords(pipes[k])) : null;
       const distM = at ? Math.round(root.PeelDcInfra.dcM([p.lng, p.lat], at)) : null, st = at ? streetAtPt(at[0], at[1]) : '';
-      const what = path ? `Along the planned DC main ${esc(path.first.p || path.first.c)}${path.first.d ? ` (${path.first.d} mm)` : ''}` : k != null && k >= 0 ? `${pipes[k][0]} mm sanitary sewer${st ? ` on ${esc(st)}` : ''}` : 'No sewer within reach';
+      const what = rec && rec.mode === 'set' && rec.kind === 'cap' ? `New sanitary sewer ${esc(rec.project || '')}, being built`
+        : path && path.first.cap ? `Along the new sanitary sewer ${esc(path.first.p || '')} (being built)`
+        : path ? `Along the planned DC main ${esc(path.first.p || path.first.c)}${path.first.d ? ` (${path.first.d} mm)` : ''}` : k != null && k >= 0 ? `${pipes[k][0]} mm sanitary sewer${st ? ` on ${esc(st)}` : ''}` : 'No sewer within reach';
       const why = rec && rec.mode === 'set' ? DO.recText(rec) : path ? `off the existing sewers: its route along the planned mains${rec ? ` · ${DO.recText(rec)}` : ' · not checked'}` : `the nearest sewer of 300 mm or more${distM != null ? `, ${fmtNum(distM)} m from the site` : ''}${rec ? ` · ${DO.recText(rec)}` : ' · not checked'}`;
       const now = sel.links.map(l => ({ key: l.key, tier: l.tier, y: l.y }));
       const TIER = { A: 'needs it to connect', B1: 'runs short: needs it for capacity', B2: 'on its path, has room' };
@@ -1158,34 +1164,38 @@
         : S.mode === 'pick' ? `<div class="pnl-acts"><button type="button" class="btn small" data-dvo="cancel">Cancel</button></div>`
         : `<div class="pnl-acts"><button type="button" class="btn small pnl-primary" data-dvo="confirm">${rec && rec.mode === 'confirmed' ? 'Confirmed ✓' : 'Confirm outlet'}</button><button type="button" class="btn small" data-dvo="start">Set where it discharges</button><button type="button" class="btn small" data-dvo="auto"${rec ? '' : ' disabled'}>Automatic</button></div>`;
       // Pick from the list (or tap the map): the sewers and planned mains near the site.
-      const near = S.mode !== 'idle' ? DO.nearby(p, { streetOf: streetAtPt }) : [];
+      const near = S.mode !== 'idle' ? DO.nearby(p, { streetOf: streetAtPt, first: sel.first }) : [];
+      // The checks: does the outlet fit the development's stage, timing, ground and drainage area?
+      const EV_ICON = { ok: '✓', warn: '!', bad: '✕', unk: '?' };
+      const evHTML = list => `<ul class="dvo-ev">${list.map(e => `<li class="ev-${e.tone}"><span aria-hidden="true">${EV_ICON[e.tone]}</span>${esc(e.text)}</li>`).join('')}</ul>`;
+      const curC = DO.currentCand(p, { k, path }), checks = S.cand ? DO.checksFor(p, S.cand, sel.first) : DO.checksFor(p, curC, sel.first);
       const nearHTML = S.mode === 'idle' ? '' : near.length ? `<h4>Nearby infrastructure</h4><ol class="dvo-near">${near.map((c, i) => {
         const on = DO.sameOutlet(S.cand, c), now = DO.isCurrent(c, { k, path });
-        return `<li><button type="button" class="dvo-near-b${on ? ' on' : ''}" data-dvo="near:${i}" aria-pressed="${on}"><span class="dvo-near-n">${i + 1}</span><span>${esc(c.label)}<small>${c.kind === 'dc' ? 'planned' : 'existing'}${c.kind === 'sewer' && c.mm < 300 ? ' · local sewer' : ''}${now ? ' · <b>its outlet now</b>' : ''}</small></span><b class="dvo-near-m">${fmtNum(Math.round(c.m))} m</b></button></li>`;
+        return `<li><button type="button" class="dvo-near-b${on ? ' on' : ''} fit-${c.fit || 'ok'}" data-dvo="near:${i}" aria-pressed="${on}"><span class="dvo-near-n">${i + 1}</span><span>${esc(c.label)}<small>${esc(c.status || '')}${c.kind === 'sewer' && c.mm < 300 ? ' · local sewer' : ''}${now ? ' · <b>its outlet now</b>' : ''}</small>${(() => { const e = (c.checks || []).find(x => x.tone === 'bad') || (c.checks || []).find(x => x.tone === 'warn'); return e ? `<small class="ev-${e.tone}">${EV_ICON[e.tone]} ${esc(e.text)}</small>` : ''; })()}</span><b class="dvo-near-m">${fmtNum(Math.round(c.m))} m</b></button></li>`;
       }).join('')}</ol>` : '<p class="small muted">No sewer or planned main within 400 m: tap the map.</p>';
       panel = `<section class="dvo-panel" data-psec="list"><div class="pnl-list-h"><h3>${esc(p.title)}</h3><button type="button" class="btn small link" data-pnl-dev="${esc(p.key)}">Open the development ›</button></div>
         <p class="small muted">${esc(p.municipality)} · ${fmtNum(Math.round(sel.units))} units${sel.first ? ` · first homes ≈${sel.first}` : ''}</p>
-        <h4>Discharges to</h4>${S.cand ? '' : `<div class="dvo-out"><b>${what}</b> ${chip(rec)}<small>${why}</small></div>`}${previewHTML}${nearHTML}
+        <h4>Discharges to</h4>${S.cand ? '' : `<div class="dvo-out"><b>${what}</b> ${chip(rec)}<small>${why}</small></div>`}${previewHTML}${checks.length ? `<h4>Does it fit?${S.cand ? ' (the new outlet)' : ''}</h4>${evHTML(checks)}` : ''}${nearHTML}
         <h4>DC projects on its path${S.cand ? ' (with the new outlet)' : ''}</h4>${projHTML}
         ${sel.gate && !S.cand ? `<p class="small">Gate year ${sel.gate.y} (${esc(sel.gate.key)})${sel.first ? ` · first homes ≈${sel.first}: ${sel.gap ? '<span class="t-over">before it is built</span>' : 'in time'}` : ''}.</p>` : ''}
         ${S.mode !== 'pick' ? src : ''}${btns}
         ${DO.edits() ? `<p class="small"><button type="button" class="btn small link" data-dvo="export">Export ${fmtNum(DO.edits())} edit${DO.edits() === 1 ? '' : 's'} (dev-outlets.json)</button> <span class="muted">to commit, so everyone sees them</span></p>` : ''}</section>`;
-      map = `<div class="dvo-map${S.mode === 'pick' ? ' picking' : ''}" data-dvo-map>${S.mode === 'pick' ? '<p class="dvo-banner small" role="status">Pick from the list, or tap the sewer or planned main it discharges to (Esc to cancel)</p>' : ''}${outletMap(p, { k, path, at }, S.cand, near)}</div>`;
-      cap = `<span class="hm-key hm-key-dvo-route"></span> its route now ${S.cand ? '<span class="hm-key hm-key-dvo-alt"></span> the new route ' : ''}<span class="hm-key hm-key-pipe"></span> sanitary sewers (thicker: larger) <span class="hm-key hm-dc-wastewater"></span> planned DC mains${near.length ? ' · numbers: the nearby list' : ''}`;
+      map = `<div class="dvo-map${S.mode === 'pick' ? ' picking' : ''}" data-dvo-map>${S.mode === 'pick' ? '<p class="dvo-banner small" role="status">Pick from the list, or tap the sewer (existing, being built or planned) it discharges to (Esc to cancel)</p>' : ''}${outletMap(p, { k, path, at }, S.cand, near)}</div>`;
+      cap = `<span class="hm-key hm-key-dvo-route"></span> its route now ${S.cand ? '<span class="hm-key hm-key-dvo-alt"></span> the new route ' : ''}<span class="hm-key hm-key-pipe"></span> sanitary sewers (thicker: larger) <span class="hm-key hm-dc-wastewater"></span> planned DC mains <span class="hm-key hm-key-cap"></span> sewers being built${near.length ? ' · numbers: the nearby list' : ''}`;
     }
     return { id: 'outlets', eyebrow: eyebrow('outlets'), name: 'Where does each development discharge?',
       status: nRec.length ? { tone: 'stage', text: `${fmtNum(nRec.length)} reviewed` } : null,
       identity: `Peel · ${fmtNum(q.all.length)} developments rely on a DC wastewater project · edits are kept in this browser until exported`,
       answer: sel ? `Check where each development's sewage goes. The app sends it to the nearest sewer of 300 mm or more (or, off the existing sewers, along the planned mains). Confirm it, or tap the right sewer on the map: the DC projects, timing and sewer loads follow.` : 'No development relies on a DC project.',
-      filters, figures: [
+      figures: [
         { v: fmtNum(q.all.length), u: '', label: 'to review', ctx: 'rely on a DC wastewater project' },
         { v: fmtNum(nRec.filter(r => r.mode === 'confirmed').length), u: '', label: 'confirmed', ctx: 'the automatic outlet, checked' },
         { v: fmtNum(nRec.filter(r => r.mode === 'set').length), u: '', label: 'set by hand', ctx: 'a different sewer or planned main' },
         { v: fmtNum(q.all.filter(x => x.gap).length), u: '', label: 'homes before the project', ctx: 'worth checking first', tone: 'over' },
       ],
-      lists: [{ html: panel }, { title: 'To review, largest first', rows, total: rows.length, all: S.all, see: { 'data-dvo': 'all' } }],
+      lists: [{ html: panel }, { html: filters }, { title: 'To review, largest first', rows, total: rows.length, all: S.all, see: { 'data-dvo': 'all' } }],
       map: sel ? { title: 'Where it discharges', html: map, caption: cap } : null,
-      method: 'A development discharges to the nearest sanitary sewer of 300 mm or more (Region sewer records), or, off the existing sewers, along the planned DC mains to an existing sewer. A reviewed outlet replaces that: confirmed (checked, unchanged) or set by hand (a sewer or planned main picked from the nearby list, existing sewers of any size and planned mains within 400 m, or tapped on the map; kept as its point and size so it survives a data rebuild). The sewer loads, the trace and the DC projects allocation (js/dc-impact.js) follow it. Edits stay in this browser until exported and committed as data/dev-outlets.json.',
+      method: 'A development discharges to the nearest sanitary sewer of 300 mm or more (Region sewer records), or, off the existing sewers, along the planned DC mains to an existing sewer. A reviewed outlet replaces that: confirmed (checked, unchanged) or set by hand (a sewer picked from the nearby list: existing sewers of any size, sewers being built (the Region’s capital projects, tendered or further) and planned DC mains within 400 m, or tapped on the map; kept as its point and size so it survives a data rebuild). The sewer loads, the trace and the DC projects allocation (js/dc-impact.js) follow it. Each outlet is checked against the development: its stage (built: a sewer in service; a building or site servicing permit: in service or being built, not a DC main still to tender; earlier: anything), in service by first homes (the whole route, the DC mains it needs downstream included), a sewer installed after the development was built (or with it: likely its own), gravity (the lidar ground at the site, 1.5 m down and 0.5 % fall, over the sewer’s invert; datum shift 0.41 m) and the drainage area. The checks flag, never block. Edits stay in this browser until exported and committed as data/dev-outlets.json.',
       sources: 'Region of Peel sanitary sewers; 2026 DC capital maps (draft); the municipal application records; reviewers’ sources (FSRs, site servicing permits).',
       actions: [{ label: DO.edits() ? `Export ${fmtNum(DO.edits())} edit${DO.edits() === 1 ? '' : 's'}` : 'Export (nothing yet)', attrs: { 'data-dvo': 'export' }, primary: !!DO.edits() }] };
   }

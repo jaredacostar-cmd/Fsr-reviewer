@@ -3007,7 +3007,7 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .home-answer .ws-back { display: block; margin-bottom: var(--space-2); }
 /* QA/QC › Review outlets: the queue filters, the development's outlet, and the map to tap. */
 .dvo-filters { display: flex; flex-wrap: wrap; gap: var(--space-1); margin: var(--space-2) 0; }
-.dvo-filters .btn.on { border-color: var(--accent); color: var(--accent); }
+.dvo-filters .btn.on { border-color: var(--accent); background: var(--accent); color: var(--on-accent); }
 .dvo-panel h4 { font-size: var(--fs-1); color: var(--text-secondary); text-transform: uppercase; letter-spacing: .04em; margin: var(--space-3) 0 var(--space-1); }
 .dvo-out { border: 1px solid var(--border); border-radius: 8px; padding: var(--space-2); background: var(--surface-2); }
 .dvo-out.alt { border-color: var(--cap-tight); }
@@ -3028,6 +3028,14 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .home-map-svg .hm-dvo-near circle { fill: var(--text-primary); stroke: var(--map-halo); stroke-width: 1.5; }
 .home-map-svg .hm-dvo-near text { fill: var(--surface-1); font-size: 9px; font-weight: 600; pointer-events: none; }
 .home-map-svg .hm-dvo-near.on circle { fill: var(--cap-tight); }
+.dvo-ev { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 3px; font-size: var(--fs-1); }
+.dvo-ev li { display: flex; gap: var(--space-2); align-items: baseline; }
+.dvo-ev li > span { flex: none; width: 1.1em; text-align: center; font-weight: 700; }
+.dvo-ev .ev-ok > span, .dvo-near-b small.ev-ok { color: var(--cap-room-t); }
+.dvo-ev .ev-warn > span, .dvo-near-b small.ev-warn { color: var(--cap-tight-t); }
+.dvo-ev .ev-bad, .dvo-near-b small.ev-bad { color: var(--cap-over-t); }
+.dvo-ev .ev-unk { color: var(--text-secondary); }
+.dvo-near-b.fit-bad { opacity: 0.75; }
 .dvo-src { display: block; margin-top: var(--space-2); color: var(--text-secondary); }
 .dvo-src input { display: block; width: 100%; box-sizing: border-box; margin-top: 4px; }
 .dvo-map { position: relative; }
@@ -3040,6 +3048,8 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .home-map-svg .hm-dvo-conn { fill: none; stroke: var(--accent); stroke-width: 1.6; stroke-dasharray: 3 3; }
 .home-map-svg .hm-dvo-conn-alt { fill: none; stroke: var(--cap-tight); stroke-width: 1.6; stroke-dasharray: 3 3; }
 .home-map-svg .hm-dvo-site { fill: var(--select); stroke: var(--map-halo); stroke-width: 2; }
+.home-map-svg .hm-cap { fill: none; stroke: var(--text-primary); stroke-width: 2.4; stroke-dasharray: 1 3; stroke-linecap: round; }
+.hm-key.hm-key-cap { height: 3px; vertical-align: 2px; background: repeating-linear-gradient(90deg, var(--text-primary) 0 2px, transparent 2px 5px); }
 .hm-key.hm-key-dvo-route { height: 3px; vertical-align: 2px; background: var(--accent); }
 .hm-key.hm-key-dvo-alt { height: 3px; vertical-align: 2px; background: var(--cap-tight); }
 .home-map-svg .hm-dc-dim { opacity: 0.35; }

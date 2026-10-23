@@ -193,8 +193,23 @@ development many times. So for money:
 **In the app: QA/QC › Review outlets** (`js/dev-outlets.js`). Reviewers can work through the
 developments relying on a DC project and do one of two things:
 - **confirm** the automatic outlet (the nearest 300 mm+ sewer, or the route along the planned mains);
-- **set** the right sewer or planned main by tapping it on the map, after a preview of the DC projects
-  and gate year it would give.
+- **set** the right outlet, picked from a list of what is nearby or tapped on the map, after a preview
+  of the DC projects and gate year it would give. The list covers existing sewers of any size, sewers
+  being built (the Region's capital projects, tendered or further) and planned DC mains, within 400 m.
+
+Each outlet is checked against the development. The checks flag; they never block:
+
+| Check | Rule |
+|---|---|
+| Stage | Built: a sewer in service. A building permit, under construction or a site servicing permit: in service or being built, not a DC main still to tender (on its route too). Earlier stages: anything. |
+| In service by first homes | The whole route, including the DC mains it needs downstream. |
+| Install year | A sewer installed after the development was built is wrong; one installed with it, within 150 m, is likely its own. |
+| Site servicing permit | Issued well before the sewer it relies on starts: flagged. |
+| Gravity | Lidar ground at the site, 1.5 m down and 0.5 % fall, over the sewer's invert (datum shift 0.41 m, `data/elevation-validation.json`). |
+| Drainage area | The outlet in a different trunk drainage area from the site: flagged. |
+
+The queue has a filter for developments whose outlet doesn't fit their stage (28 at first run: permitted
+or under construction, relying on a DC main not tendered).
 
 Each record carries its source (FSR page, permit, Region). The sewer loads, the trace and this
 allocation all follow a set outlet. Records live in this browser until exported and committed as
