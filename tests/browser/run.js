@@ -491,6 +491,20 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(lr.kind === 'local' && lr.mm === 200 && lr.k === a.k, `saved as a local sewer; the load model follows its trunk (${JSON.stringify({ kind: lr.kind, k: lr.k })})`);
     expect(/local sanitary sewer/.test(lr.text), 'the panel names the local sewer');
     await page.click('#home .dvo-panel [data-dvo="auto"]'); await wait(1000);
+    // what the development's FSR says (data/fsr-outlets.json): quoted with its page, checked against the outlet,
+    // and 'Find the FSR's outlet nearby' while picking
+    const fd = await ev(() => { const DO = PeelDevOutlets, x = DO.queue().all.find(r => DO.fsrOutletOf(r.p)); if (!x) return null; DO.state.sel = x.p.key; DO.state.mode = 'idle'; DO.state.cand = null; PeelWorkspaces.renderPage(true); return x.p.key; });
+    expect(!!fd, 'a development in the queue with its FSR read');
+    if (fd) {
+      await wait(800);
+      const fb = await ev(() => { const q = document.querySelector('#home .dvo-fsr'); return q && { text: q.textContent, link: (q.querySelector('a') || {}).href || '' }; });
+      expect(fb && /“/.test(fb.text) && /#page=\d+/.test(fb.link), `the FSR's own words, with its page linked (${fb && fb.link})`);
+      expect(await ev(() => [...document.querySelectorAll('#home .dvo-ev li')].some(li => /FSR/.test(li.textContent))), 'an FSR check on the outlet');
+      expect(await ev(() => /^FSR/.test((document.querySelector('#home [data-dvo-src]') || {}).value || '')), 'the source prefilled with the FSR and page');
+      await page.click('#home [data-dvo="start"]'); await wait(800);
+      expect(!!(await page.$('#home [data-dvo="fsr-pick"]')), 'Find the FSR’s outlet nearby, while picking');
+      await page.click('#home [data-dvo="cancel"]'); await wait(500);
+    }
     // a sewer being built (a capital project) near a development: on the list, picked, saved, followed by the models
     const capDev = await ev(() => { const DO = PeelDevOutlets, x = DO.queue().all.find(r => DO.nearby(r.p).some(c => c.kind === 'cap')); if (!x) return null; DO.state.sel = x.p.key; PeelWorkspaces.renderPage(true); return x.p.key; });
     expect(!!capDev, 'a development with a sewer being built nearby');
