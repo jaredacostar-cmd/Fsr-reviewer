@@ -62,10 +62,20 @@ Build-out is the same under both rules.
 
 `tests/ladder.test.js` checks these on the real data.
 
-## Still on MECP D-5-1 (named as such)
+## Growth views on the ladder (Oct 23, 2026)
 
-- The Scenario's counting basis "approved only" (`js/demand.js` `unitsFor(p, 'committed')`) and
-  the growth layers it feeds (the census view, a drawn area's growth, the servicing tables' "+ Approved"
-  columns): these are growth layers, not a committed line, and keep their D-5-1 meaning.
-- The 2020 Master Plan comparison table (Water › Facilities), whose "+ Approved" column sits beside the
-  plan's own forecasts.
+Every growth view counts the same two lines past what is built: **committed** (a site servicing or
+building permit, the Peel rule) and **not committed yet** (plan approved without a permit, zoning
+approved, in review, pre-application). Build-out is unchanged.
+
+- The Scenario's count **committed only** (`js/demand.js` `unitsFor(p, 'committed')`, `jobsFor`):
+  14,759 units on the Oct 2026 snapshot, the same as Explore's committed (it was 34,997 under D-5-1).
+- Census view, a drawn area's growth (`js/areas.js` `ladderLayers`).
+- Servicing › Water zones and Wastewater blocks: "+ Committed" and "+ Not committed yet" columns
+  and bars (`js/svc-tab.js` `ladderView`).
+- Growth › Areas and Plans against their targets: "Committed or built" and "Not committed yet".
+- The 2020 Master Plan comparison: pumping rows count committed by the Peel rule.
+
+MECP D-5-1 is only named, as **past plan approval (MECP D-5-1)**, where the treatment plants are
+checked: the plant capacity charts and tables, the plant rows of the Master Plan comparison, and
+`unitsFor(p, 'd51')` / `growthSince`'s approved layer that feeds them.

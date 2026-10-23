@@ -13,10 +13,10 @@
   // (no boundary, or the Previous grouping) the plans holding its point, whole.
   //
   // Measures are the Overview's: units from Growth.pipelineTotals (planned, permitted, completed,
-  // left to build), committed by D-5-1, people and jobs from PeelDemand.estimate at the chosen
+  // left to build), committed by the Peel rule (the commitment ladder) or built, people and jobs from PeelDemand.estimate at the chosen
   // basis. Each development is measured once and its shares multiply it, so Peel equals the
   // Overview.
-  const KEYS = ['planned', 'counted', 'committed', 'proposed', 'permitted', 'completed', 'left', 'people', 'jobs', 'built', 'anticipated', 'existing'];
+  const KEYS = ['planned', 'counted', 'committed', 'proposed', 'approved', 'permitted', 'completed', 'left', 'people', 'jobs', 'built', 'anticipated', 'existing'];
   const zero = () => Object.fromEntries(KEYS.map(k => [k, 0]));
   const addInto = (t, m, f) => { for (const k of KEYS) t[k] += (m[k] || 0) * f; };
 

@@ -347,7 +347,9 @@
     let growth = '';
     const bc = CA().baselineCensus();
     if (bc) {
-      const gr = Areas().growthSince(sel, {}, bc.date, c), sj = SvcTab().svcJobs(sel.filter(p => p.phase !== 'cancelled'), bc.date);
+      const sj = SvcTab().svcJobs(sel.filter(p => p.phase !== 'cancelled'), bc.date);
+      // (the growth layers on the commitment ladder: committed by a site servicing or building permit, then the rest)
+      const lg = Areas().ladderLayers(Areas().growthSince(sel, {}, bc.date, c), sj), gr = { built: lg.built, approved: lg.committed, proposed: lg.notYet };
       let pop = 0, dw = 0, nDa = 0;
       for (const d of bc.das) {
         if (selAreas.some(g => P.pointInRings(d.lng, d.lat, [g]))) { pop += d.pop; dw += d.dw; nDa++; }
@@ -360,11 +362,11 @@
         <div class="sum-tiles">
           ${nDa ? `<div class="sum-tile"><div class="sl">${bc.year} Census</div><div class="sv">${fmtNum(Math.round(pop))}</div><div class="ss">people · ${fmtNum(nDa)} DA${nDa === 1 ? '' : 's'}</div></div>` : ''}
           ${g('Built since', 's-done', gr.built.units, gr.built.population, '', sj.jbuilt)}
-          ${g('Approved, not yet built', 's-perm', gr.approved.units, gr.approved.population, 'draft plan or site plan approved, not yet built', sj.japproved)}
-          ${g('In review', 's-left', gr.proposed.units, gr.proposed.population, 'in review', sj.jproposed)}
+          ${g('Committed, not yet built', 's-perm', gr.approved.units, gr.approved.population, 'a site servicing or building permit', gr.approved.jobs)}
+          ${g('Not committed yet', 's-left', gr.proposed.units, gr.proposed.population, 'plan approved without a permit, in review or pre-application', gr.proposed.jobs)}
         </div>
         ${sum > 0 ? `<div class="grow-bar sel-grow" role="img" aria-label="Growth layers">${layers.filter(l => l[1] > 0).map(([k, v]) => `<span class="gseg g-${k}" style="flex:${v}" title="${fmtNum(Math.round(v))} people"></span>`).join('')}</div>` : ''}
-        <p class="small muted">${nDa ? 'Census: dissemination areas whose centre falls inside the drawn area(s). ' : ''}Built = units on permits completed since census day; approved = site plan approved or permit issued, not yet built; proposed = applications in pre-consultation or review (including zoning approved without a site plan approval). People at Peel persons-per-unit; jobs from the floor area the applications state.</p>
+        <p class="small muted">${nDa ? 'Census: dissemination areas whose centre falls inside the drawn area(s). ' : ''}Built = units on permits completed since census day; committed = units left to build a site servicing permit (the whole development) or a building permit (the units it covers) commits (the Peel rule); not committed yet = the rest of build-out: plan approved without a permit, zoning approved, in review or pre-application. People at Peel persons-per-unit; jobs from the floor area the applications state.</p>
       </details>`;
     }
     const byUnits = sel.slice().sort((a, b) => (b.units || 0) - (a.units || 0));

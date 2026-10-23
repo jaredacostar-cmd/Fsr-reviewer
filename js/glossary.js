@@ -25,7 +25,7 @@
     ['zone', 'Pressure zone', /\bpressure zones?\b/i, 'An area of the water system held in one pressure range, fed by its own reservoirs and pumping stations.', 'System'],
     ['block', 'Wastewater block', /\bwastewater blocks?\b/i, 'An area that drains to one trunk sewer; the blocks are traced downstream to a plant.', 'System'],
     ['run', 'Sewer run', /\bsewer runs?\b/i, 'One sewer main between two junctions; a run can be several pipe segments.', 'System'],
-    ['committed', 'Committed', /\bcommitted\b/i, 'Approved development that holds capacity: draft-approved or registered plans of subdivision and site plan approvals, through permit and construction (MECP Procedure D-5-1).', 'Planning'],
+    ['committed', 'Committed', /\bcommitted\b/i, 'Development that holds capacity, on the commitment ladder: units left to build that a water or wastewater site servicing permit (the whole development) or a building permit (the units it covers) commits, filed or issued (the Peel rule). The treatment plants alone count past plan approval instead: draft-approved or registered plans of subdivision and site plan approvals, through permit and construction (MECP Procedure D-5-1).', 'Planning'],
     ['d51', 'MECP Procedure D-5-1', /\b(?:MECP )?(?:Procedure )?D-5-1\b/, 'Ontario’s guide for checking that sewage and water capacity exists for development. It counts registered and draft-approved subdivisions and site plan approvals as committed.', 'Planning'],
     ['opa', 'OPA', /\bOPA\b|\bofficial plan amendment\b/i, 'Official plan amendment: changes the municipality’s land-use plan for the site.', 'Planning'],
     ['zba', 'ZBA', /\bZBA\b|\bzoning by-law amendment\b/i, 'Zoning by-law amendment: changes what the zoning allows on the site.', 'Planning'],

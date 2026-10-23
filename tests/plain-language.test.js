@@ -24,7 +24,7 @@ test('scenario chip: "Default" when nothing is changed, "n changes" otherwise; t
   assert.equal(B.scenarioChipText(two), '2 changes');
   assert.equal(B.scenarioChipText(B.scenarioSettings({ ...base, year: null })), '1 change', 'build-out is a change from this year');
   const list = B.scenarioListHTML(two);
-  assert.match(list, /<li class="chg"><span class="muted">Count<\/span> <b>approved only<\/b> <span class="small scen-chg">changed · default \+ pre-application<\/span><\/li>/);
+  assert.match(list, /<li class="chg"><span class="muted">Count<\/span> <b>committed only<\/b> <span class="small scen-chg">changed · default \+ pre-application<\/span><\/li>/);
   assert.match(list, /<li class="chg"><span class="muted">Design criteria<\/span> <b>2 edited<\/b>/);
   assert.match(list, /<li><span class="muted">Wastewater flows<\/span> <b>2025 metered<\/b> <span class="muted small">default<\/span><\/li>/);
   assert.match(B.scenarioChipHTML(base), /<span class="tb-scen-t">Default<\/span> ▾<\/button>$/);

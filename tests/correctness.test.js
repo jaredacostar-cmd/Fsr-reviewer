@@ -119,7 +119,7 @@ test('6. Pre-application (anticipated) carries its definition from js/layers.js 
 
 test('6. Count: committed only · + proposed · + anticipated, in the Scenario control; the chip shows it read-only', () => {
   const B = require('../js/layer-bar.js');
-  assert.deepEqual(B.COUNT_OPTS, [['committed', 'approved only'], ['buildout', '+ in review'], ['all', '+ pre-application']]);
+  assert.deepEqual(B.COUNT_OPTS, [['committed', 'committed only'], ['buildout', '+ in review'], ['all', '+ pre-application']]);
   const st = src('js/svc-tab.js');
   assert.match(st, /<span class="muted small">Count:<\/span>\$\{LB\.COUNT_OPTS\.map/);
   assert.match(st, /\[\['all', 'All'\], \['remaining', 'Left to build'\]\]/, '"left to build" keeps its own switch');

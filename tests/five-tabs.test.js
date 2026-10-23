@@ -96,7 +96,7 @@ test('Overview "would add": units and people completed before census day (Existi
   const t = { units: { existing: 2390, built: 22663 }, people: { existing: 7700, built: 65800 } };
   assert.deepEqual(preCensus(t, 'all'), { units: 2390, people: 7700 });
   assert.deepEqual(preCensus(t, 'buildout'), { units: 2390, people: 7700 });
-  assert.deepEqual(preCensus(t, 'committed'), { units: 0, people: 0 }, 'approved only counts no completed units');
+  assert.deepEqual(preCensus(t, 'committed'), { units: 0, people: 0 }, 'committed only counts no completed units');
   assert.deepEqual(preCensus(t, 'remaining'), { units: 0, people: 0 }, 'the remaining basis counts no completed units');
   assert.deepEqual(preCensus(null, 'all'), { units: 0, people: 0 });
   const o = src('js/overview-tab.js');
