@@ -1129,8 +1129,8 @@
     const S = DO.state, sel = DO.selected(), recs = DO.records(), nRec = [...recs.values()].filter(r => (r.sys || 'wastewater') === 'wastewater');
     const chip = r => (!r ? '<span class="pnl-chip t-stage">Automatic</span>' : r.mode === 'set' ? '<span class="pnl-chip t-tight">Set by hand</span>' : '<span class="pnl-chip t-room">Confirmed</span>');
     const rows = q.rows.map(x => ({ attrs: { 'data-dvo': 'pick-dev', 'data-dvo-key': x.p.key }, tone: sel && x.p.key === sel.p.key ? 'stage' : null,
-      html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.p.title)}<small>${esc(x.p.municipality)} · ${fmtNum(Math.round(x.units))} units${x.r.gate ? ` · gate ${x.r.gate.y} (${esc(x.r.gate.key)})` : ''}</small></span>${chip(x.rec)}</div>${x.r.gap ? `<small class="pnl-r-line t-over">first homes ≈${x.r.first}, before ${x.r.gate.y}</small>` : ''}` }));
-    const filters = `<div class="dvo-filters" role="group" aria-label="Queue">${[['all', `All (${fmtNum(q.all.length)})`], ['gap', `Homes before the project (${fmtNum(q.all.filter(x => x.r.gap).length)})`], ['todo', 'Not reviewed'], ['done', 'Reviewed']].map(([k, t]) => `<button type="button" class="btn small${S.filter === k ? ' on' : ''}" data-dvo="filter:${k}" aria-pressed="${S.filter === k}">${t}</button>`).join('')}</div>`;
+      html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.p.title)}<small>${esc(x.p.municipality)} · ${fmtNum(Math.round(x.units))} units${x.gate ? ` · gate ${x.gate.y} (${esc(x.gate.key)})` : ''}</small></span>${chip(x.rec)}</div>${x.gap ? `<small class="pnl-r-line t-over">first homes ≈${x.first}, before ${x.gate.y}</small>` : ''}` }));
+    const filters = `<div class="dvo-filters" role="group" aria-label="Queue">${[['all', `All (${fmtNum(q.all.length)})`], ['gap', `Homes before the project (${fmtNum(q.all.filter(x => x.gap).length)})`], ['todo', 'Not reviewed'], ['done', 'Reviewed']].map(([k, t]) => `<button type="button" class="btn small${S.filter === k ? ' on' : ''}" data-dvo="filter:${k}" aria-pressed="${S.filter === k}">${t}</button>`).join('')}</div>`;
     let panel = '', map = '', cap = '';
     if (sel) {
       const p = sel.p, rec = DO.recordOf(p), G = SC.sewerGrowth(), k = G.devPipe.get(p), pipes = MM().SEW.data.pipes;
@@ -1140,7 +1140,7 @@
       const distM = at ? Math.round(root.PeelDcInfra.dcM([p.lng, p.lat], at)) : null, st = at ? streetAtPt(at[0], at[1]) : '';
       const what = path ? `Along the planned DC main ${esc(path.first.p || path.first.c)}${path.first.d ? ` (${path.first.d} mm)` : ''}` : k != null && k >= 0 ? `${pipes[k][0]} mm sanitary sewer${st ? ` on ${esc(st)}` : ''}` : 'No sewer within reach';
       const why = rec && rec.mode === 'set' ? DO.recText(rec) : path ? `off the existing sewers: its route along the planned mains${rec ? ` · ${DO.recText(rec)}` : ' · not checked'}` : `the nearest sewer of 300 mm or more${distM != null ? `, ${fmtNum(distM)} m from the site` : ''}${rec ? ` · ${DO.recText(rec)}` : ' · not checked'}`;
-      const now = sel.r.links.filter(l => l.sys === 'wastewater').map(l => ({ key: l.key, tier: l.tier, y: l.y }));
+      const now = sel.links.map(l => ({ key: l.key, tier: l.tier, y: l.y }));
       const TIER = { A: 'needs it to connect', B1: 'runs short: needs it for capacity', B2: 'on its path, has room' };
       const li = (x, cls = '') => `<li class="${cls}"><span>${esc(x.key)}<small>${TIER[x.tier] || ''}</small></span><b>${x.y || '–'}</b></li>`;
       let projHTML = now.length ? `<ul class="dvo-plist">${now.map(x => li(x)).join('')}</ul>` : '<p class="small muted">No DC project on its path.</p>';
@@ -1149,17 +1149,17 @@
         const then = DO.projectsFor(S.cand), d = DO.diff(now, then);
         projHTML = `<ul class="dvo-plist">${[...d.add.map(x => li(x, 'add')), ...then.filter(x => !d.add.includes(x)).map(x => li(x)), ...d.drop.map(x => li(x, 'drop'))].join('')}</ul>`;
         previewHTML = `<div class="dvo-out alt"><b>${esc(S.cand.label)}</b> <span class="pnl-chip t-tight">Preview</span><small>${fmtNum(Math.round(root.PeelDcInfra.dcM([p.lng, p.lat], S.cand.at)))} m from the site</small></div>
-          <p class="small">${d.add.length || d.drop.length ? `${d.add.length ? `Adds ${d.add.map(x => esc(x.key)).join(', ')}. ` : ''}${d.drop.length ? `Drops ${d.drop.map(x => esc(x.key)).join(', ')}. ` : ''}` : 'Same DC projects on its path. '}Gate year ${d.gate === d.gateNow ? `stays ${d.gate || '–'}` : `${d.gateNow || '–'} → <strong>${d.gate || '–'}</strong>`}${sel.r.first && d.gate ? ` · first homes ≈${sel.r.first}: ${sel.r.first < d.gate ? '<span class="t-over">before it is built</span>' : 'in time'}` : ''}.</p>`;
+          <p class="small">${d.add.length || d.drop.length ? `${d.add.length ? `Adds ${d.add.map(x => esc(x.key)).join(', ')}. ` : ''}${d.drop.length ? `Drops ${d.drop.map(x => esc(x.key)).join(', ')}. ` : ''}` : 'Same DC projects on its path. '}Gate year ${d.gate === d.gateNow ? `stays ${d.gate || '–'}` : `${d.gateNow || '–'} → <strong>${d.gate || '–'}</strong>`}${sel.first && d.gate ? ` · first homes ≈${sel.first}: ${sel.first < d.gate ? '<span class="t-over">before it is built</span>' : 'in time'}` : ''}.</p>`;
       }
       const src = `<label class="dvo-src small">Source (what says so)<input type="text" data-dvo-src placeholder="e.g. FSR, May 2025, p. 12 · site servicing permit · confirmed with Region" value="${esc(rec && rec.src ? rec.src : '')}"></label>`;
       const btns = S.mode === 'preview' ? `<div class="pnl-acts"><button type="button" class="btn small pnl-primary" data-dvo="save">Save outlet</button><button type="button" class="btn small" data-dvo="cancel">Cancel</button></div>`
         : S.mode === 'pick' ? `<div class="pnl-acts"><button type="button" class="btn small" data-dvo="cancel">Cancel</button></div>`
         : `<div class="pnl-acts"><button type="button" class="btn small pnl-primary" data-dvo="confirm">${rec && rec.mode === 'confirmed' ? 'Confirmed ✓' : 'Confirm outlet'}</button><button type="button" class="btn small" data-dvo="start">Set where it discharges</button><button type="button" class="btn small" data-dvo="auto"${rec ? '' : ' disabled'}>Automatic</button></div>`;
       panel = `<section class="dvo-panel" data-psec="list"><div class="pnl-list-h"><h3>${esc(p.title)}</h3><button type="button" class="btn small link" data-pnl-dev="${esc(p.key)}">Open the development ›</button></div>
-        <p class="small muted">${esc(p.municipality)} · ${fmtNum(Math.round(sel.units))} units${sel.r.first ? ` · first homes ≈${sel.r.first}` : ''}</p>
+        <p class="small muted">${esc(p.municipality)} · ${fmtNum(Math.round(sel.units))} units${sel.first ? ` · first homes ≈${sel.first}` : ''}</p>
         <h4>Discharges to</h4>${S.cand ? '' : `<div class="dvo-out"><b>${what}</b> ${chip(rec)}<small>${why}</small></div>`}${previewHTML}
         <h4>DC projects on its path${S.cand ? ' (with the new outlet)' : ''}</h4>${projHTML}
-        ${sel.r.gate && !S.cand ? `<p class="small">Gate year ${sel.r.gate.y} (${esc(sel.r.gate.key)})${sel.r.first ? ` · first homes ≈${sel.r.first}: ${sel.r.gap ? '<span class="t-over">before it is built</span>' : 'in time'}` : ''}.</p>` : ''}
+        ${sel.gate && !S.cand ? `<p class="small">Gate year ${sel.gate.y} (${esc(sel.gate.key)})${sel.first ? ` · first homes ≈${sel.first}: ${sel.gap ? '<span class="t-over">before it is built</span>' : 'in time'}` : ''}.</p>` : ''}
         ${S.mode !== 'pick' ? src : ''}${btns}
         ${DO.edits() ? `<p class="small"><button type="button" class="btn small link" data-dvo="export">Export ${fmtNum(DO.edits())} edit${DO.edits() === 1 ? '' : 's'} (dev-outlets.json)</button> <span class="muted">to commit, so everyone sees them</span></p>` : ''}</section>`;
       map = `<div class="dvo-map${S.mode === 'pick' ? ' picking' : ''}" data-dvo-map>${S.mode === 'pick' ? '<p class="dvo-banner small" role="status">Tap the sewer or planned main it discharges to (Esc to cancel)</p>' : ''}${outletMap(p, { k, path, at }, S.cand)}</div>`;
@@ -1167,13 +1167,13 @@
     }
     return { id: 'outlets', eyebrow: eyebrow('outlets'), name: 'Where does each development discharge?',
       status: nRec.length ? { tone: 'stage', text: `${fmtNum(nRec.length)} reviewed` } : null,
-      identity: `Peel · ${fmtNum(q.all.length)} developments rely on a DC project · edits are kept in this browser until exported`,
+      identity: `Peel · ${fmtNum(q.all.length)} developments rely on a DC wastewater project · edits are kept in this browser until exported`,
       answer: sel ? `Check where each development's sewage goes. The app sends it to the nearest sewer of 300 mm or more (or, off the existing sewers, along the planned mains). Confirm it, or tap the right sewer on the map: the DC projects, timing and sewer loads follow.` : 'No development relies on a DC project.',
       filters, figures: [
-        { v: fmtNum(q.all.length), u: '', label: 'to review', ctx: 'rely on a DC project to connect or for capacity' },
+        { v: fmtNum(q.all.length), u: '', label: 'to review', ctx: 'rely on a DC wastewater project' },
         { v: fmtNum(nRec.filter(r => r.mode === 'confirmed').length), u: '', label: 'confirmed', ctx: 'the automatic outlet, checked' },
         { v: fmtNum(nRec.filter(r => r.mode === 'set').length), u: '', label: 'set by hand', ctx: 'a different sewer or planned main' },
-        { v: fmtNum(q.all.filter(x => x.r.gap).length), u: '', label: 'homes before the project', ctx: 'worth checking first', tone: 'over' },
+        { v: fmtNum(q.all.filter(x => x.gap).length), u: '', label: 'homes before the project', ctx: 'worth checking first', tone: 'over' },
       ],
       lists: [{ html: panel }, { title: 'To review, largest first', rows, total: rows.length, all: S.all, see: { 'data-dvo': 'all' } }],
       map: sel ? { title: 'Where it discharges', html: map, caption: cap } : null,

@@ -106,10 +106,14 @@
   // The queue: developments relying on a DC project (needs it to connect, or for capacity), largest first.
   function queue() {
     const m = IM() && IM().model(); if (!m) return null;
+    // (wastewater: a development relying only on a water project has no outlet to review here)
     const units = new Map();
-    for (const pr of m.projects.values()) for (const x of pr.devs) if (m.gateTiers.includes(x.tier)) units.set(x.p.key, x.units);
-    const rows = [...m.byDev.values()].filter(r => units.has(r.p.key)).map(r => ({ r, p: r.p, units: units.get(r.p.key) || 0, rec: recordOf(r.p) }));
-    const f = { all: () => true, gap: x => x.r.gap, todo: x => !x.rec, done: x => !!x.rec }[S.filter] || (() => true);
+    for (const pr of m.projects.values()) if (pr.sys === 'wastewater') for (const x of pr.devs) if (m.gateTiers.includes(x.tier)) units.set(x.p.key, x.units);
+    const rows = [...m.byDev.values()].filter(r => units.has(r.p.key)).map(r => {
+      const links = r.links.filter(l => l.sys === 'wastewater'), gate = IM().gateOf(links, m.gateTiers);
+      return { r, p: r.p, units: units.get(r.p.key) || 0, rec: recordOf(r.p), links, gate, first: r.first, gap: IM().gapOf(r.first, gate) };
+    });
+    const f = { all: () => true, gap: x => x.gap, todo: x => !x.rec, done: x => !!x.rec }[S.filter] || (() => true);
     return { all: rows, rows: rows.filter(f).sort((a, b) => b.units - a.units) };
   }
   const selected = () => { const q = queue(); if (!q) return null; return (S.sel && q.all.find(x => x.p.key === S.sel)) || q.rows[0] || null; };
