@@ -7,7 +7,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const { merge, exportJSON, diff, nearestOn, distinct, isCurrent, sameOutlet } = require('../js/dev-outlets.js');
+const { merge, exportJSON, diff, nearestOn, distinct, isCurrent, sameOutlet, evidence, worst, stageGroup } = require('../js/dev-outlets.js');
 
 const src = f => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
 
@@ -78,6 +78,64 @@ test('sameOutlet: one pipe (existing) or one project (planned or being built)', 
   assert.equal(sameOutlet({ kind: 'cap', project: '16-2291' }, { kind: 'cap', project: '16-2291' }), true);
   assert.equal(sameOutlet({ kind: 'cap', project: '16-2291' }, { kind: 'dc', project: '16-2291' }), false);
   assert.equal(sameOutlet(null, { kind: 'sewer', k: 3 }), false);
+});
+
+test('stageGroup: built, committed (a building or site servicing permit), early', () => {
+  assert.equal(stageGroup('completed', null), 'built');
+  assert.equal(stageGroup('permit', null), 'committed');
+  assert.equal(stageGroup('construction', null), 'committed');
+  assert.equal(stageGroup('review', 2025), 'committed', 'a site servicing permit on file');
+  assert.equal(stageGroup('approved', null), 'early');
+  assert.equal(stageGroup('inception', null), 'early');
+});
+
+const tone = (list, k) => (list.find(x => x.k === k) || {}).tone;
+test('evidence: the stage rule', () => {
+  const ex = { cls: 'existing' }, planned = { cls: 'planned', ready: 2030 }, building = { cls: 'building', ready: 2027 };
+  assert.equal(tone(evidence({ phase: 'completed', outlet: ex }), 'stage'), 'ok');
+  assert.equal(tone(evidence({ phase: 'completed', outlet: building }), 'stage'), 'warn');
+  assert.equal(tone(evidence({ phase: 'completed', outlet: planned }), 'stage'), 'bad');
+  assert.equal(tone(evidence({ phase: 'permit', outlet: planned }), 'stage'), 'bad', 'permitted on a DC main not tendered');
+  assert.equal(tone(evidence({ phase: 'permit', outlet: building }), 'stage'), 'ok');
+  assert.equal(tone(evidence({ phase: 'review', ssp: 2025, outlet: planned }), 'stage'), 'bad', 'a site servicing permit counts as committed');
+  assert.equal(tone(evidence({ phase: 'review', outlet: planned }), 'stage'), 'ok', 'early: any outlet');
+  // further down the route: a sewer being built that feeds a DC main not tendered
+  const fed = { cls: 'building', ready: 2030, readyBy: '25-2267', via: ['25-2267'] };
+  assert.equal(tone(evidence({ phase: 'permit', outlet: fed }), 'stage'), 'bad');
+  assert.match(evidence({ phase: 'permit', outlet: fed }).find(x => x.k === 'stage').text, /route needs DC main 25-2267/);
+  assert.match(evidence({ phase: 'review', first: 2027, outlet: fed }).find(x => x.k === 'time').text, /≈2030 \(25-2267 on its route\), after first homes/);
+});
+
+test('evidence: in service by first homes, install year, permit date', () => {
+  assert.equal(tone(evidence({ phase: 'review', first: 2027, outlet: { cls: 'planned', ready: 2030 } }), 'time'), 'bad');
+  assert.equal(tone(evidence({ phase: 'review', first: 2031, outlet: { cls: 'planned', ready: 2030 } }), 'time'), 'ok');
+  assert.equal(tone(evidence({ phase: 'review', first: 2027, outlet: { cls: 'existing' } }), 'time'), 'ok');
+  assert.equal(tone(evidence({ phase: 'review', outlet: { cls: 'building' } }), 'time'), 'unk');
+  assert.equal(tone(evidence({ phase: 'completed', built: 2015, outlet: { cls: 'existing', install: 2020 } }), 'install'), 'bad', 'installed after it was built');
+  const own = evidence({ phase: 'completed', built: 2015, dist: 60, outlet: { cls: 'existing', install: 2014 } });
+  assert.equal(tone(own, 'install'), 'ok'); assert.match(own.find(x => x.k === 'install').text, /likely its own sewer/);
+  assert.equal(tone(evidence({ phase: 'completed', built: 2015, dist: 600, outlet: { cls: 'existing', install: 2014 } }), 'install'), undefined, 'too far to be its own');
+  assert.equal(tone(evidence({ phase: 'review', ssp: 2024, outlet: { cls: 'building', start: 2027 } }), 'permit'), 'warn');
+});
+
+test('evidence: gravity (ground over the invert, less depth and fall) and drainage area', () => {
+  const g = (ground, invert, dist = 100) => tone(evidence({ phase: 'review', dist, outlet: { cls: 'existing' }, gravity: { ground, invert } }), 'gravity');
+  assert.equal(g(200, 195), 'ok');            // 200 - 1.5 - 0.5 - 195 = 3 m
+  assert.equal(g(200, 197.5), 'warn');        // 0.5 m
+  assert.equal(g(200, 199), 'bad');           // -1 m: pumping
+  assert.equal(g(undefined, 195), 'unk');     // still asking
+  assert.equal(g(null, 195), 'unk');
+  assert.equal(g(200, null), 'unk');
+  const d = (site, outlet) => tone(evidence({ phase: 'review', outlet: { cls: 'existing' }, drain: { site, outlet } }), 'drain');
+  assert.equal(d(['Clarkson 1'], 'Clarkson 1'), 'ok');
+  assert.equal(d(['Clarkson 1'], 'G.E. Booth 2'), 'warn');
+  assert.equal(d([], 'G.E. Booth 2'), undefined);
+});
+
+test('worst: bad, then warn, then unknown, then ok', () => {
+  assert.equal(worst([{ tone: 'ok' }, { tone: 'unk' }, { tone: 'warn' }]), 'warn');
+  assert.equal(worst([{ tone: 'ok' }, { tone: 'bad' }]), 'bad');
+  assert.equal(worst([]), 'ok');
 });
 
 test('wired in: the page, the models and the offline shell', () => {

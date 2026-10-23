@@ -15,6 +15,7 @@
   const store = U.store || { get: (k, d) => d, set() {} };
   const App = () => root.PeelApp, MM = () => root.PeelMapMarkers, SC = () => root.PeelSewerCap, ST = () => root.PeelSewerTrace;
   const DI = () => root.PeelDcInfra, MP = () => root.PeelMasterPlan, IM = () => root.PeelDcImpact, DJ = () => root.PeelDcJoins, CEM = () => root.PeelCapitalEAModel;
+  const DG = () => root.PeelDcGate, EL = () => root.PeelElevation, AR = () => root.PeelAreas;
   const r6 = p => [Math.round(p[0] * 1e6) / 1e6, Math.round(p[1] * 1e6) / 1e6];
   const today = () => new Date().toISOString().slice(0, 10);
 
@@ -40,6 +41,65 @@
     const gate = list => Math.max(0, ...list.filter(x => gating.includes(x.tier) && x.y).map(x => x.y)) || null;
     return { add: then.filter(x => !has(now, x.key)), drop: now.filter(x => !has(then, x.key)), gate: gate(then), gateNow: gate(now) };
   }
+
+  // ---- Pure: does an outlet fit the development? -----------------------------------------------
+  // The stage (js/phases.js) limits what a development can drain to:
+  //   built                    existing sewers (or one built since the sewer data: a capital sewer, complete);
+  //   committed (a building    existing, or being built (a capital sewer or DC main tendered, awarded or
+  //   permit, under            under construction): a DC main not yet tendered is a red flag;
+  //   construction, or a site servicing permit on file)
+  //   early (pre-application, in review, approved with no permit)   anything, planned DC mains too.
+  // The checks flag; they never block (the data lag, and a stage can be wrong): a reviewer decides.
+  const stageGroup = (phase, ssp) => (phase === 'completed' ? 'built' : phase === 'permit' || phase === 'construction' || ssp ? 'committed' : 'early');
+  // Gravity: the site's own sewer leaves it at least GRAV_DEPTH m down and falls GRAV_SLOPE (0.5 %) to
+  // the outlet; the outlet's invert must be below that. Depths: the Region's sewer inverts (CGVD28);
+  // the ground passed in on the same datum.
+  const GRAV_DEPTH = 1.5, GRAV_SLOPE = 0.005;
+  const r1 = x => (Math.round(x * 10) / 10).toFixed(1);
+  // c: { phase, ssp: site servicing permit year, built: year built, first: first-homes year, dist: m from
+  //   the site, outlet: { cls: 'existing' | 'new' | 'building' | 'planned', install, ready, start,
+  //   via: DC mains not tendered further down its route },
+  //   gravity: { ground (undefined: still asking), invert }, drain: { site: [names], outlet: name } | null }
+  // → [{ k, tone: 'ok' | 'warn' | 'bad' | 'unk', text }]
+  function evidence(c) {
+    const out = [], o = c.outlet || {}, g = stageGroup(c.phase, c.ssp), add = (k, tone, text) => out.push({ k, tone, text });
+    const permit = c.phase === 'permit' || c.phase === 'construction' ? 'Building permit issued' : 'Site servicing permit on file';
+    if (g === 'early') add('stage', 'ok', 'Not permitted yet: any outlet fits its stage');
+    else if (g === 'built') {
+      if (o.cls === 'existing' || o.cls === 'new') add('stage', 'ok', 'Built, on a sewer in service');
+      else if (o.cls === 'building') add('stage', 'warn', 'Built, but this sewer is still being built');
+      else add('stage', 'bad', 'Built, but this DC main is not started');
+      if (o.cls !== 'planned' && (o.via || []).length) add('stage', 'bad', `Built, but its route needs DC main ${o.via.join(', ')}, not started`);
+    } else if (o.cls === 'planned') add('stage', 'bad', `${permit}, but this DC main is not tendered`);
+    else if ((o.via || []).length) add('stage', 'bad', `${permit}, but its route needs DC main ${o.via.join(', ')}, not tendered`);
+    else add('stage', 'ok', `${permit}: ${o.cls === 'building' ? 'a sewer being built fits' : 'a sewer in service fits'}`);
+    if ((o.cls === 'existing' || o.cls === 'new') && !o.readyBy) add('time', 'ok', 'In service now');
+    else if (o.ready && c.first) add('time', o.ready > c.first ? 'bad' : 'ok', `In service ≈${o.ready}${o.readyBy ? ` (${o.readyBy} on its route)` : ''}, ${o.ready > c.first ? 'after' : 'by'} first homes ≈${c.first}`);
+    else add('time', 'unk', 'In-service year not known');
+    if (o.cls === 'existing' && o.install) {
+      const ref = c.built || c.ssp;
+      if (c.built && o.install > c.built + 1) add('install', 'bad', `Installed ${o.install}, after the development was built (${c.built})`);
+      else if (ref && Math.abs(o.install - ref) <= 2 && c.dist <= 150) add('install', 'ok', `Installed ${o.install}, with the development (${ref}): likely its own sewer`);
+    }
+    if (c.ssp && o.start && o.start > c.ssp + 1 && (o.cls === 'building' || o.cls === 'planned')) add('permit', 'warn', `Site servicing permit ${c.ssp}, before this sewer starts (${o.start})`);
+    const gv = c.gravity || {};
+    if (gv.invert == null) add('gravity', 'unk', o.cls === 'existing' ? 'Gravity: no depth for this sewer' : 'Gravity: no depths for a sewer not yet in the data');
+    else if (gv.ground === undefined) add('gravity', 'unk', 'Gravity: checking the ground…');
+    else if (gv.ground == null) add('gravity', 'unk', 'Gravity: ground elevation not available');
+    else {
+      const m = gv.ground - GRAV_DEPTH - GRAV_SLOPE * (c.dist || 0) - gv.invert;
+      if (m >= 1) add('gravity', 'ok', `Drains by gravity: ≈${r1(m)} m to spare`);
+      else if (m >= 0) add('gravity', 'warn', `Gravity is tight: ≈${r1(m)} m to spare`);
+      else add('gravity', 'bad', `≈${r1(-m)} m too shallow to drain by gravity: would need pumping`);
+    }
+    if (c.drain && c.drain.site.length && c.drain.outlet) {
+      if (c.drain.site.includes(c.drain.outlet)) add('drain', 'ok', `Same drainage area (${c.drain.outlet})`);
+      else add('drain', 'warn', `Different drainage area: site in ${c.drain.site[0]}, outlet in ${c.drain.outlet}`);
+    }
+    return out;
+  }
+  const TONES = ['bad', 'warn', 'unk', 'ok'];
+  const worst = list => TONES.find(t => (list || []).some(x => x.tone === t)) || 'ok';
 
   // ---- State ----------------------------------------------------------------------------------------
   const O = { shipped: [], edits: store.get('devOutletEdits', []), v: 1, loading: null };
@@ -126,7 +186,7 @@
       const links = r.links.filter(l => l.sys === 'wastewater'), gate = IM().gateOf(links, m.gateTiers);
       return { r, p: r.p, units: units.get(r.p.key) || 0, rec: recordOf(r.p), links, gate, first: r.first, gap: IM().gapOf(r.first, gate) };
     });
-    const f = { all: () => true, gap: x => x.gap, todo: x => !x.rec, done: x => !!x.rec }[S.filter] || (() => true);
+    const f = { all: () => true, gap: x => x.gap, misfit, todo: x => !x.rec, done: x => !!x.rec }[S.filter] || (() => true);
     return { all: rows, rows: rows.filter(f).sort((a, b) => b.units - a.units) };
   }
   const selected = () => { const q = queue(); if (!q) return null; return (S.sel && q.all.find(x => x.p.key === S.sel)) || q.rows[0] || null; };
@@ -143,17 +203,17 @@
     if (!cap || !dc || !CEM()) return null;
     if (capIdxFor !== cap) { capIdx = CEM().dcCapitalIndex(cap, dc); capIdxFor = cap; }
     const e = capIdx.get(proj); if (!e || e.conf === 'low' || !BUILD_WORD[e.status]) return null;
-    return e.status === 'under construction' && e.percent != null ? `${e.percent}% built` : BUILD_WORD[e.status];
+    return { raw: e.status, word: e.status === 'under construction' && e.percent != null ? `${e.percent}% built` : BUILD_WORD[e.status] };
   }
   function dcCand(ln, pt) {
     const proj = ln.p || ln.c, st = dcStatus(proj);
-    return { kind: 'dc', at: r6(nearestOn(pt, ln.g)), mm: ln.d || null, project: proj, status: st ? `planned · ${st}` : 'planned', label: `${ln.d ? `${ln.d} mm ` : ''}planned DC main ${proj}` };
+    return { kind: 'dc', at: r6(nearestOn(pt, ln.g)), mm: ln.d || null, project: proj, raw: st ? st.raw : null, status: st ? `planned · ${st.word}` : 'planned', label: `${ln.d ? `${ln.d} mm ` : ''}planned DC main ${proj}` };
   }
   // A capital project's new sewer (tendered or further: js/dc-joins.js capLines).
   const capWord = s => (/complete/.test(s) ? 'recently built' : s);
   function capCand(ln, pt) {
     const street = ln.n ? String(ln.n).toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase()) : '';
-    return { kind: 'cap', at: r6(nearestOn(pt, ln.g)), mm: null, project: ln.p, status: capWord(ln.s), label: `New sanitary sewer${street ? ` on ${street}` : ''} (${ln.p})` };
+    return { kind: 'cap', at: r6(nearestOn(pt, ln.g)), mm: null, project: ln.p, raw: ln.s, st: ln.st || null, sub: ln.sub || null, status: capWord(ln.s), label: `New sanitary sewer${street ? ` on ${street}` : ''} (${ln.p})` };
   }
   // A tap on the map while picking: the nearest existing sewer or planned DC main within r metres.
   function pickAt(lng, lat, r) {
@@ -165,6 +225,69 @@
     S.cand = opts[0].c();
     S.mode = 'preview'; refresh();
   }
+  // ---- Evidence for a candidate (the checks above, from the app's data) ---------------------------
+  // The ground at the site (js/elevation.js): asked once per development; lidar is CGVD2013, the
+  // Region's sewer depths CGVD28 (0.41 m higher here: data/elevation-validation.json shiftMedian);
+  // the terrain-tile fallback is CGVD28 already.
+  const ELEV_SHIFT = 0.41, ground = new Map();
+  function groundOf(p) {
+    if (ground.has(p.key)) return ground.get(p.key);
+    if (!EL() || !EL().getGround) return null;
+    ground.set(p.key, undefined);
+    EL().getGround(p.lat, p.lng).then(r => { ground.set(p.key, r && r.z != null ? { z: r.z + (r.source === 'lidar' ? ELEV_SHIFT : 0), src: r.source } : null); nearCache.key = null; refresh(); }, () => { ground.set(p.key, null); nearCache.key = null; refresh(); });
+    return undefined;
+  }
+  // A sewer's invert where a point meets it, between its upstream and downstream inverts (coords run downstream).
+  function invertAt(k, at) {
+    const pp = MM().SEW.data.pipes[k], up = pp[12], dn = pp[13];
+    if (!(up > 0) || !(dn > 0)) return null;
+    const g = SC().pipeCoords(pp); let tot = 0, here = 0, bd = Infinity;
+    for (let i = 1; i < g.length; i++) {
+      const L = DI().dcM(g[i - 1], g[i]), q = nearestOn(at, [g[i - 1], g[i]]), d = DI().dcM(q, at);
+      if (d < bd) { bd = d; here = tot + DI().dcM(g[i - 1], q); }
+      tot += L;
+    }
+    return up + (dn - up) * (tot ? here / tot : 0);
+  }
+  // (a planned main or a sewer being built: in service once everything on its route is, the DC mains it
+  // needs to connect (tier A) included; via: those not tendered)
+  function outletOf(c) {
+    if (c.kind === 'sewer') return { cls: 'existing', install: MM().SEW.data.pipes[c.k][7] || null, invert: invertAt(c.k, c.at) };
+    const route = projectsFor(c).filter(x => x.tier === 'A' && x.key !== c.project);
+    const via = route.filter(x => !dcStatus(x.key)).map(x => x.key), late = route.filter(x => x.y).sort((a, b) => b.y - a.y)[0];
+    const withRoute = (o, own) => (late && (!own || late.y > own) ? { ...o, ready: late.y, readyBy: late.key, via } : { ...o, ready: own, via });
+    if (c.kind === 'cap') return withRoute({ cls: /complete/.test(c.raw || '') ? 'new' : 'building', start: c.st }, c.sub);
+    const m = IM() && IM().model(), pr = m && m.projects.get(`wastewater:${c.project}`);
+    return withRoute({ cls: /complete/.test(c.raw || '') ? 'new' : c.raw ? 'building' : 'planned' }, pr ? pr.y1 : null);
+  }
+  const stepYear = (p, k) => { const row = DG() && DG().rowOf ? DG().rowOf(p) : null, st = row && row.steps.find(x => x.k === k); return st && st.d ? +String(st.d).slice(0, 4) : null; };
+  function checksFor(p, c, first) {
+    if (!p || !c) return [];
+    const o = outletOf(c), gr = groundOf(p), dr = App() && App().state.servicing && App().state.servicing.drainage;
+    const names = ids => ids.map(id => ((dr || []).find(a => a.id === id) || {}).name || id);
+    return evidence({ phase: p.phase, ssp: stepYear(p, 'ssp'), built: stepYear(p, 'built'), first, dist: DI().dcM([p.lng, p.lat], c.at), outlet: o,
+      gravity: { ground: gr === undefined ? undefined : gr ? gr.z : null, invert: o.invert ?? null },
+      drain: dr && AR() && p.dr ? { site: names(p.dr), outlet: names(AR().locate(dr, c.at[0], c.at[1]))[0] || null } : null });
+  }
+  // The outlet in use now, as a candidate: a set one from its record, else the automatic one (cur: { k, path }).
+  function currentCand(p, cur) {
+    const r = recordOf(p), site = [p.lng, p.lat];
+    if (r && r.mode === 'set' && r.at) {
+      if (r.kind === 'cap') { const l = capNear(r.at, 30), x = l.find(y => y.ln.p === r.project) || l[0]; if (x) return capCand(x.ln, r.at); }
+      if (r.kind === 'dc') { const n = DI().dcNearest('wastewater', r.at, 30); if (n) return dcCand(n.ln, r.at); }
+      if (r.kind === 'sewer' && cur && cur.k != null && cur.k >= 0) return sewerCand(cur.k, r.at);
+    }
+    if (cur && cur.path) return cur.path.first.cap ? capCand(cur.path.first, site) : dcCand(cur.path.first, site);
+    return cur && cur.k != null && cur.k >= 0 ? sewerCand(cur.k, site) : null;
+  }
+  // A queue row whose outlet does not fit its stage: permitted or built, but relying on a DC main not tendered.
+  function misfit(x) {
+    if (stageGroup(x.p.phase, stepYear(x.p, 'ssp')) === 'early') return false;
+    const planned = key => { const st = dcStatus(key); return !st; };
+    if (x.rec && x.rec.mode === 'set') return x.rec.kind === 'dc' && planned(x.rec.project);
+    return x.links.some(l => l.tier === 'A' && planned(l.key));
+  }
+
   // Keep the nearest of each run: items sorted by distance; sameRun(a, b) says two are one sewer (or one
   // project), so the list shows each pipe once, not every length of it.
   function distinct(items, sameRun, max = Infinity) {
@@ -175,7 +298,7 @@
   // The infrastructure near a development, to pick its outlet from: existing sanitary sewers (any size:
   // a site can connect to a local sewer) and planned DC mains within r metres, nearest first, each sewer
   // run and each DC project once. Each: a candidate (as a tap makes) plus m, its distance from the site.
-  const nearCache = { key: null, list: [] };
+  const nearCache = { key: null, list: [] };     // (cleared when the ground arrives)
   // The capital projects' new sewers within r metres, nearest first ({ ln, m }); a built one already in
   // the sewer data (an existing sewer within 10 m of its middle) is left out: it is listed as existing.
   function capNear(pt, r) {
@@ -188,9 +311,9 @@
     }
     return out.sort((a, b) => a.m - b.m);
   }
-  function nearby(p, { r = 400, sewers = 6, mains = 4, streetOf = null } = {}) {     // (mains: of each, planned and being built)
+  function nearby(p, { r = 400, sewers = 6, mains = 4, streetOf = null, first = null } = {}) {     // (mains: of each, planned and being built)
     if (!p || p.lat == null || !MM().SEW.data || !MM().SEW.grid) return [];
-    const key = `${p.key}|${r}|${O.v}|${App() && App().state.dcInfra ? 1 : 0}|${App() && App().state.addressPoints ? 1 : 0}|${DJ() && DJ().capReady && DJ().capReady() ? 1 : 0}|${App() && App().state.capital ? 1 : 0}`; // (street names arrive later)
+    const key = `${p.key}|${r}|${O.v}|${App() && App().state.dcInfra ? 1 : 0}|${App() && App().state.addressPoints ? 1 : 0}|${DJ() && DJ().capReady && DJ().capReady() ? 1 : 0}|${App() && App().state.capital ? 1 : 0}|${first}|${DG() && DG().loaded && DG().loaded() ? 1 : 0}`; // (street names arrive later)
     if (nearCache.key === key) return nearCache.list;
     const pt = [p.lng, p.lat], pipes = MM().SEW.data.pipes, grid = MM().SEW.grid;
     const gx = Math.floor(pt[0] / 0.004), gy = Math.floor(pt[1] / 0.003), R = Math.ceil(r / 300), seen = new Set(), sw = [];
@@ -211,7 +334,9 @@
       for (const x of distinct(dl, (a, b) => (a.ln.p || a.ln.c) === (b.ln.p || b.ln.c), mains)) out.push({ ...dcCand(x.ln, pt), m: x.m });
     }
     for (const x of distinct(capNear(pt, r), (a, b) => a.ln.p === b.ln.p, mains)) out.push({ ...capCand(x.ln, pt), m: x.m });
-    out.sort((a, b) => a.m - b.m);
+    // (each with its checks; one that fails a check (bad) after those that don't, then nearest first)
+    for (const c of out) { c.checks = checksFor(p, c, first); c.fit = worst(c.checks); }
+    out.sort((a, b) => (a.fit === 'bad') - (b.fit === 'bad') || a.m - b.m);
     nearCache.key = key; nearCache.list = out;
     return out;
   }
@@ -257,7 +382,7 @@
   // How a record reads wherever the outlet is used.
   const recText = r => (!r ? '' : `${r.mode === 'set' ? 'outlet set by hand' : 'outlet confirmed'}${r.src ? ` · ${r.src}` : ''}${r.date ? ` · ${r.date}` : ''}${r.local ? ' (this browser)' : ''}`);
 
-  const api = { merge, exportJSON, diff, load, recordOf, pipeFor, dcRouteFor, version, queue, selected, projectsFor, pickAt, routeFrom, nearby, distinct, isCurrent, sameOutlet, nearestOn, recText, state: S, edits: () => O.edits.length, records: () => recs, setRecord, backToAuto };
+  const api = { merge, exportJSON, diff, load, recordOf, pipeFor, dcRouteFor, version, queue, selected, projectsFor, pickAt, routeFrom, nearby, evidence, worst, stageGroup, checksFor, currentCand, misfit, distinct, isCurrent, sameOutlet, nearestOn, recText, state: S, edits: () => O.edits.length, records: () => recs, setRecord, backToAuto };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDevOutlets = api;
 })(typeof window !== 'undefined' ? window : globalThis);
