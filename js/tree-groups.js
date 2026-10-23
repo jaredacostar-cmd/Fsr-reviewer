@@ -12,7 +12,8 @@
   //     site (the development its site's planning files went to);
   //   - a file the tree build hasn't seen (a live refresh) stays with its site.
   // A tree keeps the key of the development that held its root file; a second tree of the same
-  // development becomes "<key>~<root file>". keyMap (old key → new keys) resolves keys saved before
+  // development becomes "<key>~<root file>". The pieces of one application merged into one
+  // development resolve to it (data.merged: old key → key kept). keyMap (old key → new keys) resolves keys saved before
   // (watchlist, allocations, share links, saved views, weekly changes, phase history).
   // aliases (js/phases.js keyAliases, set by the app after each build, computed when first needed):
   // an address key that is no development's key now → the developments holding its records.
@@ -81,6 +82,9 @@
   function resolveAll(k, exists = () => false, opts = {}) {
     if (!k) return [];
     if (exists(k)) return [k];
+    // A piece of an application merged into one development (scripts/build-tree-counts.js 3·).
+    const mg = !opts.aliasesOnly && data && data.merged && data.merged[k];
+    if (mg && mg !== k) { const r = resolveAll(mg, exists, opts); if (r.length) return r; }
     const h = String(k).lastIndexOf('#');
     if (h > 0 && !keyMap.has(k) && !aliasOf(k)) {
       const base = k.slice(0, h), ref = k.slice(h + 1);

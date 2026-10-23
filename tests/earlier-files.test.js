@@ -102,7 +102,7 @@ test('unitsOverTime: parcels by land, the latest count on a parcel stands, parce
   assert.equal(u.parcels.length, 2);
   const on = r => u.parcels.find(pc => pc.files.some(x => x.r === r)), A = on(th), B = on(plaza);
   assert.equal(A.count, 195); assert.equal(A.built.year, 2016);
-  assert.equal(B.count, 1007); assert.equal(B.total.units, 1062); assert.equal(B.built, null);
+  assert.equal(B.count, 1007); assert.equal(B.stated, 1062); assert.equal(B.built, null);
   assert.ok(B.steps.find(s => s.r === inactive && !s.counted), 'an inactive file does not count');
   assert.deepEqual(u.spans.map(s => s.x.r.ref), ['PRE17.035', 'SP83-006.000'], 'the original land, over both parcels, states no count');
   const y = Object.fromEntries(u.years.map(r => [r.year, r]));
@@ -111,7 +111,7 @@ test('unitsOverTime: parcels by land, the latest count on a parcel stands, parce
   assert.equal(y[2022].land, 195 + 1007);
   assert.equal(y[2026].built, 195);
   const text = u.flags.map(f => f.text).join('\n');
-  assert.match(text, /the app counts 1,055 homes; the latest file states 1,062, ≈1,007 after its resubmission/);
+  assert.match(text, /the app counts 1,055 homes; the latest files state 1,062, ≈1,007 after its resubmission/);
   assert.match(text, /PRE-2020-0098 states 1,052 \(the total stated\); the app reads 1,055/);
   assert.match(EF.unitsSummary(u), /^195 homes built on 1 parcel .*≈1,007–1,062 more on parcel/);
 });
