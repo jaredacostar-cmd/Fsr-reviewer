@@ -409,7 +409,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(r.ms < 10000, `computed in ${Math.round(r.ms)} ms`);
   });
 
-  await check('Capital › DC projects: the list, a project and back; the Funding lab inside it; the workspace section', browser, {}, async ({ page, ev }, expect) => {
+  await check('Capital › DC projects: the list, a project and back; the Funding lab inside it; the workspace section and its map', browser, {}, async ({ page, ev }, expect) => {
     await ev(() => { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.openTab('dca', 'dcproj'); });
     await page.waitForSelector('#pnl-dca [data-dcproj-open]', { timeout: 90000 });
     const chips = await ev(() => [...document.querySelectorAll('[data-dcasub]')].filter(b => b.offsetParent).map(b => b.textContent.trim()));
@@ -427,8 +427,12 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     await ev(() => { PeelLabs.set('funding', false); PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage('projects'); }); await wait(1500);
     await page.click('[data-ws-wsec="capital:dcproj"]'); await page.waitForSelector('#home [data-dcproj-open]', { timeout: 30000 });
     await page.click('#home [data-dcproj-open]'); await wait(1500);
-    const w = await ev(() => ({ back: !!document.querySelector('#home [data-dcproj-back]'), name: (document.querySelector('#home h1') || {}).textContent || '' }));
+    const w = await ev(() => ({ back: !!document.querySelector('#home [data-dcproj-back]'), name: (document.querySelector('#home h1') || {}).textContent || '',
+      oneP: document.querySelectorAll('#home .home-answer').length === 1 && !!document.querySelector('#home .home-answer .ws-back') && /rel(y|ies) on it|relies on it|No development/.test((document.querySelector('#home .home-answer') || {}).textContent || ''),
+      proj: document.querySelectorAll('#home .home-map-svg .hm-dcp').length, dots: document.querySelectorAll('#home .home-map-svg .hm-dcd').length, toFull: !!document.querySelector('#home [data-dcproj-map]') }));
     expect(w.back && /·/.test(w.name), `the workspace section opens a project in place, with its name and a way back ("${w.name.slice(0, 60)}")`);
+    expect(w.oneP, 'its answer is one sentence, the way back above it');
+    expect(w.proj > 0 && w.dots > 0 && w.toFull, `the side map shows the project and the developments relying on it, and opens the full map (${w.proj} lines, ${w.dots} developments)`);
     await page.click('#home [data-dcproj-back]'); await wait(800);
   });
 

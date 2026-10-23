@@ -3003,6 +3003,21 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .home-map-svg .hm-pipe { fill: none; stroke: var(--pipe-sanitary); stroke-width: 1.4; }
 .home-map-svg .hm-pipe.risky { stroke-width: 2.6; }
 .hm-key.hm-dc-wastewater { background: var(--dc-ww-main); } .hm-key.hm-dc-water { background: var(--pipe-water); }
+/* Capital › DC projects on a workspace page: the open project and the developments relying on it. */
+.home-answer .ws-back { display: block; margin-bottom: var(--space-2); }
+.home-map-svg .hm-dc-dim { opacity: 0.35; }
+.home-map-svg .hm-dcp-halo { fill: none; stroke: var(--map-halo); stroke-width: 7; stroke-linecap: round; stroke-linejoin: round; }
+.home-map-svg .hm-dcp { fill: none; stroke: var(--select); stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+.home-map-svg .hm-dcd { stroke: var(--map-halo); stroke-width: 0.8; }
+.home-map-svg .hm-dcd-a { fill: var(--accent); }
+.home-map-svg .hm-dcd-b1 { fill: var(--text-primary); }
+.home-map-svg .hm-dcd-b2 { fill: none; stroke: var(--text-secondary); stroke-width: 1.2; }
+.home-map-svg .hm-dcd-gap { fill: none; stroke: var(--cap-over); stroke-width: 1.6; pointer-events: none; }
+.hm-key.hm-key-dcp { height: 3px; vertical-align: 2px; background: var(--select); }
+.hm-key.hm-key-dcd-a { background: var(--accent); border-radius: 50%; }
+.hm-key.hm-key-dcd-b1 { background: var(--text-primary); border-radius: 50%; }
+.hm-key.hm-key-dcd-b2 { border: 1.2px solid var(--text-secondary); border-radius: 50%; }
+.hm-key.hm-key-dcd-gap { border: 1.6px solid var(--cap-over); border-radius: 50%; }
 .home-map .sk { width: 100%; height: auto; display: block; border: 0; }
 .home-map-empty { display: block; padding: var(--space-5) var(--space-3); text-align: center; }
 /* Narrow screens: the workspace list is a scrollable row of buttons above the page (one tap to switch). */

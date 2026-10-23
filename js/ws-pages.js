@@ -385,6 +385,28 @@
     if (!hs.length) for (const p of named) out.push(dotAt(p, Math.max(1.4, Math.min(6, Math.sqrt(p.units) / 8)).toFixed(1), 'hm-dev hm-dev-top', `<title>${esc(p.title)}: ${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'}</title>`));
     return f.svg(out.join(''), 'Peel’s wastewater blocks with the developments on the map', mapLabels(f, named.slice(0, 3).map(p => ({ lng: p.lng, lat: p.lat, name: hs.length ? p.title : `${shortName(p.title)} (${fmtNum(p.units)})` }))));
   }
+  // DC projects, one project open: the project over the other DC works, zoomed to it and the
+  // developments relying on it (js/dc-impact.js), as dots by how they rely on it, sized by units;
+  // a red ring where the first homes come before it is built.
+  function dcProjectMap(pr, m) {
+    const pts = pr.lines.flatMap(ln => ln.g).concat(pr.devs.filter(x => x.p.lat != null).map(x => [x.p.lng, x.p.lat]));
+    let a = 1e9, b = 1e9, c = -1e9, d = -1e9; for (const [x, y] of pts) { a = Math.min(a, x); b = Math.min(b, y); c = Math.max(c, x); d = Math.max(d, y); }
+    const pad = Math.max(0.012, (c - a) * 0.08, (d - b) * 0.08), f = frame(360, 300, [a - pad, b - pad, c + pad, d + pad]), di = App() && App().state.dcInfra; if (!f) return '';
+    const out = [], inBox = g => g.some(([x, y]) => x >= a - pad && x <= c + pad && y >= b - pad && y <= d + pad);
+    if (di) for (const sys of ['wastewater', 'water']) for (const ln of (di[sys] && di[sys].lines) || []) if ((ln.p || ln.c) !== pr.key && inBox(ln.g)) out.push(`<path d="${f.line(ln.g)}" class="hm-dc hm-dc-${sys} hm-dc-dim"/>`);
+    const first = x => { const r = m.byDev.get(x.p.key); return r ? r.first : null; };
+    const order = { B2: 0, B1: 1, A: 2 }, devs = pr.devs.filter(x => x.p.lat != null).sort((u, v) => order[u.tier] - order[v.tier] || v.units - u.units);
+    for (const x of devs) {
+      const [px, py] = f.pt(x.p.lng, x.p.lat), r = Math.max(2.2, Math.min(7, Math.sqrt(x.units || 1) / 5)).toFixed(1), f0 = first(x), gap = f0 && pr.y1 && f0 < pr.y1 && m.gateTiers.includes(x.tier);
+      out.push(`<circle cx="${px}" cy="${py}" r="${r}" class="hm-dcd hm-dcd-${x.tier.toLowerCase()}"><title>${esc(x.p.title)}: ${fmtNum(Math.round(x.units))} units${f0 ? ` · first homes ≈${f0}` : ''}</title></circle>`);
+      if (gap) out.push(`<circle cx="${px}" cy="${py}" r="${(+r + 2.5).toFixed(1)}" class="hm-dcd-gap"/>`);
+    }
+    // (the project over its developments, so a trunk under many sites stays visible)
+    for (const ln of pr.lines) { const dd = f.line(ln.g); out.push(`<path d="${dd}" class="hm-dcp-halo"/><path d="${dd}" class="hm-dcp"><title>${esc(pr.key)}${pr.y1 ? ` · ${pr.y1}` : ''}</title></path>`); }
+    const mid = pr.lines[0].g[Math.floor(pr.lines[0].g.length / 2)];
+    const lbl = [{ lng: mid[0], lat: mid[1], name: pr.key }, ...devs.filter(x => m.gateTiers.includes(x.tier)).sort((u, v) => v.units - u.units).slice(0, 2).map(x => ({ lng: x.p.lng, lat: x.p.lat, name: shortName(x.p.title, 22) }))];
+    return f.svg(out.join(''), `DC project ${pr.key} and the developments relying on it`, mapLabels(f, lbl));
+  }
   // Projects: the 2026 DC works (wastewater, water).
   function worksMap() {
     const bb = muniBounds(), f = frame(360, 300, bb), di = App() && App().state.dcInfra; if (!f) return '';
@@ -615,7 +637,8 @@
     const s = SE.wsSpecFor(ws, id);
     if (!s) return { ...m, answer: `<span class="muted">Loading ${esc(sec.title)}…</span>`, figures: [], chart: '', lists: [], folds: [], method: '', sources: '' };
     // (a section showing one item of its list, as DC projects shows a project: its name, and a way back)
-    const h = s.head || {}, back = h.back ? `<p class="small"><button type="button" class="btn small link"${Object.entries(h.back.attrs || {}).map(([k, v]) => ` ${k}="${esc(v)}"`).join('')}>‹ ${esc(h.back.label)}</button></p>` : '';
+    // (a block span: the answer is a paragraph, and a paragraph inside it would split the sentence)
+    const h = s.head || {}, back = h.back ? `<span class="ws-back small"><button type="button" class="btn small link"${Object.entries(h.back.attrs || {}).map(([k, v]) => ` ${k}="${esc(v)}"`).join('')}>‹ ${esc(h.back.label)}</button></span>` : '';
     return { ...m, ...(h.wsName ? { name: h.wsName } : {}), status: h.status, identity: h.identity ? h.identity : m.identity, answer: `${back}${s.answer}`, figures: s.figures, chart: s.chart, lists: (s.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap(m.id, r)) })), folds: s.folds, method: s.method, sources: s.sources, onMount: s.onMount };
   }
   // An area's section (Growth in an area's own drill-down, or the map's area panel for Servicing or
@@ -878,6 +901,13 @@
   }
   document.addEventListener('mouseover', mapRing);
   document.addEventListener('focusin', mapRing);
+  // The DC projects section with a project open: its own map (dcProjectMap); a click opens it on the full map.
+  function dcProjMap() {
+    const DP = root.PeelDcProjects, DI = root.PeelDcImpact, key = wsSec.capital === 'dcproj' && DP && DP.state.sel;
+    const m = key && DI && DI.model(), pr = m && m.projects.get(key); if (!pr) return null;
+    return { svg: dcProjectMap(pr, m), attrs: { 'data-dcproj-map': key }, label: `Show ${pr.key} on the full map`,
+      caption: `<span class="hm-key hm-key-dcp"></span> ${esc(pr.key)} <span class="hm-key hm-key-dcd-a"></span> needs it to connect <span class="hm-key hm-key-dcd-b1"></span> needs it for capacity <span class="hm-key hm-key-dcd-b2"></span> on its path, not needed <span class="hm-key hm-key-dcd-gap"></span> homes before it is built` };
+  }
   // ---- Projects ------------------------------------------------------------------------------------
   function projects() {
     const t = specOf('dca:timing', areaScope); if (!t) return loading('projects', 'Loading the DC program…');
@@ -889,7 +919,7 @@
         pr && pr.lists && pr.lists[0] ? { ...pr.lists[0], title: 'Region capital projects being built', rows: pr.lists[0].rows.map(r => toMap('projects', r)) } : null,
         ea && ea.lists && ea.lists[0] ? { ...ea.lists[0], title: 'EAs: milestones and comment periods', rows: ea.lists[0].rows.map(r => toMap('projects', r)) } : null,
       ],
-      map: { svg: worksMap(), attrs: { 'data-ws-go': 'projects' }, label: 'Open Projects on the map', caption: '2026 DC works (draft): <span class="hm-key hm-dc-wastewater"></span> wastewater <span class="hm-key hm-dc-water"></span> water' },
+      map: dcProjMap() || { svg: worksMap(), attrs: { 'data-ws-go': 'projects' }, label: 'Open Projects on the map', caption: '2026 DC works (draft): <span class="hm-key hm-dc-wastewater"></span> wastewater <span class="hm-key hm-dc-water"></span> water' },
       method: t.method, sources: t.sources,
       actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'projects' }, primary: true }, { label: 'Full table', attrs: { 'data-ws-go': 'projects', 'data-ws-fulltable': 'dca:timing' } }] });
   }
