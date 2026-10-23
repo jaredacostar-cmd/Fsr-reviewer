@@ -35,6 +35,7 @@ const SHELL_ASSETS = [
   'js/panel.js',
   'js/plan-rollup.js',
   'js/ledger.js',
+  'js/ledger-snapshot.js',
   'js/ledger-ui.js',
   'js/plan-tables.js',
   'js/snapshot-index.js',
