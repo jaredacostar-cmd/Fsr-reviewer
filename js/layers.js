@@ -147,6 +147,101 @@
     return layer === 'committed' ? 'approved' : layer;
   }
 
+  // ---- The commitment ladder (docs/ledger/commitment-ladder.md, settled with the user Oct 23, 2026) ----
+  // One ordered set of rungs, one name each, used on every screen. A development's units left to build
+  // sit on the highest rung they have reached: a site servicing permit lifts the whole development, a
+  // building permit only the units it covers (js/demand.js committedPeelUnits); the rest stay on the
+  // development's planning rung. A screen says which rung it counts through, not "committed" alone:
+  //   Committed (the Peel rule)  through Servicing permit: rungs servicing, building and construction
+  //   MECP D-5-1 (treatment plant reserve only)  plan approved: planApproved, whatever the permits
+  // Registered is a marker on Plan approved, not a rung. A permit can come before the plan approval
+  // (permitAhead): those units are committed but not D-5-1.
+  const LADDER = [
+    { key: 'early', label: 'Pre-application', short: 'Pre-application', note: 'pre-consultation, block or precinct plan: no formal file yet' },
+    { key: 'review', label: 'In review', short: 'In review', note: 'zoning, official plan, draft plan or site plan in review' },
+    { key: 'zoning', label: 'Zoning approved', short: 'Zoning approved', note: 'zoning approved (or under appeal), no draft or site plan approval yet' },
+    { key: 'plan', label: 'Plan approved', short: 'Plan approved', note: 'draft or site plan approved (MECP D-5-1), no site servicing or building permit yet; a registered plan is marked' },
+    { key: 'servicing', label: 'Servicing permit', short: 'Servicing permit', note: 'a water or wastewater site servicing permit filed or issued: it commits the whole development' },
+    { key: 'building', label: 'Building permit', short: 'Building permit', note: 'a building permit filed or issued: it commits the units it covers' },
+    { key: 'construction', label: 'Under construction', short: 'Under construction', note: 'a building permit, and its permits’ history says it is being built' },
+  ];
+  const RUNG = Object.fromEntries(LADDER.map((r, i) => [r.key, i]));
+  const COMMIT_RUNG = 'servicing';
+  const COMMITTED_RUNGS = LADDER.slice(RUNG[COMMIT_RUNG]).map(r => r.key);
+  /** "Counting through: Servicing permit (committed, the Peel rule)": what a figure counts. */
+  const throughText = key => `counting through: ${(LADDER[RUNG[key]] || {}).label || key}${key === COMMIT_RUNG ? ' (committed, the Peel rule)' : key === 'plan' ? ' (MECP D-5-1)' : ''}`;
+  const PE = () => root.PeelPhaseEstimate || req('./phase-estimate.js');
+  const groundCache = new WeakMap();
+  // Its permits' history says it is being built (js/phase-estimate.js, as the ledger's tier A).
+  function underway(p, gate, asOf) {
+    const k = `${asOf}|${gate ? gate.bucket : ''}`, c = groundCache.get(p);
+    if (c && c.k === k) return c.v;
+    const e = PE() ? PE().estimate(p, { servicing: gate ? gate.evidence : null, today: asOf }) : null;
+    const v = !!e && (e.key === 'building' || e.key === 'built');
+    groundCache.set(p, { k, v });
+    return v;
+  }
+  /**
+   * rungsOf(p, opts) → { rungs: { early … construction: units }, built, existing, left, committed,
+   *   planApproved, registered, permitAhead, estimated, top }
+   * Units left to build (as ofDev) on their rung; built and existing (since / before the census) apart.
+   * opts: { gateOf(p), asOf (the lapse clock and the construction estimate), censusDate }.
+   */
+  const rungCache = new WeakMap();
+  function rungsOf(p, opts = {}) {
+    if (!p) return rungsOf1(p, opts);
+    // (cached per development: a page asks for every development's rungs on each render)
+    const g = opts.gateOf ? opts.gateOf(p) : null, b = p.buildout;
+    const k = [opts.asOf, opts.censusDate, g ? `${g.bucket}|${(g.evidence || []).length}` : '', p.phase, p.units, b ? `${b.completed}|${b.permitted}` : '', (p.records || []).length].join('|');
+    const c = rungCache.get(p);
+    if (c && c.k === k) return c.v;
+    const v = rungsOf1(p, opts);
+    rungCache.set(p, { k, v });
+    return v;
+  }
+  function rungsOf1(p, opts) {
+    const rungs = Object.fromEntries(LADDER.map(r => [r.key, 0]));
+    const out = { rungs, built: 0, existing: 0, left: 0, committed: 0, planApproved: false, registered: false, permitAhead: 0, estimated: 0, top: null };
+    const L = p ? ofDev(p, { censusDate: opts.censusDate }) : null;
+    if (!L || !L.layer) return out;
+    out.built = L.parts.built || 0; out.existing = L.parts.existing || 0; out.left = L.unbuilt; out.estimated = L.estimated;
+    const asOf = opts.asOf != null ? +opts.asOf : Date.now();
+    const gate = opts.gateOf ? opts.gateOf(p) || null : null;
+    out.planApproved = D().isCommitted(p) || p.phase === 'completed';
+    out.registered = (p.records || []).some(r => r.kind === 'application' && r.phase !== 'cancelled' && (P().isRegistered(r) || (P().isRegisteredCondo && P().isRegisteredCondo(r))));
+    // Committed (the Peel rule), as the ledger: a possibly lapsed servicing permit commits nothing.
+    const c = D().committedPeelUnits(p, gate);
+    let pc = c.units;
+    if (c.by === 'servicing') { const l = LG().lapseOf(gate, D().buildingPermitsOf(p), asOf); if (l && l.why === 'old') pc = 0; }
+    pc = Math.min(pc, out.left);
+    // (the building permits' own units: all of a permits commitment, and their part of a servicing one)
+    const bp = c.by === 'servicing' ? Math.min(pc, D().committedPeelUnits(p, null).units) : pc;
+    if (pc > 0) {
+      const on = bp > 0 && underway(p, gate, asOf) ? bp : 0;
+      rungs.construction += on; rungs.building += bp - on; rungs.servicing += pc - bp;
+    }
+    out.committed = pc;
+    out.permitAhead = out.planApproved ? 0 : pc;
+    const plan = out.planApproved ? 'plan' : p.phase === 'review' || p.phase === 'inception' ? (p.zoningApproved ? 'zoning' : p.phase === 'review' ? 'review' : 'early') : 'plan';
+    rungs[plan] += out.left - pc;
+    let best = -1;
+    for (const r of LADDER) if (rungs[r.key] >= best && rungs[r.key] > 0) { best = rungs[r.key]; out.top = r.key; }
+    return out;
+  }
+  /** rungsOf summed over developments (an { p, share } item counts its share). */
+  function ladderTotals(devs, opts = {}) {
+    const t = { rungs: Object.fromEntries(LADDER.map(r => [r.key, 0])), built: 0, existing: 0, left: 0, committed: 0, planApproved: 0, permitAhead: 0, registered: 0 };
+    for (const it of devs || []) {
+      const p = it && it.p ? it.p : it, sh = it && it.p ? it.share : 1;
+      const R = rungsOf(p, opts);
+      for (const k in R.rungs) t.rungs[k] += R.rungs[k] * sh;
+      t.built += R.built * sh; t.existing += R.existing * sh; t.left += R.left * sh; t.committed += R.committed * sh; t.permitAhead += R.permitAhead * sh;
+      if (R.planApproved) t.planApproved += (R.left - R.permitAhead) * sh;
+      if (R.registered) t.registered += R.left * sh;
+    }
+    return t;
+  }
+
   /** A single file: its own phase's layer and its own units in the development's count. */
   function ofFile(r, p) {
     const layer = r.kind === 'permit'
@@ -293,7 +388,7 @@
     return `About ${strong(r(pl.total))} homes are in the planning pipeline${where}${split}. About ${r(pl.notBuilt)} are not yet built.${plus}`;
   }
 
-  const api = { LAYERS, KEYS, LABEL, NOTE, PHASE_LAYER, CENSUS_DATE, layerOfPhase, layerOf, ofDev, ofFile, totals, byType, toTarget, confidenceOf, MOVED_SINCE, movedSince, pipeline, roundHeadline, headlineText, infill, cmhcUnderConstruction, permittedNotCompleted };
+  const api = { LADDER, RUNG, COMMIT_RUNG, COMMITTED_RUNGS, throughText, rungsOf, ladderTotals, LAYERS, KEYS, LABEL, NOTE, PHASE_LAYER, CENSUS_DATE, layerOfPhase, layerOf, ofDev, ofFile, totals, byType, toTarget, confidenceOf, MOVED_SINCE, movedSince, pipeline, roundHeadline, headlineText, infill, cmhcUnderConstruction, permittedNotCompleted };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelLayers = api;
 })(typeof window !== 'undefined' ? window : globalThis);

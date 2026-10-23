@@ -118,17 +118,3 @@ test('real data: the Overview\'s committed (Peel rule) equals the ledger\'s', { 
   assert.ok(Math.abs(t.units.commitPeel - led.units.committed) < 1e-6, `${t.units.commitPeel} vs ${led.units.committed}`);
   assert.ok(Math.abs(t.units.approved - led.units.approved) < 1e-6, `approved ${t.units.approved} vs ${led.units.approved}`);
 });
-
-test('real data: the ledger\'s committed + approved = Growth in an area\'s approved, not yet built + the units committed ahead of approval', { skip: !require('./helpers/real-devs.js').available() }, () => {
-  const { projects } = require('./helpers/real-devs.js').realDevs();
-  const gate = require('../data/dc-gate.json'), by = new Map(gate.developments.map(r => [r.key, r]));
-  const set = projects.filter(p => p.phase !== 'cancelled');
-  const asOf = Date.parse('2026-10-21T00:00:00Z'), gateOf = p => by.get(p.key);
-  const rows = LG.rows(set, { gateOf, asOf }), t = LG.totals(rows);
-  // (Growth in an area: D-5-1 committed, js/ws-pages.js stageRows approved + permitted)
-  const anb = set.reduce((s, p) => s + (LY.ofDev(p).parts.committed || 0), 0);
-  const ahead = set.reduce((s, p) => s + LG.aheadOfApproval(p, gateOf(p), asOf), 0);
-  assert.ok(ahead > 0, 'some in-review developments have a permit');
-  assert.ok(Math.abs(rows.reduce((s, r) => s + r.aheadOfApproval, 0) - ahead) < 1e-6, 'the rows carry the same figure');
-  assert.ok(Math.abs(t.units.committed + t.units.approved - anb - ahead) < 1e-6, `${t.units.committed + t.units.approved} vs ${anb} + ${ahead}`);
-});

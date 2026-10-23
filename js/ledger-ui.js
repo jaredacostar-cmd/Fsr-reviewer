@@ -201,10 +201,6 @@
     const scope = (App().state.muni) || 'Peel';
     const answer = `${esc(scope)}: <strong>${fmtV(at)}</strong> ${word()} left to build counting <strong>${esc(cutWords)}</strong>, <strong>${fmtV(to31)}</strong> of them timed for 2026 to 2031. <strong>${fmtNum(Math.round(com))}</strong> units are committed (a building or site servicing permit). ${esc(LG.DISCLAIMER)}`;
     const notes = [];
-    // How committed + approved reconciles with Explore › Growth in an area's "approved, not yet built"
-    // (MECP D-5-1): the Peel rule also commits developments still in review that have a permit.
-    const ca = t.units.committed + t.units.approved, ahead = rows.reduce((s, x) => s + (x.aheadOfApproval || 0), 0);
-    if (ca >= 0.5) notes.push(`Committed + approved: ${fmtNum(Math.round(ca))} units. Explore › Growth in an area’s “approved, not yet built” (MECP D-5-1) counts ${fmtNum(Math.round(ca - ahead))} of them${ahead >= 0.5 ? `; the other ${fmtNum(Math.round(ahead))} are in developments still in review that already have a site servicing or building permit (the Peel rule commits them; Explore keeps them in review)` : ''}.${S.hideLapsed && all.lapsed ? ' Possibly lapsed developments hidden here are still in Explore’s figure.' : ''}`);
     if (!c.gateOn) notes.push('Site servicing permits are still loading: committed counts building permits only for now.');
     if (!c.timed) notes.push('The forecast is still loading: every unit shows as not timed for now.');
     else if (!c.homes) notes.push('The population projection is still loading: sites waiting longer than similar sites ever have show as not timed for now.');
