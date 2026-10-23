@@ -20,6 +20,8 @@ test('readOutlet: size, street, status, manhole, Region project', () => {
   assert.equal(chain.mm, 300); assert.equal(chain.street, 'Highwood Road');
   assert.equal(readOutlet('The site will be serviced by local 250 mm sanitary sewers that is proposed to connect to the 1200 mm Kennedy sewer.').mm, 1200);
   assert.equal(readOutlet('Sanitary servicing for Building A will be provided by a 250 mm diameter sanitary sewer connection to EX.MH31 on Airport Road.').mm, null, 'the site connection, not the sewer');
+  const two = readOutlet('Bolton is serviced by two sanitary trunk sewers: a 900 mm diameter trunk sewer on Albion-Vaughan Road in the east end and a 750 mm trunk sewer on Coleraine Drive.');
+  assert.deepEqual([two.mm, two.street], [900, 'Albion-Vaughan Road'], 'a hyphenated street, with its own size');
   // a report title is not a street
   assert.equal(readOutlet('Preliminary Functional Servicing and Stormwater Management Report Jack Kenny Court, Bolton. There is an existing 250 mm sanitary sewer on Jack Kenny Court.').street, 'Jack Kenny Court');
   // no municipal sewer

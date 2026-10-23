@@ -26,7 +26,7 @@ const MAX_PAGES = 120, MAX_MB = 250;
 
 // ---- Reading a report --------------------------------------------------------------------------
 const SUFFIX = 'Road|Rd|Street|St|Avenue|Ave|Drive|Dr|Boulevard|Blvd|Way|Crescent|Cres|Lane|Ln|Line|Sideroad|Side Road|Parkway|Pkwy|Court|Ct|Trail|Gate|Circle|Place|Pl|Terrace|Highway|Hwy';
-const STREET = new RegExp(`\\b(?:Regional Road|Highway|Hwy)\\s*\\d+\\b|\\b(?:[A-Z][A-Za-z'.]+|\\d+(?:st|nd|rd|th)|[A-Z]{2,})(?:\\s+(?:[A-Z][A-Za-z'.]+|of|the))*\\s+(?:${SUFFIX})\\b(?:\\s+(?:East|West|North|South|E|W|N|S)\\b)?`, 'g');
+const STREET = new RegExp(`\\b(?:Regional Road|Highway|Hwy)\\s*\\d+\\b|\\b(?:[A-Z][A-Za-z'.-]+|\\d+(?:st|nd|rd|th)|[A-Z]{2,})(?:\\s+(?:[A-Z][A-Za-z'.-]+|of|the))*\\s+(?:${SUFFIX})\\b(?:\\s+(?:East|West|North|South|E|W|N|S)\\b)?`, 'g');
 const MM = /(?:Ø\s*)?(\d{3,4})\s*(?:mm|millimet(?:re|er)s?)\s*(?:Ø|ø|dia(?:meter|\.)?)?/gi;
 const OUTLET_VERB = /\b(connect\w*|discharg\w*|outlet\w*|convey\w*|tie[sd]?[- ]in|tied|drain\w*|direct\w*|servic(?:ed|ing)\s+(?:by|from|via)|flow\w*\s+(?:to|into)|receiv\w*)\b/i;
 const OFF = /\b(storm(?:water)?|watermain|water\s*main|domestic water|fire\s*(?:line|service)|swm|culvert|catch\s*basin)\b/i;
