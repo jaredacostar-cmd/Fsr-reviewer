@@ -117,21 +117,63 @@
     return { all: rows, rows: rows.filter(f).sort((a, b) => b.units - a.units) };
   }
   const selected = () => { const q = queue(); if (!q) return null; return (S.sel && q.all.find(x => x.p.key === S.sel)) || q.rows[0] || null; };
-  // A tap on the map while picking: the nearest existing sewer (300 mm+) or planned DC main within r metres.
+  // A candidate outlet: a point on an existing sewer (pipe k) or on a planned DC main (line ln).
+  function sewerCand(k, pt, street) {
+    const pp = MM().SEW.data.pipes[k], at = r6(nearestOn(pt, SC().pipeCoords(pp)));
+    return { kind: 'sewer', k, at, mm: pp[0], label: `${pp[0]} mm sanitary sewer${street ? ` on ${street}` : ''}` };
+  }
+  function dcCand(ln, pt) {
+    const g = ln.g, near = g.reduce((b, v) => (DI().dcM(v, pt) < DI().dcM(b, pt) ? v : b), g[0]);
+    return { kind: 'dc', at: r6(near), mm: ln.d || null, project: ln.p || ln.c, label: `${ln.d ? `${ln.d} mm ` : ''}planned DC main ${ln.p || ln.c}` };
+  }
+  // A tap on the map while picking: the nearest existing sewer or planned DC main within r metres.
   function pickAt(lng, lat, r) {
-    if (S.mode !== 'pick') return;
+    if (S.mode !== 'pick' && S.mode !== 'preview') return;
     const pt = [lng, lat], k = SC().nearestPipe(lng, lat, r), dc = DI().dcNearest('wastewater', pt, r);
     const mk = k >= 0 ? DI().dcDist(pt, SC().pipeCoords(MM().SEW.data.pipes[k])) : Infinity;
     if (k < 0 && !dc) { if (U.toast) U.toast('No sewer or planned main there: tap closer to one'); return; }
-    if (dc && dc.m < mk) {
-      const g = dc.ln.g, near = g.reduce((b, v) => (DI().dcM(v, pt) < DI().dcM(b, pt) ? v : b), g[0]);
-      S.cand = { kind: 'dc', at: r6(near), mm: dc.ln.d || null, project: dc.ln.p || dc.ln.c, label: `${dc.ln.d ? `${dc.ln.d} mm ` : ''}planned DC main ${dc.ln.p || dc.ln.c}` };
-    } else {
-      const c = SC().pipeCoords(MM().SEW.data.pipes[k]), q = nearestOn(pt, c);
-      S.cand = { kind: 'sewer', k, at: r6(q), mm: MM().SEW.data.pipes[k][0], label: `${MM().SEW.data.pipes[k][0]} mm sanitary sewer` };
-    }
+    S.cand = dc && dc.m < mk ? dcCand(dc.ln, pt) : sewerCand(k, pt);
     S.mode = 'preview'; refresh();
   }
+  // Keep the nearest of each run: items sorted by distance; sameRun(a, b) says two are one sewer (or one
+  // project), so the list shows each pipe once, not every length of it.
+  function distinct(items, sameRun, max = Infinity) {
+    const out = [];
+    for (const it of items) { if (out.length >= max) break; if (!out.some(o => sameRun(o, it))) out.push(it); }
+    return out;
+  }
+  // The infrastructure near a development, to pick its outlet from: existing sanitary sewers (any size:
+  // a site can connect to a local sewer) and planned DC mains within r metres, nearest first, each sewer
+  // run and each DC project once. Each: a candidate (as a tap makes) plus m, its distance from the site.
+  const nearCache = { key: null, list: [] };
+  function nearby(p, { r = 400, sewers = 6, mains = 4, streetOf = null } = {}) {
+    if (!p || p.lat == null || !MM().SEW.data || !MM().SEW.grid) return [];
+    const key = `${p.key}|${r}|${O.v}|${App() && App().state.dcInfra ? 1 : 0}|${App() && App().state.addressPoints ? 1 : 0}`; // (street names arrive later)
+    if (nearCache.key === key) return nearCache.list;
+    const pt = [p.lng, p.lat], pipes = MM().SEW.data.pipes, grid = MM().SEW.grid;
+    const gx = Math.floor(pt[0] / 0.004), gy = Math.floor(pt[1] / 0.003), R = Math.ceil(r / 300), seen = new Set(), sw = [];
+    for (let i = -R; i <= R; i++) for (let j = -R; j <= R; j++) for (const k of grid.get(`${gx + i},${gy + j}`) || []) {
+      if (seen.has(k)) continue; seen.add(k);
+      const m = DI().dcDist(pt, SC().pipeCoords(pipes[k])); if (m <= r) sw.push({ k, m });
+    }
+    sw.sort((a, b) => a.m - b.m);
+    // (one sewer: the same size, one a few lengths downstream of the other)
+    const down = (a, b) => { for (let j = pipes[a][3], h = 0; j != null && j >= 0 && h < 8; j = pipes[j][3], h++) if (j === b) return true; return false; };
+    const sameSewer = (a, b) => pipes[a.k][0] === pipes[b.k][0] && (down(a.k, b.k) || down(b.k, a.k));
+    const out = distinct(sw, sameSewer, sewers).map(x => { const c = sewerCand(x.k, pt), st = streetOf ? streetOf(c.at[0], c.at[1]) : ''; return { ...(st ? sewerCand(x.k, pt, st) : c), m: x.m }; });
+    const di = App() && App().state.dcInfra;
+    if (di) {
+      const dl = di.wastewater.lines.map(ln => ({ ln, m: DI().dcDist(pt, ln.g) })).filter(x => x.m <= r).sort((a, b) => a.m - b.m);
+      for (const x of distinct(dl, (a, b) => (a.ln.p || a.ln.c) === (b.ln.p || b.ln.c), mains)) out.push({ ...dcCand(x.ln, pt), m: x.m });
+    }
+    out.sort((a, b) => a.m - b.m);
+    nearCache.key = key; nearCache.list = out;
+    return out;
+  }
+  // Two candidates on the same pipe (sewer) or the same project (planned main).
+  const sameOutlet = (a, b) => !!a && !!b && a.kind === b.kind && (a.kind === 'dc' ? a.project === b.project : a.k === b.k);
+  // Is a candidate the outlet in use now? (cur: { k, path } as the page shows it)
+  const isCurrent = (c, cur) => !!cur && (c.kind === 'dc' ? !!(cur.path && (cur.path.first.p || cur.path.first.c) === c.project) : !cur.path && cur.k === c.k);
   // The nearest point on a polyline (flat, local).
   function nearestOn(pt, g) {
     const kx = Math.cos(pt[1] * Math.PI / 180); let best = g[0], bd = Infinity;
@@ -158,6 +200,7 @@
       else if (act === 'all') { S.all = !S.all; refresh(); }
       else if (!p) return;
       else if (act === 'start') { S.mode = 'pick'; S.cand = null; refresh(); }
+      else if (act === 'near') { const c = nearCache.list[+arg]; if (c) { S.cand = c; S.mode = 'preview'; refresh(); } }
       else if (act === 'cancel') { S.mode = 'idle'; S.cand = null; refresh(); }
       else if (act === 'save' && S.cand) { const src = (document.querySelector('[data-dvo-src]') || {}).value || ''; setRecord(p, { mode: 'set', kind: S.cand.kind, at: S.cand.at, mm: S.cand.mm, ...(S.cand.project ? { project: S.cand.project } : {}), ...(src ? { src } : {}) }); S.mode = 'idle'; S.cand = null; refresh(); }
       else if (act === 'confirm') { const src = (document.querySelector('[data-dvo-src]') || {}).value || ''; setRecord(p, { mode: 'confirmed', ...(src ? { src } : {}) }); }
@@ -169,7 +212,7 @@
   // How a record reads wherever the outlet is used.
   const recText = r => (!r ? '' : `${r.mode === 'set' ? 'outlet set by hand' : 'outlet confirmed'}${r.src ? ` · ${r.src}` : ''}${r.date ? ` · ${r.date}` : ''}${r.local ? ' (this browser)' : ''}`);
 
-  const api = { merge, exportJSON, diff, load, recordOf, pipeFor, dcRouteFor, version, queue, selected, projectsFor, pickAt, nearestOn, recText, state: S, edits: () => O.edits.length, records: () => recs, setRecord, backToAuto };
+  const api = { merge, exportJSON, diff, load, recordOf, pipeFor, dcRouteFor, version, queue, selected, projectsFor, pickAt, nearby, distinct, isCurrent, sameOutlet, nearestOn, recText, state: S, edits: () => O.edits.length, records: () => recs, setRecord, backToAuto };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDevOutlets = api;
 })(typeof window !== 'undefined' ? window : globalThis);

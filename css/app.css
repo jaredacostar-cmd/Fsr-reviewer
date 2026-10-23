@@ -3031,6 +3031,17 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .dvo-plist li small { display: block; color: var(--text-secondary); }
 .dvo-plist li.add { color: var(--cap-tight-t); font-weight: 600; }
 .dvo-plist li.drop { color: var(--text-muted); text-decoration: line-through; }
+.dvo-near { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.dvo-near-b { display: flex; align-items: center; gap: var(--space-2); width: 100%; text-align: left; padding: 6px var(--space-2); border: 1px solid var(--border); border-radius: 8px; background: var(--surface-1); color: var(--text-primary); font: inherit; cursor: pointer; }
+.dvo-near-b:hover { border-color: var(--accent); }
+.dvo-near-b.on { border-color: var(--cap-tight); background: var(--surface-2); }
+.dvo-near-b > span:nth-child(2) { flex: 1; min-width: 0; }
+.dvo-near-b small { display: block; color: var(--text-secondary); }
+.dvo-near-n { flex: none; width: 20px; height: 20px; border-radius: 50%; display: inline-grid; place-items: center; font-size: var(--fs-1); font-weight: 600; background: var(--text-primary); color: var(--surface-1); }
+.home-map-svg .hm-dvo-near { cursor: pointer; }
+.home-map-svg .hm-dvo-near circle { fill: var(--text-primary); stroke: var(--map-halo); stroke-width: 1.5; }
+.home-map-svg .hm-dvo-near text { fill: var(--surface-1); font-size: 9px; font-weight: 600; pointer-events: none; }
+.home-map-svg .hm-dvo-near.on circle { fill: var(--cap-tight); }
 .dvo-src { display: block; margin-top: var(--space-2); color: var(--text-secondary); }
 .dvo-src input { display: block; width: 100%; box-sizing: border-box; margin-top: 4px; }
 .dvo-map { position: relative; }
