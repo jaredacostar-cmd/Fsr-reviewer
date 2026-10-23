@@ -104,7 +104,7 @@ test('unitsOverTime: parcels by land, the latest count on a parcel stands, parce
   assert.equal(A.count, 195); assert.equal(A.built.year, 2016);
   assert.equal(B.count, 1007); assert.equal(B.total.units, 1062); assert.equal(B.built, null);
   assert.ok(B.steps.find(s => s.r === inactive && !s.counted), 'an inactive file does not count');
-  assert.deepEqual(u.spans.map(s => s.x.r.ref), ['PRE17.035']);
+  assert.deepEqual(u.spans.map(s => s.x.r.ref), ['PRE17.035', 'SP83-006.000'], 'the original land, over both parcels, states no count');
   const y = Object.fromEntries(u.years.map(r => [r.year, r]));
   assert.equal(y[2016].land, 195, 'built before its condominium file: the homes stand from 2016');
   assert.equal(y[2020].land, 195 + 1052);
@@ -114,4 +114,36 @@ test('unitsOverTime: parcels by land, the latest count on a parcel stands, parce
   assert.match(text, /the app counts 1,055 homes; the latest file states 1,062, ≈1,007 after its resubmission/);
   assert.match(text, /PRE-2020-0098 states 1,052 \(the total stated\); the app reads 1,055/);
   assert.match(EF.unitsSummary(u), /^195 homes built on 1 parcel .*≈1,007–1,062 more on parcel/);
+});
+
+test('unitsOverTime: one application split into buildings; whole-block files counted for the building they match; an addition adds', () => {
+  const sq3 = (...c) => sq(...c.map(v => v / 3));   // (about 150 × 370 m: under the 15 ha frame limit)
+  // 209 Steeles Ave W: a 2016 site plan over the whole strip (109 townhouses), then two towers on block 2,
+  // with later revisions drawn over the whole block.
+  const whole = app('SP16-091.000', { units: 109, events: [ev('2016-12-15')], poly: sq3(0, 0, 0.004, 0.01), description: 'To construct 109 back to back townhouse units.' });
+  const thCondo = app('T01W15.038', { stage: 'condo', units: 109, events: [ev('2019-07-26')], poly: sq3(0, 0, 0.004, 0.005) });
+  const t1 = app('SPA-2020-0152', { units: 290, events: [ev('2020-10-16')], poly: sq3(0, 0.006, 0.0018, 0.01), description: 'To develop a 21-storey residential apartment building with 290 residential units' });
+  const t1z = app('OZS-2020-0028', { stage: 'master', units: 290, events: [ev('2020-10-16')], poly: sq3(0, 0.0055, 0.004, 0.01), description: 'To develop a 21-storey residential apartment building with 290 residential units' });
+  const t2 = app('SPA-2021-0230', { units: 462, events: [ev('2021-11-15')], poly: sq3(0.0025, 0.007, 0.0038, 0.0095), description: 'A 40-storey mixed-use residential building with 462 residential suites' });
+  const add = app('SPA-2024-0129', { units: 4, events: [ev('2024-09-16')], poly: sq3(0, 0.0055, 0.004, 0.01), description: '40-storey mixed-use building under construction. Limited Site Plan to add 4 units to ground floor' });
+  const condo2 = app('DPC-2025-0009', { stage: 'condo', units: 466, events: [ev('2025-12-01')], poly: sq3(0, 0.0055, 0.004, 0.01), description: 'a 40-storey, 466-unit mixed-use Condominium' });
+  const a = { key: 'a', title: 'TH', units: 109, records: [whole, thCondo] }, b = { key: 'b', title: 'Tower 1', units: 290, records: [t1, t1z, add, condo2] }, c = { key: 'c', title: 'Tower 2', units: 449, records: [t2] };
+  const all = [a, b, c];
+  assert.equal(EF.frameOf(c, all), whole, 'the whole application is the frame, from any of its developments');
+  const u = EF.unitsOverTime(c, all, Date.UTC(2026, 9, 23));
+  const on = r => u.parcels.find(pc => pc.steps.some(s => s.r === r));
+  assert.equal(u.parcels.length, 3);
+  assert.equal(on(whole), on(thCondo), 'the whole application counts for the townhouses (its count matches)');
+  assert.equal(on(t1z), on(t1));
+  assert.equal(on(add), on(t2), 'the 40-storey addition goes to the 40-storey building, not the 21-storey one');
+  assert.equal(on(t2).count, 466);
+  assert.ok(on(add).steps.find(s => s.r === add).added);
+  assert.equal(on(t1).count, 290);
+  assert.equal(u.totals.land, 109 + 290 + 466);
+  assert.match(u.flags.map(f => f.text).join('\n'), /split across 2 developments in the app/);
+});
+
+test('addOf', () => {
+  assert.equal(EF.addOf(app('X', { description: 'Limited Site Plan Application being submitted to add 4 units to ground floor' })), 4);
+  assert.equal(EF.addOf(app('X', { description: '40-storey building with 466 residential units' })), null);
 });

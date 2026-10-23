@@ -176,52 +176,88 @@
   // The parcels' colours (map outline, table swatch), as CSS custom properties.
   const PARCEL_TOKENS = ['--hue-blue', '--hue-violet', '--hue-teal', '--cap-tight', '--hue-lilac', '--ph-cancelled', '--growth-3', '--q-2'];
 
+  /** Units added by a file rather than a new total ("to add 4 units to ground floor"), or null. */
+  function addOf(r) {
+    const m = String(r.description || '').match(/\b(?:to\s+)?(?:add|adding|additional)\s+(\d[\d,]*)\s+(?:[a-z-]+\s+){0,3}?(?:units?|suites)\b/i);
+    return m && toNum(m[1]) > 0 ? toNum(m[1]) : null;
+  }
+  // The building heights a file names ("40-storey", "21 storey"): how a file over a whole block is
+  // matched to the building it is for.
+  const storeysOf = r => new Set([...String(r.description || '').matchAll(/(\d{1,3})\s*[- ]?\s*(?:storeys?|stories|story|sty)\b/gi)].map(m => Number(m[1])));
+  const FRAME_MAX = 150000;   // m²: the whole application a site was split from, not a block or secondary plan
+  /** The whole application the site's land was split from: the largest planning file (up to 15 ha)
+   *  holding at least half the site's widest file, on this site or another; else the site's widest. */
+  function frameOf(p, projects) {
+    const w = baseOf(p); if (!w) return null;
+    let best = w, ba = area(w.poly);
+    const wb = boxOf(w.poly);
+    for (const q of projects || []) for (const r of q.records || []) {
+      if (r.kind !== 'application' || !r.poly || r.municipality !== w.municipality || r.stage === 'precon' || !meet(boxOf(r.poly), wb)) continue;
+      const a = area(r.poly);
+      if (a > ba && a <= FRAME_MAX && share(w.poly, r.poly) >= INSIDE) { best = r; ba = a; }
+    }
+    return best;
+  }
+
   /** The land over time: { base, parcels, spans, years, flags, totals } or null.
-   *  parcels: [{ id, letter, name, token, files, area, steps, count, revised, built, permits, app }] */
+   *  parcels: [{ letter, name, token, files, extra, area, steps, count, total, built, underway, permits, app }] */
   function unitsOverTime(p, projects, now = Date.now()) {
-    const base = baseOf(p); if (!base) return null;
+    const base = frameOf(p, projects); if (!base) return null;
     const rows = layered(p, projects, base).filter(x => x.r !== base && x.r.poly);
-    if (!rows.length) return null;
-    const core = rows.filter(x => x.r.stage !== 'precon'), pre = rows.filter(x => x.r.stage === 'precon');
-    // Parcels from the formal files (union-find).
-    const par = core.map((x, i) => i), find = i => (par[i] === i ? i : (par[i] = find(par[i])));
+    // (the whole application is itself a file on the land: it states a count for one of its parts)
+    rows.push({ r: base, dev: [p, ...(projects || [])].find(q => q.records && q.records.includes(base)) || p, own: p.records.includes(base), inside: 1, at: firstAt(base) });
+    if (rows.length < 2) return null;
+    // Parcels from the smallest footprints up: a file holding one parcel's seed joins it; a file
+    // holding several is over several parcels (a whole block, or the whole application).
     const ar = new Map(rows.map(x => [x, area(x.r.poly)]));
-    for (let i = 0; i < core.length; i++) for (let j = i + 1; j < core.length; j++) {
-      const a = core[i], b = core[j], [sm, lg] = ar.get(a) <= ar.get(b) ? [a, b] : [b, a];
-      if (ar.get(lg) <= 3 * ar.get(sm) && share(sm.r.poly, lg.r.poly) >= INSIDE) par[find(i)] = find(j);
+    const groups = [], spans = [];
+    for (const x of rows.slice().sort((a, b) => ar.get(a) - ar.get(b))) {
+      const touch = groups.map(g => ({ g, s: share(g[0].r.poly, x.r.poly) })).filter(t => t.s >= 0.15), held = touch.filter(t => t.s >= INSIDE).map(t => t.g);
+      if (touch.length >= 2) { spans.push({ x, over: touch.map(t => t.g) }); continue; }
+      const on = held.length ? held : groups.filter(g => share(x.r.poly, g[0].r.poly) >= INSIDE);
+      if (on.length) on[0].push(x); else groups.push([x]);
     }
-    let groups = new Map();
-    core.forEach((x, i) => { const k = find(i); if (!groups.has(k)) groups.set(k, []); groups.get(k).push(x); });
-    groups = [...groups.values()];
-    // A much larger file holding other parcels (an umbrella: a draft plan, a block) sets no parcel's count.
-    const spans = [];
-    const shareIn = (x, g) => Math.max(0, ...g.map(m => share(x.r.poly, m.r.poly)));
-    const holds = (g, h) => h !== g && h.some(m => g.some(u => share(m.r.poly, u.r.poly) >= INSIDE));
-    groups = groups.filter(g => { const inner = groups.filter(h => holds(g, h)); if (!inner.length) return true; for (const x of g) spans.push({ x, over: inner }); return false; });
-    // Pre-consultations: on one parcel, over several, or a parcel of their own.
-    for (const x of pre) {
-      const hits = groups.map(g => ({ g, s: shareIn(x, g) })).filter(h => h.s >= 0.15).sort((a, b) => b.s - a.s);
-      if (hits.length >= 2) spans.push({ x, over: hits.map(h => h.g) });
-      else if (hits.length === 1 && hits[0].s >= INSIDE) hits[0].g.push(x);
-      else groups.push([x]);
+    // A file over several parcels counts for one when its count matches one parcel's own files
+    // (within 5%), or the building height it names does; else it sets no count.
+    const extra = new Map(groups.map(g => [g, []]));
+    for (const sp of spans) {
+      const r = sp.x.r, st = statedOf(r), add = addOf(r), sx = storeysOf(r);
+      let g = null, why = '';
+      if (st.units > 0 && !add) {
+        const hit = sp.over.filter(h => h.some(m => { const v = statedOf(m.r).units; return v > 0 && Math.abs(v - st.units) <= 0.05 * v; }));
+        if (hit.length === 1) { g = hit[0]; why = 'same count'; }
+      }
+      if (!g && sx.size) {
+        const hit = sp.over.filter(h => h.some(m => [...storeysOf(m.r)].some(n => sx.has(n))));
+        if (hit.length === 1) { g = hit[0]; why = `${[...sx].join(', ')} storeys`; }
+      }
+      if (g && (st.units > 0 || add)) { extra.get(g).push({ ...sp.x, why }); sp.to = g; }
     }
-    // Permits on each parcel (once, on the parcel that holds them).
+    const ownSpans = spans.filter(sp => !sp.to);
+    // Permits on each parcel (once, on the parcel whose own land holds them).
     const permitsOf = new Map(groups.map(g => [g, []]));
     const bb = boxOf(base.poly), seen = new Set();
     for (const q of projects || []) for (const r of q.records || []) {
       if (r.kind !== 'permit' || r.lat == null || r.lng < bb[0] || r.lng > bb[2] || r.lat < bb[1] || r.lat > bb[3] || seen.has(r) || !isDwellingPermit(r)) continue;
-      const g = groups.find(g => g.some(m => P().pointInRings(r.lng, r.lat, m.r.poly)));
+      const g = groups.find(g => P().pointInRings(r.lng, r.lat, g[0].r.poly)) || groups.find(g => g.some(m => P().pointInRings(r.lng, r.lat, m.r.poly)));
       if (g) { seen.add(r); permitsOf.get(g).push(r); }
     }
     const nowY = yearOf(now);
+    const byTime = (a, b) => (a.at == null) - (b.at == null) || (a.at || 0) - (b.at || 0);
     const parcels = groups.map(g => {
-      g.sort((a, b) => (a.at == null) - (b.at == null) || (a.at || 0) - (b.at || 0));
+      g.sort(byTime);
       const steps = []; let count = null, setAt = null, prev = null;
-      for (const x of g) {
-        const r = x.r, st = statedOf(r), out = r.phase === 'cancelled';
+      for (const x of [...g, ...extra.get(g)].sort(byTime)) {
+        const r = x.r, st = statedOf(r), out = r.phase === 'cancelled', add = !out && addOf(r);
+        const over = x.why ? `whole-block file, counted here (${x.why})` : '';
+        if (add && count != null) {
+          // An addition to the count, not a new total.
+          steps.push({ x, r, at: x.at, units: count + add, counted: true, change: add, added: true, note: [`adds ${num(add)} unit${add === 1 ? '' : 's'}`, over].filter(Boolean).join(' · ') });
+          prev = count = count + add; setAt = x.at; continue;
+        }
         const counted = !out && st.units > 0;
-        steps.push({ x, r, at: x.at, units: st.units, app: st.app, how: st.how, counted, change: counted && prev != null ? st.units - prev : null,
-          note: out ? `${r.statusRaw || 'withdrawn'}: not counted` : st.units > 0 ? '' : 'states no homes' });
+        steps.push({ x, r, at: x.at, units: st.units, app: st.app, how: st.how, counted, change: counted && prev != null ? st.units - prev : null, over: !!x.why,
+          note: [out ? `${r.statusRaw || 'withdrawn'}: not counted` : st.units > 0 ? '' : 'states no homes', over].filter(Boolean).join(' · ') });
         if (counted) { prev = count = st.units; setAt = x.at; }
         const rv = !out && revisionOf(r);
         if (rv && count != null && x.at === setAt) { steps.push({ x, r, at: x.at, revised: true, units: count + rv.delta, counted: true, change: rv.delta, note: `resubmission: ${rv.text}` }); prev = count = count + rv.delta; }
@@ -234,12 +270,14 @@
       const done = permits.length && permits.every(r => r.phase === 'completed');
       const builtAt = done ? Math.max(...permits.map(r => lastAt(r) || firstAtOf(r) || 0)) : null;
       const counted = steps.filter(s => s.counted), last = counted[counted.length - 1];
-      const owner = last ? last.x.dev : g[0].dev;
+      // The app development that holds the parcel's own land (a whole-block file may sit in another).
+      const ownLast = counted.filter(s => !s.x.why).pop(), owner = ownLast ? ownLast.x.dev : last ? last.x.dev : g[0].dev;
+      const devs = [...new Set(steps.filter(s => s.counted).map(s => s.x.dev).filter(Boolean))];
       const title = t => String(t || '').toLowerCase().replace(/\b[a-z]/g, c => c.toUpperCase()).replace(/\b(Rd|Dr|St|Ave|Pkwy|Cres|Blvd)\b/g, w => w);
-      return { files: g, steps, count, setAt, name: title(lead.r.address || (lead.dev && lead.dev.title) || lead.r.ref), key: last ? last.r.ref : null, area: Math.max(...g.map(x => ar.get(x) || 0)),
+      return { files: g, extra: extra.get(g), steps, count, setAt, name: title(lead.r.address || (lead.dev && lead.dev.title) || lead.r.ref), key: last ? last.r.ref : null, area: Math.max(...g.map(x => ar.get(x) || 0)),
         permits, built: done && count > 0 ? { at: builtAt, year: yearOf(builtAt) } : null, underway: !done && permits.length > 0,
-        first: g.find(x => x.at != null), app: owner ? { dev: owner, units: owner.units || 0 } : null,
-        total: counted.filter(s => !s.revised).slice(-1)[0] || null };
+        first: g.find(x => x.at != null), app: owner ? { dev: owner, units: owner.units || 0 } : null, devs,
+        total: counted.filter(s => !s.revised && !s.added).slice(-1)[0] || null };
     }).filter(pc => pc.steps.some(s => s.units > 0) || pc.files.some(x => x.r.stage !== 'precon'));
     parcels.sort((a, b) => (a.first ? a.first.at : Infinity) - (b.first ? b.first.at : Infinity));
     parcels.forEach((pc, i) => { pc.letter = LETTERS[i] || String(i + 1); pc.token = PARCEL_TOKENS[i % PARCEL_TOKENS.length]; });
@@ -262,15 +300,17 @@
     const flags = [];
     for (const pc of parcels) {
       const L = `${pc.letter} (${pc.name})`;
-      if (pc.app && pc.count != null && pc.app.units !== pc.count && !(pc.total && pc.app.units === pc.total.units)) flags.push({ kind: 'warn', parcel: pc.letter, text: `${L}: the app counts ${num(pc.app.units)} homes; the latest file states ${num(pc.total ? pc.total.units : pc.count)}${pc.total && pc.total.units !== pc.count ? `, ≈${num(pc.count)} after its resubmission` : ''}.` });
+      if (pc.app && pc.count != null && pc.app.units !== pc.count && !(pc.total && pc.app.units === pc.total.units)) flags.push({ kind: 'warn', parcel: pc.letter, text: `${L}: the app counts ${num(pc.app.units)} homes; the latest file states ${num(pc.total ? pc.total.units : pc.count)}${pc.total && pc.total.units !== pc.count ? `, ≈${num(pc.count)} after ${pc.steps.some(x => x.revised) ? 'its resubmission' : 'later additions'}` : ''}.` });
+      if (pc.devs.length > 1) flags.push({ kind: 'warn', parcel: pc.letter, text: `${L}: its files are split across ${pc.devs.length} developments in the app (${pc.devs.map(d => `${d.title || d.key}, ${num(d.units || 0)}`).join('; ')}): open any of them to see the whole land here.` });
       const sp = pc.steps.filter(s => s.counted && !s.revised && s.r.stage === 'siteplan').pop(), co = pc.steps.filter(s => s.counted && s.r.stage === 'condo').pop();
       if (sp && co && sp.units !== co.units) flags.push({ kind: 'info', parcel: pc.letter, text: `${L}: the site plan states ${num(sp.units)}, the condominium ${num(co.units)} (${co.units > sp.units ? '+' : ''}${num(co.units - sp.units)}).` });
+      for (const s of pc.steps) if (s.added) flags.push({ kind: 'info', parcel: pc.letter, text: `${L}: ${s.r.ref} adds ${num(s.change)} unit${s.change === 1 ? '' : 's'} to the count (${num(s.units - s.change)} → ${num(s.units)}).` });
       for (const s of pc.steps) if (s.revised) flags.push({ kind: 'warn', parcel: pc.letter, text: `${L}: ${s.r.ref} changes its count in its description (${s.change > 0 ? '+' : ''}${num(s.change)}): ${s.note.replace(/^resubmission: /, '')}` });
-      for (const s of pc.steps) if (s.counted && s.app && s.units !== s.app && !s.revised) flags.push({ kind: 'warn', parcel: pc.letter, text: `${L}: ${s.r.ref} states ${num(s.units)} (${s.how}); the app reads ${num(s.app)}.` });
-      for (const s of pc.steps) if (s.counted && s.change != null && !s.revised && Math.abs(s.change) > 0.1 * Math.max(1, s.units - s.change)) flags.push({ kind: 'info', parcel: pc.letter, text: `${L}: ${s.r.ref} ${s.change > 0 ? 'raised' : 'cut'} the count from ${num(s.units - s.change)} to ${num(s.units)}.` });
+      for (const s of pc.steps) if (s.counted && s.app && s.units !== s.app && !s.revised && !s.added) flags.push({ kind: 'warn', parcel: pc.letter, text: `${L}: ${s.r.ref} states ${num(s.units)} (${s.how}); the app reads ${num(s.app)}.` });
+      for (const s of pc.steps) if (s.counted && s.change != null && !s.revised && !s.added && Math.abs(s.change) > 0.1 * Math.max(1, s.units - s.change)) flags.push({ kind: 'info', parcel: pc.letter, text: `${L}: ${s.r.ref} ${s.change > 0 ? 'raised' : 'cut'} the count from ${num(s.units - s.change)} to ${num(s.units)}.` });
     }
     const last = years[years.length - 1] || { land: 0, built: 0 };
-    return { base, parcels, spans, years, flags, totals: { land: last.land, built: last.built } };
+    return { base, parcels, spans: ownSpans, years, flags, totals: { land: last.land, built: last.built } };
   }
   /** One sentence: built, and what is proposed on top (a range where a resubmission changed it). */
   function unitsSummary(u) {
@@ -343,7 +383,7 @@
   function html(p) {
     if (!p || p.parent) return '';
     if (mapKey && mapKey !== p.key) { mapLayer.clearLayers(); mapKey = null; }   // (another site's layers come off the map)
-    const base = baseOf(p); if (!base) return '';
+    const base = frameOf(p, allProjects()); if (!base) return '';
     const st = App() && App().state, since = (st && Number(st.sinceYear)) || (root.PEEL_CONFIG && root.PEEL_CONFIG.sinceYear) || null;
     const missing = implied(p, known(), since);
     const rows = layered(p, allProjects(), base);
@@ -366,7 +406,7 @@
       <div class="pt-actions small">${canLook ? `<button type="button" class="btn small" data-ef-lookup="${esc(p.key)}"${live && live.status === 'loading' ? ' disabled' : ''}>Look up the earlier files</button>` : ''}<button type="button" class="btn small" data-ef-map="${esc(p.key)}" title="The original land dashed, each parcel in its colour with its homes, earlier files found live dotted. Press again to hide">Show the layers on the map</button></div>
       <div class="ef-live">${liveHTML}</div>
       <p class="small"><strong>Filed on ${esc(base.ref)}'s land</strong>, oldest first</p>
-      <table class="rec-t ef-t small"><thead><tr><th>File</th><th>Filed</th><th class="num">Homes</th><th class="num">Inside</th><th>Site</th></tr></thead><tbody>${rowHTML({ r: base, own: true, inside: 1 }, null, 'original land')}${later.map(x => rowHTML(x, base)).join('')}</tbody></table>
+      <table class="rec-t ef-t small"><thead><tr><th>File</th><th>Filed</th><th class="num">Homes</th><th class="num">Inside</th><th>Site</th></tr></thead><tbody>${rowHTML({ r: base, own: p.records.includes(base), dev: allProjects().find(q => q.records.includes(base)), inside: 1 }, null, 'original land')}${later.map(x => rowHTML(x, base)).join('')}</tbody></table>
       <p class="small muted">Inside: share of the file's land inside ${esc(base.ref)}'s (under 90% reaches past it). A file shown under another site is counted there, not here.</p>
     </details>`;
   }
@@ -398,7 +438,7 @@
       const steps = pc.steps.map(s => `<tr class="${s.counted ? '' : 'muted'}"><td>${s.revised ? '↳ later' : esc(dayOf(s.at))}</td><td><button type="button" class="tr-ref" data-dev-file="${esc(s.r.ref)}"${s.x.dev && !s.x.own ? ` data-dev-key="${esc(s.x.dev.key)}"` : ''}>${esc(s.r.ref)}</button></td><td>${esc(s.revised ? 'resubmission' : stage(s.r))}</td><td class="num">${s.units > 0 ? num(s.units) : '–'}</td><td class="num">${s.change ? `${s.change > 0 ? '▲' : '▼'}${num(Math.abs(s.change))}` : ''}</td><td>${esc(s.revised ? s.note.replace(/^resubmission: /, '') : s.note || (s.how && s.how !== 'the units field' ? `from ${s.how}` : ''))}</td></tr>`).join('');
       const pm = pc.built ? `Built: ${num(pc.permits.length)} building permit${pc.permits.length === 1 ? '' : 's'}, all closed, last in ${pc.built.year}.` : pc.underway ? `Under way: ${num(pc.permits.length)} building permit${pc.permits.length === 1 ? '' : 's'} issued, not all closed.` : 'No building permits for these homes yet.';
       const app = pc.app && pc.app.dev ? ` The app counts <strong>${num(pc.app.units)}</strong> on <button type="button" class="btn small link" data-ef-open="${esc(pc.app.dev.key)}">${esc(pc.app.dev.title || pc.app.dev.key)}</button>.` : '';
-      return `<details class="ef-parcel"${pc.count > 0 && !pc.built ? ' open' : ''}><summary>${sw(pc)}<strong>${esc(pc.letter)} · ${esc(pc.name)}</strong> <span class="muted small">${num(Math.round(pc.area / 100) / 100)} ha · ${pc.count != null ? `${num(pc.count)} homes` : 'no homes stated'}${pc.built ? ` · built ${pc.built.year}` : pc.underway ? ' · under way' : ''}</span></summary>
+      return `<details class="ef-parcel"${pc.count > 0 && !pc.built ? ' open' : ''}><summary>${sw(pc)}<strong>${esc(pc.letter)} · ${esc(pc.name)}</strong> <span class="muted small">${pc.area >= 10000 ? `${(pc.area / 10000).toFixed(1)} ha` : `${num(Math.round(pc.area / 10) * 10)} m²`} · ${pc.count != null ? `${num(pc.count)} homes` : 'no homes stated'}${pc.built ? ` · built ${pc.built.year}` : pc.underway ? ' · under way' : ''}</span></summary>
         <table class="rec-t ef-t small"><thead><tr><th>Filed</th><th>File</th><th>Stage</th><th class="num">Homes</th><th class="num">Change</th><th>Note</th></tr></thead><tbody>${steps}</tbody></table>
         <p class="small muted">${pm}${app}</p></details>`;
     };
@@ -422,7 +462,7 @@
     mapLayer.clearLayers();
     if (mapKey === p.key) { mapKey = null; return; }   // (a second press clears it)
     mapKey = p.key;
-    const base = baseOf(p); if (!base) return;
+    const base = frameOf(p, allProjects()); if (!base) return;
     const ll = rings => rings.map(r => r.map(([x, y]) => [y, x]));
     const tok = n => { const U = root.PeelUtil; return U && U.token ? U.token(n) : undefined; };
     const add = (r, style, label) => { const g = L.polygon(ll(r.poly), { interactive: true, ...style }).addTo(mapLayer); g.bindTooltip(label, { sticky: true }); return g; };
@@ -462,7 +502,7 @@
       .then(() => { rerender(); if (mapKey === p.key) { mapKey = null; showOnMap(p); } });
   });
 
-  const api = { implied, baseOf, layered, discrepancies, lookup, html, yearOfRef, showOnMap, statedOf, revisionOf, unitsOverTime, unitsSummary, unitsHTML };
+  const api = { implied, baseOf, layered, discrepancies, lookup, html, yearOfRef, showOnMap, statedOf, revisionOf, addOf, frameOf, unitsOverTime, unitsSummary, unitsHTML };
   if (isNode) module.exports = api;
   else root.PeelEarlierFiles = api;
 })(typeof window !== 'undefined' ? window : globalThis);
