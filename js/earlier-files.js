@@ -434,8 +434,10 @@
     const rows = layered(p, allProjects(), base);
     const later = rows.filter(x => x.r !== base);
     // (also when the count on the land has a story: two parcels or more, or a count that changed)
-    const uu = unitsOf(p), story = hasUnits(uu) && (uu.parcels.filter(pc => pc.count > 0).length > 1 || uu.parcels.some(pc => pc.steps.filter(s => s.counted).length > 1));
-    if (!missing.length && !later.some(x => !x.own) && !story) return '';
+    // (the parcels are worked out only when two files on the land state a count: most sites have one)
+    const counts = rows.filter(x => x.r.units > 0 || x.r.precUnits > 0).length;
+    const story = () => { const uu = unitsOf(p); return hasUnits(uu) && (uu.parcels.filter(pc => pc.count > 0).length > 1 || uu.parcels.some(pc => pc.steps.filter(s => s.counted).length > 1)); };
+    if (!missing.length && !later.some(x => !x.own) && !(counts > 1 && story())) return '';
     const diffs = discrepancies(p, base, later, missing);
     const live = found.get(p.key);
     const canLook = missing.some(m => m.kind === 'revision' || m.kind === 'lot' || m.kind === 'named');
