@@ -64,7 +64,7 @@ function readOutlet(s) {
     if (/^\s*(?:\w+\s+){0,3}?(sanitary|san\b|sewer|trunk)/i.test(after)) v += 2;
     if (/(connect\w*|discharg\w*|outlet\w*|convey\w*|tie[sd]?[- ]in|drain\w*|carried by|serviced by|available from|discharging to|connection to)\s+(?:\w+\s+){0,4}$/i.test(before)) v += 3;
     if (/\b(existing|future|ultimate)\s+(?:\w+\s+){0,2}$/i.test(before)) v += 2;
-    if (/^\s*(?:\w+\s+){0,3}?(service\s+(?:connection|lateral)|lateral|watermain|water\s*main|storm|forcemain|force\s*main|culvert|CSP|catch)/i.test(after)) v -= 4;
+    if (/^\s*(?:\w+\s+){0,3}?(service\s+(?:connection|lateral)|(?:sewer\s+)?connection\b|lateral|watermain|water\s*main|storm|forcemain|force\s*main|culvert|CSP|catch)/i.test(after)) v -= 4;
     if (/\b(internal|local|on-?site|private|new)\s+(?:\w+\s+){0,1}$/i.test(before)) v -= 2;
     // (further down the chain: "…, which drains to a 375 mm sewer", "ultimately to the 1200 mm trunk")
     if (/\b(which|that)\s+(drains?|flows?|discharges?|conveys?|connects?)\b|\bdownstream\b|\bultimate(?:ly)?\b|\bvia twin\b/i.test(before)) v -= 3;

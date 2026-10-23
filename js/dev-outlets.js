@@ -104,7 +104,7 @@
   // Does an outlet match what the FSR says (data/fsr-outlets.json, scripts/build-fsr-outlets.js)?
   // f: { outlet: { mm, street, status, project }, confidence, quotes: [{ page }] }; c: a candidate
   // ({ kind, mm, street, project }). Same Region project, or the size and street agreeing: ok; one of
-  // them differing: warn; both (a sure read): bad; nothing to compare: unk.
+  // them differing (or the only one to compare): warn; both (a sure read): bad; nothing to compare: unk.
   const normStreet = x => String(x || '').toLowerCase().replace(/\b(road|rd|street|st|avenue|ave|drive|dr|boulevard|blvd|way|crescent|cres|lane|ln|line|sideroad|parkway|pkwy|court|ct|trail|gate|circle|place|pl|east|west|north|south|e|w|n|s)\b\.?/g, '').replace(/[^a-z0-9]+/g, ' ').trim();
   function fsrCheck(f, c) {
     if (!f || !f.outlet || !c) return null;
@@ -115,6 +115,8 @@
     if (mm === null && st === null) return { k: 'fsr', tone: 'unk', text: `The FSR names ${said}${pg}` };
     if (mm !== false && st !== false) return { k: 'fsr', tone: 'ok', text: `The FSR names this sewer${pg}` };
     if (mm === true || st === true) return { k: 'fsr', tone: 'warn', text: `The FSR names ${said}${pg}: the ${mm === false ? 'size' : 'street'} differs` };
+    // (only one of them to compare, and it differs: a warning; both differ: a different outlet)
+    if (mm === null || st === null) return { k: 'fsr', tone: f.confidence === 'low' ? 'unk' : 'warn', text: `The FSR names ${said}${pg}: the ${mm === false ? 'size' : 'street'} differs` };
     return { k: 'fsr', tone: f.confidence === 'low' ? 'unk' : 'bad', text: `The FSR names a different outlet: ${said}${pg}` };
   }
 
