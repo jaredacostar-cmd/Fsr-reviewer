@@ -59,15 +59,26 @@ this site or another, with what differs (later files reaching past the original 
 stated against the homes counted). *Look up the earlier files* fetches them live with no date filter;
 *Show the layers on the map* draws the original land, each parcel in its colour with its homes, and the earlier ones.
 
-**Units on the land over time** (the development's Growth tab, *Units on this land over time*). The files on
-the original land fall into parcels by their land: a file at least half inside another of no more than
-3× its size is the same parcel; a pre-consultation over several parcels sets no count. On a parcel the
-latest file stating a count replaces the earlier ones (a withdrawn or inactive file doesn't count), and
-parcels add up; a parcel is built when its new-dwelling permits (from 3 years before the file that set
-its count) are all closed. The table gives each parcel's count at the end of each year, the land's
-total and what is built, then each parcel's files with the count each states, and flags where the
-app's count differs from the latest file, a site plan and its condominium disagree, or a description
-changes a count (a resubmission).
+**Units on the land over time** (the development's Growth tab, *Units on this land over time*). The land
+is the whole application the site was split from: the largest planning file (up to 15 ha, not a
+city-initiated policy file) holding at least half the site. Its files fall into parcels, from the
+smallest footprints up; a file over several parcels (a whole block, the whole application) counts for
+the one whose own files state the same count or name the same building height, else sets no count.
+On a parcel, a later file revises a building when its count is within 25% (or the earlier count was a
+pre-consultation's); another phase, an addition ("add 4 units", "24 units addition to the existing
+plaza") or a count 25%+ apart is another building. Withdrawn or inactive files don't count; buildings
+and parcels add up; a parcel is built when its new-dwelling permits (from 3 years before the file that
+set its count) are all closed. The table gives each parcel's count at the end of each year, the land's
+total and what is built, then each parcel's files, with flags where the app's count differs from the
+latest files, a site plan and its condominium disagree, or a description changes a count.
+
+**One application, one development.** When two or more developments with homes lie on the same whole
+application (a 2016 site plan for 109 townhouses later split into two towers: 209 Steeles Ave W), the
+tree build (`scripts/build-tree-counts.js`) makes them one development. Each piece keeps its own count,
+except a piece whose every counted file was revised by a later file of the same building in another
+piece counts nothing (137 Steeles Ave W: the 2023 rezoning for 1,147 and the 2025 site plan for 991 are
+the same towers), and a piece holding the latest files of buildings on separate parcels counts them all.
+The pieces' old keys resolve to the development kept (`merged` in `data/tree-counts.json`).
 
 ## Run it
 

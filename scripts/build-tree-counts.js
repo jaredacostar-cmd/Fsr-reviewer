@@ -270,4 +270,4 @@ async function main() {
   console.log(`tree developments: ${b.data.devs.length} trees · live ${t.developmentsBefore} → ${t.developments} · Peel previous ${t.previous} → tree ${t.tree} · keys kept ${b.changes.kept}, new ${b.changes.newKeys}, gone ${b.changes.goneKeys}, split ${b.changes.splits} · ${Object.keys(b.data.permits).length} permits placed by the tree · ${b.overridden} overrides · ${b.mergedGroups.length} split applications merged`);
 }
 if (require.main === module) main().catch(e => { console.error(e); process.exit(1); });
-module.exports = { build };
+module.exports = { build, mergeApplications };
