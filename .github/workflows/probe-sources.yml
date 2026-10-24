@@ -17,6 +17,7 @@ name: Probe data sources
 #  mode=dc-maps: download the 2026 DC capital maps (water, wastewater) as text, images, SVG and any GeoPDF layers (ref-docs-dc branch)
 #  mode=linework: existing watermains, sanitary mains, storm sewers and ponds published for Peel (log only)
 #  mode=linework-raw: download existing water / wastewater linework, report field completeness (linework-raw branch)
+#  mode=fsr-outlets: download each FSR in data/fsr.json, read where it says the sanitary flows go → data/fsr-outlets.json committed to this branch; the texts pushed to the fsr-raw branch
 #  mode=sewer-build: rebuild data/sewers.json (sewer pipe capacity screen), data/sewers-local.json (local sewers under 300 mm near developments), data/water-supply.json (large mains across zone boundaries) and data/watermains.json (300 mm+ network for the water trace) from the Region's mains, committed to this branch
 #  mode=dragonfly: the Region's I&I story map, its web maps and the 40 wastewater Blocks (Dragonfly, WEFTEC 2024), pushed to the dragonfly-raw branch
 #  mode=fsr: latest functional servicing reports on the application pages (data/fsr.json, committed to this branch)
@@ -44,7 +45,7 @@ on:
   workflow_dispatch:
     inputs:
       mode:
-        description: 'all, fsr, external, plant-flows, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw, sewer-build, capital, capital-probe, ea-maps, ea-trace or eas'
+        description: 'all, fsr, external, plant-flows, phases, imagery, aerial, areas, census, servicing, servicing-raw, servicing-build, peel-reports, refs-council, masterplan, dc-maps, linework, linework-raw, sewer-build, fsr-outlets, capital, capital-probe, ea-maps, ea-trace or eas'
         default: 'all'
         required: false
       only:
@@ -223,6 +224,20 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add data/fsr.json
           git diff --cached --quiet || { git commit -m "Functional servicing report links"; bash scripts/push-data.sh; }
+      - name: Sanitary outlets read from the FSRs (data/fsr-outlets.json committed to this branch; the texts pushed to the fsr-raw branch)
+        if: inputs.mode == 'fsr-outlets'
+        run: |
+          command -v pdftotext >/dev/null || { sudo apt-get update -qq && sudo apt-get install -y -qq poppler-utils >/dev/null; }
+          node scripts/build-fsr-outlets.js --fetch --raw /tmp/fsr-raw --out data
+          git config user.name "peel-snapshot-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/fsr-outlets.json
+          git diff --cached --quiet || { git commit -m "Sanitary outlets read from the FSRs"; bash scripts/push-data.sh; }
+          rm -rf fsr-raw && cp -r /tmp/fsr-raw fsr-raw
+          git checkout -B fsr-raw
+          git add -f fsr-raw
+          git commit -q -m "FSR texts (pdftotext) for the outlet read" || true
+          git push -f origin fsr-raw
       - name: External open data (pushed to the ext-raw branch)
         if: inputs.mode == 'external'
         run: |
