@@ -102,10 +102,13 @@
     if (da && da.year !== Y) { CA().setDaContext(da.project); return; }
     const g = { muni: App().state.muni, sp: App().state.sp, mtsa: App().state.mtsa };
     const base = da ? { population: da.pop, dwellings: da.dw, das: 1 } : PeelAreas.censusTotals(bc.das, g);
-    const gr = PeelAreas.growthSince(da ? da.projects : App().state.projects, da ? {} : g, bc.date, App().state.criteria);
+    const gr0 = PeelAreas.growthSince(da ? da.projects : App().state.projects, da ? {} : g, bc.date, App().state.criteria);
     // Employment growth: jobs on development sites (from the floor area the applications state).
     const jb = SvcTab().svcJobs((da ? da.projects : App().state.projects).filter(p => p.phase !== 'cancelled' && (da || PeelAreas.inGeo(g, { muni: p.municipality, sp: p.sp, mtsa: p.mtsa }))), bc.date);
-    gr.built.jobs = jb.jbuilt; gr.approved.jobs = jb.japproved; gr.proposed.jobs = jb.jproposed;
+    // (the growth layers on the commitment ladder: committed, a site servicing or building permit (the
+    // Peel rule); then not committed yet, the rest of build-out)
+    const L = PeelAreas.ladderLayers(gr0, jb);
+    const gr = { built: { ...gr0.built, jobs: jb.jbuilt }, approved: L.committed, proposed: L.notYet };
     const name = da ? `DA ${da.id} (${da.muni || 'Peel'}), around ${da.title}`
       : [App().state.mtsa.length && PA().multiSummary('mtsa'), App().state.sp.length && PA().spSummary(), App().state.muni].filter(Boolean)[0] || 'Peel Region';
     const pct = (a, b) => b > 0 ? ` (+${(a / b * 100).toFixed(1)}%)` : '';
@@ -121,21 +124,21 @@
     const why = start == null ? `all years: earliest census with data (${earliest})` : start < earliest ? `timeline starts ${start}; earliest census with data is ${earliest}` : `timeline starts ${start}`;
     const asof = (DU().freshness()[0] && DU().freshness()[0].date) || '–';
     body.innerHTML = `
-      ${hlP(`Since the ${Y} Census, ${esc(name)} has added <strong>≈${fmtNum(Math.round(gr.built.population))} people</strong> in ${fmtNum(Math.round(gr.built.units))} dwellings; <strong>${fmtNum(roundPop(gr.approved.population + gr.proposed.population))} more people</strong> are approved or proposed in the application pipeline.`)}
+      ${hlP(`Since the ${Y} Census, ${esc(name)} has added <strong>≈${fmtNum(Math.round(gr.built.population))} people</strong> in ${fmtNum(Math.round(gr.built.units))} dwellings; <strong>${fmtNum(roundPop(gr.approved.population + gr.proposed.population))} more people</strong> are committed or not committed yet in the application pipeline.`)}
       ${da ? `<div class="c-ctx"><button type="button" class="d-pill da" data-clear-da title="Back to all of ${esc(CA().daScopeName())}">DA ${esc(da.id)} · around ${esc(da.title)} <span aria-hidden="true">×</span></button>
         <span class="muted small">Census dissemination area of the selected development; growth from every development application located in it.</span></div>` : ''}
       <div class="tiles">${[
         tile(da ? `${Y} Census · DA ${da.id}` : `${Y} Census`, base.population, base.dwellings, da ? 'the selected development’s dissemination area' : `${fmtNum(base.das)} dissemination area${base.das === 1 ? '' : 's'}${App().state.sp.length || App().state.mtsa.length ? ', share by land area' : ''}`, 'census-base'),
         tile('+ Built since (estimate today)', nowPop, nowDw, `+${fmtNum(gr.built.units)} units${pct(gr.built.units, base.dwellings)}`, 'census-built', gr.built.jobs),
-        tile('+ Approved or permitted, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-approved', gr.approved.jobs),
-        tile('+ Proposed: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-proposed', gr.proposed.jobs),
+        tile('+ Committed, not yet built', futPop, futDw, `+${fmtNum(gr.approved.units)} units${pct(futDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-approved', gr.approved.jobs),
+        tile('+ Not committed yet: full build-out of applications', allPop, allDw, `+${fmtNum(gr.proposed.units)} units${pct(allDw - base.dwellings, base.dwellings)} vs ${Y}`, 'census-proposed', gr.proposed.jobs),
       ].join('')}</div>
       <div class="growth-chart" id="gc-chart" data-info="growth-bars"></div>
       ${da ? `<p class="small muted">Wastewater I&amp;I for this area lives on the ${DV().homeLine('svc:network', 'Servicing › Network')}.</p>`
         : ha > 0 ? `<p class="small muted">Wastewater I&amp;I from growth since ${Y}: ${fmt1(ii)} L/s on ${fmtNum(Math.round(ha))} ha of development sites.</p>` : ''}
       ${forecastTableHTML(bc)}
       ${da ? '' : housingActivityHTML() + outlookCardHTML(true)}
-      <p class="small muted">ⓘ ${esc(name)} · ${Y} Census baseline (${esc(why)}) · built = permits completed since census day (${CA().censusDay(bc.date)})${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; approved = site plan approved or building permit issued, not yet built; proposed = applications in pre-consultation or review; people at Peel persons-per-unit; jobs on development sites from the floor area the applications state (existing jobs are not in the census) · other filters ignored · applications as of <strong>${esc(asof)}</strong>.</p>`;
+      <p class="small muted">ⓘ ${esc(name)} · ${Y} Census baseline (${esc(why)}) · built = permits completed since census day (${CA().censusDay(bc.date)})${gr.built.estimatedDates ? '; Brampton and Caledon completion dates estimated from issue date' : ''}; committed = units left to build a site servicing or building permit commits (the Peel rule); not committed yet = the rest of build-out (plan approved without a permit, zoning approved, in review, pre-application); people at Peel persons-per-unit; jobs on development sites from the floor area the applications state (existing jobs are not in the census) · other filters ignored · applications as of <strong>${esc(asof)}</strong>.</p>`;
     renderGrowthChart(base, gr, Y, $('#gc-chart'));
   }
 
@@ -178,8 +181,8 @@
     const layers = [
       { key: 'base', label: `${Y} Census`, people: base.population, dwellings: base.dwellings, jobs: 0 },
       { key: 'built', label: opt.builtLabel || `Built since ${Y} (every permit completed since census day)`, people: gr.built.population, dwellings: gr.built.units, jobs: gr.built.jobs || 0 },
-      { key: 'approved', label: 'Committed (draft plan or site plan approved, permit, construction)', people: gr.approved.population, dwellings: gr.approved.units, jobs: gr.approved.jobs || 0 },
-      { key: 'proposed', label: 'Proposed (in review)', people: gr.proposed.population, dwellings: gr.proposed.units, jobs: gr.proposed.jobs || 0 },
+      { key: 'approved', label: 'Committed (a site servicing or building permit, not yet built)', people: gr.approved.population, dwellings: gr.approved.units, jobs: gr.approved.jobs || 0 },
+      { key: 'proposed', label: 'Not committed yet (plan approved without a permit, in review, pre-application)', people: gr.proposed.population, dwellings: gr.proposed.units, jobs: gr.proposed.jobs || 0 },
     ].filter(l => l.people + l.dwellings + (l.jobs || 0) > 0);
     const bar = (measure, unit) => {
       const total = layers.reduce((t, l) => t + l[measure], 0);

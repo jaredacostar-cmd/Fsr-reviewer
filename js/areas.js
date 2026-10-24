@@ -173,7 +173,7 @@
       const part = k => ({ ...p, units: k, buildout: null, siteAreaHa: p.siteAreaHa > 0 && p.units > 0 ? p.siteAreaHa * Math.min(1, k / p.units) : null });
       if (n > 0) { built.push(part(n)); builtUnits += n; builtProjects++; }
       if (nSuite > 0) { built.push({ ...p, units: nSuite, buildout: null, unitMix: { apartment: 1 }, siteAreaHa: null }); builtUnits += nSuite; if (!(n > 0)) builtProjects++; }
-      const c = D.unitsFor(p, 'committed');
+      const c = D.unitsFor(p, 'd51');
       if (c > 0) { approved.push(part(c)); approvedUnits += c; approvedProjects++; }
       const q = PROPOSED_PHASES.has(p.phase) && !D.isCommitted(p) && p.buildout ? p.buildout.unbuilt : 0;
       if (q > 0) { proposed.push(part(q)); proposedUnits += q; proposedProjects++; }
@@ -193,7 +193,21 @@
     };
   }
 
-  const api = { prepare, locate, nearest, tagCensus, censusTotals, growthSince, completedAt, inGeo };
+  /**
+   * The growth layers on the commitment ladder: { built, committed, notYet }, from growthSince's
+   * layers. committed: what a site servicing or building permit commits (the Peel rule, in approved and
+   * in proposed); notYet: the rest of build-out (plan approved without a permit, in review,
+   * pre-application). Each { units, projects, population, ha, ii }; jobs (svcJobs) split the same way.
+   */
+  function ladderLayers(gr, j = null) {
+    const c = gr.committed, add = (a, b) => ({ units: a.units + b.units, projects: a.projects + b.projects, population: a.population + b.population, ha: a.ha + b.ha, ii: a.ii + b.ii });
+    const sub = (a, b) => ({ units: Math.max(0, a.units - b.units), projects: Math.max(0, a.projects - b.projects), population: Math.max(0, a.population - b.population), ha: Math.max(0, a.ha - b.ha), ii: Math.max(0, a.ii - b.ii) });
+    const committed = add(c.approved, c.proposed), notYet = sub(add(gr.approved, gr.proposed), committed);
+    if (j) { committed.jobs = (j.jcpA || 0) + (j.jcpP || 0); notYet.jobs = Math.max(0, (j.japproved || 0) + (j.jproposed || 0) - committed.jobs); }
+    return { built: gr.built, committed, notYet };
+  }
+
+  const api = { prepare, locate, nearest, tagCensus, censusTotals, growthSince, ladderLayers, completedAt, inGeo };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelAreas = api;
 })(typeof window !== 'undefined' ? window : globalThis);

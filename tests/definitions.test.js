@@ -41,11 +41,14 @@ test('not committed: approved zoning alone, a Brampton T-file read as zoning, la
   assert.equal(D.isCommitted(merged([draft, newer])), false, 'a newer subdivision file in review re-proposes the land');
 });
 
-test('committed units and jobs follow the same rule', () => {
-  assert.equal(D.unitsFor(dev('approved', []), 'committed'), 100);
-  assert.equal(D.unitsFor(dev('review', []), 'committed'), 0);
-  assert.equal(D.jobsFor(dev('approved', []), 50, 'committed'), 50);
-  assert.equal(D.jobsFor(dev('review', []), 50, 'committed'), 0);
+test('D-5-1 units and jobs follow the same rule', () => {
+  assert.equal(D.unitsFor(dev('approved', []), 'd51'), 100);
+  assert.equal(D.unitsFor(dev('review', []), 'd51'), 0);
+  assert.equal(D.jobsFor(dev('approved', []), 50, 'd51'), 50);
+  assert.equal(D.jobsFor(dev('review', []), 50, 'd51'), 0);
+  // Committed (the Peel rule): approved with no permit is not committed.
+  assert.equal(D.unitsFor(dev('approved', []), 'committed'), 0);
+  assert.equal(D.jobsFor(dev('approved', []), 50, 'committed'), 0);
 });
 
 test('the scenario cache key includes every switch that changes a result (diversion, basis, outside areas)', () => {

@@ -136,7 +136,7 @@
   // + Anticipated = the stress test. Mapped onto the counting basis: committed | buildout | all
   // ('remaining', units not yet completed: Growth's left to build, is picked in the Scenario panel).
   const BASIS_LAYERS = { committed: ['committed'], buildout: ['committed', 'proposed'], all: ['committed', 'proposed', 'anticipated'], remaining: ['committed', 'proposed', 'anticipated'] };
-  const ROLE = { committed: 'D-5-1 check', proposed: 'build-out', anticipated: 'stress test' };
+  const ROLE = { committed: 'committed check', proposed: 'build-out', anticipated: 'stress test' };
   const layersOf = basis => ['existing', 'built', ...(BASIS_LAYERS[basis] || BASIS_LAYERS.all)];
   /** The basis after ticking / unticking a layer in the chip (Committed is always on). */
   function nextBasis(basis, layer) {
@@ -147,7 +147,8 @@
     return basis;
   }
   // The count setting (Stage 1 #6), one label everywhere: the Scenario control's switch and the chip.
-  const COUNT_OPTS = [['committed', 'approved only'], ['buildout', '+ in review'], ['all', '+ pre-application']];
+  // (committed only: a site servicing or building permit, the Peel rule; js/demand.js unitsFor)
+  const COUNT_OPTS = [['committed', 'committed only'], ['buildout', '+ in review'], ['all', '+ pre-application']];
   const countLabel = basis => (basis === 'remaining' ? '+ pre-application, left to build' : (COUNT_OPTS.find(([v]) => v === basis) || COUNT_OPTS[2])[1]);
   // Bundle 5: the scenario as a list of its settings, each with its default, so the chip can say
   // "Default" or "2 changes" and the Scenario control can list them in full.
@@ -185,7 +186,7 @@
    *  the full settings on hover and in the Scenario control. */
   function scenarioChipHTML(o) {
     const on = new Set(layersOf(o.basis));
-    const what = on.has('anticipated') ? 'stress test' : on.has('proposed') ? 'build-out' : 'D-5-1 check';
+    const what = on.has('anticipated') ? 'stress test' : on.has('proposed') ? 'build-out' : 'committed check';
     const rows = scenarioSettings(o);
     return `<button type="button" class="sc-more" data-scen-open="1" aria-haspopup="dialog" title="Scenario (${esc(what)}): ${esc(scenarioLine(rows))} — open the Scenario control to see or change it"><span class="sc-what">Scenario</span> <span class="tb-scen-t">${esc(scenarioChipText(rows))}</span> ▾</button>`;
   }

@@ -177,13 +177,22 @@
     return out;
   }
 
+  // Committed, the Scenario's "committed only" (the commitment ladder, js/layers.js rungsOf): the units
+  // left to build a site servicing or building permit commits (the Peel rule), with the app's servicing
+  // permits once they are in. 'd51': MECP D-5-1, past plan approval (the treatment plants' growth layer,
+  // js/areas.js growthSince).
+  const LYr = () => root.PeelLayers || (typeof require === 'function' ? require('./layers.js') : null);
+  const commitOptsNow = () => (root.PeelDemandUI && root.PeelDemandUI.commitOpts ? root.PeelDemandUI.commitOpts() : {});
+  const ladderOf = project => { const L = LYr(); return L && L.rungsOf ? L.rungsOf(project, commitOptsNow()) : null; };
+
   /** How many of a project's units count, by basis. */
   function unitsFor(project, basis = 'all') {
     const b = project.buildout;
-    if (basis === 'committed') {
+    if (basis === 'd51') {
       if (!b || !isCommitted(project)) return 0;
       return b.unbuilt;
     }
+    if (basis === 'committed') { const R = ladderOf(project); return R ? R.committed : 0; }
     // Left to build: planned, not yet completed (permit issued or not), the same figure as Growth's
     // left to build (PeelPhases.unbuiltOf).
     if (basis === 'remaining') return project.phase === 'cancelled' || !(project.units > 0) ? 0 : b ? Math.max(0, project.units - (b.completed || 0)) : (project.phase === 'completed' ? 0 : project.units);
@@ -245,13 +254,20 @@
   }
 
   // Jobs a project counts for a basis. Employment space has no unit-level build-out, so the
-  // project's phase decides: committed = approved / permitted / under construction, left to
-  // build = not yet completed, completed = completed.
+  // project's phase decides: d51 = approved / permitted / under construction; committed = the share of
+  // its units left to build a permit commits (all of them for a site servicing permit; a development
+  // with no units: committed once it has a building or servicing permit); left to build = not yet
+  // completed, completed = completed.
   function jobsFor(project, jobs, basis = 'all') {
     if (!(jobs > 0)) return 0;
     const ph = project.phase;
     if (ph === 'cancelled') return 0;
-    if (basis === 'committed') return isCommitted(project) ? jobs : 0;
+    if (basis === 'd51') return isCommitted(project) ? jobs : 0;
+    if (basis === 'committed') {
+      const R = ladderOf(project); if (!R) return 0;
+      if (R.left > 0) return jobs * R.committed / R.left;
+      return ph !== 'completed' && isCommittedPeel(project, (commitOptsNow().gateOf || (() => null))(project)) ? jobs : 0;
+    }
     if (basis === 'remaining' || basis === 'unbuilt') return ph !== 'completed' ? jobs : 0;
     if (basis === 'completed') return ph === 'completed' ? jobs : 0;
     return jobs;

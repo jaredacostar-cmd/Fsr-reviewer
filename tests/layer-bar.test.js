@@ -50,7 +50,7 @@ test('scenario chip: the basis is a set of layers (Existing + Built always)', ()
   assert.deepEqual(B.layersOf('committed'), ['existing', 'built', 'committed']);
   assert.deepEqual(B.layersOf('buildout'), ['existing', 'built', 'committed', 'proposed']);
   assert.deepEqual(B.layersOf('all'), ['existing', 'built', 'committed', 'proposed', 'anticipated']);
-  assert.equal(B.nextBasis('all', 'proposed'), 'committed', 'untick Proposed → the D-5-1 check');
+  assert.equal(B.nextBasis('all', 'proposed'), 'committed', 'untick Proposed → the committed check');
   assert.equal(B.nextBasis('committed', 'proposed'), 'buildout', 'tick Proposed → build-out');
   assert.equal(B.nextBasis('buildout', 'anticipated'), 'all', 'tick Anticipated → stress test');
   assert.equal(B.nextBasis('all', 'anticipated'), 'buildout');
@@ -62,7 +62,7 @@ test('scenario chip: the basis is a set of layers (Existing + Built always)', ()
   // Bundle 5: the chip says "Default" or "n changes"; every setting is in its title and in the control.
   assert.match(h, /Count: \+ in review · Units: all · Map results for: build-out · Wastewater flows: 2025 metered · Water maximum day: design factor · Outside mapped areas: nearest · Design criteria: Peel v2\.0 · Units per development: tree count · Plant expansions: on/);
   assert.match(h, /<span class="tb-scen-t">1 change<\/span>/, 'the count is the one change from the default');
-  assert.equal(B.countLabel('committed'), 'approved only');
+  assert.equal(B.countLabel('committed'), 'committed only');
   assert.equal(B.countLabel('all'), '+ pre-application');
   assert.equal(B.countLabel('remaining'), '+ pre-application, left to build');
 });

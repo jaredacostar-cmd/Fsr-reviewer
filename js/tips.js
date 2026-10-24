@@ -151,7 +151,7 @@
       ['Heatmap; gas and hydro layers', 'Removed.'],
     ] },
     { h: 'Words and controls', rows: [
-      ['Committed / Proposed / Anticipated switches in the top bar', 'The Scenario control: Count "approved only · + in review · + pre-application".'],
+      ['Committed / Proposed / Anticipated switches in the top bar', 'The Scenario control: Count "committed only · + in review · + pre-application".'],
       ['Existing', 'On the system (2021 census).'],
       ['Built', 'Built since 2021.'],
       ['Committed', 'Committed: a site servicing or building permit (the Peel rule), everywhere but the treatment plants, which count past plan approval (MECP D-5-1); never "Approved" alone.'],

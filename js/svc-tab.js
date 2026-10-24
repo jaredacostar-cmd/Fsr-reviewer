@@ -114,7 +114,7 @@
   // on the tabs, the map legend, the exports and share links.
   function scenarioText() {
     const R = App().state.reports, dv = R && R.wastewater.diversion, n = criteriaChanges().length;
-    const basisTxt = { all: 'All units', buildout: 'Units applied for (no pre-application)', committed: 'Approved units', remaining: 'Units left to build' }[App().state.basis] || 'All units';
+    const basisTxt = { all: 'All units', buildout: 'Units applied for (no pre-application)', committed: 'Committed units', remaining: 'Units left to build' }[App().state.basis] || 'All units';
     return [svcOpt.ww === 'calibrated' ? 'Capacity check (2025 flows)' : 'Design flows', `max day ${svcOpt.md === 'observed' ? 'observed' : 'design'}`,
       dv ? `diversion ${svcOpt.div === 'on' ? 'on' : 'off'}` : null, Sett().wetText(), `outside areas ${svcOpt.nr === 'on' ? 'to nearest' : 'left out'}`, App().state.dcInfra ? `plant expansions ${SP().hz.exp ? 'on' : 'off'}` : null, n ? `${n} criteria modified` : 'Peel criteria',
       `counting: ${basisTxt}${window.PeelTreeCounts ? ` (${window.PeelTreeCounts.label()})` : ''}`, `results: ${MA().yearText()}`].filter(Boolean).join(' · ');
@@ -204,14 +204,21 @@
   const addLayers = (rows) => rows.reduce((t, r) => { for (const k of SUM_KEYS) t[k] = (t[k] || 0) + (r[k] || 0); return t; }, {});
   const LAYER_KEYS = ['census', 'built', 'approved', 'proposed'];
   const JOB_KEY = { census: null, built: 'jbuilt', approved: 'japproved', proposed: 'jproposed' };
-  // Stacked bar for a row: census / built / approved / proposed as shares of its build-out
-  // (the full bar = build-out; the numbers carry the size).
-  function svcBar(l) {
+  // A load's growth layers on the commitment ladder (the zone and catchment tables): approved =
+  // committed (a site servicing or building permit, the Peel rule: cpA + cpP), proposed = not committed
+  // yet (the rest of build-out). The totals are the same; the treatment plants' tables keep MECP D-5-1.
+  const ladderView = l => (!l || l.cpA == null ? l : { ...l, approved: (l.cpA || 0) + (l.cpP || 0), proposed: Math.max(0, l.approved + l.proposed - (l.cpA || 0) - (l.cpP || 0)),
+    japproved: (l.jcpA || 0) + (l.jcpP || 0), jproposed: Math.max(0, (l.japproved || 0) + (l.jproposed || 0) - (l.jcpA || 0) - (l.jcpP || 0)) });
+  const LAYER_WORDS = { peel: ['Committed', 'Not committed yet', 'Committed, not yet built (a site servicing or building permit)', 'Not committed yet (plan approved without a permit, in review)'], d51: ['Past plan approval (MECP D-5-1)', 'In review', 'Past plan approval, not yet built (MECP D-5-1)', 'In review'] };
+  // Stacked bar for a row: census / built / committed / not committed yet as shares of its build-out
+  // (the full bar = build-out; the numbers carry the size). rule 'd51': a treatment plant's layers.
+  function svcBar(l0, rule = 'peel') {
+    const l = rule === 'd51' ? l0 : ladderView(l0), w = LAYER_WORDS[rule] || LAYER_WORDS.peel;
     const t = l.census + l.built + l.approved + l.proposed, max = t || 1;
     const seg = (k, cls, label) => l[k] > 0 ? `<span class="gseg ${cls}" style="width:${(100 * l[k] / max).toFixed(2)}%" title="${label}: ${fmtNum(Math.round(l[k]))} people"></span>` : '';
-    return `<div class="svc-bar" role="img" aria-label="Build-out ${fmtNum(Math.round(t))} people">${seg('census', 'g-base', 'Census')}${seg('built', 'g-built', 'Built since')}${seg('approved', 'g-approved', 'Approved')}${seg('proposed', 'g-proposed', 'In review')}</div>`;
+    return `<div class="svc-bar" role="img" aria-label="Build-out ${fmtNum(Math.round(t))} people">${seg('census', 'g-base', 'Census')}${seg('built', 'g-built', 'Built since')}${seg('approved', 'g-approved', w[0])}${seg('proposed', 'g-proposed', w[1])}</div>`;
   }
-  const svcLegend = Y => `<ul class="grow-legend svc-legend"><li><span class="gsw g-base"></span>${Y} Census</li><li><span class="gsw g-built"></span>Built since</li><li><span class="gsw g-approved"></span>Approved, not yet built</li><li><span class="gsw g-proposed"></span>In review</li><li class="muted">Each bar is the row's build-out population, split by layer · click a row to zoom to it on the map</li></ul>`;
+  const svcLegend = (Y, rule = 'peel') => { const w = LAYER_WORDS[rule] || LAYER_WORDS.peel; return `<ul class="grow-legend svc-legend"><li><span class="gsw g-base"></span>${Y} Census</li><li><span class="gsw g-built"></span>Built since</li><li><span class="gsw g-approved"></span>${w[2]}</li><li><span class="gsw g-proposed"></span>${w[3]}</li><li class="muted">Each bar is the row's build-out population, split by layer · click a row to zoom to it on the map</li></ul>`; };
   // Drainage areas as a tree along the sewer flow path (data/servicing.json: downstream).
   function svcFlowTree() {
     const ids = new Set(App().state.servicing.drainage.map(d => d.id));
@@ -433,7 +440,7 @@
     const rowAttrs = (id, cls) => id ? ` class="${cls} svc-row${id === focus ? ' on' : ''}" data-svc="${esc(id)}" tabindex="0"` : ` class="${cls}"`;
     // Simple view: the layer-by-layer and local / upstream columns (class xc) are hidden; the
     // Engineering switch shows them.
-    const layerHead = `<th class="xc">${Y} Census</th><th class="xc">+ Built since</th><th class="xc">+ Approved</th><th class="xc">+ Proposed (in review)</th><th>Build-out</th>`;
+    const layerHead = `<th class="xc">${Y} Census</th><th class="xc">+ Built since</th><th class="xc">+ Committed</th><th class="xc">+ Not committed yet</th><th>Build-out</th>`;
 
     // ---- Water: maximum day (ML/d) by layer, peak hour at build-out; residential + employment.
     const sp = R && R.water.southPeel;
@@ -442,7 +449,7 @@
     const wAvg = (p, j) => (p * c.water.avg + j * E.water) / 1e6;
     const wMax = (p, j) => (p * c.water.avg * mdR + j * E.water * mdE) / 1e6;
     const wPH = (p, j) => (p * c.water.avg * c.water.peakHour + j * E.water * E.peakHour) / 1e6;
-    const wRow = (name, l, id, cls = '') => `<tr${rowAttrs(id, cls)}><td>${name}</td><td class="bar">${svcBar(l)}</td>${devCell(l)}${LAYER_KEYS.map(k => cell(wMax(l[k], jobsK(l, k)), l[k], jobsK(l, k), 'xc')).join('')}
+    const wRow = (name, l, id, cls = '') => `<tr${rowAttrs(id, cls)}><td>${name}</td><td class="bar">${svcBar(l)}</td>${devCell(l)}${(lv => LAYER_KEYS.map(k => cell(wMax(lv[k], jobsK(lv, k)), lv[k], jobsK(lv, k), 'xc')).join(''))(ladderView(l))}
       ${cell(wMax(total(l), jobs(l)), total(l), jobs(l), 'bo')}<td class="bo">${uML(wPH(total(l), jobs(l)))}</td></tr>`;
     const zones = App().state.servicing.zones.slice().sort(SD().byZone);
     const zr = zones.map(z => ({ a: z, l: svcLayerTotals('pz', z, bc) })).filter(r => total(r.l) > 0 || r.l.devs);
@@ -498,7 +505,7 @@
       // Where the flow comes from (local + upstream) and what it is made of (census + growth
       // layers); both add up to the total average dry weather flow at the outlet.
       const mid = (d ? cell(adwf(lo, f), total(lo), jobs(lo), 'xc') + (total(up) > 0 || up.ha ? cell(adwf(up, f), total(up), jobs(up), 'xc') : '<td class="muted xc">–</td>') : '<td class="xc"></td><td class="xc"></td>')
-        + LAYER_KEYS.map((k, i) => cell(lay(l, k, f), l[k], jobsK(l, k), i ? 'xc' : 'sep xc')).join('') + cell(adwf(l, f), total(l), jobs(l), 'bo');
+        + (lv => LAYER_KEYS.map((k, i) => cell(lay(lv, k, f), lv[k], jobsK(lv, k), i ? 'xc' : 'sep xc')).join(''))(ladderView(l)) + cell(adwf(l, f), total(l), jobs(l), 'bo');
       return `<tr${rowAttrs(id, cls)}>${nameCell(name, sub, depth)}<td class="bar">${svcBar(l)}</td>${devCell(d ? lo : l)}${mid}${peakCells(l, f)}</tr>`;
     };
     const short = (d, pl) => d.name.replace(`${pl} · `, '');
@@ -557,7 +564,7 @@
       <table class="dt svc-table ww-table" data-info="drainage-area"><caption>Wastewater by ${App().state.servicing.blocks ? 'block (the Region\'s 40 I&amp;I sewersheds)' : 'sanitary catchment'}, building up along the flow path to the lake · average dry weather (ML/d); people and jobs below</caption>
       <thead><tr><th rowspan="2">${App().state.servicing.blocks ? 'Block' : 'Catchment'} (top of the sewershed → plant)</th><th rowspan="2" class="bar-h">Build-out mix</th><th rowspan="2">Developments</th>
         <th colspan="2" class="grp-h xc">Where it comes from</th><th colspan="4" class="grp-h sep xc">What it is made of</th><th rowspan="2">= Total<br>${svcOpt.ww === 'calibrated' ? 'annual avg' : 'ADWF'}</th><th rowspan="2">Peak dry<br>weather</th><th rowspan="2">I&amp;I</th><th rowspan="2">Peak wet<br>weather</th></tr>
-        <tr class="xc-row"><th class="xc">Local</th><th class="xc">+ Upstream</th><th class="sep xc">${Y} Census</th><th class="xc">+ Built since ${Y}</th><th class="xc">+ Approved</th><th class="xc">+ Proposed (in review)</th></tr></thead>
+        <tr class="xc-row"><th class="xc">Local</th><th class="xc">+ Upstream</th><th class="sep xc">${Y} Census</th><th class="xc">+ Built since ${Y}</th><th class="xc">+ Committed</th><th class="xc">+ Not committed yet</th></tr></thead>
       <tbody>${secs.map(x => `<tr class="grp"><td colspan="${cols}">${esc(SD().plantLabel(x.pl))}</td></tr>${x.rows.join('')}`).join('')}
         ${sRow(`Peel total (${secs.map(x => SD().PLANT_SHORT[x.pl]).join(' + ')})`, '', null, peel, null, peelF, 'tot')}
         ${tor.rows.length ? `<tr class="grp"><td colspan="${cols}">${esc(SD().plantLabel('Toronto'))} · not in the Peel total</td></tr>${tor.rows.join('')}` : ''}</tbody></table>
@@ -635,7 +642,7 @@
     wwBasis,
     renderSvcTab, ensureSvcModel, renderScenario, scenarioText, scenarioMetrics, setCapYear,
     renderScenarioCriteria, criteriaChanges, CRIT_LABEL, CRIT_KEY_LABEL, svcOpt,
-    svcFlowTree, upstreamOf, svcJobs, svcBar, svcLegend, optSwitch, refLink,
+    svcFlowTree, upstreamOf, svcJobs, svcBar, svcLegend, ladderView, optSwitch, refLink,
     pctRated, trigText, setHeadline, syncScenCrit, JOB_KEY, wwFlowLabel, wMaxDayLabel,
     byZone: (...a) => SD().byZone(...a),
   };

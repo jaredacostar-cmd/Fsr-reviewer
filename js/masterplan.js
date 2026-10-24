@@ -97,7 +97,8 @@
     const v = {};
     for (const r of MP2020.water) {
       const devs = groups[r.key], gr = Areas().growthSince(devs, {}, bc.date, App().state.criteria), j = SvcTab().svcJobs(devs, bc.date);
-      v[r.key] = { n: devs.filter(p => p.kinds.includes('application')).length, built: M.wMax(gr.built.population, j.jbuilt || 0), approved: M.wMax(gr.approved.population, j.japproved || 0), proposed: M.wMax(gr.proposed.population, j.jproposed || 0) };
+      v[r.key] = { n: devs.filter(p => p.kinds.includes('application')).length, built: M.wMax(gr.built.population, j.jbuilt || 0), approved: M.wMax(gr.approved.population, j.japproved || 0), proposed: M.wMax(gr.proposed.population, j.jproposed || 0),
+        committed: M.wMax(gr.committed.approved.population + gr.committed.proposed.population, (j.jcpA || 0) + (j.jcpP || 0)) };
     }
     mpWaterGrowth.key = scenarioKey() + App().state.projects.length; mpWaterGrowth.v = v;
     return v;
@@ -122,15 +123,18 @@
       <td class="n mpc-x">${fmtNum(Math.round(today))}${todayNote ? `<small>${esc(todayNote)}</small>` : ''}</td><td class="n mpc-x">+${fmtNum(Math.round(approved))}</td><td class="n mpc-x">+${fmtNum(Math.round(proposed))}</td>
       <td class="n"><strong${bo > cap ? ' class="mpc-hi"' : ''}>${fmtNum(Math.round(bo))}</strong><small>${verdict}${bo > cap ? ' · over capacity' : ''}</small></td><td class="mpc-cell">${bar}</td></tr>`;
   }
-  const mpHead = unitT => `<tr><th>Facility</th><th class="n">Capacity</th><th class="n">Master Plan<br>2026 · 2031 · 2041</th><th class="n mpc-x">Today</th><th class="n mpc-x">+ Approved</th><th class="n mpc-x">+ Proposed</th><th class="n">Build-out</th><th>${unitT}</th></tr>`;
-  const mpLegend = `<ul class="grow-legend"><li><span class="gsw mpc-t"></span>Today</li><li><span class="gsw mpc-a"></span>+ Committed</li><li><span class="gsw mpc-p"></span>+ Proposed (in review)</li><li><span class="mpc-mp-sw"></span>Master Plan forecast (26, 31, 41)</li><li><span class="cap-line-sw"></span>Capacity</li></ul>`;
+  // (the commitment ladder: + Committed at the pumping (the Peel rule), past plan approval at a treatment
+  // plant (MECP D-5-1), the row says which; then the rest of build-out)
+  const mpHead = (unitT, com = '+ Committed', rest = '+ Not committed yet') => `<tr><th>Facility</th><th class="n">Capacity</th><th class="n">Master Plan<br>2026 · 2031 · 2041</th><th class="n mpc-x">Today</th><th class="n mpc-x">${com}</th><th class="n mpc-x">${rest}</th><th class="n">Build-out</th><th>${unitT}</th></tr>`;
+  const mpLegend = `<ul class="grow-legend"><li><span class="gsw mpc-t"></span>Today</li><li><span class="gsw mpc-a"></span>+ Committed (treatment plants: past plan approval, MECP D-5-1; pumping: a site servicing or building permit)</li><li><span class="gsw mpc-p"></span>+ Not committed yet</li><li><span class="mpc-mp-sw"></span>Master Plan forecast (26, 31, 41)</li><li><span class="cap-line-sw"></span>Capacity</li></ul>`;
+  const MP2020_PLANT_ROWS = new Set(['sp', 'apk', 'lp']);
   function renderMpCompare() {
     const M = App().state.svcModel, R = App().state.reports;
     const ww = $('#mp-ww');
     if (ww && M && R) {
       const rows = MP2020.ww.map(r => { const c = M.plantCap(r.pl); return c ? mpRowHTML(r.name, '', r.cap, 'rated (MP: 90%)', r.mp, r.ref, c.existing, c.committed - c.existing, c.buildout - c.committed, `${M.mode === 'calibrated' ? '2025 flows' : 'design'} + built`) : ''; }).join('');
       ww.innerHTML = `<section class="mpc" data-info="mp-compare"><h3 class="svc-sub">2020 Master Plan vs this tracker <span class="muted small">average day flow, ML/d</span></h3>${mpLegend}
-        <div class="table-wrap"><table class="dt mpc-table"><thead>${mpHead('Build-out against the Master Plan')}</thead><tbody>${rows}</tbody></table></div>
+        <div class="table-wrap"><table class="dt mpc-table"><thead>${mpHead('Build-out against the Master Plan', '+ Past plan approval (MECP D-5-1)', '+ In review')}</thead><tbody>${rows}</tbody></table></div>
         <p class="small muted">Master Plan: forecast average daily flow by plant without east–west transfers (Vol. 4, Tables 7–8; G.E. Booth includes York and Toronto agreement flows). Tracker: the plant's sewershed today (${M.mode === 'calibrated' ? 'calibrated to 2025 flows' : 'design flows'}, with external inflows) + approved + proposed developments, as in the chart above. “≈ the MP's year” reads off when the Master Plan expected that flow.</p></section>`;
     }
     const w = $('#mp-w');
@@ -140,7 +144,9 @@
       const rows = MP2020.water.map(r => {
         const x = g[r.key], measured = r.today && r.today(R);
         const today = measured != null ? measured : r.mp[0] + x.built;
-        return mpRowHTML(r.name, `${fmtNum(x.n)} developments`, r.cap, r.capNote, r.mp, r.ref, today, x.approved, x.proposed, measured != null ? r.todayNote : 'MP 2021 + built');
+        // (a treatment plant row keeps MECP D-5-1; the pumping rows count committed by the Peel rule)
+        const plant = MP2020_PLANT_ROWS.has(r.key), com = plant ? x.approved : x.committed, rest = x.approved + x.proposed - com;
+        return mpRowHTML(r.name, `${fmtNum(x.n)} developments · ${plant ? 'past plan approval (MECP D-5-1)' : 'committed: a site servicing or building permit'}`, r.cap, r.capNote, r.mp, r.ref, today, com, rest, measured != null ? r.todayNote : 'MP 2021 + built');
       }).join('');
       const st = MP2020.storage.map(s => `<tr><td>${esc(s.name)}<small class="muted">Vol. 3, Table 12</small></td><td class="n">${s.avail} ML</td><td class="n">${[s.req[1], s.req[2], s.req[4]].join(' · ')} ML required</td><td colspan="5" class="muted small mpc-st">${s.req[4] > s.avail ? `Short by ${s.req[4] - s.avail} ML by 2041 in the Master Plan (new cell planned). ` : ''}Not computed by the tracker: storage includes fire and emergency volumes it doesn't model.</td></tr>`).join('');
       w.innerHTML = `<section class="mpc" data-info="mp-compare"><h3 class="svc-sub">2020 Master Plan vs this tracker <span class="muted small">maximum day, ML/d</span></h3>${mpLegend}
