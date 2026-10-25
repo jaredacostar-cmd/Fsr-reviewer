@@ -317,7 +317,7 @@ HIDDEN = {
   svc:    { growth: ['areas'], svc: ['fsr'], dca: ['eas','projects'], records: ['files'] },
   site:   { growth: ['areas','timing'], svc: ['capacity','pipes'], dca: ['eas','projects'], records: ['sources','checks'] },
   file:   { growth: '*', svc: ['capacity','network','pipes','fsr'] /* its flows only */, dca: '*', records: ['sources','checks'] },
-  object: { growth: '*', svc: '*', dca: '*', records: '*' },   // Overview only (a later phase may add more, owner dec. 14)
+  object: { growth: '*', svc: '*', dca: '*', records: '*' },   // Overview only (a later phase may add more: owner decision 15, new capabilities)
 }
 ```
 `iiblock` (sewer-trace.js:506) opens as the `block` servicing scope.
@@ -536,7 +536,7 @@ There are 38 `max-width: 700px` blocks in css/app.css. Each PR attaches 390×844
 | 82 | Municipality × period table | By period, rows = child nodes at any scope | Task 7 at any scope |
 | 83 | Tiers A–E table | Fold "How sure" | — |
 | 84 | Developments list (sortable) | Forecast full table | — |
-| 85 | Since the last snapshot (ledger-ui.js:252-268) | Forecast fold (owner decision 12) | Annual diff |
+| 85 | Since the last snapshot (ledger-ui.js:252-268) | Forecast fold (with the Ledger merge, owner decision 2) | Annual diff |
 | 86 | "Open Growth › Ledger" action | Removed | No Ledger chip |
 | | **SITE PAGE AND FIND STEP** | | |
 | 87 | Summary | Overview (+ path line, named DC projects, About, timeline) | One name; task 1 at 1 |
