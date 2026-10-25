@@ -57,7 +57,7 @@
     const bp = r && r.items.find(i => i.browserPage);
     if (bp) return `<strong>Servicing documents</strong> ${ext(bp.page, 'City application page')}<small>Look under Project documents for the latest Functional Servicing Report (the City's page builds that list in the browser, so it can't be linked directly).</small>`;
     if (r && r.items.length) return `<span class="muted">No FSR posted yet</span> · ${ext(r.items[0].page, 'application documents')}`;
-    if (p.municipality === 'Brampton') { const f = (p.records || []).filter(x => x.kind === 'application' && x.ref).sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)))[0]; return `<strong>Servicing documents</strong> ${ext(home[1], 'BramPlanOnline')}<small>${f ? `Search ${esc(f.ref)}` : 'Search the file number'} and open its documents for the latest Functional Servicing Report. Public, no sign-in; the app can't link a Brampton file directly.</small>`; }
+    if (p.municipality === 'Brampton') { const f = P.newestFirst((p.records || []).filter(x => x.kind === 'application' && x.ref))[0]; return `<strong>Servicing documents</strong> ${ext(home[1], 'BramPlanOnline')}<small>${f ? `Search ${esc(f.ref)}` : 'Search the file number'} and open its documents for the latest Functional Servicing Report. Public, no sign-in; the app can't link a Brampton file directly.</small>`; }
     return `<span class="muted">No public application page found</span>${home ? ` · ${ext(home[1], esc(home[0]))}` : ''}`;
   }
   const fsrBoxHTML = p => p.records.some(r => r.kind === 'application') ? `<div class="fsr-box small" id="dev-fsr" data-info="fsr">${fsrInnerHTML(p)}</div>` : '';

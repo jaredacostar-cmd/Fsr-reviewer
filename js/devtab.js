@@ -379,7 +379,7 @@
       ${p.description ? brow('Proposal', `<p class="desc-clamp small">${esc(p.description)}</p>`) : ''}
     </section>`;
     const FT = root.PeelFileTree, d = FT && FT.flat && !p.parent ? FT.of(p) : null;
-    const newest = p.records.filter(r => r.kind === 'application').sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)))[0];
+    const newest = P().newestFirst(p.records.filter(r => r.kind === 'application'))[0];
     // The permits under each planning file (its site servicing permits, its building permits as one
     // group: js/dc-gate.js treeOpts), in the file's row; those filed before the files, after the chart.
     const tOpts = d && root.PeelDcGate && root.PeelDcGate.treeOpts ? root.PeelDcGate.treeOpts(p, d) : {};
@@ -469,6 +469,10 @@
 
   // ---- Files, drill-down, related developments (copied from js/app.js) --------------
   const SUBS = new Map();
+  // (a rebuild makes new developments: the subs built on the old ones go, as js/app.js clears
+  // js/dev-nav.js's at every rebuild)
+  let subsOf = null;
+  const freshSubs = () => { const st = state(); if (st && st.projects !== subsOf) { SUBS.clear(); subsOf = st.projects; } };
   const isFormal = r => r.kind === 'application' && (r.stage || P().stageOf(r)) !== 'precon';
   const isPrecon = r => r.kind === 'application' && (r.stage || P().stageOf(r)) === 'precon';
   const civicOf = r => { const a = P().normalizeAddress(r.address); return a && /\d/.test(a) && !/^0+(\s*-\s*0+)?\s/.test(a) ? a : ''; };
@@ -517,6 +521,8 @@
     p.dr = Ar.locate(st.servicing.drainage, p.lng, p.lat);
   }
   function subProject(p, ref) {
+    if (!p) return null;
+    freshSubs();
     const key = `${p.key}#${ref}`;
     if (SUBS.has(key)) return SUBS.get(key);
     const row = fileTree(p).find(t => t.a.ref === ref); if (!row) return null;
@@ -524,7 +530,8 @@
     const permits = a.poly ? p.records.filter(r => r.kind === 'permit' && r.lat != null && P().pointInRings(r.lng, r.lat, a.poly)) : [];
     // A tree row opens its whole branch (the file and the files under it).
     const own = row.branch ? row.branch : [a, ...row.pre];
-    const sub = P().mergeProject(key, [...own, ...permits.filter(r => !own.includes(r))], {});
+    // (on copies of the records: mergeProject writes each permit's placement onto the records it is given)
+    const sub = P().mergeProject(key, [...own, ...permits.filter(r => !own.includes(r))].map(r => ({ ...r })), {});
     sub.parent = p; sub.subRef = ref; sub.title = `${ref} · ${a.address || p.title}`;
     if (a.lat != null) { sub.lat = a.lat; sub.lng = a.lng; }
     tagAreasLite(sub);
@@ -535,17 +542,21 @@
   }
   function projectByKey(k) {
     const st = state(); if (!st || !k) return null;
+    freshSubs();
     if (SUBS.has(k)) return SUBS.get(k);
-    const i = String(k).lastIndexOf('#'), base = i > 0 ? k.slice(0, i) : k;
     // (every development built, the ones held aside too: site activity, dormant)
-    const p = (st.projects.all || st.projects).find(x => x.key === base);
+    const find = key => (st.projects.all || st.projects).find(x => x.key === key);
+    // (a development's own key first: a land split's key ends "#<n>" like a branch's, phases.js buildProjects)
+    const own = find(k); if (own) return own;
+    const i = String(k).lastIndexOf('#'), base = i > 0 ? k.slice(0, i) : k;
+    const p = i > 0 ? find(base) : null;
     if (!p) {
       // A key saved before the trees became the developments (Step B2): resolve it.
       const TG = window.PeelTreeGroups, list = st.projects;
       const to = TG && TG.resolve(k, x => list.some(q => q.key === x));
       return to && to !== k ? projectByKey(to) : null;
     }
-    return i > 0 ? subProject(p, k.slice(i + 1)) : p;
+    return subProject(p, k.slice(i + 1));
   }
   // Plain bbox for a development (app.js `projectBounds` needs Leaflet).
   function devBbox(p) {
@@ -638,7 +649,7 @@
     const bp = r && r.items.find(i => i.browserPage);
     if (bp) return `<strong>Servicing documents</strong> ${ext(bp.page, 'City application page')}<small>Look under Project documents for the latest Functional Servicing Report (the City's page builds that list in the browser, so it can't be linked directly).</small>`;
     if (r && r.items.length) return `<span class="muted">No FSR posted yet</span> · ${ext(r.items[0].page, 'application documents')}`;
-    if (p.municipality === 'Brampton') { const f = (p.records || []).filter(x => x.kind === 'application' && x.ref).sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)))[0]; return `<strong>Servicing documents</strong> ${ext(home[1], 'BramPlanOnline')}<small>${f ? `Search ${esc(f.ref)}` : 'Search the file number'} and open its documents for the latest Functional Servicing Report. Public, no sign-in; the app can't link a Brampton file directly.</small>`; }
+    if (p.municipality === 'Brampton') { const f = P().newestFirst((p.records || []).filter(x => x.kind === 'application' && x.ref))[0]; return `<strong>Servicing documents</strong> ${ext(home[1], 'BramPlanOnline')}<small>${f ? `Search ${esc(f.ref)}` : 'Search the file number'} and open its documents for the latest Functional Servicing Report. Public, no sign-in; the app can't link a Brampton file directly.</small>`; }
     return `<span class="muted">No public application page found</span>${home ? ` · ${ext(home[1], esc(home[0]))}` : ''}`;
   }
   const fsrBoxHTML = p => p.records.some(r => r.kind === 'application') ? `<div class="fsr-box small" id="devtab-fsr" data-info="fsr">${fsrInnerHTML(p)}</div>` : '';
@@ -1465,7 +1476,7 @@
   // newest files under it. Where the development has no tree entry, the files newest first.
   function filesTreeHTML(p) {
     const FT = root.PeelFileTree, d = FT && !p.parent ? FT.of(p) : null, files = p.records.filter(r => r.kind === 'application');
-    const newest = files.slice().sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)));
+    const newest = P().newestFirst(files);
     const row = r => `<li class="pnl-kv"><span><button type="button" class="tr-ref" data-dev-file="${esc(r.ref || '')}">${esc(r.ref || 'file')}</button>${r.type ? ` <small class="muted">${esc(r.type)}</small>` : ''}</span><span>${r.units ? `${fmtNum(r.units)} unit${r.units === 1 ? '' : 's'} · ` : ''}${esc((P().PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}</span></li>`;
     const tree = d ? FT.treeHTML(d, FT.recLookup(p), { dot: k => dot(k), latest: newest[0] && newest[0].ref, ...(root.PeelDcGate ? root.PeelDcGate.treeOpts(p, d) : {}) }) : '';
     return `${tree || `<ul class="pnl-files">${newest.slice(0, 8).map(row).join('')}</ul>`}

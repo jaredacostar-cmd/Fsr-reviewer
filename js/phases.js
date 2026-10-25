@@ -1777,6 +1777,14 @@
     for (const r of (p && p.records) || []) if (r.council && r.council.last) t = Math.max(t, Date.parse(`${r.council.last}T00:00:00Z`));
     return t || null;
   }
+  // A planning file's submission date (ms): its newest 'inception' event, null when it has none (the
+  // municipalities publish the first submission's date). newestFirst: files newest submission first,
+  // undated last, ties in the order given; the first is map-labels latestSub's "Latest submission".
+  function submittedAt(r) { let t = null; for (const e of (r && r.events) || []) if (e.phase === 'inception' && (t == null || +e.date > t)) t = +e.date; return t; }
+  function newestFirst(files) {
+    const at = x => (x[1] == null ? -Infinity : x[1]);
+    return files.map((r, i) => [r, submittedAt(r), i]).sort((a, b) => (at(b) - at(a)) || a[2] - b[2]).map(x => x[0]);
+  }
   function proposedStateOf(p, now = Date.now()) {
     if (!p || p.phase !== 'review') return null;
     const last = lastActivityOf(p), years = last ? (now - last) / YEAR_MS : null;
@@ -1848,7 +1856,7 @@
     phaseFromStatus, detectFields, parseDate, normalizeAddress, displayAddress, normalizeRecord,
     representativePoint, buildProjects, closeStalePermits, inferBlankPermits, isBlankPermit, buildingsListed, permitBase, addressAliases, humanizeField, unitsFromText, permitUnits, pointInRings, ringsArea, landShare,
     canonRef, fileId, stageOf, isMinorFile, plannedFromApps, permitAddsUnits, lostHomes, lostHomesInText, mergeProject, projectKey, keyAliases, legacyNormalizeAddress, isNewBuild,
-    PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf, lastActivityOf, proposedStateOf, dormantOf, DORMANT_YEARS,
+    PHASE_RULES, sitePhaseOf, isLegacy, isRegistered, isDemolition, permitRole, fileKind, zoningOf, containerOf, unbuiltOf, lastActivityOf, submittedAt, newestFirst, proposedStateOf, dormantOf, DORMANT_YEARS,
     // The joining and stage rules' numbers, for Reference › How the app decides (js/logic.js).
     MAX_SITE_AREA_M2, DATE_SLACK_MS, STALE_OPEN_YEARS, NEAR_PERMIT_M, NEAR_PERMIT_MIN_UNITS, CONTAINER_NEAR_M: NEAR_M,
   };
