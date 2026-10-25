@@ -182,6 +182,11 @@ What makes it hard to keep right:
 
 Full detail, with every measurement and the build design: [`architecture-review/data-relationships.md`](architecture-review/data-relationships.md).
 
+How capital projects, DC works and the existing network connect, and how to find the developments each
+one affects now and as new applications arrive (a network trace, not a radius: the 400 m buffer misses
+97% of the wastewater dependencies and 62% of what it reports is not on the development's path):
+[`architecture-review/infrastructure-dependencies.md`](architecture-review/infrastructure-dependencies.md).
+
 ### 2.1 The entities and the id each should carry
 
 | Entity | Canonical id (existing or proposed) | Where it lives |
@@ -293,7 +298,7 @@ The 18 of the appendix's 22 worth building now, in its order (#18 here is its #2
 | # | Link | Verified today | What you would see | Effort |
 |---:|---|---|---|---|
 | 1 | Side files and history for today's developments | DC gate done in Part 0. History 3,446 / 4,626 file developments; weekly changes 355 / 1,000 resolve | *Stalled 2+ years* and This week cover tree-split developments | S |
-| 2 | DC ↔ capital status into the DC chip | 5 "In the 2026 budget" lines are already tendered or awarded; 4 "Paused" lines are under construction or tendered | Capital › DC timing, the DC works tooltip and the funding scenario stop contradicting the contract status | S |
+| 2 | DC ↔ capital status into the DC chip, taken from each work's own same-system records | 4 "Paused" lines show "under construction" or "tendered" through their contract, but 3 of them take it from a watermain record on the same contract page (a cross-system roll-up); 1 is genuinely tendered. Of the 5 "In the 2026 budget" lines, 1 has the same artefact (infrastructure-dependencies.md §9.2) | Capital › DC timing, the DC works tooltip and the funding scenario show each work's own status | S |
 | 3 | One file id, then the council index fixes | 498 / 1,088 council keys hit; the address fallback resolves 155 / 693 unresolved items (Mississauga 143 / 351) | Files & history shows the right council history; zoning and draft approvals move stages | M |
 | 4 | Servicing permit → development by permit number | 960 / 2,468 share number and year with a development's permit (957 at the same address), against 556 by location (532 before the Part 0 rebuild) | The site's servicing permit listed without a 60 m guess | S |
 | 5 | Census DA × block by area, keyed by `dauid` | Centre points put 7.64% of people (110,832) in another block (block 22 +104%, block 10 −48%) | Servicing › Network catchment and Capacity census baselines become true overlap, as README already claims | S |
@@ -308,7 +313,7 @@ The 18 of the appendix's 22 worth building now, in its order (#18 here is its #2
 | 14 | 2020 DC projects → capital records | 22 / 137 project numbers appear in capital.json; the 14 that are not 2026 DC projects cover 57 records in 17 contracts (35 under construction), 2 of them linked today | Active construction marked as 2020-DC-funded | S |
 | 15 | Related applications across developments | 11 cross-development mentions never shown; 1,515 overlap pairs | A "Related applications" list with the reason | S |
 | 16 | Constraints on the site boundary, not its centre point | 345 / 2,411 sites flagged by point; 772 by the cells inside the boundary | Check a site flags land that touches regulated or flood areas | S |
-| 17 | The receiving pipe, with stable pipe ids | A trunk within 400 m for 86.4% of sites; 265 pipes shared by 711 developments | Servicing › Network shows who shares a pipe; the site brief lists works on the site's own path | L |
+| 17 | The receiving pipe and the whole servicing path, with stable pipe ids | A full path on the existing network for 16,937 / 20,990 developments (80.7%); 1,733 receiving pipes shared by 2+ developments (infrastructure-dependencies.md) | Servicing › Network shows who shares a pipe; a development lists the projects on its own path, and a project the developments upstream of it | L |
 | 18 | Regional council reports | 0 / 2,414 municipal items mention an EA, plant or station | Which report funded or paused each DC project | L |
 
 ### 2.5 Where the links should live
