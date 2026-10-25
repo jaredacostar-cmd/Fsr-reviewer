@@ -144,15 +144,16 @@
     capital: c => (CAPITAL.includes(c.last) ? c.last : 'projects'),
     reference: () => 'help',
   };
-  const resolvePage = (id, ctx = {}) => (PAGE_ALIAS[id] ? PAGE_ALIAS[id](ctx) : id);
+  // (own keys only: a stored or linked id such as '__proto__' is no page, and must not throw)
+  const own = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+  const resolvePage = (id, ctx = {}) => (own(PAGE_ALIAS, id) ? PAGE_ALIAS[id](ctx) : id);
   function startScreen({ hash = '', pref = 'home', last = null } = {}) {
     const q = new URLSearchParams(String(hash).replace(/^#/, ''));
     const w = q.get('w') || '';
     const pid = /^p:/.test(w) ? resolvePage(w.slice(2), { site: !!q.get('d'), last }) : '';
-    if ([...q.keys()].length) return w === 'home' ? { mode: 'home', page: 'home' } : pid && (BY_ID[pid] || REF[pid] || LAB_PAGES[pid]) ? { mode: 'home', page: pid } : BY_ID[w] ? { mode: 'ws', ws: w } : { mode: 'full' };
+    if ([...q.keys()].length) return w === 'home' ? { mode: 'home', page: 'home' } : pid && (own(BY_ID, pid) || own(REF, pid) || own(LAB_PAGES, pid)) ? { mode: 'home', page: pid } : own(BY_ID, w) ? { mode: 'ws', ws: w } : { mode: 'full' };
     if (pref === 'full') return { mode: 'full' };
-    const lp = resolvePage(last || '', { last });
-    if (pref === 'last') return { mode: 'home', page: BY_ID[lp] ? lp : 'tight' };
+    if (pref === 'last') { const lp = resolvePage(String(last || ''), { last }); return { mode: 'home', page: own(BY_ID, lp) ? lp : 'tight' }; }
     return { mode: 'home', page: 'home' };
   }
 

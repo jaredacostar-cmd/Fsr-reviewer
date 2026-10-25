@@ -130,22 +130,30 @@
       // Layers (lg=…). Links from before the groups have none: their layers stay as the view sets them
       // (and ms= above), as they opened before.
       if (q.get('lg') && window.PeelLayerGroups) { const lg = q.get('lg'); setTimeout(() => window.PeelLayerGroups.applyEncoded(lg), 0); }
-      if (q.get('t')) {
+      // A workspace page's link from before nav=2 carried the map's tab, not the page's: when that page is
+      // the one open (the link opened it), the page's own tab and sub-view go behind it. A saved view
+      // applied on the full map opens no page, so it keeps its own t.
+      const W = window.PeelWorkspaces, w = q.get('w') || '';
+      const pid = !(Number(q.get('nav')) >= 2) && /^p:/.test(w) && W && W.resolvePage ? W.resolvePage(w.slice(2), { site: !!q.get('d'), last: window.PeelUtil.store.get('lastWs', '') }) : '';
+      const pageWs = pid && W.mode() === 'home' && W.page() === pid && Object.prototype.hasOwnProperty.call(W.BY_ID, pid) ? W.BY_ID[pid] : null;
+      if (q.get('t') || pageWs) {
         // Phase 4: old links name removed tabs — migrateTabKey maps them onto the new set.
         // Stage 2: old links name the Wastewater / Water halves (t=ww|water&ws=…) and old sub-views
         // (gs=census2051|byplan, dcs=build|recommendations|funding); migrateTabKey maps them on, and every
         // sub-view param goes through it, so a sub-view moved to another tab is followed, never dropped.
-        // A workspace page's link from before nav=2 carried the map's tab, not the page's: the page's own.
-        const W = window.PeelWorkspaces, w = q.get('w') || '';
-        const pageWs = q.get('nav') !== '2' && /^p:/.test(w) && W && W.BY_ID && W.resolvePage ? W.BY_ID[W.resolvePage(w.slice(2), { site: !!q.get('d'), last: window.PeelUtil.store.get('lastWs', '') })] : null;
         const t = pageWs ? pageWs.tab : q.get('t');
         const oldSub = pageWs ? pageWs.sub : t === 'ww' || t === 'water' ? q.get('ws') : t === 'growth' ? q.get('gs') : t === 'dca' ? q.get('dcs') : t === 'svc' ? q.get('svs') : t === 'records' ? q.get('rs') : null;
         const m = AT().migrateTabKey(t, oldSub);
         AT().setFootPref(m.tab); if (m.gSub) AT().setGSub(m.gSub); if (m.svcSub) AT().setSvcSub(m.svcSub); if (m.dcSub) AT().setDcSub(m.dcSub); if (m.rSub) AT().setRSub(m.rSub);
+        // (a Servicing or Records sub-view named beside another tab is kept for its tab, as before)
+        for (const [tab, k] of [['svc', 'svs'], ['records', 'rs']]) {
+          const r = q.get(k) && tab !== t ? AT().migrateSub(tab, q.get(k)) : null;
+          if (r && r.tab === 'svc') AT().setSvcSub(r.sub); else if (r && r.tab === 'records') AT().setRSub(r.sub);
+        }
         // An old link to the funding screen or the hydraulic check turns that Labs switch on, so the
         // link still opens its view.
         if (window.PeelLabs && (m.dcSub === 'funding' || q.get('dcs') === 'funding')) window.PeelLabs.set('funding', true);
-        if (window.PeelLabs && t === 'water' && q.get('ws') === 'hydro') window.PeelLabs.set('hydro', true);
+        if (window.PeelLabs && q.get('t') === 'water' && q.get('ws') === 'hydro') window.PeelLabs.set('hydro', true);
       }
       SD().showSvcArea(false);
       if (q.get('m')) { const [la, ln, z] = q.get('m').split(',').map(Number); if (isFinite(la) && isFinite(ln)) map.setView([la, ln], isFinite(z) ? z : map.getZoom()); }

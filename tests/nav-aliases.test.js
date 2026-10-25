@@ -132,11 +132,48 @@ test('share links: every sub-view param goes through migrateTabKey; nav=2; an ol
   assert.match(sh, /if \(m\.dcSub\) AT\(\)\.setDcSub\(m\.dcSub\); if \(m\.rSub\) AT\(\)\.setRSub\(m\.rSub\);/);
   assert.match(sh, /set\('nav', '2'\);\n {6}set\('t', tab\);/);
   assert.match(sh, /const tab = pageWs \? pageWs\.tab : AT\(\)\.getFootPref\(\);/, 'on a workspace page, the page\'s own tab');
-  assert.match(sh, /const pageWs = q\.get\('nav'\) !== '2' && \/\^p:\/\.test\(w\) && W && W\.BY_ID && W\.resolvePage \? W\.BY_ID\[W\.resolvePage\(w\.slice\(2\), \{ site: !!q\.get\('d'\), last: window\.PeelUtil\.store\.get\('lastWs', ''\) \}\)\] : null;/);
+  // (an older page link: nav below 2, the page it names open; a saved view applied on the full map opens
+  // no page, so it keeps its own t)
+  assert.match(sh, /const pid = !\(Number\(q\.get\('nav'\)\) >= 2\) && \/\^p:\/\.test\(w\) && W && W\.resolvePage \? W\.resolvePage\(w\.slice\(2\), \{ site: !!q\.get\('d'\), last: window\.PeelUtil\.store\.get\('lastWs', ''\) \}\) : '';/);
+  assert.match(sh, /const pageWs = pid && W\.mode\(\) === 'home' && W\.page\(\) === pid && Object\.prototype\.hasOwnProperty\.call\(W\.BY_ID, pid\) \? W\.BY_ID\[pid\] : null;\n {6}if \(q\.get\('t'\) \|\| pageWs\) \{/);
+  // A Servicing or Records sub-view named beside another tab is still kept (as before); the hydraulic
+  // check's Labs switch reads the link's own t.
+  assert.match(sh, /const r = q\.get\(k\) && tab !== t \? AT\(\)\.migrateSub\(tab, q\.get\(k\)\) : null;/);
+  assert.match(sh, /q\.get\('t'\) === 'water' && q\.get\('ws'\) === 'hydro'/);
   // What an older link to a workspace page opens behind it: the page's tab and sub-view.
   for (const w of W.WS) {
     const m = plain(AT.migrateTabKey(w.tab, w.sub));
     assert.equal(m.tab, w.tab, w.id);
     if (w.sub) assert.equal(m[AT.SUB_KEY[w.tab]], w.sub, `${w.id}: ${w.tab}:${w.sub}`);
   }
+});
+
+test('names inherited from Object.prototype are no page, tab or sub-view, and never throw', () => {
+  const NAMES = ['__proto__', 'constructor', 'toString', 'valueOf', 'hasOwnProperty', '__defineGetter__', 'prototype'];
+  for (const n of NAMES) {
+    assert.equal(W.resolvePage(n, {}), n, `resolvePage(${n})`);
+    assert.deepEqual(plain(W.startScreen({ hash: `#w=p:${n}` })), { mode: 'full' }, `#w=p:${n}`);
+    assert.deepEqual(plain(W.startScreen({ hash: `#w=${n}` })), { mode: 'full' }, `#w=${n}`);
+    for (const pref of ['home', 'last', 'full']) {
+      const r = plain(W.startScreen({ hash: '', pref, last: n }));
+      assert.ok(r.mode === 'full' || r.page === 'home' || r.page === 'tight', `stored lastWs ${n}, start screen ${pref}: ${JSON.stringify(r)}`);
+    }
+    for (const t of [...TABS_NOW, 'ww', 'water', n]) {
+      assert.equal(AT.migrateSub(t, n), null, `migrateSub(${t}, ${n})`);
+      assert.ok(TABS_NOW.includes(AT.migrateTabKey(t, n).tab), `migrateTabKey(${t}, ${n})`);
+    }
+    for (const k of Object.values(AT.SUB_KEY)) assert.ok(AT.migratePrefs({ footPref: 'overview', gSub: 'pipeline', svcSub: 'capacity', dcSub: 'timing', rSub: 'sources', [k]: n }));
+  }
+});
+
+test('in-app calls follow a moved sub-view too: setSub, a data-at link, showFootTab(tab, sub)', () => {
+  AT.SUB_MAP.svc.movedTest = 'records:checks';
+  try {
+    assert.equal(AT.setSub('svc', 'movedTest'), 'records', 'setSub returns the tab the sub-view now lives in');
+    assert.equal(AT.getRSub(), 'checks');
+  } finally { delete AT.SUB_MAP.svc.movedTest; }
+  assert.equal(AT.setSub('svc', 'network'), 'svc');
+  const s = src('js/analysis-tabs.js');
+  assert.match(s, /const \[t0, s0\] = a\.dataset\.at\.split\(':'\), r = s0 \? migrateSub\(t0, s0\) : null, tab = r \? r\.tab : t0, sub = r \? r\.sub : s0;/);
+  assert.match(s, /\{ const r = sub \? migrateSub\(key, sub\) : null; if \(r\) \{ key = r\.tab; sub = r\.sub; \} \}/);
 });

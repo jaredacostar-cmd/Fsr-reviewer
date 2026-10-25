@@ -168,10 +168,11 @@ test('4. old links and stored views map to the new tabs', () => {
   const sh = src('js/share.js');
   assert.match(sh, /const oldSub = pageWs \? pageWs\.sub : t === 'ww' \|\| t === 'water' \? q\.get\('ws'\) : t === 'growth' \? q\.get\('gs'\) : t === 'dca' \? q\.get\('dcs'\) : t === 'svc' \? q\.get\('svs'\) : t === 'records' \? q\.get\('rs'\) : null;/);
   assert.match(sh, /if \(window\.PeelLabs && \(m\.dcSub === 'funding' \|\| q\.get\('dcs'\) === 'funding'\)\) window\.PeelLabs\.set\('funding', true\);/);
-  assert.match(sh, /if \(window\.PeelLabs && t === 'water' && q\.get\('ws'\) === 'hydro'\) window\.PeelLabs\.set\('hydro', true\);/);
+  assert.match(sh, /if \(window\.PeelLabs && q\.get\('t'\) === 'water' && q\.get\('ws'\) === 'hydro'\) window\.PeelLabs\.set\('hydro', true\);/);
   assert.match(sh, /if \(tab === 'svc'\) set\('svs', AT\(\)\.getSvcSub\(\)\); if \(tab === 'records'\) set\('rs', AT\(\)\.getRSub\(\)\);/);
   // In-app callers with an old name still land: setSub maps it, showFootTab('ww' | 'water') is Servicing.
-  assert.match(src('js/analysis-tabs.js'), /const v = \(SUB_MAP\[tab\] && SUB_MAP\[tab\]\[sub\]\) \|\| sub;/);
+  assert.match(src('js/analysis-tabs.js'), /const setSub = \(tab, sub\) => \{ const r = migrateSub\(tab, sub\) \|\| \{ tab, sub \}, s = TABSUBS\[r\.tab\];/);
+  assert.equal(AT.setSub('dca', 'build'), 'dca'); assert.equal(AT.getDcSub(), 'projects', "setSub maps an old name ('build' → 'projects')");
   assert.equal(AT.tabOf('ww'), 'svc'); assert.equal(AT.tabOf('water'), 'svc');
 });
 
