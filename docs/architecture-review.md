@@ -40,6 +40,20 @@ its appendix cite `60cd0e3`, the branch head with the Part 0 fixes.
 5. **Bugs found and fixed now** (Part 0). The most urgent one: the weekly data update will be held
    every Monday from 2026-10-26 unless this branch is merged before that day's 10:17 UTC run.
 
+**After weighing the pros and cons.** Each recommendation was then argued both ways (cost, risk, what
+users lose, test churn, reversibility, a cheaper option), in
+[`architecture-review/pros-and-cons.md`](architecture-review/pros-and-cons.md). Most stand with changes;
+these moved, and the parts below are updated to match:
+- **Dropped:** the optional Page | Map phase (10), and removing the Ledger's stage cut-off (Part 4 #9).
+- **Reconsidered:** snapshot v2 (1.2 D: about 8% gzip, near nothing once the developments table paints);
+  regrouping `data/` into folders (1.2 G: churn nobody sees; a data registry gets the gain); making the
+  deploy audit blocking (Part 4 #14); most hand-reviewed crosswalks (one, DC ↔ capital, until someone
+  reviews them); EA → DC mains and Regional council reports (thin evidence); the sidebar cut to 5 (it
+  lengthens three paths: count usage first); pages rendering the tab strip (phase 6: no clicks saved, high
+  risk); Ledger into Forecast (phase 3: an active owner project).
+- **Navigation commitment:** phases 0–2 plus small slices of 4, 5, 7 and 8 (Part 3.5). Phase 1 alone
+  carries all the click savings.
+
 ---
 
 ## Part 0. Fixed on this branch
@@ -112,7 +126,8 @@ and the committed counts (the `dc-gate.json` buckets). `history.json` (accuracy 
 (`PeelLazy.need(group)`), once there is a module manifest that index.html, `sw.js`, eslint and the tests
 all read (today `sw.js` copies index.html's 154 scripts by hand, and 26 test files police the copy).
 
-**D. Slim the snapshot** (M, medium). About 6.2 MB is constant or repeated (`newBuild` is true on all
+**D. Slim the snapshot** (M, medium; *reconsidered after weighing*: worth it only if B is dropped, as a
+shared columnar codec; the second units in a cold file stand on their own, about 0.6 MB gzip). About 6.2 MB is constant or repeated (`newBuild` is true on all
 85,141 records; municipality and kind follow from `sourceId`, and `uid` repeats it as a prefix). A v2 encoding with dictionaries and
 short keys cuts the parsed size from 42.1 to 23.0 MB (gzip 4.04 → 3.72 MB). Before dropping `newBuild`,
 flip the decoders' `false` default (`app.js:707`, `build-snapshot.js:62`), or every development hides.
@@ -133,7 +148,9 @@ for a missing `censuses` reads the legacy census copy.
 `staleWhenNewer`, and generate the weekly `git add` list, the publish exclusions and the README data table
 from it. `staleWhenNewer` would have caught the DC gate drift in Part 0 at build time.
 
-**G. Group the files by role** (L, medium; after A–C, so each move is a one-line path change):
+**G. Group the files by role** (L, medium; after A–C, so each move is a one-line path change; *reconsidered
+after weighing*: the gain comes from A's data registry and E's publish exclusions, without the moves;
+no housing merge):
 
 ```
 data/  developments/ (snapshot, developments, history, tree-counts, council*, fsr, address-points, servicing-gate)
@@ -437,6 +454,12 @@ Three paths get longer without a role shortcut (Old pipes and What's coming 1 �
 | 8 | Every scope kind gets real tabs (servicing scopes, a file, a DC project, an EA) | L | Medium |
 | 9 | Words sweep: README sections, tour, info cards, "What moved where" | S–M | Low |
 
+**After weighing** ([pros-and-cons.md](architecture-review/pros-and-cons.md)): commit to phases 0–2, plus
+phase 4's EA move and tool link, phase 5's dead code and path line, phase 7's ⚙ sheet and one role list,
+and phase 8's HIDDEN rows. Phase 3 waits for the ledger plan's own Phase 7 (cross-link meanwhile); phase 6
+is reconsidered (no clicks saved, high risk: count section-bar clicks first); the sidebar cut in phase 7
+waits for 2–4 weeks of usage counts; phase 10 is dropped. Phase 0 shipped in `57c7ce6`.
+
 Watch for these in every phase: the Excel workbook reads hidden pane bodies by id (`exports.js:260-261`)
 and the servicing memo reads the site's existing-mains and fire-flow boxes (`reports.js:274`), so every
 phase keeps those ids, changes only `data-sub` / `data-pane`, and renders a pane before exporting from a
@@ -452,19 +475,19 @@ The recommendation is first in each row.
 | # | Question | Recommendation |
 |---:|---|---|
 | 1 | Keep *Refresh live*, *Add source*, *Discover datasets*, *Records since*, *Max per layer*? | Keep them for now under Records › Sources › Advanced. If they go, the in-browser build can go too and Part 1.2 B gets simpler; that is the biggest single simplification available. |
-| 2 | The startup index: delete it, or rebuild it on the trees and publish it? | Delete it (and `bootFromIndex`, `snapshot-index.js`, `buildIndex`), and replace it with the developments table (Part 1.2 B). Today it is gated off. |
+| 2 | The startup index: delete it, or rebuild it on the trees and publish it? | Delete `buildIndex` and its weekly *Previous*-grouping pass; keep the paint-then-swap path (`applyIndex`) and use it to paint from the developments table (Part 1.2 B). Today the index is gated off. |
 | 3 | Retire the *Previous* counting mode now? (approved 2026-10-15 "for one release") | Yes, before the development-layout work; it threads a second model through every figure. |
-| 4 | The weekly alerts feed and the frozen ledger (`build-alerts.js`, `build-ledger.js`): wire them in or remove the panels? | Hide the alerts UI now (wave 1); wire `build-alerts.js` in once development ids are stable (wave 3; as written it would key alerts by the *Previous* grouping). Keep the Forecast's "Since the last snapshot" fold and run `build-ledger.js` on its annual procedure. |
+| 4 | The weekly alerts feed and the frozen ledger (`build-alerts.js`, `build-ledger.js`): wire them in or remove the panels? | The alerts panel is already hidden (`index.html:176`) and the feed asked for once (Part 0): fix the text that promises it. Capacity alerts need blocks, not ids (wave 2); watch and change alerts wait for stable development ids (wave 3; as written they would key by the *Previous* grouping). Keep the Forecast's "Since the last snapshot" fold and run `build-ledger.js` on its annual procedure. |
 | 5 | Which reports are public receipts? (`tree-audit`, `site-audit`, `capital-links-audit`, `eas-review.csv`, `probe/`) | Publish the few the Sources page links as receipts; move the rest out of the published folder. |
-| 6 | Permit-only developments (81% of developments, 9% of units) and Brampton's 31,944 second units: full records in the snapshot, or compact servicing tables? | Compact tables; the second units alone are about 15.6 MB of the 42 MB snapshot. |
+| 6 | Permit-only developments (81% of developments, 9% of units) and Brampton's 31,944 second units: full records in the snapshot, or compact servicing tables? | Second units to a compact table now, independent of snapshot v2 (about 15.6 MB of the 42 MB snapshot; about 0.6 MB gzip saved with the fields the app reads); old completed permits stay, since they calibrate the forecast. |
 | 7 | Is SPEC §0 still binding (five tabs at every scope), with §4's Data tab superseded by Records? | Yes, as stated. Part 3 depends on it. |
 | 8 | One DC projects list with both verdicts? | Yes. |
-| 9 | Ledger stage cut-off: keep it inside Forecast › By period, or let the Scenario's Count drive it? | Keep it in the merge, then drop it, so the Scenario's Count is the one control for which layers count (Find › Stage, Counts as and Scenario › Units stay). Dropping it loses the "+ Plan approved" cut, which the Count does not have. |
-| 10 | Team headings → *For your role* shortcuts (adding QA/QC as a role)? | Yes, after asking pilot users for their Settings › Usage exports. |
+| 9 | Ledger stage cut-off: keep it inside Forecast › By period, or let the Scenario's Count drive it? | Keep it as the ledger's own filter (dropping it loses the "+ Plan approved" cut, which the Scenario's Count does not have); at most align its labels with the Count. |
+| 10 | Team headings → *For your role* shortcuts (adding QA/QC as a role)? | Only after usage evidence: count section-bar clicks, Explore views, search and role for 2–4 weeks, then decide. Keep Review outlets' entry meanwhile. |
 | 11 | Should drilling into a plan set the plan filter for the map and every tab? | Yes (one "where"); users will notice the change. |
-| 12 | Growth's *By dwelling type* "Left" column is planned − permitted beside a planned − completed total: relabel it "To permit", or recompute it as left to build? | Relabel now (no number changes); recompute later with the derived-figures module. |
-| 13 | Capital contract and EA page changes this week have no visible renderer since the This week page took over: list them there? | Yes, when they first appear (both files have none today). |
-| 14 | The deploy's count-once audit reads 0 now: make it blocking? | Yes. |
+| 12 | Growth's *By dwelling type* "Left" column is planned − permitted beside a planned − completed total: relabel it "To permit", or recompute it as left to build? | Recompute now (about 5 lines in `demand.js typeBuildout`), with a before/after table, so the column adds up to the Left to build tile. |
+| 13 | Capital contract and EA page changes this week have no visible renderer since the This week page took over: list them there? | Yes: wire them now into the one This week list, hidden when empty (both files have none today). |
+| 14 | The deploy's count-once audit reads 0 now: make it blocking? | No (reconsidered): it audits the *Previous* grouping and would block code deploys for a data fault. Add the check to the weekly review gate instead, on the tree grouping. |
 | 15 | Region confirmation needed: which plant blocks 13 and 14 drain to, and whether zone 8A is partly lake-fed | Ask. Only blocks 13 / 14 (Part 2.4 #6) and zone 8A (#7) wait on it; block 23's plant (546 of 557 pipes drain to Toronto) and the other well zones can be fixed now. |
 
 [navigation-design.md](architecture-review/navigation-design.md) §9 numbers these differently: its 1 = #7,
@@ -478,10 +501,10 @@ design-level and decided there.
 | Wave | Data | Navigation |
 |---|---|---|
 | **Now** | Merge this branch (before Monday's update). | — |
-| **1. Stop the drift** (days, low risk) | Dataset manifest with `staleWhenNewer` (1.2 F); the link step's first items: capital same-system check and component keys, census on blocks, block 23 (2.5 step 1); stop publishing reports (1.2 E); retire *Previous* (Part 4 #3); hide the alerts UI (Part 4 #4) | Phase 0 (aliases), phase 9's README fixes for what already moved |
-| **2. Load less** (1–2 weeks) | Content-hashed data URLs (1.2 A); load each file when its view opens (1.2 C); a module manifest and lazy code groups | Phases 1–3 (Find everywhere, Servicing / Records merges, Ledger into Forecast) |
-| **3. One model** (2–4 weeks) | Developments table from the weekly job (1.2 B); sticky ids (`dev-ids.json`); `js/file-id.js` and `file-links.json`; `dev-facts.js` for every derived figure; snapshot v2 (1.2 D); the alerts feed on the new ids | Phases 4–5 (Capital 4 → 3, one development layout) |
-| **4. One system** (4+ weeks) | `link-placer.js` and `dev-links` / `area-links` / `infra-links`; the facility and plant registry; folders by role (1.2 G); `scripts/lib/`; README split; screenshots out of the repo | Phases 6–8 (pages render the tab strip, Home sidebar 9 → 5, every scope kind) |
+| **1. Stop the drift** (days, low risk) | Dataset manifest with `job`, `publish` and builder-recorded input dates, failing in pull requests and warning weekly (1.2 F); the link step's first items: capital same-system check and component keys, status from each work's own records, census on blocks, block 23 (2.5 step 1); exclude unread files at publish (1.2 E); remove the *Previous* switch (Part 4 #3); fix the alerts text (Part 4 #4) | Phase 0 (shipped, `57c7ce6`), phase 9's stale-text fixes |
+| **2. Load less** (1–2 weeks) | Content-hashed data URLs with a mandatory schema check (1.2 A, about 4× less re-download); idle loading with `dc-infra.json` first (1.2 C); `sw.js` generated from `index.html`; capacity alerts; second units to a compact table | Phases 1–2 (Find everywhere, Servicing / Records merges); the ⚙ sheet and one role list |
+| **3. One model** (2–4 weeks) | Developments table from the weekly job, painted through the existing paint-then-swap path (1.2 B); sticky ids (`dev-ids.json`, history by file); the file-id parsing fixes; parity tests, then `dev-facts.js`; the watch and change alerts on the new ids | Phase 4's slices (EA move, tool link; one DC list once Part 4 #8 is answered); phase 5 after the *Previous* switch goes |
+| **4. One system** (4+ weeks) | The network method (infrastructure-dependencies.md): stable network ids, link columns in the developments table, one `infra-links.json`; facility ids from GIS; `scripts/lib/` as scripts are touched; README split; screenshots out of the repo | Phase 8's scope rows; phases 6 and the sidebar cut only if usage counts support them |
 
 Each wave keeps the README's "one set of numbers" rule, guarded by the browser paths
 (`npm run browser`, 23 paths, all passing on this branch) and the unit suite.
