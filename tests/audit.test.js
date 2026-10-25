@@ -58,3 +58,20 @@ test('audit: integrity checks are zero and the unit reconciliation adds up', () 
   assert.equal(u.counted, 200);
   assert.equal(u.raw - u.duplicateCopies - u.withdrawn - u.repeatApps - u.repeatPermits - u.permitsInApps - u.other, u.counted);
 });
+
+test('audit: files held aside on their own lists (second units, hidden dormant developments, site activity) are not missing', () => {
+  const a1 = app(rect(-79.70, 43.70, -79.69, 43.705), { FILE_NO: 'OZ 23-1', ADDRESS: '20 Main St', STATUS: 'Approved', UNITS: 40, RECEIVED_DATE: Y(2023) });
+  const a2 = app(rect(-79.60, 43.60, -79.59, 43.605), { FILE_NO: 'OZ 12-9', ADDRESS: '30 Old Rd', STATUS: 'In review', UNITS: 80, RECEIVED_DATE: Y(2012) });
+  const deduped = P.dedupeRecords([a1, a2]);
+  const all = P.buildProjects(deduped);
+  const dormant = all.filter(p => p.records.some(r => r.uid === a2.uid)), shown = all.filter(p => !dormant.includes(p));
+  const su = { uid: 'su-1', kind: 'permit', municipality: 'Brampton', units: 1 };
+  Object.defineProperty(shown, 'secondUnits', { value: [su] });
+  const without = audit([a1, a2, su], [...deduped, su], shown);
+  Object.defineProperty(shown, 'dormant', { value: dormant });
+  Object.defineProperty(shown, 'siteActivity', { value: [] });
+  const a = audit([a1, a2, su], [...deduped, su], shown);
+  assert.equal(without.checks.find(c => c.key === 'inNoProject').value, 1, 'a hidden dormant development, not on its list, is missing');
+  assert.deepEqual(a.checks.map(c => c.value), [0, 0, 0]);
+  assert.equal(a.records.heldAside, 2, 'the second unit and the dormant development\'s file');
+});
