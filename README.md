@@ -391,8 +391,9 @@ from street zoom (14), up to 3,000 in view.
 - **Reports**: *Memo* on a development opens a one-page servicing memo (proposal, status, flows,
   sewer path, plant reserve, DC needs, planned works, live site context, a map sketch of sewers by
   load and DC works) to print or save as PDF. *Area report* (a drawn selection, or *Report* on the
-  Showing line for what is shown) gives combined demand, the capacity relied on with the DC timing,
-  and the largest developments. DC timing → *Excel (all rows)* exports every constraint.
+  Showing line for what is shown, or *Area report (PDF)* on Growth in an area for the level it is at)
+  gives combined demand, the capacity relied on with the DC timing, and the largest developments.
+  DC timing → *Excel (all rows)* exports every constraint.
 - **Search places**: the search also finds secondary plans / character areas, MTSAs, pressure zones,
   catchments and pumping stations, DC projects (by number or name) and DC facilities, file numbers
   by prefix, and intersections ("Main St & Queen St").
@@ -1516,12 +1517,26 @@ demand. Nothing about a site is only in the full map.
 
 Home's sidebar has one **Explore** entry for what were five: Growth in an area, Check a site,
 Review an FSR, Forecast and Study area are its views.
-- Each view opens with the one search (an address, a file number, a description) and **Draw an
-  area**. A site picked from an area view (the search, a list row, the map) opens on its page.
+- The one search (an address, a file number, a description) and **Draw an area** are in every
+  page's header, not only Explore's (see *Find from every page* below). A site picked from an area
+  view (the search, a list row, the map) opens on its page.
 - A site shows where it sits, **Peel › municipality › plan › site** (the plan tree's placement, as
   the plan filter); each step opens Growth in an area at that level.
 - A site's sections: Summary, Growth, Servicing, Capital, Files and **FSR review** (the cross-check
   and what an FSR should cover). An area's: Growth (the drill-down) and Forecast.
+- A site's Summary (and the map's development Overview, the same panel) has the **path line** under
+  Wastewater, *Path to the plant*: from the site, the pumping stations on its sewer path in flow order, each at its
+  build-out peak wet weather against firm capacity, then the plant and its uncommitted reserve (or the
+  City of Toronto system), and how the outlet was set (Automatic, Confirmed or Set by hand). *Review →*
+  opens Review outlets at the development when its review queue lists it, once the DC impact model
+  has been worked out in this visit (Capital › DC projects, Review outlets or the DC project map; the
+  Overview never builds it). Its *Infrastructure coming* row names the DC projects it relies on, by
+  number and name as the search lists them, late ones first ("Relies on 25-2945 – G.E. Booth Water
+  Resource Recovery Facility (late), 22-1005 (in time)"): each constraint on its path that needs
+  relief, by its first relief with a project number; the name is the DC main's, else the facility's
+  (a plant step, a facility's item). One late project makes the row *Check*, whatever the connection's
+  own verdict. Review outlets also opens from Records › Data checks (*Review outlets →*) and the
+  sidebar (QA/QC).
 - The views keep their own ids (`site`, `fsr`, `growth`, `outlook`, `study`), so links, share links and
   the map-view chips still work; Explore opens the site in scope, else the last view used.
 - A site's page has the **live map** beside its sections, at the site, with the infrastructure around
@@ -1541,6 +1556,52 @@ Review an FSR, Forecast and Study area are its views.
   under Built since 2021), a tile per development coloured by its stage (the 30 largest a box, the
   rest as one tile). A tile opens the site, a box's name opens its level. Hovering a tile or a table
   row rings the development on the map; hovering a box rings its developments and outlines its area.
+
+## Find from every page
+
+Navigation phase 1 (docs/architecture-review/navigation-design.md §3.3). Every page's header, Home
+included, has the one search and **Draw an area** beside it (the Study area page draws on its own
+map). Draw an area opens the Study area map view with the Select tool on; on a phone the bottom
+sheet drops to its peek, so the map is there to draw on.
+
+On a page, a pick opens what it found (`js/workspaces.js` `pageRoute` and `routePick`):
+
+| The pick | Opens |
+|---|---|
+| A development | Its page on Summary (from Review an FSR, its FSR review) |
+| A file number (a development matched by it only) | Its page at Files, the file's row in the tree marked |
+| A secondary plan or character area | Growth in an area at the plan |
+| An MTSA | Its filter (as on the map), with Growth in an area at its municipality |
+| A plant, station, block, zone or South Peel water | Its scope on Servicing capacity's map view |
+| A DC project | Capital › DC projects at the project: its developments by tier |
+| A DC facility, or an address | Capital's or Check a site's map view, then the facility card or the pin |
+
+- **Pages only.** On the full map and in a workspace's map view the search works as before (a plan
+  sets the map's plan filter, a facility opens its scope there); `routePick` returns false outside a
+  page.
+- **The drill does not filter.** A plan picked on a page is Growth in an area's own drill-down: the map
+  and the other pages stay unfiltered (the plan filter from a drill comes in phase 6). The plan tree
+  holds only the developments shown, so a filter that would leave the pick out goes first: Home's
+  municipality when the plan or MTSA is in another (back to Peel), and the map's plan or MTSA filter
+  (a plan picked on the full map, the MTSA a page's MTSA pick left on), unless it is a plan filter that
+  already holds the plan picked. An MTSA pick then sets its own filter, as on the map.
+- **Its Area report is the drilled area's.** At a municipality, plan, precinct or sub-area, *Area
+  report (PDF)* reports that level's developments (`data-ws-areareport`, js/ws-pages.js), with the
+  outline on its map: a development partly in the plan counts whole, as the map's plan filter counts
+  it, so the title says "(developments in or partly in it)" where the level has an outline. At Peel
+  it is the developments shown, as before. (Share-weighted report totals come with the plan filter
+  from a drill, phase 6.)
+- **"← Page"** after a facility pick goes to Servicing capacity: the workspace's map view, as from
+  the pages' facility rows.
+- **Typing is never interrupted.** While the box has the focus, the page it is on is not rebuilt
+  (Home refreshes every second while its figures load, and data landing redraws a page): the render
+  waits until the box lets go. A pick lets go of it on a page, so what it opens renders at once.
+- **Hits need loaded data.** Plans, facilities and DC projects come from `state.areas`,
+  `state.servicing` and `state.dcInfra`, and file numbers from each development's `records`; until
+  they are in, the list says so in a muted line. Zones, stations and blocks are offered once the
+  servicing lookup is filled (`svcById`, with the DC program), so a pick never lands on an empty map
+  view; a scope that still does not open is taken on a page and nothing moves. A change that loads
+  these lazily must load them by the box's first focus.
 
 ## Servicing and Capital: one page each, the map's sub-views as sections
 
@@ -1566,12 +1627,22 @@ Review an FSR, Forecast and Study area are its views.
   figure follows it; one that is Region-wide (capacity, the DC program) says so.
 - **Four groups of figures**, each the answer of its page and opening it: **Growth** (homes planned,
   left to build, people at build-out, expected by 2031), **Servicing** (over capacity at build-out,
-  the first 90% trigger), **Capital** (DC projects late, facilities with no relief in time) and
-  **Change** (this week's changes, files on a tight plant).
+  the first 90% trigger, the first zone limit (100% of firm pumping)), **Capital** (DC projects late,
+  facilities with no relief in time) and **Change** (this week's changes, files on a tight plant).
+  The first 90% trigger opens its plant as a scope on Servicing capacity's map; the first zone limit
+  (pumping into a pressure zone, which reaches its limit at 100% of firm pumping, not at the plants'
+  90%) opens the Servicing capacity page (Soonest limits, and every zone in its full table). Both use one rule
+  (`js/ws-pages.js` `firstTrigger`, `firstZone`): the first to its limit, ties to the more loaded.
+  When no zone reaches its limit by the horizon's end (2051), the zone figure says *None* and names
+  the most loaded zone, with its % at build-out.
 - The stage chart (with the homes dormant developments leave out), **Needs attention** beside the
   capacity map, **Largest left to build**, **Plans furthest behind their target** and **This week**.
-- Home's sidebar has seven entries: Home, This week, Explore, Servicing capacity, Capital, Old pipes
-  and Reference, then Full map.
+  A Needs attention row opens its plant, station or water system as a scope on Servicing capacity's
+  map; a row with no scope (storage, pumping into a zone) and *See all* open the Servicing capacity
+  page.
+- Home's sidebar has nine entries: Home and This week, then by team Explore, Servicing capacity and
+  What's coming (Planning), Capital, Review outlets (QA/QC), Old pipes (Asset Management) and
+  Reference, then Full map.
 
 ## Build-out: planned vs permitted vs left to build
 
@@ -1734,6 +1805,20 @@ From design audit, Group 7:
   open in the right-hand detail panel.
   - The detail panel is used only when the tool framework is absent.
   - Every other tool already used the Tool result tab.
+- **A result started at a development keeps it** (navigation phase 1, `keepDev` in
+  `PeelSvcScope.openResult`). The **Inquiry draft** is a development action (beside *Servicing
+  memo*, on its page and on the map's Overview) and stays an Export ▾ item: both call one function
+  (`js/topbar.js` `draftInquiryResponse` → `PeelToolInquiry.draftForDevelopment`) and open one result,
+  with its Copy button.
+  - It opens on the map's Overview with the development still open; from a page the map opens first,
+    with its way back to the page.
+  - The trail reads Peel › the site › Inquiry draft. × or the site step closes the draft and shows the
+    site again; Peel closes both. Opening another development replaces the draft.
+  - On a phone the draft opens the bottom sheet all the way (the site bar above it leaves a half sheet
+    no room), for the draft only: the sheet is not remembered at full, and closing the draft puts it
+    back where it was. A full sheet stops under the map's way back to the page, so it still takes a
+    tap.
+  - Every other result still replaces the development (one scope at a time).
 - **Inspect point and Fit fixed.** Both use the sewer trace. The trace returned nothing and
   opened a panel as a side effect, so Inspect's sewer-path section was empty. The trace now
   comes back to them with no panel.
@@ -1757,6 +1842,7 @@ From design audit, Group 7:
     accent button.
   - **Search** moves into the top bar at 1600 px and wider, the projector and wide desks. It
     stays at the top of Explore on narrower screens. It is one search box, moved, not copied.
+    On a page the search sits in the page header at every width; the top-bar slot is the map's.
   - On a phone, every top-bar control and menu item is at least 44 px.
 
 ## Scope-aware tabs and duplicates removed
@@ -1796,7 +1882,8 @@ Before this change, tapping one gave a "What loads this?" tool result.
 **Opening a scope.** You can open one by:
 - tapping it on the map ("What loads this?" now opens the scope);
 - tapping a plant or South Peel water in the Peel Overview's capacity bars;
-- searching for its name (plants, stations, blocks and zones are all searchable);
+- searching for its name (plants, stations, blocks and zones are all searchable; from a page it
+  opens on the map);
 - following a link in another scope's ladder;
 - following a share link (`ss=`).
 

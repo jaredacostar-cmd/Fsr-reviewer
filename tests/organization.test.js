@@ -132,7 +132,9 @@ test('the trail owns the scope’s count; filters on show on pages; Review an FS
   assert.match(src('index.html'), /<div class="ws-filters" id="ws-filters"><\/div>/);
   const p = src('js/ws-pages.js');
   assert.match(p, /\{ title: 'Files with an FSR posted', rows: fsrRows/);
-  assert.match(p, /top: `<div class="page-search" id="page-search"><\/div>\$\{stepper\}`/);
+  // (the Find step's search is the page header's, as on every page: one slot, js/ws-pages.js pageHTML)
+  assert.match(p, /top: stepper,/);
+  assert.equal((p.match(/id="page-search"/g) || []).length, 1, 'one search slot, in the page header (pageHTML)');
   assert.doesNotMatch(p.slice(p.indexOf('  function find(id) {'), p.indexOf('  // ---- Check a site, with a site')), /title: 'Steps'/, 'the steps are one line, not a list');
 });
 

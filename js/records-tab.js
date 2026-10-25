@@ -22,10 +22,12 @@
   // Records › Checks: the data checks (the model against published totals, the permit check, the
   // accuracy of the statuses). The duplicate check and its pass/fail list are the panel below
   // (#audit-panel, js/data-tab.js renderAudit, redrawn after each rebuild). The servicing model's
-  // checks are Servicing › Checks.
+  // checks are Servicing › Checks. Review outlets (QA/QC: where each development discharges) opens from
+  // here too (navigation design §9 #5, AD-5), as from a site's path line and the sidebar.
+  const OUTLETS = { what: 'Where each development discharges: confirm the automatic outlet or set it on the map', btn: '<button type="button" class="btn small link" data-ws-page="outlets">Review outlets →</button>' };
   function checksHTML() {
     const acc = root.ModelChecks && typeof root.ModelChecks.accuracy === 'string' ? root.ModelChecks.accuracy : '';
-    return `${DU().checksHTML ? DU().checksHTML() : ''}${acc}<p class="small muted">The servicing model against the Master Plan and the 2025 reports: <button type="button" class="btn small link" data-at="svc:checks">Servicing › Model checks →</button></p>`;
+    return `${DU().checksHTML ? DU().checksHTML() : ''}${acc}<p class="small muted">The servicing model against the Master Plan and the 2025 reports: <button type="button" class="btn small link" data-at="svc:checks">Servicing › Model checks →</button></p><p class="small muted">${OUTLETS.what}: ${OUTLETS.btn}</p>`;
   }
   const peelHTML = () => `${sourcesHTML()}${checksHTML()}`;
 
@@ -100,7 +102,8 @@
       head: PN.areaHead('Records › Data checks', 'Can the data be trusted?', fails.length || pFail.length ? { tone: 'tight', text: `${fails.length + pFail.length} to review` } : { tone: 'room', text: 'Pass' }, a ? `${fmtNum(a.records.raw)} records → ${fmtNum(a.records.unique)} files → ${fmtNum(a.records.projects)} developments` : 'Checks run once the full data has loaded'),
       answer: a ? `${fmtNum(a.records.raw)} records make <strong>${fmtNum(a.records.projects)}</strong> developments; <strong>${fmtNum(a.possible.length)}</strong> possible duplicate pair${a.possible.length === 1 ? '' : 's'} to review${pFail.length ? `; permit counts differ from Region figures for ${pFail.map(r => esc(r.m)).join(' and ')}` : ''}.` : 'The checks run once the full data has loaded.',
       figures: a ? [{ v: fmtNum(a.records.raw), u: 'records', label: 'read', ctx: '' }, { v: fmtNum(a.records.unique), u: 'files', label: 'unique', ctx: '' }, { v: fmtNum(a.possible.length), u: 'pairs', label: 'possible duplicates', ctx: 'to review in the duplicate check', tone: a.possible.length ? 'tight' : 'room' }, { v: fails.length, u: '', label: 'checks flagged', ctx: '', tone: fails.length ? 'tight' : 'room' }] : [],
-      lists: a ? [{ title: 'Checks', rows: a.checks.slice(0, 5).map(c => PN.kv(esc(c.label), `${c.value ? '✕' : '✓'} ${fmtNum(c.value)}`, c.value ? 'tight' : 'room')), total: a.checks.length, seeAll: { 'data-full-table': 'records' } }] : [],
+      lists: [...(a ? [{ title: 'Checks', rows: a.checks.slice(0, 5).map(c => PN.kv(esc(c.label), `${c.value ? '✕' : '✓'} ${fmtNum(c.value)}`, c.value ? 'tight' : 'room')), total: a.checks.length, seeAll: { 'data-full-table': 'records' } }] : []),
+        { title: 'Sewer outlets', rows: [{ attrs: { 'data-ws-page': 'outlets', title: 'Open Review outlets' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">Review outlets →</span></div><small class="pnl-r-line">${OUTLETS.what}</small>` }], total: 1 }],
       method: 'Records read from each municipality are grouped into unique files and developments; the checks count what could not be placed or matched. The model against published totals, the permit check (fail beyond 25%) and the accuracy report are in the full table. The servicing model\u2019s checks are Servicing › Model checks.',
       sources: 'The municipal application and permit records; Region of Peel published totals and permit figures.',
       foot: { primary: { label: 'Duplicate check', attrs: { 'data-full-table': 'records', 'data-ft-go': 'Units: every record' }, title: 'The duplicate check and the possible duplicate pairs (was the Data tab)' }, secondary: [{ label: 'Servicing checks', attrs: { 'data-at': 'svc:checks' } }] },

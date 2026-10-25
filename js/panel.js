@@ -180,7 +180,9 @@
     // Old pipes, This week) and names its source in the header ("Getting tight · from Servicing ›
     // Capacity", with Open full map).
     const W = root.PeelWorkspaces, ov = W && W.override ? W.override(key, scopeId()) : null;
-    const e = ov ? { html: html({ key, ...ov }), onMount: ov.onMount } : e0 && e0.scope === scopeId() ? e0 : null, ok = !!e;
+    // (a result kept at its development, the Inquiry draft: its host shows on Overview, not the site's panel)
+    const kept = t === 'overview' && root.PeelSvcScope && root.PeelSvcScope.keepsDev && root.PeelSvcScope.keepsDev();
+    const e = kept ? null : ov ? { html: html({ key, ...ov }), onMount: ov.onMount } : e0 && e0.scope === scopeId() ? e0 : null, ok = !!e;
     const v = e ? (W && W.srcLine ? e.html.replace(HEAD, `${HEAD}${W.srcLine(key)}`) : e.html) : '';
     an.classList.toggle('pnl-on', ok);
     const host = document.getElementById(`pnl-${t}`);

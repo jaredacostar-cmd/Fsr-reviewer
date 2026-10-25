@@ -106,13 +106,14 @@ test('4. old links still open the full map; the start screen preference otherwis
 });
 
 // The browser half of js/workspaces.js with the real panel builder and a stub page.
-function loadBrowser(areaSpec) {
+// (o.setTimeout / o.clearTimeout: timers to queue instead of running at once)
+function loadBrowser(areaSpec, o = {}) {
   const nodes = { '#home': { hidden: false, innerHTML: '' } };
   const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: s => nodes[s] || null, querySelectorAll: () => [], getElementById: () => null, addEventListener() {}, dispatchEvent() {} };
   const store = new Map();
   const window = { document, PeelUtil: { esc: x => String(x == null ? '' : x).replace(/&/g, '&amp;').replace(/</g, '&lt;'), fmtNum: n => Math.round(n).toLocaleString('en-CA'), store: { get: (k, d) => (store.has(k) ? store.get(k) : d), set: (k, v) => store.set(k, v) } },
     PeelOverviewTab: { lastAreaSpec: () => areaSpec }, PeelMapMarkers: { THIS_YEAR: 2026 }, PeelSvcCapacity: { collect: () => [] }, PeelApp: { state: { muni: '', projects: [] } } };
-  const ctx = { window, document, location: { hash: '' }, setTimeout: f => f(), clearTimeout() {}, URLSearchParams, CustomEvent: function CustomEvent() {} }; ctx.globalThis = ctx;
+  const ctx = { window, document, location: { hash: '' }, setTimeout: o.setTimeout || (f => f()), clearTimeout: o.clearTimeout || (() => {}), URLSearchParams, CustomEvent: function CustomEvent() {} }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/panel.js'), ctx);
   vm.runInNewContext(src('js/ws-pages.js'), ctx);
   vm.runInNewContext(src('js/workspaces.js'), ctx);
@@ -267,9 +268,11 @@ test('3. Home links open the matching chip', () => {
   assert.match(h, /<button type="button" class="home-ws" data-ws-page="explore"><strong>Explore/, 'Explore: one entry for its five views');
   assert.match(h, /<button type="button" class="home-ws" data-ws-page="capital"><strong>Capital/, 'Capital: one entry for DC projects and EA to construction');
   assert.match(h, /class="home-ws home-full" data-ws-full>/);
-  // Needs attention → the Servicing capacity page; This week → the This week page; the figures → their
-  // pages (bundle 6); the map → Servicing capacity.
-  assert.match(h, /<li class="pnl-row t-over" data-ws-page="tight" tabindex="0" role="button"><span class="pnl-r-name">G\.E\. Booth/);
+  // Find from every page, Home included: the search slot and Draw an area in the header.
+  assert.match(h, /<div class="page-find" data-psec="find"><div class="page-search" id="page-search"><\/div><button type="button" class="btn small page-draw" data-ws-go="study"[^>]*>Draw an area<\/button><\/div><\/header>/);
+  // Needs attention → the facility's scope (else the Servicing capacity page); This week → the This week
+  // page; the figures → their pages (bundle 6); the map → Servicing capacity.
+  assert.match(h, /<li class="pnl-row t-over" data-ws-go="tight" data-ws-ss="plant:Lakeview" tabindex="0" role="button"><span class="pnl-r-name">G\.E\. Booth/);
   assert.match(h, /<li class="pnl-row t-over" data-ws-page="tight" tabindex="0" role="button"><span class="pnl-r-name">West Brampton/);
   assert.match(h, /<li class="pnl-row" data-ws-page="week" tabindex="0" role="button"><small>New: 1 Main St/);
   assert.match(h, /data-ws-page="tight">See all \(9\) →/);
@@ -280,6 +283,153 @@ test('3. Home links open the matching chip', () => {
   // The start screen choice, and the screening note.
   assert.match(h, /<select data-ws-start><option value="home" selected>Home<\/option><option value="last">Last workspace<\/option><option value="full">Full map<\/option>/);
   assert.match(h, /General screening results only\. Peel's W&amp;WW Infrastructure Planning team must validate or confirm all results\./);
+});
+
+test('Home › Servicing: the first 90% trigger opens its plant, the first zone limit its page; Needs attention rows open their facility', () => {
+  const { W: B, nodes, window } = loadBrowser(AREA);
+  const row = (id, kind, name, y, pctBo, ss) => ({ id, kind, name, ss, sys: kind === 'pump' || kind === 'wplant' ? 'water' : 'ww', limit: { y, what: kind === 'pump' ? '100% firm' : '90% trigger' }, pctBo, relief: 'planned' });
+  window.PeelSvcCapacity.collect = () => [row('plant:Lakeview', 'plant', 'G.E. Booth', 2031, 120, 'plant:Lakeview'), row('pump:Zone 5', 'pump', 'Into zone 5 and above', 2029, 104, null), row('plant:Clarkson', 'plant', 'Clarkson', 2034, 84, 'plant:Clarkson')];
+  B.setMode('home');
+  const h = nodes['#home'].innerHTML;
+  assert.match(h, /<div class="pnl-fig t-tight" data-ws-go="tight" data-ws-ss="plant:Lakeview" title="Open G\.E\. Booth" role="button" tabindex="0"><b>≈2031<\/b><span class="pnl-l">first 90% trigger<\/span><small>G\.E\. Booth reaches its 90% expansion trigger · Servicing capacity →<\/small>/);
+  assert.match(h, /<div class="pnl-fig t-tight" data-ws-page="tight" title="Servicing capacity" role="button" tabindex="0"><b>≈2029<\/b><span class="pnl-l">first zone limit \(100% of firm\)<\/span><small>Into zone 5 and above reaches 100% of firm pumping · Servicing capacity →<\/small>/);
+  // (in the Servicing group, after the trigger)
+  const grp = h.slice(h.indexOf('<h2>Servicing</h2>'), h.indexOf('<h2>Capital</h2>'));
+  assert.deepEqual([...grp.matchAll(/<span class="pnl-l">([^<]+)<\/span>/g)].map(m => m[1]), ['over capacity at build-out', 'first 90% trigger', 'first zone limit (100% of firm)']);
+  // A row with a scope opens it on Servicing capacity's map; one with none, and See all, the page.
+  assert.match(h, /<li class="pnl-row t-over" data-ws-go="tight" data-ws-ss="plant:Lakeview" tabindex="0" role="button"><span class="pnl-r-name">G\.E\. Booth/);
+  assert.match(h, /<li class="pnl-row t-over" data-ws-page="tight" tabindex="0" role="button"><span class="pnl-r-name">West Brampton/);
+  assert.match(h, /data-ws-page="tight">See all \(9\) →/);
+  // No zone at its limit by the horizon's end: "None" before 2051, naming the most loaded zone.
+  window.PeelSvcCapacity.collect = () => [row('plant:Lakeview', 'plant', 'G.E. Booth', 2031, 120, 'plant:Lakeview'), row('pump:Zone 5', 'pump', 'Into zone 5 and above', null, 60, null), row('pump:Zone 7', 'pump', 'Into zone 7 and above', null, 83, null)];
+  B.renderPage(true);
+  assert.match(nodes['#home'].innerHTML, /<div class="pnl-fig" data-ws-page="tight" title="Servicing capacity" role="button" tabindex="0"><b>None<\/b><span class="pnl-l">first zone limit \(100% of firm\)<\/span><small>before 2051 · most loaded: Into zone 7 and above \(83% at build-out\) · Servicing capacity →<\/small>/);
+  // No zone row, no zone figure; a well system (no scope) opens the page.
+  window.PeelSvcCapacity.collect = () => [row('wsys:AV13', 'wplant', 'Alton wells', 2030, 95, null)];
+  B.renderPage(true);
+  const h2 = nodes['#home'].innerHTML;
+  assert.doesNotMatch(h2, /first zone limit/);
+  assert.match(h2, /<div class="pnl-fig t-tight" data-ws-page="tight" title="Servicing capacity" role="button" tabindex="0"><b>≈2030<\/b><span class="pnl-l">first 90% trigger<\/span>/);
+});
+
+test('Find from every page: the page waits while its search has the focus; another page never does', () => {
+  // (timers queued, run by hand)
+  let n = 0; const q = new Map(), run = () => { const fs = [...q.values()]; q.clear(); for (const f of fs) f(); };
+  const spec = { ...AREA };
+  const { W: B, nodes, window } = loadBrowser(spec, { setTimeout: f => { q.set(++n, f); return n; }, clearTimeout: id => q.delete(id) });
+  let writes = 0, html = '';
+  Object.defineProperty(nodes['#home'], 'innerHTML', { get: () => html, set: v => { html = v; writes++; } });
+  B.setMode('home'); run();
+  const input = { value: '' };
+  nodes['#f-search'] = input; nodes['#home'].contains = x => x === input;
+  // 1. The box focused (a phone tap, nothing typed yet): data landing does not rebuild Home, forced or not.
+  window.document.activeElement = input;
+  spec.answer = 'The developments shown have changed.';
+  const before = html, w0 = writes;
+  B.renderPage(false); B.renderPage(true);
+  assert.equal(html, before, 'Home unchanged while the box has the focus');
+  assert.equal(writes, w0);
+  assert.equal(q.size, 1, 'one render waits');
+  // 2. The box lets go: the waiting render runs, with the new answer.
+  window.document.activeElement = null; run();
+  assert.ok(html.includes(spec.answer), 'the page updates once the box loses focus');
+  // (a forced render waits as forced: it rebuilds an unchanged page; a plain one does not)
+  window.document.activeElement = input;
+  const w1 = writes; B.renderPage(true); window.document.activeElement = null; run();
+  assert.equal(writes, w1 + 1, 'force kept for the waiting render');
+  window.document.activeElement = input;
+  const w2 = writes; B.renderPage(false); window.document.activeElement = null; run();
+  assert.equal(writes, w2, 'an unchanged page is not rebuilt');
+  // 3. Another page is never held back.
+  window.document.activeElement = input;
+  B.openPage('tight');
+  assert.match(html, /data-page="tight"/, 'Servicing capacity renders at once');
+  // The top bar is told where the box is: its slot hides while the box is in a page (any width).
+  assert.match(src('js/topbar.js'), /if \(document\.documentElement\.classList\.contains\('home-on'\) && box\.closest\('#page-search'\)\) \{ slot\.hidden = true; return; \}/);
+  assert.match(src('js/workspaces.js'), /if \(slot\) \{ if \(box\.parentElement !== slot\) slot\.appendChild\(box\); if \(root\.PeelTopbar && root\.PeelTopbar\.placeSearch\) root\.PeelTopbar\.placeSearch\(\); return; \}/);
+});
+
+test('Find from every page: a pick on a page opens what it found; the map’s picks are unchanged', () => {
+  const { W: B, window } = loadBrowser(AREA);
+  const sel = [];
+  window.PeelDcProjects = { select: k => sel.push(k) };
+  // The full map (and a workspace's map view): not routed, the search's own code runs.
+  B.setMode('full');
+  assert.equal(B.routePick({ p: { key: 'k', title: 'x' } }), false);
+  assert.equal(B.mode(), 'full');
+  B.go('tight');
+  assert.equal(B.routePick({ place: { hit: 'plan', id: 'sp1', muni: 'Brampton' } }), false);
+  assert.equal(B.mode(), 'ws');
+  // On a page: a development its page, a plan Growth in an area, a plant its scope on Servicing
+  // capacity's map, a DC project Capital (DC projects, at it).
+  const onHome = () => B.openPage('home');
+  onHome(); assert.equal(B.routePick({ p: { key: 'k', title: 'x' } }), true); assert.equal(B.page(), 'site');
+  onHome(); assert.equal(B.routePick({ label: 'x', p: { key: 'k', title: 'x' }, hit: 'file', ref: 'OZ 21-005' }), true); assert.equal(B.page(), 'site');
+  onHome(); assert.equal(B.routePick({ place: { hit: 'plan', id: 'sp1', muni: 'Brampton' } }), true); assert.equal(B.page(), 'growth');
+  onHome(); assert.equal(B.routePick({ place: { hit: 'svc', ss: 'plant:Lakeview' } }), true); assert.equal(B.mode(), 'ws'); assert.equal(B.current(), 'tight');
+  onHome(); assert.equal(B.routePick({ place: { hit: 'dc', key: 'wastewater:25-2269' } }), true); assert.equal(B.page(), 'projects');
+  assert.deepEqual(sel, ['wastewater:25-2269'], 'the project selected');
+  // An address (and a DC facility): its map view, then the map's own pick (the pin) runs.
+  onHome(); assert.equal(B.routePick({ label: '1 Main St', g: { lat: 43.7, lng: -79.7, label: '1 Main St' } }), false); assert.equal(B.mode(), 'ws'); assert.equal(B.current(), 'site');
+  onHome(); assert.equal(B.routePick({ place: { hit: 'dcfac' } }), false); assert.equal(B.current(), 'projects');
+  // The filter row is no place.
+  onHome(); assert.equal(B.routePick({ label: 'x', filter: 'x' }), false); assert.equal(B.page(), 'home');
+  // A plan in another municipality than Home's picked one goes back to Peel first; one in it keeps it.
+  let applied = 0;
+  window.PeelApp.applyFilters = () => { applied++; };
+  window.PeelApp.state.muni = 'Mississauga';
+  onHome(); B.routePick({ place: { hit: 'plan', id: 'sp2', muni: 'Mississauga' } });
+  assert.equal(window.PeelApp.state.muni, 'Mississauga'); assert.equal(applied, 0);
+  onHome(); B.routePick({ place: { hit: 'plan', id: 'sp1', muni: 'Brampton' } });
+  assert.equal(window.PeelApp.state.muni, '', 'Peel'); assert.equal(applied, 1); assert.equal(B.page(), 'growth');
+  // The map's plan or MTSA filter (a plan picked on the map, the MTSA a page's pick left on): off before
+  // the drill, so the tree it drills in holds the plan picked; a plan filter that holds it stays.
+  const S = window.PeelApp.state, log = [], drill = window.PeelWsPages.drillTo;
+  window.PeelApp.applyFilters = () => log.push(`apply ${S.sp.length + S.mtsa.length}`);
+  window.PeelWsPages.drillTo = (id, fall) => { log.push(`drill ${id} ${fall}`); drill(id, fall); };
+  window.PeelPlanAreas = { renderAreaSelects: () => log.push('selects'), showArea: () => log.push('outline'), renderPlanAreas: () => log.push('outlines') };
+  const pickPlan = (sp, mtsa) => { Object.assign(S, { sp, mtsa }); log.length = 0; onHome(); return B.routePick({ place: { hit: 'plan', id: 'sp1', muni: 'Brampton' } }); };
+  assert.equal(pickPlan(['sp9'], []), true);
+  assert.deepEqual(plain([S.sp, S.mtsa, log]), [[], [], ['selects', 'outline', 'outlines', 'apply 0', 'drill a:sp1 m:Brampton']], 'another plan’s filter: off, then the drill');
+  assert.equal(B.page(), 'growth');
+  pickPlan([], ['mtsa:3']);
+  assert.deepEqual(plain([S.sp, S.mtsa, log.slice(-2)]), [[], [], ['apply 0', 'drill a:sp1 m:Brampton']], 'an MTSA filter: off');
+  pickPlan(['sp1', 'sp9'], ['mtsa:3']);
+  assert.deepEqual(plain([S.sp, S.mtsa]), [[], []], 'a plan filter holding it, narrowed by an MTSA: off');
+  pickPlan(['sp1', 'sp9'], []);
+  assert.deepEqual(plain([S.sp, S.mtsa, log]), [['sp1', 'sp9'], [], ['drill a:sp1 m:Brampton']], 'a plan filter holding it: kept, nothing re-applied');
+  // An MTSA picked on a page: any area filter off before the drill to its municipality; the map's own
+  // handler then sets its filter (routePick returns false).
+  Object.assign(S, { sp: ['sp9'], mtsa: ['mtsa:3'] }); log.length = 0; onHome();
+  assert.equal(B.routePick({ place: { hit: 'mtsa', id: 'mtsa:4', muni: 'Brampton' } }), false);
+  assert.deepEqual(plain([S.sp, S.mtsa, log.slice(-2)]), [[], [], ['apply 0', 'drill m:Brampton undefined']]);
+  // A servicing scope that does not open yet (its data still loading): taken, and nothing moves: the
+  // page stays, the open scope is not closed. Once it resolves, its scope on Servicing capacity's map.
+  const opened = [], closed = [];
+  window.PeelSvcScope = { resolve: ref => (ref === 'plant:Lakeview' ? { ref } : null), current: () => ({ ref: 'plant:Clarkson' }), close: () => closed.push(1), open: ref => opened.push(ref) };
+  onHome(); assert.equal(B.routePick({ place: { hit: 'svc', ss: 'pz:5' } }), true);
+  assert.deepEqual(plain([B.mode(), B.page(), opened, closed]), ['home', 'home', [], []], 'pz:5 not in yet: stays on Home');
+  onHome(); assert.equal(B.routePick({ place: { hit: 'svc', ss: 'plant:Lakeview' } }), true);
+  assert.deepEqual(plain([B.mode(), B.current(), opened]), ['ws', 'tight', ['plant:Lakeview']]);
+});
+
+test('Draw an area (every page header): Select on, and on a phone the sheet down to its peek, the map there to draw on', () => {
+  const { W: B, window } = loadBrowser(AREA);
+  const lasso = [], snaps = [];
+  let narrow = true;
+  window.PeelAreaSelect = { setLasso: on => lasso.push(on) };
+  window.PeelDataTab = { shellNarrow: () => narrow };
+  window.PeelApp.setAnalysisSnap = (s, save) => snaps.push([s, save]);
+  // A phone (a kept result may have left the sheet full): Select on, the sheet at its peek, not remembered.
+  B.openPage('projects'); B.go('study');
+  assert.equal(B.mode(), 'ws'); assert.equal(B.current(), 'study');
+  assert.deepEqual(lasso, [true]); assert.deepEqual(snaps, [['peek', false]]);
+  // The way back to the map view (noDraw) arms nothing; another map view leaves the sheet as it is.
+  B.go('study', { quiet: true, noDraw: true }); B.go('tight');
+  assert.deepEqual(lasso, [true]); assert.deepEqual(snaps, [['peek', false]]);
+  // A wide screen: Select on, the side panel untouched.
+  narrow = false; B.openPage('home'); B.go('study');
+  assert.deepEqual(lasso, [true, true]); assert.deepEqual(snaps, [['peek', false]]);
 });
 
 test('the page: Home, the chip bar, the Home button and the settings', () => {

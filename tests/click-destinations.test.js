@@ -113,3 +113,100 @@ test('site tools: one Tools menu (trace, Check FSR, memo, allocation, Compare, E
   // The footer no longer repeats Check FSR.
   assert.doesNotMatch(src('js/overview-tab.js'), /label: 'Check FSR'/);
 });
+
+// Navigation phase 1 (NP-1, AD-13): a result started at the open development keeps it (keepDev). The
+// Inquiry draft is the one that does: a development action and an Export ▾ item, one function, one result.
+test('keepDev: a result started at the open development keeps it; any other result replaces it', () => {
+  const { S, win, calls } = loadScope();
+  let dev = { key: 'Brampton|1 A ST', title: '1 A ST' }, snap = 'half';
+  win.DevScope = { current: () => dev, close: () => { calls.push('dev-close'); dev = null; } };
+  // (a phone: the bottom sheet)
+  const saved = [];
+  win.PeelDataTab = { shellNarrow: () => true }; Object.assign(win.PeelApp, { getAnalysisSnap: () => snap, setAnalysisSnap: (x, save = true) => { snap = x; if (save) saved.push(x); } });
+  S.openResult({ title: 'Inquiry draft — 1 A ST', html: '<pre class="tinq-pre">x</pre>', keepDev: true });
+  assert.ok(!calls.includes('dev-close'), 'the development stays open');
+  assert.equal(snap, 'full', 'on a phone the sheet opens all the way: the site bar sits above the result');
+  assert.deepEqual(saved, [], 'for this result only: not remembered (the map never reopens under a full sheet)');
+  assert.equal(win.PeelApp.state.ss, 'tool:inquiry-draft-1-a-st');
+  assert.equal(S.current().result.keepDev, true); assert.equal(S.keepsDev(), true);
+  assert.equal(S.closeResult(), true);
+  assert.equal(S.keepsDev(), false); assert.ok(dev, 'closing the draft goes back to the development');
+  assert.equal(snap, 'half', '× puts the sheet back where it was');
+  // The trail's Peel step (the scope cleared, the development closed) puts it back too; a sheet moved
+  // since the raise stays where it was moved to.
+  snap = 'peek'; S.openResult({ title: 'Inquiry draft — 1 A ST', html: '', keepDev: true }); assert.equal(snap, 'full');
+  S.clear(); assert.equal(snap, 'peek');
+  S.openResult({ title: 'Inquiry draft — 1 A ST', html: '', keepDev: true }); snap = 'half';
+  S.closeResult(); assert.equal(snap, 'half');
+  assert.deepEqual(saved, [], 'none of it remembered');
+  // A plain result (a pick, a tool) replaces the development: one scope at a time.
+  snap = 'peek';
+  S.openResult({ title: 'Inspect point', html: '<p>x</p>' });
+  assert.equal(snap, 'half', 'a plain result raises the sheet from its peek, as before');
+  assert.deepEqual(saved, ['half'], '(remembered, as before)');
+  assert.ok(calls.includes('dev-close') && dev === null, 'a plain result closes the development');
+  assert.equal(S.keepsDev(), false);
+  // With no development open there is nothing to keep.
+  S.openResult({ title: 'Inquiry draft — point', html: '', keepDev: true });
+  assert.equal(S.current().result.keepDev, false); assert.equal(S.keepsDev(), false);
+});
+
+test('keepDev: the kept result shows on Overview, its trail Peel › the site › the result', () => {
+  const ov = src('js/overview-tab.js'), pn = src('js/panel.js'), tb = src('js/topbar.js');
+  // The Overview shows the result over the site (still checking the development scope first), the site's card hidden.
+  assert.match(ov, /if \(resultHost\(rsc && rsc\.kind === 'result' && \(!DV\(\)\.scopedDev\(\) \|\| rsc\.result\.keepDev\) \? rsc : null\)\) \{ const sec = \$\('#ov-dev'\); if \(sec\) sec\.hidden = true; return; \}/);
+  // Its header: Peel (closes both) › the site (closes the result) › the kind; rebuilt when the site changes.
+  assert.match(ov, /const kd = rs\.result\.keepDev \? DV\(\)\.scopedDev\(\) : null;/);
+  assert.match(ov, /\(host\.dataset\.kd \|\| ''\) !== \(kd \? kd\.key : ''\)/);
+  assert.match(ov, /const site = kd \? \[\{ label: kd\.title, attrs: \{ 'data-scope-result-close': '' \} \}\] : \[\];/);
+  assert.match(ov, /trail: \[\{ label: 'Peel', attrs: kd \? \{ 'data-scope-result-close': '', 'data-pnl-dev-close': '' \} : \{ 'data-scope-result-close': '' \} \}, \.\.\.site, \{ label: kind\.split\(' · '\)\[0\] \}\]/);
+  // The site's own Overview panel does not cover it (pnl-on hides the panes).
+  assert.match(pn, /const kept = t === 'overview' && root\.PeelSvcScope && root\.PeelSvcScope\.keepsDev && root\.PeelSvcScope\.keepsDev\(\);\n\s*const e = kept \? null : ov \?/);
+  // The top bar: the site before the result's crumbs, its step closing the result; else the ladder first.
+  const rt = tb.slice(tb.indexOf('function renderTrail()'), tb.indexOf('const tc = '));
+  const at = s => { const i = rt.indexOf(s); assert.ok(i >= 0, s); return i; };
+  assert.ok(at('if (kept) steps.push(devStep);') < at('steps.push(...window.PeelSvcScope.crumbs());'));
+  assert.ok(at('steps.push(...window.PeelSvcScope.crumbs());') < at('if (scoped && !kept) steps.push(devStep);'));
+  assert.match(rt, /kept \? \{ label: scoped\.title \|\| 'Development', go: \(\) => SS\.closeResult\(\),/);
+  assert.match(rt, /: \{ label: scoped\.title \|\| 'Development', go: trailGoDev, title: 'Reopen this development' \}/);
+});
+
+test('the Inquiry draft: one function, a development action and the Export item, the development kept', () => {
+  const opened = [];
+  const win = { PeelTools: { openResult: o => opened.push(o) }, PeelApp: { scope: { estimate: () => null, svcFacts: () => null }, state: {}, whatIfProject: w => ({ ...w, title: w.name }) } };
+  win.window = win;
+  vm.runInContext(src('js/tools-inquiry.js'), vm.createContext({ window: win, console, Date, Math, String, Number, isFinite }));
+  win.PeelToolInquiry.draftForDevelopment({ title: '1 A ST', municipality: 'Brampton', phase: 'approved', lat: 43.7, lng: -79.7 });
+  win.PeelToolInquiry.draftForPoint({ lat: 43.7, lng: -79.7 });
+  assert.deepEqual(opened.map(o => [o.title, o.keepDev]), [['Inquiry draft — 1 A ST', true], ['Inquiry draft — point', false]]);
+  assert.match(opened[0].html, /data-tinq-copy>Copy<\/button>[\s\S]*<pre class="tinq-pre">/, 'its own Copy button');
+  const tb = src('js/topbar.js'), fn = tb.slice(tb.indexOf('function draftInquiryResponse()'), tb.indexOf('function renderExportMenu()'));
+  // From a page the map opens first (the panel hosts are empty on a page), then one result.
+  assert.match(fn, /const W = root\.PeelWorkspaces; if \(W && W\.mode && W\.mode\(\) === 'home' && W\.setMode\) W\.setMode\('full'\);/);
+  assert.match(fn, /if \(p\) \{ I\.draftForDevelopment\(p\); return; \}/);
+  assert.equal((fn.match(/openResult\(/g) || []).length, 2, 'only the "not loaded" and "open a development first" results besides the draft');
+  assert.doesNotMatch(tb, /inq-copy|inq-draft/);
+  assert.doesNotMatch(src('css/app.css'), /\.inq-draft/);
+  // Both entries call it: the Export ▾ item and any [data-inquiry] button.
+  assert.match(tb, /data-tbx="inquiry">Inquiry response draft<\/button>/);
+  assert.match(tb, /inquiry: draftInquiryResponse \}\[b\.dataset\.tbx\]/);
+  assert.match(tb, /document\.addEventListener\('click', e => \{ if \(e\.target\.closest && e\.target\.closest\('\[data-inquiry\]'\)\) draftInquiryResponse\(\); \}\);/);
+  // The site page (beside the memo, the actions on one line: dead-ui DV-12) and the map's development Overview.
+  assert.match(src('js/ws-pages.js'), /function site\(\)[\s\S]*?actions: \[\{ label: 'Servicing memo', attrs: \{ 'data-pnl-memo': '' \}, primary: true \}, \{ label: 'Inquiry draft', attrs: \{ 'data-inquiry': '' \}[^\n]*'data-watch': p\.key/);
+  assert.match(src('js/overview-tab.js'), /foot: \{ primary: \{ label: 'Servicing memo', attrs: \{ 'data-pnl-memo': '' \}[^\n]*secondary: \[\{ label: 'Inquiry draft', attrs: \{ 'data-inquiry': '' \}/);
+});
+
+// Navigation phase 1 (AD-5, design §9 #5): Review outlets is a tool page reached from Records › Data
+// checks, a site's path line (Review →) and the sidebar (QA/QC); each way in is a data-ws-page button,
+// which opens the page from the map and from a page alike (one document-wide handler).
+test('Review outlets opens from Records › Data checks, a site’s path line and the sidebar', () => {
+  const r = src('js/records-tab.js');
+  assert.match(r, /btn: '<button type="button" class="btn small link" data-ws-page="outlets">Review outlets →<\/button>'/);
+  assert.match(r, /<p class="small muted">\$\{OUTLETS\.what\}: \$\{OUTLETS\.btn\}<\/p>`;/, 'the full table (checksHTML)');
+  assert.match(r, /\{ title: 'Sewer outlets', rows: \[\{ attrs: \{ 'data-ws-page': 'outlets', title: 'Open Review outlets' \}, html: `<div class="pnl-r-top"><span class="pnl-r-name">Review outlets →<\/span><\/div><small class="pnl-r-line">\$\{OUTLETS\.what\}<\/small>` \}\], total: 1 \}\]/, 'the panel: its own list, whatever the checks');
+  assert.match(src('js/overview-tab.js'), /data-ws-page="outlets" data-dvo="pick-dev"/, 'the path line');
+  const W = require('../js/workspaces.js');
+  assert.ok(W.GROUPS.some(([g, ids]) => g === 'QA/QC' && ids.includes('outlets')), 'the sidebar');
+  assert.match(src('js/workspaces.js'), /const pg = e\.target\.closest\('\[data-ws-page\]'\);\n {4}if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage\); return; \}/);
+  assert.match(src('js/tips.js'), /Also Records › Data checks \(Review outlets →\), and "Review →" on a development’s Overview/);
+});

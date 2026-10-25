@@ -123,13 +123,26 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
 
   await check('phone: the full map\'s way back sits above the bottom sheet and takes a tap', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
     await page.locator('[data-ws-full]:visible').first().click(); await wait(2000);
-    for (const snap of ['peek', 'half']) {
+    const back = () => ev(() => { const b = document.querySelector('#back-bar [data-ws-back]').getBoundingClientRect(), a = document.getElementById('analysis').getBoundingClientRect(), hit = document.elementFromPoint(b.left + 20, b.top + b.height / 2); return { bottom: Math.round(b.bottom), sheet: Math.round(a.top), hit: !!(hit && hit.closest('#back-bar')), snap: PeelApp.getAnalysisSnap(), stored: localStorage.getItem('peel-dev:analysisSnap') }; });
+    for (const snap of ['peek', 'half', 'full']) {
       await ev(s => PeelApp.setAnalysisSnap(s), snap); await wait(800);
-      const r = await ev(() => { const b = document.querySelector('#back-bar [data-ws-back]').getBoundingClientRect(), a = document.getElementById('analysis').getBoundingClientRect(), hit = document.elementFromPoint(b.left + 20, b.top + b.height / 2); return { bottom: b.bottom, sheet: a.top, hit: !!(hit && hit.closest('#back-bar')) }; });
-      expect(r.bottom <= r.sheet && r.hit, `${snap}: "Back to Home" above the sheet, not under it`);
+      const r = await back();
+      expect(r.bottom <= r.sheet && r.hit, `${snap}: "Back to Home" above the sheet, not under it (${JSON.stringify(r)})`);
     }
+    await ev(() => PeelApp.setAnalysisSnap('peek')); await wait(500);
     await page.click('#back-bar [data-ws-back]'); await wait(1500);
     expect(await ev(() => PeelWorkspaces.mode()) === 'home', 'the tap goes back to Home');
+    // A site's Inquiry draft (kept at the development) opens the sheet full for itself only: the way back
+    // still takes a tap; × puts the sheet back; nothing remembered for the next visit.
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
+    await ev(() => { const q = PeelApp.state.projects.find(x => x.phase === 'approved' && x.units > 300); PeelDevNav.showDetail(q); }); await wait(2500);
+    await ev(() => PeelWorkspaces.openPage('site')); await wait(2000);
+    await page.locator('#home .page-foot [data-inquiry]').tap(); await wait(2500);
+    const d = await back(), pre = await ev(() => !!document.querySelector('#scope-body:not([hidden]) .tinq-pre'));
+    expect(pre && d.snap === 'full' && d.hit && d.bottom <= d.sheet, `the draft on a full sheet, "Back to Check a site" above it and tappable (${JSON.stringify(d)})`);
+    await page.locator('#scope-body .pnl-x[data-scope-result-close]').tap(); await wait(1500);
+    const x = await back();
+    expect(x.snap === 'peek' && x.hit && x.stored === '"peek"', `× puts the sheet back at its peek, nothing remembered (${JSON.stringify(x)})`);
   });
 
   // A filter change paints the map and the view in sight, and leaves the rest for when the page is
@@ -198,6 +211,20 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
       expect(r.on === id, `${id}: the section bar shows ${r.on}`);
       expect(r.map && r.page === r.map, `${id}: the page's answer is the map panel's ("${r.page.slice(0, 60)}" / "${String(r.map).slice(0, 60)}")`);
     }
+    // Summary: the path line under Wastewater (a development on the mapped catchments: its plant), and the
+    // DC projects it relies on named in Infrastructure coming.
+    await page.click('#home [data-ws-sec="summary"]'); await wait(2500);
+    const pl = await ev(() => {
+      const p = DevScope.current(), f = PeelSvcData.svcFacts(p), rel = PeelDevVerdict.reliedOn(PeelMasterPlan.devNeeds(p) || []);
+      const row = n => [...document.querySelectorAll('#home .pnl-row')].find(r => ((r.querySelector('.pnl-r-name') || {}).textContent || '').includes(n));
+      const path = row('Path to the plant'), inf = row('Infrastructure coming'), names = [...document.querySelectorAll('#home .pnl-row .pnl-r-name')].map(x => x.textContent);
+      return { plant: !!(f && f.pl), path: path ? path.querySelector('.pnl-r-line').textContent : null, after: names.indexOf('Path to the plant') === names.findIndex(x => /Wastewater/.test(x)) + 1, rel: rel.length ? rel[0] : null, late: rel.some(x => x.late), inf: inf ? inf.querySelector('.pnl-r-line').textContent : '', chip: inf ? (inf.querySelector('.pnl-r-top > :last-child') || {}).textContent : '' };
+    });
+    if (pl.plant) expect(pl.path && pl.path.includes('→') && /outlet: (Automatic|Confirmed|Set by hand)/.test(pl.path) && pl.after, `Summary: Path to the plant under Wastewater ("${pl.path}")`);
+    else expect(!pl.path, 'no plant on the path: no path line');
+    // (by number and name, as the search lists a DC project; one late: the row is something to check)
+    if (pl.rel) expect(pl.inf.startsWith(`Relies on ${pl.rel.key}${pl.rel.name ? ` – ${pl.rel.name}` : ''} (`), `Infrastructure coming names ${pl.rel.key} ${pl.rel.name || ''} first ("${pl.inf.slice(0, 100)}")`);
+    if (pl.late) expect(pl.chip !== 'OK', `a late DC project: Infrastructure coming is not OK (${pl.chip})`);
   });
 
   // Explore: one sidebar entry for Growth in an area, Check a site, Review an FSR, Forecast and Study
@@ -240,6 +267,297 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     await page.locator('#home [data-ws-explore="m:Brampton"]').first().click(); await wait(2500);
     const u = await ev(() => ({ page: PeelWorkspaces.page(), dev: !!DevScope.current(), name: (document.querySelector('#home h1') || {}).textContent }));
     expect(u.page === 'growth' && !u.dev && /Brampton/.test(u.name), `up the trail to Brampton (${u.page}, ${u.name})`);
+  });
+
+  // Find from every page (navigation phase 1): the one search and Draw an area in every page's header;
+  // on a page a pick opens what it found; the full map's search works as before.
+  // (type q into the box, then pick the row that matches want: its label, a text it starts with or holds,
+  // the kind under it, a place row; tap: a touch, else the mousedown the list listens for)
+  const findPick = async (page, ev, q, want, tap = false) => {
+    await ev(() => { document.getElementById('f-search').value = ''; });
+    const box = page.locator('#f-search');
+    if (tap) await box.tap(); else await box.click();
+    await page.keyboard.type(q, { delay: 20 }); await wait(1200);
+    const i = await ev(w => { const li = [...document.querySelectorAll('#search-sug li[data-i]')].find(x => !x.classList.contains('sug-filter') && (!w.place || !!x.querySelector('.sug-pin'))
+      && (!w.label || ((x.querySelector('.sug-pin + span') || {}).firstChild || {}).nodeValue === w.label) && (!w.starts || x.textContent.startsWith(w.starts))
+      && (w.has || []).every(t => x.textContent.includes(t)) && (!w.kind || new RegExp(w.kind).test((x.querySelector('small') || {}).textContent || ''))); return li ? li.dataset.i : null; }, want);
+    if (i == null) return false;
+    const li = page.locator(`#search-sug li[data-i="${i}"]`);
+    if (tap) await li.tap(); else await li.dispatchEvent('mousedown');
+    await wait(2500);
+    return true;
+  };
+  // (the largest secondary plan with 100+ units: Growth in an area's own node)
+  const bigPlan = ev => ev(() => { const r = PeelPlanTables.compute(), n = [...r.nodes.values()].find(x => x.kind === 'plan' && x.m.planned >= 100); return n ? { id: n.id, name: n.name, area: n.areaId } : null; });
+  await check('Find from every page: Home’s header search routes a file number, a plan, a facility and a DC project; the full map’s search still filters', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect() && PeelApp.state.dcInfra && PeelApp.state.areas, null, { timeout: 120000 });
+    for (const id of ['home', 'tight', 'week', 'projects', 'help']) {
+      await ev(i => PeelWorkspaces.openPage(i), id); await wait(1200);
+      const h = await ev(() => ({ box: !!document.querySelector('#home .page-find #page-search #search-box'), draw: !!document.querySelector('#home .page-draw[data-ws-go="study"]') }));
+      expect(h.box && h.draw, `${id}: the search and Draw an area in the page header`);
+    }
+    // A file number (a development matched by it alone): its page at Files, the file marked in its tree.
+    // (one in its tree's fold of earlier files when there is one: the mark opens the fold)
+    const f = await ev(() => {
+      const all = PeelApp.state.projects, lc = s => String(s || '').toLowerCase(), T = window.PeelFileTree;
+      let first = null;
+      for (const p of all) {
+        if (p.lat == null) continue;
+        const d = T && T.of(p), nodes = d ? T.build(d).all : [];
+        for (const r of p.records || []) {
+          const q = lc(r.ref);
+          if (r.kind !== 'application' || q.length < 7 || !/\d/.test(q) || lc(p.title).includes(q) || p.records.some(x => lc(x.address).includes(q))) continue;
+          const n = nodes.find(x => x.ref === r.ref); let top = n; while (top && top.parent >= 0) top = nodes[top.parent];
+          const fold = !!(top && top.i > 0); if (first && !fold) continue;
+          if (all.filter(o => o.lat != null && (lc(o.title).includes(q) || o.records.some(x => lc(x.address).includes(q) || lc(x.ref).startsWith(q)))).length === 1) { const x = { key: p.key, title: p.title, ref: r.ref, tree: !!n, fold }; if (fold) return x; first = x; }
+        }
+      }
+      return first;
+    });
+    expect(!!f, 'a development found by a file number alone');
+    if (f) {
+      await ev(() => PeelWorkspaces.openPage('home')); await wait(1200);
+      expect(await findPick(page, ev, f.ref, { has: [f.title, f.ref] }), `${f.ref} in the list`);
+      const s = await ev(() => ({ page: PeelWorkspaces.page(), key: (DevScope.current() || {}).key, files: !!document.querySelector('#home .page-sec.on[data-ws-sec="files"]') }));
+      expect(s.page === 'site' && s.key === f.key && s.files, `its page at Files (${s.page}, at Files: ${s.files})`);
+      await wait(1000);
+      const m = await ev(r => { const b = document.querySelector(`#home .tr-row > div > .tr-ref[data-dev-file="${CSS.escape(r)}"]`), row = b && b.closest('.tr-row'), fold = row && row.closest('details.tr-same'); return { row: !!row, hit: !!(row && row.classList.contains('tr-hit')), open: fold ? fold.open : null }; }, f.ref);
+      // (a file in its tree: its row is there, marked, its fold of earlier files opened)
+      if (f.tree) {
+        expect(m.row, `${f.ref}: its row in the file tree`);
+        expect(m.hit, 'the file is marked in the tree');
+        if (f.fold) expect(m.open === true, `its fold of earlier files opened (${m.open})`);
+      }
+    }
+    // A plan: Growth in an area at it, the map and the other pages unfiltered.
+    const pl = await bigPlan(ev);
+    expect(!!pl, 'a plan with 100+ units');
+    if (pl) {
+      await ev(() => PeelWorkspaces.openPage('home')); await wait(1200);
+      expect(await findPick(page, ev, pl.name, { label: pl.name, kind: 'secondary plan|character area', place: true }), `${pl.name} in the list`);
+      const g = await ev(() => ({ page: PeelWorkspaces.page(), name: (document.querySelector('#home h1') || {}).textContent, sp: PeelApp.state.sp.length }));
+      expect(g.page === 'growth' && g.name === pl.name && g.sp === 0, `Growth in an area at ${pl.name} (${g.page}, "${g.name}", ${g.sp} plan filters)`);
+      // Its Area report (PDF) is the plan's, not the map's developments (the drill does not filter).
+      const rt = await ev(() => { const R = PeelReports, was = R.areaReport, t = []; R.areaReport = (d, title) => t.push([title, d.length]); try { const b = document.querySelector('#home .page-foot [data-ws-areareport]'); if (b) b.click(); } finally { R.areaReport = was; } return t; });
+      expect(rt.length === 1 && rt[0][0].includes(pl.name) && rt[0][1] > 0, `the Area report is the plan's (${JSON.stringify(rt)})`);
+    }
+    // A plant: its scope on Servicing capacity's map.
+    await ev(() => PeelWorkspaces.openPage('home')); await wait(1200);
+    expect(await findPick(page, ev, 'clarkson', { kind: 'Wastewater treatment plant', place: true }), 'Clarkson (the plant) in the list');
+    const c = await ev(() => ({ mode: PeelWorkspaces.mode(), ws: PeelWorkspaces.current(), ss: PeelApp.state.ss }));
+    expect(c.mode === 'ws' && c.ws === 'tight' && c.ss === 'plant:Clarkson', `the plant's scope on Servicing capacity's map (${c.mode}, ${c.ws}, ${c.ss})`);
+    // A DC project: Capital › DC projects at it, its developments by tier.
+    const dc = await ev(() => { const l = PeelApp.state.dcInfra.wastewater.lines.find(x => x.p && x.p.length >= 5); return l ? { p: l.p, key: `wastewater:${l.p}` } : null; });
+    expect(!!dc, 'a wastewater DC project');
+    if (dc) {
+      await ev(() => { if (PeelSvcScope.current()) PeelSvcScope.close(); PeelWorkspaces.openPage('home'); }); await wait(1200);
+      expect(await findPick(page, ev, dc.p, { starts: `DC project ${dc.p}`, place: true }), `DC project ${dc.p} in the list`);
+      const d = await ev(() => ({ page: PeelWorkspaces.page(), sel: PeelDcProjects.state.sel }));
+      expect(d.page === 'projects' && d.sel === dc.key, `Capital at the project (${d.page}, ${d.sel})`);
+      const back = await page.waitForSelector('#home [data-dcproj-back]', { timeout: 90000 }).then(() => true, () => false);
+      expect(back, 'the project open in DC projects (its developments, a way back)');
+      await ev(() => PeelDcProjects.select(null));
+    }
+    // The full map: a plan pick still sets the map's plan filter.
+    if (pl) {
+      await ev(() => { PeelWorkspaces.setMode('full'); PeelDataTab.showTab('explore'); }); await wait(1500);
+      expect(await findPick(page, ev, pl.name, { label: pl.name, kind: 'secondary plan|character area', place: true }), `${pl.name} in the full map's list`);
+      const s = await ev(() => ({ mode: PeelWorkspaces.mode(), sp: PeelApp.state.sp.slice() }));
+      expect(s.mode === 'full' && s.sp[0] === pl.area, `the full map filters to the plan (${s.mode}, ${s.sp.join()})`);
+      // With that filter on, another plan of the same municipality picked on Home: Growth in an area at
+      // that plan, the filter off (the plan tree holds only the developments shown).
+      const pl2 = await ev(([id, area]) => { const r = PeelPlanTables.compute(), muni = x => { for (let y = x; y; y = y.parent ? r.nodes.get(y.parent) : null) if (y.kind === 'municipality') return y.name; return ''; }, m = muni(r.nodes.get(id));
+        PeelApp.state.sp = []; PeelApp.applyFilters(); const u = PeelPlanTables.compute(), n = [...u.nodes.values()].find(x => x.kind === 'plan' && x.areaId !== area && x.m.planned >= 100 && muni(x) === m && x.name.length >= 6);
+        PeelApp.state.sp = [area]; PeelPlanAreas.renderAreaSelects(); PeelApp.applyFilters(); return n ? { name: n.name, area: n.areaId } : null; }, [pl.id, pl.area]);
+      if (pl2) {
+        await ev(() => PeelWorkspaces.openPage('home')); await wait(1200);
+        expect(await findPick(page, ev, pl2.name, { label: pl2.name, kind: 'secondary plan|character area', place: true }), `${pl2.name} in the list`);
+        const g = await ev(() => ({ page: PeelWorkspaces.page(), name: (document.querySelector('#home h1') || {}).textContent, sp: PeelApp.state.sp.slice(), mtsa: PeelApp.state.mtsa.slice() }));
+        expect(g.page === 'growth' && g.name === pl2.name && !g.sp.length && !g.mtsa.length, `under ${pl.name}'s filter, ${pl2.name} picked: Growth in an area at it, the filter off (${g.page}, "${g.name}", ${g.sp.join()})`);
+      }
+      await ev(() => { PeelApp.state.sp = []; PeelApp.applyFilters(); }); await wait(800);
+    }
+    // An MTSA picked on a page leaves its filter on; a plan picked next: Growth in an area at the plan,
+    // the MTSA filter off.
+    const mt1 = await ev(() => { const a = PeelApp.state.areas.mtsas.find(x => x.municipality && x.name.length >= 6 && PeelApp.state.areas.mtsas.filter(o => o.name === x.name).length === 1); return a ? { id: a.id, name: a.name } : null; });
+    if (pl && mt1) {
+      await ev(() => PeelWorkspaces.openPage('home')); await wait(1200);
+      expect(await findPick(page, ev, mt1.name, { label: mt1.name, kind: 'MTSA', place: true }), `${mt1.name} in the list`);
+      const a = await ev(() => PeelApp.state.mtsa.slice());
+      expect(a.join() === mt1.id, `the MTSA's filter on (${a.join()})`);
+      expect(await findPick(page, ev, pl.name, { label: pl.name, kind: 'secondary plan|character area', place: true }), `${pl.name} in the list, from Growth in an area`);
+      const g = await ev(() => ({ page: PeelWorkspaces.page(), name: (document.querySelector('#home h1') || {}).textContent, sp: PeelApp.state.sp.slice(), mtsa: PeelApp.state.mtsa.slice() }));
+      expect(g.page === 'growth' && g.name === pl.name && !g.sp.length && !g.mtsa.length, `then ${pl.name}: Growth in an area at it, the MTSA filter off (${g.page}, "${g.name}", ${g.mtsa.join()})`);
+    }
+    // 1600 px: on a page the box is in the header and the top-bar slot hides; the full map has it back.
+    await page.setViewportSize({ width: 1600, height: 900 }); await wait(800);
+    await ev(() => PeelWorkspaces.openPage('home')); await wait(1500);
+    const w1 = await ev(() => ({ slot: document.getElementById('tb-search').hidden, inPage: !!document.querySelector('#page-search #search-box') }));
+    expect(w1.slot && w1.inPage, `1600 px, a page: the box in its header, the top-bar slot hidden (${JSON.stringify(w1)})`);
+    await ev(() => PeelWorkspaces.setMode('full')); await wait(1500);
+    const w2 = await ev(() => ({ slot: document.getElementById('tb-search').hidden, inBar: !!document.querySelector('#tb-search #search-box') }));
+    expect(!w2.slot && w2.inBar, `1600 px, the full map: the box in the top bar (${JSON.stringify(w2)})`);
+    await page.setViewportSize({ width: 1440, height: 900 }); await wait(500);
+  });
+
+  await check('phone: the search in every page header, 44 px, its list in view, no sideways scroll; a pick opens the place; Draw an area leaves the map to draw on', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelApp && PeelApp.state.areas && window.PeelPlanTables, null, { timeout: 120000 });
+    for (const id of ['home', 'tight', 'growth']) {
+      await ev(i => PeelWorkspaces.openPage(i), id); await wait(1500);
+      const r = await ev(() => { const i = document.querySelector('#home #page-search input').getBoundingClientRect(), d = document.querySelector('#home .page-draw').getBoundingClientRect(); return { ih: i.height, l: i.left, r: i.right, dh: d.height, dr: d.right, w: document.documentElement.scrollWidth, vw: innerWidth }; });
+      expect(r.ih >= 44 && r.l >= 0 && r.r <= 390, `${id}: the box ${Math.round(r.ih)} px tall, inside the screen (${Math.round(r.l)}–${Math.round(r.r)})`);
+      expect(r.dh >= 44 && r.dr <= 390, `${id}: Draw an area ${Math.round(r.dh)} px tall, beside it`);
+      expect(r.w <= r.vw, `${id}: no sideways scroll (${r.w} > ${r.vw})`);
+    }
+    // Its list in view, rows a thumb tall; a tap on the plan opens Growth in an area and lets go of the box.
+    const pl = await bigPlan(ev);
+    if (pl) {
+      await ev(() => PeelWorkspaces.openPage('home')); await wait(1500);
+      await page.locator('#f-search').tap(); await page.keyboard.type(pl.name, { delay: 20 }); await wait(1200);
+      const s = await ev(() => { const u = document.getElementById('search-sug'), r = u.getBoundingClientRect(); return { shown: !u.hidden, top: r.top, bottom: r.bottom, h: innerHeight, rows: [...u.querySelectorAll('li[data-i]')].map(li => Math.round(li.getBoundingClientRect().height)) }; });
+      expect(s.shown && s.top >= 0 && s.bottom <= s.h, `the list in view (${Math.round(s.top)}–${Math.round(s.bottom)} of ${s.h})`);
+      expect(s.rows.length > 0 && s.rows.every(h => h >= 44), `rows 44 px or taller (${s.rows.join()})`);
+      await ev(() => { document.getElementById('f-search').blur(); }); await wait(500);
+      expect(await findPick(page, ev, pl.name, { label: pl.name, kind: 'secondary plan|character area', place: true }, true), `${pl.name} in the list`);
+      const g = await ev(() => ({ page: PeelWorkspaces.page(), focus: document.activeElement === document.getElementById('f-search') }));
+      expect(g.page === 'growth', `the tap opens Growth in an area (${g.page})`);
+      expect(!g.focus, 'the pick lets go of the box (the keyboard closes)');
+    }
+    // Typing on a page that redraws (Home while it loads, a tile landing): the focus and the list stay.
+    await ev(() => PeelWorkspaces.openPage('home')); await wait(1500);
+    await page.locator('#f-search').tap(); await page.keyboard.type('bram', { delay: 30 }); await wait(1000);
+    await ev(() => { PeelWorkspaces.renderPage(false); PeelWorkspaces.renderPage(true); }); await wait(300);
+    const k = await ev(() => ({ focus: document.activeElement === document.getElementById('f-search'), shown: !document.getElementById('search-sug').hidden }));
+    expect(k.focus && k.shown, `typing keeps the focus and the list while the page would redraw (${JSON.stringify(k)})`);
+    await ev(() => { const b = document.getElementById('f-search'); b.value = ''; b.blur(); }); await wait(1000);
+    await page.locator('#f-search').tap(); await wait(300);
+    await ev(() => { PeelWorkspaces.renderPage(false); PeelWorkspaces.renderPage(true); }); await wait(300);
+    expect(await ev(() => document.activeElement === document.getElementById('f-search')), 'a tap with nothing typed keeps the focus (the keyboard stays up)');
+    // Draw an area: the Study area map with Select on, the sheet down to its peek (a result kept at a
+    // development leaves it full), the drawing layer under a thumb in the middle of the map.
+    await ev(() => { document.getElementById('f-search').blur(); PeelApp.setAnalysisSnap('full', false); PeelWorkspaces.openPage('projects'); }); await wait(1500);
+    await page.locator('#home .page-draw').tap(); await wait(2000);
+    const dr = await ev(() => {
+      const b = PeelMapCore.map.getContainer().getBoundingClientRect(), a = document.getElementById('analysis'), y = (b.top + Math.min(b.bottom, a.getBoundingClientRect().top)) / 2, e = document.elementFromPoint(innerWidth / 2, y);
+      return { mode: PeelWorkspaces.mode(), ws: PeelWorkspaces.current(), lasso: PeelAreaSelect.getLassoOn(), snap: a.dataset.snap, room: Math.round(Math.min(b.bottom, a.getBoundingClientRect().top) - b.top), layer: !!(e && e.closest('.lasso-layer')), y: Math.round(y) };
+    });
+    expect(dr.mode === 'ws' && dr.ws === 'study' && dr.lasso, `Draw an area: the Study area map, Select on (${dr.mode}, ${dr.ws}, ${dr.lasso})`);
+    expect(dr.snap === 'peek' && dr.room >= 400 && dr.layer, `the sheet at its peek, the map there to draw on (${dr.snap}, ${dr.room} px of map; the drawing layer at y ${dr.y}: ${dr.layer})`);
+    await ev(() => PeelAreaSelect.setLasso(false));
+  });
+
+  // The Inquiry draft (navigation phase 1, AD-13): a development action and the Export item, one function:
+  // one draft on the map's Overview, the development kept (keepDev); × back to the site, the back bar to its page.
+  await check('Inquiry draft: a site action and the Export item open one draft on the map, the development kept', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
+    const p = await ev(() => { const q = PeelApp.state.projects.find(x => x.phase === 'approved' && x.units > 300); PeelDevNav.showDetail(q); return { key: q.key, title: q.title }; });
+    await wait(2500);
+    await ev(() => PeelWorkspaces.openPage('site')); await wait(2000);
+    await page.click('#home .page-foot [data-inquiry]'); await wait(2000);
+    const a = await ev(() => ({ mode: PeelWorkspaces.mode(), key: (DevScope.current() || {}).key, pre: !!document.querySelector('#scope-body:not([hidden]) .tinq-pre'), trail: [...document.querySelectorAll('#trail .tb-step')].map(b => b.textContent) }));
+    expect(a.mode === 'full', `the draft opens on the map (${a.mode})`);
+    expect(a.key === p.key, 'the development stays open');
+    expect(a.pre, 'the draft is on the Overview, in sight');
+    expect(a.trail.slice(-2).join(' › ') === `${p.title} › Inquiry draft — ${p.title}`, `the trail: ${a.trail.join(' › ')}`);
+    // Export ▾ › Inquiry response draft: the same draft, once.
+    await page.click('#tb-export'); await wait(400);
+    await page.click('#tb-export-menu [data-tbx="inquiry"]'); await wait(1500);
+    const b = await ev(() => ({ n: document.querySelectorAll('#scope-body .tinq-pre').length, old: !!document.getElementById('inq-copy'), key: (DevScope.current() || {}).key }));
+    expect(b.n === 1 && !b.old && b.key === p.key, `one draft from Export, the development kept (${JSON.stringify(b)})`);
+    // × (the header's Peel step closes both): back to the site's Overview, its own Inquiry draft there too.
+    await page.click('#scope-body .pnl-x[data-scope-result-close]'); await wait(1500);
+    const c = await ev(() => ({ key: (DevScope.current() || {}).key, hidden: document.getElementById('scope-body').hidden, act: !!document.querySelector('#pnl-overview .pnl-foot [data-inquiry]') }));
+    expect(c.key === p.key && c.hidden, `× goes back to the development (${JSON.stringify(c)})`);
+    expect(c.act, 'the map\u2019s development Overview has Inquiry draft too');
+    await page.click('#back-bar [data-ws-back]'); await wait(2000);
+    const d = await ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page(), key: (DevScope.current() || {}).key }));
+    expect(d.mode === 'home' && d.page === 'site' && d.key === p.key, `back on the site's page (${JSON.stringify(d)})`);
+  });
+
+  // A pick on any page, not only Home, opens what it found (navigation phase 1, §3.3): from Review an FSR a
+  // development opens its FSR review, from another page its page at Summary; a pumping station its scope on
+  // Servicing capacity's map, ← Page back to that page; an MTSA its filter, Growth in an area at its
+  // municipality; a DC facility Capital's map view, its card there.
+  await check('a pick on any page opens what it found: a development (from Review an FSR, its FSR review), a station, an MTSA, a DC facility', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect() && PeelApp.state.dcInfra && PeelApp.state.areas && PeelApp.state.servicing, null, { timeout: 120000 });
+    // (a development of its own name: the one row that starts with it)
+    const p = await ev(() => { const all = PeelApp.state.projects, q = all.find(x => x.phase === 'approved' && x.units > 300 && x.lat != null && x.title.length > 8 && x.title.length < 40 && all.filter(o => o.title.toLowerCase().includes(x.title.toLowerCase())).length === 1); return { key: q.key, title: q.title }; });
+    await ev(() => PeelWorkspaces.openPage('fsr')); await wait(1500);
+    expect(await findPick(page, ev, p.title, { has: [p.title] }), `${p.title} in Review an FSR's list`);
+    const f = await ev(() => ({ page: PeelWorkspaces.page(), key: (DevScope.current() || {}).key, box: !!document.querySelector('#home [data-pnl-fsrbox]'), focus: document.activeElement === document.getElementById('f-search') }));
+    expect(f.page === 'fsr' && f.key === p.key && f.box, `from Review an FSR: its FSR review (${f.page}, ${f.key === p.key})`);
+    expect(!f.focus, 'the pick lets go of the box');
+    await ev(() => { DevScope.close(); PeelWorkspaces.openPage('tight'); }); await wait(1500);
+    expect(await findPick(page, ev, p.title, { has: [p.title] }), `${p.title} in Servicing capacity's list`);
+    const s = await ev(() => ({ page: PeelWorkspaces.page(), key: (DevScope.current() || {}).key, sec: (document.querySelector('#home .page-sec.on') || { dataset: {} }).dataset.wsSec }));
+    expect(s.page === 'site' && s.key === p.key && s.sec === 'summary', `from Servicing capacity: its page at Summary (${s.page}, ${s.sec})`);
+    // A pumping station: its scope on Servicing capacity's map; ← Page is that page.
+    const st = await ev(() => { const a = (PeelApp.state.servicing.psAreas || []).find(x => PeelSvcData.drName(x).length >= 6); return a ? { id: a.id, name: PeelSvcData.drName(a) } : null; });
+    expect(!!st, 'a pumping station catchment');
+    if (st) {
+      await ev(() => { DevScope.close(); PeelWorkspaces.openPage('projects'); }); await wait(1500);
+      expect(await findPick(page, ev, st.name, { label: st.name, kind: 'Pumping station catchment', place: true }), `${st.name} in Capital's list`);
+      const c = await ev(() => ({ mode: PeelWorkspaces.mode(), ws: PeelWorkspaces.current(), ss: PeelApp.state.ss }));
+      expect(c.mode === 'ws' && c.ws === 'tight' && c.ss === st.id, `its scope on Servicing capacity's map (${c.mode}, ${c.ws}, ${c.ss})`);
+      await page.click('#ws-bar [data-ws-backpage]'); await wait(1500);
+      const b = await ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page(), box: !!document.querySelector('#home .page-find #page-search #search-box') }));
+      expect(b.mode === 'home' && b.page === 'tight' && b.box, `← Page: Servicing capacity, its search back in the header (${JSON.stringify(b)})`);
+      await ev(() => { if (PeelSvcScope.current()) PeelSvcScope.close(); });
+    }
+    // An MTSA: its filter, as on the map, and Growth in an area at its municipality.
+    const mt = await ev(() => { const a = PeelApp.state.areas.mtsas.find(x => x.municipality && x.name.length >= 6 && PeelApp.state.areas.mtsas.filter(o => o.name === x.name).length === 1); return a ? { id: a.id, name: a.name, muni: a.municipality } : null; });
+    expect(!!mt, 'an MTSA');
+    if (mt) {
+      await ev(() => PeelWorkspaces.openPage('home')); await wait(1200);
+      expect(await findPick(page, ev, mt.name, { label: mt.name, kind: 'MTSA', place: true }), `${mt.name} in the list`);
+      const m = await ev(() => ({ page: PeelWorkspaces.page(), name: (document.querySelector('#home h1') || {}).textContent, mtsa: PeelApp.state.mtsa.slice() }));
+      expect(m.page === 'growth' && m.name === mt.muni && m.mtsa.join() === mt.id, `Growth in an area at ${mt.muni}, the MTSA filter on (${m.page}, "${m.name}", ${m.mtsa.join()})`);
+      await ev(() => { PeelApp.state.mtsa = []; PeelPlanAreas.renderAreaSelects(); PeelApp.applyFilters(); }); await wait(800);
+    }
+    // A DC facility: Capital's map view, its card there.
+    const fc = await ev(() => { const x = PeelApp.state.dcInfra.wastewater.facilities.find(f => f.name.length >= 6 && f.g); return x ? { name: x.name } : null; });
+    expect(!!fc, 'a wastewater DC facility');
+    if (fc) {
+      await ev(() => PeelWorkspaces.openPage('home')); await wait(1200);
+      expect(await findPick(page, ev, fc.name, { label: fc.name, kind: 'DC wastewater', place: true }), `${fc.name} in the list`);
+      const d = await ev(() => ({ mode: PeelWorkspaces.mode(), ws: PeelWorkspaces.current(), card: [...document.querySelectorAll('#scope-body:not([hidden]) h3')].map(h => h.textContent) }));
+      expect(d.mode === 'ws' && d.ws === 'projects' && d.card.includes(fc.name), `Capital's map view with its card (${d.mode}, ${d.ws}, ${d.card.join(' | ')})`);
+    }
+  });
+
+  // Draw an area from any page's header (navigation phase 1, task 7): the Study area map view with the
+  // Select tool on; a drag picks the developments inside it; ← Page shows them on the Study area page.
+  await check('Draw an area from a page header: the Study area map with Select on, a drag picks the developments, ← Page lists them', browser, {}, async ({ page, ev }, expect) => {
+    await ev(() => PeelWorkspaces.openPage('projects')); await wait(1500);
+    await page.click('#home .page-draw'); await wait(2000);
+    const a = await ev(() => ({ mode: PeelWorkspaces.mode(), ws: PeelWorkspaces.current(), lasso: PeelAreaSelect.getLassoOn(), sel: PeelAreaSelect.selection.size }));
+    expect(a.mode === 'ws' && a.ws === 'study' && a.lasso && !a.sel, `the Study area map view, Select on (${JSON.stringify(a)})`);
+    // (at street zoom round the largest development; a box round one shown where the drawing layer takes
+    // the pointer, its corners too)
+    await ev(() => { const p = PeelApp.state.filtered.filter(q => q.lat != null).sort((x, y) => (y.units || 0) - (x.units || 0))[0]; PeelMapCore.map.setView([p.lat, p.lng], 15, { animate: false }); }); await wait(2000);
+    const D = 90;
+    const at = await ev(d => {
+      const map = PeelMapCore.map, b = map.getContainer().getBoundingClientRect(), on = (x, y) => { const e = document.elementFromPoint(x, y); return !!(e && e.closest('.lasso-layer') && !e.closest('.lasso-hint')); };
+      for (const p of PeelApp.state.filtered) {
+        if (p.lat == null) continue;
+        const c = map.latLngToContainerPoint([p.lat, p.lng]), x = b.left + c.x, y = b.top + c.y;
+        if ([[0, 0], [-d, -d], [d, -d], [d, d], [-d, d]].every(([dx, dy]) => on(x + dx, y + dy))) return { x, y };
+      }
+      return null;
+    }, D);
+    expect(!!at, 'a development in view, the drawing layer round it');
+    if (at) {
+      await page.mouse.move(at.x - D, at.y - D); await page.mouse.down();
+      for (const [x, y] of [[D, -D], [D, D], [-D, D], [-D, -D + 8]]) await page.mouse.move(at.x + x, at.y + y, { steps: 8 });
+      await page.mouse.up(); await wait(2000);
+    }
+    const s = await ev(() => ({ n: PeelAreaSelect.selection.size, lasso: PeelAreaSelect.getLassoOn() }));
+    expect(s.n > 0 && !s.lasso, `the drag picks the developments inside it (${s.n}), Select off`);
+    await page.click('#ws-bar [data-ws-backpage]'); await wait(2000);
+    const b = await ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page(), answer: (document.querySelector('#home .home-answer') || {}).textContent || '', sel: !!document.querySelector('#home .page-sel'), draw: !!document.querySelector('#home .page-draw'), box: !!document.querySelector('#home #page-search #search-box') }));
+    expect(b.mode === 'home' && b.page === 'study' && b.sel && b.answer.includes(`holds ${s.n.toLocaleString('en-CA')} development`), `← Page: the Study area page holds them (${b.page}: "${b.answer.slice(0, 80)}")`);
+    expect(b.box && !b.draw, 'its header has the search, and no Draw an area (the page draws on its own map)');
+    await ev(() => PeelAreaSelect.clearSelection());
   });
 
   // Servicing and Capital: one entry each; the map's other sub-views of the tab are sections of the page,
@@ -304,6 +622,27 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(c.list, 'Largest left to build is listed');
     await page.click('#home [data-ws-muni=""]'); await wait(2000);
     expect(await ev(() => PeelApp.state.muni === ''), 'back to Peel');
+    // Servicing: the first zone limit (100% of firm pumping) beside the first 90% trigger, once the pumps
+    // are in; the trigger opens its plant; a Needs attention row opens its facility as a scope.
+    await page.waitForFunction(() => !PeelSvcCapacity.partial || !PeelSvcCapacity.partial(), null, { timeout: 60000 }).catch(() => {}); await wait(1500);
+    const sv = await ev(() => {
+      const g = [...document.querySelectorAll('#home .home-grp')].find(x => /Servicing/.test((x.querySelector('.home-grp-h h2') || {}).textContent || ''));
+      const zone = PeelWsPages.firstZone(PeelSvcCapacity.collect() || []), trig = PeelWsPages.firstTrigger(PeelSvcCapacity.collect() || []);
+      const tf = g && [...g.querySelectorAll('.pnl-fig')].find(f => /first 90% trigger/.test(f.textContent));
+      return { text: g ? g.textContent : '', zone: zone && zone.name, pumps: (PeelSvcCapacity.collect() || []).filter(r => r.kind === 'pump').length, trigSs: trig && trig.ss, figSs: tf ? tf.dataset.wsSs || null : null };
+    });
+    // (none at its limit by the horizon's end: "None" before 2051, and the most loaded zone)
+    if (sv.zone) expect(sv.text.includes('first zone limit (100% of firm)') && sv.text.includes('100% of firm pumping') && sv.text.includes(sv.zone), `the Servicing group has the first zone limit, ${sv.zone} (${sv.text.replace(/\s+/g, ' ').slice(0, 160)})`);
+    else if (sv.pumps) expect(sv.text.includes('first zone limit (100% of firm)') && /None\s*first zone limit \(100% of firm\)\s*before \d{4} · most loaded: /.test(sv.text), `the Servicing group says no zone reaches its limit (${sv.text.replace(/\s+/g, ' ').slice(0, 200)})`);
+    else expect(!sv.text.includes('first zone limit'), 'no pumps loaded: no zone figure');
+    expect(sv.figSs === (sv.trigSs || null), `the first 90% trigger opens its plant (${sv.figSs} / ${sv.trigSs})`);
+    const ss = await ev(() => { const r = document.querySelector('#home .page-list .pnl-row[data-ws-ss]'); return r ? r.dataset.wsSs : null; });
+    expect(!!ss, 'a Needs attention row with a scope');
+    if (ss) {
+      await page.click(`#home .page-list .pnl-row[data-ws-ss="${ss}"]`); await wait(2500);
+      const c = await ev(() => ({ mode: PeelWorkspaces.mode(), ws: PeelWorkspaces.current(), ss: PeelApp.state.ss }));
+      expect(c.mode === 'ws' && c.ws === 'tight' && c.ss === ss, `the row opens ${ss} on Servicing capacity's map (${c.mode}, ${c.ws}, ${c.ss})`);
+    }
   });
 
   // Plan areas: Growth in an area and the map's plan filter ("Show on the map") count the same
@@ -437,10 +776,40 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   });
 
   await check('QA/QC › Review outlets: open a development, tap the map or pick from the nearby list (existing, local, being built, planned) to set its outlet, save it with its source, back to automatic', browser, {}, async ({ page, ev }, expect) => {
+    // Its way in from Records › Data checks (AD-5): the panel's row on the full map opens the page.
+    await ev(() => { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.openTab('records', 'checks'); }); await wait(1500);
+    await page.click('#pnl-records .pnl-row[data-ws-page="outlets"]'); await wait(1500);
+    const rc = await ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page() }));
+    expect(rc.mode === 'home' && rc.page === 'outlets', `Records › Data checks › Review outlets → opens the page (${JSON.stringify(rc)})`);
     await ev(() => { PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage('outlets'); });
     await page.waitForSelector('#home [data-dvo="start"]', { timeout: 120000 }); await wait(800);
     const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
     expect(side.includes('outlets'), `Review outlets is in Home's sidebar (${side.join()})`);
+    // A site's path to it (AD-5): with the DC impact model worked out (this page built it), a queued
+    // development's Summary has "Review →" in its Path to the plant row; it opens the editor at it. A
+    // development the queue does not list has none.
+    const rk = await ev(() => { const q = PeelDevOutlets.queue(), keys = new Set(q.all.map(x => x.p.key)), plant = p => { const f = PeelSvcData.svcFacts(p); return !!(f && f.pl); };
+      const x = q.all.find(r => plant(r.p)), y = PeelApp.state.projects.find(p => !keys.has(p.key) && p.lat != null && plant(p));
+      return { inQ: x ? x.p.key : null, outQ: y ? y.key : null, built: !!PeelDcImpact.current() }; });
+    expect(rk.built && !!rk.inQ, `the model is worked out and a queued development drains to a plant (${rk.inQ})`);
+    if (rk.inQ) {
+      await ev(k => { PeelDevNav.showDetail(PeelApp.state.projects.find(p => p.key === k)); }, rk.inQ); await wait(1500);
+      await ev(() => PeelWorkspaces.openPage('site')); await wait(2000);
+      const btn = await ev(() => { const b = document.querySelector('#home .pnl-row [data-dvo="pick-dev"][data-ws-page="outlets"]'); return b ? { key: b.dataset.dvoKey, row: b.closest('.pnl-row').querySelector('.pnl-r-name').textContent } : null; });
+      expect(btn && btn.key === rk.inQ && btn.row === 'Path to the plant', `Review → in the Path to the plant row (${JSON.stringify(btn)})`);
+      if (btn) {
+        await page.click('#home .pnl-row [data-dvo="pick-dev"]'); await wait(1500);
+        const o = await ev(() => ({ page: PeelWorkspaces.page(), sel: (PeelDevOutlets.selected() || { p: {} }).p.key }));
+        expect(o.page === 'outlets' && o.sel === rk.inQ, `Review → opens Review outlets at the development (${o.page}, ${o.sel})`);
+      }
+    }
+    if (rk.outQ) {
+      await ev(k => { PeelDevNav.showDetail(PeelApp.state.projects.find(p => p.key === k)); }, rk.outQ); await wait(1500);
+      await ev(() => PeelWorkspaces.openPage('site')); await wait(2000);
+      expect(await ev(() => !document.querySelector('#home [data-dvo="pick-dev"]')), 'no Review → for a development the queue does not list');
+    }
+    await ev(() => { if (DevScope.current()) DevScope.close(); PeelWorkspaces.openPage('outlets'); });
+    await page.waitForSelector('#home [data-dvo="start"]', { timeout: 60000 }); await wait(800);
     // (a development on the existing sewers, so a tap at its site lands on its own sewer)
     await ev(() => { const q = PeelDevOutlets.queue(), G = PeelSewerCap.sewerGrowth(), x = q.rows.find(r => r.p.dr && r.p.dr.length && G.devPipe.get(r.p) != null); PeelDevOutlets.state.sel = x.p.key; PeelWorkspaces.renderPage(true); });
     await wait(800);

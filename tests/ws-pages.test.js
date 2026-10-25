@@ -25,7 +25,7 @@ test('the page template: Home’s layout, sections in order, empty ones left out
   };
   const h = WP.pageHTML(m, NOTE);
   // (every list and fold in the column beside the map, then the map)
-  assert.deepEqual(plain(WP.sectionsOf(h)), ['header', 'scenario', 'answer', 'caveat', 'figures', 'chart', 'list', 'list', 'fold', 'map', 'method', 'sources', 'footer']);
+  assert.deepEqual(plain(WP.sectionsOf(h)), ['header', 'scenario', 'find', 'answer', 'caveat', 'figures', 'chart', 'list', 'list', 'fold', 'map', 'method', 'sources', 'footer']);
   assert.equal((h.match(/class="pnl-fig[ "]/g) || []).length, 4, 'at most four figures');
   assert.equal((h.match(/<li class="pnl-row/g) || []).length, 6, 'five rows of the first list, one of the second');
   assert.match(h, /<h3>Soonest limits<\/h3><button type="button" class="btn small link" data-ws-go="tight">See all \(6\) →<\/button>/);
@@ -35,8 +35,14 @@ test('the page template: Home’s layout, sections in order, empty ones left out
   assert.match(h, /<footer class="page-foot" data-psec="footer"><div class="pnl-acts"><button type="button" class="btn small pnl-primary" data-ws-go="tight">Open the map<\/button><button type="button" class="btn small pnl-sec" data-pnl-brief="">Briefing PDF<\/button><\/div><p class="pnl-note small">General screening results only/);
   // A bare page: header, answer and footer (with the screening note).
   const bare = WP.pageHTML({ id: 'x', name: 'x', answer: 'Loading…' }, NOTE);
-  assert.deepEqual(plain(WP.sectionsOf(bare)), ['header', 'answer', 'footer']);
+  assert.deepEqual(plain(WP.sectionsOf(bare)), ['header', 'find', 'answer', 'footer']);
   assert.ok(bare.includes(NOTE));
+  // Find from every page (navigation phase 1): the search slot and Draw an area, the header's last row;
+  // Study area draws on its own map, so its header has the search only.
+  assert.match(h, /<div class="page-find" data-psec="find"><div class="page-search" id="page-search"><\/div><button type="button" class="btn small page-draw" data-ws-go="study" title="Open the map with the Select tool on: drag round the developments">Draw an area<\/button><\/div><\/header>/);
+  const study = WP.pageHTML({ id: 'study', name: 'x', answer: 'y', draw: false }, NOTE);
+  assert.match(study, /id="page-search"/);
+  assert.doesNotMatch(study, /page-draw/);
   // A map whose drawing is not ready still links to the map.
   assert.match(WP.pageHTML({ id: 'x', name: 'x', map: { svg: '', attrs: { 'data-ws-go': 'x' } } }, NOTE), /class="home-map-btn" data-ws-go="x" aria-label="Open the map"><span class="home-map-empty small muted">Open the map<\/span>/);
 });
@@ -72,6 +78,33 @@ test('uncommitted reserve (D-5-1): treatment plants only, in ML/d and people; pu
   assert.match(s, /late = rows\.filter\(r => r\.relief === 'gap' && r\.limit\.y != null\)/);
   // 'gap' is split on the page and in the rows: a relief after the limit, or none listed.
   assert.match(src('js/svc-capacity.js'), /const reliefOf = r => \(r\.relief === 'gap' && !r\.reliefY \? \['No relief listed', 'over'\]/);
+});
+
+test('Home’s Servicing figures: the first 90% trigger (plants) and the first zone limit (100% of firm pumping); each opens its facility', () => {
+  const row = (id, kind, y, pctBo, ss) => ({ id, kind, name: id, ss: ss || null, limit: { y, what: kind === 'pump' || kind === 'ps' ? '100% firm' : '90% trigger' }, pctBo });
+  const rows = [
+    row('ps:dr:A', 'ps', 'today', 180, 'dr:A'), row('stor:West Brampton', 'storage', 2027, 123),
+    row('plant:Clarkson', 'plant', 2034, 84, 'plant:Clarkson'), row('wsys:southPeel', 'wplant', 2031, 67, 'wsys:lake'), row('plant:Lakeview', 'plant', 2031, 120, 'plant:Lakeview'),
+    row('pump:Zone 6', 'pump', 2029, 95), row('pump:Zone 5', 'pump', 'today', 104), row('pump:Zone 4', 'pump', null, 60), row('plant:Inglewood', 'plant', null, 40),
+  ];
+  // A plant or a water plant only ('today' first, then by year; a tie goes to the more loaded at build-out).
+  assert.equal(WP.firstTrigger(rows).id, 'plant:Lakeview', 'G.E. Booth and South Peel both ≈2031: the more loaded wins');
+  assert.equal(WP.firstTrigger(rows.filter(r => r.id !== 'plant:Lakeview')).id, 'wsys:southPeel', 'a water treatment plant counts');
+  assert.equal(WP.firstZone(rows).id, 'pump:Zone 5', 'pumping into a zone only: the pump at its limit today, not the station');
+  assert.equal(WP.firstZone(rows.filter(r => r.id !== 'pump:Zone 5').concat(row('pump:Zone 7', 'pump', 2029, 99))).id, 'pump:Zone 7', 'a tie by year goes by pctBo');
+  assert.equal(WP.firstZone(rows.filter(r => r.kind !== 'pump')), null, 'no pumps, no zone figure');
+  assert.equal(WP.firstZone(rows.filter(r => r.kind !== 'pump').concat(row('pump:Zone 4', 'pump', null, 60))), null, 'a pump with no limit year is never first');
+  assert.equal(WP.firstTrigger([]), null);
+  // The figures: the zone's threshold in its label, beside the trigger; the trigger opens its plant's scope.
+  const s = src('js/ws-pages.js');
+  assert.match(s, /const trig = firstTrigger\(rows\), zone = firstZone\(rows\);/);
+  assert.match(s, /label: 'first zone limit \(100% of firm\)', ctx: `\$\{peelWide\}\$\{esc\(zone\.name\)\} reaches 100% of firm pumping · Servicing capacity →`, tone: 'tight', attrs: go\('tight', 'Servicing capacity'\) \}/);
+  assert.match(s, /label: 'first 90% trigger', ctx: `\$\{peelWide\}\$\{esc\(trig\.name\)\} reaches its 90% expansion trigger · Servicing capacity →`, tone: 'tight', attrs: trig\.ss \? \{ 'data-ws-go': 'tight', 'data-ws-ss': trig\.ss, title: `Open \$\{trig\.name\}` \} : go\('tight', 'Servicing capacity'\) \}/);
+  assert.match(s, /: busiest \? \{ v: 'None', u: '', label: 'first zone limit \(100% of firm\)', ctx: `\$\{peelWide\}before \$\{end\} · most loaded: \$\{esc\(busiest\.name\)\} \(\$\{Math\.round\(busiest\.pctBo\)\}% at build-out\)/, 'none at its limit by the horizon’s end: None, the most loaded zone named');
+  assert.match(s, /figures: \[byL\(\/over capacity\/\), byL\(\/first 90% trigger\/\), byL\(\/first zone limit\/\)\] \}/);
+  assert.match(s, /\['Servicing', \['over capacity at build-out', 'first 90% trigger', 'first zone limit \(100% of firm\)'\]\]/, 'its place kept while loading');
+  // Servicing capacity's own "first to reach its 90% expansion trigger" is the same rule.
+  assert.match(s, /const first = firstTrigger\(rows\), low = res\[0\]/);
 });
 
 test('Old pipes grid: likelihood by age (moderate risk one band up) × consequence by units carried', () => {
@@ -175,6 +208,64 @@ test('Growth drill-down: Peel → municipality → plan → precinct / sub-area 
   // by site servicing permit; under the map, its treemap.
   assert.match(s, /const groups = by === 'area' \? kidRows\.map\(\(\[c, rows\]\) => \(\{ key: c\.id, name: c\.name, sub: kind\(c\), drill: c\.id, rows \}\)\)/);
   assert.match(s, /after: treemap \}/);
+});
+
+// Navigation phase 1 (S9): the drill does not filter, so a drilled level's Area report is its own
+// developments (a straddling one whole, as the map's plan filter counts it), with its outline.
+test('Growth in an area: Area report (PDF) reports the level shown, not the map’s developments', () => {
+  const s = src('js/ws-pages.js');
+  assert.match(s, /actions: \[\{ label: 'Area report \(PDF\)', attrs: atPeel \? \{ 'data-area-report': 'shown' \} : \{ 'data-ws-areareport': n\.id \}, primary: true \}/);
+  const clicks = [], reports = [], home = { contains: () => true };
+  const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: () => null, querySelectorAll: () => [], getElementById: id => (id === 'home' ? home : null), addEventListener: (t, f) => { if (t === 'click') clicks.push(f); }, dispatchEvent() {} };
+  const a = { key: 'a' }, b = { key: 'b' }, c = { key: 'c' }, ring = [[[-79.7, 43.6], [-79.6, 43.6], [-79.6, 43.7]]];
+  const plan = { id: 'sp:x', name: 'Plan X', kind: 'plan', areaId: 'x', devs: [{ p: a, share: 1 }, { p: b, share: 0.4 }], children: [{ id: 'sp:x:p1', name: 'P1', kind: 'precinct', devs: [{ p: c, share: 1 }], children: [] }] };
+  const muni = { id: 'm:Brampton', name: 'Brampton', kind: 'municipality', devs: [], children: [plan] }, rest = { id: 'sp:x:rest', name: 'Elsewhere in Plan X', kind: 'rest', devs: [{ p: b, share: 0.6 }], children: [] };
+  const nodes = new Map([[plan.id, plan], [muni.id, muni], [rest.id, rest]]);
+  const window = { document, PeelUtil: { esc: x => String(x), fmtNum: n => String(n) }, PeelPlanTables: { compute: () => ({ nodes }) }, PeelReports: { areaReport: (...x) => reports.push(x) }, PeelApp: { state: { areas: { secondaryPlans: [{ id: 'x', rings: ring }], precincts: [] } } } };
+  const ctx = { window, document, setTimeout: () => 0, clearTimeout() {}, URLSearchParams }; ctx.globalThis = ctx;
+  vm.runInNewContext(src('js/ws-pages.js'), ctx);
+  const click = (attrs, inHome = true) => { home.contains = () => inHome; const t = { dataset: attrs, getAttribute: () => null }; const ev = { target: { closest: sel => (sel === '[data-ws-areareport]' && attrs.wsAreareport ? t : null) }, preventDefault() {}, stopPropagation() {} }; for (const f of clicks) f(ev); };
+  click({ wsAreareport: 'sp:x' });
+  click({ wsAreareport: 'm:Brampton' });
+  click({ wsAreareport: 'sp:x:rest' });
+  click({ wsAreareport: 'sp:x' }, false);   // (not on a page: nothing)
+  click({ wsAreareport: 'nope' });          // (a level gone since: nothing)
+  assert.deepEqual(plain(reports.map(([devs, title, rings]) => [devs.map(d => d.key), title, rings.length])), [
+    [['a', 'b', 'c'], 'Area report – Plan X (developments in or partly in it)', 1],
+    [['a', 'b', 'c'], 'Area report – Brampton', 0],
+    [['b'], 'Area report – Elsewhere in Plan X', 0],
+  ]);
+  assert.equal(reports[0][2], ring, 'the plan’s outline on the report’s map');
+});
+
+// Navigation phase 1 (S4): where a plan picked on a page lands (js/ws-pages.js drillTo): Growth in an
+// area at the plan, else at its municipality, else at Peel, in the plan tree of the developments shown
+// (a filter that leaves the plan out: js/workspaces.js routePick turns the map's area filters off first).
+test('drillTo: a plan pick lands at the plan, else its municipality, else Peel, in the tree as worked out', () => {
+  const node = (id, name, kind, parent) => ({ id, name, kind, parent, children: [], devs: [], m: { planned: 0, left: 0, people: 0, jobs: 0 } });
+  const peel = node('peel', 'Peel', 'peel', null), muni = node('m:Brampton', 'Brampton', 'municipality', 'peel'), plan = node('a:sp1', 'Plan One', 'plan', 'm:Brampton');
+  peel.children = [muni]; muni.children = [plan];
+  let tree = null;
+  const of = list => ({ root: peel, nodes: new Map(list.map(n => [n.id, n])) });
+  const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: () => null, querySelectorAll: () => [], getElementById: () => null, addEventListener() {}, dispatchEvent() {} };
+  const window = { document, PeelUtil: { esc: x => String(x), fmtNum: n => String(n) },
+    PeelPlanTables: { compute: () => { if (!tree) throw new Error('the developments are not in yet'); return tree; } },
+    PeelPanel: { get: k => (k === 'growth:pipeline' ? { scope: 'area', spec: { answer: 'Peel’s pipeline.', lists: [], method: '', sources: '' } } : null), scenarioChip: () => '' },
+    PeelApp: { state: { basis: 'all', muni: '', sp: [], mtsa: [], areas: null } } };
+  const ctx = { window, document, setTimeout: () => 0, clearTimeout() {}, URLSearchParams }; ctx.globalThis = ctx;
+  vm.runInNewContext(src('js/ws-pages.js'), ctx);
+  const P = window.PeelWsPages, at = (t, id = 'a:sp1', fall = 'm:Brampton') => { tree = t; P.drillTo(id, fall); return P.build('growth').name; };
+  const PEEL = 'How much is coming, where, and how fast?';
+  assert.equal(at(of([peel, muni, plan])), 'Plan One', 'in the tree: the plan');
+  assert.equal(at(of([peel, muni])), 'Brampton', 'filtered out of it: its municipality');
+  assert.equal(at(of([peel])), PEEL, 'its municipality filtered out too: Peel');
+  assert.equal(at(of([peel, muni, plan]), 'a:sp1', 'peel'), 'Plan One');
+  assert.equal(at(of([peel, muni]), 'a:sp1', 'peel'), PEEL, 'no municipality to fall to: Peel');
+  // The tree not worked out yet: the plan kept, and the page lands at it once the tree has it (at Peel
+  // if it is no node then).
+  at(null); assert.match(P.build('growth').answer, /Loading the pipeline…/, 'still loading');
+  tree = of([peel, muni, plan]); assert.equal(P.build('growth').name, 'Plan One');
+  at(null); tree = of([peel, muni]); assert.equal(P.build('growth').name, PEEL);
 });
 
 test('a development’s stage on the chart: the rung holding most of its units; built once none are left', () => {

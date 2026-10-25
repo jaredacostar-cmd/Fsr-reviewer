@@ -1399,7 +1399,6 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .tool-banner .seg { display: inline-flex; gap: 2px; background: var(--surface-2); border-radius: var(--radius-panel); padding: 2px; }
 .tool-banner .seg .btn.small { border: 0; background: transparent; }
 .tool-banner .seg .btn.small.on { background: var(--accent); color: var(--on-accent); }
-.inq-draft { white-space: pre-wrap; font-size: var(--fs-2); background: var(--surface-0); border: 1px solid var(--border); border-radius: var(--radius-panel); padding: var(--space-2); max-height: 50vh; overflow: auto; }
 .sel-radius { stroke: var(--select); stroke-width: 2; stroke-dasharray: 6 4; fill: var(--select); fill-opacity: 0.08; }
 @media (max-width: 700px) { .tool-banner { top: 8px; padding: var(--space-1) var(--space-2); font-size: var(--fs-1); gap: var(--space-1); } }
 .measure-line { stroke: var(--select); stroke-width: 3; stroke-dasharray: 6 4; fill: none; }
@@ -2734,6 +2733,8 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .pnl-head-top { display: flex; align-items: center; gap: var(--space-2); min-height: 24px; }
 .pnl-trail { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; font-size: var(--fs-1); color: var(--text-muted); flex: 1; min-width: 0; }
 .pnl-trail .pnl-sep { margin: 0 2px; }
+/* (a long site name as a step, a result kept at its development: cut to the row, as the top bar's) */
+.pnl-trail button.pnl-crumb { max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
 .pnl-x { margin-left: auto; }
 .pnl-title { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
 .pnl-name { margin: 0; font-size: var(--fs-4); font-weight: 600; color: var(--text-primary); }
@@ -2926,15 +2927,13 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
   .ws-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
   .ws-chip { flex: 0 0 auto; }
 }
-/* Desk screens: the groups share rows (each spans its own figures of 4 columns), and Explore's search
-   sits beside where you are. */
+/* Desk screens: the groups share rows (each spans its own figures of 4 columns), and Explore's where you
+   are takes one line. */
 @media (min-width: 1200px) {
   .home-grps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-3) var(--space-2); }
   .home-grps > .home-grp { margin: 0; grid-column: span var(--n, 4); }
   .home-grps > .home-grp .pnl-figs { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); }
   .home-main .page-explore { flex-direction: row; align-items: center; gap: var(--space-3); }
-  .home-main .page-explore .page-search { flex: 0 1 420px; }
-  .home-main .page-explore .page-search input { height: 36px; }
   .home-main .page-explore .ex-where { flex: 1 1 0; min-width: 0; }
   /* (a page has room in the top bar for the action names the full map hides below 1600px) */
   html.home-on .tb-actions .tb-btn:not(.tb-icon) { font-size: var(--fs-2); gap: 5px; }
@@ -2955,7 +2954,7 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
   cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; min-height: 44px; }
 .page-sec:hover { color: var(--text-primary); }
 .page-sec.on { color: var(--text-primary); border-bottom-color: var(--accent); }
-/* Explore: the one search and where you are, at the top of each of its pages. */
+/* Explore: where you are, at the top of a site's pages (the search is in every page's header). */
 /* Explore's five views, a row at the top of each (js/workspaces.js viewsHTML); one line that scrolls on a phone. */
 .page-views { display: flex; gap: var(--space-1); margin: 0 0 var(--space-2); overflow-x: auto; scrollbar-width: none; }
 .page-views::-webkit-scrollbar { display: none; }
@@ -2966,13 +2965,16 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .page-filters .old-link-note { flex-basis: 100%; color: var(--text-secondary); }
 #f-showing .old-link-note { display: block; margin-top: var(--space-1); }
 .page-explore { display: flex; flex-direction: column; gap: var(--space-1); margin: var(--space-2) 0 0; }
-.page-explore .page-search { max-width: 640px; }
 .ex-where { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); color: var(--text-secondary); }
 .page-id { flex-basis: 100%; margin: 0; }
 .page-search { max-width: 520px; position: relative; }
 .page-search .field { margin: 0; }
 .page-search input { width: 100%; height: 40px; font-size: var(--fs-3); }
 .page-search .search-sug { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: var(--z-float); }
+/* The search on every page, in the header's own row, with Draw an area beside it (js/ws-pages.js pageHTML). */
+.page-find { flex-basis: 100%; display: flex; align-items: center; gap: var(--space-2); }
+.page-find .page-search { flex: 1 1 0; min-width: 0; max-width: 520px; }
+.page-draw { flex: none; }
 .page-chart { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-panel); padding: var(--space-2) var(--space-3); }
 .page-list ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: var(--space-1); }
 .page-list .pnl-row[role="button"] { cursor: pointer; }
@@ -3383,6 +3385,8 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .tr-more { margin: 4px 0; color: var(--text-muted); }
 .tr-same { margin: 4px 0 0; border-top: 1px solid var(--border); padding: 6px 4px; color: var(--text-secondary); }
 .tr-same summary { cursor: pointer; font-size: var(--fs-2); }
+/* The file a search found (a file number picked on a page: js/ws-pages.js markFile). */
+.tr-hit { outline: 2px solid var(--focus); outline-offset: 1px; border-radius: 4px; }
 .tr-key { margin: var(--space-2) 0 0; font-size: var(--fs-1); color: var(--text-muted); }
 .tr-sum { display: block; color: var(--text-secondary); font-size: var(--fs-1); margin-top: 2px; }
 .tr-sum b { color: var(--text-primary); font-weight: 600; }
@@ -3558,6 +3562,8 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .search-bar .search-sug { position: static; margin: 4px 0 var(--space-2); box-shadow: none; border: 1px solid var(--border); }
 .search-sug .sug-h { cursor: default; padding: 6px var(--space-2) 2px; font-size: var(--fs-1); font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
 .search-sug .sug-h:hover { background: transparent; }
+/* (the places still loading: a note under the results, not one of them) */
+.search-sug .sug-wait { text-transform: none; font-weight: 400; }
 .search-sug .sug-filter { border-top: 1px solid var(--border); }
 .search-sug .sug-fl { flex: none; width: 14px; text-align: center; color: var(--text-muted); }
 
@@ -3584,6 +3590,10 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
   .home-main { padding-bottom: 84px; }
   .home-main .page-foot .pnl-acts { position: fixed; left: 0; right: 0; bottom: 0; z-index: var(--z-sheet); margin: 0; padding: var(--space-2) var(--space-3) calc(var(--space-2) + env(safe-area-inset-bottom, 0px)); background: var(--surface-1); border-top: 1px solid var(--border); box-shadow: 0 -2px 8px rgba(0,0,0,.25); display: flex; flex-wrap: nowrap; overflow-x: auto; gap: var(--space-2); }
   .home-main .page-foot .pnl-acts .btn { flex: 0 0 auto; min-height: 44px; }
+  /* (the page's search: 16 px text, so iOS does not zoom in on it; its list in view, rows a thumb tall) */
+  .page-search input { font-size: 16px; }
+  .page-search .search-sug { max-height: 50vh; }
+  .page-search .search-sug li { min-height: 44px; }
   html:not(.home-on) .home-main .page-foot .pnl-acts { display: none; }
   .pnl-phone-ctx { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-top: var(--space-1); }
   /* (the timeline hides under the panel on a phone: Find › When has the years as boxes) */

@@ -82,11 +82,24 @@
     const withGap = (v, sys) => { const g = gaps.filter(c => c.sys === sys); return g.length ? { tone: 'bad', text: g.map(gapTxt).join('; ') } : v; };
     const w = st.works || {}, eaN = root.PeelCapitalEA && root.PeelCapitalEA.siteEaCount ? root.PeelCapitalEA.siteEaCount() : null;
     const nWorks = (w.trunks ? w.trunks.length : 0) + (w.facs ? w.facs.length : 0);
+    // The path line (navigation design §3.6): the pumping stations on its sewer path (firm %), the plant
+    // and its reserve, and how the outlet was set (this browser's edits and the shipped file, as loaded:
+    // never fetched from here). "Review →" opens Review outlets at this development, only when its queue
+    // lists it, and only once the DC impact model is worked out (PeelDcImpact.current never builds it).
+    const DO = root.PeelDevOutlets, IM = root.PeelDcImpact;
+    const pathTo = f && DV().pathLine ? DV().pathLine({ stations: f.sps.filter(s => s.firm > 0).map(s => ({ name: DD().psName(s.a), pct: Math.round(s.wet / s.firm * 100) })), plant, toronto: f.pl === 'Toronto', reserve: f.cap ? fmt1(f.reserve) : null, over: !!(f.cap && f.reserve <= 0), outlet: DO && DO.recordOf ? (DO.recordOf(p) || {}).mode : null }) : null;
+    const queued = pathTo && IM && IM.current && IM.current() && DO && DO.queue ? ((DO.queue() || {}).all || []).some(x => x.p.key === p.key) : false;
+    const review = queued ? ` <button type="button" class="btn small link" data-ws-page="outlets" data-dvo="pick-dev" data-dvo-key="${esc(p.key)}">Review →</button>` : '';
+    // The DC projects it relies on, by number and name, as the search lists them (late first: they come
+    // after the constraint runs out). One late is something to check, whatever the connection's verdict.
+    const rel = DV().reliedOn ? DV().reliedOn(needs) : [], relTxt = rel.length ? `Relies on ${rel.map(x => `${esc(x.key)}${x.name ? ` – ${esc(x.name)}` : ''} (${x.late ? 'late' : 'in time'})`).join(', ')} · ` : '';
+    const infTone = dcv.tone === 'ok' && rel.some(x => x.late) ? 'warn' : dcv.tone;
     const rows = [
       svcRow(`💧 Water${f && f.z ? ` · ${esc(f.z.name.replace('Pressure zone ', 'zone '))}` : ''}`, withGap(wv, 'water'), 'svc:network'),
       svcRow(`🚰 Wastewater${plant ? ` · to ${esc(plant)}` : ''}`, withGap(wwv, 'ww'), 'svc:network'),
+      ...(pathTo ? [{ tone: TONE[pathTo.tone], html: `<div class="pnl-r-top"><span class="pnl-r-name">Path to the plant</span></div><small class="pnl-r-line">${esc(pathTo.text)} · outlet: ${esc(pathTo.outlet)}${review}</small>` }] : []),
       { tone: pipeOn ? PN.toneOf(Math.round(worst.r1 * 100)) : null, attrs: { 'data-at': 'svc:network' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">Tightest pipe on the path</span></div><small class="pnl-r-line">${pipeOn ? `${fmtNum(worst.p[0])} mm · ${Math.round(worst.r1 * 100)}% of full-pipe capacity at build-out` : 'Not assessed here: pipe-by-pipe capacity is left to the Region\u2019s hydraulic model.'}</small>` },
-      { tone: TONE[dcv.tone], attrs: { 'data-at': 'dca:timing' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">🏗 Infrastructure coming</span>${PN.chip({ tone: TONE[dcv.tone], text: dcv.tone === 'ok' ? 'OK' : dcv.tone === 'warn' ? 'Check' : 'Short' })}</div><small class="pnl-r-line">${fmtNum(nWorks)} DC work${nWorks === 1 ? '' : 's'} nearby${eaN != null ? ` · ${fmtNum(eaN)} EA${eaN === 1 ? '' : 's'}` : ''} · ${esc(dcv.text)}</small>` },
+      { tone: TONE[infTone], attrs: { 'data-at': 'dca:timing' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">🏗 Infrastructure coming</span>${PN.chip({ tone: TONE[infTone], text: infTone === 'ok' ? 'OK' : infTone === 'warn' ? 'Check' : 'Short' })}</div><small class="pnl-r-line">${relTxt}${fmtNum(nWorks)} DC work${nWorks === 1 ? '' : 's'} nearby${eaN != null ? ` · ${fmtNum(eaN)} EA${eaN === 1 ? '' : 's'}` : ''} · ${esc(dcv.text)}</small>` },
     ];
     // Timing: the latest submission, the municipality's typical time to approval (dated file events)
     // and, before approval, that time added to the submission (an estimate).
@@ -126,8 +139,9 @@
       ],
       method: `Flows at Peel design criteria, as in a functional servicing report${pe.employment.jobs > 0 ? `; jobs from the floor area the applications state (${fmtNum(App().state.criteria.employment.water)} L/job/d water)` : ''}. The servicing rows read the same results as Servicing and Capital for this site. Typical time to approval: the median from first submission to approval of the ${esc(p.municipality)} files with both dates; the expected year adds it to the latest submission (an estimate, not a forecast for this file).`,
       sources: `The ${esc(p.municipality)} applications and building permits on the map (Records › Files for this site); Peel design criteria; the servicing model; the mapped constraint layers and storm sewers (each check names its source).`,
-      // (the site's tools — trace, Check FSR — are in its Tools menu, once)
-      foot: { primary: { label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, title: 'One-page servicing memo to print or save as PDF' } },
+      // (the site's tools — trace, Check FSR — are in its Tools menu, once; the Inquiry draft opens over
+      // this Overview, the development kept: js/topbar.js draftInquiryResponse)
+      foot: { primary: { label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, title: 'One-page servicing memo to print or save as PDF' }, secondary: [{ label: 'Inquiry draft', attrs: { 'data-inquiry': '' }, title: 'A servicing inquiry response for this development, to copy' }] },
       onMount: () => { if (DT && DT.fillParts) DT.fillParts(p, ['story', 'site']); },
     };
   }
@@ -302,19 +316,23 @@
     if (!rs) { host.hidden = true; if (el) el.hidden = false; return false; }
     if (el) el.hidden = true; host.hidden = false;
     const W = root.PeelWorkspaces, wsNow = W && W.mode() === 'ws' ? String(W.current()) : '';
-    if (host.dataset.ref !== rs.ref || host.dataset.v !== String(rs.result.v) || (host.dataset.ws || '') !== wsNow) {
+    // (a result that kept its development: Peel › the site › the kind; the site step goes back to the
+    // site, Peel closes both)
+    const kd = rs.result.keepDev ? DV().scopedDev() : null;
+    if (host.dataset.ref !== rs.ref || host.dataset.v !== String(rs.result.v) || (host.dataset.ws || '') !== wsNow || (host.dataset.kd || '') !== (kd ? kd.key : '')) {
       // Stage 3: the result as the standard panel: its header (back to Peel, ×, kind), the result's
       // headline as the answer, its body as the details, the footer with the screening note. Rendered
       // here, in the result's own host, so a tool's inputs keep their state.
       const kind = SCOPE_KIND[rs.rkind] || 'Result', body = String(rs.result.html || '');
       const hm = body.match(/<p class="headline"[^>]*>([\s\S]*?)<\/p>/), rest = hm ? body.replace(hm[0], '') : body;
+      const site = kd ? [{ label: kd.title, attrs: { 'data-scope-result-close': '' } }] : [];
       host.innerHTML = root.PeelPanel ? root.PeelPanel.html({ key: 'overview:result', calc: /\d/.test(body) && rs.rkind !== 'help' && rs.rkind !== 'file',
-        head: { trail: [{ label: 'Peel', attrs: { 'data-scope-result-close': '' } }, { label: kind.split(' · ')[0] }], close: { 'data-scope-result-close': '', 'aria-label': `Close ${rs.title}` }, name: rs.title, identity: esc(kind) },
+        head: { trail: [{ label: 'Peel', attrs: kd ? { 'data-scope-result-close': '', 'data-pnl-dev-close': '' } : { 'data-scope-result-close': '' } }, ...site, { label: kind.split(' · ')[0] }], close: { 'data-scope-result-close': '', 'aria-label': `Close ${rs.title}` }, name: rs.title, identity: esc(kind) },
         answer: hm ? hm[1] : `<strong>${esc(rs.title)}</strong>`, lists: [{ title: 'Details', rows: [{ kv: true, html: `<div class="pnl-result">${rest}</div>` }], total: 1 }] })
         : `<div class="scope-head"><span class="muted small">${esc(kind)}</span><button type="button" class="btn small scope-x" data-scope-result-close aria-label="Close ${esc(rs.title)}">× Close</button></div>${body}`;
       // In a workspace (Study area: the drawn area's result) the header names its source, as every panel.
       if (W && W.srcLine) host.innerHTML = host.innerHTML.replace('<header class="pnl-head" data-sec="header">', m => `${m}${W.srcLine('overview:')}`);
-      host.dataset.ref = rs.ref; host.dataset.v = String(rs.result.v); host.dataset.ws = wsNow;
+      host.dataset.ref = rs.ref; host.dataset.v = String(rs.result.v); host.dataset.ws = wsNow; host.dataset.kd = kd ? kd.key : '';
     }
     return true;
   }
@@ -365,7 +383,8 @@
   function renderOverview(set, e, basis) {
     const el = $('#ov-body'); if (!el) return;
     const rsc = root.PeelSvcScope && root.PeelSvcScope.current();
-    if (resultHost(rsc && rsc.kind === 'result' && !DV().scopedDev() ? rsc : null)) return;
+    // (a result started at the open development, the Inquiry draft, shows over the site's Overview)
+    if (resultHost(rsc && rsc.kind === 'result' && (!DV().scopedDev() || rsc.result.keepDev) ? rsc : null)) { const sec = $('#ov-dev'); if (sec) sec.hidden = true; return; }
     const p = DV().scopedDev();
     if (p) { renderVerdictCard(p); return; }
     const sec = $('#ov-dev'); if (sec) sec.hidden = true;

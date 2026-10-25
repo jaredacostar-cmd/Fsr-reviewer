@@ -83,7 +83,7 @@ test('wired in: filter, trail, Overview, search, share link, reset, "What loads 
   assert.match(src('js/overview-tab.js'), /root\.PeelPanel\.set\('overview:', root\.PeelSvcScope\.panelSpec\(ss, sset\)\)/);
   assert.match(src('js/overview-tab.js'), /data-ss="\$\{c\.kind === 'plant' \? `plant:/, 'Peel capacity bars open the plant scope');
   const sf = src('js/search-filter.js');
-  assert.match(sf, /SS\(\)\.open\(`plant:\$\{pl\}`\)/); assert.match(sf, /area\('Water pressure zone', a, \(\) => SS\(\)\.open\(a\.id\)\)/); assert.match(sf, /psAreas/);
+  assert.match(sf, /SS\(\)\.open\(`plant:\$\{pl\}`\)/); assert.match(sf, /area\('Water pressure zone', a, \(\) => SS\(\)\.open\(a\.id\), \{ hit: 'svc', ss: a\.id \}\)/); assert.match(sf, /psAreas/);
   const sh = src('js/share.js');
   assert.match(sh, /set\('ss', App\(\)\.state\.ss && window\.PeelSvcScope/); assert.match(sh, /else App\(\)\.state\.ss = ss;/);
   // Result scopes (SPEC §3): re-opened from a link once their data loads.

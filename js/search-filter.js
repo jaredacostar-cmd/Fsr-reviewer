@@ -81,16 +81,22 @@
     const A = App().state.areas, sp = A && (p.sp || []).length ? (A.secondaryPlans.find(a => a.id === p.sp[0]) || {}).name : '';
     return [p.municipality, P.PHASE_BY_KEY[p.phase].label, p.units ? `${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'}` : '', ref, sp].filter(Boolean).map(esc).join(' · ');
   }
+  // A development found by a file number only (not by its title or an address): that file number, so a
+  // pick on a page opens its Files at it (js/workspaces.js pageRoute). ql: the query, in lower case.
+  const fileRefOf = (p, ql) => { if (ql.length < 5 || !/\d/.test(ql) || p.title.toLowerCase().includes(ql) || p.records.some(r => (r.address || '').toLowerCase().includes(ql))) return null; const r = p.records.find(x => (x.ref || '').toLowerCase().startsWith(ql)); return r ? r.ref : null; };
   function renderSug() {
     sugEl.hidden = !sugItems.length;
     const ql = $('#f-search').value.trim().toLowerCase();
     let placed = false;
+    // (the plans, facilities and DC projects are found once their data is in: a note under the results,
+    // not one of them)
+    const S = App().state, wait = sugItems.length && (!S.areas || !S.servicing || !S.dcInfra) ? '<li class="sug-h sug-wait" role="presentation">Plans, facilities and DC projects are still loading…</li>' : '';
     sugEl.innerHTML = sugItems.map((x, i) => {
       // (places and facilities in their own group, under the developments)
       const head = !placed && (x.place || x.g) && i > 0 ? (placed = true, '<li class="sug-h" role="presentation">Places and facilities</li>') : '';
       if (x.place || x.g) placed = true;
       return `${head}<li role="option" data-i="${i}" class="${i === sugSel ? 'on' : ''}${x.filter ? ' sug-filter' : ''}" aria-selected="${i === sugSel}">${x.p ? dot(x.p.phase) : x.filter ? '<span class="sug-fl" aria-hidden="true">⌕</span>' : '<span class="sug-pin" aria-hidden="true"></span>'}<span>${esc(x.label)}<small>${x.p ? devLine(x.p, ql) : x.filter ? 'the developments, the map and every tab, until you remove the chip' : x.place ? esc(x.place.kind) : x.loading ? 'searching addresses…' : x.kind || 'Go to address'}</small></span></li>`;
-    }).join('');
+    }).join('') + wait;
   }
   async function updateSug(q) {
     const seq = ++sugSeq; sugFor = q;
@@ -100,39 +106,47 @@
       .sort((a, b) => (b.title.toLowerCase().startsWith(ql) - a.title.toLowerCase().startsWith(ql)) || (b.units || 0) - (a.units || 0)).slice(0, 4);
     const places = placeMatches(ql);
     const filterItem = { label: `Filter the list by “${q}”`, filter: q };
-    sugItems = [...devs.map(p => ({ label: p.title, p })), ...places, ...(/\d/.test(q) || q.length > 4 ? [{ label: q, loading: true }] : []), filterItem];
+    // (a development found by a file number says so: a pick on a page opens its Files)
+    const devItems = devs.map(p => { const ref = fileRefOf(p, ql); return { label: p.title, p, ...(ref ? { hit: 'file', ref } : {}) }; });
+    sugItems = [...devItems, ...places, ...(/\d/.test(q) || q.length > 4 ? [{ label: q, loading: true }] : []), filterItem];
     sugSel = -1; renderSug();
     if (!sugItems.some(x => x.loading)) return;
     const geo = await geocode(q);
     if (seq !== sugSeq) return;
-    sugItems = [...devs.map(p => ({ label: p.title, p })), ...places, ...geo.map(g => ({ label: g.label, g, kind: /&| and /i.test(q) ? 'Go to intersection' : null })), filterItem];
+    sugItems = [...devItems, ...places, ...geo.map(g => ({ label: g.label, g, kind: /&| and /i.test(q) ? 'Go to intersection' : null })), filterItem];
     renderSug();
   }
   // Places in the search: secondary plans / character areas, MTSAs, pressure zones, catchments and
-  // pumping stations, DC projects (by number or name) and DC facilities.
+  // pumping stations, DC projects (by number or name) and DC facilities. go: what a pick does on the map;
+  // hit (and its id): what it is, for a pick on a page (js/workspaces.js pageRoute).
   function placeMatches(ql) {
     const out = [], has = t => String(t || '').toLowerCase().includes(ql);
-    const area = (kind, a, go) => out.push({ label: a.name, place: { kind, go } });
+    const area = (kind, a, go, route) => out.push({ label: a.name, place: { kind, go, ...route } });
     if (App().state.areas) {
-      for (const a of App().state.areas.secondaryPlans) if (has(a.name)) area(`${a.municipality || ''} ${a.municipality === 'Mississauga' ? 'character area' : 'secondary plan'}`.trim(), a, () => { App().state.sp = [a.id]; PA().renderAreaSelects(); PA().showArea(true); App().applyFilters(); });
-      for (const a of App().state.areas.mtsas) if (has(a.name)) area('MTSA (major transit station area)', a, () => { App().state.mtsa = [a.id]; PA().renderAreaSelects(); PA().showArea(true); App().applyFilters(); });
+      for (const a of App().state.areas.secondaryPlans) if (has(a.name)) area(`${a.municipality || ''} ${a.municipality === 'Mississauga' ? 'character area' : 'secondary plan'}`.trim(), a, () => { App().state.sp = [a.id]; PA().renderAreaSelects(); PA().showArea(true); App().applyFilters(); }, { hit: 'plan', id: a.id, muni: a.municipality });
+      for (const a of App().state.areas.mtsas) if (has(a.name)) area('MTSA (major transit station area)', a, () => { App().state.mtsa = [a.id]; PA().renderAreaSelects(); PA().showArea(true); App().applyFilters(); }, { hit: 'mtsa', id: a.id, muni: a.municipality });
     }
     if (App().state.servicing) {
-      // Servicing items open as servicing scopes (design audit, Group 5).
-      const SS = () => window.PeelSvcScope;
-      for (const pl of ['Lakeview', 'Clarkson', 'Inglewood']) if (has(SD().PLANT_NAME[pl]) || has(SD().PLANT_SHORT[pl])) out.push({ label: SD().plantLabel(pl), place: { kind: 'Wastewater treatment plant', go: () => SS().open(`plant:${pl}`) } });
-      if (has('south peel') || has('water system')) out.push({ label: 'South Peel water system', place: { kind: 'Water system (lake-based)', go: () => SS().open('wsys:lake') } });
-      for (const a of App().state.servicing.zones) if (has(a.name)) area('Water pressure zone', a, () => SS().open(a.id));
-      for (const a of App().state.servicing.psAreas || []) if (has(SD().drName(a))) out.push({ label: SD().drName(a), place: { kind: 'Pumping station catchment', go: () => SS().open(a.id) } });
-      for (const a of App().state.servicing.drainage) if (has(SD().drName(a))) out.push({ label: SD().drName(a), place: { kind: a.kind === 'ps' ? 'Pumping station catchment' : a.kind === 'block' ? 'Wastewater block' : 'Sanitary catchment', go: () => SS().open(a.id) } });
+      // Servicing items open as servicing scopes (design audit, Group 5). Zones, stations and blocks open
+      // once the servicing lookup is filled, after the optional data (js/svc-data.js svcById): until then
+      // they are not offered, and the note under the results says they are still loading.
+      const SS = () => window.PeelSvcScope, ready = SD().svcById.size > 0;
+      for (const pl of ['Lakeview', 'Clarkson', 'Inglewood']) if (has(SD().PLANT_NAME[pl]) || has(SD().PLANT_SHORT[pl])) out.push({ label: SD().plantLabel(pl), place: { kind: 'Wastewater treatment plant', go: () => SS().open(`plant:${pl}`), hit: 'svc', ss: `plant:${pl}` } });
+      if (has('south peel') || has('water system')) out.push({ label: 'South Peel water system', place: { kind: 'Water system (lake-based)', go: () => SS().open('wsys:lake'), hit: 'svc', ss: 'wsys:lake' } });
+      if (ready) {
+        for (const a of App().state.servicing.zones) if (has(a.name)) area('Water pressure zone', a, () => SS().open(a.id), { hit: 'svc', ss: a.id });
+        for (const a of App().state.servicing.psAreas || []) if (has(SD().drName(a))) out.push({ label: SD().drName(a), place: { kind: 'Pumping station catchment', go: () => SS().open(a.id), hit: 'svc', ss: a.id } });
+        for (const a of App().state.servicing.drainage) if (has(SD().drName(a))) out.push({ label: SD().drName(a), place: { kind: a.kind === 'ps' ? 'Pumping station catchment' : a.kind === 'block' ? 'Wastewater block' : 'Sanitary catchment', go: () => SS().open(a.id), hit: 'svc', ss: a.id } });
+      }
     }
     if (App().state.dcInfra && ql.length >= 3) {
       const seen = new Set();
       for (const sys of ['wastewater', 'water']) for (const ln of App().state.dcInfra[sys].lines) {
         const k = ln.p || ln.c; if (!k || seen.has(k) || !(has(ln.p) || has(ln.n))) continue; seen.add(k);
-        out.push({ label: `DC project ${ln.p || ln.c}${ln.n ? ` – ${ln.n}` : ''}`, place: { kind: `${DI().DC_KIND[ln.k][0]}${ln.y ? ` · ${ln.y}` : ''}`, go: () => { if (!MM().getDcOn().on) MA().setDcOn({ on: true, sys: 'both' }); MP().showDcLine(ln); map.fitBounds(L.latLngBounds(ln.g.map(([x, y]) => [y, x])), { maxZoom: 15, padding: [30, 30] }); } } });
+        // (key: the DC impact model's project, js/dc-impact.js, as Capital › DC projects' rows carry it)
+        out.push({ label: `DC project ${ln.p || ln.c}${ln.n ? ` – ${ln.n}` : ''}`, place: { kind: `${DI().DC_KIND[ln.k][0]}${ln.y ? ` · ${ln.y}` : ''}`, go: () => { if (!MM().getDcOn().on) MA().setDcOn({ on: true, sys: 'both' }); MP().showDcLine(ln); map.fitBounds(L.latLngBounds(ln.g.map(([x, y]) => [y, x])), { maxZoom: 15, padding: [30, 30] }); }, hit: 'dc', key: `${sys}:${k}` } });
       }
-      for (const sys of ['wastewater', 'water']) for (const fc of App().state.dcInfra[sys].facilities) if (has(fc.name) || fc.items.some(i => has(i.proj))) out.push({ label: fc.name, place: { kind: `${DI().DC_FAC[fc.kind] || fc.kind} · DC ${sys}`, go: () => { if (!MM().getDcOn().on) MA().setDcOn({ on: true, sys: 'both' }); DI().showFacility(fc); if (fc.g) map.setView([fc.g[1], fc.g[0]], Math.max(map.getZoom(), 14)); } } });
+      for (const sys of ['wastewater', 'water']) for (const fc of App().state.dcInfra[sys].facilities) if (has(fc.name) || fc.items.some(i => has(i.proj))) out.push({ label: fc.name, place: { kind: `${DI().DC_FAC[fc.kind] || fc.kind} · DC ${sys}`, go: () => { if (!MM().getDcOn().on) MA().setDcOn({ on: true, sys: 'both' }); DI().showFacility(fc); if (fc.g) map.setView([fc.g[1], fc.g[0]], Math.max(map.getZoom(), 14)); }, hit: 'dcfac' } });
     }
     return out.slice(0, 5);
   }
@@ -143,11 +157,17 @@
     // not bring the list back under the emptied box)
     clearTimeout(sugTimer); sugSeq++; sugFor = null;
     sugItems = []; renderSug();
+    // On a page a pick ends the typing: the box lets go of the focus (a phone's keyboard closes), so the
+    // page that follows renders at once (js/workspaces.js renderPage waits while you type).
+    const W = window.PeelWorkspaces, onPage = !!(W && W.mode && W.mode() === 'home'); if (onPage) $('#f-search').blur();
     if (x.filter) { filterBy(x.filter); return; }
     // Picking opens it: the box empties and nothing is left filtered.
     $('#f-search').value = '';
     // On a phone the search sits in the list view: switch to the map to show the place.
     if (innerWidth <= 700 && $('#sidebar').classList.contains('open')) { DT().toggleSidebar(false); setTimeout(() => map.invalidateSize(), 50); }
+    // On a page the pick opens what it found (js/workspaces.js routePick); a DC facility or an address
+    // switches to its map view and goes on below. The map and a workspace's map view: as they always did.
+    if (onPage && W.routePick && W.routePick(x)) return;
     if (x.p) { Nav().showDetail(x.p); return; }
     if (x.place) return x.place.go();
     // An address: pan and zoom there with a pin.

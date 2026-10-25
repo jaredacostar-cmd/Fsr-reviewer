@@ -217,6 +217,7 @@
     document.addEventListener('keydown', e => { const r = e.target.closest && e.target.closest('tr[data-dcproj-open]'); if (r && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); r.click(); } });
   }
 
-  const api = { render, panelSpec, refresh, state: S, TIER };
+  // (select: a project opened from elsewhere, as a row click opens it: the search on a page, js/workspaces.js routePick)
+  const api = { render, panelSpec, refresh, state: S, TIER, select: k => setS('sel', k) };
   root.PeelDcProjects = api;
 })(typeof window !== 'undefined' ? window : globalThis);

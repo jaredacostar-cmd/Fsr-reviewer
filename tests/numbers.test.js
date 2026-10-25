@@ -78,7 +78,7 @@ test('people and jobs round the same way on every page; units stay exact', () =>
 test('Home keeps Needs attention in its place while the servicing model loads, and redraws when it has', () => {
   const w = src('js/ws-pages.js');
   assert.match(w, /const wait = \{ title: 'Needs attention', rows: \[\{ kv: true, html: '<span class="muted">Checking servicing capacity…<\/span>' \}\], total: 1 \};/);
-  assert.match(w, /lists: \[ready \? toPage\('tight', needs\) : needs, unbuilt, tgt, toPage\('week', week\)\]/);
+  assert.match(w, /lists: \[ready \? toScope\(needs\) : needs, unbuilt, tgt, toPage\('week', week\)\]/);
   assert.match(w, /caption: !ready \? '<span class="muted">Checking servicing capacity…<\/span>'/);
   assert.match(src('js/svc-tab.js'), /if \(AT\(\)\.getFootTab\(\) === 'overview' \|\| \(root\.PeelWorkspaces && root\.PeelWorkspaces\.mode\(\) !== 'full'\)\) OV\(\)\.renderOverview\(\);/);
 });

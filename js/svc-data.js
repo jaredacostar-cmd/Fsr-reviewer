@@ -283,11 +283,12 @@
     const path = []; const seen = new Set();
     while (d && !seen.has(d.id)) { seen.add(d.id); path.push(d); d = d.downstream ? svcById.get(d.downstream) : null; }
     // Pumping stations on the path: build-out peak dry and ≈ peak wet (design flows) vs firm capacity.
-    // (With blocks as the catchments: the stations on the development's own pipe route.)
+    // (With blocks as the catchments: the stations on the development's own pipe route, in the order the
+    // flow reaches them, as the path line reads them.)
     let onPath = path.filter(a => spsOf(a));
     if (App().state.servicing.blocks && MM().SEW.data && p.lat != null) {
-      const G = SC().sewerGrowth(), k0 = G.devPipe.get(p) ?? SC().nearestPipe(p.lng, p.lat), route = k0 >= 0 ? new Set(ST().pipeRoute(k0)) : new Set();
-      onPath = (App().state.servicing.psAreas || []).filter(a => spsOf(a) && route.has(MA().stationPipe(a)));
+      const G = SC().sewerGrowth(), k0 = G.devPipe.get(p) ?? SC().nearestPipe(p.lng, p.lat), route = new Map((k0 >= 0 ? ST().pipeRoute(k0) : []).map((k, i) => [k, i]));
+      onPath = (App().state.servicing.psAreas || []).filter(a => spsOf(a) && route.has(MA().stationPipe(a))).sort((a, b) => route.get(MA().stationPipe(a)) - route.get(MA().stationPipe(b)));
     }
     const sps = onPath.map(a => {
       const l = MA().psLoads(a);

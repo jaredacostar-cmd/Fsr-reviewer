@@ -30,6 +30,8 @@ const verdictWastewater = extractFn('verdictWastewater');
 const verdictDc = extractFn('verdictDc');
 const verdictMilestone = extractFn('verdictMilestone');
 const firstSentence = extractFn('firstSentence');
+const pathLine = extractFn('pathLine');
+const reliedOn = extractFn('reliedOn');
 
 test('firstSentence: keeps one sentence, passes through text without a period', () => {
   assert.equal(firstSentence('Under review since Oct 3, 2026 — foo bar. Second sentence here.'), 'Under review since Oct 3, 2026 — foo bar.');
@@ -82,6 +84,68 @@ test('verdictDc: gap is bad, need-by is warn, otherwise ok', () => {
   assert.equal(near.tone, 'ok');
   assert.match(near.text, /2 planned works nearby/);
   assert.match(verdictDc({ loading: false, gap: false, needBy: 0, nearby: 0 }).text, /no planned works nearby/);
+});
+
+test('pathLine: from the site, the stations in flow order with their firm %, then the plant and its reserve; how the outlet was set', () => {
+  const two = pathLine({ stations: [{ name: 'Lisgar', pct: 85 }, { name: 'McVean Drive', pct: 102 }], plant: 'G.E. Booth', reserve: '29.0', over: false, outlet: null });
+  assert.deepEqual(two, { tone: 'bad', text: 'Site → Lisgar (85% of firm) → McVean Drive (102% of firm) → G.E. Booth, 29.0 ML/d reserve', outlet: 'Automatic' }, 'a station at 100%+ is bad');
+  assert.equal(pathLine({ stations: [{ name: 'Lisgar', pct: 92 }], plant: 'Clarkson', reserve: '40.1', over: false }).tone, 'warn', '90%+ is warn');
+  const ok = pathLine({ stations: [], plant: 'Clarkson', reserve: '40.1', over: false, outlet: 'confirmed' });
+  assert.deepEqual(ok, { tone: 'ok', text: 'Site → Clarkson, 40.1 ML/d reserve', outlet: 'Confirmed' }, 'no station: the site to the plant');
+  const over = pathLine({ stations: [{ name: 'Lisgar', pct: 40 }], plant: 'G.E. Booth', reserve: '-3.2', over: true, outlet: 'set' });
+  assert.equal(over.tone, 'bad', 'no reserve is bad');
+  assert.match(over.text, /→ G\.E\. Booth, no reserve \(over its rated capacity\)$/);
+  assert.equal(over.outlet, 'Set by hand');
+  const tor = pathLine({ stations: [{ name: 'Malton', pct: 60 }], plant: 'Toronto', toronto: true, reserve: null, over: false });
+  assert.equal(tor.text, 'Site → Malton (60% of firm) → the City of Toronto system');
+  assert.equal(tor.tone, 'ok');
+  assert.equal(pathLine({ stations: [], plant: 'Clarkson', reserve: null, over: false }).text, 'Site → Clarkson', 'no capacity figure: the plant named, no reserve');
+  assert.equal(pathLine({ stations: [{ name: 'Lisgar', pct: 50 }], plant: null, toronto: false }), null, 'no plant, no path line');
+  // On a development's Overview (the map and the site page's Summary): under Wastewater, Review → only
+  // when the review queue lists it, and only once the DC impact model is worked out (never built here).
+  const o = fs.readFileSync(path.join(JS_DIR, 'overview-tab.js'), 'utf8');
+  assert.match(o, /stations: f\.sps\.filter\(s => s\.firm > 0\)\.map\(s => \(\{ name: DD\(\)\.psName\(s\.a\), pct: Math\.round\(s\.wet \/ s\.firm \* 100\) \}\)\), plant, toronto: f\.pl === 'Toronto', reserve: f\.cap \? fmt1\(f\.reserve\) : null, over: !!\(f\.cap && f\.reserve <= 0\), outlet: DO && DO\.recordOf \? \(DO\.recordOf\(p\) \|\| \{\}\)\.mode : null/);
+  assert.match(o, /const queued = pathTo && IM && IM\.current && IM\.current\(\) && DO && DO\.queue \? \(\(DO\.queue\(\) \|\| \{\}\)\.all \|\| \[\]\)\.some\(x => x\.p\.key === p\.key\) : false;/);
+  assert.match(o, /<button type="button" class="btn small link" data-ws-page="outlets" data-dvo="pick-dev" data-dvo-key="\$\{esc\(p\.key\)\}">Review →<\/button>/);
+  assert.match(o, /svcRow\(`🚰 Wastewater[^\n]+\n\s+\.\.\.\(pathTo \? \[\{ tone: TONE\[pathTo\.tone\], html: `<div class="pnl-r-top"><span class="pnl-r-name">Path to the plant<\/span>/, 'right under Wastewater');
+  assert.doesNotMatch(o, /DO\.load\(|IM\.model\(|PeelDcImpact\.model\(/, 'the Overview never loads the outlets nor builds the DC impact model');
+  // Both handlers are document-wide: the page opens and the editor picks the development, in either order.
+  assert.match(fs.readFileSync(path.join(JS_DIR, 'dev-outlets.js'), 'utf8'), /if \(act === 'pick-dev'\) \{ S\.sel = t\.dataset\.dvoKey; store\.set\('dvoSel', S\.sel\);/);
+  // The stations come in the order the flow reaches them.
+  assert.match(fs.readFileSync(path.join(JS_DIR, 'svc-data.js'), 'utf8'), /\.filter\(a => spsOf\(a\) && route\.has\(MA\(\)\.stationPipe\(a\)\)\)\.sort\(\(a, b\) => route\.get\(MA\(\)\.stationPipe\(a\)\) - route\.get\(MA\(\)\.stationPipe\(b\)\)\)/);
+});
+
+test('reliedOn: the DC projects a development relies on, one per project, late first, the first n', () => {
+  const ln = (p, y) => ({ kind: 'line', ln: { p }, y });
+  const needs = [
+    { status: 'gap', relief: [ln('25-2269', 2031)] },
+    { status: 'planned', relief: [ln('25-2269', 2031)] },             // the same project, in time here: still late
+    { status: 'planned', relief: [{ kind: 'step', y: 2029, step: { proj: '22-1005' } }] },
+    { status: 'planned', relief: [{ kind: 'fac', y: 2033, items: [{ what: 'pumps' }, { what: 'forcemain', proj: '24-2110' }] }] },
+    { status: 'ok', relief: [ln('20-9999', 2027)] },                   // room: not relied on
+    { status: 'check', relief: [ln('20-8888', 2027)] },
+    { status: 'gap', relief: [] },                                      // no relief listed: no project
+    { status: 'planned', relief: [{ kind: 'line', ln: { c: 'C-7' }, y: 2035 }] },
+  ];
+  assert.deepEqual(reliedOn(needs), [{ key: '25-2269', name: null, y: 2031, late: true }, { key: '22-1005', name: null, y: 2029, late: false }, { key: '24-2110', name: null, y: 2033, late: false }]);
+  assert.deepEqual(reliedOn(needs, 10).map(x => x.key), ['25-2269', '22-1005', '24-2110', 'C-7'], 'a component number when no project number');
+  assert.deepEqual(reliedOn([{ status: 'planned', relief: [{ kind: 'line', ln: {}, y: 2030 }, ln('23-1', 2032)] }]), [{ key: '23-1', name: null, y: 2032, late: false }], 'the first relief with a number');
+  assert.deepEqual(reliedOn(null), []);
+  // Each by its name, as the relief carries it: a DC main's own, else the facility's (a plant step, a
+  // facility's item); a later constraint on the same project fills a name the first one lacked.
+  const plant = { name: 'G.E. Booth Water Resource Recovery Facility' };
+  assert.deepEqual(reliedOn([{ status: 'gap', relief: [{ kind: 'step', y: 2037, fc: plant, step: { proj: '25-2945', mld: 600 } }] }]), [{ key: '25-2945', name: 'G.E. Booth Water Resource Recovery Facility', y: 2037, late: true }], 'a plant step: the plant');
+  assert.deepEqual(reliedOn([{ status: 'planned', relief: [{ kind: 'line', ln: { p: '24-1', n: 'Mayfield Road trunk sewer' }, y: 2030 }] }]), [{ key: '24-1', name: 'Mayfield Road trunk sewer', y: 2030, late: false }], 'a DC main: its name');
+  assert.deepEqual(reliedOn([{ status: 'planned', relief: [{ kind: 'fac', y: 2033, fc: { name: 'Lisgar PS' }, items: [{ what: 'pumps', proj: '24-2110' }] }] }]).map(x => x.name), ['Lisgar PS'], 'a facility item: the facility');
+  assert.deepEqual(reliedOn([{ status: 'planned', relief: [ln('23-1', 2032)] }, { status: 'gap', relief: [{ kind: 'line', ln: { p: '23-1', n: 'Queen St main' }, y: 2032 }] }]), [{ key: '23-1', name: 'Queen St main', y: 2032, late: true }]);
+  // The Overview's Infrastructure coming row names them first, by number and name (as the search lists a
+  // DC project), and one late makes the row something to check, whatever the connection's verdict.
+  const o = fs.readFileSync(path.join(JS_DIR, 'overview-tab.js'), 'utf8');
+  assert.match(o, /relTxt = rel\.length \? `Relies on \$\{rel\.map\(x => `\$\{esc\(x\.key\)\}\$\{x\.name \? ` – \$\{esc\(x\.name\)\}` : ''\} \(\$\{x\.late \? 'late' : 'in time'\}\)`\)\.join\(', '\)\} · ` : ''/);
+  assert.match(fs.readFileSync(path.join(JS_DIR, 'search-filter.js'), 'utf8'), /label: `DC project \$\{ln\.p \|\| ln\.c\}\$\{ln\.n \? ` – \$\{ln\.n\}` : ''\}`/, 'the search’s own name for it');
+  assert.match(o, /const infTone = dcv\.tone === 'ok' && rel\.some\(x => x\.late\) \? 'warn' : dcv\.tone;/);
+  assert.match(o, /\{ tone: TONE\[infTone\], attrs: \{ 'data-at': 'dca:timing' \}, html: `<div class="pnl-r-top"><span class="pnl-r-name">🏗 Infrastructure coming<\/span>\$\{PN\.chip\(\{ tone: TONE\[infTone\], text: infTone === 'ok' \? 'OK' : infTone === 'warn' \? 'Check' : 'Short' \}\)\}/);
+  assert.match(o, /<small class="pnl-r-line">\$\{relTxt\}\$\{fmtNum\(nWorks\)\} DC work/);
 });
 
 test('verdictMilestone: withdrawn, done, appeal, stalled, next', () => {
