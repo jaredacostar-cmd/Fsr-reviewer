@@ -107,6 +107,7 @@
   // The chips a tab shows at a scope (≤ 4: tests/four-tabs.test.js).
   const chipsAt = (tab, scope) => (TABSUBS[tab] ? TABSUBS[tab].valid.filter(v => !hiddenAt(scope, tab, v)) : []);
   const areaPick = {};
+  let heldTab = null;
   function showFootTab(key, sub) {
     if (key === 'dev' || key === 'developments' || key === 'tool') key = 'overview';   // the development's views live in the Overview
     if (key === 'growth' && root.PeelUtil && root.PeelUtil.flushLater) root.PeelUtil.flushLater();   // (its views, if they wait to render)
@@ -114,7 +115,9 @@
     // (a sub-view another tab now holds opens there: SUB_MAP 'tab:sub')
     { const r = sub ? migrateSub(key, sub) : null; if (r) { key = r.tab; sub = r.sub; } }
     if (sub && TABSUBS[key] && TABSUBS[key].valid.includes(sub)) { delete areaPick[key]; TABSUBS[key].set(sub); store.set(TABSUBS[key].store, sub); }
-    if (!document.querySelector(`.f-tab[data-tab="${key}"]:not([hidden])`)) key = 'overview';
+    // (Servicing and Capital show once the servicing data loads, js/svc-tab.js: a tab picked before then
+    // is held and opened when it shows, tabShown below, unless another tab is picked meanwhile)
+    if (!document.querySelector(`.f-tab[data-tab="${key}"]:not([hidden])`)) { heldTab = key; key = 'overview'; } else heldTab = null;
     const site = !!(root.DevScope && root.DevScope.current());
     const ssCur = root.PeelSvcScope && root.PeelSvcScope.current && root.PeelSvcScope.current();
     const fileScope = !!(ssCur && ssCur.kind === 'result' && ssCur.rkind === 'file');
@@ -166,6 +169,8 @@
   });
   showFootTab(footPref);
 
+  // A tab button just shown (js/svc-tab.js renderSvcTab): open it if it was the one asked for and held.
+  function tabShown(key) { if (heldTab === key && footTab === 'overview') showFootTab(key); }
   // Helper for other modules: set a tab's sub-view, persisting the choice.
   // A link or button that opens a tab (and sub-view): the tab becomes the one picked (kept, and in
   // the share link), as a click on the tab itself does.
@@ -180,7 +185,7 @@
   const api = {
     tabOf, TAB_KEYS, SUB_MAP, HIDDEN, hiddenAt, chipsAt,
     getFootPref: () => footPref, setFootPref: v => { footPref = tabOf(v); }, openTab,
-    getFootTab: () => footTab,
+    getFootTab: () => footTab, tabShown,
     getSvcSub: () => svcSub, setSvcSub: v => { svcSub = v; store.set('svcSub', v); },
     getGSub: () => gSub, setGSub: v => { gSub = v; },
     getDcSub: () => dcSub, setDcSub: v => { dcSub = v; },

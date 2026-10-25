@@ -379,6 +379,8 @@
     const has = !!(App().state.servicing && bc);
     $('#ftab-svc').hidden = !has;
     $('#ftab-dca').hidden = !has || !App().state.dcInfra;
+    // (a link or a stored tab that named one of them before the data arrived opens it now)
+    if (AT() && AT().tabShown) for (const k of ['svc', 'dca']) if (!$(`#ftab-${k}`).hidden) AT().tabShown(k);
     if (!has) return;
     // Not before the servicing lookup is filled (js/svc-data.js): a model built without it counts
     // rural land as sewered and tags no development — Inglewood read 398% until the next rebuild.

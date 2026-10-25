@@ -177,3 +177,22 @@ test('in-app calls follow a moved sub-view too: setSub, a data-at link, showFoot
   assert.match(s, /const \[t0, s0\] = a\.dataset\.at\.split\(':'\), r = s0 \? migrateSub\(t0, s0\) : null, tab = r \? r\.tab : t0, sub = r \? r\.sub : s0;/);
   assert.match(s, /\{ const r = sub \? migrateSub\(key, sub\) : null; if \(r\) \{ key = r\.tab; sub = r\.sub; \} \}/);
 });
+
+test('a tab named before its data arrived (Servicing, Capital) opens when its button shows, unless another was picked', () => {
+  const shown = new Set(['overview', 'growth', 'records']);
+  const q = sel => { const m = /^\.f-tab\[data-tab="(\w+)"\]:not\(\[hidden\]\)$/.exec(sel); return m ? (shown.has(m[1]) ? {} : null) : null; };
+  const document = { querySelector: q, querySelectorAll: () => [], getElementById: () => null, addEventListener: () => {} };
+  const ctx = { window: { PeelUtil: { store: { get: (k, d) => d, set: () => {} } }, document }, document, setTimeout: () => 0, module: { exports: {} } };
+  ctx.globalThis = ctx;
+  require('node:vm').runInNewContext(src('js/analysis-tabs.js'), ctx);
+  const T = ctx.module.exports;
+  T.showFootTab('svc');
+  assert.equal(T.getFootTab(), 'overview', 'its button is hidden: Overview meanwhile');
+  shown.add('svc'); T.tabShown('svc');
+  assert.equal(T.getFootTab(), 'svc', 'the button shows: the tab asked for opens');
+  T.showFootTab('dca'); assert.equal(T.getFootTab(), 'overview');
+  T.showFootTab('growth');
+  shown.add('dca'); T.tabShown('dca');
+  assert.equal(T.getFootTab(), 'growth', 'another tab picked meanwhile stays');
+  assert.match(src('js/svc-tab.js'), /if \(AT\(\) && AT\(\)\.tabShown\) for \(const k of \['svc', 'dca'\]\) if \(!\$\(`#ftab-\$\{k\}`\)\.hidden\) AT\(\)\.tabShown\(k\);/);
+});
