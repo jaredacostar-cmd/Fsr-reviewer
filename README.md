@@ -1530,9 +1530,13 @@ Review an FSR, Forecast and Study area are its views.
   City of Toronto system), and how the outlet was set (Automatic, Confirmed or Set by hand). *Review →*
   opens Review outlets at the development when its review queue lists it, once the DC impact model
   has been worked out in this visit (Capital › DC projects, Review outlets or the DC project map; the
-  Overview never builds it). Its *Infrastructure coming* row names the DC projects it relies on, late
-  ones first ("Relies on 25-2269 (late), 22-1005 (in time)"): each constraint on its path that needs
-  relief, by its first relief with a project number.
+  Overview never builds it). Its *Infrastructure coming* row names the DC projects it relies on, by
+  number and name as the search lists them, late ones first ("Relies on 25-2945 – G.E. Booth Water
+  Resource Recovery Facility (late), 22-1005 (in time)"): each constraint on its path that needs
+  relief, by its first relief with a project number; the name is the DC main's, else the facility's
+  (a plant step, a facility's item). One late project makes the row *Check*, whatever the connection's
+  own verdict. Review outlets also opens from Records › Data checks (*Review outlets →*) and the
+  sidebar (QA/QC).
 - The views keep their own ids (`site`, `fsr`, `growth`, `outlook`, `study`), so links, share links and
   the map-view chips still work; Explore opens the site in scope, else the last view used.
 - A site's page has the **live map** beside its sections, at the site, with the infrastructure around
@@ -1576,9 +1580,11 @@ On a page, a pick opens what it found (`js/workspaces.js` `pageRoute` and `route
   sets the map's plan filter, a facility opens its scope there); `routePick` returns false outside a
   page.
 - **The drill does not filter.** A plan picked on a page is Growth in an area's own drill-down: the map
-  and the other pages stay unfiltered (the plan filter from a drill comes in phase 6). A plan or MTSA
-  in another municipality than Home's picked one goes back to Peel first, because the plan tree holds
-  only the developments shown.
+  and the other pages stay unfiltered (the plan filter from a drill comes in phase 6). The plan tree
+  holds only the developments shown, so a filter that would leave the pick out goes first: Home's
+  municipality when the plan or MTSA is in another (back to Peel), and the map's plan or MTSA filter
+  (a plan picked on the full map, the MTSA a page's MTSA pick left on), unless it is a plan filter that
+  already holds the plan picked. An MTSA pick then sets its own filter, as on the map.
 - **Its Area report is the drilled area's.** At a municipality, plan, precinct or sub-area, *Area
   report (PDF)* reports that level's developments (`data-ws-areareport`, js/ws-pages.js), with the
   outline on its map: a development partly in the plan counts whole, as the map's plan filter counts
@@ -1592,8 +1598,10 @@ On a page, a pick opens what it found (`js/workspaces.js` `pageRoute` and `route
   waits until the box lets go. A pick lets go of it on a page, so what it opens renders at once.
 - **Hits need loaded data.** Plans, facilities and DC projects come from `state.areas`,
   `state.servicing` and `state.dcInfra`, and file numbers from each development's `records`; until
-  they are in, the list says so in a muted line. A change that loads these lazily must load them by
-  the box's first focus.
+  they are in, the list says so in a muted line. Zones, stations and blocks are offered once the
+  servicing lookup is filled (`svcById`, with the DC program), so a pick never lands on an empty map
+  view; a scope that still does not open is taken on a page and nothing moves. A change that loads
+  these lazily must load them by the box's first focus.
 
 ## Servicing and Capital: one page each, the map's sub-views as sections
 
@@ -1806,6 +1814,10 @@ From design audit, Group 7:
     with its way back to the page.
   - The trail reads Peel › the site › Inquiry draft. × or the site step closes the draft and shows the
     site again; Peel closes both. Opening another development replaces the draft.
+  - On a phone the draft opens the bottom sheet all the way (the site bar above it leaves a half sheet
+    no room), for the draft only: the sheet is not remembered at full, and closing the draft puts it
+    back where it was. A full sheet stops under the map's way back to the page, so it still takes a
+    tap.
   - Every other result still replaces the development (one scope at a time).
 - **Inspect point and Fit fixed.** Both use the sewer trace. The trace returned nothing and
   opened a panel as a side effect, so Inspect's sewer-path section was empty. The trace now

@@ -79,16 +79,18 @@
   // The DC projects a development relies on (the Overview's Infrastructure coming row): for each
   // constraint on its path that needs relief (js/masterplan.js devNeeds: gap, it runs out before its
   // relief; planned, in time), the first relief with a project number (a DC main, a plant step or a
-  // facility's item). One per project, late first, then by year; the first n. → [{ key, y, late }]
+  // facility's item). One per project, late first, then by year; the first n. Its name is the one the
+  // relief carries (a DC main's, else the facility's: a plant step or a facility item), or null.
+  // → [{ key, name, y, late }]
   const reliedOn = (needs, n = 3) => {
     const by = new Map();
     for (const c of needs || []) {
       if (c.status !== 'gap' && c.status !== 'planned') continue;
       const r = (c.relief || []).find(x => (x.ln && (x.ln.p || x.ln.c)) || (x.step && x.step.proj) || (x.items || []).some(i => i.proj));
       if (!r) continue;
-      const key = (r.ln && (r.ln.p || r.ln.c)) || (r.step && r.step.proj) || r.items.find(i => i.proj).proj, was = by.get(key);
-      if (was) was.late = was.late || c.status === 'gap';
-      else by.set(key, { key, y: r.y || null, late: c.status === 'gap' });
+      const key = (r.ln && (r.ln.p || r.ln.c)) || (r.step && r.step.proj) || r.items.find(i => i.proj).proj, was = by.get(key), name = (r.ln && r.ln.n) || (r.fc && r.fc.name) || null;
+      if (was) { was.late = was.late || c.status === 'gap'; was.name = was.name || name; }
+      else by.set(key, { key, name, y: r.y || null, late: c.status === 'gap' });
     }
     return [...by.values()].sort((a, b) => b.late - a.late || (a.y || 1e4) - (b.y || 1e4)).slice(0, n);
   };

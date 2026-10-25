@@ -49,6 +49,27 @@ test('every place hit carries what it is, for the page to open it', () => {
   assert.match(sf, /hit: 'dcfac' \}/);
 });
 
+// A zone, station or block hit opens only once the servicing lookup is filled (js/svc-data.js svcById,
+// after the optional files: dc-infra and the rest); until then it is not offered, the "still loading"
+// note stands, and a pick never lands on an empty map view.
+test('servicing hits are offered once they open: zones, stations and blocks after the servicing lookup', () => {
+  const placeMatches = new Function('App', 'SD', 'window', `${body(sf, '  function placeMatches(ql) {')}\n  }\nreturn placeMatches;`);
+  const zone = { id: 'pz:5', name: 'Pressure zone 5' }, ps = { id: 'dr:ps:7', name: 'Lisgar PS' }, block = { id: 'dr:B5', name: 'Block 5', kind: 'block' };
+  const state = { areas: null, dcInfra: null, servicing: { zones: [zone], psAreas: [ps], drainage: [block] } }, svcById = new Map();
+  const NAME = { Lakeview: 'G.E. Booth', Clarkson: 'Clarkson', Inglewood: 'Inglewood' };
+  const pm = placeMatches(() => ({ state }), () => ({ svcById, PLANT_NAME: NAME, PLANT_SHORT: NAME, plantLabel: pl => `${pl} plant`, drName: a => a.name }), {});
+  const hits = q => pm(q).map(x => x.place.ss);
+  // The servicing areas in, their lookup not yet: plants and South Peel (they resolve without it) only.
+  assert.deepEqual(plain([hits('zone 5'), hits('lisgar'), hits('block 5')]), [[], [], []]);
+  assert.deepEqual(plain([hits('clarkson'), hits('south peel')]), [['plant:Clarkson'], ['wsys:lake']]);
+  // Filled: each its scope.
+  for (const a of [zone, ps, block]) svcById.set(a.id, a);
+  assert.deepEqual(plain([hits('zone 5'), hits('lisgar'), hits('block 5')]), [['pz:5'], ['dr:ps:7'], ['dr:B5']]);
+  assert.match(sf, /const SS = \(\) => window\.PeelSvcScope, ready = SD\(\)\.svcById\.size > 0;/);
+  // (the note under the results holds through that window: the lookup is filled with dcInfra, js/svc-data.js)
+  assert.match(src('js/svc-data.js'), /App\(\)\.state\.dcInfra = DI\(\)\.prepDc\(dc\);\n\s+SP\(\)\.renderRefs\(\);\n\s+for \(const a of \[\.\.\.App\(\)\.state\.servicing\.zones, \.\.\.App\(\)\.state\.servicing\.drainage, \.\.\.App\(\)\.state\.servicing\.psAreas\]\) svcById\.set\(a\.id, a\);/);
+});
+
 test('a pick on a page is routed; the full map and a workspace map view keep the search’s own code', () => {
   const g = body(sf, '  function goSug(x) {');
   const blur = g.indexOf("const W = window.PeelWorkspaces, onPage = !!(W && W.mode && W.mode() === 'home'); if (onPage) $('#f-search').blur();");
@@ -71,7 +92,7 @@ test('pageRoute: what each hit opens on a page (navigation design §3.3)', () =>
   assert.deepEqual(plain(W.pageRoute({ label: 'x', p }, 'growth')), { page: 'site', dev: 'k1', sec: 'summary' });
   assert.deepEqual(plain(W.pageRoute({ label: 'x', p }, 'fsr')), { page: 'fsr', dev: 'k1', sec: 'summary' }, 'from Review an FSR: its FSR review');
   assert.deepEqual(plain(W.pageRoute({ label: 'x', p, hit: 'file', ref: 'OZ-21-005' }, 'fsr')), { page: 'site', dev: 'k1', sec: 'files', file: 'OZ-21-005' }, 'a file number: its page at Files');
-  assert.deepEqual(plain(W.pageRoute({ place: { hit: 'plan', id: 'sp7', muni: 'Brampton' } }, 'home')), { page: 'growth', drill: 'a:sp7', fall: 'm:Brampton', muni: 'Brampton' }, 'a plan: Growth in an area at it');
+  assert.deepEqual(plain(W.pageRoute({ place: { hit: 'plan', id: 'sp7', muni: 'Brampton' } }, 'home')), { page: 'growth', drill: 'a:sp7', fall: 'm:Brampton', muni: 'Brampton', sp: 'sp7' }, 'a plan: Growth in an area at it (a plan filter holding it may stay)');
   assert.deepEqual(plain(W.pageRoute({ place: { hit: 'mtsa', id: 'mt3', muni: 'Mississauga' } }, 'home')), { page: 'growth', drill: 'm:Mississauga', muni: 'Mississauga', then: 'map' }, 'an MTSA: at its municipality, then its filter');
   assert.deepEqual(plain(W.pageRoute({ place: { hit: 'mtsa', id: 'mt4' } }, 'home')), { page: 'growth', drill: 'peel', muni: '', then: 'map' });
   assert.deepEqual(plain(W.pageRoute({ place: { hit: 'svc', ss: 'plant:Lakeview' } }, 'week')), { ws: 'tight', ss: 'plant:Lakeview' }, 'a facility: its scope on Servicing capacity’s map');
@@ -94,8 +115,13 @@ test('the browser half: the page gate, the pick’s place set before its page op
   const at = s => { const i = r.indexOf(s); assert.ok(i > 0, s); return i; };
   assert.ok(at('exploreDev = `dev:${r.dev}`; pickDev(r.dev);') < at('WP.siteAt(r.dev, r.sec, r.file || null);') && at('WP.siteAt(') < at('openPage(r.page);'));
   assert.ok(at('WP.drillTo(r.drill, r.fall);') < at("openPage('growth');"));
-  assert.match(r, /if \(A && A\.state\.muni && A\.state\.muni !== r\.muni\) \{ A\.state\.muni = '';/, 'a plan in another municipality than Home’s: Peel first');
-  assert.match(r, /else if \(r\.ws\) go\(r\.ws, \{ ss: r\.ss, quiet: true \}\);/);
+  // (a filter that leaves the pick out of the plan tree goes first: Home's municipality, the map's plan
+  // or MTSA filter; once, before the drill)
+  assert.match(r, /muniOff = !!\(S\.muni && S\.muni !== r\.muni\)/, 'a plan in another municipality than Home’s: Peel first');
+  assert.match(r, /areaOff = !!\(sp\.length \|\| mt\.length\) && !\(r\.sp && !mt\.length && sp\.includes\(r\.sp\)\);/, 'a plan or MTSA filter: off, unless a plan filter holding the plan');
+  assert.ok(at('if (A.applyFilters) A.applyFilters(); }') < at('WP.drillTo(r.drill, r.fall);'), 'filters applied before the drill');
+  // A servicing scope that does not open yet: the pick is taken, nothing moves (no closed scopes).
+  assert.ok(at('if (r.ss && SS() && SS().resolve && !SS().resolve(r.ss)) return true;') < at('go(r.ws, { ss: r.ss, quiet: true });'));
   assert.match(r, /const D = root\.PeelDcProjects; if \(D && D\.select\) D\.select\(r\.dcSel\);/);
   assert.match(r, /return r\.then !== 'map';/);
   // The places the pick lands at (js/ws-pages.js): the same reset as a step up a site's trail.

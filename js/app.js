@@ -415,9 +415,11 @@
     const vh = window.innerHeight;
     const footH = $('#footer') ? $('#footer').getBoundingClientRect().height : 0;
     if (name === 'half') return Math.round(vh * 0.5);
-    // Full stops at the top bar, so the sheet's tabs and the panel header stay in view.
+    // Full stops at the top bar, so the sheet's tabs and the panel header stay in view, and under the
+    // map's way back to a page when it shows (js/workspaces.js renderBack), so it can still be tapped.
     const topB = $('#topbar') ? Math.max(0, $('#topbar').getBoundingClientRect().bottom) : 0;
-    if (name === 'full') return Math.max(240, Math.round(vh - footH - topB) - 8);
+    const back = document.querySelector('#back-bar:not([hidden])'), backH = back ? Math.round(back.getBoundingClientRect().height) + 8 : 0;
+    if (name === 'full') return Math.max(240, Math.round(vh - footH - topB - backH) - 8);
     return 96;
   }
   function setAnalysisSnap(name, save = true) {

@@ -238,6 +238,36 @@ test('Growth in an area: Area report (PDF) reports the level shown, not the map�
   assert.equal(reports[0][2], ring, 'the plan’s outline on the report’s map');
 });
 
+// Navigation phase 1 (S4): where a plan picked on a page lands (js/ws-pages.js drillTo): Growth in an
+// area at the plan, else at its municipality, else at Peel, in the plan tree of the developments shown
+// (a filter that leaves the plan out: js/workspaces.js routePick turns the map's area filters off first).
+test('drillTo: a plan pick lands at the plan, else its municipality, else Peel, in the tree as worked out', () => {
+  const node = (id, name, kind, parent) => ({ id, name, kind, parent, children: [], devs: [], m: { planned: 0, left: 0, people: 0, jobs: 0 } });
+  const peel = node('peel', 'Peel', 'peel', null), muni = node('m:Brampton', 'Brampton', 'municipality', 'peel'), plan = node('a:sp1', 'Plan One', 'plan', 'm:Brampton');
+  peel.children = [muni]; muni.children = [plan];
+  let tree = null;
+  const of = list => ({ root: peel, nodes: new Map(list.map(n => [n.id, n])) });
+  const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: () => null, querySelectorAll: () => [], getElementById: () => null, addEventListener() {}, dispatchEvent() {} };
+  const window = { document, PeelUtil: { esc: x => String(x), fmtNum: n => String(n) },
+    PeelPlanTables: { compute: () => { if (!tree) throw new Error('the developments are not in yet'); return tree; } },
+    PeelPanel: { get: k => (k === 'growth:pipeline' ? { scope: 'area', spec: { answer: 'Peel’s pipeline.', lists: [], method: '', sources: '' } } : null), scenarioChip: () => '' },
+    PeelApp: { state: { basis: 'all', muni: '', sp: [], mtsa: [], areas: null } } };
+  const ctx = { window, document, setTimeout: () => 0, clearTimeout() {}, URLSearchParams }; ctx.globalThis = ctx;
+  vm.runInNewContext(src('js/ws-pages.js'), ctx);
+  const P = window.PeelWsPages, at = (t, id = 'a:sp1', fall = 'm:Brampton') => { tree = t; P.drillTo(id, fall); return P.build('growth').name; };
+  const PEEL = 'How much is coming, where, and how fast?';
+  assert.equal(at(of([peel, muni, plan])), 'Plan One', 'in the tree: the plan');
+  assert.equal(at(of([peel, muni])), 'Brampton', 'filtered out of it: its municipality');
+  assert.equal(at(of([peel])), PEEL, 'its municipality filtered out too: Peel');
+  assert.equal(at(of([peel, muni, plan]), 'a:sp1', 'peel'), 'Plan One');
+  assert.equal(at(of([peel, muni]), 'a:sp1', 'peel'), PEEL, 'no municipality to fall to: Peel');
+  // The tree not worked out yet: the plan kept, and the page lands at it once the tree has it (at Peel
+  // if it is no node then).
+  at(null); assert.match(P.build('growth').answer, /Loading the pipeline…/, 'still loading');
+  tree = of([peel, muni, plan]); assert.equal(P.build('growth').name, 'Plan One');
+  at(null); tree = of([peel, muni]); assert.equal(P.build('growth').name, PEEL);
+});
+
 test('a development’s stage on the chart: the rung holding most of its units; built once none are left', () => {
   assert.equal(WP.stageOf({ top: 'plan', built: 0, existing: 0 }), 'plan');
   assert.equal(WP.stageOf({ top: null, built: 30, existing: 0 }), 'built');

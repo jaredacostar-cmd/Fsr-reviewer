@@ -127,13 +127,17 @@
       for (const a of App().state.areas.mtsas) if (has(a.name)) area('MTSA (major transit station area)', a, () => { App().state.mtsa = [a.id]; PA().renderAreaSelects(); PA().showArea(true); App().applyFilters(); }, { hit: 'mtsa', id: a.id, muni: a.municipality });
     }
     if (App().state.servicing) {
-      // Servicing items open as servicing scopes (design audit, Group 5).
-      const SS = () => window.PeelSvcScope;
+      // Servicing items open as servicing scopes (design audit, Group 5). Zones, stations and blocks open
+      // once the servicing lookup is filled, after the optional data (js/svc-data.js svcById): until then
+      // they are not offered, and the note under the results says they are still loading.
+      const SS = () => window.PeelSvcScope, ready = SD().svcById.size > 0;
       for (const pl of ['Lakeview', 'Clarkson', 'Inglewood']) if (has(SD().PLANT_NAME[pl]) || has(SD().PLANT_SHORT[pl])) out.push({ label: SD().plantLabel(pl), place: { kind: 'Wastewater treatment plant', go: () => SS().open(`plant:${pl}`), hit: 'svc', ss: `plant:${pl}` } });
       if (has('south peel') || has('water system')) out.push({ label: 'South Peel water system', place: { kind: 'Water system (lake-based)', go: () => SS().open('wsys:lake'), hit: 'svc', ss: 'wsys:lake' } });
-      for (const a of App().state.servicing.zones) if (has(a.name)) area('Water pressure zone', a, () => SS().open(a.id), { hit: 'svc', ss: a.id });
-      for (const a of App().state.servicing.psAreas || []) if (has(SD().drName(a))) out.push({ label: SD().drName(a), place: { kind: 'Pumping station catchment', go: () => SS().open(a.id), hit: 'svc', ss: a.id } });
-      for (const a of App().state.servicing.drainage) if (has(SD().drName(a))) out.push({ label: SD().drName(a), place: { kind: a.kind === 'ps' ? 'Pumping station catchment' : a.kind === 'block' ? 'Wastewater block' : 'Sanitary catchment', go: () => SS().open(a.id), hit: 'svc', ss: a.id } });
+      if (ready) {
+        for (const a of App().state.servicing.zones) if (has(a.name)) area('Water pressure zone', a, () => SS().open(a.id), { hit: 'svc', ss: a.id });
+        for (const a of App().state.servicing.psAreas || []) if (has(SD().drName(a))) out.push({ label: SD().drName(a), place: { kind: 'Pumping station catchment', go: () => SS().open(a.id), hit: 'svc', ss: a.id } });
+        for (const a of App().state.servicing.drainage) if (has(SD().drName(a))) out.push({ label: SD().drName(a), place: { kind: a.kind === 'ps' ? 'Pumping station catchment' : a.kind === 'block' ? 'Wastewater block' : 'Sanitary catchment', go: () => SS().open(a.id), hit: 'svc', ss: a.id } });
+      }
     }
     if (App().state.dcInfra && ql.length >= 3) {
       const seen = new Set();

@@ -121,18 +121,29 @@ test('keepDev: a result started at the open development keeps it; any other resu
   let dev = { key: 'Brampton|1 A ST', title: '1 A ST' }, snap = 'half';
   win.DevScope = { current: () => dev, close: () => { calls.push('dev-close'); dev = null; } };
   // (a phone: the bottom sheet)
-  win.PeelDataTab = { shellNarrow: () => true }; Object.assign(win.PeelApp, { getAnalysisSnap: () => snap, setAnalysisSnap: x => { snap = x; } });
+  const saved = [];
+  win.PeelDataTab = { shellNarrow: () => true }; Object.assign(win.PeelApp, { getAnalysisSnap: () => snap, setAnalysisSnap: (x, save = true) => { snap = x; if (save) saved.push(x); } });
   S.openResult({ title: 'Inquiry draft — 1 A ST', html: '<pre class="tinq-pre">x</pre>', keepDev: true });
   assert.ok(!calls.includes('dev-close'), 'the development stays open');
   assert.equal(snap, 'full', 'on a phone the sheet opens all the way: the site bar sits above the result');
+  assert.deepEqual(saved, [], 'for this result only: not remembered (the map never reopens under a full sheet)');
   assert.equal(win.PeelApp.state.ss, 'tool:inquiry-draft-1-a-st');
   assert.equal(S.current().result.keepDev, true); assert.equal(S.keepsDev(), true);
   assert.equal(S.closeResult(), true);
   assert.equal(S.keepsDev(), false); assert.ok(dev, 'closing the draft goes back to the development');
+  assert.equal(snap, 'half', '× puts the sheet back where it was');
+  // The trail's Peel step (the scope cleared, the development closed) puts it back too; a sheet moved
+  // since the raise stays where it was moved to.
+  snap = 'peek'; S.openResult({ title: 'Inquiry draft — 1 A ST', html: '', keepDev: true }); assert.equal(snap, 'full');
+  S.clear(); assert.equal(snap, 'peek');
+  S.openResult({ title: 'Inquiry draft — 1 A ST', html: '', keepDev: true }); snap = 'half';
+  S.closeResult(); assert.equal(snap, 'half');
+  assert.deepEqual(saved, [], 'none of it remembered');
   // A plain result (a pick, a tool) replaces the development: one scope at a time.
   snap = 'peek';
   S.openResult({ title: 'Inspect point', html: '<p>x</p>' });
   assert.equal(snap, 'half', 'a plain result raises the sheet from its peek, as before');
+  assert.deepEqual(saved, ['half'], '(remembered, as before)');
   assert.ok(calls.includes('dev-close') && dev === null, 'a plain result closes the development');
   assert.equal(S.keepsDev(), false);
   // With no development open there is nothing to keep.
@@ -183,4 +194,19 @@ test('the Inquiry draft: one function, a development action and the Export item,
   // The site page (beside the memo, the actions on one line: dead-ui DV-12) and the map's development Overview.
   assert.match(src('js/ws-pages.js'), /function site\(\)[\s\S]*?actions: \[\{ label: 'Servicing memo', attrs: \{ 'data-pnl-memo': '' \}, primary: true \}, \{ label: 'Inquiry draft', attrs: \{ 'data-inquiry': '' \}[^\n]*'data-watch': p\.key/);
   assert.match(src('js/overview-tab.js'), /foot: \{ primary: \{ label: 'Servicing memo', attrs: \{ 'data-pnl-memo': '' \}[^\n]*secondary: \[\{ label: 'Inquiry draft', attrs: \{ 'data-inquiry': '' \}/);
+});
+
+// Navigation phase 1 (AD-5, design §9 #5): Review outlets is a tool page reached from Records › Data
+// checks, a site's path line (Review →) and the sidebar (QA/QC); each way in is a data-ws-page button,
+// which opens the page from the map and from a page alike (one document-wide handler).
+test('Review outlets opens from Records › Data checks, a site’s path line and the sidebar', () => {
+  const r = src('js/records-tab.js');
+  assert.match(r, /btn: '<button type="button" class="btn small link" data-ws-page="outlets">Review outlets →<\/button>'/);
+  assert.match(r, /<p class="small muted">\$\{OUTLETS\.what\}: \$\{OUTLETS\.btn\}<\/p>`;/, 'the full table (checksHTML)');
+  assert.match(r, /\{ title: 'Sewer outlets', rows: \[\{ attrs: \{ 'data-ws-page': 'outlets', title: 'Open Review outlets' \}, html: `<div class="pnl-r-top"><span class="pnl-r-name">Review outlets →<\/span><\/div><small class="pnl-r-line">\$\{OUTLETS\.what\}<\/small>` \}\], total: 1 \}\]/, 'the panel: its own list, whatever the checks');
+  assert.match(src('js/overview-tab.js'), /data-ws-page="outlets" data-dvo="pick-dev"/, 'the path line');
+  const W = require('../js/workspaces.js');
+  assert.ok(W.GROUPS.some(([g, ids]) => g === 'QA/QC' && ids.includes('outlets')), 'the sidebar');
+  assert.match(src('js/workspaces.js'), /const pg = e\.target\.closest\('\[data-ws-page\]'\);\n {4}if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage\); return; \}/);
+  assert.match(src('js/tips.js'), /Also Records › Data checks \(Review outlets →\), and "Review →" on a development’s Overview/);
 });

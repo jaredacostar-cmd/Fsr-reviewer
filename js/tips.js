@@ -135,7 +135,7 @@
       ['Explore\u2019s "Draw an area →"', 'Draw an area at the top of every page: the map opens with the Select tool on.'],
       ['Export ▾ › Inquiry response draft', 'Also Inquiry draft beside a development’s Servicing memo. Both open the draft on the map with the development kept (Peel › the site › the draft).'],
       ['Home › Needs attention (a row opened Servicing capacity)', 'A row opens its plant, station or water system as a scope on the map, as does the first 90% trigger. Home’s Servicing figures add the first zone limit (100% of firm pumping).'],
-      ['Where a development discharges (Review outlets, from the sidebar only)', 'Also "Review →" on a development’s Overview, in the "Path to the plant" row, when the development is in the review queue.'],
+      ['Where a development discharges (Review outlets, from the sidebar only)', 'Also Records › Data checks (Review outlets →), and "Review →" on a development’s Overview, in the "Path to the plant" row, when the development is in the review queue.'],
     ] },
     { h: 'The analysis tabs', rows: [
       ['Servicing › the Wastewater and Water chip rows (four each)', 'One row for both: Capacity · Network · Allocations · Checks.'],

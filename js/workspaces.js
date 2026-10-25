@@ -168,7 +168,7 @@
     if (!x || x.filter || x.loading) return null;
     if (x.p) return x.hit === 'file' ? { page: 'site', dev: x.p.key, sec: 'files', file: x.ref } : { page: page === 'fsr' ? 'fsr' : 'site', dev: x.p.key, sec: 'summary' };
     const h = x.place || {}, muni = h.muni || '';
-    if (h.hit === 'plan') return { page: 'growth', drill: `a:${h.id}`, fall: muni ? `m:${muni}` : 'peel', muni };
+    if (h.hit === 'plan') return { page: 'growth', drill: `a:${h.id}`, fall: muni ? `m:${muni}` : 'peel', muni, sp: h.id };
     if (h.hit === 'mtsa') return { page: 'growth', drill: muni ? `m:${muni}` : 'peel', muni, then: 'map' };
     if (h.hit === 'svc') return { ws: 'tight', ss: h.ss };
     if (h.hit === 'dc') return { page: 'projects', wsec: 'dcproj', dcSel: h.key };
@@ -202,6 +202,8 @@
     const on = mode === 'full' && !!backTo;
     bar.hidden = !on;
     bar.innerHTML = on ? `<button type="button" class="btn small" data-ws-back>← Back to ${esc(backTo.ws ? `${pageName(backTo.ws)} (map)` : pageName(backTo.page))}</button><button type="button" class="btn small link" data-ws-back-x aria-label="Close the back bar" title="Stay on the full map">×</button>` : '';
+    // (a phone's full sheet stops under the bar while it shows: js/app.js analysisSnapPx)
+    const A = App(); if (A && A.getAnalysisSnap && A.getAnalysisSnap() === 'full') A.setAnalysisSnap('full', false);
   }
   function setMode(m, pg) {
     if (m === 'full' && mode !== 'full') backTo = mode === 'home' ? { page } : mode === 'ws' && cur ? { ws: cur } : null;
@@ -552,14 +554,25 @@
       if (WP && WP.siteAt) WP.siteAt(r.dev, r.sec, r.file || null);
       openPage(r.page);
     } else if (r.drill) {
-      // (the plan tree holds the developments shown: a plan in another municipality than Home's is not
-      // in it, so that pick goes back to Peel first, as Home's Peel button does)
-      const A = App();
-      if (A && A.state.muni && A.state.muni !== r.muni) { A.state.muni = ''; if (root.PeelSearchFilter && root.PeelSearchFilter.renderMuniChips) root.PeelSearchFilter.renderMuniChips(); if (root.PeelPlanAreas && root.PeelPlanAreas.renderAreaSelects) root.PeelPlanAreas.renderAreaSelects(); if (A.applyFilters) A.applyFilters(); }
+      // (the plan tree holds the developments shown, so a filter that leaves the pick out goes first:
+      // Home's municipality when it is another's, as Home's Peel button does, and the map's plan or MTSA
+      // filter, unless it is a plan filter that holds the plan picked; an MTSA pick then sets its own,
+      // the search's map handler running after this returns false)
+      const A = App(), S = A && A.state, PA = root.PeelPlanAreas;
+      if (S) {
+        const sp = S.sp || [], mt = S.mtsa || [], muniOff = !!(S.muni && S.muni !== r.muni), areaOff = !!(sp.length || mt.length) && !(r.sp && !mt.length && sp.includes(r.sp));
+        if (muniOff) { S.muni = ''; if (root.PeelSearchFilter && root.PeelSearchFilter.renderMuniChips) root.PeelSearchFilter.renderMuniChips(); }
+        if (areaOff) { S.sp = []; S.mtsa = []; }
+        if (muniOff || areaOff) { if (PA && PA.renderAreaSelects) PA.renderAreaSelects(); if (areaOff && PA && PA.showArea) { PA.showArea(); if (PA.renderPlanAreas) PA.renderPlanAreas(); } if (A.applyFilters) A.applyFilters(); }
+      }
       if (WP && WP.drillTo) WP.drillTo(r.drill, r.fall);
       openPage('growth');
-    } else if (r.ws) go(r.ws, { ss: r.ss, quiet: true });
-    else if (r.dcSel) {
+    } else if (r.ws) {
+      // (a scope that does not open yet, its servicing data still loading, is no reason to leave the page
+      // or close the open scope: the pick is taken and nothing moves)
+      if (r.ss && SS() && SS().resolve && !SS().resolve(r.ss)) return true;
+      go(r.ws, { ss: r.ss, quiet: true });
+    } else if (r.dcSel) {
       if (WP && WP.sectionAt) WP.sectionAt('capital', r.wsec);
       openPage(r.page);
       const D = root.PeelDcProjects; if (D && D.select) D.select(r.dcSel);

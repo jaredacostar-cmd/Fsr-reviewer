@@ -382,6 +382,35 @@ test('Find from every page: a pick on a page opens what it found; the map’s pi
   assert.equal(window.PeelApp.state.muni, 'Mississauga'); assert.equal(applied, 0);
   onHome(); B.routePick({ place: { hit: 'plan', id: 'sp1', muni: 'Brampton' } });
   assert.equal(window.PeelApp.state.muni, '', 'Peel'); assert.equal(applied, 1); assert.equal(B.page(), 'growth');
+  // The map's plan or MTSA filter (a plan picked on the map, the MTSA a page's pick left on): off before
+  // the drill, so the tree it drills in holds the plan picked; a plan filter that holds it stays.
+  const S = window.PeelApp.state, log = [], drill = window.PeelWsPages.drillTo;
+  window.PeelApp.applyFilters = () => log.push(`apply ${S.sp.length + S.mtsa.length}`);
+  window.PeelWsPages.drillTo = (id, fall) => { log.push(`drill ${id} ${fall}`); drill(id, fall); };
+  window.PeelPlanAreas = { renderAreaSelects: () => log.push('selects'), showArea: () => log.push('outline'), renderPlanAreas: () => log.push('outlines') };
+  const pickPlan = (sp, mtsa) => { Object.assign(S, { sp, mtsa }); log.length = 0; onHome(); return B.routePick({ place: { hit: 'plan', id: 'sp1', muni: 'Brampton' } }); };
+  assert.equal(pickPlan(['sp9'], []), true);
+  assert.deepEqual(plain([S.sp, S.mtsa, log]), [[], [], ['selects', 'outline', 'outlines', 'apply 0', 'drill a:sp1 m:Brampton']], 'another plan’s filter: off, then the drill');
+  assert.equal(B.page(), 'growth');
+  pickPlan([], ['mtsa:3']);
+  assert.deepEqual(plain([S.sp, S.mtsa, log.slice(-2)]), [[], [], ['apply 0', 'drill a:sp1 m:Brampton']], 'an MTSA filter: off');
+  pickPlan(['sp1', 'sp9'], ['mtsa:3']);
+  assert.deepEqual(plain([S.sp, S.mtsa]), [[], []], 'a plan filter holding it, narrowed by an MTSA: off');
+  pickPlan(['sp1', 'sp9'], []);
+  assert.deepEqual(plain([S.sp, S.mtsa, log]), [['sp1', 'sp9'], [], ['drill a:sp1 m:Brampton']], 'a plan filter holding it: kept, nothing re-applied');
+  // An MTSA picked on a page: any area filter off before the drill to its municipality; the map's own
+  // handler then sets its filter (routePick returns false).
+  Object.assign(S, { sp: ['sp9'], mtsa: ['mtsa:3'] }); log.length = 0; onHome();
+  assert.equal(B.routePick({ place: { hit: 'mtsa', id: 'mtsa:4', muni: 'Brampton' } }), false);
+  assert.deepEqual(plain([S.sp, S.mtsa, log.slice(-2)]), [[], [], ['apply 0', 'drill m:Brampton undefined']]);
+  // A servicing scope that does not open yet (its data still loading): taken, and nothing moves: the
+  // page stays, the open scope is not closed. Once it resolves, its scope on Servicing capacity's map.
+  const opened = [], closed = [];
+  window.PeelSvcScope = { resolve: ref => (ref === 'plant:Lakeview' ? { ref } : null), current: () => ({ ref: 'plant:Clarkson' }), close: () => closed.push(1), open: ref => opened.push(ref) };
+  onHome(); assert.equal(B.routePick({ place: { hit: 'svc', ss: 'pz:5' } }), true);
+  assert.deepEqual(plain([B.mode(), B.page(), opened, closed]), ['home', 'home', [], []], 'pz:5 not in yet: stays on Home');
+  onHome(); assert.equal(B.routePick({ place: { hit: 'svc', ss: 'plant:Lakeview' } }), true);
+  assert.deepEqual(plain([B.mode(), B.current(), opened]), ['ws', 'tight', ['plant:Lakeview']]);
 });
 
 test('Draw an area (every page header): Select on, and on a phone the sheet down to its peek, the map there to draw on', () => {

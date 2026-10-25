@@ -127,13 +127,24 @@ test('reliedOn: the DC projects a development relies on, one per project, late f
     { status: 'gap', relief: [] },                                      // no relief listed: no project
     { status: 'planned', relief: [{ kind: 'line', ln: { c: 'C-7' }, y: 2035 }] },
   ];
-  assert.deepEqual(reliedOn(needs), [{ key: '25-2269', y: 2031, late: true }, { key: '22-1005', y: 2029, late: false }, { key: '24-2110', y: 2033, late: false }]);
+  assert.deepEqual(reliedOn(needs), [{ key: '25-2269', name: null, y: 2031, late: true }, { key: '22-1005', name: null, y: 2029, late: false }, { key: '24-2110', name: null, y: 2033, late: false }]);
   assert.deepEqual(reliedOn(needs, 10).map(x => x.key), ['25-2269', '22-1005', '24-2110', 'C-7'], 'a component number when no project number');
-  assert.deepEqual(reliedOn([{ status: 'planned', relief: [{ kind: 'line', ln: {}, y: 2030 }, ln('23-1', 2032)] }]), [{ key: '23-1', y: 2032, late: false }], 'the first relief with a number');
+  assert.deepEqual(reliedOn([{ status: 'planned', relief: [{ kind: 'line', ln: {}, y: 2030 }, ln('23-1', 2032)] }]), [{ key: '23-1', name: null, y: 2032, late: false }], 'the first relief with a number');
   assert.deepEqual(reliedOn(null), []);
-  // The Overview's Infrastructure coming row names them first.
+  // Each by its name, as the relief carries it: a DC main's own, else the facility's (a plant step, a
+  // facility's item); a later constraint on the same project fills a name the first one lacked.
+  const plant = { name: 'G.E. Booth Water Resource Recovery Facility' };
+  assert.deepEqual(reliedOn([{ status: 'gap', relief: [{ kind: 'step', y: 2037, fc: plant, step: { proj: '25-2945', mld: 600 } }] }]), [{ key: '25-2945', name: 'G.E. Booth Water Resource Recovery Facility', y: 2037, late: true }], 'a plant step: the plant');
+  assert.deepEqual(reliedOn([{ status: 'planned', relief: [{ kind: 'line', ln: { p: '24-1', n: 'Mayfield Road trunk sewer' }, y: 2030 }] }]), [{ key: '24-1', name: 'Mayfield Road trunk sewer', y: 2030, late: false }], 'a DC main: its name');
+  assert.deepEqual(reliedOn([{ status: 'planned', relief: [{ kind: 'fac', y: 2033, fc: { name: 'Lisgar PS' }, items: [{ what: 'pumps', proj: '24-2110' }] }] }]).map(x => x.name), ['Lisgar PS'], 'a facility item: the facility');
+  assert.deepEqual(reliedOn([{ status: 'planned', relief: [ln('23-1', 2032)] }, { status: 'gap', relief: [{ kind: 'line', ln: { p: '23-1', n: 'Queen St main' }, y: 2032 }] }]), [{ key: '23-1', name: 'Queen St main', y: 2032, late: true }]);
+  // The Overview's Infrastructure coming row names them first, by number and name (as the search lists a
+  // DC project), and one late makes the row something to check, whatever the connection's verdict.
   const o = fs.readFileSync(path.join(JS_DIR, 'overview-tab.js'), 'utf8');
-  assert.match(o, /relTxt = rel\.length \? `Relies on \$\{rel\.map\(x => `\$\{esc\(x\.key\)\} \(\$\{x\.late \? 'late' : 'in time'\}\)`\)\.join\(', '\)\} · ` : ''/);
+  assert.match(o, /relTxt = rel\.length \? `Relies on \$\{rel\.map\(x => `\$\{esc\(x\.key\)\}\$\{x\.name \? ` – \$\{esc\(x\.name\)\}` : ''\} \(\$\{x\.late \? 'late' : 'in time'\}\)`\)\.join\(', '\)\} · ` : ''/);
+  assert.match(fs.readFileSync(path.join(JS_DIR, 'search-filter.js'), 'utf8'), /label: `DC project \$\{ln\.p \|\| ln\.c\}\$\{ln\.n \? ` – \$\{ln\.n\}` : ''\}`/, 'the search’s own name for it');
+  assert.match(o, /const infTone = dcv\.tone === 'ok' && rel\.some\(x => x\.late\) \? 'warn' : dcv\.tone;/);
+  assert.match(o, /\{ tone: TONE\[infTone\], attrs: \{ 'data-at': 'dca:timing' \}, html: `<div class="pnl-r-top"><span class="pnl-r-name">🏗 Infrastructure coming<\/span>\$\{PN\.chip\(\{ tone: TONE\[infTone\], text: infTone === 'ok' \? 'OK' : infTone === 'warn' \? 'Check' : 'Short' \}\)\}/);
   assert.match(o, /<small class="pnl-r-line">\$\{relTxt\}\$\{fmtNum\(nWorks\)\} DC work/);
 });
 

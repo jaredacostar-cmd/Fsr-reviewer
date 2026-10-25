@@ -90,14 +90,16 @@
     const pathTo = f && DV().pathLine ? DV().pathLine({ stations: f.sps.filter(s => s.firm > 0).map(s => ({ name: DD().psName(s.a), pct: Math.round(s.wet / s.firm * 100) })), plant, toronto: f.pl === 'Toronto', reserve: f.cap ? fmt1(f.reserve) : null, over: !!(f.cap && f.reserve <= 0), outlet: DO && DO.recordOf ? (DO.recordOf(p) || {}).mode : null }) : null;
     const queued = pathTo && IM && IM.current && IM.current() && DO && DO.queue ? ((DO.queue() || {}).all || []).some(x => x.p.key === p.key) : false;
     const review = queued ? ` <button type="button" class="btn small link" data-ws-page="outlets" data-dvo="pick-dev" data-dvo-key="${esc(p.key)}">Review →</button>` : '';
-    // The DC projects it relies on, by number (late first: they come after the constraint runs out).
-    const rel = DV().reliedOn ? DV().reliedOn(needs) : [], relTxt = rel.length ? `Relies on ${rel.map(x => `${esc(x.key)} (${x.late ? 'late' : 'in time'})`).join(', ')} · ` : '';
+    // The DC projects it relies on, by number and name, as the search lists them (late first: they come
+    // after the constraint runs out). One late is something to check, whatever the connection's verdict.
+    const rel = DV().reliedOn ? DV().reliedOn(needs) : [], relTxt = rel.length ? `Relies on ${rel.map(x => `${esc(x.key)}${x.name ? ` – ${esc(x.name)}` : ''} (${x.late ? 'late' : 'in time'})`).join(', ')} · ` : '';
+    const infTone = dcv.tone === 'ok' && rel.some(x => x.late) ? 'warn' : dcv.tone;
     const rows = [
       svcRow(`💧 Water${f && f.z ? ` · ${esc(f.z.name.replace('Pressure zone ', 'zone '))}` : ''}`, withGap(wv, 'water'), 'svc:network'),
       svcRow(`🚰 Wastewater${plant ? ` · to ${esc(plant)}` : ''}`, withGap(wwv, 'ww'), 'svc:network'),
       ...(pathTo ? [{ tone: TONE[pathTo.tone], html: `<div class="pnl-r-top"><span class="pnl-r-name">Path to the plant</span></div><small class="pnl-r-line">${esc(pathTo.text)} · outlet: ${esc(pathTo.outlet)}${review}</small>` }] : []),
       { tone: pipeOn ? PN.toneOf(Math.round(worst.r1 * 100)) : null, attrs: { 'data-at': 'svc:network' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">Tightest pipe on the path</span></div><small class="pnl-r-line">${pipeOn ? `${fmtNum(worst.p[0])} mm · ${Math.round(worst.r1 * 100)}% of full-pipe capacity at build-out` : 'Not assessed here: pipe-by-pipe capacity is left to the Region\u2019s hydraulic model.'}</small>` },
-      { tone: TONE[dcv.tone], attrs: { 'data-at': 'dca:timing' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">🏗 Infrastructure coming</span>${PN.chip({ tone: TONE[dcv.tone], text: dcv.tone === 'ok' ? 'OK' : dcv.tone === 'warn' ? 'Check' : 'Short' })}</div><small class="pnl-r-line">${relTxt}${fmtNum(nWorks)} DC work${nWorks === 1 ? '' : 's'} nearby${eaN != null ? ` · ${fmtNum(eaN)} EA${eaN === 1 ? '' : 's'}` : ''} · ${esc(dcv.text)}</small>` },
+      { tone: TONE[infTone], attrs: { 'data-at': 'dca:timing' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">🏗 Infrastructure coming</span>${PN.chip({ tone: TONE[infTone], text: infTone === 'ok' ? 'OK' : infTone === 'warn' ? 'Check' : 'Short' })}</div><small class="pnl-r-line">${relTxt}${fmtNum(nWorks)} DC work${nWorks === 1 ? '' : 's'} nearby${eaN != null ? ` · ${fmtNum(eaN)} EA${eaN === 1 ? '' : 's'}` : ''} · ${esc(dcv.text)}</small>` },
     ];
     // Timing: the latest submission, the municipality's typical time to approval (dated file events)
     // and, before approval, that time added to the submission (an estimate).

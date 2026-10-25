@@ -71,7 +71,7 @@
     return true;
   }
   // Drop the scope without re-rendering (the caller re-filters), e.g. the trail's Peel step.
-  function clear() { if (App()) App().state.ss = null; result = null; }
+  function clear() { if (App()) App().state.ss = null; result = null; lower(); }
   function close() { clear(); App().applyFilters(); OT().renderOverview(); Sh().viewLink.write(); }
 
   // ---- Result scopes (SPEC §3): every feature click and tool result opens here ------------------
@@ -85,7 +85,10 @@
   //     the result replaces it (one scope at a time).
   const RESULT_KINDS = new Set(['tool', 'dcwork', 'pipe', 'file', 'iiblock', 'wfac', 'sel', 'help', 'cx', 'ea', 'cap']);
   const isResultRef = ref => !!ref && RESULT_KINDS.has(String(ref).slice(0, String(ref).indexOf(':')));
-  let result = null, resultV = 0;
+  let result = null, resultV = 0, raisedFrom = null;
+  // (a phone: the sheet a kept result raised to full goes back where it was when the result closes, if
+  // nobody moved it since; the raise is never remembered, so the map does not reopen under a full sheet)
+  const lower = () => { const A = App(), was = raisedFrom; raisedFrom = null; if (was && A && A.getAnalysisSnap && A.getAnalysisSnap() === 'full') A.setAnalysisSnap(was, false); };
   const slug = t => String(t || 'result').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
   function devKeysOf(html) { const out = new Set(); String(html || '').replace(/data-dev="([^"]+)"/g, (m, k) => { out.add(k.replace(/&amp;/g, '&').replace(/&quot;/g, '"').replace(/&#39;/g, "'")); return m; }); return out.size ? out : null; }
   function openResult(o) {
@@ -101,14 +104,18 @@
     App().applyFilters(); OT().renderOverview(); if (TB()) TB().renderTrail(); Sh().viewLink.write();
     const host = typeof document !== 'undefined' && document.getElementById('scope-body'); if (host) host.scrollTop = 0;
     // On a phone the right panel is a bottom sheet: raise it from its peek so the result shows (a result
-    // kept at its development all the way: the site bar above it leaves a half sheet no room for it).
+    // kept at its development all the way, for this result only: the site bar above it leaves a half
+    // sheet no room for it).
     const DT = window.PeelDataTab, A = App();
-    if (DT && DT.shellNarrow && DT.shellNarrow() && A.getAnalysisSnap) { const sn = A.getAnalysisSnap(); if (result.keepDev ? sn !== 'full' : sn === 'peek') A.setAnalysisSnap(result.keepDev ? 'full' : 'half'); }
+    if (DT && DT.shellNarrow && DT.shellNarrow() && A.getAnalysisSnap) {
+      const sn = A.getAnalysisSnap();
+      if (!result.keepDev) { raisedFrom = null; if (sn === 'peek') A.setAnalysisSnap('half'); } else if (sn !== 'full') { raisedFrom = sn; A.setAnalysisSnap('full', false); }
+    }
     return result;
   }
   function closeResult() {
     if (!result) return false;
-    result = null;
+    result = null; lower();
     if (isResultRef(App().state.ss)) App().state.ss = null;
     if (typeof document !== 'undefined' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('peel:tool-closed'));
     App().applyFilters(); OT().renderOverview(); if (TB()) TB().renderTrail(); Sh().viewLink.write();
