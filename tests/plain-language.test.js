@@ -72,9 +72,10 @@ test('plain words: no "screen late", project IDs on the rows, file types and I&I
   const D = require('../js/demand.js');
   assert.equal(D.iiPlain(2.106), 'includes 2.1 L/s of rain and groundwater (I&I: 8.1 ha at 0.26 L/s/ha)');
   assert.match(src('js/overview-tab.js'), /'wastewater, peak wet weather', cb\.wastewater\.infiltration > 0 \? esc\(D\.iiPlain\(/);
-  // The calibration factor said as a comparison.
+  // The calibration factor said as a comparison (navigation phase 2: in Records › Data checks' Servicing
+  // model group, where the retired Model checks panel's answer and its "measured ÷ modelled" figures went).
   assert.match(src('js/svc-capacity.js'), /measured \$\{x\.c\.f\.toFixed\(2\)\} times the model's flow/);
-  assert.match(src('js/svc-capacity.js'), /label: `\$\{SD\(\)\.PLANT_SHORT\[x\.pl\]\}: measured ÷ modelled`/);
+  assert.match(src('js/svc-capacity.js'), /\(the calibration factor, measured ÷ modelled, applied in the capacity check\): \$\{plants\.map\(x => `<strong>\$\{esc\(SD\(\)\.PLANT_SHORT\[x\.pl\]\)\}<\/strong> measured/);
   // The capacity answer: the limit in words.
   assert.match(src('js/svc-capacity.js'), /const LIMIT_WORDS = \{ '100% firm': 'its firm capacity', '90% trigger': 'its 90% expansion trigger'/);
   // Old pipes: "sewer runs", no "runs of one main"; a verdict chip, not a count.

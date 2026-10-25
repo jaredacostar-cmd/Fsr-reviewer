@@ -37,13 +37,13 @@
     { id: 'capital', title: 'Capital', tab: 'dca', keys: ['dca:timing'], wide: true },
   ];
   // The Servicing and Capital workspaces (step 4): each a page with the map's other sub-views of its
-  // tab as sections. host: the page a panel section shows on.
+  // tab as sections. host: the page a panel section shows on. (Navigation phase 2: Servicing is Capacity
+  // · Network; the allocations are a fold of Capacity, on its page too, and the model checks are Records ›
+  // Data checks, Reference › Data checks on a page.)
   const WORKSPACES = {
     servicing: { host: 'tight', secs: [
       { id: 'capacity', title: 'Capacity', page: 'tight' },
       { id: 'network', title: 'Network', tab: 'svc', keys: ['svc:network'] },
-      { id: 'alloc', title: 'Allocations', tab: 'svc', keys: ['svc:alloc'] },
-      { id: 'checks', title: 'Model checks', tab: 'svc', keys: ['svc:checks'] },
     ] },
     // Reference (step 5): Help, How it works and the Glossary, and the map's Records › Sources and
     // Data checks (the old Data tab) as Data sources (its own page) and Data checks.
@@ -70,8 +70,6 @@
     'dca:dcproj': () => (root.PeelDcProjects ? root.PeelDcProjects.panelSpec() : null),
     'dca:projects': () => (root.PeelCapitalEA && root.PeelCapitalEA.projectsPanelSpec ? root.PeelCapitalEA.projectsPanelSpec() : null),
     'dca:eas': () => (root.PeelCapitalEA && root.PeelCapitalEA.easPanelSpec ? root.PeelCapitalEA.easPanelSpec() : null),
-    // (Allocations sets its own panel when it renders)
-    'svc:alloc': () => { if (root.PeelDemandUI && root.PeelDemandUI.renderAlloc) root.PeelDemandUI.renderAlloc(); const e = PN() && PN().get('svc:alloc'); return e && e.scope === 'area' ? e.spec : null; },
   };
   // An area panel (Peel, the municipality filter): the one its tab set, else built here (null while loading).
   function areaPanel(k) {

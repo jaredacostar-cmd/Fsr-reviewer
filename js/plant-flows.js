@@ -9,7 +9,8 @@
   //   summary(pl)     one sentence: latest year, % of rated, change over ten years (for the two
   //                   lake plants, the two together, since the 2025 diversion moves flow between them).
   //   checksHTML()    MECP's figure against the Region's annual report, per plant and year
-  //                   (registered as window.ModelChecks.plantFlows for Settings → Data quality).
+  //                   (registered as window.ModelChecks.plantFlows for Records › Data checks,
+  //                   the Servicing model group).
   // Pure strings; reads App().state.plantFlows.
   const App = () => root.PeelApp;
   const U = () => root.PeelUtil;

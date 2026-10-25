@@ -1,4 +1,4 @@
-/* js/accuracy.js — Accuracy report for the Sources & checks page (Phase 7, feature 3).
+/* js/accuracy.js — Accuracy report in Records › Data checks (Phase 7, feature 3).
  * Two error rates for the tracker itself:
  *  1. Phase-reading accuracy: how often the app's phase reading is confirmed by a
  *     later dated reading, from data/history.json. Every snapshot run records each
@@ -10,8 +10,8 @@
  *     only in a per-session in-memory cache — no verdict history is persisted
  *     anywhere, so no hit rate can be computed. The section says so plainly instead
  *     of inventing one, and states the decision rule and what would need logging.
- * Registers window.ModelChecks.accuracy (rendered by the Sources & checks gear page
- * in js/demand-ui.js). Pure logic is Node-requireable for tests; all DOM access is
+ * Registers window.ModelChecks.accuracy (rendered in Records › Data checks' full table by
+ * js/records-tab.js checksHTML). Pure logic is Node-requireable for tests; all DOM access is
  * guarded.
  */
 (function (root) {
@@ -169,7 +169,7 @@
   } else {
     root.PeelAccuracy = api;
     if (typeof window !== 'undefined') {
-      // Register a placeholder so the section exists on the Sources & checks page
+      // Register a placeholder so the section exists in Records › Data checks
       // immediately; fill it once data/history.json loads (same pattern as FSR).
       window.ModelChecks = window.ModelChecks || {};
       window.ModelChecks.accuracy =

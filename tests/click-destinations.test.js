@@ -203,7 +203,10 @@ test('Review outlets opens from Records › Data checks, a site’s path line an
   const r = src('js/records-tab.js');
   assert.match(r, /btn: '<button type="button" class="btn small link" data-ws-page="outlets">Review outlets →<\/button>'/);
   assert.match(r, /<p class="small muted">\$\{OUTLETS\.what\}: \$\{OUTLETS\.btn\}<\/p>`;/, 'the full table (checksHTML)');
-  assert.match(r, /\{ title: 'Sewer outlets', rows: \[\{ attrs: \{ 'data-ws-page': 'outlets', title: 'Open Review outlets' \}, html: `<div class="pnl-r-top"><span class="pnl-r-name">Review outlets →<\/span><\/div><small class="pnl-r-line">\$\{OUTLETS\.what\}<\/small>` \}\], total: 1 \}\]/, 'the panel: its own list, whatever the checks');
+  // (navigation phase 2: the list is "Where developments discharge", with the count to review once the DC
+  // model is worked out, and the footer's secondary action; tests/servicing-records.test.js runs it)
+  assert.match(r, /\{ title: 'Where developments discharge', rows: \[\{ attrs: \{ 'data-ws-page': 'outlets', title: 'Review outlets: check and fix where each development discharges' \}, html: `<div class="pnl-r-top"><span class="pnl-r-name">Review outlets →<\/span>\$\{n == null \? '' : `<span class="pnl-r-fig">\$\{fmtNum\(n\)\}<small>to review<\/small><\/span>`\}<\/div><small class="pnl-r-line">\$\{OUTLETS\.what\}<\/small>` \}\], total: 1 \}\]/, 'the panel: its own list, whatever the checks');
+  assert.match(r, /secondary: \[\{ label: 'Review outlets', attrs: \{ 'data-ws-page': 'outlets' \}/, 'and its footer');
   assert.match(src('js/overview-tab.js'), /data-ws-page="outlets" data-dvo="pick-dev"/, 'the path line');
   const W = require('../js/workspaces.js');
   assert.ok(W.GROUPS.some(([g, ids]) => g === 'QA/QC' && ids.includes('outlets')), 'the sidebar');

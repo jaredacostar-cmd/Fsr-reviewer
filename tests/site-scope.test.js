@@ -23,7 +23,7 @@ function loadTabs() {
 // (Capital › EAs is also hidden at a site with no EA mapped near it: EMPTY_AT_SITE.)
 const AT_SITE = {
   growth: { pipeline: 'show', areas: 'hide', timing: 'hide', ledger: 'hide' },
-  svc: { capacity: 'hide', network: 'show', alloc: 'hide', checks: 'hide' },
+  svc: { capacity: 'hide', network: 'show' },
   dca: { timing: 'show', dcproj: 'hide', projects: 'hide', eas: 'show' },
   records: { sources: 'hide', checks: 'hide', files: 'show' },
 };
@@ -39,7 +39,10 @@ test('site scope: every sub-view is either shown with site content or hidden', (
 test('site scope: a hidden sub-view falls back to the first one with site content; Peel scope keeps the pick', () => {
   const AT = loadTabs();
   assert.equal(AT.subFor('svc', 'capacity', true), 'network');
-  assert.equal(AT.subFor('svc', 'checks', true), 'network');
+  // (a stored Allocations pick is Capacity now, hidden at a site; a stored Model checks pick is Records ›
+  // Data checks, Files at a site)
+  assert.equal(AT.subFor('svc', AT.migrateSub('svc', 'alloc').sub, true), 'network');
+  assert.equal(AT.subFor('records', AT.migrateSub('svc', 'checks').sub, true), 'files');
   assert.equal(AT.subFor('growth', 'areas', true), 'pipeline');
   assert.equal(AT.subFor('dca', 'projects', true), 'timing');
   assert.equal(AT.subFor('dca', 'eas', true), 'eas');
@@ -61,8 +64,9 @@ test('site scope: hidden sub-view buttons get .site-off (CSS hides them); Growth
 test('site scope: in-panel links land on a sub-view with site content (no dead links)', () => {
   const AT = loadTabs();
   for (const [tab, stored] of [['svc', 'capacity'], ['svc', 'alloc'], ['svc', 'checks'], ['dca', 'projects'], ['growth', 'areas'], ['records', 'checks']]) {
-    const v = AT.subFor(tab, stored, true);
-    assert.ok(v && !AT.siteHidden(tab, v), `${tab} (stored ${stored}) lands on ${v}`);
+    // (a stored pick goes through the alias it takes first: Servicing › Model checks is Records › Data checks)
+    const r = AT.migrateSub(tab, stored) || { tab, sub: stored }, v = AT.subFor(r.tab, r.sub, true);
+    assert.ok(v && !AT.siteHidden(r.tab, v) && AT.TABSUBS[r.tab].valid.includes(v), `${tab} (stored ${stored}) lands on ${r.tab}:${v}`);
   }
   assert.match(src('js/fsr.js'), /homeLine\('svc:network', 'Servicing › Network'\)/, 'no "Wastewater tab": the tab is Servicing');
   assert.doesNotMatch(src('js/census-view.js'), /'Wastewater tab'/);

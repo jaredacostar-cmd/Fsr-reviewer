@@ -43,6 +43,28 @@ test('usage: CSV with a label per name (quoted when it needs it); old days drop 
   assert.ok(!e.days['2025-01-01'] && !e.days['2025-01-03'] && e.days['2025-01-04']);
 });
 
+test('usage: a retired sub-view\'s counts add up with where it moved (navigation phase 2)', () => {
+  let d = null;
+  d = U.bump(d, 'sub', 'svc.alloc', '2026-10-16'); d = U.bump(d, 'sub', 'svc.alloc', '2026-10-16');
+  d = U.bump(d, 'sub', 'svc.capacity', '2026-10-16'); d = U.bump(d, 'sub', 'svc.checks', '2026-10-16');
+  const alias = k => ({ 'sub:svc.alloc': 'sub:svc.capacity', 'sub:svc.checks': 'sub:records.checks' }[k] || k);
+  assert.deepEqual(plain(U.totals(d, alias)), { 'sub:svc.capacity': 3, 'sub:records.checks': 1 });
+  assert.equal(U.toCSV(d, {}, alias), 'date,kind,id,label,count\n2026-10-16,sub,records.checks,,1\n2026-10-16,sub,svc.capacity,,3\n');
+  // Without an alias, the counts as kept; the kept counts are never rewritten.
+  assert.deepEqual(plain(U.totals(d)), { 'sub:svc.alloc': 2, 'sub:svc.capacity': 1, 'sub:svc.checks': 1 });
+  assert.deepEqual(plain(d.days['2026-10-16']), { 'sub:svc.alloc': 2, 'sub:svc.capacity': 1, 'sub:svc.checks': 1 });
+  // In the browser the alias is the tabs' own table (js/analysis-tabs.js migrateSub), for Settings and the CSV.
+  const s = src('js/usage.js');
+  assert.match(s, /const aliasKey = k => \{ const m = \/\^sub:\(\\w\+\)\\\.\(\\w\+\)\$\/\.exec\(k\), AT = root\.PeelAnalysisTabs, r = m && AT && AT\.migrateSub \? AT\.migrateSub\(m\[1\], m\[2\]\) : null; return r \? `sub:\$\{r\.tab\}\.\$\{r\.sub\}` : k; \};/);
+  assert.ok(s.includes('t = totals(d, aliasKey)') && s.includes('toCSV(load(), labels(), aliasKey)'), 'Settings › Usage and its CSV');
+  const el = () => null, document = { querySelector: el, querySelectorAll: () => [], getElementById: el, addEventListener: () => {} };
+  const ctx = { window: { PeelUtil: { store: { get: (k, v) => v, set: () => {} } }, document }, document, setTimeout: () => 0, module: { exports: {} } };
+  ctx.globalThis = ctx; vm.runInNewContext(src('js/analysis-tabs.js'), ctx);
+  const AT = ctx.module.exports;
+  assert.deepEqual(plain(AT.migrateSub('svc', 'alloc')), { tab: 'svc', sub: 'capacity' });
+  assert.deepEqual(plain(AT.migrateSub('svc', 'checks')), { tab: 'records', sub: 'checks' });
+});
+
 test('usage: a person’s clicks count (not the app moving itself); Settings shows it with Export CSV', () => {
   const s = src('js/usage.js');
   assert.match(s, /window\.addEventListener\('click', onClick, true\);/);
@@ -100,12 +122,12 @@ test('What moved where: every old tab and sub-view says where it is now', () => 
   const now = old => MOVED.flatMap(g => g.rows).find(r => r[0].includes(old))[1];
   assert.match(now('Plants & capacity'), /Servicing › Capacity/);
   assert.match(now('Pressure zones'), /Servicing › Network/);
-  assert.match(now('Water › Facilities'), /Servicing › Model checks/);
+  assert.match(now('Water › Facilities'), /Servicing › Network/);
   assert.match(now('Census & 2051'), /Growth › Areas/);
   assert.match(now('Capital › Construction'), /Capital › Projects/);
   const at = src('js/analysis-tabs.js');
-  assert.match(at, /ww: \{ plants: 'capacity', catchments: 'network', alloc: 'alloc', pumpstations: 'network' \}/);
-  assert.match(at, /water: \{ capacity: 'capacity', zones: 'network', facilities: 'checks', hydro: 'checks' \}/);
+  assert.match(at, /ww: \{ plants: 'capacity', catchments: 'network', alloc: 'capacity', pumpstations: 'network' \}/);
+  assert.match(at, /water: \{ capacity: 'capacity', zones: 'network', facilities: 'network', hydro: 'network' \}/);
   assert.match(at, /dca: \{ timing: 'timing', build: 'projects'/);
   // In Help: its own card and a button at the top; old tab names gone from the guides.
   assert.match(tips, /<details class="help-card help-moved" id="help-moved"><summary><strong>What moved where<\/strong>/);

@@ -41,14 +41,16 @@ test('no two sub-views share a name; the chips, the trails and the source lines 
   const all = ['growth', 'svc', 'dca', 'records'].flatMap(chips);
   assert.equal(new Set(all).size, all.length, `duplicate sub-view names: ${all.join(', ')}`);
   assert.deepEqual(chips('growth'), ['Pipeline', 'Areas', 'Forecast', 'Ledger']);
-  assert.ok(chips('svc').includes('Model checks') && chips('records').includes('Data checks') && chips('dca').includes('DC timing'));
+  assert.deepEqual(chips('svc'), ['Capacity', 'Network']); assert.ok(chips('records').includes('Data checks') && chips('dca').includes('DC timing'));
   const W = require('../js/workspaces.js');
-  assert.equal(W.tabPath('svc', 'checks'), 'Servicing › Model checks');
+  assert.equal(W.tabPath('svc', 'network'), 'Servicing › Network');
   assert.equal(W.tabPath('records', 'checks'), 'Records › Data checks');
+  assert.doesNotMatch(src('js/workspaces.js'), /'svc:checks'|alloc: 'Allocations'/, 'no name for a sub-view that is gone');
   assert.equal(W.tabPath('growth', 'timing'), 'Growth › Forecast');
   assert.equal(W.tabPath('dca', 'timing'), 'Capital › DC timing');
   assert.ok(W.WS.some(w => w.id === 'projects' && w.label === 'DC projects'));
-  for (const [f, re] of [['js/timing.js', /areaHead\('Growth › Forecast'/], ['js/dca-tab.js', /areaHead\('Capital › DC timing'/], ['js/svc-capacity.js', /areaHead\('Servicing › Model checks'/], ['js/records-tab.js', /areaHead\('Records › Data checks'/]]) assert.match(src(f), re, f);
+  for (const [f, re] of [['js/timing.js', /areaHead\('Growth › Forecast'/], ['js/dca-tab.js', /areaHead\('Capital › DC timing'/], ['js/svc-capacity.js', /areaHead\('Servicing › Network'/], ['js/records-tab.js', /areaHead\('Records › Data checks'/]]) assert.match(src(f), re, f);
+  assert.doesNotMatch(src('js/svc-capacity.js') + src('js/demand-ui.js'), /areaHead\('Servicing › (Model checks|Allocations)'/);
 });
 
 test('Help names only places that exist (tab › sub-view), and none of the old ones', () => {

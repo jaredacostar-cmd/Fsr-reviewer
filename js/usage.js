@@ -34,28 +34,32 @@
     while (days.length > MAX_DAYS) delete d.days[days.shift()];
     return d;
   }
-  // One row per day and name: { date, kind, id, count }, by date then name.
-  function rows(data) {
+  // One row per day and name: { date, kind, id, count }, by date then name. alias maps a retired name
+  // onto where it moved (the browser passes the app's own table, SUB_MAP), so a pilot's counts before and
+  // after a move add up (navigation-design §10.9); the counts kept are never rewritten.
+  function rows(data, alias = k => k) {
     const out = [];
     for (const day of Object.keys((data && data.days) || {}).sort()) {
-      for (const k of Object.keys(data.days[day]).sort()) {
+      const sum = Object.create(null);
+      for (const [k, n] of Object.entries(data.days[day])) { const a = alias(k) || k; sum[a] = (sum[a] || 0) + n; }
+      for (const k of Object.keys(sum).sort()) {
         const [kind, ...rest] = k.split(':');
-        out.push({ date: day, kind, id: rest.join(':'), count: data.days[day][k] });
+        out.push({ date: day, kind, id: rest.join(':'), count: sum[k] });
       }
     }
     return out;
   }
   // Totals over all days: { 'kind:id': n }.
-  function totals(data) {
+  function totals(data, alias) {
     const t = {};
-    for (const r of rows(data)) { const k = r.id ? `${r.kind}:${r.id}` : r.kind; t[k] = (t[k] || 0) + r.count; }
+    for (const r of rows(data, alias)) { const k = r.id ? `${r.kind}:${r.id}` : r.kind; t[k] = (t[k] || 0) + r.count; }
     return t;
   }
   const cell = v => ((typeof window !== 'undefined' && window.PeelUtil) || require('./util.js')).csvCell(v);
   // CSV: date, kind, id, label (from labels['kind:id'] or labels[kind]), count.
-  function toCSV(data, labels = {}) {
+  function toCSV(data, labels = {}, alias) {
     const lines = ['date,kind,id,label,count'];
-    for (const r of rows(data)) lines.push([r.date, r.kind, r.id, labels[r.id ? `${r.kind}:${r.id}` : r.kind] || '', r.count].map(cell).join(','));
+    for (const r of rows(data, alias)) lines.push([r.date, r.kind, r.id, labels[r.id ? `${r.kind}:${r.id}` : r.kind] || '', r.count].map(cell).join(','));
     return `${lines.join('\n')}\n`;
   }
 
@@ -68,6 +72,9 @@
   const store = () => root.PeelUtil && root.PeelUtil.store;
   const today = () => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; };
   const load = () => { const s = store(); return s ? s.get('usage', empty()) : empty(); };
+  // A sub-view that moved (Servicing › Allocations is Capacity's fold now …) is shown and exported under
+  // where it went, through the tabs' own table (js/analysis-tabs.js migrateSub).
+  const aliasKey = k => { const m = /^sub:(\w+)\.(\w+)$/.exec(k), AT = root.PeelAnalysisTabs, r = m && AT && AT.migrateSub ? AT.migrateSub(m[1], m[2]) : null; return r ? `sub:${r.tab}.${r.sub}` : k; };
   function count(kind, id) {
     const s = store(); if (!s) return;
     s.set('usage', bump(load(), kind, id, today()));
@@ -114,7 +121,7 @@
   // ---- Settings › Usage --------------------------------------------------------------------------
   const { esc, fmtNum } = root.PeelUtil || { esc: s => String(s), fmtNum: n => String(n) };
   function settingsHTML() {
-    const d = load(), t = totals(d), L = labels();
+    const d = load(), t = totals(d, aliasKey), L = labels();
     const top = Object.entries(t).filter(([k]) => !k.startsWith('start')).sort((a, b) => b[1] - a[1]);
     const opens = Object.entries(t).filter(([k]) => k.startsWith('start')).reduce((s, [, n]) => s + n, 0);
     return `<section class="gear-sec" id="usage-sec"><h3>Usage in this browser (pilot)</h3>
@@ -124,7 +131,7 @@
       <p><button type="button" class="btn small" data-usage-csv>Export CSV</button> <button type="button" class="btn small link" data-usage-reset>Reset counts</button></p></section>`;
   }
   function exportCSV() {
-    const csv = toCSV(load(), labels());
+    const csv = toCSV(load(), labels(), aliasKey);
     const a = document.createElement('a');
     a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
     a.download = `peel-usage-${today()}.csv`;

@@ -8,12 +8,12 @@
   const Sh = () => window.PeelShare;
 
   // ---- The right panel (Stage 2): four tabs at every scope, Overview · Growth · Servicing · Capital,
-  // plus Records, a small trailing tab (also opened from the Settings gear). Sub-views: at most four
+  // plus Records, a small trailing tab (the Overview's ⓘ line opens its Data checks). Sub-views: at most four
   // per tab, one chip row under the tab bar (TABSUBS). Overview has none.
   //   Growth:    Pipeline · Areas · Timing · Ledger (the pipeline ledger, js/ledger-ui.js)
-  //   Servicing: Capacity · Network · Allocations · Checks   (water and wastewater together)
+  //   Servicing: Capacity · Network   (water and wastewater together; Allocations is a fold of Capacity)
   //   Capital:   Timing · DC projects · Projects · EAs (the Funding lab's screen sits in DC projects)
-  //   Records:   Sources · Checks · Files
+  //   Records:   Sources · Data checks · Files (every check: the data, then the servicing model)
   // footPref: the tab last picked (kept); each tab's sub-view last picked is kept too. Old tab and
   // sub-view names (share links, stored prefs) migrate onto these (migrateTabKey / migrateSub).
   const TAB_KEYS = ['overview', 'growth', 'svc', 'dca', 'records'];
@@ -23,12 +23,14 @@
   // Every sub-view of the four tabs is a row, so a link's or a stored sub-view always goes through
   // here; a value 'tab:sub' moves it to another tab (the navigation redesign moves sub-views between
   // tabs: docs/architecture-review/navigation-design.md §7.2–7.3).
+  // Phase 2: Allocations is a fold of Capacity, the model checks are Records › Data checks, the water
+  // facilities and the hydraulic check are Network's.
   const SUB_MAP = {
-    ww: { plants: 'capacity', catchments: 'network', alloc: 'alloc', pumpstations: 'network' },
-    water: { capacity: 'capacity', zones: 'network', facilities: 'checks', hydro: 'checks' },
+    ww: { plants: 'capacity', catchments: 'network', alloc: 'capacity', pumpstations: 'network' },
+    water: { capacity: 'capacity', zones: 'network', facilities: 'network', hydro: 'network' },
     growth: { pipeline: 'pipeline', census2051: 'areas', byplan: 'areas', timing: 'timing', areas: 'areas', ledger: 'ledger' },
     dca: { timing: 'timing', build: 'projects', dcproj: 'dcproj', projects: 'projects', eas: 'eas', recommendations: 'dcproj', funding: 'dcproj' },
-    svc: { capacity: 'capacity', network: 'network', alloc: 'alloc', checks: 'checks' },
+    svc: { capacity: 'capacity', network: 'network', alloc: 'capacity', checks: 'records:checks' },
     records: { sources: 'sources', checks: 'checks', files: 'files' },
   };
   // The state key of each tab's sub-view.
@@ -41,6 +43,9 @@
     const i = v.indexOf(':');
     return i > 0 ? { tab: v.slice(0, i), sub: v.slice(i + 1) } : { tab: tabOf(tab), sub: v };
   };
+  // A moved sub-view that became a fold of its new view: the fold to open (navigation-design §7.2).
+  const FOLD_OF = { ww: { alloc: 'alloc' }, svc: { alloc: 'alloc' } };
+  const foldOf = (tab, sub) => (sub && own(FOLD_OF, tab) && own(FOLD_OF[tab], sub) ? FOLD_OF[tab][sub] : null);
   const subKey = r => (SUB_KEY[r.tab] ? { tab: r.tab, [SUB_KEY[r.tab]]: r.sub } : { tab: r.tab });
   // A tab key from a link or a stored pref (with its sub-view, when the link or the old key named one).
   const migrateTabKey = (t, sub) => {
@@ -82,18 +87,29 @@
   // Sub-view state per tab: the chip data-attribute, the store key, the valid values, get / set.
   const TABSUBS = {
     growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'areas', 'timing', 'ledger'], get: () => gSub, set: v => { gSub = v; } },
-    svc: { attr: 'svcsub', store: 'svcSub', valid: ['capacity', 'network', 'alloc', 'checks'], get: () => svcSub, set: v => { svcSub = v; } },
+    svc: { attr: 'svcsub', store: 'svcSub', valid: ['capacity', 'network'], get: () => svcSub, set: v => { svcSub = v; } },
     dca: { attr: 'dcasub', store: 'dcSub', valid: ['timing', 'dcproj', 'projects', 'eas'], get: () => dcSub, set: v => { dcSub = v; } },
     records: { attr: 'rsub', store: 'rSub', valid: ['sources', 'checks', 'files'], get: () => rSub, set: v => { rSub = v; } },
   };
   for (const s of Object.values(TABSUBS)) if (!s.valid.includes(s.get())) s.set(s.valid[0]);
+  // ---- One System control (navigation-design §3.4, N-11): Both · Wastewater · Water, one pick kept in this
+  // browser for Servicing › Capacity and Capital › DC projects; the lens sets it (js/topbar.js). A link
+  // carries it (sy=, js/share.js); one without it opens at Both.
+  const SYS = [['both', 'Both'], ['ww', 'Wastewater'], ['water', 'Water']];
+  // Any value → one of SYS: the old words too ('all' was Capacity's, 'wastewater' DC projects').
+  const sysKey = v => (v === 'ww' || v === 'wastewater' ? 'ww' : v === 'water' ? 'water' : 'both');
+  // A lens sets the System its map shows: its DC layer's system (js/map-analysis.js VIEW_PRESETS);
+  // Planning, with no DC layer, leaves it.
+  const SYS_OF_VIEW = { water: 'water', wastewater: 'ww', dc: 'both' };
+  let sysOn = sysKey(store.get('sysPick', null) ?? store.get('dcProjSys', 'both'));   // (DC projects' own pick, once)
+  const sysSeg = () => `<div class="seg" role="group" aria-label="System">${SYS.map(([k, t]) => `<button type="button" class="btn small${sysOn === k ? ' on' : ''}" data-sys="${k}" aria-pressed="${sysOn === k}">${t}</button>`).join('')}</div>`;
   // What each scope hides (a sub-view with nothing to show is hidden, never blank; area-only content
   // never renders at a site). 'site': a development is the scope; 'area': Peel, a municipality, a plan
   // or a result with no files of its own.
   // At a site, Capital › Timing is the site's DC projects (the projects it relies on); the Projects
   // list is Region-wide, so it is hidden there.
   const HIDDEN = {
-    site: { growth: ['areas', 'timing', 'ledger'], svc: ['capacity', 'alloc', 'checks'], dca: ['dcproj', 'projects'], records: ['sources', 'checks'] },
+    site: { growth: ['areas', 'timing', 'ledger'], svc: ['capacity'], dca: ['dcproj', 'projects'], records: ['sources', 'checks'] },
     area: { records: ['files'] },
   };
   const SITE_HIDDEN = HIDDEN.site;
@@ -112,7 +128,8 @@
     if (key === 'dev' || key === 'developments' || key === 'tool') key = 'overview';   // the development's views live in the Overview
     if (key === 'growth' && root.PeelUtil && root.PeelUtil.flushLater) root.PeelUtil.flushLater();   // (its views, if they wait to render)
     if (key === 'ww' || key === 'water') { if (!sub) sub = svcSub === 'capacity' || svcSub === 'network' ? svcSub : 'network'; key = 'svc'; }
-    // (a sub-view another tab now holds opens there: SUB_MAP 'tab:sub')
+    // (a sub-view another tab now holds opens there: SUB_MAP 'tab:sub'; one that became a fold opens it)
+    if (sub && foldOf(key, sub) === 'alloc' && DUI() && DUI().openAllocFold) DUI().openAllocFold();
     { const r = sub ? migrateSub(key, sub) : null; if (r) { key = r.tab; sub = r.sub; } }
     if (sub && TABSUBS[key] && TABSUBS[key].valid.includes(sub)) { delete areaPick[key]; TABSUBS[key].set(sub); store.set(TABSUBS[key].store, sub); }
     // (Servicing and Capital show once the servicing data loads, js/svc-tab.js: a tab picked before then
@@ -144,7 +161,7 @@
     if (root.PeelSvcScope) root.PeelSvcScope.peelWideNote();
     if (key === 'dca' && typeof DcaTab().renderDca === 'function') setTimeout(() => DcaTab().renderDca(), 0);
     if (key === 'overview') setTimeout(() => { if (OT() && window.PeelApp) OT().renderOverview(); }, 0);   // (may fire before the app has loaded; its boot renders the overview)
-    if (key === 'svc' && svcSub === 'alloc') setTimeout(() => DUI().renderAlloc(), 0);
+    if (key === 'svc' && svcSub === 'capacity') setTimeout(() => DUI().renderAlloc(), 0);   // (Allocations recorded: Capacity's fold, its tables in the full table)
     if (key === 'svc' && root.PeelSvcCapacity) setTimeout(() => root.PeelSvcCapacity.renderFor(svcSub), 0);
     if (key === 'growth' && gSub === 'areas' && root.PeelPlanTables) setTimeout(() => root.PeelPlanTables.render(), 0);
     if (key === 'growth' && gSub === 'ledger' && root.PeelLedgerUI) setTimeout(() => root.PeelLedgerUI.render(), 0);
@@ -165,8 +182,19 @@
   document.addEventListener('click', e => {
     const a = e.target.closest && e.target.closest('[data-at]'); if (!a) return;
     const [t0, s0] = a.dataset.at.split(':'), r = s0 ? migrateSub(t0, s0) : null, tab = r ? r.tab : t0, sub = r ? r.sub : s0;
+    if (s0 && foldOf(t0, s0) === 'alloc' && DUI() && DUI().openAllocFold) DUI().openAllocFold();
     footPref = tabOf(tab); store.set('footTab4', footPref); showFootTab(tab, sub); Sh().viewLink.write();
   });
+  // The System pick (a link's is for the visit: not stored). Capacity redraws every time (cheap; Home's
+  // Servicing capacity page reads its panel); DC projects only once it has drawn, so a System tap on
+  // Capacity never builds the DC impact model. On a page the redraw comes through pnl:set.
+  function setSys(v, o = {}) {
+    sysOn = sysKey(v); if (!o.link) store.set('sysPick', sysOn);
+    if (o.quiet) return;
+    if (root.PeelSvcCapacity && root.PeelSvcCapacity.render) root.PeelSvcCapacity.render();
+    if (root.PeelDcProjects && root.PeelDcProjects.shown && root.PeelDcProjects.shown()) root.PeelDcProjects.refresh();
+  }
+  document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-sys]'); if (b) { setSys(b.dataset.sys); Sh().viewLink.write(); } });
   showFootTab(footPref);
 
   // A tab button just shown (js/svc-tab.js renderSvcTab): open it if it was the one asked for and held.
@@ -193,7 +221,8 @@
     getGSub: () => gSub, setGSub: v => { gSub = v; },
     getDcSub: () => dcSub, setDcSub: v => { dcSub = v; },
     getRSub: () => rSub, setRSub: v => { rSub = v; },
-    showFootTab, TABSUBS, SUB_KEY, migrateTabKey, migrateSub, migratePrefs, setSub, SITE_HIDDEN, siteHidden, subFor,
+    showFootTab, TABSUBS, SUB_KEY, migrateTabKey, migrateSub, migratePrefs, setSub, SITE_HIDDEN, siteHidden, subFor, FOLD_OF, foldOf,
+    SYS, SYS_OF_VIEW, sysKey, sysSeg, getSys: () => sysOn, setSys,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelAnalysisTabs = api;

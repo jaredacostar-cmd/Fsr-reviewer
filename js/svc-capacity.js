@@ -70,7 +70,9 @@
   const SvcTab = () => root.PeelSvcTab, SP = () => root.PeelSvcPlants, WTab = () => root.PeelWaterTab;
   const D = () => root.PeelDemand, DD = () => root.PeelDevDetail;
   const WT = () => root.PeelWaterTrace, SD = () => root.PeelSvcData, LB = () => root.PeelLayerBar, MM = () => root.PeelMapMarkers;
-  const st = { sort: (U.store && U.store.get('capSort', 'limit')) || 'limit', sys: 'all', open: new Set() };
+  const st = { sort: (U.store && U.store.get('capSort', 'limit')) || 'limit', open: new Set() };
+  // The one System control (js/analysis-tabs.js): Both · Wastewater · Water, shared with Capital › DC projects.
+  const AT = () => root.PeelAnalysisTabs, sysNow = () => (AT() && AT().getSys ? AT().getSys() : 'both');
   const PICK = [2031, 2041, 2051];
   // Horizon from a load function q(y) ('today' | year | null = build-out): the % at the pick years and
   // the years it reaches 80 / 90 / 100% (MP.runOut: 'today', a year, or null by the horizon end).
@@ -204,12 +206,15 @@
       <td class="n xc" data-l="Capacity">${qty(r, r.cap)} ${r.capWord}</td><td class="n xc" data-l="Today">${qty(r, r.existing + r.built)}</td><td class="n xc" data-l="Committed">${qty(r, r.committed)}</td><td class="n xc" data-l="Build-out">${qty(r, r.buildout)}</td></tr>
       ${open ? `<tr class="cap-hz"><td colspan="11">${horizonHTML(r)}</td></tr>` : ''}`;
   }
+  // One sort vocabulary (N-11): the panel's words in the table too; each tooltip names its year or measure
+  // (DC projects' "Soonest" is the construction year, js/dc-projects.js).
+  const SORT_TIP = { limit: 'The soonest limit year first', impact: 'How far past its Master Plan limit at build-out, furthest first' };
   function tableHTML(rows) {
-    const sortBtn = (k, t, tip) => `<button type="button" class="btn small${st.sort === k ? ' on' : ''}" data-cap-sort="${k}" aria-pressed="${st.sort === k}" title="${tip}">${t}</button>`;
+    const sortBtn = (k, t) => `<button type="button" class="btn small${st.sort === k ? ' on' : ''}" data-cap-sort="${k}" aria-pressed="${st.sort === k}" title="${SORT_TIP[k]}">${t}</button>`;
     const nOver = rows.filter(r => r.pctBo >= 100).length, soon = sortRows(rows, 'limit', MM().THIS_YEAR)[0];
     const hl = `<strong>${rows.length}</strong> facilities, water and wastewater together${nOver ? `: <strong>${nOver}</strong> over 100% of capacity at build-out` : ': none over 100% at build-out'}${soon && soon.limit.y != null ? `; <strong>${esc(soon.name)}</strong> is the first to reach its limit (${esc(limitWords(soon.limit.what))}: ${whenWords(soon.limit.y, SP().hz.end)})` : ''}.`;
     return `${U.hlP ? U.hlP(hl) : `<p>${hl}</p>`}
-      <div class="svc-head"><div class="svc-switches"><div class="svc-switch" role="group" aria-label="Sort"><span class="muted small">Sort</span>${sortBtn('limit', 'Limit year', 'Soonest limit year first')}${sortBtn('impact', 'Impact', 'Most loaded at build-out first (% of capacity)')}</div>${SvcTab().optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}</div></div>
+      <div class="svc-head"><div class="svc-switches"><div class="svc-switch" role="group" aria-label="Sort"><span class="muted small">Sort</span>${sortBtn('limit', 'Soonest')}${sortBtn('impact', 'Largest impact')}</div>${SvcTab().optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}</div></div>
       <table class="dt svc-table cap-all" data-info="servicing-capacity"><thead><tr><th>Facility</th><th>System</th><th>Compared</th><th class="n">Committed</th><th class="n">Build-out</th><th class="n">Limit year</th><th class="n">Room / over<br><small>at build-out, to 100%</small></th><th class="n xc">Capacity</th><th class="n xc">Today</th><th class="n xc">Committed</th><th class="n xc">Build-out</th></tr></thead>
       <tbody>${sortRows(rows, st.sort, MM().THIS_YEAR).map(rowHTML).join('')}</tbody></table>
       ${LB() ? LB().capLegendHTML() : ''}
@@ -239,14 +244,15 @@
   const whenWords = (y, end) => (y === 'today' ? 'already' : y == null ? `not before ${end}` : `≈${y}`);
   function panelSpec(all) {
     const now = MM().THIS_YEAR, end = SP().hz.end;
-    const rows = st.sys === 'all' ? all : all.filter(r => r.sys === st.sys), sorted = sortRows(rows, st.sort, now);
+    const sys = sysNow(), rows = sys === 'both' ? all : all.filter(r => r.sys === sys), sorted = sortRows(rows, st.sort, now);
     const over = rows.filter(r => r.pctBo >= 100), tight = rows.filter(r => r.pctBo >= 90 && r.pctBo < 100);
     const soon = sortRows(rows, 'limit', now)[0], big = sortRows(rows, 'impact', now)[0];
     const n = k => rows.filter(r => r.kind === k).length, plural = (x, a, b) => `${x} ${x === 1 ? a : b}`;
-    const chipBtn = (attr, k, t, on) => `<button type="button" class="btn small${on ? ' on' : ''}" ${attr}="${k}" aria-pressed="${on}">${t}</button>`;
-    const tools = `<div class="seg" role="group" aria-label="System">${[['all', 'All'], ['ww', 'Wastewater'], ['water', 'Water']].map(([k, t]) => chipBtn('data-cap-sys', k, t, st.sys === k)).join('')}</div>
-      <div class="seg" role="group" aria-label="Sort">${chipBtn('data-cap-sort', 'limit', 'Soonest', st.sort === 'limit')}${chipBtn('data-cap-sort', 'impact', 'Largest impact', st.sort === 'impact')}</div>`;
-    const sysWord = st.sys === 'ww' ? 'wastewater' : st.sys === 'water' ? 'water' : 'water and wastewater';
+    const chipBtn = (attr, k, t, on, tip) => `<button type="button" class="btn small${on ? ' on' : ''}" ${attr}="${k}" aria-pressed="${on}"${tip ? ` title="${tip}"` : ''}>${t}</button>`;
+    // (the System seg is the one control, js/analysis-tabs.js; each Sort button names its measure)
+    const tools = `${AT() && AT().sysSeg ? AT().sysSeg() : ''}
+      <div class="seg" role="group" aria-label="Sort">${chipBtn('data-cap-sort', 'limit', 'Soonest', st.sort === 'limit', SORT_TIP.limit)}${chipBtn('data-cap-sort', 'impact', 'Largest impact', st.sort === 'impact', SORT_TIP.impact)}</div>`;
+    const sysWord = sys === 'ww' ? 'wastewater' : sys === 'water' ? 'water' : 'water and wastewater';
     return {
       calc: true, fullTitle: `Servicing › Capacity · Peel · ${sysWord}`,
       head: { trail: [{ label: 'Peel' }, { label: 'Servicing › Capacity' }], name: 'Can the system take it?', status: over.length ? { tone: 'over', text: `${over.length} over` } : tight.length ? { tone: 'tight', text: `${tight.length} tight` } : { tone: 'room', text: 'Room' },
@@ -262,8 +268,9 @@
       ].filter(Boolean),
       chart: sorted[0] ? `<p class="small pnl-chart-t">${esc(sorted[0].name)}: existing, built, committed and proposed flow <span class="pnl-chart-u">(% of ${sorted[0].capWord} capacity)</span></p>${labelledBar(sorted[0])}${LB() ? LB().capLegendHTML() : ''}` : '',
       lists: [{ title: 'Facilities', tools, rows: sorted.slice(0, 5).map(listRow), total: rows.length, seeAll: { 'data-full-table': 'svc:capacity' } }],
-      folds: root.PeelWwEvents && App().state.wwEvents ? [{ title: 'Overflows and spills reported', html: root.PeelWwEvents.summaryHTML() }] : [],
-      method: `Committed = existing + built + committed as a % of the row's capacity (rated for treatment, firm for pumping, available for storage); build-out adds the proposed applications. Each row's basis: 2025 metered (calibrated), design criteria or the 2020 Master Plan. Limit year and impact follow the 2020 Master Plan's own tests: treatment against the 90% expansion trigger (Vol. 4, s. 2.3.1), pumping stations peak wet weather against firm capacity (s. 2.3.2), storage required against available (Vol. 3, Table 12), pumping into a zone maximum day against firm pumping. Largest impact ranks how far build-out goes past that limit, as a share of it. ${U.PIPE_RESULTS ? '' : 'Sewer pipes are not in this list: pipe-by-pipe results are left to the Region\u2019s model. '}The full table adds the flows, the horizon years and the plant and water charts.`,
+      // (navigation phase 2: the allocations recorded are a fold here, their tables and CSV in the full table)
+      folds: [...(root.PeelWwEvents && App().state.wwEvents ? [{ title: 'Overflows and spills reported', html: root.PeelWwEvents.summaryHTML() }] : []), ...(root.PeelDemandUI && root.PeelDemandUI.allocFold ? [root.PeelDemandUI.allocFold()].filter(Boolean) : [])],
+      method: `Committed = existing + built + committed as a % of the row's capacity (rated for treatment, firm for pumping, available for storage); build-out adds the proposed applications. Each row's basis: 2025 metered (calibrated), design criteria or the 2020 Master Plan. Limit year and impact follow the 2020 Master Plan's own tests: treatment against the 90% expansion trigger (Vol. 4, s. 2.3.1), pumping stations peak wet weather against firm capacity (s. 2.3.2), storage required against available (Vol. 3, Table 12), pumping into a zone maximum day against firm pumping. Largest impact ranks how far build-out goes past that limit, as a share of it. ${U.PIPE_RESULTS ? '' : 'Sewer pipes are not in this list: pipe-by-pipe results are left to the Region\u2019s model. '}The full table adds the flows, the horizon years and the plant and water charts. Allocations recorded: the plants\u2019 room at the 90% trigger after the allocations recorded in this browser ahead of approval (Export and Import CSV in the full table).`,
       sources: 'Rated capacity and the 2025 metered flows: Region of Peel 2025 annual reports (wastewater plants, drinking water systems). Firm pumping and storage: 2020 Water and Wastewater Master Plan (Vol. 3 and 4). Growth: the applications and permits on the map at Peel design criteria. Planned expansions and relief: 2026 DC capital maps (draft).',
       foot: { primary: { label: 'Show capacity on the map', attrs: { 'data-mview': 'wastewater' }, title: 'The Wastewater view: capacity colours, blocks and sanitary sewers' } },
     };
@@ -307,47 +314,44 @@
   // The plant and water charts behind the table fold under "Charts and method" (kept in this browser).
   let detail = !!(U.store && U.store.get('capDetail', false));
   function syncDetail() { for (const n of document.querySelectorAll('.svc-detail')) n.classList.toggle('cap-detail-on', detail); const b = $('[data-cap-detail]'); if (b) b.setAttribute('aria-expanded', String(detail)); }
-  // ---- Servicing › Checks: the servicing model against the published figures --------------------
+  // ---- Records › Data checks, group Servicing model (navigation phase 2; was Servicing › Model checks) ----
   // The 2020 Master Plan against this tracker, the 2025 plant reports against the model (with each
-  // plant's calibration factor), the 2025 water production and the Caledon groundwater systems.
-  // (The existing water facilities with the Master Plan's water comparison, and the hydraulic check
-  // while its Labs switch is on, are the panes below this one.) Data checks (freshness, duplicates,
-  // the permit check) are in Records › Checks.
+  // plant's calibration factor), the 2025 water production, the Caledon groundwater systems, the
+  // Ministry's measured plant flow and the collection system report's station roster: #svc-checks-body,
+  // under the data checks in Records › Data checks' full table. The existing water facilities and the
+  // hydraulic check are Network's panes.
   function renderChecks() {
     const el = $('#svc-checks-body'); if (!el) return;
     if (root.DevScope && root.DevScope.current()) return;
-    const MC = root.ModelChecks || {}, sec = k => { try { const v = typeof MC[k] === 'function' ? MC[k]() : MC[k]; return typeof v === 'string' ? v : ''; } catch (e) { return ''; } };
-    const body = ['wwMasterPlanVsTracker', 'wwReportsVsModel', 'waterProduction', 'caledonGroundwater'].map(sec).join('');
+    // (a section is a string, or { html } as plant-flows.js and ww-events.js register theirs)
+    const MC = root.ModelChecks || {}, sec = k => { try { const v = typeof MC[k] === 'function' ? MC[k]() : MC[k]; return typeof v === 'string' ? v : v && typeof v.html === 'string' ? v.html : ''; } catch (e) { return ''; } };
+    const body = ['wwMasterPlanVsTracker', 'wwReportsVsModel', 'waterProduction', 'caledonGroundwater', 'plantFlows', 'wwRoster'].map(sec).join('');
+    // The calibration factor said as a comparison (was the Model checks panel's answer).
+    const M = App() && App().state.svcModel, plants = M ? ['Lakeview', 'Clarkson', 'Inglewood'].map(pl => ({ pl, c: M.plantCap(pl) })).filter(x => x.c) : [];
+    const cal = !M ? '' : M.mode === 'calibrated' ? ` Each plant\u2019s measured 2025 flow against what the model works out for today (the calibration factor, measured ÷ modelled, applied in the capacity check): ${plants.map(x => `<strong>${esc(SD().PLANT_SHORT[x.pl])}</strong> measured ${x.c.f.toFixed(2)} times the model's flow`).join(', ')}. The difference is what the model does not hold: existing jobs, rain and groundwater getting into the sewers, and other flows.` : ' Design flows at Peel criteria: switch the Scenario to the capacity check (2025 flows) to see the calibration factors.';
     el.innerHTML = `${U.SCREEN_NOTE || ''}<div class="svc-head"><div class="svc-switches">${SvcTab().optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}</div></div>
-      ${U.hlP ? U.hlP('How the servicing model compares with the 2020 Master Plan and the 2025 reports: the plants, water production and the Caledon wells. Data checks (freshness, duplicates, permits) are in Records.') : ''}
+      <h3 class="sub-title">Servicing model</h3>
+      ${U.hlP ? U.hlP(`How the servicing model compares with the 2020 Master Plan and the 2025 reports (the plants, water production, the Caledon wells), the Ministry\u2019s measured plant flow and the collection system report\u2019s station roster.${cal}`) : ''}
       ${body || (U.skel ? U.skel('Loading the servicing model') : '')}`;
-    // Stage 3: the standard panel; the comparisons above (and the water facilities, the hydraulic check)
-    // are its full table.
-    const PN = root.PeelPanel, A = App(), M = A && A.state.svcModel, R = A && A.state.reports;
-    if (!PN || !M) return;
-    const cal = M.mode === 'calibrated';
+  }
+  // Records › Data checks' panel, its Servicing model list (the retired Model checks panel's list):
+  // one row a comparison, the measured figure as its value; the Caledon wells last, so the five the
+  // panel shows hold the two checks that were only on the gear page. kv rows with no attrs (the list's
+  // See all opens the full table at the first; a page's toMap leaves them alone). [] until the model is in.
+  function checksRows() {
+    const PN = root.PeelPanel, A = App(), M = A && A.state.svcModel, R = A && A.state.reports; if (!PN || !M) return [];
     const plants = ['Lakeview', 'Clarkson', 'Inglewood'].map(pl => ({ pl, c: M.plantCap(pl) })).filter(x => x.c);
-    const sp = R && R.water && R.water.southPeel;
-    const ft = { 'data-full-table': 'svc' };
-    const check = (t, what, go) => ({ attrs: { ...ft, 'data-ft-go': go || t }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${t}</span></div><small class="pnl-r-line">${what}</small>` });
-    const labs = root.PeelLabs && root.PeelLabs.on('hydro');
-    PN.set('svc:checks', {
-      calc: true, fullTitle: 'Servicing › Model checks · the model against the 2020 Master Plan and the 2025 reports',
-      head: PN.areaHead('Servicing › Model checks', 'Does the model match the reports?', null, `Peel · ${cal ? 'capacity check: calibrated to the 2025 plant flows' : 'design flows (Peel criteria)'}`),
-      answer: cal ? `Each plant's measured 2025 flow is compared with what the model works out for today, and the model is scaled to match: ${plants.map(x => `<strong>${esc(SD().PLANT_SHORT[x.pl])}</strong> measured ${x.c.f.toFixed(2)} times the model's flow`).join(', ')}. The difference is what the model does not hold: existing jobs, rain and groundwater getting into the sewers, and other flows.` : 'Design flows at Peel criteria: switch the Scenario to the capacity check (2025 flows) to see the calibration factors. The comparisons with the Master Plan and the 2025 reports are below.',
-      figures: [...plants.map(x => ({ v: `×${x.c.f.toFixed(2)}`, u: '', label: `${SD().PLANT_SHORT[x.pl]}: measured ÷ modelled`, ctx: 'calibration factor: 2025 measured flow ÷ the model today' })),
-        ...(sp ? [{ v: fmt1(sp.maxDayMLd), u: 'ML/d', label: 'South Peel 2025 maximum day', ctx: `of ${fmt1(sp.plants.reduce((t, p) => t + p.ratedMLd, 0))} ML/d rated (incl. York supply)` }] : [])].slice(0, 4),
-      lists: [{ title: 'Checks in the full table', rows: [
-        check('2020 Master Plan vs this tracker', 'Wastewater plants (average day) and water (maximum day): build-out here against the Master Plan forecast, and the year the Master Plan expected that flow.'),
-        check('2025 annual reports vs the model', 'Each plant: rated capacity, reported average and highest day, the model today and the calibration factor.'),
-        check('2025 water production', 'South Peel (A.P. Kennedy, Lorne Park) and the Caledon groundwater systems: rated, average and maximum day, per person.', 'Reported 2025 production'),
-        check('Existing water facilities', 'Every reservoir, tank and pumping station with its firm capacity, and the ones the Master Plan finds short by 2041.', 'Existing water facilities'),
-        ...(labs ? [check('Hydraulic check (beta, Labs)', 'An experimental EPANET check of the large mains feeding each upper pressure zone.', 'Hydraulic')] : []),
-      ], total: labs ? 5 : 4, seeAll: ft }],
-      method: 'The calibration factor = (reported − external inflows) ÷ the model today (census + built since, residential + development jobs); it is applied in the capacity check mode, I&amp;I is not scaled. Data checks (freshness, duplicates, permit counts) are in Records › Data checks.',
-      sources: 'Region of Peel 2025 annual reports (G.E. Booth, Clarkson, Inglewood; drinking water systems); 2020 Water and Wastewater Master Plan (Vol. 3 and 4); the Wastewater Collection System report (York and Toronto inflows).',
-      foot: { primary: { label: 'The reports (Records)', attrs: { 'data-at': 'records:sources' }, title: 'Every report and source with its date' } },
-    });
+    const sp = R && R.water && R.water.southPeel, cal = (R && R.water && R.water.caledon) || [], pf = A.state.plantFlows, ev = A.state.wwEvents;
+    const worst = pf && pf.checks && pf.checks.length ? pf.checks.reduce((m, c) => Math.max(m, Math.abs(c.diffPct)), 0) : null;   // (as plant-flows.js checksHTML)
+    const roster = ev && ev.stations ? [...(ev.stations.southPeel || []), ...(ev.stations.inglewood || [])].length : 0;
+    return [
+      ...(R ? [PN.kv('2020 Master Plan vs this tracker', 'build-out against the Master Plan forecast'),
+        PN.kv('2025 annual reports vs the model', M.mode === 'calibrated' && plants.length ? `measured ${plants.map(x => `${esc(SD().PLANT_SHORT[x.pl])} ${x.c.f.toFixed(2)}`).join(', ')} times the model's flow` : 'design flows: the capacity check shows the factors')] : []),
+      ...(sp ? [PN.kv('2025 water production', `South Peel maximum day ${fmt1(sp.maxDayMLd)} of ${fmt1(sp.plants.reduce((t, p) => t + p.ratedMLd, 0))} ML/d rated (incl. York supply)`)] : []),
+      ...(worst != null ? [PN.kv('Plant flow: Ministry data vs the annual reports', `largest difference ${worst.toFixed(1)}%, ${worst <= 2 ? 'matches' : worst <= 5 ? 'close' : 'differs'}`, worst <= 2 ? 'room' : worst <= 5 ? 'tight' : 'over')] : []),
+      ...(ev ? [PN.kv('Pumping stations: GIS layer vs the collection system report', roster ? `the report’s ${fmtNum(roster)} stations against the open layer` : 'the report’s roster against the open layer')] : []),
+      ...(cal.length ? [PN.kv('Caledon groundwater systems', `${fmtNum(cal.length)} well systems: rated, average and maximum day`)] : []),
+    ];
   }
   // ---- Servicing › Network: the bar over the blocks, stations and zones ------------------------------
   // A tapped row is selected (the map shows it and everything upstream of it); the bar names it and
@@ -381,8 +385,14 @@
     const ps = (capRows || []).filter(r => r.kind === 'ps'), psOver = ps.filter(r => r.pctBo >= 100);
     const stRow = r => { const x = listRow(r); return { ...x, attrs: null, html: `${x.html}${netActs(r.id.replace(/^ps:/, ''), true)}` }; };
     const big = blocks[0], zg = zones[0];
+    // (navigation phase 2: the existing water facilities and, while its Labs switch is on, the hydraulic
+    // check are Network's full table; a row opens the full table at its table)
+    const labs = root.PeelLabs && root.PeelLabs.on('hydro');
+    const row = (t, what, go) => ({ attrs: { 'data-full-table': 'svc', 'data-ft-go': go }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${t}</span></div><small class="pnl-r-line">${what}</small>` });
+    const fac = [row('💧 Every reservoir, tank and pumping station', 'With its firm capacity, and the ones the Master Plan finds short by 2041.', 'Existing water facilities'),
+      ...(labs ? [row('💧 Hydraulic check (beta, Labs)', 'An experimental EPANET check of the large mains feeding each upper pressure zone.', 'Hydraulic')] : [])];
     PN.set('svc:network', {
-      calc: true, fullTitle: 'Servicing › Network · Peel: blocks, pumping stations and pressure zones',
+      calc: true, fullTitle: 'Servicing › Network · Peel: blocks, pumping stations, pressure zones and water facilities',
       head: PN.areaHead('Servicing › Network', 'Where does it flow?', psOver.length ? { tone: 'over', text: `${psOver.length} station${psOver.length === 1 ? '' : 's'} over` } : { tone: 'room', text: 'Room' }, `Peel · ${fmtNum(blocks.length)} wastewater blocks · ${fmtNum(ps.length)} pumping stations · ${fmtNum(zones.length)} pressure zones`),
       answer: `Sewage flows through <strong>${fmtNum(blocks.length)}</strong> wastewater blocks to the plants${big ? `; <strong>${esc(SD().drName(big.a))}</strong> carries the most (${fmt1(big.bo)} ML/d on an average dry day at build-out)` : ''}. <strong>${fmtNum(psOver.length)}</strong> of ${fmtNum(ps.length)} pumping stations with a firm capacity on file would be over it in a storm at build-out${zg ? `; water use grows most in <strong>${esc(zg.z.name)}</strong> (+${fmt1(zg.bo - zg.now)} ML/d on the highest day)` : ''}.`,
       figures: [
@@ -395,6 +405,7 @@
         { title: 'Pumping stations (tightest)', rows: SC_sort(ps).slice(0, 5).map(stRow), total: ps.length, seeAll: { 'data-full-table': 'svc', 'data-ft-go': 'Pumping stations' } },
         { title: 'Blocks carrying the most flow', rows: blocks.slice(0, 5).map(b => ({ html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(SD().drName(b.a))}<small>to ${esc(SD().plantLabel(b.a.plant))}</small></span><span class="pnl-r-fig">${fmt1(b.bo)} ML/d<small>+${fmt1(b.bo - b.now)} ML/d from growth</small></span></div>${netActs(b.a.id, true)}` })), total: blocks.length, seeAll: { 'data-full-table': 'svc', 'data-ft-go': 'Wastewater by block' } },
         { title: 'Pressure zones growing most', rows: zones.slice(0, 5).map(z => ({ html: `<div class="pnl-r-top"><span class="pnl-r-name">💧 ${esc(z.z.name)}</span><span class="pnl-r-fig">${fmt1(z.bo)} ML/d<small>+${fmt1(z.bo - z.now)} ML/d from growth, maximum day</small></span></div>${netActs(z.z.id, false)}` })), total: zones.length, seeAll: { 'data-full-table': 'svc', 'data-ft-go': 'Water by pressure zone' } },
+        { title: 'Existing water facilities', rows: fac, total: fac.length, seeAll: { 'data-full-table': 'svc', 'data-ft-go': 'Existing water facilities' } },
       ],
       method: 'Each block\u2019s own flow plus everything upstream of it along the traced flow path, building up to the plant on the lake (average dry weather at design criteria, calibrated to the 2025 plant flows in Capacity check mode). Pumping stations: peak wet weather against firm capacity (2020 Master Plan). Zones: maximum day at Peel design criteria. "What loads this?" opens it as a scope with the developments loading it; "Show upstream" shows it on the map with everything that drains into it.',
       sources: 'The Region\u2019s 40 I&amp;I sewersheds (blocks) and the traced sewer network; 2020 Water and Wastewater Master Plan (firm capacity); pressure zones (Region of Peel); the applications on the map.',
@@ -440,15 +451,14 @@
   }
   const renderAll = () => { render(); renderChecks(); renderNetBar(); };
   // Render on entering the sub-view (PeelAnalysisTabs.showFootTab).
-  const renderFor = sub => { if (sub === 'capacity') render(); else if (sub === 'checks') renderChecks(); else if (sub === 'network') { renderNetBar(); const rows = !(root.DevScope && root.DevScope.current()) && collect(); if (rows) renderNetworkPanel(rows); } };
+  const renderFor = sub => { if (sub === 'capacity') render(); else if (sub === 'network') { renderNetBar(); const rows = !(root.DevScope && root.DevScope.current()) && collect(); if (rows) renderNetworkPanel(rows); } };
   if (typeof document !== 'undefined') document.addEventListener('click', e => {
     if (!e.target.closest) return;
     const s = e.target.closest('[data-cap-sort]'); if (s) { st.sort = s.dataset.capSort; if (U.store) U.store.set('capSort', st.sort); render(); return; }
-    const y = e.target.closest('[data-cap-sys]'); if (y) { st.sys = y.dataset.capSys; render(); return; }
     const f = e.target.closest('[data-cap-fold]'); if (f) { const id = f.dataset.capFold; if (st.open.has(id)) st.open.delete(id); else st.open.add(id); render(); return; }
     if (e.target.closest('[data-cap-detail]')) { detail = !detail; if (U.store) U.store.set('capDetail', detail); syncDetail(); if (detail) { const p = $('#pane-plants'); if (p) p.scrollIntoView({ block: 'start', behavior: 'smooth' }); } }
   });
-  const api = { SYSTEM, derive, impactOf, sortRows, listRow, renderNetworkPanel, renderSiteNetwork, yTxt, pctTxt, collect, partial: () => lastPartial, tableHTML, panelSpec, fullTableHTML, reachText, numOnly, render, renderChecks, renderNetBar, renderAll, renderFor, syncDetail };
+  const api = { SYSTEM, derive, impactOf, sortRows, listRow, renderNetworkPanel, renderSiteNetwork, yTxt, pctTxt, collect, partial: () => lastPartial, tableHTML, panelSpec, fullTableHTML, reachText, numOnly, render, renderChecks, checksRows, renderNetBar, renderAll, renderFor, syncDetail };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSvcCapacity = api;
 })(typeof window !== 'undefined' ? window : globalThis);

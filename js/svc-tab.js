@@ -461,13 +461,13 @@
     $('#water-body').innerHTML = `${SCREEN_NOTE}<div class="svc-head">${svcLegend(Y)}<div class="svc-switches">${optSwitch('tech', 'Columns', [['off', 'Simple'], ['on', 'Engineering']])}${TS().inViewBox()}</div></div>
       ${WTab().waterZonesHTML(zr, zsum, { wMax, wPH, total, jobs, wRow, layerHead, Y, c, E, mdR, mdE, observed, censusHowW })}`;
     // ---- Water: Capacity sub-view. The 2025 production / Caledon groundwater reports moved
-    // to Sources & checks (window.ModelChecks); the hydraulic check moved to its own sub-view.
+    // to Records › Data checks (window.ModelChecks); the hydraulic check moved to its own sub-view.
     $('#wcap-body').innerHTML = `${WTab().waterCapHTML(wcapM)}`;
-    // ---- Water: Facilities sub-view (tiles → Master Plan compare → facilities table). ----
+    // ---- Servicing › Network: the existing water facilities (tiles → Master Plan compare → facilities table). ----
     $('#wfac-body').innerHTML = `${MP().waterFacilitiesHTML()}`;
     // ---- Hydraulic check (Labs).
     const hydPane = $('#hyd-box'); if (hydPane) hydPane.outerHTML = MP().hydroBoxHTML();
-    // (Its pane sits in Servicing › Checks while Settings › Labs › Hydraulic check is on.)
+    // (Its pane sits in Servicing › Network while Settings › Labs › Hydraulic check is on.)
     $('#water-note').textContent = `${Y} Census baseline (follows the timeline) · top zones by build-out maximum day`;
 
     // ---- Wastewater: each catchment's own (local) flow plus everything upstream of it along the
@@ -602,10 +602,13 @@
     renderHeadlines(); MP().renderMpCompare();
     renderScenario(); MA().renderCapLayer(); MA().renderLegend(); TS().filterInView();
     if (AT().getFootTab() === 'dca') DCAT().renderDca();
+    // (Records › Data checks' Servicing model group fills in once the model is in; never at a development,
+    // whose Records is its files)
+    if (!p && AT().getFootTab() === 'records' && root.PeelRecordsTab) root.PeelRecordsTab.render();
     // (Home and the workspace pages read the Overview's figures: re-render it there too, so a page opened
     // before the model loaded gets its capacity rows)
     if (AT().getFootTab() === 'overview' || (root.PeelWorkspaces && root.PeelWorkspaces.mode() !== 'full')) OV().renderOverview();
-    if (AT().getFootTab() === 'svc' && AT().getSvcSub() === 'alloc') DUI().renderAlloc();
+    if (AT().getFootTab() === 'svc' && AT().getSvcSub() === 'capacity') DUI().renderAlloc();
     if (root.PeelSvcCapacity) root.PeelSvcCapacity.renderAll();
     $('#ww-note').textContent = `${Y} Census baseline (follows the timeline) · flows build up from the top of each sewershed down to G.E. Booth (Lakeview), Clarkson and Inglewood`;
     wide = WIDE.map(sel => { const n = $(sel); return n ? n.innerHTML : ''; });

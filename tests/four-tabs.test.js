@@ -31,7 +31,7 @@ function loadTabs({ labs = [], site = false, publicView = false, siteEas = 3 } =
 
 // The spec's inventory: the chips each tab shows at each scope.
 const SPEC = {
-  area: { overview: [], growth: ['pipeline', 'areas', 'timing', 'ledger'], svc: ['capacity', 'network', 'alloc', 'checks'], dca: ['timing', 'dcproj', 'projects', 'eas'], records: ['sources', 'checks'] },
+  area: { overview: [], growth: ['pipeline', 'areas', 'timing', 'ledger'], svc: ['capacity', 'network'], dca: ['timing', 'dcproj', 'projects', 'eas'], records: ['sources', 'checks'] },
   site: { overview: [], growth: ['pipeline'], svc: ['network'], dca: ['timing', 'eas'], records: ['files'] },
 };
 
@@ -62,24 +62,30 @@ test('1. sub-views per scope match the spec (Peel / area and a development)', ()
   const row = tab => { const i = HTML.indexOf(`f-subtabs`, HTML.indexOf(`data-pane="${tab}" hidden role="group"`) - 80); const s = HTML.slice(i, HTML.indexOf('</div>', i)); return [...s.matchAll(/data-(?:gsub|svcsub|dcasub|rsub)="(\w+)">([^<]+)</g)].map(m => m[2].trim()); };
   // (no two sub-views share a name: design bundle 2)
   assert.deepEqual(row('growth'), ['Pipeline', 'Areas', 'Forecast', 'Ledger']);
-  assert.deepEqual(row('svc'), ['Capacity', 'Network', 'Allocations', 'Model checks']);
+  assert.deepEqual(row('svc'), ['Capacity', 'Network']);
   assert.deepEqual(row('dca'), ['DC timing', 'DC projects', 'Projects', 'EAs']);
   assert.deepEqual(row('records'), ['Sources', 'Data checks', 'Files']);
 });
 
-test('1. the panes behind each sub-view: Areas is one drill-down; Network holds blocks, stations, zones', () => {
+test('1. the panes behind each sub-view: Areas is one drill-down; Network holds blocks, stations, zones and the water facilities', () => {
   const pane = id => (HTML.match(new RegExp(`id="${id}" data-pane="(\\w+)" data-sub="([\\w ]+)"`)) || []).slice(1).join('/');
   assert.equal(pane('pane-growth-byplan'), 'growth/areas');
   assert.equal(pane('pane-growth-census'), 'growth/areas');
   assert.equal(pane('pane-svc-capacity'), 'svc/capacity');
   for (const id of ['pane-ww', 'pane-pumpstations', 'pane-water']) assert.equal(pane(id), 'svc/network', id);
-  assert.equal(pane('pane-alloc'), 'svc/alloc');
-  for (const id of ['pane-svc-checks', 'pane-wfac', 'pane-hydro']) assert.equal(pane(id), 'svc/checks', id);
+  // Navigation phase 2: Allocations is a fold of Capacity (its tables in Capacity's full table); the
+  // water facilities and the hydraulic check are Network's; the servicing model is Records › Data checks.
+  assert.equal(pane('pane-alloc'), 'svc/capacity');
+  for (const id of ['pane-wfac', 'pane-hydro']) assert.equal(pane(id), 'svc/network', id);
+  assert.equal(pane('pane-svc-checks'), 'records/checks');
   assert.equal(pane('pane-dca-build'), 'dca/projects');
   for (const id of ['pane-dca-dcproj', 'pane-dca-rec', 'pane-dca-funding']) assert.equal(pane(id), 'dca/dcproj', id);
-  // The funding screen is "Screening results" now; the lens switch stays a map-layer preset only.
+  // The funding screen is "Screening results" now.
   assert.match(src('js/dca-tab.js'), /<h3 class="sub-title">Screening results/);
-  assert.match(src('js/topbar.js'), /it never changes the right panel's tabs or the open tab/);
+  // The lens (owner decision 9): its map preset and the one System control; Capital, Water and Wastewater
+  // still open their tab, and the comment says so (AD-9).
+  assert.match(src('js/topbar.js'), /encoding and legend, and the one System control \(js\/analysis-tabs\.js setSys\) to what its map/);
+  assert.doesNotMatch(src('js/topbar.js'), /it never changes the right panel's tabs/);
 });
 
 test('2. Servicing › Capacity: water and wastewater in ONE table, a basis on every row', () => {
@@ -116,6 +122,10 @@ test('2. Servicing › Capacity: water and wastewater in ONE table, a basis on e
   // Room / over in signed words; the limit year as a year, "now" or "after <end>".
   assert.match(html, /over by 102\.0 ML\/d/); assert.match(html, /room 600\.0 ML\/d/);
   assert.match(html, /≈2028<small>90% trigger/); assert.match(html, /after 2051<small>90% trigger/);
+  // One sort vocabulary (N-11): the panel's words, Soonest · Largest impact; each button names its measure.
+  assert.match(html, /data-cap-sort="limit"[^>]*>Soonest</); assert.match(html, /data-cap-sort="impact"[^>]*>Largest impact</);
+  assert.match(html, /data-cap-sort="limit"[^>]*title="The soonest limit year first"/);
+  assert.doesNotMatch(html, />Limit year<\/button>|>Impact<\/button>/);
   // Sort by limit year (soonest first) or by impact (most loaded at build-out first).
   assert.deepEqual(C.sortRows(rows, 'limit', 2026).map(r => r.id), ['plant:Lakeview', 'stor:x', 'wsys:southPeel', 'ps:y']);
   // (Stage 3: impact in the Master Plan's own test, how far build-out goes past each limit.)
@@ -156,8 +166,8 @@ test('4. old links and stored views map to the new tabs', () => {
   const AT = loadTabs();
   const m = (t, sub) => plain(AT.migrateTabKey(t, sub));
   const cases = [
-    [['ww', 'plants'], { tab: 'svc', svcSub: 'capacity' }], [['ww', 'catchments'], { tab: 'svc', svcSub: 'network' }], [['ww', 'alloc'], { tab: 'svc', svcSub: 'alloc' }], [['ww', 'pumpstations'], { tab: 'svc', svcSub: 'network' }],
-    [['water', 'capacity'], { tab: 'svc', svcSub: 'capacity' }], [['water', 'zones'], { tab: 'svc', svcSub: 'network' }], [['water', 'facilities'], { tab: 'svc', svcSub: 'checks' }], [['water', 'hydro'], { tab: 'svc', svcSub: 'checks' }],
+    [['ww', 'plants'], { tab: 'svc', svcSub: 'capacity' }], [['ww', 'catchments'], { tab: 'svc', svcSub: 'network' }], [['ww', 'alloc'], { tab: 'svc', svcSub: 'capacity' }], [['ww', 'pumpstations'], { tab: 'svc', svcSub: 'network' }],
+    [['water', 'capacity'], { tab: 'svc', svcSub: 'capacity' }], [['water', 'zones'], { tab: 'svc', svcSub: 'network' }], [['water', 'facilities'], { tab: 'svc', svcSub: 'network' }], [['water', 'hydro'], { tab: 'svc', svcSub: 'network' }],
     [['growth', 'census2051'], { tab: 'growth', gSub: 'areas' }], [['growth', 'byplan'], { tab: 'growth', gSub: 'areas' }], [['growth', 'timing'], { tab: 'growth', gSub: 'timing' }], [['census'], { tab: 'growth', gSub: 'areas' }],
     [['dca', 'build'], { tab: 'dca', dcSub: 'projects' }], [['dca', 'recommendations'], { tab: 'dca', dcSub: 'dcproj' }], [['dca', 'funding'], { tab: 'dca', dcSub: 'dcproj' }], [['dca', 'eas'], { tab: 'dca', dcSub: 'eas' }],
     [['plants'], { tab: 'svc', svcSub: 'capacity' }], [['demand'], { tab: 'growth' }], [['criteria'], { tab: 'overview' }], [['developments'], { tab: 'overview' }], [['records'], { tab: 'records' }],

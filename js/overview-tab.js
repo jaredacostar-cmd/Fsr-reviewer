@@ -27,7 +27,6 @@
   const FI = () => root.PeelFilterUI;
   const AS = () => root.PeelAreaSelect;
   const DN = () => root.PeelDevNav;
-  const TB = () => root.PeelTopbar;
   const RP = () => root.PeelReports;
   const SvcTab = () => root.PeelSvcTab;
 
@@ -449,10 +448,11 @@
     const infL = root.PeelLayers && root.PeelLayers.infill ? root.PeelLayers.infill(infillScope(), { secondUnits: secondUnitScope() }) : null;
     const mgmt = pipeL ? `<span class="ov-mgmt">${root.PeelLayers.headlineText(pipeL, /^all of peel$/i.test(scopeW) ? '' : ` (${esc(scopeW)})`, fmtNum, s => `<strong>${s}</strong>`, infL)}</span> ` : '';
     const hl = set.length ? `${mgmt}The <strong>${fmtNum(set.length)}</strong> developments shown would add about <strong>${fmtNum(roundPop(Math.max(0, e.population - pre.people)))} people</strong> and ${fmtNum(roundPop(em.jobs))} jobs in ${fmtNum(Math.round(Math.max(0, unitsAll - pre.units)))} units${lyTiles.built >= 0.5 && (basis === 'all' || basis === 'buildout') ? `, <strong>${fmtNum(Math.round(lyTiles.built))}</strong> of them built since 2021` : ''}${pre.units >= 0.5 ? ` <span class="muted">(not counting ${fmtNum(Math.round(pre.units))} completed before the 2021 Census, already in it)</span>` : ''}.${tight ? ` <strong>${esc(SV().PLANT_SHORT[tight.pl])}</strong> ${SvcTab().trigText(tight)} (existing + built + committed under MECP D-5-1 ${SvcTab().pctRated(tight, 'com')}% of rated capacity → ${SvcTab().pctRated(tight, 'bo')}% at build-out).` : ''}` : noDevsText();
-    // ⓘ line: method, criteria, data dates.
+    // ⓘ line: method, criteria, data dates; its link opens Records › Data checks (data-at: on the map, in the
+    // panel's Method fold and from a page alike; was the Sources & checks gear page, navigation phase 2).
     const fr = DU().freshness(), nDue = fr.filter(r => r.st === 'due' || r.st === 'stale').length;
     const basisTxt = { all: 'every stage, pre-consultation to completed', committed: 'committed only (a site servicing or building permit, the Peel rule)', buildout: 'every stage but pre-application', remaining: 'units left to build (not yet completed)' }[basis] || 'every stage';
-    const info = `<p class="small muted ov-info"><button type="button" class="btn small link" data-info="definitions">Definitions</button> · ⓘ Servicing demand at Peel design criteria, as in a functional servicing report; capacity as % of rated (plants: ${SvcTab().wwFlowLabel('long')}; water: max day); black tick: the 90% expansion trigger. Scope: ${esc(basisTxt)}${App().state.muni ? ` · ${esc(App().state.muni)}` : ''}. Applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong> · ${nDue ? `<span class="fr-b fr-due">${nDue} source${nDue === 1 ? '' : 's'} due for a refresh</span>` : '<span class="fr-b fr-ok">all sources current</span>'} ${go('criteria', 'Data & checks')}</p>`;
+    const info = `<p class="small muted ov-info"><button type="button" class="btn small link" data-info="definitions">Definitions</button> · ⓘ Servicing demand at Peel design criteria, as in a functional servicing report; capacity as % of rated (plants: ${SvcTab().wwFlowLabel('long')}; water: max day); black tick: the 90% expansion trigger. Scope: ${esc(basisTxt)}${App().state.muni ? ` · ${esc(App().state.muni)}` : ''}. Applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong> · ${nDue ? `<span class="fr-b fr-due">${nDue} source${nDue === 1 ? '' : 's'} due for a refresh</span>` : '<span class="fr-b fr-ok">all sources current</span>'} <button type="button" class="btn small link ov-go" data-at="records:checks">Records › Data checks →</button></p>`;
     const permitCaveat = root.PeelCensusView && root.PeelCensusView.permitCaveatHTML ? root.PeelCensusView.permitCaveatHTML() : '';
     // Stage 3: the standard panel. The cards below (every tile, the capacity bars, Needs attention by
     // group, the largest unbuilt, the constraint card) are its full table.
@@ -554,8 +554,6 @@
   $('#ov-body').addEventListener('click', e => {
     const t = e.target.closest('[data-ov-tab]');
     if (t) {
-      // Phase 4: the criteria tab is gone — "Data & checks" opens the gear menu's Sources & checks page.
-      if (t.dataset.ovTab === 'criteria') { TB().openGearPage('sources'); return; }
       const [tab, sub] = t.dataset.ovTab.split(':');   // "tab" or "tab:sub-view"
       AT().setFootPref(AT().tabOf(tab)); store.set('footTab4', AT().tabOf(tab)); AT().showFootTab(tab, sub); return;
     }

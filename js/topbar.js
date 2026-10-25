@@ -22,9 +22,11 @@
   const Sh = () => window.PeelShare;
 
   // ---- Top bar: scope trail with its count, lens switch, scenario chip, menus ----------------
-  // Lens switch (SPEC §4): one button per MAP_VIEWS entry. A lens sets the map's layer preset,
-  // marker encoding and legend only; it never changes the right panel's tabs or the open tab.
-  // syncMapOpts() toggles .on on every [data-mview], so this stays in sync with the map control.
+  // Lens switch (SPEC §4): one button per MAP_VIEWS entry. A lens sets the map's layer preset, marker
+  // encoding and legend, and the one System control (js/analysis-tabs.js setSys) to what its map
+  // shows; Capital, Water and Wastewater also open their tab (the owner's change of 2026-10-16, kept:
+  // navigation-design §9 #9). syncMapOpts() toggles .on on every [data-mview], so this stays in sync
+  // with the map control.
   function renderViewSwitch() {
     const el = $('#tb-views'); if (!el) return;
     el.innerHTML = MM().MAP_VIEWS.map(([k, t]) => `<button type="button" class="btn small" data-mview="${k}" title="${t} lens: the map's layers, marker colours and legend">${PD.icon(k)}<span>${t}</span></button>`).join('');
@@ -38,6 +40,8 @@
     if (phone() && b.classList.contains('on') && !v.classList.contains('open')) { v.classList.add('open'); return; }
     v.classList.remove('open');
     MA().setMapView(b.dataset.mview);
+    // (only a lens tap sets the System: a workspace or a page calling setMapView leaves it; Planning too)
+    const sy = AT() && AT().SYS_OF_VIEW ? AT().SYS_OF_VIEW[b.dataset.mview] : null; if (sy && AT().setSys) AT().setSys(sy);
     // Bundle 6: a view opens its tab (picking Capital used to leave Overview open): Capital → Capital,
     // Water and Wastewater → Servicing; Planning keeps the tab you are on.
     const tab = { dc: 'dca', water: 'svc', wastewater: 'svc' }[b.dataset.mview];
@@ -286,14 +290,15 @@
     const m = $('#tb-gear-menu'); if (!m) return;
     m.innerHTML =
       '<button type="button" role="menuitem" data-tbg="settings">Settings</button>' +
-      // Stage 2: Records (Sources · Checks · Files) replaces the Sources & checks page here.
+      // Stage 2: Records (Sources · Data checks · Files) took the Sources & checks page's place;
+      // navigation phase 2 retired the page.
       '<button type="button" role="menuitem" data-tbg="labs">Labs</button>' +
       '<button type="button" role="menuitem" data-tbg="log">Change log</button>';
   }
-  // Gear menu pages (Phase 4): workers register page renderers on window.GearPages —
-  // Worker G registers GearPages.sources for the Sources & checks page. openGearPage
-  // renders the page into the gear menu, which stays open on the page. A renderer may
-  // return an HTML string, a Node, or fill the container element itself.
+  // Gear menu pages (Phase 4): workers register page renderers on window.GearPages:
+  // Settings and Labs. openGearPage renders the page into the gear menu, which stays
+  // open on the page. A renderer may return an HTML string, a Node, or fill the
+  // container element itself.
   window.GearPages = window.GearPages || {};
   function openGearPage(name) {
     const m = $('#tb-gear-menu'); if (!m) return;
@@ -313,13 +318,12 @@
   $('#tb-gear-menu').addEventListener('click', e => {
     const b = e.target.closest('[data-tbg]'); if (!b) return;
     const k = b.dataset.tbg;
-    // Phase 4: the Settings & sources and Change log tabs are gone — Settings opens the
-    // scenario popover (the criteria editor lives in the scenario bar now), the change
-    // log lives in the Help menu, and Sources & checks is a gear page (Worker G).
+    // Phase 4: the Settings & sources and Change log tabs are gone: Settings is a gear page
+    // (the criteria editor lives in the scenario bar now) and the change log is in the Help
+    // menu. (Navigation phase 2: the Sources & checks page is gone, its parts in Records.)
     if (k === 'settings') openGearPage('settings');
     else if (k === 'log') { closeTbMenus(); Tips().showHelpLog(); }
-    else if (k === 'sources') openGearPage('sources');
-    // Stage 2: Records is the panel's trailing tab, also reached from here; Labs holds the extra tools.
+    // Stage 2: Records is the panel's trailing tab; Labs holds the extra tools.
     else if (k === 'labs') openGearPage('labs');
   });
   function closeTbMenus() {
@@ -339,7 +343,7 @@
   { const so = $('#tb-restart'); if (so) so.addEventListener('click', startOver); }
   $('#tb-gear').addEventListener('click', e => { e.stopPropagation(); toggleTbMenu('#tb-gear', '#tb-gear-menu'); });
   // Outside a menu closes it. The click's path is read as it was dispatched: a menu item that
-  // opens a page (Settings, Sources & checks) is replaced by the page, so the clicked element
+  // opens a page (Settings, Labs) is replaced by the page, so the clicked element
   // is no longer in the document and e.target.closest() would find no menu.
   document.addEventListener('click', e => {
     const path = typeof e.composedPath === 'function' ? e.composedPath() : [];

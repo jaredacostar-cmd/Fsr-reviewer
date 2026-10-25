@@ -8,7 +8,7 @@
   //   forPlant(pl)      events at the stations draining to a plant
   //   rowsFor(list)     panel list rows (PeelPanel lists)
   //   summaryHTML()     Peel-wide: each year's count, overflows, volume and the largest events
-  //   rosterHTML()      Data checks: GIS stations against the report's roster
+  //   rosterHTML()      Records › Data checks, Servicing model: GIS stations against the report's roster
   // Pure strings; reads App().state.wwEvents and the servicing data.
   const App = () => root.PeelApp;
   const SD = () => root.PeelSvcData;

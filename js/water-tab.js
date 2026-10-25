@@ -144,8 +144,8 @@
   }
   // ---- 2025 production & Caledon groundwater: moved out of the Water tab (Phase 4) --------
   // These two sections used to render inside the Water tab's Capacity sub-view
-  // (waterReportsHTML). They now live on the Sources & checks page (Settings & sources tab),
-  // rendered by Worker G through window.ModelChecks.
+  // (waterReportsHTML). They are now in Records › Data checks, the Servicing model group,
+  // rendered through window.ModelChecks (js/svc-capacity.js renderChecks).
   function waterModelToday() {
     const M = App().state.svcModel; if (!M) return null;
     let pop = 0, jobs = 0;

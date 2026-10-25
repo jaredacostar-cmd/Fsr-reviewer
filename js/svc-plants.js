@@ -272,10 +272,10 @@
       ${st.length > 10 ? `<p><button type="button" class="btn small" data-ps-all>${psAll ? 'Show top 10' : `See all ${st.length} stations`}</button></p>` : ''}
       ${DUI().wwInfoLine('Pumping stations: firm capacity from the 2020 Master Plan (Vol. 4, Table 6; largest pump out of service) against the build-out flow at Peel design criteria (not calibrated); the check is peak wet weather flow (PWWF) against firm capacity, the comparison the Region expands a station on. Peak dry is shown beside it. Trunk and local sewer methods are not separated here; the Region\u2019s hydraulic model governs. I&amp;I at a station uses the land draining through its arriving sewer (published network, 300 mm and up), so peak wet is approximate (≈).')}`;
   }
-  // ---- Phase 4: these two checks moved out of the Wastewater tab into Sources & checks
-  // (Worker G renders them there); the tab keeps the capacity story. The reports-vs-model
-  // HTML is cached from the last Plants render; the Master Plan comparison is rebuilt from
-  // the current model when called.
+  // ---- Phase 4: these two checks moved out of the Wastewater tab (now Records › Data checks, the
+  // Servicing model group: js/svc-capacity.js renderChecks); the tab keeps the capacity story. The
+  // reports-vs-model HTML is cached from the last Plants render; the Master Plan comparison is
+  // rebuilt from the current model when called.
   let wwReportsVsModelHTML = '';
   window.ModelChecks = window.ModelChecks || {};
   window.ModelChecks.wwReportsVsModel = () => wwReportsVsModelHTML;
@@ -375,8 +375,8 @@
       });
       chart += capHorizonHTML(hzPlants, dv);
     }
-    // Phase 4: the 2025-reports comparison moved out of the tab into Sources & checks —
-    // cache it here for ModelChecks.wwReportsVsModel (Worker G renders it there).
+    // Phase 4: the 2025-reports comparison moved out of the tab (now Records › Data checks, the Servicing
+    // model group): cache it here for ModelChecks.wwReportsVsModel (js/svc-capacity.js renderChecks).
     wwReportsVsModelHTML = '';
     if (R) {
       const rows = secs.map(x => {
@@ -420,11 +420,11 @@
         ${block(`Peel total (${secs.map(x => SD().PLANT_SHORT[x.pl]).join(' + ')})`, peel, peelF, peelExt, secs.reduce((t, x) => t + ratedOf(x.pl), 0))}
         ${tor.rows.length ? block(esc(SD().plantLabel('Toronto')), tor.sum, 1, [], 0, 'Malton · not in the Peel total') : ''}</tbody></table></details>
       <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Each plant's whole sewershed (all catchments traced to it): ${Y} Census + external inflows + built since census day + approved + proposed (in review) = build-out. Residential ${c.wastewater.avg} L/cap/d, employment ${c.employment.wastewater} L/emp/d (jobs on development sites). Peak dry weather = residential average × Harmon M on the population + employment average × its peaking factor; external inflows are added at their annual average. Because peaking is not additive, a growth layer's figure is the increase in the plant's peak when it is added (→ running total). I&amp;I = ${c.wastewater.infiltration} L/s/ha on the traced drainage area, counted with the existing system; peak wet weather = peak dry + I&amp;I. Average % of rated = average dry weather ÷ the plant's rated (annual average) capacity. ${Y} Census ${censusHow} (Inglewood's village sits in a large rural dissemination area, so its census share is small; calibration corrects its flow).</p></details>
-      ${DUI().wwInfoLine('Each plant\u2019s whole sewershed (all catchments traced to it): average dry weather flow against rated capacity; horizon years phase approved then proposed growth in. The 2025-report comparison and the Master Plan comparison moved to Sources &amp; checks.')}`;
+      ${DUI().wwInfoLine('Each plant\u2019s whole sewershed (all catchments traced to it): average dry weather flow against rated capacity; horizon years phase approved then proposed growth in. The 2025-report comparison and the Master Plan comparison are in Records › Data checks.')}`;
     $('#plants-note').textContent = `${Y} Census baseline (follows the timeline) · flows reaching each wastewater treatment plant`;
   }
   // References (Breakdown & criteria tab): the Region's 2025 annual reports used for comparison.
-  // References HTML (shared by the Settings tab and the Sources & checks gear page).
+  // References HTML (Records › Sources).
   function refsHTML() {
     const R = App().state.reports;
     if (!R) return '';
