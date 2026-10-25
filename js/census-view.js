@@ -93,7 +93,7 @@
     // (the tab again only when the pane came or went: this view can render later than a tab change,
     // e.g. closing a site, and must not send the panel back to the remembered tab)
     const off = has ? '' : '1';
-    if (gcPane && gcPane.dataset.off !== off) { gcPane.dataset.off = off; AT().showFootTab(AT().getFootPref()); }
+    if (gcPane && gcPane.dataset.off !== off) { gcPane.dataset.off = off; AT().refreshFootTab(); }
     CA().syncDaYear();
     if (!has) { body.innerHTML = `<p class="small muted">Census data is still loading.</p>`; return; }
     const Y = bc.year;

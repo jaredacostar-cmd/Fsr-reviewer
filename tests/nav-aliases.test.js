@@ -194,5 +194,13 @@ test('a tab named before its data arrived (Servicing, Capital) opens when its bu
   T.showFootTab('growth');
   shown.add('dca'); T.tabShown('dca');
   assert.equal(T.getFootTab(), 'growth', 'another tab picked meanwhile stays');
+  // A view re-rendering the open tab keeps a pick made meanwhile, and keeps a tab still held.
+  shown.delete('svc'); T.showFootTab('svc'); T.showFootTab('overview'); T.refreshFootTab();
+  shown.add('svc'); T.tabShown('svc');
+  assert.equal(T.getFootTab(), 'overview', 'an Overview pick meanwhile stays (census-view.js re-renders)');
+  shown.delete('svc'); T.showFootTab('svc'); T.refreshFootTab(); assert.equal(T.getFootTab(), 'overview');
+  shown.add('svc'); T.tabShown('svc'); assert.equal(T.getFootTab(), 'svc', 'a held tab stays held through a re-render');
+  assert.match(src('js/census-view.js'), /gcPane\.dataset\.off = off; AT\(\)\.refreshFootTab\(\);/);
+  assert.match(src('js/labs.js'), /if \(AT && AT\.refreshFootTab\) AT\.refreshFootTab\(\);/);
   assert.match(src('js/svc-tab.js'), /if \(AT\(\) && AT\(\)\.tabShown\) for \(const k of \['svc', 'dca'\]\) if \(!\$\(`#ftab-\$\{k\}`\)\.hidden\) AT\(\)\.tabShown\(k\);/);
 });

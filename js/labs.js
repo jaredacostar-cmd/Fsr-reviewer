@@ -33,7 +33,7 @@
     store.set('labs', [...on]); sync();
     // A Labs sub-view that went away falls back to the tab's first sub-view.
     const AT = root.PeelAnalysisTabs;
-    if (AT && AT.getFootTab) AT.showFootTab(AT.getFootTab());
+    if (AT && AT.refreshFootTab) AT.refreshFootTab();
     // Home's sidebar lists a switch's page while it is on (Labs › Sewer designer); its page, open as the
     // switch goes off, gives way to Home.
     const W = root.PeelWorkspaces;

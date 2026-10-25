@@ -160,8 +160,8 @@
       if (q.get('yf') && q.get('yt')) TL().setYears(Number(q.get('yf')), Number(q.get('yt'))); else App().applyFilters();
       AT().showFootTab(AT().getFootPref());
       const d = q.get('d') && DN().projectByKey(q.get('d'));
-      // (opening a development shows its Overview: the link's own tab goes back on after it)
-      if (d) { DN().showDetail(d); if (q.get('t')) AT().showFootTab(AT().getFootPref()); }
+      // (opening a development shows its Overview: the link's own tab, or its page's, goes back on after it)
+      if (d) { DN().showDetail(d); if (q.get('t') || pageWs) AT().showFootTab(AT().getFootPref()); }
       write();
     };
     map.on('moveend', write);

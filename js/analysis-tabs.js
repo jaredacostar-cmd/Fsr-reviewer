@@ -171,6 +171,9 @@
 
   // A tab button just shown (js/svc-tab.js renderSvcTab): open it if it was the one asked for and held.
   function tabShown(key) { if (heldTab === key && footTab === 'overview') showFootTab(key); }
+  // A view re-rendering the open tab (its pane came or went: census-view.js, a Labs switch): the tab on
+  // screen again, or the one still held; never the remembered one, which a pick since may have left.
+  const refreshFootTab = () => showFootTab(heldTab || footTab);
   // Helper for other modules: set a tab's sub-view, persisting the choice.
   // A link or button that opens a tab (and sub-view): the tab becomes the one picked (kept, and in
   // the share link), as a click on the tab itself does.
@@ -185,7 +188,7 @@
   const api = {
     tabOf, TAB_KEYS, SUB_MAP, HIDDEN, hiddenAt, chipsAt,
     getFootPref: () => footPref, setFootPref: v => { footPref = tabOf(v); }, openTab,
-    getFootTab: () => footTab, tabShown,
+    getFootTab: () => footTab, tabShown, refreshFootTab,
     getSvcSub: () => svcSub, setSvcSub: v => { svcSub = v; store.set('svcSub', v); },
     getGSub: () => gSub, setGSub: v => { gSub = v; },
     getDcSub: () => dcSub, setDcSub: v => { dcSub = v; },
