@@ -133,17 +133,32 @@
   // its map view; without w the full map, as old links always did); otherwise the preference: Home
   // (default), the last workspace's page or the full map.
   const START = [['home', 'Home'], ['last', 'Last workspace'], ['full', 'Full map']];
+  // Page ids that open another page (the navigation redesign, docs/architecture-review/navigation-
+  // design.md §7.1: each later move adds its row here, so old links, data-ws-page buttons, the stored
+  // last workspace and Help's role buttons keep opening the right place). ctx: { site } a development
+  // is open, { last } the last workspace (lastWs).
+  const PAGE_ALIAS = {
+    // Explore: the site open, else the last of its views, else Growth in an area.
+    explore: c => (c.site ? 'site' : EXPLORE.includes(c.last) ? c.last : 'growth'),
+    // Capital: the last of its two pages, else DC projects.
+    capital: c => (CAPITAL.includes(c.last) ? c.last : 'projects'),
+    reference: () => 'help',
+  };
+  // (own keys only: a stored or linked id such as '__proto__' is no page, and must not throw)
+  const own = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+  const resolvePage = (id, ctx = {}) => (own(PAGE_ALIAS, id) ? PAGE_ALIAS[id](ctx) : id);
   function startScreen({ hash = '', pref = 'home', last = null } = {}) {
     const q = new URLSearchParams(String(hash).replace(/^#/, ''));
     const w = q.get('w') || '';
-    if ([...q.keys()].length) return w === 'home' ? { mode: 'home', page: 'home' } : /^p:/.test(w) && (BY_ID[w.slice(2)] || REF[w.slice(2)] || LAB_PAGES[w.slice(2)]) ? { mode: 'home', page: w.slice(2) } : BY_ID[w] ? { mode: 'ws', ws: w } : { mode: 'full' };
+    const pid = /^p:/.test(w) ? resolvePage(w.slice(2), { site: !!q.get('d'), last }) : '';
+    if ([...q.keys()].length) return w === 'home' ? { mode: 'home', page: 'home' } : pid && (own(BY_ID, pid) || own(REF, pid) || own(LAB_PAGES, pid)) ? { mode: 'home', page: pid } : own(BY_ID, w) ? { mode: 'ws', ws: w } : { mode: 'full' };
     if (pref === 'full') return { mode: 'full' };
-    if (pref === 'last') return { mode: 'home', page: BY_ID[last] ? last : 'tight' };
+    if (pref === 'last') { const lp = resolvePage(String(last || ''), { last }); return { mode: 'home', page: own(BY_ID, lp) ? lp : 'tight' }; }
     return { mode: 'home', page: 'home' };
   }
 
   // ---- Browser ----------------------------------------------------------------------------------
-  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SITE_MAP, LAB_PAGES, BY_ID, LAYERS, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen };
+  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SITE_MAP, LAB_PAGES, BY_ID, LAYERS, OLD, START, PAGE_ALIAS, REF, plan, sourceText, tabPath, oldPipes, pipeRuns, resolvePage, startScreen };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -429,10 +444,7 @@
   // leave a site; Check a site and Review an FSR keep it. The page's tab and sub-view open behind it, so
   // their panels are worked out for the same scope.
   function openPage(id, o = {}) {
-    // Explore: the site open, else the last of its views, else Growth in an area.
-    if (id === 'explore') id = root.DevScope && root.DevScope.current && root.DevScope.current() ? 'site' : (EXPLORE.includes(store.get('lastWs', '')) ? store.get('lastWs', '') : 'growth');
-    if (id === 'capital') id = CAPITAL.includes(store.get('lastWs', '')) ? store.get('lastWs', '') : 'projects';
-    if (id === 'reference') id = 'help';
+    id = resolvePage(id, { site: !!(root.DevScope && root.DevScope.current && root.DevScope.current()), last: store.get('lastWs', '') });
     if (id !== 'home' && !BY_ID[id] && !REF[id] && !labPageOn(id)) id = 'home';
     const w = BY_ID[id];
     if (w && w.scope === 'area') {

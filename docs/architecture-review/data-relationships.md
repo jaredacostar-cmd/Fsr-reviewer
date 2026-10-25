@@ -487,7 +487,7 @@ build-svc-census, build-blocks and build-dc-infra run in probe modes; each of th
 - DC-capital "77.6% of geometric links have another project number": uninformative (100% by construction);
   the cross-system errors are in the project branch.
 - Facility near-capital rules: links are passing pipes, not facility work.
-- DC status (I10): 4 'Paused' lines are 3 under construction + 1 tendered; status exists at runtime in
+- DC status (I10): 4 'Paused' lines are 3 under construction + 1 tendered (later found: the 3 take "under construction" from a watermain record on the same contract page; their own sanitary records are planned; infrastructure-dependencies.md §9.2); status exists at runtime in
   dcActualHTML / capTag, only the chip ignores it ("partial", not "missing").
 - EA -> DC items linked: 7/15 distinct items, not 8/15.
 - Census centre-vs-area misplacement: 7.64%, not 7.95%.

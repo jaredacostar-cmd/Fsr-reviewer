@@ -82,7 +82,7 @@ test('offline: every script index.html loads is in the worker\'s shell, and ?v= 
 test('share links: a link opens its own scenario, keeps its tab with a development, never waits for ever', () => {
   const s = src('js/share.js');
   assert.match(s, /App\(\)\.state\.basis = App\(\)\.DEFAULT_BASIS;\n      for \(const \[k, o, d\] of \[\['wm', 'ww', 'calibrated'\], \['md', 'md', 'design'\], \['dv', 'div', 'off'\], \['nr', 'nr', 'on'\]\]\) SVCT\(\)\.svcOpt\[o\] = q\.get\(k\) \|\| d;/);
-  assert.match(s, /if \(d\) \{ DN\(\)\.showDetail\(d\); if \(q\.get\('t'\)\) AT\(\)\.showFootTab\(AT\(\)\.getFootPref\(\)\); \}/);
+  assert.match(s, /if \(d\) \{ DN\(\)\.showDetail\(d\); if \(q\.get\('t'\) \|\| pageWs\) AT\(\)\.showFootTab\(AT\(\)\.getFootPref\(\)\); \}/);
   assert.match(s, /if \(Date\.now\(\) - wait0 < 20000\)/);
   // (a plain visit is not a link: the stored settings stay)
   assert.match(s, /let pending = location\.hash\.length > 1 \? new URLSearchParams\(location\.hash\.slice\(1\)\) : null, applied = !pending/);

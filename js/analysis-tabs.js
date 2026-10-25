@@ -17,33 +17,67 @@
   // footPref: the tab last picked (kept); each tab's sub-view last picked is kept too. Old tab and
   // sub-view names (share links, stored prefs) migrate onto these (migrateTabKey / migrateSub).
   const TAB_KEYS = ['overview', 'growth', 'svc', 'dca', 'records'];
-  // Old sub-view names → the new ones (pure; tests/four-tabs.test.js).
+  // Old keys still reach the right tab: 'ww' / 'water' (and 'svc') are Servicing.
+  const tabOf = key => (key === 'ww' || key === 'water' ? 'svc' : key);
+  // Old sub-view names → the new ones (pure; tests/four-tabs.test.js, tests/nav-aliases.test.js).
+  // Every sub-view of the four tabs is a row, so a link's or a stored sub-view always goes through
+  // here; a value 'tab:sub' moves it to another tab (the navigation redesign moves sub-views between
+  // tabs: docs/architecture-review/navigation-design.md §7.2–7.3).
   const SUB_MAP = {
     ww: { plants: 'capacity', catchments: 'network', alloc: 'alloc', pumpstations: 'network' },
     water: { capacity: 'capacity', zones: 'network', facilities: 'checks', hydro: 'checks' },
     growth: { pipeline: 'pipeline', census2051: 'areas', byplan: 'areas', timing: 'timing', areas: 'areas', ledger: 'ledger' },
     dca: { timing: 'timing', build: 'projects', dcproj: 'dcproj', projects: 'projects', eas: 'eas', recommendations: 'dcproj', funding: 'dcproj' },
+    svc: { capacity: 'capacity', network: 'network', alloc: 'alloc', checks: 'checks' },
+    records: { sources: 'sources', checks: 'checks', files: 'files' },
   };
-  // A tab key from a link or a stored pref (with its sub-view, when the old key named one).
+  // The state key of each tab's sub-view.
+  const SUB_KEY = { growth: 'gSub', svc: 'svcSub', dca: 'dcSub', records: 'rSub' };
+  // A tab's sub-view name → { tab, sub } (another tab when SUB_MAP moved it), or null when it names none.
+  const own = (o, k) => !!o && Object.prototype.hasOwnProperty.call(o, k);
+  const migrateSub = (tab, sub) => {
+    const v = sub && own(SUB_MAP, tab) && own(SUB_MAP[tab], sub) ? SUB_MAP[tab][sub] : null;
+    if (typeof v !== 'string' || !v) return null;
+    const i = v.indexOf(':');
+    return i > 0 ? { tab: v.slice(0, i), sub: v.slice(i + 1) } : { tab: tabOf(tab), sub: v };
+  };
+  const subKey = r => (SUB_KEY[r.tab] ? { tab: r.tab, [SUB_KEY[r.tab]]: r.sub } : { tab: r.tab });
+  // A tab key from a link or a stored pref (with its sub-view, when the link or the old key named one).
   const migrateTabKey = (t, sub) => {
     if (t === 'demand') return { tab: 'growth' };
     if (t === 'census') return { tab: 'growth', gSub: 'areas' };
     if (t === 'criteria' || t === 'log') return { tab: 'overview' };
     if (t === 'developments' || t === 'tool' || t === 'dev') return { tab: 'overview' };
     if (t === 'plants') return { tab: 'svc', svcSub: 'capacity' };
-    if (t === 'ww' || t === 'water') return { tab: 'svc', svcSub: (sub && SUB_MAP[t][sub]) || (t === 'ww' ? 'capacity' : 'capacity') };
-    if (t === 'growth' && sub) return { tab: 'growth', gSub: SUB_MAP.growth[sub] || 'pipeline' };
-    if (t === 'dca' && sub) return { tab: 'dca', dcSub: SUB_MAP.dca[sub] || 'timing' };
+    const r = sub ? migrateSub(t, sub) : null;
+    if (r) return subKey(r);
+    if (t === 'ww' || t === 'water') return { tab: 'svc', svcSub: 'capacity' };
+    if (t === 'growth' && sub) return { tab: 'growth', gSub: 'pipeline' };
+    if (t === 'dca' && sub) return { tab: 'dca', dcSub: 'timing' };
     return { tab: TAB_KEYS.includes(t) ? t : 'overview' };
   };
+  // Stored sub-views through SUB_MAP (pure): a renamed one keeps its view; one moved to another tab
+  // goes with it when its tab was the one last picked (footPref), else that tab opens on its first.
+  function migratePrefs(p) {
+    const o = { ...p };
+    for (const [tab, k] of Object.entries(SUB_KEY)) {
+      const r = migrateSub(tab, o[k]);
+      if (!r) { if (tab === 'growth') o[k] = 'pipeline'; else if (tab === 'dca') o[k] = 'timing'; continue; }
+      if (r.tab === tab) { o[k] = r.sub; continue; }
+      o[k] = null;
+      if (o.footPref === tab) { o.footPref = r.tab; if (SUB_KEY[r.tab]) o[SUB_KEY[r.tab]] = r.sub; }
+    }
+    return o;
+  }
   let footPref = store.get('footTab4', 'overview'), footTab = 'overview';
   let gSub = store.get('gSub', 'pipeline'), dcSub = store.get('dcSub', 'timing');
   let svcSub = store.get('svcSub', null), rSub = store.get('rSub', 'sources');
   // Stored sub-views from before Stage 2 (wwSub / wSub, census2051, build …) map onto the new ones.
   if (!svcSub) { const sys = store.get('svcSys', 'ww'); svcSub = (SUB_MAP[sys === 'water' ? 'water' : 'ww'] || {})[store.get(sys === 'water' ? 'wSub' : 'wwSub', '')] || 'capacity'; }
-  gSub = SUB_MAP.growth[gSub] || 'pipeline'; dcSub = SUB_MAP.dca[dcSub] || 'timing';
   // (a stored 'ww' / 'water' tab keeps the Servicing sub-view stored with it; only 'plants' names one)
   { const old = footPref, m = migrateTabKey(footPref); footPref = m.tab; if (m.gSub) gSub = m.gSub; if (m.svcSub && old !== 'ww' && old !== 'water') svcSub = m.svcSub; }
+  // (before the reset to each tab's first valid sub-view below, which would lose a moved one)
+  ({ footPref, gSub, svcSub, dcSub, rSub } = migratePrefs({ footPref, gSub, svcSub, dcSub, rSub }));
   // (Labs add no sub-view: the Funding lab's screen sits in Capital › DC projects, js/dc-projects.js.)
   // Sub-view state per tab: the chip data-attribute, the store key, the valid values, get / set.
   const TABSUBS = {
@@ -72,15 +106,18 @@
   const subFor = (tab, sub, site, scope = site ? 'site' : 'area') => (hiddenAt(scope, tab, sub) ? TABSUBS[tab].valid.find(v => !hiddenAt(scope, tab, v)) : sub);
   // The chips a tab shows at a scope (≤ 4: tests/four-tabs.test.js).
   const chipsAt = (tab, scope) => (TABSUBS[tab] ? TABSUBS[tab].valid.filter(v => !hiddenAt(scope, tab, v)) : []);
-  // Old keys still reach the right tab: 'ww' / 'water' (and 'svc') are Servicing.
-  const tabOf = key => (key === 'ww' || key === 'water' ? 'svc' : key);
   const areaPick = {};
+  let heldTab = null;
   function showFootTab(key, sub) {
     if (key === 'dev' || key === 'developments' || key === 'tool') key = 'overview';   // the development's views live in the Overview
     if (key === 'growth' && root.PeelUtil && root.PeelUtil.flushLater) root.PeelUtil.flushLater();   // (its views, if they wait to render)
     if (key === 'ww' || key === 'water') { if (!sub) sub = svcSub === 'capacity' || svcSub === 'network' ? svcSub : 'network'; key = 'svc'; }
+    // (a sub-view another tab now holds opens there: SUB_MAP 'tab:sub')
+    { const r = sub ? migrateSub(key, sub) : null; if (r) { key = r.tab; sub = r.sub; } }
     if (sub && TABSUBS[key] && TABSUBS[key].valid.includes(sub)) { delete areaPick[key]; TABSUBS[key].set(sub); store.set(TABSUBS[key].store, sub); }
-    if (!document.querySelector(`.f-tab[data-tab="${key}"]:not([hidden])`)) key = 'overview';
+    // (Servicing and Capital show once the servicing data loads, js/svc-tab.js: a tab picked before then
+    // is held and opened when it shows, tabShown below, unless another tab is picked meanwhile)
+    if (!document.querySelector(`.f-tab[data-tab="${key}"]:not([hidden])`)) { heldTab = key; key = 'overview'; } else heldTab = null;
     const site = !!(root.DevScope && root.DevScope.current());
     const ssCur = root.PeelSvcScope && root.PeelSvcScope.current && root.PeelSvcScope.current();
     const fileScope = !!(ssCur && ssCur.kind === 'result' && ssCur.rkind === 'file');
@@ -127,11 +164,16 @@
   // A link to a tab and sub-view anywhere in the panel: data-at="tab" or "tab:sub-view".
   document.addEventListener('click', e => {
     const a = e.target.closest && e.target.closest('[data-at]'); if (!a) return;
-    const [tab, sub] = a.dataset.at.split(':');
+    const [t0, s0] = a.dataset.at.split(':'), r = s0 ? migrateSub(t0, s0) : null, tab = r ? r.tab : t0, sub = r ? r.sub : s0;
     footPref = tabOf(tab); store.set('footTab4', footPref); showFootTab(tab, sub); Sh().viewLink.write();
   });
   showFootTab(footPref);
 
+  // A tab button just shown (js/svc-tab.js renderSvcTab): open it if it was the one asked for and held.
+  function tabShown(key) { if (heldTab === key && footTab === 'overview') showFootTab(key); }
+  // A view re-rendering the open tab (its pane came or went: census-view.js, a Labs switch): the tab on
+  // screen again, or the one still held; never the remembered one, which a pick since may have left.
+  const refreshFootTab = () => showFootTab(heldTab || footTab);
   // Helper for other modules: set a tab's sub-view, persisting the choice.
   // A link or button that opens a tab (and sub-view): the tab becomes the one picked (kept, and in
   // the share link), as a click on the tab itself does.
@@ -141,16 +183,17 @@
     if (root.PeelShare && root.PeelShare.viewLink) root.PeelShare.viewLink.write();
   }
   // (An old sub-view name maps onto its new one: 'build' → 'projects', 'byplan' → 'areas', …)
-  const setSub = (tab, sub) => { const s = TABSUBS[tab]; if (!s) return; const v = (SUB_MAP[tab] && SUB_MAP[tab][sub]) || sub; if (s.valid.includes(v)) { s.set(v); store.set(s.store, v); } };
+  // (one moved to another tab is set there: the tab it now lives in is returned, for the caller to open)
+  const setSub = (tab, sub) => { const r = migrateSub(tab, sub) || { tab, sub }, s = TABSUBS[r.tab]; if (!s) return r.tab; const v = r.sub; if (s.valid.includes(v)) { s.set(v); store.set(s.store, v); } return r.tab; };
   const api = {
     tabOf, TAB_KEYS, SUB_MAP, HIDDEN, hiddenAt, chipsAt,
     getFootPref: () => footPref, setFootPref: v => { footPref = tabOf(v); }, openTab,
-    getFootTab: () => footTab,
+    getFootTab: () => footTab, tabShown, refreshFootTab,
     getSvcSub: () => svcSub, setSvcSub: v => { svcSub = v; store.set('svcSub', v); },
     getGSub: () => gSub, setGSub: v => { gSub = v; },
     getDcSub: () => dcSub, setDcSub: v => { dcSub = v; },
     getRSub: () => rSub, setRSub: v => { rSub = v; },
-    showFootTab, TABSUBS, migrateTabKey, setSub, SITE_HIDDEN, siteHidden, subFor,
+    showFootTab, TABSUBS, SUB_KEY, migrateTabKey, migrateSub, migratePrefs, setSub, SITE_HIDDEN, siteHidden, subFor,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelAnalysisTabs = api;

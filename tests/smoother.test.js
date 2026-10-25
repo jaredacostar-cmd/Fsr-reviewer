@@ -82,6 +82,6 @@ test('phone: the map\'s way back sits above the bottom sheet, where it can be ta
 
 test('the Census view switches tab only when its pane comes or goes (it can render after a tab change)', () => {
   const cv = src('js/census-view.js');
-  assert.match(cv, /if \(gcPane && gcPane\.dataset\.off !== off\) \{ gcPane\.dataset\.off = off; AT\(\)\.showFootTab\(AT\(\)\.getFootPref\(\)\); \}/);
+  assert.match(cv, /if \(gcPane && gcPane\.dataset\.off !== off\) \{ gcPane\.dataset\.off = off; AT\(\)\.refreshFootTab\(\); \}/);
   assert.doesNotMatch(cv, /\n    AT\(\)\.showFootTab\(AT\(\)\.getFootPref\(\)\);\n/, 'no unconditional switch back to the remembered tab');
 });
