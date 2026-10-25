@@ -387,7 +387,7 @@
         ${tile('s-plan', 'Planned', fmtNum(bo.planned), 'units')}
         ${tile('s-perm', 'Permitted', fmtNum(bo.permitted), pc(bo.permitted))}
         ${tile('s-done', 'Completed', fmtNum(bo.completed), pc(bo.completed))}
-        ${tile('s-left', 'Left to build', fmtNum(bo.remaining), 'no permit yet')}
+        ${tile('s-left', 'Left to permit', fmtNum(bo.remaining), 'no permit yet')}
       </div>
       <table class="dt type-table" data-info="unit-types"><thead><tr><th></th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead>
         <tbody>${GUI().aggTypeRowsHTML(GUI().aggregateTypes(sel))}</tbody></table></div>

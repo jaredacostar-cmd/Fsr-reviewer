@@ -119,7 +119,7 @@
   const SORTS = {
     recent: (a, b) => (b.last || 0) - (a.last || 0) || b.rank - a.rank,
     units: (a, b) => (b.units || 0) - (a.units || 0),
-    left: (a, b) => ((b.buildout && b.buildout.remaining) || 0) - ((a.buildout && a.buildout.remaining) || 0) || (b.units || 0) - (a.units || 0),
+    left: (a, b) => P.unbuiltOf(b) - P.unbuiltOf(a) || (b.units || 0) - (a.units || 0),
     name: (a, b) => String(a.title).localeCompare(String(b.title), 'en', { numeric: true }),
   };
   // Page slice of a sorted list: the items for the page plus the page bookkeeping.

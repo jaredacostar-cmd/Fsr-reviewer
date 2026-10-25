@@ -278,7 +278,7 @@
           <tr><td>Units</td><td class="n">${fmtNum(Math.round(e.totalUnits))}</td><td>${D.UNIT_TYPES.filter(t => e.units[t.key] > 0).map(t => `${fmtNum(Math.round(e.units[t.key]))} ${t.label.toLowerCase()}`).join(' · ')}</td></tr>
           <tr><td>People</td><td class="n">${fmtNum(roundPop(e.population))}</td><td class="muted">${ppu.toFixed(1)} persons per unit (Peel)</td></tr>
           ${e.employment.jobs > 0 ? `<tr><td>Jobs</td><td class="n">${fmtNum(roundPop(e.employment.jobs))}</td><td></td></tr>` : ''}
-          ${b ? `<tr><td>Build-out</td><td class="n">${fmtNum(b.remaining)} left</td><td>${fmtNum(b.planned)} planned · ${fmtNum(b.permitted)} permitted · ${fmtNum(b.completed)} completed</td></tr>` : ''}</table>
+          ${b ? `<tr><td>Build-out</td><td class="n">${fmtNum(P.unbuiltOf(p))} left to build</td><td>${fmtNum(b.planned)} planned · ${fmtNum(b.permitted)} permitted · ${fmtNum(b.completed)} completed · ${fmtNum(b.remaining)} left to permit</td></tr>` : ''}</table>
         <h2>Status</h2><p>${esc(textOf(st.why))}</p><p>${esc(textOf(DD().latestDecisionHTML(p, st)))}</p>
       </div><div>${p.lat != null ? sketchSVG({ center: [p.lng, p.lat], site: [p.lng, p.lat] }) : ''}</div></div>
       <h2>Servicing (Peel design criteria)</h2>${svc}

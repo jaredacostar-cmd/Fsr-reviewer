@@ -245,7 +245,7 @@
     return wrap('capacity', {
       answer: 'At each plant, pumping station and storage facility, the app adds up what is <strong>on the system</strong>, what has been <strong>built since 2021</strong>, what is <strong>approved but not built</strong> (committed) and what is <strong>in review</strong>, then compares the total with the facility’s <strong>capacity</strong>, the way the 2020 Master Plan tests it.',
       mid: capacityHTML(row),
-      method: `Committed follows MECP Procedure D-5-1. The tests are the 2020 Water and Wastewater Master Plan’s (Vol. 3 and 4). Sewer pipes are not compared here: pipe-by-pipe results are left to the Region’s model. ${NOTE_TAIL}`,
+      method: `Committed follows MECP Procedure D-5-1 at the treatment plants and the Peel rule (a site servicing or building permit) at every other facility. The tests are the 2020 Water and Wastewater Master Plan’s (Vol. 3 and 4). Sewer pipes are not compared here: pipe-by-pipe results are left to the Region’s model. ${NOTE_TAIL}`,
       sources: 'MECP Procedure D-5-1; Region of Peel, 2020 Water and Wastewater Master Plan for the Lake-Based Systems, Vol. 3 (water) and Vol. 4 (wastewater); Region of Peel 2025 plant annual reports.',
       actions: [{ label: 'Servicing capacity', attrs: { 'data-ws-page': 'tight' }, primary: true }, { label: 'DC projects', attrs: { 'data-ws-page': 'projects' } }],
     });

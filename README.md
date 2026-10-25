@@ -250,8 +250,8 @@ peak wet). Population, water and wastewater are estimated
 from the units in the projects shown. **The selection is the sidebar's:** the header shows the
 stage, the counting basis, the years and any other filter, with **Change** jumping to the selectors; there
 is no separate selector in the panel. Each project counts all its units, except under the
-**Committed** counting basis (approved or permitted units not yet completed) and the **Left to
-build** counting basis (planned units with no permit yet). Open **Breakdown & criteria** to edit the
+**Committed** counting basis (units left to build that a site servicing or building permit commits, the Peel rule) and the **Left to
+build** counting basis (planned units not yet completed, permit issued or not). Open **Breakdown & criteria** to edit the
 criteria.
 
 **Scale, north arrow and boundaries:** a metric scale bar and a north arrow sit under the zoom
@@ -1420,7 +1420,7 @@ four columns by type (single / semi, townhouse, apartment, type not stated), and
 - **Permitted / completed** by type: each building permit's own description (one figure per
   building, as in the build-out). Permits that don't say (e.g. foundation-only conditional
   permits) go to the types with room left in the plan.
-- **Left** = planned − permitted per type. Every column adds up to the tiles above.
+- **Left** (to permit) = planned − permitted per type. Every column adds up to the tiles above.
 - Stacked and back-to-back towns count as apartments, as in Peel's persons-per-unit.
 - Employment floor space has no unit-level permits, so it moves with the project's phase.
 
@@ -1985,7 +1985,7 @@ these definitions. In the app they're in the **Definitions** card (Overview ⓘ 
 |---|---|
 | Existing | Census population (and jobs) on census day |
 | Built since census | Completed after census day, by the building permit completion date (estimated for Brampton and Caledon) |
-| **Committed** (MECP D-5-1) | Registered or draft-approved plans of subdivision, plus site plan approved where there is no subdivision, through permit and construction. Approved zoning alone is not committed. A development still in review is committed when its most recent subdivision file is draft-approved or registered; a newer subdivision file in review means the land is being re-proposed. The servicing layer is called *Committed*; the phase *Approved* still means site plan approved. |
+| **Committed** (the Peel rule) | Units left to build that a water or wastewater site servicing permit (the whole development) or a building permit (the units it covers) commits, filed or issued. The treatment plants alone use MECP D-5-1: registered or draft-approved plans of subdivision, plus site plan approved where there is no subdivision, through permit and construction. Approved zoning alone is not committed. A development still in review is committed when its most recent subdivision file is draft-approved or registered; a newer subdivision file in review means the land is being re-proposed. The servicing layer is called *Committed*; the phase *Approved* still means site plan approved. |
 | Proposed | Pre-consultation, inception and review, not committed |
 | Allocated | Only the allocations you record. Peel publishes no allocation list. |
 | Planned units | Each development's units counted once (the larger of planned and permitted), net of homes demolished |

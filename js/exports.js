@@ -39,7 +39,7 @@
       ...Object.fromEntries(P.PHASES.map(s => [`${s.key}_date`, fmtDate(p.milestones[s.key])])),
       units: p.units ?? '',
       planned_units: p.buildout ? p.buildout.planned : '', permitted_units: p.buildout ? p.buildout.permitted : '',
-      completed_units: p.buildout ? p.buildout.completed : '', left_to_build: p.buildout ? p.buildout.remaining : '',
+      completed_units: p.buildout ? p.buildout.completed : '', left_to_build: p.buildout ? P.unbuiltOf(p) : '', left_to_permit: p.buildout ? p.buildout.remaining : '',
       building_permits: p.records.filter(r => r.kind === 'permit').length,
       est_population: p.units ? Math.round(D.estimate([p], App().state.criteria).population) : '',
       ...(e => ({ employment_uses: e ? e.uses.map(u => u.label).join('; ') : '', nonres_floor_area_m2: e && e.totalM2 ? e.totalM2 : '', est_jobs: e && e.jobs ? e.jobs : '', ...(d => ({ emp_water_avg_lps: d ? +d.water.avg.toFixed(2) : '', emp_wastewater_peak_lps: d ? +d.wastewater.peak.toFixed(2) : '' }))(e && e.jobs ? D.employmentDemand(e.jobs, App().state.criteria) : null) }))(App().empOf(p)),

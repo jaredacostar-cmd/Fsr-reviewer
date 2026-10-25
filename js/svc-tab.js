@@ -147,7 +147,7 @@
   // Counting basis: which of each project's units the demand counts. It changes the math,
   // so it lives in the Scenario control, not the filter panel.
   // Count (Stage 1 #6): which layers are counted, moved here from the top bar; "left to build" is a
-  // separate switch (it counts every layer, only the units with no permit yet).
+  // separate switch (it counts every layer, only the units not yet completed: Growth’s left to build).
   // (The button already on keeps the basis as it is: Units › All never resets the Count, and the
   // Count already on never turns Left to build off.)
   const basisSwitch = () => {
