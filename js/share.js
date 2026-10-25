@@ -21,6 +21,7 @@
     let pending = location.hash.length > 1 ? new URLSearchParams(location.hash.slice(1)) : null, applied = !pending, timer;
     const encode = () => {
       const q = new URLSearchParams(), set = (k, v) => { if (v !== '' && v != null) q.set(k, v); };
+      const W = window.PeelWorkspaces;
       // (always written: links made before Completed was shown by default carry no ph and open with the
       // active phases, as they did)
       set('ph', [...App().state.phases].join(','));
@@ -38,10 +39,15 @@
       if (App().state.minUnits) set('u', App().state.minUnits); if (!App().state.newOnly) set('nn', '0');
       if (App().state.yearMode !== 'any') set('ym', App().state.yearMode);
       if (!TL().atDefaultYears()) { set('yf', TL().tFrom.value); set('yt', TL().tTo.value); }
-      // The tab and its sub-view (Stage 2: Servicing is one tab, svs=capacity|network|alloc|checks).
-      set('t', AT().getFootPref());
-      if (AT().getFootPref() === 'svc') set('svs', AT().getSvcSub()); if (AT().getFootPref() === 'records') set('rs', AT().getRSub());
-      if (AT().getFootPref() === 'growth') set('gs', AT().getGSub()); if (AT().getFootPref() === 'dca') set('dcs', AT().getDcSub());
+      // The tab and its sub-view (Stage 2: Servicing is one tab, svs=capacity|network|alloc|checks). On a
+      // workspace's page, the page's own tab (the one behind it), not the map's last pick; nav=2 says so
+      // (links before it always wrote the map's tab: on a page link that one is not read, below).
+      const pageWs = W && W.mode() === 'home' && W.page && W.BY_ID[W.page()];
+      const tab = pageWs ? pageWs.tab : AT().getFootPref();
+      set('nav', '2');
+      set('t', tab);
+      if (tab === 'svc') set('svs', AT().getSvcSub()); if (tab === 'records') set('rs', AT().getRSub());
+      if (tab === 'growth') set('gs', AT().getGSub()); if (tab === 'dca') set('dcs', AT().getDcSub());
       if (SVCT().svcOpt.ww !== 'calibrated') set('wm', SVCT().svcOpt.ww); if (SVCT().svcOpt.md !== 'design') set('md', SVCT().svcOpt.md); if (SVCT().svcOpt.div !== 'off') set('dv', SVCT().svcOpt.div); if (SVCT().svcOpt.nr !== 'on') set('nr', SVCT().svcOpt.nr);
       if (MM().mstyle.color !== 'phase' || MM().mstyle.size !== 'fixed' || MM().mstyle.cap !== 'off') set('ms', `${MM().mstyle.color}.${MM().mstyle.size}.${MM().mstyle.cap}`);
       // Layer groups: the layers on and the groups open (js/layer-groups.js).
@@ -49,7 +55,7 @@
       const c = map.getCenter(); set('m', `${c.lat.toFixed(5)},${c.lng.toFixed(5)},${map.getZoom()}`);
       // Stage 4: Home, a workspace's page or its map view (w=home | w=p:<chip> | w=<chip>); a link without
       // w opens the full map.
-      { const W = window.PeelWorkspaces; if (W && W.mode() === 'home') set('w', W.page && W.page() !== 'home' ? `p:${W.page()}` : 'home'); else if (W && W.mode() === 'ws' && W.current()) set('w', W.current()); }
+      if (W && W.mode() === 'home') set('w', W.page && W.page() !== 'home' ? `p:${W.page()}` : 'home'); else if (W && W.mode() === 'ws' && W.current()) set('w', W.current());
       // Phase 3: the scoped development carries the dev focus in the link, not the #detail panel.
       const sc = typeof DevScope !== 'undefined' ? DevScope.current() : null;
       if (sc) set('d', sc.key);
@@ -127,12 +133,15 @@
       if (q.get('t')) {
         // Phase 4: old links name removed tabs — migrateTabKey maps them onto the new set.
         // Stage 2: old links name the Wastewater / Water halves (t=ww|water&ws=…) and old sub-views
-        // (gs=census2051|byplan, dcs=build|recommendations|funding); migrateTabKey maps them on.
-        const t = q.get('t'), oldSub = t === 'ww' || t === 'water' ? q.get('ws') : t === 'growth' ? q.get('gs') : t === 'dca' ? q.get('dcs') : null;
+        // (gs=census2051|byplan, dcs=build|recommendations|funding); migrateTabKey maps them on, and every
+        // sub-view param goes through it, so a sub-view moved to another tab is followed, never dropped.
+        // A workspace page's link from before nav=2 carried the map's tab, not the page's: the page's own.
+        const W = window.PeelWorkspaces, w = q.get('w') || '';
+        const pageWs = q.get('nav') !== '2' && /^p:/.test(w) && W && W.BY_ID && W.resolvePage ? W.BY_ID[W.resolvePage(w.slice(2), { site: !!q.get('d'), last: window.PeelUtil.store.get('lastWs', '') })] : null;
+        const t = pageWs ? pageWs.tab : q.get('t');
+        const oldSub = pageWs ? pageWs.sub : t === 'ww' || t === 'water' ? q.get('ws') : t === 'growth' ? q.get('gs') : t === 'dca' ? q.get('dcs') : t === 'svc' ? q.get('svs') : t === 'records' ? q.get('rs') : null;
         const m = AT().migrateTabKey(t, oldSub);
-        AT().setFootPref(m.tab); if (m.gSub) AT().setGSub(m.gSub); if (m.svcSub) AT().setSvcSub(m.svcSub); if (m.dcSub) AT().setDcSub(m.dcSub);
-        if (q.get('svs') && AT().TABSUBS.svc.valid.includes(q.get('svs'))) AT().setSvcSub(q.get('svs'));
-        if (q.get('rs') && AT().TABSUBS.records.valid.includes(q.get('rs'))) AT().setRSub(q.get('rs'));
+        AT().setFootPref(m.tab); if (m.gSub) AT().setGSub(m.gSub); if (m.svcSub) AT().setSvcSub(m.svcSub); if (m.dcSub) AT().setDcSub(m.dcSub); if (m.rSub) AT().setRSub(m.rSub);
         // An old link to the funding screen or the hydraulic check turns that Labs switch on, so the
         // link still opens its view.
         if (window.PeelLabs && (m.dcSub === 'funding' || q.get('dcs') === 'funding')) window.PeelLabs.set('funding', true);
