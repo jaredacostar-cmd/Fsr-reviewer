@@ -70,3 +70,16 @@ test('file tree: site servicing permits go under the file they follow, the rest 
   assert.match(src('js/devtab.js'), /PeelDcGate\.treeOpts\(p, d\)/);
   assert.match(src('js/records-tab.js'), /PeelDcGate\.treeOpts\(p, d\)/);
 });
+
+// data/dc-gate.json is keyed by development and built from tree-counts.json (site.yml runs Tree counts,
+// then DC gate). Rebuilding the trees by hand without the gate left 231 developments (29,139 units,
+// 10-23 trees vs a 10-20 gate) with no chip and no Site servicing permit filter value.
+const { siteTest } = require('./helpers/site-check.js');
+const H = require('./helpers/real-devs.js');
+siteTest('every development the gate covers has its row: rebuild data/dc-gate.json after the trees', { skip: !H.available() }, () => {
+  const B = require('../scripts/build-dc-gate.js');
+  const gate = JSON.parse(src('data/dc-gate.json'));
+  const rows = new Set(gate.developments.map(r => r.key));
+  const missing = H.realDevs().projects.filter(B.inScope).filter(p => !rows.has(p.key));
+  assert.deepEqual(missing.slice(0, 5).map(p => p.key), [], `${missing.length} in-scope developments have no row: run node scripts/build-dc-gate.js --data data`);
+});

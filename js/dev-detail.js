@@ -445,34 +445,6 @@
     return out;
   }
 
-  // "Data as of <date> · <n> sources" under the development header; the date button
-  // opens the Sources & checks tab. <date> = the latest pulled date across the
-  // development's records (snapshot build date when nothing was pulled live);
-  // <n> = the distinct data sources its records come from.
-  function devDataLine(p) {
-    if (!p.records.length) return '';
-    const meta = App().state.snapshot && { generatedAt: App().state.snapshot.generatedAt };
-    const pulled = p.records.map(r => PV ? PV.retrievedAt(r, meta) : null).filter(Boolean).sort();
-    const latest = pulled.length ? pulled[pulled.length - 1] : (App().state.snapshot ? App().state.snapshot.generatedAt.slice(0, 10) : null);
-    if (!latest) return '';
-    const n = new Set(p.records.map(r => String(r.sourceId).split('/')[0])).size;
-    return `<div class="m"><button type="button" class="btn small link" data-open="d-quality">Data as of ${esc(latest)}</button> · ${fmtNum(n)} source${n === 1 ? '' : 's'}</div>`;
-  }
-  function devHeadHTML(p, st, f) {
-    const e = f ? f.e : D.estimate([p], App().state.criteria, 'all', App().jobsOf);
-    const facts = [];
-    if (e.totalUnits > 0) facts.push(chip(`${uUnits(e.totalUnits)} · ${uPop(e.population)}${p.areaPlan ? ` <span class="muted">· whole area: plan + ${p.areaPlan.drafts} draft plan${p.areaPlan.drafts === 1 ? '' : 's'}</span>` : ''}`));
-    if (e.employment.jobs > 0) facts.push(chip(unit(fmtNum(roundPop(e.employment.jobs)), 'jobs')));
-    if (f && f.z) facts.push(chip(`${esc(f.z.name.replace('Pressure zone ', 'Zone '))}${f.zNear ? ' (nearest)' : ''}`));
-    if (f && f.pl) facts.push(p.lat != null ? `<button type="button" class="chip chip-btn" data-trace="${esc(p.key)}" title="Trace the sewer path to the plant on the map">→ ${esc(SV().PLANT_SHORT[f.pl] || SV().plantLabel(f.pl))}${f.dNear ? ' (nearest)' : ''} <span aria-hidden="true">⤳</span></button>` : chip(`→ ${esc(SV().PLANT_SHORT[f.pl] || SV().plantLabel(f.pl))}${f.dNear ? ' (nearest catchment)' : ''}`));
-    if (p.last) facts.push(chip(`Last activity ${fmtDate(new Date(p.last))}`, 'muted'));
-    const flags = devFlags(p, st, f);
-    const w = App().watch.has(p.key);
-    return `<div class="head"><button type="button" class="watch-btn${w ? ' on' : ''}" data-watch="${esc(p.key)}" aria-pressed="${w}" title="${w ? 'Remove from your watchlist' : 'Add to your watchlist (the Watch tab)'}">${w ? '★ Watching' : '☆ Watch'}</button><button type="button" class="watch-btn memo-btn" data-memo title="One-page servicing memo to print or save as PDF">Servicing memo</button><h3>${esc(p.title)}</h3><div class="m">${esc(p.municipality)}${p.types.length ? ' · ' + esc(p.types.slice(0, 3).join(', ')) : ''}</div>${(ls => ls ? `<div class="m latest-sub" data-info="latest-submission">Latest submission <strong>${fmtDate(ls.date)}</strong>${ls.ref ? ` · ${esc(ls.ref)}` : ''}</div>` : '')(ML().latestSub(p))}
-        ${window.PeelLayerBar ? window.PeelLayerBar.siteBadgeHTML(p) : `<span class="badge">${dot(p.phase)}${esc(P.PHASE_BY_KEY[p.phase].label)}</span>`}${devDataLine(p)}</div>
-      <div class="chips dev-chips">${facts.join('')}${flags.join('')}</div>`;
-  }
-
   // The latest council / committee decision in brief, plus what all the items raised.
   function latestDecisionHTML(p, st) {
     const loaded = App().state.council && Object.keys(App().state.council.files || {}).length;
@@ -546,7 +518,7 @@
   }
 
   // ---- Public contract ----
-  const api = { recordRows, recordProvHTML, recordAuditRows, phasesHTML, buildoutHTML, employmentHTML, summaryHTML, typeTableHTML, demandHTML, STATUS_SIGNALS, loadCouncil, councilItems, councilBriefs, planApprovedNote, statusOf, devFlags, devHeadHTML, latestDecisionHTML, servicingBriefHTML, buildoutBriefHTML, devBriefHTML, chip, pctOf, outBadge, psName, trigger };
+  const api = { recordRows, recordProvHTML, recordAuditRows, phasesHTML, buildoutHTML, employmentHTML, summaryHTML, typeTableHTML, demandHTML, STATUS_SIGNALS, loadCouncil, councilItems, councilBriefs, planApprovedNote, statusOf, devFlags, latestDecisionHTML, servicingBriefHTML, buildoutBriefHTML, devBriefHTML, chip, pctOf, outBadge, psName, trigger };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDevDetail = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -8,9 +8,12 @@
  *   asks for them with ?v=<build>, so a new deploy asks for new URLs.
  * - SW_VERSION is stamped with the build at deploy (.github/workflows/site.yml),
  *   so each deploy installs a new worker that clears the previous caches.
- * - data/*.json (snapshot.json plus the ~19 per-topic files) uses
+ * - data/*.json at the top of data/ (the snapshot and every per-topic file) uses
  *   stale-while-revalidate: an instant answer from the cache on every
  *   load, refreshed silently in the background when the network is there.
+ *   Files in sub-folders (data/constraints/ tiles, data/ledger/) carry the
+ *   build too (js/util.js) and are cache-first in the shell cache, cleared
+ *   with it at the next deploy; data/3d/ is never cached (range reads).
  *
  * Dependency-free. Everything is guarded: if caches are unavailable, or a
  * fetch throws, the request falls through to the network and the page is
@@ -192,9 +195,8 @@ const SHELL_ASSETS = [
   'js/water-trace.js'
 ];
 
-// Data payloads: the snapshot plus every per-topic JSON under data/.
-// Add new files here if future phases add data/*.json assets.
-// snapshot.json is ~26.5MB parsed; it is the whole point of the offline cache.
+// Data payloads: the snapshot plus every per-topic JSON at the top of data/ (sub-folders: see the
+// header). snapshot.json, tens of MB, is the whole point of the offline cache.
 const DATA_URL_RE = /(?:^|\/)data\/[^/]+\.json(\?|$)/;
 
 // The URL index.html asks for: js/, css/ and the manifest carry ?v=<build> (stamped at deploy).

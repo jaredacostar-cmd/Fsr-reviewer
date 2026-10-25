@@ -256,6 +256,7 @@
   }
   function devMemo(p) {
     const st = DD().statusOf(p), f = SD().svcFacts(p), e = f ? f.e : D.estimate([p], App().state.criteria, 'all', App().jobsOf);
+    st.works = st.works || (DI() && DI().devWorks ? DI().devWorks(p, f) : null);   // (statusOf has no works: each caller adds them)
     const ppu = MP().ppuOf(p), b = p.buildout;
     const files = [...new Set(p.records.filter(r => r.kind === 'application').map(r => r.ref))].slice(0, 6).join(', ');
     const domText = id => { const el = DN().getCurrentProject() === p && document.getElementById(id); return el ? [...el.querySelectorAll('li')].map(li => li.textContent.replace(/\s+/g, ' ').trim()).filter(Boolean).join(' · ') : ''; };
@@ -270,7 +271,7 @@
       ${f.cap ? `<li>${esc(f.cap.name)}: ${window.PeelUtil.reserveWords(f.reserve, f.cap.rated)}; this development ${window.PeelUtil.capTxt(f.use, f.cap.rated)} (${esc(f.useNote)})${f.reserve > 0 ? ` = ${DD().pctOf(f.use, f.reserve)} of the reserve` : ' — the screen shows the plant over rated capacity'}</li>` : ''}</ul>` : '<p class="muted">No units or jobs stated — flows not estimated.</p>';
     // The reviewer's site brief (js/capital-ea.js): each EA and capital work near the site, as text.
     const brief = root.PeelCapitalEA && root.PeelCapitalEA.siteBriefHTML ? root.PeelCapitalEA.siteBriefHTML(p, { links: false }) : '';
-    const ctx = [['Existing mains', domText('dev-exist')], ['Fire flow', domText('dev-fire')], ['Stormwater', domText('dev-storm')]].filter(([, t]) => t && !/^Looking up/.test(t));
+    const ctx = [['Watermains', domText('dev-exist-water')], ['Sanitary sewers', domText('dev-exist-sanitary')], ['Storm sewers', domText('dev-exist-storm')], ['Fire flow', domText('dev-fire')], ['Stormwater', domText('dev-storm')]].filter(([, t]) => t && !/^Looking up/.test(t));
     const body = `<h1>${esc(p.title)}</h1><p class="sub">${esc(p.municipality)} · ${esc(P.PHASE_BY_KEY[p.phase].label)}${files ? ` · ${esc(files)}` : ''}</p>
       <p class="meta">Servicing memo · prepared ${esc(new Date().toLocaleDateString('en-CA', { dateStyle: 'medium' }))} · Peel Growth Pipeline (unofficial)</p>
       <div class="grid"><div>
@@ -278,7 +279,7 @@
           <tr><td>Units</td><td class="n">${fmtNum(Math.round(e.totalUnits))}</td><td>${D.UNIT_TYPES.filter(t => e.units[t.key] > 0).map(t => `${fmtNum(Math.round(e.units[t.key]))} ${t.label.toLowerCase()}`).join(' · ')}</td></tr>
           <tr><td>People</td><td class="n">${fmtNum(roundPop(e.population))}</td><td class="muted">${ppu.toFixed(1)} persons per unit (Peel)</td></tr>
           ${e.employment.jobs > 0 ? `<tr><td>Jobs</td><td class="n">${fmtNum(roundPop(e.employment.jobs))}</td><td></td></tr>` : ''}
-          ${b ? `<tr><td>Build-out</td><td class="n">${fmtNum(b.remaining)} left</td><td>${fmtNum(b.planned)} planned · ${fmtNum(b.permitted)} permitted · ${fmtNum(b.completed)} completed</td></tr>` : ''}</table>
+          ${b ? `<tr><td>Build-out</td><td class="n">${fmtNum(P.unbuiltOf(p))} left to build</td><td>${fmtNum(b.planned)} planned · ${fmtNum(b.permitted)} permitted · ${fmtNum(b.completed)} completed · ${fmtNum(b.remaining)} left to permit</td></tr>` : ''}</table>
         <h2>Status</h2><p>${esc(textOf(st.why))}</p><p>${esc(textOf(DD().latestDecisionHTML(p, st)))}</p>
       </div><div>${p.lat != null ? sketchSVG({ center: [p.lng, p.lat], site: [p.lng, p.lat] }) : ''}</div></div>
       <h2>Servicing (Peel design criteria)</h2>${svc}

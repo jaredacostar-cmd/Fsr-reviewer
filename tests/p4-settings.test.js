@@ -184,8 +184,9 @@ test('extra model-check sections render defensively', () => {
 
 test('number conventions and Prepared by stay in the Settings UI', () => {
   assert.ok(APP.includes('function numberConventionsHTML'), 'conventions extracted');
-  assert.ok(/function renderQuality\(\)[\s\S]{0,200}numberConventionsHTML\(\)/.test(APP),
-    'renderQuality still shows them in the Settings tab');
+  assert.ok(/<h2 class="pane-h">Settings<\/h2>[^\n]*\$\{DU\(\)\.numberConventionsHTML\(\)\}/.test(APP),
+    'the Settings page shows them (js/growth-ui.js)');
+  assert.ok(!/function renderQuality\(/.test(APP), 'no renderer for the missing #d-quality');
 });
 
 // ---- exports: Criteria sheet ---------------------------------------------------------------
@@ -211,4 +212,10 @@ test('demand figures carry an info button with their formula', () => {
   assert.ok(body.includes('howSPeak') && body.includes('Harmon M = 1 + 14 / (4 +'), 'Harmon formula with inputs');
   assert.ok(body.includes('howII'), 'I&I formula with inputs');
   assert.ok(body.includes('howJobs'), 'jobs formula with inputs');
+});
+
+test("the scenario control: Criteria & references opens the criteria editor below it; Horizon years names where they are", () => {
+  const s = fs.readFileSync(path.join(JS_DIR, "svc-tab.js"), "utf8");
+  assert.match(s, /if \(gt === .criteria.\) \{ TB\(\)\.openScenPop\(\); const d = \$\(.#scen-criteria-mount details.\); if \(d\) \{ d\.open = true; d\.scrollIntoView/);
+  assert.match(s, /Horizon years: Servicing › Capacity › Charts and method\./);
 });

@@ -83,7 +83,7 @@
   // Labs pages (Settings › Labs): a tool with a page of its own in Home's sidebar while its switch is on
   // (the page itself: the tool's module, e.g. js/sewer-designer.js page()).
   const LAB_PAGES = { sewer: { label: 'Sewer designer', what: 'Draw a sanitary sewer to an existing one: the design, profile and CSV', lab: 'sewer' } };
-  for (const [id, label] of [['roles', 'Who decides what'], ['approvals', 'How approvals work'], ['flows', 'From homes to flows'], ['network', 'How sewage and water travel'], ['capacity', 'How capacity is checked'], ['fsrguide', 'What an FSR should cover'], ['capital', 'How a capital project gets built'], ['targets', 'Growth targets and forecasts'], ['forecast', 'How the forecast is timed']]) REF[id] = { label, guide: true };
+  for (const [id, label] of [['roles', 'Who decides what'], ['approvals', 'How approvals work'], ['flows', 'From homes to flows'], ['network', 'How sewage and water travel'], ['capacity', 'How capacity is checked'], ['fsrguide', 'What an FSR should cover'], ['capguide', 'How a capital project gets built'], ['targets', 'Growth targets and forecasts'], ['forecast', 'How the forecast is timed']]) REF[id] = { label, guide: true };
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Servicing › Model checks / Records › Data checks,
   // Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.
@@ -141,11 +141,9 @@
     if (pref === 'last') return { mode: 'home', page: BY_ID[last] ? last : 'tight' };
     return { mode: 'home', page: 'home' };
   }
-  // A workspace picked without naming one: Servicing capacity the first time, the last one after that.
-  const defaultWs = last => (BY_ID[last] ? last : 'tight');
 
   // ---- Browser ----------------------------------------------------------------------------------
-  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SITE_MAP, LAB_PAGES, BY_ID, LAYERS, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen, defaultWs };
+  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SITE_MAP, LAB_PAGES, BY_ID, LAYERS, OLD, START, plan, sourceText, tabPath, oldPipes, pipeRuns, startScreen };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -490,9 +488,6 @@
     if (m.pending) { clearTimeout(timer); timer = setTimeout(() => renderPage(false), 1000); }
   }
   const schedule = () => { if (mode !== 'home') return; clearTimeout(timer); timer = setTimeout(() => renderPage(false), 200); };
-  // Kept for the tests and older callers: Home is the page 'home'.
-  const renderHome = () => { if (mode === 'home') renderPage(true); };
-  const homeMapSVG = rows => (root.PeelWsPages ? root.PeelWsPages.capacityMap(rows) : '');
   // ---- Settings: the start screen ------------------------------------------------------------------
   const settingsHTML = () => { const pref = store.get('startScreen', 'home'); return `<section class="gear-sec"><h3>Start screen</h3><p class="small muted">What opens when you load the app without a link. Kept in this browser.</p><div class="seg" role="group" aria-label="Start screen">${START.map(([k, t]) => `<button type="button" class="btn small${pref === k ? ' on' : ''}" data-ws-start-btn="${k}" aria-pressed="${pref === k}">${t}</button>`).join('')}</div></section>`; };
   // ---- Wiring -------------------------------------------------------------------------------------
@@ -595,6 +590,6 @@
     else if (s.mode === 'home') openPage(s.page || 'home');
     else setMode(s.mode);
   }
-  Object.assign(api, { REF, bootRestore, go, openPage, setMode, mode: () => mode, current: () => cur, page: () => page, override, srcLine, renderHome, renderPage, renderChips, settingsHTML, homeMapSVG, oldList, pipesSpec, init });
+  Object.assign(api, { REF, bootRestore, go, openPage, setMode, mode: () => mode, current: () => cur, page: () => page, override, srcLine, renderPage, renderChips, settingsHTML, oldList, pipesSpec, init });
   root.PeelWorkspaces = api;
 })(typeof window !== 'undefined' ? window : globalThis);

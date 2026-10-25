@@ -1264,7 +1264,6 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .chip.infra { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); font-weight: 500; }
 .chip.concern { border-style: dashed; }
 .chips .ck { font-size: var(--fs-1); color: var(--text-muted); margin-right: var(--space-1); }
-.dev-chips { margin: var(--space-2) 0 var(--space-1); }
 .brief { border-radius: var(--radius-panel); padding: var(--space-1) var(--space-2) var(--space-2); background: var(--surface-2); margin: var(--space-2) 0; }
 .brief .b-row { display: grid; grid-template-columns: 92px minmax(0, 1fr); gap: var(--space-2); padding: var(--space-2) 0; }
 .brief .b-k { font-size: var(--fs-1); color: var(--text-secondary); padding-top: var(--space-1); }
@@ -1569,7 +1568,6 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .tour-card p { margin: var(--space-2) 0 var(--space-2); color: var(--text-secondary); line-height: 1.45; }
 
 .tour-btns { display: flex; justify-content: space-between; }
-.head .watch-btn.memo-btn { margin-right: var(--space-2); }
 
 /* Ground profile */
 .tp-elev { display: block; width: 100%; }
@@ -1712,8 +1710,6 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .svc-sys-water { --sys: var(--hue-blue); }
 .svc-sys-ww { --sys: var(--select); }
 .svc-sys-site { --sys: var(--cap-room); }
-.chip-btn { cursor: pointer; font: inherit; font-size: var(--fs-2); color: var(--accent); border-color: currentColor; }
-.chip-btn:hover { background: color-mix(in srgb, var(--accent) 12%, var(--surface-2)); }
 /* Where & areas (map panel): municipality, planning area and service area filters and outlines. */
 .map-opts .mo-field { display: grid; grid-template-columns: 70px minmax(0, 1fr); align-items: center; gap: var(--space-2); color: var(--text-secondary); }
 .map-opts .multi > summary { padding: var(--space-1) var(--space-4) var(--space-1) var(--space-2); border-radius: 4px; font-size: var(--fs-2); }
@@ -1900,7 +1896,6 @@ details.stamp { display: block; }
 .fr-due { background: color-mix(in srgb, var(--cap-tight) 18%, transparent); color: var(--cap-tight-t); }
 .fr-stale { background: color-mix(in srgb, var(--cap-over) 18%, transparent); color: var(--cap-over-t); }
 .fr-ref, .fr-na { background: var(--surface-2); color: var(--text-secondary); }
-.d-quality { margin-bottom: var(--space-3); }
 
 /* Servicing allocation (development Servicing tab) */
 .dcrev { border-radius: var(--radius-panel); padding: var(--space-2) var(--space-2); margin: var(--space-2) 0; background: var(--surface-2); display: grid; gap: var(--space-2); }

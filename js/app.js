@@ -561,11 +561,15 @@
   // (same keys, same grouping) so detail views, exports and live refresh keep
   // working against full records.
   let indexPainted = false, fullLoaded = false, fullLoadPromise = null;
+  // The startup index is built weekly but not published (.github/workflows/site.yml commits it only
+  // when the owner enables it; tests/build-guards.test.js): no request for a file that is never
+  // there, a 404 before the snapshot on every visit. true with its line in the weekly commit.
+  const STARTUP_INDEX = false;
 
   async function bootFromIndex() {
     try {
       const SI = window.PeelSnapshotIndex;
-      if (!SI) return false;
+      if (!STARTUP_INDEX || !SI) return false;
       const res = await fetch('data/snapshot-index.json', { cache: 'no-cache' });
       if (!res.ok) return false;
       const idx = await res.json();
@@ -624,7 +628,10 @@
         const missing = state.sources.filter(s => s.enabled && !s.fromSnapshot);
         inflight += missing.length; showLoading();
         for (const s of missing) { await loadSource(s); inflight--; showLoading(); }
-        fetch('data/history.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(h => {
+        // (the file js/accuracy.js already asked for: one request, one parsed copy. The tree keys are
+        // added to the app's own copy of the key list, so the shared one stays as published.)
+        PeelUtil.dataJSON('data/history.json').then(h => {
+          if (h && h.projects) h = { ...h, projects: { ...h.projects } };
           state.history = h;
           if (window.PeelTreeGroups) { const keys = new Set(state.projects.map(p => p.key)); PeelTreeGroups.translateHistory(h, k => keys.has(k), { aliasesOnly: !state.treeGrouped }); }
         }).catch(() => {});
@@ -746,39 +753,22 @@
       const k = b.dataset.watch; if (watch.has(k)) watch.delete(k); else watch.add(k);
       store.set('watch', [...watch]);
       const on = watch.has(k); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); b.textContent = on ? '★ Watching' : '☆ Watch';
-      renderWatch(); PeelFilterUI.renderFlagChips(); if (window.PeelCapitalEA) window.PeelCapitalEA.renderWeek(); return;
+      renderWatch(); PeelFilterUI.renderFlagChips(); return;
     }
     const o = e.target.closest('[data-watch-open]');
     if (o) { const p = PeelDevNav.projectByKey(o.dataset.watchOpen); if (p) PeelDevelopmentsTab.focusProject(p); }
   });
 
-  // "This week" panel: projects that appeared or changed phase since the previous snapshot.
   document.addEventListener('click', e => { if (e.target.closest('[data-tbg-log]')) PeelTips.showHelpLog(); });
+  // Backfill (SPEC §4): a newly listed file that is already completed is an old record surfacing in the
+  // refresh, not news. It is noted under Records › Sources, never counted as a change (this week's
+  // changes are the This week page's: js/overview-tab.js weekChanges).
   function renderChanges() {
     const c = state.snapshot && state.snapshot.changes;
     if (!c || c.baseline) return;
-    $('#changes-head').textContent = `${c.since} → ${c.until}`;
-    // Real changes vs backfill (SPEC §4): a newly listed file that is already completed is an old
-    // record surfacing in the refresh, not news; it is counted here and listed under Data › Sources.
-    const real = c.added.filter(a => a.phase !== 'completed'), backfill = c.added.filter(a => a.phase === 'completed');
-    const n = (c.movedCount || c.moved.length || 0) + real.length;
-    $('#week-count').hidden = true;   // (bundle 6: the Watch tab is the watchlist; this week's count is on Home's This week)
-    $('#week-count').textContent = n > 99 ? '99+' : String(n);
-    const items = [
-      ...c.moved.map(m => ({ ...m, html: `${dot(m.to)}<span><span class="t">${watch.has(m.key) ? '★ ' : ''}${esc(m.title)}</span><span class="m">${esc(P.PHASE_BY_KEY[m.from].label)} → ${esc(P.PHASE_BY_KEY[m.to].label)} · ${esc(m.municipality)}</span></span>` })),
-      ...real.map(a => ({ ...a, html: `${dot(a.phase)}<span><span class="t">${watch.has(a.key) ? '★ ' : ''}${esc(a.title)}</span><span class="m">New · ${esc(P.PHASE_BY_KEY[a.phase].label)} · ${esc(a.municipality)}${a.units ? ` · ${fmtNum(a.units)} units` : ''}</span></span>` })),
-    ];
-    $('#changes-summary').textContent = `${fmtNum(c.movedCount || c.moved.length)} changed phase · ${fmtNum(real.length)} new${backfill.length ? ` · ${fmtNum(backfill.length)} backfill hidden (older completed files that surfaced in the refresh: Data › Sources)` : ''}`;
+    const backfill = c.added.filter(a => a.phase === 'completed');
     const bf = $('#backfill-note');
     if (bf) { bf.hidden = !backfill.length; bf.innerHTML = backfill.length ? `<strong>Backfill ${esc(c.since)} → ${esc(c.until)}:</strong> ${fmtNum(backfill.length)} older completed file${backfill.length === 1 ? '' : 's'} surfaced in the refresh (not counted as changes): ${backfill.slice(0, 8).map(a => esc(a.title)).join(' · ')}${backfill.length > 8 ? ` · +${fmtNum(backfill.length - 8)} more` : ''}.` : ''; }
-    const SHOW = 25;
-    $('#changes-list').innerHTML = items.slice(0, SHOW).map((it, i) => `<li><button type="button" data-i="${i}">${it.html}</button></li>`).join('') +
-      (items.length > SHOW ? `<li class="muted small">+ ${fmtNum(items.length - SHOW)} more</li>` : '');
-    $('#changes-list').onclick = e => {
-      const b = e.target.closest('button[data-i]'); if (!b) return;
-      const p = PeelDevNav.projectByKey(items[+b.dataset.i].key);
-      if (p) PeelDevelopmentsTab.focusProject(p);
-    };
   }
 
   // Phase 6: PeelApp bridge — core-owned values are direct references; module-owned

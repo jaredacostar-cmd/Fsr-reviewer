@@ -98,7 +98,7 @@ test('4. old links still open the full map; the start screen preference otherwis
   assert.deepEqual(plain(W.startScreen({ hash: '', pref: 'last', last: 'pipes' })), { mode: 'home', page: 'pipes' });
   assert.deepEqual(plain(W.startScreen({ hash: '', pref: 'last', last: null })), { mode: 'home', page: 'tight' });
   assert.deepEqual(plain(W.startScreen({ hash: '', pref: 'full' })), { mode: 'full' });
-  assert.equal(W.defaultWs(null), 'tight'); assert.equal(W.defaultWs('growth'), 'growth');
+  assert.equal(W.defaultWs, undefined, 'the last-workspace rule is startScreen\'s alone');
   // The link carries w only in Home or a workspace; old-link decoding is unchanged.
   const sh = src('js/share.js');
   assert.match(sh, /if \(W && W\.mode\(\) === 'home'\) set\('w', W\.page && W\.page\(\) !== 'home' \? `p:\$\{W\.page\(\)\}` : 'home'\); else if \(W && W\.mode\(\) === 'ws' && W\.current\(\)\) set\('w', W\.current\(\)\);/);

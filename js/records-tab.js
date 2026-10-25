@@ -19,16 +19,13 @@
   function sourcesHTML() {
     return `${DU().freshnessHTML()}${root.PeelSvcPlants && root.PeelSvcPlants.refsHTML ? root.PeelSvcPlants.refsHTML() : ''}`;
   }
-  // Records › Checks: the data checks (duplicates, the model against published totals, the permit
-  // check, the accuracy of the statuses). The servicing model's checks are Servicing › Checks.
+  // Records › Checks: the data checks (the model against published totals, the permit check, the
+  // accuracy of the statuses). The duplicate check and its pass/fail list are the panel below
+  // (#audit-panel, js/data-tab.js renderAudit, redrawn after each rebuild). The servicing model's
+  // checks are Servicing › Checks.
   function checksHTML() {
-    const a = App().state.audit || (App().state.auditInput && App().state.projects.length && root.PeelAudit ? (App().state.audit = root.PeelAudit.audit(App().state.auditInput.raw, App().state.auditInput.records, App().state.projects)) : null);
-    const dups = a ? `<h3 class="sub-title" data-info="duplicate-check">Checks and duplicates</h3>
-        <ul class="audit-checks">${a.checks.map(c => `<li class="${c.value ? 'bad' : 'good'}"><span aria-hidden="true">${c.value ? '✕' : '✓'}</span> ${esc(c.label)}: <strong>${fmtNum(c.value)}</strong></li>`).join('')}</ul>
-        <p class="small">${fmtNum(a.records.raw)} records → ${fmtNum(a.records.unique)} unique files → ${fmtNum(a.records.projects)} developments; <strong>${fmtNum(a.possible.length)}</strong> possible duplicate pair${a.possible.length === 1 ? '' : 's'} to review in the duplicate check below.</p>`
-      : '<p class="small muted">Checks run once the full data has loaded.</p>';
     const acc = root.ModelChecks && typeof root.ModelChecks.accuracy === 'string' ? root.ModelChecks.accuracy : '';
-    return `${dups}${DU().checksHTML ? DU().checksHTML() : ''}${acc}<p class="small muted">The servicing model against the Master Plan and the 2025 reports: <button type="button" class="btn small link" data-at="svc:checks">Servicing › Model checks →</button></p>`;
+    return `${DU().checksHTML ? DU().checksHTML() : ''}${acc}<p class="small muted">The servicing model against the Master Plan and the 2025 reports: <button type="button" class="btn small link" data-at="svc:checks">Servicing › Model checks →</button></p>`;
   }
   const peelHTML = () => `${sourcesHTML()}${checksHTML()}`;
 
@@ -124,9 +121,9 @@
   function filesPanelSpec(p) {
     const PN = root.PeelPanel, PH = root.PeelPhases, FT = root.PeelFileTree, files = (p.records || []).filter(r => r.kind === 'application'), permits = (p.records || []).filter(r => r.kind === 'permit');
     const day = d => (d ? new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '');
-    const sorted = files.slice().sort((a, b) => (+new Date(b.date || 0)) - (+new Date(a.date || 0)));
+    const sorted = PH && PH.newestFirst ? PH.newestFirst(files) : files.slice();
     const plain = t => (PN.typeWords ? PN.typeWords(t) : t);
-    const latest = sorted.slice(0, 5).map(r => PN.kv(`<strong>${esc(r.ref || 'file')}</strong>${r.type ? ` <small>${esc(plain(r.type))}</small>` : ''}`, `${r.units ? `${fmtNum(r.units)} unit${r.units === 1 ? '' : 's'} · ` : ''}${r.statusRaw ? `municipal status: ${esc(r.statusRaw)}` : esc((PH && PH.PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}${r.date ? ` · ${esc(day(r.date))}` : ''}`));
+    const latest = sorted.slice(0, 5).map(r => PN.kv(`<strong>${esc(r.ref || 'file')}</strong>${r.type ? ` <small>${esc(plain(r.type))}</small>` : ''}`, `${r.units ? `${fmtNum(r.units)} unit${r.units === 1 ? '' : 's'} · ` : ''}${r.statusRaw ? `municipal status: ${esc(r.statusRaw)}` : esc((PH && PH.PHASE_BY_KEY[r.phase] || {}).label || r.phase || '')}${(t => (t ? ` · ${esc(day(t))}` : ''))(PH && PH.submittedAt ? PH.submittedAt(r) : null)}`));
     // Site → proposal → file (js/sites.js): the other proposals on its land, then the site's other
     // activity (a patio, a fit-out), each opening its own page.
     const TG = root.PeelTreeGroups, all = root.PeelApp && root.PeelApp.state && root.PeelApp.state.projects;

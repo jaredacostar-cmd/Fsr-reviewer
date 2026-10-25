@@ -60,12 +60,12 @@
   // the set stays consistent. Help is no longer on the rail: it lives on the topbar Help button.
   const TOOL_ITEMS = [
     ['select', 'Select', 'Select developments: tap one, draw a lasso around them, hold Ctrl / ⌘ and drag a box, or tap for a radius', 'select'],
-    ['measure', 'Measure & ground profile', 'Measure a distance with its ground profile, or select developments within a radius', 'measure'],
+    ['measure', 'Measure & ground profile', 'Measure a distance with its ground profile, along a line or a sewer', 'measure'],
     ['trace', 'Trace', 'Trace a sewer path to the plant, or a water route from the plant, from any point', 'trace'],
     ['whatif', 'Test a site', 'Servicing check for a proposed development: tap the map where it is', 'whatif'],
     ['inspect', 'Inspect point', 'What is at this point: sewers, watermains, pressure zones and plants nearby', 'inspect'],
     ['corridor', 'Corridor select', 'Select the developments along a drawn corridor', 'corridor'],
-    ['unitsfit', 'How many more units fit?', 'Estimate the remaining unit capacity of an area', 'unitsfit'],
+    ['unitsfit', 'How many more units fit?', 'Tap a point: how many more units fit before its tightest sewer, pumping station, plant or water zone', 'unitsfit'],
     ['timebox', 'Time Box', 'Drag a box to see its aerial imagery over the years, with the applications filed by then', 'clock'],
     ['sewer', 'Sewer designer', 'Draw a gravity sanitary sewer from a site to an existing sewer: a preliminary design to Peel\u2019s rules, in plan and profile', 'sewer'],
   ];
@@ -387,7 +387,7 @@
         ${tile('s-plan', 'Planned', fmtNum(bo.planned), 'units')}
         ${tile('s-perm', 'Permitted', fmtNum(bo.permitted), pc(bo.permitted))}
         ${tile('s-done', 'Completed', fmtNum(bo.completed), pc(bo.completed))}
-        ${tile('s-left', 'Left to build', fmtNum(bo.remaining), 'no permit yet')}
+        ${tile('s-left', 'Left to permit', fmtNum(bo.remaining), 'no permit yet')}
       </div>
       <table class="dt type-table" data-info="unit-types"><thead><tr><th></th><th>Planned</th><th>Permitted</th><th>Completed</th><th>Left</th></tr></thead>
         <tbody>${GUI().aggTypeRowsHTML(GUI().aggregateTypes(sel))}</tbody></table></div>

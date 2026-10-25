@@ -209,18 +209,22 @@ async function main() {
   const snapFile = path.join(outDir, 'snapshot.json');
   const histFile = path.join(outDir, 'history.json');
   const idxFile = path.join(outDir, 'snapshot-index.json');
+  // The startup index is written only when asked (--index): it is not published until the owner
+  // enables it (js/app.js STARTUP_INDEX, the weekly commit list), and an unpublished file left in
+  // data/ has no receipt (tests/sources.test.js), which held the weekly update.
+  const withIndex = process.argv.includes('--index');
   const svcFile = path.join(outDir, 'servicing-permits.json');
   const { snapshot, history, index, servicing, summary } = await buildSnapshot({
     previous: readJSON(snapFile), previousServicing: readJSON(svcFile), history: readJSON(histFile),
   });
   fs.writeFileSync(snapFile, JSON.stringify(snapshot));
   fs.writeFileSync(histFile, JSON.stringify(history));
-  fs.writeFileSync(idxFile, JSON.stringify(index));
+  if (withIndex) fs.writeFileSync(idxFile, JSON.stringify(index));
   fs.writeFileSync(svcFile, JSON.stringify(servicing));
   const mb = f => (fs.statSync(f).size / 1e6).toFixed(1);
   console.log(`snapshot: ${summary.ok}/${summary.sources} sources, ${summary.records} records, ${summary.projects} projects, ` +
     `+${summary.added} new, ${summary.moved} changed phase; snapshot.json ${mb(snapFile)} MB, history.json ${mb(histFile)} MB, ` +
-    `snapshot-index.json ${mb(idxFile)} MB (${Math.round(fs.statSync(idxFile).size / fs.statSync(snapFile).size * 100)}% of snapshot); `
+    (withIndex ? `snapshot-index.json ${mb(idxFile)} MB (${Math.round(fs.statSync(idxFile).size / fs.statSync(snapFile).size * 100)}% of snapshot); ` : '')
     + `servicing-permits.json ${servicing.rows.length} permits, ${mb(svcFile)} MB`);
 }
 

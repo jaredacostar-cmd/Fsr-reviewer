@@ -88,7 +88,7 @@
     <aside class="sidebar" id="sidebar">
       <nav class="tabs" role="tablist" aria-label="Sidebar">
         <button type="button" role="tab" id="tab-btn-explore" aria-controls="tab-explore" aria-selected="true" data-tab="explore">Find</button>
-        <button type="button" role="tab" id="tab-btn-week" aria-controls="tab-week" aria-selected="false" data-tab="week">Watch <span class="badge-n" id="week-count" hidden></span><span class="badge-n watch-n" id="week-watch-n" hidden></span><span class="badge-n" id="alerts-n" hidden></span></button>
+        <button type="button" role="tab" id="tab-btn-week" aria-controls="tab-week" aria-selected="false" data-tab="week">Watch <span class="badge-n watch-n" id="week-watch-n" hidden></span><span class="badge-n" id="alerts-n" hidden></span></button>
       </nav>
 
       <!-- ===== Explore ===== -->
@@ -171,27 +171,13 @@
           <ol class="project-list" id="watch-list"></ol>
         </section>
         <!-- Bundle 6: what changed this week has one home, the This week page; the tab keeps the
-             watchlist and its alerts. (The two sections below stay for their renderers, never shown.) -->
+             watchlist and its alerts. -->
         <p class="small week-link"><button type="button" class="btn small" data-ws-page="week">This week: what changed →</button></p>
-        <div class="week-moved" hidden>
-        <section class="panel" id="ce-week-panel" hidden>
-          <div class="panel-head"><h2 class="label" data-info="ce-week">Capital projects and EAs</h2><span class="muted small" id="ce-week-head"></span></div>
-          <ol class="project-list" id="ce-week-list"></ol>
-          <p class="small muted">General screening results only. Peel’s W&amp;WW Infrastructure Planning team must validate or confirm all results.</p>
-        </section>
-        </div>
         <section class="panel" id="alerts-panel" hidden>
           <div class="panel-head"><h2 class="label" data-info="alerts">Alerts for your watchlist</h2><span class="muted small" id="alerts-head"></span></div>
           <ol class="project-list" id="alerts-list"></ol>
           <p class="small muted" id="alerts-foot"></p>
         </section>
-        <div class="week-moved" hidden>
-        <section class="panel changes" id="changes">
-          <div class="panel-head"><h2 class="label">Changes since last update</h2><span class="muted small" id="changes-head"></span></div>
-          <p class="small" id="changes-summary">Changes appear after the next weekly update (Mondays).</p>
-          <ol class="project-list" id="changes-list"></ol>
-        </section>
-        </div>
       </div>
 
 

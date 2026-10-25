@@ -6,7 +6,7 @@
  *     phase rules (scripts/build-snapshot.js), not new file events, so they are
  *     reported separately.
  *  2. Aerial "is it built?" check performance: the check (js/aerial.js, run from
- *     js/aerial-check.js) runs on demand in the browser and its verdicts are kept
+ *     js/devtab.js aerialRun) runs on demand in the browser and its verdicts are kept
  *     only in a per-session in-memory cache — no verdict history is persisted
  *     anywhere, so no hit rate can be computed. The section says so plainly instead
  *     of inventing one, and states the decision rule and what would need logging.
@@ -100,7 +100,7 @@
   // ---- Pure: aerial check ----------------------------------------------------------
   // The check's decision rule, as coded in js/aerial.js score(): probability >= 0.7
   // -> 'Likely completed' (the panel's hi/mid/lo bands split at 0.7 and 0.35).
-  // Its verdicts are NOT persisted — runAerial() in js/aerial-check.js keeps them in
+  // Its verdicts are NOT persisted — aerialRun() in js/devtab.js keeps them in
   // a per-session in-memory cache only — so there is no verdict history to score.
   // The measurable proxy is coverage: developments the check can run for.
   const AERIAL_RULE = { verdict: 'Likely completed', threshold: 0.7, midBand: 0.35 };
@@ -109,7 +109,7 @@
     let checkable = 0, total = 0;
     for (const p of projects || []) {
       total++;
-      // Mirrors the guard in js/aerial-check.js runAerial(): imagery configured for
+      // Mirrors js/devtab.js aerialAvailable(): imagery configured for
       // the municipality and a mapped location.
       if (p && p.lat != null && ok.has(p.municipality)) checkable++;
     }
@@ -175,9 +175,11 @@
       window.ModelChecks.accuracy =
         `<h3 class="sub-title" data-info="accuracy-report">Accuracy report</h3>` +
         `<div id="accuracy-report"><p class="small muted">Working out the accuracy report…</p></div>`;
-      const load = () => fetch('data/history.json', { cache: 'no-cache' })
+      // (one request and one parsed copy with js/app.js, js/util.js dataJSON; read before the app
+      // adds the tree keys to its own copy)
+      const load = () => (U.dataJSON ? U.dataJSON('data/history.json') : fetch('data/history.json', { cache: 'no-cache' })
         .then(resp => (resp && resp.ok) ? resp.json() : null)
-        .catch(() => null)
+        .catch(() => null))
         .then(h => {
           if (!h || typeof document === 'undefined') return;
           const stats = phaseAccuracy(h), cov = coverageFromApp();

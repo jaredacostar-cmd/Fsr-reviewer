@@ -26,7 +26,8 @@ test('top bar: the trail carries its count (developments, units)', () => {
 
 test('left panel: Find · Watch (the Data tab folded into Records, bundle 6); rows Where / What / When / Counts as / Flags collapsed with their value', () => {
   assert.match(HTML, /data-tab="explore">Find<\/button>/);
-  assert.match(HTML, /data-tab="week">Watch <span class="badge-n"/);
+  assert.match(HTML, /data-tab="week">Watch <span class="badge-n watch-n" id="week-watch-n" hidden><\/span><span class="badge-n" id="alerts-n" hidden><\/span><\/button>/);
+  assert.doesNotMatch(HTML, /id="week-count"/, 'this week\'s count is on Home\'s This week');
   assert.doesNotMatch(HTML, /data-tab="data"/);
   const order = ['fr-where', 'fr-what', 'fr-when', 'fr-counts', 'fr-flags'].map(id => HTML.indexOf(`<details class="fp-sec fp-row" id="${id}">`));
   assert.ok(order.every(i => i > 0), 'all rows present');
@@ -69,8 +70,9 @@ test('Counts as: a rung of the commitment ladder (js/layers.js) in the filter, t
 
 test('Watch: real changes; backfill (newly listed, already completed) counted and filed under Data › Sources', () => {
   const a = src('js/app.js');
-  assert.match(a, /const real = c\.added\.filter\(a => a\.phase !== 'completed'\), backfill = c\.added\.filter\(a => a\.phase === 'completed'\);/);
-  assert.match(a, /\.\.\.real\.map\(a =>/);
+  assert.match(a, /const backfill = c\.added\.filter\(a => a\.phase === 'completed'\);/);
+  assert.match(src('js/overview-tab.js'), /added: \(ch\.added \|\| \[\]\)\.filter\(a => a\.phase !== 'completed' && inMuni\(a\)\)/, 'real changes: the This week page');
+  assert.doesNotMatch(a, /#changes-list|#week-count|renderWeek\(/, 'no renderer for the removed hidden sections');
   assert.match(HTML, /<p class="small muted" id="backfill-note" hidden><\/p>/);
 });
 

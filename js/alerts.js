@@ -103,14 +103,15 @@
     updateBadge(lastFeed);
   }
 
-  let lastFeed = null, loading = null;
+  let lastFeed = null, loading = null, asked = false;
   function load() {
-    if (lastFeed) return Promise.resolve(lastFeed);
+    // (asked once: an unpublished feed is not asked for again on every ☆ Watch)
+    if (lastFeed || asked) return Promise.resolve(lastFeed);
     if (loading) return loading;
     loading = fetch('data/alerts.json', { cache: 'no-cache' })
       .then(r => r.ok ? r.json() : null)
       .catch(() => null)
-      .then(feed => { loading = null; lastFeed = feed; return feed; });
+      .then(feed => { loading = null; asked = true; lastFeed = feed; return feed; });
     return loading;
   }
 

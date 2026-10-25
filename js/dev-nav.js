@@ -87,7 +87,9 @@
     const permits = a.poly ? p.records.filter(r => r.kind === 'permit' && r.lat != null && P.pointInRings(r.lng, r.lat, a.poly)) : [];
     // A tree row opens its whole branch (the file and the files under it).
     const own = row.branch ? row.branch : [a, ...row.pre];
-    const sub = P.mergeProject(key, [...own, ...permits.filter(r => !own.includes(r))], {});
+    // (on copies of the records: mergeProject writes each permit's placement, fileOf / prePlan / outside…,
+    // onto the records it is given, and the development's own figures read the development's placement)
+    const sub = P.mergeProject(key, [...own, ...permits.filter(r => !own.includes(r))].map(r => ({ ...r })), {});
     sub.parent = p; sub.subRef = ref; sub.title = `${ref} · ${a.address || p.title}`;
     if (a.lat != null) { sub.lat = a.lat; sub.lng = a.lng; }
     if (App().state.servicing) SD().tagAreas(sub);
@@ -98,15 +100,18 @@
   function projectByKey(k) {
     if (!k) return null;
     if (SUBS.has(k)) return SUBS.get(k);
+    const st = App().state, find = key => st.projects.find(x => x.key === key) || (st.projects.dormant || []).find(x => x.key === key) || (st.projects.siteActivity || []).find(x => x.key === key);
+    // (a development's own key first: a land split's key ends "#<n>" like a branch's, phases.js buildProjects)
+    const own = find(k); if (own) return own;
     const i = String(k).lastIndexOf('#'), base = i > 0 ? k.slice(0, i) : k;
-    const p = App().state.projects.find(x => x.key === base) || (App().state.projects.dormant || []).find(x => x.key === base) || (App().state.projects.siteActivity || []).find(x => x.key === base);
+    const p = i > 0 ? find(base) : null;
     if (!p) {
       // A key saved before the trees became the developments (Step B2): resolve it.
       const TG = window.PeelTreeGroups, list = App().state.projects;
       const to = TG && TG.resolve(k, x => list.some(q => q.key === x));
       return to && to !== k ? projectByKey(to) : null;
     }
-    return i > 0 ? subProject(p, k.slice(i + 1)) : p;
+    return subProject(p, k.slice(i + 1));
   }
   // Other developments on overlapping land (a precinct's draft plans, the precinct a site sits in).
   function relatedProjects(p) {

@@ -142,3 +142,9 @@ test('the Layers panel splits the network from the capital program; a map view o
   assert.match(src('js/topbar.js'), /const tab = \{ dc: 'dca', water: 'svc', wastewater: 'svc' \}\[b\.dataset\.mview\];/);
   assert.match(src('css/app.css'), /\.pnl-r-year \{ font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; \}/);
 });
+
+test('Help › What each workspace answers lists every workspace', () => {
+  const t = src('js/tips.js'), W = require('../js/workspaces.js');
+  const ASKS = new Function(`${t.match(/const ASKS = \{[^\n]*\};/)[0]}; return ASKS;`)();
+  for (const w of W.WS) assert.ok(ASKS[w.id], `${w.id} (${w.label}) has no line in Help`);
+});

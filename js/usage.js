@@ -9,7 +9,7 @@
  *   start  how the app opened: home / ws / full (+ "-link" when it opened from a link)
  *   page   a workspace page (or Home) opened         map    a workspace's map view opened
  *   full   Full map opened                           tab    an analysis tab picked
- *   sub    a sub-view picked (tab.sub)               side   a sidebar tab picked (Find, Watch, Data)
+ *   sub    a sub-view picked (tab.sub)               side   a sidebar tab picked (Find, Watch)
  *   issue  "Report a data issue" followed (by panel kind)
  *
  * Pure (Node-testable): bump, rows, toCSV, totals. The rest is guarded browser code.

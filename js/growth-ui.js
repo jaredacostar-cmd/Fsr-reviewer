@@ -251,7 +251,7 @@
 
   // Phase 4: the editable design criteria live in the Scenario control (scenario bar),
   // rendered by renderScenarioCriteria(). This tab keeps display settings, the wet weather
-  // scenario, number conventions and "prepared by" (see renderQuality).
+  // scenario, number conventions and "prepared by" (the Settings page below).
   function displaySettingsHTML() {
     const theme = store.get('theme', 'dark'), density = store.get('density', PD.densityDefault());
     const sel = (id, cur, opts) => `<select id="${id}" autocomplete="off">${opts.map(([v, t]) => `<option value="${v}"${v === cur ? ' selected' : ''}>${t}</option>`).join('')}</select>`;

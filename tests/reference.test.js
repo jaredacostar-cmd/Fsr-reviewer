@@ -16,7 +16,7 @@ const strip = h => String(h).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 const NOTE = /General screening|confirm the current rules and figures with the Region of Peel/;
 
 test('nine guides in reading order, How approvals work among them; How it works lists them all', () => {
-  assert.deepEqual(R.IDS, ['roles', 'approvals', 'flows', 'network', 'capacity', 'fsrguide', 'capital', 'targets', 'forecast']);
+  assert.deepEqual(R.IDS, ['roles', 'approvals', 'flows', 'network', 'capacity', 'fsrguide', 'capguide', 'targets', 'forecast']);
   const ix = R.indexPage();
   assert.equal(ix.id, 'guides');
   for (const [id, label] of R.GUIDES) assert.ok(ix.mid.includes(`data-ws-page="${id}"`) && ix.mid.includes(label), id);
@@ -24,7 +24,7 @@ test('nine guides in reading order, How approvals work among them; How it works 
 });
 
 test('each guide: the question as its title, n of 9, previous / All guides / next, and the screening note in its method', () => {
-  const pages = { roles: R.roles(), flows: R.flows(null), network: R.network(json('data/peel-reports.json')), capacity: R.capacity(null), fsrguide: R.fsrguide([]), capital: R.capital([], []), targets: R.targets(json('data/housing.json'), json('data/peel-reports.json').forecast2051, null), forecast: R.forecast({}) };
+  const pages = { roles: R.roles(), flows: R.flows(null), network: R.network(json('data/peel-reports.json')), capacity: R.capacity(null), fsrguide: R.fsrguide([]), capguide: R.capital([], []), targets: R.targets(json('data/housing.json'), json('data/peel-reports.json').forecast2051, null), forecast: R.forecast({}) };
   for (const [id, m] of Object.entries(pages)) {
     const g = R.GUIDES.find(x => x[0] === id), i = R.IDS.indexOf(id);
     assert.equal(m.id, id); assert.equal(m.name, g[2]);
@@ -121,7 +121,10 @@ test('wired in: the sidebar shows Help, How it works and the Glossary; every gui
   for (const id of R.IDS) assert.ok(new RegExp(`\\['${id}', '[^']+'\\]`).test(w), `${id} in REF`);
   assert.match(w, /const isOn = id => page === id \|\| \(id === 'guides' && !!\(REF\[page\] && REF\[page\]\.guide\)\) \|\| \(id === 'explore' && EXPLORE\.includes\(page\)\) \|\| \(id === 'capital' && CAPITAL\.includes\(page\)\) \|\| \(id === 'reference' && !!REF\[page\]\);/, 'a guide lights How it works; an Explore view lights Explore');
   assert.match(s, /const ref = id => \(\) => \(root\.PeelReference \? root\.PeelReference\.page\(id\)/);
-  assert.match(s, /const GUIDE_OF = \{ site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capital', eaflow: 'capital', pipes: 'network' \};/);
+  assert.match(s, /const GUIDE_OF = \{ site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capguide', eaflow: 'capguide', pipes: 'network' \};/);
+  // (a guide's id is never a sidebar entry or a workspace: openPage rewrites those before REF is read)
+  const W = require('../js/workspaces.js');
+  for (const id of R.IDS) assert.ok(!W.SIDE[id] && !W.BY_ID[id] && !['home', 'explore', 'capital', 'reference'].includes(id), `guide ${id} collides with a sidebar or workspace id`);
   assert.match(src('js/tips.js'), /data-ws-page="guides">How it works: the guides<\/button>/);
   assert.match(src('index.html'), /<script src="js\/reference\.js\?v=__BUILD__"><\/script>/);
   assert.match(src('sw.js'), /'js\/reference\.js',/);
@@ -160,4 +163,11 @@ test('How the forecast is timed: the three steps, the homes needed, the completi
   // Linked from the Forecast panel and How it works.
   assert.match(src('js/timing.js'), /\{ label: 'How the forecast is timed', attrs: \{ 'data-ws-page': 'forecast' \} \}/);
   assert.match(src('js/workspaces.js'), /\['forecast', 'How the forecast is timed'\]\]\) REF\[id\]/);
+});
+
+test('How it works counts its guides in words: the index says as many as there are', () => {
+  const WORDS = ['Zero', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve'];
+  const said = src('js/reference.js').match(/answer: '(\w+) short guides:/);
+  assert.ok(said, 'the index answer names its guide count');
+  assert.equal(said[1], WORDS[R.IDS.length], `${R.IDS.length} guides, the index says ${said[1]}`);
 });

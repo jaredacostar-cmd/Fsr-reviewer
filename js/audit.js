@@ -35,9 +35,17 @@
     const seen = new Map();
     for (const p of projects) for (const r of p.records) seen.set(r.uid, (seen.get(r.uid) || 0) + 1);
     const inSeveralProjects = [...seen.values()].filter(n => n > 1).length;
+    // Held aside on purpose, each on its own list (js/phases.js buildProjects, js/app.js holdDormant):
+    // Brampton's basement second units (one-permit servicing sites, not developments), and the dormant
+    // developments and site activity while they are hidden.
+    const held = new Set();
+    for (const r of projects.secondUnits || []) held.add(r.uid);
+    for (const p of [...(projects.dormant || []), ...(projects.siteActivity || [])]) for (const r of p.records) held.add(r.uid);
+    const unseen = deduped.filter(r => !seen.has(r.uid));
+    const heldAside = unseen.filter(r => held.has(r.uid)).length;
     // Sites made only of permits that build nothing (signs, entrances, demolitions…) are set aside on purpose.
-    const setAside = deduped.filter(r => !seen.has(r.uid) && r.kind === 'permit' && P.permitRole(r) === 'none').length;
-    const inNoProject = deduped.filter(r => !seen.has(r.uid)).length - setAside;
+    const setAside = unseen.filter(r => !held.has(r.uid) && r.kind === 'permit' && P.permitRole(r) === 'none').length;
+    const inNoProject = unseen.length - setAside - heldAside;
 
     // ---- 3. Units -----------------------------------------------------------------------
     const u = {
@@ -86,7 +94,7 @@
     return {
       records: {
         raw: raw.length, unique: deduped.length, copiesMerged: raw.length - deduped.length, mergedGroups,
-        projects: projects.length, setAside, bySource: [...bySource].map(([name, n]) => ({ name, n })).sort((a, b) => b.n - a.n),
+        projects: projects.length, setAside, heldAside, bySource: [...bySource].map(([name, n]) => ({ name, n })).sort((a, b) => b.n - a.n),
       },
       checks: [
         { key: 'filesListedTwice', label: 'Files still listed twice after merging', value: filesListedTwice },
@@ -106,7 +114,7 @@
     const ok = a.checks.every(c => c.value === 0);
     return [
       `## ${title}`, '',
-      `${n(a.records.raw)} raw records → ${n(a.records.copiesMerged)} copies of the same file merged (${n(a.records.mergedGroups)} files) → ${n(a.records.unique)} unique files → ${n(a.records.projects)} projects${a.records.setAside ? ` (${n(a.records.setAside)} permits that build nothing — signs, entrances, demolitions… — set aside)` : ''}.`, '',
+      `${n(a.records.raw)} raw records → ${n(a.records.copiesMerged)} copies of the same file merged (${n(a.records.mergedGroups)} files) → ${n(a.records.unique)} unique files → ${n(a.records.projects)} projects${a.records.setAside ? ` (${n(a.records.setAside)} permits that build nothing — signs, entrances, demolitions… — set aside)` : ''}${a.records.heldAside ? `; ${n(a.records.heldAside)} files held aside on their own lists (second units, and dormant developments and site activity while hidden)` : ''}.`, '',
       '| Check | Result |', '|---|---|',
       ...a.checks.map(c => `| ${c.label} | ${c.value === 0 ? '✅ 0' : `❌ ${n(c.value)}`} |`), '',
       '| Units | |', '|---|---:|',

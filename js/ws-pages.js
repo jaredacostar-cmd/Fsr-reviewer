@@ -691,7 +691,7 @@
       map: siteLiveMap(p),
       folds: waiting ? [] : b.folds, method: waiting ? '' : b.method, sources: waiting ? '' : b.sources, onMount: waiting ? null : b.onMount,
       // (a section's own secondary action after the memo: Capital's "Copy for review comments")
-      actions: [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, ...(sec && !waiting && sec.foot && sec.foot.secondary ? sec.foot.secondary : []), { label: 'Review its FSR', attrs: { 'data-ws-page': 'fsr' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'site' } }] };
+      actions: [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, ...(sec && !waiting && sec.foot && sec.foot.secondary ? sec.foot.secondary : []), (w => ({ label: w ? '★ Watching' : '☆ Watch', attrs: { 'data-watch': p.key, 'aria-pressed': String(w) }, title: w ? 'Remove from your watchlist' : 'Add to your watchlist (This week, Watched)' }))(!!(App() && App().watch && App().watch.has(p.key))), { label: 'Review its FSR', attrs: { 'data-ws-page': 'fsr' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'site' } }] };
   }
 
   // ---- Growth in an area: drill down Peel → municipality → plan → precinct / sub-area → its files ----
@@ -917,8 +917,8 @@
       figures: t.figures, chart: t.chart,
       lists: [
         ...(t.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('projects', r)) })).slice(0, 1),
-        pr && pr.lists && pr.lists[0] ? { ...pr.lists[0], title: 'Region capital projects being built', rows: pr.lists[0].rows.map(r => toMap('projects', r)) } : null,
-        ea && ea.lists && ea.lists[0] ? { ...ea.lists[0], title: 'EAs: milestones and comment periods', rows: ea.lists[0].rows.map(r => toMap('projects', r)) } : null,
+        // (by title: Projects' first list is To check whenever anything is flagged, EAs' is Current EAs when no milestone is due)
+        ...[[pr, 'Furthest along', 'Region capital projects being built'], [ea, 'Coming up (90 days)', 'EAs: milestones and comment periods']].map(([s, from, title]) => { const l = s && s.lists && s.lists.find(x => x.title === from); return l ? { ...l, title, rows: l.rows.map(r => toMap('projects', r)) } : null; }),
       ],
       map: dcProjMap() || { svg: worksMap(), attrs: { 'data-ws-go': 'projects' }, label: 'Open Projects on the map', caption: '2026 DC works (draft): <span class="hm-key hm-dc-wastewater"></span> wastewater <span class="hm-key hm-dc-water"></span> water' },
       method: t.method, sources: t.sources,
@@ -1253,7 +1253,7 @@
   // Reference pages (not workspaces): How it works and its guides (js/reference.js; How approvals work
   // is js/approvals-guide.js, wrapped as a guide), the Glossary (js/glossary.js), Help (js/tips.js).
   const ref = id => () => (root.PeelReference ? root.PeelReference.page(id) : id === 'approvals' && root.PeelApprovalsGuide ? root.PeelApprovalsGuide.page() : loading(id, 'Loading…'));
-  const [guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast] = ['guides', 'roles', 'approvals', 'flows', 'network', 'capacity', 'fsrguide', 'capital', 'targets', 'forecast'].map(ref);
+  const [guides, roles, approvals, flows, network, capacity, fsrguide, capguide, targets, forecast] = ['guides', 'roles', 'approvals', 'flows', 'network', 'capacity', 'fsrguide', 'capguide', 'targets', 'forecast'].map(ref);
   const glossary = () => (root.PeelGlossary ? root.PeelGlossary.page() : loading('glossary', 'Loading…'));
   // How the app decides (js/logic.js): the data rules, gates and back-end decisions, read from the code.
   const logic = () => (root.PeelLogic ? root.PeelLogic.page() : loading('logic', 'Loading…'));
@@ -1272,9 +1272,9 @@
   const sewer = () => (root.PeelSewerDesigner && root.PeelSewerDesigner.page ? root.PeelSewerDesigner.page() : { id: 'sewer', eyebrow: 'Labs', name: 'Sewer designer', answer: '<span class="muted">Loading…</span>' });
   // What's coming: Growth › Ledger on a page (js/ledger-ui.js page()).
   const coming = () => { const m = root.PeelLedgerUI && root.PeelLedgerUI.page ? root.PeelLedgerUI.page() : { id: 'coming', name: 'What is coming, where, when and how sure?', answer: '<span class="muted">Loading…</span>' }; return { ...m, eyebrow: eyebrow('coming'), scen: scen() }; };
-  const BUILD = { home, tight, site, growth, outlook, coming, projects, eaflow, week, fsr, pipes, outlets, study, sewer, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, logic, help, data };
+  const BUILD = { home, tight, site, growth, outlook, coming, projects, eaflow, week, fsr, pipes, outlets, study, sewer, guides, roles, approvals, flows, network, capacity, fsrguide, capguide, targets, forecast, glossary, logic, help, data };
   // Each workspace's guide (How it works), a button in its footer.
-  const GUIDE_OF = { site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capital', eaflow: 'capital', pipes: 'network' };
+  const GUIDE_OF = { site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capguide', eaflow: 'capguide', pipes: 'network' };
   // A page's header count opens its workspace's full table (as the map panels' do).
   const FULL_OF = { home: 'tight', tight: 'tight', projects: 'projects', pipes: 'pipes' };
   function build(id) {

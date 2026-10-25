@@ -147,7 +147,7 @@
   // Counting basis: which of each project's units the demand counts. It changes the math,
   // so it lives in the Scenario control, not the filter panel.
   // Count (Stage 1 #6): which layers are counted, moved here from the top bar; "left to build" is a
-  // separate switch (it counts every layer, only the units with no permit yet).
+  // separate switch (it counts every layer, only the units not yet completed: Growth’s left to build).
   // (The button already on keeps the basis as it is: Units › All never resets the Count, and the
   // Count already on never turns Left to build off.)
   const basisSwitch = () => {
@@ -194,7 +194,7 @@
       ${root.PeelTreeCounts && root.PeelTreeCounts.settingsHTML ? root.PeelTreeCounts.settingsHTML() : ''}
       ${Sett() && Sett().wetBoxHTML ? Sett().wetBoxHTML() : ''}
       ${compareHTML()}
-      <p class="small muted">Horizon years: Wastewater → Plants & capacity. <span data-scen-crit>${scenCritLineHTML()}</span> — <button type="button" class="btn small link" data-goto-tab="criteria">Criteria &amp; references</button>. The scenario is saved in this browser and carried in share links and exports.</p>
+      <p class="small muted">Horizon years: Servicing › Capacity › Charts and method. <span data-scen-crit>${scenCritLineHTML()}</span> — <button type="button" class="btn small link" data-goto-tab="criteria">Criteria &amp; references</button>. The scenario is saved in this browser and carried in share links and exports.</p>
       <div id="scen-criteria-mount"></div></details>`;
     TB().renderTbScen();
     const critMount = el.querySelector('#scen-criteria-mount');
@@ -613,7 +613,7 @@
   // Switches in the Water / Wastewater / Plants tabs.
   for (const id of ['#water-body', '#wcap-body', '#ww-body', '#plants-body', '#svc-capacity-body', '#svc-checks-body', '#scen-bar']) if ($(id)) $(id).addEventListener('click', e => {
     if (e.target.closest('[data-open-scen]')) { const d = $('#scen-bar details'); if (d) { d.open = true; d.scrollIntoView({ block: 'nearest' }); } return; }
-    if (e.target.closest('[data-goto-tab]')) { const gt = e.target.closest('[data-goto-tab]').dataset.gotoTab; if (gt === 'criteria') { TB().openScenPop(); return; } return AT().openTab(gt); }
+    if (e.target.closest('[data-goto-tab]')) { const gt = e.target.closest('[data-goto-tab]').dataset.gotoTab; if (gt === 'criteria') { TB().openScenPop(); const d = $('#scen-criteria-mount details'); if (d) { d.open = true; d.scrollIntoView({ block: 'nearest' }); } return; } return AT().openTab(gt); }
     if (e.target.closest('[data-scen-pin]')) { store.set('scenA', scenarioMetrics()); return renderScenario(); }
     if (e.target.closest('[data-scen-clear]')) { store.set('scenA', null); return renderScenario(); }
     if (e.target.closest('[data-inview]')) { store.set('svcInView', e.target.closest('[data-inview]').checked); document.querySelectorAll('[data-inview]').forEach(c => { c.checked = store.get('svcInView', false); }); return TS().filterInView(); }
