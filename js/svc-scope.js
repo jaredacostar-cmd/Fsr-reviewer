@@ -78,9 +78,11 @@
   // A DC work, a sewer pipe, a single file, a wastewater block, a water facility, a selection or a
   // tool's result is a scope too: it opens in the right panel (Overview) with its trail step, filters
   // the developments to the ones it lists, and goes in the share link (ss=pipe:123, file:<uid>, …).
-  //   openResult({ ref, title, html, reopen, devKeys, filter, screen })
+  //   openResult({ ref, title, html, reopen, devKeys, filter, screen, keepDev })
   //     ref: '<kind>:<id>' (kinds below; default 'tool:<title>'); devKeys: the developments it covers
-  //     (filter: true reads them from the result's data-dev rows); reopen(): re-runs the producer.
+  //     (filter: true reads them from the result's data-dev rows); reopen(): re-runs the producer;
+  //     keepDev: a result started at the open development keeps it (Peel › the site › the result), else
+  //     the result replaces it (one scope at a time).
   const RESULT_KINDS = new Set(['tool', 'dcwork', 'pipe', 'file', 'iiblock', 'wfac', 'sel', 'help', 'cx', 'ea', 'cap']);
   const isResultRef = ref => !!ref && RESULT_KINDS.has(String(ref).slice(0, String(ref).indexOf(':')));
   let result = null, resultV = 0;
@@ -91,16 +93,17 @@
     const ref = o.ref || `tool:${slug(o.title)}`;
     if (window.DevScope && window.DevScope.current() && !o.keepDev) window.DevScope.close();
     const keys = o.devKeys ? new Set(o.devKeys) : o.filter ? devKeysOf(o.html) : null;
-    result = { ref, title: o.title || 'Result', group: o.group || null, html: (o.screen ? window.PeelUtil.SCREEN_NOTE : '') + (o.html || ''), reopen: typeof o.reopen === 'function' ? o.reopen : null, devKeys: keys, v: ++resultV };
+    result = { ref, title: o.title || 'Result', group: o.group || null, html: (o.screen ? window.PeelUtil.SCREEN_NOTE : '') + (o.html || ''), reopen: typeof o.reopen === 'function' ? o.reopen : null, devKeys: keys, keepDev: !!o.keepDev && !!(window.DevScope && window.DevScope.current()), v: ++resultV };
     App().state.ss = ref; showAll = false;
     // Layers that drew a selection for an earlier result (EA / capital highlights) drop it when replaced.
     if (typeof document !== 'undefined' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('peel:result-opened', { detail: { ref } }));
     AT().setFootPref('overview'); AT().showFootTab('overview');
     App().applyFilters(); OT().renderOverview(); if (TB()) TB().renderTrail(); Sh().viewLink.write();
     const host = typeof document !== 'undefined' && document.getElementById('scope-body'); if (host) host.scrollTop = 0;
-    // On a phone the right panel is a bottom sheet: raise it from its peek so the result shows.
+    // On a phone the right panel is a bottom sheet: raise it from its peek so the result shows (a result
+    // kept at its development all the way: the site bar above it leaves a half sheet no room for it).
     const DT = window.PeelDataTab, A = App();
-    if (DT && DT.shellNarrow && DT.shellNarrow() && A.getAnalysisSnap && A.getAnalysisSnap() === 'peek') A.setAnalysisSnap('half');
+    if (DT && DT.shellNarrow && DT.shellNarrow() && A.getAnalysisSnap) { const sn = A.getAnalysisSnap(); if (result.keepDev ? sn !== 'full' : sn === 'peek') A.setAnalysisSnap(result.keepDev ? 'full' : 'half'); }
     return result;
   }
   function closeResult() {
@@ -119,6 +122,8 @@
   }
   const hasResult = () => !!result && App().state.ss === result.ref;
   const resultTitle = () => (result ? result.title : null);
+  // (the open result was started at the development still open: the trail and the panel keep the site)
+  const keepsDev = () => hasResult() && !!result.keepDev && !!(window.DevScope && window.DevScope.current());
   // A shared link to a result scope: re-run its producer once the data it needs has loaded.
   const RESTORE = {
     pipe: id => { const M = MM(); if (!M.SEW.data) { window.PeelSewerCap.loadSewers(); return false; } window.PeelSewerCap.showPipeLoads(+id); return true; },
@@ -348,7 +353,7 @@
     return true;
   }
   if (typeof document !== 'undefined') document.addEventListener('click', e => { const f = e.target.closest && e.target.closest('[data-ss-fit]'); if (f) fitScope(f.dataset.ssFit); });
-  const api = { fitScope, resolve, current, has, open, close, clear, crumbs, label, cardHTML, panelSpec, peelWideNote, PLANTS, KIND_LABEL, openResult, closeResult, reopenResult, hasResult, resultTitle, isResultRef, restore, devKeysOf, RESULT_KINDS };
+  const api = { fitScope, resolve, current, has, open, close, clear, crumbs, label, cardHTML, panelSpec, peelWideNote, PLANTS, KIND_LABEL, openResult, closeResult, reopenResult, hasResult, resultTitle, keepsDev, isResultRef, restore, devKeysOf, RESULT_KINDS };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSvcScope = api;
 })(typeof window !== 'undefined' ? window : globalThis);

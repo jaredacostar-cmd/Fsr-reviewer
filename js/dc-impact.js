@@ -102,6 +102,8 @@
     return out;
   }
   const ready = () => { const s = App() && App().state; return !!(s && s.dcInfra && s.servicing && s.svcModel && MM() && MM().SEW && MM().SEW.data); };
+  // (the scenario, the developments loaded, the gating tiers and the reviewed outlets: a change re-runs it)
+  const keyOf = o => { const DO = W().PeelDevOutlets; return [MP().scenarioKey(), App().state.projects.length, o.gateTiers.join(''), DO ? DO.version() : 0].join('|'); };
 
   /**
    * The allocation for the current scenario, or null until the DC program, the servicing model and
@@ -111,8 +113,7 @@
    */
   function model(opts = {}) {
     if (!ready()) return null;
-    const o = { ...DEFAULTS, ...opts };
-    const DO = W().PeelDevOutlets, k = [MP().scenarioKey(), App().state.projects.length, o.gateTiers.join(''), DO ? DO.version() : 0].join('|');
+    const o = { ...DEFAULTS, ...opts }, k = keyOf(o), DO = W().PeelDevOutlets;
     if (M.key === k && M.res) return M.res;
     const st = App().state, pipes = MM().SEW.data.pipes, N = pipes.length, THIS = MM().THIS_YEAR;
     const est = p => D().estimate([p], st.criteria, 'all', App().jobsOf);
@@ -200,7 +201,10 @@
   /** A development's DC projects, gate and timing gap, or null. */
   function devImpact(p, opts) { const m = model(opts); return m ? m.byDev.get(p.key) || null : null; }
 
-  const api = { projectKey, groupProjects, markUpstream, gateOf, gapOf, flowShares, model, impactOf, devImpact, DEFAULTS };
+  // The allocation already worked out for these options, else null: it never builds one (a development's
+  // Overview asks it for "Review →", on the view opened most: building walks every pipe and development).
+  const current = (opts = {}) => (ready() && M.res && M.key === keyOf({ ...DEFAULTS, ...opts }) ? M.res : null);
+  const api = { projectKey, groupProjects, markUpstream, gateOf, gapOf, flowShares, model, current, impactOf, devImpact, DEFAULTS };
 
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDcImpact = api;

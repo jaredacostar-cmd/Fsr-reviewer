@@ -5,14 +5,17 @@
  *
  * Contract:
  *   window.PeelToolInquiry = {
- *     draftForDevelopment(p),   // p: a development project object → draft text (also shown)
+ *     draftForDevelopment(p),   // p: a development project object → draft text (also shown,
+ *                               //   the development kept open: keepDev)
  *     draftForPoint(latlng, program?), // {lat,lng} + optional {name,single,town,apartment,jobs}
  *     copy(text),               // clipboard with textarea fallback → Promise<bool>
  *   }
  * buildDraft(fields) is PURE (plain object → string) and unit-tested; it never
  * touches the app bridge. The draftFor* wrappers gather fields lazily through
  * window.PeelApp and render the result into the Tool result pane via
- * PeelTools.openResult. Another worker adds the Export-menu entry point.
+ * PeelTools.openResult. Export ▾ › Inquiry response draft and a development's
+ * Inquiry draft action ([data-inquiry]) both call draftForDevelopment, through
+ * js/topbar.js draftInquiryResponse: one function, one result.
  *
  * The sewer-path section uses the servicing model's drainage path
  * (svcFacts().path) rather than the map trace: tracing would move the map and
@@ -190,7 +193,8 @@
     return s;
   }
 
-  function showDraft(text, title, reopen) {
+  // keepDev: a draft for the open development keeps it (Peel › the site › the draft); a point's does not.
+  function showDraft(text, title, reopen, keepDev) {
     var pt = PT();
     if (!pt) return text;
     if (typeof document !== 'undefined') {
@@ -212,6 +216,7 @@
         '<span class="tinq-note">Plain text — paste it into the reply.</span></div>' +
         '<pre class="tinq-pre">' + esc(text) + '</pre></div>',
       reopen: reopen || null,
+      keepDev: !!keepDev,
     });
     return text;
   }
@@ -223,7 +228,7 @@
     var title = p.title || 'Untitled development';
     var sub = [p.municipality, p.phase].filter(Boolean).join(' · ');
     var text = buildDraft(fieldsFor(app, p, title, sub || null, programTextFor(e), null));
-    return showDraft(text, 'Inquiry draft — ' + title, function () { draftForDevelopment(p); });
+    return showDraft(text, 'Inquiry draft — ' + title, function () { draftForDevelopment(p); }, true);
   }
 
   function draftForPoint(latlng, program) {

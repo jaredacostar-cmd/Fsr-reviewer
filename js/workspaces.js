@@ -157,8 +157,28 @@
     return { mode: 'home', page: 'home' };
   }
 
+  // Find from every page (navigation design §3.3): what a search pick (js/search-filter.js) opens on a
+  // page. A development its page on Summary (from Review an FSR, its FSR review); a file number its page
+  // at Files; a plan Growth in an area at the plan (else its municipality); an MTSA its filter, as on the
+  // map, at its municipality; a plant, station, block, zone or South Peel its scope on Servicing
+  // capacity's map; a DC project Capital › DC projects at it; a DC facility or an address the map view
+  // where the map's own pick then runs (then: 'map'). null: not a place (the filter row, a lookup).
+  // (the drill is the page's own: the map and the other pages stay unfiltered, owner decision 10)
+  function pageRoute(x, page) {
+    if (!x || x.filter || x.loading) return null;
+    if (x.p) return x.hit === 'file' ? { page: 'site', dev: x.p.key, sec: 'files', file: x.ref } : { page: page === 'fsr' ? 'fsr' : 'site', dev: x.p.key, sec: 'summary' };
+    const h = x.place || {}, muni = h.muni || '';
+    if (h.hit === 'plan') return { page: 'growth', drill: `a:${h.id}`, fall: muni ? `m:${muni}` : 'peel', muni };
+    if (h.hit === 'mtsa') return { page: 'growth', drill: muni ? `m:${muni}` : 'peel', muni, then: 'map' };
+    if (h.hit === 'svc') return { ws: 'tight', ss: h.ss };
+    if (h.hit === 'dc') return { page: 'projects', wsec: 'dcproj', dcSel: h.key };
+    if (h.hit === 'dcfac') return { ws: 'projects', then: 'map' };
+    if (x.g) return { ws: 'site', then: 'map' };
+    return null;
+  }
+
   // ---- Browser ----------------------------------------------------------------------------------
-  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SITE_MAP, LAB_PAGES, BY_ID, LAYERS, OLD, START, PAGE_ALIAS, REF, plan, sourceText, tabPath, oldPipes, pipeRuns, resolvePage, startScreen };
+  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SITE_MAP, LAB_PAGES, BY_ID, LAYERS, OLD, START, PAGE_ALIAS, REF, plan, sourceText, tabPath, oldPipes, pipeRuns, resolvePage, startScreen, pageRoute };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -191,6 +211,7 @@
     else putMapBack();
     mode = m;
     if (mode !== 'home' || page !== 'sewer') sewerMapOn = false;
+    if (mode !== 'home') shown = '';   // (back on a page: it renders, the box put back in it)
     const de = document.documentElement, app = $('.app');
     de.classList.toggle('ws-mode', m === 'ws'); de.classList.toggle('home-on', m === 'home');
     if (app) { app.classList.toggle('ws-mode', m === 'ws'); }
@@ -208,11 +229,12 @@
     // (a page's tool follows it: the Sewer designer is on while its page is open)
     if (typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('peel:page', { detail: { mode, page: mode === 'home' ? page : null, was: was.mode === 'home' ? was.page : null } }));
   }
-  // The one search box: over the map in a workspace's map view, on the Find step of Check a site and
-  // Review an FSR, else in the left panel (or the top bar on wide screens).
+  // The one search box: at the top of every page (its header, js/ws-pages.js pageHTML), over the map in
+  // a workspace's map view, else in the left panel (or the top bar on wide screens). The top bar is told
+  // either way, so its slot hides while the box is on a page or over the map.
   function placeSearch() {
     const box = $('#search-box'), slot = mode === 'ws' ? $('#ws-search') : mode === 'home' ? $('#page-search') : null; if (!box) return;
-    if (slot) { if (box.parentElement !== slot) slot.appendChild(box); return; }
+    if (slot) { if (box.parentElement !== slot) slot.appendChild(box); if (root.PeelTopbar && root.PeelTopbar.placeSearch) root.PeelTopbar.placeSearch(); return; }
     const pageSlot = $('#page-search');
     if (box.parentElement === $('#ws-search') || (pageSlot && box.parentElement === pageSlot) || !document.body.contains(box.parentElement)) { const home = document.querySelector('#tab-explore .search-bar'); if (home) home.insertBefore(box, home.firstChild); }
     if (root.PeelTopbar && root.PeelTopbar.placeSearch) root.PeelTopbar.placeSearch();
@@ -271,7 +293,12 @@
     // Review an FSR at a site: the cross-check is an open fold of the Servicing panel (fsrSpec), so the
     // site bar's own copy closes (one form on screen).
     if (pl.fsr) { const box = document.getElementById('site-bar-fsr'), b = document.querySelector('#site-bar [data-scope-fsr]'); if (box && !box.hidden && b) b.click(); }
-    if (pl.lasso && !o.noDraw && root.PeelAreaSelect && root.PeelAreaSelect.setLasso) root.PeelAreaSelect.setLasso(true);
+    // Draw an area (a page header's, the chip's): Select on, and on a phone the sheet down to its peek,
+    // so the map is there to draw on (a result kept at a development may have left it full).
+    if (pl.lasso && !o.noDraw && root.PeelAreaSelect && root.PeelAreaSelect.setLasso) {
+      root.PeelAreaSelect.setLasso(true);
+      const DT = root.PeelDataTab; if (DT && DT.shellNarrow && DT.shellNarrow() && App() && App().setAnalysisSnap) App().setAnalysisSnap('peek', false);
+    }
     const ss = o.ss; if (ss && SS() && SS().open) SS().open(ss);
     renderChips();
     if (PN()) PN().sync();
@@ -456,7 +483,9 @@
     setMode('home', id);
     if (!o.keepScroll) { const el = $('#home'); if (el) el.scrollTop = 0; }
   }
-  let lastHTML = '', timer = null, menuOpen = false;
+  let lastHTML = '', shown = '', timer = null, menuOpen = false;
+  // (the page's search has the focus, on the page it is on: typing, or about to, on a phone)
+  const typing = el => { const s = $('#f-search'); return !!s && document.activeElement === s && el.contains(s); };
   const pageName = id => (id === 'home' ? 'Home' : SIDE[id] ? SIDE[id].label : BY_ID[id] ? BY_ID[id].label : REF[id] ? REF[id].label : LAB_PAGES[id] ? LAB_PAGES[id].label : id);
   function sideHTML() {
     const nW = weekRows().length, pref = store.get('startScreen', 'home'), labIds = Object.keys(LAB_PAGES).filter(labPageOn);
@@ -480,6 +509,11 @@
   // force: rebuild even when the page HTML is unchanged (a mode switch).
   function renderPage(force) {
     const el = $('#home'), WP = root.PeelWsPages; if (!el || el.hidden || !WP) return;
+    // While the page's search has the focus, the page is not rebuilt under it (forced or not: a rebuild
+    // moves the box out and back, which takes its focus and, on a phone, the keyboard): it waits until
+    // the box lets go. A pick lets go (js/search-filter.js goSug), so what it opens renders at once;
+    // another page or mode is never held back.
+    if (typing(el) && shown === `${mode}|${page}`) { clearTimeout(timer); timer = setTimeout(() => renderPage(force), 600); return; }
     const m = WP.build(page);
     if (!REF[page] && !LAB_PAGES[page]) m.filters = filterChipsHTML();
     if (EXPLORE.includes(page)) m.views = viewsHTML();
@@ -491,7 +525,7 @@
     if (box && side && el.contains(box)) side.insertBefore(box, side.firstChild);
     putMapBack();
     const y = el.scrollTop;
-    el.innerHTML = html; lastHTML = html;
+    el.innerHTML = html; lastHTML = html; shown = `${mode}|${page}`;
     if (!force) el.scrollTop = y;
     placeSearch(); placeMap();
     if (typeof m.onMount === 'function') try { m.onMount(el.querySelector('.page-main')); } catch (e) { /* the page stays without its async parts */ }
@@ -505,6 +539,33 @@
   // ---- Wiring -------------------------------------------------------------------------------------
   const devByKey = k => { const N = root.PeelDevNav; return N && N.projectByKey ? N.projectByKey(k) : null; };
   function pickDev(k) { const N = root.PeelDevNav, q = devByKey(k); if (q && N) N.showDetail(q); return q; }
+  // A search pick on a page (pageRoute; js/search-filter.js goSug): true when it has been opened here,
+  // false for the map's own handling (the full map and a workspace's map view always; a DC facility or an
+  // address after its map view opens).
+  function routePick(x) {
+    if (mode !== 'home') return false;
+    const r = pageRoute(x, page), WP = root.PeelWsPages; if (!r) return false;
+    if (r.dev) {
+      // (the site page's section is set after the development opens: a new development resets it; and
+      // the Explore hook below must not open the page a second time)
+      exploreDev = `dev:${r.dev}`; pickDev(r.dev);
+      if (WP && WP.siteAt) WP.siteAt(r.dev, r.sec, r.file || null);
+      openPage(r.page);
+    } else if (r.drill) {
+      // (the plan tree holds the developments shown: a plan in another municipality than Home's is not
+      // in it, so that pick goes back to Peel first, as Home's Peel button does)
+      const A = App();
+      if (A && A.state.muni && A.state.muni !== r.muni) { A.state.muni = ''; if (root.PeelSearchFilter && root.PeelSearchFilter.renderMuniChips) root.PeelSearchFilter.renderMuniChips(); if (root.PeelPlanAreas && root.PeelPlanAreas.renderAreaSelects) root.PeelPlanAreas.renderAreaSelects(); if (A.applyFilters) A.applyFilters(); }
+      if (WP && WP.drillTo) WP.drillTo(r.drill, r.fall);
+      openPage('growth');
+    } else if (r.ws) go(r.ws, { ss: r.ss, quiet: true });
+    else if (r.dcSel) {
+      if (WP && WP.sectionAt) WP.sectionAt('capital', r.wsec);
+      openPage(r.page);
+      const D = root.PeelDcProjects; if (D && D.select) D.select(r.dcSel);
+    }
+    return r.then !== 'map';
+  }
   function copyText(t, btn) {
     const done = () => { if (btn) { const l = btn.textContent; btn.textContent = 'Copied'; setTimeout(() => { btn.textContent = l; }, 1500); } };
     try { navigator.clipboard.writeText(t).then(done, () => {}); } catch (e) { /* no clipboard */ }
@@ -602,6 +663,6 @@
     else if (s.mode === 'home') openPage(s.page || 'home');
     else setMode(s.mode);
   }
-  Object.assign(api, { REF, bootRestore, go, openPage, setMode, mode: () => mode, current: () => cur, page: () => page, override, srcLine, renderPage, renderChips, settingsHTML, oldList, pipesSpec, init });
+  Object.assign(api, { REF, bootRestore, go, openPage, setMode, mode: () => mode, current: () => cur, page: () => page, override, srcLine, renderPage, renderChips, settingsHTML, oldList, pipesSpec, routePick, init });
   root.PeelWorkspaces = api;
 })(typeof window !== 'undefined' ? window : globalThis);

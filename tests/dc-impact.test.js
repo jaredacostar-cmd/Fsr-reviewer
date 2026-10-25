@@ -91,3 +91,34 @@ test('loaded after js/masterplan.js, in the offline shell; costEstimate is expor
   assert.match(src('sw.js'), /'js\/dc-impact\.js',/);
   assert.match(src('js/dc-cost.js'), /\n {4}costEstimate,\n/);
 });
+
+test('current(): the model already worked out for this scenario, never built (a development’s Overview asks it)', () => {
+  const vm = require('node:vm');
+  let builds = 0, key = 's1';
+  const window = {
+    PeelApp: { state: { dcInfra: { wastewater: { lines: [] }, water: { lines: [] } }, servicing: {}, svcModel: {}, projects: [], criteria: {} } },
+    PeelMapMarkers: { SEW: { data: { pipes: [] } }, THIS_YEAR: 2026 }, PeelMasterPlan: { scenarioKey: () => key },
+    PeelSewerCap: { sewerGrowth: () => ({ devPipe: new Map() }) }, PeelSvcTab: { svcFlowTree: () => { builds++; return null; } }, PeelDcInfra: { dcM: () => 0 },
+  };
+  const ctx = { window, module: { exports: {} } }; ctx.globalThis = ctx;
+  vm.runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'js', 'dc-impact.js'), 'utf8'), ctx);
+  const IM = ctx.module.exports;
+  assert.equal(IM.current(), null, 'nothing worked out yet');
+  assert.equal(builds, 0, 'and asking did not build it');
+  const m = IM.model();
+  assert.equal(builds, 1);
+  assert.equal(IM.current(), m, 'the same model, by the same key');
+  assert.equal(IM.current({ gateTiers: ['A', 'B1'] }), m);
+  assert.equal(IM.current({ gateTiers: ['A'] }), null, 'other options: another key');
+  key = 's2';
+  assert.equal(IM.current(), null, 'a new scenario: not worked out for it');
+  assert.equal(builds, 1, 'still never built by current()');
+  window.PeelApp.state.svcModel = null;
+  assert.equal(IM.current(), null, 'not ready: null');
+  // The one key for both, and no path from current() to the builder.
+  const s = fs.readFileSync(path.join(__dirname, '..', 'js', 'dc-impact.js'), 'utf8');
+  assert.match(s, /const o = \{ \.\.\.DEFAULTS, \.\.\.opts \}, k = keyOf\(o\), DO = W\(\)\.PeelDevOutlets;\n {4}if \(M\.key === k && M\.res\) return M\.res;/);
+  const cur = /const current = [^\n]+/.exec(s)[0];
+  assert.match(cur, /M\.res && M\.key === keyOf\(\{ \.\.\.DEFAULTS, \.\.\.opts \}\) \? M\.res : null/);
+  assert.doesNotMatch(cur, /model\(/);
+});

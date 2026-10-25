@@ -64,6 +64,34 @@
     if (d.nearby) return { tone: 'ok', text: `Served by the existing network · ${d.nearby} planned ${d.nearby === 1 ? 'work' : 'works'} nearby` };
     return { tone: 'ok', text: 'Served by the existing network — no planned works nearby' };
   };
+  // The path line (navigation design §3.6): from the site, the pumping stations on its sewer path in the
+  // order the flow reaches them, each against its firm capacity, then the plant and its uncommitted reserve.
+  // d: { stations: [{ name, pct }], plant, toronto, reserve (ML/d, formatted, or null), over, outlet
+  // (the reviewed outlet's mode: 'set', 'confirmed', else automatic) } → { tone, text, outlet }, or null
+  // with no path to a plant.
+  const pathLine = (d) => {
+    if (!d.plant && !d.toronto) return null;
+    const st = d.stations || [], top = Math.max(0, ...st.map(s => s.pct));
+    const end = d.toronto ? 'the City of Toronto system' : d.over ? `${d.plant}, no reserve (over its rated capacity)` : d.reserve != null ? `${d.plant}, ${d.reserve} ML/d reserve` : d.plant;
+    return { tone: d.over || top >= 100 ? 'bad' : top >= 90 ? 'warn' : 'ok', text: ['Site', ...st.map(s => `${s.name} (${s.pct}% of firm)`), end].join(' → '),
+      outlet: d.outlet === 'set' ? 'Set by hand' : d.outlet === 'confirmed' ? 'Confirmed' : 'Automatic' };
+  };
+  // The DC projects a development relies on (the Overview's Infrastructure coming row): for each
+  // constraint on its path that needs relief (js/masterplan.js devNeeds: gap, it runs out before its
+  // relief; planned, in time), the first relief with a project number (a DC main, a plant step or a
+  // facility's item). One per project, late first, then by year; the first n. → [{ key, y, late }]
+  const reliedOn = (needs, n = 3) => {
+    const by = new Map();
+    for (const c of needs || []) {
+      if (c.status !== 'gap' && c.status !== 'planned') continue;
+      const r = (c.relief || []).find(x => (x.ln && (x.ln.p || x.ln.c)) || (x.step && x.step.proj) || (x.items || []).some(i => i.proj));
+      if (!r) continue;
+      const key = (r.ln && (r.ln.p || r.ln.c)) || (r.step && r.step.proj) || r.items.find(i => i.proj).proj, was = by.get(key);
+      if (was) was.late = was.late || c.status === 'gap';
+      else by.set(key, { key, y: r.y || null, late: c.status === 'gap' });
+    }
+    return [...by.values()].sort((a, b) => b.late - a.late || (a.y || 1e4) - (b.y || 1e4)).slice(0, n);
+  };
   const verdictMilestone = (d) => {
     if (d.withdrawn) return { tone: 'warn', text: 'Withdrawn — no next milestone' };
     if (d.done) return { tone: 'ok', text: 'Completed — built out' };
@@ -156,7 +184,7 @@
   });
 
   // ---- Public contract ----
-  const api = { needsGroups, scopedDev, firstSentence, verdictWater, verdictWastewater, verdictDc, verdictMilestone, needsAttention, homeLine, scopeBriefIds };
+  const api = { needsGroups, scopedDev, firstSentence, verdictWater, verdictWastewater, verdictDc, pathLine, reliedOn, verdictMilestone, needsAttention, homeLine, scopeBriefIds };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDevVerdict = api;
 })(typeof window !== 'undefined' ? window : globalThis);

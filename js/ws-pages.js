@@ -21,7 +21,8 @@
   //          figures: [{ v, u, label, ctx, tone }] (≤ 4), chart, lists: [{ title, rows: [{ html, attrs, tone }],
   //          total, see: attrs }], map: { svg, caption, attrs, html, after (under the map: a treemap) }, folds: [{ title, html, open }],
   //          method, sources, actions: [{ label, attrs, primary }], note, chip, scen, top (before the answer:
-  //          a search box, a live map), mid (after the figures: a form, a grid, a summary) }
+  //          where you are, the steps, a live map), mid (after the figures: a form, a grid, a summary),
+  //          draw (false: no Draw an area in the header) }
   // The lists and folds sit beside the map (held in view); Method and Sources below. Sections with nothing are left out.
   const attrs = a => Object.entries(a || {}).map(([k, v]) => (v === true ? ` ${k}` : v == null || v === false ? '' : ` ${k}="${esc(v)}"`)).join('');
   const TONE_WORD = { over: 'Over', tight: 'Tight', room: 'Room', stage: '' };
@@ -46,7 +47,10 @@
     const out = [];
     if (m.views) out.push(m.views);
     // (the scenario chip sits in the title row, beside the status: one row less above the answer)
-    out.push(`<header class="home-h" data-psec="header"><p class="page-eyebrow small">${m.eyebrow || ''}</p><h1>${esc(m.name || '')}</h1>${chipHTML(m.status)}${m.badge || ''}${m.scen ? `<div class="pnl-scen" data-psec="scenario">${m.scen}</div>` : ''}${m.identity ? `<p class="small muted page-id">${m.identity}</p>` : ''}${m.extra || ''}</header>`);
+    // One search on every page, Home included, with Draw an area beside it (navigation design §3.3):
+    // the one box is moved into the slot by js/workspaces.js placeSearch. (Study area draws on its own map.)
+    const find = `<div class="page-find" data-psec="find"><div class="page-search" id="page-search"></div>${m.draw === false ? '' : '<button type="button" class="btn small page-draw" data-ws-go="study" title="Open the map with the Select tool on: drag round the developments">Draw an area</button>'}</div>`;
+    out.push(`<header class="home-h" data-psec="header"><p class="page-eyebrow small">${m.eyebrow || ''}</p><h1>${esc(m.name || '')}</h1>${chipHTML(m.status)}${m.badge || ''}${m.scen ? `<div class="pnl-scen" data-psec="scenario">${m.scen}</div>` : ''}${m.identity ? `<p class="small muted page-id">${m.identity}</p>` : ''}${m.extra || ''}${find}</header>`);
     if (m.filters) out.push(m.filters);
     if (m.top) out.push(m.top);
     // Bundle 5: terms underlined in the answer and figures (js/glossary.js).
@@ -218,7 +222,19 @@
     ['Fire flow (Fire Underwriters Survey) and pressures', 'eye', 'Not modelled here'],
   ];
 
-  const api = { pageHTML, sectionsOf, briefing, listHTML, reserveRows, pipeGrid, likeOf, consOf, LIKE, CONS, approvedNotBuilt, COVERAGE, STAGES, COMMITTED_STAGES, STAGE_CLS, stageRows, stageOf, stageChartHTML, EST_KINDS, estimateRows };
+  // The first capacity row (js/svc-capacity.js collect) of these kinds to reach its limit: 'today' first,
+  // then by year, ties by the more loaded at build-out.
+  function firstOf(rows, kinds) {
+    const yr = r => (r.limit.y === 'today' ? 0 : r.limit.y);
+    return rows.filter(r => kinds.includes(r.kind) && r.limit && r.limit.y != null).sort((x, y) => yr(x) - yr(y) || y.pctBo - x.pctBo)[0] || null;
+  }
+  // The first treatment plant (wastewater or water) to reach its 90% expansion trigger: one rule for
+  // Home, Servicing capacity and the Overview's headline.
+  const firstTrigger = rows => firstOf(rows, ['plant', 'wplant']);
+  // The first pumping into a pressure zone to reach its limit, 100% of firm pumping (Home's "first zone limit").
+  const firstZone = rows => firstOf(rows, ['pump']);
+
+  const api = { pageHTML, sectionsOf, briefing, listHTML, reserveRows, pipeGrid, likeOf, consOf, LIKE, CONS, approvedNotBuilt, COVERAGE, STAGES, COMMITTED_STAGES, STAGE_CLS, stageRows, stageOf, stageChartHTML, EST_KINDS, estimateRows, firstTrigger, firstZone };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -479,18 +495,14 @@
   }
 
   // ---- Home --------------------------------------------------------------------------------------
-  // The first treatment plant (wastewater or water) to reach its 90% expansion trigger: one rule for
-  // Home, Servicing capacity and the Overview's headline.
-  function firstTrigger(rows) {
-    const yr = r => (r.limit.y === 'today' ? 0 : r.limit.y);
-    return rows.filter(r => (r.kind === 'plant' || r.kind === 'wplant') && r.limit && r.limit.y != null).sort((x, y) => yr(x) - yr(y) || y.pctBo - x.pctBo)[0] || null;
-  }
   function homeFigures(rows, ready, week) {
     // Capacity and the DC program are Region-wide (a plant serves more than one municipality): with a
     // municipality picked, those figures say so.
     const peelWide = App() && App().state.muni ? 'Peel-wide · ' : '';
     const over = rows.filter(r => r.pctBo >= 100);
-    const trig = firstTrigger(rows);
+    const trig = firstTrigger(rows), zone = firstZone(rows);
+    // (no zone at its limit by the horizon's end: "None", with the most loaded zone)
+    const busiest = rows.filter(r => r.kind === 'pump').sort((x, y) => y.pctBo - x.pctBo)[0], end = (root.PeelSvcPlants && root.PeelSvcPlants.hz.end) || 2051;
     // (the DC panel builds when Capital opens; until then the same analysis, cached, gives the count)
     const dc = specOf('dca:timing', areaScope);
     let late = dc && (dc.figures || []).find(f => f && f.label === 'late');
@@ -499,13 +511,17 @@
     const go = (page, title) => ({ 'data-ws-page': page, title });
     return [
       ready ? { v: fmtNum(over.length), u: 'over', label: 'over capacity at build-out', ctx: `${peelWide}of ${fmtNum(rows.length)} facilities · Servicing capacity →`, tone: over.length ? 'over' : null, attrs: go('tight', 'Servicing capacity') } : { v: '…', u: '', label: 'over capacity at build-out', ctx: 'checking servicing capacity', attrs: go('tight', 'Servicing capacity') },
-      trig ? { v: trig.limit.y === 'today' ? 'Now' : `≈${trig.limit.y}`, u: '', label: 'first 90% trigger', ctx: `${peelWide}${esc(trig.name)} reaches its 90% expansion trigger · Servicing capacity →`, tone: 'tight', attrs: go('tight', 'Servicing capacity') } : null,
+      // (each opens its facility as a scope on Servicing capacity's map; a pump row is "into zone n and
+      // above", several zones and no scope, so the zone figure opens the page and its Soonest limits)
+      trig ? { v: trig.limit.y === 'today' ? 'Now' : `≈${trig.limit.y}`, u: '', label: 'first 90% trigger', ctx: `${peelWide}${esc(trig.name)} reaches its 90% expansion trigger · Servicing capacity →`, tone: 'tight', attrs: trig.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': trig.ss, title: `Open ${trig.name}` } : go('tight', 'Servicing capacity') } : null,
+      zone ? { v: zone.limit.y === 'today' ? 'Now' : `≈${zone.limit.y}`, u: '', label: 'first zone limit (100% of firm)', ctx: `${peelWide}${esc(zone.name)} reaches 100% of firm pumping · Servicing capacity →`, tone: 'tight', attrs: go('tight', 'Servicing capacity') }
+        : busiest ? { v: 'None', u: '', label: 'first zone limit (100% of firm)', ctx: `${peelWide}before ${end} · most loaded: ${esc(busiest.name)} (${Math.round(busiest.pctBo)}% at build-out) · Servicing capacity →`, attrs: go('tight', 'Servicing capacity') } : null,
       late ? { v: late.v, u: '', label: 'DC projects late', ctx: `${peelWide}in service after the capacity runs out · DC projects →`, tone: +late.v ? 'over' : null, attrs: go('projects', 'DC projects') } : null,
       { v: fmtNum(nW), u: nW === 1 ? 'change' : 'changes', label: 'this week', ctx: 'files moved, new files, capital and EA dates · This week →', attrs: go('week', 'This week') },
     ].filter(Boolean);
   }
   function home() {
-    const a = briefing(); if (!a) return { ...waitingFor('home', 'Loading the developments and working out the briefing…', [['Growth', ['planned', 'left to build', 'at build-out', 'expected by 2031']], ['Servicing', ['over capacity at build-out', 'first 90% trigger']], ['Capital', ['DC projects late', 'with no relief in time']], ['Change', ['this week']]]), eyebrow: `Peel · ${esc((App() && App().state.muni) || 'all of Peel')}`, name: `${(App() && App().state.muni) || 'Peel'}: what needs attention`, scen: scen() };
+    const a = briefing(); if (!a) return { ...waitingFor('home', 'Loading the developments and working out the briefing…', [['Growth', ['planned', 'left to build', 'at build-out', 'expected by 2031']], ['Servicing', ['over capacity at build-out', 'first 90% trigger', 'first zone limit (100% of firm)']], ['Capital', ['DC projects late', 'with no relief in time']], ['Change', ['this week']]]), eyebrow: `Peel · ${esc((App() && App().state.muni) || 'all of Peel')}`, name: `${(App() && App().state.muni) || 'Peel'}: what needs attention`, scen: scen() };
     // The servicing model loads after the developments: until then Needs attention keeps its place with
     // a placeholder (never silently left out), and the map's key waits for the colours it explains. The
     // capacity figures wait for every facility (the pumps and pumping stations load last), so a count
@@ -517,6 +533,9 @@
     const week = a.lists.find(l => l.title === 'This week');
     // Home's rows open the matching workspace page.
     const toPage = (ws, l) => (l ? { ...l, rows: l.rows.map(r => ({ ...r, attrs: { 'data-ws-page': ws, title: (r.attrs || {}).title } })), see: { 'data-ws-page': ws } } : null);
+    // Needs attention: a plant, station or water system opens as a scope on Servicing capacity's map (as
+    // the page's own rows); a row with no scope (storage, pumping into a zone) and See all open the page.
+    const toScope = l => ({ ...l, rows: l.rows.map(r => ((r.attrs || {})['data-ss'] ? toMap('tight', r) : { ...r, attrs: { 'data-ws-page': 'tight', title: (r.attrs || {}).title } })), see: { 'data-ws-page': 'tight' } });
     // Step 6: the scope first (Peel or a municipality: every figure on the page follows it), then four
     // groups of figures, each the answer of its page: Growth, Servicing, Capital, Change.
     const muni = (App() && App().state.muni) || '', MUNIS = ['', 'Mississauga', 'Brampton', 'Caledon'];
@@ -533,7 +552,7 @@
         G ? { v: fmtNum(Math.round(G.left)), u: 'homes', label: 'left to build', ctx: `${fmtNum(Math.round(G.completed))} completed`, attrs: go('growth') } : null,
         people ? { v: people.v, u: 'people', label: 'at build-out', ctx: 'Peel design criteria', attrs: go('growth') } : null,
         f31 ? { v: f31.v, u: f31.u || 'units', label: 'expected by 2031', ctx: f31.ctx, attrs: go('outlook') } : null] },
-      { title: 'Servicing', link: { label: 'Servicing capacity', attrs: go('tight') }, figures: [byL(/over capacity/), byL(/first 90% trigger/)] },
+      { title: 'Servicing', link: { label: 'Servicing capacity', attrs: go('tight') }, figures: [byL(/over capacity/), byL(/first 90% trigger/), byL(/first zone limit/)] },
       { title: 'Capital', link: { label: 'Capital', attrs: go('projects') }, figures: [byL(/DC projects late/), ready ? { v: fmtNum(noRelief), u: noRelief === 1 ? 'facility' : 'facilities', label: 'with no relief in time', ctx: `${muni ? 'Peel-wide · ' : ''}reach a limit with no DC project in time`, tone: noRelief ? 'over' : null, attrs: go('tight') } : null] },
       { title: 'Change', link: { label: 'This week', attrs: go('week') }, figures: [byL(/this week/), tightFiles ? { ...tightFiles, attrs: go('week') } : null] },
     ];
@@ -550,7 +569,7 @@
       figures: [], groups,
       // The units the answer adds, by stage: Built since 2021 beside what is approved and in review.
       chart: a.stageStrip ? `${a.stageStrip}${(d => (d.n ? `<p class="small muted">${dormantNote(d).trim()}</p>` : ''))(dormantFor(muni))}` : '',
-      lists: [ready ? toPage('tight', needs) : needs, unbuilt, tgt, toPage('week', week)],
+      lists: [ready ? toScope(needs) : needs, unbuilt, tgt, toPage('week', week)],
       map: { svg: capacityMap(rows), attrs: { 'data-ws-page': 'tight' }, link: 'Servicing capacity', label: 'Open Servicing capacity', caption: !ready ? '<span class="muted">Checking servicing capacity…</span>' : '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out (catchments, zones and plants)' },
       actions: [{ label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' }, primary: true }, { label: 'Full map', attrs: { 'data-ws-full': '' } }] };
   }
@@ -613,7 +632,7 @@
         { title: 'Recently active', rows: recent.map(devRow), total: recent.length }]
       : [{ title: 'Recently active', rows: recent.map(devRow), total: recent.length }, { title: 'Large files under review', rows: big.map(devRow), total: big.length }];
     return { id, eyebrow: `${esc(label(id))} · step 1 of 3`, name: id === 'fsr' ? 'Do the consultant’s figures match Peel’s criteria?' : 'Can this development be serviced, and when?',
-      top: `<div class="page-search" id="page-search"></div>${stepper}`,
+      top: stepper,
       answer: id === 'fsr' ? `Find the development: search an address or file number, or pick one with an FSR posted${fsrRows ? ` (${fmtNum(fsrRows.length)} in Mississauga and Caledon; Brampton’s are on BramPlanOnline, searched by file number)` : ''}.` : 'Find the development: search an address or file number, or pick one below.',
       lists,
       map: { svg: devsMap(((App() && App().state.filtered) || []), recent), attrs: { 'data-ws-go': id }, label: 'Pick a development on the map', caption: '<span class="hm-key hm-key-hl"></span> recently active <span class="hm-key hm-key-dev"></span> developments of 50+ units (sized by units); click to pick one on the map' },
@@ -623,6 +642,16 @@
   // The site's sections (js/sections.js): every full-map tab's panel for this development, one at a
   // time under a section bar; Summary first. A new development opens on Summary.
   let siteSec = 'summary', siteSecDev = null;
+  // A file number picked in the search (js/workspaces.js routePick): its row in the Files tree marked, and
+  // scrolled to once. (the tree row's own button: the header's latest file, the "counted once" figure and
+  // the row's tags carry the same attribute; a row among the earlier files on the land opens their fold)
+  let siteFile = null, siteFileShown = false;
+  function markFile(host, ref) {
+    const b = host && host.querySelector(`.tr-row > div > .tr-ref[data-dev-file="${CSS.escape(ref)}"]`), row = b && b.closest('.tr-row'); if (!row) return;
+    const fold = row.closest('details.tr-same'); if (fold && !fold.open) fold.open = true;
+    row.classList.add('tr-hit');
+    if (!siteFileShown) { siteFileShown = true; row.scrollIntoView({ block: 'center' }); }
+  }
   function sectionBar(secs, on, attr = 'data-ws-sec', prefix = '') {
     return `<nav class="page-secs" aria-label="Sections" data-psec="sections">${secs.map(s => `<button type="button" class="page-sec${s.id === on ? ' on' : ''}" ${s.page ? `data-ws-page="${esc(s.page)}"` : `${attr}="${esc(prefix + s.id)}"`} aria-pressed="${s.id === on}">${esc(s.title)}</button>`).join('')}</nav>`;
   }
@@ -659,10 +688,11 @@
     return { title: 'Where: the site and the infrastructure around it', attrs: { 'data-ws-go': 'site' }, link: 'Open the map', html: `<div class="page-map-slot page-map-site" id="page-map-slot" data-site="${esc(p.key)}"></div><div class="page-layers" role="group" aria-label="Layers on this map">${chips}</div>`,
       caption: '<span class="hm-key hm-key-site"></span> the site (outlined) · existing mains show from street zoom; dashed: the 2026 DC program; the Region\u2019s construction and EA study areas. The same layers as the full map.' };
   }
-  // Explore (Check a site, Review an FSR, Growth in an area, Forecast, Study area: one workspace): the
-  // one search, where you are (Peel › municipality › plan › site, each a step back up), and Draw an area.
+  // Explore (Check a site, Review an FSR, Growth in an area, Forecast, Study area: one workspace): where
+  // you are (Peel › municipality › plan › site, each a step back up). The search and Draw an area are
+  // in every page's header (pageHTML).
   function exploreBar(trail) {
-    return `<div class="page-explore" data-psec="explore"><div class="page-search" id="page-search"></div><p class="ex-where small">${trail || ''}<button type="button" class="btn small link" data-ws-page="study">Draw an area →</button></p></div>`;
+    return trail ? `<div class="page-explore" data-psec="explore"><p class="ex-where small">${trail}</p></div>` : '';
   }
   // A development's place in the plan tree: Peel › its municipality › its plan › … (its deepest area).
   function siteTrail(p) {
@@ -673,25 +703,27 @@
     const leaf = r ? ids.map(id => r.nodes.get(`a:${id}`)).filter(Boolean).sort((a, b) => depth(b) - depth(a))[0] || r.nodes.get(`m:${p.municipality}`) : null;
     const trail = []; for (let x = leaf; x; x = x.parent ? r.nodes.get(x.parent) : null) trail.unshift(x);
     const crumb = n => `<button type="button" class="btn small link" data-ws-explore="${esc(n.id)}">${esc(n.name)}</button>`;
-    return `${(trail.length ? trail : [{ id: 'peel', name: 'Peel' }]).map(crumb).join(' <span aria-hidden="true">›</span> ')} <span aria-hidden="true">›</span> <strong>${esc(p.title)}</strong> · `;
+    return `${(trail.length ? trail : [{ id: 'peel', name: 'Peel' }]).map(crumb).join(' <span aria-hidden="true">›</span> ')} <span aria-hidden="true">›</span> <strong>${esc(p.title)}</strong>`;
   }
   function site() {
     const p = devNow(); if (!p) return find('site');
     const s = specOf('overview:', `dev:${p.key}`); if (!s) return loading('site', `Loading ${p.title}…`);
     const SE = root.PeelSections;
-    if (siteSecDev !== p.key) { siteSec = 'summary'; siteSecDev = p.key; }
+    if (siteSecDev !== p.key) { siteSec = 'summary'; siteSecDev = p.key; siteFile = null; }
     const sec = SE && siteSec !== 'summary' ? SE.specFor(siteSec, p) : null, on = sec ? siteSec : 'summary';
     const waiting = SE && siteSec !== 'summary' && !sec;
-    const b = sec || s;
+    const b = sec || s, ref = on === 'files' ? siteFile : null;
+    const mount = ref ? host => { if (typeof b.onMount === 'function') b.onMount(host); markFile(host, ref); } : b.onMount;
     return { id: 'site', eyebrow: `${esc(label('site'))} · <span class="pnl-steps-i">✓ Find › <b>Result</b> › Output: Servicing memo</span>`, name: p.title, status: s.head.status, badge: s.head.badge, extra: s.head.extra, identity: s.head.identity, scen: scen(),
       top: `${exploreBar(siteTrail(p))}${SE ? sectionBar(SE.SITE, waiting ? siteSec : on) : ''}`,
       answer: waiting ? `<span class="muted">Loading ${esc((SE.BY_ID[siteSec] || {}).title || '')} for ${esc(p.title)} (the servicing model and the DC program)…</span>` : b.answer,
       caveats: [], figures: waiting ? [] : b.figures, chart: waiting ? '' : b.chart,
       lists: waiting ? [] : (b.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('site', r)) })),
       map: siteLiveMap(p),
-      folds: waiting ? [] : b.folds, method: waiting ? '' : b.method, sources: waiting ? '' : b.sources, onMount: waiting ? null : b.onMount,
-      // (a section's own secondary action after the memo: Capital's "Copy for review comments")
-      actions: [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, ...(sec && !waiting && sec.foot && sec.foot.secondary ? sec.foot.secondary : []), (w => ({ label: w ? '★ Watching' : '☆ Watch', attrs: { 'data-watch': p.key, 'aria-pressed': String(w) }, title: w ? 'Remove from your watchlist' : 'Add to your watchlist (This week, Watched)' }))(!!(App() && App().watch && App().watch.has(p.key))), { label: 'Review its FSR', attrs: { 'data-ws-page': 'fsr' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'site' } }] };
+      folds: waiting ? [] : b.folds, method: waiting ? '' : b.method, sources: waiting ? '' : b.sources, onMount: waiting ? null : mount,
+      // (after the memo: the Inquiry draft, on the map with the development kept, js/topbar.js; then a
+      // section's own secondary action: Capital's "Copy for review comments")
+      actions: [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, { label: 'Inquiry draft', attrs: { 'data-inquiry': '' }, title: 'A servicing inquiry response for this development, to copy: it opens on the map, the development kept' }, ...(sec && !waiting && sec.foot && sec.foot.secondary ? sec.foot.secondary : []), (w => ({ label: w ? '★ Watching' : '☆ Watch', attrs: { 'data-watch': p.key, 'aria-pressed': String(w) }, title: w ? 'Remove from your watchlist' : 'Add to your watchlist (This week, Watched)' }))(!!(App() && App().watch && App().watch.has(p.key))), { label: 'Review its FSR', attrs: { 'data-ws-page': 'fsr' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'site' } }] };
   }
 
   // ---- Growth in an area: drill down Peel → municipality → plan → precinct / sub-area → its files ----
@@ -822,7 +854,7 @@
       ? `${pl.answer}${f2031 ? ` About <strong>${f2031.v}</strong> units are expected by 2031 (${f2031.ctx}).` : ''}${svcLine}`
       : `<strong>${esc(n.name)}</strong> ${trail[1] && trail[1] !== n ? ` (${esc(trail[1].name)})` : ''} holds <strong>${n0(m.planned)}</strong> planned units, ${p0(m.people)} people${m.jobs >= 0.5 ? ` and ${p0(m.jobs)} jobs` : ''} at build-out; ${n0(m.left)} left to build, ${n0(com)} of them committed (a site servicing or building permit) and ${n0(planU)} more plan approved, not committed.${svcLine}`;
     return areaSection(atPeel ? (App().state.muni || '') : n.name, { id: 'growth', eyebrow: `${esc(label('growth'))} · ${crumbs}${atPeel ? '' : ` <span class="page-kind">${esc(kind(n))}</span>`}`, name: atPeel ? 'How much is coming, where, and how fast?' : n.name, status: null, identity: atPeel ? esc(`${App().state.muni || 'Peel'} · ${fmtNum(plans.length)} plans with planned units`) : esc(`${fmtNum(dm.size)} developments${trail.length > 2 ? ` · in ${trail[trail.length - 2].name}` : ''}`), scen: scen(), answer,
-      top: `${exploreBar('')}${root.PeelSections ? sectionBar(root.PeelSections.AREA, gSec, 'data-ws-asec') : ''}`,
+      top: root.PeelSections ? sectionBar(root.PeelSections.AREA, gSec, 'data-ws-asec') : '',
       figures: [
         // (units and jobs at the Scenario's counting basis, as the people and the Overview: one basis)
         basis === 'all' ? { v: n0(m.planned), u: 'units', label: 'planned', ctx: `${n0(m.left)} left to build` } : { v: n0(m.counted), u: 'units', label: G.basisUnits(basis), ctx: `of ${n0(m.planned)} planned` },
@@ -841,7 +873,9 @@
       map: { svg: mapSvg, attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' }, label: `Show ${n.name} on the map`, caption: ring ? `<span class="hm-key hm-key-area"></span> ${esc(n.name)} <span class="hm-key hm-key-dev"></span> its developments (sized by units)` : '<span class="hm-key hm-key-dev"></span> developments of 50+ units (sized by units) · municipal outlines', after: treemap },
       method: `${pl.method} Drill-down: Growth › Areas' plan tree (Peel, municipality, secondary plan or character area, precinct or sub-area, then "not in a plan" and "elsewhere in the plan"); every level equals the sum of the levels under it, and a site split between plans counts its share. The stages are the commitment ladder (one set of names on every screen): pre-application, in review, zoning approved, plan approved (draft or site plan, MECP D-5-1), servicing permit, building permit, under construction, then built since the 2021 census. A development's units left to build sit on the highest rung they have reached: a water or wastewater site servicing permit (filed or issued) lifts the whole development, a building permit only the units it covers, and the rest stay on its planning rung. Committed (the Peel rule, the default everywhere but the treatment plants' reserve) is Servicing permit and up; a permit can come before the plan approval. A servicing permit issued 3 or more years ago with no building permit since (possibly lapsed) commits nothing. Estimated counts: a file's units left to build that are not stated on it (found online, a pre-consultation estimate, an estimate from the wording, or counted from building permits), the hatching on the stage bars. A file with more than one kind of estimate has its estimate split between the kinds in proportion to their units. Employment: the floor area the applications state and the jobs it holds at Peel's floor space per job.${tm && atPeel ? ` ${tm.method}` : ''}`,
       sources: pl.sources,
-      actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'Show on the map', attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } }, !atPeel ? { label: '↑ Up a level', attrs: { 'data-ws-drill': n.parent || 'peel' } } : null] });
+      // (the Area report of the level shown: at Peel the developments shown; drilled, the node's own, as the
+      // drill does not filter the map)
+      actions: [{ label: 'Area report (PDF)', attrs: atPeel ? { 'data-area-report': 'shown' } : { 'data-ws-areareport': n.id }, primary: true }, { label: 'Show on the map', attrs: spId ? { 'data-ws-go': 'growth', 'data-ws-area': spId } : { 'data-ws-go': 'growth' } }, !atPeel ? { label: '↑ Up a level', attrs: { 'data-ws-drill': n.parent || 'peel' } } : null] });
   }
   let gAll = false, gEst = false;
   // The developments table: grouped by (null: the next level down), sorted by, the groups opened or
@@ -864,10 +898,10 @@
     // An area's Servicing or Capital: on Growth in an area's page (from the Forecast too).
     if (t.dataset.wsAsec) { gSec = t.dataset.wsAsec; if (W() && W().page && W().page() !== 'growth') { W().openPage('growth', { keepScroll: true }); return; } if (W() && W().renderPage) W().renderPage(true); return; }
     // A site's section from its FSR review: back on the site's page, at that section.
-    if (t.dataset.wsSec && W() && W().page && W().page() !== 'site') { siteSec = t.dataset.wsSec; W().openPage('site', { keepScroll: true }); return; }
+    if (t.dataset.wsSec && W() && W().page && W().page() !== 'site') { siteSec = t.dataset.wsSec; siteFile = null; W().openPage('site', { keepScroll: true }); return; }
     // A step up the trail from a site: Growth in an area at that level (the site closes).
     if (t.dataset.wsExplore) { gAt = t.dataset.wsExplore; gStage = 'all'; gAll = false; gEst = false; if (W() && W().openPage) W().openPage('growth'); return; }
-    if (t.dataset.wsSec) siteSec = t.dataset.wsSec;
+    if (t.dataset.wsSec) { siteSec = t.dataset.wsSec; siteFile = null; }
     // The table: grouping, sorting, a group opened or closed, all its rows (the page keeps its scroll).
     else if (t.dataset.gtBy || t.dataset.gtSort || t.dataset.gtTog || t.dataset.gtMore) {
       if (t.dataset.gtBy) gBy = t.dataset.gtBy;
@@ -883,6 +917,16 @@
     else if (t.dataset.wsEstall) gEst = !gEst;
     if (W() && W().renderPage) W().renderPage(true);
   }, true);
+  // Area report (PDF) at a drilled level (a municipality, plan, precinct or sub-area): its developments,
+  // a straddling one whole (as the map's plan filter counts it, so the title says "in or partly in"
+  // where the level has an outline), with that outline on the report's map.
+  document.addEventListener('click', e => {
+    const b = e.target.closest && e.target.closest('[data-ws-areareport]'), PT = root.PeelPlanTables;
+    if (!b || !document.getElementById('home') || !document.getElementById('home').contains(b) || !PT || !R()) return;
+    const n = (() => { try { return PT.compute().nodes.get(b.dataset.wsAreareport); } catch (err) { return null; } })(); if (!n) return;
+    const A = App() && App().state.areas, ring = n.areaId && A ? [...(A.secondaryPlans || []), ...(A.precincts || [])].find(x => x.id === n.areaId) : null;
+    R().areaReport([...nodeDevs(n).keys()], n.areaId ? `Area report – ${n.name} (developments in or partly in it)` : `Area report – ${n.name}`, ring && ring.rings ? ring.rings : []);
+  });
   // A treemap tile or a table row under the pointer (or focused): ringed on the page's map; a treemap
   // box: its developments and its outline.
   function mapRing(e) {
@@ -930,7 +974,7 @@
     const t = specOf('growth:timing', areaScope); if (!t) return loading('outlook', 'Timing the pipeline…');
     const SE = root.PeelSections;
     return { id: 'outlook', eyebrow: eyebrow('outlook'), name: 'When do the homes and people arrive?', status: t.head.status, identity: t.head.identity, scen: scen(), answer: t.answer,
-      top: `${exploreBar('')}${SE ? sectionBar(SE.AREA, 'outlook', 'data-ws-asec') : ''}`,
+      top: SE ? sectionBar(SE.AREA, 'outlook', 'data-ws-asec') : '',
       figures: t.figures, chart: t.chart,
       lists: (t.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('outlook', r)) })),
       map: { svg: devsMap((App() && App().state.filtered) || []), attrs: { 'data-ws-go': 'outlook' }, label: 'Open Forecast on the map', caption: '<span class="hm-key hm-key-dev"></span> developments of 50+ units' },
@@ -1242,9 +1286,9 @@
   function study() {
     const AS = root.PeelAreaSelect, sel = AS ? [...AS.selection.values()] : [];
     const has = sel.length > 0 || (AS && AS.selAreas && AS.selAreas.length);
-    return { id: 'study', eyebrow: eyebrow('study'), name: 'What does this area add, and what servicing does it lean on?', scen: scen(),
+    return { id: 'study', eyebrow: eyebrow('study'), name: 'What does this area add, and what servicing does it lean on?', scen: scen(), draw: false,
       answer: has ? `The drawn area holds <strong>${fmtNum(sel.length)}</strong> development${sel.length === 1 ? '' : 's'}. Its growth and the servicing it needs are below.` : 'Draw an area on the map: press <strong>Draw an area</strong>, then drag around the developments.',
-      top: `${exploreBar('')}<section class="page-livemap" data-psec="livemap"><div class="page-map-slot" id="page-map-slot"></div><div class="pnl-acts"><button type="button" class="btn small pnl-primary" data-ws-draw>${has ? 'Add an area' : 'Draw an area'}</button>${has ? '<button type="button" class="btn small" data-ws-clear>Clear</button>' : ''}</div></section>`,
+      top: `<section class="page-livemap" data-psec="livemap"><div class="page-map-slot" id="page-map-slot"></div><div class="pnl-acts"><button type="button" class="btn small pnl-primary" data-ws-draw>${has ? 'Add an area' : 'Draw an area'}</button>${has ? '<button type="button" class="btn small" data-ws-clear>Clear</button>' : ''}</div></section>`,
       mid: has && AS ? `<section class="page-sel" data-psec="selection">${AS.selectionSummaryHTML(sel)}</section>` : '',
       method: 'The developments shown on the map inside the drawn area(s): units by type and stage, people and jobs at Peel design criteria, and the water and wastewater demand they add (the same estimate as each development’s panel).',
       actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'study' }, primary: !has }, has ? { label: 'Area report (PDF)', attrs: { 'data-area-report': 'sel' }, primary: true } : null] };
@@ -1291,6 +1335,17 @@
     if (refOn && root.PeelSections) m.top = `${wsBar('reference', id === 'data' && wsSec.reference ? wsSec.reference : refOn)}${m.top || ''}`;
     return m;
   }
-  Object.assign(api, { build, tilesSVG, tileCredit, tilesOk, eaMap, eaTimelineHTML, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame });
+  // Where a search pick on a page lands (js/workspaces.js routePick): a site's section (and a file to
+  // mark), Growth in an area at a plan (else at fall, else Peel; reset as a step up a site's trail is),
+  // and a workspace's section (Capital › DC projects).
+  const siteAt = (key, sec, file) => { siteSec = sec || 'summary'; siteSecDev = key; siteFile = file || null; siteFileShown = false; };
+  function drillTo(id, fall) {
+    let r = null; try { r = root.PeelPlanTables.compute(); } catch (e) { r = null; }
+    // (the tree not worked out yet: the plan's id kept, and growth() falls back to Peel if it is no node)
+    const has = k => !!(k && r && r.nodes.get(k));
+    gAt = !r || has(id) ? id : has(fall) ? fall : 'peel'; gStage = 'all'; gAll = false; gEst = false; gSec = 'growth';
+  }
+  const sectionAt = (ws, id) => { wsSec[ws] = id; };
+  Object.assign(api, { build, tilesSVG, tileCredit, tilesOk, eaMap, eaTimelineHTML, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame, siteAt, drillTo, sectionAt });
   root.PeelWsPages = api;
 })(typeof window !== 'undefined' ? window : globalThis);

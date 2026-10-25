@@ -115,11 +115,15 @@
     if (App().state.muni) steps.push({ label: App().state.muni, go: trailGoMuni, title: `Filter to ${App().state.muni}` });
     const a = trailArea();
     if (a) steps.push({ label: a.label, go: trailGoArea, title: 'Filter to this area only' });
+    // Phase 3: the development step follows the dev scope, not the #detail panel. A result started at
+    // the development (the Inquiry draft) keeps it: Peel › the site › the result, the site step closing
+    // the result (reopening the site would drop the result unannounced). Else it follows the ladder.
+    const SS = window.PeelSvcScope, scoped = typeof DevScope !== 'undefined' ? DevScope.current() : null, kept = !!(scoped && SS && SS.keepsDev && SS.keepsDev());
+    const devStep = scoped && (kept ? { label: scoped.title || 'Development', go: () => SS.closeResult(), title: `Back to ${scoped.title || 'the development'}` } : { label: scoped.title || 'Development', go: trailGoDev, title: 'Reopen this development' });
+    if (kept) steps.push(devStep);
     // Servicing ladder (plant › block / station; water system › zone): one step per rung.
     if (window.PeelSvcScope) steps.push(...window.PeelSvcScope.crumbs());
-    // Phase 3: the development step follows the dev scope, not the #detail panel.
-    const scoped = typeof DevScope !== 'undefined' ? DevScope.current() : null;
-    if (scoped) steps.push({ label: scoped.title || 'Development', go: trailGoDev, title: 'Reopen this development' });
+    if (scoped && !kept) steps.push(devStep);
     // Phase 3b: a tool result scope adds its own crumb (Peel › Lasso selection).
     const tc = (typeof PeelTools !== 'undefined' && PeelTools.trailCrumb) ? PeelTools.trailCrumb() : null;
     if (tc) steps.push(...[].concat(tc));
@@ -211,29 +215,19 @@
   // working after the Export row itself is removed.
   // Phase 3b: "Inquiry response draft" export item. Drafts a response for the open
   // development via js/tools-inquiry.js (sibling worker C); guarded so the menu still
-  // works before that module loads.
+  // works before that module loads. The same function is a development's Inquiry draft
+  // action ([data-inquiry]: its page and its Overview), one result either way (AD-13):
+  // on the map's Overview, the development kept, its Copy button tools-inquiry's own.
   function draftInquiryResponse() {
+    // (on a page the panel hosts are empty: the draft opens on the map, with its way back)
+    const W = root.PeelWorkspaces; if (W && W.mode && W.mode() === 'home' && W.setMode) W.setMode('full');
     const I = (typeof window !== 'undefined') ? window.PeelToolInquiry : null;
     const p = (typeof DevScope !== 'undefined' && DevScope.current) ? DevScope.current() : null;
     if (!I || typeof I.draftForDevelopment !== 'function') {
       if (Meas().hasTools()) PeelTools.openResult({ title: 'Inquiry response draft', html: '<p class="small muted">The inquiry module has not loaded yet — try again in a moment.</p>' });
       return;
     }
-    if (p) {
-      const text = I.draftForDevelopment(p) || '';
-      if (Meas().hasTools()) {
-        PeelTools.openResult({ title: `Inquiry response — ${p.title}`, html: `<p><button type="button" class="btn small" id="inq-copy">Copy</button></p><pre class="inq-draft">${esc(text)}</pre>` });
-        const btn = document.getElementById('inq-copy');
-        if (btn) btn.addEventListener('click', async () => {
-          try {
-            if (typeof I.copy === 'function') await I.copy(text);
-            else if (navigator.clipboard && navigator.clipboard.writeText) await navigator.clipboard.writeText(text);
-            btn.textContent = 'Copied ✓';
-          } catch (e) { btn.textContent = 'Copy failed — select the text manually'; }
-        });
-      }
-      return;
-    }
+    if (p) { I.draftForDevelopment(p); return; }
     if (Meas().hasTools()) {
       PeelTools.openResult({ title: 'Inquiry response draft', html: `<p>Open a development first, then draft its inquiry response.</p>
         <p><button type="button" class="btn small" id="inq-inspect">Use Inspect point</button> <span class="muted small">— or draft one for any point on the map.</span></p>` });
@@ -280,6 +274,7 @@
       '<button type="button" role="menuitem" data-share>Copy share link</button>' +
       '<button type="button" role="menuitem" data-tbx="saveview">Save this view…</button>';
   }
+  document.addEventListener('click', e => { if (e.target.closest && e.target.closest('[data-inquiry]')) draftInquiryResponse(); });
   $('#tb-export-menu').addEventListener('click', e => {
     const item = e.target.closest('[role="menuitem"]'); if (!item || item.disabled) return;
     closeTbMenus();
@@ -368,11 +363,12 @@
   document.addEventListener('fullscreenchange', syncPresentBtn);
 
   // Search sits in the top bar on wide screens, so it is always reachable (design audit, Group 7);
-  // on narrower screens it stays at the top of the Explore panel. The node moves: one search box.
+  // on narrower screens it stays at the top of the Explore panel. The node moves: one search box. On a
+  // page it is in the page's header at every width, so the top-bar slot hides (the slot is the map's).
   function placeSearch() {
     const box = $('#search-box'), slot = $('#tb-search'), home = document.querySelector('#tab-explore .search-bar'); if (!box || !slot || !home) return;
     if (document.documentElement.classList.contains('ws-mode')) { slot.hidden = true; return; }   // a workspace keeps it over the map
-    if (document.documentElement.classList.contains('home-on') && box.closest('#page-search')) return;   // a page's Find step keeps it
+    if (document.documentElement.classList.contains('home-on') && box.closest('#page-search')) { slot.hidden = true; return; }   // a page keeps it, at every width
     const wide = matchMedia('(min-width: 1600px)').matches;
     if (wide && box.parentElement !== slot) slot.appendChild(box);
     else if (!wide && box.parentElement !== home) home.insertBefore(box, home.firstChild);
