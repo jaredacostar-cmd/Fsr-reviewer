@@ -19,16 +19,13 @@
   function sourcesHTML() {
     return `${DU().freshnessHTML()}${root.PeelSvcPlants && root.PeelSvcPlants.refsHTML ? root.PeelSvcPlants.refsHTML() : ''}`;
   }
-  // Records › Checks: the data checks (duplicates, the model against published totals, the permit
-  // check, the accuracy of the statuses). The servicing model's checks are Servicing › Checks.
+  // Records › Checks: the data checks (the model against published totals, the permit check, the
+  // accuracy of the statuses). The duplicate check and its pass/fail list are the panel below
+  // (#audit-panel, js/data-tab.js renderAudit, redrawn after each rebuild). The servicing model's
+  // checks are Servicing › Checks.
   function checksHTML() {
-    const a = App().state.audit || (App().state.auditInput && App().state.projects.length && root.PeelAudit ? (App().state.audit = root.PeelAudit.audit(App().state.auditInput.raw, App().state.auditInput.records, App().state.projects)) : null);
-    const dups = a ? `<h3 class="sub-title" data-info="duplicate-check">Checks and duplicates</h3>
-        <ul class="audit-checks">${a.checks.map(c => `<li class="${c.value ? 'bad' : 'good'}"><span aria-hidden="true">${c.value ? '✕' : '✓'}</span> ${esc(c.label)}: <strong>${fmtNum(c.value)}</strong></li>`).join('')}</ul>
-        <p class="small">${fmtNum(a.records.raw)} records → ${fmtNum(a.records.unique)} unique files → ${fmtNum(a.records.projects)} developments; <strong>${fmtNum(a.possible.length)}</strong> possible duplicate pair${a.possible.length === 1 ? '' : 's'} to review in the duplicate check below.</p>`
-      : '<p class="small muted">Checks run once the full data has loaded.</p>';
     const acc = root.ModelChecks && typeof root.ModelChecks.accuracy === 'string' ? root.ModelChecks.accuracy : '';
-    return `${dups}${DU().checksHTML ? DU().checksHTML() : ''}${acc}<p class="small muted">The servicing model against the Master Plan and the 2025 reports: <button type="button" class="btn small link" data-at="svc:checks">Servicing › Model checks →</button></p>`;
+    return `${DU().checksHTML ? DU().checksHTML() : ''}${acc}<p class="small muted">The servicing model against the Master Plan and the 2025 reports: <button type="button" class="btn small link" data-at="svc:checks">Servicing › Model checks →</button></p>`;
   }
   const peelHTML = () => `${sourcesHTML()}${checksHTML()}`;
 

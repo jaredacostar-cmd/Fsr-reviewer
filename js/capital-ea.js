@@ -368,16 +368,8 @@
   const listsHTML = () => (data.loaded ? M.listsHTML({ contracts: data.contracts, eas: data.eas && data.eas.eas, muni: muni(), thisYear: new Date().getFullYear(), hasCapital: !!data.capital, capitalAsOf: capAsOf(), screenNote: U.SCREEN_NOTE_SHORT, allCap, watch: watchList(), allWatch }) : U.skel ? U.skel('Loading capital projects and EAs') : '');
   const attention = () => (data.loaded ? M.attentionItems(data.capital, data.eas, new Date().toISOString().slice(0, 10)) : []);
   const watchRows = watch => (data.loaded ? M.watchRows(watch, data.capital, data.eas) : []);
-  function renderWeek() {
-    const box = document.querySelector('#ce-week-list'), panel = document.querySelector('#ce-week-panel'); if (!box || !panel) return;
-    const items = data.loaded ? M.weekItems(data.capital, data.eas, (App() && App().watch) || new Set()) : [];
-    panel.hidden = !items.length;
-    box.innerHTML = M.weekHTML(items);
-    const h = document.querySelector('#ce-week-head'); if (h) h.textContent = items.length ? `${items.length} change${items.length === 1 ? '' : 's'} this week` : '';
-  }
   // Refresh everything that reads the data once it arrives.
   function refreshViews() {
-    renderWeek();
     if (App() && App().renderWatch) App().renderWatch();
     const AT = window.PeelAnalysisTabs;
     if (AT && AT.getFootTab() === 'dca' && window.PeelDcaTab) window.PeelDcaTab.renderDca();
@@ -562,6 +554,6 @@
 
   // Stage 1 #9: a DC project's status in the capital records (null when it has no record).
   const dcStatusOf = proj => (proj && data.capital ? dcIndex().get(proj) || null : null);
-  const api = { projectsPanelSpec, easPanelSpec, siteEaCount, siteBriefCount, siteBriefFor, siteBriefText, siteBriefHTML, watchList, dcStatusOf, statusText: s => M.statusLabel(s), renderEaTab, eaTabHTML, renderIfChanged, exportConsGeoJSON, exportEasGeoJSON, consGeoJSON, easGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, renderWeek, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
+  const api = { projectsPanelSpec, easPanelSpec, siteEaCount, siteBriefCount, siteBriefFor, siteBriefText, siteBriefHTML, watchList, dcStatusOf, statusText: s => M.statusLabel(s), renderEaTab, eaTabHTML, renderIfChanged, exportConsGeoJSON, exportEasGeoJSON, consGeoJSON, easGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
   root.PeelCapitalEA = api;
 })(typeof window !== 'undefined' ? window : globalThis);

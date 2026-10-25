@@ -691,7 +691,7 @@
       map: siteLiveMap(p),
       folds: waiting ? [] : b.folds, method: waiting ? '' : b.method, sources: waiting ? '' : b.sources, onMount: waiting ? null : b.onMount,
       // (a section's own secondary action after the memo: Capital's "Copy for review comments")
-      actions: [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, ...(sec && !waiting && sec.foot && sec.foot.secondary ? sec.foot.secondary : []), { label: 'Review its FSR', attrs: { 'data-ws-page': 'fsr' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'site' } }] };
+      actions: [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, ...(sec && !waiting && sec.foot && sec.foot.secondary ? sec.foot.secondary : []), (w => ({ label: w ? '★ Watching' : '☆ Watch', attrs: { 'data-watch': p.key, 'aria-pressed': String(w) }, title: w ? 'Remove from your watchlist' : 'Add to your watchlist (This week, Watched)' }))(!!(App() && App().watch && App().watch.has(p.key))), { label: 'Review its FSR', attrs: { 'data-ws-page': 'fsr' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'site' } }] };
   }
 
   // ---- Growth in an area: drill down Peel → municipality → plan → precinct / sub-area → its files ----

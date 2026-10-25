@@ -1,4 +1,5 @@
-/* js/aerial-check.js — aerial photo check, the single-file scope and closing the right panel's scopes.
+/* js/aerial-check.js — the single-file scope and closing the right panel's scopes (the aerial photo
+ * check is js/devtab.js aerialRun, shown by js/aerial-chip.js).
  * Extracted verbatim from js/app.js (lines 3383-3505); the only edits are the
  * reference rewrites in SPLIT_MAP.md §0 rule 4.
  * Note: bare `box` are function-locals; bare DevScope/PeelAerial are pre-Phase-6 globals.
@@ -22,45 +23,6 @@
   const SH = () => root.PeelShare;
 
 /* ---- app.js lines 3383-3505 ---- */
-  // ---- Aerial check -------------------------------------------------------------------
-  const aerialCache = new Map();
-  function runAerial(p) {
-    const box = $('#aerial-check');
-    if (!box) return;
-    if (!window.PeelAerial || !CFG.imagery || !CFG.imagery[p.municipality] || p.lat == null) {
-      box.innerHTML = '<p class="small muted">No aerial imagery is set up for this location.</p>';
-      return;
-    }
-    const show = r => { if (DN().getCurrentProject() === p && $('#aerial-check')) renderAerial(r); };
-    if (aerialCache.has(p.key)) return show(aerialCache.get(p.key));
-    box.innerHTML = '<p class="small muted aerial-loading">Comparing aerial photos…</p>';
-    PeelAerial.check(p, CFG, { phaseLabel: P.PHASE_BY_KEY[p.phase].label })
-      .then(r => { aerialCache.set(p.key, r); show(r); })
-      .catch(e => { if (DN().getCurrentProject() === p && $('#aerial-check')) $('#aerial-check').innerHTML = `<p class="small muted">Aerial check unavailable: ${esc(e.message)}.</p>`; });
-  }
-  function renderAerial(a) {
-    const box = $('#aerial-check');
-    const r = a.result, pctv = Math.round(r.probability * 100);
-    const cls = r.probability >= 0.7 ? 'hi' : r.probability >= 0.35 ? 'mid' : 'lo';
-    const label = y => a.src.years[y].label;
-    const fig = (ph, y, note) => ph ? `<figure><div class="aerial-img"></div><figcaption><strong>${esc(label(y))}</strong> ${note}</figcaption></figure>` : '';
-    const arrow = e => e > 0 ? '<span class="sig up" aria-label="raises">▲</span>' : e < 0 ? '<span class="sig down" aria-label="lowers">▼</span>' : '<span class="sig" aria-hidden="true">•</span>';
-    box.innerHTML = `
-      <div class="aerial-head ${cls}">
-        <div class="aerial-pct"><strong>${pctv}%</strong><span>likely completed</span></div>
-        <div class="aerial-status">${esc(r.status)}</div>
-      </div>
-      <div class="aerial-meter" role="img" aria-label="${pctv}% likely completed"><span style="width:${pctv}%"></span></div>
-      <div class="aerial-pair">
-        ${fig(a.before, a.years.before, a.years.preStart ? '· before the application' : '· earliest available')}
-        ${fig(a.latest, a.years.latest, '· latest')}
-      </div>
-      <ul class="aerial-signals">${r.signals.map(s => `<li>${arrow(s.effect)}<span>${esc(s.text)}</span></li>`).join('')}</ul>
-      <p class="small muted">${esc(a.src.owner)} aerial photos. Site: ${esc(a.geom.source)} (yellow outline). Estimate from how much the site changed compared with its surroundings and how much building structure it shows${a.fp.now != null ? ', plus building footprints traced from the photos' : ''}; not a site inspection.</p>`;
-    const slots = box.querySelectorAll('.aerial-img');
-    const canvases = [a.before && a.before.canvas, a.latest.canvas].filter(Boolean);
-    canvases.forEach((c, i) => slots[i] && slots[i].appendChild(c));
-  }
   // Close what the right panel shows: a result scope (file, block, selection, tool result) first;
   // with none, the development scope. Closing a selection also removes the drawn areas (unless
   // drawing another one).
@@ -159,7 +121,7 @@
 
   // ---- Public contract ----
   const currentFile = () => { const S = root.PeelSvcScope; return fileCtx && S && S.hasResult() && String(App().state.ss).startsWith('file:') ? fileCtx : null; };
-  const api = { runAerial, renderAerial, closeDetail, showRecordDetail, currentFile };
+  const api = { closeDetail, showRecordDetail, currentFile };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelAerialCheck = api;
 })(typeof window !== 'undefined' ? window : globalThis);

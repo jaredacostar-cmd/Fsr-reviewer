@@ -184,8 +184,9 @@ test('extra model-check sections render defensively', () => {
 
 test('number conventions and Prepared by stay in the Settings UI', () => {
   assert.ok(APP.includes('function numberConventionsHTML'), 'conventions extracted');
-  assert.ok(/function renderQuality\(\)[\s\S]{0,200}numberConventionsHTML\(\)/.test(APP),
-    'renderQuality still shows them in the Settings tab');
+  assert.ok(/<h2 class="pane-h">Settings<\/h2>[^\n]*\$\{DU\(\)\.numberConventionsHTML\(\)\}/.test(APP),
+    'the Settings page shows them (js/growth-ui.js)');
+  assert.ok(!/function renderQuality\(/.test(APP), 'no renderer for the missing #d-quality');
 });
 
 // ---- exports: Criteria sheet ---------------------------------------------------------------

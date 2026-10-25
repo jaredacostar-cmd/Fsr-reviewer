@@ -302,10 +302,6 @@
       <h3 class="sub-title">Prepared by</h3>
       <p class="small"><label>Name and team on briefings <input type="text" id="prep-by" value="${esc(store.get('prepBy', ''))}" placeholder="e.g. J. Smith, Infrastructure Planning" style="min-width:260px"></label></p>`;
   }
-  function renderQuality() {
-    const el = $('#d-quality'); if (!el) return;
-    el.innerHTML = `${freshnessHTML()}${checksHTML()}${modelSectionsHTML()}${numberConventionsHTML()}`;
-  }
   // (prep-by is handled by the document-level change listener above)
   // Sources & checks gear page (Worker A: openGearPage('sources') renders GearPages.sources()).
   function sourcesPageHTML() {
@@ -323,7 +319,7 @@
   // anything out: every stage ('all') and build-out ('buildout'); committed only ('committed', the Peel rule) and left
   // to build ('remaining') count none.
   const preCensus = (t, basis) => (t && (basis === 'all' || basis === 'buildout') ? { units: (t.units && t.units.existing) || 0, people: (t.people && t.people.existing) || 0 } : { units: 0, people: 0 });
-  const api = { allocBoxHTML, commitOpts, preCensus, MUNIS, freshness, validationRows, freshnessHTML, checksHTML, renderQuality, sourcesPageHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, wwTile, miniBar, wwInfoLine, numberConventionsHTML, modelSectionsHTML };
+  const api = { allocBoxHTML, commitOpts, preCensus, MUNIS, freshness, validationRows, freshnessHTML, checksHTML, sourcesPageHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, wwTile, miniBar, wwInfoLine, numberConventionsHTML, modelSectionsHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemandUI = api;
 })(typeof window !== 'undefined' ? window : globalThis);
