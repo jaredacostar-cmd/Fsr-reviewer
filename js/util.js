@@ -23,6 +23,20 @@
     const build = dataBuild();
     if (build) { const f = root.fetch.bind(root); root.fetch = (input, init) => f(versionedDataURL(input, build), init); }
   }
+  // One request and one parsed copy per data file for the modules that read the same file
+  // (data/history.json: the accuracy report and the app; data/capital.json: the capital layers and
+  // the DC joins). The copy is shared: read it, or copy it before changing it. null when it is
+  // missing or fails, as each loader had it; a later caller then asks again.
+  const DATA_LOADS = new Map();
+  function dataJSON(url) {
+    if (typeof root.fetch !== 'function') return Promise.resolve(null);
+    if (!DATA_LOADS.has(url)) {
+      const pr = root.fetch(url, { cache: 'no-cache' }).then(r => (r && r.ok ? r.json() : null)).catch(() => null);
+      DATA_LOADS.set(url, pr);
+      pr.then(d => { if (d == null && DATA_LOADS.get(url) === pr) DATA_LOADS.delete(url); });
+    }
+    return DATA_LOADS.get(url);
+  }
 
   // ---- Unofficial banner (source: app.js 13–14) ---------------------------------
   const UNOFFICIAL = 'Unofficial prototype · public data only · not a Region of Peel product';
@@ -271,7 +285,7 @@
   function flushLater() { while (LATER.size) runOne(); }
   const cancelLater = key => LATER.delete(key);
   const api = {
-    versionedDataURL,
+    versionedDataURL, dataJSON,
     hoverCard, toast, later, flushLater, cancelLater, laterPending: () => LATER.size, idOf, csvCell,
     $, esc, fmtNum, fmtDate, dayText, sig3, skel, estTag, store,
     token, dot, readColors, phaseColor, glyphColor,

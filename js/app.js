@@ -561,11 +561,15 @@
   // (same keys, same grouping) so detail views, exports and live refresh keep
   // working against full records.
   let indexPainted = false, fullLoaded = false, fullLoadPromise = null;
+  // The startup index is built weekly but not published (.github/workflows/site.yml commits it only
+  // when the owner enables it; tests/build-guards.test.js): no request for a file that is never
+  // there, a 404 before the snapshot on every visit. true with its line in the weekly commit.
+  const STARTUP_INDEX = false;
 
   async function bootFromIndex() {
     try {
       const SI = window.PeelSnapshotIndex;
-      if (!SI) return false;
+      if (!STARTUP_INDEX || !SI) return false;
       const res = await fetch('data/snapshot-index.json', { cache: 'no-cache' });
       if (!res.ok) return false;
       const idx = await res.json();
@@ -624,7 +628,10 @@
         const missing = state.sources.filter(s => s.enabled && !s.fromSnapshot);
         inflight += missing.length; showLoading();
         for (const s of missing) { await loadSource(s); inflight--; showLoading(); }
-        fetch('data/history.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(h => {
+        // (the file js/accuracy.js already asked for: one request, one parsed copy. The tree keys are
+        // added to the app's own copy of the key list, so the shared one stays as published.)
+        PeelUtil.dataJSON('data/history.json').then(h => {
+          if (h && h.projects) h = { ...h, projects: { ...h.projects } };
           state.history = h;
           if (window.PeelTreeGroups) { const keys = new Set(state.projects.map(p => p.key)); PeelTreeGroups.translateHistory(h, k => keys.has(k), { aliasesOnly: !state.treeGrouped }); }
         }).catch(() => {});

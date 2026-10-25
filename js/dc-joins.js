@@ -96,7 +96,8 @@
   function load() {
     if (J.loading) return J.loading;
     const get = u => (typeof fetch === 'function' ? fetch(u).then(r => (r.ok ? r.json() : null)).catch(() => null) : Promise.resolve(null));
-    J.loading = Promise.all([get('data/dc-joins.json'), get('data/capital.json')]).then(([d, cap]) => {
+    // (data/capital.json is shared with js/capital-ea.js: one request, one parsed copy)
+    J.loading = Promise.all([get('data/dc-joins.json'), U.dataJSON && typeof fetch === 'function' ? U.dataJSON('data/capital.json') : get('data/capital.json')]).then(([d, cap]) => {
       if (d && Array.isArray(d.joins)) J.shipped = d.joins;
       if (cap && Array.isArray(cap.records)) J.capRecords = cap.records;
       merged = merge(J.shipped, J.edits); J.v++; syncCount();

@@ -41,7 +41,8 @@
   // ---- data ----------------------------------------------------------------------------------------
   async function load() {
     const opt = async f => { try { const r = await fetch(f, { cache: 'no-cache' }); return r.ok ? await r.json() : null; } catch (e) { return null; } };
-    const [cap, eas] = await Promise.all([opt('data/capital.json'), opt('data/eas.json')]);
+    // (data/capital.json is shared with js/dc-joins.js: one request, one parsed copy)
+    const [cap, eas] = await Promise.all([U.dataJSON ? U.dataJSON('data/capital.json') : opt('data/capital.json'), opt('data/eas.json')]);
     // (once every script has run: setting the data redraws the legend and the views, which read the
     // app's state from js/app.js, the last script; the files can arrive first)
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setData(cap, eas), { once: true });

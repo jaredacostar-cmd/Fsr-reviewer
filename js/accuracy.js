@@ -175,9 +175,11 @@
       window.ModelChecks.accuracy =
         `<h3 class="sub-title" data-info="accuracy-report">Accuracy report</h3>` +
         `<div id="accuracy-report"><p class="small muted">Working out the accuracy report…</p></div>`;
-      const load = () => fetch('data/history.json', { cache: 'no-cache' })
+      // (one request and one parsed copy with js/app.js, js/util.js dataJSON; read before the app
+      // adds the tree keys to its own copy)
+      const load = () => (U.dataJSON ? U.dataJSON('data/history.json') : fetch('data/history.json', { cache: 'no-cache' })
         .then(resp => (resp && resp.ok) ? resp.json() : null)
-        .catch(() => null)
+        .catch(() => null))
         .then(h => {
           if (!h || typeof document === 'undefined') return;
           const stats = phaseAccuracy(h), cov = coverageFromApp();
