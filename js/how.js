@@ -68,7 +68,7 @@
     guides: [], roles: [], approvals: [], glossary: [], logic: [], help: [],
     flows: ['peel-reports.json'], network: ['servicing.json', 'peel-reports.json', 'water-facilities.json', 'ww-facilities.json'],
     capacity: ['peel-reports.json', 'plant-flows.json', 'water-facilities.json', 'ww-facilities.json'],
-    fsrguide: ['fsr.json'], capital: ['capital.json', 'eas.json', 'dc-infra.json'],
+    fsrguide: ['fsr.json'], capguide: ['capital.json', 'eas.json', 'dc-infra.json'],
     targets: ['housing.json', 'plan-targets.json', 'snapshot.json'], forecast: ['history.json', 'housing.json', 'peel-housing.json', 'snapshot.json'],
   };
   /** The data files a panel key ('svc:capacity', 'overview:') or page id ('tight') reads; null when none is listed. */

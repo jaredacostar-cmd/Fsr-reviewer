@@ -27,7 +27,7 @@
     ['network', 'How sewage and water travel', 'How do sewage and water travel?', 'Plants, trunk sewers, pressure zones and wells'],
     ['capacity', 'How capacity is checked', 'How does the app check capacity?', 'What is compared at each facility, and its limit'],
     ['fsrguide', 'What an FSR should cover', 'What should a functional servicing report cover?', 'The Region’s requirements, and what the app can check'],
-    ['capital', 'How a capital project gets built', 'How does a capital project get built?', 'Master Plan, DC study, Class EA, design, tender, construction'],
+    ['capguide', 'How a capital project gets built', 'How does a capital project get built?', 'Master Plan, DC study, Class EA, design, tender, construction'],
     ['targets', 'Growth targets and forecasts', 'How much growth is planned, and by when?', 'Housing targets, the 2051 forecast and the pipeline'],
     ['forecast', 'How the forecast is timed', 'When will the pipeline be built?', 'Time in stage, the population pace and the completions record'],
   ];
@@ -60,7 +60,7 @@
   function indexPage() {
     const cards = GUIDES.map(([id, label, q, line], i) => `<li><button type="button" class="rf-card" data-ws-page="${id}"><span class="rf-n">${i + 1}</span><strong>${esc(label)}</strong><span>${esc(q)}</span><small>${esc(line)}</small></button></li>`).join('');
     return { id: 'guides', eyebrow: 'Reference', name: 'How does servicing for growth work in Peel?',
-      answer: 'Eight short guides: who decides, how a development is approved, how its homes become water and sewage flows, where those flows go, how capacity is checked, what a <strong>functional servicing report</strong> covers, how the Region builds the works, and how much growth is planned. Each one says how the app reads it, and where it simplifies.',
+      answer: 'Nine short guides: who decides, how a development is approved, how its homes become water and sewage flows, where those flows go, how capacity is checked, what a <strong>functional servicing report</strong> covers, how the Region builds the works, how much growth is planned, and when the pipeline is built. Each one says how the app reads it, and where it simplifies.',
       mid: sec('guides', '', `<ol class="rf-index">${cards}</ol>`) + sec('more', 'More reference', `<p>${go('glossary', 'Glossary: the terms in plain words')} ${go('logic', 'How the app decides: the data rules and gates')} ${go('help', 'Help: how to use the app')}</p>`),
       actions: [{ label: `Start: ${GUIDES[0][1]}`, attrs: { 'data-ws-page': GUIDES[0][0] }, primary: true }, { label: 'Full map', attrs: { 'data-ws-full': '' } }] };
   }
@@ -302,7 +302,7 @@
     const steps = flowHTML(CAP_STEPS.map(([t, s]) => [t, esc(s)]), 'How a capital project gets built');
     const map = tableHTML(['Step', 'In the app'], CAP_STEPS.map(([t, , a]) => [esc(t), `<span class="muted">${esc(a)}</span>`]), 'The steps and the app’s status words');
     const schRows = SCHEDULES.map(([k, d]) => [esc(k), esc(d), (k === 'A / A+' ? (sch.A || 0) + (sch['A+'] || 0) : sch[k === 'Master plan' ? 'master plan' : k] || 0) ? num(k === 'A / A+' ? (sch.A || 0) + (sch['A+'] || 0) : sch[k === 'Master plan' ? 'master plan' : k]) : '–']);
-    return wrap('capital', {
+    return wrap('capguide', {
       answer: 'A project starts in the <strong>Master Plan</strong>, is costed and timed in the <strong>DC Background Study</strong>, goes through a <strong>Class Environmental Assessment</strong>, then <strong>design</strong>, <strong>tender</strong> and <strong>construction</strong> until it is <strong>in service</strong>. The app shows each step’s status from the Region’s project and EA listings, and screens whether the capacity arrives before it is needed.',
       figures: eas && eas.length ? [
         { v: num((st.commenced || 0) + (st.consultation || 0)), u: 'EAs', label: 'under way', ctx: 'commenced or in consultation' },
@@ -490,7 +490,7 @@
     if (id === 'network') return network(s.reports);
     if (id === 'capacity') return capacity(capRow());
     if (id === 'fsrguide') return fsrguide(root.PeelWsPages ? root.PeelWsPages.COVERAGE : null);
-    if (id === 'capital') return capital(s.eas && s.eas.eas, s.capital && s.capital.records);
+    if (id === 'capguide') return capital(s.eas && s.eas.eas, s.capital && s.capital.records);
     if (id === 'targets') return targets(s.housing, s.reports && s.reports.forecast2051, pipeline());
     if (id === 'forecast') return forecast(forecastInputs(s));
     return indexPage();

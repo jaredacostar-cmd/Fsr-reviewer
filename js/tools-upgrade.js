@@ -97,7 +97,7 @@
     var pipes = null;
     try { pipes = app.sewerPipes(); } catch (err) { pipes = null; }
     if (!pipes || !pipes[i]) {
-      pt.openResult({ title: 'Upgrade a pipe', html: msgHTML('Sewer data is not loaded yet. Open the Wastewater tab (or tap a sewer) first, then use “Upgrade this pipe” again.') });
+      pt.openResult({ title: 'Upgrade a pipe', html: msgHTML('Sewer data is not loaded yet. Tap a sewer on the map first, then use “Upgrade this pipe” again.') });
       return;
     }
     if (upg && upg.i !== i) reset();

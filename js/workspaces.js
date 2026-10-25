@@ -83,7 +83,7 @@
   // Labs pages (Settings › Labs): a tool with a page of its own in Home's sidebar while its switch is on
   // (the page itself: the tool's module, e.g. js/sewer-designer.js page()).
   const LAB_PAGES = { sewer: { label: 'Sewer designer', what: 'Draw a sanitary sewer to an existing one: the design, profile and CSV', lab: 'sewer' } };
-  for (const [id, label] of [['roles', 'Who decides what'], ['approvals', 'How approvals work'], ['flows', 'From homes to flows'], ['network', 'How sewage and water travel'], ['capacity', 'How capacity is checked'], ['fsrguide', 'What an FSR should cover'], ['capital', 'How a capital project gets built'], ['targets', 'Growth targets and forecasts'], ['forecast', 'How the forecast is timed']]) REF[id] = { label, guide: true };
+  for (const [id, label] of [['roles', 'Who decides what'], ['approvals', 'How approvals work'], ['flows', 'From homes to flows'], ['network', 'How sewage and water travel'], ['capacity', 'How capacity is checked'], ['fsrguide', 'What an FSR should cover'], ['capguide', 'How a capital project gets built'], ['targets', 'Growth targets and forecasts'], ['forecast', 'How the forecast is timed']]) REF[id] = { label, guide: true };
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Servicing › Model checks / Records › Data checks,
   // Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.

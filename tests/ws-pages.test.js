@@ -101,7 +101,7 @@ test('Review an FSR coverage: what an FSR covers and what the app can check', ()
 
 test('every workspace has a page builder; pages open from Home, chips and the map view', () => {
   const s = src('js/ws-pages.js'), w = src('js/workspaces.js');
-  assert.match(s, /const BUILD = \{ home, tight, site, growth, outlook, coming, projects, eaflow, week, fsr, pipes, outlets, study, sewer, guides, roles, approvals, flows, network, capacity, fsrguide, capital, targets, forecast, glossary, logic, help, data \};/, "every workspace, Labs › Sewer designer, and the Reference pages: How it works and its guides, the Glossary, How the app decides and Help");
+  assert.match(s, /const BUILD = \{ home, tight, site, growth, outlook, coming, projects, eaflow, week, fsr, pipes, outlets, study, sewer, guides, roles, approvals, flows, network, capacity, fsrguide, capguide, targets, forecast, glossary, logic, help, data \};/, "every workspace, Labs › Sewer designer, and the Reference pages: How it works and its guides, the Glossary, How the app decides and Help");
   // A page's map buttons open the workspace's map view; Full map is the all-tools map; the map view has
   // a way back to the page.
   assert.match(w, /const pg = e\.target\.closest\('\[data-ws-page\]'\);\s*if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage\); return; \}/);
@@ -216,4 +216,11 @@ test('estimated counts: a file mixing kinds is split in proportion, and the page
   assert.match(s, /A file with more than one kind of estimate is split between them in proportion to their units\./);
   assert.match(s, /\(split in proportion\)/);
   assert.match(s, /has its estimate split between the kinds in proportion to their units/);
+});
+
+test('DC timing borrows the Projects and EAs lists by title, never the first list (To check / Current EAs)', () => {
+  const s = src('js/ws-pages.js'), c = src('js/capital-ea.js');
+  assert.match(s, /\[\[pr, 'Furthest along', 'Region capital projects being built'\], \[ea, 'Coming up \(90 days\)', 'EAs: milestones and comment periods'\]\]/);
+  assert.doesNotMatch(s, /pr\.lists\[0\]|ea\.lists\[0\]/);
+  assert.ok(c.includes("{ title: 'Furthest along', rows: act.slice(0, 5)") && c.includes("[{ title: 'Coming up (90 days)', rows: up.slice(0, 5)"), 'the titles DC timing picks by');
 });

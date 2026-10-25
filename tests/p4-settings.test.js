@@ -212,3 +212,9 @@ test('demand figures carry an info button with their formula', () => {
   assert.ok(body.includes('howII'), 'I&I formula with inputs');
   assert.ok(body.includes('howJobs'), 'jobs formula with inputs');
 });
+
+test("the scenario control: Criteria & references opens the criteria editor below it; Horizon years names where they are", () => {
+  const s = fs.readFileSync(path.join(JS_DIR, "svc-tab.js"), "utf8");
+  assert.match(s, /if \(gt === .criteria.\) \{ TB\(\)\.openScenPop\(\); const d = \$\(.#scen-criteria-mount details.\); if \(d\) \{ d\.open = true; d\.scrollIntoView/);
+  assert.match(s, /Horizon years: Servicing › Capacity › Charts and method\./);
+});
