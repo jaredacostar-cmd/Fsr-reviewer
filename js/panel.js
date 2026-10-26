@@ -279,8 +279,10 @@
     if (go) goTo(go);
     return true;
   }
-  // (on the next frame, once a sub-view the click opened has drawn)
-  const goTo = go => requestAnimationFrame(() => { refresh(); const g = String(go).toLowerCase(), j = jumps.find(x => x.name.toLowerCase().includes(g)) || tablesNow().find(x => x.name.toLowerCase().includes(g)); if (j) jumpTo(j.at); });
+  // (on the next frame, once a sub-view the click opened has drawn; a section with no table, as Records ›
+  // Data checks' station roster, by its heading)
+  const headNamed = g => { const panes = document.getElementById('analysis-panes'), h = panes && [...panes.querySelectorAll(HEADS)].find(el => shown(el) && !el.closest('table') && label(el).toLowerCase().includes(g)); return h ? { at: h } : null; };
+  const goTo = go => requestAnimationFrame(() => { refresh(); const g = String(go).toLowerCase(), j = jumps.find(x => x.name.toLowerCase().includes(g)) || tablesNow().find(x => x.name.toLowerCase().includes(g)) || headNamed(g); if (j) jumpTo(j.at); });
   function closeFull() {
     const an = typeof document !== 'undefined' && document.getElementById('analysis'); if (!an || !an.classList.contains('ft-on')) return false;
     if (watch) watch.disconnect();

@@ -151,9 +151,10 @@
   // model. The latest are text lines, not buttons: the fold is drawn on the Servicing capacity page too,
   // where a development button would open it in the hidden map (the full table's rows open each one).
   // Closed unless an old Allocations link asked for it (openAllocFold: for the visit, until the reader
-  // closes it; a re-render keeps the reader's choice).
+  // closes it; a re-render keeps the reader's choice). A link applied again opens a fold already drawn
+  // too (the map's and the page's), which its toggle then records.
   let allocOpen = false;
-  const openAllocFold = () => { allocOpen = true; };
+  const openAllocFold = () => { allocOpen = true; if (typeof document !== 'undefined' && document.querySelectorAll) document.querySelectorAll('#pnl-alloc-rec').forEach(d => { d.open = true; }); };
   document.addEventListener('toggle', e => { if (e.target && e.target.id === 'pnl-alloc-rec') allocOpen = e.target.open; }, true);
   function allocFold() {
     const PN = root.PeelPanel; if (!PN || !App() || !App().state.svcModel) return null;

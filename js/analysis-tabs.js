@@ -186,13 +186,17 @@
     footPref = tabOf(tab); store.set('footTab4', footPref); showFootTab(tab, sub); Sh().viewLink.write();
   });
   // The System pick (a link's is for the visit: not stored). Capacity redraws every time (cheap; Home's
-  // Servicing capacity page reads its panel); DC projects only once it has drawn, so a System tap on
-  // Capacity never builds the DC impact model. On a page the redraw comes through pnl:set.
+  // Servicing capacity page reads its panel); DC projects once it has drawn, and only while its DC impact
+  // model is worked out for this scenario or its panel is on screen: a System tap on Capacity (or a lens)
+  // never builds that model (it walks every sewer pipe). Otherwise its stored panel goes, and the next
+  // Capital open or page draws it at the new System. On a page the redraw comes through pnl:set.
+  const dcOnScreen = () => [...document.querySelectorAll('[data-dcproj-sort], [data-dcproj-back]')].some(b => b.getClientRects().length > 0);
   function setSys(v, o = {}) {
     sysOn = sysKey(v); if (!o.link) store.set('sysPick', sysOn);
     if (o.quiet) return;
     if (root.PeelSvcCapacity && root.PeelSvcCapacity.render) root.PeelSvcCapacity.render();
-    if (root.PeelDcProjects && root.PeelDcProjects.shown && root.PeelDcProjects.shown()) root.PeelDcProjects.refresh();
+    const DP = root.PeelDcProjects, DI = root.PeelDcImpact;
+    if (DP && DP.shown && DP.shown()) { if ((DI && DI.current && DI.current()) || dcOnScreen()) DP.refresh(); else if (root.PeelPanel) root.PeelPanel.clear('dca:dcproj'); }
   }
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-sys]'); if (b) { setSys(b.dataset.sys); Sh().viewLink.write(); } });
   showFootTab(footPref);
@@ -205,8 +209,10 @@
   // Helper for other modules: set a tab's sub-view, persisting the choice.
   // A link or button that opens a tab (and sub-view): the tab becomes the one picked (kept, and in
   // the share link), as a click on the tab itself does.
+  // (a sub-view another tab now holds, SUB_MAP: that tab is the one picked, as a data-at link's)
   function openTab(tab, sub) {
-    footPref = tabOf(tab === 'dev' || tab === 'developments' || tab === 'tool' ? 'overview' : tab); store.set('footTab4', footPref);
+    const r = sub ? migrateSub(tab, sub) : null, t = r ? r.tab : tab;
+    footPref = tabOf(t === 'dev' || t === 'developments' || t === 'tool' ? 'overview' : t); store.set('footTab4', footPref);
     showFootTab(tab, sub);
     if (root.PeelShare && root.PeelShare.viewLink) root.PeelShare.viewLink.write();
   }

@@ -172,7 +172,6 @@
       ['Colour sites by Phase | Layer', 'Colour sites by Stage | Counted as.'],
       ['Each panel’s own layout', 'Every panel reads the same way: the answer, up to four figures, short lists, then Method and basis and Sources. Open full table shows the detailed table; Report a data issue is at the foot of every panel.'],
       ['The System switch: All · Wastewater · Water (Servicing › Capacity), Wastewater · Water · Both (Capital › DC projects)', 'One System control, Both · Wastewater · Water, the same pick in Servicing › Capacity and Capital › DC projects (Both to start); the Water, Wastewater and Capital lenses set it, and a share link carries it.'],
-      ['Sort: Limit year · Impact (Servicing › Capacity, full table)', 'Soonest · Largest impact, as in its panel.'],
     ] },
   ];
   const movedHTML = () => `<p class="small muted">For people who used the app before the four tabs and the workspaces. Old links and saved views still open the equivalent view.</p>${MOVED.map(g => `<h4>${esc(g.h)}</h4><table class="moved-t small"><thead><tr><th>You used</th><th>Now</th></tr></thead><tbody>${g.rows.map(([a, b]) => `<tr><td>${esc(a)}</td><td>${esc(b)}</td></tr>`).join('')}</tbody></table>`).join('')}`;

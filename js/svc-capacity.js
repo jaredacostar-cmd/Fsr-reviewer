@@ -242,9 +242,10 @@
   const LIMIT_WORDS = { '100% firm': 'its firm capacity', '90% trigger': 'its 90% expansion trigger', 'required > available': 'more storage needed than it has', '100% full pipe': 'a full pipe' };
   const limitWords = what => LIMIT_WORDS[what] || what;
   const whenWords = (y, end) => (y === 'today' ? 'already' : y == null ? `not before ${end}` : `≈${y}`);
-  function panelSpec(all) {
+  // (sys: the System picked; the Servicing capacity page asks for Both, js/ws-pages.js tight)
+  function panelSpec(all, sys = sysNow()) {
     const now = MM().THIS_YEAR, end = SP().hz.end;
-    const sys = sysNow(), rows = sys === 'both' ? all : all.filter(r => r.sys === sys), sorted = sortRows(rows, st.sort, now);
+    const rows = sys === 'both' ? all : all.filter(r => r.sys === sys), sorted = sortRows(rows, st.sort, now);
     const over = rows.filter(r => r.pctBo >= 100), tight = rows.filter(r => r.pctBo >= 90 && r.pctBo < 100);
     const soon = sortRows(rows, 'limit', now)[0], big = sortRows(rows, 'impact', now)[0];
     const n = k => rows.filter(r => r.kind === k).length, plural = (x, a, b) => `${x} ${x === 1 ? a : b}`;
@@ -336,21 +337,23 @@
   }
   // Records › Data checks' panel, its Servicing model list (the retired Model checks panel's list):
   // one row a comparison, the measured figure as its value; the Caledon wells last, so the five the
-  // panel shows hold the two checks that were only on the gear page. kv rows with no attrs (the list's
-  // See all opens the full table at the first; a page's toMap leaves them alone). [] until the model is in.
+  // panel shows hold the two checks that were only on the gear page. Each row opens the full table at
+  // its comparison (data-ft-go: the section's own heading, as the Model checks rows did); the list's See
+  // all opens it at the first; on a page, js/ws-pages.js wsSection keeps the jump. [] until the model is in.
   function checksRows() {
     const PN = root.PeelPanel, A = App(), M = A && A.state.svcModel, R = A && A.state.reports; if (!PN || !M) return [];
     const plants = ['Lakeview', 'Clarkson', 'Inglewood'].map(pl => ({ pl, c: M.plantCap(pl) })).filter(x => x.c);
     const sp = R && R.water && R.water.southPeel, cal = (R && R.water && R.water.caledon) || [], pf = A.state.plantFlows, ev = A.state.wwEvents;
     const worst = pf && pf.checks && pf.checks.length ? pf.checks.reduce((m, c) => Math.max(m, Math.abs(c.diffPct)), 0) : null;   // (as plant-flows.js checksHTML)
     const roster = ev && ev.stations ? [...(ev.stations.southPeel || []), ...(ev.stations.inglewood || [])].length : 0;
+    const go = (r, at) => ({ ...r, attrs: { 'data-full-table': 'records', 'data-ft-go': at } });
     return [
-      ...(R ? [PN.kv('2020 Master Plan vs this tracker', 'build-out against the Master Plan forecast'),
-        PN.kv('2025 annual reports vs the model', M.mode === 'calibrated' && plants.length ? `measured ${plants.map(x => `${esc(SD().PLANT_SHORT[x.pl])} ${x.c.f.toFixed(2)}`).join(', ')} times the model's flow` : 'design flows: the capacity check shows the factors')] : []),
-      ...(sp ? [PN.kv('2025 water production', `South Peel maximum day ${fmt1(sp.maxDayMLd)} of ${fmt1(sp.plants.reduce((t, p) => t + p.ratedMLd, 0))} ML/d rated (incl. York supply)`)] : []),
-      ...(worst != null ? [PN.kv('Plant flow: Ministry data vs the annual reports', `largest difference ${worst.toFixed(1)}%, ${worst <= 2 ? 'matches' : worst <= 5 ? 'close' : 'differs'}`, worst <= 2 ? 'room' : worst <= 5 ? 'tight' : 'over')] : []),
-      ...(ev ? [PN.kv('Pumping stations: GIS layer vs the collection system report', roster ? `the report’s ${fmtNum(roster)} stations against the open layer` : 'the report’s roster against the open layer')] : []),
-      ...(cal.length ? [PN.kv('Caledon groundwater systems', `${fmtNum(cal.length)} well systems: rated, average and maximum day`)] : []),
+      ...(R ? [go(PN.kv('2020 Master Plan vs this tracker', 'build-out against the Master Plan forecast'), '2020 Master Plan vs this tracker'),
+        go(PN.kv('2025 annual reports vs the model', M.mode === 'calibrated' && plants.length ? `measured ${plants.map(x => `${esc(SD().PLANT_SHORT[x.pl])} ${x.c.f.toFixed(2)}`).join(', ')} times the model's flow` : 'design flows: the capacity check shows the factors'), '2025 annual reports vs.')] : []),
+      ...(sp ? [go(PN.kv('2025 water production', `South Peel maximum day ${fmt1(sp.maxDayMLd)} of ${fmt1(sp.plants.reduce((t, p) => t + p.ratedMLd, 0))} ML/d rated (incl. York supply)`), 'Reported 2025 production')] : []),
+      ...(worst != null ? [go(PN.kv('Plant flow: Ministry data vs the annual reports', `largest difference ${worst.toFixed(1)}%, ${worst <= 2 ? 'matches' : worst <= 5 ? 'close' : 'differs'}`, worst <= 2 ? 'room' : worst <= 5 ? 'tight' : 'over'), 'Plant flow: Ministry data')] : []),
+      ...(ev ? [go(PN.kv('Pumping stations: GIS layer vs the collection system report', roster ? `the report’s ${fmtNum(roster)} stations against the open layer` : 'the report’s roster against the open layer'), 'Pumping stations: open GIS layer')] : []),
+      ...(cal.length ? [go(PN.kv('Caledon groundwater systems', `${fmtNum(cal.length)} well systems: rated, average and maximum day`), 'Caledon groundwater systems')] : []),
     ];
   }
   // ---- Servicing › Network: the bar over the blocks, stations and zones ------------------------------

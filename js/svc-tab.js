@@ -602,9 +602,10 @@
     renderHeadlines(); MP().renderMpCompare();
     renderScenario(); MA().renderCapLayer(); MA().renderLegend(); TS().filterInView();
     if (AT().getFootTab() === 'dca') DCAT().renderDca();
-    // (Records › Data checks' Servicing model group fills in once the model is in; never at a development,
-    // whose Records is its files)
-    if (!p && AT().getFootTab() === 'records' && root.PeelRecordsTab) root.PeelRecordsTab.render();
+    // (Records › Data checks' Servicing model group fills in once the model is in, and follows the Scenario;
+    // with another tab open its panel is still stored, for Reference › Data checks on a page. Never at a
+    // development, whose Records is its files)
+    if (!p && root.PeelRecordsTab) { if (AT().getFootTab() === 'records') root.PeelRecordsTab.render(); else if (root.PeelPanel && root.PeelRecordsTab.checksPanelSpec) root.PeelPanel.set('records:checks', root.PeelRecordsTab.checksPanelSpec()); }
     // (Home and the workspace pages read the Overview's figures: re-render it there too, so a page opened
     // before the model loaded gets its capacity rows)
     if (AT().getFootTab() === 'overview' || (root.PeelWorkspaces && root.PeelWorkspaces.mode() !== 'full')) OV().renderOverview();

@@ -1639,11 +1639,14 @@ views, **Capacity · Network**, at Peel as at a development (where Capacity is h
 - **Records › Data checks' panel** lists the data checks, then the **Servicing model** (a row a
   comparison with its measured figure: each plant's calibration factor, South Peel's maximum day, the
   largest difference between the Ministry's and the Region's plant flow, the station roster, the
-  Caledon wells; *See all* opens the full table at the first), then **Where developments discharge**:
-  *Review outlets →*, with the count still to review once Capital › DC projects has worked out the DC
-  model (building that model walks every sewer pipe, so Records never builds it). *Review outlets*
-  is in its footer too, beside *Duplicate check*. Reference › Data checks shows the same panel, and
-  its Review outlets row opens the page from there. The sidebar entry stays.
+  Caledon wells; each row opens the full table at its comparison, *See all* at the first), then
+  **Where developments discharge**: *Review outlets →*, with the count still to review once Capital ›
+  DC projects has worked out the DC model (building that model walks every sewer pipe, so Records
+  never builds it). *Review outlets* is in its footer too, beside *Duplicate check*. Reference › Data
+  checks shows the same panel (kept up to date as the servicing model is rebuilt, a Scenario change
+  included, whichever tab is open); its Servicing model rows and *See all* open the full map's Records
+  › Data checks full table at their comparison, and its Review outlets row opens the page from there.
+  The sidebar entry stays.
 - **The Sources & checks gear page is gone.** It was reached only from the Overview's ⓘ line
   (*Data & checks →*); that link is now *Records › Data checks →*, and it works in the Overview
   panel's Method fold and from a page too (it did nothing there). Freshness and the references are
@@ -1656,18 +1659,24 @@ views, **Capacity · Network**, at Peel as at a development (where Capacity is h
   Wastewater to start); DC projects now opens at Both, and a browser that had picked a system there
   keeps that pick, for both lists, the first time. Each list names its system (Capacity's header *Peel ·
   water*, *Water projects*). The System narrows the panel's list; Capacity's full table keeps every
-  facility of both systems, and Home's figures never filter. A share link carries it as `sy=` (only
-  when not Both; a link without it opens at Both and does not change the stored pick).
+  facility of both systems, and Home's figures never filter. The Servicing capacity page's header and
+  figures count both systems too, so they match Home's figure that opens the page; the System narrows
+  its *Soonest limits* list, which names it (*Soonest limits: water*). A System tap redraws DC projects
+  only while its DC model is worked out for the Scenario or its list is on screen (building that model
+  walks every sewer pipe); otherwise the next Capital open draws it at the new System. A share link
+  carries it as `sy=` (only when not Both; a link without it opens at Both and does not change the
+  stored pick).
 - **The lens sets the System** to what its map shows: Water → Water, Wastewater → Wastewater, Capital
   → Both; Planning leaves it. Water and Wastewater still open Servicing and Capital opens Capital (the
   owner's change of 2026-10-16). Only a lens tap sets it: a workspace or a page that sets its map view
   (the Servicing capacity page opens the Wastewater view) leaves the System as it is.
-- **One sort vocabulary**: Capacity's full table sorts *Soonest · Largest impact*, as its panel does
-  (was *Limit year · Impact*). Capital › DC projects keeps *Most affected · Soonest* (and *$ a unit*,
-  Labs): a different measure (units relying on a project, its construction year) keeps its own words,
+- **One sort vocabulary**: Capacity's panel sorts *Soonest · Largest impact* (its full table keeps the
+  panel's order). Capital › DC projects keeps *Most affected · Soonest* (and *$ a unit*, Labs): a
+  different measure (units relying on a project, its construction year) keeps its own words,
   and every sort button's tooltip names what it sorts by, so the two *Soonest* say which year.
 - Pane ids are unchanged (`#alloc-body`, `#wfac-body`, `#svc-checks-body`): the workbook and the
-  reports read them as before.
+  reports read them as before. At a development the workbook's Water sheet leaves out the Peel-wide
+  water facilities, as Network's full table does there (`OFF_AT_SITE`, `js/exports.js`).
 
 Old names still land (`js/analysis-tabs.js` `SUB_MAP`, `FOLD_OF`, `sysKey`; tests/nav-aliases.test.js):
 

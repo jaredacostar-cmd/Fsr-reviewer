@@ -36,6 +36,20 @@ test('css: at a development, Network leaves out the Peel-wide water facilities a
   assert.match(src('css/app.css'), /#analysis\.site-scope #pane-svc-netbar, #analysis\.site-scope #pane-wfac, #analysis\.site-scope #pane-hydro \{ display: none; \}/);
 });
 
+test('the workbook at a development leaves out the Peel-wide panes Network hides there (the Water sheet read #wfac-body)', () => {
+  const ex = src('js/exports.js'), off = /const OFF_AT_SITE = '([^']+)';/.exec(ex);
+  assert.ok(off, 'OFF_AT_SITE');
+  const rule = /\n(#analysis\.site-scope #pane-svc-netbar[^{]*)\{ display: none; \}/.exec(src('css/app.css'))[1].split(',').map(x => x.trim());
+  const sels = off[1].split(',').map(x => x.trim());
+  assert.deepEqual(sels, ['#analysis.site-scope #pane-wfac', '#analysis.site-scope #pane-hydro']);
+  for (const x of sels) assert.ok(rule.includes(x), `${x}: hidden on screen as well`);
+  assert.match(ex, /const tables = \[\.\.\.body\.querySelectorAll\('table'\)\]\.filter\(t => !t\.closest\(`\[hidden\], \$\{OFF_AT_SITE\}`\)\);/);
+  // (the Water sheet's facilities table is inside #pane-wfac; at Peel it is in the sheet, Network's now)
+  assert.match(ex, /\['Existing water facilities', '#wfac-body'\]/);
+  const i = HTML.indexOf('id="pane-wfac"'), j = HTML.indexOf('id="wfac-body"');
+  assert.ok(i > 0 && j > i && j < HTML.indexOf('</section>', i), '#wfac-body in #pane-wfac');
+});
+
 test('sections, labs, names: no Allocations or Model checks section; the hydraulic check is Network’s', () => {
   globalThis.PeelPanel = { get: () => null };
   delete require.cache[require.resolve('../js/sections.js')];
@@ -60,7 +74,7 @@ test('Allocations recorded: rendered when Capacity is the sub-view (its full-tab
 });
 
 // js/demand-ui.js in a vm: two plants, two allocations (one ahead of approval).
-function loadDemandUI({ model = true, allocations } = {}) {
+function loadDemandUI({ model = true, allocations, drawn } = {}) {
   const docL = {}, store = { allocations: allocations || { a: { units: 120, date: '2026-09-01', ref: 'R-1' }, b: { units: 40, date: '2026-10-01' } } };
   const el = { addEventListener: () => {} };
   const U = { $: () => el, esc: s => String(s).replace(/</g, '&lt;'), fmtNum: n => String(Math.round(n)), fmt1: n => n.toFixed(1), skel: t => t, store: { get: (k, d) => (k in store ? store[k] : d), set: (k, v) => { store[k] = v; } }, dot: () => '', roundPop: n => n, hlP: h => `<p>${h}</p>`, isSmallSystem: c => c < 10, roomWords: v => String(v) };
@@ -75,7 +89,8 @@ function loadDemandUI({ model = true, allocations } = {}) {
     PeelSvcData: { PLANT_SHORT: { Lakeview: 'G.E. Booth', Clarkson: 'Clarkson', Inglewood: 'Inglewood' } },
     PeelPanel: { chip: s => `<span class="pnl-chip t-${s.tone}">${s.text}</span>`, kv: (l, v, t) => ({ html: `<div class="pnl-kv"><span>${l}</span><span${t ? ` class="t-${t}"` : ''}>${v}</span></div>`, kv: true }) },
   };
-  const document = { addEventListener: (t, f) => { (docL[t] = docL[t] || []).push(f); }, querySelector: () => el };
+  // (drawn: the folds on screen, the map's and the page's; without it the document has no querySelectorAll)
+  const document = { addEventListener: (t, f) => { (docL[t] = docL[t] || []).push(f); }, querySelector: () => el, ...(drawn ? { querySelectorAll: s => (s === '#pnl-alloc-rec' ? drawn : []) } : {}) };
   const ctx = { window, document, module: { exports: {} } }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/demand-ui.js'), ctx);
   return { DU: ctx.module.exports, fire: (t, e) => (docL[t] || []).forEach(f => f(e)) };
@@ -97,6 +112,13 @@ test('Allocations recorded: a fold of Capacity’s panel, closed unless an old l
   fire('toggle', { target: { id: 'pnl-alloc-rec', open: false } }); assert.equal(DU.allocFold().open, false);
   fire('toggle', { target: { id: 'pnl-alloc', open: true } }); assert.equal(DU.allocFold().open, false, 'another fold leaves it');
   fire('toggle', { target: { id: 'pnl-alloc-rec', open: true } }); assert.equal(DU.allocFold().open, true);
+  // The link applied again (a saved view, a data-at svc:alloc) after the reader closed a drawn fold: it opens
+  // again, both copies (the map's and the page's); the toggle that follows records it.
+  const drawn = [{ id: 'pnl-alloc-rec', open: false }, { id: 'pnl-alloc-rec', open: false }], L2 = loadDemandUI({ drawn });
+  L2.DU.openAllocFold(); L2.fire('toggle', { target: drawn[0] });
+  assert.deepEqual(drawn.map(d => d.open), [true, true]); assert.equal(L2.DU.allocFold().open, true);
+  drawn[0].open = false; L2.fire('toggle', { target: drawn[0] });
+  assert.equal(L2.DU.allocFold().open, false, 'closed again by the reader: a redraw (a System tap) keeps it closed');
   // None recorded: it says how to record one; no servicing model: no fold.
   f = loadDemandUI({ allocations: {} }).DU.allocFold();
   assert.equal(f.title, 'Allocations recorded (0)');
@@ -194,7 +216,17 @@ test('Records › Data checks, Servicing model list: a row a comparison with its
   assert.equal(cells[2][1], 'South Peel maximum day 612.4 of 1100.0 ML/d rated (incl. York supply)');
   assert.equal(cells[3][1], 'largest difference 3.4%, close'); assert.match(rows[3].html, /<span class="t-tight">/);
   assert.equal(cells[4][1], 'the report’s 3 stations against the open layer');
-  assert.ok(rows.every(r => r.kv && !r.attrs), 'kv rows, no attrs: a page leaves them as they are');
+  // Each row opens the full table at its comparison (the Model checks rows did; the plain kv lines did nothing).
+  assert.ok(rows.every(r => r.kv && r.attrs['data-full-table'] === 'records' && r.attrs['data-ft-go']), 'kv rows, each a jump into the full table');
+  assert.deepEqual(plain(rows.map(r => r.attrs['data-ft-go'])), ['2020 Master Plan vs this tracker', '2025 annual reports vs.', 'Reported 2025 production', 'Plant flow: Ministry data', 'Pumping stations: open GIS layer', 'Caledon groundwater systems']);
+  // (each names its section's own heading in the full table)
+  assert.match(src('js/svc-plants.js'), /<h3 class="svc-sub">2025 annual reports vs\. the model <span/);
+  assert.match(src('js/water-tab.js'), /<h3 class="svc-sub">Reported 2025 production <span[\s\S]*<h3 class="svc-sub">Caledon groundwater systems <span/);
+  assert.match(src('js/plant-flows.js'), /<h3 class="sub-title">Plant flow: Ministry data against the Region's annual reports<\/h3>\n\s*<table/);
+  assert.match(src('js/ww-events.js'), /<h3 class="sub-title">Pumping stations: open GIS layer against the collection system report<\/h3>/);
+  // (the roster has no table under its heading: the full table finds such a section by its heading, js/panel.js)
+  assert.match(src('js/panel.js'), /const goTo = go => [^\n]*\|\| headNamed\(g\); if \(j\) jumpTo\(j\.at\); \}\);/);
+  assert.match(PN.html({ key: 'records:checks', lists: [{ title: 'Servicing model', rows, total: rows.length }] }), /<li class="pnl-row kv" data-full-table="records" data-ft-go="Reported 2025 production" tabindex="0" role="button">/);
   // Design flows: the way to the factors; the gear page's two checks only once their data is in.
   const d = loadCapacity({ PeelPanel: PN, PeelApp: { state: { svcModel: { mode: 'design', plantCap: () => ({ f: 1 }) }, reports } }, ...SDs }).checksRows();
   assert.match(d[1].html, /design flows: the capacity check shows the factors/);
@@ -251,8 +283,61 @@ test('Records › Data checks on a page, and once the model lands', () => {
   const r = { attrs: { 'data-ws-page': 'outlets', title: 'Review outlets' }, html: 'x' };
   assert.equal(toMap('data', r), r, 'a data-ws-page row is left as it is');
   assert.deepEqual(toMap('tight', { attrs: { 'data-ss': 'plant:Lakeview', title: 't' }, html: 'y' }).attrs, { 'data-ws-go': 'tight', 'data-ws-ss': 'plant:Lakeview', title: 't' }, 'a scope row still opens the map');
-  // The Servicing model group fills in when the model is built (Peel or an area; at a development Records is its files).
-  assert.match(src('js/svc-tab.js'), /if \(AT\(\)\.getFootTab\(\) === 'dca'\) DCAT\(\)\.renderDca\(\);\n[^\n]*\n[^\n]*\n {4}if \(!p && AT\(\)\.getFootTab\(\) === 'records' && root\.PeelRecordsTab\) root\.PeelRecordsTab\.render\(\);/);
+  // The Servicing model group fills in when the model is built (Peel or an area; at a development Records is its files),
+  // and with another tab open its panel is stored all the same: Reference › Data checks reads it (a stale group
+  // there kept the loading line, or the last Scenario's factors).
+  assert.match(src('js/svc-tab.js'), /if \(AT\(\)\.getFootTab\(\) === 'dca'\) DCAT\(\)\.renderDca\(\);\n[^\n]*\n[^\n]*\n[^\n]*\n {4}if \(!p && root\.PeelRecordsTab\) \{ if \(AT\(\)\.getFootTab\(\) === 'records'\) root\.PeelRecordsTab\.render\(\); else if \(root\.PeelPanel && root\.PeelRecordsTab\.checksPanelSpec\) root\.PeelPanel\.set\('records:checks', root\.PeelRecordsTab\.checksPanelSpec\(\)\); \}/);
+  // (Reference › Data checks takes the stored panel while it is the area's: js/sections.js areaPanel)
+  const sec = src('js/sections.js');
+  assert.match(sec, /\{ id: 'checks', title: 'Data checks', tab: 'records', keys: \['records:checks'\] \}/);
+  assert.match(sec, /if \(e && e\.spec && e\.scope === 'area'\) return e\.spec;/);
+});
+
+// js/ws-pages.js in a vm: a page built from the stored panels (PeelPanel.get), with the page's own modules stubbed.
+function loadPages(window) {
+  const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: () => null, querySelectorAll: () => [], getElementById: () => null, addEventListener() {}, dispatchEvent() {} };
+  Object.assign(window, { document, PeelUtil: { esc: x => String(x), fmtNum: n => String(n), fmt1: n => n.toFixed(1) } }, window);
+  const ctx = { window, document, setTimeout: () => 0, clearTimeout() {}, URLSearchParams }; ctx.globalThis = ctx;
+  vm.runInNewContext(src('js/ws-pages.js'), ctx);
+  return window.PeelWsPages;
+}
+
+test('Reference › Data checks on a page: its Servicing model rows and See all open the map’s full table at their comparison', () => {
+  const PN = require('../js/panel.js');
+  const rows = ['2020 Master Plan vs this tracker', '2025 annual reports vs.', 'Reported 2025 production', 'Plant flow: Ministry data', 'Pumping stations: open GIS layer', 'Caledon groundwater systems'].map(go => ({ ...PN.kv(go, 'x'), attrs: { 'data-full-table': 'records', 'data-ft-go': go } }));
+  const checks = { head: {}, answer: 'a', figures: [], method: '', sources: '',
+    lists: [{ title: 'Servicing model', rows, total: 6, seeAll: { 'data-full-table': 'records', 'data-ft-go': '2020 Master Plan vs this tracker' } }, { title: 'Where developments discharge', rows: [{ attrs: { 'data-ws-page': 'outlets', title: 'Review outlets' }, html: 'r' }], total: 1 }] };
+  const secs = [{ id: 'sources', title: 'Data sources', page: 'data' }, { id: 'checks', title: 'Data checks', tab: 'records', keys: ['records:checks'] }];
+  const P = loadPages({ PeelPanel: { get: () => null, scenarioChip: () => '' }, PeelWorkspaces: { BY_ID: { tight: {}, projects: {} } }, PeelApp: { state: {} },
+    PeelSections: { WORKSPACES: { reference: { secs } }, areaPanel: k => (k === 'records:sources' ? { head: {}, answer: 's', lists: [] } : checks), wsSpecFor: () => checks } });
+  P.sectionAt('reference', 'checks');
+  const [svc, out] = P.build('data').lists;
+  // (Reference has no map workspace: a data-ws-go row would do nothing; data-at + data-full-table opens the map there)
+  assert.deepEqual(plain(svc.rows.map(r => r.attrs)), rows.map(r => ({ 'data-at': 'records:checks', 'data-full-table': 'records', 'data-ft-go': r.attrs['data-ft-go'] })));
+  assert.deepEqual(plain(svc.see), { 'data-at': 'records:checks', 'data-full-table': 'records', 'data-ft-go': '2020 Master Plan vs this tracker' });
+  assert.match(P.listHTML(svc), /data-ft-go="2020 Master Plan vs this tracker">See all \(6\) →<\/button>/, 'the sixth (the Caledon wells) reachable from the page');
+  assert.deepEqual(plain(out.rows[0].attrs), { 'data-ws-page': 'outlets', title: 'Review outlets' }, 'a page row is left as it is');
+  // (a page link to the map's tools: the full map first, then its own handler; js/workspaces.js MAP_LINK)
+  assert.match(src('js/workspaces.js'), /const MAP_LINK = '\[data-at\], \[data-ss\], \[data-full-table\], \[data-trace\], \[data-mview\]';/);
+});
+
+test('the Servicing capacity page under a System: its header and figures count both systems (as Home’s figure); Soonest limits follows the System and names it', () => {
+  let sys = 'water';
+  const spec = s => ({ head: { status: { tone: 'over', text: `${s} over` }, identity: `Peel · ${s}` }, answer: `answer ${s}`, figures: [{ v: s, label: 'over capacity at build-out' }], lists: [{ title: 'Facilities', tools: `[seg ${s}]`, rows: [{ html: `row ${s}`, attrs: { 'data-ss': 'plant:Lakeview' } }], total: 1 }], folds: [], method: 'm', sources: 's' });
+  const asked = [];
+  const P = loadPages({ PeelPanel: { get: k => (k === 'svc:capacity' ? { scope: 'area', spec: spec(sys) } : null), scenarioChip: () => '' }, PeelWorkspaces: { BY_ID: { tight: { label: 'Servicing capacity' } } }, PeelAnalysisTabs: { getSys: () => sys },
+    PeelSvcCapacity: { collect: () => [], panelSpec: (rows, s) => { asked.push(s); return spec(s); } },
+    PeelApp: { state: { criteria: { wastewater: { avg: 290 }, water: { avg: 280, maxDay: 1.8 } }, servicing: { psAreas: [] }, muni: '' } } });
+  let m = P.build('tight');
+  assert.deepEqual(asked, ['both'], 'the header from both systems');
+  assert.equal(m.identity, 'Peel · both'); assert.equal(m.answer, 'answer both'); assert.equal(m.status.text, 'both over'); assert.equal(m.figures[0].v, 'both');
+  assert.equal(m.lists[0].title, 'Soonest limits: water'); assert.equal(m.lists[0].tools, '[seg water]'); assert.equal(m.lists[0].rows[0].html, 'row water');
+  sys = 'ww'; assert.equal(P.build('tight').lists[0].title, 'Soonest limits: wastewater');
+  sys = 'both'; asked.length = 0; m = P.build('tight');
+  assert.deepEqual(asked, [], 'at Both the stored panel is the page’s');
+  assert.equal(m.lists[0].title, 'Soonest limits'); assert.equal(m.identity, 'Peel · both');
+  // Capacity's panelSpec takes the System as asked (the map's panel: the one picked).
+  assert.match(src('js/svc-capacity.js'), /function panelSpec\(all, sys = sysNow\(\)\) \{\n {4}const now = MM\(\)\.THIS_YEAR, end = SP\(\)\.hz\.end;\n {4}const rows = sys === 'both' \? all : all\.filter\(r => r\.sys === sys\)/);
 });
 
 test('the Sources & checks gear page is gone: the Overview’s ⓘ link opens Records › Data checks, wherever it is drawn', () => {
@@ -268,34 +353,53 @@ test('the Sources & checks gear page is gone: the Overview’s ⓘ link opens Re
 
 // ---- Chunk 3: one System control (navigation-design §3.4, N-11), the lens sets it (AD-9), one sort vocabulary.
 // js/analysis-tabs.js in a vm (it reads the DOM and the store at load), with the window's other modules.
-function loadTabs(win = {}, stored = {}) {
+// (dom: what document.querySelectorAll finds for a selector, [] by default)
+function loadTabs(win = {}, stored = {}, dom = () => []) {
   const el = () => null, store = { get: (k, d) => (Object.prototype.hasOwnProperty.call(stored, k) ? stored[k] : d), set: () => {} };
-  const document = { querySelector: el, querySelectorAll: () => [], getElementById: el, addEventListener: () => {} };
+  const document = { querySelector: el, querySelectorAll: s => dom(s), getElementById: el, addEventListener: () => {} };
   const ctx = { window: { PeelUtil: { store }, document, ...win }, document, setTimeout: () => 0, module: { exports: {} } };
   ctx.globalThis = ctx;
   vm.runInNewContext(src('js/analysis-tabs.js'), ctx);
   return ctx.module.exports;
 }
 
-test('one System control: Both · Wastewater · Water, one on; a pick redraws Capacity, and DC projects once it has drawn', () => {
+test('one System control: Both · Wastewater · Water, one on; a pick redraws Capacity, and DC projects once it has drawn, when that is cheap or on screen', () => {
   const T = loadTabs();
   const seg = T.sysSeg();
   assert.match(seg, /^<div class="seg" role="group" aria-label="System">/);
   assert.deepEqual([...seg.matchAll(/data-sys="(\w+)"[^>]*>([^<]+)</g)].map(m => [m[1], m[2]]), [['both', 'Both'], ['ww', 'Wastewater'], ['water', 'Water']]);
   assert.equal((seg.match(/class="btn small on"/g) || []).length, 1, 'exactly one on');
   assert.match(seg, /class="btn small on" data-sys="both" aria-pressed="true">Both</);
-  // A pick: Capacity redraws every time; DC projects only once it has drawn (a tap on Capacity never builds
-  // the DC impact model); a quiet set (a link, before the panels draw) redraws neither.
-  const calls = [], W = { PeelSvcCapacity: { render: () => calls.push('capacity') }, PeelDcProjects: { shown: () => false, refresh: () => calls.push('dcproj') } };
-  const T2 = loadTabs(W);
+  // A pick: Capacity redraws every time; DC projects only once it has drawn, and only while its DC impact
+  // model is worked out for this scenario or its panel is on screen (a tap on Capacity, or a lens, never
+  // builds that model: it walks every sewer pipe); else its stored panel goes, for the next Capital open or
+  // page to draw. A quiet set (a link, before the panels draw) redraws neither.
+  let current = null, onScreen = [];
+  const calls = [], W = { PeelSvcCapacity: { render: () => calls.push('capacity') }, PeelDcProjects: { shown: () => false, refresh: () => calls.push('dcproj') },
+    PeelDcImpact: { current: () => current }, PeelPanel: { sync: () => {}, clear: k => calls.push(`clear ${k}`) } };
+  const T2 = loadTabs(W, {}, s => (s === '[data-dcproj-sort], [data-dcproj-back]' ? onScreen : []));
   T2.setSys('water'); assert.deepEqual(calls, ['capacity']);
   assert.match(T2.sysSeg(), /class="btn small on" data-sys="water" aria-pressed="true">Water</);
   calls.length = 0; W.PeelDcProjects.shown = () => true;
-  T2.setSys('wastewater'); assert.deepEqual(calls, ['capacity', 'dcproj']); assert.equal(T2.getSys(), 'ww');
+  T2.setSys('wastewater'); assert.deepEqual(calls, ['capacity', 'clear dca:dcproj'], 'drawn once, the model since out of date, off screen: not rebuilt in the tap'); assert.equal(T2.getSys(), 'ww');
+  calls.length = 0; onScreen = [{ getClientRects: () => [] }];
+  T2.setSys('water'); assert.deepEqual(calls, ['capacity', 'clear dca:dcproj'], 'its Sort in a hidden tab is not on screen');
+  calls.length = 0; onScreen = [{ getClientRects: () => [{}] }];
+  T2.setSys('ww'); assert.deepEqual(calls, ['capacity', 'dcproj'], 'on screen: redrawn');
+  calls.length = 0; onScreen = []; current = {};
+  T2.setSys('water'); assert.deepEqual(calls, ['capacity', 'dcproj'], 'the model worked out for this scenario: cheap, redrawn');
   calls.length = 0;
   T2.setSys('both', { quiet: true }); assert.deepEqual(calls, []); assert.equal(T2.getSys(), 'both');
   // A tap anywhere (the map's panels, a page's sections) and the share link follows.
   assert.match(src('js/analysis-tabs.js'), /document\.addEventListener\('click', e => \{ const b = e\.target\.closest && e\.target\.closest\('\[data-sys\]'\); if \(b\) \{ setSys\(b\.dataset\.sys\); Sh\(\)\.viewLink\.write\(\); \} \}\);/);
+});
+
+test('openTab with a sub-view another tab now holds: that tab is the one picked (as a data-at link)', () => {
+  const T = loadTabs({ PeelPanel: { sync: () => {} } });
+  T.openTab('svc', 'checks');
+  assert.equal(T.getFootPref(), 'records'); assert.equal(T.getRSub(), 'checks');
+  T.openTab('svc', 'network'); assert.equal(T.getFootPref(), 'svc');
+  T.openTab('dev'); assert.equal(T.getFootPref(), 'overview');
 });
 
 test('Servicing › Capacity reads the one System: its list, its counts and its header name the system; the full table keeps both', () => {
