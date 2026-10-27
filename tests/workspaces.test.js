@@ -43,9 +43,13 @@ test('1. each chip opens the stated tab and scope (and the layer preset)', () =>
   }
   assert.equal(W.plan('coming').fold, 'period', 'What’s coming opens the Forecast at By period'); assert.equal(W.plan('outlook').fold, null);
   assert.equal(W.plan('eaflow').fold, 'eaflow', 'EA to construction opens Capital › EAs at its fold'); assert.equal(W.plan('projects').fold, null);
-  // With a development open: Check a site → Overview at the site; Review an FSR → Servicing at the site
-  // with the FSR cross-check; area chips close the site.
-  assert.deepEqual(plain(['site', 'fsr'].map(id => { const p = W.plan(id, { site: true }); return [p.tab, p.scope, p.fsr]; })), [['overview', 'site', false], ['svc', 'site', true]]);
+  // With a development open: Check a site → Overview at the site; Review an FSR → Servicing › FSR review at
+  // the site (navigation phase 5: its own view, siteSub); without one, its Find step on Network; area chips
+  // close the site.
+  assert.deepEqual(plain(['site', 'fsr'].map(id => { const p = W.plan(id, { site: true }); return [p.tab, p.sub, p.scope]; })), [['overview', '', 'site'], ['svc', 'fsr', 'site']]);
+  assert.equal(W.plan('fsr', {}).sub, 'network', 'the Find step');
+  assert.equal(W.plan('fsr', { site: true }).source, 'Review an FSR · from Servicing › FSR review');
+  assert.equal(W.sourceText('fsr', 'svc:fsr'), 'Review an FSR · Servicing › FSR review');
   assert.equal(W.plan('tight', { site: true }).closeScopes, true);
   assert.equal(W.plan('study').lasso, true);
   // The header names the source tab.
@@ -188,30 +192,54 @@ test('2. workspace figures equal full-map figures (Home and This week read the P
   assert.equal(B.override('overview:', 'dev:x'), null);
 });
 
-test('Review an FSR at a site: the cross-check is an open fold of the Servicing panel', () => {
+// Navigation phase 5 (owner decision 4): FSR review is a development's Servicing view, the one host of the
+// cross-check (the workspace's fsrSpec override and the site bar's box are gone).
+test('Review an FSR at a site: Servicing › FSR review, the one host', () => {
   const { W: B, PN, window } = loadBrowser(AREA);
-  const mounted = [];
+  const subs = [];
   window.DevScope = { current: () => ({ key: 'x', title: '0 HERITAGE RD' }), close() {} };
-  window.PeelFsrCheck = { mount: (box, p) => mounted.push(p.key) };
-  // Servicing at the site, as js/svc-capacity.js sets it (its own folds and onMount kept).
-  let own = 0;
-  PN.set('svc:network', { head: { name: '0 HERITAGE RD' }, answer: 'Water from Pressure zone 6.', lists: [{ title: 'Path', rows: [{ html: 'Block 15' }], total: 1 }], folds: [{ title: 'Ground', html: '<div class="g"></div>' }], onMount: () => { own++; } });
+  window.PeelAnalysisTabs = { setSub: (t, v) => subs.push([t, v]), setFootPref() {}, showFootTab() {}, openFold() {}, getFootTab: () => 'svc', TABSUBS: { svc: { get: () => 'fsr' } } };
   B.go('fsr');
-  const spec = B.override('svc:network', 'dev:x');
-  assert.equal(spec.answer, 'Water from Pressure zone 6.', 'the panel itself is unchanged');
-  assert.deepEqual(plain(spec.folds.map(f => [f.title, !!f.open])), [['FSR cross-check: the consultant\u2019s figures vs this app\u2019s', true], ['Ground', false]]);
-  assert.match(PN.html({ key: 'svc:network', ...spec }), /<details class="pnl-fold" data-sec="fold" open id="pnl-fsr"><summary>FSR cross-check[^<]*<\/summary><div><div class="fsr-box" data-pnl-fsrbox><\/div><\/div><\/details><details class="pnl-fold" data-sec="fold"><summary>Ground/);
-  const box = {}, host = { querySelector: s => (s === '[data-pnl-fsrbox]' ? box : null) };
+  assert.deepEqual(plain(subs), [['svc', 'fsr']], 'the chip opens Servicing › FSR review at the site');
+  assert.equal(B.override('svc:fsr', 'dev:x'), null, 'no workspace override: the view is the panel itself');
+  assert.equal(B.override('svc:network', 'dev:x'), null);
+  // The view's panel (js/fsr-check.js in node): the Network panel's answer, figures and lists, the form's
+  // fold and all seven things an FSR should cover, open; Copy the comparison and Print / PDF; its own full table.
+  const ctx = { module: { exports: {} }, PeelWsPages: { COVERAGE: require('../js/ws-pages.js').COVERAGE } }; ctx.globalThis = ctx;
+  vm.runInNewContext(src('js/fsr-check.js'), ctx);
+  const F = ctx.module.exports;
+  const net = { head: { name: '0 HERITAGE RD' }, answer: 'Water from Pressure zone 6.', figures: [{ v: '5.5', u: 'L/s', label: 'water, maximum day' }], lists: [{ title: 'The path', rows: [{ html: 'Block 15' }], total: 1 }], method: 'Flows at Peel design criteria.', sources: 'Pressure zones.' };
+  const spec = F.panelSpec({ key: 'x', title: '0 HERITAGE RD' }, net);
+  assert.deepEqual(plain(spec.folds.map(f => [f.title, !!f.open])), [['The consultant\u2019s figures against this app\u2019s', true], ['What the FSR should cover', true]]);
+  assert.equal(spec.lists, net.lists); assert.equal(spec.answer, net.answer); assert.equal(spec.figures, net.figures); assert.equal(spec.head, net.head);
+  const cov = spec.folds[1].html;
+  assert.equal((cov.match(/<li class="pnl-kv">/g) || []).length, 7, 'all seven, the two an engineer reviews too');
+  for (const t of ['Local sewer and watermain capacity', 'Fire flow (Fire Underwriters Survey) and pressures']) assert.ok(cov.includes(t), t);
+  assert.match(cov, /<span class="t-over">By an engineer<\/span>/);
+  assert.match(spec.method, /^Flows at Peel design criteria\. What the FSR should cover: Region of Peel, Functional Servicing Report Requirements \(November 2009\)/);
+  assert.deepEqual(plain(spec.foot), { primary: { label: 'Copy the comparison', attrs: { 'data-ws-fsrcopy': '' } }, secondary: [{ label: 'Print / PDF', attrs: { 'data-ws-fsrprint': '' } }] });
+  assert.equal(spec.widen, true);
+  const h = PN.html({ key: 'svc:fsr', ...spec });
+  assert.match(h, /<details class="pnl-fold" data-sec="fold" open id="pnl-fsr"><summary>The consultant[^<]*<\/summary><div><div class="fsr-box" data-pnl-fsrbox><\/div>/);
+  assert.doesNotMatch(h, /See all \(/);
+  // onMount puts the form in its box for the site (mount needs a document: a stub box records it).
+  const box = { dataset: {}, set innerHTML(v) { this.html = v; }, querySelector: () => null }, host = { querySelector: q => (q === '[data-pnl-fsrbox]' ? box : null) };
+  ctx.document = {}; ctx.PeelUtil = require('../js/util.js');
   spec.onMount(host);
-  assert.deepEqual(mounted, ['x'], 'the form mounts for the open site');
-  assert.equal(own, 1, 'the panel\u2019s own async parts still fill');
-  // Only in Review an FSR, and only at the site it was set for.
-  assert.equal(B.override('svc:network', 'dev:other'), null);
-  B.go('site'); assert.equal(B.override('svc:network', 'dev:x'), null);
-  // The form's events work in any .fsr-box (the panel's or the site bar's); mount() keeps drafts.
+  assert.equal(box.dataset.pkey, 'x', 'the form mounts for the open site');
+  assert.match(box.html, /data-fc="population"/);
+  // The form's events work in any .fsr-box (the view's, on the map or its page); mount() keeps drafts.
   const f = src('js/fsr-check.js');
-  assert.match(f, /closest\('\.fsr-box \[data-fc-run\], \.fsr-box \[data-fc-print\], \.fsr-box \[data-fc-clear\], #site-bar-fsr/);
+  assert.match(f, /closest\('\.fsr-box \[data-fc-run\], \.fsr-box \[data-fc-print\], \.fsr-box \[data-fc-clear\]'\)/);
+  assert.doesNotMatch(f, /site-bar-fsr|function toggleFor/);
   assert.match(f, /function mount\(box, p\) \{[\s\S]*?if \(_last && _last\.key === p\.key && _drafts\[p\.key\]\) runCheck\(box\);/);
+  // Set beside Network (js/svc-capacity.js), and the page of Review an FSR reads the same spec: the site's
+  // page at Servicing › FSR review (js/sections.js viewOf, navigation phase 5's S12).
+  assert.match(src('js/svc-capacity.js'), /PN\.set\('svc:network', spec\);\n\s+if \(FC && FC\.panelSpec\) PN\.set\('svc:fsr', FC\.panelSpec\(p, spec\)\);/);
+  assert.match(src('js/ws-pages.js'), /function fsr\(\) \{\n\s+if \(!devNow\(\)\) return find\('fsr'\);\n\s+return site\('fsr'\);/);
+  assert.deepEqual(plain(require('../js/sections.js').viewOf('servicing', 'fsr').keys), ['svc:fsr']);
+  // Copy the comparison reads the results beside the button: the map's panel or the page.
+  assert.match(src('js/workspaces.js'), /const r = \(fc\.closest\('#home, #analysis'\) \|\| document\)\.querySelector\('\[data-fc-results\]'\);/);
 });
 
 test('picking a chip closes the map\u2019s Layers panel; the full map gets it back as it was', () => {

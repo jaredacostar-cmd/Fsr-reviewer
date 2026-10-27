@@ -464,7 +464,7 @@
         ${newer ? `<p class="small">Since then: <span class="d">${esc(newer.m.date)}</span> · ${esc(newer.s.kind)}${newer.s.verdict ? ` — ${esc(newer.s.verdict)}` : ''} · <span class="muted">${esc(newer.it.title)}</span></p>` : ''}
         ${all.requirements.length ? `<div class="chips small"><span class="ck">Requirements on record</span>${chips(all.requirements)}</div>` : ''}
         ${all.concerns.length ? `<div class="chips small"><span class="ck">Issues raised</span>${chips(all.concerns, true)}</div>` : ''}
-        <p class="small muted">${list.length > 1 ? `${fmtNum(list.length)} council and committee items since ${esc(list[list.length - 1].m.date.slice(0, 4))}` : 'One council or committee item'} — <button type="button" class="btn small link" data-open="dev-hist">all in History</button>. ${fileStatus}</p>
+        <p class="small muted">${list.length > 1 ? `${fmtNum(list.length)} council and committee items since ${esc(list[list.length - 1].m.date.slice(0, 4))}` : 'One council or committee item'} — <button type="button" class="btn small link" data-dt-open="devtab-hist">all in History</button>. ${fileStatus}</p>
       </div>`;
   }
 

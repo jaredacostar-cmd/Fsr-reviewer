@@ -131,10 +131,18 @@
     const bar = $('#presentation-bar'); if (!bar) return;
     const OT = window.PeelOverviewTab;
     if (!presRendering && OT && OT.renderOverview) { presRendering = true; try { OT.renderOverview(); } finally { presRendering = false; } }
-    const hl = document.querySelector('#ov-body .ov-top .headline');
-    const tiles = document.querySelectorAll('#ov-body .ov-tiles:not(.ov-flow) .ov-tile');
-    $('#pres-hl').innerHTML = hl ? hl.innerHTML : '';
-    $('#pres-tiles').innerHTML = [...tiles].slice(0, 4).map(t => t.outerHTML).join('');
+    // (a development in scope: its Overview panel's answer and first four figures; navigation phase 5 retired
+    // the card the tiles were read from)
+    const p = window.PeelDevVerdict && window.PeelDevVerdict.scopedDev(), e = p && window.PeelPanel && window.PeelPanel.get('overview:');
+    if (e && e.spec && e.scope === `dev:${p.key}`) {
+      $('#pres-hl').innerHTML = `<strong>${esc(p.title)}</strong> · ${e.spec.answer || ''}`;
+      $('#pres-tiles').innerHTML = (e.spec.figures || []).filter(Boolean).slice(0, 4).map(f => `<div class="ov-tile"><b>${f.v}</b><span class="ov-u">${esc(f.u || '')}</span><span class="ov-l">${esc(f.label)}</span></div>`).join('');
+    } else {
+      const hl = document.querySelector('#ov-body .ov-top .headline');
+      const tiles = document.querySelectorAll('#ov-body .ov-tiles:not(.ov-flow) .ov-tile');
+      $('#pres-hl').innerHTML = hl ? hl.innerHTML : '';
+      $('#pres-tiles').innerHTML = [...tiles].slice(0, 4).map(t => t.outerHTML).join('');
+    }
     const snap = App().state.snapshot, U = window.PeelUtil;
     $('#pres-note').textContent = `${U.SCREEN_LINE} · Data ${snap && snap.generatedAt ? snap.generatedAt.slice(0, 10) : 'as loaded'} · ${U.UNOFFICIAL}`;
   }

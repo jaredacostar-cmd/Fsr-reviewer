@@ -164,7 +164,7 @@
     // To target (SPEC §2, "To 2051"): a growth target in units less the layers applied for; a target
     // that counts every home (scope total) holds existing homes too, so it draws no to-target part.
     toTarget = new Map(R().vsTarget(r, targets && targets.targets, munisAlloc()).rows.filter(x => x.compared === 'units' && x.target.scope !== 'total' && x.gap > 0 && !x.target.covers).map(x => [x.node.id, x.gap]));
-    body.innerHTML = `<div class="pt-head"><p class="small">The developments shown, by where they are: Peel, municipality, plan, sub-area. People at Peel design criteria, counting ${esc(BASIS[basis] || 'all units')} (the Overview's basis). Every row equals the sum of the rows under it (Check). Bars: units by layer, then what a published target allows beyond them (dashed).${App().state.treeGrouped ? ' Grouping: tree.' : ' Grouping: previous (Settings › Counting).'}</p>
+    body.innerHTML = `<div class="pt-head"><p class="small">The developments shown, by where they are: Peel, municipality, plan, sub-area. People at Peel design criteria, counting ${esc(BASIS[basis] || 'all units')} (the Overview's basis). Every row equals the sum of the rows under it (Check). Bars: units by layer, then what a published target allows beyond them (dashed).${App().state.treeGrouped ? ' Grouping: tree.' : ' Grouping: by address (the tree counts did not load).'}</p>
         <p><button type="button" class="btn small" data-pt-wide aria-pressed="${wide}">${wide ? 'Fewer columns' : 'All columns'}</button> <button type="button" class="btn small" data-pt-empty aria-pressed="${showEmpty}">${showEmpty ? 'Hide empty plans' : `Show empty plans (${[...r.nodes.values()].filter(isEmpty).length})`}</button> <button type="button" class="btn small" data-pt-csv>Download CSV</button></p></div>
       ${tableHTML(r)}${notesHTML(r)}
       ${targetHTML(r)}
@@ -277,7 +277,7 @@
     const rows = csvRows(compute()); if (!rows.length) return;
     const cols = Object.keys(rows[0]);
     const cell = v => root.PeelUtil.csvCell(v);
-    root.PeelExports.download('peel-by-plan.csv', CSV_DISCLAIMER + `# Basis: ${BASIS[DU().demandBasis()] || 'all units'}; grouping: ${App().state.treeGrouped ? 'tree' : 'previous'}\n` + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
+    root.PeelExports.download('peel-by-plan.csv', CSV_DISCLAIMER + `# Basis: ${BASIS[DU().demandBasis()] || 'all units'}; grouping: ${App().state.treeGrouped ? 'tree' : 'address (tree counts not loaded)'}\n` + [cols.join(','), ...rows.map(r => cols.map(c => cell(r[c])).join(','))].join('\n'), 'text/csv');
   }
   // Workbook sheet "By plan": the same rows.
   function sheetRows() {

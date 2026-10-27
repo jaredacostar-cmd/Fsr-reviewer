@@ -101,7 +101,7 @@ test('pathLine: from the site, the stations in flow order with their firm %, the
   assert.equal(tor.tone, 'ok');
   assert.equal(pathLine({ stations: [], plant: 'Clarkson', reserve: null, over: false }).text, 'Site → Clarkson', 'no capacity figure: the plant named, no reserve');
   assert.equal(pathLine({ stations: [{ name: 'Lisgar', pct: 50 }], plant: null, toronto: false }), null, 'no plant, no path line');
-  // On a development's Overview (the map and the site page's Summary): under Wastewater, Review → only
+  // On a development's Overview (the map and the site page's Overview): under Wastewater, Review → only
   // when the review queue lists it, and only once the DC impact model is worked out (never built here).
   const o = fs.readFileSync(path.join(JS_DIR, 'overview-tab.js'), 'utf8');
   assert.match(o, /stations: f\.sps\.filter\(s => s\.firm > 0\)\.map\(s => \(\{ name: DD\(\)\.psName\(s\.a\), pct: Math\.round\(s\.wet \/ s\.firm \* 100\) \}\)\), plant, toronto: f\.pl === 'Toronto', reserve: f\.cap \? fmt1\(f\.reserve\) : null, over: !!\(f\.cap && f\.reserve <= 0\), outlet: DO && DO\.recordOf \? \(DO\.recordOf\(p\) \|\| \{\}\)\.mode : null/);
@@ -213,19 +213,28 @@ test('scopedDev: prefers DevScope.current(), falls back to currentProject', () =
   assert.match(m[0], /return DN\(\)\.getCurrentProject\(\)/);
 });
 
-test('verdict card: key numbers (homes, jobs, flows), one status sentence, four tab-linked verdict lines', () => {
-  const m = /function renderVerdictCard\(p\) \{[\s\S]*?\n  \}/.exec(APP);
-  assert.ok(m, 'renderVerdictCard not found');
+// Navigation phase 5 retired the full table's verdict card (§5 row 119): its key numbers are the Overview's
+// figures and At a glance, its status sentence the About fold's, its verdicts the Servicing rows and its next
+// milestone a Timing row; its four flows are Servicing › Network's.
+test('a development\'s Overview: the key numbers in its figures and At a glance, one status sentence, the verdicts on the Servicing rows and the next milestone under Timing', () => {
+  const m = /function renderSiteOverview\(p\) \{[\s\S]*?\n  \}/.exec(APP);
+  assert.ok(m, 'renderSiteOverview not found');
   const src = m[0];
-  for (const label of ['units', 'people', 'jobs', 'floor area', 'water max day', 'average dry weather', 'peak dry weather', 'peak wet weather']) assert.match(src, new RegExp(label), `missing key number: ${label}`);
-  assert.match(src, /firstSentence\(st\.why\)/, 'status sentence must derive from statusOf(p).why');
   assert.match(src, /verdictWater\(/, 'water verdict from per-tab brief logic');
   assert.match(src, /verdictWastewater\(/, 'wastewater verdict from per-tab brief logic');
   assert.match(src, /verdictDc\(/, 'DC verdict from per-tab brief logic');
   assert.match(src, /verdictMilestone\(/, 'milestone verdict');
-  // Stage 2: water and wastewater are one Servicing tab; both lines open Servicing › Network.
-  for (const tab of ["go('svc:network', 'Servicing')", "go('dca'"]) assert.match(src, new RegExp(tab.replace(/[()']/g, '\\$&')), `missing tab link ${tab}`);
-  assert.match(src, /data-ov-tab="records">Files &amp; history \(Records\) →/, "milestone line opens the development's files (Records, SPEC §5)");
+  const g = /function atGlance\([\s\S]*?\n  \}/.exec(APP);
+  assert.ok(g, 'atGlance not found');
+  for (const label of ["'units'", "'people'", "'jobs'", 'floor area']) assert.match(g[0], new RegExp(label), `missing key number: ${label}`);
+  assert.match(/function aboutBlockHTML\([\s\S]*?\n  \}/.exec(APP)[0], /st\.why/, 'status sentence must derive from statusOf(p).why (the About fold, open)');
+  const sp = /function sitePanelSpec\(p, o\) \{[\s\S]*?\n  \}/.exec(APP)[0];
+  assert.match(sp, /PN\.kv\('Next milestone'/, 'the next milestone under Timing');
+  // Stage 2: water and wastewater are one Servicing tab; both rows open Servicing › Network, DC works Capital.
+  for (const at of ["'svc:network'", "'dca:timing'"]) assert.match(sp, new RegExp(`'data-at': ${at}`), `missing tab link ${at}`);
+  const net = /function renderSiteNetwork\(p\) \{[\s\S]*?\n  \}/.exec(APP)[0];
+  for (const label of ['water, maximum day', 'average dry weather', 'peak dry weather', 'peak wet weather']) assert.match(net, new RegExp(label, 'i'), `missing flow: ${label}`);
+  // (the header's "n files · history ›" opens the development's files on every tab: tests/chips.test.js)
 });
 
 test('growth chart tooltip: delegated to .growth-chart so both sub-views keep it', () => {
@@ -279,7 +288,7 @@ test('scoped renders: footer copies get prefixed ids (water, ww, demand, dc)', (
 });
 
 test('water trace button: output goes to the clicked container, labels stay in sync across copies', () => {
-  assert.match(APP, /const scope = b\.closest\('#scope-body, #pane-dev-body, #water-body'\) \|\| document;/);
+  assert.match(APP, /const scope = b\.closest\('#scope-body, \.pnl-host, #home, #water-body'\) \|\| document;/);
   assert.match(APP, /const tops = \[\.\.\.document\.querySelectorAll\(`\[data-wtrace="\$\{CSS\.escape\(p\.key\)\}"\]`\)\];/);
   assert.match(APP, /for \(const o of document\.querySelectorAll\('\.wtrace-out'\)\) o\.innerHTML = '';/);
 });

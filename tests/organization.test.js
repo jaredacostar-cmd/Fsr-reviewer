@@ -55,7 +55,7 @@ test('Records › Files: the tree, then the latest activity; Growth: the develop
   assert.match(w, /<small class="tr-sum">the estimate is on <b>\$\{esc\(e\.ref\)\}<\/b>/);
   assert.match(w, /const had = files\.find\(f => f\.p === p\);/, 'one estimate row per development');
   assert.match(src('js/workspaces.js'), /if \(pk && pk\.dataset\.wsTree\) \{ e\.preventDefault\(\); setMode\('full'\); pickDev\(pk\.dataset\.wsPick\); setTimeout\(\(\) => \{ const AT = root\.PeelAnalysisTabs; if \(AT && AT\.openTab\) AT\.openTab\('records', 'files'\);/);
-  // The site bar: "n links to check" opens the tree.
+  // The header's flags: "n links to check" opens the tree.
   assert.match(src('js/dev-detail.js'), /data-tree-check title="Files linked to this development by overlap only/);
   assert.match(src('index.html'), /<script src="js\/file-tree\.js\?v=__BUILD__"><\/script>/);
   assert.match(src('sw.js'), /'js\/file-tree\.js',/);
@@ -89,14 +89,18 @@ test('Help is a page in Home’s layout: start here by role, what each workspace
   assert.match(src('js/ws-pages.js'), /const help = \(\) => \(root\.PeelTips && root\.PeelTips\.helpPage \? root\.PeelTips\.helpPage\(\) : loading\('help', 'Loading…'\)\);/);
 });
 
-test('counting in one place: the Scenario control holds Units per development; the map loads say when the Stage filter limits them', () => {
+test('counting in one place: the Scenario control names Units per development (the tree count; the Previous switch is retired, owner decision 14); the map loads say when the Stage filter limits them', () => {
   const B = require('../js/layer-bar.js');
   const base = { basis: 'all', flows: '2025 metered', md: 'design', outside: 'nearest', year: 2026, yearDefault: 2026, criteria: 0, count: 'tree count' };
   assert.equal(B.scenarioChipText(B.scenarioSettings({ ...base, loads: 'every stage' })), 'Default');
   const lim = B.scenarioSettings({ ...base, loads: 'built + committed only (Stage filter)' });
   assert.equal(B.scenarioChipText(lim), '1 change', 'a Stage filter that drops a stage from the loads is a change, said in the chip');
   assert.match(B.scenarioListHTML(lim), /Map loads from<\/span> <b>built \+ committed only \(Stage filter\)<\/b>/);
-  assert.match(src('js/svc-tab.js'), /\$\{root\.PeelTreeCounts && root\.PeelTreeCounts\.settingsHTML \? root\.PeelTreeCounts\.settingsHTML\(\) : ''\}/);
+  // (removed by design: the switch; the row it fed is asserted instead)
+  assert.doesNotMatch(src('js/svc-tab.js'), /PeelTreeCounts\.settingsHTML/);
+  assert.doesNotMatch(src('js/tree-counts.js'), /id="count-mode"|function setMode\(|function settingsHTML\(/);
+  assert.doesNotMatch(src('js/settings.js'), /count-mode/);
+  assert.ok(B.scenarioSettings(base).some(r => r.key === 'countMode' && r.value === 'tree count' && r.def), 'Units per development: tree count, the default');
   // Settings: Display → Start screen → Counting (a pointer to the Scenario control) → Usage.
   const g = src('js/growth-ui.js');
   assert.match(g, /<h2 class="pane-h">Settings<\/h2>\$\{displaySettingsHTML\(\)\}\$\{root\.PeelWorkspaces && root\.PeelWorkspaces\.settingsHTML \? root\.PeelWorkspaces\.settingsHTML\(\) : ''\}\$\{counting\}\$\{root\.PeelUsage/);

@@ -104,8 +104,8 @@
     App().applyFilters(); OT().renderOverview(); if (TB()) TB().renderTrail(); Sh().viewLink.write();
     const host = typeof document !== 'undefined' && document.getElementById('scope-body'); if (host) host.scrollTop = 0;
     // On a phone the right panel is a bottom sheet: raise it from its peek so the result shows (a result
-    // kept at its development all the way, for this result only: the site bar above it leaves a half
-    // sheet no room for it).
+    // kept at its development all the way, for this result only: the header and the tab strip above it
+    // leave a half sheet no room for it).
     const DT = window.PeelDataTab, A = App();
     if (DT && DT.shellNarrow && DT.shellNarrow() && A.getAnalysisSnap) {
       const sn = A.getAnalysisSnap();

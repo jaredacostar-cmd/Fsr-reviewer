@@ -139,10 +139,11 @@
     const devU = scoped && window.Growth ? window.Growth.pipelineTotals([scoped]).planned : 0;
     const count = scoped ? `<span class="tb-count" title="This development's planned homes">· ${fmtNum(Math.round(devU))} home${Math.round(devU) === 1 ? '' : 's'} planned</span>`
       : `<span class="tb-count" title="Developments in scope and their planned units">· ${fmtNum(set.length)} development${set.length === 1 ? '' : 's'}${units > 0 ? ` · ${fmtNum(Math.round(units))} units` : ''}</span>`;
-    // The tree counts didn't load: the units are the previous count, so the total differs. Say so.
+    // The tree counts didn't load: the units are counted from the files and permits (the fallback),
+    // so the total differs. Say so.
     const TC = window.PeelTreeCounts;
-    const warn = TC && TC.mode() === 'tree' && TC.status === 'failed'
-      ? ' <span class="tb-count-warn" role="status" title="The tree counts (data/tree-counts.json) did not load, so each development shows its previous count and the total differs from the usual one.">· previous counts: tree counts didn\u2019t load <button type="button" class="btn small link" data-tb-reload>Reload</button></span>' : '';
+    const warn = TC && TC.status === 'failed'
+      ? ' <span class="tb-count-warn" role="status" title="The tree counts (data/tree-counts.json) did not load, so each development is counted from its files and permits, and the total differs from the usual one.">· tree counts didn\u2019t load: counted from the files and permits <button type="button" class="btn small link" data-tb-reload>Reload</button></span>' : '';
     el.innerHTML = steps.map((s, i) => `${i ? '<span class="tb-sep" aria-hidden="true">›</span>' : ''}<button type="button" class="tb-step" data-i="${i}" title="${esc(s.title)}">${esc(s.label)}</button>`).join('')
       + count + warn;
     el._steps = steps;
@@ -220,7 +221,7 @@
   // Phase 3b: "Inquiry response draft" export item. Drafts a response for the open
   // development via js/tools-inquiry.js (sibling worker C); guarded so the menu still
   // works before that module loads. The same function is a development's Inquiry draft
-  // action ([data-inquiry]: its page and its Overview), one result either way (AD-13):
+  // action ([data-inquiry]: its header, on every tab and its page), one result either way (AD-13):
   // on the map's Overview, the development kept, its Copy button tools-inquiry's own.
   function draftInquiryResponse() {
     // (on a page the panel hosts are empty: the draft opens on the map, with its way back)

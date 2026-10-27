@@ -76,7 +76,7 @@ test('sub-view defaults: gSub pipeline, dcSub timing, Servicing capacity, Record
 
 test('sub-view valid values: at most four per tab', () => {
   assert.deepEqual(plain(AT.TABSUBS.growth.valid), ['pipeline', 'areas', 'timing']);
-  assert.deepEqual(plain(AT.TABSUBS.svc.valid), ['capacity', 'network']);
+  assert.deepEqual(plain(AT.TABSUBS.svc.valid), ['capacity', 'network', 'fsr']);
   assert.deepEqual(plain(AT.TABSUBS.dca.valid), ['timing', 'eas', 'projects']);
   assert.deepEqual(plain(AT.TABSUBS.records.valid), ['sources', 'checks', 'files']);
 });
@@ -112,7 +112,7 @@ test('index.html: final tab set — removed tabs gone, labels renamed', () => {
   // Stage 2: four tabs at every scope, then Records as a small trailing tab.
   const tabs = [...HTML.matchAll(/<button type="button" role="tab" class="f-tab( f-tab-trail)?" id="ftab-(\w+)"[^>]*>([^<]+)</g)].map(m => [m[2], m[3], !!m[1]]);
   assert.deepEqual(tabs, [['overview', 'Overview', false], ['growth', 'Growth', false], ['svc', 'Servicing', false], ['dca', 'Capital', false], ['records', 'Records', true]]);
-  for (const gone of ['data-tab="tool"', 'id="pane-tool"', 'id="detail"', 'id="detail-body"', 'id="ftab-water"', 'id="ftab-ww"', 'id="ftab-dev"', 'id="pane-dev"', 'data-pane="water"', 'data-pane="ww"', 'data-wwsub', 'data-wsub']) assert.ok(!HTML.includes(gone), `still present: ${gone}`);
+  for (const gone of ['data-tab="tool"', 'id="pane-tool"', 'id="detail"', 'id="detail-body"', 'id="ftab-water"', 'id="ftab-ww"', 'id="ftab-dev"', 'id="pane-dev"', 'data-pane="water"', 'data-pane="ww"', 'data-wwsub', 'data-wsub', 'id="ov-dev"', 'id="pane-dev-body"', 'data-devsub', 'id="site-bar"']) assert.ok(!HTML.includes(gone), `still present: ${gone}`);
   assert.ok(HTML.includes('<div id="scope-body" class="scope-body" hidden aria-live="polite"></div>'), 'scope host');
 });
 
@@ -126,8 +126,8 @@ test('index.html: growth sub-views (Pipeline · Areas · Forecast)', () => {
   assert.ok(HTML.includes('id="pane-growth-ledger" data-pane="growth" data-sub="timing"') && HTML.includes('id="ledger-body"'), 'its pane in Forecast’s full table, id kept');
 });
 
-test('index.html: Servicing sub-views (Capacity · Network), the hydraulic check behind Labs in Network, pumping stations in Network', () => {
-  for (const [k, t] of [['capacity', 'Capacity'], ['network', 'Network']]) assert.ok(HTML.includes(`data-svcsub="${k}">${t}</button>`), k);
+test('index.html: Servicing sub-views (Capacity · Network, and FSR review at a development), the hydraulic check behind Labs in Network, pumping stations in Network', () => {
+  for (const [k, t] of [['capacity', 'Capacity'], ['network', 'Network'], ['fsr', 'FSR review']]) assert.ok(HTML.includes(`data-svcsub="${k}">${t}</button>`), k);
   assert.ok(!/data-svcsub="(alloc|checks)"/.test(HTML), 'Allocations and Model checks are no chips (navigation phase 2)');
   assert.ok(/class="f-pane svc-pane lab-hydro" id="pane-hydro" data-pane="svc" data-sub="network"/.test(HTML) && HTML.includes('id="hyd-box"'), 'hydro pane in Network, Labs');
   assert.ok(HTML.includes('id="pane-pumpstations" data-pane="svc" data-sub="network"') && HTML.includes('id="pumpstations-body"'), 'pumping stations in Network');

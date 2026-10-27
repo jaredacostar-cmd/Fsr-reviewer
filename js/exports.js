@@ -24,8 +24,6 @@
   const MM = () => root.PeelMapMarkers;
   const ST = () => root.PeelSvcTab;
   const MA = () => root.PeelMapAnalysis;
-  const DN = () => root.PeelDevNav;
-  const AS = () => root.PeelAreaSelect;
   const TS = () => root.PeelToolScope;
   const FI = () => root.PeelFilterUI;
   const CA = () => root.PeelCensusAreas;
@@ -139,7 +137,9 @@
 
 /* ---- app.js lines 5267-5343 ---- */
   // ---- Export: an Excel workbook of what is on screen (top-bar Export menu) ----
-  // Scopes: water, plants, catchments, growth (bottom panel) and dev / selection (side panel).
+  // Scopes: water, plants, catchments, growth (bottom panel), loads and test sites (results). (The
+  // development's summary went with the Development tab's pane, navigation phase 5: its memo is the
+  // Servicing memo.)
   const SCOPES = {
     water: { title: 'Water by pressure zone', els: () => [$('#water-body')] },
     wcap: { title: 'Water treatment and capacity', els: () => [$('#wcap-body')] },
@@ -148,7 +148,6 @@
     catchments: { title: 'Wastewater by sanitary catchment', els: () => [$('#ww-body')] },
     growth: { title: 'Demand', els: () => [$('#growth-pipeline-body')].filter(e => e && !e.hidden) },
     census: { title: 'Growth', els: () => [$('#growth-census-body')].filter(e => e && !e.hidden) },
-    dev: { title: 'Development servicing summary', els: () => [$('#pane-dev-body'), $('#scope-body')].filter(e => e && !e.hidden && e.innerHTML) },
     loads: { title: 'What loads it', els: () => [TS().toolScopeBody() || $('#scope-body')] },
     whatif: { title: 'Test site servicing check', els: () => [$('#scope-body')] },
   };
@@ -167,7 +166,7 @@
   }
   function reportMeta(scope) {
     const bc = CA().baselineCensus(), R = App().state.reports;
-    const title = scope === 'loads' ? (((TS().toolScopeBody() || $('#scope-body')).querySelector('h3') || {}).textContent || SCOPES.loads.title) : scope === 'dev' && DN().getCurrentProject() ? `${SCOPES.dev.title} – ${DN().getCurrentProject().title}` : scope === 'dev' && AS().selection.size ? `Selection servicing summary – ${fmtNum(AS().selection.size)} developments` : SCOPES[scope].title;
+    const title = scope === 'loads' ? (((TS().toolScopeBody() || $('#scope-body')).querySelector('h3') || {}).textContent || SCOPES.loads.title) : SCOPES[scope].title;
     return { title, lines: [
       `Prepared ${new Date().toLocaleString('en-CA', { dateStyle: 'medium', timeStyle: 'short' })} with the Peel Growth Pipeline (unofficial)`,
       UNOFFICIAL,

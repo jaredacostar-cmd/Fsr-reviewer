@@ -154,7 +154,7 @@
   // "Default" or "2 changes" and the Scenario control can list them in full.
   // o: { basis, flows ('2025 metered' | 'design'), md ('design' | 'observed'), div ('off' | 'on' | null
   // when there is no diversion), outside ('nearest' | 'left out'), year (null = build-out), criteria
-  // (n edited), count ('tree count' | 'previous count'), expansions ('on' | 'off' | null), yearDefault,
+  // (n edited), count ('tree count'), expansions ('on' | 'off' | null), yearDefault,
   // loads (the stages the map's loads count, from the Stage filter: 'every stage' or a list) }.
   function scenarioSettings(o) {
     const b = o.basis || 'all', cur = b === 'remaining' ? 'all' : b;

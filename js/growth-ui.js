@@ -267,10 +267,10 @@
   // Record type and New buildings only narrow the list: they are filters, in Find › What.
   const recordSettingsHTML = () => '<fieldset class="panel rec-set" id="rec-settings"><legend class="label" data-info="record-settings">Records</legend><p class="small">Record type and New buildings only are filters: they are in <strong>Find › What</strong>.</p></fieldset>';
   function settingsPageHTML() {
-    const TC = root.PeelTreeCounts;
     // Bundle 6: Display → Start screen → Counting → Usage; every counting choice lives in the Scenario
-    // control (Count, Units, Units per development), so Counting here points there.
-    const counting = `<fieldset data-info="counting" class="set-counting"><legend>Counting</legend><p class="small">How units are counted (Count, Units and Units per development${TC ? `: now ${esc(TC.label())}` : ''}) is set in the Scenario control, with the other scenario settings. <button type="button" class="btn small" data-pnl-scen>Open the Scenario control</button></p></fieldset>`;
+    // control (Count, Units), so Counting here points there. (Units per development is the tree count:
+    // the Previous switch is retired, owner decision 14.)
+    const counting = `<fieldset data-info="counting" class="set-counting"><legend>Counting</legend><p class="small">Each development counts its planning files once (the tree); one the tree does not count is counted from its files and permits, and says so. How units are counted (Count and Units) is set in the Scenario control, with the other scenario settings. <button type="button" class="btn small" data-pnl-scen>Open the Scenario control</button></p></fieldset>`;
     return `<h2 class="pane-h">Settings</h2>${displaySettingsHTML()}${root.PeelWorkspaces && root.PeelWorkspaces.settingsHTML ? root.PeelWorkspaces.settingsHTML() : ''}${counting}${root.PeelUsage && root.PeelUsage.settingsHTML ? root.PeelUsage.settingsHTML() : ''}${recordSettingsHTML()}${DU().numberConventionsHTML()}`;
   }
   window.GearPages = window.GearPages || {};

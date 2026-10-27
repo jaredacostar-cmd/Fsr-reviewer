@@ -27,7 +27,10 @@ test('every development opens by its key, a land split ("<key>#1") too; a branch
   assert.ok(gore, 'the README example (21T-22002C) is a land split');
   const sub = N.projectByKey(`${gore.key}#21T-22002C`);
   assert.ok(sub && sub.parent === gore, 'its file opens on its own under it');
-  for (const f of ['js/dev-nav.js', 'js/devtab.js']) assert.match(src(f), /const own = find\(k\); if \(own\) return own;\n {4}const i = String\(k\)\.lastIndexOf\('#'\)/, f);
+  assert.match(src('js/dev-nav.js'), /const own = find\(k\); if \(own\) return own;\n {4}const i = String\(k\)\.lastIndexOf\('#'\)/);
+  // (one copy, navigation phase 5, M3: Records' full table finds a development by key through js/dev-nav.js)
+  assert.doesNotMatch(src('js/devtab.js'), /function projectByKey\(|function subProject\(|const SUBS = new Map/, 'one copy: js/dev-nav.js (M3)');
+  assert.match(src('js/devtab.js'), /const projectByKey = k => \(k && state\(\) \? N\(\)\.projectByKey\(k\) : null\);/);
 });
 
 test('opening a file on its own leaves its development\'s permit placement as built', { skip: !H.available() }, () => {
@@ -39,7 +42,9 @@ test('opening a file on its own leaves its development\'s permit placement as bu
   const before = devs.map(p => [flags(p), D.buildingPermitsOf(p).length]);
   for (const p of devs) for (const row of TG.fileRows(p)) assert.ok(N.projectByKey(`${p.key}#${row.a.ref}`));
   devs.forEach((p, i) => assert.deepEqual([flags(p), D.buildingPermitsOf(p).length], before[i], p.key));
-  assert.match(src('js/devtab.js'), /P\(\)\.mergeProject\(key, \[\.\.\.own, \.\.\.permits\.filter\(r => !own\.includes\(r\)\)\]\.map\(r => \(\{ \.\.\.r \}\)\), \{\}\)/);
+  // (the one copy, js/dev-nav.js: devtab.js opens a file on its own through it since navigation phase 5)
+  assert.match(src('js/dev-nav.js'), /P\.mergeProject\(key, \[\.\.\.own, \.\.\.permits\.filter\(r => !own\.includes\(r\)\)\]\.map\(r => \(\{ \.\.\.r \}\)\), \{\}\)/);
+  assert.match(src('js/devtab.js'), /const subProject = \(p, ref\) => \(p && state\(\) \? N\(\)\.subProject\(p, ref\) : null\);/);
 });
 
 // The example the fix was found on (e1479e2: opening its files dropped it from 17 building permits to
@@ -62,9 +67,11 @@ test('the latest file is the newest submission (map-labels latestSub), not a sor
   for (const f of ['js/devtab.js', 'js/fsr.js', 'js/records-tab.js']) assert.doesNotMatch(src(f), /\.date \|\| 0\)\)/, f);
 });
 
-test('the Development tab drops the files it opened on their own when the developments are rebuilt', () => {
-  const s = src('js/devtab.js');
-  assert.match(s, /const freshSubs = \(\) => \{ const st = state\(\); if \(st && st\.projects !== subsOf\) \{ SUBS\.clear\(\); subsOf = st\.projects; \} \};/);
-  assert.match(s, /function subProject\(p, ref\) \{\n\s+if \(!p\) return null;\n\s+freshSubs\(\);/);
-  assert.match(s, /function projectByKey\(k\) \{\n\s+const st = state\(\); if \(!st \|\| !k\) return null;\n\s+freshSubs\(\);/);
+// (navigation phase 5, M3: devtab's own cache of files opened on their own went with its copy, removed by design;
+// the one cache, js/dev-nav.js's, is cleared on every rebuild and index paint)
+test('the files opened on their own are dropped when the developments are rebuilt: one cache, js/dev-nav.js\'s', () => {
+  const app = src('js/app.js');
+  assert.equal(app.match(/if \(typeof PeelDevNav !== 'undefined'\) PeelDevNav\.SUBS\.clear\(\);/g).length, 2, 'rebuild and applyIndex');
+  assert.doesNotMatch(src('js/devtab.js'), /freshSubs|SUBS\./);
+  assert.match(src('js/dev-nav.js'), /\}, SUBS, projectByKey, relatedProjects, fileTree, subProject, isFormal, isPrecon, flyToSite, showDetail \};/);
 });

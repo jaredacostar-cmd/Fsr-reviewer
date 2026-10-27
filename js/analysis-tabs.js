@@ -11,7 +11,8 @@
   // plus Records, a small trailing tab (the Overview's ⓘ line opens its Data checks). Sub-views: at most four
   // per tab, one chip row under the tab bar (TABSUBS). Overview has none.
   //   Growth:    Pipeline · Areas · Forecast (its By period fold: the pipeline ledger, js/ledger-ui.js)
-  //   Servicing: Capacity · Network   (water and wastewater together; Allocations is a fold of Capacity)
+  //   Servicing: Capacity · Network   (water and wastewater together; Allocations is a fold of Capacity), and at a
+  //              development Network · FSR review (the FSR cross-check, js/fsr-check.js)
   //   Capital:   DC timing · EAs · Projects (DC timing: every 2026 DC project with both verdicts, js/dc-projects.js, the Funding lab a fold of it)
   //   Records:   Sources · Data checks · Files (every check: the data, then the servicing model)
   // footPref: the tab last picked (kept); each tab's sub-view last picked is kept too. Old tab and
@@ -25,13 +26,14 @@
   // tabs: docs/architecture-review/navigation-design.md §7.2–7.3).
   // Phase 2: Allocations is a fold of Capacity, the model checks are Records › Data checks, the water
   // facilities and the hydraulic check are Network's. Phase 3: the Ledger is Forecast's By period fold.
-  // Phase 4: DC projects is DC timing (one list, both verdicts); the funding screen is its fold.
+  // Phase 4: DC projects is DC timing (one list, both verdicts); the funding screen is its fold. Phase 5: FSR
+  // review is a development's Servicing view.
   const SUB_MAP = {
     ww: { plants: 'capacity', catchments: 'network', alloc: 'capacity', pumpstations: 'network' },
     water: { capacity: 'capacity', zones: 'network', facilities: 'network', hydro: 'network' },
     growth: { pipeline: 'pipeline', census2051: 'areas', byplan: 'areas', timing: 'timing', areas: 'areas', ledger: 'timing' },
     dca: { timing: 'timing', build: 'projects', dcproj: 'timing', projects: 'projects', eas: 'eas', recommendations: 'timing', funding: 'timing' },
-    svc: { capacity: 'capacity', network: 'network', alloc: 'capacity', checks: 'records:checks' },
+    svc: { capacity: 'capacity', network: 'network', alloc: 'capacity', checks: 'records:checks', fsr: 'fsr' },
     records: { sources: 'sources', checks: 'checks', files: 'files' },
   };
   // The state key of each tab's sub-view.
@@ -93,7 +95,7 @@
   // Sub-view state per tab: the chip data-attribute, the store key, the valid values, get / set.
   const TABSUBS = {
     growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'areas', 'timing'], get: () => gSub, set: v => { gSub = v; } },
-    svc: { attr: 'svcsub', store: 'svcSub', valid: ['capacity', 'network'], get: () => svcSub, set: v => { svcSub = v; } },
+    svc: { attr: 'svcsub', store: 'svcSub', valid: ['capacity', 'network', 'fsr'], get: () => svcSub, set: v => { svcSub = v; } },
     dca: { attr: 'dcasub', store: 'dcSub', valid: ['timing', 'eas', 'projects'], get: () => dcSub, set: v => { dcSub = v; } },
     records: { attr: 'rsub', store: 'rSub', valid: ['sources', 'checks', 'files'], get: () => rSub, set: v => { rSub = v; } },
   };
@@ -113,16 +115,15 @@
   // never renders at a site). 'site': a development is the scope; 'area': Peel, a municipality, a plan
   // or a result with no files of its own.
   // At a site, Capital › DC timing is the site's DC projects (the projects it relies on); the Projects
-  // list is Region-wide, so it is hidden there.
+  // list is Region-wide, so it is hidden there; the EAs and works near the site are in that one view
+  // (navigation phase 5: Capital has no chip row at a site). FSR review is a development's: an area, a servicing
+  // scope or a result never shows it, and Servicing opens on its own first view there.
   const HIDDEN = {
-    site: { growth: ['areas', 'timing'], svc: ['capacity'], dca: ['projects'], records: ['sources', 'checks'] },
-    area: { records: ['files'] },
+    site: { growth: ['areas', 'timing'], svc: ['capacity'], dca: ['eas', 'projects'], records: ['sources', 'checks'] },
+    area: { svc: ['fsr'], records: ['files'] },
   };
   const SITE_HIDDEN = HIDDEN.site;
-  // Sub-views that are empty at a site are hidden too: EAs with none near the site.
-  const EMPTY_AT_SITE = { 'dca:eas': () => !!(root.PeelCapitalEA && root.PeelCapitalEA.siteBriefCount && root.PeelCapitalEA.siteBriefCount() === 0) };
-  const hiddenAt = (scope, tab, sub) => !!((HIDDEN[scope] || {})[tab] && HIDDEN[scope][tab].includes(sub))
-    || (scope === 'site' && !!(EMPTY_AT_SITE[`${tab}:${sub}`] && root.DevScope && root.DevScope.current() && EMPTY_AT_SITE[`${tab}:${sub}`]()));
+  const hiddenAt = (scope, tab, sub) => !!((HIDDEN[scope] || {})[tab] && HIDDEN[scope][tab].includes(sub));
   const siteHidden = (tab, sub) => hiddenAt('site', tab, sub);
   // The sub-view a tab shows: the one picked, else (hidden at this scope) the first that is not.
   const subFor = (tab, sub, site, scope = site ? 'site' : 'area') => (hiddenAt(scope, tab, sub) ? TABSUBS[tab].valid.find(v => !hiddenAt(scope, tab, v)) : sub);
@@ -163,7 +164,6 @@
     for (const [tk, s] of Object.entries(TABSUBS))
       for (const b of document.querySelectorAll(`[data-${s.attr}]`)) { const on = b.dataset[s.attr] === s.get(); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); b.classList.toggle('site-off', hiddenAt(scopeOf(tk), tk, b.dataset[s.attr])); }
     if (key === 'records' && root.PeelRecordsTab) setTimeout(() => root.PeelRecordsTab.render(), 0);
-    if (root.PeelRecordsTab && root.PeelRecordsTab.syncDevHome) root.PeelRecordsTab.syncDevHome(key);
     if (root.PeelSvcScope) root.PeelSvcScope.peelWideNote();
     if (key === 'dca' && typeof DcaTab().renderDca === 'function') setTimeout(() => DcaTab().renderDca(), 0);
     if (key === 'overview') setTimeout(() => { if (OT() && window.PeelApp) OT().renderOverview(); }, 0);   // (may fire before the app has loaded; its boot renders the overview)

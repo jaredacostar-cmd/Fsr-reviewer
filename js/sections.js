@@ -5,27 +5,32 @@
  * nothing is only in the map and a page never computes a figure of its own. A section whose tab
  * builds its panel only when opened (Capital, Records) is built here on demand, for the scope.
  *
- *   SITE                 the sections of one development, in the order of the map's tabs, then its
- *                        FSR review (a page of its own: the Servicing panel with the cross-check)
+ *   SITE                 the sections of one development: the map's five tabs, by the tabs' names;
+ *                        Servicing has the map's views (Network · FSR review, the page `fsr`)
  *   AREA                 the sections of an area (Peel, a municipality, a plan): Growth, Forecast,
  *                        Servicing, Capital (areaSpecFor(id): the map's area panel)
  *   WORKSPACES           Servicing and Capital: a page and the map's other sub-views of its tab
  *   specFor(sec, p)      its panel spec for development p (null while its data loads)
+ *   viewOf(sec, id)      a section's view (Servicing › FSR review), with that view's keys, for specFor
  *
  * A section with more than one key takes its answer and figures from the first and adds the
- * others' lists (Capital: the DC projects the site relies on, then the EAs near it).
+ * others' lists (each section is one panel; Capital's site panel holds the EAs near it).
  */
 (function (root) {
   'use strict';
   const PN = () => root.PeelPanel;
 
+  // (navigation phase 5: the ids summary and files are kept, the titles are the tabs'; FSR review is
+  // Servicing's second view, as on the map, and the page `fsr` draws it)
   const SITE = [
-    { id: 'summary', title: 'Summary', tab: 'overview', keys: ['overview:'] },
+    { id: 'summary', title: 'Overview', tab: 'overview', keys: ['overview:'] },
     { id: 'growth', title: 'Growth', tab: 'growth', keys: ['growth:pipeline'] },
-    { id: 'servicing', title: 'Servicing', tab: 'svc', keys: ['svc:network'] },
-    { id: 'capital', title: 'Capital', tab: 'dca', keys: ['dca:timing', 'dca:eas'] },
-    { id: 'files', title: 'Files', tab: 'records', keys: ['records:files'] },
-    { id: 'fsr', title: 'FSR review', tab: 'svc', keys: ['svc:network'], page: 'fsr' },
+    { id: 'servicing', title: 'Servicing', tab: 'svc', keys: ['svc:network'], views: [
+      { id: 'network', title: 'Network', keys: ['svc:network'] },
+      { id: 'fsr', title: 'FSR review', keys: ['svc:fsr'], page: 'fsr' },
+    ] },
+    { id: 'capital', title: 'Capital', tab: 'dca', keys: ['dca:timing'] },
+    { id: 'files', title: 'Records', tab: 'records', keys: ['records:files'] },
   ];
   // An area's sections: Growth in an area's drill-down and the Forecast are pages of their own; its
   // Servicing and Capital are the map's area panels (Region-wide: the plants and the DC program serve
@@ -81,6 +86,8 @@
   // A workspace section's panel (Servicing › Network, Capital › Projects …).
   function wsSpecFor(ws, id) { const w = WORKSPACES[ws], s = w && w.secs.find(x => x.id === id); return s && s.keys ? areaPanel(s.keys[0]) : null; }
   const BY_ID = Object.fromEntries(SITE.map(s => [s.id, s]));
+  // A site section's view: the section with that view's keys (null for no such view).
+  function viewOf(sec, id) { const s = BY_ID[sec], v = s && (s.views || []).find(x => x.id === id); return v ? { ...s, ...v, section: s.id } : null; }
 
   // A tab's panel for development p: the one its tab set for this scope, else built here.
   const BUILD = {
@@ -112,7 +119,7 @@
     return { ...first, foot, lists, folds, onMount: mounts.length ? host => { for (const f of mounts) try { f(host); } catch (err) { /* that part stays empty */ } } : null };
   }
 
-  const api = { SITE, AREA, WORKSPACES, BY_ID, specFor, areaSpecFor, wsSpecFor, areaPanel };
+  const api = { SITE, AREA, WORKSPACES, BY_ID, specFor, viewOf, areaSpecFor, wsSpecFor, areaPanel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSections = api;
 })(typeof window !== 'undefined' ? window : globalThis);

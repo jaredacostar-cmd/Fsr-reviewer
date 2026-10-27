@@ -416,18 +416,30 @@
     });
   }
   const SC_sort = rows => sortRows(rows, 'limit', MM().THIS_YEAR);
-  // A development: its zone, its sewer path and stations, the tightest pipe, the plant reserve it uses,
-  // the infrastructure coming; the aerial check and ground elevation folded. The site briefs are its full table.
+  // A development: its zone, its sewer path and stations, the tightest pipe, the plant reserve it uses, its
+  // four flows (navigation phase 5: from the retired Overview card); the infrastructure coming, the water
+  // supply (route and fire flow: was the full table's only) and the site checks folded. The site briefs
+  // (every row, the mains near, the trace buttons) are its full table. Servicing › FSR review is set beside
+  // it, from the same spec (js/fsr-check.js panelSpec: the one host of the FSR cross-check).
   function renderSiteNetwork(p) {
     const PN = root.PeelPanel; if (!PN || !p) return;
-    const f = SD().svcFacts(p); if (!f) return;
+    const FC = root.PeelFsrCheck, f = SD().svcFacts(p);
+    // (no units or jobs stated: no Network panel, its briefs say so; FSR review still opens, its form says so)
+    if (!f) { if (FC && FC.panelSpec) PN.set('svc:fsr', FC.panelSpec(p, { head: PN.siteHead(p), answer: 'No servicing figures for this development: no units or jobs are stated.' })); return; }
     const DI = root.PeelDcInfra, DT = root.DevTab, w = DI && DI.devWorks ? DI.devWorks(p, f) : null, cb = f.cb;
     const share = f.zMax > 0 ? Math.round(D().toMLd(cb.water.maxDay) / f.zMax * 100) : null, plant = f.pl ? (SD().PLANT_SHORT[f.pl] || f.pl) : null;
     const usePct = f.cap && f.reserve > 0 ? Math.round(f.use / f.reserve * 100) : null;
     const pathRows = [...(f.z ? [PN.kv(`💧 ${esc(f.z.name)}`, `${share != null ? `${share}% of the zone\u2019s build-out maximum day` : 'zone load not available'}${f.zNear ? ' · nearest zone' : ''}`)] : []),
       ...f.sps.map(x => PN.kv(esc(DD().psName(x.a)), `${Math.round(x.wet / x.firm * 100)}% of firm at build-out (peak wet)`, x.wet / x.firm >= 1 ? 'over' : x.wet / x.firm >= 0.9 ? 'tight' : 'room')),
       ...(plant ? [PN.kv(`→ ${esc(plant)}`, f.cap ? (f.reserve > 0 ? `this site uses ${usePct}% of the plant\u2019s reserve (${fmt1(f.reserve)} ML/d)` : 'the plant has no reserve after committed') : '–', f.cap && f.reserve <= 0 ? 'over' : null)] : [])];
-    PN.set('svc:network', {
+    const flows = [PN.kv('Water, maximum day', `${fmt1(cb.water.maxDay)} L/s`), PN.kv('Wastewater, average dry weather', `${fmt1(cb.wastewater.avg)} L/s`), PN.kv('Wastewater, peak dry weather', `${fmt1(cb.wastewater.peak)} L/s`),
+      PN.kv('Wastewater, peak wet weather', `${fmt1(cb.wastewater.wetPeak)} L/s${cb.wastewater.infiltration > 0 ? ` · ${esc(D().iiPlain(cb.wastewater.infiltration, App().state.criteria))}` : ''}`)];
+    // The water supply: the route from the plant (its Trace on the map writes its summary under it: a
+    // .trace-box with a .wtrace-out, js/water-trace.js) and the fire flow (hydrants: looked up on the fold's
+    // first open, below). The memo reads the fire flow from here (#dev-fire, js/reports.js devMemo).
+    const bRow = (k, body) => `<div class="b-row"><div class="b-k">${k}</div><div class="b-v">${body}</div></div>`;
+    const water = p.lat != null && WT() ? `<div class="brief"><div class="trace-box">${bRow('Supply route', `<div id="dev-wtrace" data-info="water-trace">${WT().waterTraceHTML(p)}</div><div class="wtrace-out"></div>`)}</div>${bRow('Fire flow', '<div id="dev-fire" data-info="fire-storm"><p class="small muted">Looking up hydrants…</p></div>')}</div>` : '';
+    const spec = {
       calc: true, fullTitle: `${p.title} · water and wastewater briefs`,
       head: PN.siteHead(p),
       answer: `${f.z ? `Water from <strong>${esc(f.z.name)}</strong>${share != null ? ` (this site ${share}% of its build-out maximum day)` : ''}` : 'No pressure zone mapped'}; wastewater ${f.path.length ? `along ${fmtNum(f.path.length)} block${f.path.length === 1 ? '' : 's'}${f.sps.length ? ` and ${f.sps.length} pumping station${f.sps.length === 1 ? '' : 's'}` : ''} to <strong>${esc(plant || '–')}</strong>` : 'with no traced path'}${usePct != null ? `, using ${usePct}% of its reserve` : ''}.`,
@@ -437,11 +449,13 @@
         f.cap ? { v: fmt1(Math.abs(f.reserve)), u: 'ML/d', label: f.reserve < 0 ? `${esc(plant)} over 100% after committed` : `${esc(plant)} reserve`, ctx: usePct != null ? `this site ${usePct}% of it` : '', tone: f.reserve <= 0 ? 'over' : 'room', attrs: { 'data-ss': `plant:${f.pl}` } } : null,
         { v: U.PIPE_RESULTS ? '–' : 'n/a', u: '', label: 'tightest pipe on the path', ctx: U.PIPE_RESULTS ? '' : 'pipe-by-pipe capacity is left to the Region\u2019s model' },
       ].filter(Boolean),
-      lists: [{ title: 'The path', rows: pathRows, total: pathRows.length }],
+      lists: [{ title: 'The path', rows: pathRows, total: pathRows.length }, { title: 'Flows', rows: flows, total: flows.length }],
       folds: [
         { title: 'Infrastructure coming', html: w && DI.devWorksHTML ? DI.devWorksHTML(w) : '<p class="small muted">The 2026 DC maps are still loading.</p>', open: true },
-        { title: 'Site: aerial check and ground', html: DT && DT.partHTML ? DT.partHTML(p, 'ground') : '' },
-        // Tools › Record allocation opens this (js/app.js showAllocSub).
+        { title: 'Water: supply route and fire flow', id: 'pnl-water', html: water },
+        // (the retired Site view, the Overview's Site fold and this panel's ground fold in one: js/devtab.js)
+        { title: 'Site: constraints, aerial check, ground, the mains near, storm sewers and ponds', id: 'pnl-site', html: DT && DT.partHTML ? DT.partHTML(p, 'site') : '' },
+        // The header's ⋯ › Record allocation opens this (js/app.js showAllocSub).
         { title: 'Servicing allocation', id: 'pnl-alloc', html: root.PeelDemandUI && root.PeelDemandUI.allocBoxHTML ? root.PeelDemandUI.allocBoxHTML(p) : '' },
         // (Labs: the Gravity check and the Pressure check, js/lab-checks.js)
         ...(root.PeelLabChecks ? root.PeelLabChecks.folds(p) : []),
@@ -449,8 +463,10 @@
       method: 'Flows at Peel design criteria. The path: the pressure zone the site sits in (or the nearest), the pumping stations on its traced sewer path and the plant it drains to; the plant reserve is the uncommitted reserve (MECP D-5-1), to 100% of rated after committed.',
       sources: 'Pressure zones and the sewer network (Region of Peel); 2025 plant flows; 2026 DC capital maps (draft); the lidar terrain model and aerial photos (each names its source).',
       foot: { primary: { label: 'Trace the sewer path', attrs: { 'data-trace': p.key } }, secondary: [{ label: 'Trace water', attrs: { 'data-wtrace': p.key } }] },
-      onMount: () => { if (DT && DT.fillParts) DT.fillParts(p, ['ground']); },
-    });
+      onMount: () => { if (DT && DT.fillParts) DT.fillParts(p, ['site']); },
+    };
+    PN.set('svc:network', spec);
+    if (FC && FC.panelSpec) PN.set('svc:fsr', FC.panelSpec(p, spec));
   }
   const renderAll = () => { render(); renderChecks(); renderNetBar(); };
   // Render on entering the sub-view (PeelAnalysisTabs.showFootTab).
@@ -461,6 +477,14 @@
     const f = e.target.closest('[data-cap-fold]'); if (f) { const id = f.dataset.capFold; if (st.open.has(id)) st.open.delete(id); else st.open.add(id); render(); return; }
     if (e.target.closest('[data-cap-detail]')) { detail = !detail; if (U.store) U.store.set('capDetail', detail); syncDetail(); if (detail) { const p = $('#pane-plants'); if (p) p.scrollIntoView({ block: 'start', behavior: 'smooth' }); } }
   });
+  // A development's Water fold: the fire flow on its first open, not on mount (a hydrant query on every
+  // Servicing open would be new network cost). toggle does not bubble: the capture phase sees it on the map's
+  // panel and the site's page alike; js/site-context.js fillFire keeps a late answer out of another site's box.
+  if (typeof document !== 'undefined') document.addEventListener('toggle', e => {
+    const d = e.target; if (!d || d.id !== 'pnl-water' || !d.open) return;
+    const box = d.querySelector('#dev-fire'), p = root.PeelDevNav && root.PeelDevNav.getCurrentProject();
+    if (box && p && /^Looking up/.test(box.textContent.trim()) && root.PeelSiteContext && root.PeelSiteContext.fillFire) root.PeelSiteContext.fillFire(p);
+  }, true);
   const api = { SYSTEM, derive, impactOf, sortRows, listRow, renderNetworkPanel, renderSiteNetwork, yTxt, pctTxt, collect, partial: () => lastPartial, tableHTML, panelSpec, fullTableHTML, reachText, numOnly, render, renderChecks, checksRows, renderNetBar, renderAll, renderFor, syncDetail };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSvcCapacity = api;

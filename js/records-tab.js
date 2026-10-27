@@ -3,8 +3,10 @@
   // The Records tab (SPEC §5; Stage 2: the small trailing tab), with Sources · Data checks · Files:
   //   Peel / municipality / plan: Sources (freshness, reports) and Data checks (duplicates, the data
   //                               checks, then the servicing model: navigation phase 2);
-  //   a development:              its tree of files with each file's layer, and their history
-  //                               (the development's Files & history view, moved here);
+  //   a development:              one view, its files and history (the panel: the tree, on this site,
+  //                               latest activity, related applications, the files and events; the
+  //                               full table: every file, related application, how the stage was set
+  //                               and the source records; navigation phase 5);
   //   a single file:              the file: its source record, every field, its provenance;
   //   a plant / zone / block / station / DC work: no files of its own (its developments are in
   //                               Overview; each opens to its records).
@@ -15,6 +17,7 @@
   const DD = () => root.PeelDevDetail;
   const AC = () => root.PeelAerialCheck;
   const SC = () => root.PeelSvcCapacity;
+  const DN = () => root.PeelDevNav;
 
   // Records › Sources: what each source is and how fresh it is, and the reports the model rests on.
   function sourcesHTML() {
@@ -39,22 +42,6 @@
       <table class="rec-table">${DD().recordRows(r)}</table>${root.PeelAddr ? root.PeelAddr.noteHTML(r) : ''}`;
   }
 
-  // The development's Files & history view lives in Records: its node moves between the Overview
-  // (About, Site) and this tab, so it renders once and keeps its state.
-  function syncDevHome(key) {
-    const dev = $('#ov-dev'), rec = $('#records-body'), ov = $('#pane-overview'); if (!dev || !rec || !ov) return;
-    const scoped = typeof DevScope !== 'undefined' && DevScope.current();
-    const DT = root.DevTab;
-    if (key === 'records' && scoped) {
-      if (dev.parentElement !== rec) { rec.innerHTML = ''; rec.appendChild(dev); }
-      dev.hidden = false; dev.classList.add('in-records');
-      if (DT && DT.setSub) DT.setSub('files');
-    } else if (dev.parentElement !== ov) {
-      ov.appendChild(dev); dev.classList.remove('in-records');
-      if (DT && DT.setSub && document.querySelector('[data-devsub="files"][aria-selected="true"]')) DT.setSub('about');
-    }
-  }
-
   // Bundle 6: the old Data tab's panels (refresh and manage sources; the duplicate check) under
   // Records › Sources and Records › Data checks, at Peel scope.
   function showData(which) {
@@ -66,7 +53,11 @@
   function render() {
     const body = $('#records-body'); if (!body || !App() || !App().state) return;
     const scoped = typeof DevScope !== 'undefined' && DevScope.current();
-    if (scoped) { showData(null); syncDevHome('records'); if (root.PeelPanel) root.PeelPanel.set('records:files', filesPanelSpec(scoped)); return; }
+    // A development: its files and history, the full table drawn here (js/devtab.js render, data-dev set),
+    // the panel from filesPanelSpec.
+    if (scoped) { showData(null); if (root.DevTab && root.DevTab.render) root.DevTab.render(body); if (root.PeelPanel) root.PeelPanel.set('records:files', filesPanelSpec(scoped)); return; }
+    // (no development here: DevScope's next render must not write over a file's record or the sources)
+    delete body.dataset.dev;
     const s = SS() && SS().current();
     if (s && s.kind === 'result' && s.rkind === 'file' && AC().currentFile) {
       const f = AC().currentFile(); if (f) { showData(null); body.innerHTML = fileHTML(f.r, f.p); return; }
@@ -128,7 +119,10 @@
     if (fails.length) out.push({ text: `${fails.length} data check${fails.length === 1 ? '' : 's'} flagged (${fails.map(c => c.label).join(', ')}).`, at: 'records:checks' });
     return out;
   }
-  // A development's files: the tree, the history and the source records are the full table.
+  // A development's files and history (one view, navigation phase 5): the tree, on this site, the latest
+  // activity, the related applications (was the full table's only) and the files and events (the Gantt chart
+  // and the dated events, moved from the Overview; About stays there). The full table: every file in tree
+  // order, related applications, how the stage was set and the source records.
   function filesPanelSpec(p) {
     const PN = root.PeelPanel, PH = root.PeelPhases, FT = root.PeelFileTree, files = (p.records || []).filter(r => r.kind === 'application'), permits = (p.records || []).filter(r => r.kind === 'permit');
     const day = d => (d ? new Date(d).toLocaleDateString('en-CA', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' }) : '');
@@ -142,20 +136,37 @@
     const siteRow = q => PN.kv(`<button type="button" class="btn small link" data-pnl-dev="${esc(q.key)}"><strong>${esc(q.title)}</strong></button>${q.siteActivity ? ' <small>other activity</small>' : ''}`,
       `${q.units > 0 ? `${fmtNum(q.units)} homes · ` : ''}${esc((PH && PH.PHASE_BY_KEY[q.phase] || {}).label || q.phase || '')}${(q.records || []).some(r => r.kind === 'application') ? ` · ${esc((q.records.find(r => r.kind === 'application') || {}).ref || '')}` : ''}`);
     const siteList = site.length ? [{ title: `On this site${site.length > 5 ? ` (5 of ${site.length})` : ''}`, rows: site.slice(0, 5).map(siteRow), total: Math.min(5, site.length) }] : [];
+    // Other developments with a file on the same land (not on this site), largest first: the twelve the full
+    // table lists (js/devtab.js filesHTML), each opening as the scope.
+    const onSite = new Set(site.map(q => q.key)), rel = (DN() && DN().relatedProjects ? DN().relatedProjects(p) : []).filter(x => !onSite.has(x.q.key)).slice(0, 12);
+    const HOW = { 'same address': 'same address as', 'covers it': 'covers', 'within it': 'within', 'overlapping land': 'overlaps' };
+    const relRow = ({ q, hits }) => ({ attrs: { 'data-pnl-dev': q.key }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(q.title)}</span>${q.units > 0 ? `<span class="pnl-r-fig">${fmtNum(q.units)}<small>homes</small></span>` : ''}</div><small class="pnl-r-line">${esc((PH && PH.PHASE_BY_KEY[q.phase] || {}).label || q.phase || '')}${hits[0] ? ` · ${esc(HOW[hits[0].how] || hits[0].how)} ${esc(hits[0].m.ref || '')}` : ''}</small>` });
+    const relList = rel.length ? [{ title: 'Related applications', rows: rel.slice(0, 5).map(relRow), total: rel.length, seeAll: { 'data-full-table': 'records', 'data-ft-go': 'Related applications' } }] : [];
+    // (the files and events: the Gantt chart with each file's events and source record, then every dated event)
+    const DT = root.DevTab, folds = [{ title: 'Files and events', id: 'pnl-hist', open: true, html: DT && DT.partHTML ? DT.partHTML(p, 'story') : '' }];
+    const onMount = () => { if (DT && DT.fillParts) DT.fillParts(p, ['story']); };
     // Bundle 6: the files as a tree (the tree build), the latest activity under it; the flat list
-    // where the development has no tree entry (Previous counting, or its files changed since the build).
+    // where the development has no tree entry (the tree counts did not load, or a development of
+    // permits only).
     const d = FT && FT.of(p);
     if (d) {
       const s = FT.summary(d), recOf = FT.recLookup(p), mainN = FT.nodeOf(d, s.root), rr = (mainN && recOf(mainN)) || {};
       const rootTxt = `<strong>${esc(s.root)}</strong>${rr.type ? ` (${esc(plain(rr.type))}${rr.statusRaw ? `, municipal status: ${esc(rr.statusRaw)}` : ''})` : ''}`;
-      const holds = s.counted.length > 1 ? `The homes (<strong>${fmtNum(s.units)}</strong>) are counted on ${s.counted.length} files, most on ${rootTxt}` : `${rootTxt} holds the <strong>${fmtNum(s.units)}</strong> homes`;
+      // The homes are the development's (p.units), as the Overview says them: net of the homes the site
+      // demolishes (the tree's own count is the gross), or counted from its files and permits where the
+      // tree's count is not used (its files differ from the build, or a count was entered).
+      const u = p.units || 0, lost = p.unitsLost > 0 ? p.unitsLost : 0, notTree = !(p.count && p.count.mode === 'tree');
+      const why = notTree ? `, counted from its files and permits${lost ? `, net of ${fmtNum(lost)} demolished` : ''}` : lost ? `, net of ${fmtNum(lost)} demolished` : '';
+      const holds = s.counted.length > 1 ? `The homes (<strong>${fmtNum(u)}</strong>${why}) are counted on ${s.counted.length} files, most on ${rootTxt}` : `${rootTxt} holds the <strong>${fmtNum(u)}</strong> homes${why}`;
+      const uCtx = notTree ? `counted from its files and permits (the tree build counts ${fmtNum(s.units)})` : lost ? `net of ${fmtNum(lost)} demolished (${fmtNum(s.units)} on the files)` : s.counted.length > 1 ? `on ${s.counted.length} files` : `on ${esc(s.root)}`;
       return {
         fullTitle: `${p.title} · files, history and source records`,
         head: PN.siteHead(p),
-        answer: s.files > 1 ? `<strong>${s.files}</strong> planning files on one site. ${holds}${s.onLand ? `; ${s.onLand} file${s.onLand === 1 ? ' sits' : 's sit'} on its land` : ''}${s.sameLand ? `${s.onLand ? ' and' : ';'} ${s.sameLand} earlier file${s.sameLand === 1 ? '' : 's'} share${s.sameLand === 1 ? 's' : ''} the land` : ''}.` : `One planning file: ${rootTxt}, with <strong>${fmtNum(s.units)}</strong> homes.`,
-        figures: [{ v: s.files, u: 'files', label: 'planning applications', ctx: 'in one tree', attrs: { 'data-dev-hist': 'file' } }, { v: fmtNum(s.units), u: 'homes', label: 'counted once', ctx: s.counted.length > 1 ? `on ${s.counted.length} files` : `on ${esc(s.root)}`, attrs: { 'data-dev-file': s.root } }, { v: permits.length, u: permits.length === 1 ? 'permit' : 'permits', label: 'building permits', ctx: '', attrs: permits.length ? { 'data-dev-hist': 'permit' } : null }, { v: s.check, u: s.check === 1 ? 'link' : 'links', label: 'to check', ctx: 'linked by overlap only' }],
+        answer: s.files > 1 ? `<strong>${s.files}</strong> planning files on one site. ${holds}${s.onLand ? `; ${s.onLand} file${s.onLand === 1 ? ' sits' : 's sit'} on its land` : ''}${s.sameLand ? `${s.onLand ? ' and' : ';'} ${s.sameLand} earlier file${s.sameLand === 1 ? '' : 's'} share${s.sameLand === 1 ? 's' : ''} the land` : ''}.` : `One planning file: ${rootTxt}, with <strong>${fmtNum(u)}</strong> homes${why}.`,
+        figures: [{ v: s.files, u: 'files', label: 'planning applications', ctx: 'in one tree', attrs: { 'data-dev-hist': 'file' } }, { v: fmtNum(u), u: 'homes', label: 'counted once', ctx: uCtx, attrs: { 'data-dev-file': s.root } }, { v: permits.length, u: permits.length === 1 ? 'permit' : 'permits', label: 'building permits', ctx: '', attrs: permits.length ? { 'data-dev-hist': 'permit' } : null }, { v: s.check, u: s.check === 1 ? 'link' : 'links', label: 'to check', ctx: 'linked by overlap only' }],
         chart: `<h3 class="sub-title pnl-chart-t">How the files fit together <span class="pnl-chart-u">(each under the file whose land holds it)</span></h3>${FT.treeHTML(d, recOf, { dot: k => (root.PeelUtil.dot ? root.PeelUtil.dot(k) : ''), latest: sorted[0] && sorted[0].ref, ...(root.PeelDcGate ? root.PeelDcGate.treeOpts(p, d) : {}) })}`,
-        lists: [...siteList, { title: 'Latest activity', rows: latest, total: files.length, seeAll: { 'data-full-table': 'records' } }],
+        lists: [...siteList, { title: 'Latest activity', rows: latest, total: files.length, seeAll: { 'data-full-table': 'records' } }, ...relList],
+        folds, onMount,
         method: 'The tree comes from the weekly tree build: each file sits under the file whose land holds it (by boundary overlap and file type, with a confidence on each link); the homes are counted once, on the root file. A link marked check was made by overlap only. Earlier files on the same land are the site\u2019s history and are not counted. Each file shows the municipality\u2019s own status wording.',
         sources: `${esc(p.municipality)} open data (applications and permits); the tree build of ${esc(((root.PeelTreeCounts && root.PeelTreeCounts.data && root.PeelTreeCounts.data.snapshotAt) || '').slice(0, 10))}.`,
         foot: { primary: { label: 'Servicing memo', attrs: { 'data-pnl-memo': '' } }, secondary: [{ label: 'How approvals work', attrs: { 'data-ws-page': 'approvals' }, title: 'Ontario’s steps, the app’s stages and how the files make a tree' }] },
@@ -166,14 +177,15 @@
       head: PN.siteHead(p),
       answer: `<strong>${files.length}</strong> planning file${files.length === 1 ? '' : 's'} and <strong>${permits.length}</strong> building permit${permits.length === 1 ? '' : 's'} on this site${p.last ? `; the latest activity ${esc(day(p.last))}` : ''}.`,
       figures: [{ v: files.length, u: 'files', label: 'planning applications', ctx: '' }, { v: permits.length, u: 'permits', label: 'building permits', ctx: '' }],
-      lists: [...siteList, { title: 'Files', rows: latest, total: files.length, seeAll: { 'data-full-table': 'records' } }],
+      lists: [...siteList, { title: 'Files', rows: latest, total: files.length, seeAll: { 'data-full-table': 'records' } }, ...relList],
+      folds, onMount,
       method: 'The files on the land and their history: how the development\u2019s stage was set (the furthest stage reached by a file that is not withdrawn), dated events and the source records with their provenance. Each file shows the municipality\u2019s own status wording.',
       sources: `${esc(p.municipality)} open data (applications and permits), with each record\u2019s source and pull date in the full table.`,
       foot: { primary: { label: 'Servicing memo', attrs: { 'data-pnl-memo': '' } }, secondary: [{ label: 'How approvals work', attrs: { 'data-ws-page': 'approvals' }, title: 'Ontario’s steps, the app’s stages and how the files make a tree' }] },
     };
   }
 
-  const api = { render, syncDevHome, peelHTML, sourcesHTML, checksHTML, fileHTML, caveats, filesPanelSpec, sourcesPanelSpec, checksPanelSpec };
+  const api = { render, peelHTML, sourcesHTML, checksHTML, fileHTML, caveats, filesPanelSpec, sourcesPanelSpec, checksPanelSpec };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelRecordsTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);

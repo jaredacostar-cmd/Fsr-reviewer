@@ -15,9 +15,10 @@ const src = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const HTML = src('index.html');
 const plain = o => JSON.parse(JSON.stringify(o));
 
-test('index.html: Servicing has two chips; the panes move by data-sub / data-pane and keep their ids', () => {
+test('index.html: Servicing has two chips (and FSR review at a development); the panes move by data-sub / data-pane and keep their ids', () => {
   const row = HTML.slice(HTML.indexOf('<div class="f-pane f-subtabs svc-subtabs" data-pane="svc"'), HTML.indexOf('</div>', HTML.indexOf('svc-subtabs')));
-  assert.deepEqual([...row.matchAll(/<button[^>]*data-svcsub="(\w+)">([^<]+)</g)].map(m => [m[1], m[2]]), [['capacity', 'Capacity'], ['network', 'Network']]);
+  // (navigation phase 5: FSR review is a development's third view, hidden at an area: tests/nav-aliases.test.js)
+  assert.deepEqual([...row.matchAll(/<button[^>]*data-svcsub="(\w+)">([^<]+)</g)].map(m => [m[1], m[2]]), [['capacity', 'Capacity'], ['network', 'Network'], ['fsr', 'FSR review']]);
   const at = id => HTML.indexOf(`id="${id}"`);
   for (const id of ['pane-alloc', 'alloc-body', 'pane-wfac', 'wfac-body', 'pane-hydro', 'hyd-box', 'pane-svc-checks', 'svc-checks-body']) assert.equal(HTML.split(`id="${id}"`).length, 2, `#${id} once`);
   // Capacity's full table: the table, the charts, then the allocations recorded.
@@ -319,7 +320,7 @@ test('Reference › Data checks on a page: its Servicing model rows and See all 
   assert.match(P.listHTML(svc), /data-ft-go="2020 Master Plan vs this tracker">See all \(6\) →<\/button>/, 'the sixth (the Caledon wells) reachable from the page');
   assert.deepEqual(plain(out.rows[0].attrs), { 'data-ws-page': 'outlets', title: 'Review outlets' }, 'a page row is left as it is');
   // (a page link to the map's tools: the full map first, then its own handler; js/workspaces.js MAP_LINK)
-  assert.match(src('js/workspaces.js'), /const MAP_LINK = '\[data-at\], \[data-ss\], \[data-full-table\], \[data-trace\], \[data-mview\]';/);
+  assert.match(src('js/workspaces.js'), /const MAP_LINK = '\[data-at\], \[data-ss\], \[data-full-table\], \[data-trace\], \[data-wtrace\], \[data-scope-compare\], \[data-mview\]';/);
 });
 
 test('the Servicing capacity page under a System: its header and figures count both systems (as Home’s figure); Soonest limits follows the System and names it', () => {

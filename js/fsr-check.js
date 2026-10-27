@@ -1,11 +1,12 @@
 /* js/fsr-check.js — FSR cross-check (Phase 7).
  *
- * The site bar's "Check FSR" button opens this panel for the open development: the
+ * Servicing › FSR review at a development (navigation phase 5, the one host): the
  * consultant's population and flows from a Functional Servicing Report are entered and
  * compared against the app's figures for the site — its zone servicing, the traced
- * sewer path, pipe capacities along the path and the plant reserve. Differences over
+ * sewer path, pipe capacities along the path and the plant reserve. The header's Check
+ * FSR opens it, on the map and on the site's page (panelSpec). Differences over
  * ~10% are flagged (amber over 10%, red over 25%); anything relying on DC works not
- * yet built is flagged from the DC-works timing (the same devWorks gap the site-bar
+ * yet built is flagged from the DC-works timing (the same devWorks gap the header's
  * flags use). A one-page comparison goes through the print-report pattern
  * (PeelReports.openReport + window.print()).
  *
@@ -156,7 +157,7 @@
 
   /**
    * DC-works timing flags from the devWorks shape ({ needBy, gap, trunks }) — the same
-   * "relies on DC works" logic the site-bar flags use (Phase 1).
+   * "relies on DC works" logic the header's flags use (Phase 1).
    */
   function dcCheck(w) {
     if (!w) return [{ level: 'na', text: 'DC works not loaded.' }];
@@ -189,8 +190,8 @@
   // ---- App values (browser only) --------------------------------------------------
 
   /**
-   * The app's side of the comparison for a development: the demand estimate the site
-   * bar shows (Peel design criteria), the pressure zone, the traced sewer path, the
+   * The app's side of the comparison for a development: the demand estimate its
+   * Overview shows (Peel design criteria), the pressure zone, the traced sewer path, the
    * tightest pipes along the path, the plant reserve and the DC works it relies on.
    */
   function appValues(p) {
@@ -371,9 +372,8 @@
     w.document.close();
   }
 
-  /** Toggle the panel for the open development (wired from the site bar's Check FSR button). */
-  // Stage 4: the same form inside a panel (Review an FSR: an open fold of Servicing at the site). The
-  // consultant's figures typed so far are kept per development, and a comparison already run is re-run.
+  // The form in its box (Servicing › FSR review's fold, on the map and on the page). The consultant's
+  // figures typed so far are kept per development, and a comparison already run is re-run.
   function mount(box, p) {
     if (typeof document === 'undefined' || !box || !p) return;
     renderForm(box, p);
@@ -381,26 +381,37 @@
     _open = { key: p.key, p };
     if (_last && _last.key === p.key && _drafts[p.key]) runCheck(box);
   }
-  function toggleFor(p, btn) {
-    if (typeof document === 'undefined' || !p) return;
-    const box = document.getElementById('site-bar-fsr');
-    if (!box) return;
-    const opening = box.hidden;
-    if (opening) {
-      if (box.dataset.pkey !== p.key || !box.dataset.built) renderForm(box, p);
-      _open = { key: p.key, p };
-      box.dataset.built = '1';
-    }
-    box.dataset.pkey = p.key;
-    box.hidden = !opening;
-    if (btn && btn.setAttribute) btn.setAttribute('aria-expanded', String(opening));
+
+  // ---- Servicing › FSR review (navigation phase 5: the one host) ------------------------------------
+  // The view's panel: the Network panel's answer, figures and path lists (net: its spec, js/svc-capacity.js
+  // renderSiteNetwork), the form open in its fold, then all seven things an FSR should cover (Region of
+  // Peel, FSR Requirements 2009: js/ws-pages.js COVERAGE), each with what this app can check of it. It is
+  // its own full table (widen); the footer copies or prints the comparison (js/workspaces.js).
+  const esc0 = s => (U() && U().esc ? U().esc(s) : String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])));
+  const COVER_WORD = { app: ['room', 'Compared here'], part: ['tight', 'Facilities only'], eye: ['over', 'By an engineer'] };
+  const coverHTML = cov => `<ul class="b-lines small fsr-cover">${(cov || []).map(([t, k, d]) => `<li class="pnl-kv"><span>${esc0(t)}<small class="muted"> · ${esc0(d)}</small></span><span class="t-${(COVER_WORD[k] || COVER_WORD.eye)[0]}">${(COVER_WORD[k] || COVER_WORD.eye)[1]}</span></li>`).join('')}</ul>`;
+  function panelSpec(p, net = {}) {
+    const WP = root.PeelWsPages, cov = WP && WP.COVERAGE ? WP.COVERAGE : [];
+    return {
+      calc: true, fullTitle: `${p.title} · FSR review: the consultant\u2019s figures against Peel\u2019s criteria`,
+      head: net.head, answer: net.answer, figures: net.figures || [], lists: net.lists || [],
+      folds: [
+        { title: 'The consultant\u2019s figures against this app\u2019s', id: 'pnl-fsr', open: true, html: '<div class="fsr-box" data-pnl-fsrbox></div>' },
+        { title: 'What the FSR should cover', id: 'pnl-fsr-cover', open: true, html: coverHTML(cov) },
+      ],
+      method: `${net.method ? `${net.method} ` : ''}What the FSR should cover: Region of Peel, Functional Servicing Report Requirements (November 2009); confirm the current version with the Region.`,
+      sources: net.sources || '',
+      foot: { primary: { label: 'Copy the comparison', attrs: { 'data-ws-fsrcopy': '' } }, secondary: [{ label: 'Print / PDF', attrs: { 'data-ws-fsrprint': '' } }] },
+      widen: true,
+      onMount: host => { const b = host && host.querySelector('[data-pnl-fsrbox]'); if (b) mount(b, p); },
+    };
   }
 
   if (typeof document !== 'undefined') {
     document.addEventListener('click', e => {
-      const t = e.target && e.target.closest ? e.target.closest('.fsr-box [data-fc-run], .fsr-box [data-fc-print], .fsr-box [data-fc-clear], #site-bar-fsr [data-fc-run], #site-bar-fsr [data-fc-print], #site-bar-fsr [data-fc-clear]') : null;
+      const t = e.target && e.target.closest ? e.target.closest('.fsr-box [data-fc-run], .fsr-box [data-fc-print], .fsr-box [data-fc-clear]') : null;
       if (!t) return;
-      const box = t.closest('.fsr-box, #site-bar-fsr');
+      const box = t.closest('.fsr-box');
       if (!box) return;
       if (t.hasAttribute('data-fc-run')) return runCheck(box);
       if (t.hasAttribute('data-fc-print')) return printCheck();
@@ -408,9 +419,9 @@
     });
     // Keep the consultant's inputs while the panel is rebuilt (e.g. the scope refresh).
     document.addEventListener('input', e => {
-      const inp = e.target && e.target.closest ? e.target.closest('.fsr-box [data-fc], #site-bar-fsr [data-fc]') : null;
+      const inp = e.target && e.target.closest ? e.target.closest('.fsr-box [data-fc]') : null;
       if (!inp || !inp.dataset.fc) return;
-      const box = inp.closest('.fsr-box, #site-bar-fsr');
+      const box = inp.closest('.fsr-box');
       if (!box || !box.dataset.pkey) return;
       (_drafts[box.dataset.pkey] = _drafts[box.dataset.pkey] || {})[inp.dataset.fc] = inp.value;
     });
@@ -420,7 +431,7 @@
   const api = {
     WARN_PCT, BAD_PCT, NUM_KEYS, toNum, normCon, pctDiff, flagFor, fmtDiff,
     zoneMatch, flowRows, connRows, pipeChecks, plantCheck, dcCheck,
-    summarize, verdictOf, appValues, toggleFor, mount, runCheck, printCheck,
+    summarize, verdictOf, appValues, panelSpec, mount, runCheck, printCheck,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelFsrCheck = api;

@@ -7,17 +7,13 @@
   // chronology rules and data/tree-overrides.json applied), and a signature of its files. Building
   // the trees takes seconds, so the browser never builds them; it only applies the counts.
   //
-  // Settings › Counting chooses Tree (the default) or Previous (one release, to compare). A
-  // development keeps its previous count, with the reason, when it has no tree entry, when its files
-  // differ from the tree build (a live refresh or a source turned off), or when you entered a count
-  // for one of its files.
-  const STORE_KEY = 'countMode';
-  const MODES = { tree: 'Each planning file once (tree)', previous: 'Previous count' };
+  // Every development takes its tree count. One the tree does not count keeps the count from its
+  // files and permits (the rule before the tree, kept as the fallback), with the reason: no tree
+  // entry (a development of permits only: counted from its permits), files that differ from the tree
+  // build (a live refresh or a source turned off), a count you entered for one of its files, or the
+  // tree counts not loaded. (The Settings › Counting switch, kept for one release from 2026-10-15, is
+  // retired: owner decision 14.)
   let data = null, loading = null;
-
-  const store = () => (root.PeelUtil && root.PeelUtil.store) || null;
-  function mode() { const s = store(); const v = s ? s.get(STORE_KEY, 'tree') : 'tree'; return v === 'previous' ? 'previous' : 'tree'; }
-  function setMode(v) { const s = store(); if (s) s.set(STORE_KEY, v === 'previous' ? 'previous' : 'tree'); }
 
   // The development's planning files, as the tree build saw them: "Municipality|file key"
   // (js/phases.js fileId: a Caledon number with its type).
@@ -38,7 +34,7 @@
   const sigOf = (p, canonRef) => signature(fileKeysOf(p, canonRef));
 
   // 'loading' → 'ok' or 'failed': the count shown says so when the tree counts didn't arrive, rather
-  // than quietly showing the previous count (a different total from the same data).
+  // than quietly showing the count from the files and permits (a different total from the same data).
   let status = 'idle';
   function load() {
     if (!loading) {
@@ -58,10 +54,12 @@
     return (d.projects && d.projects[key]) || null;
   }
 
-  // Sets p.units to the tree count (or keeps the previous one) and records why in p.count:
+  // Sets p.units to the tree count (or keeps the one from its files and permits) and records why in p.count:
   //   { mode: 'tree' | 'previous', previous, trees: [[root, units, basis, flag]], why }
   function apply(projects, opts = {}) {
-    const m = opts.mode || mode(), d = opts.data !== undefined ? opts.data : data;
+    // (opts.mode 'previous': the rule before the tree on its own, for tests and a comparison; nothing
+    // in the app asks for it)
+    const m = opts.mode === 'previous' ? 'previous' : 'tree', d = opts.data !== undefined ? opts.data : data;
     if (d && !usable(d)) return { mode: m, tree: 0, kept: 0 };
     const canonRef = opts.canonRef || (root.PeelPhases && root.PeelPhases.canonRef) || (x => x);
     let tree = 0, kept = 0;
@@ -86,8 +84,8 @@
       const full = p.records && p.records.length;
       if (full && (p.records || []).some(r => r.unitsUser)) { p.count.why = 'you entered a count for one of its files'; kept++; continue; }
       if (full && e.s && sigOf(p, canonRef) !== e.s) { p.count.why = `its files differ from the tree build of ${(d.snapshotAt || '').slice(0, 10)}`; kept++; continue; }
-      // Net of the dwellings the site's records demolish (js/phases.js lostHomes), as Previous counts
-      // them and as the screens say ("net of N demolished"); the tree's own count is the gross.
+      // Net of the dwellings the site's records demolish (js/phases.js lostHomes), as the rule before the tree
+      // counts them and as the screens say ("net of N demolished"); the tree's own count is the gross.
       const lost = p.unitsLost > 0 ? p.unitsLost : 0;
       p.units = lost ? Math.max(0, e.u - lost) : e.u;
       if (lost) p.unitsGross = e.u;
@@ -133,25 +131,19 @@
     if (c.mode === 'tree') {
       const more = (c.trees || []).length > max ? `<br><span class="muted">+${(c.trees || []).length - max} more trees</span>` : '';
       const parts = (c.trees || []).slice(0, max).map(([rootRef, u, basis, flag]) => `${esc(rootRef)}: ${num(u)}${flag ? ` <span class="tag">${esc(flag)}</span>` : ''} <span class="muted">(${esc(basis)})</span>`);
-      const moved = '';   // (the previous count is shown only in Settings › Counting: SPEC 1.6)
+      const moved = '';   // (the count before the tree is not shown beside it: SPEC 1.6)
       const withTxt = c.with ? `<br>Its files are counted in the tree of ${esc(c.with)}, a file another development holds, so they count 0 here.` : '';
       return `<p class="small count-note" data-count="tree"><strong>Tree count</strong>${moved}${parts.length ? `<br>${parts.join('<br>')}` : ''}${more}${partsHTML(p)}${withTxt}</p>`;
     }
-    if (mode() === 'tree' && c.why) return `<p class="small muted count-note" data-count="previous"><strong>Previous count</strong>: ${esc(c.why)}.</p>`;
-    return `<p class="small muted count-note" data-count="previous"><strong>Previous count</strong> (Settings › Counting).</p>`;
+    // Not counted by the tree (the rule before it, kept as the fallback): a development of permits only is
+    // counted from its permits; one with planning files says why the tree's count is not used.
+    const permitsOnly = !!(p.records && p.records.length) && !p.records.some(r => r.kind === 'application');
+    return `<p class="small muted count-note" data-count="previous"><strong>Counted from its ${permitsOnly ? 'permits' : 'files and permits'}</strong>${c.why && !permitsOnly ? `: ${esc(c.why)}` : ''}.</p>`;
   }
-  // Settings › Counting.
-  function settingsHTML() {
-    const m = mode();
-    const meta = data ? `Tree build of ${(data.snapshotAt || '').slice(0, 10)}: Peel ${num(data.totals && data.totals.Peel && data.totals.Peel.tree)} units (previous ${num(data.totals && data.totals.Peel && data.totals.Peel.previous)}).` : 'Tree counts are not loaded; the previous count is shown.';
-    return `<fieldset data-info="counting"><legend>Counting</legend>
-        <label class="field"><span>Units per development</span><select id="count-mode" autocomplete="off">${Object.entries(MODES).map(([v, t]) => `<option value="${v}"${v === m ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
-        <p class="small muted">Tree: the developments are the trees of files on one land, and each planning file counts once (approved 2026-10-15). Previous: the developments and counts as before (the larger of planned and permitted). Kept for one release so you can compare. ${esc(meta)}</p>
-      </fieldset>`;
-  }
-  const label = () => (mode() === 'tree' ? 'tree count' : 'previous count');
+  // (the Scenario list's "Units per development" row and the scenario text in exports say how units are counted)
+  const label = () => 'tree count';
 
-  const api = { MODES, mode, setMode, load, setData, apply, sigOf, signature, fileKeysOf, noteHTML, partsHTML, estimatedUnits, PART_KIND, settingsHTML, label, get data() { return data; }, get status() { return status; } };
+  const api = { load, setData, apply, sigOf, signature, fileKeysOf, noteHTML, partsHTML, estimatedUnits, PART_KIND, label, get data() { return data; }, get status() { return status; } };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTreeCounts = api;
 })(typeof window !== 'undefined' ? window : globalThis);

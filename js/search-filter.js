@@ -82,7 +82,7 @@
     return [p.municipality, P.PHASE_BY_KEY[p.phase].label, p.units ? `${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'}` : '', ref, sp].filter(Boolean).map(esc).join(' · ');
   }
   // A development found by a file number only (not by its title or an address): that file number, so a
-  // pick on a page opens its Files at it (js/workspaces.js pageRoute). ql: the query, in lower case.
+  // pick on a page opens its Records at it (js/workspaces.js pageRoute). ql: the query, in lower case.
   const fileRefOf = (p, ql) => { if (ql.length < 5 || !/\d/.test(ql) || p.title.toLowerCase().includes(ql) || p.records.some(r => (r.address || '').toLowerCase().includes(ql))) return null; const r = p.records.find(x => (x.ref || '').toLowerCase().startsWith(ql)); return r ? r.ref : null; };
   function renderSug() {
     sugEl.hidden = !sugItems.length;
@@ -106,7 +106,7 @@
       .sort((a, b) => (b.title.toLowerCase().startsWith(ql) - a.title.toLowerCase().startsWith(ql)) || (b.units || 0) - (a.units || 0)).slice(0, 4);
     const places = placeMatches(ql);
     const filterItem = { label: `Filter the list by “${q}”`, filter: q };
-    // (a development found by a file number says so: a pick on a page opens its Files)
+    // (a development found by a file number says so: a pick on a page opens its Records)
     const devItems = devs.map(p => { const ref = fileRefOf(p, ql); return { label: p.title, p, ...(ref ? { hit: 'file', ref } : {}) }; });
     sugItems = [...devItems, ...places, ...(/\d/.test(q) || q.length > 4 ? [{ label: q, loading: true }] : []), filterItem];
     sugSel = -1; renderSug();

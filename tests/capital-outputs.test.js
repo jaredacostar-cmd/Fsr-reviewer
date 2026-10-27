@@ -125,7 +125,10 @@ test('wiring: Construction › To check and its CSVs, the site panel and its cop
   assert.match(ce, /label: 'Copy for review comments', attrs: \{ 'data-ce-copy-brief': '' \}/);
   assert.match(ce, /\['Capital to check', M\.watchSheetRows/);
   assert.match(src('js/reports.js'), /PeelCapitalEA\.siteBriefHTML\(p, \{ links: false \}\)/);
-  assert.match(src('js/analysis-tabs.js'), /siteBriefCount\(\) === 0/);
+  // (navigation phase 5: EAs are no chip at a site, so EMPTY_AT_SITE went; the site's Capital panel lists
+  // the EAs and works near it only when there are some)
+  assert.match(src('js/dca-tab.js'), /siteBriefCount\(\) > 0/);
+  assert.doesNotMatch(src('js/analysis-tabs.js'), /EMPTY_AT_SITE/);
   const html = M.listsHTML({ contracts: new Map(), hasCapital: true, watch: [] });
   assert.match(html, /data-sec="watch"[\s\S]*Nothing to check[\s\S]*data-ce-cap-csv/);
 });

@@ -1,6 +1,6 @@
 /* Constraint data (PeelCxData): the built constraint layers (data/constraints/, scripts/
- * build-constraints.js) loaded on demand, the Development › Site constraint checklist, and the
- * area card "Land under constraints".
+ * build-constraints.js) loaded on demand, the Site constraint checklist (Servicing › Network's Site
+ * fold), and the area card "Land under constraints".
  *
  * Screening context only: every line says what a mapped layer shows at the development's point,
  * never a determination; the owner (conservation authority, province) confirms.

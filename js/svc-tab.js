@@ -191,7 +191,6 @@
         ${dv ? optSwitch('div', `${fmt1(dv.mld)} ML/d diversion to ${SD().PLANT_SHORT[dv.to]}`, [['off', 'Off'], ['on', `On (planned ${dv.when})`]]) : ''}
         ${nearSwitch()}
       </div>
-      ${root.PeelTreeCounts && root.PeelTreeCounts.settingsHTML ? root.PeelTreeCounts.settingsHTML() : ''}
       ${Sett() && Sett().wetBoxHTML ? Sett().wetBoxHTML() : ''}
       ${compareHTML()}
       <p class="small muted">Horizon years: Servicing › Capacity › Charts and method. <span data-scen-crit>${scenCritLineHTML()}</span> — <button type="button" class="btn small link" data-goto-tab="criteria">Criteria &amp; references</button>. The scenario is saved in this browser and carried in share links and exports.</p>
@@ -398,10 +397,10 @@
   // replaces the Water and Wastewater bodies (renderSvcScoped), and the Peel-wide ones come back as built.
   const idOf = (() => { const w = new WeakMap(); let n = 0; return o => (o && typeof o === 'object' ? (w.get(o) || (w.set(o, ++n), n)) : 0); })();
   function modelKey() {
-    const st = App().state, bc = CA().baselineCensus(), TC = root.PeelTreeCounts;
+    const st = App().state, bc = CA().baselineCensus();
     return JSON.stringify([idOf(st.projects), st.projects.length, idOf(st.whatifs), (st.whatifs || []).map(w => w.key), st.criteria, svcOpt, idOf(bc), bc && bc.year,
       idOf(st.servicing), idOf(st.reports), idOf(st.compliance), idOf(st.dcInfra), st.basis, st.empGen || 0, SD().svcById.size, SP() && SP().hz,
-      MM().SEW && idOf(MM().SEW.data), MA().getCapYear(), MM().getWwLay(), TC && TC.mode ? TC.mode() : '',
+      MM().SEW && idOf(MM().SEW.data), MA().getCapYear(), MM().getWwLay(),
       // (the committed horizon counts site servicing permits once data/dc-gate.json is in)
       !!(root.PeelDcGate && root.PeelDcGate.loaded && root.PeelDcGate.loaded())]);
   }

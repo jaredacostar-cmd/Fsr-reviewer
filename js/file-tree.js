@@ -76,7 +76,9 @@
    *  opts.limit: the files shown under the root before "+ n more" (all when omitted); opts.dot: the
    *  stage dot for a stage key; opts.devKey: the development, where it is not the one open;
    *  opts.after(node): HTML placed under a file (its site servicing permits, js/dc-gate.js);
-   *  opts.foot: HTML after the tree's history (permits left out). */
+   *  opts.foot: HTML after the tree's history (permits left out); opts.own: an "on its own" button on
+   *  each file (the earlier files on the same land too, as the list it replaced), opening the file and the
+   *  files under it (Records' full table: js/devtab.js filesHTML). */
   function treeHTML(d, recOf, opts = {}) {
     const t = build(d); if (!t.root) return '';
     const dot = opts.dot || (() => ''), latest = opts.latest || null, counts = countsOf(d);
@@ -86,7 +88,7 @@
       // The homes on the file that carries them; the top of a block plan that adds up its parts says so.
       const right = c ? `<b>${num(c.units)}</b>homes · counted here${c.kind !== 'stated' ? ' (estimate)' : ''}` : n.i === 0 && counts.size > 1 ? `<b>${num(d.u)}</b>homes in all, on the files below` : esc(r && r.dateText ? r.dateText : yr(r));
       // (the file number opens its source record in the development's History: js/devtab.js openFile)
-      return `<div class="tr-row">${dot(r && r.stage || 'review')}<div><button type="button" class="tr-ref" data-dev-file="${esc(n.ref)}"${opts.devKey ? ` data-dev-key="${esc(opts.devKey)}"` : ''} title="Its source record, in History">${esc(n.ref)}</button><span class="tr-type">${esc(typeOf(n, r))}</span>${latest && latest === n.ref ? ` <button type="button" class="tr-new" data-dev-file="${esc(n.ref)}"${opts.devKey ? ` data-dev-key="${esc(opts.devKey)}"` : ''} title="The latest file: its source record">latest</button>` : ''}${isCheck(n) ? ` <button type="button" class="tr-check" data-dev-file="${esc(n.ref)}"${opts.devKey ? ` data-dev-key="${esc(opts.devKey)}"` : ''} title="Linked by overlap only (low confidence): check its record. A wrong link can be reported from the record">check</button>` : ''}${r && r.statusRaw ? `<span class="tr-ms">municipal status: <em>${esc(r.statusRaw)}</em></span>` : ''}${why ? `<span class="tr-why">${esc(why)}</span>` : ''}</div><div class="tr-r">${right}</div></div>`;
+      return `<div class="tr-row">${dot(r && r.stage || 'review')}<div><button type="button" class="tr-ref" data-dev-file="${esc(n.ref)}"${opts.devKey ? ` data-dev-key="${esc(opts.devKey)}"` : ''} title="Its source record, in History">${esc(n.ref)}</button><span class="tr-type">${esc(typeOf(n, r))}</span>${opts.own ? ` <button type="button" class="btn small link tr-own" data-dt-sub="${esc(n.ref)}" title="Open this file on its own: the file and the files under it">on its own</button>` : ''}${latest && latest === n.ref ? ` <button type="button" class="tr-new" data-dev-file="${esc(n.ref)}"${opts.devKey ? ` data-dev-key="${esc(opts.devKey)}"` : ''} title="The latest file: its source record">latest</button>` : ''}${isCheck(n) ? ` <button type="button" class="tr-check" data-dev-file="${esc(n.ref)}"${opts.devKey ? ` data-dev-key="${esc(opts.devKey)}"` : ''} title="Linked by overlap only (low confidence): check its record. A wrong link can be reported from the record">check</button>` : ''}${r && r.statusRaw ? `<span class="tr-ms">municipal status: <em>${esc(r.statusRaw)}</em></span>` : ''}${why ? `<span class="tr-why">${esc(why)}</span>` : ''}</div><div class="tr-r">${right}</div></div>`;
     };
     const why = n => (n.role === PRECON ? 'its pre-consultation' : 'on its land');
     const aft = n => (opts.after ? opts.after(n) : '');
@@ -133,7 +135,7 @@
     };
   }
 
-  // The site bar's "n links to check" chip opens Records › Files.
+  // The header's "n links to check" flag opens Records › Files.
   if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('click', e => {
     if (!(e.target.closest && e.target.closest('[data-tree-check]'))) return;
     const AT = root.PeelAnalysisTabs; if (AT && AT.openTab) AT.openTab('records', 'files');

@@ -497,8 +497,8 @@
     };
   }
   if (typeof document !== 'undefined') document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-pnl-ce-map]'); if (b) setOn({ [b.dataset.pnlCeMap]: true }); });
-  // EAs within the site's radius (null when no site is scoped): an empty Capital › EAs is hidden.
-  // (Any status: a site with only completed EAs nearby still lists them under its filter.)
+  // EAs within the site's radius (null when no site is scoped): the Overview's Infrastructure coming row counts
+  // them. (Any status: a site with only completed EAs nearby still lists them under its filter.)
   const siteEaCount = () => { const near = nearScope(); return near && data.eas ? M.easNear(data.eas.eas || [], near.lat, near.lng, near.m, near.pts).length + M.easMayApply(data.eas.eas || [], near.muni).length : null; };
   // The site brief (a reviewer's): the EAs and the planned or active capital work within 1 km of a
   // development (p; else the one in scope). null before the data loads or with no site.
@@ -510,7 +510,8 @@
   const briefSources = () => ({ asOf: capAsOf(), easChecked: data.eas && data.eas.generatedAt ? data.eas.generatedAt.slice(0, 10) : '' });
   const siteBriefText = p => { const b = siteBriefFor(p), q = p || (window.PeelDevVerdict && window.PeelDevVerdict.scopedDev()); return b ? M.siteBriefText(b, { title: q && q.title, ...briefSources() }) : ''; };
   const siteBriefHTML = (p, o = {}) => { const b = siteBriefFor(p); return b ? M.siteBriefHTML(b, o) : ''; };
-  // EAs and works near the site in scope (null when none is scoped): an empty Capital › EAs is hidden.
+  // EAs and works near the site in scope (null when none is scoped): Capital's one view at a development lists
+  // them only when there are some (js/dca-tab.js siteTimingSpec; navigation phase 5).
   const siteBriefCount = () => { const b = siteBriefFor(); return b ? b.eas.length + b.may.length + b.works.length : null; };
   async function copyBrief() {
     const t = siteBriefText(); if (!t) return;

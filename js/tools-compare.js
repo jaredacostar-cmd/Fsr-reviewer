@@ -4,7 +4,7 @@
  * (the Phase 2 shell provision: fourth grid column at >=1800px; overlay
  * drawer/sheet below that via the tcmp- rules in this module).
  *
- * Contract (for the workers wiring the site-bar and pop-up buttons):
+ * Contract (for the workers wiring the header's ⋯ and pop-up buttons):
  *   window.PeelToolCompare = {
  *     addDevelopment(p),  // p: a development project object (needs .key/.title)
  *     addArea(a),         // a: { name|title, members|devs|projects|keys|items } or an array of projects

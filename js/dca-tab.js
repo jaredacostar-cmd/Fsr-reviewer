@@ -47,8 +47,9 @@
       // The site's DC brief; sewer-path and plant-reserve numbers live on the Wastewater tab.
       const st = DD().statusOf(p), f = SD().svcFacts(p);
       st.works = st.works || DI().devWorks(p, f);
+      // (then the EAs and capital works near it: Capital is one view at a site, its EAs chip hidden)
       const brief = `<p class="small muted">DC analysis for <strong>${esc(p.title)}</strong>.</p>` + DD().devBriefHTML(p, st, f, 'dc', { noWwNeeds: true });
-      set(0, brief); DV().scopeBriefIds(bodies[0] || legacy);
+      set(0, brief + (CE && CE.siteBriefHTML ? CE.siteBriefHTML(p) : '')); DV().scopeBriefIds(bodies[0] || legacy);
       if (PN) PN.set('dca:timing', siteTimingSpec(p, st, f));
       const note = `<p class="small muted">The Region-wide funding screen is shown when no site is scoped.</p>`;
       set(1, note); set(2, note);
@@ -59,9 +60,13 @@
   }
   // ---- Stage 3: Capital › DC timing at a site and Funding (Labs) as standard panels (the area's DC timing
   // is js/dc-projects.js's) -------------------------------------------------------------------------------
-  // A development: the constraints it relies on (MasterPlan.devNeeds) and the projects that relieve them.
+  // A development: the constraints it relies on (MasterPlan.devNeeds) and the projects that relieve them,
+  // then (navigation phase 5: Capital is one view at a site) the EAs and capital works within 1 km
+  // (js/capital-ea.js's near brief, only when there are some) and the DCs it would pay, in a fold.
   function siteTimingSpec(p, st, f) {
-    const PN = window.PeelPanel, needs = MP().devNeeds(p) || [];
+    const PN = window.PeelPanel, needs = MP().devNeeds(p) || [], CE = window.PeelCapitalEA, sc = DV().scopedDev();
+    const ea = CE && CE.easPanelSpec && sc && sc.key === p.key && CE.siteBriefCount() > 0 ? CE.easPanelSpec() : null, b = ea ? CE.siteBriefFor(p) : null;
+    const pay = f ? DC().dcRevenueHTML(p) : '';
     const T = { gap: ['over', 'Short'], planned: ['room', 'In time'], ok: ['room', 'Room'], check: ['tight', 'Check'] };
     const gaps = needs.filter(c => c.status === 'gap');
     // Every row opens its constraint: a plant, a pumping station or the lake-based water system its
@@ -69,14 +74,16 @@
     const scopeOf = c => (!c.id ? null : /^(plant|ps):/.test(c.id) ? c.id.replace(/^ps:/, '') : c.id === 'wsys:lake' ? c.id : c.zones && c.zones.length ? c.zones[0] : null);
     const row = c => { const [tone, word] = T[c.status] || T.ok, r = c.relief && c.relief[0], sc = scopeOf(c); return { tone, attrs: sc ? { 'data-ss': sc } : { 'data-full-table': 'dca' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${c.sys === 'water' ? '💧 ' : ''}${esc(c.name)}<small>${esc(c.sub || '')}</small></span>${PN.chip({ tone, text: word })}</div><small class="pnl-r-line">${c.out ? `runs out ${c.out === 'today' ? 'now' : `≈${c.out}`}` : `room to ${SP().hz.end}`}${r ? ` · relief: ${esc(r.text)}` : ' · no relief listed'}</small>` }; };
     return {
-      calc: true, fullTitle: `${p.title} · the DC projects it relies on`,
+      calc: true, fullTitle: `${p.title} · the DC projects it relies on${ea ? ', the EAs and capital works near it' : ''}${pay ? ' and the DCs it would pay' : ''}`,
       head: PN.siteHead(p),
       answer: needs.length ? `This site relies on <strong>${needs.length}</strong> constraint${needs.length === 1 ? '' : 's'} on its path${gaps.length ? `; <strong>${gaps.length}</strong> run${gaps.length === 1 ? 's' : ''} out before a DC project relieves ${gaps.length === 1 ? 'it' : 'them'}` : ', each with room or relief in time'}.` : 'No capacity constraint on this site\u2019s path in the screen.',
-      figures: [{ v: needs.length, u: '', label: 'constraints it relies on', ctx: '', attrs: { 'data-full-table': 'dca' } }, { v: gaps.length, u: '', label: 'run out before relief', ctx: '', tone: gaps.length ? 'over' : 'room', attrs: { 'data-full-table': 'dca' } }],
-      lists: [{ title: 'The projects it relies on', rows: needs.slice(0, 5).map(row), total: needs.length, seeAll: { 'data-full-table': 'dca' } }],
-      method: 'The constraints on this site\u2019s path (its sewer path, pumping stations, plant, water system, storage and zone supply), each with the year its capacity runs out and the DC project that relieves it (2026 DC capital maps, draft).',
-      sources: '2026 DC capital maps (draft v2, March 2026); 2020 Water and Wastewater Master Plan; the servicing model.',
-      foot: { primary: { label: 'Show the planned works', attrs: { 'data-mview': 'dc' } } },
+      figures: [{ v: needs.length, u: '', label: 'constraints it relies on', ctx: '', attrs: { 'data-full-table': 'dca' } }, { v: gaps.length, u: '', label: 'run out before relief', ctx: '', tone: gaps.length ? 'over' : 'room', attrs: { 'data-full-table': 'dca' } },
+        ...(b ? [{ v: b.eas.length, u: '', label: 'EAs within 1 km', ctx: b.may.length ? `${b.may.length} more may apply` : '', attrs: { 'data-full-table': 'dca' } }, { v: b.works.length, u: '', label: 'capital works within 1 km', ctx: '', attrs: { 'data-full-table': 'dca' } }] : [])],
+      lists: [{ title: 'The projects it relies on', rows: needs.slice(0, 5).map(row), total: needs.length, seeAll: { 'data-full-table': 'dca' } }, ...(ea ? ea.lists || [] : [])],
+      folds: pay ? [{ id: 'pnl-dcpay', title: 'DCs it would pay', html: pay }] : [],
+      method: `The constraints on this site\u2019s path (its sewer path, pumping stations, plant, water system, storage and zone supply), each with the year its capacity runs out and the DC project that relieves it (2026 DC capital maps, draft).${ea ? ` ${ea.method}` : ''}`,
+      sources: `2026 DC capital maps (draft v2, March 2026); 2020 Water and Wastewater Master Plan; the servicing model.${ea ? ` ${ea.sources}` : ''}`,
+      foot: { primary: { label: 'Show the planned works', attrs: { 'data-mview': 'dc' } }, ...(ea ? { secondary: [{ label: 'Copy for review comments', attrs: { 'data-ce-copy-brief': '' } }] } : {}) },
     };
   }
   // Capital › DC timing · Funding (Labs): the funding screen ("Screening results") and the funding levels

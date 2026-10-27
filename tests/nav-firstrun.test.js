@@ -41,7 +41,7 @@ test('a tour never leaves a development, a selection or the Watch tab open', () 
 
 test('the map tour\'s text matches the app: stages, the legend, Servicing, Capital, Records, Watch, Forecast', () => {
   const t = src('js/tips.js'), tour = t.slice(t.indexOf('const TOUR = ['), t.indexOf('const HELP = ['));
-  for (const stale of ["t: 'Phases'", 'Water and Wastewater for capacity', 'DC for timing', "t: 'Wastewater'", "t: 'Timing forecast'", "t: 'This week: watchlist", 'Files & history', 'The Demand year', 'How developments are coloured']) assert.ok(!tour.includes(stale), `stale: ${stale}`);
+  for (const stale of ["t: 'Phases'", 'Water and Wastewater for capacity', 'DC for timing', "t: 'Wastewater'", "t: 'Timing forecast'", "t: 'This week: watchlist", 'Files & history', 'The Demand year', 'How developments are coloured', '#ov-dev', "tourShow('overview', 'files')", '#site-bar']) assert.ok(!tour.includes(stale), `stale: ${stale}`);
   for (const now of ["t: 'Stages'", 'Servicing for capacity', 'Capital for DC timing', 'Records for the files', "t: 'Watch: your watchlist", "t: 'Forecast'", 'History and source records']) assert.ok(tour.includes(now), `missing: ${now}`);
 });
 

@@ -175,7 +175,7 @@
     return `<div class="small muted tree-link">${escH(l.rule)}${l.conf ? ` · ${escH(l.conf)} confidence` : ''}${escH(ov)}</div>`;
   }
   const indent = t => (t && t.depth ? ` style="margin-left:${Math.min(t.depth, 4) * 14}px"` : '');
-  const FILES_NOTE = 'Files in tree order: each sits under the file whose land holds it, with the rule that linked them and its confidence; files on the same land sit side by side. The development counts its units once, from the tree (Settings › Counting). Open a file to see its branch on its own.';
+  const FILES_NOTE = 'Files in tree order: each sits under the file whose land holds it, with the rule that linked them and its confidence; files on the same land sit side by side. The development counts its units once, from the tree. Open a file to see its branch on its own.';
 
   // Step 2 (js/sites.js): the other developments on this one's site, proposals first (most homes),
   // then its site activity (a patio, a fit-out), from every development built, held aside or not.

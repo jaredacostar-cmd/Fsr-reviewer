@@ -1,6 +1,7 @@
 /* js/dev-nav.js — development navigation (Phase 6 extraction).
  * DV_TABS/showDvTab, project lookup, related projects, file tree, flyToSite,
- * showDetail, the timeline toggle and its document listener.
+ * showDetail and its document listener. (The timeline toggle went with js/fsr.js's dead Events
+ * copy, navigation phase 5: devtab.js's own toggle, data-dt-tl, is the live one.)
  * Extracted verbatim from js/app.js (lines 3206, 3216-3382); the only edits are the
  * reference rewrites in SPLIT_MAP.md §0 rule 4.
  * Note: DV_TABS/showDvTab are defined in js/fsr.js (per the ranges) and re-exported
@@ -183,36 +184,27 @@
     else map.flyTo(t, z, { duration: 0.55 });
   }
   async function showDetail(p) {
-    // Opening a development sets the analysis scope (js/devscope.js): the site bar, the
+    // Opening a development sets the analysis scope (js/devscope.js): the header, the
     // right panel and the map treatment. Files, selections and blocks are result scopes
     // (PeelSvcScope.openResult).
     // Phase 6: the detail needs full records. While the startup index is still
-    // serving first paint, show the Development tab with a skeleton and open
+    // serving first paint, show its Overview with a skeleton and open
     // once the full snapshot lands (same project key: the grouping is identical).
     const app = App();
     if (app && !app.fullSnapshotReady()) {
-      try {
-        const ft = $('#ftab-dev'); if (ft) ft.hidden = false;
-        if (root.PeelAnalysisTabs) root.PeelAnalysisTabs.showFootTab('dev');
-      } catch (e) { /* the tab opens with the scope below */ }
-      const body = $('#pane-dev-body');
+      try { if (root.PeelAnalysisTabs) root.PeelAnalysisTabs.showFootTab('dev'); } catch (e) { /* the tab opens with the scope below */ }
+      const body = $('#ov-body');   // (the Overview, until the development's panel is set)
       if (body) body.innerHTML = root.PeelUtil.skel('Loading development…');
       try { await app.whenFullSnapshot(); } catch (e) { /* open with what we have */ }
       return DevScope.open(projectByKey(p.key) || p);
     }
     return DevScope.open(p);
   }
-  function showTl(v) {
-    document.querySelectorAll('[data-tl]').forEach(b => b.classList.toggle('on', b.dataset.tl === v));
-    document.querySelectorAll('[data-tlv]').forEach(d => { d.hidden = d.dataset.tlv !== v; });
-  }
   // The #detail side panel is gone (SPEC §3): what only it handled now listens on the document. Pipe
   // and DC links, unit counts and files are js/dev-verdict.js's document listener and the result
   // scope's (js/tool-scope.js).
   document.addEventListener('click', e => {
     if (e.target.closest('[data-loads-back]') && devBack) { const b = devBack; devBack = null; if (b.dc) return MP().showDcBack(b.dc); return b.pipe != null ? SC().showPipeLoads(b.pipe) : TS().showLoads(b.id, b.plantName); }
-    const t = e.target.closest('[data-tl]');
-    if (t) return showTl(t.dataset.tl);
     const rq = e.target.closest('[data-relq]');
     if (rq && currentProject) { const q = projectByKey(rq.dataset.relq); if (q) { projFrom = currentProject; showDetail(q); } return; }
     if (e.target.closest('[data-proj-back]') && projBack) { showDetail(projBack); return; }
@@ -225,7 +217,7 @@
   const getBackToLoads = () => backToLoads;
   const setBackToLoads = v => { backToLoads = v; };
   const showDvTab = (...a) => PF().showDvTab(...a);
-  const api = { getCurrentProject, setCurrentProject, getBackToLoads, setBackToLoads, showDvTab, get DV_TABS() { return PF().DV_TABS; }, SUBS, projectByKey, relatedProjects, fileTree, subProject, isFormal, flyToSite, showDetail, showTl };
+  const api = { getCurrentProject, setCurrentProject, getBackToLoads, setBackToLoads, showDvTab, get DV_TABS() { return PF().DV_TABS; }, SUBS, projectByKey, relatedProjects, fileTree, subProject, isFormal, isPrecon, flyToSite, showDetail };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDevNav = api;
 })(typeof window !== 'undefined' ? window : globalThis);

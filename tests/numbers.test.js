@@ -93,13 +93,18 @@ test('at a development: the site first, its census area labelled, one status lin
   assert.match(g, /title: `In its 2021 census area \(\$\{fmtNum\(set\.length\)\} developments\)`/);
   assert.match(g, /its census area: \$\{fmtNum\(set\.length\)\} developments/);
   assert.doesNotMatch(g, /Around \$\{esc\(App\(\)\.state\.daCtx\.title\)\}/);
-  // The header names the phase and the zoning approval together; the site bar keeps only the by-law.
+  // The header names the phase and the zoning approval together; its flags keep only the by-law.
   const win = { PeelPhases: { PHASE_BY_KEY: { review: { label: 'In review', rank: 2 }, approved: { label: 'Approved, no permit yet', rank: 3 } } } };
   const ctx = { window: win }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/panel.js'), ctx);
   const h = win.PeelPanel.siteHead({ title: '0 HERITAGE RD', municipality: 'Brampton', phase: 'review', rank: 2, zoningApproved: { bylaws: ['2024-101'] }, records: [] });
   assert.equal(h.status.text, 'In review · zoning approved');
   assert.equal(win.PeelPanel.siteHead({ title: 'x', municipality: 'Brampton', phase: 'review', rank: 2, records: [] }).status.text, 'In review');
+  // (navigation phase 5) Its tools on every tab: the traces need a map location; no flags or ☆ state without the app.
+  const ht = win.PeelPanel.siteHead({ key: 'k', title: 'x', municipality: 'Brampton', phase: 'review', rank: 2, records: [], lat: 43.7, lng: -79.7 }).tools;
+  assert.deepEqual([...ht.tools.map(t => t.label)], ['Trace sewer', 'Trace water', 'Check FSR', 'Servicing memo', 'Inquiry draft']);
+  assert.equal(ht.flags, ''); assert.equal(ht.watched, false);
+  assert.deepEqual([...win.PeelPanel.siteHead({ key: 'k', title: 'x', municipality: 'Brampton', phase: 'review', rank: 2, records: [], lat: null }).tools.tools.map(t => t.label)], ['Check FSR', 'Servicing memo', 'Inquiry draft']);
   assert.match(src('js/dev-detail.js'), /out\.push\(chipGo\(`Zoning by-law \$\{esc\(p\.zoningApproved\.bylaws\[0\]\)\}`, '', \{ 'data-dev-hist': 'council' \}/);
 });
 

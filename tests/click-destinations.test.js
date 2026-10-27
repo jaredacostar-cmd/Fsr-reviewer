@@ -103,14 +103,22 @@ test('one hover card: kind, name, the number, what a click does', () => {
     assert.match(src(f), /PeelUtil\.hoverCard/, `${f} uses the shared hover card`);
 });
 
-test('site tools: one Tools menu (trace, Check FSR, memo, allocation, Compare, Export) beside Watch (design bundle 4)', () => {
-  const d = src('js/devscope.js');
-  const acts = d.slice(d.indexOf('<div class="site-bar-actions">'), d.indexOf('<div class="site-bar-fsr"'));
-  const menu = acts.slice(acts.indexOf('<details class="site-more site-tools">'), acts.indexOf('</details>'));
-  const rest = acts.slice(acts.indexOf('</details>'));
-  for (const a of ['data-trace=', 'data-wtrace=', 'data-scope-fsr', 'data-memo', 'data-scope-alloc', 'data-scope-compare', 'data-scope-export']) { assert.ok(menu.includes(a), a); assert.ok(!rest.includes(a), `${a} once`); }
-  assert.match(menu, /<summary class="btn small"[^>]*>Tools ▾<\/summary>/);
-  assert.ok(rest.includes('data-watch='), 'Watch stays a button');
+// Navigation phase 5 (design §3.6, §5 rows 94, 113): the site bar and its Tools ▾ went; one header on every
+// tab and on the page. Removed by design: the bar's menu; asserted now on the header that replaces it.
+test('the development\u2019s header: Trace sewer, Trace water, Check FSR, Servicing memo, Inquiry draft one click away, the rest behind ⋯; ☆ Watch beside the flags (navigation design §3.6)', () => {
+  const PN = require('../js/panel.js');
+  const t = PN.siteTools({ key: 'Brampton|1 A ST', title: '1 A ST', lat: 43.7, lng: -79.7 }, { watched: true, flags: '<span class="chip warn">Stalled 2.5 yrs</span>' });
+  assert.deepEqual(t.tools.map(x => x.label), ['Trace sewer', 'Trace water', 'Check FSR', 'Servicing memo', 'Inquiry draft']);
+  assert.deepEqual(t.more.map(x => x.label), ['Record allocation', 'Compare', 'Export (CSV)', 'Copy link']);
+  const map = PN.toolsHTML(t, 'map'), page = PN.toolsHTML(t, 'page');
+  const row = map.slice(map.indexOf('<div class="pnl-tools-row"'), map.indexOf('<details')), menu = map.slice(map.indexOf('<details'));
+  for (const a of ['data-trace="Brampton|1 A ST"', 'data-wtrace="Brampton|1 A ST"', 'data-at="svc:fsr"', 'data-pnl-memo', 'data-inquiry']) { assert.ok(row.includes(a), a); assert.equal(map.split(a).length, 2, `${a} once`); }
+  for (const a of ['data-scope-alloc', 'data-scope-compare', 'data-scope-export', 'data-share']) { assert.ok(menu.includes(a), a); assert.equal(map.split(a).length, 2, `${a} once`); }
+  // ⋯ outside the row (a phone scrolls the row sideways; the menu is never clipped).
+  assert.match(map, /<\/div><details class="site-more pnl-more"><summary class="btn small"[^>]*>⋯<\/summary>/);
+  assert.match(map, /<div class="pnl-flags chips"><span class="pnl-flag-list"><span class="chip warn">Stalled 2\.5 yrs<\/span><\/span><button type="button" class="watch-btn on" data-watch="Brampton\|1 A ST" aria-pressed="true"[^>]*>★ Watching<\/button><\/div>/);
+  // On a page Check FSR opens the page's FSR review; on the map Servicing › FSR review.
+  assert.ok(page.includes('data-ws-page="fsr"') && !page.includes('data-at="svc:fsr"'));
   // The footer no longer repeats Check FSR.
   assert.doesNotMatch(src('js/overview-tab.js'), /label: 'Check FSR'/);
 });
@@ -126,7 +134,7 @@ test('keepDev: a result started at the open development keeps it; any other resu
   win.PeelDataTab = { shellNarrow: () => true }; Object.assign(win.PeelApp, { getAnalysisSnap: () => snap, setAnalysisSnap: (x, save = true) => { snap = x; if (save) saved.push(x); } });
   S.openResult({ title: 'Inquiry draft — 1 A ST', html: '<pre class="tinq-pre">x</pre>', keepDev: true });
   assert.ok(!calls.includes('dev-close'), 'the development stays open');
-  assert.equal(snap, 'full', 'on a phone the sheet opens all the way: the site bar sits above the result');
+  assert.equal(snap, 'full', 'on a phone the sheet opens all the way: the header and tabs sit above the result');
   assert.deepEqual(saved, [], 'for this result only: not remembered (the map never reopens under a full sheet)');
   assert.equal(win.PeelApp.state.ss, 'tool:inquiry-draft-1-a-st');
   assert.equal(S.current().result.keepDev, true); assert.equal(S.keepsDev(), true);
@@ -154,8 +162,9 @@ test('keepDev: a result started at the open development keeps it; any other resu
 
 test('keepDev: the kept result shows on Overview, its trail Peel › the site › the result', () => {
   const ov = src('js/overview-tab.js'), pn = src('js/panel.js'), tb = src('js/topbar.js');
-  // The Overview shows the result over the site (still checking the development scope first), the site's card hidden.
-  assert.match(ov, /if \(resultHost\(rsc && rsc\.kind === 'result' && \(!DV\(\)\.scopedDev\(\) \|\| rsc\.result\.keepDev\) \? rsc : null\)\) \{ const sec = \$\('#ov-dev'\); if \(sec\) sec\.hidden = true; return; \}/);
+  // The Overview shows the result over the site (still checking the development scope first); the site's own
+  // panel stays out (below: kept), and since navigation phase 5 it has no card or sub-views to hide.
+  assert.match(ov, /if \(resultHost\(rsc && rsc\.kind === 'result' && \(!DV\(\)\.scopedDev\(\) \|\| rsc\.result\.keepDev\) \? rsc : null\)\) return;/);
   // Its header: Peel (closes both) › the site (closes the result) › the kind; rebuilt when the site changes.
   assert.match(ov, /const kd = rs\.result\.keepDev \? DV\(\)\.scopedDev\(\) : null;/);
   assert.match(ov, /\(host\.dataset\.kd \|\| ''\) !== \(kd \? kd\.key : ''\)/);
@@ -192,9 +201,16 @@ test('the Inquiry draft: one function, a development action and the Export item,
   assert.match(tb, /data-tbx="inquiry">Inquiry response draft<\/button>/);
   assert.match(tb, /inquiry: draftInquiryResponse \}\[b\.dataset\.tbx\]/);
   assert.match(tb, /document\.addEventListener\('click', e => \{ if \(e\.target\.closest && e\.target\.closest\('\[data-inquiry\]'\)\) draftInquiryResponse\(\); \}\);/);
-  // The site page (beside the memo, the actions on one line: dead-ui DV-12) and the map's development Overview.
-  assert.match(src('js/ws-pages.js'), /function site\(\)[\s\S]*?actions: \[\{ label: 'Servicing memo', attrs: \{ 'data-pnl-memo': '' \}, primary: true \}, \{ label: 'Inquiry draft', attrs: \{ 'data-inquiry': '' \}[^\n]*'data-watch': p\.key/);
-  assert.match(src('js/overview-tab.js'), /foot: \{ primary: \{ label: 'Servicing memo', attrs: \{ 'data-pnl-memo': '' \}[^\n]*secondary: \[\{ label: 'Inquiry draft', attrs: \{ 'data-inquiry': '' \}/);
+  // The development's header holds it, beside the memo, on every tab of the map and on its page (navigation
+  // phase 5; the site page's footer and the Overview's no longer repeat it).
+  assert.match(src('js/panel.js'), /label: 'Inquiry draft', attrs: \{ 'data-inquiry': '' \}/);
+  assert.match(src('js/panel.js'), /label: 'Servicing memo', attrs: \{ 'data-pnl-memo': '' \}/);
+  assert.match(src('js/panel.js'), /\$\{h\.tools \? toolsHTML\(h\.tools, 'map'\) : ''\}/);
+  assert.match(src('js/ws-pages.js'), /tools: s\.head\.tools/);
+  assert.match(src('js/ws-pages.js'), /toolsHTML\(m\.tools, 'page'\)/);
+  assert.match(src('js/overview-tab.js'), /foot: \{ primary: \{ label: 'Servicing memo', attrs: \{ 'data-pnl-memo': '' \}, title: '[^']*' \} \},/);
+  assert.doesNotMatch(src('js/ws-pages.js').slice(src('js/ws-pages.js').indexOf('function site(view)'), src('js/ws-pages.js').indexOf('// ---- Growth in an area')), /'data-inquiry'|'data-watch'|Review its FSR/);
+  assert.ok(src('js/ws-pages.js').includes('function site(view)'), 'the site page (FSR review its Servicing view)');
 });
 
 // Navigation phase 1 (AD-5, design §9 #5): Review outlets is a tool page reached from Records › Data

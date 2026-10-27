@@ -217,7 +217,9 @@ function loadTabsWith(stored = {}, extra = {}) {
   return ctx.module.exports;
 }
 test('phase 2: Allocations folds into Capacity, the model checks move to Records › Data checks, the water facilities and the hydraulic check move to Network', () => {
-  assert.deepEqual(plain(AT.TABSUBS.svc.valid), ['capacity', 'network']);
+  // (navigation phase 5 adds FSR review, a development's view: an area shows the two, below)
+  assert.deepEqual(plain(AT.TABSUBS.svc.valid), ['capacity', 'network', 'fsr']);
+  assert.deepEqual(plain(AT.chipsAt('svc', 'area')), ['capacity', 'network']);
   // Links (t=svc&svs=…, t=ww|water&ws=…).
   assert.deepEqual(plain(AT.migrateTabKey('svc', 'alloc')), { tab: 'svc', svcSub: 'capacity' });
   assert.deepEqual(plain(AT.migrateTabKey('svc', 'checks')), { tab: 'records', rSub: 'checks' });
@@ -322,9 +324,10 @@ test('phase 4: DC projects is DC timing; the funding screen its fold; the stored
   assert.equal(T2.getDcSub(), 'eas');
   assert.equal(T2.setSub('dca', 'dcproj'), 'dca'); assert.equal(T2.getDcSub(), 'timing');
   T2.setSub('dca', 'eas'); T2.showFootTab('dca', 'dcproj'); assert.equal(T2.getDcSub(), 'timing', 'showFootTab(dca, dcproj): DC timing');
-  // The chips; at a development the full table shows the site's brief only.
+  // The chips; at a development the full table shows the site's brief only (and, since navigation phase 5,
+  // the EAs near it: Capital is one view there, the phase-5 test below).
   assert.deepEqual(plain(AT.chipsAt('dca', 'area')), ['timing', 'eas', 'projects']);
-  assert.deepEqual(plain(AT.chipsAt('dca', 'site')), ['timing', 'eas']);
+  assert.deepEqual(plain(AT.chipsAt('dca', 'site')), ['timing']);
   const rule = /\n(#analysis\.site-scope #pane-svc-netbar[^{]*)\{ display: none; \}/.exec(src('css/app.css'))[1].split(',').map(x => x.trim());
   for (const id of ['pane-dca-dcproj', 'pane-dca-rec', 'pane-dca-funding']) assert.ok(rule.includes(`#analysis.site-scope #${id}`), `#${id} hidden at a development`);
   // Settings › Usage: a DC projects count is DC timing's, by the browser's own rule (js/usage.js aliasKey).
@@ -386,4 +389,113 @@ test('the one System control: one stored pick; old values, stored picks and link
     if (on === 'true') assert.equal(AT.SYS_OF_VIEW[view], AT.sysKey(sys), view);
     else assert.ok(!Object.prototype.hasOwnProperty.call(AT.SYS_OF_VIEW, view), `${view}: leaves the System`);
   }
+});
+
+// Navigation phase 5 (navigation-design §7.3, stored preferences): a stored pick that names a control the
+// phase retires is ignored, never an error. Settings › Counting's Previous switch (owner decision 14):
+// `countMode: 'previous'` in this browser's store opens on the tree count; nothing reads the key.
+test('phase 5: stored preferences of retired controls are ignored (countMode)', () => {
+  const sets = [], store = { get: (k, d) => (k === 'countMode' ? 'previous' : d), set: (k, v) => sets.push([k, v]) };
+  const ctx = { PeelUtil: { store }, console };
+  ctx.window = ctx; ctx.globalThis = ctx;
+  require('node:vm').runInNewContext(src('js/tree-counts.js'), ctx);
+  const TC = ctx.PeelTreeCounts;
+  assert.equal(TC.mode, undefined, 'no mode to read back');
+  const p = { key: 'k', units: 5, records: [{ kind: 'application', municipality: 'B', ref: 'OZ-1', fileKey: 'OZ-1', uid: 'OZ-1' }] };
+  const data = { snapshotAt: '2026-10-12', projects: { k: { u: 9, s: TC.sigOf(p, x => x), t: [] } } };
+  TC.apply([p], { data, canonRef: x => x });
+  assert.equal(p.count.mode, 'tree'); assert.equal(p.units, 9);
+  assert.deepEqual(sets, [], 'nothing written either');
+  assert.doesNotMatch(src('js/tree-counts.js'), /countMode|STORE_KEY/);
+});
+
+// The development's sub-tabs (About · Files & history · Site, `peel-dev:devsub` in localStorage) are retired:
+// a stored pick is never read. A development opens on the tab picked; an old link's Development tab (and its
+// sub-view) is the Overview; Records shows the files and history whatever the store holds.
+test('phase 5: stored preferences of retired controls are ignored (peel-dev:devsub)', () => {
+  assert.doesNotMatch(src('js/devtab.js'), /peel-dev:devsub|DEVSUBS|readSub|writeSub/);
+  const read = [], localStorage = { getItem: k => { read.push(k); return k === 'peel-dev:devsub' ? 'site' : null; }, setItem: k => read.push(`set:${k}`) };
+  const p = { key: 'Brampton|1 MAIN ST', title: '1 Main St', municipality: 'Brampton', phase: 'review', rank: 2, last: null, first: null, timeline: [], milestones: {},
+    records: [{ uid: 'u1', ref: 'OZ 24-001', kind: 'application', stage: 'master', phase: 'review', statusRaw: '', events: [], description: '', address: '1 Main St', type: 'Zoning' }] };
+  const body = { dataset: {}, innerHTML: '' };
+  const document = { getElementById: id => (id === 'records-body' ? body : null), querySelectorAll: () => [], addEventListener() {}, documentElement: { classList: { contains: () => false } } };
+  const ctx = { document, localStorage, PeelPhases: require('../js/phases.js'), PeelUtil: require('../js/util.js'), PeelDemand: require('../js/demand.js'), PeelMapCore: { map: {} }, DevScope: { current: () => p }, console };
+  ctx.window = ctx; ctx.globalThis = ctx;
+  // (with the development model it reads: js/dev-detail.js, js/dev-nav.js, loaded after it as index.html does)
+  for (const f of ['js/devtab.js', 'js/dev-detail.js', 'js/dev-nav.js']) require('node:vm').runInNewContext(src(f), ctx);
+  ctx.DevTab.render(body);
+  assert.match(body.innerHTML, />Files and events<\/h2>/, 'Records: the files and history');
+  for (const part of ['about', 'timeline', 'story']) assert.ok(ctx.DevTab.partHTML(p, part), part);
+  assert.deepEqual(read.filter(k => /devsub/.test(k)), [], 'the stored sub-view is never read or written');
+  for (const [t, s] of [['dev', undefined], ['dev', 'files'], ['dev', 'site'], ['developments', 'about']]) assert.deepEqual(plain(AT.migrateTabKey(t, s)), { tab: 'overview' }, `t=${t}${s ? ` / ${s}` : ''}`);
+});
+
+// Capital at a development is one view (navigation phase 5): its EAs and capital works near the site are in DC
+// timing's site panel, so Capital › EAs is no chip there. A link or a stored pick of EAs keeps its value: at a
+// development Capital opens on DC timing (the one view, no chip row), and back at an area the EAs pick returns.
+test('phase 5: Capital › EAs at a development is the one Capital view; the pick returns at an area', () => {
+  let site = { key: 'Brampton|1 MAIN ST' };
+  const T = loadTabsWith({ dcSub: 'eas', footTab4: 'dca' }, { DevScope: { current: () => site } });
+  assert.deepEqual(plain(T.migrateTabKey('dca', 'eas')), { tab: 'dca', dcSub: 'eas' }, 't=dca&dcs=eas: the link keeps its pick');
+  assert.deepEqual(plain(T.chipsAt('dca', 'site')), ['timing']);
+  assert.equal(T.subFor('dca', 'eas', true), 'timing');
+  T.showFootTab('dca', 'eas'); assert.equal(T.getDcSub(), 'timing', 'at a development: DC timing, the one view');
+  site = null; T.showFootTab('dca'); assert.equal(T.getDcSub(), 'eas', 'at Peel: the EAs pick again');
+  assert.doesNotMatch(src('js/analysis-tabs.js'), /EMPTY_AT_SITE/);
+  assert.match(src('js/analysis-tabs.js'), /dca: \['eas', 'projects'\]/);
+});
+
+// FSR review is a development's Servicing view (navigation phase 5, owner decision 4; navigation-design §7.1–7.2):
+// t=svc&svs=fsr&d=<key> reopens it at the development; at an area, a servicing scope or a result Servicing opens
+// on its own first view and FSR review comes back when a development opens (areaPick). The page id fsr stays a
+// page (#w=p:fsr: the Find step, or with a site its FSR review), and the Review an FSR chip opens the view at a site.
+test('phase 5: FSR review is a development\u2019s Servicing view; the fsr page and map view lead there', () => {
+  assert.deepEqual(plain(AT.migrateTabKey('svc', 'fsr')), { tab: 'svc', svcSub: 'fsr' });
+  assert.deepEqual(plain(AT.migrateSub('svc', 'fsr')), { tab: 'svc', sub: 'fsr' });
+  assert.deepEqual(plain(AT.chipsAt('svc', 'site')), ['network', 'fsr']);
+  assert.deepEqual(plain(AT.chipsAt('svc', 'area')), ['capacity', 'network']);
+  assert.equal(AT.subFor('svc', 'fsr', false), 'capacity');
+  assert.equal(AT.subFor('svc', 'fsr', true), 'fsr');
+  // A stored or linked FSR review pick: Capacity at Peel, FSR review again once a development is open.
+  let site = null;
+  const T = loadTabsWith({ svcSub: 'fsr', footTab4: 'svc' }, { DevScope: { current: () => site } });
+  T.showFootTab('svc'); assert.equal(T.getSvcSub(), 'capacity', 'at Peel: Servicing on its own first view');
+  site = { key: 'Brampton|1 MAIN ST' }; T.showFootTab('svc'); assert.equal(T.getSvcSub(), 'fsr', 'at a development: FSR review again');
+  site = null; T.showFootTab('svc'); assert.equal(T.getSvcSub(), 'capacity');
+  // The page id: still a page (a link, Help's role buttons, the last workspace); with a site, its FSR review.
+  assert.equal(W.resolvePage('fsr', {}), 'fsr');
+  assert.deepEqual(plain(W.startScreen({ hash: '#w=p:fsr&d=Brampton%7C1%20MAIN%20ST' })), { mode: 'home', page: 'fsr' });
+  assert.deepEqual(plain(W.startScreen({ hash: '#w=p:fsr' })), { mode: 'home', page: 'fsr' }, 'without a site: the Find step');
+  // The map view (#w=fsr): the Find step on Network, then Servicing › FSR review once a site is open.
+  assert.equal(W.plan('fsr', {}).sub, 'network');
+  assert.equal(W.plan('fsr', { site: true }).sub, 'fsr');
+  // A share link writes svs as the open sub-view (js/share.js reads it back through migrateTabKey).
+  assert.match(src('js/share.js'), /migrateTabKey\(/);
+});
+
+// The site page's sections take the map's tab names (navigation phase 5, design §3.1 rule 1); their ids are kept,
+// since phase 1's search routes (pageRoute's sec) and siteAt name them; the old FSR review section is Servicing's
+// second view, the page fsr (§7.1: #w=p:fsr&d=<key> is the site's page there; without a site, the Find step).
+test('phase 5: the site page’s sections by the tabs’ names; the old ids and the FSR review section land', () => {
+  const vm = require('node:vm'), p = { key: 'k', title: '1 A St', municipality: 'Brampton' };
+  let dev = p;
+  const spec = a => ({ scope: 'dev:k', spec: { head: { status: null, tools: { key: 'k' } }, answer: a, lists: [], folds: [] } });
+  const panels = { 'overview:': spec('Overview'), 'records:files': spec('Records'), 'svc:network': spec('Network'), 'svc:fsr': spec('FSR review') };
+  const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: () => null, querySelectorAll: () => [], getElementById: () => null, addEventListener() {}, dispatchEvent() {} };
+  const window = { document, PeelPanel: { get: k => panels[k] || null, scenarioChip: () => '' }, PeelWorkspaces: { BY_ID: { site: { label: 'Check a site' }, fsr: { label: 'Review an FSR' } } }, PeelApp: { state: { projects: [], filtered: [] } }, DevScope: { current: () => dev } };
+  const ctx = { window, document, setTimeout: () => 0, clearTimeout() {}, URLSearchParams, CSS: { escape: x => x } }; ctx.globalThis = ctx;
+  for (const f of ['js/sections.js', 'js/ws-pages.js']) vm.runInNewContext(src(f), ctx);
+  const WP = window.PeelWsPages, on = m => (/<button type="button" class="page-sec on"[^>]*>([^<]*)</.exec(m.top) || [])[1];
+  // A pick routes to the ids (phase 1): summary is Overview, files is Records.
+  assert.deepEqual(plain(W.pageRoute({ label: 'x', p }, 'home')), { page: 'site', dev: 'k', sec: 'summary' });
+  WP.siteAt('k', 'summary'); assert.equal(on(WP.build('site')), 'Overview');
+  WP.siteAt('k', 'files'); let m = WP.build('site'); assert.equal(on(m), 'Records'); assert.equal(m.answer, 'Records');
+  // An id no section has now (the old fsr section was a page button, never an id; any other): Overview.
+  WP.siteAt('k', 'fsr'); m = WP.build('site'); assert.equal(on(m), 'Overview'); assert.equal(m.answer, 'Overview');
+  // The page fsr: with a site, the site's page at Servicing › FSR review; a pick from it lands there too.
+  assert.deepEqual(plain(W.pageRoute({ label: 'x', p }, 'fsr')), { page: 'fsr', dev: 'k', sec: 'summary' });
+  m = WP.build('fsr'); assert.equal(m.id, 'fsr'); assert.equal(on(m), 'Servicing'); assert.equal(m.answer, 'FSR review');
+  assert.match(m.top, /aria-label="Views"[^>]*><button type="button" class="page-sec" data-ws-sec="servicing"[^>]*>Network<\/button><button type="button" class="page-sec on" data-ws-page="fsr"/);
+  dev = null; m = WP.build('fsr'); assert.equal(m.id, 'fsr'); assert.match(m.answer, /^Find the development/, 'without a site: the Find step');
+  assert.deepEqual(plain(W.startScreen({ hash: '#w=p:fsr' })), { mode: 'home', page: 'fsr' });
 });

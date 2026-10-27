@@ -230,10 +230,10 @@
     const records = P.dedupeRecords(raw);
     // Council decisions (zoning by-laws passed, draft plans approved) onto their files (SPEC 1.2).
     if (window.PeelCouncilDecisions && PeelCouncilDecisions.data) PeelCouncilDecisions.applyTo(records, PeelCouncilDecisions.data, P.canonRef);
-    // Step B2: with the tree count in use, the trees are the developments (js/tree-groups.js
-    // through buildProjects' regroup hook); Previous keeps today's grouping.
+    // Step B2: the trees are the developments (js/tree-groups.js through buildProjects' regroup
+    // hook); without the tree data (it did not load) today's grouping by address stays: the fallback.
     const TG = window.PeelTreeGroups, TC = window.PeelTreeCounts;
-    const grouped = !!(TG && TC && TC.mode() === 'tree' && TG.ready());
+    const grouped = !!(TG && TG.ready());
     state.projects = P.buildProjects(records, grouped ? { regroup: parts => TG.regroup(parts) } : {});
     state.treeGrouped = grouped;
     if (TC) TC.apply(state.projects);
@@ -286,8 +286,9 @@
   }
 
   // Units counted by the Size filter: the development's units, as every screen shows them (the
-  // tree count or the previous count, net of homes demolished). With "Planning applications"
-  // selected, a site with no planning application counts none (only permits behind it).
+  // tree count, or the count from its files and permits where the tree does not count it, net of
+  // homes demolished). With "Planning applications" selected, a site with no planning application
+  // counts none (only permits behind it).
   function unitsFor(p) {
     if (state.kind === 'application' && !p.kinds.includes('application')) return 0;
     return p.units || 0;
@@ -617,9 +618,9 @@
         finishFull();
       } else {
         // The developments are built once the tree counts are in. Waiting only 3 s used to build them
-        // with the previous count on a slow connection, then again when the counts arrived: two
-        // different totals from the same data. 20 s is only the guard for a request that never ends;
-        // a failed load says so in the count (js/topbar.js).
+        // with the count from the files and permits on a slow connection, then again when the counts
+        // arrived: two different totals from the same data. 20 s is only the guard for a request that
+        // never ends; a failed load says so in the count (js/topbar.js).
         await Promise.race([treeCountsLoad, new Promise(r => setTimeout(r, 20000))]);
         finishFull();
         applySnapshot(snap);
@@ -646,8 +647,7 @@
   // Start from the weekly snapshot (fast, survives source outages); fall back to live.
   // Step B1: the tree counts (small, built with the snapshot) load alongside; when they arrive
   // after first paint, the developments take them and every view refreshes.
-  // Step B2: the developments become the trees once the data is in; a switch in Settings ›
-  // Counting regroups (Tree) or puts today's grouping back (Previous).
+  // Step B2: the developments become the trees once the data is in.
   // (the full snapshot waits for both, a few seconds at most, so the developments are built once:
   // each one arriving after it rebuilt everything again, a 4 s freeze at start-up)
   let treeCountsLoad = Promise.resolve();
@@ -669,7 +669,8 @@
   }
   // Keys saved under today's developments (watchlist, allocations), the weekly changes and the
   // phase history, rewritten to the trees' keys. Nothing saved is dropped (js/tree-groups.js).
-  // With the trees off (Previous), only old address keys are rewritten (js/phases.js keyAliases).
+  // With the trees off (the tree data did not load), only old address keys are rewritten
+  // (js/phases.js keyAliases).
   function migrateSavedKeys(grouped) {
     const TG = window.PeelTreeGroups; if (!TG) return;
     const keys = new Set(state.projects.map(p => p.key)), exists = k => keys.has(k), opts = { aliasesOnly: !grouped };

@@ -39,6 +39,9 @@ test('RST-24: no renderers for ids nothing draws', () => {
   for (const [, id] of all.matchAll(/data-open="([\w-]+)"/g)) assert.ok(new RegExp(`id="(f-)?${id}"`).test(all), id);
 });
 test('DV-12: a site page can be watched from the page', () => {
-  assert.match(src('js/ws-pages.js'), /function site\(\)[\s\S]*?actions: \[[^\n]*'data-watch': p\.key/);
+  // (navigation phase 5: ☆ Watch is in the development's header, on the page as on the map, beside its flags)
+  assert.match(src('js/ws-pages.js'), /function site\(view\)[\s\S]*?tools: s\.head\.tools/);
+  assert.match(src('js/ws-pages.js'), /toolsHTML\(m\.tools, 'page'\)/);
+  assert.match(src('js/panel.js'), /<button type="button" class="watch-btn\$\{t\.watched \? ' on' : ''\}" data-watch="\$\{esc\(t\.key\)\}"/);
   assert.match(src('js/ws-pages.js'), /Star a development with ☆ Watch \(its page or the map\)/);
 });

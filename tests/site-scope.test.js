@@ -20,11 +20,12 @@ function loadTabs() {
 }
 
 // What each sub-view shows at a development's scope (the audit of 0 Heritage Rd, Brampton; Stage 2).
-// (Capital › EAs is also hidden at a site with no EA mapped near it: EMPTY_AT_SITE.)
+// (Capital is one view at a site: its EAs are in DC timing's site panel; FSR review is a development's
+// Servicing view, navigation phase 5.)
 const AT_SITE = {
   growth: { pipeline: 'show', areas: 'hide', timing: 'hide' },
-  svc: { capacity: 'hide', network: 'show' },
-  dca: { timing: 'show', eas: 'show', projects: 'hide' },
+  svc: { capacity: 'hide', network: 'show', fsr: 'show' },
+  dca: { timing: 'show', eas: 'hide', projects: 'hide' },
   records: { sources: 'hide', checks: 'hide', files: 'show' },
 };
 
@@ -46,11 +47,13 @@ test('site scope: a hidden sub-view falls back to the first one with site conten
   assert.equal(AT.subFor('growth', AT.migrateSub('growth', 'ledger').sub, true), 'pipeline');   // (a stored Ledger pick is Forecast now, hidden at a site)
   assert.equal(AT.subFor('growth', 'areas', true), 'pipeline');
   assert.equal(AT.subFor('dca', 'projects', true), 'timing');
-  assert.equal(AT.subFor('dca', 'eas', true), 'eas');
+  assert.equal(AT.subFor('dca', 'eas', true), 'timing', 'a stored EAs pick lands on the one Capital view');
   assert.equal(AT.subFor('records', 'sources', true), 'files');
   assert.equal(AT.subFor('records', 'files', false), 'sources', 'Peel has no files of its own');
+  assert.equal(AT.subFor('svc', 'fsr', false), 'capacity', 'FSR review is a development\u2019s');
+  assert.equal(AT.subFor('svc', 'fsr', true), 'fsr');
   for (const [tab, subs] of Object.entries(AT_SITE)) for (const sub of Object.keys(subs)) {
-    if ((tab === 'dca' && sub === 'funding') || (tab === 'records' && sub === 'files')) continue;   // Labs / site only
+    if ((tab === 'dca' && sub === 'funding') || (tab === 'records' && sub === 'files') || (tab === 'svc' && sub === 'fsr')) continue;   // Labs / site only
     assert.equal(AT.subFor(tab, sub, false), sub, `${tab} › ${sub} stays at Peel scope`);
   }
 });
@@ -64,12 +67,15 @@ test('site scope: hidden sub-view buttons get .site-off (CSS hides them); Growth
 
 test('site scope: in-panel links land on a sub-view with site content (no dead links)', () => {
   const AT = loadTabs();
-  for (const [tab, stored] of [['svc', 'capacity'], ['svc', 'alloc'], ['svc', 'checks'], ['dca', 'projects'], ['dca', 'dcproj'], ['growth', 'areas'], ['growth', 'ledger'], ['records', 'checks']]) {
+  for (const [tab, stored] of [['svc', 'capacity'], ['svc', 'alloc'], ['svc', 'checks'], ['dca', 'projects'], ['dca', 'dcproj'], ['dca', 'eas'], ['growth', 'areas'], ['growth', 'ledger'], ['records', 'checks']]) {
     // (a stored pick goes through the alias it takes first: Servicing › Model checks is Records › Data checks)
     const r = AT.migrateSub(tab, stored) || { tab, sub: stored }, v = AT.subFor(r.tab, r.sub, true);
     assert.ok(v && !AT.siteHidden(r.tab, v) && AT.TABSUBS[r.tab].valid.includes(v), `${tab} (stored ${stored}) lands on ${r.tab}:${v}`);
   }
   assert.match(src('js/fsr.js'), /homeLine\('svc:network', 'Servicing › Network'\)/, 'no "Wastewater tab": the tab is Servicing');
   assert.doesNotMatch(src('js/census-view.js'), /'Wastewater tab'/);
-  assert.match(src('js/overview-tab.js'), /data-ov-tab="records">Files &amp; history \(Records\) →/);
+  // (navigation phase 5: the card's "Files & history (Records)" link went with the card; the header's
+  // "n files · history ›" opens them on every tab)
+  assert.doesNotMatch(src('js/overview-tab.js'), /Files &amp; history/);
+  assert.match(src('js/panel.js'), /data-dev-hist="" title="History, with each file's source record"/);
 });

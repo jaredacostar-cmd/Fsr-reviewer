@@ -38,6 +38,7 @@
     'growth:timing': [...GROWTH, 'site-audit.json', 'dc-gate.json', 'servicing.json'],   // (navigation phase 3: By period, the pipeline ledger, too)
     'svc:capacity': [...SVC, 'snapshot.json', 'tree-counts.json'],
     'svc:network': [...SVC, 'sewers.json', 'watermains.json', 'water-supply.json', 'blocks.json', 'idf.json'],
+    'svc:fsr': [...SVC, 'sewers.json', 'watermains.json', 'water-supply.json', 'blocks.json', 'fsr.json'],   // (navigation phase 5: FSR review, a development's)
     'dca:timing': [...CAP, ...SVC, 'sewers.json', 'dc-joins.json', 'snapshot.json'],   // (navigation phase 4: DC projects' list too, both verdicts)
     'dca:projects': CAP,
     'dca:eas': ['eas.json', 'capital.json'],   // (navigation phase 4: EA to construction too, its fold)

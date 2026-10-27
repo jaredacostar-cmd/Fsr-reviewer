@@ -36,12 +36,29 @@
   // (plant + water treatment capacity bars) → one top-5 developments table with "See all" →
   // one ⓘ line (method, criteria, data dates). Housing, the population outlook and the
   // demand-by-phase breakdown live on the Growth tab (Worker C); the DC program card is now
-  // one line inside Needs attention. Scoped Overview: a verdict card for the site instead of
-  // the Peel-wide aggregates.
+  // one line inside Needs attention. Scoped Overview: the site's standard panel (its full table is
+  // the same panel, widened).
   // A site's type (SPEC §5): residential, mixed-use or employment.
   function siteKind(p, pe, em) {
     const units = pe.totalUnits > 0, emp = !!(em && (em.totalM2 > 0 || em.jobs > 0));
     return units && emp ? 'mixed' : emp ? 'employment' : 'residential';
+  }
+  // At a glance (navigation phase 5: was the full table's card): the homes, people and jobs the site's type
+  // shows (SPEC §5, site templates), then how they are counted (the tree count, or counted from its
+  // permits). Five rows at most: a panel list draws five, and a "See all" here would have nowhere to go.
+  function atGlance(p, { pe, em, jobs, useTxt, kind }) {
+    const PN = root.PeelPanel, TC = root.PeelTreeCounts, note = TC ? TC.noteHTML(p, 3) : '';
+    const tile = (v, u, l) => PN.kv(l.charAt(0).toUpperCase() + l.slice(1), `${v} ${esc(u)}`);
+    const unitsT = tile(fmtNum(Math.round(pe.totalUnits)), 'units', p.unitsLost ? `net of ${fmtNum(p.unitsLost)} demolished` : 'planned');
+    const pplT = pe.population > 0 ? tile(fmtNum(roundPop(pe.population)), 'people', 'at build-out') : '';
+    const jobsT = jobs > 0 ? tile(fmtNum(roundPop(jobs)), 'jobs', 'on the site') : '';
+    const gfaT = em && em.totalM2 > 0 ? tile(fmtNum(Math.round(em.totalM2)), 'm²', `${esc(useTxt)} floor area`) : '';
+    return [
+      ...(kind === 'employment' ? [jobsT, gfaT, p.siteAreaHa > 0 ? tile(fmt1(p.siteAreaHa), 'ha', 'site area') : '']
+        : kind === 'mixed' ? [unitsT, pplT, jobsT, gfaT]
+          : [unitsT, pplT, pe.totalUnits > 0 && pe.population > 0 ? tile((pe.population / pe.totalUnits).toFixed(2), 'ppu', 'people per unit') : '']),
+      ...(note ? [{ html: note }] : []),
+    ].filter(Boolean);
   }
   // "n things to confirm", computed per site (SPEC §5): what a planner should check before relying
   // on the screen. Each line names the thing and where it comes from.
@@ -61,7 +78,7 @@
   }
   // ---- Stage 3: a development's Overview as the standard panel (the site board) ----------------------
   function sitePanelSpec(p, o) {
-    const PN = root.PeelPanel, { st, f, cb, pe, kind, em, jobs, useTxt, wv, wwv, dcv, confirm, worst } = o;
+    const PN = root.PeelPanel, { st, f, cb, pe, kind, em, jobs, useTxt, wv, wwv, dcv, mv, confirm, worst } = o;
     const TONE = { ok: 'room', warn: 'tight', bad: 'over' }, phl = P.PHASE_BY_KEY[p.phase].label;
     const ls = root.PeelMapLabels && root.PeelMapLabels.latestSub ? root.PeelMapLabels.latestSub(p) : null;
     // (each figure carries its working: the "?" on it opens the inputs, the rule and the data, js/how.js)
@@ -110,11 +127,14 @@
       PN.kv('Latest submission', ls ? `${esc(fmtDay(ls.date))}${ls.ref ? ` · ${esc(ls.ref)}` : ''}` : '–'),
       ...(med != null ? [PN.kv(`Typical time to approval, ${esc(p.municipality)}`, `${Math.round(med)} months · n=${fmtNum(lags.length)}`)] : []),
       ...(est ? [PN.kv('Expected approval (estimate)', `≈${est}`)] : []),
+      // (the next stage, or why there is none: withdrawn, built out, under appeal, stalled)
+      ...(mv ? [PN.kv('Next milestone', esc(mv.text.replace(/^Next milestone: /, '')), mv.tone === 'warn' ? 'tight' : null)] : []),
     ];
+    const glance = atGlance(p, o);
     const DT = root.DevTab;
     const types = (p.types || []).slice(0, 3).join(' / ');
     return {
-      calc: true, fullTitle: `${p.title} · Overview: every figure, the flows and the things to confirm`,
+      calc: true, fullTitle: `${p.title} · Overview: the servicing rows, timing, the things to confirm and the site at a glance`,
       head: PN.siteHead(p),
       answer: (() => {
         const need = [['water', withGap(wv, 'water')], ['wastewater', withGap(wwv, 'ww')], ['DC works', dcv]].filter(([, v]) => v.tone !== 'ok').map(([n]) => n);
@@ -127,31 +147,36 @@
       lists: [
         { title: 'Servicing', rows, total: rows.length },
         { title: 'Timing', rows: timing, total: timing.length },
-        { title: `${confirm.length} thing${confirm.length === 1 ? '' : 's'} to confirm`, rows: confirm.map(c => ({ html: `<small class="pnl-r-line">${c}</small>` })), total: confirm.length, seeAll: { 'data-full-table': 'overview' } },
+        // (five here, the rest in a fold below: the panel's "See all" had only the full table's card to open)
+        { title: `${confirm.length} thing${confirm.length === 1 ? '' : 's'} to confirm`, rows: confirm.slice(0, 5).map(c => ({ html: `<small class="pnl-r-line">${c}</small>` })), total: Math.min(5, confirm.length) },
+        { title: 'At a glance', rows: glance, total: glance.length },
       ],
       folds: [
-        // One section for the files, their events and the proposal (it used to be four folds: the Gantt
-        // chart, About, Files and History): open when the development opens, the same on the map's panel
-        // and on the Check a site page.
-        { title: 'Files, events and proposal', id: 'pnl-hist', open: true, html: DT && DT.partHTML ? DT.partHTML(p, 'story') : '' },
-        { title: 'Site: water, wastewater, constraints, storm sewers and ponds', html: DT && DT.partHTML ? DT.partHTML(p, 'site') : '' },
+        ...(confirm.length > 5 ? [{ title: `Every thing to confirm (${confirm.length})`, html: `<ul class="b-lines small">${confirm.map(c => `<li>${c}</li>`).join('')}</ul>` }] : []),
+        // About and the approvals timeline, the same on the map's panel and the site's page; the files, events
+        // and the source records are Records', the site checks Servicing › Network's (navigation phase 5).
+        { title: 'About', id: 'pnl-about', open: true, html: DT && DT.partHTML ? DT.partHTML(p, 'about') : '' },
+        { title: 'Approvals timeline', id: 'pnl-timeline', html: DT && DT.partHTML ? DT.partHTML(p, 'timeline') : '' },
       ],
       method: `Flows at Peel design criteria, as in a functional servicing report${pe.employment.jobs > 0 ? `; jobs from the floor area the applications state (${fmtNum(App().state.criteria.employment.water)} L/job/d water)` : ''}. The servicing rows read the same results as Servicing and Capital for this site. Typical time to approval: the median from first submission to approval of the ${esc(p.municipality)} files with both dates; the expected year adds it to the latest submission (an estimate, not a forecast for this file).`,
-      sources: `The ${esc(p.municipality)} applications and building permits on the map (Records › Files for this site); Peel design criteria; the servicing model; the mapped constraint layers and storm sewers (each check names its source).`,
-      // (the site's tools — trace, Check FSR — are in its Tools menu, once; the Inquiry draft opens over
-      // this Overview, the development kept: js/topbar.js draftInquiryResponse)
-      foot: { primary: { label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, title: 'One-page servicing memo to print or save as PDF' }, secondary: [{ label: 'Inquiry draft', attrs: { 'data-inquiry': '' }, title: 'A servicing inquiry response for this development, to copy' }] },
-      onMount: () => { if (DT && DT.fillParts) DT.fillParts(p, ['story', 'site']); },
+      sources: `The ${esc(p.municipality)} applications and building permits on the map (Records, for this site); Peel design criteria; the servicing model; the mapped constraint layers and storm sewers (each check names its source).`,
+      // (the site's tools and actions — trace, Check FSR, the Inquiry draft — are in its header, on every tab:
+      // js/panel.js siteTools; the Inquiry draft opens over this Overview, the development kept, as Export ▾'s
+      // does: js/topbar.js draftInquiryResponse)
+      foot: { primary: { label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, title: 'One-page servicing memo to print or save as PDF' } },
+      onMount: () => { if (DT && DT.fillParts) DT.fillParts(p, ['about']); },
+      // (its own full table: Open full table widens this panel, js/panel.js sync)
+      widen: true,
     };
   }
-  function renderVerdictCard(p) {
+  // A development's Overview: the standard panel (js/panel.js), as the site board. Navigation phase 5 retired
+  // the full table's verdict card: its key numbers are At a glance, its next milestone a Timing row and its
+  // four flows Servicing › Network's; Open full table widens the same panel.
+  function renderSiteOverview(p) {
     const el = $('#ov-body'); if (!el) return;
     const st = DD().statusOf(p), f = SV().svcFacts(p);
     st.works = st.works || DI().devWorks(p, f);
     const pe = f ? f.e : D.estimate([p], App().state.criteria, 'all', App().jobsOf), cb = pe.combined;
-    const tile = (v, u, l, sub = "") => `<div class="ov-tile"><b>${v}</b><span class="ov-u">${u}</span><span class="ov-l">${l}</span>${sub ? `<small>${sub}</small>` : ""}</div>`;
-    const toneCls = { ok: 'why-ok-t', warn: 'why-stall-t', bad: 'why-stop-t' };
-    const vtxt = v => esc(v.text);
     // Verdict inputs from the same per-tab brief logic the detail panel uses.
     const pp = MM().SEW.data && p.lat != null ? SC().pathPipes(p) : null, worst = pp && pp.worst;
     const sps = f && f.sps.length ? f.sps.slice().sort((a, b) => b.wet / b.firm - a.wet / a.firm)[0] : null;
@@ -191,51 +216,14 @@
       stalled: st.stalled ? `${st.years.toFixed(1)} yrs` : null,
       next: nextPh ? nextPh.label : '—',
     });
-    // Homes and jobs (an employment site has no units: its flows come from its floor area), then
-    // the flows: water, wastewater average dry weather, peak dry weather and peak wet weather.
+    // Homes and jobs (an employment site has no units: its flows come from its floor area); At a glance
+    // follows the site's type (SPEC §5, site templates by type).
     const em = App().empOf ? App().empOf(p) : null, jobs = pe.employment.jobs || 0;
     const useTxt = em && em.uses.length ? em.uses.map(u => u.label.toLowerCase()).slice(0, 2).join(', ') : 'employment';
-    // The tiles follow the site (SPEC §5, site templates by type).
     const kind = siteKind(p, pe, em);
-    const unitsT = tile(fmtNum(Math.round(pe.totalUnits)), 'units', p.unitsLost ? `net of ${fmtNum(p.unitsLost)} demolished` : 'planned');
-    const pplT = pe.population > 0 ? tile(fmtNum(roundPop(pe.population)), 'people', 'at build-out') : '';
-    const jobsT = jobs > 0 ? tile(fmtNum(roundPop(jobs)), 'jobs', 'on the site') : '';
-    const gfaT = em && em.totalM2 > 0 ? tile(fmtNum(Math.round(em.totalM2)), 'm²', `${esc(useTxt)} floor area`) : '';
-    const tiles = [
-      ...(kind === 'employment' ? [jobsT, gfaT, p.siteAreaHa > 0 ? tile(fmt1(p.siteAreaHa), 'ha', 'site area') : '']
-        : kind === 'mixed' ? [unitsT, pplT, jobsT, gfaT]
-          : [unitsT, pplT, pe.totalUnits > 0 && pe.population > 0 ? tile((pe.population / pe.totalUnits).toFixed(2), 'ppu', 'people per unit') : '']),
-      tile(fmt1(cb.water.maxDay), 'L/s', 'water max day'),
-      tile(fmt1(cb.wastewater.avg), 'L/s', 'average dry weather'),
-      tile(fmt1(cb.wastewater.peak), 'L/s', 'peak dry weather'),
-      tile(fmt1(cb.wastewater.wetPeak), 'L/s', 'peak wet weather', cb.wastewater.infiltration > 0 ? esc(D.iiText(cb.wastewater.infiltration, App().state.criteria)) : ''),
-    ].join('');
-    const go = (tab, t) => `<button type="button" class="btn small link ov-go" data-ov-tab="${tab}">${t} →</button>`;
-    const devBtn = `<button type="button" class="btn small link ov-go" data-ov-tab="records">Files &amp; history (Records) →</button>`;
     const confirm = thingsToConfirm(p, { st, f, cb, kind });
-    const vline = (v, label, btn) => `<li><strong>${label}</strong> <span class="${toneCls[v.tone]}">${vtxt(v)}</span> ${btn}</li>`;
-    // Stage 3: the standard panel (js/panel.js), as the site board: the latest file names the
-    // development; the servicing rows, Timing and Site (constraints, storm sewers and ponds); About
-    // and Files fold. The card below (every tile, the flows, the things to confirm) is its full table.
     if (root.PeelPanel) root.PeelPanel.set('overview:', sitePanelSpec(p, { st, f, cb, pe, kind, em, jobs, useTxt, wv, wwv, dcv, mv, confirm, worst }));
-    el.innerHTML = `<div class="ov-top">${hlP(`<strong>${esc(p.title)}</strong> · ${esc(p.municipality)} · ${dot(p.phase)} ${esc(P.PHASE_BY_KEY[p.phase].label)}`)}</div>
-      ${confirm.length ? `<section class="ov-card ov-confirm"><div class="ov-h"><h3>${confirm.length} thing${confirm.length === 1 ? '' : 's'} to confirm</h3></div><ul class="b-lines small">${confirm.map(c => `<li>${c}</li>`).join('')}</ul></section>` : ''}
-      <div class="ov-grid">
-        <section class="ov-card ov-growth"><div class="ov-h"><h3>At a glance</h3>${devBtn}</div>
-          <p class="small">${DV().firstSentence(st.why)}</p>
-          <div class="ov-tiles">${tiles}</div>
-          ${window.PeelTreeCounts ? window.PeelTreeCounts.noteHTML(p, 3) : ''}
-          <p class="small muted">Flows at Peel design criteria, as in a functional servicing report${pe.employment.jobs > 0 ? `; jobs from the floor area the applications state (${fmtNum(App().state.criteria.employment.water)} L/job/d water)` : ''}. Below: the proposal, its files and history, and the site.</p>
-        </section>
-        <section class="ov-card ov-cap-c"><div class="ov-h"><h3>Screening summary</h3></div>
-          <ul class="b-lines small">
-            ${vline(wv, '💧 Water', go('svc:network', 'Servicing'))}
-            ${vline(wwv, '🚰 Wastewater', go('svc:network', 'Servicing'))}
-            ${vline(dcv, '🏗 DC works', go('dca', 'Capital'))}
-            ${vline(mv, '🚩 Next milestone', devBtn)}
-          </ul></section>
-      </div>`;
-    const sec = $('#ov-dev'); if (sec) sec.hidden = false;
+    el.innerHTML = '';
     if (document.documentElement.hasAttribute('data-presentation')) AS().renderPresentation();
   }
   // The capacity constraints behind the Overview bars (wastewater plants + the South Peel
@@ -383,10 +371,9 @@
     const el = $('#ov-body'); if (!el) return;
     const rsc = root.PeelSvcScope && root.PeelSvcScope.current();
     // (a result started at the open development, the Inquiry draft, shows over the site's Overview)
-    if (resultHost(rsc && rsc.kind === 'result' && (!DV().scopedDev() || rsc.result.keepDev) ? rsc : null)) { const sec = $('#ov-dev'); if (sec) sec.hidden = true; return; }
+    if (resultHost(rsc && rsc.kind === 'result' && (!DV().scopedDev() || rsc.result.keepDev) ? rsc : null)) return;
     const p = DV().scopedDev();
-    if (p) { renderVerdictCard(p); return; }
-    const sec = $('#ov-dev'); if (sec) sec.hidden = true;
+    if (p) { renderSiteOverview(p); return; }
     // A servicing scope (plant / station / block / zone / water system) has its own Overview.
     const ss = root.PeelSvcScope && root.PeelSvcScope.current();
     if (ss) {
@@ -557,15 +544,13 @@
       const [tab, sub] = t.dataset.ovTab.split(':');   // "tab" or "tab:sub-view"
       AT().setFootPref(AT().tabOf(tab)); store.set('footTab4', AT().tabOf(tab)); AT().showFootTab(tab, sub); return;
     }
-    const ds = e.target.closest('[data-ov-devsec]');
-    if (ds) { if (window.DevTab && typeof window.DevTab.setSub === 'function') window.DevTab.setSub(ds.dataset.ovDevsec); const sec = $('#ov-dev'); if (sec) sec.scrollIntoView({ block: 'start', behavior: 'smooth' }); return; }
     const dv = e.target.closest('[data-ov-dev]'); if (dv) { const q = DN().projectByKey(dv.dataset.ovDev); if (q) DN().showDetail(q); return; }
     const k = e.target.closest('[data-ov-tool]');
     if (k && k.dataset.ovTool === 'brief') RP().briefingPDF();
   });
 
   // ---- Public contract ----
-  const api = { renderOverview, renderVerdictCard, scopeText, scopeLabel, infillScope, secondUnitScope, capacityBarsHTML, lastAreaSpec: () => lastArea, lastAreaCount: () => lastAreaN, weekChanges };
+  const api = { renderOverview, renderSiteOverview, scopeText, scopeLabel, infillScope, secondUnitScope, capacityBarsHTML, lastAreaSpec: () => lastArea, lastAreaCount: () => lastAreaN, weekChanges };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelOverviewTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);

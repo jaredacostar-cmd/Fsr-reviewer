@@ -14,11 +14,20 @@ function load(store, build = {}) {
 }
 const p = { key: 'B|1 MAIN ST', title: '1 Main St' };
 
-test('the site sections follow the map tabs, Summary first', () => {
+test('the site sections are the map\u2019s five tabs, by their names; Servicing has the map\u2019s views', () => {
   const S = load({});
-  assert.deepEqual(S.SITE.map(s => s.title), ['Summary', 'Growth', 'Servicing', 'Capital', 'Files', 'FSR review']);
-  assert.deepEqual(S.SITE.map(s => s.tab), ['overview', 'growth', 'svc', 'dca', 'records', 'svc']);
-  assert.equal(S.BY_ID.fsr.page, 'fsr', 'the FSR review is a page of its own');
+  assert.deepEqual(S.SITE.map(s => s.title), ['Overview', 'Growth', 'Servicing', 'Capital', 'Records']);
+  assert.deepEqual(S.SITE.map(s => s.tab), ['overview', 'growth', 'svc', 'dca', 'records']);
+  assert.deepEqual(S.SITE.map(s => s.id), ['summary', 'growth', 'servicing', 'capital', 'files'], 'the ids are kept (phase 1\u2019s routes, siteAt)');
+  assert.deepEqual(S.BY_ID.servicing.views.map(v => [v.title, v.keys[0], v.page || '']), [['Network', 'svc:network', ''], ['FSR review', 'svc:fsr', 'fsr']]);
+  assert.equal(S.BY_ID.fsr, undefined, 'FSR review is a Servicing view, not a section');
+  // A view is its section with the view's keys: specFor draws FSR review's panel (the page fsr).
+  const v = S.viewOf('servicing', 'fsr');
+  assert.deepEqual([v.section, v.id, v.title, v.page, v.keys], ['servicing', 'fsr', 'FSR review', 'fsr', ['svc:fsr']]);
+  assert.equal(S.viewOf('servicing', 'nope'), null); assert.equal(S.viewOf('growth', 'fsr'), null);
+  const fsr = { answer: 'FSR review' }, S2 = load({ 'svc:fsr': { spec: fsr, scope: `dev:${p.key}` }, 'svc:network': { spec: { answer: 'Network' }, scope: `dev:${p.key}` } });
+  assert.equal(S2.specFor(S2.viewOf('servicing', 'fsr'), p), fsr);
+  assert.equal(S2.specFor('servicing', p).answer, 'Network', 'the section itself is its first view');
   assert.deepEqual(S.AREA.map(s => [s.title, s.page || s.keys[0]]), [['Growth', 'growth'], ['Forecast', 'outlook'], ['Servicing', 'svc:capacity'], ['Capital', 'dca:timing']]);
 });
 
@@ -30,16 +39,23 @@ test('a panel the tab set for this development is used as is; one for another sc
   assert.equal(S.specFor('growth', p), null, 'the area panel is not the site’s');
 });
 
-test('Capital and Files are built on demand; Capital adds the EAs’ lists under the timing', () => {
+test('Capital and Records are built on demand; a section of two panels takes the first\u2019s answer and both lists', () => {
   const S = load({}, {
     dca: q => ({ answer: `relies on 5 (${q.title})`, figures: [{ v: 5 }], lists: [{ title: 'The projects it relies on', rows: [] }] }),
     eas: () => ({ answer: 'EAs', lists: [{ title: 'Near the site', rows: [] }], foot: { primary: { label: 'Show EAs' }, secondary: [{ label: 'Copy for review comments', attrs: { 'data-ce-copy-brief': '' } }] } }),
     files: () => ({ answer: '9 files', lists: [] }),
   });
+  // (navigation phase 5: a site's Capital is one panel, DC timing's, which holds the EAs near it: js/dca-tab.js)
+  assert.deepEqual(S.BY_ID.capital.keys, ['dca:timing']);
   const cap = S.specFor('capital', p);
   assert.equal(cap.answer, 'relies on 5 (1 Main St)');
-  assert.deepEqual(cap.lists.map(l => l.title), ['The projects it relies on', 'Near the site']);
-  assert.deepEqual(cap.foot.secondary.map(b => b.label), ['Copy for review comments'], 'the EAs panel\u2019s action reaches the footer');
+  assert.deepEqual(cap.lists.map(l => l.title), ['The projects it relies on'], 'the dca builder\u2019s spec as is: no EAs panel merged');
+  assert.equal(cap.foot, undefined);
+  // The merge (general; no site section uses it now): the first's answer, both lists, the other's footer action.
+  const two = S.specFor({ keys: ['dca:timing', 'dca:eas'] }, p);
+  assert.equal(two.answer, 'relies on 5 (1 Main St)');
+  assert.deepEqual(two.lists.map(l => l.title), ['The projects it relies on', 'Near the site']);
+  assert.deepEqual(two.foot.secondary.map(b => b.label), ['Copy for review comments'], 'the second panel\u2019s action reaches the footer');
   assert.equal(S.specFor('files', p).answer, '9 files');
 });
 

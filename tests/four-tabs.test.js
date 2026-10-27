@@ -32,7 +32,7 @@ function loadTabs({ labs = [], site = false, publicView = false, siteEas = 3 } =
 // The spec's inventory: the chips each tab shows at each scope.
 const SPEC = {
   area: { overview: [], growth: ['pipeline', 'areas', 'timing'], svc: ['capacity', 'network'], dca: ['timing', 'eas', 'projects'], records: ['sources', 'checks'] },
-  site: { overview: [], growth: ['pipeline'], svc: ['network'], dca: ['timing', 'eas'], records: ['files'] },
+  site: { overview: [], growth: ['pipeline'], svc: ['network', 'fsr'], dca: ['timing'], records: ['files'] },
 };
 
 test('1. tabs: Overview · Growth · Servicing · Capital at every scope, then Records as a small trailing tab', () => {
@@ -51,9 +51,10 @@ test('1. sub-views per scope match the spec (Peel / area and a development)', ()
   }
   // Labs › DC funding adds no chip: its screen is a fold of Capital › DC timing (js/dc-projects.js).
   assert.deepEqual(plain(loadTabs({ labs: ['funding'] }).chipsAt('dca', 'area')), ['timing', 'eas', 'projects']);
-  assert.deepEqual(plain(loadTabs({ labs: ['funding'], site: true }).chipsAt('dca', 'site')), ['timing', 'eas']);
+  assert.deepEqual(plain(loadTabs({ labs: ['funding'], site: true }).chipsAt('dca', 'site')), ['timing']);
   assert.deepEqual(plain(loadTabs({ labs: ['funding'], publicView: true }).chipsAt('dca', 'area')), ['timing', 'eas', 'projects']);
-  // An empty sub-view at a site is hidden: no EA mapped near it.
+  // EAs never show a chip at a site: the one Capital view lists them (navigation phase 5), with or without any near.
+  assert.deepEqual(plain(loadTabs({ site: true, siteEas: 3 }).chipsAt('dca', 'site')), ['timing']);
   assert.deepEqual(plain(loadTabs({ site: true, siteEas: 0 }).chipsAt('dca', 'site')), ['timing']);
   // One chip is no choice: the row is hidden (Overview has none at all).
   assert.match(src('js/analysis-tabs.js'), /p\.hidden = pk !== key \|\| chipsAt\(pk, scopeOf\(pk\)\)\.length < 2;/);
@@ -62,7 +63,7 @@ test('1. sub-views per scope match the spec (Peel / area and a development)', ()
   const row = tab => { const i = HTML.indexOf(`f-subtabs`, HTML.indexOf(`data-pane="${tab}" hidden role="group"`) - 80); const s = HTML.slice(i, HTML.indexOf('</div>', i)); return [...s.matchAll(/data-(?:gsub|svcsub|dcasub|rsub)="(\w+)">([^<]+)</g)].map(m => m[2].trim()); };
   // (no two sub-views share a name: design bundle 2)
   assert.deepEqual(row('growth'), ['Pipeline', 'Areas', 'Forecast']);
-  assert.deepEqual(row('svc'), ['Capacity', 'Network']);
+  assert.deepEqual(row('svc'), ['Capacity', 'Network', 'FSR review']);
   assert.deepEqual(row('dca'), ['DC timing', 'EAs', 'Projects']);
   assert.deepEqual(row('records'), ['Sources', 'Data checks', 'Files']);
 });

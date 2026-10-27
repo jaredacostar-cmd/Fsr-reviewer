@@ -30,7 +30,8 @@ test('wired in: the site header carries the chip and its box, on the panels and 
   assert.match(pn, /\$\{chip\(h\.status\)\}\$\{h\.badge \|\| ''\}/);
   assert.match(pn, /badge: AC \? AC\.chipHTML\(p\) : '', extra: `\$\{SC \? SC\.boxHTML\(p\) : ''\}\$\{AC \? AC\.boxHTML\(p\) : ''\}`/, 'with the stage chip\'s box (PR 2)');
   assert.match(wp, /\$\{chipHTML\(m\.status\)\}\$\{m\.badge \|\| ''\}/);
-  assert.equal((wp.match(/badge: s\.head\.badge, extra: s\.head\.extra/g) || []).length, 2, 'site and fsr pages');
+  assert.equal((wp.match(/badge: s\.head\.badge, extra: s\.head\.extra/g) || []).length, 1, 'the site page, Review an FSR its Servicing view (navigation phase 5)');
+  assert.match(wp, /function fsr\(\) \{\n {4}if \(!devNow\(\)\) return find\('fsr'\);\n {4}return site\('fsr'\);/);
   assert.match(dt, /const aerialRuns = new Map\(\);/);
   assert.match(dt, /aerialRun\(p\)\n {6}\.then\(show\)/, 'the Site view uses the same run');
   assert.match(src('index.html'), /<script src="js\/aerial-chip\.js\?v=__BUILD__"><\/script>/);

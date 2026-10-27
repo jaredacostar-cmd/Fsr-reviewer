@@ -12,6 +12,7 @@ test('presents the open scope: no longer closes the development', () => {
   const enter = as.match(/function enterPresentation\(\) \{[\s\S]*?\n  \}/)[0];
   assert.doesNotMatch(enter, /closeDetail/);
   assert.match(as, /document\.querySelector\('#ov-body \.ov-top \.headline'\)/, 'headline from the current Overview (any scope)');
+  assert.match(as, /PeelPanel\.get\('overview:'\)/, 'a development: its Overview panel');
   assert.match(as, /if \(!presRendering && OT && OT\.renderOverview\)/, 'no render loop with the Overview');
 });
 

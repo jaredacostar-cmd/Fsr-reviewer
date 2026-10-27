@@ -65,7 +65,8 @@ test('arriving on the full map from a page or a workspace, a bar offers the way 
 
 test('a page\'s link to the map\'s tools goes to the full map first, then does what it does there', () => {
   const w = src('js/workspaces.js');
-  assert.match(w, /const MAP_LINK = '\[data-at\], \[data-ss\], \[data-full-table\], \[data-trace\], \[data-mview\]';/);
+  // (navigation phase 5: a site page's header Trace water and ⋯ Compare too)
+  assert.match(w, /const MAP_LINK = '\[data-at\], \[data-ss\], \[data-full-table\], \[data-trace\], \[data-wtrace\], \[data-scope-compare\], \[data-mview\]';/);
   assert.match(w, /if \(mode !== 'home' \|\| !e\.target\.closest\) return;[^]*?setMode\('full'\);\n {2}\}, true\);/);
 });
 
