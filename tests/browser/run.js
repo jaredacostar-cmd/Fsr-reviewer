@@ -14,10 +14,13 @@ const PORT = +(process.env.PORT || 8790);
 const CDN = process.env.CDN_DIR;
 const results = [];
 
-async function open(browser, { w = 1440, h = 900, fresh = false, slowApp = 0, prefs = null } = {}) {
-  const ctx = await browser.newContext({ viewport: { width: w, height: h }, isMobile: w < 500, hasTouch: w < 500 });
+async function open(browser, { w = 1440, h = 900, fresh = false, slowApp = 0, slowData = null, prefs = null } = {}) {
+  // (slowData: no service worker, which would answer the held files itself)
+  const ctx = await browser.newContext({ viewport: { width: w, height: h }, isMobile: w < 500, hasTouch: w < 500, serviceWorkers: slowData ? 'block' : 'allow' });
   // (js/app.js held back: the data files and the map arrive first, as on a slow connection)
   if (slowApp) await ctx.route(/\/js\/app\.js/, async route => { await wait(slowApp); route.continue(); });
+  // (slowData: data files held back, { 'dc-gate.json': ms }, as a slow connection delivers a large one late)
+  for (const [f, ms] of Object.entries(slowData || {})) await ctx.route(`**/data/${f}*`, async route => { await wait(ms); route.continue(); });
   if (CDN) await ctx.route('https://unpkg.com/**', route => { const m = /unpkg\.com\/([^@]+)@([^/]+)\/(.+)$/.exec(route.request().url()); const f = m && `${CDN}/${m[1]}-${m[2]}/package/${m[3]}`; if (f && fs.existsSync(f)) route.fulfill({ path: f, contentType: f.endsWith('.css') ? 'text/css' : 'application/javascript' }); else route.abort(); });
   const page = await ctx.newPage(); const errors = [];
   page.on('pageerror', e => errors.push(e.message));
@@ -926,37 +929,260 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     await ev(() => { PeelApp.state.sp = []; PeelApp.applyFilters(); });
   });
 
-  // The pipeline ledger (docs/pipeline-ledger-plan.md, Phase 2): Growth › Ledger adds up to Growth's
-  // left to build at Everything, the cut-off buttons and the units / people switch change it, every total
-  // carries the disclaimer, a row opens its development.
-  await check('Growth › Ledger: Peel equals left to build; cut-offs, people, a row opens the site', browser, {}, async ({ page, ev }, expect) => {
+  // The pipeline ledger (docs/pipeline-ledger-plan.md, Phase 2), since navigation phase 3 Growth ›
+  // Forecast's fold By period: it adds up to Growth's left to build at Everything, its own cut-off buttons
+  // and the units / people switch change it, every total carries the disclaimer, its 2026 to 2031 column is
+  // the Forecast's units expected by 2031 (one model); the old name, an old link and What's coming open the
+  // fold, a redraw never rewrites the reader's pick, the developments are in the full table (a row opens
+  // its site). (Selectors are scoped to the panel: the full table holds the same buttons.)
+  await check('Growth › Forecast, By period: Peel equals left to build; its own cut-off and people; one model with the Forecast; the developments in the full table; old links open it', browser, {}, async ({ page, ev }, expect) => {
+    const F = '#pnl-growth #pnl-by-period';
+    // 1. The old name, as old links and buttons name it: the Forecast, By period open.
     await ev(() => { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.openTab('growth', 'ledger'); });
-    await page.waitForSelector('#ledger-body .ldg-table', { timeout: 30000 }); await wait(1500);
-    await page.click('[data-ledger-cut="all"]'); await page.click('[data-ledger-measure="units"]'); await wait(800);
+    await page.waitForSelector(`${F}[open] .ldg-table`, { timeout: 30000 }); await wait(1500);
+    const c1 = await ev(() => ({ sub: PeelAnalysisTabs.getGSub(), chips: [...document.querySelectorAll('[data-gsub]')].filter(b => b.getClientRects().length).map(b => b.textContent.trim()).join('|') }));
+    expect(c1.sub === 'timing', `the Ledger opens the Forecast (${c1.sub})`);
+    expect(c1.chips === 'Pipeline|Areas|Forecast', `Growth's chips: ${c1.chips}`);
+    // 2. Everything, units, nothing hidden: Peel = left to build; the disclaimer; the check column.
+    if (await ev(() => PeelLedgerUI.settings.hideLapsed)) { await page.click(`${F} [data-ledger-lapse]`); await wait(800); }
+    await page.click(`${F} [data-ledger-cut="all"]`); await wait(800); await page.click(`${F} [data-ledger-measure="units"]`); await wait(800);
     const num = s => +String(s).replace(/[^\d]/g, '');
-    const a = await ev(() => ({ peel: document.querySelector('#ledger-body .ldg-peel td:last-child strong').textContent, left: Math.round(Growth.pipelineTotals(PeelDemandUI.overviewSet()).left), disc: document.querySelector('#ledger-body .ldg-table caption').textContent, check: PeelLedgerUI.model().r.check }));
+    const a = await ev(() => ({ peel: document.querySelector('#pnl-growth #pnl-by-period .ldg-peel td:last-child strong').textContent, left: Math.round(Growth.pipelineTotals(PeelDemandUI.overviewSet()).left), disc: document.querySelector('#pnl-growth #pnl-by-period .ldg-table caption').textContent, check: PeelLedgerUI.model().r.check }));
     expect(num(a.peel) === a.left, `Peel ${a.peel} = Growth's left to build ${a.left}`);
     expect(/Public-data estimate\. Not the Region’s committed capacity ledger\./.test(a.disc), 'the table carries the disclaimer');
     expect(a.check < 1e-6, `every parent equals its children (check ${a.check})`);
-    await page.click('[data-ledger-cut="committed"]'); await wait(800);
-    const com = await ev(() => +document.querySelector('#ledger-body .ldg-peel td:last-child strong').textContent.replace(/[^\d]/g, ''));
+    // 3. One model with the Forecast (once it is timed): By period's 2026 to 2031 = the units expected by 2031.
+    await page.waitForFunction(() => { const c = PeelLedgerUI.compute(); return !!(c && c.timed && c.homes); }, null, { timeout: 60000 }).catch(() => {});
+    const one = await ev(() => { const fc = PeelTiming.bandsFromSchedules(PeelTiming.pipelineItems(PeelDemandUI.demandSet()), PeelTiming.forecastModel().ss); return { ledger: PeelLedger.sumOf(PeelLedgerUI.model().r.root.cells, { bucket: 'to2031', cutoff: 'all', measure: 'units' }), forecast: fc.years.filter(r => r.year <= 2031).reduce((t, r) => t + r.likely, 0) }; });
+    expect(Math.abs(one.ledger - one.forecast) <= Math.max(1, one.forecast * 0.01), `By period's 2026 to 2031 (${Math.round(one.ledger)}) = the Forecast's units expected by 2031 (${Math.round(one.forecast)})`);
+    // 4. Committed only, the people switch.
+    await page.click(`${F} [data-ledger-cut="committed"]`); await wait(800);
+    const com = await ev(() => +document.querySelector('#pnl-growth #pnl-by-period .ldg-peel td:last-child strong').textContent.replace(/[^\d]/g, ''));
     expect(com > 0 && com < a.left, `committed only: ${com} of ${a.left}`);
-    await page.click('[data-ledger-measure="people"]'); await wait(800);
-    expect(await ev(() => /^People by/.test(document.querySelector('#ledger-body .ldg-table caption').textContent)), 'the people switch');
-    await page.click('[data-ledger-cut="all"]'); await page.click('[data-ledger-measure="units"]'); await wait(800);
+    await page.click(`${F} [data-ledger-measure="people"]`); await wait(800);
+    expect(await ev(() => /^People by/.test(document.querySelector('#pnl-growth #pnl-by-period .ldg-table caption').textContent)), 'the people switch');
+    await page.click(`${F} [data-ledger-cut="all"]`); await wait(800); await page.click(`${F} [data-ledger-measure="units"]`); await wait(800);
+    // 4b. At a municipality the rows are its plans and Not in a plan, as Growth › Areas places them: each
+    // plan's units = its left to build there (compared as maps: Areas orders plans by people, the table by
+    // units), the total row = the municipality's left to build, named; then Peel again.
+    await ev(() => { PeelApp.state.muni = 'Brampton'; PeelApp.applyFilters(); });
+    await page.waitForFunction(() => { const th = document.querySelector('#pnl-growth #pnl-by-period .ldg-table thead th'); return th && th.textContent === 'Plan'; }, null, { timeout: 60000 }).catch(() => {});
+    await wait(800);
+    const b = await ev(() => {
+      const n = s => +String(s).replace(/[^\d]/g, ''), t = document.querySelector('#pnl-growth #pnl-by-period .ldg-table');
+      const rows = [...t.querySelectorAll('tbody tr')].map(tr => [tr.querySelector('th').textContent, n(tr.querySelector('td:last-child strong').textContent)]);
+      const kids = PeelPlanTables.compute().nodes.get('m:Brampton').children.filter(c => c.m.left >= 0.5).map(c => [c.name, Math.round(c.m.left)]);
+      return { head: t.querySelector('thead th').textContent, rows, kids, foot: t.querySelector('tfoot th').textContent, total: n(t.querySelector('tfoot td:last-child strong').textContent), left: Math.round(Growth.pipelineTotals(PeelDemandUI.overviewSet()).left), check: PeelLedgerUI.model().r.check };
+    });
+    expect(b.head === 'Plan', `at Brampton the rows are its plans (head ${b.head})`);
+    const tm = new Map(b.rows.filter(([, v]) => v > 0)), am = new Map(b.kids);
+    expect(tm.size === am.size && [...am].every(([k, v]) => tm.has(k) && Math.abs(tm.get(k) - v) <= 1), `each plan's units = Growth › Areas' left to build there (table ${JSON.stringify([...tm])}, Areas ${JSON.stringify([...am])})`);
+    expect(b.rows.length > 1 && b.rows[b.rows.length - 1][0] === 'Not in a plan', `Not in a plan last (${b.rows.map(r => r[0]).join('|')})`);
+    expect(b.foot === 'Brampton' && b.total === b.left, `the total row: Brampton ${b.total} = its left to build ${b.left} (${b.foot})`);
+    expect(b.check < 1e-6, `the plans add up to Brampton (check ${b.check})`);
+    await ev(() => { PeelApp.state.muni = ''; PeelApp.applyFilters(); });
+    await page.waitForFunction(() => { const th = document.querySelector('#pnl-growth #pnl-by-period .ldg-table thead th'); return th && th.textContent === 'Municipality'; }, null, { timeout: 60000 }).catch(() => {});
+    expect(await ev(() => document.querySelector('#pnl-growth #pnl-by-period .ldg-table thead th').textContent === 'Municipality'), 'Peel again: municipality rows');
+    // 5. Shut by the reader (kept in this browser); an old link opens it; What's coming opens it.
+    await page.click(`${F} > summary`); await wait(300);
+    expect(await ev(() => PeelUtil.store.get('ledgerOpen', true) === false), 'shut by the reader: kept in this browser');
+    await ev(() => PeelShare.viewLink.apply('t=growth&gs=ledger')); await wait(1500);
+    expect(await ev(() => !!document.querySelector('#pnl-growth #pnl-by-period[open]')), 'an old gs=ledger link opens By period');
+    await page.click(`${F} > summary`); await wait(300);
+    await ev(() => PeelWorkspaces.go('coming')); await wait(1500);
+    const c5 = await ev(() => ({ mode: PeelWorkspaces.mode(), sub: PeelAnalysisTabs.getGSub(), open: !!document.querySelector('#pnl-growth #pnl-by-period[open]') }));
+    expect(c5.mode === 'ws' && c5.sub === 'timing' && c5.open, `What's coming opens the Forecast with By period open (${JSON.stringify(c5)})`);
+    // 5b. A redraw is not a pick: shut on the map, a page, back on the map: still shut, and kept.
+    await ev(() => PeelWorkspaces.setMode('full')); await wait(800);
+    if (await ev(() => !!document.querySelector('#pnl-growth #pnl-by-period[open]'))) { await page.click(`${F} > summary`); await wait(300); }
+    expect(await ev(() => PeelUtil.store.get('ledgerOpen', true) === false), 'shut by the reader again');
+    await ev(() => PeelWorkspaces.openPage('home')); await wait(500);
+    await ev(() => PeelWorkspaces.setMode('full')); await wait(500);
+    const c5b = await ev(() => ({ there: !!document.querySelector('#pnl-growth #pnl-by-period'), open: !!document.querySelector('#pnl-growth #pnl-by-period[open]'), kept: PeelUtil.store.get('ledgerOpen', true) }));
+    expect(c5b.there && !c5b.open && c5b.kept === false, `back on the map from a page: By period as the reader left it (${JSON.stringify(c5b)})`);
+    await page.click(`${F} > summary`); await wait(300);
+    expect(await ev(() => PeelUtil.store.get('ledgerOpen', true) === true), 'opened again by the reader');
+    // 6. The developments in the full table, at their table; a row opens its development.
+    await page.click(`${F} [data-full-table]`); await wait(1200);
+    const ft = await ev(() => {
+      const an = document.getElementById('analysis'), pane = document.getElementById('pane-growth-ledger'), cap = document.querySelector('#ledger-body table.ldg-list caption');
+      const box = document.getElementById('analysis-panes').getBoundingClientRect(), r = cap ? cap.closest('table').getBoundingClientRect() : null;
+      return { on: an.classList.contains('ft-on'), shown: !!pane && getComputedStyle(pane).display !== 'none', cap: cap ? cap.textContent : '', top: r ? Math.round(r.top) : null, box: [Math.round(box.top), Math.round(box.bottom)] };
+    });
+    expect(ft.on && ft.shown, `the Forecast's full table with By period's pane (${JSON.stringify(ft)})`);
+    expect(/^Developments by stage, tier and expected year/.test(ft.cap), `the developments list (${ft.cap.slice(0, 60)})`);
+    expect(ft.top != null && ft.top >= ft.box[0] - 2 && ft.top < ft.box[1], `the full table opens at the developments (top ${ft.top}, box ${ft.box})`);
     const key = await ev(() => document.querySelector('#ledger-body tr.ldg-row').dataset.pnlDev);
     await page.locator('#ledger-body tr.ldg-row').first().click(); await wait(2500);
     expect(await ev(() => (DevScope.current() || {}).key) === key, `a row opens its development (${key})`);
   });
 
-  await check('phone: Home › What’s coming shows the ledger with no sideways scroll', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
+  // What's coming (navigation phase 3): the Forecast page under the ledger's question, opened with By
+  // period; a fold the reader shut on the Forecast page stays shut when the page rebuilds; the page's own
+  // developments list moved to the Forecast's full table (one tap), which opens on the map.
+  await check('phone: What’s coming opens the Forecast page at By period; no sideways scroll (the page, the full table, the map’s panel); a cut-off works; the developments in the full table', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
+    // 1. The Forecast page: By period shut by the reader stays shut on a rebuild (foldsNow).
+    // (#home is the page's scroller, fixed at the screen's width: the document never grows wider, so the
+    // page's sideways scroll is #home's own)
+    const sideways = () => ev(() => { const h = document.getElementById('home'), d = document.documentElement; return { w: d.scrollWidth, vw: innerWidth, hw: h.scrollWidth, hc: h.clientWidth }; });
+    await ev(() => PeelWorkspaces.openPage('outlook'));
+    await page.waitForSelector('#home #pnl-by-period[open] .ldg-table', { timeout: 60000 }); await wait(1500);
+    const s0 = await sideways();
+    expect(s0.w <= s0.vw && s0.hw <= s0.hc, `no sideways scroll on the Forecast page, By period open (document ${s0.w}/${s0.vw}, page ${s0.hw}/${s0.hc})`);
+    await page.click('#home #pnl-by-period > summary'); await wait(400);
+    await ev(() => PeelWorkspaces.renderPage(true)); await wait(400);
+    const s1 = await ev(() => ({ there: !!document.querySelector('#home #pnl-by-period'), open: !!document.querySelector('#home #pnl-by-period[open]'), kept: PeelUtil.store.get('ledgerOpen', true) }));
+    expect(s1.there && !s1.open && s1.kept === false, `shut on the Forecast page, still shut when it rebuilds (${JSON.stringify(s1)})`);
+    // 2. What's coming: the same page under its own question, By period open; the sidebar lights it.
     await ev(() => PeelWorkspaces.openPage('coming'));
-    await page.waitForSelector('#home .ldg-table', { timeout: 30000 }); await wait(1500);
-    const s = await ev(() => ({ w: document.documentElement.scrollWidth, vw: innerWidth, disc: document.querySelectorAll('#home .ldg-disc').length, rows: document.querySelectorAll('#home tr.ldg-row').length }));
-    expect(s.w <= s.vw, `no sideways scroll (${s.w} > ${s.vw})`);
-    expect(s.disc > 0 && s.rows > 0, `the list and the disclaimer (${s.rows} rows)`);
+    await page.waitForSelector('#home #pnl-by-period[open] .ldg-table', { timeout: 30000 }); await wait(1500);
+    const s = await ev(() => { const sum = document.querySelector('#home #pnl-by-period > summary').getBoundingClientRect(), hm = document.getElementById('home'); return { w: document.documentElement.scrollWidth, vw: innerWidth, hw: hm.scrollWidth, hc: hm.clientWidth, h1: document.querySelector('#home h1').textContent, sum: Math.round(sum.height), disc: (document.querySelector('#home #pnl-by-period .ldg-table caption') || {}).textContent || '', lit: ((document.querySelector('#home .home-ws.on') || {}).dataset || {}).wsPage, page: PeelWorkspaces.page() }; });
+    expect(s.page === 'coming' && s.h1 === 'What is coming, where, when and how sure?', `the ledger's question as the page's title (${s.page}: ${s.h1})`);
+    expect(s.w <= s.vw && s.hw <= s.hc, `no sideways scroll (document ${s.w}/${s.vw}, page ${s.hw}/${s.hc})`);
+    expect(s.sum >= 44, `By period's summary is a 44 px target (${s.sum})`);
+    expect(/Public-data estimate\. Not the Region’s committed capacity ledger\./.test(s.disc), 'the table carries the disclaimer');
+    expect(s.lit === 'coming', `What's coming lit in the menu (${s.lit})`);
+    // 3. A cut-off button works on the page (the page rebuilds from the panel, the fold still open).
     await page.click('#home [data-ledger-cut="approved"]'); await wait(1000);
-    expect(await ev(() => document.querySelector('#home [data-ledger-cut="approved"]').getAttribute('aria-pressed') === 'true'), 'a cut-off button works on the page');
+    const s3 = await ev(() => ({ on: (document.querySelector('#home [data-ledger-cut="approved"]') || { getAttribute: () => null }).getAttribute('aria-pressed'), open: !!document.querySelector('#home #pnl-by-period[open]') }));
+    expect(s3.on === 'true' && s3.open, `a cut-off button works on the page (${JSON.stringify(s3)})`);
+    // 4. The developments: the Forecast's full table, on the map.
+    await page.click('#home #pnl-by-period [data-full-table]'); await wait(2000);
+    // (on the map the sheet's #analysis-panes is the scroller)
+    const panes = () => ev(() => { const a = document.getElementById('analysis-panes'); return { aw: a.scrollWidth, ac: a.clientWidth }; });
+    const s4 = await ev(() => ({ mode: PeelWorkspaces.mode(), ft: document.getElementById('analysis').classList.contains('ft-on'), rows: document.querySelectorAll('#ledger-body tr.ldg-row').length, w: document.documentElement.scrollWidth, vw: innerWidth }));
+    Object.assign(s4, await panes());
+    expect(s4.mode === 'full' && s4.ft && s4.rows > 0, `the developments in the full table (${JSON.stringify(s4)})`);
+    expect(s4.w <= s4.vw && s4.aw <= s4.ac, `no sideways scroll in the full table (document ${s4.w}/${s4.vw}, panes ${s4.aw}/${s4.ac})`);
+    // 5. Back to the Forecast's panel, the sheet pulled up: By period and its link fit the sheet too.
+    await ev(() => PeelPanel.closeFull()); await wait(800);
+    await ev(() => PeelApp.setAnalysisSnap('full')); await wait(1000);
+    const s5 = await ev(() => { const l = document.querySelector('#pnl-growth #pnl-by-period[open] [data-full-table]'); return { link: !!l && l.getClientRects().length > 0, ft: document.getElementById('analysis').classList.contains('ft-on') }; });
+    Object.assign(s5, await panes());
+    expect(s5.link && !s5.ft && s5.aw <= s5.ac, `no sideways scroll in the map's Forecast panel, By period open (panes ${s5.aw}/${s5.ac}; ${JSON.stringify(s5)})`);
+  });
+
+  // By period counts the site servicing permits however late data/dc-gate.json (1.3 MB) lands: Home sets
+  // the Forecast's panel before it is in, and the gate sets the panel's folds again out of sight, so the
+  // map's Growth › Forecast and What's coming show the full table's figure, never building permits only.
+  await check('a late dc-gate.json: By period on the map’s Growth › Forecast and on What’s coming counts the site servicing permits, as the model does', browser, { slowData: { 'dc-gate.json': 12000 } }, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelDcGate && PeelDcGate.loaded(), null, { timeout: 120000 }); await wait(3000);
+    const read = sel => ev(q => {
+      const n = t => { const m = /([\d,]+) units are committed/.exec(t || ''); return m ? m[1] : null; };
+      const d = document.querySelector(q), x = document.createElement('div'); x.innerHTML = PeelLedgerUI.model().answer;
+      return { shown: d ? n(d.textContent) : null, model: n(x.textContent), loading: !!d && /Site servicing permits are still loading/.test(d.textContent) };
+    }, sel);
+    await ev(() => { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.showFootTab('growth', 'timing'); });
+    await page.waitForSelector('#pnl-growth #pnl-by-period .ldg-table', { timeout: 60000 }); await wait(1500);
+    const a = await read('#pnl-growth #pnl-by-period');
+    expect(a.shown && a.shown === a.model && !a.loading, `the map's Growth › Forecast: By period's committed is the model's (${JSON.stringify(a)})`);
+    await ev(() => PeelWorkspaces.openPage('coming'));
+    await page.waitForSelector('#home #pnl-by-period .ldg-table', { timeout: 60000 }); await wait(1500);
+    const b = await read('#home #pnl-by-period');
+    expect(b.shown && b.shown === b.model && !b.loading, `What's coming: By period's committed is the model's (${JSON.stringify(b)})`);
+  });
+
+  // Kept from before phase 3 (navigation-design §7.2–7.3): a browser that last stood on Growth › Ledger,
+  // the ledger's own settings stored, opens Growth on the Forecast (never Pipeline), By period open at its
+  // stored cut-off, people and sort. The cut-off is the table's own (owner decision 2): a tap moves neither
+  // the Scenario's Count nor the Forecast's figures, and the Count leaves it. A By period the reader shut
+  // stays shut in this browser; a cold old link and What's coming's page link open it for the visit.
+  await check('kept from before phase 3: a stored Growth › Ledger opens the Forecast at By period with its cut-off, people and sort; the cut-off is the table’s own, never the Scenario’s Count; cold gs=ledger and What’s coming links open a shut By period for the visit', browser, { prefs: { footTab4: 'growth', gSub: 'ledger', ledgerCut: 'approved', ledgerMeasure: 'people', ledgerSort: 'year' } }, async ({ page, ev }, expect) => {
+    const F = '#pnl-growth #pnl-by-period';
+    const cutOn = () => ev(() => [...document.querySelectorAll('#pnl-growth #pnl-by-period [data-ledger-cut][aria-pressed="true"]')].map(b => b.dataset.ledgerCut).join());
+    const pr = await ev(() => ({ tab: PeelAnalysisTabs.getFootPref(), sub: PeelAnalysisTabs.getGSub() }));
+    expect(pr.tab === 'growth' && pr.sub === 'timing', `the stored Ledger: Growth on the Forecast, not Pipeline (${JSON.stringify(pr)})`);
+    await ev(() => PeelWorkspaces.setMode('full'));
+    await page.waitForSelector(`${F}[open] .ldg-table`, { timeout: 60000 }); await wait(1500);
+    const a = await ev(() => ({ tab: PeelAnalysisTabs.getFootTab(), on: ([...document.querySelectorAll('[data-gsub].on')].find(b => b.getClientRects().length) || {}).textContent, cap: document.querySelector('#pnl-growth #pnl-by-period .ldg-table caption').textContent, hint: (document.querySelector('#pnl-growth #pnl-by-period .ldg-hint') || {}).textContent || '' }));
+    expect(a.tab === 'growth' && a.on === 'Forecast', `the map opens on Growth › Forecast (${a.tab} › ${a.on})`);
+    expect(await cutOn() === 'approved' && /^People by municipality and milestone \(\+ Plan approved\)/.test(a.cap), `By period at the stored + Plan approved, in people (${a.cap.slice(0, 60)})`);
+    expect(/for this table only/.test(a.hint), `it says the cut-off counts for this table only (${a.hint})`);
+    // The stored sort: the developments in the full table by expected year.
+    await page.click(`${F} [data-full-table]`); await wait(1500);
+    const so = await ev(() => ({ ft: document.getElementById('analysis').classList.contains('ft-on'), th: [...document.querySelectorAll('#ledger-body table.ldg-list th[aria-sort="ascending"], #ledger-body table.ldg-list th[aria-sort="descending"]')].map(t => t.textContent.trim()).join('|') }));
+    expect(so.ft && so.th === 'Expected ▾', `the full table's developments by the stored sort, expected year (${JSON.stringify(so)})`);
+    await page.keyboard.press('Escape'); await wait(800);
+    // Owner decision 2: a cut-off tap leaves the Scenario's Count and the Forecast's figures as they were …
+    const fig = () => ev(() => ({ basis: PeelApp.state.basis, chip: (document.querySelector('#tb-scen .tb-scen-t') || {}).textContent || '', figs: ((document.querySelector('#pnl-growth [data-sec="figures"]') || {}).textContent || '').trim() }));
+    const f0 = await fig();
+    await page.click(`${F} [data-ledger-cut="review"]`); await wait(1000);
+    const f1 = await fig();
+    expect(await cutOn() === 'review' && await ev(() => PeelUtil.store.get('ledgerCut', null)) === 'review', 'the cut-off: + In review, kept in this browser');
+    expect(f0.figs.length > 0 && f1.basis === f0.basis && f1.chip === f0.chip && f1.figs === f0.figs, `the Scenario's Count and the Forecast's figures unchanged (${JSON.stringify({ f0, f1 })})`);
+    // … and the Count (committed only) leaves By period's cut-off as it is.
+    await ev(() => document.querySelector('#scen-bar [data-svcopt="basis"][data-v="committed"]').click()); await wait(2500);
+    const c2 = await ev(() => ({ basis: PeelApp.state.basis, cut: PeelLedgerUI.settings.cutoff, open: !!document.querySelector('#pnl-growth #pnl-by-period[open]') }));
+    expect(c2.basis === 'committed' && c2.cut === 'review' && await cutOn() === 'review' && c2.open, `the Count at committed only: By period keeps + In review (${JSON.stringify(c2)})`);
+    await ev(b => { PeelApp.state.basis = b; PeelApp.applyFilters(); }, f0.basis); await wait(1500);
+    // Shut by the reader: kept in this browser. A cold old link opens it for the visit, the store untouched.
+    // (each link with a query of its own: a new load, not a hash change)
+    await page.click(`${F} > summary`); await wait(300);
+    expect(await ev(() => PeelUtil.store.get('ledgerOpen', true) === false), 'shut by the reader');
+    await page.goto(`http://localhost:${PORT}/?link#t=growth&gs=ledger`);
+    await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 });
+    await page.waitForSelector(`${F}[open] .ldg-table`, { timeout: 120000 }); await wait(1500);
+    const cl = await ev(() => ({ mode: PeelWorkspaces.mode(), tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getGSub(), kept: PeelUtil.store.get('ledgerOpen', true), link: PeelShare.viewLink.hash() }));
+    expect(cl.mode === 'full' && cl.tab === 'growth' && cl.sub === 'timing' && cl.kept === false, `t=growth&gs=ledger opened cold: the Forecast, By period open for the visit (${JSON.stringify(cl)})`);
+    expect(/(^|&)gs=timing(&|$)/.test(cl.link) && !/gs=ledger/.test(cl.link), `the link now says gs=timing (${cl.link})`);
+    // What's coming's page link, cold: the page, By period open, the store untouched.
+    await page.goto(`http://localhost:${PORT}/?page#w=p:coming`);
+    await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 });
+    await page.waitForSelector('#home #pnl-by-period[open] .ldg-table', { timeout: 120000 }); await wait(1500);
+    const wc = await ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page(), h1: document.querySelector('#home h1').textContent, kept: PeelUtil.store.get('ledgerOpen', true) }));
+    expect(wc.mode === 'home' && wc.page === 'coming' && wc.kept === false, `w=p:coming opened cold: What's coming, By period open (${JSON.stringify(wc)})`);
+    // The next visit with no link: By period as the reader left it, shut.
+    await page.goto(`http://localhost:${PORT}/`);
+    await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 }); await wait(2500);
+    await ev(() => { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.openTab('growth', 'timing'); });
+    await page.waitForSelector(`${F} .ldg-table`, { state: 'attached', timeout: 60000 }); await wait(1500);
+    const nx = await ev(() => ({ there: !!document.querySelector('#pnl-growth #pnl-by-period'), open: !!document.querySelector('#pnl-growth #pnl-by-period[open]'), cut: PeelLedgerUI.settings.cutoff }));
+    expect(nx.there && !nx.open && nx.cut === 'review', `the next visit: By period shut, as the reader left it, at its cut-off (${JSON.stringify(nx)})`);
+  });
+
+  // Task 7 (navigation-design §6.1): the growth of a drawn area by horizon year in four clicks: Draw an
+  // area, the drag, Growth, Forecast. By period is open to start, and its table is the developments drawn.
+  await check('a drawn area by period in four clicks (task 7): Draw an area, drag, Growth, Forecast; By period open, its total the drawn developments’ left to build', browser, {}, async ({ page, ev }, expect) => {
+    const F = '#pnl-growth #pnl-by-period';
+    expect(await ev(() => PeelWorkspaces.mode() === 'home' && PeelWorkspaces.page() === 'home' && !!document.querySelector('#home .page-draw')), 'Home, with Draw an area in its header');
+    await page.click('#home .page-draw'); await wait(2000);   // 1. Draw an area
+    await ev(() => { const p = PeelApp.state.filtered.filter(q => q.lat != null).sort((x, y) => (y.units || 0) - (x.units || 0))[0]; PeelMapCore.map.setView([p.lat, p.lng], 13, { animate: false }); }); await wait(2000);   // (a district: several developments)
+    const D = 90;
+    const at = await ev(d => {
+      const map = PeelMapCore.map, b = map.getContainer().getBoundingClientRect(), on = (x, y) => { const e = document.elementFromPoint(x, y); return !!(e && e.closest('.lasso-layer') && !e.closest('.lasso-hint')); };
+      for (const p of PeelApp.state.filtered) {
+        if (p.lat == null) continue;
+        const c = map.latLngToContainerPoint([p.lat, p.lng]), x = b.left + c.x, y = b.top + c.y;
+        if ([[0, 0], [-d, -d], [d, -d], [d, d], [-d, d]].every(([dx, dy]) => on(x + dx, y + dy))) return { x, y };
+      }
+      return null;
+    }, D);
+    expect(!!at, 'a development in view, the drawing layer round it');
+    if (at) {   // 2. the drag
+      await page.mouse.move(at.x - D, at.y - D); await page.mouse.down();
+      for (const [x, y] of [[D, -D], [D, D], [-D, D], [-D, -D + 8]]) await page.mouse.move(at.x + x, at.y + y, { steps: 8 });
+      await page.mouse.up(); await wait(2000);
+    }
+    const s = await ev(() => ({ n: PeelAreaSelect.selection.size, scope: PeelApp.state.ss || null, sub: PeelAnalysisTabs.getGSub() }));
+    expect(s.n > 0 && s.scope === 'sel:selection', `the drag picks the developments inside it, a scope of its own (${JSON.stringify(s)})`);
+    expect(s.sub === 'pipeline', `Growth opens on Pipeline (no Growth view picked in this browser), so Forecast is the fourth click (${s.sub})`);
+    await page.click('.f-tab[data-tab="growth"]'); await wait(1500);   // 3. Growth
+    await page.click('[data-gsub="timing"]');   // 4. Forecast
+    await page.waitForSelector(`${F}[open] .ldg-table`, { timeout: 60000 }); await wait(1500);
+    const g = await ev(() => ({ tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getGSub(), scope: PeelApp.state.ss || null }));
+    expect(g.tab === 'growth' && g.sub === 'timing' && g.scope === 'sel:selection', `Growth › Forecast at the drawn area, By period open (${JSON.stringify(g)})`);
+    // (Everything, units, nothing hidden: the total is the drawn developments' left to build)
+    if (await ev(() => PeelLedgerUI.settings.hideLapsed)) { await page.click(`${F} [data-ledger-lapse]`); await wait(800); }
+    if (await ev(() => PeelLedgerUI.settings.cutoff !== 'all')) { await page.click(`${F} [data-ledger-cut="all"]`); await wait(800); }
+    if (await ev(() => PeelLedgerUI.settings.measure !== 'units')) { await page.click(`${F} [data-ledger-measure="units"]`); await wait(800); }
+    const b = await ev(() => {
+      const set = PeelDemandUI.overviewSet(), sel = PeelAreaSelect.selection;
+      return { devs: PeelLedgerUI.compute().devs, set: set.length, inSel: set.every(p => sel.has(p.key)), total: +document.querySelector('#pnl-growth #pnl-by-period .ldg-peel td:last-child strong').textContent.replace(/[^\d]/g, ''), left: Math.round(Growth.pipelineTotals(set).left), peel: Math.round(Growth.pipelineTotals(PeelApp.state.projects.filter(p => p.phase !== 'cancelled')).left), check: PeelLedgerUI.model().r.check };
+    });
+    expect(b.set > 0 && b.inSel && b.devs === b.set, `By period counts the developments drawn (${b.devs} of ${b.set}, all selected: ${b.inSel})`);
+    expect(b.total === b.left && b.total < b.peel, `its total ${b.total} = their left to build ${b.left} (Peel's ${b.peel})`);
+    expect(b.check < 1e-6, `every parent equals its children (check ${b.check})`);
+    await ev(() => PeelAreaSelect.clearSelection());
   });
 
   await check('DC impact model: tiers as the DC panel, built kept apart, cost shares add up, a gate per development', browser, {}, async ({ ev }, expect) => {

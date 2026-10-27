@@ -31,7 +31,7 @@ function loadTabs({ labs = [], site = false, publicView = false, siteEas = 3 } =
 
 // The spec's inventory: the chips each tab shows at each scope.
 const SPEC = {
-  area: { overview: [], growth: ['pipeline', 'areas', 'timing', 'ledger'], svc: ['capacity', 'network'], dca: ['timing', 'dcproj', 'projects', 'eas'], records: ['sources', 'checks'] },
+  area: { overview: [], growth: ['pipeline', 'areas', 'timing'], svc: ['capacity', 'network'], dca: ['timing', 'dcproj', 'projects', 'eas'], records: ['sources', 'checks'] },
   site: { overview: [], growth: ['pipeline'], svc: ['network'], dca: ['timing', 'eas'], records: ['files'] },
 };
 
@@ -61,7 +61,7 @@ test('1. sub-views per scope match the spec (Peel / area and a development)', ()
   // The chip rows in index.html: one per tab, in the spec's order and words.
   const row = tab => { const i = HTML.indexOf(`f-subtabs`, HTML.indexOf(`data-pane="${tab}" hidden role="group"`) - 80); const s = HTML.slice(i, HTML.indexOf('</div>', i)); return [...s.matchAll(/data-(?:gsub|svcsub|dcasub|rsub)="(\w+)">([^<]+)</g)].map(m => m[2].trim()); };
   // (no two sub-views share a name: design bundle 2)
-  assert.deepEqual(row('growth'), ['Pipeline', 'Areas', 'Forecast', 'Ledger']);
+  assert.deepEqual(row('growth'), ['Pipeline', 'Areas', 'Forecast']);
   assert.deepEqual(row('svc'), ['Capacity', 'Network']);
   assert.deepEqual(row('dca'), ['DC timing', 'DC projects', 'Projects', 'EAs']);
   assert.deepEqual(row('records'), ['Sources', 'Data checks', 'Files']);
@@ -78,6 +78,8 @@ test('1. the panes behind each sub-view: Areas is one drill-down; Network holds 
   assert.equal(pane('pane-alloc'), 'svc/capacity');
   for (const id of ['pane-wfac', 'pane-hydro']) assert.equal(pane(id), 'svc/network', id);
   assert.equal(pane('pane-svc-checks'), 'records/checks');
+  // Navigation phase 3: the Ledger is Forecast's By period fold; its pane (id kept) is in Forecast's full table.
+  for (const id of ['pane-growth-timing', 'pane-growth-ledger']) assert.equal(pane(id), 'growth/timing', id);
   assert.equal(pane('pane-dca-build'), 'dca/projects');
   for (const id of ['pane-dca-dcproj', 'pane-dca-rec', 'pane-dca-funding']) assert.equal(pane(id), 'dca/dcproj', id);
   // The funding screen is "Screening results" now.
@@ -168,7 +170,7 @@ test('4. old links and stored views map to the new tabs', () => {
   const cases = [
     [['ww', 'plants'], { tab: 'svc', svcSub: 'capacity' }], [['ww', 'catchments'], { tab: 'svc', svcSub: 'network' }], [['ww', 'alloc'], { tab: 'svc', svcSub: 'capacity' }], [['ww', 'pumpstations'], { tab: 'svc', svcSub: 'network' }],
     [['water', 'capacity'], { tab: 'svc', svcSub: 'capacity' }], [['water', 'zones'], { tab: 'svc', svcSub: 'network' }], [['water', 'facilities'], { tab: 'svc', svcSub: 'network' }], [['water', 'hydro'], { tab: 'svc', svcSub: 'network' }],
-    [['growth', 'census2051'], { tab: 'growth', gSub: 'areas' }], [['growth', 'byplan'], { tab: 'growth', gSub: 'areas' }], [['growth', 'timing'], { tab: 'growth', gSub: 'timing' }], [['census'], { tab: 'growth', gSub: 'areas' }],
+    [['growth', 'census2051'], { tab: 'growth', gSub: 'areas' }], [['growth', 'byplan'], { tab: 'growth', gSub: 'areas' }], [['growth', 'timing'], { tab: 'growth', gSub: 'timing' }], [['growth', 'ledger'], { tab: 'growth', gSub: 'timing' }], [['census'], { tab: 'growth', gSub: 'areas' }],
     [['dca', 'build'], { tab: 'dca', dcSub: 'projects' }], [['dca', 'recommendations'], { tab: 'dca', dcSub: 'dcproj' }], [['dca', 'funding'], { tab: 'dca', dcSub: 'dcproj' }], [['dca', 'eas'], { tab: 'dca', dcSub: 'eas' }],
     [['plants'], { tab: 'svc', svcSub: 'capacity' }], [['demand'], { tab: 'growth' }], [['criteria'], { tab: 'overview' }], [['developments'], { tab: 'overview' }], [['records'], { tab: 'records' }],
   ];

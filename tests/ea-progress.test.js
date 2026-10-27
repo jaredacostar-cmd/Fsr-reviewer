@@ -79,7 +79,7 @@ test('completion year: the best evidence first, never before the EA began or aft
 test('Home pages: EA to construction (Capital) and Forecast (Planning), reachable from Home', () => {
   const s = src('js/ws-pages.js');
   assert.match(s, /function eaflow\(\) \{/);
-  assert.match(s, /function outlook\(\) \{\s*const t = specOf\('growth:timing', areaScope\);/);
+  assert.match(s, /function outlook\(id = 'outlook'\) \{\s*const t = specOf\('growth:timing', areaScope\);/);
   // (step 6: from Home's groups: the 2031 figure opens the Forecast; Capital opens DC projects, whose
   // section bar holds EA to construction)
   assert.match(s, /label: 'expected by 2031', ctx: f31\.ctx, attrs: go\('outlook'\)/);

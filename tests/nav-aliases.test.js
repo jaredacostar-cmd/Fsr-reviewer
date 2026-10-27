@@ -249,10 +249,57 @@ test('phase 2: Allocations folds into Capacity, the model checks move to Records
   T.showFootTab('ww', 'alloc'); assert.equal(opened, 2, 'showFootTab(ww, alloc)');
   T.showFootTab('svc', 'capacity'); T.showFootTab('svc'); assert.equal(opened, 2, 'Capacity itself leaves the fold as it is');
   const s = src('js/analysis-tabs.js');
-  const fold = s.indexOf("if (sub && foldOf(key, sub) === 'alloc' && DUI() && DUI().openAllocFold) DUI().openAllocFold();");
+  // (one opener for every fold a moved sub-view became, navigation phase 3: openFold; Allocations is its
+  // 'alloc', which calls PeelDemandUI.openAllocFold, as the spies above show)
+  assert.match(s, /const FOLD_OPEN = \{ alloc: \(\) => DUI\(\) && DUI\(\)\.openAllocFold,/);
+  const fold = s.indexOf('if (sub) openFold(foldOf(key, sub));');
   assert.ok(fold > 0 && fold < s.indexOf('{ const r = sub ? migrateSub(key, sub) : null;'), 'showFootTab: the fold before the sub-view migrates');
-  assert.match(s, /const \[t0, s0\] = a\.dataset\.at\.split\(':'\), r = [^\n]*\n {4}if \(s0 && foldOf\(t0, s0\) === 'alloc' && DUI\(\) && DUI\(\)\.openAllocFold\) DUI\(\)\.openAllocFold\(\);/, 'a data-at link: the fold from the name before it migrates');
-  assert.match(src('js/share.js'), /if \(AT\(\)\.foldOf && AT\(\)\.foldOf\(t, oldSub\) === 'alloc' && window\.PeelDemandUI && window\.PeelDemandUI\.openAllocFold\) window\.PeelDemandUI\.openAllocFold\(\);/, 'a link: t and its own sub-view param');
+  assert.match(s, /const \[t0, s0\] = a\.dataset\.at\.split\(':'\), r = [^\n]*\n {4}if \(s0\) openFold\(foldOf\(t0, s0\)\);/, 'a data-at link: the fold from the name before it migrates');
+  assert.match(src('js/share.js'), /if \(AT\(\)\.openFold && AT\(\)\.foldOf\) AT\(\)\.openFold\(AT\(\)\.foldOf\(t, oldSub\)\);/, 'a link: t and its own sub-view param');
+});
+
+// Navigation phase 3 (navigation-design §3.4, §7.2–7.3): the Ledger is Growth › Forecast's By period fold
+// (js/ledger-ui.js). Old links (gs=ledger), a stored Ledger pick, in-app calls (data-at="growth:ledger",
+// openTab, showFootTab, setSub) and the What's coming chip and page land on the Forecast with By period open.
+test('phase 3: the Ledger is Forecast’s By period, from a link, a stored pick, an in-app call and the What’s coming chip', () => {
+  assert.deepEqual(plain(AT.TABSUBS.growth.valid), ['pipeline', 'areas', 'timing']);
+  assert.deepEqual(plain(AT.migrateTabKey('growth', 'ledger')), { tab: 'growth', gSub: 'timing' });
+  assert.deepEqual(plain(AT.migrateSub('growth', 'ledger')), { tab: 'growth', sub: 'timing' });
+  assert.equal(AT.foldOf('growth', 'ledger'), 'period');
+  for (const [t, sub] of [['growth', 'timing'], ['growth', '__proto__'], ['growth', 'constructor'], ['growth', undefined], ['svc', 'ledger']]) assert.equal(AT.foldOf(t, sub), null, `${t}:${sub}`);
+  // Stored picks: the Ledger was Growth's own, so Growth opens on the Forecast whichever tab was last
+  // picked (never on Pipeline, §7.3).
+  const prefs = { footPref: 'growth', gSub: 'ledger', svcSub: 'capacity', dcSub: 'timing', rSub: 'sources' };
+  assert.deepEqual(plain(AT.migratePrefs(prefs)), { ...prefs, gSub: 'timing' });
+  assert.deepEqual(plain(AT.migratePrefs({ ...prefs, footPref: 'svc' })), { ...prefs, footPref: 'svc', gSub: 'timing' });
+  // … as the app loads them (gSub / footTab4 in this browser), before the reset to each tab's first.
+  let T = loadTabsWith({ gSub: 'ledger', footTab4: 'growth' });
+  assert.equal(T.getGSub(), 'timing'); assert.equal(T.getFootPref(), 'growth');
+  assert.equal(loadTabsWith({ gSub: 'ledger', footTab4: 'svc' }).getGSub(), 'timing');
+  // In-app calls.
+  assert.equal(AT.setSub('growth', 'ledger'), 'growth'); assert.equal(AT.getGSub(), 'timing');
+  // One opener: showFootTab (and a data-at link, a share link, the chip, the page) opens By period for the
+  // old name; the Forecast itself leaves the fold as it is; Allocations still opens its own fold.
+  const calls = [];
+  T = loadTabsWith({}, { PeelLedgerUI: { openPeriod: () => calls.push('period'), render: () => {} }, PeelDemandUI: { openAllocFold: () => calls.push('alloc'), renderAlloc: () => {} } });
+  T.showFootTab('growth', 'ledger'); assert.deepEqual(calls, ['period'], 'showFootTab(growth, ledger): By period, not Allocations');
+  assert.equal(T.getGSub(), 'timing');
+  T.showFootTab('growth', 'timing'); T.showFootTab('growth'); assert.deepEqual(calls, ['period'], 'the Forecast itself leaves the fold as it is');
+  T.openFold('alloc'); assert.deepEqual(calls, ['period', 'alloc'], 'Allocations: its own fold only');
+  T.openFold('period'); assert.deepEqual(calls, ['period', 'alloc', 'period']);
+  for (const f of ['__proto__', 'constructor', 'toString', null, undefined, '', 'nonsense']) T.openFold(f);
+  assert.equal(calls.length, 3, 'no other name opens a fold');
+  const bare = loadTabsWith({});
+  assert.doesNotThrow(() => { bare.openFold('period'); bare.openFold('alloc'); bare.showFootTab('growth', 'ledger'); }, 'no ledger or demand module loaded: nothing opens, nothing throws');
+  // The What's coming chip and page: the Forecast with its fold (js/workspaces.js go, openPage), opened
+  // after the tab, before the page draws.
+  assert.equal(W.BY_ID.coming.sub, 'timing'); assert.equal(W.plan('coming').fold, 'period');
+  const ws = src('js/workspaces.js');
+  assert.match(ws, /function go\(id, o = \{\}\) \{[\s\S]*?A\.showFootTab\(pl\.tab\); if \(pl\.fold && A\.openFold\) A\.openFold\(pl\.fold\); \}\n {4}foldLayers\(\);/);
+  assert.match(ws, /function openPage\(id, o = \{\}\) \{[\s\S]*?A\.showFootTab\(w\.tab\); if \(w\.fold && A\.openFold\) A\.openFold\(w\.fold\); \} \}\n {4}lastHTML = '';\n {4}setMode\('home', id\);/);
+  // A link names the old sub-view through the same opener (js/share.js, the phase 2 test above).
+  assert.match(src('js/share.js'), /if \(AT\(\)\.openFold && AT\(\)\.foldOf\) AT\(\)\.openFold\(AT\(\)\.foldOf\(t, oldSub\)\);/);
+  assert.match(src('js/analysis-tabs.js'), /period: \(\) => root\.PeelLedgerUI && root\.PeelLedgerUI\.openPeriod \};/);
 });
 
 // Navigation phase 2 (navigation-design §3.4, N-11): one System control, Both · Wastewater · Water, one

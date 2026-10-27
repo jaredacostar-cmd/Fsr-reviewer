@@ -2,7 +2,7 @@
 'use strict';
   // Pipeline ledger, Phase 5 (docs/pipeline-ledger-plan.md): the annual snapshot. Pure: no DOM; Node
   // (scripts/build-ledger.js writes data/ledger/<year>-<season>.json and .csv) and the browser (Export ›
-  // Pipeline snapshot (CSV), and Growth › Ledger's "Since the last snapshot") share it.
+  // Pipeline snapshot (CSV), and Growth › Forecast's "Since the last snapshot") share it.
   //
   //   COLUMNS     the fixed column template (the Phase 1 row), versioned by TEMPLATE: a change to the
   //               columns is a new template number, never an edit of a frozen file

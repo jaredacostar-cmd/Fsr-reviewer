@@ -10,7 +10,7 @@
   // ---- The right panel (Stage 2): four tabs at every scope, Overview · Growth · Servicing · Capital,
   // plus Records, a small trailing tab (the Overview's ⓘ line opens its Data checks). Sub-views: at most four
   // per tab, one chip row under the tab bar (TABSUBS). Overview has none.
-  //   Growth:    Pipeline · Areas · Timing · Ledger (the pipeline ledger, js/ledger-ui.js)
+  //   Growth:    Pipeline · Areas · Forecast (its By period fold: the pipeline ledger, js/ledger-ui.js)
   //   Servicing: Capacity · Network   (water and wastewater together; Allocations is a fold of Capacity)
   //   Capital:   Timing · DC projects · Projects · EAs (the Funding lab's screen sits in DC projects)
   //   Records:   Sources · Data checks · Files (every check: the data, then the servicing model)
@@ -24,11 +24,11 @@
   // here; a value 'tab:sub' moves it to another tab (the navigation redesign moves sub-views between
   // tabs: docs/architecture-review/navigation-design.md §7.2–7.3).
   // Phase 2: Allocations is a fold of Capacity, the model checks are Records › Data checks, the water
-  // facilities and the hydraulic check are Network's.
+  // facilities and the hydraulic check are Network's. Phase 3: the Ledger is Forecast's By period fold.
   const SUB_MAP = {
     ww: { plants: 'capacity', catchments: 'network', alloc: 'capacity', pumpstations: 'network' },
     water: { capacity: 'capacity', zones: 'network', facilities: 'network', hydro: 'network' },
-    growth: { pipeline: 'pipeline', census2051: 'areas', byplan: 'areas', timing: 'timing', areas: 'areas', ledger: 'ledger' },
+    growth: { pipeline: 'pipeline', census2051: 'areas', byplan: 'areas', timing: 'timing', areas: 'areas', ledger: 'timing' },
     dca: { timing: 'timing', build: 'projects', dcproj: 'dcproj', projects: 'projects', eas: 'eas', recommendations: 'dcproj', funding: 'dcproj' },
     svc: { capacity: 'capacity', network: 'network', alloc: 'capacity', checks: 'records:checks' },
     records: { sources: 'sources', checks: 'checks', files: 'files' },
@@ -44,8 +44,12 @@
     return i > 0 ? { tab: v.slice(0, i), sub: v.slice(i + 1) } : { tab: tabOf(tab), sub: v };
   };
   // A moved sub-view that became a fold of its new view: the fold to open (navigation-design §7.2).
-  const FOLD_OF = { ww: { alloc: 'alloc' }, svc: { alloc: 'alloc' } };
+  const FOLD_OF = { ww: { alloc: 'alloc' }, svc: { alloc: 'alloc' }, growth: { ledger: 'period' } };
   const foldOf = (tab, sub) => (sub && own(FOLD_OF, tab) && own(FOLD_OF[tab], sub) ? FOLD_OF[tab][sub] : null);
+  // Open the fold a moved sub-view became: Allocations recorded (js/demand-ui.js), By period (js/ledger-ui.js);
+  // a fold whose module is not loaded, or none, opens nothing.
+  const FOLD_OPEN = { alloc: () => DUI() && DUI().openAllocFold, period: () => root.PeelLedgerUI && root.PeelLedgerUI.openPeriod };
+  const openFold = f => { const fn = f && own(FOLD_OPEN, f) ? FOLD_OPEN[f]() : null; if (typeof fn === 'function') fn(); };
   const subKey = r => (SUB_KEY[r.tab] ? { tab: r.tab, [SUB_KEY[r.tab]]: r.sub } : { tab: r.tab });
   // A tab key from a link or a stored pref (with its sub-view, when the link or the old key named one).
   const migrateTabKey = (t, sub) => {
@@ -86,7 +90,7 @@
   // (Labs add no sub-view: the Funding lab's screen sits in Capital › DC projects, js/dc-projects.js.)
   // Sub-view state per tab: the chip data-attribute, the store key, the valid values, get / set.
   const TABSUBS = {
-    growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'areas', 'timing', 'ledger'], get: () => gSub, set: v => { gSub = v; } },
+    growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'areas', 'timing'], get: () => gSub, set: v => { gSub = v; } },
     svc: { attr: 'svcsub', store: 'svcSub', valid: ['capacity', 'network'], get: () => svcSub, set: v => { svcSub = v; } },
     dca: { attr: 'dcasub', store: 'dcSub', valid: ['timing', 'dcproj', 'projects', 'eas'], get: () => dcSub, set: v => { dcSub = v; } },
     records: { attr: 'rsub', store: 'rSub', valid: ['sources', 'checks', 'files'], get: () => rSub, set: v => { rSub = v; } },
@@ -109,7 +113,7 @@
   // At a site, Capital › Timing is the site's DC projects (the projects it relies on); the Projects
   // list is Region-wide, so it is hidden there.
   const HIDDEN = {
-    site: { growth: ['areas', 'timing', 'ledger'], svc: ['capacity'], dca: ['dcproj', 'projects'], records: ['sources', 'checks'] },
+    site: { growth: ['areas', 'timing'], svc: ['capacity'], dca: ['dcproj', 'projects'], records: ['sources', 'checks'] },
     area: { records: ['files'] },
   };
   const SITE_HIDDEN = HIDDEN.site;
@@ -129,7 +133,7 @@
     if (key === 'growth' && root.PeelUtil && root.PeelUtil.flushLater) root.PeelUtil.flushLater();   // (its views, if they wait to render)
     if (key === 'ww' || key === 'water') { if (!sub) sub = svcSub === 'capacity' || svcSub === 'network' ? svcSub : 'network'; key = 'svc'; }
     // (a sub-view another tab now holds opens there: SUB_MAP 'tab:sub'; one that became a fold opens it)
-    if (sub && foldOf(key, sub) === 'alloc' && DUI() && DUI().openAllocFold) DUI().openAllocFold();
+    if (sub) openFold(foldOf(key, sub));
     { const r = sub ? migrateSub(key, sub) : null; if (r) { key = r.tab; sub = r.sub; } }
     if (sub && TABSUBS[key] && TABSUBS[key].valid.includes(sub)) { delete areaPick[key]; TABSUBS[key].set(sub); store.set(TABSUBS[key].store, sub); }
     // (Servicing and Capital show once the servicing data loads, js/svc-tab.js: a tab picked before then
@@ -164,7 +168,7 @@
     if (key === 'svc' && svcSub === 'capacity') setTimeout(() => DUI().renderAlloc(), 0);   // (Allocations recorded: Capacity's fold, its tables in the full table)
     if (key === 'svc' && root.PeelSvcCapacity) setTimeout(() => root.PeelSvcCapacity.renderFor(svcSub), 0);
     if (key === 'growth' && gSub === 'areas' && root.PeelPlanTables) setTimeout(() => root.PeelPlanTables.render(), 0);
-    if (key === 'growth' && gSub === 'ledger' && root.PeelLedgerUI) setTimeout(() => root.PeelLedgerUI.render(), 0);
+    if (key === 'growth' && gSub === 'timing' && root.PeelLedgerUI) setTimeout(() => root.PeelLedgerUI.render(), 0);   // (By period's full table, #ledger-body)
     // The standard panel of the open tab and sub-view (js/panel.js).
     if (root.PeelPanel) root.PeelPanel.sync();
     // A narrow screen scrolls the tab strip: keep the open tab in view.
@@ -182,7 +186,7 @@
   document.addEventListener('click', e => {
     const a = e.target.closest && e.target.closest('[data-at]'); if (!a) return;
     const [t0, s0] = a.dataset.at.split(':'), r = s0 ? migrateSub(t0, s0) : null, tab = r ? r.tab : t0, sub = r ? r.sub : s0;
-    if (s0 && foldOf(t0, s0) === 'alloc' && DUI() && DUI().openAllocFold) DUI().openAllocFold();
+    if (s0) openFold(foldOf(t0, s0));
     footPref = tabOf(tab); store.set('footTab4', footPref); showFootTab(tab, sub); Sh().viewLink.write();
   });
   // The System pick (a link's is for the visit: not stored). Capacity redraws every time (cheap; Home's
@@ -227,7 +231,7 @@
     getGSub: () => gSub, setGSub: v => { gSub = v; },
     getDcSub: () => dcSub, setDcSub: v => { dcSub = v; },
     getRSub: () => rSub, setRSub: v => { rSub = v; },
-    showFootTab, TABSUBS, SUB_KEY, migrateTabKey, migrateSub, migratePrefs, setSub, SITE_HIDDEN, siteHidden, subFor, FOLD_OF, foldOf,
+    showFootTab, TABSUBS, SUB_KEY, migrateTabKey, migrateSub, migratePrefs, setSub, SITE_HIDDEN, siteHidden, subFor, FOLD_OF, foldOf, openFold,
     SYS, SYS_OF_VIEW, sysKey, sysSeg, getSys: () => sysOn, setSys,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

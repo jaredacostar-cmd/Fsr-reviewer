@@ -33,7 +33,7 @@ developments with a site servicing permit.
 
 | Line | Rungs | Used by |
 |---|---|---|
-| **Committed** (the Peel rule, the default) | Servicing permit and up (4 to 6) | Explore › Growth in an area, What's coming (Growth › Ledger), the Overview, the briefing, and the committed horizon of every capacity check except the treatment plants: pumping stations, sewers, water pumping into each zone, supply into a zone, trunk mains |
+| **Committed** (the Peel rule, the default) | Servicing permit and up (4 to 6) | Explore › Growth in an area, What's coming (Growth › Forecast, By period), the Overview, the briefing, and the committed horizon of every capacity check except the treatment plants: pumping stations, sewers, water pumping into each zone, supply into a zone, trunk mains |
 | **Past plan approval** (MECP D-5-1) | Plan approved, whatever the permits | The treatment plants only: wastewater plants (flow and BOD loading), South Peel water treatment, the Caledon well systems, and their uncommitted reserve |
 
 The capacity bars name the rule per facility (`js/layer-bar.js` `commitSegs`): the committed segment

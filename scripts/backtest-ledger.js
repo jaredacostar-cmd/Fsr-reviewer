@@ -88,9 +88,9 @@ Median error is the likely year less the actual (negative: it finished later tha
 - The pooled curves leave far more sites with no year at all, because Brampton's and Caledon's sites still
   waiting count while their finished ones (no date) drop out. That makes the curves too slow, which is why
   the app now uses the municipalities that date completions.
-- Growth › Ledger's method note works the same backtest out in the browser for the start date five years
-  back, on the developments the app loads (dormant ones and site activity held aside), so its figures can
-  differ from these by a few points.
+- By period's method note, in the Forecast's full table, works the same backtest out in the browser
+  for the start date five years back, on the developments the app loads (dormant ones and site
+  activity held aside), so its figures can differ from these by a few points.
 - Brampton and Caledon rows are timed with these curves and marked in the ledger. A way to check them:
   date their completions from the yearly aerial photos (follow-up).
 `;

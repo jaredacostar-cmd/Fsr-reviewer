@@ -37,7 +37,7 @@ test('Records follows the scope: Sources and Checks at Peel; a development its f
 
 test('no placeholder sub-views at site scope; one disclaimer per panel', () => {
   const at = src('js/analysis-tabs.js');
-  assert.match(at, /site: \{ growth: \['areas', 'timing', 'ledger'\], svc: \['capacity'\], dca: \['dcproj', 'projects'\], records: \['sources', 'checks'\] \}/);
+  assert.match(at, /site: \{ growth: \['areas', 'timing'\], svc: \['capacity'\], dca: \['dcproj', 'projects'\], records: \['sources', 'checks'\] \}/);
   assert.match(at, /const v = subFor\(tk, s\.get\(\), null, scopeOf\(tk\)\); if \(v !== s\.get\(\)\) \{ if \(areaPick\[tk\] == null\) areaPick\[tk\] = s\.get\(\); s\.set\(v\); \}/, 'a hidden sub-view falls back (tests/four-tabs.test.js)');
   const css = src('css/app.css');
   assert.ok(css.includes('.f-subtabs .site-off, #analysis.site-scope #screen-note-top { display: none !important; }'));

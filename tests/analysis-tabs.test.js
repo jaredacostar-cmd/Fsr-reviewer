@@ -75,7 +75,7 @@ test('sub-view defaults: gSub pipeline, dcSub timing, Servicing capacity, Record
 });
 
 test('sub-view valid values: at most four per tab', () => {
-  assert.deepEqual(plain(AT.TABSUBS.growth.valid), ['pipeline', 'areas', 'timing', 'ledger']);
+  assert.deepEqual(plain(AT.TABSUBS.growth.valid), ['pipeline', 'areas', 'timing']);
   assert.deepEqual(plain(AT.TABSUBS.svc.valid), ['capacity', 'network']);
   assert.deepEqual(plain(AT.TABSUBS.dca.valid), ['timing', 'dcproj', 'projects', 'eas']);
   assert.deepEqual(plain(AT.TABSUBS.records.valid), ['sources', 'checks', 'files']);
@@ -122,6 +122,8 @@ test('index.html: growth sub-views (Pipeline · Areas · Forecast)', () => {
   assert.ok(HTML.includes('id="pane-growth-census" data-pane="growth" data-sub="areas"'), 'census & 2051 in Areas');
   assert.ok(HTML.includes('id="growth-pipeline-body"') && HTML.includes('id="growth-census-body"') && HTML.includes('id="timing-body"'), 'growth body divs missing');
   assert.ok(HTML.includes('js/timing.js?v=__BUILD__'), 'timing.js script tag missing');
+  assert.ok(!HTML.includes('data-gsub="ledger"'), 'the Ledger is Forecast’s By period (navigation phase 3)');
+  assert.ok(HTML.includes('id="pane-growth-ledger" data-pane="growth" data-sub="timing"') && HTML.includes('id="ledger-body"'), 'its pane in Forecast’s full table, id kept');
 });
 
 test('index.html: Servicing sub-views (Capacity · Network), the hydraulic check behind Labs in Network, pumping stations in Network', () => {

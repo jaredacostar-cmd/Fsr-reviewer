@@ -35,8 +35,7 @@
     'overview:result': [...DEV, ...SVC],
     'growth:pipeline': GROWTH,
     'growth:areas': [...GROWTH, 'svc-census.json'],
-    'growth:timing': [...GROWTH, 'site-audit.json'],
-    'growth:ledger': [...GROWTH, 'dc-gate.json', 'servicing.json'],
+    'growth:timing': [...GROWTH, 'site-audit.json', 'dc-gate.json', 'servicing.json'],   // (navigation phase 3: By period, the pipeline ledger, too)
     'svc:capacity': [...SVC, 'snapshot.json', 'tree-counts.json'],
     'svc:network': [...SVC, 'sewers.json', 'watermains.json', 'water-supply.json', 'blocks.json', 'idf.json'],
     'dca:timing': [...CAP, ...SVC, 'snapshot.json'],
@@ -51,8 +50,8 @@
     tight: [...SVC, 'snapshot.json', 'tree-counts.json'],
     site: [...DEV, ...SVC],
     growth: GROWTH,
-    outlook: [...GROWTH, ...SVC],
-    coming: [...GROWTH, 'dc-gate.json', 'servicing.json'],
+    outlook: [...GROWTH, ...SVC, 'dc-gate.json'],
+    coming: [...GROWTH, ...SVC, 'dc-gate.json'],   // (navigation phase 3: the Forecast page, By period open)
     projects: CAP,
     eaflow: ['eas.json', 'capital.json'],
     week: ['snapshot.json', 'history.json', 'capital.json', 'eas.json', 'council.json'],

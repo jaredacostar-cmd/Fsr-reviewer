@@ -2,9 +2,9 @@
 /*
  * Pipeline ledger, Phase 5: the annual snapshot (docs/ledger/annual-procedure.md).
  *
- * Builds the ledger rows (js/ledger.js) for Peel exactly as Growth › Ledger shows them with no filters,
- * from the data in data/, and writes data/ledger/<name>.json and data/ledger/<name>.csv in the fixed
- * column template (js/ledger-snapshot.js), plus data/ledger/index.json listing every snapshot.
+ * Builds the ledger rows (js/ledger.js) for Peel exactly as Growth › Forecast's By period shows them
+ * with no filters, from the data in data/, and writes data/ledger/<name>.json and data/ledger/<name>.csv
+ * in the fixed column template (js/ledger-snapshot.js), plus data/ledger/index.json listing every snapshot.
  * A snapshot is frozen once written: the script refuses to write a name that already exists.
  *
  *   node scripts/build-ledger.js                  name from the data date (e.g. 2026-fall)

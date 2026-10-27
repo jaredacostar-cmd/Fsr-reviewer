@@ -39,7 +39,7 @@
     const run = (key, sub, fn) => (on === sub || !(U && U.later) ? fn() : U.later(key, fn));
     run('growth:pipeline', 'pipeline', renderGrowthPipeline);
     run('growth:timing', 'timing', () => TL().renderTiming());
-    run('growth:ledger', 'ledger', () => { if (root.PeelLedgerUI) root.PeelLedgerUI.render(); });
+    run('growth:ledger', 'timing', () => { if (root.PeelLedgerUI) root.PeelLedgerUI.render(); });   // (By period: the Forecast's full table)
     run('growth:plans', 'areas', () => { if (root.PeelPlanTables) root.PeelPlanTables.render(); });
     run('growth:census', 'areas', () => CV().renderGrowthCensus());
     const set = DU().demandSet(), basis = DU().demandBasis();

@@ -981,16 +981,19 @@
   }
 
   // ---- Forecast: when the pipeline's homes and people arrive (Growth › Forecast, on a page) ----------
-  function outlook() {
-    const t = specOf('growth:timing', areaScope); if (!t) return loading('outlook', 'Timing the pipeline…');
+  // (id: the Forecast or What's coming: their map views; the folds By period, How sure and Since the last
+  // snapshot as the reader left them, js/ledger-ui.js foldsNow)
+  function outlook(id = 'outlook') {
+    const t = specOf('growth:timing', areaScope); if (!t) return loading(id, 'Timing the pipeline…');
     const SE = root.PeelSections;
-    return { id: 'outlook', eyebrow: eyebrow('outlook'), name: 'When do the homes and people arrive?', status: t.head.status, identity: t.head.identity, scen: scen(), answer: t.answer,
+    return { id, eyebrow: eyebrow(id), name: 'When do the homes and people arrive?', status: t.head.status, identity: t.head.identity, scen: scen(), answer: t.answer,
       top: SE ? sectionBar(SE.AREA, 'outlook', 'data-ws-asec') : '',
       figures: t.figures, chart: t.chart,
-      lists: (t.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('outlook', r)) })),
-      map: { svg: devsMap((App() && App().state.filtered) || []), attrs: { 'data-ws-go': 'outlook' }, label: 'Open Forecast on the map', caption: '<span class="hm-key hm-key-dev"></span> developments of 50+ units' },
+      lists: (t.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap(id, r)) })),
+      folds: root.PeelLedgerUI && root.PeelLedgerUI.foldsNow ? root.PeelLedgerUI.foldsNow(t.folds) : t.folds || [],
+      map: { svg: devsMap((App() && App().state.filtered) || []), attrs: { 'data-ws-go': id }, label: 'Open Forecast on the map', caption: '<span class="hm-key hm-key-dev"></span> developments of 50+ units' },
       method: t.method, sources: t.sources,
-      actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'How the forecast is timed ›', attrs: { 'data-ws-page': 'forecast' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'outlook' } }] };
+      actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'How the forecast is timed ›', attrs: { 'data-ws-page': 'forecast' } }, { label: 'Open the map', attrs: { 'data-ws-go': id } }] };
   }
 
   // ---- EA to construction: each Region EA and the construction that followed it ---------------------
@@ -1325,8 +1328,10 @@
   }
   // Labs › Sewer designer: its page is the tool's own (js/sewer-designer.js page()).
   const sewer = () => (root.PeelSewerDesigner && root.PeelSewerDesigner.page ? root.PeelSewerDesigner.page() : { id: 'sewer', eyebrow: 'Labs', name: 'Sewer designer', answer: '<span class="muted">Loading…</span>' });
-  // What's coming: Growth › Ledger on a page (js/ledger-ui.js page()).
-  const coming = () => { const m = root.PeelLedgerUI && root.PeelLedgerUI.page ? root.PeelLedgerUI.page() : { id: 'coming', name: 'What is coming, where, when and how sure?', answer: '<span class="muted">Loading…</span>' }; return { ...m, eyebrow: eyebrow('coming'), scen: scen() }; };
+  // What's coming (navigation phase 3; was Growth › Ledger on a page): the Forecast page, opened with its
+  // By period fold (js/workspaces.js WS fold), under the pipeline ledger's own question, without
+  // Explore's section bar.
+  const coming = () => ({ ...outlook('coming'), name: 'What is coming, where, when and how sure?', top: '' });
   const BUILD = { home, tight, site, growth, outlook, coming, projects, eaflow, week, fsr, pipes, outlets, study, sewer, guides, roles, approvals, flows, network, capacity, fsrguide, capguide, targets, forecast, glossary, logic, help, data };
   // Each workspace's guide (How it works), a button in its footer.
   const GUIDE_OF = { site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capguide', eaflow: 'capguide', pipes: 'network' };

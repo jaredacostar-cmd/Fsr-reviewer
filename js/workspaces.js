@@ -31,8 +31,9 @@
     // QA/QC (decided with the user): where each development discharges, confirmed or set on the map (js/dev-outlets.js).
     { id: 'outlets', label: 'Review outlets', group: 'QA/QC', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Check and fix where developments discharge' },
     { id: 'pipes', label: 'Old pipes', group: 'Asset Management', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Old sewers that carry the most growth' },
-    // The pipeline ledger (docs/pipeline-ledger-plan.md, Phase 2): Growth › Ledger on a page.
-    { id: 'coming', label: 'What\u2019s coming', group: 'Planning', tab: 'growth', sub: 'ledger', scope: 'area', view: 'planning', what: 'Homes and people by stage and milestone' },
+    // What's coming (the pipeline ledger, docs/pipeline-ledger-plan.md Phase 2): since navigation phase 3,
+    // Growth › Forecast with its By period fold open (fold: js/analysis-tabs.js openFold).
+    { id: 'coming', label: 'What\u2019s coming', group: 'Planning', tab: 'growth', sub: 'timing', fold: 'period', scope: 'area', view: 'planning', what: 'Homes and people by stage and milestone' },
     { id: 'week', label: 'This week', group: 'Planning', tab: 'overview', sub: '', scope: 'area', view: 'planning', what: 'Files moved, new files, capital and EA dates' },
   ];
   const BY_ID = Object.fromEntries(WS.map(w => [w.id, w]));
@@ -87,13 +88,14 @@
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Records › Data checks (Servicing has none since
   // navigation phase 2), Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.
-  const SUB_NAME = { capacity: 'Capacity', network: 'Network', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', ledger: 'Ledger', 'dca:timing': 'DC timing', dcproj: 'DC projects', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
+  const SUB_NAME = { capacity: 'Capacity', network: 'Network', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', 'dca:timing': 'DC timing', dcproj: 'DC projects', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
   const tabPath = (tab, sub) => [TAB_NAME[tab] || tab, sub ? SUB_NAME[`${tab}:${sub}`] || SUB_NAME[sub] || sub : ''].filter(Boolean).join(' › ');
-  // What a chip does: the tab, sub-view, scope and preset; closeScopes = area chips leave a site.
+  // What a chip does: the tab, sub-view, scope and preset; closeScopes = area chips leave a site; fold: the
+  // fold of that sub-view it opens (What's coming: By period).
   function plan(id, ctx = {}) {
     const w = BY_ID[id]; if (!w) return null;
     const site = !!ctx.site;
-    return { id, tab: w.tab, sub: w.sub, view: w.view, scope: w.scope === 'site' ? (site ? 'site' : 'find') : w.scope, closeScopes: w.scope === 'area', fsr: !!w.fsr && site, lasso: w.scope === 'drawn', source: `${w.label} · from ${tabPath(w.tab, w.sub)}` };
+    return { id, tab: w.tab, sub: w.sub, view: w.view, scope: w.scope === 'site' ? (site ? 'site' : 'find') : w.scope, closeScopes: w.scope === 'area', fsr: !!w.fsr && site, lasso: w.scope === 'drawn', source: `${w.label} · from ${tabPath(w.tab, w.sub)}`, fold: w.fold || null };
   }
   // The panel header line in a workspace: the workspace when the panel is its sub-view, else the tab.
   function sourceText(wsId, key) {
@@ -289,7 +291,7 @@
     }
     // The chip's view from its preset (nothing saved), then its lean layers.
     lean(pl.view, LAYERS[id] || []);
-    const A = AT(); if (A) { if (pl.sub && A.setSub) A.setSub(pl.tab, pl.sub); if (A.setFootPref) A.setFootPref(pl.tab); A.showFootTab(pl.tab); }
+    const A = AT(); if (A) { if (pl.sub && A.setSub) A.setSub(pl.tab, pl.sub); if (A.setFootPref) A.setFootPref(pl.tab); A.showFootTab(pl.tab); if (pl.fold && A.openFold) A.openFold(pl.fold); }
     foldLayers();
     pipesLayer(id === 'pipes');
     // Review an FSR at a site: the cross-check is an open fold of the Servicing panel (fsrSpec), so the
@@ -480,7 +482,7 @@
       if (root.DevScope && root.DevScope.current && root.DevScope.current()) root.DevScope.close();
       if (SS() && SS().current && SS().current()) SS().close();
     }
-    if (w) { store.set('lastWs', id); const A = AT(); if (A) { if (w.sub && A.setSub) A.setSub(w.tab, w.sub); A.showFootTab(w.tab); } }
+    if (w) { store.set('lastWs', id); const A = AT(); if (A) { if (w.sub && A.setSub) A.setSub(w.tab, w.sub); A.showFootTab(w.tab); if (w.fold && A.openFold) A.openFold(w.fold); } }
     lastHTML = '';
     setMode('home', id);
     if (!o.keepScroll) { const el = $('#home'); if (el) el.scrollTop = 0; }
