@@ -416,6 +416,8 @@
     const tbl = l => (l && l.rows.length ? `<table class="dt"><caption>${esc(l.title)} <span class="muted">(${l.rows.length})</span></caption><tbody>${l.rows.map(r => `<tr class="ld-row"${Object.entries(r.attrs || {}).map(([k, v]) => ` ${k}="${esc(v)}"`).join('')} tabindex="0"><td>${r.html}</td></tr>`).join('')}</tbody></table>` : '');
     return `<section class="ea-flow" data-info="eaflow"><h3 class="sub-title">EA to construction</h3>${U.hlP ? U.hlP(f.answer) : `<p>${f.answer}</p>`}${f.chart}${f.lists.map(tbl).join('')}${f.folds.filter(Boolean).map(x => `<details class="dcn-more"${x.open ? ' open' : ''}><summary class="small">${esc(x.title)}</summary>${x.html}</details>`).join('')}<details class="dcn-more"><summary class="small">Method and basis</summary><p class="small muted">${f.method}</p></details></section>`;
   }
+  // (Capital › EAs; at a development, Capital's one view draws the site's table in its full table: js/dca-tab.js)
+  const EA_HOSTS = '#dca-eas-body, #dca-site-eas';
   let eaBox = null;
   function renderEaTab(box) {
     eaBox = box || eaBox || document.querySelector('#dca-eas-body'); if (!eaBox) return;
@@ -534,7 +536,7 @@
       clearTimeout(qTimer); qTimer = setTimeout(() => { eaTab.f.q = q.value; renderEaTab(); }, 200);
     });
     document.addEventListener('change', e => {
-      const t = e.target; if (!t.closest || !t.closest('#dca-eas-body')) return;
+      const t = e.target; if (!t.closest || !t.closest(EA_HOSTS)) return;
       if (t.dataset.eatabShow != null && t.checked) { eaTab.f.show = t.dataset.eatabShow; eaTab.picked = true; }
       else if (t.dataset.eatabSys != null) eaTab.f.sys = { ...eaTab.f.sys, [t.dataset.eatabSys]: t.checked };
       else if (t.dataset.eatabSort != null) eaTab.sort = t.value;
@@ -551,7 +553,7 @@
     document.addEventListener('click', e => {
       const go = e.target.closest('[data-ce-goto]');
       if (go) { const AT = window.PeelAnalysisTabs; if (AT) { AT.setSub('dca', go.dataset.ceGoto); AT.showFootTab('dca'); } return; }
-      if (!e.target.closest('#dca-eas-body')) return;
+      if (!e.target.closest(EA_HOSTS)) return;
       const stamp = today();
       if (e.target.closest('[data-eatab-csv]')) {
         const { cols, rows } = M.eaSheetRows(filteredEAs()), q = v => U.csvCell(v, true);

@@ -1886,7 +1886,9 @@ five tabs, one view per tab except Servicing (Network · FSR review), nothing on
   are the Overview's figures and Servicing rows. Each tab's panel keeps its own copy of the header, put
   right when it is shown (☆, a trace on or off, the flags once the DC data is in: `syncTools`; browser path
   *a development’s one header on every tab and its page* follows them, and ⋯'s four items). On a page
-  Check FSR opens the page's FSR review and Trace water and Compare open the full map first. On a phone
+  Check FSR opens the page's FSR review and Trace water and Compare open the full map first; on either it
+  scrolls the form's fold into view (the cross-check first, §3.6). The "n links to check" flag opens
+  Records › Files on the map and the site's Records section on its page. On a phone
   the row scrolls sideways (⋯ outside it, so its menu is never clipped) and a development's header
   scrolls with its panel: with the flags and tools it is taller than the half sheet (364–458 px of 423
   measured), so it no longer sticks.
@@ -1899,22 +1901,31 @@ five tabs, one view per tab except Servicing (Network · FSR review), nothing on
 - **Records**: one view of its files and history: the tree, on this site, the latest activity,
   **Related applications** (were in the full table only) and the fold **Files and events** (the Gantt
   chart and the dated events, without the About block). Its full table draws the files with the panel's
-  own tree (`js/file-tree.js` `treeHTML`, each file with *on its own*); the older list stays only for a
-  development with no tree entry. The development's sub-tabs (About · Files & history · Site) and
+  own tree (`js/file-tree.js` `treeHTML`, each file with *on its own* and, with `links: true`, the link
+  that put it there: "same land: use + draft plan · medium confidence, 86% inside"; the panel's tree
+  stays compact); *← Whole development* goes back from a file opened on its own. The older list stays only
+  for a development with no tree entry. The development's sub-tabs (About · Files & history · Site) and
   `#ov-dev` are gone; *history ›* in the header opens Records.
-- **Servicing › Network**: the path, the four flows (water maximum day, wastewater average dry, peak dry,
-  peak wet with I&I); folds Infrastructure coming, **Water: supply route and fire flow** (was in the full
-  table only; the fire flow is looked up when the fold first opens), **Site** (constraints, the aerial
-  check, ground, *Mains near* (was "Water and wastewater"), storm sewers and ponds: the old Site
-  sub-view, the Overview's Site fold and Servicing's ground fold in one), Servicing allocation and Labs.
+- **Servicing › Network**: the path (zone → pumping stations → **Discharges to** the outlet: Automatic,
+  Confirmed or Set by hand, with *Review →* to Review outlets when its queue lists it → the plant and its
+  reserve), the four flows (water maximum day, wastewater average dry, peak dry, peak wet with I&I); folds
+  Infrastructure coming, **Water: supply route and fire flow** (was in the full table only; the fire flow
+  is looked up when the fold first opens), **Site** (constraints, the aerial check, ground, *Mains near*
+  (was "Water and wastewater"), storm sewers and ponds: the old Site sub-view, the Overview's Site fold
+  and Servicing's ground fold in one), Servicing allocation and Labs. A development with no units or jobs
+  (no servicing figures: about one in five) still gets the panel, its answer saying so, with the Site
+  and allocation folds.
 - **Servicing › FSR review** (`svs=fsr`, `js/fsr-check.js` `panelSpec`): the one host of the FSR
   cross-check: the path and flows, the fold *The consultant’s figures against this app’s* (the form;
   your figures are kept per development while the app is open), *What the FSR should cover* (all seven
   items), Copy the comparison and Print / PDF; Open full table widens it. At an area it is hidden
   (Capacity · Network), and comes back when a development opens.
 - **Capital**: one view at a development: the DC projects it relies on, then the EAs and capital works
-  within 1 km (with *Copy for review comments*) and the fold *DCs it would pay* (were a second chip and
-  the full table).
+  within 1 km (with *Copy for review comments*; *Show EAs on the map* heads the list of the EAs near) and
+  the fold *DCs it would pay* (were a second chip and the full table). Its full table ends with the
+  site's EA table (Capital › EAs' at the site: Current · Complete · All, the systems, sort, CSV, GeoJSON,
+  *Show these on the map*, *Add to calendar (.ics)*), drawn once (`#dca-site-eas`; the hidden EAs pane is
+  emptied at a site).
 - **Its page** (`js/sections.js` `SITE`): the sections are the map's tabs by their names, **Overview ·
   Growth · Servicing · Capital · Records** (were Summary · … · Files · FSR review); on Servicing a second
   row, **Network · FSR review**. Review an FSR with a site (`#w=p:fsr&d=<key>`) is the site's page at
@@ -1938,7 +1949,7 @@ Help › What moved where lists each move. Old names still land (tests/nav-alias
 |---|---|
 | `#t=svc&svs=fsr&d=<key>` (new), a stored FSR review pick | Servicing › FSR review at the development; at an area Servicing's first view, FSR review again when a development opens |
 | `#w=fsr` (the Review an FSR chip) | At a site, Servicing › FSR review; without one, the Find step on Servicing › Network |
-| `#w=p:fsr`, `lastWs=fsr`, `data-ws-page="fsr"` | The same page id: with a site, the site's page at Servicing › FSR review; without one, the Find step |
+| `#w=p:fsr`, `lastWs=fsr`, `data-ws-page="fsr"` | The same page id: with a site, the site's page at Servicing › FSR review (the map behind it too, so the stored pick, the address and the way back stay on FSR review); without one, the Find step |
 | `t=dev`, `t=developments`, a stored `peel-dev:devsub` (About · Files · Site) | Overview; the stored sub-tab is no longer read |
 | `dcs=eas` at a development | Capital's one view (DC timing); EAs again at an area |
 | A stored `countMode: 'previous'` | Ignored: the tree count |

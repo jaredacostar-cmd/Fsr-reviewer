@@ -474,10 +474,14 @@
       if (root.DevScope && root.DevScope.current && root.DevScope.current()) root.DevScope.close();
       if (SS() && SS().current && SS().current()) SS().close();
     }
-    if (w) { store.set('lastWs', id); const A = AT(); if (A) { if (w.sub && A.setSub) A.setSub(w.tab, w.sub); A.showFootTab(w.tab); if (w.fold && A.openFold) A.openFold(w.fold); } }
+    // (at a site, the sub-view it opens there: Review an FSR, Servicing › FSR review, as go() and plan() pick it)
+    const dev = !!(w && w.siteSub && root.DevScope && root.DevScope.current && root.DevScope.current());
+    if (w) { store.set('lastWs', id); const A = AT(), sub = dev ? w.siteSub : w.sub; if (A) { if (sub && A.setSub) A.setSub(w.tab, sub); A.showFootTab(w.tab); if (w.fold && A.openFold) A.openFold(w.fold); } }
     lastHTML = '';
     setMode('home', id);
     if (!o.keepScroll) { const el = $('#home'); if (el) el.scrollTop = 0; }
+    // (Check FSR at a development: the form's fold in view, after the reset; js/analysis-tabs.js on the map)
+    if (dev && id === 'fsr' && !o.keepScroll) { const f = $('#home #pnl-fsr'); if (f) { f.open = true; f.scrollIntoView({ block: 'start' }); } }
   }
   let lastHTML = '', shown = '', timer = null, menuOpen = false;
   // (the page's search has the focus, on the page it is on: typing, or about to, on a phone)
@@ -639,9 +643,9 @@
     const sb = e.target.closest('[data-ws-start-btn]'); if (sb) { store.set('startScreen', sb.dataset.wsStartBtn); document.querySelectorAll('[data-ws-start-btn]').forEach(b => { const on = b === sb; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }); }
   });
   // A page's link to the map's tools (a tab, a servicing scope, the full table, a trace, a lens; a site
-  // header's Trace water and Compare, navigation phase 5): the full map first, then the link does what it
-  // does there (its own handler, as the click bubbles on).
-  const MAP_LINK = '[data-at], [data-ss], [data-full-table], [data-trace], [data-wtrace], [data-scope-compare], [data-mview]';
+  // header's Trace water and Compare, navigation phase 5; Capital's EAs on the map): the full map first, then
+  // the link does what it does there (its own handler, as the click bubbles on).
+  const MAP_LINK = '[data-at], [data-ss], [data-full-table], [data-trace], [data-wtrace], [data-scope-compare], [data-mview], [data-pnl-ce-map]';
   document.addEventListener('click', e => {
     if (mode !== 'home' || !e.target.closest) return;
     const a = e.target.closest(MAP_LINK);

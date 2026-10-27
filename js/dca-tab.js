@@ -47,9 +47,11 @@
       // The site's DC brief; sewer-path and plant-reserve numbers live on the Wastewater tab.
       const st = DD().statusOf(p), f = SD().svcFacts(p);
       st.works = st.works || DI().devWorks(p, f);
-      // (then the EAs and capital works near it: Capital is one view at a site, its EAs chip hidden)
+      // (then the EAs and capital works near it, and the site's EA table with its filters, exports and map
+      // button: Capital is one view at a site, its EAs chip hidden, so the table is drawn here, not twice)
       const brief = `<p class="small muted">DC analysis for <strong>${esc(p.title)}</strong>.</p>` + DD().devBriefHTML(p, st, f, 'dc', { noWwNeeds: true });
-      set(0, brief + (CE && CE.siteBriefHTML ? CE.siteBriefHTML(p) : '')); DV().scopeBriefIds(bodies[0] || legacy);
+      set(0, brief + (CE && CE.siteBriefHTML ? CE.siteBriefHTML(p) : '') + '<div id="dca-site-eas"></div>'); DV().scopeBriefIds(bodies[0] || legacy);
+      if (CE && CE.renderEaTab && $('#dca-site-eas')) { if (eb) eb.innerHTML = ''; CE.renderEaTab($('#dca-site-eas')); }
       if (PN) PN.set('dca:timing', siteTimingSpec(p, st, f));
       const note = `<p class="small muted">The Region-wide funding screen is shown when no site is scoped.</p>`;
       set(1, note); set(2, note);
@@ -79,7 +81,10 @@
       answer: needs.length ? `This site relies on <strong>${needs.length}</strong> constraint${needs.length === 1 ? '' : 's'} on its path${gaps.length ? `; <strong>${gaps.length}</strong> run${gaps.length === 1 ? 's' : ''} out before a DC project relieves ${gaps.length === 1 ? 'it' : 'them'}` : ', each with room or relief in time'}.` : 'No capacity constraint on this site\u2019s path in the screen.',
       figures: [{ v: needs.length, u: '', label: 'constraints it relies on', ctx: '', attrs: { 'data-full-table': 'dca' } }, { v: gaps.length, u: '', label: 'run out before relief', ctx: '', tone: gaps.length ? 'over' : 'room', attrs: { 'data-full-table': 'dca' } },
         ...(b ? [{ v: b.eas.length, u: '', label: 'EAs within 1 km', ctx: b.may.length ? `${b.may.length} more may apply` : '', attrs: { 'data-full-table': 'dca' } }, { v: b.works.length, u: '', label: 'capital works within 1 km', ctx: '', attrs: { 'data-full-table': 'dca' } }] : [])],
-      lists: [{ title: 'The projects it relies on', rows: needs.slice(0, 5).map(row), total: needs.length, seeAll: { 'data-full-table': 'dca' } }, ...(ea ? ea.lists || [] : [])],
+      // (Capital › EAs' "Show EAs on the map" heads its list of the EAs near: a footer has one action besides
+      // the table, Copy for review comments)
+      lists: [{ title: 'The projects it relies on', rows: needs.slice(0, 5).map(row), total: needs.length, seeAll: { 'data-full-table': 'dca' } },
+        ...(ea ? (ea.lists || []).map(l => (l.title === 'Near the site' ? { ...l, tools: '<button type="button" class="btn small link" data-pnl-ce-map="ea">Show EAs on the map</button>' } : l)) : [])],
       folds: pay ? [{ id: 'pnl-dcpay', title: 'DCs it would pay', html: pay }] : [],
       method: `The constraints on this site\u2019s path (its sewer path, pumping stations, plant, water system, storage and zone supply), each with the year its capacity runs out and the DC project that relieves it (2026 DC capital maps, draft).${ea ? ` ${ea.method}` : ''}`,
       sources: `2026 DC capital maps (draft v2, March 2026); 2020 Water and Wastewater Master Plan; the servicing model.${ea ? ` ${ea.sources}` : ''}`,

@@ -16,7 +16,8 @@
   const PRECON = 5;
   // A tree entry's node: [ref, role, parent index (-1 = on the land itself), rule, confidence
   // ('h' | 'm' | 'l'), score, units, -, file key].
-  const node = (x, i) => ({ i, ref: x[0], role: x[1], parent: x[2], rule: x[3], conf: x[4], units: x[6] || 0, key: x[8] || null, kids: [] });
+  const node = (x, i) => ({ i, ref: x[0], role: x[1], parent: x[2], rule: x[3], conf: x[4], score: x[5], units: x[6] || 0, key: x[8] || null, kids: [] });
+  const CONF = { h: 'high', m: 'medium', l: 'low' };
   // A link to check: made by overlap only (low confidence), not a pre-consultation (those are
   // matched to the formal file they overlap most, by design).
   const isCheck = n => n.i > 0 && n.conf === 'l' && n.role !== PRECON;
@@ -78,17 +79,27 @@
    *  opts.after(node): HTML placed under a file (its site servicing permits, js/dc-gate.js);
    *  opts.foot: HTML after the tree's history (permits left out); opts.own: an "on its own" button on
    *  each file (the earlier files on the same land too, as the list it replaced), opening the file and the
-   *  files under it (Records' full table: js/devtab.js filesHTML). */
+   *  files under it (Records' full table: js/devtab.js filesHTML); opts.links: under each file the link that
+   *  put it there, its rule, confidence and overlap ("same land: use + draft plan · medium confidence, 86%
+   *  inside": Records' full table too; opts.rules, the rules in words, else the loaded tree counts'). */
   function treeHTML(d, recOf, opts = {}) {
     const t = build(d); if (!t.root) return '';
     const dot = opts.dot || (() => ''), latest = opts.latest || null, counts = countsOf(d);
+    const rules = opts.rules || (((root.PeelTreeCounts || {}).data || {}).codes || {}).rules || [];
+    // (as js/tree-groups.js linkHTML read it: a file under another, or one a rule put on the same land)
+    const link = n => {
+      if (!opts.links || !(n.parent >= 0 || n.rule >= 0)) return '';
+      const ov = n.score != null ? `${Math.round(n.score * 100)}% inside` : '';
+      const txt = [esc(rules[n.rule] || ''), CONF[n.conf] ? `${CONF[n.conf]} confidence${ov ? `, ${ov}` : ''}` : ov].filter(Boolean).join(' · ');
+      return txt ? `<span class="tr-why tr-link">${txt}</span>` : '';
+    };
     const yr = r => (r && r.date ? String(r.date).slice(0, 4) : '');
     const row = (n, why) => {
       const r = recOf ? recOf(n) : null, c = counts.get(n.ref);
       // The homes on the file that carries them; the top of a block plan that adds up its parts says so.
       const right = c ? `<b>${num(c.units)}</b>homes · counted here${c.kind !== 'stated' ? ' (estimate)' : ''}` : n.i === 0 && counts.size > 1 ? `<b>${num(d.u)}</b>homes in all, on the files below` : esc(r && r.dateText ? r.dateText : yr(r));
       // (the file number opens its source record in the development's History: js/devtab.js openFile)
-      return `<div class="tr-row">${dot(r && r.stage || 'review')}<div><button type="button" class="tr-ref" data-dev-file="${esc(n.ref)}"${opts.devKey ? ` data-dev-key="${esc(opts.devKey)}"` : ''} title="Its source record, in History">${esc(n.ref)}</button><span class="tr-type">${esc(typeOf(n, r))}</span>${opts.own ? ` <button type="button" class="btn small link tr-own" data-dt-sub="${esc(n.ref)}" title="Open this file on its own: the file and the files under it">on its own</button>` : ''}${latest && latest === n.ref ? ` <button type="button" class="tr-new" data-dev-file="${esc(n.ref)}"${opts.devKey ? ` data-dev-key="${esc(opts.devKey)}"` : ''} title="The latest file: its source record">latest</button>` : ''}${isCheck(n) ? ` <button type="button" class="tr-check" data-dev-file="${esc(n.ref)}"${opts.devKey ? ` data-dev-key="${esc(opts.devKey)}"` : ''} title="Linked by overlap only (low confidence): check its record. A wrong link can be reported from the record">check</button>` : ''}${r && r.statusRaw ? `<span class="tr-ms">municipal status: <em>${esc(r.statusRaw)}</em></span>` : ''}${why ? `<span class="tr-why">${esc(why)}</span>` : ''}</div><div class="tr-r">${right}</div></div>`;
+      return `<div class="tr-row">${dot(r && r.stage || 'review')}<div><button type="button" class="tr-ref" data-dev-file="${esc(n.ref)}"${opts.devKey ? ` data-dev-key="${esc(opts.devKey)}"` : ''} title="Its source record, in History">${esc(n.ref)}</button><span class="tr-type">${esc(typeOf(n, r))}</span>${opts.own ? ` <button type="button" class="btn small link tr-own" data-dt-sub="${esc(n.ref)}" title="Open this file on its own: the file and the files under it">on its own</button>` : ''}${latest && latest === n.ref ? ` <button type="button" class="tr-new" data-dev-file="${esc(n.ref)}"${opts.devKey ? ` data-dev-key="${esc(opts.devKey)}"` : ''} title="The latest file: its source record">latest</button>` : ''}${isCheck(n) ? ` <button type="button" class="tr-check" data-dev-file="${esc(n.ref)}"${opts.devKey ? ` data-dev-key="${esc(opts.devKey)}"` : ''} title="Linked by overlap only (low confidence): check its record. A wrong link can be reported from the record">check</button>` : ''}${r && r.statusRaw ? `<span class="tr-ms">municipal status: <em>${esc(r.statusRaw)}</em></span>` : ''}${why ? `<span class="tr-why">${esc(why)}</span>` : ''}${link(n)}</div><div class="tr-r">${right}</div></div>`;
     };
     const why = n => (n.role === PRECON ? 'its pre-consultation' : 'on its land');
     const aft = n => (opts.after ? opts.after(n) : '');
@@ -135,10 +146,14 @@
     };
   }
 
-  // The header's "n links to check" flag opens Records › Files.
+  // The header's "n links to check" flag opens Records › Files on the map; on a page (the flags are in the
+  // page's header too, navigation phase 5) the site's Records section, as History's links do (js/devtab.js
+  // revealHistory).
   if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('click', e => {
     if (!(e.target.closest && e.target.closest('[data-tree-check]'))) return;
-    const AT = root.PeelAnalysisTabs; if (AT && AT.openTab) AT.openTab('records', 'files');
+    const W = root.PeelWorkspaces, WP = root.PeelWsPages, AT = root.PeelAnalysisTabs, cur = root.DevScope && root.DevScope.current && root.DevScope.current();
+    if (document.documentElement.classList.contains('home-on') && cur && WP && WP.siteAt && W && W.openPage) { WP.siteAt(cur.key, 'files'); W.openPage('site', { keepScroll: true }); return; }
+    if (AT && AT.openTab) AT.openTab('records', 'files');
   });
 
   const api = { ROLE, PRECON, of, build, flat, summary, countsOf, nodeOf, estimateOf, summaryHTML, treeHTML, recLookup, isCheck };

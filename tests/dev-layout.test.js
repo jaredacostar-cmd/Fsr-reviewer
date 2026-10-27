@@ -30,12 +30,12 @@ const fnOf = (s, name) => { const m = new RegExp(`function ${name}\\([\\s\\S]*?\
 // A DevTab loaded in a context of its own, with a document holding Records' body (the full view's host), and
 // the development model it reads (js/dev-detail.js, js/dev-nav.js: S13), loaded after it as index.html does.
 function devTab(scoped) {
-  const body = { dataset: {}, innerHTML: '' };
-  const document = { getElementById: id => (id === 'records-body' ? body : null), querySelectorAll: () => [], addEventListener() {}, documentElement: { classList: { contains: () => false } } };
+  const body = { dataset: {}, innerHTML: '' }, on = {};
+  const document = { getElementById: id => (id === 'records-body' ? body : null), querySelectorAll: () => [], addEventListener: (t, f) => { (on[t] = on[t] || []).push(f); }, documentElement: { classList: { contains: () => false } } };
   const ctx = { document, PeelPhases: require('../js/phases.js'), PeelUtil: require('../js/util.js'), PeelDemand: require('../js/demand.js'), PeelMapCore: { map: {} }, DevScope: { current: () => scoped }, console };
   ctx.window = ctx; ctx.globalThis = ctx;
   for (const f of ['js/devtab.js', 'js/dev-detail.js', 'js/dev-nav.js']) require('node:vm').runInNewContext(src(f), ctx);
-  return { DT: ctx.DevTab, body, ctx };
+  return { DT: ctx.DevTab, body, ctx, on };
 }
 const stubDev = (extra = {}) => ({
   key: 'Brampton|1 MAIN ST', title: '1 Main St', municipality: 'Brampton', phase: 'review', rank: 2, last: null, first: null,
@@ -168,7 +168,9 @@ test('Servicing › Network at a development: the four flows, the water supply, 
   assert.match(net, /<div class="trace-box">\$\{bRow\('Supply route', `<div id="dev-wtrace" data-info="water-trace">\$\{WT\(\)\.waterTraceHTML\(p\)\}<\/div><div class="wtrace-out"><\/div>`\)\}<\/div>/);
   assert.match(net, /id="dev-fire"/);
   assert.match(net, /id: 'pnl-site', html: DT && DT\.partHTML \? DT\.partHTML\(p, 'site'\) : '' \}/);
-  assert.match(net, /onMount: \(\) => \{ if \(DT && DT\.fillParts\) DT\.fillParts\(p, \['site'\]\); \}/);
+  assert.match(net, /const fillSite = \(\) => \{ if \(DT && DT\.fillParts\) DT\.fillParts\(p, \['site'\]\); \};/);
+  assert.match(net, /folds: \[\n\s+\{ title: 'Infrastructure coming'[^\n]*\n\s+\{ title: 'Water: supply route and fire flow'[^\n]*\n(?:\s+\/\/[^\n]*\n)*\s+site, alloc,\n/, 'the Site fold and the allocation, after Water');
+  assert.equal((net.match(/onMount: fillSite/g) || []).length, 2, 'both specs fill the Site fold (with and without servicing figures)');
   // Fire flow on the Water fold's first open (toggle does not bubble: the capture phase).
   assert.match(src('js/svc-capacity.js'), /document\.addEventListener\('toggle', e => \{\n\s+const d = e\.target; if \(!d \|\| d\.id !== 'pnl-water' \|\| !d\.open\) return;[^]*?root\.PeelSiteContext\.fillFire\(p\);\n\s+\}, true\);/);
   assert.doesNotMatch(src('js/overview-tab.js'), /partHTML\(p, 'site'\)/, 'the Site fold left the Overview');
@@ -218,8 +220,20 @@ test('Capital is one view at a development: the DC projects it relies on, the EA
   assert.equal(none.figures.length, 2); assert.deepEqual(none.folds, []); assert.equal(none.foot.secondary, undefined);
   // (another development in scope: its EAs are not borrowed)
   assert.equal(spec(CE(4), { key: 'other' })(p, {}, null).lists.length, 1);
-  // The full table: the DC brief, then the EA brief (Capital › EAs is no chip at a site).
-  assert.match(src('js/dca-tab.js'), /set\(0, brief \+ \(CE && CE\.siteBriefHTML \? CE\.siteBriefHTML\(p\) : ''\)\);/);
+  // The full table: the DC brief, the EA brief, then the site's EA table with its filters, exports and map
+  // button (Capital › EAs is no chip at a site), drawn once: the hidden EAs pane is emptied.
+  const dca = fnOf(src('js/dca-tab.js'), 'renderDca');
+  assert.match(dca, /set\(0, brief \+ \(CE && CE\.siteBriefHTML \? CE\.siteBriefHTML\(p\) : ''\) \+ '<div id="dca-site-eas"><\/div>'\);/);
+  assert.match(dca, /if \(CE && CE\.renderEaTab && \$\('#dca-site-eas'\)\) \{ if \(eb\) eb\.innerHTML = ''; CE\.renderEaTab\(\$\('#dca-site-eas'\)\); \}/);
+  assert.ok(dca.indexOf("renderEaTab(eb)") < dca.indexOf("renderEaTab($('#dca-site-eas'))"), 'after the EAs pane: the table that answers its controls is the one on screen');
+  const cea = src('js/capital-ea.js');
+  assert.match(cea, /const EA_HOSTS = '#dca-eas-body, #dca-site-eas';/);
+  assert.equal((cea.match(/closest\(EA_HOSTS\)/g) || []).length, 2, 'its filters, sort, CSV, GeoJSON, calendar and map buttons work there');
+  assert.doesNotMatch(cea, /closest\('#dca-eas-body'\)/);
+  // Show EAs on the map heads the list of the EAs near (a footer has one action besides the table: Copy).
+  assert.match(s.lists.find(l => l.title === 'Near the site').tools, /^<button type="button" class="btn small link" data-pnl-ce-map="ea">Show EAs on the map<\/button>$/);
+  assert.ok(s.lists.every(l => l.title === 'Near the site' || !l.tools), 'on that list only');
+  assert.match(src('js/workspaces.js'), /const MAP_LINK = '[^']*\[data-pnl-ce-map\]';/, 'on a page it opens the full map first');
   // The page's Capital section is the same one panel.
   assert.deepEqual(require('../js/sections.js').BY_ID.capital.keys, ['dca:timing']);
 });
@@ -234,7 +248,7 @@ test('Records\' full table draws the files with the panel\'s tree; devtab keeps 
   assert.doesNotMatch(FT.treeHTML(d, null, {}), /tr-own|data-dt-sub/, 'off by default: the panel and the page keep their tree');
   const dt = src('js/devtab.js'), files = fnOf(dt, 'filesHTML');
   assert.match(files, /const FT = root\.PeelFileTree, d = FT && !p\.parent \? FT\.of\(p\) : null;/);
-  assert.match(files, /FT\.treeHTML\(d, FT\.recLookup\(p\), \{[^}]*own: true/);
+  assert.match(files, /FT\.treeHTML\(d, FT\.recLookup\(p\), \{[^}]*own: true, links: true/);
   assert.match(files, /\} else if \(formal\.length > 1[^]*?<ul class="file-tree">\$\{tree\.map\(t => `<li\$\{TG \? TG\.indent\(t\) : ''\}>/, 'the list where there is no tree entry');
   // The one copy of each derived figure: js/dev-detail.js (status), js/dev-nav.js (files, a file on its own, related).
   for (const [name, to] of [['statusOf', 'DD().statusOf(p)'], ['planApprovedNote', 'DD().planApprovedNote(p)'], ['isFormal', 'N().isFormal(r)'], ['isPrecon', 'N().isPrecon(r)'], ['fileTree', 'N().fileTree(p)'], ['relatedProjects', 'N().relatedProjects(p)']]) assert.ok(new RegExp(`const ${name} = [^\\n]*${to.replace(/[().]/g, '\\$&')}`).test(dt), name);
@@ -253,7 +267,7 @@ test('the FSR cross-check has one host: Servicing › FSR review (svs=fsr), its 
   assert.match(src('index.html'), /data-svcsub="fsr">FSR review<\/button>/);
   const net = fnOf(src('js/svc-capacity.js'), 'renderSiteNetwork');
   assert.match(net, /PN\.set\('svc:network', spec\);\n\s+if \(FC && FC\.panelSpec\) PN\.set\('svc:fsr', FC\.panelSpec\(p, spec\)\);/);
-  assert.match(net, /if \(!f\) \{ if \(FC && FC\.panelSpec\) PN\.set\('svc:fsr', FC\.panelSpec\(p, \{ head: PN\.siteHead\(p\),/, 'no units or jobs stated: FSR review still opens (its form says so)');
+  assert.match(net, /if \(!f\) \{\n[^]*?PN\.set\('svc:network', spec0\);\n\s+if \(FC && FC\.panelSpec\) PN\.set\('svc:fsr', FC\.panelSpec\(p, spec0\)\);\n\s+return;/, 'no units or jobs stated: FSR review still opens (its form says so); run below');
   assert.ok(require('../js/how.js').filesFor('svc:fsr').includes('fsr.json'));
   // The form's fold has its own name (§3.9 retires "FSR cross-check (fold)"); the form's heading is hidden in its box.
   assert.match(src('js/fsr-check.js'), /\{ title: 'The consultant\\u2019s figures against this app\\u2019s', id: 'pnl-fsr', open: true,/);
@@ -385,4 +399,90 @@ test('a stored panel’s header is put right when it is shown: ☆ Watch, the tr
   w.PeelSewerTrace.TRACE.key = null; w.PeelApp.watch.clear();
   PN.syncTools(host);
   assert.equal(tr.dataset.on, ''); assert.equal(tr.innerHTML, 'Trace sewer'); assert.equal(watch.textContent, '☆ Watch'); assert.equal(watch.attrs['aria-pressed'], 'false');
+});
+
+// ---- Review fixes (navigation phase 5) -------------------------------------------------------------------
+// js/svc-capacity.js renderSiteNetwork in a context of its own: the panels it stores, the Site part's mount.
+function siteNetwork(facts, extra = {}) {
+  const sets = {}, filled = [];
+  const window = { PeelSvcData: { svcFacts: () => facts, PLANT_SHORT: { Lakeview: 'G.E. Booth' } }, PeelFsrCheck: require('../js/fsr-check.js'),
+    PeelPanel: { set: (k, v) => { sets[k] = v; }, siteHead: q => ({ name: q.title }), kv: (l, v, t) => ({ html: `${l}|${v}${t ? `|${t}` : ''}`, kv: true }) },
+    DevTab: { partHTML: (q, part) => `<div class="brief" id="part-${part}"></div>`, fillParts: (q, parts) => filled.push(parts) },
+    PeelDemandUI: { allocBoxHTML: () => '<form class="alloc"></form>' }, PeelDemand: { toMLd: v => v * 0.0864 }, PeelDevDetail: { psName: a => a.name }, ...extra };
+  const ctx = { window, module: { exports: {} } }; ctx.globalThis = ctx;
+  require('node:vm').runInNewContext(src('js/svc-capacity.js'), ctx);
+  return { SC: ctx.module.exports, sets, filled };
+}
+const plain = x => JSON.parse(JSON.stringify(x));   // (out of the context's realm)
+test('no units or jobs stated: Servicing › Network still holds the Site checks (their one home); FSR review opens, its form saying so', () => {
+  const { SC, sets, filled } = siteNetwork(null), p = { key: 'Brampton|5085 MAYFIELD RD~SPA-2024-0010', title: '5085 Mayfield Rd' };
+  SC.renderSiteNetwork(p);
+  const net = plain(sets['svc:network']), fsr = plain(sets['svc:fsr']);
+  assert.ok(net, 'a Network panel: the Site fold has a home for every development (4,562 have no units or jobs)');
+  assert.equal(net.answer, 'No servicing figures for this development: no units or jobs are stated.');
+  assert.deepEqual(net.folds.map(f => [f.id, f.html]), [['pnl-site', '<div class="brief" id="part-site"></div>'], ['pnl-alloc', '<form class="alloc"></form>']]);
+  assert.equal(net.figures, undefined); assert.equal(net.lists, undefined); assert.equal(net.calc, undefined);
+  sets['svc:network'].onMount(); assert.deepEqual(plain(filled), [['site']], 'its mount fills the constraints, aerial check, ground, mains near, storm sewers and ponds');
+  assert.equal(fsr.answer, net.answer);
+  assert.deepEqual(fsr.folds.map(f => f.id), ['pnl-fsr', 'pnl-fsr-cover'], 'FSR review: the form and what an FSR should cover');
+  assert.deepEqual([fsr.figures, fsr.lists], [[], []]);
+  assert.match(fsr.method, /^What the FSR should cover:/);
+});
+
+test('Servicing › Network’s path: the zone, the pumping stations, discharges to the outlet (how it was set, Review →), the plant', () => {
+  const f = { cb: { water: { maxDay: 5.65 }, wastewater: { avg: 3.37, peak: 12.8, wetPeak: 13.1, infiltration: 0 } }, z: { id: 'pz:1', name: 'Pressure zone 1' }, zMax: 100, zNear: false,
+    sps: [{ a: { name: 'Lakeshore SPS' }, wet: 50, firm: 100 }], pl: 'Lakeview', cap: true, reserve: 50.6, use: 0.5, path: [{}] };
+  const DO = mode => ({ recordOf: () => (mode ? { mode } : null), queue: () => ({ all: [{ p: { key: 'k' } }] }) });
+  const path = (extra) => { const { SC, sets } = siteNetwork(f, extra); SC.renderSiteNetwork({ key: 'k', title: '800 Hydro Rd' }); return plain(sets['svc:network'].lists.find(l => l.title === 'The path').rows.map(r => r.html)); };
+  const rows = path({ PeelDevOutlets: DO(null) });
+  assert.deepEqual(rows.map(r => r.split('|')[0]), ['💧 Pressure zone 1', 'Lakeshore SPS', 'Discharges to', '→ G.E. Booth'], 'the outlet before the plant (design §3.6)');
+  assert.equal(rows[2], 'Discharges to|the outlet · Automatic', 'no Review → until the DC impact model is worked out (never built from here)');
+  assert.equal(path({ PeelDevOutlets: DO('confirmed') })[2], 'Discharges to|the outlet · Confirmed');
+  assert.match(path({ PeelDevOutlets: DO('set'), PeelDcImpact: { current: () => ({}) } })[2], /^Discharges to\|the outlet · Set by hand <button type="button" class="btn small link" data-ws-page="outlets" data-dvo="pick-dev" data-dvo-key="k">Review →<\/button>$/, 'Review → opens Review outlets at this development, when its queue lists it');
+  assert.doesNotMatch(path({ PeelDevOutlets: { recordOf: () => null, queue: () => ({ all: [] }) }, PeelDcImpact: { current: () => ({}) } })[2], /Review/, 'not queued: no Review →');
+});
+
+test('Records’ full table: each file with the link that put it there (rule, confidence, overlap); the panel’s tree stays compact', () => {
+  const FT = require('../js/file-tree.js'), rules = ['same land: use + draft plan', 'pre-consultation → the formal file it overlaps most'];
+  const d = { root: 'A-1', u: 40, n: [['A-1', 1, -1, 0, 'h', 0.98, 40, 0, 'k1'], ['PRE-1', 5, 0, 1, 'l', 1, 0, 0, 'k2'], ['A-2', 2, 0, -1, 'm', null, 0, 0, 'k3'], ['OLD-1', 1, -1, 0, 'm', 0.5, 0, 0, 'k4'], ['OLD-2', 2, -1, -1, '', null, 0, 0, 'k5']], c: [['A-1', 40, 'stated']] };
+  const links = h => [...h.matchAll(/data-dev-file="([^"]+)"[^]*?(?=data-dev-file=|<p class="tr-key")/g)].map(m => [m[1], (/<span class="tr-why tr-link">([^<]*)<\/span>/.exec(m[0]) || [])[1] || null]).filter((x, i, a) => a.findIndex(y => y[0] === x[0]) === i);
+  assert.deepEqual(links(FT.treeHTML(d, null, { own: true, links: true, rules })), [
+    ['A-1', 'same land: use + draft plan · high confidence, 98% inside'],
+    ['PRE-1', 'pre-consultation → the formal file it overlaps most · low confidence, 100% inside'],
+    ['A-2', 'medium confidence'],
+    ['OLD-1', 'same land: use + draft plan · medium confidence, 50% inside'],   // (the earlier files on the same land carry theirs too)
+    ['OLD-2', null],   // (on its land with no rule: no link to show)
+  ]);
+  assert.doesNotMatch(FT.treeHTML(d, null, { own: true, rules }), /tr-link|(high|medium) confidence|% inside/, 'off by default: the panel and the page keep their tree');
+});
+
+test('the header’s “n links to check” flag: Records › Files on the map, the site’s Records section on its page', () => {
+  const vm = require('node:vm'), calls = [];
+  let page = false, click = null;
+  const document = { addEventListener: (t, f) => { if (t === 'click') click = f; }, documentElement: { classList: { contains: k => k === 'home-on' && page } } };
+  const window = { document, DevScope: { current: () => ({ key: 'Mississauga|5080' }) }, PeelWsPages: { siteAt: (...a) => calls.push(['siteAt', ...a]) }, PeelWorkspaces: { openPage: (...a) => calls.push(['openPage', ...a]) }, PeelAnalysisTabs: { openTab: (...a) => calls.push(['openTab', ...a]) } };
+  vm.runInNewContext(src('js/file-tree.js'), { window, document });
+  const flag = { target: { closest: s => (s === '[data-tree-check]' ? {} : null) } };
+  click(flag);
+  assert.deepEqual(plain(calls), [['openTab', 'records', 'files']], 'the map: Records › Files');
+  calls.length = 0; page = true; click(flag);
+  assert.deepEqual(plain(calls), [['siteAt', 'Mississauga|5080', 'files'], ['openPage', 'site', { keepScroll: true }]], 'a page: its Records section (it stayed on the Overview, the map behind it switching)');
+  calls.length = 0; click({ target: { closest: () => null } });
+  assert.deepEqual(calls, [], 'any other click: nothing');
+});
+
+test('← Whole development in Records’ full table: back from a file opened on its own (the scope itself, no drill)', () => {
+  const whole = stubDev(), sub = stubDev({ key: `${whole.key}#OZ 24-001`, parent: whole, subRef: 'OZ 24-001' });
+  const { ctx, on } = devTab(sub), shown = [];
+  ctx.PeelDevNav.showDetail = q => shown.push(q.key);
+  const back = { closest: s => (s === '[data-dt-back]' || s === '.dev-hist, .pnl-fold, .home-main' ? {} : null) };
+  for (const f of on.click) f({ target: back, preventDefault() {}, stopPropagation() {} });
+  assert.deepEqual(shown, [whole.key], 'the whole development is the scope again');
+});
+
+test('Check FSR opens the form in view: the map’s panel and the page scroll to its fold (design §3.6: the cross-check first)', () => {
+  assert.match(src('js/analysis-tabs.js'), /showFootTab\(tab, sub\); Sh\(\)\.viewLink\.write\(\);\n[^\n]*\n\s+if \(a\.dataset\.at === 'svc:fsr'\) requestAnimationFrame\(\(\) => \{ const f = document\.querySelector\('#pnl-svc #pnl-fsr'\); if \(f\) \{ f\.open = true; f\.scrollIntoView\(\{ block: 'start' \}\); \} \}\);/);
+  const op = fnOf(src('js/workspaces.js'), 'openPage');
+  assert.match(op, /if \(!o\.keepScroll\) \{ const el = \$\('#home'\); if \(el\) el\.scrollTop = 0; \}\n[^\n]*\n\s+if \(dev && id === 'fsr' && !o\.keepScroll\) \{ const f = \$\('#home #pnl-fsr'\); if \(f\) \{ f\.open = true; f\.scrollIntoView\(\{ block: 'start' \}\); \} \}/, 'after the page’s scroll reset');
+  assert.match(op, /const A = AT\(\), sub = dev \? w\.siteSub : w\.sub;/, 'FSR review behind the page at a site (tests/workspaces.test.js runs it)');
 });

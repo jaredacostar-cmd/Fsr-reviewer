@@ -441,8 +441,8 @@
     if (d && FT.summary(d).files > 1) {
       const latest = (P().newestFirst(p.records.filter(r => r.kind === 'application'))[0] || {}).ref;
       html += `<details class="sect" id="devtab-files" open><summary><h2 class="section-title" data-info="dev-files">Applications in this development</h2><span class="muted small sect-sum">${fmtNum(FT.summary(d).files)} files · open one on its own</span></summary>
-        ${FT.treeHTML(d, FT.recLookup(p), { dot: k => dot(k), latest, own: true, ...(root.PeelDcGate ? root.PeelDcGate.treeOpts(p, d) : {}) })}
-        <p class="small muted">A file number opens its source record in History; “on its own” opens the file and the files under it.</p></details>`;
+        ${FT.treeHTML(d, FT.recLookup(p), { dot: k => dot(k), latest, own: true, links: true, ...(root.PeelDcGate ? root.PeelDcGate.treeOpts(p, d) : {}) })}
+        <p class="small muted">A file number opens its source record in History; under each file, the rule that linked it, how sure that link is and how much of its land lies inside; “on its own” opens the file and the files under it.</p></details>`;
     } else if (formal.length > 1 || (formal.length && tree.length > formal.length) || (treeRows && tree.length > 1)) {
       const counted = p.buildout && p.buildout.basis;
       html += `<details class="sect" id="devtab-files" open><summary><h2 class="section-title" data-info="dev-files">Applications in this development</h2><span class="muted small sect-sum">${fmtNum(tree.length)} files · open one on its own</span></summary>
@@ -1262,7 +1262,8 @@
     if (xh) { highlightStormMain(xh.dataset.dtExhl.split('|')[1]); return; }
     const bb = e.target.closest('[data-dt-back]');
     if (bb) {
-      const back = drill && (drill.parent || drill._dtBack);
+      // (the file on its own is the scope itself where DevScope opens it, js/dev-nav.js showDetail: no drill)
+      const back = p && (p.parent || p._dtBack);
       drill = null;
       if (back) navigate(back); else render();
       scrollTop();
@@ -1280,7 +1281,7 @@
     if (part === 'about') return `${p.parent ? subHeadHTML(p) : ''}${aboutBlockHTML(p, statusOf(p))}`;
     if (part === 'timeline') return stepperHTML(p);
     // ('ground', its aerial check and ground part, is the one Site part now: kept as a name for one release)
-    if (part === 'site' || part === 'ground') return `<div class="brief">${has ? row('Constraints', 'devtab-cx', 'Checking the mapped constraint layers…') + brow('Aerial check', '<div class="aerial" id="devtab-aerial"><p class="small muted">Comparing aerial photos…</p></div>') + row('Ground', 'devtab-ground', 'Looking up ground elevation…', 'ground') + row('Mains near', 'devtab-net', 'Looking up the watermains and sewers…') + row('Storm sewers', 'devtab-exist-storm', 'Looking up the nearest storm sewers…') + row('Stormwater', 'devtab-storm', 'Looking up stormwater ponds…', 'fire-storm') : '<p class="small muted">Not checked: this development has no map location.</p>'}</div>`;
+    if (part === 'site' || part === 'ground') return `<div class="brief">${has ? row('Constraints', 'devtab-cx', 'Checking the mapped constraint layers…', 'site-constraints') + brow('Aerial check', '<div class="aerial" id="devtab-aerial"><p class="small muted">Comparing aerial photos…</p></div>') + row('Ground', 'devtab-ground', 'Looking up ground elevation…', 'ground') + row('Mains near', 'devtab-net', 'Looking up the watermains and sewers…') + row('Storm sewers', 'devtab-exist-storm', 'Looking up the nearest storm sewers…') + row('Stormwater', 'devtab-storm', 'Looking up stormwater ponds…', 'fire-storm') : '<p class="small muted">Not checked: this development has no map location.</p>'}</div>`;
     if (part === 'files') return filesTreeHTML(p);
     // (Files and History are one section: the story, with the Gantt chart at its heart; About is the Overview's)
     if (part === 'story' || part === 'history' || part === 'gantt') return storyHTML(p, statusOf(p), false, { about: false });

@@ -424,14 +424,31 @@
   function renderSiteNetwork(p) {
     const PN = root.PeelPanel; if (!PN || !p) return;
     const FC = root.PeelFsrCheck, f = SD().svcFacts(p);
-    // (no units or jobs stated: no Network panel, its briefs say so; FSR review still opens, its form says so)
-    if (!f) { if (FC && FC.panelSpec) PN.set('svc:fsr', FC.panelSpec(p, { head: PN.siteHead(p), answer: 'No servicing figures for this development: no units or jobs are stated.' })); return; }
-    const DI = root.PeelDcInfra, DT = root.DevTab, w = DI && DI.devWorks ? DI.devWorks(p, f) : null, cb = f.cb;
+    // (the retired Site view, the Overview's Site fold and this panel's ground fold in one: js/devtab.js)
+    const DT = root.DevTab, site = { title: 'Site: constraints, aerial check, ground, the mains near, storm sewers and ponds', id: 'pnl-site', html: DT && DT.partHTML ? DT.partHTML(p, 'site') : '' };
+    // The header's ⋯ › Record allocation opens this (js/app.js showAllocSub).
+    const alloc = { title: 'Servicing allocation', id: 'pnl-alloc', html: root.PeelDemandUI && root.PeelDemandUI.allocBoxHTML ? root.PeelDemandUI.allocBoxHTML(p) : '' };
+    const fillSite = () => { if (DT && DT.fillParts) DT.fillParts(p, ['site']); };
+    // (no units or jobs stated: no figures, its briefs say so, but the site checks keep their one home here;
+    // FSR review still opens, its form says so)
+    if (!f) {
+      const spec0 = { fullTitle: `${p.title} · water and wastewater briefs`, head: PN.siteHead(p), answer: 'No servicing figures for this development: no units or jobs are stated.', folds: [site, alloc], onMount: fillSite };
+      PN.set('svc:network', spec0);
+      if (FC && FC.panelSpec) PN.set('svc:fsr', FC.panelSpec(p, spec0));
+      return;
+    }
+    const DI = root.PeelDcInfra, w = DI && DI.devWorks ? DI.devWorks(p, f) : null, cb = f.cb;
     const share = f.zMax > 0 ? Math.round(D().toMLd(cb.water.maxDay) / f.zMax * 100) : null, plant = f.pl ? (SD().PLANT_SHORT[f.pl] || f.pl) : null;
     const usePct = f.cap && f.reserve > 0 ? Math.round(f.use / f.reserve * 100) : null;
+    // Discharges to (navigation design §3.6): how the outlet was set, in the Overview path line's words, and
+    // "Review →" (Review outlets at this development) only when its queue lists it, once the DC impact model
+    // is worked out (PeelDcImpact.current never builds it).
+    const DO = root.PeelDevOutlets, IM = root.PeelDcImpact, om = DO && DO.recordOf ? (DO.recordOf(p) || {}).mode : null;
+    const queued = !!(IM && IM.current && IM.current() && DO && DO.queue) && ((DO.queue() || {}).all || []).some(x => x.p.key === p.key);
+    const outlet = PN.kv('Discharges to', `the outlet · ${om === 'set' ? 'Set by hand' : om === 'confirmed' ? 'Confirmed' : 'Automatic'}${queued ? ` <button type="button" class="btn small link" data-ws-page="outlets" data-dvo="pick-dev" data-dvo-key="${esc(p.key)}">Review →</button>` : ''}`);
     const pathRows = [...(f.z ? [PN.kv(`💧 ${esc(f.z.name)}`, `${share != null ? `${share}% of the zone\u2019s build-out maximum day` : 'zone load not available'}${f.zNear ? ' · nearest zone' : ''}`)] : []),
       ...f.sps.map(x => PN.kv(esc(DD().psName(x.a)), `${Math.round(x.wet / x.firm * 100)}% of firm at build-out (peak wet)`, x.wet / x.firm >= 1 ? 'over' : x.wet / x.firm >= 0.9 ? 'tight' : 'room')),
-      ...(plant ? [PN.kv(`→ ${esc(plant)}`, f.cap ? (f.reserve > 0 ? `this site uses ${usePct}% of the plant\u2019s reserve (${fmt1(f.reserve)} ML/d)` : 'the plant has no reserve after committed') : '–', f.cap && f.reserve <= 0 ? 'over' : null)] : [])];
+      ...(plant ? [outlet, PN.kv(`→ ${esc(plant)}`, f.cap ? (f.reserve > 0 ? `this site uses ${usePct}% of the plant\u2019s reserve (${fmt1(f.reserve)} ML/d)` : 'the plant has no reserve after committed') : '–', f.cap && f.reserve <= 0 ? 'over' : null)] : [])];
     const flows = [PN.kv('Water, maximum day', `${fmt1(cb.water.maxDay)} L/s`), PN.kv('Wastewater, average dry weather', `${fmt1(cb.wastewater.avg)} L/s`), PN.kv('Wastewater, peak dry weather', `${fmt1(cb.wastewater.peak)} L/s`),
       PN.kv('Wastewater, peak wet weather', `${fmt1(cb.wastewater.wetPeak)} L/s${cb.wastewater.infiltration > 0 ? ` · ${esc(D().iiPlain(cb.wastewater.infiltration, App().state.criteria))}` : ''}`)];
     // The water supply: the route from the plant (its Trace on the map writes its summary under it: a
@@ -453,17 +470,14 @@
       folds: [
         { title: 'Infrastructure coming', html: w && DI.devWorksHTML ? DI.devWorksHTML(w) : '<p class="small muted">The 2026 DC maps are still loading.</p>', open: true },
         { title: 'Water: supply route and fire flow', id: 'pnl-water', html: water },
-        // (the retired Site view, the Overview's Site fold and this panel's ground fold in one: js/devtab.js)
-        { title: 'Site: constraints, aerial check, ground, the mains near, storm sewers and ponds', id: 'pnl-site', html: DT && DT.partHTML ? DT.partHTML(p, 'site') : '' },
-        // The header's ⋯ › Record allocation opens this (js/app.js showAllocSub).
-        { title: 'Servicing allocation', id: 'pnl-alloc', html: root.PeelDemandUI && root.PeelDemandUI.allocBoxHTML ? root.PeelDemandUI.allocBoxHTML(p) : '' },
+        site, alloc,
         // (Labs: the Gravity check and the Pressure check, js/lab-checks.js)
         ...(root.PeelLabChecks ? root.PeelLabChecks.folds(p) : []),
       ],
-      method: 'Flows at Peel design criteria. The path: the pressure zone the site sits in (or the nearest), the pumping stations on its traced sewer path and the plant it drains to; the plant reserve is the uncommitted reserve (MECP D-5-1), to 100% of rated after committed.',
+      method: 'Flows at Peel design criteria. The path: the pressure zone the site sits in (or the nearest), the pumping stations on its traced sewer path, the outlet it discharges to (automatic, or confirmed or set by hand in Review outlets) and the plant it drains to; the plant reserve is the uncommitted reserve (MECP D-5-1), to 100% of rated after committed.',
       sources: 'Pressure zones and the sewer network (Region of Peel); 2025 plant flows; 2026 DC capital maps (draft); the lidar terrain model and aerial photos (each names its source).',
       foot: { primary: { label: 'Trace the sewer path', attrs: { 'data-trace': p.key } }, secondary: [{ label: 'Trace water', attrs: { 'data-wtrace': p.key } }] },
-      onMount: () => { if (DT && DT.fillParts) DT.fillParts(p, ['site']); },
+      onMount: fillSite,
     };
     PN.set('svc:network', spec);
     if (FC && FC.panelSpec) PN.set('svc:fsr', FC.panelSpec(p, spec));

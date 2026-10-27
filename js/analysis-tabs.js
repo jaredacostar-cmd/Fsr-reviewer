@@ -190,6 +190,8 @@
     const [t0, s0] = a.dataset.at.split(':'), r = s0 ? migrateSub(t0, s0) : null, tab = r ? r.tab : t0, sub = r ? r.sub : s0;
     if (s0) openFold(foldOf(t0, s0));
     footPref = tabOf(tab); store.set('footTab4', footPref); showFootTab(tab, sub); Sh().viewLink.write();
+    // (Check FSR, the header's: the form's fold in view, the cross-check first as the layout puts it, design §3.6)
+    if (a.dataset.at === 'svc:fsr') requestAnimationFrame(() => { const f = document.querySelector('#pnl-svc #pnl-fsr'); if (f) { f.open = true; f.scrollIntoView({ block: 'start' }); } });
   });
   // The System pick (a link's is for the visit: not stored). Capacity redraws every time (cheap; Home's
   // Servicing capacity page reads its panel); Capital › DC timing once it has drawn, and only while its

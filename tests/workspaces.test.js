@@ -201,6 +201,13 @@ test('Review an FSR at a site: Servicing › FSR review, the one host', () => {
   window.PeelAnalysisTabs = { setSub: (t, v) => subs.push([t, v]), setFootPref() {}, showFootTab() {}, openFold() {}, getFootTab: () => 'svc', TABSUBS: { svc: { get: () => 'fsr' } } };
   B.go('fsr');
   assert.deepEqual(plain(subs), [['svc', 'fsr']], 'the chip opens Servicing › FSR review at the site');
+  // Its page too (a page header's Check FSR, the Home menu): FSR review behind it, so the stored pick, the
+  // address and the way back to the map stay on the form; without a site, the Find step on Network.
+  subs.length = 0; B.openPage('fsr');
+  assert.deepEqual(plain(subs), [['svc', 'fsr']], 'the page at a site: Servicing › FSR review behind it, not Network');
+  const dev = window.DevScope.current; window.DevScope.current = () => null; subs.length = 0; B.openPage('fsr');
+  assert.deepEqual(plain(subs), [['svc', 'network']], 'no site: Network');
+  window.DevScope.current = dev;
   assert.equal(B.override('svc:fsr', 'dev:x'), null, 'no workspace override: the view is the panel itself');
   assert.equal(B.override('svc:network', 'dev:x'), null);
   // The view's panel (js/fsr-check.js in node): the Network panel's answer, figures and lists, the form's

@@ -11,7 +11,7 @@
   'use strict';
 
   // ---- Guarded lazy accessors (this module loads before js/app.js installs PeelApp) ----
-  const { $, esc, fmtNum, store, dot } = root.PeelUtil;
+  const { $ } = root.PeelUtil;
   const P = root.PeelPhases;
   const PD = root.PeelDesign;
   const map = root.PeelMapCore.map;
@@ -36,7 +36,6 @@
   // with the same tabs. Sub-developments are views only: the totals count the whole development
   // once. Keys are "<development key>#<file>".
   const SUBS = new Map();
-  let projBack = null, projFrom = null;   // the development to go back to after going across to a related one
   const isFormal = r => r.kind === 'application' && (r.stage || P.stageOf(r)) !== 'precon';
   const isPrecon = r => r.kind === 'application' && (r.stage || P.stageOf(r)) === 'precon';
   const civicOf = r => { const a = P.normalizeAddress(r.address); return a && /\d/.test(a) && !/^0+(\s*-\s*0+)?\s/.test(a) ? a : ''; };
@@ -131,38 +130,6 @@
     p._rel = { list: App().state.projects, out };
     return out;
   }
-  const fileLine = r => `${esc(r.ref || 'File')}${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · <em>${esc(r.statusRaw)}</em>` : ''}`;
-  function filesHTML(p) {
-    const tree = p.parent ? [] : fileTree(p), formal = tree.filter(t => isFormal(t.a));
-    // Step 2 (js/sites.js): the other proposals and the site activity on this development's land.
-    const TGs = window.PeelTreeGroups, site = TGs && TGs.siteParts ? TGs.siteParts(p, App().state.projects.all || App().state.projects) : [];
-    const onSite = new Set(site.map(q => q.key));
-    const rel = relatedProjects(p).filter(x => !onSite.has(x.q.key)).slice(0, 12);
-    let html = '';
-    const TG = window.PeelTreeGroups, treeRows = tree.length && tree[0].branch;
-    if (formal.length > 1 || (formal.length && tree.length > formal.length) || (treeRows && tree.length > 1)) {
-      const counted = p.buildout && p.buildout.basis;
-      html += `<details class="sect" id="dev-files" open><summary><h2 class="section-title" data-info="dev-files">Applications in this development</h2><span class="muted small sect-sum">${fmtNum(tree.length)} files · open one on its own</span></summary>
-        <ul class="file-tree">${tree.map(t => `<li${TG ? TG.indent(t) : ''}>${dot(t.a.phase)}<div><button type="button" class="btn small link" data-sub="${esc(t.a.ref)}">${fileLine(t.a)}</button>${t.a.units > 0 && isFormal(t.a) ? ` · ${fmtNum(t.a.units)} units` : ''}${isPrecon(t.a) && !treeRows ? ' <span class="muted">· pre-consultation, no formal application on its land yet</span>' : ''}
-          ${t.pre.length ? `<div class="small muted">Pre-consultation${t.pre.length > 1 ? 's' : ''}: ${t.pre.map(r => esc(r.ref)).join(', ')}</div>` : ''}${TG ? TG.linkHTML(t) : ''}</div></li>`).join('')}</ul>
-        ${treeRows ? `<p class="small muted">${esc(TG.FILES_NOTE)}</p></details>` : `<p class="small muted">Each file is listed once; pre-consultations sit under the application on the same land. The development counts its units once${counted ? ` (${fmtNum(p.buildout.planned)} planned, from the ${esc({ master: 'official plan / zoning / subdivision', siteplan: 'site plan', condo: 'condominium', other: 'planning' }[counted] || counted)} files)` : ''}; pre-consultation units are never added, since the formal application repeats them.</p></details>`}`;
-    }
-    if (p.areaPlan) html += `<p class="small area-note"><strong>Area plan:</strong> ${fmtNum(p.areaPlan.drafts)} draft plan${p.areaPlan.drafts === 1 ? '' : 's'} inside this ${esc(/precinct/i.test(p.description) ? 'precinct' : /block plan/i.test(p.description) ? 'block' : 'area')} ${p.areaPlan.drafts === 1 ? 'is its own development' : 'are their own developments'} (below, under Related applications)${p.areaPlan.covered ? `, carrying ${fmtNum(p.areaPlan.covered)} units` : ''}. ${p.areaPlan.covered ? `This plan counts only the units they don't already carry${p.units ? ` (${fmtNum(p.units)})` : ' (none left)'}, so nothing is counted twice.` : 'Their units are counted there, not here.'}</p>`;
-    if (site.length) {
-      const props = site.filter(q => !q.siteActivity), acts = site.filter(q => q.siteActivity);
-      const li = q => `<li>${dot(q.phase)}<div><button type="button" class="btn small link" data-relq="${esc(q.key)}"><strong>${esc(q.title)}</strong></button>${q.units > 0 ? ` · ${fmtNum(q.units)} units` : ''} <span class="muted">· ${esc(P.PHASE_BY_KEY[q.phase].label)}</span>
-        <div class="small muted">${(q.records || []).filter(r => r.kind === 'application').slice(0, 3).map(fileLine).join('<br>')}</div></div></li>`;
-      html += `<details class="sect" id="dev-site" open><summary><h2 class="section-title" data-info="dev-site">On this site</h2><span class="muted small sect-sum">${props.length ? `${fmtNum(props.length)} other proposal${props.length === 1 ? '' : 's'}` : ''}${props.length && acts.length ? ' · ' : ''}${acts.length ? 'other activity' : ''}</span></summary>
-        ${props.length ? `<h3 class="sub-title">Other proposals here</h3><ul class="file-tree">${props.map(li).join('')}</ul>` : ''}
-        ${acts.length ? `<h3 class="sub-title">Other activity on this site</h3><ul class="file-tree">${acts.map(li).join('')}</ul>` : ''}
-        <p class="small muted">${p.siteActivity ? 'These files only alter what stands on the site (no homes, no new building): they set no development\'s stage and are left out of the counts unless site activity is included (Find).' : 'Each proposal on this land has its own count and stage. Other activity (a patio, a fit-out, a new door) alters what stands: it sets no proposal\'s stage and adds no homes.'}</p></details>`;
-    }
-    if (rel.length) html += `<details class="sect" id="dev-related"${p.records.every(isPrecon) || p.areaPlan ? ' open' : ''}><summary><h2 class="section-title" data-info="dev-related">Related applications</h2><span class="muted small sect-sum">${fmtNum(rel.length)} development${rel.length === 1 ? '' : 's'} on overlapping land</span></summary>
-      <ul class="file-tree">${rel.map(({ q, hits }) => `<li>${dot(q.phase)}<div><button type="button" class="btn small link" data-relq="${esc(q.key)}"><strong>${esc(q.title)}</strong></button>${q.units > 0 ? ` · ${fmtNum(q.units)} units` : ''} <span class="muted">· ${esc(P.PHASE_BY_KEY[q.phase].label)}</span>
-        <div class="small muted">${hits.slice(0, 4).map(h => `${fileLine(h.r)} <span class="rel-how">${esc({ 'same address': 'same address as', 'covers it': 'covers', 'within it': 'within', 'overlapping land': 'overlaps' }[h.how])} ${esc(h.m.ref)}</span>`).join('<br>')}${hits.length > 4 ? `<br>+ ${hits.length - 4} more` : ''}</div></div></li>`).join('')}</ul>
-      <p class="small muted">Other developments with an application on the same land (overlapping boundaries or the same civic address), each counted in its own development, once.</p></details>`;
-    return html;
-  }
   // Opening a site flies the map to it (quick); with reduced motion it jumps via
   // setView instead. Skipped when the map is already there.
   // Where the map is not under the phone's bottom sheet: the site goes in the middle of that part
@@ -205,9 +172,6 @@
   // scope's (js/tool-scope.js).
   document.addEventListener('click', e => {
     if (e.target.closest('[data-loads-back]') && devBack) { const b = devBack; devBack = null; if (b.dc) return MP().showDcBack(b.dc); return b.pipe != null ? SC().showPipeLoads(b.pipe) : TS().showLoads(b.id, b.plantName); }
-    const rq = e.target.closest('[data-relq]');
-    if (rq && currentProject) { const q = projectByKey(rq.dataset.relq); if (q) { projFrom = currentProject; showDetail(q); } return; }
-    if (e.target.closest('[data-proj-back]') && projBack) { showDetail(projBack); return; }
     return undefined;
   });
 

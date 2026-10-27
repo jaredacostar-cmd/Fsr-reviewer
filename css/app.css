@@ -1273,7 +1273,8 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .brief .sum-bar { margin: var(--space-1) 0 var(--space-1); }
 .brief .export-bar { margin: var(--space-2) 0 0; }
 .brief .desc-clamp { margin: var(--space-1) 0; }
-@media (max-width: 480px) { .brief .b-row { grid-template-columns: 1fr; gap: var(--space-1); } }
+/* (minmax: one column, no wider than the phone; a DC need's card would set it, 773 px at a site's Capital) */
+@media (max-width: 480px) { .brief .b-row { grid-template-columns: minmax(0, 1fr); gap: var(--space-1); } }
 .c-brief .c-head { color: var(--text-secondary); }
 .c-verdict { margin: var(--space-1) 0; }
 .c-motion { border-left: 3px solid var(--border); padding-left: var(--space-2); color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
@@ -1484,6 +1485,8 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .dcn-table td small { color: var(--text-muted); font-size: var(--fs-1); }
 .dcn-table td:first-child small { display: block; }
 .dcn-table td[data-l] small { margin-left: var(--space-1); }
+/* (a DC relief's and a site brief's long names wrap: Capital's full table at a site, on a phone) */
+.dcn-table td .btn.link, .ce-brief .btn.link { white-space: normal; text-align: left; overflow-wrap: anywhere; }
 .dcn-table tr.dcn-gap { box-shadow: inset 3px 0 0 var(--cap-over); }
 .dcn-table tr.dcn-ok { box-shadow: inset 3px 0 0 var(--cap-room); }
 .dcn-table tr.dcn-check { box-shadow: inset 3px 0 0 var(--cap-tight); }
@@ -2318,8 +2321,6 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .analysis .ov-activity { grid-column: span 12; }
 @media (max-width: 1199px) { .ov-activity { grid-column: span 12; } }
 .ov-activity td small { display: block; color: var(--text-muted); font-size: var(--fs-1); }
-/* The separate Development tab is retired: a development reads on the five tabs (navigation phase 5). */
-#ftab-dev { display: none !important; }
 /* Tables in the analysis panel: text wraps so they fit the panel's width; one that still doesn't
    fit (js/app.js marks it .dt-wide) scrolls sideways inside itself with its first column pinned,
    instead of being cut off at the panel's edge. */
