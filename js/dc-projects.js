@@ -16,8 +16,11 @@
   const DI = () => root.PeelDcImpact, PN = () => root.PeelPanel, MP = () => root.PeelMasterPlan, DC = () => root.PeelDcCost;
   const DIF = () => root.PeelDcInfra, MM = () => root.PeelMapMarkers, SC = () => root.PeelSewerCap, App = () => root.PeelApp;
 
-  const S = { sel: store.get('dcProjSel', null), sys: store.get('dcProjSys', 'wastewater'), sort: store.get('dcProjSort', 'affected') };
-  const SYS = { wastewater: 'Wastewater', water: 'Water', both: 'Both' };
+  const S = { sel: store.get('dcProjSel', null), sort: store.get('dcProjSort', 'affected') };
+  // The System is the one control shared with Servicing › Capacity (js/analysis-tabs.js; it took over this
+  // list's own stored pick, dcProjSys, once): both · ww · water.
+  const AT = () => root.PeelAnalysisTabs, sysNow = () => (AT() && AT().getSys ? AT().getSys() : 'both');
+  const SYS = { both: 'Water and wastewater', ww: 'Wastewater', water: 'Water' };
   const TIER = { A: 'Needs it to connect', B1: 'Needs it for capacity', B2: 'On its path, not needed' };
   const funding = () => !!(root.PeelLabs && root.PeelLabs.on('funding') && !(U.isPublic && U.isPublic()));
 
@@ -44,7 +47,7 @@
   }
 
   function rowsFor(m) {
-    const list = [...m.projects.values()].filter(pr => S.sys === 'both' || pr.sys === S.sys).map(pr => {
+    const s = sysNow(), list = [...m.projects.values()].filter(pr => s === 'both' || pr.sys === (s === 'ww' ? 'wastewater' : 'water')).map(pr => {
       const c = counted(m, pr);
       return { pr, c, units: unitsOf(c), perUnit: pr.cost && unitsOf(c) ? pr.cost / unitsOf(c) : null };
     });
@@ -54,7 +57,8 @@
   }
 
   // ---- Panels ---------------------------------------------------------------------------------------
-  const seg = (attr, cur, opts) => `<div class="seg" role="group">${opts.map(([k, t]) => `<button type="button" class="btn small${cur === k ? ' on' : ''}" data-${attr}="${k}" aria-pressed="${cur === k}">${t}</button>`).join('')}</div>`;
+  // (an option's third element is its tooltip: the measure it sorts by, N-11)
+  const seg = (attr, cur, opts, label) => `<div class="seg" role="group"${label ? ` aria-label="${label}"` : ''}>${opts.map(([k, t, tip]) => `<button type="button" class="btn small${cur === k ? ' on' : ''}" data-${attr}="${k}" aria-pressed="${cur === k}"${tip ? ` title="${tip}"` : ''}>${t}</button>`).join('')}</div>`;
   const loadingSpec = what => ({ head: PN().areaHead('Capital › DC projects', 'What does each DC project affect?', null, 'Peel'), answer: `<span class="muted">${esc(what)}</span>` });
 
   function listSpec(m) {
@@ -67,7 +71,8 @@
         html: `<div class="pnl-r-top"><span class="pnl-r-name">${pr.sys === 'water' ? '💧 ' : ''}${esc(l.short)}<small>project ${esc(pr.key)} · construction ${esc(yrs(pr))}${pr.status === 'approved' ? ' · approved 2026' : ''}</small></span><span class="pnl-r-fig">${fmtNum(Math.round(units))}<small>units · ${fmtNum(c.length)} dev.</small></span></div>
           <small class="pnl-r-line">${pr.gaps ? `<span class="t-over">${fmtNum(pr.gaps)} expected before it is built</span>` : c.length ? 'in time for the developments relying on it' : 'no development in the pipeline relies on it'}${fl ? ` · DC cost ${pr.cost ? fmtMoney(pr.cost) : 'not costed'}${perUnit ? ` (${fmtMoney(perUnit)} a unit)` : ''} · ${esc(scr)}` : ''}</small>` };
     };
-    const tools = `${seg('dcproj-sys', S.sys, [['wastewater', 'Wastewater'], ['water', 'Water'], ['both', 'Both']])}${seg('dcproj-sort', S.sort, [['affected', 'Most affected'], ['soonest', 'Soonest'], ...(fl ? [['perunit', '$ a unit']] : [])])}`;
+    // (DC projects keeps its own sort words: units relying is not Capacity's measure)
+    const tools = `${AT() && AT().sysSeg ? AT().sysSeg() : ''}${seg('dcproj-sort', S.sort, [['affected', 'Most affected', 'Most units relying on it first'], ['soonest', 'Soonest', 'Earliest construction year first'], ...(fl ? [['perunit', '$ a unit', 'Lowest DC cost per unit relying on it first']] : [])], 'Sort')}`;
     return {
       calc: true, fullTitle: 'Capital › DC projects · Peel: every DC project and the developments relying on it',
       head: PN().areaHead('Capital › DC projects', 'What does each DC project affect?', gapP.length ? { tone: 'over', text: `${gapP.length} with a timing gap` } : null, `Peel · ${fmtNum(all.length)} DC projects · 2026 DC capital maps (draft, as of ${esc(CAPITAL.asOf)})`),
@@ -78,7 +83,7 @@
         { v: fmtNum(gapP.length), u: '', label: 'with a timing gap', ctx: 'first homes before the project is built', tone: gapP.length ? 'over' : null, attrs: { 'data-full-table': 'dca' } },
         ...(fl ? [{ v: fmtNum(ns.length), u: '', label: 'not in the funding screen', ctx: 'relied on, but no constraint or connector puts them in it', tone: ns.length ? 'tight' : null }] : []),
       ],
-      lists: [{ title: `${SYS[S.sys]} projects`, tools, rows: rows.slice(0, 8).map(row), total: rows.length, seeAll: { 'data-full-table': 'dca' } }],
+      lists: [{ title: `${SYS[sysNow()]} projects`, tools, rows: rows.slice(0, 8).map(row), total: rows.length, seeAll: { 'data-full-table': 'dca' } }],
       folds: fl ? [fundingFold()] : [],
       method: 'Developments in the pipeline (approved or proposed) allocated to the 2026 DC works they rely on: needs it to connect (off the existing sewers, its route runs along the planned main; water: outside the mapped zones, the planned main within 1 km), or needs it for capacity (it drains through an existing sewer the project relieves, and that sewer runs short, as the DC main’s panel rates it). Developments on its path whose sewer has room are listed, not counted. A timing gap: the forecast’s first homes come before the latest construction year of the projects a development relies on (docs/dc-impact/ALLOCATION.md).',
       sources: `2026 DC capital maps (draft, as of ${esc(CAPITAL.asOf)}); Region sanitary sewers; the municipal application records; the Growth forecast.`,
@@ -155,7 +160,7 @@
           return `<tr class="ld-row" data-pnl-dev="${esc(x.p.key)}" tabindex="0"><td>${esc(x.p.title)}<small>${esc(x.p.municipality)}</small></td><td>${esc(TIER[x.tier])}</td><td>${fmtNum(Math.round(x.units))}</td><td>${x.q.toFixed(1)}</td><td${gap ? ' class="t-over"' : ''}>${f || '–'}${gap ? ` (before ${pr.y1})` : ''}</td>${fl ? `<td>${x.share ? fmtMoney(x.share) : '–'}</td>` : ''}</tr>`; }).join('')}</tbody></table>`;
     }
     const sc = fl ? screens() : null, rows = rowsFor(m);
-    return `<table class="dt"><caption>${fmtNum(rows.length)} ${esc(SYS[S.sys].toLowerCase())} DC projects</caption><thead><tr><th>Project</th><th>Construction</th><th>To connect</th><th>For capacity</th><th>On path, not needed</th><th>Units relying</th><th>Before it is built</th>${fl ? '<th>DC cost</th><th>$ a unit</th><th>Funding screen</th>' : ''}</tr></thead>
+    return `<table class="dt"><caption>${fmtNum(rows.length)} ${esc(SYS[sysNow()].toLowerCase())} DC projects</caption><thead><tr><th>Project</th><th>Construction</th><th>To connect</th><th>For capacity</th><th>On path, not needed</th><th>Units relying</th><th>Before it is built</th>${fl ? '<th>DC cost</th><th>$ a unit</th><th>Funding screen</th>' : ''}</tr></thead>
       <tbody>${rows.map(({ pr, units, perUnit }) => `<tr class="ld-row" data-dcproj-open="${esc(`${pr.sys}:${pr.key}`)}" tabindex="0"><td>${esc(label(pr).short)}<small>${esc(pr.key)}</small></td><td>${esc(yrs(pr))}</td><td>${pr.devs.filter(x => x.tier === 'A').length}</td><td>${pr.devs.filter(x => x.tier === 'B1').length}</td><td>${pr.devs.filter(x => x.tier === 'B2').length}</td><td>${fmtNum(Math.round(units))}</td><td${pr.gaps ? ' class="t-over"' : ''}>${pr.gaps}</td>${fl ? `<td>${pr.cost ? fmtMoney(pr.cost) : '–'}</td><td>${perUnit ? fmtMoney(perUnit) : '–'}</td><td>${esc(screenOf(sc, pr))}</td>` : ''}</tr>`).join('')}</tbody></table>`;
   }
 
@@ -171,9 +176,11 @@
     const pr = S.sel && m.projects.get(S.sel);
     return pr ? projectSpec(m, pr) : listSpec(m);
   }
+  // shown: the panel has drawn (the System control redraws it then, js/analysis-tabs.js setSys).
+  let shown = false;
   function render() {
     const spec = panelSpec(); if (!spec) return;
-    PN().set('dca:dcproj', spec);
+    shown = true; PN().set('dca:dcproj', spec);
     const body = typeof document !== 'undefined' && document.getElementById('dca-dcproj-body'), m = DI().model();
     if (body) body.innerHTML = m ? fullHTML(m) : '';
   }
@@ -181,7 +188,7 @@
     render();
     const W = root.PeelWorkspaces; if (W && W.mode && W.mode() === 'home' && W.renderPage) W.renderPage(true);
   }
-  const setS = (k, v) => { S[k] = v; store.set({ sel: 'dcProjSel', sys: 'dcProjSys', sort: 'dcProjSort' }[k], v); refresh(); };
+  const setS = (k, v) => { S[k] = v; store.set({ sel: 'dcProjSel', sort: 'dcProjSort' }[k], v); refresh(); };
   function csv(which) {
     const m = DI().model(); if (!m || !root.PeelExports) return;
     const q = v => U.csvCell(v, true), out = [];
@@ -205,11 +212,10 @@
   }
   if (typeof document !== 'undefined') {
     document.addEventListener('click', e => {
-      const t = e.target.closest && e.target.closest('[data-dcproj-open],[data-dcproj-back],[data-dcproj-sys],[data-dcproj-sort],[data-dcproj-csv],[data-dcproj-map]'); if (!t) return;
+      const t = e.target.closest && e.target.closest('[data-dcproj-open],[data-dcproj-back],[data-dcproj-sort],[data-dcproj-csv],[data-dcproj-map]'); if (!t) return;
       const d = t.dataset;
       if (d.dcprojOpen != null) setS('sel', d.dcprojOpen);
       else if (d.dcprojBack != null) setS('sel', null);
-      else if (d.dcprojSys) setS('sys', d.dcprojSys);
       else if (d.dcprojSort) setS('sort', d.dcprojSort);
       else if (d.dcprojCsv) csv(d.dcprojCsv);
       else if (d.dcprojMap) showOnMap(d.dcprojMap);
@@ -218,6 +224,6 @@
   }
 
   // (select: a project opened from elsewhere, as a row click opens it: the search on a page, js/workspaces.js routePick)
-  const api = { render, panelSpec, refresh, state: S, TIER, select: k => setS('sel', k) };
+  const api = { render, panelSpec, refresh, state: S, TIER, select: k => setS('sel', k), shown: () => shown };
   root.PeelDcProjects = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -218,12 +218,14 @@
 /* ---- app.js lines 5352-5403 ---- */
   // Tables from analysis tab bodies for the workbook: a section-header row
   // naming each panel, then each visible table's rows (the tableRows helper).
+  // (OFF_AT_SITE: the Peel-wide panes a development leaves out, as css/app.css's site-scope rule does)
+  const OFF_AT_SITE = '#analysis.site-scope #pane-wfac, #analysis.site-scope #pane-hydro';
   function panelTableRows(panels) {
     if (window.PeelUtil && window.PeelUtil.flushLater) window.PeelUtil.flushLater();   // (views waiting to render out of sight)
     const out = [];
     for (const [label, sel] of panels) {
       const body = $(sel); if (!body) continue;
-      const tables = [...body.querySelectorAll('table')].filter(t => !t.closest('[hidden]'));
+      const tables = [...body.querySelectorAll('table')].filter(t => !t.closest(`[hidden], ${OFF_AT_SITE}`));
       if (!tables.length) continue;
       if (out.length) out.push([]);
       out.push([label]);

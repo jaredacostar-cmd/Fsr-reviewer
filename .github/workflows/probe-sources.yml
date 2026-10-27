@@ -63,7 +63,8 @@ concurrency:
 
 jobs:
   probe:
-    runs-on: ubuntu-latest
+    # (24.04, not ubuntu-latest: the playwright modes install no Chromium on Ubuntu 26.04)
+    runs-on: ubuntu-24.04
     timeout-minutes: 90
     env:
       # The free-text input reaches the scripts as a variable only (never pasted into a script).

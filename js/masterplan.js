@@ -56,7 +56,7 @@
     return DCN.mpw;
   }
   const zLevel = z => { const m = /^(\d+)/.exec(z || ''); return m ? +m[1] : null; };
-  // ---- 2020 Master Plan assessment vs this tracker (Water → Facilities, Wastewater → Plants) ----
+  // ---- 2020 Master Plan assessment vs this tracker (Servicing › Network's existing water facilities; Servicing › Capacity's plants) ----
   // The Master Plan's forecasts for the facilities it assessed, next to the tracker's numbers: today
   // (2025 measured flows for the plants; the Master Plan's 2021 figure + growth built since the
   // census for the pumping stations), + approved, + proposed (build-out). A development counts at

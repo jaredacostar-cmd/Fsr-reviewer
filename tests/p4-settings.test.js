@@ -4,7 +4,7 @@
  * - The criteria stamp names the exact source documents and versions.
  * - The criteria editor lives in the Scenario control (renderScenarioCriteria) with a
  *   reset-to-Peel-defaults button; the Settings tab keeps display/number conventions.
- * - The Sources & checks gear page is registered (GearPages.sources).
+ * - The Sources & checks gear page is gone (navigation phase 2): its parts are in Records.
  * js/app.js is a browser IIFE, so app-side assertions read it as source.
  */
 const test = require('node:test');
@@ -162,24 +162,20 @@ test('record type + new-buildings-only controls are filters, in Find › What (n
   assert.ok(APP.includes("e.target.id === 'f-new'"), 'delegated wiring for new-buildings-only');
 });
 
-// ---- Sources & checks gear page -----------------------------------------------------------
-test('GearPages.sources is registered and composes freshness, checks and references', () => {
-  assert.ok(APP.includes('window.GearPages = window.GearPages || {}'), 'GearPages registry created');
-  assert.ok(APP.includes('window.GearPages.sources = () => sourcesPageHTML()'), 'sources page registered');
-  const m = /function sourcesPageHTML\(\) \{([\s\S]*?)\n  \}/.exec(APP);
-  assert.ok(m, 'sourcesPageHTML not found');
-  const body = m[1];
-  assert.ok(body.includes('freshnessHTML()'), 'data freshness included');
-  assert.ok(body.includes('checksHTML()'), 'model checks included');
-  assert.ok(body.includes('refsHTML()'), 'references included');
+// ---- Sources & checks gear page: gone (navigation phase 2), its parts in Records ----------------
+test('the Sources & checks gear page is gone; freshness and the references are Records › Sources, the checks Records › Data checks', () => {
+  assert.ok(APP.includes('window.GearPages = window.GearPages || {}'), 'GearPages registry created (Settings, Labs)');
+  assert.ok(!APP.includes('GearPages.sources') && !/function sourcesPageHTML\(/.test(APP), 'no Sources & checks gear page');
+  const rt = fs.readFileSync(path.join(JS_DIR, 'records-tab.js'), 'utf8');
+  assert.match(rt, /return `\$\{DU\(\)\.freshnessHTML\(\)\}\$\{root\.PeelSvcPlants && root\.PeelSvcPlants\.refsHTML \? root\.PeelSvcPlants\.refsHTML\(\) : ''\}`/, 'data freshness and the references: Records › Sources');
+  assert.match(rt, /DU\(\)\.checksHTML \? DU\(\)\.checksHTML\(\) : ''/, 'the model checks: Records › Data checks');
+  assert.match(fs.readFileSync(path.join(JS_DIR, 'svc-capacity.js'), 'utf8'), /'plantFlows', 'wwRoster'\]\.map\(sec\)/, 'the page\'s own two checks: Records › Data checks, Servicing model');
 });
 
 test('extra model-check sections render defensively', () => {
   assert.ok(APP.includes('window.ModelChecks'), 'reads the ModelChecks registry');
-  const m = /function modelSectionsHTML\(\) \{([\s\S]*?)\n  \}/.exec(APP);
-  assert.ok(m, 'modelSectionsHTML not found');
-  assert.ok(m[1].includes("(typeof window !== 'undefined' && window.ModelChecks) || {}"),
-    'missing registry renders as nothing, not a throw');
+  // (the one reader left: js/svc-capacity.js renderChecks, Records › Data checks' Servicing model group)
+  assert.match(fs.readFileSync(path.join(JS_DIR, 'svc-capacity.js'), 'utf8'), /const MC = root\.ModelChecks \|\| \{\}, sec = k => \{ try \{ const v = typeof MC\[k\] === 'function' \? MC\[k\]\(\) : MC\[k\]; return typeof v === 'string' \? v : v && typeof v\.html === 'string' \? v\.html : ''; \} catch \(e\) \{ return ''; \} \};/, 'a missing or odd section renders as nothing, not a throw');
 });
 
 test('number conventions and Prepared by stay in the Settings UI', () => {

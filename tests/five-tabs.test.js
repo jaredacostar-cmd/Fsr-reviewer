@@ -15,7 +15,7 @@ test('four tabs and Records, in order; Servicing holds water and wastewater in o
   const tabs = [...HTML.matchAll(/class="f-tab(?: f-tab-trail)?" id="ftab-(\w+)"[^>]*>([^<]+)</g)].map(m => m[2]);
   assert.deepEqual(tabs, ['Overview', 'Growth', 'Servicing', 'Capital', 'Records']);
   const row = HTML.slice(HTML.indexOf('<div class="f-pane f-subtabs svc-subtabs" data-pane="svc"'), HTML.indexOf('</div>', HTML.indexOf('svc-subtabs')));
-  assert.deepEqual([...row.matchAll(/data-svcsub="(\w+)"/g)].map(m => m[1]), ['capacity', 'network', 'alloc', 'checks']);
+  assert.deepEqual([...row.matchAll(/data-svcsub="(\w+)"/g)].map(m => m[1]), ['capacity', 'network']);
   const at = src('js/analysis-tabs.js');
   assert.match(at, /const tabOf = key => \(key === 'ww' \|\| key === 'water' \? 'svc' : key\);/);
   assert.match(at, /if \(key === 'dev' \|\| key === 'developments' \|\| key === 'tool'\) key = 'overview';/);
@@ -37,7 +37,7 @@ test('Records follows the scope: Sources and Checks at Peel; a development its f
 
 test('no placeholder sub-views at site scope; one disclaimer per panel', () => {
   const at = src('js/analysis-tabs.js');
-  assert.match(at, /site: \{ growth: \['areas', 'timing', 'ledger'\], svc: \['capacity', 'alloc', 'checks'\], dca: \['dcproj', 'projects'\], records: \['sources', 'checks'\] \}/);
+  assert.match(at, /site: \{ growth: \['areas', 'timing', 'ledger'\], svc: \['capacity'\], dca: \['dcproj', 'projects'\], records: \['sources', 'checks'\] \}/);
   assert.match(at, /const v = subFor\(tk, s\.get\(\), null, scopeOf\(tk\)\); if \(v !== s\.get\(\)\) \{ if \(areaPick\[tk\] == null\) areaPick\[tk\] = s\.get\(\); s\.set\(v\); \}/, 'a hidden sub-view falls back (tests/four-tabs.test.js)');
   const css = src('css/app.css');
   assert.ok(css.includes('.f-subtabs .site-off, #analysis.site-scope #screen-note-top { display: none !important; }'));

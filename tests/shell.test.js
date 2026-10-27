@@ -11,7 +11,7 @@ const ROOT = path.join(__dirname, '..');
 const src = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const HTML = src('index.html');
 
-test('top bar: lenses Planning / Water / Wastewater / Capital; a lens never switches the right panel tab', () => {
+test('top bar: lenses Planning / Water / Wastewater / Capital; a lens opens its tab through openTab, never showFootTab', () => {
   assert.match(src('js/map-markers.js'), /MAP_VIEWS = \[\['planning', 'Planning'\], \['water', 'Water'\], \['wastewater', 'Wastewater'\], \['dc', 'Capital'\]\]/);
   const tb = src('js/topbar.js');
   const h = tb.slice(tb.indexOf("$('#tb-views').addEventListener('click'"), tb.indexOf('});', tb.indexOf("$('#tb-views').addEventListener('click'")));

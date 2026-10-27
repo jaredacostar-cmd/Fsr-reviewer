@@ -85,7 +85,7 @@ test('every tab and sub-view a link can name lands on a tab and a sub-view that 
   }
 });
 
-test('every sub-view of the four tabs has a SUB_MAP row; in phase 0 nothing has moved', () => {
+test('every sub-view of the four tabs has a SUB_MAP row; the names before Stage 2 land where phase 2 put them', () => {
   for (const [tab, s] of Object.entries(AT.TABSUBS)) {
     assert.ok(AT.SUB_MAP[tab], `${tab} has rows`);
     for (const v of s.valid) {
@@ -94,7 +94,7 @@ test('every sub-view of the four tabs has a SUB_MAP row; in phase 0 nothing has 
     }
   }
   // The names before Stage 2 still map as they did (tests/four-tabs.test.js has the full table).
-  assert.deepEqual(plain(AT.migrateTabKey('water', 'facilities')), { tab: 'svc', svcSub: 'checks' });
+  assert.deepEqual(plain(AT.migrateTabKey('water', 'facilities')), { tab: 'svc', svcSub: 'network' });
   assert.deepEqual(plain(AT.migrateTabKey('dca', 'funding')), { tab: 'dca', dcSub: 'dcproj' });
   assert.deepEqual(plain(AT.migrateTabKey('growth', 'nonsense')), { tab: 'growth', gSub: 'pipeline' });
   assert.deepEqual(plain(AT.migrateTabKey('svc', 'nonsense')), { tab: 'svc' }, 'an unknown Servicing sub-view keeps the one open');
@@ -203,4 +203,94 @@ test('a tab named before its data arrived (Servicing, Capital) opens when its bu
   assert.match(src('js/census-view.js'), /gcPane\.dataset\.off = off; AT\(\)\.refreshFootTab\(\);/);
   assert.match(src('js/labs.js'), /if \(AT && AT\.refreshFootTab\) AT\.refreshFootTab\(\);/);
   assert.match(src('js/svc-tab.js'), /if \(AT\(\) && AT\(\)\.tabShown\) for \(const k of \['svc', 'dca'\]\) if \(!\$\(`#ftab-\$\{k\}`\)\.hidden\) AT\(\)\.tabShown\(k\);/);
+});
+
+// Navigation phase 2 (navigation-design §7.2–7.3): Servicing is Capacity · Network. Allocations is a fold
+// of Capacity, the model checks are Records › Data checks (its Servicing model group), the water
+// facilities and the hydraulic check are Network's. Old links, stored picks and in-app calls land there.
+function loadTabsWith(stored = {}, extra = {}) {
+  const el = () => null, store = { get: (k, d) => (Object.prototype.hasOwnProperty.call(stored, k) ? stored[k] : d), set: () => {} };
+  const document = { querySelector: el, querySelectorAll: () => [], getElementById: el, addEventListener: () => {} };
+  const ctx = { window: { PeelUtil: { store }, document, ...extra }, document, setTimeout: () => 0, module: { exports: {} } };
+  ctx.globalThis = ctx;
+  require('node:vm').runInNewContext(src('js/analysis-tabs.js'), ctx);
+  return ctx.module.exports;
+}
+test('phase 2: Allocations folds into Capacity, the model checks move to Records › Data checks, the water facilities and the hydraulic check move to Network', () => {
+  assert.deepEqual(plain(AT.TABSUBS.svc.valid), ['capacity', 'network']);
+  // Links (t=svc&svs=…, t=ww|water&ws=…).
+  assert.deepEqual(plain(AT.migrateTabKey('svc', 'alloc')), { tab: 'svc', svcSub: 'capacity' });
+  assert.deepEqual(plain(AT.migrateTabKey('svc', 'checks')), { tab: 'records', rSub: 'checks' });
+  assert.deepEqual(plain(AT.migrateTabKey('ww', 'alloc')), { tab: 'svc', svcSub: 'capacity' });
+  assert.deepEqual(plain(AT.migrateTabKey('water', 'hydro')), { tab: 'svc', svcSub: 'network' });
+  // The fold an old Allocations name opens.
+  assert.equal(AT.foldOf('svc', 'alloc'), 'alloc');
+  assert.equal(AT.foldOf('ww', 'alloc'), 'alloc');
+  for (const [t, s] of [['svc', 'capacity'], ['svc', '__proto__'], ['svc', 'constructor'], ['__proto__', 'alloc'], ['svc', undefined], ['water', 'alloc']]) assert.equal(AT.foldOf(t, s), null, `${t}:${s}`);
+  // Stored picks: the Model checks pick goes to Records when Servicing was the tab last picked.
+  const prefs = { footPref: 'svc', gSub: 'pipeline', svcSub: 'checks', dcSub: 'timing', rSub: 'sources' };
+  assert.deepEqual(plain(AT.migratePrefs(prefs)), { footPref: 'records', gSub: 'pipeline', svcSub: null, dcSub: 'timing', rSub: 'checks' });
+  assert.deepEqual(plain(AT.migratePrefs({ ...prefs, footPref: 'growth' })), { footPref: 'growth', gSub: 'pipeline', svcSub: null, dcSub: 'timing', rSub: 'sources' }, 'another tab last picked: Servicing resets to Capacity, Records keeps its own');
+  assert.equal(AT.migratePrefs({ ...prefs, svcSub: 'alloc' }).svcSub, 'capacity');
+  // … as the app loads them (footTab4 / svcSub / rSub in this browser).
+  let T = loadTabsWith({ footTab4: 'svc', svcSub: 'checks', rSub: 'sources' });
+  assert.equal(T.getFootPref(), 'records'); assert.equal(T.getRSub(), 'checks'); assert.equal(T.getSvcSub(), 'capacity');
+  T = loadTabsWith({ footTab4: 'growth', svcSub: 'checks', rSub: 'sources' });
+  assert.equal(T.getFootPref(), 'growth'); assert.equal(T.getRSub(), 'sources'); assert.equal(T.getSvcSub(), 'capacity');
+  T = loadTabsWith({ footTab4: 'svc', svcSub: 'alloc' });
+  assert.equal(T.getFootPref(), 'svc'); assert.equal(T.getSvcSub(), 'capacity');
+  // In-app calls.
+  assert.equal(AT.setSub('svc', 'checks'), 'records'); assert.equal(AT.getRSub(), 'checks');
+  assert.equal(AT.setSub('svc', 'alloc'), 'svc'); assert.equal(AT.getSvcSub(), 'capacity');
+  // showFootTab, a data-at link and a share link open the fold for an old Allocations name.
+  let opened = 0;
+  T = loadTabsWith({}, { PeelDemandUI: { openAllocFold: () => { opened++; }, renderAlloc: () => {} } });
+  T.showFootTab('svc', 'alloc'); assert.equal(opened, 1, 'showFootTab(svc, alloc)');
+  T.showFootTab('ww', 'alloc'); assert.equal(opened, 2, 'showFootTab(ww, alloc)');
+  T.showFootTab('svc', 'capacity'); T.showFootTab('svc'); assert.equal(opened, 2, 'Capacity itself leaves the fold as it is');
+  const s = src('js/analysis-tabs.js');
+  const fold = s.indexOf("if (sub && foldOf(key, sub) === 'alloc' && DUI() && DUI().openAllocFold) DUI().openAllocFold();");
+  assert.ok(fold > 0 && fold < s.indexOf('{ const r = sub ? migrateSub(key, sub) : null;'), 'showFootTab: the fold before the sub-view migrates');
+  assert.match(s, /const \[t0, s0\] = a\.dataset\.at\.split\(':'\), r = [^\n]*\n {4}if \(s0 && foldOf\(t0, s0\) === 'alloc' && DUI\(\) && DUI\(\)\.openAllocFold\) DUI\(\)\.openAllocFold\(\);/, 'a data-at link: the fold from the name before it migrates');
+  assert.match(src('js/share.js'), /if \(AT\(\)\.foldOf && AT\(\)\.foldOf\(t, oldSub\) === 'alloc' && window\.PeelDemandUI && window\.PeelDemandUI\.openAllocFold\) window\.PeelDemandUI\.openAllocFold\(\);/, 'a link: t and its own sub-view param');
+});
+
+// Navigation phase 2 (navigation-design §3.4, N-11): one System control, Both · Wastewater · Water, one
+// stored pick for Servicing › Capacity and Capital › DC projects. Capacity's old 'all', DC projects' old
+// words and its own stored pick (dcProjSys) land on it; a link carries it as sy=.
+test('the one System control: one stored pick; old values, stored picks and links land', () => {
+  for (const v of ['both', 'all', undefined, null, '', 'nonsense', '__proto__', 'constructor']) assert.equal(AT.sysKey(v), 'both', String(v));
+  for (const v of ['ww', 'wastewater']) assert.equal(AT.sysKey(v), 'ww', v);
+  assert.equal(AT.sysKey('water'), 'water');
+  assert.deepEqual(plain(AT.SYS.map(x => x[0])), ['both', 'ww', 'water'], 'Both first');
+  // As the app loads it: fresh → Both; the one pick; DC projects' own pick once, when the one pick is unset.
+  assert.equal(loadTabsWith({}).getSys(), 'both', 'a fresh browser: Both (DC projects was Wastewater)');
+  assert.equal(loadTabsWith({ sysPick: 'water' }).getSys(), 'water');
+  assert.equal(loadTabsWith({ dcProjSys: 'wastewater' }).getSys(), 'ww', 'DC projects’ stored pick carries over');
+  assert.equal(loadTabsWith({ dcProjSys: 'both' }).getSys(), 'both');
+  assert.equal(loadTabsWith({ sysPick: 'both', dcProjSys: 'water' }).getSys(), 'both', 'the one pick wins');
+  // A pick is stored; a link's is for the visit.
+  const sets = [], store = { get: (k, d) => d, set: (k, v) => sets.push([k, v]) };
+  const document = { querySelector: () => null, querySelectorAll: () => [], getElementById: () => null, addEventListener: () => {} };
+  const ctx = { window: { PeelUtil: { store }, document }, document, setTimeout: () => 0, module: { exports: {} } };
+  ctx.globalThis = ctx;
+  require('node:vm').runInNewContext(src('js/analysis-tabs.js'), ctx);
+  const T = ctx.module.exports;
+  sets.length = 0;
+  T.setSys('water'); assert.equal(T.getSys(), 'water'); assert.deepEqual(sets, [['sysPick', 'water']]);
+  sets.length = 0;
+  T.setSys('ww', { link: true }); assert.equal(T.getSys(), 'ww'); assert.deepEqual(sets, [], 'a link changes the pick, stores nothing');
+  T.setSys(null, { link: true }); assert.equal(T.getSys(), 'both', 'a link without sy=: Both');
+  // The share link: written when not Both, read before the panels draw.
+  const sh = src('js/share.js');
+  assert.match(sh, /if \(AT\(\)\.getSys && AT\(\)\.getSys\(\) !== 'both'\) set\('sy', AT\(\)\.getSys\(\)\);/);
+  assert.match(sh, /AT\(\)\.setSys\(q\.get\('sy'\), \{ link: true, quiet: true \}\)/);
+  assert.ok(sh.indexOf("AT().setSys(q.get('sy')") < sh.indexOf('AT().showFootTab(AT().getFootPref());'), 'before the tab draws');
+  // A lens sets the system its own DC layer shows (js/map-analysis.js VIEW_PRESETS); Planning has none.
+  const ma = src('js/map-analysis.js'), presets = [...ma.matchAll(/^ {4}(\w+): \{ basemap: [^\n]*dc: \{ on: (true|false), sys: '(\w+)' \} \},$/gm)];
+  assert.deepEqual(presets.map(m => m[1]), ['planning', 'water', 'wastewater', 'dc'], 'the four lenses');
+  for (const [, view, on, sys] of presets) {
+    if (on === 'true') assert.equal(AT.SYS_OF_VIEW[view], AT.sysKey(sys), view);
+    else assert.ok(!Object.prototype.hasOwnProperty.call(AT.SYS_OF_VIEW, view), `${view}: leaves the System`);
+  }
 });

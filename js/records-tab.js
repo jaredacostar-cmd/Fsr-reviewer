@@ -1,8 +1,8 @@
 (function (root) {
   'use strict';
-  // The Records tab (SPEC §5; Stage 2: the small trailing tab, also in the Settings gear), with
-  // Sources · Checks · Files:
-  //   Peel / municipality / plan: Sources (freshness, reports) and Checks (duplicates, data checks);
+  // The Records tab (SPEC §5; Stage 2: the small trailing tab), with Sources · Data checks · Files:
+  //   Peel / municipality / plan: Sources (freshness, reports) and Data checks (duplicates, the data
+  //                               checks, then the servicing model: navigation phase 2);
   //   a development:              its tree of files with each file's layer, and their history
   //                               (the development's Files & history view, moved here);
   //   a single file:              the file: its source record, every field, its provenance;
@@ -14,20 +14,22 @@
   const SS = () => root.PeelSvcScope;
   const DD = () => root.PeelDevDetail;
   const AC = () => root.PeelAerialCheck;
+  const SC = () => root.PeelSvcCapacity;
 
   // Records › Sources: what each source is and how fresh it is, and the reports the model rests on.
   function sourcesHTML() {
     return `${DU().freshnessHTML()}${root.PeelSvcPlants && root.PeelSvcPlants.refsHTML ? root.PeelSvcPlants.refsHTML() : ''}`;
   }
-  // Records › Checks: the data checks (the model against published totals, the permit check, the
+  // Records › Data checks: the data checks (the model against published totals, the permit check, the
   // accuracy of the statuses). The duplicate check and its pass/fail list are the panel below
   // (#audit-panel, js/data-tab.js renderAudit, redrawn after each rebuild). The servicing model's
-  // checks are Servicing › Checks. Review outlets (QA/QC: where each development discharges) opens from
-  // here too (navigation design §9 #5, AD-5), as from a site's path line and the sidebar.
+  // checks are the pane below that (#svc-checks-body, js/svc-capacity.js renderChecks; was Servicing ›
+  // Model checks). Review outlets (QA/QC: where each development discharges) opens from here too
+  // (navigation design §9 #5, AD-5), as from a site's path line and the sidebar.
   const OUTLETS = { what: 'Where each development discharges: confirm the automatic outlet or set it on the map', btn: '<button type="button" class="btn small link" data-ws-page="outlets">Review outlets →</button>' };
   function checksHTML() {
     const acc = root.ModelChecks && typeof root.ModelChecks.accuracy === 'string' ? root.ModelChecks.accuracy : '';
-    return `${DU().checksHTML ? DU().checksHTML() : ''}${acc}<p class="small muted">The servicing model against the Master Plan and the 2025 reports: <button type="button" class="btn small link" data-at="svc:checks">Servicing › Model checks →</button></p><p class="small muted">${OUTLETS.what}: ${OUTLETS.btn}</p>`;
+    return `${DU().checksHTML ? DU().checksHTML() : ''}${acc}<p class="small muted">${OUTLETS.what}: ${OUTLETS.btn}</p>`;
   }
   const peelHTML = () => `${sourcesHTML()}${checksHTML()}`;
 
@@ -73,6 +75,7 @@
     const AT = root.PeelAnalysisTabs, sub = AT && AT.getRSub ? AT.getRSub() : 'sources';
     const note = s ? `<p class="small muted">${esc(s.title)} has no files of its own. Its developments are listed in Overview; each opens to its own records. Below: the ${sub === 'checks' ? 'checks' : 'sources'} for all of Peel.</p>` : '';
     body.innerHTML = note + (sub === 'checks' ? checksHTML() : sourcesHTML());
+    if (sub === 'checks' && root.PeelSvcCapacity && root.PeelSvcCapacity.renderChecks) root.PeelSvcCapacity.renderChecks();   // (its Servicing model group)
     showData(sub === 'checks' ? 'checks' : 'sources');
     if (root.PeelPanel) root.PeelPanel.set(`records:${sub === 'checks' ? 'checks' : 'sources'}`, sub === 'checks' ? checksPanelSpec() : sourcesPanelSpec());
   }
@@ -97,16 +100,21 @@
   function checksPanelSpec() {
     const PN = root.PeelPanel, a = App().state.audit, pc = root.PeelCensusView && root.PeelCensusView.permitCheck ? root.PeelCensusView.permitCheck() : null;
     const fails = a ? a.checks.filter(c => c.value) : [], pFail = pc && pc.rows ? pc.rows.filter(r => !r.pass) : [];
+    // The Servicing model group (js/svc-capacity.js checksRows), and Review outlets' count only once the DC
+    // impact model is worked out in the visit (building it walks every sewer pipe, js/dc-impact.js).
+    const svc = SC() && SC().checksRows ? SC().checksRows() : [];
+    const IM = root.PeelDcImpact, DO = root.PeelDevOutlets, q = IM && IM.current && IM.current() && DO && DO.queue ? DO.queue() : null, n = q ? q.all.filter(x => !x.rec).length : null;
     return {
-      fullTitle: 'Records › Data checks: duplicates, published totals, permit counts and the accuracy report',
+      fullTitle: 'Records › Data checks: duplicates, published totals, permit counts, the accuracy report and the servicing model',
       head: PN.areaHead('Records › Data checks', 'Can the data be trusted?', fails.length || pFail.length ? { tone: 'tight', text: `${fails.length + pFail.length} to review` } : { tone: 'room', text: 'Pass' }, a ? `${fmtNum(a.records.raw)} records → ${fmtNum(a.records.unique)} files → ${fmtNum(a.records.projects)} developments` : 'Checks run once the full data has loaded'),
       answer: a ? `${fmtNum(a.records.raw)} records make <strong>${fmtNum(a.records.projects)}</strong> developments; <strong>${fmtNum(a.possible.length)}</strong> possible duplicate pair${a.possible.length === 1 ? '' : 's'} to review${pFail.length ? `; permit counts differ from Region figures for ${pFail.map(r => esc(r.m)).join(' and ')}` : ''}.` : 'The checks run once the full data has loaded.',
       figures: a ? [{ v: fmtNum(a.records.raw), u: 'records', label: 'read', ctx: '' }, { v: fmtNum(a.records.unique), u: 'files', label: 'unique', ctx: '' }, { v: fmtNum(a.possible.length), u: 'pairs', label: 'possible duplicates', ctx: 'to review in the duplicate check', tone: a.possible.length ? 'tight' : 'room' }, { v: fails.length, u: '', label: 'checks flagged', ctx: '', tone: fails.length ? 'tight' : 'room' }] : [],
       lists: [...(a ? [{ title: 'Checks', rows: a.checks.slice(0, 5).map(c => PN.kv(esc(c.label), `${c.value ? '✕' : '✓'} ${fmtNum(c.value)}`, c.value ? 'tight' : 'room')), total: a.checks.length, seeAll: { 'data-full-table': 'records' } }] : []),
-        { title: 'Sewer outlets', rows: [{ attrs: { 'data-ws-page': 'outlets', title: 'Open Review outlets' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">Review outlets →</span></div><small class="pnl-r-line">${OUTLETS.what}</small>` }], total: 1 }],
-      method: 'Records read from each municipality are grouped into unique files and developments; the checks count what could not be placed or matched. The model against published totals, the permit check (fail beyond 25%) and the accuracy report are in the full table. The servicing model\u2019s checks are Servicing › Model checks.',
-      sources: 'The municipal application and permit records; Region of Peel published totals and permit figures.',
-      foot: { primary: { label: 'Duplicate check', attrs: { 'data-full-table': 'records', 'data-ft-go': 'Units: every record' }, title: 'The duplicate check and the possible duplicate pairs (was the Data tab)' }, secondary: [{ label: 'Servicing checks', attrs: { 'data-at': 'svc:checks' } }] },
+        { title: 'Servicing model', rows: svc.length ? svc : [{ html: '<span class="small muted">The servicing model loads with the servicing data.</span>' }], total: svc.length || 1, seeAll: { 'data-full-table': 'records', 'data-ft-go': '2020 Master Plan vs this tracker' } },
+        { title: 'Where developments discharge', rows: [{ attrs: { 'data-ws-page': 'outlets', title: 'Review outlets: check and fix where each development discharges' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">Review outlets →</span>${n == null ? '' : `<span class="pnl-r-fig">${fmtNum(n)}<small>to review</small></span>`}</div><small class="pnl-r-line">${OUTLETS.what}</small>` }], total: 1 }],
+      method: 'Records read from each municipality are grouped into unique files and developments; the checks count what could not be placed or matched. The model against published totals, the permit check (fail beyond 25%) and the accuracy report are in the full table. The servicing model: the 2020 Master Plan, the 2025 reports, the Ministry\u2019s plant flow and the station roster (full table, Servicing model). Calibration factor = (reported − external inflows) ÷ the model today (census + built since, residential + development jobs), applied in the capacity check mode; I&amp;I is not scaled. Review outlets counts the developments still to review once Capital › DC projects has worked out the DC model.',
+      sources: 'The municipal application and permit records; Region of Peel published totals and permit figures; for the servicing model, the 2020 Water and Wastewater Master Plan, the 2025 annual reports, the Ministry\u2019s plant flow data and the Wastewater Collection System report.',
+      foot: { primary: { label: 'Duplicate check', attrs: { 'data-full-table': 'records', 'data-ft-go': 'Units: every record' }, title: 'The duplicate check and the possible duplicate pairs (was the Data tab)' }, secondary: [{ label: 'Review outlets', attrs: { 'data-ws-page': 'outlets' }, title: 'Where each development discharges (QA/QC)' }] },
     };
   }
   // Failing checks as one caveat line each (Home, Stage 4): sources due for a refresh, permit counts

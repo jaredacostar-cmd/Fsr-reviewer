@@ -11,7 +11,7 @@
   const store = U.store || { get: (k, d) => d, set: () => {} };
   const esc = U.esc || (s => String(s));
   const LABS = [
-    { id: 'hydro', label: 'Hydraulic check (beta)', where: 'Servicing › Model checks', what: 'An experimental EPANET check of the large mains feeding each upper pressure zone.' },
+    { id: 'hydro', label: 'Hydraulic check (beta)', where: 'Servicing › Network', what: 'An experimental EPANET check of the large mains feeding each upper pressure zone.' },
     { id: 'funding', label: 'DC funding', where: 'Capital › DC projects', what: 'The funding screen (screening results within / outside a budget) and funding levels.' },
     { id: '3d', label: '3D view', where: 'the map', what: 'Terrain, buildings and proposals in 3D (indicative).' },
     { id: 'timebox', label: 'Time Box', where: 'the tool rail', what: 'Aerial imagery over the years for a box, with the applications filed by then.' },

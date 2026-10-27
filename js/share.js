@@ -14,7 +14,7 @@
   const SVCT = () => root.PeelSvcTab;
   const SF = () => root.PeelSearchFilter;
   // ---- Shareable links: filters, tab, switches, map view and the open development in the URL ----
-  // #ph=…&fl=…&pl=…&dw=…&lu=…&basis=…&cy=…&mu=…&k=…&q=…&sp=…&mt=…&pz=…&dr=…&u=…&nn=0&ym=…&yf=…&yt=…&t=…&ws=…&gs=…&dcs=…&wm=…&md=…&dv=…&m=lat,lng,zoom&d=key
+  // #ph=…&fl=…&pl=…&dw=…&lu=…&basis=…&cy=…&mu=…&k=…&q=…&sp=…&mt=…&pz=…&dr=…&u=…&nn=0&ym=…&yf=…&yt=…&t=…&ws=…&gs=…&dcs=…&sy=…&wm=…&md=…&dv=…&m=lat,lng,zoom&d=key
   // (pre-Phase-1 links used fo=… for the quick-view focus; it is migrated on read —
   // see migrateLegacyFocus in js/filters.js)
   const viewLink = (() => {
@@ -39,15 +39,18 @@
       if (App().state.minUnits) set('u', App().state.minUnits); if (!App().state.newOnly) set('nn', '0');
       if (App().state.yearMode !== 'any') set('ym', App().state.yearMode);
       if (!TL().atDefaultYears()) { set('yf', TL().tFrom.value); set('yt', TL().tTo.value); }
-      // The tab and its sub-view (Stage 2: Servicing is one tab, svs=capacity|network|alloc|checks). On a
-      // workspace's page, the page's own tab (the one behind it), not the map's last pick; nav=2 says so
-      // (links before it always wrote the map's tab: on a page link that one is not read, below).
+      // The tab and its sub-view (Stage 2: Servicing is one tab, svs=capacity|network; the old alloc / checks
+      // values migrate, SUB_MAP in js/analysis-tabs.js). On a workspace's page, the page's own tab (the one
+      // behind it), not the map's last pick; nav=2 says so (links before it always wrote the map's tab: on a
+      // page link that one is not read, below).
       const pageWs = W && W.mode() === 'home' && W.page && W.BY_ID[W.page()];
       const tab = pageWs ? pageWs.tab : AT().getFootPref();
       set('nav', '2');
       set('t', tab);
       if (tab === 'svc') set('svs', AT().getSvcSub()); if (tab === 'records') set('rs', AT().getRSub());
       if (tab === 'growth') set('gs', AT().getGSub()); if (tab === 'dca') set('dcs', AT().getDcSub());
+      // The one System control (Servicing › Capacity, Capital › DC projects): only when not Both.
+      if (AT().getSys && AT().getSys() !== 'both') set('sy', AT().getSys());
       if (SVCT().svcOpt.ww !== 'calibrated') set('wm', SVCT().svcOpt.ww); if (SVCT().svcOpt.md !== 'design') set('md', SVCT().svcOpt.md); if (SVCT().svcOpt.div !== 'off') set('dv', SVCT().svcOpt.div); if (SVCT().svcOpt.nr !== 'on') set('nr', SVCT().svcOpt.nr);
       if (MM().mstyle.color !== 'phase' || MM().mstyle.size !== 'fixed' || MM().mstyle.cap !== 'off') set('ms', `${MM().mstyle.color}.${MM().mstyle.size}.${MM().mstyle.cap}`);
       // Layer groups: the layers on and the groups open (js/layer-groups.js).
@@ -85,6 +88,9 @@
       // the servicing switches would otherwise be whatever this browser last used).
       App().state.basis = App().DEFAULT_BASIS;
       for (const [k, o, d] of [['wm', 'ww', 'calibrated'], ['md', 'md', 'design'], ['dv', 'div', 'off'], ['nr', 'nr', 'on']]) SVCT().svcOpt[o] = q.get(k) || d;
+      // … and its System (links before sy= opened Capacity at Both): for the visit, not stored; the panels
+      // draw on the showFootTab below.
+      if (AT().setSys) AT().setSys(q.get('sy'), { link: true, quiet: true });
       if (q.get('ph')) { App().state.phases = new Set(q.get('ph').split(',').filter(k => P.PHASE_BY_KEY[k])); App().state.oldLink = false; }
       else {
         App().state.phases = new Set(App().ACTIVE_PHASES);   // an older link: the default then (no Completed)
@@ -145,6 +151,8 @@
         const oldSub = pageWs ? pageWs.sub : t === 'ww' || t === 'water' ? q.get('ws') : t === 'growth' ? q.get('gs') : t === 'dca' ? q.get('dcs') : t === 'svc' ? q.get('svs') : t === 'records' ? q.get('rs') : null;
         const m = AT().migrateTabKey(t, oldSub);
         AT().setFootPref(m.tab); if (m.gSub) AT().setGSub(m.gSub); if (m.svcSub) AT().setSvcSub(m.svcSub); if (m.dcSub) AT().setDcSub(m.dcSub); if (m.rSub) AT().setRSub(m.rSub);
+        // (an old Allocations link, svs=alloc or t=ww&ws=alloc, opens Capacity with its fold open)
+        if (AT().foldOf && AT().foldOf(t, oldSub) === 'alloc' && window.PeelDemandUI && window.PeelDemandUI.openAllocFold) window.PeelDemandUI.openAllocFold();
         // (a Servicing or Records sub-view named beside another tab is kept for its tab, as before)
         for (const [tab, k] of [['svc', 'svs'], ['records', 'rs']]) {
           const r = q.get(k) && tab !== t ? AT().migrateSub(tab, q.get(k)) : null;

@@ -62,7 +62,7 @@ test('an area\u2019s Servicing and Capital: the map\u2019s area panels (Capital 
 
 test('Servicing and Capital: a page, and the map’s other sub-views of the tab as sections', () => {
   const S = load({ 'svc:network': { spec: { answer: 'where it flows' }, scope: 'area' } });
-  assert.deepEqual(S.WORKSPACES.servicing.secs.map(s => s.title), ['Capacity', 'Network', 'Allocations', 'Model checks']);
+  assert.deepEqual(S.WORKSPACES.servicing.secs.map(s => s.title), ['Capacity', 'Network']);
   assert.deepEqual(S.WORKSPACES.capital.secs.map(s => s.title), ['DC timing', 'DC projects', 'EA to construction', 'Projects', 'EAs']);
   assert.equal(S.WORKSPACES.servicing.host, 'tight'); assert.equal(S.WORKSPACES.capital.host, 'projects');
   assert.equal(S.wsSpecFor('servicing', 'network').answer, 'where it flows');

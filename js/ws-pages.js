@@ -252,8 +252,9 @@
   const label = id => (W() && W().BY_ID[id] ? W().BY_ID[id].label : id);
   const eyebrow = id => `${esc(label(id))} · ${esc((App() && App().state.muni) || 'Peel')}`;
   // A panel row that opened a scope opens it on the map from a page (the workspace's map view).
-  // (a DC project opens in place, on the page: js/dc-projects.js)
-  const toMap = (ws, r) => { const a = r.attrs || {}, x = { 'data-ws-go': ws }; if (a['data-dcproj-open'] != null) return r; if (a['data-ss']) x['data-ws-ss'] = a['data-ss']; if (a['data-pnl-dev']) x['data-ws-dev'] = a['data-pnl-dev']; if (a['data-ce-open']) x['data-ws-ce'] = a['data-ce-open']; if (a['data-pipe'] != null) x['data-ws-pipe'] = a['data-pipe']; return { ...r, attrs: r.attrs ? { ...x, title: a.title } : null }; };
+  // (a DC project opens in place, on the page: js/dc-projects.js; a row that opens a page, as Records › Data
+  // checks' Review outlets, opens it from a page too)
+  const toMap = (ws, r) => { const a = r.attrs || {}, x = { 'data-ws-go': ws }; if (a['data-dcproj-open'] != null || a['data-ws-page']) return r; if (a['data-ss']) x['data-ws-ss'] = a['data-ss']; if (a['data-pnl-dev']) x['data-ws-dev'] = a['data-pnl-dev']; if (a['data-ce-open']) x['data-ws-ce'] = a['data-ce-open']; if (a['data-pipe'] != null) x['data-ws-pipe'] = a['data-pipe']; return { ...r, attrs: r.attrs ? { ...x, title: a.title } : null }; };
   const loading = (id, what) => ({ id, eyebrow: eyebrow(id), name: (W() && W().BY_ID[id] && W().BY_ID[id].question) || label(id), answer: `<span class="muted">${esc(what || 'Loading…')}</span>` });
   // The Overview's area panel, once it is worked out for the developments loaded. Until the snapshot is in,
   // and while the panel still holds the empty one drawn before it (the Growth render that redraws it waits
@@ -578,6 +579,9 @@
   function tight() {
     const s = specOf('svc:capacity', areaScope), rows = Cap() && Cap().collect ? Cap().collect() : null;
     if (!s || !rows) return loading('tight', 'Loading the servicing model…');
+    // (the System narrows the Soonest limits list it sits on, which names it; the page's header and figures
+    // count both systems, as Home's figure that opens the page and the full table do)
+    const sy = root.PeelAnalysisTabs && root.PeelAnalysisTabs.getSys ? root.PeelAnalysisTabs.getSys() : 'both', both = sy !== 'both' && Cap().panelSpec ? Cap().panelSpec(rows, 'both') : s;
     const crit = App().state.criteria, psPlant = Object.fromEntries(((App().state.servicing && App().state.servicing.psAreas) || []).map(a => [`ps:${a.id}`, a.plant]));
     const res = reserveRows(rows, crit, psPlant), late = rows.filter(r => r.relief === 'gap' && r.limit.y != null).sort((a, b) => (a.limit.y === 'today' ? 0 : a.limit.y || 1e4) - (b.limit.y === 'today' ? 0 : b.limit.y || 1e4));
     const over = rows.filter(r => r.pctBo >= 100);
@@ -591,20 +595,22 @@
     const lateRow = r => ({ tone: 'over', attrs: r.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': r.ss, title: `Open ${r.name} on the map` } : null,
       html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.sys === 'water' ? '💧 ' : ''}${esc(r.name)}</span><span class="pnl-r-year t-over">limit ${yTxt(r.limit.y)}</span></div><small class="pnl-r-line">${esc(r.limit.what)} · ${Math.round(r.pctBo)}% at build-out · ${r.reliefY ? `relief ≈${r.reliefY}, after the limit` : 'no relief listed in the Master Plan'}</small>` });
     const area = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null;
-    return wsSection('servicing', { id: 'tight', top: wsBar('servicing', wsSec.servicing || 'capacity'), eyebrow: eyebrow('tight'), name: 'Can the system take it?', status: s.head.status, identity: s.head.identity, scen: scen(), answer: s.answer, caveats: caveats().filter(c => /source/i.test(c.text)),
+    return wsSection('servicing', { id: 'tight', top: wsBar('servicing', wsSec.servicing || 'capacity'), eyebrow: eyebrow('tight'), name: 'Can the system take it?', status: both.head.status, identity: both.head.identity, scen: scen(), answer: both.answer, caveats: caveats().filter(c => /source/i.test(c.text)),
       figures: [
-        s.figures[0],
+        both.figures[0],
         { v: fmtNum(late.length), u: late.length === 1 ? 'facility' : 'facilities', label: 'no relief in time', ctx: `${fmtNum(late.filter(r => r.reliefY).length)} relief after the limit · ${fmtNum(late.filter(r => !r.reliefY).length)} none listed`, tone: late.length ? 'over' : 'room', attrs: { 'data-ws-go': 'tight', 'data-ws-fulltable': '1' } },
         first ? { v: yTxt(first.limit.y), u: '', label: 'first 90% trigger', ctx: `${esc(first.name)} · ${esc(first.limit.what)}`, tone: 'tight', attrs: first.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': first.ss } : null } : null,
         low ? { v: low.reserve < 0 ? 'none' : fmt1(low.reserve), u: low.reserve < 0 ? '' : 'ML/d', label: 'uncommitted reserve, lowest', ctx: `${esc(low.name)}${low.reserve > 0 ? ` · ≈${fmtNum(Math.round(low.people / 100) * 100)} people` : ''}`, tone: low.pct < 10 ? 'tight' : 'room', attrs: low.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': low.ss } : null } : null,
       ],
       chart: area && area.chart ? area.chart : '',
       lists: [
-        { ...s.lists[0], title: 'Soonest limits', tools: s.lists[0].tools, rows: s.lists[0].rows.map(r => toMap('tight', r)), see: { 'data-ws-go': 'tight', 'data-ws-fulltable': 'svc:capacity' } },
+        { ...s.lists[0], title: `Soonest limits${sy === 'ww' ? ': wastewater' : sy === 'water' ? ': water' : ''}`, tools: s.lists[0].tools, rows: s.lists[0].rows.map(r => toMap('tight', r)), see: { 'data-ws-go': 'tight', 'data-ws-fulltable': 'svc:capacity' } },
         { title: 'Uncommitted reserve at the treatment plants', rows: res.map(resRow), total: res.length },
         { title: 'No relief in time', rows: late.map(lateRow), total: late.length, see: { 'data-ws-page': 'projects' } },
       ],
       map: { svg: capacityMap(rows), attrs: { 'data-ws-go': 'tight' }, label: 'Open Servicing capacity on the map', caption: '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out' },
+      // (the panel's folds: the overflows reported and, navigation phase 2, the allocations recorded)
+      folds: s.folds || [],
       method: `${s.method} Uncommitted reserve (Ontario MECP Procedure D-5-1, treatment plants only): rated capacity less existing, built and committed flow, in ML/d and in people at Peel criteria (${fmtNum(crit.wastewater.avg)} L/person/day for wastewater; ${fmtNum(crit.water.avg)} L × ${crit.water.maxDay} maximum day for water). D-5-1 asks that collection and pumping limits be checked first: a pumping station (wastewater) or storage and zone pumping (South Peel water) over its limit is named beside the plant it limits. No relief in time: the facility reaches its limit and the 2020 Master Plan either lists no relief for it or plans the relief after that year (the same test as Capital › Timing).`,
       sources: s.sources,
       actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'tight' }, primary: true }, { label: 'Full table', attrs: { 'data-ws-go': 'tight', 'data-ws-fulltable': 'svc:capacity' } }, { label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' } }] });
@@ -667,7 +673,12 @@
     // (a section showing one item of its list, as DC projects shows a project: its name, and a way back)
     // (a block span: the answer is a paragraph, and a paragraph inside it would split the sentence)
     const h = s.head || {}, back = h.back ? `<span class="ws-back small"><button type="button" class="btn small link"${Object.entries(h.back.attrs || {}).map(([k, v]) => ` ${k}="${esc(v)}"`).join('')}>‹ ${esc(h.back.label)}</button></span>` : '';
-    return { ...m, ...(h.wsName ? { name: h.wsName } : {}), status: h.status, identity: h.identity ? h.identity : m.identity, answer: `${back}${s.answer}`, figures: s.figures, chart: s.chart, lists: (s.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap(m.id, r)) })), folds: s.folds, method: s.method, sources: s.sources, onMount: s.onMount };
+    // (a page with no map workspace of its own, Reference: a row or See all into the full table opens the
+    // map at the section's tab and the full table at its table, as on the map; Records › Data checks'
+    // Servicing model rows)
+    const ft = W() && W().BY_ID && !W().BY_ID[m.id] ? a => (a && a['data-full-table'] != null ? { 'data-at': sec.keys[0], 'data-full-table': a['data-full-table'], 'data-ft-go': a['data-ft-go'], title: a.title } : null) : () => null;
+    const row = r => { const a = ft(r.attrs); return a ? { ...r, attrs: a } : toMap(m.id, r); };
+    return { ...m, ...(h.wsName ? { name: h.wsName } : {}), status: h.status, identity: h.identity ? h.identity : m.identity, answer: `${back}${s.answer}`, figures: s.figures, chart: s.chart, lists: (s.lists || []).map(l => ({ ...l, rows: l.rows.map(row), ...(ft(l.seeAll) ? { see: ft(l.seeAll) } : {}) })), folds: s.folds, method: s.method, sources: s.sources, onMount: s.onMount };
   }
   // An area's section (Growth in an area's own drill-down, or the map's area panel for Servicing or
   // Capital: Region-wide, so a municipality or a plan says so). The header, the trail and the map stay.

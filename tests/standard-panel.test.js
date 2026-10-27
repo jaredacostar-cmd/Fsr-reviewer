@@ -73,11 +73,14 @@ test('1. every panel goes through the builder, and every tab has a panel slot', 
   // The panels set in each tab (key → the file that sets it).
   const SETS = {
     'overview:': 'js/overview-tab.js', 'growth:pipeline': 'js/growth-ui.js', 'growth:areas': 'js/plan-tables.js', 'growth:timing': 'js/timing.js',
-    'svc:capacity': 'js/svc-capacity.js', 'svc:network': 'js/svc-capacity.js', 'svc:alloc': 'js/demand-ui.js', 'svc:checks': 'js/svc-capacity.js',
+    'svc:capacity': 'js/svc-capacity.js', 'svc:network': 'js/svc-capacity.js',
     'dca:timing': 'js/dca-tab.js', 'dca:projects': 'js/dca-tab.js', 'dca:eas': 'js/dca-tab.js',
     'records:files': 'js/records-tab.js',
   };
   for (const [key, f] of Object.entries(SETS)) assert.ok(src(f).includes(`'${key}'`), `${key} in ${f}`);
+  // Navigation phase 2: Allocations is a fold of Servicing › Capacity, the model checks are Records › Data checks.
+  assert.ok(!src('js/demand-ui.js').includes("PN.set('svc:alloc'") && !src('js/svc-capacity.js').includes("PN.set('svc:checks'"), 'no Allocations or Model checks panel');
+  assert.match(src('js/svc-capacity.js'), /root\.PeelDemandUI\.allocFold\(\)/, 'Allocations: a fold of the Capacity panel');
   assert.ok(src('js/records-tab.js').includes("root.PeelPanel.set(`records:${sub === 'checks' ? 'checks' : 'sources'}`"), 'records:sources and records:checks');
   // The slot is synced each time a tab opens; Esc closes the full table.
   assert.match(src('js/analysis-tabs.js'), /if \(root\.PeelPanel\) root\.PeelPanel\.sync\(\);/);

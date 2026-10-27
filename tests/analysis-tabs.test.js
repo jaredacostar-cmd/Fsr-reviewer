@@ -76,7 +76,7 @@ test('sub-view defaults: gSub pipeline, dcSub timing, Servicing capacity, Record
 
 test('sub-view valid values: at most four per tab', () => {
   assert.deepEqual(plain(AT.TABSUBS.growth.valid), ['pipeline', 'areas', 'timing', 'ledger']);
-  assert.deepEqual(plain(AT.TABSUBS.svc.valid), ['capacity', 'network', 'alloc', 'checks']);
+  assert.deepEqual(plain(AT.TABSUBS.svc.valid), ['capacity', 'network']);
   assert.deepEqual(plain(AT.TABSUBS.dca.valid), ['timing', 'dcproj', 'projects', 'eas']);
   assert.deepEqual(plain(AT.TABSUBS.records.valid), ['sources', 'checks', 'files']);
 });
@@ -124,9 +124,10 @@ test('index.html: growth sub-views (Pipeline · Areas · Forecast)', () => {
   assert.ok(HTML.includes('js/timing.js?v=__BUILD__'), 'timing.js script tag missing');
 });
 
-test('index.html: Servicing sub-views, the hydraulic check behind Labs, pumping stations in Network', () => {
-  for (const [k, t] of [['capacity', 'Capacity'], ['network', 'Network'], ['alloc', 'Allocations'], ['checks', 'Model checks']]) assert.ok(HTML.includes(`data-svcsub="${k}">${t}</button>`), k);
-  assert.ok(/class="f-pane svc-pane lab-hydro" id="pane-hydro" data-pane="svc" data-sub="checks"/.test(HTML) && HTML.includes('id="hyd-box"'), 'hydro pane in Checks, Labs');
+test('index.html: Servicing sub-views (Capacity · Network), the hydraulic check behind Labs in Network, pumping stations in Network', () => {
+  for (const [k, t] of [['capacity', 'Capacity'], ['network', 'Network']]) assert.ok(HTML.includes(`data-svcsub="${k}">${t}</button>`), k);
+  assert.ok(!/data-svcsub="(alloc|checks)"/.test(HTML), 'Allocations and Model checks are no chips (navigation phase 2)');
+  assert.ok(/class="f-pane svc-pane lab-hydro" id="pane-hydro" data-pane="svc" data-sub="network"/.test(HTML) && HTML.includes('id="hyd-box"'), 'hydro pane in Network, Labs');
   assert.ok(HTML.includes('id="pane-pumpstations" data-pane="svc" data-sub="network"') && HTML.includes('id="pumpstations-body"'), 'pumping stations in Network');
 });
 
@@ -150,7 +151,9 @@ test('index.html: scenario bar carries the criteria mount', () => {
 test('gear menu: GearPages registry and openGearPage contract', () => {
   assert.ok(APP.includes('window.GearPages = window.GearPages || {};'), 'GearPages registry missing');
   assert.ok(/function openGearPage\(name\)/.test(APP), 'openGearPage missing');
-  assert.ok(APP.includes(`openGearPage('sources')`), 'Sources & checks does not call openGearPage');
+  // The Sources & checks page is gone (navigation phase 2): its parts are Records › Sources and Data checks.
+  assert.ok(!APP.includes(`openGearPage('sources')`) && !APP.includes('GearPages.sources'), 'no Sources & checks gear page');
+  assert.match(fs.readFileSync(path.join(JS_DIR, 'overview-tab.js'), 'utf8'), /data-at="records:checks">Records › Data checks →<\/button>/, 'the Overview\'s ⓘ link opens Records › Data checks');
   assert.ok(APP.includes('window.openGearPage = openGearPage'), 'openGearPage not exposed for other workers');
 });
 

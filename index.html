@@ -247,8 +247,6 @@
       <div class="f-pane f-subtabs svc-subtabs" data-pane="svc" hidden role="group" aria-label="Servicing view">
         <button type="button" class="btn small" data-svcsub="capacity">Capacity</button>
         <button type="button" class="btn small" data-svcsub="network">Network</button>
-        <button type="button" class="btn small" data-svcsub="alloc">Allocations</button>
-        <button type="button" class="btn small" data-svcsub="checks">Model checks</button>
       </div>
       <section class="f-pane pnl-host" id="pnl-svc" data-pane="svc" aria-labelledby="ftab-svc" hidden></section>
       <!-- Capacity: one table, water and wastewater (js/svc-capacity.js); the plant and water charts
@@ -265,6 +263,11 @@
         <div class="tb-head"><h2 class="sr">Water treatment and capacity</h2></div>
         <div id="wcap-body"></div>
       </section>
+      <!-- Allocations recorded (navigation phase 2: a fold of Capacity's panel; its tables and CSV here). -->
+      <section class="f-pane svc-pane" id="pane-alloc" data-pane="svc" data-sub="capacity" role="tabpanel" aria-labelledby="ftab-svc" hidden>
+        <div class="tb-head"><h2 class="sr">Servicing allocations</h2></div>
+        <div id="alloc-body"></div>
+      </section>
       <!-- Network: tap a block, station or zone, then "What loads this?" or "Show upstream" (js/svc-capacity.js). -->
       <section class="f-pane svc-pane net-bar-pane" id="pane-svc-netbar" data-pane="svc" data-sub="network" role="tabpanel" aria-labelledby="ftab-svc" hidden><div id="svc-net-bar" class="net-bar" aria-live="polite"></div></section>
       <section class="f-pane svc-pane" id="pane-ww" data-pane="svc" data-sub="network" role="tabpanel" aria-labelledby="ftab-svc" hidden>
@@ -279,19 +282,13 @@
         <div class="tb-head"><h2 class="sr">Water by pressure zone</h2><span class="muted small" id="water-note"></span></div>
         <div id="water-body"></div>
       </section>
-      <section class="f-pane svc-pane" id="pane-alloc" data-pane="svc" data-sub="alloc" role="tabpanel" aria-labelledby="ftab-svc" hidden>
-        <div class="tb-head"><h2 class="sr">Servicing allocations</h2></div>
-        <div id="alloc-body"></div>
-      </section>
-      <section class="f-pane svc-pane" id="pane-svc-checks" data-pane="svc" data-sub="checks" role="tabpanel" aria-labelledby="ftab-svc" hidden>
-        <div class="tb-head"><h2 class="sr">Servicing checks</h2></div>
-        <div id="svc-checks-body"></div>
-      </section>
-      <section class="f-pane svc-pane" id="pane-wfac" data-pane="svc" data-sub="checks" role="tabpanel" aria-labelledby="ftab-svc" hidden>
+      <!-- The existing water facilities and the hydraulic check (Labs) are Network's; Peel-wide, they are
+           hidden at a development (css/app.css, #analysis.site-scope). -->
+      <section class="f-pane svc-pane" id="pane-wfac" data-pane="svc" data-sub="network" role="tabpanel" aria-labelledby="ftab-svc" hidden>
         <div class="tb-head"><h2 class="sr">Existing water facilities</h2></div>
         <div id="wfac-body"></div>
       </section>
-      <section class="f-pane svc-pane lab-hydro" id="pane-hydro" data-pane="svc" data-sub="checks" role="tabpanel" aria-labelledby="ftab-svc" hidden>
+      <section class="f-pane svc-pane lab-hydro" id="pane-hydro" data-pane="svc" data-sub="network" role="tabpanel" aria-labelledby="ftab-svc" hidden>
         <div class="tb-head"><h2 class="sr">Hydraulic check</h2></div>
         <div id="hyd-box"></div>
       </section>
@@ -358,6 +355,12 @@
           <div id="audit-body"><p class="small muted">Runs once the data has loaded.</p></div>
         </section>
         </div>
+      </section>
+      <!-- Records › Data checks, its Servicing model group (navigation phase 2; was Servicing › Model checks):
+           js/svc-capacity.js renderChecks. -->
+      <section class="f-pane svc-pane" id="pane-svc-checks" data-pane="records" data-sub="checks" role="tabpanel" aria-labelledby="ftab-records" hidden>
+        <div class="tb-head"><h2 class="sr">Servicing model</h2></div>
+        <div id="svc-checks-body"></div>
       </section>
 
       </div>

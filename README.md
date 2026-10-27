@@ -317,9 +317,10 @@ from street zoom (14), up to 3,000 in view.
   (e.g. which plant reaches its trigger first, which zone adds the most, how many pumping stations
   exceed firm capacity, which DC projects come too late).
 - **Servicing allocations**: record a development's allocation (units, date, reference) in its
-  Servicing tab; Wastewater → *Allocations* lists them and gives each plant's room at the 90%
-  trigger after existing + approved development and after allocations made ahead of approval (also
-  on the Overview). Kept in the browser; CSV export / import to share one list.
+  Servicing tab; Servicing › Capacity's fold *Allocations recorded* lists them and gives each plant's
+  room at the 90% trigger after existing + approved development and after allocations made ahead of
+  approval (also on the Overview), with Export and Import CSV in its full table. Kept in the browser;
+  CSV export / import to share one list.
 - **Data freshness and model checks** (Settings & sources): every source with its date, update
   interval and status (current / due for a refresh / out of date / reference / live), summarised on
   the Overview; and the model against published figures — 2021 Census population for Peel and each
@@ -809,8 +810,8 @@ proposed growth). **+ Add area** draws another area into the selection, × remov
 
 **Layers → Water facilities** shows the Region's existing water facilities: treatment plants,
 pumping stations, reservoirs, elevated tanks, standpipes, boosters, wells and re-chlorination
-stations. The layer is on by default in the Water view. **Water → Facilities** lists them
-by transmission system.
+stations. The layer is on by default in the Water view. Servicing › Network's full table lists them
+(Existing water facilities), by transmission system.
 
 `scripts/build-water-facilities.py` builds `data/water-facilities.json` from these sources:
 
@@ -1085,7 +1086,8 @@ The bottom panel's tabs run Overview · Growth · Demand · Water · Wastewater 
 proposed, the growth chart and the 2051 forecast check) has its own bottom-panel tab, **Growth**,
 next to **Demand**, which keeps the servicing demand of the shown developments.
 
-**2020 Master Plan vs this tracker.** Water → Facilities and Wastewater → Plants open with a table
+**2020 Master Plan vs this tracker.** Servicing › Network's existing water facilities and Records › Data
+checks' Servicing model group (the wastewater plants) open with a table
 of the facilities the 2020 Water and Wastewater Master Plan assessed: capacity, the Master Plan's
 forecast for 2026 · 2031 · 2041, and the tracker's numbers (today, + approved, + proposed, build-out),
 with a bar per row (Master Plan years as dashed ticks, capacity as a line) and the Master Plan
@@ -1338,7 +1340,8 @@ These sources are fetched on GitHub Actions, because the sandbox can't reach the
   - a 4-hour Chicago design storm from the MTO IDF curves.
 
   It runs in SWMM 5.2: this was checked with pyswmm, with a 0.03% continuity error.
-- **Hydraulic check (beta).** **Water → Hydraulic check** runs EPANET 2.2 in the browser
+- **Hydraulic check (beta).** **Settings › Labs › Hydraulic check**, then Servicing › Network's full
+  table, runs EPANET 2.2 in the browser
   (epanet-js 0.9.0, loaded from jsDelivr on demand).
   - It works on the large mains crossing into each upper pressure zone, at the maximum day for
     the results year.
@@ -1606,11 +1609,89 @@ On a page, a pick opens what it found (`js/workspaces.js` `pageRoute` and `route
 ## Servicing and Capital: one page each, the map's sub-views as sections
 
 - **Servicing capacity**: Capacity (its own page: limits, the 90% trigger, the uncommitted reserve,
-  no relief in time) and the map's **Network**, **Allocations** and **Model checks** as sections.
+  no relief in time) and the map's **Network** as a section; the allocations recorded are a fold of
+  Capacity, on the page too (navigation phase 2, below).
 - **Capital** (one sidebar entry for what were DC projects and EA to construction): **DC timing**,
   **EA to construction** (its own page) and the map's **Projects** and **EAs** as sections.
 - Each section is the map's own panel (`js/sections.js` `WORKSPACES`), built on demand when its
   tab hasn't been opened, so the page and the map read the same.
+
+## Servicing and Records (navigation phase 2)
+
+Navigation phase 2 (docs/architecture-review/navigation-design.md §3.4, §5, §7). Servicing has two
+views, **Capacity · Network**, at Peel as at a development (where Capacity is hidden, as before).
+
+- **Allocations recorded** is a fold of Capacity's panel (the status, each plant's room at the 90%
+  trigger after the allocations, the latest five, and *Export or import the CSV ›*). Its tables (the
+  plants' room after allocations, the Export / Import CSV bar, every allocation, each row opening its
+  development) are a section of Capacity's full table, after the facility table and the charts.
+  Allocations are still recorded at each development (its Servicing panel's *Servicing allocation*
+  fold). The Servicing capacity page and Growth in an area's Servicing section show the fold too.
+- **Network** lists the **existing water facilities** (and, with Settings › Labs › Hydraulic check on,
+  the **hydraulic check**); both are in its full table, after the pressure zones. They are Peel-wide,
+  so a development's Network full table leaves them out (`#analysis.site-scope`, css/app.css).
+- **Records › Data checks** is the one list of checks: the data checks, the duplicate check, then the
+  **Servicing model** group (was Servicing › Model checks): the 2020 Master Plan against this
+  tracker, the 2025 reports against the model with each plant's calibration factor, the 2025 water
+  production, the Caledon wells, and, once they load, the Ministry's measured plant flow and the
+  collection system report's pumping-station roster (until now only on the gear's Sources & checks
+  page). `#pane-svc-checks` keeps its id; it is Records' pane now (`data-pane="records"`).
+- **Records › Data checks' panel** lists the data checks, then the **Servicing model** (a row a
+  comparison with its measured figure: each plant's calibration factor, South Peel's maximum day, the
+  largest difference between the Ministry's and the Region's plant flow, the station roster, the
+  Caledon wells; each row opens the full table at its comparison, *See all* at the first), then
+  **Where developments discharge**: *Review outlets →*, with the count still to review once Capital ›
+  DC projects has worked out the DC model (building that model walks every sewer pipe, so Records
+  never builds it). *Review outlets* is in its footer too, beside *Duplicate check*. Reference › Data
+  checks shows the same panel (kept up to date as the servicing model is rebuilt, a Scenario change
+  included, whichever tab is open); its Servicing model rows and *See all* open the full map's Records
+  › Data checks full table at their comparison, and its Review outlets row opens the page from there.
+  The sidebar entry stays.
+- **The Sources & checks gear page is gone.** It was reached only from the Overview's ⓘ line
+  (*Data & checks →*); that link is now *Records › Data checks →*, and it works in the Overview
+  panel's Method fold and from a page too (it did nothing there). Freshness and the references are
+  Records › Sources; every check, the two that were only on that page included, is Records › Data
+  checks. The gear menu's pages are Settings and Labs (`window.GearPages`).
+- **One System control**, *Both · Wastewater · Water*, on Servicing › Capacity's list and Capital ›
+  DC projects' list (and their sections on the Servicing capacity and Capital pages): one pick, kept in
+  this browser (`sysPick`, `js/analysis-tabs.js` `setSys`), Both to start. It was two switches, *All ·
+  Wastewater · Water* (Capacity, for the visit only) and *Wastewater · Water · Both* (DC projects, stored,
+  Wastewater to start); DC projects now opens at Both, and a browser that had picked a system there
+  keeps that pick, for both lists, the first time. Each list names its system (Capacity's header *Peel ·
+  water*, *Water projects*). The System narrows the panel's list; Capacity's full table keeps every
+  facility of both systems, and Home's figures never filter. The Servicing capacity page's header and
+  figures count both systems too, so they match Home's figure that opens the page; the System narrows
+  its *Soonest limits* list, which names it (*Soonest limits: water*). A System tap redraws DC projects
+  only while its DC model is worked out for the Scenario or its list is on screen (building that model
+  walks every sewer pipe); otherwise the next Capital open draws it at the new System. A share link
+  carries it as `sy=` (only when not Both; a link without it opens at Both and does not change the
+  stored pick).
+- **The lens sets the System** to what its map shows: Water → Water, Wastewater → Wastewater, Capital
+  → Both; Planning leaves it. Water and Wastewater still open Servicing and Capital opens Capital (the
+  owner's change of 2026-10-16). Only a lens tap sets it: a workspace or a page that sets its map view
+  (the Servicing capacity page opens the Wastewater view) leaves the System as it is.
+- **One sort vocabulary**: Capacity's panel sorts *Soonest · Largest impact* (its full table keeps the
+  panel's order). Capital › DC projects keeps *Most affected · Soonest* (and *$ a unit*, Labs): a
+  different measure (units relying on a project, its construction year) keeps its own words,
+  and every sort button's tooltip names what it sorts by, so the two *Soonest* say which year.
+- Pane ids are unchanged (`#alloc-body`, `#wfac-body`, `#svc-checks-body`): the workbook and the
+  reports read them as before. At a development the workbook's Water sheet leaves out the Peel-wide
+  water facilities, as Network's full table does there (`OFF_AT_SITE`, `js/exports.js`).
+
+Old names still land (`js/analysis-tabs.js` `SUB_MAP`, `FOLD_OF`, `sysKey`; tests/nav-aliases.test.js):
+
+| Old | Where it opens now |
+|---|---|
+| `#t=svc&svs=alloc`, `#t=ww&ws=alloc`, a saved view, `data-at="svc:alloc"` | Servicing › Capacity, the fold *Allocations recorded* open (for the visit, until it is closed) |
+| `#t=svc&svs=checks` | Records › Data checks (`t=records&rs=checks`) |
+| `#t=water&ws=facilities` | Servicing › Network |
+| `#t=water&ws=hydro` | Servicing › Network, with Labs › Hydraulic check turned on |
+| A stored Allocations pick (`svcSub=alloc`) | Capacity |
+| A stored Model checks pick (`svcSub=checks`) | Records › Data checks when Servicing was the tab last picked; otherwise Servicing opens on Capacity and Records keeps its own pick |
+| The Overview's ⓘ *Data & checks →* (the Sources & checks gear page) | Records › Data checks (`data-at="records:checks"`) |
+| Settings › Usage counts `sub:svc.alloc`, `sub:svc.checks` | Shown and exported as `sub:svc.capacity`, `sub:records.checks` (`js/usage.js` `aliasKey`, through `migrateSub`); the counts kept are not rewritten |
+| DC projects' stored system pick (`dcProjSys`) | The one System pick (`sysPick`), read once while that is unset |
+| A link without `sy=` (every link before phase 2) | The System at Both, as Capacity opened them |
 
 ## Reference and This week
 
@@ -1835,6 +1916,8 @@ From design audit, Group 7:
   | Output | Export ▾ · Present ▾ |
   | Help and settings | Help · ⚙ |
 
+  - A **lens** (the view switch) sets the map preset and the System control (navigation phase 2);
+    Capital, Water and Wastewater also open their tab.
   - **Present ▾** holds Present and Time-lapse; the separate Time-lapse button is gone.
   - **Export ▾** gains *Save this view…*; the Save button in the Layers card is gone. Saved
     views still open from the Layers card and the chips above the filters.
@@ -2205,9 +2288,9 @@ and small phases were cut off ("pprove", "Inde truc").
 
 ## Settings menu opens
 
-The gear menu's *Settings* and *Sources & checks* pages closed the moment they opened. The page
-replaces the menu item that was clicked, so the outside-click check no longer found the menu
-and closed it. That check now reads the click's path as dispatched. The top bar also sits above
+The gear menu's *Settings* and *Sources & checks* pages (the second retired in navigation phase 2)
+closed the moment they opened. The page replaces the menu item that was clicked, so the
+outside-click check no longer found the menu and closed it. That check now reads the click's path as dispatched. The top bar also sits above
 the map controls and the phone sheet, so its menus open on top, and long pages scroll inside
 the menu.
 
@@ -3112,7 +3195,7 @@ Decided 2026-10-17, after testing against the committed snapshot.
   - **Where it shows:** beside the pipeline headline, not in it.
   - **Brampton:** its open permit data has no second-unit permits; the headline says so.
   - **Servicing:** the completed ones count as built since the census (as they did). Suites now use the apartment rate (2.7 people), not a house's.
-- **Under construction against CMHC** (Sources & checks › Model checks).
+- **Under construction against CMHC** (Records › Data checks, the model against published figures).
   - **Why a roll-forward:** CMHC archived its under-construction inventory by municipality after 2022. The check rolls it forward with CMHC starts and completions (Region of Peel Housing Construction Activity): inventory(Y) = inventory(Y − 1) + starts(Y) − completions(Y), which reproduces CMHC's own 2017–2022 figures.
   - **Against the app:** compared with homes permitted and not completed on planning applications, by municipality, refreshed with each weekly data update.
   - **Known gaps:** Mississauga (large permits signed off within two years of issue, to confirm with the City) and Caledon (no completion dates).

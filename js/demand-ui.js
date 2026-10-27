@@ -1,6 +1,7 @@
 /* js/demand-ui.js — population & servicing demand UI (Phase 6 extraction).
- * Allocations, plant room, data-freshness table, model validation checks,
- * window.ModelChecks extra sections, Sources & checks gear page.
+ * Allocations (Servicing › Capacity's fold "Allocations recorded" and its full-table section), plant
+ * room, data-freshness table (Records › Sources), model validation checks (Records › Data checks). The
+ * Sources & checks gear page is gone (navigation phase 2): its parts are in Records.
  * Extracted verbatim from js/app.js (lines 1410, 1418-1675); the only edits are
  * the reference rewrites in SPLIT_MAP.md §0 rule 4.
  */
@@ -70,10 +71,11 @@
   // ---- Servicing allocations: units the Region has allocated servicing capacity to, per
   // development (kept in this browser; CSV export / import to share one list). An allocation to a
   // development not yet approved commits capacity ahead of its approval: the plants' room after
-  // allocations is the room after existing + approved, less those allocations.
+  // allocations is the room after existing + approved, less those allocations. Recorded at each
+  // development (its Servicing panel's fold); listed in Servicing › Capacity's fold "Allocations recorded".
   const allocs = () => store.get('allocations', {}) || {};
   function setAlloc(key, a) { const all = allocs(); if (a) all[key] = a; else delete all[key]; store.set('allocations', all); onAllocChange(); }
-  function onAllocChange() { renderAlloc(); if (AT().getFootTab() === 'overview') OV().renderOverview(); if (typeof DevScope !== 'undefined' && DevScope.current()) DevScope.refresh(); }
+  function onAllocChange() { renderAlloc(); if (root.PeelSvcCapacity && root.PeelSvcCapacity.render) root.PeelSvcCapacity.render(); if (AT().getFootTab() === 'overview') OV().renderOverview(); if (typeof DevScope !== 'undefined' && DevScope.current()) DevScope.refresh(); }   // (Capacity's fold reads them)
   const allocPeople = (p, a) => { const e = D.estimate([p], App().state.criteria, 'all', App().jobsOf); return e.totalUnits > 0 ? a.units * e.population / e.totalUnits : a.units * (App().state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment; };
   function allocRows() {
     const out = [];
@@ -111,7 +113,7 @@
       <div class="alloc-h"><strong>Servicing allocation</strong> ${a ? `<span class="fr-b fr-ok">${fmtNum(a.units)} units allocated${a.date ? ` · ${esc(a.date)}` : ''}</span>` : '<span class="fr-b fr-ref">Not recorded</span>'}</div>
       <div class="alloc-f"><label>Units <input type="number" min="0" step="1" data-alloc-f="units" value="${a ? a.units : def}"></label><label>Date <input type="date" data-alloc-f="date" value="${esc(a ? a.date || '' : new Date().toISOString().slice(0, 10))}"></label><label>Reference <input type="text" data-alloc-f="ref" value="${esc(a ? a.ref || '' : '')}" placeholder="report / agreement no."></label>
         <button type="button" class="btn small" data-alloc-save="${esc(p.key)}">${a ? 'Update' : 'Record allocation'}</button>${a ? `<button type="button" class="btn small link" data-alloc-del="${esc(p.key)}">Remove</button>` : ''}</div>
-      <small class="muted">Kept in this browser; share the list from Servicing › Allocations (CSV), at Peel.</small></div>`;
+      <small class="muted">Kept in this browser; share the list from Servicing › Capacity, Allocations recorded (Export CSV in its full table), at Peel.</small></div>`;
   }
   document.addEventListener('click', e => {
     const sv = e.target.closest('[data-alloc-save]');
@@ -120,6 +122,8 @@
   });
   // Phase 4: "See all" for the recorded-allocations table (top 10 by default).
   let allocSeeAll = false;
+  // The plants' room after allocations, the CSV bar and every allocation: the "Allocations recorded"
+  // section of Servicing › Capacity's full table (navigation phase 2; its panel's fold is allocFold).
   function renderAlloc() {
     const el = $('#alloc-body'); if (!el) return;
     const rows = allocRows(), plants = ['Lakeview', 'Clarkson', 'Inglewood'].map(allocPlant).filter(Boolean);
@@ -140,24 +144,32 @@
         ${shown.map(r => `<tr class="ld-row" data-dev="${esc(r.key)}" tabindex="0"><td>${r.p ? `${dot(r.p.phase)} ${esc(r.p.title)}` : `<span class="muted">${esc(r.key)} (not in the current data)</span>`}</td><td>${fmtNum(r.a.units)}</td><td>${fmtNum(roundPop(r.people))}</td><td>${esc(r.a.date || '–')}</td><td>${esc(r.a.ref || '')}</td><td>${esc(SV().PLANT_SHORT[r.pl] || '–')}</td><td>${r.lay === 'proposed' ? '<span class="fr-b fr-due">Ahead of approval</span>' : r.lay === 'out' ? '<span class="fr-b fr-ref">Withdrawn</span>' : '<span class="fr-b fr-ok">Approved / built</span>'}</td></tr>`).join('')}</tbody></table>
         ${rows.length > 10 ? `<p><button type="button" class="btn small link" data-alloc-all>${allocSeeAll ? 'Show fewer' : `See all ${fmtNum(rows.length)} allocations`}</button></p>` : ''}` : ''}
       ${wwInfoLine('Room at the 90% expansion trigger after existing + built + committed, less allocations recorded ahead of approval; ' + SvcTab().wwFlowLabel('long') + '.')}`;
-    // Stage 3: the standard panel; the tables above are its full table.
-    const PN = root.PeelPanel;
-    if (PN) {
-      const short = plants.filter(x => x.after < 0);
-      PN.set('svc:alloc', {
-        calc: true, fullTitle: 'Servicing › Allocations · Peel: the plants and every allocation recorded',
-        head: PN.areaHead('Servicing › Allocations', 'What is already allocated?', short.length ? { tone: 'over', text: `${short.length} past the trigger` } : { tone: 'room', text: 'Room' }, `Peel · ${fmtNum(rows.length)} allocation${rows.length === 1 ? '' : 's'} recorded in this browser`),
-        answer: rows.length ? `<strong>${fmtNum(rows.length)}</strong> allocation${rows.length === 1 ? '' : 's'} recorded for <strong>${fmtNum(totU)} units</strong>; ${fmtNum(ahead.length)} ahead of approval.${short.length ? ` ${short.map(x => esc(SV().PLANT_SHORT[x.pl])).join(' and ')} ${short.length === 1 ? 'has' : 'have'} no room left at the 90% trigger after them.` : ''}` : `${short.length ? `${short.map(x => `<strong>${esc(SV().PLANT_SHORT[x.pl])}</strong> is already ${fmt1(-x.after)} ML/d past its 90% trigger`).join('; ')}, before any allocation. ` : ''}No allocations recorded yet: record one from a development (its ⋯ menu, Record allocation) or import a CSV in the full table.`,
-        figures: [{ v: fmtNum(rows.length), u: 'allocations', label: 'recorded', ctx: `${fmtNum(totU)} units` },
-          // (an over is a positive "over by", never a negative room: one sign rule, as the bars)
-          ...plants.map(x => ({ v: qAbs(x), u: uOf(x), label: `${SV().PLANT_SHORT[x.pl]} ${allocWord(x)}`, ctx: `${x.after < 0 ? 'past the 90% trigger ' : 'to the 90% trigger '}after allocations · ≈${fmtNum(roundPop(Math.abs(x.peopleAfter)))} people`, tone: allocTone(x) }))].slice(0, 4),
-        chart: `<p class="small pnl-chart-t">Room at the 90% expansion trigger after allocations <span class="pnl-chart-u">(ML/d)</span></p>${roomBars(plants)}`,
-        lists: [{ title: 'Allocations', rows: rows.slice(0, 5).map(r => ({ attrs: r.p ? { 'data-pnl-dev': r.key } : null, html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.p ? `${dot(r.p.phase)} ${esc(r.p.title)}` : esc(r.key)}<small>${esc(SV().PLANT_SHORT[r.pl] || '')}${r.a.ref ? ` · ${esc(r.a.ref)}` : ''}</small></span><span class="pnl-r-fig">${fmtNum(r.a.units)}<small>units</small></span></div>` })), total: rows.length, seeAll: { 'data-full-table': 'svc' } }],
-        method: `Room at the 90% expansion trigger after existing + built + committed, less allocations recorded ahead of approval; ${esc(SvcTab().wwFlowLabel('long'))}. Allocations are kept in this browser (export and import them as CSV in the full table).`,
-        sources: 'Plant capacity and flows: Region of Peel 2025 annual reports; the 90% trigger: 2020 Master Plan (Vol. 4, s. 2.3.1); allocations: recorded here.',
-        foot: { primary: { label: 'Import or export CSV', attrs: { 'data-full-table': 'svc' }, title: 'Open the full table: Export CSV and Import CSV are there' } },
-      });
-    }
+  }
+  // Servicing › Capacity's fold "Allocations recorded" (navigation phase 2, N-5; was Servicing ›
+  // Allocations): the status, each plant's room at the 90% trigger after the allocations, the latest
+  // five, and the way to the CSV in the full table (#alloc-body above). Null while there is no servicing
+  // model. The latest are text lines, not buttons: the fold is drawn on the Servicing capacity page too,
+  // where a development button would open it in the hidden map (the full table's rows open each one).
+  // Closed unless an old Allocations link asked for it (openAllocFold: for the visit, until the reader
+  // closes it; a re-render keeps the reader's choice). A link applied again opens a fold already drawn
+  // too (the map's and the page's), which its toggle then records.
+  let allocOpen = false;
+  const openAllocFold = () => { allocOpen = true; if (typeof document !== 'undefined' && document.querySelectorAll) document.querySelectorAll('#pnl-alloc-rec').forEach(d => { d.open = true; }); };
+  document.addEventListener('toggle', e => { if (e.target && e.target.id === 'pnl-alloc-rec') allocOpen = e.target.open; }, true);
+  function allocFold() {
+    const PN = root.PeelPanel; if (!PN || !App() || !App().state.svcModel) return null;
+    const rows = allocRows(), plants = ['Lakeview', 'Clarkson', 'Inglewood'].map(allocPlant).filter(Boolean);
+    const totU = rows.reduce((t, r) => t + r.a.units, 0), ahead = rows.filter(r => r.lay === 'proposed'), short = plants.filter(x => x.after < 0);
+    const status = PN.chip(short.length ? { tone: 'over', text: `${short.length} past the trigger` } : { tone: 'room', text: 'Room' });
+    const answer = rows.length ? `<strong>${fmtNum(rows.length)}</strong> allocation${rows.length === 1 ? '' : 's'} recorded for <strong>${fmtNum(totU)} units</strong>; ${fmtNum(ahead.length)} ahead of approval.${short.length ? ` ${short.map(x => esc(SV().PLANT_SHORT[x.pl])).join(' and ')} ${short.length === 1 ? 'has' : 'have'} no room left at the 90% trigger after them.` : ''}`
+      : `${short.length ? `${short.map(x => `<strong>${esc(SV().PLANT_SHORT[x.pl])}</strong> is already ${qAbs(x)} ${uOf(x)} past its 90% trigger`).join('; ')}, before any allocation. ` : ''}No allocations recorded yet: record one from a development (its ⋯ menu, Record allocation) or import a CSV in the full table.`;
+    // (an over is a positive "over by", never a negative room: one sign rule, as the bars)
+    const figs = plants.map(x => ({ v: qAbs(x), u: uOf(x), label: `${SV().PLANT_SHORT[x.pl]} ${allocWord(x)}`, ctx: `${x.after < 0 ? 'past the 90% trigger ' : 'to the 90% trigger '}after allocations · ≈${fmtNum(roundPop(Math.abs(x.peopleAfter)))} people`, tone: allocTone(x) }));
+    const kv = f => PN.kv(`${esc(f.label)} <small>${f.ctx}</small>`, `${f.v}&nbsp;${f.u}`, f.tone).html;   // (a figure and its unit on one line)
+    const latest = rows.slice(0, 5).map(r => PN.kv(r.p ? esc(r.p.title) : `${esc(r.key)} <small>not in the current data</small>`, `${fmtNum(r.a.units)} units · ${esc(SV().PLANT_SHORT[r.pl] || '–')}`).html).join('');
+    return { title: `Allocations recorded (${fmtNum(rows.length)})`, id: 'pnl-alloc-rec', open: allocOpen,
+      html: `<p class="small">${status} ${answer}</p>${figs.map(kv).join('')}<p class="small pnl-chart-t">Room at the 90% expansion trigger after allocations <span class="pnl-chart-u">(ML/d)</span></p>${roomBars(plants)}${latest ? `<p class="small muted">The latest recorded:</p>${latest}` : ''}
+      <p class="small"><button type="button" class="btn small link" data-at="svc:capacity" data-full-table="svc:capacity" data-ft-go="Plants: room at the 90%">Export or import the CSV ›</button></p>` };
   }
   $('#alloc-body').addEventListener('click', e => {
     if (e.target.closest('[data-alloc-all]')) { allocSeeAll = !allocSeeAll; renderAlloc(); return; }
@@ -261,7 +273,7 @@
     }
     return out;
   }
-  // Data freshness table HTML (shared by the Settings tab and the Sources & checks gear page).
+  // Data freshness table HTML (Records › Sources).
   function freshnessHTML() {
     const fr = freshness(), need = fr.filter(r => r.st === 'due' || r.st === 'stale');
     return `${hlP(need.length ? `<strong>${need.length} data source${need.length === 1 ? '' : 's'}</strong> ${need.length === 1 ? 'is' : 'are'} due for a refresh: ${need.map(r => esc(r.name)).join('; ')}.` : `All data sources are current; applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong>.`)}
@@ -270,29 +282,18 @@
         ${fr.map(r => `<tr><td>${esc(r.name)}${r.note ? `<small>${esc(r.note)}</small>` : ''}</td><td>${r.date ? esc(r.date) : '–'}${r.a != null && r.st !== 'ref' ? `<small>${r.a === 0 ? 'today' : `${fmtNum(r.a)} day${r.a === 1 ? '' : 's'} ago`}</small>` : ''}</td><td>${esc(r.every)}</td><td><span class="fr-b ${FRESH[r.st][0]}">${FRESH[r.st][1]}</span></td></tr>`).join('')}
       </tbody></table>${root.PeelSources ? `<h3 class="sub-title">Every data file and its source</h3>${root.PeelSources.slotHTML()}` : ''}`;
   }
-  // Model checks against published figures (this module's own checks; other workers add
-  // sections via window.ModelChecks).
+  // The model against published figures (this module's own checks, Records › Data checks; the servicing
+  // model's, registered on window.ModelChecks, are its Servicing model group: js/svc-capacity.js renderChecks).
   function checksHTML() {
     const vr = validationRows();
     const st = (m, p) => { const d = (m - p) / p * 100, a = Math.abs(d); return [d, a <= 10 ? 'fr-ok' : a <= 25 ? 'fr-due' : 'fr-stale', a <= 10 ? 'Matches' : a <= 25 ? 'Close' : 'Differs']; };
     const num = (v, u) => u === 'ML/d' ? `${fmt1(v)} ML/d` : u === 'units' ? `${fmtNum(Math.round(v))} units` : `${fmtNum(roundPop(v))}`;
-    return `<h3 class="sub-title" data-info="validation">Model checks against published figures</h3>
+    return `<h3 class="sub-title" data-info="validation">The model against published figures</h3>
       ${vr.length ? `<table class="dt fr-table"><thead><tr><th>Check</th><th>Model</th><th>Published</th><th>Difference</th><th>Result</th></tr></thead><tbody>
         ${vr.map(([what, m, p, u, why, kind]) => { if (kind === 'share') { const sh = m / p * 100; return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>${num(p, u)}</td><td>${sh.toFixed(1)}% of Peel</td><td><span class="fr-b fr-ref">Coverage</span></td></tr>`; }
           const [d, cls, t] = st(m, p); return `<tr><td>${esc(what)}<small>${esc(why)}</small></td><td>${num(m, u)}</td><td>${num(p, u)}</td><td>${d >= 0 ? '+' : '−'}${Math.abs(d).toFixed(1)}%</td><td><span class="fr-b ${cls}">${t}</span></td></tr>`; }).join('')}
       </tbody></table>
       <p class="small muted">Within ±10%: matches; ±25%: close; beyond: differs (the note says why it is expected to). The wastewater capacity check uses each plant's measured flow, so the design-criteria difference does not carry into it.</p>` : skel('Loading the servicing model')}${root.PeelCensusView && root.PeelCensusView.permitCheckHTML ? root.PeelCensusView.permitCheckHTML() : ''}`;
-  }
-  // Extra model-check sections registered by other modules (Workers D and E).
-  // Convention: window.ModelChecks = { key: htmlString } or { key: { title, html } }.
-  // Rendered defensively: anything unexpected is skipped, never throws.
-  function modelSectionsHTML() {
-    const reg = (typeof window !== 'undefined' && window.ModelChecks) || {};
-    return Object.values(reg).map(s => {
-      if (typeof s === 'string' && s.trim()) return s;
-      if (s && typeof s.html === 'string' && s.html.trim()) return `${s.title ? `<h3 class="sub-title">${esc(String(s.title))}</h3>` : ''}${s.html}`;
-      return '';
-    }).join('');
   }
   function numberConventionsHTML() {
     return `<h3 class="sub-title">Number conventions</h3>
@@ -303,15 +304,6 @@
       <p class="small"><label>Name and team on briefings <input type="text" id="prep-by" value="${esc(store.get('prepBy', ''))}" placeholder="e.g. J. Smith, Infrastructure Planning" style="min-width:260px"></label></p>`;
   }
   // (prep-by is handled by the document-level change listener above)
-  // Sources & checks gear page (Worker A: openGearPage('sources') renders GearPages.sources()).
-  function sourcesPageHTML() {
-    return `<h2 class="pane-h">Sources &amp; checks</h2>
-      ${freshnessHTML()}
-      ${checksHTML()}${modelSectionsHTML()}
-      ${SP().refsHTML()}`;
-  }
-  window.GearPages = window.GearPages || {};
-  window.GearPages.sources = () => sourcesPageHTML();
 
   // ---- Public contract ----
   // Units and people completed before census day (the Existing layer of js/layers.js totals): already
@@ -319,7 +311,7 @@
   // anything out: every stage ('all') and build-out ('buildout'); committed only ('committed', the Peel rule) and left
   // to build ('remaining') count none.
   const preCensus = (t, basis) => (t && (basis === 'all' || basis === 'buildout') ? { units: (t.units && t.units.existing) || 0, people: (t.people && t.people.existing) || 0 } : { units: 0, people: 0 });
-  const api = { allocBoxHTML, commitOpts, preCensus, MUNIS, freshness, validationRows, freshnessHTML, checksHTML, sourcesPageHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, wwTile, miniBar, wwInfoLine, numberConventionsHTML, modelSectionsHTML };
+  const api = { allocBoxHTML, commitOpts, preCensus, MUNIS, freshness, validationRows, freshnessHTML, checksHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, wwTile, miniBar, wwInfoLine, numberConventionsHTML, allocFold, openAllocFold };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemandUI = api;
 })(typeof window !== 'undefined' ? window : globalThis);

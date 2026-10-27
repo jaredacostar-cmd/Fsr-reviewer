@@ -39,15 +39,13 @@
     'growth:ledger': [...GROWTH, 'dc-gate.json', 'servicing.json'],
     'svc:capacity': [...SVC, 'snapshot.json', 'tree-counts.json'],
     'svc:network': [...SVC, 'sewers.json', 'watermains.json', 'water-supply.json', 'blocks.json', 'idf.json'],
-    'svc:checks': [...SVC, 'housing.json', 'compliance.json'],
-    'svc:alloc': ['snapshot.json', 'servicing.json'],
     'dca:timing': [...CAP, ...SVC, 'snapshot.json'],
     'dca:dcproj': [...CAP, ...SVC, 'sewers.json', 'dc-joins.json', 'snapshot.json'],
     'dca:projects': CAP,
     'dca:eas': ['eas.json', 'capital.json'],
     'records:files': DEV,
     'records:sources': ['snapshot.json', 'history.json'],
-    'records:checks': ['snapshot.json', 'site-audit.json', 'tree-audit.json', 'peel-housing.json', 'housing.json'],
+    'records:checks': [...SVC, 'snapshot.json', 'site-audit.json', 'tree-audit.json', 'peel-housing.json', 'housing.json', 'compliance.json', 'ww-events.json', 'dev-outlets.json'],   // (navigation phase 2: the servicing model's checks too)
     // Pages (js/ws-pages.js BUILD ids)
     home: [...GROWTH, ...SVC, ...CAP],
     tight: [...SVC, 'snapshot.json', 'tree-counts.json'],
