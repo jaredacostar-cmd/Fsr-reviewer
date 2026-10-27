@@ -60,7 +60,8 @@
     const A = App(); if (!A || !A.state || !L()) return null;
     const set = DU() && DU().overviewSet ? DU().overviewSet() : (A.state.filtered || []);
     const G = root.PeelDcGate, gateOn = !!(G && G.loaded && G.loaded());
-    if (G && !gateOn && G.load) G.load().then(() => { cache.key = null; if (isOn()) rerender(); });
+    // (one wait for the servicing permits, however many draws ask before they land)
+    if (G && !gateOn && G.load && !compute.gate) compute.gate = G.load().then(() => { cache.key = null; landed(); });
     const yr = yearsOfFn();
     // (the projection still loading: look again shortly, while the view is on screen)
     if ((!yr.timed || !yr.homes) && !compute.retry && typeof setTimeout === 'function') compute.retry = setTimeout(() => { compute.retry = null; if (isOn()) rerender(); }, 3000);
@@ -264,7 +265,7 @@
     const m = model(); if (!m) return [];
     const hl = U.hlP ? U.hlP(m.answer) : `<p class="hl">${m.answer}</p>`, n = m.rows.filter(r => rowVal(r) > 0).length;
     return [
-      { id: FOLD_ID.period, title: 'By period', open: OPEN.period, html: `${hl}${periodHTML(m)}<p class="small"><button type="button" class="btn small link" data-at="growth:timing" data-full-table="growth" data-ft-go="by stage, tier and expected year">The ${fmtNum(n)} developments, with stage, tier and expected year (full table) ›</button></p>` },
+      { id: FOLD_ID.period, title: 'By period', open: OPEN.period, html: `${hl}${periodHTML(m)}<p class="small"><button type="button" class="btn small link ldg-ft" data-at="growth:timing" data-full-table="growth" data-ft-go="by stage, tier and expected year">The ${fmtNum(n)} developments, with stage, tier and expected year (full table) ›</button></p>` },
       { id: FOLD_ID.tiers, title: 'How sure (tiers A to E)', open: OPEN.tiers, html: tiersHTML(m.rows) },
       { id: FOLD_ID.since, title: 'Since the last snapshot', open: OPEN.since, html: sinceHTML(m.rows, { head: false, links: false }) },
     ];
@@ -305,8 +306,8 @@
     fetch('data/ledger/index.json', { cache: 'no-cache' }).then(r => (r.ok ? r.json() : null)).catch(() => null).then(idx => {
       const list = (idx && idx.snapshots) || [], latest = list[list.length - 1];
       SNAP.index = list;
-      if (!latest) { SNAP.loading = false; if (isOn()) rerender(); return null; }
-      return fetch(`data/ledger/${encodeURIComponent(latest.name)}.json`).then(r => (r.ok ? r.json() : null)).catch(() => null).then(s => { SNAP.last = s; SNAP.loading = false; if (isOn()) rerender(); });
+      if (!latest) { SNAP.loading = false; if (isOn()) rerender(); return null; }   // (the panel's fold stays left out: only the full table says so)
+      return fetch(`data/ledger/${encodeURIComponent(latest.name)}.json`).then(r => (r.ok ? r.json() : null)).catch(() => null).then(s => { SNAP.last = s; SNAP.loading = false; landed(); });
     });
   }
   // o.head === false: no heading (the panel's fold names it); o.links === false: names as text, not buttons
@@ -331,7 +332,8 @@
   }
 
   // (the Forecast in sight: Growth › Forecast, its page or What's coming)
-  const isOn = () => { const AT = root.PeelAnalysisTabs, W = root.PeelWorkspaces; return !!(AT && AT.getFootTab() === 'growth' && AT.getGSub() === 'timing') || !!(W && W.mode && W.mode() === 'home' && W.page && ['outlook', 'coming'].includes(W.page())); };
+  const pageShown = () => { const W = root.PeelWorkspaces; return !!(W && W.mode && W.mode() === 'home' && W.page && ['outlook', 'coming'].includes(W.page())); };
+  const isOn = () => { const AT = root.PeelAnalysisTabs; return !!(AT && AT.getFootTab() === 'growth' && AT.getGSub() === 'timing') || pageShown(); };
   function render() {
     const body = $('#ledger-body'); if (!body) return;
     const A = App(); if (!A || !A.state || !(A.state.projects || []).length) { body.innerHTML = '<p class="small muted">Loading the developments…</p>'; return; }
@@ -341,8 +343,12 @@
     body.innerHTML = `<h3 class="sub-title">By period</h3>${hl}${bodyHTML(m)}<details class="pnl-fold"><summary>Method and basis</summary><div class="small muted">${m.method}</div></details><details class="pnl-fold"><summary>Sources</summary><div class="small muted">${m.sources}</div></details>`;
   }
   // (the full table, and the panel's folds: the Forecast page and What's coming, js/ws-pages.js outlook,
-  // draw them from the panel and rebuild on its pnl:set)
-  const rerender = () => { render(); refresh(); };
+  // draw them from the panel; an open one is drawn again now, as its pnl:set rebuild waits for a quiet
+  // 200 ms, js/workspaces.js schedule, which the other panels' sets can hold off for seconds)
+  const rerender = () => { render(); refresh(); if (pageShown() && root.PeelWorkspaces.renderPage) root.PeelWorkspaces.renderPage(false); };
+  // (data landed: the Forecast in sight is drawn again; out of sight, its stored panel takes the fresh
+  // folds, so the map's Growth › Forecast and the pages show them when they open)
+  const landed = () => (isOn() ? rerender() : refresh());
 
   if (typeof document !== 'undefined' && document.addEventListener) {
     document.addEventListener('click', e => {

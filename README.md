@@ -3316,8 +3316,8 @@ Two pages added to Home's sidebar, so they are no longer only on the full map:
 
 - **Planning › Forecast** (`outlook`): Growth › Forecast on a page. Units expected by 2031 and 2041
   with their ranges, the plants' 90% trigger years at the forecast pace, the largest contributors,
-  then the folds By period, How sure and Since the last snapshot, and a link to *How the forecast is
-  timed*. Same figures as the full map (`growth:timing`).
+  then the folds By period, How sure and (once a frozen snapshot exists) Since the last snapshot, and
+  a link to *How the forecast is timed*. Same figures as the full map (`growth:timing`).
 - **What's coming** (`coming`): the same page, under its own question (*What is coming, where, when
   and how sure?*), opened with By period.
 - **Capital › EA to construction** (`eaflow`): each Region Class EA and the construction that

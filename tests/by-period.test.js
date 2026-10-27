@@ -83,7 +83,7 @@ test('owner decision 2: By period keeps the ledger’s own stage cut-off, Units 
   assert.match(h, /<p class="small muted ldg-hint">The cut-off counts stages for this table only; the Scenario’s Count sets the rest of the app\.<\/p>/);
   assert.ok(h.includes(esc(L.DISCLAIMER)), 'the disclaimer on every total');
   assert.match(h, /<table class="dt ldg-table" data-info="by-period"><caption>Units left to build by municipality and milestone/);
-  assert.match(h, /<button type="button" class="btn small link" data-at="growth:timing" data-full-table="growth" data-ft-go="by stage, tier and expected year">The 4 developments, with stage, tier and expected year \(full table\) ›<\/button>/);
+  assert.match(h, /<button type="button" class="btn small link ldg-ft" data-at="growth:timing" data-full-table="growth" data-ft-go="by stage, tier and expected year">The 4 developments, with stage, tier and expected year \(full table\) ›<\/button>/);
   // The Scenario's Count is not touched: the cut-off is a setting of this view only.
   assert.doesNotMatch(src('js/ledger-ui.js'), /state\.phases\s*=|state\.basis\s*=|setCount\(/);
 });
@@ -175,6 +175,77 @@ test('openPeriod sets the Forecast’s panel again with fresh folds, for the sco
   assert.equal(calls.length, 0, 'a panel set for another scope is left alone'); assert.equal(x.LU.periodOpen(), true);
 });
 
+// ---- Data landing late (the review of phase 3) ----------------------------------------------------
+// data/dc-gate.json (1.3 MB) can land after Home has set the Forecast's panel (Home reads its figures):
+// a stub gate whose load() resolves when the test says; Brampton's approved 200 is a counted servicing
+// permit, so committed goes from 100 (the building permit) to 300.
+const COUNTED = { bucket: 'counted', servicingApplied: '2024-01-10', evidence: [{ kind: 'site', ref: 'DRAIN 1', issued: '2024-02-01', services: ['water'] }] };
+function lateGate(projects) {
+  let on = false, land; const p = new Promise(r => { land = r; });
+  const G = { loads: 0, loaded: () => on, load: () => { G.loads++; return p; }, rowOf: q => (q.key === projects[1].key ? COUNTED : null), land: () => { on = true; land(); } };
+  return G;
+}
+// A Forecast panel set for the area, as js/timing.js renderTiming leaves it; calls records set and renderPage.
+const forecastPanel = calls => ({ get: () => ({ spec: { answer: 'x', lists: [], folds: [] }, scope: 'area' }), scopeId: () => 'area', set: (k, spec) => calls.push([k, spec]) });
+const committedIn = h => (/<strong>([\d,]+)<\/strong> units are committed/.exec(h) || [])[1];
+
+test('the servicing permits landing out of sight set the stored Forecast panel’s folds again (the map and the pages show them later)', async () => {
+  const projects = fixtures(), G = lateGate(projects), calls = [];
+  // Home only: no tab, no page in sight.
+  const x = loadLedgerUI({ projects, extra: { PeelDcGate: G, PeelPanel: forecastPanel(calls) } });
+  const before = x.LU.periodFolds()[0].html; x.LU.periodFolds(); x.LU.model();
+  assert.equal(committedIn(before), '100', 'building permits only, for now');
+  assert.match(before, /Site servicing permits are still loading/);
+  assert.equal(G.loads, 1, 'one wait for the gate, however many draws ask');
+  assert.equal(x.LU.isOn(), false);
+  G.land(); await settle();
+  assert.equal(calls.length, 1, 'the stored panel is set again once');
+  const [k, spec] = calls[0], fold = spec.folds[0].html;
+  assert.equal(k, 'growth:timing'); assert.equal(spec.answer, 'x', 'the forecast as it was: only the folds change');
+  assert.equal(committedIn(fold), '300', 'By period counts the servicing permit');
+  assert.doesNotMatch(fold, /Site servicing permits are still loading/);
+  assert.equal(committedIn(x.LU.model().answer), '300', 'the same as a fresh model');
+  assert.equal(x.body.innerHTML, '', 'the full table out of sight is left to draw when it opens');
+});
+
+test('in sight, the gate landing draws the Forecast again: the full table and the panel, and an open Forecast page or What’s coming at once', async () => {
+  for (const [at, expectPage] of [[{ page: 'coming' }, true], [{ page: 'outlook' }, true], [{ page: 'home' }, false], [{ tab: true }, false]]) {
+    const projects = fixtures(), G = lateGate(projects), calls = [];
+    const W = { mode: () => (at.page ? 'home' : 'full'), page: () => at.page || 'home', renderPage: force => calls.push(['page', force]) };
+    const AT = { getFootTab: () => (at.tab ? 'growth' : 'overview'), getGSub: () => 'timing' };
+    const x = loadLedgerUI({ projects, extra: { PeelDcGate: G, PeelPanel: forecastPanel(calls), PeelWorkspaces: W, PeelAnalysisTabs: AT } });
+    x.LU.periodFolds();
+    G.land(); await settle();
+    const label = JSON.stringify(at);
+    assert.equal(calls[0][0], 'growth:timing', label); assert.equal(committedIn(calls[0][1].folds[0].html), '300', label);
+    if (expectPage || at.tab) assert.equal(committedIn(x.body.innerHTML), '300', `${label}: the full table`);
+    // (Home itself is out of sight: the panel only; js/dc-gate.js draws Home again itself)
+    assert.deepEqual(plain(calls.slice(1)), expectPage ? [['page', false]] : [], `${label}: the page drawn now, after the folds, keeping its scroll`);
+  }
+});
+
+test('a cut-off on the Forecast page or What’s coming draws the page at once, after the panel’s folds', () => {
+  const calls = [], W = { mode: () => 'home', page: () => 'coming', renderPage: force => calls.push(['page', force]) };
+  const x = loadLedgerUI({ extra: { PeelPanel: forecastPanel(calls), PeelWorkspaces: W } });
+  const [click] = x.on('click', false);
+  click({ target: { closest: s => (s === '[data-ledger-cut]' ? { dataset: { ledgerCut: 'approved' } } : null) } });
+  assert.deepEqual(plain(calls.map(c => c[0])), ['growth:timing', 'page']);
+  assert.equal(calls[1][1], false, 'its scroll kept; an unchanged page is not rebuilt');
+  assert.match(calls[0][1].folds[0].html, /data-ledger-cut="approved" aria-pressed="true"/);
+});
+
+test('a frozen snapshot landing out of sight sets the stored Forecast panel’s Since fold', async () => {
+  const projects = fixtures(), calls = [];
+  const frozen = LS.snapshot(L.rows(projects.slice(1), { people, asOf: Date.parse(AS_OF) }), { name: '2026-fall', sourceDate: '2026-10-01' });
+  const files = { 'data/ledger/index.json': { snapshots: [{ name: '2026-fall' }] }, 'data/ledger/2026-fall.json': frozen };
+  const fetch = url => Promise.resolve(own(files, url) ? { ok: true, json: () => Promise.resolve(files[url]) } : { ok: false });
+  const x = loadLedgerUI({ projects, extra: { fetch, PeelPanel: forecastPanel(calls) } });
+  assert.equal(x.LU.periodFolds()[2].html, '', 'nothing to compare yet');
+  await settle();
+  assert.equal(calls.length, 1); assert.equal(calls[0][0], 'growth:timing');
+  assert.match(calls[0][1].folds[2].html, /Against <strong>2026-fall<\/strong> \(data as of 2026-10-01\): <strong>1<\/strong> new/);
+});
+
 test('Since the last snapshot: in the panel only once there is one to compare; names as text there, buttons in the full table', async () => {
   // No fetch (or still looking): the panel's fold has no HTML (left out), the full table says so.
   let x = loadLedgerUI();
@@ -209,10 +280,15 @@ test('the Forecast draws the folds, Growth renders the full table when the Forec
   assert.match(src('js/growth-ui.js'), /run\('growth:ledger', 'timing', \(\) => \{ if \(root\.PeelLedgerUI\) root\.PeelLedgerUI\.render\(\); \}\);/);
   assert.match(src('js/analysis-tabs.js'), /if \(key === 'growth' && gSub === 'timing' && root\.PeelLedgerUI\) setTimeout\(\(\) => root\.PeelLedgerUI\.render\(\), 0\);/);
   assert.match(src('css/app.css'), /\.pnl-fold \.ldg-table th, \.pnl-fold \.ldg-table td \{ padding: var\(--space-1\); \}/);
-  // isOn: the Forecast in sight (its rerender also sets the panel's folds again).
+  // The full-table link wraps (a .btn is nowrap: at 390 its words ran 40 px past the column, and the page
+  // and the map's sheet scrolled sideways; the phone path measures #home and #analysis-panes).
+  assert.match(src('css/app.css'), /\n\.ldg-ft \{ white-space: normal; text-align: left; \}/);
+  // isOn: the Forecast in sight (its rerender also sets the panel's folds again, then draws an open
+  // Forecast page or What's coming at once: the behaviour is the test below).
   const lu = src('js/ledger-ui.js');
-  assert.match(lu, /AT\.getFootTab\(\) === 'growth' && AT\.getGSub\(\) === 'timing'/);
-  assert.match(lu, /const rerender = \(\) => \{[^\n]*render\(\); refresh\(\); \};/);
+  assert.match(lu, /AT\.getFootTab\(\) === 'growth' && AT\.getGSub\(\) === 'timing'\) \|\| pageShown\(\)/);
+  assert.match(lu, /const pageShown = \(\) => \{[^\n]*W\.mode\(\) === 'home' && W\.page && \['outlook', 'coming'\]\.includes\(W\.page\(\)\)/);
+  assert.match(lu, /const rerender = \(\) => \{ render\(\); refresh\(\); if \(pageShown\(\) && root\.PeelWorkspaces\.renderPage\) root\.PeelWorkspaces\.renderPage\(false\); \};/);
   // No export reads the panes by id here: the Pipeline snapshot CSV reads model(); the pane ids are kept.
   assert.doesNotMatch(src('js/exports.js'), /ledger-body|timing-body/);
 });

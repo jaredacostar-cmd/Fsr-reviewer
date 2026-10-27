@@ -3967,6 +3967,7 @@ button.gtm-h { cursor: pointer; }
 .ldg-tier { display: inline-block; min-width: 1.5em; padding: 0 var(--space-1); border: 1px solid var(--border); border-radius: 4px; text-align: center; font-weight: 600; }
 .ldg-tiers th .ldg-tier { margin-right: var(--space-1); }
 .ldg-hint { margin: 0 0 var(--space-1); }
+.ldg-ft { white-space: normal; text-align: left; }   /* (By period's full-table link wraps: wider than a phone's column) */
 .pnl-fold .ldg-table th, .pnl-fold .ldg-table td { padding: var(--space-1); }   /* (in the panel column's width) */
 @media (max-width: 480px) {
   .ldg-table th, .ldg-table td, .ldg-list th, .ldg-list td { padding: var(--space-1); }

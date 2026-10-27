@@ -14,10 +14,13 @@ const PORT = +(process.env.PORT || 8790);
 const CDN = process.env.CDN_DIR;
 const results = [];
 
-async function open(browser, { w = 1440, h = 900, fresh = false, slowApp = 0, prefs = null } = {}) {
-  const ctx = await browser.newContext({ viewport: { width: w, height: h }, isMobile: w < 500, hasTouch: w < 500 });
+async function open(browser, { w = 1440, h = 900, fresh = false, slowApp = 0, slowData = null, prefs = null } = {}) {
+  // (slowData: no service worker, which would answer the held files itself)
+  const ctx = await browser.newContext({ viewport: { width: w, height: h }, isMobile: w < 500, hasTouch: w < 500, serviceWorkers: slowData ? 'block' : 'allow' });
   // (js/app.js held back: the data files and the map arrive first, as on a slow connection)
   if (slowApp) await ctx.route(/\/js\/app\.js/, async route => { await wait(slowApp); route.continue(); });
+  // (slowData: data files held back, { 'dc-gate.json': ms }, as a slow connection delivers a large one late)
+  for (const [f, ms] of Object.entries(slowData || {})) await ctx.route(`**/data/${f}*`, async route => { await wait(ms); route.continue(); });
   if (CDN) await ctx.route('https://unpkg.com/**', route => { const m = /unpkg\.com\/([^@]+)@([^/]+)\/(.+)$/.exec(route.request().url()); const f = m && `${CDN}/${m[1]}-${m[2]}/package/${m[3]}`; if (f && fs.existsSync(f)) route.fulfill({ path: f, contentType: f.endsWith('.css') ? 'text/css' : 'application/javascript' }); else route.abort(); });
   const page = await ctx.newPage(); const errors = [];
   page.on('pageerror', e => errors.push(e.message));
@@ -1017,10 +1020,15 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   // What's coming (navigation phase 3): the Forecast page under the ledger's question, opened with By
   // period; a fold the reader shut on the Forecast page stays shut when the page rebuilds; the page's own
   // developments list moved to the Forecast's full table (one tap), which opens on the map.
-  await check('phone: What’s coming opens the Forecast page at By period; no sideways scroll; a cut-off works; the developments in the full table', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
+  await check('phone: What’s coming opens the Forecast page at By period; no sideways scroll (the page, the full table, the map’s panel); a cut-off works; the developments in the full table', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
     // 1. The Forecast page: By period shut by the reader stays shut on a rebuild (foldsNow).
+    // (#home is the page's scroller, fixed at the screen's width: the document never grows wider, so the
+    // page's sideways scroll is #home's own)
+    const sideways = () => ev(() => { const h = document.getElementById('home'), d = document.documentElement; return { w: d.scrollWidth, vw: innerWidth, hw: h.scrollWidth, hc: h.clientWidth }; });
     await ev(() => PeelWorkspaces.openPage('outlook'));
     await page.waitForSelector('#home #pnl-by-period[open] .ldg-table', { timeout: 60000 }); await wait(1500);
+    const s0 = await sideways();
+    expect(s0.w <= s0.vw && s0.hw <= s0.hc, `no sideways scroll on the Forecast page, By period open (document ${s0.w}/${s0.vw}, page ${s0.hw}/${s0.hc})`);
     await page.click('#home #pnl-by-period > summary'); await wait(400);
     await ev(() => PeelWorkspaces.renderPage(true)); await wait(400);
     const s1 = await ev(() => ({ there: !!document.querySelector('#home #pnl-by-period'), open: !!document.querySelector('#home #pnl-by-period[open]'), kept: PeelUtil.store.get('ledgerOpen', true) }));
@@ -1028,9 +1036,9 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     // 2. What's coming: the same page under its own question, By period open; the sidebar lights it.
     await ev(() => PeelWorkspaces.openPage('coming'));
     await page.waitForSelector('#home #pnl-by-period[open] .ldg-table', { timeout: 30000 }); await wait(1500);
-    const s = await ev(() => { const sum = document.querySelector('#home #pnl-by-period > summary').getBoundingClientRect(); return { w: document.documentElement.scrollWidth, vw: innerWidth, h1: document.querySelector('#home h1').textContent, sum: Math.round(sum.height), disc: (document.querySelector('#home #pnl-by-period .ldg-table caption') || {}).textContent || '', lit: ((document.querySelector('#home .home-ws.on') || {}).dataset || {}).wsPage, page: PeelWorkspaces.page() }; });
+    const s = await ev(() => { const sum = document.querySelector('#home #pnl-by-period > summary').getBoundingClientRect(), hm = document.getElementById('home'); return { w: document.documentElement.scrollWidth, vw: innerWidth, hw: hm.scrollWidth, hc: hm.clientWidth, h1: document.querySelector('#home h1').textContent, sum: Math.round(sum.height), disc: (document.querySelector('#home #pnl-by-period .ldg-table caption') || {}).textContent || '', lit: ((document.querySelector('#home .home-ws.on') || {}).dataset || {}).wsPage, page: PeelWorkspaces.page() }; });
     expect(s.page === 'coming' && s.h1 === 'What is coming, where, when and how sure?', `the ledger's question as the page's title (${s.page}: ${s.h1})`);
-    expect(s.w <= s.vw, `no sideways scroll (${s.w} > ${s.vw})`);
+    expect(s.w <= s.vw && s.hw <= s.hc, `no sideways scroll (document ${s.w}/${s.vw}, page ${s.hw}/${s.hc})`);
     expect(s.sum >= 44, `By period's summary is a 44 px target (${s.sum})`);
     expect(/Public-data estimate\. Not the Region’s committed capacity ledger\./.test(s.disc), 'the table carries the disclaimer');
     expect(s.lit === 'coming', `What's coming lit in the menu (${s.lit})`);
@@ -1040,9 +1048,38 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(s3.on === 'true' && s3.open, `a cut-off button works on the page (${JSON.stringify(s3)})`);
     // 4. The developments: the Forecast's full table, on the map.
     await page.click('#home #pnl-by-period [data-full-table]'); await wait(2000);
+    // (on the map the sheet's #analysis-panes is the scroller)
+    const panes = () => ev(() => { const a = document.getElementById('analysis-panes'); return { aw: a.scrollWidth, ac: a.clientWidth }; });
     const s4 = await ev(() => ({ mode: PeelWorkspaces.mode(), ft: document.getElementById('analysis').classList.contains('ft-on'), rows: document.querySelectorAll('#ledger-body tr.ldg-row').length, w: document.documentElement.scrollWidth, vw: innerWidth }));
+    Object.assign(s4, await panes());
     expect(s4.mode === 'full' && s4.ft && s4.rows > 0, `the developments in the full table (${JSON.stringify(s4)})`);
-    expect(s4.w <= s4.vw, `no sideways scroll in the full table (${s4.w} > ${s4.vw})`);
+    expect(s4.w <= s4.vw && s4.aw <= s4.ac, `no sideways scroll in the full table (document ${s4.w}/${s4.vw}, panes ${s4.aw}/${s4.ac})`);
+    // 5. Back to the Forecast's panel, the sheet pulled up: By period and its link fit the sheet too.
+    await ev(() => PeelPanel.closeFull()); await wait(800);
+    await ev(() => PeelApp.setAnalysisSnap('full')); await wait(1000);
+    const s5 = await ev(() => { const l = document.querySelector('#pnl-growth #pnl-by-period[open] [data-full-table]'); return { link: !!l && l.getClientRects().length > 0, ft: document.getElementById('analysis').classList.contains('ft-on') }; });
+    Object.assign(s5, await panes());
+    expect(s5.link && !s5.ft && s5.aw <= s5.ac, `no sideways scroll in the map's Forecast panel, By period open (panes ${s5.aw}/${s5.ac}; ${JSON.stringify(s5)})`);
+  });
+
+  // By period counts the site servicing permits however late data/dc-gate.json (1.3 MB) lands: Home sets
+  // the Forecast's panel before it is in, and the gate sets the panel's folds again out of sight, so the
+  // map's Growth › Forecast and What's coming show the full table's figure, never building permits only.
+  await check('a late dc-gate.json: By period on the map’s Growth › Forecast and on What’s coming counts the site servicing permits, as the model does', browser, { slowData: { 'dc-gate.json': 12000 } }, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelDcGate && PeelDcGate.loaded(), null, { timeout: 120000 }); await wait(3000);
+    const read = sel => ev(q => {
+      const n = t => { const m = /([\d,]+) units are committed/.exec(t || ''); return m ? m[1] : null; };
+      const d = document.querySelector(q), x = document.createElement('div'); x.innerHTML = PeelLedgerUI.model().answer;
+      return { shown: d ? n(d.textContent) : null, model: n(x.textContent), loading: !!d && /Site servicing permits are still loading/.test(d.textContent) };
+    }, sel);
+    await ev(() => { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.showFootTab('growth', 'timing'); });
+    await page.waitForSelector('#pnl-growth #pnl-by-period .ldg-table', { timeout: 60000 }); await wait(1500);
+    const a = await read('#pnl-growth #pnl-by-period');
+    expect(a.shown && a.shown === a.model && !a.loading, `the map's Growth › Forecast: By period's committed is the model's (${JSON.stringify(a)})`);
+    await ev(() => PeelWorkspaces.openPage('coming'));
+    await page.waitForSelector('#home #pnl-by-period .ldg-table', { timeout: 60000 }); await wait(1500);
+    const b = await read('#home #pnl-by-period');
+    expect(b.shown && b.shown === b.model && !b.loading, `What's coming: By period's committed is the model's (${JSON.stringify(b)})`);
   });
 
   // Kept from before phase 3 (navigation-design §7.2–7.3): a browser that last stood on Growth › Ledger,
