@@ -1,7 +1,8 @@
 'use strict';
 // Browser click-paths, run in CI on every pull request (.github/workflows/browser.yml) and locally:
 //   npm run browser            (PLAYWRIGHT: path to the playwright module; CDN_DIR: local copies of the
-//                               unpkg packages, for offline runs; CHROMIUM: a browser executable)
+//                               unpkg packages, for offline runs; CHROMIUM: a browser executable;
+//                               SHARD=i/n: every n-th path from the i-th, as CI runs them side by side)
 // Each path is what a person does, with real clicks and keys; a path fails on a wrong result or any
 // page error. The live municipal and Region services are not needed: the paths use the published
 // data in data/.
@@ -13,6 +14,9 @@ const ROOT = path.join(__dirname, '..', '..');
 const PORT = +(process.env.PORT || 8790);
 const CDN = process.env.CDN_DIR;
 const results = [];
+const [SHARD, SHARDS] = (process.env.SHARD || '1/1').split('/').map(Number);
+if (!(SHARDS >= 1 && SHARD >= 1 && SHARD <= SHARDS)) throw new Error(`SHARD must be i/n with 1 <= i <= n, not ${process.env.SHARD}`);
+let nth = 0;
 
 async function open(browser, { w = 1440, h = 900, fresh = false, slowApp = 0, slowData = null, prefs = null } = {}) {
   // (slowData: no service worker, which would answer the held files itself)
@@ -33,6 +37,7 @@ async function open(browser, { w = 1440, h = 900, fresh = false, slowApp = 0, sl
   return { ctx, page, errors, ev: (f, a) => page.evaluate(f, a) };
 }
 async function check(name, browser, opts, fn) {
+  if (nth++ % SHARDS !== SHARD - 1) return;   // (another shard's path)
   const t0 = Date.now(); let s;
   try {
     s = await open(browser, opts);
@@ -1652,6 +1657,6 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
   await browser.close(); srv.close();
   for (const r of results) console.log(`${r.ok ? 'ok  ' : 'FAIL'} ${r.name} (${(r.ms / 1000).toFixed(1)} s)${r.ok ? '' : `\n       - ${r.fails.join('\n       - ')}`}`);
   const bad = results.filter(r => !r.ok).length;
-  console.log(`\n${results.length - bad} of ${results.length} browser paths pass`);
+  console.log(`\n${results.length - bad} of ${results.length} browser paths pass${SHARDS > 1 ? ` (shard ${SHARD} of ${SHARDS}, ${nth} paths in all)` : ''}`);
   process.exit(bad ? 1 : 0);
 })().catch(e => { console.error(e); process.exit(1); });
