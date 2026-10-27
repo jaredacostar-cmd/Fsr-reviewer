@@ -71,7 +71,7 @@
   const D = () => root.PeelDemand, DD = () => root.PeelDevDetail;
   const WT = () => root.PeelWaterTrace, SD = () => root.PeelSvcData, LB = () => root.PeelLayerBar, MM = () => root.PeelMapMarkers;
   const st = { sort: (U.store && U.store.get('capSort', 'limit')) || 'limit', open: new Set() };
-  // The one System control (js/analysis-tabs.js): Both · Wastewater · Water, shared with Capital › DC projects.
+  // The one System control (js/analysis-tabs.js): Both · Wastewater · Water, shared with Capital › DC timing.
   const AT = () => root.PeelAnalysisTabs, sysNow = () => (AT() && AT().getSys ? AT().getSys() : 'both');
   const PICK = [2031, 2041, 2051];
   // Horizon from a load function q(y) ('today' | year | null = build-out): the % at the pick years and

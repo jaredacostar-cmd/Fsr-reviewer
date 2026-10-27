@@ -41,8 +41,6 @@
       // Blocks: the pumping stations' loads come from the pipes, so redo the tables and layers.
       if (App().state.servicing && App().state.servicing.blocks) SvcTab().renderSvcTab(); else if (MM().mstyle.cap === 'pipes') MA().renderCapLayer();
       if (typeof DS() !== 'undefined' && DS().current()) DS().refresh();
-      // Phase 3b: DC timing lives in the Tool result tab now — re-run while that result is open.
-      if (TS().toolScope && TS().toolScope.kind === 'dc' && TS().toolScope.title === 'DC timing' && typeof window !== 'undefined' && window.PeelTools && window.PeelTools.hasResult()) MP().showDcTiming();
       return d;
     }).catch(() => null);
     return MM().SEW.loading;

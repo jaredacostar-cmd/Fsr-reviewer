@@ -5,14 +5,14 @@
   // default and remembered per browser: the hydraulic check, the DC funding screen, the 3D view,
   // the Time Box, the SWMM export and batch test sites. Each switch adds a class to <html>
   // (lab-<id>); css/app.css hides the tool while its class is missing, and the panel code asks
-  // PeelLabs.on(id) where a view depends on it (the funding screen in Capital › DC projects). Old share links to the
+  // PeelLabs.on(id) where a view depends on it (the funding screen in Capital › DC timing). Old share links to the
   // funding screen or the hydraulic check turn their switch on (js/share.js), so they still open.
   const U = root.PeelUtil || {};
   const store = U.store || { get: (k, d) => d, set: () => {} };
   const esc = U.esc || (s => String(s));
   const LABS = [
     { id: 'hydro', label: 'Hydraulic check (beta)', where: 'Servicing › Network', what: 'An experimental EPANET check of the large mains feeding each upper pressure zone.' },
-    { id: 'funding', label: 'DC funding', where: 'Capital › DC projects', what: 'The funding screen (screening results within / outside a budget) and funding levels.' },
+    { id: 'funding', label: 'DC funding', where: 'Capital › DC timing', what: 'The funding screen (screening results within / outside a budget) and funding levels.' },
     { id: '3d', label: '3D view', where: 'the map', what: 'Terrain, buildings and proposals in 3D (indicative).' },
     { id: 'timebox', label: 'Time Box', where: 'the tool rail', what: 'Aerial imagery over the years for a box, with the applications filed by then.' },
     { id: 'swmm', label: 'SWMM export', where: 'Export', what: 'The wastewater blocks as a SWMM model (.inp).' },

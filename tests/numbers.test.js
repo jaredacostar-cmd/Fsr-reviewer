@@ -44,10 +44,13 @@ test('the sentence and the figure beside it agree, or each names its basis', () 
   assert.match(ov, /since\(e\.population, pre\.people, x => fmtNum\(roundPop\(x\)\)\)/);
   assert.match(ov, /since\(unitsAll, pre\.units, x => fmtNum\(Math\.round\(x\)\)\)/);
   assert.match(ov, /areaPanelSpec\(\{ set, e, basis, pipe, unitsAll, unitsWord, inPlan, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue, pre \}\)/);
-  // Capital › Timing: the total held back and one project's share are both named.
-  const dca = src('js/dca-tab.js');
-  assert.match(dca, /With every project as scheduled, <strong>≈\$\{pp\(R\.baseBo\)\} people<\/strong> are still constrained at build-out/);
-  assert.match(dca, /more would be, the most of any one project/);
+  // Capital › DC timing: the total held back and one project's share are both named (at a System, the System's
+  // project; the total, the largest constraint of either system, says so).
+  const dca = src('js/dc-projects.js');
+  assert.match(dca, /With every project as scheduled, <strong>≈\$\{pp\(R\.baseBo\)\} people<\/strong>\$\{both\} are still constrained at build-out/);
+  assert.match(dca, /more would be, the most of any one \$\{s === 'both' \? '' : `\$\{SYS\[s\]\.toLowerCase\(\)\} `\}project/);
+  assert.match(dca, /const big = R\.list\.filter\(r => s === 'both' \|\| r\.sys === s\)\.sort\(\(a, b\) => b\.bo - a\.bo\)\[0\]/);
+  assert.match(dca, /both = s === 'both' \? '' : ' \(both systems\)';/);
   // Growth: completed, and how many of them since the census (the chart's "Built since 2021").
   assert.match(src('js/growth-ui.js'), /completed\$\{sinceC >= 0\.5 && Math\.round\(sinceC\) !== Math\.round\(t\.completed\)/);
   // Growth › Timing names its pace; the trigger year is not doubled ("≈2027 2027").

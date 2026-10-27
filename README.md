@@ -394,7 +394,8 @@ from street zoom (14), up to 3,000 in view.
   load and DC works) to print or save as PDF. *Area report* (a drawn selection, or *Report* on the
   Showing line for what is shown, or *Area report (PDF)* on Growth in an area for the level it is at)
   gives combined demand, the capacity relied on with the DC timing, and the largest developments.
-  DC timing → *Excel (all rows)* exports every constraint.
+  The workbook's DC sheet (Export → Excel) lists every constraint, filtered as Capital › DC timing's
+  Status was last set (Late to start).
 - **Search places**: the search also finds secondary plans / character areas, MTSAs, pressure zones,
   catchments and pumping stations, DC projects (by number or name) and DC facilities, file numbers
   by prefix, and intersections ("Main St & Queen St").
@@ -610,7 +611,7 @@ from street zoom (14), up to 3,000 in view.
   ArcGIS World, then OpenStreetMap) and distance, pieces of the same main merged; tap one to see it
   on the map — and the oldest / moderate-risk sanitary sewer on the site's path (first
   3 km, from `data/sewers.json`).
-- **DC needs** (development brief, DC main / facility panels, *DC timing* in Layers & style):
+- **DC needs** (development brief, DC main / facility panels, *Capital › DC timing* from Layers › More settings):
   existing capacity against the 2026 DC capital program. For each constraint a development relies
   on — sanitary sewers on its path at 90%+ of full-pipe capacity by build-out (grouped by the DC
   main that runs along them, i.e. a twin or replacement), pumping stations (master plan firm
@@ -620,8 +621,10 @@ from street zoom (14), up to 3,000 in view.
   room after existing + approved development in people and units, the year approved and proposed
   growth uses it up (Horizon years phasing), and the relieving DC project. Red when it runs out
   before the DC project (or none is planned), orange "check the data" when the census flow alone
-  exceeds the full-pipe capacity from the published slope. Tap a DC main or facility for what it
-  relieves and the developments relying on it.
+  exceeds the full-pipe capacity from the published slope. Tap a DC facility for what it relieves and
+  the developments relying on it; a DC main's card has both verdicts and the developments relying on it
+  by tier (the DC projects allocation), then what it relieves. Every constraint, at DC timing's Status
+  and System, is in Capital › DC timing's full table (the table the DC timing tool result drew).
 - **Fire flow and stormwater** (development brief, live): Region hydrants within 150 m (count,
   nearest, recorded pressure zone, flagged against the mapped zone) and the nearest large
   (750 mm+) watermain within 1.5 km — hydrant flow tests are not published; the nearest
@@ -1532,8 +1535,8 @@ Review an FSR, Forecast and Study area are its views.
   build-out peak wet weather against firm capacity, then the plant and its uncommitted reserve (or the
   City of Toronto system), and how the outlet was set (Automatic, Confirmed or Set by hand). *Review →*
   opens Review outlets at the development when its review queue lists it, once the DC impact model
-  has been worked out in this visit (Capital › DC projects, Review outlets or the DC project map; the
-  Overview never builds it). Its *Infrastructure coming* row names the DC projects it relies on, by
+  has been worked out in this visit (Capital › DC timing once its list has painted, Review outlets or
+  the DC project map; the Overview never builds it). Its *Infrastructure coming* row names the DC projects it relies on, by
   number and name as the search lists them, late ones first ("Relies on 25-2945 – G.E. Booth Water
   Resource Recovery Facility (late), 22-1005 (in time)"): each constraint on its path that needs
   relief, by its first relief with a project number; the name is the DC main's, else the facility's
@@ -1576,7 +1579,7 @@ On a page, a pick opens what it found (`js/workspaces.js` `pageRoute` and `route
 | A secondary plan or character area | Growth in an area at the plan |
 | An MTSA | Its filter (as on the map), with Growth in an area at its municipality |
 | A plant, station, block, zone or South Peel water | Its scope on Servicing capacity's map view |
-| A DC project | Capital › DC projects at the project: its developments by tier |
+| A DC project | Capital › DC timing at the project (the Capital page): its developments by tier and both verdicts |
 | A DC facility, or an address | Capital's or Check a site's map view, then the facility card or the pin |
 
 - **Pages only.** On the full map and in a workspace's map view the search works as before (a plan
@@ -1611,8 +1614,10 @@ On a page, a pick opens what it found (`js/workspaces.js` `pageRoute` and `route
 - **Servicing capacity**: Capacity (its own page: limits, the 90% trigger, the uncommitted reserve,
   no relief in time) and the map's **Network** as a section; the allocations recorded are a fold of
   Capacity, on the page too (navigation phase 2, below).
-- **Capital** (one sidebar entry for what were DC projects and EA to construction): **DC timing**,
-  **EA to construction** (its own page) and the map's **Projects** and **EAs** as sections.
+- **Capital** (one sidebar entry): **DC timing** (its own page: every 2026 DC project with both
+  verdicts; a project opens in place, with its map, and *Open the map* opens its card there), **EAs**
+  (its own page: the EAs, then EA to construction) and the map's **Projects** as a section (navigation
+  phase 4, below).
 - Each section is the map's own panel (`js/sections.js` `WORKSPACES`), built on demand when its
   tab hasn't been opened, so the page and the map read the same.
 
@@ -1641,7 +1646,7 @@ views, **Capacity · Network**, at Peel as at a development (where Capacity is h
   largest difference between the Ministry's and the Region's plant flow, the station roster, the
   Caledon wells; each row opens the full table at its comparison, *See all* at the first), then
   **Where developments discharge**: *Review outlets →*, with the count still to review once Capital ›
-  DC projects has worked out the DC model (building that model walks every sewer pipe, so Records
+  DC timing has worked out the DC model (building that model walks every sewer pipe, so Records
   never builds it). *Review outlets* is in its footer too, beside *Duplicate check*. Reference › Data
   checks shows the same panel (kept up to date as the servicing model is rebuilt, a Scenario change
   included, whichever tab is open); its Servicing model rows and *See all* open the full map's Records
@@ -1653,15 +1658,15 @@ views, **Capacity · Network**, at Peel as at a development (where Capacity is h
   Records › Sources; every check, the two that were only on that page included, is Records › Data
   checks. The gear menu's pages are Settings and Labs (`window.GearPages`).
 - **One System control**, *Both · Wastewater · Water*, on Servicing › Capacity's list and Capital ›
-  DC projects' list (and their sections on the Servicing capacity and Capital pages): one pick, kept in
+  DC timing's list (DC projects' until navigation phase 4; and their sections on the Servicing capacity and Capital pages): one pick, kept in
   this browser (`sysPick`, `js/analysis-tabs.js` `setSys`), Both to start. It was two switches, *All ·
   Wastewater · Water* (Capacity, for the visit only) and *Wastewater · Water · Both* (DC projects, stored,
-  Wastewater to start); DC projects now opens at Both, and a browser that had picked a system there
+  Wastewater to start); DC timing now opens at Both, and a browser that had picked a system there
   keeps that pick, for both lists, the first time. Each list names its system (Capacity's header *Peel ·
   water*, *Water projects*). The System narrows the panel's list; Capacity's full table keeps every
   facility of both systems, and Home's figures never filter. The Servicing capacity page's header and
   figures count both systems too, so they match Home's figure that opens the page; the System narrows
-  its *Soonest limits* list, which names it (*Soonest limits: water*). A System tap redraws DC projects
+  its *Soonest limits* list, which names it (*Soonest limits: water*). A System tap redraws DC timing
   only while its DC model is worked out for the Scenario or its list is on screen (building that model
   walks every sewer pipe); otherwise the next Capital open draws it at the new System. A share link
   carries it as `sy=` (only when not Both; a link without it opens at Both and does not change the
@@ -1671,9 +1676,9 @@ views, **Capacity · Network**, at Peel as at a development (where Capacity is h
   owner's change of 2026-10-16). Only a lens tap sets it: a workspace or a page that sets its map view
   (the Servicing capacity page opens the Wastewater view) leaves the System as it is.
 - **One sort vocabulary**: Capacity's panel sorts *Soonest · Largest impact* (its full table keeps the
-  panel's order). Capital › DC projects keeps *Most affected · Soonest* (and *$ a unit*, Labs): a
-  different measure (units relying on a project, its construction year) keeps its own words,
-  and every sort button's tooltip names what it sorts by, so the two *Soonest* say which year.
+  panel's order). Capital › DC timing (navigation phase 4, below) sorts *Soonest · Largest impact ·
+  Most affected* (and *$ a unit*, Labs): a different measure (units relying on a project) keeps its
+  own words, and every sort button's tooltip names what it sorts by, so each *Soonest* says which year.
 - Pane ids are unchanged (`#alloc-body`, `#wfac-body`, `#svc-checks-body`): the workbook and the
   reports read them as before. At a development the workbook's Water sheet leaves out the Peel-wide
   water facilities, as Network's full table does there (`OFF_AT_SITE`, `js/exports.js`).
@@ -1744,6 +1749,123 @@ Old names still land (`js/analysis-tabs.js` `SUB_MAP`, `FOLD_OF`, `openFold`; te
 | Settings › Usage counts `sub:growth.ledger` | Shown and exported as `sub:growth.timing` (`aliasKey`, through `migrateSub`); the counts kept are not rewritten |
 
 New links write `gs=timing` and carry no fold state.
+
+## Capital: DC timing · EAs · Projects (navigation phase 4)
+
+Navigation phase 4 (docs/architecture-review/navigation-design.md §3.4, §5, §7; pros-and-cons N-6, N-11).
+Capital has three views, **DC timing · EAs · Projects**. DC timing and DC projects are one list
+(`js/dc-projects.js`); the page and the workspace keep the name *DC projects*.
+
+- **One row per 2026 DC project**, on the key both DC models give a DC line (its project number, its
+  contract where it has none: `ln.p || ln.c`), with **both verdicts, named**: *in service before the
+  capacity it relieves runs out* (the capacity model, `js/dc-cost.js` `dcAnalysis`: the year the
+  capacity runs out, "in service after it runs out" or "in service in time", "nothing held back if
+  cancelled", "check the data") and *first homes before it is built* (the DC projects allocation,
+  `js/dc-impact.js`: "3 expected before it is built" or "first homes in time for the 14 relying on
+  it"). The two answer different questions and can disagree: a main can be in service before the
+  capacity it relieves runs out and still after the first homes of a development that needs it to
+  connect, or the reverse; the method says so. A project that relieves no modelled constraint says
+  so and shows under All only; so does one the capacity model has only for the developments connecting
+  to it ("relieves no capacity constraint: developments connect to it", never "in time" for a capacity
+  that does not run out, and not drawn on the chart; Soonest puts it after every capacity verdict).
+- **Status** (Late · In time · Check the data · Room · All, each with its count, Late's with the late
+  reliefs that are no DC line; a status no row has is left out), the **one System control** and **one
+  row of sorts**: *Soonest* (the year the capacity it relieves runs out), *Largest impact* (held back by
+  build-out if it were cancelled), *Most affected* (units relying on it), *$ a unit* (Labs). Each button's tooltip names its measure. The *late* figure
+  sets the list to Late. At Wastewater or Water the answer's largest relief is that System's, and the
+  build-out total (the largest constraint of either system) says *both systems*.
+- **The second verdict is worked out after the list paints** (the allocation walks every sewer pipe and
+  development): the rows say "working out who relies on it…" for a second or so, then fill; once per
+  Scenario. Home and a development's Overview never build it.
+- **Plant expansions, 2020 Master Plan mains and DC facilities** relieve constraints too but are no DC
+  line. Late, they count in the header, the *late* figure and the Late chip, the answer names each
+  ("Also late, with no DC line: G.E. Booth WRRF (Lakeview): expansion to 600 ML/d (in service 2037,
+  capacity runs out ≈2029)", the name opening the facility it relieves), Late lists them after the DC
+  projects and the chart draws them; a plant's or a pumping station's is with its facility in Servicing
+  › Capacity, and the full table's capacity analysis lists every relief.
+- **The full table**: the list in full (both verdicts, filtered as the panel; a row opens the project;
+  at Late the late reliefs that are no DC line named), then **the constraints** at the Status and System
+  (`js/masterplan.js` `consTableHTML`: the DC timing tool result's table, a name opening what loads it, a
+  relief its project or facility; BOD loading and the 2020 Master Plan trunks have no facility in
+  Servicing › Capacity, so this is their panel home), then the capacity analysis (if one project were
+  cancelled: its Year select, sorts, CSV and timelines), then, with the Funding lab on, the screening
+  results and funding levels. The Funding lab's screen is a fold of the panel (with the DC projects
+  relied on but not in the screen). Not moved by this phase, and listed by no later one (§8): the Year
+  select still sets the analysis year itself (§5 row 199 would have it read Scenario › Results for
+  year), and the funding screen's Within · Outside filter stays on its Screening results table (§5 row
+  197 would put it in the Funding fold).
+- **A row opens the project's scope** (`dcwork:<sys>:<key>`, the same as a tap on the DC main, a search
+  pick or an `ss=dcwork:…` link). On the map, its **card** on the Overview (`js/dc-projects.js`
+  `cardHTML`, drawn by `js/masterplan.js` `showDcLine`): trail *Peel › DC timing › the main* (the *DC
+  timing* step opens Capital › DC timing), a headline with both verdicts, the two verdicts as lines,
+  who relies on it as the page's project says it (units and flow in the headline; the developments by
+  tier, their units and people + jobs, and their flow as lines), every development on it by tier (needs
+  it to connect, needs it for capacity, on its path but not needed; past the first 30 the rest in a
+  fold; the map and the left panel filtered to them, a row opening the development), the Funding lab's
+  lines (never in the public version), *CSV: its developments*, *All DC projects ›*, then *What it
+  relieves*. The allocation is worked out after the
+  card first paints ("Working out the developments relying on it…"), then the card is drawn again, once
+  (the tap itself never walks every pipe; the build runs after the paint). A redraw, after the
+  allocation or the sewers it waited for, never moves the reader: the tab they went on to, the phone's
+  sheet and the card's scroll stay as they were.
+  For a DC main the developments come from the DC projects allocation (one model per answer: the card's
+  older "Developments relying on it" list, the first draft of the same rule, stays for DC facilities,
+  which the allocation does not cover). On the Capital page the project opens in place (both verdicts,
+  then the developments by tier, five a tier with *See all* opening the rest in place, the funding fold
+  with the lab, its own map), the section bar's *DC timing* returns to the list, and *Open the map*
+  opens its card. A DC project picked in a page's search opens there.
+- **A Status no project has** keeps the list and its chips, with one line saying none is, so *All* is
+  one tap away. (Today no DC line is late and a plant expansion is: Late lists it.)
+- **The DC timing tool result is the list.** Layers › More settings *DC timing: capacity vs DC projects
+  →*, a development's *All DC timing →*, a constraint's *← DC timing*, Help's *Show me* and
+  `App().showDcTiming()` open Capital › DC timing (on a page, the Capital page) at the Status the
+  workbook's filter holds (`PeelMasterPlan.dcnFilter`, Late to start), closing the development or result
+  open, as the result did. The System is the one control as the reader left it: a link never sets it.
+  The result's own Both · Wastewater · Water seg (the last of three System controls) is gone. Its
+  constraints are in the list's full table, at the list's Status and System (see above); the workbook's
+  DC sheet still lists them, filtered by `dcnFilter`, which only the list's Status chips write (their status and the System at the
+  tap; the late figure and Home's figure set the list's Status only).
+- **Home's *DC projects late*** keeps its source: every relief in service after the capacity it relieves
+  runs out (`dcAnalysis`), Peel-wide, never filtered. A tap opens the Capital page at its DC timing
+  section (wherever the page was left) with the list at Late: at System Both its header, *late* figure
+  and Late chip say Home's number, and Late lists every one.
+- **The Capital page**: DC timing · EAs · Projects. The Projects and EAs lists it borrowed under DC
+  timing are gone: they are its sections.
+- **EA to construction joins EAs.** One builder (`js/capital-ea-model.js` `eaFlowSpec`, with the
+  timeline `eaTimelineHTML`) for both hosts. On the map, Capital › EAs ends with the fold *EA to
+  construction* (shut to start; its answer, four figures and the timeline, a row opening the EA; *The
+  EAs and the construction after them (full table) ›* opens the full table at its first list), and the
+  full table has the EA table, then EA to construction (the timeline, its four lists as tables, the
+  other-work, unknown-date and conflict folds, its method). The fold is kept as the reader leaves it (a
+  tap on its own summary, never a redraw: phase 3's rule) and worked out once per data and
+  municipality. At a development there is no fold (the EAs near the site, as before). The EA to
+  construction chip (`#w=eaflow`, an old link) opens Capital › EAs with the fold open (`fold: 'eaflow'`,
+  `js/analysis-tabs.js` `openFold`). On a page, the Capital page's **EAs** section is the `eaflow`
+  page: the map's Capital › EAs (its answer, figures and lists, built when the map has not drawn it),
+  then EA to construction (its timeline, lists and folds), the EA map; every row opens the EA on the map.
+  Home → Capital → EAs is two taps, as EA to construction was. Beside the EAs its counts say their own
+  measure: an EA with an addendum is complete there (current in the EAs' count) and one with no status
+  published is under way ("Of 45 completed EAs (2 with an addendum under way) … 30 are under way (4 with no
+  status published)"). On a phone the timeline's rows are 44 px and the fold's link wraps.
+
+Old names still land (`js/analysis-tabs.js` `SUB_MAP`; tests/nav-aliases.test.js):
+
+| Old | Where it opens now |
+|---|---|
+| `#t=dca&dcs=dcproj`, a saved view, `data-at="dca:dcproj"`, `openTab('dca', 'dcproj')` | Capital › DC timing (`dcs=timing`) |
+| `#t=dca&dcs=funding`, `dcs=recommendations` | Capital › DC timing (`funding` still turns Labs › DC funding on, and the Funding fold is in the panel while it is on) |
+| A stored DC projects pick (`dcSub=dcproj`) | DC timing |
+| The stored sorts `dcaPnlSort` (DC timing's), `dcProjSort` (DC projects') | One stored sort, `dcSort`: DC timing's, else DC projects' *Most affected* or *$ a unit* (its *Soonest*, the construction year, is not carried), else *Soonest* |
+| The stored open project (`dcProjSel`) | No longer read: Capital opens on the list |
+| A DC project picked in a page's search (`wsec: 'dcproj'`) | The Capital page at the project, DC timing (`wsec: 'timing'`) |
+| Settings › Usage counts `sub:dca.dcproj` | Shown and exported as `sub:dca.timing` (`aliasKey`, through `migrateSub`); the counts kept are not rewritten |
+| The DC timing tool result (`PeelMasterPlan.showDcTiming()`, `App().showDcTiming()`, `[data-dcn-all]`, `#opt-dctiming`, Help's *Show me*) | Capital › DC timing at `dcnFilter`'s Status (`PeelDcProjects.openList`); the System left as it is |
+| `ss=dcwork:<sys>:<key>` (a shared link, a saved view) | The DC main's card, now with both verdicts and the developments by tier (`js/svc-scope.js` `RESTORE.dcwork`) |
+| The EA to construction chip (`#w=eaflow`) | Capital › EAs with the fold *EA to construction* open |
+| The EA to construction page (`#w=p:eaflow`, `lastWs=eaflow`, `data-ws-page="eaflow"`) | The same page id, now the Capital page's **EAs** section (the EAs, then EA to construction); no `PAGE_ALIAS` row |
+
+New links write `dcs=timing|eas|projects`. No page id, `ss=` kind or pane id changes (`#pane-dca-dcproj`
+keeps its id; it is DC timing's now, `data-sub="timing"`, above `#pane-dca-timing`).
 
 ## Reference and This week
 
@@ -3320,7 +3442,8 @@ Two pages added to Home's sidebar, so they are no longer only on the full map:
   a link to *How the forecast is timed*. Same figures as the full map (`growth:timing`).
 - **What's coming** (`coming`): the same page, under its own question (*What is coming, where, when
   and how sure?*), opened with By period.
-- **Capital › EA to construction** (`eaflow`): each Region Class EA and the construction that
+- **Capital › EAs** (`eaflow`, the EAs page; on the map the fold *EA to construction* of Capital ›
+  EAs, since navigation phase 4): each Region Class EA and the construction that
   followed it, as a timeline (EA study, public information centres, completion, then the
   construction bars, with today marked), and lists: complete and waiting (oldest first, those
   10+ years old flagged: the Class EA must be reviewed before construction), construction that
@@ -3358,8 +3481,8 @@ with the reasons and never count as following the EA.
   placed by its projected corners so it turns with the map (road grid). One probe tile decides; when
   tiles don't load (offline), the Check a site map names its streets from the Region's address points
   (`js/reports.js` `streetLines`).
-- **Zoom**: Forecast, This week, DC projects and EA to construction zoom to the municipality chosen.
-- **EA to construction** draws the EA study areas (by status) and the construction that followed.
+- **Zoom**: Forecast, This week, DC projects and the EAs page zoom to the municipality chosen.
+- **The EAs page** (EA to construction) draws the EA study areas (by status) and the construction that followed.
 - **Labels** (the three largest developments, the largest named works, the EAs waiting longest, the
   worst old pipes by street) only on a zoomed-in map: a map of all of Peel names only the municipalities.
 - **Check a site › Site › Water and wastewater** (`js/devtab.js`): within 100 m – 1 km (as the storm

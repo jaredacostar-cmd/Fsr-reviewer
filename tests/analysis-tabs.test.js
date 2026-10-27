@@ -77,7 +77,7 @@ test('sub-view defaults: gSub pipeline, dcSub timing, Servicing capacity, Record
 test('sub-view valid values: at most four per tab', () => {
   assert.deepEqual(plain(AT.TABSUBS.growth.valid), ['pipeline', 'areas', 'timing']);
   assert.deepEqual(plain(AT.TABSUBS.svc.valid), ['capacity', 'network']);
-  assert.deepEqual(plain(AT.TABSUBS.dca.valid), ['timing', 'dcproj', 'projects', 'eas']);
+  assert.deepEqual(plain(AT.TABSUBS.dca.valid), ['timing', 'eas', 'projects']);
   assert.deepEqual(plain(AT.TABSUBS.records.valid), ['sources', 'checks', 'files']);
 });
 
@@ -133,13 +133,14 @@ test('index.html: Servicing sub-views (Capacity · Network), the hydraulic check
   assert.ok(HTML.includes('id="pane-pumpstations" data-pane="svc" data-sub="network"') && HTML.includes('id="pumpstations-body"'), 'pumping stations in Network');
 });
 
-test('index.html: Capital sub-views (DC timing · DC projects · Projects · EAs; the Funding lab inside DC projects)', () => {
-  for (const [sub, label] of [['timing', 'DC timing'], ['dcproj', 'DC projects'], ['projects', 'Projects'], ['eas', 'EAs']]) assert.ok(HTML.includes(`data-dcasub="${sub}">${label}</button>`), `DC subtab ${sub} missing`);
-  assert.ok(!HTML.includes('data-dcasub="funding"'), 'no Funding chip: the funding screen is in DC projects');
-  assert.ok(HTML.includes('id="pane-dca-dcproj" data-pane="dca" data-sub="dcproj"') && HTML.includes('id="dca-dcproj-body"'), 'DC projects pane/body');
+test('index.html: Capital sub-views (DC timing · EAs · Projects; the Funding lab a fold of DC timing)', () => {
+  for (const [sub, label] of [['timing', 'DC timing'], ['eas', 'EAs'], ['projects', 'Projects']]) assert.ok(HTML.includes(`data-dcasub="${sub}">${label}</button>`), `DC subtab ${sub} missing`);
+  assert.ok(!HTML.includes('data-dcasub="dcproj"') && !HTML.includes('data-dcasub="funding"'), 'no DC projects or Funding chip: DC timing is the one list, the funding screen its fold (navigation phase 4)');
+  assert.ok(HTML.includes('id="pane-dca-dcproj" data-pane="dca" data-sub="timing"') && HTML.includes('id="dca-dcproj-body"'), 'the list in full: DC timing’s full table');
+  assert.ok(HTML.indexOf('id="pane-dca-dcproj"') < HTML.indexOf('id="pane-dca-timing"'), 'the list first, then the capacity analysis');
   assert.ok(HTML.includes('id="pane-dca-timing"') && HTML.includes('id="dca-timing-body"'), 'dca timing pane/body missing');
-  assert.ok(HTML.includes('id="pane-dca-rec" data-pane="dca" data-sub="dcproj"') && HTML.includes('id="dca-rec-body"'), 'screening results in DC projects (Funding lab)');
-  assert.ok(HTML.includes('id="pane-dca-funding" data-pane="dca" data-sub="dcproj"') && HTML.includes('id="dca-funding-body"'), 'funding levels in DC projects (Funding lab)');
+  assert.ok(HTML.includes('id="pane-dca-rec" data-pane="dca" data-sub="timing"') && HTML.includes('id="dca-rec-body"'), 'screening results in DC timing (Funding lab)');
+  assert.ok(HTML.includes('id="pane-dca-funding" data-pane="dca" data-sub="timing"') && HTML.includes('id="dca-funding-body"'), 'funding levels in DC timing (Funding lab)');
   assert.ok(!HTML.includes('id="pane-dca"'), 'old single DC pane still present');
   assert.ok(!HTML.includes('id="dca-body"'), 'old dca-body still present');
 });

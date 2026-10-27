@@ -152,7 +152,7 @@
   document.addEventListener('click', e => {
     const g = e.target.closest('[data-foot-tab]');
     if (g) { const [tab, sub] = g.dataset.footTab.split(':'); AT().openTab(tab, sub); return; }   // "tab" or "tab:sub-view"
-    if (e.target.closest('#scope-body') && e.target.closest('[data-pipe], [data-dcn-all], [data-dcn-cons], [data-dcn-relief], [data-dcn-filter]')) return;
+    if (e.target.closest('#scope-body') && e.target.closest('[data-pipe], [data-dcn-all], [data-dcn-cons], [data-dcn-relief]')) return;
     const pb = e.target.closest('[data-pipe]');
     if (pb && MM().SEW.data) { const i = +pb.dataset.pipe; SC().showPipeLoads(i); const c = MM().SEW.data.pipes[i][10]; map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); return; }
     if (e.target.closest('[data-dcn-all]')) { SC().loadSewers(); MP().showDcTiming(); return; }

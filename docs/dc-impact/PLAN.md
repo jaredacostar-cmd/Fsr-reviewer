@@ -1,5 +1,7 @@
 # Capital › DC projects: which developments does each one affect?
 
+(2026-10: since navigation phase 4 this list is Capital › DC timing, merged with the capacity timing; a project opens its `dcwork:` card.)
+
 Draft plan, October 2026. Nothing built yet.
 
 > **Status (October 22, 2026): ready to build.** The DC mapping update merged to main as #322, and the prototype was rerun on main: the allocation is unchanged from the check on the branch. Main's new timing curves do change the timing gaps (see ALLOCATION.md, step 4).

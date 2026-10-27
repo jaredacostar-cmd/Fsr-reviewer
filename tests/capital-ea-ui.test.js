@@ -311,7 +311,7 @@ test('Capital tab: Projects and EAs views (public too), screening note in This w
   assert.match(html, /id="pane-dca-eas" data-pane="dca" data-sub="eas"/);
   assert.doesNotMatch(html, /id="ce-week-panel"|class="week-moved"/, 'the hidden This week copies are gone (the This week page is their home)');
   // Only the funding screen is held back in the public version (and behind its Labs switch): its panes
-  // in DC projects, and the panel's Funding folds (js/dc-projects.js).
+  // in DC timing, and the panel's Funding folds (js/dc-projects.js).
   assert.match(html, /class="f-pane lab-funding-pane pv-hide" id="pane-dca-rec"/);
   assert.match(src('js/dc-projects.js'), /const funding = \(\) => !!\(root\.PeelLabs && root\.PeelLabs\.on\('funding'\) && !\(U\.isPublic && U\.isPublic\(\)\)\);/);
   assert.match(src('js/overview-tab.js'), /dca: 'Capital'/);

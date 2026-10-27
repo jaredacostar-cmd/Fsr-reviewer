@@ -409,11 +409,18 @@
     if (!data.eas) return '<p class="small muted">The environmental assessments did not load.</p>';
     return M.eaTabHTML({ eas: data.eas.eas, f: eaTab.f, picked: !!eaTab.picked, sort: eaTab.sort, today: today(), thisYear: new Date().getFullYear(), muni: muni(), near: nearScope(), checked: data.eas.generatedAt && data.eas.generatedAt.slice(0, 10), screenNote: U.SCREEN_NOTE_SHORT });
   }
+  // EA to construction under the EA table: the timeline, its lists as tables (each caption a stop for the panel's
+  // links), the other work, unknown dates and conflicts. (A row opens the EA: the document handler above.)
+  function eaFlowFullHTML() {
+    const f = nearScope() ? null : flowNow(); if (!f) return '';
+    const tbl = l => (l && l.rows.length ? `<table class="dt"><caption>${esc(l.title)} <span class="muted">(${l.rows.length})</span></caption><tbody>${l.rows.map(r => `<tr class="ld-row"${Object.entries(r.attrs || {}).map(([k, v]) => ` ${k}="${esc(v)}"`).join('')} tabindex="0"><td>${r.html}</td></tr>`).join('')}</tbody></table>` : '');
+    return `<section class="ea-flow" data-info="eaflow"><h3 class="sub-title">EA to construction</h3>${U.hlP ? U.hlP(f.answer) : `<p>${f.answer}</p>`}${f.chart}${f.lists.map(tbl).join('')}${f.folds.filter(Boolean).map(x => `<details class="dcn-more"${x.open ? ' open' : ''}><summary class="small">${esc(x.title)}</summary>${x.html}</details>`).join('')}<details class="dcn-more"><summary class="small">Method and basis</summary><p class="small muted">${f.method}</p></details></section>`;
+  }
   let eaBox = null;
   function renderEaTab(box) {
     eaBox = box || eaBox || document.querySelector('#dca-eas-body'); if (!eaBox) return;
     const q = eaBox.querySelector('[data-eatab-q]'), focused = q && document.activeElement === q, pos = q ? q.selectionStart : 0;
-    eaBox.innerHTML = eaTabHTML();
+    eaBox.innerHTML = `${eaTabHTML()}${eaFlowFullHTML()}`;
     if (focused) { const q2 = eaBox.querySelector('[data-eatab-q]'); if (q2) { q2.focus(); q2.setSelectionRange(pos, pos); } }
   }
   // ---- Stage 3: Capital › Projects and Capital › EAs as standard panels ---------------------------------
@@ -434,6 +441,32 @@
       foot: { primary: { label: 'Show them on the map', attrs: { 'data-pnl-ce-map': 'cons' } }, ...(data.capital ? { secondary: [{ label: 'CSV: every contract', attrs: { 'data-ce-cap-csv': '' } }] } : {}) },
     };
   }
+  // EA to construction (navigation phase 4: was a page of its own; js/capital-ea-model.js eaFlowSpec): the area's
+  // fold of Capital › EAs, shut to start; #w=eaflow opens it (openEaFlow); its lists are the full table's. Worked
+  // out once per data and municipality (Capital redraws on every render, the EA table on every keystroke).
+  const EAFLOW_ID = 'pnl-eaflow';
+  let eaFlowOpen = false, flowMemo = { k: null, f: null };
+  const flowNow = () => {
+    if (!(data.loaded && data.eas && data.capital)) return null;
+    const k = [data.eas.generatedAt, (data.capital.records || []).length, muni()].join('|');
+    if (flowMemo.k !== k) flowMemo = { k, f: M.eaFlowSpec({ eas: data.eas.eas || [], capital: data.capital.records || [], muni: muni(), open: x => ({ 'data-ce-open': `ea:${x.e.id}` }) }) };
+    return flowMemo.f;
+  };
+  function eaFlowFold() {
+    const f = nearScope() ? null : flowNow(); if (!f) return null;
+    const kv = x => root.PeelPanel.kv(`${x.label}${x.ctx ? ` <small>${x.ctx}</small>` : ''}`, `${x.v}${x.u ? `\u00a0${x.u}` : ''}`, x.tone).html;   // ("19 EAs" on one line)
+    return { id: EAFLOW_ID, title: 'EA to construction', open: eaFlowOpen, html: `<p class="small">${f.answer}</p>${f.figures.map(kv).join('')}${f.chart}<p class="small"><button type="button" class="btn small link eat-ft" data-full-table="dca" data-ft-go="Complete, waiting for construction">The EAs and the construction after them (full table) ›</button></p>` };
+  }
+  // (the reader's fold as they left it, on a panel put back from its stored HTML)
+  const syncEaFlow = host => { const d = host && host.querySelector ? host.querySelector(`#${EAFLOW_ID}`) : null; if (d && d.open !== eaFlowOpen) d.open = eaFlowOpen; };
+  // Open it (the chip, a link, the EAs page behind it): drawn open where it is on screen, and in the stored panel.
+  function openEaFlow() {
+    if (eaFlowOpen) return;
+    eaFlowOpen = true;
+    if (typeof document !== 'undefined' && document.querySelectorAll) document.querySelectorAll(`#${EAFLOW_ID}`).forEach(d => { d.open = true; });
+    const PN = root.PeelPanel, e = PN && PN.get ? PN.get('dca:eas') : null;
+    if (e && e.spec && e.scope === PN.scopeId()) PN.set('dca:eas', easPanelSpec());
+  }
   function easPanelSpec() {
     const PN = root.PeelPanel, near = nearScope(), all = (data.eas && data.eas.eas) || [], t = today(), y = new Date().getFullYear();
     const scoped = near ? M.easNear(all, near.lat, near.lng, near.m, near.pts).map(h => ({ ...h.e, _d: h.d })) : muni() ? all.filter(inScope) : all;
@@ -443,8 +476,9 @@
     const works = near ? (siteBriefFor() || { works: [] }).works : [];
     const workRow = x => { const [head, tail] = M.briefWorkLine(x); return { attrs: { 'data-ce-open': `cap:${x.c.key}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${U.esc(head)}</span>${M.statusBadge(x.c.status)}</div><small class="pnl-r-line">${U.esc(tail.replace(/^[^;,]+[;,] ?/, ''))}</small>` }; };
     const eaRow = e => ({ attrs: { 'data-ce-open': `ea:${e.id}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${U.esc(e.name)}<small>${U.esc(M.titleCase(e.system))}${e._d != null ? ` · ${e._d < 1 ? 'on the site' : `${Math.round(e._d)} m away`}` : ''}</small></span>${M.eaBadge(e.status)}</div><small class="pnl-r-line">${e.nextStep ? `next: ${U.esc(e.nextStep.text)}${e.nextStep.date ? ` · ${U.esc(M.fmtDate(e.nextStep.date))}` : ''}` : e.completedYear ? `completed ${e.completedYear}` : 'no next step published'}</small>` });
+    const flow = near ? null : flowNow();
     return {
-      fullTitle: `Capital › EAs · ${p ? p.title : muni() || 'Peel'}: every environmental assessment, with filters`,
+      fullTitle: `Capital › EAs · ${p ? p.title : muni() || 'Peel'}: every environmental assessment, with filters${near ? '' : ', and EA to construction'}`,
       head: p ? PN.siteHead(p) : PN.areaHead('Capital › EAs', 'What is being studied?', open.length ? { tone: 'tight', text: `${open.length} open for comment` } : null, `${U.esc(muni() || 'Peel')} · ${scoped.length} EAs`),
       answer: near ? `${scoped.length ? `<strong>${scoped.length}</strong> EA${scoped.length === 1 ? '' : 's'} within 1 km of the site boundary (${cur.length} current)` : 'No EA mapped within 1 km of the site boundary'}${may.length ? `; <strong>${may.length}</strong> more may apply (not on the map yet)` : ''}; <strong>${works.length}</strong> capital work${works.length === 1 ? '' : 's'} planned or under way within 1 km${works.filter(x => x.check.overdue).length ? ` (${works.filter(x => x.check.overdue).length} past ${works.filter(x => x.check.overdue).length === 1 ? 'its' : 'their'} completion target)` : ''}.`
         : `<strong>${cur.length}</strong> current EA${cur.length === 1 ? '' : 's'}${muni() ? ` in ${U.esc(muni())}` : ''}; ${up.length} milestone${up.length === 1 ? '' : 's'} in the next 90 days${open.length ? `, <strong>${open.length}</strong> open for comment now` : ''}.`,
@@ -455,8 +489,10 @@
         ...(may.length ? [{ title: 'May apply (not on the map yet)', rows: may.slice(0, 5).map(eaRow), total: may.length, seeAll: { 'data-full-table': 'dca' } }] : []),
         ...(near ? [{ title: 'Capital works planned or under way near the site', rows: works.slice(0, 5).map(workRow), total: works.length, seeAll: { 'data-full-table': 'dca' } }] : []),
       ],
-      method: near ? 'EAs whose mapped study area is within 1 km of the site boundary (0 inside it); "may apply" lists EAs with no mapped study area that name the site\u2019s municipality or the whole Region. Capital works: planned, tendered, awarded or under construction contracts with a segment within 1 km; % built is the Region\u2019s figure, else estimated from the start and target dates; a target passed with no completion date, or a record not updated in a year, is said. Copy for review comments gives all of it as plain text with each project page.' : 'Region of Peel environmental assessments: current ones (commenced, in consultation, under review or in addendum), their dated milestones and open comment periods. Screening wording only.',
+      method: near ? 'EAs whose mapped study area is within 1 km of the site boundary (0 inside it); "may apply" lists EAs with no mapped study area that name the site\u2019s municipality or the whole Region. Capital works: planned, tendered, awarded or under construction contracts with a segment within 1 km; % built is the Region\u2019s figure, else estimated from the start and target dates; a target passed with no completion date, or a record not updated in a year, is said. Copy for review comments gives all of it as plain text with each project page.' : `Region of Peel environmental assessments: current ones (commenced, in consultation, under review or in addendum), their dated milestones and open comment periods.${flow ? ` EA to construction: ${flow.method.split('. ').slice(0, 2).join('. ')} (the rule in full under the full table).` : ''} Screening wording only.`,
       sources: `Region of Peel EA project pages${data.eas && data.eas.generatedAt ? `, checked ${U.esc(M.fmtDate(data.eas.generatedAt.slice(0, 10)))}` : ''}.`,
+      // (EA to construction: a fold of the area's panel, on the map only; the Capital page's EAs section is its page)
+      folds: near ? [] : [eaFlowFold()].filter(Boolean), onMount: syncEaFlow,
       foot: { primary: { label: 'Show EAs on the map', attrs: { 'data-pnl-ce-map': 'ea' } }, ...(near ? { secondary: [{ label: 'Copy for review comments', attrs: { 'data-ce-copy-brief': '' } }] } : {}) },
     };
   }
@@ -504,6 +540,13 @@
       else return;
       saveEaTab(); renderEaTab();
     });
+    // (EA to construction's fold as the reader leaves it: a tap on its own summary, not a redraw, which fires
+    // toggle for every fold it draws open; phase 3's rule, js/ledger-ui.js. toggle does not bubble: capture.)
+    let flowPicked = null;
+    document.addEventListener('click', e => { const s = e.target && e.target.closest ? e.target.closest('summary') : null; flowPicked = s && s.parentElement && s.parentElement.id === EAFLOW_ID ? s.parentElement : null; }, true);
+    document.addEventListener('toggle', e => { if (e.target !== flowPicked) return; flowPicked = null; eaFlowOpen = e.target.open; }, true);
+    // (a timeline row or a full-table row is a button: Enter or Space opens the EA, as a click does)
+    document.addEventListener('keydown', e => { const r = e.target.closest && e.target.closest('.eat-row[data-ce-open], tr[data-ce-open]'); if (r && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); r.click(); } });
     document.addEventListener('click', e => {
       const go = e.target.closest('[data-ce-goto]');
       if (go) { const AT = window.PeelAnalysisTabs; if (AT) { AT.setSub('dca', go.dataset.ceGoto); AT.showFootTab('dca'); } return; }
@@ -554,6 +597,6 @@
 
   // Stage 1 #9: a DC project's status in the capital records (null when it has no record).
   const dcStatusOf = proj => (proj && data.capital ? dcIndex().get(proj) || null : null);
-  const api = { projectsPanelSpec, easPanelSpec, siteEaCount, siteBriefCount, siteBriefFor, siteBriefText, siteBriefHTML, watchList, dcStatusOf, statusText: s => M.statusLabel(s), renderEaTab, eaTabHTML, renderIfChanged, exportConsGeoJSON, exportEasGeoJSON, consGeoJSON, easGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
+  const api = { projectsPanelSpec, easPanelSpec, openEaFlow, eaFlowOpen: () => eaFlowOpen, siteEaCount, siteBriefCount, siteBriefFor, siteBriefText, siteBriefHTML, watchList, dcStatusOf, statusText: s => M.statusLabel(s), renderEaTab, eaTabHTML, renderIfChanged, exportConsGeoJSON, exportEasGeoJSON, consGeoJSON, easGeoJSON, workbookSheets, setOn, consHits, eaHits, easForDcHTML, listsHTML, dcActualHTML, attention, watchRows, load, setData, render, renderLabels, openEA, openCapital, settingsHTML, legendHTML, syncControls, getState: () => ce, data };
   root.PeelCapitalEA = api;
 })(typeof window !== 'undefined' ? window : globalThis);

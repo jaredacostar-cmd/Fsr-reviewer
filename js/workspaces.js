@@ -27,7 +27,9 @@
     { id: 'outlook', label: 'Forecast', group: 'Planning', tab: 'growth', sub: 'timing', scope: 'area', view: 'planning', what: 'When homes and people arrive, by year' },
     { id: 'study', label: 'Study area', group: 'Planning', tab: 'overview', sub: '', scope: 'drawn', view: 'planning', what: 'Draw an area: its growth and servicing' },
     { id: 'projects', label: 'DC projects', group: 'Capital', tab: 'dca', sub: 'timing', scope: 'area', view: 'dc', what: 'Is each DC project in time?' },
-    { id: 'eaflow', label: 'EA to construction', group: 'Capital', tab: 'dca', sub: 'eas', scope: 'area', view: 'dc', what: 'Each EA and the construction after it' },
+    // EA to construction (navigation phase 4): Capital › EAs with its EA to construction fold open; its page is
+    // the Capital workspace's EAs (js/ws-pages.js eaflow).
+    { id: 'eaflow', label: 'EA to construction', group: 'Capital', tab: 'dca', sub: 'eas', fold: 'eaflow', scope: 'area', view: 'dc', what: 'Each EA and the construction after it' },
     // QA/QC (decided with the user): where each development discharges, confirmed or set on the map (js/dev-outlets.js).
     { id: 'outlets', label: 'Review outlets', group: 'QA/QC', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Check and fix where developments discharge' },
     { id: 'pipes', label: 'Old pipes', group: 'Asset Management', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Old sewers that carry the most growth' },
@@ -58,12 +60,13 @@
   // view opens on Check a site; a step up its trail opens Growth in an area there. Their map-view
   // chips, links and share links keep their own ids.
   const EXPLORE = ['growth', 'site', 'fsr', 'outlook', 'study'];
-  // Capital (step 4): DC projects and EA to construction, one entry; the map's Projects and EAs are
-  // sections of DC projects' page (js/sections.js WORKSPACES).
+  // Capital (step 4; navigation phase 4): DC projects and EA to construction, one entry; DC timing (DC projects'
+  // page), EAs (EA to construction's page: the EAs, then EA to construction) and Projects are its sections
+  // (js/sections.js WORKSPACES).
   const CAPITAL = ['projects', 'eaflow'];
   const SIDE = {
     explore: { label: 'Explore', what: 'A site, a plan or an area you draw: growth, servicing, capital, files, FSR' },
-    capital: { label: 'Capital', what: 'DC timing, EA to construction, projects, EAs' },
+    capital: { label: 'Capital', what: 'DC timing, EAs and EA to construction, projects' },
     // Reference (step 5): Help, How it works, the Glossary, How the app decides and Data sources, one entry.
     reference: { label: 'Reference', what: 'Help, how it works, the glossary, the app’s rules, data sources and checks' },
   };
@@ -88,10 +91,10 @@
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Records › Data checks (Servicing has none since
   // navigation phase 2), Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.
-  const SUB_NAME = { capacity: 'Capacity', network: 'Network', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', 'dca:timing': 'DC timing', dcproj: 'DC projects', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
+  const SUB_NAME = { capacity: 'Capacity', network: 'Network', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', 'dca:timing': 'DC timing', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
   const tabPath = (tab, sub) => [TAB_NAME[tab] || tab, sub ? SUB_NAME[`${tab}:${sub}`] || SUB_NAME[sub] || sub : ''].filter(Boolean).join(' › ');
   // What a chip does: the tab, sub-view, scope and preset; closeScopes = area chips leave a site; fold: the
-  // fold of that sub-view it opens (What's coming: By period).
+  // fold of that sub-view it opens (What's coming: By period; EA to construction: its fold of Capital › EAs).
   function plan(id, ctx = {}) {
     const w = BY_ID[id]; if (!w) return null;
     const site = !!ctx.site;
@@ -163,8 +166,9 @@
   // page. A development its page on Summary (from Review an FSR, its FSR review); a file number its page
   // at Files; a plan Growth in an area at the plan (else its municipality); an MTSA its filter, as on the
   // map, at its municipality; a plant, station, block, zone or South Peel its scope on Servicing
-  // capacity's map; a DC project Capital › DC projects at it; a DC facility or an address the map view
-  // where the map's own pick then runs (then: 'map'). null: not a place (the filter row, a lookup).
+  // capacity's map; a DC project Capital › DC timing at it (in place, on the Capital page); a DC facility
+  // or an address the map view where the map's own pick then runs (then: 'map'). null: not a place (the
+  // filter row, a lookup).
   // (the drill is the page's own: the map and the other pages stay unfiltered, owner decision 10)
   function pageRoute(x, page) {
     if (!x || x.filter || x.loading) return null;
@@ -173,7 +177,7 @@
     if (h.hit === 'plan') return { page: 'growth', drill: `a:${h.id}`, fall: muni ? `m:${muni}` : 'peel', muni, sp: h.id };
     if (h.hit === 'mtsa') return { page: 'growth', drill: muni ? `m:${muni}` : 'peel', muni, then: 'map' };
     if (h.hit === 'svc') return { ws: 'tight', ss: h.ss };
-    if (h.hit === 'dc') return { page: 'projects', wsec: 'dcproj', dcSel: h.key };
+    if (h.hit === 'dc') return { page: 'projects', wsec: 'timing', dcSel: h.key };
     if (h.hit === 'dcfac') return { ws: 'projects', then: 'map' };
     if (x.g) return { ws: 'site', then: 'map' };
     return null;
@@ -605,9 +609,11 @@
     const un = e.target.closest('[data-ws-unpick]');
     if (un) { if (root.DevScope && root.DevScope.current()) root.DevScope.close(); openPage(un.dataset.wsUnpick); return; }
     const g = e.target.closest('[data-ws-go]');
-    if (g) { e.preventDefault(); const dev = g.dataset.wsDev, ce = g.dataset.wsCe, pipe = g.dataset.wsPipe, ft = g.dataset.wsFulltable; go(g.dataset.wsGo, { ss: g.dataset.wsSs, quiet: !!dev });
+    if (g) { e.preventDefault(); const dev = g.dataset.wsDev, ce = g.dataset.wsCe, pipe = g.dataset.wsPipe, ft = g.dataset.wsFulltable, dcw = g.dataset.wsDcwork; go(g.dataset.wsGo, { ss: g.dataset.wsSs, quiet: !!dev });
       if (dev) pickDev(dev);
       if (ce && root.PeelCapitalEA) { const [k, ...rest] = ce.split(':'), CE = root.PeelCapitalEA; if (k === 'ea') CE.openEA(rest.join(':')); else if (k === 'cap') CE.openCapital(rest.join(':')); }
+      // (the Capital page's "Open the map" with a DC project open: the map view at its card)
+      if (dcw && root.PeelDcProjects && root.PeelDcProjects.openWork) root.PeelDcProjects.openWork(dcw);
       if (pipe != null && SC() && MM().SEW && MM().SEW.data) { const i = +pipe, c = MM().SEW.data.pipes[i][10], map = root.PeelMapCore.map; SC().showPipeLoads(i); map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); }
       if (ft && PN() && PN().openFull) setTimeout(() => PN().openFull(), 400);
       // An area from Growth in an area: the map and every tab filtered to it (Growth › Areas' own filter).

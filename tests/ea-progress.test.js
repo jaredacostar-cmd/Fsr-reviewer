@@ -81,12 +81,14 @@ test('Home pages: EA to construction (Capital) and Forecast (Planning), reachabl
   assert.match(s, /function eaflow\(\) \{/);
   assert.match(s, /function outlook\(id = 'outlook'\) \{\s*const t = specOf\('growth:timing', areaScope\);/);
   // (step 6: from Home's groups: the 2031 figure opens the Forecast; Capital opens DC projects, whose
-  // section bar holds EA to construction)
+  // section bar holds EAs, with EA to construction)
   assert.match(s, /label: 'expected by 2031', ctx: f31\.ctx, attrs: go\('outlook'\)/);
   assert.match(s, /\{ title: 'Capital', link: \{ label: 'Capital', attrs: go\('projects'\) \}/);
-  assert.match(s, /\{ id: 'eaflow', title: 'EA to construction', page: 'eaflow' \}/.test(src('js/sections.js')) ? /function eaflow/ : /never/);
-  // The outcome list only holds construction the model calls the EA's outcome.
-  assert.match(s, /followed\.flatMap\(x => x\.outcome\.map\(/);
+  assert.match(src('js/sections.js'), /\{ id: 'eas', title: 'EAs', page: 'eaflow' \}/, 'EA to construction is the EAs section’s page');
+  // The outcome list only holds construction the model calls the EA's outcome (the rule moved with the spec,
+  // js/capital-ea-model.js eaFlowSpec, which the page builds on).
+  assert.match(src('js/capital-ea-model.js'), /followed\.flatMap\(x => x\.outcome\.map\(/);
+  assert.match(s, /M\.eaFlowSpec\(\{/);
   // No colours in the page code: tokens in css/app.css.
   const body = s.slice(s.indexOf('function eaflow'), s.indexOf('// ---- This week'));
   assert.doesNotMatch(body, /#[0-9a-f]{3,6}\b/i);

@@ -712,7 +712,10 @@
     }
     return rows;
   }
-  function dcNeedsSection(it) {
+  // (o.devs false: a DC line's card has its developments from the DC projects allocation already, by tier,
+  // js/dc-projects.js cardHTML: one model per answer; a DC facility, which the allocation does not cover,
+  // keeps this list)
+  function dcNeedsSection(it, o = {}) {
     if (!App().state.svcModel) return '';
     const cs = dcItemCons(it), conn = it.ln ? dcConnectors(it.ln) : [];
     let zoneRows = [];
@@ -727,7 +730,7 @@
       ${cs.length ? `${needsTable(cs, ppu)}<p class="small muted">Room in units at ${ppu} persons per unit (apartment).</p>` : `<p class="small muted">${it.ln && it.ln.sys === 'wastewater' ? 'It does not run along an existing sanitary sewer of 300 mm or more (a new trunk or a local main).' : 'No tabled capacity matched to it.'}</p>`}
       ${conn.length ? `<p class="small"><strong>${fmtNum(conn.length)} development${conn.length === 1 ? '' : 's'}</strong> outside the existing network would connect to it.</p>` : ''}
       ${zoneNote}
-      ${devsOfDcHTML(cs.filter(c => c.kind !== 'wplant' || cs.length === 1), conn, zoneRows)}`;
+      ${o.devs === false ? '' : devsOfDcHTML(cs.filter(c => c.kind !== 'wplant' || cs.length === 1), conn, zoneRows)}`;
   }
   // Who relies on a DC project. Through an existing pipe or facility it relieves only where that
   // runs short (a sewer with room to build-out needs no relief: the developments draining through
@@ -740,19 +743,21 @@
       ${consDevsHTML(roomy, [], { caption: `developments draining through ${roomy.length === 1 ? 'it' : 'them'}` })}</details>` : '';
     return `<h3 class="sub-title">Developments relying on it</h3>${relying}${through}`;
   }
-  // Panel for a planned main (tap on the map or a relief link).
+  // Panel for a planned main (tap on the map, a relief link, a Capital › DC timing row, a search pick): its
+  // card, both verdicts and the developments relying on it by tier (js/dc-projects.js), then what it relieves.
+  // Its trail: Peel › DC timing › the main (the group step opens Capital › DC timing, js/svc-scope.js).
   function showDcLine(ln) {
     const proj = ln.p || ln.c, parts = App().state.dcInfra[ln.sys].lines.filter(x => (x.p || x.c) === proj);
     const len = parts.reduce((t, x) => { for (let i = 1; i < x.g.length; i++) t += DI().dcM(x.g[i - 1], x.g[i]); return t; }, 0);
     const ys = parts.map(x => x.y).filter(Boolean);
-    const dcTitle = `DC ${DI().DC_KIND[ln.k][0]}${ln.d ? ` · ${ln.d} mm` : ''}`;
+    const dcTitle = `DC ${DI().DC_KIND[ln.k][0]}${ln.d ? ` · ${ln.d} mm` : ''}`, DP = window.PeelDcProjects, card = DP && DP.cardHTML ? DP.cardHTML(ln) : '';
     const html = `
       <div class="head"><h3>${esc(DI().DC_KIND[ln.k][0])}${ln.d ? ` · ${ln.d} mm` : ''}</h3><div class="m">${ln.p ? `Project ${esc(ln.p)}` : 'No project label'} · construction ${ys.length ? (Math.min(...ys) === Math.max(...ys) ? ys[0] : `${Math.min(...ys)}–${Math.max(...ys)}`) : 'year not labelled'} · ${unit(fmtNum(Math.round(len / 10) * 10), 'm')} · ${ln.s === 'approved' ? 'approved 2026' : 'proposed'} · 2026 DC capital map (draft)</div></div>
       ${ln.n ? `<p class="small">${esc(ln.n)}</p>` : ''}
-      ${dcNeedsSection({ ln })}
+      ${card}${dcNeedsSection({ ln }, { devs: !card })}
       `;
     TS().loadsOf = { dc: { ln } };
-    TS().toolResult('dc', dcTitle, html, () => showDcLine(ln), { ref: `dcwork:${ln.sys}:${ln.p || ln.c}` });
+    TS().toolResult('dc', dcTitle, html, () => showDcLine(ln), { ref: `dcwork:${ln.sys}:${ln.p || ln.c}`, group: 'DC timing' });
   }
   // All constraints in the network, for the DC timing table.
   function allNeeds() {
@@ -787,23 +792,26 @@
       return out.sort((a, b) => order[a.status] - order[b.status] || yr(a) - yr(b) || a.people - b.people);
     });
   }
+  // The DC timing tool result is Capital › DC timing now (navigation phase 4): every way to it ("All DC timing →",
+  // "← DC timing", Layers › More settings, Help's Show me, App().showDcTiming) opens that list at dcnFilter's
+  // Status, in the one System control as the reader left it (only the list's own Status chip writes the
+  // filter's system part, so applying it here could only undo a later System pick). The constraints the result
+  // listed are in that list's full table, at its Status and System (consTableHTML); a plant's, a pumping
+  // station's and storage's are with the facility in Servicing › Capacity too, a plant's BOD loading and the 2020
+  // Master Plan trunks only there; dcnFilter still filters the workbook's DC sheet (js/exports.js).
   let dcnFilter = 'gap';
   function showDcTiming() {
-    if (!App().state.svcModel) return;
-    const all = allNeeds(), ppu = (App().state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment;
-    const sysF = dcnFilter.split(':')[1] || 'all', stF = dcnFilter.split(':')[0];
-    const list = all.filter(c => (stF === 'all' || c.status === stF) && (sysF === 'all' || c.sys === sysF));
-    const n = k => all.filter(c => c.status === k).length;
-    const html = `
-      <div class="head"><h3 data-info="dc-needs">DC timing</h3><div class="m">Existing capacity against the 2026 DC capital program (draft) · ${esc(SvcTab().scenarioText())}</div></div>
-      <div class="chips">${[['gap', `Screens late ${n('gap')}`], ['planned', `DC project in time ${n('planned')}`], ['check', `Check the data ${n('check')}`], ['ok', `Room to build-out ${n('ok')}`], ['all', `All ${all.length}`]].map(([k, t]) => `<button type="button" class="chip btn small${stF === k ? ' on' : ''}" data-dcn-filter="${k}:${sysF}">${esc(t)}</button>`).join('')}
-        <span class="seg">${[['all', 'Both'], ['ww', 'Wastewater'], ['water', 'Water']].map(([k, t]) => `<button type="button" class="btn small${sysF === k ? ' on' : ''}" data-dcn-filter="${stF}:${k}">${t}</button>`).join('')}</span></div>
-      ${list.length ? needsTable(list.slice(0, 150), ppu) : '<p class="small muted">Nothing in this group.</p>'}
-      ${list.length > 150 ? `<p class="small muted">+ ${fmtNum(list.length - 150)} more.</p>` : ''}
-      <p class="small"><span class="muted">Tap a name for what loads it; tap a DC project for what it relieves and who relies on it.</span></p>
-      <p class="small muted">Sewers: pipes reaching 90% of full capacity by build-out, grouped by the DC main that runs along them (or by run); the tightest pipe of each group is shown. Room in units at ${ppu} persons per unit (apartment). Room = capacity − (existing + built + approved); runs out = the year approved and proposed growth reach it, phased as in Horizon years. Plants at ${Math.round(PLANT_TRIGGER * 100)}% of rated; pumping stations at firm capacity; storage from the 2020 Master Plan forecast; water supply into the upper zones is a rough conveyance estimate (1.5 m/s in the large mains crossing each zone boundary; water pumping station capacities are not published). A screen, not a hydraulic model.</p>`;
-    TS().loadsOf = { dc: { timing: true } };
-    TS().toolResult('dc', 'DC timing', html, showDcTiming, { filter: false });
+    const DP = window.PeelDcProjects;
+    if (DP && DP.openList) DP.openList({ status: dcnFilter.split(':')[0] || 'gap' });
+  }
+  // The constraints at a Status and System (st: gap · planned · check · ok · all; sys: all · ww · water), the
+  // table the DC timing tool result drew: Capital › DC timing's full table, under the DC projects
+  // (js/dc-projects.js fullHTML). A name opens what loads it, a relief the DC project or facility.
+  function consTableHTML(st = 'all', sys = 'all') {
+    if (!App().state.svcModel) return '';
+    const all = allNeeds().filter(c => sys === 'all' || c.sys === sys), list = all.filter(c => st === 'all' || c.status === st), ppu = (App().state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment;
+    return `${list.length ? needsTable(list.slice(0, 150), ppu) : '<p class="small muted">No constraint at this Status.</p>'}${list.length > 150 ? `<p class="small muted">+ ${fmtNum(list.length - 150)} more (the workbook’s DC sheet has every one).</p>` : ''}
+      <p class="small muted">Room in units at ${ppu} persons per unit (apartment). Room = capacity − (existing + built + approved); runs out = the year approved and proposed growth reach it, phased as in Horizon years. ${PIPE_RESULTS ? 'Sewers: pipes reaching 90% of full capacity by build-out, grouped by the DC main that runs along them (or by run). ' : `${PIPES_NOT_ASSESSED}. `}Plants at ${Math.round(PLANT_TRIGGER * 100)}% of rated; pumping stations at firm capacity; storage from the 2020 Master Plan forecast; water supply into the upper zones is a rough conveyance estimate (1.5 m/s in the large mains crossing each zone boundary; water pumping station capacities are not published). ${TRUNK_NOTE} A screen, not a hydraulic model.</p>`;
   }
   function showConsDevs(c) {
     const ppu = (App().state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment;
@@ -910,6 +918,7 @@
     get dcnFilter() { return dcnFilter; },
     set dcnFilter(v) { dcnFilter = v; },
     showDcTiming,
+    consTableHTML,
     showConsDevs,
     consStatus,
     showDcBack,

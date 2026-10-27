@@ -24,7 +24,7 @@ function loadTabs() {
 const AT_SITE = {
   growth: { pipeline: 'show', areas: 'hide', timing: 'hide' },
   svc: { capacity: 'hide', network: 'show' },
-  dca: { timing: 'show', dcproj: 'hide', projects: 'hide', eas: 'show' },
+  dca: { timing: 'show', eas: 'show', projects: 'hide' },
   records: { sources: 'hide', checks: 'hide', files: 'show' },
 };
 
@@ -64,7 +64,7 @@ test('site scope: hidden sub-view buttons get .site-off (CSS hides them); Growth
 
 test('site scope: in-panel links land on a sub-view with site content (no dead links)', () => {
   const AT = loadTabs();
-  for (const [tab, stored] of [['svc', 'capacity'], ['svc', 'alloc'], ['svc', 'checks'], ['dca', 'projects'], ['growth', 'areas'], ['growth', 'ledger'], ['records', 'checks']]) {
+  for (const [tab, stored] of [['svc', 'capacity'], ['svc', 'alloc'], ['svc', 'checks'], ['dca', 'projects'], ['dca', 'dcproj'], ['growth', 'areas'], ['growth', 'ledger'], ['records', 'checks']]) {
     // (a stored pick goes through the alias it takes first: Servicing › Model checks is Records › Data checks)
     const r = AT.migrateSub(tab, stored) || { tab, sub: stored }, v = AT.subFor(r.tab, r.sub, true);
     assert.ok(v && !AT.siteHidden(r.tab, v) && AT.TABSUBS[r.tab].valid.includes(v), `${tab} (stored ${stored}) lands on ${r.tab}:${v}`);

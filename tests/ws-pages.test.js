@@ -309,9 +309,11 @@ test('estimated counts: a file mixing kinds is split in proportion, and the page
   assert.match(s, /has its estimate split between the kinds in proportion to their units/);
 });
 
-test('DC timing borrows the Projects and EAs lists by title, never the first list (To check / Current EAs)', () => {
-  const s = src('js/ws-pages.js'), c = src('js/capital-ea.js');
-  assert.match(s, /\[\[pr, 'Furthest along', 'Region capital projects being built'\], \[ea, 'Coming up \(90 days\)', 'EAs: milestones and comment periods'\]\]/);
+test('the DC timing page borrows no lists: Projects and EAs are sections of its page (navigation phase 4)', () => {
+  const s = src('js/ws-pages.js'), c = src('js/capital-ea.js'), body = s.slice(s.indexOf('function projects()'), s.indexOf('// ---- Forecast'));
+  assert.doesNotMatch(body, /'Furthest along'|'Coming up \(90 days\)'|specOf\('dca:projects'|specOf\('dca:eas'/, 'no borrowed list');
   assert.doesNotMatch(s, /pr\.lists\[0\]|ea\.lists\[0\]/);
-  assert.ok(c.includes("{ title: 'Furthest along', rows: act.slice(0, 5)") && c.includes("[{ title: 'Coming up (90 days)', rows: up.slice(0, 5)"), 'the titles DC timing picks by');
+  assert.match(src('js/sections.js'), /\{ id: 'projects', title: 'Projects', tab: 'dca', keys: \['dca:projects'\] \}/);
+  assert.match(src('js/sections.js'), /\{ id: 'eas', title: 'EAs', page: 'eaflow' \}/, 'EAs: its own page (the EAs, then EA to construction)');
+  assert.ok(c.includes("{ title: 'Furthest along', rows: act.slice(0, 5)") && c.includes("[{ title: 'Coming up (90 days)', rows: up.slice(0, 5)"), 'the lists themselves: the Projects and EAs sections');
 });
