@@ -174,7 +174,7 @@ half its homes are done. On main, with the allocation unchanged:
 
 The two years are a median of 1 year apart. **Decided (October 22, 2026): flag the gap at the
 first homes**, because servicing has to be in place before anyone moves in. Show the app's
-expected year beside it, so the row agrees with Growth › Ledger. The prototype records both
+expected year beside it, so the row agrees with Growth › Forecast's By period. The prototype records both
 (`need` / `needHalf`).
 
 ### 5. Apportion money, without double counting

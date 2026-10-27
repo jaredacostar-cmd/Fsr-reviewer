@@ -156,6 +156,10 @@ sums, a development split across two plans, and a cancelled file.
 
 ## Phase 2. Ledger view (3 days)
 
+> Since navigation phase 3 (2026-10): Growth › Forecast, fold By period (the table, its cut-off,
+> Units | People, Hide possibly lapsed), with How sure and Since the last snapshot; the developments list is
+> the full table; Home › What's coming opens it there. Numbers unchanged.
+
 - New sub-view Growth › Ledger (`js/analysis-tabs.js`), and a Home workspace "What's coming"
   (`js/workspaces.js`) that opens it.
 - Top: a table of units and people by municipality × milestone bucket, stacked by capacity stage

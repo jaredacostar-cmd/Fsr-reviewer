@@ -23,8 +23,9 @@ for like. An extra snapshot (spring, or after a policy change) gets its own seas
 
    It prints the name (e.g. `2026-fall`, from the data date), the template number, the developments,
    the units left to build and committed, the people and the tier counts. These should match
-   Growth › Ledger in the app at Peel with no filters (the app counts dormant developments by today's
-   date, the snapshot by the data date, so one or two developments can differ).
+   Growth › Forecast's By period in the app at Peel with no filters (the app counts dormant
+   developments by today's date, the snapshot by the data date, so one or two developments can
+   differ).
 3. Write it:
 
    ```
@@ -38,8 +39,9 @@ for like. An extra snapshot (spring, or after a policy change) gets its own seas
 5. Send the CSV to the modelling team (Hong, Arash). The `#` lines at the top are its README: the
    source date, the scope, the definitions and the disclaimer, and what every column holds. Most tools
    skip them as comments; in Excel, start the import at the header row (`id,name,…`).
-6. In the app, Growth › Ledger shows **Since the last snapshot**: the developments new since it, dropped
-   (built, withdrawn or held aside), moved milestone and changed tier, at Peel with no filters.
+6. In the app, Growth › Forecast shows **Since the last snapshot** (a fold under By period; with
+   buttons in its full table): the developments new since it, dropped (built, withdrawn or held
+   aside), moved milestone and changed tier, at Peel with no filters.
 
 ## The template
 

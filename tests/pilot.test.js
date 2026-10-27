@@ -63,6 +63,12 @@ test('usage: a retired sub-view\'s counts add up with where it moved (navigation
   const AT = ctx.module.exports;
   assert.deepEqual(plain(AT.migrateSub('svc', 'alloc')), { tab: 'svc', sub: 'capacity' });
   assert.deepEqual(plain(AT.migrateSub('svc', 'checks')), { tab: 'records', sub: 'checks' });
+  // Navigation phase 3: the Ledger's counts are the Forecast's, by the browser's own rule (aliasKey above).
+  const alias3 = k => { const m = /^sub:(\w+)\.(\w+)$/.exec(k), r = m && AT.migrateSub(m[1], m[2]); return r ? `sub:${r.tab}.${r.sub}` : k; };
+  let g = U.bump(null, 'sub', 'growth.ledger', '2026-10-26'); g = U.bump(g, 'sub', 'growth.ledger', '2026-10-26'); g = U.bump(g, 'sub', 'growth.timing', '2026-10-27');
+  const tg = plain(U.totals(g, alias3));
+  assert.deepEqual(tg, { 'sub:growth.timing': 3 }, 'no sub:growth.ledger key');
+  assert.equal(U.toCSV(g, {}, alias3), 'date,kind,id,label,count\n2026-10-26,sub,growth.timing,,2\n2026-10-27,sub,growth.timing,,1\n');
 });
 
 test('usage: a person’s clicks count (not the app moving itself); Settings shows it with Export CSV', () => {
@@ -125,10 +131,14 @@ test('What moved where: every old tab and sub-view says where it is now', () => 
   assert.match(now('Water › Facilities'), /Servicing › Network/);
   assert.match(now('Census & 2051'), /Growth › Areas/);
   assert.match(now('Capital › Construction'), /Capital › Projects/);
+  // Navigation phase 3: the Ledger is the Forecast's By period; What's coming opens it there.
+  assert.match(now('Growth › Ledger'), /Growth › Forecast/);
+  assert.match(now('Home › What’s coming'), /Growth › Forecast/);
   const at = src('js/analysis-tabs.js');
   assert.match(at, /ww: \{ plants: 'capacity', catchments: 'network', alloc: 'capacity', pumpstations: 'network' \}/);
   assert.match(at, /water: \{ capacity: 'capacity', zones: 'network', facilities: 'network', hydro: 'network' \}/);
   assert.match(at, /dca: \{ timing: 'timing', build: 'projects'/);
+  assert.match(at, /growth: \{ pipeline: 'pipeline', census2051: 'areas', byplan: 'areas', timing: 'timing', areas: 'areas', ledger: 'timing' \}/);
   // In Help: its own card and a button at the top; old tab names gone from the guides.
   assert.match(tips, /<details class="help-card help-moved" id="help-moved"><summary><strong>What moved where<\/strong>/);
   assert.match(tips, /data-help-moved>What moved where<\/button>/);

@@ -151,8 +151,9 @@
         const oldSub = pageWs ? pageWs.sub : t === 'ww' || t === 'water' ? q.get('ws') : t === 'growth' ? q.get('gs') : t === 'dca' ? q.get('dcs') : t === 'svc' ? q.get('svs') : t === 'records' ? q.get('rs') : null;
         const m = AT().migrateTabKey(t, oldSub);
         AT().setFootPref(m.tab); if (m.gSub) AT().setGSub(m.gSub); if (m.svcSub) AT().setSvcSub(m.svcSub); if (m.dcSub) AT().setDcSub(m.dcSub); if (m.rSub) AT().setRSub(m.rSub);
-        // (an old Allocations link, svs=alloc or t=ww&ws=alloc, opens Capacity with its fold open)
-        if (AT().foldOf && AT().foldOf(t, oldSub) === 'alloc' && window.PeelDemandUI && window.PeelDemandUI.openAllocFold) window.PeelDemandUI.openAllocFold();
+        // (an old link to a sub-view that became a fold opens it: svs=alloc or t=ww&ws=alloc Capacity's
+        // Allocations recorded, gs=ledger the Forecast's By period)
+        if (AT().openFold && AT().foldOf) AT().openFold(AT().foldOf(t, oldSub));
         // (a Servicing or Records sub-view named beside another tab is kept for its tab, as before)
         for (const [tab, k] of [['svc', 'svs'], ['records', 'rs']]) {
           const r = q.get(k) && tab !== t ? AT().migrateSub(tab, q.get(k)) : null;

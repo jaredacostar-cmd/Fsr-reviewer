@@ -1693,6 +1693,58 @@ Old names still land (`js/analysis-tabs.js` `SUB_MAP`, `FOLD_OF`, `sysKey`; test
 | DC projects' stored system pick (`dcProjSys`) | The one System pick (`sysPick`), read once while that is unset |
 | A link without `sy=` (every link before phase 2) | The System at Both, as Capacity opened them |
 
+## Growth: By period in the Forecast (navigation phase 3)
+
+Navigation phase 3 (docs/architecture-review/navigation-design.md §3.4, §5, §7; pros-and-cons N-4).
+Growth has three views, **Pipeline · Areas · Forecast**. The pipeline ledger (was Growth › Ledger,
+docs/pipeline-ledger-plan.md) is the Forecast panel's fold **By period**:
+
+- **By period** (open to start; a reader who shuts it finds it shut next time, `ledgerOpen`): the
+  units (or people) left to build in the developments shown by milestone (2026 to 2031, 2032 to 2041,
+  2042 to 2051, after 2051 or not timed), each cell stacked by stage, committed first, with its answer,
+  key and notes. Its **own stage cut-off** (*Committed only · + Plan approved · + In review ·
+  Everything*), *Units | People* and *Hide possibly lapsed* are the ledger's, kept in this browser as
+  before (`ledgerCut`, `ledgerMeasure`, `ledgerHideLapsed`). The cut-off counts stages for this table
+  only, as its hint line says: it is a filter of the table (owner decision 2), never the Scenario's
+  Count, which sets the rest of the app.
+- **Its rows are the scope's child nodes**: the municipalities at Peel, a drawn area or a servicing
+  scope; at a municipality (the map's municipality filter, with no plan, MTSA or census-area filter)
+  its plans and *Not in a plan*, each development split by its share of each plan as Growth › Areas
+  places it (`PeelPlanTables.compute()`, the plan tree), so each plan's row is its left to build in
+  Areas and the total row (named for the municipality) is the municipality's. A plan filter keeps
+  municipality rows until a plan is a scope of its own (phase 6: a development straddling two plans is
+  in the filter whole, in each plan by its share).
+- Then the folds **How sure** (the tiers A to E) and **Since the last snapshot** (shut to start; the
+  latter only once `data/ledger/index.json` names a frozen snapshot, until then the full table says
+  how the first is written).
+- **The developments list** (sortable; stage, tier and expected year; a row opens the development)
+  is the Forecast's **full table**, after the Forecast's own tables: the fold's *The N developments,
+  with stage, tier and expected year (full table) ›* opens it there. The full table also holds By
+  period's table, the tiers, Since the last snapshot and the ledger's method (`#ledger-body`, in
+  `#pane-growth-ledger`, which keeps its id and is now `data-sub="timing"`).
+- **The numbers are the ledger's, unchanged**: `js/ledger.js`, `compute()` and the roll-up are
+  untouched; at Everything, units, nothing hidden, Peel equals Growth's left to build, and By
+  period's 2026 to 2031 column equals the Forecast's units expected by 2031 (one time-in-stage model;
+  both checked in the browser paths). Export ▾ › Pipeline snapshot (CSV) reads the same model.
+- **What's coming** (the sidebar entry, the `coming` chip and page) opens the Forecast with By period
+  open: the chip on the map, the page as the Forecast page under the ledger's own question. The page
+  lost the ledger's own four figures (its answer keeps three of them) and its inline developments
+  list (one tap: the full table); its *Open Growth › Ledger* is gone.
+
+Old names still land (`js/analysis-tabs.js` `SUB_MAP`, `FOLD_OF`, `openFold`; tests/nav-aliases.test.js):
+
+| Old | Where it opens now |
+|---|---|
+| `#t=growth&gs=ledger`, a saved view | Growth › Forecast (`gs=timing`), By period open |
+| `data-at="growth:ledger"`, `openTab('growth', 'ledger')`, `showFootTab('growth', 'ledger')` | Growth › Forecast, By period open (`setSub('growth', 'ledger')`: the Forecast, the fold as it is) |
+| A stored Ledger pick (`gSub=ledger`) | The Forecast (never Pipeline) |
+| The `coming` chip (`#w=coming`) | Growth › Forecast, By period open (`WS` `fold: 'period'`) |
+| The What's coming page (`#w=p:coming`, the sidebar, a stored `lastWs=coming`) | The Forecast page under *What is coming, where, when and how sure?*, By period open (the page id is kept until the sidebar entry goes) |
+| The ledger's stored settings (`ledgerCut`, `ledgerMeasure`, `ledgerHideLapsed`, `ledgerSort`) | Unchanged |
+| Settings › Usage counts `sub:growth.ledger` | Shown and exported as `sub:growth.timing` (`aliasKey`, through `migrateSub`); the counts kept are not rewritten |
+
+New links write `gs=timing` and carry no fold state.
+
 ## Reference and This week
 
 - **Reference** is one sidebar entry: **Help**, **How it works** (and each guide), the **Glossary**,
@@ -1723,7 +1775,7 @@ Old names still land (`js/analysis-tabs.js` `SUB_MAP`, `FOLD_OF`, `sysKey`; test
   page.
 - Home's sidebar has nine entries: Home and This week, then by team Explore, Servicing capacity and
   What's coming (Planning), Capital, Review outlets (QA/QC), Old pipes (Asset Management) and
-  Reference, then Full map.
+  Reference, then Full map; What's coming opens Growth › Forecast with its By period fold open.
 
 ## Build-out: planned vs permitted vs left to build
 
@@ -3263,8 +3315,11 @@ should do.
 Two pages added to Home's sidebar, so they are no longer only on the full map:
 
 - **Planning › Forecast** (`outlook`): Growth › Forecast on a page. Units expected by 2031 and 2041
-  with their ranges, the plants' 90% trigger years at the forecast pace, the largest contributors, and
-  a link to *How the forecast is timed*. Same figures as the full map (`growth:timing`).
+  with their ranges, the plants' 90% trigger years at the forecast pace, the largest contributors,
+  then the folds By period, How sure and Since the last snapshot, and a link to *How the forecast is
+  timed*. Same figures as the full map (`growth:timing`).
+- **What's coming** (`coming`): the same page, under its own question (*What is coming, where, when
+  and how sure?*), opened with By period.
 - **Capital › EA to construction** (`eaflow`): each Region Class EA and the construction that
   followed it, as a timeline (EA study, public information centres, completion, then the
   construction bars, with today marked), and lists: complete and waiting (oldest first, those

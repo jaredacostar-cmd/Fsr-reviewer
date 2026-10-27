@@ -34,13 +34,14 @@ test('1. each chip opens the stated tab and scope (and the layer preset)', () =>
     site: ['overview', '', 'find', 'planning'], tight: ['svc', 'capacity', 'area', 'wastewater'], growth: ['growth', 'areas', 'area', 'planning'],
     fsr: ['svc', 'network', 'find', 'wastewater'], study: ['overview', '', 'drawn', 'planning'], projects: ['dca', 'timing', 'area', 'dc'],
     pipes: ['svc', 'network', 'area', 'wastewater'], outlook: ['growth', 'timing', 'area', 'planning'], eaflow: ['dca', 'eas', 'area', 'dc'], week: ['overview', '', 'area', 'planning'],
-    coming: ['growth', 'ledger', 'area', 'planning'],
+    coming: ['growth', 'timing', 'area', 'planning'],
   };
   for (const [id, [tab, sub, scope, view]] of Object.entries(want)) {
     const p = W.plan(id, { site: false });
     assert.deepEqual([p.tab, p.sub, p.scope, p.view], [tab, sub, scope, view], id);
     assert.equal(p.closeScopes, scope === 'area', `${id}: an area chip leaves a site`);
   }
+  assert.equal(W.plan('coming').fold, 'period', 'What’s coming opens the Forecast at By period'); assert.equal(W.plan('outlook').fold, null);
   // With a development open: Check a site → Overview at the site; Review an FSR → Servicing at the site
   // with the FSR cross-check; area chips close the site.
   assert.deepEqual(plain(['site', 'fsr'].map(id => { const p = W.plan(id, { site: true }); return [p.tab, p.scope, p.fsr]; })), [['overview', 'site', false], ['svc', 'site', true]]);
