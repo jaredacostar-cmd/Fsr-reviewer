@@ -26,7 +26,7 @@ const GROUPS = [
 const R = { ppu: 2.5, baseBo: 1200, list: [
   { key: 'ln:wastewater:22-1', rec: 'advance', outY: 2028, bo: 500, sys: 'ww', name: 'Sanitary main 900 mm · 22-1', short: 'Sanitary main 22-1', cons: [{}] },
   { key: 'ln:water:25-9', rec: 'keep', outY: 2040, bo: 10, sys: 'water', name: 'Watermain 600 mm · 25-9', short: 'Watermain 25-9', cons: [{}] },
-  { key: 'step:x', rec: 'advance', outY: 2027, bo: 900, sys: 'ww', name: 'G.E. Booth: expansion to 600 ML/d', short: 'G.E. Booth expansion', cons: [{}] },
+  { key: 'step:x', rec: 'advance', outY: 2027, y: 2030, pid: '25-2945', bo: 900, sys: 'ww', name: 'G.E. Booth: expansion to 600 ML/d', short: 'G.E. Booth expansion', cons: [{ id: 'plant:Lakeview' }] },
 ] };
 const NEEDS = [{ status: 'check', relief: [{ key: 'ln:wastewater:28-3' }] }, { status: 'gap', relief: [{ key: 'ln:wastewater:22-1' }] }];
 const dev = (key, tier, units) => ({ p: { key, title: key, municipality: 'Brampton' }, tier, units, q: 1, pop: units * 3, how: {}, e: { employment: { jobs: 0 } } });
@@ -37,19 +37,23 @@ const MODEL = () => ({ gateTiers: ['A', 'B1'], byDev: new Map(), projects: new M
 ]) });
 
 // js/dc-projects.js in a vm, whole (a const read before its line would throw here; eslint here is no-undef only).
-// (the DC program: one line of 22-1 drawn; the result open and a development open for the card and openList)
+// (the DC program: one line of 22-1 drawn; the result open and a development open for the card and openList;
+// o.foot: the reader's tab, its preference and the phone's sheet, which the result's openResult sets on a reopen;
+// o.body: the full table's #dca-dcproj-body; o.realCard: the map's showDcLine draws the real card)
 const INFRA = () => ({ wastewater: { lines: [{ p: '22-1', sys: 'wastewater', k: 'primary', g: [[-79.70, 43.70], [-79.71, 43.71]] }] }, water: { lines: [] } });
 function load(o = {}) {
   const stored = { ...(o.store || {}) }, writes = [], sets = [], timers = [], handlers = {};
-  const calls = { model: 0, openPage: [], sectionAt: [], renderPage: 0, showDcLine: [], restore: [], reopen: 0, closeResult: 0, devClose: 0, openTab: [], setSys: 0, setMode: [], loadSewers: 0, fit: 0, setDcOn: 0 };
+  const calls = { model: 0, openPage: [], sectionAt: [], renderPage: 0, showDcLine: [], cards: [], restore: [], reopen: 0, closeResult: 0, devClose: 0, openTab: [], setSys: 0, setMode: [], loadSewers: 0, fit: 0, setDcOn: 0, showFootTab: [] };
   let cur = o.current || null;
   const st = { sys: o.sys || 'both', mode: o.mode || 'full', page: o.page || 'home', lab: !!o.lab, dev: o.dev || null, result: !!o.result, devOpen: o.devOpen || null };
-  const SEW = { data: o.sewers === false ? null : {} };
+  const SEW = { data: o.sewers === false ? null : {} }, foot = o.foot ? { ...o.foot } : null, scroll = { scrollTop: o.scrollTop || 0 };
   const U = { esc: x => String(x), fmtNum: n => String(n), fmtMoney: n => `$${Math.round(n)}`, roundPop: n => Math.round(n), csvCell: v => String(v), CAPITAL: { asOf: 'Oct 2026' }, isPublic: () => !!o.public,
     store: { get: (k, d) => (own(stored, k) ? stored[k] : d), set: (k, v) => { writes.push(k); stored[k] = v; } } };
-  const document = { addEventListener: (t, f) => { (handlers[t] = handlers[t] || []).push(f); }, getElementById: () => null };
-  const MP = { allNeeds: () => NEEDS, reliefKey: r => r.key, dcnFilter: 'gap', showDcLine: ln => calls.showDcLine.push(ln) };
-  const App = { state: { svcModel: o.svcModel === false ? null : {}, dcInfra: o.dcInfra === undefined ? INFRA() : o.dcInfra, ss: o.ss || null } };
+  const document = { addEventListener: (t, f) => { (handlers[t] = handlers[t] || []).push(f); }, getElementById: id => (id === 'dca-dcproj-body' ? o.body || null : id === 'scope-body' && foot ? scroll : null) };
+  const MP = { allNeeds: () => NEEDS, reliefKey: r => r.key, dcnFilter: 'gap', consTableHTML: (st, sys) => `<cons ${st}/${sys}>`,
+    showDcLine: ln => { calls.showDcLine.push(ln); if (o.realCard) calls.cards.push(window.PeelDcProjects.cardHTML(ln)); } };
+  const App = { state: { svcModel: o.svcModel === false ? null : {}, dcInfra: o.dcInfra === undefined ? INFRA() : o.dcInfra, ss: o.ss || null },
+    ...(foot ? { getAnalysisSnap: () => foot.snap, setAnalysisSnap: v => { foot.snap = v; } } : {}) };
   const window = { PeelUtil: U, document,
     PeelPanel: { areaHead: (w, name, status, identity) => ({ w, name, status, identity }), set: (k, spec) => sets.push([k, spec]), kv: (k, v, t) => ({ html: `<kv>${k}=${v}${t ? `:${t}` : ''}</kv>` }), chip: c => c.text },
     PeelMapMarkers: { THIS_YEAR: 2026, SEW, getDcOn: () => ({ on: !o.dcOff }) },
@@ -57,8 +61,11 @@ function load(o = {}) {
     PeelDcImpact: { current: () => cur, model: () => { calls.model++; const m = 'model' in o ? o.model : MODEL(); if (m) cur = m; return m; }, groupProjects: () => o.groups || GROUPS },
     PeelDcInfra: { dcM: () => 0 }, PeelMasterPlan: MP, PeelSvcPlants: { hz: { end: 2051 } },
     PeelApp: App,
-    PeelAnalysisTabs: { getSys: () => st.sys, sysSeg: () => `<div class="seg" aria-label="System">[${st.sys}]</div>`, openTab: (t, v) => calls.openTab.push([t, v]), setSys: () => { calls.setSys++; } },
-    PeelSvcScope: { restore: r => calls.restore.push(r), hasResult: () => st.result, reopenResult: () => { calls.reopen++; }, closeResult: () => { calls.closeResult++; st.result = false; } },
+    PeelAnalysisTabs: { getSys: () => st.sys, sysSeg: () => `<div class="seg" aria-label="System">[${st.sys}]</div>`, openTab: (t, v) => calls.openTab.push([t, v]), setSys: () => { calls.setSys++; },
+      ...(foot ? { getFootTab: () => foot.tab, getFootPref: () => foot.pref, setFootPref: v => { foot.pref = v; }, showFootTab: t => { calls.showFootTab.push(t); foot.tab = t; } } : {}) },
+    // (a reopen re-runs the producer, which opens the result again: js/svc-scope.js openResult's Overview, its raise of a peek sheet and its scroll)
+    PeelSvcScope: { restore: r => calls.restore.push(r), hasResult: () => st.result, closeResult: () => { calls.closeResult++; st.result = false; },
+      reopenResult: () => { calls.reopen++; if (foot) { foot.tab = 'overview'; foot.pref = 'overview'; if (foot.snap === 'peek') foot.snap = 'half'; scroll.scrollTop = 0; } } },
     DevScope: { current: () => st.devOpen, close: () => { calls.devClose++; st.devOpen = null; } },
     PeelSewerCap: { loadSewers: () => { calls.loadSewers++; return Promise.resolve(o.loaded === undefined ? {} : o.loaded).then(d => { if (d) SEW.data = d; return d; }); } },
     PeelMapAnalysis: { setDcOn: () => { calls.setDcOn++; } }, PeelMapCore: { map: { fitBounds: () => { calls.fit++; } } }, L: { latLngBounds: x => x },
@@ -73,7 +80,7 @@ function load(o = {}) {
   const D = window.PeelDcProjects;
   // A click on an element (dataset; inChips: inside the Status chips).
   const click = (dataset, inChips) => { const el = { dataset, closest: s => (s === '.dcp-status' ? (inChips ? {} : null) : el) }; for (const f of handlers.click || []) f({ target: el }); };
-  return { D, sets, timers, calls, st, MP, App, SEW, stored, writes, click, ctx, setCur: m => { cur = m; } };
+  return { D, sets, timers, calls, st, MP, App, SEW, stored, writes, click, ctx, foot, scroll, setCur: m => { cur = m; } };
 }
 const keys = rows => plain(rows.map(x => x.k));
 
@@ -159,10 +166,11 @@ test('the second verdict’s model is worked out once the list has painted: one 
 test('the list: both verdicts named on every row, the Status chips, the System, the sorts; the reliefs that are no DC line named', () => {
   const L = load(), s = L.D.panelSpec();
   assert.deepEqual([s.head.w, s.head.name], ['Capital › DC timing', 'Is each DC project in time?']);
-  assert.deepEqual(plain(s.head.status), { tone: 'over', text: '1 late' });
+  assert.deepEqual(plain(s.head.status), { tone: 'over', text: '2 late' }, 'the late DC line and the late plant step: Home’s number');
   assert.equal(s.fullTitle, 'Capital › DC timing · Peel: every 2026 DC project, both verdicts');
   assert.deepEqual(plain(s.figures.map(f => f.label)), ['DC projects', 'late', 'first homes before it is built', 'constrained at build-out']);
   assert.deepEqual(plain(s.figures[1].attrs), { 'data-dc-status': 'gap' }, 'the late figure sets the list to Late');
+  assert.deepEqual([s.figures[1].v, s.figures[1].ctx, s.figures[1].tone], ['2', '1 DC project · 1 other relief (no DC line)', 'over'], 'the late figure counts both, and says the split');
   assert.equal(s.figures[2].v, '…', 'the second verdict: still being worked out');
   assert.equal(s.figures[0].ctx, '2 wastewater · 1 water');
   const r = s.lists[0].rows[0];
@@ -175,7 +183,7 @@ test('the list: both verdicts named on every row, the Status chips, the System, 
   const t = s.lists[0].tools;
   for (const k of ['gap', 'planned', 'check', 'all']) assert.ok(t.includes(`data-dc-status="${k}"`), k);
   assert.ok(!t.includes('data-dc-status="ok"'), 'a status no row has is left out');
-  assert.match(t, /data-dc-status="gap" aria-pressed="false">Late 1</); assert.match(t, /data-dc-status="all" aria-pressed="true">All 3</);
+  assert.match(t, /data-dc-status="gap" aria-pressed="false">Late 2</, 'Late counts the late reliefs that are no DC line'); assert.match(t, /data-dc-status="all" aria-pressed="true">All 3</);
   assert.ok(t.includes('[both]'), 'the one System control');
   assert.deepEqual([...t.matchAll(/data-dcproj-sort="(\w+)"/g)].map(m => m[1]), ['soonest', 'impact', 'affected'], 'four sorts with the lab, three without');
   assert.match(t, /title="Most people held back by build-out if it were cancelled">Largest impact</);
@@ -183,9 +191,8 @@ test('the list: both verdicts named on every row, the Status chips, the System, 
   // expansion here), the reliefs that are no DC line named with their home.
   assert.match(s.answer, /^Of the <strong>3 DC projects<\/strong> on the 2026 DC maps, <strong>1<\/strong> is in service only after the capacity it relieves runs out\./);
   assert.match(s.answer, /With every project as scheduled, <strong>≈1200 people<\/strong> are still constrained at build-out; without the <strong>G\.E\. Booth expansion<\/strong>, ≈900 more would be, the most of any one project\./);
-  assert.match(s.answer, /Also late: <strong>1<\/strong> other relief with no DC line/);
-  assert.match(s.answer, /data-at="svc:capacity">Servicing › Capacity →<\/button>/);
-  assert.match(s.chart, /<chart 2\/6>/, 'the chart of the rows with a capacity verdict');
+  assert.match(s.answer, /\. Also late, with no DC line: <button type="button" class="btn small link" data-ss="plant:Lakeview"><strong>G\.E\. Booth expansion<\/strong><\/button> \(in service 2030, capacity runs out ≈2027\)\. Late lists it; plants and stations are in <button type="button" class="btn small link" data-at="svc:capacity">Servicing › Capacity →<\/button>, every relief in the full table\. With every project/, 'each named, with both years');
+  assert.match(s.chart, /<chart 3\/6>/, 'the chart of the rows with a capacity verdict and the late reliefs that are no DC line');
   assert.doesNotMatch(JSON.stringify(s), /screens? late/i);
   assert.match(s.method, /The two answer different questions and can disagree/);
   assert.equal(s.folds.length, 0, 'no Funding fold while the lab is off');
@@ -195,14 +202,70 @@ test('the list: both verdicts named on every row, the Status chips, the System, 
   assert.match(s2.lists[0].rows[0].html, /<span class="t-over">1 expected before it is built<\/span>/);
   assert.match(s2.lists[0].rows.find(x => x.attrs['data-dcproj-open'] === 'water:25-9').html, /first homes in time for the 1 relying on it/);
   assert.match(s2.answer, /; <strong>1<\/strong> has developments whose first homes come before it is built\./);
-  // At Water: the list, its title and the header name the System; the reliefs late elsewhere are not named.
+  // At Water: the list, its title and the header name the System; the reliefs late elsewhere are not named; the
+  // largest relief is the System's, and the build-out total (the largest constraint of either) says both systems.
   L.st.sys = 'water'; const s3 = L.D.panelSpec();
   assert.equal(s3.lists[0].title, 'Water projects'); assert.equal(s3.lists[0].total, 1);
   assert.match(s3.head.identity, /^Peel · water · 1 DC projects/); assert.doesNotMatch(s3.answer, /Also late/);
+  assert.deepEqual(plain(s3.head.status), { tone: 'room', text: 'In time' }); assert.equal(s3.figures[1].v, '0');
+  assert.match(s3.answer, /<strong>≈1200 people<\/strong> \(both systems\) are still constrained at build-out; without the <strong>Watermain 25-9<\/strong>, ≈10 more would be, the most of any one water project\./);
+  assert.doesNotMatch(s3.answer, /G\.E\. Booth/, 'never the other system’s plant');
+  assert.match(s3.figures[3].ctx, /every project as scheduled, both systems$/);
   // The Funding lab: the fold, with the projects relied on but not in the screen once the allocation is in.
+  // Late lists the late reliefs that are no DC line after the DC projects, each opening the facility it relieves
+  // (else the full table's analysis).
+  L.st.sys = 'both'; L.D.state.status = 'gap'; const sl = L.D.panelSpec().lists[0];
+  assert.deepEqual(plain(sl.rows.map(r => [r.tone, r.attrs])), [['over', { 'data-dcproj-open': 'wastewater:22-1' }], ['over', { 'data-ss': 'plant:Lakeview' }]]);
+  assert.equal(sl.total, 2);
+  assert.match(sl.rows[1].html, /G\.E\. Booth expansion<small>project 25-2945 · in service 2030<\/small><\/span><span class="pnl-r-year t-over">≈2027<\/span>/);
+  assert.match(sl.rows[1].html, /<span>capacity runs out<\/span><span class="t-over">in service after it runs out<\/span>[^]*plant expansion, no DC line: opens the facility it relieves/);
+  L.D.state.status = 'all';
   L.st.sys = 'both'; L.st.lab = true; const s4 = L.D.panelSpec();
   assert.equal(s4.folds[0].title, 'Funding screen (Labs)'); assert.match(s4.folds[0].html, /not in the funding screen <small>/);
   assert.ok(s4.lists[0].tools.includes('data-dcproj-sort="perunit"'));
+});
+
+test('today’s data: no DC line late, a plant expansion is: the head, the late figure and Late say Home’s 1, Late lists it, the answer names it with both years', () => {
+  // (Home's DC projects late counts every relief late: the analysis itself, js/ws-pages.js homeFigures)
+  let L = load({ R: { ...R, list: [R.list[2]] } }), s = L.D.panelSpec();
+  assert.deepEqual(plain(s.head.status), { tone: 'over', text: '1 late' }, 'never “In time” while a relief is late');
+  assert.deepEqual([s.figures[1].v, s.figures[1].ctx, s.figures[1].tone], ['1', '0 DC projects · 1 other relief (no DC line)', 'over']);
+  assert.match(s.lists[0].tools, /data-dc-status="gap" aria-pressed="false">Late 1</, 'the Late chip, though no DC line is late');
+  assert.match(s.answer, /none is in service after the capacity it relieves runs out\. Also late, with no DC line: <button type="button" class="btn small link" data-ss="plant:Lakeview"><strong>G\.E\. Booth expansion<\/strong><\/button> \(in service 2030, capacity runs out ≈2027\)\. Late lists it;/);
+  assert.match(s.chart, /<chart 1\/6>/, 'the chart draws it');
+  // Its tap (the late figure, Home's figure): Late lists it, opening the facility it relieves.
+  L.click({ dcStatus: 'gap' }); s = L.D.panelSpec();
+  assert.deepEqual(plain(s.lists[0].rows.map(r => [r.tone, r.attrs])), [['over', { 'data-ss': 'plant:Lakeview' }]]); assert.equal(s.lists[0].total, 1);
+  // More than three: three named, the rest counted; one with no facility scope (BOD loading, a 2020 Master Plan
+  // trunk) opens the full table's analysis.
+  const mk = (i, id) => ({ key: `mpu:T-${i}`, rec: 'advance', outY: 2026, y: 2030, bo: 1, sys: 'ww', name: `Trunk ${i}`, cons: [{ id }] });
+  L = load({ R: { ...R, list: [R.list[2], mk(1, 'bod:Lakeview'), mk(2, 'trunk:CT7'), mk(3, 'bod:Clarkson')] } }); s = L.D.panelSpec();
+  assert.deepEqual(plain(s.head.status), { tone: 'over', text: '4 late' });
+  assert.match(s.answer, /Also late, with no DC line: <button[^>]*data-ss="plant:Lakeview">[^]*?; <strong>Trunk 1<\/strong> \(in service 2030, capacity runs out now\); <strong>Trunk 2<\/strong> \(in service 2030, capacity runs out now\); 1 more\. Late lists them;/);
+  L.click({ dcStatus: 'gap' }); s = L.D.panelSpec();
+  assert.deepEqual(plain(s.lists[0].rows.map(r => r.attrs)), [{ 'data-ss': 'plant:Lakeview' }, { 'data-full-table': 'dca' }, { 'data-full-table': 'dca' }, { 'data-full-table': 'dca' }]);
+  assert.match(s.lists[0].rows[1].html, /2020 Master Plan main, no DC line: in the full table’s analysis/);
+});
+
+test('a main the capacity model has only for the developments connecting to it: no first verdict, never “in time”; after every capacity verdict in Soonest, not on the chart; its card says so', () => {
+  const RC = { ...R, list: [...R.list, { key: 'ln:wastewater:28-3', rec: 'keep', outY: null, bo: 40, sys: 'ww', cons: [] }, { key: 'ln:water:9-9', rec: 'review', outY: null, bo: 0, sys: 'water', cons: [] }] };
+  const L = load({ R: RC });
+  assert.deepEqual(L.D.mergeRows([...GROUPS, { key: '9-9', sys: 'water', lines: [] }], RC, null).rows.map(x => x.st), ['gap', 'planned', 'connect', 'ok'], 'connect (All only); with nothing held back, Room as before');
+  const s = L.D.panelSpec(), r = s.lists[0].rows.find(x => x.attrs['data-dcproj-open'] === 'wastewater:28-3');
+  assert.match(r.html, /<span class="pnl-r-year t-room">–<\/span>/);
+  assert.match(r.html, /<span>capacity runs out<\/span><span class="t-room">relieves no capacity constraint: developments connect to it<\/span>/);
+  assert.doesNotMatch(r.html, /in service in time/);
+  assert.match(s.lists[0].tools, /data-dc-status="planned" aria-pressed="false">In time 1</, 'In time counts the capacity verdicts only');
+  assert.ok(!s.lists[0].tools.includes('data-dc-status="connect"'), 'no chip of its own');
+  assert.match(s.chart, /<chart 3\/6>/, 'not drawn: it has no year the capacity runs out');
+  // Soonest: after a capacity running out after the horizon, before a project with no verdict.
+  const G5 = [...GROUPS, { key: '30-1', sys: 'wastewater', k: 'local', d: 250, y0: 2026, y1: 2026, lenM: 100, status: 'approved', lines: [] }, { key: '31-2', sys: 'water', lines: [] }];
+  const R5 = { ...R, list: [...R.list, { key: 'ln:wastewater:30-1', rec: 'keep', outY: null, bo: 5, cons: [{}] }, { key: 'ln:wastewater:28-3', rec: 'keep', outY: null, bo: 40, cons: [] }] };
+  assert.deepEqual(keys(load({ groups: G5 }).D.rowsFor(R5, null)), ['wastewater:22-1', 'water:25-9', 'wastewater:30-1', 'wastewater:28-3', 'water:31-2']);
+  // Its card: in service, no capacity to run out; no capacity year among its verdicts.
+  const h = L.D.cardHTML({ p: '28-3', sys: 'wastewater' });
+  assert.match(h, /^<p class="headline">In service ≈2029; it relieves no capacity constraint: developments connect to it\. Working out who relies on it…<\/p>/);
+  assert.match(h, /<kv>In service before the capacity runs out\?=relieves no capacity constraint: developments connect to it <small>construction 2029<\/small><\/kv>/);
 });
 
 test('at a development there is no area list: its Capital panel is js/dca-tab.js’s', () => {
@@ -222,6 +285,12 @@ test('clicks: a Status chip filters and sets the workbook’s DC filter; the lat
   assert.equal(L.D.state.status, 'gap'); assert.equal(L.D.state.sel, null); assert.equal(L.MP.dcnFilter, 'gap', 'the late figure leaves the workbook’s filter');
   L.click({ wsPage: 'projects', dcStatus: 'gap' }, false);
   assert.equal(L.MP.dcnFilter, 'gap', 'Home’s figure too');
+  assert.deepEqual(L.calls.sectionAt, [], 'on the map: no page section');
+  // On a page (Home's figure, the Capital page's late figure): the Capital page's DC timing section, wherever the
+  // page was left (its Projects section visited, it would open there: no Status chips, no list).
+  L = load({ mode: 'home', page: 'home' }); L.click({ wsPage: 'projects', dcStatus: 'gap' }, false);
+  assert.deepEqual(L.calls.sectionAt, [['capital', 'timing']]); assert.equal(L.D.state.status, 'gap'); assert.equal(L.MP.dcnFilter, 'gap');
+  L = load();
   L.click({ dcStatus: '__proto__' }, true); assert.equal(L.D.state.status, 'all');
   // A row on a page: in place on the Capital page; from another page, the Capital page at it.
   L = load({ mode: 'home', page: 'growth' });
@@ -248,8 +317,13 @@ test('clicks: a Status chip filters and sets the workbook’s DC filter; the lat
     L.click({ dcprojOpen: 'wastewater:22-1' });
     assert.equal(L.D.state.sel, null, mode); assert.deepEqual(L.calls.openPage, []); assert.equal(L.calls.renderPage, 0);
     assert.deepEqual(plain(L.calls.showDcLine.map(ln => ln.p)), ['22-1']); assert.equal(L.calls.fit, 1);
-    assert.equal(L.calls.model, 0, 'a tap never works out the allocation');
+    assert.equal(L.calls.model, 0, 'the tap itself never works out the allocation (the card builds it after it paints)');
   }
+  // (the real card on the tap: it paints first, then the allocation is one build after it, never on the tap)
+  L = load({ realCard: true, result: true, ss: 'dcwork:wastewater:22-1' }); L.click({ dcprojOpen: 'wastewater:22-1' });
+  assert.equal(L.calls.cards.length, 1); assert.match(L.calls.cards[0], /Working out who relies on it…/);
+  assert.equal(L.calls.model, 0, 'not on the tap'); assert.equal(L.timers.length, 1, 'one build, deferred');
+  L.timers[0](); assert.equal(L.calls.model, 1); assert.equal(L.calls.reopen, 1, 'then the card drawn again');
   // (the DC layer off: on first; the DC program still loading: the shared link's way, js/svc-scope.js restore)
   L = load({ dcOff: true }); L.click({ dcprojOpen: 'wastewater:22-1' }); assert.equal(L.calls.setDcOn, 1);
   L = load({ dcInfra: null }); L.click({ dcprojOpen: 'wastewater:22-1' });
@@ -337,11 +411,14 @@ test('a DC project’s card (its dcwork: scope on the map): both verdicts, then 
   // Another result open by then: not drawn again.
   L = load({ result: true, ss: 'pipe:12' }); L.D.cardHTML(ln); L.timers[0](); assert.equal(L.calls.reopen, 0);
   L = load({ result: false, ss: 'dcwork:wastewater:22-1' }); L.D.cardHTML(ln); L.timers[0](); assert.equal(L.calls.reopen, 0, 'closed meanwhile');
-  // Worked out: the headline names both verdicts; every development on it by tier, as data-dev rows (the result
-  // filters the map and the left panel to them; js/tool-scope.js opens one).
+  // Worked out: the headline names both verdicts (who relies on it as the page's project says it: units, flow,
+  // those on its path); every development on it by tier, as data-dev rows (the result filters the map and the
+  // left panel to them; js/tool-scope.js opens one).
   L = load({ current: MODEL() }); h = L.D.cardHTML(ln);
-  assert.match(h, /^<p class="headline">In service ≈2031, after the capacity it relieves runs out \(≈2028\): <strong>late<\/strong>\. <strong>2 developments<\/strong> rely on it; <strong>1<\/strong> is expected before it is built\.<\/p>/);
+  assert.match(h, /^<p class="headline">In service ≈2031, after the capacity it relieves runs out \(≈2028\): <strong>late<\/strong>\. <strong>2 developments<\/strong> \(≈150 units, ≈2 L\/s peak wet\) rely on it; <strong>1<\/strong> is expected before it is built in 2031\. 1 more is on its path, but the sewer it relieves has room for it\.<\/p>/);
   assert.match(h, /<kv>First homes before it is built\?=1 expected before it is built:over<\/kv>/);
+  // (the totals Capital › DC projects' project gave, as lines: the developments by tier, units and people + jobs, flow)
+  assert.match(h, /<kv>Developments relying on it=2 <small>1 to connect · 1 for capacity<\/small><\/kv><kv>Units in the pipeline=150 <small>≈450 people \+ jobs<\/small><\/kv><kv>Peak wet weather added by them=2 L\/s <small>Peel criteria<\/small><\/kv>/);
   assert.equal(L.timers.length, 0, 'nothing to build');
   assert.match(h, /<table class="dt dt-wide loads-table"><caption>2 developments relying on it, by tier \(and 1 on its path, not needed\)<\/caption>/);
   assert.deepEqual([...h.matchAll(/<tr class="ld-row" data-dev="(\w+)" tabindex="0">/g)].map(m => m[1]), ['d1', 'd2', 'd3']);
@@ -350,11 +427,12 @@ test('a DC project’s card (its dcwork: scope on the map): both verdicts, then 
   assert.match(h, /data-dcproj-csv="wastewater:22-1">CSV: its developments</);
   assert.doesNotMatch(h, /Funding \(Labs\)|pv-hide/, 'no funding lines while the lab is off');
   // The second project (in time, one relying on it); the third (relieves only flagged constraints, none relying).
-  assert.match(L.D.cardHTML({ p: '25-9', sys: 'water' }), /^<p class="headline">In service ≈2035, before the capacity it relieves runs out \(≈2040\): in time\. <strong>1 development<\/strong> relies on it, all expected after it is built\.<\/p>/);
+  assert.match(L.D.cardHTML({ p: '25-9', sys: 'water' }), /^<p class="headline">In service ≈2035, before the capacity it relieves runs out \(≈2040\): in time\. <strong>1 development<\/strong> \(≈300 units, ≈1 L\/s max day\) relies on it, all expected after it is built in 2035\.<\/p>[^]*<kv>Max day added by them=1 L\/s/);
   h = L.D.cardHTML({ c: '28-3', sys: 'wastewater' });
   assert.match(h, /^<p class="headline">It relieves only constraints whose data is flagged: check the data\. No development in the pipeline relies on it\.<\/p>/);
   assert.match(h, /<kv>In service before the capacity runs out\?=check the data <small>construction 2029<\/small>:tight<\/kv>/, 'no capacity year to name');
   assert.match(h, /<p class="small muted">No development in the pipeline relies on it\.<\/p>/, 'a contract key too');
+  assert.doesNotMatch(h, /Developments relying on it=/, 'no totals with none relying on it');
   // The Funding lab: its lines, hidden in the public version (and never built there: funding() is off).
   L = load({ current: MODEL(), lab: true }); h = L.D.cardHTML(ln);
   assert.match(h, /<div class="pv-hide"><h3 class="sub-title">Funding \(Labs\)<\/h3><kv>DC cost \(2026\$, DC-recoverable\)=\$1000000<\/kv>/);
@@ -387,6 +465,45 @@ test('the card’s redraw cannot loop: the sewers fetched only when missing, the
   await tick(); assert.equal(L.calls.loadSewers, 1); assert.equal(L.calls.reopen, 1);
   // (the sewers failing to load: nothing drawn again)
   L = load({ ...at, sewers: false, loaded: null }); L.D.cardHTML(ln); await tick(); assert.equal(L.calls.reopen, 0);
+});
+
+test('the card drawn again (the sewers it waited for, the allocation) never moves the reader: their tab, its preference, the phone’s sheet and the card’s scroll put back', async () => {
+  const ln = INFRA().wastewater.lines[0], tick = () => new Promise(r => setImmediate(r)), at = { result: true, ss: 'dcwork:wastewater:22-1' };
+  // The sewers late: the reader went on to Growth and lowered the sheet to peek; they arrive, the card is redrawn.
+  let L = load({ ...at, sewers: false, foot: { tab: 'growth', pref: 'growth', snap: 'peek' } });
+  L.D.cardHTML(ln); await tick();
+  assert.equal(L.calls.reopen, 1, 'drawn again'); assert.deepEqual(plain(L.foot), { tab: 'growth', pref: 'growth', snap: 'peek' }, 'still on Growth, the sheet at peek');
+  // The allocation worked out after the paint, the reader on Records: the same.
+  L = load({ ...at, foot: { tab: 'records', pref: 'records', snap: 'half' } }); L.D.cardHTML(ln); L.timers[0]();
+  assert.equal(L.calls.reopen, 1); assert.deepEqual(plain(L.foot), { tab: 'records', pref: 'records', snap: 'half' }); assert.deepEqual(L.calls.showFootTab, ['records']);
+  // Still on the Overview, reading it: there, its scroll kept, the sheet where they left it.
+  L = load({ ...at, foot: { tab: 'overview', pref: 'overview', snap: 'peek' }, scrollTop: 240 }); L.D.cardHTML(ln); L.timers[0]();
+  assert.deepEqual(plain(L.foot), { tab: 'overview', pref: 'overview', snap: 'peek' }); assert.equal(L.scroll.scrollTop, 240); assert.deepEqual(L.calls.showFootTab, []);
+});
+
+test('the full table: the list in full, at Late the reliefs that are no DC line named, then the constraints at its Status and System (the DC timing tool result’s table)', () => {
+  const body = { innerHTML: '' }, L = load({ body });
+  L.D.render();
+  assert.match(body.innerHTML, /^<table class="dt dt-wide"><caption>Every DC project, both verdicts: 3 water and wastewater DC projects<\/caption>/);
+  assert.match(body.innerHTML, /<h3 class="sub-title" data-info="dc-needs">The constraints: existing capacity against the 2026 DC program<\/h3><cons all\/all>$/);
+  assert.doesNotMatch(body.innerHTML, /Also late/);
+  L.D.state.status = 'gap'; L.D.render();
+  assert.match(body.innerHTML, /<p class="small"><span class="t-over">Also late, with no DC line:<\/span> G\.E\. Booth expansion \(in service 2030, capacity runs out ≈2027\)\. Each is in the capacity analysis below\.<\/p>/);
+  assert.match(body.innerHTML, /The constraints: existing capacity against the 2026 DC program \(Late\)<\/h3><cons gap\/all>/);
+  L.st.sys = 'water'; L.D.render();
+  assert.match(body.innerHTML, /<cons gap\/water>/); assert.doesNotMatch(body.innerHTML, /Also late/, 'the plant step is wastewater');
+  // js/masterplan.js consTableHTML: the constraints at the Status and System (BOD loading and the 2020 Master Plan
+  // trunks too: no facility in Servicing › Capacity), the old result's note; nothing before the servicing model.
+  const mp = src('js/masterplan.js'), fn = mp.slice(mp.indexOf('  function consTableHTML('), mp.indexOf('  function showConsDevs('));
+  const C = [{ id: 'bod:Lakeview', sys: 'ww', status: 'gap' }, { id: 'trunk:CT7', sys: 'water', status: 'gap' }, { id: 'ps:1', sys: 'ww', status: 'ok' }];
+  const make = svc => new Function('App', 'allNeeds', 'needsTable', 'D', 'fmtNum', 'PLANT_TRIGGER', 'PIPE_RESULTS', 'PIPES_NOT_ASSESSED', 'TRUNK_NOTE', `${fn}; return consTableHTML;`)(
+    () => ({ state: { svcModel: svc ? {} : null, criteria: {} } }), () => C, (l, ppu) => `<t ${l.map(c => c.id).join(',')} ${ppu}>`, { DEFAULT_CRITERIA: { ppu: { apartment: 2 } } }, String, 0.9, false, 'Sewer pipes: not assessed', 'Water trunk mains.');
+  const f = make(true);
+  assert.match(f('gap', 'all'), /^<t bod:Lakeview,trunk:CT7 2>/); assert.match(f('gap', 'water'), /^<t trunk:CT7 2>/); assert.match(f(), /^<t bod:Lakeview,trunk:CT7,ps:1 2>/);
+  assert.match(f('planned'), /^<p class="small muted">No constraint at this Status\.<\/p>/);
+  assert.match(f('gap'), /Sewer pipes: not assessed\. Plants at 90% of rated; pumping stations at firm capacity;[^]*Water trunk mains\. A screen, not a hydraulic model\.<\/p>$/);
+  assert.equal(make(false)('gap'), '');
+  assert.match(mp, /    showDcTiming,\n    consTableHTML,\n/);
 });
 
 test('the project in place on the Capital page: both verdicts first, then every development relying on it by tier (See all in place); Show on the map opens its card from the DC program', () => {
@@ -429,13 +546,16 @@ test('the old DC timing tool result opens the list: at its Status, the developme
   L.D.openList({ status: 'planned' });
   assert.deepEqual(L.calls.sectionAt, [['capital', 'timing']]); assert.deepEqual(L.calls.openPage, ['projects']); assert.deepEqual(L.calls.openTab, []);
   assert.equal(L.D.state.status, 'planned');
-  // At a Status no row has (today's data: no DC line late, a plant step is): the list stays, its chips above a
+  // Today's data: no DC line late, a plant step is. Late lists the step, so the link shows what is late (§5 row 62:
+  // each figure opens its own rows), its chip counts it; at a Status no row has the list stays, its chips above a
   // line saying so, so All is one tap away (a list with no rows is not drawn at all, js/panel.js).
   const R0 = { ...R, list: R.list.map(r => (r.key === 'ln:wastewater:22-1' ? { ...r, rec: 'keep' } : r)) };
   L = load({ R: R0 }); L.D.openList({ status: 'gap' }); const e = L.D.panelSpec().lists[0];
-  assert.deepEqual(plain(e.rows), [{ html: '<small class="pnl-r-line">No DC project is late (the answer names the other reliefs late).</small>' }]);
-  assert.equal(e.total, 0); assert.match(e.tools, /data-dc-status="gap" aria-pressed="true">Late 0</); assert.match(e.tools, /data-dc-status="all" aria-pressed="false">All 3</);
+  assert.deepEqual(plain(e.rows.map(r => r.attrs)), [{ 'data-ss': 'plant:Lakeview' }]);
+  assert.equal(e.total, 1); assert.match(e.tools, /data-dc-status="gap" aria-pressed="true">Late 1</); assert.match(e.tools, /data-dc-status="all" aria-pressed="false">All 3</);
   L.st.sys = 'water'; assert.match(L.D.panelSpec().lists[0].rows[0].html, /^<small class="pnl-r-line">No water DC project is late\.<\/small>$/);
+  L.st.sys = 'both'; L.D.state.status = 'check'; L.st.sys = 'water';
+  assert.match(L.D.panelSpec().lists[0].rows[0].html, /^<small class="pnl-r-line">No water DC project is flagged “check the data”\.<\/small>$/);
   // js/masterplan.js showDcTiming: dcnFilter's Status only (its system part can only be the list's own chip's).
   const mp = src('js/masterplan.js'), fn = mp.slice(mp.indexOf("  let dcnFilter = 'gap';"), mp.indexOf('  function showConsDevs('));
   const got = [];

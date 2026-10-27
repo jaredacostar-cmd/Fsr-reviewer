@@ -60,10 +60,11 @@ test('glossary: the first use of a term is underlined (three at most a panel), n
 
 test('plain words: no "screen late", project IDs on the rows, file types and I&I in words', () => {
   for (const f of ['js/dca-tab.js', 'js/dc-cost.js', 'js/dc-projects.js']) assert.doesNotMatch(src(f), /screens? late\b(?! \(capacity)|screen in time/, f);
-  // (Capital › DC timing, js/dc-projects.js since navigation phase 4: the chip says "late", the row the plain
-  // name, then the project ID)
+  // (Capital › DC timing, js/dc-projects.js since navigation phase 4: the chip says "late", counting the late
+  // reliefs that are no DC line too, the row the plain name, then the project ID)
   const p = src('js/dc-projects.js');
-  assert.match(p, /\{ tone: 'over', text: `\$\{late\.length\} late` \}/);
+  assert.match(p, /\{ tone: 'over', text: `\$\{nLate\} late` \}/);
+  assert.match(p, /nLate = late\.length \+ otherLate\.length;/);
   assert.match(p, /\$\{esc\(label\(pr\)\.short\)\}<small>project \$\{esc\(pr\.key\)\} · construction/);
   assert.match(p, /without the <strong>\$\{esc\(big\.short \|\| big\.name\)\}<\/strong>/, 'the plain name in the sentence');
   const d = src('js/dca-tab.js');

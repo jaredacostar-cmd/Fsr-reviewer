@@ -110,6 +110,8 @@
       <td class="pv-hide"><span class="dca-rec">${DC().REC[r.rec][1]}</span><small>${esc(r.why)}</small></td></tr>
       ${MP().DCA.open.has(r.key) ? `<tr class="dca-detail"><td colspan="8">${dcaDetail(r, years)}</td></tr>` : ''}`;
   }
+  // (its Year select is its own, not Scenario › Results for year, and the funding screen's Within · Outside filter
+  // stays on its table, not in the Funding fold: §5 rows 199 and 197, which no phase in §8 takes; README says so)
   function renderDcaTiming(R) {
     const years = R.years, yi = MA().getCapYear() == null ? -1 : years.indexOf(MA().getCapYear()), atY = r => yi >= 0 ? r.ys[yi] : r.bo;
     const yrLabel = MA().getCapYear() == null ? 'build-out' : MA().getCapYear();

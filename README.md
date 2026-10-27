@@ -623,7 +623,8 @@ from street zoom (14), up to 3,000 in view.
   before the DC project (or none is planned), orange "check the data" when the census flow alone
   exceeds the full-pipe capacity from the published slope. Tap a DC facility for what it relieves and
   the developments relying on it; a DC main's card has both verdicts and the developments relying on it
-  by tier (the DC projects allocation), then what it relieves.
+  by tier (the DC projects allocation), then what it relieves. Every constraint, at DC timing's Status
+  and System, is in Capital › DC timing's full table (the table the DC timing tool result drew).
 - **Fire flow and stormwater** (development brief, live): Region hydrants within 150 m (count,
   nearest, recorded pressure zone, flagged against the mapped zone) and the nearest large
   (750 mm+) watermain within 1.5 km — hydrant flow tests are not published; the nearest
@@ -1764,52 +1765,70 @@ Capital has three views, **DC timing · EAs · Projects**. DC timing and DC proj
   it"). The two answer different questions and can disagree: a main can be in service before the
   capacity it relieves runs out and still after the first homes of a development that needs it to
   connect, or the reverse; the method says so. A project that relieves no modelled constraint says
-  so and shows under All only.
-- **Status** (Late · In time · Check the data · Room · All, each with its count; a status no row has
-  is left out), the **one System control** and **one row of sorts**: *Soonest* (the year the capacity it
-  relieves runs out), *Largest impact* (held back by build-out if it were cancelled), *Most affected*
-  (units relying on it), *$ a unit* (Labs). Each button's tooltip names its measure. The *late* figure
-  sets the list to Late.
+  so and shows under All only; so does one the capacity model has only for the developments connecting
+  to it ("relieves no capacity constraint: developments connect to it", never "in time" for a capacity
+  that does not run out, and not drawn on the chart; Soonest puts it after every capacity verdict).
+- **Status** (Late · In time · Check the data · Room · All, each with its count, Late's with the late
+  reliefs that are no DC line; a status no row has is left out), the **one System control** and **one
+  row of sorts**: *Soonest* (the year the capacity it relieves runs out), *Largest impact* (held back by
+  build-out if it were cancelled), *Most affected* (units relying on it), *$ a unit* (Labs). Each button's tooltip names its measure. The *late* figure
+  sets the list to Late. At Wastewater or Water the answer's largest relief is that System's, and the
+  build-out total (the largest constraint of either system) says *both systems*.
 - **The second verdict is worked out after the list paints** (the allocation walks every sewer pipe and
   development): the rows say "working out who relies on it…" for a second or so, then fill; once per
   Scenario. Home and a development's Overview never build it.
 - **Plant expansions, 2020 Master Plan mains and DC facilities** relieve constraints too but are no DC
-  line: they stay with their facility in Servicing › Capacity, the answer names them when late ("Also
-  late: n other reliefs with no DC line …"), and the full table's capacity analysis lists every relief.
-- **The full table**: the list in full (both verdicts, filtered as the panel; a row opens the project),
-  then the capacity analysis (if one project were cancelled: its Year select, sorts, CSV and timelines),
-  then, with the Funding lab on, the screening results and funding levels. The Funding lab's screen is
-  a fold of the panel (with the DC projects relied on but not in the screen).
+  line. Late, they count in the header, the *late* figure and the Late chip, the answer names each
+  ("Also late, with no DC line: G.E. Booth WRRF (Lakeview): expansion to 600 ML/d (in service 2037,
+  capacity runs out ≈2029)", the name opening the facility it relieves), Late lists them after the DC
+  projects and the chart draws them; a plant's or a pumping station's is with its facility in Servicing
+  › Capacity, and the full table's capacity analysis lists every relief.
+- **The full table**: the list in full (both verdicts, filtered as the panel; a row opens the project;
+  at Late the late reliefs that are no DC line named), then **the constraints** at the Status and System
+  (`js/masterplan.js` `consTableHTML`: the DC timing tool result's table, a name opening what loads it, a
+  relief its project or facility; BOD loading and the 2020 Master Plan trunks have no facility in
+  Servicing › Capacity, so this is their panel home), then the capacity analysis (if one project were
+  cancelled: its Year select, sorts, CSV and timelines), then, with the Funding lab on, the screening
+  results and funding levels. The Funding lab's screen is a fold of the panel (with the DC projects
+  relied on but not in the screen). Not moved by this phase, and listed by no later one (§8): the Year
+  select still sets the analysis year itself (§5 row 199 would have it read Scenario › Results for
+  year), and the funding screen's Within · Outside filter stays on its Screening results table (§5 row
+  197 would put it in the Funding fold).
 - **A row opens the project's scope** (`dcwork:<sys>:<key>`, the same as a tap on the DC main, a search
   pick or an `ss=dcwork:…` link). On the map, its **card** on the Overview (`js/dc-projects.js`
   `cardHTML`, drawn by `js/masterplan.js` `showDcLine`): trail *Peel › DC timing › the main* (the *DC
   timing* step opens Capital › DC timing), a headline with both verdicts, the two verdicts as lines,
-  every development on it by tier (needs it to connect, needs it for capacity, on its path but not
-  needed; past the first 30 the rest in a fold; the map and the left panel filtered to them, a row
-  opening the development), the Funding lab's lines (never in the public version), *CSV: its
-  developments*, *All DC projects ›*, then *What it relieves*. The allocation is worked out after the
-  card first paints ("Working out the developments relying on it…"), then the card is drawn again, once.
+  who relies on it as the page's project says it (units and flow in the headline; the developments by
+  tier, their units and people + jobs, and their flow as lines), every development on it by tier (needs
+  it to connect, needs it for capacity, on its path but not needed; past the first 30 the rest in a
+  fold; the map and the left panel filtered to them, a row opening the development), the Funding lab's
+  lines (never in the public version), *CSV: its developments*, *All DC projects ›*, then *What it
+  relieves*. The allocation is worked out after the
+  card first paints ("Working out the developments relying on it…"), then the card is drawn again, once
+  (the tap itself never walks every pipe; the build runs after the paint). A redraw, after the
+  allocation or the sewers it waited for, never moves the reader: the tab they went on to, the phone's
+  sheet and the card's scroll stay as they were.
   For a DC main the developments come from the DC projects allocation (one model per answer: the card's
   older "Developments relying on it" list, the first draft of the same rule, stays for DC facilities,
   which the allocation does not cover). On the Capital page the project opens in place (both verdicts,
   then the developments by tier, five a tier with *See all* opening the rest in place, the funding fold
   with the lab, its own map), the section bar's *DC timing* returns to the list, and *Open the map*
   opens its card. A DC project picked in a page's search opens there.
-- **A Status no project has** (today: no DC line is late, a plant expansion is) keeps the list and its
-  chips, with one line saying none is (and that the answer names the other reliefs late), so *All* is
-  one tap away.
+- **A Status no project has** keeps the list and its chips, with one line saying none is, so *All* is
+  one tap away. (Today no DC line is late and a plant expansion is: Late lists it.)
 - **The DC timing tool result is the list.** Layers › More settings *DC timing: capacity vs DC projects
   →*, a development's *All DC timing →*, a constraint's *← DC timing*, Help's *Show me* and
   `App().showDcTiming()` open Capital › DC timing (on a page, the Capital page) at the Status the
   workbook's filter holds (`PeelMasterPlan.dcnFilter`, Late to start), closing the development or result
   open, as the result did. The System is the one control as the reader left it: a link never sets it.
-  The result's own Both · Wastewater · Water seg (the last of three System controls) is gone. Each
-  constraint is with its facility in Servicing › Capacity; the workbook's DC sheet still lists them,
-  filtered by `dcnFilter`, which only the list's Status chips write (their status and the System at the
+  The result's own Both · Wastewater · Water seg (the last of three System controls) is gone. Its
+  constraints are in the list's full table, at the list's Status and System (see above); the workbook's
+  DC sheet still lists them, filtered by `dcnFilter`, which only the list's Status chips write (their status and the System at the
   tap; the late figure and Home's figure set the list's Status only).
 - **Home's *DC projects late*** keeps its source: every relief in service after the capacity it relieves
-  runs out (`dcAnalysis`), Peel-wide, never filtered. A tap opens the Capital page with the list at Late;
-  the list's late plus the answer's *Also late* is Home's number at System Both.
+  runs out (`dcAnalysis`), Peel-wide, never filtered. A tap opens the Capital page at its DC timing
+  section (wherever the page was left) with the list at Late: at System Both its header, *late* figure
+  and Late chip say Home's number, and Late lists every one.
 - **The Capital page**: DC timing · EAs · Projects. The Projects and EAs lists it borrowed under DC
   timing are gone: they are its sections.
 - **EA to construction joins EAs.** One builder (`js/capital-ea-model.js` `eaFlowSpec`, with the

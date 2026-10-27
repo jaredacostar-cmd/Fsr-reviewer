@@ -795,12 +795,23 @@
   // The DC timing tool result is Capital › DC timing now (navigation phase 4): every way to it ("All DC timing →",
   // "← DC timing", Layers › More settings, Help's Show me, App().showDcTiming) opens that list at dcnFilter's
   // Status, in the one System control as the reader left it (only the list's own Status chip writes the
-  // filter's system part, so applying it here could only undo a later System pick). Each constraint is with its
-  // facility in Servicing › Capacity; dcnFilter still filters the workbook's DC sheet (js/exports.js).
+  // filter's system part, so applying it here could only undo a later System pick). The constraints the result
+  // listed are in that list's full table, at its Status and System (consTableHTML); a plant's, a pumping
+  // station's and storage's are with the facility in Servicing › Capacity too, a plant's BOD loading and the 2020
+  // Master Plan trunks only there; dcnFilter still filters the workbook's DC sheet (js/exports.js).
   let dcnFilter = 'gap';
   function showDcTiming() {
     const DP = window.PeelDcProjects;
     if (DP && DP.openList) DP.openList({ status: dcnFilter.split(':')[0] || 'gap' });
+  }
+  // The constraints at a Status and System (st: gap · planned · check · ok · all; sys: all · ww · water), the
+  // table the DC timing tool result drew: Capital › DC timing's full table, under the DC projects
+  // (js/dc-projects.js fullHTML). A name opens what loads it, a relief the DC project or facility.
+  function consTableHTML(st = 'all', sys = 'all') {
+    if (!App().state.svcModel) return '';
+    const all = allNeeds().filter(c => sys === 'all' || c.sys === sys), list = all.filter(c => st === 'all' || c.status === st), ppu = (App().state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment;
+    return `${list.length ? needsTable(list.slice(0, 150), ppu) : '<p class="small muted">No constraint at this Status.</p>'}${list.length > 150 ? `<p class="small muted">+ ${fmtNum(list.length - 150)} more (the workbook’s DC sheet has every one).</p>` : ''}
+      <p class="small muted">Room in units at ${ppu} persons per unit (apartment). Room = capacity − (existing + built + approved); runs out = the year approved and proposed growth reach it, phased as in Horizon years. ${PIPE_RESULTS ? 'Sewers: pipes reaching 90% of full capacity by build-out, grouped by the DC main that runs along them (or by run). ' : `${PIPES_NOT_ASSESSED}. `}Plants at ${Math.round(PLANT_TRIGGER * 100)}% of rated; pumping stations at firm capacity; storage from the 2020 Master Plan forecast; water supply into the upper zones is a rough conveyance estimate (1.5 m/s in the large mains crossing each zone boundary; water pumping station capacities are not published). ${TRUNK_NOTE} A screen, not a hydraulic model.</p>`;
   }
   function showConsDevs(c) {
     const ppu = (App().state.criteria.ppu || D.DEFAULT_CRITERIA.ppu).apartment;
@@ -907,6 +918,7 @@
     get dcnFilter() { return dcnFilter; },
     set dcnFilter(v) { dcnFilter = v; },
     showDcTiming,
+    consTableHTML,
     showConsDevs,
     consStatus,
     showDcBack,

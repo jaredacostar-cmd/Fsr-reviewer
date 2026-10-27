@@ -1243,13 +1243,16 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     const v2 = await ev(() => ({ working: [...document.querySelectorAll('#pnl-dca .pnl-list .pnl-row')].some(r => /working out/.test(r.textContent)),
       fig: ([...document.querySelectorAll('#pnl-dca .pnl-fig')].find(f => /first homes before it is built/.test(f.textContent)) || {}).textContent || '' }));
     expect(!v2.working && /expected first/.test(v2.fig), `the second verdict filled in (${v2.fig.slice(0, 80)})`);
-    // Late filters the list.
+    // Late filters the list: the DC projects late, then the late reliefs that are no DC line (a plant expansion);
+    // the header, the late figure and the Late chip count them all (at System Both, Home's number).
     if (await ev(() => !!document.querySelector('#pnl-dca .dcp-status [data-dc-status="gap"]'))) {
       await page.click('#pnl-dca .dcp-status [data-dc-status="gap"]'); await wait(1000);
-      const l = await ev(() => ({ metas: [...document.querySelectorAll('#pnl-dca .pnl-list .pnl-row .pnl-r-meta')].map(m => m.textContent), fig: +(((document.querySelector('#pnl-dca .pnl-fig[data-dc-status="gap"] b') || {}).textContent || '').replace(/\D/g, '')),
-        total: PeelDcProjects.rowsFor(PeelDcCost.dcAnalysis(), PeelDcImpact.current()).length, status: PeelDcProjects.state.status }));
+      const l = await ev(() => { const n = s => +((s || {}).textContent || '').replace(/\D/g, '');
+        return { metas: [...document.querySelectorAll('#pnl-dca .pnl-list .pnl-row .pnl-r-meta')].map(m => m.textContent), fig: n(document.querySelector('#pnl-dca .pnl-fig[data-dc-status="gap"] b')),
+          chip: n(document.querySelector('#pnl-dca .dcp-status [data-dc-status="gap"]')), head: ((document.querySelector('#pnl-dca .pnl-head .pnl-chip') || {}).textContent || '').trim(),
+          n: PeelDcCost.dcAnalysis().list.filter(r => r.rec === 'advance').length, status: PeelDcProjects.state.status }; });
       expect(l.status === 'gap' && l.metas.length > 0 && l.metas.every(t => /in service after it runs out/.test(t)), `Late: every row is late (${l.metas.length} rows)`);
-      expect(l.fig === l.total, `the late figure is the list's total (${l.fig} / ${l.total})`);
+      expect(l.fig === l.n && l.chip === l.n && new RegExp(`^${l.n} late`).test(l.head), `the late figure, the Late chip and the header count every relief late (${l.fig} / ${l.chip} / "${l.head}" / ${l.n})`);
       await page.click('#pnl-dca .dcp-status [data-dc-status="all"]'); await wait(800);
     }
     // A row opens the project's card, its dcwork: scope on the Overview (sorted by Most affected, so the first has
@@ -1291,16 +1294,24 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     await ev(() => { PeelSvcScope.closeResult(); PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage('projects'); }); await wait(1500);
     await page.click('#home .page-sec[data-ws-page="projects"]'); await wait(1500);
     expect(await ev(() => !!document.querySelector('#home [data-dcproj-open]') && !document.querySelector('#home [data-dcproj-back]')), 'the bar’s DC timing: the list again');
-    // Home's DC projects late: every relief late (the analysis itself); a tap opens the list at Late, which with
-    // the answer's "Also late" adds up to it (at System Both: Home never filters). The workbook's filter is untouched.
+    // Home's DC projects late: every relief late (the analysis itself); a tap opens the Capital page's DC timing
+    // section at Late, even where the page was left on its Projects section; its header, late figure and Late chip
+    // say Home's number (at System Both: Home never filters) and the list shows the late ones. The workbook's
+    // filter is untouched.
+    await page.click('#home .page-sec[data-ws-wsec="capital:projects"]'); await wait(1500);
+    expect(await ev(() => !!document.querySelector('#home .page-sec.on[data-ws-wsec="capital:projects"]')), 'the Capital page left on its Projects section');
     await ev(() => { PeelAnalysisTabs.setSys('both'); PeelWorkspaces.openPage('home'); }); await wait(2500);
     const h = await ev(() => ({ v: +(((document.querySelector('#home .pnl-fig[data-dc-status="gap"] b') || {}).textContent || '').replace(/\D/g, '')), n: PeelDcCost.dcAnalysis().list.filter(r => r.rec === 'advance').length, f: PeelMasterPlan.dcnFilter }));
     expect(h.v === h.n, `Home's DC projects late is the analysis' (${h.v} / ${h.n})`);
     await page.click('#home .pnl-fig[data-dc-status="gap"]'); await wait(2500);
-    const hl = await ev(() => ({ page: PeelWorkspaces.page(), status: PeelDcProjects.state.status, late: PeelDcProjects.rowsFor(PeelDcCost.dcAnalysis(), PeelDcImpact.current()).length,
-      also: +((/Also late: (\d+)/.exec(((document.querySelector('#home .home-answer') || {}).textContent || '')) || [0, 0])[1]), f: PeelMasterPlan.dcnFilter }));
-    expect(hl.page === 'projects' && hl.status === 'gap', `the Capital page at Late (${hl.page}, ${hl.status})`);
-    expect(hl.late + hl.also === h.v, `the list's late and the answer's Also late add up to Home's (${hl.late} + ${hl.also} / ${h.v})`);
+    const hl = await ev(() => { const n = s => +((s || {}).textContent || '').replace(/\D/g, ''), H = document.getElementById('home');
+      return { page: PeelWorkspaces.page(), status: PeelDcProjects.state.status, sec: ((H.querySelector('.page-sec.on') || {}).textContent || '').trim(),
+        fig: n(H.querySelector('.pnl-fig[data-dc-status="gap"] b')), chip: n(H.querySelector('.dcp-status [data-dc-status="gap"]')), rows: H.querySelectorAll('.pnl-list .pnl-row').length,
+        also: /Also late, with no DC line/.test((H.querySelector('.home-answer') || {}).textContent || ''),
+        other: PeelDcCost.dcAnalysis().list.filter(r => r.rec === 'advance' && !/^ln:/.test(r.key)).length, f: PeelMasterPlan.dcnFilter }; });
+    expect(hl.page === 'projects' && hl.status === 'gap' && hl.sec === 'DC timing', `the Capital page at DC timing, Late (${hl.page}, ${hl.status}, ${hl.sec})`);
+    expect(hl.fig === h.v && hl.chip === h.v && (h.v === 0 || hl.rows > 0), `its late figure and Late chip are Home's, the list shows them (${hl.fig} / ${hl.chip} / ${hl.rows} rows / ${h.v})`);
+    expect(!hl.other || hl.also, 'the answer names the late reliefs that are no DC line');
     expect(hl.f === h.f, `the workbook's DC filter unchanged (${hl.f})`);
     await ev(() => { PeelDcProjects.state.status = 'all'; PeelDcProjects.refresh(); });
   });
