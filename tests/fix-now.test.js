@@ -18,7 +18,10 @@ test('a plant\'s or the water system\'s "Show on the map" fits the map to the ar
   assert.match(s, /function fitScope\(ref\) \{[^]*?map\.fitBounds\(\[\[b\[1\], b\[0\]\], \[b\[3\], b\[2\]\]\]/);
 });
 
-test('Tools › Record allocation opens the allocation form, a fold of the development\'s Servicing panel', () => {
+// (navigation phase 5: the site bar's Tools ▾ is the header's ⋯, on every tab and the page)
+test('⋯ › Record allocation opens the allocation form, a fold of the development\'s Servicing panel', () => {
+  assert.match(src('js/panel.js'), /\{ label: 'Record allocation', attrs: \{ 'data-scope-alloc': '' \}/);
+  assert.match(src('js/devscope.js'), /const al = e\.target\.closest\('\[data-scope-alloc\]'\);\n\s+if \(al\) \{ const h = H\(\); if \(h && h\.showAllocSub\) h\.showAllocSub\(\); return; \}/);
   assert.match(src('js/svc-capacity.js'), /\{ title: 'Servicing allocation', id: 'pnl-alloc', html: root\.PeelDemandUI && root\.PeelDemandUI\.allocBoxHTML \? root\.PeelDemandUI\.allocBoxHTML\(p\) : '' \}/);
   assert.match(src('js/demand-ui.js'), /const api = \{ allocBoxHTML,/);
   assert.match(src('js/app.js'), /showAllocSub: \(\) => \{[^]*?openTab\('svc', 'network'\)[^]*?getElementById\('pnl-alloc'\)[^]*?d\.open = true/);

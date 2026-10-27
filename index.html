@@ -209,7 +209,6 @@
       <div class="analysis-resize" id="analysis-resize" role="separator" aria-orientation="vertical" aria-label="Resize the analysis column: drag left or right" tabindex="0"><span></span></div>
       <button type="button" class="sheet-grip" id="analysis-grip" aria-label="Resize the analysis panel: drag, or tap to change its height"><span></span></button>
       <button type="button" class="f-sum" id="f-sum" title="Show the overview totals"></button>
-      <div id="site-bar" hidden></div>
       <div class="analysis-tabs" role="tablist" aria-label="Analysis">
         <button type="button" role="tab" class="f-tab" id="ftab-overview" data-tab="overview" data-info="tab-overview" aria-controls="pane-overview" aria-selected="true">Overview</button>
         <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-growth" aria-controls="pane-growth-pipeline" aria-selected="false">Growth</button>
@@ -230,8 +229,6 @@
       <section class="f-pane overview" id="pane-overview" data-pane="overview" role="tabpanel" aria-labelledby="ftab-overview">
         <div id="ov-body"></div>
         <div id="scope-body" class="scope-body" hidden aria-live="polite"></div>
-        <!-- A scoped development: its About / Files & history / Site views, below the verdict. -->
-        <div id="ov-dev" class="ov-dev" hidden><div class="dev-subtabs" role="tablist" aria-label="Development views"><button type="button" data-devsub="about" aria-selected="true">About</button><button type="button" data-devsub="files" aria-selected="false">Files &amp; history</button><button type="button" data-devsub="site" aria-selected="false">Site</button></div><div id="pane-dev-body"></div></div>
       </section>
 
       <div class="f-pane f-subtabs" data-pane="growth" hidden role="group" aria-label="Growth view"><button type="button" class="btn small" data-gsub="pipeline">Pipeline</button><button type="button" class="btn small" data-gsub="areas">Areas</button><button type="button" class="btn small" data-gsub="timing">Forecast</button></div>
@@ -248,6 +245,7 @@
       <div class="f-pane f-subtabs svc-subtabs" data-pane="svc" hidden role="group" aria-label="Servicing view">
         <button type="button" class="btn small" data-svcsub="capacity">Capacity</button>
         <button type="button" class="btn small" data-svcsub="network">Network</button>
+        <button type="button" class="btn small" data-svcsub="fsr">FSR review</button>
       </div>
       <section class="f-pane pnl-host" id="pnl-svc" data-pane="svc" aria-labelledby="ftab-svc" hidden></section>
       <!-- Capacity: one table, water and wastewater (js/svc-capacity.js); the plant and water charts

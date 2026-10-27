@@ -62,8 +62,8 @@
   }
   const fsrBoxHTML = p => p.records.some(r => r.kind === 'application') ? `<div class="fsr-box small" id="dev-fsr" data-info="fsr">${fsrInnerHTML(p)}</div>` : '';
   // Servicing tab: the trace tool first, then Water and Wastewater in their own sections, then the
-  // site (ground, stormwater). opts.site === false drops the site section (its home is
-  // Development › Site); opts.noWwNeeds replaces the DC wastewater-needs table (sewer-path and
+  // site (ground, stormwater). opts.site === false drops the site section (its home is the
+  // Network panel's Site fold); opts.noWwNeeds replaces the DC wastewater-needs table (sewer-path and
   // plant numbers, whose home is the Wastewater tab) with a one-line pointer.
   function devServicingBriefHTML(p, st, f, part, opts = {}) {
     const row = (k, body) => `<div class="b-row"><div class="b-k">${k}</div><div class="b-v">${body}</div></div>`;
@@ -133,74 +133,6 @@
     return `${SCREEN_NOTE}${traceW}${traceS}${near}${water}${ww}${site}`;
   }
 
-  // One dated history: phase changes (weekly check), council and committee items, file events
-  // and building permit events; newest first, by year.
-  function devEvents(p) {
-    const byUid = new Map(p.records.map(r => [r.uid, r]));
-    const ev = [], groups = new Map();
-    for (const t of p.timeline) {
-      const r = byUid.get(t.record), type = r && r.kind === 'permit' ? 'permit' : 'file';
-      const k = `${fmtDate(t.date)}|${t.text}|${type}`;
-      if (!groups.has(k)) { const g = { date: t.date, type, phase: t.phase, text: t.text, tags: [] }; groups.set(k, g); ev.push(g); }
-      const g = groups.get(k); if (!g.tags.includes(t.tag)) g.tags.push(t.tag);
-    }
-    const h = (App().state.history && App().state.history.projects && App().state.history.projects[p.key]) || [];
-    // Only actual moves: the first weekly check ("first seen as") is when tracking began, not an event.
-    h.forEach(([d, ph, tag], i) => {
-      if (!i || tag === 'rules') return;
-      const at = new Date(`${d}T23:59:59`), why = p.timeline.filter(e => e.phase === ph && e.date <= at).sort((a, b) => b.date - a.date)[0];
-      ev.push({ date: new Date(`${d}T12:00:00`), seq: i + 1, type: 'phase', phase: ph, text: `Moved to ${P.PHASE_BY_KEY[ph].label}`, why });
-    });
-    if (App().state.council) for (const c of DD().councilBriefs(p)) ev.push({ date: new Date(`${c.m.date}T12:00:00`), type: 'council', c });
-    return ev.sort((a, b) => b.date - a.date || (b.seq || 0) - (a.seq || 0));
-  }
-  // Key events: everything but individual permits, which are counted per year instead.
-  function keyEvents(all) {
-    const out = [], years = new Map();
-    for (const x of all) {
-      if (x.type !== 'permit') { out.push(x); continue; }
-      const y = fmtDate(x.date).slice(0, 4);
-      if (!years.has(y)) { const s = { date: x.date, type: 'permits', byPhase: new Map(), tags: new Set() }; years.set(y, s); out.push(s); }
-      const s = years.get(y);
-      if (!s.byPhase.has(x.phase)) s.byPhase.set(x.phase, new Set());
-      for (const t of x.tags) { s.byPhase.get(x.phase).add(t); s.tags.add(t); }
-    }
-    return out;
-  }
-  const TL_TYPE = { council: 'Council', phase: 'Stage', file: 'File', permit: 'Permit', permits: 'Permits' };
-  function evHTML(x) {
-    const tags = list => list.length <= 3 ? esc(list.join(', '))
-      : `${esc(list.slice(0, 2).join(', '))} <details class="tl-more"><summary>+${list.length - 2} more</summary>${esc(list.slice(2).join(', '))}</details>`;
-    let body;
-    if (x.type === 'council') {
-      const { m, it, s } = x.c;
-      body = `<details class="c-ev"><summary>${s.verdict ? `<strong>${esc(s.verdict)}</strong> · ` : ''}${esc(m.name)}${it.n ? ` · item ${esc(it.n)}` : ''} <span class="c-kind">${esc(s.kind)}</span> ${DD().outBadge(it, s)}
-          <span class="c-title">${esc(it.title)}</span></summary>
-        ${s.decision ? `<p class="small c-motion">${esc(s.decision)}</p>` : ''}
-        ${s.requirements.length || s.concerns.length ? `<div class="chips small">${s.requirements.map(r => DD().chip(esc(r.label), r.infra ? 'infra' : '')).join('')}${s.concerns.map(c => DD().chip(`Concern: ${esc(c)}`, 'concern')).join('')}</div>` : ''}
-        <p class="small"><a href="${esc(m.url)}" target="_blank" rel="noopener">Meeting page</a>${it.docs.map(([id, name]) => ` · <a href="https://${esc(m.host)}/filestream.ashx?DocumentId=${esc(id)}" target="_blank" rel="noopener">${esc(name.replace(/\.pdf$/i, ''))}</a>`).join('')}</p>
-        ${it.text ? `<details class="c-text"><summary>${m.passed ? 'Minutes: discussion, motion and vote' : 'Agenda text'}</summary><p class="small">${esc(it.text)}</p></details>` : ''}
-      </details>`;
-    } else if (x.type === 'phase') {
-      body = `${dot(x.phase)}<span><strong>${esc(x.text)}</strong>${x.why ? ` <span class="muted">— ${esc(x.why.text.replace(/^[^·]*· /, ''))} on ${esc(x.why.tag)} (${fmtDate(x.why.date)})</span>` : ''}</span>`;
-    } else if (x.type === 'permits') {
-      const ph = P.PHASES.map(q => q.key).concat('cancelled').filter(k => x.byPhase.has(k)).reverse();
-      body = `${dot(ph[0] || 'permit')}<span>${fmtNum(x.tags.size)} building permit${x.tags.size === 1 ? '' : 's'} with dates this year: ${ph.map(k => `${esc(P.PHASE_BY_KEY[k].label.toLowerCase())} ${fmtNum(x.byPhase.get(k).size)}`).join(' · ')} <span class="muted">— each under All dated events</span></span>`;
-    } else {
-      body = `${dot(x.phase)}<span>${esc(x.text)}${x.tags.length > 1 ? ` <span class="tl-n">×${x.tags.length}</span>` : ''} <span class="muted">— ${tags(x.tags)}</span></span>`;
-    }
-    return `<li class="t-${x.type}"><span class="d">${fmtDate(x.date).slice(5)}</span><span class="tl-type">${TL_TYPE[x.type]}</span><div class="tl-body">${body}</div></li>`;
-  }
-  function evListHTML(list) {
-    if (!list.length) return '<p class="muted small">No dated events in the source data.</p>';
-    const years = new Map();
-    for (const x of list) { const y = fmtDate(x.date).slice(0, 4); if (!years.has(y)) years.set(y, []); years.get(y).push(x); }
-    return [...years].map(([y, xs], i) => {
-      const n = t => xs.filter(x => x.type === t).length;
-      const sum = [n('council') && `${n('council')} council`, n('phase') && `${n('phase')} phase`, n('file') && `${n('file')} file`, (n('permit') + n('permits')) && 'permits'].filter(Boolean).join(' · ');
-      return `<details class="tl-year"${i < 2 ? ' open' : ''}><summary><strong>${y}</strong> <span class="muted small">${sum}</span></summary><ol class="tl2">${xs.map(evHTML).join('')}</ol></details>`;
-    }).join('');
-  }
   // How the site's phase was set: approvals by stage against the latest submission, each file's
   // published status and how it was read, and flags where the reading is uncertain.
   const STAGE_NAME = { precon: 'Pre-consultation', master: 'Official plan / zoning / subdivision', siteplan: 'Site plan', condo: 'Condominium', other: 'Other planning file', permit: 'Building permits' };
@@ -303,21 +235,6 @@
         ${list.length > MAX ? `<p class="small muted">+ ${fmtNum(list.length - MAX)} more in Source records.</p>` : ''}</details>
       <p class="small muted">Statuses are as each municipality publishes them; phases are this app's reading of them (open the ⓘ for the rules). A screening view — confirm against the file before relying on it.</p></details>`;
   }
-  function devHistoryHTML(p, st) {
-    const cancelled = p.phase === 'cancelled';
-    const steps = P.PHASES.map(s => {
-      const reached = !cancelled && s.rank <= p.rank, when = p.milestones[s.key];
-      return `<li class="${s.key === p.phase ? 'current done' : reached ? 'done' : 'todo'}">${dot(s.key)}<span class="lbl">${esc(s.label)}</span><span class="when">${when ? fmtDate(when) : reached ? 'reached' : ''}</span></li>`;
-    }).join('');
-    const all = devEvents(p), key = keyEvents(all);
-    const nC = all.filter(x => x.type === 'council').length;
-    return `<details class="sect" id="dev-hist" open><summary><h2 class="section-title" data-info="dev-history">History</h2><span class="muted small sect-sum">${p.first ? `since ${fmtDate(p.first).slice(0, 4)}` : ''}${nC ? ` · ${nC} council` : ''}</span></summary>
-      <ol class="stepper compact">${steps}</ol>
-      ${st.sig.length ? `<ul class="why-list" data-info="status-why">${st.sig.map(x => `<li class="why-${x.kind}"><span>${esc(x.text)}</span><small>${esc(x.files.slice(0, 3).join('; '))}${x.files.length > 3 ? ` +${x.files.length - 3} more` : ''}</small></li>`).join('')}</ul>` : ''}
-      <div class="seg tl-toggle" role="group" aria-label="Events shown"><button type="button" class="btn small on" data-tl="key">Key events</button><button type="button" class="btn small" data-tl="all">All dated events (${fmtNum(all.length)})</button></div>
-      <div data-tlv="key">${evListHTML(key)}</div><div data-tlv="all" hidden>${evListHTML(all)}</div>
-      <p class="small muted">Phase changes from the weekly check; council and committee items that name the files (${App().state.council ? 'agendas and minutes since 2019' : '<span class="skel" style="display:inline-block;width:110px;vertical-align:middle" role="status" aria-label="Loading"></span>'}); file and permit dates from the municipal records. Open a council item for its motion, reports and minutes.</p></details>`;
-  }
 
   function devServicingHTML(p, f, open) {
     const dem = '';   // demand by stage is in Units, jobs & build-out
@@ -405,7 +322,7 @@
   }
 
   // ---- Public contract ----
-  const api = { FSR, loadFsr, fsrFor, fsrInnerHTML, fsrBoxHTML, devServicingBriefHTML, devEvents, devHistoryHTML, devServicingHTML, getDmSys, setDmSys, devStageDemandHTML, appBuildoutHTML, devUnitsHTML, phaseBasisHTML, evListHTML, DV_TABS, showDvTab };
+  const api = { FSR, loadFsr, fsrFor, fsrInnerHTML, fsrBoxHTML, devServicingBriefHTML, devServicingHTML, getDmSys, setDmSys, devStageDemandHTML, appBuildoutHTML, devUnitsHTML, phaseBasisHTML, DV_TABS, showDvTab };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelFsr = api;
 })(typeof window !== 'undefined' ? window : globalThis);

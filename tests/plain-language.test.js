@@ -32,7 +32,10 @@ test('scenario chip: "Default" when nothing is changed, "n changes" otherwise; t
   assert.match(src('js/panel.js'), /txt = p && p\.settings \? p\.text : 'Default'/);
   assert.match(src('js/svc-tab.js'), /<p class="scen-k">This scenario: \$\{esc\(scn\.text\)\}<\/p>\$\{LB\.scenarioListHTML\(scn\.settings\)\}/);
   assert.match(src('js/topbar.js'), /yearDefault: root\.PeelMapMarkers \? root\.PeelMapMarkers\.THIS_YEAR : null/);
-  assert.match(src('js/tree-counts.js'), /tree: 'Each planning file once \(tree\)'/, 'no "Tree (new)"');
+  // (removed by design, navigation phase 5: the Previous switch and its option words; the note says how a
+  // development is counted, in words, with no "Tree (new)" or "Previous count")
+  assert.doesNotMatch(src('js/tree-counts.js'), /Tree \(new\)|Previous count/, 'no "Tree (new)"');
+  assert.match(src('js/tree-counts.js'), /<strong>Counted from its \$\{permitsOnly \? 'permits' : 'files and permits'\}<\/strong>/);
 });
 
 test('glossary: the first use of a term is underlined (three at most a panel), never inside a tag or a button', () => {

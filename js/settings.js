@@ -33,7 +33,6 @@
     else if (e.target.id === 'dsp-density') setDensity(e.target.value);
     else if (e.target.id === 'dsp-present') store.set('presentTheme', e.target.value === 'app' ? 'app' : 'light');
     else if (e.target.id === 'prep-by') store.set('prepBy', e.target.value.trim());
-    else if (e.target.id === 'count-mode') { root.PeelTreeCounts.setMode(e.target.value); App().recount(); }
     else if (e.target.id === 'public-view') { store.set('publicView', !!e.target.checked); root.PeelUtil.applyPublic(); App().refreshTheme(); }
     const w = e.target.closest && e.target.closest('[data-wet]');
     if (w) { App().state.wet[w.dataset.wet] = w.dataset.wet === 'clim' ? w.value : +w.value; wetChanged(); }

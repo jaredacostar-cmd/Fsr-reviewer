@@ -17,8 +17,10 @@ const APP = {
 };
 
 test('exports the comparison/flag contract and the thresholds', () => {
-  for (const k of ['toNum', 'normCon', 'pctDiff', 'flagFor', 'fmtDiff', 'zoneMatch', 'flowRows', 'connRows', 'pipeChecks', 'plantCheck', 'dcCheck', 'summarize', 'verdictOf', 'toggleFor'])
+  // (navigation phase 5: Servicing › FSR review is the one host, panelSpec; the site bar's toggle went with it)
+  for (const k of ['toNum', 'normCon', 'pctDiff', 'flagFor', 'fmtDiff', 'zoneMatch', 'flowRows', 'connRows', 'pipeChecks', 'plantCheck', 'dcCheck', 'summarize', 'verdictOf', 'panelSpec', 'mount'])
     assert.equal(typeof F[k], 'function', k);
+  assert.equal(F.toggleFor, undefined);
   assert.equal(F.WARN_PCT, 10);
   assert.equal(F.BAD_PCT, 25);
 });

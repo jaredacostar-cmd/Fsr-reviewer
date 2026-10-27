@@ -23,7 +23,8 @@
     { id: 'site', label: 'Check a site', group: 'Planning', tab: 'overview', sub: '', scope: 'site', view: 'planning', what: 'One development: servicing, timing, the memo' },
     { id: 'tight', label: 'Servicing capacity', group: 'Planning', tab: 'svc', sub: 'capacity', scope: 'area', view: 'wastewater', what: 'Plants, pumping and storage near their limit' },
     { id: 'growth', label: 'Growth in an area', group: 'Planning', tab: 'growth', sub: 'areas', scope: 'area', view: 'planning', what: 'Planned homes and people, by area' },
-    { id: 'fsr', label: 'Review an FSR', group: 'Planning', tab: 'svc', sub: 'network', scope: 'site', view: 'wastewater', fsr: true, what: 'A consultant’s FSR against the app’s figures' },
+    // (at a site, Servicing › FSR review, a development's view: siteSub; without one, the Find step on Network)
+    { id: 'fsr', label: 'Review an FSR', group: 'Planning', tab: 'svc', sub: 'network', siteSub: 'fsr', scope: 'site', view: 'wastewater', what: 'A consultant’s FSR against the app’s figures' },
     { id: 'outlook', label: 'Forecast', group: 'Planning', tab: 'growth', sub: 'timing', scope: 'area', view: 'planning', what: 'When homes and people arrive, by year' },
     { id: 'study', label: 'Study area', group: 'Planning', tab: 'overview', sub: '', scope: 'drawn', view: 'planning', what: 'Draw an area: its growth and servicing' },
     { id: 'projects', label: 'DC projects', group: 'Capital', tab: 'dca', sub: 'timing', scope: 'area', view: 'dc', what: 'Is each DC project in time?' },
@@ -91,14 +92,15 @@
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Records › Data checks (Servicing has none since
   // navigation phase 2), Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.
-  const SUB_NAME = { capacity: 'Capacity', network: 'Network', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', 'dca:timing': 'DC timing', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
+  const SUB_NAME = { capacity: 'Capacity', network: 'Network', fsr: 'FSR review', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', 'dca:timing': 'DC timing', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
   const tabPath = (tab, sub) => [TAB_NAME[tab] || tab, sub ? SUB_NAME[`${tab}:${sub}`] || SUB_NAME[sub] || sub : ''].filter(Boolean).join(' › ');
   // What a chip does: the tab, sub-view, scope and preset; closeScopes = area chips leave a site; fold: the
-  // fold of that sub-view it opens (What's coming: By period; EA to construction: its fold of Capital › EAs).
+  // fold of that sub-view it opens (What's coming: By period; EA to construction: its fold of Capital › EAs);
+  // siteSub: the sub-view it opens once a site is open (Review an FSR: Servicing › FSR review).
   function plan(id, ctx = {}) {
     const w = BY_ID[id]; if (!w) return null;
-    const site = !!ctx.site;
-    return { id, tab: w.tab, sub: w.sub, view: w.view, scope: w.scope === 'site' ? (site ? 'site' : 'find') : w.scope, closeScopes: w.scope === 'area', fsr: !!w.fsr && site, lasso: w.scope === 'drawn', source: `${w.label} · from ${tabPath(w.tab, w.sub)}`, fold: w.fold || null };
+    const site = !!ctx.site, sub = site && w.siteSub ? w.siteSub : w.sub;
+    return { id, tab: w.tab, sub, view: w.view, scope: w.scope === 'site' ? (site ? 'site' : 'find') : w.scope, closeScopes: w.scope === 'area', lasso: w.scope === 'drawn', source: `${w.label} · from ${tabPath(w.tab, sub)}`, fold: w.fold || null };
   }
   // The panel header line in a workspace: the workspace when the panel is its sub-view, else the tab.
   function sourceText(wsId, key) {
@@ -163,8 +165,8 @@
   }
 
   // Find from every page (navigation design §3.3): what a search pick (js/search-filter.js) opens on a
-  // page. A development its page on Summary (from Review an FSR, its FSR review); a file number its page
-  // at Files; a plan Growth in an area at the plan (else its municipality); an MTSA its filter, as on the
+  // page. A development its page on Overview (from Review an FSR, Servicing › FSR review); a file number its
+  // page at Records; a plan Growth in an area at the plan (else its municipality); an MTSA its filter, as on the
   // map, at its municipality; a plant, station, block, zone or South Peel its scope on Servicing
   // capacity's map; a DC project Capital › DC timing at it (in place, on the Capital page); a DC facility
   // or an address the map view where the map's own pick then runs (then: 'map'). null: not a place (the
@@ -298,9 +300,6 @@
     const A = AT(); if (A) { if (pl.sub && A.setSub) A.setSub(pl.tab, pl.sub); if (A.setFootPref) A.setFootPref(pl.tab); A.showFootTab(pl.tab); if (pl.fold && A.openFold) A.openFold(pl.fold); }
     foldLayers();
     pipesLayer(id === 'pipes');
-    // Review an FSR at a site: the cross-check is an open fold of the Servicing panel (fsrSpec), so the
-    // site bar's own copy closes (one form on screen).
-    if (pl.fsr) { const box = document.getElementById('site-bar-fsr'), b = document.querySelector('#site-bar [data-scope-fsr]'); if (box && !box.hidden && b) b.click(); }
     // Draw an area (a page header's, the chip's): Select on, and on a phone the sheet down to its peek,
     // so the map is there to draw on (a result kept at a development may have left it full).
     if (pl.lasso && !o.noDraw && root.PeelAreaSelect && root.PeelAreaSelect.setLasso) {
@@ -388,7 +387,6 @@
     if (!isWs() || !cur || !PN()) return null;
     const pl = plan(cur, { site: scope.startsWith('dev:') });
     if ((cur === 'site' || cur === 'fsr') && pl.scope === 'find' && key === `${pl.tab}:${pl.sub}` && scope === 'area') return findSpec(cur);
-    if (cur === 'fsr' && key === 'svc:network' && scope.startsWith('dev:')) return fsrSpec(scope);
     if (cur === 'pipes' && key === 'svc:network' && scope === 'area') return pipesSpec();
     if (cur === 'week' && key === 'overview:' && scope === 'area') return weekSpec();
     return null;
@@ -398,7 +396,7 @@
     const w = BY_ID[id], P = root.PeelPhases;
     const last = p => (P && P.lastActivityOf ? P.lastActivityOf(p) || 0 : 0);
     const recent = ((App() && App().state.projects) || []).filter(p => p.phase !== 'cancelled' && p.phase !== 'completed' && (p.units || 0) > 0).map(p => [p, last(p)]).filter(x => x[1]).sort((a, b) => b[1] - a[1]).slice(0, 5).map(x => x[0]);
-    const steps = [['Find', 'Search an address or file number above, or click a development on the map.'], ['Result', id === 'fsr' ? 'Its servicing path with the FSR cross-check (Servicing at the site).' : 'Its servicing, timing and what to confirm (Overview at the site).'], ['Output', id === 'fsr' ? 'The cross-check notes to compare with the report.' : 'The one-page servicing memo.']];
+    const steps = [['Find', 'Search an address or file number above, or click a development on the map.'], ['Result', id === 'fsr' ? 'Servicing › FSR review at the site: the consultant’s figures against this app’s.' : 'Its servicing, timing and what to confirm (Overview at the site).'], ['Output', id === 'fsr' ? 'The cross-check notes to compare with the report.' : 'The one-page servicing memo.']];
     return {
       head: { name: w.label, status: { tone: 'stage', text: 'Step 1 of 3' }, identity: esc(w.what) },
       answer: 'Find the development: search an address or file number above, or click it on the map.',
@@ -408,16 +406,6 @@
       ],
       foot: { primary: { label: 'Search', attrs: { 'data-ws-focus': '' } } },
     };
-  }
-  // Review an FSR at a site: Servicing at the site as it is, with the FSR cross-check as its first fold,
-  // open (the same form and checks as the site bar's Check FSR, js/fsr-check.js).
-  function fsrSpec(scope) {
-    const e = PN().get('svc:network'), F = root.PeelFsrCheck, p = root.DevScope && root.DevScope.current && root.DevScope.current();
-    if (!e || !e.spec || e.scope !== scope || !F || !F.mount || !p) return null;
-    const s = e.spec;
-    return { ...s,
-      folds: [{ title: 'FSR cross-check: the consultant\u2019s figures vs this app\u2019s', open: true, id: 'pnl-fsr', html: '<div class="fsr-box" data-pnl-fsrbox></div>' }, ...(s.folds || [])],
-      onMount: host => { if (typeof s.onMount === 'function') s.onMount(host); const b = host.querySelector('[data-pnl-fsrbox]'); if (b) F.mount(b, p); } };
   }
   // Old pipes: Servicing › Network filtered to age / risk with the build-out load (units carried).
   function oldList() {
@@ -486,10 +474,14 @@
       if (root.DevScope && root.DevScope.current && root.DevScope.current()) root.DevScope.close();
       if (SS() && SS().current && SS().current()) SS().close();
     }
-    if (w) { store.set('lastWs', id); const A = AT(); if (A) { if (w.sub && A.setSub) A.setSub(w.tab, w.sub); A.showFootTab(w.tab); if (w.fold && A.openFold) A.openFold(w.fold); } }
+    // (at a site, the sub-view it opens there: Review an FSR, Servicing › FSR review, as go() and plan() pick it)
+    const dev = !!(w && w.siteSub && root.DevScope && root.DevScope.current && root.DevScope.current());
+    if (w) { store.set('lastWs', id); const A = AT(), sub = dev ? w.siteSub : w.sub; if (A) { if (sub && A.setSub) A.setSub(w.tab, sub); A.showFootTab(w.tab); if (w.fold && A.openFold) A.openFold(w.fold); } }
     lastHTML = '';
     setMode('home', id);
     if (!o.keepScroll) { const el = $('#home'); if (el) el.scrollTop = 0; }
+    // (Check FSR at a development: the form's fold in view, after the reset; js/analysis-tabs.js on the map)
+    if (dev && id === 'fsr' && !o.keepScroll) { const f = $('#home #pnl-fsr'); if (f) { f.open = true; f.scrollIntoView({ block: 'start' }); } }
   }
   let lastHTML = '', shown = '', timer = null, menuOpen = false;
   // (the page's search has the focus, on the page it is on: typing, or about to, on a phone)
@@ -537,6 +529,7 @@
     if (!force) el.scrollTop = y;
     placeSearch(); placeMap();
     if (typeof m.onMount === 'function') try { m.onMount(el.querySelector('.page-main')); } catch (e) { /* the page stays without its async parts */ }
+    if (PN() && PN().syncTools) PN().syncTools(el);   // (a site's header: ☆ Watch and the flags as they are now)
 
     // A page still waiting on data that sets no panel when it lands (Home's servicing figures) tries again.
     if (m.pending) { clearTimeout(timer); timer = setTimeout(() => renderPage(false), 1000); }
@@ -642,15 +635,17 @@
     // Study area: draw on the page's map; the page refreshes once the drawing ends.
     if (e.target.closest('[data-ws-draw]')) { const AS = root.PeelAreaSelect; if (AS) { AS.setLasso(true); const iv = setInterval(() => { if (!AS.getLassoOn()) { clearInterval(iv); renderPage(true); } }, 300); } return; }
     if (e.target.closest('[data-ws-clear]')) { const AS = root.PeelAreaSelect; if (AS && AS.clearSelection) AS.clearSelection(); renderPage(true); return; }
-    // Review an FSR: the comparison as text for the review, or printed.
-    const fc = e.target.closest('[data-ws-fsrcopy]'); if (fc) { const r = document.querySelector('#home [data-fc-results]'); copyText(r && !r.hidden ? r.innerText : 'Run Compare first.', fc); return; }
+    // Review an FSR: the comparison as text for the review, or printed (the footer's: Servicing › FSR review on
+    // the map, the FSR review page).
+    const fc = e.target.closest('[data-ws-fsrcopy]'); if (fc) { const r = (fc.closest('#home, #analysis') || document).querySelector('[data-fc-results]'); copyText(r && !r.hidden ? r.innerText : 'Run Compare first.', fc); return; }
     if (e.target.closest('[data-ws-fsrprint]')) { const F = root.PeelFsrCheck; if (F && F.printCheck) F.printCheck(); return; }
     if (e.target.closest('[data-ws-pipescsv]')) { pipesCSV(); return; }
     const sb = e.target.closest('[data-ws-start-btn]'); if (sb) { store.set('startScreen', sb.dataset.wsStartBtn); document.querySelectorAll('[data-ws-start-btn]').forEach(b => { const on = b === sb; b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); }); }
   });
-  // A page's link to the map's tools (a tab, a servicing scope, the full table, a trace, a lens): the
-  // full map first, then the link does what it does there (its own handler, as the click bubbles on).
-  const MAP_LINK = '[data-at], [data-ss], [data-full-table], [data-trace], [data-mview]';
+  // A page's link to the map's tools (a tab, a servicing scope, the full table, a trace, a lens; a site
+  // header's Trace water and Compare, navigation phase 5; Capital's EAs on the map): the full map first, then
+  // the link does what it does there (its own handler, as the click bubbles on).
+  const MAP_LINK = '[data-at], [data-ss], [data-full-table], [data-trace], [data-wtrace], [data-scope-compare], [data-mview], [data-pnl-ce-map]';
   document.addEventListener('click', e => {
     if (mode !== 'home' || !e.target.closest) return;
     const a = e.target.closest(MAP_LINK);

@@ -10,7 +10,7 @@
   //
   // Placement: a tree development's share of its root file's land in each plan (the tree build,
   // data/tree-counts.json), so a development straddling two plans is split by area; otherwise
-  // (no boundary, or the Previous grouping) the plans holding its point, whole.
+  // (no boundary, or grouped by address: the tree counts did not load) the plans holding its point, whole.
   //
   // Measures are the Overview's: units from Growth.pipelineTotals (planned, permitted, completed,
   // left to build), committed by the Peel rule (the commitment ladder) or built, people and jobs from PeelDemand.estimate at the chosen

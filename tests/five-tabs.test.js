@@ -15,7 +15,7 @@ test('four tabs and Records, in order; Servicing holds water and wastewater in o
   const tabs = [...HTML.matchAll(/class="f-tab(?: f-tab-trail)?" id="ftab-(\w+)"[^>]*>([^<]+)</g)].map(m => m[2]);
   assert.deepEqual(tabs, ['Overview', 'Growth', 'Servicing', 'Capital', 'Records']);
   const row = HTML.slice(HTML.indexOf('<div class="f-pane f-subtabs svc-subtabs" data-pane="svc"'), HTML.indexOf('</div>', HTML.indexOf('svc-subtabs')));
-  assert.deepEqual([...row.matchAll(/data-svcsub="(\w+)"/g)].map(m => m[1]), ['capacity', 'network']);
+  assert.deepEqual([...row.matchAll(/data-svcsub="(\w+)"/g)].map(m => m[1]), ['capacity', 'network', 'fsr']);
   const at = src('js/analysis-tabs.js');
   assert.match(at, /const tabOf = key => \(key === 'ww' \|\| key === 'water' \? 'svc' : key\);/);
   assert.match(at, /if \(key === 'dev' \|\| key === 'developments' \|\| key === 'tool'\) key = 'overview';/);
@@ -27,17 +27,18 @@ test('Records follows the scope: Sources and Checks at Peel; a development its f
   assert.match(r, /return `\$\{DU\(\)\.freshnessHTML\(\)\}/, 'Sources: freshness first');
   assert.match(r, /possible duplicate pair/);
   assert.match(r, /body\.innerHTML = note \+ \(sub === 'checks' \? checksHTML\(\) : sourcesHTML\(\)\);/);
-  assert.match(r, /if \(scoped\) \{ showData\(null\); syncDevHome\('records'\); if \(root\.PeelPanel\) root\.PeelPanel\.set\('records:files', filesPanelSpec\(scoped\)\); return; \}/);
-  assert.match(r, /if \(DT && DT\.setSub\) DT\.setSub\('files'\);/);
+  assert.match(r, /if \(scoped\) \{ showData\(null\); if \(root\.DevTab && root\.DevTab\.render\) root\.DevTab\.render\(body\); if \(root\.PeelPanel\) root\.PeelPanel\.set\('records:files', filesPanelSpec\(scoped\)\); return; \}/);
+  // (navigation phase 5: one Records view at a development; no node moves in from the Overview, no sub-tabs)
+  assert.doesNotMatch(r, /syncDevHome|setSub\(/);
   assert.match(r, /s\.rkind === 'file' && AC\(\)\.currentFile/);
   assert.match(HTML, /<section class="f-pane" id="pane-records" data-pane="records"[^>]*><div id="records-body"><\/div>\n {8}<!-- Bundle 6: the old Data tab folded into Records/);
   assert.match(HTML, /data-rsub="sources">Sources<\/button><button type="button" class="btn small" data-rsub="checks">Data checks<\/button><button type="button" class="btn small" data-rsub="files">Files<\/button>/);
-  assert.match(src('css/app.css'), /#pane-overview \.dev-subtabs \[data-devsub="files"\]/, 'Files & history lives in Records');
+  assert.ok(!HTML.includes('data-devsub') && !HTML.includes('id="ov-dev"'), 'one Records view at a development');
 });
 
 test('no placeholder sub-views at site scope; one disclaimer per panel', () => {
   const at = src('js/analysis-tabs.js');
-  assert.match(at, /site: \{ growth: \['areas', 'timing'\], svc: \['capacity'\], dca: \['projects'\], records: \['sources', 'checks'\] \}/);
+  assert.match(at, /site: \{ growth: \['areas', 'timing'\], svc: \['capacity'\], dca: \['eas', 'projects'\], records: \['sources', 'checks'\] \}/);
   assert.match(at, /const v = subFor\(tk, s\.get\(\), null, scopeOf\(tk\)\); if \(v !== s\.get\(\)\) \{ if \(areaPick\[tk\] == null\) areaPick\[tk\] = s\.get\(\); s\.set\(v\); \}/, 'a hidden sub-view falls back (tests/four-tabs.test.js)');
   const css = src('css/app.css');
   assert.ok(css.includes('.f-subtabs .site-off, #analysis.site-scope #screen-note-top { display: none !important; }'));

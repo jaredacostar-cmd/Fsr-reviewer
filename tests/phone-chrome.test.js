@@ -49,11 +49,15 @@ test('touch targets follow touch screens of any width; no zoom buttons on a touc
   assert.match(CSS, /@media \(pointer: coarse\) \{ \.leaflet-control-zoom \{ display: none; \} \}/);
 });
 
-test('the site: its tools once (one Tools menu), the footer without them; a pick folds the menu', () => {
-  const d = src('js/devscope.js');
-  assert.match(d, /<details class="site-more site-tools"><summary class="btn small"[^>]*>Tools ▾<\/summary>/);
-  assert.match(d, /const mi = e\.target\.closest\('\.site-more \[role="menuitem"\]'\), md = mi && mi\.closest\('details'\);\n {8}if \(md\) setTimeout\(\(\) => \{ md\.open = false; \}, 0\);/);
+// (navigation phase 5: the site bar's Tools ▾ went; its tools are the header's, one row, ⋯ for the rest)
+test('the development: its tools once (the header), the footer without them; a pick folds the ⋯ menu', () => {
+  assert.match(src('js/panel.js'), /<details class="site-more pnl-more"><summary class="btn small"[^>]*>⋯<\/summary>/);
+  assert.match(src('js/panel.js'), /const mi = e\.target\.closest\('\.pnl-more \[role="menuitem"\]'\), md = mi && mi\.closest\('details'\);\n {6}if \(md\) setTimeout\(\(\) => \{ md\.open = false; \}, 0\);/);
   assert.doesNotMatch(src('js/overview-tab.js'), /'data-pnl-fsr'/);
+  // A phone: the row scrolls sideways (no page scroll), each button 44 px; ☆ Watch and the ⋯ items too.
+  assert.match(CSS, /\.pnl-tools-row \{ flex-wrap: nowrap; overflow-x: auto;/);
+  assert.match(CSS, /\.pnl-tools-row \.btn \{ flex: none; white-space: nowrap; \}/);
+  assert.match(CSS, /\.pnl-flags \.watch-btn, \.pnl-more \.site-more-menu \.btn \{ min-height: 44px; \}/);
 });
 
 test('footer: one row of actions; the screening note in full with Report a data issue at its end; never cut', () => {

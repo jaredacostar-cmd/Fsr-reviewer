@@ -129,7 +129,9 @@ test('approved, not yet built: units left in files past their first planning app
 test('Review an FSR coverage: what an FSR covers and what the app can check', () => {
   assert.deepEqual(plain(WP.COVERAGE.map(c => c[1])), ['app', 'app', 'app', 'app', 'part', 'eye', 'eye']);
   assert.match(WP.COVERAGE[6][0], /Fire flow/);
-  assert.match(src('js/ws-pages.js'), /Functional Servicing Report Requirements \(November 2009\); confirm the current version with the Region\./);
+  // (navigation phase 5: the page is Servicing › FSR review's panel, js/fsr-check.js panelSpec, which lists all seven)
+  assert.match(src('js/fsr-check.js'), /Functional Servicing Report Requirements \(November 2009\); confirm the current version with the Region\./);
+  assert.match(src('js/ws-pages.js'), /vw = fv \? SE\.viewOf\('servicing', 'fsr'\) : null;\n {4}const sec = fv \? SE\.specFor\(vw, p\)/);
 });
 
 test('every workspace has a page builder; pages open from Home, chips and the map view', () => {

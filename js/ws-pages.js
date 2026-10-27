@@ -47,10 +47,11 @@
     const out = [];
     if (m.views) out.push(m.views);
     // (the scenario chip sits in the title row, beside the status: one row less above the answer)
+    // (a site's page: its header's flags, ☆ Watch and tools, as on the map: js/panel.js toolsHTML)
     // One search on every page, Home included, with Draw an area beside it (navigation design §3.3):
     // the one box is moved into the slot by js/workspaces.js placeSearch. (Study area draws on its own map.)
     const find = `<div class="page-find" data-psec="find"><div class="page-search" id="page-search"></div>${m.draw === false ? '' : '<button type="button" class="btn small page-draw" data-ws-go="study" title="Open the map with the Select tool on: drag round the developments">Draw an area</button>'}</div>`;
-    out.push(`<header class="home-h" data-psec="header"><p class="page-eyebrow small">${m.eyebrow || ''}</p><h1>${esc(m.name || '')}</h1>${chipHTML(m.status)}${m.badge || ''}${m.scen ? `<div class="pnl-scen" data-psec="scenario">${m.scen}</div>` : ''}${m.identity ? `<p class="small muted page-id">${m.identity}</p>` : ''}${m.extra || ''}${find}</header>`);
+    out.push(`<header class="home-h" data-psec="header"><p class="page-eyebrow small">${m.eyebrow || ''}</p><h1>${esc(m.name || '')}</h1>${chipHTML(m.status)}${m.badge || ''}${m.scen ? `<div class="pnl-scen" data-psec="scenario">${m.scen}</div>` : ''}${m.identity ? `<p class="small muted page-id">${m.identity}</p>` : ''}${m.extra || ''}${m.tools && root.PeelPanel && root.PeelPanel.toolsHTML ? root.PeelPanel.toolsHTML(m.tools, 'page') : ''}${find}</header>`);
     if (m.filters) out.push(m.filters);
     if (m.top) out.push(m.top);
     // Bundle 5: terms underlined in the answer and figures (js/glossary.js).
@@ -647,7 +648,7 @@
   }
   // ---- Check a site, with a site -----------------------------------------------------------------------
   // The site's sections (js/sections.js): every full-map tab's panel for this development, one at a
-  // time under a section bar; Summary first. A new development opens on Summary.
+  // time under a section bar, by the tabs' names; Overview first. A new development opens on Overview.
   let siteSec = 'summary', siteSecDev = null;
   // A file number picked in the search (js/workspaces.js routePick): its row in the Files tree marked, and
   // scrolled to once. (the tree row's own button: the header's latest file, the "counted once" figure and
@@ -661,6 +662,11 @@
   }
   function sectionBar(secs, on, attr = 'data-ws-sec', prefix = '') {
     return `<nav class="page-secs" aria-label="Sections" data-psec="sections">${secs.map(s => `<button type="button" class="page-sec${s.id === on ? ' on' : ''}" ${s.page ? `data-ws-page="${esc(s.page)}"` : `${attr}="${esc(prefix + s.id)}"`} aria-pressed="${s.id === on}">${esc(s.title)}</button>`).join('')}</nav>`;
+  }
+  // A section's views (a site's Servicing: Network · FSR review, the map's chips), a second row under the
+  // bar: the section's own view is the section, another view its page (FSR review: the page `fsr`).
+  function viewsBar(sec, on) {
+    return `<nav class="page-secs page-subsecs" aria-label="Views" data-psec="views">${sec.views.map(v => `<button type="button" class="page-sec${v.id === on ? ' on' : ''}" ${v.page ? `data-ws-page="${esc(v.page)}"` : `data-ws-sec="${esc(sec.id)}"`} aria-pressed="${v.id === on}">${esc(v.title)}</button>`).join('')}</nav>`;
   }
   // The Servicing and Capital workspaces (js/sections.js WORKSPACES): their pages, and the map's other
   // sub-views of the tab shown on the host page (Servicing capacity, DC projects), header kept.
@@ -722,25 +728,33 @@
     const crumb = n => `<button type="button" class="btn small link" data-ws-explore="${esc(n.id)}">${esc(n.name)}</button>`;
     return `${(trail.length ? trail : [{ id: 'peel', name: 'Peel' }]).map(crumb).join(' <span aria-hidden="true">›</span> ')} <span aria-hidden="true">›</span> <strong>${esc(p.title)}</strong>`;
   }
-  function site() {
-    const p = devNow(); if (!p) return find('site');
-    const s = specOf('overview:', `dev:${p.key}`); if (!s) return loading('site', `Loading ${p.title}…`);
-    const SE = root.PeelSections;
+  // view 'fsr': Servicing › FSR review (js/fsr-check.js panelSpec), drawn as the page `fsr` (its id, eyebrow,
+  // guide and link), with the site's header, trail and section bar (Servicing on, its views row under it).
+  function site(view) {
+    const SE = root.PeelSections, fv = view === 'fsr' && !!SE, id = fv ? 'fsr' : 'site';
+    const p = devNow(); if (!p) return find(id);
+    const s = specOf('overview:', `dev:${p.key}`); if (!s) return loading(id, `Loading ${p.title}…`);
     if (siteSecDev !== p.key) { siteSec = 'summary'; siteSecDev = p.key; siteFile = null; }
-    const sec = SE && siteSec !== 'summary' ? SE.specFor(siteSec, p) : null, on = sec ? siteSec : 'summary';
-    const waiting = SE && siteSec !== 'summary' && !sec;
+    if (SE && !SE.BY_ID[siteSec]) siteSec = 'summary';   // (an id no section has now, as the old fsr: Overview)
+    const want = fv ? 'servicing' : siteSec, vw = fv ? SE.viewOf('servicing', 'fsr') : null;
+    const sec = fv ? SE.specFor(vw, p) : SE && siteSec !== 'summary' ? SE.specFor(siteSec, p) : null, on = sec || fv ? want : 'summary';
+    const waiting = SE && want !== 'summary' && !sec;
     const b = sec || s, ref = on === 'files' ? siteFile : null;
     const mount = ref ? host => { if (typeof b.onMount === 'function') b.onMount(host); markFile(host, ref); } : b.onMount;
-    return { id: 'site', eyebrow: `${esc(label('site'))} · <span class="pnl-steps-i">✓ Find › <b>Result</b> › Output: Servicing memo</span>`, name: p.title, status: s.head.status, badge: s.head.badge, extra: s.head.extra, identity: s.head.identity, scen: scen(),
-      top: `${exploreBar(siteTrail(p))}${SE ? sectionBar(SE.SITE, waiting ? siteSec : on) : ''}`,
-      answer: waiting ? `<span class="muted">Loading ${esc((SE.BY_ID[siteSec] || {}).title || '')} for ${esc(p.title)} (the servicing model and the DC program)…</span>` : b.answer,
+    const svc = SE && (waiting ? want : on) === 'servicing' ? viewsBar(SE.BY_ID.servicing, fv ? 'fsr' : 'network') : '';
+    // (the memo, then a section's own secondary action: Capital's "Copy for review comments"; FSR review its
+    // own footer, Copy the comparison and Print / PDF; the Inquiry draft, ☆ Watch and Check FSR are the
+    // header's, as on the map: navigation phase 5)
+    const foot = (sec && !waiting && sec.foot) || {};
+    const acts = fv ? [...(foot.primary ? [{ ...foot.primary, primary: true }] : []), ...(foot.secondary || [])] : [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, ...(foot.secondary || [])];
+    return { id, eyebrow: `${esc(label(id))} · <span class="pnl-steps-i">✓ Find › <b>Result</b> › Output: ${fv ? 'notes for the review' : 'Servicing memo'}</span>`, name: p.title, status: s.head.status, badge: s.head.badge, extra: s.head.extra, identity: s.head.identity, tools: s.head.tools, scen: scen(),
+      top: `${exploreBar(siteTrail(p))}${SE ? sectionBar(SE.SITE, waiting ? want : on) : ''}${svc}`,
+      answer: waiting ? `<span class="muted">Loading ${esc((vw || SE.BY_ID[want] || {}).title || '')} for ${esc(p.title)} (the servicing model and the DC program)…</span>` : b.answer,
       caveats: [], figures: waiting ? [] : b.figures, chart: waiting ? '' : b.chart,
-      lists: waiting ? [] : (b.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('site', r)) })),
+      lists: waiting ? [] : (b.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap(id, r)) })),
       map: siteLiveMap(p),
       folds: waiting ? [] : b.folds, method: waiting ? '' : b.method, sources: waiting ? '' : b.sources, onMount: waiting ? null : mount,
-      // (after the memo: the Inquiry draft, on the map with the development kept, js/topbar.js; then a
-      // section's own secondary action: Capital's "Copy for review comments")
-      actions: [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, { label: 'Inquiry draft', attrs: { 'data-inquiry': '' }, title: 'A servicing inquiry response for this development, to copy: it opens on the map, the development kept' }, ...(sec && !waiting && sec.foot && sec.foot.secondary ? sec.foot.secondary : []), (w => ({ label: w ? '★ Watching' : '☆ Watch', attrs: { 'data-watch': p.key, 'aria-pressed': String(w) }, title: w ? 'Remove from your watchlist' : 'Add to your watchlist (This week, Watched)' }))(!!(App() && App().watch && App().watch.has(p.key))), { label: 'Review its FSR', attrs: { 'data-ws-page': 'fsr' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'site' } }] };
+      actions: [...acts, { label: 'Open the map', attrs: { 'data-ws-go': id } }, { label: 'Another site', attrs: { 'data-ws-unpick': id } }] };
   }
 
   // ---- Growth in an area: drill down Peel → municipality → plan → precinct / sub-area → its files ----
@@ -1079,22 +1093,11 @@
   }
 
   // ---- Review an FSR, with a site -------------------------------------------------------------------
+  // The site's page at Servicing › FSR review, the map's own panel (js/fsr-check.js panelSpec, set by
+  // js/svc-capacity.js beside Network: the one host of the form and of what an FSR should cover).
   function fsr() {
-    const p = devNow(); if (!p) return find('fsr');
-    const s = specOf('svc:network', `dev:${p.key}`); if (!s) return loading('fsr', `Loading ${p.title}…`);
-    const F = root.PeelFsrCheck, WD = { app: ['room', 'Compared here'], part: ['tight', 'Facilities only'], eye: ['over', 'By an engineer'] }, SE = root.PeelSections;
-    return { id: 'fsr', eyebrow: `${esc(label('fsr'))} · <span class="pnl-steps-i">✓ Find › <b>Result</b> › Output: notes for the review</span>`, name: p.title, status: s.head.status, badge: s.head.badge, extra: s.head.extra, identity: s.head.identity, scen: scen(), answer: s.answer,
-      top: `${exploreBar(siteTrail(p))}${SE ? sectionBar(SE.SITE, 'fsr') : ''}`,
-      figures: s.figures,
-      mid: '<section class="page-fsr" data-psec="fsr"><h3>FSR cross-check: the consultant’s figures vs this app’s</h3><div class="fsr-box" data-pnl-fsrbox></div></section>',
-      lists: [
-        { title: 'What the FSR should cover', rows: COVERAGE.map(([t, k, d]) => ({ kv: true, html: `<div class="pnl-kv"><span>${esc(t)}<small class="muted"> · ${esc(d)}</small></span><span class="t-${WD[k][0]}">${WD[k][1]}</span></div>` })), total: COVERAGE.length },
-        ...(s.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('fsr', r)) })),
-      ],
-      map: siteLiveMap(p),
-      folds: s.folds, method: `${s.method || ''} What the FSR should cover: Region of Peel, Functional Servicing Report Requirements (November 2009); confirm the current version with the Region.`, sources: s.sources,
-      onMount: host => { if (typeof s.onMount === 'function') try { s.onMount(host); } catch (e) { /* the async parts */ } const b = host.querySelector('[data-pnl-fsrbox]'); if (b && F && F.mount) F.mount(b, p); },
-      actions: [{ label: 'Copy the comparison', attrs: { 'data-ws-fsrcopy': '' }, primary: true }, { label: 'Print / PDF', attrs: { 'data-ws-fsrprint': '' } }, { label: 'Check the site', attrs: { 'data-ws-page': 'site' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'fsr' } }] };
+    if (!devNow()) return find('fsr');
+    return site('fsr');
   }
 
   // ---- QA/QC › Review outlets: where each development discharges, checked and set on the map --------

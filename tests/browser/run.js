@@ -51,6 +51,8 @@ async function check(name, browser, opts, fn) {
   } finally { if (s) await s.ctx.close(); }
 }
 const wait = ms => new Promise(r => setTimeout(r, ms));
+// (in the page: an element shown inside the part of its scrolling box that is on screen, top and bottom)
+const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].find(x => x.getClientRects().length); const b = document.querySelector(box); if (!e || !b) return { found: !!e }; const r = e.getBoundingClientRect(), c = b.getBoundingClientRect(), top = Math.max(0, c.top), bottom = Math.min(innerHeight, c.bottom); return { found: true, top: Math.round(r.top), box: [Math.round(top), Math.round(bottom)], in: r.top >= top - 1 && r.bottom <= bottom + 1 }; };
 
 (async () => {
   const srv = await serve(ROOT, PORT);
@@ -147,7 +149,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
     await ev(() => { const q = PeelApp.state.projects.find(x => x.phase === 'approved' && x.units > 300); PeelDevNav.showDetail(q); }); await wait(2500);
     await ev(() => PeelWorkspaces.openPage('site')); await wait(2000);
-    await page.locator('#home .page-foot [data-inquiry]').tap(); await wait(2500);
+    await page.locator('#home .home-h [data-inquiry]').tap(); await wait(2500);   // (the site's header, navigation phase 5)
     const d = await back(), pre = await ev(() => !!document.querySelector('#scope-body:not([hidden]) .tinq-pre'));
     expect(pre && d.snap === 'full' && d.hit && d.bottom <= d.sheet, `the draft on a full sheet, "Back to Check a site" above it and tappable (${JSON.stringify(d)})`);
     await page.locator('#scope-body .pnl-x[data-scope-result-close]').tap(); await wait(1500);
@@ -202,8 +204,70 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     await ev(() => { PeelApp.state.muni = ''; PeelApp.state.basis = 'all'; PeelApp.applyFilters(); });
   });
 
-  // A site's sections: Check a site shows every map tab's panel for the development (Summary,
-  // Growth, Servicing, Capital, Files), each the map's own answer.
+  // M3 (navigation phase 5): a development reads the same on every tab of the full map and on its page, for a
+  // sample: the largest approved tree of files, one with demolitions, one of permits only, one of jobs only, one
+  // in Caledon, one outside the mapped pressure zones. (The count note is read from the Overview's At a glance;
+  // the related applications from Records' panel list and its full table, #devtab-related, against
+  // PeelDevNav.relatedProjects: navigation phase 5.)
+  await check('a development’s page and the full map agree: units, people or jobs, the flows, the constraints, the files, the stage', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect() && PeelApp.state.dcInfra, null, { timeout: 120000 });
+    const sample = await ev(() => {
+      const ps = PeelApp.state.projects, FT = PeelFileTree, files = p => p.records.some(r => r.kind === 'application'), tree = p => !!FT.of(p) && p.count && p.count.mode === 'tree';
+      const jobs = p => PeelDemand.estimate([p], PeelApp.state.criteria, 'all', PeelApp.jobsOf).employment.jobs, one = f => (ps.find(f) || {}).key || null;
+      const big = ps.filter(p => p.phase === 'approved' && tree(p) && FT.summary(FT.of(p)).files > 1).sort((a, b) => b.units - a.units)[0];
+      return [['the largest approved tree of files', big ? big.key : null], ['with demolitions', one(p => p.unitsLost > 0 && p.units > 0 && tree(p))], ['permits only', one(p => p.units > 0 && p.records.length && !files(p))],
+        ['jobs only', one(p => !(p.units > 0) && files(p) && jobs(p) > 0)], ['in Caledon', one(p => p.municipality === 'Caledon' && p.units > 0 && tree(p))], ['outside the mapped zones', one(p => p.units > 0 && p.pzNear && (PeelSvcData.svcFacts(p) || {}).zNear)]];
+    });
+    for (const [what, key] of sample) {
+      if (!key) { expect(true, `${what}: none in today's data`); continue; }
+      const at = `${what} (${key})`;
+      await ev(k => { PeelWorkspaces.setMode('full'); PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); }, key); await wait(2000);
+      for (const ts of [['overview'], ['growth', 'pipeline'], ['svc', 'network'], ['dca', 'timing'], ['records', 'files']]) { await ev(([t, s]) => { PeelAnalysisTabs.openTab(t, s); }, ts); await wait(1000); }
+      const r = await ev(k => {
+        const p = PeelDevNav.projectByKey(k), strip = h => String(h == null ? '' : h).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+        const spec = id => { const e = PeelPanel.get(id); return e && e.scope === `dev:${k}` ? e.spec : null; };
+        const ov = spec('overview:'), gr = spec('growth:pipeline'), net = spec('svc:network'), cap = PeelSections.specFor('capital', p), rec = PeelSections.specFor('files', p);
+        const fig = (s, re) => { const f = ((s && s.figures) || []).find(x => x && re.test(`${x.u} ${x.label}`)); return f ? strip(f.v) : null; };
+        const site = new Set((PeelTreeGroups.siteParts ? PeelTreeGroups.siteParts(p, PeelApp.state.projects.all || PeelApp.state.projects) : []).map(q => q.key));
+        delete p._rel;   // (the list's cache on the project: dev-nav's, the one copy since S13, worked out again)
+        const note = 'Counted from its permits';
+        return { units: Math.round(p.units || 0).toLocaleString('en-CA'), jobsOnly: !(p.units > 0), permitsOnly: !p.records.some(x => x.kind === 'application'),
+          ov: fig(ov, /^units planned/), ovJobs: fig(ov, /^jobs /), gr: fig(gr, /^units planned/), rec: fig(rec, /^homes counted once/),
+          trail: ((document.querySelector('#trail .tb-count') || {}).textContent || '').replace(/[^\d,]/g, ''),
+          ovW: fig(ov, /water, maximum day/), netW: fig(net, /water, maximum day/), ovWW: fig(ov, /wastewater, peak wet/), netWW: fig(net, /wastewater, peak wet/),
+          cap: fig(cap, /constraints it relies on/), needs: String((PeelMasterPlan.devNeeds(p) || []).length),
+          stages: [ov, gr, net, cap, rec].map(s => (s && s.head && s.head.status ? s.head.status.text : null)),
+          noteFn: PeelTreeCounts.noteHTML(p).includes(note), noteShown: ((ov && ov.lists) || []).some(l => l.title === 'At a glance' && l.rows.some(x => String(x.html).includes(note))),
+          rel: PeelDevNav.relatedProjects(p).filter(x => !site.has(x.q.key)).slice(0, 12).map(x => x.q.key), shown: [...document.querySelectorAll('#records-body #devtab-related [data-dt-relq]')].map(b => b.dataset.dtRelq),
+          panelRel: ((((rec && rec.lists) || []).find(l => l.title === 'Related applications') || {}).rows || []).map(x => x.attrs['data-pnl-dev']) };
+      }, key);
+      if (r.jobsOnly) expect(r.ovJobs && r.gr === '0' && r.trail === '0', `${at}: jobs on the Overview (${r.ovJobs}), no homes on Growth (${r.gr}) or the trail (${r.trail})`);
+      else expect(r.ov === r.units && r.gr === r.units && r.trail === r.units, `${at}: ${r.units} units; the Overview ${r.ov}, Growth ${r.gr}, the trail ${r.trail}`);
+      if (r.rec != null) expect(r.rec === r.units, `${at}: Records counts ${r.rec} homes once, the development ${r.units}`);
+      expect(r.netW != null && r.ovW === r.netW && r.ovWW === r.netWW, `${at}: flows ${r.ovW} / ${r.ovWW} L/s on the Overview, ${r.netW} / ${r.netWW} on Servicing › Network`);
+      expect(r.cap === r.needs, `${at}: Capital relies on ${r.cap} constraints, devNeeds ${r.needs}`);
+      expect(r.stages.every(x => x && x === r.stages[0]), `${at}: one stage on every tab (${r.stages.join(' | ')})`);
+      if (r.permitsOnly) expect(r.noteFn && r.noteShown, `${at}: “Counted from its permits” (the note ${r.noteFn}, shown ${r.noteShown})`);
+      expect(r.shown.join() === r.rel.join() && r.panelRel.join() === r.rel.slice(0, 5).join(), `${at}: related applications ${r.panelRel.length} in Records' panel, ${r.shown.length} in its full table, ${r.rel.length} by PeelDevNav`);
+      // Its page: each section's figures are its map tab's.
+      await ev(() => { PeelWorkspaces.openPage('site'); }); await wait(2000);
+      const secs = await ev(() => [...document.querySelectorAll('#home [data-ws-sec]')].map(b => b.dataset.wsSec));
+      expect(secs.length >= 5, `${at}: the page's sections (${secs.join()})`);
+      for (const id of secs) {
+        await page.click(`#home [data-ws-sec="${id}"]`); await wait(1200);
+        const f = await ev(id => {
+          const p = DevScope.current(), s = PeelSections.specFor(id, p) || (id === 'summary' ? PeelPanel.get('overview:').spec : null), strip = h => String(h == null ? '' : h).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+          // (as js/panel.js draws them: no n/a or – figure, four at most)
+          const map = ((s && s.figures) || []).filter(x => x && !/^(n\/a|–|-)$/i.test(String(x.v))).slice(0, 4).map(x => strip(x.v));
+          return { page: [...document.querySelectorAll('#home .pnl-figs[data-psec="figures"] .pnl-fig > b')].map(b => strip(b.innerHTML)), map };
+        }, id);
+        expect(f.page.join(' | ') === f.map.join(' | '), `${at}, page section ${id}: ${f.page.join(' | ')} / the map's ${f.map.join(' | ')}`);
+      }
+    }
+  });
+
+  // A site's sections: Check a site shows every map tab's panel for the development (Overview,
+  // Growth, Servicing, Capital, Records), each the map's own answer.
   await check('Check a site: every map tab is a section of the page, with the map’s own answer', browser, {}, async ({ page, ev }, expect) => {
     await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
     await ev(() => { const p = PeelApp.state.projects.find(q => q.phase === 'approved' && q.units > 300); PeelDevNav.showDetail(p); });
@@ -221,7 +285,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
       expect(r.on === id, `${id}: the section bar shows ${r.on}`);
       expect(r.map && r.page === r.map, `${id}: the page's answer is the map panel's ("${r.page.slice(0, 60)}" / "${String(r.map).slice(0, 60)}")`);
     }
-    // Summary: the path line under Wastewater (a development on the mapped catchments: its plant), and the
+    // Overview: the path line under Wastewater (a development on the mapped catchments: its plant), and the
     // DC projects it relies on named in Infrastructure coming.
     await page.click('#home [data-ws-sec="summary"]'); await wait(2500);
     const pl = await ev(() => {
@@ -230,16 +294,361 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
       const path = row('Path to the plant'), inf = row('Infrastructure coming'), names = [...document.querySelectorAll('#home .pnl-row .pnl-r-name')].map(x => x.textContent);
       return { plant: !!(f && f.pl), path: path ? path.querySelector('.pnl-r-line').textContent : null, after: names.indexOf('Path to the plant') === names.findIndex(x => /Wastewater/.test(x)) + 1, rel: rel.length ? rel[0] : null, late: rel.some(x => x.late), inf: inf ? inf.querySelector('.pnl-r-line').textContent : '', chip: inf ? (inf.querySelector('.pnl-r-top > :last-child') || {}).textContent : '' };
     });
-    if (pl.plant) expect(pl.path && pl.path.includes('→') && /outlet: (Automatic|Confirmed|Set by hand)/.test(pl.path) && pl.after, `Summary: Path to the plant under Wastewater ("${pl.path}")`);
+    if (pl.plant) expect(pl.path && pl.path.includes('→') && /outlet: (Automatic|Confirmed|Set by hand)/.test(pl.path) && pl.after, `Overview: Path to the plant under Wastewater ("${pl.path}")`);
     else expect(!pl.path, 'no plant on the path: no path line');
     // (by number and name, as the search lists a DC project; one late: the row is something to check)
     if (pl.rel) expect(pl.inf.startsWith(`Relies on ${pl.rel.key}${pl.rel.name ? ` – ${pl.rel.name}` : ''} (`), `Infrastructure coming names ${pl.rel.key} ${pl.rel.name || ''} first ("${pl.inf.slice(0, 100)}")`);
     if (pl.late) expect(pl.chip !== 'OK', `a late DC project: Infrastructure coming is not OK (${pl.chip})`);
   });
 
+  // Navigation phase 5, one development layout: a development's tabs on the full map. The Overview: At a glance,
+  // the About and Approvals timeline folds, no #ov-dev, Open full table widening the same panel; Records, one view
+  // (the files and events, related applications; its full table draws the files with the panel's tree, each file
+  // with the link that put it there and "on its own", and ← Whole development back); Servicing › Network: the
+  // path to the outlet and the plant, the four flows, the Water fold (fire flow looked up on opening) and the Site
+  // fold; Capital, one view (no chip row: the EAs near it, Show EAs on the map, and the DCs it would pay in its
+  // panel; the site's EA table in its full table). Then its page; then a development with no units or jobs,
+  // whose Site checks are still Network's.
+  await check('a development’s tabs: Overview’s At a glance, About and timeline; Records one view; Network’s flows, water and Site; Capital one view', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect() && PeelApp.state.dcInfra, null, { timeout: 120000 });
+    // (an approved development of 300+ units, a tree of files when there is one: its files open on their own)
+    const key = await ev(() => { const FT = PeelFileTree, ps = PeelApp.state.projects.filter(q => q.phase === 'approved' && q.units > 300); return (ps.find(q => FT.of(q) && FT.summary(FT.of(q)).files > 1) || ps[0]).key; });
+    const panel = sel => ev(sl => {
+      const h = document.querySelector(sl); if (!h) return null;
+      const list = t => [...h.querySelectorAll('section.pnl-list')].find(l => ((l.querySelector('h3') || {}).textContent || '').trim() === t);
+      return { lists: [...h.querySelectorAll('.pnl-list-h h3')].map(x => x.textContent.trim()), folds: [...h.querySelectorAll('details.pnl-fold[data-sec="fold"]')].map(d => ({ id: d.id, t: d.querySelector('summary').textContent.trim(), open: d.open })),
+        flows: list('Flows') ? list('Flows').querySelectorAll('li.pnl-row').length : 0, shown: h.getClientRects().length > 0 };
+    }, sel);
+    const subtabsShown = t => ev(tb => { const r = document.querySelector(`#analysis .f-subtabs[data-pane="${tb}"]`); return !!r && !r.hidden && r.getClientRects().length > 0; }, t);
+    await ev(k => { PeelWorkspaces.setMode('full'); PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); }, key); await wait(2500);
+    // 1. The Overview.
+    await ev(() => { PeelAnalysisTabs.openTab('overview'); }); await wait(1200);
+    const ov = await panel('#pnl-overview'), ft = ov.folds.map(f => f.t);
+    expect(ov.lists.includes('At a glance'), `${key}: the Overview lists At a glance (${ov.lists.join(' | ')})`);
+    expect(ft.includes('About') && ft.includes('Approvals timeline') && ft.indexOf('About') < ft.indexOf('Approvals timeline') && ov.folds.find(f => f.t === 'About').open, `the Overview folds About (open), then Approvals timeline (${ft.join(' | ')})`);
+    expect(await ev(() => !document.getElementById('ov-dev') && !(document.getElementById('ov-body') || {}).innerHTML), 'no #ov-dev, nothing under the panel');
+    await ev(() => { PeelPanel.openFull(); }); await wait(1200);
+    expect(await ev(() => !!document.querySelector('#analysis.ft-on.ft-pnl') && document.getElementById('pnl-overview').getClientRects().length > 0), 'Open full table widens the Overview panel itself');
+    await ev(() => { PeelPanel.closeFull(); }); await wait(600);
+    // The header's "files · history ›": Records, the files and events in view.
+    await page.click('#pnl-overview [data-dev-hist]'); await wait(1500);
+    expect(await ev(() => PeelAnalysisTabs.getFootTab() === 'records' && [...document.querySelectorAll('.dev-hist')].some(d => { const r = d.getBoundingClientRect(); return r.height > 0 && r.top < innerHeight && r.bottom > 0; })), 'files · history › opens Records with the files and events in view');
+    // 2. Records: one view; its full table.
+    await ev(() => { PeelAnalysisTabs.openTab('records'); }); await wait(1500);
+    const rec = await panel('#pnl-records'), recRel = await ev(k => { const p = PeelDevNav.projectByKey(k), site = new Set((PeelTreeGroups.siteParts ? PeelTreeGroups.siteParts(p, PeelApp.state.projects.all || PeelApp.state.projects) : []).map(q => q.key)); return PeelDevNav.relatedProjects(p).filter(x => !site.has(x.q.key)).length; }, key);
+    expect(!(await subtabsShown('records')), 'Records has no chip row at a development');
+    expect(await ev(() => !!document.querySelector('#pnl-records #pnl-hist .dev-hist')), 'Records\' panel folds the files and events');
+    expect(rec.lists.includes('Related applications') === recRel > 0, `related applications listed when there are some (${recRel}; ${rec.lists.join(' | ')})`);
+    await ev(() => { PeelPanel.openFull(); }); await wait(1500);
+    const rf = await ev(() => ({ hist: !!document.querySelector('#records-body .dev-hist'), brief: !!document.querySelector('#records-body [data-info="dev-brief"]'), own: [...document.querySelectorAll('#records-body .tr .tr-own[data-dt-sub]')].map(b => b.dataset.dtSub), shown: [...document.querySelectorAll('#records-body .tr .tr-own[data-dt-sub]')].filter(b => b.checkVisibility()).map(b => b.dataset.dtSub), tree: (d => !!d && PeelFileTree.summary(d).files > 1)(PeelFileTree.of(DevScope.current())) }));
+    expect(rf.hist && !rf.brief, `Records' full table: the files and events, no About (${JSON.stringify({ hist: rf.hist, brief: rf.brief })})`);
+    if (rf.tree) {
+      expect(rf.own.length > 1, `the full table's files are the tree, each "on its own" (${rf.own.length})`);
+      // (each file the tree linked says how: its rule, the link's confidence and overlap; the panel's tree stays compact)
+      const ln = await ev(() => ({ full: [...document.querySelectorAll('#records-body .tr .tr-link')].map(x => x.textContent), linked: PeelFileTree.build(PeelFileTree.of(DevScope.current())).all.filter(n => n.parent >= 0 || n.rule >= 0).length, panel: document.querySelectorAll('#pnl-records .tr-link').length }));
+      expect((ln.full.length > 0) === (ln.linked > 0) && ln.full.every(t => /confidence|% inside/.test(t)) && !ln.panel, `the full table's files say the link that put them there (${ln.full.length} of ${ln.linked}: ${ln.full.slice(0, 2).join(' | ')})`);
+      // (one in view: the earlier files on the same land are folded, and a closed fold's content keeps its boxes,
+      // so getClientRects alone counts them: checkVisibility does not)
+      const ref = rf.shown[rf.shown.length - 1];
+      await page.click(`#records-body .tr .tr-own[data-dt-sub="${ref}"]`); await wait(2000);
+      await ev(() => { PeelPanel.closeFull(); PeelAnalysisTabs.openTab('overview'); }); await wait(1500);
+      const sub = await ev(() => ({ title: (DevScope.current() || {}).title || '', head: ((document.querySelector('#pnl-overview #pnl-about .sub-head') || {}).textContent || '').trim() }));
+      expect(sub.title.startsWith(`${ref} · `) && sub.head.includes(`${ref} on its own`), `"on its own" makes ${ref} the scope, its About saying so ("${sub.title}"; "${sub.head.slice(0, 60)}")`);
+      // ← Whole development in Records' full table: the whole development is the scope again.
+      await ev(() => { PeelAnalysisTabs.openTab('records'); PeelPanel.openFull(); }); await wait(1500);
+      await page.click('#records-body [data-dt-back]'); await wait(2000);
+      const bk = await ev(() => (DevScope.current() || {}).key);
+      expect(bk === key, `← Whole development: back to ${key} (${bk})`);
+      await ev(() => { PeelPanel.closeFull(); }); await wait(500);
+      if (bk !== key) { await ev(k => { PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); }, key); await wait(2000); }
+    } else await ev(() => { PeelPanel.closeFull(); });
+    // 3. Servicing › Network: the four flows, Water (fire flow on opening), Site, the allocation.
+    await ev(() => { PeelAnalysisTabs.openTab('svc', 'network'); }); await wait(1500);
+    const net = await panel('#pnl-svc'), nf = net.folds.map(f => f.id);
+    expect(net.flows === 4, `Network lists the four flows (${net.flows}; ${net.lists.join(' | ')})`);
+    expect(['pnl-water', 'pnl-site', 'pnl-alloc'].every(id => nf.includes(id)), `Network folds Water, Site and the allocation (${nf.join(' | ')})`);
+    const pth = await ev(() => { const l = [...document.querySelectorAll('#pnl-svc section.pnl-list')].find(x => ((x.querySelector('h3') || {}).textContent || '').trim() === 'The path'); return l ? [...l.querySelectorAll('.pnl-kv > span:first-child')].map(x => x.textContent.trim()) : []; });
+    expect(pth.includes('Discharges to') && pth.indexOf('Discharges to') === pth.length - 2, `the path: discharges to the outlet, then the plant (${pth.join(' · ')})`);
+    await page.click('#pnl-svc #pnl-water > summary');
+    const fire = await page.waitForFunction(() => { const b = document.querySelector('#pnl-svc #dev-fire'); return b && !/Looking up/.test(b.textContent) ? b.textContent.trim() : false; }, null, { timeout: 20000 }).then(h => h.jsonValue()).catch(() => null);
+    expect(!!fire, `the Water fold fills the fire flow when it opens ("${String(fire).slice(0, 60)}")`);
+    // 4. Capital: one view.
+    await ev(() => { PeelAnalysisTabs.openTab('dca'); });
+    await page.waitForFunction(() => document.querySelector('#pnl-dca .pnl-answer'), null, { timeout: 60000 }).catch(() => null); await wait(800);
+    const cap = await panel('#pnl-dca'), cw = await ev(k => { const p = PeelDevNav.projectByKey(k); return { n: PeelCapitalEA.siteBriefCount() || 0, needs: (PeelMasterPlan.devNeeds(p) || []).length, pay: !!(PeelSvcData.svcFacts(p) && PeelDcCost.dcRevenueHTML(p)), copy: !!document.querySelector('#pnl-dca [data-ce-copy-brief]') }; }, key);
+    expect(!(await subtabsShown('dca')) && (await ev(() => PeelAnalysisTabs.getDcSub())) === 'timing', 'Capital has no chip row at a development: one view');
+    const near = cap.lists.filter(t => ['Coming up (90 days)', 'Near the site', 'May apply (not on the map yet)', 'Capital works planned or under way near the site'].includes(t));
+    expect((cap.lists[0] === 'The projects it relies on' || !cw.needs) && (cw.n > 0) === (near.length > 0 && cw.copy), `Capital lists the projects it relies on, then the EAs and works near it when there are some (${cw.n}: ${cap.lists.join(' | ')}; copy ${cw.copy})`);
+    expect(cap.folds.some(f => f.t === 'DCs it would pay') === cw.pay, `the DCs it would pay, a fold (${cap.folds.map(f => f.t).join(' | ')})`);
+    if (await ev(() => (PeelCapitalEA.siteBriefFor() || { eas: [] }).eas.length > 0)) {
+      // (EAs near: Show EAs on the map heads their list; the full table ends with the site's EA table, its
+      // controls working there, drawn once)
+      expect(await ev(() => !!document.querySelector('#pnl-dca .pnl-list-h [data-pnl-ce-map="ea"]')), 'Show EAs on the map heads the list of the EAs near');
+      await ev(() => { PeelPanel.openFull(); }); await wait(1500);
+      const se = await ev(() => { const b = document.querySelector('#dca-site-eas'), vis = q => !!b && [...b.querySelectorAll(q)].some(x => x.checkVisibility()); return { q: vis('[data-eatab-q]'), csv: vis('[data-eatab-csv]'), geo: vis('[data-eatab-geo]'), map: vis('[data-eatab-map]'), checked: b ? b.querySelectorAll('input[data-eatab-show]:checked').length : -1, pane: !!(document.getElementById('dca-eas-body') || {}).innerHTML }; });
+      expect(se.q && se.csv && se.geo && se.map && se.checked === 1 && !se.pane, `Capital's full table: the site's EA table with its filters and exports, once (${JSON.stringify(se)})`);
+      const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 15000 }).catch(() => null), page.click('#dca-site-eas [data-eatab-csv]')]);
+      expect(dl && /^peel-environmental-assessments-.+\.csv$/.test(dl.suggestedFilename()), `its CSV (${dl && dl.suggestedFilename()})`);
+      await ev(() => { PeelPanel.closeFull(); }); await wait(600);
+    }
+    // 5. Its page: the Overview's About; the Records section's files and events.
+    await ev(() => { PeelWorkspaces.openPage('site'); }); await wait(2000);
+    const sum = await ev(() => [...document.querySelectorAll('#home details.pnl-fold > summary')].map(x => x.textContent.trim()));
+    expect(sum.includes('About') && !sum.includes('Files, events and proposal'), `the page's Overview folds About (${sum.join(' | ')})`);
+    await page.click('#home [data-ws-sec="files"]'); await wait(2000);
+    expect((await ev(() => [...document.querySelectorAll('#home details.pnl-fold > summary')].map(x => x.textContent.trim()))).includes('Files and events'), 'the page\'s Records section folds the files and events');
+    // 6. No units or jobs (no servicing figures, about one development in five): Network still holds the Site checks.
+    const z = await ev(() => { const q = PeelApp.state.projects.find(x => x.lat != null && !PeelSvcData.svcFacts(x)); return q && q.key; });
+    await ev(k => { PeelWorkspaces.setMode('full'); PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); }, z); await wait(2500);
+    await ev(() => { PeelAnalysisTabs.openTab('svc', 'network'); }); await wait(1500);
+    const zn = await ev(() => ({ at: `${PeelAnalysisTabs.getFootTab()}:${PeelAnalysisTabs.getSvcSub()}`, answer: ((document.querySelector('#pnl-svc .pnl-answer') || {}).textContent || '').trim(), cx: document.querySelectorAll('#pnl-svc #pnl-site #devtab-cx').length, all: document.querySelectorAll('#devtab-cx').length }));
+    expect(zn.at === 'svc:network' && /^No servicing figures/.test(zn.answer) && zn.cx === 1 && zn.all === 1, `${z}: no units or jobs, Network's Site fold holds the constraints (${JSON.stringify(zn)})`);
+    await ev(() => { PeelWorkspaces.openPage('site'); }); await wait(2000);
+    await page.click('#home .page-sec[data-ws-sec="servicing"]'); await wait(2000);
+    expect(await ev(() => document.querySelectorAll('#home #pnl-site #devtab-cx').length === 1), 'and its page\'s Servicing section');
+  });
+
+  // Navigation phase 5: FSR review is a Servicing view (svs=fsr), the one host of the FSR cross-check. Check FSR
+  // in the development's header opens it on the map and on its page; one form in the document; at Peel the view
+  // hides; a link reopens it; the site page's sections are the map's tabs, Servicing with its views row; a
+  // cold #w=p:fsr&d=<key> is the page's FSR review, and its Open the map the map's.
+  await check('FSR review is a Servicing view: Check FSR in the header opens it on the map and on the page; one form; a link reopens it', browser, {}, async ({ page, ev }, expect) => {
+    const ready = () => page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
+    await ready();
+    const key = await ev(() => PeelApp.state.projects.find(q => q.phase === 'approved' && q.units > 300).key);
+    await ev(k => { PeelWorkspaces.setMode('full'); PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); }, key); await wait(2500);
+    await ev(() => { PeelAnalysisTabs.openTab('overview'); }); await wait(1000);
+    expect(await ev(() => !document.getElementById('site-bar')), 'no site bar');
+    // 1. The map: the header's Check FSR, one form, the view's link.
+    await page.click('#pnl-overview .pnl-tools [data-at="svc:fsr"]'); await wait(2000);
+    const m = await ev(() => ({ tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getSvcSub(), form: !!document.querySelector('#pnl-svc [data-pnl-fsrbox] .fsr-check'), runs: document.querySelectorAll('.fsr-box [data-fc-run]').length, link: PeelShare.viewLink.hash() }));
+    expect(m.tab === 'svc' && m.sub === 'fsr', `Check FSR opens Servicing › FSR review (${m.tab} › ${m.sub})`);
+    const mv = await ev(IN_VIEW, ['#pnl-svc [data-fc="population"]', '#analysis-panes']);
+    expect(mv.in, `the form in view after the one click, the cross-check first (${JSON.stringify(mv)})`);
+    expect(m.form && m.runs === 1, `its form, the one in the document (${m.runs})`);
+    expect(/(^|&)svs=fsr(&|$)/.test(m.link) && /(^|&)d=/.test(m.link), `the view's link keeps it (${m.link.slice(0, 140)})`);
+    await page.fill('#pnl-svc .fsr-box [data-fc="population"]', '1234');
+    await page.click('#pnl-svc .fsr-box [data-fc-run]'); await wait(1500);
+    expect(await ev(() => { const r = document.querySelector('#pnl-svc [data-fc-results]'); return !!r && !r.hidden && r.textContent.trim().length > 0; }), 'Compare sets the consultant\u2019s figures beside the app\u2019s');
+    // 2. At Peel the view hides (Capacity · Network); the link reopens it at the development.
+    await ev(() => { DevScope.close(); PeelAnalysisTabs.showFootTab('svc'); }); await wait(1500);
+    expect(await ev(() => { const c = document.querySelector('[data-svcsub="fsr"]'); return !!c && c.classList.contains('site-off') && !c.offsetParent; }), 'at Peel the FSR review chip is hidden');
+    await ev(h => { PeelShare.viewLink.apply(h); }, m.link); await wait(3000);
+    const r = await ev(() => ({ key: (DevScope.current() || {}).key, tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getSvcSub() }));
+    expect(r.key === key && r.tab === 'svc' && r.sub === 'fsr', `the link reopens FSR review at the development (${JSON.stringify(r)})`);
+    // 3. Its page: the map's five tabs by their names; the header's Check FSR, the typed figure kept; Network back.
+    await ev(() => { PeelWorkspaces.openPage('site'); }); await wait(2500);
+    const secs = await ev(() => [...document.querySelectorAll('#home .page-secs[aria-label="Sections"] .page-sec')].map(b => b.textContent).join());
+    expect(secs === 'Overview,Growth,Servicing,Capital,Records', `the site page's sections (${secs})`);
+    await page.click('#home .home-h [data-ws-page="fsr"]'); await wait(2500);
+    const pg = await ev(() => ({ page: PeelWorkspaces.page(), form: !!document.querySelector('#home [data-pnl-fsrbox] .fsr-check'), runs: document.querySelectorAll('.fsr-box [data-fc-run]').length, pop: (document.querySelector('#home .fsr-box [data-fc="population"]') || {}).value, on: (document.querySelector('#home .page-sec.on') || {}).textContent, view: (document.querySelector('#home .page-subsecs .page-sec.on') || {}).textContent }));
+    expect(pg.page === 'fsr' && pg.form && pg.runs === 1 && pg.on === 'Servicing' && pg.view === 'FSR review', `Check FSR on the page: Servicing › FSR review, one form (${JSON.stringify(pg)})`);
+    const pv = await ev(IN_VIEW, ['#home [data-fc="population"]', '#home']), behind = await ev(() => ({ sub: PeelAnalysisTabs.getSvcSub(), hash: location.hash }));
+    expect(pv.in, `the page's form in view too (${JSON.stringify(pv)})`);
+    expect(behind.sub === 'fsr' && /(^|[#&])svs=fsr(&|$)/.test(behind.hash), `FSR review behind the page, the address saying so (${behind.sub}; ${behind.hash.slice(0, 120)})`);
+    expect(pg.pop === '1234', `the figure typed on the map is kept (${pg.pop})`);
+    await page.click('#home .page-subsecs [data-ws-sec="servicing"]'); await wait(2000);
+    const nw = await ev(() => ({ page: PeelWorkspaces.page(), view: (document.querySelector('#home .page-subsecs .page-sec.on') || {}).textContent }));
+    expect(nw.page === 'site' && nw.view === 'Network', `Network: the site page at Servicing (${nw.page}, ${nw.view})`);
+    // 4. A cold #w=p:fsr&d=<key> (the page's own link, reloaded): the page's FSR review; Open the map: the map's.
+    await page.click('#home .home-h [data-ws-page="fsr"]'); await wait(1500);
+    expect(/(^|[#&])w=p%3Afsr(&|$)|(^|[#&])w=p:fsr(&|$)/.test(await ev(() => location.hash)) && (await ev(() => location.hash)).includes('d='), 'the address is the page\u2019s link');
+    await page.reload(); await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 }); await ready();
+    await page.waitForFunction(() => document.querySelector('#home [data-pnl-fsrbox] .fsr-check'), null, { timeout: 60000 }).catch(() => null);
+    const c = await ev(() => ({ page: PeelWorkspaces.page(), key: (DevScope.current() || {}).key, form: !!document.querySelector('#home [data-pnl-fsrbox] .fsr-check') }));
+    expect(c.page === 'fsr' && c.key === key && c.form, `#w=p:fsr&d= opens the page's FSR review (${JSON.stringify(c)})`);
+    await page.click('#home .page-foot [data-ws-go="fsr"]'); await wait(2500);
+    const mp = await ev(() => ({ mode: PeelWorkspaces.mode(), tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getSvcSub(), form: !!document.querySelector('#pnl-svc [data-pnl-fsrbox] .fsr-check') }));
+    expect(mp.mode !== 'home' && mp.tab === 'svc' && mp.sub === 'fsr' && mp.form, `Open the map: Servicing › FSR review on the map (${JSON.stringify(mp)})`);
+  });
+
+  // Navigation phase 5 on a phone (390 × 844): a development's header is one row of tools that scrolls sideways,
+  // ☆ Watch and ⋯ in reach (44 px), the ⋯ menu inside the screen and folded by a pick; the header scrolls with
+  // its panel (taller than the half sheet with the flags and tools: R7's fallback); Check FSR one tap; its page
+  // with no sideways scroll, Servicing's views row too.
+  await check('phone: a development\u2019s header in one row, ⋯ in reach, Check FSR one tap, no sideways scroll', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
+    await ev(() => { const p = PeelApp.state.projects.find(q => q.phase === 'approved' && q.units > 300 && q.lat != null); PeelWorkspaces.setMode('full'); PeelApp.setAnalysisSnap('half'); PeelDevNav.showDetail(p); }); await wait(2500);
+    await ev(() => { PeelAnalysisTabs.openTab('overview'); PeelApp.setAnalysisSnap('half'); }); await wait(1200);
+    const h = await ev(() => {
+      const q = s => document.querySelector(s), ht = el => (el ? Math.round(el.getBoundingClientRect().height) : 0), row = q('#pnl-overview .pnl-tools-row');
+      return { row: ht(row), btns: row ? [...row.querySelectorAll('.btn')].map(ht) : [], watch: ht(q('#pnl-overview .pnl-flags .watch-btn')), more: ht(q('#pnl-overview .pnl-more > summary')), head: ht(q('#pnl-overview .pnl-head')), pos: getComputedStyle(q('#pnl-overview .pnl-head')).position, doc: document.documentElement.scrollWidth, panes: (q('#analysis-panes') || {}).scrollWidth || 0 };
+    });
+    expect(h.row > 0 && h.row < 60 && h.btns.length >= 3 && h.btns.every(x => x >= 44), `the tools in one row, each 44 px (${h.row}: ${h.btns.join()})`);
+    expect(h.watch >= 44 && h.more >= 44, `☆ Watch and ⋯, 44 px (${h.watch}, ${h.more})`);
+    expect(h.pos === 'static', `the header (${h.head} px) scrolls with its panel (${h.pos})`);
+    expect(h.doc <= 390 && h.panes <= 390, `no sideways scroll (${h.doc}, ${h.panes})`);
+    await page.locator('#pnl-overview .pnl-more > summary').tap(); await wait(800);
+    const mn = await ev(() => { const m = document.querySelector('#pnl-overview .pnl-more .site-more-menu'), r = m.getBoundingClientRect(); return { l: Math.round(r.left), r: Math.round(r.right), t: Math.round(r.top), b: Math.round(r.bottom), vw: innerWidth, vh: innerHeight, items: [...m.querySelectorAll('.btn')].map(b => Math.round(b.getBoundingClientRect().height)) }; });
+    expect(mn.l >= 0 && mn.r <= mn.vw && mn.t >= 0 && mn.b <= mn.vh, `the ⋯ menu inside the screen (${JSON.stringify(mn)})`);
+    expect(mn.items.length === 4 && mn.items.every(x => x >= 44), `its four items, 44 px (${mn.items.join()})`);
+    await page.locator('#pnl-overview .pnl-more [data-scope-compare]').tap(); await wait(800);
+    expect(await ev(() => !document.querySelector('#pnl-overview .pnl-more').open), 'a pick folds the menu');
+    // (Compare opens the comparison, a sheet over the panel on a phone, as the site bar's Tools › Compare did:
+    // its Clear all closes it)
+    const cmp = await ev(() => { const c = document.getElementById('compare-col'), p = DevScope.current(); return !!c && c.classList.contains('tcmp-on') && PeelToolCompare.items().some(x => x.key === `dev:${p.key}`); });
+    expect(cmp, '⋯ › Compare shows the development in the comparison');
+    await page.locator('#compare-col [data-tcmp-clear]').tap(); await wait(600);
+    expect(await ev(() => document.getElementById('compare-col').hidden), 'its Clear all closes the comparison');
+    await ev(() => { PeelAnalysisTabs.openTab('overview'); }); await wait(800);
+    await page.locator('#pnl-overview .pnl-tools [data-at="svc:fsr"]').tap(); await wait(2000);
+    expect(await ev(() => PeelAnalysisTabs.getFootTab() === 'svc' && PeelAnalysisTabs.getSvcSub() === 'fsr'), 'Check FSR, one tap: Servicing › FSR review');
+    const fv = await ev(IN_VIEW, ['#pnl-svc [data-fc="population"]', '#analysis-panes']);
+    expect(fv.in, `its form in the half sheet, no scroll needed (${JSON.stringify(fv)})`);
+    // Its page: the header's buttons 44 px; no sideways scroll on Overview, Servicing (its views row) and FSR review.
+    await ev(() => { PeelWorkspaces.openPage('site'); }); await wait(2500);
+    const sp = async () => ev(() => ({ btns: [...document.querySelectorAll('#home .home-h .pnl-tools .btn, #home .home-h .watch-btn, #home .page-subsecs .page-sec')].map(b => Math.round(b.getBoundingClientRect().height)), doc: document.documentElement.scrollWidth, home: document.getElementById('home').scrollWidth }));
+    const a = await sp();
+    expect(a.btns.length >= 4 && a.btns.every(x => x >= 44) && a.doc <= 390 && a.home <= 390, `the site page: its header 44 px, no sideways scroll (${JSON.stringify(a)})`);
+    await page.locator('#home .page-sec[data-ws-sec="servicing"]').first().tap(); await wait(2000);
+    const b = await sp();
+    expect(b.btns.length >= 6 && b.btns.every(x => x >= 44) && b.doc <= 390 && b.home <= 390, `its Servicing, the views row 44 px, no sideways scroll (${JSON.stringify(b)})`);
+    await page.locator('#home .page-subsecs [data-ws-page="fsr"]').tap(); await wait(2500);
+    const f = await ev(() => ({ page: PeelWorkspaces.page(), doc: document.documentElement.scrollWidth, home: document.getElementById('home').scrollWidth }));
+    expect(f.page === 'fsr' && f.doc <= 390 && f.home <= 390, `its FSR review, no sideways scroll (${JSON.stringify(f)})`);
+    const pf = await ev(IN_VIEW, ['#home [data-fc="population"]', '#home']);
+    expect(pf.in, `its form in view (${JSON.stringify(pf)})`);
+    // (Records: the files and events, its Gantt chart's bars inside their track)
+    await page.locator('#home .page-sec[data-ws-sec="files"]').first().tap(); await wait(2500);
+    const rc = await ev(() => ({ page: PeelWorkspaces.page(), doc: document.documentElement.scrollWidth, home: document.getElementById('home').scrollWidth }));
+    expect(rc.page === 'site' && rc.doc <= 390 && rc.home <= 390, `its Records, no sideways scroll (${JSON.stringify(rc)})`);
+  });
+
+  // Navigation phase 5 (design §3.6): one header for a development, on every tab and on its page, in place of the
+  // map's site bar. Each tab's panel carries its own copy, so what changes on one tab shows on the next (☆ Watch,
+  // a trace's on state: a second press hides the path; the flags); ⋯ holds the rest: Record allocation opens
+  // Servicing › Network's allocation fold, Compare adds the development, Export (CSV) its row, Copy link the view.
+  await check('a development’s one header on every tab and its page: ☆ Watch and Trace sewer follow from tab to tab; ⋯ Record allocation, Compare, Export (CSV) and Copy link do what they say', browser, {}, async ({ ctx, page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect() && PeelApp.state.dcInfra, null, { timeout: 120000 });
+    const key = await ev(() => PeelApp.state.projects.find(q => q.phase === 'approved' && q.units > 300 && q.lat != null && !PeelApp.watch.has(q.key)).key);
+    await ev(k => { PeelWorkspaces.setMode('full'); PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); }, key); await wait(2500);
+    const TABS = [['overview', null], ['growth', 'pipeline'], ['svc', 'network'], ['dca', 'timing'], ['records', 'files']];
+    const show = async ts => { await ev(([t, s]) => { PeelAnalysisTabs.openTab(t, s || undefined); }, ts); await page.waitForSelector(`#pnl-${ts[0]} .pnl-head .pnl-tools-row`, { timeout: 60000 }).catch(() => null); await wait(1000); };
+    const head = sel => ev(sl => {
+      const h = document.querySelector(sl); if (!h) return null;
+      const tx = s => [...h.querySelectorAll(s)].map(b => b.textContent.trim()), one = s => ((h.querySelector(s) || {}).textContent || '').trim();
+      return { shown: h.getClientRects().length > 0, tools: tx('.pnl-tools-row .btn'), more: tx('.pnl-more [role="menuitem"]'), watch: one('.pnl-flags [data-watch]'), trace: one('.pnl-tools-row [data-trace]'), flags: (h.querySelector('.pnl-flag-list') || {}).innerHTML, fsr: [...h.querySelectorAll('.pnl-tools-row .btn')].filter(b => b.textContent === 'Check FSR').map(b => b.dataset.at || `page:${b.dataset.wsPage}`)[0] };
+    }, sel);
+    const TOOLS = 'Trace sewer|Trace water|Check FSR|Servicing memo|Inquiry draft', MORE = 'Record allocation|Compare|Export (CSV)|Copy link';
+    // 1. The same header on the five tabs: its tools and actions in one row, ⋯, ☆ Watch beside the same flags.
+    const heads = [];
+    for (const ts of TABS) { await show(ts); heads.push([ts[0], await head(`#pnl-${ts[0]} .pnl-head`)]); }
+    for (const [t, h] of heads) expect(h && h.shown && h.tools.join('|') === TOOLS && h.more.join('|') === MORE && h.watch === '☆ Watch' && h.fsr === 'svc:fsr', `${t}: the development's header (${JSON.stringify(h && { tools: h.tools, more: h.more, watch: h.watch, fsr: h.fsr })})`);
+    expect(heads.every(([, h]) => h && h.flags === heads[0][1].flags), `the same flags on every tab (${heads.map(([t, h]) => `${t} ${h ? h.flags.length : '-'}`).join(', ')})`);
+    expect(await ev(() => !document.getElementById('site-bar')), 'no site bar above the tabs');
+    // 2. ☆ Watch on the Overview: Growth's copy says Watching; off again on Growth: the Overview's copy follows.
+    await show(TABS[0]); await page.click('#pnl-overview .pnl-flags [data-watch]'); await wait(600);
+    await show(TABS[1]);
+    expect((await head('#pnl-growth .pnl-head')).watch === '★ Watching' && await ev(k => PeelApp.watch.has(k), key), 'watched from the Overview: Growth’s header says ★ Watching');
+    await page.click('#pnl-growth .pnl-flags [data-watch]'); await wait(600);
+    await show(TABS[0]);
+    expect((await head('#pnl-overview .pnl-head')).watch === '☆ Watch' && !(await ev(k => PeelApp.watch.has(k), key)), 'and off again from Growth: the Overview’s header says ☆ Watch');
+    // 3. Trace sewer on Network: the Overview's copy is on ("Hide the path"), and a press there hides the path.
+    await show(TABS[2]); await page.click('#pnl-svc .pnl-tools-row [data-trace]');
+    const traced = await page.waitForFunction(k => PeelSewerTrace.TRACE.key === k, key, { timeout: 30000 }).then(() => true, () => false);
+    await show(TABS[0]);
+    const ot = await ev(() => { const b = document.querySelector('#pnl-overview .pnl-tools-row [data-trace]'); return { t: b.textContent.trim(), on: b.dataset.on }; });
+    expect(traced && ot.t === 'Hide the path' && ot.on === '1', `traced from Network: the Overview's Trace sewer is on (${traced}, ${JSON.stringify(ot)})`);
+    await page.click('#pnl-overview .pnl-tools-row [data-trace]'); await wait(1000);
+    expect(await ev(() => !PeelSewerTrace.TRACE.key), 'a press there hides the path');
+    await show(TABS[2]);
+    expect((await head('#pnl-svc .pnl-head')).trace === 'Trace sewer', 'and Network’s copy is off again');
+    // 4. ⋯ on Capital › Record allocation: Servicing › Network, its allocation fold open, the menu folded.
+    await show(TABS[3]);
+    await page.click('#pnl-dca .pnl-more > summary'); await wait(400);
+    await page.click('#pnl-dca .pnl-more [data-scope-alloc]'); await wait(1500);
+    const al = await ev(() => ({ tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getSvcSub(), open: !!(document.getElementById('pnl-alloc') || {}).open, inSvc: !!document.querySelector('#pnl-svc #pnl-alloc'), menu: !!(document.querySelector('#pnl-dca .pnl-more') || {}).open }));
+    expect(al.tab === 'svc' && al.sub === 'network' && al.open && al.inSvc, `⋯ › Record allocation: Servicing › Network, its allocation fold open (${JSON.stringify(al)})`);
+    expect(!al.menu, 'the pick folds the ⋯ menu');
+    // 5. ⋯ on Records: Compare adds it; Export (CSV) downloads its row; Copy link copies the view (Records, d=).
+    await show(TABS[4]);
+    await page.click('#pnl-records .pnl-more > summary'); await wait(400);
+    await page.click('#pnl-records .pnl-more [data-scope-compare]'); await wait(800);
+    expect(await ev(k => PeelToolCompare.items().some(x => x.key === `dev:${k}`) && document.getElementById('compare-col').classList.contains('tcmp-on'), key), '⋯ › Compare adds the development to the comparison, shown');
+    // (under 1800 px the comparison sits over the panel's side: its Clear all closes it)
+    await page.click('#compare-col [data-tcmp-clear]'); await wait(600);
+    await page.click('#pnl-records .pnl-more > summary'); await wait(400);
+    const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 15000 }).catch(() => null), page.click('#pnl-records .pnl-more [data-scope-export]')]);
+    const csv = dl ? fs.readFileSync(await dl.path(), 'utf8') : '', title = await ev(k => PeelDevNav.projectByKey(k).title, key);
+    expect(dl && /^peel-.+\.csv$/.test(dl.suggestedFilename()) && csv.includes(title), `⋯ › Export (CSV): its row (${dl && dl.suggestedFilename()}, ${csv.split('\n').length} lines)`);
+    await ctx.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: `http://localhost:${PORT}` });
+    await page.click('#pnl-records .pnl-more > summary'); await wait(400);
+    await page.click('#pnl-records .pnl-more [data-share]'); await wait(1000);
+    const link = await ev(() => navigator.clipboard.readText()).catch(() => ''), lq = new URLSearchParams(link.split('#')[1] || '');
+    expect(lq.get('d') === key && lq.get('t') === 'records', `⋯ › Copy link: this view, the development and Records (${link.slice(0, 120)})`);
+    // 6. Its page: the same header; Check FSR the page's FSR review; ☆ Watch there shows on the map's copy.
+    await ev(() => { PeelWorkspaces.openPage('site'); }); await wait(2500);
+    const ph = await head('#home .home-h');
+    expect(ph && ph.tools.join('|') === TOOLS && ph.more.join('|') === MORE && ph.fsr === 'page:fsr' && ph.flags === heads[0][1].flags, `the page's header: the same tools, ⋯ and flags; Check FSR its page (${JSON.stringify(ph && { tools: ph.tools, more: ph.more, fsr: ph.fsr })})`);
+    await page.click('#home .home-h .pnl-flags [data-watch]'); await wait(600);
+    await ev(() => { PeelWorkspaces.setMode('full'); }); await show(TABS[0]);
+    expect((await head('#pnl-overview .pnl-head')).watch === '★ Watching', 'watched from its page: the map’s header says ★ Watching');
+    await page.click('#pnl-overview .pnl-flags [data-watch]'); await wait(400);
+    // 7. The "n links to check" flag on a page: the site's Records section (the map's Records › Files behind it).
+    const ck = await ev(() => { const FT = PeelFileTree, q = PeelApp.state.projects.find(x => FT.of(x) && FT.summary(FT.of(x)).check > 0); return q && q.key; });
+    await ev(k => { PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); PeelWorkspaces.openPage('site'); }, ck); await wait(2500);
+    await page.click('#home .home-h [data-tree-check]'); await wait(2000);
+    const tc = await ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page(), sec: ((document.querySelector('#home .page-sec.on') || {}).textContent || '').trim(), hist: [...document.querySelectorAll('#home .dev-hist')].some(x => x.getClientRects().length > 0) }));
+    expect(tc.mode === 'home' && tc.page === 'site' && tc.sec === 'Records' && tc.hist, `${ck}: the page's "links to check" opens its Records section (${JSON.stringify(tc)})`);
+  });
+
+  // Kept from before navigation phase 5 (design §7, the plan's alias rows): a browser left at Settings › Counting's
+  // Previous opens on the tree count (owner decision 14: the switch is retired, its rule the fallback, with its
+  // reason); a stored Development sub-tab (peel-dev:devsub) is never read: a development opens on its Overview, and
+  // Records is its one view of the files; a stored FSR review pick is Servicing's first view at Peel and FSR review
+  // again at a development, a stored EAs pick DC timing there; old links with d=: t=dev (the Overview), #w=fsr (the
+  // map's Review an FSR view at FSR review), t=dca&dcs=eas (Capital's one view; the EAs again at Peel), #w=p:site
+  // (its page at Overview).
+  await check('kept from before phase 5: a stored Previous count is the tree count; a stored Development sub-tab is never read; stored FSR review and EAs picks wait for a development; old t=dev, #w=fsr, dcs=eas and #w=p:site links open the one layout', browser, { prefs: { countMode: 'previous', footTab4: 'svc', svcSub: 'fsr', dcSub: 'eas' } }, async ({ page, ev }, expect) => {
+    const load = async (url, ready) => { await page.goto(`http://localhost:${PORT}/${url}`); await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 }); if (ready) await page.waitForSelector(ready, { timeout: 120000 }); await wait(1500); };
+    const svcReady = () => page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
+    // (the old release's raw sub-tab value, as js/devtab.js wrote it: once, before the next load)
+    await page.addInitScript(() => { if (sessionStorage.getItem('devsubSet')) return; localStorage.setItem('peel-dev:devsub', 'site'); sessionStorage.setItem('devsubSet', '1'); });
+    // 1. Previous: the tree count for every development the tree counts, the rest with their reason; no switch.
+    const tc = await ev(() => { const ps = PeelApp.state.projects.all || PeelApp.state.projects; return { tree: ps.filter(p => p.count && p.count.mode === 'tree').length, why: ps.filter(p => p.count && p.count.mode !== 'tree').every(p => !!p.count.why), mode: typeof PeelTreeCounts.mode, kept: PeelUtil.store.get('countMode', null), sel: !!document.getElementById('count-mode') }; });
+    expect(tc.tree > 1000 && tc.why && tc.mode === 'undefined' && !tc.sel, `the stored Previous: the tree count for ${tc.tree} developments, the rest say why they keep the count from their files and permits; no switch (${JSON.stringify(tc)})`);
+    expect(tc.kept === 'previous', 'the stored pick is left as it was: nothing reads or writes it');
+    await ev(() => { PeelWorkspaces.setMode('full'); }); await wait(1000);
+    await page.click('#tb-gear', { timeout: 5000 }); await wait(500);
+    await page.click('#tb-gear-menu [data-tbg="settings"]', { timeout: 5000 }); await wait(800);
+    const st = await ev(() => { const f = document.querySelector('#tb-gear-menu .set-counting'); return f ? { text: f.textContent.replace(/\s+/g, ' ').trim(), inputs: f.querySelectorAll('select, input').length } : null; });
+    expect(st && /counts its planning files once \(the tree\)/.test(st.text) && !/Previous/.test(st.text) && !st.inputs, `Settings › Counting says how units are counted, with no switch (${JSON.stringify(st)})`);
+    await page.keyboard.press('Escape'); await wait(300);
+    // 2. The stored FSR review pick: Capacity at Peel; FSR review once a development opens (on its Overview).
+    await svcReady();
+    const key = await ev(() => PeelApp.state.projects.find(q => q.phase === 'approved' && q.units > 300 && q.lat != null).key);
+    expect(await ev(() => PeelAnalysisTabs.getSvcSub()) === 'capacity', 'at Peel the stored FSR review pick shows Servicing › Capacity');
+    await ev(k => { PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); }, key); await wait(2500);
+    const op = await ev(() => ({ tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getSvcSub(), dc: PeelAnalysisTabs.getDcSub() }));
+    expect(op.tab === 'overview' && op.sub === 'fsr' && op.dc === 'timing', `a development opens on its Overview; Servicing at FSR review, Capital its one view (${JSON.stringify(op)})`);
+    await ev(() => { PeelAnalysisTabs.openTab('svc'); }); await page.waitForSelector('#pnl-svc [data-pnl-fsrbox] .fsr-check', { timeout: 60000 }).catch(() => null);
+    expect(await ev(() => PeelAnalysisTabs.getSvcSub() === 'fsr' && !!document.querySelector('#pnl-svc [data-pnl-fsrbox] .fsr-check')), 'Servicing opens at FSR review, its form');
+    // 3. Old links with d=, opened cold (each with a query of its own: a new load, not a hash change).
+    const d = encodeURIComponent(key), at = () => ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page && PeelWorkspaces.page(), key: (DevScope.current() || {}).key, tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getSvcSub(), dc: PeelAnalysisTabs.getDcSub(), ovDev: !!document.getElementById('ov-dev'), devsub: document.querySelectorAll('[data-devsub]').length, stored: localStorage.getItem('peel-dev:devsub') }));
+    await load(`?dev#t=dev&d=${d}`, '#pnl-overview .pnl-head .pnl-tools-row');
+    const a = await at();
+    expect(a.key === key && a.tab === 'overview' && !a.ovDev && !a.devsub, `t=dev&d=: the development's Overview, no Development sub-tabs (${JSON.stringify(a)})`);
+    expect(a.stored === 'site', `the stored Development sub-tab is left as it was, never read (${a.stored})`);
+    await ev(() => { PeelAnalysisTabs.openTab('records'); }); await page.waitForSelector('#pnl-records #pnl-hist .dev-hist', { timeout: 60000 }).catch(() => null);
+    expect(await ev(() => !document.querySelector('#analysis .f-subtabs[data-pane="records"]:not([hidden])') && !!document.querySelector('#pnl-records #pnl-hist .dev-hist')), 'Records: one view, its files and events (the stored Site sub-tab changes nothing)');
+    await load(`?fsr#w=fsr&d=${d}`); await svcReady();
+    await page.waitForSelector('#pnl-svc [data-pnl-fsrbox] .fsr-check', { timeout: 60000 }).catch(() => null);
+    const b = await at();
+    expect(b.mode === 'ws' && b.key === key && b.tab === 'svc' && b.sub === 'fsr' && await ev(() => document.querySelectorAll('.fsr-box [data-fc-run]').length === 1), `#w=fsr&d=: the map's Review an FSR view at Servicing › FSR review, one form (${JSON.stringify(b)})`);
+    await load(`?eas#t=dca&dcs=eas&d=${d}`); await svcReady();
+    await page.waitForFunction(() => document.querySelector('#pnl-dca .pnl-answer'), null, { timeout: 60000 }).catch(() => null); await wait(800);
+    const c = await at(), chips = await ev(() => { const r = document.querySelector('#analysis .f-subtabs[data-pane="dca"]'); return !!r && !r.hidden && r.getClientRects().length > 0; });
+    expect(c.key === key && c.tab === 'dca' && c.dc === 'timing' && !chips, `t=dca&dcs=eas&d=: Capital's one view at the development, no chip row (${JSON.stringify({ tab: c.tab, dc: c.dc, chips })})`);
+    await ev(() => { DevScope.close(); PeelAnalysisTabs.showFootTab('dca'); }); await wait(1500);
+    expect(await ev(() => PeelAnalysisTabs.getDcSub()) === 'eas', 'closed: Capital › EAs again, the link’s pick');
+    await load(`?site#w=p:site&d=${d}`, '#home .page-sec.on');
+    const s = await ev(() => ({ page: PeelWorkspaces.page(), key: (DevScope.current() || {}).key, on: ((document.querySelector('#home .page-sec.on') || {}).textContent || '').trim(), secs: [...document.querySelectorAll('#home .page-secs[aria-label="Sections"] .page-sec')].map(x => x.textContent).join() }));
+    expect(s.page === 'site' && s.key === key && s.on === 'Overview' && s.secs === 'Overview,Growth,Servicing,Capital,Records', `#w=p:site&d=: its page at Overview, the map's five tabs (${JSON.stringify(s)})`);
+  });
+
   // Explore: one sidebar entry for Growth in an area, Check a site, Review an FSR, Forecast and Study
-  // area; the one search at the top of each; a site picked opens its page; its trail steps back up; the
-  // FSR review is one of its sections.
+  // area; the one search at the top of each; a site picked opens its page; its trail steps back up; its
+  // FSR review is Servicing's second view (navigation phase 5: the sections are the map's tabs, by their names).
   await check('Explore: one entry, the search on every view, a site and back up its trail, its FSR review', browser, {}, async ({ page, ev }, expect) => {
     await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
     const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
@@ -261,15 +670,16 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     const s = await ev(() => ({ page: PeelWorkspaces.page(), dev: !!DevScope.current(), trail: [...document.querySelectorAll('#home [data-ws-explore]')].map(b => b.textContent), secs: [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent), search: !!document.querySelector('#home #page-search #search-box') }));
     expect(s.page === 'site' && s.dev, `a development opens its page (${s.page})`);
     expect(s.trail[0] === 'Peel' && s.trail.includes('Brampton'), `its trail: ${s.trail.join(' › ')}`);
-    expect(s.secs.join() === 'Summary,Growth,Servicing,Capital,Files,FSR review', `its sections: ${s.secs.join()}`);
+    expect(s.secs.join() === 'Overview,Growth,Servicing,Capital,Records', `its sections: ${s.secs.join()}`);
     expect(s.search, 'the search stays at the top');
     const lm = await ev(() => ({ inPage: !!document.querySelector('#home #page-map-slot #map'), chips: [...document.querySelectorAll('#home [data-ws-layer]')].map(b => b.dataset.wsLayer) }));
     expect(lm.inPage, 'the live map is on the site\u2019s page');
     expect(lm.chips.join() === 'devs,ex-water,ex-sanitary,ex-storm,dcw,cons,ea', `its layer chips: ${lm.chips.join()}`);
-    // Its FSR review, then back to a section of the site.
-    await page.click('#home .page-sec[data-ws-page="fsr"]'); await wait(2500);
-    const f = await ev(() => ({ page: PeelWorkspaces.page(), box: !!document.querySelector('#home [data-pnl-fsrbox]'), on: (document.querySelector('#home .page-sec.on') || {}).textContent }));
-    expect(f.page === 'fsr' && f.box && f.on === 'FSR review', `the FSR review (${f.page}, ${f.on})`);
+    // Its FSR review (Servicing, then its views row), then back to a section of the site.
+    await page.click('#home .page-sec[data-ws-sec="servicing"]'); await wait(2500);
+    await page.click('#home .page-subsecs [data-ws-page="fsr"]'); await wait(2500);
+    const f = await ev(() => ({ page: PeelWorkspaces.page(), box: !!document.querySelector('#home [data-pnl-fsrbox]'), on: (document.querySelector('#home .page-sec.on') || {}).textContent, view: (document.querySelector('#home .page-subsecs .page-sec.on') || {}).textContent }));
+    expect(f.page === 'fsr' && f.box && f.on === 'Servicing' && f.view === 'FSR review', `the FSR review (${f.page}, ${f.on} › ${f.view})`);
     await page.click('#home .page-sec[data-ws-sec="growth"]'); await wait(2500);
     const g = await ev(() => ({ page: PeelWorkspaces.page(), on: (document.querySelector('#home .page-sec.on') || {}).textContent }));
     expect(g.page === 'site' && g.on === 'Growth', `back on the site at Growth (${g.page}, ${g.on})`);
@@ -306,7 +716,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
       const h = await ev(() => ({ box: !!document.querySelector('#home .page-find #page-search #search-box'), draw: !!document.querySelector('#home .page-draw[data-ws-go="study"]') }));
       expect(h.box && h.draw, `${id}: the search and Draw an area in the page header`);
     }
-    // A file number (a development matched by it alone): its page at Files, the file marked in its tree.
+    // A file number (a development matched by it alone): its page at Records, the file marked in its tree.
     // (one in its tree's fold of earlier files when there is one: the mark opens the fold)
     const f = await ev(() => {
       const all = PeelApp.state.projects, lc = s => String(s || '').toLowerCase(), T = window.PeelFileTree;
@@ -329,7 +739,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
       await ev(() => PeelWorkspaces.openPage('home')); await wait(1200);
       expect(await findPick(page, ev, f.ref, { has: [f.title, f.ref] }), `${f.ref} in the list`);
       const s = await ev(() => ({ page: PeelWorkspaces.page(), key: (DevScope.current() || {}).key, files: !!document.querySelector('#home .page-sec.on[data-ws-sec="files"]') }));
-      expect(s.page === 'site' && s.key === f.key && s.files, `its page at Files (${s.page}, at Files: ${s.files})`);
+      expect(s.page === 'site' && s.key === f.key && s.files, `its page at Records (${s.page}, at Records: ${s.files})`);
       await wait(1000);
       const m = await ev(r => { const b = document.querySelector(`#home .tr-row > div > .tr-ref[data-dev-file="${CSS.escape(r)}"]`), row = b && b.closest('.tr-row'), fold = row && row.closest('details.tr-same'); return { row: !!row, hit: !!(row && row.classList.contains('tr-hit')), open: fold ? fold.open : null }; }, f.ref);
       // (a file in its tree: its row is there, marked, its fold of earlier files opened)
@@ -463,7 +873,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     const p = await ev(() => { const q = PeelApp.state.projects.find(x => x.phase === 'approved' && x.units > 300); PeelDevNav.showDetail(q); return { key: q.key, title: q.title }; });
     await wait(2500);
     await ev(() => PeelWorkspaces.openPage('site')); await wait(2000);
-    await page.click('#home .page-foot [data-inquiry]'); await wait(2000);
+    await page.click('#home .home-h [data-inquiry]'); await wait(2000);   // (the site's header, navigation phase 5)
     const a = await ev(() => ({ mode: PeelWorkspaces.mode(), key: (DevScope.current() || {}).key, pre: !!document.querySelector('#scope-body:not([hidden]) .tinq-pre'), trail: [...document.querySelectorAll('#trail .tb-step')].map(b => b.textContent) }));
     expect(a.mode === 'full', `the draft opens on the map (${a.mode})`);
     expect(a.key === p.key, 'the development stays open');
@@ -476,16 +886,16 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(b.n === 1 && !b.old && b.key === p.key, `one draft from Export, the development kept (${JSON.stringify(b)})`);
     // × (the header's Peel step closes both): back to the site's Overview, its own Inquiry draft there too.
     await page.click('#scope-body .pnl-x[data-scope-result-close]'); await wait(1500);
-    const c = await ev(() => ({ key: (DevScope.current() || {}).key, hidden: document.getElementById('scope-body').hidden, act: !!document.querySelector('#pnl-overview .pnl-foot [data-inquiry]') }));
+    const c = await ev(() => ({ key: (DevScope.current() || {}).key, hidden: document.getElementById('scope-body').hidden, act: !!document.querySelector('#pnl-overview .pnl-head [data-inquiry]') }));
     expect(c.key === p.key && c.hidden, `× goes back to the development (${JSON.stringify(c)})`);
-    expect(c.act, 'the map\u2019s development Overview has Inquiry draft too');
+    expect(c.act, 'the map\u2019s development Overview: its header has Inquiry draft too');
     await page.click('#back-bar [data-ws-back]'); await wait(2000);
     const d = await ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page(), key: (DevScope.current() || {}).key }));
     expect(d.mode === 'home' && d.page === 'site' && d.key === p.key, `back on the site's page (${JSON.stringify(d)})`);
   });
 
   // A pick on any page, not only Home, opens what it found (navigation phase 1, §3.3): from Review an FSR a
-  // development opens its FSR review, from another page its page at Summary; a pumping station its scope on
+  // development opens its FSR review, from another page its page at Overview; a pumping station its scope on
   // Servicing capacity's map, ← Page back to that page; an MTSA its filter, Growth in an area at its
   // municipality; a DC facility Capital's map view, its card there.
   await check('a pick on any page opens what it found: a development (from Review an FSR, its FSR review), a station, an MTSA, a DC facility', browser, {}, async ({ page, ev }, expect) => {
@@ -500,7 +910,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     await ev(() => { DevScope.close(); PeelWorkspaces.openPage('tight'); }); await wait(1500);
     expect(await findPick(page, ev, p.title, { has: [p.title] }), `${p.title} in Servicing capacity's list`);
     const s = await ev(() => ({ page: PeelWorkspaces.page(), key: (DevScope.current() || {}).key, sec: (document.querySelector('#home .page-sec.on') || { dataset: {} }).dataset.wsSec }));
-    expect(s.page === 'site' && s.key === p.key && s.sec === 'summary', `from Servicing capacity: its page at Summary (${s.page}, ${s.sec})`);
+    expect(s.page === 'site' && s.key === p.key && s.sec === 'summary', `from Servicing capacity: its page at Overview (${s.page}, ${s.sec})`);
     // A pumping station: its scope on Servicing capacity's map; ← Page is that page.
     const st = await ev(() => { const a = (PeelApp.state.servicing.psAreas || []).find(x => PeelSvcData.drName(x).length >= 6); return a ? { id: a.id, name: PeelSvcData.drName(a) } : null; });
     expect(!!st, 'a pumping station catchment');
@@ -1548,7 +1958,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
     expect(side.includes('outlets'), `Review outlets is in Home's sidebar (${side.join()})`);
     // A site's path to it (AD-5): with the DC impact model worked out (this page built it), a queued
-    // development's Summary has "Review →" in its Path to the plant row; it opens the editor at it. A
+    // development's Overview has "Review →" in its Path to the plant row; it opens the editor at it. A
     // development the queue does not list has none.
     const rk = await ev(() => { const q = PeelDevOutlets.queue(), keys = new Set(q.all.map(x => x.p.key)), plant = p => { const f = PeelSvcData.svcFacts(p); return !!(f && f.pl); };
       const x = q.all.find(r => plant(r.p)), y = PeelApp.state.projects.find(p => !keys.has(p.key) && p.lat != null && plant(p));

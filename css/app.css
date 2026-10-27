@@ -226,7 +226,7 @@
 
 /* Stacking layers, low to high (one name per layer; z-index 1–5 stay local to a component). */
 :root {
-  --z-menu: 20;          /* a small menu inside a bar (the site bar's More) */
+  --z-menu: 20;          /* a small menu inside a bar (a development's header ⋯) */
   --z-suggest: 30;       /* the search suggestions in the left panel */
   --z-topbar: 70;        /* the top bar */
   --z-topbar-menu: 80;   /* the top bar's ⋯ list on a phone */
@@ -1273,7 +1273,8 @@ details.sect.emp > summary .sect-sum { margin-left: auto; }
 .brief .sum-bar { margin: var(--space-1) 0 var(--space-1); }
 .brief .export-bar { margin: var(--space-2) 0 0; }
 .brief .desc-clamp { margin: var(--space-1) 0; }
-@media (max-width: 480px) { .brief .b-row { grid-template-columns: 1fr; gap: var(--space-1); } }
+/* (minmax: one column, no wider than the phone; a DC need's card would set it, 773 px at a site's Capital) */
+@media (max-width: 480px) { .brief .b-row { grid-template-columns: minmax(0, 1fr); gap: var(--space-1); } }
 .c-brief .c-head { color: var(--text-secondary); }
 .c-verdict { margin: var(--space-1) 0; }
 .c-motion { border-left: 3px solid var(--border); padding-left: var(--space-2); color: var(--text-secondary); display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
@@ -1484,6 +1485,8 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .dcn-table td small { color: var(--text-muted); font-size: var(--fs-1); }
 .dcn-table td:first-child small { display: block; }
 .dcn-table td[data-l] small { margin-left: var(--space-1); }
+/* (a DC relief's and a site brief's long names wrap: Capital's full table at a site, on a phone) */
+.dcn-table td .btn.link, .ce-brief .btn.link { white-space: normal; text-align: left; overflow-wrap: anywhere; }
 .dcn-table tr.dcn-gap { box-shadow: inset 3px 0 0 var(--cap-over); }
 .dcn-table tr.dcn-ok { box-shadow: inset 3px 0 0 var(--cap-room); }
 .dcn-table tr.dcn-check { box-shadow: inset 3px 0 0 var(--cap-tight); }
@@ -2282,32 +2285,13 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .dca-tile b, .ov-tile b, .aerial-pct strong { font-weight: 500; }
 .badge-n { font-weight: 500; }
 
-/* Phase 3: development scope — the site bar above the analysis tabs, and the
-   Development tab's own sub-tabs. Token-based colours only, so dark/light follow
-   the theme; the bar lives in the analysis column (a bottom sheet on phones),
-   so its actions wrap. */
-#site-bar { border-bottom: 1px solid var(--border); background: var(--surface-1); padding: var(--space-2) var(--space-3) var(--space-2); flex: none; }
-#site-bar[hidden] { display: none; }
-.site-bar-top { display: flex; align-items: flex-start; gap: var(--space-2); }
-.site-bar-id { flex: 1 1 auto; min-width: 0; }
-.site-bar-id h2 { margin: 0; font-size: var(--fs-3); font-weight: 600; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; }
-.site-bar-meta { font-size: var(--fs-2); color: var(--text-secondary); }
-.site-bar-top .badge { margin-top: 0; flex: none; }
-.site-bar-x { flex: none; }
-.site-bar-facts { margin-top: var(--space-1); font-size: var(--fs-2); font-variant-numeric: tabular-nums; }
-.site-bar-facts .sep { color: var(--text-muted); margin: 0 var(--space-1); }
-.site-bar-facts .u { color: var(--text-muted); font-size: var(--fs-1); margin-left: 2px; }
-.site-bar-svc { margin-top: var(--space-1); font-size: var(--fs-2); color: var(--text-secondary); }
-.site-bar-flags { margin-top: var(--space-1); }
-.site-bar-flags .q-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: var(--space-1); vertical-align: baseline; }
-.site-bar-actions { display: flex; flex-wrap: wrap; gap: var(--space-1); margin-top: var(--space-2); align-items: center; }
-.site-bar-actions .watch-btn { border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary); border-radius: 999px; padding: var(--space-1) var(--space-2); font-size: var(--fs-2); cursor: pointer; }
-.site-bar-actions .watch-btn.on { border-color: var(--cap-tight); color: var(--cap-tight-t); background: color-mix(in srgb, var(--cap-tight) 14%, var(--surface-1)); font-weight: 500; }
-.site-bar-fsr { margin: var(--space-2) 0 0; }
 /* FSR cross-check panel (Phase 7): consultant figures vs the app's. Theme tokens
    carry dark (default) and light mode; .table-wrap keeps the table usable on phones. */
 .fsr-check { border-top: 1px solid var(--border); margin-top: var(--space-2); padding-top: var(--space-2); display: grid; gap: var(--space-2); }
 .fsr-check h3 { margin: 0; font-size: var(--fs-2); }
+/* Servicing › FSR review's "What the FSR should cover": each item, its source, and what this app checks of it. */
+.fsr-cover { list-style: none; margin: 0; padding: 0; }
+.fsr-cover li { margin: var(--space-1) 0; }
 .fsr-form { display: grid; gap: var(--space-2); }
 .fsr-form fieldset { border: 1px solid var(--border); border-radius: var(--radius-panel); padding: var(--space-2); margin: 0; display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .fsr-form legend { font-size: var(--fs-1); color: var(--text-secondary); padding: 0 var(--space-1); }
@@ -2327,10 +2311,6 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .fsr-table td small, .fsr-table .muted { color: var(--text-muted); }
 .fsr-infra { margin-top: var(--space-2); }
 @media (max-width: 700px) { .fsr-form fieldset { flex-direction: column; } .fsr-form input[type=number] { width: 140px; } }
-.dev-subtabs { display: flex; gap: var(--space-1); margin: 0 0 var(--space-2); overflow-x: auto; scrollbar-width: none; }
-.dev-subtabs::-webkit-scrollbar { display: none; }
-.dev-subtabs button { flex: 1 0 auto; border: 0; background: none; padding: var(--space-2); font-size: var(--fs-2); font-weight: 500; color: var(--text-secondary); border-bottom: 2px solid transparent; margin-bottom: -1px; cursor: pointer; white-space: nowrap; }
-.dev-subtabs button[aria-selected="true"] { color: var(--text-primary); border-bottom-color: var(--accent); }
 
 /* Before every trace and servicing demand result: a screening method, the Region's models govern. */
 .screen-note { margin: 0 0 var(--space-2); padding: var(--space-1) var(--space-2); border-left: 3px solid var(--cap-tight); border-radius: 4px; background: color-mix(in srgb, var(--cap-tight) 10%, transparent); font-size: var(--fs-1); color: var(--text-secondary); }
@@ -2341,10 +2321,6 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .analysis .ov-activity { grid-column: span 12; }
 @media (max-width: 1199px) { .ov-activity { grid-column: span 12; } }
 .ov-activity td small { display: block; color: var(--text-muted); font-size: var(--fs-1); }
-/* The development's About / Files & history / Site views live in the Overview (below the verdict);
-   the separate Development tab is retired. */
-#ftab-dev { display: none !important; }
-.ov-dev { margin-top: var(--space-3); border-top: 1px solid var(--border); padding-top: var(--space-2); }
 /* Tables in the analysis panel: text wraps so they fit the panel's width; one that still doesn't
    fit (js/app.js marks it .dt-wide) scrolls sideways inside itself with its first column pinned,
    instead of being cut off at the panel's edge. */
@@ -2426,6 +2402,9 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
   .btn.small:not(.link), .chip, .t-toggle { min-width: 44px; }
   .chip, .btn.small:not(.link) { display: inline-flex; align-items: center; justify-content: center; }
   details > summary { display: flex; align-items: center; }
+  .c-ev > summary { flex-wrap: wrap; } .c-ev > summary .c-title { flex-basis: 100%; }   /* (a council item's long title wraps: Records at a development, 390 px) */
+  .pnl-flags .watch-btn, .pnl-more .site-more-menu .btn { min-height: 44px; }   /* (a development's ☆ Watch, no .btn, and its ⋯ items, links) */
+  .pnl-more .site-more-menu .btn { display: flex; align-items: center; }
   .leaflet-touch .leaflet-bar a, .leaflet-bar a { width: 44px; height: 44px; line-height: 44px; }
   .pipeline button, .f-tab { min-height: 44px; min-width: 44px; }
   #north-btn, .north-ctl button, .tool-rail button, .view3d-ctl button { width: 44px; height: 44px; }
@@ -2561,7 +2540,7 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .f-subtabs .btn { white-space: nowrap; }
 .f-subtabs .lab-chip small { font-size: var(--fs-1); color: inherit; opacity: .7; margin-left: 2px; }
 /* A sub-view with nothing to show at this scope is hidden, never blank (PeelAnalysisTabs.HIDDEN).
-   At a site the site bar's note is the one disclaimer. */
+   At a site the panel's footer note is the one disclaimer. */
 .f-subtabs .site-off, #analysis.site-scope #screen-note-top { display: none !important; }
 /* Labs (Settings › Labs): each tool shows only while its switch is on (js/labs.js). */
 html:not(.lab-3d) .view3d-ctl, html:not(.lab-timebox) .tool-rail [data-tool="timebox"], html:not(.lab-sewer) .tool-rail [data-tool="sewer"],
@@ -2571,8 +2550,6 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .labs-page h3 { margin: 0 0 var(--space-1); }
 .labs-row { display: flex; gap: var(--space-2); align-items: flex-start; padding: var(--space-1) 0; cursor: pointer; }
 .labs-row small { display: block; }
-/* The development's Files & history is the Records tab; its Overview keeps About and Site. */
-#pane-overview .dev-subtabs [data-devsub="files"], .ov-dev.in-records .dev-subtabs { display: none; }
 /* Construction and EAs (js/capital-ea.js) and the tap picker (js/map-pick.js) */
 .lg-line.dot { background: repeating-linear-gradient(90deg, var(--c) 0 2px, transparent 2px 6px); }
 .ce-lbl span { display: inline-block; white-space: nowrap; font-size: 11px; font-weight: 600; color: var(--map-label); text-shadow: 0 0 3px var(--map-halo), 0 0 2px var(--map-halo); transform: translate(-50%, -140%); pointer-events: none; }
@@ -2739,6 +2716,18 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .pnl-title { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; }
 .pnl-name { margin: 0; font-size: var(--fs-4); font-weight: 600; color: var(--text-primary); }
 .pnl-id { margin: 2px 0 0; }
+/* A development's header (navigation phase 5, js/panel.js toolsHTML; on every tab and on its page): the flags
+   with ☆ Watch, then one row of tools and actions, ⋯ at its end (outside the row: a phone scrolls the row
+   sideways, never clips the menu). */
+.pnl-flags { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); margin: var(--space-1) 0 0; }
+.pnl-flag-list { display: contents; }
+.pnl-flags .q-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: var(--space-1); vertical-align: baseline; }
+.pnl-flags .watch-btn { border: 1px solid var(--border); background: var(--surface-1); color: var(--text-secondary); border-radius: 999px; padding: var(--space-1) var(--space-2); font-size: var(--fs-2); cursor: pointer; }
+.pnl-flags .watch-btn.on { border-color: var(--cap-tight); color: var(--cap-tight-t); background: color-mix(in srgb, var(--cap-tight) 14%, var(--surface-1)); font-weight: 500; }
+.pnl-tools { display: flex; align-items: center; gap: var(--space-1); margin-top: var(--space-1); }
+.pnl-tools-row { display: flex; flex-wrap: wrap; gap: var(--space-1); min-width: 0; }
+.pnl-more { flex: none; }
+.pnl-more .site-more-menu { right: 0; left: auto; min-width: 190px; }
 .pnl-chip { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: var(--fs-1); font-weight: 600; border: 1px solid currentColor; white-space: nowrap; }
 .pnl-chip.t-over { color: var(--cap-over-t); } .pnl-chip.t-tight { color: var(--cap-tight-t); } .pnl-chip.t-room { color: var(--pnl-room); } .pnl-chip.t-stage { color: var(--pnl-stage); }
 .pnl-scen-chip { all: unset; cursor: pointer; display: inline-flex; gap: 6px; align-items: baseline; max-width: 100%; padding: 2px 10px; border: 1px dashed var(--border); border-radius: 999px; font-size: var(--fs-1); color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; box-sizing: border-box; }
@@ -2798,17 +2787,18 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .ft-table th { position: sticky; top: 0; background: var(--surface-1); z-index: 1; }
 .ft-table td small { display: block; color: var(--text-muted); font-size: var(--fs-1); }
 .ft-table td:not(.n), .ft-table th:not(.n) { text-align: left; }
-/* At a development the panel header names it; the site bar keeps its tools (trace, FSR, watch …). */
-#site-bar.pnl-tools .site-bar-top, #site-bar.pnl-tools .site-bar-facts, #site-bar.pnl-tools .site-bar-svc, #site-bar.pnl-tools > .screen-note { display: none; }
 
 /* Panel mode: the open sub-view shows its standard panel (#pnl-<tab>); its detailed panes are the
    full table. Full mode (#analysis.ft-on): the column covers the window below the top bar and shows
    the detailed panes, Engineering columns on. A sub-view without a panel shows its panes as before. */
 #analysis:not(.pnl-on) .pnl-host, #analysis.ft-on .pnl-host { display: none !important; }
+/* (a panel that is its own full table, a development's Overview: Open full table widens it, js/panel.js sync) */
+#analysis.ft-on.ft-pnl .pnl-host:not([hidden]) { display: block !important; }
+#analysis.ft-on.ft-pnl .analysis-panes > .f-pane:not(.pnl-host):not(.f-subtabs) { display: none !important; }
 #analysis.pnl-on:not(.ft-on) .analysis-panes > .f-pane:not(.f-subtabs):not(.pnl-host) { display: none !important; }
 #analysis.pnl-on:not(.ft-on) #screen-note-top { display: none; }   /* the panel's footer carries the note; the Peel-wide note (#scope-note) stays */
 #analysis.ft-on { position: fixed !important; top: var(--ft-top, 56px); left: 0; right: 0; bottom: 0; width: auto !important; max-width: none !important; height: auto !important; z-index: var(--z-page); border-left: 0; }   /* under the top bar (1200), so its menus open over the full table */
-#analysis.ft-on .analysis-resize, #analysis.ft-on .sheet-grip, #analysis.ft-on #site-bar, #analysis.ft-on .f-sum { display: none; }
+#analysis.ft-on .analysis-resize, #analysis.ft-on .sheet-grip, #analysis.ft-on .f-sum { display: none; }
 .ft-bar { display: flex; align-items: center; gap: var(--space-3); padding: var(--space-2) var(--space-3); border-bottom: 1px solid var(--border); background: var(--surface-2); flex: none; }
 .ft-bar[hidden] { display: none; }
 .ft-bar .ft-t { flex: 1; min-width: 0; }
@@ -2893,6 +2883,7 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .home-main { padding: var(--space-4) var(--space-4) var(--space-5); max-width: 1100px; display: flex; flex-direction: column; gap: var(--space-3); font-variant-numeric: tabular-nums; }
 .home-h { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
 .home-h p { flex-basis: 100%; margin: 0; }
+.home-h > .pnl-flags, .home-h > .pnl-tools { flex-basis: 100%; min-width: 0; }   /* (a site's page: its header's flags and tools, js/panel.js toolsHTML) */
 .home-h h1 { font-size: var(--fs-5); margin: 0; }
 .home-answer { font-size: var(--fs-3); margin: 0; }
 .home-caveat { margin: 0; padding: var(--space-1) var(--space-2); border-left: 3px solid var(--cap-tight); background: color-mix(in srgb, var(--cap-tight) 10%, transparent); }
@@ -2956,6 +2947,10 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
   cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; min-height: 44px; }
 .page-sec:hover { color: var(--text-primary); }
 .page-sec.on { color: var(--text-primary); border-bottom-color: var(--accent); }
+/* A section's views under the bar (a site's Servicing: Network · FSR review, js/ws-pages.js viewsBar), as the
+   map's chips under its tabs: a second, lighter row that scrolls sideways like the bar on a phone. */
+.page-secs + .page-subsecs { margin-top: calc(-1 * var(--space-2)); border-bottom: 0; }
+.page-subsecs .page-sec { font-weight: 400; }
 /* Explore: where you are, at the top of a site's pages (the search is in every page's header). */
 /* Explore's five views, a row at the top of each (js/workspaces.js viewsHTML); one line that scrolls on a phone. */
 .page-views { display: flex; gap: var(--space-1); margin: 0 0 var(--space-2); overflow-x: auto; scrollbar-width: none; }
@@ -2983,9 +2978,8 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .page-main > .pnl-fold { background: var(--surface-1); }
 .page-foot { display: flex; flex-direction: column; gap: var(--space-2); border-top: 1px solid var(--border); padding-top: var(--space-3); }
 .page-foot .pnl-acts { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-.page-fsr, .page-grid, .page-sel { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-panel); padding: var(--space-3); }
-.page-fsr > h3, .page-grid > h3 { margin: 0 0 var(--space-2); font-size: var(--fs-3); }
-.page-fsr .fsr-check > h3 { display: none; }
+.page-grid, .page-sel { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-panel); padding: var(--space-3); }
+.page-grid > h3 { margin: 0 0 var(--space-2); font-size: var(--fs-3); }
 /* Old pipes grid: likelihood (rows, worst first) × consequence (columns); the worst corner darkest. */
 .pg-wrap { overflow-x: auto; }
 .pg { border-collapse: separate; border-spacing: 4px; font-variant-numeric: tabular-nums; min-width: 420px; }
@@ -3214,6 +3208,16 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
   .tb-actions.open .tb-acts-list .tb-btn { font-size: var(--fs-2) !important; justify-content: flex-start; width: 100%; gap: var(--space-2) !important; border: 0; }
   .tb-actions.open .tb-acts-list .tb-btn.tb-icon::after { content: 'Settings'; }
   .tb-acts-list .tb-menu { right: auto; left: 0; }
+  /* (the earlier files on a development's land, in Records' Files and events: wider than a phone, the table
+     scrolls inside itself, as .dt-wide does, never the panel) */
+  .ef-t { display: block; overflow-x: auto; max-width: 100%; overscroll-behavior-x: contain; }
+  /* (a development's header: its tools and actions in one row that scrolls sideways, ⋯ in reach at its end.
+     With its trail, name, chips, identity and flags it is taller than the half sheet (364–458 px of 423 at
+     390 px, navigation phase 5's measure; the site bar and the header were 329–473 before), so it scrolls with
+     its panel instead of holding the sheet: the tab strip stays) */
+  .pnl-tools-row { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .pnl-tools-row .btn { flex: none; white-space: nowrap; }
+  .pnl.pnl-site > .pnl-head { position: static; }
 }
 /* The footer: one row of actions; the screening note in full below, with "Report a data issue" at its
    end (the note is never cut: the footer sticks to the bottom edge, not below it). */
@@ -3222,12 +3226,6 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .pnl-foot .pnl-acts .btn { flex: none; white-space: nowrap; }
 .pnl-note { font-size: var(--fs-1); line-height: 1.35; }
 .pnl-note .pnl-report-line { margin-left: var(--space-2); white-space: nowrap; }
-/* The site's tools: one Tools menu beside Watch. */
-.site-tools .site-more-menu { left: 0; right: auto; min-width: 190px; }
-.site-tools .site-more-menu hr { border: 0; border-top: 1px solid var(--border); margin: 2px 0; }
-#site-bar.pnl-tools .site-bar-flags { display: inline-flex; flex-wrap: wrap; margin: 0; }
-#site-bar.pnl-tools { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-2); }
-#site-bar.pnl-tools .site-bar-actions { margin-top: 0; }
 /* Map tools behind one Tools button; no zoom buttons on a touch screen (pinch); the scale by the
    attribution. */
 .tool-rail .rail-tools { display: flex; flex-direction: column; }
@@ -3384,6 +3382,8 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .tr-kids { margin-left: var(--space-2); padding-left: 10px; border-left: 2px solid var(--border); }
 .tr-check { display: inline-block; margin-left: 4px; padding: 0 5px; border: 1px dashed var(--text-muted); border-radius: 999px; color: var(--text-secondary); font-size: var(--fs-1); line-height: 1.4; }
 .tr-new { display: inline-block; padding: 0 6px; border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border); font-size: var(--fs-1); color: var(--text-primary); }
+/* (Records' full table: a file of the tree opens on its own, js/devtab.js filesHTML) */
+.tr-own { margin-left: 4px; padding: 0 2px; font-size: var(--fs-1); }
 .tr-more { margin: 4px 0; color: var(--text-muted); }
 .tr-same { margin: 4px 0 0; border-top: 1px solid var(--border); padding: 6px 4px; color: var(--text-secondary); }
 .tr-same summary { cursor: pointer; font-size: var(--fs-2); }
@@ -3910,8 +3910,9 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 .gt-gn { display: flex; flex-direction: column; min-width: 0; }
 .gt-gn b { overflow-wrap: anywhere; }
 .gt-car { width: 12px; color: var(--text-muted); }
-.gt-bar { display: flex; flex: 0 1 120px; min-width: 40px; height: 8px; border-radius: 4px; overflow: hidden; background: var(--surface-1); }
-.gt-bar i { display: block; height: 100%; }
+/* (the table's own bar, scoped: js/dev-gantt.js's bars share the class, and took this min-width and background) */
+.gt .gt-bar { display: flex; flex: 0 1 120px; min-width: 40px; height: 8px; border-radius: 4px; overflow: hidden; background: var(--surface-1); }
+.gt .gt-bar i { display: block; height: 100%; }
 .gt-gl { flex: none; min-width: 64px; text-align: right; font-variant-numeric: tabular-nums; }
 .gt-r { cursor: pointer; }
 .gt-r:hover td { background: color-mix(in srgb, var(--accent) 10%, transparent); }

@@ -4,6 +4,10 @@ const assert = require('node:assert/strict');
 const Ph = require('../js/phases.js');
 globalThis.PeelPhases = Ph;
 const DT = require('../js/devtab.js');
+// The status is the development model's (js/dev-detail.js, M3: devtab.js keeps no copy since navigation
+// phase 5): DT.statusOf calls it, so the statusOf tests below run on the one function.
+Object.assign(globalThis, { window: globalThis, PeelUtil: require('../js/util.js'), PeelDemand: require('../js/demand.js') });
+globalThis.PeelDevDetail = require('../js/dev-detail.js');
 
 const appRec = (extra = {}) => ({
   uid: 'src/1', ref: 'OZ 24-001', kind: 'application', stage: 'master', phase: 'review',
@@ -97,6 +101,13 @@ test('statusOf: a council item naming the file is activity — no stall (SPEC 1.
   assert.equal(st.stalled, false);
   assert.equal(st.state, 'active');
   assert.ok(st.years < 1);
+});
+
+test('statusOf: devtab reads the development model\'s, with no copy of its own', () => {
+  const p = project({ records: [appRec({ statusRaw: 'Under appeal to the OLT' })] });
+  assert.deepEqual(DT.statusOf(p), globalThis.PeelDevDetail.statusOf(p));
+  assert.equal(DT.planApprovedNote(p), globalThis.PeelDevDetail.planApprovedNote(p));
+  assert.doesNotMatch(require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'js', 'devtab.js'), 'utf8'), /const STATUS_SIGNALS =|function statusOf\(|function planApprovedNote\(/);
 });
 
 test('statusOf: why names the phase-setting event when the timeline has one', () => {

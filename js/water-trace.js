@@ -491,9 +491,9 @@
   document.addEventListener('click', async e => {
     const b = e.target.closest('[data-wtrace]'); if (!b) return;
     const p = Nav().projectByKey(b.dataset.wtrace); if (!p) return;
-    // The button can appear twice (detail panel and the footer Water tab): the trace output
-    // goes to the clicked button's container, and every copy's label stays in sync.
-    const scope = b.closest('#scope-body, #pane-dev-body, #water-body') || document;
+    // The button can appear more than once (the Network panel's Water fold or the page, the full table's
+    // Water brief): the trace output goes to the clicked button's container, and every copy's label stays in sync.
+    const scope = b.closest('#scope-body, .pnl-host, #home, #water-body') || document;
     const top = scope.querySelector(`.trace-box [data-wtrace="${CSS.escape(p.key)}"]`), box = top && top.closest('.trace-box');
     const tops = [...document.querySelectorAll(`[data-wtrace="${CSS.escape(p.key)}"]`)];
     for (const t of tops) if (t._label == null) t._label = t.innerHTML;

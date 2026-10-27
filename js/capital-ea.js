@@ -416,6 +416,8 @@
     const tbl = l => (l && l.rows.length ? `<table class="dt"><caption>${esc(l.title)} <span class="muted">(${l.rows.length})</span></caption><tbody>${l.rows.map(r => `<tr class="ld-row"${Object.entries(r.attrs || {}).map(([k, v]) => ` ${k}="${esc(v)}"`).join('')} tabindex="0"><td>${r.html}</td></tr>`).join('')}</tbody></table>` : '');
     return `<section class="ea-flow" data-info="eaflow"><h3 class="sub-title">EA to construction</h3>${U.hlP ? U.hlP(f.answer) : `<p>${f.answer}</p>`}${f.chart}${f.lists.map(tbl).join('')}${f.folds.filter(Boolean).map(x => `<details class="dcn-more"${x.open ? ' open' : ''}><summary class="small">${esc(x.title)}</summary>${x.html}</details>`).join('')}<details class="dcn-more"><summary class="small">Method and basis</summary><p class="small muted">${f.method}</p></details></section>`;
   }
+  // (Capital › EAs; at a development, Capital's one view draws the site's table in its full table: js/dca-tab.js)
+  const EA_HOSTS = '#dca-eas-body, #dca-site-eas';
   let eaBox = null;
   function renderEaTab(box) {
     eaBox = box || eaBox || document.querySelector('#dca-eas-body'); if (!eaBox) return;
@@ -497,8 +499,8 @@
     };
   }
   if (typeof document !== 'undefined') document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-pnl-ce-map]'); if (b) setOn({ [b.dataset.pnlCeMap]: true }); });
-  // EAs within the site's radius (null when no site is scoped): an empty Capital › EAs is hidden.
-  // (Any status: a site with only completed EAs nearby still lists them under its filter.)
+  // EAs within the site's radius (null when no site is scoped): the Overview's Infrastructure coming row counts
+  // them. (Any status: a site with only completed EAs nearby still lists them under its filter.)
   const siteEaCount = () => { const near = nearScope(); return near && data.eas ? M.easNear(data.eas.eas || [], near.lat, near.lng, near.m, near.pts).length + M.easMayApply(data.eas.eas || [], near.muni).length : null; };
   // The site brief (a reviewer's): the EAs and the planned or active capital work within 1 km of a
   // development (p; else the one in scope). null before the data loads or with no site.
@@ -510,7 +512,8 @@
   const briefSources = () => ({ asOf: capAsOf(), easChecked: data.eas && data.eas.generatedAt ? data.eas.generatedAt.slice(0, 10) : '' });
   const siteBriefText = p => { const b = siteBriefFor(p), q = p || (window.PeelDevVerdict && window.PeelDevVerdict.scopedDev()); return b ? M.siteBriefText(b, { title: q && q.title, ...briefSources() }) : ''; };
   const siteBriefHTML = (p, o = {}) => { const b = siteBriefFor(p); return b ? M.siteBriefHTML(b, o) : ''; };
-  // EAs and works near the site in scope (null when none is scoped): an empty Capital › EAs is hidden.
+  // EAs and works near the site in scope (null when none is scoped): Capital's one view at a development lists
+  // them only when there are some (js/dca-tab.js siteTimingSpec; navigation phase 5).
   const siteBriefCount = () => { const b = siteBriefFor(); return b ? b.eas.length + b.may.length + b.works.length : null; };
   async function copyBrief() {
     const t = siteBriefText(); if (!t) return;
@@ -533,7 +536,7 @@
       clearTimeout(qTimer); qTimer = setTimeout(() => { eaTab.f.q = q.value; renderEaTab(); }, 200);
     });
     document.addEventListener('change', e => {
-      const t = e.target; if (!t.closest || !t.closest('#dca-eas-body')) return;
+      const t = e.target; if (!t.closest || !t.closest(EA_HOSTS)) return;
       if (t.dataset.eatabShow != null && t.checked) { eaTab.f.show = t.dataset.eatabShow; eaTab.picked = true; }
       else if (t.dataset.eatabSys != null) eaTab.f.sys = { ...eaTab.f.sys, [t.dataset.eatabSys]: t.checked };
       else if (t.dataset.eatabSort != null) eaTab.sort = t.value;
@@ -550,7 +553,7 @@
     document.addEventListener('click', e => {
       const go = e.target.closest('[data-ce-goto]');
       if (go) { const AT = window.PeelAnalysisTabs; if (AT) { AT.setSub('dca', go.dataset.ceGoto); AT.showFootTab('dca'); } return; }
-      if (!e.target.closest('#dca-eas-body')) return;
+      if (!e.target.closest(EA_HOSTS)) return;
       const stamp = today();
       if (e.target.closest('[data-eatab-csv]')) {
         const { cols, rows } = M.eaSheetRows(filteredEAs()), q = v => U.csvCell(v, true);

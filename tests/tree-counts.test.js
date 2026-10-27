@@ -129,3 +129,38 @@ test('tree groups: resolve, migrate and branch keys on a small example', () => {
   assert.deepEqual(TG.migrateKeys(['B|3 MAIN ST', 'gone'], exists).sort(), ['B|1 MAIN ST', 'gone'], 'nothing dropped');
   TG.setData(null);
 });
+
+// Navigation phase 5, S1 (pros-and-cons M1; owner decision 14, approved 2026-10-15 "for one release"):
+// Settings › Counting's Previous switch is retired. Every development takes its tree count; one the tree
+// does not count keeps the rule before it (the fallback) and says so in words.
+test('the Previous switch is retired: the rule stays the fallback, said in words', () => {
+  for (const k of ['mode', 'setMode', 'settingsHTML', 'MODES']) assert.equal(TC[k], undefined, k);
+  assert.equal(TC.label(), 'tree count');
+  // A browser that stored Previous: the stored value is never read (a vm copy with that store).
+  const store = { get: (k, d) => (k === 'countMode' ? 'previous' : d), set() {} };
+  const ctx = { PeelUtil: { store }, console };
+  ctx.window = ctx; ctx.globalThis = ctx;
+  require('node:vm').runInNewContext(fs.readFileSync(path.join(__dirname, '..', 'js', 'tree-counts.js'), 'utf8'), ctx);
+  const p = dev('k1', 100, [rec('OZS-1')]);
+  const data = { snapshotAt: '2026-10-12', projects: { k1: { u: 140, s: ctx.PeelTreeCounts.sigOf(p, id), t: [['OZS-1', 140, 'own count', '']] } } };
+  assert.equal(ctx.PeelTreeCounts.apply([p], { data, canonRef: id }).mode, 'tree');
+  assert.equal(p.count.mode, 'tree', 'a stored Previous is ignored'); assert.equal(p.units, 140);
+  // The fallback's note: a development of permits only is counted from its permits; one with files says why.
+  const permits = { key: 'k5', units: 12, records: [{ kind: 'permit', municipality: 'Brampton', ref: 'BP-1', uid: 'BP-1' }] };
+  TC.apply([permits], { data, canonRef: id });
+  assert.equal(permits.count.mode, 'previous');
+  assert.match(TC.noteHTML(permits), /<strong>Counted from its permits<\/strong>\.<\/p>/);
+  const changed = dev('k1', 100, [rec('OZS-1'), rec('SP-9')]);
+  TC.apply([changed], { data, canonRef: id });
+  assert.match(TC.noteHTML(changed), /Counted from its files and permits<\/strong>: its files differ from the tree build of 2026-10-12/);
+  const none = dev('k1', 100, [rec('OZS-1')]);
+  TC.apply([none], { data: null, canonRef: id });
+  assert.match(TC.noteHTML(none), /Counted from its files and permits<\/strong>: tree counts not loaded/);
+  for (const q of [permits, changed, none]) assert.doesNotMatch(TC.noteHTML(q), /Previous count|Settings › Counting/);
+  // The app groups by the trees whenever their data is in; the top bar warns on a failed load.
+  const src = f => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
+  assert.match(src('js/app.js'), /const grouped = !!\(TG && TG\.ready\(\)\);/);
+  assert.match(src('js/topbar.js'), /TC && TC\.status === 'failed'/);
+  assert.match(src('js/topbar.js'), /tree counts didn\\u2019t load: counted from the files and permits/);
+  for (const f of fs.readdirSync(path.join(__dirname, '..', 'js')).filter(f => f.endsWith('.js'))) assert.doesNotMatch(src(`js/${f}`), /PeelTreeCounts\.(mode|setMode|settingsHTML)\b|\bTC\.(mode|setMode)\(/, `js/${f}`);
+});

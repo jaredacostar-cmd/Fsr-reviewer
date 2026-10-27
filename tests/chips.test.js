@@ -37,9 +37,13 @@ test('the site header: the latest file opens its record; "n files · history" op
   assert.match(pn, /data-dev-hist="" title="History, with each file's source record">\$\{nRec\} file\$\{nRec === 1 \? '' : 's'\} · history ›<\/button>/);
 });
 
-test('the board (map panel and Check a site page): one section for the files, events and proposal', () => {
+test('the board: About and the approvals timeline on the Overview; the files, events and source records one section of Records', () => {
   const ov = src('js/overview-tab.js');
-  assert.match(ov, /\{ title: 'Files, events and proposal', id: 'pnl-hist', open: true, html: DT && DT\.partHTML \? DT\.partHTML\(p, 'story'\) : '' \}/);
+  // (navigation phase 5: the story fold moved from the Overview to Records; About and the timeline stayed)
+  assert.match(src('js/records-tab.js'), /\{ title: 'Files and events', id: 'pnl-hist', open: true, html: DT && DT\.partHTML \? DT\.partHTML\(p, 'story'\) : '' \}/);
+  assert.match(ov, /\{ title: 'About', id: 'pnl-about', open: true, html: DT && DT\.partHTML \? DT\.partHTML\(p, 'about'\) : '' \}/);
+  assert.match(ov, /\{ title: 'Approvals timeline', id: 'pnl-timeline'/);
+  assert.doesNotMatch(ov, /'Files, events and proposal'|partHTML\(p, 'story'\)|partHTML\(p, 'site'\)/, 'no copy across tabs');
   assert.doesNotMatch(ov, /title: 'About this proposal'|id: 'pnl-files'|title: 'History and source records'/, 'no separate About, Files or History folds');
   const dt = src('js/devtab.js');
   assert.match(dt, /<div id="devtab-recs">\$\{chart\}/, 'the old Source records id, so old links land');

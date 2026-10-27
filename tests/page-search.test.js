@@ -88,10 +88,10 @@ test('a pick on a page is routed; the full map and a workspace map view keep the
 
 test('pageRoute: what each hit opens on a page (navigation design §3.3)', () => {
   const p = { key: 'k1', title: '1 Main St' };
-  assert.deepEqual(plain(W.pageRoute({ label: 'x', p }, 'home')), { page: 'site', dev: 'k1', sec: 'summary' }, 'a development: its page on Summary');
+  assert.deepEqual(plain(W.pageRoute({ label: 'x', p }, 'home')), { page: 'site', dev: 'k1', sec: 'summary' }, 'a development: its page on Overview (the section id summary)');
   assert.deepEqual(plain(W.pageRoute({ label: 'x', p }, 'growth')), { page: 'site', dev: 'k1', sec: 'summary' });
-  assert.deepEqual(plain(W.pageRoute({ label: 'x', p }, 'fsr')), { page: 'fsr', dev: 'k1', sec: 'summary' }, 'from Review an FSR: its FSR review');
-  assert.deepEqual(plain(W.pageRoute({ label: 'x', p, hit: 'file', ref: 'OZ-21-005' }, 'fsr')), { page: 'site', dev: 'k1', sec: 'files', file: 'OZ-21-005' }, 'a file number: its page at Files');
+  assert.deepEqual(plain(W.pageRoute({ label: 'x', p }, 'fsr')), { page: 'fsr', dev: 'k1', sec: 'summary' }, 'from Review an FSR: its page at Servicing › FSR review');
+  assert.deepEqual(plain(W.pageRoute({ label: 'x', p, hit: 'file', ref: 'OZ-21-005' }, 'fsr')), { page: 'site', dev: 'k1', sec: 'files', file: 'OZ-21-005' }, 'a file number: its page at Records (the section id files)');
   assert.deepEqual(plain(W.pageRoute({ place: { hit: 'plan', id: 'sp7', muni: 'Brampton' } }, 'home')), { page: 'growth', drill: 'a:sp7', fall: 'm:Brampton', muni: 'Brampton', sp: 'sp7' }, 'a plan: Growth in an area at it (a plan filter holding it may stay)');
   assert.deepEqual(plain(W.pageRoute({ place: { hit: 'mtsa', id: 'mt3', muni: 'Mississauga' } }, 'home')), { page: 'growth', drill: 'm:Mississauga', muni: 'Mississauga', then: 'map' }, 'an MTSA: at its municipality, then its filter');
   assert.deepEqual(plain(W.pageRoute({ place: { hit: 'mtsa', id: 'mt4' } }, 'home')), { page: 'growth', drill: 'peel', muni: '', then: 'map' });

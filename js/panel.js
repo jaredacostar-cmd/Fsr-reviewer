@@ -3,7 +3,8 @@
   // ---- The standard panel (Stage 3) -------------------------------------------------------------
   // Every panel (every tab at every scope, every tool result, every map pop-up that opens a scope)
   // renders the same sections, in this order:
-  //   1 header (sticky): trail / back, close ×; name; status chip; one identity line
+  //   1 header (sticky): trail / back, close ×; name; status chip; one identity line (a development's: its
+  //     flags and ☆ Watch, and one row of its tools, actions and ⋯: siteTools)
   //   2 scenario chip (read-only) wherever a calculated number appears; it opens the Scenario control
   //   3 answer: one plain sentence answering the panel's question
   //   4 key figures: at most four, 2×2, each with its unit and one context line
@@ -59,7 +60,7 @@
     out.push(`<header class="pnl-head" data-sec="header">
       <div class="pnl-head-top">${trail ? `<nav class="pnl-trail" aria-label="Scope">${trail}</nav>` : ''}${h.close ? `<button type="button" class="btn small pnl-x"${attrs(h.close)} aria-label="Close">×</button>` : ''}</div>
       <div class="pnl-title"><h2 class="pnl-name">${esc(h.name || '')}</h2>${chip(h.status)}${h.badge || ''}</div>
-      ${h.identity ? `<p class="pnl-id small muted">${h.identity}</p>` : ''}${h.extra || ''}
+      ${h.identity ? `<p class="pnl-id small muted">${h.identity}</p>` : ''}${h.extra || ''}${h.tools ? toolsHTML(h.tools, 'map') : ''}
     </header>`);
     if (s.calc || s.scenario || calcIn(s)) out.push(`<div class="pnl-scen" data-sec="scenario">${s.scenario || scenarioChip()}</div>`);
     // Bundle 5: the first use of each term in the answer and the figures is underlined (js/glossary.js).
@@ -82,7 +83,8 @@
     out.push(`<footer class="pnl-foot" data-sec="footer"><div class="pnl-acts">${f.primary ? btn(f.primary, 'pnl-primary') : ''}${btn({ label: 'Open full table', attrs: { 'data-full-table': s.key || '', ...(f.fullTable || {}) } }, 'pnl-sec')}${sec.map(b => btn(b, 'pnl-sec')).join('')}</div>
       <div class="pnl-phone-ctx small">${scenarioChip()}${yearsChip()}</div>
       <p class="pnl-note small">${NOTE}${reportLink(s.key, h.name)}</p></footer>`);
-    return `<article class="pnl" data-panel="${esc(s.key || '')}">${out.join('')}</article>`;
+    // (a development's: its header, with the flags and the tools row, scrolls with the panel on a phone)
+    return `<article class="pnl${h.tools ? ' pnl-site' : ''}" data-panel="${esc(s.key || '')}">${out.join('')}</article>`;
   }
   // A label / value row for a short list (the site panel's Timing and Site).
   const kv = (label, value, tone) => ({ html: `<div class="pnl-kv"><span>${label}</span><span${tone ? ` class="t-${esc(tone)}"` : ''}>${value}</span></div>`, kv: true });
@@ -130,8 +132,8 @@
     const types = typesText(p.types);
     const SC = root.PeelStageChip, AC = root.PeelAerialChip, nRec = (p.records || []).length;
     const h = { trail: [{ label: 'Peel', attrs: { 'data-pnl-dev-close': '' } }, { label: p.municipality }, { label: p.title }], close: { 'data-pnl-dev-close': '' }, name: p.title,
-      // One status line: the development's phase, with its zoning approval where that came first (the
-      // site bar no longer shows a second, contradicting chip).
+      // One status line: the development's phase, with its zoning approval where that came first (one
+      // status line, in the one header).
       status: { tone: 'stage', text: `${PH && PH.PHASE_BY_KEY[p.phase] ? PH.PHASE_BY_KEY[p.phase].label : p.phase}${p.zoningApproved && PH && PH.PHASE_BY_KEY.approved && p.rank < PH.PHASE_BY_KEY.approved.rank ? ' · zoning approved' : ''}${p.smallSite ? ' · no site plan needed' : ''}`,
         // (pressed: How the stage was set, under the header: js/stage-chip.js)
         ...(SC ? { attrs: { 'data-stage-chip': p.key }, expanded: SC.isOpen(p.key), title: 'How the stage was set: the file that set it, and what it needs next' } : {}) },
@@ -142,7 +144,59 @@
     // And, for a development in the DC pipeline, whether it counts (js/dc-gate.js).
     const DG = root.PeelDcGate;
     if (DG) { h.badge += DG.chipHTML(p); h.extra += DG.boxHTML(p); }
+    // Its tools, actions, ⋯, ☆ Watch and flags (navigation phase 5: the site bar's, on every tab and its page).
+    const A = root.PeelApp, DS = root.DevScope;
+    h.tools = siteTools(p, { watched: !!(A && A.watch && A.watch.has(p.key)), flags: DS && DS.flagsFor ? DS.flagsFor(p) : '' });
     return h;
+  }
+  // ---- A development's tools (navigation phase 5, design §3.6): one header on every tab and on its page --
+  // The tools (Trace sewer and Trace water, on the map, so only with a map location; Check FSR: Servicing ›
+  // FSR review), the actions (Servicing memo; Inquiry draft, on the map with the development kept) and ⋯ (the
+  // rest); ☆ Watch beside the flags (js/devscope.js flagsFor). page: what a page's copy carries instead.
+  function siteTools(p, o = {}) {
+    const k = p.key, at = p.lat != null && p.lng != null;
+    return { key: k, watched: !!o.watched, flags: o.flags || '',
+      tools: [
+        ...(at ? [{ label: 'Trace sewer', attrs: { 'data-trace': k }, title: 'Trace the sewer path to the plant on the map' },
+          { label: 'Trace water', attrs: { 'data-wtrace': k }, title: 'Trace the water supply route from the plant on the map' }] : []),
+        { label: 'Check FSR', attrs: { 'data-at': 'svc:fsr' }, page: { 'data-ws-page': 'fsr' }, title: 'Servicing › FSR review: the consultant\u2019s figures against Peel\u2019s criteria' },
+        { label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, title: 'One-page servicing memo to print or save as PDF' },
+        { label: 'Inquiry draft', attrs: { 'data-inquiry': '' }, title: 'A servicing inquiry response for this development, to copy: it opens on the map, the development kept' },
+      ],
+      more: [
+        { label: 'Record allocation', attrs: { 'data-scope-alloc': '' }, title: 'Record a servicing allocation for this development (its Servicing › Network fold)' },
+        { label: 'Compare', attrs: { 'data-scope-compare': '' }, title: 'Add this development to the comparison (Compare tool)' },
+        { label: 'Export (CSV)', attrs: { 'data-scope-export': '' }, title: 'This development\u2019s row (phase, units, layer, demand) as a CSV' },
+        { label: 'Copy link', attrs: { 'data-share': '' }, title: 'Copy a link to this view' },
+      ] };
+  }
+  // The flags line (the flags, then ☆ Watch), then the tools row; ⋯ sits outside the row, which scrolls
+  // sideways on a phone, so its menu is never clipped. host: 'map' (a panel) or 'page' (a site's page).
+  function toolsHTML(t, host) {
+    if (!t) return '';
+    const b = x => `<button type="button" class="btn small"${attrs(host === 'page' && x.page ? x.page : x.attrs)}${x.title ? ` title="${esc(x.title)}"` : ''}>${esc(x.label)}</button>`;
+    const mi = x => `<button type="button" role="menuitem" class="btn small link"${attrs(x.attrs)}${x.title ? ` title="${esc(x.title)}"` : ''}>${esc(x.label)}</button>`;
+    return `<div class="pnl-flags chips"><span class="pnl-flag-list">${t.flags || ''}</span><button type="button" class="watch-btn${t.watched ? ' on' : ''}" data-watch="${esc(t.key)}" aria-pressed="${!!t.watched}" title="${t.watched ? 'Remove from your watchlist' : 'Add to your watchlist (This week, Watched)'}">${t.watched ? '★ Watching' : '☆ Watch'}</button></div>`
+      + `<div class="pnl-tools"><div class="pnl-tools-row" role="group" aria-label="Tools for this development">${(t.tools || []).map(b).join('')}</div>`
+      + `<details class="site-more pnl-more"><summary class="btn small" aria-label="More for this development: record an allocation, compare, export, copy the link">⋯</summary><div class="site-more-menu" role="menu">${(t.more || []).map(mi).join('')}</div></details></div>`;
+  }
+  // A stored panel's HTML is from when it was built; each tab's panel carries its own copy of the header, so
+  // what changed since is put right when it is shown (navigation phase 5): ☆ Watch (PeelApp.watch), the
+  // trace buttons' on state (else a second press traces again instead of hiding the path) and the flags
+  // (worked out once the DC data and the servicing model are in, js/devscope.js flagsFor).
+  function syncTools(host) {
+    if (!host || !host.querySelector) return;
+    const A = root.PeelApp, ST = root.PeelSewerTrace, DS = root.DevScope;
+    for (const b of host.querySelectorAll('.pnl-flags [data-watch]')) {
+      const on = !!(A && A.watch && A.watch.has(b.dataset.watch));
+      if (b.classList.contains('on') !== on) { b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); b.textContent = on ? '★ Watching' : '☆ Watch'; }
+    }
+    const tk = ST && ST.TRACE ? ST.TRACE.key : null, wk = ST && ST.WTRACE ? ST.WTRACE.key : null;
+    const tr = (b, on, txt) => { if (b._label == null) b._label = b.innerHTML; if (!!b.dataset.on === on) return; b.dataset.on = on ? '1' : ''; b.classList.toggle('on', on); b.innerHTML = on ? txt : b._label; };
+    for (const b of host.querySelectorAll('[data-trace]')) tr(b, !!tk && b.dataset.trace === tk, 'Hide the path');
+    for (const b of host.querySelectorAll('[data-wtrace]')) tr(b, !!wk && b.dataset.wtrace === wk, 'Hide the water route');
+    const p = DS && DS.current && DS.current(), fl = p && DS.flagsFor ? host.querySelector('.pnl-flags .pnl-flag-list') : null;
+    if (fl) { const f = DS.flagsFor(p); if (fl._f !== f) { fl.innerHTML = f; fl._f = f; } }
   }
   // ---- Panels in the right-hand column ---------------------------------------------------------
   // Each tab has one panel slot (#pnl-<tab>, above its sub-views' panes). A renderer hands over the
@@ -185,6 +239,8 @@
     const e = kept ? null : ov ? { html: html({ key, ...ov }), onMount: ov.onMount } : e0 && e0.scope === scopeId() ? e0 : null, ok = !!e;
     const v = e ? (W && W.srcLine ? e.html.replace(HEAD, `${HEAD}${W.srcLine(key)}`) : e.html) : '';
     an.classList.toggle('pnl-on', ok);
+    // (a panel that is its own full table, a development's Overview: Open full table widens it)
+    an.classList.toggle('ft-pnl', !!(e && e.spec && e.spec.widen));
     const host = document.getElementById(`pnl-${t}`);
     if (host) {
       if (!ok) { host.innerHTML = ''; host.dataset.v = ''; }
@@ -194,6 +250,7 @@
         if (keepY != null) sc.scrollTop = keepY;
         if (typeof e.onMount === 'function') try { e.onMount(host); } catch (er) { /* the panel stays without the async parts */ }
       }
+      if (ok) syncTools(host);
     }
     if (an.classList.contains('ft-on')) fullBar();
   }
@@ -306,23 +363,30 @@
         if (w) { w.open = true; setTimeout(() => w.scrollIntoView({ block: 'start' }), 120); }
         return;
       }
-      // A development's header: back to Peel (close the scope); its memo.
+      // A development's header: back to Peel (close the scope); its memo. A pick in its ⋯ menu folds it (the
+      // pick still runs: its own handler, js/devscope.js, js/share.js).
+      const mi = e.target.closest('.pnl-more [role="menuitem"]'), md = mi && mi.closest('details');
+      if (md) setTimeout(() => { md.open = false; }, 0);
       if (e.target.closest('[data-pnl-dev-close]')) { if (root.DevScope) root.DevScope.close(); return; }
       if (e.target.closest('[data-pnl-memo]')) { const p = root.DevScope && root.DevScope.current(), R = root.PeelReports; if (p && R && R.devMemo) R.devMemo(p); return; }
       // A development named in a list (This week, Largest unbuilt): opens it as the scope.
       const dv = e.target.closest('[data-pnl-dev]'); if (dv) { const N = root.PeelDevNav, q = N && N.projectByKey(dv.dataset.pnlDev); if (q) N.showDetail(q); return; }
       const fo = e.target.closest('[data-pnl-focus]'); if (fo && fo.dataset.pnlFocus && root.PeelSewerTrace) { root.PeelSewerTrace.focusSvc(fo.dataset.pnlFocus, { zoom: true, loads: false, keep: true }); return; }
-      if (e.target.closest('[data-pnl-brief]')) { const R = root.PeelReports; if (R && R.briefingPDF) R.briefingPDF(); return; }
-      // Check FSR: the site bar's own FSR cross-check (it opens there, under the tools).
-      if (e.target.closest('[data-pnl-fsr]')) { const b = document.querySelector('#site-bar [data-scope-fsr]'); if (b) { b.click(); b.scrollIntoView({ block: 'nearest' }); } }
+      if (e.target.closest('[data-pnl-brief]')) { const R = root.PeelReports; if (R && R.briefingPDF) R.briefingPDF(); }
     });
     document.addEventListener('keydown', e => {
       if (e.key === 'Escape' && closeFull()) { e.stopPropagation(); return; }
       // A list row or a figure with an action is a button: Enter / Space opens it.
       if ((e.key === 'Enter' || e.key === ' ') && e.target.classList && (e.target.classList.contains('pnl-row') || e.target.classList.contains('pnl-fig')) && e.target.getAttribute('role') === 'button') { e.preventDefault(); e.target.click(); }
     }, true);
+    // A development's ⋯ opened low in the panel (a phone's half sheet): its menu scrolled into view. (toggle
+    // does not bubble: the capture phase sees it on the map's panels and the site's page alike)
+    document.addEventListener('toggle', e => {
+      const d = e.target; if (!d || !d.open || !d.classList || !d.classList.contains('pnl-more')) return;
+      const m = d.querySelector('.site-more-menu'); if (m && m.scrollIntoView) requestAnimationFrame(() => m.scrollIntoView({ block: 'nearest' }));
+    }, true);
   }
-  const api = { typeWords, typesText, SECTIONS, NOTE, reportLink, toneOf, chip, kv, html, calcIn, areaHead, siteHead, sectionsOf, scenarioChip, set, get, clear, sync, keyNow, scopeId, openFull, closeFull, isFull };
+  const api = { typeWords, typesText, SECTIONS, NOTE, reportLink, toneOf, chip, kv, html, calcIn, areaHead, siteHead, siteTools, toolsHTML, syncTools, sectionsOf, scenarioChip, set, get, clear, sync, keyNow, scopeId, openFull, closeFull, isFull };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPanel = api;
 })(typeof window !== 'undefined' ? window : globalThis);

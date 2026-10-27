@@ -1513,8 +1513,9 @@ basis, and for every plan, sub-area and precinct.
 ## Sections: a page shows every map tab for its scope
 
 Each full-map tab's panel (Overview, Growth, Servicing, Capital, Records) is a **section**
-(`js/sections.js`). **Check a site** shows all of a development's sections under one bar:
-Summary, Growth, Servicing, Capital (the DC projects it relies on, then the EAs near it) and Files.
+(`js/sections.js`). **Check a site** shows all of a development's sections under one bar, by the
+map's tab names: Overview, Growth, Servicing (Network · FSR review), Capital (the DC projects it relies
+on, then the EAs and works near it, one panel) and Records.
 Each is the map tab's own panel, so the page and the map read the same answer and figures; a
 section whose tab builds its panel only when opened (Capital, Records) is built for the page on
 demand. Nothing about a site is only in the full map.
@@ -1528,9 +1529,10 @@ Review an FSR, Forecast and Study area are its views.
   view (the search, a list row, the map) opens on its page.
 - A site shows where it sits, **Peel › municipality › plan › site** (the plan tree's placement, as
   the plan filter); each step opens Growth in an area at that level.
-- A site's sections: Summary, Growth, Servicing, Capital, Files and **FSR review** (the cross-check
-  and what an FSR should cover). An area's: Growth (the drill-down) and Forecast.
-- A site's Summary (and the map's development Overview, the same panel) has the **path line** under
+- A site's sections: Overview, Growth, Servicing, Capital and Records; **FSR review** is Servicing's
+  second view (the cross-check and what an FSR should cover), a row under the bar on Servicing. An
+  area's: Growth (the drill-down) and Forecast.
+- A site's Overview (the map's development Overview, the same panel) has the **path line** under
   Wastewater, *Path to the plant*: from the site, the pumping stations on its sewer path in flow order, each at its
   build-out peak wet weather against firm capacity, then the plant and its uncommitted reserve (or the
   City of Toronto system), and how the outlet was set (Automatic, Confirmed or Set by hand). *Review →*
@@ -1574,8 +1576,8 @@ On a page, a pick opens what it found (`js/workspaces.js` `pageRoute` and `route
 
 | The pick | Opens |
 |---|---|
-| A development | Its page on Summary (from Review an FSR, its FSR review) |
-| A file number (a development matched by it only) | Its page at Files, the file's row in the tree marked |
+| A development | Its page on Overview (from Review an FSR, Servicing › FSR review) |
+| A file number (a development matched by it only) | Its page at Records, the file's row in the tree marked |
 | A secondary plan or character area | Growth in an area at the plan |
 | An MTSA | Its filter (as on the map), with Growth in an area at its municipality |
 | A plant, station, block, zone or South Peel water | Its scope on Servicing capacity's map view |
@@ -1838,7 +1840,8 @@ Capital has three views, **DC timing · EAs · Projects**. DC timing and DC proj
   full table has the EA table, then EA to construction (the timeline, its four lists as tables, the
   other-work, unknown-date and conflict folds, its method). The fold is kept as the reader leaves it (a
   tap on its own summary, never a redraw: phase 3's rule) and worked out once per data and
-  municipality. At a development there is no fold (the EAs near the site, as before). The EA to
+  municipality. At a development there is no fold (the EAs near the site, as before; since navigation
+  phase 5 they are in Capital's one view there, under the DC projects it relies on). The EA to
   construction chip (`#w=eaflow`, an old link) opens Capital › EAs with the fold open (`fold: 'eaflow'`,
   `js/analysis-tabs.js` `openFold`). On a page, the Capital page's **EAs** section is the `eaflow`
   page: the map's Capital › EAs (its answer, figures and lists, built when the map has not drawn it),
@@ -1866,6 +1869,91 @@ Old names still land (`js/analysis-tabs.js` `SUB_MAP`; tests/nav-aliases.test.js
 
 New links write `dcs=timing|eas|projects`. No page id, `ss=` kind or pane id changes (`#pane-dca-dcproj`
 keeps its id; it is DC timing's now, `data-sub="timing"`, above `#pane-dca-timing`).
+
+## One development layout (navigation phase 5)
+
+Navigation phase 5 (docs/architecture-review/navigation-design.md §3.6, §5, §7; pros-and-cons N-7, N-8 /
+NP-5, M1, M3, M4, AD-13). A development reads the same on its page and on the full map: one header, the
+five tabs, one view per tab except Servicing (Network · FSR review), nothing only in a full table.
+
+- **One header, on every tab and on its page** (`js/panel.js` `siteHead`, `siteTools`, `toolsHTML`): the
+  name, the stage, aerial and site servicing permit chips; the flags (stalled, appeal, needs a planned
+  main, a station or plant over its limit, the data-quality and "links to check" chips) with **☆ Watch**;
+  the identity line (latest file · types · latest submission · n files · *history ›*); one row of tools,
+  **Trace sewer · Trace water** (with a location) **· Check FSR · Servicing memo · Inquiry draft**, and
+  **⋯** for *Record allocation · Compare · Export (CSV) · Copy link*. The map's site bar (its hidden
+  title, facts and servicing line, *Tools ▾* and its FSR box) is gone; its key numbers and zone → plant
+  are the Overview's figures and Servicing rows. Each tab's panel keeps its own copy of the header, put
+  right when it is shown (☆, a trace on or off, the flags once the DC data is in: `syncTools`; browser path
+  *a development’s one header on every tab and its page* follows them, and ⋯'s four items). On a page
+  Check FSR opens the page's FSR review and Trace water and Compare open the full map first; on either it
+  scrolls the form's fold into view (the cross-check first, §3.6). The "n links to check" flag opens
+  Records › Files on the map and the site's Records section on its page. On a phone
+  the row scrolls sideways (⋯ outside it, so its menu is never clipped) and a development's header
+  scrolls with its panel: with the flags and tools it is taller than the half sheet (364–458 px of 423
+  measured), so it no longer sticks.
+- **Overview**: the answer, the four figures and the plant bar; the Servicing rows (the path line, the
+  DC projects it relies on by name), Timing with the **next milestone**, five things to confirm (the
+  rest in a fold), **At a glance** (units, people, people per unit or jobs and floor area by the site's
+  type, and how it is counted: "Tree count…" or "Counted from its permits"); folds **About** (open:
+  status and why, the latest decision, the FSR, the proposal) and **Approvals timeline**. The verdict
+  card that was Open full table's view is gone: Open full table widens the same panel (`spec.widen`).
+- **Records**: one view of its files and history: the tree, on this site, the latest activity,
+  **Related applications** (were in the full table only) and the fold **Files and events** (the Gantt
+  chart and the dated events, without the About block). Its full table draws the files with the panel's
+  own tree (`js/file-tree.js` `treeHTML`, each file with *on its own* and, with `links: true`, the link
+  that put it there: "same land: use + draft plan · medium confidence, 86% inside"; the panel's tree
+  stays compact); *← Whole development* goes back from a file opened on its own. The older list stays only
+  for a development with no tree entry. The development's sub-tabs (About · Files & history · Site) and
+  `#ov-dev` are gone; *history ›* in the header opens Records.
+- **Servicing › Network**: the path (zone → pumping stations → **Discharges to** the outlet: Automatic,
+  Confirmed or Set by hand, with *Review →* to Review outlets when its queue lists it → the plant and its
+  reserve), the four flows (water maximum day, wastewater average dry, peak dry, peak wet with I&I); folds
+  Infrastructure coming, **Water: supply route and fire flow** (was in the full table only; the fire flow
+  is looked up when the fold first opens), **Site** (constraints, the aerial check, ground, *Mains near*
+  (was "Water and wastewater"), storm sewers and ponds: the old Site sub-view, the Overview's Site fold
+  and Servicing's ground fold in one), Servicing allocation and Labs. A development with no units or jobs
+  (no servicing figures: about one in five) still gets the panel, its answer saying so, with the Site
+  and allocation folds.
+- **Servicing › FSR review** (`svs=fsr`, `js/fsr-check.js` `panelSpec`): the one host of the FSR
+  cross-check: the path and flows, the fold *The consultant’s figures against this app’s* (the form;
+  your figures are kept per development while the app is open), *What the FSR should cover* (all seven
+  items), Copy the comparison and Print / PDF; Open full table widens it. At an area it is hidden
+  (Capacity · Network), and comes back when a development opens.
+- **Capital**: one view at a development: the DC projects it relies on, then the EAs and capital works
+  within 1 km (with *Copy for review comments*; *Show EAs on the map* heads the list of the EAs near) and
+  the fold *DCs it would pay* (were a second chip and the full table). Its full table ends with the
+  site's EA table (Capital › EAs' at the site: Current · Complete · All, the systems, sort, CSV, GeoJSON,
+  *Show these on the map*, *Add to calendar (.ics)*), drawn once (`#dca-site-eas`; the hidden EAs pane is
+  emptied at a site).
+- **Its page** (`js/sections.js` `SITE`): the sections are the map's tabs by their names, **Overview ·
+  Growth · Servicing · Capital · Records** (were Summary · … · Files · FSR review); on Servicing a second
+  row, **Network · FSR review**. Review an FSR with a site (`#w=p:fsr&d=<key>`) is the site's page at
+  Servicing › FSR review; without one, its Find step. The footer keeps the Servicing memo (FSR review:
+  Copy the comparison, Print / PDF), Open the map and Another site; the Inquiry draft, ☆ Watch and
+  Check FSR are the header's.
+- **Counts**: the *Previous* counting switch is retired (owner decision 14; see *Step B1*). A development
+  the tree does not count keeps the count from its files and permits and says so. Where the tree
+  counts did not load, developments group by address and are counted from their files and permits, with
+  Reload in the top bar.
+- **The same figures on both hosts** (M3): tests/dev-parity.test.js checks the development model's
+  status, files, sub-files and units across the Overview, Growth, the trail and Records for every file
+  development (with `data/snapshot.json` and `data/tree-counts.json`); browser path *a development’s
+  page and the full map agree* checks a sample in the app. Records' copies of those figures (in
+  `js/devtab.js`) now call the development model.
+
+Help › What moved where lists each move. Old names still land (tests/nav-aliases.test.js; browser path
+*kept from before phase 5* opens the stored ones and the old links cold in the app):
+
+| Old | Where it opens now |
+|---|---|
+| `#t=svc&svs=fsr&d=<key>` (new), a stored FSR review pick | Servicing › FSR review at the development; at an area Servicing's first view, FSR review again when a development opens |
+| `#w=fsr` (the Review an FSR chip) | At a site, Servicing › FSR review; without one, the Find step on Servicing › Network |
+| `#w=p:fsr`, `lastWs=fsr`, `data-ws-page="fsr"` | The same page id: with a site, the site's page at Servicing › FSR review (the map behind it too, so the stored pick, the address and the way back stay on FSR review); without one, the Find step |
+| `t=dev`, `t=developments`, a stored `peel-dev:devsub` (About · Files · Site) | Overview; the stored sub-tab is no longer read |
+| `dcs=eas` at a development | Capital's one view (DC timing); EAs again at an area |
+| A stored `countMode: 'previous'` | Ignored: the tree count |
+| The page's sections `summary`, `files` (a search pick, `siteAt`) | The same ids, now titled Overview and Records |
 
 ## Reference and This week
 
@@ -2061,16 +2149,16 @@ From design audit, Group 7:
   - The detail panel is used only when the tool framework is absent.
   - Every other tool already used the Tool result tab.
 - **A result started at a development keeps it** (navigation phase 1, `keepDev` in
-  `PeelSvcScope.openResult`). The **Inquiry draft** is a development action (beside *Servicing
-  memo*, on its page and on the map's Overview) and stays an Export ▾ item: both call one function
+  `PeelSvcScope.openResult`). The **Inquiry draft** is a development action (in the development's
+  header, beside *Servicing memo*, on every tab and on its page) and stays an Export ▾ item: both call one function
   (`js/topbar.js` `draftInquiryResponse` → `PeelToolInquiry.draftForDevelopment`) and open one result,
   with its Copy button.
   - It opens on the map's Overview with the development still open; from a page the map opens first,
     with its way back to the page.
   - The trail reads Peel › the site › Inquiry draft. × or the site step closes the draft and shows the
     site again; Peel closes both. Opening another development replaces the draft.
-  - On a phone the draft opens the bottom sheet all the way (the site bar above it leaves a half sheet
-    no room), for the draft only: the sheet is not remembered at full, and closing the draft puts it
+  - On a phone the draft opens the bottom sheet all the way (the header and the tabs above it leave a
+    half sheet no room), for the draft only: the sheet is not remembered at full, and closing the draft puts it
     back where it was. A full sheet stops under the map's way back to the page, so it still takes a
     tap.
   - Every other result still replaces the development (one scope at a time).
@@ -2472,7 +2560,7 @@ the menu.
 
 Selecting a development moves the map to its site at your current zoom or closer, never further
 out. It no longer traces the sewer path automatically, because the trace zoomed the map out to
-the whole route to the plant. *Trace sewer* in the site bar draws the route when you want it.
+the whole route to the plant. *Trace sewer* in the development's header draws the route when you want it.
 
 ## Employment: jobs from published floor areas and permits
 
@@ -2621,8 +2709,10 @@ lists the Region's other layers.
 **The development Overview** shows the development, not just its demand:
 - Its homes (or *net of N demolished*), people and jobs, with the employment floor area. An
   employment site with no homes no longer shows "0 units".
-- Its flows: water max day, wastewater average dry weather, peak dry weather and peak wet weather.
-- The About, Files & history and Site views, below the verdict. The separate Development tab is
+- Its flows: water max day, wastewater average dry weather, peak dry weather and peak wet weather,
+  in Servicing › Network's Flows (navigation phase 5).
+- About and the approvals timeline fold under it; its files and history are Records (one view), its
+  site checks a fold of Servicing › Network (navigation phase 5). The separate Development tab is
   gone, and links to it open the Overview.
 
 **Growth** shows employment in the same layout as homes: floor area planned, permitted,
@@ -2785,20 +2875,25 @@ and your decisions in `data/tree-overrides.json`). Development keys are unchange
   signature of its planning files.
 - `js/tree-counts.js` (`PeelTreeCounts`) applies the counts after the developments are built.
   The browser never builds the trees, which takes seconds.
-- A development keeps its previous count, with the reason shown, when:
-  - it has no tree (12 developments whose only planning files are withdrawn: 2 units);
+- A development the tree does not count keeps the count from its files and permits, with the
+  reason shown, when:
+  - it has no tree (12 developments whose only planning files are withdrawn: 2 units; and every
+    development of permits only, counted from its permits);
   - its files differ from the tree build (a live refresh, or a source turned off);
-  - you entered a count for one of its files.
+  - you entered a count for one of its files;
+  - the tree counts did not load (the top bar says so, with Reload).
 - A development whose files are counted in another development's tree shows 0 and names that
   tree (30 developments).
 
 **Where it shows.**
-- **Settings › Counting:** Tree (new), the default, or Previous. Kept for one release so you
-  can compare.
-- The scenario bar and the top-bar chip say "counting: All units (tree count)" or
-  "(previous count)". Exports and share links carry the same scenario text.
+- **The Previous switch is retired** (2026-10-27, navigation phase 5; owner decision 14, approved
+  2026-10-15 for one release): one total. The rule before the tree is the fallback above, and the
+  note says *Counted from its permits* (or *Counted from its files and permits*: why). Settings ›
+  Counting only points to the Scenario control.
+- The scenario bar and the top-bar chip say "counting: All units (tree count)". Exports and share
+  links carry the same scenario text.
 - The development panel's At a glance has a **Tree count** note: the trees, their counts and
-  flags, and the previous count when it differs.
+  flags.
 
 **What moved** (snapshot 2026-10-12, live developments):
 
@@ -2829,9 +2924,10 @@ On the default view (active applications, 2021–2026), the Overview goes from 2
 
 ## Step B2: the trees are the developments
 
-Since GO 3 (2026-10-15), with Settings › Counting on **Tree**, each tree of files on one land is a
-development. An app development that held unrelated trees splits, and developments that shared
-a tree merge. **Previous** puts back today's developments and counts for one release.
+Since GO 3 (2026-10-15), each tree of files on one land is a development. An app development that
+held unrelated trees splits, and developments that shared a tree merge. (The Previous switch that
+put back today's developments for one release is retired; without the tree data, the developments
+stay grouped by address and counted from their files and permits.)
 
 **How it runs.**
 - `data/tree-counts.json` (version 2, built by `scripts/build-tree-counts.js`) lists every tree
@@ -2856,9 +2952,12 @@ a tree merge. **Previous** puts back today's developments and counts for one rel
   - share links, saved views and "Back to" resolve old keys, including branch keys
     (`<key>#<file>`);
   - the weekly changes and the phase history are copied to the new keys.
-- **Files view** (Development › Files & history): the tree's files in order. Each sits under the
-  file whose land holds it, with its rule, confidence and overlap. Opening a file opens its whole
-  branch as a sub-development (decided: one development, branches as subs).
+- **Files view** (Records at a development): the tree's files in order, drawn by the Records panel's
+  own tree (`js/file-tree.js`, navigation phase 5: one renderer). Each sits under the file whose land
+  holds it; the homes are counted once, on the file that says *counted here*; a link made by overlap
+  only is marked *check*. *On its own* opens a file's whole branch as a sub-development (decided: one
+  development, branches as subs). A development with no tree entry (the tree counts did not load, or
+  permits only) keeps the list, with each file's rule, confidence and overlap.
 
 **What moved** (live developments, snapshot 2026-10-12):
 
@@ -3189,7 +3288,9 @@ scope (SPEC §0.4). The EA lists moved here from the old "Construction & EAs" vi
   - At a municipality: its EAs plus the Region-wide studies.
   - At a development: the EAs whose study area, route or site is within 1 km, nearest first
     ("covers the site" or "350 m away"). EAs placed only approximately or not yet mapped are not
-    checked against a site, and the panel says so.
+    checked against a site, and the panel says so. (Navigation phase 5: at a development these
+    lists, with the capital works within 1 km, are part of Capital's one view, under the DC
+    projects it relies on; EAs is no chip there.)
 - **Tiles.** Current EAs, milestones in the next 90 days, comment or review periods open now, and
   EAs completed in the last two years.
 - **Coming up.** Dated public meetings, comment and review deadlines and report releases in the
@@ -3325,7 +3426,7 @@ re-renders (Home while its figures load, a filter, the scenario), the open box c
 
 Now:
 - **Build-tagged data:** every `data/*.json` request carries the build (`?v=<build>`, from `<meta name="app-version">`; `js/util.js`), as the scripts and styles do. A copy cached by the previous build never answers the new code.
-- **Tree counts:** the developments are built once the tree counts are in (a 20 s guard only for a request that never ends). If they fail, the count says "previous counts: tree counts didn't load", with a Reload button.
+- **Tree counts:** the developments are built once the tree counts are in (a 20 s guard only for a request that never ends). If they fail, the count says "tree counts didn't load: counted from the files and permits", with a Reload button.
 - **Old links:** a link from before Completed was shown by default still opens without Completed, and now says so.
 
 **Counts found online** (`data/unit-lookups.json`, used only when no planning file states a count). Each one with a link was checked against its page on 2026-10-17 (`scripts/probe-unit-lookups.js`, `probe-sources mode=unit-lookups`; the sandbox can't reach the sites).

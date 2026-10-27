@@ -328,7 +328,6 @@
   // workbook — dcTimingRows() in js/export-workbook.js, used by
   // exportWorkbook()'s DC sheet.)
   document.addEventListener('click', e => {
-    if (e.target.closest('[data-memo]') && DN().getCurrentProject()) return devMemo(DN().getCurrentProject());
     const a = e.target.closest('[data-area-report]'); if (!a) return;
     if (a.dataset.areaReport === 'sel') areaReport([...AS().selection.values()], `Area report – ${fmtNum(AS().selection.size)} selected developments`, AS().selAreas);
     else { const where = [App().state.muni, ...Object.keys(MM().AREA_F).map(k => PA().multiSummary(k, true))].filter(Boolean).join(', ') || 'All of Peel'; areaReport(App().state.filtered, `Area report – ${where}`); }

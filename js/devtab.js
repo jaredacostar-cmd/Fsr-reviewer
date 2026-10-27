@@ -1,25 +1,26 @@
-/* Development analysis tab: the About / Files & history / Site sub-views.
+/* A development's files and history (Records at a development, its full table: #records-body), and the
+ * parts its other views fold in: About and the approvals timeline (Overview), the files and events
+ * (Records' panel), Site (Servicing › Network). Navigation phase 5 retired the About / Files & history /
+ * Site sub-views and #ov-dev (one development layout, navigation-design §3.6).
  *
- * Worker B (Phase 3: "Development as a scope, not a side panel"). Worker A owns
- * the tab shell in index.html (`#pane-dev`, `.dev-subtabs` with
- * `[data-devsub]` buttons, `#pane-dev-body`, and the `<script src="js/devtab.js">`
- * tag). This module owns ONLY what renders inside `#pane-dev-body`.
- *
- * Public contract: `window.DevTab = { render(sub), setSub(sub) }`.
- * The scoped project comes from `window.DevScope.current()` (Worker A); every
- * access is guarded so this module also works standalone / under `node --test`.
+ * Public contract: `window.DevTab = { render(host), partHTML(p, part), fillParts(p, parts), … }`.
+ * The scoped project comes from `window.DevScope.current()`; every access is guarded so this module also
+ * works standalone / under `node --test`.
  *
  * Reuse strategy (no edits to js/app.js): the brief/history/files/record/aerial
  * builders in app.js live inside its IIFE, so they are not callable here. The
  * small ones are copied into this module (each marked "copied from js/app.js"),
  * the public ones are called through their modules (`window.PeelPhases`,
  * `window.PeelBrief`, `window.PeelProvenance`, `window.PeelArcGIS`,
- * `window.PeelAerial`, `window.PeelAreas`, `window.PeelApp`). New container ids
- * use a `devtab-` prefix so they never collide with the old `#detail` panel ids.
+ * `window.PeelAerial`, `window.PeelApp`). The derived figures are not copied (M3,
+ * navigation phase 5): the status is js/dev-detail.js's, the file tree, a file on its
+ * own and the related developments js/dev-nav.js's, and the files draw with
+ * js/file-tree.js's tree (M4). New container ids use a `devtab-` prefix so they
+ * never collide with the old `#detail` panel ids.
  */
 (function (root) {
   'use strict';
-  // The aerial and ground boxes can be on the page twice (the development's Site view and the Servicing
+  // A box can be on the page twice (the map's panel kept while a page shows it, the full table and the
   // panel's fold): fill the one on screen.
   const byIdShown = id => { const all = typeof document !== 'undefined' ? [...document.querySelectorAll(`[id="${id}"]`)] : []; return all.find(e => e.getClientRects().length) || all[0] || null; };
 
@@ -28,12 +29,15 @@
   const B = () => root.PeelBrief;
   const PV = () => root.PeelProvenance;
   const ARC = () => root.PeelArcGIS;
-  const Areas = () => root.PeelAreas;
   const Aerial = () => root.PeelAerial;
   const CFG = () => root.PEEL_CONFIG;
   const app = () => root.PeelApp || null;
   const state = () => (app() && app().state) || null;
   const hasDOM = () => typeof document !== 'undefined';
+  // The development model's own functions (M3, navigation phase 5: no copies here). Both modules load after
+  // this one, so they are read when called.
+  const DD = () => root.PeelDevDetail;
+  const N = () => root.PeelDevNav;
 
   // ---- Tiny helpers (copied from js/app.js; the canonical ones live there) ----
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
@@ -61,17 +65,10 @@
   const outBadge = (it, s) => it.outcome || s.vote ? `<span class="c-out c-${String(it.outcome || s.vote).toLowerCase().replace(/\s.*$/, '')}">${esc(s.vote || (OUTCOME_LABEL[it.outcome] || it.outcome))}</span>` : '';
   const OUTCOME_LABEL = { CARRIED: 'Carried', 'CARRIED AS AMENDED': 'Carried as amended', DEFEATED: 'Defeated', LOST: 'Lost', DEFERRED: 'Deferred', REFERRED: 'Referred', RECEIVED: 'Received', WITHDRAWN: 'Withdrawn', APPROVED: 'Approved', ADOPTED: 'Adopted' };
 
-  // ---- Sub-view state ----------------------------------------------------------
-  const DEVSUBS = ['about', 'files', 'site'];
-  const SUB_KEY = 'peel-dev:devsub';
-  const readSub = () => { try { return localStorage.getItem(SUB_KEY); } catch (e) { return null; } };
-  const writeSub = v => { try { localStorage.setItem(SUB_KEY, v); } catch (e) { /* private mode */ } };
-  const currentSub = () => DEVSUBS.includes(readSub()) ? readSub() : 'about';
-  function syncSubtabs() {
-    if (!hasDOM()) return;
-    const cur = currentSub();
-    document.querySelectorAll('[data-devsub]').forEach(b => b.setAttribute('aria-selected', String(b.dataset.devsub === cur)));
-  }
+  // ---- Where the full view renders ----------------------------------------------
+  // Records' body (js/records-tab.js render): it carries data-dev while it shows a development.
+  const HOST = () => (hasDOM() ? document.getElementById('records-body') : null);
+  const scrollTop = () => { if (hasDOM()) { const sc = document.getElementById('analysis-panes'); if (sc) sc.scrollTop = 0; } };
 
   // ---- Scoped project (Worker A's DevScope) + drill-down override ---------------
   // Drill-down (one application on its own, or across to a related development)
@@ -88,7 +85,7 @@
   function navigate(p, backTo) {
     if (!p) return;
     const S = root.DevScope, N = root.PeelDevNav;
-    // (the file's own development, as a click on its boundary opens it: header, site bar and tabs follow)
+    // (the file's own development, as a click on its boundary opens it: header and tabs follow)
     if (N && N.showDetail) { drill = null; N.showDetail(p); return; }
     if (S && typeof S.set === 'function') { drill = null; S.set(p); }
     else {
@@ -96,70 +93,12 @@
       drill = p; drill._dtBack = backTo || null; drillBase = scope && scope.key;
     }
     render();
-    if (hasDOM()) { const body = document.getElementById('pane-dev-body'); if (body) body.scrollTop = 0; }
+    scrollTop();
   }
 
-  // ---- Status (copied from js/app.js) -------------------------------------------
-  const STATUS_SIGNALS = [
-    [/\b(OMB|OLT|LPAT)\b|appeal/i, 'appeal', 'Under appeal to the Ontario Land Tribunal (formerly the OMB / LPAT) — the decision rests with the Tribunal'],
-    [/withdrawn/i, 'stop', 'Withdrawn by the applicant'],
-    [/refused/i, 'stop', 'Refused'],
-    [/cancel|revoked/i, 'stop', 'Cancelled or revoked'],
-    [/deemed abandoned|lapsed|expired/i, 'stop', 'Lapsed, expired or deemed abandoned'],
-    [/inactive/i, 'stall', 'Marked inactive by the municipality (no activity on the file)'],
-    [/recirculation|resubmi/i, 'info', 'Resubmission being recirculated for comments (revisions after the first review)'],
-    [/initial submission rejected|incomplete|invalid/i, 'info', 'Submission rejected, incomplete or invalid — waiting on the applicant'],
-    [/public mtg complete|public meeting/i, 'info', 'Statutory public meeting held; recommendation report to follow'],
-    [/pre.?public mtg|pre public/i, 'info', 'Awaiting the statutory public meeting'],
-    [/comments released/i, 'info', 'Pre-consultation comments released to the applicant'],
-    [/staff review complete|satisfactory/i, 'info', 'Staff review complete'],
-    [/endorsed by council|adoption|adopted/i, 'ok', 'Endorsed or adopted by council'],
-    [/draft approv/i, 'ok', 'Draft approved — conditions to clear before registration'],
-    [/registered|registration|m-plan/i, 'ok', 'Plan registered or being registered'],
-    [/agreement/i, 'ok', 'Agreement being prepared or executed'],
-    [/\bmzo\b/i, 'ok', "Approved by Minister's Zoning Order"],
-    // Mississauga lists "Withheld" among its active statuses (City Planning Data Hub): an open
-    // file with no decision yet, never in its approved layer.
-    [/withheld/i, 'info', 'Active application, no decision yet'],
-  ];
-  function planApprovedNote(p) {
-    // Zoning approved (a zoning file approved, or a zoning by-law passed at council) with no draft or
-    // site plan approved yet: the development stays under review (SPEC 1.2).
-    const z = p.zoningApproved;
-    if (z && p.rank < P().PHASE_BY_KEY.approved.rank) return `Zoning approved${z.bylaws.length ? ` (By-law ${z.bylaws.slice(0, 3).join(', ')}${z.date ? `, ${z.date}` : ''})` : z.date ? ` (${z.date})` : ''}${z.refs.length ? ` on ${z.refs.slice(0, 3).join(', ')}` : ''}; no draft plan or site plan approved yet`;
-    const a = p.planApproved;
-    if (!a || p.rank >= P().PHASE_BY_KEY.approved.rank) return '';
-    const sp = p.records.some(r => r.kind === 'application' && r.stage === 'siteplan' && r.phase !== 'cancelled');
-    return `Official plan / condominium approved${a.refs.length ? ` (${a.refs.slice(0, 2).join(', ')}${a.date ? `, ${fmtDate(a.date)}` : ''})` : ''}; ${sp ? 'site plan not yet approved' : 'no draft plan or site plan approved yet'}`;
-  }
-
-  function statusOf(p) {
-    const apps = p.records.filter(r => r.kind === 'application');
-    const seen = new Map();
-    for (const r of apps) for (const [re, kind, text] of STATUS_SIGNALS) if (re.test(r.statusRaw || '')) {
-      if (!seen.has(text)) seen.set(text, { kind, text, files: [], main: false });
-      seen.get(text).files.push(`${r.ref || 'file'} (“${r.statusRaw}”)`);
-      if (recGroup(r) !== 'precon') seen.get(text).main = true;
-      break;
-    }
-    const setBy = p.phaseRecs && p.phaseRecs.length ? new Set(p.phaseRecs.map(r => r.uid)) : null;
-    const ev = p.timeline.filter(t => t.phase === p.phase && (!setBy || setBy.has(t.record))).sort((a, b) => b.date - a.date)[0];
-    const label = P().PHASE_BY_KEY[p.phase].label;
-    const why = ev ? `${esc(label)} since ${fmtDate(ev.date)} — ${esc(ev.text.replace(/^[^·]*· /, ''))} on ${esc(ev.tag)}` : `${esc(label)}: from the status of ${esc(apps.map(r => `${r.ref} (“${r.statusRaw}”)`).slice(0, 2).join(', ') || 'its files')}`;
-    const pa = planApprovedNote(p);
-    const why2 = pa ? `${why}. ${esc(pa)}` : why;
-    // SPEC 1.3: active · stalled · under appeal, on the latest file event, permit or council item.
-    const ps = P().proposedStateOf(p);
-    const stalled = !!ps && ps.state === 'stalled', appealed = !!ps && ps.state === 'appeal';
-    const lastAt = P().lastActivityOf(p);
-    const years = lastAt ? (Date.now() - lastAt) / (365.25 * 864e5) : 0;
-    const RANK = { appeal: 0, stop: 1, stall: 2, ok: 3, info: 4 };
-    const sig = [...seen.values()].sort((a, b) => RANK[a.kind] - RANK[b.kind]);
-    const cause = stalled ? (sig.find(x => x.kind === 'appeal') ? 'while under appeal' : sig.find(x => x.kind === 'stall') ? 'and marked inactive' : sig.find(x => /Draft approved/.test(x.text)) ? 'after draft approval (conditions not yet cleared)' : 'with no reason in the municipal data — check the council and committee items') : '';
-    const lastOf = r => r.events.length ? Math.max(...r.events.map(e => +e.date)) : 0;
-    const latest = apps.slice().sort((a, b) => lastOf(b) - lastOf(a))[0];
-    return { sig, why: why2, stalled, appealed, state: ps ? ps.state : null, years, lastAt, cause, latest, latestAt: latest ? lastOf(latest) : 0 };
-  }
+  // ---- Status: js/dev-detail.js's (the Overview's About, the site's flags and Records read one copy) ----
+  const statusOf = p => DD().statusOf(p);
+  const planApprovedNote = p => DD().planApprovedNote(p);
 
   // ---- How the phase was set (copied from js/app.js) ------------------------------
   const STAGE_NAME = { precon: 'Pre-consultation', master: 'Official plan / zoning / subdivision', siteplan: 'Site plan', condo: 'Condominium', other: 'Other planning file', permit: 'Building permits' };
@@ -236,7 +175,7 @@
     if (cb) flags.push(['info', `Condominium ${cb.refs.join(', ')} ${cb.refs.length === 1 ? 'is' : 'are'} registered: a condominium is registered once its building stands, so ${fmtNum(cb.units)} home${cb.units === 1 ? ' is' : 's are'} counted as built${p.phase === 'completed' ? '' : ' and the site as under construction at least'}, whatever the building permits in the open data say.`]);
     const conv = recs.filter(r => r.conversion && r.phase !== 'cancelled');
     if (conv.length) flags.push(['info', `${conv.slice(0, 2).map(r => r.ref).join(', ')}${conv.length > 2 ? ` +${conv.length - 2}` : ''} ${conv.length === 1 ? 'converts' : 'convert'} an existing building to condominium tenure: no new homes, so ${conv.length === 1 ? 'its' : 'their'} units are not counted.`]);
-    const appeal = live.filter(r => r.kind === 'application' && STATUS_SIGNALS[0][0].test(r.statusRaw || ''));
+    const appeal = live.filter(r => r.kind === 'application' && DD().STATUS_SIGNALS[0][0].test(r.statusRaw || ''));
     if (appeal.length) flags.push(['warn', `Under appeal at the Ontario Land Tribunal (${appeal.map(r => `${r.ref || 'no number'}: “${r.statusRaw}”`).join('; ')}): ${appeal.some(r => r.phase === 'approved') ? 'the status is read as approved, but the decision is not final until the Tribunal rules' : 'the Tribunal, not council, will decide'}.`]);
     const demos = recs.filter(r => P().isDemolition(r) && r.phase !== 'cancelled');
     if (demos.length && live.some(r => !P().isDemolition(r))) flags.push(['info', `${demos.length} demolition permit${demos.length === 1 ? '' : 's'} (${demos.slice(0, 2).map(r => r.ref).join(', ')}) ${demos.length === 1 ? 'clears' : 'clear'} the site and ${demos.length === 1 ? 'does' : 'do'} not set the phase.`]);
@@ -337,11 +276,11 @@
       return `<details class="tl-year"${i < 2 ? ' open' : ''}><summary><strong>${y}</strong> <span class="muted small">${sum}</span></summary><ol class="tl2">${xs.map(evHTML).join('')}</ol></details>`;
     }).join('');
   }
-  // Files, events and proposal: one section for what the Files tree, History (with the source records)
-  // and About used to show apart. The proposal and its status first; then the Gantt chart
-  // (js/dev-gantt.js), its planning files in the file tree's order, each row opening to the file's
-  // dated events and source record (the stage row to the stages reached, the council row to the
-  // council items, a permit group to its permits); then every dated event in date order, folded.
+  // Files and events (Records' fold; navigation phase 5: the proposal and its status are the Overview's
+  // About): one section for what the Files tree and History (with the source records) used to show apart.
+  // The Gantt chart (js/dev-gantt.js), its planning files in the file tree's order, each row opening to
+  // the file's dated events and source record (the stage row to the stages reached, the council row to
+  // the council items, a permit group to its permits); then every dated event in date order, folded.
   function fileRecOf(p) {
     const by = new Map();
     for (const r of p.records) if (r.kind === 'application') {
@@ -358,18 +297,12 @@
       ${ev.length ? `<ol class="gt-evs small">${ev.map(e => `<li><span class="d">${fmtDate(e.date)}</span>${dot(e.phase)}<span>${esc(P().humanizeField(e.label || ''))}</span></li>`).join('')}</ol>` : '<p class="small muted">No dated events on this file.</p>'}
       ${recordProvHTML(r)}<details class="gt-fields"><summary class="small">Every field as published</summary><table class="rec-t">${recordRows(r)}</table></details>`;
   }
-  function storyHTML(p, st, wrap = false) {
-    const cancelled = p.phase === 'cancelled';
-    const steps = P().PHASES.map(s => {
-      const reached = !cancelled && s.rank <= p.rank, when = p.milestones[s.key];
-      return `<li class="${s.key === p.phase ? 'current done' : reached ? 'done' : 'todo'}">${dot(s.key)}<span class="lbl">${esc(s.label)}</span><span class="when">${when ? fmtDate(when) : reached ? 'reached' : ''}</span></li>`;
-    }).join('');
-    evRecs = new Map(p.records.map(r => [r.uid, r]));
-    const all = devEvents(p), key = keyEvents(all), council = all.filter(x => x.type === 'council');
-    const st2 = state(), byRef = new Map(p.records.map(r => [r.ref, r]));
+  // About (the Overview's fold, navigation phase 5): the status with its why and the signals, the latest
+  // decision, the servicing report and the proposal.
+  function aboutBlockHTML(p, st) {
+    const byRef = new Map(p.records.map(r => [r.ref, r]));
     const fileLink = f => (byRef.has(f) ? `<button type="button" class="tr-ref" data-dev-file="${esc(f)}">${esc(f)}</button>` : esc(f));
-    // The proposal and its status (what the About fold held), the reasons under the status.
-    const about = `<section class="brief" data-info="dev-brief">
+    return `<section class="brief" data-info="dev-brief">
       ${brow('Status', `<p class="small">${dot(p.phase)} <strong>${esc(P().PHASE_BY_KEY[p.phase].label)}</strong>${p.last ? ` · latest activity ${fmtDate(new Date(p.last))}` : ''}</p>
         ${st.why ? `<p class="small muted">${st.why}</p>` : ''}
         ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no file event, permit or council item since ${fmtDate(new Date(st.lastAt))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}
@@ -378,6 +311,20 @@
       ${p.records.some(r => r.kind === 'application') ? brow('Servicing report', fsrBoxHTML(p)) : ''}
       ${p.description ? brow('Proposal', `<p class="desc-clamp small">${esc(p.description)}</p>`) : ''}
     </section>`;
+  }
+  // The stages reached, each with its date (the Overview's Approvals timeline; the Gantt chart's stage row).
+  function stepperHTML(p) {
+    const cancelled = p.phase === 'cancelled';
+    return `<ol class="stepper compact">${P().PHASES.map(s => {
+      const reached = !cancelled && s.rank <= p.rank, when = p.milestones[s.key];
+      return `<li class="${s.key === p.phase ? 'current done' : reached ? 'done' : 'todo'}">${dot(s.key)}<span class="lbl">${esc(s.label)}</span><span class="when">${when ? fmtDate(when) : reached ? 'reached' : ''}</span></li>`;
+    }).join('')}</ol>`;
+  }
+  // o.about === false: without About (the Overview has it; Records' fold and full table, navigation phase 5).
+  function storyHTML(p, st, wrap = false, o = {}) {
+    evRecs = new Map(p.records.map(r => [r.uid, r]));
+    const all = devEvents(p), key = keyEvents(all), council = all.filter(x => x.type === 'council');
+    const st2 = state();
     const FT = root.PeelFileTree, d = FT && FT.flat && !p.parent ? FT.of(p) : null;
     const newest = P().newestFirst(p.records.filter(r => r.kind === 'application'))[0];
     // The permits under each planning file (its site servicing permits, its building permits as one
@@ -387,7 +334,7 @@
       const h = r.node && tOpts.after ? tOpts.after(r.node.n) : '';
       return h ? `<div class="tr gt-after"><p class="small"><strong>Permits under ${esc(r.ref)}</strong></p>${h}</div>` : '';
     };
-    const body = r => r.kind === 'stage' ? `<ol class="stepper compact">${steps}</ol>`
+    const body = r => r.kind === 'stage' ? stepperHTML(p)
       : r.kind === 'council' ? `<ol class="tl2">${council.map(evHTML).join('')}</ol>`
       : r.kind === 'group' ? r.recs.map(recHTML).join('')
       : r.kind === 'file' ? `${r.rec ? fileBodyHTML(r.rec) : ''}${after(r)}` : '';
@@ -396,14 +343,13 @@
       <div class="seg tl-toggle" role="group" aria-label="Events shown"><button type="button" class="btn small on" data-dt-tl="key">Key events</button><button type="button" class="btn small" data-dt-tl="all">All dated events (${fmtNum(all.length)})</button></div>
       <p class="tl-only small" hidden>Only <b data-tl-only-name></b> events · <button type="button" class="btn small link" data-tl-type="">Show all</button></p>
       <div data-dt-tlv="key">${evListHTML(key)}</div><div data-dt-tlv="all" hidden>${evListHTML(all)}</div></details>`;
-    const inner = `${about}<div id="devtab-recs">${chart}${tOpts.foot ? `<div class="tr">${tOpts.foot}</div>` : ''}</div>${root.PeelEarlierFiles ? root.PeelEarlierFiles.html(p) : ''}${events}
+    const inner = `${o.about === false ? '' : aboutBlockHTML(p, st)}<div id="devtab-recs">${chart}${tOpts.foot ? `<div class="tr">${tOpts.foot}</div>` : ''}</div>${root.PeelEarlierFiles ? root.PeelEarlierFiles.html(p) : ''}${events}
       <p class="small muted">Stage changes from the weekly check; council and committee items that name the files (${st2 && st2.council ? 'agendas and minutes since 2019' : 'loading'}); file and permit dates and every field from the municipal records.</p>`;
     evRecs = null;
     return wrap
-      ? `<details class="sect dev-hist" id="devtab-hist" open><summary><h2 class="section-title" data-info="dev-history">Files, events and proposal</h2><span class="muted small sect-sum">${p.first ? `since ${fmtDate(p.first).slice(0, 4)}` : ''}${council.length ? ` · ${council.length} council` : ''} · ${fmtNum(p.records.length)} source records</span></summary>${inner}</details>`
+      ? `<details class="sect dev-hist" id="devtab-hist" open><summary><h2 class="section-title" data-info="dev-history">${o.about === false ? 'Files and events' : 'Files, events and proposal'}</h2><span class="muted small sect-sum">${p.first ? `since ${fmtDate(p.first).slice(0, 4)}` : ''}${council.length ? ` · ${council.length} council` : ''} · ${fmtNum(p.records.length)} source records</span></summary>${inner}</details>`
       : `<div class="dev-hist">${inner}</div>`;
   }
-  const devHistoryHTML = (p, st) => storyHTML(p, st, true);
 
   // ---- Council items + latest decision (copied from js/app.js) ---------------------
   function councilItems(p) {
@@ -440,8 +386,11 @@
     councilLoading = fetch('data/council.json', { cache: 'no-cache' }).then(r => r.ok ? r.json() : null).then(d => {
       st.council = d || { meetings: {}, files: {} };
       if (liveKey === p.key) rerenderPreserve();
-      // The Overview panel's About fold reads the same council items (Stage 3).
+      // The Overview panel's About fold reads the same council items (Stage 3), and Records' Files and events
+      // fold its council rows (drawn again where Records has a panel for this development).
       if (liveKey === p.key && root.PeelOverviewTab && root.PeelOverviewTab.renderOverview) root.PeelOverviewTab.renderOverview();
+      const PN = root.PeelPanel, RT = root.PeelRecordsTab, e = liveKey === p.key && PN && PN.get ? PN.get('records:files') : null;
+      if (e && e.scope === `dev:${p.key}` && RT && RT.filesPanelSpec) PN.set('records:files', RT.filesPanelSpec(p));
     }).catch(() => { st.council = { meetings: {}, files: {} }; });
   }
   function latestDecisionHTML(p, st) {
@@ -467,133 +416,34 @@
       </div>`;
   }
 
-  // ---- Files, drill-down, related developments (copied from js/app.js) --------------
-  const SUBS = new Map();
-  // (a rebuild makes new developments: the subs built on the old ones go, as js/app.js clears
-  // js/dev-nav.js's at every rebuild)
-  let subsOf = null;
-  const freshSubs = () => { const st = state(); if (st && st.projects !== subsOf) { SUBS.clear(); subsOf = st.projects; } };
-  const isFormal = r => r.kind === 'application' && (r.stage || P().stageOf(r)) !== 'precon';
-  const isPrecon = r => r.kind === 'application' && (r.stage || P().stageOf(r)) === 'precon';
-  const civicOf = r => { const a = P().normalizeAddress(r.address); return a && /\d/.test(a) && !/^0+(\s*-\s*0+)?\s/.test(a) ? a : ''; };
-  const fracCache = new WeakMap();
-  function landShare(a, b) {
-    let m = fracCache.get(a); if (!m) fracCache.set(a, m = new WeakMap());
-    if (m.has(b)) return m.get(b);
-    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-    for (const g of a) for (const [x, y] of g) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
-    let n = 0, k = 0;
-    for (let i = 0; i < 12; i++) for (let j = 0; j < 12; j++) {
-      const x = x0 + (x1 - x0) * (i + 0.5) / 12, y = y0 + (y1 - y0) * (j + 0.5) / 12;
-      if (!P().pointInRings(x, y, a)) continue; n++; if (P().pointInRings(x, y, b)) k++;
-    }
-    const f = n ? k / n : 0; m.set(b, f); return f;
-  }
-  function landRel(a, b) {
-    if (civicOf(a) && civicOf(a) === civicOf(b)) return 'same address';
-    if (a.poly && b.poly) {
-      const ab = landShare(a.poly, b.poly), ba = landShare(b.poly, a.poly);
-      if (ab >= 0.9 && ba < 0.9) return 'within it';
-      if (ba >= 0.9 && ab < 0.9) return 'covers it';
-      return ab >= 0.15 || ba >= 0.15 ? 'overlapping land' : null;
-    }
-    const pt = a.poly ? b : a, pl = a.poly ? a : b;
-    return pl.poly && pt.lat != null && P().pointInRings(pt.lng, pt.lat, pl.poly) ? (pl === a ? 'covers it' : 'within it') : null;
-  }
-  const sameLand = (a, b) => !!landRel(a, b);
-  function fileTree(p) {
-    // Step B2: a tree development lists its files in tree order, with their links.
-    const TG = window.PeelTreeGroups, tRows = TG && !p.parent && state() && state().treeGrouped ? TG.fileRows(p) : null;
-    if (tRows && tRows.length) return tRows;
-    const formal = p.records.filter(isFormal), pre = p.records.filter(isPrecon), used = new Set();
-    const rows = formal.map(a => ({ a, pre: pre.filter(r => !used.has(r) && sameLand(a, r) && used.add(r)) }));
-    for (const r of pre) if (!used.has(r)) rows.push({ a: r, pre: [] });
-    const start = r => r.events.length ? Math.min(...r.events.map(e => +e.date)) : Infinity;
-    return rows.sort((x, y) => start(x.a) - start(y.a));
-  }
-  // Minimal servicing tagging for a sub-project (app.js `tagAreas` is private and
-  // needs its sewer-model internals; the pressure-zone / drainage lookup is the
-  // part the Development tab's own views need).
-  function tagAreasLite(p) {
-    const st = state(), Ar = Areas();
-    if (!st || !st.servicing || !Ar || p.lat == null) return;
-    p.pz = Ar.locate(st.servicing.zones, p.lng, p.lat);
-    p.dr = Ar.locate(st.servicing.drainage, p.lng, p.lat);
-  }
-  function subProject(p, ref) {
-    if (!p) return null;
-    freshSubs();
-    const key = `${p.key}#${ref}`;
-    if (SUBS.has(key)) return SUBS.get(key);
-    const row = fileTree(p).find(t => t.a.ref === ref); if (!row) return null;
-    const a = row.a;
-    const permits = a.poly ? p.records.filter(r => r.kind === 'permit' && r.lat != null && P().pointInRings(r.lng, r.lat, a.poly)) : [];
-    // A tree row opens its whole branch (the file and the files under it).
-    const own = row.branch ? row.branch : [a, ...row.pre];
-    // (on copies of the records: mergeProject writes each permit's placement onto the records it is given)
-    const sub = P().mergeProject(key, [...own, ...permits.filter(r => !own.includes(r))].map(r => ({ ...r })), {});
-    sub.parent = p; sub.subRef = ref; sub.title = `${ref} · ${a.address || p.title}`;
-    if (a.lat != null) { sub.lat = a.lat; sub.lng = a.lng; }
-    tagAreasLite(sub);
-    const st = state(), Ar = Areas();
-    if (st && st.areas && Ar) { sub.sp = Ar.locate(st.areas.secondaryPlans, sub.lng, sub.lat, sub.municipality); sub.mtsa = Ar.locate(st.areas.mtsas, sub.lng, sub.lat, sub.municipality); }
-    SUBS.set(key, sub);
-    return sub;
-  }
-  function projectByKey(k) {
-    const st = state(); if (!st || !k) return null;
-    freshSubs();
-    if (SUBS.has(k)) return SUBS.get(k);
-    // (every development built, the ones held aside too: site activity, dormant)
-    const find = key => (st.projects.all || st.projects).find(x => x.key === key);
-    // (a development's own key first: a land split's key ends "#<n>" like a branch's, phases.js buildProjects)
-    const own = find(k); if (own) return own;
-    const i = String(k).lastIndexOf('#'), base = i > 0 ? k.slice(0, i) : k;
-    const p = i > 0 ? find(base) : null;
-    if (!p) {
-      // A key saved before the trees became the developments (Step B2): resolve it.
-      const TG = window.PeelTreeGroups, list = st.projects;
-      const to = TG && TG.resolve(k, x => list.some(q => q.key === x));
-      return to && to !== k ? projectByKey(to) : null;
-    }
-    return subProject(p, k.slice(i + 1));
-  }
-  // Plain bbox for a development (app.js `projectBounds` needs Leaflet).
-  function devBbox(p) {
-    let x0 = Infinity, y0 = Infinity, x1 = -Infinity, y1 = -Infinity;
-    for (const r of p.records) {
-      if (r.poly) for (const ring of r.poly) for (const [x, y] of ring) { x0 = Math.min(x0, x); y0 = Math.min(y0, y); x1 = Math.max(x1, x); y1 = Math.max(y1, y); }
-      else if (r.lat != null) { x0 = Math.min(x0, r.lng); y0 = Math.min(y0, r.lat); x1 = Math.max(x1, r.lng); y1 = Math.max(y1, r.lat); }
-    }
-    return x0 === Infinity ? null : { x0, y0, x1, y1, intersects: b => !(b.x1 < x0 || b.x0 > x1 || b.y1 < y0 || b.y0 > y1) };
-  }
-  function relatedProjects(p) {
-    const st = state(); if (!st) return [];
-    if (p._rel && p._rel.list === st.projects) return p._rel.out;
-    const mine = p.records.filter(r => r.kind === 'application' && r.phase !== 'cancelled' && (r.poly || r.lat != null));
-    const b = devBbox(p), out = [];
-    if (b && mine.length) for (const q of st.projects) {
-      if (q === p || q === p.parent || q.phase === 'cancelled') continue;
-      const qb = devBbox(q); if (!qb || !b.intersects(qb)) continue;
-      const theirs = q.records.filter(r => r.kind === 'application' && r.phase !== 'cancelled');
-      const hits = [];
-      for (const r of theirs) { const m = mine.find(m => landRel(r, m)); if (m) hits.push({ r, how: landRel(r, m), m }); }
-      if (hits.length) out.push({ q, hits });
-    }
-    out.sort((x, y) => (y.q.units || 0) - (x.q.units || 0));
-    p._rel = { list: st.projects, out };
-    return out;
-  }
+  // ---- Files, drill-down, related developments: js/dev-nav.js's (one cache of files opened on their own,
+  // cleared when the developments are rebuilt: js/app.js). Without the app's state (node --test) there is no
+  // tree, file or development to find.
+  const isFormal = r => N().isFormal(r);
+  const isPrecon = r => N().isPrecon(r);
+  const fileTree = p => (state() ? N().fileTree(p) : []);
+  const subProject = (p, ref) => (p && state() ? N().subProject(p, ref) : null);
+  const projectByKey = k => (k && state() ? N().projectByKey(k) : null);
+  const relatedProjects = p => (state() ? N().relatedProjects(p) : []);
   const fileLine = r => `${esc(r.ref || 'File')}${r.type ? ` · ${esc(r.type)}` : ''}${r.statusRaw ? ` · <em>${esc(r.statusRaw)}</em>` : ''}`;
   function filesHTML(p) {
-    const tree = p.parent ? [] : fileTree(p), formal = tree.filter(t => isFormal(t.a));
+    // The files as the Records panel draws them (M4, navigation phase 5: one tree renderer, js/file-tree.js),
+    // the homes counted once on the file that says "counted here", each file openable on its own; the list
+    // below only where the development has no tree entry (the tree counts did not load, or permits only).
+    const FT = root.PeelFileTree, d = FT && !p.parent ? FT.of(p) : null;
+    const tree = p.parent || d ? [] : fileTree(p), formal = tree.filter(t => isFormal(t.a));
     // Step 2 (js/sites.js): the other proposals and the site activity on this development's land.
     const TGs = window.PeelTreeGroups, site = TGs && TGs.siteParts ? TGs.siteParts(p, (l => l && (l.all || l))((state() || {}).projects)) : [];
     const onSite = new Set(site.map(q => q.key));
     const rel = relatedProjects(p).filter(x => !onSite.has(x.q.key)).slice(0, 12);
     let html = '';
     const TG = window.PeelTreeGroups, treeRows = tree.length && tree[0].branch;
-    if (formal.length > 1 || (formal.length && tree.length > formal.length) || (treeRows && tree.length > 1)) {
+    if (d && FT.summary(d).files > 1) {
+      const latest = (P().newestFirst(p.records.filter(r => r.kind === 'application'))[0] || {}).ref;
+      html += `<details class="sect" id="devtab-files" open><summary><h2 class="section-title" data-info="dev-files">Applications in this development</h2><span class="muted small sect-sum">${fmtNum(FT.summary(d).files)} files · open one on its own</span></summary>
+        ${FT.treeHTML(d, FT.recLookup(p), { dot: k => dot(k), latest, own: true, links: true, ...(root.PeelDcGate ? root.PeelDcGate.treeOpts(p, d) : {}) })}
+        <p class="small muted">A file number opens its source record in History; under each file, the rule that linked it, how sure that link is and how much of its land lies inside; “on its own” opens the file and the files under it.</p></details>`;
+    } else if (formal.length > 1 || (formal.length && tree.length > formal.length) || (treeRows && tree.length > 1)) {
       const counted = p.buildout && p.buildout.basis;
       html += `<details class="sect" id="devtab-files" open><summary><h2 class="section-title" data-info="dev-files">Applications in this development</h2><span class="muted small sect-sum">${fmtNum(tree.length)} files · open one on its own</span></summary>
         <ul class="file-tree">${tree.map(t => `<li${TG ? TG.indent(t) : ''}>${dot(t.a.phase)}<div><button type="button" class="btn small link" data-dt-sub="${esc(t.a.ref)}">${fileLine(t.a)}</button>${t.a.units > 0 && isFormal(t.a) ? ` · ${fmtNum(t.a.units)} units` : ''}${isPrecon(t.a) && !treeRows ? ' <span class="muted">· pre-consultation, no formal application on its land yet</span>' : ''}
@@ -1185,7 +1035,7 @@
     });
   }
 
-  // ---- The three sub-views ----------------------------------------------------------
+  // ---- Shared rows and the full view --------------------------------------------------
   const brow = (k, body) => `<div class="b-row"><div class="b-k">${k}</div><div class="b-v">${body}</div></div>`;
   // "This application on its own" legend for a drilled-down sub-project.
   function subHeadHTML(p) {
@@ -1198,44 +1048,15 @@
     if (p._dtBack) return `<button type="button" class="btn small link back-sel" data-dt-back="1">← ${esc(p._dtBack.title)}</button>`;
     return '';
   }
-  // About: proposal, a concise status line (phase badge + latest activity +
-  // stalled note), the latest council/committee decision, and the FSR link.
-  // The status in full, with the files and events, is in Files & history.
-  function aboutHTML(p) {
-    const st = statusOf(p);
-    return `${drillBackHTML(p)}${p.parent ? subHeadHTML(p) : ''}
-    <section class="brief" data-info="dev-brief">
-      ${brow('Status', `<p class="small">${dot(p.phase)} <strong>${esc(P().PHASE_BY_KEY[p.phase].label)}</strong>${p.last ? ` · latest activity ${fmtDate(new Date(p.last))}` : ''}</p>
-        ${st.stalled ? `<p class="small why-stall"><strong>Stalled:</strong> no file event, permit or council item since ${fmtDate(new Date(st.lastAt))} (${st.years.toFixed(1)} years), ${st.cause}.</p>` : ''}`)}
-      ${brow('Latest decision', latestDecisionHTML(p, st))}
-      ${p.records.some(r => r.kind === 'application') ? brow('Servicing report', fsrBoxHTML(p)) : ''}
-      ${p.description ? brow('Proposal', `<p class="desc-clamp small">${esc(p.description)}</p>`) : ''}
-    </section>`;
-  }
-  // Files & history: the files, events and proposal in one section (the status, the Gantt chart
-  // with each file's events and source record, the dated events), then the applications to open
-  // on their own, related applications and how the phase was set.
+  // Records' full table at a development: the files and events (the Gantt chart with each file's events and
+  // source record, the dated events), then the applications to open on their own, on this site, related
+  // applications and how the stage was set. (About is the Overview's.)
   function filesViewHTML(p) {
     const st = statusOf(p);
     return `${drillBackHTML(p)}${p.parent ? subHeadHTML(p) : ''}
-      ${devHistoryHTML(p, st)}
+      ${storyHTML(p, st, true, { about: false })}
       ${filesHTML(p)}
       ${phaseBasisHTML(p)}`;
-  }
-  // Site: the constraint checklist (screening) first, then aerial check, ground elevation, storm
-  // sewers, stormwater ponds. (Ground/storm/ponds moved here from the old Wastewater tab.)
-  function siteViewHTML(p) {
-    const has = p.lat != null;
-    return `${drillBackHTML(p)}
-    <details class="sect" id="devtab-cx-sect" open><summary><h2 class="section-title" data-info="site-constraints">Constraints</h2><span class="muted small sect-sum">screening · mapped layers</span></summary>
-      <div id="devtab-cx">${has ? '<p class="small muted">Checking the mapped constraint layers…</p>' : '<p class="small muted">Not checked: this development has no map location.</p>'}</div></details>
-    <details class="sect" id="devtab-site" open><summary><h2 class="section-title" data-info="site-check">Site</h2><span class="muted small sect-sum">aerial · ground · stormwater</span></summary>
-      <div class="brief">
-        ${brow('Aerial check', '<div class="aerial" id="devtab-aerial"><p class="small muted">Comparing aerial photos…</p></div>')}
-        ${has ? brow('Ground', '<div id="devtab-ground" data-info="ground"><p class="small muted">Looking up ground elevation…</p></div>') : ''}
-        ${has ? brow('Storm sewers', '<div id="devtab-exist-storm"><p class="small muted">Looking up the nearest storm sewers…</p></div>') : ''}
-        ${has ? brow('Stormwater', '<div id="devtab-storm" data-info="fire-storm"><p class="small muted">Looking up stormwater ponds…</p></div>') : ''}
-      </div></details>`;
   }
 
   // ---- Render -----------------------------------------------------------------------
@@ -1245,41 +1066,31 @@
     return { open, tl };
   }
   function restoreOpen(body, keep) {
-    for (const [id, was] of keep.open) { const d = document.getElementById(id); if (d) d.open = was; }
+    for (const d of body.querySelectorAll('details[id]')) if (keep.open.has(d.id)) d.open = keep.open.get(d.id);
     if (keep.tl) {
       body.querySelectorAll('[data-dt-tl]').forEach(x => x.classList.toggle('on', x.dataset.dtTl === keep.tl));
       body.querySelectorAll('[data-dt-tlv]').forEach(x => { x.hidden = x.dataset.dtTlv !== keep.tl; });
     }
   }
-  function render(sub) {
+  // Into host (Records' body), else Records' body while it shows a development (DevScope's open and refresh).
+  function render(host) {
     if (!hasDOM()) return;
-    const body = document.getElementById('pane-dev-body');
-    if (!body) return;
-    if (sub && DEVSUBS.includes(sub)) writeSub(sub);
-    syncSubtabs();
+    const body = host || HOST();
+    if (!body || (!host && !body.dataset.dev)) return;
     const p = scopeProject();
-    if (!p || !P()) { liveKey = null; body.innerHTML = '<p class="small muted">Select a development to see its details.</p>'; return; }
+    if (!p || !P()) { liveKey = null; if (host) { delete body.dataset.dev; body.innerHTML = '<p class="small muted">Select a development to see its details.</p>'; } return; }
     liveKey = p.key;
-    const s = currentSub();
-    body.innerHTML = s === 'about' ? aboutHTML(p) : s === 'files' ? filesViewHTML(p) : siteViewHTML(p);
-    if (s === 'about' || s === 'files') ensureCouncil(p);
-    if (s === 'site' && p.lat != null) { fillNetworks(p); fillConstraints(p); devAerial(p); fillGround(p); fillStormMains(p); }
+    body.dataset.dev = p.key;
+    body.innerHTML = filesViewHTML(p);
+    ensureCouncil(p);
   }
   // Re-render after async data (council, FSR) arrives, keeping open sections.
   function rerenderPreserve() {
-    if (!hasDOM()) return;
-    const body = document.getElementById('pane-dev-body');
-    if (!body) return;
+    const body = HOST();
+    if (!body || !body.dataset.dev) return;
     const keep = captureOpen(body);
     render();
     restoreOpen(body, keep);
-  }
-  function setSub(sub) {
-    if (!DEVSUBS.includes(sub)) return;
-    writeSub(sub);
-    syncSubtabs();
-    render();
-    if (hasDOM()) { const body = document.getElementById('pane-dev-body'); if (body) body.scrollTop = 0; }
   }
 
   // ---- Map helpers for the delegated actions -----------------------------------------
@@ -1322,7 +1133,8 @@
     if (AT && AT.openTab) AT.openTab('records', 'files');
     setTimeout(() => {
       if (PN && PN.openFull) PN.openFull();
-      if (currentSub() !== 'files') setSub('files');
+      // (Records' render has drawn it; else draw it here)
+      const b = HOST(), p = scopeProject(); if (b && p && b.dataset.dev !== p.key) render(b);
       // (the old Source records section is the story's Gantt rows now)
       const d = byIdShown(id === 'devtab-recs' ? 'devtab-hist' : id); if (d) { d.open = true; d.scrollIntoView({ block: 'start' }); }
     }, 250);
@@ -1343,21 +1155,26 @@
     if (line) line.hidden = !on;
     if (name) name.textContent = { council: 'council', file: 'file', permit: 'permit', phase: 'stage' }[on] || '';
   }
-  // The History shown beside the element (the same panel or page), else the development's Overview.
+  // The History shown beside the element (the same panel or page), else any in that host.
+  const vis = x => !!(x && x.getClientRects().length);
   function historyNear(el) {
     const host = (el && el.closest('#home, #analysis')) || document;
-    const vis = x => x && x.getClientRects().length;
     const all = [...host.querySelectorAll('.dev-hist')];
     return all.find(vis) || all[0] || null;
   }
+  // (on screen, or in a fold of the panel or page on screen: showing it opens the fold)
+  const reachable = x => vis(x) || vis(x && x.closest('.pnl-host, #home'));
   function revealHistory(el, then) {
     let h = historyNear(el);
     const show = x => { for (let d = x; d; d = d.parentElement && d.parentElement.closest('details')) d.open = true; then(x); };
-    if (h) return show(h);
-    // (no History here: the development's Overview has it, in a fold)
-    const AT = root.PeelAnalysisTabs;
-    if (AT && AT.openTab) AT.openTab('overview', '');
-    setTimeout(() => { h = historyNear(document.getElementById('analysis')); if (h) show(h); }, 300);
+    if (reachable(h)) return show(h);
+    // History is Records' (navigation phase 5): on a page its Records section, on the map Records › Files
+    // (the panel's Files and events fold, open).
+    const W = root.PeelWorkspaces, WP = root.PeelWsPages, AT = root.PeelAnalysisTabs, cur = root.DevScope && root.DevScope.current && root.DevScope.current();
+    const home = hasDOM() && document.documentElement.classList.contains('home-on') && !!(cur && WP && WP.siteAt && W && W.openPage);
+    if (home) { WP.siteAt(cur.key, 'files'); W.openPage('site', { keepScroll: true }); }
+    else if (AT && AT.openTab) AT.openTab('records', 'files');
+    setTimeout(() => { h = historyNear(document.getElementById(home ? 'home' : 'analysis')); if (h) show(h); }, 300);
   }
   function flash(x) { x.classList.add('rec-flash'); setTimeout(() => x.classList.remove('rec-flash'), 1600); }
   /** A file number: its source record, open in History's By file view. */
@@ -1396,9 +1213,7 @@
   // handlers in js/app.js never see them (and vice versa).
   function onClick(e) {
     if (!e.target || !e.target.closest) return;
-    const ds = e.target.closest('[data-devsub]');
-    if (ds) { setSub(ds.dataset.devsub); return; }
-    const body = document.getElementById('pane-dev-body');
+    const body = HOST() && HOST().dataset.dev ? HOST() : null;
     // A file number anywhere opens its source record in History; "history" links open History.
     const df = e.target.closest('[data-dev-file]');
     if (df) { e.preventDefault(); e.stopPropagation(); openFile(df.dataset.devFile, df); return; }
@@ -1418,8 +1233,7 @@
     const o = e.target.closest('[data-dt-open]');
     if (o) {
       const id = o.dataset.dtOpen;
-      if (id === 'devtab-hist' && currentSub() !== 'files') setSub('files');
-      const d = document.getElementById(id);
+      const d = byIdShown(id);
       if (d) { d.open = true; d.scrollIntoView({ block: 'start' }); }
       return;
     }
@@ -1448,26 +1262,29 @@
     if (xh) { highlightStormMain(xh.dataset.dtExhl.split('|')[1]); return; }
     const bb = e.target.closest('[data-dt-back]');
     if (bb) {
-      const back = drill && (drill.parent || drill._dtBack);
+      // (the file on its own is the scope itself where DevScope opens it, js/dev-nav.js showDetail: no drill)
+      const back = p && (p.parent || p._dtBack);
       drill = null;
       if (back) navigate(back); else render();
-      const bd = document.getElementById('pane-dev-body'); if (bd) bd.scrollTop = 0;
+      scrollTop();
     }
   }
   if (hasDOM() && typeof document.addEventListener === 'function') document.addEventListener('click', onClick);
 
   // ---- Stage 3: the development's pieces in the standard panels -------------------------------
-  // About (proposal, status, latest decision, servicing report) folds into the Overview panel; the
-  // site checks there are the constraint checklist and the storm sewers and ponds; the aerial check
-  // and ground elevation sit in Servicing at the site. Same containers and fillers as the Site view.
+  // Navigation phase 5, one development layout: About and the approvals timeline fold into the Overview
+  // panel; the files and events into Records'; the site checks (constraints, the aerial check, ground,
+  // the mains near, storm sewers and ponds: the retired Site view) are one fold of Servicing › Network.
   function partHTML(p, part) {
     const has = p.lat != null, row = (t, id, msg, info) => brow(t, `<div id="${id}"${info ? ` data-info="${info}"` : ''}><p class="small muted">${msg}</p></div>`);
-    if (part === 'about') return aboutHTML(p).replace(drillBackHTML(p), '');
-    if (part === 'site') return `<div class="brief">${has ? row('Water and wastewater', 'devtab-net', 'Looking up the watermains and sewers…') + row('Constraints', 'devtab-cx', 'Checking the mapped constraint layers…') + row('Storm sewers', 'devtab-exist-storm', 'Looking up the nearest storm sewers…') + row('Stormwater', 'devtab-storm', 'Looking up stormwater ponds…', 'fire-storm') : '<p class="small muted">Not checked: this development has no map location.</p>'}</div>`;
-    if (part === 'ground') return `<div class="brief">${brow('Aerial check', '<div class="aerial" id="devtab-aerial"><p class="small muted">Comparing aerial photos…</p></div>')}${has ? row('Ground', 'devtab-ground', 'Looking up ground elevation…', 'ground') : ''}</div>`;
+    // (a file opened on its own says so first: "OZ 24-001 on its own: … Counted in the whole development")
+    if (part === 'about') return `${p.parent ? subHeadHTML(p) : ''}${aboutBlockHTML(p, statusOf(p))}`;
+    if (part === 'timeline') return stepperHTML(p);
+    // ('ground', its aerial check and ground part, is the one Site part now: kept as a name for one release)
+    if (part === 'site' || part === 'ground') return `<div class="brief">${has ? row('Constraints', 'devtab-cx', 'Checking the mapped constraint layers…', 'site-constraints') + brow('Aerial check', '<div class="aerial" id="devtab-aerial"><p class="small muted">Comparing aerial photos…</p></div>') + row('Ground', 'devtab-ground', 'Looking up ground elevation…', 'ground') + row('Mains near', 'devtab-net', 'Looking up the watermains and sewers…') + row('Storm sewers', 'devtab-exist-storm', 'Looking up the nearest storm sewers…') + row('Stormwater', 'devtab-storm', 'Looking up stormwater ponds…', 'fire-storm') : '<p class="small muted">Not checked: this development has no map location.</p>'}</div>`;
     if (part === 'files') return filesTreeHTML(p);
-    // (Files, History and About are one section now: the story, with the Gantt chart at its heart)
-    if (part === 'story' || part === 'history' || part === 'gantt') return storyHTML(p, statusOf(p));
+    // (Files and History are one section: the story, with the Gantt chart at its heart; About is the Overview's)
+    if (part === 'story' || part === 'history' || part === 'gantt') return storyHTML(p, statusOf(p), false, { about: false });
     // (How the stage was set, without its section wrapper: the stage chip opens it under the header)
     if (part === 'stage') return phaseBasisHTML(p).replace(/^\s*<details[^>]*>\s*<summary>[^]*?<\/summary>/, '').replace(/<\/details>\s*$/, '');
     return '';
@@ -1486,11 +1303,12 @@
     if (!hasDOM() || !p) return;
     liveKey = p.key;
     if (['about', 'history', 'gantt', 'story'].some(x => parts.includes(x))) ensureCouncil(p);
-    if (parts.includes('site') && p.lat != null) { fillNetworks(p); fillConstraints(p); fillStormMains(p); }
-    if (parts.includes('ground') && p.lat != null) { devAerial(p); fillGround(p); }
+    if ((parts.includes('site') || parts.includes('ground')) && p.lat != null) { fillNetworks(p); fillConstraints(p); fillStormMains(p); devAerial(p); fillGround(p); }
   }
   // ---- Public contract ------------------------------------------------------------------
-  const api = { render, setSub, partHTML, fillParts, aerialRun, aerialAvailable, renderAerialInto, openSection, openFile, openHistory };
-  if (typeof module !== 'undefined' && module.exports) module.exports = { ...api, currentSub, recGroup, REC_GROUPS, groupRecords, statusOf, phaseBasis, scopeProjectForTest: () => scopeProject() };
+  const api = { render, partHTML, fillParts, aerialRun, aerialAvailable, renderAerialInto, openSection, openFile, openHistory };
+  // (node only: the delegates tests/dev-parity.test.js runs against the canonical modules, M3, and the full
+  // table's files list)
+  if (typeof module !== 'undefined' && module.exports) module.exports = { ...api, recGroup, REC_GROUPS, groupRecords, statusOf, phaseBasis, fileTree, subProject, projectByKey, relatedProjects, planApprovedNote, filesHTML, scopeProjectForTest: () => scopeProject() };
   else root.DevTab = api;
 })(typeof window !== 'undefined' ? window : globalThis);

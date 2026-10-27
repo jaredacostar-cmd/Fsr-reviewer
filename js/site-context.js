@@ -17,7 +17,7 @@
   // Ground at the site, and the fall to its catchment's outlet (gravity hint for the sewer path),
   // from the lidar terrain model (terrain tiles where it has no value), each with its source.
   const EL = () => window.PeelElevation;
-  // The Ground row's HTML (Development › Site, both views).
+  // The Ground row's HTML (Servicing › Network's Site fold).
   async function groundHTML(p) {
     try {
       const f = SD() && SD().svcFacts ? SD().svcFacts(p) : null, out = f && f.path.find(a => a.outletAt && a.kind !== 'plant');

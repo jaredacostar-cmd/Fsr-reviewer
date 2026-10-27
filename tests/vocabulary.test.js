@@ -41,9 +41,10 @@ test('no two sub-views share a name; the chips, the trails and the source lines 
   const all = ['growth', 'svc', 'dca', 'records'].flatMap(chips);
   assert.equal(new Set(all).size, all.length, `duplicate sub-view names: ${all.join(', ')}`);
   assert.deepEqual(chips('growth'), ['Pipeline', 'Areas', 'Forecast']);
-  assert.deepEqual(chips('svc'), ['Capacity', 'Network']); assert.ok(chips('records').includes('Data checks') && chips('dca').includes('DC timing'));
+  assert.deepEqual(chips('svc'), ['Capacity', 'Network', 'FSR review']); assert.ok(chips('records').includes('Data checks') && chips('dca').includes('DC timing'));
   const W = require('../js/workspaces.js');
   assert.equal(W.tabPath('svc', 'network'), 'Servicing › Network');
+  assert.equal(W.tabPath('svc', 'fsr'), 'Servicing › FSR review');
   assert.equal(W.tabPath('records', 'checks'), 'Records › Data checks');
   assert.doesNotMatch(src('js/workspaces.js'), /'svc:checks'|alloc: 'Allocations'/, 'no name for a sub-view that is gone');
   assert.doesNotMatch(src('js/workspaces.js'), /ledger: 'Ledger'/, 'no name for a sub-view that is gone');
@@ -69,5 +70,5 @@ test('Help names only places that exist (tab › sub-view), and none of the old 
   for (const [, tab, sub] of names) assert.ok(chips(TAB[tab]).some(c => sub.startsWith(c)), `"${tab} › ${sub}" is not a sub-view (${chips(TAB[tab]).join(', ')})`);
   for (const old of ['DC needs:', 'Development tab', 'Layers & style', 'Data tab:', 'DC map view', 'This week tab', 'Definitions (Overview', 'Inception', 'Under review', 'Draft / site plan approved', 'More settings → Existing']) assert.ok(!HELP.includes(old), `Help still says "${old}"`);
   // (the help strings outside Help: info, the tool rail, the scenario control)
-  for (const [f, old] of [['js/info.js', 'Settings (gear menu) → Records'], ['js/info.js', 'screen button under the map tools'], ['js/area-select.js', 'select developments within a radius'], ['js/svc-tab.js', 'Wastewater → Plants & capacity'], ['js/tools-upgrade.js', 'Open the Wastewater tab'], ['js/tips.js', 'grouped: Planning, Capital, Asset Management']]) assert.ok(!src(f).includes(old), `${f} still says "${old}"`);
+  for (const [f, old] of [['js/info.js', 'Settings (gear menu) → Records'], ['js/info.js', 'The Development tab lists the nearest'], ['js/info.js', 'screen button under the map tools'], ['js/area-select.js', 'select developments within a radius'], ['js/svc-tab.js', 'Wastewater → Plants & capacity'], ['js/tools-upgrade.js', 'Open the Wastewater tab'], ['js/tips.js', 'grouped: Planning, Capital, Asset Management']]) assert.ok(!src(f).includes(old), `${f} still says "${old}"`);
 });

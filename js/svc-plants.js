@@ -28,7 +28,7 @@
   // Servicing › Network at a site: the site's brief (zone, path, plant reserve, infrastructure
   // coming) replaces the Peel-wide blocks and zones; the Region-wide station list gives way. The
   // area-only sub-views are hidden by PeelAnalysisTabs (site scope). Ground / storm / ponds stay
-  // out (their home is Development › Site).
+  // out (their home is Servicing › Network's Site fold).
   function renderSvcScoped(p) {
     { const n = $('#pane-pumpstations'); if (n) n.dataset.off = '1'; }
     const st = DD().statusOf(p), f = SD().svcFacts(p);
@@ -38,7 +38,7 @@
       + `<p class="small muted">Peel-wide pressure zones return when no site is scoped.</p>`;
     $('#ww-body').innerHTML = `<div class="tb-head"><h2 class="pane-h">${esc(p.title)} <span class="muted">· Wastewater</span></h2></div>`
       + FS().devServicingBriefHTML(p, st, f, 'ww', { site: false })
-      + `<p class="small muted">Ground, storm sewers and stormwater ponds live in Overview › Site. Peel-wide catchments return when no site is scoped.</p>`;
+      + `<p class="small muted">Constraints, ground, storm sewers and ponds are in the Network panel’s Site fold. Peel-wide catchments return when no site is scoped.</p>`;
     DV().scopeBriefIds($('#water-body')); DV().scopeBriefIds($('#ww-body'));
     $('#water-note').textContent = `${p.title} · site servicing`;
     $('#ww-note').textContent = `${p.title} · site servicing`;

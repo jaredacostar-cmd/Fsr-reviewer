@@ -42,7 +42,7 @@ siteTest('Brampton|2055 BOVAIRD DR W reconciles: 6,289 + 592 + 52 stated, 2,929 
   assert.match(html, /2,929 OZS-2024-0051 <span class="muted">\(found online: /);
   assert.match(html, /<span class="tag">estimate<\/span>/);
   assert.match(html, /= <strong>9,862<\/strong>/);
-  assert.doesNotMatch(html, /previous rule/, 'the previous count is only in Settings › Counting');
+  assert.doesNotMatch(html, /previous rule/, 'the count before the tree is not shown beside it');
   // SPEC 1.9: a block of several proposals is titled as a block, naming its draft plans.
   assert.equal(p.title, 'Heritage / Bovaird block · 3 draft plans');
 });

@@ -100,7 +100,10 @@ test('step 2: the app holds site activity aside, and a development page lists th
   assert.match(src('js/app.js'), /const out = new Set\(\[\.\.\.\(state\.showDormant \? \[\] : dorm\), \.\.\.\(state\.showSiteActivity \? \[\] : site\)\]\);/);
   assert.match(src('js/filter-ui.js'), /site activity left out · include/);
   assert.match(src('js/share.js'), /set\('sx', '1'\)/);
-  for (const f of ['js/dev-nav.js', 'js/devtab.js']) assert.match(src(f), /<h2 class="section-title" data-info="dev-site">On this site<\/h2>/, f);
+  // (Records' full table, js/devtab.js filesHTML: the one copy; js/dev-nav.js's had no caller and went in
+  // navigation phase 5's review, with its data-relq and data-proj-back handlers)
+  assert.match(src('js/devtab.js'), /<h2 class="section-title" data-info="dev-site">On this site<\/h2>/);
+  assert.doesNotMatch(src('js/dev-nav.js'), /function filesHTML|data-relq|data-proj-back/);
 });
 
 test('step 2: Records › Files, the panel a development opens to, lists On this site', () => {
