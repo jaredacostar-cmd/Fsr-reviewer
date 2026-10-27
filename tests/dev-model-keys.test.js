@@ -7,6 +7,7 @@ const path = require('node:path');
 const src = f => fs.readFileSync(path.join(__dirname, '..', f), 'utf8');
 const P = require('../js/phases.js');
 const H = require('./helpers/real-devs.js');
+const { siteTest } = require('./helpers/site-check.js');
 
 // js/dev-nav.js in node: the app's globals it reads at load, stubbed.
 function devNav(projects) {
@@ -38,9 +39,18 @@ test('opening a file on its own leaves its development\'s permit placement as bu
   const before = devs.map(p => [flags(p), D.buildingPermitsOf(p).length]);
   for (const p of devs) for (const row of TG.fileRows(p)) assert.ok(N.projectByKey(`${p.key}#${row.a.ref}`));
   devs.forEach((p, i) => assert.deepEqual([flags(p), D.buildingPermitsOf(p).length], before[i], p.key));
-  const airport = projects.find(p => p.key === 'Brampton|11903 AIRPORT RD');
-  if (airport) assert.equal(D.buildingPermitsOf(airport).length, 17);
   assert.match(src('js/devtab.js'), /P\(\)\.mergeProject\(key, \[\.\.\.own, \.\.\.permits\.filter\(r => !own\.includes\(r\)\)\]\.map\(r => \(\{ \.\.\.r \}\)\), \{\}\)/);
+});
+
+// The example the fix was found on (e1479e2: opening its files dropped it from 17 building permits to
+// 3). A site check: its permits follow the weekly data, so a new one is a finding for review, not a hold.
+siteTest('11903 Airport Rd keeps its 17 building permits once its files are opened on their own', { skip: !H.available() }, () => {
+  const { projects } = H.realDevs();
+  const N = devNav(projects), TG = require('../js/tree-groups.js'), D = require('../js/demand.js');
+  const airport = projects.find(p => p.key === 'Brampton|11903 AIRPORT RD');
+  assert.ok(airport, 'the development is in the data');
+  for (const row of TG.fileRows(airport) || []) N.projectByKey(`${airport.key}#${row.a.ref}`);
+  assert.equal(D.buildingPermitsOf(airport).length, 17);
 });
 
 test('the latest file is the newest submission (map-labels latestSub), not a sort on a field no record has', () => {

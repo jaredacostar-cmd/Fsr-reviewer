@@ -84,6 +84,25 @@ function verdict(rows, { testsFailed = 0, siteChecks = [], accept = false } = {}
   if (moved.length > 4 && !accept) reasons.push(`${moved.length - 4} more measures moved`);
   return { held: testsFailed > 0 || (moved.length > 0 && !accept), reasons, moved: moved.length, accepted: accept && moved.length > 0, siteChecks };
 }
+// Each failing test, with where it failed and the first lines of its error (node's TAP: the YAML block
+// under its "not ok" line), so a held week can be read from the issue without the run's log.
+function failures(testLog) {
+  const L = String(testLog).split('\n'), out = [];
+  for (let i = 0; i < L.length; i++) {
+    const m = /^not ok \d+ - (.*)$/.exec(L[i]); if (!m) continue;
+    let where = '';
+    const err = [];
+    for (let j = i + 1; j < L.length && !/^ {2}\.\.\.$/.test(L[j]) && !/^(not )?ok \d+/.test(L[j]); j++) {
+      const loc = /^ {2}location: '.*?((?:tests|scripts|js)\/[^':]+:\d+)/.exec(L[j]); if (loc) where = loc[1];
+      if (!/^ {2}error: /.test(L[j])) continue;
+      const inline = L[j].replace(/^ {2}error: (\|-)?/, '').trim().replace(/^'(.*)'$/, '$1');
+      if (inline) err.push(inline);
+      while (j + 1 < L.length && /^ {4}/.test(L[j + 1])) { j++; if (L[j].trim()) err.push(L[j].trim()); }
+    }
+    out.push({ name: m[1], where, error: err.slice(0, 3).join(' · ').slice(0, 300) });
+  }
+  return out;
+}
 /** The review issue's body: what moved, the tests, the site checks, and how to publish anyway. */
 function markdown(rows, v, { prevAt, nowAt, testLog = '' } = {}) {
   const lines = [`## Weekly data update: ${v.held ? '**held for review**' : 'published'}`, '',
@@ -92,8 +111,8 @@ function markdown(rows, v, { prevAt, nowAt, testLog = '' } = {}) {
   lines.push('| Measure | Last week | This week | Change |', '|---|---:|---:|---:|');
   for (const r of rows.filter(x => x.flagged || x.change !== 0)) lines.push(`| ${r.flagged ? '**' : ''}${r.label}${r.flagged ? '**' : ''} | ${n(r.prev)} | ${n(r.now)} | ${r.change >= 0 ? '+' : ''}${n(r.change)} (${pct(r)}) |`);
   if (v.siteChecks.length) lines.push('', '**Site checks that changed** (tests pinned to one real site; they follow the data):', ...v.siteChecks.map(s => `- ${s.test}: ${s.message}`));
-  const failed = String(testLog).split('\n').filter(l => /^not ok/.test(l));
-  if (failed.length) lines.push('', '**Failing tests**', ...failed.slice(0, 20).map(l => `- ${l.replace(/^not ok \d+ - /, '')}`));
+  const failed = failures(testLog);
+  if (failed.length) lines.push('', '**Failing tests**', ...failed.slice(0, 20).map(f => `- ${f.name}${f.where ? ` (\`${f.where}\`)` : ''}${f.error ? `: ${f.error}` : ''}`));
   if (v.held) lines.push('', '**To publish it anyway** (after a look): Actions → *Update data and deploy site* → *Run workflow* → tick **accept_data**. Failing tests still hold it; fix them first.');
   lines.push('', 'General screening results only. Peel\'s W&WW Infrastructure Planning team must validate or confirm all results.');
   return lines.join('\n');
@@ -123,4 +142,4 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { THRESHOLD, FLOOR, measures, compare, verdict, markdown, refreshJSON };
+module.exports = { THRESHOLD, FLOOR, measures, compare, verdict, failures, markdown, refreshJSON };

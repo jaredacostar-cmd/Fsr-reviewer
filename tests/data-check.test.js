@@ -44,6 +44,24 @@ test('the verdict: failing tests always hold; accept publishes a big move; site 
   assert.match(md, /General screening results only/);
 });
 
+test('the review issue says how each failing test failed, and where (node\'s TAP block under "not ok")', () => {
+  const log = ['TAP version 13', '# Subtest: fine', 'ok 1 - fine', '  ---', '  duration_ms: 0.9', '  ...',
+    '# Subtest: a count that moved', 'not ok 2 - a count that moved', '  ---', '  duration_ms: 1.1', "  type: 'test'",
+    "  location: '/home/runner/work/Fsr-reviewer/Fsr-reviewer/tests/dev-model-keys.test.js:32:1'", "  failureType: 'testCodeFailure'",
+    '  error: |-', '    Expected values to be strictly equal:', '    ', '    18 !== 17', '    ', "  code: 'ERR_ASSERTION'", '  expected: 17', '  actual: 18',
+    '  stack: |-', '    TestContext.<anonymous> (/home/runner/work/x/tests/dev-model-keys.test.js:47:43)', '  ...',
+    'not ok 3 - an inline one', '  ---', "  error: 'boom'", '  ...', 'not ok 4 - no block'].join('\n');
+  assert.deepEqual(C.failures(log), [
+    { name: 'a count that moved', where: 'tests/dev-model-keys.test.js:32', error: 'Expected values to be strictly equal: · 18 !== 17' },
+    { name: 'an inline one', where: '', error: 'boom' },
+    { name: 'no block', where: '', error: '' },
+  ]);
+  const rows = C.compare(week(), week()), md = C.markdown(rows, C.verdict(rows, { testsFailed: 3 }), { testLog: log });
+  assert.match(md, /- a count that moved \(`tests\/dev-model-keys\.test\.js:32`\): Expected values to be strictly equal: · 18 !== 17/);
+  assert.match(md, /- an inline one: boom/);
+  assert.match(md, /- no block$/m);
+});
+
 test('data/refresh.json for the app: held with the date shown and the issue; ok with this week', () => {
   const held = C.refreshJSON({ held: true, reasons: ['All permits +69% in a week'], prevAt: '2026-10-12T10:00:00Z', nowAt: '2026-10-19T10:00:00Z' }, 'https://github.com/o/r/issues/7', '2026-10-19');
   assert.deepEqual(held, { version: 1, status: 'held', checked: '2026-10-19', shown: '2026-10-12', reasons: ['All permits +69% in a week'], issue: 'https://github.com/o/r/issues/7' });
