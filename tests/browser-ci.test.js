@@ -28,6 +28,17 @@ test('the paths run in two halves side by side, and the check named browser pass
   assert.match(r, /async function check\(name, browser, opts, fn\) \{\n {2}if \(nth\+\+ % SHARDS !== SHARD - 1\) return;/);
 });
 
+test('CI serves the map libraries from the npm registry, every one the app loads from unpkg', () => {
+  const w = src('.github/workflows/browser.yml'), { packages } = require('./browser/cdn.js');
+  assert.match(w, /run: node tests\/browser\/cdn\.js "\$RUNNER_TEMP\/cdn"/);
+  assert.match(w, /CDN_DIR: \$\{\{ runner\.temp \}\}\/cdn\n {8}run: npm run browser/);
+  const pk = packages();
+  assert.deepEqual(pk, ['leaflet-rotate@0.2.8', 'leaflet.markercluster@1.5.3', 'leaflet@1.9.4', 'maplibre-gl@4.7.1', 'pmtiles@3.2.1']);
+  // (each one where run.js looks for it: <CDN_DIR>/<name>-<version>/package/<path>)
+  assert.match(src('tests/browser/run.js'), /`\$\{CDN\}\/\$\{m\[1\]\}-\$\{m\[2\]\}\/package\/\$\{m\[3\]\}`/);
+  assert.match(src('tests/browser/cdn.js'), /`\$\{p\.slice\(0, at\)\}-\$\{p\.slice\(at \+ 1\)\}`/);
+});
+
 test('the paths cover first run, Check a site, the full table, Start over, page ↔ map, the keyboard and the phone', () => {
   const r = src('tests/browser/run.js');
   for (const name of ['first run:', 'Check a site:', 'the header count opens the full table', 'Start over clears', 'a page link opens the full map', 'keyboard:', 'phone:']) assert.ok(r.includes(`check('${name}`), name);

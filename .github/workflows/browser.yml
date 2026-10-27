@@ -43,9 +43,15 @@ jobs:
           npm install --no-save --no-package-lock playwright@1.56.1
           npx playwright install --with-deps chromium
 
+      # (the map libraries the app loads from unpkg, served from the npm registry's copies: unpkg's
+      # stalls left page loads hanging until the paths timed out, 2026-10-27)
+      - name: Map libraries from the npm registry
+        run: node tests/browser/cdn.js "$RUNNER_TEMP/cdn"
+
       - name: Browser paths
         env:
           SHARD: ${{ matrix.shard }}/2
+          CDN_DIR: ${{ runner.temp }}/cdn
         run: npm run browser
 
   browser:
