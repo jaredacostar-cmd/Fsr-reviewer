@@ -40,7 +40,7 @@ test('every place hit carries what it is, for the page to open it', () => {
   assert.equal((sf.match(/hit: 'svc', ss: /g) || []).length, 5);
   assert.match(sf, /go: \(\) => SS\(\)\.open\(`plant:\$\{pl\}`\), hit: 'svc', ss: `plant:\$\{pl\}` \}/);
   assert.match(sf, /go: \(\) => SS\(\)\.open\('wsys:lake'\), hit: 'svc', ss: 'wsys:lake' \}/);
-  // a DC line: the DC impact model's project key, as Capital › DC projects' rows carry it
+  // a DC line: the DC impact model's project key, as Capital › DC timing's rows carry it
   assert.match(sf, /hit: 'dc', key: `\$\{sys\}:\$\{k\}` \}/);
   assert.match(sf, /const k = ln\.p \|\| ln\.c;/);
   assert.match(src('js/dc-impact.js'), /const projectKey = ln => ln\.p \|\| ln\.c \|\| null;/);
@@ -96,7 +96,7 @@ test('pageRoute: what each hit opens on a page (navigation design §3.3)', () =>
   assert.deepEqual(plain(W.pageRoute({ place: { hit: 'mtsa', id: 'mt3', muni: 'Mississauga' } }, 'home')), { page: 'growth', drill: 'm:Mississauga', muni: 'Mississauga', then: 'map' }, 'an MTSA: at its municipality, then its filter');
   assert.deepEqual(plain(W.pageRoute({ place: { hit: 'mtsa', id: 'mt4' } }, 'home')), { page: 'growth', drill: 'peel', muni: '', then: 'map' });
   assert.deepEqual(plain(W.pageRoute({ place: { hit: 'svc', ss: 'plant:Lakeview' } }, 'week')), { ws: 'tight', ss: 'plant:Lakeview' }, 'a facility: its scope on Servicing capacity’s map');
-  assert.deepEqual(plain(W.pageRoute({ place: { hit: 'dc', key: 'wastewater:25-2269' } }, 'home')), { page: 'projects', wsec: 'dcproj', dcSel: 'wastewater:25-2269' }, 'a DC project: Capital › DC projects at it');
+  assert.deepEqual(plain(W.pageRoute({ place: { hit: 'dc', key: 'wastewater:25-2269' } }, 'home')), { page: 'projects', wsec: 'timing', dcSel: 'wastewater:25-2269' }, 'a DC project: Capital › DC timing at it');
   assert.deepEqual(plain(W.pageRoute({ place: { hit: 'dcfac' } }, 'home')), { ws: 'projects', then: 'map' }, 'a DC facility: Capital’s map, then its card');
   assert.deepEqual(plain(W.pageRoute({ label: '1 Main St', g: { lat: 43.7, lng: -79.7 } }, 'home')), { ws: 'site', then: 'map' }, 'an address: Check a site’s map, then its pin');
   assert.equal(W.pageRoute({ label: 'Filter the list by “x”', filter: 'x' }, 'home'), null, 'the filter row');

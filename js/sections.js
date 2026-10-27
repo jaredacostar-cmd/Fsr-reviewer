@@ -55,19 +55,18 @@
       { id: 'sources', title: 'Data sources', page: 'data' },
       { id: 'checks', title: 'Data checks', tab: 'records', keys: ['records:checks'] },
     ] },
+    // Capital (navigation phase 4): DC timing (its page: DC timing and DC projects are one list, a project open
+    // in place), EAs (its page: the EAs and EA to construction) and the map's Projects as a section.
     capital: { host: 'projects', secs: [
       { id: 'timing', title: 'DC timing', page: 'projects' },
-      { id: 'dcproj', title: 'DC projects', tab: 'dca', keys: ['dca:dcproj'] },
-      { id: 'eaflow', title: 'EA to construction', page: 'eaflow' },
+      { id: 'eas', title: 'EAs', page: 'eaflow' },
       { id: 'projects', title: 'Projects', tab: 'dca', keys: ['dca:projects'] },
-      { id: 'eas', title: 'EAs', tab: 'dca', keys: ['dca:eas'] },
     ] },
   };
   const AREA_BUILD = {
     'dca:timing': () => (root.PeelDcaTab && root.PeelDcaTab.areaSpec ? root.PeelDcaTab.areaSpec() : null),
     'records:sources': () => (root.PeelRecordsTab && root.PeelRecordsTab.sourcesPanelSpec ? root.PeelRecordsTab.sourcesPanelSpec() : null),
     'records:checks': () => (root.PeelRecordsTab && root.PeelRecordsTab.checksPanelSpec ? root.PeelRecordsTab.checksPanelSpec() : null),
-    'dca:dcproj': () => (root.PeelDcProjects ? root.PeelDcProjects.panelSpec() : null),
     'dca:projects': () => (root.PeelCapitalEA && root.PeelCapitalEA.projectsPanelSpec ? root.PeelCapitalEA.projectsPanelSpec() : null),
     'dca:eas': () => (root.PeelCapitalEA && root.PeelCapitalEA.easPanelSpec ? root.PeelCapitalEA.easPanelSpec() : null),
   };
@@ -79,7 +78,7 @@
   }
   // An area section's panel (Growth in an area's Servicing and Capital).
   function areaSpecFor(id) { const s = AREA.find(x => x.id === id); return s && s.keys ? areaPanel(s.keys[0]) : null; }
-  // A workspace section's panel (Servicing › Network, Capital › EAs …).
+  // A workspace section's panel (Servicing › Network, Capital › Projects …).
   function wsSpecFor(ws, id) { const w = WORKSPACES[ws], s = w && w.secs.find(x => x.id === id); return s && s.keys ? areaPanel(s.keys[0]) : null; }
   const BY_ID = Object.fromEntries(SITE.map(s => [s.id, s]));
 

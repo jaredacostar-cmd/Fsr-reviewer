@@ -49,7 +49,7 @@
       set('t', tab);
       if (tab === 'svc') set('svs', AT().getSvcSub()); if (tab === 'records') set('rs', AT().getRSub());
       if (tab === 'growth') set('gs', AT().getGSub()); if (tab === 'dca') set('dcs', AT().getDcSub());
-      // The one System control (Servicing › Capacity, Capital › DC projects): only when not Both.
+      // The one System control (Servicing › Capacity, Capital › DC timing): only when not Both.
       if (AT().getSys && AT().getSys() !== 'both') set('sy', AT().getSys());
       if (SVCT().svcOpt.ww !== 'calibrated') set('wm', SVCT().svcOpt.ww); if (SVCT().svcOpt.md !== 'design') set('md', SVCT().svcOpt.md); if (SVCT().svcOpt.div !== 'off') set('dv', SVCT().svcOpt.div); if (SVCT().svcOpt.nr !== 'on') set('nr', SVCT().svcOpt.nr);
       if (MM().mstyle.color !== 'phase' || MM().mstyle.size !== 'fixed' || MM().mstyle.cap !== 'off') set('ms', `${MM().mstyle.color}.${MM().mstyle.size}.${MM().mstyle.cap}`);

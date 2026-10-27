@@ -2422,7 +2422,7 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
    phone held sideways) gets them too (pointer: coarse). */
 @media (max-width: 700px), (pointer: coarse) {
   .btn:not(.link), .chip, .f-tab, select, input[type="text"], input[type="search"], input[type="number"],
-  details > summary, .f-sum, .t-toggle, .tb-step, .seg .btn, .switch { min-height: 44px; }
+  details > summary, .f-sum, .t-toggle, .tb-step, .seg .btn, .switch, .eat-row { min-height: 44px; }
   .btn.small:not(.link), .chip, .t-toggle { min-width: 44px; }
   .chip, .btn.small:not(.link) { display: inline-flex; align-items: center; justify-content: center; }
   details > summary { display: flex; align-items: center; }
@@ -2721,7 +2721,7 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .cap-hz > td { background: var(--surface-2); padding: var(--space-2) var(--space-3); }
 .cap-hz-t { margin: 0; width: auto; }
 .net-bar { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); padding: var(--space-2); border: 1px solid var(--border); border-radius: 6px; background: var(--surface-2); }
-#analysis.site-scope #pane-svc-netbar, #analysis.site-scope #pane-wfac, #analysis.site-scope #pane-hydro { display: none; }
+#analysis.site-scope #pane-svc-netbar, #analysis.site-scope #pane-wfac, #analysis.site-scope #pane-hydro, #analysis.site-scope #pane-dca-dcproj, #analysis.site-scope #pane-dca-rec, #analysis.site-scope #pane-dca-funding { display: none; }
 
 /* ---- The standard panel (Stage 3, js/panel.js): header, scenario chip, answer, ≤ 4 figures, one
    chart, short lists, folded method and sources, footer. Amber tight, red over, teal room, violet
@@ -2826,7 +2826,9 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .pnl-r-year.t-over, .pnl-r-meta .t-over { color: var(--cap-over-t); }
 .pnl-r-year.t-tight, .pnl-r-meta .t-tight { color: var(--cap-tight-t); }
 .pnl-r-year.t-room, .pnl-r-meta .t-room { color: var(--pnl-room); }
-.pnl-list-h .seg { display: inline-flex; gap: 2px; }
+.pnl-list-h .seg { display: inline-flex; flex-wrap: wrap; gap: 2px; }
+/* Capital › DC timing's Status chips: a line of their own above the System and the sorts (js/dc-projects.js). */
+.pnl-list-h .dcp-status { flex-basis: 100%; margin: 0; }
 .pnl-kv { display: flex; justify-content: space-between; gap: var(--space-3); }
 .pnl-kv > span:last-child { color: var(--text-secondary); text-align: right; }
 .pnl-kv .t-over { color: var(--cap-over-t); } .pnl-kv .t-tight { color: var(--cap-tight-t); } .pnl-kv .t-room { color: var(--pnl-room); }
@@ -3014,7 +3016,7 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .home-map-svg .hm-pipe { fill: none; stroke: var(--pipe-sanitary); stroke-width: 1.4; }
 .home-map-svg .hm-pipe.risky { stroke-width: 2.6; }
 .hm-key.hm-dc-wastewater { background: var(--dc-ww-main); } .hm-key.hm-dc-water { background: var(--pipe-water); }
-/* Capital › DC projects on a workspace page: the open project and the developments relying on it. */
+/* Capital › DC timing on the Capital page: the project open in place and the developments relying on it. */
 .home-answer .ws-back { display: block; margin-bottom: var(--space-2); }
 /* QA/QC › Review outlets: the queue filters, the development's outlet, and the map to tap. */
 .dvo-filters { display: flex; flex-wrap: wrap; gap: var(--space-1); margin: var(--space-2) 0; }
@@ -3706,12 +3708,14 @@ button.c-kind { all: unset; cursor: pointer; text-decoration: underline dotted; 
 /* Home: the units the answer adds, by stage (Built since 2021 first). */
 .home-stages .lybar { margin: 4px 0 6px; }
 
-/* EA to construction (Home › Capital): one row per EA; the EA's span, its public information
-   centres and completion, then the construction that started after it. Tokens only. */
+/* EA to construction (Capital › EAs: the fold, its full table and the EAs page): one row per EA; the
+   EA's span, its public information centres and completion, then the construction that started after
+   it. Tokens only. */
 .eat { list-style: none; margin: 0; padding: 0; }
 .eat-row, .eat-axis { display: grid; grid-template-columns: minmax(120px, 32%) 1fr; gap: var(--space-2); align-items: center; }
 .eat-row { padding: 3px 0; border-top: 1px solid var(--border); cursor: pointer; }
 .eat-row:hover, .eat-row:focus-visible { background: color-mix(in srgb, var(--accent) 8%, transparent); }
+.eat-ft { white-space: normal; text-align: left; }   /* (the fold's full-table link wraps: wider than a phone's column) */
 .eat-nm { font-size: .85em; line-height: 1.2; overflow-wrap: anywhere; }
 .eat-nm small { display: block; color: var(--text-muted); }
 .eat-track { position: relative; height: 18px; }

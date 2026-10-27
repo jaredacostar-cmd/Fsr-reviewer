@@ -50,8 +50,11 @@ test('no two sub-views share a name; the chips, the trails and the source lines 
   assert.equal(W.tabPath('growth', 'timing'), 'Growth › Forecast');
   assert.equal(W.tabPath('dca', 'timing'), 'Capital › DC timing');
   assert.ok(W.WS.some(w => w.id === 'projects' && w.label === 'DC projects'));
-  for (const [f, re] of [['js/timing.js', /areaHead\('Growth › Forecast'/], ['js/dca-tab.js', /areaHead\('Capital › DC timing'/], ['js/svc-capacity.js', /areaHead\('Servicing › Network'/], ['js/records-tab.js', /areaHead\('Records › Data checks'/]]) assert.match(src(f), re, f);
+  for (const [f, re] of [['js/timing.js', /areaHead\('Growth › Forecast'/], ['js/dc-projects.js', /areaHead\('Capital › DC timing', 'Is each DC project in time\?'/], ['js/svc-capacity.js', /areaHead\('Servicing › Network'/], ['js/records-tab.js', /areaHead\('Records › Data checks'/]]) assert.match(src(f), re, f);
   assert.doesNotMatch(src('js/svc-capacity.js') + src('js/demand-ui.js'), /areaHead\('Servicing › (Model checks|Allocations)'/);
+  // (navigation phase 4: DC projects is DC timing, the funding screen its fold)
+  assert.doesNotMatch(src('js/dc-projects.js') + src('js/dca-tab.js'), /areaHead\('Capital › (DC projects|Funding)'/, 'no head names a gone sub-view');
+  assert.doesNotMatch(src('js/workspaces.js'), /dcproj: 'DC projects'/, 'no name for a sub-view that is gone');
 });
 
 test('Help names only places that exist (tab › sub-view), and none of the old ones', () => {

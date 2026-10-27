@@ -143,7 +143,7 @@
       const seen = new Set();
       for (const sys of ['wastewater', 'water']) for (const ln of App().state.dcInfra[sys].lines) {
         const k = ln.p || ln.c; if (!k || seen.has(k) || !(has(ln.p) || has(ln.n))) continue; seen.add(k);
-        // (key: the DC impact model's project, js/dc-impact.js, as Capital › DC projects' rows carry it)
+        // (key: the DC impact model's project, js/dc-impact.js, as Capital › DC timing's rows carry it)
         out.push({ label: `DC project ${ln.p || ln.c}${ln.n ? ` – ${ln.n}` : ''}`, place: { kind: `${DI().DC_KIND[ln.k][0]}${ln.y ? ` · ${ln.y}` : ''}`, go: () => { if (!MM().getDcOn().on) MA().setDcOn({ on: true, sys: 'both' }); MP().showDcLine(ln); map.fitBounds(L.latLngBounds(ln.g.map(([x, y]) => [y, x])), { maxZoom: 15, padding: [30, 30] }); }, hit: 'dc', key: `${sys}:${k}` } });
       }
       for (const sys of ['wastewater', 'water']) for (const fc of App().state.dcInfra[sys].facilities) if (has(fc.name) || fc.items.some(i => has(i.proj))) out.push({ label: fc.name, place: { kind: `${DI().DC_FAC[fc.kind] || fc.kind} · DC ${sys}`, go: () => { if (!MM().getDcOn().on) MA().setDcOn({ on: true, sys: 'both' }); DI().showFacility(fc); if (fc.g) map.setView([fc.g[1], fc.g[0]], Math.max(map.getZoom(), 14)); }, hit: 'dcfac' } });

@@ -33,7 +33,8 @@ test('index.html: Servicing has two chips; the panes move by data-sub / data-pan
 });
 
 test('css: at a development, Network leaves out the Peel-wide water facilities and hydraulic check', () => {
-  assert.match(src('css/app.css'), /#analysis\.site-scope #pane-svc-netbar, #analysis\.site-scope #pane-wfac, #analysis\.site-scope #pane-hydro \{ display: none; \}/);
+  // (and, since navigation phase 4, DC timing's Peel-wide list in full and the funding tables: the site's brief only)
+  assert.match(src('css/app.css'), /#analysis\.site-scope #pane-svc-netbar, #analysis\.site-scope #pane-wfac, #analysis\.site-scope #pane-hydro, #analysis\.site-scope #pane-dca-dcproj, #analysis\.site-scope #pane-dca-rec, #analysis\.site-scope #pane-dca-funding \{ display: none; \}/);
 });
 
 test('the workbook at a development leaves out the Peel-wide panes Network hides there (the Water sheet read #wfac-body)', () => {
@@ -363,32 +364,35 @@ function loadTabs(win = {}, stored = {}, dom = () => []) {
   return ctx.module.exports;
 }
 
-test('one System control: Both · Wastewater · Water, one on; a pick redraws Capacity, and DC projects once it has drawn, when that is cheap or on screen', () => {
+test('one System control: Both · Wastewater · Water, one on; a pick redraws Capacity, and Capital › DC timing once it has drawn, when that is cheap or on screen', () => {
   const T = loadTabs();
   const seg = T.sysSeg();
   assert.match(seg, /^<div class="seg" role="group" aria-label="System">/);
   assert.deepEqual([...seg.matchAll(/data-sys="(\w+)"[^>]*>([^<]+)</g)].map(m => [m[1], m[2]]), [['both', 'Both'], ['ww', 'Wastewater'], ['water', 'Water']]);
   assert.equal((seg.match(/class="btn small on"/g) || []).length, 1, 'exactly one on');
   assert.match(seg, /class="btn small on" data-sys="both" aria-pressed="true">Both</);
-  // A pick: Capacity redraws every time; DC projects only once it has drawn, and only while its DC impact
-  // model is worked out for this scenario or its panel is on screen (a tap on Capacity, or a lens, never
-  // builds that model: it walks every sewer pipe); else its stored panel goes, for the next Capital open or
-  // page to draw. A quiet set (a link, before the panels draw) redraws neither.
-  let current = null, onScreen = [];
+  // A pick: Capacity redraws every time; DC timing (DC projects' list until navigation phase 4) only once it
+  // has drawn, and only while its DC impact model is worked out for this scenario or its panel is on screen (a
+  // tap on Capacity, or a lens, never builds that model: it walks every sewer pipe); else its stored panel
+  // goes, for the next Capital open or page to draw (never a development's own). A quiet set (a link, before
+  // the panels draw) redraws neither.
+  let current = null, onScreen = [], dev = null;
   const calls = [], W = { PeelSvcCapacity: { render: () => calls.push('capacity') }, PeelDcProjects: { shown: () => false, refresh: () => calls.push('dcproj') },
-    PeelDcImpact: { current: () => current }, PeelPanel: { sync: () => {}, clear: k => calls.push(`clear ${k}`) } };
+    PeelDcImpact: { current: () => current }, PeelPanel: { sync: () => {}, clear: k => calls.push(`clear ${k}`) }, DevScope: { current: () => dev } };
   const T2 = loadTabs(W, {}, s => (s === '[data-dcproj-sort], [data-dcproj-back]' ? onScreen : []));
   T2.setSys('water'); assert.deepEqual(calls, ['capacity']);
   assert.match(T2.sysSeg(), /class="btn small on" data-sys="water" aria-pressed="true">Water</);
   calls.length = 0; W.PeelDcProjects.shown = () => true;
-  T2.setSys('wastewater'); assert.deepEqual(calls, ['capacity', 'clear dca:dcproj'], 'drawn once, the model since out of date, off screen: not rebuilt in the tap'); assert.equal(T2.getSys(), 'ww');
+  T2.setSys('wastewater'); assert.deepEqual(calls, ['capacity', 'clear dca:timing'], 'drawn once, the model since out of date, off screen: not rebuilt in the tap'); assert.equal(T2.getSys(), 'ww');
   calls.length = 0; onScreen = [{ getClientRects: () => [] }];
-  T2.setSys('water'); assert.deepEqual(calls, ['capacity', 'clear dca:dcproj'], 'its Sort in a hidden tab is not on screen');
+  T2.setSys('water'); assert.deepEqual(calls, ['capacity', 'clear dca:timing'], 'its Sort in a hidden tab is not on screen');
   calls.length = 0; onScreen = [{ getClientRects: () => [{}] }];
   T2.setSys('ww'); assert.deepEqual(calls, ['capacity', 'dcproj'], 'on screen: redrawn');
   calls.length = 0; onScreen = []; current = {};
   T2.setSys('water'); assert.deepEqual(calls, ['capacity', 'dcproj'], 'the model worked out for this scenario: cheap, redrawn');
-  calls.length = 0;
+  calls.length = 0; current = null; dev = { key: 'd1' };
+  T2.setSys('ww'); assert.deepEqual(calls, ['capacity'], 'at a development its own Capital panel (js/dca-tab.js) stays');
+  calls.length = 0; dev = null;
   T2.setSys('both', { quiet: true }); assert.deepEqual(calls, []); assert.equal(T2.getSys(), 'both');
   // A tap anywhere (the map's panels, a page's sections) and the share link follows.
   assert.match(src('js/analysis-tabs.js'), /document\.addEventListener\('click', e => \{ const b = e\.target\.closest && e\.target\.closest\('\[data-sys\]'\); if \(b\) \{ setSys\(b\.dataset\.sys\); Sh\(\)\.viewLink\.write\(\); \} \}\);/);
@@ -436,17 +440,18 @@ test('Servicing › Capacity reads the one System: its list, its counts and its 
   assert.match(c, /const tools = `\$\{AT\(\) && AT\(\)\.sysSeg \? AT\(\)\.sysSeg\(\) : ''\}/);
 });
 
-test('Capital › DC projects reads the one System (Both to start, was Wastewater); its sort words keep their own measure, each named', () => {
+test('Capital › DC timing (DC projects’ list until navigation phase 4) reads the one System (Both to start, was Wastewater); its sort words keep their own measure, each named', () => {
   const sets = [];
-  const U = { esc: x => String(x), fmtNum: n => String(n), fmtMoney: n => `$${n}`, store: { get: (k, d) => d, set: () => {} }, CAPITAL: { asOf: 'Oct 2026' } };
+  const U = { esc: x => String(x), fmtNum: n => String(n), fmtMoney: n => `$${n}`, roundPop: n => Math.round(n), store: { get: (k, d) => d, set: () => {} }, CAPITAL: { asOf: 'Oct 2026' } };
   let sys = 'both';
   const window = { PeelUtil: U, PeelAnalysisTabs: { getSys: () => sys, sysSeg: () => `<div class="seg" aria-label="System">[${sys}]</div>` },
     PeelPanel: { areaHead: (w, name, status, identity) => ({ trail: [{ label: 'Peel' }, { label: w }], name, status, identity }), set: k => sets.push(k) },
-    PeelDcCost: { projLabels: o => ({ short: `Project ${o.id}` }) } };
+    PeelDcCost: { projLabels: o => ({ short: `Project ${o.id}` }), dcAnalysis: () => ({ list: [], ppu: 2.5, baseBo: 0 }), dcaTimingChart: () => '' },
+    PeelApp: { state: { svcModel: {}, dcInfra: {} } }, PeelMapMarkers: { THIS_YEAR: 2026, SEW: { data: {} } }, PeelMasterPlan: { allNeeds: () => [], reliefKey: () => null } };
   const pr = (key, s) => ({ key, sys: s, k: 'main', d: 600, devs: [{ tier: 'A', units: 10 }], gaps: 0, y0: 2028, y1: 2030, status: 'approved' });
   const m = { projects: new Map([['wastewater:W1', pr('W1', 'wastewater')], ['wastewater:W2', pr('W2', 'wastewater')], ['water:A1', pr('A1', 'water')]]), gateTiers: ['A', 'B1'], byDev: new Map() };
-  window.PeelDcImpact = { model: () => m };
-  const ctx = { window }; ctx.globalThis = ctx;
+  window.PeelDcImpact = { model: () => m, current: () => m };
+  const ctx = { window, setTimeout: () => 0 }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/dc-projects.js'), ctx);
   const D = window.PeelDcProjects;
   let s = D.panelSpec();
@@ -456,16 +461,19 @@ test('Capital › DC projects reads the one System (Both to start, was Wastewate
   assert.match(s.lists[0].rows[0].html, /💧 Project A1/);
   sys = 'ww'; s = D.panelSpec();
   assert.equal(s.lists[0].title, 'Wastewater projects'); assert.equal(s.lists[0].total, 2);
-  assert.ok(s.lists[0].tools.startsWith('<div class="seg" aria-label="System">[ww]</div>'), 'the one control');
-  // "Most affected" (units relying) and "Soonest" (the construction year) stay: each button names its measure.
-  assert.match(s.lists[0].tools, /<div class="seg" role="group" aria-label="Sort"><button type="button" class="btn small on" data-dcproj-sort="affected" aria-pressed="true" title="Most units relying on it first">Most affected</);
-  assert.match(s.lists[0].tools, /data-dcproj-sort="soonest" aria-pressed="false" title="Earliest construction year first">Soonest</);
+  // (the Status chips first, then the one control, then the sorts)
+  const t = s.lists[0].tools;
+  assert.ok(t.startsWith('<div class="chips dcp-status"') && t.indexOf('<div class="seg" aria-label="System">[ww]</div>') > 0 && t.indexOf('[ww]') < t.indexOf('aria-label="Sort"'), 'the one control');
+  // "Soonest" is the capacity year now (DC timing's measure); "Most affected" (units relying) keeps its own
+  // words: each button names its measure.
+  assert.match(t, /<div class="seg" role="group" aria-label="Sort"><button type="button" class="btn small on" data-dcproj-sort="soonest" aria-pressed="true" title="The year the capacity it relieves runs out, earliest first">Soonest</);
+  assert.match(t, /data-dcproj-sort="affected" aria-pressed="false" title="Most units relying on it first">Most affected</);
   // shown: false until the panel has drawn (the System control redraws it only then).
   assert.equal(D.shown(), false);
-  D.render(); assert.deepEqual(sets, ['dca:dcproj']); assert.equal(D.shown(), true);
+  D.render(); assert.deepEqual(sets, ['dca:timing']); assert.equal(D.shown(), true);
   const d = src('js/dc-projects.js');
   assert.doesNotMatch(d, /data-dcproj-sys|dcprojSys|store\.get\('dcProjSys'/);
-  assert.match(d, /const s = sysNow\(\), list = \[\.\.\.m\.projects\.values\(\)\]\.filter\(pr => s === 'both' \|\| pr\.sys === \(s === 'ww' \? 'wastewater' : 'water'\)\)/);
+  assert.match(d, /const sysOk = x => \{ const s = sysNow\(\), pr = x\.pr; return s === 'both' \|\| pr\.sys === \(s === 'ww' \? 'wastewater' : 'water'\); \};/);
   assert.match(d, /\['perunit', '\$ a unit', 'Lowest DC cost per unit relying on it first'\]/);
 });
 

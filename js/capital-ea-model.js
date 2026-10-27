@@ -376,7 +376,7 @@
     return `<p class="small pv-hide ce-review" data-internal="ea-review">Completed ${esc(e.completedYear)} (${r.years} years ago) with no linked construction under way: ${r.level === 'past' ? 'past' : 'approaching'} 10 years, so a review may be required. From January 1, 2027 the Municipal Class EA is replaced by the Municipal Project Assessment Process (O. Reg. 258/26).</p>`;
   }
 
-  // ---- EA to construction (Home › EA to construction) ---------------------------------------------
+  // ---- EA to construction (Capital › EAs; the EAs page) -------------------------------------------
   // Each EA, from commencement to the construction that follows it. A contract linked to an EA is its
   // outcome only if it starts after the EA is complete (or, for an EA still under way, after its
   // expected report): construction never starts before the EA that decides it. Work that started
@@ -462,6 +462,85 @@
     return { ea: x.d.start != null || eaEnd != null ? { a: f(x.d.start != null ? x.d.start : eaEnd), b: f(eaEnd != null ? eaEnd : Date.now()), open: eaEnd == null } : null,
       pics: x.d.pics.map(f), done: x.d.completion ? f(x.d.completion.at) : null, expected: x.d.expected ? f(x.d.expected.at) : null,
       works: x.outcome.filter(c => c.start != null).map(c => ({ a: f(c.start), b: f(c.end != null ? Math.max(c.end, c.start) : c.start + 365 * 864e5), status: c.status, planned: !c.startActual })) };
+  }
+  // The timeline (rows from eaProgress); open(x): each row's attributes, what a tap opens (the EA on the map).
+  function eaTimelineHTML(rows, open, today = Date.now()) {
+    if (!rows.length) return '';
+    const y0 = Math.max(2008, Math.min(...rows.map(x => x.d.start).filter(v => v != null).map(v => new Date(v).getUTCFullYear()), new Date(today).getUTCFullYear() - 10));
+    const y1 = new Date(today).getUTCFullYear() + 6, from = Date.UTC(y0, 0, 1), to = Date.UTC(y1, 0, 1);
+    const pct = v => `${(v * 100).toFixed(2)}%`;
+    const ticks = []; for (let y = Math.ceil(y0 / 5) * 5; y < y1; y += 5) ticks.push(`<span class="eat-tick" style="left:${pct((Date.UTC(y, 0, 1) - from) / (to - from))}">${y}</span>`);
+    const nowAt = pct((today - from) / (to - from));
+    const line = x => {
+      const t = timelineRow(x, from, to), parts = [];
+      if (t.ea) parts.push(`<span class="eat-ea${t.ea.open ? ' open' : ''}" style="left:${pct(t.ea.a)};width:${pct(Math.max(0.004, t.ea.b - t.ea.a))}"></span>`);
+      for (const p of t.pics) parts.push(`<span class="eat-pic" style="left:${pct(p)}" title="Public information centre"></span>`);
+      if (t.done != null) parts.push(`<span class="eat-done" style="left:${pct(t.done)}" title="EA complete ${esc(String(x.d.completion.year))}"></span>`);
+      else if (t.expected != null) parts.push(`<span class="eat-exp" style="left:${pct(t.expected)}" title="Report expected ${esc(String(x.d.expected.year))}"></span>`);
+      for (const w of t.works) parts.push(`<span class="eat-w eat-w-${esc(w.status.replace(/\s+/g, '-'))}${w.planned ? ' planned' : ''}" style="left:${pct(w.a)};width:${pct(Math.max(0.006, w.b - w.a))}"></span>`);
+      return `<li class="eat-row" ${Object.entries(open(x)).map(([k, v]) => `${k}="${esc(v)}"`).join(' ')} tabindex="0" role="button"><span class="eat-nm">${esc(x.e.name)}<small>${esc(x.e.municipality || 'Peel')} · ${esc((BUCKETS.find(b => b[0] === x.bucket) || [])[1] || '')}</small></span><span class="eat-track">${parts.join('')}<span class="eat-now" style="left:${nowAt}"></span></span></li>`;
+    };
+    return `<h3 class="pnl-chart-t">Each EA and the construction after it <span class="pnl-chart-u">(${y0}–${y1})</span></h3>
+      <div class="eat-axis" aria-hidden="true"><span class="eat-nm"></span><span class="eat-track">${ticks.join('')}</span></div>
+      <ul class="eat" aria-label="EA timelines">${rows.map(line).join('')}</ul>
+      <p class="small muted eat-key"><span class="eat-k eat-ea"></span> EA study <span class="eat-k eat-pic"></span> public information centre <span class="eat-k eat-done"></span> EA complete <span class="eat-k eat-exp"></span> report expected <span class="eat-k eat-w eat-w-under-construction"></span> construction <span class="eat-k eat-w planned"></span> planned <span class="eat-k eat-now"></span> today</p>`;
+  }
+  // EA to construction (navigation phase 4: one builder for Capital › EAs' fold and full table and the EAs page):
+  // o = { eas, capital (its records), muni, today, open(x): a row's attributes } → { all, answer, figures, chart,
+  // lists, folds, method, sources }. Construction counts as the EA's outcome only when it starts on or after the
+  // EA's completion (the year, where only the year is known); earlier work in the study area is listed as other
+  // work, never as following the EA (eaProgress).
+  const num = n => (n == null ? '' : Number(n).toLocaleString('en-CA'));
+  const yrOf = v => (v == null ? '' : String(new Date(v).getUTCFullYear()));
+  const workLine = c => `${esc(c.work || 'Construction')}${c.street ? ` · ${esc(c.street)}` : ''} <small>${esc(c.status)}${c.start != null ? `, ${c.startActual ? 'started' : 'starts'} ${yrOf(c.start)}` : ''}</small>`;
+  function eaFlowSpec(o) {
+    const { eas = [], capital = [], muni = null, today = Date.now(), open } = o || {};
+    const all = eaProgress(eas, capital, today).filter(x => !muni || !x.e.municipality || x.e.municipality === 'Region-wide' || x.e.municipality.split(' / ').includes(muni));
+    const by = k => all.filter(x => x.bucket === k), n = k => by(k).length;
+    const followed = all.filter(x => ['planned', 'building', 'built'].includes(x.bucket));
+    const waiting = [...by('limit'), ...by('waiting')].sort((a, b) => a.d.completion.at - b.d.completion.at);
+    const current = by('current').sort((a, b) => (a.d.expected ? a.d.expected.at : 9e15) - (b.d.expected ? b.d.expected.at : 9e15));
+    const conflicts = all.filter(x => x.conflict.length);
+    // (a report date already past on an EA still under way: the page has not been updated, or the EA is late)
+    const now0 = today, nextRep = current.find(x => x.d.expected && x.d.expected.at >= now0), pastDue = current.filter(x => x.d.expected && x.d.expected.at < now0).length;
+    // Current construction near a past EA that the weekly build hasn't linked (never counted as following it).
+    const inMuni = x => !muni || !x.e.municipality || x.e.municipality.split(' / ').includes(muni);
+    const possible = possibleLinks(eas, capital, today).filter(inMuni);
+    // Construction starting 10+ years after the EA was complete: the Class EA may need a review first.
+    const gapOf = (x, c) => (x.d.completion && c.start != null ? new Date(c.start).getUTCFullYear() - x.d.completion.year : null);
+    const gapNote = g => (g != null && g >= 10 ? ` <span class="pnl-chip t-tight">${num(g)} years after the EA</span>` : '');
+    const late = [...followed.flatMap(x => x.outcome.map(c => gapOf(x, c))), ...possible.map(p => gapOf(p, p.c))].filter(g => g != null && g >= 10).length;
+    const done = all.length - n('current');
+    // (each count says its own measure: Capital › EAs, beside it, counts an addendum as current and an EA with
+    // no status published as neither; here an addendum's EA is complete and one with no status is under way)
+    const addenda = all.filter(x => x.e.status === 'addendum').length, noStatus = by('current').filter(x => !EA_CURRENT.has(x.e.status)).length;
+    const answer = !all.length ? 'No Region EAs in this area.'
+      : `Of <strong>${num(done)}</strong> completed EA${done === 1 ? '' : 's'}${addenda ? ` (${num(addenda)} with an addendum under way)` : ''}, <strong>${num(followed.length)}</strong> ${followed.length === 1 ? 'has' : 'have'} construction that started after the EA was complete, <strong>${num(waiting.length)}</strong> ${waiting.length === 1 ? 'is' : 'are'} waiting for construction${n('limit') ? ` (${num(n('limit'))} for 9 years or more)` : ''}, and <strong>${num(n('nodate'))}</strong> ${n('nodate') === 1 ? 'has' : 'have'} no completion date yet. <strong>${num(n('current'))}</strong> ${n('current') === 1 ? 'is' : 'are'} under way${noStatus ? ` (${num(noStatus)} with no status published)` : ''}.${possible.length ? ` <strong>${num(possible.length)}</strong> current construction contract${possible.length === 1 ? ' lies' : 's lie'} near a past EA without a link: possible links to check.` : ''}${late ? ` <strong>${num(late)}</strong> contract${late === 1 ? ' starts' : 's start'} 10 or more years after ${late === 1 ? 'its' : 'their'} EA: check the EA was reviewed (a Class EA rule).` : ''}`;
+    const row = (x, right) => ({ attrs: open(x), html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.e.name)}<small>${esc(x.e.municipality || 'Peel')}</small></span><span class="pnl-r-fig">${right}</span></div>` });
+    const chartRows = [...followed, ...waiting].sort((a, b) => (a.d.completion ? a.d.completion.at : 9e15) - (b.d.completion ? b.d.completion.at : 9e15));
+    const others = all.filter(x => x.other.length);
+    const unknown = by('nodate');
+    return { all, answer,
+      figures: [
+        { v: num(followed.length), u: 'EAs', label: 'construction followed', ctx: `${num(n('building'))} under construction · ${num(n('planned'))} planned · ${num(n('built'))} built` },
+        { v: num(waiting.length), u: 'EAs', label: 'complete, no construction yet', ctx: waiting.length ? `oldest completed ${esc(String(waiting[0].d.completion.year))}` : '', tone: n('limit') ? 'tight' : null },
+        { v: num(n('current')), u: 'EAs', label: 'under way', ctx: [nextRep ? `next report expected ${esc(String(nextRep.d.expected.year))}` : '', pastDue ? `${num(pastDue)} past their report date` : '', noStatus ? `${num(noStatus)} with no status published` : ''].filter(Boolean).join(' · ') },
+        { v: num(n('nodate')), u: 'EAs', label: 'completion date unknown', ctx: 'construction can’t be ordered against them yet' },
+      ],
+      chart: eaTimelineHTML(chartRows, open, today),
+      lists: [
+        { title: 'Complete, waiting for construction (oldest first)', rows: waiting.map(x => row(x, `${esc(String(x.d.completion.year))}<small>${num(x.yearsSince)} year${x.yearsSince === 1 ? '' : 's'} ago${x.yearsSince >= 10 ? ' · review needed before construction' : x.bucket === 'limit' ? ' · near 10 years' : ''}</small>`)), total: waiting.length, all: true },
+        { title: 'Construction that followed an EA', rows: followed.flatMap(x => x.outcome.map(c => ({ attrs: open(x), html: `<div class="pnl-r-top"><span class="pnl-r-name">${workLine(c)}${gapNote(gapOf(x, c))}<small>after ${esc(x.e.name)} (complete ${esc(String(x.d.completion ? x.d.completion.year : '?'))})</small></span></div>` }))), total: followed.length, all: true },
+        { title: 'Possible links to check: current construction near a past EA', rows: possible.map(x => ({ attrs: open(x), html: `<div class="pnl-r-top"><span class="pnl-r-name">${workLine(x.c)}${gapNote(gapOf(x, x.c))}<small>near ${esc(x.e.name)}${x.d.completion ? ` (complete ${esc(String(x.d.completion.year))})` : ''} · ${esc(x.why.join(' · '))}</small></span></div>` })), total: possible.length, all: true },
+        { title: 'EAs under way (by expected report)', rows: current.map(x => row(x, x.d.expected ? `${esc(String(x.d.expected.year))}<small>${x.d.expected.at < now0 ? 'report was due' : 'report expected'}</small>` : '<small>no report date yet</small>')), total: current.length },
+      ],
+      folds: [
+        others.length ? { title: `Other work in the study areas (${num(others.reduce((t, x) => t + x.other.length, 0))}): started before the EA was complete, so not counted as following it`, html: `<ul class="small">${others.map(x => `<li><strong>${esc(x.e.name)}</strong>${x.d.completion ? ` (EA complete ${esc(String(x.d.completion.year))})` : x.d.expected ? ` (report expected ${esc(String(x.d.expected.year))})` : ''}: ${x.other.map(workLine).join('; ')}</li>`).join('')}</ul>` } : null,
+        unknown.length ? { title: `Completion date unknown (${num(unknown.length)})`, html: `<p class="small muted">The EA’s page, notice and report don’t give a completion year yet, so linked construction can’t be ordered against it.</p><ul class="small">${unknown.map(x => `<li>${esc(x.e.name)} <span class="muted">· ${esc(x.e.municipality || 'Peel')}${x.contracts.length ? ` · ${num(x.contracts.length)} linked contract${x.contracts.length === 1 ? '' : 's'}` : ''}</span></li>`).join('')}</ul>` } : null,
+        conflicts.length ? { title: `Date conflicts to check (${num(conflicts.length)})`, open: true, html: `<p class="small muted">The project’s own page links this construction to the EA, but it started before the EA was complete. One of the dates may be wrong.</p><ul class="small">${conflicts.map(x => `<li><strong>${esc(x.e.name)}</strong> (EA complete ${esc(String(x.d.completion ? x.d.completion.year : x.d.expected ? x.d.expected.year : '?'))}): ${x.conflict.map(workLine).join('; ')}</li>`).join('')}</ul>` } : null,
+      ],
+      method: 'Each Region Class EA (Water, Wastewater and Roads) from its project page, with the capital projects linked to it (by the project’s own page, inside the study area, or by street inside the study area). Construction counts as following the EA only when it starts on or after the EA was complete; where only the year is known, a start in the same year counts. For an EA under way, only construction due after the expected report counts. Earlier work in the study area is listed as other work. The completion year comes from, in order: the notice of completion, the report filing date, the page’s wording, the report’s cover, the report’s file name. Under the Municipal Class EA, when more than 10 years pass between the notice of completion and the start of construction, the EA must be reviewed (and an addendum filed if anything changed) before construction: waiting EAs past 10 years and construction starting 10 or more years after its EA are flagged to check; the app can’t see whether that review was done. Possible links: planned or active contracts of the same system and municipality, mostly within 250 m of a completed EA’s study area (500 m of a facility), starting after the EA was complete, that the weekly build has not linked; repairs, relining, resurfacing and developer-built works are left out, Region-wide studies are left out, and a study area placed with low confidence needs the street named in the EA as well. They are listed to check and never counted as following the EA. The start date is the actual start where recorded, else the target start. An EA with an addendum counts as complete here (Capital › EAs counts it as current), and one with no status published as under way.',
+      sources: 'Region of Peel EA project pages and their notices and reports (weekly build, scripts/build-eas.js); Region of Peel capital project and construction pages (data/capital.json).' };
   }
 
   // ---- Possible links: current construction near a past EA, not yet linked to it ----------------------
@@ -875,7 +954,7 @@
     EA_STATUS, EA_CURRENT, eaBadge, eaShown, eaDashed, eaUnplaced, MS_LABEL,
     PRIORITY, rankHits, tolerance, hitDistance, pickHeading, sameSpot,
     EA_OUTLINE_ZOOM, eaStyle, labelPoint, pctLabel, SYS_CASING,
-    eaReview, eaDates, contractSpans, classifyLink, eaProgress, timelineRow, possibleLinks, sameStreetAs, metresTo, BUCKETS, LINK_STRENGTH, capitalSheetRows, eaSheetRows, capitalGeoJSON, easGeoJSON, CAP_COLS, EA_COLS,
+    eaReview, eaDates, contractSpans, classifyLink, eaProgress, timelineRow, eaTimelineHTML, eaFlowSpec, possibleLinks, sameStreetAs, metresTo, BUCKETS, LINK_STRENGTH, capitalSheetRows, eaSheetRows, capitalGeoJSON, easGeoJSON, CAP_COLS, EA_COLS,
     contractCheck, eaCheck, placeOf, ago, watchList, watchListHTML, watchSheetRows, WATCH_KINDS, WATCH_COLS, siteBrief, siteBriefText, siteBriefHTML, briefEaLine, briefWorkLine,
     eaScopeHTML, capitalScopeHTML, capitalHover, eaHover, watchBtn,
     dcCapitalIndex, dcActualHTML, eaMatch, eaSort, geomDistM, easNear, easMayApply, upcoming, openPeriods, eaICS, eaTabHTML, EA_SYS, activeConstruction, currentEAs, recentEAs, RECENT_YEARS, listsHTML, easForDc, easForDcHTML, weekItems, weekHTML, watchRows, attentionItems,

@@ -161,9 +161,11 @@
     const s = current(); if (!s) return [];
     if (s.kind === 'result') {
       const back = { label: s.short, go: () => { AT().showFootTab('overview'); OT().renderOverview(); }, title: `Back to ${s.title}` };
-      // A group step before the title: Peel › EA › name (opens Capital › EAs), Peel › Capital › project (Capital › Construction).
+      // A group step before the title: Peel › EA › name opens Capital › EAs, Peel › Capital › project Capital ›
+      // Projects, Peel › DC timing › a DC project Capital › DC timing.
       const g = s.result && s.result.group;
-      return g ? [{ label: g, go: () => { if (AT().setDcSub) AT().setDcSub(g === 'EA' ? 'eas' : 'projects'); AT().showFootTab('dca'); }, title: g === 'EA' ? 'Environmental assessments (Capital › EAs)' : 'Capital projects (Capital › Construction)' }, back] : [back];
+      const GROUP_SUB = { EA: 'eas', Capital: 'projects', 'DC timing': 'timing' }, GROUP_TITLE = { EA: 'Environmental assessments (Capital › EAs)', Capital: 'Capital projects (Capital › Projects)', 'DC timing': 'Every DC project (Capital › DC timing)' };
+      return g ? [{ label: g, go: () => { if (AT().setDcSub) AT().setDcSub(GROUP_SUB[g] || 'projects'); AT().showFootTab('dca'); }, title: GROUP_TITLE[g] || g }, back] : [back];
     }
     const step = (ref, label, title) => ({ label, go: () => open(ref), title });
     const out = [];

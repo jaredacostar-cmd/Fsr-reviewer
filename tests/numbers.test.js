@@ -44,8 +44,8 @@ test('the sentence and the figure beside it agree, or each names its basis', () 
   assert.match(ov, /since\(e\.population, pre\.people, x => fmtNum\(roundPop\(x\)\)\)/);
   assert.match(ov, /since\(unitsAll, pre\.units, x => fmtNum\(Math\.round\(x\)\)\)/);
   assert.match(ov, /areaPanelSpec\(\{ set, e, basis, pipe, unitsAll, unitsWord, inPlan, left, n, lyTiles, capList, nd, hl, permitCaveat, info, fr, nDue, pre \}\)/);
-  // Capital › Timing: the total held back and one project's share are both named.
-  const dca = src('js/dca-tab.js');
+  // Capital › DC timing: the total held back and one project's share are both named.
+  const dca = src('js/dc-projects.js');
   assert.match(dca, /With every project as scheduled, <strong>≈\$\{pp\(R\.baseBo\)\} people<\/strong> are still constrained at build-out/);
   assert.match(dca, /more would be, the most of any one project/);
   // Growth: completed, and how many of them since the census (the chart's "Built since 2021").

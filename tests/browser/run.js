@@ -351,7 +351,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(await findPick(page, ev, 'clarkson', { kind: 'Wastewater treatment plant', place: true }), 'Clarkson (the plant) in the list');
     const c = await ev(() => ({ mode: PeelWorkspaces.mode(), ws: PeelWorkspaces.current(), ss: PeelApp.state.ss }));
     expect(c.mode === 'ws' && c.ws === 'tight' && c.ss === 'plant:Clarkson', `the plant's scope on Servicing capacity's map (${c.mode}, ${c.ws}, ${c.ss})`);
-    // A DC project: Capital › DC projects at it, its developments by tier.
+    // A DC project: Capital › DC timing at it (in place, on the Capital page), its developments by tier.
     const dc = await ev(() => { const l = PeelApp.state.dcInfra.wastewater.lines.find(x => x.p && x.p.length >= 5); return l ? { p: l.p, key: `wastewater:${l.p}` } : null; });
     expect(!!dc, 'a wastewater DC project');
     if (dc) {
@@ -360,7 +360,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
       const d = await ev(() => ({ page: PeelWorkspaces.page(), sel: PeelDcProjects.state.sel }));
       expect(d.page === 'projects' && d.sel === dc.key, `Capital at the project (${d.page}, ${d.sel})`);
       const back = await page.waitForSelector('#home [data-dcproj-back]', { timeout: 90000 }).then(() => true, () => false);
-      expect(back, 'the project open in DC projects (its developments, a way back)');
+      expect(back, 'the project open in Capital › DC timing at it (its developments, a way back)');
       await ev(() => PeelDcProjects.select(null));
     }
     // The full map: a plan pick still sets the map's plan filter.
@@ -572,7 +572,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
     expect(side.includes('capital') && !side.includes('projects') && !side.includes('eaflow'), `the sidebar: ${side.join()}`);
     const st = 'h => String(h || "").replace(/<[^>]+>/g, "").replace(/\\s+/g, " ").trim()';
-    for (const [entry, ws, secs] of [['tight', 'servicing', ['network']], ['capital', 'capital', ['dcproj', 'projects', 'eas']]]) {
+    for (const [entry, ws, secs] of [['tight', 'servicing', ['network']], ['capital', 'capital', ['projects']]]) {
       await page.click(`#home .home-side [data-ws-page="${entry}"]`); await wait(3000);
       const bar = await ev(() => [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent.trim()));
       const want = await ev(ws => PeelSections.WORKSPACES[ws].secs.map(x => x.title), ws);
@@ -586,7 +586,7 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     }
     await page.click('#home .page-sec[data-ws-page="eaflow"]'); await wait(2500);
     const ea = await ev(() => ({ page: PeelWorkspaces.page(), on: (document.querySelector('#home .page-sec.on') || {}).textContent, lit: (document.querySelector('#home .home-ws.on') || {}).dataset }));
-    expect(ea.page === 'eaflow' && ea.on === 'EA to construction' && ea.lit && ea.lit.wsPage === 'capital', `EA to construction is a section of Capital (${ea.page}, ${ea.on})`);
+    expect(ea.page === 'eaflow' && ea.on === 'EAs' && ea.lit && ea.lit.wsPage === 'capital', `EAs (with EA to construction) is a section of Capital (${ea.page}, ${ea.on})`);
   });
 
   // Navigation phase 2: Servicing is Capacity · Network; Allocations is a fold of Capacity with its tables and
@@ -714,11 +714,11 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(sy.sys === 'water' && sy.on && sy.kept === 'water', `System › Water: the pick, kept (${JSON.stringify({ sys: sy.sys, on: sy.on, kept: sy.kept })})`);
     expect(sy.names.length > 0 && sy.names.every(t => t.startsWith('💧')), `Capacity lists the water facilities only (${sy.names.slice(0, 4).join(' | ')})`);
     expect(/(^|&)sy=water(&|$)/.test(sy.link), 'the share link carries sy=water');
-    // … the same pick in Capital › DC projects.
+    // … the same pick in Capital › DC timing (opened by its old name, DC projects: the alias, navigation phase 4).
     await ev(() => PeelAnalysisTabs.openTab('dca', 'dcproj'));
     await page.waitForSelector('#pnl-dca [data-dcproj-open]', { timeout: 90000 }); await wait(500);
     const dp = await ev(() => ({ on: !!document.querySelector('#pnl-dca [data-sys="water"].on'), h: [...document.querySelectorAll('#pnl-dca .pnl-list-h h3')].map(h => h.textContent) }));
-    expect(dp.on && dp.h.includes('Water projects'), `DC projects at the same System (${JSON.stringify(dp)})`);
+    expect(dp.on && dp.h.includes('Water projects'), `DC timing at the same System (${JSON.stringify(dp)})`);
     // (a System tap on Capacity once the Scenario has put the DC impact model out of date: DC projects is out of
     // sight, so the tap does not rebuild it; it walks every sewer pipe)
     await ev(() => PeelAnalysisTabs.openTab('svc', 'capacity')); await wait(1500);
@@ -1216,31 +1216,309 @@ const wait = ms => new Promise(r => setTimeout(r, ms));
     expect(r.ms < 10000, `computed in ${Math.round(r.ms)} ms`);
   });
 
-  await check('Capital › DC projects: the list, a project and back; the Funding lab inside it; the workspace section and its map', browser, {}, async ({ page, ev }, expect) => {
-    await ev(() => { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.openTab('dca', 'dcproj'); });
+  // Navigation phase 4: DC timing and DC projects are one list, both verdicts named; Late filters it; a row opens
+  // the project's card on the map (its dcwork: scope) and the project in place on the Capital page, with its map;
+  // Home's DC projects late opens it at Late.
+  await check('Capital › DC timing: one list with both verdicts, Late filters it, a row opens the project’s card on the map and the project in place on the Capital page with its map; the Funding lab inside it; Home’s DC projects late opens it at Late', browser, {}, async ({ page, ev }, expect) => {
+    await ev(() => { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.setSys('both'); PeelAnalysisTabs.openTab('dca', 'timing'); });
     await page.waitForSelector('#pnl-dca [data-dcproj-open]', { timeout: 90000 });
     const chips = await ev(() => [...document.querySelectorAll('[data-dcasub]')].filter(b => b.offsetParent).map(b => b.textContent.trim()));
-    expect(chips.join('|') === 'DC timing|DC projects|Projects|EAs', `Capital's chips (${chips.join(' · ')})`);
-    const a = await ev(() => ({ rows: document.querySelectorAll('#pnl-dca [data-dcproj-open]').length, body: document.querySelectorAll('#dca-dcproj-body tr[data-dcproj-open]').length, fund: !!document.querySelector('#pnl-dca details') && [...document.querySelectorAll('#pnl-dca details summary')].some(s => /Funding/.test(s.textContent)) }));
-    expect(a.rows > 0 && a.body > a.rows, `a short list and the full table (${a.rows} / ${a.body})`);
+    expect(chips.join('|') === 'DC timing|EAs|Projects', `Capital's chips (${chips.join(' · ')})`);
+    // The list, then its full table: the list in full first (both verdicts), then the capacity analysis.
+    const a = await ev(() => {
+      const b = document.getElementById('dca-dcproj-body'), t = document.getElementById('dca-timing-body');
+      return { rows: document.querySelectorAll('#pnl-dca .pnl-list [data-dcproj-open]').length, body: document.querySelectorAll('#dca-dcproj-body tr[data-dcproj-open]').length,
+        first: !!(b && t && (b.compareDocumentPosition(t) & Node.DOCUMENT_POSITION_FOLLOWING)), cap: ((b && b.querySelector('caption')) || {}).textContent || '',
+        meta: [...document.querySelectorAll('#pnl-dca .pnl-list .pnl-row')].every(r => /capacity runs out/.test(r.textContent)),
+        fund: [...document.querySelectorAll('#pnl-dca details summary')].some(s => /Funding/.test(s.textContent)) };
+    });
+    expect(a.rows > 0 && a.body > a.rows, `a short list and the list in full (${a.rows} / ${a.body})`);
+    expect(a.first && /^Every DC project, both verdicts/.test(a.cap), `the list in full comes first ("${a.cap.slice(0, 60)}")`);
+    expect(a.meta, 'every row says the first verdict: when the capacity it relieves runs out');
     expect(!a.fund, 'no funding screen while the Funding lab is off');
-    await page.click('#pnl-dca [data-dcproj-open]'); await wait(800);
-    const p = await ev(() => ({ back: !!document.querySelector('#pnl-dca [data-dcproj-back]'), devs: document.querySelectorAll('#pnl-dca [data-pnl-dev]').length, map: !!document.querySelector('#pnl-dca [data-dcproj-map]') }));
-    expect(p.back && p.devs > 0 && p.map, `a project: its developments, Show on the map, a way back (${p.devs} rows)`);
-    await page.click('#pnl-dca [data-dcproj-back]'); await wait(500);
-    expect(await ev(() => !!document.querySelector('#pnl-dca [data-dcproj-open]')), 'back to the list');
+    // The second verdict: worked out after the list painted, then drawn.
+    const built = await page.waitForFunction(() => !!PeelDcImpact.current(), null, { timeout: 60000 }).then(() => true, () => false);
+    expect(built, 'the DC projects allocation is worked out after the list paints');
+    await wait(1000);
+    const v2 = await ev(() => ({ working: [...document.querySelectorAll('#pnl-dca .pnl-list .pnl-row')].some(r => /working out/.test(r.textContent)),
+      fig: ([...document.querySelectorAll('#pnl-dca .pnl-fig')].find(f => /first homes before it is built/.test(f.textContent)) || {}).textContent || '' }));
+    expect(!v2.working && /expected first/.test(v2.fig), `the second verdict filled in (${v2.fig.slice(0, 80)})`);
+    // Late filters the list.
+    if (await ev(() => !!document.querySelector('#pnl-dca .dcp-status [data-dc-status="gap"]'))) {
+      await page.click('#pnl-dca .dcp-status [data-dc-status="gap"]'); await wait(1000);
+      const l = await ev(() => ({ metas: [...document.querySelectorAll('#pnl-dca .pnl-list .pnl-row .pnl-r-meta')].map(m => m.textContent), fig: +(((document.querySelector('#pnl-dca .pnl-fig[data-dc-status="gap"] b') || {}).textContent || '').replace(/\D/g, '')),
+        total: PeelDcProjects.rowsFor(PeelDcCost.dcAnalysis(), PeelDcImpact.current()).length, status: PeelDcProjects.state.status }));
+      expect(l.status === 'gap' && l.metas.length > 0 && l.metas.every(t => /in service after it runs out/.test(t)), `Late: every row is late (${l.metas.length} rows)`);
+      expect(l.fig === l.total, `the late figure is the list's total (${l.fig} / ${l.total})`);
+      await page.click('#pnl-dca .dcp-status [data-dc-status="all"]'); await wait(800);
+    }
+    // A row opens the project's card, its dcwork: scope on the Overview (sorted by Most affected, so the first has
+    // developments relying on it): both verdicts, the developments by tier (the allocation is in by now), what it
+    // relieves; the trail's DC timing step opens Capital › DC timing, the card's All DC projects › the list.
+    await page.click('#pnl-dca [data-dcproj-sort="affected"]'); await wait(800);
+    await page.click('#pnl-dca .pnl-list [data-dcproj-open]'); await wait(2000);
+    const c = await ev(() => { const b = document.getElementById('scope-body'), t = (b && b.textContent) || '';
+      return { ss: PeelApp.state.ss || '', tab: PeelAnalysisTabs.getFootTab(), answer: ((b && b.querySelector('.pnl-answer')) || {}).textContent || '', relieves: /What it relieves/.test(t),
+        tiers: [...(b ? b.querySelectorAll('caption') : [])].some(x => /relying on it, by tier/.test(x.textContent)), rows: b ? b.querySelectorAll('tr.ld-row[data-dev]').length : 0,
+        trail: [...document.querySelectorAll('#trail .tb-step')].map(x => x.textContent.trim()) }; });
+    expect(/^dcwork:/.test(c.ss) && c.tab === 'overview', `a row opens the project's card (${c.ss}, ${c.tab})`);
+    expect(/In service|relieves no modelled constraint|held back|check the data/.test(c.answer) && /rel(y|ies) on it/.test(c.answer), `its headline names both verdicts ("${c.answer.slice(0, 140)}")`);
+    expect(c.tiers && c.rows > 0 && c.relieves, `the developments relying on it by tier (${c.rows} rows), then what it relieves`);
+    expect(c.trail.includes('DC timing'), `the trail has a DC timing step (${c.trail.join(' › ')})`);
+    await ev(() => { const s = [...document.querySelectorAll('#trail .tb-step')].find(x => x.textContent.trim() === 'DC timing'); if (s) s.click(); }); await wait(1000);
+    expect(await ev(() => PeelAnalysisTabs.getFootTab() === 'dca' && PeelAnalysisTabs.getDcSub() === 'timing'), 'its trail step opens Capital › DC timing');
+    await ev(() => PeelAnalysisTabs.showFootTab('overview')); await wait(1000);
+    await page.click('#scope-body [data-scope-result-close][data-at="dca:timing"]'); await wait(1000);
+    expect(await ev(() => !PeelSvcScope.hasResult() && PeelAnalysisTabs.getFootTab() === 'dca' && !!document.querySelector('#pnl-dca [data-dcproj-open]')), 'All DC projects ›: the card closed, the list open');
     await ev(() => { PeelLabs.set('funding', true); PeelDcaTab.renderDca(); }); await wait(1500);
-    expect(await ev(() => [...document.querySelectorAll('#pnl-dca details summary')].some(s => /Funding screen/.test(s.textContent))), 'the Funding lab adds the funding screen to DC projects');
+    expect(await ev(() => [...document.querySelectorAll('#pnl-dca details summary')].some(s => /Funding screen/.test(s.textContent))), 'the Funding lab adds the funding screen to DC timing');
+    // The Capital page: DC timing is its first section; a project opens in place with its map; the bar's DC timing returns to the list.
     await ev(() => { PeelLabs.set('funding', false); PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage('projects'); }); await wait(1500);
-    await page.click('[data-ws-wsec="capital:dcproj"]'); await page.waitForSelector('#home [data-dcproj-open]', { timeout: 30000 });
+    const bar = await ev(() => ({ bar: [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent.trim()).join('|'), want: PeelSections.WORKSPACES.capital.secs.map(x => x.title).join('|') }));
+    expect(bar.bar === bar.want, `the Capital page's sections (${bar.bar})`);
+    await page.waitForSelector('#home [data-dcproj-open]', { timeout: 30000 });
     await page.click('#home [data-dcproj-open]'); await wait(1500);
     const w = await ev(() => ({ back: !!document.querySelector('#home [data-dcproj-back]'), name: (document.querySelector('#home h1') || {}).textContent || '',
       oneP: document.querySelectorAll('#home .home-answer').length === 1 && !!document.querySelector('#home .home-answer .ws-back') && /rel(y|ies) on it|relies on it|No development/.test((document.querySelector('#home .home-answer') || {}).textContent || ''),
       proj: document.querySelectorAll('#home .home-map-svg .hm-dcp').length, dots: document.querySelectorAll('#home .home-map-svg .hm-dcd').length, toFull: !!document.querySelector('#home [data-dcproj-map]') }));
-    expect(w.back && /·/.test(w.name), `the workspace section opens a project in place, with its name and a way back ("${w.name.slice(0, 60)}")`);
+    expect(w.back && /·/.test(w.name), `the Capital page opens a project in place, with its name and a way back ("${w.name.slice(0, 60)}")`);
     expect(w.oneP, 'its answer is one sentence, the way back above it');
     expect(w.proj > 0 && w.dots > 0 && w.toFull, `the side map shows the project and the developments relying on it, and opens the full map (${w.proj} lines, ${w.dots} developments)`);
-    await page.click('#home [data-dcproj-back]'); await wait(800);
+    // Open the map, a project open: the map view at its card.
+    await page.click('#home [data-ws-dcwork]'); await wait(2000);
+    const om = await ev(() => ({ mode: PeelWorkspaces.mode(), ss: PeelApp.state.ss || '', sel: PeelDcProjects.state.sel, tab: PeelAnalysisTabs.getFootTab() }));
+    expect(om.mode !== 'home' && om.ss === `dcwork:${om.sel}` && om.tab === 'overview', `Open the map: the project's card on the map (${JSON.stringify(om)})`);
+    await ev(() => { PeelSvcScope.closeResult(); PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage('projects'); }); await wait(1500);
+    await page.click('#home .page-sec[data-ws-page="projects"]'); await wait(1500);
+    expect(await ev(() => !!document.querySelector('#home [data-dcproj-open]') && !document.querySelector('#home [data-dcproj-back]')), 'the bar’s DC timing: the list again');
+    // Home's DC projects late: every relief late (the analysis itself); a tap opens the list at Late, which with
+    // the answer's "Also late" adds up to it (at System Both: Home never filters). The workbook's filter is untouched.
+    await ev(() => { PeelAnalysisTabs.setSys('both'); PeelWorkspaces.openPage('home'); }); await wait(2500);
+    const h = await ev(() => ({ v: +(((document.querySelector('#home .pnl-fig[data-dc-status="gap"] b') || {}).textContent || '').replace(/\D/g, '')), n: PeelDcCost.dcAnalysis().list.filter(r => r.rec === 'advance').length, f: PeelMasterPlan.dcnFilter }));
+    expect(h.v === h.n, `Home's DC projects late is the analysis' (${h.v} / ${h.n})`);
+    await page.click('#home .pnl-fig[data-dc-status="gap"]'); await wait(2500);
+    const hl = await ev(() => ({ page: PeelWorkspaces.page(), status: PeelDcProjects.state.status, late: PeelDcProjects.rowsFor(PeelDcCost.dcAnalysis(), PeelDcImpact.current()).length,
+      also: +((/Also late: (\d+)/.exec(((document.querySelector('#home .home-answer') || {}).textContent || '')) || [0, 0])[1]), f: PeelMasterPlan.dcnFilter }));
+    expect(hl.page === 'projects' && hl.status === 'gap', `the Capital page at Late (${hl.page}, ${hl.status})`);
+    expect(hl.late + hl.also === h.v, `the list's late and the answer's Also late add up to Home's (${hl.late} + ${hl.also} / ${h.v})`);
+    expect(hl.f === h.f, `the workbook's DC filter unchanged (${hl.f})`);
+    await ev(() => { PeelDcProjects.state.status = 'all'; PeelDcProjects.refresh(); });
+  });
+
+  // Navigation phase 4: the DC timing tool result is Capital › DC timing. Every way to it opens the list at the
+  // workbook filter's Status, the System left as the reader set it (one control); no tool result opens; only the
+  // list's Status chips write the filter, and the workbook's DC sheet follows it.
+  await check('the DC timing tool result and “All DC timing →” open Capital › DC timing at its Status, the System the reader’s; no tool result; the workbook’s DC sheet follows the list’s Status chip', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => !!(PeelApp.state.svcModel && PeelApp.state.dcInfra), null, { timeout: 120000 });
+    await ev(() => PeelSewerCap.loadSewers()); await wait(500);
+    // 1. showDcTiming (App().showDcTiming, Help's Show me): the list at Late, the System the reader's.
+    await ev(() => { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.setSys('both'); PeelMasterPlan.dcnFilter = 'gap:water'; PeelMasterPlan.showDcTiming(); });
+    await page.waitForSelector('#pnl-dca .dcp-status [data-dc-status]', { timeout: 90000 }); await wait(800);
+    const a = await ev(() => ({ tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getDcSub(), status: PeelDcProjects.state.status, sys: PeelAnalysisTabs.getSys(), result: PeelSvcScope.hasResult(), on: !!document.querySelector('#pnl-dca .dcp-status [data-dc-status="gap"].on') }));
+    expect(a.tab === 'dca' && a.sub === 'timing' && a.status === 'gap' && !a.result && a.on, `showDcTiming opens Capital › DC timing at Late, no tool result (${JSON.stringify(a)})`);
+    expect(a.sys === 'both', `the System stays the reader's, never the filter's (${a.sys})`);
+    // 2. A development's "All DC timing →" (its Capital full table, when it has one): the development closes.
+    const opened = await ev(() => { const q = PeelApp.state.projects.find(x => x.phase === 'approved' && x.units > 300); if (!q) return false; PeelDevNav.showDetail(q); return true; });
+    if (opened) {
+      await wait(2000); await ev(() => { PeelAnalysisTabs.openTab('dca', 'timing'); PeelPanel.openFull(); }); await wait(2500);
+      if (await ev(() => !!document.querySelector('#dca-timing-body [data-dcn-all]'))) {
+        await ev(() => { PeelDcProjects.state.status = 'all'; document.querySelector('#dca-timing-body [data-dcn-all]').click(); }); await wait(1500);
+        const b = await ev(() => ({ dev: !!DevScope.current(), status: PeelDcProjects.state.status, list: !!document.querySelector('#pnl-dca .dcp-status'), result: PeelSvcScope.hasResult(), tab: PeelAnalysisTabs.getFootTab() }));
+        expect(!b.dev && b.status === 'gap' && b.list && !b.result && b.tab === 'dca', `All DC timing → closes the development and opens the list at Late (${JSON.stringify(b)})`);
+      }
+      await ev(() => { if (PeelPanel.closeFull) PeelPanel.closeFull(); if (DevScope.current()) DevScope.close(); }); await wait(1000);
+    }
+    // 3. A Status chip writes the filter (its status and the System at the tap); a later link keeps the System.
+    await ev(() => { PeelAnalysisTabs.openTab('dca', 'timing'); PeelAnalysisTabs.setSys('water'); }); await wait(1500);
+    await page.click('#pnl-dca .dcp-status [data-dc-status="all"]'); await wait(800);
+    const f = await ev(() => PeelMasterPlan.dcnFilter);
+    expect(f === 'all:water', `a Status chip writes the workbook's filter: its status and the System at the tap (${f})`);
+    await ev(() => { PeelAnalysisTabs.setSys('both'); PeelMasterPlan.showDcTiming(); }); await wait(1000);
+    const g = await ev(() => ({ sys: PeelAnalysisTabs.getSys(), status: PeelDcProjects.state.status }));
+    expect(g.sys === 'both' && g.status === 'all', `"All DC timing →" again: the filter's Status, the System still the reader's (${JSON.stringify(g)})`);
+    // 4. Layers › More settings "DC timing: capacity vs DC projects →": the list, no tool result.
+    await ev(() => { PeelAnalysisTabs.openTab('overview'); const b = document.getElementById('opt-dctiming'); if (b) b.click(); }); await wait(1500);
+    const l = await ev(() => ({ btn: !!document.getElementById('opt-dctiming'), tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getDcSub(), result: PeelSvcScope.hasResult() }));
+    expect(l.btn && l.tab === 'dca' && l.sub === 'timing' && !l.result, `More settings' DC timing link opens the list (${JSON.stringify(l)})`);
+    // 5. The workbook's DC sheet: the constraints at the filter step 3 wrote (water only).
+    const x = await ev(() => { const all = PeelMasterPlan.allNeeds(), r = PeelExportWorkbook.dcTimingRows(all, { filter: PeelMasterPlan.dcnFilter, ppu: 2.5, hzEnd: PeelSvcPlants.hz.end, plantTrigger: PeelMasterPlan.PLANT_TRIGGER });
+      return { f: PeelMasterPlan.dcnFilter, rows: r.rows.length, water: all.filter(c => c.sys === 'water').length, all: all.length }; });
+    expect(x.f === 'all:water' && x.rows === x.water && x.rows < x.all, `the DC sheet follows the list's Status chip: water only (${JSON.stringify(x)})`);
+  });
+
+  // Navigation phase 4: EA to construction joins Capital › EAs. On the map, a fold of its panel (shut; the chip,
+  // an old #w=eaflow link and its page open it; the reader's tap keeps it), its lists in the full table; on a
+  // page, the Capital page's EAs section is its page (the EAs, then EA to construction).
+  await check('Capital › EAs carries EA to construction: a fold (shut, kept as the reader leaves it, its link into the full table), the chip opens it; the EAs page', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelCapitalEA && PeelCapitalEA.data.loaded, null, { timeout: 120000 });
+    // 1. The fold, shut; open it: the timeline; a redraw keeps it open.
+    await ev(() => { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.openTab('dca', 'eas'); }); await wait(2000);
+    const f = await ev(() => { const d = document.querySelector('#pnl-dca #pnl-eaflow'); return d ? { sum: d.querySelector('summary').textContent.trim(), open: d.open } : null; });
+    expect(f && f.sum === 'EA to construction' && !f.open, `Capital › EAs has the fold EA to construction, shut (${JSON.stringify(f)})`);
+    await page.click('#pnl-dca #pnl-eaflow > summary'); await wait(600);
+    await ev(() => PeelDcaTab.renderDca()); await wait(600);
+    const o = await ev(() => { const d = document.querySelector('#pnl-dca #pnl-eaflow'); return { open: !!(d && d.open), rows: d ? d.querySelectorAll('.eat .eat-row').length : 0, kept: PeelCapitalEA.eaFlowOpen() }; });
+    expect(o.open && o.kept && o.rows > 0, `opened, the timeline (${o.rows} rows), kept through a redraw (${JSON.stringify(o)})`);
+    // 2. Its link: the full table at its first list, in view.
+    await page.click('#pnl-dca #pnl-eaflow [data-ft-go]'); await wait(1500);
+    const ft = await ev(() => { const panes = document.getElementById('analysis-panes'), on = document.getElementById('analysis').classList.contains('ft-on');
+      const c = [...panes.querySelectorAll('#dca-eas-body .ea-flow caption')].find(x => /^Complete, waiting for construction/.test(x.textContent.trim()));
+      if (!c) return { on, cap: false }; const r = c.getBoundingClientRect(), b = panes.getBoundingClientRect(); return { on, cap: true, top: Math.round(r.top - b.top), h: Math.round(b.height) }; });
+    expect(ft.on && ft.cap && ft.top >= -2 && ft.top < ft.h, `the full table at "Complete, waiting for construction" (${JSON.stringify(ft)})`);
+    // 3. A row of it opens the EA.
+    await page.click('#dca-eas-body .ea-flow tr[data-ce-open]'); await wait(1500);
+    expect(/^ea:/.test(await ev(() => PeelApp.state.ss || '')), 'a full-table row opens its EA');
+    await ev(() => { if (PeelPanel.closeFull) PeelPanel.closeFull(); PeelSvcScope.closeResult(); }); await wait(800);
+    // 4. The reader shuts it; the EA to construction chip opens it again.
+    await ev(() => { PeelAnalysisTabs.openTab('dca', 'eas'); }); await wait(1200);
+    if (await ev(() => { const d = document.querySelector('#pnl-dca #pnl-eaflow'); return !!(d && d.open); })) await page.click('#pnl-dca #pnl-eaflow > summary');
+    await wait(500);
+    expect(await ev(() => !PeelCapitalEA.eaFlowOpen()), 'the reader shut it');
+    await ev(() => PeelWorkspaces.go('eaflow')); await wait(2500);
+    expect(await ev(() => PeelAnalysisTabs.getDcSub() === 'eas' && !!document.querySelector('#pnl-dca #pnl-eaflow[open]')), 'the EA to construction chip: Capital › EAs with the fold open');
+    // 5. The EAs page: Capital's EAs section, the EAs then EA to construction; the EAs built there when the map has none.
+    await ev(() => { PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage('eaflow'); }); await wait(2500);
+    const pg = await ev(() => ({ on: ((document.querySelector('#home .page-sec.on') || {}).textContent || '').trim(), lists: [...document.querySelectorAll('#home .pnl-list-h h3')].map(h => h.textContent.trim()), rows: document.querySelectorAll('#home .eat-row').length }));
+    expect(pg.on === 'EAs', `the bar: EAs (${pg.on})`);
+    expect(pg.lists.includes('Current EAs') && pg.lists.includes('Complete, waiting for construction (oldest first)') && pg.lists.indexOf('Current EAs') < pg.lists.indexOf('Complete, waiting for construction (oldest first)'), `the EAs, then EA to construction (${pg.lists.join(' | ')})`);
+    expect(pg.rows > 0, `the timeline (${pg.rows} rows)`);
+    await ev(() => { PeelPanel.clear('dca:eas'); PeelWorkspaces.renderPage(true); }); await wait(1500);
+    expect(await ev(() => [...document.querySelectorAll('#home .pnl-list-h h3')].some(h => h.textContent.trim() === 'Current EAs')), 'the EAs with no stored panel: built on demand');
+    await page.click('#home .eat-row'); await wait(2500);
+    const op = await ev(() => ({ mode: PeelWorkspaces.mode(), ss: PeelApp.state.ss || '' }));
+    expect(op.mode !== 'home' && /^ea:/.test(op.ss), `a timeline row opens the EA on the map (${JSON.stringify(op)})`);
+  });
+
+  // Navigation phase 4 on a phone: Capital's three chips, DC timing's filters, a project's card, Capital › EAs' fold
+  // and the Capital and EAs pages in reach, nothing wider than the screen.
+  await check('phone: Capital’s three chips, DC timing’s filters and a project’s card in reach, EA to construction’s fold and the EAs page; no sideways scroll', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
+    await ev(() => { PeelWorkspaces.setMode('full'); PeelApp.setAnalysisSnap('half'); PeelAnalysisTabs.setSys('both'); PeelAnalysisTabs.openTab('dca', 'timing'); });
+    await page.waitForSelector('#pnl-dca [data-dcproj-open]', { timeout: 90000 }); await wait(1000);
+    const a = await ev(() => { const row = document.querySelector('.f-subtabs[data-pane="dca"]'), h = el => Math.round(el.getBoundingClientRect().height);
+      return { fits: !!row && row.scrollWidth <= row.clientWidth, chips: [...document.querySelectorAll('[data-dcasub]')].filter(b => b.offsetParent).map(h), status: [...document.querySelectorAll('#pnl-dca [data-dc-status]')].filter(b => b.closest('.dcp-status')).map(h), sorts: [...document.querySelectorAll('#pnl-dca [data-dcproj-sort]')].map(h) }; });
+    expect(a.fits, 'Capital’s chip row fits the screen');
+    expect(a.chips.length === 3 && a.chips.every(x => x >= 44), `three chips, 44 px or taller (${a.chips.join()})`);
+    expect(a.status.length > 0 && a.status.every(x => x >= 44), `the Status chips, 44 px (${a.status.join()})`);
+    expect(a.sorts.length >= 3 && a.sorts.every(x => x >= 44), `the sorts, 44 px (${a.sorts.join()})`);
+    const wide = () => ev(() => { const l = document.querySelector('#pnl-dca .pnl-list-h'), p = document.getElementById('analysis-panes');
+      return { head: !!l && l.scrollWidth <= l.clientWidth, segs: l ? [...l.querySelectorAll('.seg')].every(x => x.scrollWidth <= x.clientWidth) : false, panes: p.scrollWidth <= p.clientWidth, doc: document.documentElement.scrollWidth <= innerWidth }; });
+    let w = await wide();
+    expect(w.head && w.segs && w.panes && w.doc, `DC timing's list header, its controls and the panel fit (${JSON.stringify(w)})`);
+    await ev(() => { PeelLabs.set('funding', true); PeelDcaTab.renderDca(); }); await wait(1500);
+    w = await wide();
+    expect(w.head && w.segs && w.panes && w.doc, `with the Funding lab's fourth sort too (${JSON.stringify(w)})`);
+    await ev(() => { PeelLabs.set('funding', false); PeelDcaTab.renderDca(); }); await wait(1000);
+    // A row: its card, nothing wider than the screen (its developments table scrolls inside itself).
+    await ev(() => document.querySelector('#pnl-dca [data-dcproj-sort="affected"]').click()); await wait(800);
+    await ev(() => document.querySelector('#pnl-dca .pnl-list [data-dcproj-open]').click()); await wait(2500);
+    const c = await ev(() => { const b = document.getElementById('scope-body'), csv = b && [...b.querySelectorAll('button')].find(x => x.textContent.trim() === 'CSV: its developments');
+      return { card: !!b && /^dcwork:/.test(PeelApp.state.ss || ''), doc: document.documentElement.scrollWidth, vw: innerWidth, csv: csv ? Math.round(csv.getBoundingClientRect().height) : 0 }; });
+    expect(c.card && c.doc <= c.vw, `a project's card, no sideways scroll (${c.doc} / ${c.vw})`);
+    expect(c.csv >= 44, `CSV: its developments, 44 px (${c.csv})`);
+    await ev(() => PeelSvcScope.closeResult()); await wait(800);
+    // Capital › EAs with EA to construction open: the fold's summary and rows 44 px, its link inside the panel.
+    await ev(() => { PeelAnalysisTabs.openTab('dca', 'eas'); PeelCapitalEA.openEaFlow(); }); await wait(1500);
+    const e = await ev(() => { const d = document.querySelector('#pnl-dca #pnl-eaflow'), p = document.getElementById('analysis-panes'), l = d && d.querySelector('[data-ft-go]'), h = el => Math.round(el.getBoundingClientRect().height);
+      return d ? { open: d.open, sum: h(d.querySelector('summary')), rows: [...d.querySelectorAll('.eat-row')].map(h), link: l ? Math.round(l.getBoundingClientRect().right) : 0, pr: Math.round(p.getBoundingClientRect().right), panes: p.scrollWidth <= p.clientWidth } : null; });
+    expect(e && e.open && e.sum >= 44 && e.rows.length > 0 && e.rows.every(x => x >= 44), `EA to construction's fold: its summary and timeline rows 44 px (${e && `${e.sum}, ${e.rows.slice(0, 4).join()}`})`);
+    expect(e && e.panes && e.link <= e.pr, `the fold and its full-table link fit the panel (${JSON.stringify(e && { link: e.link, pr: e.pr, panes: e.panes })})`);
+    // The Capital page and the EAs page.
+    for (const id of ['projects', 'eaflow']) {
+      await ev(id => { PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage(id); }, id); await wait(2500);
+      const p = await ev(() => { const hm = document.getElementById('home'); return { home: hm.scrollWidth <= hm.clientWidth, doc: document.documentElement.scrollWidth <= innerWidth, rows: [...document.querySelectorAll('#home .eat-row')].map(el => Math.round(el.getBoundingClientRect().height)) }; });
+      expect(p.home && p.doc, `the ${id} page: no sideways scroll (${JSON.stringify({ home: p.home, doc: p.doc })})`);
+      if (id === 'eaflow') expect(p.rows.length > 0 && p.rows.every(x => x >= 44), `the EAs page's timeline rows, 44 px (${p.rows.slice(0, 4).join()})`);
+    }
+  });
+
+  // Navigation phase 4's old links and stored picks (navigation-design §7.1–7.3): what an earlier release stored
+  // (the DC projects chip, its sort, the project it had open) and linked to (dcs=dcproj, dcs=funding, the EA to
+  // construction chip and page, the DC projects page, a DC project's ss=dcwork:) land on DC timing, EAs and the card.
+  await check('kept from before phase 4: a stored DC projects chip opens DC timing at its stored sort, never its stored project; cold dcs=dcproj and dcs=funding links open DC timing (the funding one with its lab and fold); #w=eaflow opens Capital › EAs at EA to construction; the DC projects and EA to construction pages; ss=dcwork: opens the project’s card', browser, { prefs: { footTab4: 'dca', dcSub: 'dcproj', dcProjSort: 'affected', dcProjSel: 'wastewater:26-2242' } }, async ({ page, ev }, expect) => {
+    const load = async (url, ready) => { await page.goto(`http://localhost:${PORT}/${url}`); await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 }); if (ready) await page.waitForSelector(ready, { timeout: 120000 }); await wait(1500); };
+    const pr = await ev(() => ({ tab: PeelAnalysisTabs.getFootPref(), sub: PeelAnalysisTabs.getDcSub(), sort: PeelDcProjects.state.sort, sel: PeelDcProjects.state.sel, kept: PeelUtil.store.get('dcSort', null) }));
+    expect(pr.tab === 'dca' && pr.sub === 'timing', `the stored DC projects chip: Capital › DC timing (${JSON.stringify(pr)})`);
+    expect(pr.sort === 'affected' && pr.kept === null && pr.sel === null, `its stored Most affected is DC timing's sort, its stored project not reopened (${JSON.stringify(pr)})`);
+    await ev(() => PeelWorkspaces.setMode('full'));
+    await page.waitForSelector('#pnl-dca .pnl-list [data-dcproj-open]', { timeout: 90000 }); await wait(1000);
+    const m = await ev(() => ({ tab: PeelAnalysisTabs.getFootTab(), on: ([...document.querySelectorAll('[data-dcasub].on')].find(b => b.offsetParent) || {}).textContent, sort: ((document.querySelector('#pnl-dca [data-dcproj-sort].on') || {}).textContent || '').trim(), back: !!document.querySelector('#pnl-dca [data-dcproj-back]'), k: document.querySelector('#pnl-dca .pnl-list [data-dcproj-open]').dataset.dcprojOpen }));
+    expect(m.tab === 'dca' && m.on === 'DC timing' && m.sort === 'Most affected' && !m.back, `the map opens on the list at Most affected, no project open (${JSON.stringify(m)})`);
+    await page.click('#pnl-dca [data-dcproj-sort="soonest"]'); await wait(800);
+    expect(await ev(() => PeelUtil.store.get('dcSort', null) === 'soonest' && PeelDcProjects.state.sort === 'soonest'), 'a pick is the one stored sort, dcSort');
+    // Old links, opened cold (each with a query of its own: a new load, not a hash change).
+    await load('?dcproj#t=dca&dcs=dcproj', '#pnl-dca .pnl-list [data-dcproj-open]');
+    const dl = await ev(() => ({ mode: PeelWorkspaces.mode(), tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getDcSub(), sort: PeelDcProjects.state.sort, link: PeelShare.viewLink.hash() }));
+    expect(dl.mode === 'full' && dl.tab === 'dca' && dl.sub === 'timing' && dl.sort === 'soonest', `t=dca&dcs=dcproj opened cold: Capital › DC timing, at the stored sort (${JSON.stringify({ mode: dl.mode, tab: dl.tab, sub: dl.sub, sort: dl.sort })})`);
+    expect(/(^|&)dcs=timing(&|$)/.test(dl.link) && !/dcs=dcproj/.test(dl.link), `the link now says dcs=timing (${dl.link})`);
+    const lab = await ev(() => PeelLabs.on('funding'));
+    await load('?funding#t=dca&dcs=funding', '#pnl-dca .pnl-list [data-dcproj-open]');
+    const fu = await ev(() => ({ sub: PeelAnalysisTabs.getDcSub(), lab: PeelLabs.on('funding'), fold: [...document.querySelectorAll('#pnl-dca details.pnl-fold')].filter(d => /^Funding screen/.test(d.querySelector('summary').textContent)).map(d => d.open), perunit: !!document.querySelector('#pnl-dca [data-dcproj-sort="perunit"]') }));
+    expect(fu.sub === 'timing' && fu.lab && fu.fold.length === 1 && fu.fold[0] && fu.perunit, `t=dca&dcs=funding: DC timing, Labs › DC funding on, its Funding screen fold open and the $ a unit sort (${JSON.stringify(fu)})`);
+    await ev(w => PeelLabs.set('funding', w), lab);
+    // The EA to construction chip: Capital › EAs with its fold open; its page and the Capital page's old ids.
+    await load('?chip#w=eaflow', '#pnl-dca #pnl-eaflow[open]');
+    const ec = await ev(() => ({ mode: PeelWorkspaces.mode(), tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getDcSub(), kept: PeelCapitalEA.eaFlowOpen(), rows: document.querySelectorAll('#pnl-dca #pnl-eaflow .eat-row').length }));
+    expect(ec.mode === 'ws' && ec.tab === 'dca' && ec.sub === 'eas' && ec.kept && ec.rows > 0, `#w=eaflow: Capital › EAs, EA to construction open (${JSON.stringify(ec)})`);
+    const bar = () => ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page(), on: ((document.querySelector('#home .page-sec.on') || {}).textContent || '').trim(), lists: [...document.querySelectorAll('#home .pnl-list-h h3')].map(h => h.textContent.trim()) }));
+    await load('?page#w=p:eaflow', '#home .eat-row');
+    const ep = await bar();
+    expect(ep.mode === 'home' && ep.page === 'eaflow' && ep.on === 'EAs' && ep.lists.includes('Current EAs') && ep.lists.includes('Complete, waiting for construction (oldest first)'), `w=p:eaflow: the Capital page's EAs, with EA to construction (${JSON.stringify(ep)})`);
+    await load('?projects#w=p:projects', '#home [data-dcproj-open]');
+    const cp = await bar();
+    expect(cp.mode === 'home' && cp.page === 'projects' && cp.on === 'DC timing', `w=p:projects: the Capital page at DC timing, the list (${JSON.stringify({ mode: cp.mode, page: cp.page, on: cp.on })})`);
+    // A DC project's link: its card on the Overview, the developments relying on it by tier once worked out.
+    await load(`?work#ss=dcwork:${m.k}`);
+    const got = await page.waitForFunction(k => PeelApp.state.ss === `dcwork:${k}` && !!document.querySelector('#scope-body tr.ld-row[data-dev]'), m.k, { timeout: 120000 }).then(() => true, () => false);
+    const wk = await ev(() => { const b = document.getElementById('scope-body'); return { mode: PeelWorkspaces.mode(), ss: PeelApp.state.ss, tab: PeelAnalysisTabs.getFootTab(), answer: ((b && b.querySelector('.pnl-answer')) || {}).textContent || '', tiers: [...(b ? b.querySelectorAll('caption') : [])].some(x => /relying on it, by tier/.test(x.textContent)), trail: [...document.querySelectorAll('#trail .tb-step')].map(x => x.textContent.trim()) }; });
+    expect(got && wk.mode === 'full' && wk.tab === 'overview' && wk.tiers, `ss=dcwork:${m.k} opened cold: its card, the developments by tier (${JSON.stringify({ mode: wk.mode, ss: wk.ss, tab: wk.tab, tiers: wk.tiers })})`);
+    expect(/rel(y|ies) on it/.test(wk.answer) && wk.trail.includes('DC timing'), `its headline names both verdicts, its trail DC timing ("${wk.answer.slice(0, 120)}"; ${wk.trail.join(' › ')})`);
+  });
+
+  // Task 8 (navigation-design §6.1, §3.5): the developments relying on a DC project in two clicks on the map,
+  // Capital (DC timing is its first view) and a row: the project's card lists every one by tier, and a row of it
+  // opens the development; a row of the list in full opens the same card; on the Capital page the project opens
+  // in place, five a tier, See all lists the rest there.
+  await check('the developments relying on a DC project in two clicks (task 8): Capital, a row; its card lists every one by tier and opens one; the list in full opens the same card; on the Capital page See all lists every one in place', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => !!(PeelApp.state.svcModel && PeelApp.state.dcInfra), null, { timeout: 120000 });
+    await ev(() => PeelWorkspaces.setMode('full')); await wait(1500);
+    expect(await ev(() => PeelAnalysisTabs.getDcSub() === 'timing'), 'Capital opens on DC timing');
+    await page.click('.f-tab[data-tab="dca"]');   // 1. Capital
+    await page.waitForSelector('#pnl-dca .pnl-list [data-dcproj-open]', { timeout: 90000 });
+    await page.waitForFunction(() => !!PeelDcImpact.current(), null, { timeout: 90000 }); await wait(1500);
+    // (the row the reader picks: of those shown, the one with the most developments relying on it)
+    const k = await ev(() => { const m = PeelDcImpact.current(); return [...document.querySelectorAll('#pnl-dca .pnl-list [data-dcproj-open]')].map(b => b.dataset.dcprojOpen).sort((a, b) => (m.projects.get(b) || { devs: [] }).devs.length - (m.projects.get(a) || { devs: [] }).devs.length)[0]; });
+    await page.click(`#pnl-dca .pnl-list [data-dcproj-open="${k}"]`); await wait(2500);   // 2. the row
+    const card = () => ev(k => { const b = document.getElementById('scope-body'), pr = PeelDcImpact.current().projects.get(k), want = new Set(pr.devs.map(x => x.p.key)), rows = b ? [...b.querySelectorAll('tr.ld-row[data-dev]')].map(r => r.dataset.dev) : [];
+      return { ss: PeelApp.state.ss || '', tab: PeelAnalysisTabs.getFootTab(), cap: ((b && b.querySelector('caption')) || {}).textContent || '', counted: pr.devs.filter(x => PeelDcImpact.current().gateTiers.includes(x.tier)).length,
+        n: rows.length, every: rows.length === want.size && rows.every(x => want.has(x)), tiers: [...new Set(b ? [...b.querySelectorAll('tr.ld-row[data-dev] td:nth-child(2)')].map(td => td.textContent) : [])] }; }, k);
+    const c = await card();
+    expect(c.ss === `dcwork:${k}` && c.tab === 'overview', `two clicks: Capital, a row; the project's card (${c.ss}, ${c.tab})`);
+    expect(c.n > 0 && c.every, `the card lists every development relying on it, the fold's too (${c.n})`);
+    expect(new RegExp(`^${c.counted.toLocaleString('en-CA')} developments? relying on it, by tier`).test(c.cap) && c.tiers.every(t => ['Needs it to connect', 'Needs it for capacity', 'On its path, not needed'].includes(t)), `by tier: "${c.cap}" (${c.tiers.join(' · ')})`);
+    const dev = await ev(() => document.querySelector('#scope-body tr.ld-row[data-dev]').dataset.dev);
+    await page.click(`#scope-body tr.ld-row[data-dev="${dev}"]`); await wait(2000);
+    expect(await ev(d => !!(window.DevScope && DevScope.current() && DevScope.current().key === d), dev), `a row of it opens the development (${dev})`);
+    await ev(() => { if (DevScope.current()) DevScope.close(); PeelSvcScope.closeResult(); PeelAnalysisTabs.openTab('dca', 'timing'); }); await wait(1500);
+    // The list in full: the same project's row opens the same card.
+    await ev(() => PeelPanel.openFull()); await wait(2000);
+    await page.click(`#dca-dcproj-body tr[data-dcproj-open="${k}"]`); await wait(2500);
+    const f = await card();
+    expect(f.ss === `dcwork:${k}` && f.tab === 'overview' && f.every, `the list in full: its row opens the same card (${f.ss}, ${f.n} developments)`);
+    await ev(() => { if (PeelPanel.closeFull) PeelPanel.closeFull(); PeelSvcScope.closeResult(); }); await wait(1000);
+    // The Capital page: the project in place, its tiers five rows each; See all lists the rest there, Show fewer shuts it.
+    await ev(() => { PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage('projects'); }); await wait(2500);
+    await page.click(`#home [data-dcproj-open="${k}"]`); await wait(2000);
+    const tiers = () => ev(() => [...document.querySelectorAll('#home section.page-list')].filter(s => /^(Needs it|On its path)/.test(s.querySelector('h3').textContent)).map(s => ({ t: s.querySelector('h3').textContent, li: s.querySelectorAll('li').length, btn: ((s.querySelector('[data-dcproj-more]') || {}).textContent || '').trim() })));
+    const t0 = await tiers(), big = t0.find(x => x.btn);
+    expect(t0.length > 0 && t0.every(x => x.li <= 5), `the project in place, its tiers five rows each at most (${t0.map(x => `${x.t}: ${x.li}`).join(' · ')})`);
+    if (big) {
+      const n = +big.btn.replace(/\D/g, '');
+      await page.click('#home [data-dcproj-more]'); await wait(1500);
+      const t1 = (await tiers()).find(x => x.t === big.t);
+      expect(n > 5 && t1 && t1.li === n && t1.btn === 'Show fewer', `See all: every one of "${big.t}" in place (${t1 && t1.li} / ${n})`);
+      await page.click('#home [data-dcproj-more]'); await wait(1000);
+      expect(((await tiers()).find(x => x.t === big.t) || {}).li === 5, 'Show fewer: five again');
+    }
   });
 
   await check('QA/QC › Review outlets: open a development, tap the map or pick from the nearby list (existing, local, being built, planned) to set its outlet, save it with its source, back to automatic', browser, {}, async ({ page, ev }, expect) => {

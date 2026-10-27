@@ -155,8 +155,7 @@
       if (r) { const p = DN().projectByKey(r.dataset.dev); if (p) { if (loadsOf) DN().setBackToLoads({ ...loadsOf }); DN().showDetail(p); if (p.lat != null) map.setView([p.lat, p.lng], Math.max(map.getZoom(), 15)); } return; }
       const pb = e.target.closest('[data-pipe]');
       if (pb && MM().SEW.data) { const i = +pb.dataset.pipe; SC().showPipeLoads(i); const c = MM().SEW.data.pipes[i][10]; map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); return; }
-      const f = e.target.closest('[data-dcn-filter]');
-      if (f) { MP().dcnFilter = f.dataset.dcnFilter; return MP().showDcTiming(); }
+      // (a constraint card's "← DC timing": Capital › DC timing, js/masterplan.js showDcTiming)
       if (e.target.closest('[data-dcn-all]')) { SC().loadSewers(); return MP().showDcTiming(); }
       const cn = e.target.closest('[data-dcn-cons]');
       if (cn && MP().DCN.reg && MP().DCN.reg.get(cn.dataset.dcnCons)) return MP().showConsDevs(MP().DCN.reg.get(cn.dataset.dcnCons));

@@ -95,7 +95,7 @@ test('every sub-view of the four tabs has a SUB_MAP row; the names before Stage 
   }
   // The names before Stage 2 still map as they did (tests/four-tabs.test.js has the full table).
   assert.deepEqual(plain(AT.migrateTabKey('water', 'facilities')), { tab: 'svc', svcSub: 'network' });
-  assert.deepEqual(plain(AT.migrateTabKey('dca', 'funding')), { tab: 'dca', dcSub: 'dcproj' });
+  assert.deepEqual(plain(AT.migrateTabKey('dca', 'funding')), { tab: 'dca', dcSub: 'timing' });
   assert.deepEqual(plain(AT.migrateTabKey('growth', 'nonsense')), { tab: 'growth', gSub: 'pipeline' });
   assert.deepEqual(plain(AT.migrateTabKey('svc', 'nonsense')), { tab: 'svc' }, 'an unknown Servicing sub-view keeps the one open');
 });
@@ -300,6 +300,52 @@ test('phase 3: the Ledger is Forecast’s By period, from a link, a stored pick,
   // A link names the old sub-view through the same opener (js/share.js, the phase 2 test above).
   assert.match(src('js/share.js'), /if \(AT\(\)\.openFold && AT\(\)\.foldOf\) AT\(\)\.openFold\(AT\(\)\.foldOf\(t, oldSub\)\);/);
   assert.match(src('js/analysis-tabs.js'), /period: \(\) => root\.PeelLedgerUI && root\.PeelLedgerUI\.openPeriod \};/);
+});
+
+// Navigation phase 4 (navigation-design §7.2–7.3): Capital is DC timing · EAs · Projects. DC projects is DC
+// timing (one list, both verdicts); the funding screen is its fold. Old links, stored picks, in-app calls and
+// the usage counts land there.
+test('phase 4: DC projects is DC timing; the funding screen its fold; the stored sorts and the open project', () => {
+  assert.deepEqual(plain(AT.TABSUBS.dca.valid), ['timing', 'eas', 'projects']);
+  for (const sub of ['dcproj', 'funding', 'recommendations', 'timing']) assert.deepEqual(plain(AT.migrateTabKey('dca', sub)), { tab: 'dca', dcSub: 'timing' }, `dcs=${sub}`);
+  assert.deepEqual(plain(AT.migrateTabKey('dca', 'build')), { tab: 'dca', dcSub: 'projects' });
+  // (what the usage alias and an in-app call read)
+  assert.deepEqual(plain(AT.migrateSub('dca', 'dcproj')), { tab: 'dca', sub: 'timing' });
+  assert.equal(AT.foldOf('dca', 'dcproj'), null, 'no fold: DC timing is the list itself');
+  // Stored picks, as the app loads them (before the reset to each tab's first, which is also DC timing).
+  const prefs = { footPref: 'dca', gSub: 'pipeline', svcSub: 'capacity', dcSub: 'dcproj', rSub: 'sources' };
+  assert.deepEqual(plain(AT.migratePrefs(prefs)), { ...prefs, dcSub: 'timing' });
+  const T = loadTabsWith({ dcSub: 'dcproj', footTab4: 'dca' });
+  assert.equal(T.getDcSub(), 'timing'); assert.equal(T.getFootPref(), 'dca');
+  // In-app calls: setSub, showFootTab, a data-at link (all through migrateSub).
+  const T2 = loadTabsWith({ dcSub: 'eas' });
+  assert.equal(T2.getDcSub(), 'eas');
+  assert.equal(T2.setSub('dca', 'dcproj'), 'dca'); assert.equal(T2.getDcSub(), 'timing');
+  T2.setSub('dca', 'eas'); T2.showFootTab('dca', 'dcproj'); assert.equal(T2.getDcSub(), 'timing', 'showFootTab(dca, dcproj): DC timing');
+  // The chips; at a development the full table shows the site's brief only.
+  assert.deepEqual(plain(AT.chipsAt('dca', 'area')), ['timing', 'eas', 'projects']);
+  assert.deepEqual(plain(AT.chipsAt('dca', 'site')), ['timing', 'eas']);
+  const rule = /\n(#analysis\.site-scope #pane-svc-netbar[^{]*)\{ display: none; \}/.exec(src('css/app.css'))[1].split(',').map(x => x.trim());
+  for (const id of ['pane-dca-dcproj', 'pane-dca-rec', 'pane-dca-funding']) assert.ok(rule.includes(`#analysis.site-scope #${id}`), `#${id} hidden at a development`);
+  // Settings › Usage: a DC projects count is DC timing's, by the browser's own rule (js/usage.js aliasKey).
+  const U = require('../js/usage.js'), alias = k => { const m = /^sub:(\w+)\.(\w+)$/.exec(k), r = m && AT.migrateSub(m[1], m[2]); return r ? `sub:${r.tab}.${r.sub}` : k; };
+  let d = U.bump(null, 'sub', 'dca.dcproj', '2026-10-27'); d = U.bump(d, 'sub', 'dca.timing', '2026-10-27');
+  assert.deepEqual(plain(U.totals(d, alias)), { 'sub:dca.timing': 2 }, 'no sub:dca.dcproj key');
+  // No name for the chip that went; the page and the workspace keep "DC projects".
+  assert.doesNotMatch(src('js/workspaces.js'), /dcproj: 'DC projects'/);
+  assert.equal(W.BY_ID.projects.label, 'DC projects');
+  // A search pick on a page: the Capital page at the project, DC timing's section.
+  assert.deepEqual(plain(W.pageRoute({ place: { hit: 'dc', key: 'water:25-9' } }, 'home')), { page: 'projects', wsec: 'timing', dcSel: 'water:25-9' });
+  // EA to construction joins EAs: its page id stays (the EAs page; no PAGE_ALIAS row), and its chip, its page and
+  // an old #w=eaflow link open Capital › EAs with the EA to construction fold open (js/capital-ea.js openEaFlow).
+  assert.equal(W.resolvePage('eaflow'), 'eaflow'); assert.equal(W.BY_ID.eaflow.sub, 'eas'); assert.equal(W.BY_ID.eaflow.fold, 'eaflow');
+  const opened = [];
+  const T3 = loadTabsWith({}, { PeelCapitalEA: { openEaFlow: () => opened.push('eaflow') }, PeelLedgerUI: { openPeriod: () => opened.push('period'), render: () => {} }, PeelDemandUI: { openAllocFold: () => opened.push('alloc'), renderAlloc: () => {} } });
+  T3.openFold('eaflow'); assert.deepEqual(opened, ['eaflow'], 'the chip’s fold: EA to construction, once');
+  T3.openFold('alloc'); T3.openFold('period'); assert.deepEqual(opened, ['eaflow', 'alloc', 'period'], 'Allocations and By period open their own folds only');
+  T3.showFootTab('dca', 'eas'); assert.deepEqual(opened, ['eaflow', 'alloc', 'period'], 'Capital › EAs itself leaves the fold as it is (no sub-view moved into it)');
+  assert.equal(AT.foldOf('dca', 'eas'), null);
+  assert.doesNotThrow(() => loadTabsWith({}).openFold('eaflow'), 'no Capital module loaded: nothing opens, nothing throws');
 });
 
 // Navigation phase 2 (navigation-design §3.4, N-11): one System control, Both · Wastewater · Water, one

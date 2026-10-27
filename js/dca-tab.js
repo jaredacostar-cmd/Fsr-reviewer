@@ -20,14 +20,14 @@
   const SC = () => window.PeelSewerCap;
   const SP = () => window.PeelSvcPlants;
 
-  // ---- Capital sub-views (Stage 2): Timing · Projects · EAs, and Funding while its Labs switch is
-  // on (Settings › Labs): the funding screen's "Screening results" (was Recommendations) and the
-  // funding levels, one under the other. -----------------------------------------------------------
-  // Worker A owns the sub-view chrome (dcSub state, data-dcasub buttons, the three panes); the
-  // renderers below fill #dca-timing-body / #dca-rec-body / #dca-funding-body. The single scenario
-  // bar replaces the old per-tab scenario stamp line (no stampHTML call remains in this tab).
+  // ---- Capital (navigation phase 4): DC timing · EAs · Projects. DC timing's panel and its list in full
+  // are js/dc-projects.js's (both verdicts); this file fills the rest of its full table: the capacity
+  // analysis of every relief (#dca-timing-body: if one project were cancelled, its timeline) and, while
+  // the Funding lab is on (Settings › Labs), the screening results and funding levels (#dca-rec-body,
+  // #dca-funding-body); at a development, the site's DC brief and panel. The single scenario bar
+  // replaces the old per-tab scenario stamp line (no stampHTML call remains in this tab). ------------
   function renderDca() {
-    // Capital › DC projects: its own panel and full table (js/dc-projects.js), at every scope.
+    // Capital › DC timing: its panel and the list in full (js/dc-projects.js, at an area).
     if (window.PeelDcProjects) window.PeelDcProjects.render();
     // Construction & EAs: Region capital projects and EAs (needs neither the servicing model nor the sewers).
     const bb = $('#dca-build-body'); if (bb && window.PeelCapitalEA) bb.innerHTML = window.PeelCapitalEA.listsHTML();
@@ -56,39 +56,9 @@
     }
     const R = DC().dcAnalysis();
     set(0, renderDcaTiming(R)); set(1, renderDcaRec(R)); set(2, renderDcaFunding(R));
-    if (PN) PN.set('dca:timing', timingSpec(R));
   }
-  // ---- Stage 3: Capital › Timing (area and site) and Funding (Labs) as standard panels ------------------
-  let pnlSort = store.get('dcaPnlSort', 'soonest');
-  document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-dca-pnlsort]'); if (b) { pnlSort = b.dataset.dcaPnlsort; store.set('dcaPnlSort', pnlSort); renderDca(); } });
-  const yrOf = r => (r.outY === MM().THIS_YEAR ? 0 : r.outY || 9999);
-  function timingSpec(R) {
-    const PN = window.PeelPanel, pp = v => fmtNum(roundPop(v)), uu = v => fmtNum(Math.round(v / R.ppu));
-    const adv = R.list.filter(r => r.rec === 'advance'), inTime = R.list.filter(r => r.rec === 'keep' || r.rec === 'defer').length;
-    const ranked = R.list.filter(r => r.outY || r.bo > 0).slice().sort(pnlSort === 'impact' ? (a, b) => b.bo - a.bo : (a, b) => yrOf(a) - yrOf(b) || b.bo - a.bo);
-    const big = R.list.slice().sort((a, b) => b.bo - a.bo)[0];
-    const sortBtn = (k, t) => `<button type="button" class="btn small${pnlSort === k ? ' on' : ''}" data-dca-pnlsort="${k}" aria-pressed="${pnlSort === k}">${t}</button>`;
-    // The project's plain name on the row, its ID beside the in-service year (bundle 5).
-    const row = r => ({ tone: r.rec === 'advance' ? 'over' : 'room', attrs: { 'data-full-table': 'dca' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.sys === 'water' ? '💧 ' : ''}${esc(r.short || r.name)}<small>${r.pid ? `project ${esc(r.pid)} · ` : ''}in service ${r.y || '–'}${r.status === 'approved' ? ' · approved 2026' : r.status === 'proposed' ? ' · proposed' : ''}</small></span><span class="pnl-r-year t-${r.rec === 'advance' ? 'over' : 'room'}">${r.outY ? (r.outY === MM().THIS_YEAR ? 'now' : `≈${r.outY}`) : `after ${SP().hz.end}`}</span></div>
-      <div class="pnl-r-meta"><span>capacity runs out</span><span class="t-${r.rec === 'advance' ? 'over' : 'room'}">${r.rec === 'advance' ? 'in service after it runs out' : 'in service in time'}</span></div>
-      <small class="pnl-r-line">Impact: ${r.bo > 0 ? `≈${pp(r.bo)} people (≈${uu(r.bo)} units) held back by build-out if cancelled` : 'none held back if cancelled'}</small>` });
-    return {
-      calc: true, fullTitle: `Capital › DC timing · ${App().state.muni || 'Peel'}: every DC project`,
-      head: window.PeelPanel.areaHead('Capital › DC timing', 'What must be built first?', adv.length ? { tone: 'over', text: `${adv.length} late` } : { tone: 'room', text: 'In time' }, `Peel · ${fmtNum(R.list.length)} DC projects · 2026 DC capital maps (draft, as of ${esc(CAPITAL.asOf)})`),
-      answer: `Across <strong>${fmtNum(R.list.length)} DC projects</strong>, ${adv.length ? `<strong>${adv.length}</strong> ${adv.length === 1 ? 'is' : 'are'} in service only after the capacity ${adv.length === 1 ? 'it relieves' : 'they relieve'} runs out` : 'every project is in service before the capacity it relieves runs out'}${R.baseBo > 0 ? `. With every project as scheduled, <strong>≈${pp(R.baseBo)} people</strong> are still constrained at build-out` : ''}${big && big.bo > 0 ? `; without the <strong>${esc(big.short || big.name)}</strong>, ≈${pp(big.bo)} more would be, the most of any one project` : ''}.`,
-      figures: [
-        { v: fmtNum(R.list.length), u: 'projects', label: 'DC projects', ctx: 'relieve a constraint or serve new development' },
-        { v: adv.length, u: '', label: 'late', ctx: 'in service after the capacity runs out', tone: adv.length ? 'over' : null, attrs: { 'data-full-table': 'dca' } },
-        { v: inTime, u: '', label: 'in time', ctx: 'in service before it runs out', attrs: { 'data-full-table': 'dca' } },
-        { v: pp(R.baseBo), u: 'people', label: 'constrained at build-out', ctx: `≈${uu(R.baseBo)} units, every project as scheduled`, tone: R.baseBo > 0 ? 'tight' : 'room' },
-      ],
-      chart: DC().dcaTimingChart(R.list, 6),
-      lists: [{ title: 'DC projects', tools: `<div class="seg" role="group" aria-label="Sort">${sortBtn('soonest', 'Soonest')}${sortBtn('impact', 'Largest impact')}</div>`, rows: ranked.slice(0, 5).map(row), total: R.list.length, seeAll: { 'data-full-table': 'dca' } }],
-      method: 'Each capacity constraint (pumping stations at firm capacity, plants at 90% of rated, the water systems and supply into the upper zones) is replayed year by year to the horizon. Cancelling one project holds back the growth above the remaining capacity; people at each constraint\u2019s own rate, units at the growth\u2019s persons per unit. Constraints in series count the largest, not the sum. Screening results only, not a capital plan.',
-      sources: '2026 DC capital maps (draft v2, March 2026; dates as of March 2026, before the May 2026 pause); 2020 DC Background Study costs indexed to 2026$; Region capital records where a DC project matches one.',
-      foot: { primary: { label: 'Show the planned works', attrs: { 'data-mview': 'dc' } } },
-    };
-  }
+  // ---- Stage 3: Capital › DC timing at a site and Funding (Labs) as standard panels (the area's DC timing
+  // is js/dc-projects.js's) -------------------------------------------------------------------------------
   // A development: the constraints it relies on (MasterPlan.devNeeds) and the projects that relieve them.
   function siteTimingSpec(p, st, f) {
     const PN = window.PeelPanel, needs = MP().devNeeds(p) || [];
@@ -109,14 +79,15 @@
       foot: { primary: { label: 'Show the planned works', attrs: { 'data-mview': 'dc' } } },
     };
   }
-  // Capital › Funding (Labs): the funding screen ("Screening results") and the funding levels.
+  // Capital › DC timing · Funding (Labs): the funding screen ("Screening results") and the funding levels
+  // (its answer, figures and chart are DC timing's Funding fold, js/dc-projects.js).
   function fundingSpec(R) {
     if (!App().state.dcCosts || !App().state.dcCosts.unitCost) return null;
     const PN = window.PeelPanel, B = DC().dcaBudget(DC().DCB.budget, DC().DCB.years), pp = v => fmtNum(roundPop(v));
     const merged = DC().dcaMergeRecs(B);
     return {
-      calc: true, fullTitle: 'Capital › Funding (Labs) · the funding screen and funding levels',
-      head: PN.areaHead('Capital › Funding', 'What can be funded?', { tone: 'stage', text: 'Labs' }, `Peel · ${fmtMoney(DC().DCB.budget)} over ${DC().DCB.years} years (${MM().THIS_YEAR}–${B.end})`),
+      calc: true, fullTitle: 'Capital › DC timing · Funding (Labs) · the funding screen and funding levels',
+      head: PN.areaHead('Capital › DC timing · Funding', 'What can be funded?', { tone: 'stage', text: 'Labs' }, `Peel · ${fmtMoney(DC().DCB.budget)} over ${DC().DCB.years} years (${MM().THIS_YEAR}–${B.end})`),
       answer: `With <strong>${fmtMoney(DC().DCB.budget)}</strong> of DC funding against a <strong>${fmtMoney(B.total)}</strong> program, <strong>${B.keep.length}</strong> projects fall within the funding screen and <strong>${B.defer.length}</strong> outside it${B.upper > 0 ? `; without them the screen shows ≈${ppRange(B.lower, B.upper)} people constrained by ${B.end}` : ''}.`,
       figures: [{ v: B.keep.length, u: '', label: 'within the screen', ctx: fmtMoney(B.spent), tone: 'room' }, { v: B.defer.length, u: '', label: 'outside the screen', ctx: fmtMoney(B.total - B.spent), tone: B.defer.length ? 'tight' : 'room' }, { v: B.upper > 0 ? ppRange(B.lower, B.upper) : '0', u: 'people', label: `constrained by ${B.end}`, ctx: 'without the projects outside it' }, { v: fmtMoney(B.total), u: '', label: 'DC program', ctx: `2026$, ${B.rows.length} projects` }],
       chart: DC().dcaRecChart(merged, B.end),
@@ -158,7 +129,7 @@
       ${DC().dcaTimingChart(R.list, 10)}
       <div class="dca-tools"><label class="small dca-yr">Year <select data-dca-year aria-label="Year for the impact column (same as the map's Demand year)">${years.map(y => `<option value="${y}"${MA().getCapYear() === y ? ' selected' : ''}>${y}</option>`).join('')}<option value=""${MA().getCapYear() == null ? ' selected' : ''}>Build-out</option></select></label><span class="seg">${[['impact', 'Largest impact'], ['cost', 'Cost per person'], ['rec', 'By screening result'], ['year', 'By year']].map(([k, t]) => `<button type="button" class="btn small${MP().DCA.sort === k ? ' on' : ''}" data-dca-sort="${k}">${t}</button>`).join('')}</span>
         <button type="button" class="btn small" data-dca-csv>CSV</button><span class="muted small">Impact at the Demand year (${esc(String(yrLabel))}) and at build-out · tap a row for its timeline</span></div>
-      <table class="dt dca-table"><thead><tr><th>DC project</th><th>Online <small>draft, as of ${CAPITAL.asOf}</small></th><th>Relieves</th><th>Capacity runs out</th><th>If cancelled · ${esc(String(yrLabel))}</th><th>If cancelled · build-out</th><th>Cost (2026$)</th><th class="pv-hide">Screening result</th></tr></thead><tbody>
+      <table class="dt dca-table"><caption>If one project were cancelled: every DC project and relief (plant expansions and facilities too)</caption><thead><tr><th>DC project</th><th>Online <small>draft, as of ${CAPITAL.asOf}</small></th><th>Relieves</th><th>Capacity runs out</th><th>If cancelled · ${esc(String(yrLabel))}</th><th>If cancelled · build-out</th><th>Cost (2026$)</th><th class="pv-hide">Screening result</th></tr></thead><tbody>
         ${shown.map(r => dcaTimingRow(r, years, atY, pp, uu)).join('')}
       </tbody></table>
       ${list.length > 10 ? `<p><button type="button" class="btn small" data-dcatiming-all>${MP().DCA.timingAll ? 'Show top 10' : `See all ${list.length} projects`}</button></p>` : ''}
@@ -290,10 +261,11 @@
     st.works = st.works || DI().devWorks(p, f);
     return siteTimingSpec(p, st, f);
   }
-  // Capital › DC timing for the area (Peel), built on demand (an area's Capital section).
+  // Capital › DC timing for the area (Peel), built on demand (an area's Capital section, the Capital page):
+  // js/dc-projects.js's list, both verdicts.
   function areaSpec() {
     if (!App().state.svcModel || !App().state.dcInfra || !MM().SEW.data) return null;
-    return timingSpec(DC().dcAnalysis());
+    return window.PeelDcProjects && window.PeelDcProjects.panelSpec ? window.PeelDcProjects.panelSpec() : null;
   }
   const api = {
     fundingSpec: () => (App().state.svcModel && App().state.dcInfra ? fundingSpec(DC().dcAnalysis()) : null),

@@ -38,10 +38,9 @@
     'growth:timing': [...GROWTH, 'site-audit.json', 'dc-gate.json', 'servicing.json'],   // (navigation phase 3: By period, the pipeline ledger, too)
     'svc:capacity': [...SVC, 'snapshot.json', 'tree-counts.json'],
     'svc:network': [...SVC, 'sewers.json', 'watermains.json', 'water-supply.json', 'blocks.json', 'idf.json'],
-    'dca:timing': [...CAP, ...SVC, 'snapshot.json'],
-    'dca:dcproj': [...CAP, ...SVC, 'sewers.json', 'dc-joins.json', 'snapshot.json'],
+    'dca:timing': [...CAP, ...SVC, 'sewers.json', 'dc-joins.json', 'snapshot.json'],   // (navigation phase 4: DC projects' list too, both verdicts)
     'dca:projects': CAP,
-    'dca:eas': ['eas.json', 'capital.json'],
+    'dca:eas': ['eas.json', 'capital.json'],   // (navigation phase 4: EA to construction too, its fold)
     'records:files': DEV,
     'records:sources': ['snapshot.json', 'history.json'],
     'records:checks': [...SVC, 'snapshot.json', 'site-audit.json', 'tree-audit.json', 'peel-housing.json', 'housing.json', 'compliance.json', 'ww-events.json', 'dev-outlets.json'],   // (navigation phase 2: the servicing model's checks too)
@@ -52,8 +51,8 @@
     growth: GROWTH,
     outlook: [...GROWTH, ...SVC, 'dc-gate.json'],
     coming: [...GROWTH, ...SVC, 'dc-gate.json'],   // (navigation phase 3: the Forecast page, By period open)
-    projects: CAP,
-    eaflow: ['eas.json', 'capital.json'],
+    projects: [...CAP, ...SVC, 'sewers.json', 'dc-joins.json', 'snapshot.json'],   // (its figures are DC timing's: both models)
+    eaflow: ['eas.json', 'capital.json'],   // (the EAs page: the EAs, then EA to construction)
     week: ['snapshot.json', 'history.json', 'capital.json', 'eas.json', 'council.json'],
     fsr: ['fsr.json', ...DEV, ...SVC],
     pipes: ['sewers.json', 'servicing.json', 'snapshot.json'],

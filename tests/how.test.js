@@ -20,7 +20,9 @@ test('every panel the app sets and every page it builds has the data files it re
     for (const m of src(`js/${f}`).matchAll(/(?:PN|PeelPanel|Panel|PN\(\))\.set\(\s*['`]([a-z]+:[a-z-]*)['`]/g)) keys.add(m[1]);
   }
   for (const k of ['records:sources', 'records:checks', 'overview:result']) keys.add(k);
-  assert.ok(keys.size >= 14, `${keys.size} panel keys found`);
+  // (navigation phases 2 and 4 retired svc:alloc, svc:checks and dca:dcproj: the scan must still find every panel)
+  for (const k of ['overview:', 'growth:pipeline', 'growth:areas', 'growth:timing', 'svc:capacity', 'svc:network', 'dca:timing', 'dca:projects', 'dca:eas', 'records:files']) assert.ok(keys.has(k), `${k} found`);
+  assert.ok(keys.size >= 13, `${keys.size} panel keys found`);
   for (const k of keys) assert.ok(H.filesFor(k), `panel ${k}: add its data files to FILES in js/how.js`);
   const build = /const BUILD = \{([^}]+)\}/.exec(src('js/ws-pages.js'))[1].split(',').map(s => s.trim()).filter(Boolean);
   for (const id of build) assert.ok(H.filesFor(id), `page ${id}: add its data files to FILES in js/how.js`);

@@ -68,7 +68,8 @@ test('every producer opens a named scope: file, pipe, DC work, block, water faci
     ['js/aerial-check.js', /openResult\(\{ ref: `file:\$\{r\.uid\}`/],
     ['js/sewer-cap.js', /\{ ref: `pipe:\$\{i\}`, devKeys: up\.map\(r => r\.dev\.key\) \}/],
     ['js/dc-infra.js', /\{ ref: `dcwork:\$\{fc\.sys\}:\$\{fc\.name\}` \}/],
-    ['js/masterplan.js', /\{ ref: `dcwork:\$\{ln\.sys\}:\$\{ln\.p \|\| ln\.c\}` \}/],
+    // (a DC main's result has its trail group since navigation phase 4: Peel › DC timing › the main)
+    ['js/masterplan.js', /\{ ref: `dcwork:\$\{ln\.sys\}:\$\{ln\.p \|\| ln\.c\}`, group: 'DC timing' \}/],
     ['js/sewer-trace.js', /openResult\(\{ ref: `iiblock:\$\{b\.id\}`/],
     ['js/water-trace.js', /openResult\(\{ ref: `wfac:/],
     ['js/measure.js', /ref: 'sel:selection'/],

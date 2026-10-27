@@ -12,7 +12,7 @@
   // per tab, one chip row under the tab bar (TABSUBS). Overview has none.
   //   Growth:    Pipeline · Areas · Forecast (its By period fold: the pipeline ledger, js/ledger-ui.js)
   //   Servicing: Capacity · Network   (water and wastewater together; Allocations is a fold of Capacity)
-  //   Capital:   Timing · DC projects · Projects · EAs (the Funding lab's screen sits in DC projects)
+  //   Capital:   DC timing · EAs · Projects (DC timing: every 2026 DC project with both verdicts, js/dc-projects.js, the Funding lab a fold of it)
   //   Records:   Sources · Data checks · Files (every check: the data, then the servicing model)
   // footPref: the tab last picked (kept); each tab's sub-view last picked is kept too. Old tab and
   // sub-view names (share links, stored prefs) migrate onto these (migrateTabKey / migrateSub).
@@ -25,11 +25,12 @@
   // tabs: docs/architecture-review/navigation-design.md §7.2–7.3).
   // Phase 2: Allocations is a fold of Capacity, the model checks are Records › Data checks, the water
   // facilities and the hydraulic check are Network's. Phase 3: the Ledger is Forecast's By period fold.
+  // Phase 4: DC projects is DC timing (one list, both verdicts); the funding screen is its fold.
   const SUB_MAP = {
     ww: { plants: 'capacity', catchments: 'network', alloc: 'capacity', pumpstations: 'network' },
     water: { capacity: 'capacity', zones: 'network', facilities: 'network', hydro: 'network' },
     growth: { pipeline: 'pipeline', census2051: 'areas', byplan: 'areas', timing: 'timing', areas: 'areas', ledger: 'timing' },
-    dca: { timing: 'timing', build: 'projects', dcproj: 'dcproj', projects: 'projects', eas: 'eas', recommendations: 'dcproj', funding: 'dcproj' },
+    dca: { timing: 'timing', build: 'projects', dcproj: 'timing', projects: 'projects', eas: 'eas', recommendations: 'timing', funding: 'timing' },
     svc: { capacity: 'capacity', network: 'network', alloc: 'capacity', checks: 'records:checks' },
     records: { sources: 'sources', checks: 'checks', files: 'files' },
   };
@@ -46,9 +47,10 @@
   // A moved sub-view that became a fold of its new view: the fold to open (navigation-design §7.2).
   const FOLD_OF = { ww: { alloc: 'alloc' }, svc: { alloc: 'alloc' }, growth: { ledger: 'period' } };
   const foldOf = (tab, sub) => (sub && own(FOLD_OF, tab) && own(FOLD_OF[tab], sub) ? FOLD_OF[tab][sub] : null);
-  // Open the fold a moved sub-view became: Allocations recorded (js/demand-ui.js), By period (js/ledger-ui.js);
-  // a fold whose module is not loaded, or none, opens nothing.
-  const FOLD_OPEN = { alloc: () => DUI() && DUI().openAllocFold, period: () => root.PeelLedgerUI && root.PeelLedgerUI.openPeriod };
+  // Open the fold a moved sub-view or a chip opens: Allocations recorded (js/demand-ui.js), By period
+  // (js/ledger-ui.js), EA to construction (js/capital-ea.js, the EA to construction chip and page); a fold whose
+  // module is not loaded, or none, opens nothing.
+  const FOLD_OPEN = { alloc: () => DUI() && DUI().openAllocFold, eaflow: () => root.PeelCapitalEA && root.PeelCapitalEA.openEaFlow, period: () => root.PeelLedgerUI && root.PeelLedgerUI.openPeriod };
   const openFold = f => { const fn = f && own(FOLD_OPEN, f) ? FOLD_OPEN[f]() : null; if (typeof fn === 'function') fn(); };
   const subKey = r => (SUB_KEY[r.tab] ? { tab: r.tab, [SUB_KEY[r.tab]]: r.sub } : { tab: r.tab });
   // A tab key from a link or a stored pref (with its sub-view, when the link or the old key named one).
@@ -87,17 +89,17 @@
   { const old = footPref, m = migrateTabKey(footPref); footPref = m.tab; if (m.gSub) gSub = m.gSub; if (m.svcSub && old !== 'ww' && old !== 'water') svcSub = m.svcSub; }
   // (before the reset to each tab's first valid sub-view below, which would lose a moved one)
   ({ footPref, gSub, svcSub, dcSub, rSub } = migratePrefs({ footPref, gSub, svcSub, dcSub, rSub }));
-  // (Labs add no sub-view: the Funding lab's screen sits in Capital › DC projects, js/dc-projects.js.)
+  // (Labs add no sub-view: the Funding lab's screen is a fold of Capital › DC timing, js/dc-projects.js.)
   // Sub-view state per tab: the chip data-attribute, the store key, the valid values, get / set.
   const TABSUBS = {
     growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'areas', 'timing'], get: () => gSub, set: v => { gSub = v; } },
     svc: { attr: 'svcsub', store: 'svcSub', valid: ['capacity', 'network'], get: () => svcSub, set: v => { svcSub = v; } },
-    dca: { attr: 'dcasub', store: 'dcSub', valid: ['timing', 'dcproj', 'projects', 'eas'], get: () => dcSub, set: v => { dcSub = v; } },
+    dca: { attr: 'dcasub', store: 'dcSub', valid: ['timing', 'eas', 'projects'], get: () => dcSub, set: v => { dcSub = v; } },
     records: { attr: 'rsub', store: 'rSub', valid: ['sources', 'checks', 'files'], get: () => rSub, set: v => { rSub = v; } },
   };
   for (const s of Object.values(TABSUBS)) if (!s.valid.includes(s.get())) s.set(s.valid[0]);
   // ---- One System control (navigation-design §3.4, N-11): Both · Wastewater · Water, one pick kept in this
-  // browser for Servicing › Capacity and Capital › DC projects; the lens sets it (js/topbar.js). A link
+  // browser for Servicing › Capacity and Capital › DC timing; the lens sets it (js/topbar.js). A link
   // carries it (sy=, js/share.js); one without it opens at Both.
   const SYS = [['both', 'Both'], ['ww', 'Wastewater'], ['water', 'Water']];
   // Any value → one of SYS: the old words too ('all' was Capacity's, 'wastewater' DC projects').
@@ -110,10 +112,10 @@
   // What each scope hides (a sub-view with nothing to show is hidden, never blank; area-only content
   // never renders at a site). 'site': a development is the scope; 'area': Peel, a municipality, a plan
   // or a result with no files of its own.
-  // At a site, Capital › Timing is the site's DC projects (the projects it relies on); the Projects
+  // At a site, Capital › DC timing is the site's DC projects (the projects it relies on); the Projects
   // list is Region-wide, so it is hidden there.
   const HIDDEN = {
-    site: { growth: ['areas', 'timing'], svc: ['capacity'], dca: ['dcproj', 'projects'], records: ['sources', 'checks'] },
+    site: { growth: ['areas', 'timing'], svc: ['capacity'], dca: ['projects'], records: ['sources', 'checks'] },
     area: { records: ['files'] },
   };
   const SITE_HIDDEN = HIDDEN.site;
@@ -190,17 +192,18 @@
     footPref = tabOf(tab); store.set('footTab4', footPref); showFootTab(tab, sub); Sh().viewLink.write();
   });
   // The System pick (a link's is for the visit: not stored). Capacity redraws every time (cheap; Home's
-  // Servicing capacity page reads its panel); DC projects once it has drawn, and only while its DC impact
-  // model is worked out for this scenario or its panel is on screen: a System tap on Capacity (or a lens)
-  // never builds that model (it walks every sewer pipe). Otherwise its stored panel goes, and the next
-  // Capital open or page draws it at the new System. On a page the redraw comes through pnl:set.
+  // Servicing capacity page reads its panel); Capital › DC timing once it has drawn, and only while its
+  // second verdict's model (the DC projects allocation) is worked out for this scenario or its list is on
+  // screen: a System tap on Capacity (or a lens) never builds that model (it walks every sewer pipe).
+  // Otherwise its stored panel goes (never a development's: its Capital panel is js/dca-tab.js's), and the
+  // next Capital open or page draws it at the new System. On a page the redraw comes through pnl:set.
   const dcOnScreen = () => [...document.querySelectorAll('[data-dcproj-sort], [data-dcproj-back]')].some(b => b.getClientRects().length > 0);
   function setSys(v, o = {}) {
     sysOn = sysKey(v); if (!o.link) store.set('sysPick', sysOn);
     if (o.quiet) return;
     if (root.PeelSvcCapacity && root.PeelSvcCapacity.render) root.PeelSvcCapacity.render();
     const DP = root.PeelDcProjects, DI = root.PeelDcImpact;
-    if (DP && DP.shown && DP.shown()) { if ((DI && DI.current && DI.current()) || dcOnScreen()) DP.refresh(); else if (root.PeelPanel) root.PeelPanel.clear('dca:dcproj'); }
+    if (DP && DP.shown && DP.shown()) { if ((DI && DI.current && DI.current()) || dcOnScreen()) DP.refresh(); else if (root.PeelPanel && !(root.DevScope && root.DevScope.current())) root.PeelPanel.clear('dca:timing'); }
   }
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-sys]'); if (b) { setSys(b.dataset.sys); Sh().viewLink.write(); } });
   showFootTab(footPref);

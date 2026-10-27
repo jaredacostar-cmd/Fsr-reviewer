@@ -504,10 +504,11 @@
     const trig = firstTrigger(rows), zone = firstZone(rows);
     // (no zone at its limit by the horizon's end: "None", with the most loaded zone)
     const busiest = rows.filter(r => r.kind === 'pump').sort((x, y) => y.pctBo - x.pctBo)[0], end = (root.PeelSvcPlants && root.PeelSvcPlants.hz.end) || 2051;
-    // (the DC panel builds when Capital opens; until then the same analysis, cached, gives the count)
-    const dc = specOf('dca:timing', areaScope);
-    let late = dc && (dc.figures || []).find(f => f && f.label === 'late');
-    if (!late && root.PeelDcCost && root.PeelDcCost.dcAnalysis && App() && App().state.svcModel && App().state.dcInfra && MM() && MM().SEW && MM().SEW.data) { try { const R = root.PeelDcCost.dcAnalysis(); late = { v: R.list.filter(r => r.rec === 'advance').length }; } catch (e) { late = null; } }
+    // (DC projects late: every relief in service after the capacity it relieves runs out, from the DC timing
+    // analysis itself, js/dc-cost.js dcAnalysis, cached by scenario; Capital › DC timing lists the 2026 DC lines
+    // of it and names the rest, navigation phase 4)
+    let late = null;
+    if (root.PeelDcCost && root.PeelDcCost.dcAnalysis && App() && App().state.svcModel && App().state.dcInfra && MM() && MM().SEW && MM().SEW.data) { try { const R = root.PeelDcCost.dcAnalysis(); late = { v: R.list.filter(r => r.rec === 'advance').length }; } catch (e) { late = null; } }
     const nW = week && week.rows ? week.rows.length : 0;
     const go = (page, title) => ({ 'data-ws-page': page, title });
     return [
@@ -517,7 +518,7 @@
       trig ? { v: trig.limit.y === 'today' ? 'Now' : `≈${trig.limit.y}`, u: '', label: 'first 90% trigger', ctx: `${peelWide}${esc(trig.name)} reaches its 90% expansion trigger · Servicing capacity →`, tone: 'tight', attrs: trig.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': trig.ss, title: `Open ${trig.name}` } : go('tight', 'Servicing capacity') } : null,
       zone ? { v: zone.limit.y === 'today' ? 'Now' : `≈${zone.limit.y}`, u: '', label: 'first zone limit (100% of firm)', ctx: `${peelWide}${esc(zone.name)} reaches 100% of firm pumping · Servicing capacity →`, tone: 'tight', attrs: go('tight', 'Servicing capacity') }
         : busiest ? { v: 'None', u: '', label: 'first zone limit (100% of firm)', ctx: `${peelWide}before ${end} · most loaded: ${esc(busiest.name)} (${Math.round(busiest.pctBo)}% at build-out) · Servicing capacity →`, attrs: go('tight', 'Servicing capacity') } : null,
-      late ? { v: late.v, u: '', label: 'DC projects late', ctx: `${peelWide}in service after the capacity runs out · DC projects →`, tone: +late.v ? 'over' : null, attrs: go('projects', 'DC projects') } : null,
+      late ? { v: late.v, u: '', label: 'DC projects late', ctx: `${peelWide}in service after the capacity runs out · DC projects →`, tone: +late.v ? 'over' : null, attrs: { ...go('projects', 'DC projects'), 'data-dc-status': 'gap' } } : null,
       { v: fmtNum(nW), u: nW === 1 ? 'change' : 'changes', label: 'this week', ctx: 'files moved, new files, capital and EA dates · This week →', attrs: go('week', 'This week') },
     ].filter(Boolean);
   }
@@ -670,13 +671,18 @@
     if (!sec || sec.page) return m;
     const s = SE.wsSpecFor(ws, id);
     if (!s) return { ...m, answer: `<span class="muted">Loading ${esc(sec.title)}…</span>`, figures: [], chart: '', lists: [], folds: [], method: '', sources: '' };
-    // (a section showing one item of its list, as DC projects shows a project: its name, and a way back)
+    return asSection(m, s, sec.keys[0]);
+  }
+  // A panel spec s drawn as page m's section (key: the section's panel, for a page with no map workspace).
+  // (a section showing one item of its list, as DC timing shows a project on the Capital page: its name, and a
+  // way back)
+  function asSection(m, s, key) {
     // (a block span: the answer is a paragraph, and a paragraph inside it would split the sentence)
     const h = s.head || {}, back = h.back ? `<span class="ws-back small"><button type="button" class="btn small link"${Object.entries(h.back.attrs || {}).map(([k, v]) => ` ${k}="${esc(v)}"`).join('')}>‹ ${esc(h.back.label)}</button></span>` : '';
     // (a page with no map workspace of its own, Reference: a row or See all into the full table opens the
     // map at the section's tab and the full table at its table, as on the map; Records › Data checks'
     // Servicing model rows)
-    const ft = W() && W().BY_ID && !W().BY_ID[m.id] ? a => (a && a['data-full-table'] != null ? { 'data-at': sec.keys[0], 'data-full-table': a['data-full-table'], 'data-ft-go': a['data-ft-go'], title: a.title } : null) : () => null;
+    const ft = W() && W().BY_ID && !W().BY_ID[m.id] ? a => (a && a['data-full-table'] != null ? { 'data-at': key, 'data-full-table': a['data-full-table'], 'data-ft-go': a['data-ft-go'], title: a.title } : null) : () => null;
     const row = r => { const a = ft(r.attrs); return a ? { ...r, attrs: a } : toMap(m.id, r); };
     return { ...m, ...(h.wsName ? { name: h.wsName } : {}), status: h.status, identity: h.identity ? h.identity : m.identity, answer: `${back}${s.answer}`, figures: s.figures, chart: s.chart, lists: (s.lists || []).map(l => ({ ...l, rows: l.rows.map(row), ...(ft(l.seeAll) ? { see: ft(l.seeAll) } : {}) })), folds: s.folds, method: s.method, sources: s.sources, onMount: s.onMount };
   }
@@ -896,7 +902,7 @@
   document.addEventListener('click', e => {
     // (an area's Growth section is its own page: its own content again; the same for a workspace's pages)
     const gp = e.target.closest && e.target.closest('.page-secs [data-ws-page]');
-    if (gp) { if (gp.dataset.wsPage === 'growth') gSec = 'growth'; if (gp.dataset.wsPage === 'tight') wsSec.servicing = null; if (gp.dataset.wsPage === 'projects' || gp.dataset.wsPage === 'eaflow') wsSec.capital = null; if (['help', 'guides', 'glossary', 'logic', 'data'].includes(gp.dataset.wsPage)) wsSec.reference = null; }
+    if (gp) { if (gp.dataset.wsPage === 'growth') gSec = 'growth'; if (gp.dataset.wsPage === 'tight') wsSec.servicing = null; if (gp.dataset.wsPage === 'projects' || gp.dataset.wsPage === 'eaflow') { wsSec.capital = null; const DP = root.PeelDcProjects; if (DP && DP.state.sel) { DP.state.sel = null; DP.render(); } } if (['help', 'guides', 'glossary', 'logic', 'data'].includes(gp.dataset.wsPage)) wsSec.reference = null; }
     const wb = e.target.closest && e.target.closest('[data-ws-wsec]');
     if (wb && document.getElementById('home') && document.getElementById('home').contains(wb)) {
       e.preventDefault(); e.stopPropagation();
@@ -957,27 +963,28 @@
   }
   document.addEventListener('mouseover', mapRing);
   document.addEventListener('focusin', mapRing);
-  // The DC projects section with a project open: its own map (dcProjectMap); a click opens it on the full map.
+  // A DC project open on the Capital page: its own map (dcProjectMap); a click opens it on the full map. (Never
+  // built from a page's map: the allocation is the list's, js/dc-projects.js, worked out after it paints.)
   function dcProjMap() {
-    const DP = root.PeelDcProjects, DI = root.PeelDcImpact, key = wsSec.capital === 'dcproj' && DP && DP.state.sel;
-    const m = key && DI && DI.model(), pr = m && m.projects.get(key); if (!pr) return null;
+    const DP = root.PeelDcProjects, DI = root.PeelDcImpact, key = (!wsSec.capital || wsSec.capital === 'timing') && DP && DP.state.sel;
+    const m = key && DI && DI.current && DI.current(), pr = m && m.projects.get(key); if (!pr) return null;
     return { svg: dcProjectMap(pr, m), attrs: { 'data-dcproj-map': key }, label: `Show ${pr.key} on the full map`,
       caption: `<span class="hm-key hm-key-dcp"></span> ${esc(pr.key)} <span class="hm-key hm-key-dcd-a"></span> needs it to connect <span class="hm-key hm-key-dcd-b1"></span> needs it for capacity <span class="hm-key hm-key-dcd-b2"></span> on its path, not needed <span class="hm-key hm-key-dcd-gap"></span> homes before it is built` };
   }
   // ---- Projects ------------------------------------------------------------------------------------
   function projects() {
-    const t = specOf('dca:timing', areaScope); if (!t) return loading('projects', 'Loading the DC program…');
-    const pr = specOf('dca:projects', areaScope), ea = specOf('dca:eas', areaScope);
-    return wsSection('capital', { id: 'projects', top: wsBar('capital', wsSec.capital || 'timing'), eyebrow: eyebrow('projects'), name: 'Is the capital program arriving in time for growth?', status: t.head.status, identity: t.head.identity, scen: scen(), answer: t.answer,
-      figures: t.figures, chart: t.chart,
-      lists: [
-        ...(t.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('projects', r)) })).slice(0, 1),
-        // (by title: Projects' first list is To check whenever anything is flagged, EAs' is Current EAs when no milestone is due)
-        ...[[pr, 'Furthest along', 'Region capital projects being built'], [ea, 'Coming up (90 days)', 'EAs: milestones and comment periods']].map(([s, from, title]) => { const l = s && s.lists && s.lists.find(x => x.title === from); return l ? { ...l, title, rows: l.rows.map(r => toMap('projects', r)) } : null; }),
-      ],
+    // DC timing (navigation phase 4: DC timing and DC projects are one list, js/dc-projects.js); a project opened
+    // here shows in place, with its own map: the page's host of its scope, as the map's card is the map's.
+    // (the project from js/dc-projects.js openSpec, on DC timing's section only; the stored panel is the list;
+    // "Open the map" opens the project's card there)
+    const DP = root.PeelDcProjects, one = (!wsSec.capital || wsSec.capital === 'timing') && DP && DP.openSpec ? DP.openSpec() : null;
+    const t = one || specOf('dca:timing', areaScope); if (!t) return loading('projects', 'Loading the DC program…');
+    const m = { id: 'projects', top: wsBar('capital', wsSec.capital || 'timing'), eyebrow: eyebrow('projects'), name: 'Is the capital program arriving in time for growth?', status: t.head.status, identity: t.head.identity, scen: scen(), answer: t.answer,
+      figures: t.figures, chart: t.chart, lists: (t.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('projects', r)) })), folds: t.folds,
       map: dcProjMap() || { svg: worksMap(), attrs: { 'data-ws-go': 'projects' }, label: 'Open Projects on the map', caption: '2026 DC works (draft): <span class="hm-key hm-dc-wastewater"></span> wastewater <span class="hm-key hm-dc-water"></span> water' },
       method: t.method, sources: t.sources,
-      actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'projects' }, primary: true }, { label: 'Full table', attrs: { 'data-ws-go': 'projects', 'data-ws-fulltable': 'dca:timing' } }] });
+      actions: [{ label: 'Open the map', attrs: one ? { 'data-ws-go': 'projects', 'data-ws-dcwork': DP.state.sel } : { 'data-ws-go': 'projects' }, primary: true }, { label: 'Full table', attrs: { 'data-ws-go': 'projects', 'data-ws-fulltable': 'dca:timing' } }] };
+    return wsSection('capital', t.head && t.head.back ? asSection(m, t) : m);
   }
 
   // ---- Forecast: when the pipeline's homes and people arrive (Growth › Forecast, on a page) ----------
@@ -996,85 +1003,34 @@
       actions: [{ label: 'Area report (PDF)', attrs: { 'data-area-report': 'shown' }, primary: true }, { label: 'How the forecast is timed ›', attrs: { 'data-ws-page': 'forecast' } }, { label: 'Open the map', attrs: { 'data-ws-go': id } }] };
   }
 
-  // ---- EA to construction: each Region EA and the construction that followed it ---------------------
-  // Construction counts as the EA's outcome only when it starts on or after the EA's completion (the
-  // year, where only the year is known); earlier work in the study area is listed as other work, never
-  // as following the EA (js/capital-ea-model.js eaProgress).
+  // ---- EA to construction, on the EAs page: what is being studied, and which EAs led to construction ----
+  // The Capital workspace's EAs page (navigation phase 4): the map's Capital › EAs (the area panel, built here
+  // when the map's Capital tab has not drawn it), then EA to construction (js/capital-ea-model.js eaFlowSpec,
+  // the same builder as the map's fold and full table). Construction counts as the EA's outcome only when it
+  // starts on or after the EA's completion; earlier work in the study area is other work, never following it.
   const CM = () => root.PeelCapitalEAModel, CE = () => root.PeelCapitalEA;
-  const yrOf = v => (v == null ? '' : String(new Date(v).getUTCFullYear()));
   const eaOpen = x => ({ 'data-ws-go': 'eaflow', 'data-ws-ce': `ea:${x.e.id}`, title: 'Open the EA on the map' });
-  const workLine = c => `${esc(c.work || 'Construction')}${c.street ? ` · ${esc(c.street)}` : ''} <small>${esc(c.status)}${c.start != null ? `, ${c.startActual ? 'started' : 'starts'} ${yrOf(c.start)}` : ''}</small>`;
-  function eaTimelineHTML(rows, today = Date.now()) {
-    if (!rows.length) return '';
-    const y0 = Math.max(2008, Math.min(...rows.map(x => x.d.start).filter(v => v != null).map(v => new Date(v).getUTCFullYear()), new Date(today).getUTCFullYear() - 10));
-    const y1 = new Date(today).getUTCFullYear() + 6, from = Date.UTC(y0, 0, 1), to = Date.UTC(y1, 0, 1);
-    const pct = v => `${(v * 100).toFixed(2)}%`, M = CM();
-    const ticks = []; for (let y = Math.ceil(y0 / 5) * 5; y < y1; y += 5) ticks.push(`<span class="eat-tick" style="left:${pct((Date.UTC(y, 0, 1) - from) / (to - from))}">${y}</span>`);
-    const nowAt = pct((today - from) / (to - from));
-    const line = x => {
-      const t = M.timelineRow(x, from, to), parts = [];
-      if (t.ea) parts.push(`<span class="eat-ea${t.ea.open ? ' open' : ''}" style="left:${pct(t.ea.a)};width:${pct(Math.max(0.004, t.ea.b - t.ea.a))}"></span>`);
-      for (const p of t.pics) parts.push(`<span class="eat-pic" style="left:${pct(p)}" title="Public information centre"></span>`);
-      if (t.done != null) parts.push(`<span class="eat-done" style="left:${pct(t.done)}" title="EA complete ${esc(String(x.d.completion.year))}"></span>`);
-      else if (t.expected != null) parts.push(`<span class="eat-exp" style="left:${pct(t.expected)}" title="Report expected ${esc(String(x.d.expected.year))}"></span>`);
-      for (const w of t.works) parts.push(`<span class="eat-w eat-w-${esc(w.status.replace(/\s+/g, '-'))}${w.planned ? ' planned' : ''}" style="left:${pct(w.a)};width:${pct(Math.max(0.006, w.b - w.a))}"></span>`);
-      return `<li class="eat-row" ${Object.entries(eaOpen(x)).map(([k, v]) => `${k}="${esc(v)}"`).join(' ')} tabindex="0" role="button"><span class="eat-nm">${esc(x.e.name)}<small>${esc(x.e.municipality || 'Peel')} · ${esc((M.BUCKETS.find(b => b[0] === x.bucket) || [])[1] || '')}</small></span><span class="eat-track">${parts.join('')}<span class="eat-now" style="left:${nowAt}"></span></span></li>`;
-    };
-    return `<h3 class="pnl-chart-t">Each EA and the construction after it <span class="pnl-chart-u">(${y0}–${y1})</span></h3>
-      <div class="eat-axis" aria-hidden="true"><span class="eat-nm"></span><span class="eat-track">${ticks.join('')}</span></div>
-      <ul class="eat" aria-label="EA timelines">${rows.map(line).join('')}</ul>
-      <p class="small muted eat-key"><span class="eat-k eat-ea"></span> EA study <span class="eat-k eat-pic"></span> public information centre <span class="eat-k eat-done"></span> EA complete <span class="eat-k eat-exp"></span> report expected <span class="eat-k eat-w eat-w-under-construction"></span> construction <span class="eat-k eat-w planned"></span> planned <span class="eat-k eat-now"></span> today</p>`;
-  }
+  // (worked out once per data and municipality: the page rebuilds whenever a panel changes)
+  let eaMemo = { k: null, f: null };
   function eaflow() {
-    const ce = CE(), M = CM();
-    if (!ce || !M || !M.eaProgress || !ce.data.loaded) return loading('eaflow', 'Loading the EAs and capital projects…');
-    if (!ce.data.eas || !ce.data.capital) return { id: 'eaflow', eyebrow: eyebrow('eaflow'), name: 'Which EAs have led to construction?', answer: '<span class="muted">The EA or capital project list did not load. Reload the page to try again.</span>' };
-    const muni = App() && App().state.muni;
-    const all = M.eaProgress(ce.data.eas.eas || [], ce.data.capital.records || []).filter(x => !muni || !x.e.municipality || x.e.municipality === 'Region-wide' || x.e.municipality.split(' / ').includes(muni));
-    const by = k => all.filter(x => x.bucket === k), n = k => by(k).length;
-    const followed = all.filter(x => ['planned', 'building', 'built'].includes(x.bucket));
-    const waiting = [...by('limit'), ...by('waiting')].sort((a, b) => a.d.completion.at - b.d.completion.at);
-    const current = by('current').sort((a, b) => (a.d.expected ? a.d.expected.at : 9e15) - (b.d.expected ? b.d.expected.at : 9e15));
-    const conflicts = all.filter(x => x.conflict.length);
-    // (a report date already past on an EA still under way: the page has not been updated, or the EA is late)
-    const now0 = Date.now(), nextRep = current.find(x => x.d.expected && x.d.expected.at >= now0), pastDue = current.filter(x => x.d.expected && x.d.expected.at < now0).length;
-    // Current construction near a past EA that the weekly build hasn't linked (never counted as following it).
-    const inMuni = x => !muni || !x.e.municipality || x.e.municipality.split(' / ').includes(muni);
-    const possible = (M.possibleLinks ? M.possibleLinks(ce.data.eas.eas || [], ce.data.capital.records || []) : []).filter(inMuni);
-    // Construction starting 10+ years after the EA was complete: the Class EA may need a review first.
-    const gapOf = (x, c) => (x.d.completion && c.start != null ? new Date(c.start).getUTCFullYear() - x.d.completion.year : null);
-    const gapNote = g => (g != null && g >= 10 ? ` <span class="pnl-chip t-tight">${fmtNum(g)} years after the EA</span>` : '');
-    const late = [...followed.flatMap(x => x.outcome.map(c => gapOf(x, c))), ...possible.map(p => gapOf(p, p.c))].filter(g => g != null && g >= 10).length;
-    const done = all.length - n('current');
-    const answer = !all.length ? 'No Region EAs in this area.'
-      : `Of <strong>${fmtNum(done)}</strong> completed EA${done === 1 ? '' : 's'}, <strong>${fmtNum(followed.length)}</strong> ${followed.length === 1 ? 'has' : 'have'} construction that started after the EA was complete, <strong>${fmtNum(waiting.length)}</strong> ${waiting.length === 1 ? 'is' : 'are'} waiting for construction${n('limit') ? ` (${fmtNum(n('limit'))} for 9 years or more)` : ''}, and <strong>${fmtNum(n('nodate'))}</strong> ${n('nodate') === 1 ? 'has' : 'have'} no completion date yet. <strong>${fmtNum(n('current'))}</strong> ${n('current') === 1 ? 'is' : 'are'} under way.${possible.length ? ` <strong>${fmtNum(possible.length)}</strong> current construction contract${possible.length === 1 ? ' lies' : 's lie'} near a past EA without a link: possible links to check.` : ''}${late ? ` <strong>${fmtNum(late)}</strong> contract${late === 1 ? ' starts' : 's start'} 10 or more years after ${late === 1 ? 'its' : 'their'} EA: check the EA was reviewed (a Class EA rule).` : ''}`;
-    const row = (x, right) => ({ attrs: eaOpen(x), html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(x.e.name)}<small>${esc(x.e.municipality || 'Peel')}</small></span><span class="pnl-r-fig">${right}</span></div>` });
-    const chartRows = [...followed, ...waiting].sort((a, b) => (a.d.completion ? a.d.completion.at : 9e15) - (b.d.completion ? b.d.completion.at : 9e15));
-    const others = all.filter(x => x.other.length);
-    const unknown = by('nodate');
-    return { id: 'eaflow', top: wsBar('capital', 'eaflow'), eyebrow: eyebrow('eaflow'), name: 'Which EAs have led to construction?', status: { tone: 'stage', text: 'From public pages' },
-      identity: `${esc(muni || 'Peel')} · ${fmtNum(all.length)} Region EAs · ${fmtNum(ce.data.capital.records.length)} capital project records`, scen: scen(), answer,
-      figures: [
-        { v: fmtNum(followed.length), u: 'EAs', label: 'construction followed', ctx: `${fmtNum(n('building'))} under construction · ${fmtNum(n('planned'))} planned · ${fmtNum(n('built'))} built` },
-        { v: fmtNum(waiting.length), u: 'EAs', label: 'complete, no construction yet', ctx: waiting.length ? `oldest completed ${esc(String(waiting[0].d.completion.year))}` : '', tone: n('limit') ? 'tight' : null },
-        { v: fmtNum(n('current')), u: 'EAs', label: 'under way', ctx: nextRep ? `next report expected ${esc(String(nextRep.d.expected.year))}${pastDue ? ` · ${fmtNum(pastDue)} past their report date` : ''}` : pastDue ? `${fmtNum(pastDue)} past their report date` : '' },
-        { v: fmtNum(n('nodate')), u: 'EAs', label: 'completion date unknown', ctx: 'construction can’t be ordered against them yet' },
-      ],
-      chart: eaTimelineHTML(chartRows),
-      lists: [
-        { title: 'Complete, waiting for construction (oldest first)', rows: waiting.map(x => row(x, `${esc(String(x.d.completion.year))}<small>${fmtNum(x.yearsSince)} year${x.yearsSince === 1 ? '' : 's'} ago${x.yearsSince >= 10 ? ' · review needed before construction' : x.bucket === 'limit' ? ' · near 10 years' : ''}</small>`)), total: waiting.length, all: true },
-        { title: 'Construction that followed an EA', rows: followed.flatMap(x => x.outcome.map(c => ({ attrs: eaOpen(x), html: `<div class="pnl-r-top"><span class="pnl-r-name">${workLine(c)}${gapNote(gapOf(x, c))}<small>after ${esc(x.e.name)} (complete ${esc(String(x.d.completion ? x.d.completion.year : '?'))})</small></span></div>` }))), total: followed.length, all: true },
-        { title: 'Possible links to check: current construction near a past EA', rows: possible.map(x => ({ attrs: eaOpen(x), html: `<div class="pnl-r-top"><span class="pnl-r-name">${workLine(x.c)}${gapNote(gapOf(x, x.c))}<small>near ${esc(x.e.name)}${x.d.completion ? ` (complete ${esc(String(x.d.completion.year))})` : ''} · ${esc(x.why.join(' · '))}</small></span></div>` })), total: possible.length, all: true },
-        { title: 'EAs under way (by expected report)', rows: current.map(x => row(x, x.d.expected ? `${esc(String(x.d.expected.year))}<small>${x.d.expected.at < now0 ? 'report was due' : 'report expected'}</small>` : '<small>no report date yet</small>')), total: current.length },
-      ],
-      folds: [
-        others.length ? { title: `Other work in the study areas (${fmtNum(others.reduce((t, x) => t + x.other.length, 0))}): started before the EA was complete, so not counted as following it`, html: `<ul class="small">${others.map(x => `<li><strong>${esc(x.e.name)}</strong>${x.d.completion ? ` (EA complete ${esc(String(x.d.completion.year))})` : x.d.expected ? ` (report expected ${esc(String(x.d.expected.year))})` : ''}: ${x.other.map(workLine).join('; ')}</li>`).join('')}</ul>` } : null,
-        unknown.length ? { title: `Completion date unknown (${fmtNum(unknown.length)})`, html: `<p class="small muted">The EA’s page, notice and report don’t give a completion year yet, so linked construction can’t be ordered against it.</p><ul class="small">${unknown.map(x => `<li>${esc(x.e.name)} <span class="muted">· ${esc(x.e.municipality || 'Peel')}${x.contracts.length ? ` · ${fmtNum(x.contracts.length)} linked contract${x.contracts.length === 1 ? '' : 's'}` : ''}</span></li>`).join('')}</ul>` } : null,
-        conflicts.length ? { title: `Date conflicts to check (${fmtNum(conflicts.length)})`, open: true, html: `<p class="small muted">The project’s own page links this construction to the EA, but it started before the EA was complete. One of the dates may be wrong.</p><ul class="small">${conflicts.map(x => `<li><strong>${esc(x.e.name)}</strong> (EA complete ${esc(String(x.d.completion ? x.d.completion.year : x.d.expected ? x.d.expected.year : '?'))}): ${x.conflict.map(workLine).join('; ')}</li>`).join('')}</ul>` } : null,
-      ],
-      map: { svg: eaMap(all), attrs: { 'data-ws-go': 'eaflow' }, label: 'Open EA to construction on the map', caption: `<span class="hm-key hm-key-ea-wait"></span> complete, waiting <span class="hm-key hm-key-ea-follow"></span> construction followed <span class="hm-key hm-key-ea-now"></span> under way <span class="hm-key hm-key-cons"></span> construction after an EA${muniBounds() ? ' · named: the three waiting longest (year complete)' : ''}` },
-      method: 'Each Region Class EA (Water, Wastewater and Roads) from its project page, with the capital projects linked to it (by the project’s own page, inside the study area, or by street inside the study area). Construction counts as following the EA only when it starts on or after the EA was complete; where only the year is known, a start in the same year counts. For an EA under way, only construction due after the expected report counts. Earlier work in the study area is listed as other work. The completion year comes from, in order: the notice of completion, the report filing date, the page’s wording, the report’s cover, the report’s file name. Under the Municipal Class EA, when more than 10 years pass between the notice of completion and the start of construction, the EA must be reviewed (and an addendum filed if anything changed) before construction: waiting EAs past 10 years and construction starting 10 or more years after its EA are flagged to check; the app can’t see whether that review was done. Possible links: planned or active contracts of the same system and municipality, mostly within 250 m of a completed EA’s study area (500 m of a facility), starting after the EA was complete, that the weekly build has not linked; repairs, relining, resurfacing and developer-built works are left out, Region-wide studies are left out, and a study area placed with low confidence needs the street named in the EA as well. They are listed to check and never counted as following the EA. The start date is the actual start where recorded, else the target start.',
-      sources: 'Region of Peel EA project pages and their notices and reports (weekly build, scripts/build-eas.js); Region of Peel capital project and construction pages (data/capital.json).',
+    const ce = CE(), M = CM(), name = 'What is being studied, and which EAs have led to construction?';
+    if (!ce || !M || !M.eaFlowSpec || !ce.data.loaded) return loading('eaflow', 'Loading the EAs and capital projects…');
+    if (!ce.data.eas) return { id: 'eaflow', top: wsBar('capital', 'eas'), eyebrow: eyebrow('eaflow'), name, answer: '<span class="muted">The EA list did not load. Reload the page to try again.</span>' };
+    // (the capital projects missing: the EAs still, and no construction counted against them)
+    const muni = App() && App().state.muni, recs = ce.data.capital ? ce.data.capital.records || [] : null;
+    const k = recs && [ce.data.eas.generatedAt, recs.length, muni].join('|');
+    if (recs && eaMemo.k !== k) eaMemo = { k, f: M.eaFlowSpec({ eas: ce.data.eas.eas || [], capital: recs, muni, open: eaOpen }) };
+    const f = recs ? eaMemo.f : { all: [], answer: '<span class="muted">The capital project list did not load, so EA to construction can’t be shown. Reload the page to try again.</span>', figures: [], chart: '', lists: [], folds: [], method: '', sources: '' };
+    const SE = root.PeelSections, ea = SE && SE.areaPanel ? SE.areaPanel('dca:eas') : specOf('dca:eas', areaScope);
+    const fig = (s, re) => (s && (s.figures || []).find(x => x && re.test(x.label))) || null;
+    return { id: 'eaflow', top: wsBar('capital', 'eas'), eyebrow: eyebrow('eaflow'), name, status: { tone: 'stage', text: 'From public pages' },
+      identity: `${esc(muni || 'Peel')}${recs ? ` · ${fmtNum(f.all.length)} Region EAs · ${fmtNum(recs.length)} capital project records` : ''}`, scen: scen(), answer: `${ea ? `${ea.answer} ` : ''}${f.answer}`,
+      figures: [fig(ea, /EAs under way/), fig(ea, /open for comment/), fig(f, /construction followed/), fig(f, /no construction yet/)].filter(Boolean),
+      chart: f.chart,
+      lists: [...(ea ? (ea.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('eaflow', r)) })) : []), ...f.lists],
+      folds: f.folds,
+      map: { svg: eaMap(f.all), attrs: { 'data-ws-go': 'eaflow' }, label: 'Open EA to construction on the map', caption: `<span class="hm-key hm-key-ea-wait"></span> complete, waiting <span class="hm-key hm-key-ea-follow"></span> construction followed <span class="hm-key hm-key-ea-now"></span> under way <span class="hm-key hm-key-cons"></span> construction after an EA${muniBounds() ? ' · named: the three waiting longest (year complete)' : ''}` },
+      method: `${ea && ea.method ? `${ea.method} ` : ''}${f.method}`, sources: f.sources || (ea && ea.sources) || '',
       actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'eaflow' }, primary: true }, { label: 'Full EA table', attrs: { 'data-ws-go': 'eaflow', 'data-ws-fulltable': 'dca:eas' } }] };
   }
 
@@ -1353,7 +1309,7 @@
   }
   // Where a search pick on a page lands (js/workspaces.js routePick): a site's section (and a file to
   // mark), Growth in an area at a plan (else at fall, else Peel; reset as a step up a site's trail is),
-  // and a workspace's section (Capital › DC projects).
+  // and a workspace's section (Capital › DC timing, a project open on it).
   const siteAt = (key, sec, file) => { siteSec = sec || 'summary'; siteSecDev = key; siteFile = file || null; siteFileShown = false; };
   function drillTo(id, fall) {
     let r = null; try { r = root.PeelPlanTables.compute(); } catch (e) { r = null; }
@@ -1362,6 +1318,6 @@
     gAt = !r || has(id) ? id : has(fall) ? fall : 'peel'; gStage = 'all'; gAll = false; gEst = false; gSec = 'growth';
   }
   const sectionAt = (ws, id) => { wsSec[ws] = id; };
-  Object.assign(api, { build, tilesSVG, tileCredit, tilesOk, eaMap, eaTimelineHTML, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame, siteAt, drillTo, sectionAt });
+  Object.assign(api, { build, tilesSVG, tileCredit, tilesOk, eaMap, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame, siteAt, drillTo, sectionAt });
   root.PeelWsPages = api;
 })(typeof window !== 'undefined' ? window : globalThis);

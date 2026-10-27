@@ -59,11 +59,15 @@ test('glossary: the first use of a term is underlined (three at most a panel), n
 });
 
 test('plain words: no "screen late", project IDs on the rows, file types and I&I in words', () => {
-  for (const f of ['js/dca-tab.js', 'js/dc-cost.js']) assert.doesNotMatch(src(f), /screens? late\b(?! \(capacity)|screen in time/, f);
+  for (const f of ['js/dca-tab.js', 'js/dc-cost.js', 'js/dc-projects.js']) assert.doesNotMatch(src(f), /screens? late\b(?! \(capacity)|screen in time/, f);
+  // (Capital › DC timing, js/dc-projects.js since navigation phase 4: the chip says "late", the row the plain
+  // name, then the project ID)
+  const p = src('js/dc-projects.js');
+  assert.match(p, /\{ tone: 'over', text: `\$\{late\.length\} late` \}/);
+  assert.match(p, /\$\{esc\(label\(pr\)\.short\)\}<small>project \$\{esc\(pr\.key\)\} · construction/);
+  assert.match(p, /without the <strong>\$\{esc\(big\.short \|\| big\.name\)\}<\/strong>/, 'the plain name in the sentence');
   const d = src('js/dca-tab.js');
-  assert.match(d, /\{ tone: 'over', text: `\$\{adv\.length\} late` \}/);
-  assert.match(d, /\$\{esc\(r\.short \|\| r\.name\)\}<small>\$\{r\.pid \? `project \$\{esc\(r\.pid\)\} · ` : ''\}in service/);
-  assert.match(d, /without the <strong>\$\{esc\(big\.short \|\| big\.name\)\}<\/strong>/, 'the plain name in the sentence');
+  assert.match(d, /without the <strong>\$\{esc\(big\.short \|\| big\.name\)\}<\/strong>/, 'the plain name in the full table\'s sentence');
   // Application types in words at a site.
   assert.equal(PN.typesText(['OPA ZBA Subdivision', 'Pre Consultation']), 'Official plan, zoning and subdivision · pre-consultation');
   assert.equal(PN.typesText(['SITE PLAN', 'Site Plan Approval', 'RESIDENTIAL']), 'Site plan · residential');
