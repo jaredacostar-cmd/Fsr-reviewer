@@ -55,6 +55,8 @@
       <span class="tb-wordmark">Peel Growth Pipeline</span>
       <button type="button" class="btn small tb-btn tb-home" id="tb-home" data-ws-home title="Home: the briefing and the workspaces">Home</button>
       <nav class="tb-trail" id="trail" aria-label="Scope"></nav>
+      <!-- (the trail's "k filters" popover: js/topbar.js renderTrail; under the top bar, out of the trail's clip) -->
+      <div class="tb-pop tb-fl-pop" id="tb-fl-pop" hidden></div>
       <div class="tb-search" id="tb-search"></div>
       <div class="tb-views" id="tb-views" role="group" aria-label="Map view"></div>
       <div class="tb-scen-wrap">
@@ -189,7 +191,6 @@
       <div class="ws-bar" id="ws-bar" hidden>
         <div class="ws-top"><button type="button" class="btn small ws-fullbtn" data-ws-backpage title="Back to this workspace's page">← Page</button><div class="ws-search" id="ws-search"></div><button type="button" class="btn small ws-fullbtn" data-ws-full title="Every layer, filter and tool, with the same scope, filters and scenario">Full map</button></div>
         <div class="ws-chips" id="ws-chips" role="toolbar" aria-label="Tasks"></div>
-        <div class="ws-filters" id="ws-filters"></div>
       </div>
       <div class="tool-banner" id="tool-banner" role="status" hidden></div>
       <div id="presentation-bar" hidden>
@@ -212,8 +213,8 @@
       <div class="analysis-tabs" role="tablist" aria-label="Analysis">
         <button type="button" role="tab" class="f-tab" id="ftab-overview" data-tab="overview" data-info="tab-overview" aria-controls="pane-overview" aria-selected="true">Overview</button>
         <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-growth" aria-controls="pane-growth-pipeline" aria-selected="false">Growth</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-svc" data-tab="svc" data-info="tab-servicing" aria-controls="pane-svc-capacity" aria-selected="false" hidden>Servicing</button>
-        <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca-timing" aria-selected="false" hidden>Capital</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-svc" data-tab="svc" data-info="tab-servicing" aria-controls="pane-svc-capacity" aria-selected="false" aria-busy="true" title="Loading: it opens when its data lands">Servicing</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca-timing" aria-selected="false" aria-busy="true" title="Loading: it opens when its data lands">Capital</button>
         <button type="button" role="tab" class="f-tab f-tab-trail" id="ftab-records" data-tab="records" data-info="tab-records" aria-controls="pane-records" aria-selected="false">Records</button>
       </div>
       <!-- Stage 3: "Open full table" widens this column to the full window and shows the open

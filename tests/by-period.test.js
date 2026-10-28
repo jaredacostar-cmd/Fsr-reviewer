@@ -209,9 +209,10 @@ test('the servicing permits landing out of sight set the stored Forecast panel�
 });
 
 test('in sight, the gate landing draws the Forecast again: the full table and the panel, and an open Forecast page or What’s coming at once', async () => {
-  for (const [at, expectPage] of [[{ page: 'coming' }, true], [{ page: 'outlook' }, true], [{ page: 'home' }, false], [{ tab: true }, false]]) {
+  // (navigation phase 6: the Forecast page and What's coming are Home's Growth › Forecast, the page host's view)
+  for (const [at, expectPage] of [[{ page: 'home', view: 'growth:timing' }, true], [{ page: 'home', view: 'growth:areas' }, false], [{ page: 'home', view: 'overview:' }, false], [{ tab: true }, false]]) {
     const projects = fixtures(), G = lateGate(projects), calls = [];
-    const W = { mode: () => (at.page ? 'home' : 'full'), page: () => at.page || 'home', renderPage: force => calls.push(['page', force]) };
+    const W = { mode: () => (at.page ? 'home' : 'full'), page: () => at.page || 'home', view: () => (at.page ? at.view : null), renderPage: force => calls.push(['page', force]) };
     const AT = { getFootTab: () => (at.tab ? 'growth' : 'overview'), getGSub: () => 'timing' };
     const x = loadLedgerUI({ projects, extra: { PeelDcGate: G, PeelPanel: forecastPanel(calls), PeelWorkspaces: W, PeelAnalysisTabs: AT } });
     x.LU.periodFolds();
@@ -225,7 +226,7 @@ test('in sight, the gate landing draws the Forecast again: the full table and th
 });
 
 test('a cut-off on the Forecast page or What’s coming draws the page at once, after the panel’s folds', () => {
-  const calls = [], W = { mode: () => 'home', page: () => 'coming', renderPage: force => calls.push(['page', force]) };
+  const calls = [], W = { mode: () => 'home', page: () => 'home', view: () => 'growth:timing', renderPage: force => calls.push(['page', force]) };
   const x = loadLedgerUI({ extra: { PeelPanel: forecastPanel(calls), PeelWorkspaces: W } });
   const [click] = x.on('click', false);
   click({ target: { closest: s => (s === '[data-ledger-cut]' ? { dataset: { ledgerCut: 'approved' } } : null) } });
@@ -287,20 +288,25 @@ test('the Forecast draws the folds, Growth renders the full table when the Forec
   // Forecast page or What's coming at once: the behaviour is the test below).
   const lu = src('js/ledger-ui.js');
   assert.match(lu, /AT\.getFootTab\(\) === 'growth' && AT\.getGSub\(\) === 'timing'\) \|\| pageShown\(\)/);
-  assert.match(lu, /const pageShown = \(\) => \{[^\n]*W\.mode\(\) === 'home' && W\.page && \['outlook', 'coming'\]\.includes\(W\.page\(\)\)/);
+  assert.match(lu, /const pageShown = \(\) => \{[^\n]*W\.mode\(\) === 'home' && W\.page\(\) === 'home' && W\.view && W\.view\(\) === 'growth:timing'/);
   assert.match(lu, /const rerender = \(\) => \{ render\(\); refresh\(\); if \(pageShown\(\) && root\.PeelWorkspaces\.renderPage\) root\.PeelWorkspaces\.renderPage\(false\); \};/);
   // No export reads the panes by id here: the Pipeline snapshot CSV reads model(); the pane ids are kept.
   assert.doesNotMatch(src('js/exports.js'), /ledger-body|timing-body/);
 });
 
 // ---- The pages (S6): the Forecast page and What's coming draw the panel's folds ----------------------
-test('the Forecast page and What’s coming draw the folds as the reader left them; What’s coming is the Forecast page', () => {
+test('the Forecast page and What’s coming draw the folds as the reader left them; What’s coming opens the Forecast page (Home’s Growth › Forecast)', () => {
   const s = src('js/ws-pages.js');
   const fn = s.slice(s.indexOf("function outlook(id = 'outlook') {"), s.indexOf('// ---- EA to construction'));
   assert.ok(fn.length > 100, 'outlook(id) is the Forecast page’s builder');
-  assert.ok(fn.includes('folds: root.PeelLedgerUI && root.PeelLedgerUI.foldsNow ? root.PeelLedgerUI.foldsNow(t.folds) : t.folds || [],'));
+  // (the folds as foldsNow gives them; By period leads the page, under the answer: navigation phase 6, 6a-S3)
+  assert.ok(fn.includes('const LU = root.PeelLedgerUI, fs = LU && LU.foldsNow ? LU.foldsNow(t.folds) : t.folds || [], lead = (LU && LU.FOLD_ID && fs.find(f => f && f.id === LU.FOLD_ID.period)) || null;'));
+  assert.ok(fn.includes('lead, figures: t.figures, chart: t.chart,') && fn.includes('folds: fs.filter(f => f !== lead),'));
   assert.ok(fn.includes('toMap(id, r)') && fn.includes("'data-ws-go': id") && fn.includes("loading(id, 'Timing the pipeline…')"), 'its map view is the page’s own: outlook or coming');
-  assert.match(s, /const coming = \(\) => \(\{ \.\.\.outlook\('coming'\), name: 'What is coming, where, when and how sure\?', top: '' \}\);/);
+  // (What's coming's own page builder is removed by design, navigation phase 6, §5 row 33: its id opens Home at
+  // Growth › Forecast with By period open; tests/nav-aliases.test.js "phase 6a" has the row)
+  assert.doesNotMatch(s, /const coming = /);
+  assert.deepEqual(plain(require('../js/workspaces.js').hostOf('coming')), { page: 'home', tab: 'growth', sub: 'timing', fold: 'period' });
   // The ledger's own page is gone (it was the only "Open Growth › Ledger"): its rows open from the full table.
   const lu = src('js/ledger-ui.js');
   assert.doesNotMatch(lu, /function page\(\)|data-ws-pick|Open Growth › Ledger|onPage/);
@@ -318,6 +324,21 @@ test('the Forecast page and What’s coming draw the folds as the reader left th
     assert.doesNotMatch(h, /id="pnl-since"/, 'nothing to compare yet: left out, never blank');
     assert.ok(h.includes('data-at="growth:timing" data-full-table="growth"'), 'the developments: one tap, the full table');
   }
+  // What's coming's order on the page host (navigation phase 6, 6a-S3: By period sat 1.7 screens down): By period
+  // leads, under the answer and before the figures, with its id (its toggle is kept, as the fold's) and open or
+  // shut as the reader left it; How sure stays in the folds column.
+  for (const open of [true, false]) {
+    const { LU } = loadLedgerUI({ stored: { ledgerOpen: open } });
+    const [lead, ...folds] = LU.foldsNow(LU.periodFolds());
+    const h = WP.pageHTML({ id: 'outlook', name: 'When do the homes and people arrive?', answer: 'x', lead, folds, figures: [{ v: '1', u: 'units', label: 'planned' }], map: { svg: '<svg></svg>', attrs: { 'data-ws-go': 'outlook' } } }, '');
+    const order = WP.sectionsOf(h);
+    assert.ok(order.indexOf('answer') < order.indexOf('lead') && order.indexOf('lead') < order.indexOf('figures') && order.indexOf('figures') < order.indexOf('fold'), order.join(' '));
+    assert.ok(h.includes(`<details class="pnl-fold page-lead" data-psec="lead"${open ? ' open' : ''} id="pnl-by-period"><summary>By period</summary>`), `the lead ${open ? 'open' : 'shut'}`);
+    assert.equal((h.match(/id="pnl-by-period"/g) || []).length, 1, 'drawn once');
+    assert.ok(h.includes('<details class="pnl-fold" data-psec="fold" id="pnl-how-sure">'), 'How sure in the folds column');
+  }
+  assert.equal(WP.sectionsOf(WP.pageHTML({ id: 'x', answer: 'y', lead: { id: 'z', title: 'Z', html: '' } }, '')).includes('lead'), false, 'an empty lead is left out');
+  assert.match(src('css/app.css'), /\n\.page-lead \{ margin: 0; min-width: 0; \}/);
 });
 
 // ---- By period's rows are the scope's child nodes (S8): a municipality's plans ------------------------
@@ -367,7 +388,8 @@ test('municipality rows at Peel, at a plan, MTSA or census-area filter, with no 
     assert.match(tableOf(x.LU.periodFolds()[0].html), /<th scope="col">Municipality<\/th>/, why);
   };
   muniRows(loadAtBrampton({ state: { muni: '' } }), 'no municipality filter');
-  muniRows(loadAtBrampton({ state: { sp: ['x'] } }), 'a plan filter (its sub-areas wait for phase 6)');
+  muniRows(loadAtBrampton({ state: { sp: ['x'] } }), 'a plan filter the plan tree does not hold (one it holds: its parts, the test below)');
+  muniRows(loadAtBrampton({ state: { sp: ['p1', 'x'] } }), 'two plans');
   muniRows(loadAtBrampton({ state: { mtsa: ['y'] } }), 'an MTSA filter');
   muniRows(loadAtBrampton({ state: { daCtx: { keys: new Set() } } }), 'a census area');
   muniRows(loadAtBrampton({ PT: {} }), 'no plan tables');
@@ -384,4 +406,56 @@ test('a development the plan tree did not place counts whole in Not in a plan', 
   assert.ok(Math.abs(L.sumOf(p1.cells) - rows.find(r => r.id === A.key).left) < 1e-6);
   assert.ok(Math.abs(L.sumOf(none.cells) - rows.find(r => r.id === B.key).left) < 1e-6);
   assert.ok(m.r.check < 1e-6);
+});
+
+// ---- At a plan (navigation phase 6, owner decision 10: the drill and a plan pick are the filter) --------------
+// The two-part rule (pros-and-cons M6, P4-11): the filter shows a development partly in the plan whole; the plan's own
+// totals count only its share. By period's rows are the plan's parts, each development by its share of each, so the
+// footer is the plan's own left to build (Growth › Areas' node), and a note says who lies partly outside it.
+function planParts({ parts = true } = {}) {
+  const node = (id, kind, name, parent, m) => ({ id, kind, name, parent, children: [], m: m || {} });
+  const mu = node('m:Brampton', 'municipality', 'Brampton', 'peel'), p1 = node('a:p1', 'plan', 'Plan 1', 'm:Brampton', { left: 380 }), p2 = node('a:p2', 'plan', 'Plan 2', 'm:Brampton');
+  const sub = node('a:p1s', 'subplan', 'Sub One', 'a:p1'), rest = node('r:p1', 'rest', 'Elsewhere in Plan 1', 'a:p1');
+  mu.children = [p1, p2]; p1.children = parts ? [rest, sub] : [];
+  const list = [node('peel', 'peel', 'Peel', null), mu, p1, p2, ...(parts ? [sub, rest] : [])];
+  return { nodes: new Map(list.map(n => [n.id, n])) };
+}
+test('at a plan: its parts, each development by its share; the footer is the plan’s own, a note names the straddlers', () => {
+  // A (300 left) lies 60% in Plan 1 (40% in its sub-area, 20% elsewhere in it) and 40% in Plan 2; B (200) all in Sub One.
+  const placed = ([a, b]) => [{ p: a, at: new Map([['peel', 1], ['m:Brampton', 1], ['a:p1', 0.6], ['a:p1s', 0.4], ['r:p1', 0.2], ['a:p2', 0.4]]) }, { p: b, at: new Map([['peel', 1], ['m:Brampton', 1], ['a:p1', 1], ['a:p1s', 1]]) }];
+  // (no municipality filter needed: a plan picked on the map's filter panel leaves it empty)
+  const { LU, A, B, rows, body } = loadAtBrampton({ placed, tree: planParts(), state: { muni: '', sp: ['p1'] } });
+  const m = LU.model(), left = id => rows.find(r => r.id === id).left;
+  assert.equal(m.rowsBy, 'part'); assert.equal(m.scope, 'Plan 1');
+  assert.deepEqual(plain(m.r.root.children.map(g => g.name)), ['Sub One', 'Elsewhere in Plan 1'], 'Elsewhere in the plan last');
+  const [sub, rest] = m.r.root.children;
+  assert.ok(Math.abs(L.sumOf(sub.cells) - (left(A.key) * 0.4 + left(B.key))) < 1e-6);
+  assert.ok(Math.abs(L.sumOf(rest.cells) - left(A.key) * 0.2) < 1e-6);
+  assert.ok(Math.abs(L.sumOf(m.r.root.cells) - 380) < 1e-6, 'the footer: the plan’s own left to build (A’s share and all of B)');
+  assert.equal(L.sumOf(m.r.root.cells), planParts().nodes.get('a:p1').m.left, 'Growth › Areas’ node');
+  assert.ok(m.r.check < 1e-6, 'the rows add up to it');
+  assert.equal(m.outside, 1);
+  assert.match(m.answer, /^Plan 1: <strong>380<\/strong> units left to build/);
+  const h = LU.periodFolds()[0].html, t = tableOf(h);
+  assert.match(t, /<caption>Units left to build by part of the plan and milestone/);
+  assert.match(t, /<thead><tr><th scope="col">Part of the plan<\/th>/);
+  assert.match(t, /<tbody><tr><th scope="row">Sub One<\/th>[\s\S]*<tr><th scope="row">Elsewhere in Plan 1<\/th>[\s\S]*<\/tbody>/);
+  assert.match(t, /<tfoot><tr class="ldg-peel"><th scope="row">Plan 1<\/th>/, 'the total row names the plan');
+  assert.match(h, /<li>1 development with homes left to build lies partly outside Plan 1: By period counts the part inside it; the Forecast’s figures count it whole\.<\/li>/);
+  LU.render(); assert.equal(tableOf(body.innerHTML), t, 'the full table draws the same table');
+  assert.match(m.method, /at a plan, its parts \(sub-areas, precincts and Elsewhere in the plan\), each development by its share of each/);
+  // A plan with no parts: one row, the plan, at each development's share in it.
+  const one = loadAtBrampton({ placed: ([a, b]) => [{ p: a, at: new Map([['peel', 1], ['m:Brampton', 1], ['a:p1', 0.6], ['a:p2', 0.4]]) }, { p: b, at: new Map([['peel', 1], ['m:Brampton', 1], ['a:p1', 1]]) }], tree: planParts({ parts: false }), state: { sp: ['p1'] } });
+  const m1 = one.LU.model();
+  assert.deepEqual(plain(m1.r.root.children.map(g => g.name)), ['Plan 1']);
+  assert.ok(Math.abs(L.sumOf(m1.r.root.cells) - 380) < 1e-6 && m1.r.check < 1e-6);
+  // No straddler: no note; the plan's total is the filter's.
+  const whole = loadAtBrampton({ placed: ([a, b]) => [{ p: a, at: new Map([['peel', 1], ['m:Brampton', 1], ['a:p1', 1], ['a:p1s', 1]]) }, { p: b, at: new Map([['peel', 1], ['m:Brampton', 1], ['a:p1', 1], ['r:p1', 1]]) }], tree: planParts(), state: { sp: ['p1'] } });
+  const mw = whole.LU.model();
+  assert.equal(mw.outside, 0); assert.doesNotMatch(whole.LU.periodFolds()[0].html, /partly outside/);
+  assert.ok(Math.abs(L.sumOf(mw.r.root.cells) - (left(A.key) + left(B.key))) < 1e-6);
+  // (the rollup's own rule, pure: byShare makes the total its groups' sum)
+  const r2 = L.rollup(rows, row => (row.id === A.key ? [['x', 'X', 0.5]] : [['x', 'X', 1]]), { byShare: true });
+  assert.ok(Math.abs(L.sumOf(r2.root.cells) - (left(A.key) * 0.5 + left(B.key))) < 1e-6 && r2.check < 1e-6);
+  assert.ok(Math.abs(L.sumOf(L.rollup(rows, row => (row.id === A.key ? [['x', 'X', 0.5]] : [['x', 'X', 1]])).root.cells) - (left(A.key) + left(B.key))) < 1e-6, 'without it: each row whole');
 });

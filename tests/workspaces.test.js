@@ -63,6 +63,8 @@ test('1. each chip opens the stated tab and scope (and the layer preset)', () =>
   assert.match(s, /lean\(pl\.view, LAYERS\[id\] \|\| \[\]\);/);
   assert.match(s, /MA\.showView\(view\);\s*if \(LG && LG\.apply\) LG\.apply\(new Set\(layers\)\);/);
   assert.match(s, /if \(pl\.sub && A\.setSub\) A\.setSub\(pl\.tab, pl\.sub\); if \(A\.setFootPref\) A\.setFootPref\(pl\.tab\); A\.showFootTab\(pl\.tab\);/);
+  // (navigation phase 6: a page view's Open the map keeps the tab and view: go(id, { keep }))
+  assert.match(s, /const A = AT\(\); if \(A && !o\.keep\) \{ if \(pl\.sub/);
   assert.match(s, /data-ws-full title="The same scope, filters and scenario with every tool">Full map →/);
   assert.match(src('js/panel.js'), /e\.html\.replace\(HEAD, `\$\{HEAD\}\$\{W\.srcLine\(key\)\}`\)/);
 });
@@ -111,6 +113,17 @@ test('4. old links still open the full map; the start screen preference otherwis
   assert.match(src('js/app.js'), /if \(window\.PeelWorkspaces\) window\.PeelWorkspaces\.init\(\);/);
 });
 
+// The map's tab state as js/analysis-tabs.js keeps it, stubbed (navigation phase 6: Home, the page host, shows
+// its tab and view; the chips at an area are analysis-tabs' TABSUBS less HIDDEN.area: tests/page-host.test.js).
+const AREA_CHIPS = { overview: [], growth: ['pipeline', 'areas', 'timing'], svc: ['capacity', 'network'], dca: ['timing', 'eas', 'projects'], records: ['sources', 'checks'] };
+function tabsStub() {
+  const at = { tab: 'overview', subs: { growth: 'pipeline', svc: 'capacity', dca: 'timing', records: 'sources' }, calls: [] };
+  return { at, TAB_KEYS: Object.keys(AREA_CHIPS), chipsAt: t => AREA_CHIPS[t] || [], tabReady: () => true, getFootTab: () => at.tab,
+    setSub: (t, s) => { at.calls.push(['setSub', t, s]); at.subs[t] = s; return t; }, setFootPref: t => at.calls.push(['setFootPref', t]),
+    showFootTab: t => { at.calls.push(['showFootTab', t]); at.tab = t; }, openFold: f => at.calls.push(['openFold', f]),
+    openTab: (t, s) => { at.calls.push(['openTab', t, s]); if (s) at.subs[t] = s; at.tab = t; },
+    wantedTab: () => at.tab, viewKey: () => `${at.tab}:${at.subs[at.tab] || ''}` };
+}
 // The browser half of js/workspaces.js with the real panel builder and a stub page.
 // (o.setTimeout / o.clearTimeout: timers to queue instead of running at once)
 function loadBrowser(areaSpec, o = {}) {
@@ -118,9 +131,10 @@ function loadBrowser(areaSpec, o = {}) {
   const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: s => nodes[s] || null, querySelectorAll: () => [], getElementById: () => null, addEventListener() {}, dispatchEvent() {} };
   const store = new Map();
   const window = { document, PeelUtil: { esc: x => String(x == null ? '' : x).replace(/&/g, '&amp;').replace(/</g, '&lt;'), fmtNum: n => Math.round(n).toLocaleString('en-CA'), store: { get: (k, d) => (store.has(k) ? store.get(k) : d), set: (k, v) => store.set(k, v) } },
-    PeelOverviewTab: { lastAreaSpec: () => areaSpec }, PeelMapMarkers: { THIS_YEAR: 2026 }, PeelSvcCapacity: { collect: () => [] }, PeelApp: { state: { muni: '', projects: [] } } };
+    PeelOverviewTab: { lastAreaSpec: () => areaSpec }, PeelMapMarkers: { THIS_YEAR: 2026 }, PeelSvcCapacity: { collect: () => [] }, PeelApp: { state: { muni: '', projects: [], sp: [] } }, PeelAnalysisTabs: tabsStub() };
   const ctx = { window, document, location: { hash: '' }, setTimeout: o.setTimeout || (f => f()), clearTimeout: o.clearTimeout || (() => {}), URLSearchParams, CustomEvent: function CustomEvent() {} }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/panel.js'), ctx);
+  vm.runInNewContext(src('js/sections.js'), ctx);
   vm.runInNewContext(src('js/ws-pages.js'), ctx);
   vm.runInNewContext(src('js/workspaces.js'), ctx);
   return { W: window.PeelWorkspaces, PN: window.PeelPanel, nodes, window };
@@ -307,6 +321,8 @@ test('3. Home links open the matching chip', () => {
   assert.match(h, /class="home-ws home-full" data-ws-full>/);
   // Find from every page, Home included: the search slot and Draw an area in the header.
   assert.match(h, /<div class="page-find" data-psec="find"><div class="page-search" id="page-search"><\/div><button type="button" class="btn small page-draw" data-ws-go="study"[^>]*>Draw an area<\/button><\/div><\/header>/);
+  // (navigation phase 6: the page host's strip right under the header, Overview on)
+  assert.match(h, /<\/header><nav class="page-secs page-tabs" role="tablist" aria-label="Tabs" data-psec="tabs"><button type="button" role="tab" class="page-sec page-tab on" data-pg-tab="overview"/);
   // Needs attention → the facility's scope (else the Servicing capacity page); This week → the This week
   // page; the figures → their pages (bundle 6); the map → Servicing capacity.
   assert.match(h, /<li class="pnl-row t-over" data-ws-go="tight" data-ws-ss="plant:Lakeview" tabindex="0" role="button"><span class="pnl-r-name">G\.E\. Booth/);
@@ -377,10 +393,12 @@ test('Find from every page: the page waits while its search has the focus; anoth
   window.document.activeElement = input;
   const w2 = writes; B.renderPage(false); window.document.activeElement = null; run();
   assert.equal(writes, w2, 'an unchanged page is not rebuilt');
-  // 3. Another page is never held back.
+  // 3. Another page is never held back (navigation phase 6: Servicing capacity is Home at Servicing › Capacity,
+  // the view another page as far as the wait goes: its tab and view change under the box).
   window.document.activeElement = input;
   B.openPage('tight');
   assert.match(html, /data-page="tight"/, 'Servicing capacity renders at once');
+  assert.match(html, /data-pg-tab="svc" [^>]*aria-selected="true">Servicing</);
   // The top bar is told where the box is: its slot hides while the box is in a page (any width).
   assert.match(src('js/topbar.js'), /if \(document\.documentElement\.classList\.contains\('home-on'\) && box\.closest\('#page-search'\)\) \{ slot\.hidden = true; return; \}/);
   assert.match(src('js/workspaces.js'), /if \(slot\) \{ if \(box\.parentElement !== slot\) slot\.appendChild\(box\); if \(root\.PeelTopbar && root\.PeelTopbar\.placeSearch\) root\.PeelTopbar\.placeSearch\(\); return; \}/);
@@ -397,54 +415,51 @@ test('Find from every page: a pick on a page opens what it found; the map’s pi
   B.go('tight');
   assert.equal(B.routePick({ place: { hit: 'plan', id: 'sp1', muni: 'Brampton' } }), false);
   assert.equal(B.mode(), 'ws');
-  // On a page: a development its page, a plan Growth in an area, a plant its scope on Servicing
-  // capacity's map, a DC project Capital (DC projects, at it).
-  const onHome = () => B.openPage('home');
+  // On a page: a development its page, a plan its filter on the tab you were on (navigation phase 6, owner decision
+  // 10: from Home's Overview, the briefing at the plan), a plant its scope on Servicing capacity's map, a DC project
+  // Capital (Home's Capital › DC timing, at it).
+  const S = window.PeelApp.state, log = [];
+  window.PeelApp.applyFilters = () => log.push(`apply ${S.muni}|${S.sp.join('+')}|${S.mtsa.join('+')}`);
+  window.PeelPlanAreas = { areaById: new Map([['sp1', { id: 'sp1', municipality: 'Brampton' }], ['sp2', { id: 'sp2', municipality: 'Mississauga' }]]), renderAreaSelects() {}, showArea() {}, renderPlanAreas() {} };
+  Object.assign(S, { mtsa: [], pz: [], dr: [] });
+  const onHome = () => B.openPage('home'), at = () => [B.page(), B.view()];
   onHome(); assert.equal(B.routePick({ p: { key: 'k', title: 'x' } }), true); assert.equal(B.page(), 'site');
   onHome(); assert.equal(B.routePick({ label: 'x', p: { key: 'k', title: 'x' }, hit: 'file', ref: 'OZ 21-005' }), true); assert.equal(B.page(), 'site');
-  onHome(); assert.equal(B.routePick({ place: { hit: 'plan', id: 'sp1', muni: 'Brampton' } }), true); assert.equal(B.page(), 'growth');
+  onHome(); log.length = 0; assert.equal(B.routePick({ place: { hit: 'plan', id: 'sp1', muni: 'Brampton' } }), true);
+  assert.deepEqual(at(), ['home', 'overview:'], 'the tab you were on: Home’s Overview, at the plan');
+  assert.deepEqual(plain([S.muni, S.sp, log]), ['Brampton', ['sp1'], ['apply Brampton|sp1|']], 'its filter, in its municipality, applied once');
   onHome(); assert.equal(B.routePick({ place: { hit: 'svc', ss: 'plant:Lakeview' } }), true); assert.equal(B.mode(), 'ws'); assert.equal(B.current(), 'tight');
-  onHome(); assert.equal(B.routePick({ place: { hit: 'dc', key: 'wastewater:25-2269' } }), true); assert.equal(B.page(), 'projects');
+  onHome(); assert.equal(B.routePick({ place: { hit: 'dc', key: 'wastewater:25-2269' } }), true); assert.deepEqual(at(), ['home', 'dca:timing']);
   assert.deepEqual(sel, ['wastewater:25-2269'], 'the project selected');
   // An address (and a DC facility): its map view, then the map's own pick (the pin) runs.
   onHome(); assert.equal(B.routePick({ label: '1 Main St', g: { lat: 43.7, lng: -79.7, label: '1 Main St' } }), false); assert.equal(B.mode(), 'ws'); assert.equal(B.current(), 'site');
   onHome(); assert.equal(B.routePick({ place: { hit: 'dcfac' } }), false); assert.equal(B.current(), 'projects');
   // The filter row is no place.
   onHome(); assert.equal(B.routePick({ label: 'x', filter: 'x' }), false); assert.equal(B.page(), 'home');
-  // A plan in another municipality than Home's picked one goes back to Peel first; one in it keeps it.
-  let applied = 0;
-  window.PeelApp.applyFilters = () => { applied++; };
-  window.PeelApp.state.muni = 'Mississauga';
-  onHome(); B.routePick({ place: { hit: 'plan', id: 'sp2', muni: 'Mississauga' } });
-  assert.equal(window.PeelApp.state.muni, 'Mississauga'); assert.equal(applied, 0);
-  onHome(); B.routePick({ place: { hit: 'plan', id: 'sp1', muni: 'Brampton' } });
-  assert.equal(window.PeelApp.state.muni, '', 'Peel'); assert.equal(applied, 1); assert.equal(B.page(), 'growth');
-  // The map's plan or MTSA filter (a plan picked on the map, the MTSA a page's pick left on): off before
-  // the drill, so the tree it drills in holds the plan picked; a plan filter that holds it stays.
-  const S = window.PeelApp.state, log = [], drill = window.PeelWsPages.drillTo;
-  window.PeelApp.applyFilters = () => log.push(`apply ${S.sp.length + S.mtsa.length}`);
-  window.PeelWsPages.drillTo = (id, fall) => { log.push(`drill ${id} ${fall}`); drill(id, fall); };
-  window.PeelPlanAreas = { renderAreaSelects: () => log.push('selects'), showArea: () => log.push('outline'), renderPlanAreas: () => log.push('outlines') };
-  const pickPlan = (sp, mtsa) => { Object.assign(S, { sp, mtsa }); log.length = 0; onHome(); return B.routePick({ place: { hit: 'plan', id: 'sp1', muni: 'Brampton' } }); };
-  assert.equal(pickPlan(['sp9'], []), true);
-  assert.deepEqual(plain([S.sp, S.mtsa, log]), [[], [], ['selects', 'outline', 'outlines', 'apply 0', 'drill a:sp1 m:Brampton']], 'another plan’s filter: off, then the drill');
-  assert.equal(B.page(), 'growth');
-  pickPlan([], ['mtsa:3']);
-  assert.deepEqual(plain([S.sp, S.mtsa, log.slice(-2)]), [[], [], ['apply 0', 'drill a:sp1 m:Brampton']], 'an MTSA filter: off');
-  pickPlan(['sp1', 'sp9'], ['mtsa:3']);
-  assert.deepEqual(plain([S.sp, S.mtsa]), [[], []], 'a plan filter holding it, narrowed by an MTSA: off');
-  pickPlan(['sp1', 'sp9'], []);
-  assert.deepEqual(plain([S.sp, S.mtsa, log]), [['sp1', 'sp9'], [], ['drill a:sp1 m:Brampton']], 'a plan filter holding it: kept, nothing re-applied');
-  // An MTSA picked on a page: any area filter off before the drill to its municipality; the map's own
+  // The tab you were on is kept: from Servicing › Network, a plan pick stays there, filtered to the plan.
+  onHome(); B.openPage('tight'); window.PeelAnalysisTabs.openTab('svc', 'network'); window.PeelAnalysisTabs.at.calls.length = 0;
+  assert.equal(B.routePick({ place: { hit: 'plan', id: 'sp2', muni: 'Mississauga' } }), true);
+  assert.deepEqual(at(), ['home', 'svc:network']); assert.deepEqual(plain(window.PeelAnalysisTabs.at.calls), [], 'no tab set');
+  assert.deepEqual(plain([S.muni, S.sp]), ['Mississauga', ['sp2']], 'a plan in another municipality: its own (no Peel step first)');
+  // Whatever was set before is replaced: another plan, an MTSA, a zone or a block filter (one apply).
+  const pickPlan = (sp, mtsa, pz = []) => { Object.assign(S, { muni: 'Caledon', sp, mtsa, pz, dr: [] }); log.length = 0; onHome(); return B.routePick({ place: { hit: 'plan', id: 'sp1', muni: 'Brampton' } }); };
+  for (const [sp, mt, pz] of [[['sp9'], []], [[], ['mtsa:3']], [['sp1', 'sp9'], ['mtsa:3']], [['sp1', 'sp9'], []], [[], [], ['pz:5']]]) {
+    assert.equal(pickPlan(sp, mt, pz), true);
+    assert.deepEqual(plain([S.muni, S.sp, S.mtsa, S.pz, log]), ['Brampton', ['sp1'], [], [], ['apply Brampton|sp1|']], `before: ${sp} ${mt} ${pz}`);
+  }
+  // An MTSA picked on a page: its municipality (any area filter off), Home on the tab you were on; the map's own
   // handler then sets its filter (routePick returns false).
-  Object.assign(S, { sp: ['sp9'], mtsa: ['mtsa:3'] }); log.length = 0; onHome();
+  Object.assign(S, { muni: '', sp: ['sp9'], mtsa: ['mtsa:3'] }); log.length = 0; onHome();
   assert.equal(B.routePick({ place: { hit: 'mtsa', id: 'mtsa:4', muni: 'Brampton' } }), false);
-  assert.deepEqual(plain([S.sp, S.mtsa, log.slice(-2)]), [[], [], ['apply 0', 'drill m:Brampton undefined']]);
+  assert.deepEqual(plain([S.muni, S.sp, S.mtsa, log]), ['Brampton', [], [], ['apply Brampton||']]);
+  assert.deepEqual(at(), ['home', 'overview:']);
   // A servicing scope that does not open yet (its data still loading): taken, and nothing moves: the
   // page stays, the open scope is not closed. Once it resolves, its scope on Servicing capacity's map.
   const opened = [], closed = [];
   window.PeelSvcScope = { resolve: ref => (ref === 'plant:Lakeview' ? { ref } : null), current: () => ({ ref: 'plant:Clarkson' }), close: () => closed.push(1), open: ref => opened.push(ref) };
-  onHome(); assert.equal(B.routePick({ place: { hit: 'svc', ss: 'pz:5' } }), true);
+  // (Home itself closes an open servicing scope, as the area pages did: its views are the area's, navigation phase 6)
+  onHome(); assert.deepEqual(closed, [1], 'Home closes the servicing scope'); closed.length = 0;
+  assert.equal(B.routePick({ place: { hit: 'svc', ss: 'pz:5' } }), true);
   assert.deepEqual(plain([B.mode(), B.page(), opened, closed]), ['home', 'home', [], []], 'pz:5 not in yet: stays on Home');
   onHome(); assert.equal(B.routePick({ place: { hit: 'svc', ss: 'plant:Lakeview' } }), true);
   assert.deepEqual(plain([B.mode(), B.current(), opened]), ['ws', 'tight', ['plant:Lakeview']]);

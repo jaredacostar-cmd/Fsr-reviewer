@@ -1,8 +1,10 @@
 'use strict';
 // js/sections.js: a page's sections are the full map's tab panels for its scope, built on demand when
-// the tab hasn't built one; a section of two panels takes the first's answer and both panels' lists.
+// the tab hasn't built one; a section of two panels takes the first's answer and both panels' lists. A page
+// host's views (navigation phase 6: Home at an area) are the map's tabs and chips, by tab:sub.
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const plain = o => JSON.parse(JSON.stringify(o));
 
 function load(store, build = {}) {
   delete require.cache[require.resolve('../js/sections.js')];
@@ -28,7 +30,16 @@ test('the site sections are the map\u2019s five tabs, by their names; Servicing 
   const fsr = { answer: 'FSR review' }, S2 = load({ 'svc:fsr': { spec: fsr, scope: `dev:${p.key}` }, 'svc:network': { spec: { answer: 'Network' }, scope: `dev:${p.key}` } });
   assert.equal(S2.specFor(S2.viewOf('servicing', 'fsr'), p), fsr);
   assert.equal(S2.specFor('servicing', p).answer, 'Network', 'the section itself is its first view');
-  assert.deepEqual(S.AREA.map(s => [s.title, s.page || s.keys[0]]), [['Growth', 'growth'], ['Forecast', 'outlook'], ['Servicing', 'svc:capacity'], ['Capital', 'dca:timing']]);
+});
+
+// (navigation phase 6, §5 row 50: the AREA bar, Growth in an area's Growth · Forecast · Servicing · Capital, is
+// removed by design; an area's views are Home's tabs and chips, the map's own)
+test('an area\u2019s views: the map\u2019s tabs and chips by tab:sub, a page builder where a page adds to the panel, else the panel', () => {
+  const S = load({});
+  assert.equal(S.AREA, undefined);
+  assert.deepEqual(Object.keys(S.VIEWS.area), ['overview:', 'growth:pipeline', 'growth:areas', 'growth:timing', 'svc:capacity', 'svc:network', 'dca:timing', 'dca:eas', 'dca:projects', 'records:sources', 'records:checks']);
+  assert.deepEqual(Object.entries(S.VIEWS.area).map(([k, v]) => [k, v.page || v.keys[0], v.ws || '']), [['overview:', 'home', ''], ['growth:pipeline', 'growth:pipeline', 'growth'], ['growth:areas', 'growth', ''], ['growth:timing', 'outlook', ''], ['svc:capacity', 'tight', ''], ['svc:network', 'svc:network', 'tight'], ['dca:timing', 'projects', ''], ['dca:eas', 'eaflow', ''], ['dca:projects', 'dca:projects', 'projects'], ['records:sources', 'data', ''], ['records:checks', 'records:checks', '']]);
+  for (const v of Object.values(S.VIEWS.area)) assert.ok(!!v.page !== !!v.keys, 'a page builder or a panel, never both');
 });
 
 test('a panel the tab set for this development is used as is; one for another scope is not', () => {
@@ -65,26 +76,31 @@ test('a section whose data is still loading is null (the page says it is loading
   assert.equal(S.specFor('nope', p), null);
 });
 
-test('an area\u2019s Servicing and Capital: the map\u2019s area panels (Capital built on demand)', () => {
+// (navigation phase 6: areaSpecFor, Growth in an area's Servicing and Capital sections, went with the AREA bar;
+// the views read areaPanel, the same panel)
+test('an area\u2019s view panel: the one its tab set for the area, else built here (Capital built on demand)', () => {
   const cap = { answer: 'Peel capacity' };
   let S = load({ 'svc:capacity': { spec: cap, scope: 'area' } });
-  assert.equal(S.areaSpecFor('servicing'), cap);
-  assert.equal(S.areaSpecFor('capital'), null, 'Capital: not built yet, no builder');
+  assert.equal(S.areaSpecFor, undefined);
+  assert.equal(S.areaPanel('svc:capacity'), cap);
+  assert.equal(S.areaPanel('dca:timing'), null, 'Capital: not built yet, no builder');
   globalThis.PeelDcaTab = { areaSpec: () => ({ answer: '1 late' }) };
-  assert.equal(S.areaSpecFor('capital').answer, '1 late');
+  assert.equal(S.areaPanel('dca:timing').answer, '1 late');
   S = load({ 'svc:capacity': { spec: cap, scope: 'dev:x' } });
-  assert.equal(S.areaSpecFor('servicing'), null, 'a site\u2019s panel is not the area\u2019s');
+  assert.equal(S.areaPanel('svc:capacity'), null, 'a site\u2019s panel is not the area\u2019s');
 });
 
-test('Servicing and Capital: a page, and the map’s other sub-views of the tab as sections', () => {
+// (navigation phase 6, §5 rows 51–52: the Servicing and Capital workspace bars are removed by design; their
+// sections are the strip's views of Home: Servicing › Capacity · Network, Capital › DC timing · EAs · Projects)
+test('Servicing and Capital: the map’s sub-views of the tab are Home’s views; a panel view is the map’s panel', () => {
   const S = load({ 'svc:network': { spec: { answer: 'where it flows' }, scope: 'area' } });
-  assert.deepEqual(S.WORKSPACES.servicing.secs.map(s => s.title), ['Capacity', 'Network']);
-  assert.deepEqual(S.WORKSPACES.capital.secs.map(s => s.title), ['DC timing', 'EAs', 'Projects']);
-  assert.deepEqual(S.WORKSPACES.capital.secs.map(s => s.page || s.keys[0]), ['projects', 'eaflow', 'dca:projects'], 'EAs is EA to construction’s page (the EAs, then EA to construction; navigation phase 4)');
-  assert.ok(!S.WORKSPACES.capital.secs.some(s => s.id === 'dcproj'), 'DC projects is DC timing (navigation phase 4)');
-  assert.equal(S.WORKSPACES.servicing.host, 'tight'); assert.equal(S.WORKSPACES.capital.host, 'projects');
-  assert.equal(S.wsSpecFor('servicing', 'network').answer, 'where it flows');
-  assert.equal(S.wsSpecFor('servicing', 'capacity'), null, 'a page of its own, not a panel');
+  assert.equal(S.WORKSPACES.servicing, undefined); assert.equal(S.WORKSPACES.capital, undefined); assert.equal(S.wsSpecFor, undefined);
+  assert.deepEqual(plain(S.VIEWS.area['svc:network']), { keys: ['svc:network'], ws: 'tight' }, 'Network: the panel, its map view Servicing capacity’s');
+  assert.deepEqual(plain(S.VIEWS.area['dca:projects']), { keys: ['dca:projects'], ws: 'projects' });
+  assert.deepEqual(['dca:timing', 'dca:eas'].map(k => S.VIEWS.area[k].page), ['projects', 'eaflow'], 'DC timing and EAs: their pages (a project in place; the EAs, then EA to construction)');
+  assert.ok(!Object.keys(S.VIEWS.area).includes('dca:dcproj'), 'DC projects is DC timing (navigation phase 4)');
+  assert.equal(S.areaPanel('svc:network').answer, 'where it flows');
+  assert.equal(S.areaPanel('svc:capacity'), null, 'not set: the page builder reads it when it is');
   globalThis.PeelCapitalEA = { projectsPanelSpec: () => ({ answer: '12 under construction' }) };
-  assert.equal(S.wsSpecFor('capital', 'projects').answer, '12 under construction', 'built on demand');
+  assert.equal(S.areaPanel('dca:projects').answer, '12 under construction', 'built on demand');
 });

@@ -40,7 +40,8 @@ test('Start over (top bar) clears filters, search, selection, development, scope
   assert.match(src('index.html'), /<button type="button" class="btn small tb-btn" id="tb-restart" title="Start over: [^"]*">Start over<\/button>/);
   const t = src('js/topbar.js');
   const body = t.match(/function startOver\(\) \{[^]*?\n {2}\}/)[0];
-  for (const re of [/PeelSvcScope\.clear\(\)/, /DevScope\.close\(\)/, /PeelTools\.closeResult\(\)/, /AS\(\)\.clearSelected\(\)/, /\$\('#f-search'\)/, /FI\(\)\.resetAllFilters\(\)/, /setMode\('home', 'home'\)/]) assert.match(body, re);
+  // (navigation phase 6: Home at its Overview, openPage, not whatever tab the map had)
+  for (const re of [/PeelSvcScope\.clear\(\)/, /DevScope\.close\(\)/, /PeelTools\.closeResult\(\)/, /AS\(\)\.clearSelected\(\)/, /\$\('#f-search'\)/, /FI\(\)\.resetAllFilters\(\)/, /root\.PeelWorkspaces\.openPage\('home'\)/]) assert.match(body, re);
   // (the lens and the scenario stay)
   assert.doesNotMatch(body, /setMapView|setView|criteria|basis/);
   assert.match(t, /\$\('#tb-restart'\); if \(so\) so\.addEventListener\('click', startOver\);/);
@@ -57,10 +58,13 @@ test('the Peel crumb only navigates: back to all of Peel, the filters stay', () 
 
 test('arriving on the full map from a page or a workspace, a bar offers the way back', () => {
   const w = src('js/workspaces.js');
-  assert.match(w, /if \(m === 'full' && mode !== 'full'\) backTo = mode === 'home' \? \{ page \} : mode === 'ws' && cur \? \{ ws: cur \} : null;/);
+  // (navigation phase 6: from a page, the view it was left at too, the way back from a scope's Overview: backView)
+  assert.match(w, /if \(m === 'full' && mode !== 'full'\) backTo = mode === 'home' \? \{ page, view: view\(\) \} : mode === 'ws' && cur \? \{ ws: cur \} : null;/);
   assert.match(w, /else if \(m !== 'full'\) backTo = null;/);
   assert.match(w, /data-ws-back>← Back to \$\{esc\(/);
-  assert.match(w, /if \(e\.target\.closest\('\[data-ws-back\]'\)\) \{[^\n]*openPage\(\(b && b\.page\) \|\| 'home', \{ keepScroll: true \}\)/);
+  // (navigation phase 6: back at the page with the map's tab and view as they are, keep; at the Overview of a scope
+  // the page closes, the view it was left at)
+  assert.match(w, /if \(e\.target\.closest\('\[data-ws-back\]'\)\) \{[^\n]*openPage\(\(b && b\.page\) \|\| 'home', \{ keepScroll: true, keep: true, view: b && hostPage\(b\.page\) && scopeOverview\(\) \? b\.view : null \}\)/);
 });
 
 test('a page\'s link to the map\'s tools goes to the full map first, then does what it does there', () => {

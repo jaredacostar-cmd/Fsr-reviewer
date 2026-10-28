@@ -57,7 +57,9 @@ test('sections, labs, names: no Allocations or Model checks section; the hydraul
   delete require.cache[require.resolve('../js/sections.js')];
   const S = require('../js/sections.js');
   delete globalThis.PeelPanel;
-  assert.deepEqual(S.WORKSPACES.servicing.secs.map(s => s.id), ['capacity', 'network']);
+  // (navigation phase 6: Servicing's views are Home's, the strip's: Capacity · Network at an area)
+  assert.deepEqual(Object.keys(S.VIEWS.area).filter(k => k.startsWith('svc:')), ['svc:capacity', 'svc:network']);
+  assert.equal(S.WORKSPACES.servicing, undefined, 'no Servicing workspace bar');
   assert.deepEqual(S.WORKSPACES.reference.secs.map(s => s.title).slice(-2), ['Data sources', 'Data checks']);
   assert.ok(!src('js/sections.js').includes("'svc:alloc'"), 'no Allocations panel builder');
   const L = require('../js/labs.js');
@@ -289,9 +291,11 @@ test('Records › Data checks on a page, and once the model lands', () => {
   // and with another tab open its panel is stored all the same: Reference › Data checks reads it (a stale group
   // there kept the loading line, or the last Scenario's factors).
   assert.match(src('js/svc-tab.js'), /if \(AT\(\)\.getFootTab\(\) === 'dca'\) DCAT\(\)\.renderDca\(\);\n[^\n]*\n[^\n]*\n[^\n]*\n {4}if \(!p && root\.PeelRecordsTab\) \{ if \(AT\(\)\.getFootTab\(\) === 'records'\) root\.PeelRecordsTab\.render\(\); else if \(root\.PeelPanel && root\.PeelRecordsTab\.checksPanelSpec\) root\.PeelPanel\.set\('records:checks', root\.PeelRecordsTab\.checksPanelSpec\(\)\); \}/);
-  // (Reference › Data checks takes the stored panel while it is the area's: js/sections.js areaPanel)
+  // (Home's Records › Data checks, Reference's on a page before navigation phase 6, takes the stored panel while
+  // it is the area's: js/sections.js areaPanel)
   const sec = src('js/sections.js');
-  assert.match(sec, /\{ id: 'checks', title: 'Data checks', tab: 'records', keys: \['records:checks'\] \}/);
+  assert.match(sec, /'records:checks': \{ keys: \['records:checks'\] \}/);
+  assert.match(sec, /\{ id: 'checks', title: 'Data checks', at: 'records:checks' \}/, 'Help’s bar links there');
   assert.match(sec, /if \(e && e\.spec && e\.scope === 'area'\) return e\.spec;/);
 });
 
@@ -304,21 +308,30 @@ function loadPages(window) {
   return window.PeelWsPages;
 }
 
-test('Reference › Data checks on a page: its Servicing model rows and See all open the map’s full table at their comparison', () => {
+// (navigation phase 6: Reference › Data checks on a page is Home's Records › Data checks, the map's panel as a view)
+test('Records › Data checks on Home: its Servicing model rows and See all open the map’s full table at their comparison; its footer’s actions first', () => {
   const PN = require('../js/panel.js');
   const rows = ['2020 Master Plan vs this tracker', '2025 annual reports vs.', 'Reported 2025 production', 'Plant flow: Ministry data', 'Pumping stations: open GIS layer', 'Caledon groundwater systems'].map(go => ({ ...PN.kv(go, 'x'), attrs: { 'data-full-table': 'records', 'data-ft-go': go } }));
-  const checks = { head: {}, answer: 'a', figures: [], method: '', sources: '',
-    lists: [{ title: 'Servicing model', rows, total: 6, seeAll: { 'data-full-table': 'records', 'data-ft-go': '2020 Master Plan vs this tracker' } }, { title: 'Where developments discharge', rows: [{ attrs: { 'data-ws-page': 'outlets', title: 'Review outlets' }, html: 'r' }], total: 1 }] };
-  const secs = [{ id: 'sources', title: 'Data sources', page: 'data' }, { id: 'checks', title: 'Data checks', tab: 'records', keys: ['records:checks'] }];
+  const foot = { primary: { label: 'Duplicate check', attrs: { 'data-full-table': 'records', 'data-ft-go': 'Units: every record' } }, secondary: [{ label: 'Review outlets', attrs: { 'data-ws-page': 'outlets' } }] };
+  const checks = { head: { name: 'Are the data and the model sound?' }, answer: 'a', figures: [], method: '', sources: '', foot,
+    lists: [{ title: 'Servicing model', rows, total: 6, seeAll: { 'data-full-table': 'records', 'data-ft-go': '2020 Master Plan vs this tracker' } }, { title: 'Where developments discharge', rows: [{ attrs: { 'data-ws-page': 'outlets', title: 'Review outlets' }, html: 'r' }, { attrs: { 'data-pnl-dev': 'd1', title: 'Open it' }, html: 'd' }], total: 2 }] };
+  const secs = require('../js/sections.js').WORKSPACES.reference.secs;
   const P = loadPages({ PeelPanel: { get: () => null, scenarioChip: () => '' }, PeelWorkspaces: { BY_ID: { tight: {}, projects: {} } }, PeelApp: { state: {} },
-    PeelSections: { WORKSPACES: { reference: { secs } }, areaPanel: k => (k === 'records:sources' ? { head: {}, answer: 's', lists: [] } : checks), wsSpecFor: () => checks } });
-  P.sectionAt('reference', 'checks');
-  const [svc, out] = P.build('data').lists;
-  // (Reference has no map workspace: a data-ws-go row would do nothing; data-at + data-full-table opens the map there)
+    PeelSections: { VIEWS: require('../js/sections.js').VIEWS, WORKSPACES: { reference: { secs } }, areaPanel: k => (k === 'records:sources' ? { head: {}, answer: 's', lists: [] } : checks) } });
+  const m = P.build('records:checks'), [svc, out] = m.lists;
+  assert.equal(m.id, 'records:checks'); assert.equal(m.name, 'Are the data and the model sound?');
+  // (Records has no map workspace: a data-ws-go row would do nothing; data-at + data-full-table opens the map there)
   assert.deepEqual(plain(svc.rows.map(r => r.attrs)), rows.map(r => ({ 'data-at': 'records:checks', 'data-full-table': 'records', 'data-ft-go': r.attrs['data-ft-go'] })));
   assert.deepEqual(plain(svc.see), { 'data-at': 'records:checks', 'data-full-table': 'records', 'data-ft-go': '2020 Master Plan vs this tracker' });
   assert.match(P.listHTML(svc), /data-ft-go="2020 Master Plan vs this tracker">See all \(6\) →<\/button>/, 'the sixth (the Caledon wells) reachable from the page');
   assert.deepEqual(plain(out.rows[0].attrs), { 'data-ws-page': 'outlets', title: 'Review outlets' }, 'a page row is left as it is');
+  assert.deepEqual(plain(out.rows[1].attrs), { 'data-pnl-dev': 'd1', title: 'Open it', 'data-at': 'records:checks' }, 'another row: the full map at the view, then its own handler');
+  // The footer's own actions first (foot.primary restored, design §5 row 56), then the map at the view.
+  assert.deepEqual(plain(m.actions), [{ ...foot.primary, primary: true }, foot.secondary[0], { label: 'Open the map', attrs: { 'data-ws-full': '', 'data-at': 'records:checks' } }, { label: 'Full table', attrs: { 'data-at': 'records:checks', 'data-full-table': '' } }]);
+  // Help's bar: Data sources and Data checks open Home's Records tab (the strip's attributes).
+  const bar = P.build('help').top;
+  assert.match(bar, /data-pg-tab="records" data-pg-sub="sources" aria-pressed="false">Data sources</);
+  assert.match(bar, /data-pg-tab="records" data-pg-sub="checks" aria-pressed="false">Data checks</);
   // (a page link to the map's tools: the full map first, then its own handler; js/workspaces.js MAP_LINK)
   assert.match(src('js/workspaces.js'), /const MAP_LINK = '\[data-at\], \[data-ss\], \[data-full-table\], \[data-trace\], \[data-wtrace\], \[data-scope-compare\], \[data-mview\], \[data-pnl-ce-map\]';/);
 });

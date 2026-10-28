@@ -104,6 +104,9 @@
     if (at('[data-ws-home]')) return count('page', 'home');
     if ((el = at('[data-ws-go]'))) return count('map', el.dataset.wsGo);
     if (at('[data-ws-full]')) return count('full', '');
+    // (a page host's strip and views row: the map's own kinds, so a tab's count adds the page and the map up)
+    if ((el = at('[data-pg-sub]'))) return count('sub', `${el.dataset.pgTab}.${el.dataset.pgSub}`);
+    if ((el = at('[data-pg-tab]'))) return count('tab', el.dataset.pgTab);
     if ((el = at('.f-tab[data-tab]'))) return count('tab', el.dataset.tab);
     if ((el = at('#sidebar [role="tab"][data-tab]'))) return count('side', el.dataset.tab);
     for (const [attr, tab] of Object.entries(SUB_ATTR)) if ((el = at(`[data-${attr}]`))) return count('sub', `${tab}.${el.dataset[attr]}`);

@@ -80,11 +80,12 @@ test('Home pages: EA to construction (Capital) and Forecast (Planning), reachabl
   const s = src('js/ws-pages.js');
   assert.match(s, /function eaflow\(\) \{/);
   assert.match(s, /function outlook\(id = 'outlook'\) \{\s*const t = specOf\('growth:timing', areaScope\);/);
-  // (step 6: from Home's groups: the 2031 figure opens the Forecast; Capital opens DC projects, whose
-  // section bar holds EAs, with EA to construction)
-  assert.match(s, /label: 'expected by 2031', ctx: f31\.ctx, attrs: go\('outlook'\)/);
+  // (step 6: from Home's groups: the 2031 figure opens the Forecast; Capital opens DC projects, since navigation
+  // phase 6 Home's Capital › DC timing, whose views row holds EAs, with EA to construction)
+  // (at a plan its ctx says the Forecast counts the developments partly in it whole: navigation phase 6)
+  assert.match(s, /label: 'expected by 2031', ctx: inPlan \? `\$\{f31\.ctx\} · the developments in or partly in \$\{inName\}, whole` : f31\.ctx, attrs: go\('outlook'\)/);
   assert.match(s, /\{ title: 'Capital', link: \{ label: 'Capital', attrs: go\('projects'\) \}/);
-  assert.match(src('js/sections.js'), /\{ id: 'eas', title: 'EAs', page: 'eaflow' \}/, 'EA to construction is the EAs section’s page');
+  assert.match(src('js/sections.js'), /'dca:eas': \{ page: 'eaflow' \}/, 'EA to construction is the EAs view’s page builder');
   // The outcome list only holds construction the model calls the EA's outcome (the rule moved with the spec,
   // js/capital-ea-model.js eaFlowSpec, which the page builds on).
   assert.match(src('js/capital-ea-model.js'), /followed\.flatMap\(x => x\.outcome\.map\(/);

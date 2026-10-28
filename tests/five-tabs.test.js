@@ -19,7 +19,8 @@ test('four tabs and Records, in order; Servicing holds water and wastewater in o
   const at = src('js/analysis-tabs.js');
   assert.match(at, /const tabOf = key => \(key === 'ww' \|\| key === 'water' \? 'svc' : key\);/);
   assert.match(at, /if \(key === 'dev' \|\| key === 'developments' \|\| key === 'tool'\) key = 'overview';/);
-  assert.match(src('js/svc-tab.js'), /\$\('#ftab-svc'\)\.hidden = !has;/);
+  // (navigation phase 6: Servicing shows from the first paint, marked loading until the servicing data lands)
+  assert.match(src('js/svc-tab.js'), /busy\(\$\('#ftab-svc'\), !has\);/);
 });
 
 test('Records follows the scope: Sources and Checks at Peel; a development its files; a file the file', () => {

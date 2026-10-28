@@ -484,5 +484,5 @@ test('Check FSR opens the form in view: the map’s panel and the page scroll to
   assert.match(src('js/analysis-tabs.js'), /showFootTab\(tab, sub\); Sh\(\)\.viewLink\.write\(\);\n[^\n]*\n\s+if \(a\.dataset\.at === 'svc:fsr'\) requestAnimationFrame\(\(\) => \{ const f = document\.querySelector\('#pnl-svc #pnl-fsr'\); if \(f\) \{ f\.open = true; f\.scrollIntoView\(\{ block: 'start' \}\); \} \}\);/);
   const op = fnOf(src('js/workspaces.js'), 'openPage');
   assert.match(op, /if \(!o\.keepScroll\) \{ const el = \$\('#home'\); if \(el\) el\.scrollTop = 0; \}\n[^\n]*\n\s+if \(dev && id === 'fsr' && !o\.keepScroll\) \{ const f = \$\('#home #pnl-fsr'\); if \(f\) \{ f\.open = true; f\.scrollIntoView\(\{ block: 'start' \}\); \} \}/, 'after the page’s scroll reset');
-  assert.match(op, /const A = AT\(\), sub = dev \? w\.siteSub : w\.sub;/, 'FSR review behind the page at a site (tests/workspaces.test.js runs it)');
+  assert.match(op, /else if \(w\) \{ const sub = dev \? w\.siteSub : w\.sub;/, 'FSR review behind the page at a site (tests/workspaces.test.js runs it)');
 });

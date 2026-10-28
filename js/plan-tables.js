@@ -34,6 +34,14 @@
     return [...A.secondaryPlans.map(a => ({ id: a.id, name: a.name, municipality: a.municipality, kind: a.municipality === 'Mississauga' ? 'character area' : 'secondary plan', parent: null })),
       ...(A.precincts || []).map(a => ({ id: a.id, name: a.name, municipality: a.municipality, kind: 'precinct', parent: null }))];
   }
+  // An area's place in the plan tree: the ids from its top plan down to it (navigation phase 6: the top bar's
+  // trail, Peel › Brampton › Bram West › Precinct 40-3, each step that level as the filter). An id the list does
+  // not hold is itself alone.
+  function areaPath(id, list = areas()) {
+    const byId = new Map(list.map(a => [a.id, a])), out = [];
+    for (let a = byId.get(id); a && !out.includes(a.id); a = a.parent ? byId.get(a.parent) : null) out.unshift(a.id);
+    return out.length ? out : [id];
+  }
   function sharesOf(p) {
     if (!App().state.treeGrouped || !TG()) return null;
     const d = TG().devOf(p.key), list = TG().data && TG().data.areas;
@@ -375,7 +383,7 @@
     App().applyFilters();
   });
 
-  const api = { loadTargets, setTargets: d => { targets = d; }, targetHTML, behindTarget, render, compute, areaIdsOf, inside, csvRows, sheetRows, planOf, downloadCSV, areas, matrixHTML, matrixSheetRows, matrixData };
+  const api = { loadTargets, setTargets: d => { targets = d; }, targetHTML, behindTarget, render, compute, areaIdsOf, areaPath, inside, csvRows, sheetRows, planOf, downloadCSV, areas, matrixHTML, matrixSheetRows, matrixData };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPlanTables = api;
 })(typeof window !== 'undefined' ? window : globalThis);

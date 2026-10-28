@@ -15,6 +15,11 @@ const ROOT = path.join(__dirname, '..');
 const src = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const plain = o => JSON.parse(JSON.stringify(o));
 const own = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+// The page host's state, stubbed (navigation phase 6: Home shows the map's tab and view; js/ws-pages.js host).
+const WSP = require('../js/workspaces.js'), SEC = require('../js/sections.js');
+const AREA_CHIPS = { overview: [], growth: ['pipeline', 'areas', 'timing'], svc: ['capacity', 'network'], dca: ['timing', 'eas', 'projects'], records: ['sources', 'checks'] };
+const hostAT = key => ({ TAB_KEYS: Object.keys(AREA_CHIPS), viewKey: () => key, chipsAt: t => AREA_CHIPS[t] || [], tabReady: () => true });
+const hostW = BY_ID => ({ BY_ID, TAB_NAME: WSP.TAB_NAME, tabPath: WSP.tabPath, chipName: WSP.chipName, hostOf: WSP.hostOf });
 
 // Three DC line projects (groups), the capacity analysis (R: two of them, and a plant step that is no DC
 // line), a constraint flagged "check the data" relieved by the third, and the allocation (m).
@@ -45,7 +50,7 @@ function load(o = {}) {
   const stored = { ...(o.store || {}) }, writes = [], sets = [], timers = [], handlers = {};
   const calls = { model: 0, openPage: [], sectionAt: [], renderPage: 0, showDcLine: [], cards: [], restore: [], reopen: 0, closeResult: 0, devClose: 0, openTab: [], setSys: 0, setMode: [], loadSewers: 0, fit: 0, setDcOn: 0, showFootTab: [] };
   let cur = o.current || null;
-  const st = { sys: o.sys || 'both', mode: o.mode || 'full', page: o.page || 'home', lab: !!o.lab, dev: o.dev || null, result: !!o.result, devOpen: o.devOpen || null };
+  const st = { sys: o.sys || 'both', mode: o.mode || 'full', page: o.page || 'home', view: o.view || null, lab: !!o.lab, dev: o.dev || null, result: !!o.result, devOpen: o.devOpen || null };
   const SEW = { data: o.sewers === false ? null : {} }, foot = o.foot ? { ...o.foot } : null, scroll = { scrollTop: o.scrollTop || 0 };
   const U = { esc: x => String(x), fmtNum: n => String(n), fmtMoney: n => `$${Math.round(n)}`, roundPop: n => Math.round(n), csvCell: v => String(v), CAPITAL: { asOf: 'Oct 2026' }, isPublic: () => !!o.public,
     store: { get: (k, d) => (own(stored, k) ? stored[k] : d), set: (k, v) => { writes.push(k); stored[k] = v; } } };
@@ -72,7 +77,7 @@ function load(o = {}) {
     PeelLabs: { on: id => id === 'funding' && st.lab },
     PeelDevVerdict: { scopedDev: () => st.dev },
     PeelDcaTab: { fundingSpec: () => ({ answer: 'the screen', figures: [{ v: 3, u: '', label: 'within the screen' }], chart: '' }) },
-    PeelWorkspaces: { mode: () => st.mode, page: () => st.page, openPage: id => calls.openPage.push(id), renderPage: () => { calls.renderPage++; }, setMode: m => { calls.setMode.push(m); st.mode = m; } },
+    PeelWorkspaces: { mode: () => st.mode, page: () => st.page, view: () => (st.mode === 'home' ? st.view : null), openPage: id => calls.openPage.push(id), renderPage: () => { calls.renderPage++; }, setMode: m => { calls.setMode.push(m); st.mode = m; } },
     PeelWsPages: { sectionAt: (ws, id) => calls.sectionAt.push([ws, id]) },
   };
   const ctx = { window, document, setTimeout: f => timers.push(f), module: { exports: {} } }; ctx.globalThis = ctx;
@@ -275,7 +280,7 @@ test('at a development there is no area list: its Capital panel is js/dca-tab.js
   assert.equal(L.timers.length, 0, 'and nothing built');
 });
 
-test('clicks: a Status chip filters and sets the workbook’s DC filter; the late figure and Home’s figure set the Status only; a row opens its project, on a page in place (from another page the Capital page), on the map its card', () => {
+test('clicks: a Status chip filters and sets the workbook’s DC filter; the late figure and Home’s figure set the Status only; a row opens its project, on a page in place (from another view or page Home’s Capital › DC timing), on the map its card', () => {
   let L = load();
   L.click({ dcStatus: 'planned' }, true);
   assert.equal(L.D.state.status, 'planned'); assert.equal(L.MP.dcnFilter, 'planned:all');
@@ -286,17 +291,20 @@ test('clicks: a Status chip filters and sets the workbook’s DC filter; the lat
   L.click({ wsPage: 'projects', dcStatus: 'gap' }, false);
   assert.equal(L.MP.dcnFilter, 'gap', 'Home’s figure too');
   assert.deepEqual(L.calls.sectionAt, [], 'on the map: no page section');
-  // On a page (Home's figure, the Capital page's late figure): the Capital page's DC timing section, wherever the
-  // page was left (its Projects section visited, it would open there: no Status chips, no list).
-  L = load({ mode: 'home', page: 'home' }); L.click({ wsPage: 'projects', dcStatus: 'gap' }, false);
-  assert.deepEqual(L.calls.sectionAt, [['capital', 'timing']]); assert.equal(L.D.state.status, 'gap'); assert.equal(L.MP.dcnFilter, 'gap');
+  // On a page (Home's figure, the DC timing view's late figure): the Status; Home's figure opens Capital › DC
+  // timing itself (its data-ws-page: js/workspaces.js openPage, the page id projects a view of Home, navigation
+  // phase 6), so no page section is set here any more.
+  L = load({ mode: 'home', page: 'home', view: 'overview:' }); L.click({ wsPage: 'projects', dcStatus: 'gap' }, false);
+  assert.deepEqual(L.calls.sectionAt, []); assert.equal(L.D.state.status, 'gap'); assert.equal(L.MP.dcnFilter, 'gap');
   L = load();
   L.click({ dcStatus: '__proto__' }, true); assert.equal(L.D.state.status, 'all');
-  // A row on a page: in place on the Capital page; from another page, the Capital page at it.
-  L = load({ mode: 'home', page: 'growth' });
+  // A row on a page: in place on Home's Capital › DC timing; from another view or page, there at it.
+  L = load({ mode: 'home', page: 'home', view: 'growth:areas' });
   L.click({ dcprojOpen: 'wastewater:22-1' });
-  assert.deepEqual(L.calls.sectionAt, [['capital', 'timing']]); assert.deepEqual(L.calls.openPage, ['projects']); assert.equal(L.D.state.sel, 'wastewater:22-1');
-  L = load({ mode: 'home', page: 'projects' });
+  assert.deepEqual(L.calls.sectionAt, []); assert.deepEqual(L.calls.openPage, ['projects']); assert.equal(L.D.state.sel, 'wastewater:22-1');
+  L = load({ mode: 'home', page: 'week' });
+  L.click({ dcprojOpen: 'wastewater:22-1' }); assert.deepEqual(L.calls.openPage, ['projects'], 'from another page');
+  L = load({ mode: 'home', page: 'home', view: 'dca:timing' });
   L.click({ dcprojOpen: 'water:25-9' });
   assert.deepEqual(L.calls.openPage, []); assert.equal(L.D.state.sel, 'water:25-9'); assert.ok(L.calls.renderPage > 0, 'the page redrawn');
   assert.deepEqual(L.calls.showDcLine, [], 'no card on a page');
@@ -353,18 +361,20 @@ test('source pins: DC timing’s panel moved to js/dc-projects.js; the analysis 
   assert.match(src('js/analysis-tabs.js'), /else if \(root\.PeelPanel && !\(root\.DevScope && root\.DevScope\.current\(\)\)\) root\.PeelPanel\.clear\('dca:timing'\); \}/);
 });
 
-test('Home’s DC projects late keeps its source (every relief, the analysis itself) and opens the list at Late; the Capital page hosts the list and a project in place', () => {
+test('Home’s DC projects late keeps its source (every relief, the analysis itself) and opens the list at Late; Home’s Capital › DC timing hosts the list and a project in place', () => {
   const s = src('js/ws-pages.js'), h = s.slice(s.indexOf('function homeFigures('), s.indexOf('function home()'));
   assert.match(h, /const R = root\.PeelDcCost\.dcAnalysis\(\); late = \{ v: R\.list\.filter\(r => r\.rec === 'advance'\)\.length \};/);
   assert.doesNotMatch(h, /specOf\('dca:timing'/, 'not the panel’s figure: the list counts DC lines only');
   assert.match(h, /attrs: \{ \.\.\.go\('projects', 'DC projects'\), 'data-dc-status': 'gap' \}/);
   const p = s.slice(s.indexOf('function projects()'), s.indexOf('// ---- Forecast'));
-  assert.match(p, /return wsSection\('capital', t\.head && t\.head\.back \? asSection\(m, t\) : m\);/);
-  assert.match(p, /one = \(!wsSec\.capital \|\| wsSec\.capital === 'timing'\) && DP && DP\.openSpec \? DP\.openSpec\(\) : null;/, 'the project in place on DC timing’s section only');
+  assert.match(p, /return t\.head && t\.head\.back \? asSection\(m, t\) : m;/);
+  assert.match(p, /one = DP && DP\.openSpec \? DP\.openSpec\(\) : null;/, 'the project in place on DC timing (the builder is that view’s only)');
   assert.match(p, /const t = one \|\| specOf\('dca:timing', areaScope\);/);
   const mp = s.slice(s.indexOf('function dcProjMap()'), s.indexOf('function projects()'));
   assert.match(mp, /DI\.current && DI\.current\(\)/); assert.doesNotMatch(mp, /wsSec\.capital === 'dcproj'|DI\.model\(\)/);
-  assert.match(s, /if \(gp\.dataset\.wsPage === 'projects' \|\| gp\.dataset\.wsPage === 'eaflow'\) \{ wsSec\.capital = null; const DP = root\.PeelDcProjects; if \(DP && DP\.state\.sel\) \{ DP\.state\.sel = null; DP\.render\(\); \} \}/, 'the bar’s DC timing: the list again');
+  // (the strip's DC timing, as the old section bar's: the list again; js/workspaces.js, navigation phase 6)
+  assert.match(src('js/workspaces.js'), /if \(pt\.dataset\.pgTab === 'dca' && pt\.dataset\.pgSub === 'timing'\) \{ const DP = root\.PeelDcProjects; if \(DP && DP\.state\.sel\) \{ DP\.state\.sel = null; DP\.render\(\); \} \}/, 'the strip’s DC timing: the list again');
+  assert.doesNotMatch(s, /const wsSec = |wsSec\.capital|gp\.dataset\.wsPage/);
   // The page in a vm: the list (a row opens in place: toMap passes it), then a project open with its way back.
   const list = { head: { status: { tone: 'over', text: '1 late' }, identity: 'Peel · 3 DC projects' }, answer: 'Of the 3 DC projects', figures: [{ v: '3', label: 'DC projects' }], chart: '', lists: [{ title: 'Water and wastewater projects', rows: [{ attrs: { 'data-dcproj-open': 'wastewater:22-1' }, html: 'r' }], total: 1 }], folds: [], method: 'm', sources: 's' };
   const proj = { head: { back: { label: 'All DC projects', attrs: { 'data-dcproj-back': '' } }, wsName: 'Main 22-1 · 22-1', status: null, identity: 'Wastewater' }, answer: '<strong>2 developments</strong> rely on it.', figures: [], lists: [{ title: 'Needs it to connect', rows: [{ attrs: { 'data-pnl-dev': 'd1' }, html: 'd' }], total: 1 }], folds: [], method: 'm', sources: 's' };
@@ -372,15 +382,21 @@ test('Home’s DC projects late keeps its source (every relief, the analysis its
   const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: () => null, querySelectorAll: () => [], getElementById: () => null, addEventListener() {}, dispatchEvent() {} };
   const window = { document, PeelUtil: { esc: x => String(x), fmtNum: n => String(n), fmt1: n => n.toFixed(1) },
     PeelPanel: { get: k => (k === 'dca:timing' ? { scope: 'area', spec: stored } : null), scenarioChip: () => '' },
-    PeelWorkspaces: { BY_ID: { projects: { label: 'DC projects' } } }, PeelApp: { state: {} }, PeelDcProjects: { state: { sel: null }, openSpec: () => open },
-    PeelSections: { WORKSPACES: { capital: { host: 'projects', secs: [{ id: 'timing', title: 'DC timing', page: 'projects' }, { id: 'projects', title: 'Projects', tab: 'dca', keys: ['dca:projects'] }] } } } };
+    PeelWorkspaces: hostW({ projects: { label: 'DC projects' } }), PeelApp: { state: {} }, PeelDcProjects: { state: { sel: null }, openSpec: () => open },
+    PeelSections: { VIEWS: SEC.VIEWS } };
   const ctx = { window, document, setTimeout: () => 0, clearTimeout() {}, URLSearchParams }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/ws-pages.js'), ctx);
   const P = window.PeelWsPages;
   let m = P.build('projects');
   assert.equal(m.answer, 'Of the 3 DC projects'); assert.equal(m.lists.length, 1, 'no borrowed lists');
   assert.deepEqual(plain(m.lists[0].rows[0].attrs), { 'data-dcproj-open': 'wastewater:22-1' }, 'a row opens in place');
-  assert.match(m.top, /data-ws-page="projects" aria-pressed="true">DC timing</);
+  // (no section bar: DC timing, EAs and Projects are the views of Home's Capital tab, the strip's)
+  assert.equal(m.top, undefined);
+  window.PeelAnalysisTabs = hostAT('dca:timing');
+  const hm = P.host();
+  assert.equal(hm.id, 'projects'); assert.equal(hm.answer, 'Of the 3 DC projects');
+  assert.match(hm.tabs, /data-pg-tab="dca" [^>]*aria-selected="true">Capital</);
+  assert.match(hm.tabs, /data-pg-sub="timing" aria-pressed="true">DC timing</);
   assert.deepEqual(plain(m.actions[0]), { label: 'Open the map', attrs: { 'data-ws-go': 'projects' }, primary: true });
   // (the project from js/dc-projects.js openSpec, the stored panel still the list; its Open the map: its card)
   open = proj; window.PeelDcProjects.state.sel = 'wastewater:22-1'; m = P.build('projects');
@@ -388,8 +404,9 @@ test('Home’s DC projects late keeps its source (every relief, the analysis its
   assert.deepEqual(plain(m.actions[0].attrs), { 'data-ws-go': 'projects', 'data-ws-dcwork': 'wastewater:22-1' }, 'Open the map: the map view at the project’s card');
   assert.match(m.answer, /^<span class="ws-back small"><button type="button" class="btn small link" data-dcproj-back="">‹ All DC projects<\/button><\/span><strong>2 developments<\/strong>/);
   assert.deepEqual(plain(m.lists[0].rows[0].attrs), { 'data-ws-go': 'projects', 'data-ws-dev': 'd1' }, 'a development opens on the map view');
-  // A DC project picked in a page's search: the Capital page at it, DC timing's section (js/workspaces.js routePick).
-  assert.match(src('js/workspaces.js'), /if \(h\.hit === 'dc'\) return \{ page: 'projects', wsec: 'timing', dcSel: h\.key \};/);
+  // A DC project picked in a page's search: Home's Capital › DC timing at it (js/workspaces.js routePick; the page's
+  // own section id, wsec, went with sectionAt: navigation phase 6, the page id opens the view).
+  assert.match(src('js/workspaces.js'), /if \(h\.hit === 'dc'\) return \{ page: 'projects', dcSel: h\.key \};/);
 });
 
 // ---- Chunk 2: a DC project row opens its dcwork: scope; the DC timing tool result is the list ----------
@@ -508,7 +525,7 @@ test('the full table: the list in full, at Late the reliefs that are no DC line 
 
 test('the project in place on the Capital page: both verdicts first, then every development relying on it by tier (See all in place); Show on the map opens its card from the DC program', () => {
   const m = MODEL(); m.projects.get('wastewater:22-1').devs.push(...Array.from({ length: 7 }, (_, i) => dev(`a${i}`, 'A', 10)));
-  const L = load({ mode: 'home', page: 'projects', current: m });
+  const L = load({ mode: 'home', page: 'home', view: 'dca:timing', current: m });
   assert.equal(L.D.openSpec(), null, 'none open');
   L.D.state.sel = 'wastewater:22-1'; const p = L.D.openSpec();
   assert.equal(p.lists[0].title, 'Is it in time?');
@@ -525,13 +542,13 @@ test('the project in place on the Capital page: both verdicts first, then every 
   L.D.state.sel = 'wastewater:nope'; assert.equal(L.D.openSpec(), null, 'one the allocation does not have: the list');
   // Show on the map (the page's side map too): the full map at the project's card, its lines from the DC
   // program, never the allocation.
-  const L2 = load({ mode: 'home', page: 'projects' });
+  const L2 = load({ mode: 'home', page: 'home', view: 'dca:timing' });
   L2.click({ dcprojMap: 'wastewater:22-1' });
   assert.deepEqual(L2.calls.setMode, ['full']); assert.deepEqual(plain(L2.calls.showDcLine.map(ln => ln.p)), ['22-1']); assert.equal(L2.calls.fit, 1);
   assert.equal(L2.calls.model, 0);
 });
 
-test('the old DC timing tool result opens the list: at its Status, the development or the result closed, the System never set; on a page the Capital page', () => {
+test('the old DC timing tool result opens the list: at its Status, the development or the result closed, the System never set; on a page Home’s Capital › DC timing', () => {
   let L = load({ result: true, devOpen: { key: 'd1' } });
   L.D.state.sel = 'wastewater:22-1';
   L.D.openList({ status: 'gap' });
@@ -542,9 +559,10 @@ test('the old DC timing tool result opens the list: at its Status, the developme
   assert.equal(L.calls.devClose, 1, 'nothing more to close'); assert.equal(L.calls.closeResult, 1);
   for (const v of ['nonsense', '__proto__', undefined]) { L.D.openList({ status: v }); assert.equal(L.D.state.status, 'all', String(v)); }
   L.D.openList(); assert.equal(L.D.state.status, 'all');
-  L = load({ mode: 'home', page: 'home' });
+  L = load({ mode: 'home', page: 'home', view: 'overview:' });
   L.D.openList({ status: 'planned' });
-  assert.deepEqual(L.calls.sectionAt, [['capital', 'timing']]); assert.deepEqual(L.calls.openPage, ['projects']); assert.deepEqual(L.calls.openTab, []);
+  assert.deepEqual(L.calls.sectionAt, [], 'no page section: Home’s Capital › DC timing is the page id projects’ view');
+  assert.deepEqual(L.calls.openPage, ['projects']); assert.deepEqual(L.calls.openTab, []);
   assert.equal(L.D.state.status, 'planned');
   // Today's data: no DC line late, a plant step is. Late lists the step, so the link shows what is late (§5 row 62:
   // each figure opens its own rows), its chip counts it; at a Status no row has the list stays, its chips above a
@@ -742,15 +760,20 @@ test('the EAs page: the map’s Capital › EAs (built when the map has not draw
   const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: () => null, querySelectorAll: () => [], getElementById: () => null, addEventListener() {}, dispatchEvent() {} };
   const window = { document, PeelUtil: { esc: CEM.esc, fmtNum: n => String(n), fmt1: n => n.toFixed(1) }, PeelCapitalEAModel: { ...CEM, eaFlowSpec: x => { flows++; return CEM.eaFlowSpec(x); } }, PeelCapitalEA: ce,
     PeelPanel: { get: () => null, scenarioChip: () => '' }, PeelApp: { state: { muni: 'Brampton' } },
-    PeelWorkspaces: { BY_ID: { eaflow: { label: 'EA to construction' }, projects: { label: 'DC projects' } } },
-    PeelSections: { WORKSPACES: { capital: { host: 'projects', secs: [{ id: 'timing', title: 'DC timing', page: 'projects' }, { id: 'eas', title: 'EAs', page: 'eaflow' }, { id: 'projects', title: 'Projects', tab: 'dca', keys: ['dca:projects'] }] } }, areaPanel: k => { asked.push(k); return easPanel; } } };
+    PeelWorkspaces: hostW({ eaflow: { label: 'EA to construction' }, projects: { label: 'DC projects' } }),
+    PeelSections: { VIEWS: SEC.VIEWS, areaPanel: k => { asked.push(k); return easPanel; } } };
   const ctx = { window, document, setTimeout: () => 0, clearTimeout() {}, URLSearchParams }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/ws-pages.js'), ctx);
   const P = window.PeelWsPages;
   let m = P.build('eaflow');
   assert.deepEqual(asked, ['dca:eas'], 'the EAs from PeelSections.areaPanel (stored, else built)');
   assert.equal(m.name, 'What is being studied, and which EAs have led to construction?');
-  assert.match(m.top, /data-ws-page="eaflow" aria-pressed="true">EAs</); assert.match(m.top, /data-ws-page="projects" aria-pressed="false">DC timing</);
+  // (Home's Capital › EAs: the strip's views row, no section bar; navigation phase 6)
+  assert.equal(m.top, undefined);
+  window.PeelAnalysisTabs = hostAT('dca:eas');
+  const hm = P.host(); asked.length = 0;
+  assert.equal(hm.id, 'eaflow');
+  assert.match(hm.tabs, /data-pg-sub="eas" aria-pressed="true">EAs</); assert.match(hm.tabs, /data-pg-sub="timing" aria-pressed="false">DC timing</);
   assert.match(m.answer, /^<strong>1<\/strong> current EA in Brampton\. Of <strong>2<\/strong> completed EAs/);
   assert.deepEqual(plain(m.figures.map(f => f.label)), ['EAs under way', 'open for comment now', 'construction followed', 'complete, no construction yet']);
   assert.deepEqual(plain(m.figures[1].attrs), { 'data-ws-go': 'eaflow', 'data-ws-fulltable': '1' }, 'a figure into the full table: the map view at it');
@@ -786,7 +809,8 @@ test('source pins: Capital › EAs’ fold, its full table, the chip’s fold, t
   const s = src('js/ws-pages.js'), p = s.slice(s.indexOf('  function eaflow() {'), s.indexOf('  // ---- This week'));
   assert.match(p, /if \(recs && eaMemo\.k !== k\) eaMemo = \{ k, f: M\.eaFlowSpec\(\{ eas: ce\.data\.eas\.eas \|\| \[\], capital: recs, muni, open: eaOpen \}\) \};/);
   assert.match(p, /SE\.areaPanel \? SE\.areaPanel\('dca:eas'\)/);
-  assert.match(p, /top: wsBar\('capital', 'eas'\)/); assert.doesNotMatch(s, /wsBar\('capital', 'eaflow'\)/);
+  // (no Capital section bar: the strip's views, navigation phase 6)
+  assert.doesNotMatch(p, /wsBar\('capital'/); assert.doesNotMatch(s, /wsBar\('capital', 'eaflow'\)/);
   assert.match(src('js/analysis-tabs.js'), /eaflow: \(\) => root\.PeelCapitalEA && root\.PeelCapitalEA\.openEaFlow,/);
   assert.match(src('js/workspaces.js'), /\{ id: 'eaflow', label: 'EA to construction', group: 'Capital', tab: 'dca', sub: 'eas', fold: 'eaflow', scope: 'area', view: 'dc',/);
   const css = src('css/app.css');

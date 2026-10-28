@@ -41,11 +41,12 @@
       if (!TL().atDefaultYears()) { set('yf', TL().tFrom.value); set('yt', TL().tTo.value); }
       // The tab and its sub-view (Stage 2: Servicing is one tab, svs=capacity|network; the old alloc / checks
       // values migrate, SUB_MAP in js/analysis-tabs.js). On a workspace's page, the page's own tab (the one
-      // behind it), not the map's last pick; nav=2 says so (links before it always wrote the map's tab: on a
-      // page link that one is not read, below).
-      const pageWs = W && W.mode() === 'home' && W.page && W.BY_ID[W.page()];
+      // behind it), not the map's last pick; on a page host (Home: its tabs are the map's, navigation phase 6)
+      // the map's, which is the page's own. nav=3 says so (links before it wrote the map's tab on Home and Data
+      // sources, and before nav=2 on every page: on such a link that one is not read, below).
+      const pageWs = W && W.mode() === 'home' && W.page && !(W.view && W.view()) && W.BY_ID[W.page()];
       const tab = pageWs ? pageWs.tab : AT().getFootPref();
-      set('nav', '2');
+      set('nav', '3');
       set('t', tab);
       if (tab === 'svc') set('svs', AT().getSvcSub()); if (tab === 'records') set('rs', AT().getRSub());
       if (tab === 'growth') set('gs', AT().getGSub()); if (tab === 'dca') set('dcs', AT().getDcSub());
@@ -139,9 +140,12 @@
       // A workspace page's link from before nav=2 carried the map's tab, not the page's: when that page is
       // the one open (the link opened it), the page's own tab and sub-view go behind it. A saved view
       // applied on the full map opens no page, so it keeps its own t.
-      const W = window.PeelWorkspaces, w = q.get('w') || '';
-      const pid = !(Number(q.get('nav')) >= 2) && /^p:/.test(w) && W && W.resolvePage ? W.resolvePage(w.slice(2), { site: !!q.get('d'), last: window.PeelUtil.store.get('lastWs', '') }) : '';
-      const pageWs = pid && W.mode() === 'home' && W.page() === pid && Object.prototype.hasOwnProperty.call(W.BY_ID, pid) ? W.BY_ID[pid] : null;
+      // (navigation phase 6: a link from before nav=3 to Home or an area page opens the page's own view, never
+      // the map's tab it carried: Home its Overview, an area page Home at that page's tab and view, hostOf)
+      const W = window.PeelWorkspaces, nv = Number(q.get('nav')) || 0, w = q.get('w') || '';
+      const pid = nv < 3 && /^p:/.test(w) && W && W.resolvePage ? W.resolvePage(w.slice(2), { site: !!q.get('d'), last: window.PeelUtil.store.get('lastWs', '') }) : '';
+      const host = nv < 3 && W && W.hostOf && W.mode() === 'home' ? (w === 'home' ? { tab: 'overview', sub: '' } : pid ? W.hostOf(pid, { site: !!q.get('d') }) : null) : null;
+      const pageWs = host || (nv < 2 && pid && W.mode() === 'home' && W.page() === pid && Object.prototype.hasOwnProperty.call(W.BY_ID, pid) ? W.BY_ID[pid] : null);
       if (q.get('t') || pageWs) {
         // Phase 4: old links name removed tabs — migrateTabKey maps them onto the new set.
         // Stage 2: old links name the Wastewater / Water halves (t=ww|water&ws=…) and old sub-views

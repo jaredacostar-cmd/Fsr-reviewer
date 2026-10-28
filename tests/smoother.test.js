@@ -81,7 +81,9 @@ test('phone: the map\'s way back sits above the bottom sheet, where it can be ta
   // At full the sheet stops under the bar while it shows (a kept Inquiry draft opens the sheet full), and
   // the full height is worked out again when the bar comes or goes.
   assert.match(app, /const back = document\.querySelector\('#back-bar:not\(\[hidden\]\)'\), backH = back \? Math\.round\(back\.getBoundingClientRect\(\)\.height\) \+ 8 : 0;\n\s+if \(name === 'full'\) return Math\.max\(240, Math\.round\(vh - footH - topB - backH\) - 8\);/);
-  const rb = src('js/workspaces.js'), i = rb.indexOf('  function renderBack() {');
+  // (navigation phase 6: renderBack(relabel), the label alone redrawn as a view is picked on the full map)
+  const rb = src('js/workspaces.js'), i = rb.indexOf('  function renderBack(relabel) {');
+  assert.ok(i > 0, 'renderBack');
   assert.match(rb.slice(i, rb.indexOf('\n  }\n', i)), /bar\.hidden = !on;[\s\S]+const A = App\(\); if \(A && A\.getAnalysisSnap && A\.getAnalysisSnap\(\) === 'full'\) A\.setAnalysisSnap\('full', false\);$/);
 });
 

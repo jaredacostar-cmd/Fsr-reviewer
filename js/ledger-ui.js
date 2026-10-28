@@ -8,7 +8,8 @@
   //     the Scenario's Count)
   //   - units / people switch
   //   - municipality × milestone table (2026 to 2031, 2032 to 2041, 2042 to 2051, after 2051 or not
-  //     timed), each cell stacked by stage, committed first; at a municipality, its plans (childBy)
+  //     timed), each cell stacked by stage, committed first; at a municipality, its plans; at a plan, its
+  //     parts, each development by its share (childBy)
   //   - the development list, sortable; a row opens the development
   // The Forecast panel's folds (periodFolds): By period, How sure, Since the last snapshot; the full table
   // (#ledger-body): the same, then the developments list.
@@ -85,17 +86,23 @@
   // By period's rows (navigation-design §5 row 82): the scope's child nodes. At Peel, a drawn area or a
   // servicing scope the municipalities; at a municipality (no plan, MTSA or census-area filter) its plans
   // and "Not in a plan", each development split by Growth › Areas' own shares (js/plan-tables.js compute,
-  // the plan tree), so the rows add up to the municipality and match Areas. A plan filter's own sub-areas
-  // wait for the plan scope (phase 6: a straddling development is in the filter whole).
-  let kids = { r: null, mu: null, by: null };
+  // the plan tree), so the rows add up to the municipality and match Areas. At one plan (the filter a drill
+  // or a plan pick sets, navigation phase 6: no MTSA or census-area filter) its parts (sub-areas, precincts,
+  // Elsewhere in the plan; a plan with none, one row, the plan), each development by its share of each, so the
+  // total is the plan's own, Growth › Areas' (a development partly outside it counts only the part inside: the
+  // two-part rule; the filter shows it whole). → { fn: row → [[key, name, share]], plan: its node or null }
+  let kids = { r: null, at: null, by: null };
   function childBy() {
-    const st = App().state, PT = root.PeelPlanTables;
-    if (!st.muni || (st.sp && st.sp.length) || (st.mtsa && st.mtsa.length) || st.daCtx || !PT || !PT.compute) return null;
+    const st = App().state, PT = root.PeelPlanTables, sp = st.sp || [];
+    if ((st.mtsa && st.mtsa.length) || st.daCtx || !PT || !PT.compute || sp.length > 1 || (!sp.length && !st.muni)) return null;
     let r; try { r = PT.compute(); } catch (e) { return null; }
-    const mu = r && r.nodes && r.nodes.get(`m:${st.muni}`); if (!mu || !mu.children.some(c => c.kind !== 'none')) return null;   // (no plan: its municipality row)
-    if (kids.r !== r || kids.mu !== mu.id) {
-      const sh = new Map(r.placed.map(x => [x.p.key, [...x.at].filter(([id]) => (r.nodes.get(id) || {}).parent === mu.id).map(([id, s]) => [id, r.nodes.get(id).name, s])]));
-      kids = { r, mu: mu.id, by: row => { const a = sh.get(row.id); return a && a.length ? a : [[`n:${row.municipality}`, 'Not in a plan', 1]]; } };
+    const at = r && r.nodes && r.nodes.get(sp.length ? `a:${sp[0]}` : `m:${st.muni}`);
+    if (!at || (!sp.length && !at.children.some(c => c.kind !== 'none'))) return null;   // (no plan: its municipality row; a plan the tree does not hold: the municipality rows)
+    if (kids.r !== r || kids.at !== at.id) {
+      const partsOf = x => [...x.at].filter(([id]) => (r.nodes.get(id) || {}).parent === at.id).map(([id, s]) => [id, r.nodes.get(id).name, s]);
+      const sh = new Map(r.placed.map(x => { const a = partsOf(x), own = x.at.get(at.id) || 0; return [x.p.key, a.length || !sp.length ? a : own > 0 ? [[at.id, at.name, own]] : []]; }));
+      const by = sp.length ? row => { const a = sh.get(row.id); return a && a.length ? a : [[at.id, at.name, 1]]; } : row => { const a = sh.get(row.id); return a && a.length ? a : [[`n:${row.municipality}`, 'Not in a plan', 1]]; };
+      kids = { r, at: at.id, by: { fn: by, plan: sp.length ? at : null } };
     }
     return kids.by;
   }
@@ -128,10 +135,10 @@
   function tableHTML(r, o = {}) {
     const LG = L(), B = LG.BUCKETS, val = (cells, b) => LG.sumOf(cells, { bucket: b, cutoff: S.cutoff, measure: S.measure });
     const munis = [...MUNIS.map(m => r.groups.get(m)).filter(Boolean), ...r.root.children.filter(g => !MUNIS.includes(g.key))];
-    const plan = o.rowsBy === 'plan';
+    const plan = o.rowsBy === 'plan', part = o.rowsBy === 'part';
     const row = (g, cls = '', name = g.name) => `<tr${cls ? ` class="${cls}"` : ''}><th scope="row">${esc(name)}</th>${B.map(b => `<td class="n">${fmtV(val(g.cells, b.key))}${stackHTML(g.cells, b.key)}</td>`).join('')}<td class="n"><strong>${fmtV(val(g.cells, null))}</strong>${stackHTML(g.cells, null)}</td></tr>`;
-    return `<div class="hyd-scroll"><table class="dt ldg-table" data-info="by-period"><caption>${esc(word() === 'people' ? 'People' : 'Units left to build')} by ${plan ? 'plan' : 'municipality'} and milestone <span class="muted">(${esc((LG.CUTOFFS.find(c => c.key === S.cutoff) || {}).label || '')})</span><br><span class="muted small">${esc(LG.DISCLAIMER)}</span></caption>
-      <thead><tr><th scope="col">${plan ? 'Plan' : 'Municipality'}</th>${B.map(b => `<th scope="col" class="n">${esc(b.label)}</th>`).join('')}<th scope="col" class="n">Total</th></tr></thead>
+    return `<div class="hyd-scroll"><table class="dt ldg-table" data-info="by-period"><caption>${esc(word() === 'people' ? 'People' : 'Units left to build')} by ${part ? 'part of the plan' : plan ? 'plan' : 'municipality'} and milestone <span class="muted">(${esc((LG.CUTOFFS.find(c => c.key === S.cutoff) || {}).label || '')})</span><br><span class="muted small">${esc(LG.DISCLAIMER)}</span></caption>
+      <thead><tr><th scope="col">${part ? 'Part of the plan' : plan ? 'Plan' : 'Municipality'}</th>${B.map(b => `<th scope="col" class="n">${esc(b.label)}</th>`).join('')}<th scope="col" class="n">Total</th></tr></thead>
       <tbody>${munis.map(g => row(g)).join('')}</tbody><tfoot>${row(r.root, 'ldg-peel', o.scope || r.root.name)}</tfoot></table></div>`;
   }
 
@@ -224,11 +231,11 @@
   // ---- The model (the Forecast's folds and its full table share it; its page and What's coming draw the folds) ----
   function model() {
     const c = compute(); if (!c) return null;
-    const LG = L(), rows = shownRows(c), by = childBy(), r = by ? LG.rollup(rows, by) : LG.rollup(rows, 'municipality'), t = LG.totals(rows), all = LG.totals(c.rows);
+    const LG = L(), rows = shownRows(c), by = childBy(), part = !!(by && by.plan), r = by ? LG.rollup(rows, by.fn, { byShare: part }) : LG.rollup(rows, 'municipality'), t = LG.totals(rows), all = LG.totals(c.rows);
     const at = LG.sumOf(r.root.cells, { cutoff: S.cutoff, measure: S.measure });
     const com = LG.sumOf(r.root.cells, { cutoff: 'committed' }), to31 = LG.sumOf(r.root.cells, { bucket: 'to2031', cutoff: S.cutoff, measure: S.measure });
     const cutWords = CUT_WORDS[S.cutoff] || CUT_WORDS.all;
-    const scope = (App().state.muni) || 'Peel';
+    const scope = part ? by.plan.name : (App().state.muni) || 'Peel';
     const answer = `${esc(scope)}: <strong>${fmtV(at)}</strong> ${word()} left to build counting <strong>${esc(cutWords)}</strong>, <strong>${fmtV(to31)}</strong> of them timed for 2026 to 2031. <strong>${fmtNum(Math.round(com))}</strong> units are committed (a building or site servicing permit). ${esc(LG.DISCLAIMER)}`;
     const notes = [];
     if (!c.gateOn) notes.push('Site servicing permits are still loading: committed counts building permits only for now.');
@@ -236,15 +243,18 @@
     else if (!c.homes) notes.push('The population projection is still loading: sites waiting longer than similar sites ever have show as not timed for now.');
     if (all.lapsed) notes.push(`${fmtNum(all.lapsed)} development${all.lapsed === 1 ? '' : 's'} (${fmtNum(Math.round(all.lapsedUnits))} units) flagged possibly lapsed${S.hideLapsed ? ', hidden' : ''}.`);
     if (all.estimated) notes.push(`${fmtNum(all.estimated)} with permit units estimated (a permit states none: the development's units split across its permits).`);
+    // (at a plan: the developments the filter shows whole that lie partly outside it, counted here by their share)
+    const outside = part ? rows.filter(x => by.fn(x).reduce((s, y) => s + y[2], 0) < 1 - 1e-6).length : 0;
+    if (outside) notes.push(`${fmtNum(outside)} development${outside === 1 ? '' : 's'} with homes left to build ${outside === 1 ? 'lies' : 'lie'} partly outside ${scope}: By period counts the part inside it; the Forecast’s figures count ${outside === 1 ? 'it' : 'them'} whole.`);
     const figures = [
       { v: fmtV(at), u: word(), label: `left to build: ${cutWords}`, ctx: LG.DISCLAIMER },
       { v: fmtNum(Math.round(t.units.committed)), u: 'units', label: 'committed', ctx: `${root.PeelLayers && root.PeelLayers.throughText ? root.PeelLayers.throughText(root.PeelLayers.COMMIT_RUNG) : 'a site servicing or building permit'} · ${LG.DISCLAIMER}` },
       { v: fmtV(to31), u: word(), label: 'timed for 2026 to 2031', ctx: `Forecast view's model, likely · ${LG.DISCLAIMER}` },
       { v: fmtNum(t.rows), u: 'developments', label: 'with homes left to build', ctx: `of ${fmtNum(c.devs)} shown` },
     ];
-    const method = `One row per development (the developments shown, as the Overview counts them), its units left to build split by stage. <strong>Committed</strong> (the Peel rule, settled Oct 21, 2026): a site servicing permit (filed or issued) commits the whole development; a building permit commits only the units it covers, not yet built. A residential permit stating no units takes the development's units split evenly across its permits (flagged). Septic sites never count. <strong>Plan approved, not committed</strong>: draft or site plan approval (MECP D-5-1), no permit yet. <strong>In review or zoning approved</strong>: zoning, draft plan or site plan in review, or zoning approved with no plan approval yet. <strong>Pre-application</strong>: pre-consultation. The stages are the commitment ladder's (Explore › Growth in an area draws each rung), so the figures here and there are the same. <strong>Possibly lapsed</strong>: a servicing permit issued 3 or more years ago with no building permit since, or cancelled by the city; its commitment drops back to the development's planning stage (approved, not committed, for an approved site). Milestone buckets share each development's homes out by the Forecast view's time-in-stage model (likely band), so they add up to its yearly totals; homes the calibrated approval and completion rates do not expect to finish, and those beyond its last year, are after 2051 or not timed. <strong>Expected year</strong> (Phase 3): the year by which half of a development's expected homes are finished in that model, with its range from the fast to the slow band; hover the year for what it is based on (how many similar sites, of what stage and size, and the files the rates come from). The timing comes from the municipalities that date their completions (${esc((compute().munis || []).join(' and ') || 'none yet')}); the others publish no completion dates, so their sites are timed the same way and marked. ${backtestNote()} <strong>Confidence tier</strong> (Phase 4, as drafted in the plan, to confirm with the Region): A underway (a building permit, and its permits\u2019 history says it is being built), B committed, C approved with no permit, D in review, E early (pre-consultation, or an official plan amendment only). One step lower for any of: no file activity in 3 years, a plan superseded by a newer file, a site servicing permit out of order, one possibly lapsed. People at Peel design criteria. The table's rows are the municipalities; at a municipality, its plans and Not in a plan, each development split by its share of each plan as Growth › Areas places it. Every parent row equals the sum of its rows (check ${r.check < 1e-6 ? '0' : r.check.toFixed(3)}).`;
+    const method = `One row per development (the developments shown, as the Overview counts them), its units left to build split by stage. <strong>Committed</strong> (the Peel rule, settled Oct 21, 2026): a site servicing permit (filed or issued) commits the whole development; a building permit commits only the units it covers, not yet built. A residential permit stating no units takes the development's units split evenly across its permits (flagged). Septic sites never count. <strong>Plan approved, not committed</strong>: draft or site plan approval (MECP D-5-1), no permit yet. <strong>In review or zoning approved</strong>: zoning, draft plan or site plan in review, or zoning approved with no plan approval yet. <strong>Pre-application</strong>: pre-consultation. The stages are the commitment ladder's (Explore › Growth in an area draws each rung), so the figures here and there are the same. <strong>Possibly lapsed</strong>: a servicing permit issued 3 or more years ago with no building permit since, or cancelled by the city; its commitment drops back to the development's planning stage (approved, not committed, for an approved site). Milestone buckets share each development's homes out by the Forecast view's time-in-stage model (likely band), so they add up to its yearly totals; homes the calibrated approval and completion rates do not expect to finish, and those beyond its last year, are after 2051 or not timed. <strong>Expected year</strong> (Phase 3): the year by which half of a development's expected homes are finished in that model, with its range from the fast to the slow band; hover the year for what it is based on (how many similar sites, of what stage and size, and the files the rates come from). The timing comes from the municipalities that date their completions (${esc((compute().munis || []).join(' and ') || 'none yet')}); the others publish no completion dates, so their sites are timed the same way and marked. ${backtestNote()} <strong>Confidence tier</strong> (Phase 4, as drafted in the plan, to confirm with the Region): A underway (a building permit, and its permits\u2019 history says it is being built), B committed, C approved with no permit, D in review, E early (pre-consultation, or an official plan amendment only). One step lower for any of: no file activity in 3 years, a plan superseded by a newer file, a site servicing permit out of order, one possibly lapsed. People at Peel design criteria. The table's rows are the municipalities; at a municipality, its plans and Not in a plan, each development split by its share of each plan as Growth › Areas places it; at a plan, its parts (sub-areas, precincts and Elsewhere in the plan), each development by its share of each, so the total is the plan's own: a development partly outside the plan counts only the part inside it (the filter shows it whole). Every parent row equals the sum of its rows (check ${r.check < 1e-6 ? '0' : r.check.toFixed(3)}).`;
     const sources = 'Planning applications and building permits (Mississauga, Brampton, Caledon open data); site servicing permits from the city building permit feeds (data/dc-gate.json, weekly); the Forecast view’s calibration. Public data only: no Region model, SCADA or Development Services data.';
-    return { c, rows, r, t, all, answer, notes, figures, method, sources, scope, rowsBy: by ? 'plan' : 'municipality' };
+    return { c, rows, r, t, all, answer, notes, figures, method, sources, scope, rowsBy: part ? 'part' : by ? 'plan' : 'municipality', outside };
   }
 
   // By period: the cut-off, Units | People, the table and its notes (the Forecast panel's fold, and the
@@ -331,8 +341,9 @@
       <p class="small muted">${esc(L().DISCLAIMER)}</p>`;
   }
 
-  // (the Forecast in sight: Growth › Forecast, its page or What's coming)
-  const pageShown = () => { const W = root.PeelWorkspaces; return !!(W && W.mode && W.mode() === 'home' && W.page && ['outlook', 'coming'].includes(W.page())); };
+  // (the Forecast in sight: Growth › Forecast on the map or on Home, its page host, where What's coming opens too:
+  // navigation phase 6)
+  const pageShown = () => { const W = root.PeelWorkspaces; return !!(W && W.mode && W.mode() === 'home' && W.page() === 'home' && W.view && W.view() === 'growth:timing'); };
   const isOn = () => { const AT = root.PeelAnalysisTabs; return !!(AT && AT.getFootTab() === 'growth' && AT.getGSub() === 'timing') || pageShown(); };
   function render() {
     const body = $('#ledger-body'); if (!body) return;

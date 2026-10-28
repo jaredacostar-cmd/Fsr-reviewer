@@ -1,7 +1,7 @@
 'use strict';
 // Navigation phase 1 — Find from every page (docs/architecture-review/navigation-design.md §3.3): each
 // search hit says what it is (js/search-filter.js), and a pick on a page opens what it found
-// (js/workspaces.js pageRoute / routePick, js/ws-pages.js siteAt / drillTo / sectionAt). On the full
+// (js/workspaces.js pageRoute / routePick, js/ws-pages.js siteAt / drillTo). On the full
 // map and in a workspace's map view the search works as before.
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -92,11 +92,13 @@ test('pageRoute: what each hit opens on a page (navigation design §3.3)', () =>
   assert.deepEqual(plain(W.pageRoute({ label: 'x', p }, 'growth')), { page: 'site', dev: 'k1', sec: 'summary' });
   assert.deepEqual(plain(W.pageRoute({ label: 'x', p }, 'fsr')), { page: 'fsr', dev: 'k1', sec: 'summary' }, 'from Review an FSR: its page at Servicing › FSR review');
   assert.deepEqual(plain(W.pageRoute({ label: 'x', p, hit: 'file', ref: 'OZ-21-005' }, 'fsr')), { page: 'site', dev: 'k1', sec: 'files', file: 'OZ-21-005' }, 'a file number: its page at Records (the section id files)');
-  assert.deepEqual(plain(W.pageRoute({ place: { hit: 'plan', id: 'sp7', muni: 'Brampton' } }, 'home')), { page: 'growth', drill: 'a:sp7', fall: 'm:Brampton', muni: 'Brampton', sp: 'sp7' }, 'a plan: Growth in an area at it (a plan filter holding it may stay)');
-  assert.deepEqual(plain(W.pageRoute({ place: { hit: 'mtsa', id: 'mt3', muni: 'Mississauga' } }, 'home')), { page: 'growth', drill: 'm:Mississauga', muni: 'Mississauga', then: 'map' }, 'an MTSA: at its municipality, then its filter');
-  assert.deepEqual(plain(W.pageRoute({ place: { hit: 'mtsa', id: 'mt4' } }, 'home')), { page: 'growth', drill: 'peel', muni: '', then: 'map' });
+  // (navigation phase 6, owner decision 10: a plan is the filter, the map and every tab following it; Home on the
+  // tab you were on, routePick's keep. No fall-back level: drillTo sets the filter, it needs no tree)
+  assert.deepEqual(plain(W.pageRoute({ place: { hit: 'plan', id: 'sp7', muni: 'Brampton' } }, 'home')), { page: 'home', drill: 'a:sp7', muni: 'Brampton', sp: 'sp7' }, 'a plan: its filter, on Home');
+  assert.deepEqual(plain(W.pageRoute({ place: { hit: 'mtsa', id: 'mt3', muni: 'Mississauga' } }, 'home')), { page: 'home', drill: 'm:Mississauga', muni: 'Mississauga', then: 'map' }, 'an MTSA: its municipality, then its filter');
+  assert.deepEqual(plain(W.pageRoute({ place: { hit: 'mtsa', id: 'mt4' } }, 'home')), { page: 'home', drill: 'peel', muni: '', then: 'map' });
   assert.deepEqual(plain(W.pageRoute({ place: { hit: 'svc', ss: 'plant:Lakeview' } }, 'week')), { ws: 'tight', ss: 'plant:Lakeview' }, 'a facility: its scope on Servicing capacity’s map');
-  assert.deepEqual(plain(W.pageRoute({ place: { hit: 'dc', key: 'wastewater:25-2269' } }, 'home')), { page: 'projects', wsec: 'timing', dcSel: 'wastewater:25-2269' }, 'a DC project: Capital › DC timing at it');
+  assert.deepEqual(plain(W.pageRoute({ place: { hit: 'dc', key: 'wastewater:25-2269' } }, 'home')), { page: 'projects', dcSel: 'wastewater:25-2269' }, 'a DC project: Capital › DC timing at it (Home’s view: no section id)');
   assert.deepEqual(plain(W.pageRoute({ place: { hit: 'dcfac' } }, 'home')), { ws: 'projects', then: 'map' }, 'a DC facility: Capital’s map, then its card');
   assert.deepEqual(plain(W.pageRoute({ label: '1 Main St', g: { lat: 43.7, lng: -79.7 } }, 'home')), { ws: 'site', then: 'map' }, 'an address: Check a site’s map, then its pin');
   assert.equal(W.pageRoute({ label: 'Filter the list by “x”', filter: 'x' }, 'home'), null, 'the filter row');
@@ -104,7 +106,7 @@ test('pageRoute: what each hit opens on a page (navigation design §3.3)', () =>
   assert.equal(W.pageRoute(null, 'home'), null);
   // Every destination is an existing page or map view (no alias needed: nothing moved, §7).
   const hits = [{ p }, { p, hit: 'file', ref: 'r' }, { place: { hit: 'plan', id: 'a', muni: 'm' } }, { place: { hit: 'mtsa', id: 'a' } }, { place: { hit: 'svc', ss: 's' } }, { place: { hit: 'dc', key: 'k' } }, { place: { hit: 'dcfac' } }, { g: {} }];
-  for (const pg of ['home', 'fsr']) for (const x of hits) { const r = W.pageRoute(x, pg); const id = r.page || r.ws; assert.ok(W.BY_ID[id], `${id} is a workspace`); }
+  for (const pg of ['home', 'fsr']) for (const x of hits) { const r = W.pageRoute(x, pg); const id = r.page || r.ws; assert.ok(id === 'home' || W.BY_ID[id], `${id} is Home or a workspace`); }
 });
 
 test('the browser half: the page gate, the pick’s place set before its page opens, the file marked', () => {
@@ -114,12 +116,13 @@ test('the browser half: the page gate, the pick’s place set before its page op
   // A development: the Explore hook told first, the development opened, its section set, then its page.
   const at = s => { const i = r.indexOf(s); assert.ok(i > 0, s); return i; };
   assert.ok(at('exploreDev = `dev:${r.dev}`; pickDev(r.dev);') < at('WP.siteAt(r.dev, r.sec, r.file || null);') && at('WP.siteAt(') < at('openPage(r.page);'));
-  assert.ok(at('WP.drillTo(r.drill, r.fall);') < at("openPage('growth');"));
-  // (a filter that leaves the pick out of the plan tree goes first: Home's municipality, the map's plan
-  // or MTSA filter; once, before the drill)
-  assert.match(r, /muniOff = !!\(S\.muni && S\.muni !== r\.muni\)/, 'a plan in another municipality than Home’s: Peel first');
-  assert.match(r, /areaOff = !!\(sp\.length \|\| mt\.length\) && !\(r\.sp && !mt\.length && sp\.includes\(r\.sp\)\);/, 'a plan or MTSA filter: off, unless a plan filter holding the plan');
-  assert.ok(at('if (A.applyFilters) A.applyFilters(); }') < at('WP.drillTo(r.drill, r.fall);'), 'filters applied before the drill');
+  // A plan or MTSA: its filter (drillTo), then Home on the tab you were on (keep: navigation phase 6, §3.3).
+  assert.ok(at('WP.drillTo(r.drill);') < at('openPage(r.page, { keep: true });'));
+  // (the filters set before are replaced by drillTo itself, so the old clean-up before the drill is removed by design)
+  assert.doesNotMatch(r, /muniOff|areaOff/);
+  const dt = body(src('js/ws-pages.js'), '  function drillTo(id) {');
+  assert.match(dt, /S\.sp = a \? \[a\] : \[\]; S\.mtsa = \[\]; S\.pz = \[\]; S\.dr = \[\];/, 'the place filters replaced');
+  assert.match(dt, /if \(A\.applyFilters\) A\.applyFilters\(\);/, 'and applied once');
   // A servicing scope that does not open yet: the pick is taken, nothing moves (no closed scopes).
   assert.ok(at('if (r.ss && SS() && SS().resolve && !SS().resolve(r.ss)) return true;') < at('go(r.ws, { ss: r.ss, quiet: true });'));
   assert.match(r, /const D = root\.PeelDcProjects; if \(D && D\.select\) D\.select\(r\.dcSel\);/);
@@ -127,8 +130,12 @@ test('the browser half: the page gate, the pick’s place set before its page op
   // The places the pick lands at (js/ws-pages.js): the same reset as a step up a site's trail.
   const p = src('js/ws-pages.js');
   assert.match(p, /const siteAt = \(key, sec, file\) => \{ siteSec = sec \|\| 'summary'; siteSecDev = key; siteFile = file \|\| null; siteFileShown = false; \};/);
-  assert.match(p, /gAt = !r \|\| has\(id\) \? id : has\(fall\) \? fall : 'peel'; gStage = 'all'; gAll = false; gEst = false; gSec = 'growth';/);
-  assert.match(p, /const sectionAt = \(ws, id\) => \{ wsSec\[ws\] = id; \};/);
+  assert.match(p, /if \(A\.applyFilters\) A\.applyFilters\(\);\n {4}gStage = 'all'; gAll = false; gEst = false;\n/, 'the drill’s reset: Growth › Areas’ stage, estimates and all rows');
+  assert.doesNotMatch(p, /\bgAt\b/, 'no page-local level: the filter is the level');
+  // (navigation phase 6: no page-local section to set: a DC project is Home's Capital › DC timing at it, a plan
+  // Home's Growth › Areas, both views of the map's own tab state; sectionAt is removed by design)
+  assert.doesNotMatch(p, /sectionAt|const wsSec = |wsSec\[|gSec/);
+  assert.doesNotMatch(r, /sectionAt/);
   // The file marked: the tree row's own button (not the header's latest file or the figure), its fold
   // of earlier files opened; scrolled to once; cleared with a new development or a section button.
   const m = body(p, '  function markFile(host, ref) {');

@@ -96,6 +96,18 @@ test('By plan CSV: one row per area and development, with a path for pivot table
   assert.ok(rows.filter(x => x.level !== 'development' && x.check_units !== '').every(x => x.check_units === 0), 'every check 0');
 });
 
+test('areaPath: an area’s place in the plan tree, its top plan first (navigation phase 6: the top bar’s trail)', () => {
+  globalThis.PeelUtil = globalThis.PeelUtil || { $: () => null, esc: s => String(s), fmtNum: n => String(n), store: null, CSV_DISCLAIMER: '' };
+  const PT = require('../js/plan-tables.js');
+  assert.deepEqual(PT.areaPath('p1', AREAS), ['mayfield', 'p1'], 'a precinct under its plan');
+  assert.deepEqual(PT.areaPath('core', AREAS), ['bolton', 'core'], 'a nested plan under its plan');
+  assert.deepEqual(PT.areaPath('bolton', AREAS), ['bolton'], 'a plan alone');
+  assert.deepEqual(PT.areaPath('nope', AREAS), ['nope'], 'an id the list does not hold: itself');
+  // (a parent the list does not hold ends the path; a loop never runs away)
+  assert.deepEqual(PT.areaPath('x', [{ id: 'x', parent: 'gone' }]), ['x']);
+  assert.deepEqual(PT.areaPath('a', [{ id: 'a', parent: 'b' }, { id: 'b', parent: 'a' }]), ['b', 'a']);
+});
+
 // Step C4: areas against their targets.
 test('targets: units compared (committed and all proposed); no target is never 0; municipalities use the 2051 allocation growth', () => {
   const set = [dev('a', 100, { pt: ['bolton'], c: true }), dev('b', 300, { pt: ['bolton'] }), dev('m', 50, { pt: ['mayfield'] })];
@@ -145,11 +157,35 @@ test('SPEC 1.9: a plan filter reconciles: inside the plan (By plan) + the parts 
   assert.equal(w.found, 1);
   assert.equal(w.planned, r.nodes.get('a:bolton').m.planned, 'the By plan row');
   assert.equal(w.planned, 140);
+  assert.equal(w.left, r.nodes.get('a:bolton').m.left, 'left to build, by share (Home’s Growth figures at a plan)');
+  assert.equal(w.left, 140);
   assert.equal(w.outside, 100, 'the rest of s');
   assert.equal(w.planned + w.outside, r.root.m.planned, 'adds up to the units shown');
   assert.equal(w.straddling, 1);
   assert.equal(w.devs, 2);
   assert.equal(R.within(r, ['nowhere']).found, 0);
+});
+
+test('a plan filter of two plans: one inside the other counts once, in the plan (never more than the set shown); two apart add up', () => {
+  // (navigation phase 6: a link's sp=a,b, or a plan and its sub-area picked together; Home printed 36,809 planned
+  // against 27,064 shown, and "+ -9,745 … outside it")
+  const set = [dev('a', 100, { pt: ['core', 'bolton'] }), dev('b', 50, { pt: ['bolton'] }), dev('s', 200, { sh: [['bolton', 0.5], ['mayfield', 0.3]] })];
+  const r = R.build(set, { areas: AREAS, sharesOf: p => p.sh || null, pointOf: p => p.pt || [], measure }), shown = r.root.m.planned;
+  const one = R.within(r, ['bolton']);
+  assert.equal(one.planned, 250); assert.equal(one.outside, 100); assert.equal(one.straddling, 1); assert.equal(one.devs, 3);
+  for (const ids of [['bolton', 'core'], ['core', 'bolton'], ['bolton', 'bolton']]) {
+    const w = R.within(r, ids);
+    assert.deepEqual([w.planned, w.left, w.people, w.outside, w.straddling, w.devs], [one.planned, one.left, one.people, one.outside, one.straddling, one.devs], ids.join());
+    assert.ok(w.planned <= shown && w.outside >= 0, ids.join());
+  }
+  assert.equal(R.within(r, ['bolton', 'core']).found, 2, 'both are in the tree');
+  // Two plans apart: their parts add up, and the rest of s is outside them both.
+  const two = R.within(r, ['bolton', 'mayfield']);
+  assert.equal(two.planned, 310); assert.equal(two.outside, 40); assert.equal(two.planned + two.outside, shown); assert.equal(two.straddling, 1);
+  // A precinct and its plan (Mayfield West, Precinct 1): the same rule a level down.
+  const r2 = R.build([dev('q', 30, { pt: ['p1', 'mayfield'] }), dev('w', 20, { pt: ['mayfield'] })], { areas: AREAS, pointOf: p => p.pt, measure });
+  assert.deepEqual([R.within(r2, ['p1']).planned, R.within(r2, ['p1', 'mayfield']).planned, R.within(r2, ['mayfield', 'p1']).outside], [30, 50, 0]);
+  assert.equal(R.within(r, ['core']).planned, 100);
 });
 
 test('SPEC 1.9: the scope label says "all of Peel" only when nothing narrows it', () => {
