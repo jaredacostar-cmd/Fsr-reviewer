@@ -152,7 +152,10 @@
         // (gs=census2051|byplan, dcs=build|recommendations|funding); migrateTabKey maps them on, and every
         // sub-view param goes through it, so a sub-view moved to another tab is followed, never dropped.
         const t = pageWs ? pageWs.tab : q.get('t');
-        const oldSub = pageWs ? pageWs.sub : t === 'ww' || t === 'water' ? q.get('ws') : t === 'growth' ? q.get('gs') : t === 'dca' ? q.get('dcs') : t === 'svc' ? q.get('svs') : t === 'records' ? q.get('rs') : null;
+        // (a link to Old pipes' map view made before navigation phase 6c named Servicing › Network, where its panel
+        // sat: Servicing › Old pipes now, the view it showed)
+        const svs = w === 'pipes' && t === 'svc' && q.get('svs') === 'network' ? 'pipes' : q.get('svs');
+        const oldSub = pageWs ? pageWs.sub : t === 'ww' || t === 'water' ? q.get('ws') : t === 'growth' ? q.get('gs') : t === 'dca' ? q.get('dcs') : t === 'svc' ? svs : t === 'records' ? q.get('rs') : null;
         const m = AT().migrateTabKey(t, oldSub);
         AT().setFootPref(m.tab); if (m.gSub) AT().setGSub(m.gSub); if (m.svcSub) AT().setSvcSub(m.svcSub); if (m.dcSub) AT().setDcSub(m.dcSub); if (m.rSub) AT().setRSub(m.rSub);
         // (an old link to a sub-view that became a fold opens it: svs=alloc or t=ww&ws=alloc Capacity's

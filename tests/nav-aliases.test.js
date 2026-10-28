@@ -221,9 +221,9 @@ function loadTabsWith(stored = {}, extra = {}) {
   return ctx.module.exports;
 }
 test('phase 2: Allocations folds into Capacity, the model checks move to Records › Data checks, the water facilities and the hydraulic check move to Network', () => {
-  // (navigation phase 5 adds FSR review, a development's view: an area shows the two, below)
-  assert.deepEqual(plain(AT.TABSUBS.svc.valid), ['capacity', 'network', 'fsr']);
-  assert.deepEqual(plain(AT.chipsAt('svc', 'area')), ['capacity', 'network']);
+  // (navigation phase 5 adds FSR review, a development's view, and 6c Old pipes, an area's: an area shows three, below)
+  assert.deepEqual(plain(AT.TABSUBS.svc.valid), ['capacity', 'network', 'pipes', 'fsr']);
+  assert.deepEqual(plain(AT.chipsAt('svc', 'area')), ['capacity', 'network', 'pipes']);
   // Links (t=svc&svs=…, t=ww|water&ws=…).
   assert.deepEqual(plain(AT.migrateTabKey('svc', 'alloc')), { tab: 'svc', svcSub: 'capacity' });
   assert.deepEqual(plain(AT.migrateTabKey('svc', 'checks')), { tab: 'records', rSub: 'checks' });
@@ -460,7 +460,7 @@ test('phase 5: FSR review is a development\u2019s Servicing view; the fsr page a
   assert.deepEqual(plain(AT.migrateTabKey('svc', 'fsr')), { tab: 'svc', svcSub: 'fsr' });
   assert.deepEqual(plain(AT.migrateSub('svc', 'fsr')), { tab: 'svc', sub: 'fsr' });
   assert.deepEqual(plain(AT.chipsAt('svc', 'site')), ['network', 'fsr']);
-  assert.deepEqual(plain(AT.chipsAt('svc', 'area')), ['capacity', 'network']);
+  assert.deepEqual(plain(AT.chipsAt('svc', 'area')), ['capacity', 'network', 'pipes'], '(Old pipes since navigation phase 6c)');
   assert.equal(AT.subFor('svc', 'fsr', false), 'capacity');
   assert.equal(AT.subFor('svc', 'fsr', true), 'fsr');
   // A stored or linked FSR review pick: Capacity at Peel, FSR review again once a development is open.
@@ -570,7 +570,7 @@ test('phase 6b: the site page is the host at a development: old section ids, the
 // five tabs under its header; the area pages are its views. Every old area page id (a link, a data-ws-page button,
 // the stored last workspace, Help's role buttons) opens Home at that page's tab and view, its fold open; a link
 // from before phase 6 opens the page's own view (nav=3); Open the map and ← Page keep the tab and view.
-function loadWs(stored = {}) {
+function loadWs(stored = {}, extra = {}) {
   const calls = [], handlers = {}, store = new Map(Object.entries(stored)), closed = [];
   const at = { tab: 'overview', subs: { growth: 'pipeline', svc: 'capacity', dca: 'timing', records: 'sources' } };
   let dev = null, ss = null;
@@ -581,7 +581,7 @@ function loadWs(stored = {}) {
   const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: () => null, querySelectorAll: () => [], getElementById: () => null,
     addEventListener: (t, f) => { (handlers[t] = handlers[t] || []).push(f); }, dispatchEvent() {} };
   const window = { document, PeelUtil: { esc: x => String(x), fmtNum: n => String(n), store: { get: (k, d) => (store.has(k) ? store.get(k) : d), set: (k, v) => store.set(k, v) } }, PeelAnalysisTabs,
-    DevScope: { current: () => dev, close: () => { closed.push('dev'); dev = null; } }, PeelSvcScope: { current: () => ss, close: () => { closed.push('ss'); ss = null; } } };
+    DevScope: { current: () => dev, close: () => { closed.push('dev'); dev = null; } }, PeelSvcScope: { current: () => ss, close: () => { closed.push('ss'); ss = null; } }, ...extra };
   const ctx = { window, document, location: { hash: '' }, setTimeout: () => 0, clearTimeout() {}, URLSearchParams, CustomEvent: function CustomEvent() {} }; ctx.globalThis = ctx;
   require('node:vm').runInNewContext(src('js/workspaces.js'), ctx);
   // A click on an element matching sel (its data-* in dataset).
@@ -590,8 +590,8 @@ function loadWs(stored = {}) {
 }
 test('phase 6a: the area pages are Home’s tabs; old links open the page’s own tab; Open the map and ← Page keep the view', () => {
   const S = require('../js/sections.js');
-  const ROWS = { growth: ['growth', 'areas', null], outlook: ['growth', 'timing', null], coming: ['growth', 'timing', 'period'], tight: ['svc', 'capacity', null], projects: ['dca', 'timing', null], eaflow: ['dca', 'eas', 'eaflow'], data: ['records', 'sources', null] };
-  assert.deepEqual(Object.keys(W.HOST).sort(), Object.keys(ROWS).sort(), 'every area page, and only those (the site and FSR review are SITE_HOST’s, at a development: 6b; Old pipes joins in 6c)');
+  const ROWS = { growth: ['growth', 'areas', null], outlook: ['growth', 'timing', null], coming: ['growth', 'timing', 'period'], tight: ['svc', 'capacity', null], pipes: ['svc', 'pipes', null], projects: ['dca', 'timing', null], eaflow: ['dca', 'eas', 'eaflow'], data: ['records', 'sources', null] };
+  assert.deepEqual(Object.keys(W.HOST).sort(), Object.keys(ROWS).sort(), 'every area page, and only those (the site and FSR review are SITE_HOST’s, at a development: 6b; Old pipes joined in 6c)');
   for (const [id, [tab, sub, fold]] of Object.entries(ROWS)) {
     assert.deepEqual(plain(W.hostOf(id)), { page: 'home', tab, sub, fold }, id);
     assert.ok(isPage(id), `${id} is still a page id (links, buttons, the last workspace)`);
@@ -599,7 +599,7 @@ test('phase 6a: the area pages are Home’s tabs; old links open the page’s ow
     // (the view it opens is Home's, drawn by the page's own builder: What's coming the Forecast's)
     assert.equal(S.VIEWS.area[`${tab}:${sub}`].page, id === 'coming' ? 'outlook' : id, `${id}: its builder`);
   }
-  for (const id of ['home', 'week', 'site', 'fsr', 'study', 'outlets', 'pipes', 'help', 'explore', 'capital', '__proto__', 'constructor', 'nonsense']) assert.equal(W.hostOf(id), null, id);
+  for (const id of ['home', 'week', 'site', 'fsr', 'study', 'outlets', 'help', 'explore', 'capital', '__proto__', 'constructor', 'nonsense']) assert.equal(W.hostOf(id), null, id);
   // Explore, Capital: the alias first (PAGE_ALIAS unchanged), then the host.
   assert.deepEqual(plain(W.hostOf(W.resolvePage('explore', {}))), { page: 'home', tab: 'growth', sub: 'areas', fold: null });
   assert.deepEqual(plain(W.hostOf(W.resolvePage('capital', { last: 'eaflow' }))), { page: 'home', tab: 'dca', sub: 'eas', fold: 'eaflow' });
@@ -607,7 +607,7 @@ test('phase 6a: the area pages are Home’s tabs; old links open the page’s ow
   assert.deepEqual(Object.keys(S.VIEWS.area), ['overview:', ...AT.TAB_KEYS.flatMap(t => AT.chipsAt(t, 'area').map(c => `${t}:${c}`))]);
   for (const v of Object.values(S.VIEWS.area)) if (v.page) assert.ok(v.page === 'home' || W.HOST[v.page], v.page);
   // The tab and view names: the map's (the chips in index.html carry the same words).
-  assert.deepEqual(plain(AT.chipsAt('svc', 'area').map(c => W.chipName('svc', c))), ['Capacity', 'Network']);
+  assert.deepEqual(plain(AT.chipsAt('svc', 'area').map(c => W.chipName('svc', c))), ['Capacity', 'Network', 'Old pipes']);
   assert.deepEqual(['timing', 'eas', 'projects'].map(c => W.chipName('dca', c)), ['DC timing', 'EAs', 'Projects']);
   assert.deepEqual(['sources', 'checks'].map(c => W.chipName('records', c)), ['Sources', 'Data checks']);
   assert.equal(W.chipName('growth', 'timing'), 'Forecast');
@@ -652,14 +652,18 @@ test('phase 6a: the area pages are Home’s tabs; old links open the page’s ow
   L.B.go('tight', { keep: true, quiet: true }); L.B.setMode('full'); L.at.tab = 'dca'; L.calls.length = 0;
   L.click('[data-ws-back]');
   assert.deepEqual([L.B.mode(), L.B.current(), L.at.tab, L.calls.length], ['ws', 'tight', 'dca', 0]);
-  // … but a task's map view (This week, Old pipes: no page host's view, its panel the chip's own) gets its tab again, as
-  // before phase 6, the rule ← Page uses (hostOf).
-  for (const [ws, tab, sub] of [['week', 'overview', ''], ['pipes', 'svc', 'network']]) {
+  // … but a task's map view (This week, Review outlets: no page host's view, its panel the chip's own) gets its tab again,
+  // as before phase 6, the rule ← Page uses (hostOf). (Old pipes was one until navigation phase 6c: since then Home's
+  // Servicing › Old pipes, a host's view, kept as the map was left, below)
+  for (const [ws, tab, sub] of [['week', 'overview', ''], ['outlets', 'svc', 'network']]) {
     L.B.go(ws, { quiet: true }); L.B.setMode('full'); L.at.tab = 'growth'; L.calls.length = 0;
     L.click('[data-ws-back]');
     assert.deepEqual([L.B.mode(), L.B.current(), L.at.tab], ['ws', ws, tab], ws);
     assert.deepEqual(L.calls.filter(c => c[0] === 'showFootTab' || c[0] === 'setSub'), [...(sub ? [['setSub', tab, sub]] : []), ['showFootTab', tab]], ws);
   }
+  L.B.go('pipes', { quiet: true }); L.B.setMode('full'); L.at.tab = 'growth'; L.calls.length = 0;
+  L.click('[data-ws-back]');
+  assert.deepEqual([L.B.mode(), L.B.current(), L.at.tab, L.calls.length], ['ws', 'pipes', 'growth', 0], 'Old pipes: a host’s map view');
   // A facility or a development opened on the map shows its own Overview, which Home closes on the way back (it hosts an
   // area): the back bar lands at the view the page was left at, ← Page at the map view's page's own view, not Home's
   // Overview; the scope closed either way.
@@ -713,4 +717,93 @@ test('phase 6a: a view picked on Home’s strip is the start screen’s last wor
     assert.deepEqual(plain(W.startScreen({ pref: 'last', last: lw })), { mode: 'home', page: lw });
     const R = loadWs({ lastWs: lw }); R.B.openPage(lw); assert.equal(R.B.view(), view, lw);
   }
+});
+
+// Navigation phase 6c (design §3.4 "WS BAR ← Page · search · Full map (the 12 task chips go; w=<chip> applies its LAYERS
+// preset once)", §5 rows 16, 18, 22, 45, 63): Explore's views bar, the task chips under a map view's search and each
+// panel's source line go; every #w=<id> link still opens its map view at its tab and view, with its layer preset and
+// only its layers; the two Find steps link to each other (until phase 7's Find); This week is one spec. (Old pipes as
+// Servicing › Old pipes, svc:pipes: its own test, below.)
+test('phase 6c: no views bar, task chips or source line; a #w=<id> link still opens its map view, at its view with its layers; the Find steps link each other', () => {
+  for (const w of W.WS) {
+    assert.deepEqual(plain(W.startScreen({ hash: `#w=${w.id}` })), { mode: 'ws', ws: w.id }, `#w=${w.id}`);
+    const views = [], layers = [], L = loadWs({}, { PeelMapAnalysis: { showView: v => views.push(v), rememberCurrent() {}, currentView: () => 'planning' }, PeelLayerGroups: { apply: x => layers.push([...x]) } });
+    L.B.go(w.id, { quiet: true, noDraw: true });
+    const p = W.plan(w.id);
+    assert.deepEqual(L.calls, [...(p.sub ? [['setSub', p.tab, p.sub]] : []), ['setFootPref', p.tab], ['showFootTab', p.tab], ...(p.fold ? [['openFold', p.fold]] : [])], `${w.id}: its tab and view`);
+    assert.deepEqual(plain([views, layers]), [[p.view], [W.LAYERS[w.id]]], `${w.id}: its preset, only its layers`);
+    assert.deepEqual([L.B.mode(), L.B.current(), L.store.get('lastWs')], ['ws', w.id, w.id]);
+    assert.ok(!('source' in p), `${w.id}: no source line`);
+  }
+  // Gone, no producer left (removed by design): the views bar (viewsHTML, m.views, .page-views), the chips (renderChips,
+  // #ws-chips, .ws-chip), the source line (srcLine, sourceText, plan().source, .pnl-src), workspaces.js's weekSpec.
+  assert.equal(W.sourceText, undefined);
+  assert.doesNotMatch(src('js/workspaces.js') + src('js/panel.js'), /viewsHTML|m\.views|renderChips|ws-chips|srcLine|sourceText|pnl-src|function weekSpec/);
+  assert.doesNotMatch(src('js/ws-pages.js'), /m\.views|page-views/);
+  assert.doesNotMatch(src('index.html'), /id="ws-chips"/);
+  assert.doesNotMatch(src('css/app.css'), /\.page-views|\.ws-chips?\b|\.pnl-src|\.pnl-steps\b/);
+  assert.match(src('index.html'), /data-ws-backpage title="Back to the page, at the same tab and view">← Page<\/button><div class="ws-search" id="ws-search"><\/div><button type="button" class="btn small ws-fullbtn" data-ws-full/);
+  // The Find steps: each list one click from the other's (Check a site's ends with Review an FSR's files with an FSR posted,
+  // and back), the way between them now that the views bar is gone; a click opens it.
+  const vm = require('node:vm');
+  const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: () => null, querySelectorAll: () => [], getElementById: () => null, addEventListener() {}, dispatchEvent() {} };
+  const window = { document, PeelPanel: { get: () => null, scenarioChip: () => '' }, PeelAnalysisTabs: { TAB_KEYS: AT.TAB_KEYS, chipsAt: AT.chipsAt, tabReady: () => true, viewKey: () => 'overview:' },
+    PeelWorkspaces: { BY_ID: { site: { label: 'Check a site' }, fsr: { label: 'Review an FSR' } }, TAB_NAME: W.TAB_NAME, tabPath: W.tabPath, chipName: W.chipName }, PeelApp: { state: { projects: [], filtered: [] } }, DevScope: { current: () => null } };
+  const ctx = { window, document, setTimeout: () => 0, clearTimeout() {}, URLSearchParams, CSS: { escape: x => x } }; ctx.globalThis = ctx;
+  for (const f of ['js/sections.js', 'js/ws-pages.js']) vm.runInNewContext(src(f), ctx);
+  const other = id => (/<button type="button" class="btn small link pnl-step-other" data-ws-page="(\w+)">([^<]+)<\/button><\/p>$/.exec(window.PeelWsPages.build(id).top) || []).slice(1);
+  assert.deepEqual(other('site'), ['fsr', 'Files with an FSR posted → Review an FSR']);
+  assert.deepEqual(other('fsr'), ['site', 'Any development → Check a site']);
+  const L = loadWs(); L.B.openPage('site'); L.click('[data-ws-page]', { wsPage: 'fsr' });
+  assert.deepEqual([L.B.page(), L.B.view()], ['fsr', null], 'Review an FSR’s Find step');
+  L.click('[data-ws-page]', { wsPage: 'site' }); assert.deepEqual([L.B.page(), L.B.view()], ['site', null], 'and back');
+});
+
+// Navigation phase 6c-S3 (design §3.4, §3.5, §5 rows 9, 21, 38, 104, 136, §7.1–7.2): Old pipes is Servicing › Old pipes
+// (svc:pipes), an area's view, hidden at a development (Network there, the pick back at an area). The page id `pipes`
+// (#w=p:pipes, the sidebar's Old pipes, Help's role buttons, the stored last workspace) opens Home at it; #w=pipes opens
+// the map view there (its amber layer); t=svc&svs=pipes is a link's and a stored pick's value.
+test('phase 6c: Old pipes is Servicing › Old pipes; the page id, the map view, a link and a stored pick land there', () => {
+  assert.deepEqual(plain(AT.migrateTabKey('svc', 'pipes')), { tab: 'svc', svcSub: 'pipes' });
+  assert.deepEqual(plain(AT.migrateSub('svc', 'pipes')), { tab: 'svc', sub: 'pipes' });
+  assert.deepEqual(plain(AT.chipsAt('svc', 'area')), ['capacity', 'network', 'pipes']);
+  assert.deepEqual(plain(AT.chipsAt('svc', 'site')), ['network', 'fsr'], 'a development: no Old pipes chip');
+  assert.equal(AT.subFor('svc', 'pipes', true), 'network'); assert.equal(AT.subFor('svc', 'pipes', false), 'pipes');
+  assert.ok(AT.TABSUBS.svc.valid.length <= 4, 'four at most (tests/four-tabs.test.js)');
+  // A stored pick (or a link's svs=pipes): Old pipes at Peel, Network at a development, Old pipes again after.
+  let site = null;
+  const T = loadTabsWith({ svcSub: 'pipes', footTab4: 'svc' }, { DevScope: { current: () => site } });
+  T.showFootTab('svc'); assert.equal(T.getSvcSub(), 'pipes');
+  site = { key: 'Brampton|1 MAIN ST' }; T.showFootTab('svc'); assert.equal(T.getSvcSub(), 'network', 'at a development: Network');
+  site = null; T.showFootTab('svc'); assert.equal(T.getSvcSub(), 'pipes', 'back at an area: Old pipes again');
+  // The page id: Home at Servicing › Old pipes; the map view's own tab and view; the name the chip's.
+  assert.deepEqual(plain(W.hostOf('pipes')), { page: 'home', tab: 'svc', sub: 'pipes', fold: null });
+  assert.deepEqual(plain(W.hostOf('pipes', { site: true })), { page: 'home', tab: 'svc', sub: 'pipes', fold: null });
+  assert.equal(W.plan('pipes').sub, 'pipes'); assert.equal(W.plan('pipes').tab, 'svc');
+  assert.equal(W.tabPath('svc', 'pipes'), 'Servicing › Old pipes'); assert.equal(W.chipName('svc', 'pipes'), 'Old pipes');
+  assert.deepEqual(plain(W.startScreen({ hash: '#w=p:pipes' })), { mode: 'home', page: 'pipes' });
+  assert.deepEqual(plain(W.startScreen({ hash: '#w=pipes' })), { mode: 'ws', ws: 'pipes' });
+  // (a link made in its map view before 6c carried Servicing › Network, where its panel sat: js/share.js reads it as
+  // Old pipes, the view it showed; a link to another map view keeps its Network)
+  assert.match(src('js/share.js'), /const svs = w === 'pipes' && t === 'svc' && q\.get\('svs'\) === 'network' \? 'pipes' : q\.get\('svs'\);\n {8}const oldSub = [^\n]*t === 'svc' \? svs : /);
+  assert.deepEqual(plain(W.startScreen({ pref: 'last', last: 'pipes' })), { mode: 'home', page: 'pipes' });
+  assert.equal(require('../js/sections.js').VIEWS.area['svc:pipes'].page, 'pipes', 'Home’s view: the Old pipes builder');
+  // The browser half: openPage, the last workspace, the strip's pick, the map view (no override: the view's own panel).
+  let L = loadWs();
+  L.B.openPage('pipes');
+  assert.deepEqual([L.B.page(), L.B.view(), L.store.get('lastWs')], ['home', 'svc:pipes', 'pipes']);
+  assert.deepEqual(L.calls, [['setSub', 'svc', 'pipes'], ['setFootPref', 'svc'], ['showFootTab', 'svc']]);
+  L = loadWs(); L.B.openPage('home'); L.click('#home [data-pg-tab]', { pgTab: 'svc', pgSub: 'pipes' });
+  assert.deepEqual([L.B.view(), L.store.get('lastWs')], ['svc:pipes', 'pipes'], 'the strip’s Old pipes: the start screen’s last workspace');
+  L = loadWs({ lastWs: 'pipes' }); L.B.openPage('pipes'); assert.equal(L.B.view(), 'svc:pipes', 'a reload with Last workspace');
+  L.calls.length = 0; L.B.go('pipes', { quiet: true });
+  assert.deepEqual(L.calls, [['setSub', 'svc', 'pipes'], ['setFootPref', 'svc'], ['showFootTab', 'svc']], '#w=pipes: the map view at Servicing › Old pipes');
+  assert.equal(L.B.override('svc:pipes', 'area'), null); assert.equal(L.B.override('svc:network', 'area'), null, 'no Network filtered to old pipes any more');
+  // ← Page from it: Home at the map's tab and view (a host's view, as Servicing capacity's).
+  L.at.subs.svc = 'network'; L.calls.length = 0; L.click('[data-ws-backpage]');
+  assert.deepEqual([L.B.page(), L.B.view(), L.calls.length], ['home', 'svc:network', 0]);
+  // Gone (removed by design, §5 row 21): the pipesSpec override on Network, the layer tied to the map view.
+  assert.doesNotMatch(src('js/workspaces.js'), /cur === 'pipes' && key === 'svc:network'|pipesLayer\(id === 'pipes'\)|cur === 'pipes' && e\.detail/);
+  assert.match(src('index.html'), /data-svcsub="network">Network<\/button>\n\s+<button type="button" class="btn small" data-svcsub="pipes">Old pipes<\/button>/);
+  assert.match(src('index.html'), /<section class="f-pane svc-pane" id="pane-svc-pipes" data-pane="svc" data-sub="pipes" role="tabpanel" aria-labelledby="ftab-svc" hidden><div class="tb-head"><h2 class="sr">Old pipes<\/h2><\/div><div id="pipes-body"><\/div><\/section>/);
 });

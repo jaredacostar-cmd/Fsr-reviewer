@@ -15,10 +15,11 @@ const src = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const HTML = src('index.html');
 const plain = o => JSON.parse(JSON.stringify(o));
 
-test('index.html: Servicing has two chips (and FSR review at a development); the panes move by data-sub / data-pane and keep their ids', () => {
+test('index.html: Servicing has three chips at an area (and FSR review at a development); the panes move by data-sub / data-pane and keep their ids', () => {
   const row = HTML.slice(HTML.indexOf('<div class="f-pane f-subtabs svc-subtabs" data-pane="svc"'), HTML.indexOf('</div>', HTML.indexOf('svc-subtabs')));
-  // (navigation phase 5: FSR review is a development's third view, hidden at an area: tests/nav-aliases.test.js)
-  assert.deepEqual([...row.matchAll(/<button[^>]*data-svcsub="(\w+)">([^<]+)</g)].map(m => [m[1], m[2]]), [['capacity', 'Capacity'], ['network', 'Network'], ['fsr', 'FSR review']]);
+  // (navigation phase 5: FSR review is a development's view, hidden at an area; 6c: Old pipes an area's, hidden at a
+  // development: tests/nav-aliases.test.js)
+  assert.deepEqual([...row.matchAll(/<button[^>]*data-svcsub="(\w+)">([^<]+)</g)].map(m => [m[1], m[2]]), [['capacity', 'Capacity'], ['network', 'Network'], ['pipes', 'Old pipes'], ['fsr', 'FSR review']]);
   const at = id => HTML.indexOf(`id="${id}"`);
   for (const id of ['pane-alloc', 'alloc-body', 'pane-wfac', 'wfac-body', 'pane-hydro', 'hyd-box', 'pane-svc-checks', 'svc-checks-body']) assert.equal(HTML.split(`id="${id}"`).length, 2, `#${id} once`);
   // Capacity's full table: the table, the charts, then the allocations recorded.
@@ -57,8 +58,8 @@ test('sections, labs, names: no Allocations or Model checks section; the hydraul
   delete require.cache[require.resolve('../js/sections.js')];
   const S = require('../js/sections.js');
   delete globalThis.PeelPanel;
-  // (navigation phase 6: Servicing's views are Home's, the strip's: Capacity · Network at an area)
-  assert.deepEqual(Object.keys(S.VIEWS.area).filter(k => k.startsWith('svc:')), ['svc:capacity', 'svc:network']);
+  // (navigation phase 6: Servicing's views are Home's, the strip's: Capacity · Network · Old pipes at an area, 6c)
+  assert.deepEqual(Object.keys(S.VIEWS.area).filter(k => k.startsWith('svc:')), ['svc:capacity', 'svc:network', 'svc:pipes']);
   assert.equal(S.WORKSPACES.servicing, undefined, 'no Servicing workspace bar');
   assert.deepEqual(S.WORKSPACES.reference.secs.map(s => s.title).slice(-2), ['Data sources', 'Data checks']);
   assert.ok(!src('js/sections.js').includes("'svc:alloc'"), 'no Allocations panel builder');

@@ -11,8 +11,9 @@
   // plus Records, a small trailing tab (the Overview's ⓘ line opens its Data checks). Sub-views: at most four
   // per tab, one chip row under the tab bar (TABSUBS). Overview has none.
   //   Growth:    Pipeline · Areas · Forecast (its By period fold: the pipeline ledger, js/ledger-ui.js)
-  //   Servicing: Capacity · Network   (water and wastewater together; Allocations is a fold of Capacity), and at a
-  //              development Network · FSR review (the FSR cross-check, js/fsr-check.js)
+  //   Servicing: Capacity · Network · Old pipes (water and wastewater together; Allocations is a fold of Capacity;
+  //              Old pipes the old sewers carrying growth, js/workspaces.js pipesSpec), and at a development
+  //              Network · FSR review (the FSR cross-check, js/fsr-check.js)
   //   Capital:   DC timing · EAs · Projects (DC timing: every 2026 DC project with both verdicts, js/dc-projects.js, the Funding lab a fold of it)
   //   Records:   Sources · Data checks · Files (every check: the data, then the servicing model)
   // footPref: the tab last picked (kept); each tab's sub-view last picked is kept too. Old tab and
@@ -28,13 +29,14 @@
   // Phase 2: Allocations is a fold of Capacity, the model checks are Records › Data checks, the water
   // facilities and the hydraulic check are Network's. Phase 3: the Ledger is Forecast's By period fold.
   // Phase 4: DC projects is DC timing (one list, both verdicts); the funding screen is its fold. Phase 5: FSR
-  // review is a development's Servicing view.
+  // review is a development's Servicing view. Phase 6c: Old pipes is an area's Servicing view (the page id 'pipes'
+  // an alias of it, js/workspaces.js HOST).
   const SUB_MAP = {
     ww: { plants: 'capacity', catchments: 'network', alloc: 'capacity', pumpstations: 'network' },
     water: { capacity: 'capacity', zones: 'network', facilities: 'network', hydro: 'network' },
     growth: { pipeline: 'pipeline', census2051: 'areas', byplan: 'areas', timing: 'timing', areas: 'areas', ledger: 'timing' },
     dca: { timing: 'timing', build: 'projects', dcproj: 'timing', projects: 'projects', eas: 'eas', recommendations: 'timing', funding: 'timing' },
-    svc: { capacity: 'capacity', network: 'network', alloc: 'capacity', checks: 'records:checks', fsr: 'fsr' },
+    svc: { capacity: 'capacity', network: 'network', alloc: 'capacity', checks: 'records:checks', fsr: 'fsr', pipes: 'pipes' },
     records: { sources: 'sources', checks: 'checks', files: 'files' },
   };
   // The state key of each tab's sub-view.
@@ -96,7 +98,7 @@
   // Sub-view state per tab: the chip data-attribute, the store key, the valid values, get / set.
   const TABSUBS = {
     growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'areas', 'timing'], get: () => gSub, set: v => { gSub = v; } },
-    svc: { attr: 'svcsub', store: 'svcSub', valid: ['capacity', 'network', 'fsr'], get: () => svcSub, set: v => { svcSub = v; } },
+    svc: { attr: 'svcsub', store: 'svcSub', valid: ['capacity', 'network', 'pipes', 'fsr'], get: () => svcSub, set: v => { svcSub = v; } },
     dca: { attr: 'dcasub', store: 'dcSub', valid: ['timing', 'eas', 'projects'], get: () => dcSub, set: v => { dcSub = v; } },
     records: { attr: 'rsub', store: 'rSub', valid: ['sources', 'checks', 'files'], get: () => rSub, set: v => { rSub = v; } },
   };
@@ -118,9 +120,10 @@
   // At a site, Capital › DC timing is the site's DC projects (the projects it relies on); the Projects
   // list is Region-wide, so it is hidden there; the EAs and works near the site are in that one view
   // (navigation phase 5: Capital has no chip row at a site). FSR review is a development's: an area, a servicing
-  // scope or a result never shows it, and Servicing opens on its own first view there.
+  // scope or a result never shows it, and Servicing opens on its own first view there. Old pipes is Peel's sewers
+  // (navigation phase 6c): a development shows Network in its place, and the pick comes back at an area.
   const HIDDEN = {
-    site: { growth: ['areas', 'timing'], svc: ['capacity'], dca: ['eas', 'projects'], records: ['sources', 'checks'] },
+    site: { growth: ['areas', 'timing'], svc: ['capacity', 'pipes'], dca: ['eas', 'projects'], records: ['sources', 'checks'] },
     area: { svc: ['fsr'], records: ['files'] },
   };
   const SITE_HIDDEN = HIDDEN.site;
@@ -177,6 +180,8 @@
     if (key === 'growth' && gSub === 'timing' && root.PeelLedgerUI) setTimeout(() => root.PeelLedgerUI.render(), 0);   // (By period's full table, #ledger-body)
     // The standard panel of the open tab and sub-view (js/panel.js).
     if (root.PeelPanel) root.PeelPanel.sync();
+    // (Servicing › Old pipes on the map: its amber pipes while it is open, js/workspaces.js syncPipes)
+    if (root.PeelWorkspaces && root.PeelWorkspaces.syncPipes) root.PeelWorkspaces.syncPipes();
     // A narrow screen scrolls the tab strip: keep the open tab in view.
     const ft = document.querySelector(`.f-tab[data-tab="${key}"]`), strip = ft && ft.parentElement;
     if (strip && strip.scrollWidth > strip.clientWidth) strip.scrollTo({ left: Math.max(0, ft.offsetLeft - (strip.clientWidth - ft.offsetWidth) / 2), behavior: 'smooth' });

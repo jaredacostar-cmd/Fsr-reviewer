@@ -2877,15 +2877,6 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .ws-search input { width: 100%; height: 36px; box-shadow: var(--shadow); }
 .ws-search .search-sug { position: absolute; left: 0; right: 0; top: calc(100% + 4px); z-index: var(--z-float); }
 .ws-fullbtn { box-shadow: var(--shadow); background: var(--surface-1); min-height: 36px; }
-.ws-chips { display: flex; flex-wrap: wrap; gap: var(--space-1); }
-.ws-chip { min-height: 32px; border-radius: 999px; background: var(--surface-1); box-shadow: var(--shadow); }
-.ws-chip.on { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
-.ws-chip .badge-n { display: inline-block; min-width: 18px; padding: 0 6px; margin-left: 4px; border-radius: 999px; background: var(--surface-2); color: var(--text-primary); font-size: var(--fs-1); line-height: 18px; }
-.ws-chip.on .badge-n { background: var(--on-accent); color: var(--accent); }
-/* The panel header's source line: "Getting tight · from Servicing › Capacity", Open full map. */
-.pnl-src { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); margin: 0 0 var(--space-1); color: var(--text-muted); }
-.pnl-src > span { font-weight: 600; color: var(--pnl-stage); }
-.pnl-steps { display: block; font-weight: 400; color: var(--text-muted); }
 /* Check a site / Review an FSR: the steps as a numbered list (the current one marked). */
 .pnl-step { display: flex; align-items: baseline; gap: var(--space-2); }
 .pnl-step-n { flex: 0 0 auto; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: var(--fs-1); font-weight: 600; border: 1px solid var(--border); color: var(--text-secondary); }
@@ -2947,8 +2938,6 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
      (the HTML order, and so a screen reader's, stays header, answer, figures). */
   .page-main[data-page="home"] > .home-h, .page-main[data-page="home"] > .page-tabs, .page-main[data-page="home"] > .page-subsecs, .page-main[data-page="home"] > .pnl-scen, .page-main[data-page="home"] > .home-scope { order: -2; }
   .page-main[data-page="home"] > .home-grp { order: -1; }
-  .ws-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
-  .ws-chip { flex: 0 0 auto; }
 }
 /* Desk screens: the groups share rows (each spans its own figures of 4 columns). */
 @media (min-width: 1200px) {
@@ -2988,11 +2977,6 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
   .page-tab-wait { display: none; }
   .page-tab[aria-busy]::after { content: ' …'; }
 }
-/* Explore: where you are, at the top of a site's pages (the search is in every page's header). */
-/* Explore's five views, a row at the top of each (js/workspaces.js viewsHTML); one line that scrolls on a phone. */
-.page-views { display: flex; gap: var(--space-1); margin: 0 0 var(--space-2); overflow-x: auto; scrollbar-width: none; }
-.page-views::-webkit-scrollbar { display: none; }
-.page-views .btn { flex: none; white-space: nowrap; }
 /* The Explore view you are on, named in its sidebar entry. */
 .home-ws-cur { font-weight: 400; color: var(--text-secondary); }
 /* A link from before Completed was shown by default (js/filter-ui.js oldLinkNote): its own line. */
@@ -3020,10 +3004,11 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .page-main > .scope-note .btn.link { white-space: normal; text-align: left; }
 .page-foot { display: flex; flex-direction: column; gap: var(--space-2); border-top: 1px solid var(--border); padding-top: var(--space-3); }
 .page-foot .pnl-acts { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-.page-grid, .page-sel { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-panel); padding: var(--space-3); }
-.page-grid > h3 { margin: 0 0 var(--space-2); font-size: var(--fs-3); }
-/* Old pipes grid: likelihood (rows, worst first) × consequence (columns); the worst corner darkest. */
-.pg-wrap { overflow-x: auto; }
+.page-sel { background: var(--surface-1); border: 1px solid var(--border); border-radius: var(--radius-panel); padding: var(--space-3); }
+/* Old pipes grid: likelihood (rows, worst first) × consequence (columns); the worst corner darkest. Servicing ›
+   Old pipes' chart (navigation phase 6c): on Home's view, the map's panel and its full table. */
+.pg-wrap { overflow-x: auto; max-width: 100%; }
+.pipes-grid { margin-bottom: var(--space-3); }
 .pg { border-collapse: separate; border-spacing: 4px; font-variant-numeric: tabular-nums; min-width: 420px; }
 .pg th { font-size: var(--fs-1); color: var(--text-muted); font-weight: 600; text-align: left; padding: 2px 6px; }
 .pg td { border-radius: 6px; padding: 6px 10px; text-align: right; min-width: 92px; }
@@ -3034,6 +3019,11 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .pg .pg-s4 { background: color-mix(in srgb, var(--cap-tight) 18%, transparent); }
 .pg .pg-s5 { background: color-mix(in srgb, var(--cap-tight) 30%, transparent); }
 .pg .pg-s6 { background: color-mix(in srgb, var(--cap-over) 35%, transparent); }
+/* (in the map's 440 px panel and on a phone the grid takes the column's width, its cells tighter; it scrolls inside
+   its own box only where even that is too narrow) */
+.pnl .pg { min-width: 0; width: 100%; }
+.pnl .pg td { min-width: 0; padding: 4px 6px; }
+@media (max-width: 700px) { .pg { min-width: 0; width: 100%; } .pg td { min-width: 0; padding: 4px 6px; } }
 /* Study area: the map itself on the page. */
 .page-livemap { display: flex; flex-direction: column; gap: var(--space-2); }
 .page-map-slot { height: min(440px, 60vh); border: 1px solid var(--border); border-radius: var(--radius-panel); overflow: hidden; position: relative; }
@@ -3460,6 +3450,8 @@ html.home-on #tb-scen-pop { left: auto; right: var(--space-2); }
 .pnl-stepper b { display: inline-grid; place-items: center; width: 16px; height: 16px; border-radius: 50%; border: 1px solid var(--border); font-size: 10px; margin-right: 2px; }
 .pnl-stepper .on { color: var(--text-primary); }
 .pnl-stepper .on b { background: var(--accent); border-color: var(--accent); color: var(--surface-0); }
+/* (the other Find step's list, at the end of the line: it wraps on a phone, never pushing the page sideways) */
+.pnl-stepper .pnl-step-other { white-space: normal; text-align: left; }
 /* Home (step 6): the scope picker, then the figures in four groups. */
 .home-scope { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2) var(--space-3); margin: var(--space-2) 0; }
 .home-scope p { margin: 0; }

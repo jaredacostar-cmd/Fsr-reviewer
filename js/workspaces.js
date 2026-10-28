@@ -1,18 +1,20 @@
 (function (root) {
   'use strict';
   // ---- Workspaces and Home (Stage 4) ------------------------------------------------------------
-  // A workspace is a view onto the four tabs, never a separate calculation: a task chip sets the map's
-  // layer preset, the scope and the panel, and the panel header names the tab it comes from
-  // ("Servicing capacity · from Servicing › Capacity"). Three modes:
-  //   home  the briefing (headline, 4 figures, Needs attention, a small map of the problems, This week)
-  //         with the workspaces listed by team, then "Full map";
-  //   ws    the map with the task chips under the search box; the left panel and the tool rail are
-  //         hidden; "Full map" on every panel keeps the scope, filters and scenario;
+  // A workspace is a view onto the five tabs, never a separate calculation: its map view sets the map's
+  // layer preset, the scope and the panel (its tab and view). Three modes:
+  //   home  a page: Home (the briefing) or a workspace's page, with the workspaces listed by team, then
+  //         "Full map";
+  //   ws    a workspace's map view, the map with only its layers: ← Page · the search · Full map over it (the
+  //         task chips under the search box and each panel's source line went in navigation phase 6c: a page's
+  //         Open the map is the way in, ← Page the way back; a #w=<id> link still opens it); the left panel
+  //         and the tool rail are hidden; "Full map" keeps the scope, filters and scenario;
   //   full  the map with every tool (as before Stage 4). Old share links open here.
   // The start screen (Home · last workspace · Full map) is remembered per browser.
   const U = root.PeelUtil || {};
   const esc = U.esc || (s => String(s == null ? '' : s));
   const fmtNum = U.fmtNum || (n => String(n));
+  const fmt1 = U.fmt1 || (n => (Math.round(n * 10) / 10).toFixed(1));
   const store = U.store || { get: (k, d) => d, set: () => {} };
 
   // ---- Pure: the workspaces, what each opens, the Old pipes list, the start screen -----------------
@@ -33,7 +35,9 @@
     { id: 'eaflow', label: 'EA to construction', group: 'Capital', tab: 'dca', sub: 'eas', fold: 'eaflow', scope: 'area', view: 'dc', what: 'Each EA and the construction after it' },
     // QA/QC (decided with the user): where each development discharges, confirmed or set on the map (js/dev-outlets.js).
     { id: 'outlets', label: 'Review outlets', group: 'QA/QC', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Check and fix where developments discharge' },
-    { id: 'pipes', label: 'Old pipes', group: 'Asset Management', tab: 'svc', sub: 'network', scope: 'area', view: 'wastewater', what: 'Old sewers that carry the most growth' },
+    // Old pipes (navigation phase 6c): Servicing › Old pipes, an area's view (its page Home's, HOST), the amber pipes on
+    // the map while it is open (syncPipes).
+    { id: 'pipes', label: 'Old pipes', group: 'Asset Management', tab: 'svc', sub: 'pipes', scope: 'area', view: 'wastewater', what: 'Old sewers that carry the most growth' },
     // What's coming (the pipeline ledger, docs/pipeline-ledger-plan.md Phase 2): since navigation phase 3,
     // Growth › Forecast with its By period fold open (fold: js/analysis-tabs.js openFold).
     { id: 'coming', label: 'What\u2019s coming', group: 'Planning', tab: 'growth', sub: 'timing', fold: 'period', scope: 'area', view: 'planning', what: 'Homes and people by stage and milestone' },
@@ -51,7 +55,7 @@
     outlook: ['devs'],
     projects: ['dcw', 'cons'],                      // planned DC works, Region construction
     eaflow: ['ea', 'cons'],                         // EA study areas, Region construction
-    pipes: [],                                      // the old pipes only (drawn by this module)
+    pipes: [],                                      // the old pipes only (drawn by this module while Old pipes is open)
     outlets: ['devs', 'ex-sanitary'],               // developments, existing sewers
     week: ['devs'],
     coming: ['devs'],
@@ -92,23 +96,17 @@
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Records › Data checks (Servicing has none since
   // navigation phase 2), Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.
-  const SUB_NAME = { capacity: 'Capacity', network: 'Network', fsr: 'FSR review', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', 'dca:timing': 'DC timing', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
+  const SUB_NAME = { capacity: 'Capacity', network: 'Network', pipes: 'Old pipes', fsr: 'FSR review', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', 'dca:timing': 'DC timing', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
   const tabPath = (tab, sub) => [TAB_NAME[tab] || tab, sub ? SUB_NAME[`${tab}:${sub}`] || SUB_NAME[sub] || sub : ''].filter(Boolean).join(' › ');
   // A chip's own word (the page host's views row, js/ws-pages.js tabsHTML: the map's chips' words).
   const chipName = (tab, sub) => SUB_NAME[`${tab}:${sub}`] || SUB_NAME[sub] || sub;
-  // What a chip does: the tab, sub-view, scope and preset; closeScopes = area chips leave a site; fold: the
-  // fold of that sub-view it opens (What's coming: By period; EA to construction: its fold of Capital › EAs);
-  // siteSub: the sub-view it opens once a site is open (Review an FSR: Servicing › FSR review).
+  // What a workspace's map view does: the tab, sub-view, scope and preset; closeScopes = an area's leaves a site;
+  // fold: the fold of that sub-view it opens (What's coming: By period; EA to construction: its fold of Capital ›
+  // EAs); siteSub: the sub-view it opens once a site is open (Review an FSR: Servicing › FSR review).
   function plan(id, ctx = {}) {
     const w = BY_ID[id]; if (!w) return null;
     const site = !!ctx.site, sub = site && w.siteSub ? w.siteSub : w.sub;
-    return { id, tab: w.tab, sub, view: w.view, scope: w.scope === 'site' ? (site ? 'site' : 'find') : w.scope, closeScopes: w.scope === 'area', lasso: w.scope === 'drawn', source: `${w.label} · from ${tabPath(w.tab, sub)}`, fold: w.fold || null };
-  }
-  // The panel header line in a workspace: the workspace when the panel is its sub-view, else the tab.
-  function sourceText(wsId, key) {
-    const w = BY_ID[wsId]; if (!w) return '';
-    const [tab, sub] = String(key || '').split(':');
-    return tab === w.tab && (sub || '') === (w.sub || '') ? `${w.label} · from ${tabPath(tab, sub)}` : `${w.label} · ${tabPath(tab, sub)}`;
+    return { id, tab: w.tab, sub, view: w.view, scope: w.scope === 'site' ? (site ? 'site' : 'find') : w.scope, closeScopes: w.scope === 'area', lasso: w.scope === 'drawn', fold: w.fold || null };
   }
   // Old pipes (decided with the user): installed 50+ years ago OR rated MODERATE (the highest rating in
   // the Region's data), AND carrying 100+ planned units at build-out; ranked by units carried.
@@ -158,12 +156,13 @@
   const resolvePage = (id, ctx = {}) => (own(PAGE_ALIAS, id) ? PAGE_ALIAS[id](ctx) : id);
   // Page ids that are views of a page host (navigation phase 6, design §3.1 rule 1, §7.1): Home is the host at
   // an area (Peel, a municipality, a plan), the map's five tabs under its header, so each area page is Home at
-  // its tab and view (What's coming with By period open, EA to construction with its fold). The ids stay what
-  // links, buttons, the stored last workspace and Help's role buttons name; openPage opens the host there.
+  // its tab and view (What's coming with By period open, EA to construction with its fold; Old pipes at Servicing ›
+  // Old pipes, 6c). The ids stay what links, buttons, the stored last workspace and Help's role buttons name;
+  // openPage opens the host there.
   // The site's page is the host at a development (6b): Check a site is it at Overview, Review an FSR at Servicing ›
   // FSR review (ctx.site: a development is open; without one each is its Find step, a page of its own).
   // → { page, tab, sub, fold } | null.
-  const HOST = { growth: 'growth:areas', outlook: 'growth:timing', coming: 'growth:timing', tight: 'svc:capacity', projects: 'dca:timing', eaflow: 'dca:eas', data: 'records:sources' };
+  const HOST = { growth: 'growth:areas', outlook: 'growth:timing', coming: 'growth:timing', tight: 'svc:capacity', pipes: 'svc:pipes', projects: 'dca:timing', eaflow: 'dca:eas', data: 'records:sources' };
   const SITE_HOST = { site: 'overview:', fsr: 'svc:fsr' };
   function hostOf(id, ctx = {}) {
     const at = own(HOST, id) ? HOST[id] : ctx.site && own(SITE_HOST, id) ? SITE_HOST[id] : null; if (!at) return null;
@@ -204,7 +203,7 @@
   }
 
   // ---- Browser ----------------------------------------------------------------------------------
-  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SITE_MAP, LAB_PAGES, BY_ID, LAYERS, OLD, START, PAGE_ALIAS, REF, TAB_NAME, HOST, SITE_HOST, SITE_SEC, plan, sourceText, tabPath, chipName, oldPipes, pipeRuns, resolvePage, hostOf, startScreen, pageRoute };
+  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SITE_MAP, LAB_PAGES, BY_ID, LAYERS, OLD, START, PAGE_ALIAS, REF, TAB_NAME, HOST, SITE_HOST, SITE_SEC, plan, tabPath, chipName, oldPipes, pipeRuns, resolvePage, hostOf, startScreen, pageRoute };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -217,8 +216,8 @@
   const isWs = () => mode === 'ws';
   const devOpen = () => !!(root.DevScope && root.DevScope.current && root.DevScope.current());
 
-  // home: a page is open (Home or a workspace's page, js/ws-pages.js); ws: a workspace's map view with
-  // the chips; full: the map with every tool.
+  // home: a page is open (Home or a workspace's page, js/ws-pages.js); ws: a workspace's map view (← Page ·
+  // search · Full map over the map); full: the map with every tool.
   // Back from the full map: arriving there from a page or a workspace's map view, a bar over the map
   // offers the way back ("← Back to Check a site"); it goes when you leave the full map or close it.
   // (back to a page host, it names the view it lands on: the map's tab and view as they are then, "← Back to
@@ -253,8 +252,8 @@
     if (app) { app.classList.toggle('ws-mode', m === 'ws'); }
     const home = $('#home'); if (home) home.hidden = m !== 'home';
     const bar = $('#ws-bar'); if (bar) bar.hidden = m !== 'ws';
-    if (m !== 'ws') { cur = null; pipesLayer(false); if (m === 'full') { unfoldLayers(); restoreView(); } }
-    renderChips();
+    if (m !== 'ws') { cur = null; if (m === 'full') { unfoldLayers(); restoreView(); } }
+    syncPipes();
     if (m === 'home') renderPage(true); else placeSearch();
     if (root.PeelDataTab && root.PeelDataTab.fixMap) setTimeout(() => root.PeelDataTab.fixMap(), 50);
     if (PN()) PN().sync();
@@ -311,7 +310,7 @@
     if (bb[0] < bb[2]) setTimeout(() => map.fitBounds([[bb[1], bb[0]], [bb[3], bb[2]]], { padding: [10, 10] }), 60);
   }
   const invalidate = () => { const map = root.PeelMapCore && root.PeelMapCore.map; if (map && map.invalidateSize) setTimeout(() => map.invalidateSize(), 30); };
-  // ---- A chip -------------------------------------------------------------------------------------
+  // ---- A workspace's map view (a page's Open the map, a #w=<id> link) -------------------------------------
   function go(id, o = {}) {
     const site = root.DevScope && root.DevScope.current ? root.DevScope.current() : null;
     const pl = plan(id, { site: !!site }); if (!pl) return;
@@ -324,30 +323,29 @@
       if (site) root.DevScope.close();
       if (SS() && SS().current && SS().current()) SS().close();
     }
-    // The chip's view from its preset (nothing saved), then its lean layers.
+    // The workspace's view from its preset (nothing saved), then its lean layers.
     lean(pl.view, LAYERS[id] || []);
     // (o.keep: a page view's Open the map, the map view at the view the page shows, navigation phase 6: the
-    // chip's preset and scope, the tab and view kept)
+    // workspace's preset and scope, the tab and view kept)
     const A = AT(); if (A && !o.keep) { if (pl.sub && A.setSub) A.setSub(pl.tab, pl.sub); if (A.setFootPref) A.setFootPref(pl.tab); A.showFootTab(pl.tab); if (pl.fold && A.openFold) A.openFold(pl.fold); }
     foldLayers();
-    pipesLayer(id === 'pipes');
-    // Draw an area (a page header's, the chip's): Select on, and on a phone the sheet down to its peek,
+    syncPipes();
+    // Draw an area (a page header's, a #w=study link's): Select on, and on a phone the sheet down to its peek,
     // so the map is there to draw on (a result kept at a development may have left it full).
     if (pl.lasso && !o.noDraw && root.PeelAreaSelect && root.PeelAreaSelect.setLasso) {
       root.PeelAreaSelect.setLasso(true);
       const DT = root.PeelDataTab; if (DT && DT.shellNarrow && DT.shellNarrow() && App() && App().setAnalysisSnap) App().setAnalysisSnap('peek', false);
     }
     const ss = o.ss; if (ss && SS() && SS().open) SS().open(ss);
-    renderChips();
     if (PN()) PN().sync();
     if (root.PeelShare && root.PeelShare.viewLink) root.PeelShare.viewLink.write();
     // A site workspace without a site: the search box is the first step.
     if (pl.scope === 'find' && !o.quiet) { const s = $('#f-search'); if (s) try { s.focus({ preventScroll: true }); } catch (e) { /* older browsers */ } }
   }
-  // The map's Layers panel closes when a chip is picked (the chip has set the layers); the full map gets
-  // it back as it was before the workspace.
+  // The map's Layers panel closes when a map view opens (it has set the layers); the full map gets it back as it
+  // was before the workspace.
   let layersWasOpen = null, viewKept = false, booted = false;
-  // A view preset and only these layers (a chip's map, a site page's map); the full map's own settings
+  // A view preset and only these layers (a workspace's map view, a site page's map); the full map's own settings
   // come back with it (restoreView).
   function lean(view, layers) {
     const MA = root.PeelMapAnalysis, LG = root.PeelLayerGroups;
@@ -359,7 +357,7 @@
     if (LG && LG.apply) LG.apply(new Set(layers));
   }
 
-  // Back in the full map: the open view with its own remembered layers (not the chip's).
+  // Back in the full map: the open view with its own remembered layers (not the workspace's).
   function restoreView() {
     const MA = root.PeelMapAnalysis;
     if (!viewKept && !booted) return;   // (before the data and the link: bootRestore does it)
@@ -383,28 +381,15 @@
     if (el && layersWasOpen) el.open = true;
     layersWasOpen = null;
   }
-  // This week's count (the chip's badge): the Peel Overview's own list (none while it is still loading).
+  // This week's count (the sidebar's badge): the Peel Overview's own list (none while it is still loading).
   function weekRows() { const WP = root.PeelWsPages, a = WP && WP.briefing ? WP.briefing() : OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; const l = a && a.lists ? a.lists.find(x => x.title === 'This week') : null; return l ? l.rows : []; }
-  function renderChips() {
-    const el = $('#ws-chips'); if (!el) return;
-    const nW = weekRows().length;
-    el.innerHTML = WS.map(w => `<button type="button" class="btn small ws-chip${cur === w.id ? ' on' : ''}" data-ws-go="${w.id}" aria-pressed="${cur === w.id}" title="${esc(w.what)}">${esc(w.label)}${w.id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</button>`).join('');
-  }
-  // The header line on every panel in a workspace: its source and "Full map".
-  function srcLine(key) {
-    if (!isWs() || !cur) return '';
-    // Check a site / Review an FSR, once the site is open: the guided steps, Find done.
-    const site = (cur === 'site' || cur === 'fsr') && root.DevScope && root.DevScope.current && root.DevScope.current();
-    const steps = site ? ` <small class="pnl-steps">✓ Find › <b>Result</b> › Output: ${cur === 'fsr' ? 'the cross-check notes' : 'Servicing memo'}</small>` : '';
-    return `<p class="pnl-src small"><span>${esc(sourceText(cur, key))}${steps}</span><button type="button" class="btn small link" data-ws-full title="The same scope, filters and scenario with every tool">Full map →</button></p>`;
-  }
   // ---- A workspace's own view of a sub-view --------------------------------------------------------
   function override(key, scope) {
     if (!isWs() || !cur || !PN()) return null;
     const pl = plan(cur, { site: scope.startsWith('dev:') });
     if ((cur === 'site' || cur === 'fsr') && pl.scope === 'find' && key === `${pl.tab}:${pl.sub}` && scope === 'area') return findSpec(cur);
-    if (cur === 'pipes' && key === 'svc:network' && scope === 'area') return pipesSpec();
-    if (cur === 'week' && key === 'overview:' && scope === 'area') return weekSpec();
+    // (This week: its one spec, the page's and Home's Change figures', js/ws-pages.js weekSpec; navigation phase 6c)
+    if (cur === 'week' && key === 'overview:' && scope === 'area') { const WP = root.PeelWsPages, w = WP && WP.weekSpec ? WP.weekSpec() : null; return w || { head: { name: 'What changed since the last update?', status: null, identity: esc((App() && App().state.muni) || 'Peel') }, answer: '<span class="muted">Loading the changes…</span>' }; }
     return null;
   }
   // Check a site / Review an FSR before a site is picked: Find → Result → Output.
@@ -423,63 +408,74 @@
       foot: { primary: { label: 'Search', attrs: { 'data-ws-focus': '' } } },
     };
   }
-  // Old pipes: Servicing › Network filtered to age / risk with the build-out load (units carried).
+  // Old pipes (Servicing › Old pipes, navigation phase 6c): the Region's sanitary sewers on the list (oldPipes) with
+  // the build-out load each carries (units). One list per sewer load worked out (js/sewer-cap.js sewerGrowth keeps
+  // it until the developments, criteria or outlets change): the panel, Home's view, the layer and the CSV read it.
+  let oldMemo = null;
   function oldList() {
     const S = MM() && MM().SEW; if (!S || !S.data || !SC()) return null;
     const G = SC().sewerGrowth(); if (!G) return null;
+    if (oldMemo && oldMemo.G === G && oldMemo.data === S.data && oldMemo.y === now()) return oldMemo.list;
     const n = S.data.pipes.length, u = new Float64Array(n);
     for (const k of ['built', 'approved', 'proposed']) if (G[k] && G[k].units) for (let i = 0; i < n; i++) u[i] += G[k].units[i];
-    return oldPipes(S.data, u, now());
+    const list = oldPipes(S.data, u, now());
+    oldMemo = { G, data: S.data, y: now(), list };
+    return list;
   }
+  const plantShort = k => (root.PeelSvcData && root.PeelSvcData.PLANT_SHORT && root.PeelSvcData.PLANT_SHORT[k]) || k;
+  // Its one spec, the map's panel (js/svc-capacity.js renderFor) and Home's view (js/ws-pages.js pipes): the four
+  // figures, the likelihood × consequence grid (js/ws-pages.js pipeGridHTML), the runs, most units first, and the
+  // plants they drain to; its CSV first. Until the sewer records are in, it says so and loads them once.
   function pipesSpec() {
-    const list = oldList(), runs = list ? pipeRuns(list, MM().SEW.data) : [];
-    if (!list) { if (MM() && MM().SEW && !MM().SEW.data && SC() && SC().loadSewers) SC().loadSewers().then(() => PN() && PN().sync()); return { head: { name: 'Old pipes', identity: 'Sanitary sewers 300 mm and larger' }, answer: 'Loading the Region’s sanitary sewer records…' }; }
-    const old = list.filter(r => r.old).length, risky = list.filter(r => r.risky).length, units = list.reduce((t, r) => Math.max(t, r.units), 0);
-    const oldest = list.reduce((a, r) => (r.year && (!a || r.year < a.year) ? r : a), null);
+    const list = oldList(), WP = root.PeelWsPages;
+    const head = { trail: [{ label: 'Peel' }, { label: 'Servicing › Old pipes' }], name: 'Which old pipes carry the most growth?' };
+    if (!list) {
+      // (the view drawn again once they land, if it is still the one open)
+      if (MM() && MM().SEW && !MM().SEW.data && SC() && SC().loadSewers) SC().loadSewers().then(() => { const A = AT(); if (Cap() && Cap().renderFor && A && A.getFootTab() === 'svc' && A.getSvcSub() === 'pipes') Cap().renderFor('pipes'); });
+      return { head: { ...head, identity: 'Sanitary sewers 300 mm and larger' }, answer: 'Loading the Region’s sanitary sewer records…' };
+    }
+    const runs = pipeRuns(list, MM().SEW.data), risky = list.filter(r => r.risky).length, km = runs.reduce((t, r) => t + (r.lengthM || 0), 0) / 1000;
+    // (the grid's top-right cell: the oldest band and the most homes carried)
+    const top = r => WP && WP.likeOf && WP.likeOf(r) === 3 && WP.consOf(r) === 3, worst = runs.filter(top).length;
+    const byPlant = new Map(); for (const r of runs) { const k = r.plant || 'other', x = byPlant.get(k) || { n: 0, km: 0 }; x.n++; x.km += (r.lengthM || 0) / 1000; byPlant.set(k, x); }
     return {
-      calc: true, fullTitle: 'Servicing › Network · Old pipes',
-      head: { trail: [{ label: 'Peel' }, { label: 'Servicing › Network' }], name: 'Which old pipes carry the most growth?', status: !list.length ? { tone: 'room', text: 'None' } : risky ? { tone: 'tight', text: `${fmtNum(risky)} moderate risk` } : null, identity: `Sanitary sewers 300 mm+ · ${OLD.age}+ years old or rated ${OLD.risk.toLowerCase()} risk · ${OLD.minUnits}+ units at build-out` },
-      answer: list.length ? `<strong>${fmtNum(runs.length)}</strong> sewer runs (${fmtNum(list.length)} pipe segments) are ${OLD.age}+ years old or rated moderate risk and carry ${OLD.minUnits}+ planned units at build-out. The one carrying the most is <strong>${esc(`the ${runs[0].d} mm main${runs[0].plant ? ` to ${(root.PeelSvcData && root.PeelSvcData.PLANT_SHORT && root.PeelSvcData.PLANT_SHORT[runs[0].plant]) || runs[0].plant}` : ''}`)}</strong>, ${runs[0].year ? `laid in ${runs[0].year}` : 'year not recorded'} (${fmtNum(Math.round(runs[0].units))} units).` : `No sewer ${OLD.age}+ years old or rated moderate risk carries ${OLD.minUnits}+ planned units at build-out.`,
+      calc: true, fullTitle: 'Servicing › Old pipes · Peel: the grid and every run on the list',
+      head: { ...head, status: !list.length ? { tone: 'room', text: 'None' } : risky ? { tone: 'tight', text: `${fmtNum(risky)} moderate risk` } : null, identity: `Sanitary sewers 300 mm+ · ${OLD.age}+ years old or rated ${OLD.risk.toLowerCase()} risk · ${OLD.minUnits}+ units at build-out` },
+      answer: list.length ? `<strong>${fmtNum(runs.length)}</strong> sewer runs (${fmtNum(list.length)} pipe segments) are ${OLD.age}+ years old or rated moderate risk and carry ${OLD.minUnits}+ planned units at build-out. The one carrying the most is <strong>${esc(`the ${runs[0].d} mm main${runs[0].plant ? ` to ${plantShort(runs[0].plant)}` : ''}`)}</strong>, ${runs[0].year ? `laid in ${runs[0].year}` : 'year not recorded'} (${fmtNum(Math.round(runs[0].units))} units).` : `No sewer ${OLD.age}+ years old or rated moderate risk carries ${OLD.minUnits}+ planned units at build-out.`,
       figures: [
         { v: fmtNum(runs.length), u: 'sewer runs', label: 'on the list', ctx: `${fmtNum(list.length)} pipe segments · ${OLD.minUnits}+ units at build-out` },
-        { v: fmtNum(old), u: 'pipes', label: `${OLD.age}+ years old`, ctx: `installed ${now() - OLD.age} or earlier` },
+        { v: fmt1(km), u: 'km', label: 'length on the list', ctx: `${fmtNum(runs.length)} sewer runs` },
+        { v: fmtNum(worst), u: 'sewer runs', label: 'oldest and most loaded', ctx: `${WP ? WP.LIKE[3] : '80+ years'} (or older + moderate risk) and ${WP ? WP.CONS[3] : '10,000+ units'}: the grid’s top-right cell`, tone: worst ? 'over' : null },
         { v: fmtNum(risky), u: 'pipes', label: 'rated moderate risk', ctx: 'the Region’s highest rating in the data', tone: risky ? 'tight' : 'room' },
-        oldest ? { v: oldest.year, u: '', label: 'oldest on the list', ctx: `${oldest.d} mm${oldest.mat ? ` ${esc(oldest.mat)}` : ''} · ${fmtNum(Math.round(oldest.units))} units` } : { v: fmtNum(Math.round(units)), u: 'units', label: 'most carried', ctx: '' },
       ],
-      lists: [{ title: 'Runs, most units first', rows: runs.slice(0, 5).map(r => ({ tone: r.risky ? 'tight' : null, attrs: { 'data-pipe': r.i, title: 'Show the pipe and what loads it' },
-        html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.d} mm${r.mat ? ` ${esc(r.mat)}` : ''}${r.plant ? ` · to ${esc((root.PeelSvcData && root.PeelSvcData.PLANT_SHORT && root.PeelSvcData.PLANT_SHORT[r.plant]) || r.plant)}` : ''}</span><span class="pnl-r-year${r.old ? ' t-tight' : ''}">${r.year ? `${r.year} · ${r.age} yrs` : 'year not recorded'}</span></div><div class="pnl-r-meta"><span>${fmtNum(Math.round(r.units))} units at build-out · ${r.n > 1 ? `${fmtNum(r.n)} segments, ` : ''}${fmtNum(Math.round(r.lengthM))} m</span><span${r.risky ? ' class="t-tight"' : ''}>${r.risk ? `${esc(r.risk.charAt(0) + r.risk.slice(1).toLowerCase())} risk` : 'risk not rated'}</span></div>` })),
-        total: runs.length, seeAll: { 'data-full-table': 'svc:network' } }],
-      method: `From the Region’s sanitary sewer records (300 mm and larger): install year and risk rating as published. A pipe is listed when it was installed ${OLD.age}+ years ago or is rated ${OLD.risk.toLowerCase()} risk (the highest rating in the data; the others are low and insignificant), and the developments on the map that drain through it (built since the census, approved, proposed) plan ${OLD.minUnits}+ units. Units carried is a count of planned units, not a flow: pipe-by-pipe capacity is left to the Region’s model. Segments that join end to end with the same size, install year, material and risk are shown as one run, ranked by the most units any of its segments carries.`,
+      chart: WP && WP.pipeGridHTML ? WP.pipeGridHTML(runs) : '',
+      lists: [
+        { title: 'Runs, most units first', rows: runs.slice(0, 5).map(r => ({ tone: r.risky ? 'tight' : null, attrs: { 'data-pipe': r.i, title: 'Show the pipe and what loads it' },
+          html: `<div class="pnl-r-top"><span class="pnl-r-name">${r.d} mm${r.mat ? ` ${esc(r.mat)}` : ''}${r.plant ? ` · to ${esc(plantShort(r.plant))}` : ''}</span><span class="pnl-r-year${r.old ? ' t-tight' : ''}">${r.year ? `${r.year} · ${r.age} yrs` : 'year not recorded'}</span></div><div class="pnl-r-meta"><span>${fmtNum(Math.round(r.units))} units at build-out · ${r.n > 1 ? `${fmtNum(r.n)} segments, ` : ''}${fmtNum(Math.round(r.lengthM))} m</span><span${r.risky ? ' class="t-tight"' : ''}>${r.risk ? `${esc(r.risk.charAt(0) + r.risk.slice(1).toLowerCase())} risk` : 'risk not rated'}</span></div>` })),
+          total: runs.length, seeAll: { 'data-full-table': 'svc:pipes', 'data-ft-go': 'Every run' } },
+        { title: 'By plant', rows: [...byPlant.entries()].sort((a, b) => b[1].km - a[1].km).map(([k, x]) => ({ kv: true, html: `<div class="pnl-kv"><span>${esc(plantShort(k))}</span><span>${fmtNum(x.n)} sewer runs · ${fmt1(x.km)} km</span></div>` })), total: byPlant.size },
+      ],
+      method: `From the Region’s sanitary sewer records (300 mm and larger): install year and risk rating as published. A pipe is listed when it was installed ${OLD.age}+ years ago or is rated ${OLD.risk.toLowerCase()} risk (the highest rating in the data; the others are low and insignificant), and the developments on the map that drain through it (built since the census, approved, proposed) plan ${OLD.minUnits}+ units. Units carried is a count of planned units, not a flow: pipe-by-pipe capacity is left to the Region’s model. Segments that join end to end with the same size, install year, material and risk are shown as one run, ranked by the most units any of its segments carries. The grid counts runs by likelihood (age 50–64 / 65–79 / 80+ years; a moderate risk rating moves a run one band up) and consequence (planned units carried: 100–1,000 / 1,000–10,000 / 10,000+).`,
       sources: 'Region of Peel Wastewater Main (open data): diameter, install date, material, risk rating. The applications and permits on the map.',
-      foot: { primary: { label: 'Show the sewers on the map', attrs: { 'data-mview': 'wastewater' } } },
+      foot: { primary: { label: 'Export the list (CSV)', attrs: { 'data-ws-pipescsv': '' } }, secondary: [{ label: 'Show the sewers on the map', attrs: { 'data-mview': 'wastewater' } }] },
     };
   }
-  // The old pipes on the map while the workspace is open (amber; moderate risk heavier).
-  let pLayer = null;
+  // The old pipes on the map while Servicing › Old pipes is open (amber; moderate risk heavier): on the map and in a
+  // map view, never under a page; drawn once per list (syncPipes runs on every tab or view shown, js/analysis-tabs.js).
+  let pLayer = null, pList = null;
   function pipesLayer(on) {
     const L = root.L, map = root.PeelMapCore && root.PeelMapCore.map; if (!L || !map) return;
+    const list = on ? oldList() : null;
+    if (pLayer && list === pList) return;
     if (pLayer) { map.removeLayer(pLayer); pLayer = null; }
-    if (!on) return;
-    const list = oldList(); if (!list) return;
+    pList = list; if (!list) return;
     const C = SC() && SC().pipeCoords;
     pLayer = L.layerGroup(list.map(r => { const c = MM().SEW.data.pipes[r.i][10], pts = []; for (let k = 0; k < c.length; k += 2) pts.push([c[k + 1], c[k]]);
       return L.polyline(C ? C(MM().SEW.data.pipes[r.i]).map(([x, y]) => [y, x]) : pts, { color: U.token ? U.token('--cap-tight') : getComputedStyle(document.documentElement).getPropertyValue('--cap-tight').trim(), weight: r.risky ? 6 : 4, opacity: 0.9, interactive: false }); })).addTo(map);
   }
-  // This week: the Overview's changes, every row.
-  function weekSpec() {
-    const a = OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null, rows = weekRows();
-    const muni = App() && App().state.muni;
-    return {
-      head: { trail: [{ label: 'Peel' }, ...(muni ? [{ label: muni }] : []), { label: 'Overview' }], name: 'What changed this week?', status: null, identity: a && a.head ? a.head.identity : esc(muni || 'Peel') },
-      answer: rows.length ? `<strong>${fmtNum(rows.length)}</strong> change${rows.length === 1 ? '' : 's'} since the last data update: files that moved stage, new files, capital and EA dates.` : 'Nothing changed since the last data update.',
-      lists: [{ title: 'This week', rows: rows.slice(0, 5), total: rows.length, seeAll: { 'data-full-table': 'overview' } }],
-      method: 'Changes between the last two data updates: files whose stage moved, files listed for the first time (not those already completed), Region capital projects and EAs with a review period closing or a DC-matched date moved later.',
-      sources: 'The municipal application records (each update); Region of Peel capital project and EA listings.',
-      foot: { primary: { label: 'Watch list', attrs: { 'data-ws-watch': '' }, title: 'The developments you watch (left panel, Watch)' } },
-    };
-  }
+  function syncPipes() { const A = AT(); pipesLayer(mode !== 'home' && !!A && !!A.getSvcSub && A.getFootTab() === 'svc' && A.getSvcSub() === 'pipes'); }
   // ---- Pages ------------------------------------------------------------------------------------
-  // A chip's page (js/ws-pages.js builds it from the tabs' panels); Home is the page 'home', the page host at
+  // A workspace's page (js/ws-pages.js builds it from the tabs' panels); Home is the page 'home', the page host at
   // an area (navigation phase 6): the map's five tabs under its header, its view the map's own tab state
   // (view() below), so an area page's id opens Home at that page's tab and view (hostOf). Home and the area
   // pages leave a site; Check a site and Review an FSR keep it: with a development open each is the site's page,
@@ -531,7 +527,7 @@
   // view(): the view a page host shows ('svc:network'; Home's Overview 'overview:'), null on any other page or mode.
   const view = () => (mode === 'home' && hostPage(page) && AT() && AT().viewKey ? AT().viewKey() : null);
   // The page as the reader names it: the site's page at Servicing › FSR review is Review an FSR (the sidebar's
-  // Explore entry, Explore's views, a search pick from it: phase 1's route stays there).
+  // Explore entry, the start screen's last workspace, a search pick from it: phase 1's route stays there).
   const shownPage = () => (page === 'site' && view() === 'svc:fsr' ? 'fsr' : page);
   function sideHTML() {
     const nW = weekRows().length, pref = store.get('startScreen', 'home'), labIds = Object.keys(LAB_PAGES).filter(labPageOn);
@@ -550,8 +546,6 @@
       <label class="home-pref small">Start screen <select data-ws-start>${START.map(([k, t]) => `<option value="${k}"${pref === k ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
     </nav>`;
   }
-  // Explore's five views in a row at the top of each of them: where you are, and the others one click away.
-  const viewsHTML = () => `<nav class="page-views" aria-label="Explore">${EXPLORE.map(id => `<button type="button" class="btn small${id === shownPage() ? ' on' : ''}" data-ws-page="${id}"${id === shownPage() ? ' aria-current="page"' : ''} title="${esc(BY_ID[id].what)}">${esc(BY_ID[id].label)}</button>`).join('')}</nav>`;
   // force: rebuild even when the page HTML is unchanged (a mode switch).
   function renderPage(force) {
     const el = $('#home'), WP = root.PeelWsPages; if (!el || el.hidden || !WP) return;
@@ -562,7 +556,6 @@
     // (a page host's view counts as its page here: another tab or view is another page)
     if (typing(el) && shown === `${mode}|${page}|${view() || ''}`) { clearTimeout(timer); timer = setTimeout(() => renderPage(force), 600); return; }
     const m = page === 'home' ? WP.host('area') : hostPage(page) ? WP.host('site') : WP.build(page);
-    if (EXPLORE.includes(page)) m.views = viewsHTML();
     const main = WP.pageHTML(m, PN() ? PN().NOTE : '');
     const html = `<div class="home-grid">${sideHTML()}${main}</div>`;
     // (a page host's tab before its data tries again even when nothing has changed yet: its data may land
@@ -695,8 +688,8 @@
     // what was picked on the map kept (navigation phase 6, §3.4), unless the map is at a scope's Overview that the
     // host closes (scopeOverview): then the page's own view.
     if (e.target.closest('[data-ws-backpage]')) { const h = cur && hostAt(cur); openPage(cur || page || 'home', { keep: !!h && !scopeOverview(h.page) }); return; }
-    // (the back bar to a map view: a page host's view keeps the map's tab and view, as ← Page; a task's map view, Old
-    // pipes or This week, its own tab again, the panel it is about)
+    // (the back bar to a map view: a page host's view keeps the map's tab and view, as ← Page; a task's map view, This
+    // week or Review outlets, its own tab again, the panel it is about)
     if (e.target.closest('[data-ws-back]')) { const b = backTo; if (b && b.ws) { setMode('ws'); go(b.ws, { quiet: true, noDraw: true, keep: !!hostAt(b.ws) }); } else openPage((b && b.page) || 'home', { keepScroll: true, keep: true, view: b && hostPage(b.page) && scopeOverview(b.page) ? b.view : null }); return; }
     if (e.target.closest('[data-ws-back-x]')) { backTo = null; renderBack(); return; }
     // Home's scope (step 6): Peel or a municipality, the same filter as the map's. A place, as the top bar's trail
@@ -737,8 +730,7 @@
   }, true);
   document.addEventListener('change', e => { const s = e.target.closest && e.target.closest('[data-ws-start]'); if (s) store.set('startScreen', s.value); });
   document.addEventListener('keydown', e => { if (!e.defaultPrevented && (e.key === 'Enter' || e.key === ' ') && e.target.closest && (e.target.closest('#home [role="button"]') || e.target.closest('#home [data-ws-stage]'))) { e.preventDefault(); e.target.click(); } });
-  // The page and the chips follow the panels (their figures, This week's count): a page rebuilds when what
-  // it shows has changed.
+  // The page follows the panels (their figures, This week's count): it rebuilds when what it shows has changed.
   let exploreDev = null;
   document.addEventListener('pnl:set', e => {
     // Explore: a site picked (the search, the map) while an area view is open opens its page.
@@ -748,8 +740,8 @@
     // (a link's d= landing on Review an FSR's Find step, js/share.js ready: the site's page at FSR review, 6b)
     else if (sc && sc.startsWith('dev:') && sc !== exploreDev && mode === 'home' && page === 'fsr') { exploreDev = sc; setTimeout(() => openPage('fsr'), 0); }
     else if (sc && !sc.startsWith('dev:')) exploreDev = null;
-    if (e.detail && e.detail.key === 'overview:' && e.detail.scope === 'area') renderChips();
-    if (mode === 'ws' && cur === 'pipes' && e.detail && e.detail.key === 'svc:network') pipesLayer(true);
+    // (Servicing › Old pipes drawn: its pipes on the map, once the sewer records are in)
+    if (e.detail && e.detail.key === 'svc:pipes') syncPipes();
     // (the back bar names the view it goes back to: a tab or view picked on the full map meanwhile)
     if (mode === 'full' && backTo && backTo.page && hostPage(backTo.page)) renderBack(true);
     schedule();
@@ -766,6 +758,6 @@
     else if (s.mode === 'home') openPage(s.page || 'home');
     else setMode(s.mode);
   }
-  Object.assign(api, { REF, bootRestore, go, openPage, setMode, mode: () => mode, current: () => cur, page: () => page, view, override, srcLine, renderPage, renderChips, settingsHTML, oldList, pipesSpec, routePick, init });
+  Object.assign(api, { REF, bootRestore, go, openPage, setMode, mode: () => mode, current: () => cur, page: () => page, view, override, renderPage, settingsHTML, oldList, pipesSpec, syncPipes, routePick, init });
   root.PeelWorkspaces = api;
 })(typeof window !== 'undefined' ? window : globalThis);

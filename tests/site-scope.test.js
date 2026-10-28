@@ -21,10 +21,10 @@ function loadTabs() {
 
 // What each sub-view shows at a development's scope (the audit of 0 Heritage Rd, Brampton; Stage 2).
 // (Capital is one view at a site: its EAs are in DC timing's site panel; FSR review is a development's
-// Servicing view, navigation phase 5.)
+// Servicing view, navigation phase 5; Old pipes is Peel's sewers, an area's Servicing view, navigation phase 6c.)
 const AT_SITE = {
   growth: { pipeline: 'show', areas: 'hide', timing: 'hide' },
-  svc: { capacity: 'hide', network: 'show', fsr: 'show' },
+  svc: { capacity: 'hide', network: 'show', pipes: 'hide', fsr: 'show' },
   dca: { timing: 'show', eas: 'hide', projects: 'hide' },
   records: { sources: 'hide', checks: 'hide', files: 'show' },
 };
@@ -52,6 +52,7 @@ test('site scope: a hidden sub-view falls back to the first one with site conten
   assert.equal(AT.subFor('records', 'files', false), 'sources', 'Peel has no files of its own');
   assert.equal(AT.subFor('svc', 'fsr', false), 'capacity', 'FSR review is a development\u2019s');
   assert.equal(AT.subFor('svc', 'fsr', true), 'fsr');
+  assert.equal(AT.subFor('svc', 'pipes', true), 'network', 'Old pipes at a site: Network');
   for (const [tab, subs] of Object.entries(AT_SITE)) for (const sub of Object.keys(subs)) {
     if ((tab === 'dca' && sub === 'funding') || (tab === 'records' && sub === 'files') || (tab === 'svc' && sub === 'fsr')) continue;   // Labs / site only
     assert.equal(AT.subFor(tab, sub, false), sub, `${tab} › ${sub} stays at Peel scope`);

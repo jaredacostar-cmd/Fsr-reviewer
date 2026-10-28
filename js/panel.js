@@ -204,7 +204,6 @@
   // sub-view, for the scope it was made for (a development, a servicing scope, or the area). Until a
   // sub-view has a panel for the current scope, its detailed panes show as before.
   const STORE = new Map();
-  const HEAD = '<header class="pnl-head" data-sec="header">';
   const AT = () => root.PeelAnalysisTabs;
   const scopeId = () => {
     const d = root.DevScope && root.DevScope.current && root.DevScope.current(); if (d) return `dev:${d.key}`;
@@ -230,14 +229,14 @@
     const Wp = root.PeelWorkspaces;
     if (Wp && Wp.mode && Wp.mode() === 'home') { document.querySelectorAll('.pnl-host').forEach(h => { h.innerHTML = ''; h.dataset.v = ''; }); return; }
     const t = A.getFootTab(), key = keyNow(), e0 = STORE.get(key);
-    // Stage 4: a workspace may show its own view of a sub-view (Check a site before a site is picked,
-    // Old pipes, This week) and names its source in the header ("Getting tight · from Servicing ›
-    // Capacity", with Open full map).
+    // Stage 4: a workspace's map view may show its own view of a sub-view (Check a site before a site is
+    // picked, This week: js/workspaces.js override; Old pipes is Servicing › Old pipes, its own panel). (its panels
+    // name no workspace since navigation phase 6c: the source line went with the task chips)
     const W = root.PeelWorkspaces, ov = W && W.override ? W.override(key, scopeId()) : null;
     // (a result kept at its development, the Inquiry draft: its host shows on Overview, not the site's panel)
     const kept = t === 'overview' && root.PeelSvcScope && root.PeelSvcScope.keepsDev && root.PeelSvcScope.keepsDev();
     const e = kept ? null : ov ? { html: html({ key, ...ov }), onMount: ov.onMount } : e0 && e0.scope === scopeId() ? e0 : null, ok = !!e;
-    const v = e ? (W && W.srcLine ? e.html.replace(HEAD, `${HEAD}${W.srcLine(key)}`) : e.html) : '';
+    const v = e ? e.html : '';
     an.classList.toggle('pnl-on', ok);
     // (a panel that is its own full table, a development's Overview: Open full table widens it)
     an.classList.toggle('ft-pnl', !!(e && e.spec && e.spec.widen));

@@ -482,9 +482,34 @@
     PN.set('svc:network', spec);
     if (FC && FC.panelSpec) PN.set('svc:fsr', FC.panelSpec(p, spec));
   }
-  const renderAll = () => { render(); renderChecks(); renderNetBar(); };
+  // ---- Servicing › Old pipes (navigation phase 6c) -------------------------------------------------------
+  // Its one spec (js/workspaces.js pipesSpec; Home's view reads the same) as the panel, and its full table: the
+  // grid, the runs by plant and every run on the list, with the CSV. Peel's sewers: a development shows Network.
+  function renderPipes() {
+    const W = root.PeelWorkspaces; if (!W || !W.pipesSpec || (root.DevScope && root.DevScope.current())) return;
+    const s = W.pipesSpec();
+    if (root.PeelPanel) root.PeelPanel.set('svc:pipes', s);
+    renderPipesTable(s);
+  }
+  function renderPipesTable(s) {
+    const el = $('#pipes-body'), W = root.PeelWorkspaces, MM = root.PeelMapMarkers; if (!el || !W) return;
+    const list = W.oldList ? W.oldList() : null;
+    if (!list || !s.chart) { el.innerHTML = U.skel ? U.skel('Loading the sanitary sewer records') : ''; return; }
+    const runs = W.pipeRuns(list, MM.SEW.data), WP = root.PeelWsPages, SD = root.PeelSvcData, plant = k => (SD && SD.PLANT_SHORT && SD.PLANT_SHORT[k]) || k;
+    const byPlant = new Map(); for (const r of runs) { const k = r.plant || 'other', x = byPlant.get(k) || { n: 0, km: 0 }; x.n++; x.km += (r.lengthM || 0) / 1000; byPlant.set(k, x); }
+    const band = (f, r) => (WP && WP[f] ? WP[f](r) : '–');
+    const row = r => `<tr${r.risky ? ' class="t-tight"' : ''}><th scope="row" class="ft-pin" data-l="Sewer">${r.d} mm${r.mat ? ` ${esc(r.mat)}` : ''}</th><td class="n" data-l="Installed">${r.year ? `${r.year} <small>${r.age} yrs</small>` : '–'}</td><td data-l="Risk">${r.risk ? esc(r.risk.charAt(0) + r.risk.slice(1).toLowerCase()) : 'not rated'}</td><td class="n" data-l="Units at build-out">${fmtNum(Math.round(r.units))}</td><td class="n" data-l="Segments">${fmtNum(r.n)}</td><td class="n" data-l="Length">${fmtNum(Math.round(r.lengthM))} m</td><td data-l="Plant">${r.plant ? esc(plant(r.plant)) : '–'}</td><td class="n" data-l="Likelihood">${band('likeOf', r)}</td><td class="n" data-l="Consequence">${band('consOf', r)}</td></tr>`;
+    el.innerHTML = `${U.SCREEN_NOTE || ''}<section class="pipes-grid">${s.chart}</section>
+      <h3 class="sub-title">By plant</h3><div class="ft-scroll"><table class="dt"><thead><tr><th>Plant</th><th class="n">Sewer runs</th><th class="n">Length</th></tr></thead><tbody>${[...byPlant.entries()].sort((a, b) => b[1].km - a[1].km).map(([k, x]) => `<tr><th scope="row">${esc(k === 'other' ? 'Other' : plant(k))}</th><td class="n">${fmtNum(x.n)}</td><td class="n">${fmt1(x.km)} km</td></tr>`).join('')}</tbody></table></div>
+      <h3 class="sub-title">Every run on the list <span class="muted small">(${fmtNum(runs.length)}, most units first; likelihood and consequence: the grid's bands, 1–3)</span></h3>
+      <p class="small"><button type="button" class="btn small" data-ws-pipescsv>Export the list (CSV)</button></p>
+      <div class="ft-scroll"><table class="dt ft-table pipes-full"><thead><tr><th class="ft-pin">Sewer</th><th class="n">Installed</th><th>Risk</th><th class="n">Units at build-out</th><th class="n">Segments</th><th class="n">Length</th><th>Plant</th><th class="n">Likelihood</th><th class="n">Consequence</th></tr></thead><tbody>${runs.map(row).join('')}</tbody></table></div>`;
+  }
+  const pipesOpen = () => { const A = root.PeelAnalysisTabs; return !!A && A.getFootTab() === 'svc' && A.getSvcSub() === 'pipes'; };
+  // (Old pipes open: drawn again with the rest, as its sewer load follows the developments and criteria)
+  const renderAll = () => { render(); renderChecks(); renderNetBar(); if (pipesOpen()) renderPipes(); };
   // Render on entering the sub-view (PeelAnalysisTabs.showFootTab).
-  const renderFor = sub => { if (sub === 'capacity') render(); else if (sub === 'network') { renderNetBar(); const rows = !(root.DevScope && root.DevScope.current()) && collect(); if (rows) renderNetworkPanel(rows); } };
+  const renderFor = sub => { if (sub === 'capacity') render(); else if (sub === 'network') { renderNetBar(); const rows = !(root.DevScope && root.DevScope.current()) && collect(); if (rows) renderNetworkPanel(rows); } else if (sub === 'pipes') renderPipes(); };
   if (typeof document !== 'undefined') document.addEventListener('click', e => {
     if (!e.target.closest) return;
     const s = e.target.closest('[data-cap-sort]'); if (s) { st.sort = s.dataset.capSort; if (U.store) U.store.set('capSort', st.sort); render(); return; }
@@ -499,7 +524,7 @@
     const box = d.querySelector('#dev-fire'), p = root.PeelDevNav && root.PeelDevNav.getCurrentProject();
     if (box && p && /^Looking up/.test(box.textContent.trim()) && root.PeelSiteContext && root.PeelSiteContext.fillFire) root.PeelSiteContext.fillFire(p);
   }, true);
-  const api = { SYSTEM, derive, impactOf, sortRows, listRow, renderNetworkPanel, renderSiteNetwork, yTxt, pctTxt, collect, partial: () => lastPartial, tableHTML, panelSpec, fullTableHTML, reachText, numOnly, render, renderChecks, checksRows, renderNetBar, renderAll, renderFor, syncDetail };
+  const api = { SYSTEM, derive, impactOf, sortRows, listRow, renderNetworkPanel, renderSiteNetwork, yTxt, pctTxt, collect, partial: () => lastPartial, tableHTML, panelSpec, fullTableHTML, reachText, numOnly, render, renderChecks, checksRows, renderNetBar, renderAll, renderFor, renderPipes, syncDetail };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSvcCapacity = api;
 })(typeof window !== 'undefined' ? window : globalThis);

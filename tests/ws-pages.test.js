@@ -144,7 +144,8 @@ test('every workspace has a page builder; pages open from Home, chips and the ma
   // A page's map buttons open the workspace's map view; Full map is the all-tools map; the map view has
   // a way back to the page.
   assert.match(w, /const pg = e\.target\.closest\('\[data-ws-page\]'\);\s*if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage\); return; \}/);
-  assert.match(src('index.html'), /data-ws-backpage title="Back to this workspace's page">← Page<\/button>/);
+  // (navigation phase 6c: ← Page goes back at the same tab and view, the map view's only way back besides Full map)
+  assert.match(src('index.html'), /data-ws-backpage title="Back to the page, at the same tab and view">← Page<\/button>/);
   // Study area: the map itself moves onto the page and back.
   assert.match(w, /function placeMap\(\) \{\s*const m = \$\('#map'\), slot = \$\('#page-map-slot'\);/);
   assert.match(s, /<div class="page-map-slot" id="page-map-slot"><\/div>/);

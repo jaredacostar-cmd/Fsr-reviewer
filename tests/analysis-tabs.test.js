@@ -76,7 +76,7 @@ test('sub-view defaults: gSub pipeline, dcSub timing, Servicing capacity, Record
 
 test('sub-view valid values: at most four per tab', () => {
   assert.deepEqual(plain(AT.TABSUBS.growth.valid), ['pipeline', 'areas', 'timing']);
-  assert.deepEqual(plain(AT.TABSUBS.svc.valid), ['capacity', 'network', 'fsr']);
+  assert.deepEqual(plain(AT.TABSUBS.svc.valid), ['capacity', 'network', 'pipes', 'fsr']);
   assert.deepEqual(plain(AT.TABSUBS.dca.valid), ['timing', 'eas', 'projects']);
   assert.deepEqual(plain(AT.TABSUBS.records.valid), ['sources', 'checks', 'files']);
 });
@@ -126,8 +126,9 @@ test('index.html: growth sub-views (Pipeline · Areas · Forecast)', () => {
   assert.ok(HTML.includes('id="pane-growth-ledger" data-pane="growth" data-sub="timing"') && HTML.includes('id="ledger-body"'), 'its pane in Forecast’s full table, id kept');
 });
 
-test('index.html: Servicing sub-views (Capacity · Network, and FSR review at a development), the hydraulic check behind Labs in Network, pumping stations in Network', () => {
-  for (const [k, t] of [['capacity', 'Capacity'], ['network', 'Network'], ['fsr', 'FSR review']]) assert.ok(HTML.includes(`data-svcsub="${k}">${t}</button>`), k);
+test('index.html: Servicing sub-views (Capacity · Network · Old pipes, and FSR review at a development), the hydraulic check behind Labs in Network, pumping stations in Network', () => {
+  for (const [k, t] of [['capacity', 'Capacity'], ['network', 'Network'], ['pipes', 'Old pipes'], ['fsr', 'FSR review']]) assert.ok(HTML.includes(`data-svcsub="${k}">${t}</button>`), k);
+  assert.ok(HTML.includes('id="pane-svc-pipes" data-pane="svc" data-sub="pipes"') && HTML.includes('id="pipes-body"'), 'Old pipes’ full table (navigation phase 6c)');
   assert.ok(!/data-svcsub="(alloc|checks)"/.test(HTML), 'Allocations and Model checks are no chips (navigation phase 2)');
   assert.ok(/class="f-pane svc-pane lab-hydro" id="pane-hydro" data-pane="svc" data-sub="network"/.test(HTML) && HTML.includes('id="hyd-box"'), 'hydro pane in Network, Labs');
   assert.ok(HTML.includes('id="pane-pumpstations" data-pane="svc" data-sub="network"') && HTML.includes('id="pumpstations-body"'), 'pumping stations in Network');
