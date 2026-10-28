@@ -1,0 +1,14 @@
+# Area comparison sheet (scripts/compare-areas.js, docs/ledger/area-compare.md).
+# Copy it to reports-internal/ (never committed) and fill the blank columns there. Leave this file blank.
+# match: <area id in data/areas.json, e.g. sp:caledon:alloa> | circle:<lng>,<lat>,<metres> | geojson:<path> | dev:<ledger id>; ';' between parts.
+# The Macville and North Hill circles and Heritage Heights (the whole secondary plan) are stand-ins: replace them with a
+# geojson: boundary when you have one (keep that file in reports-internal/ too).
+area,match,start_year,fsr_units,units_not_deferred,capital_deferred_m,notes
+Mayfield West (Phase 1) Stage 2,sp:caledon:mayfield-west,,,,,
+Alloa Phases 1 and 2,sp:caledon:alloa,,,,,
+Heritage Heights (North of CNR),sp:brampton:52:-heritage-heights,,,,,
+Bram West SP40A,sp:brampton:40-a-:-bram-west,,,,,
+Streetsville,sp:mississauga:streetsville-cn;sp:mississauga:streetsville-nhd,,,,,
+Macville,"circle:-79.802438,43.874636,2000",,,,,
+North Hill Bolton,"circle:-79.76653,43.89734,1500",,,,,
+Uptown Mississauga,sp:mississauga:uptown-mn,,,,,
