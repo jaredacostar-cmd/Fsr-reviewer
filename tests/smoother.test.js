@@ -80,7 +80,10 @@ test('phone: the map\'s way back sits above the bottom sheet, where it can be ta
   assert.match(app, /analysisEl\.style\.setProperty\('--analysis-h', v\); document\.documentElement\.style\.setProperty\('--sheet-h', v\);/, 'while dragged too');
   // At full the sheet stops under the bar while it shows (a kept Inquiry draft opens the sheet full), and
   // the full height is worked out again when the bar comes or goes.
-  assert.match(app, /const back = document\.querySelector\('#back-bar:not\(\[hidden\]\)'\), backH = back \? Math\.round\(back\.getBoundingClientRect\(\)\.height\) \+ 8 : 0;\n\s+if \(name === 'full'\) return Math\.max\(240, Math\.round\(vh - footH - topB - backH\) - 8\);/);
+  // (and under a map view's bar, ← Page, the search and Full map, while it shows: navigation phase 6c, the panels'
+  // Full map → gone with their source line; setMode's renderBack works it out again)
+  assert.match(app, /const back = document\.querySelector\('#back-bar:not\(\[hidden\]\)'\), backH = back \? Math\.round\(back\.getBoundingClientRect\(\)\.height\) \+ 8 : 0;\n\s+const ws = document\.querySelector\('#ws-bar:not\(\[hidden\]\) \.ws-top'\), wsH = ws \? Math\.max\(0, Math\.round\(ws\.getBoundingClientRect\(\)\.bottom - topB\)\) \+ 8 : 0;\n\s+if \(name === 'full'\) return Math\.max\(240, Math\.round\(vh - footH - topB - backH - wsH\) - 8\);/);
+  assert.match(src('js/workspaces.js'), /const bar = \$\('#ws-bar'\); if \(bar\) bar\.hidden = m !== 'ws';[\s\S]+?renderBack\(\);/, 'the bar shown or hidden before renderBack works the full height out again');
   // (navigation phase 6: renderBack(relabel), the label alone redrawn as a view is picked on the full map)
   const rb = src('js/workspaces.js'), i = rb.indexOf('  function renderBack(relabel) {');
   assert.ok(i > 0, 'renderBack');

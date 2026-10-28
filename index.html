@@ -187,10 +187,10 @@
 
     <main class="map-wrap">
       <div id="map" aria-label="Map of developments"></div>
-      <!-- Stage 4: a workspace's search box and task chips over the map (js/workspaces.js). -->
+      <!-- Stage 4: a workspace's map view: ← Page, the search box and Full map over the map (js/workspaces.js; the
+           task chips under it went in navigation phase 6c). -->
       <div class="ws-bar" id="ws-bar" hidden>
-        <div class="ws-top"><button type="button" class="btn small ws-fullbtn" data-ws-backpage title="Back to this workspace's page">← Page</button><div class="ws-search" id="ws-search"></div><button type="button" class="btn small ws-fullbtn" data-ws-full title="Every layer, filter and tool, with the same scope, filters and scenario">Full map</button></div>
-        <div class="ws-chips" id="ws-chips" role="toolbar" aria-label="Tasks"></div>
+        <div class="ws-top"><button type="button" class="btn small ws-fullbtn" data-ws-backpage title="Back to the page, at the same tab and view">← Page</button><div class="ws-search" id="ws-search"></div><button type="button" class="btn small ws-fullbtn" data-ws-full title="Every layer, filter and tool, with the same scope, filters and scenario">Full map</button></div>
       </div>
       <div class="tool-banner" id="tool-banner" role="status" hidden></div>
       <div id="presentation-bar" hidden>
@@ -246,6 +246,7 @@
       <div class="f-pane f-subtabs svc-subtabs" data-pane="svc" hidden role="group" aria-label="Servicing view">
         <button type="button" class="btn small" data-svcsub="capacity">Capacity</button>
         <button type="button" class="btn small" data-svcsub="network">Network</button>
+        <button type="button" class="btn small" data-svcsub="pipes">Old pipes</button>
         <button type="button" class="btn small" data-svcsub="fsr">FSR review</button>
       </div>
       <section class="f-pane pnl-host" id="pnl-svc" data-pane="svc" aria-labelledby="ftab-svc" hidden></section>
@@ -292,6 +293,8 @@
         <div class="tb-head"><h2 class="sr">Hydraulic check</h2></div>
         <div id="hyd-box"></div>
       </section>
+      <!-- Old pipes (navigation phase 6c): the grid, by plant and every run on the list, its CSV (js/svc-capacity.js renderPipesTable). -->
+      <section class="f-pane svc-pane" id="pane-svc-pipes" data-pane="svc" data-sub="pipes" role="tabpanel" aria-labelledby="ftab-svc" hidden><div class="tb-head"><h2 class="sr">Old pipes</h2></div><div id="pipes-body"></div></section>
 
       <div class="f-pane f-subtabs" data-pane="dca" hidden role="group" aria-label="Capital view"><button type="button" class="btn small" data-dcasub="timing">DC timing</button><button type="button" class="btn small" data-dcasub="eas">EAs</button><button type="button" class="btn small" data-dcasub="projects">Projects</button></div>
       <section class="f-pane pnl-host" id="pnl-dca" data-pane="dca" aria-labelledby="ftab-dca" hidden></section>

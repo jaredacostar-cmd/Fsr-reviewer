@@ -24,9 +24,9 @@
 
   // The views of Home, the page host at an area (Peel, a municipality, a plan; navigation phase 6): every tab's
   // chips at an area (js/analysis-tabs.js chipsAt), each a page builder where a page adds to the panel (Home's
-  // groups, the drill and its table, the reserve, a project in place, EA to construction, the sources) or the
-  // map's panel itself, its footer's actions first (ws: the map view its Open the map opens; none for Records,
-  // which opens the full map at the view).
+  // groups, the drill and its table, the reserve, Old pipes' small map, a project in place, EA to construction, the
+  // sources) or the map's panel itself, its footer's actions first (ws: the map view its Open the map opens; none
+  // for Records, which opens the full map at the view).
   const VIEWS = {
     area: {
       'overview:': { page: 'home' },
@@ -35,6 +35,7 @@
       'growth:timing': { page: 'outlook' },
       'svc:capacity': { page: 'tight' },
       'svc:network': { keys: ['svc:network'], ws: 'tight' },
+      'svc:pipes': { page: 'pipes' },
       'dca:timing': { page: 'projects' },
       'dca:eas': { page: 'eaflow' },
       'dca:projects': { keys: ['dca:projects'], ws: 'projects' },

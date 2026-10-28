@@ -417,10 +417,13 @@
     const footH = $('#footer') ? $('#footer').getBoundingClientRect().height : 0;
     if (name === 'half') return Math.round(vh * 0.5);
     // Full stops at the top bar, so the sheet's tabs and the panel header stay in view, and under the
-    // map's way back to a page when it shows (js/workspaces.js renderBack), so it can still be tapped.
+    // map's way back to a page when it shows (js/workspaces.js renderBack), so it can still be tapped;
+    // in a map view under its bar, ← Page, the search and Full map (the panels' Full map → went with
+    // their source line, navigation phase 6c; setMode works it out again as the bar comes or goes).
     const topB = $('#topbar') ? Math.max(0, $('#topbar').getBoundingClientRect().bottom) : 0;
     const back = document.querySelector('#back-bar:not([hidden])'), backH = back ? Math.round(back.getBoundingClientRect().height) + 8 : 0;
-    if (name === 'full') return Math.max(240, Math.round(vh - footH - topB - backH) - 8);
+    const ws = document.querySelector('#ws-bar:not([hidden]) .ws-top'), wsH = ws ? Math.max(0, Math.round(ws.getBoundingClientRect().bottom - topB)) + 8 : 0;
+    if (name === 'full') return Math.max(240, Math.round(vh - footH - topB - backH - wsH) - 8);
     return 96;
   }
   function setAnalysisSnap(name, save = true) {

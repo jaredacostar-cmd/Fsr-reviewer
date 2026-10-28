@@ -1528,7 +1528,13 @@ demand. Nothing about a site is only in the full map.
 
 Home's sidebar has one **Explore** entry for what were five: Growth in an area, Check a site,
 Review an FSR, Forecast and Study area are its views. Since navigation phase 6 an area's two are Home's
-tabs (Growth › Areas and Growth › Forecast): Explore opens them there.
+tabs (Growth › Areas and Growth › Forecast). Explore opens the site you have open, else the last of its
+views you used (Check a site, Review an FSR, Study area, or Home's Growth › Areas / Forecast), else Home ›
+Growth › Areas. The row of the five views at the top of each is gone (navigation phase 6c, §5 row 45): Home's
+Growth tab, the search (a site), Draw an area (Study area) and *Check FSR* in a site's header (Review an FSR)
+reach the same places, and Check a site's and Review an FSR's first steps each end with a link to the other's
+list (*Files with an FSR posted → Review an FSR*, *Any development → Check a site*), until phase 7's Find
+lists both.
 - The one search (an address, a file number, a description) and **Draw an area** are in every
   page's header, not only Explore's (see *Find from every page* below). A site picked from an area
   view (the search, a list row, the map) opens on its page.
@@ -1553,7 +1559,7 @@ tabs (Growth › Areas and Growth › Forecast): Explore opens them there.
   own verdict. Review outlets also opens from Records › Data checks (*Review outlets →*) and the
   sidebar (QA/QC).
 - The views keep their own ids (`site`, `fsr`, `growth`, `outlook`, `study`), so links, share links and
-  the map-view chips still work; Explore opens the site in scope, else the last view used.
+  the map views' `#w=` links still work.
 - A site's page has the **live map** beside the open tab's answer, at the site, with the infrastructure around
   it: existing water, sanitary and storm mains (from street zoom), the 2026 DC works, Region
   construction and the EA study areas, and the developments; each layer is a chip under the map.
@@ -1634,8 +1640,9 @@ On a page, a pick opens what it found (`js/workspaces.js` `pageRoute` and `route
 
 - **Servicing** (Home's tab; the sidebar's Servicing capacity opens it at Capacity): **Capacity** (the
   Servicing capacity page's builder: limits, the 90% trigger, the uncommitted reserve, no relief in time;
-  the allocations recorded a fold of it, navigation phase 2, below) and **Network** (the map's panel,
-  its footer's actions first).
+  the allocations recorded a fold of it, navigation phase 2, below), **Network** (the map's panel,
+  its footer's actions first) and **Old pipes** (the sidebar's Old pipes opens it: one spec with the map's
+  panel, its small map of the runs beside it; navigation phase 6c, below).
 - **Capital** (Home's tab; the sidebar's Capital opens it at DC timing): **DC timing** (the Capital
   page's builder: every 2026 DC project with both verdicts; a project opens in place, with its map, and
   *Open the map* opens its card there), **EAs** (the EAs, then EA to construction) and **Projects** (the
@@ -1647,7 +1654,8 @@ On a page, a pick opens what it found (`js/workspaces.js` `pageRoute` and `route
 ## Servicing and Records (navigation phase 2)
 
 Navigation phase 2 (docs/architecture-review/navigation-design.md §3.4, §5, §7). Servicing has two
-views, **Capacity · Network**, at Peel as at a development (where Capacity is hidden, as before).
+views, **Capacity · Network**, at Peel as at a development (where Capacity is hidden, as before). (Phase 5
+adds FSR review at a development, phase 6c Old pipes at an area: *Home hosts the map's tabs*, its 6c part.)
 
 - **Allocations recorded** is a fold of Capacity's panel (the status, each plant's room at the 90%
   trigger after the allocations, the latest five, and *Export or import the CSV ›*). Its tables (the
@@ -2000,6 +2008,7 @@ map's (`js/analysis-tabs.js` `viewKey`), so a pick on either is the other's, sto
 | Growth › Forecast | The Forecast page's builder, By period first |
 | Servicing › Capacity | Servicing capacity's builder: the limits, the reserve, the allocations fold |
 | Servicing › Network | The map's panel |
+| Servicing › Old pipes | The Old pipes page's builder: the map's panel (one spec), its small map (navigation phase 6c) |
 | Capital › DC timing | The Capital page's builder: a project opens in place, with its map |
 | Capital › EAs | The EAs page's builder, with EA to construction |
 | Capital › Projects | The map's panel |
@@ -2011,15 +2020,18 @@ the map's panel shows its footer's actions first (Network's *Show the network on
 *Show them on the map* and *CSV: every contract*, Data checks' *Duplicate check* and *Review outlets*),
 then *Open the map* and *Full table*. A view drawn by its page builder keeps that page's own actions (DC
 timing's *Open the map* and *Full table*, not its panel's *Show the planned works*), as before this phase.
+A *Show … on the map* action, on a page or a panel, sets that lens (`js/topbar.js`; a page's on the full map,
+at its tab and view; the System as it is); before the 6c review only the top bar's switch set it, so these
+opened the map at the lens it had.
 
 - **The old pages are views of Home.** Growth in an area, the Forecast, What's coming, Servicing capacity,
-  Capital (DC timing, EAs) and Data sources keep their page ids (links, sidebar entries, buttons, the start
-  screen's last workspace): each opens Home at its tab and view (`js/workspaces.js` `HOST`, `hostOf`), its
-  fold open (What's coming: By period; EAs: EA to construction), and Home is lit in the sidebar. A view picked
-  on the strip that is one of them (Growth › Forecast, Capital › EAs) is the start screen's last workspace, as
+  Capital (DC timing, EAs), Data sources (and Old pipes since 6c, below) keep their page ids (links, sidebar
+  entries, buttons, the start screen's last workspace): each opens Home at its tab and view (`js/workspaces.js`
+  `HOST`, `hostOf`), its fold open (What's coming: By period; EAs: EA to construction), and Home is lit in the
+  sidebar. A view picked on the strip that is one of them (Growth › Forecast, Capital › EAs, Servicing › Old
+  pipes) is the start screen's last workspace, as
   the old section bars' buttons were (a view that is none, such as Servicing › Network, leaves it). Their
-  section bars are gone (the strip), and so is Explore's views bar on them (a site's page, Review an FSR
-  and Study area keep it until phase 6c).
+  section bars are gone (the strip), and so is Explore's views bar on them (on every page since 6c, below).
 - **Servicing and Capital show "loading"** until their data lands, on Home's strip and on the map's (they
   used to appear late on the map): picked early, the tab is lit, says loading and opens as soon as it can
   (the pick is held: `heldTab`, `wantedTab`); on a phone the word is "…". Capital › EAs needs neither the
@@ -2029,7 +2041,8 @@ timing's *Open the map* and *Full table*, not its panel's *Show the planned work
   (`data-ws-keep`) opens its map view, with its layers, at the same tab and view; the map view's *← Page*
   goes back to Home at the map's tab and view as they were left; the full map's *← Back to Home ›
   Servicing › Network* names the view and keeps it (and follows a tab picked on the full map meanwhile); its
-  way back to a task's map view (Old pipes, This week) opens that view's own tab again, as before. A
+  way back to a task's map view (This week, Review outlets) opens that view's own tab again, as before (Old
+  pipes' is a host's since 6c, kept as the map was left). A
   development or facility opened on the map (a search pick, a facility link) shows its own Overview, which Home
   closes on the way back (it hosts an area), so there *← Page* lands on the map view's page at its own view and
   the back bar at the view the page was left at, never on Home's Overview (`scopeOverview`, `backView`).
@@ -2142,8 +2155,8 @@ FSR review row are gone.
   Overview from the top. A result kept at the site (the Inquiry draft) keeps *Peel › the site › the
   draft*. On a phone the trail scrolls in its own box, scrolled to its end (the site).
 - **Phones** (390 px): above the answer the header, the strip and, on Servicing, the views row (the site's
-  own trail line is gone; Home's ☰ row stays until phase 7 and Explore's views bar until phase 6c); the
-  strip scrolls sideways in its own box, the open tab in view.
+  own trail line is gone, and Explore's views bar since 6c; Home's ☰ row stays until phase 7); the strip
+  scrolls sideways in its own box, the open tab in view.
 
 Old names still land (`js/workspaces.js` `SITE_HOST`, `SITE_SEC`, `hostOf(id, { site })`; tests/nav-aliases.test.js
 "phase 6b"):
@@ -2159,6 +2172,65 @@ Old names still land (`js/workspaces.js` `SITE_HOST`, `SITE_SEC`, `hostOf(id, { 
 | The site's own trail line (Peel › municipality › plan › site, each a `data-ws-explore` step) | The top bar's trail at the development |
 | `siteAt`, `data-ws-sec`, `viewsBar`, `PeelSections.SITE` / `BY_ID` / `viewOf`, `siteTrail`, `exploreBar` | Gone (the strip, the trail; `fileAt` marks a file) |
 
+### The views bar, the task chips and the source line go; Old pipes is a Servicing view; one This week (6c)
+
+Navigation phase 6c (§3.4 "WS BAR ← Page · search · Full map", §5 rows 2, 16, 18, 22, 45, 63, 71; N-2, N-3).
+
+- **Explore's views bar is gone** from the site's page, Review an FSR's and Check a site's Find steps and
+  Study area (one row less above the answer on a phone): see *Explore* above. The two Find steps link to each
+  other's list in their step line (`js/ws-pages.js` `find`), so Review an FSR's *Files with an FSR posted*, the
+  FSR reviewer's start, stays one click from Check a site's, and back; Help › Start here's role buttons open
+  both.
+- **A workspace's map view is the map with only its layers**, the panel at its tab and view, and over the map
+  **← Page · the search · Full map** (its *← Page*: "Back to the page, at the same tab and view"). The twelve task
+  chips under the search and every panel's source line ("Servicing capacity · from Servicing › Capacity",
+  *Full map →*, and once a site was open "✓ Find › Result › Output") are gone: a page's *Open the map* is the
+  way in (its layer preset, `LAYERS`, applied once, the page's tab and view kept), *← Page* the way back, the
+  page's strip and the panel's own trail name the place. A `#w=<id>` link (all twelve) still opens its map view
+  at its tab and view with its preset and only its layers (`startScreen` → `go`). Phone: one row less over the
+  map. (Browser path *A map view without task chips*: a cold `#w=tight` opens it with the capacity colours and
+  the wastewater blocks, a layer the reader turns on stays on through the map's chips; a cold `#w=week` is the
+  one This week spec below, *Open in Watch* on its panel and on its page opens the Watch tab.)
+- **One This week** (`js/ws-pages.js` `weekSpec`): the page, its map view (`#w=week`, the Overview panel there,
+  `js/workspaces.js` `override`) and Home's *Change* figures read one spec: the answer (the changes since the
+  last data update), the four figures (moved stage, new, capital and EA dates, on a tight plant), the lists
+  (Moved stage, New files, Capital and EA dates, Your watch list, and the capacity alerts only when the weekly
+  feed is published: owner decision 8), the method and sources. Its rows are a panel's (a development opens it,
+  a date its record; on the map the top five and *See all* into the Overview's full table); the page makes them
+  its own (a development opens its page; a date the map view at it). Its first action is **Open in Watch** (was
+  *Watch list*): the full map's Watch, the watch list and alerts. Home's *on a tight plant* figure is the spec's,
+  without building the page. Workspaces.js's own `weekSpec` (the Overview's This week rows, top five) is gone.
+- **Old pipes is Servicing › Old pipes** (`svc:pipes`; §3.4, §5 rows 9, 21, 38, 104, 136): an area's third
+  Servicing view, Capacity · Network · Old pipes, on Home and the map (at a development Servicing shows Network in
+  its place, and the pick comes back at an area; `HIDDEN.site`). One spec (`js/workspaces.js` `pipesSpec`) is the
+  map's panel (`js/svc-capacity.js` `renderFor`) and Home's view (`js/ws-pages.js` `pipes`): the four figures
+  (sewer runs on the list, their length, the oldest and most loaded, the pipes rated moderate risk), the
+  likelihood × consequence grid as its chart (`pipeGridHTML`: one grid), the runs (most units first, each opening
+  the pipe and what loads it) and the plants they drain to; its first action **Export the list (CSV)**, then *Show
+  the sewers on the map*. Its full table (`#pane-svc-pipes`, new; no pane id changed) is the grid, the runs by
+  plant and every run (size, installed, risk, units at build-out, segments, length, plant, its grid bands), with
+  the CSV. On the map (a map view or the full map, never under a page) the **amber pipes** show while it is open
+  (`syncPipes`, run on every tab or view shown; drawn once per list), and stay around a run picked from it (its
+  pipe's result on Overview) and after that closes, until another tab or view is shown. It was a page of its own (Asset
+  Management) whose map view put its own panel over Servicing › Network (the `pipesSpec` override, gone); the
+  sidebar's Old pipes, Help's role buttons and old links open Home › Servicing › Old pipes. It is Peel's sewers,
+  so below Peel it says Peel-wide, as Servicing's other views do. Phone: three chips in the row; the grid fits the
+  sheet, scrolling inside its own box if it must.
+
+Old names still land (`js/workspaces.js` `startScreen`, `go`, `HOST`; `js/analysis-tabs.js` `SUB_MAP`;
+tests/nav-aliases.test.js "phase 6c"):
+
+| Old | Where it opens now |
+|---|---|
+| `#w=<id>` (all twelve: `site`, `tight`, `growth`, `fsr`, `outlook`, `study`, `projects`, `eaflow`, `outlets`, `pipes`, `coming`, `week`) | Its map view at its tab and view, with its layer preset, without a chip row |
+| Explore's views bar's buttons | Home's Growth tab, the search, Draw an area, a site's *Check FSR*; the Find steps' links |
+| `#w=week` | The map view at Overview, the one This week spec in its panel |
+| `#w=p:pipes`, `data-ws-page="pipes"` (the sidebar's Old pipes, Help's role buttons), a stored last workspace `pipes`; a link copied on the Old pipes page in 6a or 6b (`w=p:pipes&nav=3&t=svc&svs=network`: the map's tab behind the page, whatever tab it names) | Home › Servicing › Old pipes (`HOST.pipes`; the id stays the last workspace, a strip pick of Old pipes stores it; `js/share.js` reads that nav=3 link as an older page link) |
+| `#w=pipes`; a link made in its map view before 6c (`w=pipes&t=svc&svs=network`: its panel sat on Network) | The map view at Servicing › Old pipes, its amber pipes on (`js/share.js` reads that link's Network as Old pipes) |
+| `t=svc&svs=pipes` (new), a stored `svcSub: 'pipes'` | Servicing › Old pipes; at a development Network, Old pipes again at an area |
+| The `pipesSpec` override on Servicing › Network, the layer tied to the Old pipes map view | Gone (Servicing › Old pipes' own panel; `syncPipes`) |
+| `viewsHTML`, `m.views`, `.page-views`, `renderChips`, `#ws-chips`, `.ws-chip`, `srcLine`, `sourceText`, `plan().source`, `.pnl-src`, workspaces.js's `weekSpec` | Gone (no producer left) |
+
 ## Reference and This week
 
 - **Reference** is one sidebar entry: **Help**, **How it works** (and each guide), the **Glossary**,
@@ -2166,7 +2238,9 @@ Old names still land (`js/workspaces.js` `SITE_HOST`, `SITE_SEC`, `hostOf(id, { 
   Records › Data checks (the old Data tab; navigation phase 6): Help's bar links there.
 - **This week** carries **Your watch list** (the developments starred ☆ Watch, each with its stage
   and whether it changed this week, changed ones first) and the week's **capacity alerts** from the
-  weekly feed, both of which were only in the full map's Watch tab.
+  weekly feed, both of which were only in the full map's Watch tab. One spec draws it, on its page, in its
+  map view and in Home's *Change* figures (navigation phase 6c); its first action, *Open in Watch*, opens the
+  full map's Watch tab.
 
 ## Home: the briefing
 
@@ -2193,7 +2267,8 @@ Old names still land (`js/workspaces.js` `SITE_HOST`, `SITE_SEC`, `hostOf(id, { 
   Capacity.
 - Home's sidebar has nine entries: Home and This week, then by team Explore, Servicing capacity and
   What's coming (Planning), Capital, Review outlets (QA/QC), Old pipes (Asset Management) and
-  Reference, then Full map; What's coming opens Growth › Forecast on Home, By period first and open.
+  Reference, then Full map; What's coming opens Growth › Forecast on Home, By period first and open, and
+  Old pipes Servicing › Old pipes (navigation phase 6c).
 
 ## Build-out: planned vs permitted vs left to build
 

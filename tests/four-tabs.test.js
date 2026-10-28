@@ -29,9 +29,9 @@ function loadTabs({ labs = [], site = false, publicView = false, siteEas = 3 } =
   return ctx.module.exports;
 }
 
-// The spec's inventory: the chips each tab shows at each scope.
+// The spec's inventory: the chips each tab shows at each scope. (navigation phase 6c: Old pipes, an area's Servicing view)
 const SPEC = {
-  area: { overview: [], growth: ['pipeline', 'areas', 'timing'], svc: ['capacity', 'network'], dca: ['timing', 'eas', 'projects'], records: ['sources', 'checks'] },
+  area: { overview: [], growth: ['pipeline', 'areas', 'timing'], svc: ['capacity', 'network', 'pipes'], dca: ['timing', 'eas', 'projects'], records: ['sources', 'checks'] },
   site: { overview: [], growth: ['pipeline'], svc: ['network', 'fsr'], dca: ['timing'], records: ['files'] },
 };
 
@@ -63,7 +63,7 @@ test('1. sub-views per scope match the spec (Peel / area and a development)', ()
   const row = tab => { const i = HTML.indexOf(`f-subtabs`, HTML.indexOf(`data-pane="${tab}" hidden role="group"`) - 80); const s = HTML.slice(i, HTML.indexOf('</div>', i)); return [...s.matchAll(/data-(?:gsub|svcsub|dcasub|rsub)="(\w+)">([^<]+)</g)].map(m => m[2].trim()); };
   // (no two sub-views share a name: design bundle 2)
   assert.deepEqual(row('growth'), ['Pipeline', 'Areas', 'Forecast']);
-  assert.deepEqual(row('svc'), ['Capacity', 'Network', 'FSR review']);
+  assert.deepEqual(row('svc'), ['Capacity', 'Network', 'Old pipes', 'FSR review']);
   assert.deepEqual(row('dca'), ['DC timing', 'EAs', 'Projects']);
   assert.deepEqual(row('records'), ['Sources', 'Data checks', 'Files']);
 });
@@ -180,7 +180,9 @@ test('4. old links and stored views map to the new tabs', () => {
   // The share link reads the old sub-view param for the old tab, and turns on the Labs switch an old
   // funding-screen or hydraulic-check link needs; new links carry svs / rs.
   const sh = src('js/share.js');
-  assert.match(sh, /const oldSub = pageWs \? pageWs\.sub : t === 'ww' \|\| t === 'water' \? q\.get\('ws'\) : t === 'growth' \? q\.get\('gs'\) : t === 'dca' \? q\.get\('dcs'\) : t === 'svc' \? q\.get\('svs'\) : t === 'records' \? q\.get\('rs'\) : null;/);
+  // (svs: the link's own, but Network on a link to Old pipes' map view from before navigation phase 6c is Old pipes)
+  assert.match(sh, /const svs = w === 'pipes' && t === 'svc' && q\.get\('svs'\) === 'network' \? 'pipes' : q\.get\('svs'\);/);
+  assert.match(sh, /const oldSub = pageWs \? pageWs\.sub : t === 'ww' \|\| t === 'water' \? q\.get\('ws'\) : t === 'growth' \? q\.get\('gs'\) : t === 'dca' \? q\.get\('dcs'\) : t === 'svc' \? svs : t === 'records' \? q\.get\('rs'\) : null;/);
   assert.match(sh, /if \(window\.PeelLabs && \(m\.dcSub === 'funding' \|\| q\.get\('dcs'\) === 'funding'\)\) window\.PeelLabs\.set\('funding', true\);/);
   assert.match(sh, /if \(window\.PeelLabs && q\.get\('t'\) === 'water' && q\.get\('ws'\) === 'hydro'\) window\.PeelLabs\.set\('hydro', true\);/);
   assert.match(sh, /if \(tab === 'svc'\) set\('svs', AT\(\)\.getSvcSub\(\)\); if \(tab === 'records'\) set\('rs', AT\(\)\.getRSub\(\)\);/);

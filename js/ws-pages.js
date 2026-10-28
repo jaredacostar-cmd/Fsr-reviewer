@@ -1,7 +1,7 @@
 (function (root) {
   'use strict';
   // ---- Workspace pages (Stage 4b) -------------------------------------------------------------------
-  // Each task chip opens a page in Home's layout: the workspace list on the left (js/workspaces.js) and,
+  // Each workspace opens a page in Home's layout: the workspace list on the left (js/workspaces.js) and,
   // on the right, the question, a one-sentence answer, caveat lines, four figures, a list beside a small
   // map, more short lists, folds (method, sources) and the actions. The pages lay out what the tabs
   // already work out (their panels, js/panel.js); the few figures added here are derived from those
@@ -60,7 +60,6 @@
     // (a zero is never coloured; n/a is never a figure)
     const figs = (m.figures || []).filter(f => f && !/^(n\/a|–|-)$/i.test(String(f.v))).slice(0, 4).map(f => (String(f.v) === '0' && f.tone ? { ...f, tone: null } : f));
     const out = [];
-    if (m.views) out.push(m.views);
     // (the scenario chip sits in the title row, beside the status: one row less above the answer)
     // (a site's page: its header's flags, ☆ Watch and tools, as on the map: js/panel.js toolsHTML)
     // One search on every page, Home included, with Draw an area beside it (navigation design §3.3):
@@ -133,6 +132,12 @@
     const g = [1, 2, 3].map(() => [1, 2, 3].map(() => ({ n: 0, km: 0 })));
     for (const r of runs) { const c = g[likeOf(r) - 1][consOf(r) - 1]; c.n++; c.km += (r.lengthM || 0) / 1000; }
     return g;   // g[like-1][cons-1]
+  }
+  // The grid as Servicing › Old pipes' chart (its map panel and Home's view: one grid, navigation phase 6c): runs and
+  // km in each cell, the worst likelihood on top.
+  function pipeGridHTML(runs) {
+    const g = pipeGrid(runs), cell = (l, c) => { const x = g[l - 1][c - 1]; return `<td class="pg-c pg-s${l + c}"><b>${fmtNum(x.n)}</b><small>${fmt1(x.km)} km</small></td>`; };
+    return `<h3 class="sub-title pnl-chart-t">Old sewer runs by age (likelihood) and the homes they carry (consequence) <span class="pnl-chart-u">(sewer runs, km)</span></h3><div class="pg-wrap"><table class="pg" aria-label="Old pipe runs by likelihood and consequence"><thead><tr><th scope="col">Likelihood ↓ · Consequence →</th>${[1, 2, 3].map(c => `<th scope="col">${CONS[c]}</th>`).join('')}</tr></thead><tbody>${[3, 2, 1].map(l => `<tr><th scope="row">${LIKE[l]}</th>${[1, 2, 3].map(c => cell(l, c)).join('')}</tr>`).join('')}</tbody></table></div><p class="small muted">Likelihood: install age (a moderate risk rating one band up). Consequence: planned units the run carries at build-out. Condition grades from inspection are not in the open data.</p>`;
   }
   // Approved, not yet built: units left to build in files past their first planning approval (draft or
   // site plan approved, permit issued, under construction), as development pipeline reports count them.
@@ -252,7 +257,7 @@
   // The first pumping into a pressure zone to reach its limit, 100% of firm pumping (Home's "first zone limit").
   const firstZone = rows => firstOf(rows, ['pump']);
 
-  const api = { pageHTML, sectionsOf, briefing, listHTML, tabsHTML, TAB_INFO, reserveRows, pipeGrid, likeOf, consOf, LIKE, CONS, approvedNotBuilt, COVERAGE, STAGES, COMMITTED_STAGES, STAGE_CLS, stageRows, stageOf, stageChartHTML, EST_KINDS, estimateRows, firstTrigger, firstZone };
+  const api = { pageHTML, sectionsOf, briefing, listHTML, tabsHTML, TAB_INFO, reserveRows, pipeGrid, pipeGridHTML, likeOf, consOf, LIKE, CONS, approvedNotBuilt, COVERAGE, STAGES, COMMITTED_STAGES, STAGE_CLS, stageRows, stageOf, stageChartHTML, EST_KINDS, estimateRows, firstTrigger, firstZone };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -572,7 +577,8 @@
     const hf = homeFigures(rows, ready, week), byL = re => hf.find(f => f && re.test(f.label)) || null;
     const people = (a.figures || []).find(f => f && f.u === 'people'), tm = specOf('growth:timing', areaScope), f31 = tm && (tm.figures || []).find(f => f && /2031/.test(f.label));
     const noRelief = rows.filter(r => r.relief === 'gap' && r.limit && r.limit.y != null).length;
-    let tightFiles = null; try { const wk = week && ready ? BUILD.week() : null; tightFiles = wk && (wk.figures || []).find(f => f && /tight plant/.test(f.label)); } catch (e) { tightFiles = null; }
+    // (Change: This week's own figure, from its one spec, not its page built here)
+    let tightFiles = null; try { const wk = week && ready ? weekSpec() : null; tightFiles = wk && (wk.figures || []).find(f => f && /tight plant/.test(f.label)); } catch (e) { tightFiles = null; }
     const go = page => ({ 'data-ws-page': page });
     // At a plan (the filter a drill or a plan pick sets: navigation phase 6, owner decision 10, the two-part rule): a
     // development partly in it is shown, and the plan's own figures count only its share in it, as Growth › Areas,
@@ -663,7 +669,10 @@
     // Bundle 6: the steps in one line under the search (not a list beside the map); Review an FSR
     // starts from the files that have an FSR posted (data/fsr.json), newest first.
     const steps = [['Find', 'search or pick one below'], ['Result', id === 'fsr' ? 'its servicing path with the FSR cross-check' : 'its servicing, timing and what to confirm'], ['Output', id === 'fsr' ? 'notes for the review' : 'the one-page servicing memo']];
-    const stepper = `<p class="pnl-stepper small" aria-label="Steps">${steps.map(([t, d], i) => `<span class="${i === 0 ? 'on' : ''}"><b>${i + 1}</b> ${esc(t)}: ${esc(d)}</span>`).join('<span class="muted" aria-hidden="true"> › </span>')}</p>`;
+    // (the other Find step's list, one click away: Explore's views bar is gone, navigation phase 6c, and until phase 7's
+    // Find this is the way to Review an FSR's files with an FSR posted, and back to Check a site's)
+    const other = id === 'fsr' ? ['site', 'Any development → Check a site'] : ['fsr', 'Files with an FSR posted → Review an FSR'];
+    const stepper = `<p class="pnl-stepper small" aria-label="Steps">${steps.map(([t, d], i) => `<span class="${i === 0 ? 'on' : ''}"><b>${i + 1}</b> ${esc(t)}: ${esc(d)}</span>`).join('<span class="muted" aria-hidden="true"> › </span>')}<span class="muted" aria-hidden="true"> · </span><button type="button" class="btn small link pnl-step-other" data-ws-page="${other[0]}">${esc(other[1])}</button></p>`;
     const F = root.PeelFsr;
     let fsrRows = null;
     if (id === 'fsr' && F) {
@@ -1059,8 +1068,12 @@
   }
 
   // ---- This week -----------------------------------------------------------------------------------
-  function week() {
-    const a = briefing(); if (!a) return waitingFor('week', 'Loading the changes…');
+  // One This week (navigation phase 6c, design §5 rows 2, 22, 63, 71): the page, its map view (the Overview panel
+  // there, js/workspaces.js override) and Home's Change figures read this one spec. Its rows are a panel's (a
+  // development data-pnl-dev, a capital or EA date data-ce-open, top 5 and See all into the Overview's full table on
+  // the map); the page makes them its own (week). null until the briefing is in.
+  function weekSpec() {
+    const a = briefing(); if (!a) return null;
     const ce = root.PeelCapitalEA ? root.PeelCapitalEA.attention() : [];
     const byKey = new Map(App().state.projects.map(p => [p.key, p]));
     // (the Overview's own changes: the same files, the same municipality, the same baseline rule)
@@ -1070,18 +1083,19 @@
     const plantOf = k => { const p = byKey.get(k); return p && MM() && MM().plantOfDev ? MM().plantOfDev(p) : null; };
     const flag = k => { const pl = plantOf(k); return pl && hot.has(pl) ? ` <span class="t-tight">· drains to ${esc((root.PeelSvcData && root.PeelSvcData.PLANT_SHORT[pl]) || pl)} (tight)</span>` : ''; };
     const Ph = P(), lab = k => (Ph && Ph.PHASE_BY_KEY[k] ? Ph.PHASE_BY_KEY[k].label : k);
-    const devRow = (k, html) => ({ attrs: { 'data-ws-pick': k, 'data-ws-as': 'site' }, html });
+    const devRow = (k, html) => ({ attrs: { 'data-pnl-dev': k }, html });
     const W0 = (a.lists.find(l => l.title === 'This week') || { rows: [] }).rows;
-    const pts = [...moved, ...added].map(x => byKey.get(x.key)).filter(Boolean);
     // Step 5: the watch list (the full map's Watch tab) on the page: the developments starred ☆ Watch,
     // each with its stage and whether it changed this week, then the week's capacity alerts.
     const watchKeys = (U.store && U.store.get('watch', [])) || [], changed = new Map([...moved.map(m => [m.key, `${lab(m.from)} → ${lab(m.to)}`]), ...added.map(a => [a.key, 'new this week'])]);
     const dorm = (App().state.projects && App().state.projects.dormant) || [], byKeyAll = k => byKey.get(k) || dorm.find(q => q.key === k);
     const watched = watchKeys.map(byKeyAll).filter(Boolean).sort((a, b) => (changed.has(b.key) ? 1 : 0) - (changed.has(a.key) ? 1 : 0));
+    // (the capacity alerts only when a feed is published: owner decision 8, the alerts UI stays hidden)
     const AL = root.PeelAlerts, feed = AL && AL.last ? AL.last() : null;
-    if (!feed && AL && AL.load && !week.asked) { week.asked = true; AL.load().then(() => { if (W() && W().renderPage) W().renderPage(true); }); }
+    if (!feed && AL && AL.load && !weekSpec.asked) { weekSpec.asked = true; AL.load().then(() => { if (W() && W().renderPage) W().renderPage(true); if (PN() && PN().sync) PN().sync(); }); }
     const infra = feed && AL.infraItems ? AL.infraItems(feed) : [];
-    return { id: 'week', eyebrow: eyebrow('week'), name: 'What changed since the last update?', status: null, identity: a.head.identity,
+    const muni = App().state.muni, all = { 'data-full-table': 'overview' };
+    return { head: { trail: [{ label: 'Peel' }, ...(muni ? [{ label: muni }] : []), { label: 'Overview' }], name: 'What changed since the last update?', status: null, identity: a.head.identity },
       answer: W0.length ? `<strong>${fmtNum(W0.length)}</strong> change${W0.length === 1 ? '' : 's'} since the last data update: ${[moved.length && `${fmtNum(moved.length)} file${moved.length === 1 ? '' : 's'} moved stage`, added.length && `${fmtNum(added.length)} new file${added.length === 1 ? '' : 's'}`, ce.length && `${fmtNum(ce.length)} capital or EA date${ce.length === 1 ? '' : 's'}`].filter(Boolean).join(', ')}.` : 'Nothing changed since the last data update.',
       figures: [
         { v: fmtNum(moved.length), u: 'files', label: 'moved stage', ctx: '' },
@@ -1090,16 +1104,27 @@
         { v: fmtNum([...moved, ...added].filter(x => { const pl = plantOf(x.key); return pl && hot.has(pl); }).length), u: 'files', label: 'on a tight plant', ctx: 'drain to a plant past its 90% trigger' },
       ],
       lists: [
-        { title: 'Moved stage', rows: moved.map(m => devRow(m.key, `<div class="pnl-r-top"><span class="pnl-r-name">${esc(m.title)}</span><span class="pnl-r-year">${esc(lab(m.from))} → ${esc(lab(m.to))}</span></div>${flag(m.key) ? `<small class="pnl-r-line">${flag(m.key)}</small>` : ''}`)), total: moved.length },
-        { title: 'New files', rows: added.map(m => devRow(m.key, `<div class="pnl-r-top"><span class="pnl-r-name">${esc(m.title)}</span><span class="pnl-r-year">${esc(lab(m.phase))}</span></div><small class="pnl-r-line">${esc(m.municipality || '')}${flag(m.key)}</small>`)), total: added.length },
-        { title: 'Capital and EA dates', rows: ce.map(it => ({ attrs: { 'data-ws-go': 'week', 'data-ws-ce': it.ce }, html: `<small class="pnl-r-line">${esc(it.text)}</small>` })), total: ce.length },
+        { title: 'Moved stage', rows: moved.map(m => devRow(m.key, `<div class="pnl-r-top"><span class="pnl-r-name">${esc(m.title)}</span><span class="pnl-r-year">${esc(lab(m.from))} → ${esc(lab(m.to))}</span></div>${flag(m.key) ? `<small class="pnl-r-line">${flag(m.key)}</small>` : ''}`)), total: moved.length, seeAll: all },
+        { title: 'New files', rows: added.map(m => devRow(m.key, `<div class="pnl-r-top"><span class="pnl-r-name">${esc(m.title)}</span><span class="pnl-r-year">${esc(lab(m.phase))}</span></div><small class="pnl-r-line">${esc(m.municipality || '')}${flag(m.key)}</small>`)), total: added.length, seeAll: all },
+        { title: 'Capital and EA dates', rows: ce.map(it => ({ attrs: { 'data-ce-open': it.ce }, html: `<small class="pnl-r-line">${esc(it.text)}</small>` })), total: ce.length, seeAll: all },
         { title: 'Your watch list', rows: watched.length ? watched.map(p => devRow(p.key, `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year${changed.has(p.key) ? ' t-tight' : ''}">${esc(changed.get(p.key) || lab(p.phase))}</span></div><small class="pnl-r-line">${esc(p.municipality || '')} · ${fmtNum(p.units || 0)} units${changed.has(p.key) ? ' · changed this week' : ''}</small>`)) : [{ kv: true, html: '<span class="muted small">Star a development with ☆ Watch (its page or the map) to follow it here.</span>' }], total: watched.length },
         infra.length ? { title: 'Capacity alerts this week', rows: infra.map(it => ({ kv: true, html: `<small class="pnl-r-line"><strong>${esc(AL.kindLabel(it.kind))}</strong> · ${esc(it.text)}</small>` })), total: infra.length } : null,
-      ],
-      map: { svg: devsMap(((App() && App().state.filtered) || []), pts), attrs: { 'data-ws-go': 'week' }, label: 'Open This week on the map', caption: '<span class="hm-key hm-key-hl"></span> changed this week <span class="hm-key hm-key-dev"></span> developments of 50+ units' },
+      ].filter(Boolean),
+      // (the developments that changed: highlighted on the page's map)
+      devs: [...moved, ...added].map(x => byKey.get(x.key)).filter(Boolean),
       method: 'Changes between the last two data updates: files whose stage moved, files listed for the first time (not those already completed), Region capital projects and EAs with a review period closing or a DC-matched date moved later. "On a tight plant": the file drains to a wastewater plant past its 90% trigger at build-out.',
       sources: 'The municipal application records (each update); Region of Peel capital project and EA listings.',
-      actions: [{ label: 'Watch list', attrs: { 'data-ws-watch': '' }, primary: true }, { label: 'Open the map', attrs: { 'data-ws-go': 'week' } }] };
+      foot: { primary: { label: 'Open in Watch', attrs: { 'data-ws-watch': '' }, title: 'The developments you watch, on the full map (its left panel, Watch)' } } };
+  }
+  // The page: the spec's rows open the site's page (a development) or the map view at the date (a capital or EA one).
+  function week() {
+    const s = weekSpec(); if (!s) return waitingFor('week', 'Loading the changes…');
+    const onPage = r => { const a = r.attrs || {}; return a['data-pnl-dev'] ? { ...r, attrs: { 'data-ws-pick': a['data-pnl-dev'], 'data-ws-as': 'site' } } : a['data-ce-open'] ? { ...r, attrs: { 'data-ws-go': 'week', 'data-ws-ce': a['data-ce-open'] } } : r; };
+    return { id: 'week', eyebrow: eyebrow('week'), name: s.head.name, status: s.head.status, identity: s.head.identity, answer: s.answer, figures: s.figures,
+      lists: s.lists.map(l => ({ ...l, rows: l.rows.map(onPage) })),
+      map: { svg: devsMap(((App() && App().state.filtered) || []), s.devs), attrs: { 'data-ws-go': 'week' }, label: 'Open This week on the map', caption: '<span class="hm-key hm-key-hl"></span> changed this week <span class="hm-key hm-key-dev"></span> developments of 50+ units' },
+      method: s.method, sources: s.sources,
+      actions: [{ ...s.foot.primary, primary: true }, { label: 'Open the map', attrs: { 'data-ws-go': 'week' } }] };
   }
 
   // ---- Review an FSR, with a site -------------------------------------------------------------------
@@ -1157,7 +1182,8 @@
     const DO = root.PeelDevOutlets, IMD = root.PeelDcImpact, SC = root.PeelSewerCap, Wk = W();
     if (!DO || !IMD || !SC) return loading('outlets');
     DO.load();
-    if (!MM().SEW.data) { SC.loadSewers().then(() => Wk && Wk.renderPage && Wk.renderPage(true)); return loading('outlets', 'Loading the Region’s sanitary sewers…'); }
+    // (drawn again once they land; not when they failed to load, which would ask again at once, for ever)
+    if (!MM().SEW.data) { SC.loadSewers().then(d => d && Wk && Wk.renderPage && Wk.renderPage(true)); return loading('outlets', 'Loading the Region’s sanitary sewers…'); }
     const q = DO.queue();
     if (!q) { if (outletWait++ < 60) setTimeout(() => { if (Wk && Wk.page && Wk.page() === 'outlets') Wk.renderPage(true); }, 1500); return loading('outlets', 'Loading the DC program and the servicing model…'); }
     outletWait = 0;
@@ -1243,28 +1269,21 @@
     DO.pickAt(lng, lat, Math.max(15, 14 * 111320 / outletFrame.sc));
   });
 
-  // ---- Old pipes ------------------------------------------------------------------------------------
+  // ---- Old pipes: Home's Servicing › Old pipes (navigation phase 6c) ------------------------------------
+  // The map's panel drawn as the page (js/workspaces.js pipesSpec, one spec: its figures, the grid, the runs and the
+  // plants), its runs opening the map view at the pipe, with the small map of the runs; its CSV first.
   function pipes() {
     const Wk = W(); const list = Wk && Wk.oldList ? Wk.oldList() : null;
-    if (!list) { const S = MM() && MM().SEW, SC = root.PeelSewerCap; if (S && !S.data && SC && SC.loadSewers) SC.loadSewers().then(() => Wk && Wk.renderPage && Wk.renderPage()); return loading('pipes', 'Loading the Region’s sanitary sewer records…'); }
-    const s = Wk.pipesSpec(), runs = Wk.pipeRuns(list, MM().SEW.data), g = pipeGrid(runs);
-    const km = runs.reduce((t, r) => t + (r.lengthM || 0), 0) / 1000;
-    const cell = (l, c) => { const x = g[l - 1][c - 1]; const sev = l + c; return `<td class="pg-c pg-s${sev}"><b>${fmtNum(x.n)}</b><small>${fmt1(x.km)} km</small></td>`; };
-    const grid = `<div class="pg-wrap"><table class="pg" aria-label="Old pipe runs by likelihood and consequence"><thead><tr><th scope="col">Likelihood ↓ · Consequence →</th>${[1, 2, 3].map(c => `<th scope="col">${CONS[c]}</th>`).join('')}</tr></thead><tbody>${[3, 2, 1].map(l => `<tr><th scope="row">${LIKE[l]}</th>${[1, 2, 3].map(c => cell(l, c)).join('')}</tr>`).join('')}</tbody></table></div>`;
-    const byPlant = new Map(); for (const r of runs) { const k = r.plant || 'other'; const x = byPlant.get(k) || { n: 0, km: 0, u: 0 }; x.n++; x.km += (r.lengthM || 0) / 1000; x.u = Math.max(x.u, r.units); byPlant.set(k, x); }
-    const SD = root.PeelSvcData;
-    const worst = runs.filter(r => likeOf(r) === 3 && consOf(r) === 3).length;
-    return { id: 'pipes', eyebrow: eyebrow('pipes'), name: 'Which ageing sewers carry the most growth?', status: s.head.status, identity: s.head.identity, scen: scen(), answer: s.answer,
-      figures: [s.figures[0], { v: fmt1(km), u: 'km', label: 'length on the list', ctx: `${fmtNum(runs.length)} sewer runs` }, { v: fmtNum(worst), u: 'sewer runs', label: 'oldest and most loaded', ctx: `${LIKE[3]} (or older + moderate risk) and ${CONS[3]}: the grid’s top-right cell`, tone: worst ? 'over' : null }, s.figures[2]],
-      mid: `<section class="page-grid" data-psec="grid"><h3 class="pnl-chart-t">Old sewer runs by age (likelihood) and the homes they carry (consequence) <span class="pnl-chart-u">(sewer runs, km)</span></h3>${grid}<p class="small muted">Likelihood: install age (a moderate risk rating one band up). Consequence: planned units the run carries at build-out. Condition grades from inspection are not in the open data.</p></section>`,
-      lists: [
-        { ...s.lists[0], rows: s.lists[0].rows.map(r => toMap('pipes', r)), see: { 'data-ws-go': 'pipes' } },
-        { title: 'By plant', rows: [...byPlant.entries()].sort((a, b) => b[1].km - a[1].km).map(([k, x]) => ({ kv: true, html: `<div class="pnl-kv"><span>${esc((SD && SD.PLANT_SHORT && SD.PLANT_SHORT[k]) || k)}</span><span>${fmtNum(x.n)} sewer runs · ${fmt1(x.km)} km</span></div>` })), total: byPlant.size },
-      ],
+    // (drawn again once the sewer records land; not when they failed to load, as outlets above)
+    if (!list) { const S = MM() && MM().SEW, SC = root.PeelSewerCap; if (S && !S.data && SC && SC.loadSewers) SC.loadSewers().then(d => d && Wk && Wk.renderPage && Wk.renderPage()); return loading('pipes', 'Loading the Region’s sanitary sewer records…'); }
+    const s = Wk.pipesSpec(), f = s.foot || {}, [runs, ...more] = s.lists || [];
+    return { id: 'pipes', eyebrow: eyebrow('pipes'), name: s.head.name, status: s.head.status, identity: s.head.identity, scen: scen(), answer: s.answer,
+      figures: s.figures, chart: s.chart,
+      // (See all: the map view's full table, every run)
+      lists: [{ ...runs, rows: runs.rows.map(r => toMap('pipes', r)), see: { 'data-ws-go': 'pipes', 'data-ws-fulltable': '1' } }, ...more],
       map: { svg: pipesMap(list), attrs: { 'data-ws-go': 'pipes' }, label: 'Open Old pipes on the map', caption: '<span class="hm-key hm-key-pipe"></span> old pipes on the list (heavier: moderate risk)' },
-      method: `${s.method} The grid counts runs (one main: segments end to end with the same size, year, material and risk) by likelihood (age 50–64 / 65–79 / 80+ years; a moderate risk rating moves a run one band up) and consequence (planned units carried: 100–1,000 / 1,000–10,000 / 10,000+).`,
-      sources: s.sources,
-      actions: [{ label: 'Export the list (CSV)', attrs: { 'data-ws-pipescsv': '' }, primary: true }, { label: 'Open the map', attrs: { 'data-ws-go': 'pipes' } }] };
+      method: s.method, sources: s.sources,
+      actions: [...(f.primary ? [{ ...f.primary, primary: true }] : []), ...(f.secondary || []), { label: 'Open the map', attrs: { 'data-ws-go': 'pipes' } }] };
   }
 
   // ---- Study area: a small interactive map on the page ------------------------------------------------
@@ -1388,6 +1407,6 @@
     if (A.applyFilters) A.applyFilters();
     gStage = 'all'; gAll = false; gEst = false;
   }
-  Object.assign(api, { build, host, tilesSVG, tileCredit, tilesOk, eaMap, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame, fileAt, drillTo });
+  Object.assign(api, { build, host, weekSpec, tilesSVG, tileCredit, tilesOk, eaMap, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame, fileAt, drillTo });
   root.PeelWsPages = api;
 })(typeof window !== 'undefined' ? window : globalThis);

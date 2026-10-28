@@ -33,7 +33,7 @@ test('1. each chip opens the stated tab and scope (and the layer preset)', () =>
   const want = {
     site: ['overview', '', 'find', 'planning'], tight: ['svc', 'capacity', 'area', 'wastewater'], growth: ['growth', 'areas', 'area', 'planning'],
     fsr: ['svc', 'network', 'find', 'wastewater'], study: ['overview', '', 'drawn', 'planning'], projects: ['dca', 'timing', 'area', 'dc'],
-    pipes: ['svc', 'network', 'area', 'wastewater'], outlook: ['growth', 'timing', 'area', 'planning'], eaflow: ['dca', 'eas', 'area', 'dc'], week: ['overview', '', 'area', 'planning'],
+    pipes: ['svc', 'pipes', 'area', 'wastewater'], outlook: ['growth', 'timing', 'area', 'planning'], eaflow: ['dca', 'eas', 'area', 'dc'], week: ['overview', '', 'area', 'planning'],
     coming: ['growth', 'timing', 'area', 'planning'],
   };
   for (const [id, [tab, sub, scope, view]] of Object.entries(want)) {
@@ -48,16 +48,14 @@ test('1. each chip opens the stated tab and scope (and the layer preset)', () =>
   // close the site.
   assert.deepEqual(plain(['site', 'fsr'].map(id => { const p = W.plan(id, { site: true }); return [p.tab, p.sub, p.scope]; })), [['overview', '', 'site'], ['svc', 'fsr', 'site']]);
   assert.equal(W.plan('fsr', {}).sub, 'network', 'the Find step');
-  assert.equal(W.plan('fsr', { site: true }).source, 'Review an FSR · from Servicing › FSR review');
-  assert.equal(W.sourceText('fsr', 'svc:fsr'), 'Review an FSR · Servicing › FSR review');
+  // (the panel's source line, "Review an FSR · from Servicing › FSR review", went with the task chips: navigation
+  // phase 6c, §5 rows 16 and 18, removed by design; the page host's strip and eyebrow name the tab and view)
+  assert.ok(!('source' in W.plan('fsr', { site: true })), 'no source line');
+  assert.equal(W.sourceText, undefined);
   assert.equal(W.plan('tight', { site: true }).closeScopes, true);
   assert.equal(W.plan('study').lasso, true);
-  // The header names the source tab.
-  assert.equal(W.plan('tight').source, 'Servicing capacity · from Servicing › Capacity');
-  assert.equal(W.sourceText('tight', 'svc:capacity'), 'Servicing capacity · from Servicing › Capacity');
-  assert.equal(W.sourceText('tight', 'growth:areas'), 'Servicing capacity · Growth › Areas');
-  assert.equal(W.sourceText('week', 'overview:'), 'This week · from Overview');
-  // The browser does what the plan says (go()), and every panel in a workspace carries Open full map.
+  for (const id of ['tight', 'growth', 'week']) assert.ok(!('source' in W.plan(id)), `${id}: no source line`);
+  // The browser does what the plan says (go()); the map view's bar carries Full map (its panels no source line).
   const s = src('js/workspaces.js');
   assert.match(s, /if \(pl\.closeScopes\) \{\s*if \(site\) root\.DevScope\.close\(\);\s*if \(SS\(\) && SS\(\)\.current && SS\(\)\.current\(\)\) SS\(\)\.close\(\);/);
   assert.match(s, /lean\(pl\.view, LAYERS\[id\] \|\| \[\]\);/);
@@ -65,8 +63,9 @@ test('1. each chip opens the stated tab and scope (and the layer preset)', () =>
   assert.match(s, /if \(pl\.sub && A\.setSub\) A\.setSub\(pl\.tab, pl\.sub\); if \(A\.setFootPref\) A\.setFootPref\(pl\.tab\); A\.showFootTab\(pl\.tab\);/);
   // (navigation phase 6: a page view's Open the map keeps the tab and view: go(id, { keep }))
   assert.match(s, /const A = AT\(\); if \(A && !o\.keep\) \{ if \(pl\.sub/);
-  assert.match(s, /data-ws-full title="The same scope, filters and scenario with every tool">Full map →/);
-  assert.match(src('js/panel.js'), /e\.html\.replace\(HEAD, `\$\{HEAD\}\$\{W\.srcLine\(key\)\}`\)/);
+  assert.match(src('index.html'), /<button type="button" class="btn small ws-fullbtn" data-ws-full title="Every layer, filter and tool, with the same scope, filters and scenario">Full map<\/button>/);
+  assert.doesNotMatch(s + src('js/panel.js'), /srcLine|sourceText|pnl-src/);
+  assert.match(src('js/panel.js'), /const v = e \? e\.html : '';/);
 });
 
 test('Old pipes: 50+ years old or moderate risk, carrying 100+ units at build-out; runs of one main', () => {
@@ -175,7 +174,7 @@ test('Home while loading: never "No developments match" and zeros, its place kep
 });
 
 test('2. workspace figures equal full-map figures (Home and This week read the Peel Overview panel)', () => {
-  const { W: B, PN, nodes } = loadBrowser(AREA);
+  const { W: B, PN, nodes, window } = loadBrowser(AREA);
   B.setMode('home');
   const h = nodes['#home'].innerHTML;
   // Bundle 6: the figures are the other pages' answers, each opening its page; the Overview's pipeline
@@ -188,12 +187,18 @@ test('2. workspace figures equal full-map figures (Home and This week read the P
   assert.match(h, /<div class="home-scope"><div class="seg" role="group" aria-label="Municipality"><button type="button" class="btn small on" data-ws-muni="" aria-pressed="true">Peel<\/button>/);
   for (const g of ['Growth', 'Servicing', 'Capital', 'Change']) assert.match(h, new RegExp(`<div class="home-grp-h"><h2>${g}</h2>`), g);
   assert.match(h, /9 over/);
-  // This week in its workspace: the Overview's own rows, every one.
+  // This week in its map view: the one This week spec (navigation phase 6c, §5 row 22: the page's, js/ws-pages.js
+  // weekSpec), its answer counting the Overview's own This week rows, its lists the page's, each row a panel's.
+  window.PeelOverviewTab.weekChanges = () => ({ moved: [{ key: 'k1', title: '1 Main St', from: 'review', to: 'approved' }], added: [] });
   B.go('week');
   const wk = B.override('overview:', 'area');
-  assert.deepEqual(plain(wk.lists[0].rows), plain(AREA.lists[1].rows), 'the same rows');
-  assert.equal(wk.lists[0].rows[0], AREA.lists[1].rows[0], 'the same row objects');
-  assert.equal(wk.lists[0].total, 2);
+  assert.equal(wk.head.name, 'What changed since the last update?');
+  assert.match(wk.answer, /^<strong>2<\/strong> changes since the last data update: 1 file moved stage\.$/, 'the count: the Overview’s This week rows (2)');
+  assert.deepEqual(plain(wk.lists.map(l => l.title)), ['Moved stage', 'New files', 'Capital and EA dates', 'Your watch list']);
+  assert.deepEqual(plain(wk.lists[0].rows[0].attrs), { 'data-pnl-dev': 'k1' });
+  assert.deepEqual(plain(wk.lists[0].seeAll), { 'data-full-table': 'overview' });
+  assert.deepEqual(plain(wk.foot.primary), { label: 'Open in Watch', attrs: { 'data-ws-watch': '' }, title: 'The developments you watch, on the full map (its left panel, Watch)' });
+  assert.equal(wk.lists[0].total, 1);
   // Servicing capacity, Growth in an area and Projects show the tab's own panel (no override).
   for (const id of ['tight', 'growth', 'projects']) { B.go(id); const p = B.plan(id); assert.equal(B.override(`${p.tab}:${p.sub}`, 'area'), null, id); }
   // Check a site before a site is picked: the Find step; once a site is open, the site's own panel.
@@ -298,14 +303,19 @@ test('each chip\u2019s map is lean (1–2 layers); the full map gets its own lay
   assert.match(src('js/svc-data.js'), /if \(!MM\(\)\.getDevsOn\(\)\) return window\.PeelWorkspaces && window\.PeelWorkspaces\.mode\(\) === 'ws' \? '' : 'Developments are switched off';/);
 });
 
-test('Check a site: Find → Result → Output in the header once the site is open', () => {
-  const { W: B, window } = loadBrowser(AREA);
+// Navigation phase 6c (§5 rows 16, 18 and 57): the map view names no workspace. The panel header's source line
+// ("Check a site · from Overview", Full map →, and Find › Result › Output once the site was open) went with the task
+// chips, removed by design: the steps stay on the Find step, the site's page names its view (6b), the bar keeps
+// Full map.
+test('the map view names no workspace: no source line on its panels; the Find step keeps its steps', () => {
+  const { W: B, PN, window } = loadBrowser(AREA);
   B.go('site');
-  assert.match(B.srcLine('overview:'), /^<p class="pnl-src small"><span>Check a site · from Overview<\/span><button type="button" class="btn small link" data-ws-full/);
+  assert.equal(B.srcLine, undefined); assert.equal(B.renderChips, undefined);
+  const find = B.override('overview:', 'area'), h = PN.html({ key: 'overview:', ...find });
+  assert.match(h, /<h2 class="pnl-name">Check a site<\/h2><span class="pnl-chip t-stage">Step 1 of 3<\/span>/);
+  assert.doesNotMatch(h, /pnl-src|pnl-steps"| · from /);
   window.DevScope = { current: () => ({ key: 'x' }), close() {} };
-  assert.match(B.srcLine('overview:'), /Check a site · from Overview <small class="pnl-steps">✓ Find › <b>Result<\/b> › Output: Servicing memo<\/small>/);
-  B.setMode('full');
-  assert.equal(B.srcLine('overview:'), '', 'the full map has no workspace line');
+  assert.equal(B.override('overview:', 'dev:x'), null, 'the site open: its own panel, as on the full map');
 });
 
 test('3. Home links open the matching chip', () => {
@@ -487,7 +497,10 @@ test('Draw an area (every page header): Select on, and on a phone the sheet down
 test('the page: Home, the chip bar, the Home button and the settings', () => {
   const html = src('index.html');
   assert.match(html, /<section class="home" id="home" aria-label="Home" hidden><\/section>/);
-  assert.match(html, /<div class="ws-chips" id="ws-chips" role="toolbar" aria-label="Tasks"><\/div>/);
+  // The map view's bar: ← Page · the search · Full map (the task chips under it went in navigation phase 6c, §5 row
+  // 16, removed by design; a #w=<id> link still opens its map view with its layers).
+  assert.doesNotMatch(html, /id="ws-chips"|class="ws-chips?"/);
+  assert.match(html, /<div class="ws-top"><button type="button" class="btn small ws-fullbtn" data-ws-backpage title="[^"]+">← Page<\/button><div class="ws-search" id="ws-search"><\/div><button type="button" class="btn small ws-fullbtn" data-ws-full title="[^"]+">Full map<\/button><\/div>\s*<\/div>/);
   assert.match(html, /id="tb-home" data-ws-home/);
   const at = f => html.indexOf(`<script src="js/${f}?v=__BUILD__">`);
   assert.ok(at('panel.js') > 0 && at('panel.js') < at('ws-pages.js') && at('ws-pages.js') < at('workspaces.js') && at('workspaces.js') < at('app.js'));

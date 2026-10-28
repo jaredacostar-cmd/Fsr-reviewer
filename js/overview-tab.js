@@ -302,11 +302,10 @@
     const el = $('#ov-body'), host = $('#scope-body'); if (!host) return false;
     if (!rs) { host.hidden = true; if (el) el.hidden = false; return false; }
     if (el) el.hidden = true; host.hidden = false;
-    const W = root.PeelWorkspaces, wsNow = W && W.mode() === 'ws' ? String(W.current()) : '';
     // (a result that kept its development: Peel › the site › the kind; the site step goes back to the
     // site, Peel closes both)
     const kd = rs.result.keepDev ? DV().scopedDev() : null;
-    if (host.dataset.ref !== rs.ref || host.dataset.v !== String(rs.result.v) || (host.dataset.ws || '') !== wsNow || (host.dataset.kd || '') !== (kd ? kd.key : '')) {
+    if (host.dataset.ref !== rs.ref || host.dataset.v !== String(rs.result.v) || (host.dataset.kd || '') !== (kd ? kd.key : '')) {
       // Stage 3: the result as the standard panel: its header (back to Peel, ×, kind), the result's
       // headline as the answer, its body as the details, the footer with the screening note. Rendered
       // here, in the result's own host, so a tool's inputs keep their state.
@@ -317,9 +316,7 @@
         head: { trail: [{ label: 'Peel', attrs: kd ? { 'data-scope-result-close': '', 'data-pnl-dev-close': '' } : { 'data-scope-result-close': '' } }, ...site, { label: kind.split(' · ')[0] }], close: { 'data-scope-result-close': '', 'aria-label': `Close ${rs.title}` }, name: rs.title, identity: esc(kind) },
         answer: hm ? hm[1] : `<strong>${esc(rs.title)}</strong>`, lists: [{ title: 'Details', rows: [{ kv: true, html: `<div class="pnl-result">${rest}</div>` }], total: 1 }] })
         : `<div class="scope-head"><span class="muted small">${esc(kind)}</span><button type="button" class="btn small scope-x" data-scope-result-close aria-label="Close ${esc(rs.title)}">× Close</button></div>${body}`;
-      // In a workspace (Study area: the drawn area's result) the header names its source, as every panel.
-      if (W && W.srcLine) host.innerHTML = host.innerHTML.replace('<header class="pnl-head" data-sec="header">', m => `${m}${W.srcLine('overview:')}`);
-      host.dataset.ref = rs.ref; host.dataset.v = String(rs.result.v); host.dataset.ws = wsNow; host.dataset.kd = kd ? kd.key : '';
+      host.dataset.ref = rs.ref; host.dataset.v = String(rs.result.v); host.dataset.kd = kd ? kd.key : '';
     }
     return true;
   }

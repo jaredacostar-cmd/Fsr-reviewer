@@ -41,10 +41,11 @@ test('no two sub-views share a name; the chips, the trails and the source lines 
   const all = ['growth', 'svc', 'dca', 'records'].flatMap(chips);
   assert.equal(new Set(all).size, all.length, `duplicate sub-view names: ${all.join(', ')}`);
   assert.deepEqual(chips('growth'), ['Pipeline', 'Areas', 'Forecast']);
-  assert.deepEqual(chips('svc'), ['Capacity', 'Network', 'FSR review']); assert.ok(chips('records').includes('Data checks') && chips('dca').includes('DC timing'));
+  assert.deepEqual(chips('svc'), ['Capacity', 'Network', 'Old pipes', 'FSR review']); assert.ok(chips('records').includes('Data checks') && chips('dca').includes('DC timing'));
   const W = require('../js/workspaces.js');
   assert.equal(W.tabPath('svc', 'network'), 'Servicing › Network');
   assert.equal(W.tabPath('svc', 'fsr'), 'Servicing › FSR review');
+  assert.equal(W.tabPath('svc', 'pipes'), 'Servicing › Old pipes', '(navigation phase 6c: the workspace’s name, one name)');
   assert.equal(W.tabPath('records', 'checks'), 'Records › Data checks');
   assert.doesNotMatch(src('js/workspaces.js'), /'svc:checks'|alloc: 'Allocations'/, 'no name for a sub-view that is gone');
   assert.doesNotMatch(src('js/workspaces.js'), /ledger: 'Ledger'/, 'no name for a sub-view that is gone');

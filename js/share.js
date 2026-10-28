@@ -142,9 +142,11 @@
       // applied on the full map opens no page, so it keeps its own t.
       // (navigation phase 6: a link from before nav=3 to Home or an area page opens the page's own view, never
       // the map's tab it carried: Home its Overview, an area page Home at that page's tab and view, hostOf)
-      const W = window.PeelWorkspaces, nv = Number(q.get('nav')) || 0, w = q.get('w') || '';
-      const pid = nv < 3 && /^p:/.test(w) && W && W.resolvePage ? W.resolvePage(w.slice(2), { site: !!q.get('d'), last: window.PeelUtil.store.get('lastWs', '') }) : '';
-      const host = nv < 3 && W && W.hostOf && W.mode() === 'home' ? (w === 'home' ? { tab: 'overview', sub: '' } : pid ? W.hostOf(pid, { site: !!q.get('d') }) : null) : null;
+      // (Old pipes became a host's view in 6c: a 6a or 6b link to its page, nav=3, carried the map's tab behind the page,
+      // Servicing › Network, as an older link did, so it is read as one: Home at Servicing › Old pipes)
+      const W = window.PeelWorkspaces, nv = Number(q.get('nav')) || 0, w = q.get('w') || '', pre = nv < 3 || (nv === 3 && w === 'p:pipes');
+      const pid = pre && /^p:/.test(w) && W && W.resolvePage ? W.resolvePage(w.slice(2), { site: !!q.get('d'), last: window.PeelUtil.store.get('lastWs', '') }) : '';
+      const host = pre && W && W.hostOf && W.mode() === 'home' ? (w === 'home' ? { tab: 'overview', sub: '' } : pid ? W.hostOf(pid, { site: !!q.get('d') }) : null) : null;
       const pageWs = host || (nv < 2 && pid && W.mode() === 'home' && W.page() === pid && Object.prototype.hasOwnProperty.call(W.BY_ID, pid) ? W.BY_ID[pid] : null);
       if (q.get('t') || pageWs) {
         // Phase 4: old links name removed tabs — migrateTabKey maps them onto the new set.
@@ -152,7 +154,10 @@
         // (gs=census2051|byplan, dcs=build|recommendations|funding); migrateTabKey maps them on, and every
         // sub-view param goes through it, so a sub-view moved to another tab is followed, never dropped.
         const t = pageWs ? pageWs.tab : q.get('t');
-        const oldSub = pageWs ? pageWs.sub : t === 'ww' || t === 'water' ? q.get('ws') : t === 'growth' ? q.get('gs') : t === 'dca' ? q.get('dcs') : t === 'svc' ? q.get('svs') : t === 'records' ? q.get('rs') : null;
+        // (a link to Old pipes' map view made before navigation phase 6c named Servicing › Network, where its panel
+        // sat: Servicing › Old pipes now, the view it showed)
+        const svs = w === 'pipes' && t === 'svc' && q.get('svs') === 'network' ? 'pipes' : q.get('svs');
+        const oldSub = pageWs ? pageWs.sub : t === 'ww' || t === 'water' ? q.get('ws') : t === 'growth' ? q.get('gs') : t === 'dca' ? q.get('dcs') : t === 'svc' ? svs : t === 'records' ? q.get('rs') : null;
         const m = AT().migrateTabKey(t, oldSub);
         AT().setFootPref(m.tab); if (m.gSub) AT().setGSub(m.gSub); if (m.svcSub) AT().setSvcSub(m.svcSub); if (m.dcSub) AT().setDcSub(m.dcSub); if (m.rSub) AT().setRSub(m.rSub);
         // (an old link to a sub-view that became a fold opens it: svs=alloc or t=ww&ws=alloc Capacity's

@@ -80,6 +80,12 @@ async function pickView(page, ev, key, tap = false) {
 
   await check('Check a site: search, pick, the stage chip opens how the stage was set', browser, {}, async ({ page, ev }, expect) => {
     await ev(() => PeelWorkspaces.openPage('site')); await wait(1500);
+    // (navigation phase 6c: Explore's views bar is gone; each Find step's line links the other's list, and back)
+    await page.click('#home .pnl-stepper [data-ws-page="fsr"]'); await wait(1500);
+    const fl = await ev(() => ({ page: PeelWorkspaces.page(), lists: [...document.querySelectorAll('#home .pnl-list-h h3')].map(h => h.textContent).join('|'), bar: document.querySelectorAll('#home .page-views').length }));
+    expect(fl.page === 'fsr' && /Files with an FSR posted/.test(fl.lists) && !fl.bar, `Check a site's step line: Review an FSR's files (${JSON.stringify(fl)})`);
+    await page.click('#home .pnl-stepper [data-ws-page="site"]'); await wait(1500);
+    expect(await ev(() => PeelWorkspaces.page()) === 'site', 'and back to Check a site');
     const box = page.locator('#f-search').first();
     await box.click(); await page.keyboard.type('0 heritage', { delay: 30 }); await wait(1200);
     expect(await ev(() => PeelApp.state.search === ''), 'typing does not filter');
@@ -131,6 +137,9 @@ async function pickView(page, ev, key, tap = false) {
     await page.locator('#home .page-foot [data-ws-go][data-ws-keep]', { hasText: 'Open the map' }).first().click(); await wait(2500);
     const m = await ev(() => ({ mode: PeelWorkspaces.mode(), tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getSvcSub() }));
     expect(m.mode === 'ws' && m.tab === 'svc' && m.sub === 'network', `Open the map: the map view at Servicing › Network (${JSON.stringify(m)})`);
+    // (navigation phase 6c: the map view's bar is ← Page · the search · Full map; no task chips, no source line on its panel)
+    const bar = await ev(() => ({ btns: [...document.querySelectorAll('#ws-bar .ws-fullbtn')].map(b => b.textContent.trim()), rows: document.getElementById('ws-bar').children.length, gone: document.querySelectorAll('#ws-chips, .ws-chip, #analysis .pnl-src').length }));
+    expect(bar.btns.join() === '← Page,Full map' && bar.rows === 1 && !bar.gone, `the map view's bar: ← Page, the search, Full map (${JSON.stringify(bar)})`);
     await page.locator('#ws-bar [data-ws-backpage]').click(); await wait(2000);
     s = await at(); expect(s.mode === 'home' && s.page === 'home' && s.view === 'svc:network', `← Page: Home at Servicing › Network (${JSON.stringify(s)})`);
     await page.locator('#home [data-ws-full]').first().click(); await wait(2000);
@@ -189,7 +198,18 @@ async function pickView(page, ev, key, tap = false) {
     expect(groups >= 4, 'the menu opens grouped');
   });
 
-  await check('phone: the full map\'s way back sits above the bottom sheet and takes a tap', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
+  await check('phone: a map view\'s bar and the full map\'s way back sit above the bottom sheet and take a tap', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
+    // A map view: its bar (← Page, the search, Full map) above the sheet at every height, each a tap (navigation phase
+    // 6c: the panels' Full map → went with their source line; the full sheet stops under the bar, js/app.js).
+    await ev(() => PeelWorkspaces.go('tight')); await wait(2500);
+    for (const snap of ['peek', 'half', 'full']) {
+      await ev(s => PeelApp.setAnalysisSnap(s), snap); await wait(800);
+      const r = await ev(() => { const a = document.getElementById('analysis').getBoundingClientRect(); return ['[data-ws-backpage]', '[data-ws-full]'].map(q => { const b = document.querySelector(`#ws-bar ${q}`), x = b.getBoundingClientRect(), hit = document.elementFromPoint(x.left + x.width / 2, x.top + x.height / 2); return { q, bottom: Math.round(x.bottom), sheet: Math.round(a.top), hit: !!(hit && hit.closest(q) === b) }; }); });
+      expect(r.every(x => x.hit && x.bottom <= x.sheet), `${snap}: the map view's ← Page and Full map above the sheet, not under it (${JSON.stringify(r)})`);
+    }
+    await page.locator('#ws-bar [data-ws-full]').tap(); await wait(1500);
+    expect(await ev(() => PeelWorkspaces.mode()) === 'full', 'its Full map takes the tap at a full sheet');
+    await ev(() => PeelApp.setAnalysisSnap('peek')); await ev(() => PeelWorkspaces.openPage('home')); await wait(1500);
     await page.locator('[data-ws-full]:visible').first().click(); await wait(2000);
     const back = () => ev(() => { const b = document.querySelector('#back-bar [data-ws-back]').getBoundingClientRect(), a = document.getElementById('analysis').getBoundingClientRect(), hit = document.elementFromPoint(b.left + 20, b.top + b.height / 2); return { bottom: Math.round(b.bottom), sheet: Math.round(a.top), hit: !!(hit && hit.closest('#back-bar')), snap: PeelApp.getAnalysisSnap(), stored: localStorage.getItem('peel-dev:analysisSnap') }; });
     for (const snap of ['peek', 'half', 'full']) {
@@ -679,12 +699,13 @@ async function pickView(page, ev, key, tap = false) {
     const tc = await ev(() => { const ps = PeelApp.state.projects.all || PeelApp.state.projects; return { tree: ps.filter(p => p.count && p.count.mode === 'tree').length, why: ps.filter(p => p.count && p.count.mode !== 'tree').every(p => !!p.count.why), mode: typeof PeelTreeCounts.mode, kept: PeelUtil.store.get('countMode', null), sel: !!document.getElementById('count-mode') }; });
     expect(tc.tree > 1000 && tc.why && tc.mode === 'undefined' && !tc.sel, `the stored Previous: the tree count for ${tc.tree} developments, the rest say why they keep the count from their files and permits; no switch (${JSON.stringify(tc)})`);
     expect(tc.kept === 'previous', 'the stored pick is left as it was: nothing reads or writes it');
-    // (the servicing model in first: worked out as its data lands, it holds the page for a few seconds, longer than
-    // the gear's click waits; since navigation phase 6 the full map opened from Home is at Overview, more work at once)
+    // (the servicing model in first: worked out as its data lands, it holds the page for several seconds, and since
+    // navigation phase 6 the full map opened from Home is at Overview, more work at once: the gear's clicks wait for a
+    // page that answers, 30 s, not 5)
     await svcReady();
     await ev(() => { PeelWorkspaces.setMode('full'); }); await wait(1000);
-    await page.click('#tb-gear', { timeout: 5000 }); await wait(500);
-    await page.click('#tb-gear-menu [data-tbg="settings"]', { timeout: 5000 }); await wait(800);
+    await page.click('#tb-gear', { timeout: 30000 }); await wait(500);
+    await page.click('#tb-gear-menu [data-tbg="settings"]', { timeout: 30000 }); await wait(800);
     const st = await ev(() => { const f = document.querySelector('#tb-gear-menu .set-counting'); return f ? { text: f.textContent.replace(/\s+/g, ' ').trim(), inputs: f.querySelectorAll('select, input').length } : null; });
     expect(st && /counts its planning files once \(the tree\)/.test(st.text) && !/Previous/.test(st.text) && !st.inputs, `Settings › Counting says how units are counted, with no switch (${JSON.stringify(st)})`);
     await page.keyboard.press('Escape'); await wait(300);
@@ -739,7 +760,7 @@ async function pickView(page, ev, key, tap = false) {
     // 1. Servicing picked (the stored last workspace) before its data: lit, loading, never Overview; the map's tab shown, marked.
     const s0 = await at();
     if (s0.map.busy) {
-      expect(s0.mode === 'home' && s0.page === 'home' && s0.view === 'svc:capacity' && s0.on && s0.busy && /^Loading/.test(s0.answer) && s0.views === 'Capacity,Network', `before the servicing data: Home › Servicing lit and loading (${JSON.stringify(s0)})`);
+      expect(s0.mode === 'home' && s0.page === 'home' && s0.view === 'svc:capacity' && s0.on && s0.busy && /^Loading/.test(s0.answer) && s0.views === 'Capacity,Network,Old pipes', `before the servicing data: Home › Servicing lit and loading (${JSON.stringify(s0)})`);
       expect(!s0.map.hidden && /loading/.test(s0.map.word), `the map's strip shows Servicing, marked loading (${JSON.stringify(s0.map)})`);
     } else expect(s0.view === 'svc:capacity', `the servicing data was already in: Home › Servicing › Capacity (${s0.view})`);
     const landed = await page.waitForFunction(() => !document.querySelector('#ftab-svc[aria-busy]') && !document.querySelector('#home .page-tabs [data-pg-tab="svc"][aria-busy]'), null, { timeout: 90000 }).then(() => true, () => false);
@@ -1265,7 +1286,8 @@ async function pickView(page, ev, key, tap = false) {
     await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
     await ev(() => { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.openTab('svc', 'capacity'); }); await wait(2500);
     const chips = await ev(() => [...document.querySelectorAll('[data-svcsub]')].filter(b => b.offsetParent).map(b => b.textContent.trim()).join('|'));
-    expect(chips === 'Capacity|Network', `Servicing's chips: ${chips}`);
+    // (navigation phase 6c: Old pipes is the third, an area's)
+    expect(chips === 'Capacity|Network|Old pipes', `Servicing's chips: ${chips}`);
     const folds = await ev(() => [...document.querySelectorAll('#pnl-svc details.pnl-fold summary')].map(x => x.textContent.trim()));
     expect(folds.some(t => t.startsWith('Allocations recorded')), `Capacity's folds: ${folds.join(' | ')}`);
     // "Export or import the CSV ›": Capacity's full table at the plants' room after allocations, the CSV bar under it.
@@ -1324,7 +1346,7 @@ async function pickView(page, ev, key, tap = false) {
     // its lists.
     await ev(() => PeelWorkspaces.openPage('tight')); await wait(3000);
     const pg = await ev(() => ({ view: PeelWorkspaces.view(), bar: [...document.querySelectorAll('#home .page-subsecs .page-sec')].map(b => b.textContent.trim()).join(), fold: [...document.querySelectorAll('#home details.pnl-fold summary')].some(x => x.textContent.trim().startsWith('Allocations recorded')) }));
-    expect(pg.view === 'svc:capacity' && pg.bar === 'Capacity,Network' && pg.fold, `the Servicing capacity page (${JSON.stringify(pg)})`);
+    expect(pg.view === 'svc:capacity' && pg.bar === 'Capacity,Network,Old pipes' && pg.fold, `the Servicing capacity page (${JSON.stringify(pg)})`);
     // Records › Data checks (chunk 2): the data checks, then the Servicing model group and Review outlets.
     await page.waitForFunction(() => PeelApp.state.svcModel && PeelApp.state.plantFlows && PeelApp.state.wwEvents, null, { timeout: 120000 });
     await ev(() => { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.openTab('records', 'checks'); }); await wait(2500);
@@ -1415,7 +1437,7 @@ async function pickView(page, ev, key, tap = false) {
 
   // Phone (navigation phase 2): Servicing's two chips and Records › Data checks fit; the System control and the
   // Allocations fold are a thumb tall; the Servicing capacity page carries both, with no sideways scroll.
-  await check('phone: Servicing\u2019s two chips and Records › Data checks fit, the System control and the fold in reach, no sideways scroll', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
+  await check('phone: Servicing\u2019s three chips and Records › Data checks fit, the System control and the fold in reach, no sideways scroll', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
     await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
     await ev(() => { PeelWorkspaces.setMode('full'); PeelApp.setAnalysisSnap('half'); PeelAnalysisTabs.openTab('svc', 'capacity'); }); await wait(2500);
     const sv = await ev(() => {
@@ -1424,7 +1446,7 @@ async function pickView(page, ev, key, tap = false) {
       return { fits: !!row && row.scrollWidth <= row.clientWidth, chips: [...document.querySelectorAll('[data-svcsub]')].filter(b => b.offsetParent).map(h), sys: [...document.querySelectorAll('#pnl-svc [data-sys]')].map(h), fold: fold ? h(fold) : 0 };
     });
     expect(sv.fits, 'Servicing\u2019s chip row fits the screen');
-    expect(sv.chips.length === 2 && sv.chips.every(x => x >= 44), `two chips, 44 px or taller (${sv.chips.join()})`);
+    expect(sv.chips.length === 3 && sv.chips.every(x => x >= 44), `three chips (Old pipes the third, navigation phase 6c), 44 px or taller (${sv.chips.join()})`);
     expect(sv.sys.length === 3 && sv.sys.every(x => x >= 44), `the System control, 44 px (${sv.sys.join()})`);
     expect(sv.fold >= 44, `the Allocations recorded fold, 44 px (${sv.fold})`);
     await ev(() => PeelAnalysisTabs.openTab('records', 'checks')); await wait(2500);
@@ -1481,6 +1503,84 @@ async function pickView(page, ev, key, tap = false) {
     await ev(w => PeelLabs.set('hydro', w), hw);
   });
 
+  // Navigation phase 6c-S3 (design §3.4, §5 rows 9, 21, 104): Old pipes is Servicing › Old pipes, an area's view on Home and
+  // the map, one spec (the figures, the grid, the runs), its CSV first; the amber pipes on the map while it is open, never
+  // under a page; its full table every run; a cold #w=p:pipes lands there, and on a phone nothing scrolls sideways.
+  await check('Servicing › Old pipes: Home’s chip and the map’s, one grid, its CSV first, the amber pipes while it is open and around a run picked; #w=p:pipes and its 6a/6b page link land; Show the sewers on the map sets the lens', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect() && !document.querySelector('#ftab-svc[aria-busy]'), null, { timeout: 150000 });
+    // (the amber pipes: js/workspaces.js's own polylines, not interactive, in the tight colour)
+    const amber = () => ev(() => { const c = PeelUtil.token('--cap-tight'); let n = 0; PeelMapCore.map.eachLayer(l => { if (l instanceof L.Polyline && l.options.interactive === false && l.options.opacity === 0.9 && l.options.color === c) n++; }); return n; });
+    const grid = sel => page.waitForFunction(q => document.querySelectorAll(`${q} table.pg td.pg-c`).length === 9, sel, { timeout: 90000 }).then(() => true, () => false);
+    const txt = q => `((document.querySelector('${q}') || {}).textContent || '').replace(/\\s+/g, ' ').trim()`;
+    // 1. Home › Servicing › Old pipes, by the strip: the grid (9 cells) its chart, its CSV first, no amber pipes.
+    await ev(() => PeelWorkspaces.openPage('home')); await wait(1500);
+    await pickView(page, ev, 'svc:pipes');
+    const g1 = await grid('#home .page-chart');
+    const h = await ev(t => ({ view: PeelWorkspaces.view(), views: [...document.querySelectorAll('#home .page-subsecs .page-sec')].map(b => b.textContent.trim()).join(), first: eval(t[0]), answer: eval(t[1]), lastWs: PeelUtil.store.get('lastWs', '') }), [txt('#home .page-foot .pnl-acts .btn'), txt('#home .home-answer')]);
+    expect(g1 && h.view === 'svc:pipes' && h.views === 'Capacity,Network,Old pipes' && h.first === 'Export the list (CSV)' && h.lastWs === 'pipes', `Home › Servicing › Old pipes: the grid, its CSV first (${JSON.stringify({ ...h, answer: h.answer.slice(0, 40) })})`);
+    const [dl] = await Promise.all([page.waitForEvent('download', { timeout: 15000 }).catch(() => null), page.click('#home .page-foot [data-ws-pipescsv]')]);
+    expect(dl && dl.suggestedFilename() === 'peel-old-pipes.csv', `its CSV (${dl && dl.suggestedFilename()})`);
+    expect(await amber() === 0, 'no amber pipes under a page');
+    // 2. Open the map: the map view at Servicing › Old pipes, its panel the same answer and grid, CSV first; the amber pipes on.
+    await page.locator('#home .page-foot [data-ws-go="pipes"]', { hasText: 'Open the map' }).first().click(); await wait(2500);
+    const g2 = await grid('#pnl-svc .pnl-chart');
+    const m = await ev(t => ({ mode: PeelWorkspaces.mode(), ws: PeelWorkspaces.current(), tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getSvcSub(), answer: eval(t[0]), first: eval(t[1]) }), [txt('#pnl-svc .pnl-answer'), txt('#pnl-svc .pnl-foot .pnl-primary')]);
+    expect(g2 && m.mode === 'ws' && m.ws === 'pipes' && m.tab === 'svc' && m.sub === 'pipes' && m.first === 'Export the list (CSV)' && m.answer === h.answer, `the map view at Servicing › Old pipes, the page's answer and grid (${JSON.stringify({ ...m, answer: m.answer.slice(0, 40) })})`);
+    const n = await amber(); expect(n > 0, `the amber pipes on the map (${n})`);
+    // 3. Its full table: the grid, by plant and every run on the list.
+    await ev(() => PeelPanel.openFull()); await wait(1500);
+    const ft = await ev(() => { const p = document.getElementById('pane-svc-pipes'), e = PeelPanel.get('svc:pipes'); return { shown: !!p && p.checkVisibility(), rows: document.querySelectorAll('#pipes-body table.pipes-full tbody tr').length, cells: document.querySelectorAll('#pipes-body table.pg td.pg-c').length, want: e && e.spec && e.spec.lists ? e.spec.lists[0].total : null }; });
+    expect(ft.shown && ft.cells === 9 && ft.rows > 0 && ft.rows === ft.want, `its full table: the grid and every run (${JSON.stringify(ft)})`);
+    await ev(() => PeelPanel.closeFull()); await wait(600);
+    // 4. The map's Capacity chip: the amber pipes go; Old pipes again, they are back; ← Page: Home at it, none.
+    await page.click('.f-subtabs[data-pane="svc"] [data-svcsub="capacity"]'); await wait(1500);
+    expect(await amber() === 0, 'Capacity: the amber pipes gone');
+    await page.click('.f-subtabs[data-pane="svc"] [data-svcsub="pipes"]'); await wait(1500);
+    expect(await amber() === n, 'Old pipes again: the amber pipes back');
+    // 4b. A run picked in its panel: the pipe's result on Overview, the amber pipes kept around it and after it closes;
+    // Servicing again: Old pipes, its pipes.
+    await page.click('#pnl-svc .pnl-row[data-pipe]'); await wait(2500);
+    const rp = await ev(() => ({ tab: PeelAnalysisTabs.getFootTab(), ss: PeelApp.state.ss || '' })), n1 = await amber();
+    expect(rp.tab === 'overview' && /^pipe:/.test(rp.ss) && n1 === n, `a run picked: its pipe's result, the amber pipes kept (${JSON.stringify({ ...rp, amber: n1 })})`);
+    await page.click('#scope-body .pnl-x[data-scope-result-close]'); await wait(1500);
+    expect(await amber() === n, 'its result closed: the amber pipes still there');
+    await page.click('#ftab-svc'); await wait(1500);
+    expect(await ev(() => PeelAnalysisTabs.getSvcSub()) === 'pipes' && await amber() === n, 'Servicing again: Old pipes, its pipes');
+    await page.click('#ws-bar [data-ws-backpage]'); await wait(2500);
+    expect(await ev(() => PeelWorkspaces.page() === 'home' && PeelWorkspaces.view() === 'svc:pipes') && await amber() === 0, '← Page: Home › Servicing › Old pipes, no amber pipes');
+    // 5. A link made in its map view before 6c (Servicing › Network, where its panel sat): the map view at Old pipes.
+    await page.goto(`http://localhost:${PORT}/?p6cw#w=pipes&nav=3&t=svc&svs=network`);
+    await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 }); await wait(2500);
+    await page.waitForFunction(() => PeelAnalysisTabs.getSvcSub() === 'pipes' && document.querySelectorAll('#pnl-svc .pnl-chart table.pg td.pg-c').length === 9, null, { timeout: 90000 }).catch(() => {});
+    const ol = await ev(() => ({ mode: PeelWorkspaces.mode(), ws: PeelWorkspaces.current(), at: `${PeelAnalysisTabs.getFootTab()}:${PeelAnalysisTabs.getSvcSub()}` }));
+    expect(ol.mode === 'ws' && ol.ws === 'pipes' && ol.at === 'svc:pipes' && await amber() > 0, `an older #w=pipes link: the map view at Servicing › Old pipes (${JSON.stringify(ol)})`);
+    // 5b. A link copied on Old pipes' page in 6a or 6b (nav=3, the map's Servicing › Network behind the page): Home at
+    // Servicing › Old pipes. Show the sewers on the map (from Planning): the full map at the Wastewater lens, Servicing ›
+    // Old pipes kept; back. A run there: the map view at its pipe, the amber pipes around it; ← Page: Home at Old pipes.
+    await ev(() => localStorage.setItem('peel-dev:mapView', JSON.stringify('planning')));
+    await page.goto(`http://localhost:${PORT}/?p6cp#w=p:pipes&nav=3&t=svc&svs=network`);
+    await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 }); await wait(2500);
+    const g4 = await grid('#home .page-chart'), pl = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), lens: PeelMapAnalysis.currentView() }));
+    expect(g4 && pl.page === 'home' && pl.view === 'svc:pipes', `a link copied on the Old pipes page in 6a/6b: Home › Servicing › Old pipes (${JSON.stringify(pl)})`);
+    await page.locator('#home .page-foot [data-mview="wastewater"]').first().click(); await wait(2500);
+    const lens = await ev(() => ({ mode: PeelWorkspaces.mode(), lens: PeelMapAnalysis.currentView(), at: `${PeelAnalysisTabs.getFootTab()}:${PeelAnalysisTabs.getSvcSub()}` }));
+    expect(pl.lens === 'planning' && lens.mode === 'full' && lens.lens === 'wastewater' && lens.at === 'svc:pipes', `Show the sewers on the map: the full map at the Wastewater lens (${JSON.stringify({ from: pl.lens, ...lens })})`);
+    await page.click('#back-bar [data-ws-back]'); await wait(2500);
+    expect(await ev(() => PeelWorkspaces.page() === 'home' && PeelWorkspaces.view() === 'svc:pipes'), 'the way back: Home › Servicing › Old pipes');
+    await page.locator('#home [data-ws-pipe]').first().click(); await wait(3000);
+    const hr = await ev(() => ({ mode: PeelWorkspaces.mode(), ws: PeelWorkspaces.current(), tab: PeelAnalysisTabs.getFootTab(), ss: PeelApp.state.ss || '' })), n2 = await amber();
+    expect(hr.mode === 'ws' && hr.ws === 'pipes' && hr.tab === 'overview' && /^pipe:/.test(hr.ss) && n2 > 0, `a run on Home: the map view at its pipe, the amber pipes around it (${JSON.stringify({ ...hr, amber: n2 })})`);
+    await page.click('#ws-bar [data-ws-backpage]'); await wait(2500);
+    expect(await ev(() => PeelWorkspaces.page() === 'home' && PeelWorkspaces.view() === 'svc:pipes'), '← Page: Home › Servicing › Old pipes');
+    // 6. A cold #w=p:pipes on a phone: Home at Servicing › Old pipes, the grid in its box, nothing scrolls sideways.
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.goto(`http://localhost:${PORT}/?p6c#w=p:pipes`);
+    await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 }); await wait(2500);
+    const g3 = await grid('#home .page-chart');
+    const c = await ev(() => { const e = document.getElementById('home'); return { page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), doc: document.documentElement.scrollWidth, vw: innerWidth, home: e ? e.scrollWidth - e.clientWidth : -1 }; });
+    expect(g3 && c.page === 'home' && c.view === 'svc:pipes' && c.doc <= c.vw && c.home <= 0, `#w=p:pipes on a phone: Home › Servicing › Old pipes, no sideways scroll (${JSON.stringify(c)})`);
+  });
+
   // Reference and This week (step 5): one Reference entry (Help, How it works, the Glossary, How the app decides, the data
   // sources and checks that were map-only); This week carries the watch list.
   await check('Reference: one entry, the data sources and checks on pages; This week: the watch list', browser, {}, async ({ page, ev }, expect) => {
@@ -1525,6 +1625,59 @@ async function pickView(page, ev, key, tap = false) {
     const wl = await ev(() => [...document.querySelectorAll('#home .pnl-list-h h3, #home h3')].map(h => h.textContent).join('|') + '#' + document.querySelector('#home').innerText.includes('Your watch list'));
     const has = await ev(t => document.querySelector('#home').innerText.includes(t), w);
     expect(/true$/.test(wl) && has, `This week lists the watch list with ${w}`);
+    // (navigation phase 6c: one This week spec, the page's, its map view's and Home's; its first action Open in Watch)
+    const act = await ev(() => { const b = document.querySelector('#home .page-foot .pnl-acts .btn'); return b ? `${b.textContent}|${b.classList.contains('pnl-primary')}|${b.hasAttribute('data-ws-watch')}` : ''; });
+    expect(act === 'Open in Watch|true|true', `This week's first action: Open in Watch (${act})`);
+    await ev(() => PeelUtil.store.set('watch', []));
+  });
+
+  // Navigation phase 6c-S2 and S4 (design §3.4, §5 rows 16, 18, 63, 71-72): the map view has no task chips, so an old
+  // #w=<chip> link opens its map view at the chip's tab and view with the chip's layers, once (what the reader then turns
+  // on stays on); #w=week is This week's one spec, the page's, the map view's and Home's, its first action Open in Watch.
+  await check('A map view without task chips: an old #w=tight link opens it with its layers, once; #w=week is This week’s one spec and Open in Watch opens the Watch tab', browser, {}, async ({ page, ev }, expect) => {
+    const load = async hash => { await page.goto(`http://localhost:${PORT}/${hash}`); await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 }); await wait(2500); };
+    const st = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+    const layers = () => ev(() => [...PeelLayerGroups.onSet()].sort().join());
+    // 1. #w=tight, cold: the map view at Servicing › Capacity with the capacity colours and the wastewater blocks only; its
+    // bar is ← Page · the search · Full map, with no chip row and no source line on its panel.
+    await load('?p6r1#w=tight');
+    await page.waitForFunction(() => PeelAnalysisTabs.getFootTab() === 'svc' && !document.querySelector('#ftab-svc[aria-busy]'), null, { timeout: 150000 }).catch(() => {});
+    await wait(1500);
+    const t = await ev(() => ({ mode: PeelWorkspaces.mode(), ws: PeelWorkspaces.current(), tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getSvcSub(), btns: [...document.querySelectorAll('#ws-bar .ws-fullbtn')].map(b => b.textContent.trim()).join(), chips: document.querySelectorAll('#ws-chips, .ws-chip, #analysis .pnl-src').length }));
+    expect(t.mode === 'ws' && t.ws === 'tight' && t.tab === 'svc' && t.sub === 'capacity' && t.btns === '← Page,Full map' && !t.chips, `#w=tight: the map view at Servicing › Capacity, ← Page · Full map, no chips (${JSON.stringify(t)})`);
+    const l0 = await layers();
+    expect(l0 === 'bk,cap', `its layers: the capacity colours and the wastewater blocks (${l0})`);
+    // 2. Once: a layer the reader turns on stays on through the map's own chips, which never re-apply the preset.
+    await ev(() => PeelLayerGroups.apply(new Set([...PeelLayerGroups.onSet(), 'devs']))); await wait(500);
+    await page.click('.f-subtabs[data-pane="svc"] [data-svcsub="network"]'); await wait(1200);
+    await page.click('.f-subtabs[data-pane="svc"] [data-svcsub="capacity"]'); await wait(1200);
+    const l1 = await layers();
+    expect(l1.split(',').includes('devs') && l1.split(',').includes('cap'), `the preset is applied once: a layer turned on stays on through Network and back (${l1})`);
+    // 3. #w=week with a watched development: the map view's Overview panel is the spec the page and Home read.
+    const w = await ev(() => { const p = PeelApp.state.projects.find(q => q.units > 100 && q.phase === 'review'); PeelUtil.store.set('watch', [p.key]); return p.title; });
+    await load('?p6r2#w=week');
+    await page.waitForSelector('#pnl-overview .pnl-answer', { timeout: 60000 }); await wait(1500);
+    const wk = await ev(title => {
+      const s = PeelWsPages.weekSpec(), pg = PeelWsPages.build('week'), chg = (PeelWsPages.build('home').groups || []).find(g => g.title === 'Change'), tight = f => f && /tight plant/.test(f.label);
+      const q = sel => [...document.querySelectorAll(`#pnl-overview ${sel}`)], first = document.querySelector('#pnl-overview .pnl-foot .pnl-acts .btn');
+      return { mode: PeelWorkspaces.mode(), ws: PeelWorkspaces.current(), tab: PeelAnalysisTabs.getFootTab(), answer: (document.querySelector('#pnl-overview .pnl-answer') || {}).innerHTML, spec: s.answer, page: pg.answer,
+        figs: q('.pnl-figs .pnl-fig').length, specFigs: s.figures.length, lists: q('.pnl-list-h h3').map(h => h.textContent.trim()), specLists: s.lists.map(l => l.title),
+        watched: q('.pnl-list').some(l => /Your watch list/.test(l.textContent) && l.textContent.includes(title)),
+        first: first ? first.textContent.trim() : '', primary: !!first && first.classList.contains('pnl-primary') && first.hasAttribute('data-ws-watch'),
+        homeTight: ((chg && chg.figures) || []).filter(tight).map(f => f.v).join(), specTight: s.figures.filter(tight).map(f => f.v).join() };
+    }, w);
+    expect(wk.mode === 'ws' && wk.ws === 'week' && wk.tab === 'overview' && st(wk.answer) === st(wk.spec) && st(wk.spec) === st(wk.page), `#w=week: the map view's answer is the page's (${JSON.stringify({ mode: wk.mode, ws: wk.ws, tab: wk.tab, answer: st(wk.answer).slice(0, 60) })})`);
+    expect(wk.figs === wk.specFigs && wk.lists.length > 0 && wk.lists.every(x => wk.specLists.includes(x)) && wk.watched, `its figures and lists are the spec's, the watch list with ${w} (${wk.figs} of ${wk.specFigs}; ${wk.lists.join(' | ')})`);
+    expect(wk.first === 'Open in Watch' && wk.primary && wk.homeTight !== '' && wk.homeTight === wk.specTight, `its first action is Open in Watch; Home's Change group shows the spec's "on a tight plant" (${JSON.stringify({ first: wk.first, primary: wk.primary, home: wk.homeTight, spec: wk.specTight })})`);
+    // 4. Open in Watch, on the map view and on the page: the full map with its Watch tab, the watch list in it.
+    const watch = () => ev(() => ({ mode: PeelWorkspaces.mode(), on: (document.querySelector('.tabs [data-tab="week"]') || { getAttribute: () => null }).getAttribute('aria-selected'), text: (document.getElementById('tab-week') || { textContent: '' }).textContent }));
+    await page.click('#pnl-overview .pnl-foot [data-ws-watch]'); await wait(1500);
+    const w1 = await watch();
+    expect(w1.mode === 'full' && w1.on === 'true' && w1.text.includes(w), `the map view's Open in Watch: the full map's Watch tab, the watched development in it (${w1.mode}, ${w1.on})`);
+    await ev(() => PeelWorkspaces.openPage('week')); await wait(2000);
+    await page.click('#home .page-foot [data-ws-watch]'); await wait(1500);
+    const w2 = await watch();
+    expect(w2.mode === 'full' && w2.on === 'true', `the page's Open in Watch: the same (${w2.mode}, ${w2.on})`);
     await ev(() => PeelUtil.store.set('watch', []));
   });
 

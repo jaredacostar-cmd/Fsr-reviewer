@@ -36,8 +36,9 @@ test('a development\u2019s views are the map\u2019s: its tabs and chips by tab:s
 test('an area\u2019s views: the map\u2019s tabs and chips by tab:sub, a page builder where a page adds to the panel, else the panel', () => {
   const S = load({});
   assert.equal(S.AREA, undefined);
-  assert.deepEqual(Object.keys(S.VIEWS.area), ['overview:', 'growth:pipeline', 'growth:areas', 'growth:timing', 'svc:capacity', 'svc:network', 'dca:timing', 'dca:eas', 'dca:projects', 'records:sources', 'records:checks']);
-  assert.deepEqual(Object.entries(S.VIEWS.area).map(([k, v]) => [k, v.page || v.keys[0], v.ws || '']), [['overview:', 'home', ''], ['growth:pipeline', 'growth:pipeline', 'growth'], ['growth:areas', 'growth', ''], ['growth:timing', 'outlook', ''], ['svc:capacity', 'tight', ''], ['svc:network', 'svc:network', 'tight'], ['dca:timing', 'projects', ''], ['dca:eas', 'eaflow', ''], ['dca:projects', 'dca:projects', 'projects'], ['records:sources', 'data', ''], ['records:checks', 'records:checks', '']]);
+  // (navigation phase 6c: Servicing › Old pipes, drawn by the Old pipes page builder: the panel's spec, its small map)
+  assert.deepEqual(Object.keys(S.VIEWS.area), ['overview:', 'growth:pipeline', 'growth:areas', 'growth:timing', 'svc:capacity', 'svc:network', 'svc:pipes', 'dca:timing', 'dca:eas', 'dca:projects', 'records:sources', 'records:checks']);
+  assert.deepEqual(Object.entries(S.VIEWS.area).map(([k, v]) => [k, v.page || v.keys[0], v.ws || '']), [['overview:', 'home', ''], ['growth:pipeline', 'growth:pipeline', 'growth'], ['growth:areas', 'growth', ''], ['growth:timing', 'outlook', ''], ['svc:capacity', 'tight', ''], ['svc:network', 'svc:network', 'tight'], ['svc:pipes', 'pipes', ''], ['dca:timing', 'projects', ''], ['dca:eas', 'eaflow', ''], ['dca:projects', 'dca:projects', 'projects'], ['records:sources', 'data', ''], ['records:checks', 'records:checks', '']]);
   for (const v of Object.values(S.VIEWS.area)) assert.ok(!!v.page !== !!v.keys, 'a page builder or a panel, never both');
 });
 

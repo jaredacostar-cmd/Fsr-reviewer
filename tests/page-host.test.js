@@ -39,7 +39,7 @@ function load(o = {}) {
   const nodes = { '#home': home };
   const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: s => nodes[s] || null, querySelectorAll: () => [], getElementById: id => nodes[`#${id}`] || null,
     addEventListener: (t, f) => { (handlers[t] = handlers[t] || []).push(f); }, dispatchEvent() {} };
-  const PeelAnalysisTabs = { TAB_KEYS: AT.TAB_KEYS, chipsAt: AT.chipsAt, tabReady: t => !!at.ready(t), getFootTab: () => at.tab,
+  const PeelAnalysisTabs = { TAB_KEYS: AT.TAB_KEYS, chipsAt: AT.chipsAt, tabReady: t => !!at.ready(t), getFootTab: () => at.tab, getSvcSub: () => at.subs.svc,
     setSub: (t, s) => { calls.push(['setSub', t, s]); at.subs[t] = s; return t; }, setFootPref: t => calls.push(['setFootPref', t]),
     showFootTab: t => { calls.push(['showFootTab', t]); at.tab = t; }, openFold: f => calls.push(['openFold', f]),
     openTab: (t, s) => { calls.push(['openTab', t, s]); if (s) at.subs[t] = s; at.tab = t; },
@@ -84,7 +84,7 @@ test('the strip is the map’s: five tabs in the map’s order and words, the vi
     if (want.length > 1) { assert.deepEqual(s.views, want, `${t.key}: the map’s chips, its words`); assert.equal(s.view, sub); }
     else assert.ok(!h.includes('page-subsecs'), `${t.key}: one view or none is no choice: no row`);
   }
-  assert.deepEqual(mapChips('svc').map(c => c.sub), ['capacity', 'network', 'fsr']);
+  assert.deepEqual(mapChips('svc').map(c => c.sub), ['capacity', 'network', 'pipes', 'fsr'], '(Old pipes since navigation phase 6c)');
   // The markup (pure): the strip a tablist, a tab lit, a busy one marked and worded, Records trailing.
   const h = L.WP.tabsHTML({ tabs: [{ key: 'overview', label: 'Overview', info: 'tab-overview' }, { key: 'svc', label: 'Servicing', info: 'tab-servicing', busy: true }, { key: 'records', label: 'Records', trail: true }], on: 'svc', chips: [{ sub: 'capacity', label: 'Capacity' }, { sub: 'network', label: 'Network' }], sub: 'network' });
   assert.equal(h, '<nav class="page-secs page-tabs" role="tablist" aria-label="Tabs" data-psec="tabs"><button type="button" role="tab" class="page-sec page-tab" data-pg-tab="overview" data-info="tab-overview" aria-selected="false">Overview</button><button type="button" role="tab" class="page-sec page-tab on" data-pg-tab="svc" data-info="tab-servicing" aria-selected="true" aria-busy="true" title="Loading: it opens when its data lands">Servicing <small class="page-tab-wait">loading</small></button><button type="button" role="tab" class="page-sec page-tab page-tab-trail" data-pg-tab="records" aria-selected="false">Records</button></nav><nav class="page-secs page-subsecs" aria-label="Views" data-psec="views"><button type="button" class="page-sec" data-pg-tab="svc" data-pg-sub="capacity" aria-pressed="false">Capacity</button><button type="button" class="page-sec on" data-pg-tab="svc" data-pg-sub="network" aria-pressed="true">Network</button></nav>');
@@ -149,7 +149,7 @@ test('a tab before its data: Servicing and Capital say loading, lit, never Overv
   assert.match(m.answer, /Loading Servicing › Capacity \(the servicing model and the DC program\)…/);
   assert.equal(s.on, 'svc', 'the tab asked for is the one lit'); assert.deepEqual(s.busy, ['svc', 'dca']);
   assert.match(m.tabs, /data-pg-tab="svc"[^>]*aria-busy="true" title="Loading: it opens when its data lands">Servicing <small class="page-tab-wait">loading<\/small>/);
-  assert.deepEqual(s.views, ['Capacity', 'Network'], 'its views row is there');
+  assert.deepEqual(s.views, ['Capacity', 'Network', 'Old pipes'], 'its views row is there');
   assert.equal(m.waitTab, true, 'it tries again until the tab is ready, even with nothing changed (js/workspaces.js renderPage)');
   assert.match(src('js/workspaces.js'), /if \(!force && html === lastHTML\) \{ if \(m\.waitTab\) \{ clearTimeout\(timer\); timer = setTimeout\(\(\) => renderPage\(false\), 1000\); \} return; \}/);
   // Capital › EAs needs neither the servicing model nor the DC program: its builder's own content (or its own wait for
@@ -641,13 +641,14 @@ test('the site page hosts the development’s views: the strip, Servicing’s tw
   assert.deepEqual([fold.open, fold.shown], [false, null]);
   L.click('#home [data-pg-tab]', { pgTab: 'svc', pgSub: 'fsr' });
   assert.deepEqual([L.W.page(), L.W.view(), fold.open, fold.shown], ['site', 'svc:fsr', true, 'start']);
-  // The page as the reader names it (shownPage): at FSR review, Review an FSR, on the ☰ button, the sidebar's Explore
-  // entry and Explore's views bar (lit); any other view, Check a site.
-  const named = () => [/data-home-menu[^>]*><span aria-hidden="true">☰<\/span> ([^<]+) </.exec(L.home.innerHTML)[1], /<span class="home-ws-cur">› ([^<]+)<\/span>/.exec(L.home.innerHTML)[1],
-    /<nav class="page-views"[^]*?class="btn small on" data-ws-page="(\w+)" aria-current="page"/.exec(L.home.innerHTML)[1]];
-  assert.deepEqual(named(), ['Explore › Review an FSR', 'Review an FSR', 'fsr']);
+  // The page as the reader names it (shownPage): at FSR review, Review an FSR, on the ☰ button and the sidebar's
+  // Explore entry; any other view, Check a site. (Explore's views bar, which lit it too, is gone: navigation phase 6c,
+  // §5 row 45, removed by design)
+  const named = () => [/data-home-menu[^>]*><span aria-hidden="true">☰<\/span> ([^<]+) </.exec(L.home.innerHTML)[1], /<span class="home-ws-cur">› ([^<]+)<\/span>/.exec(L.home.innerHTML)[1]];
+  assert.deepEqual(named(), ['Explore › Review an FSR', 'Review an FSR']);
+  assert.doesNotMatch(L.home.innerHTML, /page-views|aria-label="Explore"/);
   L.click('#home [data-pg-tab]', { pgTab: 'svc', pgSub: 'network' });
-  assert.deepEqual(named(), ['Explore › Check a site', 'Check a site', 'site']);
+  assert.deepEqual(named(), ['Explore › Check a site', 'Check a site']);
   assert.match(src('js/workspaces.js'), /const ff = pt\.dataset\.pgSub === 'fsr' && \$\('#home #pnl-fsr'\);\n\s+if \(ff\) \{ ff\.open = true; ff\.scrollIntoView\(\{ block: 'start' \}\); return; \}\n[^\n]*\n\s+const el = \$\('#home'\), st = /);
   // renderPage: the site's page is a host with a development, Home the area's (js/workspaces.js).
   assert.match(src('js/workspaces.js'), /const m = page === 'home' \? WP\.host\('area'\) : hostPage\(page\) \? WP\.host\('site'\) : WP\.build\(page\);/);
@@ -690,4 +691,182 @@ test('a pick on the FSR list, or a link’s d= on its Find step, opens the site�
   L.click('[data-ws-go]', { wsGo: 'site', wsKeep: '' }); L.dv.p = { key: 'k2' }; L.pnlSet({ key: 'overview:', scope: 'dev:k2' }); run();
   assert.deepEqual(L.calls.filter(c => c[0] === 'showFootTab'), [['showFootTab', 'overview']]);
   assert.match(src('js/workspaces.js'), /const pl = plan\(id, \{ site: !!site \}\); if \(!pl\) return;\n(?: {4}\/\/[^\n]*\n)+ {4}lastDev = site \? `dev:\$\{site\.key\}` : null;/);
+});
+
+// Navigation phase 6c-S4 (design §5 rows 2, 22, 63, 71): one This week. The page, its map view (the Overview panel there,
+// js/workspaces.js override) and Home's Change figures read one spec (js/ws-pages.js weekSpec); its rows are a panel's,
+// the page makes them its own; "Open in Watch" (was "Watch list") first.
+test('one This week: the page, the map view and Home’s Change read one spec; Open in Watch first (6c)', () => {
+  const area = { head: { identity: 'Peel · all of Peel', status: null }, answer: 'The 2 developments shown.', figures: [],
+    lists: [{ title: 'Needs attention', rows: [], total: 0 }, { title: 'This week', rows: [{ attrs: { 'data-pnl-dev': 'k1' }, html: 'a' }, { attrs: { 'data-pnl-dev': 'k2' }, html: 'b' }, { attrs: { 'data-ce-open': 'ea:7' }, html: 'c' }], total: 3 }] };
+  const projects = [{ key: 'k1', title: '1 Main St', municipality: 'Brampton', phase: 'approved', units: 40 }, { key: 'k2', title: '2 Main St', municipality: 'Caledon', phase: 'review', units: 12 }];
+  const extra = {
+    PeelOverviewTab: { lastAreaSpec: () => area, weekChanges: () => ({ moved: [{ key: 'k1', title: '1 Main St', from: 'review', to: 'approved' }], added: [{ key: 'k2', title: '2 Main St', phase: 'review', municipality: 'Caledon' }] }) },
+    PeelCapitalEA: { attention: () => [{ ce: 'ea:7', text: 'EA 7: comment period closes' }] },
+    PeelSvcCapacity: { collect: () => [{ kind: 'plant', id: 'plant:Lakeview', name: 'G.E. Booth', pctBo: 95, limit: { y: 2031, what: 'x' } }], partial: () => false },
+    PeelMapMarkers: { THIS_YEAR: 2026, plantOfDev: p => (p.key === 'k1' ? 'Lakeview' : 'Clarkson') },
+  };
+  const L = load({ area, state: { projects, filtered: projects }, extra, dev: null, devs: { k1: projects[0] } }), s = L.WP.weekSpec();
+  assert.equal(s.head.name, 'What changed since the last update?'); assert.equal(s.head.status, null);
+  assert.equal(s.answer, '<strong>3</strong> changes since the last data update: 1 file moved stage, 1 new file, 1 capital or EA date.', 'the count: the Overview’s This week rows');
+  assert.deepEqual(plain(s.figures.map(f => [f.v, f.label])), [['1', 'moved stage'], ['1', 'new'], ['1', 'capital and EA dates'], ['1', 'on a tight plant']]);
+  assert.deepEqual(plain(s.lists.map(l => l.title)), ['Moved stage', 'New files', 'Capital and EA dates', 'Your watch list'], 'the capacity alerts only when a feed is published (owner decision 8)');
+  // (a panel's rows: a development opens it, a date its record; top 5 and See all into the Overview's full table)
+  assert.deepEqual(plain(s.lists.slice(0, 3).map(l => [l.rows[0].attrs, l.seeAll])), [[{ 'data-pnl-dev': 'k1' }, { 'data-full-table': 'overview' }], [{ 'data-pnl-dev': 'k2' }, { 'data-full-table': 'overview' }], [{ 'data-ce-open': 'ea:7' }, { 'data-full-table': 'overview' }]]);
+  assert.match(s.lists[0].rows[0].html, /drains to Lakeview \(tight\)/);
+  assert.deepEqual(plain(s.foot.primary), { label: 'Open in Watch', attrs: { 'data-ws-watch': '' }, title: 'The developments you watch, on the full map (its left panel, Watch)' });
+  assert.deepEqual(plain(s.devs.map(p => p.key)), ['k1', 'k2'], 'the changed developments, highlighted on the page’s map');
+  // The page: the spec as it is, its rows the page's (a development its site's page; a date the map view at it).
+  const m = L.WP.build('week');
+  assert.deepEqual([m.id, m.name, m.identity, m.answer], ['week', s.head.name, s.head.identity, s.answer]);
+  assert.deepEqual(plain(m.figures), plain(s.figures));
+  assert.deepEqual(plain(m.lists.map(l => l.title)), plain(s.lists.map(l => l.title)));
+  assert.deepEqual(plain(m.lists.slice(0, 3).map(l => l.rows[0].attrs)), [{ 'data-ws-pick': 'k1', 'data-ws-as': 'site' }, { 'data-ws-pick': 'k2', 'data-ws-as': 'site' }, { 'data-ws-go': 'week', 'data-ws-ce': 'ea:7' }]);
+  assert.deepEqual(plain(m.actions), [{ label: 'Open in Watch', attrs: { 'data-ws-watch': '' }, title: s.foot.primary.title, primary: true }, { label: 'Open the map', attrs: { 'data-ws-go': 'week' } }]);
+  L.W.openPage('week'); L.click('[data-ws-pick]', { wsPick: 'k1', wsAs: 'site' });
+  assert.deepEqual([L.W.page(), L.W.view(), L.dv.p && L.dv.p.key], ['site', 'overview:', 'k1'], 'a row: its site’s page');
+  // Home's Change: the spec's "on a tight plant" figure (not the page built for it), opening This week.
+  L.dv.p = null; L.W.openPage('home');
+  const ch = L.WP.build('home').groups.find(g => g.title === 'Change');
+  assert.deepEqual(plain(ch.figures[1]), { ...plain(s.figures[3]), attrs: { 'data-ws-page': 'week' } });
+  // The map view (#w=week): the same spec in the Overview panel; before the briefing, a loading answer, never the area's.
+  L.W.go('week', { quiet: true });
+  assert.deepEqual(plain(L.W.override('overview:', 'area')), plain(s));
+  assert.equal(L.W.override('svc:capacity', 'area'), null);
+  const N = load({ extra: { PeelOverviewTab: { lastAreaSpec: () => null } } }); N.W.go('week', { quiet: true });
+  assert.deepEqual(plain(N.W.override('overview:', 'area')), { head: { name: 'What changed since the last update?', status: null, identity: 'Peel' }, answer: '<span class="muted">Loading the changes…</span>' });
+  // One builder: workspaces.js's own weekSpec is gone; Home reads the spec, not BUILD.week().
+  assert.doesNotMatch(src('js/workspaces.js'), /function weekSpec|'Watch list'/);
+  assert.match(src('js/workspaces.js'), /const WP = root\.PeelWsPages, w = WP && WP\.weekSpec \? WP\.weekSpec\(\) : null;/);
+  assert.match(src('js/ws-pages.js'), /const wk = week && ready \? weekSpec\(\) : null;/);
+  assert.doesNotMatch(src('js/ws-pages.js'), /BUILD\.week\(\)|label: 'Watch list'/);
+});
+
+// Navigation phase 6c-S3 (design §3.4, §5 rows 9, 21, 38, 104, 136): Old pipes is Servicing › Old pipes (svc:pipes), an
+// area's view. One spec (js/workspaces.js pipesSpec) is the map's panel and Home's view: the four figures, the likelihood ×
+// consequence grid as its chart, the runs and the plants, its CSV first; the map's full table the grid and every run; the
+// amber pipes on the map while it is open (syncPipes), never under a page. The pipesSpec override is gone.
+test('Old pipes’ one spec: the map’s panel and Home’s Servicing › Old pipes read the same figures, grid and runs; its CSV first; the amber pipes while it is open (6c)', () => {
+  // [diameterMm, slope, capacityLs, next, censusPopUp, haUp, plant, installYear, material, risk, coords, share, invertUp, invertDown, lengthM]
+  const data = { risks: ['LOW', 'MODERATE'], materials: ['CONP'], plants: ['Lakeview', 'Clarkson'], pipes: [
+    [900, 0.01, 1, 1, 0, 0, 0, 1940, 0, 0, [-79.6, 43.6, -79.61, 43.61], 1, 0, 0, 1500],    // 0: 86 years, 12,000 units (one main with 1)
+    [900, 0.01, 1, -1, 0, 0, 0, 1940, 0, 0, [-79.61, 43.61, -79.62, 43.62], 1, 0, 0, 1000], // 1: the same main, 11,000 units
+    [300, 0.01, 1, -1, 0, 0, 1, 2000, 0, 1, [-79.7, 43.7, -79.71, 43.71], 1, 0, 0, 500],    // 2: new, moderate risk, 150 units
+    [450, 0.01, 1, -1, 0, 0, 1, 1970, 0, 0, [-79.8, 43.8, -79.81, 43.81], 1, 0, 0, 800],    // 3: 56 years, 2,000 units
+  ] };
+  const G = { built: { units: Float64Array.from([12000, 11000, 150, 2000]) }, approved: { units: new Float64Array(4) }, proposed: { units: new Float64Array(4) } };
+  const map = { layers: [], removeLayer(l) { this.layers = this.layers.filter(x => x !== l); } };
+  let drawn = 0;
+  const Lf = { polyline: (pts, opt) => ({ pts, opt }), layerGroup: ls => ({ ls, addTo(m) { drawn++; m.layers.push(this); return this; } }) };
+  const extra = { PeelMapMarkers: { THIS_YEAR: 2026, SEW: { data } }, PeelSewerCap: { sewerGrowth: () => G }, L: Lf, PeelMapCore: { map },
+    PeelUtil: { esc: U.esc, fmtNum: U.fmtNum, fmt1: U.fmt1, store: { get: (k, d) => d, set() {} }, token: () => 'amber' } };
+  const L = load({ key: 'svc:pipes', extra }), s = L.W.pipesSpec();
+  // The spec: runs (0 and 1 one main), the length, the grid's top-right cell, the moderate risk pipes.
+  assert.equal(s.head.name, 'Which old pipes carry the most growth?');
+  assert.deepEqual(plain(s.head.trail.map(t => t.label)), ['Peel', 'Servicing › Old pipes']);
+  assert.deepEqual(plain(s.head.status), { tone: 'tight', text: '1 moderate risk' });
+  assert.deepEqual(plain(s.figures.map(f => [f.v, f.u, f.label])), [['3', 'sewer runs', 'on the list'], ['3.8', 'km', 'length on the list'], ['1', 'sewer runs', 'oldest and most loaded'], ['1', 'pipes', 'rated moderate risk']]);
+  assert.match(s.answer, /^<strong>3<\/strong> sewer runs \(4 pipe segments\)[^]*the 900 mm main to Lakeview<\/strong>, laid in 1940 \(12,000 units\)\.$/);
+  // (its chart: the grid, the worst likelihood on top; the top-right cell the 900 mm main, 2.5 km)
+  assert.equal(s.chart, L.WP.pipeGridHTML(L.W.pipeRuns(L.W.oldList(), data)));
+  assert.equal((s.chart.match(/<td class="pg-c pg-s\d">/g) || []).length, 9);
+  assert.match(s.chart, /<tbody><tr><th scope="row">80\+ years<\/th><td class="pg-c pg-s4"><b>0<\/b><small>0 km<\/small><\/td><td class="pg-c pg-s5"><b>0<\/b><small>0 km<\/small><\/td><td class="pg-c pg-s6"><b>1<\/b><small>2\.5 km<\/small><\/td><\/tr>/);
+  assert.deepEqual(plain(s.lists.map(l => [l.title, l.rows.length, l.total])), [['Runs, most units first', 3, 3], ['By plant', 2, 2]]);
+  assert.deepEqual(plain(s.lists[0].rows.map(r => r.attrs['data-pipe'])), [0, 3, 2], 'most units first');
+  assert.deepEqual(plain(s.lists[0].seeAll), { 'data-full-table': 'svc:pipes', 'data-ft-go': 'Every run' });
+  assert.match(s.lists[1].rows[0].html, /<span>Lakeview<\/span><span>1 sewer runs · 2\.5 km<\/span>/);
+  assert.deepEqual(plain(s.foot), { primary: { label: 'Export the list (CSV)', attrs: { 'data-ws-pipescsv': '' } }, secondary: [{ label: 'Show the sewers on the map', attrs: { 'data-mview': 'wastewater' } }] });
+  // The map's panel (js/panel.js): its CSV first, then the full table, then the sewers; the grid its chart.
+  const PNh = require('../js/panel.js').html({ key: 'svc:pipes', ...s });
+  assert.deepEqual([...PNh.matchAll(/<button type="button" class="btn small (pnl-primary|pnl-sec)"[^>]*>([^<]+)</g)].map(x => x[2]), ['Export the list (CSV)', 'Open full table', 'Show the sewers on the map']);
+  assert.match(PNh, /<div class="pnl-chart" data-sec="chart"><h3 class="sub-title pnl-chart-t">Old sewer runs by age/);
+  // Home's view: the same answer, figures, grid and lists, its runs opening the map view at the pipe; CSV first.
+  const m = L.WP.host(), st = strip(m.tabs);
+  assert.deepEqual([m.id, st.on, st.view, st.views], ['pipes', 'svc', 'pipes', ['Capacity', 'Network', 'Old pipes']]);
+  assert.deepEqual([m.name, m.answer, m.identity, m.chart, m.method], [s.head.name, s.answer, s.head.identity, s.chart, s.method]);
+  assert.equal(m.eyebrow, 'Servicing › Old pipes · Peel');
+  assert.deepEqual(plain(m.figures), plain(s.figures));
+  assert.deepEqual(plain(m.lists.map(l => l.title)), ['Runs, most units first', 'By plant']);
+  assert.deepEqual(plain(m.lists[0].rows[0].attrs), { 'data-ws-go': 'pipes', 'data-ws-pipe': 0, title: 'Show the pipe and what loads it' });
+  assert.deepEqual(plain(m.lists[0].see), { 'data-ws-go': 'pipes', 'data-ws-fulltable': '1' }, 'See all: every run, the map view’s full table');
+  assert.deepEqual(plain(m.status.attrs), { 'data-ws-go': 'pipes', 'data-ws-fulltable': '1' });
+  assert.deepEqual(plain(m.actions), [{ label: 'Export the list (CSV)', attrs: { 'data-ws-pipescsv': '' }, primary: true }, { label: 'Show the sewers on the map', attrs: { 'data-mview': 'wastewater' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'pipes' } }]);
+  // (Show the sewers on the map, as every panel's and page's Show … on the map: that lens, the page's on the full map,
+  // js/topbar.js; the System and the tab as they are. No handler took it outside the lens switch: the full map opened
+  // at the lens it had, 6c review)
+  assert.match(src('js/topbar.js'), /document\.addEventListener\('click', e => \{ const b = e\.target\.closest && e\.target\.closest\('\[data-mview\]'\); if \(b && !b\.closest\('#tb-views'\)\) MA\(\)\.setMapView\(b\.dataset\.mview\); \}\);/);
+  assert.match(m.map.caption, /hm-key-pipe/); assert.deepEqual(plain(m.map.attrs), { 'data-ws-go': 'pipes' });
+  const page = L.WP.pageHTML(m, '');
+  assert.ok(L.WP.sectionsOf(page).includes('chart') && !L.WP.sectionsOf(page).includes('grid'), 'one grid: the chart');
+  // The sewer records not in yet: both say so (the page tries again, the panel is set again when they land).
+  const N = load({ key: 'svc:pipes' });
+  assert.deepEqual(plain(N.W.pipesSpec()), { head: { trail: [{ label: 'Peel' }, { label: 'Servicing › Old pipes' }], name: 'Which old pipes carry the most growth?', identity: 'Sanitary sewers 300 mm and larger' }, answer: 'Loading the Region’s sanitary sewer records…' });
+  assert.match(N.WP.host().answer, /Loading the Region’s sanitary sewer records…/);
+  // The map's Servicing › Old pipes (js/svc-capacity.js renderFor): the panel set from the one spec, its full table.
+  const sets = [], body = { innerHTML: '' };
+  const cctx = { window: { PeelUtil: U, PeelWorkspaces: L.W, PeelWsPages: L.WP, PeelMapMarkers: extra.PeelMapMarkers, PeelPanel: { set: (k, v) => sets.push([k, v]) }, PeelAnalysisTabs: { getFootTab: () => 'svc', getSvcSub: () => 'pipes' } },
+    document: { querySelector: q => (q === '#pipes-body' ? body : null), addEventListener() {} }, module: { exports: {} } };
+  cctx.globalThis = cctx; vm.runInNewContext(src('js/svc-capacity.js'), cctx);
+  const C = cctx.module.exports;
+  C.renderFor('pipes');
+  assert.deepEqual(plain(sets.map(x => [x[0], x[1].answer])), [['svc:pipes', s.answer]]);
+  assert.ok(body.innerHTML.includes(s.chart), 'the full table: the grid');
+  assert.match(body.innerHTML, /<h3 class="sub-title">By plant<\/h3>[^]*<h3 class="sub-title">Every run on the list/);
+  assert.equal((body.innerHTML.match(/<tr(?: class="t-tight")?><th scope="row" class="ft-pin" data-l="Sewer">/g) || []).length, 3, 'every run');
+  assert.match(body.innerHTML, /<button type="button" class="btn small" data-ws-pipescsv>Export the list \(CSV\)<\/button>/);
+  // The amber pipes: on the map while Servicing › Old pipes is open (each segment), drawn once per list; another view,
+  // or a page, takes them off.
+  L.W.syncPipes();
+  assert.deepEqual([drawn, map.layers.length, map.layers[0] && map.layers[0].ls.length], [1, 1, 4]);
+  assert.deepEqual(plain(map.layers[0].ls.map(p => p.opt.weight)), [4, 4, 4, 6], 'heavier: moderate risk (the segments, most units first)');
+  L.W.syncPipes(); L.pnlSet({ key: 'svc:pipes', scope: 'area' }); assert.equal(drawn, 1, 'not drawn again for the same list');
+  L.at.subs.svc = 'network'; L.W.syncPipes(); assert.equal(map.layers.length, 0, 'Network: gone');
+  L.at.subs.svc = 'pipes'; L.W.syncPipes(); assert.equal(map.layers.length, 1);
+  // (a run picked there: its pipe's result on Overview, the pipes drawn kept around it, and after it closes until
+  // another tab or view; Overview without a pipe's result, or a pipe's result with none drawn, never draws them)
+  const ss = v => { L.window.PeelApp.state.ss = v; };
+  ss('pipe:0'); L.at.tab = 'overview'; L.W.syncPipes(); assert.deepEqual([map.layers.length, drawn], [1, 2], 'a run’s result: kept, not drawn again');
+  ss(null); L.W.syncPipes(); assert.equal(map.layers.length, 0, 'Overview without it: gone');
+  ss('pipe:0'); L.W.syncPipes(); assert.equal(map.layers.length, 0, 'a pipe’s result with none drawn: not drawn for it');
+  ss('dcwork:1'); L.at.tab = 'svc'; L.W.syncPipes(); assert.equal(map.layers.length, 1, 'Old pipes again');
+  L.at.tab = 'overview'; L.W.syncPipes(); assert.equal(map.layers.length, 0, 'another result: gone');
+  L.at.tab = 'svc'; L.W.syncPipes(); assert.equal(map.layers.length, 1);
+  L.W.openPage('pipes'); assert.equal(map.layers.length, 0, 'a page: never under it');
+  assert.deepEqual([L.W.page(), L.W.view()], ['home', 'svc:pipes']);
+  // Wired: setMode, go and every tab shown (js/analysis-tabs.js), the panel's pnl:set; no override, no Network filter.
+  const ws = src('js/workspaces.js');
+  assert.match(ws, /if \(m !== 'ws'\) \{ cur = null; if \(m === 'full'\) \{ unfoldLayers\(\); restoreView\(\); \} \}\n {4}syncPipes\(\);/);
+  assert.match(ws, /foldLayers\(\);\n {4}syncPipes\(\);/);
+  assert.match(ws, /if \(e\.detail && e\.detail\.key === 'svc:pipes'\) syncPipes\(\);/);
+  assert.match(ws, /function syncPipes\(\) \{ const A = AT\(\), ss = App\(\) && App\(\)\.state && App\(\)\.state\.ss; pipesLayer\(mode !== 'home' && !!A && !!A\.getSvcSub && A\.getSvcSub\(\) === 'pipes' && \(A\.getFootTab\(\) === 'svc' \|\| \(!!pLayer && A\.getFootTab\(\) === 'overview' && \/\^pipe:\/\.test\(ss \|\| ''\)\)\)\); \}/);
+  assert.match(src('js/analysis-tabs.js'), /if \(root\.PeelPanel\) root\.PeelPanel\.sync\(\);\n(?: {4}\/\/[^\n]*\n)? {4}if \(root\.PeelWorkspaces && root\.PeelWorkspaces\.syncPipes\) root\.PeelWorkspaces\.syncPipes\(\);/);
+  assert.doesNotMatch(ws, /cur === 'pipes' && key === 'svc:network'|pipesLayer\(id === 'pipes'\)|pipesLayer\(true\)|pipesLayer\(false\)/);
+  assert.match(src('js/svc-capacity.js'), /else if \(sub === 'pipes'\) renderPipes\(\); \};/);
+  assert.match(src('js/svc-capacity.js'), /const renderAll = \(\) => \{ render\(\); renderChecks\(\); renderNetBar\(\); if \(pipesOpen\(\)\) renderPipes\(\); \};/);
+  // css: the grid takes the 440 px panel's width (and a phone's), scrolling in its own box where that is too narrow.
+  const css = src('css/app.css');
+  assert.match(css, /\.pg-wrap \{ overflow-x: auto; max-width: 100%; \}/);
+  assert.match(css, /\.pnl \.pg \{ min-width: 0; width: 100%; \}\n\.pnl \.pg td \{ min-width: 0; padding: 4px 6px; \}\n@media \(max-width: 700px\) \{ \.pg \{ min-width: 0; width: 100%; \} \.pg td \{ min-width: 0; padding: 4px 6px; \} \}/);
+  assert.doesNotMatch(css, /\.page-grid\b/);
+});
+
+// The sewer records failing to load (an HTTP error, sewers.json during a deploy): Servicing › Old pipes on the map (a
+// link, a stored pick) and on Home, and Review outlets, say they are loading and ask once; drawn again only when they
+// land. (Each drew itself again when the load came back empty and asked again at once, for ever: the tab hung.)
+test('the sewer records failing to load: Old pipes and Review outlets ask once, never again in a loop (6c review)', async () => {
+  let asked = 0, drawn = 0, F = null;
+  // (past six asks the load never settles, so a loop shows as a count, not a hung test)
+  const sew = { data: null }, loadSewers = () => (++asked > 6 ? new Promise(() => {}) : Promise.resolve(null));
+  F = load({ key: 'svc:pipes', extra: { PeelMapMarkers: { THIS_YEAR: 2026, SEW: sew }, PeelSewerCap: { loadSewers }, PeelSvcCapacity: { renderFor: () => { drawn++; F.W.pipesSpec(); } }, PeelDevOutlets: { load() {} }, PeelDcImpact: {} } });
+  const settle = () => new Promise(r => setImmediate(r));
+  assert.match(F.W.pipesSpec().answer, /^Loading the Region’s sanitary sewer records…$/);
+  await settle(); assert.deepEqual([asked, drawn], [1, 0], 'the map’s panel: asked once, not drawn again');
+  F.W.openPage('pipes'); await settle();
+  assert.equal(F.W.view(), 'svc:pipes'); assert.match(F.home.innerHTML, /Loading the Region’s sanitary sewer records…/);
+  assert.equal(asked, 2, 'Home’s Servicing › Old pipes: asked once more');
+  const n = asked; F.WP.build('outlets'); await settle();
+  assert.equal(asked, n + 1, 'Review outlets: asked once');
+  // (when they land: drawn again, the panel at its view)
+  asked = 0; let ok = null; const G = load({ key: 'svc:pipes', extra: { PeelMapMarkers: { THIS_YEAR: 2026, SEW: sew }, PeelSewerCap: { loadSewers: () => { asked++; ok = { pipes: [] }; return Promise.resolve(ok); } }, PeelSvcCapacity: { renderFor: k => { drawn = k; } } } });
+  drawn = 0; G.W.pipesSpec(); await settle(); assert.deepEqual([asked, drawn], [1, 'pipes'], 'landed: the panel drawn again');
 });
