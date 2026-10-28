@@ -198,7 +198,18 @@ async function pickView(page, ev, key, tap = false) {
     expect(groups >= 4, 'the menu opens grouped');
   });
 
-  await check('phone: the full map\'s way back sits above the bottom sheet and takes a tap', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
+  await check('phone: a map view\'s bar and the full map\'s way back sit above the bottom sheet and take a tap', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
+    // A map view: its bar (← Page, the search, Full map) above the sheet at every height, each a tap (navigation phase
+    // 6c: the panels' Full map → went with their source line; the full sheet stops under the bar, js/app.js).
+    await ev(() => PeelWorkspaces.go('tight')); await wait(2500);
+    for (const snap of ['peek', 'half', 'full']) {
+      await ev(s => PeelApp.setAnalysisSnap(s), snap); await wait(800);
+      const r = await ev(() => { const a = document.getElementById('analysis').getBoundingClientRect(); return ['[data-ws-backpage]', '[data-ws-full]'].map(q => { const b = document.querySelector(`#ws-bar ${q}`), x = b.getBoundingClientRect(), hit = document.elementFromPoint(x.left + x.width / 2, x.top + x.height / 2); return { q, bottom: Math.round(x.bottom), sheet: Math.round(a.top), hit: !!(hit && hit.closest(q) === b) }; }); });
+      expect(r.every(x => x.hit && x.bottom <= x.sheet), `${snap}: the map view's ← Page and Full map above the sheet, not under it (${JSON.stringify(r)})`);
+    }
+    await page.locator('#ws-bar [data-ws-full]').tap(); await wait(1500);
+    expect(await ev(() => PeelWorkspaces.mode()) === 'full', 'its Full map takes the tap at a full sheet');
+    await ev(() => PeelApp.setAnalysisSnap('peek')); await ev(() => PeelWorkspaces.openPage('home')); await wait(1500);
     await page.locator('[data-ws-full]:visible').first().click(); await wait(2000);
     const back = () => ev(() => { const b = document.querySelector('#back-bar [data-ws-back]').getBoundingClientRect(), a = document.getElementById('analysis').getBoundingClientRect(), hit = document.elementFromPoint(b.left + 20, b.top + b.height / 2); return { bottom: Math.round(b.bottom), sheet: Math.round(a.top), hit: !!(hit && hit.closest('#back-bar')), snap: PeelApp.getAnalysisSnap(), stored: localStorage.getItem('peel-dev:analysisSnap') }; });
     for (const snap of ['peek', 'half', 'full']) {
@@ -1495,7 +1506,7 @@ async function pickView(page, ev, key, tap = false) {
   // Navigation phase 6c-S3 (design §3.4, §5 rows 9, 21, 104): Old pipes is Servicing › Old pipes, an area's view on Home and
   // the map, one spec (the figures, the grid, the runs), its CSV first; the amber pipes on the map while it is open, never
   // under a page; its full table every run; a cold #w=p:pipes lands there, and on a phone nothing scrolls sideways.
-  await check('Servicing › Old pipes: Home’s chip and the map’s, one grid, its CSV first, the amber pipes while it is open; #w=p:pipes lands', browser, {}, async ({ page, ev }, expect) => {
+  await check('Servicing › Old pipes: Home’s chip and the map’s, one grid, its CSV first, the amber pipes while it is open and around a run picked; #w=p:pipes and its 6a/6b page link land; Show the sewers on the map sets the lens', browser, {}, async ({ page, ev }, expect) => {
     await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect() && !document.querySelector('#ftab-svc[aria-busy]'), null, { timeout: 150000 });
     // (the amber pipes: js/workspaces.js's own polylines, not interactive, in the tight colour)
     const amber = () => ev(() => { const c = PeelUtil.token('--cap-tight'); let n = 0; PeelMapCore.map.eachLayer(l => { if (l instanceof L.Polyline && l.options.interactive === false && l.options.opacity === 0.9 && l.options.color === c) n++; }); return n; });
@@ -1526,6 +1537,15 @@ async function pickView(page, ev, key, tap = false) {
     expect(await amber() === 0, 'Capacity: the amber pipes gone');
     await page.click('.f-subtabs[data-pane="svc"] [data-svcsub="pipes"]'); await wait(1500);
     expect(await amber() === n, 'Old pipes again: the amber pipes back');
+    // 4b. A run picked in its panel: the pipe's result on Overview, the amber pipes kept around it and after it closes;
+    // Servicing again: Old pipes, its pipes.
+    await page.click('#pnl-svc .pnl-row[data-pipe]'); await wait(2500);
+    const rp = await ev(() => ({ tab: PeelAnalysisTabs.getFootTab(), ss: PeelApp.state.ss || '' })), n1 = await amber();
+    expect(rp.tab === 'overview' && /^pipe:/.test(rp.ss) && n1 === n, `a run picked: its pipe's result, the amber pipes kept (${JSON.stringify({ ...rp, amber: n1 })})`);
+    await page.click('#scope-body .pnl-x[data-scope-result-close]'); await wait(1500);
+    expect(await amber() === n, 'its result closed: the amber pipes still there');
+    await page.click('#ftab-svc'); await wait(1500);
+    expect(await ev(() => PeelAnalysisTabs.getSvcSub()) === 'pipes' && await amber() === n, 'Servicing again: Old pipes, its pipes');
     await page.click('#ws-bar [data-ws-backpage]'); await wait(2500);
     expect(await ev(() => PeelWorkspaces.page() === 'home' && PeelWorkspaces.view() === 'svc:pipes') && await amber() === 0, '← Page: Home › Servicing › Old pipes, no amber pipes');
     // 5. A link made in its map view before 6c (Servicing › Network, where its panel sat): the map view at Old pipes.
@@ -1534,6 +1554,24 @@ async function pickView(page, ev, key, tap = false) {
     await page.waitForFunction(() => PeelAnalysisTabs.getSvcSub() === 'pipes' && document.querySelectorAll('#pnl-svc .pnl-chart table.pg td.pg-c').length === 9, null, { timeout: 90000 }).catch(() => {});
     const ol = await ev(() => ({ mode: PeelWorkspaces.mode(), ws: PeelWorkspaces.current(), at: `${PeelAnalysisTabs.getFootTab()}:${PeelAnalysisTabs.getSvcSub()}` }));
     expect(ol.mode === 'ws' && ol.ws === 'pipes' && ol.at === 'svc:pipes' && await amber() > 0, `an older #w=pipes link: the map view at Servicing › Old pipes (${JSON.stringify(ol)})`);
+    // 5b. A link copied on Old pipes' page in 6a or 6b (nav=3, the map's Servicing › Network behind the page): Home at
+    // Servicing › Old pipes. Show the sewers on the map (from Planning): the full map at the Wastewater lens, Servicing ›
+    // Old pipes kept; back. A run there: the map view at its pipe, the amber pipes around it; ← Page: Home at Old pipes.
+    await ev(() => localStorage.setItem('peel-dev:mapView', JSON.stringify('planning')));
+    await page.goto(`http://localhost:${PORT}/?p6cp#w=p:pipes&nav=3&t=svc&svs=network`);
+    await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 }); await wait(2500);
+    const g4 = await grid('#home .page-chart'), pl = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), lens: PeelMapAnalysis.currentView() }));
+    expect(g4 && pl.page === 'home' && pl.view === 'svc:pipes', `a link copied on the Old pipes page in 6a/6b: Home › Servicing › Old pipes (${JSON.stringify(pl)})`);
+    await page.locator('#home .page-foot [data-mview="wastewater"]').first().click(); await wait(2500);
+    const lens = await ev(() => ({ mode: PeelWorkspaces.mode(), lens: PeelMapAnalysis.currentView(), at: `${PeelAnalysisTabs.getFootTab()}:${PeelAnalysisTabs.getSvcSub()}` }));
+    expect(pl.lens === 'planning' && lens.mode === 'full' && lens.lens === 'wastewater' && lens.at === 'svc:pipes', `Show the sewers on the map: the full map at the Wastewater lens (${JSON.stringify({ from: pl.lens, ...lens })})`);
+    await page.click('#back-bar [data-ws-back]'); await wait(2500);
+    expect(await ev(() => PeelWorkspaces.page() === 'home' && PeelWorkspaces.view() === 'svc:pipes'), 'the way back: Home › Servicing › Old pipes');
+    await page.locator('#home [data-ws-pipe]').first().click(); await wait(3000);
+    const hr = await ev(() => ({ mode: PeelWorkspaces.mode(), ws: PeelWorkspaces.current(), tab: PeelAnalysisTabs.getFootTab(), ss: PeelApp.state.ss || '' })), n2 = await amber();
+    expect(hr.mode === 'ws' && hr.ws === 'pipes' && hr.tab === 'overview' && /^pipe:/.test(hr.ss) && n2 > 0, `a run on Home: the map view at its pipe, the amber pipes around it (${JSON.stringify({ ...hr, amber: n2 })})`);
+    await page.click('#ws-bar [data-ws-backpage]'); await wait(2500);
+    expect(await ev(() => PeelWorkspaces.page() === 'home' && PeelWorkspaces.view() === 'svc:pipes'), '← Page: Home › Servicing › Old pipes');
     // 6. A cold #w=p:pipes on a phone: Home at Servicing › Old pipes, the grid in its box, nothing scrolls sideways.
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto(`http://localhost:${PORT}/?p6c#w=p:pipes`);

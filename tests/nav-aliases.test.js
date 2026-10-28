@@ -135,9 +135,11 @@ test('share links: every sub-view param goes through migrateTabKey; nav=3; an ol
   assert.match(sh, /const tab = pageWs \? pageWs\.tab : AT\(\)\.getFootPref\(\);/, 'on a workspace page, the page\'s own tab');
   assert.match(sh, /const pageWs = W && W\.mode\(\) === 'home' && W\.page && !\(W\.view && W\.view\(\)\) && W\.BY_ID\[W\.page\(\)\];/, 'on a page host (Home), the map\'s tab: the page\'s own');
   // (an older page link: nav below 2, the page it names open; a saved view applied on the full map opens
-  // no page, so it keeps its own t; navigation phase 6: below 3, Home and the area pages open their own view)
-  assert.match(sh, /const pid = nv < 3 && \/\^p:\/\.test\(w\) && W && W\.resolvePage \? W\.resolvePage\(w\.slice\(2\), \{ site: !!q\.get\('d'\), last: window\.PeelUtil\.store\.get\('lastWs', ''\) \}\) : '';/);
-  assert.match(sh, /const host = nv < 3 && W && W\.hostOf && W\.mode\(\) === 'home' \? \(w === 'home' \? \{ tab: 'overview', sub: '' \} : pid \? W\.hostOf\(pid, \{ site: !!q\.get\('d'\) \}\) : null\) : null;\n {6}const pageWs = host \|\| \(nv < 2 && pid && W\.mode\(\) === 'home' && W\.page\(\) === pid && Object\.prototype\.hasOwnProperty\.call\(W\.BY_ID, pid\) \? W\.BY_ID\[pid\] : null\);\n {6}if \(q\.get\('t'\) \|\| pageWs\) \{/);
+  // no page, so it keeps its own t; navigation phase 6: below 3, Home and the area pages open their own view, and a
+  // nav=3 link to Old pipes' page, from 6a or 6b, before it became a host's view in 6c)
+  assert.match(sh, /const W = window\.PeelWorkspaces, nv = Number\(q\.get\('nav'\)\) \|\| 0, w = q\.get\('w'\) \|\| '', pre = nv < 3 \|\| \(nv === 3 && w === 'p:pipes'\);/);
+  assert.match(sh, /const pid = pre && \/\^p:\/\.test\(w\) && W && W\.resolvePage \? W\.resolvePage\(w\.slice\(2\), \{ site: !!q\.get\('d'\), last: window\.PeelUtil\.store\.get\('lastWs', ''\) \}\) : '';/);
+  assert.match(sh, /const host = pre && W && W\.hostOf && W\.mode\(\) === 'home' \? \(w === 'home' \? \{ tab: 'overview', sub: '' \} : pid \? W\.hostOf\(pid, \{ site: !!q\.get\('d'\) \}\) : null\) : null;\n {6}const pageWs = host \|\| \(nv < 2 && pid && W\.mode\(\) === 'home' && W\.page\(\) === pid && Object\.prototype\.hasOwnProperty\.call\(W\.BY_ID, pid\) \? W\.BY_ID\[pid\] : null\);\n {6}if \(q\.get\('t'\) \|\| pageWs\) \{/);
   // A Servicing or Records sub-view named beside another tab is still kept (as before); the hydraulic
   // check's Labs switch reads the link's own t.
   assert.match(sh, /const r = q\.get\(k\) && tab !== t \? AT\(\)\.migrateSub\(tab, q\.get\(k\)\) : null;/);
@@ -738,7 +740,9 @@ test('phase 6c: no views bar, task chips or source line; a #w=<id> link still op
   // Gone, no producer left (removed by design): the views bar (viewsHTML, m.views, .page-views), the chips (renderChips,
   // #ws-chips, .ws-chip), the source line (srcLine, sourceText, plan().source, .pnl-src), workspaces.js's weekSpec.
   assert.equal(W.sourceText, undefined);
-  assert.doesNotMatch(src('js/workspaces.js') + src('js/panel.js'), /viewsHTML|m\.views|renderChips|ws-chips|srcLine|sourceText|pnl-src|function weekSpec/);
+  // (and a result's header, js/overview-tab.js resultHost: no source line, no rebuild as the map view changes)
+  assert.doesNotMatch(src('js/workspaces.js') + src('js/panel.js') + src('js/overview-tab.js'), /viewsHTML|m\.views|renderChips|ws-chips|srcLine|sourceText|pnl-src|function weekSpec/);
+  assert.doesNotMatch(src('js/overview-tab.js'), /wsNow|host\.dataset\.ws\b/);
   assert.doesNotMatch(src('js/ws-pages.js'), /m\.views|page-views/);
   assert.doesNotMatch(src('index.html'), /id="ws-chips"/);
   assert.doesNotMatch(src('css/app.css'), /\.page-views|\.ws-chips?\b|\.pnl-src|\.pnl-steps\b/);
@@ -786,6 +790,22 @@ test('phase 6c: Old pipes is Servicing › Old pipes; the page id, the map view,
   // (a link made in its map view before 6c carried Servicing › Network, where its panel sat: js/share.js reads it as
   // Old pipes, the view it showed; a link to another map view keeps its Network)
   assert.match(src('js/share.js'), /const svs = w === 'pipes' && t === 'svc' && q\.get\('svs'\) === 'network' \? 'pipes' : q\.get\('svs'\);\n {8}const oldSub = [^\n]*t === 'svc' \? svs : /);
+  // A link's tab and view as js/share.js ready() reads them (its own lines; Home open at the page the link names, as init
+  // leaves it): a link copied on Old pipes' page in 6a or 6b (nav=3, the map's Servicing › Network behind the page) opens
+  // Home at Servicing › Old pipes whatever tab it carried, as an older one does; Home's own and an area page's nav=3
+  // links (a host's view since 6a) keep theirs.
+  const sh = src('js/share.js'), a = sh.indexOf('      const W = window.PeelWorkspaces, nv ='), b = sh.indexOf("      if (q.get('t') || pageWs) {", a);
+  const c = sh.indexOf('        const t = pageWs', b), d = sh.indexOf('        const m = AT().migrateTabKey(t, oldSub);', c);
+  assert.ok(a > 0 && b > a && c > b && d > c, 'js/share.js ready(): the lines read');
+  const read = new Function('window', 'q', 'AT', `${sh.slice(a, b)}if (!(q.get('t') || pageWs)) return null;\n${sh.slice(c, d)}return AT.migrateTabKey(t, oldSub);`);
+  const linkAt = (hash, mode = 'home') => plain(read({ PeelWorkspaces: { ...W, mode: () => mode, page: () => (mode === 'home' ? 'home' : null) }, PeelUtil: { store: { get: (k, dflt) => dflt } } }, new URLSearchParams(hash), AT));
+  for (const h of ['w=p:pipes&nav=3&t=svc&svs=network', 'w=p:pipes&nav=3&t=svc&svs=capacity', 'w=p:pipes&nav=3&t=overview', 'w=p:pipes&nav=3&t=growth&gs=areas', 'w=p:pipes&nav=2&t=svc&svs=network', 'w=p:pipes'])
+    assert.deepEqual(linkAt(h), { tab: 'svc', svcSub: 'pipes' }, h);
+  assert.deepEqual(linkAt('w=home&nav=3&t=svc&svs=network'), { tab: 'svc', svcSub: 'network' }, 'Home at Network: Network');
+  assert.deepEqual(linkAt('w=p:tight&nav=3&t=svc&svs=network'), { tab: 'svc', svcSub: 'network' }, 'an area page at Network (a host view since 6a): Network');
+  assert.deepEqual(linkAt('w=home&nav=3&t=svc&svs=pipes'), { tab: 'svc', svcSub: 'pipes' });
+  assert.deepEqual(linkAt('w=pipes&nav=3&t=svc&svs=network', 'ws'), { tab: 'svc', svcSub: 'pipes' }, 'the map view’s older link: Old pipes');
+  assert.deepEqual(linkAt('w=tight&nav=3&t=svc&svs=network', 'ws'), { tab: 'svc', svcSub: 'network' }, 'another map view’s: Network');
   assert.deepEqual(plain(W.startScreen({ pref: 'last', last: 'pipes' })), { mode: 'home', page: 'pipes' });
   assert.equal(require('../js/sections.js').VIEWS.area['svc:pipes'].page, 'pipes', 'Home’s view: the Old pipes builder');
   // The browser half: openPage, the last workspace, the strip's pick, the map view (no override: the view's own panel).

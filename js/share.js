@@ -142,9 +142,11 @@
       // applied on the full map opens no page, so it keeps its own t.
       // (navigation phase 6: a link from before nav=3 to Home or an area page opens the page's own view, never
       // the map's tab it carried: Home its Overview, an area page Home at that page's tab and view, hostOf)
-      const W = window.PeelWorkspaces, nv = Number(q.get('nav')) || 0, w = q.get('w') || '';
-      const pid = nv < 3 && /^p:/.test(w) && W && W.resolvePage ? W.resolvePage(w.slice(2), { site: !!q.get('d'), last: window.PeelUtil.store.get('lastWs', '') }) : '';
-      const host = nv < 3 && W && W.hostOf && W.mode() === 'home' ? (w === 'home' ? { tab: 'overview', sub: '' } : pid ? W.hostOf(pid, { site: !!q.get('d') }) : null) : null;
+      // (Old pipes became a host's view in 6c: a 6a or 6b link to its page, nav=3, carried the map's tab behind the page,
+      // Servicing › Network, as an older link did, so it is read as one: Home at Servicing › Old pipes)
+      const W = window.PeelWorkspaces, nv = Number(q.get('nav')) || 0, w = q.get('w') || '', pre = nv < 3 || (nv === 3 && w === 'p:pipes');
+      const pid = pre && /^p:/.test(w) && W && W.resolvePage ? W.resolvePage(w.slice(2), { site: !!q.get('d'), last: window.PeelUtil.store.get('lastWs', '') }) : '';
+      const host = pre && W && W.hostOf && W.mode() === 'home' ? (w === 'home' ? { tab: 'overview', sub: '' } : pid ? W.hostOf(pid, { site: !!q.get('d') }) : null) : null;
       const pageWs = host || (nv < 2 && pid && W.mode() === 'home' && W.page() === pid && Object.prototype.hasOwnProperty.call(W.BY_ID, pid) ? W.BY_ID[pid] : null);
       if (q.get('t') || pageWs) {
         // Phase 4: old links name removed tabs — migrateTabKey maps them onto the new set.

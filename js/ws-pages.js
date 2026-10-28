@@ -1182,7 +1182,8 @@
     const DO = root.PeelDevOutlets, IMD = root.PeelDcImpact, SC = root.PeelSewerCap, Wk = W();
     if (!DO || !IMD || !SC) return loading('outlets');
     DO.load();
-    if (!MM().SEW.data) { SC.loadSewers().then(() => Wk && Wk.renderPage && Wk.renderPage(true)); return loading('outlets', 'Loading the Region’s sanitary sewers…'); }
+    // (drawn again once they land; not when they failed to load, which would ask again at once, for ever)
+    if (!MM().SEW.data) { SC.loadSewers().then(d => d && Wk && Wk.renderPage && Wk.renderPage(true)); return loading('outlets', 'Loading the Region’s sanitary sewers…'); }
     const q = DO.queue();
     if (!q) { if (outletWait++ < 60) setTimeout(() => { if (Wk && Wk.page && Wk.page() === 'outlets') Wk.renderPage(true); }, 1500); return loading('outlets', 'Loading the DC program and the servicing model…'); }
     outletWait = 0;
@@ -1273,7 +1274,8 @@
   // plants), its runs opening the map view at the pipe, with the small map of the runs; its CSV first.
   function pipes() {
     const Wk = W(); const list = Wk && Wk.oldList ? Wk.oldList() : null;
-    if (!list) { const S = MM() && MM().SEW, SC = root.PeelSewerCap; if (S && !S.data && SC && SC.loadSewers) SC.loadSewers().then(() => Wk && Wk.renderPage && Wk.renderPage()); return loading('pipes', 'Loading the Region’s sanitary sewer records…'); }
+    // (drawn again once the sewer records land; not when they failed to load, as outlets above)
+    if (!list) { const S = MM() && MM().SEW, SC = root.PeelSewerCap; if (S && !S.data && SC && SC.loadSewers) SC.loadSewers().then(d => d && Wk && Wk.renderPage && Wk.renderPage()); return loading('pipes', 'Loading the Region’s sanitary sewer records…'); }
     const s = Wk.pipesSpec(), f = s.foot || {}, [runs, ...more] = s.lists || [];
     return { id: 'pipes', eyebrow: eyebrow('pipes'), name: s.head.name, status: s.head.status, identity: s.head.identity, scen: scen(), answer: s.answer,
       figures: s.figures, chart: s.chart,

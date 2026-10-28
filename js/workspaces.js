@@ -430,8 +430,9 @@
     const list = oldList(), WP = root.PeelWsPages;
     const head = { trail: [{ label: 'Peel' }, { label: 'Servicing › Old pipes' }], name: 'Which old pipes carry the most growth?' };
     if (!list) {
-      // (the view drawn again once they land, if it is still the one open)
-      if (MM() && MM().SEW && !MM().SEW.data && SC() && SC().loadSewers) SC().loadSewers().then(() => { const A = AT(); if (Cap() && Cap().renderFor && A && A.getFootTab() === 'svc' && A.getSvcSub() === 'pipes') Cap().renderFor('pipes'); });
+      // (the view drawn again once they land, if it is still the one open; not when they failed to load: drawn again,
+      // it would ask again at once, for ever, and the tab would hang)
+      if (MM() && MM().SEW && !MM().SEW.data && SC() && SC().loadSewers) SC().loadSewers().then(d => { const A = AT(); if (d && Cap() && Cap().renderFor && A && A.getFootTab() === 'svc' && A.getSvcSub() === 'pipes') Cap().renderFor('pipes'); });
       return { head: { ...head, identity: 'Sanitary sewers 300 mm and larger' }, answer: 'Loading the Region’s sanitary sewer records…' };
     }
     const runs = pipeRuns(list, MM().SEW.data), risky = list.filter(r => r.risky).length, km = runs.reduce((t, r) => t + (r.lengthM || 0), 0) / 1000;
@@ -473,7 +474,9 @@
     pLayer = L.layerGroup(list.map(r => { const c = MM().SEW.data.pipes[r.i][10], pts = []; for (let k = 0; k < c.length; k += 2) pts.push([c[k + 1], c[k]]);
       return L.polyline(C ? C(MM().SEW.data.pipes[r.i]).map(([x, y]) => [y, x]) : pts, { color: U.token ? U.token('--cap-tight') : getComputedStyle(document.documentElement).getPropertyValue('--cap-tight').trim(), weight: r.risky ? 6 : 4, opacity: 0.9, interactive: false }); })).addTo(map);
   }
-  function syncPipes() { const A = AT(); pipesLayer(mode !== 'home' && !!A && !!A.getSvcSub && A.getFootTab() === 'svc' && A.getSvcSub() === 'pipes'); }
+  // (a run picked there, a pipe's result on Overview: the pipes drawn stay around it, and after it closes, until another
+  // tab or view is shown)
+  function syncPipes() { const A = AT(), ss = App() && App().state && App().state.ss; pipesLayer(mode !== 'home' && !!A && !!A.getSvcSub && A.getSvcSub() === 'pipes' && (A.getFootTab() === 'svc' || (!!pLayer && A.getFootTab() === 'overview' && /^pipe:/.test(ss || '')))); }
   // ---- Pages ------------------------------------------------------------------------------------
   // A workspace's page (js/ws-pages.js builds it from the tabs' panels); Home is the page 'home', the page host at
   // an area (navigation phase 6): the map's five tabs under its header, its view the map's own tab state

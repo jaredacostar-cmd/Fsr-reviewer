@@ -47,6 +47,9 @@
     const tab = { dc: 'dca', water: 'svc', wastewater: 'svc' }[b.dataset.mview];
     if (tab && AT() && AT().openTab) AT().openTab(tab);
   });
+  // A panel's or a page's "Show … on the map" ([data-mview] outside the switch): that lens (a page's opens the full map
+  // first, js/workspaces.js MAP_LINK); the System and the tab stay as they are, as when a workspace sets a lens.
+  document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-mview]'); if (b && !b.closest('#tb-views')) MA().setMapView(b.dataset.mview); });
   // Phones: Export, Present, Help and Settings in one ⋯ menu.
   const more = $('#tb-more'), acts = $('#tb-actions');
   if (more && acts) {

@@ -2020,6 +2020,9 @@ the map's panel shows its footer's actions first (Network's *Show the network on
 *Show them on the map* and *CSV: every contract*, Data checks' *Duplicate check* and *Review outlets*),
 then *Open the map* and *Full table*. A view drawn by its page builder keeps that page's own actions (DC
 timing's *Open the map* and *Full table*, not its panel's *Show the planned works*), as before this phase.
+A *Show … on the map* action, on a page or a panel, sets that lens (`js/topbar.js`; a page's on the full map,
+at its tab and view; the System as it is); before the 6c review only the top bar's switch set it, so these
+opened the map at the lens it had.
 
 - **The old pages are views of Home.** Growth in an area, the Forecast, What's coming, Servicing capacity,
   Capital (DC timing, EAs), Data sources (and Old pipes since 6c, below) keep their page ids (links, sidebar
@@ -2207,7 +2210,8 @@ Navigation phase 6c (§3.4 "WS BAR ← Page · search · Full map", §5 rows 2, 
   the sewers on the map*. Its full table (`#pane-svc-pipes`, new; no pane id changed) is the grid, the runs by
   plant and every run (size, installed, risk, units at build-out, segments, length, plant, its grid bands), with
   the CSV. On the map (a map view or the full map, never under a page) the **amber pipes** show while it is open
-  (`syncPipes`, run on every tab or view shown; drawn once per list). It was a page of its own (Asset
+  (`syncPipes`, run on every tab or view shown; drawn once per list), and stay around a run picked from it (its
+  pipe's result on Overview) and after that closes, until another tab or view is shown. It was a page of its own (Asset
   Management) whose map view put its own panel over Servicing › Network (the `pipesSpec` override, gone); the
   sidebar's Old pipes, Help's role buttons and old links open Home › Servicing › Old pipes. It is Peel's sewers,
   so below Peel it says Peel-wide, as Servicing's other views do. Phone: three chips in the row; the grid fits the
@@ -2221,7 +2225,7 @@ tests/nav-aliases.test.js "phase 6c"):
 | `#w=<id>` (all twelve: `site`, `tight`, `growth`, `fsr`, `outlook`, `study`, `projects`, `eaflow`, `outlets`, `pipes`, `coming`, `week`) | Its map view at its tab and view, with its layer preset, without a chip row |
 | Explore's views bar's buttons | Home's Growth tab, the search, Draw an area, a site's *Check FSR*; the Find steps' links |
 | `#w=week` | The map view at Overview, the one This week spec in its panel |
-| `#w=p:pipes`, `data-ws-page="pipes"` (the sidebar's Old pipes, Help's role buttons), a stored last workspace `pipes` | Home › Servicing › Old pipes (`HOST.pipes`; the id stays the last workspace, a strip pick of Old pipes stores it) |
+| `#w=p:pipes`, `data-ws-page="pipes"` (the sidebar's Old pipes, Help's role buttons), a stored last workspace `pipes`; a link copied on the Old pipes page in 6a or 6b (`w=p:pipes&nav=3&t=svc&svs=network`: the map's tab behind the page, whatever tab it names) | Home › Servicing › Old pipes (`HOST.pipes`; the id stays the last workspace, a strip pick of Old pipes stores it; `js/share.js` reads that nav=3 link as an older page link) |
 | `#w=pipes`; a link made in its map view before 6c (`w=pipes&t=svc&svs=network`: its panel sat on Network) | The map view at Servicing › Old pipes, its amber pipes on (`js/share.js` reads that link's Network as Old pipes) |
 | `t=svc&svs=pipes` (new), a stored `svcSub: 'pipes'` | Servicing › Old pipes; at a development Network, Old pipes again at an area |
 | The `pipesSpec` override on Servicing › Network, the layer tied to the Old pipes map view | Gone (Servicing › Old pipes' own panel; `syncPipes`) |

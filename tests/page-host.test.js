@@ -791,6 +791,10 @@ test('Old pipes’ one spec: the map’s panel and Home’s Servicing › Old pi
   assert.deepEqual(plain(m.lists[0].see), { 'data-ws-go': 'pipes', 'data-ws-fulltable': '1' }, 'See all: every run, the map view’s full table');
   assert.deepEqual(plain(m.status.attrs), { 'data-ws-go': 'pipes', 'data-ws-fulltable': '1' });
   assert.deepEqual(plain(m.actions), [{ label: 'Export the list (CSV)', attrs: { 'data-ws-pipescsv': '' }, primary: true }, { label: 'Show the sewers on the map', attrs: { 'data-mview': 'wastewater' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'pipes' } }]);
+  // (Show the sewers on the map, as every panel's and page's Show … on the map: that lens, the page's on the full map,
+  // js/topbar.js; the System and the tab as they are. No handler took it outside the lens switch: the full map opened
+  // at the lens it had, 6c review)
+  assert.match(src('js/topbar.js'), /document\.addEventListener\('click', e => \{ const b = e\.target\.closest && e\.target\.closest\('\[data-mview\]'\); if \(b && !b\.closest\('#tb-views'\)\) MA\(\)\.setMapView\(b\.dataset\.mview\); \}\);/);
   assert.match(m.map.caption, /hm-key-pipe/); assert.deepEqual(plain(m.map.attrs), { 'data-ws-go': 'pipes' });
   const page = L.WP.pageHTML(m, '');
   assert.ok(L.WP.sectionsOf(page).includes('chart') && !L.WP.sectionsOf(page).includes('grid'), 'one grid: the chart');
@@ -818,6 +822,15 @@ test('Old pipes’ one spec: the map’s panel and Home’s Servicing › Old pi
   L.W.syncPipes(); L.pnlSet({ key: 'svc:pipes', scope: 'area' }); assert.equal(drawn, 1, 'not drawn again for the same list');
   L.at.subs.svc = 'network'; L.W.syncPipes(); assert.equal(map.layers.length, 0, 'Network: gone');
   L.at.subs.svc = 'pipes'; L.W.syncPipes(); assert.equal(map.layers.length, 1);
+  // (a run picked there: its pipe's result on Overview, the pipes drawn kept around it, and after it closes until
+  // another tab or view; Overview without a pipe's result, or a pipe's result with none drawn, never draws them)
+  const ss = v => { L.window.PeelApp.state.ss = v; };
+  ss('pipe:0'); L.at.tab = 'overview'; L.W.syncPipes(); assert.deepEqual([map.layers.length, drawn], [1, 2], 'a run’s result: kept, not drawn again');
+  ss(null); L.W.syncPipes(); assert.equal(map.layers.length, 0, 'Overview without it: gone');
+  ss('pipe:0'); L.W.syncPipes(); assert.equal(map.layers.length, 0, 'a pipe’s result with none drawn: not drawn for it');
+  ss('dcwork:1'); L.at.tab = 'svc'; L.W.syncPipes(); assert.equal(map.layers.length, 1, 'Old pipes again');
+  L.at.tab = 'overview'; L.W.syncPipes(); assert.equal(map.layers.length, 0, 'another result: gone');
+  L.at.tab = 'svc'; L.W.syncPipes(); assert.equal(map.layers.length, 1);
   L.W.openPage('pipes'); assert.equal(map.layers.length, 0, 'a page: never under it');
   assert.deepEqual([L.W.page(), L.W.view()], ['home', 'svc:pipes']);
   // Wired: setMode, go and every tab shown (js/analysis-tabs.js), the panel's pnl:set; no override, no Network filter.
@@ -825,7 +838,7 @@ test('Old pipes’ one spec: the map’s panel and Home’s Servicing › Old pi
   assert.match(ws, /if \(m !== 'ws'\) \{ cur = null; if \(m === 'full'\) \{ unfoldLayers\(\); restoreView\(\); \} \}\n {4}syncPipes\(\);/);
   assert.match(ws, /foldLayers\(\);\n {4}syncPipes\(\);/);
   assert.match(ws, /if \(e\.detail && e\.detail\.key === 'svc:pipes'\) syncPipes\(\);/);
-  assert.match(ws, /function syncPipes\(\) \{ const A = AT\(\); pipesLayer\(mode !== 'home' && !!A && !!A\.getSvcSub && A\.getFootTab\(\) === 'svc' && A\.getSvcSub\(\) === 'pipes'\); \}/);
+  assert.match(ws, /function syncPipes\(\) \{ const A = AT\(\), ss = App\(\) && App\(\)\.state && App\(\)\.state\.ss; pipesLayer\(mode !== 'home' && !!A && !!A\.getSvcSub && A\.getSvcSub\(\) === 'pipes' && \(A\.getFootTab\(\) === 'svc' \|\| \(!!pLayer && A\.getFootTab\(\) === 'overview' && \/\^pipe:\/\.test\(ss \|\| ''\)\)\)\); \}/);
   assert.match(src('js/analysis-tabs.js'), /if \(root\.PeelPanel\) root\.PeelPanel\.sync\(\);\n(?: {4}\/\/[^\n]*\n)? {4}if \(root\.PeelWorkspaces && root\.PeelWorkspaces\.syncPipes\) root\.PeelWorkspaces\.syncPipes\(\);/);
   assert.doesNotMatch(ws, /cur === 'pipes' && key === 'svc:network'|pipesLayer\(id === 'pipes'\)|pipesLayer\(true\)|pipesLayer\(false\)/);
   assert.match(src('js/svc-capacity.js'), /else if \(sub === 'pipes'\) renderPipes\(\); \};/);
@@ -835,4 +848,25 @@ test('Old pipes’ one spec: the map’s panel and Home’s Servicing › Old pi
   assert.match(css, /\.pg-wrap \{ overflow-x: auto; max-width: 100%; \}/);
   assert.match(css, /\.pnl \.pg \{ min-width: 0; width: 100%; \}\n\.pnl \.pg td \{ min-width: 0; padding: 4px 6px; \}\n@media \(max-width: 700px\) \{ \.pg \{ min-width: 0; width: 100%; \} \.pg td \{ min-width: 0; padding: 4px 6px; \} \}/);
   assert.doesNotMatch(css, /\.page-grid\b/);
+});
+
+// The sewer records failing to load (an HTTP error, sewers.json during a deploy): Servicing › Old pipes on the map (a
+// link, a stored pick) and on Home, and Review outlets, say they are loading and ask once; drawn again only when they
+// land. (Each drew itself again when the load came back empty and asked again at once, for ever: the tab hung.)
+test('the sewer records failing to load: Old pipes and Review outlets ask once, never again in a loop (6c review)', async () => {
+  let asked = 0, drawn = 0, F = null;
+  // (past six asks the load never settles, so a loop shows as a count, not a hung test)
+  const sew = { data: null }, loadSewers = () => (++asked > 6 ? new Promise(() => {}) : Promise.resolve(null));
+  F = load({ key: 'svc:pipes', extra: { PeelMapMarkers: { THIS_YEAR: 2026, SEW: sew }, PeelSewerCap: { loadSewers }, PeelSvcCapacity: { renderFor: () => { drawn++; F.W.pipesSpec(); } }, PeelDevOutlets: { load() {} }, PeelDcImpact: {} } });
+  const settle = () => new Promise(r => setImmediate(r));
+  assert.match(F.W.pipesSpec().answer, /^Loading the Region’s sanitary sewer records…$/);
+  await settle(); assert.deepEqual([asked, drawn], [1, 0], 'the map’s panel: asked once, not drawn again');
+  F.W.openPage('pipes'); await settle();
+  assert.equal(F.W.view(), 'svc:pipes'); assert.match(F.home.innerHTML, /Loading the Region’s sanitary sewer records…/);
+  assert.equal(asked, 2, 'Home’s Servicing › Old pipes: asked once more');
+  const n = asked; F.WP.build('outlets'); await settle();
+  assert.equal(asked, n + 1, 'Review outlets: asked once');
+  // (when they land: drawn again, the panel at its view)
+  asked = 0; let ok = null; const G = load({ key: 'svc:pipes', extra: { PeelMapMarkers: { THIS_YEAR: 2026, SEW: sew }, PeelSewerCap: { loadSewers: () => { asked++; ok = { pipes: [] }; return Promise.resolve(ok); } }, PeelSvcCapacity: { renderFor: k => { drawn = k; } } } });
+  drawn = 0; G.W.pipesSpec(); await settle(); assert.deepEqual([asked, drawn], [1, 'pipes'], 'landed: the panel drawn again');
 });
