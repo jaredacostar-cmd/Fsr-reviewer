@@ -396,7 +396,7 @@ function loadTopbar(o = {}) {
   const node = sel => nodes[sel] || (nodes[sel] = { hidden: sel === '#tb-fl-pop', innerHTML: '', style: {}, handlers: {}, clientWidth: 1000, offsetWidth: 0,
     classList: { add() {}, remove() {}, toggle() {}, contains: () => false }, setAttribute() {}, insertAdjacentHTML() {}, getBoundingClientRect: () => ({ left: 0, top: 0 }),
     addEventListener(t, f) { (this.handlers[t] = this.handlers[t] || []).push(f); }, ...(sel === '#trail' ? o.trail || {} : {}) });
-  const S = { muni: '', sp: [], mtsa: [], pz: [], dr: [], filtered: [], ...(o.state || {}) }, names = o.names || {};
+  const S = { muni: '', sp: [], mtsa: [], pz: [], dr: [], filtered: [], ...(o.state || {}) }, names = o.names || {}, stored = {};
   const filters = (o.filters || []).map(f => ({ ...f, clear: () => log.push(`clear ${f.label}`) }));
   const window = {
     PeelUtil: { $: node, esc: U.esc, fmtNum: U.fmtNum, store: { get: (k, d) => d }, toast() {} }, PeelDesign: { icon: n => `<svg data-icon="${n}"></svg>` },
@@ -406,8 +406,10 @@ function loadTopbar(o = {}) {
     PeelPlanTables: { areaPath: id => (o.paths || {})[id] || [id], areas: () => [], inside: () => null },
     PeelFilterUI: { activeFilters: () => filters, oldLinkNote: () => o.old || '', resetAllFilters: () => log.push('reset all'), includeCompleted: () => log.push('include') },
     ...(o.width ? { matchMedia: q => ({ matches: /max-width: (\d+)px/.test(q) && o.width <= +/max-width: (\d+)px/.exec(q)[1] }) } : {}),
-    PeelAnalysisTabs: { wantedTab: () => o.tab || 'overview', openTab: (t, sb) => log.push(`openTab ${t}${sb ? ` ${sb}` : ''}`) },
-    PeelWsPages: { drillTo: id => log.push(`drill ${id}`) },
+    // (openTab stores the tab, footTab4, as js/analysis-tabs.js's; setFootPref and showFootTab do not)
+    PeelAnalysisTabs: { wantedTab: () => o.tab || 'overview', openTab: (t, sb) => { stored.footTab4 = t; log.push(`openTab ${t}${sb ? ` ${sb}` : ''}`); }, setFootPref: t => log.push(`setFootPref ${t}`), showFootTab: t => log.push(`showFootTab ${t}`) },
+    PeelShare: { viewLink: { write: () => log.push('link') } },
+    PeelWsPages: { drillTo: id => log.push(`drill ${id}`) }, PeelDevNav: { getCurrentProject: () => o.dev || null, showDetail: p => log.push(`showDetail ${p.key}`) },
     PeelWorkspaces: { mode: () => o.mode || 'full', openPage: (id, op) => log.push(`openPage ${id} ${JSON.stringify(op)}`) },
     ...(o.kept ? { PeelSvcScope: { keepsDev: () => true, crumbs: () => [], peelWideNote() {}, closeResult() {} } } : {}),
   };
@@ -419,7 +421,7 @@ function loadTopbar(o = {}) {
   const T = window.PeelTopbar, ev = (sel, dataset = {}) => ({ target: { closest: s => (s === sel ? { dataset } : null) } });
   const click = (on, sel, dataset) => { for (const f of nodes[on].handlers.click || []) f(ev(sel, dataset)); };
   const steps = () => [...nodes['#trail'].innerHTML.matchAll(/class="tb-step" data-i="\d+" title="[^"]*">([^<]+)</g)].map(m => m[1]);
-  return { T, S, log, nodes, click, steps, trail: () => nodes['#trail'].innerHTML, pop: nodes['#tb-fl-pop'] };
+  return { T, S, log, stored, nodes, click, steps, trail: () => nodes['#trail'].innerHTML, pop: nodes['#tb-fl-pop'] };
 }
 
 test('one trail (6a-S6): the plan tree’s steps, the municipality’s step the whole of it, “k filters ×” clears only the k', () => {
@@ -504,31 +506,57 @@ test('the trail places a development in the plan tree, after the steps the filte
   assert.deepEqual(at({ state: { muni: 'Brampton', sp: ['mp'] } })[1], ['Peel', 'Brampton', 'Mount Pleasant', '10 Main St']);
   assert.deepEqual(at({ place: 'p403', state: { muni: 'Brampton', sp: ['bw'] } })[1], ['Peel', 'Brampton', 'Bram West', 'Precinct 40-3', '10 Main St']);
   assert.deepEqual(at({ place: 'p403' })[1], ['Peel', 'Brampton', 'Bram West', 'Precinct 40-3', '10 Main St'], 'its deepest area, under its plan');
-  // In no plan: its municipality. A filter that does not hold it (another municipality or plan), an MTSA, two plans: the
-  // trail as the filter has it. A result kept at the site (the Inquiry draft): Peel › the site › …, as before.
+  // In no plan: its municipality. A filter's municipality or plan that does not hold it (a Caledon filter, a Brampton
+  // site; Bram West on, the site in Mount Pleasant): its own place, never the filter's (the trail said Peel › Caledon ›
+  // the site), and that filter in "k filters", removable there; its steps each that place, the site closed.
   assert.deepEqual(at({ place: null })[1], ['Peel', 'Brampton', '10 Main St']);
-  assert.deepEqual(at({ state: { muni: 'Caledon' } })[1], ['Peel', 'Caledon', '10 Main St']);
-  assert.deepEqual(at({ state: { muni: 'Brampton', sp: ['bw'] } })[1], ['Peel', 'Brampton', 'Bram West', '10 Main St']);
+  let [L, st] = at({ state: { muni: 'Caledon' }, filters: [{ label: 'Caledon', scope: true }] });
+  assert.deepEqual(st, ['Peel', 'Brampton', 'Mount Pleasant', '10 Main St']);
+  assert.match(L.trail(), /aria-label="1 filter"/);
+  L.click('#trail', '[data-tb-filters]'); assert.match(L.pop.innerHTML, /data-pf-i="0" title="Remove this filter">Caledon <span/);
+  L.log.length = 0; L.click('#tb-fl-pop', '[data-pf-i]', { pfI: '0' }); assert.deepEqual(plain(L.log), ['clear Caledon', 'apply']);
+  L.T.renderTrail(); L.log.length = 0; L.click('#trail', '[data-i]', { i: '1' });
+  assert.deepEqual(plain(L.log), ['close', 'drill m:Brampton', 'setFootPref overview', 'showFootTab overview', 'link'], 'Brampton: the site’s municipality as the filter');
+  [L, st] = at({ state: { muni: 'Brampton', sp: ['bw'] }, filters: [{ label: 'Brampton', scope: true }, { label: 'Bram West', scope: true }, { label: '10+ units' }] });
+  assert.deepEqual(st, ['Peel', 'Brampton', 'Mount Pleasant', '10 Main St']);
+  L.click('#trail', '[data-tb-filters]'); assert.match(L.trail(), /aria-label="3 filters"/);
+  assert.deepEqual([...L.pop.innerHTML.matchAll(/data-pf-i="\d" title="Remove this filter">([^<]+) </g)].map(m => m[1]), ['Brampton', 'Bram West', '10+ units']);
+  // (a filter that holds it keeps its place in the steps, out of "k filters")
+  [L, st] = at({ state: { muni: 'Brampton' }, filters: [{ label: 'Brampton', scope: true }] });
+  assert.deepEqual(st, ['Peel', 'Brampton', 'Mount Pleasant', '10 Main St']); assert.doesNotMatch(L.trail(), /tb-fl/);
+  // An MTSA, two plans (no plan-tree steps): the trail as the filter has it. A result kept at the site (the Inquiry
+  // draft): Peel › the site › …, as before.
   assert.deepEqual(at({ state: { muni: 'Brampton', mtsa: ['m1'] }, names: { ...names, m1: 'Main MTSA' } })[1], ['Peel', 'Brampton', 'Main MTSA', '10 Main St']);
   assert.deepEqual(at({ state: { muni: 'Brampton', sp: ['mp', 'bw'] } })[1], ['Peel', 'Brampton', 'Mount Pleasant +1', '10 Main St']);
   assert.deepEqual(at({ kept: true })[1], ['Peel', '10 Main St']);
   // A place's step on the site's page: the site closes, the place is the filter (Growth › Areas' drill), and Home, the
-  // place's host, opens at the tab the page was on (its view the area's own).
-  let [L] = at({ mode: 'home', tab: 'svc' });
+  // place's host, opens at the tab the page was on (its view the area's own), for this visit: the tab is not stored
+  // (footTab4: the site's Overview was never picked, and closing a development leaves the stored tab as it was).
+  [L] = at({ mode: 'home', tab: 'svc' });
   L.log.length = 0; L.click('#trail', '[data-i]', { i: '2' });
-  assert.deepEqual(plain(L.log), ['close', 'drill a:mp', 'openPage home {"keep":true,"view":"svc:"}']);
-  // On the map: the same, the map staying where it is, at the tab.
+  assert.deepEqual(plain(L.log), ['close', 'drill a:mp', 'setFootPref svc', 'showFootTab svc', 'openPage home {"keep":true}']);
+  assert.equal(L.stored.footTab4, undefined, 'not stored');
+  // On the map: the same, the map staying where it is, at the tab (the link written).
   [L] = at({ mode: 'full', tab: 'dca' });
   L.log.length = 0; L.click('#trail', '[data-i]', { i: '1' });
-  assert.deepEqual(plain(L.log), ['close', 'drill m:Brampton', 'openTab dca']);
+  assert.deepEqual(plain(L.log), ['close', 'drill m:Brampton', 'setFootPref dca', 'showFootTab dca', 'link']);
+  [L] = at({ mode: 'full', tab: 'overview' });
+  L.log.length = 0; L.click('#trail', '[data-i]', { i: '0' });
+  assert.deepEqual(plain(L.log), ['close', 'apply', 'setFootPref overview', 'showFootTab overview', 'link']);
+  assert.equal(L.stored.footTab4, undefined, 'Peel at the site’s Overview: the stored tab (Growth, say) stays the reload’s');
   // The filter's own steps at a development do the same (each its own filter: Brampton the whole of it, Peel all of it).
   [L] = at({ mode: 'home', tab: 'growth', state: { muni: 'Brampton' } });
   L.log.length = 0; L.click('#trail', '[data-i]', { i: '1' });
-  assert.deepEqual(plain(L.log), ['close', 'apply', 'openPage home {"keep":true,"view":"growth:"}']);
+  assert.deepEqual(plain(L.log), ['close', 'apply', 'setFootPref growth', 'showFootTab growth', 'openPage home {"keep":true}']);
   [L] = at({ mode: 'home', tab: 'overview' });
   L.log.length = 0; L.click('#trail', '[data-i]', { i: '0' });
-  assert.deepEqual(plain(L.log), ['close', 'apply', 'openPage home {"keep":true,"view":"overview:"}']);
-  assert.deepEqual(plain([L.S.muni, L.S.sp]), ['', []]);
+  assert.deepEqual(plain(L.log), ['close', 'apply', 'setFootPref overview', 'showFootTab overview', 'openPage home {"keep":true}']);
+  assert.deepEqual(plain([L.S.muni, L.S.sp]), ['', []]); assert.equal(L.stored.footTab4, undefined);
+  // The site's own step: on its page, its Overview from the top (openPage, which scrolls it up); on the map, reopened.
+  [L] = at({ mode: 'home', tab: 'svc' }); L.log.length = 0; L.click('#trail', '[data-i]', { i: '3' });
+  assert.deepEqual(plain(L.log), ['openPage site undefined']);
+  [L] = at({ mode: 'full', tab: 'svc' }); L.log.length = 0; L.click('#trail', '[data-i]', { i: '3' });
+  assert.deepEqual(plain(L.log), ['showDetail k']);
   // No development: the steps as they were (no page opened, no tab set).
   L = loadTopbar({ names, state: { muni: 'Brampton' }, dev: null, mode: 'home' }); L.T.renderTrail();
   assert.deepEqual(L.steps(), ['Peel', 'Brampton']);
@@ -537,10 +565,15 @@ test('the trail places a development in the plan tree, after the steps the filte
   // click-destinations); its leaf placeOf's (js/plan-tables.js: the deepest, a straddler's largest share).
   const tb = src('js/topbar.js'), rt = tb.slice(tb.indexOf('function renderTrail()'), tb.indexOf('const tc = '));
   const i = s => { const k = rt.indexOf(s); assert.ok(k >= 0, s); return k; };
-  assert.ok(i('steps.push(...window.PeelSvcScope.crumbs());') < i('for (const id of devPlace(scoped, a))') && i('for (const id of devPlace(scoped, a))') < i('if (scoped && !kept) steps.push(devStep);'));
+  assert.ok(i('const dp = scoped && !kept ? devPlace(scoped, a) : [];') < i('const steps = ['), 'the place known before the filter’s steps');
+  assert.ok(i('steps.push(...window.PeelSvcScope.crumbs());') < i('for (const id of dp)') && i('for (const id of dp)') < i('if (scoped && !kept) steps.push(devStep);'));
+  assert.match(rt, /if \(App\(\)\.state\.muni && !dp\.off\) steps\.push/); assert.match(rt, /up = !dp\.off && a && /); assert.match(rt, /if \(a && !dp\.off\) steps\.push/);
   assert.ok(i('if (scoped && !kept) for (const s of steps) { const go = s.go; s.go = () => leaveDev(go); }') < i('steps.push(...window.PeelSvcScope.crumbs());'), 'the place steps only, not the ladder');
   assert.match(tb, /const leaf = PT && PT\.placeOf \? PT\.placeOf\(p\) : null;\n\s+const path = \[`m:\$\{p\.municipality\}`, \.\.\.\(leaf && PT\.areaPath \? PT\.areaPath\(leaf\)\.map\(id => `a:\$\{id\}`\) : \[\]\)\];/);
-  assert.match(tb, /if \(typeof DevScope !== 'undefined' && DevScope\.current\(\)\) DevScope\.close\(\);\n\s+go\(\);\n\s+if \(W && W\.mode && W\.mode\(\) === 'home' && W\.openPage\) W\.openPage\('home', \{ keep: true, view: `\$\{tab\}:` \}\);\n\s+else if \(A && A\.openTab\) A\.openTab\(tab\);/);
+  assert.match(tb, /if \(typeof DevScope !== 'undefined' && DevScope\.current\(\)\) DevScope\.close\(\);\n\s+go\(\);\n\s+if \(A && A\.showFootTab\) \{ if \(A\.setFootPref\) A\.setFootPref\(tab\); A\.showFootTab\(tab\); \}\n\s+if \(W && W\.mode && W\.mode\(\) === 'home' && W\.openPage\) W\.openPage\('home', \{ keep: true \}\);\n\s+else if \(Sh\(\) && Sh\(\)\.viewLink\) Sh\(\)\.viewLink\.write\(\);/);
+  assert.doesNotMatch(tb.slice(tb.indexOf('function leaveDev('), tb.indexOf('const goPlace')), /openTab|store\.set/, 'the tab for the visit: never stored');
+  assert.match(tb, /return at && i < 0 \? Object\.assign\(path\.slice\(\), \{ off: true \}\) : path\.slice\(i \+ 1\);/);
+  assert.match(tb, /const otherFilters = \(\) => \(FI\(\) && FI\(\)\.activeFilters \? FI\(\)\.activeFilters\(\)\.filter\(f => !f\.scope \|\| placeOff\) : \[\]\);/);
   // The site's page has no trail line of its own now (removed by design, §5 row 47): Home's "Plans furthest behind"
   // rows are data-ws-explore's one producer.
   const wp = src('js/ws-pages.js');
@@ -608,6 +641,13 @@ test('the site page hosts the development’s views: the strip, Servicing’s tw
   assert.deepEqual([fold.open, fold.shown], [false, null]);
   L.click('#home [data-pg-tab]', { pgTab: 'svc', pgSub: 'fsr' });
   assert.deepEqual([L.W.page(), L.W.view(), fold.open, fold.shown], ['site', 'svc:fsr', true, 'start']);
+  // The page as the reader names it (shownPage): at FSR review, Review an FSR, on the ☰ button, the sidebar's Explore
+  // entry and Explore's views bar (lit); any other view, Check a site.
+  const named = () => [/data-home-menu[^>]*><span aria-hidden="true">☰<\/span> ([^<]+) </.exec(L.home.innerHTML)[1], /<span class="home-ws-cur">› ([^<]+)<\/span>/.exec(L.home.innerHTML)[1],
+    /<nav class="page-views"[^]*?class="btn small on" data-ws-page="(\w+)" aria-current="page"/.exec(L.home.innerHTML)[1]];
+  assert.deepEqual(named(), ['Explore › Review an FSR', 'Review an FSR', 'fsr']);
+  L.click('#home [data-pg-tab]', { pgTab: 'svc', pgSub: 'network' });
+  assert.deepEqual(named(), ['Explore › Check a site', 'Check a site', 'site']);
   assert.match(src('js/workspaces.js'), /const ff = pt\.dataset\.pgSub === 'fsr' && \$\('#home #pnl-fsr'\);\n\s+if \(ff\) \{ ff\.open = true; ff\.scrollIntoView\(\{ block: 'start' \}\); return; \}\n[^\n]*\n\s+const el = \$\('#home'\), st = /);
   // renderPage: the site's page is a host with a development, Home the area's (js/workspaces.js).
   assert.match(src('js/workspaces.js'), /const m = page === 'home' \? WP\.host\('area'\) : hostPage\(page\) \? WP\.host\('site'\) : WP\.build\(page\);/);

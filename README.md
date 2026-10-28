@@ -2118,7 +2118,8 @@ FSR review row are gone.
   file marked (another view or development clears the mark). The header's *history ›* and the "n links to
   check" flag open Records › Files on the page. The *FSR review* chip, like *Check FSR* in the header, opens the
   form's fold and brings it into view (on a phone it is far down the page); any other pick keeps the strip
-  in sight.
+  in sight. A pick on the strip is the start screen's last workspace as the page is named: Review an FSR
+  at FSR review, else Check a site (the same as *Check FSR* and the old section buttons left it).
 - **Open the map, ← Page and the back bar keep the tab and view** here too: *Open the map* (the footer's, a
   row's, the live map's) opens the site's map view at the view; its *← Page* lands back at it; the full
   map's *← Back to Check a site › Servicing › Network* keeps it (the page hosts its development's
@@ -2128,12 +2129,17 @@ FSR review row are gone.
   site's page had a line of its own, which is gone). The place is the plan tree's
   (`PeelPlanTables.placeOf`: its deepest area; one straddling two, the area holding its largest share,
   where Growth › Areas places most of it), after the steps the filter already has (a Brampton filter's
-  step is not repeated); a filter that does not hold it (another municipality or plan, an MTSA, zone or
-  block, two plans) keeps the trail as the filter has it. Each step is that place as the filter
-  (`drillTo`), the site closed, the tab kept (`js/topbar.js` `devPlace`, `leaveDev`); from the site's page,
-  Home, the place's host, at that tab (a view only a development has, FSR review or Records › Files, gives
-  way to the area's: Capacity, Sources). The filter's own steps (Peel, the municipality, a plan) do the
-  same at a development. A result kept at the site (the Inquiry draft) keeps *Peel › the site › the
+  step is not repeated). A municipality or plan filter that does not hold it (a Caledon filter, a
+  Brampton site picked from the search; Bram West on, the site in Mount Pleasant) gives way to the site's
+  own place, never the filter's (*Peel › Brampton › … › the site*, not *Peel › Caledon › the site*), and
+  that filter is in the trail's *k filters*, removable there; an MTSA, zone or block, or two plans (no
+  plan-tree steps) keep the trail as the filter has it. Each step is that place as the filter
+  (`drillTo`), the site closed, the tab kept for the visit, not stored (the site's Overview was never
+  picked: a reload opens the tab the map had, as closing the site leaves it) (`js/topbar.js` `devPlace`,
+  `leaveDev`); from the site's page, Home, the place's host, at that tab (a view only a development has,
+  FSR review or Records › Files, gives way to the area's: Capacity, Sources). The filter's own steps
+  (Peel, the municipality, a plan) do the same at a development; the site's own step on its page is its
+  Overview from the top. A result kept at the site (the Inquiry draft) keeps *Peel › the site › the
   draft*. On a phone the trail scrolls in its own box, scrolled to its end (the site).
 - **Phones** (390 px): above the answer the header, the strip and, on Servicing, the views row (the site's
   own trail line is gone; Home's ☰ row stays until phase 7 and Explore's views bar until phase 6c); the

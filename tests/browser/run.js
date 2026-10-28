@@ -510,9 +510,15 @@ async function pickView(page, ev, key, tap = false) {
     expect(pv.in, `the page's form in view too (${JSON.stringify(pv)})`);
     expect(behind.sub === 'fsr' && /(^|[#&])svs=fsr(&|$)/.test(behind.hash), `FSR review behind the page, the address saying so (${behind.sub}; ${behind.hash.slice(0, 120)})`);
     expect(pg.pop === '1234', `the figure typed on the map is kept (${pg.pop})`);
+    // (the start screen's last workspace: the page as the reader names it, Review an FSR at FSR review, else Check a
+    // site, by Check FSR or the views row alike)
+    const lw = () => ev(() => JSON.parse(localStorage.getItem('peel-dev:lastWs')));
+    expect(await lw() === 'fsr', 'Check FSR: the last workspace is Review an FSR');
     await page.click('#home .page-subsecs [data-pg-sub="network"]'); await wait(2000);
-    const nw = await ev(() => ({ page: PeelWorkspaces.page(), at: PeelWorkspaces.view(), view: (document.querySelector('#home .page-subsecs .page-sec.on') || {}).textContent }));
-    expect(nw.page === 'site' && nw.at === 'svc:network' && nw.view === 'Network', `Network: the site page at Servicing (${nw.page}, ${nw.at}, ${nw.view})`);
+    const nw = await ev(() => ({ page: PeelWorkspaces.page(), at: PeelWorkspaces.view(), view: (document.querySelector('#home .page-subsecs .page-sec.on') || {}).textContent, lw: JSON.parse(localStorage.getItem('peel-dev:lastWs')) }));
+    expect(nw.page === 'site' && nw.at === 'svc:network' && nw.view === 'Network' && nw.lw === 'site', `Network: the site page at Servicing, the last workspace Check a site (${JSON.stringify(nw)})`);
+    await page.click('#home .page-subsecs [data-pg-sub="fsr"]'); await wait(2000);
+    { const f = await ev(() => ({ at: PeelWorkspaces.view(), lw: JSON.parse(localStorage.getItem('peel-dev:lastWs')) })); expect(f.at === 'svc:fsr' && f.lw === 'fsr', `the views row's FSR review: the last workspace Review an FSR, as Check FSR's (${JSON.stringify(f)})`); }
     // 4. The page's own link, reloaded cold (#w=p:site&nav=3&t=svc&svs=fsr&d=<key>): the page's FSR review; Open the
     // map: the map's. (Phase 5's #w=p:fsr links: "kept from before phase 5".)
     await page.click('#home .home-h [data-ws-page="fsr"]'); await wait(1500);
@@ -865,7 +871,8 @@ async function pickView(page, ev, key, tap = false) {
     });
     expect(!!d, 'an approved development under a plan and one of its levels'); if (!d) return;
     const st = () => ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), tab: PeelAnalysisTabs.getFootTab(), dev: (DevScope.current() || {}).title || null, muni: PeelApp.state.muni, sp: PeelApp.state.sp.slice(),
-      trail: [...document.querySelectorAll('#trail .tb-step')].map(b => b.textContent.trim()), own: document.querySelectorAll('#home [data-ws-explore], #home .page-explore, #home .ex-where').length }));
+      trail: [...document.querySelectorAll('#trail .tb-step')].map(b => b.textContent.trim()), own: document.querySelectorAll('#home [data-ws-explore], #home .page-explore, #home .ex-where').length,
+      stored: JSON.parse(localStorage.getItem('peel-dev:footTab4')), fl: (document.querySelector('#trail [data-tb-filters]') || { getAttribute: () => null }).getAttribute('aria-label') }));
     const step = async i => { await page.locator('#trail .tb-step').nth(i).click(); await wait(2500); };
     const open = async (to, tab) => {
       await ev(([k, to, tab]) => { PeelWsPages.drillTo('peel'); PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); if (to === 'site') PeelWorkspaces.openPage('site'); else { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.openTab(tab); } }, [d.key, to, tab]); await wait(2500);
@@ -876,12 +883,14 @@ async function pickView(page, ev, key, tap = false) {
     expect(s.mode === 'full' && s.tab === 'dca' && placed(s), `the map's trail places the site (${s.trail.join(' › ')})`);
     await step(1); s = await st();
     expect(s.mode === 'full' && s.tab === 'dca' && !s.dev && s.muni === d.muni && !s.sp.length && s.trail.join() === `Peel,${d.muni}`, `the municipality's step: the filter, the site closed, Capital kept (${JSON.stringify(s)})`);
-    // 2. With the municipality the filter the trail does not repeat it; the plan's step, on the map at Overview.
+    // 2. With the municipality the filter the trail does not repeat it; the plan's step, on the map at Overview (the
+    // site's, for the visit: the stored tab stays Capital, the one picked, as closing the site leaves it).
     await ev(k => { PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); }, d.key); await wait(2500);
     s = await st();
     expect(placed(s) && s.trail.filter(x => x === d.muni).length === 1, `with ${d.muni} the filter, its step is not repeated (${s.trail.join(' › ')})`);
     await step(2); s = await st();
     expect(s.mode === 'full' && !s.dev && s.muni === d.muni && s.sp.join() === d.path[0] && s.tab === 'overview', `the plan's step: the plan the filter, the site closed (${JSON.stringify(s)})`);
+    expect(s.stored === 'dca', `the tab kept for the visit, not stored: footTab4 ${s.stored}`);
     // 3. The site's page: the same trail, none of its own; the precinct's step is Home at the precinct, Servicing kept.
     await open('site'); await pickView(page, ev, 'svc:network'); s = await st();
     expect(s.page === 'site' && s.view === 'svc:network' && placed(s) && !s.own, `the page's trail is the top bar's (${s.trail.join(' › ')}; the page's own ${s.own})`);
@@ -890,6 +899,18 @@ async function pickView(page, ev, key, tap = false) {
     // 4. Peel's step on the page at Growth: Home at Growth, every filter off.
     await open('site'); await pickView(page, ev, 'growth:pipeline'); await step(0); s = await st();
     expect(s.page === 'home' && s.view === 'growth:pipeline' && !s.dev && !s.muni && !s.sp.length && s.trail.join() === 'Peel', `Peel's step: Home at Growth, nothing filtered (${JSON.stringify(s)})`);
+    // 5. A filter that does not hold it (another municipality, the site picked anyway): the site's own place, never the
+    // filter's; that filter is the trail's "1 filter", removable there, the site kept.
+    const other = d.muni === 'Caledon' ? 'Mississauga' : 'Caledon';
+    await ev(([k, m]) => { PeelWsPages.drillTo(`m:${m}`); PeelWorkspaces.setMode('full'); PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); }, [d.key, other]); await wait(2500);
+    s = await st();
+    expect(s.mode === 'full' && s.muni === other && s.dev === d.title && placed(s) && !s.trail.includes(other) && s.fl === '1 filter', `a ${other} filter: the trail is the site's own place, the filter its 1 filter (${s.trail.join(' › ')}; ${s.fl})`);
+    await page.locator('#trail [data-tb-filters]').click(); await wait(800);
+    const chips = await ev(() => [...document.querySelectorAll('#tb-fl-pop [data-pf-i]')].map(x => x.textContent.replace('×', '').trim()));
+    expect(chips.join() === other, `the popover lists ${other} (${chips.join()})`);
+    await page.locator('#tb-fl-pop [data-pf-i="0"]').click(); await wait(2500);
+    s = await st();
+    expect(!s.muni && s.dev === d.title && placed(s) && !s.fl, `${other} removed: the site kept, its place the trail (${JSON.stringify(s)})`);
   });
 
   // Find from every page (navigation phase 1): the one search and Draw an area in every page's header;

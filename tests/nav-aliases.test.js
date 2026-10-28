@@ -519,9 +519,15 @@ test('phase 6b: the site page is the host at a development: old section ids, the
   assert.deepEqual([L.B.page(), L.B.view(), L.calls], ['site', 'overview:', [['setFootPref', 'overview'], ['showFootTab', 'overview']]]);
   L.B.openPage('fsr'); L.B.routePick({ label: 'x', p });
   assert.deepEqual([L.B.page(), L.B.view()], ['site', 'svc:fsr']);
-  // A strip pick there is the development's view: the last workspace stays Check a site / Review an FSR.
+  // A strip pick there is the development's view: the last workspace is the page as the reader names it, Review an FSR
+  // at FSR review, else Check a site (as the views row's FSR review and its section buttons stored it before 6b, and as
+  // the header's Check FSR stores it now: one view, one last workspace, whichever way it was reached).
   L.B.openPage('site'); L.click('#home [data-pg-tab]', { pgTab: 'dca', pgSub: 'timing' });
   assert.deepEqual([L.B.page(), L.B.view(), L.store.get('lastWs')], ['site', 'dca:timing', 'site']);
+  L.click('#home [data-pg-tab]', { pgTab: 'svc', pgSub: 'fsr' }); assert.deepEqual([L.B.view(), L.store.get('lastWs')], ['svc:fsr', 'fsr']);
+  L.click('#home [data-pg-tab]', { pgTab: 'svc', pgSub: 'network' }); assert.deepEqual([L.B.view(), L.store.get('lastWs')], ['svc:network', 'site']);
+  L.B.openPage('fsr'); assert.equal(L.store.get('lastWs'), 'fsr', 'Check FSR');
+  L.click('#home [data-pg-tab]', { pgTab: 'overview' }); assert.deepEqual([L.B.page(), L.B.view(), L.store.get('lastWs')], ['site', 'overview:', 'site'], 'left at Overview: Check a site');
   // ← Page from the site's map view: the site's page at the map's tab and view (its development's Overview is one of them).
   L.B.go('site', { keep: true, quiet: true }); L.at.tab = 'svc'; L.at.subs.svc = 'network'; L.calls.length = 0;
   L.click('[data-ws-backpage]');
@@ -557,7 +563,7 @@ test('phase 6b: the site page is the host at a development: old section ids, the
   // each step that place's filter, the site closed, the tab kept; tests/page-host.test.js).
   assert.doesNotMatch(['js/ws-pages.js', 'js/workspaces.js', 'js/devtab.js', 'js/file-tree.js'].map(src).join(''), /siteAt|data-ws-sec|wsSec\b|viewsBar|siteSec|siteTrail|exploreBar/);
   assert.doesNotMatch(src('js/sections.js'), /\bSITE = |BY_ID|viewOf/);
-  assert.match(src('js/topbar.js'), /if \(scoped && !kept\) for \(const id of devPlace\(scoped, a\)\)/);
+  assert.match(src('js/topbar.js'), /const dp = scoped && !kept \? devPlace\(scoped, a\) : \[\];[^]*for \(const id of dp\)/);
 });
 
 // Navigation phase 6a (navigation-design §3.1 rule 1, §3.3, §7.1–7.2): Home is the page host at an area, the map's

@@ -655,8 +655,9 @@
       const A = AT(); if (A && A.openTab) A.openTab(pt.dataset.pgTab, pt.dataset.pgSub || undefined);
       // (the start screen's last workspace, as openPage keeps it: the workspace the view is, Growth › Forecast
       // 'outlook', until phase 7's Last place; a view that is none, Servicing › Network, leaves it as it was)
-      // (the site's views are its development's, no area page's: Check a site or Review an FSR stays the last one)
-      const v = A && A.viewKey && A.viewKey(), lw = v && (page === 'home' || !hostPage(page)) && Object.keys(HOST).find(k => HOST[k] === v && own(BY_ID, k));
+      // (the site's views are its development's, no area page's: the page as the reader names it, Review an FSR at
+      // FSR review, else Check a site, as its own buttons and Check FSR store it: shownPage)
+      const v = A && A.viewKey && A.viewKey(), lw = page === 'home' || !hostPage(page) ? v && Object.keys(HOST).find(k => HOST[k] === v && own(BY_ID, k)) : shownPage();
       if (lw) store.set('lastWs', lw);
       if (!hostPage(page)) { openPage('home', { keep: true }); return; }
       renderPage(true);
