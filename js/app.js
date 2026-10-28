@@ -905,6 +905,6 @@
   PeelSvcData.loadServicing();
   window.PeelTopbar.initTopbar();
   window.PeelDataTab.initDataTab();
-  // Stage 4: the start screen (Home, the last workspace or the full map; a link opens what it names).
+  // Stage 4: the start screen (Home, Last place or the full map; a link opens what it names).
   if (window.PeelWorkspaces) window.PeelWorkspaces.init();
 })();

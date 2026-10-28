@@ -23,10 +23,16 @@ const MODS = { P, D, C, G, A, AC, DC: { CLOSE_YEARS: 2 }, DI: { DC_CONNECT_M: 10
 test('the page: stages, joins, the DC gate, demand, capacity, timing, aerial and freshness, each rule with its value and where it is set', () => {
   const m = L.page(MODS);
   assert.equal(m.id, 'logic');
-  assert.equal(m.eyebrow, 'Reference');
+  assert.equal(m.eyebrow, 'Help');
   assert.deepEqual(L.groups(MODS).map(g => g[0]), ['stages', 'joins', 'dcgate', 'demand', 'capacity', 'timing', 'aerial', 'fresh']);
   for (const g of L.groups(MODS)) for (const r of g[3]) { assert.equal(r.length, 4, r[0]); assert.ok(r[3], `${r[0]}: where it is set`); }
   assert.match(m.method, /must validate or confirm all results/);
+  // (navigation phase 7, design §3.7, §5 row 171: the number conventions, Settings' until now, after the groups, in the
+  // contents line too; the sources it names are Records › Sources, their one name)
+  assert.match(m.mid, /<section class="rf" id="lg-numbers" data-psec="numbers"><h3 class="ws-h">Number conventions<\/h3><p class="small">People and jobs are estimates and are rounded the same way everywhere: [^<]*≈ marks a screening estimate\.<\/p><\/section>$/);
+  assert.match(m.mid, /data-lg-go="numbers">Number conventions<\/button><\/p><\/nav>/);
+  assert.deepEqual(m.actions[0], { label: 'Records › Sources', attrs: { 'data-ws-page': 'data' }, primary: true });
+  assert.doesNotMatch(strip(m.mid), /Data sources|Reference/);
 });
 
 test('values come from the code: change a constant and the page follows', () => {
@@ -54,7 +60,7 @@ test('the build-side rules match the code they describe', () => {
   assert.match(src('js/util.js'), /const PIPE_RESULTS = false;/);
 });
 
-test('reached from Reference: the bar, Home’s sidebar entry, How it works, and loaded with the app', () => {
+test('reached from Help: the bar, Home’s sidebar entry, How it works, and loaded with the app', () => {
   assert.match(src('js/sections.js'), /\{ id: 'logic', title: 'How the app decides', page: 'logic' \}/);
   assert.match(src('js/workspaces.js'), /logic: \{ label: 'How the app decides', what: /);
   assert.match(src('js/ws-pages.js'), /const logic = \(\) => \(root\.PeelLogic \? root\.PeelLogic\.page\(\) : loading\('logic', 'Loading…'\)\);/);

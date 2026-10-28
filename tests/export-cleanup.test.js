@@ -20,7 +20,7 @@ const HTML = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const CSS = fs.readFileSync(path.join(root, 'css', 'app.css'), 'utf8');
 
 // The menu-building source, so assertions target the menu, not the whole app.
-const menuSrc = APP.slice(APP.indexOf('function renderExportMenu()'), APP.indexOf('function renderGearMenu()'));
+const menuSrc = APP.slice(APP.indexOf('function renderExportMenu()'), APP.indexOf('function openGearPage(name)'));
 assert.ok(menuSrc.length > 500, 'could not isolate renderExportMenu source');
 
 test('exportBar is gone: no invocations and no const definition', () => {

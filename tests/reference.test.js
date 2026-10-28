@@ -119,12 +119,14 @@ test('wired in: the sidebar shows Help, How it works and the Glossary; every gui
   const w = src('js/workspaces.js'), s = src('js/ws-pages.js');
   assert.match(w, /guides: \{ label: 'How it works'/);
   for (const id of R.IDS) assert.ok(new RegExp(`\\['${id}', '[^']+'\\]`).test(w), `${id} in REF`);
-  assert.match(w, /const isOn = id => page === id \|\| \(id === 'guides' && !!\(REF\[page\] && REF\[page\]\.guide\)\) \|\| \(id === 'explore' && EXPLORE\.includes\(page\)\) \|\| \(id === 'capital' && CAPITAL\.includes\(page\)\) \|\| \(id === 'reference' && !!REF\[page\]\);/, 'a guide lights How it works; an Explore view lights Explore');
+  // (navigation phase 7: Home's menu has Help, which every Help page lights, a guide's too; Find lights the Find steps,
+  // the site's page and Study area)
+  assert.match(w, /const isOn = id => \(id === 'home' \? page === 'home' : id === 'find' \? \['site', 'fsr', 'study'\]\.includes\(page\) : id === 'help' \? !!REF\[page\] : page === id\);/, 'a guide lights Help; a Find step lights Find');
   assert.match(s, /const ref = id => \(\) => \(root\.PeelReference \? root\.PeelReference\.page\(id\)/);
   assert.match(s, /const GUIDE_OF = \{ site: 'flows', tight: 'capacity', growth: 'targets', fsr: 'fsrguide', projects: 'capguide', eaflow: 'capguide', pipes: 'network' \};/);
   // (a guide's id is never a sidebar entry or a workspace: openPage rewrites those before REF is read)
   const W = require('../js/workspaces.js');
-  for (const id of R.IDS) assert.ok(!W.SIDE[id] && !W.BY_ID[id] && !['home', 'explore', 'capital', 'reference'].includes(id), `guide ${id} collides with a sidebar or workspace id`);
+  for (const id of R.IDS) assert.ok(!W.SIDE[id] && !W.BY_ID[id] && !['home', 'explore', 'capital', 'reference', 'find', 'help', 'week'].includes(id) && !W.SIDEBAR.some(e => e[0] === id), `guide ${id} collides with a sidebar or workspace id`);
   assert.match(src('js/tips.js'), /data-ws-page="guides">How it works: the guides<\/button>/);
   assert.match(src('index.html'), /<script src="js\/reference\.js\?v=__BUILD__"><\/script>/);
   assert.match(src('sw.js'), /'js\/reference\.js',/);

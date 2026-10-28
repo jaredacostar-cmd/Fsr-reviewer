@@ -250,8 +250,8 @@
   }
 
   // Phase 4: the editable design criteria live in the Scenario control (scenario bar),
-  // rendered by renderScenarioCriteria(). This tab keeps display settings, the wet weather
-  // scenario, number conventions and "prepared by" (the Settings page below).
+  // rendered by renderScenarioCriteria(). The Settings sheet below keeps the display settings, the start screen,
+  // your role, the reports' "prepared by" and public version, Labs and usage.
   function displaySettingsHTML() {
     const theme = store.get('theme', 'dark'), density = store.get('density', PD.densityDefault());
     const sel = (id, cur, opts) => `<select id="${id}" autocomplete="off">${opts.map(([v, t]) => `<option value="${v}"${v === cur ? ' selected' : ''}>${t}</option>`).join('')}</select>`;
@@ -264,23 +264,20 @@
       </fieldset>
       <p class="small">Design criteria (persons per unit, water and wastewater rates, employment) and the wet weather scenario (design storm) are edited in the <strong>Scenario</strong> control in the top bar — open it, then "Change the scenario". Edited values are used everywhere and flagged as modified.</p>`;
   }
-  // Record type and New buildings only narrow the list: they are filters, in Find › What.
-  const recordSettingsHTML = () => '<fieldset class="panel rec-set" id="rec-settings"><legend class="label" data-info="record-settings">Records</legend><p class="small">Record type and New buildings only are filters: they are in <strong>Find › What</strong>.</p></fieldset>';
   function settingsPageHTML() {
-    // Bundle 6: Display → Start screen → Counting → Usage; every counting choice lives in the Scenario
-    // control (Count, Units), so Counting here points there. (Units per development is the tree count:
-    // the Previous switch is retired, owner decision 14.)
-    const counting = `<fieldset data-info="counting" class="set-counting"><legend>Counting</legend><p class="small">Each development counts its planning files once (the tree); one the tree does not count is counted from its files and permits, and says so. How units are counted (Count and Units) is set in the Scenario control, with the other scenario settings. <button type="button" class="btn small" data-pnl-scen>Open the Scenario control</button></p></fieldset>`;
-    return `<h2 class="pane-h">Settings</h2>${displaySettingsHTML()}${root.PeelWorkspaces && root.PeelWorkspaces.settingsHTML ? root.PeelWorkspaces.settingsHTML() : ''}${counting}${root.PeelUsage && root.PeelUsage.settingsHTML ? root.PeelUsage.settingsHTML() : ''}${recordSettingsHTML()}${DU().numberConventionsHTML()}`;
+    // ⚙'s one Settings sheet (navigation phase 7, design §3.7): Display → Start screen → Your role → Reports → Labs →
+    // Usage. Counting is the Scenario control's (Count, Units; the Previous switch retired, owner decision 14) and
+    // record type Find › What's, so their pointers went; the number conventions are Help › How the app decides'.
+    return `<h2 class="pane-h">Settings</h2>${displaySettingsHTML()}${root.PeelWorkspaces && root.PeelWorkspaces.settingsHTML ? root.PeelWorkspaces.settingsHTML() : ''}${DU().reportSettingsHTML()}${root.PeelLabs && root.PeelLabs.pageHTML ? root.PeelLabs.pageHTML() : ''}${root.PeelUsage && root.PeelUsage.settingsHTML ? root.PeelUsage.settingsHTML() : ''}`;
   }
   window.GearPages = window.GearPages || {};
   window.GearPages.settings = () => settingsPageHTML();
-  // Phase 4: the old Settings & sources tab is gone; settings live on the gear page.
+  // Phase 4: the old Settings & sources tab is gone; settings live in ⚙'s Settings sheet.
   // Kept as a safe no-op for legacy callers (boot, criteria reset).
   function renderCriteria() {}
 
   // ---- Public contract ----
-  const api = { renderGrowth, renderGrowthPipeline, aggregateTypes, aggTypeRowsHTML, displaySettingsHTML, recordSettingsHTML, settingsPageHTML, renderCriteria, growthDeps, siteCompare, siteCompareHTML };
+  const api = { renderGrowth, renderGrowthPipeline, aggregateTypes, aggTypeRowsHTML, displaySettingsHTML, settingsPageHTML, renderCriteria, growthDeps, siteCompare, siteCompareHTML };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelGrowthUI = api;
 })(typeof window !== 'undefined' ? window : globalThis);

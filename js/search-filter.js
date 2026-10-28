@@ -153,6 +153,8 @@
   const pinLayer = L.layerGroup().addTo(map);
   function goSug(x) {
     if (!x || x.loading) return;
+    // (Settings › Usage counts the pick by the kind of place it found, never the text: navigation phase 7, P4-10)
+    const Us = window.PeelUsage; if (Us && Us.count) Us.count('search', x.filter ? 'filter' : x.p ? (x.hit === 'file' ? 'file' : 'dev') : x.place ? (x.place.hit || 'place') : 'address');
     // (a pick ends the typing: a suggestion update still waiting, or an address lookup still out, must
     // not bring the list back under the emptied box)
     clearTimeout(sugTimer); sugSeq++; sugFor = null;

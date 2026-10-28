@@ -75,8 +75,8 @@ test('a page\'s link to the map\'s tools goes to the full map first, then does w
   assert.match(w, /if \(mode !== 'home' \|\| !e\.target\.closest\) return;[^]*?setMode\('full'\);\n {2}\}, true\);/);
 });
 
-test('Home\'s small map says where it goes: Servicing capacity', () => {
+test('Home\'s small map says where it goes: Servicing › Capacity (navigation phase 7: the tab, not the sidebar entry that went)', () => {
   const p = src('js/ws-pages.js');
   assert.match(p, /\$\{esc\(m\.map\.link \|\| 'Open the map'\)\} →<\/button>/);
-  assert.match(p, /attrs: \{ 'data-ws-page': 'tight' \}, link: 'Servicing capacity'/);
+  assert.match(p, /attrs: \{ 'data-ws-page': 'tight' \}, link: 'Servicing › Capacity', label: 'Open Servicing › Capacity'/);
 });

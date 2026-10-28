@@ -61,7 +61,10 @@ test('sections, labs, names: no Allocations or Model checks section; the hydraul
   // (navigation phase 6: Servicing's views are Home's, the strip's: Capacity · Network · Old pipes at an area, 6c)
   assert.deepEqual(Object.keys(S.VIEWS.area).filter(k => k.startsWith('svc:')), ['svc:capacity', 'svc:network', 'svc:pipes']);
   assert.equal(S.WORKSPACES.servicing, undefined, 'no Servicing workspace bar');
-  assert.deepEqual(S.WORKSPACES.reference.secs.map(s => s.title).slice(-2), ['Data sources', 'Data checks']);
+  // (Help's bar's Data sources and Data checks, removed by design, §5 row 166, N-9: Help is four sections; Home's
+  // Records tab has them, Start here links there)
+  assert.deepEqual(S.WORKSPACES.reference.secs.map(s => s.title), ['Start here', 'How it works', 'Glossary', 'How the app decides']);
+  assert.ok(S.WORKSPACES.reference.secs.every(s => s.page && !s.at), 'every section a page');
   assert.ok(!src('js/sections.js').includes("'svc:alloc'"), 'no Allocations panel builder');
   const L = require('../js/labs.js');
   assert.equal(L.LABS.find(l => l.id === 'hydro').where, 'Servicing › Network');
@@ -296,7 +299,9 @@ test('Records › Data checks on a page, and once the model lands', () => {
   // it is the area's: js/sections.js areaPanel)
   const sec = src('js/sections.js');
   assert.match(sec, /'records:checks': \{ keys: \['records:checks'\] \}/);
-  assert.match(sec, /\{ id: 'checks', title: 'Data checks', at: 'records:checks' \}/, 'Help’s bar links there');
+  // (Help links there: Start here's line, removed from its bar by design, §5 row 166; and the QA/QC role's shortcut)
+  assert.match(src('js/tips.js'), /data-ws-page="home" data-ws-at="records:checks">Records › Data checks</, 'Help links there');
+  assert.ok(require('../js/workspaces.js').ROLES.find(r => r.key === 'qa').links.some(l => l.at === 'records:checks'), 'the QA/QC role’s shortcut');
   assert.match(sec, /if \(e && e\.spec && e\.scope === 'area'\) return e\.spec;/);
 });
 
@@ -329,10 +334,11 @@ test('Records › Data checks on Home: its Servicing model rows and See all open
   assert.deepEqual(plain(out.rows[1].attrs), { 'data-pnl-dev': 'd1', title: 'Open it', 'data-at': 'records:checks' }, 'another row: the full map at the view, then its own handler');
   // The footer's own actions first (foot.primary restored, design §5 row 56), then the map at the view.
   assert.deepEqual(plain(m.actions), [{ ...foot.primary, primary: true }, foot.secondary[0], { label: 'Open the map', attrs: { 'data-ws-full': '', 'data-at': 'records:checks' } }, { label: 'Full table', attrs: { 'data-at': 'records:checks', 'data-full-table': '' } }]);
-  // Help's bar: Data sources and Data checks open Home's Records tab (the strip's attributes).
+  // Help's bar: its four sections, each a page (Data sources and Data checks left it for Home's Records tab, removed by
+  // design, §5 row 166: Start here links there).
   const bar = P.build('help').top;
-  assert.match(bar, /data-pg-tab="records" data-pg-sub="sources" aria-pressed="false">Data sources</);
-  assert.match(bar, /data-pg-tab="records" data-pg-sub="checks" aria-pressed="false">Data checks</);
+  assert.match(bar, /<button type="button" class="page-sec on" data-ws-page="help" aria-pressed="true">Start here</);
+  assert.doesNotMatch(bar, /data-pg-tab/);
   // (a page link to the map's tools: the full map first, then its own handler; js/workspaces.js MAP_LINK)
   assert.match(src('js/workspaces.js'), /const MAP_LINK = '\[data-at\], \[data-ss\], \[data-full-table\], \[data-trace\], \[data-wtrace\], \[data-scope-compare\], \[data-mview\], \[data-pnl-ce-map\]';/);
 });

@@ -68,10 +68,21 @@ async function pickView(page, ev, key, tap = false) {
   await check('first run: Home opens with the role picker, and the tour leaves nothing open', browser, { fresh: true }, async ({ page, ev }, expect) => {
     expect(await ev(() => PeelWorkspaces.mode()) === 'home', 'opens on Home');
     await page.waitForSelector('.tour-card [data-tour-role]', { timeout: 15000 });
+    // (navigation phase 7: one list of six roles, owner decision 6; QA/QC added)
+    const rk = await ev(() => [...document.querySelectorAll('.tour-card [data-tour-role]')].map(b => b.dataset.tourRole).join(','));
+    expect(rk === await ev(() => PeelWorkspaces.ROLES.map(r => r.key).join(',')) && rk.split(',').length === 6 && rk.includes('qa'), `the tour's six roles (${rk})`);
     await page.click('[data-tour-role="engineer"]');
     for (let i = 0; i < 8 && await page.$('.tour-card'); i++) { await page.click('.tour-card [data-tour-next], .tour-card [data-tour-help]'); await wait(500); }
     expect(!(await page.$('.tour-card')), 'the tour ends');
     expect(await ev(() => !(window.DevScope && DevScope.current())), 'no development left open');
+    // Home's menu keeps the role's shortcuts (For your role); one opens a view of Home.
+    const sc = await ev(() => ({ got: [...document.querySelectorAll('#home .home-side .home-short')].map(b => b.textContent.trim()).join('|'), want: PeelWorkspaces.ROLES.find(r => r.key === 'engineer').links.map(l => l.label).join('|') }));
+    expect(sc.got === sc.want, `For your role: the engineer's three (${sc.got})`);
+    await page.locator('#home .home-side .home-short', { hasText: 'Servicing › Network' }).first().click(); await wait(2000);
+    // (Servicing says loading until the servicing data lands, the pick held: 6a-S2b)
+    await page.waitForFunction(() => PeelAnalysisTabs.tabReady('svc') && PeelWorkspaces.view() === 'svc:network', null, { timeout: 60000 }).catch(() => {});
+    const at = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view() }));
+    expect(at.page === 'home' && at.view === 'svc:network', `the Servicing › Network shortcut: Home at its view (${JSON.stringify(at)})`);
   });
 
   await check('a slow start: js/app.js arriving after the data and the map throws nothing', browser, { slowApp: 3000 }, async ({ ev }, expect) => {
@@ -80,12 +91,13 @@ async function pickView(page, ev, key, tap = false) {
 
   await check('Check a site: search, pick, the stage chip opens how the stage was set', browser, {}, async ({ page, ev }, expect) => {
     await ev(() => PeelWorkspaces.openPage('site')); await wait(1500);
-    // (navigation phase 6c: Explore's views bar is gone; each Find step's line links the other's list, and back)
-    await page.click('#home .pnl-stepper [data-ws-page="fsr"]'); await wait(1500);
-    const fl = await ev(() => ({ page: PeelWorkspaces.page(), lists: [...document.querySelectorAll('#home .pnl-list-h h3')].map(h => h.textContent).join('|'), bar: document.querySelectorAll('#home .page-views').length }));
-    expect(fl.page === 'fsr' && /Files with an FSR posted/.test(fl.lists) && !fl.bar, `Check a site's step line: Review an FSR's files (${JSON.stringify(fl)})`);
-    await page.click('#home .pnl-stepper [data-ws-page="site"]'); await wait(1500);
-    expect(await ev(() => PeelWorkspaces.page()) === 'site', 'and back to Check a site');
+    // (navigation phase 7: the Find step lists both Find steps' files, Recently active, Large files under review and
+    // Files with an FSR posted; Review an FSR's own step links back to Find. 6c: no views bar)
+    const fl = await ev(() => ({ page: PeelWorkspaces.page(), eyebrow: (document.querySelector('#home .page-eyebrow') || {}).textContent || '', lists: [...document.querySelectorAll('#home .pnl-list-h h3')].map(h => h.textContent).join('|'), bar: document.querySelectorAll('#home .page-views').length, other: document.querySelectorAll('#home .pnl-stepper [data-ws-page]').length }));
+    expect(fl.page === 'site' && /^Find\b/.test(fl.eyebrow) && ['Recently active', 'Large files under review', 'Files with an FSR posted'].every(t => fl.lists.includes(t)) && !fl.bar && !fl.other, `Find: its three lists, eyebrow Find, no step link (${JSON.stringify(fl)})`);
+    await ev(() => PeelWorkspaces.openPage('fsr')); await wait(1500);
+    await page.click('#home .pnl-stepper [data-ws-page="find"]'); await wait(1500);
+    expect(await ev(() => PeelWorkspaces.page()) === 'site', 'Review an FSR’s step line: back to Find');
     const box = page.locator('#f-search').first();
     await box.click(); await page.keyboard.type('0 heritage', { delay: 30 }); await wait(1200);
     expect(await ev(() => PeelApp.state.search === ''), 'typing does not filter');
@@ -161,7 +173,7 @@ async function pickView(page, ev, key, tap = false) {
     expect(await ev(() => !!DevScope.current()), 'Enter opens it');
   });
 
-  await check('phone: Home\'s menu behind one button, the page actions in reach', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
+  await check('phone: Home\'s menu is ☰ in the top bar, the page actions in reach', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
     await ev(() => PeelWorkspaces.openPage('tight')); await wait(2500);
     const a = await ev(() => { const r = document.querySelector('#home .page-foot .pnl-acts').getBoundingClientRect(); return { bottom: Math.round(r.bottom), h: innerHeight }; });
     expect(a.bottom <= a.h && a.bottom > a.h - 120, 'the action bar sits at the bottom of the screen');
@@ -193,9 +205,18 @@ async function pickView(page, ev, key, tap = false) {
       expect(d.n >= 4 && d.last === deep && d.right <= d.btn && d.whole && d.hit && d.doc <= 390, `a deep place (${deep}): the last step whole and clear of the filters button (${JSON.stringify(d)})`);
     }
     await ev(() => { PeelWsPages.drillTo('peel'); PeelApp.state.minUnits = 0; PeelApp.applyFilters(); }); await wait(800);
-    await page.locator('#home .home-menu-btn').click(); await wait(800);
-    const groups = await ev(() => [...document.querySelectorAll('#home .home-side .home-g')].filter(x => x.offsetParent).length);
-    expect(groups >= 4, 'the menu opens grouped');
+    // (navigation phase 7, §3.8: Home's menu is ☰ in the top bar, beside Home; the page's ☰ row is gone, so the
+    // page header comes first and a phone has three navigation rows above the answer)
+    const nb = await ev(() => { const b = document.getElementById('tb-nav'), r = b && b.getBoundingClientRect(), t = document.getElementById('topbar').getBoundingClientRect(), side = document.querySelector('#home .home-side'), kids = [...document.querySelectorAll('#home .home-grid > *')].filter(x => x.getClientRects().length);
+      return { shown: !!r && r.width > 0, w: r ? Math.round(r.width) : 0, h: r ? Math.round(r.height) : 0, right: r ? Math.round(r.right) : 0, inBar: !!r && r.top >= t.top - 1 && r.bottom <= t.bottom + 1, exp: b && b.getAttribute('aria-expanded'), shut: !!side && side.getClientRects().length === 0, first: !!kids[0] && !!kids[0].querySelector('.home-h'), row: document.querySelectorAll('#home .home-menu-btn').length }; });
+    expect(nb.shown && nb.w >= 44 && nb.h >= 44 && nb.right <= 390 && nb.inBar && nb.exp === 'false' && nb.shut && nb.first && !nb.row, `☰ in the top bar, 44 px; the menu shut, the page header first (${JSON.stringify(nb)})`);
+    await page.locator('#tb-nav').tap(); await wait(800);
+    const mo = await ev(() => { const side = document.querySelector('#home .home-side'), vis = sel => [...side.querySelectorAll(sel)].filter(x => x.getClientRects().length);
+      return { ids: vis('ul .home-ws[data-ws-page]').map(b => b.dataset.wsPage).join(','), full: vis('.home-full').length, heads: vis('.home-g').length, pick: vis('.home-role').length, exp: document.getElementById('tb-nav').getAttribute('aria-expanded'), top: document.getElementById('home').scrollTop, home: document.getElementById('home').scrollWidth, doc: document.documentElement.scrollWidth }; });
+    expect(mo.ids === 'home,week,find,help' && mo.full === 1 && !mo.heads && mo.pick === 1 && mo.exp === 'true' && mo.top === 0 && mo.home <= 390 && mo.doc <= 390, `☰ opens the five entries at the top of the page, no team heading (no role: the pick line), no sideways scroll (${JSON.stringify(mo)})`);
+    await page.locator('#home .home-side [data-ws-page="find"]').first().tap(); await wait(1500);
+    const fd = await ev(() => ({ page: PeelWorkspaces.page(), dev: !!(window.DevScope && DevScope.current()), shut: document.querySelector('#home .home-side').getClientRects().length === 0, exp: document.getElementById('tb-nav').getAttribute('aria-expanded') }));
+    expect(fd.page === 'site' && !fd.dev && fd.shut && fd.exp === 'false', `Find from the menu: the Find step, the menu shut (${JSON.stringify(fd)})`);
   });
 
   await check('phone: a map view\'s bar and the full map\'s way back sit above the bottom sheet and take a tap', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
@@ -704,11 +725,12 @@ async function pickView(page, ev, key, tap = false) {
     // page that answers, 30 s, not 5)
     await svcReady();
     await ev(() => { PeelWorkspaces.setMode('full'); }); await wait(1000);
-    await page.click('#tb-gear', { timeout: 30000 }); await wait(500);
-    await page.click('#tb-gear-menu [data-tbg="settings"]', { timeout: 30000 }); await wait(800);
-    const st = await ev(() => { const f = document.querySelector('#tb-gear-menu .set-counting'); return f ? { text: f.textContent.replace(/\s+/g, ' ').trim(), inputs: f.querySelectorAll('select, input').length } : null; });
-    expect(st && /counts its planning files once \(the tree\)/.test(st.text) && !/Previous/.test(st.text) && !st.inputs, `Settings › Counting says how units are counted, with no switch (${JSON.stringify(st)})`);
+    // (navigation phase 7: ⚙ opens one Settings sheet, no menu; its Counting pointer is gone, §5 row 170)
+    await page.click('#tb-gear', { timeout: 30000 }); await wait(800);
+    const st = await ev(() => { const m = document.getElementById('tb-gear-menu'); return { open: !m.hidden, heads: [...m.querySelectorAll('legend, h3')].map(h => h.textContent.trim()).filter(t => /^(Display|Start screen|Your role|Reports|Labs|Usage)/.test(t)).map(t => t.split(' ')[0]).join(','), counting: !!m.querySelector('.set-counting'), sel: !!m.querySelector('#count-mode'), menu: m.querySelectorAll('[data-tbg]').length }; });
+    expect(st.open && st.heads === 'Display,Start,Your,Reports,Labs,Usage' && !st.counting && !st.sel && !st.menu, `Settings has no counting switch or pointer: the Scenario control counts (${JSON.stringify(st)})`);
     await page.keyboard.press('Escape'); await wait(300);
+    expect(await ev(() => document.getElementById('tb-gear-menu').hidden), 'Escape closes the Settings sheet');
     // 2. The stored FSR review pick: Capacity at Peel; FSR review once a development opens (on its Overview).
     await svcReady();
     const key = await ev(() => PeelApp.state.projects.find(q => q.phase === 'approved' && q.units > 300 && q.lat != null).key);
@@ -789,18 +811,126 @@ async function pickView(page, ev, key, tap = false) {
     expect(e.view === 'dca:eas' && !/^Loading/.test(e.answer) && e.answer.length > 20, `#w=p:eaflow before the DC program: Home › Capital › EAs drawn (${JSON.stringify(e)})`);
   });
 
-  // Explore: one sidebar entry for Growth in an area, Check a site, Review an FSR, Forecast and Study
-  // area; the one search at the top of each; a site picked opens its page; its trail steps back up; its
-  // FSR review is Servicing's second view (navigation phase 6b: the site's page has the map's strip, and where it
-  // sits is the top bar's trail, each step that place, the site closed, the tab kept).
-  await check('Explore: one entry, the search on every view, a site and back up its trail, its FSR review', browser, {}, async ({ page, ev }, expect) => {
+  // Navigation phase 7 (owner decision 17, AD-17; §3.2, §3.7): ⚙ is one Settings sheet (the focus in it, Escape back
+  // to ⚙, a click outside closes it, a Labs switch keeps it open); Settings › Your role sets Home's For your role; the
+  // start screen's Last place reopens the page, its tab and view, its development and its place; a development that
+  // has gone opens the page without it; on a phone ⚙ in ⋯ folds ⋯ and the sheet fits the screen.
+  await check('Last place and Settings: ⚙ is one sheet, its role sets Home’s shortcuts; the start screen’s Last place reopens the page, tab, view and development; a development gone, the page without it', browser, { prefs: { startScreen: 'last' } }, async ({ page, ev }, expect) => {
+    // (the next load's stored place, set before the app reads it: a page still drawing could store its own first)
+    await page.addInitScript(() => { const v = sessionStorage.getItem('lpNext'); if (v) { localStorage.setItem('peel-dev:lastPlace', v); sessionStorage.removeItem('lpNext'); } });
+    const load = async url => { await page.goto(`http://localhost:${PORT}/${url}`); await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 }); await wait(2500); };
+    const at = () => ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), d: (window.DevScope && DevScope.current() || {}).key || null, muni: PeelApp.state.muni, tab: ((document.querySelector('#home .page-tabs .page-sec.on') || {}).dataset || {}).pgTab, chip: ((document.querySelector('#home .page-subsecs .page-sec.on') || {}).textContent || '').trim(), eyebrow: ((document.querySelector('#home .page-eyebrow') || {}).textContent || '').trim() }));
+    const kept = () => ev(() => JSON.parse(localStorage.getItem('peel-dev:lastPlace')));
+    // 1. ⚙ opens the sheet at once: its sections in order, Last place the start screen picked, the focus in it.
+    await page.click('#tb-gear', { timeout: 30000 }); await wait(800);
+    const sh = await ev(() => { const m = document.getElementById('tb-gear-menu'); return { open: !m.hidden, dialog: m.getAttribute('role'), heads: [...m.querySelectorAll('legend, h3')].map(h => h.textContent.trim().split(' ')[0]).join(','), start: ((m.querySelector('[data-ws-start-btn].on') || {}).textContent || '').trim(), focus: m.contains(document.activeElement) }; });
+    expect(sh.open && sh.dialog === 'dialog' && sh.heads === 'Display,Start,Your,Reports,Labs,Usage' && sh.start === 'Last place' && sh.focus, `⚙: the Settings sheet, Display · Start screen · Your role · Reports · Labs · Usage, Last place on, the focus in it (${JSON.stringify(sh)})`);
+    await page.keyboard.press('Escape'); await wait(300);
+    const es = await ev(() => ({ hidden: document.getElementById('tb-gear-menu').hidden, focus: (document.activeElement || {}).id }));
+    expect(es.hidden && es.focus === 'tb-gear', `Escape closes it, the focus back on ⚙ (${JSON.stringify(es)})`);
+    // Your role in the sheet: Home's menu keeps that role's shortcuts at once; a Labs switch leaves the sheet open.
+    await page.click('#tb-gear'); await wait(800);
+    await page.selectOption('#tb-gear-menu [data-role-set]', 'capital'); await wait(1000);
+    const rl = await ev(() => ({ open: !document.getElementById('tb-gear-menu').hidden, role: PeelUtil.store.get('role', ''), got: [...document.querySelectorAll('#home .home-side .home-short')].map(b => b.textContent.trim()).join('|') }));
+    expect(rl.open && rl.role === 'capital' && rl.got === 'Capital › DC timing|EA to construction (Capital › EAs)|Old pipes (Servicing › Old pipes)', `Settings › Your role: capital, Home's For your role (${JSON.stringify(rl)})`);
+    await page.click('#tb-gear-menu [data-lab="swmm"]'); await wait(800);
+    const lb = await ev(() => ({ open: !document.getElementById('tb-gear-menu').hidden, on: PeelLabs.on('swmm') }));
+    await page.click('#tb-gear-menu [data-lab="swmm"]'); await wait(800);
+    expect(lb.open && lb.on && !(await ev(() => PeelLabs.on('swmm'))), `a Labs switch keeps the sheet open (${JSON.stringify(lb)})`);
+    // (a tap outside the sheet, on a shortcut: it closes as the shortcut opens Home › Capital › EAs)
+    await page.locator('#home .home-side .home-short', { hasText: 'EA to construction' }).first().click(); await wait(2500);
+    const ea = await ev(() => ({ hidden: document.getElementById('tb-gear-menu').hidden, page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), lists: [...document.querySelectorAll('#home .pnl-list-h h3')].map(h => h.textContent.trim()) }));
+    expect(ea.hidden && ea.page === 'home' && ea.view === 'dca:eas', `the EA to construction shortcut: the sheet closed, Home › Capital › EAs (${JSON.stringify({ ...ea, lists: undefined })})`);
+    // 2. A development's page at Servicing › Network: kept as the last place.
+    await page.waitForFunction(() => PeelAnalysisTabs.tabReady('svc'), null, { timeout: 120000 }).catch(() => {});
+    const key = await ev(() => { const p = PeelApp.state.projects.find(q => q.phase === 'approved' && q.units >= 300 && q.lat != null); PeelDevNav.showDetail(p); return p.key; }); await wait(2500);
+    await ev(() => PeelWorkspaces.openPage('site')); await wait(2000);
+    await pickView(page, ev, 'svc:network'); await wait(1000);
+    const k1 = await kept();
+    expect(k1 && k1.page === 'site' && k1.view === 'svc:network' && k1.d === key, `the site's page at Servicing › Network kept (${JSON.stringify(k1)})`);
+    // 3. A load with no link: that page, its view and its development.
+    await load('?lp1');
+    await page.waitForFunction(() => PeelAnalysisTabs.tabReady('svc') && PeelWorkspaces.view() === 'svc:network', null, { timeout: 90000 }).catch(() => {});
+    const c1 = await at();
+    expect(c1.mode === 'home' && c1.page === 'site' && c1.view === 'svc:network' && c1.d === key && c1.tab === 'svc' && c1.chip === 'Network', `Last place: the site's page at Servicing › Network, its development (${JSON.stringify(c1)})`);
+    // 4. Home › Growth › Areas at Caledon: the place filter comes back with it.
+    await ev(() => PeelWorkspaces.openPage('home')); await wait(1500);
+    await ev(() => PeelWsPages.drillTo('m:Caledon')); await wait(1500);
+    await pickView(page, ev, 'growth:areas'); await wait(1000);
+    const k2 = await kept();
+    expect(k2 && k2.page === 'home' && k2.view === 'growth:areas' && k2.mu === 'Caledon' && !k2.d, `Home › Growth › Areas at Caledon kept (${JSON.stringify(k2)})`);
+    await load('?lp2');
+    await page.waitForFunction(() => PeelApp.state.muni === 'Caledon' && PeelWorkspaces.view() === 'growth:areas', null, { timeout: 60000 }).catch(() => {});
+    const c2 = await at();
+    expect(c2.page === 'home' && c2.view === 'growth:areas' && c2.muni === 'Caledon' && !c2.d, `Last place: Home › Growth › Areas at Caledon (${JSON.stringify(c2)})`);
+    // 5. A development that has gone (a regroup): the page without it, its Find step.
+    await ev(() => sessionStorage.setItem('lpNext', JSON.stringify({ page: 'site', view: 'svc:network', d: 'Nowhere|0 NO ST', mu: '', sp: '' })));
+    await load('?lp3'); await wait(1500);
+    const c3 = await at();
+    expect(c3.page === 'site' && !c3.d && c3.view === null && /^Find · step 1 of 3/.test(c3.eyebrow), `a development gone: the site's page at its Find step (${JSON.stringify(c3)})`);
+    // 6. A phone: ⚙ in ⋯ folds ⋯ (toggleSettings' own fold) and the sheet fits the screen, scrolling inside itself.
+    await page.setViewportSize({ width: 390, height: 844 }); await wait(1500);
+    await page.click('#tb-more'); await wait(500);
+    await page.click('#tb-gear'); await wait(800);
+    const ph = await ev(() => { const m = document.getElementById('tb-gear-menu'), r = m.getBoundingClientRect(); return { open: !m.hidden, left: Math.round(r.left), right: Math.round(r.right), bottom: Math.round(r.bottom), more: document.getElementById('tb-actions').classList.contains('open'), exp: document.getElementById('tb-more').getAttribute('aria-expanded'), home: document.getElementById('home').scrollWidth, doc: document.documentElement.scrollWidth }; });
+    expect(ph.open && ph.left >= 0 && ph.right <= 390 && ph.bottom <= 844 && !ph.more && ph.exp === 'false' && ph.home <= 390 && ph.doc <= 390, `phone: ⋯ folded, the sheet inside 390 × 844, no sideways scroll (${JSON.stringify(ph)})`);
+    await page.keyboard.press('Escape'); await wait(300);
+    await ev(() => PeelUtil.store.set('role', ''));
+  });
+
+  // Navigation phase 7 (owner decision 6; §3.2, §3.7, §7): with no role Home's menu says where to pick one; Help › Start
+  // here's This is my role sets the For your role shortcuts (one list of six, the same on Home's menu, the tour and
+  // Settings); a shortcut opens the view it names and a row of What each tab answers opens its view; the old
+  // #w=p:explore and #w=p:reference links open Find and Help.
+  await check('Your role and old links: Help › Start here’s This is my role sets Home’s shortcuts, a shortcut and a row of What each tab answers open their view; #w=p:explore opens Find and #w=p:reference Help', browser, {}, async ({ page, ev }, expect) => {
+    const side = () => ev(() => ({ pick: [...document.querySelectorAll('#home .home-side .home-role [data-ws-page="help"]')].map(b => b.textContent.trim()).join(), head: ((document.querySelector('#home .home-side h2.home-g') || {}).textContent || '').trim(), got: [...document.querySelectorAll('#home .home-side .home-short')].map(b => b.textContent.trim()).join('|') }));
+    const r0 = await side();
+    expect(/^Pick your role for shortcuts/.test(r0.pick) && !r0.got, `no role: the pick line, no shortcut (${JSON.stringify(r0)})`);
+    await page.click('#home .home-side .home-role [data-ws-page="help"]'); await wait(1500);
+    expect(await ev(() => PeelWorkspaces.page()) === 'help', 'the pick line opens Help');
+    // (Start here: a role's card says "This is my role"; picking it keeps the role and redraws Home's menu at once)
+    await page.click('#home .help-role [data-role-pick="growth"]'); await wait(1200);
+    const gr = await ev(() => ({ role: PeelUtil.store.get('role', ''), on: document.querySelectorAll('#home .help-role.on').length, pressed: (b => b && b.getAttribute('aria-pressed'))(document.querySelector('#home .help-role.on [data-role-pick]')), want: PeelWorkspaces.ROLES.find(r => r.key === 'growth').links.map(l => l.label).join('|') }));
+    const r1 = await side();
+    expect(gr.role === 'growth' && gr.on === 1 && gr.pressed === 'true' && r1.got === gr.want && /^For your role · Growth or policy analyst/.test(r1.head) && !r1.pick, `This is my role: growth, its card on, Home's menu keeps its shortcuts (${JSON.stringify({ ...gr, ...r1 })})`);
+    // A shortcut opens the view it names (What's coming: Home › Growth › Forecast), Home lit.
+    await page.locator('#home .home-side .home-short', { hasText: 'What’s coming' }).first().click(); await wait(2500);
+    const sc = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), lit: ((document.querySelector('#home .home-ws.on') || {}).dataset || {}).wsPage }));
+    expect(sc.page === 'home' && sc.view === 'growth:timing' && sc.lit === 'home', `the What’s coming shortcut: Home › Growth › Forecast (${JSON.stringify(sc)})`);
+    // What each tab answers: a row per view of Home; one opens its view.
+    await ev(() => PeelWorkspaces.openPage('help')); await wait(1500);
+    await page.click('#home .help-asks [data-ws-at="dca:eas"]'); await wait(2500);
+    const as = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), lit: ((document.querySelector('#home .home-ws.on') || {}).dataset || {}).wsPage }));
+    expect(as.page === 'home' && as.view === 'dca:eas' && as.lit === 'home', `a row of What each tab answers opens its view (${JSON.stringify(as)})`);
+    // Old links, cold: #w=p:explore is Find (its step), #w=p:reference is Help (four sections, Help lit); the role stays.
+    const load = async hash => { await page.goto(`http://localhost:${PORT}/${hash}`); await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 }); await wait(2500); };
+    await load('?old1#w=p:explore');
+    const ex = await ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page(), eyebrow: ((document.querySelector('#home .page-eyebrow') || {}).textContent || '').trim(), lit: ((document.querySelector('#home .home-ws.on') || {}).dataset || {}).wsPage }));
+    expect(ex.mode === 'home' && ex.page === 'site' && /^Find/.test(ex.eyebrow) && ex.lit === 'find', `#w=p:explore: Find (${JSON.stringify(ex)})`);
+    await load('?old2#w=p:reference');
+    const rf = await ev(() => ({ page: PeelWorkspaces.page(), secs: [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent).join(), lit: ((document.querySelector('#home .home-ws.on') || {}).dataset || {}).wsPage, role: PeelUtil.store.get('role', '') }));
+    expect(rf.page === 'help' && rf.secs === 'Start here,How it works,Glossary,How the app decides' && rf.lit === 'help' && rf.role === 'growth', `#w=p:reference: Help, its four sections, the role kept (${JSON.stringify(rf)})`);
+    await ev(() => PeelUtil.store.set('role', ''));
+  });
+
+  // Find: one sidebar entry (Explore's, navigation phase 7) for Check a site and Review an FSR's first steps, an
+  // area's views being Home's tabs; the one search at the top of each; a site picked opens its page; its trail steps
+  // back up; its FSR review is Servicing's second view (navigation phase 6b: the site's page has the map's strip, and
+  // where it sits is the top bar's trail, each step that place, the site closed, the tab kept).
+  await check('Find: one entry, the search on every page, a site and back up its trail, its FSR review', browser, {}, async ({ page, ev }, expect) => {
     await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
-    const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
-    expect(side.includes('explore') && !side.some(id => ['site', 'fsr', 'growth', 'outlook', 'study'].includes(id)), `the sidebar: ${side.join()}`);
-    await page.click('#home .home-side [data-ws-page="explore"]'); await wait(2000);
-    // (navigation phase 6: an area's views are Home's tabs; Explore opens Home › Growth › Areas, Home lit)
+    const side = await ev(() => [...document.querySelectorAll('#home .home-side ul [data-ws-page]')].map(b => b.dataset.wsPage));
+    expect(side.join() === 'home,week,find,help', `the sidebar: ${side.join()}`);
+    const lit = () => ev(() => ((document.querySelector('#home .home-ws.on') || {}).dataset || {}).wsPage);
+    await page.click('#home .home-side [data-ws-page="find"]'); await wait(2000);
+    const fd = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), lists: [...document.querySelectorAll('#home .pnl-list-h h3')].map(h => h.textContent).join('|') }));
+    expect(fd.page === 'site' && fd.view === null && ['Recently active', 'Large files under review', 'Files with an FSR posted'].every(t => fd.lists.includes(t)), `Find opens the Find step, its three lists (${JSON.stringify(fd)})`);
+    expect(await lit() === 'find', 'Find is lit in the sidebar');
+    // (navigation phase 6: an area's views are Home's tabs: Home, then the strip's Growth › Areas, Home lit)
+    await page.click('#home .home-side [data-ws-page="home"]'); await wait(2000);
+    await pickView(page, ev, 'growth:areas');
     const a = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), search: !!document.querySelector('#home #page-search #search-box'), on: (document.querySelector('#home .home-ws.on') || {}).dataset, tabs: [...document.querySelectorAll('#home .page-tabs .page-sec')].map(b => b.childNodes[0].textContent.trim()), views: [...document.querySelectorAll('#home .page-subsecs .page-sec')].map(b => b.textContent.trim()) }));
-    expect(a.page === 'home' && a.view === 'growth:areas', `Explore opens Home › Growth › Areas (${a.page}, ${a.view})`);
+    expect(a.page === 'home' && a.view === 'growth:areas', `Home › Growth › Areas (${a.page}, ${a.view})`);
     expect(a.search, 'the search box is at the top of the page');
     expect(a.on && a.on.wsPage === 'home', 'Home is lit in the sidebar');
     expect(a.tabs.join() === 'Overview,Growth,Servicing,Capital,Records' && a.views.join() === 'Pipeline,Areas,Forecast', `the strip and Growth's views: ${a.tabs.join()} | ${a.views.join()}`);
@@ -818,6 +948,7 @@ async function pickView(page, ev, key, tap = false) {
       trail: [...document.querySelectorAll('#trail .tb-step')].map(b => b.textContent.trim()), own: document.querySelectorAll('#home [data-ws-explore], #home .page-explore').length,
       secs: [...document.querySelectorAll('#home .page-tabs .page-sec')].map(b => b.childNodes[0].textContent.trim()), search: !!document.querySelector('#home #page-search #search-box') }));
     expect(s.page === 'site' && s.view === 'overview:' && s.dev, `a development opens its page, at Overview (${s.page}, ${s.view})`);
+    expect(await lit() === 'find', 'a site’s page: Find is lit');
     // (the top bar's trail: Peel › Brampton (the filter's, once) › its plan … › the site; the page has no line of its own)
     expect(s.trail[0] === 'Peel' && s.trail[1] === 'Brampton' && s.trail.filter(x => x === 'Brampton').length === 1 && s.trail.at(-1) === s.title && (!s.placed || s.trail.length >= 4) && !s.own, `its trail: ${s.trail.join(' › ')} (placed ${s.placed}; the page's own ${s.own})`);
     expect(s.secs.join() === 'Overview,Growth,Servicing,Capital,Records', `its tabs: ${s.secs.join()}`);
@@ -829,6 +960,7 @@ async function pickView(page, ev, key, tap = false) {
     await pickView(page, ev, 'svc:fsr');
     const f = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), box: !!document.querySelector('#home [data-pnl-fsrbox]'), on: (((document.querySelector('#home .page-tabs .page-sec.on') || {}).childNodes || [])[0] || { textContent: '' }).textContent.trim(), chip: (document.querySelector('#home .page-subsecs .page-sec.on') || {}).textContent }));
     expect(f.page === 'site' && f.view === 'svc:fsr' && f.box && f.on === 'Servicing' && f.chip === 'FSR review', `the FSR review (${f.page} at ${f.view}, ${f.on} › ${f.chip})`);
+    expect(await lit() === 'find', 'its FSR review: Find is lit');
     await page.click('#home .page-tabs [data-pg-tab="growth"]'); await wait(2500);
     const g = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), on: (((document.querySelector('#home .page-tabs .page-sec.on') || {}).childNodes || [])[0] || { textContent: '' }).textContent.trim() }));
     expect(g.page === 'site' && g.view === 'growth:pipeline' && g.on === 'Growth', `back on the site at Growth (${g.page}, ${g.view}, ${g.on})`);
@@ -837,6 +969,7 @@ async function pickView(page, ev, key, tap = false) {
     await page.locator('#trail .tb-step', { hasText: /^Brampton$/ }).first().click(); await wait(2500);
     const u = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), dev: !!DevScope.current(), muni: PeelApp.state.muni, name: (document.querySelector('#home h1') || {}).textContent }));
     expect(u.page === 'home' && u.view === 'growth:areas' && !u.dev && u.muni === 'Brampton' && /Brampton/.test(u.name), `up the trail to Brampton (${JSON.stringify(u)})`);
+    expect(await lit() === 'home', 'Home is lit again');
   });
 
   // Navigation phase 6 (the site's page): a development's page is the map's tab strip at the development. Each view
@@ -1243,12 +1376,13 @@ async function pickView(page, ev, key, tap = false) {
   // (navigation phase 6: the sections of Servicing capacity, Capital and Growth in an area are Home's tabs and views)
   await check('Home\u2019s tabs are the map\u2019s: every area view\u2019s answer is its panel\u2019s or its page builder\u2019s; Open the map keeps the view', browser, {}, async ({ page, ev }, expect) => {
     await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect() && !document.querySelector('#home [data-pg-tab][aria-busy], #ftab-dca[aria-busy]'), null, { timeout: 150000 });
+    // (navigation phase 7: the sidebar's Servicing capacity and Capital entries went; their ids are aliases)
     const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
-    expect(side.includes('capital') && !side.includes('projects') && !side.includes('eaflow'), `the sidebar: ${side.join()}`);
+    expect(!side.some(id => ['tight', 'capital', 'projects', 'eaflow'].includes(id)), `the sidebar: ${side.join()}`);
     const st = 'h => String(h || "").replace(/<[^>]+>/g, "").replace(/\\s+/g, " ").trim()';
-    // (the sidebar's Servicing capacity and Capital open Home at their tab; the views row is the map's chips there)
+    // (the old ids Servicing capacity and Capital open Home at their tab; the views row is the map's chips there)
     for (const [entry, key] of [['tight', 'svc:capacity'], ['capital', 'dca:timing']]) {
-      await page.click(`#home .home-side [data-ws-page="${entry}"]`); await wait(3000);
+      await ev(id => PeelWorkspaces.openPage(id), entry); await wait(3000);
       const r = await ev(k => { const [t] = k.split(':'); return { page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), lit: (document.querySelector('#home .home-ws.on') || {}).dataset, views: [...document.querySelectorAll('#home .page-subsecs .page-sec')].map(b => b.textContent.trim()), want: PeelAnalysisTabs.chipsAt(t, 'area').map(c => PeelWorkspaces.tabPath(t, c).split(' › ')[1]) }; }, key);
       expect(r.page === 'home' && r.view === key && r.lit && r.lit.wsPage === 'home' && r.views.join() === r.want.join(), `${entry}: Home at ${key}, Home lit, its views ${r.views.join()} (${r.want.join()})`);
     }
@@ -1581,17 +1715,19 @@ async function pickView(page, ev, key, tap = false) {
     expect(g3 && c.page === 'home' && c.view === 'svc:pipes' && c.doc <= c.vw && c.home <= 0, `#w=p:pipes on a phone: Home › Servicing › Old pipes, no sideways scroll (${JSON.stringify(c)})`);
   });
 
-  // Reference and This week (step 5): one Reference entry (Help, How it works, the Glossary, How the app decides, the data
-  // sources and checks that were map-only); This week carries the watch list.
-  await check('Reference: one entry, the data sources and checks on pages; This week: the watch list', browser, {}, async ({ page, ev }, expect) => {
+  // Help and This week (step 5; navigation phase 7: Reference is Help, four sections, §3.7): one Help entry (Start here,
+  // How it works, the Glossary, How the app decides); the data sources and checks are Home's Records tab, Start here
+  // links there; This week carries the watch list.
+  await check('Help: one entry, four sections, the data sources and checks on Home’s Records tab; This week: the watch list', browser, {}, async ({ page, ev }, expect) => {
     const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
-    expect(side.includes('reference') && !side.some(id => ['help', 'guides', 'glossary'].includes(id)), `the sidebar: ${side.join()}`);
-    await page.click('#home .home-side [data-ws-page="reference"]'); await wait(1500);
-    const bar = await ev(() => ({ page: PeelWorkspaces.page(), secs: [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent), lit: (document.querySelector('#home .home-ws.on') || {}).dataset }));
-    expect(bar.page === 'help' && bar.secs.join() === 'Help,How it works,Glossary,How the app decides,Data sources,Data checks' && bar.lit && bar.lit.wsPage === 'reference', `Reference (${bar.page}: ${bar.secs.join()})`);
+    expect(side.includes('help') && !side.some(id => ['reference', 'guides', 'glossary'].includes(id)), `the sidebar: ${side.join()}`);
+    await page.click('#home .home-side ul [data-ws-page="help"]'); await wait(1500);
+    const bar = await ev(() => ({ page: PeelWorkspaces.page(), secs: [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent), lit: (document.querySelector('#home .home-ws.on') || {}).dataset, roles: document.querySelectorAll('#home .help-role').length, asks: document.querySelectorAll('#home .help-asks tbody tr').length, views: Object.keys(PeelSections.VIEWS.area).length }));
+    expect(bar.page === 'help' && bar.secs.join() === 'Start here,How it works,Glossary,How the app decides' && bar.lit && bar.lit.wsPage === 'help', `Help (${bar.page}: ${bar.secs.join()})`);
+    expect(bar.roles === 6 && bar.asks === bar.views + 1, `Start here: the six roles, What each tab answers a row per view of Home and a development's page (${bar.roles}, ${bar.asks} / ${bar.views})`);
     const st = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-    // (navigation phase 6: the bar's Data sources and Data checks are Home's Records tab, Home lit)
-    await page.click('#home .page-sec[data-pg-tab="records"][data-pg-sub="sources"]'); await wait(2000);
+    // (navigation phase 6: the data sources and checks are Home's Records tab, Home lit; phase 7: Start here's links)
+    await page.click('#home .help-page > p [data-ws-at="records:sources"]'); await wait(2000);
     const ds = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), lit: ((document.querySelector('#home .home-ws.on') || {}).dataset || {}).wsPage, a: document.querySelector('#home .home-answer').innerHTML, m: PeelSections.areaPanel('records:sources').answer }));
     expect(ds.page === 'home' && ds.view === 'records:sources' && ds.lit === 'home' && st(ds.a) === st(ds.m), `Data sources is Home › Records › Sources, the map's ("${st(ds.a).slice(0, 50)}", ${ds.view}, ${ds.lit})`);
     await page.click('#home .page-subsecs [data-pg-tab="records"][data-pg-sub="checks"]'); await wait(2000);
@@ -1599,7 +1735,7 @@ async function pickView(page, ev, key, tap = false) {
     expect(dc.view === 'records:checks' && dc.m && st(dc.a) === st(dc.m), `Data checks is Home › Records › Data checks, the map's ("${st(dc.a).slice(0, 50)}")`);
     // (navigation phase 2: its Servicing model list, and the Review outlets row opening its page from here)
     const rl = await ev(() => ({ lists: [...document.querySelectorAll('#home .pnl-list-h h3')].map(h => h.textContent), row: !!document.querySelector('#home .pnl-row[data-ws-page="outlets"]') }));
-    expect(rl.lists.includes('Servicing model') && rl.row, `Reference › Data checks: the Servicing model list and Review outlets (${rl.lists.join(' | ')})`);
+    expect(rl.lists.includes('Servicing model') && rl.row, `Records › Data checks: the Servicing model list and Review outlets (${rl.lists.join(' | ')})`);
     // (it follows a Scenario change made with another tab open, and its Servicing model rows and See all open the
     // map's Records › Data checks full table at their comparison; navigation phase 6: the page's tab is the map's,
     // so the change is made on Home's Overview)
@@ -2504,8 +2640,16 @@ async function pickView(page, ev, key, tap = false) {
     expect(rc.mode === 'home' && rc.page === 'outlets', `Records › Data checks › Review outlets → opens the page (${JSON.stringify(rc)})`);
     await ev(() => { PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage('outlets'); });
     await page.waitForSelector('#home [data-dvo="start"]', { timeout: 120000 }); await wait(800);
+    // (navigation phase 7, owner decision 5: a tool page, no sidebar entry; the QA/QC role's first shortcut)
     const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
-    expect(side.includes('outlets'), `Review outlets is in Home's sidebar (${side.join()})`);
+    expect(!side.includes('outlets'), `with no role Review outlets is not in Home's sidebar (${side.join()})`);
+    await ev(() => { PeelUtil.store.set('role', 'qa'); PeelWorkspaces.openPage('home'); }); await wait(1500);
+    const qa = await ev(() => [...document.querySelectorAll('#home .home-side .home-short')].map(b => b.textContent.trim()).join('|'));
+    expect(qa === 'Review outlets|Records › Data checks|Records › Sources', `For your role (QA/QC): ${qa}`);
+    await page.locator('#home .home-side .home-short', { hasText: 'Review outlets' }).first().click();
+    await page.waitForSelector('#home [data-dvo="start"]', { timeout: 120000 }); await wait(800);
+    expect(await ev(() => PeelWorkspaces.page()) === 'outlets', 'its shortcut opens Review outlets');
+    await ev(() => { PeelUtil.store.set('role', ''); PeelWorkspaces.renderPage(true); }); await wait(500);
     // A site's path to it (AD-5): with the DC impact model worked out (this page built it), a queued
     // development's Overview has "Review →" in its Path to the plant row; it opens the editor at it. A
     // development the queue does not list has none.

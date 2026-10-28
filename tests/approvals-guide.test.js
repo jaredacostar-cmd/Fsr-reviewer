@@ -40,12 +40,14 @@ test('it says what the app does: draft approval commits (MECP D-5-1), zoning alo
   }
 });
 
-test('easy to reach: Home sidebar (Reference), the Stage block, a site’s stage section, Records › Files; a share link', () => {
+test('easy to reach: Home sidebar (Help), the Stage block, a site’s stage section, Records › Files; a share link', () => {
   const w = src('js/workspaces.js');
   // (a guide since the reference pages: listed on How it works, which the sidebar carries)
   assert.match(w, /\['approvals', 'How approvals work'\][^\n]*REF\[id\] = \{ label, guide: true \};/);
-  // (step 5: one Reference entry; Help, How it works, the Glossary and Data sources share its bar)
-  assert.match(w, /<h2 class="home-g">Reference<\/h2><ul>\$\{item\('reference', SIDE\.reference\.what\)\}<\/ul>/);
+  // (step 5: one Reference entry, Help since navigation phase 7, an entry of the menu, §5 row 11; the Reference group
+  // went, removed by design; a guide lights Help)
+  assert.match(w, /\['help', 'Start here, guides, the glossary, the app’s rules'\]\];/);
+  assert.match(w, /id === 'help' \? !!REF\[page\]/);
   assert.match(w, /if \(id !== 'home' && !BY_ID\[id\] && !REF\[id\] && !labPageOn\(id\)\) id = 'home';/);
   assert.match(w, /pid && \(own\(BY_ID, pid\) \|\| own\(REF, pid\) \|\| own\(LAB_PAGES, pid\)\) \? \{ mode: 'home', page: pid \}/, 'a link to the page opens it');
   assert.deepEqual(JSON.parse(JSON.stringify(require('../js/workspaces.js').startScreen({ hash: '#w=p:approvals' }))), { mode: 'home', page: 'approvals' });

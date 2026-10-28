@@ -214,9 +214,10 @@ test('the Inquiry draft: one function, a development action and the Export item,
 });
 
 // Navigation phase 1 (AD-5, design §9 #5): Review outlets is a tool page reached from Records › Data
-// checks, a site's path line (Review →) and the sidebar (QA/QC); each way in is a data-ws-page button,
-// which opens the page from the map and from a page alike (one document-wide handler).
-test('Review outlets opens from Records › Data checks, a site’s path line and the sidebar', () => {
+// checks, a site's path line (Review →) and the sidebar (QA/QC; since navigation phase 7 the QA/QC role's first
+// shortcut, owner decisions 5 and 6); each way in is a data-ws-page button, which opens the page from the map and
+// from a page alike (one document-wide handler).
+test('Review outlets opens from Records › Data checks, a site’s path line and the QA/QC shortcut', () => {
   const r = src('js/records-tab.js');
   assert.match(r, /btn: '<button type="button" class="btn small link" data-ws-page="outlets">Review outlets →<\/button>'/);
   assert.match(r, /<p class="small muted">\$\{OUTLETS\.what\}: \$\{OUTLETS\.btn\}<\/p>`;/, 'the full table (checksHTML)');
@@ -226,7 +227,7 @@ test('Review outlets opens from Records › Data checks, a site’s path line an
   assert.match(r, /secondary: \[\{ label: 'Review outlets', attrs: \{ 'data-ws-page': 'outlets' \}/, 'and its footer');
   assert.match(src('js/overview-tab.js'), /data-ws-page="outlets" data-dvo="pick-dev"/, 'the path line');
   const W = require('../js/workspaces.js');
-  assert.ok(W.GROUPS.some(([g, ids]) => g === 'QA/QC' && ids.includes('outlets')), 'the sidebar');
-  assert.match(src('js/workspaces.js'), /const pg = e\.target\.closest\('\[data-ws-page\]'\);\n {4}if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage\); return; \}/);
+  assert.equal(W.roleAttrs(W.ROLES.find(r => r.key === 'qa').links[0])['data-ws-page'], 'outlets', 'the QA/QC role’s shortcut');
+  assert.match(src('js/workspaces.js'), /const pg = e\.target\.closest\('\[data-ws-page\]'\);\n {4}if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage, pg\.dataset\.wsAt \? \{ at: pg\.dataset\.wsAt \} : \{\}\); return; \}/);
   assert.match(src('js/tips.js'), /Also Records › Data checks \(Review outlets →\), and "Review →" on a development’s Overview/);
 });

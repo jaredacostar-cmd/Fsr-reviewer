@@ -5,7 +5,6 @@
   const App = () => window.PeelApp;
   const MM = () => window.PeelMapMarkers;
   const MA = () => window.PeelMapAnalysis;
-  const Tips = () => window.PeelTips;
   const Nav = () => window.PeelDevNav;
   const AS = () => window.PeelAreaSelect;
   const Meas = () => window.PeelMeasure;
@@ -324,9 +323,9 @@
   });
 
   // Menus. Items carrying data-export / data-share / data-area-report are handled by
-  // the existing document-level handlers; the rest use data-tbx (export) / data-tbg
-  // (gear). The list-panel export actions are named functions, so the menu keeps
-  // working after the Export row itself is removed.
+  // the existing document-level handlers; the rest use data-tbx (export). The list-panel
+  // export actions are named functions, so the menu keeps working after the Export row
+  // itself is removed. (⚙ opens the Settings sheet, no menu: toggleSettings below)
   // Phase 3b: "Inquiry response draft" export item. Drafts a response for the open
   // development via js/tools-inquiry.js (sibling worker C); guarded so the menu still
   // works before that module loads. The same function is a development's Inquiry draft
@@ -396,19 +395,9 @@
     const fn = { saveview: () => MA().saveCurrentView(), csv: PE().exportDevsCSV, geojson: PE().exportDevsGeoJSON, areas: PE().exportAreasGeoJSON, shp: PE().exportShapefiles, dc: DCT().exportDcGeoJSON, cons: () => window.PeelCapitalEA && window.PeelCapitalEA.exportConsGeoJSON(), eas: () => window.PeelCapitalEA && window.PeelCapitalEA.exportEasGeoJSON(), swmm: SC().exportSwmmModel, workbook: PE().exportWorkbook, ledger: () => window.PeelLedgerUI && window.PeelLedgerUI.exportSnapshotCSV(), print: TS().printMap, brief: RP().briefingPDF, memo: () => { if (Nav().getCurrentProject()) RP().devMemo(Nav().getCurrentProject()); }, comparepdf: () => { if (typeof RP().comparisonPDF === 'function') RP().comparisonPDF(); }, inquiry: draftInquiryResponse }[b.dataset.tbx];
     if (fn) fn();
   });
-  function renderGearMenu() {
-    const m = $('#tb-gear-menu'); if (!m) return;
-    m.innerHTML =
-      '<button type="button" role="menuitem" data-tbg="settings">Settings</button>' +
-      // Stage 2: Records (Sources · Data checks · Files) took the Sources & checks page's place;
-      // navigation phase 2 retired the page.
-      '<button type="button" role="menuitem" data-tbg="labs">Labs</button>' +
-      '<button type="button" role="menuitem" data-tbg="log">Change log</button>';
-  }
-  // Gear menu pages (Phase 4): workers register page renderers on window.GearPages:
-  // Settings and Labs. openGearPage renders the page into the gear menu, which stays
-  // open on the page. A renderer may return an HTML string, a Node, or fill the
-  // container element itself.
+  // Gear pages (Phase 4): workers register page renderers on window.GearPages (Settings: js/growth-ui.js, with
+  // Labs as its section since navigation phase 7). openGearPage renders the page into the Settings sheet, which
+  // stays open on it. A renderer may return an HTML string, a Node, or fill the container element itself.
   window.GearPages = window.GearPages || {};
   function openGearPage(name) {
     const m = $('#tb-gear-menu'); if (!m) return;
@@ -425,17 +414,20 @@
     const gb = $('#tb-gear'); if (gb) gb.setAttribute('aria-expanded', 'true');
   }
   window.openGearPage = openGearPage;
-  $('#tb-gear-menu').addEventListener('click', e => {
-    const b = e.target.closest('[data-tbg]'); if (!b) return;
-    const k = b.dataset.tbg;
-    // Phase 4: the Settings & sources and Change log tabs are gone: Settings is a gear page
-    // (the criteria editor lives in the scenario bar now) and the change log is in the Help
-    // menu. (Navigation phase 2: the Sources & checks page is gone, its parts in Records.)
-    if (k === 'settings') openGearPage('settings');
-    else if (k === 'log') { closeTbMenus(); Tips().showHelpLog(); }
-    // Stage 2: Records is the panel's trailing tab; Labs holds the extra tools.
-    else if (k === 'labs') openGearPage('labs');
-  });
+  // ⚙ is one Settings sheet (navigation phase 7, design §3.7, N-10; its menu of Settings · Labs · Change log went:
+  // Labs is a section of the sheet, the change log Help › What's new): Display · Start screen · Your role · Reports ·
+  // Labs · Usage. A dialog under the top bar's end, outside the ⋯ list, so it shows on a phone as ⋯ folds (⚙'s own
+  // click never reaches ⋯'s listeners: it stops there); the focus goes into it, and back to ⚙ on Esc.
+  function toggleSettings() {
+    const m = $('#tb-gear-menu'); if (!m) return;
+    if (!m.hidden) { closeTbMenus(); return; }
+    closeScenPop();
+    const a = $('#tb-actions'), mb = $('#tb-more'); if (a && a.classList.contains('open')) { a.classList.remove('open'); if (mb) mb.setAttribute('aria-expanded', 'false'); }
+    openGearPage('settings');
+    // (as tall as the screen leaves under it, whatever the banners above the top bar take: its foot in reach on a phone)
+    m.style.maxHeight = `${Math.max(160, Math.floor(innerHeight - m.getBoundingClientRect().top - 8))}px`;
+    m.tabIndex = -1; try { m.focus({ preventScroll: true }); } catch (e) { /* older browsers */ }
+  }
   function closeTbMenus() {
     for (const id of ['#tb-export-menu', '#tb-gear-menu', '#tb-present-menu']) { const m = $(id); if (m) m.hidden = true; }
     for (const id of ['#tb-export', '#tb-gear', '#tb-present']) { const b = $(id); if (b) b.setAttribute('aria-expanded', 'false'); }
@@ -445,25 +437,33 @@
     const willOpen = m.hidden;
     closeTbMenus(); closeScenPop();
     if (!willOpen) return;
-    if (btnId === '#tb-export') renderExportMenu(); else if (btnId === '#tb-gear') renderGearMenu();
+    if (btnId === '#tb-export') renderExportMenu();
     m.hidden = false;
     $(btnId).setAttribute('aria-expanded', 'true');
   }
   $('#tb-export').addEventListener('click', e => { e.stopPropagation(); toggleTbMenu('#tb-export', '#tb-export-menu'); });
   { const so = $('#tb-restart'); if (so) so.addEventListener('click', startOver); }
-  $('#tb-gear').addEventListener('click', e => { e.stopPropagation(); toggleTbMenu('#tb-gear', '#tb-gear-menu'); });
-  // Outside a menu closes it. The click's path is read as it was dispatched: a menu item that
-  // opens a page (Settings, Labs) is replaced by the page, so the clicked element
-  // is no longer in the document and e.target.closest() would find no menu.
+  $('#tb-gear').addEventListener('click', e => { e.stopPropagation(); toggleSettings(); });
+  // Outside a menu closes it. The click's path is read as it was dispatched: a control the sheet draws again (its
+  // Start screen, a Labs switch) may no longer be in the document, and e.target.closest() would find no menu. The
+  // Settings sheet sits outside every .tb-wrap: a click inside it keeps it open.
   document.addEventListener('click', e => {
     const path = typeof e.composedPath === 'function' ? e.composedPath() : [];
     const inside = sel => path.some(n => n && n.matches && n.matches(sel)) || !!(e.target.closest && e.target.closest(sel));
-    if (!inside('.tb-wrap')) closeTbMenus();
+    if (!inside('.tb-wrap') && !inside('#tb-gear-menu')) closeTbMenus();
     if (!inside('.tb-scen-wrap') && !scenJustOpened) closeScenPop();
     if (filtersOpen && !inside('#tb-fl-pop') && !inside('.tb-fl-wrap')) { filtersOpen = false; renderTrail(); }
   });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && filtersOpen) { filtersOpen = false; renderTrail(); } });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (['#tb-export-menu', '#tb-gear-menu', '#tb-present-menu', '#tb-scen-pop'].some(id => { const m = $(id); return m && !m.hidden; })) e.preventDefault(); closeTbMenus(); closeScenPop(); if (typeof PeelTools !== 'undefined' && PeelTools.escape) PeelTools.escape(); } });
+  document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (['#tb-export-menu', '#tb-gear-menu', '#tb-present-menu', '#tb-scen-pop'].some(id => { const m = $(id); return m && !m.hidden; })) e.preventDefault();
+    // (the Settings sheet closed: the focus back on ⚙, or on ⋯ while ⚙ is folded in it on a phone)
+    const sh = $('#tb-gear-menu'), was = !!sh && !sh.hidden;
+    closeTbMenus(); closeScenPop();
+    if (was) { const g = $('#tb-gear'), mb = $('#tb-more'), to = g && g.getClientRects().length ? g : mb; if (to) to.focus(); }
+    if (typeof PeelTools !== 'undefined' && PeelTools.escape) PeelTools.escape();
+  });
 
   // Present toggles the existing presentation mode; the button follows its state.
   function syncPresentBtn() {
@@ -518,7 +518,7 @@
     scenParts,
     openGearPage,
     renderExportMenu,
-    renderGearMenu,
+    toggleSettings,
     draftInquiryResponse,
     initTopbar,
   };

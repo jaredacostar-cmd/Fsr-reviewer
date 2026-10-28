@@ -98,8 +98,8 @@ test('Home’s Servicing figures: the first 90% trigger (plants) and the first z
   // The figures: the zone's threshold in its label, beside the trigger; the trigger opens its plant's scope.
   const s = src('js/ws-pages.js');
   assert.match(s, /const trig = firstTrigger\(rows\), zone = firstZone\(rows\);/);
-  assert.match(s, /label: 'first zone limit \(100% of firm\)', ctx: `\$\{peelWide\}\$\{esc\(zone\.name\)\} reaches 100% of firm pumping · Servicing capacity →`, tone: 'tight', attrs: go\('tight', 'Servicing capacity'\) \}/);
-  assert.match(s, /label: 'first 90% trigger', ctx: `\$\{peelWide\}\$\{esc\(trig\.name\)\} reaches its 90% expansion trigger · Servicing capacity →`, tone: 'tight', attrs: trig\.ss \? \{ 'data-ws-go': 'tight', 'data-ws-ss': trig\.ss, title: `Open \$\{trig\.name\}` \} : go\('tight', 'Servicing capacity'\) \}/);
+  assert.match(s, /label: 'first zone limit \(100% of firm\)', ctx: `\$\{peelWide\}\$\{esc\(zone\.name\)\} reaches 100% of firm pumping · Servicing › Capacity →`, tone: 'tight', attrs: go\('tight', 'Servicing › Capacity'\) \}/);
+  assert.match(s, /label: 'first 90% trigger', ctx: `\$\{peelWide\}\$\{esc\(trig\.name\)\} reaches its 90% expansion trigger · Servicing › Capacity →`, tone: 'tight', attrs: trig\.ss \? \{ 'data-ws-go': 'tight', 'data-ws-ss': trig\.ss, title: `Open \$\{trig\.name\}` \} : go\('tight', 'Servicing › Capacity'\) \}/);
   assert.match(s, /: busiest \? \{ v: 'None', u: '', label: 'first zone limit \(100% of firm\)', ctx: `\$\{peelWide\}before \$\{end\} · most loaded: \$\{esc\(busiest\.name\)\} \(\$\{Math\.round\(busiest\.pctBo\)\}% at build-out\)/, 'none at its limit by the horizon’s end: None, the most loaded zone named');
   assert.match(s, /figures: \[byL\(\/over capacity\/\), byL\(\/first 90% trigger\/\), byL\(\/first zone limit\/\)\] \}/);
   assert.match(s, /\['Servicing', \['over capacity at build-out', 'first 90% trigger', 'first zone limit \(100% of firm\)'\]\]/, 'its place kept while loading');
@@ -143,7 +143,7 @@ test('every workspace has a page builder; pages open from Home, chips and the ma
   assert.match(s, /const BUILD = \{ home, tight, site, growth, outlook, projects, eaflow, week, fsr, pipes, outlets, study, sewer, guides, roles, approvals, flows, network, capacity, fsrguide, capguide, targets, forecast, glossary, logic, help, data \};/, "every workspace (What's coming: the Forecast's), Labs › Sewer designer, and the Reference pages: How it works and its guides, the Glossary, How the app decides and Help");
   // A page's map buttons open the workspace's map view; Full map is the all-tools map; the map view has
   // a way back to the page.
-  assert.match(w, /const pg = e\.target\.closest\('\[data-ws-page\]'\);\s*if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage\); return; \}/);
+  assert.match(w, /const pg = e\.target\.closest\('\[data-ws-page\]'\);\s*if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage, pg\.dataset\.wsAt \? \{ at: pg\.dataset\.wsAt \} : \{\}\); return; \}/);
   // (navigation phase 6c: ← Page goes back at the same tab and view, the map view's only way back besides Full map)
   assert.match(src('index.html'), /data-ws-backpage title="Back to the page, at the same tab and view">← Page<\/button>/);
   // Study area: the map itself moves onto the page and back.

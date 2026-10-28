@@ -84,7 +84,7 @@ test('Home pages: EA to construction (Capital) and Forecast (Planning), reachabl
   // phase 6 Home's Capital › DC timing, whose views row holds EAs, with EA to construction)
   // (at a plan its ctx says the Forecast counts the developments partly in it whole: navigation phase 6)
   assert.match(s, /label: 'expected by 2031', ctx: inPlan \? `\$\{f31\.ctx\} · the developments in or partly in \$\{inName\}, whole` : f31\.ctx, attrs: go\('outlook'\)/);
-  assert.match(s, /\{ title: 'Capital', link: \{ label: 'Capital', attrs: go\('projects'\) \}/);
+  assert.match(s, /\{ title: 'Capital', link: \{ label: 'Capital › DC timing', attrs: go\('projects'\) \}/);
   assert.match(src('js/sections.js'), /'dca:eas': \{ page: 'eaflow' \}/, 'EA to construction is the EAs view’s page builder');
   // The outcome list only holds construction the model calls the EA's outcome (the rule moved with the spec,
   // js/capital-ea-model.js eaFlowSpec, which the page builds on).

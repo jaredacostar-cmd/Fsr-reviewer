@@ -37,24 +37,19 @@
   const vis = (...sels) => { for (const s of sels) { const e = document.querySelector(s); const r = e && e.getBoundingClientRect(); if (r && r.width && r.height && r.right > 0 && r.bottom > 0 && r.left < innerWidth && r.top < innerHeight) return e; } return null; };
   // Navigation 4: the first run is a short tour of Home, after "What's your role?"; the map has its own
   // tour (TOUR below), offered the first time the full map opens. Neither leaves anything open.
-  const TOUR_ROLES = [
-    ['engineer', 'Infrastructure planner or engineer', ['site', 'tight', 'fsr']],
-    ['manager', 'Manager or director', ['home', 'tight', 'projects']],
-    ['growth', 'Growth or policy analyst', ['growth', 'study', 'week']],
-    ['capital', 'Capital or asset management', ['projects', 'pipes']],
-    ['fsr', 'FSR reviewer (development engineering)', ['fsr', 'site', 'week']],
-  ];
-  const roleNow = () => TOUR_ROLES.find(r => r[0] === store.get('role', '')) || null;
-  const pageName = id => { const W = root.PeelWorkspaces; return id === 'home' ? 'Home' : W && W.WS ? (W.WS.find(w => w.id === id) || {}).label || id : id; };
-  const rolePages = () => { const r = roleNow(); return r ? r[2].map(pageName).join(', ') : 'Check a site, Servicing capacity and Growth in an area'; };
-  // (on a phone the menu folds behind one button: the step points at it)
-  const homeMenu = sel => vis(`#home .home-side.open ${sel}`, `#home .home-side ${sel}`, '#home .home-menu-btn');
+  // The roles: the one list (owner decision 6, navigation phase 7), js/workspaces.js ROLES, which Help › Start here,
+  // Settings › Your role and Home's menu (For your role) read too.
+  const roles = () => (root.PeelWorkspaces && root.PeelWorkspaces.ROLES) || [];
+  const roleNow = () => roles().find(r => r.key === store.get('role', '')) || null;
+  const rolePages = () => { const r = roleNow(); return r ? `For your role it keeps: ${r.links.map(l => l.label).join(', ')} (Help › Start here or Settings changes the role).` : 'Pick your role on Help › Start here or in Settings and it keeps up to three shortcuts for it.'; };
+  // (on a phone the menu is behind ☰ in the top bar: the step points at it)
+  const homeMenu = sel => vis(`#home .home-side.open ${sel}`, `#home .home-side ${sel}`, '#tb-nav');
   const HOME_TOUR = [
-    { ch: 'Start', el: () => null, roles: true, t: 'Welcome', b: 'This app follows every development application in Mississauga, Brampton and Caledon, and what each one needs from Peel\'s water and wastewater systems. It is an unofficial prototype built from public open data, not a Region of Peel product. What\'s your role? The tour shows you where to start (Help › Tour of Home asks again).' },
+    { ch: 'Start', el: () => null, roles: true, t: 'Welcome', b: 'This app follows every development application in Mississauga, Brampton and Caledon, and what each one needs from Peel\'s water and wastewater systems. It is an unofficial prototype built from public open data, not a Region of Peel product. What\'s your role? Home\'s menu keeps up to three shortcuts for it (Help › Start here changes it).' },
     { ch: 'Home', el: () => vis('#home .page-tabs', '#home .page-main .home-h', '#home .page-main'), t: 'The briefing', b: 'Home opens on what needs attention: the facilities near their limit, the files that moved, and the capital and EA dates. Each line opens what it names. Under it, the map\u2019s five tabs and their views: the same answers as the full map, for the same place.' },
-    { ch: 'Home', el: () => homeMenu('ul'), t: 'Your pages', b: () => `Each page answers one question, with its own map. For your role, start with: ${rolePages()}. The menu lists them all, grouped: Planning, Capital, QA/QC, Asset Management and Reference.` },
-    // (the search at the top of the page: Home's header, as on every page; else Explore in the menu)
-    { ch: 'Home', el: () => vis('#home #page-search input', '#home #page-search') || homeMenu('[data-ws-page="explore"]'), t: 'Search from any page', b: 'The search at the top of every page finds an address, a file number, a plan, a facility or a DC project number and opens it: a site\u2019s Overview (a file number, its Records), a plan as the filter, on the tab you are on, a plant\u2019s or station\u2019s capacity on the map, a DC project with the developments relying on it. Draw an area beside it opens the map with the Select tool on. Explore, in the menu, opens a site\u2019s page (an area\u2019s views are Home\u2019s tabs).' },
+    { ch: 'Home', el: () => homeMenu('ul'), t: 'Your pages', b: () => `Home’s menu: Home, This week, Find and Help, then the full map. ${rolePages()} On a phone the menu is ☰ in the top bar.` },
+    // (the search at the top of the page: Home's header, as on every page; else Find in the menu)
+    { ch: 'Home', el: () => vis('#home #page-search input', '#home #page-search') || homeMenu('[data-ws-page="find"]'), t: 'Search from any page', b: 'The search at the top of every page finds an address, a file number, a plan, a facility or a DC project number and opens it: a site\u2019s Overview (a file number, its Records), a plan as the filter, on the tab you are on, a plant\u2019s or station\u2019s capacity on the map, a DC project with the developments relying on it. Draw an area beside it opens the map with the Select tool on. Find, in the menu, lists the recently active files, the large ones under review and those with an FSR posted (an area\u2019s views are Home\u2019s tabs).' },
     { ch: 'Home', el: () => homeMenu('.home-full'), t: 'The full map', b: 'Every layer, filter and tool. A "← Back to …" bar takes you back to the page you came from, and a short map tour is offered the first time you open it.' },
     { ch: 'Home', el: () => vis('#tb-restart', '#tb-more'), t: 'Start over and Help', b: 'Start over (top bar) clears every filter, the search and the selection and brings you back to Home; the map view and the scenario stay. Help has the guides, both tours and the glossary.' },
   ];
@@ -129,20 +124,30 @@
   const MOVED = [
     { h: 'Where the app opens', rows: [
       ['The map with every tool', 'Full map, from Home or the top of every page. Settings › Start screen can open it straight away.'],
-      ['(new)', 'Home, a briefing of what needs attention, and the workspaces (Check a site, Servicing capacity, Growth in an area, Review an FSR, Study area, This week, Projects, Old pipes). Each opens a page (Servicing capacity and Old pipes are Home’s Servicing tab, at Capacity and at Old pipes); its "Open the map" shows the map with only its layers, at the page’s tab and view, and ← Page goes back.'],
+      ['(new)', 'Home, a briefing of what needs attention, under it the map’s five tabs, and a menu of five: Home · This week · Find · Help · Full map (For your role: up to three shortcuts). A page’s "Open the map" shows the map with only its layers, at the page’s tab and view, and ← Page goes back.'],
+      ['Home’s sidebar by team (Planning: Explore, Servicing capacity, What’s coming; Capital; QA/QC: Review outlets; Asset Management: Old pipes; Reference)', 'Five entries: Home · This week · Find · Help · Full map, then For your role, up to three shortcuts for the role you picked (the first-run tour, Help › Start here or Settings). Servicing capacity, What’s coming, Capital and Old pipes are Home’s tabs (Servicing › Capacity, Growth › Forecast at By period, Capital › DC timing, Servicing › Old pipes); Explore is Find; Review outlets opens from Records › Data checks, a development’s path line and the QA/QC role; Reference is Help. Old links and buttons open the same places.'],
+      ['The phone’s “☰ … · all pages” row above each page', '☰ in the top bar, beside Home: the same list opens at the top of the page.'],
+      ['Start screen (under the sidebar, and in Settings): Home · Last workspace · Full map', 'Settings › Start screen only: Home · Last place · Full map. Last place reopens the page, its tab and view, its place (Peel, a municipality or a plan) and its development; a development that has gone opens the page without it. Until you have one, the last workspace you opened.'],
+      ['Help › Start here’s roles (four) and the first-run tour’s (five)', 'One list of six (QA/QC added): Help › Start here, the tour and Settings › Your role; each role’s shortcuts are on Help and in Home’s menu.'],
+      ['Help › What each workspace answers', 'Help › What each tab answers: each view of Home and its question.'],
+      ['Help’s bar: Help · How it works · Glossary · How the app decides · Data sources · Data checks', 'Start here · How it works · Glossary · How the app decides. Data sources and checks are Home’s Records tab (Records › Sources, Records › Data checks; Start here links there).'],
+      ['The Definitions card (the Overview’s ⓘ line)', 'Also the Glossary’s first section.'],
+      ['⚙ menu: Settings · Labs · Change log', '⚙ opens Settings, one sheet: Display · Start screen · Your role · Reports (Prepared by, Public version) · Labs · Usage. The change log is Help › What’s new.'],
+      ['Settings › Counting and Settings › Records (pointers)', 'Gone: counting is the Scenario control’s (Count, Units); record type is a filter, Find › What.'],
+      ['Settings › Number conventions', 'Help › How the app decides (Number conventions); the public version and Prepared by are Settings › Reports.'],
       ['The search (Find on the full map; the top bar on wide screens)', 'Also at the top of every page, Home included. On a page a pick opens what it found: a development its page, a file number its page at Records (the file marked), a plan (or MTSA) its filter, the map and every tab following it, on the tab you were on (from Home\u2019s Overview the briefing at the plan, with its Area report), a plant, station, block or zone its scope on the map, a DC project Capital › DC timing at the project (in place, on Home\u2019s Capital tab). On the full map it works as before.'],
       ['Explore\u2019s "Draw an area →"', 'Draw an area at the top of every page: the map opens with the Select tool on.'],
       ['Export ▾ › Inquiry response draft', 'Also Inquiry draft in a development’s header, beside its Servicing memo, on every tab and its page. Both open the draft on the map with the development kept (Peel › the site › the draft).'],
       ['Home › Needs attention (a row opened Servicing capacity)', 'A row opens its plant, station or water system as a scope on the map, as does the first 90% trigger. Home’s Servicing figures add the first zone limit (100% of firm pumping).'],
       ['Home › What’s coming (its own page, with the developments list)', 'Home › Growth › Forecast, By period first and open (the same table, cut-off and folds as the map’s Forecast; the Forecast’s figures follow it), under the Forecast’s question; the developments list is the full table, on the map.'],
-      ['The area pages: Growth in an area, Forecast, Servicing capacity, Capital (DC timing, EAs), Data sources, each with its own bar of sections', 'Home’s tabs: the map’s five, Overview · Growth · Servicing · Capital · Records, the open one’s views in a row under it (Growth › Pipeline · Areas · Forecast, Servicing › Capacity · Network · Old pipes, Capital › DC timing · EAs · Projects, Records › Sources · Data checks). The old pages’ links and sidebar entries open the same tab, and Home is lit; Open the map and ← Page keep the tab and view, as does the “← Back to Home › …” bar from the full map (a development or facility opened on the map closes on the way back, which lands at the view you left). Servicing and Capital say “loading” until their data lands. Home opens on its Overview and closes an open development, as the other area pages did.'],
-      ['Old pipes (its own page, Asset Management; its map view Servicing › Network with a panel of its own)', 'Servicing › Old pipes, on Home and the map: its figures, the grid of age against the homes carried, the runs, by plant, and the CSV (first); on the map the amber pipes while it is open, its full table the grid and every run. The sidebar’s Old pipes and old links open it; at a development Servicing shows Network in its place.'],
-      ['Explore’s five views (a row at the top of each: Growth in an area, Check a site, Review an FSR, Forecast, Study area)', 'Home’s Growth tab (Areas, Forecast), the search (a site), Draw an area (Study area) and Check FSR in a site’s header (Review an FSR). Check a site’s and Review an FSR’s first steps each link to the other’s list (Files with an FSR posted → Review an FSR; Any development → Check a site).'],
+      ['The area pages: Growth in an area, Forecast, Servicing capacity, Capital (DC timing, EAs), Data sources, each with its own bar of sections', 'Home’s tabs: the map’s five, Overview · Growth · Servicing · Capital · Records, the open one’s views in a row under it (Growth › Pipeline · Areas · Forecast, Servicing › Capacity · Network · Old pipes, Capital › DC timing · EAs · Projects, Records › Sources · Data checks). The old pages’ links and the role shortcuts open the same tab, and Home is lit; Open the map and ← Page keep the tab and view, as does the “← Back to Home › …” bar from the full map (a development or facility opened on the map closes on the way back, which lands at the view you left). Servicing and Capital say “loading” until their data lands. Home opens on its Overview and closes an open development, as the other area pages did.'],
+      ['Old pipes (its own page, Asset Management; its map view Servicing › Network with a panel of its own)', 'Servicing › Old pipes, on Home and the map: its figures, the grid of age against the homes carried, the runs, by plant, and the CSV (first); on the map the amber pipes while it is open, its full table the grid and every run. The capital role’s shortcut and old links open it; at a development Servicing shows Network in its place.'],
+      ['Explore’s five views (a row at the top of each: Growth in an area, Check a site, Review an FSR, Forecast, Study area)', 'Home’s Growth tab (Areas, Forecast), Find and the search (a site), Draw an area (Study area) and Check FSR in a site’s header (Review an FSR). Find, the menu’s, lists Recently active, Large files under review and Files with an FSR posted (a file with an FSR opens Servicing › FSR review); Review an FSR’s own step stays, its line linking back to Find.'],
       ['The task chips under a workspace’s map, and its panels’ source line (“Servicing capacity · from Servicing › Capacity”, Full map →)', 'Gone: each page’s Open the map shows only its layers, at the page’s tab and view; ← Page goes back, Full map is beside the search over the map. Old #w= links still open their map view, with its layers.'],
       ['This week’s map view and Home’s Change figures (built twice); its Watch list button', 'One This week: the page, its map view and Home’s Change figures read the same lists and figures. Its first action, Open in Watch, opens the full map’s Watch (your watch list and alerts).'],
       ['The full map opened from Home, at the last tab picked', 'At Home’s tab: Home opens on its Overview (the top bar’s Home, Start over), so the full map opened from there is at Overview too; a tab picked on Home is the map’s. A full map set as the start screen still opens at the last tab picked.'],
       ['The map’s Servicing and Capital tabs, which appeared once their data had loaded', 'Shown from the start, marked “loading” until their data lands; picked early, the tab opens as soon as it can.'],
-      ['Where a development discharges (Review outlets, from the sidebar only)', 'Also Records › Data checks (Review outlets →), and "Review →" on a development’s Overview, in the "Path to the plant" row, when the development is in the review queue. In Records › Data checks it is the list "Where developments discharge", with the count still to review once Capital › DC timing has worked out the DC model.'],
+      ['Where a development discharges (Review outlets, from the sidebar only)', 'Also Records › Data checks (Review outlets →), and "Review →" on a development’s Overview, in the "Path to the plant" row, when the development is in the review queue. In Records › Data checks it is the list "Where developments discharge", with the count still to review once Capital › DC timing has worked out the DC model; and the QA/QC role’s shortcut.'],
     ] },
     { h: 'The analysis tabs', rows: [
       ['Servicing › the Wastewater and Water chip rows (four each)', 'One row for both: Capacity · Network · Old pipes. Allocations is a fold of Capacity; the model checks are Records › Data checks (the Servicing model group).'],
@@ -159,7 +164,7 @@
       ['The Capital page’s DC projects section, and the Projects and EAs lists under DC timing', 'Home’s Capital tab: DC timing (a project opens in place, with its map) · EAs (with EA to construction) · Projects.'],
       ['Capital › EA to construction (its own page and section)', 'Capital › EAs: the fold "EA to construction" (its lists in the full table); on Home, its Capital tab’s EAs, the fold open.'],
       ['Growth in an area’s Servicing and Capital sections', 'Home’s Servicing and Capital tabs: the map’s Servicing › Capacity and Capital › DC timing, Peel-wide (at a municipality or a plan), said once as on the map.'],
-      ['Reference › Data sources and Data checks', 'Records › Sources and Records › Data checks, Home’s Records tab (Help’s bar links there).'],
+      ['Reference › Data sources and Data checks', 'Records › Sources and Records › Data checks, Home’s Records tab (Help › Start here links there, as does the QA/QC role).'],
       ['Growth › Timing', 'Growth › Forecast.'],
       ['Growth › Ledger', 'Growth › Forecast, its fold "By period": the units (or people) left to build by municipality (at a municipality, by its plans and Not in a plan, as Growth › Areas places them; at a plan, by its parts, each development by its share) and milestone, stacked by stage, with its own stage cut-off (Committed only · + Plan approved · + In review · Everything), Units | People and Hide possibly lapsed; How sure (the tiers A to E) folds under it (and Since the last snapshot, once a frozen snapshot exists); the developments list is its full table.'],
       ['Servicing › Checks; Records › Checks', 'Records › Data checks, one list: the data checks, then the Servicing model group.'],
@@ -214,25 +219,22 @@
     'The PDFs under Export (top bar) — executive briefing, servicing memo, area report, comparison — open a print-ready page: use Print / Save as PDF.',
     'On a phone or tablet, Filters opens the search, filters and the developments on the map; tap it again to go back to the map.',
   ];
-  // Bundle 6: Help is a page in Home's layout (Home › Reference): start here by role, what each
-  // workspace answers, the task guides ("Show me" opens the full map, set up), the tour, the change log,
-  // what moved where, the glossary and quick tips.
-  const ROLES = [
-    ['Infrastructure planner or engineer', 'Screen an application, an FSR or a pre-consultation.', ['site', 'fsr', 'tight']],
-    ['Manager or director', 'What needs attention, and whether the capital program keeps up.', ['home', 'tight', 'projects']],
-    ['Growth or policy analyst', 'How much is coming, where, and when.', ['growth', 'study', 'week']],
-    ['Capital or asset management', 'DC projects against the capacity they relieve; ageing sewers carrying growth.', ['projects', 'pipes']],
-  ];
-  const ASKS = { site: 'Can this development be serviced, and what must be confirmed?', fsr: 'Does the consultant’s FSR match the app’s figures?', growth: 'How much is coming, where, and how fast?', study: 'What does a drawn area add, and what does it lean on?', tight: 'Can the system take it?', week: 'What changed since the last update?', projects: 'Is the capital program arriving in time for growth?', eaflow: 'What is being studied, and which EAs have led to construction?', outlook: 'When do the homes and people arrive?', coming: 'What is coming, where, when and how sure?', outlets: 'Where does each development discharge?', pipes: 'Which old pipes carry the most growth?' };
+  // Help › Start here (bundle 6; navigation phase 7, design §3.7): a page in Home's layout, the first of Help's four
+  // sections. The six roles of the one list (js/workspaces.js ROLES), each with its shortcuts and "This is my role"
+  // (Home's menu keeps that role's); Records' sources and checks (Home's Records tab); what each tab of Home answers
+  // (js/sections.js VIEWS.area and ASK, the question each view heads with); the task guides ("Show me" opens the full
+  // map, set up), the tours, What's new (the change log), what moved where and quick tips.
+  const attrs = a => Object.entries(a || {}).map(([k, v]) => (v === true ? ` ${k}` : v == null || v === false ? '' : ` ${k}="${esc(v)}"`)).join('');
   function helpPage() {
-    const W = root.PeelWorkspaces, label = id => (id === 'home' ? 'Home' : W && W.BY_ID && W.BY_ID[id] ? W.BY_ID[id].label : id);
-    const roles = `<div class="help-roles">${ROLES.map(([r, w, ids]) => `<div class="help-role"><strong>${esc(r)}</strong><small>${esc(w)}</small><div>${ids.map(id => `<button type="button" class="btn small" data-ws-page="${id}">${esc(label(id))}</button>`).join('')}</div></div>`).join('')}</div>`;
-    const asks = `<table class="help-asks small"><tbody>${Object.entries(ASKS).map(([id, q]) => `<tr><th scope="row"><button type="button" class="btn small link" data-ws-page="${id}">${esc(label(id))}</button></th><td>${esc(q)}</td></tr>`).join('')}</tbody></table>`;
+    const W = root.PeelWorkspaces, SE = root.PeelSections, mine = store.get('role', '');
+    const cards = `<div class="help-roles">${roles().map(r => `<div class="help-role${r.key === mine ? ' on' : ''}"><strong>${esc(r.label)}</strong><small>${esc(r.what)}</small><div>${r.links.map(l => `<button type="button" class="btn small"${attrs(W.roleAttrs(l))}>${esc(l.label)}</button>`).join('')}</div><button type="button" class="btn small link" data-role-pick="${esc(r.key)}" aria-pressed="${r.key === mine}">${r.key === mine ? 'Your role' : 'This is my role'}</button></div>`).join('')}</div>
+      <p class="small">Data sources and checks are Home’s Records tab: <button type="button" class="btn small link" data-ws-page="home" data-ws-at="records:sources">Records › Sources</button> · <button type="button" class="btn small link" data-ws-page="home" data-ws-at="records:checks">Records › Data checks</button></p>`;
+    const asks = `<table class="help-asks small"><tbody>${Object.keys((SE && SE.VIEWS && SE.VIEWS.area) || {}).map(key => { const [t, sub] = key.split(':'); return `<tr><th scope="row"><button type="button" class="btn small link" data-ws-page="home"${key === 'overview:' ? '' : ` data-ws-at="${esc(key)}"`}>${esc(key === 'overview:' ? 'Overview' : W.tabPath(t, sub))}</button></th><td>${esc(SE.ASK[key] || '')}</td></tr>`; }).join('')}<tr><th scope="row">A development’s page (Find)</th><td>The same five tabs, for one development.</td></tr></tbody></table>`;
     const guides = HELP.map((h, i) => `<details class="help-card"><summary><strong>${esc(h.t)}</strong><small>${esc(h.w)}</small></summary>
         <ol>${h.s.map(x => `<li>${esc(x)}</li>`).join('')}</ol><button type="button" class="btn small" data-help-go="${i}">Show me on the map</button></details>`).join('');
     const mid = `<section class="help-page" data-psec="help">
-      <h3 class="ws-h">Start here</h3>${roles}
-      <h3 class="ws-h">What each workspace answers</h3>${asks}
+      <h3 class="ws-h">Start here</h3>${cards}
+      <h3 class="ws-h">What each tab answers</h3>${asks}
       <h3 class="ws-h">Task guides</h3><p class="small muted">Each one sets the full map up for you.</p>${guides}
       <h3 class="ws-h">More help</h3>
       <p><button type="button" class="btn small" data-help-tour="home">Tour of Home</button> <button type="button" class="btn small" data-help-tour="map">Tour of the full map</button> <button type="button" class="btn small" data-help-log>What's new: the change log</button> <button type="button" class="btn small" data-help-moved>What moved where</button> <button type="button" class="btn small" data-ws-page="guides">How it works: the guides</button> <button type="button" class="btn small" data-ws-page="glossary">Glossary</button> <button type="button" class="btn small" data-ws-page="approvals">How approvals work</button></p>
@@ -240,7 +242,7 @@
       <details class="help-card help-moved" id="help-moved"><summary><strong>What moved where</strong><small>For existing users: where each tab, sub-view and control is now.</small></summary>${movedHTML()}</details>
       <h3 class="ws-h">Quick tips</h3><ul class="help-tips">${QUICK_TIPS.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
     </section>`;
-    return { id: 'help', eyebrow: 'Reference', name: 'How do I use this?', answer: 'Start with your question: each workspace answers one, on a page like this, and its <strong>Open the map</strong> shows the map with only the layers it needs. The <strong>Full map</strong> has every layer, filter and tool; the task guides below set it up for you.', mid,
+    return { id: 'help', eyebrow: 'Help', name: 'How do I use this?', answer: 'Start with your question: Home’s five tabs each answer one (<strong>What each tab answers</strong>, below), for Peel, a municipality or a plan, on the page and on the full map; <strong>Find</strong> opens a development, a file or a plan; the task guides set the full map up for you.', mid,
       actions: [{ label: 'Tour of Home', attrs: { 'data-help-tour': 'home' }, primary: true }, { label: 'Tour of the full map', attrs: { 'data-help-tour': 'map' } }, { label: 'Full map', attrs: { 'data-ws-full': '' } }] };
   }
   // The Help button, the tour's Help and old links: the Help page.
@@ -262,7 +264,7 @@
     const ht = e.target.closest('[data-help-tour]');
     if (ht && ht.dataset.helpTour === 'home') { const W = root.PeelWorkspaces; if (W && W.openPage) W.openPage('home'); return setTimeout(() => startTour('home'), 400); }
     if (ht) { const f = toFull(); AC().closeDetail(); return f ? setTimeout(() => startTour('map'), 400) : startTour('map'); }
-    // Phase 3b: Help carries the change log too — same destination as the gear menu's Change log.
+    // Phase 3b: Help carries the change log (What's new; the ⚙ menu's Change log until navigation phase 7).
     if (e.target.closest('[data-help-log]')) { CL().renderChangelog(); const w = $('#help-log-body'); if (w) w.scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
     const g = e.target.closest('[data-help-go]'); if (!g) return;
     const h = HELP[+g.dataset.helpGo]; if (!h) return;
@@ -329,7 +331,8 @@
         else if (d) tourGo(+d.dataset.tourDot);
         else if (e.target.closest('[data-tour-help]')) { endTour(); showHelp(); }
         else if (e.target.closest('[data-tour-skip]')) endTour();
-        else { const r = e.target.closest('[data-tour-role]'); if (r) { store.set('role', r.dataset.tourRole); tourGo(tourI + 1); } }
+        // (a role picked: Home's menu shows its shortcuts at once, the next step points at them)
+        else { const r = e.target.closest('[data-tour-role]'); if (r) { store.set('role', r.dataset.tourRole); const W = root.PeelWorkspaces; if (W && W.mode && W.mode() === 'home') W.renderPage(true); tourGo(tourI + 1); } }
       });
       addEventListener('keydown', tourKey, true);
     }
@@ -356,11 +359,11 @@
     };
     let [cx, cy] = place(200);
     const chapters = [...new Set(steps.map(x => x.ch))], last = tourI === steps.length - 1, body = typeof st.b === 'function' ? st.b() : st.b;
-    const roles = st.roles ? `<div class="tour-roles" role="group" aria-label="Your role">${TOUR_ROLES.map(([k, t]) => `<button type="button" class="btn small${store.get('role', '') === k ? ' on' : ''}" data-tour-role="${k}">${esc(t)}</button>`).join('')}</div>` : '';
+    const picks = st.roles ? `<div class="tour-roles" role="group" aria-label="Your role">${roles().map(r => `<button type="button" class="btn small${store.get('role', '') === r.key ? ' on' : ''}" data-tour-role="${esc(r.key)}">${esc(r.label)}</button>`).join('')}</div>` : '';
     tourEl.innerHTML = `${box && !big ? `<div class="tour-hole" style="left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px"></div>` : big ? `<div class="tour-hole big" style="left:${box.x}px;top:${box.y}px;width:${box.w}px;height:${box.h}px"></div>` : ''}
       <div class="tour-card" role="dialog" aria-live="polite" aria-label="Tour step ${tourI + 1} of ${steps.length}: ${esc(st.t)}" style="left:${cx}px;top:${cy}px;width:${cw}px">
         <div class="tour-ch">${chapters.map(c => `<span class="${c === st.ch ? 'on' : ''}">${esc(c)}</span>`).join('')}</div>
-        <strong>${esc(st.t)}</strong><p>${esc(body)}</p>${roles}
+        <strong>${esc(st.t)}</strong><p>${esc(body)}</p>${picks}
         <div class="tour-dots" aria-hidden="true">${steps.map((_, i) => `<button type="button" tabindex="-1" class="${i === tourI ? 'on' : i < tourI ? 'done' : ''}" data-tour-dot="${i}" title="Step ${i + 1}"></button>`).join('')}</div>
         <div class="tour-btns"><button type="button" class="btn small link" data-tour-skip>${last ? 'Close' : 'Skip tour'}</button><span>${tourI ? '<button type="button" class="btn small" data-tour-back>← Back</button>' : ''}${last ? '<button type="button" class="btn small primary" data-tour-help>Open Help &amp; tips</button>' : st.roles ? '<button type="button" class="btn small" data-tour-next>Continue without a role →</button>' : `<button type="button" class="btn small primary" data-tour-next>${tourI ? 'Next →' : 'Start →'}</button>`}</span></div></div>`;
     const card = tourEl.querySelector('.tour-card'), [x2, y2] = place(card.offsetHeight); card.style.left = `${x2}px`; card.style.top = `${y2}px`;
@@ -368,7 +371,7 @@
     const nx = tourEl.querySelector(st.roles ? '[data-tour-role]' : '[data-tour-next], [data-tour-help]'); if (nx) nx.focus({ preventScroll: true });
   }
 
-  const api = { maybeTour, maybeMapTour, HOME_TOUR, TOUR_ROLES, TOUR, showHelp, showHelpLog, openAnalysis, startTour, MOVED, movedHTML, helpPage, ROLES, ASKS, HELP };
+  const api = { maybeTour, maybeMapTour, HOME_TOUR, TOUR, showHelp, showHelpLog, openAnalysis, startTour, MOVED, movedHTML, helpPage, HELP };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelTips = api;
 })(typeof window !== 'undefined' ? window : globalThis);

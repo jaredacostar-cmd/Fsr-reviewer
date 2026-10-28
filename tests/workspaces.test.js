@@ -15,7 +15,7 @@ const src = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const plain = o => JSON.parse(JSON.stringify(o));
 const W = (() => { const ctx = { module: { exports: {} }, URLSearchParams }; ctx.globalThis = ctx; vm.runInNewContext(src('js/workspaces.js'), ctx); return ctx.module.exports; })();
 
-test('1. the chips, in the brief\'s order, and Home\'s groups', () => {
+test('1. the chips, in the brief\'s order, Home\'s groups (alias data since navigation phase 7) and its sidebar', () => {
   assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Servicing capacity', 'Growth in an area', 'Review an FSR', 'Forecast', 'Study area', 'DC projects', 'EA to construction', 'Review outlets', 'Old pipes', 'What’s coming', 'This week']);
   // Home's sidebar: This week under Home (bundle 6), then Planning (Servicing capacity with it),
   // Capital, QA/QC (Review outlets), Asset Management; then Full map.
@@ -23,10 +23,13 @@ test('1. the chips, in the brief\'s order, and Home\'s groups', () => {
   assert.deepEqual(plain(W.GROUPS), [['Planning', ['explore', 'tight', 'coming']], ['Capital', ['capital']], ['QA/QC', ['outlets']], ['Asset Management', ['pipes']]]);
   assert.deepEqual(plain(W.CAPITAL), ['projects', 'eaflow']);
   assert.deepEqual(plain(W.EXPLORE), ['growth', 'site', 'fsr', 'outlook', 'study']);
-  assert.match(fs.readFileSync(path.join(__dirname, '..', 'js', 'workspaces.js'), 'utf8'), /<ul>\$\{item\('home', 'The briefing'\)\}\$\{item\('week', BY_ID\.week\.what\)\}<\/ul>/);
+  // (navigation phase 7, design §3.2: Home's menu is SIDEBAR, Home · This week · Find · Help, then Full map)
+  assert.match(fs.readFileSync(path.join(__dirname, '..', 'js', 'workspaces.js'), 'utf8'), /<ul>\$\{SIDEBAR\.map\(\(\[id, what\]\) => item\(id, what\)\)\.join\(''\)\}<\/ul>/);
   for (const w of W.WS) assert.ok(w.what.split(/\s+/).length <= 8, `${w.id}: 8 words or fewer`);
-  const all = [...W.GROUPS.flatMap(g => g[1]).flatMap(id => (id === 'explore' ? W.EXPLORE : id === 'capital' ? W.CAPITAL : [id])), 'week'].sort();
-  assert.deepEqual(plain(all), plain(W.WS.map(w => w.id).sort()), 'every workspace listed once');
+  // (navigation phase 7, §5 rows 3–9: the sidebar lists no workspace, its team groups gone, removed by design) Every
+  // workspace is one tap from Home's sidebar: an entry, a role's shortcut, or one of Home's tabs (HOST).
+  const near = new Set([...W.SIDEBAR.map(e => W.resolvePage(e[0], {})), ...W.ROLES.flatMap(r => r.links).flatMap(l => { const a = W.roleAttrs(l); return [a['data-ws-page'] && W.resolvePage(a['data-ws-page'], {}), a['data-ws-go']]; }), ...Object.keys(W.HOST)]);
+  for (const w of W.WS) assert.ok(near.has(w.id), `${w.id}: one tap from Home's sidebar or one of its tabs`);
 });
 
 test('1. each chip opens the stated tab and scope (and the layer preset)', () => {
@@ -135,8 +138,13 @@ function loadBrowser(areaSpec, o = {}) {
   vm.runInNewContext(src('js/panel.js'), ctx);
   vm.runInNewContext(src('js/sections.js'), ctx);
   vm.runInNewContext(src('js/ws-pages.js'), ctx);
+  // (js/workspaces.js's own click and change listeners, run by click(sel, dataset) and change(sel, el): an element
+  // matching sel exactly, as tests/nav-aliases.test.js loadWs does)
+  const handlers = {};
+  document.addEventListener = (t, f) => { (handlers[t] = handlers[t] || []).push(f); };
   vm.runInNewContext(src('js/workspaces.js'), ctx);
-  return { W: window.PeelWorkspaces, PN: window.PeelPanel, nodes, window };
+  const fire = (t, sel, el) => { for (const f of handlers[t] || []) f({ target: { closest: x => (x === sel ? el : null) }, preventDefault() {}, stopPropagation() {} }); };
+  return { W: window.PeelWorkspaces, PN: window.PeelPanel, nodes, window, store, click: (sel, dataset = {}) => fire('click', sel, { dataset }), change: (sel, el) => fire('change', sel, el) };
 }
 const AREA = {
   head: { identity: 'Peel · all of Peel', status: { tone: 'over', text: '9 over' } },
@@ -182,7 +190,7 @@ test('2. workspace figures equal full-map figures (Home and This week read the P
   void PN;
   assert.ok(h.includes(AREA.answer), 'the headline sentence');
   assert.match(h, /<div class="pnl-fig" data-ws-page="week" title="This week" role="button" tabindex="0"><b>2<\/b><span class="pnl-u">changes<\/span><span class="pnl-l">this week<\/span>/, 'This week: the same rows as its page');
-  assert.match(h, /data-ws-page="tight" title="Servicing capacity" role="button" tabindex="0"><b>/);
+  assert.match(h, /data-ws-page="tight" title="Servicing › Capacity" role="button" tabindex="0"><b>/);
   // Step 6: the scope first (Peel or a municipality), then the figures in groups.
   assert.match(h, /<div class="home-scope"><div class="seg" role="group" aria-label="Municipality"><button type="button" class="btn small on" data-ws-muni="" aria-pressed="true">Peel<\/button>/);
   for (const g of ['Growth', 'Servicing', 'Capital', 'Change']) assert.match(h, new RegExp(`<div class="home-grp-h"><h2>${g}</h2>`), g);
@@ -322,12 +330,14 @@ test('3. Home links open the matching chip', () => {
   const { W: B, nodes } = loadBrowser(AREA);
   B.setMode('home');
   const h = nodes['#home'].innerHTML;
-  // The workspace list: one button per chip, then Full map.
-  // Home itself first (current), then one button per workspace page, then Full map.
+  // Home's menu: Home itself first (current), This week, Find, Help, then Full map (navigation phase 7, §3.2; a
+  // button per workspace and the Explore and Capital entries went, §5 rows 3–9, removed by design: the old ids are
+  // the role shortcuts' and land through the alias layer).
   assert.match(h, /<button type="button" class="home-ws on" data-ws-page="home" aria-current="page"><strong>Home<\/strong>/);
-  for (const w of B.WS.filter(x => !B.EXPLORE.includes(x.id) && !B.CAPITAL.includes(x.id))) assert.match(h, new RegExp(`<button type="button" class="home-ws" data-ws-page="${w.id}"><strong>${w.label}`), w.id);
-  assert.match(h, /<button type="button" class="home-ws" data-ws-page="explore"><strong>Explore/, 'Explore: one entry for its five views');
-  assert.match(h, /<button type="button" class="home-ws" data-ws-page="capital"><strong>Capital/, 'Capital: one entry for DC projects and EA to construction');
+  const side = h.slice(h.indexOf('<nav class="home-side'), h.indexOf('</nav>', h.indexOf('<nav class="home-side')));
+  assert.deepEqual([...side.matchAll(/<button type="button" class="home-ws[^"]*" data-ws-page="(\w+)"/g)].map(m => m[1]), ['home', 'week', 'find', 'help']);
+  assert.match(side, /<button type="button" class="home-ws" data-ws-page="find"><strong>Find<\/strong>/);
+  assert.doesNotMatch(side, /data-ws-page="(tight|coming|outlets|pipes|capital|explore|reference)"/);
   assert.match(h, /class="home-ws home-full" data-ws-full>/);
   // Find from every page, Home included: the search slot and Draw an area in the header.
   assert.match(h, /<div class="page-find" data-psec="find"><div class="page-search" id="page-search"><\/div><button type="button" class="btn small page-draw" data-ws-go="study"[^>]*>Draw an area<\/button><\/div><\/header>/);
@@ -341,11 +351,97 @@ test('3. Home links open the matching chip', () => {
   assert.match(h, /data-ws-page="tight">See all \(9\) →/);
   assert.doesNotMatch(h, /See all \(2\)/, 'no See all when every row is shown');
   assert.match(h, /<div class="pnl-fig" data-ws-page="tight"/);
-  assert.match(h, /<h2>Growth<\/h2><button type="button" class="btn small link" data-ws-page="growth">Growth in an area →<\/button>/);
+  assert.match(h, /<h2>Growth<\/h2><button type="button" class="btn small link" data-ws-page="growth">Growth › Areas →<\/button>/);
   assert.match(h, /<button type="button" class="home-map-btn" data-ws-page="tight"/);
-  // The start screen choice, and the screening note.
-  assert.match(h, /<select data-ws-start><option value="home" selected>Home<\/option><option value="last">Last workspace<\/option><option value="full">Full map<\/option>/);
+  // The screening note. (The start screen select under the sidebar went in navigation phase 7, §5 row 13, removed by
+  // design: Settings › Start screen keeps it.)
+  assert.doesNotMatch(h, /data-ws-start>|home-pref/);
   assert.match(h, /General screening results only\. Peel's W&amp;WW Infrastructure Planning team must validate or confirm all results\./);
+});
+
+// Navigation phase 7 (design §3.2, §3.8, §5 rows 3–14; owner decision 6): Home's menu is five entries, then For your
+// role's shortcuts from the one ROLES list and Labs; on a phone ☰ in the top bar opens it.
+test('Home’s sidebar (navigation phase 7): five entries, For your role from the one list, Labs; ☰ in the top bar on a phone', () => {
+  const L = loadBrowser(AREA), { W: B, nodes, window, store } = L, at = window.PeelAnalysisTabs.at;
+  window.PeelOverviewTab.weekChanges = () => ({ moved: [], added: [] });   // (This week's page)
+  const side = () => { const h = nodes['#home'].innerHTML, i = h.indexOf('<nav class="home-side'); return h.slice(i, h.indexOf('</nav>', i) + 6); };
+  const entries = () => [...side().matchAll(/<button type="button" class="home-ws[^"]*" data-ws-page="(\w+)"/g)].map(m => m[1]);
+  const lit = () => [...side().matchAll(/data-ws-page="(\w+)" aria-current="page"/g)].map(m => m[1]);
+  B.setMode('home');
+  assert.deepEqual(entries(), ['home', 'week', 'find', 'help']);
+  assert.deepEqual(lit(), ['home']);
+  assert.match(side(), /^<nav class="home-side" id="home-side" aria-label="Pages"><ul><li><button type="button" class="home-ws on" data-ws-page="home" aria-current="page"><strong>Home<\/strong><small>What needs attention: Peel or a municipality<\/small><\/button><\/li>/);
+  assert.match(side(), /<\/ul>\n\s*<button type="button" class="home-ws home-full" data-ws-full><strong>Full map<\/strong>/, 'Full map after the four');
+  assert.doesNotMatch(side(), /<h2 class="home-g">|data-ws-start|home-menu-btn|data-home-menu/, 'no team heading, no select, no ☰ of its own');
+  assert.match(side(), /<p class="home-role small"><button type="button" class="btn small link" data-ws-page="help">Pick your role for shortcuts →<\/button><\/p>/, 'no role: the pick line');
+  // A role: its heading and its three shortcuts (never lit), each button's attributes the shortcut's own.
+  store.set('role', 'qa'); B.renderPage(true);
+  assert.match(side(), /<h2 class="home-g">For your role · QA\/QC \(data review\) <button type="button" class="btn small link home-role-x" data-ws-page="help">\(change\)<\/button><\/h2><ul><li><button type="button" class="home-ws home-short" data-ws-page="outlets"><strong>Review outlets<\/strong><\/button><\/li><li><button type="button" class="home-ws home-short" data-ws-page="home" data-ws-at="records:checks"><strong>Records › Data checks<\/strong><\/button><\/li><li><button type="button" class="home-ws home-short" data-ws-page="data"><strong>Records › Sources<\/strong><\/button><\/li><\/ul>/);
+  assert.deepEqual(lit(), ['home'], 'a shortcut is a way in, never lit');
+  assert.doesNotMatch(side(), /home-role small/);
+  store.set('role', 'growth'); B.renderPage(true);
+  assert.match(side(), /<button type="button" class="home-ws home-short" data-ws-page="coming"><strong>What’s coming \(Growth › Forecast › By period\)<\/strong>/, 'the label as text');
+  assert.match(side(), /<button type="button" class="home-ws home-short" data-ws-go="study"><strong>Draw an area<\/strong>/);
+  store.set('role', 'manager'); B.renderPage(true);
+  assert.match(side(), /<button type="button" class="home-ws home-short" data-ws-page="projects" data-dc-status="gap"><strong>DC projects late \(Capital › DC timing\)<\/strong>/);
+  assert.match(side(), /<button type="button" class="home-ws home-short" data-pnl-brief=""><strong>Briefing PDF<\/strong>/);
+  store.set('role', 'Jane'); B.renderPage(true);
+  assert.match(side(), /Pick your role for shortcuts →/, 'a role not in the list: the pick line');
+  // Which entry is lit: Find on the Find steps (and the site's page) and Study area, Help on every Help page, a guide's
+  // too, This week on This week; nothing on a tool page (Review outlets).
+  for (const [id, on] of [['site', 'find'], ['fsr', 'find'], ['study', 'find'], ['explore', 'find'], ['help', 'help'], ['glossary', 'help'], ['logic', 'help'], ['guides', 'help'], ['approvals', 'help'], ['week', 'week'], ['tight', 'home'], ['reference', 'help']]) {
+    B.openPage(id); assert.deepEqual(lit(), [on], id);
+  }
+  B.openPage('outlets'); assert.deepEqual(lit(), [], 'Review outlets: a tool page, none lit');
+  // A shortcut to a view of Home (data-ws-at): Home at it, as an area page's id opens its own, an open development
+  // closed (Home is the area's host); nothing else opened.
+  let dev = { key: 'k' }; const closed = [];
+  window.DevScope = { current: () => dev, close: () => { closed.push('dev'); dev = null; } };
+  at.calls.length = 0; L.click('[data-ws-page]', { wsPage: 'home', wsAt: 'records:checks' });
+  assert.deepEqual(at.calls, [['setSub', 'records', 'checks'], ['setFootPref', 'records'], ['showFootTab', 'records']]);
+  assert.deepEqual([B.page(), B.view(), closed], ['home', 'records:checks', ['dev']]);
+  at.calls.length = 0; L.click('[data-ws-page]', { wsPage: 'home', wsAt: 'svc:network' });
+  assert.deepEqual([B.view(), at.calls.map(c => c[0])], ['svc:network', ['setSub', 'setFootPref', 'showFootTab']]);
+  // The sidebar's Find with a development open: it closes, the Find step opens (as Home closes it); a page id without
+  // data-ws-at as before.
+  dev = { key: 'k' }; closed.length = 0; L.click('[data-ws-page]', { wsPage: 'find' });
+  assert.deepEqual([B.page(), B.view(), closed], ['site', null, ['dev']]);
+  at.calls.length = 0; L.click('[data-ws-page]', { wsPage: 'tight' });
+  assert.deepEqual([B.page(), B.view(), at.calls.length], ['home', 'svc:capacity', 3]);
+  // A role picked (Help › Start here's "This is my role"): stored, the menu redrawn; a key not in ROLES is not stored.
+  store.set('role', ''); B.openPage('home');
+  L.click('[data-role-pick]', { rolePick: 'capital' });
+  assert.equal(store.get('role'), 'capital'); assert.match(side(), /For your role · Capital or asset management/);
+  L.click('[data-role-pick]', { rolePick: 'Jane Smith' }); assert.equal(store.get('role'), 'capital', 'not a role: nothing stored');
+  // Settings › Your role (a select): a ROLES key or none.
+  L.change('[data-role-set]', { value: 'fsr' }); assert.equal(store.get('role'), 'fsr'); assert.match(side(), /For your role · FSR reviewer/);
+  L.change('[data-role-set]', { value: '<b>' }); assert.equal(store.get('role'), 'fsr');
+  L.change('[data-role-set]', { value: '' }); assert.equal(store.get('role'), ''); assert.match(side(), /Pick your role for shortcuts →/);
+  // ☰ (the top bar's, a phone's): the menu opens at the top of the page and shuts; its aria-expanded follows.
+  const nav = { attrs: {}, setAttribute(k, v) { this.attrs[k] = v; } };
+  nodes['#tb-nav'] = nav; nodes['#home'].scrollTop = 300;
+  L.click('[data-home-menu]');
+  assert.match(side(), /^<nav class="home-side open" id="home-side"/); assert.equal(nav.attrs['aria-expanded'], 'true'); assert.equal(nodes['#home'].scrollTop, 0, 'the list at the top of the page');
+  L.click('[data-home-menu]');
+  assert.match(side(), /^<nav class="home-side" id="home-side"/); assert.equal(nav.attrs['aria-expanded'], 'false');
+  // (a pick from the open menu shuts it; so does leaving the page)
+  L.click('[data-home-menu]'); L.click('[data-ws-page]', { wsPage: 'week' });
+  assert.match(side(), /^<nav class="home-side" id="home-side"/); assert.equal(nav.attrs['aria-expanded'], 'false');
+  L.click('[data-home-menu]'); B.setMode('full'); B.setMode('home');
+  assert.match(side(), /^<nav class="home-side" id="home-side"/);
+  // The markup and styles: ☰ beside Home in the top bar, only on a page at ≤ 700 px; the menu's own button, the Start
+  // select and the Explore entry's name have no rule left.
+  const html = src('index.html'), css = src('css/app.css'), w = src('js/workspaces.js');
+  assert.match(html, /<button type="button" class="btn small tb-btn tb-nav" id="tb-nav" data-home-menu aria-expanded="false" aria-controls="home-side" aria-label="Pages: Home, This week, Find, Help and the full map" title="Pages">☰<\/button>/);
+  assert.ok(html.indexOf('id="tb-nav"') > html.indexOf('id="tb-home"') && html.indexOf('id="tb-nav"') < html.indexOf('id="trail"'), 'beside Home, before the trail');
+  assert.match(css, /\.topbar \.tb-btn\.tb-nav \{ display: none; flex: 0 0 auto; \}/);
+  assert.match(css, /@media \(max-width: 700px\) \{\n {2}html\.home-on \.topbar \.tb-btn\.tb-nav \{ display: inline-flex;/);
+  assert.match(css, /\.home-side\.open \.home-ws \{ width: 100%; justify-content: flex-start; white-space: normal; \}/, 'long shortcut labels wrap on a phone');
+  assert.doesNotMatch(css, /\.home-menu-btn|\.home-pref|\.home-ws-cur/);
+  assert.match(w, /const nb = \$\('#tb-nav'\); if \(nb\) nb\.setAttribute\('aria-expanded', String\(menuOpen\)\);/);
+  assert.match(w, /function setMode\(m, pg\) \{\n {4}if \(m !== 'home'\) menuOpen = false;/);
+  assert.match(w, /<li><button type="button" class="home-ws home-short"\$\{attrs\(roleAttrs\(l\)\)\}><strong>\$\{esc\(l\.label\)\}<\/strong><\/button><\/li>/);
+  assert.doesNotMatch(w, /data-ws-start[^-]|home-ws-cur|EXPLORE\.includes\(page\)/);
 });
 
 test('Home › Servicing: the first 90% trigger opens its plant, the first zone limit its page; Needs attention rows open their facility', () => {
@@ -354,8 +450,8 @@ test('Home › Servicing: the first 90% trigger opens its plant, the first zone 
   window.PeelSvcCapacity.collect = () => [row('plant:Lakeview', 'plant', 'G.E. Booth', 2031, 120, 'plant:Lakeview'), row('pump:Zone 5', 'pump', 'Into zone 5 and above', 2029, 104, null), row('plant:Clarkson', 'plant', 'Clarkson', 2034, 84, 'plant:Clarkson')];
   B.setMode('home');
   const h = nodes['#home'].innerHTML;
-  assert.match(h, /<div class="pnl-fig t-tight" data-ws-go="tight" data-ws-ss="plant:Lakeview" title="Open G\.E\. Booth" role="button" tabindex="0"><b>≈2031<\/b><span class="pnl-l">first 90% trigger<\/span><small>G\.E\. Booth reaches its 90% expansion trigger · Servicing capacity →<\/small>/);
-  assert.match(h, /<div class="pnl-fig t-tight" data-ws-page="tight" title="Servicing capacity" role="button" tabindex="0"><b>≈2029<\/b><span class="pnl-l">first zone limit \(100% of firm\)<\/span><small>Into zone 5 and above reaches 100% of firm pumping · Servicing capacity →<\/small>/);
+  assert.match(h, /<div class="pnl-fig t-tight" data-ws-go="tight" data-ws-ss="plant:Lakeview" title="Open G\.E\. Booth" role="button" tabindex="0"><b>≈2031<\/b><span class="pnl-l">first 90% trigger<\/span><small>G\.E\. Booth reaches its 90% expansion trigger · Servicing › Capacity →<\/small>/);
+  assert.match(h, /<div class="pnl-fig t-tight" data-ws-page="tight" title="Servicing › Capacity" role="button" tabindex="0"><b>≈2029<\/b><span class="pnl-l">first zone limit \(100% of firm\)<\/span><small>Into zone 5 and above reaches 100% of firm pumping · Servicing › Capacity →<\/small>/);
   // (in the Servicing group, after the trigger)
   const grp = h.slice(h.indexOf('<h2>Servicing</h2>'), h.indexOf('<h2>Capital</h2>'));
   assert.deepEqual([...grp.matchAll(/<span class="pnl-l">([^<]+)<\/span>/g)].map(m => m[1]), ['over capacity at build-out', 'first 90% trigger', 'first zone limit (100% of firm)']);
@@ -366,13 +462,13 @@ test('Home › Servicing: the first 90% trigger opens its plant, the first zone 
   // No zone at its limit by the horizon's end: "None" before 2051, naming the most loaded zone.
   window.PeelSvcCapacity.collect = () => [row('plant:Lakeview', 'plant', 'G.E. Booth', 2031, 120, 'plant:Lakeview'), row('pump:Zone 5', 'pump', 'Into zone 5 and above', null, 60, null), row('pump:Zone 7', 'pump', 'Into zone 7 and above', null, 83, null)];
   B.renderPage(true);
-  assert.match(nodes['#home'].innerHTML, /<div class="pnl-fig" data-ws-page="tight" title="Servicing capacity" role="button" tabindex="0"><b>None<\/b><span class="pnl-l">first zone limit \(100% of firm\)<\/span><small>before 2051 · most loaded: Into zone 7 and above \(83% at build-out\) · Servicing capacity →<\/small>/);
+  assert.match(nodes['#home'].innerHTML, /<div class="pnl-fig" data-ws-page="tight" title="Servicing › Capacity" role="button" tabindex="0"><b>None<\/b><span class="pnl-l">first zone limit \(100% of firm\)<\/span><small>before 2051 · most loaded: Into zone 7 and above \(83% at build-out\) · Servicing › Capacity →<\/small>/);
   // No zone row, no zone figure; a well system (no scope) opens the page.
   window.PeelSvcCapacity.collect = () => [row('wsys:AV13', 'wplant', 'Alton wells', 2030, 95, null)];
   B.renderPage(true);
   const h2 = nodes['#home'].innerHTML;
   assert.doesNotMatch(h2, /first zone limit/);
-  assert.match(h2, /<div class="pnl-fig t-tight" data-ws-page="tight" title="Servicing capacity" role="button" tabindex="0"><b>≈2030<\/b><span class="pnl-l">first 90% trigger<\/span>/);
+  assert.match(h2, /<div class="pnl-fig t-tight" data-ws-page="tight" title="Servicing › Capacity" role="button" tabindex="0"><b>≈2030<\/b><span class="pnl-l">first 90% trigger<\/span>/);
 });
 
 test('Find from every page: the page waits while its search has the focus; another page never does', () => {

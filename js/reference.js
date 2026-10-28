@@ -1,5 +1,5 @@
 /* How it works (PeelReference): the reference guides, pages in Home's layout (js/ws-pages.js) opened
- * from Home's sidebar (Reference › How it works), the Help page and the panels they explain. Each guide
+ * from Home's sidebar (Help › How it works), Help › Start here and the panels they explain. Each guide
  * answers one question about how servicing for growth works in Peel, and how the app reads it:
  * who decides what, how approvals work (js/approvals-guide.js), homes to flows (a worked example),
  * how sewage and water travel, how capacity is checked, what an FSR should cover, how a capital
@@ -37,7 +37,7 @@
   const NOTE_TAIL = 'A general guide for screening: confirm the current rules and figures with the Region of Peel.';
 
   // ---- Shared pieces ------------------------------------------------------------------------------
-  const eyebrowOf = id => `Reference · <button type="button" class="btn small link" data-ws-page="guides">How it works</button> · ${IDS.indexOf(id) + 1} of ${IDS.length}`;
+  const eyebrowOf = id => `Help · <button type="button" class="btn small link" data-ws-page="guides">How it works</button> · ${IDS.indexOf(id) + 1} of ${IDS.length}`;
   /** Previous / All guides / Next, under each guide. */
   function navHTML(id) {
     const i = IDS.indexOf(id), prev = GUIDES[i - 1], next = GUIDES[i + 1];
@@ -59,9 +59,9 @@
   // ---- The index: How it works ---------------------------------------------------------------------
   function indexPage() {
     const cards = GUIDES.map(([id, label, q, line], i) => `<li><button type="button" class="rf-card" data-ws-page="${id}"><span class="rf-n">${i + 1}</span><strong>${esc(label)}</strong><span>${esc(q)}</span><small>${esc(line)}</small></button></li>`).join('');
-    return { id: 'guides', eyebrow: 'Reference', name: 'How does servicing for growth work in Peel?',
+    return { id: 'guides', eyebrow: 'Help', name: 'How does servicing for growth work in Peel?',
       answer: 'Nine short guides: who decides, how a development is approved, how its homes become water and sewage flows, where those flows go, how capacity is checked, what a <strong>functional servicing report</strong> covers, how the Region builds the works, how much growth is planned, and when the pipeline is built. Each one says how the app reads it, and where it simplifies.',
-      mid: sec('guides', '', `<ol class="rf-index">${cards}</ol>`) + sec('more', 'More reference', `<p>${go('glossary', 'Glossary: the terms in plain words')} ${go('logic', 'How the app decides: the data rules and gates')} ${go('help', 'Help: how to use the app')}</p>`),
+      mid: sec('guides', '', `<ol class="rf-index">${cards}</ol>`) + sec('more', 'More help', `<p>${go('glossary', 'Glossary: the terms in plain words')} ${go('logic', 'How the app decides: the data rules and gates')} ${go('help', 'Start here: how to use the app')}</p>`),
       actions: [{ label: `Start: ${GUIDES[0][1]}`, attrs: { 'data-ws-page': GUIDES[0][0] }, primary: true }, { label: 'Full map', attrs: { 'data-ws-full': '' } }] };
   }
 
