@@ -126,16 +126,18 @@ test('every stored sub-view lands on a valid one after the reset', () => {
   assert.ok(mig > 0 && reset > mig);
 });
 
-test('share links: every sub-view param goes through migrateTabKey; nav=2; an older page link opens the page\'s own tab', () => {
+test('share links: every sub-view param goes through migrateTabKey; nav=3; an older page link opens the page\'s own tab', () => {
   const sh = src('js/share.js');
   assert.doesNotMatch(sh, /TABSUBS\.svc\.valid\.includes\(q\.get\('svs'\)\)|TABSUBS\.records\.valid\.includes\(q\.get\('rs'\)\)/, 'a moved svs / rs value is no longer dropped');
   assert.match(sh, /if \(m\.dcSub\) AT\(\)\.setDcSub\(m\.dcSub\); if \(m\.rSub\) AT\(\)\.setRSub\(m\.rSub\);/);
-  assert.match(sh, /set\('nav', '2'\);\n {6}set\('t', tab\);/);
+  // (navigation phase 6: nav=3, the same marker versioned: before it Home and Data sources wrote the map's tab)
+  assert.match(sh, /set\('nav', '3'\);\n {6}set\('t', tab\);/);
   assert.match(sh, /const tab = pageWs \? pageWs\.tab : AT\(\)\.getFootPref\(\);/, 'on a workspace page, the page\'s own tab');
+  assert.match(sh, /const pageWs = W && W\.mode\(\) === 'home' && W\.page && !\(W\.view && W\.view\(\)\) && W\.BY_ID\[W\.page\(\)\];/, 'on a page host (Home), the map\'s tab: the page\'s own');
   // (an older page link: nav below 2, the page it names open; a saved view applied on the full map opens
-  // no page, so it keeps its own t)
-  assert.match(sh, /const pid = !\(Number\(q\.get\('nav'\)\) >= 2\) && \/\^p:\/\.test\(w\) && W && W\.resolvePage \? W\.resolvePage\(w\.slice\(2\), \{ site: !!q\.get\('d'\), last: window\.PeelUtil\.store\.get\('lastWs', ''\) \}\) : '';/);
-  assert.match(sh, /const pageWs = pid && W\.mode\(\) === 'home' && W\.page\(\) === pid && Object\.prototype\.hasOwnProperty\.call\(W\.BY_ID, pid\) \? W\.BY_ID\[pid\] : null;\n {6}if \(q\.get\('t'\) \|\| pageWs\) \{/);
+  // no page, so it keeps its own t; navigation phase 6: below 3, Home and the area pages open their own view)
+  assert.match(sh, /const pid = nv < 3 && \/\^p:\/\.test\(w\) && W && W\.resolvePage \? W\.resolvePage\(w\.slice\(2\), \{ site: !!q\.get\('d'\), last: window\.PeelUtil\.store\.get\('lastWs', ''\) \}\) : '';/);
+  assert.match(sh, /const host = nv < 3 && W && W\.hostOf && W\.mode\(\) === 'home' \? \(w === 'home' \? \{ tab: 'overview', sub: '' \} : pid \? W\.hostOf\(pid, \{ site: !!q\.get\('d'\) \}\) : null\) : null;\n {6}const pageWs = host \|\| \(nv < 2 && pid && W\.mode\(\) === 'home' && W\.page\(\) === pid && Object\.prototype\.hasOwnProperty\.call\(W\.BY_ID, pid\) \? W\.BY_ID\[pid\] : null\);\n {6}if \(q\.get\('t'\) \|\| pageWs\) \{/);
   // A Servicing or Records sub-view named beside another tab is still kept (as before); the hydraulic
   // check's Labs switch reads the link's own t.
   assert.match(sh, /const r = q\.get\(k\) && tab !== t \? AT\(\)\.migrateSub\(tab, q\.get\(k\)\) : null;/);
@@ -178,9 +180,11 @@ test('in-app calls follow a moved sub-view too: setSub, a data-at link, showFoot
   assert.match(s, /\{ const r = sub \? migrateSub\(key, sub\) : null; if \(r\) \{ key = r\.tab; sub = r\.sub; \} \}/);
 });
 
-test('a tab named before its data arrived (Servicing, Capital) opens when its button shows, unless another was picked', () => {
+// (navigation phase 6: the button shows from the first paint, marked loading, aria-busy, until its data lands:
+// "shown" below is "ready", not loading; js/analysis-tabs.js tabReady)
+test('a tab named before its data arrived (Servicing, Capital) opens when its data lands, unless another was picked', () => {
   const shown = new Set(['overview', 'growth', 'records']);
-  const q = sel => { const m = /^\.f-tab\[data-tab="(\w+)"\]:not\(\[hidden\]\)$/.exec(sel); return m ? (shown.has(m[1]) ? {} : null) : null; };
+  const q = sel => { const m = /^\.f-tab\[data-tab="(\w+)"\]:not\(\[hidden\]\):not\(\[aria-busy\]\)$/.exec(sel); return m ? (shown.has(m[1]) ? {} : null) : null; };
   const document = { querySelector: q, querySelectorAll: () => [], getElementById: () => null, addEventListener: () => {} };
   const ctx = { window: { PeelUtil: { store: { get: (k, d) => d, set: () => {} } }, document }, document, setTimeout: () => 0, module: { exports: {} } };
   ctx.globalThis = ctx;
@@ -202,7 +206,7 @@ test('a tab named before its data arrived (Servicing, Capital) opens when its bu
   shown.add('svc'); T.tabShown('svc'); assert.equal(T.getFootTab(), 'svc', 'a held tab stays held through a re-render');
   assert.match(src('js/census-view.js'), /gcPane\.dataset\.off = off; AT\(\)\.refreshFootTab\(\);/);
   assert.match(src('js/labs.js'), /if \(AT && AT\.refreshFootTab\) AT\.refreshFootTab\(\);/);
-  assert.match(src('js/svc-tab.js'), /if \(AT\(\) && AT\(\)\.tabShown\) for \(const k of \['svc', 'dca'\]\) if \(!\$\(`#ftab-\$\{k\}`\)\.hidden\) AT\(\)\.tabShown\(k\);/);
+  assert.match(src('js/svc-tab.js'), /if \(AT\(\) && AT\(\)\.tabShown\) for \(const k of \['svc', 'dca'\]\) if \(!\$\(`#ftab-\$\{k\}`\)\.hasAttribute\('aria-busy'\)\) AT\(\)\.tabShown\(k\);/);
 });
 
 // Navigation phase 2 (navigation-design §7.2–7.3): Servicing is Capacity · Network. Allocations is a fold
@@ -298,7 +302,9 @@ test('phase 3: the Ledger is Forecast’s By period, from a link, a stored pick,
   assert.equal(W.BY_ID.coming.sub, 'timing'); assert.equal(W.plan('coming').fold, 'period');
   const ws = src('js/workspaces.js');
   assert.match(ws, /function go\(id, o = \{\}\) \{[\s\S]*?A\.showFootTab\(pl\.tab\); if \(pl\.fold && A\.openFold\) A\.openFold\(pl\.fold\); \}\n {4}foldLayers\(\);/);
-  assert.match(ws, /function openPage\(id, o = \{\}\) \{[\s\S]*?A\.showFootTab\(w\.tab\); if \(w\.fold && A\.openFold\) A\.openFold\(w\.fold\); \} \}\n {4}lastHTML = '';\n {4}setMode\('home', id\);/);
+  // (navigation phase 6: What's coming is Home's Growth › Forecast, the host block: the tab, then the fold,
+  // then the page; a workspace page's block the same; the back bar's o.view, the other branch, before the page too)
+  assert.match(ws, /function openPage\(id, o = \{\}\) \{[\s\S]*?if \(h\) \{ if \(h\.sub && A\.setSub\) A\.setSub\(h\.tab, h\.sub\); if \(A\.setFootPref\) A\.setFootPref\(h\.tab\); A\.showFootTab\(h\.tab\); if \(h\.fold && A\.openFold\) A\.openFold\(h\.fold\); \}[\s\S]*?A\.showFootTab\(w\.tab\); if \(w\.fold && A\.openFold\) A\.openFold\(w\.fold\); \}\n {4}\}\n {4}\/\/ \(o\.view, with keep: [^\n]*\n {4}else if \(A && o\.view && A\.openTab\) \{ const \[t, s\] = o\.view\.split\(':'\); A\.openTab\(t, s \|\| undefined\); \}\n {4}if \(h\) id = h\.page;\n {4}lastHTML = '';\n {4}setMode\('home', id\);/);
   // A link names the old sub-view through the same opener (js/share.js, the phase 2 test above).
   assert.match(src('js/share.js'), /if \(AT\(\)\.openFold && AT\(\)\.foldOf\) AT\(\)\.openFold\(AT\(\)\.foldOf\(t, oldSub\)\);/);
   assert.match(src('js/analysis-tabs.js'), /period: \(\) => root\.PeelLedgerUI && root\.PeelLedgerUI\.openPeriod \};/);
@@ -337,8 +343,9 @@ test('phase 4: DC projects is DC timing; the funding screen its fold; the stored
   // No name for the chip that went; the page and the workspace keep "DC projects".
   assert.doesNotMatch(src('js/workspaces.js'), /dcproj: 'DC projects'/);
   assert.equal(W.BY_ID.projects.label, 'DC projects');
-  // A search pick on a page: the Capital page at the project, DC timing's section.
-  assert.deepEqual(plain(W.pageRoute({ place: { hit: 'dc', key: 'water:25-9' } }, 'home')), { page: 'projects', wsec: 'timing', dcSel: 'water:25-9' });
+  // A search pick on a page: the Capital page at the project (since navigation phase 6 Home's Capital › DC timing:
+  // `projects` opens the view, so no section id rides along).
+  assert.deepEqual(plain(W.pageRoute({ place: { hit: 'dc', key: 'water:25-9' } }, 'home')), { page: 'projects', dcSel: 'water:25-9' });
   // EA to construction joins EAs: its page id stays (the EAs page; no PAGE_ALIAS row), and its chip, its page and
   // an old #w=eaflow link open Capital › EAs with the EA to construction fold open (js/capital-ea.js openEaFlow).
   assert.equal(W.resolvePage('eaflow'), 'eaflow'); assert.equal(W.BY_ID.eaflow.sub, 'eas'); assert.equal(W.BY_ID.eaflow.fold, 'eaflow');
@@ -498,4 +505,124 @@ test('phase 5: the site page’s sections by the tabs’ names; the old ids and 
   assert.match(m.top, /aria-label="Views"[^>]*><button type="button" class="page-sec" data-ws-sec="servicing"[^>]*>Network<\/button><button type="button" class="page-sec on" data-ws-page="fsr"/);
   dev = null; m = WP.build('fsr'); assert.equal(m.id, 'fsr'); assert.match(m.answer, /^Find the development/, 'without a site: the Find step');
   assert.deepEqual(plain(W.startScreen({ hash: '#w=p:fsr' })), { mode: 'home', page: 'fsr' });
+});
+
+// Navigation phase 6a (navigation-design §3.1 rule 1, §3.3, §7.1–7.2): Home is the page host at an area, the map's
+// five tabs under its header; the area pages are its views. Every old area page id (a link, a data-ws-page button,
+// the stored last workspace, Help's role buttons) opens Home at that page's tab and view, its fold open; a link
+// from before phase 6 opens the page's own view (nav=3); Open the map and ← Page keep the tab and view.
+function loadWs(stored = {}) {
+  const calls = [], handlers = {}, store = new Map(Object.entries(stored)), closed = [];
+  const at = { tab: 'overview', subs: { growth: 'pipeline', svc: 'capacity', dca: 'timing', records: 'sources' } };
+  let dev = null, ss = null;
+  const PeelAnalysisTabs = { TAB_KEYS: AT.TAB_KEYS, chipsAt: AT.chipsAt, tabReady: () => true, getFootTab: () => at.tab,
+    setSub: (t, s) => { calls.push(['setSub', t, s]); at.subs[t] = s; return t; }, setFootPref: t => calls.push(['setFootPref', t]),
+    showFootTab: t => { calls.push(['showFootTab', t]); at.tab = t; }, openFold: f => calls.push(['openFold', f]),
+    openTab: (t, s) => { calls.push(['openTab', t, s]); if (s) at.subs[t] = s; at.tab = t; }, wantedTab: () => at.tab, viewKey: () => `${at.tab}:${at.subs[at.tab] || ''}` };
+  const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: () => null, querySelectorAll: () => [], getElementById: () => null,
+    addEventListener: (t, f) => { (handlers[t] = handlers[t] || []).push(f); }, dispatchEvent() {} };
+  const window = { document, PeelUtil: { esc: x => String(x), fmtNum: n => String(n), store: { get: (k, d) => (store.has(k) ? store.get(k) : d), set: (k, v) => store.set(k, v) } }, PeelAnalysisTabs,
+    DevScope: { current: () => dev, close: () => { closed.push('dev'); dev = null; } }, PeelSvcScope: { current: () => ss, close: () => { closed.push('ss'); ss = null; } } };
+  const ctx = { window, document, location: { hash: '' }, setTimeout: () => 0, clearTimeout() {}, URLSearchParams, CustomEvent: function CustomEvent() {} }; ctx.globalThis = ctx;
+  require('node:vm').runInNewContext(src('js/workspaces.js'), ctx);
+  // A click on an element matching sel (its data-* in dataset).
+  const click = (sel, dataset = {}) => { const el = { dataset }; for (const f of handlers.click || []) f({ target: { closest: s => (s === sel ? el : null) }, preventDefault() {}, stopPropagation() {} }); };
+  return { B: window.PeelWorkspaces, calls, at, store, closed, click, open: (d, s) => { dev = d; ss = s; } };
+}
+test('phase 6a: the area pages are Home’s tabs; old links open the page’s own tab; Open the map and ← Page keep the view', () => {
+  const S = require('../js/sections.js');
+  const ROWS = { growth: ['growth', 'areas', null], outlook: ['growth', 'timing', null], coming: ['growth', 'timing', 'period'], tight: ['svc', 'capacity', null], projects: ['dca', 'timing', null], eaflow: ['dca', 'eas', 'eaflow'], data: ['records', 'sources', null] };
+  assert.deepEqual(Object.keys(W.HOST).sort(), Object.keys(ROWS).sort(), 'every area page, and only those (the site and FSR review join in 6b, Old pipes in 6c)');
+  for (const [id, [tab, sub, fold]] of Object.entries(ROWS)) {
+    assert.deepEqual(plain(W.hostOf(id)), { page: 'home', tab, sub, fold }, id);
+    assert.ok(isPage(id), `${id} is still a page id (links, buttons, the last workspace)`);
+    assert.deepEqual(plain(W.startScreen({ hash: `#w=p:${id}` })), { mode: 'home', page: id }, `#w=p:${id}: openPage resolves it to Home`);
+    // (the view it opens is Home's, drawn by the page's own builder: What's coming the Forecast's)
+    assert.equal(S.VIEWS.area[`${tab}:${sub}`].page, id === 'coming' ? 'outlook' : id, `${id}: its builder`);
+  }
+  for (const id of ['home', 'week', 'site', 'fsr', 'study', 'outlets', 'pipes', 'help', 'explore', 'capital', '__proto__', 'constructor', 'nonsense']) assert.equal(W.hostOf(id), null, id);
+  // Explore, Capital: the alias first (PAGE_ALIAS unchanged), then the host.
+  assert.deepEqual(plain(W.hostOf(W.resolvePage('explore', {}))), { page: 'home', tab: 'growth', sub: 'areas', fold: null });
+  assert.deepEqual(plain(W.hostOf(W.resolvePage('capital', { last: 'eaflow' }))), { page: 'home', tab: 'dca', sub: 'eas', fold: 'eaflow' });
+  // Home's views are the map's tabs and chips at an area (one registry, js/sections.js VIEWS), each page a host id.
+  assert.deepEqual(Object.keys(S.VIEWS.area), ['overview:', ...AT.TAB_KEYS.flatMap(t => AT.chipsAt(t, 'area').map(c => `${t}:${c}`))]);
+  for (const v of Object.values(S.VIEWS.area)) if (v.page) assert.ok(v.page === 'home' || W.HOST[v.page], v.page);
+  // The tab and view names: the map's (the chips in index.html carry the same words).
+  assert.deepEqual(plain(AT.chipsAt('svc', 'area').map(c => W.chipName('svc', c))), ['Capacity', 'Network']);
+  assert.deepEqual(['timing', 'eas', 'projects'].map(c => W.chipName('dca', c)), ['DC timing', 'EAs', 'Projects']);
+  assert.deepEqual(['sources', 'checks'].map(c => W.chipName('records', c)), ['Sources', 'Data checks']);
+  assert.equal(W.chipName('growth', 'timing'), 'Forecast');
+
+  // The browser half: openPage opens Home at the page's tab and view (its fold open), the id kept as the last workspace.
+  let L = loadWs();
+  L.B.openPage('tight');
+  assert.equal(L.B.page(), 'home'); assert.equal(L.B.view(), 'svc:capacity');
+  assert.deepEqual(L.calls, [['setSub', 'svc', 'capacity'], ['setFootPref', 'svc'], ['showFootTab', 'svc']]);
+  assert.equal(L.store.get('lastWs'), 'tight', 'the id asked for: the start screen’s last workspace');
+  L.calls.length = 0; L.B.openPage('coming');
+  assert.deepEqual(L.calls, [['setSub', 'growth', 'timing'], ['setFootPref', 'growth'], ['showFootTab', 'growth'], ['openFold', 'period']], 'What’s coming: the Forecast, By period open');
+  L.calls.length = 0; L.B.openPage('eaflow'); assert.deepEqual(L.calls.at(-1), ['openFold', 'eaflow']); assert.equal(L.B.view(), 'dca:eas');
+  L.B.openPage('data'); assert.deepEqual([L.B.page(), L.B.view()], ['home', 'records:sources']);
+  L.B.openPage('projects'); assert.deepEqual([L.B.page(), L.B.view()], ['home', 'dca:timing']);
+  L = loadWs({ lastWs: 'outlook' }); L.B.openPage('explore');
+  assert.deepEqual([L.B.page(), L.B.view()], ['home', 'growth:timing'], 'Explore: its last view, a view of Home');
+  // Home itself: its Overview (not stored: setFootPref), and an open development or servicing scope closes.
+  L.open({ key: 'k' }, { ref: 'plant:Lakeview' }); L.calls.length = 0;
+  L.B.openPage('home');
+  assert.deepEqual(L.calls, [['setFootPref', 'overview'], ['showFootTab', 'overview']]); assert.deepEqual(L.closed, ['dev', 'ss']);
+  assert.equal(L.B.view(), 'overview:');
+  // keep: the tab and view as they are, for every id (the id still the last workspace).
+  L.at.tab = 'svc'; L.at.subs.svc = 'network'; L.calls.length = 0;
+  L.B.openPage('home', { keep: true }); L.B.openPage('tight', { keep: true });
+  assert.deepEqual(L.calls, []); assert.equal(L.B.view(), 'svc:network'); assert.equal(L.store.get('lastWs'), 'tight');
+  // Open the map from a page view (data-ws-keep): the map view, its preset, the tab and view kept.
+  L.B.go('tight', { keep: true, quiet: true }); assert.deepEqual(L.calls, []); assert.equal(L.B.mode(), 'ws'); assert.equal(L.B.view(), null, 'no page host on the map');
+  L.click('[data-ws-go]', { wsGo: 'tight', wsKeep: '' }); assert.deepEqual(L.calls, [], 'the button’s data-ws-keep');
+  L.click('[data-ws-go]', { wsGo: 'tight' }); assert.deepEqual(L.calls, [['setSub', 'svc', 'capacity'], ['setFootPref', 'svc'], ['showFootTab', 'svc']], 'a Home row that means Capacity still opens it');
+  // ← Page: back on Home at the map's tab and view (a pick on the map kept); a page that is no host view, its own.
+  L.at.subs.svc = 'network'; L.calls.length = 0;
+  L.click('[data-ws-backpage]');
+  assert.deepEqual([L.B.mode(), L.B.page(), L.B.view(), L.calls.length], ['home', 'home', 'svc:network', 0]);
+  L.B.go('week', { quiet: true }); L.calls.length = 0; L.click('[data-ws-backpage]');
+  assert.deepEqual([L.B.page(), L.calls], ['week', [['showFootTab', 'overview']]], 'This week’s map view: back on This week, as before');
+  // The back bar from the full map: the page, the tab and view kept.
+  L.B.openPage('tight'); L.at.subs.svc = 'network'; L.B.setMode('full'); L.calls.length = 0;
+  L.click('[data-ws-back]');
+  assert.deepEqual([L.B.mode(), L.B.page(), L.B.view(), L.calls.length], ['home', 'home', 'svc:network', 0]);
+  // … and back to a map view: its preset again, the map's tab and view as they were left (risk 7).
+  L.B.go('tight', { keep: true, quiet: true }); L.B.setMode('full'); L.at.tab = 'dca'; L.calls.length = 0;
+  L.click('[data-ws-back]');
+  assert.deepEqual([L.B.mode(), L.B.current(), L.at.tab, L.calls.length], ['ws', 'tight', 'dca', 0]);
+  // A facility or a development opened on the map shows its own Overview, which Home closes on the way back (it hosts an
+  // area): the back bar lands at the view the page was left at, ← Page at the map view's page's own view, not Home's
+  // Overview; the scope closed either way.
+  L.B.openPage('tight'); L.B.setMode('full'); L.open(null, { ref: 'plant:Lakeview' }); L.at.tab = 'overview'; L.closed.length = 0; L.calls.length = 0;
+  L.click('[data-ws-back]');
+  assert.deepEqual([L.B.mode(), L.B.page(), L.B.view(), L.closed, L.calls], ['home', 'home', 'svc:capacity', ['ss'], [['openTab', 'svc', 'capacity']]]);
+  L.B.go('tight', { keep: true, quiet: true }); L.open({ key: 'k' }, null); L.at.tab = 'overview'; L.closed.length = 0; L.calls.length = 0;
+  L.click('[data-ws-backpage]');
+  assert.deepEqual([L.B.page(), L.B.view(), L.closed, L.calls], ['home', 'svc:capacity', ['dev'], [['setSub', 'svc', 'capacity'], ['setFootPref', 'svc'], ['showFootTab', 'svc']]]);
+  // … and a tab picked under that scope is kept, as any pick on the map.
+  L.B.openPage('tight'); L.B.setMode('full'); L.open(null, { ref: 'plant:Lakeview' }); L.at.tab = 'dca'; L.calls.length = 0;
+  L.click('[data-ws-back]');
+  assert.deepEqual([L.B.view(), L.calls.length], ['dca:timing', 0]);
+  const ws = src('js/workspaces.js');
+  assert.match(ws, /if \(e\.target\.closest\('\[data-ws-backpage\]'\)\) \{ openPage\(cur \|\| page \|\| 'home', \{ keep: !!\(cur && hostOf\(cur\)\) && !scopeOverview\(\) \}\); return; \}/);
+  assert.match(ws, /data-ws-back>← Back to \$\{esc\(backTo\.ws \? `\$\{pageName\(backTo\.ws\)\} \(map\)` : hostPage\(backTo\.page\) \? `\$\{pageName\(backTo\.page\)\} › \$\{viewName\(backView\(\)\)\}` : pageName\(backTo\.page\)\)\}/, '“← Back to Home › Servicing › Network”');
+  assert.match(ws, /if \(mode === 'full' && backTo && backTo\.page && hostPage\(backTo\.page\)\) renderBack\(true\);/, 'the label follows a pick on the full map');
+  // A development picked while Home is open (any of its views) opens its page (§5 row 25).
+  assert.match(ws, /mode === 'home' && \(page === 'home' \|\| page === 'study'\)\) \{ exploreDev = sc; setTimeout\(\(\) => openPage\('site'\), 0\); \}/);
+  // Start over and Home's buttons land on its Overview.
+  assert.match(src('js/topbar.js'), /if \(root\.PeelWorkspaces && root\.PeelWorkspaces\.openPage\) root\.PeelWorkspaces\.openPage\('home'\);/);
+  assert.match(ws, /if \(e\.target\.closest\('\[data-ws-home\]'\)\) \{ openPage\('home'\); return; \}/);
+  // A share link: the page host writes the map's tab (its own) and nav=3 (the share test above has the rules).
+  assert.match(src('js/share.js'), /set\('nav', '3'\);/);
+  // The page ids that are gone as builders: no What's coming page of its own, no section of a page to set.
+  assert.doesNotMatch(src('js/ws-pages.js'), /const coming = |sectionAt|wsSection|areaSection|data-ws-asec|data-ws-wsec/);
+  assert.doesNotMatch(src('js/sections.js'), /\bAREA = |areaSpecFor|wsSpecFor|servicing: \{ host|capital: \{ host/);
+  // (6a-S6) The pages' and the workspace bar's "Filters on" row is the top bar trail's "k filters" (no link or stored
+  // preference named it), and the drill's crumbs and Up a level are the trail's steps.
+  assert.doesNotMatch(src('js/workspaces.js') + src('index.html'), /filterChipsHTML|id="ws-filters"/);
+  assert.doesNotMatch(src('js/ws-pages.js'), /Up a level|const crumbs = /);
+  assert.match(src('js/topbar.js'), /PT\.areaPath\(a\.id\)\.slice\(0, -1\)/);
 });

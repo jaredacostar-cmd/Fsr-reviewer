@@ -94,6 +94,8 @@
   // navigation phase 2), Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.
   const SUB_NAME = { capacity: 'Capacity', network: 'Network', fsr: 'FSR review', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', 'dca:timing': 'DC timing', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
   const tabPath = (tab, sub) => [TAB_NAME[tab] || tab, sub ? SUB_NAME[`${tab}:${sub}`] || SUB_NAME[sub] || sub : ''].filter(Boolean).join(' › ');
+  // A chip's own word (the page host's views row, js/ws-pages.js tabsHTML: the map's chips' words).
+  const chipName = (tab, sub) => SUB_NAME[`${tab}:${sub}`] || SUB_NAME[sub] || sub;
   // What a chip does: the tab, sub-view, scope and preset; closeScopes = area chips leave a site; fold: the
   // fold of that sub-view it opens (What's coming: By period; EA to construction: its fold of Capital › EAs);
   // siteSub: the sub-view it opens once a site is open (Review an FSR: Servicing › FSR review).
@@ -154,6 +156,17 @@
   // (own keys only: a stored or linked id such as '__proto__' is no page, and must not throw)
   const own = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
   const resolvePage = (id, ctx = {}) => (own(PAGE_ALIAS, id) ? PAGE_ALIAS[id](ctx) : id);
+  // Page ids that are views of a page host (navigation phase 6, design §3.1 rule 1, §7.1): Home is the host at
+  // an area (Peel, a municipality, a plan), the map's five tabs under its header, so each area page is Home at
+  // its tab and view (What's coming with By period open, EA to construction with its fold). The ids stay what
+  // links, buttons, the stored last workspace and Help's role buttons name; openPage opens the host there.
+  // → { page, tab, sub, fold } | null (the site and FSR review at a development join it in 6b).
+  const HOST = { growth: 'growth:areas', outlook: 'growth:timing', coming: 'growth:timing', tight: 'svc:capacity', projects: 'dca:timing', eaflow: 'dca:eas', data: 'records:sources' };
+  function hostOf(id) {
+    if (!own(HOST, id)) return null;
+    const [tab, sub] = HOST[id].split(':');
+    return { page: 'home', tab, sub, fold: (own(BY_ID, id) && BY_ID[id].fold) || null };
+  }
   function startScreen({ hash = '', pref = 'home', last = null } = {}) {
     const q = new URLSearchParams(String(hash).replace(/^#/, ''));
     const w = q.get('w') || '';
@@ -166,27 +179,26 @@
 
   // Find from every page (navigation design §3.3): what a search pick (js/search-filter.js) opens on a
   // page. A development its page on Overview (from Review an FSR, Servicing › FSR review); a file number its
-  // page at Records; a plan Growth in an area at the plan (else its municipality); an MTSA its filter, as on the
-  // map, at its municipality; a plant, station, block, zone or South Peel its scope on Servicing
-  // capacity's map; a DC project Capital › DC timing at it (in place, on the Capital page); a DC facility
-  // or an address the map view where the map's own pick then runs (then: 'map'). null: not a place (the
-  // filter row, a lookup).
-  // (the drill is the page's own: the map and the other pages stay unfiltered, owner decision 10)
+  // page at Records; a plan its filter (the map and every tab follow it, js/ws-pages.js drillTo), Home on the tab
+  // you were on (owner decision 10, §3.3: from Home's Overview the briefing at the plan, with its Area report); an
+  // MTSA its municipality, then its own filter as on the map; a plant, station, block, zone or South Peel its scope
+  // on Servicing capacity's map; a DC project Home's Capital › DC timing at it (in place); a DC facility or an
+  // address the map view where the map's own pick then runs (then: 'map'). null: not a place (the filter row, a lookup).
   function pageRoute(x, page) {
     if (!x || x.filter || x.loading) return null;
     if (x.p) return x.hit === 'file' ? { page: 'site', dev: x.p.key, sec: 'files', file: x.ref } : { page: page === 'fsr' ? 'fsr' : 'site', dev: x.p.key, sec: 'summary' };
     const h = x.place || {}, muni = h.muni || '';
-    if (h.hit === 'plan') return { page: 'growth', drill: `a:${h.id}`, fall: muni ? `m:${muni}` : 'peel', muni, sp: h.id };
-    if (h.hit === 'mtsa') return { page: 'growth', drill: muni ? `m:${muni}` : 'peel', muni, then: 'map' };
+    if (h.hit === 'plan') return { page: 'home', drill: `a:${h.id}`, muni, sp: h.id };
+    if (h.hit === 'mtsa') return { page: 'home', drill: muni ? `m:${muni}` : 'peel', muni, then: 'map' };
     if (h.hit === 'svc') return { ws: 'tight', ss: h.ss };
-    if (h.hit === 'dc') return { page: 'projects', wsec: 'timing', dcSel: h.key };
+    if (h.hit === 'dc') return { page: 'projects', dcSel: h.key };
     if (h.hit === 'dcfac') return { ws: 'projects', then: 'map' };
     if (x.g) return { ws: 'site', then: 'map' };
     return null;
   }
 
   // ---- Browser ----------------------------------------------------------------------------------
-  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SITE_MAP, LAB_PAGES, BY_ID, LAYERS, OLD, START, PAGE_ALIAS, REF, plan, sourceText, tabPath, oldPipes, pipeRuns, resolvePage, startScreen, pageRoute };
+  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SITE_MAP, LAB_PAGES, BY_ID, LAYERS, OLD, START, PAGE_ALIAS, REF, TAB_NAME, HOST, plan, sourceText, tabPath, chipName, oldPipes, pipeRuns, resolvePage, hostOf, startScreen, pageRoute };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -202,19 +214,26 @@
   // the chips; full: the map with every tool.
   // Back from the full map: arriving there from a page or a workspace's map view, a bar over the map
   // offers the way back ("← Back to Check a site"); it goes when you leave the full map or close it.
+  // (back to a page host, it names the view it lands on: the map's tab and view as they are then, "← Back to
+  // Home › Servicing › Network"; the label follows a pick made on the full map meanwhile, the pnl:set hook. At the
+  // Overview of a development or facility opened on the full map, which the host closes on the way back, the view
+  // the page was left at: backView)
   let backTo = null;
-  function renderBack() {
+  // (relabel: only its words, when they changed)
+  function renderBack(relabel) {
     const wrap = mapWrap(); if (!wrap) return;
     let bar = $('#back-bar');
     if (!bar) { bar = document.createElement('div'); bar.id = 'back-bar'; bar.className = 'back-bar'; bar.setAttribute('role', 'navigation'); bar.setAttribute('aria-label', 'Back'); wrap.appendChild(bar); }
     const on = mode === 'full' && !!backTo;
     bar.hidden = !on;
-    bar.innerHTML = on ? `<button type="button" class="btn small" data-ws-back>← Back to ${esc(backTo.ws ? `${pageName(backTo.ws)} (map)` : pageName(backTo.page))}</button><button type="button" class="btn small link" data-ws-back-x aria-label="Close the back bar" title="Stay on the full map">×</button>` : '';
+    const html = on ? `<button type="button" class="btn small" data-ws-back>← Back to ${esc(backTo.ws ? `${pageName(backTo.ws)} (map)` : hostPage(backTo.page) ? `${pageName(backTo.page)} › ${viewName(backView())}` : pageName(backTo.page))}</button><button type="button" class="btn small link" data-ws-back-x aria-label="Close the back bar" title="Stay on the full map">×</button>` : '';
+    if (relabel && bar.dataset.v === html) return;
+    if (bar.dataset.v !== html) { bar.innerHTML = html; bar.dataset.v = html; }
     // (a phone's full sheet stops under the bar while it shows: js/app.js analysisSnapPx)
     const A = App(); if (A && A.getAnalysisSnap && A.getAnalysisSnap() === 'full') A.setAnalysisSnap('full', false);
   }
   function setMode(m, pg) {
-    if (m === 'full' && mode !== 'full') backTo = mode === 'home' ? { page } : mode === 'ws' && cur ? { ws: cur } : null;
+    if (m === 'full' && mode !== 'full') backTo = mode === 'home' ? { page, view: view() } : mode === 'ws' && cur ? { ws: cur } : null;
     else if (m !== 'full') backTo = null;
     const was = { mode, page };
     if (m === 'home') page = pg || page || 'home';
@@ -297,7 +316,9 @@
     }
     // The chip's view from its preset (nothing saved), then its lean layers.
     lean(pl.view, LAYERS[id] || []);
-    const A = AT(); if (A) { if (pl.sub && A.setSub) A.setSub(pl.tab, pl.sub); if (A.setFootPref) A.setFootPref(pl.tab); A.showFootTab(pl.tab); if (pl.fold && A.openFold) A.openFold(pl.fold); }
+    // (o.keep: a page view's Open the map, the map view at the view the page shows, navigation phase 6: the
+    // chip's preset and scope, the tab and view kept)
+    const A = AT(); if (A && !o.keep) { if (pl.sub && A.setSub) A.setSub(pl.tab, pl.sub); if (A.setFootPref) A.setFootPref(pl.tab); A.showFootTab(pl.tab); if (pl.fold && A.openFold) A.openFold(pl.fold); }
     foldLayers();
     pipesLayer(id === 'pipes');
     // Draw an area (a page header's, the chip's): Select on, and on a phone the sheet down to its peek,
@@ -354,24 +375,9 @@
   }
   // This week's count (the chip's badge): the Peel Overview's own list (none while it is still loading).
   function weekRows() { const WP = root.PeelWsPages, a = WP && WP.briefing ? WP.briefing() : OT() && OT().lastAreaSpec ? OT().lastAreaSpec() : null; const l = a && a.lists ? a.lists.find(x => x.title === 'This week') : null; return l ? l.rows : []; }
-  // Bundle 6: the filters that stay on while you are on a page or in a workspace, as chips with
-  // Reset, so a filtered page never reads as the whole of Peel.
-  function filterChipsHTML() {
-    const F = root.PeelFilterUI, list = F && F.activeFilters ? F.activeFilters() : [], old = F && F.oldLinkNote ? F.oldLinkNote() : '';
-    if (!list.length) return old ? `<div class="page-filters small" role="group" aria-label="Filters on">${old}</div>` : '';
-    return `<div class="page-filters small" role="group" aria-label="Filters on"><span class="muted">Filters on:</span> ${list.map((f, i) => `<button type="button" class="chip on removable" data-pf-i="${i}" title="Remove this filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('')}<button type="button" class="btn small link" data-pf-reset>Reset ${list.length === 1 ? 'it' : `all ${list.length}`}</button>${old}</div>`;
-  }
-  document.addEventListener('click', e => {
-    const F = root.PeelFilterUI; if (!F || !e.target.closest) return;
-    const r = e.target.closest('[data-pf-reset]'), c = e.target.closest('[data-pf-i]'), o = e.target.closest('.page-filters [data-include-completed]'); if (!r && !c && !o) return;
-    e.preventDefault();
-    if (o) F.includeCompleted(); else if (r) F.resetAllFilters(); else { const f = F.activeFilters()[+c.dataset.pfI]; if (f) { f.clear(); App().applyFilters(); } }
-    renderChips(); if (mode === 'home') renderPage(true);
-  });
   function renderChips() {
     const el = $('#ws-chips'); if (!el) return;
     const nW = weekRows().length;
-    const fl = $('#ws-filters'); if (fl) fl.innerHTML = filterChipsHTML();
     el.innerHTML = WS.map(w => `<button type="button" class="btn small ws-chip${cur === w.id ? ' on' : ''}" data-ws-go="${w.id}" aria-pressed="${cur === w.id}" title="${esc(w.what)}">${esc(w.label)}${w.id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</button>`).join('');
   }
   // The header line on every panel in a workspace: its source and "Full map".
@@ -463,20 +469,32 @@
     };
   }
   // ---- Pages ------------------------------------------------------------------------------------
-  // A chip's page (js/ws-pages.js builds it from the tabs' panels); Home is the page 'home'. Area pages
-  // leave a site; Check a site and Review an FSR keep it. The page's tab and sub-view open behind it, so
-  // their panels are worked out for the same scope.
+  // A chip's page (js/ws-pages.js builds it from the tabs' panels); Home is the page 'home', the page host at
+  // an area (navigation phase 6): the map's five tabs under its header, its view the map's own tab state
+  // (view() below), so an area page's id opens Home at that page's tab and view (hostOf). Home and the area
+  // pages leave a site; Check a site and Review an FSR keep it. The page's tab and sub-view open behind it, so
+  // their panels are worked out for the same scope; Home itself opens on its Overview (not stored: the map's
+  // last pick stays the one kept). o.keep: the tab and view as they are (← Page, the back bar, the strip).
   function openPage(id, o = {}) {
     id = resolvePage(id, { site: !!(root.DevScope && root.DevScope.current && root.DevScope.current()), last: store.get('lastWs', '') });
     if (id !== 'home' && !BY_ID[id] && !REF[id] && !labPageOn(id)) id = 'home';
-    const w = BY_ID[id];
-    if (w && w.scope === 'area') {
+    const w = BY_ID[id], h = hostOf(id), A = AT();
+    // (the id asked for: the start screen's last workspace)
+    if (w) store.set('lastWs', id);
+    if (id === 'home' || (h && h.page === 'home') || (w && w.scope === 'area')) {
       if (root.DevScope && root.DevScope.current && root.DevScope.current()) root.DevScope.close();
       if (SS() && SS().current && SS().current()) SS().close();
     }
     // (at a site, the sub-view it opens there: Review an FSR, Servicing › FSR review, as go() and plan() pick it)
     const dev = !!(w && w.siteSub && root.DevScope && root.DevScope.current && root.DevScope.current());
-    if (w) { store.set('lastWs', id); const A = AT(), sub = dev ? w.siteSub : w.sub; if (A) { if (sub && A.setSub) A.setSub(w.tab, sub); A.showFootTab(w.tab); if (w.fold && A.openFold) A.openFold(w.fold); } }
+    if (A && !o.keep) {
+      if (h) { if (h.sub && A.setSub) A.setSub(h.tab, h.sub); if (A.setFootPref) A.setFootPref(h.tab); A.showFootTab(h.tab); if (h.fold && A.openFold) A.openFold(h.fold); }
+      else if (id === 'home') { if (A.setFootPref) A.setFootPref('overview'); A.showFootTab('overview'); }
+      else if (w) { const sub = dev ? w.siteSub : w.sub; if (sub && A.setSub) A.setSub(w.tab, sub); A.showFootTab(w.tab); if (w.fold && A.openFold) A.openFold(w.fold); }
+    }
+    // (o.view, with keep: that view instead, once the scope above is closed: the back bar's backView)
+    else if (A && o.view && A.openTab) { const [t, s] = o.view.split(':'); A.openTab(t, s || undefined); }
+    if (h) id = h.page;
     lastHTML = '';
     setMode('home', id);
     if (!o.keepScroll) { const el = $('#home'); if (el) el.scrollTop = 0; }
@@ -487,6 +505,17 @@
   // (the page's search has the focus, on the page it is on: typing, or about to, on a phone)
   const typing = el => { const s = $('#f-search'); return !!s && document.activeElement === s && el.contains(s); };
   const pageName = id => (id === 'home' ? 'Home' : SIDE[id] ? SIDE[id].label : BY_ID[id] ? BY_ID[id].label : REF[id] ? REF[id].label : LAB_PAGES[id] ? LAB_PAGES[id].label : id);
+  // A page that hosts the map's tabs (navigation phase 6: Home, at an area; 6b adds the site), and the view the
+  // map's tab state names, in words ("Servicing › Network").
+  const hostPage = p => p === 'home';
+  const viewName = (key = AT() && AT().viewKey ? AT().viewKey() : 'overview:') => { const k = key.split(':'); return tabPath(k[0], k[1]); };
+  // (the map at the Overview of a development or a facility, a scope Home closes on the way back, as it hosts an
+  // area: that Overview is none of its views, so ← Page lands on the map view's page at its own view, and the back
+  // bar at the view the page was left at, not on Home's Overview)
+  const scopeOverview = () => { const A = AT(); return !!(A && A.viewKey && A.viewKey() === 'overview:') && !!((root.DevScope && root.DevScope.current && root.DevScope.current()) || (SS() && SS().current && SS().current())); };
+  const backView = () => (backTo && backTo.view && scopeOverview() ? backTo.view : AT() && AT().viewKey ? AT().viewKey() : 'overview:');
+  // view(): the view a page host shows ('svc:network'; Home's Overview 'overview:'), null on any other page or mode.
+  const view = () => (mode === 'home' && hostPage(page) && AT() && AT().viewKey ? AT().viewKey() : null);
   function sideHTML() {
     const nW = weekRows().length, pref = store.get('startScreen', 'home'), labIds = Object.keys(LAB_PAGES).filter(labPageOn);
     // (a guide's page lights How it works)
@@ -513,26 +542,36 @@
     // moves the box out and back, which takes its focus and, on a phone, the keyboard): it waits until
     // the box lets go. A pick lets go (js/search-filter.js goSug), so what it opens renders at once;
     // another page or mode is never held back.
-    if (typing(el) && shown === `${mode}|${page}`) { clearTimeout(timer); timer = setTimeout(() => renderPage(force), 600); return; }
-    const m = WP.build(page);
-    if (!REF[page] && !LAB_PAGES[page]) m.filters = filterChipsHTML();
+    // (a page host's view counts as its page here: another tab or view is another page)
+    if (typing(el) && shown === `${mode}|${page}|${view() || ''}`) { clearTimeout(timer); timer = setTimeout(() => renderPage(force), 600); return; }
+    const m = hostPage(page) ? WP.host('area') : WP.build(page);
     if (EXPLORE.includes(page)) m.views = viewsHTML();
     const main = WP.pageHTML(m, PN() ? PN().NOTE : '');
     const html = `<div class="home-grid">${sideHTML()}${main}</div>`;
-    if (!force && html === lastHTML) return;
+    // (a page host's tab before its data tries again even when nothing has changed yet: its data may land
+    // with no panel set for it, the Capital tab's DC program)
+    if (!force && html === lastHTML) { if (m.waitTab) { clearTimeout(timer); timer = setTimeout(() => renderPage(false), 1000); } return; }
     // The search box and the map live outside the page while it is rebuilt.
     const box = $('#search-box'), side = document.querySelector('#tab-explore .search-bar');
     if (box && side && el.contains(box)) side.insertBefore(box, side.firstChild);
     putMapBack();
     const y = el.scrollTop;
-    el.innerHTML = html; lastHTML = html; shown = `${mode}|${page}`;
+    el.innerHTML = html; lastHTML = html; shown = `${mode}|${page}|${view() || ''}`;
     if (!force) el.scrollTop = y;
-    placeSearch(); placeMap();
+    placeSearch(); placeMap(); stripInView(el);
     if (typeof m.onMount === 'function') try { m.onMount(el.querySelector('.page-main')); } catch (e) { /* the page stays without its async parts */ }
     if (PN() && PN().syncTools) PN().syncTools(el);   // (a site's header: ☆ Watch and the flags as they are now)
 
     // A page still waiting on data that sets no panel when it lands (Home's servicing figures) tries again.
     if (m.pending) { clearTimeout(timer); timer = setTimeout(() => renderPage(false), 1000); }
+  }
+  // The strip and its views row scroll sideways on a phone: the open tab and view in sight after every rebuild
+  // (the page's HTML is replaced, so the row would start at its left end again).
+  function stripInView(el) {
+    for (const row of el.querySelectorAll ? el.querySelectorAll('.page-tabs, .page-subsecs') : []) {
+      const on = row.querySelector('.page-sec.on'); if (!on || row.scrollWidth <= row.clientWidth) continue;
+      row.scrollLeft = Math.max(0, on.getBoundingClientRect().left - row.getBoundingClientRect().left + row.scrollLeft - (row.clientWidth - on.offsetWidth) / 2);
+    }
   }
   const schedule = () => { if (mode !== 'home') return; clearTimeout(timer); timer = setTimeout(() => renderPage(false), 200); };
   // ---- Settings: the start screen ------------------------------------------------------------------
@@ -553,26 +592,17 @@
       if (WP && WP.siteAt) WP.siteAt(r.dev, r.sec, r.file || null);
       openPage(r.page);
     } else if (r.drill) {
-      // (the plan tree holds the developments shown, so a filter that leaves the pick out goes first:
-      // Home's municipality when it is another's, as Home's Peel button does, and the map's plan or MTSA
-      // filter, unless it is a plan filter that holds the plan picked; an MTSA pick then sets its own,
-      // the search's map handler running after this returns false)
-      const A = App(), S = A && A.state, PA = root.PeelPlanAreas;
-      if (S) {
-        const sp = S.sp || [], mt = S.mtsa || [], muniOff = !!(S.muni && S.muni !== r.muni), areaOff = !!(sp.length || mt.length) && !(r.sp && !mt.length && sp.includes(r.sp));
-        if (muniOff) { S.muni = ''; if (root.PeelSearchFilter && root.PeelSearchFilter.renderMuniChips) root.PeelSearchFilter.renderMuniChips(); }
-        if (areaOff) { S.sp = []; S.mtsa = []; }
-        if (muniOff || areaOff) { if (PA && PA.renderAreaSelects) PA.renderAreaSelects(); if (areaOff && PA && PA.showArea) { PA.showArea(); if (PA.renderPlanAreas) PA.renderPlanAreas(); } if (A.applyFilters) A.applyFilters(); }
-      }
-      if (WP && WP.drillTo) WP.drillTo(r.drill, r.fall);
-      openPage('growth');
+      // (a plan the filter, in place of the place filters set before; an MTSA its municipality, the search's map
+      // handler then setting its own filter as this returns false. The page stays on the tab it was on, from another
+      // page Home at the map's tab: owner decision 10, §3.3)
+      if (WP && WP.drillTo) WP.drillTo(r.drill);
+      openPage(r.page, { keep: true });
     } else if (r.ws) {
       // (a scope that does not open yet, its servicing data still loading, is no reason to leave the page
       // or close the open scope: the pick is taken and nothing moves)
       if (r.ss && SS() && SS().resolve && !SS().resolve(r.ss)) return true;
       go(r.ws, { ss: r.ss, quiet: true });
     } else if (r.dcSel) {
-      if (WP && WP.sectionAt) WP.sectionAt('capital', r.wsec);
       openPage(r.page);
       const D = root.PeelDcProjects; if (D && D.select) D.select(r.dcSel);
     }
@@ -593,6 +623,21 @@
   document.addEventListener('click', e => {
     if (!e.target.closest) return;
     if (e.target.closest('[data-home-menu]')) { menuOpen = !menuOpen; renderPage(true); return; }
+    // The page host's strip and views row (js/ws-pages.js tabsHTML; Help's bar has two of its views): a tab or a
+    // view picked as on the map's own strip (stored, in the link), and the page follows it; from another page,
+    // Home at it. (DC timing from the strip: the list again, an open project closed, as the old section bar's)
+    const pt = e.target.closest('#home [data-pg-tab]');
+    if (pt) {
+      e.preventDefault(); menuOpen = false;
+      if (pt.dataset.pgTab === 'dca' && pt.dataset.pgSub === 'timing') { const DP = root.PeelDcProjects; if (DP && DP.state.sel) { DP.state.sel = null; DP.render(); } }
+      const A = AT(); if (A && A.openTab) A.openTab(pt.dataset.pgTab, pt.dataset.pgSub || undefined);
+      if (!hostPage(page)) { openPage('home', { keep: true }); return; }
+      renderPage(true);
+      // (the strip kept in sight: the page goes up to it only when it had scrolled past it)
+      const el = $('#home'), st = el && el.querySelector && el.querySelector('.page-tabs');
+      if (st) { const top = st.getBoundingClientRect().top - el.getBoundingClientRect().top; if (top < 0) el.scrollTop += top; }
+      return;
+    }
     const pg = e.target.closest('[data-ws-page]');
     if (pg) { e.preventDefault(); menuOpen = false; openPage(pg.dataset.wsPage); return; }
     const pk = e.target.closest('[data-ws-pick]');
@@ -602,28 +647,29 @@
     const un = e.target.closest('[data-ws-unpick]');
     if (un) { if (root.DevScope && root.DevScope.current()) root.DevScope.close(); openPage(un.dataset.wsUnpick); return; }
     const g = e.target.closest('[data-ws-go]');
-    if (g) { e.preventDefault(); const dev = g.dataset.wsDev, ce = g.dataset.wsCe, pipe = g.dataset.wsPipe, ft = g.dataset.wsFulltable, dcw = g.dataset.wsDcwork; go(g.dataset.wsGo, { ss: g.dataset.wsSs, quiet: !!dev });
+    // (data-ws-keep: a page view's Open the map, its rows and figures: the map view at the view the page shows)
+    if (g) { e.preventDefault(); const dev = g.dataset.wsDev, ce = g.dataset.wsCe, pipe = g.dataset.wsPipe, ft = g.dataset.wsFulltable, dcw = g.dataset.wsDcwork; go(g.dataset.wsGo, { ss: g.dataset.wsSs, quiet: !!dev, keep: g.dataset.wsKeep != null });
       if (dev) pickDev(dev);
       if (ce && root.PeelCapitalEA) { const [k, ...rest] = ce.split(':'), CE = root.PeelCapitalEA; if (k === 'ea') CE.openEA(rest.join(':')); else if (k === 'cap') CE.openCapital(rest.join(':')); }
       // (the Capital page's "Open the map" with a DC project open: the map view at its card)
       if (dcw && root.PeelDcProjects && root.PeelDcProjects.openWork) root.PeelDcProjects.openWork(dcw);
       if (pipe != null && SC() && MM().SEW && MM().SEW.data) { const i = +pipe, c = MM().SEW.data.pipes[i][10], map = root.PeelMapCore.map; SC().showPipeLoads(i); map.setView([c[1], c[0]], Math.max(map.getZoom(), 15)); }
       if (ft && PN() && PN().openFull) setTimeout(() => PN().openFull(), 400);
-      // An area from Growth in an area: the map and every tab filtered to it (Growth › Areas' own filter).
-      const area = g.dataset.wsArea; if (area && App()) { App().state.sp = [area]; if (root.PeelPlanAreas && root.PeelPlanAreas.renderAreaSelects) root.PeelPlanAreas.renderAreaSelects(); App().applyFilters(); }
       return; }
-    if (e.target.closest('[data-ws-backpage]')) { openPage(cur || page || 'home'); return; }
-    if (e.target.closest('[data-ws-back]')) { const b = backTo; if (b && b.ws) { setMode('ws'); go(b.ws, { quiet: true, noDraw: true }); } else openPage((b && b.page) || 'home', { keepScroll: true }); return; }
+    // ← Page (the map view's): its page; a view of a page host (Servicing capacity's, Home's tabs) back at the
+    // host with the map's tab and view as they are, what was picked on the map kept (navigation phase 6, §3.4),
+    // unless the map is at a scope's Overview that the host closes (scopeOverview): then the page's own view.
+    if (e.target.closest('[data-ws-backpage]')) { openPage(cur || page || 'home', { keep: !!(cur && hostOf(cur)) && !scopeOverview() }); return; }
+    if (e.target.closest('[data-ws-back]')) { const b = backTo; if (b && b.ws) { setMode('ws'); go(b.ws, { quiet: true, noDraw: true, keep: true }); } else openPage((b && b.page) || 'home', { keepScroll: true, keep: true, view: b && hostPage(b.page) && scopeOverview() ? b.view : null }); return; }
     if (e.target.closest('[data-ws-back-x]')) { backTo = null; renderBack(); return; }
-    // Home's scope (step 6): Peel or a municipality, the same filter as the map's (a plan or MTSA in
-    // another municipality no longer applies).
+    // Home's scope (step 6): Peel or a municipality, the same filter as the map's. A place, as the top bar's trail
+    // steps: Peel all of Peel, a municipality the whole of it (a plan, MTSA, zone or block filter goes with it, now that
+    // the drill and a plan pick are the filter: navigation phase 6, js/ws-pages.js drillTo).
     const mu = e.target.closest('[data-ws-muni]');
     if (mu && App()) {
-      const m = mu.dataset.wsMuni, PA = root.PeelPlanAreas, keep = id => !m || ((PA && PA.areaById && PA.areaById.get(id)) || {}).municipality === m;
-      App().state.muni = m; App().state.sp = App().state.sp.filter(keep); App().state.mtsa = App().state.mtsa.filter(keep);
-      if (root.PeelSearchFilter && root.PeelSearchFilter.renderMuniChips) root.PeelSearchFilter.renderMuniChips();
-      if (PA && PA.renderAreaSelects) PA.renderAreaSelects();
-      App().applyFilters(); renderPage(true); return;
+      const m = mu.dataset.wsMuni, WP = root.PeelWsPages;
+      if (WP && WP.drillTo) WP.drillTo(m ? `m:${m}` : 'peel');
+      renderPage(true); return;
     }
     // A layer chip under a site page's map: that layer on or off.
     const lc = e.target.closest('[data-ws-layer]');
@@ -660,10 +706,13 @@
   document.addEventListener('pnl:set', e => {
     // Explore: a site picked (the search, the map) while an area view is open opens its page.
     const sc = e.detail && e.detail.scope;
-    if (sc && sc.startsWith('dev:') && sc !== exploreDev && mode === 'home' && ['growth', 'outlook', 'study'].includes(page)) { exploreDev = sc; setTimeout(() => openPage('site'), 0); }
+    // (navigation phase 6: Home is the area views' host, Growth in an area and the Forecast among them)
+    if (sc && sc.startsWith('dev:') && sc !== exploreDev && mode === 'home' && (page === 'home' || page === 'study')) { exploreDev = sc; setTimeout(() => openPage('site'), 0); }
     else if (sc && !sc.startsWith('dev:')) exploreDev = null;
     if (e.detail && e.detail.key === 'overview:' && e.detail.scope === 'area') renderChips();
     if (mode === 'ws' && cur === 'pipes' && e.detail && e.detail.key === 'svc:network') pipesLayer(true);
+    // (the back bar names the view it goes back to: a tab or view picked on the full map meanwhile)
+    if (mode === 'full' && backTo && backTo.page && hostPage(backTo.page)) renderBack(true);
     schedule();
   });
   // A site picked in a workspace's map view (Check a site / Review an FSR): on to its result.
@@ -679,6 +728,6 @@
     else if (s.mode === 'home') openPage(s.page || 'home');
     else setMode(s.mode);
   }
-  Object.assign(api, { REF, bootRestore, go, openPage, setMode, mode: () => mode, current: () => cur, page: () => page, override, srcLine, renderPage, renderChips, settingsHTML, oldList, pipesSpec, routePick, init });
+  Object.assign(api, { REF, bootRestore, go, openPage, setMode, mode: () => mode, current: () => cur, page: () => page, view, override, srcLine, renderPage, renderChips, settingsHTML, oldList, pipesSpec, routePick, init });
   root.PeelWorkspaces = api;
 })(typeof window !== 'undefined' ? window : globalThis);

@@ -18,7 +18,8 @@ test('a header count opens the full table (your choice); a stage-tone status sta
   assert.match(PN.html({ head: { name: 'Find', status: { tone: 'stage', text: 'Step 1 of 3' } }, answer: 'x' }), /<span class="pnl-chip t-stage">Step 1 of 3<\/span>/);
   const ws = src('js/ws-pages.js');
   assert.match(ws, /const FULL_OF = \{ home: 'tight', tight: 'tight', projects: 'projects', pipes: 'pipes' \};/);
-  assert.match(ws, /attrs: \{ 'data-ws-go': FULL_OF\[id\], 'data-ws-fulltable': '1' \}, title: 'Open the full table'/);
+  // (a page host's panel view takes its map view's, the tab and view kept: navigation phase 6)
+  assert.match(ws, /attrs: \{ 'data-ws-go': FULL_OF\[wsId\], 'data-ws-fulltable': '1', \.\.\.keep \}, title: 'Open the full table'/);
 });
 
 test('the stage chip opens How the stage was set in place, and says what the next stage needs', () => {

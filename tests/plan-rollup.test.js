@@ -96,6 +96,18 @@ test('By plan CSV: one row per area and development, with a path for pivot table
   assert.ok(rows.filter(x => x.level !== 'development' && x.check_units !== '').every(x => x.check_units === 0), 'every check 0');
 });
 
+test('areaPath: an area’s place in the plan tree, its top plan first (navigation phase 6: the top bar’s trail)', () => {
+  globalThis.PeelUtil = globalThis.PeelUtil || { $: () => null, esc: s => String(s), fmtNum: n => String(n), store: null, CSV_DISCLAIMER: '' };
+  const PT = require('../js/plan-tables.js');
+  assert.deepEqual(PT.areaPath('p1', AREAS), ['mayfield', 'p1'], 'a precinct under its plan');
+  assert.deepEqual(PT.areaPath('core', AREAS), ['bolton', 'core'], 'a nested plan under its plan');
+  assert.deepEqual(PT.areaPath('bolton', AREAS), ['bolton'], 'a plan alone');
+  assert.deepEqual(PT.areaPath('nope', AREAS), ['nope'], 'an id the list does not hold: itself');
+  // (a parent the list does not hold ends the path; a loop never runs away)
+  assert.deepEqual(PT.areaPath('x', [{ id: 'x', parent: 'gone' }]), ['x']);
+  assert.deepEqual(PT.areaPath('a', [{ id: 'a', parent: 'b' }, { id: 'b', parent: 'a' }]), ['b', 'a']);
+});
+
 // Step C4: areas against their targets.
 test('targets: units compared (committed and all proposed); no target is never 0; municipalities use the 2051 allocation growth', () => {
   const set = [dev('a', 100, { pt: ['bolton'], c: true }), dev('b', 300, { pt: ['bolton'] }), dev('m', 50, { pt: ['mayfield'] })];
@@ -145,6 +157,8 @@ test('SPEC 1.9: a plan filter reconciles: inside the plan (By plan) + the parts 
   assert.equal(w.found, 1);
   assert.equal(w.planned, r.nodes.get('a:bolton').m.planned, 'the By plan row');
   assert.equal(w.planned, 140);
+  assert.equal(w.left, r.nodes.get('a:bolton').m.left, 'left to build, by share (Home’s Growth figures at a plan)');
+  assert.equal(w.left, 140);
   assert.equal(w.outside, 100, 'the rest of s');
   assert.equal(w.planned + w.outside, r.root.m.planned, 'adds up to the units shown');
   assert.equal(w.straddling, 1);

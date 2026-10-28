@@ -93,31 +93,55 @@
     const box = $('#f-search'); if (box) box.value = '';
     const sug = $('#search-sug'); if (sug) sug.hidden = true;
     FI().resetAllFilters();
-    if (root.PeelWorkspaces && root.PeelWorkspaces.setMode) root.PeelWorkspaces.setMode('home', 'home');
+    // (Home at its Overview, navigation phase 6: Home hosts the map's tabs, and opens on the briefing)
+    if (root.PeelWorkspaces && root.PeelWorkspaces.openPage) root.PeelWorkspaces.openPage('home');
     if (toast) toast('Started over: filters, search and selection cleared. The map view and scenario stay.');
   }
-  function trailGoMuni() {
-    if (!App().state.muni) return;
-    // Reuse the filter panel's own chip: it also drops areas from other municipalities.
-    const chip = document.querySelector(`#f-muni [data-muni="${CSS.escape(App().state.muni)}"]`);
-    if (chip) chip.click();
-    AS().clearSelected();
-  }
-  function trailGoArea() {
-    const a = trailArea(); if (!a) return;
-    App().state.sp = []; App().state.mtsa = []; App().state.pz = []; App().state.dr = [];
-    App().state[a.kind] = [a.id];
+  // The place's steps (navigation phase 6: the drill is the filter, so the trail is the way up). An area step: that
+  // area alone the filter, the levels under it gone (the municipality and the other filters stay).
+  function setArea(kind, id) {
+    const S = App().state; S.sp = []; S.mtsa = []; S.pz = []; S.dr = [];
+    if (kind) S[kind] = [id];
     PA().renderAreaSelects(); SD().renderSvcSelects();
     PA().showArea(); SD().showSvcArea(); PA().renderPlanAreas();
     AS().clearSelected();
     App().applyFilters();
   }
+  // The municipality's step is the whole of it: the plan, MTSA, zone and block filters go, the others stay. (It
+  // clicked the filter panel's chip, which keeps a plan of the same municipality: a drilled plan had no way up.)
+  function trailGoMuni() {
+    if (!App().state.muni) return;
+    setArea(null);
+  }
+  function trailGoArea() {
+    const a = trailArea(); if (!a) return;
+    setArea(a.kind, a.id);
+  }
+  // A level of the plan tree by its name (a sub-area the filter panel does not list, by the tree's).
+  function areaLabel(id) {
+    const PT = window.PeelPlanTables;
+    return PA().areaName('sp', id) || ((PT && PT.areas ? PT.areas() : []).find(a => a.id === id) || {}).name || id;
+  }
+  // The filters on besides the place (the place is the steps): the trail's "k filters", each removable.
+  const otherFilters = () => (FI() && FI().activeFilters ? FI().activeFilters().filter(f => !f.scope) : []);
+  let filtersOpen = false;
+  // (a page follows at once, as it did with its own row of chips)
+  const pageFollows = () => { const W = root.PeelWorkspaces; if (W && W.mode && W.mode() === 'home' && W.renderPage) W.renderPage(true); };
+  function clearOthers() {
+    const fl = otherFilters(); filtersOpen = false;
+    if (!fl.length) { renderTrail(); return; }
+    fl.forEach(f => f.clear()); App().applyFilters(); pageFollows();
+  }
   function trailGoDev() { if (Nav().getCurrentProject()) Nav().showDetail(Nav().getCurrentProject()); }
   function renderTrail() {
     const el = $('#trail'); if (!el) return;
     const steps = [{ label: 'Peel', go: trailGoPeel, title: 'All of Peel: closes the development, the area and the selection (the filters stay; Start over clears them)' }];
-    if (App().state.muni) steps.push({ label: App().state.muni, go: trailGoMuni, title: `Filter to ${App().state.muni}` });
+    if (App().state.muni) steps.push({ label: App().state.muni, go: trailGoMuni, title: `All of ${App().state.muni} (the plan and area filters go; the others stay)` });
     const a = trailArea();
+    // (one plan filter: its place in the plan tree first, Peel › Brampton › Bram West › Precinct 40-3, each step that
+    // level as the filter: navigation phase 6)
+    const PT = window.PeelPlanTables, up = a && a.kind === 'sp' && App().state.sp.length === 1 && PT && PT.areaPath ? PT.areaPath(a.id).slice(0, -1) : [];
+    for (const id of up) { const nm = areaLabel(id); steps.push({ label: nm, go: () => setArea('sp', id), title: `All of ${nm} (the level under it goes; the other filters stay)` }); }
     if (a) steps.push({ label: a.label, go: trailGoArea, title: 'Filter to this area only' });
     // Phase 3: the development step follows the dev scope, not the #detail panel. A result started at
     // the development (the Inquiry draft) keeps it: Peel › the site › the result, the site step closing
@@ -144,16 +168,51 @@
     const TC = window.PeelTreeCounts;
     const warn = TC && TC.status === 'failed'
       ? ' <span class="tb-count-warn" role="status" title="The tree counts (data/tree-counts.json) did not load, so each development is counted from its files and permits, and the total differs from the usual one.">· tree counts didn\u2019t load: counted from the files and permits <button type="button" class="btn small link" data-tb-reload>Reload</button></span>' : '';
+    // Then the other filters on (navigation phase 6: the pages' "Filters on" row and the workspace bar's, one trail
+    // on the pages and the map): "k filters" opens them in a popover, each removable, Reset all and the older-link
+    // note; × clears the k (the place stays: it is the steps). A phone: one 44 px button, the funnel and the count.
+    const fl = otherFilters(), k = fl.length, old = FI() && FI().oldLinkNote ? FI().oldLinkNote() : '', ks = `${k} filter${k === 1 ? '' : 's'}`;
+    if (!k && !old) filtersOpen = false;
+    const flHTML = k || old ? `<span class="tb-fl-wrap"><button type="button" class="tb-fl" data-tb-filters aria-expanded="${filtersOpen}" aria-controls="tb-fl-pop" aria-label="${k ? ks : 'Opened from an older link'}" title="${k ? 'The filters on besides the place: each one, Reset all' : 'Opened from an older link: Completed is hidden'}">${PD.icon('filter')}${k ? `<span class="tb-fl-n">${k}</span><span class="tb-fl-w"> filter${k === 1 ? '' : 's'}</span>` : '<span class="tb-fl-w">Older link</span>'}</button>`
+      + `${k ? `<button type="button" class="tb-fl tb-fl-x" data-tb-filters-x aria-label="Clear the ${ks}" title="Clear these filters (the place stays)">×</button>` : ''}</span>` : '';
     el.innerHTML = steps.map((s, i) => `${i ? '<span class="tb-sep" aria-hidden="true">›</span>' : ''}<button type="button" class="tb-step" data-i="${i}" title="${esc(s.title)}">${esc(s.label)}</button>`).join('')
-      + count + warn;
+      + count + flHTML + warn;
     el._steps = steps;
+    const pop = $('#tb-fl-pop');
+    if (pop) {
+      pop.hidden = !filtersOpen;
+      pop.innerHTML = !filtersOpen ? '' : `<div class="page-filters small" role="group" aria-label="Filters on">${k ? `<span class="muted">Filters on:</span> ${fl.map((f, i) => `<button type="button" class="chip on removable" data-pf-i="${i}" title="Remove this filter">${esc(f.label)} <span aria-hidden="true">×</span></button>`).join('')}`
+        + `<button type="button" class="btn small link" data-tb-filters-x title="The place stays">Clear ${k === 1 ? 'it' : `these ${k}`}</button><button type="button" class="btn small link" data-pf-reset title="Every filter back to its default, the place and the search too">Reset all</button>` : ''}${old}</div>`;
+      placeFlPop(pop);
+    }
     if (window.PeelSvcScope) window.PeelSvcScope.peelWideNote();
+  }
+  // The popover under its button (a phone: the top bar's width, as the scenario's).
+  function placeFlPop(pop) {
+    pop.style.left = '';
+    const b = $('#trail [data-tb-filters]'), tb = $('#topbar'); if (pop.hidden || !b || !tb || phone()) return;
+    const x = b.getBoundingClientRect().left - tb.getBoundingClientRect().left;
+    pop.style.left = `${Math.max(8, Math.min(x, tb.clientWidth - pop.offsetWidth - 8))}px`;
   }
   $('#trail').addEventListener('click', e => {
     if (e.target.closest('[data-tb-reload]')) { location.reload(); return; }
+    if (e.target.closest('[data-tb-filters]')) { filtersOpen = !filtersOpen; renderTrail(); return; }
+    if (e.target.closest('[data-tb-filters-x]')) { clearOthers(); return; }
     const b = e.target.closest('[data-i]'); if (!b) return;
-    const s = ($('#trail')._steps || [])[+b.dataset.i]; if (s) s.go();
+    const s = ($('#trail')._steps || [])[+b.dataset.i];
+    if (filtersOpen) { filtersOpen = false; renderTrail(); }
+    if (s) s.go();
   });
+  // The popover's chips (data-pf-i indexes the list it shows, the place left out), Clear, Reset all (every filter,
+  // the place too: the old row's Reset) and the older link's Include Completed.
+  { const pop = $('#tb-fl-pop'); if (pop) pop.addEventListener('click', e => {
+    const F = FI(); if (!F) return;
+    if (e.target.closest('[data-include-completed]')) { F.includeCompleted(); pageFollows(); return; }
+    if (e.target.closest('[data-tb-filters-x]')) { clearOthers(); return; }
+    if (e.target.closest('[data-pf-reset]')) { filtersOpen = false; F.resetAllFilters(); pageFollows(); return; }
+    const c = e.target.closest('[data-pf-i]'); if (!c) return;
+    const f = otherFilters()[+c.dataset.pfI]; if (f) { f.clear(); App().applyFilters(); pageFollows(); }
+  }); }
 
   // Scenario chip: a one-line summary plus a "modified" badge when criteria differ
   // from Peel defaults (criteriaChanges() is the existing detection). Clicking opens
@@ -351,7 +410,9 @@
     const inside = sel => path.some(n => n && n.matches && n.matches(sel)) || !!(e.target.closest && e.target.closest(sel));
     if (!inside('.tb-wrap')) closeTbMenus();
     if (!inside('.tb-scen-wrap') && !scenJustOpened) closeScenPop();
+    if (filtersOpen && !inside('#tb-fl-pop') && !inside('.tb-fl-wrap')) { filtersOpen = false; renderTrail(); }
   });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && filtersOpen) { filtersOpen = false; renderTrail(); } });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (['#tb-export-menu', '#tb-gear-menu', '#tb-present-menu', '#tb-scen-pop'].some(id => { const m = $(id); return m && !m.hidden; })) e.preventDefault(); closeTbMenus(); closeScenPop(); if (typeof PeelTools !== 'undefined' && PeelTools.escape) PeelTools.escape(); } });
 
   // Present toggles the existing presentation mode; the button follows its state.

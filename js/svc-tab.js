@@ -373,13 +373,17 @@
     const top = App().state.servicing.drainage.filter(d => !d.downstream).map(d => ({ d, l: M.cum.get(d.id) })).filter(x => x.l).sort((a, b) => M.adwf(b.l) - M.adwf(a.l))[0];
     setHeadline($('#ww-body'), top ? `<strong>${esc(SD().drName(top.d))}</strong> delivers the most flow to ${esc(SD().plantLabel(top.d.plant))}: ${fmt1(M.adwf(top.l, M.fOf(top.d.plant)))} ML/d ${wwFlowLabel()} at build-out.` : '');
   }
+  // A tab marked loading (aria-busy) until its data lands, or ready.
+  const busy = (b, on) => { if (!b) return; if (on) { b.setAttribute('aria-busy', 'true'); b.title = 'Loading: it opens when its data lands'; } else { b.removeAttribute('aria-busy'); b.removeAttribute('title'); } };
   function renderSvcTab() {
     const bc = CA().baselineCensus();
     const has = !!(App().state.servicing && bc);
-    $('#ftab-svc').hidden = !has;
-    $('#ftab-dca').hidden = !has || !App().state.dcInfra;
-    // (a link or a stored tab that named one of them before the data arrived opens it now)
-    if (AT() && AT().tabShown) for (const k of ['svc', 'dca']) if (!$(`#ftab-${k}`).hidden) AT().tabShown(k);
+    // (navigation phase 6: shown from the first paint, marked loading until the data lands, never hidden;
+    // the label stays the tab's name, the word is the CSS's)
+    busy($('#ftab-svc'), !has);
+    busy($('#ftab-dca'), !has || !App().state.dcInfra);
+    // (a link, a stored tab or a pick that named one of them before the data arrived opens it now)
+    if (AT() && AT().tabShown) for (const k of ['svc', 'dca']) if (!$(`#ftab-${k}`).hasAttribute('aria-busy')) AT().tabShown(k);
     if (!has) return;
     // Not before the servicing lookup is filled (js/svc-data.js): a model built without it counts
     // rural land as sewered and tags no development — Inglewood read 398% until the next rebuild.

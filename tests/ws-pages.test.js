@@ -136,7 +136,9 @@ test('Review an FSR coverage: what an FSR covers and what the app can check', ()
 
 test('every workspace has a page builder; pages open from Home, chips and the map view', () => {
   const s = src('js/ws-pages.js'), w = src('js/workspaces.js');
-  assert.match(s, /const BUILD = \{ home, tight, site, growth, outlook, coming, projects, eaflow, week, fsr, pipes, outlets, study, sewer, guides, roles, approvals, flows, network, capacity, fsrguide, capguide, targets, forecast, glossary, logic, help, data \};/, "every workspace, Labs › Sewer designer, and the Reference pages: How it works and its guides, the Glossary, How the app decides and Help");
+  // (navigation phase 6: What's coming has no builder of its own, removed by design: its id opens Home's Growth ›
+  // Forecast, outlook's, with By period open; js/workspaces.js hostOf)
+  assert.match(s, /const BUILD = \{ home, tight, site, growth, outlook, projects, eaflow, week, fsr, pipes, outlets, study, sewer, guides, roles, approvals, flows, network, capacity, fsrguide, capguide, targets, forecast, glossary, logic, help, data \};/, "every workspace (What's coming: the Forecast's), Labs › Sewer designer, and the Reference pages: How it works and its guides, the Glossary, How the app decides and Help");
   // A page's map buttons open the workspace's map view; Full map is the all-tools map; the map view has
   // a way back to the page.
   assert.match(w, /const pg = e\.target\.closest\('\[data-ws-page\]'\);\s*if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage\); return; \}/);
@@ -194,11 +196,15 @@ test('Growth drill-down: Peel → municipality → plan → precinct / sub-area 
   // The tree is Growth › Areas' own; a level's developments are its leaves' (a split site counts its share).
   assert.match(s, /const r = PT && PT\.compute \?/);
   assert.match(s, /function nodeDevs\(n, out = new Map\(\)\) \{\s*for \(const d of n\.devs\) out\.set\(d\.p, \(out\.get\(d\.p\) \|\| 0\) \+ d\.share\);\s*for \(const c of n\.children\) nodeDevs\(c, out\);/);
-  // A row opens the next level; the trail goes back up; the stage bars filter the files.
-  assert.match(s, /const kidRow = c => \(\{ attrs: \{ 'data-ws-drill': c\.id/);
-  assert.match(s, /data-ws-drill="\$\{esc\(x\.id\)\}">\$\{esc\(x\.name\)\}<\/button>/);
+  // A row opens the next level (the map's filter since navigation phase 6: a level no filter expresses, Not in a
+  // plan or Elsewhere in the plan, is listed and not opened); the stage bars filter the files.
+  assert.match(s, /const drillable = c => c\.kind === 'municipality' \|\| !!c\.areaId;/);
+  assert.match(s, /const kidRow = c => \(\{ attrs: drillable\(c\) \? \{ 'data-ws-drill': c\.id/);
   assert.match(s, /\$\{st\.click && r\.units >= 0\.5 \? ` data-ws-stage="\$\{r\.key\}" tabindex="0"` : ''\}/, 'a stage with no units is not clickable (bundle 6)');
-  assert.match(s, /label: '↑ Up a level', attrs: \{ 'data-ws-drill': n\.parent \|\| 'peel' \}/);
+  // (the page's own crumbs and its "↑ Up a level" are removed by design, §5 rows 48 and 78: going up is the top
+  // bar's trail, the map's filter)
+  assert.doesNotMatch(s, /const crumbs = /);
+  assert.doesNotMatch(s, /Up a level/);
   // Employment: a figure and its own list (floor area planned, permitted, completed, left; jobs).
   assert.match(s, /label: 'employment', ctx: emp\.planned >= 1 \?/);
   assert.match(s, /\{ title: 'Employment', rows: empRows/);
@@ -208,13 +214,15 @@ test('Growth drill-down: Peel → municipality → plan → precinct / sub-area 
   assert.match(s, /empty: `No developments \$\{gStage === 'all' \? 'with planned units'/);
   // The developments table: grouped by the next level down (each group opens its level), by stage or
   // by site servicing permit; under the map, its treemap.
-  assert.match(s, /const groups = by === 'area' \? kidRows\.map\(\(\[c, rows\]\) => \(\{ key: c\.id, name: c\.name, sub: kind\(c\), drill: c\.id, rows \}\)\)/);
+  assert.match(s, /const groups = by === 'area' \? kidRows\.map\(\(\[c, rows\]\) => \(\{ key: c\.id, name: c\.name, sub: kind\(c\), drill: drillable\(c\) \? c\.id : null, rows \}\)\)/);
+  assert.match(s, /const boxes = kids\.length \? kidRows\.map\(\(\[c, rows\]\) => \(\{ key: c\.id, name: c\.name, drill: drillable\(c\) \? c\.id : null,/, 'the treemap’s boxes the same');
   assert.match(s, /after: treemap \}/);
 });
 
-// Navigation phase 1 (S9): the drill does not filter, so a drilled level's Area report is its own
-// developments (a straddling one whole, as the map's plan filter counts it), with its outline.
-test('Growth in an area: Area report (PDF) reports the level shown, not the map’s developments', () => {
+// Navigation phase 1 (S9): a drilled level's Area report is its own developments (a straddling one whole, as the
+// map's plan filter counts it), with its outline. Since navigation phase 6 the level shown is the filter (owner
+// decision 10), so they are the developments in or partly in it, as the map shows them.
+test('Growth in an area: Area report (PDF) reports the level shown, which is the filter: its developments in or partly in it', () => {
   const s = src('js/ws-pages.js');
   assert.match(s, /actions: \[\{ label: 'Area report \(PDF\)', attrs: atPeel \? \{ 'data-area-report': 'shown' \} : \{ 'data-ws-areareport': n\.id \}, primary: true \}/);
   const clicks = [], reports = [], home = { contains: () => true };
@@ -240,34 +248,51 @@ test('Growth in an area: Area report (PDF) reports the level shown, not the map�
   assert.equal(reports[0][2], ring, 'the plan’s outline on the report’s map');
 });
 
-// Navigation phase 1 (S4): where a plan picked on a page lands (js/ws-pages.js drillTo): Growth in an
-// area at the plan, else at its municipality, else at Peel, in the plan tree of the developments shown
-// (a filter that leaves the plan out: js/workspaces.js routePick turns the map's area filters off first).
-test('drillTo: a plan pick lands at the plan, else its municipality, else Peel, in the tree as worked out', () => {
-  const node = (id, name, kind, parent) => ({ id, name, kind, parent, children: [], devs: [], m: { planned: 0, left: 0, people: 0, jobs: 0 } });
-  const peel = node('peel', 'Peel', 'peel', null), muni = node('m:Brampton', 'Brampton', 'municipality', 'peel'), plan = node('a:sp1', 'Plan One', 'plan', 'm:Brampton');
+// Navigation phase 1 (S4), phase 6 (owner decision 10): a level of the plan tree is the map's filter (js/ws-pages.js
+// drillTo): a plan, sub-area or precinct its plan filter in its municipality, a municipality the whole of it, Peel all
+// of it; the other place filters go. Growth › Areas shows the filter's level, in the tree of the developments shown
+// (a plan the tree does not hold: its municipality, then Peel), and waits for the tree when it is not worked out.
+test('drillTo: a level of the plan tree is the map’s filter; the page shows that level', () => {
+  const node = (id, name, kind, parent, extra = {}) => ({ id, name, kind, parent, children: [], devs: [], m: { planned: 0, left: 0, people: 0, jobs: 0 }, ...extra });
+  const peel = node('peel', 'Peel', 'peel', null), muni = node('m:Brampton', 'Brampton', 'municipality', 'peel'), plan = node('a:sp1', 'Plan One', 'plan', 'm:Brampton', { areaId: 'sp1' });
   peel.children = [muni]; muni.children = [plan];
-  let tree = null;
+  let tree = null, applied = 0;
   const of = list => ({ root: peel, nodes: new Map(list.map(n => [n.id, n])) });
   const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: () => null, querySelectorAll: () => [], getElementById: () => null, addEventListener() {}, dispatchEvent() {} };
+  const S = { basis: 'all', muni: '', sp: ['old'], mtsa: ['mt'], pz: ['pz1'], dr: ['dr1'], areas: null }, drawn = [];
   const window = { document, PeelUtil: { esc: x => String(x), fmtNum: n => String(n) },
     PeelPlanTables: { compute: () => { if (!tree) throw new Error('the developments are not in yet'); return tree; } },
+    PeelPlanAreas: { areaById: new Map([['sp1', { id: 'sp1', municipality: 'Brampton' }]]), renderAreaSelects: () => drawn.push('selects'), showArea: () => drawn.push('outline'), renderPlanAreas: () => drawn.push('outlines') },
+    PeelSearchFilter: { renderMuniChips: () => drawn.push('chips') }, PeelSvcData: { renderSvcSelects: () => drawn.push('svc selects'), showSvcArea: () => drawn.push('svc outline') },
     PeelPanel: { get: k => (k === 'growth:pipeline' ? { scope: 'area', spec: { answer: 'Peel’s pipeline.', lists: [], method: '', sources: '' } } : null), scenarioChip: () => '' },
-    PeelApp: { state: { basis: 'all', muni: '', sp: [], mtsa: [], areas: null } } };
+    PeelApp: { state: S, applyFilters: () => { applied++; } } };
   const ctx = { window, document, setTimeout: () => 0, clearTimeout() {}, URLSearchParams }; ctx.globalThis = ctx;
   vm.runInNewContext(src('js/ws-pages.js'), ctx);
-  const P = window.PeelWsPages, at = (t, id = 'a:sp1', fall = 'm:Brampton') => { tree = t; P.drillTo(id, fall); return P.build('growth').name; };
-  const PEEL = 'How much is coming, where, and how fast?';
-  assert.equal(at(of([peel, muni, plan])), 'Plan One', 'in the tree: the plan');
-  assert.equal(at(of([peel, muni])), 'Brampton', 'filtered out of it: its municipality');
-  assert.equal(at(of([peel])), PEEL, 'its municipality filtered out too: Peel');
-  assert.equal(at(of([peel, muni, plan]), 'a:sp1', 'peel'), 'Plan One');
-  assert.equal(at(of([peel, muni]), 'a:sp1', 'peel'), PEEL, 'no municipality to fall to: Peel');
-  // The tree not worked out yet: the plan kept, and the page lands at it once the tree has it (at Peel
-  // if it is no node then).
-  at(null); assert.match(P.build('growth').answer, /Loading the pipeline…/, 'still loading');
+  const P = window.PeelWsPages, PEEL = 'How much is coming, where, and how fast?';
+  // A plan: its filter, in its municipality; the MTSA, zone and block filters go; applied once (the tree not needed).
+  P.drillTo('a:sp1');
+  assert.deepEqual(plain({ muni: S.muni, sp: S.sp, mtsa: S.mtsa, pz: S.pz, dr: S.dr }), { muni: 'Brampton', sp: ['sp1'], mtsa: [], pz: [], dr: [] });
+  assert.equal(applied, 1);
+  assert.deepEqual(drawn, ['chips', 'selects', 'outline', 'outlines', 'svc selects', 'svc outline'], 'the filter panel, the outlines and the servicing selects follow');
+  // The page: the tree not worked out yet, loading; then the plan's level.
+  assert.match(P.build('growth').answer, /Loading the pipeline…/);
   tree = of([peel, muni, plan]); assert.equal(P.build('growth').name, 'Plan One');
-  at(null); tree = of([peel, muni]); assert.equal(P.build('growth').name, PEEL);
+  tree = of([peel, muni]); assert.equal(P.build('growth').name, 'Brampton', 'a plan the tree does not hold: its municipality');
+  tree = of([peel]); assert.equal(P.build('growth').name, PEEL, 'its municipality not there either: Peel');
+  // A municipality: the whole of it; Peel: all of it.
+  tree = of([peel, muni, plan]); drawn.length = 0;
+  P.drillTo('m:Brampton');
+  assert.deepEqual(plain([S.muni, S.sp, applied]), ['Brampton', [], 2]); assert.equal(P.build('growth').name, 'Brampton');
+  assert.ok(!drawn.includes('svc selects'), 'no servicing filter to clear: its selects left alone');
+  P.drillTo('peel');
+  assert.deepEqual(plain([S.muni, S.sp, applied]), ['', [], 3]); assert.equal(P.build('growth').name, PEEL);
+  // (a level no filter expresses: Elsewhere in a plan its plan, Not in a plan its municipality)
+  P.drillTo('r:sp1'); assert.deepEqual(plain([S.muni, S.sp]), ['Brampton', ['sp1']]);
+  P.drillTo('n:Brampton'); assert.deepEqual(plain([S.muni, S.sp]), ['Brampton', []]);
+  // A plan picked on the map's filter panel (no municipality set): the page at the plan too.
+  Object.assign(S, { muni: '', sp: ['sp1'] }); assert.equal(P.build('growth').name, 'Plan One');
+  // Two plans: the municipality's level, else Peel (no one plan to stand at).
+  Object.assign(S, { muni: '', sp: ['sp1', 'sp2'] }); assert.equal(P.build('growth').name, PEEL);
 });
 
 test('a development’s stage on the chart: the rung holding most of its units; built once none are left', () => {
@@ -311,11 +336,11 @@ test('estimated counts: a file mixing kinds is split in proportion, and the page
   assert.match(s, /has its estimate split between the kinds in proportion to their units/);
 });
 
-test('the DC timing page borrows no lists: Projects and EAs are sections of its page (navigation phase 4)', () => {
+test('the DC timing page borrows no lists: Projects and EAs are Capital’s views (navigation phase 4; Home’s strip, phase 6)', () => {
   const s = src('js/ws-pages.js'), c = src('js/capital-ea.js'), body = s.slice(s.indexOf('function projects()'), s.indexOf('// ---- Forecast'));
   assert.doesNotMatch(body, /'Furthest along'|'Coming up \(90 days\)'|specOf\('dca:projects'|specOf\('dca:eas'/, 'no borrowed list');
   assert.doesNotMatch(s, /pr\.lists\[0\]|ea\.lists\[0\]/);
-  assert.match(src('js/sections.js'), /\{ id: 'projects', title: 'Projects', tab: 'dca', keys: \['dca:projects'\] \}/);
-  assert.match(src('js/sections.js'), /\{ id: 'eas', title: 'EAs', page: 'eaflow' \}/, 'EAs: its own page (the EAs, then EA to construction)');
+  assert.match(src('js/sections.js'), /'dca:projects': \{ keys: \['dca:projects'\], ws: 'projects' \}/);
+  assert.match(src('js/sections.js'), /'dca:eas': \{ page: 'eaflow' \}/, 'EAs: its own page builder (the EAs, then EA to construction)');
   assert.ok(c.includes("{ title: 'Furthest along', rows: act.slice(0, 5)") && c.includes("[{ title: 'Coming up (90 days)', rows: up.slice(0, 5)"), 'the lists themselves: the Projects and EAs sections');
 });

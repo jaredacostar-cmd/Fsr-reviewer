@@ -339,7 +339,7 @@
   // one row a comparison, the measured figure as its value; the Caledon wells last, so the five the
   // panel shows hold the two checks that were only on the gear page. Each row opens the full table at
   // its comparison (data-ft-go: the section's own heading, as the Model checks rows did); the list's See
-  // all opens it at the first; on a page, js/ws-pages.js wsSection keeps the jump. [] until the model is in.
+  // all opens it at the first; on a page, js/ws-pages.js asSection keeps the jump (Home's Records › Data checks). [] until the model is in.
   function checksRows() {
     const PN = root.PeelPanel, A = App(), M = A && A.state.svcModel, R = A && A.state.reports; if (!PN || !M) return [];
     const plants = ['Lakeview', 'Clarkson', 'Inglewood'].map(pl => ({ pl, c: M.plantCap(pl) })).filter(x => x.c);

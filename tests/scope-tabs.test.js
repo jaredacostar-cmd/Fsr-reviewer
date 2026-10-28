@@ -11,7 +11,10 @@ test('Water / Wastewater / DC say "Peel-wide" below Peel scope, and link what th
   assert.match(src('index.html'), /<p class="scope-note small" id="scope-note" role="note" hidden><\/p>/);
   const ss = src('js/svc-scope.js');
   assert.match(ss, /const below = st\.muni \|\| st\.sp\.length \|\| st\.mtsa\.length \|\| st\.pz\.length \|\| st\.dr\.length \|\| st\.ss;/);
-  assert.match(ss, /if \(!below \|\| \(window\.DevScope && window\.DevScope\.current\(\)\) \|\| !PEEL_WIDE\[tab\]\) \{ el\.hidden = true; return; \}/);
+  // (one rule for both hosts, navigation phase 6: peelWideText words it, '' when there is nothing to say; the
+  // map's #scope-note hides then, Home's Servicing and Capital tabs leave it out, js/ws-pages.js host)
+  assert.match(ss, /if \(!below \|\| \(window\.DevScope && window\.DevScope\.current\(\)\) \|\| !PEEL_WIDE\[tab\]\) return '';/);
+  assert.match(ss, /function peelWideNote\(\) \{\n[^\n]*\n {4}const html = peelWideText\(AT\(\) && AT\(\)\.getFootTab\(\)\);\n {4}el\.innerHTML = html; el\.hidden = !html;\n {2}\}/);
   assert.match(ss, /<strong>Peel-wide\.<\/strong> \$\{PEEL_WIDE\[tab\]\} serve all of Peel, so these tables are not filtered to/);
   assert.match(src('js/topbar.js'), /window\.PeelSvcScope\.peelWideNote\(\)/, 'refreshed with every filter change');
   assert.match(src('js/analysis-tabs.js'), /root\.PeelSvcScope\.peelWideNote\(\)/, 'and every tab change');

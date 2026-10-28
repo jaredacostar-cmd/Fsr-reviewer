@@ -392,7 +392,8 @@ from street zoom (14), up to 3,000 in view.
 - **Reports**: *Memo* on a development opens a one-page servicing memo (proposal, status, flows,
   sewer path, plant reserve, DC needs, planned works, live site context, a map sketch of sewers by
   load and DC works) to print or save as PDF. *Area report* (a drawn selection, or *Report* on the
-  Showing line for what is shown, or *Area report (PDF)* on Growth in an area for the level it is at)
+  Showing line for what is shown, or *Area report (PDF)* on Home › Growth › Areas for the level it is at,
+  and on Home's Overview at one plan: the filter's level since navigation phase 6)
   gives combined demand, the capacity relied on with the DC timing, and the largest developments.
   The workbook's DC sheet (Export → Excel) lists every constraint, filtered as Capital › DC timing's
   Status was last set (Late to start).
@@ -1508,12 +1509,13 @@ basis, and for every plan, sub-area and precinct.
 | First 90% trigger | The first treatment plant (wastewater or water) to reach its 90% expansion trigger, then the most loaded: the same plant on Home, Servicing capacity and the Overview's headline. A facility's own *limit* (firm capacity, full pipe) is named as a limit, not a trigger. |
 | This week | One list of changes for Home, the Overview, the badge and the This week page, in the municipality picked; none on the first (baseline) update. |
 | Dormant developments | Held out of every count (`PeelPhases.dormantOf`); the stage charts on Home and Growth in an area say how many homes are left out. |
-| Plan areas | A plan filter on the map (and "Show on the map" from Growth in an area) holds the developments Growth in an area counts there, by the same placement (`PeelPlanTables.areaIdsOf`): a straddling development by its share, precincts and sub-areas included. The Overview and the header count the part inside the plan (units, people, jobs), with what the straddling developments hold outside it named beside. A precinct filed under the plan holding most of it can't pull a development out of the plan it sits in (Bram West 40 (d) was counted at half). |
+| Plan areas | A plan filter on the map (and a drill on Home › Growth › Areas: the drill is the filter) holds the developments Growth › Areas counts there, by the same placement (`PeelPlanTables.areaIdsOf`): a straddling development by its share, precincts and sub-areas included. The Overview and the header count the part inside the plan (units, people, jobs), with what the straddling developments hold outside it named beside. A precinct filed under the plan holding most of it can't pull a development out of the plan it sits in (Bram West 40 (d) was counted at half). |
 
 ## Sections: a page shows every map tab for its scope
 
 Each full-map tab's panel (Overview, Growth, Servicing, Capital, Records) is a **section**
-(`js/sections.js`). **Check a site** shows all of a development's sections under one bar, by the
+(`js/sections.js`). Home shows them as its tabs at Peel, a municipality or a plan, the map's five tabs
+and their views under its header (navigation phase 6: *Home hosts the map's tabs*, below). **Check a site** shows all of a development's sections under one bar, by the
 map's tab names: Overview, Growth, Servicing (Network · FSR review), Capital (the DC projects it relies
 on, then the EAs and works near it, one panel) and Records.
 Each is the map tab's own panel, so the page and the map read the same answer and figures; a
@@ -1523,15 +1525,16 @@ demand. Nothing about a site is only in the full map.
 ## Explore: one workspace for a site, a plan or an area you draw
 
 Home's sidebar has one **Explore** entry for what were five: Growth in an area, Check a site,
-Review an FSR, Forecast and Study area are its views.
+Review an FSR, Forecast and Study area are its views. Since navigation phase 6 an area's two are Home's
+tabs (Growth › Areas and Growth › Forecast): Explore opens them there.
 - The one search (an address, a file number, a description) and **Draw an area** are in every
   page's header, not only Explore's (see *Find from every page* below). A site picked from an area
   view (the search, a list row, the map) opens on its page.
 - A site shows where it sits, **Peel › municipality › plan › site** (the plan tree's placement, as
-  the plan filter); each step opens Growth in an area at that level.
+  the plan filter); each step makes that level the filter and opens Home › Growth › Areas.
 - A site's sections: Overview, Growth, Servicing, Capital and Records; **FSR review** is Servicing's
   second view (the cross-check and what an FSR should cover), a row under the bar on Servicing. An
-  area's: Growth (the drill-down) and Forecast.
+  area's are Home's tabs: Growth › Areas (the drill-down) and Growth › Forecast.
 - A site's Overview (the map's development Overview, the same panel) has the **path line** under
   Wastewater, *Path to the plant*: from the site, the pumping stations on its sewer path in flow order, each at its
   build-out peak wet weather against firm capacity, then the plant and its uncommitted reserve (or the
@@ -1551,18 +1554,19 @@ Review an FSR, Forecast and Study area are its views.
   it: existing water, sanitary and storm mains (from street zoom), the 2026 DC works, Region
   construction and the EA study areas, and the developments; each layer is a chip under the map.
   The full map gets its own layers back when you open it.
-- An area's sections also include **Servicing** and **Capital**: the map's Servicing › Capacity and
-  Capital › DC timing panels. They are Region-wide (the plants and the DC program serve more than one
-  municipality), and say so inside a municipality or a plan.
+- Home's **Servicing** and **Capital** tabs (were an area's sections): the map's Servicing › Capacity and
+  Capital › DC timing panels and their other views. They are Region-wide (the plants and the DC program
+  serve more than one municipality), and say so once inside a municipality or a plan, in the map's words
+  (one *Peel-wide* note under the strip: `js/svc-scope.js` `peelWideText`).
 - An area's developments are **one table** (js/dev-table.js), in place of the lists of plans, site
   servicing permits and developments. Group it by the next level down (municipality, plan or
-  sub-area: each group opens its level), by stage, by site servicing permit (each group shows its
+  sub-area: each group makes its level the filter), by stage, by site servicing permit (each group shows its
   developments on the map) or not at all; sort by name, units, left to build or last activity. Each
   group heading carries its totals and a bar of its homes left to build by stage; ten rows a group,
   then **Show all**. A row opens the site. The stage buttons filter the table, the treemap and the chart.
 - Under the map, a **treemap** of the same: a box per area, sized by homes left to build (homes built,
   under Built since 2021), a tile per development coloured by its stage (the 30 largest a box, the
-  rest as one tile). A tile opens the site, a box's name opens its level. Hovering a tile or a table
+  rest as one tile). A tile opens the site, a box's name makes its level the filter. Hovering a tile or a table
   row rings the development on the map; hovering a box rings its developments and outlines its area.
 
 ## Find from every page
@@ -1578,29 +1582,38 @@ On a page, a pick opens what it found (`js/workspaces.js` `pageRoute` and `route
 |---|---|
 | A development | Its page on Overview (from Review an FSR, Servicing › FSR review) |
 | A file number (a development matched by it only) | Its page at Records, the file's row in the tree marked |
-| A secondary plan or character area | Growth in an area at the plan |
-| An MTSA | Its filter (as on the map), with Growth in an area at its municipality |
+| A secondary plan or character area | Its filter, the map and every tab following it, on the tab you were on (from Home's Overview, the briefing at the plan with its Area report) |
+| An MTSA | Its filter (as on the map), its municipality first, on the tab you were on |
 | A plant, station, block, zone or South Peel water | Its scope on Servicing capacity's map view |
-| A DC project | Capital › DC timing at the project (the Capital page): its developments by tier and both verdicts |
+| A DC project | Home › Capital › DC timing at the project, in place: its developments by tier and both verdicts |
 | A DC facility, or an address | Capital's or Check a site's map view, then the facility card or the pin |
 
 - **Pages only.** On the full map and in a workspace's map view the search works as before (a plan
   sets the map's plan filter, a facility opens its scope there); `routePick` returns false outside a
   page.
-- **The drill does not filter.** A plan picked on a page is Growth in an area's own drill-down: the map
-  and the other pages stay unfiltered (the plan filter from a drill comes in phase 6). The plan tree
-  holds only the developments shown, so a filter that would leave the pick out goes first: Home's
-  municipality when the plan or MTSA is in another (back to Peel), and the map's plan or MTSA filter
-  (a plan picked on the full map, the MTSA a page's MTSA pick left on), unless it is a plan filter that
-  already holds the plan picked. An MTSA pick then sets its own filter, as on the map.
-- **Its Area report is the drilled area's.** At a municipality, plan, precinct or sub-area, *Area
-  report (PDF)* reports that level's developments (`data-ws-areareport`, js/ws-pages.js), with the
-  outline on its map: a development partly in the plan counts whole, as the map's plan filter counts
-  it, so the title says "(developments in or partly in it)" where the level has an outline. At Peel
-  it is the developments shown, as before. (Share-weighted report totals come with the plan filter
-  from a drill, phase 6.)
-- **"← Page"** after a facility pick goes to Servicing capacity: the workspace's map view, as from
-  the pages' facility rows.
+- **The drill is the filter** (navigation phase 6, owner decision 10). A plan picked on a page, a level
+  picked on Home › Growth › Areas (a municipality, plan, precinct or sub-area row, a table group's *Open →*,
+  a treemap box) and Home's *Plans furthest behind their target* rows set the map's filter
+  (`js/ws-pages.js` `drillTo`: `state.muni` and `state.sp`, the MTSA, zone and block filters cleared, one
+  `applyFilters`), so the map and every tab follow it; the page stays on the tab it was on. The
+  **two-part rule** (pros-and-cons M6, P4-11): a development partly in the plan is in the filter (any
+  share, `PeelPlanTables.areaIdsOf`, as before); the plan's own totals count only its share
+  (`PeelPlanRollup.within`): the top bar's count, Home's Growth figures at the plan ("+ N planned in the
+  parts of k developments outside it", as the Overview says), Growth › Areas' node and By period's rows.
+  The Forecast and the Overview's other figures count the members whole, and say so where both show
+  ("the developments in or partly in <plan>, whole"). *Not in a plan* and *Elsewhere in the plan* stay
+  groups of the table, not levels (no filter expresses them). *↑ Up a level* and the drill's crumbs are
+  gone: the way up is the top bar's trail (*One trail*, below); Home's Peel and municipality buttons are
+  places too (a municipality is the whole of it, a plan or MTSA filter going with it). An MTSA pick sets
+  its municipality first, then (the map's own handler) its own filter.
+- **Its Area report is the level's.** At a municipality, plan, precinct or sub-area, *Area report (PDF)*
+  reports that level's developments (`data-ws-areareport`, js/ws-pages.js; Home's Overview at one plan has
+  it too), with the outline on its map: a development partly in the plan counts whole, as the map's plan
+  filter counts it, so the title says "(developments in or partly in it)" where the level has an outline.
+  At Peel it is the developments shown, as before. The report lists the plan's developments, any share,
+  as the filter does; Home's figures and By period count the plan's share.
+- **"← Page"** after a facility pick goes to Home › Servicing, at the view the map view was on
+  (Capacity unless another was picked there), as from the pages' facility rows.
 - **Typing is never interrupted.** While the box has the focus, the page it is on is not rebuilt
   (Home refreshes every second while its figures load, and data landing redraws a page): the render
   waits until the box lets go. A pick lets go of it on a page, so what it opens renders at once.
@@ -1611,17 +1624,19 @@ On a page, a pick opens what it found (`js/workspaces.js` `pageRoute` and `route
   view; a scope that still does not open is taken on a page and nothing moves. A change that loads
   these lazily must load them by the box's first focus.
 
-## Servicing and Capital: one page each, the map's sub-views as sections
+## Servicing and Capital: Home's tabs, the map's sub-views as views
 
-- **Servicing capacity**: Capacity (its own page: limits, the 90% trigger, the uncommitted reserve,
-  no relief in time) and the map's **Network** as a section; the allocations recorded are a fold of
-  Capacity, on the page too (navigation phase 2, below).
-- **Capital** (one sidebar entry): **DC timing** (its own page: every 2026 DC project with both
-  verdicts; a project opens in place, with its map, and *Open the map* opens its card there), **EAs**
-  (its own page: the EAs, then EA to construction) and the map's **Projects** as a section (navigation
-  phase 4, below).
-- Each section is the map's own panel (`js/sections.js` `WORKSPACES`), built on demand when its
-  tab hasn't been opened, so the page and the map read the same.
+- **Servicing** (Home's tab; the sidebar's Servicing capacity opens it at Capacity): **Capacity** (the
+  Servicing capacity page's builder: limits, the 90% trigger, the uncommitted reserve, no relief in time;
+  the allocations recorded a fold of it, navigation phase 2, below) and **Network** (the map's panel,
+  its footer's actions first).
+- **Capital** (Home's tab; the sidebar's Capital opens it at DC timing): **DC timing** (the Capital
+  page's builder: every 2026 DC project with both verdicts; a project opens in place, with its map, and
+  *Open the map* opens its card there), **EAs** (the EAs, then EA to construction) and **Projects** (the
+  map's panel; navigation phase 4, below).
+- Each view is a page builder where the page adds to the panel, else the map's own panel
+  (`js/sections.js` `VIEWS.area`), built on demand when its tab hasn't been opened, so the page and the
+  map read the same (navigation phase 6: *Home hosts the map's tabs*, below).
 
 ## Servicing and Records (navigation phase 2)
 
@@ -1633,7 +1648,7 @@ views, **Capacity · Network**, at Peel as at a development (where Capacity is h
   plants' room after allocations, the Export / Import CSV bar, every allocation, each row opening its
   development) are a section of Capacity's full table, after the facility table and the charts.
   Allocations are still recorded at each development (its Servicing panel's *Servicing allocation*
-  fold). The Servicing capacity page and Growth in an area's Servicing section show the fold too.
+  fold). Home's Servicing › Capacity shows the fold too.
 - **Network** lists the **existing water facilities** (and, with Settings › Labs › Hydraulic check on,
   the **hydraulic check**); both are in its full table, after the pressure zones. They are Peel-wide,
   so a development's Network full table leaves them out (`#analysis.site-scope`, css/app.css).
@@ -1649,8 +1664,8 @@ views, **Capacity · Network**, at Peel as at a development (where Capacity is h
   Caledon wells; each row opens the full table at its comparison, *See all* at the first), then
   **Where developments discharge**: *Review outlets →*, with the count still to review once Capital ›
   DC timing has worked out the DC model (building that model walks every sewer pipe, so Records
-  never builds it). *Review outlets* is in its footer too, beside *Duplicate check*. Reference › Data
-  checks shows the same panel (kept up to date as the servicing model is rebuilt, a Scenario change
+  never builds it). *Review outlets* is in its footer too, beside *Duplicate check*. Home's Records ›
+  Data checks (Help's bar links there) shows the same panel (kept up to date as the servicing model is rebuilt, a Scenario change
   included, whichever tab is open); its Servicing model rows and *See all* open the full map's Records
   › Data checks full table at their comparison, and its Review outlets row opens the page from there.
   The sidebar entry stays.
@@ -1660,13 +1675,13 @@ views, **Capacity · Network**, at Peel as at a development (where Capacity is h
   Records › Sources; every check, the two that were only on that page included, is Records › Data
   checks. The gear menu's pages are Settings and Labs (`window.GearPages`).
 - **One System control**, *Both · Wastewater · Water*, on Servicing › Capacity's list and Capital ›
-  DC timing's list (DC projects' until navigation phase 4; and their sections on the Servicing capacity and Capital pages): one pick, kept in
+  DC timing's list (DC projects' until navigation phase 4; and Home's Servicing and Capital tabs): one pick, kept in
   this browser (`sysPick`, `js/analysis-tabs.js` `setSys`), Both to start. It was two switches, *All ·
   Wastewater · Water* (Capacity, for the visit only) and *Wastewater · Water · Both* (DC projects, stored,
   Wastewater to start); DC timing now opens at Both, and a browser that had picked a system there
   keeps that pick, for both lists, the first time. Each list names its system (Capacity's header *Peel ·
   water*, *Water projects*). The System narrows the panel's list; Capacity's full table keeps every
-  facility of both systems, and Home's figures never filter. The Servicing capacity page's header and
+  facility of both systems, and Home's figures never filter. Home's Servicing › Capacity header and
   figures count both systems too, so they match Home's figure that opens the page; the System narrows
   its *Soonest limits* list, which names it (*Soonest limits: water*). A System tap redraws DC timing
   only while its DC model is worked out for the Scenario or its list is on screen (building that model
@@ -1718,9 +1733,13 @@ docs/pipeline-ledger-plan.md) is the Forecast panel's fold **By period**:
   scope; at a municipality (the map's municipality filter, with no plan, MTSA or census-area filter)
   its plans and *Not in a plan*, each development split by its share of each plan as Growth › Areas
   places it (`PeelPlanTables.compute()`, the plan tree), so each plan's row is its left to build in
-  Areas and the total row (named for the municipality) is the municipality's. A plan filter keeps
-  municipality rows until a plan is a scope of its own (phase 6: a development straddling two plans is
-  in the filter whole, in each plan by its share).
+  Areas and the total row (named for the municipality) is the municipality's. At a plan (one plan filter,
+  with no MTSA or census-area filter, a municipality set or not; navigation phase 6) its parts (its
+  sub-areas and precincts) and *Elsewhere in the plan*, each development by its share of each (a plan with
+  no parts: one row, the plan, at each development's share); the footer is the plan's (its share-weighted
+  left to build, = Growth › Areas' node: `rollup(…, { byShare })`), and a note names the developments
+  with homes left to build that lie partly outside it (By period counts the part inside, the Forecast's
+  figures count them whole). A plan the tree does not hold keeps municipality rows.
 - Then the folds **How sure** (the tiers A to E) and **Since the last snapshot** (shut to start; the
   latter only once `data/ledger/index.json` names a frozen snapshot, until then the full table says
   how the first is written).
@@ -1734,7 +1753,8 @@ docs/pipeline-ledger-plan.md) is the Forecast panel's fold **By period**:
   period's 2026 to 2031 column equals the Forecast's units expected by 2031 (one time-in-stage model;
   both checked in the browser paths). Export ▾ › Pipeline snapshot (CSV) reads the same model.
 - **What's coming** (the sidebar entry, the `coming` chip and page) opens the Forecast with By period
-  open: the chip on the map, the page as the Forecast page under the ledger's own question. The page
+  open: the chip on the map, the page as Home › Growth › Forecast with By period first, above the
+  Forecast's figures, under the Forecast's question (navigation phase 6; the map's panel keeps its order). The page
   lost the ledger's own four figures (its answer keeps three of them) and its inline developments
   list (one tap: the full table); its *Open Growth › Ledger* is gone.
 
@@ -1746,7 +1766,7 @@ Old names still land (`js/analysis-tabs.js` `SUB_MAP`, `FOLD_OF`, `openFold`; te
 | `data-at="growth:ledger"`, `openTab('growth', 'ledger')`, `showFootTab('growth', 'ledger')` | Growth › Forecast, By period open (`setSub('growth', 'ledger')`: the Forecast, the fold as it is) |
 | A stored Ledger pick (`gSub=ledger`) | The Forecast (never Pipeline) |
 | The `coming` chip (`#w=coming`) | Growth › Forecast, By period open (`WS` `fold: 'period'`) |
-| The What's coming page (`#w=p:coming`, the sidebar, a stored `lastWs=coming`) | The Forecast page under *What is coming, where, when and how sure?*, By period open (the page id is kept until the sidebar entry goes) |
+| The What's coming page (`#w=p:coming`, the sidebar, a stored `lastWs=coming`) | Home › Growth › Forecast, By period first and open (navigation phase 6; was the Forecast page under *What is coming, where, when and how sure?*; the page id is kept until the sidebar entry goes) |
 | The ledger's stored settings (`ledgerCut`, `ledgerMeasure`, `ledgerHideLapsed`, `ledgerSort`) | Unchanged |
 | Settings › Usage counts `sub:growth.ledger` | Shown and exported as `sub:growth.timing` (`aliasKey`, through `migrateSub`); the counts kept are not rewritten |
 
@@ -1812,15 +1832,15 @@ Capital has three views, **DC timing · EAs · Projects**. DC timing and DC proj
   sheet and the card's scroll stay as they were.
   For a DC main the developments come from the DC projects allocation (one model per answer: the card's
   older "Developments relying on it" list, the first draft of the same rule, stays for DC facilities,
-  which the allocation does not cover). On the Capital page the project opens in place (both verdicts,
-  then the developments by tier, five a tier with *See all* opening the rest in place, the funding fold
-  with the lab, its own map), the section bar's *DC timing* returns to the list, and *Open the map*
+  which the allocation does not cover). On Home's Capital › DC timing the project opens in place (both
+  verdicts, then the developments by tier, five a tier with *See all* opening the rest in place, the
+  funding fold with the lab, its own map), the strip's *DC timing* returns to the list, and *Open the map*
   opens its card. A DC project picked in a page's search opens there.
 - **A Status no project has** keeps the list and its chips, with one line saying none is, so *All* is
   one tap away. (Today no DC line is late and a plant expansion is: Late lists it.)
 - **The DC timing tool result is the list.** Layers › More settings *DC timing: capacity vs DC projects
   →*, a development's *All DC timing →*, a constraint's *← DC timing*, Help's *Show me* and
-  `App().showDcTiming()` open Capital › DC timing (on a page, the Capital page) at the Status the
+  `App().showDcTiming()` open Capital › DC timing (on a page, Home's Capital tab) at the Status the
   workbook's filter holds (`PeelMasterPlan.dcnFilter`, Late to start), closing the development or result
   open, as the result did. The System is the one control as the reader left it: a link never sets it.
   The result's own Both · Wastewater · Water seg (the last of three System controls) is gone. Its
@@ -1828,11 +1848,11 @@ Capital has three views, **DC timing · EAs · Projects**. DC timing and DC proj
   DC sheet still lists them, filtered by `dcnFilter`, which only the list's Status chips write (their status and the System at the
   tap; the late figure and Home's figure set the list's Status only).
 - **Home's *DC projects late*** keeps its source: every relief in service after the capacity it relieves
-  runs out (`dcAnalysis`), Peel-wide, never filtered. A tap opens the Capital page at its DC timing
-  section (wherever the page was left) with the list at Late: at System Both its header, *late* figure
+  runs out (`dcAnalysis`), Peel-wide, never filtered. A tap opens Home › Capital › DC timing with the
+  list at Late: at System Both its header, *late* figure
   and Late chip say Home's number, and Late lists every one.
-- **The Capital page**: DC timing · EAs · Projects. The Projects and EAs lists it borrowed under DC
-  timing are gone: they are its sections.
+- **Home's Capital tab** (was the Capital page; navigation phase 6): DC timing · EAs · Projects. The
+  Projects and EAs lists it borrowed under DC timing are gone: they are its views.
 - **EA to construction joins EAs.** One builder (`js/capital-ea-model.js` `eaFlowSpec`, with the
   timeline `eaTimelineHTML`) for both hosts. On the map, Capital › EAs ends with the fold *EA to
   construction* (shut to start; its answer, four figures and the timeline, a row opening the EA; *The
@@ -1843,8 +1863,8 @@ Capital has three views, **DC timing · EAs · Projects**. DC timing and DC proj
   municipality. At a development there is no fold (the EAs near the site, as before; since navigation
   phase 5 they are in Capital's one view there, under the DC projects it relies on). The EA to
   construction chip (`#w=eaflow`, an old link) opens Capital › EAs with the fold open (`fold: 'eaflow'`,
-  `js/analysis-tabs.js` `openFold`). On a page, the Capital page's **EAs** section is the `eaflow`
-  page: the map's Capital › EAs (its answer, figures and lists, built when the map has not drawn it),
+  `js/analysis-tabs.js` `openFold`). On Home, Capital › **EAs** is the `eaflow` page's
+  builder: the map's Capital › EAs (its answer, figures and lists, built when the map has not drawn it),
   then EA to construction (its timeline, lists and folds), the EA map; every row opens the EA on the map.
   Home → Capital → EAs is two taps, as EA to construction was. Beside the EAs its counts say their own
   measure: an EA with an addendum is complete there (current in the EAs' count) and one with no status
@@ -1860,12 +1880,12 @@ Old names still land (`js/analysis-tabs.js` `SUB_MAP`; tests/nav-aliases.test.js
 | A stored DC projects pick (`dcSub=dcproj`) | DC timing |
 | The stored sorts `dcaPnlSort` (DC timing's), `dcProjSort` (DC projects') | One stored sort, `dcSort`: DC timing's, else DC projects' *Most affected* or *$ a unit* (its *Soonest*, the construction year, is not carried), else *Soonest* |
 | The stored open project (`dcProjSel`) | No longer read: Capital opens on the list |
-| A DC project picked in a page's search (`wsec: 'dcproj'`) | The Capital page at the project, DC timing (`wsec: 'timing'`) |
+| A DC project picked in a page's search (`wsec: 'dcproj'`) | Home › Capital › DC timing at the project (navigation phase 6: no `wsec`, the page's view is the map's) |
 | Settings › Usage counts `sub:dca.dcproj` | Shown and exported as `sub:dca.timing` (`aliasKey`, through `migrateSub`); the counts kept are not rewritten |
 | The DC timing tool result (`PeelMasterPlan.showDcTiming()`, `App().showDcTiming()`, `[data-dcn-all]`, `#opt-dctiming`, Help's *Show me*) | Capital › DC timing at `dcnFilter`'s Status (`PeelDcProjects.openList`); the System left as it is |
 | `ss=dcwork:<sys>:<key>` (a shared link, a saved view) | The DC main's card, now with both verdicts and the developments by tier (`js/svc-scope.js` `RESTORE.dcwork`) |
 | The EA to construction chip (`#w=eaflow`) | Capital › EAs with the fold *EA to construction* open |
-| The EA to construction page (`#w=p:eaflow`, `lastWs=eaflow`, `data-ws-page="eaflow"`) | The same page id, now the Capital page's **EAs** section (the EAs, then EA to construction); no `PAGE_ALIAS` row |
+| The EA to construction page (`#w=p:eaflow`, `lastWs=eaflow`, `data-ws-page="eaflow"`) | The same page id: Home › Capital › EAs, the fold open (the EAs, then EA to construction; navigation phase 6, `hostOf`); no `PAGE_ALIAS` row |
 
 New links write `dcs=timing|eas|projects`. No page id, `ss=` kind or pane id changes (`#pane-dca-dcproj`
 keeps its id; it is DC timing's now, `data-sub="timing"`, above `#pane-dca-timing`).
@@ -1955,17 +1975,121 @@ Help › What moved where lists each move. Old names still land (tests/nav-alias
 | A stored `countMode: 'previous'` | Ignored: the tree count |
 | The page's sections `summary`, `files` (a search pick, `siteAt`) | The same ids, now titled Overview and Records |
 
+## Home hosts the map's tabs (navigation phase 6)
+
+Navigation phase 6a (docs/architecture-review/navigation-design.md §3.1 rule 1, §3.3, §3.4, §5, §7;
+pros-and-cons N-3 / NP-6, M6, P4-11). Home is the **page host** at an area (Peel, a municipality, a plan):
+under its header the full map's five tabs, **Overview · Growth · Servicing · Capital · Records**, in the
+map's order and words, then the open tab's views in a row under it (only when it has two or more). A page
+and the full map host the same scope with the same tab state: the tab and view the page shows are the
+map's (`js/analysis-tabs.js` `viewKey`), so a pick on either is the other's, stored the same way
+(`footTab4`, `gSub`, `svcSub`, `dcSub`, `rSub`).
+
+| Home's view | Drawn by |
+|---|---|
+| Overview | The briefing (`home`, below) |
+| Growth › Pipeline | The map's panel |
+| Growth › Areas | Growth in an area's builder: the drill-down, its table and treemap |
+| Growth › Forecast | The Forecast page's builder, By period first |
+| Servicing › Capacity | Servicing capacity's builder: the limits, the reserve, the allocations fold |
+| Servicing › Network | The map's panel |
+| Capital › DC timing | The Capital page's builder: a project opens in place, with its map |
+| Capital › EAs | The EAs page's builder, with EA to construction |
+| Capital › Projects | The map's panel |
+| Records › Sources | The Data sources page's builder |
+| Records › Data checks | The map's panel |
+
+(`js/sections.js` `VIEWS.area`: its keys are exactly the map's chips at an area, a test.) A view that is
+the map's panel shows its footer's actions first (Network's *Show the network on the map*, Projects'
+*Show them on the map* and *CSV: every contract*, Data checks' *Duplicate check* and *Review outlets*),
+then *Open the map* and *Open full table*.
+
+- **The old pages are views of Home.** Growth in an area, the Forecast, What's coming, Servicing capacity,
+  Capital (DC timing, EAs) and Data sources keep their page ids (links, sidebar entries, buttons, the start
+  screen's last workspace): each opens Home at its tab and view (`js/workspaces.js` `HOST`, `hostOf`), its
+  fold open (What's coming: By period; EAs: EA to construction), and Home is lit in the sidebar. Their
+  section bars are gone (the strip), and so is Explore's views bar on them (a site's page, Review an FSR
+  and Study area keep it until phase 6c).
+- **Servicing and Capital show "loading"** until their data lands, on Home's strip and on the map's (they
+  used to appear late on the map): picked early, the tab is lit, says loading and opens as soon as it can
+  (the pick is held: `heldTab`, `wantedTab`); on a phone the word is "…".
+- **Open the map, ← Page and the back bar keep the tab and view.** A view's *Open the map*
+  (`data-ws-keep`) opens its map view, with its layers, at the same tab and view; the map view's *← Page*
+  goes back to Home at the map's tab and view as they were left; the full map's *← Back to Home ›
+  Servicing › Network* names the view and keeps it (and follows a tab picked on the full map meanwhile). A
+  development or facility opened on the map (a search pick, a facility link) shows its own Overview, which Home
+  closes on the way back (it hosts an area), so there *← Page* lands on the map view's page at its own view and
+  the back bar at the view the page was left at, never on Home's Overview (`scopeOverview`, `backView`).
+- **Home opens on its Overview** (the top bar's Home, Start over, the tours, a Home link made before this
+  phase) and closes an open development and servicing scope, as the area pages did. So the full map opened
+  from Home is at Overview too; a full map set as the start screen still opens at the last tab picked.
+- **The drill is the filter**, with the **two-part rule**: see *Find from every page* above; By period at
+  a plan: *Growth: By period* above.
+- **One trail.** The top bar's trail is the place: with one plan filter, **Peel › municipality › plan ›
+  precinct** (the plan tree's placement, `PeelPlanTables.areaPath`). Each step is a place: a plan's step
+  that plan alone (the level under it goes), the municipality's the whole of it (the plan, MTSA, zone and
+  block filters go, the others stay; it no longer clicks the filter panel's chip, which kept a plan of the
+  same municipality, so a drilled plan had no way up), Peel's all of Peel (the filters stay). After the
+  count, **k filters ×**: the other filters on (the place left out: the `activeFilters()` entries without
+  `scope`), listed in a popover, each removable, with *Clear these k*, *Reset all* (every filter, the place
+  and the search too: the old row's Reset) and an older link's *Include Completed*; × clears the k. It
+  replaces the pages' and the workspace bar's *Filters on* row, on the pages and the map. On a phone it is
+  one 44 px button (the funnel and the count), its × the popover's *Clear*. On the full map below 1200 px
+  (a phone, a tablet), where the top bar's *Filters (n)* button beside it opens the same filters with their
+  chips, it is left out, so the steps keep their room; a page and a map view keep it (browser path *one
+  trail: a precinct drilled to is the filter …*).
+- **What's coming opens on By period**: Home › Growth › Forecast with By period first and open, above
+  the Forecast's figures, under the Forecast's question (What's coming's own h1 retired with its page);
+  shut, it stays shut. The map's panel keeps its order.
+- **One Peel-wide note**: Home's Servicing and Capital views below Peel say *Peel-wide.* once, under the
+  strip, in the map's words (`js/svc-scope.js` `peelWideText`, the map's `#scope-note`); at Peel, and on
+  Growth and Records, nothing (browser path *phone: Home's Servicing and Capital at a municipality say
+  Peel-wide once …*).
+- **Share links** made on Home write `nav=3` with the map's tab and view; a link from before (`nav=2` or
+  none) on Home or Data sources opens the page's own view (Home: Overview), as it showed when it was made
+  (`js/share.js`).
+- **Phones** (390 px): the strip and the views row scroll sideways in their own box, the open one scrolled
+  in; their buttons are 44 px; Home's strip sits above its groups; nothing scrolls the page sideways.
+
+Old names still land (`js/workspaces.js` `HOST`, `hostOf`; `js/share.js`; tests/nav-aliases.test.js
+"phase 6a"):
+
+| Old | Where it opens now |
+|---|---|
+| `#w=p:tight`, the sidebar's Servicing capacity, `lastWs=tight`, Help's role buttons | Home › Servicing › Capacity |
+| `#w=p:growth` | Home › Growth › Areas, at the plan filter's level |
+| `#w=p:outlook` | Home › Growth › Forecast |
+| `#w=p:coming`, the sidebar's What's coming | Home › Growth › Forecast, By period first and open |
+| `#w=p:projects`, `#w=p:capital`, the sidebar's Capital | Home › Capital › DC timing (an open project stays in place) |
+| `#w=p:eaflow` | Home › Capital › EAs, EA to construction open |
+| `#w=p:data`, Help's bar's Data sources | Home › Records › Sources |
+| Help's bar's Data checks | Home › Records › Data checks |
+| `#w=p:explore` | The open site, else the last Explore view (an area's: Home's tab), else Home › Growth › Areas |
+| `#w=home&t=<x>`, `#w=home&nav=2&t=<x>` (Home links made before phase 6) | Home at Overview |
+| `#w=p:<area page>&t=<x>`, `#w=p:data&nav=2&t=<x>` | That page's own tab and view (`#w=p:data&t=overview`: Records › Sources) |
+| `#w=home&nav=3&t=…&gs=/svs=/dcs=/rs=` (new links) | Home at that tab and view |
+| A saved view | Its own `t`, as before (it applies on the full map) |
+| The Growth drill's page-local level, `data-ws-drill`, `data-ws-explore` | The map's filter (`drillTo`: `state.muni`, `state.sp`) |
+| `data-ws-asec`, `data-ws-wsec`, `sectionAt`, `wsSpecFor`, `areaSpecFor`, `PeelSections.AREA`, `WORKSPACES.servicing` / `.capital`, `filterChipsHTML`, `#ws-filters`, *↑ Up a level* | Gone (the strip, the trail) |
+
+No stored preference is renamed and no pane id moves; the strip counts as the map's own `tab:` / `sub:`
+usage keys, so a tab's count adds the page and the map up.
+
 ## Reference and This week
 
 - **Reference** is one sidebar entry: **Help**, **How it works** (and each guide), the **Glossary**,
-  **Data sources** and **Data checks**. The last two are the map's Records › Sources and Data checks
-  (the old Data tab), until now only in the full map.
+  **Data sources** and **Data checks**. The last two are Home's Records tab, Records › Sources and
+  Records › Data checks (the old Data tab; navigation phase 6): Help's bar links there.
 - **This week** carries **Your watch list** (the developments starred ☆ Watch, each with its stage
   and whether it changed this week, changed ones first) and the week's **capacity alerts** from the
   weekly feed, both of which were only in the full map's Watch tab.
 
 ## Home: the briefing
 
+- **Home is the page host** (navigation phase 6): under its header the map's five tabs, Overview ·
+  Growth · Servicing · Capital · Records, and the open tab's views; the briefing below is its Overview.
+  The sidebar's Servicing capacity, What's coming and Capital open a tab of it, and Home stays lit. See
+  *Home hosts the map's tabs*.
 - **The scope first**: Peel, Mississauga, Brampton or Caledon (the map's municipality filter). Every
   figure follows it; one that is Region-wide (capacity, the DC program) says so.
 - **Four groups of figures**, each the answer of its page and opening it: **Growth** (homes planned,
@@ -1974,18 +2098,18 @@ Help › What moved where lists each move. Old names still land (tests/nav-alias
   facilities with no relief in time) and **Change** (this week's changes, files on a tight plant).
   The first 90% trigger opens its plant as a scope on Servicing capacity's map; the first zone limit
   (pumping into a pressure zone, which reaches its limit at 100% of firm pumping, not at the plants'
-  90%) opens the Servicing capacity page (Soonest limits, and every zone in its full table). Both use one rule
+  90%) opens Home › Servicing › Capacity (Soonest limits, and every zone in its full table). Both use one rule
   (`js/ws-pages.js` `firstTrigger`, `firstZone`): the first to its limit, ties to the more loaded.
   When no zone reaches its limit by the horizon's end (2051), the zone figure says *None* and names
   the most loaded zone, with its % at build-out.
 - The stage chart (with the homes dormant developments leave out), **Needs attention** beside the
   capacity map, **Largest left to build**, **Plans furthest behind their target** and **This week**.
   A Needs attention row opens its plant, station or water system as a scope on Servicing capacity's
-  map; a row with no scope (storage, pumping into a zone) and *See all* open the Servicing capacity
-  page.
+  map; a row with no scope (storage, pumping into a zone) and *See all* open Home › Servicing ›
+  Capacity.
 - Home's sidebar has nine entries: Home and This week, then by team Explore, Servicing capacity and
   What's coming (Planning), Capital, Review outlets (QA/QC), Old pipes (Asset Management) and
-  Reference, then Full map; What's coming opens Growth › Forecast with its By period fold open.
+  Reference, then Full map; What's coming opens Growth › Forecast on Home, By period first and open.
 
 ## Build-out: planned vs permitted vs left to build
 
@@ -3537,14 +3661,15 @@ should do.
 
 Two pages added to Home's sidebar, so they are no longer only on the full map:
 
-- **Planning › Forecast** (`outlook`): Growth › Forecast on a page. Units expected by 2031 and 2041
+- **Planning › Forecast** (`outlook`): Growth › Forecast on a page (Home › Growth › Forecast since
+  navigation phase 6). By period first (navigation phase 6), then units expected by 2031 and 2041
   with their ranges, the plants' 90% trigger years at the forecast pace, the largest contributors,
-  then the folds By period, How sure and (once a frozen snapshot exists) Since the last snapshot, and
+  then the folds How sure and (once a frozen snapshot exists) Since the last snapshot, and
   a link to *How the forecast is timed*. Same figures as the full map (`growth:timing`).
-- **What's coming** (`coming`): the same page, under its own question (*What is coming, where, when
-  and how sure?*), opened with By period.
-- **Capital › EAs** (`eaflow`, the EAs page; on the map the fold *EA to construction* of Capital ›
-  EAs, since navigation phase 4): each Region Class EA and the construction that
+- **What's coming** (`coming`): the same view, opened with By period (its own question, *What is
+  coming, where, when and how sure?*, retired with its page in navigation phase 6).
+- **Capital › EAs** (`eaflow`, the EAs page, Home › Capital › EAs since navigation phase 6; on the map
+  the fold *EA to construction* of Capital › EAs, since navigation phase 4): each Region Class EA and the construction that
   followed it, as a timeline (EA study, public information centres, completion, then the
   construction bars, with today marked), and lists: complete and waiting (oldest first, those
   10+ years old flagged: the Class EA must be reviewed before construction), construction that

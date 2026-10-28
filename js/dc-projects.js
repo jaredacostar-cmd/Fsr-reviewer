@@ -427,27 +427,27 @@
   function showOnMap(key) { const W = root.PeelWorkspaces; if (W && W.mode && W.mode() === 'home' && W.setMode) W.setMode('full'); openWork(key); }
   // The list from a link to the old DC timing tool result (js/masterplan.js showDcTiming): the area's list (a
   // development or a result open closes, as the result did), at that Status; the System stays the reader's (one
-  // control, shared with Servicing › Capacity: never set here); on a page, the Capital page.
+  // control, shared with Servicing › Capacity: never set here); on a page, Home's Capital › DC timing (the page id
+  // projects: navigation phase 6).
   function openList(o = {}) {
     S.status = STATUS.some(([k]) => k === o.status) ? o.status : 'all'; S.sel = null;
     if (root.DevScope && root.DevScope.current()) root.DevScope.close();
     const SS = root.PeelSvcScope; if (SS && SS.hasResult && SS.hasResult()) SS.closeResult();
     const W = root.PeelWorkspaces, A = AT();
-    if (W && W.mode && W.mode() === 'home') { const WP = root.PeelWsPages; if (WP && WP.sectionAt) WP.sectionAt('capital', 'timing'); W.openPage('projects'); return; }
+    if (W && W.mode && W.mode() === 'home') { W.openPage('projects'); return; }
     if (A && A.openTab) A.openTab('dca', 'timing');
   }
-  // A row opens its project: on the map its card (openWork); on a page in place, from another page the Capital
-  // page at it (Growth in an area's Capital section lists the same rows). A Status chip also sets the workbook's
-  // DC sheet filter (MasterPlan dcnFilter: its status and the System at the tap); the late figure and Home's
-  // figure set the list's Status only, on a page the Capital page's DC timing section (the list, wherever the
-  // page was left).
+  // A row opens its project: on the map its card (openWork); on a page in place, on Home's Capital › DC timing
+  // (from another view or page, there at it). A Status chip also sets the workbook's DC sheet filter (MasterPlan
+  // dcnFilter: its status and the System at the tap); the late figure and Home's figure set the list's Status
+  // only (Home's figure opens Capital › DC timing, the page id projects: navigation phase 6).
   function onClick(e) {
     const t = e.target.closest && e.target.closest('[data-dcproj-open],[data-dcproj-back],[data-dcproj-sort],[data-dcproj-csv],[data-dcproj-map],[data-dcproj-more],[data-dc-status]'); if (!t) return;
     const d = t.dataset;
     if (d.dcprojOpen != null) {
       const W = root.PeelWorkspaces;
       if (!(W && W.mode && W.mode() === 'home')) { openWork(d.dcprojOpen); return; }
-      if (W.page && W.page() !== 'projects') { const WP = root.PeelWsPages; if (WP && WP.sectionAt) WP.sectionAt('capital', 'timing'); W.openPage('projects'); }
+      if (!(W.view && W.view() === 'dca:timing')) W.openPage('projects');
       setS('sel', d.dcprojOpen);
     } else if (d.dcprojBack != null) setS('sel', null);
     else if (d.dcprojMore) { const k = d.dcprojMore; S.more = S.more.includes(k) ? S.more.filter(x => x !== k) : [...S.more, k]; refresh(); }
@@ -457,7 +457,6 @@
     else if (d.dcStatus) {
       S.status = STATUS.some(([k]) => k === d.dcStatus) ? d.dcStatus : 'all'; S.sel = null;
       if (t.closest('.dcp-status') && MP()) MP().dcnFilter = `${S.status}:${({ ww: 'ww', water: 'water' })[sysNow()] || 'all'}`;
-      const W = root.PeelWorkspaces, WP = root.PeelWsPages; if (W && W.mode && W.mode() === 'home' && WP && WP.sectionAt) WP.sectionAt('capital', 'timing');
       refresh();
     }
   }

@@ -248,6 +248,8 @@
    * rollup(rows, by, opts) → { root, groups, check }
    *   by: 'municipality' | 'zone' | 'plant' | 'plan' | (row → [[key, name, share]])
    *   opts.names(id): a plan's name
+   *   opts.byShare: the total is its groups' (a row counts by the shares it holds in them, not whole): a
+   *     plan's parts, whose total is the plan's own (navigation phase 6, the two-part rule)
    * Levels: Peel → group → development. Every node has cells (bucket × stage: units, people), its
    * rows ({ row, share }) and check = its cells − the sum of its children's, always 0.
    */
@@ -256,9 +258,10 @@
     const root = { key: 'peel', name: 'Peel', cells: zeroCells(), children: [], rows: [] };
     const groups = new Map();
     for (const row of list || []) {
-      addRow(root.cells, row, 1);
-      root.rows.push({ row, share: 1 });
-      for (const [key, name, share] of place(row)) {
+      const at = place(row), w = opts.byShare ? at.reduce((t, x) => t + x[2], 0) : 1;
+      addRow(root.cells, row, w);
+      root.rows.push({ row, share: w });
+      for (const [key, name, share] of at) {
         let g = groups.get(key);
         if (!g) { g = { key, name, cells: zeroCells(), children: [], rows: [] }; groups.set(key, g); root.children.push(g); }
         addRow(g.cells, row, share);
@@ -269,7 +272,7 @@
     const checkOf = (n, kids) => { const sum = zeroCells(); for (const k of kids) addCells(sum, k); let u = 0, pe = 0; for (const b of BUCKETS) for (const s of STAGES) { u = Math.max(u, Math.abs(n.cells[b.key][s].units - sum[b.key][s].units)); pe = Math.max(pe, Math.abs(n.cells[b.key][s].people - sum[b.key][s].people)); } return { units: u, people: pe }; };
     for (const g of groups.values()) g.check = checkOf(g, g.rows.map(({ row, share }) => { const c = zeroCells(); addRow(c, row, share); return { cells: c }; }).map(x => x.cells));
     root.check = checkOf(root, root.children.map(g => g.cells));
-    const last = k => k === 'none' || k.startsWith('n:') || k === 'Other';
+    const last = k => k === 'none' || k.startsWith('n:') || k.startsWith('r:') || k === 'Other';   // (Not in a plan, Elsewhere in a plan: last)
     root.children.sort((a, b) => last(a.key) - last(b.key) || (by === 'municipality' ? a.name.localeCompare(b.name) : sumOf(b.cells) - sumOf(a.cells)));
     const check = Math.max(root.check.units, ...root.children.map(g => g.check.units));
     return { root, groups, check };

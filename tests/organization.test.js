@@ -127,13 +127,17 @@ test('views save in one place, beside the share link; they open (and delete) fro
   assert.match(src('js/search-filter.js'), /const d = e\.target\.closest\('\[data-preset-del\]'\); if \(d\) \{ MA\(\)\.deleteSavedView\(\+d\.dataset\.presetDel\); return; \}/);
 });
 
-test('the trail owns the scope’s count; filters on show on pages; Review an FSR starts from the files with an FSR', () => {
+test('the trail owns the scope’s count; the filters on are the trail’s, on pages and the map; Review an FSR starts from the files with an FSR', () => {
   assert.match(src('js/topbar.js'), /const count = scoped \? `<span class="tb-count" title="This development's planned homes">· \$\{fmtNum\(Math\.round\(devU\)\)\} home/);
-  const w = src('js/workspaces.js');
-  assert.match(w, /<div class="page-filters small" role="group" aria-label="Filters on"><span class="muted">Filters on:<\/span>/);
-  assert.match(w, /if \(!REF\[page\] && !LAB_PAGES\[page\]\) m\.filters = filterChipsHTML\(\);/);
-  assert.match(src('js/ws-pages.js'), /if \(m\.filters\) out\.push\(m\.filters\);/);
-  assert.match(src('index.html'), /<div class="ws-filters" id="ws-filters"><\/div>/);
+  // (navigation phase 6: the pages' and the workspace bar's "Filters on" row is the trail's "k filters" popover;
+  // the row itself is removed by design, §5 row 54)
+  const t = src('js/topbar.js');
+  assert.match(t, /<div class="page-filters small" role="group" aria-label="Filters on">\$\{k \? `<span class="muted">Filters on:<\/span>/);
+  assert.match(t, /data-tb-filters aria-expanded=/);
+  assert.doesNotMatch(src('js/workspaces.js'), /filterChipsHTML|m\.filters/);
+  assert.doesNotMatch(src('js/ws-pages.js'), /m\.filters/);
+  assert.doesNotMatch(src('index.html'), /id="ws-filters"/);
+  assert.match(src('index.html'), /<div class="tb-pop tb-fl-pop" id="tb-fl-pop" hidden><\/div>/);
   const p = src('js/ws-pages.js');
   assert.match(p, /\{ title: 'Files with an FSR posted', rows: fsrRows/);
   // (the Find step's search is the page header's, as on every page: one slot, js/ws-pages.js pageHTML)

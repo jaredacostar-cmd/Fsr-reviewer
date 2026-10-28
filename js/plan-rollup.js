@@ -178,7 +178,8 @@
 
   // The part of a roll-up inside the given plans (SPEC 1.9): By plan's figure for a plan filter.
   // A development the filter shows in full can lie partly in another plan; that part is `outside`
-  // (total − inside), so the Overview and By plan reconcile instead of disagreeing.
+  // (total − inside), so the Overview and By plan reconcile instead of disagreeing. (left: the plan's own
+  // left to build, by share, Home's Growth figures at a plan: navigation phase 6, the two-part rule)
   function within(r, ids) {
     const m = zero(); let found = 0; const devs = new Set(), part = new Set();
     for (const id of ids || []) {
@@ -190,7 +191,7 @@
       if (sh > 0) devs.add(p); if (sh > 0 && sh < 1 - 1e-9) part.add(p);
     }
     const total = zero(); for (const { m: x } of r.placed) addInto(total, x, 1);
-    return { found, planned: m.planned, counted: m.counted, people: m.people, jobs: m.jobs, outside: total.planned - m.planned, outsidePeople: total.people - m.people, straddling: part.size, devs: devs.size };
+    return { found, planned: m.planned, counted: m.counted, left: m.left, people: m.people, jobs: m.jobs, outside: total.planned - m.planned, outsidePeople: total.people - m.people, straddling: part.size, devs: devs.size };
   }
 
   const api = { KEYS, placement, build, matrix, vsTarget, within };

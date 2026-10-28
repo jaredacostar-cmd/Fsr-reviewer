@@ -90,7 +90,8 @@
   // starting view, not a filter, so it has no chip and Reset leaves nothing behind.
   const yearsFilterActive = () => App().timeActive() && !TL().atDefaultYears();
   // Active-filter chips: everything that narrows the view, each removable. The counting basis
-  // lives in the Scenario control, so it has no chip here.
+  // lives in the Scenario control, so it has no chip here. The place (the municipality, plan, MTSA, zone and
+  // block) carries scope: the top bar's trail names it as its steps, its "k filters" the rest (navigation phase 6).
   function activeFilters() {
     const out = [];
     const kindLabel = { application: 'Planning applications', permit: 'Building permits', both: 'Application + permits' };
@@ -99,10 +100,10 @@
     const dwellingLabel = { single: 'Single / semi-detached', town: 'Townhouse', apartment: 'Apartment' };
     const setVal = (id, v) => { const el = $(id); if (el) el.value = v; };
     if (App().state.search) out.push({ label: `“${App().state.search}”`, clear: () => { App().state.search = ''; setVal('#f-search', ''); } });
-    if (App().state.muni) out.push({ label: App().state.muni, clear: () => { App().state.muni = ''; SF().renderMuniChips(); PA().renderAreaSelects(); } });
-    if (App().state.sp.length <= 3) for (const id of App().state.sp) out.push({ label: (PA().areaById.get(id) || {}).name || 'Secondary plan', clear: () => { App().state.sp = App().state.sp.filter(x => x !== id); PA().renderAreaSelects(); PA().showArea(); } });
-    else out.push({ label: `${App().state.sp.length} secondary plans`, clear: () => { App().state.sp = []; PA().renderAreaSelects(); PA().showArea(); } });
-    for (const k of ['mtsa', 'pz', 'dr']) if (App().state[k].length) out.push({ label: k === 'mtsa' ? (App().state[k].length === 1 ? `MTSA: ${PA().multiSummary(k)}` : PA().multiSummary(k)) : k === 'dr' && App().state[k].length === 1 ? `Drainage: ${PA().multiSummary(k)}` : PA().multiSummary(k), clear: () => { App().state[k] = []; if (MM().AREA_F[k].svc) { SD().renderSvcSelects(); SD().showSvcArea(); } else { PA().renderAreaSelects(); PA().showArea(); } } });
+    if (App().state.muni) out.push({ label: App().state.muni, scope: true, clear: () => { App().state.muni = ''; SF().renderMuniChips(); PA().renderAreaSelects(); } });
+    if (App().state.sp.length <= 3) for (const id of App().state.sp) out.push({ label: (PA().areaById.get(id) || {}).name || 'Secondary plan', scope: true, clear: () => { App().state.sp = App().state.sp.filter(x => x !== id); PA().renderAreaSelects(); PA().showArea(); } });
+    else out.push({ label: `${App().state.sp.length} secondary plans`, scope: true, clear: () => { App().state.sp = []; PA().renderAreaSelects(); PA().showArea(); } });
+    for (const k of ['mtsa', 'pz', 'dr']) if (App().state[k].length) out.push({ label: k === 'mtsa' ? (App().state[k].length === 1 ? `MTSA: ${PA().multiSummary(k)}` : PA().multiSummary(k)) : k === 'dr' && App().state[k].length === 1 ? `Drainage: ${PA().multiSummary(k)}` : PA().multiSummary(k), scope: true, clear: () => { App().state[k] = []; if (MM().AREA_F[k].svc) { SD().renderSvcSelects(); SD().showSvcArea(); } else { PA().renderAreaSelects(); PA().showArea(); } } });
     if (App().state.kind !== App().DEFAULT_KIND) out.push({ label: kindLabel[App().state.kind] || 'All records', clear: () => { App().state.kind = App().DEFAULT_KIND; setVal('#f-kind', App().DEFAULT_KIND); } });
     if (App().state.minUnits) out.push({ label: unitsLabel[App().state.minUnits] || `${App().state.minUnits}+ units`, clear: () => { App().state.minUnits = 0; setVal('#f-size', '0'); } });
     if (App().state.plant) out.push({ label: SD().PLANT_SHORT[App().state.plant] || App().state.plant, clear: () => { App().state.plant = ''; setVal('#f-plant', ''); } });

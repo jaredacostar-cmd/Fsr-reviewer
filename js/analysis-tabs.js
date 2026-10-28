@@ -17,6 +17,7 @@
   //   Records:   Sources · Data checks · Files (every check: the data, then the servicing model)
   // footPref: the tab last picked (kept); each tab's sub-view last picked is kept too. Old tab and
   // sub-view names (share links, stored prefs) migrate onto these (migrateTabKey / migrateSub).
+  // A page shows the same tab and view (js/ws-pages.js host, navigation phase 6): viewKey, wantedTab.
   const TAB_KEYS = ['overview', 'growth', 'svc', 'dca', 'records'];
   // Old keys still reach the right tab: 'ww' / 'water' (and 'svc') are Servicing.
   const tabOf = key => (key === 'ww' || key === 'water' ? 'svc' : key);
@@ -131,6 +132,9 @@
   const chipsAt = (tab, scope) => (TABSUBS[tab] ? TABSUBS[tab].valid.filter(v => !hiddenAt(scope, tab, v)) : []);
   const areaPick = {};
   let heldTab = null;
+  // A tab's button is there and its data in (Servicing and Capital are marked loading, aria-busy, until the
+  // servicing data lands: js/svc-tab.js); the page host's strip asks the same (one rule for both strips).
+  const tabReady = t => !!document.querySelector(`.f-tab[data-tab="${t}"]:not([hidden]):not([aria-busy])`);
   function showFootTab(key, sub) {
     if (key === 'dev' || key === 'developments' || key === 'tool') key = 'overview';   // the development's views live in the Overview
     if (key === 'growth' && root.PeelUtil && root.PeelUtil.flushLater) root.PeelUtil.flushLater();   // (its views, if they wait to render)
@@ -139,9 +143,9 @@
     if (sub) openFold(foldOf(key, sub));
     { const r = sub ? migrateSub(key, sub) : null; if (r) { key = r.tab; sub = r.sub; } }
     if (sub && TABSUBS[key] && TABSUBS[key].valid.includes(sub)) { delete areaPick[key]; TABSUBS[key].set(sub); store.set(TABSUBS[key].store, sub); }
-    // (Servicing and Capital show once the servicing data loads, js/svc-tab.js: a tab picked before then
-    // is held and opened when it shows, tabShown below, unless another tab is picked meanwhile)
-    if (!document.querySelector(`.f-tab[data-tab="${key}"]:not([hidden])`)) { heldTab = key; key = 'overview'; } else heldTab = null;
+    // (Servicing and Capital are ready once the servicing data loads, js/svc-tab.js: a tab picked before then
+    // is held, marked as taken, and opened when it is ready, tabShown below, unless another tab is picked meanwhile)
+    if (!tabReady(key)) { heldTab = key; key = 'overview'; } else heldTab = null;
     const site = !!(root.DevScope && root.DevScope.current());
     const ssCur = root.PeelSvcScope && root.PeelSvcScope.current && root.PeelSvcScope.current();
     const fileScope = !!(ssCur && ssCur.kind === 'result' && ssCur.rkind === 'file');
@@ -155,7 +159,7 @@
       const v = subFor(tk, s.get(), null, scopeOf(tk)); if (v !== s.get()) { if (areaPick[tk] == null) areaPick[tk] = s.get(); s.set(v); }
     }
     footTab = key;
-    for (const t of document.querySelectorAll('.f-tab')) t.setAttribute('aria-selected', String(t.dataset.tab === key));
+    for (const t of document.querySelectorAll('.f-tab')) { t.setAttribute('aria-selected', String(t.dataset.tab === key)); t.classList.toggle('f-tab-held', t.dataset.tab === heldTab); }
     for (const p of document.querySelectorAll('.f-pane')) {
       const pk = p.dataset.pane;
       if (p.classList.contains('f-subtabs')) { p.hidden = pk !== key || chipsAt(pk, scopeOf(pk)).length < 2; continue; }   // one chip is no choice: no row
@@ -210,8 +214,12 @@
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-sys]'); if (b) { setSys(b.dataset.sys); Sh().viewLink.write(); } });
   showFootTab(footPref);
 
-  // A tab button just shown (js/svc-tab.js renderSvcTab): open it if it was the one asked for and held.
+  // A tab button just ready (js/svc-tab.js renderSvcTab): open it if it was the one asked for and held.
   function tabShown(key) { if (heldTab === key && footTab === 'overview') showFootTab(key); }
+  // The tab a page shows: the one asked for (held while its data loads: the page says it is loading), else
+  // the open one; and its view, 'tab:sub' (Overview 'overview:'), the key of js/sections.js VIEWS.
+  const wantedTab = () => heldTab || footTab;
+  const viewKey = () => { const t = wantedTab(), s = TABSUBS[t]; return `${t}:${s ? s.get() : ''}`; };
   // A view re-rendering the open tab (its pane came or went: census-view.js, a Labs switch): the tab on
   // screen again, or the one still held; never the remembered one, which a pick since may have left.
   const refreshFootTab = () => showFootTab(heldTab || footTab);
@@ -231,7 +239,7 @@
   const api = {
     tabOf, TAB_KEYS, SUB_MAP, HIDDEN, hiddenAt, chipsAt,
     getFootPref: () => footPref, setFootPref: v => { footPref = tabOf(v); }, openTab,
-    getFootTab: () => footTab, tabShown, refreshFootTab,
+    getFootTab: () => footTab, tabShown, refreshFootTab, wantedTab, viewKey, tabReady,
     getSvcSub: () => svcSub, setSvcSub: v => { svcSub = v; store.set('svcSub', v); },
     getGSub: () => gSub, setGSub: v => { gSub = v; },
     getDcSub: () => dcSub, setDcSub: v => { dcSub = v; },

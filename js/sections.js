@@ -1,15 +1,18 @@
-/* Sections (PeelSections): each full-map tab's standard panel, as a section a page shows too.
+/* Sections (PeelSections): the views a page hosts, by scope and tab:sub, and each full-map tab's standard
+ * panel as a section a page shows too.
  *
- * The full map shows one tab's panel at a time (js/panel.js). A page shows every section of its
- * scope, one under a section bar, with the same spec: the same answer, figures, lists and folds, so
- * nothing is only in the map and a page never computes a figure of its own. A section whose tab
- * builds its panel only when opened (Capital, Records) is built here on demand, for the scope.
+ * A page and the full map host the same scope with the same tab strip and views (navigation phase 6,
+ * design §3.1 rule 1): the page shows the view the map's tab state names (js/analysis-tabs.js viewKey),
+ * with the same spec: the same answer, figures, lists and folds, so nothing is only in the map and a page
+ * never computes a figure of its own. A panel whose tab builds it only when opened (Capital, Records) is
+ * built here on demand, for the scope.
  *
+ *   VIEWS                the views a page host shows, by scope (area: Home) and tab:sub: a page builder of
+ *                        js/ws-pages.js ({ page }) or the map's panel drawn as it is ({ keys, ws })
  *   SITE                 the sections of one development: the map's five tabs, by the tabs' names;
  *                        Servicing has the map's views (Network · FSR review, the page `fsr`)
- *   AREA                 the sections of an area (Peel, a municipality, a plan): Growth, Forecast,
- *                        Servicing, Capital (areaSpecFor(id): the map's area panel)
- *   WORKSPACES           Servicing and Capital: a page and the map's other sub-views of its tab
+ *   WORKSPACES           Reference: Help's bar (its Data sources and Data checks open Home's Records tab)
+ *   areaPanel(key)       an area panel (the one its tab set, else built here)
  *   specFor(sec, p)      its panel spec for development p (null while its data loads)
  *   viewOf(sec, id)      a section's view (Servicing › FSR review), with that view's keys, for specFor
  *
@@ -32,40 +35,36 @@
     { id: 'capital', title: 'Capital', tab: 'dca', keys: ['dca:timing'] },
     { id: 'files', title: 'Records', tab: 'records', keys: ['records:files'] },
   ];
-  // An area's sections: Growth in an area's drill-down and the Forecast are pages of their own; its
-  // Servicing and Capital are the map's area panels (Region-wide: the plants and the DC program serve
-  // more than one municipality).
-  const AREA = [
-    { id: 'growth', title: 'Growth', page: 'growth' },
-    { id: 'outlook', title: 'Forecast', page: 'outlook' },
-    { id: 'servicing', title: 'Servicing', tab: 'svc', keys: ['svc:capacity'], wide: true },
-    { id: 'capital', title: 'Capital', tab: 'dca', keys: ['dca:timing'], wide: true },
-  ];
-  // The Servicing and Capital workspaces (step 4): each a page with the map's other sub-views of its
-  // tab as sections. host: the page a panel section shows on. (Navigation phase 2: Servicing is Capacity
-  // · Network; the allocations are a fold of Capacity, on its page too, and the model checks are Records ›
-  // Data checks, Reference › Data checks on a page.)
+  // The views of Home, the page host at an area (Peel, a municipality, a plan; navigation phase 6): every tab's
+  // chips at an area (js/analysis-tabs.js chipsAt), each a page builder where a page adds to the panel (Home's
+  // groups, the drill and its table, the reserve, a project in place, EA to construction, the sources) or the
+  // map's panel itself, its footer's actions first (ws: the map view its Open the map opens; none for Records,
+  // which opens the full map at the view).
+  const VIEWS = {
+    area: {
+      'overview:': { page: 'home' },
+      'growth:pipeline': { keys: ['growth:pipeline'], ws: 'growth' },
+      'growth:areas': { page: 'growth' },
+      'growth:timing': { page: 'outlook' },
+      'svc:capacity': { page: 'tight' },
+      'svc:network': { keys: ['svc:network'], ws: 'tight' },
+      'dca:timing': { page: 'projects' },
+      'dca:eas': { page: 'eaflow' },
+      'dca:projects': { keys: ['dca:projects'], ws: 'projects' },
+      'records:sources': { page: 'data' },
+      'records:checks': { keys: ['records:checks'] },
+    },
+  };
+  // Reference (step 5): Help, How it works, the Glossary and How the app decides, and the map's Records ›
+  // Sources and Data checks (the old Data tab), Home's Records tab (at: its tab:sub; navigation phase 6).
   const WORKSPACES = {
-    servicing: { host: 'tight', secs: [
-      { id: 'capacity', title: 'Capacity', page: 'tight' },
-      { id: 'network', title: 'Network', tab: 'svc', keys: ['svc:network'] },
-    ] },
-    // Reference (step 5): Help, How it works and the Glossary, and the map's Records › Sources and
-    // Data checks (the old Data tab) as Data sources (its own page) and Data checks.
-    reference: { host: 'data', secs: [
+    reference: { secs: [
       { id: 'help', title: 'Help', page: 'help' },
       { id: 'guides', title: 'How it works', page: 'guides' },
       { id: 'glossary', title: 'Glossary', page: 'glossary' },
       { id: 'logic', title: 'How the app decides', page: 'logic' },
-      { id: 'sources', title: 'Data sources', page: 'data' },
-      { id: 'checks', title: 'Data checks', tab: 'records', keys: ['records:checks'] },
-    ] },
-    // Capital (navigation phase 4): DC timing (its page: DC timing and DC projects are one list, a project open
-    // in place), EAs (its page: the EAs and EA to construction) and the map's Projects as a section.
-    capital: { host: 'projects', secs: [
-      { id: 'timing', title: 'DC timing', page: 'projects' },
-      { id: 'eas', title: 'EAs', page: 'eaflow' },
-      { id: 'projects', title: 'Projects', tab: 'dca', keys: ['dca:projects'] },
+      { id: 'sources', title: 'Data sources', at: 'records:sources' },
+      { id: 'checks', title: 'Data checks', at: 'records:checks' },
     ] },
   };
   const AREA_BUILD = {
@@ -81,10 +80,6 @@
     if (e && e.spec && e.scope === 'area') return e.spec;
     try { return AREA_BUILD[k] ? AREA_BUILD[k]() || null : null; } catch (err) { return null; }
   }
-  // An area section's panel (Growth in an area's Servicing and Capital).
-  function areaSpecFor(id) { const s = AREA.find(x => x.id === id); return s && s.keys ? areaPanel(s.keys[0]) : null; }
-  // A workspace section's panel (Servicing › Network, Capital › Projects …).
-  function wsSpecFor(ws, id) { const w = WORKSPACES[ws], s = w && w.secs.find(x => x.id === id); return s && s.keys ? areaPanel(s.keys[0]) : null; }
   const BY_ID = Object.fromEntries(SITE.map(s => [s.id, s]));
   // A site section's view: the section with that view's keys (null for no such view).
   function viewOf(sec, id) { const s = BY_ID[sec], v = s && (s.views || []).find(x => x.id === id); return v ? { ...s, ...v, section: s.id } : null; }
@@ -119,7 +114,7 @@
     return { ...first, foot, lists, folds, onMount: mounts.length ? host => { for (const f of mounts) try { f(host); } catch (err) { /* that part stays empty */ } } : null };
   }
 
-  const api = { SITE, AREA, WORKSPACES, BY_ID, specFor, viewOf, areaSpecFor, wsSpecFor, areaPanel };
+  const api = { VIEWS, SITE, WORKSPACES, BY_ID, specFor, viewOf, areaPanel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSections = api;
 })(typeof window !== 'undefined' ? window : globalThis);
