@@ -178,6 +178,9 @@
     el.innerHTML = steps.map((s, i) => `${i ? '<span class="tb-sep" aria-hidden="true">›</span>' : ''}<button type="button" class="tb-step" data-i="${i}" title="${esc(s.title)}">${esc(s.label)}</button>`).join('')
       + count + flHTML + warn;
     el._steps = steps;
+    // (a phone: a deep place, Peel › Brampton › 48 (b) › Precinct 48-1, scrolls sideways in the trail's own box, its
+    // steps whole: the place, the last step, in sight beside the filters button; css/app.css)
+    if (el.scrollWidth > el.clientWidth && window.matchMedia && window.matchMedia('(max-width: 700px)').matches) el.scrollLeft = el.scrollWidth;
     const pop = $('#tb-fl-pop');
     if (pop) {
       pop.hidden = !filtersOpen;

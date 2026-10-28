@@ -367,6 +367,11 @@ body {
   /* (a phone: one button, the funnel and the count; the × is the popover's Clear) */
   .tb-fl-w, .tb-fl-x { display: none; }
   .tb-pop.tb-fl-pop { left: var(--space-2); right: var(--space-2); width: auto; max-width: none; }
+  /* (a deep place does not fit: the trail scrolls sideways in its own box, its steps whole, scrolled to its end by
+     js/topbar.js, so the place is never a letter under the button; a swipe brings back the steps above it) */
+  .tb-trail { overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; }
+  .tb-trail::-webkit-scrollbar { display: none; }
+  .tb-step:not(:first-child) { flex: none; }
 }
 /* (the full map below 1200 px: the top bar's Filters (n) beside it opens the same filters, their chips with them,
    so the trail keeps its room for the steps; a page and a map view, which have no Filters button, keep it) */

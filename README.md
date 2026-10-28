@@ -1600,6 +1600,8 @@ On a page, a pick opens what it found (`js/workspaces.js` `pageRoute` and `route
   share, `PeelPlanTables.areaIdsOf`, as before); the plan's own totals count only its share
   (`PeelPlanRollup.within`): the top bar's count, Home's Growth figures at the plan ("+ N planned in the
   parts of k developments outside it", as the Overview says), Growth › Areas' node and By period's rows.
+  Two plans in the filter, one inside the other (a link's `sp=a,b`: a plan and its precinct), count the
+  level under once, in the plan, so these never exceed the developments shown.
   The Forecast and the Overview's other figures count the members whole, and say so where both show
   ("the developments in or partly in <plan>, whole"). *Not in a plan* and *Elsewhere in the plan* stay
   groups of the table, not levels (no filter expresses them). *↑ Up a level* and the drill's crumbs are
@@ -2002,21 +2004,27 @@ map's (`js/analysis-tabs.js` `viewKey`), so a pick on either is the other's, sto
 (`js/sections.js` `VIEWS.area`: its keys are exactly the map's chips at an area, a test.) A view that is
 the map's panel shows its footer's actions first (Network's *Show the network on the map*, Projects'
 *Show them on the map* and *CSV: every contract*, Data checks' *Duplicate check* and *Review outlets*),
-then *Open the map* and *Open full table*.
+then *Open the map* and *Full table*. A view drawn by its page builder keeps that page's own actions (DC
+timing's *Open the map* and *Full table*, not its panel's *Show the planned works*), as before this phase.
 
 - **The old pages are views of Home.** Growth in an area, the Forecast, What's coming, Servicing capacity,
   Capital (DC timing, EAs) and Data sources keep their page ids (links, sidebar entries, buttons, the start
   screen's last workspace): each opens Home at its tab and view (`js/workspaces.js` `HOST`, `hostOf`), its
-  fold open (What's coming: By period; EAs: EA to construction), and Home is lit in the sidebar. Their
+  fold open (What's coming: By period; EAs: EA to construction), and Home is lit in the sidebar. A view picked
+  on the strip that is one of them (Growth › Forecast, Capital › EAs) is the start screen's last workspace, as
+  the old section bars' buttons were (a view that is none, such as Servicing › Network, leaves it). Their
   section bars are gone (the strip), and so is Explore's views bar on them (a site's page, Review an FSR
   and Study area keep it until phase 6c).
 - **Servicing and Capital show "loading"** until their data lands, on Home's strip and on the map's (they
   used to appear late on the map): picked early, the tab is lit, says loading and opens as soon as it can
-  (the pick is held: `heldTab`, `wantedTab`); on a phone the word is "…".
+  (the pick is held: `heldTab`, `wantedTab`); on a phone the word is "…". Capital › EAs needs neither the
+  servicing model nor the DC program: it draws as soon as the EA lists land, the strip still saying Capital is
+  loading.
 - **Open the map, ← Page and the back bar keep the tab and view.** A view's *Open the map*
   (`data-ws-keep`) opens its map view, with its layers, at the same tab and view; the map view's *← Page*
   goes back to Home at the map's tab and view as they were left; the full map's *← Back to Home ›
-  Servicing › Network* names the view and keeps it (and follows a tab picked on the full map meanwhile). A
+  Servicing › Network* names the view and keeps it (and follows a tab picked on the full map meanwhile); its
+  way back to a task's map view (Old pipes, This week) opens that view's own tab again, as before. A
   development or facility opened on the map (a search pick, a facility link) shows its own Overview, which Home
   closes on the way back (it hosts an area), so there *← Page* lands on the map view's page at its own view and
   the back bar at the view the page was left at, never on Home's Overview (`scopeOverview`, `backView`).
@@ -2042,14 +2050,20 @@ then *Open the map* and *Open full table*.
   the Forecast's figures, under the Forecast's question (What's coming's own h1 retired with its page);
   shut, it stays shut. The map's panel keeps its order.
 - **One Peel-wide note**: Home's Servicing and Capital views below Peel say *Peel-wide.* once, under the
-  strip, in the map's words (`js/svc-scope.js` `peelWideText`, the map's `#scope-note`); at Peel, and on
-  Growth and Records, nothing (browser path *phone: Home's Servicing and Capital at a municipality say
+  strip, in the map's words (`js/svc-scope.js` `peelWideText`, the map's `#scope-note`); at Peel, on Growth
+  and Records, and on Capital › EAs and Projects, whose EAs and contracts are the area's own (filtered to
+  it), nothing, on both hosts (browser path *phone: Home's Servicing and Capital at a municipality say
   Peel-wide once …*).
 - **Share links** made on Home write `nav=3` with the map's tab and view; a link from before (`nav=2` or
   none) on Home or Data sources opens the page's own view (Home: Overview), as it showed when it was made
   (`js/share.js`).
 - **Phones** (390 px): the strip and the views row scroll sideways in their own box, the open one scrolled
-  in; their buttons are 44 px; Home's strip sits above its groups; nothing scrolls the page sideways.
+  in; their buttons are 44 px; Home's strip sits above its groups; nothing scrolls the page sideways (a table
+  wider than the phone, Growth › Pipeline's *By dwelling type and stage*, scrolls inside itself, `.dt-wide`,
+  on Home as on the map). A place four levels deep scrolls sideways in the trail's own box, scrolled to its
+  end, so the place is whole beside the filters button. Above the answer a phone has four navigation rows
+  until phase 7 (Home's ☰ *all pages*, the header, the strip, the views row): the design's three come when
+  ☰ moves into the top bar (§3.8).
 
 Old names still land (`js/workspaces.js` `HOST`, `hostOf`; `js/share.js`; tests/nav-aliases.test.js
 "phase 6a"):

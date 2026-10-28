@@ -593,6 +593,14 @@ test('phase 6a: the area pages are Home’s tabs; old links open the page’s ow
   L.B.go('tight', { keep: true, quiet: true }); L.B.setMode('full'); L.at.tab = 'dca'; L.calls.length = 0;
   L.click('[data-ws-back]');
   assert.deepEqual([L.B.mode(), L.B.current(), L.at.tab, L.calls.length], ['ws', 'tight', 'dca', 0]);
+  // … but a task's map view (This week, Old pipes: no page host's view, its panel the chip's own) gets its tab again, as
+  // before phase 6, the rule ← Page uses (hostOf).
+  for (const [ws, tab, sub] of [['week', 'overview', ''], ['pipes', 'svc', 'network']]) {
+    L.B.go(ws, { quiet: true }); L.B.setMode('full'); L.at.tab = 'growth'; L.calls.length = 0;
+    L.click('[data-ws-back]');
+    assert.deepEqual([L.B.mode(), L.B.current(), L.at.tab], ['ws', ws, tab], ws);
+    assert.deepEqual(L.calls.filter(c => c[0] === 'showFootTab' || c[0] === 'setSub'), [...(sub ? [['setSub', tab, sub]] : []), ['showFootTab', tab]], ws);
+  }
   // A facility or a development opened on the map shows its own Overview, which Home closes on the way back (it hosts an
   // area): the back bar lands at the view the page was left at, ← Page at the map view's page's own view, not Home's
   // Overview; the scope closed either way.
@@ -625,4 +633,24 @@ test('phase 6a: the area pages are Home’s tabs; old links open the page’s ow
   assert.doesNotMatch(src('js/workspaces.js') + src('index.html'), /filterChipsHTML|id="ws-filters"/);
   assert.doesNotMatch(src('js/ws-pages.js'), /Up a level|const crumbs = /);
   assert.match(src('js/topbar.js'), /PT\.areaPath\(a\.id\)\.slice\(0, -1\)/);
+});
+test('phase 6a: a view picked on Home’s strip is the start screen’s last workspace, as the old bars’ page buttons were', () => {
+  // (Settings › Start screen = Last workspace: the strip's Growth › Forecast reopens the Forecast, as the area bar's
+  // data-ws-page="outlook" did; until phase 7's Last place, owner decision 17)
+  const L = loadWs(); L.B.openPage('growth'); assert.equal(L.store.get('lastWs'), 'growth');
+  for (const [tab, sub, lw] of [['growth', 'timing', 'outlook'], ['dca', 'eas', 'eaflow'], ['dca', 'timing', 'projects'], ['svc', 'capacity', 'tight'], ['growth', 'areas', 'growth']]) {
+    L.click('#home [data-pg-tab]', { pgTab: tab, pgSub: sub });
+    assert.deepEqual([L.B.view(), L.store.get('lastWs')], [`${tab}:${sub}`, lw], `${tab}:${sub}`);
+  }
+  // A view that is no workspace leaves it as it was: Servicing › Network, Growth › Pipeline and Overview (none before
+  // either), Records' (Data sources is a Reference page, which the last workspace never named: it reopens Servicing capacity).
+  for (const [tab, sub] of [['svc', 'network'], ['growth', 'pipeline'], ['overview', undefined], ['records', 'sources'], ['records', 'checks'], ['dca', 'projects']]) {
+    L.click('#home [data-pg-tab]', { pgTab: tab, pgSub: sub });
+    assert.equal(L.store.get('lastWs'), 'growth', `${tab}:${sub || ''}`);
+  }
+  // The reload: the start screen reopens it, Home at its view.
+  for (const [lw, view] of [['outlook', 'growth:timing'], ['eaflow', 'dca:eas']]) {
+    assert.deepEqual(plain(W.startScreen({ pref: 'last', last: lw })), { mode: 'home', page: lw });
+    const R = loadWs({ lastWs: lw }); R.B.openPage(lw); assert.equal(R.B.view(), view, lw);
+  }
 });

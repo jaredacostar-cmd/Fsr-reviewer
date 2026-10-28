@@ -332,13 +332,15 @@
   // Water / Wastewater / DC are Peel-wide: below Peel (municipality, area, servicing scope) they say
   // so, and link the plants or zones the scoped developments load (design audit, Group 6). One note on
   // both hosts: the map's #scope-note and Home's Servicing and Capital tabs (js/ws-pages.js host,
-  // navigation phase 6) draw the same words; '' when there is nothing to say.
+  // navigation phase 6) draw the same words; '' when there is nothing to say. sub: the tab's view; Capital ›
+  // EAs and Projects are the area's own (their EAs and contracts filtered to the municipality), so not there.
   const PEEL_WIDE = { svc: 'Plants, pumping stations, storage and pressure zones', water: 'Pressure zones and treatment', ww: 'Plants, blocks and pumping stations', dca: 'DC projects' };
-  function peelWideText(tab) {
+  const AREA_OWN = { 'dca:eas': 1, 'dca:projects': 1 };
+  function peelWideText(tab, sub) {
     if (!App() || !App().state) return '';
     const st = App().state;
     const below = st.muni || st.sp.length || st.mtsa.length || st.pz.length || st.dr.length || st.ss;
-    if (!below || (window.DevScope && window.DevScope.current()) || !PEEL_WIDE[tab]) return '';
+    if (!below || (window.DevScope && window.DevScope.current()) || !PEEL_WIDE[tab] || AREA_OWN[`${tab}:${sub}`]) return '';
     const set = st.filtered || [], count = new Map(), bump = k => count.set(k, (count.get(k) || 0) + 1);
     if (tab === 'water' || tab === 'svc') { for (const p of set) for (const id of SD().svcIds(p, 'pz')) bump(id); }
     if (tab !== 'water') for (const p of set) { const pl = MM().plantOfDev(p); if (PLANTS.includes(pl)) bump(`plant:${pl}`); }
@@ -347,7 +349,7 @@
   }
   function peelWideNote() {
     const el = typeof document !== 'undefined' && document.getElementById('scope-note'); if (!el) return;
-    const html = peelWideText(AT() && AT().getFootTab());
+    const A = AT(), t = A && A.getFootTab(), html = peelWideText(t, A && A.TABSUBS && A.TABSUBS[t] ? A.TABSUBS[t].get() : '');
     el.innerHTML = html; el.hidden = !html;
   }
   document.addEventListener('click', e => {

@@ -577,7 +577,7 @@
     // development partly in it is shown, and the plan's own figures count only its share in it, as Growth › Areas,
     // By period and the top bar do (js/plan-tables.js inside); the Forecast's 2031 figure counts them whole, and says so.
     const PTs = root.PeelPlanTables, sp0 = (App() && App().state.sp) || [], ins = sp0.length && PTs && PTs.inside ? PTs.inside() : null, inPlan = !!(ins && ins.found), inName = esc(sp0.length === 1 ? where() : 'the plans');
-    const outside = inPlan && ins.straddling ? `+ ${fmtNum(Math.round(ins.outside))} planned in the parts of ${fmtNum(ins.straddling)} development${ins.straddling === 1 ? '' : 's'} outside it` : '';
+    const outside = inPlan && ins.straddling && ins.outside >= 0.5 ? `+ ${fmtNum(Math.round(ins.outside))} planned in the parts of ${fmtNum(ins.straddling)} development${ins.straddling === 1 ? '' : 's'} outside it` : '';
     const groups = [
       { title: 'Growth', link: { label: 'Growth in an area', attrs: go('growth') }, figures: [
         inPlan ? { v: fmtNum(Math.round(ins.planned)), u: 'homes', label: 'planned', ctx: outside || `${fmtNum(set.length)} developments`, attrs: go('growth') }
@@ -877,7 +877,7 @@
       { kv: true, html: `<div class="pnl-kv"><span>Completed</span><span>${n0(emp.completed)} m²</span></div>` },
       { kv: true, html: `<div class="pnl-kv"><span>Left to build</span><span>${n0(emp.left)} m²</span></div>` },
     ] : [];
-    // The area on the small map: its outline (a plan or precinct), its developments. Show on the map: the map
+    // The area on the small map: its outline (a plan or precinct), its developments. Open the map: the map
     // view at Growth › Areas, already filtered to it (js/plan-tables.js areaIdsOf: the same developments).
     const A = App().state.areas, ring = n.areaId && A ? [...(A.secondaryPlans || []), ...(A.precincts || [])].find(x => x.id === n.areaId) : null;
     // (an area: the map zooms to its outline, with a margin)
@@ -945,7 +945,7 @@
       sources: pl.sources,
       // (the Area report of the level shown, the filter: at Peel the developments shown; at a level, its own, those in
       // or partly in it; going up a level is the top bar's trail, design §5 row 78)
-      actions: [{ label: 'Area report (PDF)', attrs: atPeel ? { 'data-area-report': 'shown' } : { 'data-ws-areareport': n.id }, primary: true }, { label: 'Show on the map', attrs: { 'data-ws-go': 'growth', 'data-ws-keep': '' } }] };
+      actions: [{ label: 'Area report (PDF)', attrs: atPeel ? { 'data-area-report': 'shown' } : { 'data-ws-areareport': n.id }, primary: true }, { label: 'Open the map', attrs: { 'data-ws-go': 'growth', 'data-ws-keep': '' } }] };
   }
   let gAll = false, gEst = false;
   // The developments table: grouped by (null: the next level down), sorted by, the groups opened or
@@ -1364,10 +1364,14 @@
     const [tab, sub] = key.split(':'), v = VW[key] || { page: 'home' }, id = v.page || key;
     const busy = t => (t === 'svc' || t === 'dca') && !!A && !!A.tabReady && !A.tabReady(t);
     const name = t => (Wk && Wk.TAB_NAME && Wk.TAB_NAME[t]) || t;
-    const m = busy(tab) ? { ...loading(id, `Loading ${viewName(key)} (the servicing model and the DC program)…`), pending: true, waitTab: true } : build(id);
-    // (Servicing and Capital below Peel: the map's Peel-wide note, once and in its words, js/svc-scope.js; its
-    // facilities are data-ss links, which open their scope on the full map)
-    const SS = root.PeelSvcScope, wide = (tab === 'svc' || tab === 'dca') && !busy(tab) && SS && SS.peelWideText ? SS.peelWideText(tab) : '';
+    // (Capital › EAs waits for neither the servicing model nor the DC program: eaflow() waits for the EA lists itself)
+    const held = busy(tab) && key !== 'dca:eas';
+    const m = held ? { ...loading(id, `Loading ${viewName(key)} (the servicing model and the DC program)…`), pending: true, waitTab: true } : build(id);
+    if (busy(tab)) m.waitTab = true;   // (the strip's "loading" clears when the tab is ready, even with nothing else changed)
+    // (Servicing and Capital below Peel: the map's Peel-wide note, once and in its words, js/svc-scope.js, on the
+    // views that are Peel-wide (not Capital › EAs or Projects, the area's own); its facilities are data-ss links,
+    // which open their scope on the full map)
+    const SS = root.PeelSvcScope, wide = (tab === 'svc' || tab === 'dca') && !busy(tab) && SS && SS.peelWideText ? SS.peelWideText(tab, sub) : '';
     if (wide) m.top = `<p class="scope-note small page-wide" role="note" data-psec="wide">${wide}</p>${m.top || ''}`;
     m.tabs = tabsHTML({ tabs: ((A && A.TAB_KEYS) || Object.keys(TAB_INFO)).map(t => ({ key: t, label: name(t), info: TAB_INFO[t], busy: busy(t), trail: t === 'records' })), on: tab, chips: chipsOf(tab).map(c => ({ sub: c, label: Wk && Wk.chipName ? Wk.chipName(tab, c) : c })), sub });
     return m;

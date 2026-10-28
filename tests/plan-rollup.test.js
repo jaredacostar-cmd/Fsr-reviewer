@@ -166,6 +166,28 @@ test('SPEC 1.9: a plan filter reconciles: inside the plan (By plan) + the parts 
   assert.equal(R.within(r, ['nowhere']).found, 0);
 });
 
+test('a plan filter of two plans: one inside the other counts once, in the plan (never more than the set shown); two apart add up', () => {
+  // (navigation phase 6: a link's sp=a,b, or a plan and its sub-area picked together; Home printed 36,809 planned
+  // against 27,064 shown, and "+ -9,745 … outside it")
+  const set = [dev('a', 100, { pt: ['core', 'bolton'] }), dev('b', 50, { pt: ['bolton'] }), dev('s', 200, { sh: [['bolton', 0.5], ['mayfield', 0.3]] })];
+  const r = R.build(set, { areas: AREAS, sharesOf: p => p.sh || null, pointOf: p => p.pt || [], measure }), shown = r.root.m.planned;
+  const one = R.within(r, ['bolton']);
+  assert.equal(one.planned, 250); assert.equal(one.outside, 100); assert.equal(one.straddling, 1); assert.equal(one.devs, 3);
+  for (const ids of [['bolton', 'core'], ['core', 'bolton'], ['bolton', 'bolton']]) {
+    const w = R.within(r, ids);
+    assert.deepEqual([w.planned, w.left, w.people, w.outside, w.straddling, w.devs], [one.planned, one.left, one.people, one.outside, one.straddling, one.devs], ids.join());
+    assert.ok(w.planned <= shown && w.outside >= 0, ids.join());
+  }
+  assert.equal(R.within(r, ['bolton', 'core']).found, 2, 'both are in the tree');
+  // Two plans apart: their parts add up, and the rest of s is outside them both.
+  const two = R.within(r, ['bolton', 'mayfield']);
+  assert.equal(two.planned, 310); assert.equal(two.outside, 40); assert.equal(two.planned + two.outside, shown); assert.equal(two.straddling, 1);
+  // A precinct and its plan (Mayfield West, Precinct 1): the same rule a level down.
+  const r2 = R.build([dev('q', 30, { pt: ['p1', 'mayfield'] }), dev('w', 20, { pt: ['mayfield'] })], { areas: AREAS, pointOf: p => p.pt, measure });
+  assert.deepEqual([R.within(r2, ['p1']).planned, R.within(r2, ['p1', 'mayfield']).planned, R.within(r2, ['mayfield', 'p1']).outside], [30, 50, 0]);
+  assert.equal(R.within(r, ['core']).planned, 100);
+});
+
 test('SPEC 1.9: the scope label says "all of Peel" only when nothing narrows it', () => {
   const src = fs.readFileSync(path.join(__dirname, '..', 'js', 'overview-tab.js'), 'utf8');
   const m = src.match(/function scopeLabel\(\{ muni, sp, mtsa, svc \}\) \{[\s\S]*?\n  \}/);

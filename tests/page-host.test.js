@@ -28,7 +28,8 @@ const AT = loadTabs();
 const SUBS = { growth: 'pipeline', svc: 'capacity', dca: 'timing', records: 'sources' };
 
 // js/sections.js, js/ws-pages.js and js/workspaces.js in one vm, the map's tab state stubbed (its tabs and chips
-// the real ones), the stored panels by key (o.panels: the area's). o.key: the view; o.ready(tab): its data in.
+// the real ones), the stored panels by key (o.panels: the area's). o.key: the view; o.ready(tab): its data in;
+// o.before: modules run first (the real js/svc-scope.js).
 function load(o = {}) {
   const calls = [], handlers = {}, store = new Map();
   const at = { tab: (o.key || 'overview:').split(':')[0], subs: { ...SUBS }, ready: o.ready || (() => true) };
@@ -48,7 +49,7 @@ function load(o = {}) {
     PeelAnalysisTabs, PeelApp: { state: { muni: '', sp: [], mtsa: [], projects: [], filtered: [], ...(o.state || {}) } },
     PeelOverviewTab: { lastAreaSpec: () => o.area || null }, PeelMapMarkers: { THIS_YEAR: 2026 }, ...(o.extra || {}) };
   const ctx = { window, document, location: { hash: '' }, setTimeout: () => 0, clearTimeout() {}, URLSearchParams, CustomEvent: function CustomEvent() {}, CSS: { escape: x => x } }; ctx.globalThis = ctx;
-  for (const f of ['js/sections.js', 'js/ws-pages.js', 'js/workspaces.js']) vm.runInNewContext(src(f), ctx);
+  for (const f of [...(o.before || []), 'js/sections.js', 'js/ws-pages.js', 'js/workspaces.js']) vm.runInNewContext(src(f), ctx);
   // A click on an element matching sel inside #home (its data-* in dataset).
   const click = (sel, dataset = {}) => { const el = { dataset }; for (const f of handlers.click || []) f({ target: { closest: s => (s === sel ? el : null) }, preventDefault() {}, stopPropagation() {} }); };
   return { WP: window.PeelWsPages, W: window.PeelWorkspaces, SE: window.PeelSections, at, calls, home, window, click, panels };
@@ -147,8 +148,20 @@ test('a tab before its data: Servicing and Capital say loading, lit, never Overv
   assert.deepEqual(s.views, ['Capacity', 'Network'], 'its views row is there');
   assert.equal(m.waitTab, true, 'it tries again until the tab is ready, even with nothing changed (js/workspaces.js renderPage)');
   assert.match(src('js/workspaces.js'), /if \(!force && html === lastHTML\) \{ if \(m\.waitTab\) \{ clearTimeout\(timer\); timer = setTimeout\(\(\) => renderPage\(false\), 1000\); \} return; \}/);
+  // Capital › EAs needs neither the servicing model nor the DC program: its builder's own content (or its own wait for
+  // the EA lists) while the strip says Capital is loading, and the page tries again until it is ready.
   m = load({ key: 'dca:eas', ready: t => t !== 'dca' }).WP.host();
-  assert.equal(m.id, 'eaflow'); assert.match(m.answer, /Loading Capital › EAs/); assert.deepEqual(strip(m.tabs).busy, ['dca']);
+  assert.equal(m.id, 'eaflow'); assert.doesNotMatch(m.answer, /Loading Capital › EAs/); assert.match(m.answer, /Loading the EAs and capital projects…/);
+  assert.deepEqual(strip(m.tabs).busy, ['dca']); assert.equal(m.waitTab, true);
+  assert.match(src('js/workspaces.js'), /if \(m\.pending \|\| m\.waitTab\) \{ clearTimeout\(timer\); timer = setTimeout\(\(\) => renderPage\(false\), 1000\); \}/, 'drawn, it still tries again while the tab loads');
+  const ce = { data: { loaded: true, eas: { generatedAt: 'g', eas: [] }, capital: { records: [] } } };
+  const flow = { all: [], answer: 'EA flow answer', figures: [], chart: '', lists: [{ title: 'Waiting', rows: [] }], folds: [], method: '', sources: '' };
+  m = load({ key: 'dca:eas', ready: t => t !== 'dca', extra: { PeelCapitalEA: ce, PeelCapitalEAModel: { eaFlowSpec: () => flow } } }).WP.host();
+  assert.equal(m.id, 'eaflow'); assert.match(m.answer, /EA flow answer/, 'the EA lists in: drawn, DC program or not');
+  assert.equal(m.pending, undefined); assert.equal(m.waitTab, true); assert.deepEqual(strip(m.tabs).busy, ['dca']);
+  // (the other Capital views are the DC program's: they wait for it)
+  m = load({ key: 'dca:timing', ready: t => t !== 'dca' }).WP.host();
+  assert.equal(m.id, 'projects'); assert.match(m.answer, /Loading Capital › DC timing \(the servicing model and the DC program\)…/); assert.equal(m.pending, true);
   // Its data in: the Servicing capacity builder (loading only for its own panel).
   L = load({ key: 'svc:capacity' }); m = L.WP.host();
   assert.equal(m.id, 'tight'); assert.deepEqual(strip(m.tabs).busy, []);
@@ -273,12 +286,14 @@ test('What’s coming opens on By period: the Forecast view leads with it, under
 
 test('Servicing and Capital on Home below Peel say Peel-wide once, in the map’s words (one peelWideText)', () => {
   // (6a-S4, design §5 row 55: the old area page's own wording went with its sections; js/svc-scope.js words it once)
-  const asked = [], SS = { peelWideText: t => { asked.push(t); return t === 'svc' || t === 'dca' ? `<strong>Peel-wide.</strong> ${t} serve all of Peel <button type="button" class="btn small link" data-ss="plant:Lakeview">G.E. Booth</button>` : ''; } };
+  const asked = [], SS = { peelWideText: (t, s) => { asked.push([t, s]); return t === 'svc' || t === 'dca' ? `<strong>Peel-wide.</strong> ${t} serve all of Peel <button type="button" class="btn small link" data-ss="plant:Lakeview">G.E. Booth</button>` : ''; } };
   const spec = name => ({ head: { name, status: null, identity: 'Brampton' }, answer: `${name} answer`, figures: [], lists: [], folds: [], method: 'm', sources: 's' });
   const panels = { 'svc:network': spec('Network'), 'dca:projects': spec('Projects'), 'growth:pipeline': spec('Pipeline'), 'records:checks': spec('Checks') };
-  for (const key of ['svc:network', 'dca:projects']) {
+  for (const key of ['svc:network', 'dca:timing']) {
+    asked.length = 0;
     const L = load({ key, panels, state: { muni: 'Brampton' }, extra: { PeelSvcScope: SS } }), m = L.WP.host(), h = L.WP.pageHTML(m, '');
-    assert.equal(m.top, `<p class="scope-note small page-wide" role="note" data-psec="wide">${SS.peelWideText(key.split(':')[0])}</p>`, key);
+    assert.deepEqual(asked, [key.split(':')], `${key}: asked with its view`);
+    assert.equal(m.top, `<p class="scope-note small page-wide" role="note" data-psec="wide">${SS.peelWideText(...key.split(':'))}</p>`, key);
     const order = L.WP.sectionsOf(h);
     assert.ok(order.indexOf('tabs') < order.indexOf('wide') && order.indexOf('wide') < order.indexOf('answer'), `${key}: under the strip, before the answer`);
     assert.equal((h.match(/Peel-wide\./g) || []).length, 1, `${key}: said once`);
@@ -290,6 +305,13 @@ test('Servicing and Capital on Home below Peel say Peel-wide once, in the map’
     assert.ok(!/Peel-wide/.test(`${m.top || ''}${m.answer}`), `${key}: none`);
   }
   assert.deepEqual(asked, [], 'asked only on Servicing and Capital');
+  // Asked with the view: Capital › EAs and Projects are the area's own (their EAs and contracts filtered to the
+  // municipality), so the rule (the real js/svc-scope.js, one for both hosts) says nothing there; DC timing and
+  // Servicing's views are Peel-wide.
+  for (const key of ['dca:eas', 'dca:projects']) { asked.length = 0; load({ key, panels, state: { muni: 'Brampton' }, extra: { PeelSvcScope: SS } }).WP.host(); assert.deepEqual(asked, [key.split(':')], key); }
+  const real = key => load({ key, panels, before: ['js/svc-scope.js'], state: { muni: 'Brampton', pz: [], dr: [] }, extra: { PeelOverviewTab: { lastAreaSpec: () => null, scopeText: () => 'Brampton' } } }).WP.host();
+  for (const key of ['svc:capacity', 'svc:network', 'dca:timing']) assert.match(real(key).top || '', /^<p class="scope-note small page-wide" role="note" data-psec="wide"><strong>Peel-wide\.<\/strong> .* serve all of Peel, so these tables are not filtered to Brampton\.<\/p>$/, key);
+  for (const key of ['dca:eas', 'dca:projects']) { const m = real(key); assert.equal(m.top, undefined, `${key}: filtered to the area, so no note`); assert.ok(!/Peel-wide/.test(m.answer), key); }
   // Nothing to say (at Peel, or a development open): no note; a tab still loading: none yet.
   assert.equal(load({ key: 'svc:network', panels, extra: { PeelSvcScope: { peelWideText: () => '' } } }).WP.host().top, undefined);
   assert.equal(load({ key: 'svc:network', panels, ready: t => t !== 'svc', extra: { PeelSvcScope: SS } }).WP.host().top, undefined);
@@ -312,6 +334,17 @@ test('the drill is the filter (owner decision 10), and a plan’s own totals cou
   // No straddler (nothing outside it): the count of developments as before.
   L = load({ area, panels: { 'growth:timing': fc }, state: { sp: ['sp1'], filtered: [{}, {}] }, extra: extra({ ...ins, outside: 0, straddling: 0 }) });
   assert.equal(growth(L.WP.build('home'))[0][2], '2 developments');
+  // Two plans, one inside the other (sp=a,b): the real roll-up counts the level under once, in the plan, so the planned
+  // figure never exceeds the developments shown and no "+ -n … outside it" is printed (nor one under half a home).
+  const R = require('../js/plan-rollup.js'), AR = [{ id: 'sp1', name: 'Plan One', municipality: 'Brampton', kind: 'secondary plan', parent: null }, { id: 'sp2', name: 'Precinct', municipality: 'Brampton', kind: 'precinct', parent: 'sp1' }];
+  const ms = p => ({ planned: p.u, committed: 0, proposed: p.u, permitted: 0, completed: 0, left: p.u, people: p.u * 3, jobs: 0 });
+  const rr = R.build([{ key: 'x', municipality: 'Brampton', u: 100, pt: ['sp2', 'sp1'] }, { key: 'y', municipality: 'Brampton', u: 50, pt: ['sp1'] }], { areas: AR, pointOf: p => p.pt, measure: ms });
+  L = load({ area, panels: { 'growth:timing': fc }, state: { sp: ['sp1', 'sp2'], muni: 'Brampton', filtered: [{}, {}] }, extra: extra(R.within(rr, ['sp1', 'sp2'])) });
+  assert.deepEqual(plain(growth(L.WP.build('home')).slice(0, 2).map(x => x.slice(0, 2))), [['planned', '150'], ['left to build', '150']], 'counted once: the 150 shown');
+  for (const outside of [-9745, 0.2]) {
+    L = load({ area, panels: { 'growth:timing': fc }, state: { sp: ['sp1'], muni: 'Brampton', filtered: [{}, {}] }, extra: extra({ ...ins, outside }) });
+    assert.equal(growth(L.WP.build('home'))[0][2], '2 developments', `outside ${outside}: no clause`);
+  }
   // The plan not in the tree (found 0), or no plan filter: Growth's own totals of the developments shown.
   for (const st of [{ sp: ['sp1'] }, { sp: [] }]) {
     L = load({ area, panels: { 'growth:timing': fc }, state: { ...st, filtered: [{}, {}] }, extra: extra({ ...ins, found: 0 }) });
@@ -340,9 +373,10 @@ test('the drill is the filter (owner decision 10), and a plan’s own totals cou
   L.window.DevScope = null; L.home.scrollTop = 500;
   L.click('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall],[data-gt-by],[data-gt-sort],[data-gt-tog],[data-gt-more],[data-ws-sec],[data-ws-explore]', { wsDrill: 'm:Brampton' });
   assert.deepEqual(plain([S.muni, S.sp, applied, L.home.scrollTop]), ['Brampton', [], 2, 0]);
-  // Show on the map from Growth › Areas: the map view there, already filtered (the data-ws-area handler went).
+  // Open the map from Growth › Areas (§5 row 78's name, as Home's other views): the map view there, already filtered
+  // (the data-ws-area handler went).
   const g = src('js/ws-pages.js'), fn = g.slice(g.indexOf('  function growth() {'), g.indexOf('\n  }\n', g.indexOf('  function growth() {')));
-  assert.ok(fn.includes("{ label: 'Show on the map', attrs: { 'data-ws-go': 'growth', 'data-ws-keep': '' } }") && fn.includes("map: { svg: mapSvg, attrs: { 'data-ws-go': 'growth', 'data-ws-keep': '' },"));
+  assert.ok(fn.includes("{ label: 'Open the map', attrs: { 'data-ws-go': 'growth', 'data-ws-keep': '' } }") && fn.includes("map: { svg: mapSvg, attrs: { 'data-ws-go': 'growth', 'data-ws-keep': '' },"));
   assert.doesNotMatch(`${g}${src('js/workspaces.js')}`, /data-ws-area['"]|wsArea\b/);
   // What reads the filtered set whole stays at its level: the census baseline and the 2031 figure (not at a plan).
   assert.ok(fn.includes('const atTop = !fsp.length && (atPeel || n.id === `m:${fl.muni}`);'));
@@ -355,7 +389,7 @@ function loadTopbar(o = {}) {
   const nodes = {}, log = [];
   const node = sel => nodes[sel] || (nodes[sel] = { hidden: sel === '#tb-fl-pop', innerHTML: '', style: {}, handlers: {}, clientWidth: 1000, offsetWidth: 0,
     classList: { add() {}, remove() {}, toggle() {}, contains: () => false }, setAttribute() {}, insertAdjacentHTML() {}, getBoundingClientRect: () => ({ left: 0, top: 0 }),
-    addEventListener(t, f) { (this.handlers[t] = this.handlers[t] || []).push(f); } });
+    addEventListener(t, f) { (this.handlers[t] = this.handlers[t] || []).push(f); }, ...(sel === '#trail' ? o.trail || {} : {}) });
   const S = { muni: '', sp: [], mtsa: [], pz: [], dr: [], filtered: [], ...(o.state || {}) }, names = o.names || {};
   const filters = (o.filters || []).map(f => ({ ...f, clear: () => log.push(`clear ${f.label}`) }));
   const window = {
@@ -365,6 +399,7 @@ function loadTopbar(o = {}) {
     PeelSvcData: { renderSvcSelects() {}, showSvcArea() {} }, PeelAreaSelect: { clearSelected() {} },
     PeelPlanTables: { areaPath: id => (o.paths || {})[id] || [id], areas: () => [], inside: () => null },
     PeelFilterUI: { activeFilters: () => filters, oldLinkNote: () => o.old || '', resetAllFilters: () => log.push('reset all'), includeCompleted: () => log.push('include') },
+    ...(o.width ? { matchMedia: q => ({ matches: /max-width: (\d+)px/.test(q) && o.width <= +/max-width: (\d+)px/.exec(q)[1] }) } : {}),
   };
   const document = { querySelector: s => { log.push(`query ${s}`); return null; }, addEventListener() {}, documentElement: { classList: { contains: () => false } } };
   const ctx = { window, document, matchMedia: () => ({ matches: false, addEventListener() {} }), CSS: { escape: x => x }, setTimeout: () => 0 }; ctx.globalThis = ctx;
@@ -429,8 +464,15 @@ test('one trail (6a-S6): the plan tree’s steps, the municipality’s step the 
   assert.equal((af.match(/scope: true/g) || []).length, 4, 'the municipality, each plan, "n secondary plans", MTSA / zone / block');
   assert.match(af, /out\.push\(\{ label: App\(\)\.state\.muni, scope: true,/);
   assert.match(src('index.html'), /<nav class="tb-trail" id="trail" aria-label="Scope"><\/nav>\n\s*<!--[^\n]*-->\n\s*<div class="tb-pop tb-fl-pop" id="tb-fl-pop" hidden><\/div>/);
+  // A phone, a place four levels deep with a filter on: the trail scrolls sideways in its own box, its steps whole, and
+  // is scrolled to its end, so the place sits whole beside the button (it was a letter under it); wider, as it was.
+  for (const [width, left] of [[390, 600], [1440, 0]]) {
+    M = loadTopbar({ width, trail: { scrollWidth: 600, clientWidth: 252, scrollLeft: 0 }, state: { muni: 'Brampton', sp: ['p481'] }, names: { cv: '48 (b): Countryside Villages', p481: 'Precinct 48-1' }, paths: { p481: ['cv', 'p481'] }, filters: [{ label: '10+ units' }] });
+    M.T.renderTrail(); assert.deepEqual([M.steps().at(-1), M.nodes['#trail'].scrollLeft], ['Precinct 48-1', left], `${width} px`);
+  }
   // (the popover out of the trail's clip; a phone: one 44 px button, the funnel and the count, its × the popover's Clear)
   const css = src('css/app.css');
+  assert.match(css, /\n {2}\.tb-trail \{ overflow-x: auto; scrollbar-width: none; overscroll-behavior-x: contain; \}\n {2}\.tb-trail::-webkit-scrollbar \{ display: none; \}\n {2}\.tb-step:not\(:first-child\) \{ flex: none; \}\n\}/, 'a phone: the trail scrolls in its own box, its steps whole');
   assert.match(css, /\.tb-fl-wrap \{ display: inline-flex; align-items: center; gap: 2px; flex: none; position: sticky; right: 0;/);
   assert.match(css, /@media \(max-width: 700px\) \{\n {2}\/\* \(a phone: one button, the funnel and the count; the × is the popover's Clear\) \*\/\n {2}\.tb-fl-w, \.tb-fl-x \{ display: none; \}/);
   assert.match(css, /\n {2}\.topbar \.tb-fl \{ min-height: 44px; min-width: 44px; justify-content: center; \}/);

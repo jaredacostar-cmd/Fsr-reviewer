@@ -180,14 +180,16 @@
   // A development the filter shows in full can lie partly in another plan; that part is `outside`
   // (total − inside), so the Overview and By plan reconcile instead of disagreeing. (left: the plan's own
   // left to build, by share, Home's Growth figures at a plan: navigation phase 6, the two-part rule)
+  // (a plan and a level under it both in the filter, Bolton and Bolton Core: the level under it is inside the
+  // plan, so it is counted once, in the plan)
   function within(r, ids) {
-    const m = zero(); let found = 0; const devs = new Set(), part = new Set();
-    for (const id of ids || []) {
-      const n = r.nodes.get(`a:${id}`); if (!n) continue; found++;
-      addInto(m, n.m, 1);
-    }
+    const m = zero(); let found = 0; const devs = new Set(), part = new Set(), want = new Set((ids || []).map(id => `a:${id}`));
+    const under = k => { let n = r.nodes.get(k); while (n && n.parent) { if (want.has(n.parent)) return true; n = r.nodes.get(n.parent); } return false; };
+    const top = [...new Set(ids || [])].filter(id => !under(`a:${id}`));
+    for (const k of want) if (r.nodes.has(k)) found++;
+    for (const id of top) { const n = r.nodes.get(`a:${id}`); if (n) addInto(m, n.m, 1); }
     for (const { p, at } of r.placed) {
-      const sh = (ids || []).reduce((t, id) => t + (at.get(`a:${id}`) || 0), 0);
+      const sh = top.reduce((t, id) => t + (at.get(`a:${id}`) || 0), 0);
       if (sh > 0) devs.add(p); if (sh > 0 && sh < 1 - 1e-9) part.add(p);
     }
     const total = zero(); for (const { m: x } of r.placed) addInto(total, x, 1);

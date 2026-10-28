@@ -563,7 +563,8 @@
     if (PN() && PN().syncTools) PN().syncTools(el);   // (a site's header: ☆ Watch and the flags as they are now)
 
     // A page still waiting on data that sets no panel when it lands (Home's servicing figures) tries again.
-    if (m.pending) { clearTimeout(timer); timer = setTimeout(() => renderPage(false), 1000); }
+    // (a view drawn while its tab is still loading too, Capital › EAs: the strip's "loading" clears when it lands)
+    if (m.pending || m.waitTab) { clearTimeout(timer); timer = setTimeout(() => renderPage(false), 1000); }
   }
   // The strip and its views row scroll sideways on a phone: the open tab and view in sight after every rebuild
   // (the page's HTML is replaced, so the row would start at its left end again).
@@ -631,6 +632,10 @@
       e.preventDefault(); menuOpen = false;
       if (pt.dataset.pgTab === 'dca' && pt.dataset.pgSub === 'timing') { const DP = root.PeelDcProjects; if (DP && DP.state.sel) { DP.state.sel = null; DP.render(); } }
       const A = AT(); if (A && A.openTab) A.openTab(pt.dataset.pgTab, pt.dataset.pgSub || undefined);
+      // (the start screen's last workspace, as openPage keeps it: the workspace the view is, Growth › Forecast
+      // 'outlook', until phase 7's Last place; a view that is none, Servicing › Network, leaves it as it was)
+      const v = A && A.viewKey && A.viewKey(), lw = v && Object.keys(HOST).find(k => HOST[k] === v && own(BY_ID, k));
+      if (lw) store.set('lastWs', lw);
       if (!hostPage(page)) { openPage('home', { keep: true }); return; }
       renderPage(true);
       // (the strip kept in sight: the page goes up to it only when it had scrolled past it)
@@ -660,7 +665,9 @@
     // host with the map's tab and view as they are, what was picked on the map kept (navigation phase 6, §3.4),
     // unless the map is at a scope's Overview that the host closes (scopeOverview): then the page's own view.
     if (e.target.closest('[data-ws-backpage]')) { openPage(cur || page || 'home', { keep: !!(cur && hostOf(cur)) && !scopeOverview() }); return; }
-    if (e.target.closest('[data-ws-back]')) { const b = backTo; if (b && b.ws) { setMode('ws'); go(b.ws, { quiet: true, noDraw: true, keep: true }); } else openPage((b && b.page) || 'home', { keepScroll: true, keep: true, view: b && hostPage(b.page) && scopeOverview() ? b.view : null }); return; }
+    // (the back bar to a map view: a page host's view keeps the map's tab and view, as ← Page; a task's map view, Old
+    // pipes or This week, its own tab again, the panel it is about)
+    if (e.target.closest('[data-ws-back]')) { const b = backTo; if (b && b.ws) { setMode('ws'); go(b.ws, { quiet: true, noDraw: true, keep: !!hostOf(b.ws) }); } else openPage((b && b.page) || 'home', { keepScroll: true, keep: true, view: b && hostPage(b.page) && scopeOverview() ? b.view : null }); return; }
     if (e.target.closest('[data-ws-back-x]')) { backTo = null; renderBack(); return; }
     // Home's scope (step 6): Peel or a municipality, the same filter as the map's. A place, as the top bar's trail
     // steps: Peel all of Peel, a municipality the whole of it (a plan, MTSA, zone or block filter goes with it, now that

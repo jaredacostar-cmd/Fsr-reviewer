@@ -154,11 +154,29 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
     const st = await ev(() => { const tabs = [...document.querySelectorAll('#home .page-tabs .page-tab')], box = document.querySelector('#home .page-tabs').getBoundingClientRect(), on = document.querySelector('#home .page-tabs .page-tab.on'), r = on && on.getBoundingClientRect();
       return { n: tabs.length, min: Math.min(...tabs.map(t => Math.round(t.getBoundingClientRect().height))), on: on && on.dataset.pgTab, inBox: !!r && r.left >= box.left - 1 && r.right <= box.right + 1, home: document.getElementById('home').scrollWidth, doc: document.documentElement.scrollWidth }; });
     expect(st.n === 5 && st.min >= 44 && st.on === 'svc' && st.inBox && st.home <= 390 && st.doc <= 390, `the strip: five 44 px tabs, Servicing on and in sight, no sideways scroll (${JSON.stringify(st)})`);
+    // (Home › Growth › Pipeline, the map's panel as a view: its "By dwelling type and stage" table, wider than a phone,
+    // scrolls inside itself once opened (.dt-wide, js/app.js markWide on #home as on the panes), never the page)
+    await page.locator('#home .page-tabs [data-pg-tab="growth"]').tap(); await wait(1500);
+    await page.locator('#home .page-subsecs [data-pg-sub="pipeline"]').tap(); await wait(2500);
+    await ev(() => { const s = [...document.querySelectorAll('#home details.see-all > summary')].find(x => /By dwelling type and stage/.test(x.textContent)); if (s) s.scrollIntoView({ block: 'center' }); }); await wait(500);
+    await page.locator('#home details.see-all > summary', { hasText: 'By dwelling type and stage' }).first().tap(); await wait(1500);
+    const pw = await ev(() => { const d = [...document.querySelectorAll('#home details.see-all')].find(x => /By dwelling type and stage/.test(x.querySelector('summary').textContent)), tb = d && d.querySelector('table.dt'), r = tb && tb.getBoundingClientRect();
+      return { view: PeelWorkspaces.view(), open: !!d && d.open, wide: !!tb && tb.classList.contains('dt-wide'), right: r ? Math.round(r.right) : null, home: document.getElementById('home').scrollWidth, doc: document.documentElement.scrollWidth }; });
+    expect(pw.view === 'growth:pipeline' && pw.open && pw.wide && pw.right <= 390 && pw.home <= 390 && pw.doc <= 390, `Home › Growth › Pipeline with By dwelling type and stage open: the table scrolls in its own box, no sideways scroll (${JSON.stringify(pw)})`);
     // (the top bar: no sideways scroll, the trail's "k filters" one 44 px button with a filter on)
     await ev(() => { PeelApp.state.minUnits = 10; PeelApp.applyFilters(); }); await wait(1500);
     const tb = await ev(() => { const b = document.querySelector('#trail [data-tb-filters]'), r = b && b.getBoundingClientRect(), t = document.getElementById('topbar'); return { btn: !!b && r.width > 0, h: r ? Math.round(r.height) : 0, w: r ? Math.round(r.width) : 0, right: r ? Math.round(r.right) : 0, top: t.scrollWidth, tw: t.clientWidth, doc: document.documentElement.scrollWidth }; });
     expect(tb.btn && tb.h >= 44 && tb.w >= 44 && tb.right <= 390 && tb.top <= tb.tw && tb.doc <= 390, `the top bar: the filters button 44 px and in sight, no sideways scroll (${JSON.stringify(tb)})`);
-    await ev(() => { PeelApp.state.minUnits = 0; PeelApp.applyFilters(); }); await wait(800);
+    // (a place four levels deep, a precinct in its plan, with that filter on: the trail scrolls in its own box to its end,
+    // so the place is whole, clear of the button, and a tap on it is the step's)
+    const deep = await ev(() => { const A = PeelPlanTables.areas(), a = A.filter(x => x.parent && A.some(y => y.id === x.parent && !y.parent)).sort((x, y) => x.name.length - y.name.length)[0]; if (!a) return null; PeelWsPages.drillTo(`a:${a.id}`); PeelApp.state.minUnits = 10; PeelApp.applyFilters(); return a.name; });
+    await wait(2000);
+    if (deep) {
+      const d = await ev(() => { const steps = [...document.querySelectorAll('#trail .tb-step')], l = steps[steps.length - 1], r = l.getBoundingClientRect(), b = document.querySelector('#trail .tb-fl').getBoundingClientRect(), hit = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+        return { n: steps.length, last: l.textContent.trim(), right: Math.round(r.right), btn: Math.round(b.left), whole: l.scrollWidth <= l.clientWidth + 1, hit: hit === l, doc: document.documentElement.scrollWidth }; });
+      expect(d.n >= 4 && d.last === deep && d.right <= d.btn && d.whole && d.hit && d.doc <= 390, `a deep place (${deep}): the last step whole and clear of the filters button (${JSON.stringify(d)})`);
+    }
+    await ev(() => { PeelWsPages.drillTo('peel'); PeelApp.state.minUnits = 0; PeelApp.applyFilters(); }); await wait(800);
     await page.locator('#home .home-menu-btn').click(); await wait(800);
     const groups = await ev(() => [...document.querySelectorAll('#home .home-side .home-g')].filter(x => x.offsetParent).length);
     expect(groups >= 4, 'the menu opens grouped');
@@ -713,6 +731,12 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
     await load('?p6c#w=home&nav=3&t=svc&svs=network');
     const o3 = await at();
     expect(o3.mode === 'home' && o3.view === 'svc:network' && o3.on, `#w=home&nav=3&t=svc&svs=network: Home › Servicing › Network (${o3.view})`);
+    // 5. Capital › EAs needs neither the servicing model nor the DC program: with servicing.json still held, its own
+    // content once the EA lists are in, while the strip may still say Capital is loading.
+    await load('?p6d#w=p:eaflow');
+    await page.waitForFunction(() => window.PeelCapitalEA && PeelCapitalEA.data && PeelCapitalEA.data.loaded, null, { timeout: 90000 }); await wait(2500);
+    const e = await ev(() => { const t = document.querySelector('#home .page-tabs [data-pg-tab="dca"]'); return { view: PeelWorkspaces.view(), busy: !!(t && t.getAttribute('aria-busy') === 'true'), svc: !!(window.PeelApp && PeelApp.state.servicing), answer: ((document.querySelector('#home .home-answer') || {}).textContent || '').trim().slice(0, 80) }; });
+    expect(e.view === 'dca:eas' && !/^Loading/.test(e.answer) && e.answer.length > 20, `#w=p:eaflow before the DC program: Home › Capital › EAs drawn (${JSON.stringify(e)})`);
   });
 
   // Explore: one sidebar entry for Growth in an area, Check a site, Review an FSR, Forecast and Study
@@ -1411,7 +1435,7 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
     }
   });
 
-  // Plan areas: Growth in an area and the map's plan filter ("Show on the map") count the same
+  // Plan areas: Growth in an area and the map's plan filter ("Open the map") count the same
   // developments the same way (a straddling one by its share), for every plan, sub-area and precinct.
   // The developments table and its treemap (js/dev-table.js): grouped by plan, by stage; a tile or a
   // row under the pointer is ringed on the map; a row opens the site.
@@ -1513,7 +1537,7 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
   await check('phone: Home’s Servicing and Capital at a municipality say Peel-wide once, in the map’s words, under the strip; nothing at Peel or on Growth and Records', browser, { w: 390, h: 844 }, async ({ page, ev }, expect) => {
     await page.waitForFunction(() => !document.querySelector('#ftab-svc[aria-busy]') && !document.querySelector('#ftab-dca[aria-busy]'), null, { timeout: 150000 }); await wait(1500);
     const at = () => ev(() => { const st = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(), kids = [...((document.querySelector('#home .page-main') || {}).children || [])], idx = sel => kids.findIndex(k => k.matches(sel)), notes = [...document.querySelectorAll('#home .page-wide')];
-      return { view: PeelWorkspaces.view(), n: notes.length, text: notes[0] ? st(notes[0].innerHTML) : '', want: st(PeelSvcScope.peelWideText(PeelAnalysisTabs.getFootTab())), order: ['.page-tabs', '.page-wide', '.home-answer'].map(idx), inAnswer: /Peel-wide/.test((document.querySelector('#home .home-answer') || {}).textContent || ''), home: document.getElementById('home').scrollWidth, doc: document.documentElement.scrollWidth }; });
+      return { view: PeelWorkspaces.view(), n: notes.length, text: notes[0] ? st(notes[0].innerHTML) : '', want: st(PeelSvcScope.peelWideText(...PeelWorkspaces.view().split(':'))), order: ['.page-tabs', '.page-wide', '.home-answer'].map(idx), inAnswer: /Peel-wide/.test((document.querySelector('#home .home-answer') || {}).textContent || ''), home: document.getElementById('home').scrollWidth, doc: document.documentElement.scrollWidth }; });
     const tab = async t => { await page.locator(`#home .page-tabs [data-pg-tab="${t}"]`).click(); await wait(2000); return at(); };
     let s = await tab('svc');
     expect(s.view === 'svc:capacity' && !s.n && !s.want, `at Peel, Servicing has no Peel-wide note (${JSON.stringify({ view: s.view, n: s.n })})`);
@@ -1532,6 +1556,12 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
     expect(fm.mode === 'ws' && fm.tab === 'dca' && fm.shown && fm.text === fm.want, `the map's Capital says the same (${JSON.stringify({ mode: fm.mode, tab: fm.tab, shown: fm.shown })})`);
     await page.locator('#ws-bar [data-ws-backpage]').click(); await wait(2000);
     expect(await ev(() => PeelWorkspaces.view()) === 'dca:timing', '← Page: Home › Capital › DC timing');
+    // Capital › EAs and Projects are the area's own (their tables filtered to Brampton): no Peel-wide note there.
+    for (const v of ['eas', 'projects']) {
+      await page.locator(`#home .page-subsecs [data-pg-sub="${v}"]`).click(); await wait(2000); s = await at();
+      expect(s.view === `dca:${v}` && !s.n && !s.want, `Capital › ${v} at Brampton: no Peel-wide note (${JSON.stringify({ view: s.view, n: s.n })})`);
+    }
+    await page.locator('#home .page-subsecs [data-pg-sub="timing"]').click(); await wait(1500);
     for (const t of ['growth', 'records']) { s = await tab(t); expect(s.view.startsWith(`${t}:`) && !s.n, `${t} at Brampton: no Peel-wide note (${s.view}, ${s.n})`); }
     await tab('overview'); await page.locator('#home [data-ws-muni=""]').click(); await wait(2500);
     s = await tab('dca');
