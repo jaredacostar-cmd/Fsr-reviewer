@@ -2950,14 +2950,11 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
   .ws-chips { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 4px; }
   .ws-chip { flex: 0 0 auto; }
 }
-/* Desk screens: the groups share rows (each spans its own figures of 4 columns), and Explore's where you
-   are takes one line. */
+/* Desk screens: the groups share rows (each spans its own figures of 4 columns). */
 @media (min-width: 1200px) {
   .home-grps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-3) var(--space-2); }
   .home-grps > .home-grp { margin: 0; grid-column: span var(--n, 4); }
   .home-grps > .home-grp .pnl-figs { grid-template-columns: repeat(var(--n, 4), minmax(0, 1fr)); }
-  .home-main .page-explore { flex-direction: row; align-items: center; gap: var(--space-3); }
-  .home-main .page-explore .ex-where { flex: 1 1 0; min-width: 0; }
   /* (a page has room in the top bar for the action names the full map hides below 1600px) */
   html.home-on .tb-actions .tb-btn:not(.tb-icon) { font-size: var(--fs-2); gap: 5px; }
 }
@@ -2970,8 +2967,7 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 /* ---- Stage 4b: workspace pages (js/ws-pages.js) in Home's layout -------------------------------- */
 .home-ws.on { border-color: var(--accent); background: color-mix(in srgb, var(--accent) 12%, var(--surface-1)); }
 .page-eyebrow { margin: 0; color: var(--text-muted); flex-basis: 100%; }
-.page-eyebrow .pnl-steps-i { color: var(--text-secondary); }
-/* A page's sections (js/sections.js): the full map's tabs for its scope, one at a time. */
+/* A page host's tab strip and views (js/ws-pages.js tabsHTML; Help's bar too): the full map's tabs for its scope, one at a time. */
 .page-secs { display: flex; gap: var(--space-1); border-bottom: 1px solid var(--border); margin: var(--space-2) 0 var(--space-3); overflow-x: auto; scrollbar-width: none; }
 .page-sec { border: 0; background: none; padding: var(--space-2) var(--space-3); font: inherit; font-size: var(--fs-2); font-weight: 500; color: var(--text-secondary);
   cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; min-height: 44px; }
@@ -3002,8 +2998,6 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 /* A link from before Completed was shown by default (js/filter-ui.js oldLinkNote): its own line. */
 .page-filters .old-link-note { flex-basis: 100%; color: var(--text-secondary); }
 #f-showing .old-link-note { display: block; margin-top: var(--space-1); }
-.page-explore { display: flex; flex-direction: column; gap: var(--space-1); margin: var(--space-2) 0 0; }
-.ex-where { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1); color: var(--text-secondary); }
 .page-id { flex-basis: 100%; margin: 0; }
 .page-search { max-width: 520px; position: relative; }
 .page-search .field { margin: 0; }

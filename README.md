@@ -1514,10 +1514,12 @@ basis, and for every plan, sub-area and precinct.
 ## Sections: a page shows every map tab for its scope
 
 Each full-map tab's panel (Overview, Growth, Servicing, Capital, Records) is a **section**
-(`js/sections.js`). Home shows them as its tabs at Peel, a municipality or a plan, the map's five tabs
-and their views under its header (navigation phase 6: *Home hosts the map's tabs*, below). **Check a site** shows all of a development's sections under one bar, by the
-map's tab names: Overview, Growth, Servicing (Network · FSR review), Capital (the DC projects it relies
-on, then the EAs and works near it, one panel) and Records.
+(`js/sections.js`, the registry of the views a page hosts, `VIEWS`, by scope and `tab:sub`). A page hosts
+them as the map does, under its header, by the map's five tabs and their views (navigation phase 6: *Home
+hosts the map's tabs*, below): **Home** at Peel, a municipality or a plan, and **a site's page** (Check a
+site, Review an FSR) at a development: Overview, Growth, Servicing (its views Network · FSR review),
+Capital (the DC projects it relies on, then the EAs and works near it, one panel) and Records, the open
+tab the map's own.
 Each is the map tab's own panel, so the page and the map read the same answer and figures; a
 section whose tab builds its panel only when opened (Capital, Records) is built for the page on
 demand. Nothing about a site is only in the full map.
@@ -1530,11 +1532,13 @@ tabs (Growth › Areas and Growth › Forecast): Explore opens them there.
 - The one search (an address, a file number, a description) and **Draw an area** are in every
   page's header, not only Explore's (see *Find from every page* below). A site picked from an area
   view (the search, a list row, the map) opens on its page.
-- A site shows where it sits, **Peel › municipality › plan › site** (the plan tree's placement, as
-  the plan filter); each step makes that level the filter and opens Home › Growth › Areas.
-- A site's sections: Overview, Growth, Servicing, Capital and Records; **FSR review** is Servicing's
-  second view (the cross-check and what an FSR should cover), a row under the bar on Servicing. An
-  area's are Home's tabs: Growth › Areas (the drill-down) and Growth › Forecast.
+- A site shows where it sits on the top bar's trail, **Peel › municipality › plan › site** (the plan
+  tree's placement, as the plan filter), on its page and on the map; each step makes that level the
+  filter, closes the site and keeps the tab (from its page, Home at that tab: navigation phase 6b).
+- A site's page has the map's tabs: Overview, Growth, Servicing, Capital and Records; **FSR review** is
+  Servicing's second view (the cross-check and what an FSR should cover), Servicing's views Network · FSR
+  review under the strip, as on the map. An area's are Home's tabs: Growth › Areas (the drill-down) and
+  Growth › Forecast.
 - A site's Overview (the map's development Overview, the same panel) has the **path line** under
   Wastewater, *Path to the plant*: from the site, the pumping stations on its sewer path in flow order, each at its
   build-out peak wet weather against firm capacity, then the plant and its uncommitted reserve (or the
@@ -1550,7 +1554,7 @@ tabs (Growth › Areas and Growth › Forecast): Explore opens them there.
   sidebar (QA/QC).
 - The views keep their own ids (`site`, `fsr`, `growth`, `outlook`, `study`), so links, share links and
   the map-view chips still work; Explore opens the site in scope, else the last view used.
-- A site's page has the **live map** beside its sections, at the site, with the infrastructure around
+- A site's page has the **live map** beside the open tab's answer, at the site, with the infrastructure around
   it: existing water, sanitary and storm mains (from street zoom), the 2026 DC works, Region
   construction and the EA study areas, and the developments; each layer is a chip under the map.
   The full map gets its own layers back when you open it.
@@ -1910,7 +1914,7 @@ five tabs, one view per tab except Servicing (Network · FSR review), nothing on
   *a development’s one header on every tab and its page* follows them, and ⋯'s four items). On a page
   Check FSR opens the page's FSR review and Trace water and Compare open the full map first; on either it
   scrolls the form's fold into view (the cross-check first, §3.6). The "n links to check" flag opens
-  Records › Files on the map and the site's Records section on its page. On a phone
+  Records › Files on the map and on its page. On a phone
   the row scrolls sideways (⋯ outside it, so its menu is never clipped) and a development's header
   scrolls with its panel: with the flags and tools it is taller than the half sheet (364–458 px of 423
   measured), so it no longer sticks.
@@ -1948,12 +1952,13 @@ five tabs, one view per tab except Servicing (Network · FSR review), nothing on
   site's EA table (Capital › EAs' at the site: Current · Complete · All, the systems, sort, CSV, GeoJSON,
   *Show these on the map*, *Add to calendar (.ics)*), drawn once (`#dca-site-eas`; the hidden EAs pane is
   emptied at a site).
-- **Its page** (`js/sections.js` `SITE`): the sections are the map's tabs by their names, **Overview ·
-  Growth · Servicing · Capital · Records** (were Summary · … · Files · FSR review); on Servicing a second
-  row, **Network · FSR review**. Review an FSR with a site (`#w=p:fsr&d=<key>`) is the site's page at
-  Servicing › FSR review; without one, its Find step. The footer keeps the Servicing memo (FSR review:
-  Copy the comparison, Print / PDF), Open the map and Another site; the Inquiry draft, ☆ Watch and
-  Check FSR are the header's.
+- **Its page**: the map's tabs by their names, **Overview · Growth · Servicing · Capital · Records**
+  (were Summary · … · Files · FSR review); on Servicing a second row, **Network · FSR review**. Since
+  navigation phase 6b they are the map's own strip and views, the open one the map's (`js/sections.js`
+  `VIEWS.site`; *Home hosts the map's tabs*, below). Review an FSR with a site (`#w=p:fsr&d=<key>`) is the
+  site's page at Servicing › FSR review; without one, its Find step. Each view's footer is its panel's
+  (the Servicing memo; FSR review: Copy the comparison, Print / PDF; …), then Open the map and Another
+  site; the Inquiry draft, ☆ Watch and Check FSR are the header's.
 - **Counts**: the *Previous* counting switch is retired (owner decision 14; see *Step B1*). A development
   the tree does not count keeps the count from its files and permits and says so. Where the tree
   counts did not load, developments group by address and are counted from their files and permits, with
@@ -1975,7 +1980,7 @@ Help › What moved where lists each move. Old names still land (tests/nav-alias
 | `t=dev`, `t=developments`, a stored `peel-dev:devsub` (About · Files · Site) | Overview; the stored sub-tab is no longer read |
 | `dcs=eas` at a development | Capital's one view (DC timing); EAs again at an area |
 | A stored `countMode: 'previous'` | Ignored: the tree count |
-| The page's sections `summary`, `files` (a search pick, `siteAt`) | The same ids, now titled Overview and Records |
+| The page's sections `summary`, `files` (a search pick) | Overview and Records › Files (navigation phase 6b: `SITE_SEC`; `fileAt` marks the file) |
 
 ## Home hosts the map's tabs (navigation phase 6)
 
@@ -2088,6 +2093,65 @@ Old names still land (`js/workspaces.js` `HOST`, `hostOf`; `js/share.js`; tests/
 
 No stored preference is renamed and no pane id moves; the strip counts as the map's own `tab:` / `sub:`
 usage keys, so a tab's count adds the page and the map up.
+
+### The site's page hosts a development's tabs (6b)
+
+Navigation phase 6b (§3.1 rule 1, §5 rows 29, 47, 49, 56–57, §7.1). **The site's page is the page host at a
+development**: Check a site with a development, and Review an FSR with one, which is the same page at
+Servicing › FSR review. Under its header (the flags, ☆ Watch, the tools) the map's five tabs, **Overview ·
+Growth · Servicing · Capital · Records**, and on Servicing its views **Network · FSR review**
+(`js/sections.js` `VIEWS.site`: its keys are exactly Overview and the map's chips at a development, a test);
+the open tab and view are the map's, a pick on either the other's. Phase 5's section bar and its Network ·
+FSR review row are gone.
+
+- **Each view is the map's panel for the development** (`js/ws-pages.js` `site`, `host('site')`): its
+  answer, figures, lists and folds, and **its footer's own actions first** (§5 row 56: the Overview's and
+  Records' *Servicing memo*, Network's *Trace the sewer path*, Growth's *Area report (PDF)*, Capital's
+  *Show the planned works*, FSR review's *Copy the comparison*), then *Open the map* at the view and
+  *Another site*. A view the map hides at a development (Servicing › Capacity, …) shows its tab's first
+  (Network). The eyebrow names the view and the place ("Servicing › FSR review · Brampton"); the Find ›
+  Result › Output steps are the Find step's only. Servicing or Capital still loading: the development's
+  header stays and the view says it is loading.
+- **Where it opens.** A development picked (Check a site's Find step, Home, the search) opens on
+  Overview; on Review an FSR's Find step (its list of files with an FSR posted, or a link's `d=`) at
+  Servicing › FSR review; a search pick from FSR review stays there; a file number at Records › Files, the
+  file marked (another view or development clears the mark). The header's *history ›* and the "n links to
+  check" flag open Records › Files on the page. The *FSR review* chip, like *Check FSR* in the header, opens the
+  form's fold and brings it into view (on a phone it is far down the page); any other pick keeps the strip
+  in sight.
+- **Open the map, ← Page and the back bar keep the tab and view** here too: *Open the map* (the footer's, a
+  row's, the live map's) opens the site's map view at the view; its *← Page* lands back at it; the full
+  map's *← Back to Check a site › Servicing › Network* keeps it (the page hosts its development's
+  Overview, so nothing closes on the way back).
+- **The trail places the development** (§5 row 47): the top bar's trail at a development reads **Peel ›
+  municipality › plan › … › the site**, on the page and on the map (it was *Peel › the site* on the map; the
+  site's page had a line of its own, which is gone). The place is the plan tree's
+  (`PeelPlanTables.placeOf`: its deepest area; one straddling two, the area holding its largest share,
+  where Growth › Areas places most of it), after the steps the filter already has (a Brampton filter's
+  step is not repeated); a filter that does not hold it (another municipality or plan, an MTSA, zone or
+  block, two plans) keeps the trail as the filter has it. Each step is that place as the filter
+  (`drillTo`), the site closed, the tab kept (`js/topbar.js` `devPlace`, `leaveDev`); from the site's page,
+  Home, the place's host, at that tab (a view only a development has, FSR review or Records › Files, gives
+  way to the area's: Capacity, Sources). The filter's own steps (Peel, the municipality, a plan) do the
+  same at a development. A result kept at the site (the Inquiry draft) keeps *Peel › the site › the
+  draft*. On a phone the trail scrolls in its own box, scrolled to its end (the site).
+- **Phones** (390 px): above the answer the header, the strip and, on Servicing, the views row (the site's
+  own trail line is gone; Home's ☰ row stays until phase 7 and Explore's views bar until phase 6c); the
+  strip scrolls sideways in its own box, the open tab in view.
+
+Old names still land (`js/workspaces.js` `SITE_HOST`, `SITE_SEC`, `hostOf(id, { site })`; tests/nav-aliases.test.js
+"phase 6b"):
+
+| Old | Where it opens now |
+|---|---|
+| `#w=p:site&d=<key>`, Check a site with a development | The site's page at Overview |
+| `#w=p:fsr&d=<key>`, a pick on Review an FSR's list, Review an FSR with a development | The site's page at Servicing › FSR review |
+| `#w=p:fsr` (no `d`) | The Find step, the files with an FSR posted (unchanged) |
+| `#w=p:fsr&nav=2&t=svc&svs=network&d=<key>` (phase 5's FSR review links) | Servicing › FSR review, by rule (`nav` below 3: the page's own view) |
+| `#w=p:site&nav=3&t=…&d=<key>` (new links from the site's page) | The site's page at that tab and view |
+| The site page's sections `summary`, `growth`, `servicing`, `capital`, `files` (phase 1's search routes, phase 5's sections) | `SITE_SEC`: Overview, Growth › Pipeline, Servicing › Network, Capital › DC timing, Records › Files |
+| The site's own trail line (Peel › municipality › plan › site, each a `data-ws-explore` step) | The top bar's trail at the development |
+| `siteAt`, `data-ws-sec`, `viewsBar`, `PeelSections.SITE` / `BY_ID` / `viewOf`, `siteTrail`, `exploreBar` | Gone (the strip, the trail; `fileAt` marks a file) |
 
 ## Reference and This week
 

@@ -133,6 +133,28 @@
     fl.forEach(f => f.clear()); App().applyFilters(); pageFollows();
   }
   function trailGoDev() { if (Nav().getCurrentProject()) Nav().showDetail(Nav().getCurrentProject()); }
+  // A place's step at a development (navigation phase 6b): the site closes, the place is the filter, the tab stays (its
+  // view the scope's own: FSR review gives way to Capacity at an area); on a page, Home, the place's host, at that tab.
+  function leaveDev(go) {
+    const A = AT(), W = root.PeelWorkspaces, tab = A && A.wantedTab ? A.wantedTab() : 'overview';
+    if (typeof DevScope !== 'undefined' && DevScope.current()) DevScope.close();
+    go();
+    if (W && W.mode && W.mode() === 'home' && W.openPage) W.openPage('home', { keep: true, view: `${tab}:` });
+    else if (A && A.openTab) A.openTab(tab);
+  }
+  // (a level of the plan tree, or a municipality, as the filter: Growth › Areas' own drill, js/ws-pages.js drillTo)
+  const goPlace = id => leaveDev(() => { const WP = root.PeelWsPages; if (WP && WP.drillTo) WP.drillTo(id); });
+  // A development's place, Peel › its municipality › its plan › … (navigation phase 6b, §5 row 47: the site's page had
+  // its own line of it): the ids the trail adds after the filter's place, when that place holds the development (a
+  // filter elsewhere, an MTSA, zone or block, or two plans: none, the trail as the filter has it).
+  function devPlace(p, a) {
+    const PT = window.PeelPlanTables, S = App().state; if (!p || !p.municipality) return [];
+    const leaf = PT && PT.placeOf ? PT.placeOf(p) : null;
+    const path = [`m:${p.municipality}`, ...(leaf && PT.areaPath ? PT.areaPath(leaf).map(id => `a:${id}`) : [])];
+    if (a && !(a.kind === 'sp' && S.sp.length === 1)) return [];
+    const at = a ? `a:${a.id}` : S.muni ? `m:${S.muni}` : null, i = at ? path.indexOf(at) : -1;
+    return at && i < 0 ? [] : path.slice(i + 1);
+  }
   function renderTrail() {
     const el = $('#trail'); if (!el) return;
     const steps = [{ label: 'Peel', go: trailGoPeel, title: 'All of Peel: closes the development, the area and the selection (the filters stay; Start over clears them)' }];
@@ -147,10 +169,14 @@
     // the development (the Inquiry draft) keeps it: Peel › the site › the result, the site step closing
     // the result (reopening the site would drop the result unannounced). Else it follows the ladder.
     const SS = window.PeelSvcScope, scoped = typeof DevScope !== 'undefined' ? DevScope.current() : null, kept = !!(scoped && SS && SS.keepsDev && SS.keepsDev());
+    // (at a development, every place step closes it and keeps the tab: leaveDev)
+    if (scoped && !kept) for (const s of steps) { const go = s.go; s.go = () => leaveDev(go); }
     const devStep = scoped && (kept ? { label: scoped.title || 'Development', go: () => SS.closeResult(), title: `Back to ${scoped.title || 'the development'}` } : { label: scoped.title || 'Development', go: trailGoDev, title: 'Reopen this development' });
     if (kept) steps.push(devStep);
     // Servicing ladder (plant › block / station; water system › zone): one step per rung.
     if (window.PeelSvcScope) steps.push(...window.PeelSvcScope.crumbs());
+    // (then, at a development, its place the filter does not show: Peel › Brampton › Mount Pleasant › 10 Main St)
+    if (scoped && !kept) for (const id of devPlace(scoped, a)) { const nm = id.startsWith('m:') ? id.slice(2) : areaLabel(id.slice(2)); steps.push({ label: nm, go: () => goPlace(id), title: `All of ${nm} (the development closes; the tab stays)` }); }
     if (scoped && !kept) steps.push(devStep);
     // Phase 3b: a tool result scope adds its own crumb (Peel › Lasso selection).
     const tc = (typeof PeelTools !== 'undefined' && PeelTools.trailCrumb) ? PeelTools.trailCrumb() : null;

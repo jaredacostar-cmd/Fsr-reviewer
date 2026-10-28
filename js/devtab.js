@@ -1168,11 +1168,12 @@
     let h = historyNear(el);
     const show = x => { for (let d = x; d; d = d.parentElement && d.parentElement.closest('details')) d.open = true; then(x); };
     if (reachable(h)) return show(h);
-    // History is Records' (navigation phase 5): on a page its Records section, on the map Records › Files
-    // (the panel's Files and events fold, open).
-    const W = root.PeelWorkspaces, WP = root.PeelWsPages, AT = root.PeelAnalysisTabs, cur = root.DevScope && root.DevScope.current && root.DevScope.current();
-    const home = hasDOM() && document.documentElement.classList.contains('home-on') && !!(cur && WP && WP.siteAt && W && W.openPage);
-    if (home) { WP.siteAt(cur.key, 'files'); W.openPage('site', { keepScroll: true }); }
+    // History is Records' (navigation phase 5): on a page the site's page at Records › Files (the page host at a
+    // development, navigation phase 6b: the map's tab, picked as on its strip), on the map Records › Files (the
+    // panel's Files and events fold, open).
+    const W = root.PeelWorkspaces, AT = root.PeelAnalysisTabs, cur = root.DevScope && root.DevScope.current && root.DevScope.current();
+    const home = hasDOM() && document.documentElement.classList.contains('home-on') && !!(cur && AT && AT.openTab && W && W.openPage);
+    if (home) { AT.openTab('records', 'files'); W.openPage('site', { keepScroll: true, keep: true }); }
     else if (AT && AT.openTab) AT.openTab('records', 'files');
     setTimeout(() => { h = historyNear(document.getElementById(home ? 'home' : 'analysis')); if (h) show(h); }, 300);
   }

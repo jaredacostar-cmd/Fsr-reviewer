@@ -56,17 +56,29 @@
   // plan tree, so a plan filter on the map holds exactly the developments Growth in an area counts
   // there (a straddling one included, by its share).
   let idsCache = new WeakMap(), idsKey = null;
-  function areaIdsOf(p) {
+  // (each with its share: placeOf below)
+  function placed(p) {
     const list = areas(), k = `${list.length}#${App().state.treeGrouped}#${!!(TG() && TG().data)}`;
     if (k !== idsKey) { idsCache = new WeakMap(); idsKey = k; }
-    let ids = idsCache.get(p);
-    if (!ids) {
+    let x = idsCache.get(p);
+    if (!x) {
       const byId = new Map(list.map(a => [a.id, a])), raw = sharesOf(p) || pointOf(p).map(id => [id, 1]);
-      ids = new Set([...R().placement(p, raw, id => byId.get(id) || null).entries()].filter(([id, sh]) => id.startsWith('a:') && sh > 0).map(([id]) => id.slice(2)));
-      idsCache.set(p, ids);
+      const sh = new Map([...R().placement(p, raw, id => byId.get(id) || null).entries()].filter(([id, s]) => id.startsWith('a:') && s > 0).map(([id, s]) => [id.slice(2), s]));
+      x = { ids: new Set(sh.keys()), sh };
+      idsCache.set(p, x);
     }
-    return ids;
+    return x;
   }
+  function areaIdsOf(p) { return placed(p).ids; }
+  // A development's place in the plan tree (navigation phase 6b: the top bar's trail at a development, Peel › its
+  // municipality › its plan › … › the site): its deepest area; one straddling two at that depth, the one holding its
+  // largest share (Growth › Areas places most of it there); null in no plan. sh: area id → share.
+  function deepestOf(sh, list = areas()) {
+    let best = null, bd = 0, bs = 0;
+    for (const [id, s] of sh) { const d = areaPath(id, list).length; if (d > bd || (d === bd && s > bs)) { best = id; bd = d; bs = s; } }
+    return best;
+  }
+  const placeOf = p => deepestOf(placed(p).sh);
   // The part of the developments shown that is inside the plans filtered to (state.sp): units,
   // people and jobs by share, as Growth in an area counts them; null with no plan filter.
   function inside(ids = App().state.sp) {
@@ -383,7 +395,7 @@
     App().applyFilters();
   });
 
-  const api = { loadTargets, setTargets: d => { targets = d; }, targetHTML, behindTarget, render, compute, areaIdsOf, areaPath, inside, csvRows, sheetRows, planOf, downloadCSV, areas, matrixHTML, matrixSheetRows, matrixData };
+  const api = { loadTargets, setTargets: d => { targets = d; }, targetHTML, behindTarget, render, compute, areaIdsOf, areaPath, deepestOf, placeOf, inside, csvRows, sheetRows, planOf, downloadCSV, areas, matrixHTML, matrixSheetRows, matrixData };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelPlanTables = api;
 })(typeof window !== 'undefined' ? window : globalThis);

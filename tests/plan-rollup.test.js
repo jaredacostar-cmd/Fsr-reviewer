@@ -108,6 +108,22 @@ test('areaPath: an area’s place in the plan tree, its top plan first (navigati
   assert.deepEqual(PT.areaPath('a', [{ id: 'a', parent: 'b' }, { id: 'b', parent: 'a' }]), ['b', 'a']);
 });
 
+test('deepestOf: a development’s place in the plan tree, its deepest area, a straddler’s largest share (navigation phase 6b: the trail at a development)', () => {
+  globalThis.PeelUtil = globalThis.PeelUtil || { $: () => null, esc: s => String(s), fmtNum: n => String(n), store: null, CSV_DISCLAIMER: '' };
+  const PT = require('../js/plan-tables.js');
+  assert.equal(PT.deepestOf(new Map([['bolton', 1], ['core', 0.4]]), AREAS), 'core', 'the level under its plan');
+  assert.equal(PT.deepestOf(new Map([['p1', 0.3], ['mayfield', 0.3], ['core', 0.7], ['bolton', 0.7]]), AREAS), 'core', 'two at one depth: the larger share');
+  assert.equal(PT.deepestOf(new Map([['core', 0.2], ['bolton', 0.5], ['p1', 0.8], ['mayfield', 0.5]]), AREAS), 'p1');
+  assert.equal(PT.deepestOf(new Map([['bolton', 1]]), AREAS), 'bolton', 'a plan alone');
+  assert.equal(PT.deepestOf(new Map(), AREAS), null, 'in no plan');
+  assert.deepEqual(PT.areaPath(PT.deepestOf(new Map([['bolton', 1], ['core', 0.4]]), AREAS), AREAS), ['bolton', 'core'], 'its trail: the plan, then the level');
+  // (placeOf reads the placement areaIdsOf counts by: one cache, the same ids)
+  const s = fs.readFileSync(path.join(__dirname, '..', 'js', 'plan-tables.js'), 'utf8');
+  assert.match(s, /function areaIdsOf\(p\) \{ return placed\(p\)\.ids; \}/);
+  assert.match(s, /const placeOf = p => deepestOf\(placed\(p\)\.sh\);/);
+  assert.equal(typeof PT.placeOf, 'function');
+});
+
 // Step C4: areas against their targets.
 test('targets: units compared (committed and all proposed); no target is never 0; municipalities use the 2051 allocation growth', () => {
   const set = [dev('a', 100, { pt: ['bolton'], c: true }), dev('b', 300, { pt: ['bolton'] }), dev('m', 50, { pt: ['mayfield'] })];

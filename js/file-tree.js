@@ -147,13 +147,13 @@
   }
 
   // The header's "n links to check" flag opens Records › Files on the map; on a page (the flags are in the
-  // page's header too, navigation phase 5) the site's Records section, as History's links do (js/devtab.js
-  // revealHistory).
+  // page's header too, navigation phase 5) the site's page at Records › Files (the page host at a development, the
+  // map's tab: navigation phase 6b), as History's links do (js/devtab.js revealHistory).
   if (typeof document !== 'undefined' && document.addEventListener) document.addEventListener('click', e => {
     if (!(e.target.closest && e.target.closest('[data-tree-check]'))) return;
-    const W = root.PeelWorkspaces, WP = root.PeelWsPages, AT = root.PeelAnalysisTabs, cur = root.DevScope && root.DevScope.current && root.DevScope.current();
-    if (document.documentElement.classList.contains('home-on') && cur && WP && WP.siteAt && W && W.openPage) { WP.siteAt(cur.key, 'files'); W.openPage('site', { keepScroll: true }); return; }
+    const W = root.PeelWorkspaces, AT = root.PeelAnalysisTabs, cur = root.DevScope && root.DevScope.current && root.DevScope.current();
     if (AT && AT.openTab) AT.openTab('records', 'files');
+    if (document.documentElement.classList.contains('home-on') && cur && W && W.openPage) W.openPage('site', { keepScroll: true, keep: true });
   });
 
   const api = { ROLE, PRECON, of, build, flat, summary, countsOf, nodeOf, estimateOf, summaryHTML, treeHTML, recLookup, isCheck };

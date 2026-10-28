@@ -1,7 +1,8 @@
 'use strict';
-// js/sections.js: a page's sections are the full map's tab panels for its scope, built on demand when
-// the tab hasn't built one; a section of two panels takes the first's answer and both panels' lists. A page
-// host's views (navigation phase 6: Home at an area) are the map's tabs and chips, by tab:sub.
+// js/sections.js: a page's views are the full map's tab panels for its scope, built on demand when
+// the tab hasn't built one; a view of two panels takes the first's answer and both panels' lists. A page
+// host's views (navigation phase 6: Home at an area, the site's page at a development) are the map's tabs and
+// chips, by tab:sub.
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const plain = o => JSON.parse(JSON.stringify(o));
@@ -16,20 +17,18 @@ function load(store, build = {}) {
 }
 const p = { key: 'B|1 MAIN ST', title: '1 Main St' };
 
-test('the site sections are the map\u2019s five tabs, by their names; Servicing has the map\u2019s views', () => {
+// (navigation phase 6b, §5 row 49: the site page's section bar (SITE, BY_ID, viewOf) is removed by design; a
+// development's views are the site page's tabs and chips, the map's own, by tab:sub)
+test('a development\u2019s views are the map\u2019s: its tabs and chips by tab:sub, each the map\u2019s panel for it, built on demand', () => {
   const S = load({});
-  assert.deepEqual(S.SITE.map(s => s.title), ['Overview', 'Growth', 'Servicing', 'Capital', 'Records']);
-  assert.deepEqual(S.SITE.map(s => s.tab), ['overview', 'growth', 'svc', 'dca', 'records']);
-  assert.deepEqual(S.SITE.map(s => s.id), ['summary', 'growth', 'servicing', 'capital', 'files'], 'the ids are kept (phase 1\u2019s routes, siteAt)');
-  assert.deepEqual(S.BY_ID.servicing.views.map(v => [v.title, v.keys[0], v.page || '']), [['Network', 'svc:network', ''], ['FSR review', 'svc:fsr', 'fsr']]);
-  assert.equal(S.BY_ID.fsr, undefined, 'FSR review is a Servicing view, not a section');
-  // A view is its section with the view's keys: specFor draws FSR review's panel (the page fsr).
-  const v = S.viewOf('servicing', 'fsr');
-  assert.deepEqual([v.section, v.id, v.title, v.page, v.keys], ['servicing', 'fsr', 'FSR review', 'fsr', ['svc:fsr']]);
-  assert.equal(S.viewOf('servicing', 'nope'), null); assert.equal(S.viewOf('growth', 'fsr'), null);
+  assert.equal(S.SITE, undefined); assert.equal(S.BY_ID, undefined); assert.equal(S.viewOf, undefined);
+  assert.deepEqual(Object.keys(S.VIEWS.site), ['overview:', 'growth:pipeline', 'svc:network', 'svc:fsr', 'dca:timing', 'records:files']);
+  for (const [k, v] of Object.entries(S.VIEWS.site)) assert.deepEqual(plain(v), { keys: [k] }, `${k}: the map\u2019s panel, no page builder`);
+  // FSR review is Servicing's second view (the page fsr at a development): specFor draws its panel.
   const fsr = { answer: 'FSR review' }, S2 = load({ 'svc:fsr': { spec: fsr, scope: `dev:${p.key}` }, 'svc:network': { spec: { answer: 'Network' }, scope: `dev:${p.key}` } });
-  assert.equal(S2.specFor(S2.viewOf('servicing', 'fsr'), p), fsr);
-  assert.equal(S2.specFor('servicing', p).answer, 'Network', 'the section itself is its first view');
+  assert.equal(S2.specFor(S2.VIEWS.site['svc:fsr'], p), fsr);
+  assert.equal(S2.specFor(S2.VIEWS.site['svc:network'], p).answer, 'Network', 'Servicing\u2019s first view at a development');
+  assert.equal(S2.specFor('servicing', p), null, 'an old section id is no view (js/workspaces.js SITE_SEC maps them)');
 });
 
 // (navigation phase 6, §5 row 50: the AREA bar, Growth in an area's Growth · Forecast · Servicing · Capital, is
@@ -45,9 +44,9 @@ test('an area\u2019s views: the map\u2019s tabs and chips by tab:sub, a page bui
 test('a panel the tab set for this development is used as is; one for another scope is not', () => {
   const mine = { answer: 'mine', lists: [] };
   let S = load({ 'growth:pipeline': { spec: mine, scope: `dev:${p.key}` } });
-  assert.equal(S.specFor('growth', p), mine);
+  assert.equal(S.specFor(S.VIEWS.site['growth:pipeline'], p), mine);
   S = load({ 'growth:pipeline': { spec: { answer: 'Peel' }, scope: 'area' } });
-  assert.equal(S.specFor('growth', p), null, 'the area panel is not the site’s');
+  assert.equal(S.specFor(S.VIEWS.site['growth:pipeline'], p), null, 'the area panel is not the site’s');
 });
 
 test('Capital and Records are built on demand; a section of two panels takes the first\u2019s answer and both lists', () => {
@@ -57,8 +56,8 @@ test('Capital and Records are built on demand; a section of two panels takes the
     files: () => ({ answer: '9 files', lists: [] }),
   });
   // (navigation phase 5: a site's Capital is one panel, DC timing's, which holds the EAs near it: js/dca-tab.js)
-  assert.deepEqual(S.BY_ID.capital.keys, ['dca:timing']);
-  const cap = S.specFor('capital', p);
+  assert.deepEqual(S.VIEWS.site['dca:timing'].keys, ['dca:timing']);
+  const cap = S.specFor(S.VIEWS.site['dca:timing'], p);
   assert.equal(cap.answer, 'relies on 5 (1 Main St)');
   assert.deepEqual(cap.lists.map(l => l.title), ['The projects it relies on'], 'the dca builder\u2019s spec as is: no EAs panel merged');
   assert.equal(cap.foot, undefined);
@@ -67,13 +66,13 @@ test('Capital and Records are built on demand; a section of two panels takes the
   assert.equal(two.answer, 'relies on 5 (1 Main St)');
   assert.deepEqual(two.lists.map(l => l.title), ['The projects it relies on', 'Near the site']);
   assert.deepEqual(two.foot.secondary.map(b => b.label), ['Copy for review comments'], 'the second panel\u2019s action reaches the footer');
-  assert.equal(S.specFor('files', p).answer, '9 files');
+  assert.equal(S.specFor(S.VIEWS.site['records:files'], p).answer, '9 files');
 });
 
 test('a section whose data is still loading is null (the page says it is loading)', () => {
   const S = load({}, { dca: () => null, eas: () => ({ lists: [] }) });
-  assert.equal(S.specFor('capital', p), null);
-  assert.equal(S.specFor('nope', p), null);
+  assert.equal(S.specFor(S.VIEWS.site['dca:timing'], p), null);
+  assert.equal(S.specFor(S.VIEWS.site.nope, p), null);
 });
 
 // (navigation phase 6: areaSpecFor, Growth in an area's Servicing and Capital sections, went with the AREA bar;
