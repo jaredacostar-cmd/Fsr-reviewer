@@ -480,31 +480,90 @@ test('phase 5: FSR review is a development\u2019s Servicing view; the fsr page a
   assert.match(src('js/share.js'), /migrateTabKey\(/);
 });
 
-// The site page's sections take the map's tab names (navigation phase 5, design §3.1 rule 1); their ids are kept,
-// since phase 1's search routes (pageRoute's sec) and siteAt name them; the old FSR review section is Servicing's
-// second view, the page fsr (§7.1: #w=p:fsr&d=<key> is the site's page there; without a site, the Find step).
-test('phase 5: the site page’s sections by the tabs’ names; the old ids and the FSR review section land', () => {
-  const vm = require('node:vm'), p = { key: 'k', title: '1 A St', municipality: 'Brampton' };
-  let dev = p;
+// Navigation phase 6b (navigation-design §3.1 rule 1, §5 rows 29, 49, 56, §7.1): the site's page is the page host at a
+// development, the map's five tabs under its header (phase 5's section bar, SITE, is removed by design). Check a site is
+// it at Overview, Review an FSR at Servicing › FSR review (#w=p:fsr&d=<key> lands there; without a site, the Find step);
+// the old section ids (phase 1's search routes, pageRoute's sec; phase 5's sections) name its views (SITE_SEC).
+test('phase 6b: the site page is the host at a development: old section ids, the fsr page and a pick land on its view', () => {
+  const S = require('../js/sections.js'), p = { key: 'k', title: '1 A St', municipality: 'Brampton' };
+  assert.deepEqual(plain(W.SITE_SEC), { summary: 'overview:', growth: 'growth:pipeline', servicing: 'svc:network', capital: 'dca:timing', files: 'records:files' });
+  for (const k of Object.values(W.SITE_SEC)) assert.ok(S.VIEWS.site[k], `${k}: a view of the site’s page`);
+  assert.deepEqual(Object.keys(S.VIEWS.site), ['overview:', ...AT.TAB_KEYS.flatMap(t => AT.chipsAt(t, 'site').map(c => `${t}:${c}`))], 'the map’s tabs and chips at a development');
+  assert.deepEqual(plain(W.hostOf('site', { site: true })), { page: 'site', tab: 'overview', sub: '', fold: null });
+  assert.deepEqual(plain(W.hostOf('fsr', { site: true })), { page: 'site', tab: 'svc', sub: 'fsr', fold: null });
+  for (const id of ['site', 'fsr']) { assert.equal(W.hostOf(id), null, `${id} without a development: its Find step`); assert.equal(W.hostOf(id, { site: false }), null, id); }
+  for (const id of Object.keys(W.HOST)) assert.equal(W.hostOf(id, { site: true }).page, 'home', `${id}: Home’s view, a development open or not`);
+  for (const id of ['__proto__', 'constructor', 'week', 'home']) assert.equal(W.hostOf(id, { site: true }), null, id);
+  assert.deepEqual(plain(W.startScreen({ hash: '#w=p:fsr' })), { mode: 'home', page: 'fsr' });
+  assert.deepEqual(plain(W.startScreen({ hash: '#w=p:site&d=k' })), { mode: 'home', page: 'site' });
+  // A phase 5 link into FSR review (#w=p:fsr&nav=2&t=svc&svs=network&d=…: openPage('fsr') set the Find step's Network): the
+  // page's own view by rule (js/share.js ready, nav < 3: hostOf with the link's d=), FSR review.
+  assert.match(src('js/share.js'), /pid \? W\.hostOf\(pid, \{ site: !!q\.get\('d'\) \}\) : null/);
+  assert.deepEqual(plain(W.hostOf(W.resolvePage('fsr', { site: true }), { site: true })), { page: 'site', tab: 'svc', sub: 'fsr', fold: null });
+  // A pick routes to the ids (phase 1, pageRoute unchanged): summary is Overview, files is Records › Files.
+  assert.deepEqual(plain(W.pageRoute({ label: 'x', p }, 'home')), { page: 'site', dev: 'k', sec: 'summary' });
+  assert.deepEqual(plain(W.pageRoute({ label: 'x', p }, 'fsr')), { page: 'fsr', dev: 'k', sec: 'summary' });
+  // The browser half (js/workspaces.js in a vm): with a development, each page id is the site's page at its view.
+  let L = loadWs(); L.open(p, null);
+  L.B.openPage('fsr');
+  assert.deepEqual([L.B.page(), L.B.view()], ['site', 'svc:fsr'], 'Review an FSR at a development: the site’s page at FSR review');
+  assert.deepEqual(L.calls, [['setSub', 'svc', 'fsr'], ['setFootPref', 'svc'], ['showFootTab', 'svc']]);
+  assert.deepEqual(L.closed, [], 'the development kept'); assert.equal(L.store.get('lastWs'), 'fsr');
+  L.calls.length = 0; L.B.openPage('site');
+  assert.deepEqual([L.B.page(), L.B.view(), L.calls], ['site', 'overview:', [['setFootPref', 'overview'], ['showFootTab', 'overview']]]);
+  // A search pick on it: a file number Records › Files (picked as on the strip), a development Overview, and from FSR
+  // review FSR review again (phase 1's route: the page as the reader names it).
+  L.calls.length = 0; assert.equal(L.B.routePick({ label: 'x', p, hit: 'file', ref: 'OZ 1' }), true);
+  assert.deepEqual([L.B.page(), L.B.view(), L.calls], ['site', 'records:files', [['openTab', 'records', 'files']]]);
+  L.calls.length = 0; L.B.routePick({ label: 'x', p });
+  assert.deepEqual([L.B.page(), L.B.view(), L.calls], ['site', 'overview:', [['setFootPref', 'overview'], ['showFootTab', 'overview']]]);
+  L.B.openPage('fsr'); L.B.routePick({ label: 'x', p });
+  assert.deepEqual([L.B.page(), L.B.view()], ['site', 'svc:fsr']);
+  // A strip pick there is the development's view: the last workspace is the page as the reader names it, Review an FSR
+  // at FSR review, else Check a site (as the views row's FSR review and its section buttons stored it before 6b, and as
+  // the header's Check FSR stores it now: one view, one last workspace, whichever way it was reached).
+  L.B.openPage('site'); L.click('#home [data-pg-tab]', { pgTab: 'dca', pgSub: 'timing' });
+  assert.deepEqual([L.B.page(), L.B.view(), L.store.get('lastWs')], ['site', 'dca:timing', 'site']);
+  L.click('#home [data-pg-tab]', { pgTab: 'svc', pgSub: 'fsr' }); assert.deepEqual([L.B.view(), L.store.get('lastWs')], ['svc:fsr', 'fsr']);
+  L.click('#home [data-pg-tab]', { pgTab: 'svc', pgSub: 'network' }); assert.deepEqual([L.B.view(), L.store.get('lastWs')], ['svc:network', 'site']);
+  L.B.openPage('fsr'); assert.equal(L.store.get('lastWs'), 'fsr', 'Check FSR');
+  L.click('#home [data-pg-tab]', { pgTab: 'overview' }); assert.deepEqual([L.B.page(), L.B.view(), L.store.get('lastWs')], ['site', 'overview:', 'site'], 'left at Overview: Check a site');
+  // ← Page from the site's map view: the site's page at the map's tab and view (its development's Overview is one of them).
+  L.B.go('site', { keep: true, quiet: true }); L.at.tab = 'svc'; L.at.subs.svc = 'network'; L.calls.length = 0;
+  L.click('[data-ws-backpage]');
+  assert.deepEqual([L.B.page(), L.B.view(), L.calls.length], ['site', 'svc:network', 0]);
+  L.B.go('fsr', { keep: true, quiet: true }); L.at.tab = 'overview'; L.calls.length = 0;
+  L.click('[data-ws-backpage]');
+  assert.deepEqual([L.B.page(), L.B.view(), L.calls.length, L.closed], ['site', 'overview:', 0, []]);
+  // Without a development: each its Find step, no host.
+  L = loadWs(); L.B.openPage('fsr'); assert.deepEqual([L.B.page(), L.B.view()], ['fsr', null]);
+  L.B.openPage('site'); assert.deepEqual([L.B.page(), L.B.view()], ['site', null]);
+  // js/ws-pages.js: the host at a development draws the map's view (an AT stub's), a file number's file marked on Records.
+  const vm = require('node:vm');
+  let dev = p, view = 'records:files';
   const spec = a => ({ scope: 'dev:k', spec: { head: { status: null, tools: { key: 'k' } }, answer: a, lists: [], folds: [] } });
   const panels = { 'overview:': spec('Overview'), 'records:files': spec('Records'), 'svc:network': spec('Network'), 'svc:fsr': spec('FSR review') };
   const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: () => null, querySelectorAll: () => [], getElementById: () => null, addEventListener() {}, dispatchEvent() {} };
-  const window = { document, PeelPanel: { get: k => panels[k] || null, scenarioChip: () => '' }, PeelWorkspaces: { BY_ID: { site: { label: 'Check a site' }, fsr: { label: 'Review an FSR' } } }, PeelApp: { state: { projects: [], filtered: [] } }, DevScope: { current: () => dev } };
+  const window = { document, PeelPanel: { get: k => panels[k] || null, scenarioChip: () => '' }, PeelAnalysisTabs: { TAB_KEYS: AT.TAB_KEYS, chipsAt: AT.chipsAt, tabReady: () => true, viewKey: () => view },
+    PeelWorkspaces: { BY_ID: { site: { label: 'Check a site' }, fsr: { label: 'Review an FSR' } }, TAB_NAME: W.TAB_NAME, tabPath: W.tabPath, chipName: W.chipName }, PeelApp: { state: { projects: [], filtered: [] } }, DevScope: { current: () => dev } };
   const ctx = { window, document, setTimeout: () => 0, clearTimeout() {}, URLSearchParams, CSS: { escape: x => x } }; ctx.globalThis = ctx;
   for (const f of ['js/sections.js', 'js/ws-pages.js']) vm.runInNewContext(src(f), ctx);
-  const WP = window.PeelWsPages, on = m => (/<button type="button" class="page-sec on"[^>]*>([^<]*)</.exec(m.top) || [])[1];
-  // A pick routes to the ids (phase 1): summary is Overview, files is Records.
-  assert.deepEqual(plain(W.pageRoute({ label: 'x', p }, 'home')), { page: 'site', dev: 'k', sec: 'summary' });
-  WP.siteAt('k', 'summary'); assert.equal(on(WP.build('site')), 'Overview');
-  WP.siteAt('k', 'files'); let m = WP.build('site'); assert.equal(on(m), 'Records'); assert.equal(m.answer, 'Records');
-  // An id no section has now (the old fsr section was a page button, never an id; any other): Overview.
-  WP.siteAt('k', 'fsr'); m = WP.build('site'); assert.equal(on(m), 'Overview'); assert.equal(m.answer, 'Overview');
-  // The page fsr: with a site, the site's page at Servicing › FSR review; a pick from it lands there too.
-  assert.deepEqual(plain(W.pageRoute({ label: 'x', p }, 'fsr')), { page: 'fsr', dev: 'k', sec: 'summary' });
-  m = WP.build('fsr'); assert.equal(m.id, 'fsr'); assert.equal(on(m), 'Servicing'); assert.equal(m.answer, 'FSR review');
-  assert.match(m.top, /aria-label="Views"[^>]*><button type="button" class="page-sec" data-ws-sec="servicing"[^>]*>Network<\/button><button type="button" class="page-sec on" data-ws-page="fsr"/);
+  const WP = window.PeelWsPages, on = m => (/<button type="button" role="tab" class="page-sec page-tab[^"]* on"[^>]*>([^<]*)</.exec(m.tabs) || [])[1];
+  WP.fileAt('k', 'OZ 1'); let m = WP.host('site');
+  assert.equal(on(m), 'Records'); assert.equal(m.answer, 'Records'); assert.equal(typeof m.onMount, 'function', 'the file marked once drawn');
+  view = 'overview:'; m = WP.host('site'); assert.equal(on(m), 'Overview'); assert.equal(m.answer, 'Overview');
+  view = 'records:files'; assert.equal(WP.host('site').onMount, undefined, 'another view clears the mark');
+  // (a view the map hides at a development, as Capacity: the tab's first, Network)
+  view = 'svc:capacity'; m = WP.host('site'); assert.equal(m.answer, 'Network');
+  view = 'svc:fsr'; m = WP.host('site'); assert.equal(m.id, 'fsr'); assert.equal(on(m), 'Servicing'); assert.equal(m.answer, 'FSR review');
+  assert.match(m.tabs, /aria-label="Views"[^>]*><button type="button" class="page-sec" data-pg-tab="svc" data-pg-sub="network"[^>]*>Network<\/button><button type="button" class="page-sec on" data-pg-tab="svc" data-pg-sub="fsr"/);
   dev = null; m = WP.build('fsr'); assert.equal(m.id, 'fsr'); assert.match(m.answer, /^Find the development/, 'without a site: the Find step');
-  assert.deepEqual(plain(W.startScreen({ hash: '#w=p:fsr' })), { mode: 'home', page: 'fsr' });
+  // Gone (no producer left: the strip; fileAt marks a file). The site's own trail line (siteTrail, exploreBar: Peel ›
+  // municipality › plan › site, each a data-ws-explore crumb) is the top bar's trail at a development (6b-S2: devPlace,
+  // each step that place's filter, the site closed, the tab kept; tests/page-host.test.js).
+  assert.doesNotMatch(['js/ws-pages.js', 'js/workspaces.js', 'js/devtab.js', 'js/file-tree.js'].map(src).join(''), /siteAt|data-ws-sec|wsSec\b|viewsBar|siteSec|siteTrail|exploreBar/);
+  assert.doesNotMatch(src('js/sections.js'), /\bSITE = |BY_ID|viewOf/);
+  assert.match(src('js/topbar.js'), /const dp = scoped && !kept \? devPlace\(scoped, a\) : \[\];[^]*for \(const id of dp\)/);
 });
 
 // Navigation phase 6a (navigation-design §3.1 rule 1, §3.3, §7.1–7.2): Home is the page host at an area, the map's
@@ -532,7 +591,7 @@ function loadWs(stored = {}) {
 test('phase 6a: the area pages are Home’s tabs; old links open the page’s own tab; Open the map and ← Page keep the view', () => {
   const S = require('../js/sections.js');
   const ROWS = { growth: ['growth', 'areas', null], outlook: ['growth', 'timing', null], coming: ['growth', 'timing', 'period'], tight: ['svc', 'capacity', null], projects: ['dca', 'timing', null], eaflow: ['dca', 'eas', 'eaflow'], data: ['records', 'sources', null] };
-  assert.deepEqual(Object.keys(W.HOST).sort(), Object.keys(ROWS).sort(), 'every area page, and only those (the site and FSR review join in 6b, Old pipes in 6c)');
+  assert.deepEqual(Object.keys(W.HOST).sort(), Object.keys(ROWS).sort(), 'every area page, and only those (the site and FSR review are SITE_HOST’s, at a development: 6b; Old pipes joins in 6c)');
   for (const [id, [tab, sub, fold]] of Object.entries(ROWS)) {
     assert.deepEqual(plain(W.hostOf(id)), { page: 'home', tab, sub, fold }, id);
     assert.ok(isPage(id), `${id} is still a page id (links, buttons, the last workspace)`);
@@ -615,7 +674,8 @@ test('phase 6a: the area pages are Home’s tabs; old links open the page’s ow
   L.click('[data-ws-back]');
   assert.deepEqual([L.B.view(), L.calls.length], ['dca:timing', 0]);
   const ws = src('js/workspaces.js');
-  assert.match(ws, /if \(e\.target\.closest\('\[data-ws-backpage\]'\)\) \{ openPage\(cur \|\| page \|\| 'home', \{ keep: !!\(cur && hostOf\(cur\)\) && !scopeOverview\(\) \}\); return; \}/);
+  assert.match(ws, /if \(e\.target\.closest\('\[data-ws-backpage\]'\)\) \{ const h = cur && hostAt\(cur\); openPage\(cur \|\| page \|\| 'home', \{ keep: !!h && !scopeOverview\(h\.page\) \}\); return; \}/);
+  assert.match(ws, /const hostAt = id => hostOf\(id, \{ site: devOpen\(\) \}\);/, '(6b: the site’s map views too, with a development open)');
   assert.match(ws, /data-ws-back>← Back to \$\{esc\(backTo\.ws \? `\$\{pageName\(backTo\.ws\)\} \(map\)` : hostPage\(backTo\.page\) \? `\$\{pageName\(backTo\.page\)\} › \$\{viewName\(backView\(\)\)\}` : pageName\(backTo\.page\)\)\}/, '“← Back to Home › Servicing › Network”');
   assert.match(ws, /if \(mode === 'full' && backTo && backTo\.page && hostPage\(backTo\.page\)\) renderBack\(true\);/, 'the label follows a pick on the full map');
   // A development picked while Home is open (any of its views) opens its page (§5 row 25).

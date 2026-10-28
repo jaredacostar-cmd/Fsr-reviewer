@@ -255,10 +255,10 @@ test('Review an FSR at a site: Servicing › FSR review, the one host', () => {
   assert.doesNotMatch(f, /site-bar-fsr|function toggleFor/);
   assert.match(f, /function mount\(box, p\) \{[\s\S]*?if \(_last && _last\.key === p\.key && _drafts\[p\.key\]\) runCheck\(box\);/);
   // Set beside Network (js/svc-capacity.js), and the page of Review an FSR reads the same spec: the site's
-  // page at Servicing › FSR review (js/sections.js viewOf, navigation phase 5's S12).
+  // page at Servicing › FSR review (navigation phase 5's S12; since 6b js/sections.js VIEWS.site, the host's view).
   assert.match(src('js/svc-capacity.js'), /PN\.set\('svc:network', spec\);\n\s+if \(FC && FC\.panelSpec\) PN\.set\('svc:fsr', FC\.panelSpec\(p, spec\)\);/);
-  assert.match(src('js/ws-pages.js'), /function fsr\(\) \{\n\s+if \(!devNow\(\)\) return find\('fsr'\);\n\s+return site\('fsr'\);/);
-  assert.deepEqual(plain(require('../js/sections.js').viewOf('servicing', 'fsr').keys), ['svc:fsr']);
+  assert.match(src('js/ws-pages.js'), /function fsr\(\) \{\n\s+if \(!devNow\(\)\) return find\('fsr'\);\n\s+return site\(\);/);
+  assert.deepEqual(plain(require('../js/sections.js').VIEWS.site['svc:fsr'].keys), ['svc:fsr']);
   // Copy the comparison reads the results beside the button: the map's panel or the page.
   assert.match(src('js/workspaces.js'), /const r = \(fc\.closest\('#home, #analysis'\) \|\| document\)\.querySelector\('\[data-fc-results\]'\);/);
 });

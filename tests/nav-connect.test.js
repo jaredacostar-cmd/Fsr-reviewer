@@ -63,8 +63,9 @@ test('arriving on the full map from a page or a workspace, a bar offers the way 
   assert.match(w, /else if \(m !== 'full'\) backTo = null;/);
   assert.match(w, /data-ws-back>← Back to \$\{esc\(/);
   // (navigation phase 6: back at the page with the map's tab and view as they are, keep; at the Overview of a scope
-  // the page closes, the view it was left at)
-  assert.match(w, /if \(e\.target\.closest\('\[data-ws-back\]'\)\) \{[^\n]*openPage\(\(b && b\.page\) \|\| 'home', \{ keepScroll: true, keep: true, view: b && hostPage\(b\.page\) && scopeOverview\(\) \? b\.view : null \}\)/);
+  // the page closes, the view it was left at: Home's, never the site's page, which hosts its development's Overview, 6b)
+  assert.match(w, /if \(e\.target\.closest\('\[data-ws-back\]'\)\) \{[^\n]*openPage\(\(b && b\.page\) \|\| 'home', \{ keepScroll: true, keep: true, view: b && hostPage\(b\.page\) && scopeOverview\(b\.page\) \? b\.view : null \}\)/);
+  assert.match(w, /const scopeOverview = \(p = 'home'\) => \{ const A = AT\(\); return p === 'home' && /);
 });
 
 test('a page\'s link to the map\'s tools goes to the full map first, then does what it does there', () => {

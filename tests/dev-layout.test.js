@@ -124,10 +124,12 @@ test('Records at a development: one view; the stored sub-tab is not read', () =>
   assert.notEqual(body.innerHTML, 'stale', 'redrawn while it shows a development');
 });
 
-test('History is Records\': the header\'s files · history opens Records on the map, its section on a page', () => {
+test('History is Records\': the header\'s files · history opens Records on the map, its view on a page', () => {
   const rh = fnOf(src('js/devtab.js'), 'revealHistory');
   assert.match(rh, /if \(reachable\(h\)\) return show\(h\);/);
-  assert.match(rh, /WP\.siteAt\(cur\.key, 'files'\); W\.openPage\('site', \{ keepScroll: true \}\);/);
+  // (navigation phase 6b: on a page the site's page at Records › Files, the map's tab, as its strip picks it)
+  assert.match(rh, /!!\(cur && AT && AT\.openTab && W && W\.openPage\);/);
+  assert.match(rh, /AT\.openTab\('records', 'files'\); W\.openPage\('site', \{ keepScroll: true, keep: true \}\);/);
   assert.match(rh, /AT\.openTab\('records', 'files'\)/);
   assert.match(src('js/devtab.js'), /const reachable = x => vis\(x\) \|\| vis\(x && x\.closest\('\.pnl-host, #home'\)\);/);
 });
@@ -234,8 +236,8 @@ test('Capital is one view at a development: the DC projects it relies on, the EA
   assert.match(s.lists.find(l => l.title === 'Near the site').tools, /^<button type="button" class="btn small link" data-pnl-ce-map="ea">Show EAs on the map<\/button>$/);
   assert.ok(s.lists.every(l => l.title === 'Near the site' || !l.tools), 'on that list only');
   assert.match(src('js/workspaces.js'), /const MAP_LINK = '[^']*\[data-pnl-ce-map\]';/, 'on a page it opens the full map first');
-  // The page's Capital section is the same one panel.
-  assert.deepEqual(require('../js/sections.js').BY_ID.capital.keys, ['dca:timing']);
+  // The page's Capital view is the same one panel.
+  assert.deepEqual(require('../js/sections.js').VIEWS.site['dca:timing'].keys, ['dca:timing']);
 });
 
 // ---- S13: the devtab copies go (M3); one tree renderer in Records (M4) -------------------------------------
@@ -272,67 +274,82 @@ test('the FSR cross-check has one host: Servicing › FSR review (svs=fsr), its 
   // The form's fold has its own name (§3.9 retires "FSR cross-check (fold)"); the form's heading is hidden in its box.
   assert.match(src('js/fsr-check.js'), /\{ title: 'The consultant\\u2019s figures against this app\\u2019s', id: 'pnl-fsr', open: true,/);
   assert.match(css, /\.fsr-box \.fsr-check > h3 \{ display: none; \}/);
-  // The Review an FSR page shows the same panel: the site's page at Servicing › FSR review (S12).
+  // The Review an FSR page shows the same panel: the site's page at Servicing › FSR review (S12; since navigation
+  // phase 6b the page host at the development, its view the map's).
   const site = fnOf(src('js/ws-pages.js'), 'site');
-  assert.match(site, /SE\.viewOf\('servicing', 'fsr'\)/);
-  assert.match(site, /const sec = fv \? SE\.specFor\(vw, p\)/);
+  assert.match(site, /SE\.VIEWS\.site\[key\]/);
+  assert.match(site, /sec = key === 'overview:' \? s : v \? SE\.specFor\(v, p\) : null/);
   assert.match(site, /folds: waiting \? \[\] : b\.folds, method: waiting \? '' : b\.method, sources: waiting \? '' : b\.sources, onMount: waiting \? null : mount,/);
   for (const f of [site, fnOf(src('js/ws-pages.js'), 'fsr')]) assert.doesNotMatch(f, /COVERAGE|page-fsr|data-pnl-fsrbox/, 'no second copy of the form or the coverage list');
 });
 
 // ---- S12: the site page: the map's five tabs by their names; FSR review a Servicing view ---------------------
+// (navigation phase 6b: the site's page is the page host at a development, the map's strip and Servicing's views,
+// the view the map's tab state names)
 // js/sections.js and js/ws-pages.js in a context of their own: the panels stored for one development (the stubs
-// below), DevScope's open development, the page ids' labels.
+// below), DevScope's open development, the page ids' labels, the map's tab state (st.view) and its chips.
 function sitePages() {
-  const vm = require('node:vm'), p = { key: 'k', title: '1 A St', municipality: 'Brampton' }, st = { dev: p };
+  const vm = require('node:vm'), p = { key: 'k', title: '1 A St', municipality: 'Brampton' }, st = { dev: p, view: 'overview:' };
   const head = { status: { tone: 'stage', text: 'In review' }, badge: '', extra: '', identity: 'OZ 1', tools: { key: 'k' } };
   const row = { attrs: { 'data-pnl-dev': 'k' }, html: 'r' };
   const panels = {
-    'overview:': { answer: 'Overview answer', lists: [], folds: [] },
-    'svc:network': { answer: 'Network answer', lists: [{ title: 'The path', rows: [row], total: 1 }], folds: [] },
+    'overview:': { answer: 'Overview answer', lists: [], folds: [], foot: { primary: { label: 'Servicing memo', attrs: { 'data-pnl-memo': '' } } } },
+    'svc:network': { answer: 'Network answer', lists: [{ title: 'The path', rows: [row], total: 1 }], folds: [], foot: { primary: { label: 'Trace the sewer path', attrs: { 'data-trace': 'k' } }, secondary: [{ label: 'Trace water', attrs: { 'data-wtrace': 'k' } }] } },
     'svc:fsr': { answer: 'FSR answer', lists: [{ title: 'The path', rows: [row], total: 1 }], folds: [{ id: 'pnl-fsr', title: 'f', html: '<div class="fsr-box" data-pnl-fsrbox></div>' }], method: 'm',
       foot: { primary: { label: 'Copy the comparison', attrs: { 'data-ws-fsrcopy': '' } }, secondary: [{ label: 'Print / PDF', attrs: { 'data-ws-fsrprint': '' } }] }, onMount: () => {} },
   };
   st.set = new Set(Object.keys(panels));
+  const el = () => null, tdoc = { querySelector: el, querySelectorAll: () => [], getElementById: el, addEventListener() {} }, tctx = { document: tdoc, setTimeout: () => 0, module: { exports: {} } };
+  tctx.window = { PeelUtil: { store: { get: (k, d) => d, set() {} } }, document: tdoc }; tctx.globalThis = tctx;
+  vm.runInNewContext(src('js/analysis-tabs.js'), tctx);
+  const T = tctx.module.exports, Wp = require('../js/workspaces.js');
   const document = { documentElement: { classList: { toggle() {}, contains: () => false } }, querySelector: () => null, querySelectorAll: () => [], getElementById: () => null, addEventListener() {}, dispatchEvent() {} };
   const window = { document, PeelPanel: { get: k => (st.set.has(k) ? { scope: 'dev:k', spec: { head, ...panels[k] } } : null), scenarioChip: () => '' },
-    PeelWorkspaces: { BY_ID: { site: { label: 'Check a site' }, fsr: { label: 'Review an FSR' } } }, PeelApp: { state: { projects: [], filtered: [] } }, DevScope: { current: () => st.dev } };
+    PeelAnalysisTabs: { TAB_KEYS: T.TAB_KEYS, chipsAt: T.chipsAt, tabReady: () => true, viewKey: () => st.view },
+    PeelWorkspaces: { BY_ID: { site: { label: 'Check a site' }, fsr: { label: 'Review an FSR' } }, TAB_NAME: Wp.TAB_NAME, tabPath: Wp.tabPath, chipName: Wp.chipName, hostOf: Wp.hostOf }, PeelApp: { state: { projects: [], filtered: [] } }, DevScope: { current: () => st.dev } };
   const ctx = { window, document, setTimeout: () => 0, clearTimeout() {}, URLSearchParams, CSS: { escape: x => x } }; ctx.globalThis = ctx;
   for (const f of ['js/sections.js', 'js/ws-pages.js']) vm.runInNewContext(src(f), ctx);
   return { WP: window.PeelWsPages, st };
 }
-const secsOf = (top, label) => { const m = new RegExp(`<nav class="page-secs[^"]*" aria-label="${label}"[^>]*>([^]*?)</nav>`).exec(top); return m ? [...m[1].matchAll(/<button[^>]*class="page-sec( on)?"[^>]*>([^<]*)</g)].map(x => `${x[2]}${x[1] ? '*' : ''}`) : null; };
-test('the site page: the map\u2019s five tabs by their names; FSR review a Servicing view (the page fsr)', () => {
+const secsOf = (top, label) => { const m = new RegExp(`<nav class="page-secs[^"]*"[^>]* aria-label="${label}"[^>]*>([^]*?)</nav>`).exec(top); return m ? [...m[1].matchAll(/<button[^>]*class="page-sec(?: page-tab)?(?: page-tab-trail)?( on)?"[^>]*>([^<]*)</g)].map(x => `${x[2]}${x[1] ? '*' : ''}`) : null; };
+test('the site page: the map\u2019s five tabs by their names; FSR review a Servicing view (the page fsr), each view\u2019s own footer first', () => {
   const { WP, st } = sitePages(), plain = x => JSON.parse(JSON.stringify(x));
-  WP.siteAt('k', 'summary');
-  let m = WP.build('site');
-  assert.deepEqual(secsOf(m.top, 'Sections'), ['Overview*', 'Growth', 'Servicing', 'Capital', 'Records']);
-  assert.equal(secsOf(m.top, 'Views'), null, 'the views row only on Servicing');
+  let m = WP.host('site');
+  assert.deepEqual(secsOf(m.tabs, 'Tabs'), ['Overview*', 'Growth', 'Servicing', 'Capital', 'Records']);
+  assert.equal(secsOf(m.tabs, 'Views'), null, 'the views row only on Servicing');
+  assert.equal(m.id, 'site'); assert.equal(m.eyebrow, 'Overview · Brampton', 'the view and the place, the tabs\u2019 words');
+  assert.equal(m.answer, 'Overview answer');
   assert.deepEqual(plain(m.actions.map(a => a.label)), ['Servicing memo', 'Open the map', 'Another site'], 'Inquiry draft, ☆ Watch and Check FSR are the header\u2019s');
-  // Servicing: its row, Network on (the section), FSR review the page fsr.
-  WP.siteAt('k', 'servicing'); m = WP.build('site');
-  assert.deepEqual(secsOf(m.top, 'Views'), ['Network*', 'FSR review']);
-  assert.match(m.top, /<nav class="page-secs page-subsecs" aria-label="Views" data-psec="views"><button type="button" class="page-sec on" data-ws-sec="servicing" aria-pressed="true">Network<\/button><button type="button" class="page-sec" data-ws-page="fsr" aria-pressed="false">FSR review<\/button><\/nav>$/);
-  assert.equal(m.answer, 'Network answer');
-  // The page fsr with a site: the site's page at Servicing › FSR review, its id, its panel, its footer.
-  m = WP.build('fsr');
-  assert.equal(m.id, 'fsr'); assert.match(m.eyebrow, /^Review an FSR · .*Output: notes for the review/);
-  assert.deepEqual(secsOf(m.top, 'Sections'), ['Overview', 'Growth', 'Servicing*', 'Capital', 'Records']);
-  assert.deepEqual(secsOf(m.top, 'Views'), ['Network', 'FSR review*']);
+  // Servicing: its row, Network on (the map's chips at a development), its own footer first (§5 row 56).
+  st.view = 'svc:network'; m = WP.host('site');
+  assert.deepEqual(secsOf(m.tabs, 'Tabs'), ['Overview', 'Growth', 'Servicing*', 'Capital', 'Records']);
+  assert.deepEqual(secsOf(m.tabs, 'Views'), ['Network*', 'FSR review']);
+  assert.match(m.tabs, /<nav class="page-secs page-subsecs" aria-label="Views" data-psec="views"><button type="button" class="page-sec on" data-pg-tab="svc" data-pg-sub="network" aria-pressed="true">Network<\/button><button type="button" class="page-sec" data-pg-tab="svc" data-pg-sub="fsr" aria-pressed="false">FSR review<\/button><\/nav>$/);
+  assert.equal(m.answer, 'Network answer'); assert.equal(m.eyebrow, 'Servicing › Network · Brampton');
+  assert.deepEqual(plain(m.actions), [{ label: 'Trace the sewer path', attrs: { 'data-trace': 'k' }, primary: true }, { label: 'Trace water', attrs: { 'data-wtrace': 'k' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'site', 'data-ws-keep': '' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'site' } }]);
+  // Servicing › FSR review: Review an FSR, its id, its panel, its footer; the stepper is the Find step's only (§5 row 57).
+  st.view = 'svc:fsr'; m = WP.host('site');
+  assert.equal(m.id, 'fsr'); assert.match(m.eyebrow, /^Servicing › FSR review · Brampton$/); assert.doesNotMatch(m.eyebrow, /pnl-steps-i|Find ›/);
+  assert.deepEqual(secsOf(m.tabs, 'Tabs'), ['Overview', 'Growth', 'Servicing*', 'Capital', 'Records']);
+  assert.deepEqual(secsOf(m.tabs, 'Views'), ['Network', 'FSR review*']);
   assert.equal(m.answer, 'FSR answer'); assert.equal(m.folds[0].id, 'pnl-fsr'); assert.equal(typeof m.onMount, 'function');
-  assert.deepEqual(plain(m.lists[0].rows[0].attrs), { 'data-ws-go': 'fsr', 'data-ws-dev': 'k' });
-  assert.deepEqual(plain(m.actions), [{ label: 'Copy the comparison', attrs: { 'data-ws-fsrcopy': '' }, primary: true }, { label: 'Print / PDF', attrs: { 'data-ws-fsrprint': '' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'fsr' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'fsr' } }]);
+  assert.deepEqual(plain(m.lists[0].rows[0].attrs), { 'data-ws-go': 'fsr', 'data-ws-dev': 'k', 'data-ws-keep': '' }, 'a row: the map view at this view');
+  assert.deepEqual(plain(m.actions.slice(0, 4)), [{ label: 'Copy the comparison', attrs: { 'data-ws-fsrcopy': '' }, primary: true }, { label: 'Print / PDF', attrs: { 'data-ws-fsrprint': '' } }, { label: 'Open the map', attrs: { 'data-ws-go': 'fsr', 'data-ws-keep': '' } }, { label: 'Another site', attrs: { 'data-ws-unpick': 'fsr' } }]);
   assert.ok(m.tools && m.tools.key === 'k', 'the one header');
-  // Its panel not set yet: the bar and the row, the page says it is loading.
-  st.set.delete('svc:fsr'); m = WP.build('fsr');
-  assert.deepEqual(secsOf(m.top, 'Views'), ['Network', 'FSR review*']);
-  assert.match(m.answer, /Loading FSR review for 1 A St/); assert.equal(m.onMount, null);
-  // No site: the Find step (phase 1's, with the FSR-posted list).
+  assert.deepEqual(plain(WP.build('fsr').actions.map(a => a.label)), ['Copy the comparison', 'Print / PDF', 'Open the map', 'Another site'], 'the page fsr with a site: the same view');
+  // Its panel not set yet: the strip and the row, the page says it is loading (and tries again).
+  st.set.delete('svc:fsr'); m = WP.host('site');
+  assert.deepEqual(secsOf(m.tabs, 'Views'), ['Network', 'FSR review*']);
+  assert.match(m.answer, /Loading Servicing › FSR review for 1 A St/); assert.equal(m.onMount, null); assert.equal(m.pending, true);
+  assert.equal(m.name, '1 A St', 'under its own header');
+  // No site: the Find step (phase 1's, with the FSR-posted list); Check a site's too.
   st.dev = null; m = WP.build('fsr');
   assert.equal(m.id, 'fsr'); assert.match(m.answer, /^Find the development/);
+  assert.equal(WP.build('site').id, 'site'); assert.match(WP.build('site').answer, /^Find the development/);
   const ws = src('js/ws-pages.js');
-  assert.match(fnOf(ws, 'fsr'), /if \(!devNow\(\)\) return find\('fsr'\);\n {4}return site\('fsr'\);/);
-  assert.match(fnOf(ws, 'site'), /const SE = root\.PeelSections, fv = view === 'fsr' && !!SE, id = fv \? 'fsr' : 'site';/);
+  assert.match(fnOf(ws, 'fsr'), /if \(!devNow\(\)\) return find\('fsr'\);\n {4}return site\(\);/);
+  assert.match(fnOf(ws, 'site'), /const key = hostKey\('site'\), id = key === 'svc:fsr' \? 'fsr' : 'site';/);
+  assert.doesNotMatch(ws + src('css/app.css'), /pnl-steps-i|function viewsBar/, 'the stepper on a site\u2019s page and the old views row are gone');
   // A phone: the row scrolls sideways like the bar (a .page-secs), lighter, under it.
   const css = src('css/app.css');
   assert.match(css, /\.page-secs \+ \.page-subsecs \{ margin-top: calc\(-1 \* var\(--space-2\)\); border-bottom: 0; \}/);
@@ -456,17 +473,17 @@ test('Records’ full table: each file with the link that put it there (rule, co
   assert.doesNotMatch(FT.treeHTML(d, null, { own: true, rules }), /tr-link|(high|medium) confidence|% inside/, 'off by default: the panel and the page keep their tree');
 });
 
-test('the header’s “n links to check” flag: Records › Files on the map, the site’s Records section on its page', () => {
+test('the header’s “n links to check” flag: Records › Files on the map, the site’s page at Records › Files', () => {
   const vm = require('node:vm'), calls = [];
   let page = false, click = null;
   const document = { addEventListener: (t, f) => { if (t === 'click') click = f; }, documentElement: { classList: { contains: k => k === 'home-on' && page } } };
-  const window = { document, DevScope: { current: () => ({ key: 'Mississauga|5080' }) }, PeelWsPages: { siteAt: (...a) => calls.push(['siteAt', ...a]) }, PeelWorkspaces: { openPage: (...a) => calls.push(['openPage', ...a]) }, PeelAnalysisTabs: { openTab: (...a) => calls.push(['openTab', ...a]) } };
+  const window = { document, DevScope: { current: () => ({ key: 'Mississauga|5080' }) }, PeelWorkspaces: { openPage: (...a) => calls.push(['openPage', ...a]) }, PeelAnalysisTabs: { openTab: (...a) => calls.push(['openTab', ...a]) } };
   vm.runInNewContext(src('js/file-tree.js'), { window, document });
   const flag = { target: { closest: s => (s === '[data-tree-check]' ? {} : null) } };
   click(flag);
   assert.deepEqual(plain(calls), [['openTab', 'records', 'files']], 'the map: Records › Files');
   calls.length = 0; page = true; click(flag);
-  assert.deepEqual(plain(calls), [['siteAt', 'Mississauga|5080', 'files'], ['openPage', 'site', { keepScroll: true }]], 'a page: its Records section (it stayed on the Overview, the map behind it switching)');
+  assert.deepEqual(plain(calls), [['openTab', 'records', 'files'], ['openPage', 'site', { keepScroll: true, keep: true }]], 'a page: the site’s page at Records › Files, the map’s tab (navigation phase 6b: one tab state)');
   calls.length = 0; click({ target: { closest: () => null } });
   assert.deepEqual(calls, [], 'any other click: nothing');
 });
@@ -483,6 +500,6 @@ test('← Whole development in Records’ full table: back from a file opened on
 test('Check FSR opens the form in view: the map’s panel and the page scroll to its fold (design §3.6: the cross-check first)', () => {
   assert.match(src('js/analysis-tabs.js'), /showFootTab\(tab, sub\); Sh\(\)\.viewLink\.write\(\);\n[^\n]*\n\s+if \(a\.dataset\.at === 'svc:fsr'\) requestAnimationFrame\(\(\) => \{ const f = document\.querySelector\('#pnl-svc #pnl-fsr'\); if \(f\) \{ f\.open = true; f\.scrollIntoView\(\{ block: 'start' \}\); \} \}\);/);
   const op = fnOf(src('js/workspaces.js'), 'openPage');
-  assert.match(op, /if \(!o\.keepScroll\) \{ const el = \$\('#home'\); if \(el\) el\.scrollTop = 0; \}\n[^\n]*\n\s+if \(dev && id === 'fsr' && !o\.keepScroll\) \{ const f = \$\('#home #pnl-fsr'\); if \(f\) \{ f\.open = true; f\.scrollIntoView\(\{ block: 'start' \}\); \} \}/, 'after the page’s scroll reset');
+  assert.match(op, /if \(!o\.keepScroll\) \{ const el = \$\('#home'\); if \(el\) el\.scrollTop = 0; \}\n[^\n]*\n\s+if \(dev && w\.id === 'fsr' && !o\.keepScroll\) \{ const f = \$\('#home #pnl-fsr'\); if \(f\) \{ f\.open = true; f\.scrollIntoView\(\{ block: 'start' \}\); \} \}/, 'after the page’s scroll reset (the id asked for: openPage maps it to the site’s page, navigation phase 6b)');
   assert.match(op, /else if \(w\) \{ const sub = dev \? w\.siteSub : w\.sub;/, 'FSR review behind the page at a site (tests/workspaces.test.js runs it)');
 });

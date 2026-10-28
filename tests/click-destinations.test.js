@@ -209,8 +209,8 @@ test('the Inquiry draft: one function, a development action and the Export item,
   assert.match(src('js/ws-pages.js'), /tools: s\.head\.tools/);
   assert.match(src('js/ws-pages.js'), /toolsHTML\(m\.tools, 'page'\)/);
   assert.match(src('js/overview-tab.js'), /foot: \{ primary: \{ label: 'Servicing memo', attrs: \{ 'data-pnl-memo': '' \}, title: '[^']*' \} \},/);
-  assert.doesNotMatch(src('js/ws-pages.js').slice(src('js/ws-pages.js').indexOf('function site(view)'), src('js/ws-pages.js').indexOf('// ---- Growth in an area')), /'data-inquiry'|'data-watch'|Review its FSR/);
-  assert.ok(src('js/ws-pages.js').includes('function site(view)'), 'the site page (FSR review its Servicing view)');
+  assert.doesNotMatch(src('js/ws-pages.js').slice(src('js/ws-pages.js').indexOf('function site()'), src('js/ws-pages.js').indexOf('// ---- Growth in an area')), /'data-inquiry'|'data-watch'|Review its FSR/);
+  assert.ok(src('js/ws-pages.js').includes('function site()'), 'the site page (FSR review its Servicing view; the page host at a development, navigation phase 6b)');
 });
 
 // Navigation phase 1 (AD-5, design §9 #5): Review outlets is a tool page reached from Records › Data

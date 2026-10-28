@@ -1,7 +1,7 @@
 'use strict';
 // Navigation phase 1 — Find from every page (docs/architecture-review/navigation-design.md §3.3): each
 // search hit says what it is (js/search-filter.js), and a pick on a page opens what it found
-// (js/workspaces.js pageRoute / routePick, js/ws-pages.js siteAt / drillTo). On the full
+// (js/workspaces.js pageRoute / routePick, js/ws-pages.js fileAt / drillTo). On the full
 // map and in a workspace's map view the search works as before.
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -113,9 +113,12 @@ test('the browser half: the page gate, the pick’s place set before its page op
   const w = src('js/workspaces.js');
   const r = body(w, '  function routePick(x) {');
   assert.match(r, /^ {2}function routePick\(x\) \{\n {4}if \(mode !== 'home'\) return false;/, 'pages only (the map’s picks never routed)');
-  // A development: the Explore hook told first, the development opened, its section set, then its page.
+  // A development: the Explore hook told first, the development opened, its view picked (a file number Records ›
+  // Files, as on the strip: navigation phase 6b, the site's page is the host at it) and its file set, then its page.
   const at = s => { const i = r.indexOf(s); assert.ok(i > 0, s); return i; };
-  assert.ok(at('exploreDev = `dev:${r.dev}`; pickDev(r.dev);') < at('WP.siteAt(r.dev, r.sec, r.file || null);') && at('WP.siteAt(') < at('openPage(r.page);'));
+  assert.ok(at('exploreDev = `dev:${r.dev}`; pickDev(r.dev);') < at('A.openTab(t, s || undefined);') && at('A.openTab(') < at('WP.fileAt(r.dev, r.file || null);') && at('WP.fileAt(') < at('openPage(r.page, { keep: at });'));
+  assert.match(r, /const \[t, s\] = \(r\.page === 'fsr' \? '' : SITE_SEC\[r\.sec\] \|\| ''\)\.split\(':'\), A = AT\(\), at = !!t && t !== 'overview';/, 'Overview and FSR review: openPage’s own view (hostOf)');
+  assert.match(r, /const r = pageRoute\(x, shownPage\(\)\)/, 'from the site’s page at FSR review: Review an FSR’s route');
   // A plan or MTSA: its filter (drillTo), then Home on the tab you were on (keep: navigation phase 6, §3.3).
   assert.ok(at('WP.drillTo(r.drill);') < at('openPage(r.page, { keep: true });'));
   // (the filters set before are replaced by drillTo itself, so the old clean-up before the drill is removed by design)
@@ -127,9 +130,10 @@ test('the browser half: the page gate, the pick’s place set before its page op
   assert.ok(at('if (r.ss && SS() && SS().resolve && !SS().resolve(r.ss)) return true;') < at('go(r.ws, { ss: r.ss, quiet: true });'));
   assert.match(r, /const D = root\.PeelDcProjects; if \(D && D\.select\) D\.select\(r\.dcSel\);/);
   assert.match(r, /return r\.then !== 'map';/);
-  // The places the pick lands at (js/ws-pages.js): the same reset as a step up a site's trail.
+  // The places the pick lands at (js/ws-pages.js): a file to mark on the site's Records › Files; the same reset as a
+  // step up a site's trail.
   const p = src('js/ws-pages.js');
-  assert.match(p, /const siteAt = \(key, sec, file\) => \{ siteSec = sec \|\| 'summary'; siteSecDev = key; siteFile = file \|\| null; siteFileShown = false; \};/);
+  assert.match(p, /const fileAt = \(key, file\) => \{ siteFileDev = key; siteFile = file \|\| null; siteFileShown = false; \};/);
   assert.match(p, /if \(A\.applyFilters\) A\.applyFilters\(\);\n {4}gStage = 'all'; gAll = false; gEst = false;\n/, 'the drill’s reset: Growth › Areas’ stage, estimates and all rows');
   assert.doesNotMatch(p, /\bgAt\b/, 'no page-local level: the filter is the level');
   // (navigation phase 6: no page-local section to set: a DC project is Home's Capital › DC timing at it, a plan
@@ -137,14 +141,15 @@ test('the browser half: the page gate, the pick’s place set before its page op
   assert.doesNotMatch(p, /sectionAt|const wsSec = |wsSec\[|gSec/);
   assert.doesNotMatch(r, /sectionAt/);
   // The file marked: the tree row's own button (not the header's latest file or the figure), its fold
-  // of earlier files opened; scrolled to once; cleared with a new development or a section button.
+  // of earlier files opened; scrolled to once; cleared with a new development or another view (navigation phase 6b:
+  // the strip; the section buttons, data-ws-sec, are removed by design).
   const m = body(p, '  function markFile(host, ref) {');
   assert.match(m, /host\.querySelector\(`\.tr-row > div > \.tr-ref\[data-dev-file="\$\{CSS\.escape\(ref\)\}"\]`\), row = b && b\.closest\('\.tr-row'\)/);
   assert.match(m, /const fold = row\.closest\('details\.tr-same'\); if \(fold && !fold\.open\) fold\.open = true;/);
   assert.match(m, /row\.classList\.add\('tr-hit'\);\n {4}if \(!siteFileShown\) \{ siteFileShown = true; row\.scrollIntoView\(\{ block: 'center' \}\); \}/);
-  assert.match(p, /const b = sec \|\| s, ref = on === 'files' \? siteFile : null;/);
-  assert.match(p, /if \(siteSecDev !== p\.key\) \{ siteSec = 'summary'; siteSecDev = p\.key; siteFile = null; \}/);
-  assert.match(p, /if \(t\.dataset\.wsSec\) \{ siteSec = t\.dataset\.wsSec; siteFile = null; \}/);
+  assert.match(p, /const b = sec \|\| s, ref = key === 'records:files' \? siteFile : null;/);
+  assert.match(p, /if \(siteFileDev !== p\.key \|\| key !== 'records:files'\) siteFile = null;/);
+  assert.doesNotMatch(p, /data-ws-sec|siteSec/);
   assert.match(src('css/app.css'), /\.tr-hit \{ outline: 2px solid var\(--focus\);/);
   // (the file tree's row: the button sits in the row's second cell)
   assert.match(src('js/file-tree.js'), /return `<div class="tr-row">\$\{dot\(r && r\.stage \|\| 'review'\)\}<div><button type="button" class="tr-ref" data-dev-file=/);

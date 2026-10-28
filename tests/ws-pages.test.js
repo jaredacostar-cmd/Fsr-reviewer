@@ -129,9 +129,11 @@ test('approved, not yet built: units left in files past their first planning app
 test('Review an FSR coverage: what an FSR covers and what the app can check', () => {
   assert.deepEqual(plain(WP.COVERAGE.map(c => c[1])), ['app', 'app', 'app', 'app', 'part', 'eye', 'eye']);
   assert.match(WP.COVERAGE[6][0], /Fire flow/);
-  // (navigation phase 5: the page is Servicing › FSR review's panel, js/fsr-check.js panelSpec, which lists all seven)
+  // (navigation phase 5: the page is Servicing › FSR review's panel, js/fsr-check.js panelSpec, which lists all seven;
+  // since 6b the site's page at that view, its view the map's: js/sections.js VIEWS.site)
   assert.match(src('js/fsr-check.js'), /Functional Servicing Report Requirements \(November 2009\); confirm the current version with the Region\./);
-  assert.match(src('js/ws-pages.js'), /vw = fv \? SE\.viewOf\('servicing', 'fsr'\) : null;\n {4}const sec = fv \? SE\.specFor\(vw, p\)/);
+  assert.match(src('js/ws-pages.js'), /const v = SE && SE\.VIEWS \? SE\.VIEWS\.site\[key\] : null, sec = key === 'overview:' \? s : v \? SE\.specFor\(v, p\) : null, waiting = !sec;/);
+  assert.deepEqual(plain(require('../js/sections.js').VIEWS.site['svc:fsr']), { keys: ['svc:fsr'] });
 });
 
 test('every workspace has a page builder; pages open from Home, chips and the map view', () => {

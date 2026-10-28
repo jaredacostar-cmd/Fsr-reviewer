@@ -53,6 +53,13 @@ async function check(name, browser, opts, fn) {
 const wait = ms => new Promise(r => setTimeout(r, ms));
 // (in the page: an element shown inside the part of its scrolling box that is on screen, top and bottom)
 const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].find(x => x.getClientRects().length); const b = document.querySelector(box); if (!e || !b) return { found: !!e }; const r = e.getBoundingClientRect(), c = b.getBoundingClientRect(), top = Math.max(0, c.top), bottom = Math.min(innerHeight, c.bottom); return { found: true, top: Math.round(r.top), box: [Math.round(top), Math.round(bottom)], in: r.top >= top - 1 && r.bottom <= bottom + 1 }; };
+// (a page host's view picked as a person does: the strip's tab, then the views row's chip; navigation phase 6)
+async function pickView(page, ev, key, tap = false) {
+  const [t, s] = key.split(':'), at = () => ev(() => PeelWorkspaces.view());
+  const hit = sel => (tap ? page.locator(sel).first().tap() : page.click(sel));
+  if ((await at() || '').split(':')[0] !== t) { await hit(`#home .page-tabs [data-pg-tab="${t}"]`); await wait(1200); }
+  if (s && await at() !== key) { await hit(`#home .page-subsecs [data-pg-sub="${s}"]`); await wait(1200); }
+}
 
 (async () => {
   const srv = await serve(ROOT, PORT);
@@ -275,14 +282,14 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
       const r = await ev(k => {
         const p = PeelDevNav.projectByKey(k), strip = h => String(h == null ? '' : h).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
         const spec = id => { const e = PeelPanel.get(id); return e && e.scope === `dev:${k}` ? e.spec : null; };
-        const ov = spec('overview:'), gr = spec('growth:pipeline'), net = spec('svc:network'), cap = PeelSections.specFor('capital', p), rec = PeelSections.specFor('files', p);
+        const V = PeelSections.VIEWS.site, ov = spec('overview:'), gr = spec('growth:pipeline'), net = spec('svc:network'), cap = PeelSections.specFor(V['dca:timing'], p), rec = PeelSections.specFor(V['records:files'], p);
         const fig = (s, re) => { const f = ((s && s.figures) || []).find(x => x && re.test(`${x.u} ${x.label}`)); return f ? strip(f.v) : null; };
         const site = new Set((PeelTreeGroups.siteParts ? PeelTreeGroups.siteParts(p, PeelApp.state.projects.all || PeelApp.state.projects) : []).map(q => q.key));
         delete p._rel;   // (the list's cache on the project: dev-nav's, the one copy since S13, worked out again)
         const note = 'Counted from its permits';
         return { units: Math.round(p.units || 0).toLocaleString('en-CA'), jobsOnly: !(p.units > 0), permitsOnly: !p.records.some(x => x.kind === 'application'),
           ov: fig(ov, /^units planned/), ovJobs: fig(ov, /^jobs /), gr: fig(gr, /^units planned/), rec: fig(rec, /^homes counted once/),
-          trail: ((document.querySelector('#trail .tb-count') || {}).textContent || '').replace(/[^\d,]/g, ''),
+          trail: ((document.querySelector('#trail .tb-count') || {}).textContent || '').replace(/[^\d,]/g, ''), steps: [...document.querySelectorAll('#trail .tb-step')].map(b => b.textContent.trim()), placed: !!PeelPlanTables.placeOf(p), muni: p.municipality, title: p.title,
           ovW: fig(ov, /water, maximum day/), netW: fig(net, /water, maximum day/), ovWW: fig(ov, /wastewater, peak wet/), netWW: fig(net, /wastewater, peak wet/),
           cap: fig(cap, /constraints it relies on/), needs: String((PeelMasterPlan.devNeeds(p) || []).length),
           stages: [ov, gr, net, cap, rec].map(s => (s && s.head && s.head.status ? s.head.status.text : null)),
@@ -293,50 +300,56 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
       if (r.jobsOnly) expect(r.ovJobs && r.gr === '0' && r.trail === '0', `${at}: jobs on the Overview (${r.ovJobs}), no homes on Growth (${r.gr}) or the trail (${r.trail})`);
       else expect(r.ov === r.units && r.gr === r.units && r.trail === r.units, `${at}: ${r.units} units; the Overview ${r.ov}, Growth ${r.gr}, the trail ${r.trail}`);
       if (r.rec != null) expect(r.rec === r.units, `${at}: Records counts ${r.rec} homes once, the development ${r.units}`);
+      // (where it sits, on the top bar's trail: Peel › its municipality › its plan … › the site; navigation phase 6b)
+      expect(r.steps[0] === 'Peel' && r.steps[1] === r.muni && r.steps.at(-1) === r.title && (r.placed ? r.steps.length >= 4 : r.steps.length === 3), `${at}: the trail ${r.steps.join(' › ')} (in a plan: ${r.placed})`);
       expect(r.netW != null && r.ovW === r.netW && r.ovWW === r.netWW, `${at}: flows ${r.ovW} / ${r.ovWW} L/s on the Overview, ${r.netW} / ${r.netWW} on Servicing › Network`);
       expect(r.cap === r.needs, `${at}: Capital relies on ${r.cap} constraints, devNeeds ${r.needs}`);
       expect(r.stages.every(x => x && x === r.stages[0]), `${at}: one stage on every tab (${r.stages.join(' | ')})`);
       if (r.permitsOnly) expect(r.noteFn && r.noteShown, `${at}: “Counted from its permits” (the note ${r.noteFn}, shown ${r.noteShown})`);
       expect(r.shown.join() === r.rel.join() && r.panelRel.join() === r.rel.slice(0, 5).join(), `${at}: related applications ${r.panelRel.length} in Records' panel, ${r.shown.length} in its full table, ${r.rel.length} by PeelDevNav`);
-      // Its page: each section's figures are its map tab's.
+      // Its page (navigation phase 6b, the host at a development): each view's figures are its map tab's, picked on
+      // the page's strip (the map's five tabs) and Servicing's views.
       await ev(() => { PeelWorkspaces.openPage('site'); }); await wait(2000);
-      const secs = await ev(() => [...document.querySelectorAll('#home [data-ws-sec]')].map(b => b.dataset.wsSec));
-      expect(secs.length >= 5, `${at}: the page's sections (${secs.join()})`);
-      for (const id of secs) {
-        await page.click(`#home [data-ws-sec="${id}"]`); await wait(1200);
-        const f = await ev(id => {
-          const p = DevScope.current(), s = PeelSections.specFor(id, p) || (id === 'summary' ? PeelPanel.get('overview:').spec : null), strip = h => String(h == null ? '' : h).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+      const tabs = await ev(() => [...document.querySelectorAll('#home .page-tabs [data-pg-tab]')].map(b => b.dataset.pgTab));
+      expect(tabs.join() === 'overview,growth,svc,dca,records', `${at}: the page's tabs (${tabs.join()})`);
+      for (const key of await ev(() => Object.keys(PeelSections.VIEWS.site))) {
+        await pickView(page, ev, key);
+        const f = await ev(k => {
+          const p = DevScope.current(), s = PeelSections.specFor(PeelSections.VIEWS.site[k], p), strip = h => String(h == null ? '' : h).replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
           // (as js/panel.js draws them: no n/a or – figure, four at most)
           const map = ((s && s.figures) || []).filter(x => x && !/^(n\/a|–|-)$/i.test(String(x.v))).slice(0, 4).map(x => strip(x.v));
-          return { page: [...document.querySelectorAll('#home .pnl-figs[data-psec="figures"] .pnl-fig > b')].map(b => strip(b.innerHTML)), map };
-        }, id);
-        expect(f.page.join(' | ') === f.map.join(' | '), `${at}, page section ${id}: ${f.page.join(' | ')} / the map's ${f.map.join(' | ')}`);
+          return { view: PeelWorkspaces.view(), page: [...document.querySelectorAll('#home .pnl-figs[data-psec="figures"] .pnl-fig > b')].map(b => strip(b.innerHTML)), map };
+        }, key);
+        expect(f.view === key && f.page.join(' | ') === f.map.join(' | '), `${at}, page view ${key} (${f.view}): ${f.page.join(' | ')} / the map's ${f.map.join(' | ')}`);
       }
     }
   });
 
-  // A site's sections: Check a site shows every map tab's panel for the development (Overview,
-  // Growth, Servicing, Capital, Records), each the map's own answer.
-  await check('Check a site: every map tab is a section of the page, with the map’s own answer', browser, {}, async ({ page, ev }, expect) => {
+  // A site's tabs: Check a site shows every map tab's panel for the development (Overview, Growth, Servicing ›
+  // Network and FSR review, Capital, Records), each the map's own answer, picked on the page's strip and Servicing's
+  // views (navigation phase 6b: the site's page is the page host at a development).
+  await check('Check a site: every map tab is a tab of the page, with the map’s own answer', browser, {}, async ({ page, ev }, expect) => {
     await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
     await ev(() => { const p = PeelApp.state.projects.find(q => q.phase === 'approved' && q.units > 300); PeelDevNav.showDetail(p); });
     await wait(2500);
     await ev(() => PeelWorkspaces.openPage('site')); await wait(2000);
-    const secs = await ev(() => [...document.querySelectorAll('#home [data-ws-sec]')].map(b => b.dataset.wsSec));
-    expect(secs.join() === 'summary,growth,servicing,capital,files', `the sections: ${secs.join()}`);
-    for (const id of secs) {
-      await page.click(`#home [data-ws-sec="${id}"]`); await wait(2500);
-      const r = await ev(id => {
-        const p = DevScope.current(), s = PeelSections.specFor(id, p) || (id === 'summary' ? PeelPanel.get('overview:').spec : null);
+    const tabs = await ev(() => [...document.querySelectorAll('#home .page-tabs .page-sec')].map(b => b.childNodes[0].textContent.trim()));
+    expect(tabs.join() === 'Overview,Growth,Servicing,Capital,Records', `the tabs: ${tabs.join()}`);
+    for (const key of await ev(() => Object.keys(PeelSections.VIEWS.site))) {
+      await pickView(page, ev, key); await wait(1300);
+      const r = await ev(k => {
+        const p = DevScope.current(), s = PeelSections.specFor(PeelSections.VIEWS.site[k], p);
         const ans = document.querySelector('#home .home-answer'), strip = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
-        return { on: (document.querySelector('#home .page-sec.on') || {}).dataset ? document.querySelector('#home .page-sec.on').dataset.wsSec : null, page: strip(ans && ans.innerHTML), map: strip(s && s.answer) };
-      }, id);
-      expect(r.on === id, `${id}: the section bar shows ${r.on}`);
-      expect(r.map && r.page === r.map, `${id}: the page's answer is the map panel's ("${r.page.slice(0, 60)}" / "${String(r.map).slice(0, 60)}")`);
+        const on = sel => ((document.querySelector(sel) || {}).dataset || {});
+        return { view: PeelWorkspaces.view(), page: PeelWorkspaces.page(), on: on('#home .page-tabs .page-sec.on').pgTab || null, chip: on('#home .page-subsecs .page-sec.on').pgSub || null, text: strip(ans && ans.innerHTML), map: strip(s && s.answer) };
+      }, key);
+      const [t, sb] = key.split(':');
+      expect(r.page === 'site' && r.view === key && r.on === t && (t === 'svc' ? r.chip === sb : !r.chip), `${key}: the strip shows ${r.on}${r.chip ? ` › ${r.chip}` : ''} (${r.page} at ${r.view})`);
+      expect(r.map && r.text === r.map, `${key}: the page's answer is the map panel's ("${r.text.slice(0, 60)}" / "${String(r.map).slice(0, 60)}")`);
     }
     // Overview: the path line under Wastewater (a development on the mapped catchments: its plant), and the
     // DC projects it relies on named in Infrastructure coming.
-    await page.click('#home [data-ws-sec="summary"]'); await wait(2500);
+    await page.click('#home .page-tabs [data-pg-tab="overview"]'); await wait(2500);
     const pl = await ev(() => {
       const p = DevScope.current(), f = PeelSvcData.svcFacts(p), rel = PeelDevVerdict.reliedOn(PeelMasterPlan.devNeeds(p) || []);
       const row = n => [...document.querySelectorAll('#home .pnl-row')].find(r => ((r.querySelector('.pnl-r-name') || {}).textContent || '').includes(n));
@@ -440,12 +453,12 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
       expect(dl && /^peel-environmental-assessments-.+\.csv$/.test(dl.suggestedFilename()), `its CSV (${dl && dl.suggestedFilename()})`);
       await ev(() => { PeelPanel.closeFull(); }); await wait(600);
     }
-    // 5. Its page: the Overview's About; the Records section's files and events.
+    // 5. Its page: the Overview's About; Records' files and events (the strip's Records, navigation phase 6b).
     await ev(() => { PeelWorkspaces.openPage('site'); }); await wait(2000);
     const sum = await ev(() => [...document.querySelectorAll('#home details.pnl-fold > summary')].map(x => x.textContent.trim()));
     expect(sum.includes('About') && !sum.includes('Files, events and proposal'), `the page's Overview folds About (${sum.join(' | ')})`);
-    await page.click('#home [data-ws-sec="files"]'); await wait(2000);
-    expect((await ev(() => [...document.querySelectorAll('#home details.pnl-fold > summary')].map(x => x.textContent.trim()))).includes('Files and events'), 'the page\'s Records section folds the files and events');
+    await page.click('#home .page-tabs [data-pg-tab="records"]'); await wait(2000);
+    expect((await ev(() => [...document.querySelectorAll('#home details.pnl-fold > summary')].map(x => x.textContent.trim()))).includes('Files and events') && await ev(() => PeelWorkspaces.view() === 'records:files'), 'the page\'s Records folds the files and events');
     // 6. No units or jobs (no servicing figures, about one development in five): Network still holds the Site checks.
     const z = await ev(() => { const q = PeelApp.state.projects.find(x => x.lat != null && !PeelSvcData.svcFacts(x)); return q && q.key; });
     await ev(k => { PeelWorkspaces.setMode('full'); PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); }, z); await wait(2500);
@@ -453,14 +466,15 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
     const zn = await ev(() => ({ at: `${PeelAnalysisTabs.getFootTab()}:${PeelAnalysisTabs.getSvcSub()}`, answer: ((document.querySelector('#pnl-svc .pnl-answer') || {}).textContent || '').trim(), cx: document.querySelectorAll('#pnl-svc #pnl-site #devtab-cx').length, all: document.querySelectorAll('#devtab-cx').length }));
     expect(zn.at === 'svc:network' && /^No servicing figures/.test(zn.answer) && zn.cx === 1 && zn.all === 1, `${z}: no units or jobs, Network's Site fold holds the constraints (${JSON.stringify(zn)})`);
     await ev(() => { PeelWorkspaces.openPage('site'); }); await wait(2000);
-    await page.click('#home .page-sec[data-ws-sec="servicing"]'); await wait(2000);
-    expect(await ev(() => document.querySelectorAll('#home #pnl-site #devtab-cx').length === 1), 'and its page\'s Servicing section');
+    await page.click('#home .page-tabs [data-pg-tab="svc"]'); await wait(2000);
+    expect(await ev(() => document.querySelectorAll('#home #pnl-site #devtab-cx').length === 1 && PeelWorkspaces.view() === 'svc:network'), 'and its page\'s Servicing › Network');
   });
 
   // Navigation phase 5: FSR review is a Servicing view (svs=fsr), the one host of the FSR cross-check. Check FSR
   // in the development's header opens it on the map and on its page; one form in the document; at Peel the view
-  // hides; a link reopens it; the site page's sections are the map's tabs, Servicing with its views row; a
-  // cold #w=p:fsr&d=<key> is the page's FSR review, and its Open the map the map's.
+  // hides; a link reopens it; the site page's strip is the map's tabs, Servicing with its views row (navigation
+  // phase 6b: the site's page is the page host at a development); the page's own link reloaded cold is its FSR
+  // review, and its Open the map the map's.
   await check('FSR review is a Servicing view: Check FSR in the header opens it on the map and on the page; one form; a link reopens it', browser, {}, async ({ page, ev }, expect) => {
     const ready = () => page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
     await ready();
@@ -487,25 +501,32 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
     expect(r.key === key && r.tab === 'svc' && r.sub === 'fsr', `the link reopens FSR review at the development (${JSON.stringify(r)})`);
     // 3. Its page: the map's five tabs by their names; the header's Check FSR, the typed figure kept; Network back.
     await ev(() => { PeelWorkspaces.openPage('site'); }); await wait(2500);
-    const secs = await ev(() => [...document.querySelectorAll('#home .page-secs[aria-label="Sections"] .page-sec')].map(b => b.textContent).join());
-    expect(secs === 'Overview,Growth,Servicing,Capital,Records', `the site page's sections (${secs})`);
+    const secs = await ev(() => [...document.querySelectorAll('#home .page-tabs .page-sec')].map(b => b.childNodes[0].textContent.trim()).join());
+    expect(secs === 'Overview,Growth,Servicing,Capital,Records', `the site page's tabs (${secs})`);
     await page.click('#home .home-h [data-ws-page="fsr"]'); await wait(2500);
-    const pg = await ev(() => ({ page: PeelWorkspaces.page(), form: !!document.querySelector('#home [data-pnl-fsrbox] .fsr-check'), runs: document.querySelectorAll('.fsr-box [data-fc-run]').length, pop: (document.querySelector('#home .fsr-box [data-fc="population"]') || {}).value, on: (document.querySelector('#home .page-sec.on') || {}).textContent, view: (document.querySelector('#home .page-subsecs .page-sec.on') || {}).textContent }));
-    expect(pg.page === 'fsr' && pg.form && pg.runs === 1 && pg.on === 'Servicing' && pg.view === 'FSR review', `Check FSR on the page: Servicing › FSR review, one form (${JSON.stringify(pg)})`);
+    const pg = await ev(() => ({ page: PeelWorkspaces.page(), at: PeelWorkspaces.view(), form: !!document.querySelector('#home [data-pnl-fsrbox] .fsr-check'), runs: document.querySelectorAll('.fsr-box [data-fc-run]').length, pop: (document.querySelector('#home .fsr-box [data-fc="population"]') || {}).value, on: ((document.querySelector('#home .page-tabs .page-sec.on') || {}).textContent || '').trim(), view: (document.querySelector('#home .page-subsecs .page-sec.on') || {}).textContent }));
+    expect(pg.page === 'site' && pg.at === 'svc:fsr' && pg.form && pg.runs === 1 && pg.on === 'Servicing' && pg.view === 'FSR review', `Check FSR on the page: Servicing › FSR review, one form (${JSON.stringify(pg)})`);
     const pv = await ev(IN_VIEW, ['#home [data-fc="population"]', '#home']), behind = await ev(() => ({ sub: PeelAnalysisTabs.getSvcSub(), hash: location.hash }));
     expect(pv.in, `the page's form in view too (${JSON.stringify(pv)})`);
     expect(behind.sub === 'fsr' && /(^|[#&])svs=fsr(&|$)/.test(behind.hash), `FSR review behind the page, the address saying so (${behind.sub}; ${behind.hash.slice(0, 120)})`);
     expect(pg.pop === '1234', `the figure typed on the map is kept (${pg.pop})`);
-    await page.click('#home .page-subsecs [data-ws-sec="servicing"]'); await wait(2000);
-    const nw = await ev(() => ({ page: PeelWorkspaces.page(), view: (document.querySelector('#home .page-subsecs .page-sec.on') || {}).textContent }));
-    expect(nw.page === 'site' && nw.view === 'Network', `Network: the site page at Servicing (${nw.page}, ${nw.view})`);
-    // 4. A cold #w=p:fsr&d=<key> (the page's own link, reloaded): the page's FSR review; Open the map: the map's.
+    // (the start screen's last workspace: the page as the reader names it, Review an FSR at FSR review, else Check a
+    // site, by Check FSR or the views row alike)
+    const lw = () => ev(() => JSON.parse(localStorage.getItem('peel-dev:lastWs')));
+    expect(await lw() === 'fsr', 'Check FSR: the last workspace is Review an FSR');
+    await page.click('#home .page-subsecs [data-pg-sub="network"]'); await wait(2000);
+    const nw = await ev(() => ({ page: PeelWorkspaces.page(), at: PeelWorkspaces.view(), view: (document.querySelector('#home .page-subsecs .page-sec.on') || {}).textContent, lw: JSON.parse(localStorage.getItem('peel-dev:lastWs')) }));
+    expect(nw.page === 'site' && nw.at === 'svc:network' && nw.view === 'Network' && nw.lw === 'site', `Network: the site page at Servicing, the last workspace Check a site (${JSON.stringify(nw)})`);
+    await page.click('#home .page-subsecs [data-pg-sub="fsr"]'); await wait(2000);
+    { const f = await ev(() => ({ at: PeelWorkspaces.view(), lw: JSON.parse(localStorage.getItem('peel-dev:lastWs')) })); expect(f.at === 'svc:fsr' && f.lw === 'fsr', `the views row's FSR review: the last workspace Review an FSR, as Check FSR's (${JSON.stringify(f)})`); }
+    // 4. The page's own link, reloaded cold (#w=p:site&nav=3&t=svc&svs=fsr&d=<key>): the page's FSR review; Open the
+    // map: the map's. (Phase 5's #w=p:fsr links: "kept from before phase 5".)
     await page.click('#home .home-h [data-ws-page="fsr"]'); await wait(1500);
-    expect(/(^|[#&])w=p%3Afsr(&|$)|(^|[#&])w=p:fsr(&|$)/.test(await ev(() => location.hash)) && (await ev(() => location.hash)).includes('d='), 'the address is the page\u2019s link');
+    { const hs = await ev(() => location.hash); expect(/(^|[#&])w=p(%3A|:)site(&|$)/.test(hs) && /(^|[#&])svs=fsr(&|$)/.test(hs) && /(^|[#&])nav=3(&|$)/.test(hs) && hs.includes('d='), `the address is the page\u2019s link (${hs.slice(0, 140)})`); }
     await page.reload(); await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 }); await ready();
     await page.waitForFunction(() => document.querySelector('#home [data-pnl-fsrbox] .fsr-check'), null, { timeout: 60000 }).catch(() => null);
-    const c = await ev(() => ({ page: PeelWorkspaces.page(), key: (DevScope.current() || {}).key, form: !!document.querySelector('#home [data-pnl-fsrbox] .fsr-check') }));
-    expect(c.page === 'fsr' && c.key === key && c.form, `#w=p:fsr&d= opens the page's FSR review (${JSON.stringify(c)})`);
+    const c = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), key: (DevScope.current() || {}).key, form: !!document.querySelector('#home [data-pnl-fsrbox] .fsr-check') }));
+    expect(c.page === 'site' && c.view === 'svc:fsr' && c.key === key && c.form, `the link opens the page's FSR review (${JSON.stringify(c)})`);
     await page.click('#home .page-foot [data-ws-go="fsr"]'); await wait(2500);
     const mp = await ev(() => ({ mode: PeelWorkspaces.mode(), tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getSvcSub(), form: !!document.querySelector('#pnl-svc [data-pnl-fsrbox] .fsr-check') }));
     expect(mp.mode !== 'home' && mp.tab === 'svc' && mp.sub === 'fsr' && mp.form, `Open the map: Servicing › FSR review on the map (${JSON.stringify(mp)})`);
@@ -544,23 +565,24 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
     expect(await ev(() => PeelAnalysisTabs.getFootTab() === 'svc' && PeelAnalysisTabs.getSvcSub() === 'fsr'), 'Check FSR, one tap: Servicing › FSR review');
     const fv = await ev(IN_VIEW, ['#pnl-svc [data-fc="population"]', '#analysis-panes']);
     expect(fv.in, `its form in the half sheet, no scroll needed (${JSON.stringify(fv)})`);
-    // Its page: the header's buttons 44 px; no sideways scroll on Overview, Servicing (its views row) and FSR review.
+    // Its page: the header's buttons and the strip's tabs 44 px; no sideways scroll on Overview, Servicing (its views
+    // row) and FSR review (navigation phase 6b: the strip and Servicing's views).
     await ev(() => { PeelWorkspaces.openPage('site'); }); await wait(2500);
-    const sp = async () => ev(() => ({ btns: [...document.querySelectorAll('#home .home-h .pnl-tools .btn, #home .home-h .watch-btn, #home .page-subsecs .page-sec')].map(b => Math.round(b.getBoundingClientRect().height)), doc: document.documentElement.scrollWidth, home: document.getElementById('home').scrollWidth }));
+    const sp = async () => ev(() => ({ btns: [...document.querySelectorAll('#home .home-h .pnl-tools .btn, #home .home-h .watch-btn, #home .page-tabs .page-sec, #home .page-subsecs .page-sec')].map(b => Math.round(b.getBoundingClientRect().height)), doc: document.documentElement.scrollWidth, home: document.getElementById('home').scrollWidth }));
     const a = await sp();
-    expect(a.btns.length >= 4 && a.btns.every(x => x >= 44) && a.doc <= 390 && a.home <= 390, `the site page: its header 44 px, no sideways scroll (${JSON.stringify(a)})`);
-    await page.locator('#home .page-sec[data-ws-sec="servicing"]').first().tap(); await wait(2000);
+    expect(a.btns.length >= 9 && a.btns.every(x => x >= 44) && a.doc <= 390 && a.home <= 390, `the site page: its header and tabs 44 px, no sideways scroll (${JSON.stringify(a)})`);
+    await page.locator('#home .page-tabs [data-pg-tab="svc"]').first().tap(); await wait(2000);
     const b = await sp();
-    expect(b.btns.length >= 6 && b.btns.every(x => x >= 44) && b.doc <= 390 && b.home <= 390, `its Servicing, the views row 44 px, no sideways scroll (${JSON.stringify(b)})`);
-    await page.locator('#home .page-subsecs [data-ws-page="fsr"]').tap(); await wait(2500);
-    const f = await ev(() => ({ page: PeelWorkspaces.page(), doc: document.documentElement.scrollWidth, home: document.getElementById('home').scrollWidth }));
-    expect(f.page === 'fsr' && f.doc <= 390 && f.home <= 390, `its FSR review, no sideways scroll (${JSON.stringify(f)})`);
+    expect(b.btns.length >= 11 && b.btns.every(x => x >= 44) && b.doc <= 390 && b.home <= 390, `its Servicing, the views row 44 px, no sideways scroll (${JSON.stringify(b)})`);
+    await page.locator('#home .page-subsecs [data-pg-sub="fsr"]').tap(); await wait(2500);
+    const f = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), doc: document.documentElement.scrollWidth, home: document.getElementById('home').scrollWidth }));
+    expect(f.page === 'site' && f.view === 'svc:fsr' && f.doc <= 390 && f.home <= 390, `its FSR review, no sideways scroll (${JSON.stringify(f)})`);
     const pf = await ev(IN_VIEW, ['#home [data-fc="population"]', '#home']);
     expect(pf.in, `its form in view (${JSON.stringify(pf)})`);
     // (Records: the files and events, its Gantt chart's bars inside their track)
-    await page.locator('#home .page-sec[data-ws-sec="files"]').first().tap(); await wait(2500);
-    const rc = await ev(() => ({ page: PeelWorkspaces.page(), doc: document.documentElement.scrollWidth, home: document.getElementById('home').scrollWidth }));
-    expect(rc.page === 'site' && rc.doc <= 390 && rc.home <= 390, `its Records, no sideways scroll (${JSON.stringify(rc)})`);
+    await page.locator('#home .page-tabs [data-pg-tab="records"]').first().tap(); await wait(2500);
+    const rc = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), doc: document.documentElement.scrollWidth, home: document.getElementById('home').scrollWidth }));
+    expect(rc.page === 'site' && rc.view === 'records:files' && rc.doc <= 390 && rc.home <= 390, `its Records, no sideways scroll (${JSON.stringify(rc)})`);
   });
 
   // Navigation phase 5 (design §3.6): one header for a development, on every tab and on its page, in place of the
@@ -633,12 +655,12 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
     await ev(() => { PeelWorkspaces.setMode('full'); }); await show(TABS[0]);
     expect((await head('#pnl-overview .pnl-head')).watch === '★ Watching', 'watched from its page: the map’s header says ★ Watching');
     await page.click('#pnl-overview .pnl-flags [data-watch]'); await wait(400);
-    // 7. The "n links to check" flag on a page: the site's Records section (the map's Records › Files behind it).
+    // 7. The "n links to check" flag on a page: the site's page at Records › Files (the map's too; navigation phase 6b).
     const ck = await ev(() => { const FT = PeelFileTree, q = PeelApp.state.projects.find(x => FT.of(x) && FT.summary(FT.of(x)).check > 0); return q && q.key; });
     await ev(k => { PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); PeelWorkspaces.openPage('site'); }, ck); await wait(2500);
     await page.click('#home .home-h [data-tree-check]'); await wait(2000);
-    const tc = await ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page(), sec: ((document.querySelector('#home .page-sec.on') || {}).textContent || '').trim(), hist: [...document.querySelectorAll('#home .dev-hist')].some(x => x.getClientRects().length > 0) }));
-    expect(tc.mode === 'home' && tc.page === 'site' && tc.sec === 'Records' && tc.hist, `${ck}: the page's "links to check" opens its Records section (${JSON.stringify(tc)})`);
+    const tc = await ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), sec: ((document.querySelector('#home .page-tabs .page-sec.on') || {}).textContent || '').trim(), hist: [...document.querySelectorAll('#home .dev-hist')].some(x => x.getClientRects().length > 0) }));
+    expect(tc.mode === 'home' && tc.page === 'site' && tc.view === 'records:files' && tc.sec === 'Records' && tc.hist, `${ck}: the page's "links to check" opens its Records (${JSON.stringify(tc)})`);
   });
 
   // Kept from before navigation phase 5 (design §7, the plan's alias rows): a browser left at Settings › Counting's
@@ -648,7 +670,7 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
   // again at a development, a stored EAs pick DC timing there; old links with d=: t=dev (the Overview), #w=fsr (the
   // map's Review an FSR view at FSR review), t=dca&dcs=eas (Capital's one view; the EAs again at Peel), #w=p:site
   // (its page at Overview).
-  await check('kept from before phase 5: a stored Previous count is the tree count; a stored Development sub-tab is never read; stored FSR review and EAs picks wait for a development; old t=dev, #w=fsr, dcs=eas and #w=p:site links open the one layout', browser, { prefs: { countMode: 'previous', footTab4: 'svc', svcSub: 'fsr', dcSub: 'eas' } }, async ({ page, ev }, expect) => {
+  await check('kept from before phase 5: a stored Previous count is the tree count; a stored Development sub-tab is never read; stored FSR review and EAs picks wait for a development; old t=dev, #w=fsr, dcs=eas, #w=p:site and #w=p:fsr links open the one layout', browser, { prefs: { countMode: 'previous', footTab4: 'svc', svcSub: 'fsr', dcSub: 'eas' } }, async ({ page, ev }, expect) => {
     const load = async (url, ready) => { await page.goto(`http://localhost:${PORT}/${url}`); await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 }); if (ready) await page.waitForSelector(ready, { timeout: 120000 }); await wait(1500); };
     const svcReady = () => page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
     // (the old release's raw sub-tab value, as js/devtab.js wrote it: once, before the next load)
@@ -693,9 +715,16 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
     expect(c.key === key && c.tab === 'dca' && c.dc === 'timing' && !chips, `t=dca&dcs=eas&d=: Capital's one view at the development, no chip row (${JSON.stringify({ tab: c.tab, dc: c.dc, chips })})`);
     await ev(() => { DevScope.close(); PeelAnalysisTabs.showFootTab('dca'); }); await wait(1500);
     expect(await ev(() => PeelAnalysisTabs.getDcSub()) === 'eas', 'closed: Capital › EAs again, the link’s pick');
-    await load(`?site#w=p:site&d=${d}`, '#home .page-sec.on');
-    const s = await ev(() => ({ page: PeelWorkspaces.page(), key: (DevScope.current() || {}).key, on: ((document.querySelector('#home .page-sec.on') || {}).textContent || '').trim(), secs: [...document.querySelectorAll('#home .page-secs[aria-label="Sections"] .page-sec')].map(x => x.textContent).join() }));
-    expect(s.page === 'site' && s.key === key && s.on === 'Overview' && s.secs === 'Overview,Growth,Servicing,Capital,Records', `#w=p:site&d=: its page at Overview, the map's five tabs (${JSON.stringify(s)})`);
+    // (navigation phase 6b: the site's page is the page host at a development, the map's strip under its header)
+    const strip = () => ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), key: (DevScope.current() || {}).key, on: (((((document.querySelector('#home .page-tabs .page-sec.on') || {}).childNodes || [])[0] || {}).textContent) || '').trim(), secs: [...document.querySelectorAll('#home .page-tabs .page-sec')].map(x => x.childNodes[0].textContent.trim()).join() }));
+    await load(`?site#w=p:site&d=${d}`, '#home .page-tabs .page-sec.on');
+    const s = await strip();
+    expect(s.page === 'site' && s.view === 'overview:' && s.key === key && s.on === 'Overview' && s.secs === 'Overview,Growth,Servicing,Capital,Records', `#w=p:site&d=: its page at Overview, the map's five tabs (${JSON.stringify(s)})`);
+    // Phase 5's FSR review link (openPage('fsr') wrote the Find step's Network): the page's own view by rule (nav < 3).
+    await load(`?fsrl#w=p:fsr&nav=2&t=svc&svs=network&d=${d}`); await svcReady();
+    await page.waitForSelector('#home [data-pnl-fsrbox] .fsr-check', { timeout: 60000 }).catch(() => null);
+    const f = await strip();
+    expect(f.page === 'site' && f.view === 'svc:fsr' && f.key === key && f.on === 'Servicing', `#w=p:fsr&nav=2&t=svc&svs=network&d=: the site's page at Servicing › FSR review (${JSON.stringify(f)})`);
   });
 
   // Navigation phase 6a, kept from before it (§7.1–7.2, risk 4): a stored last workspace opens Home at its tab, never
@@ -741,7 +770,8 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
 
   // Explore: one sidebar entry for Growth in an area, Check a site, Review an FSR, Forecast and Study
   // area; the one search at the top of each; a site picked opens its page; its trail steps back up; its
-  // FSR review is Servicing's second view (navigation phase 5: the sections are the map's tabs, by their names).
+  // FSR review is Servicing's second view (navigation phase 6b: the site's page has the map's strip, and where it
+  // sits is the top bar's trail, each step that place, the site closed, the tab kept).
   await check('Explore: one entry, the search on every view, a site and back up its trail, its FSR review', browser, {}, async ({ page, ev }, expect) => {
     await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect(), null, { timeout: 120000 });
     const side = await ev(() => [...document.querySelectorAll('#home .home-side [data-ws-page]')].map(b => b.dataset.wsPage));
@@ -763,26 +793,124 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
     await page.click('#home [data-ws-drill="m:Brampton"]'); await wait(1500);
     expect(await ev(() => PeelApp.state.muni) === 'Brampton', 'the drill to Brampton is the map’s filter');
     await page.locator('#home [data-ws-pick][data-ws-as="site"]').first().click(); await wait(3500);
-    const s = await ev(() => ({ page: PeelWorkspaces.page(), dev: !!DevScope.current(), trail: [...document.querySelectorAll('#home [data-ws-explore]')].map(b => b.textContent), secs: [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent), search: !!document.querySelector('#home #page-search #search-box') }));
-    expect(s.page === 'site' && s.dev, `a development opens its page (${s.page})`);
-    expect(s.trail[0] === 'Peel' && s.trail.includes('Brampton'), `its trail: ${s.trail.join(' › ')}`);
-    expect(s.secs.join() === 'Overview,Growth,Servicing,Capital,Records', `its sections: ${s.secs.join()}`);
+    const s = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), dev: !!DevScope.current(), title: (DevScope.current() || {}).title, placed: !!(DevScope.current() && PeelPlanTables.placeOf(DevScope.current())),
+      trail: [...document.querySelectorAll('#trail .tb-step')].map(b => b.textContent.trim()), own: document.querySelectorAll('#home [data-ws-explore], #home .page-explore').length,
+      secs: [...document.querySelectorAll('#home .page-tabs .page-sec')].map(b => b.childNodes[0].textContent.trim()), search: !!document.querySelector('#home #page-search #search-box') }));
+    expect(s.page === 'site' && s.view === 'overview:' && s.dev, `a development opens its page, at Overview (${s.page}, ${s.view})`);
+    // (the top bar's trail: Peel › Brampton (the filter's, once) › its plan … › the site; the page has no line of its own)
+    expect(s.trail[0] === 'Peel' && s.trail[1] === 'Brampton' && s.trail.filter(x => x === 'Brampton').length === 1 && s.trail.at(-1) === s.title && (!s.placed || s.trail.length >= 4) && !s.own, `its trail: ${s.trail.join(' › ')} (placed ${s.placed}; the page's own ${s.own})`);
+    expect(s.secs.join() === 'Overview,Growth,Servicing,Capital,Records', `its tabs: ${s.secs.join()}`);
     expect(s.search, 'the search stays at the top');
     const lm = await ev(() => ({ inPage: !!document.querySelector('#home #page-map-slot #map'), chips: [...document.querySelectorAll('#home [data-ws-layer]')].map(b => b.dataset.wsLayer) }));
     expect(lm.inPage, 'the live map is on the site\u2019s page');
     expect(lm.chips.join() === 'devs,ex-water,ex-sanitary,ex-storm,dcw,cons,ea', `its layer chips: ${lm.chips.join()}`);
-    // Its FSR review (Servicing, then its views row), then back to a section of the site.
-    await page.click('#home .page-sec[data-ws-sec="servicing"]'); await wait(2500);
-    await page.click('#home .page-subsecs [data-ws-page="fsr"]'); await wait(2500);
-    const f = await ev(() => ({ page: PeelWorkspaces.page(), box: !!document.querySelector('#home [data-pnl-fsrbox]'), on: (document.querySelector('#home .page-sec.on') || {}).textContent, view: (document.querySelector('#home .page-subsecs .page-sec.on') || {}).textContent }));
-    expect(f.page === 'fsr' && f.box && f.on === 'Servicing' && f.view === 'FSR review', `the FSR review (${f.page}, ${f.on} › ${f.view})`);
-    await page.click('#home .page-sec[data-ws-sec="growth"]'); await wait(2500);
-    const g = await ev(() => ({ page: PeelWorkspaces.page(), on: (document.querySelector('#home .page-sec.on') || {}).textContent }));
-    expect(g.page === 'site' && g.on === 'Growth', `back on the site at Growth (${g.page}, ${g.on})`);
-    // A step up the trail: Home › Growth › Areas at Brampton (the filter), the site closed.
-    await page.locator('#home [data-ws-explore="m:Brampton"]').first().click(); await wait(2500);
+    // Its FSR review (Servicing, then its views row), then back to another tab of the site.
+    await pickView(page, ev, 'svc:fsr');
+    const f = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), box: !!document.querySelector('#home [data-pnl-fsrbox]'), on: (((document.querySelector('#home .page-tabs .page-sec.on') || {}).childNodes || [])[0] || { textContent: '' }).textContent.trim(), chip: (document.querySelector('#home .page-subsecs .page-sec.on') || {}).textContent }));
+    expect(f.page === 'site' && f.view === 'svc:fsr' && f.box && f.on === 'Servicing' && f.chip === 'FSR review', `the FSR review (${f.page} at ${f.view}, ${f.on} › ${f.chip})`);
+    await page.click('#home .page-tabs [data-pg-tab="growth"]'); await wait(2500);
+    const g = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), on: (((document.querySelector('#home .page-tabs .page-sec.on') || {}).childNodes || [])[0] || { textContent: '' }).textContent.trim() }));
+    expect(g.page === 'site' && g.view === 'growth:pipeline' && g.on === 'Growth', `back on the site at Growth (${g.page}, ${g.view}, ${g.on})`);
+    // A step up the top bar's trail: Home at Brampton (the filter), the site closed, the tab kept (Growth, at the
+    // area's own view: Areas, picked before the site opened).
+    await page.locator('#trail .tb-step', { hasText: /^Brampton$/ }).first().click(); await wait(2500);
     const u = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), dev: !!DevScope.current(), muni: PeelApp.state.muni, name: (document.querySelector('#home h1') || {}).textContent }));
     expect(u.page === 'home' && u.view === 'growth:areas' && !u.dev && u.muni === 'Brampton' && /Brampton/.test(u.name), `up the trail to Brampton (${JSON.stringify(u)})`);
+  });
+
+  // Navigation phase 6 (the site's page): a development's page is the map's tab strip at the development. Each view
+  // opens with its own first action (the map panel's footer), and Open the map, the map view's ← Page and the full
+  // map's back bar keep the tab, the view and the development; Capital is one view at a development (no chip row).
+  await check('a development’s page is the map’s tabs: each view’s own first action; Open the map, ← Page and the full map’s back bar keep the tab, the view and the development', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect() && !document.querySelector('#ftab-dca[aria-busy]'), null, { timeout: 120000 });
+    const key = await ev(() => PeelApp.state.projects.find(q => q.phase === 'approved' && q.units > 300).key);
+    await ev(k => { PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); PeelWorkspaces.openPage('site'); }, key); await wait(2500);
+    const at = () => ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getSvcSub(), key: (DevScope.current() || {}).key, back: ((document.getElementById('back-bar') || {}).textContent || '').trim() }));
+    // 1. Each view's first action is the map panel's footer's own; then Open the map, which keeps the view.
+    for (const k of Object.keys(await ev(() => PeelSections.VIEWS.site)).filter(x => x !== 'svc:fsr')) {
+      await pickView(page, ev, k); await wait(800);
+      const r = await ev(k => {
+        const p = DevScope.current(), s = PeelSections.specFor(PeelSections.VIEWS.site[k], p), b = document.querySelector('#home .page-foot .pnl-acts > :first-child');
+        return { want: s && s.foot && s.foot.primary && s.foot.primary.label, got: b && b.textContent.trim(), keep: [...document.querySelectorAll('#home .page-foot [data-ws-go][data-ws-keep]')].some(x => x.textContent.trim() === 'Open the map') };
+      }, k);
+      expect(r.want && r.got === r.want, `${k}: the footer starts with the view's own action ("${r.got}" / "${r.want}")`);
+      expect(r.keep, `${k}: Open the map keeps the view`);
+    }
+    // 2. Servicing › Network and Capital: the map at that tab with the development, ← Page back at the view.
+    for (const [k, tab, sub] of [['svc:network', 'svc', 'network'], ['dca:timing', 'dca', null]]) {
+      await pickView(page, ev, k);
+      await page.locator('#home .page-foot [data-ws-go][data-ws-keep]', { hasText: 'Open the map' }).first().click(); await wait(2500);
+      let s = await at();
+      expect(s.mode === 'ws' && s.tab === tab && (!sub || s.sub === sub) && s.key === key, `${k}: Open the map: the map's ${tab} tab at the development (${JSON.stringify(s)})`);
+      await page.locator('#ws-bar [data-ws-backpage]').click(); await wait(2000);
+      s = await at();
+      expect(s.mode === 'home' && s.page === 'site' && s.view === k && s.key === key, `${k}: ← Page: the site's page at the same view (${JSON.stringify(s)})`);
+    }
+    // 3. The full map from the page's sidebar, and its back bar: the page at Capital, then at Servicing › Network.
+    for (const [k, words] of [['dca:timing', /Back to Check a site › Capital/], ['svc:network', /Back to Check a site › Servicing › Network/]]) {
+      await pickView(page, ev, k);
+      await page.locator('#home [data-ws-full]:visible').first().click(); await wait(2500);
+      let s = await at();
+      expect(s.mode === 'full' && s.key === key && words.test(s.back), `${k}: the full map; the back bar names the view (${s.mode}, ${s.back})`);
+      await page.locator('#back-bar [data-ws-back]').click(); await wait(2000);
+      s = await at();
+      expect(s.mode === 'home' && s.page === 'site' && s.view === k && s.key === key, `${k}: back on the page at the same view (${JSON.stringify(s)})`);
+    }
+  });
+
+  // Navigation phase 6 (the top bar's trail): at a development it places the site in its plan, Peel › municipality ›
+  // plan … › the site, on the map and on its page (no line of the page's own). Each step is that place's filter, the
+  // site closed, the tab kept: on the map the map, on the page Home at that tab, at the area's own view.
+  await check('the top bar’s trail places a development in its plan: on the map and its page each step is that place’s filter, the site closed, the tab kept', browser, {}, async ({ page, ev }, expect) => {
+    await page.waitForFunction(() => window.PeelSvcCapacity && PeelSvcCapacity.collect && PeelSvcCapacity.collect() && !document.querySelector('#ftab-dca[aria-busy]'), null, { timeout: 120000 });
+    // (a development under a plan and a level of it: a precinct)
+    const d = await ev(() => {
+      const PT = PeelPlanTables, ps = PeelApp.state.projects.filter(p => p.phase === 'approved' && p.units > 300 && p.lat != null);
+      const p = ps.find(q => { const l = PT.placeOf(q); return l && PT.areaPath(l).length >= 2; });
+      return p ? { key: p.key, title: p.title, muni: p.municipality, path: PT.areaPath(PT.placeOf(p)) } : null;
+    });
+    expect(!!d, 'an approved development under a plan and one of its levels'); if (!d) return;
+    const st = () => ev(() => ({ mode: PeelWorkspaces.mode(), page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), tab: PeelAnalysisTabs.getFootTab(), dev: (DevScope.current() || {}).title || null, muni: PeelApp.state.muni, sp: PeelApp.state.sp.slice(),
+      trail: [...document.querySelectorAll('#trail .tb-step')].map(b => b.textContent.trim()), own: document.querySelectorAll('#home [data-ws-explore], #home .page-explore, #home .ex-where').length,
+      stored: JSON.parse(localStorage.getItem('peel-dev:footTab4')), fl: (document.querySelector('#trail [data-tb-filters]') || { getAttribute: () => null }).getAttribute('aria-label') }));
+    const step = async i => { await page.locator('#trail .tb-step').nth(i).click(); await wait(2500); };
+    const open = async (to, tab) => {
+      await ev(([k, to, tab]) => { PeelWsPages.drillTo('peel'); PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); if (to === 'site') PeelWorkspaces.openPage('site'); else { PeelWorkspaces.setMode('full'); PeelAnalysisTabs.openTab(tab); } }, [d.key, to, tab]); await wait(2500);
+    };
+    const placed = s => s.trail.length === 2 + d.path.length + 1 && s.trail[0] === 'Peel' && s.trail[1] === d.muni && s.trail.at(-1) === d.title;
+    // 1. The map at Capital: the whole path; the municipality's step closes the site and filters to it, Capital kept.
+    await open('map', 'dca'); let s = await st();
+    expect(s.mode === 'full' && s.tab === 'dca' && placed(s), `the map's trail places the site (${s.trail.join(' › ')})`);
+    await step(1); s = await st();
+    expect(s.mode === 'full' && s.tab === 'dca' && !s.dev && s.muni === d.muni && !s.sp.length && s.trail.join() === `Peel,${d.muni}`, `the municipality's step: the filter, the site closed, Capital kept (${JSON.stringify(s)})`);
+    // 2. With the municipality the filter the trail does not repeat it; the plan's step, on the map at Overview (the
+    // site's, for the visit: the stored tab stays Capital, the one picked, as closing the site leaves it).
+    await ev(k => { PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); }, d.key); await wait(2500);
+    s = await st();
+    expect(placed(s) && s.trail.filter(x => x === d.muni).length === 1, `with ${d.muni} the filter, its step is not repeated (${s.trail.join(' › ')})`);
+    await step(2); s = await st();
+    expect(s.mode === 'full' && !s.dev && s.muni === d.muni && s.sp.join() === d.path[0] && s.tab === 'overview', `the plan's step: the plan the filter, the site closed (${JSON.stringify(s)})`);
+    expect(s.stored === 'dca', `the tab kept for the visit, not stored: footTab4 ${s.stored}`);
+    // 3. The site's page: the same trail, none of its own; the precinct's step is Home at the precinct, Servicing kept.
+    await open('site'); await pickView(page, ev, 'svc:network'); s = await st();
+    expect(s.page === 'site' && s.view === 'svc:network' && placed(s) && !s.own, `the page's trail is the top bar's (${s.trail.join(' › ')}; the page's own ${s.own})`);
+    await step(d.path.length + 1); s = await st();
+    expect(s.page === 'home' && s.view === 'svc:capacity' && !s.dev && s.muni === d.muni && s.sp.join() === d.path.at(-1), `the last level's step: Home at Servicing, the site closed, the place the filter (${JSON.stringify(s)})`);
+    // 4. Peel's step on the page at Growth: Home at Growth, every filter off.
+    await open('site'); await pickView(page, ev, 'growth:pipeline'); await step(0); s = await st();
+    expect(s.page === 'home' && s.view === 'growth:pipeline' && !s.dev && !s.muni && !s.sp.length && s.trail.join() === 'Peel', `Peel's step: Home at Growth, nothing filtered (${JSON.stringify(s)})`);
+    // 5. A filter that does not hold it (another municipality, the site picked anyway): the site's own place, never the
+    // filter's; that filter is the trail's "1 filter", removable there, the site kept.
+    const other = d.muni === 'Caledon' ? 'Mississauga' : 'Caledon';
+    await ev(([k, m]) => { PeelWsPages.drillTo(`m:${m}`); PeelWorkspaces.setMode('full'); PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); }, [d.key, other]); await wait(2500);
+    s = await st();
+    expect(s.mode === 'full' && s.muni === other && s.dev === d.title && placed(s) && !s.trail.includes(other) && s.fl === '1 filter', `a ${other} filter: the trail is the site's own place, the filter its 1 filter (${s.trail.join(' › ')}; ${s.fl})`);
+    await page.locator('#trail [data-tb-filters]').click(); await wait(800);
+    const chips = await ev(() => [...document.querySelectorAll('#tb-fl-pop [data-pf-i]')].map(x => x.textContent.replace('×', '').trim()));
+    expect(chips.join() === other, `the popover lists ${other} (${chips.join()})`);
+    await page.locator('#tb-fl-pop [data-pf-i="0"]').click(); await wait(2500);
+    s = await st();
+    expect(!s.muni && s.dev === d.title && placed(s) && !s.fl, `${other} removed: the site kept, its place the trail (${JSON.stringify(s)})`);
   });
 
   // Find from every page (navigation phase 1): the one search and Draw an area in every page's header;
@@ -834,8 +962,9 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
     if (f) {
       await ev(() => PeelWorkspaces.openPage('home')); await wait(1200);
       expect(await findPick(page, ev, f.ref, { has: [f.title, f.ref] }), `${f.ref} in the list`);
-      const s = await ev(() => ({ page: PeelWorkspaces.page(), key: (DevScope.current() || {}).key, files: !!document.querySelector('#home .page-sec.on[data-ws-sec="files"]') }));
-      expect(s.page === 'site' && s.key === f.key && s.files, `its page at Records (${s.page}, at Records: ${s.files})`);
+      // (navigation phase 6b: the site's page at Records › Files, the strip's Records on)
+      const s = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), key: (DevScope.current() || {}).key, on: (((document.querySelector('#home .page-tabs .page-sec.on') || {}).childNodes || [])[0] || { textContent: '' }).textContent.trim() }));
+      expect(s.page === 'site' && s.view === 'records:files' && s.key === f.key && s.on === 'Records', `its page at Records (${s.page} at ${s.view}, the strip's ${s.on})`);
       await wait(1000);
       const m = await ev(r => { const b = document.querySelector(`#home .tr-row > div > .tr-ref[data-dev-file="${CSS.escape(r)}"]`), row = b && b.closest('.tr-row'), fold = row && row.closest('details.tr-same'); return { row: !!row, hit: !!(row && row.classList.contains('tr-hit')), open: fold ? fold.open : null }; }, f.ref);
       // (a file in its tree: its row is there, marked, its fold of earlier files opened)
@@ -1008,16 +1137,17 @@ const IN_VIEW = ([sel, box]) => { const e = [...document.querySelectorAll(sel)].
     expect(await findPick(page, ev, p.title, { has: [p.title] }), `${p.title} in Review an FSR's list`);
     // (the FSR review is drawn once the development's Servicing panels are worked out: 2 to 4 s after the pick)
     await page.waitForFunction(() => !!document.querySelector('#home [data-pnl-fsrbox]'), null, { timeout: 15000 }).catch(() => {});
-    const f = await ev(() => ({ page: PeelWorkspaces.page(), key: (DevScope.current() || {}).key, box: !!document.querySelector('#home [data-pnl-fsrbox]'), focus: document.activeElement === document.getElementById('f-search') }));
-    expect(f.page === 'fsr' && f.key === p.key && f.box, `from Review an FSR: its FSR review (${f.page}, ${f.key === p.key})`);
+    // (navigation phase 6b: the site's page at Servicing › FSR review)
+    const f = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), key: (DevScope.current() || {}).key, box: !!document.querySelector('#home [data-pnl-fsrbox]'), focus: document.activeElement === document.getElementById('f-search') }));
+    expect(f.page === 'site' && f.view === 'svc:fsr' && f.key === p.key && f.box, `from Review an FSR: its FSR review (${f.page} at ${f.view}, ${f.key === p.key})`);
     expect(!f.focus, 'the pick lets go of the box');
     await ev(() => { DevScope.close(); PeelWorkspaces.openPage('tight'); }); await wait(1500);
     // (navigation phase 6: Servicing capacity is Home › Servicing › Capacity, the strip's Servicing on)
     const sc = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), on: (document.querySelector('#home .page-tabs .page-sec.on') || { dataset: {} }).dataset.pgTab }));
     expect(sc.page === 'home' && sc.view === 'svc:capacity' && sc.on === 'svc', `Servicing capacity: Home › Servicing › Capacity (${JSON.stringify(sc)})`);
     expect(await findPick(page, ev, p.title, { has: [p.title] }), `${p.title} in Servicing capacity's list`);
-    const s = await ev(() => ({ page: PeelWorkspaces.page(), key: (DevScope.current() || {}).key, sec: (document.querySelector('#home .page-sec.on') || { dataset: {} }).dataset.wsSec }));
-    expect(s.page === 'site' && s.key === p.key && s.sec === 'summary', `from Servicing capacity: its page at Overview (${s.page}, ${s.sec})`);
+    const s = await ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), key: (DevScope.current() || {}).key, on: (document.querySelector('#home .page-tabs .page-sec.on') || { dataset: {} }).dataset.pgTab }));
+    expect(s.page === 'site' && s.view === 'overview:' && s.key === p.key && s.on === 'overview', `from Servicing capacity: its page at Overview (${s.page} at ${s.view}, ${s.on})`);
     // A pumping station: its scope on Servicing capacity's map; ← Page is that page.
     const st = await ev(() => { const a = (PeelApp.state.servicing.psAreas || []).find(x => PeelSvcData.drName(x).length >= 6); return a ? { id: a.id, name: PeelSvcData.drName(a) } : null; });
     expect(!!st, 'a pumping station catchment');

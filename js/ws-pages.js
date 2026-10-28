@@ -12,7 +12,8 @@
   //   approved, not yet built (units left to build in files past their first planning approval);
   //   the Old pipes likelihood × consequence grid (bands decided with the user).
   // Home is the page host at an area (navigation phase 6, host below): under its header the map's five tabs
-  // and the open tab's views, each area page (Servicing capacity, the Forecast, DC timing …) one of its views.
+  // and the open tab's views, each area page (Servicing capacity, the Forecast, DC timing …) one of its views;
+  // the site's page is the host at a development (6b, site()), Check a site and Review an FSR its views.
   const U = root.PeelUtil || {};
   const esc = U.esc || (s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])));
   const fmtNum = U.fmtNum || (n => Math.round(n).toLocaleString('en-CA'));
@@ -680,14 +681,12 @@
       map: { svg: devsMap(((App() && App().state.filtered) || []), recent), attrs: { 'data-ws-go': id }, label: 'Pick a development on the map', caption: '<span class="hm-key hm-key-hl"></span> recently active <span class="hm-key hm-key-dev"></span> developments of 50+ units (sized by units); click to pick one on the map' },
       actions: [{ label: 'Pick on the map', attrs: { 'data-ws-go': id }, primary: true }] };
   }
-  // ---- Check a site, with a site -----------------------------------------------------------------------
-  // The site's sections (js/sections.js): every full-map tab's panel for this development, one at a
-  // time under a section bar, by the tabs' names; Overview first. A new development opens on Overview.
-  let siteSec = 'summary', siteSecDev = null;
-  // A file number picked in the search (js/workspaces.js routePick): its row in the Files tree marked, and
-  // scrolled to once. (the tree row's own button: the header's latest file, the "counted once" figure and
-  // the row's tags carry the same attribute; a row among the earlier files on the land opens their fold)
-  let siteFile = null, siteFileShown = false;
+  // ---- Check a site, with a site: the page host at a development -------------------------------------------
+  // A file number picked in the search (js/workspaces.js routePick, fileAt): its row in Records › Files' tree
+  // marked, and scrolled to once; a new development or another view clears it. (the tree row's own button: the
+  // header's latest file, the "counted once" figure and the row's tags carry the same attribute; a row among the
+  // earlier files on the land opens their fold)
+  let siteFile = null, siteFileDev = null, siteFileShown = false;
   function markFile(host, ref) {
     const b = host && host.querySelector(`.tr-row > div > .tr-ref[data-dev-file="${CSS.escape(ref)}"]`), row = b && b.closest('.tr-row'); if (!row) return;
     const fold = row.closest('details.tr-same'); if (fold && !fold.open) fold.open = true;
@@ -695,14 +694,9 @@
     if (!siteFileShown) { siteFileShown = true; row.scrollIntoView({ block: 'center' }); }
   }
   // (an entry with at: a view of Home, the page host: Help's bar's Data sources and Data checks, navigation phase 6)
-  function sectionBar(secs, on, attr = 'data-ws-sec') {
-    const to = s => (s.at ? `data-pg-tab="${esc(s.at.split(':')[0])}" data-pg-sub="${esc(s.at.split(':')[1] || '')}"` : s.page ? `data-ws-page="${esc(s.page)}"` : `${attr}="${esc(s.id)}"`);
+  function sectionBar(secs, on) {
+    const to = s => (s.at ? `data-pg-tab="${esc(s.at.split(':')[0])}" data-pg-sub="${esc(s.at.split(':')[1] || '')}"` : `data-ws-page="${esc(s.page)}"`);
     return `<nav class="page-secs" aria-label="Sections" data-psec="sections">${secs.map(s => `<button type="button" class="page-sec${s.id === on ? ' on' : ''}" ${to(s)} aria-pressed="${s.id === on}">${esc(s.title)}</button>`).join('')}</nav>`;
-  }
-  // A section's views (a site's Servicing: Network · FSR review, the map's chips), a second row under the
-  // bar: the section's own view is the section, another view its page (FSR review: the page `fsr`).
-  function viewsBar(sec, on) {
-    return `<nav class="page-secs page-subsecs" aria-label="Views" data-psec="views">${sec.views.map(v => `<button type="button" class="page-sec${v.id === on ? ' on' : ''}" ${v.page ? `data-ws-page="${esc(v.page)}"` : `data-ws-sec="${esc(sec.id)}"`} aria-pressed="${v.id === on}">${esc(v.title)}</button>`).join('')}</nav>`;
   }
   // Reference's bar (js/sections.js WORKSPACES: Help, How it works, the Glossary, How the app decides, and Home's
   // Records › Sources and Data checks).
@@ -739,56 +733,39 @@
   // A site page's live map (js/workspaces.js placeMap → fitSite): the map itself, at the site, with the
   // infrastructure around it, each layer a chip under it.
   const SITE_LAYERS = [['devs', 'Developments'], ['ex-water', 'Existing water'], ['ex-sanitary', 'Existing sewers'], ['ex-storm', 'Storm'], ['dcw', '2026 DC works'], ['cons', 'Region construction'], ['ea', 'EA study areas']];
-  function siteLiveMap(p) {
+  // (its Open the map: the site's map view at the view the page shows, as the footer's)
+  function siteLiveMap(p, id = 'site') {
     const LG = root.PeelLayerGroups, on = k => { try { return !!(LG && LG.ADAPT && LG.ADAPT[k] && LG.ADAPT[k].get()); } catch (e) { return false; } };
     const chips = SITE_LAYERS.map(([k, t]) => `<button type="button" class="btn small page-layer${on(k) ? ' on' : ''}" data-ws-layer="${k}" aria-pressed="${on(k)}">${esc(t)}</button>`).join('');
-    return { title: 'Where: the site and the infrastructure around it', attrs: { 'data-ws-go': 'site' }, link: 'Open the map', html: `<div class="page-map-slot page-map-site" id="page-map-slot" data-site="${esc(p.key)}"></div><div class="page-layers" role="group" aria-label="Layers on this map">${chips}</div>`,
+    return { title: 'Where: the site and the infrastructure around it', attrs: { 'data-ws-go': id, 'data-ws-keep': '' }, link: 'Open the map', html: `<div class="page-map-slot page-map-site" id="page-map-slot" data-site="${esc(p.key)}"></div><div class="page-layers" role="group" aria-label="Layers on this map">${chips}</div>`,
       caption: '<span class="hm-key hm-key-site"></span> the site (outlined) · existing mains show from street zoom; dashed: the 2026 DC program; the Region\u2019s construction and EA study areas. The same layers as the full map.' };
   }
-  // Explore (Check a site, Review an FSR, Growth in an area, Forecast, Study area: one workspace): where
-  // you are (Peel › municipality › plan › site, each a step back up). The search and Draw an area are
-  // in every page's header (pageHTML).
-  function exploreBar(trail) {
-    return trail ? `<div class="page-explore" data-psec="explore"><p class="ex-where small">${trail}</p></div>` : '';
-  }
-  // A development's place in the plan tree: Peel › its municipality › its plan › … (its deepest area).
-  function siteTrail(p) {
-    const PT = root.PeelPlanTables; let r = null;
-    try { r = PT && PT.compute ? PT.compute() : null; } catch (e) { r = null; }
-    const ids = PT && PT.areaIdsOf ? [...PT.areaIdsOf(p)] : [];
-    const depth = n => { let d = 0; for (let x = n; x && x.parent; x = r.nodes.get(x.parent)) d++; return d; };
-    const leaf = r ? ids.map(id => r.nodes.get(`a:${id}`)).filter(Boolean).sort((a, b) => depth(b) - depth(a))[0] || r.nodes.get(`m:${p.municipality}`) : null;
-    const trail = []; for (let x = leaf; x; x = x.parent ? r.nodes.get(x.parent) : null) trail.unshift(x);
-    const crumb = n => `<button type="button" class="btn small link" data-ws-explore="${esc(n.id)}">${esc(n.name)}</button>`;
-    return `${(trail.length ? trail : [{ id: 'peel', name: 'Peel' }]).map(crumb).join(' <span aria-hidden="true">›</span> ')} <span aria-hidden="true">›</span> <strong>${esc(p.title)}</strong>`;
-  }
-  // view 'fsr': Servicing › FSR review (js/fsr-check.js panelSpec), drawn as the page `fsr` (its id, eyebrow,
-  // guide and link), with the site's header, trail and section bar (Servicing on, its views row under it).
-  function site(view) {
-    const SE = root.PeelSections, fv = view === 'fsr' && !!SE, id = fv ? 'fsr' : 'site';
-    const p = devNow(); if (!p) return find(id);
+  // The site's page, the page host at a development (navigation phase 6b, design §3.1 rule 1): under its header the
+  // map's five tabs and Servicing's two views (Network · FSR review, js/sections.js VIEWS.site), the view the map's own
+  // tab state names (host('site')), each the map's panel for the development: its answer, figures, lists and folds,
+  // its footer's own actions first (§5 row 56: the Overview's and Records' Servicing memo, Network's Trace the sewer
+  // path, Growth's Area report, Capital's Show the planned works, FSR review's Copy the comparison; the Inquiry draft,
+  // ☆ Watch and Check FSR are the header's, as on the map), then Open the map at the view. Servicing › FSR review is
+  // Review an FSR (its id, eyebrow, guide and link: js/fsr-check.js panelSpec). A new development opens on Overview
+  // (js/workspaces.js openPage, hostOf). Where it sits, Peel › its municipality › its plan, is the top bar's trail, on
+  // the page and the map (js/topbar.js devPlace).
+  function site() {
+    const SE = root.PeelSections, p = devNow(); if (!p) return find('site');
+    const key = hostKey('site'), id = key === 'svc:fsr' ? 'fsr' : 'site';
     const s = specOf('overview:', `dev:${p.key}`); if (!s) return loading(id, `Loading ${p.title}…`);
-    if (siteSecDev !== p.key) { siteSec = 'summary'; siteSecDev = p.key; siteFile = null; }
-    if (SE && !SE.BY_ID[siteSec]) siteSec = 'summary';   // (an id no section has now, as the old fsr: Overview)
-    const want = fv ? 'servicing' : siteSec, vw = fv ? SE.viewOf('servicing', 'fsr') : null;
-    const sec = fv ? SE.specFor(vw, p) : SE && siteSec !== 'summary' ? SE.specFor(siteSec, p) : null, on = sec || fv ? want : 'summary';
-    const waiting = SE && want !== 'summary' && !sec;
-    const b = sec || s, ref = on === 'files' ? siteFile : null;
+    if (siteFileDev !== p.key || key !== 'records:files') siteFile = null;
+    const v = SE && SE.VIEWS ? SE.VIEWS.site[key] : null, sec = key === 'overview:' ? s : v ? SE.specFor(v, p) : null, waiting = !sec;
+    const b = sec || s, ref = key === 'records:files' ? siteFile : null;
     const mount = ref ? host => { if (typeof b.onMount === 'function') b.onMount(host); markFile(host, ref); } : b.onMount;
-    const svc = SE && (waiting ? want : on) === 'servicing' ? viewsBar(SE.BY_ID.servicing, fv ? 'fsr' : 'network') : '';
-    // (the memo, then a section's own secondary action: Capital's "Copy for review comments"; FSR review its
-    // own footer, Copy the comparison and Print / PDF; the Inquiry draft, ☆ Watch and Check FSR are the
-    // header's, as on the map: navigation phase 5)
-    const foot = (sec && !waiting && sec.foot) || {};
-    const acts = fv ? [...(foot.primary ? [{ ...foot.primary, primary: true }] : []), ...(foot.secondary || [])] : [{ label: 'Servicing memo', attrs: { 'data-pnl-memo': '' }, primary: true }, ...(foot.secondary || [])];
-    return { id, eyebrow: `${esc(label(id))} · <span class="pnl-steps-i">✓ Find › <b>Result</b> › Output: ${fv ? 'notes for the review' : 'Servicing memo'}</span>`, name: p.title, status: s.head.status, badge: s.head.badge, extra: s.head.extra, identity: s.head.identity, tools: s.head.tools, scen: scen(),
-      top: `${exploreBar(siteTrail(p))}${SE ? sectionBar(SE.SITE, waiting ? want : on) : ''}${svc}`,
-      answer: waiting ? `<span class="muted">Loading ${esc((vw || SE.BY_ID[want] || {}).title || '')} for ${esc(p.title)} (the servicing model and the DC program)…</span>` : b.answer,
+    const foot = (sec && sec.foot) || {};
+    // (its rows and Open the map: the site's map view at the view the page shows, keep)
+    return { id, eyebrow: `${esc(viewName(key))} · ${esc(p.municipality || 'Peel')}`, name: p.title, status: s.head.status, badge: s.head.badge, extra: s.head.extra, identity: s.head.identity, tools: s.head.tools, scen: scen(),
+      answer: waiting ? `<span class="muted">Loading ${esc(viewName(key))} for ${esc(p.title)} (the servicing model and the DC program)…</span>` : b.answer, pending: waiting,
       caveats: [], figures: waiting ? [] : b.figures, chart: waiting ? '' : b.chart,
-      lists: waiting ? [] : (b.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap(id, r)) })),
-      map: siteLiveMap(p),
+      lists: waiting ? [] : (b.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap(id, r, true)) })),
+      map: siteLiveMap(p, id),
       folds: waiting ? [] : b.folds, method: waiting ? '' : b.method, sources: waiting ? '' : b.sources, onMount: waiting ? null : mount,
-      actions: [...acts, { label: 'Open the map', attrs: { 'data-ws-go': id } }, { label: 'Another site', attrs: { 'data-ws-unpick': id } }] };
+      actions: [...(foot.primary ? [{ ...foot.primary, primary: true }] : []), ...(foot.secondary || []), { label: 'Open the map', attrs: { 'data-ws-go': id, 'data-ws-keep': '' } }, { label: 'Another site', attrs: { 'data-ws-unpick': id } }] };
   }
 
   // ---- Growth in an area: drill down Peel → municipality → plan → precinct / sub-area → its files ----
@@ -954,12 +931,10 @@
   const gGrp = new Map(), gMore = new Set();
   // (an area's Servicing and Capital, a workspace's sections: Home's tabs and views, the strip's, navigation phase 6)
   document.addEventListener('click', e => {
-    const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall],[data-gt-by],[data-gt-sort],[data-gt-tog],[data-gt-more],[data-ws-sec],[data-ws-explore]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
+    const t = e.target.closest && e.target.closest('[data-ws-drill],[data-ws-stage],[data-ws-drillall],[data-ws-estall],[data-gt-by],[data-gt-sort],[data-gt-tog],[data-gt-more],[data-ws-explore]'); if (!t || !document.getElementById('home') || !document.getElementById('home').contains(t)) return;
     e.preventDefault(); e.stopPropagation();
-    // A site's section from its FSR review: back on the site's page, at that section.
-    if (t.dataset.wsSec && W() && W().page && W().page() !== 'site') { siteSec = t.dataset.wsSec; siteFile = null; W().openPage('site', { keepScroll: true }); return; }
-    // A step up the trail from a site, or a plan on Home's "Plans furthest behind": that level the filter, and Home
-    // at Growth › Areas (the site closes first, as Home closes it).
+    // A plan on Home's "Plans furthest behind": that plan the filter, and Home at Growth › Areas (the site closes first,
+    // as Home closes it). (A site's own trail of these went to the top bar's, navigation phase 6b: js/topbar.js devPlace.)
     if (t.dataset.wsExplore) {
       if (root.DevScope && root.DevScope.current && root.DevScope.current()) root.DevScope.close();
       drillTo(t.dataset.wsExplore);
@@ -967,9 +942,8 @@
       if (W() && W().openPage) W().openPage('home', { keep: true });
       return;
     }
-    if (t.dataset.wsSec) { siteSec = t.dataset.wsSec; siteFile = null; }
     // The table: grouping, sorting, a group opened or closed, all its rows (the page keeps its scroll).
-    else if (t.dataset.gtBy || t.dataset.gtSort || t.dataset.gtTog || t.dataset.gtMore) {
+    if (t.dataset.gtBy || t.dataset.gtSort || t.dataset.gtTog || t.dataset.gtMore) {
       if (t.dataset.gtBy) gBy = t.dataset.gtBy;
       else if (t.dataset.gtSort) { const k = t.dataset.gtSort; gSort = gSort.k === k ? { k, dir: -gSort.dir } : { k, dir: k === 't' ? 1 : -1 }; }
       else if (t.dataset.gtTog) gGrp.set(`${gGk}|${t.dataset.gtTog}`, t.getAttribute('aria-expanded') !== 'true');
@@ -1130,10 +1104,12 @@
 
   // ---- Review an FSR, with a site -------------------------------------------------------------------
   // The site's page at Servicing › FSR review, the map's own panel (js/fsr-check.js panelSpec, set by
-  // js/svc-capacity.js beside Network: the one host of the form and of what an FSR should cover).
+  // js/svc-capacity.js beside Network: the one host of the form and of what an FSR should cover). (navigation phase
+  // 6b: with a development, the page fsr is the site's page there, openPage; only for a moment, a link's d= landing
+  // on the Find step, until js/workspaces.js's pnl:set hook opens it)
   function fsr() {
     if (!devNow()) return find('fsr');
-    return site('fsr');
+    return site();
   }
 
   // ---- QA/QC › Review outlets: where each development discharges, checked and set on the map --------
@@ -1331,10 +1307,11 @@
   // A page's header count opens its workspace's full table (as the map panels' do).
   const FULL_OF = { home: 'tight', tight: 'tight', projects: 'projects', pipes: 'pipes' };
   // id: a page builder's, or a page host's panel view ('svc:network': panelView), which takes its map view's
-  // guide, full table and figures' map view (its ws, the tab and view kept).
-  function build(id) {
+  // guide, full table and figures' map view (its ws, the tab and view kept). o.keep: a builder drawing the view the
+  // map's tab state names (the site's page, site()): its figures open its map view at that view too.
+  function build(id, o = {}) {
     const SE = root.PeelSections, pv = String(id).includes(':'), v = pv && SE && SE.VIEWS ? SE.VIEWS.area[id] || {} : null, wsId = pv ? (v && v.ws) || null : id;
-    const keep = pv ? { 'data-ws-keep': '' } : {};
+    const keep = pv || o.keep ? { 'data-ws-keep': '' } : {};
     const m = pv ? panelView(id) : (BUILD[id] || home)(), RF = root.PeelReference, g = RF && GUIDE_OF[wsId] && RF.GUIDES.find(x => x[0] === GUIDE_OF[wsId]);
     if (m.status && !m.status.attrs && m.status.tone !== 'stage' && FULL_OF[wsId]) m.status = { ...m.status, attrs: { 'data-ws-go': FULL_OF[wsId], 'data-ws-fulltable': '1', ...keep }, title: 'Open the full table' };
     // A figure taken from a map panel opens the same thing from the page: the workspace's map, at it.
@@ -1350,23 +1327,32 @@
     return m;
   }
   // ---- The page host (navigation phase 6, design §3.1 rule 1, §3.3: header · tab strip · chips · answer) ----
-  // Home at an area: under its header the full map's five tabs and the open tab's views, the view the map's
-  // own tab state names (js/analysis-tabs.js viewKey), so the page and the full map show the same tab and view
-  // and Open the map / ← Page keep it. Each view is its page builder or the map's panel (js/sections.js VIEWS).
+  // Home at an area, the site's page at a development (6b): under its header the full map's five tabs and the open
+  // tab's views, the view the map's own tab state names (js/analysis-tabs.js viewKey), so the page and the full map
+  // show the same tab and view and Open the map / ← Page keep it. At an area each view is its page builder or the
+  // map's panel (js/sections.js VIEWS.area); at a development the map's panel for it, drawn by site().
   // Servicing and Capital say "loading" on the strip until their data lands; one picked before then is lit, the
   // page says it is loading and fills in place (never Overview: AT's held tab, wantedTab).
+  // The view a host shows: the map's tab state; a view the scope hides (Records › Files at an area, Capacity at a
+  // development) the tab's first one, as the map shows it.
+  function hostKey(scope = 'area') {
+    const A = root.PeelAnalysisTabs, SE = root.PeelSections, VW = (SE && SE.VIEWS && SE.VIEWS[scope]) || {};
+    let key = A && A.viewKey ? A.viewKey() : 'overview:';
+    if (!VW[key]) { const t = key.split(':')[0], c = A && A.chipsAt ? A.chipsAt(t, scope)[0] : ''; key = VW[`${t}:${c || ''}`] ? `${t}:${c || ''}` : 'overview:'; }
+    return key;
+  }
   function host(scope = 'area') {
     const A = root.PeelAnalysisTabs, SE = root.PeelSections, Wk = W();
     const VW = (SE && SE.VIEWS && SE.VIEWS[scope]) || {}, chipsOf = t => (A && A.chipsAt ? A.chipsAt(t, scope) : []);
-    let key = A && A.viewKey ? A.viewKey() : 'overview:';
-    // (a view the scope hides, as Records › Files at an area: the tab's first one, as the map shows it)
-    if (!VW[key]) { const t = key.split(':')[0], c = chipsOf(t)[0]; key = VW[`${t}:${c || ''}`] ? `${t}:${c || ''}` : 'overview:'; }
-    const [tab, sub] = key.split(':'), v = VW[key] || { page: 'home' }, id = v.page || key;
+    const key = hostKey(scope), [tab, sub] = key.split(':'), v = VW[key] || { page: 'home' };
+    // (a development's views: one builder, site(); Review an FSR's at FSR review, its id, guide and link)
+    const id = scope === 'site' ? (key === 'svc:fsr' ? 'fsr' : 'site') : v.page || key;
     const busy = t => (t === 'svc' || t === 'dca') && !!A && !!A.tabReady && !A.tabReady(t);
     const name = t => (Wk && Wk.TAB_NAME && Wk.TAB_NAME[t]) || t;
-    // (Capital › EAs waits for neither the servicing model nor the DC program: eaflow() waits for the EA lists itself)
-    const held = busy(tab) && key !== 'dca:eas';
-    const m = held ? { ...loading(id, `Loading ${viewName(key)} (the servicing model and the DC program)…`), pending: true, waitTab: true } : build(id);
+    // (Capital › EAs waits for neither the servicing model nor the DC program: eaflow() waits for the EA lists itself;
+    // a development's view waits in site(), under its own header)
+    const held = scope === 'area' && busy(tab) && key !== 'dca:eas';
+    const m = held ? { ...loading(id, `Loading ${viewName(key)} (the servicing model and the DC program)…`), pending: true, waitTab: true } : build(id, { keep: scope === 'site' });
     if (busy(tab)) m.waitTab = true;   // (the strip's "loading" clears when the tab is ready, even with nothing else changed)
     // (Servicing and Capital below Peel: the map's Peel-wide note, once and in its words, js/svc-scope.js, on the
     // views that are Peel-wide (not Capital › EAs or Projects, the area's own); its facilities are data-ss links,
@@ -1376,9 +1362,10 @@
     m.tabs = tabsHTML({ tabs: ((A && A.TAB_KEYS) || Object.keys(TAB_INFO)).map(t => ({ key: t, label: name(t), info: TAB_INFO[t], busy: busy(t), trail: t === 'records' })), on: tab, chips: chipsOf(tab).map(c => ({ sub: c, label: Wk && Wk.chipName ? Wk.chipName(tab, c) : c })), sub });
     return m;
   }
-  // Where a search pick on a page lands (js/workspaces.js routePick): a site's section (and a file to
-  // mark); a plan or MTSA the filter (drillTo). (Capital › DC timing at a project: Home's view, js/dc-projects.js select)
-  const siteAt = (key, sec, file) => { siteSec = sec || 'summary'; siteSecDev = key; siteFile = file || null; siteFileShown = false; };
+  // Where a search pick on a page lands (js/workspaces.js routePick): a file number's file, marked on the site's
+  // Records › Files (the view is the map's, set there); a plan or MTSA the filter (drillTo). (Capital › DC timing at
+  // a project: Home's view, js/dc-projects.js select)
+  const fileAt = (key, file) => { siteFileDev = key; siteFile = file || null; siteFileShown = false; };
   // A level of the plan tree as the map's filter (navigation phase 6, owner decision 10): 'peel' all of Peel,
   // 'm:<name>' the municipality, 'a:<id>' a plan, sub-area or precinct in its municipality; the other place filters
   // (MTSA, zone, block) go, the rest stay. A development partly in it is in it (js/plan-tables.js areaIdsOf); its
@@ -1401,6 +1388,6 @@
     if (A.applyFilters) A.applyFilters();
     gStage = 'all'; gAll = false; gEst = false;
   }
-  Object.assign(api, { build, host, tilesSVG, tileCredit, tilesOk, eaMap, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame, siteAt, drillTo });
+  Object.assign(api, { build, host, tilesSVG, tileCredit, tilesOk, eaMap, capacityMap, devsMap, worksMap, pipesMap, siteMap, frame, fileAt, drillTo });
   root.PeelWsPages = api;
 })(typeof window !== 'undefined' ? window : globalThis);
