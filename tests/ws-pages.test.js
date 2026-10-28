@@ -143,7 +143,7 @@ test('every workspace has a page builder; pages open from Home, chips and the ma
   assert.match(s, /const BUILD = \{ home, tight, site, growth, outlook, projects, eaflow, week, fsr, pipes, outlets, study, sewer, guides, roles, approvals, flows, network, capacity, fsrguide, capguide, targets, forecast, glossary, logic, help, data \};/, "every workspace (What's coming: the Forecast's), Labs › Sewer designer, and the Reference pages: How it works and its guides, the Glossary, How the app decides and Help");
   // A page's map buttons open the workspace's map view; Full map is the all-tools map; the map view has
   // a way back to the page.
-  assert.match(w, /const pg = e\.target\.closest\('\[data-ws-page\]'\);\s*if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage, pg\.dataset\.wsAt \? \{ at: pg\.dataset\.wsAt \} : \{\}\); return; \}/);
+  assert.match(w, /const pg = e\.target\.closest\('\[data-ws-page\]'\);\s*if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage, \{ at: pg\.dataset\.wsAt, fresh: pg\.dataset\.wsFresh != null \}\); return; \}/);
   // (navigation phase 6c: ← Page goes back at the same tab and view, the map view's only way back besides Full map)
   assert.match(src('index.html'), /data-ws-backpage title="Back to the page, at the same tab and view">← Page<\/button>/);
   // Study area: the map itself moves onto the page and back.

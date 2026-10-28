@@ -213,6 +213,25 @@ test('⚙ opens one Settings sheet: Display · Start screen · Your role · Repo
   assert.deepEqual([calls, el.a.open, el.mb.attrs['aria-expanded'], el.m.tabIndex, el.focused], [['scen', 'open settings'], false, 'false', -1, 'sheet']);
   assert.equal(el.m.style.maxHeight, '692px', 'its foot 8 px above the screen’s (390 × 844, the banners above the top bar taking 144 px)');
   calls.length = 0; toggle(); assert.deepEqual(calls, ['close'], '⚙ again: closed');
+  el.a.open = true; el.mb.attrs = {}; calls.length = 0; toggle();
+  assert.deepEqual([calls, el.a.open, el.mb.attrs['aria-expanded']], [['close'], false, 'false'], '⚙ closing the sheet folds ⋯ too');
+  // ⋯ (a phone's), run: opening it closes the sheet and a menu left open (its click stops before the click-outside that
+  // would close them, and the sheet sits outside its list); folding it closes nothing else.
+  const mo = tb.indexOf("  const more = $('#tb-more'), acts = $('#tb-actions');"), moreBody = tb.slice(mo, tb.indexOf('\n  }\n', mo) + 4);
+  const lis = {}, mk = n => { const e = { cls: new Set(), attrs: {}, setAttribute: (k, v) => { e.attrs[k] = v; }, addEventListener: (t, f) => { lis[`${n} ${t}`] = f; } }; e.classList = { toggle: (c, o) => (o ? e.cls.add(c) : e.cls.delete(c)), contains: c => e.cls.has(c) }; return e; };
+  const mEl = mk('more'), aEl = mk('acts'), shut = [];
+  new Function('$', 'document', 'closeTbMenus', moreBody)(q => ({ '#tb-more': mEl, '#tb-actions': aEl }[q]), mk('doc'), () => shut.push('close'));
+  const tapMore = () => lis['more click']({ stopPropagation() {} });
+  tapMore(); assert.deepEqual([aEl.cls.has('open'), mEl.attrs['aria-expanded'], shut], [true, 'true', ['close']], '⋯ opening: the sheet closed');
+  tapMore(); assert.deepEqual([aEl.cls.has('open'), mEl.attrs['aria-expanded'], shut], [false, 'false', ['close']], '⋯ folding');
+  // The old ⚙ › Labs page (openGearPage('labs'), a section of the sheet now): the sheet, its Labs in view; an unknown page
+  // says so.
+  const og = tb.indexOf('  function openGearPage(name) {'), ogBody = tb.slice(og, tb.indexOf('\n  }\n', og) + 4);
+  const sh = { hidden: true, innerHTML: '', querySelector: q => (q === '.labs-page' && /labs-page/.test(sh.innerHTML) ? { scrollIntoView: () => { sh.scrolled = true; } } : null) }, gb = { attrs: {}, setAttribute(k, v) { this.attrs[k] = v; } };
+  const openGear = new Function('$', 'closeTbMenus', 'window', 'Node', `${ogBody}\nreturn openGearPage;`)(q => ({ '#tb-gear-menu': sh, '#tb-gear': gb }[q]), () => {}, { GearPages: { settings: () => '<h2 class="pane-h">Settings</h2><div class="gear-page labs-page"><h3>Labs</h3></div>' } }, class {});
+  openGear('labs'); assert.deepEqual([sh.hidden, /<h3>Labs<\/h3>/.test(sh.innerHTML), sh.scrolled, gb.attrs['aria-expanded']], [false, true, true, 'true']);
+  sh.scrolled = false; openGear('settings'); assert.equal(sh.scrolled, false, 'Settings: at its top');
+  openGear('sources'); assert.match(sh.innerHTML, /That page is not available yet/);
   // Esc closes it and puts the focus back on ⚙ (on ⋯ while ⚙ is folded in it).
   assert.match(tb, /const sh = \$\('#tb-gear-menu'\), was = !!sh && !sh\.hidden;\n {4}closeTbMenus\(\); closeScenPop\(\);\n {4}if \(was\) \{ const g = \$\('#tb-gear'\), mb = \$\('#tb-more'\), to = g && g\.getClientRects\(\)\.length \? g : mb; if \(to\) to\.focus\(\); \}/);
   // Its sections, in order (design §3.7): Display → Start screen → Your role → Reports → Labs → Usage.

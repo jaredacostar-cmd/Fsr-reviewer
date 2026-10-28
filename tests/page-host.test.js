@@ -734,6 +734,22 @@ test('Find lists the recently active, the large files under review and the files
   m = L.WP.build('site');
   assert.deepEqual(plain(m.lists[2]), { title: 'Files with an FSR posted', rows: [{ kv: true, html: '<span class="muted small">Looking for posted servicing reports…</span>' }], total: 0 });
   assert.equal(loads.length, 1);
+  // (and drawn again only while a Find step still shows: not over a development picked meanwhile, nor another page)
+  const redraws = () => { let n = 0; const rp = L.W.renderPage; L.W.renderPage = () => { n++; }; loads.splice(0).forEach(f => f()); L.W.renderPage = rp; return n; };
+  L = load({ dev: null, devs: { k: DEV }, devPanels: DEV_PANELS, state: { projects }, extra: { PeelPhases: Ph, PeelFsr: F2 } });
+  L.W.openPage('find'); assert.ok(redraws() > 0, 'Find still showing: drawn again');
+  L.W.openPage('find'); L.click('[data-ws-pick]', { wsPick: 'k' }); assert.equal(redraws(), 0, 'a development picked meanwhile');
+  L = load({ dev: null, devs: { k: DEV }, devPanels: DEV_PANELS, state: { projects }, extra: { PeelPhases: Ph, PeelFsr: F2 } });
+  L.W.openPage('find'); L.W.openPage('home'); assert.equal(redraws(), 0, 'another page');
+  // (every development's FSR, js/fsr.js fsrFor, looked up once per load of the developments and of the FSR index, not on
+  // each redraw of either step; a development's phase is read as the list is drawn)
+  let scans = 0; const F3 = { FSR: { by: new Map() }, fsrFor: p => { scans++; return Fsr.fsrFor(p); } };
+  L = load({ dev: null, devs: {}, devPanels: DEV_PANELS, state: { projects: projects.map(p => ({ ...p })) }, extra: { PeelPhases: Ph, PeelFsr: F3 } });
+  const st = L.window.PeelApp.state, fsrKeys = id => plain(L.WP.build(id).lists.find(l => l.title === 'Files with an FSR posted').rows.map(r => r.attrs['data-ws-pick']));
+  assert.deepEqual([fsrKeys('site'), fsrKeys('site'), fsrKeys('fsr'), scans], [['k'], ['k'], ['k'], 2], 'two developments, looked up once');
+  st.projects[0].phase = 'cancelled'; assert.deepEqual([fsrKeys('site'), scans], [[], 2], 'a file cancelled since: left out, no new lookup');
+  st.projects = projects.map(p => ({ ...p })); assert.deepEqual([fsrKeys('site'), scans], [['k'], 4], 'the developments loaded again: looked up again');
+  F3.FSR.by = new Map(); assert.deepEqual([fsrKeys('fsr'), scans], [['k'], 6], 'and the FSR index');
 });
 
 // Navigation phase 7 (owner decision 17, AD-17 with change, design §7.3): Last place is kept as each page is drawn, the

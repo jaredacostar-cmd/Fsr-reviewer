@@ -371,6 +371,7 @@ test('Home’s sidebar (navigation phase 7): five entries, For your role from th
   assert.deepEqual(entries(), ['home', 'week', 'find', 'help']);
   assert.deepEqual(lit(), ['home']);
   assert.match(side(), /^<nav class="home-side" id="home-side" aria-label="Pages"><ul><li><button type="button" class="home-ws on" data-ws-page="home" aria-current="page"><strong>Home<\/strong><small>What needs attention: Peel or a municipality<\/small><\/button><\/li>/);
+  assert.match(side(), /data-ws-page="week"><strong>This week(?: <span class="badge-n">\d+<\/span>)?<\/strong><small>What changed, and your watch list<\/small>/, 'This week’s line, §3.2’s');
   assert.match(side(), /<\/ul>\n\s*<button type="button" class="home-ws home-full" data-ws-full><strong>Full map<\/strong>/, 'Full map after the four');
   assert.doesNotMatch(side(), /<h2 class="home-g">|data-ws-start|home-menu-btn|data-home-menu/, 'no team heading, no select, no ☰ of its own');
   assert.match(side(), /<p class="home-role small"><button type="button" class="btn small link" data-ws-page="help">Pick your role for shortcuts →<\/button><\/p>/, 'no role: the pick line');
@@ -385,6 +386,8 @@ test('Home’s sidebar (navigation phase 7): five entries, For your role from th
   store.set('role', 'manager'); B.renderPage(true);
   assert.match(side(), /<button type="button" class="home-ws home-short" data-ws-page="projects" data-dc-status="gap"><strong>DC projects late \(Capital › DC timing\)<\/strong>/);
   assert.match(side(), /<button type="button" class="home-ws home-short" data-pnl-brief=""><strong>Briefing PDF<\/strong>/);
+  store.set('role', 'fsr'); B.renderPage(true);
+  assert.match(side(), /<ul><li><button type="button" class="home-ws home-short" data-ws-page="fsr" data-ws-fresh=""><strong>Find › Files with an FSR posted<\/strong><\/button><\/li><li><button type="button" class="home-ws home-short" data-ws-page="week">/, 'the FSR reviewer’s Find shortcut: with no development open (data-ws-fresh)');
   store.set('role', 'Jane'); B.renderPage(true);
   assert.match(side(), /Pick your role for shortcuts →/, 'a role not in the list: the pick line');
   // Which entry is lit: Find on the Find steps (and the site's page) and Study area, Help on every Help page, a guide's
@@ -406,6 +409,9 @@ test('Home’s sidebar (navigation phase 7): five entries, For your role from th
   // data-ws-at as before.
   dev = { key: 'k' }; closed.length = 0; L.click('[data-ws-page]', { wsPage: 'find' });
   assert.deepEqual([B.page(), B.view(), closed], ['site', null, ['dev']]);
+  // (the FSR reviewer's Find › Files with an FSR posted, data-ws-fresh: the same, at Review an FSR's Find step)
+  dev = { key: 'k' }; closed.length = 0; L.click('[data-ws-page]', { wsPage: 'fsr', wsFresh: '' });
+  assert.deepEqual([B.page(), B.view(), closed], ['fsr', null, ['dev']]);
   at.calls.length = 0; L.click('[data-ws-page]', { wsPage: 'tight' });
   assert.deepEqual([B.page(), B.view(), at.calls.length], ['home', 'svc:capacity', 3]);
   // A role picked (Help › Start here's "This is my role"): stored, the menu redrawn; a key not in ROLES is not stored.

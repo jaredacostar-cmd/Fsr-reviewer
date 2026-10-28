@@ -660,6 +660,13 @@
   }
 
   // ---- Find (Check a site's step, the menu's Find since navigation phase 7) / Review an FSR: the Find step -----
+  // (the developments with an FSR posted, newest first: one scan of every development per load of the developments
+  // and of the FSR index, not one per redraw of Find; the phase is read as each list is drawn)
+  let fsrMemo = null;
+  function fsrPosted(F, proj) {
+    if (!fsrMemo || fsrMemo.proj !== proj || fsrMemo.n !== proj.length || fsrMemo.by !== F.FSR.by) fsrMemo = { proj, n: proj.length, by: F.FSR.by, hits: proj.map(p => ({ p, f: F.fsrFor(p) })).filter(x => x.f && x.f.best).sort((a, b) => String(b.f.best.fsr.date || '').localeCompare(String(a.f.best.fsr.date || ''))) };
+    return fsrMemo.hits;
+  }
   function find(id) {
     const Ph = P(), proj = (App() && App().state.projects) || [];
     const last = p => (Ph && Ph.lastActivityOf ? Ph.lastActivityOf(p) || 0 : 0);
@@ -677,8 +684,10 @@
     const F = root.PeelFsr;
     let fsrRows = null;
     if (F) {
-      if (!F.FSR.by) { if (F.loadFsr) F.loadFsr().then(() => { if (W() && W().renderPage) W().renderPage(true); }); }
-      else fsrRows = proj.map(p => ({ p, f: F.fsrFor(p) })).filter(x => x.f && x.f.best && x.p.phase !== 'cancelled').sort((a, b) => String(b.f.best.fsr.date || '').localeCompare(String(a.f.best.fsr.date || ''))).map(({ p, f }) => ({ attrs: { 'data-ws-pick': p.key, 'data-ws-as': 'fsr', title: `Review ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${esc(f.best.fsr.date || '')}</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'} · FSR posted${f.best.fsr.date ? ` ${esc(f.best.fsr.date)}` : ''}</small>` }));
+      // (drawn again once the index lands, only while a Find step still shows: a development picked meanwhile, or
+      // another page, is not drawn again from the top with an open stage box shut)
+      if (!F.FSR.by) { if (F.loadFsr) F.loadFsr().then(() => { const Wk = W(); if (Wk && Wk.renderPage && !devNow() && (Wk.page() === 'site' || Wk.page() === 'fsr')) Wk.renderPage(true); }); }
+      else fsrRows = fsrPosted(F, proj).filter(x => x.p.phase !== 'cancelled').map(({ p, f }) => ({ attrs: { 'data-ws-pick': p.key, 'data-ws-as': 'fsr', title: `Review ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${esc(f.best.fsr.date || '')}</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'} · FSR posted${f.best.fsr.date ? ` ${esc(f.best.fsr.date)}` : ''}</small>` }));
     }
     const fsrList = { title: 'Files with an FSR posted', rows: fsrRows || [{ kv: true, html: '<span class="muted small">Looking for posted servicing reports…</span>' }], total: fsrRows ? fsrRows.length : 0 };
     const recentList = { title: 'Recently active', rows: recent.map(devRow), total: recent.length };

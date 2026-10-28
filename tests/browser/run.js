@@ -874,6 +874,14 @@ async function pickView(page, ev, key, tap = false) {
     await page.click('#tb-gear'); await wait(800);
     const ph = await ev(() => { const m = document.getElementById('tb-gear-menu'), r = m.getBoundingClientRect(); return { open: !m.hidden, left: Math.round(r.left), right: Math.round(r.right), bottom: Math.round(r.bottom), more: document.getElementById('tb-actions').classList.contains('open'), exp: document.getElementById('tb-more').getAttribute('aria-expanded'), home: document.getElementById('home').scrollWidth, doc: document.documentElement.scrollWidth }; });
     expect(ph.open && ph.left >= 0 && ph.right <= 390 && ph.bottom <= 844 && !ph.more && ph.exp === 'false' && ph.home <= 390 && ph.doc <= 390, `phone: ⋯ folded, the sheet inside 390 × 844, no sideways scroll (${JSON.stringify(ph)})`);
+    // (⋯ again with the sheet open: the sheet closes as its list opens, never one over the other; ⚙ in it, the sheet again)
+    const tb = () => ev(() => ({ sheet: !document.getElementById('tb-gear-menu').hidden, more: document.getElementById('tb-actions').classList.contains('open'), gear: document.getElementById('tb-gear').getAttribute('aria-expanded') }));
+    await page.click('#tb-more'); await wait(500);
+    const p2 = await tb();
+    expect(!p2.sheet && p2.more && p2.gear === 'false', `phone: ⋯ with the sheet open closes it and opens its list (${JSON.stringify(p2)})`);
+    await page.click('#tb-gear'); await wait(800);
+    const p3 = await tb();
+    expect(p3.sheet && !p3.more && p3.gear === 'true', `phone: ⚙ in it, the sheet again, ⋯ folded (${JSON.stringify(p3)})`);
     await page.keyboard.press('Escape'); await wait(300);
     await ev(() => PeelUtil.store.set('role', ''));
   });
@@ -910,6 +918,21 @@ async function pickView(page, ev, key, tap = false) {
     await load('?old2#w=p:reference');
     const rf = await ev(() => ({ page: PeelWorkspaces.page(), secs: [...document.querySelectorAll('#home .page-sec')].map(b => b.textContent).join(), lit: ((document.querySelector('#home .home-ws.on') || {}).dataset || {}).wsPage, role: PeelUtil.store.get('role', '') }));
     expect(rf.page === 'help' && rf.secs === 'Start here,How it works,Glossary,How the app decides' && rf.lit === 'help' && rf.role === 'growth', `#w=p:reference: Help, its four sections, the role kept (${JSON.stringify(rf)})`);
+    // The FSR reviewer's Find › Files with an FSR posted, with a development open (Help keeps it): Start here's card and
+    // Home's menu each close it and open Review an FSR's Find step, its files first, as Find › Recently active opens Find.
+    await page.click('#home .help-role [data-role-pick="fsr"]'); await wait(1200);
+    const openDev = async () => { await ev(() => { const p = PeelApp.state.projects.find(q => q.phase === 'approved' && q.units >= 300 && q.lat != null); PeelDevNav.showDetail(p); }); await wait(2500); };
+    const fs = () => ev(() => ({ page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), d: (window.DevScope && DevScope.current() || {}).key || null, lists: [...document.querySelectorAll('#home .pnl-list-h h3')].map(h => h.textContent.trim()).join('|') }));
+    await openDev(); await ev(() => PeelWorkspaces.openPage('help')); await wait(1500);
+    const h0 = await fs();
+    await page.locator('#home .help-role.on button', { hasText: 'Find › Files with an FSR posted' }).first().click(); await wait(2500);
+    const f1 = await fs();
+    expect(h0.page === 'help' && !!h0.d && f1.page === 'fsr' && !f1.d && f1.view === null && /^Files with an FSR posted\|/.test(f1.lists), `Start here's Find › Files with an FSR posted: the development closed, the FSR files first (${JSON.stringify({ h0: h0.d, ...f1 })})`);
+    await openDev(); await ev(() => PeelWorkspaces.openPage('site')); await wait(2000);
+    const s0 = await fs();
+    await page.locator('#home .home-side .home-short', { hasText: 'Find › Files with an FSR posted' }).first().click(); await wait(2500);
+    const f2 = await fs();
+    expect(s0.page === 'site' && !!s0.d && f2.page === 'fsr' && !f2.d && f2.view === null && /^Files with an FSR posted\|/.test(f2.lists), `For your role's Find › Files with an FSR posted from a development's page: the same (${JSON.stringify({ s0: s0.view, ...f2 })})`);
     await ev(() => PeelUtil.store.set('role', ''));
   });
 

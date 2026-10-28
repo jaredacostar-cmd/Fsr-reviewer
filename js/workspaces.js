@@ -94,21 +94,24 @@
   // (ROLES: up to three shortcuts) and Labs while one is on. The old entries are Home's tabs (Servicing › Capacity,
   // Growth › Forecast, Capital › DC timing, Servicing › Old pipes), Find (Explore), a tool page (Review outlets) and
   // Help (Reference): their ids land there (PAGE_ALIAS, HOST) and the role shortcuts name them.
-  const SIDEBAR = [['home', 'What needs attention: Peel or a municipality'], ['week', BY_ID.week.what], ['find', SIDE.find.what], ['help', 'Start here, guides, the glossary, the app’s rules']];
+  const SIDEBAR = [['home', 'What needs attention: Peel or a municipality'], ['week', 'What changed, and your watch list'], ['find', SIDE.find.what], ['help', 'Start here, guides, the glossary, the app’s rules']];
   // One list of the roles (owner decision 6): the first-run tour, Help › Start here, Settings › Your role and Home's
   // For your role read it. key: the stored role (the tour's five keep theirs; QA/QC added); links (up to three, the
-  // owner's names): { label, page } a page id (an old page name lands through the alias layer), { label, at } a view
-  // of Home (tab:sub), { label, attrs } a button's own handler.
+  // owner's names): { label, page } a page id (an old page name lands through the alias layer; fresh: with no
+  // development open, as Find opens: the FSR reviewer's Files with an FSR posted, Review an FSR's Find step, where
+  // Check FSR's own fsr keeps the development, at its FSR review), { label, at } a view of Home (tab:sub),
+  // { label, attrs } a button's own handler.
   const ROLES = [
     { key: 'engineer', label: 'Infrastructure planner or engineer', what: 'Screen an application, an FSR or a pre-consultation.', links: [{ label: 'Find › Recently active', page: 'find' }, { label: 'Servicing › Capacity', page: 'tight' }, { label: 'Servicing › Network', at: 'svc:network' }] },
     { key: 'manager', label: 'Manager or director', what: 'What needs attention, and whether the capital program keeps up.', links: [{ label: 'DC projects late (Capital › DC timing)', attrs: { 'data-ws-page': 'projects', 'data-dc-status': 'gap' } }, { label: 'No relief in time (Servicing › Capacity)', page: 'tight' }, { label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' } }] },
     { key: 'growth', label: 'Growth or policy analyst', what: 'How much is coming, where, and when.', links: [{ label: 'What’s coming (Growth › Forecast › By period)', page: 'coming' }, { label: 'Draw an area', attrs: { 'data-ws-go': 'study' } }, { label: 'Plans behind their target (Growth › Areas)', page: 'growth' }] },
     { key: 'capital', label: 'Capital or asset management', what: 'DC projects against the capacity they relieve; ageing sewers carrying growth.', links: [{ label: 'Capital › DC timing', page: 'projects' }, { label: 'EA to construction (Capital › EAs)', page: 'eaflow' }, { label: 'Old pipes (Servicing › Old pipes)', page: 'pipes' }] },
-    { key: 'fsr', label: 'FSR reviewer (development engineering)', what: 'Check a consultant’s FSR against the app’s figures.', links: [{ label: 'Find › Files with an FSR posted', page: 'fsr' }, { label: 'This week', page: 'week' }, { label: 'Servicing › Capacity', page: 'tight' }] },
+    { key: 'fsr', label: 'FSR reviewer (development engineering)', what: 'Check a consultant’s FSR against the app’s figures.', links: [{ label: 'Find › Files with an FSR posted', page: 'fsr', fresh: true }, { label: 'This week', page: 'week' }, { label: 'Servicing › Capacity', page: 'tight' }] },
     { key: 'qa', label: 'QA/QC (data review)', what: 'Where developments discharge, and whether the data can be trusted.', links: [{ label: 'Review outlets', page: 'outlets' }, { label: 'Records › Data checks', at: 'records:checks' }, { label: 'Records › Sources', page: 'data' }] },
   ];
-  // A shortcut's button attributes: a page id (openPage), a view of Home (data-ws-at: openPage's o.at), or its own.
-  const roleAttrs = l => (l.page ? { 'data-ws-page': l.page } : l.at ? { 'data-ws-page': 'home', 'data-ws-at': l.at } : l.attrs);
+  // A shortcut's button attributes: a page id (openPage; data-ws-fresh: its o.fresh), a view of Home (data-ws-at:
+  // openPage's o.at), or its own.
+  const roleAttrs = l => (l.page ? { 'data-ws-page': l.page, ...(l.fresh ? { 'data-ws-fresh': '' } : {}) } : l.at ? { 'data-ws-page': 'home', 'data-ws-at': l.at } : l.attrs);
   // Reference pages (Home's layout, no map, not a workspace): Help's (the sidebar's Help lights them).
   const REF = { help: { label: 'Help', what: 'Start here, guides, the tour, what’s new' }, guides: { label: 'How it works', what: 'Nine guides: approvals, flows, capacity, the forecast…' }, glossary: { label: 'Glossary', what: 'The terms in plain words' }, logic: { label: 'How the app decides', what: 'The data rules, gates and decisions behind the figures' }, data: { label: 'Data sources', what: 'Every source, its date, and the data checks' } };
   // The guides (js/reference.js): pages of their own, listed on How it works, not in the sidebar.
@@ -527,9 +530,10 @@
   // pages leave a site; Check a site and Review an FSR keep it: with a development open each is the site's page,
   // the host at a development, at Overview / Servicing › FSR review (6b). The page's tab and sub-view open behind
   // it, so their panels are worked out for the same scope; Home itself opens on its Overview (not stored: the map's
-  // last pick stays the one kept). o.keep: the tab and view as they are (← Page, the back bar, the strip).
+  // last pick stays the one kept). o.keep: the tab and view as they are (← Page, the back bar, the strip). o.fresh:
+  // the page with no development open (a role shortcut into a Find step, as the sidebar's Find closes it).
   function openPage(id, o = {}) {
-    if (id === 'find' && devOpen()) root.DevScope.close();
+    if ((id === 'find' || o.fresh) && devOpen()) root.DevScope.close();
     id = resolvePage(id, { site: !!(root.DevScope && root.DevScope.current && root.DevScope.current()), last: store.get('lastWs', '') });
     if (id !== 'home' && !BY_ID[id] && !REF[id] && !labPageOn(id)) id = 'home';
     const w = BY_ID[id], h = hostOf(id, { site: devOpen() }), A = AT();
@@ -753,7 +757,7 @@
       return;
     }
     const pg = e.target.closest('[data-ws-page]');
-    if (pg) { e.preventDefault(); menuOpen = false; openPage(pg.dataset.wsPage, pg.dataset.wsAt ? { at: pg.dataset.wsAt } : {}); return; }
+    if (pg) { e.preventDefault(); menuOpen = false; openPage(pg.dataset.wsPage, { at: pg.dataset.wsAt, fresh: pg.dataset.wsFresh != null }); return; }
     // (a role picked, Help › Start here's "This is my role": Home's menu keeps its shortcuts; a ROLES key only)
     const rp = e.target.closest('[data-role-pick]');
     if (rp) { if (ROLES.some(r => r.key === rp.dataset.rolePick)) { store.set('role', rp.dataset.rolePick); renderPage(true); } return; }

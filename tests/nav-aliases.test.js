@@ -61,8 +61,9 @@ test('the sidebar ids that are not pages (Explore, Capital, Reference; Find) res
   assert.deepEqual(plain(W.startScreen({ hash: '#w=p:reference' })), { mode: 'home', page: 'help' });
   assert.deepEqual(plain(W.startScreen({ hash: '#w=p:nonsense' })), { mode: 'full' }, 'an unknown page: the full map, as before');
   // In the browser every route into a page goes through openPage, which resolves the id first (the line above it
-  // only closes an open development for the sidebar's Find, navigation phase 7: the Find step, as Home closes it).
-  assert.match(src('js/workspaces.js'), /function openPage\(id, o = \{\}\) \{\n {4}if \(id === 'find' && devOpen\(\)\) root\.DevScope\.close\(\);\n {4}id = resolvePage\(id, \{ site: !!\(root\.DevScope && root\.DevScope\.current && root\.DevScope\.current\(\)\), last: store\.get\('lastWs', ''\) \}\);/);
+  // only closes an open development for the sidebar's Find, navigation phase 7: the Find step, as Home closes it; and
+  // for a role shortcut into a Find step, o.fresh: the FSR reviewer's Files with an FSR posted).
+  assert.match(src('js/workspaces.js'), /function openPage\(id, o = \{\}\) \{\n {4}if \(\(id === 'find' \|\| o\.fresh\) && devOpen\(\)\) root\.DevScope\.close\(\);\n {4}id = resolvePage\(id, \{ site: !!\(root\.DevScope && root\.DevScope\.current && root\.DevScope\.current\(\)\), last: store\.get\('lastWs', ''\) \}\);/);
 });
 
 test('every workspace chip (#w=<chip>) opens its map view; the stored last workspace opens its page', () => {
@@ -578,7 +579,8 @@ test('phase 6b: the site page is the host at a development: old section ids, the
 // five tabs under its header; the area pages are its views. Every old area page id (a link, a data-ws-page button,
 // the stored last workspace, Help's role buttons) opens Home at that page's tab and view, its fold open; a link
 // from before phase 6 opens the page's own view (nav=3); Open the map and ← Page keep the tab and view.
-function loadWs(stored = {}, extra = {}) {
+// (glob: the vm's own globals, e.g. a Date whose now() a test sets)
+function loadWs(stored = {}, extra = {}, glob = {}) {
   const calls = [], handlers = {}, store = new Map(Object.entries(stored)), closed = [];
   const at = { tab: 'overview', subs: { growth: 'pipeline', svc: 'capacity', dca: 'timing', records: 'sources' } };
   let dev = null, ss = null;
@@ -591,7 +593,7 @@ function loadWs(stored = {}, extra = {}) {
   // (extra.onShowTab: what a tab shown does next, e.g. the panels' pnl:set, js/panel.js sync)
   const window = { document, PeelUtil: { esc: x => String(x), fmtNum: n => String(n), store: { get: (k, d) => (store.has(k) ? store.get(k) : d), set: (k, v) => store.set(k, v) } }, PeelAnalysisTabs,
     DevScope: { current: () => dev, close: () => { closed.push('dev'); dev = null; } }, PeelSvcScope: { current: () => ss, close: () => { closed.push('ss'); ss = null; } }, ...extra };
-  const ctx = { window, document, location: { hash: '' }, setTimeout: () => 0, clearTimeout() {}, URLSearchParams, CustomEvent: function CustomEvent() {} }; ctx.globalThis = ctx;
+  const ctx = { window, document, location: { hash: '' }, setTimeout: () => 0, clearTimeout() {}, URLSearchParams, CustomEvent: function CustomEvent() {}, ...glob }; ctx.globalThis = ctx;
   require('node:vm').runInNewContext(src('js/workspaces.js'), ctx);
   // A click on an element matching sel (its data-* in dataset).
   const click = (sel, dataset = {}) => { const el = { dataset }; for (const f of handlers.click || []) f({ target: { closest: s => (s === sel ? el : null) }, preventDefault() {}, stopPropagation() {} }); };
@@ -778,6 +780,15 @@ test('phase 6c: no views bar, task chips or source line; a #w=<id> link still op
   const L = loadWs(); L.B.openPage('site'); L.click('[data-ws-page]', { wsPage: 'fsr' });
   assert.deepEqual([L.B.page(), L.B.view()], ['fsr', null], 'Review an FSR’s Find step');
   L.click('[data-ws-page]', { wsPage: 'find' }); assert.deepEqual([L.B.page(), L.B.view()], ['site', null], 'and back to Find');
+  // The FSR reviewer's Find › Files with an FSR posted (data-ws-fresh, ROLES) with a development open: it closes, Review an
+  // FSR's Find step opens (its files first), as the sidebar's Find; Check FSR's own fsr keeps it, at its FSR review.
+  const p = { key: 'Brampton|1 MAIN ST' };
+  L.open(p, null); L.click('[data-ws-page]', { wsPage: 'fsr', wsFresh: '' });
+  assert.deepEqual([L.B.page(), L.B.view(), L.closed, L.store.get('lastWs')], ['fsr', null, ['dev'], 'fsr'], 'the shortcut: the Find step, no development');
+  L.closed.length = 0; L.open(p, null); L.click('[data-ws-page]', { wsPage: 'fsr' });
+  assert.deepEqual([L.B.page(), L.B.view(), L.closed], ['site', 'svc:fsr', []], 'Check FSR: the development kept, at FSR review');
+  L.click('[data-ws-page]', { wsPage: 'fsr', wsFresh: '' }); assert.deepEqual([L.B.page(), L.B.view(), L.closed], ['fsr', null, ['dev']]);
+  L.closed.length = 0; L.click('[data-ws-page]', { wsPage: 'fsr', wsFresh: '' }); assert.deepEqual([L.B.page(), L.closed], ['fsr', []], 'none open: nothing to close');
 });
 
 // Navigation phase 6c-S3 (design §3.4, §3.5, §5 rows 9, 21, 38, 104, 136, §7.1–7.2): Old pipes is Servicing › Old pipes
@@ -874,13 +885,18 @@ test('phase 7: Home’s sidebar is five entries; its old entries, Help’s role 
     ['find', 'tight', 'svc:network'], ['data-ws-page=projects&data-dc-status=gap', 'tight', 'data-pnl-brief='], ['coming', 'data-ws-go=study', 'growth'],
     ['projects', 'eaflow', 'pipes'], ['fsr', 'week', 'tight'], ['outlets', 'records:checks', 'data']]);
   assert.equal(W.ROLES.find(r => r.key === 'qa').links[0].label, 'Review outlets', 'QA/QC: Review outlets first (owner decision 5)');
+  // The FSR reviewer's Find › Files with an FSR posted: Review an FSR's Find step with no development open (data-ws-fresh,
+  // openPage's o.fresh, as the sidebar's Find), the one fresh shortcut: the page id fsr itself (Check FSR, a link with
+  // d=) keeps a development, at its FSR review.
+  assert.deepEqual(plain(W.ROLES.flatMap(r => r.links).filter(l => l.fresh).map(W.roleAttrs)), [{ 'data-ws-page': 'fsr', 'data-ws-fresh': '' }]);
+  assert.equal(W.ROLES.find(r => r.key === 'fsr').links[0].label, 'Find › Files with an FSR posted');
   const html = src('index.html'), TAB = { Growth: 'growth', Servicing: 'svc', Capital: 'dca', Records: 'records' };
   const chips = tab => { const i = html.indexOf('f-subtabs', html.indexOf(`data-pane="${tab}" hidden role="group"`) - 80); return [...html.slice(i, html.indexOf('</div>', i)).matchAll(/data-(?:gsub|svcsub|dcasub|rsub)="\w+">([^<]+)</g)].map(m => m[1].replace(/<[^>]+>/g, '').replace(/\s*Labs$/, '').trim()); };
   for (const r of W.ROLES) {
     assert.ok(r.label && r.what && r.links.length >= 1 && r.links.length <= 3, r.key);
     for (const l of r.links) {
       const a = W.roleAttrs(l);
-      for (const k of Object.keys(a)) assert.ok(['data-ws-page', 'data-ws-at', 'data-ws-go', 'data-dc-status', 'data-pnl-brief'].includes(k), `${l.label}: ${k}`);
+      for (const k of Object.keys(a)) assert.ok(['data-ws-page', 'data-ws-at', 'data-ws-fresh', 'data-ws-go', 'data-dc-status', 'data-pnl-brief'].includes(k), `${l.label}: ${k}`);
       assert.ok(a['data-ws-page'] || a['data-ws-go'] || a['data-pnl-brief'] != null, `${l.label}: opens something`);
       if (a['data-ws-page']) assert.ok(isPage(W.resolvePage(a['data-ws-page'], {})), l.label);
       if (a['data-ws-at']) { assert.equal(a['data-ws-page'], 'home', l.label); assert.ok(Object.keys(S.VIEWS.area).includes(a['data-ws-at']), l.label); }
@@ -911,10 +927,10 @@ test('phase 7: Home’s sidebar is five entries; its old entries, Help’s role 
   // The browser half: init opens the place's page at its view at once (a view of the host, held "loading" until its
   // data lands), then its place filter and its development once the developments are in (the first pnl:set, or
   // js/app.js applyFilters' bootRestore); a development that no longer resolves gives the page without it.
-  const start = (lastPlace, ex = {}, stored = {}) => {
+  const start = (lastPlace, ex = {}, stored = {}, glob = {}) => {
     const shown = [], drills = [], st = { projects: [], muni: '', sp: [] }; let R = null;
     // (ex.pnlOnShow: each tab shown sets the panels at once, a pnl:set, as js/panel.js sync does in the app)
-    R = loadWs({ startScreen: 'last', lastPlace, ...stored }, { PeelApp: { state: st }, PeelDevNav: { projectByKey: k => (k === 'k' ? { key: 'k' } : null), showDetail: q => { shown.push(q.key); R.open(q); } }, PeelWsPages: { drillTo: x => drills.push(x) }, ...ex, onShowTab: ex.pnlOnShow ? t => R.pnlSet({ key: `${t}:`, scope: 'area' }) : null });
+    R = loadWs({ startScreen: 'last', lastPlace, ...stored }, { PeelApp: { state: st }, PeelDevNav: { projectByKey: k => (k === 'k' ? { key: 'k' } : null), showDetail: q => { shown.push(q.key); R.open(q); } }, PeelWsPages: { drillTo: x => drills.push(x) }, ...ex, onShowTab: ex.pnlOnShow ? t => R.pnlSet({ key: `${t}:`, scope: 'area' }) : null }, glob);
     R.B.init(); return Object.assign(R, { shown, drills, st });
   };
   let L = start({ page: 'site', view: 'svc:network', d: 'k', mu: '', sp: '' });
@@ -940,6 +956,12 @@ test('phase 7: Home’s sidebar is five entries; its old entries, Help’s role 
   L.st.areas = {}; L.B.bootRestore(); assert.deepEqual(L.drills, ['a:bw']);
   L = start({ page: 'home', view: 'overview:', mu: 'Brampton', sp: 'old-plan' }, { PeelPlanAreas: PA }); L.st.projects = [{}]; L.st.areas = {};
   L.B.bootRestore(); assert.deepEqual(L.drills, ['m:Brampton'], 'a plan that no longer exists: its municipality');
+  // (a plan whose areas never land: 20 s after init the place without it, at its municipality, once)
+  let t = 1e12; const clock = { Date: class extends Date { static now() { return t; } } };
+  L = start({ page: 'home', view: 'overview:', mu: 'Brampton', sp: 'bw' }, { PeelPlanAreas: PA }, {}, clock); L.st.projects = [{}];
+  t += 19999; L.B.bootRestore(); assert.deepEqual(L.drills, [], 'the areas waited for, 20 s at most');
+  t += 1; L.B.bootRestore(); assert.deepEqual([L.drills, L.B.page()], [['m:Brampton'], 'home'], 'then its municipality');
+  L.st.areas = {}; L.B.bootRestore(); assert.deepEqual(L.drills, ['m:Brampton'], 'once: the areas landing late change nothing');
   // Another page opened before the data is in: that is where the reader is, nothing restored.
   L = start({ page: 'site', view: 'svc:network', d: 'k', mu: 'Caledon', sp: '' }); L.B.openPage('help'); L.st.projects = [{}]; L.B.bootRestore();
   assert.deepEqual([L.shown, L.drills, L.B.page()], [[], [], 'help']);

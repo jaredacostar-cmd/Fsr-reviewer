@@ -228,6 +228,6 @@ test('Review outlets opens from Records › Data checks, a site’s path line an
   assert.match(src('js/overview-tab.js'), /data-ws-page="outlets" data-dvo="pick-dev"/, 'the path line');
   const W = require('../js/workspaces.js');
   assert.equal(W.roleAttrs(W.ROLES.find(r => r.key === 'qa').links[0])['data-ws-page'], 'outlets', 'the QA/QC role’s shortcut');
-  assert.match(src('js/workspaces.js'), /const pg = e\.target\.closest\('\[data-ws-page\]'\);\n {4}if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage, pg\.dataset\.wsAt \? \{ at: pg\.dataset\.wsAt \} : \{\}\); return; \}/);
+  assert.match(src('js/workspaces.js'), /const pg = e\.target\.closest\('\[data-ws-page\]'\);\n {4}if \(pg\) \{ e\.preventDefault\(\); menuOpen = false; openPage\(pg\.dataset\.wsPage, \{ at: pg\.dataset\.wsAt, fresh: pg\.dataset\.wsFresh != null \}\); return; \}/);
   assert.match(src('js/tips.js'), /Also Records › Data checks \(Review outlets →\), and "Review →" on a development’s Overview/);
 });

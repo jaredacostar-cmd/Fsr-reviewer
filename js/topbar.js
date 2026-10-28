@@ -49,11 +49,12 @@
   // A panel's or a page's "Show … on the map" ([data-mview] outside the switch): that lens (a page's opens the full map
   // first, js/workspaces.js MAP_LINK); the System and the tab stay as they are, as when a workspace sets a lens.
   document.addEventListener('click', e => { const b = e.target.closest && e.target.closest('[data-mview]'); if (b && !b.closest('#tb-views')) MA().setMapView(b.dataset.mview); });
-  // Phones: Export, Present, Help and Settings in one ⋯ menu.
+  // Phones: Export, Present, Help and Settings in one ⋯ menu. (⋯ opening closes the Settings sheet and a menu left
+  // open: the sheet sits outside the list, and ⋯'s click stops before the click-outside that would close it)
   const more = $('#tb-more'), acts = $('#tb-actions');
   if (more && acts) {
     const setMore = o => { acts.classList.toggle('open', o); more.setAttribute('aria-expanded', String(o)); };
-    more.addEventListener('click', e => { e.stopPropagation(); setMore(!acts.classList.contains('open')); });
+    more.addEventListener('click', e => { e.stopPropagation(); const o = !acts.classList.contains('open'); if (o) closeTbMenus(); setMore(o); });
     // (a pick inside it, or a tap elsewhere, folds it; a sub-menu it opens stays until its own pick)
     document.addEventListener('click', e => { if (acts.classList.contains('open') && !e.target.closest('#tb-actions')) setMore(false); });
     acts.addEventListener('click', e => { if (e.target.closest('[role="menuitem"], #tb-help, #tb-restart')) setMore(false); });
@@ -402,7 +403,8 @@
   function openGearPage(name) {
     const m = $('#tb-gear-menu'); if (!m) return;
     closeTbMenus();
-    const page = window.GearPages[name];
+    // (the old ⚙ › Labs page, a section of the sheet since navigation phase 7: the sheet, at its Labs)
+    const labs = name === 'labs', page = window.GearPages[labs ? 'settings' : name];
     let out;
     try { out = typeof page === 'function' ? page() : undefined; } catch (e) { out = undefined; }
     m.innerHTML = '';
@@ -412,6 +414,7 @@
     else m.innerHTML = '<p class="small muted">That page is not available yet — try again in a moment.</p>';
     m.hidden = false;
     const gb = $('#tb-gear'); if (gb) gb.setAttribute('aria-expanded', 'true');
+    const lp = labs && m.querySelector('.labs-page'); if (lp) lp.scrollIntoView({ block: 'start' });
   }
   window.openGearPage = openGearPage;
   // ⚙ is one Settings sheet (navigation phase 7, design §3.7, N-10; its menu of Settings · Labs · Change log went:
@@ -420,9 +423,10 @@
   // click never reaches ⋯'s listeners: it stops there); the focus goes into it, and back to ⚙ on Esc.
   function toggleSettings() {
     const m = $('#tb-gear-menu'); if (!m) return;
+    // (⋯ folds either way: ⚙ opening the sheet or closing it)
+    const a = $('#tb-actions'), mb = $('#tb-more'); if (a && a.classList.contains('open')) { a.classList.remove('open'); if (mb) mb.setAttribute('aria-expanded', 'false'); }
     if (!m.hidden) { closeTbMenus(); return; }
     closeScenPop();
-    const a = $('#tb-actions'), mb = $('#tb-more'); if (a && a.classList.contains('open')) { a.classList.remove('open'); if (mb) mb.setAttribute('aria-expanded', 'false'); }
     openGearPage('settings');
     // (as tall as the screen leaves under it, whatever the banners above the top bar take: its foot in reach on a phone)
     m.style.maxHeight = `${Math.max(160, Math.floor(innerHeight - m.getBoundingClientRect().top - 8))}px`;

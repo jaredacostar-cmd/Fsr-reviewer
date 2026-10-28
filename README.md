@@ -2239,7 +2239,7 @@ Navigation phase 7 (docs/architecture-review/navigation-design.md §3.2, §3.3, 
 40–43, 53, 157–158, 161–171; owner decisions 5, 6 and 17; pros-and-cons N-1, N-9, N-10, NP-7, P4-10, AD-5, AD-17).
 
 - **Home's sidebar is five entries**: **Home** · **This week** [N] · **Find** · **Help** · **Full map**
-  (`js/workspaces.js` `SIDEBAR`). Home is lit on every tab of Home, Find on the Find steps, a site's page and
+  (`js/workspaces.js` `SIDEBAR`, each with §3.2's line: This week's *What changed, and your watch list*). Home is lit on every tab of Home, Find on the Find steps, a site's page and
   Study area, Help on every Help page (a guide's too), This week on This week, a Labs page's own entry while its
   switch is on; nothing on Review outlets (a tool page). The team headings (Planning, Capital, QA/QC, Asset
   Management, Reference) and the entries Explore, Servicing capacity, What's coming, Capital, Review outlets,
@@ -2252,7 +2252,10 @@ Navigation phase 7 (docs/architecture-review/navigation-design.md §3.2, §3.3, 
   Manager or director, Growth or policy analyst, Capital or asset management, FSR reviewer, and QA/QC). A
   shortcut is a page id (an old page name, through the alias layer), a view of Home (`data-ws-page="home"
   data-ws-at="<tab:sub>"`, `openPage(id, { at })`: not the strip's `data-pg-tab`, which at a site would open the
-  development's tab) or a button's own (the Briefing PDF, Draw an area, DC projects late). With no role, one
+  development's tab) or a button's own (the Briefing PDF, Draw an area, DC projects late). The FSR reviewer's
+  *Find › Files with an FSR posted* is Review an FSR's Find step, its files first, with an open development closed
+  as Find closes it (`fresh: true`, `data-ws-fresh`, `openPage(id, { fresh })`); the page id `fsr` itself (Check
+  FSR, a link with `d=`) keeps the development, at Servicing › FSR review. With no role, one
   line: *Pick your role for shortcuts →* (Help › Start here). The role is picked on the first-run tour (six
   buttons), Help › Start here (*This is my role*) or Settings › Your role; it is stored as the role's key
   (`role`; the tour's five keys kept, `qa` new), never free text.
@@ -2264,7 +2267,8 @@ Navigation phase 7 (docs/architecture-review/navigation-design.md §3.2, §3.3, 
   for phase 9 or the owner to revisit).
 - **Find** (`find`, an alias of the `site` page's Find step; an open development closes first, as Home closes
   it; `#w=p:find&d=…` opens that development's page) lists **Recently active**, **Large files under review** and
-  **Files with an FSR posted** (a row opens Servicing › FSR review). `explore` opens the open site, else Find.
+  **Files with an FSR posted** (a row opens Servicing › FSR review; every development's FSR looked up once per load
+  of the developments and of `data/fsr.json`, not on each redraw). `explore` opens the open site, else Find.
 - **Last place** (owner decision 17, AD-17): Settings › Start screen is **Home · Last place · Full map** (the
   select under the sidebar went). Last place reopens the page last shown (Home or a workspace page: never Help,
   a guide or a Labs page), its tab and view, its place filter (a municipality, or one plan) and its
@@ -2289,8 +2293,9 @@ Navigation phase 7 (docs/architecture-review/navigation-design.md §3.2, §3.3, 
   (`js/growth-ui.js` `settingsPageHTML`; `js/topbar.js` `toggleSettings`). The Settings · Labs · Change log menu
   is gone (the change log is Help › What's new), and so are the Counting and Records pointer stubs (counting
   is the Scenario control's; record type Find › What). The focus goes into the sheet as it opens and back to ⚙
-  on Escape (to ⋯ when ⚙ is folded in it); on a phone opening it folds ⋯, and it spans the top bar with a small
-  margin each side (`--space-2`), scrolling inside itself to the screen's foot.
+  on Escape (to ⋯ when ⚙ is folded in it); on a phone opening or closing it folds ⋯, ⋯ opening closes it (never
+  one over the other), and it spans the top bar with a small margin each side (`--space-2`), scrolling inside
+  itself to the screen's foot. `openGearPage('labs')`, the old Labs page, opens the sheet at its Labs.
 - **Usage records the role and the searches** (NP-7, P4-10 with change): one `role:<key>` count per visit (a
   `ROLES` key or `none`), and one `search:<kind>` count per search pick, by what it found (`dev`, `file`,
   `plan`, `mtsa`, `svc`, `dc`, `dcfac`, `filter`, `place`, `address`; `bump` takes no other name), never the
