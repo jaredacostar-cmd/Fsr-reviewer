@@ -583,7 +583,7 @@ test('the old DC timing tool result opens the list: at its Status, the developme
   assert.doesNotMatch(d.slice(d.indexOf('  function openList('), d.indexOf('  // A row opens its project')), /setSys/);
 });
 
-test('the card’s trail: Peel › DC timing › the main, the group step opening Capital › DC timing (EA and Capital keep theirs)', () => {
+test('the card’s trail: Peel › DC timing › the main, the group step opening Capital › DC timing (EA and Capital keep theirs; the card closes, navigation phase 8b)', () => {
   const calls = [];
   const win = { PeelUtil: require('../js/util.js'), PeelDemand: require('../js/demand.js'), PeelPhases: require('../js/phases.js'),
     PeelApp: { state: { ss: null, svcGen: 0, servicing: null }, applyFilters() {} }, PeelOverviewTab: { renderOverview() {} },
@@ -598,7 +598,11 @@ test('the card’s trail: Peel › DC timing › the main, the group step openin
     const c = S.crumbs();
     assert.equal(c.length, 2); assert.deepEqual([c[0].label, c[0].title], [group, title]);
     calls.length = 0; c[0].go(); assert.deepEqual(calls, [`sub:${sub}`, 'tab:dca'], group);
+    // (the step leaves the card for its list: Capital is left out at a card, so the card closes first)
+    assert.equal(S.hasResult(), false, group); assert.equal(win.PeelApp.state.ss, null, group);
   }
+  const g = src('js/svc-scope.js');
+  assert.match(g, /go: \(\) => \{ closeResult\(\); if \(AT\(\)\.setDcSub\) AT\(\)\.setDcSub\(GROUP_SUB\[g\] \|\| 'projects'\); AT\(\)\.showFootTab\('dca'\); \}/);
 });
 
 test('source pins: the card in a DC main’s result (before what it relieves), its trail group, Open the map at it; the tool result, its System seg and its filter handler gone', () => {

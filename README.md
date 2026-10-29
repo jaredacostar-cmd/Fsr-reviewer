@@ -1839,7 +1839,8 @@ Capital has three views, **DC timing · EAs · Projects**. DC timing and DC proj
 - **A row opens the project's scope** (`dcwork:<sys>:<key>`, the same as a tap on the DC main, a search
   pick or an `ss=dcwork:…` link). On the map, its **card** on the Overview (`js/dc-projects.js`
   `cardHTML`, drawn by `js/masterplan.js` `showDcLine`): trail *Peel › DC timing › the main* (the *DC
-  timing* step opens Capital › DC timing), a headline with both verdicts, the two verdicts as lines,
+  timing* step closes the card and opens Capital › DC timing, navigation phase 8b), a headline with both
+  verdicts, the two verdicts as lines,
   who relies on it as the page's project says it (units and flow in the headline; the developments by
   tier, their units and people + jobs, and their flow as lines), every development on it by tier (needs
   it to connect, needs it for capacity, on its path but not needed; past the first 30 the rest in a
@@ -1848,8 +1849,8 @@ Capital has three views, **DC timing · EAs · Projects**. DC timing and DC proj
   relieves*. The allocation is worked out after the
   card first paints ("Working out the developments relying on it…"), then the card is drawn again, once
   (the tap itself never walks every pipe; the build runs after the paint). A redraw, after the
-  allocation or the sewers it waited for, never moves the reader: the tab they went on to, the phone's
-  sheet and the card's scroll stay as they were.
+  allocation or the sewers it waited for, never moves the reader: the phone's sheet and the card's scroll
+  stay as they were (the card is its Overview alone: another tab closes it first, navigation phase 8b).
   For a DC main the developments come from the DC projects allocation (one model per answer: the card's
   older "Developments relying on it" list, the first draft of the same rule, stays for DC facilities,
   which the allocation does not cover). On Home's Capital › DC timing the project opens in place (both
@@ -2335,15 +2336,16 @@ No page id, tab key, share parameter or pane id is renamed or moved: every §7 l
 Navigation phase 8 (docs/architecture-review/navigation-design.md §3.4, §3.5, §8 row 8, §5 rows 146–147 and
 150–156, §7.2; pros-and-cons NP-8, N-7, N-RULE; owner decisions 5, 7 and 11). Every scope the map's panel can
 show has one kind, and one row of the scope × tab matrix says which tabs and views it shows. It comes in two
-parts (NP-8 with change): **8a**, servicing scopes and drawn areas (below), and 8b, files and cards.
+parts (NP-8 with change): **8a**, servicing scopes and drawn areas, and **8b**, files and cards (both below).
 
 ### Servicing scopes and drawn areas (8a)
 
 - **One kind per scope** (`js/analysis-tabs.js` `kindOf` / `scopeKind()`): `site` (a development; a result
   kept at it, the Inquiry draft, keeps its tabs), `area` (Peel, a municipality, a plan), `svc` (a plant, a
   pumping station, a wastewater block, a pressure zone, the South Peel water system), `drawn` (a selection,
-  drawn or the developments inside a constraint layer: `sel:`) and `file` (`file:`); every other result is
-  `area` until 8b. One kind for every tab (the per-tab file rule went into the `file` row).
+  drawn or the developments inside a constraint layer: `sel:`), `file` (`file:`) and, since 8b, `object`
+  (every other result: a card or a tool's result). One kind for every tab (the per-tab file rule went into the
+  `file` row).
 - **What each kind shows** (`HIDDEN`; ≤ 4 chips each):
 
   | Kind | Growth | Servicing | Capital | Records |
@@ -2352,13 +2354,16 @@ parts (NP-8 with change): **8a**, servicing scopes and drawn areas (below), and 
   | Area (`area`) | Pipeline · Areas · Forecast | Capacity · Network · Old pipes | DC timing · EAs · Projects | Sources · Data checks |
   | Servicing scope (`svc`) | Pipeline · Forecast | Capacity · Network · Old pipes | DC timing | its own Sources · Data checks |
   | Drawn area (`drawn`) | Pipeline · Forecast | Capacity · Network | DC timing | (no Records tab) |
-  | File (`file`) | as an area | Capacity · Network · Old pipes | as an area | the file (Files) |
+  | File (`file`, 8b) | (left out) | (left out) | (left out) | the file (Files) |
+  | Card or tool's result (`object`, 8b) | (left out) | (left out) | (left out) | (left out) |
 
 - **A whole tab left out**: a drawn area has no Records tab (`HIDDEN.drawn.records = '*'`): its button is
   left out of the map's strip (`.f-tab-off`, never the `hidden` attribute, which means "loading" to the strip
-  and the page host), it has no chips, and a link or pick of it opens Overview. When the scope closes
-  (`js/svc-scope.js` `clear()` / `closeResult()`, and once the servicing lookup fills for a cold link:
-  `rescope()`), the strip, the chips and a view it replaced come back, and an open tab redraws for the new scope.
+  and the page host), it has no chips, and a link's or a stored pick of it opens Overview (since 8b a tab call,
+  a `[data-at]` link or Help's *Show me* asking for it closes the selection first, then opens it, as at a
+  card). When the scope closes (`js/svc-scope.js` `clear()` / `closeResult()`, and once the servicing lookup
+  fills for a cold link: `rescope()`), the strip, the chips and a view it replaced come back, and an open tab
+  redraws for the new scope.
 - **Records at a servicing scope is its own** (`js/records-tab.js` `svcSourcesSpec` / `svcChecksSpec`, was
   *"… has no files of its own"* above Peel's sources). **Sources**: where its capacity comes from and its date
   (a plant's rated capacity: the Region's 2025 annual report, its 90% trigger the 2020 Master Plan; a station's
@@ -2398,7 +2403,58 @@ tests/nav-aliases.test.js "phase 8a"):
 | `svs=pipes\|fsr` at a drawn area; `dcs=eas\|projects` at a servicing scope or a drawn area | Servicing › Capacity / Capital › DC timing there; the pick back at an area |
 | `t=records`, a stored `footTab4: 'records'`, while a selection is open | Overview (no Records tab there); the stored tab unchanged, so the next visit opens Records |
 
-No page id, tab key, share parameter or pane id is renamed: every §7 link holds.
+No page id, tab key, share parameter or pane id is renamed: every §7 link holds (browser paths *Every scope kind (8a)*:
+a plant's Records, a block, the stored picks moving between kinds; a station's, a zone's and the water system's
+Records, and the link made at a scope's Records opened cold).
+
+### Files and cards; Records a tab like the others (8b)
+
+- **A file is its record sheet and the file** (`HIDDEN.file`: Growth, Servicing and Capital left out; Records ›
+  Files): a marker's record opens on Overview as before (SPEC §3: its units alone, its flows, what it counts as,
+  its tree links) and Records shows the file (its source record, every field, its provenance). Its flows stay on
+  the record sheet: a file has no Servicing view of its own (§3.5's "one view: its flows" would be a second home
+  for them). *Open as a development* and the tree links open the development, every tab at it.
+- **A card or a tool's result is its Overview alone** (`HIDDEN.object`, `kindOf`'s fallback `object`): a DC
+  project, an EA, a capital project, a pipe, a water facility, a constraint layer's feature, a block's fallback
+  card, What loads this?, a trace, Inspect point, Test a site, Upgrade a pipe, the sewer designer's and Help's
+  results. The strip shows Overview only (the other four `.f-tab-off`); the card is the scope, its developments
+  the filter. A DC project's card lists every development relying on it, by tier, with its CSV. A result kept at
+  its development (the Inquiry draft, owner decision 13) is `site`: the five tabs.
+- **Leaving a card for a tab it leaves out** (`js/analysis-tabs.js` `leaveFor(tab)`): a tab call (`openTab`, a
+  `[data-at]` link, `[data-foot-tab]`), the lens, Help's *Show me* (`js/tips.js` `openAnalysis`), an EA card's
+  link to its list (`[data-ce-goto]`) and a map view's own tab (`js/workspaces.js` `go`) close the card first,
+  as × does (`js/aerial-check.js` `closeDetail`), then open the tab: no link is dead. The lens still opens its
+  tab, its map preset and System as before (owner decision 9). Closing runs the result's own close handlers, as
+  × does: a test site placed and not counted goes with it (a counted one stays), and the sewer designer's design
+  goes when its tool is off.
+- **The trail's group step** (Peel › DC timing / EA / Capital › the card) closes the card and opens that list:
+  Capital › DC timing · EAs · Projects. Peel closes it as × does. The five tabs come back (`rescope()`), on
+  Overview after × or Peel.
+- **Records is real or left out, never a placeholder** (§4 #7): the line *"… has no files of its own …
+  Below: the sources for all of Peel"* is gone. A file whose record is not in yet says *Loading the file*, never
+  Peel's sources.
+- **Records is a tab like the others** (§8 row 8): the muted, right-aligned trailing style is gone from the
+  map's strip (`.f-tab-trail`) and the page host's (`.page-tab-trail`); five tabs alike, Records still last.
+  It reverses the owner's small trailing tab of 2026-10-16 (NP-8's con): one class on each strip, so it can be
+  put back on its own.
+- **What a reader notices** (risk 6): at a card, Growth, Servicing, Capital and Records were one tap away,
+  filtered to its developments; now the card closes first, and its filter with it. A servicing scope or a drawn
+  area keeps the tabs for a set of developments; the trail's group step leads to the card's list.
+- **Phones**: the sheet's strip is one tab at a card, two at a file; nothing makes the panes scroll sideways at
+  390 px.
+
+Old links still land (`js/analysis-tabs.js` `HIDDEN` / `leaveFor`; tests/nav-aliases.test.js "phase 8b"):
+
+| Old | Where it opens now |
+|---|---|
+| `ss=dcwork:…\|ea:…\|cap:…\|pipe:…` with any `t` | The card on Overview, the other tabs left out; after × or the trail's Peel, Overview with the five tabs; the stored tab is the next visit's |
+| `ss=file:<uid>` with any `t` | The record sheet on Overview (the link's restore opens Overview, as before); the file is in Records, one tap |
+| The trail's DC timing / EA / Capital step at a card | The card closes; Capital › DC timing / EAs / Projects |
+| A lens (Capital, Water, Wastewater), a `[data-at]` link, Help's *Show me*, an EA card's link or a map view's tab, at a card that leaves that tab out | The card closes (as × does), then that tab |
+| `.f-tab-trail`, `.page-tab-trail` | Gone: Records a tab like the others |
+
+No page id, tab key, share parameter or pane id is renamed in 8b either (browser paths *Every scope kind (8b)*: a
+file, a DC project's card, an EA's card and the lens; an old link to each with any `t`, opened cold, and closing it).
 
 ## Help and This week
 
@@ -2601,6 +2657,9 @@ From design audit, Group 7:
   open in the right-hand detail panel.
   - The detail panel is used only when the tool framework is absent.
   - Every other tool already used the Tool result tab.
+- **A result is a scope of its own on Overview** (navigation phase 8b): the other tabs are left out while it is
+  open, and a tab, the lens or a link to another tab closes it first, as × does; a result kept at its
+  development keeps the development's tabs ("Every scope kind" above).
 - **A result started at a development keeps it** (navigation phase 1, `keepDev` in
   `PeelSvcScope.openResult`). The **Inquiry draft** is a development action (in the development's
   header, beside *Servicing memo*, on every tab and on its page) and stays an Export ▾ item: both call one function
@@ -2619,7 +2678,8 @@ From design audit, Group 7:
   opened a panel as a side effect, so Inspect's sewer-path section was empty. The trace now
   comes back to them with no panel.
 - **Test sites don't outlive the tool.**
-  - A test site that is placed and then closed unchanged is removed with its result.
+  - A test site that is placed and then closed unchanged is removed with its result (closed by ×, or, since
+    navigation phase 8b, by a tab, the lens or a link to another tab).
   - A test site that was edited or counted in the totals stays. The bar under the map lists
     it, with Remove.
 - **Top bar**, left to right:
@@ -2632,7 +2692,8 @@ From design audit, Group 7:
   | Help and settings | Help · ⚙ |
 
   - A **lens** (the view switch) sets the map preset and the System control (navigation phase 2);
-    Capital, Water and Wastewater also open their tab.
+    Capital, Water and Wastewater also open their tab (at a card or a tool's result, which leaves that tab
+    out, the result closes first: navigation phase 8b, owner decision 9).
   - **Present ▾** holds Present and Time-lapse; the separate Time-lapse button is gone.
   - **Export ▾** gains *Save this view…*; the Save button in the Layers card is gone. Saved
     views still open from the Layers card and the chips above the filters.

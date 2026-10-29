@@ -1,6 +1,6 @@
 'use strict';
 // SPEC §5 (Phase 4; Stage 2): the right panel has the same tabs at every scope — Overview · Growth ·
-// Servicing · Capital, then Records as a small trailing tab. Servicing holds the wastewater and water views; Records follows the
+// Servicing · Capital · Records (a tab like the others since navigation phase 8b). Servicing holds the wastewater and water views; Records follows the
 // scope; no placeholder sub-views at site scope; one disclaimer per panel; one "Largest" list; empty
 // plans behind "show empty"; the approval-pace column only with data; site tiles follow the type.
 const test = require('node:test');
@@ -12,7 +12,7 @@ const src = f => fs.readFileSync(path.join(ROOT, f), 'utf8');
 const HTML = src('index.html');
 
 test('four tabs and Records, in order; Servicing holds water and wastewater in one sub-view row', () => {
-  const tabs = [...HTML.matchAll(/class="f-tab(?: f-tab-trail)?" id="ftab-(\w+)"[^>]*>([^<]+)</g)].map(m => m[2]);
+  const tabs = [...HTML.matchAll(/class="f-tab" id="ftab-(\w+)"[^>]*>([^<]+)</g)].map(m => m[2]);
   assert.deepEqual(tabs, ['Overview', 'Growth', 'Servicing', 'Capital', 'Records']);
   const row = HTML.slice(HTML.indexOf('<div class="f-pane f-subtabs svc-subtabs" data-pane="svc"'), HTML.indexOf('</div>', HTML.indexOf('svc-subtabs')));
   // (navigation phase 6c: Old pipes is a Servicing view, an area's; FSR review a development's)
@@ -28,7 +28,9 @@ test('Records follows the scope: Sources and Checks at Peel; a development its f
   const r = src('js/records-tab.js');
   assert.match(r, /return `\$\{DU\(\)\.freshnessHTML\(\)\}/, 'Sources: freshness first');
   assert.match(r, /possible duplicate pair/);
-  assert.match(r, /body\.innerHTML = note \+ \(sub === 'checks' \? checksHTML\(\) : sourcesHTML\(\)\);/);
+  assert.match(r, /body\.innerHTML = sub === 'checks' \? checksHTML\(\) : sourcesHTML\(\);/);
+  // (a card or a tool's result has no Records tab: the placeholder went, removed by design, navigation phase 8b, §4 #7)
+  assert.doesNotMatch(r, /has no files of its own/);
   assert.match(r, /if \(scoped\) \{ showData\(null\); if \(root\.DevTab && root\.DevTab\.render\) root\.DevTab\.render\(body\); if \(root\.PeelPanel\) root\.PeelPanel\.set\('records:files', filesPanelSpec\(scoped\)\); return; \}/);
   // (navigation phase 5: one Records view at a development; no node moves in from the Overview, no sub-tabs)
   assert.doesNotMatch(r, /syncDevHome|setSub\(/);

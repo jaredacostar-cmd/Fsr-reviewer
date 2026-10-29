@@ -328,7 +328,7 @@
   // (the card drawn again while it is still the one open: its producer re-run, js/svc-scope.js; once, however
   // often it painted while it waited. The redraw is the card's, never a move of the reader's: the tab they went
   // on to, its preference, the phone's sheet and the card's scroll are put back, which openResult sets for a new
-  // result)
+  // result; at a card the tab is Overview: navigation phase 8b)
   const again = k => {
     const SS = root.PeelSvcScope, A = App(), T = AT(); if (!(k && SS && SS.hasResult && SS.hasResult() && A.state.ss === `dcwork:${k}`)) return;
     const tab = T && T.getFootTab ? T.getFootTab() : null, pref = T && T.getFootPref ? T.getFootPref() : null, sn = A.getAnalysisSnap ? A.getAnalysisSnap() : null;

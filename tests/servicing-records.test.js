@@ -184,7 +184,7 @@ test('Records › Data checks, Servicing model: the six comparisons, a section a
   assert.match(c, /const renderFor = sub => \{ if \(sub === 'capacity'\) render\(\); else if \(sub === 'network'\) \{/, 'no checks sub-view');
   // Records draws it with its Data checks; the old link to Servicing › Model checks is gone.
   const r = src('js/records-tab.js');
-  assert.match(r, /body\.innerHTML = note \+ \(sub === 'checks' \? checksHTML\(\) : sourcesHTML\(\)\);\n {4}if \(sub === 'checks' && root\.PeelSvcCapacity && root\.PeelSvcCapacity\.renderChecks\) root\.PeelSvcCapacity\.renderChecks\(\);/);
+  assert.match(r, /body\.innerHTML = sub === 'checks' \? checksHTML\(\) : sourcesHTML\(\);\n {4}if \(sub === 'checks' && root\.PeelSvcCapacity && root\.PeelSvcCapacity\.renderChecks\) root\.PeelSvcCapacity\.renderChecks\(\);/);
   assert.doesNotMatch(r, /svc:checks|Servicing › Model checks|label: 'Servicing checks'/);
   assert.match(r, /fullTitle: 'Records › Data checks: duplicates, published totals, permit counts, the accuracy report and the servicing model'/);
 });
@@ -619,10 +619,17 @@ test('Records at a servicing scope: its own Sources and Data checks, loading whe
   assert.doesNotMatch(body, /has no files of its own/);
   L.state.wwEvents = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/ww-events.json'), 'utf8')); R.render();
   assert.match(L.els['#records-body'].innerHTML, /2 of 2 on the report's roster \(Appendix A\)\./);
-  // A result with no files of its own (a DC work): the placeholder line as before (navigation phase 8b removes it).
+  // A result with no files of its own (a DC work): no Records tab, so never Peel's sources under it (the placeholder
+  // line went, removed by design: navigation phase 8b, §4 #7); a file whose record is not in yet: a loading line.
   cur.s = { kind: 'result', rkind: 'dcwork', ref: 'dcwork:ww:X', title: 'Trunk X', short: 'Trunk X' }; cur.sub = 'sources'; R.render();
-  assert.match(L.els['#records-body'].innerHTML, /^<p class="small muted">Trunk X has no files of its own\./);
-  assert.equal(L.els['#rec-data-sources'].hidden, false);
+  assert.equal(L.els['#records-body'].innerHTML, '');
+  assert.equal(L.els['#rec-data-sources'].hidden, true); assert.equal(L.els['#rec-data-checks'].hidden, true);
+  L.win.PeelUtil.skel = require('../js/util.js').skel; L.win.PeelAerialCheck = { currentFile: () => null };
+  const n = L.sets.length;
+  cur.s = { kind: 'result', rkind: 'file', ref: 'file:u1', title: 'A 1/26', short: 'A 1/26' }; R.render();
+  assert.match(L.els['#records-body'].innerHTML, /^<div class="skel-row" role="status" aria-label="Loading the file">/);
+  assert.doesNotMatch(L.els['#records-body'].innerHTML, /Peel freshness|has no files of its own/);
+  assert.equal(L.els['#rec-data-sources'].hidden, true); assert.equal(L.sets.length, n, 'no panel of Peel’s for it');
   // Peel (no scope): the old specs.
   cur.s = null;
   assert.deepEqual(plain(R.sourcesPanelSpec().head.trail.map(t => t.label)), ['Peel', 'Records › Sources']);

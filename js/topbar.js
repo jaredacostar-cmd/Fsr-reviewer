@@ -42,7 +42,8 @@
     // (only a lens tap sets the System: a workspace or a page calling setMapView leaves it; Planning too)
     const sy = AT() && AT().SYS_OF_VIEW ? AT().SYS_OF_VIEW[b.dataset.mview] : null; if (sy && AT().setSys) AT().setSys(sy);
     // Bundle 6: a view opens its tab (picking Capital used to leave Overview open): Capital → Capital,
-    // Water and Wastewater → Servicing; Planning keeps the tab you are on.
+    // Water and Wastewater → Servicing; Planning keeps the tab you are on. (A card or a tool's result that leaves
+    // the tab out closes first, in openTab: navigation phase 8b.)
     const tab = { dc: 'dca', water: 'svc', wastewater: 'svc' }[b.dataset.mview];
     if (tab && AT() && AT().openTab) AT().openTab(tab);
   });

@@ -109,9 +109,9 @@ test('index.html: final tab set — removed tabs gone, labels renamed', () => {
     'data-tab="criteria"', 'data-tab="log"', 'data-tab="census"', 'Settings &amp; sources', '>Demand</button>']) {
     assert.ok(!HTML.includes(gone), `still present: ${gone}`);
   }
-  // Stage 2: four tabs at every scope, then Records as a small trailing tab.
-  const tabs = [...HTML.matchAll(/<button type="button" role="tab" class="f-tab( f-tab-trail)?" id="ftab-(\w+)"[^>]*>([^<]+)</g)].map(m => [m[2], m[3], !!m[1]]);
-  assert.deepEqual(tabs, [['overview', 'Overview', false], ['growth', 'Growth', false], ['svc', 'Servicing', false], ['dca', 'Capital', false], ['records', 'Records', true]]);
+  // Stage 2: five tabs, Overview · Growth · Servicing · Capital · Records (navigation phase 8b: Records a tab like the others).
+  const tabs = [...HTML.matchAll(/<button type="button" role="tab" class="(f-tab[^"]*)" id="ftab-(\w+)"[^>]*>([^<]+)</g)].map(m => [m[2], m[3], m[1] !== 'f-tab']);
+  assert.deepEqual(tabs, [['overview', 'Overview', false], ['growth', 'Growth', false], ['svc', 'Servicing', false], ['dca', 'Capital', false], ['records', 'Records', false]]);
   for (const gone of ['data-tab="tool"', 'id="pane-tool"', 'id="detail"', 'id="detail-body"', 'id="ftab-water"', 'id="ftab-ww"', 'id="ftab-dev"', 'id="pane-dev"', 'data-pane="water"', 'data-pane="ww"', 'data-wwsub', 'data-wsub', 'id="ov-dev"', 'id="pane-dev-body"', 'data-devsub', 'id="site-bar"']) assert.ok(!HTML.includes(gone), `still present: ${gone}`);
   assert.ok(HTML.includes('<div id="scope-body" class="scope-body" hidden aria-live="polite"></div>'), 'scope host');
 });

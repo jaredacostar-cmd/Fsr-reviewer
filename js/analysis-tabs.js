@@ -7,10 +7,11 @@
   const DUI = () => window.PeelDemandUI;
   const Sh = () => window.PeelShare;
 
-  // ---- The right panel (Stage 2): four tabs at every scope, Overview · Growth · Servicing · Capital,
-  // plus Records, a small trailing tab (the Overview's ⓘ line opens its Data checks). Sub-views: at most four
-  // per tab, one chip row under the tab bar (TABSUBS). Overview has none. What each scope kind shows: HIDDEN
-  // (a drawn area has no Records tab; navigation phase 8).
+  // ---- The right panel (Stage 2): five tabs, Overview · Growth · Servicing · Capital and Records (the
+  // Overview's ⓘ line opens its Data checks; navigation phase 8b: Records a tab like the others). Sub-views: at
+  // most four per tab, one chip row under the tab bar (TABSUBS). Overview has none. What each scope kind shows:
+  // HIDDEN (a drawn area has no Records tab, a file is Overview and Records, a card or a tool's result Overview
+  // alone; navigation phase 8).
   //   Growth:    Pipeline · Areas · Forecast (its By period fold: the pipeline ledger, js/ledger-ui.js)
   //   Servicing: Capacity · Network · Old pipes (water and wastewater together; Allocations is a fold of Capacity;
   //              Old pipes the old sewers carrying growth, js/workspaces.js pipesSpec), and at a development
@@ -117,11 +118,12 @@
   const sysSeg = () => `<div class="seg" role="group" aria-label="System">${SYS.map(([k, t]) => `<button type="button" class="btn small${sysOn === k ? ' on' : ''}" data-sys="${k}" aria-pressed="${sysOn === k}">${t}</button>`).join('')}</div>`;
   // What each scope kind leaves out (navigation design §3.5; a sub-view with nothing to show is hidden, never
   // blank; area-only content never renders at a site); '*' the whole tab (navigation phase 8a).
-  //   site:  a development (a result kept at it too);  area: Peel, a municipality, a plan or a result with
-  //   no files of its own;  svc: a plant, pumping station, wastewater block, pressure zone or water system
-  //   (Growth › Pipeline · Forecast, Servicing › Capacity · Network · Old pipes, Capital › DC timing, Records ›
-  //   Sources · Data checks, its own);  drawn: a selection (Pipeline · Forecast, Capacity · Network, DC timing; no
-  //   Records);  file: a single file (Records the file; the rest the area's).
+  //   site:  a development (a result kept at it too);  area: Peel, a municipality or a plan;  svc: a plant,
+  //   pumping station, wastewater block, pressure zone or water system (Growth › Pipeline · Forecast, Servicing ›
+  //   Capacity · Network · Old pipes, Capital › DC timing, Records › Sources · Data checks, its own);  drawn: a
+  //   selection (Pipeline · Forecast, Capacity · Network, DC timing; no Records);  file: a single file (its record
+  //   sheet on Overview, the file in Records);  object: a DC project, an EA, a capital project, a pipe, a water
+  //   facility, a constraint feature, a tool's or help result (its card on Overview alone; navigation phase 8b).
   // At a site, Capital › DC timing is the site's DC projects (the projects it relies on); the Projects
   // list is Region-wide, so it is hidden there; the EAs and works near the site are in that one view
   // (navigation phase 5: Capital has no chip row at a site). FSR review is a development's: an area, a servicing
@@ -132,7 +134,8 @@
     area: { svc: ['fsr'], records: ['files'] },
     svc: { growth: ['areas'], svc: ['fsr'], dca: ['eas', 'projects'], records: ['files'] },
     drawn: { growth: ['areas'], svc: ['pipes', 'fsr'], dca: ['eas', 'projects'], records: '*' },
-    file: { svc: ['fsr'], records: ['sources', 'checks'] },
+    file: { growth: '*', svc: '*', dca: '*', records: ['sources', 'checks'] },
+    object: { growth: '*', svc: '*', dca: '*', records: '*' },
   };
   const SITE_HIDDEN = HIDDEN.site;
   const hiddenAt = (scope, tab, sub) => { const h = (HIDDEN[scope] || {})[tab]; return h === '*' || (!!h && h.includes(sub)); };
@@ -146,10 +149,20 @@
   const chipsAt = (tab, scope) => (TABSUBS[tab] ? TABSUBS[tab].valid.filter(v => !hiddenAt(scope, tab, v)) : []);
   // The kind of scope open (navigation phase 8, design §3.5): a development 'site' (a result kept at it too: the
   // Inquiry draft); no scope 'area'; a plant, station, block, zone or water system 'svc'; a result by its kind: a
-  // selection (drawn, or the developments inside a constraint layer) 'drawn', a single file 'file', any other 'area'.
+  // selection (drawn, or the developments inside a constraint layer) 'drawn', a single file 'file', any other (a
+  // card, a tool's or help result) 'object' (navigation phase 8b).
   const KIND_OF = { sel: 'drawn', file: 'file' };
-  const kindOf = ({ dev, ss } = {}) => (dev ? 'site' : !ss ? 'area' : ss.kind !== 'result' ? 'svc' : (own(KIND_OF, ss.rkind) ? KIND_OF[ss.rkind] : 'area'));
+  const kindOf = ({ dev, ss } = {}) => (dev ? 'site' : !ss ? 'area' : ss.kind !== 'result' ? 'svc' : (own(KIND_OF, ss.rkind) ? KIND_OF[ss.rkind] : 'object'));
   const scopeKind = () => kindOf({ dev: !!(root.DevScope && root.DevScope.current()), ss: root.PeelSvcScope && root.PeelSvcScope.current && root.PeelSvcScope.current() });
+  // A tab the open result leaves out, asked for (a link, the lens, a tab call, Help's Show me, a map view): the
+  // result closes first, as × does (js/aerial-check.js closeDetail: its highlight, a selection's drawn areas with
+  // it), so the tab opens and no link is dead (navigation phase 8b; owner decision 9: the lens still opens its tab).
+  // A result kept at its development keeps every tab: nothing closes.
+  function leaveFor(tab) {
+    const S = root.PeelSvcScope; if (!tabOff(scopeKind(), tabOf(tab)) || !(S && S.hasResult && S.hasResult())) return false;
+    const AC = root.PeelAerialCheck; if (AC && AC.closeDetail) AC.closeDetail(); else S.closeResult();
+    return true;
+  }
   const areaPick = {};
   let heldTab = null;
   // A tab's button is there and its data in (Servicing and Capital are marked loading, aria-busy, until the
@@ -220,6 +233,7 @@
     const a = e.target.closest && e.target.closest('[data-at]'); if (!a) return;
     const [t0, s0] = a.dataset.at.split(':'), r = s0 ? migrateSub(t0, s0) : null, tab = r ? r.tab : t0, sub = r ? r.sub : s0;
     if (s0) openFold(foldOf(t0, s0));
+    leaveFor(tab);   // (a tab the open card leaves out: the card closes first, navigation phase 8b)
     footPref = tabOf(tab); store.set('footTab4', footPref); showFootTab(tab, sub); Sh().viewLink.write();
     // (Check FSR, the header's: the form's fold in view, the cross-check first as the layout puts it, design §3.6)
     if (a.dataset.at === 'svc:fsr') requestAnimationFrame(() => { const f = document.querySelector('#pnl-svc #pnl-fsr'); if (f) { f.open = true; f.scrollIntoView({ block: 'start' }); } });
@@ -260,6 +274,7 @@
   // (a sub-view another tab now holds, SUB_MAP: that tab is the one picked, as a data-at link's)
   function openTab(tab, sub) {
     const r = sub ? migrateSub(tab, sub) : null, t = r ? r.tab : tab;
+    leaveFor(t);   // (the lens, a [data-foot-tab] or a tab call to a tab the open card leaves out: × first, navigation phase 8b)
     footPref = tabOf(t === 'dev' || t === 'developments' || t === 'tool' ? 'overview' : t); store.set('footTab4', footPref);
     showFootTab(tab, sub);
     if (root.PeelShare && root.PeelShare.viewLink) root.PeelShare.viewLink.write();
@@ -268,7 +283,7 @@
   // (one moved to another tab is set there: the tab it now lives in is returned, for the caller to open)
   const setSub = (tab, sub) => { const r = migrateSub(tab, sub) || { tab, sub }, s = TABSUBS[r.tab]; if (!s) return r.tab; const v = r.sub; if (s.valid.includes(v)) { s.set(v); store.set(s.store, v); } return r.tab; };
   const api = {
-    tabOf, TAB_KEYS, SUB_MAP, HIDDEN, hiddenAt, chipsAt, KIND_OF, kindOf, scopeKind, tabOff, rescope,
+    tabOf, TAB_KEYS, SUB_MAP, HIDDEN, hiddenAt, chipsAt, KIND_OF, kindOf, scopeKind, tabOff, rescope, leaveFor,
     getFootPref: () => footPref, setFootPref: v => { footPref = tabOf(v); }, openTab,
     getFootTab: () => footTab, tabShown, refreshFootTab, wantedTab, viewKey, tabReady,
     getSvcSub: () => svcSub, setSvcSub: v => { svcSub = v; store.set('svcSub', v); },

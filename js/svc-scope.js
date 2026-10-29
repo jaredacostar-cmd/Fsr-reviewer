@@ -78,7 +78,9 @@
   // ---- Result scopes (SPEC §3): every feature click and tool result opens here ------------------
   // A DC work, a sewer pipe, a single file, a wastewater block, a water facility, a selection or a
   // tool's result is a scope too: it opens in the right panel (Overview) with its trail step, filters
-  // the developments to the ones it lists, and goes in the share link (ss=pipe:123, file:<uid>, …).
+  // the developments to the ones it lists, and goes in the share link (ss=pipe:123, file:<uid>, …). The tabs it
+  // leaves out (a file: all but Records; a selection: Records; any other: all) are off the strip while it is open,
+  // and asking for one closes it first (js/analysis-tabs.js HIDDEN, leaveFor; navigation phase 8b).
   //   openResult({ ref, title, html, reopen, devKeys, filter, screen, keepDev })
   //     ref: '<kind>:<id>' (kinds below; default 'tool:<title>'); devKeys: the developments it covers
   //     (filter: true reads them from the result's data-dev rows); reopen(): re-runs the producer;
@@ -189,10 +191,11 @@
     if (s.kind === 'result') {
       const back = { label: s.short, go: () => { AT().showFootTab('overview'); OT().renderOverview(); }, title: `Back to ${s.title}` };
       // A group step before the title: Peel › EA › name opens Capital › EAs, Peel › Capital › project Capital ›
-      // Projects, Peel › DC timing › a DC project Capital › DC timing.
+      // Projects, Peel › DC timing › a DC project Capital › DC timing. (the card closes: its scope shows Overview
+      // alone, navigation phase 8b)
       const g = s.result && s.result.group;
       const GROUP_SUB = { EA: 'eas', Capital: 'projects', 'DC timing': 'timing' }, GROUP_TITLE = { EA: 'Environmental assessments (Capital › EAs)', Capital: 'Capital projects (Capital › Projects)', 'DC timing': 'Every DC project (Capital › DC timing)' };
-      return g ? [{ label: g, go: () => { if (AT().setDcSub) AT().setDcSub(GROUP_SUB[g] || 'projects'); AT().showFootTab('dca'); }, title: GROUP_TITLE[g] || g }, back] : [back];
+      return g ? [{ label: g, go: () => { closeResult(); if (AT().setDcSub) AT().setDcSub(GROUP_SUB[g] || 'projects'); AT().showFootTab('dca'); }, title: GROUP_TITLE[g] || g }, back] : [back];
     }
     const step = (ref, label, title) => ({ label, go: () => open(ref), title });
     const out = [];

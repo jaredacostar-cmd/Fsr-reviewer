@@ -371,7 +371,9 @@
     // The workspace's view from its preset (nothing saved), then its lean layers.
     lean(pl.view, LAYERS[id] || []);
     // (o.keep: a page view's Open the map, the map view at the view the page shows, navigation phase 6: the
-    // workspace's preset and scope, the tab and view kept)
+    // workspace's preset and scope, the tab and view kept; a card open that leaves its tab out closes first,
+    // navigation phase 8b)
+    if (!o.keep && AT() && AT().leaveFor) AT().leaveFor(pl.tab);
     const A = AT(); if (A && !o.keep) { if (pl.sub && A.setSub) A.setSub(pl.tab, pl.sub); if (A.setFootPref) A.setFootPref(pl.tab); A.showFootTab(pl.tab); if (pl.fold && A.openFold) A.openFold(pl.fold); }
     foldLayers();
     syncPipes();

@@ -42,12 +42,12 @@
   }
   // The page host's strip (navigation phase 6, design §3.3: header · tab strip · chips · answer): the full map's
   // five tabs, in its order and words, then the open tab's views (its chips) in a row under it when it has two
-  // or more. tabs: [{ key, label, info, busy, trail }]; on: the tab shown; chips: [{ sub, label }]; sub: the view.
+  // or more. tabs: [{ key, label, info, busy }]; on: the tab shown; chips: [{ sub, label }]; sub: the view.
   // A tab before its data (Servicing, Capital) is lit when picked and says it is loading. data-pg-* (never
   // data-at, which opens the full map, nor the map's chip attributes, which the map's own strip toggles).
   const TAB_INFO = { overview: 'tab-overview', growth: 'tab-growth', svc: 'tab-servicing', dca: 'tab-dca', records: 'tab-records' };
   function tabsHTML({ tabs = [], on, chips = [], sub } = {}) {
-    const tab = t => `<button type="button" role="tab" class="page-sec page-tab${t.trail ? ' page-tab-trail' : ''}${t.key === on ? ' on' : ''}" data-pg-tab="${esc(t.key)}"${t.info ? ` data-info="${esc(t.info)}"` : ''} aria-selected="${t.key === on}"${t.busy ? ' aria-busy="true" title="Loading: it opens when its data lands"' : ''}>${esc(t.label)}${t.busy ? ' <small class="page-tab-wait">loading</small>' : ''}</button>`;
+    const tab = t => `<button type="button" role="tab" class="page-sec page-tab${t.key === on ? ' on' : ''}" data-pg-tab="${esc(t.key)}"${t.info ? ` data-info="${esc(t.info)}"` : ''} aria-selected="${t.key === on}"${t.busy ? ' aria-busy="true" title="Loading: it opens when its data lands"' : ''}>${esc(t.label)}${t.busy ? ' <small class="page-tab-wait">loading</small>' : ''}</button>`;
     const chip = c => `<button type="button" class="page-sec${c.sub === sub ? ' on' : ''}" data-pg-tab="${esc(on)}" data-pg-sub="${esc(c.sub)}" aria-pressed="${c.sub === sub}">${esc(c.label)}</button>`;
     return `<nav class="page-secs page-tabs" role="tablist" aria-label="Tabs" data-psec="tabs">${tabs.map(tab).join('')}</nav>${chips.length > 1 ? `<nav class="page-secs page-subsecs" aria-label="Views" data-psec="views">${chips.map(chip).join('')}</nav>` : ''}`;
   }
@@ -1387,7 +1387,7 @@
     // which open their scope on the full map)
     const SS = root.PeelSvcScope, wide = (tab === 'svc' || tab === 'dca') && !busy(tab) && SS && SS.peelWideText ? SS.peelWideText(tab, sub) : '';
     if (wide) m.top = `<p class="scope-note small page-wide" role="note" data-psec="wide">${wide}</p>${m.top || ''}`;
-    m.tabs = tabsHTML({ tabs: ((A && A.TAB_KEYS) || Object.keys(TAB_INFO)).map(t => ({ key: t, label: name(t), info: TAB_INFO[t], busy: busy(t), trail: t === 'records' })), on: tab, chips: chipsOf(tab).map(c => ({ sub: c, label: Wk && Wk.chipName ? Wk.chipName(tab, c) : c })), sub });
+    m.tabs = tabsHTML({ tabs: ((A && A.TAB_KEYS) || Object.keys(TAB_INFO)).map(t => ({ key: t, label: name(t), info: TAB_INFO[t], busy: busy(t) })), on: tab, chips: chipsOf(tab).map(c => ({ sub: c, label: Wk && Wk.chipName ? Wk.chipName(tab, c) : c })), sub });
     return m;
   }
   // Where a search pick on a page lands (js/workspaces.js routePick): a file number's file, marked on the site's
