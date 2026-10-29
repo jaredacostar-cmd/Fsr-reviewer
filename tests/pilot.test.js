@@ -13,22 +13,95 @@ const plain = o => JSON.parse(JSON.stringify(o));
 const U = require('../js/usage.js');
 const RI = require('../js/report-issue.js');
 
-test('usage: counts per day and name; only the fixed names (no developments, searches or people)', () => {
+test('usage: counts per day and name; only the fixed names (no developments, search text or people)', () => {
   let d = null;
   d = U.bump(d, 'page', 'tight', '2026-10-16');
   d = U.bump(d, 'page', 'tight', '2026-10-16');
   d = U.bump(d, 'tab', 'svc', '2026-10-16');
   d = U.bump(d, 'sub', 'svc.capacity', '2026-10-17');
   d = U.bump(d, 'full', '', '2026-10-17');
-  // Ignored: an unknown kind, free text (an address, a search), a bad date.
+  // Ignored: an unknown kind, free text (an address, a search: a search counts only the kind of place it
+  // found, navigation phase 7), a bad date.
   d = U.bump(d, 'search', 'tight', '2026-10-17');
+  d = U.bump(d, 'query', 'tight', '2026-10-17');
   d = U.bump(d, 'page', '0 Heritage Rd', '2026-10-17');
   d = U.bump(d, 'page', 'dev:abc:123', '2026-10-17');
   d = U.bump(d, 'page', 'tight', 'today');
   assert.equal(d.since, '2026-10-16');
   assert.deepEqual(plain(d.days), { '2026-10-16': { 'page:tight': 2, 'tab:svc': 1 }, '2026-10-17': { 'sub:svc.capacity': 1, full: 1 } });
   assert.deepEqual(plain(U.totals(d)), { 'page:tight': 2, 'tab:svc': 1, 'sub:svc.capacity': 1, full: 1 });
-  assert.deepEqual(plain(U.KINDS), ['start', 'page', 'map', 'full', 'tab', 'sub', 'side', 'issue']);
+  assert.deepEqual(plain(U.KINDS), ['start', 'page', 'map', 'full', 'tab', 'sub', 'side', 'issue', 'role', 'search']);
+});
+
+// Navigation phase 7 (NP-7 and P4-10 with change): the counts record the role picked and what kind of place a
+// search found, so a pilot's counts can be read by role and show whether Find and the search took over from the
+// sidebar entries that went. Fixed names only, as every other count.
+const W7 = require('../js/workspaces.js');
+// usage.js's browser part in a vm: the stored role, a click (window capture) and the start count (after load).
+function usageBrowser(role) {
+  const kept = { role }, wl = {}, timers = [];
+  const store = { get: (k, v) => (kept[k] == null ? v : kept[k]), set: (k, v) => { kept[k] = v; } };
+  const document = { readyState: 'complete', getElementById: () => null, querySelectorAll: () => [], addEventListener: () => {} };
+  const window = { PeelUtil: { store, esc: String, fmtNum: String }, PeelWorkspaces: { mode: () => 'home', ROLES: W7.ROLES, WS: [] }, addEventListener: (t, f) => { wl[t] = f; } };
+  vm.runInNewContext(src('js/usage.js'), { window, document, location: { hash: '' }, performance: { getEntriesByType: () => [] }, setTimeout: f => timers.push(f), Date });
+  timers.splice(0).forEach(f => f());
+  const counts = () => Object.assign({}, ...Object.values((kept.usage && kept.usage.days) || {}));
+  const click = (el, sels) => wl.click({ target: { closest: sel => (sels.includes(sel) ? el : null) } });
+  return { counts, click, U: window.PeelUsage };
+}
+
+test('usage: the role counts once per visit, a ROLES key or none (never free text); a shortcut into a view of Home counts the view (navigation phase 7)', () => {
+  let d = U.bump(null, 'role', 'qa', '2026-10-28');
+  d = U.bump(d, 'role', 'Jane Smith', '2026-10-28');
+  d = U.bump(d, 'role', 'none', '2026-10-28');
+  assert.deepEqual(plain(d.days), { '2026-10-28': { 'role:qa': 1, 'role:none': 1 } }, 'a name is not a key');
+  // Once per load, with the start count: the stored role when it is one of the six, else none.
+  assert.deepEqual(usageBrowser('qa').counts(), { 'start:home': 1, 'role:qa': 1 });
+  assert.deepEqual(usageBrowser('').counts(), { 'start:home': 1, 'role:none': 1 });
+  assert.deepEqual(usageBrowser('planner').counts(), { 'start:home': 1, 'role:none': 1 }, 'an older browser’s stray value is no role');
+  for (const r of W7.ROLES) assert.deepEqual(usageBrowser(r.key).counts()[`role:${r.key}`], 1, r.key);
+  const s = src('js/usage.js');
+  assert.match(s, /count\('role', W && W\.ROLES && W\.ROLES\.some\(r => r\.key === rk\) \? rk : 'none'\);/);
+  // A role shortcut or a Help row with data-ws-at counts the view it opens, as the strip's chips do, not Home.
+  const b = usageBrowser('qa');
+  b.click({ dataset: { wsPage: 'home', wsAt: 'records:checks' } }, ['[data-ws-at]', '[data-ws-page]']);
+  b.click({ dataset: { wsPage: 'find' } }, ['[data-ws-page]']);
+  assert.deepEqual(b.counts(), { 'start:home': 1, 'role:qa': 1, 'sub:records.checks': 1, 'page:find': 1 });
+  assert.ok(s.indexOf("at('[data-ws-at]')") < s.indexOf("at('[data-ws-page]')"), 'before the page’s own count');
+  // Labelled for Settings and the CSV; Settings' table lists what was opened (the role per visit is in the CSV).
+  const L = b.U.labels();
+  assert.equal(L['role:qa'], 'Role: QA/QC (data review)');
+  assert.equal(L['role:none'], 'Role: none picked');
+  assert.equal(L['page:find'], 'Find (page)');
+  assert.equal(L['page:help'], 'Help (page)');
+  assert.doesNotMatch(b.U.settingsHTML(), /Role:/);
+  assert.match(b.U.settingsHTML(), /No developments, search text or names are counted: a search counts only what kind of place it found\./);
+});
+
+test('usage: a search counts only what kind of place it found, never its text (navigation phase 7, P4-10)', () => {
+  let d = null;
+  for (const k of Object.keys(U.SEARCH)) d = U.bump(d, 'search', k, '2026-10-28');
+  d = U.bump(d, 'search', '0 heritage rd', '2026-10-28');
+  d = U.bump(d, 'search', 'heritage', '2026-10-28');
+  d = U.bump(d, 'search', 'constructor', '2026-10-28');
+  assert.deepEqual(Object.keys(d.days['2026-10-28']).sort(), Object.keys(U.SEARCH).map(k => `search:${k}`).sort());
+  assert.deepEqual(plain(Object.keys(U.SEARCH)), ['dev', 'file', 'plan', 'mtsa', 'svc', 'dc', 'dcfac', 'filter', 'place', 'address']);
+  // Every place hit the search makes (js/search-filter.js placeMatches) is a kind.
+  const sf = src('js/search-filter.js');
+  for (const [, h] of sf.matchAll(/hit: '(\w+)'/g)) assert.ok(Object.prototype.hasOwnProperty.call(U.SEARCH, h), h);
+  // One count per pick (goSug), by the kind: the filter item, a development (or its file number), a place's hit,
+  // else an address; never x.label, x.p.title, x.g or the box's value. Before the box lets go and the routing
+  // (page-search.test: blur < filter < route).
+  const g = sf.slice(sf.indexOf('  function goSug(x) {'), sf.indexOf("$('#f-search').addEventListener('input'"));
+  const line = "const Us = window.PeelUsage; if (Us && Us.count) Us.count('search', x.filter ? 'filter' : x.p ? (x.hit === 'file' ? 'file' : 'dev') : x.place ? (x.place.hit || 'place') : 'address');";
+  assert.ok(g.includes(line));
+  assert.ok(g.indexOf('if (!x || x.loading) return;') < g.indexOf(line) && g.indexOf(line) < g.indexOf("if (onPage) $('#f-search').blur();"));
+  assert.equal((g.match(/Us\.count\(/g) || []).length, 1);
+  assert.equal((sf.match(/PeelUsage/g) || []).length, 1, 'the search counts nowhere else');
+  // The kinds by their own words in Settings and the CSV.
+  const L = usageBrowser('').U.labels();
+  assert.equal(L['search:plan'], 'Search: a plan');
+  assert.equal(L['search:file'], 'Search: a file number');
 });
 
 test('usage: CSV with a label per name (quoted when it needs it); old days drop off', () => {

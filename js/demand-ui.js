@@ -295,13 +295,12 @@
       </tbody></table>
       <p class="small muted">Within ±10%: matches; ±25%: close; beyond: differs (the note says why it is expected to). The wastewater capacity check uses each plant's measured flow, so the design-criteria difference does not carry into it.</p>` : skel('Loading the servicing model')}${root.PeelCensusView && root.PeelCensusView.permitCheckHTML ? root.PeelCensusView.permitCheckHTML() : ''}`;
   }
-  function numberConventionsHTML() {
-    return `<h3 class="sub-title">Number conventions</h3>
-      <p class="small muted">People and jobs are estimates and are rounded the same way everywhere: whole numbers under 1,000, the nearest 10 to 10,000, the nearest 100 above. Units are counted from the applications (not rounded). Flows: L/s for pipes, pumping stations and single developments; ML/d for plants, zones and totals. ≈ marks a screening estimate.</p>
-      <h3 class="sub-title">Public version</h3>
+  // Settings › Reports (navigation phase 7, design §3.7): the public version and the name on briefings. (The number
+  // conventions that headed it are Help › How the app decides', js/logic.js.)
+  function reportSettingsHTML() {
+    return `<section class="gear-sec"><h3>Reports</h3>
       <p class="small"><label><input type="checkbox" id="public-view"${root.PeelUtil.isPublic() ? ' checked' : ''}> Public version: hide the DC funding screen and funding levels, the screening-result column (table and CSV) and the screening-summary colours</label><br><span class="muted">Or add <code>?public</code> to the address to share a public link.</span></p>
-      <h3 class="sub-title">Prepared by</h3>
-      <p class="small"><label>Name and team on briefings <input type="text" id="prep-by" value="${esc(store.get('prepBy', ''))}" placeholder="e.g. J. Smith, Infrastructure Planning" style="min-width:260px"></label></p>`;
+      <p class="small"><label>Prepared by: the name and team on briefings <input type="text" id="prep-by" value="${esc(store.get('prepBy', ''))}" placeholder="e.g. J. Smith, Infrastructure Planning" style="min-width:260px; max-width:100%"></label></p></section>`;
   }
   // (prep-by is handled by the document-level change listener above)
 
@@ -311,7 +310,7 @@
   // anything out: every stage ('all') and build-out ('buildout'); committed only ('committed', the Peel rule) and left
   // to build ('remaining') count none.
   const preCensus = (t, basis) => (t && (basis === 'all' || basis === 'buildout') ? { units: (t.units && t.units.existing) || 0, people: (t.people && t.people.existing) || 0 } : { units: 0, people: 0 });
-  const api = { allocBoxHTML, commitOpts, preCensus, MUNIS, freshness, validationRows, freshnessHTML, checksHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, wwTile, miniBar, wwInfoLine, numberConventionsHTML, allocFold, openAllocFold };
+  const api = { allocBoxHTML, commitOpts, preCensus, MUNIS, freshness, validationRows, freshnessHTML, checksHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, wwTile, miniBar, wwInfoLine, reportSettingsHTML, allocFold, openAllocFold };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemandUI = api;
 })(typeof window !== 'undefined' ? window : globalThis);

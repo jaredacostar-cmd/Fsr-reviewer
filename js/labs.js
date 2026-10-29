@@ -43,10 +43,10 @@
     <p class="small muted">Extra tools, off by default. Your choice is kept in this browser.</p>
     ${LABS.map(l => `<label class="labs-row"><input type="checkbox" data-lab="${l.id}"${on.has(l.id) ? ' checked' : ''}> <span><strong>${esc(l.label)}</strong> <small class="muted">· ${esc(l.where)}</small><small>${esc(l.what)}</small></span></label>`).join('')}
     <p class="small muted">General screening results only. Peel's W&amp;WW Infrastructure Planning team must validate or confirm all results.</p></div>`;
+  // (Settings › Labs: a section of ⚙'s Settings sheet, js/growth-ui.js settingsPageHTML draws pageHTML; no gear page
+  // of its own since navigation phase 7)
   if (typeof document !== 'undefined') {
     sync();
-    root.GearPages = root.GearPages || {};
-    root.GearPages.labs = () => pageHTML();
     document.addEventListener('change', e => { const c = e.target.closest && e.target.closest('[data-lab]'); if (c) set(c.dataset.lab, c.checked); });
   }
   const api = { LABS, IDS, on: id => on.has(id), set, pageHTML };

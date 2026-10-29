@@ -3,14 +3,14 @@
   // ---- Workspaces and Home (Stage 4) ------------------------------------------------------------
   // A workspace is a view onto the five tabs, never a separate calculation: its map view sets the map's
   // layer preset, the scope and the panel (its tab and view). Three modes:
-  //   home  a page: Home (the briefing) or a workspace's page, with the workspaces listed by team, then
-  //         "Full map";
+  //   home  a page: Home (the briefing) or a workspace's page, beside Home's menu (navigation phase 7: Home · This
+  //         week · Find · Help, then "Full map", For your role's shortcuts and Labs; ☰ in the top bar on a phone);
   //   ws    a workspace's map view, the map with only its layers: ← Page · the search · Full map over it (the
   //         task chips under the search box and each panel's source line went in navigation phase 6c: a page's
   //         Open the map is the way in, ← Page the way back; a #w=<id> link still opens it); the left panel
   //         and the tool rail are hidden; "Full map" keeps the scope, filters and scenario;
   //   full  the map with every tool (as before Stage 4). Old share links open here.
-  // The start screen (Home · last workspace · Full map) is remembered per browser.
+  // The start screen (Home · Last place · Full map) is remembered per browser.
   const U = root.PeelUtil || {};
   const esc = U.esc || (s => String(s == null ? '' : s));
   const fmtNum = U.fmtNum || (n => String(n));
@@ -61,32 +61,58 @@
     coming: ['devs'],
   };
   // Explore (step 3 of the page plan): Growth in an area, Check a site, Review an FSR, Forecast and
-  // Study area are the views of one workspace, one entry in Home's sidebar. A site picked from an area
-  // view opens on Check a site; a step up its trail opens Growth in an area there. Their map-view
-  // chips, links and share links keep their own ids.
+  // Study area were the views of one workspace, one entry in Home's sidebar before navigation phase 7 (kept as
+  // alias data: the old ids stay valid names; explore is Find since). Their map-view chips, links and share links
+  // keep their own ids.
   const EXPLORE = ['growth', 'site', 'fsr', 'outlook', 'study'];
-  // Capital (step 4; navigation phase 4): DC projects and EA to construction, one entry; DC timing (DC projects'
-  // page), EAs (EA to construction's page: the EAs, then EA to construction) and Projects are its sections
-  // (js/sections.js WORKSPACES).
+  // Capital (step 4; navigation phase 4): DC projects and EA to construction, one entry in Home's sidebar before
+  // navigation phase 7 (kept as alias data: PAGE_ALIAS.capital reads it); Home's Capital › DC timing (DC projects'
+  // page) and EAs (EA to construction's) since phase 6.
   const CAPITAL = ['projects', 'eaflow'];
+  // Ids of Home's menu that are no page (the alias layer's, PAGE_ALIAS): Explore, Capital and Reference were sidebar
+  // entries before navigation phase 7 (Reference, step 5: Help, How it works, the Glossary, How the app decides and
+  // Data sources, one entry; Help since); Find is the menu's (phase 7), the Find step.
   const SIDE = {
     explore: { label: 'Explore', what: 'A site, a plan or an area you draw: growth, servicing, capital, files, FSR' },
     capital: { label: 'Capital', what: 'DC timing, EAs and EA to construction, projects' },
-    // Reference (step 5): Help, How it works, the Glossary, How the app decides and Data sources, one entry.
     reference: { label: 'Reference', what: 'Help, how it works, the glossary, the app’s rules, data sources and checks' },
+    find: { label: 'Find', what: 'A site, a file number, a plan, a facility or an area you draw' },
   };
   // A site's page: the live map beside its sections, at the site, with what is around it: existing
   // water, sanitary and storm mains (from street zoom), the 2026 DC works, Region construction and the
   // EA study areas, and the developments; each a chip on the page.
   const SITE_MAP = ['devs', 'ex-water', 'ex-sanitary', 'ex-storm', 'dcw', 'cons', 'ea'];
-  // Home's sidebar: by team (Servicing capacity with Planning), then Full map.
+  // Home's sidebar before navigation phase 7, by team: kept as data (the old ids are the alias layer's); the sidebar
+  // is SIDEBAR.
   const GROUPS = [
     ['Planning', ['explore', 'tight', 'coming']],
     ['Capital', ['capital']],
     ['QA/QC', ['outlets']],
     ['Asset Management', ['pipes']],
   ];
-  // Reference pages (Home's layout, no map, not a workspace): listed last in Home's sidebar.
+  // Home's sidebar (navigation phase 7, design §3.2): Home · This week · Find · Help, then Full map, For your role
+  // (ROLES: up to three shortcuts) and Labs while one is on. The old entries are Home's tabs (Servicing › Capacity,
+  // Growth › Forecast, Capital › DC timing, Servicing › Old pipes), Find (Explore), a tool page (Review outlets) and
+  // Help (Reference): their ids land there (PAGE_ALIAS, HOST) and the role shortcuts name them.
+  const SIDEBAR = [['home', 'What needs attention: Peel or a municipality'], ['week', 'What changed, and your watch list'], ['find', SIDE.find.what], ['help', 'Start here, guides, the glossary, the app’s rules']];
+  // One list of the roles (owner decision 6): the first-run tour, Help › Start here, Settings › Your role and Home's
+  // For your role read it. key: the stored role (the tour's five keep theirs; QA/QC added); links (up to three, the
+  // owner's names): { label, page } a page id (an old page name lands through the alias layer; fresh: with no
+  // development open, as Find opens: the FSR reviewer's Files with an FSR posted, Review an FSR's Find step, where
+  // Check FSR's own fsr keeps the development, at its FSR review), { label, at } a view of Home (tab:sub),
+  // { label, attrs } a button's own handler.
+  const ROLES = [
+    { key: 'engineer', label: 'Infrastructure planner or engineer', what: 'Screen an application, an FSR or a pre-consultation.', links: [{ label: 'Find › Recently active', page: 'find' }, { label: 'Servicing › Capacity', page: 'tight' }, { label: 'Servicing › Network', at: 'svc:network' }] },
+    { key: 'manager', label: 'Manager or director', what: 'What needs attention, and whether the capital program keeps up.', links: [{ label: 'DC projects late (Capital › DC timing)', attrs: { 'data-ws-page': 'projects', 'data-dc-status': 'gap' } }, { label: 'No relief in time (Servicing › Capacity)', page: 'tight' }, { label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' } }] },
+    { key: 'growth', label: 'Growth or policy analyst', what: 'How much is coming, where, and when.', links: [{ label: 'What’s coming (Growth › Forecast › By period)', page: 'coming' }, { label: 'Draw an area', attrs: { 'data-ws-go': 'study' } }, { label: 'Plans behind their target (Growth › Areas)', page: 'growth' }] },
+    { key: 'capital', label: 'Capital or asset management', what: 'DC projects against the capacity they relieve; ageing sewers carrying growth.', links: [{ label: 'Capital › DC timing', page: 'projects' }, { label: 'EA to construction (Capital › EAs)', page: 'eaflow' }, { label: 'Old pipes (Servicing › Old pipes)', page: 'pipes' }] },
+    { key: 'fsr', label: 'FSR reviewer (development engineering)', what: 'Check a consultant’s FSR against the app’s figures.', links: [{ label: 'Find › Files with an FSR posted', page: 'fsr', fresh: true }, { label: 'This week', page: 'week' }, { label: 'Servicing › Capacity', page: 'tight' }] },
+    { key: 'qa', label: 'QA/QC (data review)', what: 'Where developments discharge, and whether the data can be trusted.', links: [{ label: 'Review outlets', page: 'outlets' }, { label: 'Records › Data checks', at: 'records:checks' }, { label: 'Records › Sources', page: 'data' }] },
+  ];
+  // A shortcut's button attributes: a page id (openPage; data-ws-fresh: its o.fresh), a view of Home (data-ws-at:
+  // openPage's o.at), or its own.
+  const roleAttrs = l => (l.page ? { 'data-ws-page': l.page, ...(l.fresh ? { 'data-ws-fresh': '' } : {}) } : l.at ? { 'data-ws-page': 'home', 'data-ws-at': l.at } : l.attrs);
+  // Reference pages (Home's layout, no map, not a workspace): Help's (the sidebar's Help lights them).
   const REF = { help: { label: 'Help', what: 'Start here, guides, the tour, what’s new' }, guides: { label: 'How it works', what: 'Nine guides: approvals, flows, capacity, the forecast…' }, glossary: { label: 'Glossary', what: 'The terms in plain words' }, logic: { label: 'How the app decides', what: 'The data rules, gates and decisions behind the figures' }, data: { label: 'Data sources', what: 'Every source, its date, and the data checks' } };
   // The guides (js/reference.js): pages of their own, listed on How it works, not in the sidebar.
   // Labs pages (Settings › Labs): a tool with a page of its own in Home's sidebar while its switch is on
@@ -138,15 +164,18 @@
   }
   // The start screen: a link opens what it names (w=home: Home; w=p:<workspace>: its page; w=<workspace>:
   // its map view; without w the full map, as old links always did); otherwise the preference: Home
-  // (default), the last workspace's page or the full map.
-  const START = [['home', 'Home'], ['last', 'Last workspace'], ['full', 'Full map']];
+  // (default), Last place (owner decision 17: the page, its tab and view, its place and development as last shown;
+  // a browser with only the last workspace, lastWs, its page as Last workspace opened it) or the full map.
+  const START = [['home', 'Home'], ['last', 'Last place'], ['full', 'Full map']];
   // Page ids that open another page (the navigation redesign, docs/architecture-review/navigation-
-  // design.md §7.1: each later move adds its row here, so old links, data-ws-page buttons, the stored
-  // last workspace and Help's role buttons keep opening the right place). ctx: { site } a development
-  // is open, { last } the last workspace (lastWs).
+  // design.md §7.1: each later move adds its row here, so old links, data-ws-page buttons, Last place's lastWs
+  // and the role shortcuts keep opening the right place). ctx: { site } a development is open, { last } Last
+  // place's lastWs (the last workspace).
   const PAGE_ALIAS = {
-    // Explore: the site open, else the last of its views, else Growth in an area.
-    explore: c => (c.site ? 'site' : EXPLORE.includes(c.last) ? c.last : 'growth'),
+    // Explore (until navigation phase 7 one sidebar entry for five views): the open site, else Find, §7.1.
+    explore: () => 'site',
+    // Find, the sidebar's: the find step; openPage closes an open development first.
+    find: () => 'site',
     // Capital: the last of its two pages, else DC projects.
     capital: c => (CAPITAL.includes(c.last) ? c.last : 'projects'),
     reference: () => 'help',
@@ -157,8 +186,8 @@
   // Page ids that are views of a page host (navigation phase 6, design §3.1 rule 1, §7.1): Home is the host at
   // an area (Peel, a municipality, a plan), the map's five tabs under its header, so each area page is Home at
   // its tab and view (What's coming with By period open, EA to construction with its fold; Old pipes at Servicing ›
-  // Old pipes, 6c). The ids stay what links, buttons, the stored last workspace and Help's role buttons name;
-  // openPage opens the host there.
+  // Old pipes, 6c). The ids stay what links, buttons, Last place's lastWs and the role shortcuts name; openPage
+  // opens the host there.
   // The site's page is the host at a development (6b): Check a site is it at Overview, Review an FSR at Servicing ›
   // FSR review (ctx.site: a development is open; without one each is its Find step, a page of its own).
   // → { page, tab, sub, fold } | null.
@@ -172,13 +201,28 @@
   // The site page's old section ids (phase 1's search routes, pageRoute's sec; phase 5's sections): the views of the
   // host at a development they name now.
   const SITE_SEC = { summary: 'overview:', growth: 'growth:pipeline', servicing: 'svc:network', capital: 'dca:timing', files: 'records:files' };
-  function startScreen({ hash = '', pref = 'home', last = null } = {}) {
+  // Last place (owner decision 17, AD-17 with change): { page, view, d, mu, sp } as stored, or null: Home or a
+  // workspace page as the reader names it (shownPage), a page host's view (null elsewhere), the open development's
+  // key, the municipality filter and one plan filter ('' for none). Anything else stored is no place.
+  const PLACE_VIEW = /^(overview|growth|svc|dca|records):\w*$/;
+  function lastPlaceOf(x) {
+    if (!x || typeof x !== 'object' || Array.isArray(x)) return null;
+    const str = v => v == null || v === '' || (typeof v === 'string' && v.length <= 200);
+    if (typeof x.page !== 'string' || !(x.page === 'home' || own(BY_ID, x.page))) return null;
+    if (!(x.view == null || (typeof x.view === 'string' && PLACE_VIEW.test(x.view)))) return null;
+    if (![x.d, x.mu, x.sp].every(str)) return null;
+    return { page: x.page, view: x.view || null, d: x.d || null, mu: x.mu || '', sp: x.sp || '' };
+  }
+  function startScreen({ hash = '', pref = 'home', last = null, place = null } = {}) {
     const q = new URLSearchParams(String(hash).replace(/^#/, ''));
     const w = q.get('w') || '';
     const pid = /^p:/.test(w) ? resolvePage(w.slice(2), { site: !!q.get('d'), last }) : '';
     if ([...q.keys()].length) return w === 'home' ? { mode: 'home', page: 'home' } : pid && (own(BY_ID, pid) || own(REF, pid) || own(LAB_PAGES, pid)) ? { mode: 'home', page: pid } : own(BY_ID, w) ? { mode: 'ws', ws: w } : { mode: 'full' };
     if (pref === 'full') return { mode: 'full' };
-    if (pref === 'last') { const lp = resolvePage(String(last || ''), { last }); return { mode: 'home', page: own(BY_ID, lp) ? lp : 'tight' }; }
+    if (pref === 'last') {
+      const pl = lastPlaceOf(place); if (pl) return { mode: 'home', page: pl.page, ...(pl.view ? { at: pl.view } : {}), place: pl };
+      const lp = resolvePage(String(last || ''), { last }); return { mode: 'home', page: own(BY_ID, lp) ? lp : 'tight' };
+    }
     return { mode: 'home', page: 'home' };
   }
 
@@ -203,7 +247,7 @@
   }
 
   // ---- Browser ----------------------------------------------------------------------------------
-  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SITE_MAP, LAB_PAGES, BY_ID, LAYERS, OLD, START, PAGE_ALIAS, REF, TAB_NAME, HOST, SITE_HOST, SITE_SEC, plan, tabPath, chipName, oldPipes, pipeRuns, resolvePage, hostOf, startScreen, pageRoute };
+  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SIDEBAR, ROLES, SITE_MAP, LAB_PAGES, BY_ID, LAYERS, OLD, START, PAGE_ALIAS, REF, TAB_NAME, HOST, SITE_HOST, SITE_SEC, plan, tabPath, chipName, oldPipes, pipeRuns, resolvePage, hostOf, startScreen, lastPlaceOf, roleAttrs, pageRoute };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -239,6 +283,7 @@
     const A = App(); if (A && A.getAnalysisSnap && A.getAnalysisSnap() === 'full') A.setAnalysisSnap('full', false);
   }
   function setMode(m, pg) {
+    if (m !== 'home') menuOpen = false;   // (the phone's menu, ☰: a page's)
     if (m === 'full' && mode !== 'full') backTo = mode === 'home' ? { page, view: view() } : mode === 'ws' && cur ? { ws: cur } : null;
     else if (m !== 'full') backTo = null;
     const was = { mode, page };
@@ -367,6 +412,7 @@
   // At boot, before a link is applied: a workspace's lean layers left on from an earlier visit give way
   // to the view's remembered settings unless the app opens on a workspace map (once; app.js).
   function bootRestore() {
+    restorePlace();   // (Last place's filter and development, once the developments are in: js/app.js applyFilters)
     if (booted) return; booted = true;
     if (mode !== 'ws' && store.get('wsLean', null)) restoreView();
   }
@@ -484,12 +530,14 @@
   // pages leave a site; Check a site and Review an FSR keep it: with a development open each is the site's page,
   // the host at a development, at Overview / Servicing › FSR review (6b). The page's tab and sub-view open behind
   // it, so their panels are worked out for the same scope; Home itself opens on its Overview (not stored: the map's
-  // last pick stays the one kept). o.keep: the tab and view as they are (← Page, the back bar, the strip).
+  // last pick stays the one kept). o.keep: the tab and view as they are (← Page, the back bar, the strip). o.fresh:
+  // the page with no development open (a role shortcut into a Find step, as the sidebar's Find closes it).
   function openPage(id, o = {}) {
+    if ((id === 'find' || o.fresh) && devOpen()) root.DevScope.close();
     id = resolvePage(id, { site: !!(root.DevScope && root.DevScope.current && root.DevScope.current()), last: store.get('lastWs', '') });
     if (id !== 'home' && !BY_ID[id] && !REF[id] && !labPageOn(id)) id = 'home';
     const w = BY_ID[id], h = hostOf(id, { site: devOpen() }), A = AT();
-    // (the id asked for: the start screen's last workspace)
+    // (the id asked for: Last place's lastWs, for a browser that has no place stored yet)
     if (w) store.set('lastWs', id);
     if (id === 'home' || (h && h.page === 'home') || (w && w.scope === 'area')) {
       if (root.DevScope && root.DevScope.current && root.DevScope.current()) root.DevScope.close();
@@ -498,7 +546,11 @@
     // (at a site, the sub-view it opens there: Review an FSR, Servicing › FSR review, as go() and plan() pick it)
     const dev = !!(w && w.siteSub && root.DevScope && root.DevScope.current && root.DevScope.current());
     if (A && !o.keep) {
-      if (h) { if (h.sub && A.setSub) A.setSub(h.tab, h.sub); if (A.setFootPref) A.setFootPref(h.tab); A.showFootTab(h.tab); if (h.fold && A.openFold) A.openFold(h.fold); }
+      // (o.at: a view of the host, opened as an area page's id opens its own: a role shortcut, Help's links into
+      // Home's views, the start screen's Last place)
+      const at = o.at && String(o.at).split(':');
+      if (at) { if (at[1] && A.setSub) A.setSub(at[0], at[1]); if (A.setFootPref) A.setFootPref(at[0]); A.showFootTab(at[0]); }
+      else if (h) { if (h.sub && A.setSub) A.setSub(h.tab, h.sub); if (A.setFootPref) A.setFootPref(h.tab); A.showFootTab(h.tab); if (h.fold && A.openFold) A.openFold(h.fold); }
       else if (id === 'home') { if (A.setFootPref) A.setFootPref('overview'); A.showFootTab('overview'); }
       else if (w) { const sub = dev ? w.siteSub : w.sub; if (sub && A.setSub) A.setSub(w.tab, sub); A.showFootTab(w.tab); if (w.fold && A.openFold) A.openFold(w.fold); }
     }
@@ -512,6 +564,36 @@
     if (dev && w.id === 'fsr' && !o.keepScroll) { const f = $('#home #pnl-fsr'); if (f) { f.open = true; f.scrollIntoView({ block: 'start' }); } }
   }
   let lastHTML = '', shown = '', timer = null, menuOpen = false;
+  // Last place (owner decision 17, AD-17 with change): the page as the reader names it, its view, the open
+  // development and the place filter (the municipality, one plan), kept as each page is drawn (Home and the
+  // workspace pages: never Help, a guide or a Labs page, as Last workspace never named them), and reopened by
+  // the start screen (init). placeTo: the place still to restore once its data is in (nothing is kept meanwhile,
+  // so a half-restored place never takes the stored one's place).
+  let placeTo = null, placeT0 = 0, placeK = '';
+  function rememberPlace() {
+    const S = App() && App().state;
+    if (mode !== 'home' || placeTo || !S || !(page === 'home' || own(BY_ID, page))) return;
+    const sp = S.sp || [], p = { page: shownPage(), view: view(), d: page !== 'home' && hostPage(page) ? root.DevScope.current().key : null, mu: S.muni || '', sp: sp.length === 1 ? sp[0] : '' };
+    const k = JSON.stringify(p); if (k !== placeK) { placeK = k; store.set('lastPlace', p); }
+  }
+  // (once the developments are in, and a plan's areas, 20 s at most: the place filter, then the development; one
+  // that no longer resolves, a regroup, is left out: the page without it, a site's its Find step. Another page
+  // opened meanwhile is where the reader is now: nothing is restored)
+  function restorePlace() {
+    const p = placeTo, S = App() && App().state, A = AT(), WP = root.PeelWsPages;
+    if (!p || !S || !S.projects || !S.projects.length || (p.sp && !S.areas && Date.now() - placeT0 < 20000)) return;
+    placeTo = null;
+    // (only once the data is in: init's own openPage sets the panels, and so fires pnl:set, before its page is shown)
+    if (mode !== 'home' || page !== p.page) return;
+    const PA = root.PeelPlanAreas, PT = root.PeelPlanTables, plan = !!p.sp && !!S.areas && !!((PA && PA.areaById && PA.areaById.get(p.sp)) || (PT && PT.areas && PT.areas().some(a => a.id === p.sp)));
+    if ((p.sp || p.mu) && WP && WP.drillTo) WP.drillTo(plan ? `a:${p.sp}` : p.mu ? `m:${p.mu}` : 'peel');
+    // (opening a development shows its Overview, as a link's d= does: the place's own tab goes back on after it)
+    const gone = !!p.d && !devByKey(p.d);
+    if (p.d && !gone) { pickDev(p.d); if (A && p.view && p.view !== 'overview:') A.showFootTab(p.view.split(':')[0]); }
+    // (the page drawn again at once, as a pick on it is, its view kept: a page drawn only when the app next settles waits
+    // out its whole start; a site's whose development is gone, its Find step as it opens with none)
+    openPage(p.page, { keep: !gone, keepScroll: true });
+  }
   // (the page's search has the focus, on the page it is on: typing, or about to, on a phone)
   const typing = el => { const s = $('#f-search'); return !!s && document.activeElement === s && el.contains(s); };
   const pageName = id => (id === 'home' ? 'Home' : SIDE[id] ? SIDE[id].label : BY_ID[id] ? BY_ID[id].label : REF[id] ? REF[id].label : LAB_PAGES[id] ? LAB_PAGES[id].label : id);
@@ -529,24 +611,26 @@
   const backView = () => (backTo && backTo.view && scopeOverview(backTo.page) ? backTo.view : AT() && AT().viewKey ? AT().viewKey() : 'overview:');
   // view(): the view a page host shows ('svc:network'; Home's Overview 'overview:'), null on any other page or mode.
   const view = () => (mode === 'home' && hostPage(page) && AT() && AT().viewKey ? AT().viewKey() : null);
-  // The page as the reader names it: the site's page at Servicing › FSR review is Review an FSR (the sidebar's
-  // Explore entry, the start screen's last workspace, a search pick from it: phase 1's route stays there).
+  // The page as the reader names it: the site's page at Servicing › FSR review is Review an FSR (the start screen's
+  // Last place and lastWs, a search pick from it: phase 1's route stays there).
   const shownPage = () => (page === 'site' && view() === 'svc:fsr' ? 'fsr' : page);
+  const attrs = a => Object.entries(a || {}).map(([k, v]) => (v === true ? ` ${k}` : v == null || v === false ? '' : ` ${k}="${esc(v)}"`)).join('');
+  // Home's menu (navigation phase 7, design §3.2): Home · This week · Find · Help, Full map, then For your role (the
+  // stored role's shortcuts, ROLES; never lit: a way in, not a place) and Labs while one is on. Home is lit on its
+  // every tab, Find on the Find steps, the site's page and Study area, Help on every Help page (a guide's too), This
+  // week on This week; nothing on a tool page (Review outlets). (a phone: ☰ in the top bar opens it at the top of the
+  // page, #tb-nav; the Start screen is Settings')
   function sideHTML() {
-    const nW = weekRows().length, pref = store.get('startScreen', 'home'), labIds = Object.keys(LAB_PAGES).filter(labPageOn);
-    // (a guide's page lights How it works)
-    const isOn = id => page === id || (id === 'guides' && !!(REF[page] && REF[page].guide)) || (id === 'explore' && EXPLORE.includes(page)) || (id === 'capital' && CAPITAL.includes(page)) || (id === 'reference' && !!REF[page]);
-    // (Explore is one entry for its five views: the view you are on is named in it, "Explore › Check a site")
-    const cur = id => (id === 'explore' && EXPLORE.includes(page) ? ` <span class="home-ws-cur">› ${esc(BY_ID[shownPage()].label)}</span>` : '');
-    const item = (id, sub) => `<li><button type="button" class="home-ws${isOn(id) ? ' on' : ''}" data-ws-page="${id}"${isOn(id) ? ' aria-current="page"' : ''}><strong>${esc(pageName(id))}${cur(id)}${id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</strong>${sub ? `<small>${esc(sub)}</small>` : ''}</button></li>`;
-    // (This week covers capital and EA dates too: it sits under Home, not Planning)
-    // (a phone: the list folds behind one button naming the page you are on; it opens grouped)
-    return `<nav class="home-side${menuOpen ? ' open' : ''}" aria-label="Workspaces"><button type="button" class="home-menu-btn" data-home-menu aria-expanded="${menuOpen}"><span aria-hidden="true">☰</span> ${EXPLORE.includes(page) ? `Explore › ${esc(pageName(shownPage()))}` : esc(pageName(page))} <span class="muted small">· all pages</span> <span aria-hidden="true">${menuOpen ? '▴' : '▾'}</span></button><ul>${item('home', 'The briefing')}${item('week', BY_ID.week.what)}</ul>
-      ${GROUPS.map(([g, ids]) => `<h2 class="home-g">${esc(g)}</h2><ul>${ids.map(id => item(id, (SIDE[id] || BY_ID[id]).what)).join('')}</ul>`).join('')}
-      ${labIds.length ? `<h2 class="home-g">Labs</h2><ul>${labIds.map(id => item(id, LAB_PAGES[id].what)).join('')}</ul>` : ''}
-      <h2 class="home-g">Reference</h2><ul>${item('reference', SIDE.reference.what)}</ul>
+    const nW = weekRows().length, labIds = Object.keys(LAB_PAGES).filter(labPageOn), role = ROLES.find(r => r.key === store.get('role', ''));
+    const isOn = id => (id === 'home' ? page === 'home' : id === 'find' ? ['site', 'fsr', 'study'].includes(page) : id === 'help' ? !!REF[page] : page === id);
+    const item = (id, sub) => `<li><button type="button" class="home-ws${isOn(id) ? ' on' : ''}" data-ws-page="${id}"${isOn(id) ? ' aria-current="page"' : ''}><strong>${esc(pageName(id))}${id === 'week' && nW ? ` <span class="badge-n">${fmtNum(nW)}</span>` : ''}</strong>${sub ? `<small>${esc(sub)}</small>` : ''}</button></li>`;
+    // (no role yet: one line to Help › Start here, where the six are, each with its shortcuts)
+    const mine = role ? `<h2 class="home-g">For your role · ${esc(role.label)} <button type="button" class="btn small link home-role-x" data-ws-page="help">(change)</button></h2><ul>${role.links.map(l => `<li><button type="button" class="home-ws home-short"${attrs(roleAttrs(l))}><strong>${esc(l.label)}</strong></button></li>`).join('')}</ul>`
+      : '<p class="home-role small"><button type="button" class="btn small link" data-ws-page="help">Pick your role for shortcuts →</button></p>';
+    return `<nav class="home-side${menuOpen ? ' open' : ''}" id="home-side" aria-label="Pages"><ul>${SIDEBAR.map(([id, what]) => item(id, what)).join('')}</ul>
       <button type="button" class="home-ws home-full" data-ws-full><strong>Full map</strong><small>Every layer, filter and tool</small></button>
-      <label class="home-pref small">Start screen <select data-ws-start>${START.map(([k, t]) => `<option value="${k}"${pref === k ? ' selected' : ''}>${t}</option>`).join('')}</select></label>
+      ${mine}
+      ${labIds.length ? `<h2 class="home-g">Labs</h2><ul>${labIds.map(id => item(id, LAB_PAGES[id].what)).join('')}</ul>` : ''}
     </nav>`;
   }
   // force: rebuild even when the page HTML is unchanged (a mode switch).
@@ -570,6 +654,8 @@
     putMapBack();
     const y = el.scrollTop;
     el.innerHTML = html; lastHTML = html; shown = `${mode}|${page}|${view() || ''}`;
+    const nb = $('#tb-nav'); if (nb) nb.setAttribute('aria-expanded', String(menuOpen));   // (☰, the phone's menu)
+    rememberPlace();
     if (!force) el.scrollTop = y;
     placeSearch(); placeMap(); stripInView(el);
     if (typeof m.onMount === 'function') try { m.onMount(el.querySelector('.page-main')); } catch (e) { /* the page stays without its async parts */ }
@@ -588,8 +674,12 @@
     }
   }
   const schedule = () => { if (mode !== 'home') return; clearTimeout(timer); timer = setTimeout(() => renderPage(false), 200); };
-  // ---- Settings: the start screen ------------------------------------------------------------------
-  const settingsHTML = () => { const pref = store.get('startScreen', 'home'); return `<section class="gear-sec"><h3>Start screen</h3><p class="small muted">What opens when you load the app without a link. Kept in this browser.</p><div class="seg" role="group" aria-label="Start screen">${START.map(([k, t]) => `<button type="button" class="btn small${pref === k ? ' on' : ''}" data-ws-start-btn="${k}" aria-pressed="${pref === k}">${t}</button>`).join('')}</div></section>`; };
+  // ---- Settings: the start screen and your role (js/growth-ui.js settingsPageHTML, the ⚙ sheet) ------------
+  const settingsHTML = () => {
+    const pref = store.get('startScreen', 'home'), role = store.get('role', '');
+    return `<section class="gear-sec"><h3>Start screen</h3><p class="small muted">What opens when you load the app without a link: Home, the last place you were on a page (its page, tab and view, its place and its development), or the full map. Kept in this browser.</p><div class="seg" role="group" aria-label="Start screen">${START.map(([k, t]) => `<button type="button" class="btn small${pref === k ? ' on' : ''}" data-ws-start-btn="${k}" aria-pressed="${pref === k}">${t}</button>`).join('')}</div></section>
+      <section class="gear-sec"><h3>Your role</h3><p class="small muted">Home’s menu keeps up to three shortcuts for it; Help › Start here lists every role’s.</p><select data-role-set aria-label="Your role"><option value="">None</option>${ROLES.map(r => `<option value="${r.key}"${r.key === role ? ' selected' : ''}>${esc(r.label)}</option>`).join('')}</select></section>`;
+  };
   // ---- Wiring -------------------------------------------------------------------------------------
   const devByKey = k => { const N = root.PeelDevNav; return N && N.projectByKey ? N.projectByKey(k) : null; };
   function pickDev(k) { const N = root.PeelDevNav, q = devByKey(k); if (q && N) N.showDetail(q); return q; }
@@ -640,7 +730,8 @@
   }
   document.addEventListener('click', e => {
     if (!e.target.closest) return;
-    if (e.target.closest('[data-home-menu]')) { menuOpen = !menuOpen; renderPage(true); return; }
+    // (☰ in the top bar, a phone's: the menu at the top of the page, in its flow)
+    if (e.target.closest('[data-home-menu]')) { menuOpen = !menuOpen; renderPage(true); if (menuOpen) { const el = $('#home'); if (el) el.scrollTop = 0; } return; }
     // The page host's strip and views row (js/ws-pages.js tabsHTML; Help's bar has two of its views): a tab or a
     // view picked as on the map's own strip (stored, in the link), and the page follows it; from another page,
     // Home at it. (DC timing from the strip: the list again, an open project closed, as the old section bar's)
@@ -649,8 +740,8 @@
       e.preventDefault(); menuOpen = false;
       if (pt.dataset.pgTab === 'dca' && pt.dataset.pgSub === 'timing') { const DP = root.PeelDcProjects; if (DP && DP.state.sel) { DP.state.sel = null; DP.render(); } }
       const A = AT(); if (A && A.openTab) A.openTab(pt.dataset.pgTab, pt.dataset.pgSub || undefined);
-      // (the start screen's last workspace, as openPage keeps it: the workspace the view is, Growth › Forecast
-      // 'outlook', until phase 7's Last place; a view that is none, Servicing › Network, leaves it as it was)
+      // (Last place's lastWs, as openPage keeps it: the workspace the view is, Growth › Forecast 'outlook'; a view
+      // that is none, Servicing › Network, leaves it as it was. Last place itself is kept as the page is drawn)
       // (the site's views are its development's, no area page's: the page as the reader names it, Review an FSR at
       // FSR review, else Check a site, as its own buttons and Check FSR store it: shownPage)
       const v = A && A.viewKey && A.viewKey(), lw = page === 'home' || !hostPage(page) ? v && Object.keys(HOST).find(k => HOST[k] === v && own(BY_ID, k)) : shownPage();
@@ -666,7 +757,10 @@
       return;
     }
     const pg = e.target.closest('[data-ws-page]');
-    if (pg) { e.preventDefault(); menuOpen = false; openPage(pg.dataset.wsPage); return; }
+    if (pg) { e.preventDefault(); menuOpen = false; openPage(pg.dataset.wsPage, { at: pg.dataset.wsAt, fresh: pg.dataset.wsFresh != null }); return; }
+    // (a role picked, Help › Start here's "This is my role": Home's menu keeps its shortcuts; a ROLES key only)
+    const rp = e.target.closest('[data-role-pick]');
+    if (rp) { if (ROLES.some(r => r.key === rp.dataset.rolePick)) { store.set('role', rp.dataset.rolePick); renderPage(true); } return; }
     const pk = e.target.closest('[data-ws-pick]');
     // "Its full tree →" / "show it in the tree →": the site on the full map, at Records › Files.
     if (pk && pk.dataset.wsTree) { e.preventDefault(); setMode('full'); pickDev(pk.dataset.wsPick); setTimeout(() => { const AT = root.PeelAnalysisTabs; if (AT && AT.openTab) AT.openTab('records', 'files'); }, 300); return; }
@@ -731,11 +825,13 @@
     if (!a || !a.closest('#home') || a.closest('[data-ws-go], [data-ws-page], [data-ws-pick], [data-ws-full], [data-ws-home], [data-ws-backpage]')) return;
     setMode('full');
   }, true);
-  document.addEventListener('change', e => { const s = e.target.closest && e.target.closest('[data-ws-start]'); if (s) store.set('startScreen', s.value); });
+  // (Settings › Your role: a ROLES key, or none)
+  document.addEventListener('change', e => { const s = e.target.closest && e.target.closest('[data-role-set]'); if (s && (s.value === '' || ROLES.some(r => r.key === s.value))) { store.set('role', s.value); if (mode === 'home') renderPage(true); } });
   document.addEventListener('keydown', e => { if (!e.defaultPrevented && (e.key === 'Enter' || e.key === ' ') && e.target.closest && (e.target.closest('#home [role="button"]') || e.target.closest('#home [data-ws-stage]'))) { e.preventDefault(); e.target.click(); } });
   // The page follows the panels (their figures, This week's count): it rebuilds when what it shows has changed.
   let exploreDev = null;
   document.addEventListener('pnl:set', e => {
+    if (placeTo) restorePlace();   // (Last place: its filter and development, once their data is in)
     // Explore: a site picked (the search, the map) while an area view is open opens its page.
     const sc = e.detail && e.detail.scope;
     // (navigation phase 6: Home is the area views' host, Growth in an area and the Forecast among them)
@@ -756,10 +852,14 @@
     if (cur === 'site' || cur === 'fsr') setTimeout(() => { if (isWs() && (cur === 'site' || cur === 'fsr')) go(cur, { quiet: true }); }, 0);
   });
   function init() {
-    const s = startScreen({ hash: location.hash, pref: store.get('startScreen', 'home'), last: store.get('lastWs', null) });
+    const s = startScreen({ hash: location.hash, pref: store.get('startScreen', 'home'), last: store.get('lastWs', null), place: store.get('lastPlace', null) });
     if (s.mode === 'ws') { setMode('ws'); setTimeout(() => go(s.ws, { quiet: true, noDraw: true }), 0); }
-    else if (s.mode === 'home') openPage(s.page || 'home');
-    else setMode(s.mode);
+    else if (s.mode === 'home') {
+      // (Last place: its page at its view now, as a view of the host is opened, held "loading" until its data
+      // lands; its filter and development once the developments are in, restorePlace)
+      if (s.place && (s.place.d || s.place.mu || s.place.sp)) { placeTo = s.place; placeT0 = Date.now(); }
+      openPage(s.page || 'home', s.at ? { at: s.at } : {});
+    } else setMode(s.mode);
   }
   Object.assign(api, { REF, bootRestore, go, openPage, setMode, mode: () => mode, current: () => cur, page: () => page, view, override, renderPage, settingsHTML, oldList, pipesSpec, syncPipes, routePick, init });
   root.PeelWorkspaces = api;

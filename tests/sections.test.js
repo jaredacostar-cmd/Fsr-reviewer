@@ -40,6 +40,23 @@ test('an area\u2019s views: the map\u2019s tabs and chips by tab:sub, a page bui
   assert.deepEqual(Object.keys(S.VIEWS.area), ['overview:', 'growth:pipeline', 'growth:areas', 'growth:timing', 'svc:capacity', 'svc:network', 'svc:pipes', 'dca:timing', 'dca:eas', 'dca:projects', 'records:sources', 'records:checks']);
   assert.deepEqual(Object.entries(S.VIEWS.area).map(([k, v]) => [k, v.page || v.keys[0], v.ws || '']), [['overview:', 'home', ''], ['growth:pipeline', 'growth:pipeline', 'growth'], ['growth:areas', 'growth', ''], ['growth:timing', 'outlook', ''], ['svc:capacity', 'tight', ''], ['svc:network', 'svc:network', 'tight'], ['svc:pipes', 'pipes', ''], ['dca:timing', 'projects', ''], ['dca:eas', 'eaflow', ''], ['dca:projects', 'dca:projects', 'projects'], ['records:sources', 'data', ''], ['records:checks', 'records:checks', '']]);
   for (const v of Object.values(S.VIEWS.area)) assert.ok(!!v.page !== !!v.keys, 'a page builder or a panel, never both');
+  // (navigation phase 7: each view its question, ASK, none extra: Help › What each tab answers)
+  assert.deepEqual(Object.keys(S.ASK), Object.keys(S.VIEWS.area));
+});
+
+// Navigation phase 7 (design §5 row 158: Help's ASKS, a third copy, goes): the question each view of Home answers is the
+// one Home heads it with, its page builder's name or its panel's areaHead, so What each tab answers cannot drift.
+test('every view of Home has its question, the one Home heads it with', () => {
+  const S = load({}), W = require('../js/workspaces.js');
+  const src = f => require('node:fs').readFileSync(require('node:path').join(__dirname, '..', f), 'utf8');
+  const builders = src('js/ws-pages.js') + src('js/workspaces.js'), panels = ['js/growth-ui.js', 'js/svc-capacity.js', 'js/capital-ea.js', 'js/records-tab.js'].map(src).join('\n');
+  for (const [k, v] of Object.entries(S.VIEWS.area)) {
+    const q = S.ASK[k], [t, sub] = k.split(':');
+    assert.match(q, /^[A-Z][^?]*\?$/, k);
+    if (k === 'overview:') { assert.match(src('js/ws-pages.js'), /name: `\$\{where\(\)\}: what needs attention`/); assert.ok(src('js/overview-tab.js').includes(`name: '${q}'`), 'the Overview panel’s'); continue; }
+    if (v.page) assert.ok(builders.includes(`'${q}'`), `${k}: its page builder’s name (${v.page})`);
+    else assert.ok(panels.includes(`areaHead('${W.tabPath(t, sub)}', '${q}'`), `${k}: its panel’s head`);
+  }
 });
 
 test('a panel the tab set for this development is used as is; one for another scope is not', () => {

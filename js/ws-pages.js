@@ -543,13 +543,13 @@
     const nW = week && week.rows ? week.rows.length : 0;
     const go = (page, title) => ({ 'data-ws-page': page, title });
     return [
-      ready ? { v: fmtNum(over.length), u: 'over', label: 'over capacity at build-out', ctx: `${peelWide}of ${fmtNum(rows.length)} facilities · Servicing capacity →`, tone: over.length ? 'over' : null, attrs: go('tight', 'Servicing capacity') } : { v: '…', u: '', label: 'over capacity at build-out', ctx: 'checking servicing capacity', attrs: go('tight', 'Servicing capacity') },
+      ready ? { v: fmtNum(over.length), u: 'over', label: 'over capacity at build-out', ctx: `${peelWide}of ${fmtNum(rows.length)} facilities · Servicing › Capacity →`, tone: over.length ? 'over' : null, attrs: go('tight', 'Servicing › Capacity') } : { v: '…', u: '', label: 'over capacity at build-out', ctx: 'checking servicing capacity', attrs: go('tight', 'Servicing › Capacity') },
       // (each opens its facility as a scope on Servicing capacity's map; a pump row is "into zone n and
       // above", several zones and no scope, so the zone figure opens the page and its Soonest limits)
-      trig ? { v: trig.limit.y === 'today' ? 'Now' : `≈${trig.limit.y}`, u: '', label: 'first 90% trigger', ctx: `${peelWide}${esc(trig.name)} reaches its 90% expansion trigger · Servicing capacity →`, tone: 'tight', attrs: trig.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': trig.ss, title: `Open ${trig.name}` } : go('tight', 'Servicing capacity') } : null,
-      zone ? { v: zone.limit.y === 'today' ? 'Now' : `≈${zone.limit.y}`, u: '', label: 'first zone limit (100% of firm)', ctx: `${peelWide}${esc(zone.name)} reaches 100% of firm pumping · Servicing capacity →`, tone: 'tight', attrs: go('tight', 'Servicing capacity') }
-        : busiest ? { v: 'None', u: '', label: 'first zone limit (100% of firm)', ctx: `${peelWide}before ${end} · most loaded: ${esc(busiest.name)} (${Math.round(busiest.pctBo)}% at build-out) · Servicing capacity →`, attrs: go('tight', 'Servicing capacity') } : null,
-      late ? { v: late.v, u: '', label: 'DC projects late', ctx: `${peelWide}in service after the capacity runs out · DC projects →`, tone: +late.v ? 'over' : null, attrs: { ...go('projects', 'DC projects'), 'data-dc-status': 'gap' } } : null,
+      trig ? { v: trig.limit.y === 'today' ? 'Now' : `≈${trig.limit.y}`, u: '', label: 'first 90% trigger', ctx: `${peelWide}${esc(trig.name)} reaches its 90% expansion trigger · Servicing › Capacity →`, tone: 'tight', attrs: trig.ss ? { 'data-ws-go': 'tight', 'data-ws-ss': trig.ss, title: `Open ${trig.name}` } : go('tight', 'Servicing › Capacity') } : null,
+      zone ? { v: zone.limit.y === 'today' ? 'Now' : `≈${zone.limit.y}`, u: '', label: 'first zone limit (100% of firm)', ctx: `${peelWide}${esc(zone.name)} reaches 100% of firm pumping · Servicing › Capacity →`, tone: 'tight', attrs: go('tight', 'Servicing › Capacity') }
+        : busiest ? { v: 'None', u: '', label: 'first zone limit (100% of firm)', ctx: `${peelWide}before ${end} · most loaded: ${esc(busiest.name)} (${Math.round(busiest.pctBo)}% at build-out) · Servicing › Capacity →`, attrs: go('tight', 'Servicing › Capacity') } : null,
+      late ? { v: late.v, u: '', label: 'DC projects late', ctx: `${peelWide}in service after the capacity runs out · Capital › DC timing →`, tone: +late.v ? 'over' : null, attrs: { ...go('projects', 'Capital › DC timing'), 'data-dc-status': 'gap' } } : null,
       { v: fmtNum(nW), u: nW === 1 ? 'change' : 'changes', label: 'this week', ctx: 'files moved, new files, capital and EA dates · This week →', attrs: go('week', 'This week') },
     ].filter(Boolean);
   }
@@ -586,7 +586,7 @@
     const PTs = root.PeelPlanTables, sp0 = (App() && App().state.sp) || [], ins = sp0.length && PTs && PTs.inside ? PTs.inside() : null, inPlan = !!(ins && ins.found), inName = esc(sp0.length === 1 ? where() : 'the plans');
     const outside = inPlan && ins.straddling && ins.outside >= 0.5 ? `+ ${fmtNum(Math.round(ins.outside))} planned in the parts of ${fmtNum(ins.straddling)} development${ins.straddling === 1 ? '' : 's'} outside it` : '';
     const groups = [
-      { title: 'Growth', link: { label: 'Growth in an area', attrs: go('growth') }, figures: [
+      { title: 'Growth', link: { label: 'Growth › Areas', attrs: go('growth') }, figures: [
         inPlan ? { v: fmtNum(Math.round(ins.planned)), u: 'homes', label: 'planned', ctx: outside || `${fmtNum(set.length)} developments`, attrs: go('growth') }
           : G ? { v: fmtNum(Math.round(G.planned)), u: 'homes', label: 'planned', ctx: `${fmtNum(set.length)} developments`, attrs: go('growth') } : null,
         inPlan ? { v: fmtNum(Math.round(ins.left)), u: 'homes', label: 'left to build', ctx: `inside ${inName}, by share`, attrs: go('growth') }
@@ -594,8 +594,8 @@
         inPlan ? { v: fmtNum(U.roundPop ? U.roundPop(ins.people) : Math.round(ins.people)), u: 'people', label: 'at build-out', ctx: `inside ${inName} · Peel design criteria`, attrs: go('growth') }
           : people ? { v: people.v, u: 'people', label: 'at build-out', ctx: 'Peel design criteria', attrs: go('growth') } : null,
         f31 ? { v: f31.v, u: f31.u || 'units', label: 'expected by 2031', ctx: inPlan ? `${f31.ctx} · the developments in or partly in ${inName}, whole` : f31.ctx, attrs: go('outlook') } : null] },
-      { title: 'Servicing', link: { label: 'Servicing capacity', attrs: go('tight') }, figures: [byL(/over capacity/), byL(/first 90% trigger/), byL(/first zone limit/)] },
-      { title: 'Capital', link: { label: 'Capital', attrs: go('projects') }, figures: [byL(/DC projects late/), ready ? { v: fmtNum(noRelief), u: noRelief === 1 ? 'facility' : 'facilities', label: 'with no relief in time', ctx: `${muni ? 'Peel-wide · ' : ''}reach a limit with no DC project in time`, tone: noRelief ? 'over' : null, attrs: go('tight') } : null] },
+      { title: 'Servicing', link: { label: 'Servicing › Capacity', attrs: go('tight') }, figures: [byL(/over capacity/), byL(/first 90% trigger/), byL(/first zone limit/)] },
+      { title: 'Capital', link: { label: 'Capital › DC timing', attrs: go('projects') }, figures: [byL(/DC projects late/), ready ? { v: fmtNum(noRelief), u: noRelief === 1 ? 'facility' : 'facilities', label: 'with no relief in time', ctx: `${muni ? 'Peel-wide · ' : ''}reach a limit with no DC project in time`, tone: noRelief ? 'over' : null, attrs: go('tight') } : null] },
       { title: 'Change', link: { label: 'This week', attrs: go('week') }, figures: [byL(/this week/), tightFiles ? { ...tightFiles, attrs: go('week') } : null] },
     ];
     // The largest developments left to build, and the plans furthest behind their target (both full map only until now).
@@ -614,7 +614,7 @@
       // The units the answer adds, by stage: Built since 2021 beside what is approved and in review.
       chart: a.stageStrip ? `${a.stageStrip}${(d => (d.n ? `<p class="small muted">${dormantNote(d).trim()}</p>` : ''))(dormantFor(muni))}` : '',
       lists: [ready ? toScope(needs) : needs, unbuilt, tgt, toPage('week', week)],
-      map: { svg: capacityMap(rows), attrs: { 'data-ws-page': 'tight' }, link: 'Servicing capacity', label: 'Open Servicing capacity', caption: !ready ? '<span class="muted">Checking servicing capacity…</span>' : '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out (catchments, zones and plants)' },
+      map: { svg: capacityMap(rows), attrs: { 'data-ws-page': 'tight' }, link: 'Servicing › Capacity', label: 'Open Servicing › Capacity', caption: !ready ? '<span class="muted">Checking servicing capacity…</span>' : '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out (catchments, zones and plants)' },
       actions: [{ label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' }, primary: true }, plan1 ? { label: 'Area report (PDF)', attrs: { 'data-ws-areareport': `a:${plan1}` } } : null, { label: 'Full map', attrs: { 'data-ws-full': '' } }] };
   }
 
@@ -659,7 +659,14 @@
       actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'tight' }, primary: true }, { label: 'Full table', attrs: { 'data-ws-go': 'tight', 'data-ws-fulltable': 'svc:capacity' } }, { label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' } }] };
   }
 
-  // ---- Check a site / Review an FSR: the Find step ---------------------------------------------------
+  // ---- Find (Check a site's step, the menu's Find since navigation phase 7) / Review an FSR: the Find step -----
+  // (the developments with an FSR posted, newest first: one scan of every development per load of the developments
+  // and of the FSR index, not one per redraw of Find; the phase is read as each list is drawn)
+  let fsrMemo = null;
+  function fsrPosted(F, proj) {
+    if (!fsrMemo || fsrMemo.proj !== proj || fsrMemo.n !== proj.length || fsrMemo.by !== F.FSR.by) fsrMemo = { proj, n: proj.length, by: F.FSR.by, hits: proj.map(p => ({ p, f: F.fsrFor(p) })).filter(x => x.f && x.f.best).sort((a, b) => String(b.f.best.fsr.date || '').localeCompare(String(a.f.best.fsr.date || ''))) };
+    return fsrMemo.hits;
+  }
   function find(id) {
     const Ph = P(), proj = (App() && App().state.projects) || [];
     const last = p => (Ph && Ph.lastActivityOf ? Ph.lastActivityOf(p) || 0 : 0);
@@ -669,21 +676,24 @@
     // Bundle 6: the steps in one line under the search (not a list beside the map); Review an FSR
     // starts from the files that have an FSR posted (data/fsr.json), newest first.
     const steps = [['Find', 'search or pick one below'], ['Result', id === 'fsr' ? 'its servicing path with the FSR cross-check' : 'its servicing, timing and what to confirm'], ['Output', id === 'fsr' ? 'notes for the review' : 'the one-page servicing memo']];
-    // (the other Find step's list, one click away: Explore's views bar is gone, navigation phase 6c, and until phase 7's
-    // Find this is the way to Review an FSR's files with an FSR posted, and back to Check a site's)
-    const other = id === 'fsr' ? ['site', 'Any development → Check a site'] : ['fsr', 'Files with an FSR posted → Review an FSR'];
-    const stepper = `<p class="pnl-stepper small" aria-label="Steps">${steps.map(([t, d], i) => `<span class="${i === 0 ? 'on' : ''}"><b>${i + 1}</b> ${esc(t)}: ${esc(d)}</span>`).join('<span class="muted" aria-hidden="true"> › </span>')}<span class="muted" aria-hidden="true"> · </span><button type="button" class="btn small link pnl-step-other" data-ws-page="${other[0]}">${esc(other[1])}</button></p>`;
+    // (Find lists both steps' files since navigation phase 7, design §3.3: Recently active, Large files under review and
+    // Files with an FSR posted, whose rows open the site's page at Servicing › FSR review, data-ws-as; Review an FSR's
+    // own step, its files first, for #w=p:fsr and the FSR reviewer's shortcut, links back to Find)
+    const other = id === 'fsr' ? ['find', 'Any development → Find'] : null;
+    const stepper = `<p class="pnl-stepper small" aria-label="Steps">${steps.map(([t, d], i) => `<span class="${i === 0 ? 'on' : ''}"><b>${i + 1}</b> ${esc(t)}: ${esc(d)}</span>`).join('<span class="muted" aria-hidden="true"> › </span>')}${other ? `<span class="muted" aria-hidden="true"> · </span><button type="button" class="btn small link pnl-step-other" data-ws-page="${other[0]}">${esc(other[1])}</button>` : ''}</p>`;
     const F = root.PeelFsr;
     let fsrRows = null;
-    if (id === 'fsr' && F) {
-      if (!F.FSR.by) { if (F.loadFsr) F.loadFsr().then(() => { if (W() && W().renderPage) W().renderPage(true); }); }
-      else fsrRows = proj.map(p => ({ p, f: F.fsrFor(p) })).filter(x => x.f && x.f.best && x.p.phase !== 'cancelled').sort((a, b) => String(b.f.best.fsr.date || '').localeCompare(String(a.f.best.fsr.date || ''))).map(({ p, f }) => ({ attrs: { 'data-ws-pick': p.key, title: `Review ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${esc(f.best.fsr.date || '')}</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'} · FSR posted${f.best.fsr.date ? ` ${esc(f.best.fsr.date)}` : ''}</small>` }));
+    if (F) {
+      // (drawn again once the index lands, only while a Find step still shows: a development picked meanwhile, or
+      // another page, is not drawn again from the top with an open stage box shut)
+      if (!F.FSR.by) { if (F.loadFsr) F.loadFsr().then(() => { const Wk = W(); if (Wk && Wk.renderPage && !devNow() && (Wk.page() === 'site' || Wk.page() === 'fsr')) Wk.renderPage(true); }); }
+      else fsrRows = fsrPosted(F, proj).filter(x => x.p.phase !== 'cancelled').map(({ p, f }) => ({ attrs: { 'data-ws-pick': p.key, 'data-ws-as': 'fsr', title: `Review ${p.title}` }, html: `<div class="pnl-r-top"><span class="pnl-r-name">${esc(p.title)}</span><span class="pnl-r-year">${esc(f.best.fsr.date || '')}</span></div><small class="pnl-r-line">${esc(p.municipality)} · ${fmtNum(p.units)} unit${p.units === 1 ? '' : 's'} · FSR posted${f.best.fsr.date ? ` ${esc(f.best.fsr.date)}` : ''}</small>` }));
     }
-    const lists = id === 'fsr'
-      ? [{ title: 'Files with an FSR posted', rows: fsrRows || [{ kv: true, html: '<span class="muted small">Looking for posted servicing reports…</span>' }], total: fsrRows ? fsrRows.length : 0 },
-        { title: 'Recently active', rows: recent.map(devRow), total: recent.length }]
-      : [{ title: 'Recently active', rows: recent.map(devRow), total: recent.length }, { title: 'Large files under review', rows: big.map(devRow), total: big.length }];
-    return { id, eyebrow: `${esc(label(id))} · step 1 of 3`, name: id === 'fsr' ? 'Do the consultant’s figures match Peel’s criteria?' : 'Can this development be serviced, and when?',
+    const fsrList = { title: 'Files with an FSR posted', rows: fsrRows || [{ kv: true, html: '<span class="muted small">Looking for posted servicing reports…</span>' }], total: fsrRows ? fsrRows.length : 0 };
+    const recentList = { title: 'Recently active', rows: recent.map(devRow), total: recent.length };
+    const lists = id === 'fsr' ? [fsrList, recentList] : [recentList, { title: 'Large files under review', rows: big.map(devRow), total: big.length }, fsrList];
+    // (the eyebrow: Find, the step's one name, §3.9; "Check a site" with no site is retired)
+    return { id, eyebrow: `${id === 'site' ? 'Find' : esc(label(id))} · step 1 of 3`, name: id === 'fsr' ? 'Do the consultant’s figures match Peel’s criteria?' : 'Can this development be serviced, and when?',
       top: stepper,
       answer: id === 'fsr' ? `Find the development: search an address or file number, or pick one with an FSR posted${fsrRows ? ` (${fmtNum(fsrRows.length)} in Mississauga and Caledon; Brampton’s are on BramPlanOnline, searched by file number)` : ''}.` : 'Find the development: search an address or file number, or pick one below.',
       lists,
@@ -702,13 +712,12 @@
     row.classList.add('tr-hit');
     if (!siteFileShown) { siteFileShown = true; row.scrollIntoView({ block: 'center' }); }
   }
-  // (an entry with at: a view of Home, the page host: Help's bar's Data sources and Data checks, navigation phase 6)
+  // (each entry a page: Help's bar since navigation phase 7, its Data sources and Data checks Home's Records tab)
   function sectionBar(secs, on) {
-    const to = s => (s.at ? `data-pg-tab="${esc(s.at.split(':')[0])}" data-pg-sub="${esc(s.at.split(':')[1] || '')}"` : `data-ws-page="${esc(s.page)}"`);
-    return `<nav class="page-secs" aria-label="Sections" data-psec="sections">${secs.map(s => `<button type="button" class="page-sec${s.id === on ? ' on' : ''}" ${to(s)} aria-pressed="${s.id === on}">${esc(s.title)}</button>`).join('')}</nav>`;
+    return `<nav class="page-secs" aria-label="Sections" data-psec="sections">${secs.map(s => `<button type="button" class="page-sec${s.id === on ? ' on' : ''}" data-ws-page="${esc(s.page)}" aria-pressed="${s.id === on}">${esc(s.title)}</button>`).join('')}</nav>`;
   }
-  // Reference's bar (js/sections.js WORKSPACES: Help, How it works, the Glossary, How the app decides, and Home's
-  // Records › Sources and Data checks).
+  // Help's bar (js/sections.js WORKSPACES: its four sections, Start here · How it works · Glossary · How the app
+  // decides; design §3.7).
   function wsBar(ws, on) { const W = root.PeelSections && root.PeelSections.WORKSPACES[ws]; return W ? sectionBar(W.secs, on) : ''; }
   // A panel spec s drawn as page m (key: its panel; ws: the map view its rows open, none for a view with no
   // map workspace, Records). (a view showing one item of its list, as DC timing shows a project in place: its
@@ -1298,16 +1307,16 @@
       actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'study' }, primary: !has }, has ? { label: 'Area report (PDF)', attrs: { 'data-area-report': 'sel' }, primary: true } : null] };
   }
 
-  // Reference pages (not workspaces): How it works and its guides (js/reference.js; How approvals work
-  // is js/approvals-guide.js, wrapped as a guide), the Glossary (js/glossary.js), Help (js/tips.js).
+  // Help's pages (not workspaces): Start here (js/tips.js), How it works and its guides (js/reference.js; How
+  // approvals work is js/approvals-guide.js, wrapped as a guide), the Glossary (js/glossary.js).
   const ref = id => () => (root.PeelReference ? root.PeelReference.page(id) : id === 'approvals' && root.PeelApprovalsGuide ? root.PeelApprovalsGuide.page() : loading(id, 'Loading…'));
   const [guides, roles, approvals, flows, network, capacity, fsrguide, capguide, targets, forecast] = ['guides', 'roles', 'approvals', 'flows', 'network', 'capacity', 'fsrguide', 'capguide', 'targets', 'forecast'].map(ref);
   const glossary = () => (root.PeelGlossary ? root.PeelGlossary.page() : loading('glossary', 'Loading…'));
   // How the app decides (js/logic.js): the data rules, gates and back-end decisions, read from the code.
   const logic = () => (root.PeelLogic ? root.PeelLogic.page() : loading('logic', 'Loading…'));
   const help = () => (root.PeelTips && root.PeelTips.helpPage ? root.PeelTips.helpPage() : loading('help', 'Loading…'));
-  // Data sources (Reference, step 5): the map's Records › Sources panel on a page (the old Data tab,
-  // map-only until now); since navigation phase 6 Home's Records › Sources (Data checks its other view).
+  // Records › Sources, Home's (the old Data sources page, Reference's until navigation phase 6): the map's Records ›
+  // Sources panel on a page (Data checks its other view).
   function data() {
     const SE = root.PeelSections, s = SE ? SE.areaPanel('records:sources') : null;
     if (!s) return loading('data', 'Loading the sources…');
@@ -1338,8 +1347,8 @@
     const onPage = a => { if (!a || !ws) return a; if (a['data-full-table'] != null) return { 'data-ws-go': ws, 'data-ws-fulltable': '1', ...keep }; if (a['data-ss']) return { 'data-ws-go': ws, 'data-ws-ss': a['data-ss'], ...keep }; if (a['data-ce-open']) return { 'data-ws-go': ws, 'data-ws-ce': a['data-ce-open'], ...keep }; return a; };
     if (m.figures && ws) m.figures = m.figures.map(f => (f && f.attrs && !f.attrs['data-ws-go'] && !f.attrs['data-ws-page'] ? { ...f, attrs: onPage(f.attrs) } : f));
     if (g && m.actions) m.actions = [...m.actions, { label: `${g[1]} ›`, attrs: { 'data-ws-page': g[0] }, title: `How it works: ${g[2]}` }];
-    // Reference (step 5): Help, How it works (and each guide) and the Glossary share a bar; its Data sources and
-    // Data checks are Home's Records tab (navigation phase 6).
+    // Help (navigation phase 7, design §3.7): Start here, How it works (and each guide), the Glossary and How the app
+    // decides share a bar of four; Data sources and Data checks are Home's Records tab.
     const REFW = { help: 'help', guides: 'guides', glossary: 'glossary', logic: 'logic' }, R = W() && W().REF;
     const refOn = REFW[id] || (R && R[id] && R[id].guide ? 'guides' : null);
     if (refOn && root.PeelSections) m.top = `${wsBar('reference', refOn)}${m.top || ''}`;

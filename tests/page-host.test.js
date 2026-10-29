@@ -30,9 +30,10 @@ const SUBS = { growth: 'pipeline', svc: 'capacity', dca: 'timing', records: 'sou
 // js/sections.js, js/ws-pages.js and js/workspaces.js in one vm, the map's tab state stubbed (its tabs and chips
 // the real ones), the stored panels by key (o.panels: the area's). o.key: the view; o.ready(tab): its data in;
 // o.before: modules run first (the real js/svc-scope.js). With o.dev (null or a development: DevScope's open one, a
-// pick opens o.devs[key]), o.devPanels are its panels; o.timers collects what setTimeout is given.
+// pick opens o.devs[key]), o.devPanels are its panels; o.timers collects what setTimeout is given; o.stored: the
+// browser's stored values (the store is returned).
 function load(o = {}) {
-  const calls = [], handlers = {}, store = new Map();
+  const calls = [], handlers = {}, store = new Map(Object.entries(o.stored || {}));
   const at = { tab: (o.key || 'overview:').split(':')[0], subs: { ...SUBS }, ready: o.ready || (() => true) };
   if (o.key && o.key.split(':')[1]) at.subs[at.tab] = o.key.split(':')[1];
   const home = { hidden: false, innerHTML: '', scrollTop: 0, querySelector: () => null, querySelectorAll: () => [], getBoundingClientRect: () => ({ top: 0, left: 0 }), contains: () => true };
@@ -56,7 +57,7 @@ function load(o = {}) {
   const click = (sel, dataset = {}) => { const el = { dataset }; for (const f of handlers.click || []) f({ target: { closest: s => (s === sel ? el : null) }, preventDefault() {}, stopPropagation() {} }); };
   // A panel set (js/panel.js's event: its key and scope).
   const pnlSet = detail => { for (const f of handlers['pnl:set'] || []) f({ detail }); };
-  return { WP: window.PeelWsPages, W: window.PeelWorkspaces, SE: window.PeelSections, at, calls, home, window, click, pnlSet, panels, dv, nodes };
+  return { WP: window.PeelWsPages, W: window.PeelWorkspaces, SE: window.PeelSections, at, calls, home, window, click, pnlSet, panels, dv, nodes, store };
 }
 // The tab on, the view on, the busy tabs and every tab's label (a host's strip markup).
 const strip = h => ({
@@ -191,7 +192,7 @@ test('a tab before its data: Servicing and Capital say loading, lit, never Overv
   assert.match(css, /@media \(max-width: 700px\) \{ \.f-tab\[aria-busy="true"\]::after \{ content: ' …'; \} \}/);
 });
 
-test('the bars are gone: no Growth in an area, Servicing or Capital section bar; Help’s bar links Home’s Records', () => {
+test('the bars are gone: no Growth in an area, Servicing or Capital section bar; Help’s bar is its four sections', () => {
   const ws = src('js/ws-pages.js'), sec = src('js/sections.js');
   assert.doesNotMatch(ws, /data-ws-asec|data-ws-wsec|wsAsec|wsWsec|function wsSection|function areaSection|let gSec|const wsSec = /);
   assert.doesNotMatch(sec, /const AREA = |servicing: \{ host|capital: \{ host|areaSpecFor|wsSpecFor/);
@@ -202,10 +203,11 @@ test('the bars are gone: no Growth in an area, Servicing or Capital section bar;
   for (const id of ['tight', 'projects', 'outlook', 'data']) { const m = L.WP.build(id); assert.ok(m.answer && !/Loading/.test(m.answer), `${id} built`); assert.equal(m.top, undefined, `${id}: no section bar`); }
   assert.equal(L.WP.build('data').eyebrow, 'Records › Sources · Peel');
   for (const fn of ['growth', 'eaflow']) assert.doesNotMatch(ws.slice(ws.indexOf(`function ${fn}()`), ws.indexOf('\n  }\n', ws.indexOf(`function ${fn}()`))), /top: /, `${fn}: no bar`);
-  // Help's bar: its Data sources and Data checks open Home's Records tab (the strip's attributes).
+  // Help's bar: Start here · How it works · Glossary · How the app decides (navigation phase 7, design §3.7; its Data
+  // sources and Data checks, Home's Records tab, removed from it by design, §5 row 166: Start here links there).
   const top = L.WP.build('help').top;
-  assert.match(top, /<button type="button" class="page-sec" data-pg-tab="records" data-pg-sub="sources" aria-pressed="false">Data sources<\/button><button type="button" class="page-sec" data-pg-tab="records" data-pg-sub="checks" aria-pressed="false">Data checks<\/button>/);
-  assert.match(top, /class="page-sec on" data-ws-page="help"/);
+  assert.equal(top, '<nav class="page-secs" aria-label="Sections" data-psec="sections"><button type="button" class="page-sec on" data-ws-page="help" aria-pressed="true">Start here</button><button type="button" class="page-sec" data-ws-page="guides" aria-pressed="false">How it works</button><button type="button" class="page-sec" data-ws-page="glossary" aria-pressed="false">Glossary</button><button type="button" class="page-sec" data-ws-page="logic" aria-pressed="false">How the app decides</button></nav>');
+  assert.doesNotMatch(top, /data-pg-tab/);
 });
 
 test('the strip’s click opens the tab, as the map’s, and the page follows; from another page, Home at it', () => {
@@ -222,7 +224,7 @@ test('the strip’s click opens the tab, as the map’s, and the page follows; f
   L.window.PeelDcProjects = DP;
   L.click('#home [data-pg-tab]', { pgTab: 'dca', pgSub: 'timing' });
   assert.equal(DP.state.sel, null); assert.equal(DP.drawn, true);
-  // From another page (Help's bar): Home at that view, the tab not set again.
+  // From another page: Home at that view, the tab not set again.
   L = load(); L.W.openPage('help'); L.calls.length = 0;
   L.click('#home [data-pg-tab]', { pgTab: 'records', pgSub: 'checks' });
   assert.deepEqual(L.calls, [['openTab', 'records', 'checks']]);
@@ -641,14 +643,15 @@ test('the site page hosts the development’s views: the strip, Servicing’s tw
   assert.deepEqual([fold.open, fold.shown], [false, null]);
   L.click('#home [data-pg-tab]', { pgTab: 'svc', pgSub: 'fsr' });
   assert.deepEqual([L.W.page(), L.W.view(), fold.open, fold.shown], ['site', 'svc:fsr', true, 'start']);
-  // The page as the reader names it (shownPage): at FSR review, Review an FSR, on the ☰ button and the sidebar's
-  // Explore entry; any other view, Check a site. (Explore's views bar, which lit it too, is gone: navigation phase 6c,
-  // §5 row 45, removed by design)
-  const named = () => [/data-home-menu[^>]*><span aria-hidden="true">☰<\/span> ([^<]+) </.exec(L.home.innerHTML)[1], /<span class="home-ws-cur">› ([^<]+)<\/span>/.exec(L.home.innerHTML)[1]];
-  assert.deepEqual(named(), ['Explore › Review an FSR', 'Review an FSR']);
-  assert.doesNotMatch(L.home.innerHTML, /page-views|aria-label="Explore"/);
+  // Home's menu at the site's page: Find lit, at FSR review and at any other view. (The ☰ button's and the Explore
+  // entry's names of the view, "Explore › Review an FSR", went in navigation phase 7, §5 rows 4 and 14, removed by
+  // design: ☰ is the top bar's, the entry Find; shownPage's name stays the start screen's, nav-aliases' 6b rows.
+  // Explore's views bar went in 6c, §5 row 45.)
+  const lit = () => [...L.home.innerHTML.matchAll(/data-ws-page="(\w+)" aria-current="page"/g)].map(m => m[1]);
+  assert.deepEqual(lit(), ['find']);
+  assert.doesNotMatch(L.home.innerHTML, /page-views|aria-label="Explore"|home-menu-btn|home-ws-cur/);
   L.click('#home [data-pg-tab]', { pgTab: 'svc', pgSub: 'network' });
-  assert.deepEqual(named(), ['Explore › Check a site', 'Check a site']);
+  assert.deepEqual(lit(), ['find']);
   assert.match(src('js/workspaces.js'), /const ff = pt\.dataset\.pgSub === 'fsr' && \$\('#home #pnl-fsr'\);\n\s+if \(ff\) \{ ff\.open = true; ff\.scrollIntoView\(\{ block: 'start' \}\); return; \}\n[^\n]*\n\s+const el = \$\('#home'\), st = /);
   // renderPage: the site's page is a host with a development, Home the area's (js/workspaces.js).
   assert.match(src('js/workspaces.js'), /const m = page === 'home' \? WP\.host\('area'\) : hostPage\(page\) \? WP\.host\('site'\) : WP\.build\(page\);/);
@@ -691,6 +694,101 @@ test('a pick on the FSR list, or a link’s d= on its Find step, opens the site�
   L.click('[data-ws-go]', { wsGo: 'site', wsKeep: '' }); L.dv.p = { key: 'k2' }; L.pnlSet({ key: 'overview:', scope: 'dev:k2' }); run();
   assert.deepEqual(L.calls.filter(c => c[0] === 'showFootTab'), [['showFootTab', 'overview']]);
   assert.match(src('js/workspaces.js'), /const pl = plan\(id, \{ site: !!site \}\); if \(!pl\) return;\n(?: {4}\/\/[^\n]*\n)+ {4}lastDev = site \? `dev:\$\{site\.key\}` : null;/);
+});
+
+// Navigation phase 7 (design §3.3, §6.2 "Review an FSR from Home: 2"): Find, the menu's (the site page's Find step), lists
+// Recently active, Large files under review and Files with an FSR posted; an FSR row opens the site's page at Servicing ›
+// FSR review, any other its Overview. Review an FSR's own step keeps its files first and links back to Find.
+test('Find lists the recently active, the large files under review and the files with an FSR posted; an FSR row opens FSR review (navigation phase 7)', () => {
+  const projects = [{ key: 'k', title: '1 A St', municipality: 'Brampton', phase: 'review', units: 120 }, { key: 'k2', title: '2 B St', municipality: 'Caledon', phase: 'review', units: 40 }];
+  const Ph = { lastActivityOf: () => 1, PHASE_BY_KEY: { review: { label: 'In review' } } };
+  const Fsr = { FSR: { by: new Map() }, fsrFor: p => (p.key === 'k' ? { best: { fsr: { date: '2026-09-01' } } } : null) };
+  let L = load({ dev: null, devs: { k: DEV, k2: { ...DEV, key: 'k2' } }, devPanels: DEV_PANELS, state: { projects }, extra: { PeelPhases: Ph, PeelFsr: Fsr } });
+  const titles = m => plain(m.lists.map(l => l.title));
+  let m = L.WP.build('site');
+  assert.deepEqual(titles(m), ['Recently active', 'Large files under review', 'Files with an FSR posted']);
+  assert.equal(m.eyebrow, 'Find · step 1 of 3', 'the step’s one name, Find (§3.9)');
+  assert.deepEqual(plain(m.lists[2].rows.map(r => r.attrs)), [{ 'data-ws-pick': 'k', 'data-ws-as': 'fsr', title: 'Review 1 A St' }]);
+  assert.deepEqual(plain(m.lists[0].rows.map(r => r.attrs)), [{ 'data-ws-pick': 'k', title: 'Open 1 A St' }, { 'data-ws-pick': 'k2', title: 'Open 2 B St' }], 'the other rows: the step’s own page, Overview');
+  assert.match(m.top, /^<p class="pnl-stepper small" aria-label="Steps">[^]*<\/span><\/p>$/, 'no link to another step: its lists are here');
+  assert.doesNotMatch(m.top, /pnl-step-other/);
+  // Its rows: an FSR one opens the site's page at FSR review, a Recently active one at Overview.
+  L.W.openPage('find'); assert.deepEqual([L.W.page(), L.W.view()], ['site', null]);
+  assert.match(L.home.innerHTML, /<p class="page-eyebrow small">Find · step 1 of 3<\/p>/);
+  L.calls.length = 0; L.click('[data-ws-pick]', { wsPick: 'k', wsAs: 'fsr' });
+  assert.deepEqual([L.W.page(), L.W.view()], ['site', 'svc:fsr']);
+  assert.deepEqual(L.calls, [['setSub', 'svc', 'fsr'], ['setFootPref', 'svc'], ['showFootTab', 'svc']]);
+  L = load({ dev: null, devs: { k: DEV }, devPanels: DEV_PANELS, state: { projects }, extra: { PeelPhases: Ph, PeelFsr: Fsr } });
+  L.W.openPage('find'); L.click('[data-ws-pick]', { wsPick: 'k' });
+  assert.deepEqual([L.W.page(), L.W.view()], ['site', 'overview:']);
+  // Review an FSR's step: its files first, then Recently active; its line links back to Find.
+  L = load({ dev: null, devs: { k: DEV }, devPanels: DEV_PANELS, state: { projects }, extra: { PeelPhases: Ph, PeelFsr: Fsr } });
+  m = L.WP.build('fsr');
+  assert.deepEqual(titles(m), ['Files with an FSR posted', 'Recently active']);
+  assert.equal(m.eyebrow, 'Review an FSR · step 1 of 3');
+  assert.match(m.top, /<button type="button" class="btn small link pnl-step-other" data-ws-page="find">Any development → Find<\/button><\/p>$/);
+  // Until data/fsr.json is in, the FSR list says it is looking (on both steps), loaded once, the page drawn again after.
+  const loads = [];
+  const F2 = { FSR: {}, loadFsr: () => ({ then: f => loads.push(f) }), fsrFor: () => null };
+  L = load({ dev: null, devs: {}, devPanels: DEV_PANELS, state: { projects }, extra: { PeelPhases: Ph, PeelFsr: F2 } });
+  m = L.WP.build('site');
+  assert.deepEqual(plain(m.lists[2]), { title: 'Files with an FSR posted', rows: [{ kv: true, html: '<span class="muted small">Looking for posted servicing reports…</span>' }], total: 0 });
+  assert.equal(loads.length, 1);
+  // (and drawn again only while a Find step still shows: not over a development picked meanwhile, nor another page)
+  const redraws = () => { let n = 0; const rp = L.W.renderPage; L.W.renderPage = () => { n++; }; loads.splice(0).forEach(f => f()); L.W.renderPage = rp; return n; };
+  L = load({ dev: null, devs: { k: DEV }, devPanels: DEV_PANELS, state: { projects }, extra: { PeelPhases: Ph, PeelFsr: F2 } });
+  L.W.openPage('find'); assert.ok(redraws() > 0, 'Find still showing: drawn again');
+  L.W.openPage('find'); L.click('[data-ws-pick]', { wsPick: 'k' }); assert.equal(redraws(), 0, 'a development picked meanwhile');
+  L = load({ dev: null, devs: { k: DEV }, devPanels: DEV_PANELS, state: { projects }, extra: { PeelPhases: Ph, PeelFsr: F2 } });
+  L.W.openPage('find'); L.W.openPage('home'); assert.equal(redraws(), 0, 'another page');
+  // (every development's FSR, js/fsr.js fsrFor, looked up once per load of the developments and of the FSR index, not on
+  // each redraw of either step; a development's phase is read as the list is drawn)
+  let scans = 0; const F3 = { FSR: { by: new Map() }, fsrFor: p => { scans++; return Fsr.fsrFor(p); } };
+  L = load({ dev: null, devs: {}, devPanels: DEV_PANELS, state: { projects: projects.map(p => ({ ...p })) }, extra: { PeelPhases: Ph, PeelFsr: F3 } });
+  const st = L.window.PeelApp.state, fsrKeys = id => plain(L.WP.build(id).lists.find(l => l.title === 'Files with an FSR posted').rows.map(r => r.attrs['data-ws-pick']));
+  assert.deepEqual([fsrKeys('site'), fsrKeys('site'), fsrKeys('fsr'), scans], [['k'], ['k'], ['k'], 2], 'two developments, looked up once');
+  st.projects[0].phase = 'cancelled'; assert.deepEqual([fsrKeys('site'), scans], [[], 2], 'a file cancelled since: left out, no new lookup');
+  st.projects = projects.map(p => ({ ...p })); assert.deepEqual([fsrKeys('site'), scans], [['k'], 4], 'the developments loaded again: looked up again');
+  F3.FSR.by = new Map(); assert.deepEqual([fsrKeys('fsr'), scans], [['k'], 6], 'and the FSR index');
+});
+
+// Navigation phase 7 (owner decision 17, AD-17 with change, design §7.3): Last place is kept as each page is drawn, the
+// page as the reader names it (Review an FSR at Servicing › FSR review), its view, its development and the place filter
+// (the municipality, one plan); never Help, a guide or a Labs page. Settings › Start screen offers it, and Your role.
+test('Last place: kept as Home and the workspace pages are drawn, with the view, the development and the place filter; never Help; Settings has it and Your role (navigation phase 7)', () => {
+  const timers = [], run = () => { for (let i = 0; timers.length && i < 20; i++) timers.shift()(); };
+  let L = load({ dev: null, devs: { k: DEV }, devPanels: DEV_PANELS, timers });
+  const place = () => plain(L.store.get('lastPlace'));
+  L.W.openPage('tight');
+  assert.deepEqual(place(), { page: 'home', view: 'svc:capacity', d: null, mu: '', sp: '' }, 'an area page: Home at its view');
+  L.W.openPage('help'); L.W.openPage('approvals');
+  assert.deepEqual(place(), { page: 'home', view: 'svc:capacity', d: null, mu: '', sp: '' }, 'Help and a guide: never a place (as Last workspace never named them)');
+  L.W.openPage('fsr'); assert.deepEqual(place(), { page: 'fsr', view: null, d: null, mu: '', sp: '' }, 'a Find step: no view');
+  L.click('[data-ws-pick]', { wsPick: 'k' });
+  assert.deepEqual(place(), { page: 'fsr', view: 'svc:fsr', d: 'k', mu: '', sp: '' }, 'the site’s page at FSR review: Review an FSR, its development');
+  L.click('#home [data-pg-tab]', { pgTab: 'svc', pgSub: 'network' });
+  assert.deepEqual(place(), { page: 'site', view: 'svc:network', d: 'k', mu: '', sp: '' }, 'another view of the site’s page: Check a site');
+  const S = L.window.PeelApp.state; S.muni = 'Caledon'; S.sp = ['bw'];
+  L.W.openPage('growth'); assert.deepEqual(place(), { page: 'home', view: 'growth:areas', d: null, mu: 'Caledon', sp: 'bw' }, 'the place filter: its municipality and its plan');
+  S.sp = ['bw', 'mv']; L.W.openPage('week'); assert.deepEqual(place(), { page: 'week', view: null, d: null, mu: 'Caledon', sp: '' }, 'two plans: no one plan');
+  // A start with a place to restore: nothing kept until it is (a half-restored place never replaces the stored one).
+  const stored = { page: 'site', view: 'svc:network', d: 'k', mu: '', sp: '' };
+  L = load({ dev: null, devs: { k: DEV }, devPanels: DEV_PANELS, timers, stored: { startScreen: 'last', lastPlace: stored } }); timers.length = 0;
+  L.W.init();
+  assert.deepEqual([L.W.page(), L.W.view(), plain(L.store.get('lastPlace'))], ['site', null, stored], 'its page now (the Find step, the development not in yet)');
+  L.window.PeelApp.state.projects = [DEV]; L.calls.length = 0; L.W.bootRestore();
+  assert.deepEqual([L.W.page(), L.W.view(), L.calls], ['site', 'svc:network', [['showFootTab', 'svc']]], 'then the development, at the place’s view');
+  assert.match(L.home.innerHTML, /data-pg-sub="network" aria-pressed="true">Network</, 'drawn at once, as a pick is (not when the app next settles)');
+  run();
+  assert.deepEqual(plain(L.store.get('lastPlace')), stored);
+  // Settings › Start screen: Home · Last place · Full map; Your role: none or one of the six (the menu's For your role).
+  L.store.set('role', 'qa'); L.store.set('startScreen', 'last');
+  const set = L.W.settingsHTML();
+  assert.deepEqual([...set.matchAll(/data-ws-start-btn="(\w+)" aria-pressed="(true|false)">([^<]+)</g)].map(m => `${m[1]} ${m[3]}${m[2] === 'true' ? '*' : ''}`), ['home Home', 'last Last place*', 'full Full map']);
+  assert.match(set, /the last place you were on a page \(its page, tab and view, its place and its development\)/);
+  assert.deepEqual([...set.matchAll(/<option value="(\w*)"( selected)?>([^<]+)</g)].map(m => `${m[1]}${m[2] ? '*' : ''}`), ['', 'engineer', 'manager', 'growth', 'capital', 'fsr', 'qa*']);
+  assert.match(set, /<h3>Your role<\/h3>[^]*<select data-role-set aria-label="Your role"><option value="">None<\/option>/);
+  assert.match(set, /<option value="qa" selected>QA\/QC \(data review\)<\/option>/);
 });
 
 // Navigation phase 6c-S4 (design §5 rows 2, 22, 63, 71): one This week. The page, its map view (the Overview panel there,

@@ -146,18 +146,19 @@ test('settings gear page holds display settings, not editable criteria inputs', 
   assert.ok(m[1].includes('dsp-theme') && m[1].includes('dsp-density'), 'theme + density stay in Settings');
   const s = /function settingsPageHTML\(\) \{([\s\S]*?)\n  \}/.exec(APP);
   assert.ok(s, 'settingsPageHTML not found');
-  assert.ok(s[1].includes('numberConventionsHTML()'), 'number conventions + Prepared by in Settings');
+  assert.ok(s[1].includes('reportSettingsHTML()'), 'Prepared by and the public version in Settings › Reports');
 });
 
 test('record type + new-buildings-only controls are filters, in Find › What (navigation review F)', () => {
-  // They narrow the list, so they sit with the other What filters; Settings points there.
+  // They narrow the list, so they sit with the other What filters (Settings pointed there until navigation phase 7).
   const html = require('node:fs').readFileSync(require('node:path').join(__dirname, '..', 'index.html'), 'utf8');
   const what = /<details class="fp-sec fp-row" id="fr-what">([\s\S]*?)<\/details>/.exec(html);
   assert.ok(what && what[1].includes('id="f-kind"'), 'record type select in Find › What');
   assert.ok(what[1].includes('id="f-new"'), 'new-buildings-only switch in Find › What');
   assert.equal((html.match(/id="f-kind"/g) || []).length, 1);
   assert.ok(!/function recordSettingsHTML/.test(APP) || !/const recordSettingsHTML = [^\n]*id="f-kind"/.test(APP), 'not also on the Settings page');
-  assert.ok(APP.includes('Record type and New buildings only are filters: they are in <strong>Find › What</strong>'), 'Settings points to Find › What');
+  // (Settings' Records pointer to Find › What, removed by design, §5 row 170: ⚙'s one sheet has no stubs)
+  assert.doesNotMatch(APP, /id="rec-settings"/, 'no Records pointer in Settings');
   assert.ok(APP.includes("e.target.id === 'f-kind'"), 'delegated wiring for record type');
   assert.ok(APP.includes("e.target.id === 'f-new'"), 'delegated wiring for new-buildings-only');
 });
@@ -178,11 +179,75 @@ test('extra model-check sections render defensively', () => {
   assert.match(fs.readFileSync(path.join(JS_DIR, 'svc-capacity.js'), 'utf8'), /const MC = root\.ModelChecks \|\| \{\}, sec = k => \{ try \{ const v = typeof MC\[k\] === 'function' \? MC\[k\]\(\) : MC\[k\]; return typeof v === 'string' \? v : v && typeof v\.html === 'string' \? v\.html : ''; \} catch \(e\) \{ return ''; \} \};/, 'a missing or odd section renders as nothing, not a throw');
 });
 
-test('number conventions and Prepared by stay in the Settings UI', () => {
-  assert.ok(APP.includes('function numberConventionsHTML'), 'conventions extracted');
-  assert.ok(/<h2 class="pane-h">Settings<\/h2>[^\n]*\$\{DU\(\)\.numberConventionsHTML\(\)\}/.test(APP),
-    'the Settings page shows them (js/growth-ui.js)');
+test('Prepared by and the public version stay in Settings; the number conventions are How the app decides’', () => {
+  assert.ok(APP.includes('function reportSettingsHTML'), 'Settings › Reports extracted');
+  assert.ok(/<h2 class="pane-h">Settings<\/h2>[^\n]*\$\{DU\(\)\.reportSettingsHTML\(\)\}/.test(APP),
+    'the Settings sheet shows them (js/growth-ui.js)');
+  // (navigation phase 7, design §3.7, §5 row 171: documentation is Help's)
+  assert.match(fs.readFileSync(path.join(JS_DIR, 'logic.js'), 'utf8'), /id="lg-numbers"/);
+  assert.ok(!APP.includes('numberConventionsHTML'), 'one place for the conventions');
   assert.ok(!/function renderQuality\(/.test(APP), 'no renderer for the missing #d-quality');
+});
+
+// ---- ⚙: one Settings sheet (navigation phase 7, design §3.7, §5 rows 169–171, N-10 with change) --------------------
+test('⚙ opens one Settings sheet: Display · Start screen · Your role · Reports · Labs · Usage; no menu; no Counting or Records pointer', () => {
+  const read = f => fs.readFileSync(path.join(__dirname, '..', f), 'utf8'), html = read('index.html'), tb = read('js/topbar.js'), css = read('css/app.css');
+  // The sheet: a dialog under the top bar's end, after the actions (outside the ⋯ list, so it shows on a phone as ⋯ folds).
+  const acts = html.indexOf('<div class="tb-actions" id="tb-actions">'), list = html.indexOf('<div class="tb-acts-list" id="tb-acts-list">'), sheet = html.indexOf('<div class="tb-menu tb-sheet" id="tb-gear-menu" role="dialog" aria-label="Settings" hidden></div>');
+  assert.ok(acts > 0 && list > acts && sheet > list && sheet < html.indexOf('</header>'), 'the sheet in the top bar');
+  assert.ok(html.slice(list, sheet).includes('id="tb-gear"'), '⚙ still in the ⋯ list on a phone');
+  assert.match(html.slice(acts, sheet + 40), /<\/div>\n {6}<\/div>\n(?: {6}<!--[^]*?-->\n)? {6}<div class="tb-menu tb-sheet"/, 'outside #tb-actions');
+  assert.match(html, /id="tb-gear" aria-haspopup="dialog" aria-expanded="false" aria-controls="tb-gear-menu" aria-label="Settings"/);
+  assert.equal((html.match(/id="tb-gear-menu"/g) || []).length, 1);
+  // ⚙ opens it directly (no Settings · Labs · Change log menu); ⚙ again closes it; a click inside it never does.
+  assert.match(tb, /\$\('#tb-gear'\)\.addEventListener\('click', e => \{ e\.stopPropagation\(\); toggleSettings\(\); \}\);/);
+  assert.match(tb, /if \(!inside\('\.tb-wrap'\) && !inside\('#tb-gear-menu'\)\) closeTbMenus\(\);/);
+  assert.doesNotMatch(tb, /data-tbg=|renderGearMenu|openGearPage\('labs'\)/);
+  assert.doesNotMatch(read('js/labs.js'), /GearPages\.labs/, 'Labs: a section of the sheet, no page of its own');
+  // toggleSettings, run: it folds ⋯ (⚙'s click stops before ⋯'s own listeners), opens the sheet and gives it the focus.
+  const a = tb.indexOf('  function toggleSettings() {'), body = tb.slice(a, tb.indexOf('\n  }\n', a) + 4);
+  const el = { m: { hidden: true, tabIndex: 0, style: {}, getBoundingClientRect: () => ({ top: 144 }), focus() { el.focused = 'sheet'; } }, a: { open: true, classList: { contains: () => el.a.open, remove: c => { if (c === 'open') el.a.open = false; } } }, mb: { attrs: {}, setAttribute(k, v) { this.attrs[k] = v; } } };
+  const calls = [], $ = s => ({ '#tb-gear-menu': el.m, '#tb-actions': el.a, '#tb-more': el.mb }[s]);
+  const toggle = new Function('$', 'closeTbMenus', 'closeScenPop', 'openGearPage', 'innerHeight', `${body}\nreturn toggleSettings;`)($, () => calls.push('close'), () => calls.push('scen'), n => { calls.push(`open ${n}`); el.m.hidden = false; }, 844);
+  toggle();
+  assert.deepEqual([calls, el.a.open, el.mb.attrs['aria-expanded'], el.m.tabIndex, el.focused], [['scen', 'open settings'], false, 'false', -1, 'sheet']);
+  assert.equal(el.m.style.maxHeight, '692px', 'its foot 8 px above the screen’s (390 × 844, the banners above the top bar taking 144 px)');
+  calls.length = 0; toggle(); assert.deepEqual(calls, ['close'], '⚙ again: closed');
+  el.a.open = true; el.mb.attrs = {}; calls.length = 0; toggle();
+  assert.deepEqual([calls, el.a.open, el.mb.attrs['aria-expanded']], [['close'], false, 'false'], '⚙ closing the sheet folds ⋯ too');
+  // ⋯ (a phone's), run: opening it closes the sheet and a menu left open (its click stops before the click-outside that
+  // would close them, and the sheet sits outside its list); folding it closes nothing else.
+  const mo = tb.indexOf("  const more = $('#tb-more'), acts = $('#tb-actions');"), moreBody = tb.slice(mo, tb.indexOf('\n  }\n', mo) + 4);
+  const lis = {}, mk = n => { const e = { cls: new Set(), attrs: {}, setAttribute: (k, v) => { e.attrs[k] = v; }, addEventListener: (t, f) => { lis[`${n} ${t}`] = f; } }; e.classList = { toggle: (c, o) => (o ? e.cls.add(c) : e.cls.delete(c)), contains: c => e.cls.has(c) }; return e; };
+  const mEl = mk('more'), aEl = mk('acts'), shut = [];
+  new Function('$', 'document', 'closeTbMenus', moreBody)(q => ({ '#tb-more': mEl, '#tb-actions': aEl }[q]), mk('doc'), () => shut.push('close'));
+  const tapMore = () => lis['more click']({ stopPropagation() {} });
+  tapMore(); assert.deepEqual([aEl.cls.has('open'), mEl.attrs['aria-expanded'], shut], [true, 'true', ['close']], '⋯ opening: the sheet closed');
+  tapMore(); assert.deepEqual([aEl.cls.has('open'), mEl.attrs['aria-expanded'], shut], [false, 'false', ['close']], '⋯ folding');
+  // The old ⚙ › Labs page (openGearPage('labs'), a section of the sheet now): the sheet, its Labs in view; an unknown page
+  // says so.
+  const og = tb.indexOf('  function openGearPage(name) {'), ogBody = tb.slice(og, tb.indexOf('\n  }\n', og) + 4);
+  const sh = { hidden: true, innerHTML: '', querySelector: q => (q === '.labs-page' && /labs-page/.test(sh.innerHTML) ? { scrollIntoView: () => { sh.scrolled = true; } } : null) }, gb = { attrs: {}, setAttribute(k, v) { this.attrs[k] = v; } };
+  const openGear = new Function('$', 'closeTbMenus', 'window', 'Node', `${ogBody}\nreturn openGearPage;`)(q => ({ '#tb-gear-menu': sh, '#tb-gear': gb }[q]), () => {}, { GearPages: { settings: () => '<h2 class="pane-h">Settings</h2><div class="gear-page labs-page"><h3>Labs</h3></div>' } }, class {});
+  openGear('labs'); assert.deepEqual([sh.hidden, /<h3>Labs<\/h3>/.test(sh.innerHTML), sh.scrolled, gb.attrs['aria-expanded']], [false, true, true, 'true']);
+  sh.scrolled = false; openGear('settings'); assert.equal(sh.scrolled, false, 'Settings: at its top');
+  openGear('sources'); assert.match(sh.innerHTML, /That page is not available yet/);
+  // Esc closes it and puts the focus back on ⚙ (on ⋯ while ⚙ is folded in it).
+  assert.match(tb, /const sh = \$\('#tb-gear-menu'\), was = !!sh && !sh\.hidden;\n {4}closeTbMenus\(\); closeScenPop\(\);\n {4}if \(was\) \{ const g = \$\('#tb-gear'\), mb = \$\('#tb-more'\), to = g && g\.getClientRects\(\)\.length \? g : mb; if \(to\) to\.focus\(\); \}/);
+  // Its sections, in order (design §3.7): Display → Start screen → Your role → Reports → Labs → Usage.
+  const g = read('js/growth-ui.js'), f = /function settingsPageHTML\(\) \{([\s\S]*?)\n  \}/.exec(g)[1];
+  const sheetHTML = new Function('root', 'DU', 'displaySettingsHTML', `${f}`)({ PeelWorkspaces: { settingsHTML: () => '[start screen][your role]' }, PeelLabs: { pageHTML: () => '[labs]' }, PeelUsage: { settingsHTML: () => '[usage]' } }, () => ({ reportSettingsHTML: () => '[reports]' }), () => '[display]');
+  assert.equal(sheetHTML, '<h2 class="pane-h">Settings</h2>[display][start screen][your role][reports][labs][usage]');
+  assert.doesNotMatch(g, /set-counting|const counting = |recordSettingsHTML|rec-settings/, 'no Counting or Records pointer (removed by design, §5 row 170)');
+  assert.match(read('js/demand-ui.js'), /function reportSettingsHTML\(\) \{\n {4}return `<section class="gear-sec"><h3>Reports<\/h3>[^`]*id="public-view"[^`]*id="prep-by"[^`]*<\/section>`;/);
+  // The sheet's box: under the top bar's right end on a computer; across the top bar, 8 px each side, on a phone.
+  assert.match(css, /\.tb-menu\.tb-sheet \{ right: var\(--space-2\); width: min\(460px, calc\(100vw - var\(--space-4\)\)\); padding: var\(--space-2\) var\(--space-3\); \}/);
+  assert.match(css, /\.tb-sheet select \{ max-width: 100%; \}/);
+  // (Your role's select is outside a .field: it takes the .field selects' box, one look for every select in the sheet)
+  assert.match(css, /\.tb-sheet select\[data-role-set\] \{ width: 100%; padding: var\(--space-2\); border: 1px solid var\(--border\); border-radius: 4px; background: var\(--surface-1\); \}/);
+  const phone = css.slice(css.indexOf('/* ---- Design bundle 4: phone and chrome'));
+  assert.match(phone.slice(phone.indexOf('@media (max-width: 700px) {')), /^@media \(max-width: 700px\) \{[^]*?\n {2}\.tb-menu\.tb-sheet \{ left: var\(--space-2\); right: var\(--space-2\); width: auto; max-width: none; \}\n[^]*?\n\}/);
+  assert.doesNotMatch(css, /\.rec-set\b/);
 });
 
 // ---- exports: Criteria sheet ---------------------------------------------------------------

@@ -12,12 +12,20 @@ test('the first run on Home: "What\'s your role?", then a short tour of Home tha
   const n = (home.match(/\{ ch: '/g) || []).length;
   assert.ok(n >= 5 && n <= 6, `the Home tour is short (${n} steps)`);
   assert.match(home, /roles: true, t: 'Welcome', b: '[^\n]*What\\'s your role\?/);
-  for (const sel of ['#home .page-main', "homeMenu('ul')", 'data-ws-page="explore"', ".home-full'", '#tb-restart']) assert.ok(home.includes(sel), `the Home tour points at ${sel}`);
+  for (const sel of ['#home .page-main', "homeMenu('ul')", 'data-ws-page="find"', ".home-full'", '#tb-restart']) assert.ok(home.includes(sel), `the Home tour points at ${sel}`);
   // (it never points at the map's controls, hidden behind Home)
   for (const sel of ['#f-search', '#pipeline', '.map-opts', '.tool-rail', '#analysis']) assert.ok(!home.includes(sel), `not at ${sel}`);
-  // five roles, the pages to start with
-  assert.match(t, /const TOUR_ROLES = \[\n {4}\['engineer'[^]*?\['manager'[^]*?\['growth'[^]*?\['capital'[^]*?\['fsr'/);
-  assert.match(t, /const r = e\.target\.closest\('\[data-tour-role\]'\); if \(r\) \{ store\.set\('role', r\.dataset\.tourRole\); tourGo\(tourI \+ 1\); \}/);
+  // the roles, the shortcuts to start with: the one list (navigation phase 7, owner decision 6; the tour's own five
+  // went, its keys kept), six with QA/QC; a pick redraws Home's menu, so the next step shows its shortcuts
+  assert.match(t, /const roles = \(\) => \(root\.PeelWorkspaces && root\.PeelWorkspaces\.ROLES\) \|\| \[\];/);
+  assert.match(t, /<div class="tour-roles" role="group" aria-label="Your role">\$\{roles\(\)\.map\(r => /);
+  // (no local of the same name hides roles() where it is read: const roles = `…${roles().map(` would throw on the
+  // Welcome step, before its card is drawn)
+  assert.equal((t.match(/\bconst roles = /g) || []).length, 1, 'one roles: the module’s');
+  assert.doesNotMatch(t, /TOUR_ROLES/);
+  assert.deepEqual(require('../js/workspaces.js').ROLES.map(r => r.key), ['engineer', 'manager', 'growth', 'capital', 'fsr', 'qa']);
+  assert.match(t, /const r = e\.target\.closest\('\[data-tour-role\]'\); if \(r\) \{ store\.set\('role', r\.dataset\.tourRole\);[^\n]*W\.renderPage\(true\);[^\n]*tourGo\(tourI \+ 1\); \}/);
+  assert.match(t, /const homeMenu = sel => vis\(`#home \.home-side\.open \$\{sel\}`, `#home \.home-side \$\{sel\}`, '#tb-nav'\);/, 'on a phone the step points at ☰');
   assert.match(t, /if \(onHome\(\)\) \{ if \(!homeDone\(\)\) setTimeout\(\(\) => \{ if \(onHome\(\) && !tourEl\) startTour\('home'\); \}, 1200\); \} else maybeMapTour\(\);/);
 });
 
@@ -45,11 +53,16 @@ test('the map tour\'s text matches the app: stages, the legend, Servicing, Capit
   for (const now of ["t: 'Stages'", 'Servicing for capacity', 'Capital for DC timing', 'Records for the files', "t: 'Watch: your watchlist", "t: 'Forecast'", 'History and source records']) assert.ok(tour.includes(now), `missing: ${now}`);
 });
 
-test('phone: Home\'s menu behind one button, grouped; page actions in a bar at the bottom; scenario and years in the panel', () => {
+test('phone: Home\'s menu is ☰ in the top bar; page actions in a bar at the bottom; scenario and years in the panel', () => {
   const w = src('js/workspaces.js'), css = src('css/app.css'), p = src('js/panel.js');
-  assert.match(w, /<nav class="home-side\$\{menuOpen \? ' open' : ''\}" aria-label="Workspaces"><button type="button" class="home-menu-btn" data-home-menu aria-expanded="\$\{menuOpen\}">/);
-  assert.match(w, /if \(e\.target\.closest\('\[data-home-menu\]'\)\) \{ menuOpen = !menuOpen; renderPage\(true\); return; \}/);
-  assert.match(css, /\.home-side:not\(\.open\) > :not\(\.home-menu-btn\) \{ display: none; \}/);
+  // (navigation phase 7, §3.8, §5 row 14: the in-page "☰ … · all pages" row went, removed by design; ☰ sits beside Home)
+  assert.match(w, /<nav class="home-side\$\{menuOpen \? ' open' : ''\}" id="home-side" aria-label="Pages">/);
+  assert.match(src('index.html'), /id="tb-home" data-ws-home [^>]*>Home<\/button>\n[^\n]*\n\s*<button type="button" class="btn small tb-btn tb-nav" id="tb-nav" data-home-menu aria-expanded="false" aria-controls="home-side"/);
+  assert.match(w, /if \(e\.target\.closest\('\[data-home-menu\]'\)\) \{ menuOpen = !menuOpen; renderPage\(true\); if \(menuOpen\) \{ const el = \$\('#home'\); if \(el\) el\.scrollTop = 0; \} return; \}/);
+  assert.doesNotMatch(w + css, /home-menu-btn/);
+  const ph = css.slice(css.indexOf('/* Navigation 4, phone: Home'));
+  assert.match(ph, /@media \(max-width: 700px\) \{\n {2}html\.home-on \.topbar \.tb-btn\.tb-nav \{ display: inline-flex;/);
+  assert.match(ph, /\.home-side:not\(\.open\) \{ display: none; \}/);
   assert.match(css, /\.home-side\.open \.home-g \{ display: block;/);
   assert.match(css, /\.home-main \.page-foot \.pnl-acts \{ position: fixed; left: 0; right: 0; bottom: 0;/);
   assert.match(p, /<div class="pnl-phone-ctx small">\$\{scenarioChip\(\)\}\$\{yearsChip\(\)\}<\/div>/);

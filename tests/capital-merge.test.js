@@ -365,7 +365,7 @@ test('Home’s DC projects late keeps its source (every relief, the analysis its
   const s = src('js/ws-pages.js'), h = s.slice(s.indexOf('function homeFigures('), s.indexOf('function home()'));
   assert.match(h, /const R = root\.PeelDcCost\.dcAnalysis\(\); late = \{ v: R\.list\.filter\(r => r\.rec === 'advance'\)\.length \};/);
   assert.doesNotMatch(h, /specOf\('dca:timing'/, 'not the panel’s figure: the list counts DC lines only');
-  assert.match(h, /attrs: \{ \.\.\.go\('projects', 'DC projects'\), 'data-dc-status': 'gap' \}/);
+  assert.match(h, /attrs: \{ \.\.\.go\('projects', 'Capital › DC timing'\), 'data-dc-status': 'gap' \}/);
   const p = s.slice(s.indexOf('function projects()'), s.indexOf('// ---- Forecast'));
   assert.match(p, /return t\.head && t\.head\.back \? asSection\(m, t\) : m;/);
   assert.match(p, /one = DP && DP\.openSpec \? DP\.openSpec\(\) : null;/, 'the project in place on DC timing (the builder is that view’s only)');
@@ -816,6 +816,8 @@ test('source pins: Capital › EAs’ fold, its full table, the chip’s fold, t
   const css = src('css/app.css');
   assert.match(css, /@media \(max-width: 700px\), \(pointer: coarse\) \{[^}]*details > summary, \.f-sum, \.t-toggle, \.tb-step, \.seg \.btn, \.switch, \.eat-row \{ min-height: 44px; \}/, 'the timeline’s rows: 44 px on a phone');
   assert.match(css, /\.eat-ft \{ white-space: normal; text-align: left; \}/, 'the fold’s long link wraps on a phone');
-  assert.match(src('js/tips.js'), /eaflow: 'What is being studied, and which EAs have led to construction\?'/);
+  // (Help's ASKS row, removed by design, §5 row 158: the question is Home's view's, js/sections.js ASK, and still eaflow's name)
+  assert.match(src('js/sections.js'), /'dca:eas': 'What is being studied, and which EAs have led to construction\?'/);
+  assert.match(p, /name = 'What is being studied, and which EAs have led to construction\?'/);
   assert.match(src('js/info.js'), /'eaflow': \{ title: 'EA to construction', body: 'Each Region Class EA/);
 });

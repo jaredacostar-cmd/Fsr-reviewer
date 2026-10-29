@@ -308,7 +308,7 @@ from street zoom (14), up to 3,000 in view.
   Overview; the north arrow stays on the map (tap it to switch between road grid and north up).
   The sidebar has search, a "Showing …" line, and the unified filter panel (Search · Stage · Where · What · When · Flags).
 - **Executive briefing (PDF)** (Overview, top right): one printable Letter page for management —
-  title block with the date, *Prepared by* (set it in Settings & sources) and the data date; the
+  title block with the date, *Prepared by* (set it in Settings › Reports) and the data date; the
   headline sentences; growth and demand tiles; servicing demand by phase; the plants' and South
   Peel water treatment's share of the 90% expansion trigger; room after servicing allocations; a
   map of the wastewater blocks with the larger developments and the plants; the DC projects to
@@ -327,7 +327,7 @@ from street zoom (14), up to 3,000 in view.
   municipality, the share on municipal sewers, population today against the annual report's
   population served, and the plants' and South Peel water's design-criteria flows against the 2025
   measured averages (±10% matches, ±25% close; each row explains an expected difference).
-- **Number conventions**: people and jobs are rounded the same way everywhere (whole under 1,000,
+- **Number conventions** (Help › How the app decides): people and jobs are rounded the same way everywhere (whole under 1,000,
   nearest 10 to 10,000, nearest 100 above); units are exact counts; L/s for pipes, stations and
   single developments, ML/d for plants, zones and totals; ≈ marks a screening estimate.
   Capacity and DC results are labelled **screening estimate** wherever they appear.
@@ -1526,15 +1526,16 @@ demand. Nothing about a site is only in the full map.
 
 ## Explore: one workspace for a site, a plan or an area you draw
 
-Home's sidebar has one **Explore** entry for what were five: Growth in an area, Check a site,
-Review an FSR, Forecast and Study area are its views. Since navigation phase 6 an area's two are Home's
-tabs (Growth › Areas and Growth › Forecast). Explore opens the site you have open, else the last of its
-views you used (Check a site, Review an FSR, Study area, or Home's Growth › Areas / Forecast), else Home ›
-Growth › Areas. The row of the five views at the top of each is gone (navigation phase 6c, §5 row 45): Home's
-Growth tab, the search (a site), Draw an area (Study area) and *Check FSR* in a site's header (Review an FSR)
-reach the same places, and Check a site's and Review an FSR's first steps each end with a link to the other's
-list (*Files with an FSR posted → Review an FSR*, *Any development → Check a site*), until phase 7's Find
-lists both.
+Home's sidebar had one **Explore** entry for what were five: Growth in an area, Check a site,
+Review an FSR, Forecast and Study area were its views. Since navigation phase 6 an area's two are Home's
+tabs (Growth › Areas and Growth › Forecast); since navigation phase 7 the sidebar's entry is **Find**, the
+Find step (the `site` page with no development: an open one closes first, as Home closes it), and the old
+`explore` id opens the site you have open, else Find. The row of the five views at the top of each is gone
+(navigation phase 6c, §5 row 45): Home's Growth tab, Find and the search (a site), Draw an area (Study area)
+and *Check FSR* in a site's header (Review an FSR) reach the same places. Find lists **Recently active**,
+**Large files under review** and **Files with an FSR posted** (a row with an FSR opens the site's page at
+Servicing › FSR review); Review an FSR's own first step stays (`#w=p:fsr`, the FSR reviewer's shortcut), its
+FSR list first and its line linking back to Find (*Any development → Find*).
 - The one search (an address, a file number, a description) and **Draw an area** are in every
   page's header, not only Explore's (see *Find from every page* below). A site picked from an area
   view (the search, a list row, the map) opens on its page.
@@ -1557,7 +1558,7 @@ lists both.
   relief, by its first relief with a project number; the name is the DC main's, else the facility's
   (a plant step, a facility's item). One late project makes the row *Check*, whatever the connection's
   own verdict. Review outlets also opens from Records › Data checks (*Review outlets →*) and the
-  sidebar (QA/QC).
+  QA/QC role's shortcut (navigation phase 7: the sidebar's QA/QC entry went).
 - The views keep their own ids (`site`, `fsr`, `growth`, `outlook`, `study`), so links, share links and
   the map views' `#w=` links still work.
 - A site's page has the **live map** beside the open tab's answer, at the site, with the infrastructure around
@@ -1638,12 +1639,13 @@ On a page, a pick opens what it found (`js/workspaces.js` `pageRoute` and `route
 
 ## Servicing and Capital: Home's tabs, the map's sub-views as views
 
-- **Servicing** (Home's tab; the sidebar's Servicing capacity opens it at Capacity): **Capacity** (the
+- **Servicing** (Home's tab; the old `tight` page id, the role shortcuts and Home's group link open it at
+  Capacity: the sidebar entry went in navigation phase 7): **Capacity** (the
   Servicing capacity page's builder: limits, the 90% trigger, the uncommitted reserve, no relief in time;
   the allocations recorded a fold of it, navigation phase 2, below), **Network** (the map's panel,
-  its footer's actions first) and **Old pipes** (the sidebar's Old pipes opens it: one spec with the map's
+  its footer's actions first) and **Old pipes** (the old `pipes` id and the capital role's shortcut open it: one spec with the map's
   panel, its small map of the runs beside it; navigation phase 6c, below).
-- **Capital** (Home's tab; the sidebar's Capital opens it at DC timing): **DC timing** (the Capital
+- **Capital** (Home's tab; the old page ids, the role shortcuts and Home's group link open it at DC timing): **DC timing** (the Capital
   page's builder: every 2026 DC project with both verdicts; a project opens in place, with its map, and
   *Open the map* opens its card there), **EAs** (the EAs, then EA to construction) and **Projects** (the
   map's panel; navigation phase 4, below).
@@ -1679,15 +1681,15 @@ adds FSR review at a development, phase 6c Old pipes at an area: *Home hosts the
   **Where developments discharge**: *Review outlets →*, with the count still to review once Capital ›
   DC timing has worked out the DC model (building that model walks every sewer pipe, so Records
   never builds it). *Review outlets* is in its footer too, beside *Duplicate check*. Home's Records ›
-  Data checks (Help's bar links there) shows the same panel (kept up to date as the servicing model is rebuilt, a Scenario change
+  Data checks (Help › Start here links there) shows the same panel (kept up to date as the servicing model is rebuilt, a Scenario change
   included, whichever tab is open); its Servicing model rows and *See all* open the full map's Records
   › Data checks full table at their comparison, and its Review outlets row opens the page from there.
-  The sidebar entry stays.
+  Review outlets is the QA/QC role's first shortcut since navigation phase 7 (its sidebar entry went).
 - **The Sources & checks gear page is gone.** It was reached only from the Overview's ⓘ line
   (*Data & checks →*); that link is now *Records › Data checks →*, and it works in the Overview
   panel's Method fold and from a page too (it did nothing there). Freshness and the references are
   Records › Sources; every check, the two that were only on that page included, is Records › Data
-  checks. The gear menu's pages are Settings and Labs (`window.GearPages`).
+  checks. ⚙ opens Settings, one sheet, Labs a section of it (navigation phase 7; `window.GearPages`).
 - **One System control**, *Both · Wastewater · Water*, on Servicing › Capacity's list and Capital ›
   DC timing's list (DC projects' until navigation phase 4; and Home's Servicing and Capital tabs): one pick, kept in
   this browser (`sysPick`, `js/analysis-tabs.js` `setSys`), Both to start. It was two switches, *All ·
@@ -1766,7 +1768,7 @@ docs/pipeline-ledger-plan.md) is the Forecast panel's fold **By period**:
   untouched; at Everything, units, nothing hidden, Peel equals Growth's left to build, and By
   period's 2026 to 2031 column equals the Forecast's units expected by 2031 (one time-in-stage model;
   both checked in the browser paths). Export ▾ › Pipeline snapshot (CSV) reads the same model.
-- **What's coming** (the sidebar entry, the `coming` chip and page) opens the Forecast with By period
+- **What's coming** (the analyst's shortcut, the sidebar entry until navigation phase 7; the `coming` chip and page) opens the Forecast with By period
   open: the chip on the map, the page as Home › Growth › Forecast with By period first, above the
   Forecast's figures, under the Forecast's question (navigation phase 6; the map's panel keeps its order). The page
   lost the ledger's own four figures (its answer keeps three of them) and its inline developments
@@ -1780,7 +1782,7 @@ Old names still land (`js/analysis-tabs.js` `SUB_MAP`, `FOLD_OF`, `openFold`; te
 | `data-at="growth:ledger"`, `openTab('growth', 'ledger')`, `showFootTab('growth', 'ledger')` | Growth › Forecast, By period open (`setSub('growth', 'ledger')`: the Forecast, the fold as it is) |
 | A stored Ledger pick (`gSub=ledger`) | The Forecast (never Pipeline) |
 | The `coming` chip (`#w=coming`) | Growth › Forecast, By period open (`WS` `fold: 'period'`) |
-| The What's coming page (`#w=p:coming`, the sidebar, a stored `lastWs=coming`) | Home › Growth › Forecast, By period first and open (navigation phase 6; was the Forecast page under *What is coming, where, when and how sure?*; the page id is kept until the sidebar entry goes) |
+| The What's coming page (`#w=p:coming`, the sidebar's entry until phase 7, the analyst's shortcut, a stored `lastWs=coming`) | Home › Growth › Forecast, By period first and open (navigation phase 6; was the Forecast page under *What is coming, where, when and how sure?*; the page id is kept as an alias now that the sidebar entry has gone, navigation phase 7) |
 | The ledger's stored settings (`ledgerCut`, `ledgerMeasure`, `ledgerHideLapsed`, `ledgerSort`) | Unchanged |
 | Settings › Usage counts `sub:growth.ledger` | Shown and exported as `sub:growth.timing` (`aliasKey`, through `migrateSub`); the counts kept are not rewritten |
 
@@ -2025,8 +2027,8 @@ at its tab and view; the System as it is); before the 6c review only the top bar
 opened the map at the lens it had.
 
 - **The old pages are views of Home.** Growth in an area, the Forecast, What's coming, Servicing capacity,
-  Capital (DC timing, EAs), Data sources (and Old pipes since 6c, below) keep their page ids (links, sidebar
-  entries, buttons, the start screen's last workspace): each opens Home at its tab and view (`js/workspaces.js`
+  Capital (DC timing, EAs), Data sources (and Old pipes since 6c, below) keep their page ids (links, the role
+  shortcuts (sidebar entries until phase 7), buttons, the start screen's last workspace): each opens Home at its tab and view (`js/workspaces.js`
   `HOST`, `hostOf`), its fold open (What's coming: By period; EAs: EA to construction), and Home is lit in the
   sidebar. A view picked on the strip that is one of them (Growth › Forecast, Capital › EAs, Servicing › Old
   pipes) is the start screen's last workspace, as
@@ -2079,24 +2081,24 @@ opened the map at the lens it had.
   in; their buttons are 44 px; Home's strip sits above its groups; nothing scrolls the page sideways (a table
   wider than the phone, Growth › Pipeline's *By dwelling type and stage*, scrolls inside itself, `.dt-wide`,
   on Home as on the map). A place four levels deep scrolls sideways in the trail's own box, scrolled to its
-  end, so the place is whole beside the filters button. Above the answer a phone has four navigation rows
-  until phase 7 (Home's ☰ *all pages*, the header, the strip, the views row): the design's three come when
-  ☰ moves into the top bar (§3.8).
+  end, so the place is whole beside the filters button. Above the answer a phone had four navigation rows
+  until phase 7 (Home's ☰ *all pages*, the header, the strip, the views row); since ☰ is in the top bar
+  (navigation phase 7, §3.8) it has the design's three.
 
 Old names still land (`js/workspaces.js` `HOST`, `hostOf`; `js/share.js`; tests/nav-aliases.test.js
 "phase 6a"):
 
 | Old | Where it opens now |
 |---|---|
-| `#w=p:tight`, the sidebar's Servicing capacity, `lastWs=tight`, Help's role buttons | Home › Servicing › Capacity |
+| `#w=p:tight`, the sidebar's Servicing capacity and Help's role buttons (the role shortcuts since phase 7), `lastWs=tight` | Home › Servicing › Capacity |
 | `#w=p:growth` | Home › Growth › Areas, at the plan filter's level |
 | `#w=p:outlook` | Home › Growth › Forecast |
-| `#w=p:coming`, the sidebar's What's coming | Home › Growth › Forecast, By period first and open |
-| `#w=p:projects`, `#w=p:capital`, the sidebar's Capital | Home › Capital › DC timing (an open project stays in place) |
+| `#w=p:coming`, the sidebar's What's coming (the analyst's shortcut since phase 7) | Home › Growth › Forecast, By period first and open |
+| `#w=p:projects`, `#w=p:capital`, the sidebar's Capital (the capital role's shortcut since phase 7) | Home › Capital › DC timing (an open project stays in place) |
 | `#w=p:eaflow` | Home › Capital › EAs, EA to construction open |
-| `#w=p:data`, Help's bar's Data sources | Home › Records › Sources |
-| Help's bar's Data checks | Home › Records › Data checks |
-| `#w=p:explore` | The open site, else the last Explore view (an area's: Home's tab), else Home › Growth › Areas |
+| `#w=p:data`, Help's bar's Data sources (Help › Start here's *Records › Sources* since phase 7) | Home › Records › Sources |
+| Help's bar's Data checks (Help › Start here's *Records › Data checks* and the QA/QC role's since phase 7) | Home › Records › Data checks |
+| `#w=p:explore` | The open site, else Find (navigation phase 7; in 6a the last Explore view, an area's Home's tab, else Home › Growth › Areas) |
 | `#w=home&t=<x>`, `#w=home&nav=2&t=<x>` (Home links made before phase 6) | Home at Overview |
 | `#w=p:<area page>&t=<x>`, `#w=p:data&nav=2&t=<x>` | That page's own tab and view (`#w=p:data&t=overview`: Records › Sources) |
 | `#w=home&nav=3&t=…&gs=/svs=/dcs=/rs=` (new links) | Home at that tab and view |
@@ -2180,7 +2182,7 @@ Navigation phase 6c (§3.4 "WS BAR ← Page · search · Full map", §5 rows 2, 
   Study area (one row less above the answer on a phone): see *Explore* above. The two Find steps link to each
   other's list in their step line (`js/ws-pages.js` `find`), so Review an FSR's *Files with an FSR posted*, the
   FSR reviewer's start, stays one click from Check a site's, and back; Help › Start here's role buttons open
-  both.
+  both. (Since navigation phase 7 the menu's Find lists both, and Review an FSR's step line links back to Find.)
 - **A workspace's map view is the map with only its layers**, the panel at its tab and view, and over the map
   **← Page · the search · Full map** (its *← Page*: "Back to the page, at the same tab and view"). The twelve task
   chips under the search and every panel's source line ("Servicing capacity · from Servicing › Capacity",
@@ -2213,7 +2215,7 @@ Navigation phase 6c (§3.4 "WS BAR ← Page · search · Full map", §5 rows 2, 
   (`syncPipes`, run on every tab or view shown; drawn once per list), and stay around a run picked from it (its
   pipe's result on Overview) and after that closes, until another tab or view is shown. It was a page of its own (Asset
   Management) whose map view put its own panel over Servicing › Network (the `pipesSpec` override, gone); the
-  sidebar's Old pipes, Help's role buttons and old links open Home › Servicing › Old pipes. It is Peel's sewers,
+  sidebar's Old pipes and Help's role buttons (the capital role's shortcut since phase 7) and old links open Home › Servicing › Old pipes. It is Peel's sewers,
   so below Peel it says Peel-wide, as Servicing's other views do. Phone: three chips in the row; the grid fits the
   sheet, scrolling inside its own box if it must.
 
@@ -2225,17 +2227,111 @@ tests/nav-aliases.test.js "phase 6c"):
 | `#w=<id>` (all twelve: `site`, `tight`, `growth`, `fsr`, `outlook`, `study`, `projects`, `eaflow`, `outlets`, `pipes`, `coming`, `week`) | Its map view at its tab and view, with its layer preset, without a chip row |
 | Explore's views bar's buttons | Home's Growth tab, the search, Draw an area, a site's *Check FSR*; the Find steps' links |
 | `#w=week` | The map view at Overview, the one This week spec in its panel |
-| `#w=p:pipes`, `data-ws-page="pipes"` (the sidebar's Old pipes, Help's role buttons), a stored last workspace `pipes`; a link copied on the Old pipes page in 6a or 6b (`w=p:pipes&nav=3&t=svc&svs=network`: the map's tab behind the page, whatever tab it names) | Home › Servicing › Old pipes (`HOST.pipes`; the id stays the last workspace, a strip pick of Old pipes stores it; `js/share.js` reads that nav=3 link as an older page link) |
+| `#w=p:pipes`, `data-ws-page="pipes"` (the sidebar's Old pipes and Help's role buttons; the capital role's shortcut since phase 7), a stored last workspace `pipes`; a link copied on the Old pipes page in 6a or 6b (`w=p:pipes&nav=3&t=svc&svs=network`: the map's tab behind the page, whatever tab it names) | Home › Servicing › Old pipes (`HOST.pipes`; the id stays the last workspace, a strip pick of Old pipes stores it; `js/share.js` reads that nav=3 link as an older page link) |
 | `#w=pipes`; a link made in its map view before 6c (`w=pipes&t=svc&svs=network`: its panel sat on Network) | The map view at Servicing › Old pipes, its amber pipes on (`js/share.js` reads that link's Network as Old pipes) |
 | `t=svc&svs=pipes` (new), a stored `svcSub: 'pipes'` | Servicing › Old pipes; at a development Network, Old pipes again at an area |
 | The `pipesSpec` override on Servicing › Network, the layer tied to the Old pipes map view | Gone (Servicing › Old pipes' own panel; `syncPipes`) |
 | `viewsHTML`, `m.views`, `.page-views`, `renderChips`, `#ws-chips`, `.ws-chip`, `srcLine`, `sourceText`, `plan().source`, `.pnl-src`, workspaces.js's `weekSpec` | Gone (no producer left) |
 
-## Reference and This week
+## Home's sidebar, Help and Settings (navigation phase 7)
 
-- **Reference** is one sidebar entry: **Help**, **How it works** (and each guide), the **Glossary**,
-  **Data sources** and **Data checks**. The last two are Home's Records tab, Records › Sources and
-  Records › Data checks (the old Data tab; navigation phase 6): Help's bar links there.
+Navigation phase 7 (docs/architecture-review/navigation-design.md §3.2, §3.3, §3.7, §3.8, §3.9, §5 rows 3–14,
+40–43, 53, 157–158, 161–171; owner decisions 5, 6 and 17; pros-and-cons N-1, N-9, N-10, NP-7, P4-10, AD-5, AD-17).
+
+- **Home's sidebar is five entries**: **Home** · **This week** [N] · **Find** · **Help** · **Full map**
+  (`js/workspaces.js` `SIDEBAR`, each with §3.2's line: This week's *What changed, and your watch list*). Home is lit on every tab of Home, Find on the Find steps, a site's page and
+  Study area, Help on every Help page (a guide's too), This week on This week, a Labs page's own entry while its
+  switch is on; nothing on Review outlets (a tool page). The team headings (Planning, Capital, QA/QC, Asset
+  Management, Reference) and the entries Explore, Servicing capacity, What's coming, Capital, Review outlets,
+  Old pipes and Reference are gone; their ids stay valid (`GROUPS`, `EXPLORE`, `CAPITAL` and `SIDE` are kept as
+  alias data) and land where they went: Servicing › Capacity, Growth › Forecast at By period, Capital › DC
+  timing, Servicing › Old pipes (Home's tabs), Find, Review outlets (from Records › Data checks, a
+  development's path line and the QA/QC role) and Help.
+- **For your role**, under Full map once a role is picked: *For your role · <role> (change)* and up to three
+  shortcuts, from **one list of six roles** (`ROLES`, owner decision 6: Infrastructure planner or engineer,
+  Manager or director, Growth or policy analyst, Capital or asset management, FSR reviewer, and QA/QC). A
+  shortcut is a page id (an old page name, through the alias layer), a view of Home (`data-ws-page="home"
+  data-ws-at="<tab:sub>"`, `openPage(id, { at })`: not the strip's `data-pg-tab`, which at a site would open the
+  development's tab) or a button's own (the Briefing PDF, Draw an area, DC projects late). The FSR reviewer's
+  *Find › Files with an FSR posted* is Review an FSR's Find step, its files first, with an open development closed
+  as Find closes it (`fresh: true`, `data-ws-fresh`, `openPage(id, { fresh })`); the page id `fsr` itself (Check
+  FSR, a link with `d=`) keeps the development, at Servicing › FSR review. With no role, one
+  line: *Pick your role for shortcuts →* (Help › Start here). The role is picked on the first-run tour (six
+  buttons), Help › Start here (*This is my role*) or Settings › Your role; it is stored as the role's key
+  (`role`; the tour's five keys kept, `qa` new), never free text.
+- **☰ in the top bar on a phone** (≤ 700 px, on a page): `#tb-nav`, beside Home, opens the same list at the
+  top of the page (aria-expanded follows it); the in-page *☰ … · all pages* row is gone, so a phone has three
+  navigation rows above the answer (the header, the strip, the views row); the menu's entries and shortcuts, Help's
+  role buttons and its questions wrap, so nothing scrolls the page sideways at 390 px. Not on the full map or a map view:
+  the map's top bar is full, and Home there is one tap from the list (a departure from §3.3's "pages and map",
+  for phase 9 or the owner to revisit).
+- **Find** (`find`, an alias of the `site` page's Find step; an open development closes first, as Home closes
+  it; `#w=p:find&d=…` opens that development's page) lists **Recently active**, **Large files under review** and
+  **Files with an FSR posted** (a row opens Servicing › FSR review; every development's FSR looked up once per load
+  of the developments and of `data/fsr.json`, not on each redraw). `explore` opens the open site, else Find.
+- **Last place** (owner decision 17, AD-17): Settings › Start screen is **Home · Last place · Full map** (the
+  select under the sidebar went). Last place reopens the page last shown (Home or a workspace page: never Help,
+  a guide or a Labs page), its tab and view, its place filter (a municipality, or one plan) and its
+  development (`lastPlace = { page, view, d, mu, sp }`, stored only when it changes and never while a restore
+  is pending; `lastPlaceOf` validates it). The restore waits for the developments (and the areas for a plan,
+  20 s at most) and draws the page at once; a development that no longer resolves opens the page without it
+  (a site's page: its Find step), a plan that has gone its municipality. A browser with no `lastPlace` yet opens
+  its last workspace (`lastWs`) as *Last workspace* did, which is still written. Servicing and Capital say
+  "loading" until their data lands, as from any link.
+- **Help is four sections** (`js/sections.js` `WORKSPACES.reference`): **Start here** · **How it works** ·
+  **Glossary** · **How the app decides**; every eyebrow says *Help*. Start here: the six roles, each with its
+  shortcuts and *This is my role*; *Data sources and checks are Home's Records tab* (Records › Sources ·
+  Records › Data checks); **What each tab answers**, one row per view of Home with the question Home heads it
+  with (`PeelSections.ASK`, keyed as `VIEWS.area`: one registry, a test holds the two key lists equal), then *A
+  development's page (Find)*; task guides, tours, What's new (the change log), What moved where and quick
+  tips. Data sources and Data checks left Help's bar (Home's Records tab since phase 6; `#w=p:data` still opens
+  Records › Sources).
+- **The Glossary opens with the Definitions** (`PeelInfo.INFO.definitions`, one text; the Overview's ⓘ card
+  stays). **How the app decides** gains the **Number conventions** (`#lg-numbers`, was a Settings section).
+- **⚙ opens one Settings sheet** (`#tb-gear-menu`, `role="dialog"`, under the top bar's end, outside the ⋯ list):
+  **Display · Start screen · Your role · Reports** (Public version, Prepared by) **· Labs · Usage**
+  (`js/growth-ui.js` `settingsPageHTML`; `js/topbar.js` `toggleSettings`). The Settings · Labs · Change log menu
+  is gone (the change log is Help › What's new), and so are the Counting and Records pointer stubs (counting
+  is the Scenario control's; record type Find › What). The focus goes into the sheet as it opens and back to ⚙
+  on Escape (to ⋯ when ⚙ is folded in it); on a phone opening or closing it folds ⋯, ⋯ opening closes it (never
+  one over the other), and it spans the top bar with a small margin each side (`--space-2`), scrolling inside
+  itself to the screen's foot. `openGearPage('labs')`, the old Labs page, opens the sheet at its Labs.
+- **Usage records the role and the searches** (NP-7, P4-10 with change): one `role:<key>` count per visit (a
+  `ROLES` key or `none`), and one `search:<kind>` count per search pick, by what it found (`dev`, `file`,
+  `plan`, `mtsa`, `svc`, `dc`, `dcfac`, `filter`, `place`, `address`; `bump` takes no other name), never the
+  text. A role shortcut or a Help row into a view of Home counts the view (`sub:records.checks`), as the
+  strip's chips do. No page id, tab key or count was renamed; `page:find` is new.
+- **Home's words**: the group links and the figures say where they go as tabs, *Growth › Areas →*,
+  *Servicing › Capacity →*, *Capital › DC timing →*; the small map *Servicing › Capacity →*.
+
+Old names still land (`js/workspaces.js` `PAGE_ALIAS`, `HOST`, `startScreen`; tests/nav-aliases.test.js "phase 7"):
+
+| Old | Where it opens now |
+|---|---|
+| The sidebar's Explore, `data-ws-page="explore"`, `#w=p:explore` | The open site's page, else Find |
+| `find`, `#w=p:find` (new) | The Find step (an open development closes first); `#w=p:find&d=…` its development's page |
+| The sidebar's Servicing capacity, What's coming, Capital, Old pipes (`tight`, `coming`, `capital`, `pipes`) | Home › Servicing › Capacity, Growth › Forecast (By period open), Capital › DC timing, Servicing › Old pipes (unchanged); the role shortcuts |
+| The sidebar's Review outlets (`outlets`) | The tool page (unchanged): Records › Data checks' row, a site's path line, the QA/QC shortcut |
+| The sidebar's Reference (`reference`) | Help (unchanged) |
+| Help › Start here's role buttons (four roles), the tour's five | The six roles' shortcuts (page ids through the same aliases, or `data-ws-at`) |
+| A stored `role` (`engineer`, `manager`, `growth`, `capital`, `fsr`) | The same role (`qa` new) |
+| A stored `startScreen: 'last'` (*Last workspace*) | Last place (the stored value unchanged) |
+| A stored `lastWs` with no `lastPlace` | That page, as Last workspace opened it |
+| The Start screen select under the sidebar (`data-ws-start`), the phone's ☰ row (`.home-menu-btn`) | Gone: Settings › Start screen (`data-ws-start-btn`); ☰ in the top bar (`#tb-nav`, `data-home-menu`) |
+| Help's bar's Data sources / Data checks | Start here's *Records › Sources* / *Records › Data checks* (`data-ws-at`), the QA/QC shortcuts |
+| Help › What each workspace answers (`ASKS`), `TOUR_ROLES`, tips.js `ROLES` | What each tab answers (`PeelSections.ASK`); `PeelWorkspaces.ROLES` |
+| ⚙ menu Settings · Labs · Change log (`data-tbg`, `renderGearMenu`) | ⚙ opens the Settings sheet; Labs its section; Help › What's new |
+| Settings › Counting, Settings › Records (pointers); Settings › Number conventions | Gone (the Scenario control; Find › What); How the app decides (`#lg-numbers`), Public version and Prepared by Settings › Reports |
+| Usage `page:explore`, `page:tight`, … | Unchanged (kept as counted); new `page:find`, `role:<key>`, `search:<kind>` |
+
+No page id, tab key, share parameter or pane id is renamed or moved: every §7 link holds.
+
+## Help and This week
+
+- **Help** is one sidebar entry, four sections: **Start here**, **How it works** (and each guide), the
+  **Glossary** and **How the app decides** (navigation phase 7, above). Data sources and Data checks are
+  Home's Records tab, Records › Sources and Records › Data checks (the old Data tab; navigation phase 6):
+  Help › Start here and the QA/QC role link there.
 - **This week** carries **Your watch list** (the developments starred ☆ Watch, each with its stage
   and whether it changed this week, changed ones first) and the week's **capacity alerts** from the
   weekly feed, both of which were only in the full map's Watch tab. One spec draws it, on its page, in its
@@ -2246,8 +2342,9 @@ tests/nav-aliases.test.js "phase 6c"):
 
 - **Home is the page host** (navigation phase 6): under its header the map's five tabs, Overview ·
   Growth · Servicing · Capital · Records, and the open tab's views; the briefing below is its Overview.
-  The sidebar's Servicing capacity, What's coming and Capital open a tab of it, and Home stays lit. See
-  *Home hosts the map's tabs*.
+  The old page ids (`tight`, `coming`, `projects`), the role shortcuts and its groups' links (*Growth › Areas
+  →*, *Servicing › Capacity →*, *Capital › DC timing →*) open a tab of it, and Home stays lit. See *Home hosts
+  the map's tabs*.
 - **The scope first**: Peel, Mississauga, Brampton or Caledon (the map's municipality filter). Every
   figure follows it; one that is Region-wide (capacity, the DC program) says so.
 - **Four groups of figures**, each the answer of its page and opening it: **Growth** (homes planned,
@@ -2265,10 +2362,9 @@ tests/nav-aliases.test.js "phase 6c"):
   A Needs attention row opens its plant, station or water system as a scope on Servicing capacity's
   map; a row with no scope (storage, pumping into a zone) and *See all* open Home › Servicing ›
   Capacity.
-- Home's sidebar has nine entries: Home and This week, then by team Explore, Servicing capacity and
-  What's coming (Planning), Capital, Review outlets (QA/QC), Old pipes (Asset Management) and
-  Reference, then Full map; What's coming opens Growth › Forecast on Home, By period first and open, and
-  Old pipes Servicing › Old pipes (navigation phase 6c).
+- Home's sidebar has five entries, Home · This week · Find · Help · Full map, then *For your role* (up to
+  three shortcuts) and Labs while one is on; on a phone ☰ in the top bar opens it (navigation phase 7: *Home's
+  sidebar, Help and Settings* above). It had nine, by team, until then.
 
 ## Build-out: planned vs permitted vs left to build
 
@@ -2617,7 +2713,7 @@ the CSVs:
 the same number shows one number (no "65,100–65,100"). The funding screen's within / outside
 colours are neutral (accent / grey): they are not capacity states.
 
-**Public version** (Settings › Number conventions › *Public version*, or add `?public` to the
+**Public version** (Settings › Reports › *Public version*, or add `?public` to the
 link): hides the DC *Funding screen* and *Funding levels* sub-views (DC opens on Timing), the
 screening-result column in the DC timing table and its CSV, and turns the red / amber / green of
 the screening summary to plain text. Everything else is unchanged.
@@ -2694,7 +2790,8 @@ Every row carries a pre-filled call and the reason for it.
 ## Definitions (one table, used everywhere)
 
 The Overview, Growth, the header, Water, Wastewater, DC, every export and the executive briefing use
-these definitions. In the app they're in the **Definitions** card (Overview ⓘ line).
+these definitions. In the app they're in the **Definitions** card (Overview ⓘ line) and at the top of the
+Glossary (navigation phase 7).
 
 | Term | Definition |
 |---|---|
@@ -2831,13 +2928,14 @@ and small phases were cut off ("pprove", "Inde truc").
 - The phase colours had stopped showing since the module split: two modules read the colours
   once at load, before they were set. They now read them each time they draw.
 
-## Settings menu opens
+## Settings: one sheet
 
 The gear menu's *Settings* and *Sources & checks* pages (the second retired in navigation phase 2)
-closed the moment they opened. The page replaces the menu item that was clicked, so the
+closed the moment they opened. The page replaced the menu item that was clicked, so the
 outside-click check no longer found the menu and closed it. That check now reads the click's path as dispatched. The top bar also sits above
 the map controls and the phone sheet, so its menus open on top, and long pages scroll inside
-the menu.
+the menu. Since navigation phase 7 ⚙ opens Settings directly, one sheet (no menu), outside the ⋯ list:
+the outside-click check spares the sheet by its id, ⚙'s own click does not reach it, and Escape closes it.
 
 ## Opening a development doesn't trace or zoom out
 

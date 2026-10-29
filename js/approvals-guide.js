@@ -1,6 +1,6 @@
 /* How approvals work (PeelApprovalsGuide): an Ontario development as a tree, laid against the app's
  * five stages — what each step is, which stage it puts the site in, and where the app simplifies.
- * A page in Home's layout (js/ws-pages.js 'approvals'), opened from Home's sidebar (Reference), the
+ * A page in Home's layout (js/ws-pages.js 'approvals'), opened from Help › How it works (Home's menu: Help), the
  * sidebar's Stage block, a site's "How the stage was set" and Records › Files.
  *
  * Pure: html() builds the page's middle section from the stage tokens (theme-aware); the rules it
@@ -82,7 +82,7 @@
   // The page (js/ws-pages.js pageHTML): the question, the answer, the diagram.
   function page() {
     return {
-      id: 'approvals', eyebrow: 'Reference', name: 'How does a development get approved?',
+      id: 'approvals', eyebrow: 'Help', name: 'How does a development get approved?',
       answer: 'A proposal starts as a <strong>pre-consultation</strong>, is filed as an <strong>official plan and zoning amendment</strong> (often with a draft plan of subdivision), then gets <strong>draft plan</strong> or <strong>site plan</strong> approval, <strong>building permits</strong> and <strong>occupancy</strong>. Each file sits on the land of the one before it; the app reads them as one tree and gives the site the furthest stage its live files have reached.',
       mid: html(),
       actions: [{ label: 'Full map', attrs: { 'data-ws-full': '' }, primary: true }],

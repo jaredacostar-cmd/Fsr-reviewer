@@ -53,7 +53,9 @@
   <div class="app">
     <header class="topbar" id="topbar">
       <span class="tb-wordmark">Peel Growth Pipeline</span>
-      <button type="button" class="btn small tb-btn tb-home" id="tb-home" data-ws-home title="Home: the briefing and the workspaces">Home</button>
+      <button type="button" class="btn small tb-btn tb-home" id="tb-home" data-ws-home title="Home: what needs attention, and the map’s five tabs">Home</button>
+      <!-- (a phone, on a page: Home's menu behind ☰, beside Home; js/workspaces.js sideHTML, #home-side) -->
+      <button type="button" class="btn small tb-btn tb-nav" id="tb-nav" data-home-menu aria-expanded="false" aria-controls="home-side" aria-label="Pages: Home, This week, Find, Help and the full map" title="Pages">☰</button>
       <nav class="tb-trail" id="trail" aria-label="Scope"></nav>
       <!-- (the trail's "k filters" popover: js/topbar.js renderTrail; under the top bar, out of the trail's clip) -->
       <div class="tb-pop tb-fl-pop" id="tb-fl-pop" hidden></div>
@@ -80,12 +82,12 @@
           </div>
         </div>
         <button type="button" class="btn small tb-btn" id="tb-help" data-help-open title="Guides for common tasks and a quick tour">Help<span class="log-dot" hidden aria-label="new changes"></span></button>
-        <div class="tb-wrap">
-          <button type="button" class="btn small tb-btn tb-icon" id="tb-gear" aria-haspopup="menu" aria-expanded="false" aria-label="Settings menu" title="Settings"></button>
-          <div class="tb-menu" id="tb-gear-menu" role="menu" hidden></div>
-        </div>
+        <button type="button" class="btn small tb-btn tb-icon" id="tb-gear" aria-haspopup="dialog" aria-expanded="false" aria-controls="tb-gear-menu" aria-label="Settings" title="Settings"></button>
         </div>
       </div>
+      <!-- (⚙'s Settings sheet: one dialog under the top bar's end, outside the ⋯ list so it shows on a phone as ⋯ folds;
+           js/topbar.js toggleSettings, its content js/growth-ui.js settingsPageHTML) -->
+      <div class="tb-menu tb-sheet" id="tb-gear-menu" role="dialog" aria-label="Settings" hidden></div>
     </header>
     <aside class="sidebar" id="sidebar">
       <nav class="tabs" role="tablist" aria-label="Sidebar">

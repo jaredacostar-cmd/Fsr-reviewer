@@ -15,7 +15,7 @@
   const AT = () => root.PeelAnalysisTabs;
   window.GearPages = window.GearPages || {};
   window.GearPages.settings = () => GU().settingsPageHTML();
-  // ---- Display: theme + density (Settings gear page) ----------------------------------
+  // ---- Display: theme + density (⚙'s Settings sheet) ---------------------------------
   function setTheme(v) {
     if (!['dark', 'light', 'device'].includes(v)) v = 'dark';
     store.set('theme', v);

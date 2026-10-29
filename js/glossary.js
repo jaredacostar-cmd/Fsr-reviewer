@@ -1,7 +1,7 @@
 /* The glossary (PeelGlossary): the engineering and planning terms the panels use, each with a plain
  * definition. mark(html) underlines the first use of each term in a panel's answer and figures (and a
  * page's answer); a hover, focus or tap shows the definition, and "All terms" opens the Glossary page
- * (Home › Reference). Bundle 5 (plain language).
+ * (Help › Glossary, which opens with the Definitions). Bundle 5 (plain language).
  *
  * Pure: TERMS, mark() and page() run in Node (tests/plain-language.test.js); the pop-up is browser only.
  */
@@ -71,12 +71,14 @@
     }).join('');
   }
 
-  // The Glossary page (js/ws-pages.js pageHTML), in Home's layout.
+  // The Glossary page (js/ws-pages.js pageHTML), in Home's layout: Help's, opening with the Definitions (one text, the
+  // Overview's ⓘ card's: js/info.js INFO.definitions).
   function page() {
-    const groups = [...new Set(TERMS.map(t => t[4]))];
-    const mid = `<section class="gl-page" data-psec="glossary">${groups.map(g => `<h3 class="ws-h">${esc(g)}</h3><dl class="gl-list">${TERMS.filter(t => t[4] === g).map(([k, name, , def]) => `<div id="gl-${k}"><dt>${esc(name)}</dt><dd>${esc(def)}</dd></div>`).join('')}</dl>`).join('')}</section>`;
+    const groups = [...new Set(TERMS.map(t => t[4]))], D = root.PeelInfo && root.PeelInfo.INFO && root.PeelInfo.INFO.definitions;
+    const defs = D ? `<section class="gl-defs" data-psec="definitions" id="gl-definitions"><h3 class="ws-h">Definitions (used everywhere)</h3><p class="small">${esc(D.body)}</p></section>` : '';
+    const mid = `${defs}<section class="gl-page" data-psec="glossary">${groups.map(g => `<h3 class="ws-h">${esc(g)}</h3><dl class="gl-list">${TERMS.filter(t => t[4] === g).map(([k, name, , def]) => `<div id="gl-${k}"><dt>${esc(name)}</dt><dd>${esc(def)}</dd></div>`).join('')}</dl>`).join('')}</section>`;
     return {
-      id: 'glossary', eyebrow: 'Reference', name: 'What do the terms mean?',
+      id: 'glossary', eyebrow: 'Help', name: 'What do the terms mean?',
       answer: 'The words the panels use for capacity, flows, the system and planning, in plain language. In a panel, a <span class="gl-eg">dotted underline</span> marks a term: point at it or tap it for its meaning.',
       mid, actions: [{ label: 'Full map', attrs: { 'data-ws-full': '' }, primary: true }],
     };

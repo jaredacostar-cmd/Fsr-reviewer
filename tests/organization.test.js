@@ -78,13 +78,18 @@ test('the holding (H) symbol: an application to lift it is flagged on the site (
   assert.match(src('js/dev-detail.js'), /`Holding \(H\): removal in review \(\$\{esc\(p\.holding\.refs\[0\] \|\| 'file'\)\}\)`/);
 });
 
-test('Help is a page in Home’s layout: start here by role, what each workspace answers, guides, tour, change log, glossary', () => {
+test('Help is a page in Home’s layout: start here by role, what each tab answers, guides, tour, change log, glossary', () => {
   const s = src('js/tips.js');
-  assert.match(s, /return \{ id: 'help', eyebrow: 'Reference', name: 'How do I use this\?'/);
-  for (const h of ['Start here', 'What each workspace answers', 'Task guides', 'More help', 'Quick tips']) assert.ok(s.includes(`<h3 class="ws-h">${h}</h3>`), h);
+  assert.match(s, /return \{ id: 'help', eyebrow: 'Help', name: 'How do I use this\?'/);
+  for (const h of ['Start here', 'What each tab answers', 'Task guides', 'More help', 'Quick tips']) assert.ok(s.includes(`<h3 class="ws-h">${h}</h3>`), h);
   assert.match(s, /<div id="help-log-body" aria-live="polite"><\/div>/, 'the change log renders on the page');
   assert.match(s, /data-ws-page="glossary">Glossary<\/button>/);
-  assert.match(s, /\['Infrastructure planner or engineer', 'Screen an application, an FSR or a pre-consultation\.', \['site', 'fsr', 'tight'\]\]/);
+  // (the roles by start here: Help's own list of four, removed by design (§5 row 157: one ROLES list), is the one list's
+  // six, each picked here)
+  const hp = s.slice(s.indexOf('  function helpPage() {'), s.indexOf('  // The Help button, the tour'));
+  assert.match(hp, /roles\(\)\.map\(r => /); assert.match(s, /const roles = \(\) => \(root\.PeelWorkspaces && root\.PeelWorkspaces\.ROLES\) \|\| \[\];/);
+  assert.match(hp, /data-role-pick="\$\{esc\(r\.key\)\}"/);
+  assert.doesNotMatch(s, /\bconst (ROLES|ASKS) = /);
   assert.match(src('js/workspaces.js'), /const REF = \{ help: \{ label: 'Help', what: 'Start here, guides, the tour, what’s new' \}/);
   assert.match(src('js/ws-pages.js'), /const help = \(\) => \(root\.PeelTips && root\.PeelTips\.helpPage \? root\.PeelTips\.helpPage\(\) : loading\('help', 'Loading…'\)\);/);
 });
@@ -101,10 +106,12 @@ test('counting in one place: the Scenario control names Units per development (t
   assert.doesNotMatch(src('js/tree-counts.js'), /id="count-mode"|function setMode\(|function settingsHTML\(/);
   assert.doesNotMatch(src('js/settings.js'), /count-mode/);
   assert.ok(B.scenarioSettings(base).some(r => r.key === 'countMode' && r.value === 'tree count' && r.def), 'Units per development: tree count, the default');
-  // Settings: Display → Start screen → Counting (a pointer to the Scenario control) → Usage.
+  // Settings: Display → Start screen → Your role → Reports → Labs → Usage (⚙'s one sheet, navigation phase 7, design
+  // §3.7). The Counting pointer to the Scenario control, removed by design (§5 row 170): counting is the Scenario
+  // control's own (the row above).
   const g = src('js/growth-ui.js');
-  assert.match(g, /<h2 class="pane-h">Settings<\/h2>\$\{displaySettingsHTML\(\)\}\$\{root\.PeelWorkspaces && root\.PeelWorkspaces\.settingsHTML \? root\.PeelWorkspaces\.settingsHTML\(\) : ''\}\$\{counting\}\$\{root\.PeelUsage/);
-  assert.match(g, /is set in the Scenario control, with the other scenario settings\. <button type="button" class="btn small" data-pnl-scen>Open the Scenario control<\/button>/);
+  assert.match(g, /<h2 class="pane-h">Settings<\/h2>\$\{displaySettingsHTML\(\)\}\$\{root\.PeelWorkspaces && root\.PeelWorkspaces\.settingsHTML \? root\.PeelWorkspaces\.settingsHTML\(\) : ''\}\$\{DU\(\)\.reportSettingsHTML\(\)\}\$\{root\.PeelLabs && root\.PeelLabs\.pageHTML \? root\.PeelLabs\.pageHTML\(\) : ''\}\$\{root\.PeelUsage && root\.PeelUsage\.settingsHTML \? root\.PeelUsage\.settingsHTML\(\) : ''\}`;/);
+  assert.doesNotMatch(g, /set-counting|const counting = /);
 });
 
 test('the Data tab folds into Records; Records leaves the gear', () => {
@@ -153,8 +160,60 @@ test('the Layers panel splits the network from the capital program; a map view o
   assert.match(src('css/app.css'), /\.pnl-r-year \{ font-variant-numeric: tabular-nums; font-weight: 600; white-space: nowrap; \}/);
 });
 
-test('Help › What each workspace answers lists every workspace', () => {
-  const t = src('js/tips.js'), W = require('../js/workspaces.js');
-  const ASKS = new Function(`${t.match(/const ASKS = \{[^\n]*\};/)[0]}; return ASKS;`)();
-  for (const w of W.WS) assert.ok(ASKS[w.id], `${w.id} (${w.label}) has no line in Help`);
+// (Help's "What each workspace answers", ASKS, its third copy of the questions, is removed by design, §5 row 158: the
+// table is drawn from Home's views, js/sections.js VIEWS.area, and the question each heads with, ASK)
+test('Help › What each tab answers lists every view of Home, each with its question', () => {
+  const t = src('js/tips.js'), S = require('../js/sections.js');
+  assert.deepEqual(Object.keys(S.ASK), Object.keys(S.VIEWS.area), 'one question per view, none extra');
+  for (const [k, q] of Object.entries(S.ASK)) assert.match(q, /^[A-Z][^?]*\?$/, k);
+  const hp = t.slice(t.indexOf('  function helpPage() {'), t.indexOf('  // The Help button, the tour'));
+  assert.match(hp, /Object\.keys\(\(SE && SE\.VIEWS && SE\.VIEWS\.area\) \|\| \{\}\)\.map\(key => /);
+  assert.match(hp, /<td>\$\{esc\(SE\.ASK\[key\] \|\| ''\)\}<\/td>/);
+  assert.doesNotMatch(t, /const ASKS = /);
+});
+
+// Navigation phase 7 (design §3.7, §5 rows 157, 158, 164–166; N-9 with change): Help is four sections; Start here
+// has the six roles of the one list, each with its shortcuts and "This is my role", and Records' sources and checks
+// (Home's Records tab); What each tab answers is every view of Home; one name, Help.
+function loadTips(stored = {}) {
+  const store = new Map(Object.entries(stored)), W = require('../js/workspaces.js'), SE = require('../js/sections.js'), U = require('../js/util.js');
+  const document = { addEventListener() {}, querySelector: () => null, querySelectorAll: () => [], documentElement: { classList: { contains: () => false } } };
+  const window = { document, PeelUtil: { $: () => null, esc: U.esc, store: { get: (k, d) => (store.has(k) ? store.get(k) : d), set: (k, v) => store.set(k, v) } }, PeelWorkspaces: W, PeelSections: SE };
+  const ctx = { window, document, module: { exports: {} }, setTimeout: () => 0, addEventListener() {}, removeEventListener() {} }; ctx.globalThis = ctx;
+  require('node:vm').runInNewContext(src('js/tips.js'), ctx);
+  return ctx.module.exports;
+}
+test('Help is four sections: Start here has the six roles with their shortcuts and This is my role, and Records’ sources and checks; What each tab answers is every view of Home', () => {
+  const W = require('../js/workspaces.js'), SE = require('../js/sections.js'), U = require('../js/util.js');
+  assert.deepEqual(SE.WORKSPACES.reference.secs.map(s => [s.id, s.title, s.page]), [['help', 'Start here', 'help'], ['guides', 'How it works', 'guides'], ['glossary', 'Glossary', 'glossary'], ['logic', 'How the app decides', 'logic']]);
+  const m = loadTips({ role: 'qa' }).helpPage();
+  assert.equal(m.eyebrow, 'Help');
+  const cards = [...m.mid.matchAll(/<div class="help-role( on)?"><strong>([^<]+)<\/strong><small>[^<]+<\/small><div>([^]*?)<\/div><button type="button" class="btn small link" data-role-pick="(\w+)" aria-pressed="(true|false)">([^<]+)<\/button><\/div>/g)];
+  assert.deepEqual(cards.map(c => c[4]), W.ROLES.map(r => r.key), 'the six, in the one list’s order');
+  for (const [c, r] of cards.map((c, i) => [c, W.ROLES[i]])) {
+    assert.equal(c[2], U.esc(r.label));
+    const btns = [...c[3].matchAll(/<button type="button" class="btn small"([^>]*)>([^<]+)<\/button>/g)];
+    assert.deepEqual(btns.map(b => b[2]), r.links.map(l => U.esc(l.label)), `${r.key}: its shortcuts`);
+    assert.deepEqual(btns.map(b => Object.fromEntries([...b[1].matchAll(/ ([\w-]+)="([^"]*)"/g)].map(x => [x[1], x[2]]))), r.links.map(l => W.roleAttrs(l)), `${r.key}: each opens what the menu’s shortcut does`);
+    assert.deepEqual([!!c[1], c[5], c[6]], r.key === 'qa' ? [true, 'true', 'Your role'] : [false, 'false', 'This is my role'], r.key);
+  }
+  assert.match(m.mid, /Data sources and checks are Home’s Records tab: <button type="button" class="btn small link" data-ws-page="home" data-ws-at="records:sources">Records › Sources<\/button> · <button type="button" class="btn small link" data-ws-page="home" data-ws-at="records:checks">Records › Data checks<\/button>/);
+  // What each tab answers: one row per view of Home, its question; Overview Home itself, the rest at their view.
+  const rows = [...m.mid.matchAll(/<tr><th scope="row"><button type="button" class="btn small link" data-ws-page="home"(?: data-ws-at="([\w:]+)")?>([^<]+)<\/button><\/th><td>([^<]+)<\/td><\/tr>/g)];
+  assert.deepEqual(rows.map(r => r[1] || 'overview:'), Object.keys(SE.VIEWS.area));
+  assert.deepEqual(rows.map(r => r[3]), Object.values(SE.ASK).map(U.esc));
+  assert.deepEqual(rows.slice(0, 3).map(r => r[2]), ['Overview', 'Growth › Pipeline', 'Growth › Areas']);
+  assert.equal(rows.find(r => r[1] === 'records:checks')[2], 'Records › Data checks');
+  assert.match(m.mid, /<tr><th scope="row">A development’s page \(Find\)<\/th><td>The same five tabs, for one development\.<\/td><\/tr><\/tbody><\/table>/);
+  assert.doesNotMatch(m.mid.slice(0, m.mid.indexOf('<h3 class="ws-h">Task guides</h3>')) + m.answer, /workspace/i, 'Start here and the table: the tabs’ and Find’s words, no workspace');
+  assert.deepEqual([...m.mid.matchAll(/<h3 class="ws-h">([^<]+)<\/h3>/g)].map(x => x[1]), ['Start here', 'What each tab answers', 'Task guides', 'More help', 'Quick tips']);
+  // No role picked: no card is marked.
+  assert.doesNotMatch(loadTips().helpPage().mid, /help-role on|aria-pressed="true"/);
+  // One name, Help (§3.9): no eyebrow or link says Reference.
+  for (const f of ['js/tips.js', 'js/reference.js', 'js/glossary.js', 'js/logic.js', 'js/approvals-guide.js']) assert.doesNotMatch(src(f), /eyebrow: 'Reference'|Reference · <button|More reference/, f);
+  // A phone: the cards one column (220 px), their buttons wrapping (a .btn is nowrap).
+  const css = src('css/app.css');
+  assert.match(css, /\.help-roles \{ display: grid; grid-template-columns: repeat\(auto-fit, minmax\(220px, 1fr\)\);/);
+  assert.match(css, /\.help-role \.btn \{ white-space: normal; text-align: left; \}/);
+  assert.match(css, /\.help-role\.on \{ box-shadow: inset 3px 0 0 var\(--accent\); \}/);
 });

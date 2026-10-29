@@ -1,5 +1,5 @@
 /* How the app decides (PeelLogic): the data logic, the gates and the back-end decisions behind the
- * figures, on one Reference page (Home › Reference, beside the Glossary and Data sources). Each rule
+ * figures, on a Help page (Help › How the app decides, beside the Glossary), with the number conventions. Each rule
  * names its value, what it does and where it is set; the values are read from the modules that apply
  * them (js/phases.js, js/demand.js, js/capacity.js, js/dc-gate.js, js/aerial.js, js/accuracy.js,
  * js/dc-cost.js, js/dc-infra.js), so the page cannot drift from the code. The weekly build's own rules
@@ -21,6 +21,9 @@
   // goes under what it does (one row a card on a phone, css/app.css .lg-tab).
   const tableHTML = (rows, label) => `<div class="rf-tw"><table class="rf-tab lg-tab" aria-label="${esc(label)}"><thead><tr><th scope="col">Rule</th><th scope="col">Value</th><th scope="col">What it does</th></tr></thead><tbody>${rows.map(([r, v, w, f]) => `<tr><th scope="row">${esc(r)}</th><td class="lg-v">${v}</td><td>${w}<small class="lg-at">Set in <code>${esc(f)}</code></small></td></tr>`).join('')}</tbody></table></div>`;
   const sec = ([key, title, line, rows]) => `<section class="rf" data-psec="${key}" id="lg-${key}"><h3 class="ws-h">${esc(title)}</h3><p class="small muted">${line}</p>${tableHTML(rows, title)}</section>`;
+  // The number conventions (Settings' until navigation phase 7, design §3.7: documentation is Help's): how people,
+  // jobs, units and flows are rounded and shown, after the groups.
+  const NUMBERS = 'People and jobs are estimates and are rounded the same way everywhere: whole numbers under 1,000, the nearest 10 to 10,000, the nearest 100 above. Units are counted from the applications (not rounded). Flows: L/s for pipes, pumping stations and single developments; ML/d for plants, zones and totals. ≈ marks a screening estimate.';
 
   const mods = () => ({ P: root.PeelPhases, D: root.PeelDemand, C: root.PeelCapacity, G: root.PeelDcGate, A: root.PeelAerial, AC: root.PeelAccuracy, DC: root.PeelDcCost, DI: root.PeelDcInfra });
 
@@ -81,9 +84,9 @@
         ['Starting point by stage', Object.entries(prior).map(([k, v]) => `${esc(lbl(k))} ${pct(v)}`).join(' · ') || '–', 'The prior before the imagery is read: how often a development at that stage is already built.', 'js/aerial.js PRIOR'],
         ['Verdict', rule.threshold != null ? `“${esc(rule.verdict)}” at ${pct(rule.threshold)}+ · mid band from ${pct(rule.midBand)}` : '–', 'The check’s decision rule. Its verdicts are kept for the session only.', 'js/accuracy.js AERIAL_RULE'],
       ]],
-      ['fresh', 'Data freshness', 'Each source has a usual interval (Reference › Data sources lists them).', [
+      ['fresh', 'Data freshness', 'Each source has a usual interval (Records › Sources lists them).', [
         ['Current', 'within its interval', 'Weekly sources (applications, permits, phase history, council items): 10 days. Yearly sources: 365 to 400 days.', 'js/demand-ui.js freshness'],
-        ['Due for a refresh', 'past its interval', 'Shown amber on Data sources.', 'js/demand-ui.js freshness'],
+        ['Due for a refresh', 'past its interval', 'Shown amber on Records › Sources.', 'js/demand-ui.js freshness'],
         ['Out of date', 'more than twice its interval', 'Shown red; reference documents (census, master plan) are marked as such instead.', 'js/demand-ui.js freshness'],
       ]],
     ];
@@ -93,13 +96,14 @@
   function page(m) {
     const gs = groups(m || mods());
     // (buttons, not #anchors: the address's hash holds the share state, js/share.js)
-    const toc = `<nav class="lg-toc" aria-label="On this page"><p class="small">${gs.map(g => `<button type="button" class="btn small link" data-lg-go="${g[0]}">${esc(g[1].split(':')[0])}</button>`).join(' · ')}</p></nav>`;
+    const toc = `<nav class="lg-toc" aria-label="On this page"><p class="small">${gs.map(g => `<button type="button" class="btn small link" data-lg-go="${g[0]}">${esc(g[1].split(':')[0])}</button>`).join(' · ')} · <button type="button" class="btn small link" data-lg-go="numbers">Number conventions</button></p></nav>`;
+    const numbers = `<section class="rf" id="lg-numbers" data-psec="numbers"><h3 class="ws-h">Number conventions</h3><p class="small">${NUMBERS}</p></section>`;
     return {
-      id: 'logic', eyebrow: 'Reference', name: 'How does the app decide?',
+      id: 'logic', eyebrow: 'Help', name: 'How does the app decide?',
       answer: 'The rules behind the figures: how a record gets its stage, which records join into a development, which developments the DC analysis counts, the design criteria, the capacity limit, the forecast and the data checks. Each value is read from the code that applies it.',
-      mid: toc + gs.map(sec).join(''),
+      mid: toc + gs.map(sec).join('') + numbers,
       method: 'Values are read from the app’s own modules when the page opens, so a change in the code changes this page. General screening rules from public data: Peel’s W&amp;WW Infrastructure Planning team must validate or confirm all results.',
-      actions: [{ label: 'Data sources', attrs: { 'data-ws-page': 'data' }, primary: true }, { label: 'Glossary', attrs: { 'data-ws-page': 'glossary' } }],
+      actions: [{ label: 'Records › Sources', attrs: { 'data-ws-page': 'data' }, primary: true }, { label: 'Glossary', attrs: { 'data-ws-page': 'glossary' } }],
     };
   }
 

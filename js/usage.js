@@ -1,9 +1,10 @@
 /* js/usage.js — Stage 5 (pilot support): how often each workspace, tab and sub-view is opened.
  *
  * Local and anonymous: counts per day, kept in this browser only (localStorage), never sent
- * anywhere. Only fixed names are counted (a workspace, a tab, a sub-view, "full map"): no
- * developments, no search text, no addresses, nothing about the person. Settings › Usage shows
- * the counts and exports them as CSV, so the pilot's users can send them in.
+ * anywhere. Only fixed names are counted (a workspace, a tab, a sub-view, "full map", a role key,
+ * the kind of place a search found): no developments, no search text, no addresses, nothing about
+ * the person. Settings › Usage shows the counts and exports them as CSV, so the pilot's users can
+ * send them in.
  *
  * What counts is a person's click (or Enter on a focused control), not the app moving itself:
  *   start  how the app opened: home / ws / full (+ "-link" when it opened from a link)
@@ -11,21 +12,26 @@
  *   full   Full map opened                           tab    an analysis tab picked
  *   sub    a sub-view picked (tab.sub)               side   a sidebar tab picked (Find, Watch)
  *   issue  "Report a data issue" followed (by panel kind)
+ *   role   the role picked (a ROLES key, or none), once per visit (navigation phase 7, NP-7)
+ *   search a search pick, by the kind of place it found (dev, file, plan, …), never its text (P4-10)
  *
  * Pure (Node-testable): bump, rows, toCSV, totals. The rest is guarded browser code.
  */
 (function (root) {
   'use strict';
-  const KINDS = ['start', 'page', 'map', 'full', 'tab', 'sub', 'side', 'issue'];
+  const KINDS = ['start', 'page', 'map', 'full', 'tab', 'sub', 'side', 'issue', 'role', 'search'];
   const ID = /^[a-z0-9.-]{0,32}$/;
   const MAX_DAYS = 400;
   const empty = () => ({ v: 1, since: null, days: {} });
+  // The kinds a search pick counts as (js/search-filter.js goSug): a search counts only these, never its text.
+  const SEARCH = { dev: 'a development', file: 'a file number', plan: 'a plan', mtsa: 'an MTSA', svc: 'a facility', dc: 'a DC project', dcfac: 'a DC facility', filter: 'a filter', place: 'a place', address: 'an address' };
 
   // Add one to kind:id on day (YYYY-MM-DD). Anything outside the fixed names is ignored.
   function bump(data, kind, id, day) {
     const d = data && data.v === 1 && data.days ? data : empty();
     const i = String(id == null ? '' : id).toLowerCase();
     if (!KINDS.includes(kind) || !ID.test(i) || !/^\d{4}-\d{2}-\d{2}$/.test(day || '')) return d;
+    if (kind === 'search' && !Object.prototype.hasOwnProperty.call(SEARCH, i)) return d;
     const k = i ? `${kind}:${i}` : kind;
     const row = d.days[day] || (d.days[day] = {});
     row[k] = (row[k] || 0) + 1;
@@ -63,7 +69,7 @@
     return `${lines.join('\n')}\n`;
   }
 
-  const api = { KINDS, MAX_DAYS, bump, rows, totals, toCSV };
+  const api = { KINDS, SEARCH, MAX_DAYS, bump, rows, totals, toCSV };
   if (typeof module !== 'undefined' && module.exports) { module.exports = api; return; }
   root.PeelUsage = api;
   if (typeof document === 'undefined') return;
@@ -89,6 +95,10 @@
     for (const w of (W && W.WS) || []) { L[`page:${w.id}`] = `${w.label} (page)`; L[`map:${w.id}`] = `${w.label} (map view)`; }
     for (const [k, t] of Object.entries(TABS)) { L[`tab:${k}`] = t; L[`side:${k}`] = `${t} (sidebar)`; L[`issue:${k}`] = `Report a data issue (${t})`; }
     L['issue:page'] = 'Report a data issue (a page)';
+    // (navigation phase 7: Find and Help are Home's sidebar entries, not workspaces; the roles by their own label)
+    L['page:find'] = 'Find (page)'; L['page:help'] = 'Help (page)'; L['role:none'] = 'Role: none picked';
+    for (const r of (W && W.ROLES) || []) L[`role:${r.key}`] = `Role: ${r.label}`;
+    for (const [k, t] of Object.entries(SEARCH)) L[`search:${k}`] = `Search: ${t}`;
     for (const [attr, tab] of Object.entries(SUB_ATTR)) {
       document.querySelectorAll(`[data-${attr}]`).forEach(b => { const v = b.dataset[attr]; if (v && !L[`sub:${tab}.${v}`]) L[`sub:${tab}.${v}`] = `${TABS[tab]} › ${b.textContent.trim().replace(/\s*Labs$/, '')}`; });
     }
@@ -100,6 +110,8 @@
     const at = sel => t.closest(sel);
     let el;
     if ((el = at('a[data-report-panel]'))) return count('issue', String(el.dataset.reportPanel || '').split(':')[0]);
+    // (a role shortcut or a Help row into a view of Home: the view it opens, as the strip's chips count it)
+    if ((el = at('[data-ws-at]'))) { const [tab, sub] = el.dataset.wsAt.split(':'); return sub ? count('sub', `${tab}.${sub}`) : count('tab', tab); }
     if ((el = at('[data-ws-page]'))) return count('page', el.dataset.wsPage);
     if (at('[data-ws-home]')) return count('page', 'home');
     if ((el = at('[data-ws-go]'))) return count('map', el.dataset.wsGo);
@@ -118,17 +130,23 @@
   // (a reload or a restored tab carries the app's own address: only a navigation to it is a link)
   const nav = (() => { try { return performance.getEntriesByType('navigation')[0] || null; } catch (e) { return null; } })();
   const fromLink = location.hash.length > 1 && (!nav || nav.type === 'navigate');
-  const started = () => { const W = root.PeelWorkspaces; const m = W && W.mode ? W.mode() : 'full'; count('start', `${m}${fromLink ? '-link' : ''}`); };
+  // (and the role picked, a ROLES key only: an older browser's stray value is none)
+  const started = () => {
+    const W = root.PeelWorkspaces, s = store(), m = W && W.mode ? W.mode() : 'full', rk = s ? s.get('role', '') : '';
+    count('start', `${m}${fromLink ? '-link' : ''}`);
+    count('role', W && W.ROLES && W.ROLES.some(r => r.key === rk) ? rk : 'none');
+  };
   if (document.readyState === 'complete') setTimeout(started, 0); else window.addEventListener('load', () => setTimeout(started, 0), { once: true });
 
   // ---- Settings › Usage --------------------------------------------------------------------------
   const { esc, fmtNum } = root.PeelUtil || { esc: s => String(s), fmtNum: n => String(n) };
   function settingsHTML() {
     const d = load(), t = totals(d, aliasKey), L = labels();
-    const top = Object.entries(t).filter(([k]) => !k.startsWith('start')).sort((a, b) => b[1] - a[1]);
+    // (the role is counted per visit, not opened: in the CSV only)
+    const top = Object.entries(t).filter(([k]) => !/^(start|role)\b/.test(k)).sort((a, b) => b[1] - a[1]);
     const opens = Object.entries(t).filter(([k]) => k.startsWith('start')).reduce((s, [, n]) => s + n, 0);
     return `<section class="gear-sec" id="usage-sec"><h3>Usage in this browser (pilot)</h3>
-      <p class="small muted">How often each workspace, tab and sub-view is opened here${d.since ? `, since ${esc(d.since)}` : ''}: counts only, kept in this browser and never sent. No developments, searches or names are counted. Export the CSV to send it in.</p>
+      <p class="small muted">How often each workspace, tab and sub-view is opened here${d.since ? `, since ${esc(d.since)}` : ''}: counts only, kept in this browser and never sent. No developments, search text or names are counted: a search counts only what kind of place it found. Export the CSV to send it in.</p>
       ${top.length ? `<table class="usage-t small"><thead><tr><th>Opened</th><th class="num">Times</th></tr></thead><tbody>${top.slice(0, 10).map(([k, n]) => `<tr><td>${esc(L[k] || k)}</td><td class="num">${fmtNum(n)}</td></tr>`).join('')}</tbody></table>${top.length > 10 ? `<p class="small muted">and ${fmtNum(top.length - 10)} more in the CSV.</p>` : ''}` : '<p class="small muted">Nothing counted yet.</p>'}
       <p class="small muted">${fmtNum(opens)} ${opens === 1 ? 'visit' : 'visits'} counted.</p>
       <p><button type="button" class="btn small" data-usage-csv>Export CSV</button> <button type="button" class="btn small link" data-usage-reset>Reset counts</button></p></section>`;

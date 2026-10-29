@@ -158,12 +158,14 @@ test('3. no tab shows more than 4 sub-views, at any scope, with every Labs switc
   }
   for (const [tab, s] of Object.entries(loadTabs().TABSUBS)) assert.ok(s.valid.length <= 4, tab);
   for (const row of HTML.matchAll(/<div class="f-pane f-subtabs[^"]*" data-pane="\w+"[^>]*>([\s\S]*?)<\/div>/g)) assert.ok((row[1].match(/<button/g) || []).length <= 4, row[0].slice(0, 80));
-  // Labs: the extra tools sit behind Settings › Labs.
+  // Labs: the extra tools sit behind Settings › Labs (a section of ⚙'s one Settings sheet since navigation phase 7: the
+  // ⚙ menu's Labs item, removed by design, §5 row 169).
   const L = require('../js/labs.js');
   assert.deepEqual(plain(L.IDS), all);
   const css = src('css/app.css');
   for (const g of ['html:not(.lab-3d) .view3d-ctl', 'html:not(.lab-timebox) .tool-rail [data-tool="timebox"]', 'html:not(.lab-swmm) [data-tbx="swmm"]', 'html:not(.lab-batch) [data-ptool-act="batch"]', 'html:not(.lab-hydro) .lab-hydro', 'html:not(.lab-funding) .lab-funding-pane']) assert.ok(css.includes(g), g);
-  assert.match(src('js/topbar.js'), /data-tbg="labs">Labs<\/button>/);
+  assert.match(src('js/growth-ui.js'), /\$\{root\.PeelLabs && root\.PeelLabs\.pageHTML \? root\.PeelLabs\.pageHTML\(\) : ''\}/);
+  assert.doesNotMatch(src('js/topbar.js'), /data-tbg=|renderGearMenu/);
 });
 
 test('4. old links and stored views map to the new tabs', () => {

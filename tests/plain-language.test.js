@@ -51,8 +51,16 @@ test('glossary: the first use of a term is underlined (three at most a panel), n
   // In every panel's answer and figures, and on the pages (not the glossary itself).
   assert.match(src('js/panel.js'), /const seen = new Set\(\), gl = h => \(root\.PeelGlossary \? root\.PeelGlossary\.mark\(h, seen\) : h\);/);
   assert.match(src('js/ws-pages.js'), /root\.PeelGlossary && m\.id !== 'glossary' \? root\.PeelGlossary\.mark\(h, seen\) : h/);
-  // The Glossary page: Home › Reference, all terms.
+  // The Glossary page: Help › Glossary, all terms, opening with the Definitions (one text, the Overview's ⓘ card's:
+  // js/info.js INFO.definitions; navigation phase 7, N-9 with change).
+  globalThis.PeelInfo = { INFO: { definitions: { title: 'Definitions (used everywhere)', body: 'Existing: the census <population>.' } } };
+  const d = G.page();
+  delete globalThis.PeelInfo;
+  assert.equal(d.eyebrow, 'Help');
+  assert.match(d.mid, /^<section class="gl-defs" data-psec="definitions" id="gl-definitions"><h3 class="ws-h">Definitions \(used everywhere\)<\/h3><p class="small">Existing: the census &lt;population&gt;\.<\/p><\/section><section class="gl-page"/);
+  assert.match(src('js/info.js'), /'definitions': \{ title: 'Definitions \(used everywhere\)', body: 'Existing: /, 'the card’s one text, kept on the Overview’s ⓘ');
   const p = G.page();
+  assert.doesNotMatch(p.mid, /gl-defs/, 'without js/info.js loaded: the terms alone');
   assert.equal(p.id, 'glossary');
   for (const [k] of G.TERMS) assert.match(p.mid, new RegExp(`id="gl-${k}"`));
   assert.match(src('js/workspaces.js'), /glossary: \{ label: 'Glossary', what: 'The terms in plain words' \}/);

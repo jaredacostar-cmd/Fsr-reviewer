@@ -11,7 +11,9 @@
  *                        of js/ws-pages.js ({ page }) or the map's panel drawn as it is ({ keys, ws }); at a
  *                        development (the site's page) the map's panels for it ({ keys }: Servicing › Network
  *                        and FSR review, the map's two views there)
- *   WORKSPACES           Reference: Help's bar (its Data sources and Data checks open Home's Records tab)
+ *   ASK                  the question each view of Home heads with, keyed as VIEWS.area (Help › Start here's
+ *                        What each tab answers)
+ *   WORKSPACES           Help: its four sections (Start here · How it works · Glossary · How the app decides)
  *   areaPanel(key)       an area panel (the one its tab set, else built here)
  *   specFor(view, p)     a development's view, its panel spec for development p (null while its data loads)
  *
@@ -54,16 +56,32 @@
       'records:files': { keys: ['records:files'] },
     },
   };
-  // Reference (step 5): Help, How it works, the Glossary and How the app decides, and the map's Records ›
-  // Sources and Data checks (the old Data tab), Home's Records tab (at: its tab:sub; navigation phase 6).
+  // The question each view of Home answers, the one it heads with (its page builder's name, or its panel's
+  // areaHead): Help › Start here's "What each tab answers" lists them (navigation phase 7, design §5 row 158; one
+  // key per view, VIEWS.area's, in its order).
+  const ASK = {
+    'overview:': 'What needs attention?',
+    'growth:pipeline': 'How much is coming?',
+    'growth:areas': 'How much is coming, where, and how fast?',
+    'growth:timing': 'When do the homes and people arrive?',
+    'svc:capacity': 'Can the system take it?',
+    'svc:network': 'Where does it flow?',
+    'svc:pipes': 'Which old pipes carry the most growth?',
+    'dca:timing': 'Is the capital program arriving in time for growth?',
+    'dca:eas': 'What is being studied, and which EAs have led to construction?',
+    'dca:projects': 'What is being built?',
+    'records:sources': 'Where does the data come from?',
+    'records:checks': 'Can the data be trusted?',
+  };
+  // Help's four sections (design §3.7, navigation phase 7): Start here · How it works · Glossary · How the app
+  // decides. Data sources and Data checks are Home's Records tab (Records › Sources, Records › Data checks): Start
+  // here links there, as does the QA/QC role.
   const WORKSPACES = {
     reference: { secs: [
-      { id: 'help', title: 'Help', page: 'help' },
+      { id: 'help', title: 'Start here', page: 'help' },
       { id: 'guides', title: 'How it works', page: 'guides' },
       { id: 'glossary', title: 'Glossary', page: 'glossary' },
       { id: 'logic', title: 'How the app decides', page: 'logic' },
-      { id: 'sources', title: 'Data sources', at: 'records:sources' },
-      { id: 'checks', title: 'Data checks', at: 'records:checks' },
     ] },
   };
   const AREA_BUILD = {
@@ -110,7 +128,7 @@
     return { ...first, foot, lists, folds, onMount: mounts.length ? host => { for (const f of mounts) try { f(host); } catch (err) { /* that part stays empty */ } } : null };
   }
 
-  const api = { VIEWS, WORKSPACES, specFor, areaPanel };
+  const api = { VIEWS, ASK, WORKSPACES, specFor, areaPanel };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSections = api;
 })(typeof window !== 'undefined' ? window : globalThis);
