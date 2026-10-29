@@ -477,10 +477,16 @@
   function clearBlockFocus() { BLK.focus.clearLayers(); BLK.id = null; syncPathMode(); }
   // The block is its servicing scope (navigation phase 8a): Peel › plant › Block n, its I&I facts its
   // Overview's fold (blockFactsHTML), the map the scope's focus; the open scope again is a no-op (focusSvc
-  // would toggle its own focus off). The card below is the fallback where no servicing area resolves.
+  // would toggle its own focus off); on a phone the sheet comes up from its peek, as the card's did. The card
+  // below is the fallback: where no servicing area resolves, until the servicing model its Overview reads is
+  // built (a slow or missing census), and for an old link's last try (opt.card, js/svc-scope.js RESTORE).
   async function showBlock(id, opt = {}) {
-    const S = root.PeelSvcScope, ref = S && S.blockRef ? S.blockRef(id) : null;
-    if (ref && S.resolve(ref)) { clearBlockFocus(); if (!(S.current() && S.current().ref === ref)) S.open(ref); return; }
+    const S = root.PeelSvcScope, ref = S && S.blockRef ? S.blockRef(id) : null, A = App();
+    if (!opt.card && ref && A.state.svcModel && S.resolve(ref)) {
+      clearBlockFocus(); if (!(S.current() && S.current().ref === ref)) S.open(ref);
+      const DT = root.PeelDataTab; if (DT && DT.shellNarrow && DT.shellNarrow() && A.getAnalysisSnap && A.getAnalysisSnap() === 'peek') A.setAnalysisSnap('half');
+      return;
+    }
     await Promise.all([loadBlocks(), SC().loadSewers()]);
     const net = blockNet(); const x = net && net.byId.get(String(id)); if (!x) return;
     const b = x.b, P = MM().SEW.data.pipes;

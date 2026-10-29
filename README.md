@@ -461,9 +461,10 @@ from street zoom (14), up to 3,000 in view.
   servicing scope (navigation phase 8a: Peel › plant › Block N, as a search pick opens it): its Overview's fold *The
   block in the I&I program* lists its outlets on the existing sewers (main outlet with capacity and people
   upstream, the other outlets as pipe buttons), the 300 mm+ mains inside it and the distance along the pipes to
-  the plant; the rest of its Overview the blocks it drains into down to the plant, the blocks upstream and the
-  growth loading it; the map outlines the block and the blocks upstream, with arrows to the plant. Where a block
-  has no servicing area (no plant), its card opens as before. Rebuild with `node scripts/build-blocks.js` (or the `dragonfly` probe mode).
+  the plant; the rest of its Overview the blocks it drains into down to the plant (its ladder), the blocks
+  upstream and the growth loading it; the map outlines the block and the blocks upstream, with arrows to the plant.
+  Where a block has no servicing area (no plant), and until the servicing model is built, its card opens as before.
+  Rebuild with `node scripts/build-blocks.js` (or the `dragonfly` probe mode).
 - **Flow arrows follow the pipes**: a selected catchment's (and block's) arrows to the treatment plant
   run along the Region's sanitary mains (`data/sewers.json`), not straight outlet-to-outlet lines.
 - **Pipe depths in the ground profile** (Measure): the Region's sanitary sewer inverts along the line
@@ -2374,9 +2375,14 @@ parts (NP-8 with change): **8a**, servicing scopes and drawn areas (below), and 
   button or an old `ss=iiblock:<n>` link opens `dr:B<n>` (`js/svc-scope.js` `blockRef`; js/sewer-trace.js
   `showBlock`), Peel › plant › Block N with every tab at it, the link `ss=dr:B<n>`. Its I&I program facts are
   the fold *The block in the I&I program* (`blockFactsHTML`: prioritised, its area, the outlets as pipe buttons,
-  the 300 mm+ mains inside it, the distance to the plant; filled once the sewers are in). The old card stays only
-  where no servicing area resolves; an old link waits for the servicing lookup and the model (retried as every
-  shared result is).
+  the 300 mm+ mains inside it, the distance to the plant; filled once the sewers are in); its ladder names every
+  block it drains through down to the plant, as the card's *Drains to* did. On a phone a tap raises the sheet from
+  its peek, as the card did. The old card stays where no servicing area resolves and until the servicing model is
+  built (a slow or missing census: a tap then opens the card, as before 8a). An old link waits for the servicing
+  lookup and the model (retried as every shared result is, 20 s); still out at the last try (a late file, no
+  census) it opens the card, the link kept, and the block's scope replaces that card once the model is built
+  (`settleLate`, from `renderSvcTab`). Until the model is built a servicing scope's panel says it is loading (a
+  link, a search pick), as its full table does.
 - **Phones**: the strip has fewer tabs, never more; the new rows wrap and the fold's buttons are short
   (*900 mm*); nothing makes the panes scroll sideways at 390 px.
 
@@ -2385,7 +2391,7 @@ tests/nav-aliases.test.js "phase 8a"):
 
 | Old | Where it opens now |
 |---|---|
-| `ss=iiblock:<n>`, the blocks layer's tap, `[data-block]`, `App().showBlock(id)` | The block's servicing scope `dr:B<n>` (Overview); its card only where no servicing area resolves |
+| `ss=iiblock:<n>`, the blocks layer's tap, `[data-block]`, `App().showBlock(id)` | The block's servicing scope `dr:B<n>` (Overview); its card where no servicing area resolves or before the servicing model is built (an old link: on its last try, the scope once the model is in) |
 | `t=records&rs=sources\|checks&ss=<plant:, wsys:, dr:, pz:, ps: ref>` | Records at that scope, its own Sources / Data checks (a block, station or zone once the servicing lookup fills: Peel's until then) |
 | `rs=files`, a stored `rSub: 'files'` at a servicing scope | Records › Sources there; Files again at a development |
 | `gs=areas`, a stored Areas pick, at a servicing scope or a drawn area | Growth › Pipeline there; Areas again at an area |

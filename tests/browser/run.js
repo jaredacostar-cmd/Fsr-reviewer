@@ -1659,7 +1659,8 @@ async function pickView(page, ev, key, tap = false) {
     await page.waitForFunction(() => [...document.querySelectorAll('#pnl-overview details.pnl-fold > summary')].some(x => x.textContent.trim() === 'The block in the I&I program'), null, { timeout: 90000 }).catch(() => {});
     const fo = await ev(() => { const f = [...document.querySelectorAll('#pnl-overview details.pnl-fold')].find(d => d.querySelector('summary').textContent.trim() === 'The block in the I&I program'); return f ? { pipes: f.querySelectorAll('[data-pipe]').length, text: f.textContent.replace(/\s+/g, ' '), before: [...document.querySelectorAll('#pnl-overview details.pnl-fold > summary')].map(x => x.textContent.trim()).join(' | ') } : null; });
     expect(fo && /Outlets/.test(fo.text) && /Region sanitary mains of 300 mm\+ inside the block/.test(fo.text) && fo.before.indexOf('The block in the I&I program') < fo.before.indexOf('Servicing ladder'), `the fold The block in the I&I program (its outlets, the mains inside it), before the ladder (${JSON.stringify(fo && { ...fo, text: fo.text.slice(0, 240) })})`);
-    // (6) An old block link, cold: the block's scope once the servicing lookup is in, never its card.
+    // (6) An old block link, cold: the block's scope once the servicing lookup and the model are in (its card
+    // meanwhile only if they come after the link's 20 s of retries, then the scope: review of 8a).
     await load(`?b#ss=iiblock:${N}`);
     await page.waitForFunction(n => PeelApp.state.ss === `dr:B${n}`, N, { timeout: 120000 }).catch(() => {});
     const ol = await ev(() => ({ ss: PeelApp.state.ss, card: PeelSvcScope.hasResult(), mode: PeelWorkspaces.mode() }));
@@ -1676,7 +1677,11 @@ async function pickView(page, ev, key, tap = false) {
     const fit = () => ev(() => { const p = document.getElementById('analysis-panes'); return { panes: !!p && p.scrollWidth <= p.clientWidth, doc: document.documentElement.scrollWidth, vw: innerWidth }; });
     const f1 = await fit();
     expect(f1.panes && f1.doc <= 390, `the plant's Data checks fit at 390 px (${JSON.stringify(f1)})`);
+    // (a block tapped with the sheet at its peek: the sheet comes up to half, as the block's card did; review of 8a)
+    await ev(() => PeelApp.setAnalysisSnap('peek', false)); await wait(800);
     await ev(n => { PeelSewerTrace.showBlock(n); }, N); await wait(2500);
+    const sh = await ev(() => ({ snap: PeelApp.getAnalysisSnap(), ss: PeelApp.state.ss, top: Math.round(document.getElementById('analysis').getBoundingClientRect().top) }));
+    expect(sh.snap === 'half' && sh.ss === `dr:B${N}` && sh.top < 600, `the block tapped at the sheet's peek: its scope, the sheet up to half (${JSON.stringify(sh)})`);
     await ev(() => { const f = [...document.querySelectorAll('#pnl-overview details.pnl-fold')].find(d => d.querySelector('summary').textContent.trim() === 'The block in the I&I program'); if (f) f.open = true; }); await wait(800);
     const f2 = await fit();
     expect(f2.panes && f2.doc <= 390, `the block's Overview, its fold open, fits at 390 px (${JSON.stringify(f2)})`);

@@ -30,7 +30,7 @@ function load() {
   };
   const ctx = { window, document: { addEventListener() {} }, module: undefined, globalThis: {} };
   vm.runInNewContext(src('js/svc-scope.js'), ctx);
-  return { S: window.PeelSvcScope, state };
+  return { S: window.PeelSvcScope, state, window };
 }
 
 test('resolve: plant, block with everything upstream, station, zone, water system', () => {
@@ -47,6 +47,27 @@ test('resolve: plant, block with everything upstream, station, zone, water syste
   assert.equal(S.resolve('wsys:lake').kind, 'wsys');
   assert.equal(S.resolve('plant:Toronto'), null);
   assert.equal(S.resolve('dr:nope'), null);
+});
+
+// Review of navigation phase 8a: the block's card listed every block down to the plant ("Drains to"); the card
+// is the block's scope now, so its ladder does (a link each), not the next block alone.
+test('a block’s ladder names every block it drains through down to the plant; before the model a loading panel', () => {
+  const { S, state, window } = load();
+  window.PeelSvcTab.scenarioText = () => 'Scenario';
+  state.svcModel = { cum: new Map(), adwf: () => 0 };
+  const lad = h => h.slice(h.indexOf('Servicing ladder'));
+  assert.match(lad(S.cardHTML(S.resolve('dr:B3'), [])), /<strong>Drains to<\/strong> <button[^>]*data-ss="dr:B2">Block 2<\/button> → <button[^>]*data-ss="dr:B1">Block 1<\/button> → <button[^>]*data-ss="plant:Clarkson">Clarkson plant<\/button><\/li>/);
+  assert.match(lad(S.cardHTML(S.resolve('dr:B2'), [])), /<strong>Drains to<\/strong> <button[^>]*data-ss="dr:B1">Block 1<\/button> → <button[^>]*data-ss="plant:Clarkson">/);
+  assert.match(lad(S.cardHTML(S.resolve('dr:B1'), [])), /<strong>Drains to<\/strong> the plant directly → <button[^>]*data-ss="plant:Clarkson">/);
+  // The lookup filled, the model not built yet (it needs the census too): the panel says so for every kind
+  // instead of throwing (headroom and the ladder read the model), as the full table's skeleton does.
+  state.svcModel = null;
+  for (const ref of ['dr:B3', 'plant:Clarkson', 'ps:1', 'pz:3', 'wsys:lake']) {
+    const s = S.resolve(ref), p = S.panelSpec(s, []);
+    assert.match(p.answer, /Loading the servicing model/, ref); assert.equal(p.head.name, s.title);
+    assert.equal(p.head.trail.map(t => t.label).join(' › '), `Peel › ${s.title}`); assert.ok('data-ss-close' in p.head.close);
+    assert.match(S.cardHTML(s, []), /Loading the servicing model/);
+  }
 });
 
 test('has: developments in the scope only; no scope keeps every development', () => {

@@ -561,6 +561,7 @@ test('Records at a servicing scope: its own Sources and Data checks, loading whe
   assert.equal(s.lists[0].total, 10); assert.equal(s.lists[0].rows.length, 5);
   assert.deepEqual(plain(s.head.status), { tone: 'tight', text: '1 due' }, 'the sewer network row is due');
   assert.deepEqual(plain(s.foot.primary.attrs), { 'data-ss-close': '', 'data-at': 'records:sources' });
+  assert.equal(s.foot.secondary, undefined, 'no Copy share link: not a Records action (Export ▾ › Share, design §5 row 149)');
   assert.equal(s.figures.find(f => f.label === 'its capacity as of').v, '2025');
   // Data checks: three rows; the Ministry's flow and the roster load when needed.
   const cells = sp => sp.lists[0].rows.map(r => [...r.html.matchAll(/<span([^>]*)>([^<]*)<\/span>/g)].map(m => [m[2], m[1]]));

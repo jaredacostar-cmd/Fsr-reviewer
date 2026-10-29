@@ -213,7 +213,7 @@
       lists: [{ title: 'The sources it rests on', rows: x.rows.slice(0, 5).map(r => { const [tone, word] = ST_WORD[r.st] || ST_WORD.ref; return PN.kv(esc(r.name), `${r.date ? esc(r.date) : '–'} · ${word}`, tone); }), total: x.rows.length, seeAll: { 'data-full-table': 'records' } }],
       method: `Its capacity with the report or plan it comes from, and that report’s date; its outline’s map layer (${x.layer.file}); then the rows of Peel’s data freshness table its figures rest on, each with the date of the data the app holds and how often it is refreshed (due = past its refresh interval, stale = past twice that). All of Peel’s sources, the live-data controls and every data file’s fingerprint are Peel’s Records › Sources.`,
       sources: 'Region of Peel 2025 annual reports; the 2020 Water and Wastewater Master Plan; the servicing areas and the blocks (data/servicing.json, data/blocks.json); the census and the applications on the map.',
-      foot: { primary: { label: 'All of Peel’s sources', attrs: { 'data-ss-close': '', 'data-at': 'records:sources' }, title: 'Records › Sources for all of Peel: every source, the reports and the live-data controls' }, secondary: [{ label: 'Copy share link', attrs: { 'data-share': '' } }] },
+      foot: { primary: { label: 'All of Peel’s sources', attrs: { 'data-ss-close': '', 'data-at': 'records:sources' }, title: 'Records › Sources for all of Peel: every source, the reports and the live-data controls' } },   // (no Copy share link: not a Records action, Export ▾ › Share; design §5 row 149)
     };
   }
   function svcChecksSpec(s) {

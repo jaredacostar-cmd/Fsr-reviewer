@@ -1065,15 +1065,17 @@ test('phase 8a: every scope kind: a servicing scope’s views and Records, a dra
   }
   assert.deepEqual(Object.keys(AT.HIDDEN), ['site', 'area', 'svc', 'drawn', 'file']);
   // ss=iiblock:<n> (an old block link), the blocks layer's tap and [data-block]: the block's servicing scope dr:B<n>
-  // once the servicing lookup and the model are in; its card only where no servicing area resolves.
+  // once the servicing lookup and the model are in; its card where no servicing area resolves, and on a link's
+  // last try while they are still out (the link kept; the scope once the model is built: click-destinations).
   const win = { PeelUtil: require('../js/util.js'), PeelDemand: {}, PeelPhases: {} };
   const sctx = { window: win, document: { addEventListener() {} }, module: undefined, globalThis: {} };
   require('node:vm').runInNewContext(src('js/svc-scope.js'), sctx);
   assert.equal(win.PeelSvcScope.blockRef('12'), 'dr:B12');
   const sc = src('js/svc-scope.js');
-  assert.match(sc, /\n {4}iiblock: id => \{ if \(!App\(\)\.state\.servicing \|\| !SD\(\)\.svcById\.size \|\| !App\(\)\.state\.svcModel\) return false; const ref = blockRef\(id\); if \(resolve\(ref\)\) \{ open\(ref\); return true; \} if \(!ST\(\) \|\| !ST\(\)\.showBlock\) return true; return ST\(\)\.showBlock\(id\) !== false; \},/);
+  assert.match(sc, /\n {4}iiblock: \(id, last\) => \{\n {6}const ready = App\(\)\.state\.servicing && SD\(\)\.svcById\.size && App\(\)\.state\.svcModel, ref = blockRef\(id\);\n {6}if \(ready && resolve\(ref\)\) \{ open\(ref\); return true; \}\n {6}if \(!ready && !last\) return false;\n {6}if \(!ST\(\) \|\| !ST\(\)\.showBlock\) return true;\n {6}const r = ST\(\)\.showBlock\(id, \{ card: true \}\);\n/);
   const st = src('js/sewer-trace.js'), sb = st.slice(st.indexOf('async function showBlock('));
   assert.ok(sb.indexOf('S.blockRef(id)') < sb.indexOf('await '), 'the scope before any wait');
+  { const g = sb.indexOf('A.state.svcModel && S.resolve(ref)'); assert.ok(g > 0 && g < sb.indexOf('await '), 'the scope once the model is in, else the card'); }
   assert.match(st, /\.on\('click', ev => \{ L\.DomEvent\.stop\(ev\); showBlock\(b\.id\); \}\)/, 'the blocks layer’s tap');
   assert.match(st, /const bb = e\.target\.closest\('\[data-block\]'\); if \(bb\) showBlock\(bb\.dataset\.block\);/, '[data-block]');
   assert.match(src('js/app.js'), /showBlock: id => window\.PeelSewerTrace\.showBlock\(id\),/, 'App().showBlock');

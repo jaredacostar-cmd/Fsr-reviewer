@@ -75,10 +75,11 @@ test('every producer opens a named scope: file, pipe, DC work, block, water faci
     ['js/measure.js', /ref: 'sel:selection'/],
   ]) assert.match(src(f), re, f);
   assert.match(src('js/tools.js'), /return S\.openResult\(opts \|\| \{\}\);/, 'PeelTools.openResult goes through the scope');
-  // (navigation phase 8a: a block is its servicing scope dr:B<n>, opened before showBlock awaits anything;
-  // the iiblock card above is the fallback where no servicing area resolves)
+  // (navigation phase 8a: a block is its servicing scope dr:B<n>, opened before showBlock awaits anything, once
+  // the model its Overview reads is built, the sheet raised from its peek on a phone; the iiblock card above is
+  // the fallback where no servicing area resolves, before the model, and for a link's last try: opt.card)
   const sb = src('js/sewer-trace.js'), body = sb.slice(sb.indexOf('async function showBlock('));
-  assert.match(body, /^async function showBlock\(id, opt = \{\}\) \{\n {4}const S = root\.PeelSvcScope, ref = S && S\.blockRef \? S\.blockRef\(id\) : null;\n {4}if \(ref && S\.resolve\(ref\)\) \{ clearBlockFocus\(\); if \(!\(S\.current\(\) && S\.current\(\)\.ref === ref\)\) S\.open\(ref\); return; \}\n {4}await Promise\.all/);
+  assert.match(body, /^async function showBlock\(id, opt = \{\}\) \{\n {4}const S = root\.PeelSvcScope, ref = S && S\.blockRef \? S\.blockRef\(id\) : null, A = App\(\);\n {4}if \(!opt\.card && ref && A\.state\.svcModel && S\.resolve\(ref\)\) \{\n {6}clearBlockFocus\(\); if \(!\(S\.current\(\) && S\.current\(\)\.ref === ref\)\) S\.open\(ref\);\n {6}const DT = root\.PeelDataTab; if \(DT && DT\.shellNarrow && DT\.shellNarrow\(\) && A\.getAnalysisSnap && A\.getAnalysisSnap\(\) === 'peek'\) A\.setAnalysisSnap\('half'\);\n {6}return;\n {4}\}\n {4}await Promise\.all/);
   assert.ok(body.indexOf('S.blockRef(id)') < body.indexOf('await Promise.all') && body.indexOf('await Promise.all') < body.indexOf('openResult({ ref: `iiblock:'), 'the scope first, the card after the loads');
 });
 
@@ -113,7 +114,8 @@ function loadRestore(o = {}) {
     PeelTopbar: { renderTrail: () => calls.push('trail') },
     PeelSvcData: { svcById: byId, PLANT_SHORT: { Clarkson: 'Clarkson' }, plantLabel: pl => `${pl} plant`, drName: a => a.name },
     PeelSvcTab: { svcFlowTree: () => new Map(), upstreamOf: () => [] },
-    PeelSewerTrace: { showBlock: id => { shown.push(id); }, focusSvc: id => calls.push(`focus:${id}`) },
+    // (the card: opt.card, the fallback; o.cardOpens: it opens as the real one does, through openResult)
+    PeelSewerTrace: { showBlock: (id, opt) => { shown.push(opt && opt.card ? `${id}:card` : id); if (o.cardOpens) win.PeelSvcScope.openResult({ ref: `iiblock:${id}`, title: `Wastewater Block ${id}`, html: '' }); }, focusSvc: id => calls.push(`focus:${id}`) },
   };
   win.window = win;
   const document = { addEventListener() {}, getElementById: () => null, dispatchEvent() {} };
@@ -121,6 +123,8 @@ function loadRestore(o = {}) {
   vm.runInContext(src('js/svc-scope.js'), ctx);
   return { S: win.PeelSvcScope, state, calls, timers, shown, byId };
 }
+// Every retry the link has, to its last (restore's 40 × 500 ms after the first try): the number of tries.
+const drain = L => { let n = 1; while (L.timers.length) { L.timers.shift()[0](); n++; } return n; };
 test('phase 8a: a block is its servicing scope; an old ss=iiblock: link opens it once the servicing lookup is filled, the card only as the fallback', () => {
   const B12 = { id: 'dr:B12', block: '12', name: 'Block 12', kind: 'block', plant: 'Clarkson', downstream: null };
   let L = loadRestore({ byId: [[B12.id, B12]] });
@@ -149,9 +153,96 @@ test('phase 8a: a block is its servicing scope; an old ss=iiblock: link opens it
   // A filled lookup without that block (a block with no servicing area): the old card, once.
   L = loadRestore({ byId: [['dr:B1', { ...B12, id: 'dr:B1', block: '1', name: 'Block 1' }]] });
   L.S.restore('iiblock:12');
-  assert.deepEqual(L.shown, ['12']); assert.equal(L.timers.length, 0); assert.equal(L.state.ss, null);
-  // The restore row reads the filled lookup, not servicing alone (the window js/search-filter.js guards too).
-  assert.match(src('js/svc-scope.js'), /\n {4}iiblock: id => \{ if \(!App\(\)\.state\.servicing \|\| !SD\(\)\.svcById\.size \|\| !App\(\)\.state\.svcModel\) return false; const ref = blockRef\(id\); if \(resolve\(ref\)\) \{ open\(ref\); return true; \}/);
+  assert.deepEqual(L.shown, ['12:card']); assert.equal(L.timers.length, 0); assert.equal(L.state.ss, null);
+  // The restore row reads the filled lookup and the model, not servicing alone (the window js/search-filter.js
+  // guards too); each try is told whether it is the last.
+  const sc = src('js/svc-scope.js');
+  assert.match(sc, /\n {4}iiblock: \(id, last\) => \{\n {6}const ready = App\(\)\.state\.servicing && SD\(\)\.svcById\.size && App\(\)\.state\.svcModel, ref = blockRef\(id\);\n {6}if \(ready && resolve\(ref\)\) \{ open\(ref\); return true; \}\n {6}if \(!ready && !last\) return false;/);
+  assert.match(sc, /let done = false; try \{ done = f\(id, tries === 0\); \} catch \(e\) \{ done = false; \}/);
+});
+
+// Review of navigation phase 8a: a link whose data comes after restore's 20 s (a late data/dc-infra.json: the
+// lookup fills only after it; a late or missing census: no model) lands on the block's card on the last try, as
+// before 8a, the link kept (ss=iiblock:<n>), never dropped; once the model is built the block's scope replaces
+// that card, if it is still what is open.
+test('phase 8a: an old ss=iiblock: link with its data out at the last try opens the block’s card, then its scope once the model is built', () => {
+  const B12 = { id: 'dr:B12', block: '12', name: 'Block 12', kind: 'block', plant: 'Clarkson', downstream: null };
+  // The model never built (the census late or missing): the card, once, on the 41st try, the link kept.
+  let L = loadRestore({ model: false, byId: [[B12.id, B12]], cardOpens: true });
+  L.S.restore('iiblock:12');
+  assert.equal(L.state.ss, null); assert.deepEqual(L.shown, []);
+  assert.equal(drain(L), 41, 'the first try and its 40 retries');
+  assert.deepEqual(L.shown, ['12:card'], 'showBlock(id, { card: true }) exactly once');
+  assert.equal(L.state.ss, 'iiblock:12', 'the link kept'); assert.equal(L.S.hasResult(), true);
+  L.S.settleLate(); assert.equal(L.timers.length, 0, 'no model yet: the card stays');
+  // The model built (js/svc-tab.js renderSvcTab → settleLate): the block's scope replaces the card, once.
+  L.state.svcModel = {}; L.S.settleLate();
+  assert.equal(L.timers.length, 1); L.timers.shift()[0]();
+  assert.equal(L.state.ss, 'dr:B12'); assert.equal(L.S.hasResult(), false); assert.equal(L.S.current().kind, 'block');
+  L.S.settleLate(); assert.equal(L.timers.length, 0, 'once');
+  // The lookup itself still empty at the last try (a late dc-infra.json): the card too, never dropped.
+  L = loadRestore({ cardOpens: true });
+  L.S.restore('iiblock:12'); drain(L);
+  assert.deepEqual(L.shown, ['12:card']); assert.equal(L.state.ss, 'iiblock:12');
+  L.byId.set(B12.id, B12); L.state.servicing.drainage.push(B12); L.S.settleLate(); L.timers.shift()[0]();
+  assert.equal(L.state.ss, 'dr:B12', 'the lookup filled and the model built: the scope');
+  // A card the reader closed, or left for another scope, stays left.
+  L = loadRestore({ model: false, byId: [[B12.id, B12]], cardOpens: true });
+  L.S.restore('iiblock:12'); drain(L); L.S.closeResult();
+  L.state.svcModel = {}; L.S.settleLate(); assert.equal(L.timers.length, 0); assert.equal(L.state.ss, null);
+  L.state.ss = 'plant:Clarkson'; L.S.settleLate(); assert.equal(L.timers.length, 0); assert.equal(L.state.ss, 'plant:Clarkson');
+  // A card left between settleLate and its timer stays left too.
+  L = loadRestore({ model: false, byId: [[B12.id, B12]], cardOpens: true });
+  L.S.restore('iiblock:12'); drain(L); L.state.svcModel = {}; L.S.settleLate(); L.S.closeResult(); L.timers.shift()[0]();
+  assert.equal(L.state.ss, null);
+  // Wired: renderSvcTab asks once its model is built.
+  assert.match(src('js/svc-tab.js'), /try \{ buildSvcTab\(bc\); \} finally \{ svcIdx = null; \}\n[^\n]*\n {4}if \(root\.PeelSvcScope && root\.PeelSvcScope\.settleLate\) root\.PeelSvcScope\.settleLate\(\);/);
+});
+
+// js/sewer-trace.js showBlock in a vm (the blocks layer's tap, a [data-block] button, App().showBlock): the scope
+// once the model is built, the sheet raised from its peek on a phone; the card's loads before the model, for a
+// link's last try (opt.card), and where no servicing area resolves.
+function loadShowBlock(o = {}) {
+  const opened = [], loads = [], snaps = [];
+  let cur = null, snap = o.snap || 'peek';
+  const state = { svcModel: o.model === false ? null : {}, servicing: {} };
+  const win = {
+    PeelUtil: require('../js/util.js'),
+    PeelMapCore: { map: { getContainer: () => ({ classList: { toggle() {} }, dataset: {} }) }, canRotate: false },
+    PeelSewerProfile: { mapBottom: {} },
+    PeelApp: { state, getAnalysisSnap: () => snap, setAnalysisSnap: v => { snap = v; snaps.push(v); } },
+    PeelDataTab: { shellNarrow: () => !!o.narrow },
+    PeelSvcData: { syncDevsOff() {} },
+    PeelSewerCap: { loadSewers: () => { loads.push('sewers'); return Promise.resolve(); } },
+    PeelMapMarkers: { SEW: { data: null } },
+    PeelSvcScope: { blockRef: id => `dr:B${id}`, resolve: ref => (o.areas || ['dr:B12']).includes(ref) ? { ref } : null, current: () => cur, open: ref => { opened.push(ref); cur = { ref }; } },
+  };
+  win.window = win;
+  const layer = () => ({ addTo() { return this; }, clearLayers() {} });
+  const ctx = vm.createContext({ window: win, document: { addEventListener() {} }, L: { layerGroup: layer }, fetch: () => { loads.push('blocks'); return Promise.resolve({ ok: false }); }, console, Set, Map, Promise });
+  vm.runInContext(src('js/sewer-trace.js'), ctx);
+  return { ST: win.PeelSewerTrace, opened, loads, snaps, state, snap: () => snap };
+}
+test('phase 8a review: a block tapped opens its scope once the model is built (the sheet up on a phone); before it, its card as before', async () => {
+  // A phone, the sheet at its peek: the scope, and the sheet to half, as the card did through openResult.
+  let B = loadShowBlock({ narrow: true });
+  await B.ST.showBlock('12');
+  assert.deepEqual(B.opened, ['dr:B12']); assert.deepEqual(B.loads, [], 'no card loads'); assert.equal(B.snap(), 'half');
+  // The same block again: no second open (focusSvc would toggle its focus off).
+  await B.ST.showBlock('12'); assert.deepEqual(B.opened, ['dr:B12']);
+  B = loadShowBlock({ narrow: true, snap: 'full' }); await B.ST.showBlock('12');
+  assert.deepEqual(B.opened, ['dr:B12']); assert.equal(B.snap(), 'full', 'a sheet higher than its peek stays'); assert.deepEqual(B.snaps, []);
+  B = loadShowBlock({ narrow: false }); await B.ST.showBlock('12');
+  assert.deepEqual(B.opened, ['dr:B12']); assert.deepEqual(B.snaps, [], 'a wide screen has no sheet');
+  // The lookup filled, the model not built (a slow or missing census): the card's loads, no scope (whose Overview
+  // reads the model), no throw.
+  B = loadShowBlock({ narrow: true, model: false }); await B.ST.showBlock('12');
+  assert.deepEqual(B.opened, []); assert.deepEqual(B.loads.sort(), ['blocks', 'sewers']);
+  // A link's last try (opt.card) and a block with no servicing area: the card too.
+  B = loadShowBlock({}); await B.ST.showBlock('12', { card: true });
+  assert.deepEqual(B.opened, []); assert.deepEqual(B.loads.sort(), ['blocks', 'sewers']);
+  B = loadShowBlock({ areas: [] }); await B.ST.showBlock('12');
+  assert.deepEqual(B.opened, []); assert.deepEqual(B.loads.sort(), ['blocks', 'sewers']);
 });
 
 test('one hover card: kind, name, the number, what a click does', () => {

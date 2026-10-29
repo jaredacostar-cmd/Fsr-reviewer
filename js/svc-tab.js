@@ -393,6 +393,8 @@
     { const p = DV().scopedDev(); renderSvcTab.scope = p ? p.key : ''; }
     svcIdx = indexSvc();
     try { buildSvcTab(bc); } finally { svcIdx = null; }
+    // (an old block link that fell back to its card while the model was out: the block's scope now, js/svc-scope.js)
+    if (root.PeelSvcScope && root.PeelSvcScope.settleLate) root.PeelSvcScope.settleLate();
   }
   // What the servicing model and its tab are built from. Every development counts in it, whatever the
   // filters ("other filters ignored"), so a filter change leaves it as it is: ensureSvcModel() rebuilds
