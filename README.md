@@ -114,7 +114,7 @@ its own icon, under the home-screen name **Peel Dev**.
 On a phone, Home's menu is ☰ in the top bar, beside Home, and ⋯ holds Export, Present, Help and
 Settings; a page's actions sit in a bar at its foot. On the full map, **Filters** opens the search, the
 filters and the developments on the map, and the five tabs (Overview · Growth · Servicing · Capital ·
-Records) are a sheet at the bottom: drag its grip, or tap it, to change its height. Each panel has a
+Records) are a sheet at the bottom: tap its summary line to raise it, and Esc folds it back. Each panel has a
 **Scenario** and a **Years** chip (the timeline sits under the sheet); the legend is a card on the map,
 folded until you open it. Help › *What moved where* gives each older control's place now.
 

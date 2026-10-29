@@ -173,7 +173,7 @@ the deploy, so the live site keeps its last good build.
 | Brampton | Site plan approval | Applications |
 | Brampton | Draft plans of condominium | Applications |
 | Brampton | Development permit system | Applications |
-| Brampton | Pre-consultation (always shown as Inception; units not counted) | Applications |
+| Brampton | Pre-consultation (always shown as Pre-application; units not counted) | Applications |
 | Brampton | Building permits (`maps1.brampton.ca`, with dwelling counts) | Permits |
 | Caledon | Development applications (with units by dwelling type) | Applications |
 | Caledon | AMANDA building permits (units created) | Permits |

@@ -1024,7 +1024,7 @@
     const t = one || specOf('dca:timing', areaScope); if (!t) return loading('projects', 'Loading the DC program…');
     const m = { id: 'projects', eyebrow: eyebrow('projects'), name: 'Is the capital program arriving in time for growth?', status: t.head.status, identity: t.head.identity, scen: scen(), answer: t.answer,
       figures: t.figures, chart: t.chart, lists: (t.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('projects', r)) })), folds: t.folds,
-      map: dcProjMap() || { svg: worksMap(), attrs: { 'data-ws-go': 'projects' }, label: 'Open Projects on the map', caption: '2026 DC works (draft): <span class="hm-key hm-dc-wastewater"></span> wastewater <span class="hm-key hm-dc-water"></span> water' },
+      map: dcProjMap() || { svg: worksMap(), attrs: { 'data-ws-go': 'projects' }, label: 'Open Capital › DC timing on the map', caption: '2026 DC works (draft): <span class="hm-key hm-dc-wastewater"></span> wastewater <span class="hm-key hm-dc-water"></span> water' },
       method: t.method, sources: t.sources,
       actions: [{ label: 'Open the map', attrs: one ? { 'data-ws-go': 'projects', 'data-ws-dcwork': DP.state.sel } : { 'data-ws-go': 'projects' }, primary: true }, { label: 'Full table', attrs: { 'data-ws-go': 'projects', 'data-ws-fulltable': 'dca:timing' } }] };
     return t.head && t.head.back ? asSection(m, t) : m;

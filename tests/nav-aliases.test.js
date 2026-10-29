@@ -701,7 +701,10 @@ test('phase 6a: the area pages are Home’s tabs; old links open the page’s ow
   assert.match(ws, /if \(e\.target\.closest\('\[data-ws-backpage\]'\)\) \{ const h = cur && hostAt\(cur\); openPage\(cur \|\| page \|\| 'home', \{ keep: !!h && !scopeOverview\(h\.page\) \}\); return; \}/);
   assert.match(ws, /const hostAt = id => hostOf\(id, \{ site: devOpen\(\) \}\);/, '(6b: the site’s map views too, with a development open)');
   assert.match(ws, /data-ws-back>← Back to \$\{esc\(backTo\.ws \? `\$\{pageName\(backTo\.ws\)\} \(map\)` : hostPage\(backTo\.page\) \? `\$\{pageName\(backTo\.page\)\} › \$\{viewName\(backView\(\)\)\}` : pageName\(backTo\.page\)\)\}/, '“← Back to Home › Servicing › Network”');
-  assert.match(ws, /if \(mode === 'full' && backTo && backTo\.page && hostPage\(backTo\.page\)\) renderBack\(true\);/, 'the label follows a pick on the full map');
+  // (… and, navigation phase 9's review, from the site's page or a Find step's map view, a development picked or closed
+  // on the full map: Check a site with one, Find without, as the click lands)
+  assert.match(ws, /const findStep = id => id === 'site' \|\| id === 'fsr';\n {4}if \(mode === 'full' && backTo && \(backTo\.ws \? findStep\(backTo\.ws\) : backTo\.page && \(hostPage\(backTo\.page\) \|\| findStep\(backTo\.page\)\)\)\) renderBack\(true\);/, 'the label follows a pick on the full map');
+  assert.match(ws, /const pageName = id => \(id === 'home' \? 'Home' : id === 'site' \|\| id === 'fsr' \? \(devOpen\(\) \? BY_ID\.site\.label : BY_ID\[id\]\.find\)/, '(the name a Find step goes by, with and without a development)');
   // A development picked while Home is open (any of its views) opens its page (§5 row 25).
   assert.match(ws, /mode === 'home' && \(page === 'home' \|\| page === 'study'\)\) \{ exploreDev = sc; setTimeout\(\(\) => openPage\('site'\), 0\); \}/);
   // Start over and Home's buttons land on its Overview.

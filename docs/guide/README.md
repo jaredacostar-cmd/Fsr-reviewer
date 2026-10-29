@@ -14,12 +14,12 @@ longer opens it) for a card explaining what it represents and where the data com
 
 **Find** — one filter panel, in order: **Search · Stage · Where · What · When · Flags**,
 then the list of developments on the map. One-tap **saved-view preset chips** sit above the
-search bar (save a view from More settings → Saved views).
+search bar (save a view from Export ▾ › Save this view…).
 - **Search** by address, file number or description; a notice line says when nothing matches.
-- **Stage:** the bar shows how the listed developments split across the stages — Inception,
-  Under review, Approved, Permit issued, Under construction, Completed, Withdrawn — each with
-  its count. Tap a segment to show only that stage; tap again to go back to all. Ctrl-click
-  (⌘ on a Mac) picks several.
+- **Stage:** the bar shows how the listed developments split across the stages — Pre-application,
+  In review, Plan approved, Permit / under construction (one row; the bar keeps Building permit and
+  Under construction apart), Built, Withdrawn / refused — each with its count. Tap a segment to show
+  only that stage; tap again to go back to all. Ctrl-click (⌘ on a Mac) picks several.
 - **Where:** **municipality** (All, Brampton, Caledon, Mississauga); **secondary plans** (tick
   one or several; type to find a plan) and **MTSA** drop-downs — a project counts if it is
   inside any pick, and the picks are outlined on the map; and the **receiving plant** (G.E.
@@ -45,14 +45,14 @@ search bar (save a view from More settings → Saved views).
   **New buildings only** hides alterations, signs, pools and similar permits.
 - Where the old controls went: the phase quick-view chips → the **Stage** bar; the **Focus**
   chips → **Flags** (Growth is now the default land use; Major 100+ is a size; Employment is a
-  land use; Committed capacity and Left to build are the counting basis in the **Scenario** bar;
+  land use; Committed capacity and Left to build are the counting basis in the **Scenario** control;
   New in last 12 months is the Last 12 months button); record type and New buildings only →
   **What**; the demand year → the Scenario control's **Results for year**.
 
 **Watch:** the developments you starred with ☆ Watch. *This week* (Home's menu) lists the projects that are
 new, or that changed stage, since the previous weekly update.
 
-The old **Data** tab is **Records › Sources** (navigation phase 6): the source list, **Refresh live**, and an
+The old **Data** tab is **Records › Sources** (design bundle 6, before the navigation phases): the source list, **Refresh live**, and an
 **Advanced** section for adding sources.
 
 **Map**
@@ -479,9 +479,9 @@ from street zoom (14), up to 3,000 in view.
   conditions; the legend lists the loads when some are off.
   Site boundaries stay on the map whatever these switches say: a development whose layer is off
   has its boundary dashed and faint, with "Not in the wastewater loads" in its tooltip.
-- **Resizable bottom panels**: drag the analysis panel's top edge (or focus it and use the arrow keys)
-  to give the map more or less room; on a phone, drag the info sheet's grip, or tap it to step
-  30% → 50% → 62% → 92%. Heights are remembered.
+- **Resizable analysis panel**: drag the analysis column's left edge (or focus it and use the arrow keys)
+  to give the map more or less room (the width is remembered); on a phone the panel is a sheet at the
+  bottom: tap its summary line to raise it, and Esc folds it back.
 - **Paths over developments**: flow paths (a development trace, a catchment's or block's route) draw
   above the development markers, and the markers fade while a path is shown; *Developments: Show ·
   Faded · Hidden* in the bottom bar picks how (remembered). The map fits the path into the part not
@@ -2106,6 +2106,14 @@ info key or stored preference was renamed, so every link, saved view and stored 
 - **Left for later** (named, not forgotten): "phase" for a development's stage in older cards and notes, the
   full map's ☰ (see *Home's sidebar, Help and Settings*), and the sideways scroll of Servicing › Capacity's panes at
   390 px (a layout fix, not a word).
+- **From the review**: *What an FSR should cover*'s button names where it lands, *Find › Files with an FSR posted*
+  with no development open (as the role shortcut says) and *Servicing › FSR review* with one; the full map's back bar
+  from the site's page or a Find step's map view follows a development picked or closed there (*Check a site* with
+  one, *Find* without), as the click lands; a development's files are *Records* in the approvals guide, the flows guide
+  and the "links to check" chip too; What moved where says only the Inquiry draft keeps the development (any other
+  result closes it); the map tour's Forecast step points at Growth's panel, and on a phone its Timeline, Present and
+  Help steps at Filters and ⋯; the phone sheet rises from its summary line (its grip is hidden; the README said
+  otherwise).
 
 ## Help and This week
 

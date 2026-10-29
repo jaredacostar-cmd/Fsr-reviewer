@@ -3122,6 +3122,14 @@ async function pickView(page, ev, key, tap = false) {
     await page.locator('#ws-bar .ws-fullbtn', { hasText: 'Full map' }).first().click(); await wait(2000);
     let b = await back();
     expect(/^← Back to Find › Files with an FSR posted \(map\)$/.test(b), `the full map’s back bar from it (${b})`);
+    // (the review: a development picked on the full map, the bar names where its click lands, the map view with the
+    // development, Check a site; closed again, the Find step's name comes back)
+    await ev(() => { const p = PeelApp.state.projects.find(q => q.phase === 'approved' && q.units >= 300 && q.lat != null); PeelDevNav.showDetail(p); }); await wait(2500);
+    b = await back();
+    expect(/^← Back to Check a site \(map\)$/.test(b), `…a development picked on the full map: the bar names its map view (${b})`);
+    await ev(() => DevScope.close()); await wait(2000);
+    b = await back();
+    expect(/^← Back to Find › Files with an FSR posted \(map\)$/.test(b), `…and closed: the Find step’s name again (${b})`);
     await page.locator('#back-bar [data-ws-back]').click(); await wait(1500);
     s = await at(); expect(s.mode === 'ws' && s.ws === 'fsr', `back on its map view (${s.mode}, ${s.ws})`);
     // 2. Find, the sidebar's entry: the Find step; the full map's way back to it.
@@ -3171,7 +3179,7 @@ async function pickView(page, ev, key, tap = false) {
     await page.click('#home .home-side ul [data-ws-page="help"]'); await wait(1500);
     await page.click('#home .page-sec >> text=How it works'); await wait(1500);
     await page.click('#home [data-ws-page="capacity"]'); await wait(1500);
-    const g = [['capacity', ['Servicing › Capacity', 'Capital › DC timing'], 'home', 'svc:capacity'], ['fsrguide', ['Servicing › FSR review'], 'fsr', null], ['capguide', ['Capital › DC timing'], 'home', 'dca:timing'], ['forecast', ['Growth › Areas'], 'home', 'growth:areas'], ['network', ['Servicing › Capacity'], 'home', 'svc:capacity']];
+    const g = [['capacity', ['Servicing › Capacity', 'Capital › DC timing'], 'home', 'svc:capacity'], ['fsrguide', ['Find › Files with an FSR posted'], 'fsr', null], ['capguide', ['Capital › DC timing'], 'home', 'dca:timing'], ['forecast', ['Growth › Areas'], 'home', 'growth:areas'], ['network', ['Servicing › Capacity'], 'home', 'svc:capacity']];
     for (const [id, labels, pg, view] of g) {
       if ((await at()).page !== id) { await ev(i => PeelWorkspaces.openPage(i), id); await wait(1500); }
       const f = await foot();
@@ -3182,6 +3190,17 @@ async function pickView(page, ev, key, tap = false) {
       expect(a.page === pg && (!view || a.view === view), `${id}: "${labels[0]}" opens ${pg}${view ? ` at ${view}` : ''} (${JSON.stringify(a)})`);
       if (id === 'fsrguide') expect(a.eyebrow === 'Find › Files with an FSR posted · step 1 of 3', `…the FSR reviewer’s Find step (${a.eyebrow})`);
     }
+    // (the review: with a development open the same button names, and opens, the development's Servicing › FSR review)
+    await ev(() => { const p = PeelApp.state.projects.find(q => q.phase === 'approved' && q.units >= 300 && q.lat != null); PeelDevNav.showDetail(p); }); await wait(2500);
+    await ev(() => PeelWorkspaces.openPage('fsrguide')); await wait(1500);
+    const fd = await foot();
+    expect(fd.includes('Servicing › FSR review') && !fd.includes('Find › Files with an FSR posted'), `fsrguide with a development open: the footer names Servicing › FSR review (${fd.join(' | ')})`);
+    if (fd.includes('Servicing › FSR review')) {
+      await page.locator('#home .page-foot .pnl-acts .btn', { hasText: /^Servicing › FSR review$/ }).first().click(); await wait(2000);
+      const a = await at();
+      expect(a.page === 'site' && a.view === 'svc:fsr' && /^Servicing › FSR review · /.test(a.eyebrow), `…and opens the development's Servicing › FSR review (${JSON.stringify(a)})`);
+    }
+    await ev(() => window.DevScope && DevScope.current() && DevScope.close()); await wait(1200);
     // Settings › Usage: the pages by those names, none by an old one.
     await page.click('#tb-gear'); await wait(900);
     const u = await ev(() => ({ rows: [...document.querySelectorAll('#usage-sec .usage-t td:first-child')].map(td => td.textContent.trim()), text: (document.getElementById('usage-sec') || {}).textContent || '' }));
@@ -3206,6 +3225,16 @@ async function pickView(page, ev, key, tap = false) {
     const gone = ['quick-views', 'phases', 'focus', 'demand', 'demand-pop', 'ii', 'aerial', 'map-view', 'map-color', 'map-areas', 'map-year', 'map-tools', 'saved-views', 'source-records', 'demand-selection', 'legend', 'phase-all', 'phase-active', 'focus-growth', 'focus-committed', 'focus-left', 'focus-employment', 'focus-major', 'focus-newapps', 'focus-stalled', 'focus-week', 'focus-watched', 'compliance', 'tab-log', 'latest-submission', 'tab-developments', 'tab-demand', 'tab-criteria', 'select-tool', 'tab-water', 'svc-scope', 'tab-ww', 'forecast-2051', 'council-items', 'references', 'record-settings'];
     const chk = await ev(([ks, g]) => ({ hit: ks.filter(k => g.includes(k)), old: ks.filter(k => PeelInfo.INFO[k] && /Tool result tab|Wastewater tab|Water \/ Wastewater tabs|Scenario bar|Scenario line|bottom panel|workspace|Capital › Timing|Review an FSR/.test(`${PeelInfo.INFO[k].title} ${PeelInfo.INFO[k].body} ${PeelInfo.INFO[k].source || ''}`)), cards: ks.filter(k => PeelInfo.INFO[k]).length }), [[...keys], gone]);
     expect(keys.size > 10 && chk.cards > 10 && !chk.hit.length && !chk.old.length, `the ⓘ on Home’s views and the full map’s tabs: ${chk.cards} cards shown of ${keys.size} keys; none deleted (${chk.hit.join(', ')}), none naming a place that went (${chk.old.join(', ')})`);
+    // (the review: each map tour step highlights what it names: the Forecast is Growth's panel; on a phone the
+    // Timeline, Present and Help steps point at Filters and ⋯, the boxes they are behind)
+    const tourAt = async t => { await ev(x => document.querySelector(`.tour-card [data-tour-dot="${PeelTips.TOUR.findIndex(s => s.t === x)}"]`).click(), t); await wait(1800); return ev(() => ({ t: (document.querySelector('.tour-card strong') || {}).textContent, hole: !!document.querySelector('.tour-hole') })); };
+    await ev(() => PeelTips.startTour('map')); await wait(1200);
+    { const f = await tourAt('Forecast'); expect(f.t === 'Forecast' && f.hole, `the map tour’s Forecast step highlights Growth’s panel (${JSON.stringify(f)})`); }
+    await page.keyboard.press('Escape'); await wait(500);
+    await page.setViewportSize({ width: 390, height: 844 }); await wait(1500);
+    await ev(() => PeelTips.startTour('map')); await wait(1200);
+    for (const t of ['Timeline', 'Present and time-lapse', 'Forecast', 'Help any time']) { const f = await tourAt(t); expect(f.t === t && f.hole, `390 px: the map tour’s ${t} step highlights what shows (${JSON.stringify(f)})`); }
+    await page.keyboard.press('Escape'); await wait(500);
   });
 
   await browser.close(); srv.close();

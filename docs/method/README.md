@@ -116,8 +116,8 @@ Each municipality uses its own schema, so nothing is hard-coded per dataset:
 
 Under the Planned / Permitted / Completed / Left to build tiles, each project shows the same
 four columns by type (single / semi, townhouse, apartment, type not stated), and an
-**Employment** row with the non-residential floor area and estimated jobs. The bottom panel's
-**Breakdown & criteria** tab totals them for the projects shown.
+**Employment** row with the non-residential floor area and estimated jobs. **Growth › Pipeline**'s full
+table (*Build-out by dwelling type*) totals them for the developments shown.
 
 - **Planned** by type: the unit mix published with the application; else counts in the
   application description (“299 single detached, 217 street townhouse and 52 back-to-back
@@ -139,9 +139,9 @@ each assigned to the nearest use. A purely non-residential file's floor-area fie
 the text gives none (marked †). Files on one site repeat the proposal, so the largest figure per
 use counts; minor / limited files are skipped. Estimated jobs use typical floor space per
 worker: industrial 110 m², office 25, retail 45, hotel 60, institutional 50 by default. These
-are editable under **Breakdown & criteria → Employment floor space (m²/job)** (saved in the
-browser; *Reset to Peel defaults* restores them) and every job count, employment demand and
-summary updates. Shown as an **Employment** section in the development panel, an **Employment** focus chip, and in the CSV export
+are editable in the **Scenario** control (*Change the scenario › Design criteria › Floor space per job*; saved in the
+browser; *Reset to Peel criteria* restores them) and every job count, employment demand and
+summary updates. Shown as an **Employment** section in the development panel, the **Employment** land use under Find › What, and in the CSV export
 (`employment_uses`, `nonres_floor_area_m2`, `est_jobs`).
 
 ## Aerial check (is it built?)

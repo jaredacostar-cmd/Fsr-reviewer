@@ -218,6 +218,10 @@ test('What moved where: every old tab and sub-view says where it is now', () => 
   assert.match(now('The Projects workspace'), /Capital › DC timing/);
   assert.match(now('Capital › Timing'), /Capital › DC timing/);
   assert.match(now('The Tool result tab'), /on Overview/);
+  // (the review: only the Inquiry draft keeps the development; every other tool's result closes it, js/svc-scope.js)
+  assert.match(now('The Tool result tab'), /The Inquiry draft, started at a development, keeps it \(Peel › the site › the draft\); any other result closes the development first\./);
+  assert.match(src('js/svc-scope.js'), /if \(window\.DevScope && window\.DevScope\.current\(\) && !o\.keepDev\) window\.DevScope\.close\(\);/);
+  assert.deepEqual(fs.readdirSync(path.join(ROOT, 'js')).filter(f => f !== 'svc-scope.js' && f !== 'overview-tab.js' && /\bkeepDev\b/.test(src(`js/${f}`))), ['tools-inquiry.js'], 'only the Inquiry draft passes keepDev (svc-scope.js keeps it, overview-tab.js reads it)');
   assert.doesNotMatch(MOVED.flatMap(g => g.rows.map(r => r[1])).join(' '), /Tool result tab|last workspace|Review an FSR’s own step|\(your watch list and alerts\)/);
   const at = src('js/analysis-tabs.js');
   assert.match(at, /ww: \{ plants: 'capacity', catchments: 'network', alloc: 'capacity', pumpstations: 'network' \}/);

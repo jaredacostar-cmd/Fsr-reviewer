@@ -854,8 +854,10 @@
     else if (sc && !sc.startsWith('dev:')) exploreDev = null;
     // (Servicing › Old pipes drawn: its pipes on the map, once the sewer records are in)
     if (e.detail && e.detail.key === 'svc:pipes') syncPipes();
-    // (the back bar names the view it goes back to: a tab or view picked on the full map meanwhile)
-    if (mode === 'full' && backTo && backTo.page && hostPage(backTo.page)) renderBack(true);
+    // (the back bar names the view it goes back to: a tab or view picked on the full map meanwhile; and, from the
+    // site's page or a Find step's map view, a development picked or closed there: Check a site with one, Find without)
+    const findStep = id => id === 'site' || id === 'fsr';
+    if (mode === 'full' && backTo && (backTo.ws ? findStep(backTo.ws) : backTo.page && (hostPage(backTo.page) || findStep(backTo.page)))) renderBack(true);
     schedule();
   });
   // A site picked in a workspace's map view (Check a site / Review an FSR): on to its result.

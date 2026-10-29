@@ -143,7 +143,7 @@
     return `<details class="sub-sect emp"><summary><h3 class="sub-title" data-info="employment">Employment uses${e.mixed ? ' <span class="muted small">(mixed use)</span>' : ''}</h3>
         <span class="muted small sect-sum">${e.totalM2 ? `${fmtNum(e.totalM2)} m² · ~${fmtNum(e.jobs)} jobs` : 'floor area not stated'}</span></summary>
       <table class="dt"><thead><tr><th>Use</th><th>Floor area</th><th>Est. jobs</th></tr></thead><tbody>${rows}</tbody></table>
-      <p class="small muted">Read from the application descriptions${anyField ? '; † non-residential floor area published with the application' : ''}${anyPermit ? '; ‡ new non-residential buildings on the building permits' : ''}. Jobs at ${Object.entries(App().state.criteria.m2PerJob).filter(([k]) => e.uses.some(u => u.key === k)).map(([k, v]) => `${v} m²/job ${k}`).join(', ')} (editable under Breakdown &amp; criteria).</p>
+      <p class="small muted">Read from the application descriptions${anyField ? '; † non-residential floor area published with the application' : ''}${anyPermit ? '; ‡ new non-residential buildings on the building permits' : ''}. Jobs at ${Object.entries(App().state.criteria.m2PerJob).filter(([k]) => e.uses.some(u => u.key === k)).map(([k, v]) => `${v} m²/job ${k}`).join(', ')} (editable in the Scenario control).</p>
     </details>`;
   }
 
@@ -430,7 +430,7 @@
     if (p.holding) out.push(chipGo(p.holding.open ? `Holding (H): removal in review (${esc(p.holding.refs[0] || 'file')})` : `Holding (H) lifted (${esc(p.holding.refs[0] || 'file')})`, p.holding.open ? 'warn' : '', p.holding.refs[0] ? { 'data-dev-file': p.holding.refs[0] } : { 'data-dev-hist': 'file' }, 'H (holding symbol): zoning that needs a condition met, often servicing, before building. Opens the file in History'));
     // Bundle 6: links in its file tree made by overlap only (low confidence): one tap to the tree.
     { const FT = root.PeelFileTree, d = FT && FT.of(p), n = d ? FT.summary(d).check : 0;
-      if (n) out.push(`<button type="button" class="chip chip-link" data-tree-check title="Files linked to this development by overlap only: check them in Records › Files">${n} link${n === 1 ? '' : 's'} to check</button>`); }
+      if (n) out.push(`<button type="button" class="chip chip-link" data-tree-check title="Files linked to this development by overlap only: check them in Records">${n} link${n === 1 ? '' : 's'} to check</button>`); }
     const dm = P.dormantOf(p);
     if (dm) out.push(chipGo(`Dormant ${dm.years.toFixed(1)} yrs`, 'warn', { 'data-dev-hist': '' }, `No activity for over ${dm.limit} years: ${App().state.showDormant ? 'included in the counts because dormant developments are shown' : 'left out of the counts (Find › include dormant)'}`));
     else if (st.stalled) out.push(chipGo(`Stalled ${st.years.toFixed(1)} yrs`, 'warn', { 'data-dev-hist': '' }, 'History: the last activity'));

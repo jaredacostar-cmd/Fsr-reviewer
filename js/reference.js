@@ -114,7 +114,7 @@
       return `${num(e.units[k])} ${t} × ${two(rate)} people = <b>${num(e.pop[k])}</b>`;
     });
     const steps = [];
-    steps.push(['Homes', `${num(e.totalUnits)} homes planned${lines.length > 1 ? ', by type' : ''}`, lines.join('<br>') || '–', 'The units on the development’s files, counted once (Records › Files).']);
+    steps.push(['Homes', `${num(e.totalUnits)} homes planned${lines.length > 1 ? ', by type' : ''}`, lines.join('<br>') || '–', 'The units on the development’s files, counted once (Records).']);
     // The apartments' rate: the large-apartment rate, or the high-density rate on a dense site.
     let aptNote = '';
     if (e.units.apartment > 0) {
@@ -262,7 +262,8 @@
     ['Sanitary servicing', 'The outlet, the sewers proposed and the downstream sewers, pumping stations and plant.', 'The outlet is in the right wastewater block; downstream capacity is shown, not assumed.'],
     ['Phasing and works needed', 'What each phase needs; any Region capital works it depends on, and their timing.', 'Works in the DC program, and whether they arrive in time.'],
   ];
-  function fsrguide(coverage) {
+  // (dev: a development is open, so the FSR reviewer's id opens its Servicing › FSR review; with none it opens the Find step)
+  function fsrguide(coverage, dev) {
     const WD = { app: ['room', 'Compared here'], part: ['tight', 'Facilities only'], eye: ['over', 'By an engineer'] };
     const cov = (coverage || []).map(([t, k, d]) => [esc(t), `<span class="t-${WD[k][0]}">${WD[k][1]}</span>`, `<span class="muted">${esc(d)}</span>`]);
     return wrap('fsrguide', {
@@ -272,7 +273,7 @@
         + sec('errs', 'Common differences with the app’s figures', `<ul class="rf-ul"><li><strong>Persons per unit</strong> from another standard, or apartments at the high-density rate on a site that is not that dense (or the reverse).</li><li><strong>Peaking</strong> applied to the average including I&amp;I, or the factor not limited to 2.0–4.0.</li><li><strong>I&amp;I</strong> on the net instead of the gross site area, or left out.</li><li><strong>Jobs</strong> left out of a mixed-use site.</li><li><strong>Downstream capacity</strong> taken from an older study, before nearby approvals.</li></ul>`),
       method: `What the FSR should cover: Region of Peel, Functional Servicing Report Requirements (November 2009), with today’s design criteria (Linear Wastewater Standards R1.0, 2023; Modelling Demand Table v2.0, 2024; Watermain Design Criteria, 2010). Confirm the current requirements with the Region. ${NOTE_TAIL}`,
       sources: 'Region of Peel: Functional Servicing Report Requirements (2009); Linear Wastewater Standards (2023); Water and Wastewater Modelling Demand Table (2024); Public Works Watermain Design Criteria (2010).',
-      actions: [{ label: 'Servicing › FSR review', attrs: { 'data-ws-page': 'fsr' }, primary: true }],
+      actions: [{ label: dev ? 'Servicing › FSR review' : 'Find › Files with an FSR posted', attrs: { 'data-ws-page': 'fsr' }, primary: true }],
     });
   }
 
@@ -489,7 +490,7 @@
     if (id === 'flows') return flows(flowsExample());
     if (id === 'network') return network(s.reports);
     if (id === 'capacity') return capacity(capRow());
-    if (id === 'fsrguide') return fsrguide(root.PeelWsPages ? root.PeelWsPages.COVERAGE : null);
+    if (id === 'fsrguide') return fsrguide(root.PeelWsPages ? root.PeelWsPages.COVERAGE : null, !!(root.DevScope && root.DevScope.current && root.DevScope.current()));
     if (id === 'capguide') return capital(s.eas && s.eas.eas, s.capital && s.capital.records);
     if (id === 'targets') return targets(s.housing, s.reports && s.reports.forecast2051, pipeline());
     if (id === 'forecast') return forecast(forecastInputs(s));
