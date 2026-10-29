@@ -217,7 +217,7 @@
         <button type="button" role="tab" class="f-tab" id="ftab-growth" data-tab="growth" data-info="tab-growth" aria-controls="pane-growth-pipeline" aria-selected="false">Growth</button>
         <button type="button" role="tab" class="f-tab" id="ftab-svc" data-tab="svc" data-info="tab-servicing" aria-controls="pane-svc-capacity" aria-selected="false" aria-busy="true" title="Loading: it opens when its data lands">Servicing</button>
         <button type="button" role="tab" class="f-tab" id="ftab-dca" data-tab="dca" data-info="tab-dca" aria-controls="pane-dca-timing" aria-selected="false" aria-busy="true" title="Loading: it opens when its data lands">Capital</button>
-        <button type="button" role="tab" class="f-tab f-tab-trail" id="ftab-records" data-tab="records" data-info="tab-records" aria-controls="pane-records" aria-selected="false">Records</button>
+        <button type="button" role="tab" class="f-tab" id="ftab-records" data-tab="records" data-info="tab-records" aria-controls="pane-records" aria-selected="false">Records</button>
       </div>
       <!-- Stage 3: "Open full table" widens this column to the full window and shows the open
            sub-view's detailed tables (js/panel.js); Esc returns to the panel. -->
@@ -297,6 +297,8 @@
       </section>
       <!-- Old pipes (navigation phase 6c): the grid, by plant and every run on the list, its CSV (js/svc-capacity.js renderPipesTable). -->
       <section class="f-pane svc-pane" id="pane-svc-pipes" data-pane="svc" data-sub="pipes" role="tabpanel" aria-labelledby="ftab-svc" hidden><div class="tb-head"><h2 class="sr">Old pipes</h2></div><div id="pipes-body"></div></section>
+      <!-- A single file's Servicing: its one view, its flows (navigation design §3.5; js/aerial-check.js renderFlows) -->
+      <section class="f-pane svc-pane" id="pane-svc-file" data-pane="svc" data-kind="file" role="tabpanel" aria-labelledby="ftab-svc" hidden><div class="tb-head"><h2 class="sr">Its flows</h2></div><div id="svc-file-body"></div></section>
 
       <div class="f-pane f-subtabs" data-pane="dca" hidden role="group" aria-label="Capital view"><button type="button" class="btn small" data-dcasub="timing">DC timing</button><button type="button" class="btn small" data-dcasub="eas">EAs</button><button type="button" class="btn small" data-dcasub="projects">Projects</button></div>
       <section class="f-pane pnl-host" id="pnl-dca" data-pane="dca" aria-labelledby="ftab-dca" hidden></section>

@@ -322,8 +322,9 @@ test('keepDev: the kept result shows on Overview, its trail Peel › the site �
   assert.match(ov, /\(host\.dataset\.kd \|\| ''\) !== \(kd \? kd\.key : ''\)/);
   assert.match(ov, /const site = kd \? \[\{ label: kd\.title, attrs: \{ 'data-scope-result-close': '' \} \}\] : \[\];/);
   assert.match(ov, /trail: \[\{ label: 'Peel', attrs: kd \? \{ 'data-scope-result-close': '', 'data-pnl-dev-close': '' \} : \{ 'data-scope-result-close': '' \} \}, \.\.\.site, \{ label: kind\.split\(' · '\)\[0\] \}\]/);
-  // The site's own Overview panel does not cover it (pnl-on hides the panes).
-  assert.match(pn, /const kept = t === 'overview' && root\.PeelSvcScope && root\.PeelSvcScope\.keepsDev && root\.PeelSvcScope\.keepsDev\(\);\n\s*const e = kept \? null : ov \?/);
+  // The site's own Overview panel does not cover it (pnl-on hides the panes); nor a sub-view's a scope's own view
+  // (a file's Servicing, its flows: navigation phase 8b review).
+  assert.match(pn, /const kept = \(t === 'overview' && root\.PeelSvcScope && root\.PeelSvcScope\.keepsDev && root\.PeelSvcScope\.keepsDev\(\)\) \|\| !!\(A\.ownView && A\.ownView\(t\)\);\n\s*const e = kept \? null : ov \?/);
   // The top bar: the site before the result's crumbs, its step closing the result; else the ladder first.
   const rt = tb.slice(tb.indexOf('function renderTrail()'), tb.indexOf('const tc = '));
   const at = s => { const i = rt.indexOf(s); assert.ok(i >= 0, s); return i; };

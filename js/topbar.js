@@ -42,7 +42,8 @@
     // (only a lens tap sets the System: a workspace or a page calling setMapView leaves it; Planning too)
     const sy = AT() && AT().SYS_OF_VIEW ? AT().SYS_OF_VIEW[b.dataset.mview] : null; if (sy && AT().setSys) AT().setSys(sy);
     // Bundle 6: a view opens its tab (picking Capital used to leave Overview open): Capital → Capital,
-    // Water and Wastewater → Servicing; Planning keeps the tab you are on.
+    // Water and Wastewater → Servicing; Planning keeps the tab you are on. (A card or a tool's result that leaves
+    // the tab out closes first, in openTab: navigation phase 8b.)
     const tab = { dc: 'dca', water: 'svc', wastewater: 'svc' }[b.dataset.mview];
     if (tab && AT() && AT().openTab) AT().openTab(tab);
   });
@@ -71,11 +72,12 @@
   }
   // Phase 3: the "Peel" trail step also clears the dev scope.
   // The Peel crumb only navigates: back to all of Peel (no municipality, area, servicing step,
-  // development or tool result); the filters stay. Start over clears them.
+  // development or tool result); the filters stay. Start over clears them. (A card or a tool's result closes
+  // first, as × does, while it is still open: its close handlers drop an uncounted test site, an EA's highlight.)
   function goPeel() {
+    if (typeof PeelTools !== 'undefined' && PeelTools.closeResult) PeelTools.closeResult();
     if (window.PeelSvcScope) window.PeelSvcScope.clear();
     if (typeof DevScope !== 'undefined') DevScope.close();
-    if (typeof PeelTools !== 'undefined' && PeelTools.closeResult) PeelTools.closeResult();
     Object.assign(App().state, { muni: '', sp: [], mtsa: [], pz: [], dr: [] });
     if (window.PeelSearchFilter && window.PeelSearchFilter.renderMuniChips) window.PeelSearchFilter.renderMuniChips();
     PA().renderAreaSelects(); SD().renderSvcSelects(); PA().showArea(); SD().showSvcArea();

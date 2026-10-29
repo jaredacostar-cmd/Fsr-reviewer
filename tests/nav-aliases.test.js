@@ -1063,7 +1063,7 @@ test('phase 8a: every scope kind: a servicing scope’s views and Records, a dra
     assert.ok(c.length <= 4 && c.every(v => AT.TABSUBS[tab].valid.includes(v)), `${kind} › ${tab}: ${c}`);
     if (AT.tabOff(kind, tab)) assert.deepEqual(c, [], `${kind} › ${tab} left out`);
   }
-  assert.deepEqual(Object.keys(AT.HIDDEN), ['site', 'area', 'svc', 'drawn', 'file']);
+  assert.deepEqual(Object.keys(AT.HIDDEN), ['site', 'area', 'svc', 'drawn', 'file', 'object'], '(navigation phase 8b: + object, a card)');
   // ss=iiblock:<n> (an old block link), the blocks layer's tap and [data-block]: the block's servicing scope dr:B<n>
   // once the servicing lookup and the model are in; its card where no servicing area resolves, and on a link's
   // last try while they are still out (the link kept; the scope once the model is built: click-destinations).
@@ -1081,4 +1081,69 @@ test('phase 8a: every scope kind: a servicing scope’s views and Records, a dra
   assert.match(src('js/app.js'), /showBlock: id => window\.PeelSewerTrace\.showBlock\(id\),/, 'App().showBlock');
   // The link it writes: ss=dr:B<n> (a servicing scope's ref, kept as it is); iiblock only for the fallback card.
   assert.match(sh, /!\/\^\(pipe\|file\|dcwork\|iiblock\|ea\|cap\):\/\.test\(App\(\)\.state\.ss\) \? null : App\(\)\.state\.ss\);/);
+});
+
+// Navigation phase 8b (design §3.5, §4 #7, §7.2): a file is Overview (its record sheet) and Records (the file); a
+// card or a tool's result (a DC project, an EA, a capital project, a pipe, a water facility, a constraint feature,
+// Help's) is its Overview alone. A link to one (ss=dcwork:|ea:|cap:|pipe:|file:…, with any t) lands on it, on
+// Overview; a tab, a link, Help's Show me, a map view or the lens asking for a tab it leaves out closes it first.
+test('phase 8b: a file’s and a card’s scope; old links with any t land on the card; the lens and links leave it', () => {
+  // Every result kind, from js/svc-scope.js's own list (a new kind fails here until it has its row).
+  const ss = src('js/svc-scope.js'), list = JSON.parse(ss.match(/const RESULT_KINDS = new Set\((\[[^\]]*\])\);/)[1].replace(/'/g, '"'));
+  const WANT = { tool: 'object', dcwork: 'object', pipe: 'object', file: 'file', iiblock: 'object', wfac: 'object', sel: 'drawn', help: 'object', cx: 'object', ea: 'object', cap: 'object' };
+  assert.deepEqual([...list].sort(), Object.keys(WANT).sort());
+  for (const k of list) assert.equal(AT.kindOf({ ss: { kind: 'result', rkind: k } }), WANT[k], k);
+  assert.equal(AT.kindOf({ dev: true, ss: { kind: 'result', rkind: 'tool' } }), 'site', 'a result kept at its development: the development’s tabs');
+  for (const t of ['growth', 'svc', 'dca', 'records']) assert.equal(AT.tabOff('object', t), true, t);
+  // (a file's Servicing is its own view, its flows: on the strip with no chip; 8b review, design §3.5)
+  assert.deepEqual(['growth', 'svc', 'dca', 'records'].filter(t => AT.tabOff('file', t)), ['growth', 'dca']);
+  assert.deepEqual(['growth', 'svc', 'dca', 'records'].filter(t => AT.ownView(t, 'file')), ['svc']);
+  // A link with any t: share.js opens the link's tab at Peel, then restores the result (openResult: Overview), so
+  // the card ends on Overview; the tab it names is left out there (a file's Records one tap away); the stored tab
+  // is the next visit's; × brings the five tabs back, on Overview as after any result.
+  let cur = null, closed = 0;
+  const at = { PeelSvcScope: { current: () => cur, peelWideNote: () => {}, hasResult: () => !!(cur && cur.kind === 'result') },
+    PeelAerialCheck: { closeDetail: () => { closed++; cur = null; } } };
+  for (const [rkind, t, then] of [['dcwork', 'dca', 'overview'], ['ea', 'growth', 'overview'], ['cap', 'svc', 'overview'], ['pipe', 'records', 'overview'], ['file', 'growth', 'overview'], ['file', 'records', 'records'], ['file', 'svc', 'svc']]) {
+    const T = loadTabsAt({ footTab4: t }, at);
+    assert.equal(T.getFootTab(), t, `${rkind}, t=${t}: the link's tab at Peel first`);
+    cur = { kind: 'result', rkind }; T.setFootPref('overview'); T.showFootTab('overview');   // (openResult's two calls)
+    assert.equal(T.scopeKind(), WANT[rkind]);
+    T.showFootTab(t); assert.deepEqual([T.getFootTab(), T.wantedTab()], [then, then], `${rkind}, t=${t}`);
+    cur = null; T.rescope(); assert.equal(T.getFootTab(), then, 'closed: the tab it was on');
+    T.showFootTab(t); assert.equal(T.getFootTab(), t, 'the tab again at Peel');
+  }
+  const sh = src('js/share.js'), ap = sh.indexOf('setTimeout(() => S.restore(ss), 0); }');
+  assert.ok(ap > 0 && ap < sh.indexOf('      AT().showFootTab(AT().getFootPref());'), 'the result restored after the link’s tab');
+  assert.match(ss, /function openResult\(o\) \{[^]*?AT\(\)\.setFootPref\('overview'\); AT\(\)\.showFootTab\('overview'\);/);
+  // The lens (owner decision 9: it still opens its tab), a data-at link, [data-foot-tab]: openTab; at a card the card
+  // closes first (× 's close), then the tab; at a file Records and Servicing (its flows) keep it; at Peel or a kept
+  // result nothing closes.
+  cur = { kind: 'result', rkind: 'dcwork' }; closed = 0;
+  let T = loadTabsAt({}, at);
+  T.openTab('dca'); assert.deepEqual([closed, T.getFootTab(), cur], [1, 'dca', null], 'Capital lens at a DC project');
+  cur = { kind: 'result', rkind: 'file' }; T.showFootTab('overview'); T.openTab('records'); assert.deepEqual([closed, T.getFootTab()], [1, 'records']);
+  T.openTab('svc'); assert.deepEqual([closed, T.getFootTab(), cur && cur.rkind], [1, 'svc', 'file'], 'Water lens at a file: its flows, the file kept');
+  T.openTab('growth'); assert.deepEqual([closed, T.getFootTab(), cur], [2, 'growth', null], 'Growth at a file: it closes first');
+  T.openTab('growth'); assert.equal(closed, 2, 'nothing open: nothing closes');
+  assert.match(src('js/topbar.js'), /const tab = \{ dc: 'dca', water: 'svc', wastewater: 'svc' \}\[b\.dataset\.mview\];\n\s+if \(tab && AT\(\) && AT\(\)\.openTab\) AT\(\)\.openTab\(tab\);/);
+  const a = src('js/analysis-tabs.js');
+  assert.match(a, /function openTab\(tab, sub\) \{\n\s+const r = sub \? migrateSub\(tab, sub\) : null, t = r \? r\.tab : tab;\n\s+leaveFor\(t\);/);
+  assert.match(a, /if \(s0\) openFold\(foldOf\(t0, s0\)\);\n\s+leaveFor\(tab\);/, 'a data-at link');
+  // (Help's Show me, an EA card's EAs link, a map view's own tab: each leaves the card first)
+  assert.match(src('js/tips.js'), /const openAnalysis = \(tab, sub\) => \{ if \(AT\(\)\.leaveFor\) AT\(\)\.leaveFor\(tab\);/);
+  assert.match(src('js/capital-ea.js'), /if \(AT\.leaveFor\) AT\.leaveFor\('dca'\); AT\.setSub\('dca', go\.dataset\.ceGoto\);/);
+  assert.match(src('js/workspaces.js'), /if \(!o\.keep && AT\(\) && AT\(\)\.leaveFor\) AT\(\)\.leaveFor\(pl\.tab\);\n\s+const A = AT\(\); if \(A && !o\.keep\)/);
+  // The trail's DC timing / EA / Capital step closes the card for its list (tests/capital-merge.test.js runs it), a tab
+  // pick: the link it writes says t=dca&dcs=… (8b review: it said t=overview, and a reload opened Peel's Overview).
+  assert.match(ss, /go: \(\) => \{ closeResult\(\); AT\(\)\.openTab\('dca', GROUP_SUB\[g\] \|\| 'projects'\); \}/);
+  // Records is real or left out, never a placeholder (§4 #7): the "no files of its own" line is gone.
+  assert.doesNotMatch(src('js/records-tab.js'), /has no files of its own|for all of Peel\.<\/p>/);
+  // ss= still writes each result kind (no alias needed: no share parameter renamed).
+  assert.match(src('js/share.js'), /!\/\^\(pipe\|file\|dcwork\|iiblock\|ea\|cap\):\/\.test\(App\(\)\.state\.ss\) \? null : App\(\)\.state\.ss\);/);
+  // Records a tab like the others (8b-S2): the trailing classes are gone from both strips (the map's and the page
+  // host's), as is the placeholder; the tab's id, key and pane are kept (no alias needed: nothing renamed).
+  for (const f of ['index.html', 'css/app.css', 'js/ws-pages.js', 'js/analysis-tabs.js', 'js/records-tab.js']) assert.doesNotMatch(src(f), /f-tab-trail|page-tab-trail|has no files of its own/, f);
+  assert.match(src('index.html'), /<button type="button" role="tab" class="f-tab" id="ftab-records" data-tab="records" data-info="tab-records" aria-controls="pane-records" aria-selected="false">Records<\/button>\n {6}<\/div>/, 'Records last');
+  assert.match(src('js/ws-pages.js'), /m\.tabs = tabsHTML\(\{ tabs: \(\(A && A\.TAB_KEYS\) \|\| Object\.keys\(TAB_INFO\)\)\.map\(t => \(\{ key: t, label: name\(t\), info: TAB_INFO\[t\], busy: busy\(t\) \}\)\)/, 'the page host: the same five, no trailing flag');
 });

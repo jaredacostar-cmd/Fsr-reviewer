@@ -233,8 +233,9 @@
     // picked, This week: js/workspaces.js override; Old pipes is Servicing › Old pipes, its own panel). (its panels
     // name no workspace since navigation phase 6c: the source line went with the task chips)
     const W = root.PeelWorkspaces, ov = W && W.override ? W.override(key, scopeId()) : null;
-    // (a result kept at its development, the Inquiry draft: its host shows on Overview, not the site's panel)
-    const kept = t === 'overview' && root.PeelSvcScope && root.PeelSvcScope.keepsDev && root.PeelSvcScope.keepsDev();
+    // (a result kept at its development, the Inquiry draft: its host shows on Overview, not the site's panel; a tab
+    // showing the scope's own view, a file's Servicing, no sub-view's panel: js/analysis-tabs.js ownView)
+    const kept = (t === 'overview' && root.PeelSvcScope && root.PeelSvcScope.keepsDev && root.PeelSvcScope.keepsDev()) || !!(A.ownView && A.ownView(t));
     const e = kept ? null : ov ? { html: html({ key, ...ov }), onMount: ov.onMount } : e0 && e0.scope === scopeId() ? e0 : null, ok = !!e;
     const v = e ? e.html : '';
     an.classList.toggle('pnl-on', ok);

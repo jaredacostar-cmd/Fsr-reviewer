@@ -552,7 +552,8 @@
     document.addEventListener('keydown', e => { const r = e.target.closest && e.target.closest('.eat-row[data-ce-open], tr[data-ce-open]'); if (r && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); r.click(); } });
     document.addEventListener('click', e => {
       const go = e.target.closest('[data-ce-goto]');
-      if (go) { const AT = window.PeelAnalysisTabs; if (AT) { AT.setSub('dca', go.dataset.ceGoto); AT.showFootTab('dca'); } return; }
+      // (at a card that leaves Capital out, the card closes first: navigation phase 8b)
+      if (go) { const AT = window.PeelAnalysisTabs; if (AT) { if (AT.leaveFor) AT.leaveFor('dca'); AT.setSub('dca', go.dataset.ceGoto); AT.showFootTab('dca'); } return; }
       if (!e.target.closest(EA_HOSTS)) return;
       const stamp = today();
       if (e.target.closest('[data-eatab-csv]')) {

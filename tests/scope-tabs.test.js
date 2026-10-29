@@ -16,7 +16,8 @@ test('Water / Wastewater / DC say "Peel-wide" below Peel scope, and link what th
   // (asked with the tab's view: Capital › EAs and Projects are the area's own, filtered to it, so neither host says it there)
   assert.match(ss, /if \(!below \|\| \(window\.DevScope && window\.DevScope\.current\(\)\) \|\| !PEEL_WIDE\[tab\] \|\| AREA_OWN\[`\$\{tab\}:\$\{sub\}`\]\) return '';/);
   assert.match(ss, /const AREA_OWN = \{ 'dca:eas': 1, 'dca:projects': 1 \};\n {2}function peelWideText\(tab, sub\) \{/);
-  assert.match(ss, /function peelWideNote\(\) \{\n[^\n]*\n {4}const A = AT\(\), t = A && A\.getFootTab\(\), html = peelWideText\(t, A && A\.TABSUBS && A\.TABSUBS\[t\] \? A\.TABSUBS\[t\]\.get\(\) : ''\);\n {4}el\.innerHTML = html; el\.hidden = !html;\n {2}\}/);
+  // (a tab showing the scope's own view, a file's flows, has none: navigation phase 8b review)
+  assert.match(ss, /function peelWideNote\(\) \{\n[^\n]*\n {4}const A = AT\(\), t = A && A\.getFootTab\(\), html = A && A\.ownView && A\.ownView\(t\) \? '' : peelWideText\(t, A && A\.TABSUBS && A\.TABSUBS\[t\] \? A\.TABSUBS\[t\]\.get\(\) : ''\);\n {4}el\.innerHTML = html; el\.hidden = !html;\n {2}\}/);
   assert.match(ss, /<strong>Peel-wide\.<\/strong> \$\{PEEL_WIDE\[tab\]\} serve all of Peel, so these tables are not filtered to/);
   assert.match(src('js/topbar.js'), /window\.PeelSvcScope\.peelWideNote\(\)/, 'refreshed with every filter change');
   assert.match(src('js/analysis-tabs.js'), /root\.PeelSvcScope\.peelWideNote\(\)/, 'and every tab change');
@@ -33,6 +34,11 @@ test('the map’s #scope-note at Capital › EAs and Projects below Peel: none (
   const [hidden, html] = note('timing');
   assert.equal(hidden, false); assert.match(html, /^<strong>Peel-wide\.<\/strong> DC projects serve all of Peel, so these tables are not filtered to Caledon\.$/);
   assert.equal(win.PeelSvcScope.peelWideText('dca'), html, 'a tab with no view named: the tab’s note');
+  // A tab showing the scope's own view (a file's Servicing, its flows: js/analysis-tabs.js ownView): none; the page
+  // host's words (peelWideText) as they were (navigation phase 8b review).
+  win.PeelAnalysisTabs.ownView = t => t === 'dca';
+  assert.deepEqual(note('timing'), [true, '']);
+  assert.equal(win.PeelSvcScope.peelWideText('dca', 'timing'), html);
 });
 
 test('area-only Growth content is not shown at development scope', () => {

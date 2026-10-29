@@ -371,7 +371,9 @@
     // The workspace's view from its preset (nothing saved), then its lean layers.
     lean(pl.view, LAYERS[id] || []);
     // (o.keep: a page view's Open the map, the map view at the view the page shows, navigation phase 6: the
-    // workspace's preset and scope, the tab and view kept)
+    // workspace's preset and scope, the tab and view kept; a card open that leaves its tab out closes first,
+    // navigation phase 8b)
+    if (!o.keep && AT() && AT().leaveFor) AT().leaveFor(pl.tab);
     const A = AT(); if (A && !o.keep) { if (pl.sub && A.setSub) A.setSub(pl.tab, pl.sub); if (A.setFootPref) A.setFootPref(pl.tab); A.showFootTab(pl.tab); if (pl.fold && A.openFold) A.openFold(pl.fold); }
     foldLayers();
     syncPipes();
@@ -521,8 +523,8 @@
       return L.polyline(C ? C(MM().SEW.data.pipes[r.i]).map(([x, y]) => [y, x]) : pts, { color: U.token ? U.token('--cap-tight') : getComputedStyle(document.documentElement).getPropertyValue('--cap-tight').trim(), weight: r.risky ? 6 : 4, opacity: 0.9, interactive: false }); })).addTo(map);
   }
   // (a run picked there, a pipe's result on Overview: the pipes drawn stay around it, and after it closes, until another
-  // tab or view is shown)
-  function syncPipes() { const A = AT(), ss = App() && App().state && App().state.ss; pipesLayer(mode !== 'home' && !!A && !!A.getSvcSub && A.getSvcSub() === 'pipes' && (A.getFootTab() === 'svc' || (!!pLayer && A.getFootTab() === 'overview' && /^pipe:/.test(ss || '')))); }
+  // tab or view is shown; a file's Servicing is its flows, the Old pipes pick kept for later: none drawn)
+  function syncPipes() { const A = AT(), ss = App() && App().state && App().state.ss; pipesLayer(mode !== 'home' && !!A && !!A.getSvcSub && A.getSvcSub() === 'pipes' && !(A.ownView && A.ownView('svc')) && (A.getFootTab() === 'svc' || (!!pLayer && A.getFootTab() === 'overview' && /^pipe:/.test(ss || '')))); }
   // ---- Pages ------------------------------------------------------------------------------------
   // A workspace's page (js/ws-pages.js builds it from the tabs' panels); Home is the page 'home', the page host at
   // an area (navigation phase 6): the map's five tabs under its header, its view the map's own tab state

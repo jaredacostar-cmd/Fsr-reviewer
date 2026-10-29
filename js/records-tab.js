@@ -1,6 +1,6 @@
 (function (root) {
   'use strict';
-  // The Records tab (SPEC §5; Stage 2: the small trailing tab), with Sources · Data checks · Files:
+  // The Records tab (SPEC §5; Stage 2; a tab like the others since navigation phase 8b), with Sources · Data checks · Files:
   //   Peel / municipality / plan: Sources (freshness, reports) and Data checks (duplicates, the data
   //                               checks, then the servicing model: navigation phase 2);
   //   a development:              one view, its files and history (the panel: the tree, on this site,
@@ -12,8 +12,9 @@
   //                               its map layer, the sources it rests on) and Data checks (the 2025 report
   //                               against the model, the Ministry's flow, the station roster), each loading
   //                               when needed (navigation phase 8a);
-  //   a DC work, a tool's result: no files of its own (its developments are in Overview; each opens to
-  //                               its records; Peel's sources and checks below, until navigation phase 8b).
+  //   a selection, a DC work, an EA, a capital project, a pipe, a water facility or a tool's result: no
+  //                               Records tab (navigation phase 8b: its developments are in Overview, each
+  //                               opens to its records).
   const { $, esc, fmtNum, fmt1 } = root.PeelUtil;
   const App = () => root.PeelApp;
   const DU = () => root.PeelDemandUI;
@@ -67,13 +68,15 @@
     if (s && s.kind === 'result' && s.rkind === 'file' && AC().currentFile) {
       const f = AC().currentFile(); if (f) { showData(null); body.innerHTML = fileHTML(f.r, f.p); return; }
     }
-    // Peel, a municipality or plan, or a result with no files of its own: Sources or Checks.
+    // (a file whose record is not in yet: a loading line, never Peel's; any other result leaves Records out,
+    // navigation phase 8b)
+    if (s && s.kind === 'result') { showData(null); body.innerHTML = s.rkind === 'file' && root.PeelUtil.skel ? root.PeelUtil.skel('Loading the file') : ''; return; }
+    // Peel, a municipality or plan, or a servicing scope (its own, below): Sources or Checks.
     const AT = root.PeelAnalysisTabs, sub = AT && AT.getRSub ? AT.getRSub() : 'sources';
     // (a servicing scope: its own sources and checks, Peel's servicing model group emptied; Peel's live-data controls
     // and duplicate check are Peel's, navigation phase 8a)
     if (s && s.kind !== 'result') { showData(null); body.innerHTML = svcHTML(s, sub); if (SC() && SC().renderChecks) SC().renderChecks(); if (root.PeelPanel) root.PeelPanel.set(`records:${sub === 'checks' ? 'checks' : 'sources'}`, sub === 'checks' ? svcChecksSpec(s) : svcSourcesSpec(s)); return; }
-    const note = s ? `<p class="small muted">${esc(s.title)} has no files of its own. Its developments are listed in Overview; each opens to its own records. Below: the ${sub === 'checks' ? 'checks' : 'sources'} for all of Peel.</p>` : '';
-    body.innerHTML = note + (sub === 'checks' ? checksHTML() : sourcesHTML());
+    body.innerHTML = sub === 'checks' ? checksHTML() : sourcesHTML();
     if (sub === 'checks' && root.PeelSvcCapacity && root.PeelSvcCapacity.renderChecks) root.PeelSvcCapacity.renderChecks();   // (its Servicing model group)
     showData(sub === 'checks' ? 'checks' : 'sources');
     if (root.PeelPanel) root.PeelPanel.set(`records:${sub === 'checks' ? 'checks' : 'sources'}`, sub === 'checks' ? checksPanelSpec() : sourcesPanelSpec());

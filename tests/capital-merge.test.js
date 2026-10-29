@@ -484,18 +484,23 @@ test('the card’s redraw cannot loop: the sewers fetched only when missing, the
   L = load({ ...at, sewers: false, loaded: null }); L.D.cardHTML(ln); await tick(); assert.equal(L.calls.reopen, 0);
 });
 
-test('the card drawn again (the sewers it waited for, the allocation) never moves the reader: their tab, its preference, the phone’s sheet and the card’s scroll put back', async () => {
+test('the card drawn again (the sewers it waited for, the allocation) never moves the reader: the phone’s sheet and the card’s scroll put back, on its Overview (a card leaves the other tabs out: navigation phase 8b)', async () => {
   const ln = INFRA().wastewater.lines[0], tick = () => new Promise(r => setImmediate(r)), at = { result: true, ss: 'dcwork:wastewater:22-1' };
-  // The sewers late: the reader went on to Growth and lowered the sheet to peek; they arrive, the card is redrawn.
-  let L = load({ ...at, sewers: false, foot: { tab: 'growth', pref: 'growth', snap: 'peek' } });
+  // The sewers late: the reader lowered the sheet to peek; they arrive, the card is redrawn (its reopen raises a peek
+  // sheet, as openResult does for a new result): the sheet back at peek, no tab shown.
+  let L = load({ ...at, sewers: false, foot: { tab: 'overview', pref: 'overview', snap: 'peek' } });
   L.D.cardHTML(ln); await tick();
-  assert.equal(L.calls.reopen, 1, 'drawn again'); assert.deepEqual(plain(L.foot), { tab: 'growth', pref: 'growth', snap: 'peek' }, 'still on Growth, the sheet at peek');
-  // The allocation worked out after the paint, the reader on Records: the same.
-  L = load({ ...at, foot: { tab: 'records', pref: 'records', snap: 'half' } }); L.D.cardHTML(ln); L.timers[0]();
-  assert.equal(L.calls.reopen, 1); assert.deepEqual(plain(L.foot), { tab: 'records', pref: 'records', snap: 'half' }); assert.deepEqual(L.calls.showFootTab, ['records']);
-  // Still on the Overview, reading it: there, its scroll kept, the sheet where they left it.
+  assert.equal(L.calls.reopen, 1, 'drawn again'); assert.deepEqual(plain(L.foot), { tab: 'overview', pref: 'overview', snap: 'peek' }, 'the sheet at peek'); assert.deepEqual(L.calls.showFootTab, []);
+  // The allocation worked out after the paint, the sheet at half: the same.
+  L = load({ ...at, foot: { tab: 'overview', pref: 'overview', snap: 'half' } }); L.D.cardHTML(ln); L.timers[0]();
+  assert.equal(L.calls.reopen, 1); assert.deepEqual(plain(L.foot), { tab: 'overview', pref: 'overview', snap: 'half' }); assert.deepEqual(L.calls.showFootTab, []);
+  // Reading it: its scroll kept, the sheet where they left it.
   L = load({ ...at, foot: { tab: 'overview', pref: 'overview', snap: 'peek' }, scrollTop: 240 }); L.D.cardHTML(ln); L.timers[0]();
   assert.deepEqual(plain(L.foot), { tab: 'overview', pref: 'overview', snap: 'peek' }); assert.equal(L.scroll.scrollTop, 240); assert.deepEqual(L.calls.showFootTab, []);
+  // (the reader on another tab with the card open, its tab put back after the redraw, went with 8b: another tab closes
+  // the card first, js/analysis-tabs.js leaveFor; the 8b review took the branch out)
+  const d = src('js/dc-projects.js'), ag = d.slice(d.indexOf('  const again = k => {'), d.indexOf('  let cardK = null'));
+  assert.ok(ag.length > 0); assert.doesNotMatch(ag, /showFootTab|setFootPref|getFootTab|getFootPref/);
 });
 
 test('the full table: the list in full, at Late the reliefs that are no DC line named, then the constraints at its Status and System (the DC timing tool result’s table)', () => {
@@ -583,11 +588,13 @@ test('the old DC timing tool result opens the list: at its Status, the developme
   assert.doesNotMatch(d.slice(d.indexOf('  function openList('), d.indexOf('  // A row opens its project')), /setSys/);
 });
 
-test('the card’s trail: Peel › DC timing › the main, the group step opening Capital › DC timing (EA and Capital keep theirs)', () => {
+test('the card’s trail: Peel › DC timing › the main, the group step opening Capital › DC timing (EA and Capital keep theirs; the card closes, navigation phase 8b; a tab pick, 8b review)', () => {
   const calls = [];
+  // (openTab: the tab picked, stored and in the link, its sub-view set: js/analysis-tabs.js; tests/four-tabs.test.js
+  // runs the real one)
   const win = { PeelUtil: require('../js/util.js'), PeelDemand: require('../js/demand.js'), PeelPhases: require('../js/phases.js'),
     PeelApp: { state: { ss: null, svcGen: 0, servicing: null }, applyFilters() {} }, PeelOverviewTab: { renderOverview() {} },
-    PeelAnalysisTabs: { setFootPref() {}, showFootTab: t => calls.push(`tab:${t}`), setDcSub: v => calls.push(`sub:${v}`) },
+    PeelAnalysisTabs: { setFootPref() {}, showFootTab: t => calls.push(`show:${t}`), openTab: (t, sb) => calls.push(`sub:${sb}`, `tab:${t}`) },
     PeelShare: { viewLink: { write() {} } }, PeelTopbar: { renderTrail() {} } };
   win.window = win;
   const ctx = vm.createContext({ window: win, document: { addEventListener() {}, getElementById: () => null, dispatchEvent() {} }, console, Set, Map, CustomEvent: undefined });
@@ -598,6 +605,34 @@ test('the card’s trail: Peel › DC timing › the main, the group step openin
     const c = S.crumbs();
     assert.equal(c.length, 2); assert.deepEqual([c[0].label, c[0].title], [group, title]);
     calls.length = 0; c[0].go(); assert.deepEqual(calls, [`sub:${sub}`, 'tab:dca'], group);
+    // (the step leaves the card for its list: Capital is left out at a card, so the card closes first)
+    assert.equal(S.hasResult(), false, group); assert.equal(win.PeelApp.state.ss, null, group);
+  }
+  const g = src('js/svc-scope.js');
+  assert.match(g, /go: \(\) => \{ closeResult\(\); AT\(\)\.openTab\('dca', GROUP_SUB\[g\] \|\| 'projects'\); \}/);
+});
+
+test('the group step with the real tabs: Capital picked and kept, the link written at it (t=dca, its view), so a reload or Copy link opens the list (navigation phase 8b review)', () => {
+  // js/svc-scope.js and js/analysis-tabs.js in one window; the store and each link write logged (what js/share.js
+  // writes: the tab picked, footPref, and the view; ss gone once the card has closed).
+  const stored = {}, links = [], U = require('../js/util.js');
+  const win = { PeelUtil: { ...U, store: { get: (k, d) => (k in stored ? stored[k] : d), set: (k, v) => { stored[k] = v; } } }, PeelDemand: require('../js/demand.js'), PeelPhases: require('../js/phases.js'),
+    PeelApp: { state: { ss: null, svcGen: 0, servicing: null }, applyFilters() {} }, PeelOverviewTab: { renderOverview() {} }, PeelDcaTab: {},
+    PeelShare: { viewLink: { write: () => { const A = win.PeelAnalysisTabs; links.push(`t=${A.getFootPref()}&dcs=${A.getDcSub()}&ss=${win.PeelApp.state.ss || ''}`); } } }, PeelTopbar: { renderTrail() {} } };
+  win.window = win;
+  // (every tab's button there and its data in: tabReady's selector answered)
+  const document = { addEventListener() {}, getElementById: () => null, dispatchEvent() {}, querySelectorAll: () => [], querySelector: q => (/^\.f-tab\[data-tab="\w+"\]:not/.test(q) ? {} : null) };
+  const ctx = vm.createContext({ window: win, document, console, Set, Map, CustomEvent: undefined, setTimeout: () => 0 });
+  vm.runInContext(src('js/analysis-tabs.js'), ctx); vm.runInContext(src('js/svc-scope.js'), ctx);
+  const S = win.PeelSvcScope, AT = win.PeelAnalysisTabs;
+  for (const [group, sub] of [['DC timing', 'timing'], ['EA', 'eas'], ['Capital', 'projects']]) {
+    stored.footTab4 = 'overview'; AT.setFootPref('overview'); AT.showFootTab('overview');
+    S.openResult({ ref: 'dcwork:wastewater:22-1', title: 'DC sanitary main · 900 mm', html: '', group });
+    assert.equal(AT.scopeKind(), 'object', group);
+    links.length = 0; S.crumbs()[0].go();
+    assert.equal(S.hasResult(), false, group);
+    assert.deepEqual([AT.getFootTab(), AT.getFootPref(), stored.footTab4, AT.getDcSub(), stored.dcSub], ['dca', 'dca', 'dca', sub, sub], group);
+    assert.equal(links.at(-1), `t=dca&dcs=${sub}&ss=`, `${group}: the link the step leaves (it said t=overview)`);
   }
 });
 

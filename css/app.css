@@ -2558,10 +2558,8 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .mo-inview:empty { display: none; }
 .mo-inview:hover { border-color: var(--accent); color: var(--text-primary); }
 
-/* Four tabs at every scope (Stage 2): Overview · Growth · Servicing · Capital, then Records as a
-   small trailing tab (right-aligned, muted). One chip row of sub-views per tab, never two. */
-.f-tab.f-tab-trail { margin-left: auto; font-size: var(--fs-1); color: var(--text-muted); font-weight: 400; }
-.f-tab.f-tab-trail[aria-selected="true"] { color: var(--text-primary); }
+/* Five tabs (Stage 2; navigation phase 8b: Records a tab like the others): Overview · Growth · Servicing ·
+   Capital · Records, a scope kind leaving some out (.f-tab-off). One chip row of sub-views per tab, never two. */
 /* Servicing and Capital before the servicing data lands (navigation phase 6): shown, marked loading (the word
    is the CSS's, so the tab's label stays its name); a pick of one is held, marked as taken, and opens when it
    lands (js/analysis-tabs.js heldTab). The page host's strip says the same (.page-tab-wait). */
@@ -2570,6 +2568,10 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .f-tab.f-tab-held { color: var(--text-primary); border-bottom: 2px dashed var(--accent); }
 /* A tab its scope leaves out (navigation phase 8: a drawn area's Records): never [hidden], which reads as not loaded yet. */
 .f-tab.f-tab-off { display: none; }
+/* The narrowest analysis column (320 px, its drag's limit): the five tabs, Records at full size since 8b, fit
+   without scrolling, a little less padding each (the strip is its own container: the column's width is no media query). */
+.analysis-tabs { container-type: inline-size; }
+@container (max-width: 340px) { .f-tab { padding-left: var(--space-1); padding-right: var(--space-1); } }
 @media (max-width: 700px) { .f-tab[aria-busy="true"]::after { content: ' …'; } }
 .f-subtabs:not([hidden]) { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
 .f-subtabs .btn { white-space: nowrap; }
@@ -2978,10 +2980,9 @@ html:not(.lab-hydro) .lab-hydro, html:not(.lab-funding) .lab-funding-pane { disp
 .page-secs + .page-subsecs { margin-top: calc(-1 * var(--space-2)); border-bottom: 0; }
 .page-subsecs .page-sec { font-weight: 400; }
 /* The page host's strip (navigation phase 6, js/ws-pages.js tabsHTML): the map's five tabs under a page's
-   header, heavier than the views row under it; Records trails as on the map; a tab before its data says so
+   header, heavier than the views row under it; a tab before its data says so
    (one sideways-scrolling row on a phone, the open tab scrolled into it: the word shrinks to "…"). */
 .page-tabs .page-sec { font-weight: 600; }
-.page-tabs .page-tab-trail { margin-left: auto; font-size: var(--fs-1); }
 .page-tab[aria-busy="true"] { color: var(--text-muted); }
 .page-tab-wait { font-weight: 400; color: var(--text-muted); }
 @media (max-width: 700px) {

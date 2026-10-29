@@ -326,15 +326,15 @@
       <p class="small">${pm ? `<button type="button" class="btn small" data-dcproj-csv="${esc(k)}">CSV: its developments</button> ` : ''}<button type="button" class="btn small link" data-scope-result-close data-at="dca:timing">All DC projects ›</button></p>`;
   }
   // (the card drawn again while it is still the one open: its producer re-run, js/svc-scope.js; once, however
-  // often it painted while it waited. The redraw is the card's, never a move of the reader's: the tab they went
-  // on to, its preference, the phone's sheet and the card's scroll are put back, which openResult sets for a new
-  // result)
+  // often it painted while it waited. The redraw is the card's, never a move of the reader's: the phone's sheet and
+  // the card's scroll are put back, which openResult sets for a new result. The tab is the card's Overview: a card
+  // leaves the other tabs out, and asking for one closes it first, navigation phase 8b)
   const again = k => {
-    const SS = root.PeelSvcScope, A = App(), T = AT(); if (!(k && SS && SS.hasResult && SS.hasResult() && A.state.ss === `dcwork:${k}`)) return;
-    const tab = T && T.getFootTab ? T.getFootTab() : null, pref = T && T.getFootPref ? T.getFootPref() : null, sn = A.getAnalysisSnap ? A.getAnalysisSnap() : null;
+    const SS = root.PeelSvcScope, A = App(); if (!(k && SS && SS.hasResult && SS.hasResult() && A.state.ss === `dcwork:${k}`)) return;
+    const sn = A.getAnalysisSnap ? A.getAnalysisSnap() : null;
     const host = typeof document !== 'undefined' && document.getElementById('scope-body'), top = host ? host.scrollTop : 0;
     SS.reopenResult();
-    if (tab && tab !== 'overview') { if (T.setFootPref) T.setFootPref(pref); T.showFootTab(tab); } else if (host && top) host.scrollTop = top;
+    if (host && top) host.scrollTop = top;
     if (sn && A.getAnalysisSnap() !== sn) A.setAnalysisSnap(sn);
   };
   let cardK = null, sewK = null; const redraw = () => again(cardK);
