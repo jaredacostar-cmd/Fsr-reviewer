@@ -523,8 +523,8 @@
       return L.polyline(C ? C(MM().SEW.data.pipes[r.i]).map(([x, y]) => [y, x]) : pts, { color: U.token ? U.token('--cap-tight') : getComputedStyle(document.documentElement).getPropertyValue('--cap-tight').trim(), weight: r.risky ? 6 : 4, opacity: 0.9, interactive: false }); })).addTo(map);
   }
   // (a run picked there, a pipe's result on Overview: the pipes drawn stay around it, and after it closes, until another
-  // tab or view is shown)
-  function syncPipes() { const A = AT(), ss = App() && App().state && App().state.ss; pipesLayer(mode !== 'home' && !!A && !!A.getSvcSub && A.getSvcSub() === 'pipes' && (A.getFootTab() === 'svc' || (!!pLayer && A.getFootTab() === 'overview' && /^pipe:/.test(ss || '')))); }
+  // tab or view is shown; a file's Servicing is its flows, the Old pipes pick kept for later: none drawn)
+  function syncPipes() { const A = AT(), ss = App() && App().state && App().state.ss; pipesLayer(mode !== 'home' && !!A && !!A.getSvcSub && A.getSvcSub() === 'pipes' && !(A.ownView && A.ownView('svc')) && (A.getFootTab() === 'svc' || (!!pLayer && A.getFootTab() === 'overview' && /^pipe:/.test(ss || '')))); }
   // ---- Pages ------------------------------------------------------------------------------------
   // A workspace's page (js/ws-pages.js builds it from the tabs' panels); Home is the page 'home', the page host at
   // an area (navigation phase 6): the map's five tabs under its header, its view the map's own tab state

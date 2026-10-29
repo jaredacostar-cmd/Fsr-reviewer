@@ -1095,14 +1095,16 @@ test('phase 8b: a file’s and a card’s scope; old links with any t land on th
   for (const k of list) assert.equal(AT.kindOf({ ss: { kind: 'result', rkind: k } }), WANT[k], k);
   assert.equal(AT.kindOf({ dev: true, ss: { kind: 'result', rkind: 'tool' } }), 'site', 'a result kept at its development: the development’s tabs');
   for (const t of ['growth', 'svc', 'dca', 'records']) assert.equal(AT.tabOff('object', t), true, t);
-  assert.deepEqual(['growth', 'svc', 'dca', 'records'].filter(t => AT.tabOff('file', t)), ['growth', 'svc', 'dca']);
+  // (a file's Servicing is its own view, its flows: on the strip with no chip; 8b review, design §3.5)
+  assert.deepEqual(['growth', 'svc', 'dca', 'records'].filter(t => AT.tabOff('file', t)), ['growth', 'dca']);
+  assert.deepEqual(['growth', 'svc', 'dca', 'records'].filter(t => AT.ownView(t, 'file')), ['svc']);
   // A link with any t: share.js opens the link's tab at Peel, then restores the result (openResult: Overview), so
   // the card ends on Overview; the tab it names is left out there (a file's Records one tap away); the stored tab
   // is the next visit's; × brings the five tabs back, on Overview as after any result.
   let cur = null, closed = 0;
   const at = { PeelSvcScope: { current: () => cur, peelWideNote: () => {}, hasResult: () => !!(cur && cur.kind === 'result') },
     PeelAerialCheck: { closeDetail: () => { closed++; cur = null; } } };
-  for (const [rkind, t, then] of [['dcwork', 'dca', 'overview'], ['ea', 'growth', 'overview'], ['cap', 'svc', 'overview'], ['pipe', 'records', 'overview'], ['file', 'growth', 'overview'], ['file', 'records', 'records']]) {
+  for (const [rkind, t, then] of [['dcwork', 'dca', 'overview'], ['ea', 'growth', 'overview'], ['cap', 'svc', 'overview'], ['pipe', 'records', 'overview'], ['file', 'growth', 'overview'], ['file', 'records', 'records'], ['file', 'svc', 'svc']]) {
     const T = loadTabsAt({ footTab4: t }, at);
     assert.equal(T.getFootTab(), t, `${rkind}, t=${t}: the link's tab at Peel first`);
     cur = { kind: 'result', rkind }; T.setFootPref('overview'); T.showFootTab('overview');   // (openResult's two calls)
@@ -1115,12 +1117,14 @@ test('phase 8b: a file’s and a card’s scope; old links with any t land on th
   assert.ok(ap > 0 && ap < sh.indexOf('      AT().showFootTab(AT().getFootPref());'), 'the result restored after the link’s tab');
   assert.match(ss, /function openResult\(o\) \{[^]*?AT\(\)\.setFootPref\('overview'\); AT\(\)\.showFootTab\('overview'\);/);
   // The lens (owner decision 9: it still opens its tab), a data-at link, [data-foot-tab]: openTab; at a card the card
-  // closes first (× 's close), then the tab; at a file Records keeps it; at Peel or a kept result nothing closes.
+  // closes first (× 's close), then the tab; at a file Records and Servicing (its flows) keep it; at Peel or a kept
+  // result nothing closes.
   cur = { kind: 'result', rkind: 'dcwork' }; closed = 0;
   let T = loadTabsAt({}, at);
   T.openTab('dca'); assert.deepEqual([closed, T.getFootTab(), cur], [1, 'dca', null], 'Capital lens at a DC project');
   cur = { kind: 'result', rkind: 'file' }; T.showFootTab('overview'); T.openTab('records'); assert.deepEqual([closed, T.getFootTab()], [1, 'records']);
-  T.openTab('svc'); assert.deepEqual([closed, T.getFootTab()], [2, 'svc'], 'Water lens at a file');
+  T.openTab('svc'); assert.deepEqual([closed, T.getFootTab(), cur && cur.rkind], [1, 'svc', 'file'], 'Water lens at a file: its flows, the file kept');
+  T.openTab('growth'); assert.deepEqual([closed, T.getFootTab(), cur], [2, 'growth', null], 'Growth at a file: it closes first');
   T.openTab('growth'); assert.equal(closed, 2, 'nothing open: nothing closes');
   assert.match(src('js/topbar.js'), /const tab = \{ dc: 'dca', water: 'svc', wastewater: 'svc' \}\[b\.dataset\.mview\];\n\s+if \(tab && AT\(\) && AT\(\)\.openTab\) AT\(\)\.openTab\(tab\);/);
   const a = src('js/analysis-tabs.js');
@@ -1130,8 +1134,9 @@ test('phase 8b: a file’s and a card’s scope; old links with any t land on th
   assert.match(src('js/tips.js'), /const openAnalysis = \(tab, sub\) => \{ if \(AT\(\)\.leaveFor\) AT\(\)\.leaveFor\(tab\);/);
   assert.match(src('js/capital-ea.js'), /if \(AT\.leaveFor\) AT\.leaveFor\('dca'\); AT\.setSub\('dca', go\.dataset\.ceGoto\);/);
   assert.match(src('js/workspaces.js'), /if \(!o\.keep && AT\(\) && AT\(\)\.leaveFor\) AT\(\)\.leaveFor\(pl\.tab\);\n\s+const A = AT\(\); if \(A && !o\.keep\)/);
-  // The trail's DC timing / EA / Capital step closes the card for its list (tests/capital-merge.test.js runs it).
-  assert.match(ss, /go: \(\) => \{ closeResult\(\); if \(AT\(\)\.setDcSub\) AT\(\)\.setDcSub\(GROUP_SUB\[g\] \|\| 'projects'\); AT\(\)\.showFootTab\('dca'\); \}/);
+  // The trail's DC timing / EA / Capital step closes the card for its list (tests/capital-merge.test.js runs it), a tab
+  // pick: the link it writes says t=dca&dcs=… (8b review: it said t=overview, and a reload opened Peel's Overview).
+  assert.match(ss, /go: \(\) => \{ closeResult\(\); AT\(\)\.openTab\('dca', GROUP_SUB\[g\] \|\| 'projects'\); \}/);
   // Records is real or left out, never a placeholder (§4 #7): the "no files of its own" line is gone.
   assert.doesNotMatch(src('js/records-tab.js'), /has no files of its own|for all of Peel\.<\/p>/);
   // ss= still writes each result kind (no alias needed: no share parameter renamed).

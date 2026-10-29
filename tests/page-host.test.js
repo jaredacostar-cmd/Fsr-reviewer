@@ -44,7 +44,7 @@ function load(o = {}) {
     setSub: (t, s) => { calls.push(['setSub', t, s]); at.subs[t] = s; return t; }, setFootPref: t => calls.push(['setFootPref', t]),
     showFootTab: t => { calls.push(['showFootTab', t]); at.tab = t; }, openFold: f => calls.push(['openFold', f]),
     openTab: (t, s) => { calls.push(['openTab', t, s]); if (s) at.subs[t] = s; at.tab = t; },
-    wantedTab: () => at.tab, viewKey: () => `${at.tab}:${at.subs[at.tab] || ''}` };
+    wantedTab: () => at.tab, viewKey: () => `${at.tab}:${at.subs[at.tab] || ''}`, ownView: t => !!at.kind && AT.ownView(t, at.kind) };
   const panels = o.panels || {}, dv = { p: o.dev || null }, devPanels = o.devPanels || {};
   const site = 'dev' in o ? { DevScope: { current: () => dv.p, close: () => { dv.p = null; } }, PeelDevNav: { projectByKey: k => (o.devs || {})[k] || null, showDetail: q => { dv.p = q; } } } : {};
   const window = { document, PeelUtil: { esc: U.esc, fmtNum: U.fmtNum, fmt1: U.fmt1, store: { get: (k, d) => (store.has(k) ? store.get(k) : d), set: (k, v) => store.set(k, v) } },
@@ -393,8 +393,8 @@ test('the drill is the filter (owner decision 10), and a plan’s own totals cou
 
 // js/topbar.js in a vm: each element a stub that records its listeners; the place, the plan tree and the filters
 // stubbed (o.filters: [{ label, scope }], each clear logged). o.dev: DevScope's open development (o.kept: a result
-// keeps it), o.place its deepest area (placeOf), o.mode the page or the map, o.tab the tab on; the close, the drill,
-// the tab and the page opened logged.
+// keeps it), o.place its deepest area (placeOf), o.mode the page or the map, o.tab the tab on, o.scope PeelSvcScope and
+// o.tools PeelTools (a global, as the page's); the close, the drill, the tab and the page opened logged.
 function loadTopbar(o = {}) {
   const nodes = {}, log = [];
   const node = sel => nodes[sel] || (nodes[sel] = { hidden: sel === '#tb-fl-pop', innerHTML: '', style: {}, handlers: {}, clientWidth: 1000, offsetWidth: 0,
@@ -416,11 +416,13 @@ function loadTopbar(o = {}) {
     PeelWsPages: { drillTo: id => log.push(`drill ${id}`) }, PeelDevNav: { getCurrentProject: () => o.dev || null, showDetail: p => log.push(`showDetail ${p.key}`) },
     PeelWorkspaces: { mode: () => o.mode || 'full', openPage: (id, op) => log.push(`openPage ${id} ${JSON.stringify(op)}`) },
     ...(o.kept ? { PeelSvcScope: { keepsDev: () => true, crumbs: () => [], peelWideNote() {}, closeResult() {} } } : {}),
+    ...(o.scope ? { PeelSvcScope: o.scope } : {}),
   };
   if ('place' in o) window.PeelPlanTables.placeOf = () => o.place;
   const document = { querySelector: s => { log.push(`query ${s}`); return null; }, addEventListener() {}, documentElement: { classList: { contains: () => false } } };
   const ctx = { window, document, matchMedia: () => ({ matches: false, addEventListener() {} }), CSS: { escape: x => x }, setTimeout: () => 0 }; ctx.globalThis = ctx;
   if ('dev' in o) { let dv = o.dev; ctx.DevScope = { current: () => dv, close: () => { if (dv) log.push('close'); dv = null; } }; }
+  if (o.tools) ctx.PeelTools = o.tools;
   vm.runInNewContext(src('js/topbar.js'), ctx);
   const T = window.PeelTopbar, ev = (sel, dataset = {}) => ({ target: { closest: s => (s === sel ? { dataset } : null) } });
   const click = (on, sel, dataset) => { for (const f of nodes[on].handlers.click || []) f(ev(sel, dataset)); };
@@ -584,6 +586,22 @@ test('the trail places a development in the plan tree, after the steps the filte
   assert.doesNotMatch(wp, /siteTrail|exploreBar|page-explore|ex-where/);
   assert.equal((wp.match(/'data-ws-explore'/g) || []).length, 1);
   assert.doesNotMatch(src('css/app.css'), /\.page-explore|\.ex-where/);
+});
+
+test('the trail’s Peel closes a card or a tool’s result as × does: while it is still open, so its close handlers run (navigation phase 8b review)', () => {
+  // (the scope as js/svc-scope.js's: clear() drops the result unannounced; closeResult() announces peel:tool-closed,
+  // which an uncounted test site (js/sewer-profile.js) and an EA's highlight (js/capital-ea.js) close on, and only
+  // while a result is open. Peel cleared first, then closed: nothing was announced, the test site stayed.)
+  let result = { ref: 'tool:test-a-site' }; const ev = [];
+  const scope = { crumbs: () => [], peelWideNote() {}, keepsDev: () => false, clear() { result = null; ev.push('clear'); }, closeResult() { if (!result) return false; result = null; ev.push('peel:tool-closed'); return true; } };
+  const L = loadTopbar({ dev: null, scope, tools: { closeResult: () => scope.closeResult(), trailCrumb: () => null } });
+  L.T.renderTrail(); assert.deepEqual(L.steps(), ['Peel']);
+  L.click('#trail', '[data-i]', { i: '0' });
+  assert.deepEqual(ev, ['peel:tool-closed', 'clear']);
+  assert.ok(L.log.includes('apply'), 'then back to all of Peel, as before');
+  // (no result open: the step as it was, nothing announced)
+  ev.length = 0; L.T.renderTrail(); L.click('#trail', '[data-i]', { i: '0' });
+  assert.deepEqual(ev, ['clear']);
 });
 
 // ---- 6b: the site's page is the page host at a development ----------------------------------------------------
@@ -931,6 +949,10 @@ test('Old pipes’ one spec: the map’s panel and Home’s Servicing › Old pi
   ss('dcwork:1'); L.at.tab = 'svc'; L.W.syncPipes(); assert.equal(map.layers.length, 1, 'Old pipes again');
   L.at.tab = 'overview'; L.W.syncPipes(); assert.equal(map.layers.length, 0, 'another result: gone');
   L.at.tab = 'svc'; L.W.syncPipes(); assert.equal(map.layers.length, 1);
+  // (a file's Servicing, its flows (js/analysis-tabs.js ownView), the Old pipes pick kept: none drawn; navigation phase
+  // 8b review)
+  ss('file:u1'); L.at.kind = 'file'; L.W.syncPipes(); assert.equal(map.layers.length, 0, 'a file’s Servicing: no Old pipes');
+  ss(null); L.at.kind = null; L.W.syncPipes(); assert.equal(map.layers.length, 1, 'back at Peel: Old pipes');
   L.W.openPage('pipes'); assert.equal(map.layers.length, 0, 'a page: never under it');
   assert.deepEqual([L.W.page(), L.W.view()], ['home', 'svc:pipes']);
   // Wired: setMode, go and every tab shown (js/analysis-tabs.js), the panel's pnl:set; no override, no Network filter.
@@ -938,7 +960,7 @@ test('Old pipes’ one spec: the map’s panel and Home’s Servicing › Old pi
   assert.match(ws, /if \(m !== 'ws'\) \{ cur = null; if \(m === 'full'\) \{ unfoldLayers\(\); restoreView\(\); \} \}\n {4}syncPipes\(\);/);
   assert.match(ws, /foldLayers\(\);\n {4}syncPipes\(\);/);
   assert.match(ws, /if \(e\.detail && e\.detail\.key === 'svc:pipes'\) syncPipes\(\);/);
-  assert.match(ws, /function syncPipes\(\) \{ const A = AT\(\), ss = App\(\) && App\(\)\.state && App\(\)\.state\.ss; pipesLayer\(mode !== 'home' && !!A && !!A\.getSvcSub && A\.getSvcSub\(\) === 'pipes' && \(A\.getFootTab\(\) === 'svc' \|\| \(!!pLayer && A\.getFootTab\(\) === 'overview' && \/\^pipe:\/\.test\(ss \|\| ''\)\)\)\); \}/);
+  assert.match(ws, /function syncPipes\(\) \{ const A = AT\(\), ss = App\(\) && App\(\)\.state && App\(\)\.state\.ss; pipesLayer\(mode !== 'home' && !!A && !!A\.getSvcSub && A\.getSvcSub\(\) === 'pipes' && !\(A\.ownView && A\.ownView\('svc'\)\) && \(A\.getFootTab\(\) === 'svc' \|\| \(!!pLayer && A\.getFootTab\(\) === 'overview' && \/\^pipe:\/\.test\(ss \|\| ''\)\)\)\); \}/);
   assert.match(src('js/analysis-tabs.js'), /if \(root\.PeelPanel\) root\.PeelPanel\.sync\(\);\n(?: {4}\/\/[^\n]*\n)? {4}if \(root\.PeelWorkspaces && root\.PeelWorkspaces\.syncPipes\) root\.PeelWorkspaces\.syncPipes\(\);/);
   assert.doesNotMatch(ws, /cur === 'pipes' && key === 'svc:network'|pipesLayer\(id === 'pipes'\)|pipesLayer\(true\)|pipesLayer\(false\)/);
   assert.match(src('js/svc-capacity.js'), /else if \(sub === 'pipes'\) renderPipes\(\); \};/);

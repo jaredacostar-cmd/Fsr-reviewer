@@ -72,11 +72,12 @@
   }
   // Phase 3: the "Peel" trail step also clears the dev scope.
   // The Peel crumb only navigates: back to all of Peel (no municipality, area, servicing step,
-  // development or tool result); the filters stay. Start over clears them.
+  // development or tool result); the filters stay. Start over clears them. (A card or a tool's result closes
+  // first, as × does, while it is still open: its close handlers drop an uncounted test site, an EA's highlight.)
   function goPeel() {
+    if (typeof PeelTools !== 'undefined' && PeelTools.closeResult) PeelTools.closeResult();
     if (window.PeelSvcScope) window.PeelSvcScope.clear();
     if (typeof DevScope !== 'undefined') DevScope.close();
-    if (typeof PeelTools !== 'undefined' && PeelTools.closeResult) PeelTools.closeResult();
     Object.assign(App().state, { muni: '', sp: [], mtsa: [], pz: [], dr: [] });
     if (window.PeelSearchFilter && window.PeelSearchFilter.renderMuniChips) window.PeelSearchFilter.renderMuniChips();
     PA().renderAreaSelects(); SD().renderSvcSelects(); PA().showArea(); SD().showSvcArea();

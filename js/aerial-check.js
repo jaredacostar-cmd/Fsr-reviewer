@@ -45,6 +45,10 @@
     closeDetail();
   });
 
+  // A single file's flows (SPEC §3 and §5: its demand alone, at Peel criteria): the record sheet's section and the
+  // file's Servicing view (navigation design §3.5, "one view: its flows"; renderFlows below), one renderer for both.
+  const fileUnits = (r, p) => { const Ly = root.PeelLayers, lf = Ly ? Ly.ofFile(r, p) : null; return { lf, units: lf ? lf.units : r.units || 0 }; };
+  const flowsHTML = (r, units) => DD().demandHTML({ units, phase: r.phase, types: r.type ? [r.type] : [], description: r.description || '', unitMix: r.unitMix || null }, '<p class="small muted">At Peel criteria. The development view sums every file; this view is the single file.</p>');
   // A single file (SPEC §3, boards/RecordSheet): an application or a permit as its own scope, in the
   // right panel. Its units alone, the people they hold, its share of the development, what was filed,
   // how it is read and what it counts as, its demand alone, the other files of its development, and
@@ -62,8 +66,7 @@
           ${a.description ? `<div class="m">${esc(a.description.slice(0, 240))}${a.description.length > 240 ? '…' : ''}</div>` : ''}
         </div></div>`).join('')
       : '<p class="small muted">This permit is not inside any planning application in the data.</p>';
-    const Ly = root.PeelLayers, LB = root.PeelLayerBar, lf = Ly ? Ly.ofFile(r, p) : null;
-    const units = lf ? lf.units : r.units || 0;
+    const LB = root.PeelLayerBar, { lf, units } = fileUnits(r, p);
     const ppl = units > 0 && root.PeelDemand ? root.PeelDemand.estimate([{ units, phase: r.phase, types: r.type ? [r.type] : [], description: r.description || '', unitMix: r.unitMix || null }], App().state.criteria, 'all').population : 0;
     const share = units > 0 && p.units > 0 ? Math.round(units / p.units * 100) : null;
     const received = r.events.length ? r.events.map(e => e.date).sort((x, y) => x - y)[0] : null;
@@ -91,7 +94,7 @@
         ${r.events.map(e => `<dt>${esc(P.humanizeField(e.label))}</dt><dd>${fmtDate(e.date)}</dd>`).join('')}
       </dl>
       ${r.kind === 'permit' ? `<h2 class="section-title" data-info="parent-app">Part of planning application</h2>${parentHTML}` : ''}
-      ${units > 0 ? `<h2 class="section-title">Servicing demand · this file alone</h2>${DD().demandHTML({ units, phase: r.phase, types: r.type ? [r.type] : [], description: r.description || '', unitMix: r.unitMix || null }, '<p class="small muted">At Peel criteria. The development view sums every file; this view is the single file.</p>')}` : ''}
+      ${units > 0 ? `<h2 class="section-title">Servicing demand · this file alone</h2>${flowsHTML(r, units)}` : ''}
       ${others.length ? `<h2 class="section-title">Other files in this development</h2><p class="small">${others.map(a => `${dot(a.phase)} ${fileBtn(a)}${a.units ? ` <span class="muted">${fmtNum(a.units)} units</span>` : ''}`).join(' · ')}${p.records.length - 1 > others.length ? ` <span class="muted">+${fmtNum(p.records.length - 1 - others.length)} more (permits and closed files): see its tree</span>` : ''}</p>` : ''}
       <h2 class="section-title">Source record</h2>
       ${DD().recordProvHTML(r)}
@@ -102,13 +105,14 @@
     if (r.lat != null) map.setView([r.lat, r.lng], Math.max(map.getZoom(), 17), { animate: false });
   }
   let fileCtx = null;
-  { const host = $('#scope-body'); if (host) host.addEventListener('click', e => {
+  // (its record sheet's actions, and Open as a development in its Servicing view)
+  for (const host of [$('#scope-body'), $('#svc-file-body')]) if (host) host.addEventListener('click', e => {
     if (!fileCtx) return;
     if (e.target.closest('[data-file-open-dev]')) { DN().showDetail(fileCtx.p); return; }
     if (e.target.closest('[data-file-tree]')) { const p = fileCtx.p; DN().showDetail(p); setTimeout(() => { if (window.PeelAnalysisTabs && window.PeelAnalysisTabs.openTab) window.PeelAnalysisTabs.openTab('records', 'files'); }, 0); return; }
     const f = e.target.closest('[data-file]');
     if (f) { const r = fileCtx.p.records.find(x => x.uid === f.dataset.file); if (r) showRecordDetail(r, fileCtx.p); }
-  }); }
+  });
 
   // "Show on map" from a development's record list (the Development / Records views): the file
   // opens as its own scope.
@@ -121,7 +125,18 @@
 
   // ---- Public contract ----
   const currentFile = () => { const S = root.PeelSvcScope; return fileCtx && S && S.hasResult() && String(App().state.ss).startsWith('file:') ? fileCtx : null; };
-  const api = { closeDetail, showRecordDetail, currentFile };
+  // The file's Servicing (js/analysis-tabs.js showFootTab, its own view: no chips, no panel): its flows, as on its
+  // record sheet; a file whose record is not in yet a loading line, as its Records says (js/records-tab.js).
+  function renderFlows() {
+    const el = $('#svc-file-body'); if (!el) return;
+    const f = currentFile(), U = root.PeelUtil;
+    if (!f) { el.innerHTML = U.skel ? U.skel('Loading the file') : ''; return; }
+    const { r } = f, { units } = fileUnits(r, f.p), fl = units > 0 ? flowsHTML(r, units) : '';
+    el.innerHTML = `<div class="head"><h3>${esc(r.ref || r.address || 'Record')}</h3><div class="m">Its flows · this file alone</div></div>
+      ${fl || `<p class="small muted">${units > 0 ? 'No servicing demand worked out for this file.' : 'This file has no units of its own: no flows to show.'} The development’s flows are in its Servicing (<button type="button" class="btn small link" data-file-open-dev>Open as a development</button>).</p>`}`;
+    const d = el.querySelector('details'); if (d) d.open = true;   // (the view is its flows: open, where the sheet folds them)
+  }
+  const api = { closeDetail, showRecordDetail, currentFile, renderFlows };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelAerialCheck = api;
 })(typeof window !== 'undefined' ? window : globalThis);

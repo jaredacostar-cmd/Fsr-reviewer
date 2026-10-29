@@ -1736,13 +1736,16 @@ async function pickView(page, ev, key, tap = false) {
     const trail = () => ev(() => [...document.querySelectorAll('#pnl-records .pnl-crumb')].map(c => c.textContent.trim()).join(' › '));
     const dcl = { ...(await at()), sel: await ev(() => PeelAreaSelect.selection.size), ss: await ev(() => PeelApp.state.ss || '') };
     expect(dcl.sel === 0 && !dcl.ss && dcl.scope === 'area' && dcl.tabs === FIVE && dcl.tab === 'records' && !dcl.held && dcl.picks === 'areas,capacity,checks' && await trail() === 'Peel › Records › Data checks', `Records asked at a drawn area: the selection closed, Peel's Records › Data checks, the five tabs and Peel's picks (${JSON.stringify(dcl)})`);
-    // 5. A single file: Overview and Records (8b), its Records the file (one view); Growth asked closes it, Peel's
-    // Growth with its Areas pick.
-    const file = () => ev(() => { const p = PeelApp.state.projects.find(q => q.records && q.records.some(r => r.kind === 'application' && r.uid)); PeelAerialCheck.showRecordDetail(p.records.find(r => r.kind === 'application' && r.uid), p); });
+    // 5. A single file: Overview, Servicing (its flows, its own view: 8b review) and Records (8b), its Records the file
+    // (one view); Growth asked closes it, Peel's Growth with its Areas pick.
+    const file = () => ev(() => { const has = r => r.kind === 'application' && r.uid && r.units > 0, p = PeelApp.state.projects.find(q => q.records && q.records.some(has)); PeelAerialCheck.showRecordDetail(p.records.find(has), p); });
     await file(); await wait(2000);
-    const fo = await at(), fr = await tab('records');
-    expect(fo.scope === 'file' && fo.tabs === 'overview,records' && fo.tab === 'overview', `a file: Overview and Records, on Overview (${JSON.stringify(fo)})`);
-    expect(fr.scope === 'file' && fr.tabs === 'overview,records' && fr.chips === '' && fr.picks.split(',')[2] === 'files' && await trail() === '', `a file: Records its own, one view, not Peel's Sources and Data checks panel (${JSON.stringify(fr)})`);
+    const fo = await at(), fsv = await tab('svc'), fsp = await ev(() => { const b = document.getElementById('svc-file-body'), shown = id => !!document.getElementById(id) && document.getElementById(id).getClientRects().length > 0;
+      return { own: shown('pane-svc-file'), table: !!(b && b.querySelector('table')), cap: shown('pane-svc-capacity') || shown('pane-ww') || shown('pane-svc-pipes'), pnl: document.getElementById('analysis').classList.contains('pnl-on'), ss: PeelApp.state.ss || '' }; });
+    const fr = await tab('records');
+    expect(fo.scope === 'file' && fo.tabs === 'overview,svc,records' && fo.tab === 'overview', `a file: Overview, Servicing and Records, on Overview (${JSON.stringify(fo)})`);
+    expect(fsv.scope === 'file' && fsv.tab === 'svc' && fsv.chips === '' && fsp.own && fsp.table && !fsp.cap && !fsp.pnl && /^file:/.test(fsp.ss), `a file: Servicing its flows, one view, no chips, not Peel's Capacity (${JSON.stringify({ fsv, fsp })})`);
+    expect(fr.scope === 'file' && fr.tabs === 'overview,svc,records' && fr.chips === '' && fr.picks.split(',')[2] === 'files' && await trail() === '', `a file: Records its own, one view, not Peel's Sources and Data checks panel (${JSON.stringify(fr)})`);
     // (closed with Records open: the tab redraws at Peel, with the pick it had)
     await ev(() => PeelAerialCheck.closeDetail()); await wait(1500);
     const fc = await at();
@@ -2536,6 +2539,10 @@ async function pickView(page, ev, key, tap = false) {
     expect(c.trail.includes('DC timing'), `the trail has a DC timing step (${c.trail.join(' › ')})`);
     await ev(() => { const s = [...document.querySelectorAll('#trail .tb-step')].find(x => x.textContent.trim() === 'DC timing'); if (s) s.click(); }); await wait(1000);
     expect(await ev(() => !PeelSvcScope.hasResult() && PeelAnalysisTabs.getFootTab() === 'dca' && PeelAnalysisTabs.getDcSub() === 'timing' && document.getElementById('analysis').dataset.scope === 'area'), 'its trail step closes the card and opens Capital › DC timing');
+    // (a tab pick, 8b review: the address and Copy link say the list, not t=overview, and the tab is kept)
+    { const k = await ev(() => ({ link: PeelShare.viewLink.hash(), hash: location.hash, kept: PeelUtil.store.get('footTab4', null) }));
+      const at = h => /(^|[#&])t=dca(&|$)/.test(h) && /(^|[#&])dcs=timing(&|$)/.test(h) && !/(^|[#&])ss=[^&]/.test(h);
+      expect(at(k.link) && at(k.hash) && k.kept === 'dca', `the step's link is the list's (${k.link.slice(0, 120)}; kept ${k.kept})`); }
     // (the same row again, still sorted by Most affected: its card, then All DC projects ›)
     await page.click('#pnl-dca .pnl-list [data-dcproj-open]'); await wait(2000);
     await page.click('#scope-body [data-scope-result-close][data-at="dca:timing"]'); await wait(1000);
@@ -2805,23 +2812,48 @@ async function pickView(page, ev, key, tap = false) {
     }
   });
 
-  // Navigation phase 8b (navigation-design §3.5, §4 #7, §8 row 8): a file is its record sheet (Overview) and the file
-  // (Records); a DC project's and an EA's card is its Overview alone, the lens leaving the card for its tab (owner
-  // decision 9) and × bringing the five tabs back; Records a tab like the others on the map's strip and Home's; the phone.
-  await check('Every scope kind (8b): a file is its record sheet and Records; a DC project’s and an EA’s card is Overview alone; the lens leaves the card for its tab; Records a tab like the others; the phone', browser, {}, async ({ page, ev }, expect) => {
+  // Navigation phase 8b (navigation-design §3.5, §4 #7, §8 row 8): a file is its record sheet (Overview), its flows
+  // (Servicing, 8b review) and the file (Records); a DC project's and an EA's card is its Overview alone, the lens leaving
+  // the card for its tab (owner decision 9) and × bringing the five tabs back; the trail's Peel closing a test site's or an
+  // EA's result as × does (8b review); Records a tab like the others on the map's strip and Home's; the phone.
+  await check('Every scope kind (8b): a file is its record sheet, its flows and Records; a DC project’s and an EA’s card is Overview alone; the lens leaves the card for its tab; the trail’s Peel closes as × does; Records a tab like the others; the phone', browser, {}, async ({ page, ev }, expect) => {
     const at = () => ev(() => ({ scope: document.getElementById('analysis').dataset.scope, tabs: [...document.querySelectorAll('.f-tab')].filter(t => getComputedStyle(t).display !== 'none').map(t => t.dataset.tab).join(), tab: PeelAnalysisTabs.getFootTab(), ss: PeelApp.state.ss || '', result: PeelSvcScope.hasResult() }));
     const FIVE = 'overview,growth,svc,dca,records';
     await ev(() => PeelWorkspaces.setMode('full')); await wait(1000);
     await page.waitForFunction(() => PeelApp.state.svcModel && PeelApp.state.dcInfra && window.PeelCapitalEA && PeelCapitalEA.data.loaded, null, { timeout: 150000 });
-    // 1. A file (a marker's record): Overview and Records, Records the file (never Peel's sources).
-    const file = () => ev(() => { const p = PeelApp.state.projects.find(q => q.records && q.records.some(r => r.kind === 'application' && r.uid && r.ref)), r = p.records.find(x => x.kind === 'application' && x.uid && x.ref); PeelAerialCheck.showRecordDetail(r, p); return r.ref; });
+    // 1. A file (a marker's record): Overview, Servicing and Records; Servicing its flows (the record sheet's table, the
+    // file kept, the Water lens too), Records the file (never Peel's sources).
+    const file = () => ev(() => { const has = x => x.kind === 'application' && x.uid && x.ref && x.units > 0, p = PeelApp.state.projects.find(q => q.records && q.records.some(has)), r = p.records.find(has); PeelAerialCheck.showRecordDetail(r, p); return r.ref; });
+    const flows = () => ev(() => { const b = document.getElementById('svc-file-body'), pn = document.getElementById('pane-svc-file'), ap = document.getElementById('analysis-panes');
+      return { on: !!pn && pn.getClientRects().length > 0, head: ((b && b.querySelector('.head h3')) || {}).textContent || '', table: !!(b && b.querySelector('table')), pnl: document.getElementById('analysis').classList.contains('pnl-on'), note: !document.getElementById('scope-note').hidden, panes: !ap || !ap.clientWidth || ap.scrollWidth <= ap.clientWidth }; });
     const ref = await file(); await wait(2000);
     const f = await at();
-    expect(f.scope === 'file' && f.tabs === 'overview,records' && f.tab === 'overview', `a file: Overview and Records, on Overview (${JSON.stringify(f)})`);
+    expect(f.scope === 'file' && f.tabs === 'overview,svc,records' && f.tab === 'overview', `a file: Overview, Servicing and Records, on Overview (${JSON.stringify(f)})`);
+    const ov = await ev(() => (document.getElementById('scope-body').textContent || '').includes('Servicing demand · this file alone'));
+    await page.click('.f-tab[data-tab="svc"]'); await wait(1500);
+    const fs = { ...(await at()), ...(await flows()) };
+    expect(ov && fs.scope === 'file' && fs.tab === 'svc' && fs.result && fs.on && fs.head === ref && fs.table && !fs.pnl && !fs.note, `Servicing: the file's flows, as its record sheet's, no panel, no Peel-wide note (${JSON.stringify(fs)})`);
+    await page.click('.f-tab[data-tab="overview"]'); await wait(800);
+    await page.click('#tb-views [data-mview="water"]'); await wait(1500);
+    const fw = await at();
+    expect(fw.scope === 'file' && fw.tab === 'svc' && fw.result && (await flows()).on, `the Water lens at a file: its Servicing, the file kept (${JSON.stringify(fw)})`);
     await page.click('.f-tab[data-tab="records"]'); await wait(1500);
     const fr = await ev(r => ({ body: (document.getElementById('records-body').textContent || '').includes(r), data: !!document.getElementById('rec-data-sources').getClientRects().length }), ref);
     expect(fr.body && !fr.data, `Records: the file (${ref}), not Peel's sources (${JSON.stringify(fr)})`);
     await ev(() => PeelAerialCheck.closeDetail()); await wait(1200);
+    // 1b. The trail's Peel closes a result as × does (8b review): a test site placed and not counted goes with it, an
+    // EA's card announces its close (its highlight clears on it, js/capital-ea.js).
+    await ev(() => { window.__closed = 0; document.addEventListener('peel:tool-closed', () => { window.__closed++; }); });
+    const mk = () => ev(() => document.querySelectorAll('.whatif-mk').length), mk0 = await mk();
+    await ev(() => PeelSewerProfile.showWhatIf({ lat: 43.70, lng: -79.75 })); await wait(1500);
+    const mk1 = await mk();
+    await page.click('#trail .tb-step[data-i="0"]'); await wait(1500);
+    const tp = { mk0, mk1, mk2: await mk(), closed: await ev(() => window.__closed), result: await ev(() => PeelSvcScope.hasResult()) };
+    expect(tp.mk1 === mk0 + 1 && tp.mk2 === mk0 && tp.closed === 1 && !tp.result, `the trail's Peel: the uncounted test site goes, as with × (${JSON.stringify(tp)})`);
+    await ev(() => PeelCapitalEA.openEA((PeelCapitalEA.data.eas.eas || []).find(x => x.id).id)); await wait(2000);
+    await page.click('#trail .tb-step[data-i="0"]'); await wait(1500);
+    const tq = { closed: await ev(() => window.__closed), result: await ev(() => PeelSvcScope.hasResult()), trail: await ev(() => [...document.querySelectorAll('#trail .tb-step')].map(x => x.textContent.trim()).join(' › ')) };
+    expect(tq.closed === 2 && !tq.result && tq.trail === 'Peel', `the trail's Peel at an EA's card: closed as × closes it (${JSON.stringify(tq)})`);
     // 2. A DC project's card: Overview alone; the Capital lens closes it and opens Capital, its lens on.
     const k = await ev(() => { const l = PeelApp.state.dcInfra.wastewater.lines.find(x => x.p || x.c); return `wastewater:${l.p || l.c}`; });
     await ev(k => PeelDcProjects.openWork(k), k); await wait(2500);
@@ -2845,11 +2877,14 @@ async function pickView(page, ev, key, tap = false) {
     await ev(() => { PeelWorkspaces.setMode('home'); PeelWorkspaces.openPage('home'); }); await wait(2000); await page.mouse.move(1, 1);
     const h = await look(['#home .page-tabs [data-pg-tab="growth"]', '#home .page-tabs [data-pg-tab="records"]']);
     expect(h[0] === h[1] && h[2] === 'page-sec page-tab', `Home's strip: Records as Growth (${JSON.stringify(h)})`);
-    // 5. The phone: a file's two tabs in reach, nothing scrolls sideways.
+    // 5. The phone: a file's three tabs in reach, its flows too, nothing scrolls sideways.
     await page.setViewportSize({ width: 390, height: 844 }); await ev(() => PeelWorkspaces.setMode('full')); await wait(1500);
     await file(); await wait(2000);
     const ph = await ev(() => { const shown = [...document.querySelectorAll('.f-tab')].filter(t => getComputedStyle(t).display !== 'none'), p = document.getElementById('analysis-panes'); return { tabs: shown.map(t => t.dataset.tab).join(), in: shown.every(t => t.getBoundingClientRect().right <= innerWidth + 1), panes: !p || !p.clientWidth || p.scrollWidth <= p.clientWidth, doc: document.documentElement.scrollWidth }; });
-    expect(ph.tabs === 'overview,records' && ph.in && ph.panes && ph.doc <= 390, `the phone: a file's two tabs in reach, no sideways scroll (${JSON.stringify(ph)})`);
+    expect(ph.tabs === 'overview,svc,records' && ph.in && ph.panes && ph.doc <= 390, `the phone: a file's three tabs in reach, no sideways scroll (${JSON.stringify(ph)})`);
+    await page.click('.f-tab[data-tab="svc"]'); await wait(1500);
+    const pf = { ...(await flows()), doc: await ev(() => document.documentElement.scrollWidth) };
+    expect(pf.on && pf.table && pf.panes && pf.doc <= 390, `the phone: the file's flows, no sideways scroll (${JSON.stringify(pf)})`);
   });
 
   // Navigation phase 8a, the other servicing kinds and the links (navigation-design §3.4, §5 rows 150-153, §7): a pumping
@@ -2895,7 +2930,7 @@ async function pickView(page, ev, key, tap = false) {
   });
 
   // Navigation phase 8b, old links to a file or a card (navigation-design §7.2): a link made before the card left tabs out
-  // can carry any t; the file opens on Overview with Records (the file), a DC project's and an EA's card on Overview alone,
+  // can carry any t; the file opens on Overview with Servicing (its flows) and Records (the file), a DC project's and an EA's card on Overview alone,
   // and closing the result brings the area's five tabs back.
   await check('Every scope kind (8b): an old link to a file, a DC project’s or an EA’s card with any t opens the result on Overview; closing it brings the five tabs back', browser, {}, async ({ page, ev }, expect) => {
     const load = async url => { await page.goto(`http://localhost:${PORT}/${url}`); await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 }); await wait(1500); };
@@ -2910,11 +2945,11 @@ async function pickView(page, ev, key, tap = false) {
     const d = await link(() => { const l = PeelApp.state.dcInfra.wastewater.lines.find(x => x.p || x.c); PeelDcProjects.openWork(`wastewater:${l.p || l.c}`); return 'dcwork'; });
     const e = await link(() => { PeelCapitalEA.openEA((PeelCapitalEA.data.eas.eas || []).find(x => x.id).id); return 'ea'; });
     expect(/(^|&)ss=file:/.test(f.hash) && /(^|&)ss=dcwork:/.test(d.hash) && /(^|&)ss=ea:/.test(e.hash), `the three links carry their result (${f.hash.slice(-40)} | ${d.hash.slice(-40)} | ${e.hash.slice(-40)})`);
-    // 1. A file, t=records&rs=checks: Overview and Records (the file); closed from Records, Peel's Records.
+    // 1. A file, t=records&rs=checks: Overview, Servicing and Records (the file); closed from Records, Peel's Records.
     await load(`?o1#${withT(f.hash, 't=records&rs=checks')}`);
     await page.waitForFunction(() => PeelApp.state.ss && /^file:/.test(PeelApp.state.ss), null, { timeout: 60000 }).catch(() => {}); await wait(1500);
     const f1 = await at();
-    expect(f1.scope === 'file' && f1.tabs === 'overview,records' && f1.tab === 'overview' && f1.result, `a file, t=records: on Overview, with Records (${JSON.stringify(f1)})`);
+    expect(f1.scope === 'file' && f1.tabs === 'overview,svc,records' && f1.tab === 'overview' && f1.result, `a file, t=records: on Overview, with Servicing and Records (${JSON.stringify(f1)})`);
     await page.click('.f-tab[data-tab="records"]'); await wait(1500);
     const fb = await ev(r => (document.getElementById('records-body').textContent || '').includes(r), f.ref);
     expect(fb, `its Records is the file (${f.ref})`);

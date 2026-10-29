@@ -10,8 +10,8 @@
   // ---- The right panel (Stage 2): five tabs, Overview · Growth · Servicing · Capital and Records (the
   // Overview's ⓘ line opens its Data checks; navigation phase 8b: Records a tab like the others). Sub-views: at
   // most four per tab, one chip row under the tab bar (TABSUBS). Overview has none. What each scope kind shows:
-  // HIDDEN (a drawn area has no Records tab, a file is Overview and Records, a card or a tool's result Overview
-  // alone; navigation phase 8).
+  // HIDDEN (a drawn area has no Records tab, a file is Overview, Servicing (its flows) and Records, a card or a tool's
+  // result Overview alone; navigation phase 8).
   //   Growth:    Pipeline · Areas · Forecast (its By period fold: the pipeline ledger, js/ledger-ui.js)
   //   Servicing: Capacity · Network · Old pipes (water and wastewater together; Allocations is a fold of Capacity;
   //              Old pipes the old sewers carrying growth, js/workspaces.js pipesSpec), and at a development
@@ -122,8 +122,9 @@
   //   pumping station, wastewater block, pressure zone or water system (Growth › Pipeline · Forecast, Servicing ›
   //   Capacity · Network · Old pipes, Capital › DC timing, Records › Sources · Data checks, its own);  drawn: a
   //   selection (Pipeline · Forecast, Capacity · Network, DC timing; no Records);  file: a single file (its record
-  //   sheet on Overview, the file in Records);  object: a DC project, an EA, a capital project, a pipe, a water
-  //   facility, a constraint feature, a tool's or help result (its card on Overview alone; navigation phase 8b).
+  //   sheet on Overview, its flows in Servicing, the file in Records);  object: a DC project, an EA, a capital
+  //   project, a pipe, a water facility, a constraint feature, a tool's or help result (its card on Overview alone;
+  //   navigation phase 8b).
   // At a site, Capital › DC timing is the site's DC projects (the projects it relies on); the Projects
   // list is Region-wide, so it is hidden there; the EAs and works near the site are in that one view
   // (navigation phase 5: Capital has no chip row at a site). FSR review is a development's: an area, a servicing
@@ -134,7 +135,7 @@
     area: { svc: ['fsr'], records: ['files'] },
     svc: { growth: ['areas'], svc: ['fsr'], dca: ['eas', 'projects'], records: ['files'] },
     drawn: { growth: ['areas'], svc: ['pipes', 'fsr'], dca: ['eas', 'projects'], records: '*' },
-    file: { growth: '*', svc: '*', dca: '*', records: ['sources', 'checks'] },
+    file: { growth: '*', svc: ['capacity', 'network', 'pipes', 'fsr'], dca: '*', records: ['sources', 'checks'] },   // (Servicing: its flows only)
     object: { growth: '*', svc: '*', dca: '*', records: '*' },
   };
   const SITE_HIDDEN = HIDDEN.site;
@@ -143,10 +144,13 @@
   // A whole tab this scope kind leaves out: its button is not on the strip, a pick of it opens Overview.
   const tabOff = (scope, tab) => (HIDDEN[scope] || {})[tab] === '*';
   // The sub-view a tab shows: the one picked, else (hidden at this scope) the first that is not (none: the
-  // tab is left out, the pick kept).
+  // tab is left out or shows the scope's own view, ownView; the pick kept).
   const subFor = (tab, sub, site, scope = site ? 'site' : 'area') => (hiddenAt(scope, tab, sub) ? TABSUBS[tab].valid.find(v => !hiddenAt(scope, tab, v)) || sub : sub);
   // The chips a tab shows at a scope (≤ 4: tests/four-tabs.test.js).
   const chipsAt = (tab, scope) => (TABSUBS[tab] ? TABSUBS[tab].valid.filter(v => !hiddenAt(scope, tab, v)) : []);
+  // A tab on the strip with none of its sub-views at this scope: it shows the scope's own view (a file's Servicing,
+  // its flows: js/aerial-check.js renderFlows, design §3.5), never a sub-view's panel or panes; the pick is kept.
+  const ownView = (tab, scope = scopeKind()) => !!TABSUBS[tab] && !tabOff(scope, tab) && !chipsAt(tab, scope).length;
   // The kind of scope open (navigation phase 8, design §3.5): a development 'site' (a result kept at it too: the
   // Inquiry draft); no scope 'area'; a plant, station, block, zone or water system 'svc'; a result by its kind: a
   // selection (drawn, or the developments inside a constraint layer) 'drawn', a single file 'file', any other (a
@@ -187,8 +191,11 @@
     if (root.PeelSvcScope) root.PeelSvcScope.peelWideNote();
     if (key === 'dca' && typeof DcaTab().renderDca === 'function') setTimeout(() => DcaTab().renderDca(), 0);
     if (key === 'overview') setTimeout(() => { if (OT() && window.PeelApp) OT().renderOverview(); }, 0);   // (may fire before the app has loaded; its boot renders the overview)
-    if (key === 'svc' && svcSub === 'capacity') setTimeout(() => DUI().renderAlloc(), 0);   // (Allocations recorded: Capacity's fold, its tables in the full table)
-    if (key === 'svc' && root.PeelSvcCapacity) setTimeout(() => root.PeelSvcCapacity.renderFor(svcSub), 0);
+    // (a file's Servicing: its flows, never Peel's views)
+    if (key === 'svc' && ownView('svc', kind)) { if (root.PeelAerialCheck && root.PeelAerialCheck.renderFlows) setTimeout(() => root.PeelAerialCheck.renderFlows(), 0); } else {
+      if (key === 'svc' && svcSub === 'capacity') setTimeout(() => DUI().renderAlloc(), 0);   // (Allocations recorded: Capacity's fold, its tables in the full table)
+      if (key === 'svc' && root.PeelSvcCapacity) setTimeout(() => root.PeelSvcCapacity.renderFor(svcSub), 0);
+    }
     if (key === 'growth' && gSub === 'areas' && root.PeelPlanTables) setTimeout(() => root.PeelPlanTables.render(), 0);
     if (key === 'growth' && gSub === 'timing' && root.PeelLedgerUI) setTimeout(() => root.PeelLedgerUI.render(), 0);   // (By period's full table, #ledger-body)
     // The standard panel of the open tab and sub-view (js/panel.js).
@@ -216,7 +223,9 @@
     for (const p of document.querySelectorAll('.f-pane')) {
       const pk = p.dataset.pane;
       if (p.classList.contains('f-subtabs')) { p.hidden = pk !== key || chipsAt(pk, scopeOf(pk)).length < 2; continue; }   // one chip is no choice: no row
-      p.hidden = pk !== key || p.dataset.off === '1' || (p.dataset.sub != null && (!TABSUBS[pk] || !p.dataset.sub.split(' ').includes(TABSUBS[pk].get())));
+      // (a scope kind's own view, data-kind, shows at that kind only; at it the tab's sub-view panes do not: ownView)
+      if (p.dataset.kind != null) { p.hidden = pk !== key || p.dataset.kind !== kind; continue; }
+      p.hidden = pk !== key || p.dataset.off === '1' || (p.dataset.sub != null && (!TABSUBS[pk] || !p.dataset.sub.split(' ').includes(TABSUBS[pk].get()) || ownView(pk, kind)));
     }
     for (const [tk, s] of Object.entries(TABSUBS))
       for (const b of document.querySelectorAll(`[data-${s.attr}]`)) { const on = b.dataset[s.attr] === s.get(); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); b.classList.toggle('site-off', hiddenAt(scopeOf(tk), tk, b.dataset[s.attr])); }
@@ -283,7 +292,7 @@
   // (one moved to another tab is set there: the tab it now lives in is returned, for the caller to open)
   const setSub = (tab, sub) => { const r = migrateSub(tab, sub) || { tab, sub }, s = TABSUBS[r.tab]; if (!s) return r.tab; const v = r.sub; if (s.valid.includes(v)) { s.set(v); store.set(s.store, v); } return r.tab; };
   const api = {
-    tabOf, TAB_KEYS, SUB_MAP, HIDDEN, hiddenAt, chipsAt, KIND_OF, kindOf, scopeKind, tabOff, rescope, leaveFor,
+    tabOf, TAB_KEYS, SUB_MAP, HIDDEN, hiddenAt, chipsAt, KIND_OF, kindOf, scopeKind, tabOff, ownView, rescope, leaveFor,
     getFootPref: () => footPref, setFootPref: v => { footPref = tabOf(v); }, openTab,
     getFootTab: () => footTab, tabShown, refreshFootTab, wantedTab, viewKey, tabReady,
     getSvcSub: () => svcSub, setSvcSub: v => { svcSub = v; store.set('svcSub', v); },

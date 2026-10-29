@@ -2354,7 +2354,7 @@ parts (NP-8 with change): **8a**, servicing scopes and drawn areas, and **8b**, 
   | Area (`area`) | Pipeline · Areas · Forecast | Capacity · Network · Old pipes | DC timing · EAs · Projects | Sources · Data checks |
   | Servicing scope (`svc`) | Pipeline · Forecast | Capacity · Network · Old pipes | DC timing | its own Sources · Data checks |
   | Drawn area (`drawn`) | Pipeline · Forecast | Capacity · Network | DC timing | (no Records tab) |
-  | File (`file`, 8b) | (left out) | (left out) | (left out) | the file (Files) |
+  | File (`file`, 8b) | (left out) | its one view (its flows) | (left out) | the file (Files) |
   | Card or tool's result (`object`, 8b) | (left out) | (left out) | (left out) | (left out) |
 
 - **A whole tab left out**: a drawn area has no Records tab (`HIDDEN.drawn.records = '*'`): its button is
@@ -2409,11 +2409,17 @@ Records, and the link made at a scope's Records opened cold).
 
 ### Files and cards; Records a tab like the others (8b)
 
-- **A file is its record sheet and the file** (`HIDDEN.file`: Growth, Servicing and Capital left out; Records ›
-  Files): a marker's record opens on Overview as before (SPEC §3: its units alone, its flows, what it counts as,
-  its tree links) and Records shows the file (its source record, every field, its provenance). Its flows stay on
-  the record sheet: a file has no Servicing view of its own (§3.5's "one view: its flows" would be a second home
-  for them). *Open as a development* and the tree links open the development, every tab at it.
+- **A file is its record sheet, its flows and the file** (`HIDDEN.file`: Growth and Capital left out; Servicing's
+  four views left out, so it shows the file's own; Records › Files): a marker's record opens on Overview as before
+  (SPEC §3: its units alone, its flows, what it counts as, its tree links), Servicing shows its flows (design §3.5
+  "one view: its flows", SPEC §5 "this file's flows": the record sheet's demand table, the same renderer,
+  `js/aerial-check.js` `renderFlows` in `#pane-svc-file`; no chips, no panel, no Peel-wide note, no Old pipes on
+  the map; the Servicing pick is kept for the next area) and Records shows the file (its source record, every
+  field, its provenance). A tab showing a scope's own view is `ownView(tab)` (`js/analysis-tabs.js`); a pane for
+  one kind only is `data-kind`. The Water and Wastewater lenses open it with the file kept; a file whose record is
+  not in yet says *Loading the file*, as Records does. *Open as a development* and the tree links open the
+  development, every tab at it. (8b first left Servicing out at a file, the build's own reading of §3.5; the
+  review put it back as the design and SPEC have it.)
 - **A card or a tool's result is its Overview alone** (`HIDDEN.object`, `kindOf`'s fallback `object`): a DC
   project, an EA, a capital project, a pipe, a water facility, a constraint layer's feature, a block's fallback
   card, What loads this?, a trace, Inspect point, Test a site, Upgrade a pipe, the sewer designer's and Help's
@@ -2428,8 +2434,11 @@ Records, and the link made at a scope's Records opened cold).
   × does: a test site placed and not counted goes with it (a counted one stays), and the sewer designer's design
   goes when its tool is off.
 - **The trail's group step** (Peel › DC timing / EA / Capital › the card) closes the card and opens that list:
-  Capital › DC timing · EAs · Projects. Peel closes it as × does. The five tabs come back (`rescope()`), on
-  Overview after × or Peel.
+  Capital › DC timing · EAs · Projects, a tab pick as a `[data-at]` link is (`openTab`): the tab is kept and
+  the address and *Copy link* say the list (`t=dca&dcs=timing|eas|projects`), so a reload opens it. Peel closes
+  the card as × does (`PeelTools.closeResult()` first, while it is still open, so its close handlers run: an
+  uncounted test site goes, an EA's highlight clears). The five tabs come back (`rescope()`), on Overview after ×
+  or Peel.
 - **Records is real or left out, never a placeholder** (§4 #7): the line *"… has no files of its own …
   Below: the sources for all of Peel"* is gone. A file whose record is not in yet says *Loading the file*, never
   Peel's sources.
@@ -2440,7 +2449,7 @@ Records, and the link made at a scope's Records opened cold).
 - **What a reader notices** (risk 6): at a card, Growth, Servicing, Capital and Records were one tap away,
   filtered to its developments; now the card closes first, and its filter with it. A servicing scope or a drawn
   area keeps the tabs for a set of developments; the trail's group step leads to the card's list.
-- **Phones**: the sheet's strip is one tab at a card, two at a file; nothing makes the panes scroll sideways at
+- **Phones**: the sheet's strip is one tab at a card, three at a file; nothing makes the panes scroll sideways at
   390 px.
 
 Old links still land (`js/analysis-tabs.js` `HIDDEN` / `leaveFor`; tests/nav-aliases.test.js "phase 8b"):
@@ -2448,8 +2457,8 @@ Old links still land (`js/analysis-tabs.js` `HIDDEN` / `leaveFor`; tests/nav-ali
 | Old | Where it opens now |
 |---|---|
 | `ss=dcwork:…\|ea:…\|cap:…\|pipe:…` with any `t` | The card on Overview, the other tabs left out; after × or the trail's Peel, Overview with the five tabs; the stored tab is the next visit's |
-| `ss=file:<uid>` with any `t` | The record sheet on Overview (the link's restore opens Overview, as before); the file is in Records, one tap |
-| The trail's DC timing / EA / Capital step at a card | The card closes; Capital › DC timing / EAs / Projects |
+| `ss=file:<uid>` with any `t` | The record sheet on Overview (the link's restore opens Overview, as before); its flows are in Servicing and the file in Records, one tap each |
+| The trail's DC timing / EA / Capital step at a card | The card closes; Capital › DC timing / EAs / Projects, the tab kept and in the link (`t=dca&dcs=…`) |
 | A lens (Capital, Water, Wastewater), a `[data-at]` link, Help's *Show me*, an EA card's link or a map view's tab, at a card that leaves that tab out | The card closes (as × does), then that tab |
 | `.f-tab-trail`, `.page-tab-trail` | Gone: Records a tab like the others |
 

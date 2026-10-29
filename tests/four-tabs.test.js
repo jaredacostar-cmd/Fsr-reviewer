@@ -31,7 +31,8 @@ function loadTabs({ labs = [], site = false, publicView = false, siteEas = 3 } =
 
 // The spec's inventory: the chips each tab shows at each scope. (navigation phase 6c: Old pipes, an area's Servicing view;
 // navigation phase 8a, design §3.5: a servicing scope, a drawn area, a single file; a drawn area has no Records tab;
-// navigation phase 8b: a file is Overview and Records, a card or a tool's result Overview alone)
+// navigation phase 8b: a file is Overview, Servicing (its flows, no chip: its own view) and Records, a card or a tool's
+// result Overview alone)
 const SPEC = {
   area: { overview: [], growth: ['pipeline', 'areas', 'timing'], svc: ['capacity', 'network', 'pipes'], dca: ['timing', 'eas', 'projects'], records: ['sources', 'checks'] },
   site: { overview: [], growth: ['pipeline'], svc: ['network', 'fsr'], dca: ['timing'], records: ['files'] },
@@ -51,6 +52,8 @@ test('1. tabs: Overview · Growth · Servicing · Capital · Records, in that or
   assert.doesNotMatch(css, /f-tab-trail/); assert.doesNotMatch(HTML, /f-tab-trail/);
   assert.doesNotMatch(css, /#ftab-records|\[data-tab="records"\]/);
   assert.doesNotMatch(src('js/topbar.js'), /data-tbg="records"/);
+  // (the five at full size fit the narrowest column, 320 px, every tab a little less padded there: 8b review)
+  assert.match(css, /\.analysis-tabs \{ container-type: inline-size; \}\n@container \(max-width: 340px\) \{ \.f-tab \{ padding-left: var\(--space-1\); padding-right: var\(--space-1\); \} \}/);
 });
 
 test('1. sub-views per scope match the spec (Peel / area, a development, a servicing scope, a drawn area, a file, a card)', () => {
@@ -84,6 +87,11 @@ function loadStrip({ stored = {}, busy = [], extra = {} } = {}) {
   const cls = () => { const s = new Set(); return { toggle: (c, on) => { if (on) s.add(c); else s.delete(c); }, contains: c => s.has(c), add: c => s.add(c), remove: c => s.delete(c) }; };
   const el = dataset => ({ dataset, classList: cls(), attrs: {}, setAttribute(k, v) { this.attrs[k] = v; }, parentElement: null });
   const tabs = ['overview', 'growth', 'svc', 'dca', 'records'].map(tab => el({ tab }));
+  // (Servicing's panes as index.html has them: its chip row, its panel slot, a pane of each view, a file's own view)
+  const panes = Object.fromEntries([['svc-chips', { pane: 'svc' }], ['pnl-svc', { pane: 'svc' }], ['pane-svc-capacity', { pane: 'svc', sub: 'capacity' }], ['pane-ww', { pane: 'svc', sub: 'network' }],
+    ['pane-svc-pipes', { pane: 'svc', sub: 'pipes' }], ['pane-svc-file', { pane: 'svc', kind: 'file' }], ['pane-records', { pane: 'records' }]].map(([id, d]) => [id, el(d)]));
+  panes['svc-chips'].classList.add('f-subtabs');
+  const timers = [];
   const CHIPS = { gsub: ['pipeline', 'areas', 'timing'], svcsub: ['capacity', 'network', 'pipes', 'fsr'], dcasub: ['timing', 'eas', 'projects'], rsub: ['sources', 'checks', 'files'] };
   const chips = Object.fromEntries(Object.entries(CHIPS).map(([a, vs]) => [a, vs.map(v => el({ [a]: v }))]));
   const an = el({}), scope = { dev: null, ss: null, ref: null }, on = {};
@@ -92,17 +100,19 @@ function loadStrip({ stored = {}, busy = [], extra = {} } = {}) {
       const m = /^\.f-tab\[data-tab="(\w+)"\]:not\(\[hidden\]\):not\(\[aria-busy\]\)$/.exec(sel); if (m) return busy.includes(m[1]) ? null : tabs.find(t => t.dataset.tab === m[1]) || null;
       const m2 = /^\.f-tab\[data-tab="(\w+)"\]$/.exec(sel); return m2 ? tabs.find(t => t.dataset.tab === m2[1]) || null : null;
     },
-    querySelectorAll: sel => { if (sel === '.f-tab') return tabs; const m = /^\[data-(\w+)\]$/.exec(sel); return m && chips[m[1]] ? chips[m[1]] : []; },
+    querySelectorAll: sel => { if (sel === '.f-tab') return tabs; if (sel === '.f-pane') return Object.values(panes); const m = /^\[data-(\w+)\]$/.exec(sel); return m && chips[m[1]] ? chips[m[1]] : []; },
     getElementById: id => (id === 'analysis' ? an : null), addEventListener: (t, f) => (on[t] = on[t] || []).push(f) };
   const store = { get: (k, d) => (Object.prototype.hasOwnProperty.call(stored, k) ? stored[k] : d), set: () => {} };
   const window = { PeelUtil: { store }, document, PeelDcaTab: {},
     DevScope: { current: () => scope.dev },
     PeelSvcScope: { current: () => scope.ss, peelWideNote: () => {}, hasResult: () => !!(scope.ss && scope.ss.kind === 'result') }, ...extra };
-  const ctx = { window, document, setTimeout: () => 0, module: { exports: {} } };
+  const ctx = { window, document, setTimeout: f => { timers.push(f); return 0; }, module: { exports: {} } };
   ctx.globalThis = ctx;
   vm.runInNewContext(src('js/analysis-tabs.js'), ctx);
   const tab = t => tabs.find(x => x.dataset.tab === t), chip = (a, v) => chips[a].find(x => x.dataset[a] === v);
-  return { AT: ctx.module.exports, scope, an, tab, chip, on };
+  // (the panes on screen: not hidden)
+  const shownPanes = () => Object.keys(panes).filter(id => !panes[id].hidden);
+  return { AT: ctx.module.exports, scope, an, tab, chip, on, panes, shownPanes, timers };
 }
 
 test('1. every scope kind (navigation phase 8a, design §3.5): one kind for every tab; a tab a scope leaves out is not on the strip and opens Overview, never held; closing the scope brings the strip, the chips and the pick back', () => {
@@ -179,11 +189,13 @@ test('1. every scope kind (navigation phase 8a, design §3.5): one kind for ever
   assert.match(src('js/svc-data.js'), /SvcTab\(\)\.renderSvcTab\(\);\n\s+App\(\)\.applyFilters\(\);\n\s+if \(AT\(\)\.rescope\) AT\(\)\.rescope\(\);/);
 });
 
-test('1. a file and a card (navigation phase 8b, design §3.5): a file is Overview and Records, a card or a tool’s result Overview alone; a tab, a link or the lens to a tab it leaves out closes it first (leaveFor)', () => {
+test('1. a file and a card (navigation phase 8b, design §3.5): a file is Overview, Servicing (its flows) and Records, a card or a tool’s result Overview alone; a tab, a link or the lens to a tab it leaves out closes it first (leaveFor)', () => {
   const shown = L => ['overview', 'growth', 'svc', 'dca', 'records'].filter(t => !L.tab(t).classList.contains('f-tab-off'));
   // (PeelAerialCheck.closeDetail, × 's close: the stub closes the result and the tabs follow, as closeResult's rescope)
   const closed = [], share = { viewLink: { write() {} } };
-  const L = loadStrip({ extra: { PeelShare: share, PeelAerialCheck: { closeDetail: () => { closed.push(L.scope.ss && L.scope.ss.rkind); L.scope.ss = null; L.AT.rescope(); } } } }), T = L.AT;
+  let flows = 0, caps = 0;
+  const L = loadStrip({ extra: { PeelShare: share, PeelAerialCheck: { closeDetail: () => { closed.push(L.scope.ss && L.scope.ss.rkind); L.scope.ss = null; L.AT.rescope(); }, renderFlows: () => { flows++; } },
+    PeelDemandUI: { renderAlloc() {} }, PeelSvcCapacity: { renderFor: () => { caps++; } } } }), T = L.AT;
   // A DC project's card: Overview alone; a pick of another tab opens Overview (never held), the picks kept.
   L.scope.ss = { kind: 'result', rkind: 'dcwork', ref: 'dcwork:wastewater:22-1' };
   T.showFootTab('overview');
@@ -204,12 +216,26 @@ test('1. a file and a card (navigation phase 8b, design §3.5): a file is Overvi
   // A link to Overview at a card leaves it open.
   L.scope.ss = { kind: 'result', rkind: 'pipe', ref: 'pipe:7' }; T.showFootTab('overview'); at('overview');
   assert.deepEqual(closed, ['dcwork', 'ea']); assert.equal(L.scope.ss.rkind, 'pipe');
-  // A single file: Overview (its record sheet) and Records (the file, its one view); Records opens with it open.
+  // A single file: Overview (its record sheet), Servicing (its flows: its own view, no chip, the pick kept) and Records
+  // (the file, its one view); each opens with it open. (8b review: design §3.5, SPEC §5; 8b had left Servicing out)
   L.scope.ss = { kind: 'result', rkind: 'file', ref: 'file:u1' }; T.showFootTab('overview');
-  assert.deepEqual(shown(L), ['overview', 'records']); assert.equal(L.an.dataset.scope, 'file');
-  assert.deepEqual(plain(T.chipsAt('records', 'file')), ['files']);
+  assert.deepEqual(shown(L), ['overview', 'svc', 'records']); assert.equal(L.an.dataset.scope, 'file');
+  assert.deepEqual(plain(T.chipsAt('records', 'file')), ['files']); assert.deepEqual(plain(T.chipsAt('svc', 'file')), []);
+  assert.deepEqual(['growth', 'svc', 'dca', 'records'].filter(t => T.ownView(t, 'file')), ['svc'], 'Servicing its own view');
+  for (const k of ['area', 'site', 'svc', 'drawn', 'object']) assert.equal(T.ownView('svc', k), false, k);
+  const sub0 = T.getSvcSub(); L.timers.length = 0; flows = 0; caps = 0;
+  T.openTab('svc');   // (the Water or Wastewater lens too: it opens Servicing, the file kept)
+  assert.deepEqual([T.getFootTab(), T.getSvcSub(), closed.length], ['svc', sub0, 2], 'the file kept, the Servicing pick kept');
+  assert.deepEqual(L.shownPanes(), ['pnl-svc', 'pane-svc-file'], 'its flows: no chip row, no view’s panes (the panel slot empty: js/panel.js)');
+  assert.ok(L.chip('svcsub', sub0).classList.contains('site-off'));
+  L.timers.forEach(f => f()); assert.deepEqual([flows, caps], [1, 0], 'its flows drawn, never Peel’s views');
   T.openTab('records'); assert.deepEqual([T.getFootTab(), T.getRSub()], ['records', 'files']); assert.deepEqual(closed, ['dcwork', 'ea'], 'Records is a file’s');
+  assert.deepEqual(L.shownPanes(), ['pane-records']);
   T.openTab('growth'); assert.deepEqual(closed, ['dcwork', 'ea', 'file']); assert.equal(T.getFootTab(), 'growth');
+  // (back at Peel: Servicing's view again, its panes; the file's own view gone)
+  L.timers.length = 0; T.openTab('svc'); assert.ok(L.shownPanes().includes('svc-chips') && !L.shownPanes().includes('pane-svc-file'));
+  L.timers.forEach(f => f()); assert.deepEqual([flows, caps], [1, 1]);
+  T.openTab('growth');
   assert.equal(T.getRSub(), 'sources', 'the Records pick back at Peel');
   // A drawn area: Records closes the selection, then opens; at a plant Records closes nothing (its own Records).
   L.scope.ss = { kind: 'result', rkind: 'sel', ref: 'sel:a' }; T.showFootTab('overview');
@@ -236,6 +262,53 @@ test('1. a file and a card (navigation phase 8b, design §3.5): a file is Overvi
   assert.match(src('js/workspaces.js'), /\n {4}if \(!o\.keep && AT\(\) && AT\(\)\.leaveFor\) AT\(\)\.leaveFor\(pl\.tab\);\n {4}const A = AT\(\); if \(A && !o\.keep\) \{ if \(pl\.sub/);
   // The lens: its tab through openTab, as before (owner decision 9).
   assert.match(src('js/topbar.js'), /if \(tab && AT\(\) && AT\(\)\.openTab\) AT\(\)\.openTab\(tab\);/);
+});
+
+// js/aerial-check.js in a vm: a file's record sheet and its Servicing view (renderFlows), the demand table stubbed
+// (DD().demandHTML: what it was asked for), the scope's open result as js/svc-scope.js's.
+function loadFile() {
+  const U = require('../js/util.js'), nodes = {}, demand = [], opened = [], shown = [];
+  const node = id => nodes[id] || (nodes[id] = { innerHTML: '', handlers: {}, details: { open: false }, querySelector(q) { return q === 'details' && /<details/.test(this.innerHTML) ? this.details : null; },
+    addEventListener(t, f) { (this.handlers[t] = this.handlers[t] || []).push(f); } });
+  const state = { ss: null, criteria: {}, sources: [] }, scope = { result: null };
+  const window = { PeelUtil: { ...U, $: s => node(s), dot: () => '' }, PeelPhases: { PHASE_BY_KEY: { review: { label: 'In review' } }, humanizeField: x => x }, PEEL_CONFIG: {},
+    PeelMapCore: { map: { getZoom: () => 12, setView() {} } }, PeelApp: { state },
+    PeelMapMarkers: { parentApps: () => [], highlight() {} }, PeelCensusAreas: { setDaContext() {} }, PeelDevNav: { showDetail: q => shown.push(q.key) },
+    PeelDevDetail: { demandHTML: (x, intro) => { demand.push(plain(x)); return `<details class="sect"><table data-demand="${x.units}"></table>${intro}</details>`; }, recordProvHTML: () => '', recordRows: () => '' },
+    PeelSvcScope: { openResult: o => { opened.push(o); scope.result = o; state.ss = o.ref; }, hasResult: () => !!scope.result } };
+  window.window = window;
+  const ctx = vm.createContext({ window, document: { addEventListener() {} }, addEventListener() {}, console });
+  vm.runInContext(src('js/aerial-check.js'), ctx);
+  return { AC: window.PeelAerialCheck, body: node('#svc-file-body'), demand, opened, shown, scope, state };
+}
+test('1. a file’s Servicing: its flows, by the record sheet’s own renderer; a loading line before the file is in (navigation phase 8b review, design §3.5)', () => {
+  const L = loadFile();
+  // Nothing open yet: the loading line, as its Records says.
+  L.AC.renderFlows(); assert.match(L.body.innerHTML, /role="status" aria-label="Loading the file"/);
+  const r = { uid: 'u1', ref: 'OZS-2025-0032', kind: 'application', phase: 'review', type: 'Official Plan', units: 592, municipality: 'Brampton', events: [], records: [] };
+  const p = { key: 'k', title: '10 Main St', units: 900, records: [] }; p.records.push(r);
+  L.AC.showRecordDetail(r, p);
+  assert.equal(L.opened[0].ref, 'file:u1');
+  assert.match(L.opened[0].html, /<h2 class="section-title">Servicing demand · this file alone<\/h2><details class="sect"><table data-demand="592"><\/table><p class="small muted">At Peel criteria\. The development view sums every file; this view is the single file\.<\/p><\/details>/);
+  L.AC.renderFlows();
+  assert.match(L.body.innerHTML, /^<div class="head"><h3>OZS-2025-0032<\/h3><div class="m">Its flows · this file alone<\/div><\/div>\s*<details class="sect"><table data-demand="592"><\/table><p class="small muted">At Peel criteria\./);
+  assert.equal(L.body.details.open, true, 'open: the view is its flows (the record sheet folds them)');
+  assert.equal(L.demand.length, 2); assert.deepEqual(L.demand[1], L.demand[0], 'the same flows, asked the same way');
+  assert.deepEqual(L.demand[0], { units: 592, phase: 'review', types: ['Official Plan'], description: '', unitMix: null });
+  // A file with no units of its own: says so, and its development is one tap away (its flows there).
+  const q = { ...r, uid: 'u2', ref: 'SP-1', units: 0 }; p.records.push(q);
+  L.AC.showRecordDetail(q, p); L.AC.renderFlows();
+  assert.equal(L.demand.length, 2, 'no flows worked out for no units');
+  assert.match(L.body.innerHTML, /This file has no units of its own: no flows to show\. The development’s flows are in its Servicing \(<button type="button" class="btn small link" data-file-open-dev>Open as a development<\/button>\)\./);
+  for (const f of L.body.handlers.click) f({ target: { closest: s => (s === '[data-file-open-dev]' ? {} : null) } });
+  assert.deepEqual(L.shown, ['k']);
+  // Closed (or another result): the loading line again, never a stale file's flows.
+  L.scope.result = null; L.AC.renderFlows(); assert.match(L.body.innerHTML, /Loading the file/);
+  // Wired: index.html's pane, Servicing's at a file only (data-kind), its renderer called from showFootTab.
+  assert.match(HTML, /<section class="f-pane svc-pane" id="pane-svc-file" data-pane="svc" data-kind="file" role="tabpanel" aria-labelledby="ftab-svc" hidden><div class="tb-head"><h2 class="sr">Its flows<\/h2><\/div><div id="svc-file-body"><\/div><\/section>/);
+  const a = src('js/analysis-tabs.js');
+  assert.match(a, /if \(key === 'svc' && ownView\('svc', kind\)\) \{ if \(root\.PeelAerialCheck && root\.PeelAerialCheck\.renderFlows\) setTimeout\(\(\) => root\.PeelAerialCheck\.renderFlows\(\), 0\); \} else \{/);
+  assert.match(a, /if \(p\.dataset\.kind != null\) \{ p\.hidden = pk !== key \|\| p\.dataset\.kind !== kind; continue; \}/);
 });
 
 test('1. the panes behind each sub-view: Areas is one drill-down; Network holds blocks, stations, zones and the water facilities', () => {
