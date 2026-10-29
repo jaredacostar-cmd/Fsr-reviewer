@@ -8,9 +8,10 @@
   //                   G.E. Booth → Clarkson flow transfer marked. '' when there is no data.
   //   summary(pl)     one sentence: latest year, % of rated, change over ten years (for the two
   //                   lake plants, the two together, since the 2025 diversion moves flow between them).
-  //   checksHTML()    MECP's figure against the Region's annual report, per plant and year
+  //   checksHTML(pl)  MECP's figure against the Region's annual report, per plant and year
   //                   (registered as window.ModelChecks.plantFlows for Records › Data checks,
-  //                   the Servicing model group).
+  //                   the Servicing model group); with pl, that plant's rows only (its own Records ›
+  //                   Data checks, navigation phase 8a; '' when the file has none for it).
   // Pure strings; reads App().state.plantFlows.
   const App = () => root.PeelApp;
   const U = () => root.PeelUtil;
@@ -72,10 +73,10 @@
       <p class="small muted">Monthly total flow reported to the Ministry (MECP Municipal Treated Wastewater Effluent, ${esc(D.years[0])}–${esc(D.years[D.years.length - 1])}); years with all 12 months. ${(D.steps || []).some(st => st.from === pl || st.to === pl) ? esc(D.steps[0].note) : ''}</p></div>`;
   }
 
-  function checksHTML() {
-    const D = data(); if (!D || !D.checks || !D.checks.length) return '';
-    const worst = D.checks.reduce((m, c) => Math.max(m, Math.abs(c.diffPct)), 0);
-    const rows = D.checks.map(c => `<tr><td>${esc(SHORT[c.plant] || c.plant)} ${esc(c.year)}</td><td>${f1(c.mecpMLd)} ML/d</td><td>${f1(c.peelMLd)} ML/d</td><td>${c.diffPct >= 0 ? '+' : '−'}${Math.abs(c.diffPct).toFixed(1)}%</td><td><span class="fr-b ${Math.abs(c.diffPct) <= 2 ? 'fr-ok' : Math.abs(c.diffPct) <= 5 ? 'fr-due' : 'fr-stale'}">${Math.abs(c.diffPct) <= 2 ? 'Matches' : Math.abs(c.diffPct) <= 5 ? 'Close' : 'Differs'}</span></td></tr>`).join('');
+  function checksHTML(pl) {
+    const D = data(), checks = D && D.checks ? D.checks.filter(c => !pl || c.plant === pl) : []; if (!checks.length) return '';
+    const worst = checks.reduce((m, c) => Math.max(m, Math.abs(c.diffPct)), 0);
+    const rows = checks.map(c => `<tr><td>${esc(SHORT[c.plant] || c.plant)} ${esc(c.year)}</td><td>${f1(c.mecpMLd)} ML/d</td><td>${f1(c.peelMLd)} ML/d</td><td>${c.diffPct >= 0 ? '+' : '−'}${Math.abs(c.diffPct).toFixed(1)}%</td><td><span class="fr-b ${Math.abs(c.diffPct) <= 2 ? 'fr-ok' : Math.abs(c.diffPct) <= 5 ? 'fr-due' : 'fr-stale'}">${Math.abs(c.diffPct) <= 2 ? 'Matches' : Math.abs(c.diffPct) <= 5 ? 'Close' : 'Differs'}</span></td></tr>`).join('');
     return `<h3 class="sub-title">Plant flow: Ministry data against the Region's annual reports</h3>
       <table class="dt fr-table"><thead><tr><th>Plant and year</th><th>MECP (monthly totals)</th><th>Peel annual report</th><th>Difference</th><th>Result</th></tr></thead><tbody>${rows}</tbody></table>
       <p class="small muted">Two independent publications of the same meters; the largest difference is ${worst.toFixed(1)}%. Within ±2%: matches.</p>`;

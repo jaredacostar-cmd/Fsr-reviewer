@@ -8,7 +8,9 @@
   //   forPlant(pl)      events at the stations draining to a plant
   //   rowsFor(list)     panel list rows (PeelPanel lists)
   //   summaryHTML()     Peel-wide: each year's count, overflows, volume and the largest events
-  //   rosterHTML()      Records › Data checks, Servicing model: GIS stations against the report's roster
+  //   rosterHTML()      Records › Data checks, Servicing model: GIS stations against the report's roster;
+  //                     rosterHTML(names) a plant's own stations only (its Records › Data checks, navigation phase 8a)
+  //   onRoster(name)    is a station on the report's roster (true / false; null while the data is out)
   // Pure strings; reads App().state.wwEvents and the servicing data.
   const App = () => root.PeelApp;
   const SD = () => root.PeelSvcData;
@@ -47,16 +49,25 @@
     return `<div class="table-wrap"><table class="dt"><thead><tr><th>Year</th><th class="num">Events</th><th class="num">Overflows</th><th class="num">Wet weather</th><th class="num">Volume (estimated)</th><th>Largest</th><th>Source</th></tr></thead><tbody>${rows}</tbody></table></div>
       <p class="small muted">${esc(D.note)} Volume sums only the events with an estimate.</p>`;
   }
-  function rosterHTML() {
-    const D = data(), sv = App() && App().state.servicing, list = sv && ((sv.meta && sv.meta.pumpingStations) || sv.pumpingStations); if (!D || !list) return '';
-    const roster = [...D.stations.southPeel, ...D.stations.inglewood];
+  const rosterOf = D => [...D.stations.southPeel, ...D.stations.inglewood];
+  function onRoster(name) { const D = data(); if (!D) return null; const k = key(name); return !!k && rosterOf(D).some(n => key(n) === k); }
+  function rosterHTML(names) {
+    const D = data();
+    if (names) {
+      if (!D) return '';
+      const off = names.filter(n => !onRoster(n));
+      return `<h3 class="sub-title">Pumping stations: open GIS layer against the collection system report</h3>
+      <p class="small">${names.length ? `${names.length - off.length} of ${names.length} on the report's roster (Appendix A)${off.length ? `; not on it: ${esc(off.join(', '))} (a leachate, septage or lift station, or one outside the approval?)` : ''}.` : 'No traced pumping station drains here.'}</p>`;
+    }
+    const sv = App() && App().state.servicing, list = sv && ((sv.meta && sv.meta.pumpingStations) || sv.pumpingStations); if (!D || !list) return '';
+    const roster = rosterOf(D);
     const rk = new Set(roster.map(key)), gk = new Map(list.map(p => [key(p.name), p.name]));
     const extra = [...gk].filter(([k]) => !rk.has(k)).map(([, n]) => n), missing = roster.filter(n => !gk.has(key(n)));
     return `<h3 class="sub-title">Pumping stations: open GIS layer against the collection system report</h3>
       <p class="small">${list.length} points in the Region's layer; ${roster.length} sewage pumping stations under the collection system approval (Appendix A). ${missing.length ? `In the report, not on the layer: ${esc(missing.join(', '))}. ` : 'Every station in the report is on the layer. '}${extra.length ? `On the layer, not a station in the report: ${esc(extra.join(', '))} (leachate, septage and lift stations, or stations outside the approval).` : ''}</p>`;
   }
 
-  root.PeelWwEvents = { forStation, forPlant, rowsFor, summaryHTML, rosterHTML, key };
+  root.PeelWwEvents = { forStation, forPlant, rowsFor, summaryHTML, rosterHTML, onRoster, key };
   if (typeof window !== 'undefined') {
     window.ModelChecks = window.ModelChecks || {};
     Object.defineProperty(window.ModelChecks, 'wwRoster', { enumerable: true, configurable: true, get: () => ({ html: rosterHTML() }) });

@@ -277,8 +277,14 @@
   // reports-vs-model HTML is cached from the last Plants render; the Master Plan comparison is
   // rebuilt from the current model when called.
   let wwReportsVsModelHTML = '';
+  // (and each plant's row, for its own Records › Data checks: the same heading and columns, that plant alone; '' with none,
+  // navigation phase 8a)
+  const REP_HEAD = '<thead><tr><th>Plant</th><th>Rated capacity<br>(annual average)</th><th>2025 reported<br>average</th><th>2025 highest day</th><th>Model today<br>(design criteria)</th><th>Calibration<br>factor</th><th>Model<br>build-out</th></tr></thead>';
+  const wwRepRow = new Map();
   window.ModelChecks = window.ModelChecks || {};
   window.ModelChecks.wwReportsVsModel = () => wwReportsVsModelHTML;
+  window.ModelChecks.wwReportsVsModelFor = pl => (wwRepRow.get(pl) ? `<h3 class="svc-sub">2025 annual reports vs. the model <span class="muted small">annual average flow, ML/d</span></h3>
+        <table class="dt svc-table rep-table" data-info="plant-reports">${REP_HEAD}<tbody>${wwRepRow.get(pl)}</tbody></table>` : '');
   window.ModelChecks.wwMasterPlanVsTracker = () => {
     const M = App().state.svcModel, R = App().state.reports;
     if (!M || !R) return '';
@@ -377,20 +383,21 @@
     }
     // Phase 4: the 2025-reports comparison moved out of the tab (now Records › Data checks, the Servicing
     // model group): cache it here for ModelChecks.wwReportsVsModel (js/svc-capacity.js renderChecks).
-    wwReportsVsModelHTML = '';
+    wwReportsVsModelHTML = ''; wwRepRow.clear();
     if (R) {
       const rows = secs.map(x => {
         const p = rep(x.pl); if (!p) return '';
         const cb = calib[x.pl], todayDesign = cb.today + inflowsTo(x.pl), bo = adwf(x.sum, x.f) + inflowsTo(x.pl) + divMld(x.pl);
-        return `<tr><td>${esc(p.name)}<small>${SvcTab().refLink(p.ref, p.pages)}</small></td><td>${uCap(p.ratedMLd, p.ratedMLd)}</td><td>${uCap(p.avgMLd, p.ratedMLd)}<small>${p.pctOfCapacity}% of capacity</small></td><td>${uCap(p.maxDayMLd, p.ratedMLd)}<small>${esc(p.maxDayMonth)}${p.bypasses ? ` · ${p.bypasses} bypasses, ${fmtNum(p.bypassML)} ML` : ''}</small></td>
+        const tr = `<tr><td>${esc(p.name)}<small>${SvcTab().refLink(p.ref, p.pages)}</small></td><td>${uCap(p.ratedMLd, p.ratedMLd)}</td><td>${uCap(p.avgMLd, p.ratedMLd)}<small>${p.pctOfCapacity}% of capacity</small></td><td>${uCap(p.maxDayMLd, p.ratedMLd)}<small>${esc(p.maxDayMonth)}${p.bypasses ? ` · ${p.bypasses} bypasses, ${fmtNum(p.bypassML)} ML` : ''}</small></td>
           <td>${uCap(todayDesign, p.ratedMLd)}<small>${pct(todayDesign, p.avgMLd)} of reported</small></td><td>${cb.f ? `×${cb.f.toFixed(2)}` : '–'}</td><td class="bo">${uCap(bo, p.ratedMLd)}<small>${pct(bo, p.ratedMLd)} of capacity${SvcTab().svcOpt.ww === 'calibrated' ? ', calibrated' : ''}${divMld(x.pl) ? `, ${divMld(x.pl) > 0 ? '+' : '−'}${fmt1(Math.abs(divMld(x.pl)))} ML/d diversion` : ''}</small></td></tr>`;
+        wwRepRow.set(x.pl, tr); return tr;
       }).join('');
       const tor = inflows.find(x => !x.plant);
       const sumRep = secs.reduce((t, x) => t + (rep(x.pl) ? rep(x.pl).avgMLd : 0), 0), sumRated = secs.reduce((t, x) => t + (rep(x.pl) ? rep(x.pl).ratedMLd : 0), 0);
       const sumToday = secs.reduce((t, x) => t + calib[x.pl].today + inflowsTo(x.pl), 0) + (tor ? tor.mld : 0);
       const sumBo = secs.reduce((t, x) => t + adwf(x.sum, x.f) + inflowsTo(x.pl), 0) + (tor ? tor.mld : 0);
       wwReportsVsModelHTML = `<h3 class="svc-sub">2025 annual reports vs. the model <span class="muted small">annual average flow, ML/d</span></h3>
-        <table class="dt svc-table rep-table" data-info="plant-reports"><thead><tr><th>Plant</th><th>Rated capacity<br>(annual average)</th><th>2025 reported<br>average</th><th>2025 highest day</th><th>Model today<br>(design criteria)</th><th>Calibration<br>factor</th><th>Model<br>build-out</th></tr></thead>
+        <table class="dt svc-table rep-table" data-info="plant-reports">${REP_HEAD}
         <tbody>${rows}<tr class="tot"><td>Peel plants${tor ? `<small>model includes the City of Toronto inflow (${uML(tor.mld)}, plant not stated)</small>` : ''}</td><td>${uML(sumRated)}</td><td>${uML(sumRep)}<small>${pct(sumRep, sumRated)} of capacity</small></td><td></td><td>${uML(sumToday)}<small>${pct(sumToday, sumRep)} of reported</small></td><td></td><td class="bo">${uML(sumBo)}<small>${pct(sumBo, sumRated)} of capacity</small></td></tr></tbody></table>
         <details class="svc-notes"><summary>Method &amp; notes</summary><p class="small muted">Model today = ${Y} Census + built since, residential + development jobs, plus external inflows known to reach the plant. The plants also treat existing employment, institutional and commercial flow, dry-weather infiltration and inflows the model does not hold, so the design-criteria model is expected to run low; the calibration factor is reported ÷ model and is applied in <em>Capacity check</em> mode. ${R.wastewater.plants.Lakeview ? esc(R.wastewater.plants.Lakeview.notes.slice(1).join(' ')) : ''}</p></details>`;
     }

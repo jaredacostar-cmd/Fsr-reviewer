@@ -505,3 +505,145 @@ test('the lens sets the System to what its map shows, then opens its tab; only a
   // (workspace chips, pages and Help's "Show me" call setMapView: they never set it)
   assert.doesNotMatch(src('js/map-analysis.js'), /setSys/);
 });
+
+// ---- Navigation phase 8a (design §3.5, §4 #7): Records is real at a servicing scope ---------------------------
+// The names of Peel's data freshness rows, read from js/demand-ui.js freshness() (a census year and a report year filled in).
+const FRESH_NAMES = (() => {
+  const s = src('js/demand-ui.js'), f = s.slice(s.indexOf('  function freshness() {'), s.indexOf('  const FRESH = '));
+  return [...f.matchAll(/(?:row\(|\{ name: )(['`])((?:(?!\1).)*)\1/g)].map(m => m[2].replace('${bc ? bc.year : 2021}', '2021').replace("${R ? R.year : ''}", '2025'));
+})();
+// js/records-tab.js in a vm at a servicing scope (cur), with the real panel builder, the real ww-events and plant-flows
+// modules (they read the same state) and a $ for render().
+function loadScopeRecords(cur, state, extra = {}) {
+  const PN = require('../js/panel.js'), sets = [], els = {}, calls = { renderChecks: 0 };
+  const el = id => (els[id] = els[id] || { id, innerHTML: '', hidden: false, dataset: {} });
+  for (const id of ['#records-body', '#rec-data-sources', '#rec-data-checks']) el(id);
+  const fresh = FRESH_NAMES.map(name => ({ name, date: '2026-10-01', every: 'yearly', a: 28, st: name === 'Sanitary sewer network (300 mm+)' ? 'due' : 'ok', note: '' }));
+  // (js/demand-ui.js freshTableHTML, the table part of Peel's freshness HTML, with its status words)
+  const du = src('js/demand-ui.js'), fx = du.indexOf('  function freshTableHTML(fr) {'), FRESH = /\n {2}(const FRESH = [^\n]*)\n/.exec(du)[1];
+  const freshTableHTML = new Function('esc', 'fmtNum', `${FRESH}\n${du.slice(fx, du.indexOf('\n  }\n', fx) + 4)}\nreturn freshTableHTML;`)(x => String(x), n => String(n));
+  const win = {
+    PeelUtil: { $: s => els[s] || null, esc: s => String(s), fmtNum: n => String(n), fmt1: n => (+n).toFixed(1) },
+    PeelPanel: { ...PN, set: (k, s) => sets.push([k, s]) }, PeelApp: { state: { audit: null, ...state } },
+    PeelSvcScope: { current: () => cur.s, KIND_LABEL: { plant: 'Wastewater treatment plant', ps: 'Pumping station catchment', block: 'Wastewater block and everything upstream', zone: 'Water pressure zone', wsys: 'Water system (lake-based)' } },
+    PeelDemandUI: { freshness: () => fresh, freshTableHTML, freshnessHTML: () => '<p>Peel freshness</p>', checksHTML: () => '' },
+    PeelSvcCapacity: { renderChecks: () => { calls.renderChecks++; }, checksRows: () => [] },
+    PeelSvcData: { drName: a => String(a.name || '').replace(/^Lakeview · /, 'G.E. Booth · ') },
+    PeelAnalysisTabs: { getRSub: () => cur.sub || 'sources' }, ModelChecks: {}, ...extra,
+  };
+  const ctx = { window: win, module: { exports: {} } }; ctx.globalThis = ctx;
+  for (const f of ['js/ww-events.js', 'js/plant-flows.js']) vm.runInNewContext(src(f), { window: win, globalThis: win });
+  vm.runInNewContext(src('js/records-tab.js'), ctx);
+  return { R: ctx.module.exports, sets, els, calls, state: win.PeelApp.state, win };
+}
+
+test('Records at a servicing scope: its own Sources and Data checks, loading when needed (navigation phase 8a, design §3.5, §4 #7)', () => {
+  // The freshness names the patterns run over (read from the source: a renamed row breaks this test, not the app).
+  assert.ok(FRESH_NAMES.length >= 20 && FRESH_NAMES.every(n => !n.includes('${')), FRESH_NAMES.join(' | '));
+  for (const n of ['Planning applications and building permits', 'Phase history', '2021 Census (dissemination areas)', 'Peel 2025 annual reports (plants, water)', '2020 Water and Wastewater Master Plan']) assert.ok(FRESH_NAMES.includes(n), n);
+  const plant = { kind: 'plant', pl: 'Clarkson', ref: 'plant:Clarkson', title: 'Clarkson WRRF', short: 'Clarkson' };
+  const reports = { year: 2025, wastewater: { plants: { Clarkson: { name: 'Clarkson WRRF', ratedMLd: 350 }, Inglewood: { name: 'Inglewood WRRF', ratedMLd: 1.4 } } },
+    water: { southPeel: { maxDayMLd: 810, plants: [{ name: 'A.P. Kennedy WTP', ratedMLd: 1200 }, { name: 'Lorne Park WTP', ratedMLd: 500 }] } } };
+  const servicing = { blocks: true, psAreas: [{ id: 'dr:ps:1', name: 'Clarkson · Richards Memorial PS', plant: 'Clarkson' }, { id: 'dr:ps:2', name: 'Clarkson · Watersedge PS', plant: 'Clarkson' }, { id: 'dr:ps:3', name: 'Lakeview · McVean PS', plant: 'Lakeview' }] };
+  const cur = { s: plant };
+  const L = loadScopeRecords(cur, { svcModel: { mode: 'calibrated', plantCap: () => ({ f: 1.07 }) }, reports, plantFlows: null, wwEvents: null, servicing }, { PeelCapacity: { of: ref => (ref === 'plant:Clarkson' ? { rated: 350, firm: null } : null) } });
+  const { R } = L;
+  // Every pattern names exactly one row of Peel's freshness table.
+  for (const [k, res] of Object.entries(R.SVC_SRC)) for (const re of res) assert.equal(FRESH_NAMES.filter(n => re.test(n)).length, 1, `${k}: ${re}`);
+  // Sources: the scope's (its capacity's source and date, its layer, the rows it rests on).
+  let s = R.sourcesPanelSpec();
+  assert.deepEqual(plain(s.head.trail.map(t => t.label)), ['Peel', 'Clarkson', 'Records › Sources']);
+  assert.deepEqual(plain(s.head.trail[0].attrs), { 'data-ss-close': '' }); assert.deepEqual(plain(s.head.close), { 'data-ss-close': '' });
+  assert.match(s.answer, /^<strong>Clarkson WRRF<\/strong>: rated capacity <strong>350\.0 ML\/d<\/strong> \(annual average\) from the Region’s 2025 annual report \(Clarkson WRRF\); its 90% expansion trigger from the 2020 Water and Wastewater Master Plan; its outline: Wastewater blocks \(I&I program\) \(as of 2026-10-01\)\.$/);
+  const names = plain(R.svcSources(plant).rows.map(r => r.name));
+  assert.deepEqual(names, ['Planning applications and building permits', '2021 Census (dissemination areas)', 'Plant effluent compliance (MECP reports)', 'Measured plant flow (MECP effluent data)', 'Pressure zones, pumping stations, plants', 'Sanitary sewer network (300 mm+)', 'Wastewater blocks (I&I program)', '2026 DC capital maps (draft)', 'Peel 2025 annual reports (plants, water)', '2020 Water and Wastewater Master Plan']);
+  assert.ok(!names.some(n => /Phase history|Council|CMHC|IDF/.test(n)), 'only the sources it rests on');
+  assert.equal(s.lists[0].total, 10); assert.equal(s.lists[0].rows.length, 5);
+  assert.deepEqual(plain(s.head.status), { tone: 'tight', text: '1 due' }, 'the sewer network row is due');
+  assert.deepEqual(plain(s.foot.primary.attrs), { 'data-ss-close': '', 'data-at': 'records:sources' });
+  assert.equal(s.figures.find(f => f.label === 'its capacity as of').v, '2025');
+  // Data checks: three rows; the Ministry's flow and the roster load when needed.
+  const cells = sp => sp.lists[0].rows.map(r => [...r.html.matchAll(/<span([^>]*)>([^<]*)<\/span>/g)].map(m => [m[2], m[1]]));
+  s = R.checksPanelSpec();
+  assert.deepEqual(plain(s.head.trail.map(t => t.label)), ['Peel', 'Clarkson', 'Records › Data checks']);
+  let c = cells(s);
+  assert.deepEqual(plain(c.map(x => x[0][0])), ['2025 annual report vs the model', 'Plant flow: Ministry data vs the annual report', 'Pumping stations: GIS layer vs the collection system report']);
+  assert.equal(c[0][1][0], 'measured 1.07 times the model’s flow');
+  assert.deepEqual(plain([c[1][1], c[2][1]]), [['Loads when needed', ''], ['Loads when needed', '']], 'no tone while loading');
+  assert.match(s.answer, /<strong>3<\/strong> checks of Clarkson WRRF’s figures; 2 load when needed\./);
+  assert.deepEqual(plain(s.lists[0].rows.map(r => r.attrs['data-ft-go'])), ['2025 annual reports vs.', 'Plant flow: Ministry data', 'Pumping stations: open GIS layer']);
+  assert.deepEqual(plain(s.foot.primary.attrs), { 'data-ss-close': '', 'data-at': 'records:checks' });
+  assert.deepEqual(plain(s.foot.secondary), [{ label: 'Review outlets', attrs: { 'data-ws-page': 'outlets' }, title: 'Where each development discharges (QA/QC)' }], 'owner decision 5');
+  // The two files in: filled in place.
+  L.state.plantFlows = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/plant-flows.json'), 'utf8'));
+  L.state.wwEvents = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/ww-events.json'), 'utf8'));
+  c = cells(R.checksPanelSpec());
+  assert.match(c[1][1][0], /^2024: \+0\.1% · Matches$/); assert.equal(c[1][1][1], ' class="t-room"');
+  assert.deepEqual(plain(c[2][1]), ['2 of 2 on the report’s roster', ' class="t-room"']);
+  assert.deepEqual(plain(R.checksPanelSpec().head.status), { tone: 'room', text: 'Pass' });
+  // Inglewood: not in the Ministry's checks (they hold G.E. Booth and Clarkson): said, never "loading" for ever.
+  cur.s = { kind: 'plant', pl: 'Inglewood', ref: 'plant:Inglewood', title: 'Inglewood WRRF', short: 'Inglewood' };
+  assert.deepEqual(plain(R.svcChecks(cur.s)[1]), { name: 'Plant flow: Ministry data vs the annual report', value: 'not in the Ministry’s file', tone: null, go: 'Plant flow: Ministry data', loading: false });
+  assert.equal(R.svcChecks(cur.s)[2].value, 'no traced pumping station drains here');
+  // A pressure zone: no checks of its own, said in one line.
+  cur.s = { kind: 'zone', a: { id: 'pz:5', name: 'Zone 5' }, ref: 'pz:5', title: 'Zone 5', short: 'Zone 5', lake: true };
+  s = R.checksPanelSpec();
+  assert.deepEqual(plain(R.svcChecks(cur.s)), []);
+  assert.match(s.answer, /^No published figure to check Zone 5 against: a pressure zone’s figures are worked out here, from the census and the developments\.$/);
+  assert.equal(s.head.status, null); assert.equal(s.lists[0].rows.length, 1); assert.equal(s.lists[0].seeAll, undefined);
+  assert.match(R.sourcesPanelSpec().answer, /no published capacity of its own: its maximum day is worked out here/);
+  assert.deepEqual(plain(R.svcSources(cur.s).rows.map(r => r.name)), ['Planning applications and building permits', '2021 Census (dissemination areas)', 'Pressure zones, pumping stations, plants', 'Water supply mains (zone boundaries)', '2026 DC capital maps (draft)']);
+  // A pumping station: its place on the roster.
+  cur.s = { kind: 'ps', a: { id: 'dr:ps:1', name: 'Clarkson · Richards Memorial PS', plant: 'Clarkson' }, pl: 'Clarkson', ref: 'dr:ps:1', title: 'Clarkson · Richards Memorial PS', short: 'Clarkson · Richards Memorial PS' };
+  assert.deepEqual(plain(R.svcChecks(cur.s).map(r => [r.value, r.tone])), [['on the report’s roster', 'room']]);
+  cur.s = { ...cur.s, a: { id: 'dr:ps:9', name: 'Nowhere PS' } };
+  assert.deepEqual(plain(R.svcChecks(cur.s).map(r => [r.value, r.tone])), [['not on the report’s roster (a leachate, septage or lift station, or one outside the approval?)', 'tight']]);
+  L.state.wwEvents = null; assert.deepEqual(plain(R.svcChecks(cur.s).map(r => [r.value, r.loading])), [['Loads when needed', true]]);
+  // South Peel: its 2025 production.
+  cur.s = { kind: 'wsys', ref: 'wsys:lake', title: 'South Peel water system', short: 'South Peel water' };
+  assert.deepEqual(plain(R.svcChecks(cur.s).map(r => r.value)), ['South Peel maximum day 810.0 of 1700.0 ML/d rated (incl. York supply)']);
+  assert.match(R.sourcesPanelSpec().answer, /rated treatment <strong>1700\.0 ML\/d<\/strong> \(A\.P\. Kennedy WTP \+ Lorne Park WTP\) and the 2025 maximum day 810\.0 ML\/d/);
+  // render(): the scope's body, Peel's live-data controls and duplicate check hidden, Peel's servicing model group emptied.
+  cur.s = plant; L.state.wwEvents = null; L.state.plantFlows = null; L.calls.renderChecks = 0;
+  R.render();
+  assert.match(L.els['#records-body'].innerHTML, /Data freshness: the sources it rests on/);
+  assert.equal(L.els['#rec-data-sources'].hidden, true); assert.equal(L.els['#rec-data-checks'].hidden, true);
+  assert.deepEqual([L.sets.at(-1)[0], L.sets.at(-1)[1].head.trail.at(-1).label], ['records:sources', 'Records › Sources']);
+  assert.equal(L.calls.renderChecks, 1, 'the scope branch empties Peel’s Servicing model group');
+  cur.sub = 'checks'; R.render();
+  const body = L.els['#records-body'].innerHTML;
+  assert.match(body, /Plant flow: Ministry data against the Region's annual reports<\/h3><p class="small muted">Loads when needed: the Ministry’s plant flow data/);
+  assert.match(body, /Pumping stations: open GIS layer against the collection system report<\/h3><p class="small muted">Loads when needed/);
+  assert.equal(L.sets.at(-1)[0], 'records:checks'); assert.equal(L.calls.renderChecks, 2);
+  assert.doesNotMatch(body, /has no files of its own/);
+  L.state.wwEvents = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/ww-events.json'), 'utf8')); R.render();
+  assert.match(L.els['#records-body'].innerHTML, /2 of 2 on the report's roster \(Appendix A\)\./);
+  // A result with no files of its own (a DC work): the placeholder line as before (navigation phase 8b removes it).
+  cur.s = { kind: 'result', rkind: 'dcwork', ref: 'dcwork:ww:X', title: 'Trunk X', short: 'Trunk X' }; cur.sub = 'sources'; R.render();
+  assert.match(L.els['#records-body'].innerHTML, /^<p class="small muted">Trunk X has no files of its own\./);
+  assert.equal(L.els['#rec-data-sources'].hidden, false);
+  // Peel (no scope): the old specs.
+  cur.s = null;
+  assert.deepEqual(plain(R.sourcesPanelSpec().head.trail.map(t => t.label)), ['Peel', 'Records › Sources']);
+  assert.deepEqual(plain(R.checksPanelSpec().head.trail.map(t => t.label)), ['Peel', 'Records › Data checks']);
+  // (a plant's row of the 2025 reports table: the same heading and columns as Peel's, filled with it on each model build)
+  const sp = src('js/svc-plants.js');
+  assert.match(sp, /window\.ModelChecks\.wwReportsVsModelFor = pl => \(wwRepRow\.get\(pl\) \? `<h3 class="svc-sub">2025 annual reports vs\. the model <span class="muted small">annual average flow, ML\/d<\/span><\/h3>\n\s*<table class="dt svc-table rep-table" data-info="plant-reports">\$\{REP_HEAD\}<tbody>\$\{wwRepRow\.get\(pl\)\}<\/tbody><\/table>` : ''\);/);
+  assert.match(sp, /wwReportsVsModelHTML = ''; wwRepRow\.clear\(\);/); assert.match(sp, /wwRepRow\.set\(x\.pl, tr\); return tr;/);
+  assert.equal((sp.match(/\$\{REP_HEAD\}/g) || []).length, 2, 'one head for both tables');
+  // Source: the two data files draw a scope's Records again as each lands (js/svc-data.js).
+  const sd = src('js/svc-data.js');
+  assert.match(sd, /opt\('data\/plant-flows\.json'\)\.then\(p => \{ App\(\)\.state\.plantFlows = p; recordsAgain\(\); \}\);/);
+  assert.match(sd, /opt\('data\/ww-events\.json'\)\.then\(w => \{ App\(\)\.state\.wwEvents = w; recordsAgain\(\); \}\);/);
+  assert.match(sd, /const recordsAgain = \(\) => \{ const RT = window\.PeelRecordsTab, S = window\.PeelSvcScope, s = S && S\.current && S\.current\(\); if \(RT && s && s\.kind !== 'result' && AT\(\)\.getFootTab\(\) === 'records'\) RT\.render\(\); \};/);
+});
+
+test('Records › Data checks at a servicing scope: Peel’s Servicing model group is left empty (its checks are the scope’s Records body)', () => {
+  const body = { innerHTML: 'Peel’s group' };
+  const MC = { wwMasterPlanVsTracker: () => '<h3>2020 Master Plan vs this tracker</h3>' };
+  let cur = { kind: 'plant', pl: 'Clarkson' };
+  const C = loadCapacity({ ModelChecks: MC, PeelApp: { state: { svcModel: { mode: 'design', plantCap: () => ({ f: 1 }) } } }, PeelSvcScope: { current: () => cur } }, body);
+  C.renderChecks(); assert.equal(body.innerHTML, '');
+  cur = { kind: 'result', rkind: 'dcwork' }; C.renderChecks(); assert.match(body.innerHTML, /2020 Master Plan vs this tracker/, 'a result: Peel’s group, as before');
+  cur = null; body.innerHTML = ''; C.renderChecks(); assert.match(body.innerHTML, /<h3 class="sub-title">Servicing model<\/h3>/, 'Peel: as before');
+});

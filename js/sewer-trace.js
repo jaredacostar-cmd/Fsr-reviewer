@@ -475,7 +475,12 @@
     MA().renderLegend();
   }
   function clearBlockFocus() { BLK.focus.clearLayers(); BLK.id = null; syncPathMode(); }
+  // The block is its servicing scope (navigation phase 8a): Peel › plant › Block n, its I&I facts its
+  // Overview's fold (blockFactsHTML), the map the scope's focus; the open scope again is a no-op (focusSvc
+  // would toggle its own focus off). The card below is the fallback where no servicing area resolves.
   async function showBlock(id, opt = {}) {
+    const S = root.PeelSvcScope, ref = S && S.blockRef ? S.blockRef(id) : null;
+    if (ref && S.resolve(ref)) { clearBlockFocus(); if (!(S.current() && S.current().ref === ref)) S.open(ref); return; }
     await Promise.all([loadBlocks(), SC().loadSewers()]);
     const net = blockNet(); const x = net && net.byId.get(String(id)); if (!x) return;
     const b = x.b, P = MM().SEW.data.pipes;
@@ -514,6 +519,38 @@
       <p class="small muted">Blocks: Region of Peel <em>Block_view</em> feature service — the 40 sewersheds of its inflow &amp; infiltration (I&amp;I) program, as used in a 2024 conference paper on its inflow &amp; infiltration program; ★ / heavier outline = prioritised for a block study. Outlets and route: Region sanitary mains of 300 mm+ (each pipe's next pipe downstream); the main outlet is the one carrying the most people. Arrows follow the pipes to the plant; dashed = other outlets until they join.</p>` });
   }
   document.addEventListener('click', e => { const bb = e.target.closest('[data-block]'); if (bb) showBlock(bb.dataset.block); });
+  // The block's I&I program facts, a fold of its scope's Overview (js/svc-scope.js panelSpec, cardHTML): what
+  // the block's card said that the scope does not (its outlets on the existing sewers, the mains inside it,
+  // the distance to the plant). '' until the blocks and the sewers are in: asked for once per block, then the
+  // Overview redrawn if that block is still the scope. (worked out once per block: the Overview's panel and its
+  // full table both ask, on every redraw)
+  const factsAsked = new Set(), factsMemo = new Map();
+  function blockFactsHTML(id) {
+    if (id == null) return '';
+    if (factsMemo.has(String(id))) return factsMemo.get(String(id));
+    const net = blockNet(), x = net && net.byId.get(String(id));
+    if (!net) {
+      if (!factsAsked.has(String(id))) {
+        factsAsked.add(String(id));
+        Promise.all([loadBlocks(), SC().loadSewers()]).then(() => { const S = root.PeelSvcScope, s = S && S.current(); if (blockNet() && s && s.ref === S.blockRef(id) && root.PeelOverviewTab) root.PeelOverviewTab.renderOverview(); }).catch(() => {});
+      }
+      return '';
+    }
+    if (!x) return '';
+    if (!App().state.servicing) return '';
+    const b = x.b, P = MM().SEW.data.pipes, route = x.main >= 0 ? pipeRoute(x.main) : [], km = route.length ? routeKm(route) : 0;
+    const plant = (App().state.servicing.meta.plants || []).find(p => p.name === x.plant);
+    const pipeBtn = i => `<button type="button" class="btn small link" data-pipe="${i}">${P[i][0]} mm</button>`;
+    const html = `<ul class="small ss-list">
+      <li>${b.planning ? '<strong>Prioritised for a block study</strong> ★ · ' : ''}${fmtNum(b.ha)} ha · Region of Peel inflow &amp; infiltration program</li>
+      <li><strong>Outlets</strong> ${x.main >= 0 ? `main: ${pipeBtn(x.main)} sewer, full-flow capacity ${fmtNum(P[x.main][2])} L/s, ${fmtNum(P[x.main][4])} people upstream (2021)` : 'no mapped sewer of 300 mm+ leaves the block'}${x.outs.length > 1 ? `; ${x.outs.length - 1} other pipe${x.outs.length === 2 ? ' leaves' : 's leave'} it: ${x.outs.slice(1, 6).map(pipeBtn).join(', ')}${x.outs.length > 6 ? '…' : ''}` : ''}</li>
+      <li><strong>Sewers</strong> ${fmtNum(x.pipes.length)} Region sanitary mains of 300 mm+ inside the block</li>
+      ${km ? `<li><strong>To the plant</strong> ${km.toFixed(1)} km along the sewers to ${esc(plant ? SD().plantLabel(plant.name) : x.plant || 'the plant')}</li>` : ''}
+    </ul>
+    <p class="small muted">Blocks: Region of Peel <em>Block_view</em> feature service, the 40 sewersheds of its inflow &amp; infiltration (I&amp;I) program; ★ = prioritised for a block study. Outlets: Region sanitary mains of 300 mm+ leaving the block (each pipe's next pipe downstream); the main outlet is the one carrying the most people.</p>`;
+    factsMemo.set(String(id), html);
+    return html;
+  }
 
   const api = {
     svcFocus, focusSvc, drawFlowPath, addFlowMarker,
@@ -523,7 +560,7 @@
     fitClear, clearTrace, dcSewerNet, dcSewerPath, traceDev, syncTraceSum,
     traceGlow,
     traceSummaryHTML, BLK, loadBlocks, blockAt, setBlocksLayer,
-    clearBlockFocus, showBlock,
+    clearBlockFocus, showBlock, blockFactsHTML,
   };
 
   if (typeof module !== 'undefined' && module.exports) module.exports = api;

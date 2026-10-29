@@ -1615,6 +1615,132 @@ async function pickView(page, ev, key, tap = false) {
     expect(tp.sys >= 3 && tp.fold, `the page carries the System control and the fold (${JSON.stringify({ sys: tp.sys, fold: tp.fold })})`);
   });
 
+  // Navigation phase 8a (navigation-design §3.5, §5 row 153; §8 row 8): a servicing scope's views and its own Records,
+  // the Ministry's flow and the roster loading when needed (held here) then filling in place; the trail's Peel step back
+  // to Peel's; a wastewater block tapped is its servicing scope (its I&I facts a fold), as an old ss=iiblock: link and a
+  // cold ss=dr:B<n> link are; the phone.
+  await check('Every scope kind (8a): a plant’s Records are its own, the Ministry’s flow and the roster loading when needed; Areas, FSR review, EAs and Projects not shown there; a block tapped opens its scope; ss=iiblock: lands there; the phone', browser, { slowData: { 'plant-flows.json': 30000, 'ww-events.json': 30000 } }, async ({ page, ev }, expect) => {
+    const load = async url => { await page.goto(`http://localhost:${PORT}/${url}`); await page.waitForFunction(() => window.PeelApp && PeelApp.fullSnapshotReady && PeelApp.fullSnapshotReady(), null, { timeout: 240000 }); await wait(1500); };
+    const vis = () => ev(() => ({ scope: document.getElementById('analysis').dataset.scope, tabs: [...document.querySelectorAll('.f-tab')].filter(t => getComputedStyle(t).display !== 'none').map(t => t.dataset.tab).join(), chips: ([...document.querySelectorAll('.f-subtabs')].find(r => r.getClientRects().length) ? [...[...document.querySelectorAll('.f-subtabs')].find(r => r.getClientRects().length).querySelectorAll('button')].filter(b => b.getClientRects().length).map(b => b.textContent.trim()).join() : '') }));
+    const rec = () => ev(() => { const h = document.querySelector('#pnl-records'); return { trail: h ? [...h.querySelectorAll('.pnl-crumb')].map(c => c.textContent.trim()).join(' › ') : '', answer: ((h && h.querySelector('.pnl-answer')) || {}).textContent || '', rows: h ? [...h.querySelectorAll('.pnl-kv')].map(r => r.textContent.trim().replace(/\s+/g, ' ')) : [], data: !!(document.getElementById('rec-data-sources') || {}).offsetParent }; });
+    // (1) The full map; Clarkson as the capacity bars' link opens it, once the servicing lookup and model are in.
+    await ev(() => PeelWorkspaces.setMode('full')); await wait(1000);
+    await page.waitForFunction(() => PeelApp.state.svcModel && PeelSvcData.svcById.size > 0, null, { timeout: 120000 });
+    expect(await ev(() => PeelSvcScope.open('plant:Clarkson')), 'Clarkson opens'); await wait(1500);
+    const pl = await vis();
+    expect(pl.scope === 'svc' && pl.tabs === 'overview,growth,svc,dca,records', `a plant: the five tabs, kind svc (${JSON.stringify(pl)})`);
+    const chips = {};
+    for (const t of ['growth', 'svc', 'dca', 'records']) { await page.click(`.f-tab[data-tab="${t}"]`); await wait(1000); chips[t] = (await vis()).chips; }
+    expect(chips.growth === 'Pipeline,Forecast' && chips.svc === 'Capacity,Network,Old pipes' && chips.dca === '' && chips.records === 'Sources,Data checks', `its views: no Areas, FSR review, EAs, Projects or Files (${JSON.stringify(chips)})`);
+    // (2) Records › Sources: its own (the capacity's source), not Peel's live-data controls.
+    if (await ev(() => PeelAnalysisTabs.getRSub() !== 'sources')) { await page.click('[data-rsub="sources"]'); await wait(1200); }
+    const so = await rec();
+    expect(so.trail === 'Peel › Clarkson › Records › Sources' && /annual report/.test(so.answer) && !so.data, `Records › Sources at the plant (${JSON.stringify({ trail: so.trail, answer: so.answer.slice(0, 120), data: so.data })})`);
+    // (3) Data checks: three rows, the Ministry's and the roster's loading, then filled in place (no click).
+    await page.click('[data-rsub="checks"]'); await wait(1200);
+    const ck = await rec();
+    const ministry = r => r.rows.find(x => x.startsWith('Plant flow: Ministry data')) || '', roster = r => r.rows.find(x => x.startsWith('Pumping stations:')) || '';
+    expect(ck.trail === 'Peel › Clarkson › Records › Data checks' && ck.rows.length === 3, `three checks of the plant (${JSON.stringify(ck.rows)})`);
+    expect(/Loads when needed/.test(ministry(ck)) && /Loads when needed/.test(roster(ck)), `the Ministry's flow and the roster load when needed (${ministry(ck)} | ${roster(ck)})`);
+    await page.waitForFunction(() => PeelApp.state.plantFlows && PeelApp.state.wwEvents, null, { timeout: 90000 }); await wait(2000);
+    const ck2 = await rec();
+    expect(ministry(ck2) && !/Loads when needed/.test(ministry(ck2)) && roster(ck2) && !/Loads when needed/.test(roster(ck2)) && /on the report’s roster/.test(roster(ck2)), `filled in place (${ministry(ck2)} | ${roster(ck2)})`);
+    // (4) The trail's Peel step: Peel's Records › Data checks at once; Growth's Areas back.
+    await page.click('#pnl-records [data-ss-close].pnl-crumb'); await wait(2000);
+    const pe = { ...(await vis()), ...(await rec()), areas: await ev(() => !document.querySelector('[data-gsub="areas"]').classList.contains('site-off')), ss: await ev(() => PeelApp.state.ss) };
+    expect(pe.scope === 'area' && !pe.ss && pe.trail === 'Peel › Records › Data checks' && pe.areas, `back at Peel (${JSON.stringify({ scope: pe.scope, ss: pe.ss, trail: pe.trail, areas: pe.areas })})`);
+    // (5) A wastewater block tapped: its servicing scope (one map focus, not the card's), its I&I facts a fold.
+    const N = await ev(() => PeelApp.state.servicing.drainage.find(d => d.block).block);
+    await ev(n => PeelSewerTrace.showBlock(n), N); await wait(2500);
+    const bk = await ev(() => ({ ss: PeelApp.state.ss, card: PeelSvcScope.hasResult(), steps: [...document.querySelectorAll('#trail .tb-step')].map(b => b.textContent.trim()), focus: PeelSewerTrace.svcFocus.id, blk: PeelSewerTrace.BLK.id, scope: document.getElementById('analysis').dataset.scope, tab: PeelAnalysisTabs.getFootTab(), link: decodeURIComponent(PeelShare.viewLink.hash()) }));
+    expect(bk.ss === `dr:B${N}` && !bk.card && bk.scope === 'svc' && bk.tab === 'overview', `Block ${N} is its servicing scope, on its Overview (${JSON.stringify(bk)})`);
+    expect(bk.steps[0] === 'Peel' && bk.steps[bk.steps.length - 1] === `Block ${N}` && bk.steps.length === 3, `the trail Peel › plant › Block ${N} (${bk.steps.join(' › ')})`);
+    expect(bk.focus === `dr:B${N}` && bk.blk == null && /(^|&)ss=dr:B\d+(&|$)/.test(bk.link), `the scope's map focus, not the card's; the link ss=dr:B${N} (${JSON.stringify({ focus: bk.focus, blk: bk.blk, link: bk.link })})`);
+    await page.waitForFunction(() => [...document.querySelectorAll('#pnl-overview details.pnl-fold > summary')].some(x => x.textContent.trim() === 'The block in the I&I program'), null, { timeout: 90000 }).catch(() => {});
+    const fo = await ev(() => { const f = [...document.querySelectorAll('#pnl-overview details.pnl-fold')].find(d => d.querySelector('summary').textContent.trim() === 'The block in the I&I program'); return f ? { pipes: f.querySelectorAll('[data-pipe]').length, text: f.textContent.replace(/\s+/g, ' '), before: [...document.querySelectorAll('#pnl-overview details.pnl-fold > summary')].map(x => x.textContent.trim()).join(' | ') } : null; });
+    expect(fo && /Outlets/.test(fo.text) && /Region sanitary mains of 300 mm\+ inside the block/.test(fo.text) && fo.before.indexOf('The block in the I&I program') < fo.before.indexOf('Servicing ladder'), `the fold The block in the I&I program (its outlets, the mains inside it), before the ladder (${JSON.stringify(fo && { ...fo, text: fo.text.slice(0, 240) })})`);
+    // (6) An old block link, cold: the block's scope once the servicing lookup is in, never its card.
+    await load(`?b#ss=iiblock:${N}`);
+    await page.waitForFunction(n => PeelApp.state.ss === `dr:B${n}`, N, { timeout: 120000 }).catch(() => {});
+    const ol = await ev(() => ({ ss: PeelApp.state.ss, card: PeelSvcScope.hasResult(), mode: PeelWorkspaces.mode() }));
+    expect(ol.ss === `dr:B${N}` && !ol.card && ol.mode === 'full', `ss=iiblock:${N}: the block's scope (${JSON.stringify(ol)})`);
+    // (6b) A cold link to the block at Growth › Areas: Peel's strip until the lookup fills, then the block's.
+    await load(`?c#nav=3&t=growth&gs=areas&ss=dr:B${N}`);
+    await page.waitForFunction(() => document.querySelector('#analysis[data-scope="svc"]'), null, { timeout: 120000 }).catch(() => {});
+    await wait(1000);
+    const cb = { ...(await vis()), sub: await ev(() => PeelAnalysisTabs.getGSub()), tab: await ev(() => PeelAnalysisTabs.getFootTab()) };
+    expect(cb.scope === 'svc' && cb.tab === 'growth' && cb.sub === 'pipeline' && !cb.chips.split(',').includes('Areas'), `the block's Growth, Pipeline, no Areas (${JSON.stringify(cb)})`);
+    // (7) The phone: the plant's Records › Data checks and the block's fold fit at 390 px.
+    await page.setViewportSize({ width: 390, height: 844 }); await wait(1500);
+    await ev(() => { PeelApp.setAnalysisSnap('full'); PeelSvcScope.open('plant:Clarkson'); PeelAnalysisTabs.openTab('records', 'checks'); }); await wait(2500);
+    const fit = () => ev(() => { const p = document.getElementById('analysis-panes'); return { panes: !!p && p.scrollWidth <= p.clientWidth, doc: document.documentElement.scrollWidth, vw: innerWidth }; });
+    const f1 = await fit();
+    expect(f1.panes && f1.doc <= 390, `the plant's Data checks fit at 390 px (${JSON.stringify(f1)})`);
+    await ev(n => { PeelSewerTrace.showBlock(n); }, N); await wait(2500);
+    await ev(() => { const f = [...document.querySelectorAll('#pnl-overview details.pnl-fold')].find(d => d.querySelector('summary').textContent.trim() === 'The block in the I&I program'); if (f) f.open = true; }); await wait(800);
+    const f2 = await fit();
+    expect(f2.panes && f2.doc <= 390, `the block's Overview, its fold open, fits at 390 px (${JSON.stringify(f2)})`);
+  });
+
+  // Navigation phase 8a, between the scope kinds (navigation-design §3.5, §7): a stored Areas, FSR review and Files pick
+  // waits for the scope that has it and is the pick again when that scope closes; a drawn area has four tabs, a single
+  // file its own Records, Records asked at a drawn area opens Overview; the phone's four tabs fit.
+  await check('Every scope kind (8a), moving between them: a stored Areas, FSR review and Files pick waits for the scope that has it and comes back; a drawn area has four tabs and no Records, a file its own; the phone', browser, { prefs: { startScreen: 'full', footTab4: 'growth', gSub: 'areas', svcSub: 'fsr', rSub: 'files' } }, async ({ page, ev }, expect) => {
+    const at = () => ev(() => { const row = [...document.querySelectorAll('.f-subtabs')].find(r => r.getClientRects().length); return { scope: document.getElementById('analysis').dataset.scope, tabs: [...document.querySelectorAll('.f-tab')].filter(t => getComputedStyle(t).display !== 'none').map(t => t.dataset.tab).join(), tab: PeelAnalysisTabs.getFootTab(), held: !!document.querySelector('.f-tab-held'), chips: row ? [...row.querySelectorAll('button')].filter(b => b.getClientRects().length).map(b => b.textContent.trim()).join() : '', picks: [PeelAnalysisTabs.getGSub(), PeelAnalysisTabs.getSvcSub(), PeelAnalysisTabs.getRSub()].join() }; });
+    const tab = async t => { await page.click(`.f-tab[data-tab="${t}"]`); await wait(1000); return at(); };
+    const FIVE = 'overview,growth,svc,dca,records';
+    await ev(() => PeelWorkspaces.setMode('full')); await wait(1000);
+    await page.waitForFunction(() => PeelApp.state.svcModel && PeelSvcData.svcById.size > 0, null, { timeout: 120000 });
+    // 1. Peel: Growth has its Areas chip, Records Sources and Data checks; the stored FSR review and Files picks wait.
+    const pg = await tab('growth'), ps = await tab('svc'), pr = await tab('records');
+    expect(pg.scope === 'area' && pg.tabs === FIVE && pg.chips === 'Pipeline,Areas,Forecast', `Peel: five tabs, Growth's three views (${JSON.stringify(pg)})`);
+    expect(ps.chips === 'Capacity,Network,Old pipes' && pr.chips === 'Sources,Data checks' && pr.picks === 'areas,capacity,sources', `Peel: Servicing at Capacity, Records at Sources, the stored FSR review and Files picks waiting (${JSON.stringify({ s: ps.chips, r: pr.chips, picks: pr.picks })})`);
+    // 2. A plant, then the trail's Peel step: Growth without Areas, then Areas again, the tab kept.
+    await tab('growth');
+    expect(await ev(() => PeelSvcScope.open('plant:Clarkson')), 'Clarkson opens'); await wait(1500);
+    const pl = await tab('growth');
+    expect(pl.scope === 'svc' && pl.chips === 'Pipeline,Forecast' && pl.picks.startsWith('pipeline,'), `a plant: Growth is Pipeline · Forecast, never Areas (${JSON.stringify(pl)})`);
+    await page.locator('#trail .tb-step').first().click(); await wait(2000);
+    const back = await at();
+    expect(back.scope === 'area' && back.tabs === FIVE && back.tab === 'growth' && back.chips === 'Pipeline,Areas,Forecast' && back.picks.startsWith('areas,'), `the trail's Peel step: Growth's Areas pick is back, the tab kept (${JSON.stringify(back)})`);
+    // 3. A development: FSR review and Files are its views, Areas is not; closed, Peel's picks are back.
+    const key = await ev(() => PeelApp.state.projects.find(q => q.phase === 'approved' && q.units > 300 && q.lat != null).key);
+    await ev(k => { PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); }, key); await wait(2500);
+    const ds = await tab('svc'), dr = await tab('records'), dg = await tab('growth');
+    expect(ds.scope === 'site' && ds.tabs === FIVE && ds.chips === 'Network,FSR review' && ds.picks.split(',')[1] === 'fsr', `a development: Servicing at Network · FSR review, the stored pick FSR review (${JSON.stringify(ds)})`);
+    expect(dr.chips === '' && dr.picks.split(',')[2] === 'files' && dg.chips === '' && dg.picks.startsWith('pipeline,'), `a development: Records its one view, Files; Growth Pipeline alone (${JSON.stringify({ r: dr.chips, g: dg.chips, picks: dg.picks })})`);
+    await ev(() => DevScope.close()); await wait(1500);
+    const dc = await tab('records');
+    expect(dc.scope === 'area' && dc.chips === 'Sources,Data checks' && dc.picks === 'areas,capacity,sources', `closed: Peel's Records and picks (${JSON.stringify(dc)})`);
+    // 4. A drawn area: four tabs, Growth and Capacity without Areas and Old pipes; Records asked opens Overview;
+    // closed, the five tabs and the picks are back.
+    const draw = () => ev(() => { const sel = PeelAreaSelect.selection; sel.clear(); for (const p of PeelApp.state.filtered.filter(q => q.lat != null && q.units > 50).slice(0, 8)) sel.set(p.key, p); PeelAreaSelect.showSelection(); });
+    await tab('growth'); await draw(); await wait(1800);
+    const da = await at(), dag = await tab('growth'), dsv = await tab('svc');
+    expect(da.scope === 'drawn' && da.tabs === 'overview,growth,svc,dca' && dag.chips === 'Pipeline,Forecast' && dsv.chips === 'Capacity,Network', `a drawn area: four tabs, no Records; Growth Pipeline · Forecast, Servicing Capacity · Network (${JSON.stringify({ da, growth: dag.chips, svc: dsv.chips })})`);
+    // (the Overview's ⓘ line asks for Records › Data checks: the pick is kept for the scope that has Records)
+    await ev(() => PeelAnalysisTabs.openTab('records', 'checks')); await wait(1000);
+    const dro = await at();
+    expect(dro.tab === 'overview' && !dro.held && dro.tabs === 'overview,growth,svc,dca' && dro.picks.split(',')[2] === 'checks', `Records asked at a drawn area opens Overview, not held; the Data checks pick is kept (${JSON.stringify(dro)})`);
+    await page.setViewportSize({ width: 390, height: 844 }); await wait(1500);
+    const ph = await ev(() => { const shown = [...document.querySelectorAll('.f-tab')].filter(t => getComputedStyle(t).display !== 'none'); const p = document.getElementById('analysis-panes'); return { n: shown.length, in: shown.every(t => t.getBoundingClientRect().right <= innerWidth + 1), panes: !p || !p.clientWidth || p.scrollWidth <= p.clientWidth, doc: document.documentElement.scrollWidth }; });
+    expect(ph.n === 4 && ph.in && ph.panes && ph.doc <= 390, `the phone: the four tabs of a drawn area in reach, no sideways scroll (${JSON.stringify(ph)})`);
+    await page.setViewportSize({ width: 1440, height: 900 }); await wait(1000);
+    await ev(() => PeelAerialCheck.closeDetail()); await wait(1500);
+    const dcl = await at();
+    expect(dcl.scope === 'area' && dcl.tabs === FIVE && dcl.picks === 'areas,capacity,checks', `closed: the five tabs and Peel's picks, Records at the Data checks asked for (${JSON.stringify(dcl)})`);
+    // 5. A single file: five tabs, its Records the file (one view), the rest the area's.
+    await ev(() => { const p = PeelApp.state.projects.find(q => q.records && q.records.some(r => r.kind === 'application' && r.uid)); PeelAerialCheck.showRecordDetail(p.records.find(r => r.kind === 'application' && r.uid), p); }); await wait(2000);
+    const fg = await tab('growth'), fv = await tab('svc'), fr = await tab('records');
+    const trail = () => ev(() => [...document.querySelectorAll('#pnl-records .pnl-crumb')].map(c => c.textContent.trim()).join(' › '));
+    expect(fr.scope === 'file' && fr.tabs === FIVE && fr.chips === '' && fr.picks.split(',')[2] === 'files' && await trail() === '', `a file: Records its own, one view, not Peel's Sources and Data checks panel (${JSON.stringify(fr)})`);
+    expect(fg.chips === 'Pipeline,Areas,Forecast' && fv.chips === 'Capacity,Network,Old pipes', `a file: Growth and Servicing the area's, no FSR review (${JSON.stringify({ g: fg.chips, s: fv.chips })})`);
+    // (closed with Records open: the tab redraws at Peel, with the pick it had)
+    await ev(() => PeelAerialCheck.closeDetail()); await wait(1500);
+    const fc = await at();
+    expect(fc.scope === 'area' && fc.tab === 'records' && fc.chips === 'Sources,Data checks' && fc.picks.split(',')[2] === 'checks' && await trail() === 'Peel › Records › Data checks', `closed: Records at Peel, the Data checks pick it had (${JSON.stringify(fc)})`);
+  });
+
   // Navigation phase 2, kept from before it (navigation-design §7.2–7.3): what an earlier release stored in this
   // browser (Servicing › Checks last picked, DC projects' own Wastewater) and a link opened cold (svs=alloc with
   // sy=, t=water&ws=hydro) land in their new homes; Capacity's Sort says Soonest · Largest impact.
@@ -2283,11 +2409,16 @@ async function pickView(page, ev, key, tap = false) {
     const s = await ev(() => ({ n: PeelAreaSelect.selection.size, scope: PeelApp.state.ss || null, sub: PeelAnalysisTabs.getGSub() }));
     expect(s.n > 0 && s.scope === 'sel:selection', `the drag picks the developments inside it, a scope of its own (${JSON.stringify(s)})`);
     expect(s.sub === 'pipeline', `Growth opens on Pipeline (no Growth view picked in this browser), so Forecast is the fourth click (${s.sub})`);
+    // (navigation phase 8a: a drawn area has Overview, Growth, Servicing and Capital; no Records tab)
+    const shown = () => ev(() => ({ tabs: [...document.querySelectorAll('.f-tab')].filter(t => getComputedStyle(t).display !== 'none').map(t => t.dataset.tab).join(), scope: document.getElementById('analysis').dataset.scope }));
+    const k = await shown();
+    expect(k.tabs === 'overview,growth,svc,dca' && k.scope === 'drawn', `a drawn area: four tabs, no Records (${JSON.stringify(k)})`);
     await page.click('.f-tab[data-tab="growth"]'); await wait(1500);   // 3. Growth
     await page.click('[data-gsub="timing"]');   // 4. Forecast
     await page.waitForSelector(`${F}[open] .ldg-table`, { timeout: 60000 }); await wait(1500);
-    const g = await ev(() => ({ tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getGSub(), scope: PeelApp.state.ss || null }));
+    const g = await ev(() => ({ tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getGSub(), scope: PeelApp.state.ss || null, chips: [...document.querySelectorAll('[data-gsub]')].filter(b => b.getClientRects().length).map(b => b.textContent.trim()).join() }));
     expect(g.tab === 'growth' && g.sub === 'timing' && g.scope === 'sel:selection', `Growth › Forecast at the drawn area, By period open (${JSON.stringify(g)})`);
+    expect(g.chips === 'Pipeline,Forecast', `Growth's chips at a drawn area: Pipeline and Forecast (Areas is an area's) (${g.chips})`);
     // (Everything, units, nothing hidden: the total is the drawn developments' left to build)
     if (await ev(() => PeelLedgerUI.settings.hideLapsed)) { await page.click(`${F} [data-ledger-lapse]`); await wait(800); }
     if (await ev(() => PeelLedgerUI.settings.cutoff !== 'all')) { await page.click(`${F} [data-ledger-cut="all"]`); await wait(800); }
@@ -2299,7 +2430,10 @@ async function pickView(page, ev, key, tap = false) {
     expect(b.set > 0 && b.inSel && b.devs === b.set, `By period counts the developments drawn (${b.devs} of ${b.set}, all selected: ${b.inSel})`);
     expect(b.total === b.left && b.total < b.peel, `its total ${b.total} = their left to build ${b.left} (Peel's ${b.peel})`);
     expect(b.check < 1e-6, `every parent equals its children (check ${b.check})`);
-    await ev(() => PeelAreaSelect.clearSelection());
+    // × (closeDetail): the selection goes, the five tabs are back.
+    await ev(() => PeelAerialCheck.closeDetail()); await wait(1500);
+    const c = await shown();
+    expect(c.tabs === 'overview,growth,svc,dca,records' && c.scope === 'area' && !(await ev(() => PeelApp.state.ss)), `closed: Records back, Peel's tabs (${JSON.stringify(c)})`);
   });
 
   await check('DC impact model: tiers as the DC panel, built kept apart, cost shares add up, a gate per development', browser, {}, async ({ ev }, expect) => {

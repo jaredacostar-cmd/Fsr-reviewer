@@ -9,7 +9,8 @@
 
   // ---- The right panel (Stage 2): four tabs at every scope, Overview · Growth · Servicing · Capital,
   // plus Records, a small trailing tab (the Overview's ⓘ line opens its Data checks). Sub-views: at most four
-  // per tab, one chip row under the tab bar (TABSUBS). Overview has none.
+  // per tab, one chip row under the tab bar (TABSUBS). Overview has none. What each scope kind shows: HIDDEN
+  // (a drawn area has no Records tab; navigation phase 8).
   //   Growth:    Pipeline · Areas · Forecast (its By period fold: the pipeline ledger, js/ledger-ui.js)
   //   Servicing: Capacity · Network · Old pipes (water and wastewater together; Allocations is a fold of Capacity;
   //              Old pipes the old sewers carrying growth, js/workspaces.js pipesSpec), and at a development
@@ -114,9 +115,13 @@
   const SYS_OF_VIEW = { water: 'water', wastewater: 'ww', dc: 'both' };
   let sysOn = sysKey(store.get('sysPick', null) ?? store.get('dcProjSys', 'both'));   // (DC projects' own pick, once)
   const sysSeg = () => `<div class="seg" role="group" aria-label="System">${SYS.map(([k, t]) => `<button type="button" class="btn small${sysOn === k ? ' on' : ''}" data-sys="${k}" aria-pressed="${sysOn === k}">${t}</button>`).join('')}</div>`;
-  // What each scope hides (a sub-view with nothing to show is hidden, never blank; area-only content
-  // never renders at a site). 'site': a development is the scope; 'area': Peel, a municipality, a plan
-  // or a result with no files of its own.
+  // What each scope kind leaves out (navigation design §3.5; a sub-view with nothing to show is hidden, never
+  // blank; area-only content never renders at a site); '*' the whole tab (navigation phase 8a).
+  //   site:  a development (a result kept at it too);  area: Peel, a municipality, a plan or a result with
+  //   no files of its own;  svc: a plant, pumping station, wastewater block, pressure zone or water system
+  //   (Growth › Pipeline · Forecast, Servicing › Capacity · Network · Old pipes, Capital › DC timing, Records ›
+  //   Sources · Data checks, its own);  drawn: a selection (Pipeline · Forecast, Capacity · Network, DC timing; no
+  //   Records);  file: a single file (Records the file; the rest the area's).
   // At a site, Capital › DC timing is the site's DC projects (the projects it relies on); the Projects
   // list is Region-wide, so it is hidden there; the EAs and works near the site are in that one view
   // (navigation phase 5: Capital has no chip row at a site). FSR review is a development's: an area, a servicing
@@ -125,14 +130,26 @@
   const HIDDEN = {
     site: { growth: ['areas', 'timing'], svc: ['capacity', 'pipes'], dca: ['eas', 'projects'], records: ['sources', 'checks'] },
     area: { svc: ['fsr'], records: ['files'] },
+    svc: { growth: ['areas'], svc: ['fsr'], dca: ['eas', 'projects'], records: ['files'] },
+    drawn: { growth: ['areas'], svc: ['pipes', 'fsr'], dca: ['eas', 'projects'], records: '*' },
+    file: { svc: ['fsr'], records: ['sources', 'checks'] },
   };
   const SITE_HIDDEN = HIDDEN.site;
-  const hiddenAt = (scope, tab, sub) => !!((HIDDEN[scope] || {})[tab] && HIDDEN[scope][tab].includes(sub));
+  const hiddenAt = (scope, tab, sub) => { const h = (HIDDEN[scope] || {})[tab]; return h === '*' || (!!h && h.includes(sub)); };
   const siteHidden = (tab, sub) => hiddenAt('site', tab, sub);
-  // The sub-view a tab shows: the one picked, else (hidden at this scope) the first that is not.
-  const subFor = (tab, sub, site, scope = site ? 'site' : 'area') => (hiddenAt(scope, tab, sub) ? TABSUBS[tab].valid.find(v => !hiddenAt(scope, tab, v)) : sub);
+  // A whole tab this scope kind leaves out: its button is not on the strip, a pick of it opens Overview.
+  const tabOff = (scope, tab) => (HIDDEN[scope] || {})[tab] === '*';
+  // The sub-view a tab shows: the one picked, else (hidden at this scope) the first that is not (none: the
+  // tab is left out, the pick kept).
+  const subFor = (tab, sub, site, scope = site ? 'site' : 'area') => (hiddenAt(scope, tab, sub) ? TABSUBS[tab].valid.find(v => !hiddenAt(scope, tab, v)) || sub : sub);
   // The chips a tab shows at a scope (≤ 4: tests/four-tabs.test.js).
   const chipsAt = (tab, scope) => (TABSUBS[tab] ? TABSUBS[tab].valid.filter(v => !hiddenAt(scope, tab, v)) : []);
+  // The kind of scope open (navigation phase 8, design §3.5): a development 'site' (a result kept at it too: the
+  // Inquiry draft); no scope 'area'; a plant, station, block, zone or water system 'svc'; a result by its kind: a
+  // selection (drawn, or the developments inside a constraint layer) 'drawn', a single file 'file', any other 'area'.
+  const KIND_OF = { sel: 'drawn', file: 'file' };
+  const kindOf = ({ dev, ss } = {}) => (dev ? 'site' : !ss ? 'area' : ss.kind !== 'result' ? 'svc' : (own(KIND_OF, ss.rkind) ? KIND_OF[ss.rkind] : 'area'));
+  const scopeKind = () => kindOf({ dev: !!(root.DevScope && root.DevScope.current()), ss: root.PeelSvcScope && root.PeelSvcScope.current && root.PeelSvcScope.current() });
   const areaPick = {};
   let heldTab = null;
   // A tab's button is there and its data in (Servicing and Capital are marked loading, aria-busy, until the
@@ -146,30 +163,13 @@
     if (sub) openFold(foldOf(key, sub));
     { const r = sub ? migrateSub(key, sub) : null; if (r) { key = r.tab; sub = r.sub; } }
     if (sub && TABSUBS[key] && TABSUBS[key].valid.includes(sub)) { delete areaPick[key]; TABSUBS[key].set(sub); store.set(TABSUBS[key].store, sub); }
+    // (a tab this scope leaves out opens Overview, and is not held: navigation phase 8)
+    const kind = scopeKind(); if (tabOff(kind, key)) key = 'overview';
     // (Servicing and Capital are ready once the servicing data loads, js/svc-tab.js: a tab picked before then
     // is held, marked as taken, and opened when it is ready, tabShown below, unless another tab is picked meanwhile)
     if (!tabReady(key)) { heldTab = key; key = 'overview'; } else heldTab = null;
-    const site = !!(root.DevScope && root.DevScope.current());
-    const ssCur = root.PeelSvcScope && root.PeelSvcScope.current && root.PeelSvcScope.current();
-    const fileScope = !!(ssCur && ssCur.kind === 'result' && ssCur.rkind === 'file');
-    const scopeOf = tk => (site || (tk === 'records' && fileScope) ? 'site' : 'area');
-    const an = document.getElementById('analysis'); if (an) an.classList.toggle('site-scope', site);
-    // A sub-view hidden at this scope shows the first that is not; the pick it replaced comes back
-    // when the scope allows it again (closing a development returns to the sub-view picked before).
-    for (const [tk, s] of Object.entries(TABSUBS)) {
-      const back = areaPick[tk];
-      if (back != null && !hiddenAt(scopeOf(tk), tk, back)) { delete areaPick[tk]; if (back !== s.get()) s.set(back); }
-      const v = subFor(tk, s.get(), null, scopeOf(tk)); if (v !== s.get()) { if (areaPick[tk] == null) areaPick[tk] = s.get(); s.set(v); }
-    }
     footTab = key;
-    for (const t of document.querySelectorAll('.f-tab')) { t.setAttribute('aria-selected', String(t.dataset.tab === key)); t.classList.toggle('f-tab-held', t.dataset.tab === heldTab); }
-    for (const p of document.querySelectorAll('.f-pane')) {
-      const pk = p.dataset.pane;
-      if (p.classList.contains('f-subtabs')) { p.hidden = pk !== key || chipsAt(pk, scopeOf(pk)).length < 2; continue; }   // one chip is no choice: no row
-      p.hidden = pk !== key || p.dataset.off === '1' || (p.dataset.sub != null && (!TABSUBS[pk] || !p.dataset.sub.split(' ').includes(TABSUBS[pk].get())));
-    }
-    for (const [tk, s] of Object.entries(TABSUBS))
-      for (const b of document.querySelectorAll(`[data-${s.attr}]`)) { const on = b.dataset[s.attr] === s.get(); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); b.classList.toggle('site-off', hiddenAt(scopeOf(tk), tk, b.dataset[s.attr])); }
+    scopeTabs(kind);
     if (key === 'records' && root.PeelRecordsTab) setTimeout(() => root.PeelRecordsTab.render(), 0);
     if (root.PeelSvcScope) root.PeelSvcScope.peelWideNote();
     if (key === 'dca' && typeof DcaTab().renderDca === 'function') setTimeout(() => DcaTab().renderDca(), 0);
@@ -185,6 +185,28 @@
     // A narrow screen scrolls the tab strip: keep the open tab in view.
     const ft = document.querySelector(`.f-tab[data-tab="${key}"]`), strip = ft && ft.parentElement;
     if (strip && strip.scrollWidth > strip.clientWidth) strip.scrollTo({ left: Math.max(0, ft.offsetLeft - (strip.clientWidth - ft.offsetWidth) / 2), behavior: 'smooth' });
+  }
+  // What follows the scope (its kind, scopeKind): the strip (a tab it leaves out is not on it), the panes, the
+  // chips and the sub-view each tab shows. showFootTab draws it with the tab; rescope below when the scope changes.
+  function scopeTabs(kind = scopeKind()) {
+    const key = footTab, site = kind === 'site';
+    const scopeOf = () => kind;
+    const an = document.getElementById('analysis'); if (an) { an.classList.toggle('site-scope', site); an.dataset.scope = kind; }
+    // A sub-view hidden at this scope shows the first that is not; the pick it replaced comes back
+    // when the scope allows it again (closing a development returns to the sub-view picked before).
+    for (const [tk, s] of Object.entries(TABSUBS)) {
+      const back = areaPick[tk];
+      if (back != null && !hiddenAt(scopeOf(tk), tk, back)) { delete areaPick[tk]; if (back !== s.get()) s.set(back); }
+      const v = subFor(tk, s.get(), null, scopeOf(tk)); if (v !== s.get()) { if (areaPick[tk] == null) areaPick[tk] = s.get(); s.set(v); }
+    }
+    for (const t of document.querySelectorAll('.f-tab')) { t.setAttribute('aria-selected', String(t.dataset.tab === key)); t.classList.toggle('f-tab-held', t.dataset.tab === heldTab); t.classList.toggle('f-tab-off', tabOff(kind, t.dataset.tab)); }
+    for (const p of document.querySelectorAll('.f-pane')) {
+      const pk = p.dataset.pane;
+      if (p.classList.contains('f-subtabs')) { p.hidden = pk !== key || chipsAt(pk, scopeOf(pk)).length < 2; continue; }   // one chip is no choice: no row
+      p.hidden = pk !== key || p.dataset.off === '1' || (p.dataset.sub != null && (!TABSUBS[pk] || !p.dataset.sub.split(' ').includes(TABSUBS[pk].get())));
+    }
+    for (const [tk, s] of Object.entries(TABSUBS))
+      for (const b of document.querySelectorAll(`[data-${s.attr}]`)) { const on = b.dataset[s.attr] === s.get(); b.classList.toggle('on', on); b.setAttribute('aria-pressed', String(on)); b.classList.toggle('site-off', hiddenAt(scopeOf(tk), tk, b.dataset[s.attr])); }
   }
   for (const g of document.querySelectorAll('.f-subtabs')) g.addEventListener('click', e => {
     const b = e.target.closest('[data-svcsub],[data-gsub],[data-dcasub],[data-rsub]'); if (!b) return;
@@ -228,6 +250,10 @@
   // A view re-rendering the open tab (its pane came or went: census-view.js, a Labs switch): the tab on
   // screen again, or the one still held; never the remembered one, which a pick since may have left.
   const refreshFootTab = () => showFootTab(heldTab || footTab);
+  // The scope changed under the open tab (a servicing scope or a result closed, js/svc-scope.js; a link's block,
+  // station or zone resolved, js/svc-data.js): on Overview the strip and chips follow (the caller redraws the
+  // Overview), on any other tab the tab again at the new scope (navigation phase 8a).
+  const rescope = () => (footTab === 'overview' && !heldTab ? scopeTabs() : refreshFootTab());
   // Helper for other modules: set a tab's sub-view, persisting the choice.
   // A link or button that opens a tab (and sub-view): the tab becomes the one picked (kept, and in
   // the share link), as a click on the tab itself does.
@@ -242,7 +268,7 @@
   // (one moved to another tab is set there: the tab it now lives in is returned, for the caller to open)
   const setSub = (tab, sub) => { const r = migrateSub(tab, sub) || { tab, sub }, s = TABSUBS[r.tab]; if (!s) return r.tab; const v = r.sub; if (s.valid.includes(v)) { s.set(v); store.set(s.store, v); } return r.tab; };
   const api = {
-    tabOf, TAB_KEYS, SUB_MAP, HIDDEN, hiddenAt, chipsAt,
+    tabOf, TAB_KEYS, SUB_MAP, HIDDEN, hiddenAt, chipsAt, KIND_OF, kindOf, scopeKind, tabOff, rescope,
     getFootPref: () => footPref, setFootPref: v => { footPref = tabOf(v); }, openTab,
     getFootTab: () => footTab, tabShown, refreshFootTab, wantedTab, viewKey, tabReady,
     getSvcSub: () => svcSub, setSvcSub: v => { svcSub = v; store.set('svcSub', v); },

@@ -71,7 +71,8 @@
     return true;
   }
   // Drop the scope without re-rendering (the caller re-filters), e.g. the trail's Peel step.
-  function clear() { if (App()) App().state.ss = null; result = null; lower(); }
+  // (the tabs follow: a tab or view the scope left out comes back, an open tab redraws at Peel; navigation phase 8a)
+  function clear() { if (App()) App().state.ss = null; result = null; lower(); if (AT() && AT().rescope) AT().rescope(); }
   function close() { clear(); App().applyFilters(); OT().renderOverview(); Sh().viewLink.write(); }
 
   // ---- Result scopes (SPEC §3): every feature click and tool result opens here ------------------
@@ -119,6 +120,7 @@
     if (isResultRef(App().state.ss)) App().state.ss = null;
     if (typeof document !== 'undefined' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('peel:tool-closed'));
     App().applyFilters(); OT().renderOverview(); if (TB()) TB().renderTrail(); Sh().viewLink.write();
+    if (AT() && AT().rescope) AT().rescope();   // (the tabs it left out come back: navigation phase 8a)
     return true;
   }
   function reopenResult() {
@@ -131,6 +133,9 @@
   const resultTitle = () => (result ? result.title : null);
   // (the open result was started at the development still open: the trail and the panel keep the site)
   const keepsDev = () => hasResult() && !!result.keepDev && !!(window.DevScope && window.DevScope.current());
+  // A wastewater block of the I&I program (data/blocks.json) is the servicing area dr:B<n> (js/svc-data.js
+  // builds one from the other): one scope per block (navigation phase 8a, design §5 row 153).
+  const blockRef = id => `dr:B${id}`;
   // A shared link to a result scope: re-run its producer once the data it needs has loaded.
   const RESTORE = {
     pipe: id => { const M = MM(); if (!M.SEW.data) { window.PeelSewerCap.loadSewers(); return false; } window.PeelSewerCap.showPipeLoads(+id); return true; },
@@ -142,7 +147,10 @@
       const fc = d.facilities.find(x => x.name === key); if (fc) DI().showFacility(fc);
       return true;
     },
-    iiblock: id => { if (!ST() || !ST().showBlock) return true; return ST().showBlock(id) !== false; },
+    // (an old block link opens the block's servicing scope once the servicing lookup is filled, seconds after
+    // servicing.json: until then resolve() is null; and the model its Overview reads is built; the card only
+    // where no servicing area resolves)
+    iiblock: id => { if (!App().state.servicing || !SD().svcById.size || !App().state.svcModel) return false; const ref = blockRef(id); if (resolve(ref)) { open(ref); return true; } if (!ST() || !ST().showBlock) return true; return ST().showBlock(id) !== false; },
     // EAs and capital projects re-open once their data has loaded (js/capital-ea.js).
     ea: id => { const C = window.PeelCapitalEA; if (!C || !C.data.loaded) return false; C.openEA(id); return true; },
     cap: key => { const C = window.PeelCapitalEA; if (!C || !C.data.loaded) return false; C.openCapital(key); return true; },
@@ -297,6 +305,8 @@
       ],
       folds: [
         ...(s.kind === 'plant' && window.PeelPlantFlows && window.PeelPlantFlows.chartHTML(s.pl) ? [{ title: 'Measured flow since 2008', html: window.PeelPlantFlows.chartHTML(s.pl) }] : []),
+        // (a block: its I&I program facts, the card it had before navigation phase 8a; '' while the sewers load)
+        ...(s.kind === 'block' && ST() && ST().blockFactsHTML ? [{ title: 'The block in the I&I program', html: ST().blockFactsHTML(s.a.block) }] : []),
         { title: 'Servicing ladder', html: ladder(s).replace(/^<section[^>]*>|<\/section>$/g, '') },
       ],
       method: `${esc(SvcTab().scenarioText())}. Developments built since the census, committed and proposed; existing development is in the census flow. ${k ? (s.kind === 'ps' ? 'Peak wet weather against firm capacity (2020 Master Plan, Vol. 4, s. 2.3.2).' : 'Against rated capacity; the 2020 Master Plan expands a plant when 90% of rated is projected to be reached.') : ''}`,
@@ -312,10 +322,12 @@
     const totPj = rows.reduce((t, r) => t + r.e.population + r.e.employment.jobs, 0);
     const what = water ? ['Average day', 'Max day'] : ['Average dry', 'Peak wet'];
     const works = (s.key === 'dr' || s.key === 'pz') && DI() && DI().dcAreaWorksHTML ? DI().dcAreaWorksHTML(s.ids, s.key, s.kind === 'plant' ? s.pl : null) : '';
+    const iib = s.kind === 'block' && ST() && ST().blockFactsHTML ? ST().blockFactsHTML(s.a.block) : '';
     return `<div class="ov-top">${hlP(h.hl || `<strong>${esc(s.title)}</strong>`)}</div>${SCREEN_NOTE_SHORT}
       <p class="small muted ss-kind">${esc(KIND_LABEL[s.kind])} · ${fmtNum(set.length)} developments in this scope · <button type="button" class="btn small link" data-ss-close>Back to Peel</button></p>
       ${h.tiles ? `<div class="ov-tiles ss-tiles">${h.tiles}</div>` : ''}
       <div class="ss-grid">
+        ${iib ? `<section class="ov-card ss-iib"><div class="ov-h"><h3>The block in the I&amp;I program</h3></div>${iib}</section>` : ''}
         ${ladder(s)}
         <section class="ov-card ss-devs"><div class="ov-h"><h3>Developments loading it</h3><button type="button" class="btn small" data-ss-report>Area report</button></div>
           ${rows.length ? `<div class="dcb-scroll"><table class="dt ov-t ss-t"><caption class="small muted">${fmtNum(rows.length)} developments adding flow since the census, largest ${water ? 'max day' : 'peak wet weather'} first; each alone at Peel design criteria (peaks are not additive)</caption>
@@ -370,7 +382,7 @@
     return true;
   }
   if (typeof document !== 'undefined') document.addEventListener('click', e => { const f = e.target.closest && e.target.closest('[data-ss-fit]'); if (f) fitScope(f.dataset.ssFit); });
-  const api = { fitScope, resolve, current, has, open, close, clear, crumbs, label, cardHTML, panelSpec, peelWideNote, peelWideText, PLANTS, KIND_LABEL, openResult, closeResult, reopenResult, hasResult, resultTitle, keepsDev, isResultRef, restore, devKeysOf, RESULT_KINDS };
+  const api = { fitScope, resolve, current, has, open, close, clear, crumbs, label, cardHTML, panelSpec, peelWideNote, peelWideText, PLANTS, KIND_LABEL, openResult, closeResult, reopenResult, hasResult, resultTitle, keepsDev, isResultRef, restore, devKeysOf, RESULT_KINDS, blockRef };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSvcScope = api;
 })(typeof window !== 'undefined' ? window : globalThis);

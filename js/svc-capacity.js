@@ -324,6 +324,9 @@
   function renderChecks() {
     const el = $('#svc-checks-body'); if (!el) return;
     if (root.DevScope && root.DevScope.current()) return;
+    // (a plant, station, block, zone or water system: its own checks are Records' body, js/records-tab.js svcHTML; this
+    // pane is Peel's group, so it is left empty there: navigation phase 8a)
+    if (root.PeelSvcScope && root.PeelSvcScope.current && (s => !!s && s.kind !== 'result')(root.PeelSvcScope.current())) { el.innerHTML = ''; return; }
     // (a section is a string, or { html } as plant-flows.js and ww-events.js register theirs)
     const MC = root.ModelChecks || {}, sec = k => { try { const v = typeof MC[k] === 'function' ? MC[k]() : MC[k]; return typeof v === 'string' ? v : v && typeof v.html === 'string' ? v.html : ''; } catch (e) { return ''; } };
     const body = ['wwMasterPlanVsTracker', 'wwReportsVsModel', 'waterProduction', 'caledonGroundwater', 'plantFlows', 'wwRoster'].map(sec).join('');

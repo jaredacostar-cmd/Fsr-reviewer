@@ -84,9 +84,11 @@
       [App().state.svcCensus, App().state.reports, dc, App().state.dcCosts, Sett().IDF.data, App().state.housing] = await Promise.all([opt('data/svc-census.json'), opt('data/peel-reports.json'), opt('data/dc-infra.json'), opt('data/dc-costs.json'), opt('data/idf.json'), opt('data/housing.json')]);
       mergePeelHousing(App().state.housing, await opt('data/peel-housing.json'));
       // Measured plant flow by month, 2008 on (MECP): the plant's scope panel draws its trend.
-      opt('data/plant-flows.json').then(p => { App().state.plantFlows = p; });
+      // (a servicing scope's Records open meanwhile says "Loads when needed" for it, then fills in place: navigation phase 8a)
+      const recordsAgain = () => { const RT = window.PeelRecordsTab, S = window.PeelSvcScope, s = S && S.current && S.current(); if (RT && s && s.kind !== 'result' && AT().getFootTab() === 'records') RT.render(); };
+      opt('data/plant-flows.json').then(p => { App().state.plantFlows = p; recordsAgain(); });
       // Overflows and spills from the collection system reports (Table 7), and its station roster.
-      opt('data/ww-events.json').then(w => { App().state.wwEvents = w; });
+      opt('data/ww-events.json').then(w => { App().state.wwEvents = w; recordsAgain(); });
       opt('data/compliance.json').then(c => { App().state.compliance = c; if (c && AT().getFootTab() === 'svc') SvcTab().renderSvcTab(); });
       if (Sett().IDF.data) { Sett().applyWet(); const f = $('#wet-box'); if (f) f.outerHTML = Sett().wetBoxHTML(); }
       App().state.dcInfra = DI().prepDc(dc);
@@ -105,6 +107,7 @@
       // now, which also replaces one built before the 2025 annual reports arrived.
       SvcTab().renderSvcTab();
       App().applyFilters();
+      if (AT().rescope) AT().rescope();   // (a link's block, station or zone resolves only now that the lookup is filled: its tabs follow it, navigation phase 8a)
       setTimeout(SC().loadSewers, 1500);
       // Trunk-main checks need the Master Plan tables and the water facilities (the supply routes).
       Promise.all([MP().loadWaterSupply(), MP().loadMpWater(), window.PeelWaterTrace && window.PeelWaterTrace.loadWaterFacilities()]).then(() => { if (typeof DS() !== 'undefined' && DS().current()) DS().refresh(); });
