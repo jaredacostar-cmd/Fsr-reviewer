@@ -71,7 +71,8 @@
     return true;
   }
   // Drop the scope without re-rendering (the caller re-filters), e.g. the trail's Peel step.
-  function clear() { if (App()) App().state.ss = null; result = null; lower(); }
+  // (the tabs follow: a tab or view the scope left out comes back, an open tab redraws at Peel; navigation phase 8a)
+  function clear() { if (App()) App().state.ss = null; result = null; lower(); if (AT() && AT().rescope) AT().rescope(); }
   function close() { clear(); App().applyFilters(); OT().renderOverview(); Sh().viewLink.write(); }
 
   // ---- Result scopes (SPEC §3): every feature click and tool result opens here ------------------
@@ -119,6 +120,7 @@
     if (isResultRef(App().state.ss)) App().state.ss = null;
     if (typeof document !== 'undefined' && typeof CustomEvent === 'function') document.dispatchEvent(new CustomEvent('peel:tool-closed'));
     App().applyFilters(); OT().renderOverview(); if (TB()) TB().renderTrail(); Sh().viewLink.write();
+    if (AT() && AT().rescope) AT().rescope();   // (the tabs it left out come back: navigation phase 8a)
     return true;
   }
   function reopenResult() {
@@ -131,6 +133,11 @@
   const resultTitle = () => (result ? result.title : null);
   // (the open result was started at the development still open: the trail and the panel keep the site)
   const keepsDev = () => hasResult() && !!result.keepDev && !!(window.DevScope && window.DevScope.current());
+  // A wastewater block of the I&I program (data/blocks.json) is the servicing area dr:B<n> (js/svc-data.js
+  // builds one from the other): one scope per block (navigation phase 8a, design §5 row 153).
+  const blockRef = id => `dr:B${id}`;
+  // (an old block link that fell back to the block's card on its last try, its data late: settleLate below)
+  let lateBlock = null;
   // A shared link to a result scope: re-run its producer once the data it needs has loaded.
   const RESTORE = {
     pipe: id => { const M = MM(); if (!M.SEW.data) { window.PeelSewerCap.loadSewers(); return false; } window.PeelSewerCap.showPipeLoads(+id); return true; },
@@ -142,17 +149,37 @@
       const fc = d.facilities.find(x => x.name === key); if (fc) DI().showFacility(fc);
       return true;
     },
-    iiblock: id => { if (!ST() || !ST().showBlock) return true; return ST().showBlock(id) !== false; },
+    // (an old block link opens the block's servicing scope once the servicing lookup is filled, seconds after
+    // servicing.json: until then resolve() is null; and the model its Overview reads is built. The card where
+    // no servicing area resolves, and on the last try while they are still out (a late file, no census): the
+    // link kept, as before navigation phase 8a)
+    iiblock: (id, last) => {
+      const ready = App().state.servicing && SD().svcById.size && App().state.svcModel, ref = blockRef(id);
+      if (ready && resolve(ref)) { open(ref); return true; }
+      if (!ready && !last) return false;
+      if (!ST() || !ST().showBlock) return true;
+      const r = ST().showBlock(id, { card: true });
+      if (!ready) { lateBlock = String(id); if (r && r.then) r.then(settleLate, () => {}); }
+      return r !== false;
+    },
     // EAs and capital projects re-open once their data has loaded (js/capital-ea.js).
     ea: id => { const C = window.PeelCapitalEA; if (!C || !C.data.loaded) return false; C.openEA(id); return true; },
     cap: key => { const C = window.PeelCapitalEA; if (!C || !C.data.loaded) return false; C.openCapital(key); return true; },
   };
+  // (a producer is told its last try)
   function restore(ref, tries = 40) {
     if (!isResultRef(ref) || (result && result.ref === ref)) return;
     const k = ref.slice(0, ref.indexOf(':')), id = ref.slice(ref.indexOf(':') + 1), f = RESTORE[k];
     if (!f) { if (App().state.ss === ref) { App().state.ss = null; App().applyFilters(); } return; }
-    let done = false; try { done = f(id); } catch (e) { done = false; }
+    let done = false; try { done = f(id, tries === 0); } catch (e) { done = false; }
     if (!done && tries > 0) setTimeout(() => restore(ref, tries - 1), 500);
+  }
+  // The block's card an old link fell back to, its data late: the block's scope once the model is built
+  // (js/svc-tab.js renderSvcTab; or the card opened after it), if that card is still what is open.
+  function settleLate() {
+    if (lateBlock == null || !App().state.svcModel || App().state.ss == null) return;   // (the card on its way)
+    const id = lateBlock, ref = blockRef(id), card = `iiblock:${id}`; lateBlock = null;
+    if (App().state.ss === card && resolve(ref)) setTimeout(() => { if (App().state.ss === card) open(ref); }, 0);
   }
 
   // Trail steps, top of the ladder first: plant before its blocks and stations; the water system
@@ -255,8 +282,9 @@
       if (outlets.length) down.push(`<li><strong>Arriving at the plant</strong> (block and everything upstream, average dry at build-out): ${outlets.slice(0, 8).map(a => `${link(a.id, SD().drName(a))} ${fmt1(flowOf(a.id))} ML/d`).join(' · ')}${outlets.length > 8 ? ` · +${outlets.length - 8} more` : ''}</li>`);
     }
     if (s.kind === 'block') {
-      const dn = s.a.downstream && SD().svcById.get(s.a.downstream);
-      up.push(`<li><strong>Drains to</strong> ${dn ? link(dn.id, SD().drName(dn)) : 'the plant directly'} → ${link(`plant:${s.pl}`, SD().plantLabel(s.pl))}</li>`);
+      // (every block it drains through down to the plant, as the block's card listed them before navigation phase 8a)
+      const chain = []; for (let z = s.a.downstream && SD().svcById.get(s.a.downstream), n = 0; z && n < 40; z = z.downstream && SD().svcById.get(z.downstream), n++) chain.push(z);
+      up.push(`<li><strong>Drains to</strong> ${chain.length ? chain.map(d => link(d.id, SD().drName(d))).join(' → ') : 'the plant directly'} → ${link(`plant:${s.pl}`, SD().plantLabel(s.pl))}</li>`);
       const kids = sv.drainage.filter(d => d.downstream === s.a.id).sort((x, y) => flowOf(y.id) - flowOf(x.id));
       if (kids.length) down.push(`<li><strong>Fed by</strong> ${kids.map(k => `${link(k.id, SD().drName(k))} ${fmt1(flowOf(k.id))} ML/d`).join(' · ')}</li>`);
       else down.push('<li><strong>Fed by</strong> nothing upstream: a head-of-system block</li>');
@@ -274,6 +302,11 @@
   // capacity bar, its relief, what is driving it (the developments loading it), the ladder folded; the
   // card is the full table.
   function panelSpec(s, set) {
+    // (a scope resolves once the servicing lookup is filled, its figures once the model is built, which needs the
+    // census too: until then a loading panel, as the full table's skeleton; a link, a search pick or "What loads
+    // this?" in that window no longer throws, and the tabs follow it)
+    const trail = [{ label: 'Peel', attrs: { 'data-ss-close': '' } }, { label: s.title }];
+    if (!App().state.svcModel) return { head: { trail, close: { 'data-ss-close': '' }, name: s.title, identity: `${esc(KIND_LABEL[s.kind])} · ${fmtNum(set.length)} developments in this scope` }, answer: '<span class="muted">Loading the servicing model…</span>' };
     const PN = window.PeelPanel, h = headroom(s), rows = loadRows(s, set), water = s.key === 'pz';
     const k = s.kind === 'plant' ? window.PeelCapacity.of(`plant:${s.pl}`) : s.kind === 'wsys' ? window.PeelCapacity.of('wsys:southPeel') : s.kind === 'ps' ? window.PeelCapacity.of(`ps:${s.a.id}`) : null;
     const c = s.kind === 'plant' ? MP().cached(`plant:${s.pl}`, () => MP().plantCons(s.pl)) : null;
@@ -284,7 +317,7 @@
     const relief = c && c.relief.length ? c.relief.map(r => ({ html: `<div class="pnl-kv"><span>${esc(r.text)}</span></div>`, kv: true })) : [];
     return {
       calc: true, fullTitle: `${s.title} · every development loading it, the ladder and the planned works`,
-      head: { trail: [{ label: 'Peel', attrs: { 'data-ss-close': '' } }, { label: s.title }], close: { 'data-ss-close': '' }, name: s.title,
+      head: { trail, close: { 'data-ss-close': '' }, name: s.title,
         status: tone ? { tone, text: { over: 'Over', tight: 'Tight', room: 'Room' }[tone] } : null,
         identity: `${esc(KIND_LABEL[s.kind])}${k ? ` · ${k.firm != null ? 'firm' : 'rated'} ${k.unit === 'L/s' ? `${fmtNum(Math.round(k.cap))} L/s` : capTxt(k.cap, k.cap)}` : ''} · ${fmtNum(set.length)} developments in this scope` },
       answer: h.hl || `<strong>${esc(s.title)}</strong>`,
@@ -297,6 +330,8 @@
       ],
       folds: [
         ...(s.kind === 'plant' && window.PeelPlantFlows && window.PeelPlantFlows.chartHTML(s.pl) ? [{ title: 'Measured flow since 2008', html: window.PeelPlantFlows.chartHTML(s.pl) }] : []),
+        // (a block: its I&I program facts, the card it had before navigation phase 8a; '' while the sewers load)
+        ...(s.kind === 'block' && ST() && ST().blockFactsHTML ? [{ title: 'The block in the I&I program', html: ST().blockFactsHTML(s.a.block) }] : []),
         { title: 'Servicing ladder', html: ladder(s).replace(/^<section[^>]*>|<\/section>$/g, '') },
       ],
       method: `${esc(SvcTab().scenarioText())}. Developments built since the census, committed and proposed; existing development is in the census flow. ${k ? (s.kind === 'ps' ? 'Peak wet weather against firm capacity (2020 Master Plan, Vol. 4, s. 2.3.2).' : 'Against rated capacity; the 2020 Master Plan expands a plant when 90% of rated is projected to be reached.') : ''}`,
@@ -312,10 +347,12 @@
     const totPj = rows.reduce((t, r) => t + r.e.population + r.e.employment.jobs, 0);
     const what = water ? ['Average day', 'Max day'] : ['Average dry', 'Peak wet'];
     const works = (s.key === 'dr' || s.key === 'pz') && DI() && DI().dcAreaWorksHTML ? DI().dcAreaWorksHTML(s.ids, s.key, s.kind === 'plant' ? s.pl : null) : '';
+    const iib = s.kind === 'block' && ST() && ST().blockFactsHTML ? ST().blockFactsHTML(s.a.block) : '';
     return `<div class="ov-top">${hlP(h.hl || `<strong>${esc(s.title)}</strong>`)}</div>${SCREEN_NOTE_SHORT}
       <p class="small muted ss-kind">${esc(KIND_LABEL[s.kind])} · ${fmtNum(set.length)} developments in this scope · <button type="button" class="btn small link" data-ss-close>Back to Peel</button></p>
       ${h.tiles ? `<div class="ov-tiles ss-tiles">${h.tiles}</div>` : ''}
       <div class="ss-grid">
+        ${iib ? `<section class="ov-card ss-iib"><div class="ov-h"><h3>The block in the I&amp;I program</h3></div>${iib}</section>` : ''}
         ${ladder(s)}
         <section class="ov-card ss-devs"><div class="ov-h"><h3>Developments loading it</h3><button type="button" class="btn small" data-ss-report>Area report</button></div>
           ${rows.length ? `<div class="dcb-scroll"><table class="dt ov-t ss-t"><caption class="small muted">${fmtNum(rows.length)} developments adding flow since the census, largest ${water ? 'max day' : 'peak wet weather'} first; each alone at Peel design criteria (peaks are not additive)</caption>
@@ -370,7 +407,7 @@
     return true;
   }
   if (typeof document !== 'undefined') document.addEventListener('click', e => { const f = e.target.closest && e.target.closest('[data-ss-fit]'); if (f) fitScope(f.dataset.ssFit); });
-  const api = { fitScope, resolve, current, has, open, close, clear, crumbs, label, cardHTML, panelSpec, peelWideNote, peelWideText, PLANTS, KIND_LABEL, openResult, closeResult, reopenResult, hasResult, resultTitle, keepsDev, isResultRef, restore, devKeysOf, RESULT_KINDS };
+  const api = { fitScope, resolve, current, has, open, close, clear, crumbs, label, cardHTML, panelSpec, peelWideNote, peelWideText, PLANTS, KIND_LABEL, openResult, closeResult, reopenResult, hasResult, resultTitle, keepsDev, isResultRef, restore, settleLate, devKeysOf, RESULT_KINDS, blockRef };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelSvcScope = api;
 })(typeof window !== 'undefined' ? window : globalThis);

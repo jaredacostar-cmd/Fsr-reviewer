@@ -29,10 +29,14 @@ function loadTabs({ labs = [], site = false, publicView = false, siteEas = 3 } =
   return ctx.module.exports;
 }
 
-// The spec's inventory: the chips each tab shows at each scope. (navigation phase 6c: Old pipes, an area's Servicing view)
+// The spec's inventory: the chips each tab shows at each scope. (navigation phase 6c: Old pipes, an area's Servicing view;
+// navigation phase 8a, design §3.5: a servicing scope, a drawn area, a single file; a drawn area has no Records tab)
 const SPEC = {
   area: { overview: [], growth: ['pipeline', 'areas', 'timing'], svc: ['capacity', 'network', 'pipes'], dca: ['timing', 'eas', 'projects'], records: ['sources', 'checks'] },
   site: { overview: [], growth: ['pipeline'], svc: ['network', 'fsr'], dca: ['timing'], records: ['files'] },
+  svc: { overview: [], growth: ['pipeline', 'timing'], svc: ['capacity', 'network', 'pipes'], dca: ['timing'], records: ['sources', 'checks'] },
+  drawn: { overview: [], growth: ['pipeline', 'timing'], svc: ['capacity', 'network'], dca: ['timing'], records: [] },
+  file: { overview: [], growth: ['pipeline', 'areas', 'timing'], svc: ['capacity', 'network', 'pipes'], dca: ['timing', 'eas', 'projects'], records: ['files'] },
 };
 
 test('1. tabs: Overview · Growth · Servicing · Capital at every scope, then Records as a small trailing tab', () => {
@@ -44,7 +48,7 @@ test('1. tabs: Overview · Growth · Servicing · Capital at every scope, then R
   assert.doesNotMatch(src('js/topbar.js'), /data-tbg="records"/);
 });
 
-test('1. sub-views per scope match the spec (Peel / area and a development)', () => {
+test('1. sub-views per scope match the spec (Peel / area, a development, a servicing scope, a drawn area, a file)', () => {
   for (const [scope, tabs] of Object.entries(SPEC)) {
     const AT = loadTabs({ site: scope === 'site' });
     for (const [tab, want] of Object.entries(tabs)) assert.deepEqual(plain(AT.chipsAt(tab, scope)), want, `${scope} › ${tab}`);
@@ -66,6 +70,108 @@ test('1. sub-views per scope match the spec (Peel / area and a development)', ()
   assert.deepEqual(row('svc'), ['Capacity', 'Network', 'Old pipes', 'FSR review']);
   assert.deepEqual(row('dca'), ['DC timing', 'EAs', 'Projects']);
   assert.deepEqual(row('records'), ['Sources', 'Data checks', 'Files']);
+});
+
+// js/analysis-tabs.js in a vm with the map's strip: five .f-tab buttons (each ready unless busy: tabReady's
+// selector answered, so "held" and "left out" are told apart), #analysis, each tab's chips; the scope is the
+// DevScope / PeelSvcScope stubs the test switches.
+function loadStrip({ stored = {}, busy = [] } = {}) {
+  const cls = () => { const s = new Set(); return { toggle: (c, on) => { if (on) s.add(c); else s.delete(c); }, contains: c => s.has(c), add: c => s.add(c), remove: c => s.delete(c) }; };
+  const el = dataset => ({ dataset, classList: cls(), attrs: {}, setAttribute(k, v) { this.attrs[k] = v; }, parentElement: null });
+  const tabs = ['overview', 'growth', 'svc', 'dca', 'records'].map(tab => el({ tab }));
+  const CHIPS = { gsub: ['pipeline', 'areas', 'timing'], svcsub: ['capacity', 'network', 'pipes', 'fsr'], dcasub: ['timing', 'eas', 'projects'], rsub: ['sources', 'checks', 'files'] };
+  const chips = Object.fromEntries(Object.entries(CHIPS).map(([a, vs]) => [a, vs.map(v => el({ [a]: v }))]));
+  const an = el({}), scope = { dev: null, ss: null, ref: null };
+  const document = {
+    querySelector: sel => {
+      const m = /^\.f-tab\[data-tab="(\w+)"\]:not\(\[hidden\]\):not\(\[aria-busy\]\)$/.exec(sel); if (m) return busy.includes(m[1]) ? null : tabs.find(t => t.dataset.tab === m[1]) || null;
+      const m2 = /^\.f-tab\[data-tab="(\w+)"\]$/.exec(sel); return m2 ? tabs.find(t => t.dataset.tab === m2[1]) || null : null;
+    },
+    querySelectorAll: sel => { if (sel === '.f-tab') return tabs; const m = /^\[data-(\w+)\]$/.exec(sel); return m && chips[m[1]] ? chips[m[1]] : []; },
+    getElementById: id => (id === 'analysis' ? an : null), addEventListener: () => {} };
+  const store = { get: (k, d) => (Object.prototype.hasOwnProperty.call(stored, k) ? stored[k] : d), set: () => {} };
+  const window = { PeelUtil: { store }, document, PeelDcaTab: {},
+    DevScope: { current: () => scope.dev },
+    PeelSvcScope: { current: () => scope.ss, peelWideNote: () => {} } };
+  const ctx = { window, document, setTimeout: () => 0, module: { exports: {} } };
+  ctx.globalThis = ctx;
+  vm.runInNewContext(src('js/analysis-tabs.js'), ctx);
+  const tab = t => tabs.find(x => x.dataset.tab === t), chip = (a, v) => chips[a].find(x => x.dataset[a] === v);
+  return { AT: ctx.module.exports, scope, an, tab, chip };
+}
+
+test('1. every scope kind (navigation phase 8a, design §3.5): one kind for every tab; a tab a scope leaves out is not on the strip and opens Overview, never held; closing the scope brings the strip, the chips and the pick back', () => {
+  const AT = loadTabs();
+  // (a) The kind: a development (a result kept at it too), no scope, a servicing scope, a result by its kind.
+  const kinds = [[{}, 'area'], [{ dev: true }, 'site'], [{ dev: true, ss: { kind: 'result', rkind: 'tool' } }, 'site'],
+    ...['plant', 'zone', 'block', 'ps', 'wsys'].map(k => [{ ss: { kind: k } }, 'svc']),
+    [{ ss: { kind: 'result', rkind: 'sel' } }, 'drawn'], [{ ss: { kind: 'result', rkind: 'file' } }, 'file'],
+    // (8b: a card or a tool's result is its own kind, 'object')
+    ...['dcwork', 'iiblock', 'tool', '__proto__', 'constructor'].map(k => [{ ss: { kind: 'result', rkind: k } }, 'area'])];
+  for (const [o, want] of kinds) assert.equal(AT.kindOf(o), want, JSON.stringify(o));
+  assert.equal(AT.kindOf(), 'area');
+  // (b) A whole tab left out: a drawn area's Records; no chip there; its pick is kept.
+  assert.equal(AT.tabOff('drawn', 'records'), true);
+  for (const [k, t] of [['svc', 'records'], ['drawn', 'growth'], ['area', 'records'], ['site', 'records'], ['file', 'records'], ['nowhere', 'records']]) assert.equal(AT.tabOff(k, t), false, `${k} › ${t}`);
+  assert.deepEqual(plain(AT.chipsAt('records', 'drawn')), []);
+  for (const sub of ['sources', 'checks', 'files']) assert.equal(AT.hiddenAt('drawn', 'records', sub), true, sub);
+  assert.equal(AT.subFor('records', 'sources', null, 'drawn'), 'sources');
+  assert.equal(AT.subFor('growth', 'areas', null, 'svc'), 'pipeline');
+  assert.equal(AT.subFor('dca', 'projects', null, 'drawn'), 'timing');
+  assert.equal(AT.subFor('svc', 'pipes', null, 'drawn'), 'capacity');
+  assert.equal(AT.subFor('records', 'files', null, 'svc'), 'sources');
+  // (c) On the strip: Records at a drawn area opens Overview (not held: wantedTab), its button left out.
+  const L = loadStrip({ busy: ['dca'] }), T = L.AT;
+  L.scope.ss = { kind: 'result', rkind: 'sel' };
+  T.showFootTab('records');
+  assert.equal(T.getFootTab(), 'overview'); assert.equal(T.wantedTab(), 'overview', 'left out, never held');
+  assert.ok(L.tab('records').classList.contains('f-tab-off')); assert.ok(!L.tab('records').classList.contains('f-tab-held'));
+  assert.ok(!L.tab('growth').classList.contains('f-tab-off'));
+  assert.equal(L.an.dataset.scope, 'drawn'); assert.ok(!L.an.classList.contains('site-scope'));
+  assert.ok(L.chip('svcsub', 'pipes').classList.contains('site-off'), 'Old pipes not shown at a drawn area');
+  // (a tab still loading is held, as before: held is not left out)
+  T.showFootTab('dca'); assert.equal(T.getFootTab(), 'overview'); assert.equal(T.wantedTab(), 'dca'); assert.ok(L.tab('dca').classList.contains('f-tab-held'));
+  T.showFootTab('growth'); assert.equal(T.getFootTab(), 'growth');
+  // The selection closes: rescope brings Records back; another tab open is drawn again at the new scope.
+  L.scope.ss = null; T.rescope();
+  assert.ok(!L.tab('records').classList.contains('f-tab-off')); assert.equal(L.an.dataset.scope, 'area'); assert.equal(T.getFootTab(), 'growth');
+  assert.ok(!L.chip('svcsub', 'pipes').classList.contains('site-off'));
+  T.showFootTab('records'); assert.equal(T.getFootTab(), 'records', 'Records again at an area');
+  // At a plant: a stored Areas pick shows Pipeline, and comes back when the plant closes.
+  L.scope.ss = { kind: 'plant', pl: 'Clarkson', ref: 'plant:Clarkson' };
+  T.setGSub('areas'); T.showFootTab('growth');
+  assert.equal(T.getGSub(), 'pipeline'); assert.equal(L.an.dataset.scope, 'svc');
+  assert.ok(L.chip('gsub', 'areas').classList.contains('site-off')); assert.ok(!L.chip('gsub', 'timing').classList.contains('site-off'));
+  assert.ok(!L.tab('records').classList.contains('f-tab-off'), 'a servicing scope keeps every tab');
+  L.scope.ss = null; T.rescope(); assert.equal(T.getGSub(), 'areas', 'the pick back at Peel');
+  // On Overview, rescope redraws the strip only (the caller draws the Overview).
+  L.scope.ss = { kind: 'result', rkind: 'sel' }; T.showFootTab('overview'); assert.ok(L.tab('records').classList.contains('f-tab-off'));
+  L.scope.ss = null; T.rescope(); assert.ok(!L.tab('records').classList.contains('f-tab-off')); assert.equal(T.getFootTab(), 'overview');
+  // A stored Files pick at a plant (the app loaded at it): Sources there, Files again at a development.
+  const P = loadStrip({ stored: { rSub: 'files' } });
+  P.scope.ss = { kind: 'plant', pl: 'Clarkson' }; P.AT.showFootTab('records');
+  assert.equal(P.AT.getRSub(), 'sources');
+  P.scope.ss = null; P.scope.dev = { key: 'k' }; P.AT.rescope(); assert.equal(P.AT.getRSub(), 'files');
+  assert.ok(P.an.classList.contains('site-scope')); assert.equal(P.an.dataset.scope, 'site');
+  // (e) A cold link to a block (ss=dr:B12): unresolved until the servicing lookup fills (the stub null), the
+  // strip is Peel's; once it resolves, rescope (js/svc-data.js loadServicing) turns it to the block's.
+  const C = loadStrip({ stored: { gSub: 'areas', footTab4: 'growth' } });
+  C.AT.showFootTab('growth');
+  assert.equal(C.AT.getGSub(), 'areas'); assert.ok(!C.chip('gsub', 'areas').classList.contains('site-off')); assert.equal(C.an.dataset.scope, 'area');
+  C.scope.ss = { kind: 'block', ref: 'dr:B12' }; C.AT.rescope();
+  assert.equal(C.AT.getGSub(), 'pipeline'); assert.equal(C.an.dataset.scope, 'svc'); assert.ok(C.chip('gsub', 'areas').classList.contains('site-off'));
+  // (d) Source: the left-out check before the hold line; the CSS; the callers; never [hidden] on a tab.
+  const at = src('js/analysis-tabs.js');
+  const off = at.indexOf("const kind = scopeKind(); if (tabOff(kind, key)) key = 'overview';"), hold = at.indexOf("if (!tabReady(key)) { heldTab = key; key = 'overview'; } else heldTab = null;");
+  assert.ok(off > 0 && off < hold, 'a left-out tab opens Overview before the hold');
+  assert.match(at, /t\.classList\.toggle\('f-tab-off', tabOff\(kind, t\.dataset\.tab\)\);/);
+  assert.match(at, /const rescope = \(\) => \(footTab === 'overview' && !heldTab \? scopeTabs\(\) : refreshFootTab\(\)\);/);
+  assert.doesNotMatch(at, /\bt\.hidden =/);
+  assert.match(src('css/app.css'), /\n\.f-tab\.f-tab-off \{ display: none; \}\n/);
+  const ss = src('js/svc-scope.js');
+  assert.match(ss, /function clear\(\) \{ if \(App\(\)\) App\(\)\.state\.ss = null; result = null; lower\(\); if \(AT\(\) && AT\(\)\.rescope\) AT\(\)\.rescope\(\); \}/);
+  assert.match(ss, /function closeResult\(\) \{[^]*?Sh\(\)\.viewLink\.write\(\);\n\s+if \(AT\(\) && AT\(\)\.rescope\) AT\(\)\.rescope\(\);[^\n]*\n\s+return true;\n\s+\}/);
+  assert.match(src('js/svc-data.js'), /SvcTab\(\)\.renderSvcTab\(\);\n\s+App\(\)\.applyFilters\(\);\n\s+if \(AT\(\)\.rescope\) AT\(\)\.rescope\(\);/);
 });
 
 test('1. the panes behind each sub-view: Areas is one drill-down; Network holds blocks, stations, zones and the water facilities', () => {
@@ -152,9 +258,11 @@ test('2. the Simple / Engineering switch is on every Servicing sub-view', () => 
 
 test('3. no tab shows more than 4 sub-views, at any scope, with every Labs switch on', () => {
   const all = ['hydro', 'funding', '3d', 'timebox', 'swmm', 'batch', 'gravity', 'sewer', 'pressure'];
-  for (const site of [false, true]) {
-    const AT = loadTabs({ labs: all, site });
-    for (const tab of Object.keys(SPEC.area)) assert.ok(AT.chipsAt(tab, site ? 'site' : 'area').length <= 4, `${tab}${site ? ' (site)' : ''}`);
+  // (every scope kind, navigation phase 8a)
+  assert.deepEqual(plain(Object.keys(loadTabs().HIDDEN)).sort(), Object.keys(SPEC).sort());
+  for (const kind of Object.keys(loadTabs().HIDDEN)) {
+    const AT = loadTabs({ labs: all, site: kind === 'site' });
+    for (const tab of Object.keys(SPEC.area)) assert.ok(AT.chipsAt(tab, kind).length <= 4, `${tab} (${kind})`);
   }
   for (const [tab, s] of Object.entries(loadTabs().TABSUBS)) assert.ok(s.valid.length <= 4, tab);
   for (const row of HTML.matchAll(/<div class="f-pane f-subtabs[^"]*" data-pane="\w+"[^>]*>([\s\S]*?)<\/div>/g)) assert.ok((row[1].match(/<button/g) || []).length <= 4, row[0].slice(0, 80));

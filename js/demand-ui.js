@@ -278,9 +278,13 @@
     const fr = freshness(), need = fr.filter(r => r.st === 'due' || r.st === 'stale');
     return `${hlP(need.length ? `<strong>${need.length} data source${need.length === 1 ? '' : 's'}</strong> ${need.length === 1 ? 'is' : 'are'} due for a refresh: ${need.map(r => esc(r.name)).join('; ')}.` : `All data sources are current; applications as of <strong>${esc((fr[0] && fr[0].date) || '–')}</strong>.`)}
       <h3 class="sub-title" data-info="data-freshness">Data freshness</h3>
-      <table class="dt fr-table"><thead><tr><th>Source</th><th>As of</th><th>Updated</th><th>Status</th></tr></thead><tbody>
+      ${freshTableHTML(fr)}${root.PeelSources ? `<h3 class="sub-title">Every data file and its source</h3>${root.PeelSources.slotHTML()}` : ''}`;
+  }
+  // The freshness table of some of its rows (a servicing scope's Records › Sources: the ones it rests on, js/records-tab.js).
+  function freshTableHTML(fr) {
+    return `<table class="dt fr-table"><thead><tr><th>Source</th><th>As of</th><th>Updated</th><th>Status</th></tr></thead><tbody>
         ${fr.map(r => `<tr><td>${esc(r.name)}${r.note ? `<small>${esc(r.note)}</small>` : ''}</td><td>${r.date ? esc(r.date) : '–'}${r.a != null && r.st !== 'ref' ? `<small>${r.a === 0 ? 'today' : `${fmtNum(r.a)} day${r.a === 1 ? '' : 's'} ago`}</small>` : ''}</td><td>${esc(r.every)}</td><td><span class="fr-b ${FRESH[r.st][0]}">${FRESH[r.st][1]}</span></td></tr>`).join('')}
-      </tbody></table>${root.PeelSources ? `<h3 class="sub-title">Every data file and its source</h3>${root.PeelSources.slotHTML()}` : ''}`;
+      </tbody></table>`;
   }
   // The model against published figures (this module's own checks, Records › Data checks; the servicing
   // model's, registered on window.ModelChecks, are its Servicing model group: js/svc-capacity.js renderChecks).
@@ -310,7 +314,7 @@
   // anything out: every stage ('all') and build-out ('buildout'); committed only ('committed', the Peel rule) and left
   // to build ('remaining') count none.
   const preCensus = (t, basis) => (t && (basis === 'all' || basis === 'buildout') ? { units: (t.units && t.units.existing) || 0, people: (t.people && t.people.existing) || 0 } : { units: 0, people: 0 });
-  const api = { allocBoxHTML, commitOpts, preCensus, MUNIS, freshness, validationRows, freshnessHTML, checksHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, wwTile, miniBar, wwInfoLine, reportSettingsHTML, allocFold, openAllocFold };
+  const api = { allocBoxHTML, commitOpts, preCensus, MUNIS, freshness, validationRows, freshnessHTML, freshTableHTML, checksHTML, allocs, setAlloc, renderAlloc, allocPlant, demandSet, overviewSet, demandBasis, wwTile, miniBar, wwInfoLine, reportSettingsHTML, allocFold, openAllocFold };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   else root.PeelDemandUI = api;
 })(typeof window !== 'undefined' ? window : globalThis);

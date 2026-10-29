@@ -994,3 +994,91 @@ test('phase 7: Home’s sidebar is five entries; its old entries, Help’s role 
   // (the stored role: the same key in the one list; the start screen's stored 'last' unchanged, now Last place)
   assert.deepEqual(plain(W.START.find(x => x[0] === 'last')), ['last', 'Last place']);
 });
+
+// Navigation phase 8a (design §3.5, §5 row 153, §7.2): every scope kind has its row of views. A servicing scope
+// shows Growth › Pipeline · Forecast, Servicing › Capacity · Network · Old pipes, Capital › DC timing and its own
+// Records; a drawn area has no Records tab. A link's or a stored pick the scope leaves out shows the first view
+// it has there and comes back at an area (or, Files and FSR review, at a development); an old ss=iiblock: link opens
+// the block's servicing scope.
+function loadTabsAt(stored = {}, extra = {}, ready = true) {
+  const store = { get: (k, d) => (Object.prototype.hasOwnProperty.call(stored, k) ? stored[k] : d), set: () => {} };
+  // (a document whose querySelector answers tabReady's selector: every tab's button there and its data in)
+  const q = sel => (ready && /^\.f-tab\[data-tab="\w+"\]:not\(\[hidden\]\):not\(\[aria-busy\]\)$/.test(sel) ? {} : null);
+  const document = { querySelector: q, querySelectorAll: () => [], getElementById: () => null, addEventListener: () => {} };
+  const ctx = { window: { PeelUtil: { store }, document, PeelDcaTab: {}, ...extra }, document, setTimeout: () => 0, module: { exports: {} } };
+  ctx.globalThis = ctx;
+  require('node:vm').runInNewContext(src('js/analysis-tabs.js'), ctx);
+  return ctx.module.exports;
+}
+test('phase 8a: every scope kind: a servicing scope’s views and Records, a drawn area without Records; ss=iiblock: opens the block’s scope; stored picks come back at an area', () => {
+  const views = T => [T.getGSub(), T.getRSub(), T.getDcSub(), T.getSvcSub()];
+  let cur = null, dev = null;
+  const at = { PeelSvcScope: { current: () => cur, peelWideNote: () => {} }, DevScope: { current: () => dev } };
+  // Stored picks the scope leaves out (Growth › Areas, Records › Files, Capital › EAs, Servicing › FSR review).
+  let T = loadTabsWith({ gSub: 'areas', rSub: 'files', dcSub: 'eas', svcSub: 'fsr' }, at);
+  assert.deepEqual(views(T), ['areas', 'sources', 'eas', 'capacity'], 'at Peel: Files and FSR review are not an area’s');
+  cur = { kind: 'plant' }; T.rescope();
+  assert.deepEqual(views(T), ['pipeline', 'sources', 'timing', 'capacity'], 'at a plant: Pipeline, its own Sources, DC timing, Capacity');
+  for (const k of ['ps', 'block', 'zone', 'wsys']) { cur = { kind: k }; T.rescope(); assert.deepEqual(views(T), ['pipeline', 'sources', 'timing', 'capacity'], k); }
+  cur = null; T.rescope();
+  assert.deepEqual(views(T), ['areas', 'sources', 'eas', 'capacity'], 'back at Peel: the picks come back');
+  dev = { key: 'k' }; T.rescope();
+  assert.deepEqual(views(T), ['pipeline', 'files', 'timing', 'fsr'], 'at a development: Files and FSR review come back');
+  dev = null; T.rescope();
+  assert.deepEqual(views(T), ['areas', 'sources', 'eas', 'capacity']);
+  // t=records&rs=checks&ss=plant:…: Records › Data checks at that scope (share.js sets ss before the tab: pinned below).
+  cur = { kind: 'plant' };
+  T = loadTabsAt({ footTab4: 'records', rSub: 'checks' }, at);
+  assert.deepEqual([T.getFootTab(), T.getRSub()], ['records', 'checks']);
+  assert.equal(T.scopeKind(), 'svc');
+  // A drawn area: no Records tab. A link's or a stored t=records opens Overview, never held; the stored tab unchanged.
+  cur = { kind: 'result', rkind: 'sel' };
+  T = loadTabsAt({ footTab4: 'records', gSub: 'areas', svcSub: 'pipes', dcSub: 'projects' }, at);
+  assert.deepEqual([T.getFootTab(), T.wantedTab(), T.getFootPref()], ['overview', 'overview', 'records']);
+  T.showFootTab('records', 'checks');
+  assert.deepEqual([T.getFootTab(), T.wantedTab(), T.getRSub()], ['overview', 'overview', 'checks'], 'the pick kept for an area');
+  assert.equal(T.scopeKind(), 'drawn');
+  T.showFootTab('growth'); assert.deepEqual(views(T), ['pipeline', 'checks', 'timing', 'capacity'], 'gs=areas, svs=pipes, dcs=projects: Pipeline, Capacity, DC timing there');
+  T.showFootTab('svc'); assert.equal(T.getFootTab(), 'svc');
+  // The selection closes (closeResult → rescope): the open tab again at Peel, with the picks back.
+  cur = null; T.rescope();
+  assert.deepEqual([T.getFootTab(), ...views(T)], ['svc', 'areas', 'checks', 'projects', 'pipes']);
+  // On Overview it stays on Overview (as after any result), the strip back: Records opens again.
+  cur = { kind: 'result', rkind: 'sel' }; T.showFootTab('records'); cur = null; T.rescope();
+  assert.equal(T.getFootTab(), 'overview'); T.showFootTab('records'); assert.equal(T.getFootTab(), 'records');
+  // A cold ss=dr:B12 (a block, station or zone resolves once js/svc-data.js fills the lookup): Peel's views,
+  // then loadServicing's rescope turns them to the block's.
+  let blk = null;
+  T = loadTabsAt({ footTab4: 'growth', gSub: 'areas' }, { PeelSvcScope: { current: () => blk, peelWideNote: () => {} } });
+  assert.deepEqual([T.getFootTab(), T.getGSub(), T.scopeKind()], ['growth', 'areas', 'area']);
+  blk = { kind: 'block' }; T.rescope();
+  assert.deepEqual([T.getFootTab(), T.getGSub(), T.scopeKind()], ['growth', 'pipeline', 'svc']);
+  assert.match(src('js/svc-data.js'), /App\(\)\.applyFilters\(\);\n\s+if \(AT\(\)\.rescope\) AT\(\)\.rescope\(\);/);
+  // share.js applies ss before it opens the link's tab (so the tab opens at the scope's kind).
+  const sh = src('js/share.js');
+  assert.ok(sh.indexOf('else App().state.ss = ss; }') > 0 && sh.indexOf('else App().state.ss = ss; }') < sh.indexOf('      AT().showFootTab(AT().getFootPref());'), 'ss before the tab');
+  // Every kind's chips: ≤ 4, each a sub-view of its tab; a tab left out has none.
+  for (const kind of Object.keys(AT.HIDDEN)) for (const tab of Object.keys(AT.TABSUBS)) {
+    const c = plain(AT.chipsAt(tab, kind));
+    assert.ok(c.length <= 4 && c.every(v => AT.TABSUBS[tab].valid.includes(v)), `${kind} › ${tab}: ${c}`);
+    if (AT.tabOff(kind, tab)) assert.deepEqual(c, [], `${kind} › ${tab} left out`);
+  }
+  assert.deepEqual(Object.keys(AT.HIDDEN), ['site', 'area', 'svc', 'drawn', 'file']);
+  // ss=iiblock:<n> (an old block link), the blocks layer's tap and [data-block]: the block's servicing scope dr:B<n>
+  // once the servicing lookup and the model are in; its card where no servicing area resolves, and on a link's
+  // last try while they are still out (the link kept; the scope once the model is built: click-destinations).
+  const win = { PeelUtil: require('../js/util.js'), PeelDemand: {}, PeelPhases: {} };
+  const sctx = { window: win, document: { addEventListener() {} }, module: undefined, globalThis: {} };
+  require('node:vm').runInNewContext(src('js/svc-scope.js'), sctx);
+  assert.equal(win.PeelSvcScope.blockRef('12'), 'dr:B12');
+  const sc = src('js/svc-scope.js');
+  assert.match(sc, /\n {4}iiblock: \(id, last\) => \{\n {6}const ready = App\(\)\.state\.servicing && SD\(\)\.svcById\.size && App\(\)\.state\.svcModel, ref = blockRef\(id\);\n {6}if \(ready && resolve\(ref\)\) \{ open\(ref\); return true; \}\n {6}if \(!ready && !last\) return false;\n {6}if \(!ST\(\) \|\| !ST\(\)\.showBlock\) return true;\n {6}const r = ST\(\)\.showBlock\(id, \{ card: true \}\);\n/);
+  const st = src('js/sewer-trace.js'), sb = st.slice(st.indexOf('async function showBlock('));
+  assert.ok(sb.indexOf('S.blockRef(id)') < sb.indexOf('await '), 'the scope before any wait');
+  { const g = sb.indexOf('A.state.svcModel && S.resolve(ref)'); assert.ok(g > 0 && g < sb.indexOf('await '), 'the scope once the model is in, else the card'); }
+  assert.match(st, /\.on\('click', ev => \{ L\.DomEvent\.stop\(ev\); showBlock\(b\.id\); \}\)/, 'the blocks layer’s tap');
+  assert.match(st, /const bb = e\.target\.closest\('\[data-block\]'\); if \(bb\) showBlock\(bb\.dataset\.block\);/, '[data-block]');
+  assert.match(src('js/app.js'), /showBlock: id => window\.PeelSewerTrace\.showBlock\(id\),/, 'App().showBlock');
+  // The link it writes: ss=dr:B<n> (a servicing scope's ref, kept as it is); iiblock only for the fallback card.
+  assert.match(sh, /!\/\^\(pipe\|file\|dcwork\|iiblock\|ea\|cap\):\/\.test\(App\(\)\.state\.ss\) \? null : App\(\)\.state\.ss\);/);
+});

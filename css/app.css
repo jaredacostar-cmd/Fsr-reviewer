@@ -2568,6 +2568,8 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 .f-tab[aria-busy="true"] { color: var(--text-muted); }
 .f-tab[aria-busy="true"]::after { content: ' · loading'; font-size: var(--fs-1); font-weight: 400; }
 .f-tab.f-tab-held { color: var(--text-primary); border-bottom: 2px dashed var(--accent); }
+/* A tab its scope leaves out (navigation phase 8: a drawn area's Records): never [hidden], which reads as not loaded yet. */
+.f-tab.f-tab-off { display: none; }
 @media (max-width: 700px) { .f-tab[aria-busy="true"]::after { content: ' …'; } }
 .f-subtabs:not([hidden]) { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
 .f-subtabs .btn { white-space: nowrap; }

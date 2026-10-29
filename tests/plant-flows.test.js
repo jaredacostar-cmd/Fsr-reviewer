@@ -36,5 +36,11 @@ test('plant flow chart and summary render from the data', () => {
   assert.doesNotMatch(PF.summary('Inglewood'), /two lake plants/);
   assert.equal(PF.chartHTML('Toronto'), '');
   assert.match(global.window.ModelChecks.plantFlows.html, /Matches/);
+  // A plant's own Records › Data checks (navigation phase 8a): its rows only; '' for a plant the file does not check.
+  const rowsOf = h => [...h.matchAll(/<tr><td>([^<]+) \d{4}<\/td>/g)].map(m => m[1]);
+  assert.ok(rowsOf(PF.checksHTML('Clarkson')).length >= 5 && rowsOf(PF.checksHTML('Clarkson')).every(n => n === 'Clarkson'), 'Clarkson rows only');
+  assert.equal(PF.checksHTML('Inglewood'), '');
+  assert.deepEqual([...new Set(rowsOf(PF.checksHTML()))], ['G.E. Booth', 'Clarkson'], 'no plant: every row, as before');
+  assert.equal(PF.checksHTML(), global.window.ModelChecks.plantFlows.html);
   delete global.window;
 });

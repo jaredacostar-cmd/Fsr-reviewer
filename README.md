@@ -457,10 +457,14 @@ from street zoom (14), up to 3,000 in view.
   inflow & infiltration program (`data/blocks.json`, from its *Block_view* feature service; the blocks
   of "Dragonfly: An Integrated Approach to Resiliency", F. Salehzadeh, WEFTEC 2024), with the blocks
   prioritised for a block study highlighted; each block's number sits at a point inside it (`lp`), in
-  the marker pane so it stays on its block when the map is turned to the road grid. Tap a block for its outlets on the existing sewers (main
-  outlet with capacity and people upstream), the blocks it drains into down to the plant and the
-  distance along the pipes, the blocks upstream and the growth inside it; arrows on the map follow the
-  sewers to the plant. Rebuild with `node scripts/build-blocks.js` (or the `dragonfly` probe mode).
+  the marker pane so it stays on its block when the map is turned to the road grid. Tap a block to open it as a
+  servicing scope (navigation phase 8a: Peel › plant › Block N, as a search pick opens it): its Overview's fold *The
+  block in the I&I program* lists its outlets on the existing sewers (main outlet with capacity and people
+  upstream, the other outlets as pipe buttons), the 300 mm+ mains inside it and the distance along the pipes to
+  the plant; the rest of its Overview the blocks it drains into down to the plant (its ladder), the blocks
+  upstream and the growth loading it; the map outlines the block and the blocks upstream, with arrows to the plant.
+  Where a block has no servicing area (no plant), and until the servicing model is built, its card opens as before.
+  Rebuild with `node scripts/build-blocks.js` (or the `dragonfly` probe mode).
 - **Flow arrows follow the pipes**: a selected catchment's (and block's) arrows to the treatment plant
   run along the Region's sanitary mains (`data/sewers.json`), not straight outlet-to-outlet lines.
 - **Pipe depths in the ground profile** (Measure): the Region's sanitary sewer inverts along the line
@@ -2326,6 +2330,76 @@ Old names still land (`js/workspaces.js` `PAGE_ALIAS`, `HOST`, `startScreen`; te
 
 No page id, tab key, share parameter or pane id is renamed or moved: every §7 link holds.
 
+## Every scope kind (navigation phase 8)
+
+Navigation phase 8 (docs/architecture-review/navigation-design.md §3.4, §3.5, §8 row 8, §5 rows 146–147 and
+150–156, §7.2; pros-and-cons NP-8, N-7, N-RULE; owner decisions 5, 7 and 11). Every scope the map's panel can
+show has one kind, and one row of the scope × tab matrix says which tabs and views it shows. It comes in two
+parts (NP-8 with change): **8a**, servicing scopes and drawn areas (below), and 8b, files and cards.
+
+### Servicing scopes and drawn areas (8a)
+
+- **One kind per scope** (`js/analysis-tabs.js` `kindOf` / `scopeKind()`): `site` (a development; a result
+  kept at it, the Inquiry draft, keeps its tabs), `area` (Peel, a municipality, a plan), `svc` (a plant, a
+  pumping station, a wastewater block, a pressure zone, the South Peel water system), `drawn` (a selection,
+  drawn or the developments inside a constraint layer: `sel:`) and `file` (`file:`); every other result is
+  `area` until 8b. One kind for every tab (the per-tab file rule went into the `file` row).
+- **What each kind shows** (`HIDDEN`; ≤ 4 chips each):
+
+  | Kind | Growth | Servicing | Capital | Records |
+  |---|---|---|---|---|
+  | Development (`site`) | its one view (its units) | Network · FSR review | its one view (the DC projects it relies on) | its one view (its files) |
+  | Area (`area`) | Pipeline · Areas · Forecast | Capacity · Network · Old pipes | DC timing · EAs · Projects | Sources · Data checks |
+  | Servicing scope (`svc`) | Pipeline · Forecast | Capacity · Network · Old pipes | DC timing | its own Sources · Data checks |
+  | Drawn area (`drawn`) | Pipeline · Forecast | Capacity · Network | DC timing | (no Records tab) |
+  | File (`file`) | as an area | Capacity · Network · Old pipes | as an area | the file (Files) |
+
+- **A whole tab left out**: a drawn area has no Records tab (`HIDDEN.drawn.records = '*'`): its button is
+  left out of the map's strip (`.f-tab-off`, never the `hidden` attribute, which means "loading" to the strip
+  and the page host), it has no chips, and a link or pick of it opens Overview. When the scope closes
+  (`js/svc-scope.js` `clear()` / `closeResult()`, and once the servicing lookup fills for a cold link:
+  `rescope()`), the strip, the chips and a view it replaced come back, and an open tab redraws for the new scope.
+- **Records at a servicing scope is its own** (`js/records-tab.js` `svcSourcesSpec` / `svcChecksSpec`, was
+  *"… has no files of its own"* above Peel's sources). **Sources**: where its capacity comes from and its date
+  (a plant's rated capacity: the Region's 2025 annual report, its 90% trigger the 2020 Master Plan; a station's
+  firm capacity: the 2020 Master Plan; South Peel: the annual report; a zone or a block: no published capacity
+  of its own), its map layer, and the rows of Peel's freshness table it rests on. **Data checks**: a plant's
+  2025 annual report against the model, the Ministry's measured flow against the report, its pumping stations
+  against the collection system report's roster; a station's place on the roster; South Peel's 2025
+  production; a zone or block has none, said in one line. The Ministry's and the roster's rows say *Loads when
+  needed* until `data/plant-flows.json` / `data/ww-events.json` are in, then fill in place. The trail's Peel
+  step and the footer lead back to Peel's; Review outlets stays reached from Records › Data checks (owner
+  decision 5); Peel's live-data controls stay under Records › Sources at Peel (owner decision 7); a plant's
+  overflows and measured flow stay on its Overview (owner decision 11).
+- **A wastewater block is its servicing scope** (§5 row 153): tapped on the blocks layer, a `[data-block]`
+  button or an old `ss=iiblock:<n>` link opens `dr:B<n>` (`js/svc-scope.js` `blockRef`; js/sewer-trace.js
+  `showBlock`), Peel › plant › Block N with every tab at it, the link `ss=dr:B<n>`. Its I&I program facts are
+  the fold *The block in the I&I program* (`blockFactsHTML`: prioritised, its area, the outlets as pipe buttons,
+  the 300 mm+ mains inside it, the distance to the plant; filled once the sewers are in); its ladder names every
+  block it drains through down to the plant, as the card's *Drains to* did. On a phone a tap raises the sheet from
+  its peek, as the card did. The old card stays where no servicing area resolves and until the servicing model is
+  built (a slow or missing census: a tap then opens the card, as before 8a). An old link waits for the servicing
+  lookup and the model (retried as every shared result is, 20 s); still out at the last try (a late file, no
+  census) it opens the card, the link kept, and the block's scope replaces that card once the model is built
+  (`settleLate`, from `renderSvcTab`). Until the model is built a servicing scope's panel says it is loading (a
+  link, a search pick), as its full table does.
+- **Phones**: the strip has fewer tabs, never more; the new rows wrap and the fold's buttons are short
+  (*900 mm*); nothing makes the panes scroll sideways at 390 px.
+
+Old links and stored picks still land (`js/analysis-tabs.js` `HIDDEN` / `subFor`, `js/svc-scope.js` `RESTORE`;
+tests/nav-aliases.test.js "phase 8a"):
+
+| Old | Where it opens now |
+|---|---|
+| `ss=iiblock:<n>`, the blocks layer's tap, `[data-block]`, `App().showBlock(id)` | The block's servicing scope `dr:B<n>` (Overview); its card where no servicing area resolves or before the servicing model is built (an old link: on its last try, the scope once the model is in) |
+| `t=records&rs=sources\|checks&ss=<plant:, wsys:, dr:, pz:, ps: ref>` | Records at that scope, its own Sources / Data checks (a block, station or zone once the servicing lookup fills: Peel's until then) |
+| `rs=files`, a stored `rSub: 'files'` at a servicing scope | Records › Sources there; Files again at a development |
+| `gs=areas`, a stored Areas pick, at a servicing scope or a drawn area | Growth › Pipeline there; Areas again at an area |
+| `svs=pipes\|fsr` at a drawn area; `dcs=eas\|projects` at a servicing scope or a drawn area | Servicing › Capacity / Capital › DC timing there; the pick back at an area |
+| `t=records`, a stored `footTab4: 'records'`, while a selection is open | Overview (no Records tab there); the stored tab unchanged, so the next visit opens Records |
+
+No page id, tab key, share parameter or pane id is renamed: every §7 link holds.
+
 ## Help and This week
 
 - **Help** is one sidebar entry, four sections: **Start here**, **How it works** (and each guide), the
@@ -2604,7 +2678,8 @@ Before this change, tapping one gave a "What loads this?" tool result.
 | Water | Peel › South Peel water › pressure zone (well-based zones stand alone) |
 
 **Opening a scope.** You can open one by:
-- tapping it on the map ("What loads this?" now opens the scope);
+- tapping it on the map ("What loads this?" now opens the scope; a wastewater block on the blocks layer too
+  since navigation phase 8a);
 - tapping a plant or South Peel water in the Peel Overview's capacity bars;
 - searching for its name (plants, stations, blocks and zones are all searchable; from a page it
   opens on the map);
@@ -2636,7 +2711,11 @@ Before this change, tapping one gave a "What loads this?" tool result.
     | Water system | its zones (down) |
 
   - the developments loading it, largest peak first, with *See all* and *Area report*;
-  - the planned DC works in it.
+  - the planned DC works in it;
+  - a block: the fold *The block in the I&I program* (its outlets, the mains inside it, the distance to the
+    plant; navigation phase 8a).
+- Its other tabs show its views (Growth › Pipeline · Forecast, Servicing, Capital › DC timing) and its own
+  Records (navigation phase 8a: see *Every scope kind*).
 
 From the Peel Overview, "the most loaded station and the developments driving it" now takes two
 taps: the plant, then the top station.

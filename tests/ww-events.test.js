@@ -26,3 +26,21 @@ test('station names match between the report and the GIS layer', () => {
   assert.equal(W.key('Clarkson · Richards Memorial PS'), W.key('RICHARD MEMORIAL SEW. PUMP STN'));
   delete global.PeelApp;
 });
+
+// A plant's or a station's own Records › Data checks (navigation phase 8a): its stations against the roster.
+test('a scope\u2019s stations against the roster: rosterHTML(names), onRoster', () => {
+  require('../js/ww-events.js');
+  const W = globalThis.PeelWwEvents;
+  global.PeelApp = { state: { wwEvents: null } };
+  assert.equal(W.onRoster('Beach Street'), null, 'null while the data is out');
+  assert.equal(W.rosterHTML(['Clarkson · Richards Memorial PS']), '');
+  global.PeelApp = { state: { wwEvents: D } };
+  assert.equal(W.onRoster('RICHARD MEMORIAL SEW. PUMP STN'), true);
+  assert.equal(W.onRoster('Clarkson · Watersedge PS'), true);
+  assert.equal(W.onRoster('Nowhere PS'), false);
+  assert.equal(W.onRoster(''), false);
+  assert.match(W.rosterHTML(['Clarkson · Richards Memorial PS', 'Clarkson · Watersedge PS']), /<h3 class="sub-title">Pumping stations: open GIS layer against the collection system report<\/h3>\s*<p class="small">2 of 2 on the report's roster \(Appendix A\)\.<\/p>/);
+  assert.match(W.rosterHTML(['Clarkson · Watersedge PS', 'Nowhere PS']), /1 of 2 on the report's roster \(Appendix A\); not on it: Nowhere PS/);
+  assert.match(W.rosterHTML([]), /No traced pumping station drains here\./);
+  delete global.PeelApp;
+});
