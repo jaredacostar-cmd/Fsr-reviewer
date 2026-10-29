@@ -1722,13 +1722,6 @@ details.sub-sect > summary .sect-sum { margin-left: auto; }
 .sheet-grip { display: none; width: 100%; justify-content: center; border: 0; background: none; padding: var(--space-1) 0 var(--space-3); margin: -10px 0 0; cursor: ns-resize; touch-action: none; }
 .sheet-grip span { width: 44px; height: 5px; border-radius: 4px; background: var(--border); }
 .sheet-grip.dragging span { background: var(--accent); }
-/* Demand year slider on the map (above the legend). */
-.map-year { background: color-mix(in srgb, var(--surface-1) 94%, transparent); border-radius: var(--radius-panel); padding: var(--space-2) var(--space-2) var(--space-1); font-size: var(--fs-2); width: 280px; box-shadow: var(--shadow); color: var(--text-primary); }
-.map-year[hidden] { display: none; }
-
-.map-year input { width: 100%; margin: var(--space-1) 0 0; }
-
-@media (max-width: 700px) { .map-year { width: 170px; font-size: var(--fs-1); padding: var(--space-1) var(--space-2) 0; } .map-year input { height: 28px; } }
 /* Development Servicing tab: trace tool first, then Water / Wastewater / Site sections. */
 .svc-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-1) var(--space-2); margin: var(--space-2) 0 var(--space-1); }
 .svc-actions .trace-out { flex-basis: 100%; }
@@ -2107,11 +2100,6 @@ body.print-map .ww-loads { background: var(--on-tint); color: var(--ink-fixed); 
 @media (max-width: 700px) { .mpc-cell { min-width: 120px; } }
 @media (max-width: 700px) { .mpc-table .mpc-x { display: none; } .mpc-table .mpc-st { font-size: var(--fs-1); } }
 
-/* Demand year: on top of the timeline box. */
-.timebar .map-year { width: auto; border: 0; border-radius: 0; box-shadow: none; background: none; padding: 0 0 var(--space-2); margin: 0 0 var(--space-2); border-bottom: 1px solid var(--border); font-size: var(--fs-2); }
-.timebar .map-year[hidden] { display: none; }
-
-.timebar.folded .map-year { min-width: 220px; }
 .sheet-hide { display: none !important; }
 
 /* Tour: chapters, progress dots, card beside the highlight. */

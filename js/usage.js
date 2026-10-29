@@ -1,16 +1,16 @@
-/* js/usage.js — Stage 5 (pilot support): how often each workspace, tab and sub-view is opened.
+/* js/usage.js — Stage 5 (pilot support): how often each page, tab and sub-view is opened.
  *
  * Local and anonymous: counts per day, kept in this browser only (localStorage), never sent
- * anywhere. Only fixed names are counted (a workspace, a tab, a sub-view, "full map", a role key,
+ * anywhere. Only fixed names are counted (a page, a tab, a sub-view, "full map", a role key,
  * the kind of place a search found): no developments, no search text, no addresses, nothing about
  * the person. Settings › Usage shows the counts and exports them as CSV, so the pilot's users can
  * send them in.
  *
  * What counts is a person's click (or Enter on a focused control), not the app moving itself:
  *   start  how the app opened: home / ws / full (+ "-link" when it opened from a link)
- *   page   a workspace page (or Home) opened         map    a workspace's map view opened
+ *   page   a page (or Home) opened                   map    a page's map view opened
  *   full   Full map opened                           tab    an analysis tab picked
- *   sub    a sub-view picked (tab.sub)               side   a sidebar tab picked (Find, Watch)
+ *   sub    a sub-view picked (tab.sub)               side   a left-panel tab picked (Find, Watch)
  *   issue  "Report a data issue" followed (by panel kind)
  *   role   the role picked (a ROLES key, or none), once per visit (navigation phase 7, NP-7)
  *   search a search pick, by the kind of place it found (dev, file, plan, …), never its text (P4-10)
@@ -88,12 +88,13 @@
   }
   const TABS = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records', explore: 'Find', week: 'Watch', data: 'Data' };
   const SUB_ATTR = { gsub: 'growth', svcsub: 'svc', dcasub: 'dca', rsub: 'records' };
-  // Labels for the CSV and Settings: the workspaces' names, the tabs', the sub-view chips' own text.
+  // Labels for the CSV and Settings: the pages' names as the reader knows them (W.pageLabel: an area page by its view),
+  // the tabs', the sub-view chips' own text. (labels only: the kind:id keys stay, so the CSVs stay comparable)
   function labels() {
-    const L = { full: 'Full map', 'page:home': 'Home', 'map:home': 'Home', 'start:home': 'Opened on Home', 'start:ws': 'Opened on a workspace map', 'start:full': 'Opened on the full map', 'start:home-link': 'Opened on Home from a link', 'start:ws-link': 'Opened on a workspace map from a link', 'start:full-link': 'Opened on the full map from a link' };
+    const L = { full: 'Full map', 'page:home': 'Home', 'map:home': 'Home', 'start:home': 'Opened on Home', 'start:ws': 'Opened on a page’s map view', 'start:full': 'Opened on the full map', 'start:home-link': 'Opened on Home from a link', 'start:ws-link': 'Opened on a page’s map view from a link', 'start:full-link': 'Opened on the full map from a link' };
     const W = root.PeelWorkspaces;
-    for (const w of (W && W.WS) || []) { L[`page:${w.id}`] = `${w.label} (page)`; L[`map:${w.id}`] = `${w.label} (map view)`; }
-    for (const [k, t] of Object.entries(TABS)) { L[`tab:${k}`] = t; L[`side:${k}`] = `${t} (sidebar)`; L[`issue:${k}`] = `Report a data issue (${t})`; }
+    for (const w of (W && W.WS) || []) { const n = W.pageLabel ? W.pageLabel(w.id, true) : w.label; L[`page:${w.id}`] = `${n} (page)`; L[`map:${w.id}`] = `${n} (map view)`; }
+    for (const [k, t] of Object.entries(TABS)) { L[`tab:${k}`] = t; L[`side:${k}`] = `${t} (left panel)`; L[`issue:${k}`] = `Report a data issue (${t})`; }
     L['issue:page'] = 'Report a data issue (a page)';
     // (navigation phase 7: Find and Help are Home's sidebar entries, not workspaces; the roles by their own label)
     L['page:find'] = 'Find (page)'; L['page:help'] = 'Help (page)'; L['role:none'] = 'Role: none picked';
@@ -146,7 +147,7 @@
     const top = Object.entries(t).filter(([k]) => !/^(start|role)\b/.test(k)).sort((a, b) => b[1] - a[1]);
     const opens = Object.entries(t).filter(([k]) => k.startsWith('start')).reduce((s, [, n]) => s + n, 0);
     return `<section class="gear-sec" id="usage-sec"><h3>Usage in this browser (pilot)</h3>
-      <p class="small muted">How often each workspace, tab and sub-view is opened here${d.since ? `, since ${esc(d.since)}` : ''}: counts only, kept in this browser and never sent. No developments, search text or names are counted: a search counts only what kind of place it found. Export the CSV to send it in.</p>
+      <p class="small muted">How often each page, tab and sub-view is opened here${d.since ? `, since ${esc(d.since)}` : ''}: counts only, kept in this browser and never sent. No developments, search text or names are counted: a search counts only what kind of place it found. Export the CSV to send it in.</p>
       ${top.length ? `<table class="usage-t small"><thead><tr><th>Opened</th><th class="num">Times</th></tr></thead><tbody>${top.slice(0, 10).map(([k, n]) => `<tr><td>${esc(L[k] || k)}</td><td class="num">${fmtNum(n)}</td></tr>`).join('')}</tbody></table>${top.length > 10 ? `<p class="small muted">and ${fmtNum(top.length - 10)} more in the CSV.</p>` : ''}` : '<p class="small muted">Nothing counted yet.</p>'}
       <p class="small muted">${fmtNum(opens)} ${opens === 1 ? 'visit' : 'visits'} counted.</p>
       <p><button type="button" class="btn small" data-usage-csv>Export CSV</button> <button type="button" class="btn small link" data-usage-reset>Reset counts</button></p></section>`;

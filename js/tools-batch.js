@@ -6,7 +6,7 @@
  *
  * Contract:
  *   window.PeelToolBatch = { open() }
- * open() shows a file input + format help in the Tool result pane via
+ * open() shows a file input + format help in the result pane (#scope-body) via
  * PeelTools.openResult. Another worker wires the "Batch from CSV" entry point;
  * open() works standalone.
  *

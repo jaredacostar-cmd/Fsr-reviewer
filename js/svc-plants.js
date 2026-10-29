@@ -291,7 +291,7 @@
     const rows = MP().MP2020.ww.map(r => { const c = M.plantCap(r.pl); return c ? MP().mpRowHTML(r.name, '', r.cap, 'rated (MP: 90%)', r.mp, r.ref, c.existing, c.committed - c.existing, c.buildout - c.committed, `${M.mode === 'calibrated' ? '2025 flows' : 'design'} + built`) : ''; }).join('');
     return `<section class="mpc" data-info="mp-compare"><h3 class="svc-sub">2020 Master Plan vs this tracker <span class="muted small">average day flow, ML/d</span></h3>${MP().mpLegend}
       <div class="table-wrap"><table class="dt mpc-table"><thead>${MP().mpHead('Build-out against the Master Plan')}</thead><tbody>${rows}</tbody></table></div>
-      <p class="small muted">Master Plan: forecast average daily flow by plant without east–west transfers (Vol. 4, Tables 7–8; G.E. Booth includes York and Toronto agreement flows). Tracker: the plant's sewershed today (${M.mode === 'calibrated' ? 'calibrated to 2025 flows' : 'design flows'}, with external inflows) + approved + proposed developments, as in the Plants tab chart. “≈ the MP's year” reads off when the Master Plan expected that flow.</p></section>`;
+      <p class="small muted">Master Plan: forecast average daily flow by plant without east–west transfers (Vol. 4, Tables 7–8; G.E. Booth includes York and Toronto agreement flows). Tracker: the plant's sewershed today (${M.mode === 'calibrated' ? 'calibrated to 2025 flows' : 'design flows'}, with external inflows) + approved + proposed developments, as in the plants’ charts (Servicing › Capacity, its full table). “≈ the MP's year” reads off when the Master Plan expected that flow.</p></section>`;
   };
   // ---- Phase 4: effluent exceedances moved from the Plants tab into the plant's map pop-up
   // (showLoads): one line per plant.

@@ -49,8 +49,8 @@ test('a tour never leaves a development, a selection or the Watch tab open', () 
 
 test('the map tour\'s text matches the app: stages, the legend, Servicing, Capital, Records, Watch, Forecast', () => {
   const t = src('js/tips.js'), tour = t.slice(t.indexOf('const TOUR = ['), t.indexOf('const HELP = ['));
-  for (const stale of ["t: 'Phases'", 'Water and Wastewater for capacity', 'DC for timing', "t: 'Wastewater'", "t: 'Timing forecast'", "t: 'This week: watchlist", 'Files & history', 'The Demand year', 'How developments are coloured', '#ov-dev', "tourShow('overview', 'files')", '#site-bar']) assert.ok(!tour.includes(stale), `stale: ${stale}`);
-  for (const now of ["t: 'Stages'", 'Servicing for capacity', 'Capital for DC timing', 'Records for the files', "t: 'Watch: your watchlist", "t: 'Forecast'", 'History and source records']) assert.ok(tour.includes(now), `missing: ${now}`);
+  for (const stale of ["t: 'Phases'", 'Water and Wastewater for capacity', 'DC for timing', "t: 'Wastewater'", "t: 'Timing forecast'", "t: 'This week: watchlist", 'Files & history', 'The Demand year', 'How developments are coloured', '#ov-dev', "tourShow('overview', 'files')", '#site-bar', 'Tool result tab', 'posts alerts', "ch: 'This week'"]) assert.ok(!tour.includes(stale), `stale: ${stale}`);
+  for (const now of ["t: 'Stages'", 'Servicing for capacity', 'Capital for DC timing', 'Records for the files', "t: 'Watch: your watchlist", "t: 'Forecast'", 'History and source records', "ch: 'Watch'", 'opens on Overview, a scope of its own']) assert.ok(tour.includes(now), `missing: ${now}`);
 });
 
 test('phone: Home\'s menu is ☰ in the top bar; page actions in a bar at the bottom; scenario and years in the panel', () => {

@@ -97,7 +97,7 @@
       method: 'Each source with the date of the data the app holds and how often it is refreshed; due = past its refresh interval, stale = past twice that. The reports behind the design criteria and the comparisons are listed in the full table. Every data file\u2019s source link, date and SHA-256 fingerprint are under Every data file; Copy citation gives one line to quote.',
       sources: 'Municipal open data (applications, permits, plans), Region of Peel open data and reports, Statistics Canada, CMHC, the Ministry of Finance.',
       // (bundle 6: the old Data tab's refresh and source list are in the full table)
-      foot: { primary: { label: 'Refresh and manage sources', attrs: { 'data-full-table': 'records' }, title: 'Refresh live, switch or add a source (was the Data tab)' }, secondary: [{ label: 'Copy share link', attrs: { 'data-share': '' } }] },
+      foot: { primary: { label: 'Refresh and manage sources', attrs: { 'data-full-table': 'records' }, title: 'Refresh live, switch or add a source' }, secondary: [{ label: 'Copy share link', attrs: { 'data-share': '' } }] },
     };
   }
   function checksPanelSpec() {
@@ -118,7 +118,7 @@
         { title: 'Where developments discharge', rows: [{ attrs: { 'data-ws-page': 'outlets', title: 'Review outlets: check and fix where each development discharges' }, html: `<div class="pnl-r-top"><span class="pnl-r-name">Review outlets →</span>${n == null ? '' : `<span class="pnl-r-fig">${fmtNum(n)}<small>to review</small></span>`}</div><small class="pnl-r-line">${OUTLETS.what}</small>` }], total: 1 }],
       method: 'Records read from each municipality are grouped into unique files and developments; the checks count what could not be placed or matched. The model against published totals, the permit check (fail beyond 25%) and the accuracy report are in the full table. The servicing model: the 2020 Master Plan, the 2025 reports, the Ministry\u2019s plant flow and the station roster (full table, Servicing model). Calibration factor = (reported − external inflows) ÷ the model today (census + built since, residential + development jobs), applied in the capacity check mode; I&amp;I is not scaled. Review outlets counts the developments still to review once Capital › DC timing has worked out the DC model.',
       sources: 'The municipal application and permit records; Region of Peel published totals and permit figures; for the servicing model, the 2020 Water and Wastewater Master Plan, the 2025 annual reports, the Ministry\u2019s plant flow data and the Wastewater Collection System report.',
-      foot: { primary: { label: 'Duplicate check', attrs: { 'data-full-table': 'records', 'data-ft-go': 'Units: every record' }, title: 'The duplicate check and the possible duplicate pairs (was the Data tab)' }, secondary: [{ label: 'Review outlets', attrs: { 'data-ws-page': 'outlets' }, title: 'Where each development discharges (QA/QC)' }] },
+      foot: { primary: { label: 'Duplicate check', attrs: { 'data-full-table': 'records', 'data-ft-go': 'Units: every record' }, title: 'The duplicate check and the possible duplicate pairs' }, secondary: [{ label: 'Review outlets', attrs: { 'data-ws-page': 'outlets' }, title: 'Where each development discharges (QA/QC)' }] },
     };
   }
   // ---- A servicing scope's own Records (navigation phase 8a, design §3.5, §4 #7) -----------------------------

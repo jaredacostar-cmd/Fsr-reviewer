@@ -73,7 +73,7 @@
     ['Region of Peel', 'Plans, builds and runs the water and wastewater systems; allocates servicing capacity; reviews functional servicing reports; sets and collects regional development charges; runs the Master Plan and the Class EAs for its works. Since July 1, 2024 it makes no planning approvals.', 'What this app screens, for the Region’s W&WW Infrastructure Planning team to validate.'],
     ['Brampton, Mississauga and Caledon', 'Official plans, zoning, plans of subdivision and condominium, site plans, the Committee of Adjustment and building permits.', 'Their open records are the developments and stages in the app.'],
     ['Conservation authorities', 'Credit Valley (CVC), Toronto and Region (TRCA) and Nottawasaga Valley (NVCA) regulate building near rivers, valleys, wetlands and floodplains (permits under the Conservation Authorities Act) and comment on natural hazards.', 'The constraints layers (regulated areas, floodplains).'],
-    ['The applicant', 'The owner or developer files the applications and their consultants prepare the studies, including the functional servicing report; the owner pays the development charges.', 'Review an FSR compares a report’s figures with the app’s.'],
+    ['The applicant', 'The owner or developer files the applications and their consultants prepare the studies, including the functional servicing report; the owner pays the development charges.', 'Servicing › FSR review (Check FSR at a development) compares a report’s figures with the app’s.'],
     ['Neighbours on the system', 'York Region and the City of Toronto send sewage into Peel’s system; some of Malton drains to Toronto’s; Peel’s lake plants also supply water to York Region and Halton.', 'The external inflows in the plant figures.'],
   ];
   function roles() {
@@ -128,7 +128,7 @@
     steps.push(['Sewage: peak dry weather', `average × Harmon peaking factor: 1 + 14 ÷ (4 + √(${num(e.population)} ÷ 1,000)) = ${two(e.wastewater.peakingFactor)}`, `<b>${one(e.wastewater.peak)}</b> L/s`, `The factor falls as the population grows: many homes do not peak together. Peel limits it to ${one(ww.peakMin)}–${one(ww.peakMax)}.`]);
     steps.push(['Sewage: peak wet weather', `peak dry + I&amp;I: ${two(ww.infiltration)} L/s per hectare × ${two(x.ha)} ha = ${one(e.wastewater.infiltration)} L/s`, `<b>${one(e.wastewater.wetPeak)}</b> L/s`, 'Rain and groundwater that get into the sewers. Sewers and pumping stations are sized for this flow.']);
     const mld = e.wastewater.avg * 0.0864;
-    if (x.plant && x.plant.rated > 0) steps.push(['Its share of the plant', `${one(e.wastewater.avg)} L/s × 0.0864 = ${two(mld)} ML/d, against ${esc(x.plant.name)}’s rated ${num(x.plant.rated)} ML/d`, `<b>${two(mld / x.plant.rated * 100)}%</b> of rated`, `The plant check adds this to everything else on the plant (Servicing capacity).${x.zone ? ` Water: ${esc(x.zone)}.` : ''}`]);
+    if (x.plant && x.plant.rated > 0) steps.push(['Its share of the plant', `${one(e.wastewater.avg)} L/s × 0.0864 = ${two(mld)} ML/d, against ${esc(x.plant.name)}’s rated ${num(x.plant.rated)} ML/d`, `<b>${two(mld / x.plant.rated * 100)}%</b> of rated`, `The plant check adds this to everything else on the plant (Servicing › Capacity).${x.zone ? ` Water: ${esc(x.zone)}.` : ''}`]);
     return steps;
   }
   function flowsHTML(x) {
@@ -153,9 +153,9 @@
           <li><strong>The capacity check.</strong> The plant comparison is scaled to each plant’s measured 2025 flow (the calibration factor); a development’s own flows stay at design criteria.</li>
           <li><strong>Fire flow</strong> (Fire Underwriters Survey) and <strong>pressures</strong> are not worked out here: the Region’s model and the consultant’s report cover them.</li>
         </ul>`),
-      method: `The app’s development estimate (Servicing at a site, and Review an FSR), at the Scenario’s criteria (Peel’s by default): Linear Wastewater Standards (R1.0, March 2023) for persons per unit, sewage rates, Harmon peaking and I&amp;I; the Modelling Demand Table (v2.0, August 2024) for water rates and factors. ${x.live ? 'Worked live from the development’s current record.' : 'From the example’s figures (the development is not loaded).'} ${NOTE_TAIL}`,
+      method: `The app’s development estimate (Servicing at a site, and its FSR review), at the Scenario’s criteria (Peel’s by default): Linear Wastewater Standards (R1.0, March 2023) for persons per unit, sewage rates, Harmon peaking and I&amp;I; the Modelling Demand Table (v2.0, August 2024) for water rates and factors. ${x.live ? 'Worked live from the development’s current record.' : 'From the example’s figures (the development is not loaded).'} ${NOTE_TAIL}`,
       sources: 'Region of Peel, Linear Wastewater Standards (2022, R1.0 March 2023), Tables 2-1 and 2-2, s. 2.2–2.6; Region of Peel, Water and Wastewater Modelling Demand Table, Site Plan applications (v2.0, August 2024).',
-      actions: [x.key ? { label: `Check ${x.title}`, attrs: { 'data-ws-pick': x.key, 'data-ws-as': 'site' }, primary: true } : { label: 'Check a site', attrs: { 'data-ws-page': 'site' }, primary: true }],
+      actions: [x.key ? { label: `Check ${x.title}`, attrs: { 'data-ws-pick': x.key, 'data-ws-as': 'site' }, primary: true } : { label: 'Find', attrs: { 'data-ws-page': 'site' }, primary: true }],
     });
   }
 
@@ -212,7 +212,7 @@
         + sec('app', 'How the app follows a site', `<ul class="rf-ul"><li><strong>Sewage:</strong> the site’s wastewater block is traced downstream, block to block, through its pumping stations to the plant (Servicing at a site, the path).</li><li><strong>Water:</strong> the site’s pressure zone, from the mapped zones, else the nearest zone or a planned main.</li><li><strong>Not traced:</strong> the local sewer and watermain pipe by pipe: left to the Region’s model.</li></ul>`),
       method: `Plant figures: the Region’s 2025 annual reports (rated capacity is the annual average daily flow). Service areas: the 2025 wastewater collection system report. ${NOTE_TAIL}`,
       sources: 'Region of Peel: G.E. Booth, Clarkson and Inglewood 2025 annual reports; 2025 wastewater collection system report; 2025 South Peel drinking water system report and Caledon water system summaries; 2020 Water and Wastewater Master Plan.',
-      actions: [{ label: 'Servicing capacity', attrs: { 'data-ws-page': 'tight' }, primary: true }],
+      actions: [{ label: 'Servicing › Capacity', attrs: { 'data-ws-page': 'tight' }, primary: true }],
     });
   }
 
@@ -247,7 +247,7 @@
       mid: capacityHTML(row),
       method: `Committed follows MECP Procedure D-5-1 at the treatment plants and the Peel rule (a site servicing or building permit) at every other facility. The tests are the 2020 Water and Wastewater Master Plan’s (Vol. 3 and 4). Sewer pipes are not compared here: pipe-by-pipe results are left to the Region’s model. ${NOTE_TAIL}`,
       sources: 'MECP Procedure D-5-1; Region of Peel, 2020 Water and Wastewater Master Plan for the Lake-Based Systems, Vol. 3 (water) and Vol. 4 (wastewater); Region of Peel 2025 plant annual reports.',
-      actions: [{ label: 'Servicing capacity', attrs: { 'data-ws-page': 'tight' }, primary: true }, { label: 'DC projects', attrs: { 'data-ws-page': 'projects' } }],
+      actions: [{ label: 'Servicing › Capacity', attrs: { 'data-ws-page': 'tight' }, primary: true }, { label: 'Capital › DC timing', attrs: { 'data-ws-page': 'projects' } }],
     });
   }
 
@@ -272,7 +272,7 @@
         + sec('errs', 'Common differences with the app’s figures', `<ul class="rf-ul"><li><strong>Persons per unit</strong> from another standard, or apartments at the high-density rate on a site that is not that dense (or the reverse).</li><li><strong>Peaking</strong> applied to the average including I&amp;I, or the factor not limited to 2.0–4.0.</li><li><strong>I&amp;I</strong> on the net instead of the gross site area, or left out.</li><li><strong>Jobs</strong> left out of a mixed-use site.</li><li><strong>Downstream capacity</strong> taken from an older study, before nearby approvals.</li></ul>`),
       method: `What the FSR should cover: Region of Peel, Functional Servicing Report Requirements (November 2009), with today’s design criteria (Linear Wastewater Standards R1.0, 2023; Modelling Demand Table v2.0, 2024; Watermain Design Criteria, 2010). Confirm the current requirements with the Region. ${NOTE_TAIL}`,
       sources: 'Region of Peel: Functional Servicing Report Requirements (2009); Linear Wastewater Standards (2023); Water and Wastewater Modelling Demand Table (2024); Public Works Watermain Design Criteria (2010).',
-      actions: [{ label: 'Review an FSR', attrs: { 'data-ws-page': 'fsr' }, primary: true }],
+      actions: [{ label: 'Servicing › FSR review', attrs: { 'data-ws-page': 'fsr' }, primary: true }],
     });
   }
 
@@ -311,10 +311,10 @@
       ] : [],
       mid: sec('steps', 'From the plan to in service', steps) + sec('app', 'The steps in the app', map)
         + sec('ea', 'The Class EA schedules', tableHTML(['Schedule', 'What it needs', 'EAs here'], schRows, 'The Class EA schedules'))
-        + sec('late', 'Late, close, in time', '<p>The <strong>DC projects</strong> page compares each project’s in-service year with the year the capacity it relieves runs out: <span class="t-over">late</span> when it comes after, <span class="t-tight">close</span> within two years, otherwise in time. A screen, not the Region’s schedule.</p>'),
+        + sec('late', 'Late, close, in time', '<p><strong>Capital › DC timing</strong> compares each project’s in-service year with the year the capacity it relieves runs out: <span class="t-over">late</span> when it comes after, <span class="t-tight">close</span> within two years, otherwise in time. A screen, not the Region’s schedule.</p>'),
       method: `The steps: Region of Peel 2020 Water and Wastewater Master Plan, the 2020 DC Background Study and by-law, and the Municipal Class EA (Municipal Engineers Association). The counts: the app’s EA and capital project listings (EAs of unknown schedule or status are not counted). ${NOTE_TAIL}`,
       sources: 'Region of Peel: capital projects and construction listings; environmental assessments listing; 2020 Water and Wastewater Master Plan; 2020 Development Charges Background Study. Municipal Engineers Association, Municipal Class Environmental Assessment.',
-      actions: [{ label: 'DC projects', attrs: { 'data-ws-page': 'projects' }, primary: true }],
+      actions: [{ label: 'Capital › DC timing', attrs: { 'data-ws-page': 'projects' }, primary: true }],
     });
   }
 
@@ -353,7 +353,7 @@
         + sec('read', 'How to read them', '<ul class="rf-ul"><li>A <strong>target</strong> counts homes started (and some beds); a <strong>forecast</strong> is where the Region plans the people to live; the <strong>pipeline</strong> is applications, many of which take years or change.</li><li>Servicing is planned to the <strong>forecast</strong>; DC projects are timed to it. Growth slower than forecast delays the need, not the works already committed.</li></ul>'),
       method: `Targets and progress: Ontario’s housing supply progress (as of ${esc(H && H.targets ? H.targets.asOf : '–')}). The 2051 allocation: the Region’s Land Needs Assessment update (draft, August 2024). The projection: Ministry of Finance, summer 2026 (reference scenario). The pipeline: the app’s developments, homes planned and not built. ${NOTE_TAIL}`,
       sources: 'Ontario Data Catalogue, Ontario’s housing supply progress; Region of Peel, Land Needs Assessment Report Update, appendices (August 2024, draft); Ontario Ministry of Finance population projections 2025–2051.',
-      actions: [{ label: 'Growth in an area', attrs: { 'data-ws-page': 'growth' }, primary: true }],
+      actions: [{ label: 'Growth › Areas', attrs: { 'data-ws-page': 'growth' }, primary: true }],
     });
   }
 
@@ -429,7 +429,7 @@
         + sec('record', 'Checked against what was built', history) + sec('cmhc', 'Which completions count', cmhc) + sec('limits', 'What it does not know', limits),
       method: `Time in stage: Kaplan–Meier tables by stage and size from the dated application and permit events since 2016 (to a site's first completion), in the municipalities that date completions (Mississauga; decided 2026-10-22); approval and completion rates from the 2016–2019 files. Beyond the history: the Ministry of Finance projection for Peel (July 1 population) over the people per new home in the Region's 2051 allocation, split by its new homes. Decided with the app's owner on 2026-10-17. ${NOTE_TAIL}`,
       sources: 'The application and permit records on the map (Mississauga, Brampton, Caledon); Ontario Ministry of Finance population projections 2025–2051; Region of Peel, Land Needs Assessment Report Update, appendices (August 2024, draft); Region of Peel housing construction activity (CMHC Starts and Completions Survey); CMHC Housing Market Information Portal.',
-      actions: [{ label: 'Growth in an area', attrs: { 'data-ws-page': 'growth' }, primary: true }, { label: 'Growth targets and forecasts', attrs: { 'data-ws-page': 'targets' } }],
+      actions: [{ label: 'Growth › Areas', attrs: { 'data-ws-page': 'growth' }, primary: true }, { label: 'Growth targets and forecasts', attrs: { 'data-ws-page': 'targets' } }],
     });
   }
   // The guide's figures from the loaded app: the forecast model (js/timing.js) and the record.
