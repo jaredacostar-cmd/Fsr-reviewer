@@ -7,3 +7,6 @@ docs/tree-review/tree-review.json
 tests/private/
 reports-internal/
 data/sources-index.json
+
+# 2031 dev-app modelling: Region-internal inputs and generated workbooks (never committed)
+modelling/2031-dev-apps/private/
