@@ -30,8 +30,9 @@ from build_areas import PRIVATE, prepare, sheet_decisions  # noqa: E402
 DENSITY_CLASSES = [('Low', 0, 3.4), ('Medium', 100, 2.8), ('High', 300, 1.9)]   # from persons/ha, people per unit
 PHASE_SHARE = [('Pre-application', 0.15), ('In review', 0.40), ('Plan approved', 0.75), ('Building permit', 1.0),
                ('Under construction', 1.0), ('Completed', 1.0), ('Withdrawn / cancelled', 0.0)]
-AREA_DEFAULT = 0.25
-LIMIT_ON, LIMIT_RATE, LIMIT_FROM, LIMIT_TO = 'Yes', 300, 2026, 2031
+AREA_DEFAULT = 1.0          # D27: today's assumption, every application population is the 2031 figure
+LIMIT_ON, LIMIT_RATE, LIMIT_FROM, LIMIT_TO = 'No', 300, 2026, 2031
+WITHDRAWN = 'Withdrawn / cancelled'
 TOP_N = 15
 
 
@@ -73,13 +74,13 @@ def sheet_assumptions(ws, labels):
                          'total use that total.'), wrap=True)
 
     # B. share by app phase
-    X.header(ws, 10, ['B. Share built by 2031, by app phase', 'Share', '', 'Note'])
+    X.header(ws, 10, ['B. Reference only: share suggested by the app stage', 'Share', '', 'Note'])
     for i, (ph, share) in enumerate(PHASE_SHARE):
         r = 11 + i
         X.body(ws.cell(r, 1, ph), X.BOLD)
-        yellow(ws.cell(r, 2, share), '0%')
-        note = ('D21: withdrawn rows stay visible but add nothing.' if ph.startswith('Withdrawn') else
-                'Placeholder (D20). Used when the app match is High or Medium confidence.')
+        X.body(ws.cell(r, 2, share), X.INPUT, '0%')
+        note = ('Applied: withdrawn rows stay visible but add nothing (D21).' if ph.startswith('Withdrawn') else
+                'Not applied (D27). Shown beside each application as a hint for Planning\'s estimate.')
         X.body(ws.cell(r, 4, note), wrap=True)
     R.ph = f'$A$11:$A${10 + len(PHASE_SHARE)}'
     R.ph_share = f'$B$11:$B${10 + len(PHASE_SHARE)}'
@@ -87,8 +88,8 @@ def sheet_assumptions(ws, labels):
     # C. build-out speed limit
     r0 = 12 + len(PHASE_SHARE)
     X.header(ws, r0, ['C. Build-out speed limit', 'Value', '', 'Note'])
-    items = [('Apply the limit? (Yes / No)', LIMIT_ON, None, 'D23.'),
-             ('Units per year, per development', LIMIT_RATE, '#,##0', 'Placeholder (D23).'),
+    items = [('Apply the limit? (Yes / No)', LIMIT_ON, None, 'Off (D27). Planning may switch it on.'),
+             ('Units per year, per development', LIMIT_RATE, '#,##0', 'Used only if the limit is on.'),
              ('Building from (end of year)', LIMIT_FROM, '0', 'Today is late 2026.'),
              ('Building to (end of year)', LIMIT_TO, '0', 'Scenario 1 horizon.')]
     for i, (lab, val, fmt, note) in enumerate(items):
@@ -109,12 +110,12 @@ def sheet_assumptions(ws, labels):
 
     # D. area default share
     r1 = r + 3
-    X.header(ws, r1, ['D. Share built by 2031 for rows without a trusted app match', 'Share', '', 'Note'])
+    X.header(ws, r1, ["D. Planning's estimate: share of each area's population built by 2031", 'Share', '', 'Note'])
     for i, lab in enumerate(sorted(labels, key=lambda x: x['map_order'])):
         rr = r1 + 1 + i
         X.body(ws.cell(rr, 1, lab['area_name']), X.BOLD)
         yellow(ws.cell(rr, 2, AREA_DEFAULT), '0%')
-        X.body(ws.cell(rr, 4, 'Placeholder (D22). Planning to set for each area.'))
+        X.body(ws.cell(rr, 4, "100% = today's assumption (all application populations are 2031). Replace with Planning's estimate."))
     R.area = f'$A${r1 + 1}:$A${r1 + len(labels)}'
     R.area_share = f'$B${r1 + 1}:$B${r1 + len(labels)}'
     ws.freeze_panes = 'A4'
@@ -131,7 +132,8 @@ COLS = [  # key, header, width, format
     ('units', 'Units', 9, '#,##0'), ('uph', 'Units per ha', 9, '#,##0.0'),
     ('app_units', 'App units (check only)', 9, '#,##0'),
     ('conf', 'App match confidence', 10, None), ('phase', 'App phase (trusted matches)', 15, None),
-    ('ph_share', 'Share from app phase', 9, '0%'), ('ar_share', 'Share from area default', 9, '0%'),
+    ('ph_share', 'Reference: share suggested by app stage (not applied)', 11, '0%'),
+    ('ar_share', "Planning's area estimate", 9, '0%'),
     ('override', 'Planning override share', 10, '0%'), ('src', 'Share source', 15, None),
     ('share', 'Share before limit', 9, '0%'), ('dev', 'Development (for the speed limit)', 14, None),
     ('u_pre', 'Units by 2031 before limit', 9, '#,##0'), ('dev_pre', 'Development units by 2031 before limit', 11, '#,##0'),
@@ -174,8 +176,8 @@ def sheet_applications(ws, apps, match, info, stated, R):
             'ph_share': f'=IF({c["phase"]}="","",INDEX({A}{R.ph_share},MATCH({c["phase"]},{A}{R.ph},0)))',
             'ar_share': f'=INDEX({A}{R.area_share},MATCH({c["area"]},{A}{R.area},0))',
             'override': None,
-            'src': f'=IF({c["override"]}<>"","Planning override",IF({c["ph_share"]}<>"","App phase","Area default"))',
-            'share': f'=IF({c["override"]}<>"",{c["override"]},IF({c["ph_share"]}<>"",{c["ph_share"]},{c["ar_share"]}))',
+            'src': f'=IF({c["override"]}<>"","Planning override",IF({c["phase"]}="{WITHDRAWN}","Withdrawn (D21)","Area estimate"))',
+            'share': f'=IF({c["override"]}<>"",{c["override"]},IF({c["phase"]}="{WITHDRAWN}",0,{c["ar_share"]}))',
             'dev': dev_id(a, m, trusted),
             'u_pre': f'=IF(AND({c["inc"]}="Yes",{c["units"]}<>""),{c["units"]}*{c["share"]},0)',
             'dev_pre': f'=SUMIFS(${L["u_pre"]}$2:${L["u_pre"]}${len(apps) + 1},${L["dev"]}$2:${L["dev"]}${len(apps) + 1},{c["dev"]})',
@@ -222,8 +224,8 @@ def sheet_summary(ws, labels, L, n_apps):
     ws['A2'] = 'All formulas on the Applications sheet; rows in the 2031 total only. Change the yellow cells on Assumptions.'
     ws['A2'].font = X.SUB
     cols = ['Priority area', 'Rows', 'Full population', 'Units (full)', 'Share built by 2031', '2031 population',
-            'Units by 2031', '2031 pop. from app phase', '2031 pop. from area default', '2031 pop. from override',
-            'Rows held by the speed limit', 'Share of 2031 total']
+            'Units by 2031', '2031 pop. from the area estimate', '2031 pop. from row overrides',
+            'Full pop. withdrawn (D21)', 'Rows held by the speed limit', 'Share of 2031 total']
     X.header(ws, 4, cols, [22, 7, 13, 11, 11, 13, 11, 13, 13, 13, 11, 10])
     rng = lambda k: f'Applications!${L[k]}$2:${L[k]}${n_apps + 1}'   # noqa: E731
     inc = f'{rng("inc")},"Yes"'
@@ -241,8 +243,9 @@ def sheet_summary(ws, labels, L, n_apps):
         X.body(ws.cell(r, 5, f'=IF(C{r}>0,F{r}/C{r},"")'), fmt='0%')
         X.body(ws.cell(r, 6, f'=SUMIFS({rng("p2031")},{ar},{inc})'), X.BOLD, '#,##0')
         X.body(ws.cell(r, 7, f'=SUMIFS({rng("u2031")},{ar},{inc})'), fmt='#,##0')
-        for col, src in ((8, 'App phase'), (9, 'Area default'), (10, 'Planning override')):
+        for col, src in ((8, 'Area estimate'), (9, 'Planning override')):
             X.body(ws.cell(r, col, f'=SUMIFS({rng("p2031")},{ar},{inc},{rng("src")},"{src}")'), fmt='#,##0;-#,##0;-')
+        X.body(ws.cell(r, 10, f'=SUMIFS({rng("pop")},{ar},{inc},{rng("src")},"Withdrawn (D21)")'), fmt='#,##0;-#,##0;-')
         X.body(ws.cell(r, 11, f'=COUNTIFS({ar},{inc},{rng("limited")},"Yes")'), fmt='0;-0;-')  # rows
         X.body(ws.cell(r, 12, f'=F{r}/$F${t}'), fmt='0.0%')
     X.body(ws.cell(t, 1, 'Total'), X.BOLD)
@@ -289,7 +292,7 @@ def sheet_readme(ws):
     ws.column_dimensions['B'].width = 105
     ws['A1'] = 'Bucket 4: assumptions and 2031 population'
     ws['A1'].font = X.TITLE
-    ws['A2'] = 'For review by Planning. Draft; every assumption is a placeholder until Planning confirms it.'
+    ws['A2'] = "For Planning's estimate. Starts from today's assumption (100% built by 2031) until Planning enters its own."
     ws['A2'].font = X.SUB
     rows = [
         ('What Modelling receives', '2031 population = full population x share built by 2031 (decision D02), for the '
@@ -297,9 +300,10 @@ def sheet_readme(ws):
         ('Units', 'Where the Region file text states a unit total, that total. Otherwise full population / people per '
                   'unit for the row\'s density class (Assumptions A). Employment-equivalent rows (D15) get no units. '
                   'App units are shown as a check only (D12).'),
-        ('Share built by 2031', 'First that applies: a Planning override on the row; the share for the app phase when '
-                                'the app match is High or Medium confidence (Assumptions B); the area default for the '
-                                'row\'s priority area (Assumptions D).'),
+        ('Share built by 2031', 'First that applies: a Planning override on the row; 0% for a row withdrawn in the app '
+                                '(D21); Planning\'s estimate for the row\'s priority area (Assumptions D). Every area starts '
+                                'at 100%, today\'s assumption that the application populations are the 2031 figures '
+                                '(D27). The share suggested by the app stage is shown beside each row for reference only.'),
         ('Speed limit', 'If on, no development adds more than the units per year x years of building (Assumptions C). '
                         'Rows on one app development share one allowance (D24); a row without a trusted app match is '
                         'its own development. When a development is over, each of its rows is scaled down in proportion. '

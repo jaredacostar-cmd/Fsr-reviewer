@@ -12,7 +12,6 @@ Usage:  python3 build_review.py
 import collections
 import datetime as dt
 import os
-import re
 import sys
 
 from openpyxl import Workbook
@@ -170,8 +169,10 @@ def sheet_cover(ws, st, L, n_apps, R, n_flags, info):
                  ('What this workbook does', 'States, for each development application behind map 4507-WW (Scenario 1 '
                                              '2031), the units, density and share built by 2031, and the resulting 2031 '
                                              'population that goes to Modelling (D02).'),
-                 ('What Planning is asked to do', 'Check the assumptions (yellow cells on Assumptions), the largest rows '
-                                                  '(Top Rows) and the open flags (Open Flags), then sign off below.')]:
+                 ('What Planning is asked to do', "Give Planning's estimate of the share of each area's population built "
+                                                  'by 2031 (Assumptions, table D; today every area is 100%), override '
+                                                  'single applications where you know better (Applications), decide '
+                                                  'the open flags (Open Flags), then sign off below.')]:
         X.body(ws.cell(r, 1, k), X.BOLD)
         ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=3)
         c = X.body(ws.cell(r, 2, v), wrap=True)
@@ -193,20 +194,22 @@ def sheet_cover(ws, st, L, n_apps, R, n_flags, info):
              'Older or repeated rows of one development (D11, D16).')
     r = line(r, 'Full population of the applications kept', "='Area Summary'!C24", 'Full build-out.', font=X.BOLD)
     r = line(r, 'less: not built by 2031', "='Area Summary'!C24-'Area Summary'!F24",
-             'Share built by 2031 and the build-out speed limit (Assumptions).')
-    r = line(r, '2031 population for Modelling', "='Area Summary'!F24", 'Changes live with the assumptions.', font=X.BOLD)
+             "Planning's estimates; today only the withdrawn rows (D21).")
+    r = line(r, '2031 population for Modelling', "='Area Summary'!F24",
+             "Today's assumption until Planning enters its estimates.", font=X.BOLD)
     ws.cell(r - 1, 2).fill = X.TOTAL_FILL
     r = line(r, 'Share of full population built by 2031', "='Area Summary'!E24", None, '0%')
 
-    lim_row = int(re.sub(r'\D', '', R.lim_on))
-    r = section(r + 1, 'Levers that move the total most (edit on Assumptions)')
-    r = line(r, 'Build-out speed limit applied?', f'=Assumptions!{R.lim_on}', 'D23, per development (D24).', None)
-    r = line(r, 'Units per year, per development', f'=Assumptions!$B${lim_row + 1}', 'Placeholder.')
-    r = line(r, 'Area default share (lowest / highest)',
+    r = section(r + 1, "Planning's estimate (edit on Assumptions)")
+    r = line(r, "Area estimates entered (lowest / highest)",
              f'=TEXT(MIN(Assumptions!{R.area_share}),"0%")&" / "&TEXT(MAX(Assumptions!{R.area_share}),"0%")',
-             'Used for rows the app cannot confirm (D22). Placeholder 25%.', None)
-    r = line(r, '2031 population resting on the area default', "='Area Summary'!I24",
-             'Set these first. Largest areas without app evidence: ' + ', '.join(default_areas(st, info)) + '.')
+             "Share of each area's population built by 2031. 100% everywhere = today's assumption.", None)
+    r = line(r, 'Applications with a Planning override',
+             f'=COUNTIF(Applications!${L["src"]}$2:${L["src"]}${n_apps + 1},"Planning override")', None, '0')
+    r = line(r, 'Build-out speed limit applied?', f'=Assumptions!{R.lim_on}',
+             'Off (D27). Optional cap per development (D24), if Planning wants it.', None)
+    r = line(r, 'Largest areas without app evidence', ', '.join(default_areas(st, info)),
+             'The app could not confirm progress here; these need Planning\'s knowledge most.', None)
 
     r = section(r + 1, 'Open flags')
     for sev in ('High', 'Medium', 'Low'):
