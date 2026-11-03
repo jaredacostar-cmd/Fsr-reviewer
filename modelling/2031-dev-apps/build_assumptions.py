@@ -133,7 +133,9 @@ COLS = [  # key, header, width, format
     ('conf', 'App match confidence', 10, None), ('phase', 'App phase (trusted matches)', 15, None),
     ('ph_share', 'Share from app phase', 9, '0%'), ('ar_share', 'Share from area default', 9, '0%'),
     ('override', 'Planning override share', 10, '0%'), ('src', 'Share source', 15, None),
-    ('share', 'Share before limit', 9, '0%'), ('limited', 'Speed limit applies?', 9, None),
+    ('share', 'Share before limit', 9, '0%'), ('dev', 'Development (for the speed limit)', 14, None),
+    ('u_pre', 'Units by 2031 before limit', 9, '#,##0'), ('dev_pre', 'Development units by 2031 before limit', 11, '#,##0'),
+    ('limited', 'Speed limit applies?', 9, None),
     ('final', 'Share built by 2031', 9, '0%'), ('u2031', 'Units by 2031', 9, '#,##0'),
     ('p2031', '2031 population', 11, '#,##0'), ('note', 'Note', 50, None), ('rank', 'rank key', 6, None),
 ]
@@ -174,9 +176,11 @@ def sheet_applications(ws, apps, match, info, stated, R):
             'override': None,
             'src': f'=IF({c["override"]}<>"","Planning override",IF({c["ph_share"]}<>"","App phase","Area default"))',
             'share': f'=IF({c["override"]}<>"",{c["override"]},IF({c["ph_share"]}<>"",{c["ph_share"]},{c["ar_share"]}))',
-            'limited': (f'=IF(AND({A}{R.lim_on}="Yes",{c["units"]}<>""),IF({c["units"]}*{c["share"]}>{A}{R.lim_units},'
-                        f'"Yes","No"),"No")'),
-            'final': f'=IF({c["limited"]}="Yes",{A}{R.lim_units}/{c["units"]},{c["share"]})',
+            'dev': dev_id(a, m, trusted),
+            'u_pre': f'=IF(AND({c["inc"]}="Yes",{c["units"]}<>""),{c["units"]}*{c["share"]},0)',
+            'dev_pre': f'=SUMIFS(${L["u_pre"]}$2:${L["u_pre"]}${len(apps) + 1},${L["dev"]}$2:${L["dev"]}${len(apps) + 1},{c["dev"]})',
+            'limited': f'=IF(AND({A}{R.lim_on}="Yes",{c["dev_pre"]}>{A}{R.lim_units}),"Yes","No")',
+            'final': f'=IF({c["limited"]}="Yes",{c["share"]}*{A}{R.lim_units}/{c["dev_pre"]},{c["share"]})',
             'u2031': f'=IF({c["units"]}="","",{c["units"]}*{c["final"]})',
             'p2031': f'=IF({c["inc"]}="Yes",{c["pop"]}*{c["final"]},0)',
             'note': '; '.join(notes) or None,
@@ -196,6 +200,13 @@ def sheet_applications(ws, apps, match, info, stated, R):
     ws.cell(1, len(COLS)).comment = Comment('Helper for the Top Rows sheet (2031 population plus a tiny tie-breaker).',
                                             'build_assumptions.py')
     return L
+
+
+def dev_id(a, m, trusted):
+    """D24: rows on one app development share one speed-limit allowance; others stand alone."""
+    if trusted and m.get('key'):
+        return 'App: ' + (m.get('title') or m['key'])[:60]
+    return 'Row ' + a['id']
 
 
 def stated_units(stated, rid):
@@ -232,7 +243,7 @@ def sheet_summary(ws, labels, L, n_apps):
         X.body(ws.cell(r, 7, f'=SUMIFS({rng("u2031")},{ar},{inc})'), fmt='#,##0')
         for col, src in ((8, 'App phase'), (9, 'Area default'), (10, 'Planning override')):
             X.body(ws.cell(r, col, f'=SUMIFS({rng("p2031")},{ar},{inc},{rng("src")},"{src}")'), fmt='#,##0;-#,##0;-')
-        X.body(ws.cell(r, 11, f'=COUNTIFS({ar},{inc},{rng("limited")},"Yes")'), fmt='0;-0;-')
+        X.body(ws.cell(r, 11, f'=COUNTIFS({ar},{inc},{rng("limited")},"Yes")'), fmt='0;-0;-')  # rows
         X.body(ws.cell(r, 12, f'=F{r}/$F${t}'), fmt='0.0%')
     X.body(ws.cell(t, 1, 'Total'), X.BOLD)
     for col in range(2, 13):
@@ -289,8 +300,10 @@ def sheet_readme(ws):
         ('Share built by 2031', 'First that applies: a Planning override on the row; the share for the app phase when '
                                 'the app match is High or Medium confidence (Assumptions B); the area default for the '
                                 'row\'s priority area (Assumptions D).'),
-        ('Speed limit', 'If on, no development adds more than the units per year x years of building (Assumptions C); '
-                        'the share is reduced to fit. Employment-equivalent rows have no units, so no limit.'),
+        ('Speed limit', 'If on, no development adds more than the units per year x years of building (Assumptions C). '
+                        'Rows on one app development share one allowance (D24); a row without a trusted app match is '
+                        'its own development. When a development is over, each of its rows is scaled down in proportion. '
+                        'Employment-equivalent rows have no units, so no limit.'),
         ('How to review', 'Change the yellow cells on Assumptions, or type a share in "Planning override share" on a '
                           'row. Area Summary and Top Rows update. Top Rows shows where a change moves the total most.'),
         ('Colours', 'Blue = value from the data. Black = formula. Yellow = Planning fills in or edits.'),
