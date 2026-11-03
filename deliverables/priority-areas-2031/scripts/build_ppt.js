@@ -10,7 +10,7 @@ pres.title = 'Scenario 1 2031 Priority Areas: population analysis';
 const C = pres.SchemeColor;
 const f0 = n => Math.round(n).toLocaleString('en-US');
 const slug = n => n.replace(/\//g, '-').replace(/ /g, '_');
-const SLIDE0 = 6;
+const SLIDE0 = 7;
 const date = R.generatedAt.slice(0, 10);
 pres.defineSlideMaster({ title: 'DARK', background: { color: '5A0000' },
   objects: [{ placeholder: { options: { name: 'title', type: 'title', x: 0.7, y: 2.2, w: 11.9, h: 1.6, fontSize: 40, bold: true, color: 'FFFFFF', fontFace: 'Cambria', valign: 'bottom' }, text: '' } },
@@ -49,23 +49,35 @@ s.addText([
   { text: `Every figure is growth on top of the 2021 Census (census day 2021-05-11). "Existing" is what was built from census day to October 2026. The ${f0(T.u_pre)} units these developments finished before census day are already in the census and are left out.`, options: { bullet: true, breakLine: true } },
   { text: `${f0(nDev)} app developments fall inside the 19 boxes: ${nApp} planning applications and ${f0(nDev - nApp)} building-permit-only sites (mostly infill and lots in older registered subdivisions).`, options: { bullet: true, breakLine: true } },
   { text: `The app's build-out population is ${Math.round(100 * T.p_bo / mapPop)}% of the ${f0(mapPop)} people printed on the Region map. The gaps are lands with no application yet: Lakeshore, SP47, McLaughlin Road and Steeles MTSA.`, options: { bullet: true, breakLine: true } },
-  { text: `${nMatch} of ${nDots} Region map points sit within 400 m of an app planning application (slide 6). The unmatched points show where the Region models growth that has no application on file.`, options: { bullet: true, breakLine: true } },
-  { text: 'How the three files connect: area A08 = Excel sheet "A08" = slide 14 (slide 6 + area no.) = maps/A08_SP47.png. Development A08-012 is label 12 on that map.', options: { bullet: true } },
+  { text: `${nMatch} of ${nDots} Region map points sit within 400 m of an app planning application (slide 7). The unmatched points show where the Region models growth that has no application on file.`, options: { bullet: true, breakLine: true } },
+  { text: 'How the files connect: area A08 = Excel sheet "A08" = slide 15 (slide 7 + area no.) = app-screens/A08_SP47_app.png. Development A08-012 is label 12 in that app screenshot. Region map reference: maps/A08_SP47.png.', options: { bullet: true } },
 ], { x: 0.5, y: 3.6, w: 12.3, h: 3.4, fontSize: 13.5, color: '1F1F1F', paraSpaceAfter: 8, valign: 'top', isTextBox: true });
 
 // 3 Overview map
 s = add('CONTENT', 'Overview');
-s.addText('The 19 priority areas, with each app planning application by stage', { placeholder: 'title' });
+s.addText('Reference: the Region map, with the app\'s applications plotted on it', { placeholder: 'title' });
 s.addImage({ path: DIR + '/maps/A00_overview.png', x: 0.5, y: 1.0, w: 6.15, h: 6.09, altText: 'Overview map of the 19 priority areas' });
 s.addText([
   { text: 'Red boxes are the Region map boxes, georeferenced to the ground (the map is rotated about 45°, so north points up-left).', options: { bullet: true, breakLine: true } },
-  { text: 'Dots are the app\'s planning applications, coloured by stage. Area maps (slides 7–25) add building-permit-only sites and number every application.', options: { bullet: true, breakLine: true } },
+  { text: 'Dots are the app\'s planning applications, coloured by stage. Slide 4 shows the same areas in the app. Area slides 8–26 are app screenshots, with every application numbered.', options: { bullet: true, breakLine: true } },
   { text: 'A box\'s area in hectares is larger than the Region\'s stated area, because the boxes frame the sites rather than trace planning boundaries.', options: { bullet: true, breakLine: true } },
   { text: 'Names follow the map\'s labels and leader lines, checked against the app\'s plan names. Where the leader lines cross (Macville, Dixie Road, Humber Station, Airport Road), areas were named by geography.', options: { bullet: true, breakLine: true } },
   { text: 'Excel: sheet "Summary" · map file: maps/A00_overview.png', options: { bold: true } },
 ], { x: 6.95, y: 1.15, w: 5.9, h: 5.8, fontSize: 15, color: '1F1F1F', paraSpaceAfter: 10, valign: 'top', isTextBox: true });
 
-// 4 Summary table
+// 4 The 19 areas in the app
+s = add('CONTENT', 'Overview');
+s.addText('The 19 areas drawn in the app', { placeholder: 'title' });
+s.addImage({ path: DIR + '/app-screens/A00_all_areas_app.png', x: 0.5, y: 1.0, w: 8.8, h: 5.5, altText: 'Peel Growth Pipeline app with the 19 priority areas drawn as a selection' });
+s.addText([
+  { text: 'This is the Peel Growth Pipeline\'s full map. Each Region box is drawn as the app\'s own selected area (dashed), and every development inside is selected.', options: { bullet: true, breakLine: true } },
+  { text: 'The app\'s panel (right) shows the developments\' full size, including homes built before 2021.', options: { bullet: true, breakLine: true } },
+  { text: 'The figures in this deck are growth on top of the 2021 Census, worked out from the same developments.', options: { bullet: true, breakLine: true } },
+  { text: 'Basemap tiles were unavailable when these were captured, so only the app\'s own layers show.', options: { bullet: true, breakLine: true } },
+  { text: 'File: app-screens/A00_all_areas_app.png', options: { bold: true } },
+], { x: 9.55, y: 1.1, w: 3.3, h: 5.8, fontSize: 13, color: '1F1F1F', paraSpaceAfter: 8, valign: 'top', isTextBox: true });
+
+// 5 Summary table
 pres.addSection({ title: 'Summary' });
 s = add('CONTENT', 'Summary');
 s.addText('Summary: growth since the 2021 Census, by area', { placeholder: 'title' });
@@ -126,25 +138,27 @@ for (const a of R.areas) {
   s = add('CONTENT', 'Areas A01–A19');
   const t = a.total;
   s.addText(`${a.code} · ${a.name}`, { placeholder: 'title' });
-  s.addImage({ path: `${DIR}/maps/${a.code}_${slug(a.name)}.png`, x: 0.5, y: 1.0, w: 6.0, h: 6.0, altText: `Map of ${a.name} with app developments` });
-  const g = { bold: true, color: 'FFFFFF', fill: { color: '7A0000' }, align: 'center' };
+  s.addImage({ path: `${DIR}/app-screens/${a.code}_${slug(a.name)}_app.png`, x: 0.5, y: 1.0, w: 7.68, h: 4.8, altText: `Peel Growth Pipeline app: ${a.name} drawn as a selection` });
+  s.addText(`App screenshot: Peel Growth Pipeline full map. Dashed = the area as an app selection; labels = development no. (${a.code}-###). The app's panel shows the developments' full size, pre-2021 included. Region map reference: maps/${a.code}_${slug(a.name)}.png`, { x: 0.5, y: 5.9, w: 7.68, h: 0.6, fontSize: 10, italic: true, color: '595959', isTextBox: true, margin: 0 });
+  const g = { bold: true, color: 'FFFFFF', fill: { color: '7A0000' }, align: 'center', fontSize: 11 };
   s.addTable([
     [{ text: 'Growth', options: g }, { text: '2021–26', options: g }, { text: '2021–31', options: g }, { text: 'Build-out', options: g }, { text: 'Pre-2021*', options: { ...g, fill: { color: '8C8C8C' } } }],
-    ...[['Units', 'u'], ['Residential pop.', 'p'], ['Jobs', 'j']].map(([l, k]) => [{ text: l, options: { bold: true, color: '5A0000' } }, num(t[k + '_ex']), num(t[k + '_31']), num(t[k + '_bo'], { bold: true }), num(t[k + '_pre'], { color: '7F7F7F' })]),
-  ], { x: 6.8, y: 1.05, w: 6.0, colW: [1.6, 1.05, 1.05, 1.15, 1.15], fontSize: 14, fontFace: 'Calibri', rowH: 0.36, border: { type: 'solid', pt: 0.5, color: 'D9D9D9' }, valign: 'middle' });
+    ...[['Units', 'u'], ['Res. pop.', 'p'], ['Jobs', 'j']].map(([l, k]) => [{ text: l, options: { bold: true, color: '5A0000' } }, num(t[k + '_ex']), num(t[k + '_31']), num(t[k + '_bo'], { bold: true }), num(t[k + '_pre'], { color: '7F7F7F' })]),
+  ], { x: 8.4, y: 1.05, w: 4.45, colW: [0.93, 0.85, 0.85, 0.94, 0.88], fontSize: 12, fontFace: 'Calibri', rowH: 0.32, border: { type: 'solid', pt: 0.5, color: 'D9D9D9' }, valign: 'middle', margin: [0, 0.04, 0, 0.04] });
   const m = a.dots.filter(d => d.match).length;
   const munis = Object.entries(a.munis).map(([k, v]) => `${k} ${v}`).join(', ');
   s.addText([
-    { text: `*Pre-2021 = built before census day 2021-05-11, already in the 2021 Census (not added). Region map: ${f0(a.mapPop)} people on ${a.mapHa} ha. App build-out = ${Math.round(100 * t.p_bo / a.mapPop)}% of that.`, options: { breakLine: true } },
+    { text: '*Pre-2021 = built before census day 2021-05-11, already in the 2021 Census (not added).', options: { breakLine: true, color: '7F7F7F' } },
+    { text: `Region map: ${f0(a.mapPop)} people on ${a.mapHa} ha. App build-out = ${Math.round(100 * t.p_bo / a.mapPop)}% of that.`, options: { breakLine: true } },
     { text: `${f0(a.nDevs)} developments: ${a.nApps} planning applications and ${f0(a.nPermitOnly)} permit-only (${munis}). ${m} of ${a.dots.length} Region points matched.`, options: {} },
-  ], { x: 6.8, y: 2.65, w: 6.0, h: 0.85, fontSize: 11.5, color: '36454F', valign: 'top', isTextBox: true, margin: 0 });
+  ], { x: 8.4, y: 2.45, w: 4.45, h: 1.25, fontSize: 10.5, color: '36454F', valign: 'top', isTextBox: true, margin: 0 });
   const apps = a.rows.filter(r => r.kind === 'Planning application').slice(0, 7);
   const ah = { bold: true, color: '5A0000', fill: { color: 'F6EEEE' } };
   s.addTable([
-    [{ text: 'Map no. / development', options: ah }, { text: 'Stage', options: ah }, { text: 'Units', options: { ...ah, align: 'right' } }, { text: '2021–31', options: { ...ah, align: 'right' } }],
-    ...apps.map(r => [`${r.id.split('-')[1].replace(/^0+/, '')}  ${r.title.length > 34 ? r.title.slice(0, 33) + '…' : r.title}`, r.stage, num(r.u_bo), num(r.u_31)]),
-  ], { x: 6.8, y: 3.55, w: 6.0, colW: [3.3, 1.3, 0.7, 0.7], fontSize: 10.5, fontFace: 'Calibri', rowH: 0.3, border: { type: 'solid', pt: 0.5, color: 'D9D9D9' }, valign: 'middle', margin: [0, 0.05, 0, 0.05] });
-  s.addText(`Largest ${apps.length} of ${a.nApps} applications by units. Every development: Excel sheet "${a.code}" · map: maps/${a.code}_${slug(a.name)}.png`, { x: 6.8, y: 6.55, w: 6.0, h: 0.45, fontSize: 10, italic: true, color: '595959', isTextBox: true, margin: 0 });
+    [{ text: 'No. / development', options: ah }, { text: 'Stage', options: ah }, { text: 'Units', options: { ...ah, align: 'right' } }, { text: '2021–31', options: { ...ah, align: 'right' } }],
+    ...apps.map(r => [`${r.id.split('-')[1].replace(/^0+/, '')}  ${r.title.length > 24 ? r.title.slice(0, 23) + '…' : r.title}`, r.stage, num(r.u_bo), num(r.u_31)]),
+  ], { x: 8.4, y: 3.8, w: 4.45, colW: [2.1, 1.05, 0.6, 0.7], fontSize: 9.5, fontFace: 'Calibri', rowH: 0.28, border: { type: 'solid', pt: 0.5, color: 'D9D9D9' }, valign: 'middle', margin: [0, 0.04, 0, 0.04] });
+  s.addText(`Largest ${apps.length} of ${a.nApps} applications by units, as growth since 2021. Every development: Excel sheet "${a.code}"`, { x: 8.4, y: 6.55, w: 4.45, h: 0.45, fontSize: 10, italic: true, color: '595959', isTextBox: true, margin: 0 });
   s.addNotes(`${a.code} ${a.name}. Planning applications in the area (ID, title, stage, units build-out, files):\n` + a.rows.filter(r => r.kind === 'Planning application').map(r => `${r.id} ${r.title} | ${r.stage} | ${f0(r.u_bo)} units | ${r.files}`).join('\n'));
 }
 

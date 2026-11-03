@@ -8,7 +8,7 @@ exec(open('areas.py').read())
 R=json.load(open('results.json'))
 OUT='/home/user/Fsr-reviewer/deliverables/priority-areas-2031/maps'
 STAGE_COL={'Pre-application':'#9e9ac8','In review':'#3182bd','Plan approved':'#31a354','Building permit':'#fd8d3c','Under construction':'#e6550d','Built':'#636363'}
-SLIDE0=6
+SLIDE0=7
 plt.rcParams['font.family']='DejaVu Sans'
 def slug(n): return n.replace('/','-').replace(' ','_')
 # ---------- overview ----------

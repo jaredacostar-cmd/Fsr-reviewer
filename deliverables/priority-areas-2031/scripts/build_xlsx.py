@@ -6,7 +6,7 @@ from openpyxl.worksheet.table import Table, TableStyleInfo
 R=json.load(open('results.json'))
 OUT='/home/user/Fsr-reviewer/deliverables/priority-areas-2031/Priority_Areas_2031_Population_Analysis.xlsx'
 PPT='Priority_Areas_2031_Population_Analysis.pptx'
-SLIDE0=6
+SLIDE0=7
 def slug(n): return n.replace('/','-').replace(' ','_')
 F='Arial'
 H=Font(name=F,bold=True,color='FFFFFF'); HF=PatternFill('solid',fgColor='7A0000')
@@ -30,7 +30,8 @@ lines=[
 (f"App data: the app's published snapshot of {R['generatedAt'][:10]} (planning applications and new-build permits, 2016 on). Every figure was computed by the app itself: it was loaded headless and read from its own modules (PeelDemand.estimate, PeelPhases.unbuiltOf, PeelLedger + PeelTiming forecast, PeelEmployment).",False),
 ('',False),
 ('The three linked deliverables (cross-reference keys)',True),
-('Area ID A01–A19 is used everywhere: Excel sheet "A08" = PPT slide 14 (slide = 6 + area no.) = map file maps/A08_SP47.png. Every development has an ID such as A08-012; the number 12 is its label on the area map and its row on sheet A08 and in sheet Developments.',False),
+('Area ID A01–A19 is used everywhere: Excel sheet "A08" = PPT slide 15 (slide = 7 + area no.) = app screenshot app-screens/A08_SP47_app.png. Every development has an ID such as A08-012; the number 12 is its label in the app screenshot, and its row on sheet A08 and in sheet Developments.',False),
+('App screenshots (app-screens/): the Peel Growth Pipeline full map with each area drawn as the app\'s own selection and every development in it selected; the app\'s panel shows the developments\' full size (pre-2021 included). The Region map crops in maps/ are kept as a reference, with the same numbering.',False),
 ('Region map points (dots) are given IDs A08-R1… on sheet Crosswalk, with the nearest app planning application (within 400 m) and its development ID.',False),
 ('',False),
 ('Area boundaries',True),
@@ -84,7 +85,7 @@ col={'u_bo':'K','u_ex':'L','u_31':'M','p_bo':'N','p_ex':'O','p_31':'P','j_bo':'Q
 # ---------------- Summary ----------------
 sm=wb.create_sheet('Summary',1)
 sm['A1']='Scenario 1 2031 Priority Areas: growth on top of the 2021 Census (units, residential population, jobs) from the Peel Growth Pipeline app'; sm['A1'].font=Font(name=F,bold=True,size=14)
-sm['A2']=f"Basis: 2021 Census (census day 2021-05-11). Existing = built 2021-05-11 to Oct 2026; 2031 = growth 2021–2031; build-out = growth since 2021 at full build-out. All developments in each area (planning applications + building-permit-only). App snapshot {R['generatedAt'][:10]}. Formulas sum sheet 'Developments'. Excel sheet Axx = PPT slide 6+xx = maps/Axx_*.png."
+sm['A2']=f"Basis: 2021 Census (census day 2021-05-11). Existing = built 2021-05-11 to Oct 2026; 2031 = growth 2021–2031; build-out = growth since 2021 at full build-out. All developments in each area (planning applications + building-permit-only). App snapshot {R['generatedAt'][:10]}. Formulas sum sheet 'Developments'. Excel sheet Axx = PPT slide 7+xx = app-screens/Axx_*_app.png."
 sm['A2'].font=Font(name=F,italic=True,size=9)
 def block(top,title,crit):
     sm.cell(top,1,title).font=Font(name=F,bold=True,size=12)
@@ -92,7 +93,7 @@ def block(top,title,crit):
     for g,a_,b_ in groups:
         sm.merge_cells(start_row=top+1,start_column=a_,end_row=top+1,end_column=b_); c=sm.cell(top+1,a_,g); c.font=B; c.fill=SUB; c.alignment=Alignment(horizontal='center')
     hdr(sm,top+2,['Area ID','Area','Municipality (map)','Box area (ha)','Main app plan','Municipalities in box','Population (map)','Area ha (map)','Developments','Planning applications','Permit-only',
-                  'Build-out','Existing 2021–26','2031','Build-out','Existing 2021–26','2031','Build-out','Existing 2021–26','2031','App build-out pop ÷ map pop','Excel sheet','Map file','PPT slide','Units','Res pop','Jobs'])
+                  'Build-out','Existing 2021–26','2031','Build-out','Existing 2021–26','2031','Build-out','Existing 2021–26','2031','App build-out pop ÷ map pop','Excel sheet','App screenshot','PPT slide','Units','Res pop','Jobs'])
     first=top+3
     for k,a in enumerate(R['areas']):
         rr=first+k
@@ -110,7 +111,7 @@ def block(top,title,crit):
         for j,k2 in enumerate(['u_pre','p_pre','j_pre'],25):
             c=col[k2]; x=sm.cell(rr,j,f'=SUMIFS(Developments!${c}$2:${c}${last},{DEVR},$A{rr}{crit})'); x.number_format='#,##0'; x.font=Font(name=F,color='7F7F7F')
         c=sm.cell(rr,22,f"Sheet {a['code']}"); c.hyperlink=f"#'{a['code']}'!A1"; c.font=LINK
-        sm.cell(rr,23,f"maps/{a['code']}_{slug(a['name'])}.png").font=N
+        sm.cell(rr,23,f"app-screens/{a['code']}_{slug(a['name'])}_app.png").font=N
         sm.cell(rr,24,SLIDE0+a['id']).font=N
         sm.cell(rr,4).number_format='#,##0'
     tr=first+len(R['areas'])
@@ -153,7 +154,7 @@ for k,a in enumerate(R['areas']):
     srow=f1+k
     ws['A1']=f"{a['code']} · {a['name']}"; ws['A1'].font=Font(name=F,bold=True,size=14)
     c=ws['A2']; c.value='← Summary'; c.hyperlink=f"#'Summary'!A{srow}"; c.font=LINK
-    ws['C2']=f"PPT slide {SLIDE0+a['id']} · map: maps/{a['code']}_{slug(a['name'])}.png · Region map: population {a['mapPop']:,}, {a['mapHa']} ha"; ws['C2'].font=Font(name=F,italic=True,size=9)
+    ws['C2']=f"PPT slide {SLIDE0+a['id']} · app screenshot: app-screens/{a['code']}_{slug(a['name'])}_app.png · Region map reference: maps/{a['code']}_{slug(a['name'])}.png · Region map: population {a['mapPop']:,}, {a['mapHa']} ha"; ws['C2'].font=Font(name=F,italic=True,size=9)
     ws['A3']='Growth on top of the 2021 Census (census day 2021-05-11). Built before census day is already in the census: reference only.'; ws['A3'].font=Font(name=F,italic=True,size=9)
     hdr(ws,4,['','Build-out (since 2021)','Existing 2021–26','2031 (2021–31)','Built before census day'])
     for i,(lab,cs) in enumerate([('Units',('L','M','N','Y')),('Residential population',('O','P','Q','Z')),('Jobs',('R','S','T','AA'))]):
