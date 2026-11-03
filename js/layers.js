@@ -68,8 +68,18 @@
       return at != null && at < since ? { built: 0, existing: completed, estimatedDates: false } : { built: completed, existing: 0, estimatedDates: false };
     }
     let est = false;
-    const after = done.filter(r => { const c = A().completedAt(r); if (c && c.estimated) est = true; return c && c.date >= since; });
-    const all = P().permitUnits(done), aft = after.length ? P().permitUnits(after) : 0;
+    const isAfter = r => { const c = A().completedAt(r); if (c && c.estimated) est = true; return c && c.date >= since; };
+    const after = done.filter(isAfter);
+    let all = P().permitUnits(done), aft = after.length ? P().permitUnits(after) : 0;
+    // Homes inferred from permits that state no units (Brampton's apartment and stacked-townhouse
+    // permits, js/phases.js inferBlankPermits) weigh in by the share of those buildings completed since
+    // census day, as js/areas.js builtSince counts them. Without them a development whose only completed
+    // permits are blank weighs 0, and all its homes fell before census day (decided 2026-11-03).
+    const inf = p.buildout && p.buildout.inferred;
+    if (inf && inf.completed > 0 && P().isBlankPermit) {
+      const blank = done.filter(r => P().isBlankPermit(r));
+      if (blank.length) { all += inf.completed; aft += Math.round(inf.completed * blank.filter(isAfter).length / blank.length); }
+    }
     const built = all > 0 ? Math.round(completed * Math.min(1, aft / all)) : 0;
     return { built, existing: completed - built, estimatedDates: est };
   }

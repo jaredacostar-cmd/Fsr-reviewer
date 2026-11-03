@@ -100,8 +100,20 @@
         if (!byYear.has(y)) byYear.set(y, []);
         byYear.get(y).push(r);
       }
+      // Homes inferred from permits that state no units (js/phases.js inferBlankPermits), spread over
+      // the years their buildings were completed, as js/areas.js builtSince counts them.
+      const inf = p.buildout && p.buildout.inferred, infBy = new Map();
+      if (inf && inf.completed > 0 && P && P.isBlankPermit) {
+        const blank = done.filter(([r]) => P.isBlankPermit(r));
+        let given = 0;
+        blank.forEach(([, y], i) => {
+          const share = i === blank.length - 1 ? inf.completed - given : Math.round(inf.completed / blank.length);
+          given += share; infBy.set(y, (infBy.get(y) || 0) + share);
+          if (!byYear.has(y)) byYear.set(y, []);
+        });
+      }
       for (const [y, rs] of byYear) {
-        const units = permitUnits(rs) || 0;
+        const units = (rs.length ? permitUnits(rs) || 0 : 0) + (infBy.get(y) || 0);
         let yy = years.get(y);
         if (!yy) { yy = { year: y, units: 0, projects: new Set() }; years.set(y, yy); }
         yy.units += units; yy.projects.add(p.key);
