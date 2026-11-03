@@ -30,27 +30,28 @@ pres.addSection({ title: 'Overview' });
 let s = add('DARK', 'Overview');
 s.addText('Scenario 1 2031 Priority Areas: population analysis', { placeholder: 'title' });
 s.addText([{ text: '19 areas from the Region map "4507-WW Development Application Modelling Update" (2026-05-20), crossed with the Peel Growth Pipeline app', options: { breakLine: true } },
-  { text: `Units · residential population · jobs: existing, anticipated 2031, build-out · app snapshot ${date}`, options: { breakLine: true } },
+  { text: `Growth on top of the 2021 Census: units · residential population · jobs, existing 2021–2026, anticipated 2031, build-out · app snapshot ${date}`, options: { breakLine: true } },
   { text: 'Companion files: Priority_Areas_2031_Population_Analysis.xlsx · maps/A00–A19 PNG', options: { fontSize: 14 } }], { placeholder: 'body' });
 
 // 2 Key numbers
 s = add('CONTENT', 'Overview');
-s.addText('85,800 units at build-out; about a third by 2031', { placeholder: 'title' });
+s.addText(`${f0(Math.round(T.u_bo/100)*100)} units of growth since 2021; a third by 2031`, { placeholder: 'title' });
 const stat = (x, big, small, sub) => {
   s.addShape(pres.shapes.ROUNDED_RECTANGLE, { x, y: 1.25, w: 3.85, h: 2.1, fill: { color: 'F6EEEE' }, line: { color: 'F6EEEE' }, rectRadius: 0.12, objectName: 'stat card' });
   s.addText(big, { x: x + 0.25, y: 1.35, w: 3.4, h: 0.95, fontSize: 40, bold: true, color: '7A0000', fontFace: 'Cambria', isTextBox: true, margin: 0 });
   s.addText(small, { x: x + 0.25, y: 2.3, w: 3.4, h: 0.4, fontSize: 16, bold: true, color: '36454F', isTextBox: true, margin: 0 });
   s.addText(sub, { x: x + 0.25, y: 2.7, w: 3.4, h: 0.55, fontSize: 12, color: '36454F', isTextBox: true, margin: 0 });
 };
-stat(0.5, f0(T.u_bo), 'units at build-out', `${f0(T.u_ex)} existing · ${f0(T.u_31)} by 2031`);
-stat(4.73, f0(T.p_bo), 'residents at build-out', `${f0(T.p_ex)} existing · ${f0(T.p_31)} by 2031`);
-stat(8.96, f0(T.j_bo), 'jobs at build-out', `${f0(T.j_ex)} existing · ${f0(T.j_31)} by 2031`);
+stat(0.5, f0(T.u_bo), 'units at build-out', `${f0(T.u_ex)} built 2021–26 · ${f0(T.u_31)} by 2031`);
+stat(4.73, f0(T.p_bo), 'residents at build-out', `${f0(T.p_ex)} added 2021–26 · ${f0(T.p_31)} by 2031`);
+stat(8.96, f0(T.j_bo), 'jobs at build-out', `${f0(T.j_ex)} added 2021–26 · ${f0(T.j_31)} by 2031`);
 s.addText([
+  { text: `Every figure is growth on top of the 2021 Census (census day 2021-05-11). "Existing" is what was built from census day to October 2026. The ${f0(T.u_pre)} units these developments finished before census day are already in the census and are left out.`, options: { bullet: true, breakLine: true } },
   { text: `${f0(nDev)} app developments fall inside the 19 boxes: ${nApp} planning applications and ${f0(nDev - nApp)} building-permit-only sites (mostly infill and lots in older registered subdivisions).`, options: { bullet: true, breakLine: true } },
   { text: `The app's build-out population is ${Math.round(100 * T.p_bo / mapPop)}% of the ${f0(mapPop)} people printed on the Region map. The gaps are lands with no application yet: Lakeshore, SP47, McLaughlin Road and Steeles MTSA.`, options: { bullet: true, breakLine: true } },
   { text: `${nMatch} of ${nDots} Region map points sit within 400 m of an app planning application (slide 6). The unmatched points show where the Region models growth that has no application on file.`, options: { bullet: true, breakLine: true } },
   { text: 'How the three files connect: area A08 = Excel sheet "A08" = slide 14 (slide 6 + area no.) = maps/A08_SP47.png. Development A08-012 is label 12 on that map.', options: { bullet: true } },
-], { x: 0.5, y: 3.7, w: 12.3, h: 3.2, fontSize: 15, color: '1F1F1F', paraSpaceAfter: 8, valign: 'top', isTextBox: true });
+], { x: 0.5, y: 3.6, w: 12.3, h: 3.4, fontSize: 13.5, color: '1F1F1F', paraSpaceAfter: 8, valign: 'top', isTextBox: true });
 
 // 3 Overview map
 s = add('CONTENT', 'Overview');
@@ -67,33 +68,33 @@ s.addText([
 // 4 Summary table
 pres.addSection({ title: 'Summary' });
 s = add('CONTENT', 'Summary');
-s.addText('Summary: units, residential population and jobs by area', { placeholder: 'title' });
+s.addText('Summary: growth since the 2021 Census, by area', { placeholder: 'title' });
 const hc = t => ({ text: t, options: { bold: true, color: 'FFFFFF', fill: { color: '7A0000' }, align: 'center', valign: 'middle' } });
 const sub = t => ({ text: t, options: { bold: true, color: '5A0000', fill: { color: 'F6EEEE' }, align: 'center' } });
 const rows = [
   [hc('Area'), { text: 'Units', options: { colspan: 3, bold: true, color: 'FFFFFF', fill: { color: '7A0000' }, align: 'center' } }, { text: 'Residential population', options: { colspan: 3, bold: true, color: 'FFFFFF', fill: { color: '7A0000' }, align: 'center' } }, { text: 'Jobs', options: { colspan: 3, bold: true, color: 'FFFFFF', fill: { color: '7A0000' }, align: 'center' } }, hc('Region map pop.'), hc('Slide')],
-  [sub(''), sub('Existing'), sub('2031'), sub('Build-out'), sub('Existing'), sub('2031'), sub('Build-out'), sub('Existing'), sub('2031'), sub('Build-out'), sub(''), sub('')],
+  [sub(''), sub('2021–26'), sub('2021–31'), sub('Build-out'), sub('2021–26'), sub('2021–31'), sub('Build-out'), sub('2021–26'), sub('2021–31'), sub('Build-out'), sub(''), sub('')],
 ];
 const num = (v, o = {}) => ({ text: f0(v), options: { align: 'right', ...o } });
 for (const a of R.areas) { const t = a.total; rows.push([{ text: `${a.code} ${a.name}`, options: {} }, num(t.u_ex), num(t.u_31), num(t.u_bo, { bold: true }), num(t.p_ex), num(t.p_31), num(t.p_bo, { bold: true }), num(t.j_ex), num(t.j_31), num(t.j_bo, { bold: true }), num(a.mapPop, { color: '0000FF' }), { text: String(SLIDE0 + a.id), options: { align: 'center' } }]); }
 const B = { bold: true, fill: { color: 'F6EEEE' } };
 rows.push([{ text: 'Total, 19 areas', options: B }, num(T.u_ex, B), num(T.u_31, B), num(T.u_bo, B), num(T.p_ex, B), num(T.p_31, B), num(T.p_bo, B), num(T.j_ex, B), num(T.j_31, B), num(T.j_bo, B), num(mapPop, { ...B, color: '0000FF' }), { text: '', options: B }]);
 s.addTable(rows, { x: 0.5, y: 0.98, w: 12.3, colW: [2.5, 0.9, 0.9, 0.95, 0.95, 0.95, 1.0, 0.85, 0.85, 0.9, 1.05, 0.5], fontSize: 10, fontFace: 'Calibri', rowH: 0.25, border: { type: 'solid', pt: 0.5, color: 'D9D9D9' }, valign: 'middle', margin: [0, 0.05, 0, 0.05] });
-s.addText('Existing = built so far in these developments (not the 2021 Census). 2031 = existing + the app Forecast\'s 2026–2031 share of what is left to build. Blue = as printed on the Region map. Formulas and every development: Excel "Summary" (block A; block B = planning applications only).', { x: 0.5, y: 6.55, w: 12.3, h: 0.45, fontSize: 10, italic: true, color: '595959', isTextBox: true });
+s.addText('Growth on top of the 2021 Census. 2021–26 = built from census day (2021-05-11) to Oct 2026. 2021–31 = that plus the app Forecast\'s 2026–2031 share of what is left to build. Build-out = 2021–26 plus everything left to build. Units finished before census day are excluded (Excel "Summary", grey columns). Blue = as printed on the Region map.', { x: 0.5, y: 6.55, w: 12.3, h: 0.45, fontSize: 10, italic: true, color: '595959', isTextBox: true });
 
 // 5 Chart
 s = add('CONTENT', 'Summary');
 s.addText('Most areas: the app counts fewer people than the Region map', { placeholder: 'title' });
 const labels = R.areas.map(a => `${a.code} ${a.name}`);
 s.addChart(pres.charts.BAR, [
-  { name: 'Existing', labels, values: R.areas.map(a => Math.round(a.total.p_ex)) },
-  { name: 'Anticipated 2031', labels, values: R.areas.map(a => Math.round(a.total.p_31)) },
-  { name: 'Build-out (app)', labels, values: R.areas.map(a => Math.round(a.total.p_bo)) },
+  { name: 'Existing 2021–26', labels, values: R.areas.map(a => Math.round(a.total.p_ex)) },
+  { name: 'Growth 2021–31', labels, values: R.areas.map(a => Math.round(a.total.p_31)) },
+  { name: 'Build-out since 2021 (app)', labels, values: R.areas.map(a => Math.round(a.total.p_bo)) },
   { name: 'Region map population', labels, values: R.areas.map(a => a.mapPop) },
 ], { x: 0.5, y: 1.0, w: 8.6, h: 6.0, barDir: 'bar', barGrouping: 'clustered', barGapWidthPct: 40, chartColors: ['36454F', 'C98A8A', '7A0000', '3182BD'],
   catAxisOrientation: 'maxMin', catAxisLabelFontSize: 9, valAxisLabelFontSize: 9, catAxisLabelFontFace: '+mn-lt', valAxisLabelFontFace: '+mn-lt', catAxisLabelColor: '404040', valAxisLabelColor: '404040',
   valAxisLabelFormatCode: '#,##0', valGridLine: { color: 'E6E6E6', size: 0.5 }, catGridLine: { style: 'none' },
-  showLegend: true, legendPos: 't', legendFontSize: 10, legendFontFace: '+mn-lt', showTitle: true, title: 'Residential population by area', titleFontSize: 12, titleFontFace: '+mn-lt', titleColor: '404040' });
+  showLegend: true, legendPos: 't', legendFontSize: 10, legendFontFace: '+mn-lt', showTitle: true, title: 'Residential population growth since the 2021 Census, by area', titleFontSize: 12, titleFontFace: '+mn-lt', titleColor: '404040' });
 const gaps = R.areas.map(a => ({ a, gap: a.mapPop - a.total.p_bo })).sort((x, y) => y.gap - x.gap);
 s.addText([
   { text: 'Largest gaps (Region map minus app build-out)', options: { bold: true, breakLine: true, color: '5A0000' } },
@@ -128,19 +129,19 @@ for (const a of R.areas) {
   s.addImage({ path: `${DIR}/maps/${a.code}_${slug(a.name)}.png`, x: 0.5, y: 1.0, w: 6.0, h: 6.0, altText: `Map of ${a.name} with app developments` });
   const g = { bold: true, color: 'FFFFFF', fill: { color: '7A0000' }, align: 'center' };
   s.addTable([
-    [{ text: '', options: g }, { text: 'Existing', options: g }, { text: '2031', options: g }, { text: 'Build-out', options: g }],
-    ...[['Units', 'u'], ['Residential pop.', 'p'], ['Jobs', 'j']].map(([l, k]) => [{ text: l, options: { bold: true, color: '5A0000' } }, num(t[k + '_ex']), num(t[k + '_31']), num(t[k + '_bo'], { bold: true })]),
-  ], { x: 6.8, y: 1.05, w: 6.0, colW: [1.8, 1.4, 1.4, 1.4], fontSize: 14, fontFace: 'Calibri', rowH: 0.36, border: { type: 'solid', pt: 0.5, color: 'D9D9D9' }, valign: 'middle' });
+    [{ text: 'Growth', options: g }, { text: '2021–26', options: g }, { text: '2021–31', options: g }, { text: 'Build-out', options: g }, { text: 'Pre-2021*', options: { ...g, fill: { color: '8C8C8C' } } }],
+    ...[['Units', 'u'], ['Residential pop.', 'p'], ['Jobs', 'j']].map(([l, k]) => [{ text: l, options: { bold: true, color: '5A0000' } }, num(t[k + '_ex']), num(t[k + '_31']), num(t[k + '_bo'], { bold: true }), num(t[k + '_pre'], { color: '7F7F7F' })]),
+  ], { x: 6.8, y: 1.05, w: 6.0, colW: [1.6, 1.05, 1.05, 1.15, 1.15], fontSize: 14, fontFace: 'Calibri', rowH: 0.36, border: { type: 'solid', pt: 0.5, color: 'D9D9D9' }, valign: 'middle' });
   const m = a.dots.filter(d => d.match).length;
   const munis = Object.entries(a.munis).map(([k, v]) => `${k} ${v}`).join(', ');
   s.addText([
-    { text: `Region map: ${f0(a.mapPop)} people on ${a.mapHa} ha. App build-out = ${Math.round(100 * t.p_bo / a.mapPop)}% of that.`, options: { breakLine: true } },
+    { text: `*Pre-2021 = built before census day 2021-05-11, already in the 2021 Census (not added). Region map: ${f0(a.mapPop)} people on ${a.mapHa} ha. App build-out = ${Math.round(100 * t.p_bo / a.mapPop)}% of that.`, options: { breakLine: true } },
     { text: `${f0(a.nDevs)} developments: ${a.nApps} planning applications and ${f0(a.nPermitOnly)} permit-only (${munis}). ${m} of ${a.dots.length} Region points matched.`, options: {} },
-  ], { x: 6.8, y: 2.6, w: 6.0, h: 0.85, fontSize: 12, color: '36454F', valign: 'top', isTextBox: true, margin: 0 });
+  ], { x: 6.8, y: 2.65, w: 6.0, h: 0.85, fontSize: 11.5, color: '36454F', valign: 'top', isTextBox: true, margin: 0 });
   const apps = a.rows.filter(r => r.kind === 'Planning application').slice(0, 7);
   const ah = { bold: true, color: '5A0000', fill: { color: 'F6EEEE' } };
   s.addTable([
-    [{ text: 'Map no. / development', options: ah }, { text: 'Stage', options: ah }, { text: 'Units', options: { ...ah, align: 'right' } }, { text: 'By 2031', options: { ...ah, align: 'right' } }],
+    [{ text: 'Map no. / development', options: ah }, { text: 'Stage', options: ah }, { text: 'Units', options: { ...ah, align: 'right' } }, { text: '2021–31', options: { ...ah, align: 'right' } }],
     ...apps.map(r => [`${r.id.split('-')[1].replace(/^0+/, '')}  ${r.title.length > 34 ? r.title.slice(0, 33) + '…' : r.title}`, r.stage, num(r.u_bo), num(r.u_31)]),
   ], { x: 6.8, y: 3.55, w: 6.0, colW: [3.3, 1.3, 0.7, 0.7], fontSize: 10.5, fontFace: 'Calibri', rowH: 0.3, border: { type: 'solid', pt: 0.5, color: 'D9D9D9' }, valign: 'middle', margin: [0, 0.05, 0, 0.05] });
   s.addText(`Largest ${apps.length} of ${a.nApps} applications by units. Every development: Excel sheet "${a.code}" · map: maps/${a.code}_${slug(a.name)}.png`, { x: 6.8, y: 6.55, w: 6.0, h: 0.45, fontSize: 10, italic: true, color: '595959', isTextBox: true, margin: 0 });
@@ -157,7 +158,7 @@ const col = (x, head, items) => {
   s.addText(items.map((t, i) => ({ text: t, options: { bullet: true, breakLine: i < items.length - 1 } })), { x: x + 0.2, y: 1.75, w: 3.6, h: 5.0, fontSize: 12, color: '1F1F1F', paraSpaceAfter: 6, valign: 'top', isTextBox: true });
 };
 col(0.5, 'Areas', ['Red boxes from the Region PDF, georeferenced by fitting its municipal boundary to the app\'s (scale within 0.02% of 1:192,036; ~160 m fit).', 'A development counts in an area when its site point is inside the box.', 'Names follow the map labels, checked against app plan names.']);
-col(4.68, 'Figures (the app\'s)', ['Build-out = built + left to build (withdrawn or refused excluded).', 'Existing = units built in these developments since 2016. This is not the census.', '2031 = existing + the Forecast\'s 2026–2031 share (Growth › Forecast › By period).', 'People = units × persons per unit by type (4.2 / 3.4 / 3.1 or 2.7 / 2.7).', 'Jobs = non-residential floor area on the applications; employment counts by 2031 when approved to under construction.']);
+col(4.68, 'Figures (the app\'s)', ['Base: the 2021 Census. Everything is growth from census day (2021-05-11).', 'Existing 2021–26 = permits completed since census day (Growth › 2021 existing, "Built since"). Brampton and Caledon completion dates are estimated from issue dates.', '2021–31 = that plus the Forecast\'s 2026–2031 share (Growth › Forecast › By period).', 'Build-out = 2021–26 plus everything left to build.', 'People = units × persons per unit by type (4.2 / 3.4 / 3.1 or 2.7 / 2.7).', 'Jobs = non-residential floor area on the applications; employment counts by 2031 when approved to under construction.']);
 col(8.86, 'Caveats', ['Unofficial screening estimate from public open data, not the Region\'s capacity ledger.', 'Sites at a box edge may belong to a neighbouring area.', 'Lands with no application yet are not in the app, so the Region\'s figures can be higher.', 'Untimed developments (e.g. the 9,862-unit Heritage / Bovaird block) count nothing by 2031.']);
 
 (async () => { await pres.writeFile({ fileName: OUT }); await applyTheme(OUT, THEME); console.log('ok'); })();

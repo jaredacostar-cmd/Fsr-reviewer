@@ -29,12 +29,16 @@ const serve = require(ROOT + '/tests/browser/serve.js');
     const all = st.projects;
     const rows = L.rows(all, { all: true, gateOf: gateOn ? p => G.rowOf(p) : null, yearsOf, scheduleOf: p => T.scheduleFor(p, m), asOf: Date.parse(st.snapshot.generatedAt) });
     const byId = new Map(rows.map(r => [r.id, r]));
+    const cen = (st.censuses || []).find(c => c.year === 2021) || {}; const cDate = cen.date || '2021-05-11', since = +new Date(`${cDate}T00:00:00Z`);
     const ex = new Map(PeelExports.exportRows(all).map((r, i) => [all[i].key, r]));
     return { generatedAt: st.snapshot.generatedAt, gateOn, criteria: crit, n: all.length, devs: all.map(p => {
       const r = byId.get(p.key), e = ex.get(p.key);
       const est = b => D.estimate([p], crit, b, A.jobsOf);
       const bo = est('all'), done = est('completed'), rem = est('remaining');
+      const gs = PeelAreas.growthSince([p], {}, cDate, crit, {});
+      const jSince = p.phase === 'completed' && +p.milestones.completed >= since ? (A.jobsOf(p) || 0) : 0;
       return {
+        censusDate: cDate, uSince: gs.built.units, popSince: gs.built.population, jobsSince: jSince, estDates: gs.built.estimatedDates,
         key: p.key, title: p.title, municipality: p.municipality, phase: p.phase, phaseLabel: P.PHASE_BY_KEY[p.phase].label,
         lat: p.lat, lng: p.lng, units: p.units || 0, completed: p.buildout ? p.buildout.completed : (p.phase === 'completed' ? p.units || 0 : 0),
         left: P.unbuiltOf(p) || 0, popBuildout: bo.population, popBuilt: done.population, popLeft: rem.population,

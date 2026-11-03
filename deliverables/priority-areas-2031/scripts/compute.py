@@ -20,9 +20,11 @@ for aid,name,mpop,mha,(x0,y0,x1,y1),mun in AREAS:
                title=v['title'], municipality=v['municipality'], stage=v['phaseLabel'], plan=v['plan'], files=v['files'], permits=v['permits'],
                description=v['description'], types=v['types'], employmentUses=v['employmentUses'], nonresM2=v['nonresM2'],
                lat=v['lat'], lng=v['lng'], expectedYear=v['expectedYear'], expLow=v['expLow'], expHigh=v['expHigh'], tier=v['tier'],
-               u_bo=v['completed']+v['left'], u_ex=v['completed'], u_31=v['completed']+v['left']*sh,
-               p_bo=v['popBuilt']+v['popLeft'], p_ex=v['popBuilt'], p_31=v['popBuilt']+v['popLeft']*sh,
-               j_bo=v['jobs'], j_ex=v['jobsBuilt'], j_31=v['jobsBuilt']+v['jobsLeft']*js, share2031=sh, key=v['key'], appUnits=v['units'])
+               # growth on top of the 2021 Census (census day 2021-05-11): existing = built since census day (app: PeelAreas.growthSince)
+               u_ex=v['uSince'], u_31=v['uSince']+v['left']*sh, u_bo=v['uSince']+v['left'], u_pre=max(0,v['completed']-v['uSince']),
+               p_ex=v['popSince'], p_31=v['popSince']+v['popLeft']*sh, p_bo=v['popSince']+v['popLeft'], p_pre=max(0,v['popBuilt']-v['popSince']),
+               j_ex=v['jobsSince'], j_31=v['jobsSince']+v['jobsLeft']*js, j_bo=v['jobsSince']+v['jobsLeft'], j_pre=max(0,v['jobsBuilt']-v['jobsSince']),
+               share2031=sh, key=v['key'], appUnits=v['units'], estDates=v['estDates'])
         rows.append(r)
     # region dots -> nearest app development (planning application)
     ad=[]
@@ -32,7 +34,7 @@ for aid,name,mpop,mha,(x0,y0,x1,y1),mun in AREAS:
         dist=float(np.hypot(*(m(best['lng'],best['lat'])-q))) if best else None
         ad.append(dict(dot=f"A{aid:02d}-R{k}", kind=dt['kind'], lat=dt['lat'], lon=dt['lon'], x=dt['x'], y=dt['y'], match=best['id'] if best and dist<400 else '', matchTitle=best['title'] if best and dist<400 else '', dist=round(dist) if dist is not None else None))
     S=lambda f,flt=lambda r:True: sum(r[f] for r in rows if flt(r))
-    tot={k:S(k) for k in ['u_bo','u_ex','u_31','p_bo','p_ex','p_31','j_bo','j_ex','j_31']}
+    tot={k:S(k) for k in ['u_bo','u_ex','u_31','p_bo','p_ex','p_31','j_bo','j_ex','j_31','u_pre','p_pre','j_pre']}
     app={k:S(k,lambda r:r['kind']=='Planning application') for k in tot}
     stages=collections.Counter(r['stage'] for r in rows if r['kind']=='Planning application')
     res['areas'].append(dict(id=aid, code=f"A{aid:02d}", name=name, municipalityLabel=mun, mapPop=mpop, mapHa=mha, boxHa=round(boxha,1),

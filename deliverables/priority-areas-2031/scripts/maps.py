@@ -67,7 +67,7 @@ for a in R['areas']:
     pxm=0.0615*side/side; L=500*0.0615
     ax.plot([X0+side*0.70,X0+side*0.70+L],[Y0+side*0.96]*2,color='k',lw=3); ax.text(X0+side*0.70+L/2,Y0+side*0.945,'500 m',ha='center',fontsize=7)
     tt=a['total']
-    ax.set_title(f"{a['code']} · {a['name']}  —  build-out {tt['u_bo']:,.0f} units · {tt['p_bo']:,.0f} people · {tt['j_bo']:,.0f} jobs\n"
+    ax.set_title(f"{a['code']} · {a['name']}  —  growth since 2021 Census at build-out {tt['u_bo']:,.0f} units · {tt['p_bo']:,.0f} people · {tt['j_bo']:,.0f} jobs\n"
                  f"Excel: sheet \"{a['code']}\" · PPT: slide {SLIDE0+a['id']} · {len(apps)} planning applications numbered; map rotated as the Region's (north ≈ up-left)",fontsize=8.5)
     fig.tight_layout(); fig.savefig(f"{OUT}/{a['code']}_{slug(a['name'])}.png"); plt.close(fig)
     print(a['code'],'ok')
