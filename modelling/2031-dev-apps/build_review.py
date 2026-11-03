@@ -173,7 +173,7 @@ def sheet_cover(ws, st, L, n_apps, R, n_flags, info):
     ws['A1'] = '2031 development application population: Planning review'
     ws['A1'].font = X.TITLE
     ws['A2'] = (f"Scenario 1, 2031. DRAFT for Planning review, built {dt.date.today().isoformat()}. "
-                'Not for Modelling until signed off below.')
+                'First draft for review round 1: to be revised with Planning\'s input. Not for Modelling.')
     ws['A2'].font = X.SUB
 
     def section(r, title):
@@ -199,7 +199,7 @@ def sheet_cover(ws, st, L, n_apps, R, n_flags, info):
                                                   'by 2031 (Assumptions, table D; today every area is 100%), override '
                                                   'single applications where you know better (Applications), decide '
                                                   'the open flags (Open Flags), confirm our reading of the meeting '
-                                                  '(Meeting Notes), then sign off below.')]:
+                                                  '(Meeting Notes), then fill in Review round 1 below.')]:
         X.body(ws.cell(r, 1, k), X.BOLD)
         ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=3)
         c = X.body(ws.cell(r, 2, v), wrap=True)
@@ -248,17 +248,17 @@ def sheet_cover(ws, st, L, n_apps, R, n_flags, info):
                  f"=COUNTIFS('Open Flags'!$C$5:$C${n_flags + 4},\"{sev}\",'Open Flags'!$J$5:$J${n_flags + 4},\"\")",
                  None, '0')
 
-    r = section(r + 1, 'Sign-off')
-    dv = DataValidation(type='list', formula1='"Approved,Approved with changes,Not approved"', allow_blank=True)
+    r = section(r + 1, 'Review round 1 (first draft; sign-off comes with the final round)')
+    dv = DataValidation(type='list', formula1='"Comments returned,Need more time,Discuss in a meeting"',
+                        allow_blank=True)
     ws.add_data_validation(dv)
-    for lab in ['Reviewed by (Planning)', 'Role', 'Date', 'Decision', 'Conditions / comments',
-                'Sent to Modelling by', 'Date sent']:
+    for lab in ['Reviewed by (Planning)', 'Role', 'Date returned', 'Status', 'Main comments']:
         X.body(ws.cell(r, 1, lab), X.BOLD)
         ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=3)
         X.body(ws.cell(r, 2)).fill = X.REVIEW_FILL
-        if lab == 'Decision':
+        if lab == 'Status':
             dv.add(f'B{r}')
-        if lab.startswith('Conditions'):
+        if lab == 'Main comments':
             ws.row_dimensions[r].height = 45
         r += 1
     r = section(r + 1, 'Sheets')
