@@ -146,7 +146,7 @@ summary updates. Shown as an **Employment** section in the development panel, th
 
 ## Aerial check (is it built?)
 
-At the bottom of each project's panel, the app compares the site on the aerial photo from
+In each development's Servicing › Network (its *Site* fold), the app compares the site on the aerial photo from
 **before the application** with the **latest** aerial (same city source, so colours and
 alignment match) and gives a **probability that the development is completed**, with the
 before / latest photos (site outlined in yellow) and the reasons:
@@ -171,7 +171,7 @@ land show the least. `node scripts/aerial-e2e.js` (Actions: *Probe data sources*
 
 ## Duplicate check (proof of counting once)
 
-The **Data** tab has a **Duplicate check**, recomputed from every record (filters ignored):
+**Records › Data checks** has a **Duplicate check**, recomputed from every record (filters ignored):
 
 1. **Records:** raw records → copies of the same file merged (same file number across layers
    or spellings) → unique files → projects.
@@ -180,7 +180,7 @@ The **Data** tab has a **Duplicate check**, recomputed from every record (filter
 3. **Unit reconciliation:** units on every record, minus each rule that removes a repeat
    (copies of a file, withdrawn files, repeat applications for one proposal, repeat permits for
    one building, permits already inside their planning application) = **units counted**, which
-   equals the demand panel's “All units” with every filter off.
+   equals the units counted with the Scenario control at its defaults (all units) and every filter off.
 4. **Possible duplicates left:** separate projects of 20+ units within 60 m, for review (tap to
    open).
 5. **Download audit CSV:** every file with the project it is counted in, so anyone can check.
@@ -202,7 +202,7 @@ For each project with a unit count on its planning applications:
 | Planned | Units on the planning applications. Files on the same land repeat one proposal, so the largest figure is used. Parts nested inside a larger application are summed, unless the parent's own figure is larger. |
 | Permitted | Units on building permits on the land. Permits at one address (foundation, full, revisions) count once. |
 | Completed | Units on permits marked closed, finaled or occupied. |
-| **Left to build** | Planned − completed: units not yet built, permit issued or not. One figure on Growth, the Overview, Timing, the stage chart ("not yet built") and the Scenario's **Units: left to build**. |
+| **Left to build** | Planned − completed: units not yet built, permit issued or not. One figure on Growth, the Overview, Forecast, the stage chart ("not yet built") and the Scenario's **Units: left to build**. |
 | Left to permit | Planned − permitted: units with no building permit yet. |
 | **Committed capacity** | Growth only (units planned on a planning application), not yet completed, on projects that are approved, permitted or under construction. Applications still in pre-consultation or review are proposed, not committed; permits with no planning application are not growth. |
 
@@ -228,10 +228,10 @@ A project's units are counted once, as the larger of planned and permitted, neve
 together. A plan with units still left to permit shows as "Under construction", not
 "Completed", even if every permit issued so far is finished.
 
-In the app, the project panel shows a build-out bar, and the project list shows "planned / left"
-on each row. The **Unit growth** filter has an option for **Units left to build**. The demand
-panel can be based on all units, units left to build (not yet completed), or completed
-units. The CSV export includes every build-out figure.
+In the app, the project panel shows a build-out bar, and Find's *In view* list shows "planned, left
+to build" on each row. The Scenario control's **Units** has **Left to build**: the figures can be
+based on all units or units left to build (not yet completed). The CSV export includes every
+build-out figure.
 
 Run the tests with `npm test`.
 
@@ -305,9 +305,9 @@ Each planned work now shows a status (`PeelUtil.capitalStatus`):
 | **Status unknown** | In the 2026 budget (approved 2026, or a plant step Council already funded): paused only if not tendered or awarded by June 11, 2026 |
 | **Scheduled** | Known to be going ahead: set per project number in `CAPITAL.overrides` (none yet) |
 
-Shown on the DC Timing and funding tables (with "Online — draft, as of March 2026"), every DC
-relief text (Water, Wastewater, the briefing, the memo), the planned-works map tooltip and the
-development brief; a pause note heads each DC sub-view, the briefing's DC section and the memo's
+Shown on the Capital › DC timing and funding tables (with "Online — draft, as of March 2026"), every DC
+relief text (Servicing, the briefing, the memo), the planned-works map tooltip and the
+development brief; a pause note heads each DC timing and funding table, the briefing's DC section and the memo's
 DC needs. The CSVs carry an "Online (draft, as of March 2026)" and a "Capital status" column.
 The analysis itself still replays the draft schedule: the status says how far to trust each date.
 
@@ -319,7 +319,7 @@ average annual rate (≈×1.12).
 ## Screening wording and the public version
 
 Results say what the screen shows, never what the Region should do (design audit, Group 2). One
-set of labels (`PeelUtil.SCREEN`) is used on the DC tab, the briefing, the memo, the workbook and
+set of labels (`PeelUtil.SCREEN`) is used on the Capital tab, the briefing, the memo, the workbook and
 the CSVs:
 
 | Was | Now |
@@ -338,7 +338,7 @@ the same number shows one number (no "65,100–65,100"). The funding screen's wi
 colours are neutral (accent / grey): they are not capacity states.
 
 **Public version** (Settings › Reports › *Public version*, or add `?public` to the
-link): hides the DC *Funding screen* and *Funding levels* sub-views (DC opens on Timing), the
+link): hides the DC *Funding screen* and *Funding levels* (the DC funding lab's fold of Capital › DC timing), the
 screening-result column in the DC timing table and its CSV, and turns the red / amber / green of
 the screening summary to plain text. Everything else is unchanged.
 
@@ -413,7 +413,7 @@ Every row carries a pre-filled call and the reason for it.
 
 ## Definitions (one table, used everywhere)
 
-The Overview, Growth, the header, Water, Wastewater, DC, every export and the executive briefing use
+The Overview, Growth, the header, Servicing, Capital, every export and the executive briefing use
 these definitions. In the app they're in the **Definitions** card (Overview ⓘ line) and at the top of the
 Glossary (navigation phase 7).
 
@@ -474,17 +474,17 @@ How the estimate works:
   per apartment or unstated unit, and marked “est.”. For completed / remaining / left-to-build
   figures the site area is split by share of units. **Peak wet weather = Harmon dry-weather
   peak + I&I.** Shown on the wastewater tile, in each project's servicing table, and for growth
-  since 2021 in the census panel.
+  since 2021 in Growth › Areas' full table (the census view).
 - **Employment demand:** jobs estimated from the floor areas on the applications (see
   Employment uses) × 250 L/employee/day water and 270 L/employee/day wastewater. Wastewater is
   peaked with Harmon on the employee count, kept between 2 and 4; I&I is added on the boundary
   of purely non-residential sites (mixed-use sites already count theirs with the dwellings).
   Employment space has no unit-level build-out, so a project's jobs count by its phase
   (committed = approved to under construction; completed once the project is completed).
-  Shown as the Employment and Total rows of the water and wastewater tables in the bottom
-  panel, as Employment rows and a combined total in each project's servicing table, as a
-  one-line summary in the project's Employment section, in the by-phase breakdown, and in the
-  CSV (`emp_water_avg_lps`, `emp_wastewater_peak_lps`). Residential and employment peaks are
+  Shown as the Employment and Total rows of the water and wastewater tables in a drawn area's
+  *Residential / employment split* and of Servicing › Capacity's water *Demand flows*, as
+  Employment rows and a combined total in each project's servicing table, as a one-line summary
+  in the project's Employment section, in the by-phase breakdown, and in the CSV (`emp_water_avg_lps`, `emp_wastewater_peak_lps`). Residential and employment peaks are
   computed separately and added, as in a servicing report. Projects whose descriptions state no
   floor area have no jobs and so no employment demand.
 
@@ -495,9 +495,12 @@ Standards is listed on the Region's site.
 
 ## Site constraints: gas, hydro, watercourses, regulation limits
 
-Four switches in *Layers* draw site constraints, loaded live for the map area. Gas and hydro
-show from zoom 11, watercourses and regulation limits from zoom 12. Hover a line or area for
-its name and source. Each layer has a short note in the legend.
+Switches in *Layers › Constraints* draw site constraints
+(regulation limits, floodplain, Greenbelt, Oak Ridges Moraine, Niagara Escarpment, PSW / ANSI, the
+Natural Heritage System and watercourses). Watercourses show from zoom 12. Hover a line or area for
+its name; click it for its card (owner, as-of date, source). Each layer has a short note in the legend.
+The gas pipeline and hydro line layers are removed (Stage 2); the table and notes below record the
+first build's four layers.
 
 | Layer | Source | Notes |
 |---|---|---|
@@ -566,9 +569,9 @@ also stops Mississauga's `HOUSDEMO` demolition permits being counted as new home
 capacity is unchanged, because those houses were never counted as growth.
 
 **Screening note.** A note opens every trace and every servicing demand result:
-- the development's Overview, Water and Wastewater tabs, and its demand by stage
+- the development's Overview and Servicing tabs, and its demand by stage
 - the sewer and water traces
-- the bottom Water, Wastewater and Plants tabs
+- Servicing › Capacity and Network
 - area selections
 - the batch, compare, fit and inquiry tools
 - the sewer panel
@@ -594,9 +597,9 @@ Pumping stations, plants, pressure zones and water facilities stay. A traced sew
 in one colour (no capacity colours), and the briefing map's sewers are plain.
 
 **The tour** shows each step's real target again:
-- The Development tab and the Wastewater tab steps open the development only once, then pick the
+- The development's Overview and Servicing steps open the development only once, then pick the
   tab. Opening it again had reset the tabs, so those steps pointed at nothing.
-- On a phone, steps whose panel is hidden or off screen (More settings, Filter by area, This week)
+- On a phone, steps whose panel is hidden or off screen (More settings, Find, Watch)
   point at the button that opens it.
 - The card sits beside the tool rail instead of over it.
 - The step text matches the hidden pipe results.
@@ -627,10 +630,10 @@ and your decisions in `data/tree-overrides.json`). Development keys are unchange
 **Where it shows.**
 - **The Previous switch is retired** (2026-10-27, navigation phase 5; owner decision 14, approved
   2026-10-15 for one release): one total. The rule before the tree is the fallback above, and the
-  note says *Counted from its permits* (or *Counted from its files and permits*: why). Settings ›
-  Counting only points to the Scenario control.
-- The scenario bar and the top-bar chip say "counting: All units (tree count)". Exports and share
-  links carry the same scenario text.
+  note says *Counted from its permits* (or *Counted from its files and permits*: why). Counting is
+  the Scenario control's (Count, Units).
+- The Scenario control lists *Units per development: tree count* (so does the top-bar chip's hover),
+  and exports say "counting: All units (tree count)". Share links carry the same scenario.
 - The development panel's At a glance has a **Tree count** note: the trees, their counts and
   flags.
 
@@ -751,7 +754,7 @@ Each development is measured once and its shares multiply it, so Peel equals the
 
 ## Population tables, C2: Table 1, the roll-up (Growth › By plan)
 
-Growth has a new **By plan** sub-view (`js/plan-tables.js`). It shows the developments on screen
+Growth › Areas' full table has the **By plan** roll-up (`js/plan-tables.js`). It shows the developments on screen
 (the Overview's set and basis) by where they are: Peel → municipality → plan → sub-area or
 precinct → developments.
 
@@ -788,7 +791,7 @@ precinct → developments.
 
 ## Population tables, C3: Table 5, plans by plant or pressure zone
 
-Under Table 1 in Growth › By plan, the plans run down the side: each municipality's plans and
+Under Table 1 in Growth › Areas' full table, the plans run down the side: each municipality's plans and
 "Not in a plan", the same rows as Table 1. Across the top are either:
 - **Plants:** the plant receiving the wastewater (G.E. Booth, Clarkson, Inglewood, No plant);
 - **Pressure zones:** the first zone, if a development has two.
@@ -810,7 +813,7 @@ The plant capacity tables use census-relative layers; see Servicing › Capacity
 
 ## Population tables, C4: plans against their targets (Table 2)
 
-Growth › By plan has a third table, **Plans against their targets**.
+Growth › Areas' full table has a third table, **Plans against their targets**.
 - **Municipalities** are compared with the Region's 2051 allocation of growth (2051 minus 2021,
   from `data/peel-reports.json`).
 - **Plans** are compared with their published targets in `data/plan-targets.json`.
@@ -955,7 +958,7 @@ Each output answers one person's question, says why each item is listed, and say
 Wording stays screening wording: what the records show and what to check, never what the Region
 should do.
 
-- **Site brief (for the servicing review).** On a development's **Capital** section, and in its
+- **Site brief (for the servicing review).** On a development's **Capital** tab, and in its
   **Servicing memo**: each EA within 1 km of the site boundary and each Region capital contract that is
   planned, tendered, awarded or under construction within 1 km, nearest first.
   - An EA line gives its status, schedule, distance, next step or completion year, "no milestone
@@ -966,11 +969,11 @@ should do.
       so).
     - **Flags:** a completion target that has passed with no completion date, and a record with no
       update in a year.
-  - **Copy for review comments** (the site page's action row) puts the whole brief on the clipboard
+  - **Copy for review comments** (the footer of its Capital tab) puts the whole brief on the clipboard
     as plain text, one line per item with its project page and the sources' dates. If the browser
     blocks the clipboard, it is saved as a text file.
-- **To check (for the planner).** At the top of Capital › Projects, and in the map's Construction
-  view, worst first:
+- **To check (for the planner).** At the top of Capital › Projects, and in its full
+  table, worst first:
   1. EAs complete 9+ years with no construction following them.
   2. Contracts past their completion target with no completion date (how long past).
   3. EAs marked current with nothing dated ahead and no milestone in 18 months, or none published.
@@ -978,7 +981,7 @@ should do.
 
   Each item says why it is listed and what to check. It follows the map's municipality. **CSV of this
   list**, and a **Capital to check** sheet in the workbook.
-- **CSV: every contract** (Capital › Projects, and the Construction view). One row per contract (a
+- **CSV: every contract** (Capital › Projects, its footer and full table). One row per contract (a
   project page and its segments), flagged ones first.
   - **Columns added:**
     - the municipality the work is in, from its ward (the published field often names all three);

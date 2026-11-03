@@ -15,10 +15,11 @@ These sources are fetched on GitHub Actions, because the sandbox can't reach the
   - The file also holds the water and wastewater DCs per single / semi from August 1, 2026 to
     January 31, 2027 (water $30,180.96, wastewater $32,776.33). Other unit types are scaled by the
     2020 schedule's ratios.
-  - **DC Analysis** uses them to show each project's cost, its cost per person held back if
-    cancelled, and the DC revenue those held-back units would pay. The table can be sorted by
-    cost per person.
-  - A development's **Servicing** tab estimates its Regional water and wastewater DCs.
+  - **Capital › DC timing**'s full table uses them to show each project's cost, its cost per
+    person held back if cancelled, and the DC revenue those held-back units would pay. The table
+    can be sorted by cost per person.
+  - A development's **Capital** tab estimates its Regional water and wastewater DCs (the fold
+    *DCs it would pay*).
 - **Housing targets, CMHC and Ministry of Finance projections.** `data/housing.json` is built by
   `scripts/build-housing.py`. It holds:
   - Ontario's housing supply progress, from the Ontario Data Catalogue (still collected, but no
@@ -28,22 +29,24 @@ These sources are fetched on GitHub Actions, because the sandbox can't reach the
   - The Ministry of Finance 2025–2051 projection for the Peel census division.
 
   These feed:
-  - The Overview's **Population outlook** card: the Ministry of Finance projection against the
-    Region's 2.28 M forecast for 2051.
+  - The **Population outlook** card in Growth › Areas' full table: the Ministry of Finance
+    projection against the Region's 2.28 M forecast for 2051.
   - The briefing.
-  - New **Model checks**: units completed against CMHC completions, the approved build pace
-    against CMHC starts, and population today against the July 2025 estimate.
+  - New checks in **Records › Data checks** (*The model against published figures*): units
+    completed against CMHC completions, the approved build pace against CMHC starts, and
+    population today against the July 2025 estimate.
 - **Design storms and climate (wet weather scenario).** `data/idf.json` is built by
   `scripts/build-idf.js`. It holds the MTO IDF Curve Look-up coefficients at each wastewater block
   (`--only mto`) and MTO's climate trend.
-  - **Settings & sources → Wet weather scenario** scales the I&I allowance by the 1-hour intensity
-    ratio. The choices are:
+  - The Scenario control's **Wet weather scenario** (the top bar, under *Change the scenario*)
+    scales the I&I allowance by the 1-hour intensity ratio. The choices are:
     - the storm (2- to 100-year);
     - the climate: MTO trend to 2050 or 2080, or a +10, 20 or 30% uplift, for example from IDF_CC;
     - the storm the allowance represents (25-year by default).
-  - The pipes, capacity colours and DC Analysis follow the scenario, and the Scenario chip shows it.
-- **SWMM model.** **Wastewater → Blocks → SWMM model (.inp)** exports the 40 blocks as a SWMM 5
-  skeleton:
+  - The pipes, capacity colours and Capital › DC timing follow the scenario, and the scenario line
+    on the exports and the briefing names the storm.
+- **SWMM model.** **Settings › Labs › SWMM export**, then **Export ▾ › SWMM model (.inp)**,
+  exports the 40 blocks as a SWMM 5 skeleton:
   - junctions at the block outlets, and conduits to the downstream block (trunk size, nearest
     trunk slope, relative inverts);
   - dry weather flow at the results year, with a diurnal pattern;
@@ -61,11 +64,13 @@ These sources are fetched on GitHub Actions, because the sandbox can't reach the
   - The `.inp` can be downloaded to build on in EPANET or InfoWater.
 - **Effluent compliance.** `data/compliance.json` is built by `scripts/build-compliance.py` from
   MECP Environmental Compliance Reports (municipal and private sewage, 2020–2024). It lists
-  exceedances at G.E. Booth, Clarkson and Inglewood, shown in **Wastewater → Plants**.
+  exceedances at G.E. Booth, Clarkson and Inglewood; each plant's **Records › Sources** lists it
+  among the sources the plant rests on.
 - **Measured plant flow.** `data/plant-flows.json` is built by `scripts/build-plant-flows.py` from
   MECP's Municipal Treated Wastewater Effluent data (monthly total flow, 2008 on) for G.E. Booth,
   Clarkson and Inglewood. Each plant's scope panel shows the trend against rated capacity and the
-  90% trigger; Settings → Data quality checks it against the Region's annual reports (within 0.2%).
+  90% trigger; Records › Data checks (the Servicing model group) checks it against the Region's
+  annual reports (within 0.2%).
   The March 2025 G.E. Booth → Clarkson diversion breaks either plant's trend alone, not the two
   together. Rebuild with **Probe data sources**, mode `plant-flows` (once a year).
 - **Address points.** `data/address-points.json` is the Region of Peel address point (open data,
@@ -76,17 +81,17 @@ These sources are fetched on GitHub Actions, because the sandbox can't reach the
   (same address point first, neighbours last), and a file in Records says whether its address
   matches and how far the map point is from it. Rebuilt every Monday after the snapshot.
 - **Plan area and implied density.** `scripts/build-areas.js` keeps Brampton's published plan size
-  (`EST_SIZE_HC`) and any appeal from Schedule 10, and the mapped area of every plan. Growth → Plans
-  against their targets adds **Target per ha** (people + jobs, or units, over the plan's area) to set
-  beside a stated density; ⚠ where the published size and the boundary disagree by more than 25%
-  (Heritage Heights: 864 ha published, 1,562 ha mapped).
+  (`EST_SIZE_HC`) and any appeal from Schedule 10, and the mapped area of every plan.
+  Growth › Areas' *Plans against their targets* adds **Target per ha** (people + jobs, or units,
+  over the plan's area) to set beside a stated density; ⚠ where the published size and the
+  boundary disagree by more than 25% (Heritage Heights: 864 ha published, 1,562 ha mapped).
 - **Overflows and spills.** `data/ww-events.json` holds Table 7 of the Region's Wastewater
   Collection System annual reports (2024: 18 events; 2025: 12) and the station roster in
   Appendix A, transcribed by hand because the table's layout does not parse;
   `scripts/check-ww-events.js` checks every Spills Action Centre number, the stated total and the
   roster against the report text (run in **Probe data sources**, mode `peel-reports`). Station and
-  plant scope panels list their events; Servicing → Capacity folds a yearly summary; Data quality
-  sets the GIS stations against the roster.
+  plant scope panels list their events; Servicing → Capacity folds a yearly summary;
+  Records › Data checks (the Servicing model group) sets the GIS stations against the roster.
 - **2026 Census.** The first release is February 10, 2027. Run `scripts/build-areas.js` with
   `CENSUS_2026_CSV` (Statistics Canada's DA counts CSV, joined to the 2021 DA geometry) or
   `CENSUS_2026_URL`, plus `CENSUS_2026_PEEL` to check the total. 2026 then becomes the baseline
@@ -198,7 +203,7 @@ status maps to a phase.
   Caledon's development applications layer is described as possibly incomplete. Some
   Brampton datasets are updated irregularly.
 - Phases are inferred from status wording and dates, which differ between municipalities.
-  Open the source record in the project panel to check a specific project.
+  Open the source record (Record ↗) in a development's Records tab to check a specific project.
 
 **Chronology rules (proposed, modelled; the app is unchanged).** `js/tree.js` has five date rules.
 They are off unless `chrono` names them (`audit(data, { chrono: { r1, r2, r3, r4 } })`).

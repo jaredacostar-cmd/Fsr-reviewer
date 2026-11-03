@@ -52,7 +52,7 @@ doesn't set a site plan's phase. A change to these rules is recorded in
 
 **Original application and later files on its land.** The app loads files from 2016 on, so a site
 built on an older application (before pre-consultation was required) only shows the files filed on
-top of it. A development's Overview names the earlier files its own files point to (a Brampton site
+top of it. A development's Records tab, in *Files and events*, names the earlier files its own files point to (a Brampton site
 plan revision such as SP13-080.002 → SP13-080.000, the earlier files on a concession lot such as
 C04W14.001–.008, a file or registered plan named in a description, a legacy "Transferred" file with no
 dates) and lists every planning file with at least half its land inside the site's widest file, on
