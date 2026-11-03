@@ -26,6 +26,8 @@ private/
   map_boxes.json                            built by extract_map_boxes.py
   Bucket2_Areas.xlsx, Bucket2_check_map.png built by build_areas.py
   Bucket3_App_Check.xlsx                    built by build_app_check.py (runs app_match.js)
+  exclusions.csv, stated_units.csv          checkpoint exclusions; unit totals stated in the Region text
+  Bucket4_Assumptions.xlsx                  built by build_assumptions.py
 ```
 
 ## Buckets
@@ -35,8 +37,8 @@ private/
 | 0 | Map areas workbook | `build_map_areas.py` | reviewed |
 | 1 | Inventory and reconciliation | `build_inventory.py` | reviewed |
 | 2 | Area assignment (by location) | `extract_map_boxes.py`, `build_areas.py` | reviewed |
-| 3 | Cross-validation against the app | `app_match.js`, `build_app_check.py` | built, in review |
-| 4 | Assumptions (units, density, share built by 2031) | | not started |
+| 3 | Cross-validation against the app | `app_match.js`, `build_app_check.py` | reviewed |
+| 4 | Assumptions (units, density, share built by 2031) | `build_assumptions.py` | built, in review |
 | 5 | Planning review workbook | | not started |
 | 6 | Modelling handoff | | not started |
 
@@ -51,6 +53,7 @@ python3 build_inventory.py
 python3 extract_map_boxes.py
 python3 build_areas.py
 python3 build_app_check.py      # needs Node 18+; reads the app's data/ read-only
+python3 build_assumptions.py
 ```
 
 **How the area assignment works.** The map PDF is vector: each priority area is a dark-red
@@ -70,3 +73,8 @@ municipality's numbering (and within 1 km), else by the application site outline
 reads the app's data. `build_app_check.py` grades each match, raises flags (withdrawn, non-residential,
 built by 2021, people per unit), weighs the open duplicate pairs and summarises population by app
 phase. Flags that could take people out of 2031 growth are raised only on High / Medium matches.
+
+**How the 2031 population is worked out.** `build_assumptions.py` writes every assumption as an
+editable cell (people per unit by density class, share built by 2031 by app phase, a share per
+priority area for rows the app cannot confirm, and a build-out speed limit) and every row and total
+as a live formula: 2031 population = full population x share built by 2031.
