@@ -229,6 +229,7 @@
     if (r.kind !== 'permit') return null;
     if (/DEMO/i.test(String(r.ref || '')) || /demoli/i.test(String(r.type || ''))) return 'none';
     if (permitAddsUnits(r)) return isAlteration(r) || /^SEC\s*UNIT/i.test(String(r.ref || '')) || (isSuite(r) && !/\dNEW\b/i.test(String(r.ref || '')) && !/\bnew\b[^—]*\b(storey|detached|semi|town ?house|single|apartment|building)\b|\bconstruct|\berect/i.test(r.description || '')) ? 'suite' : 'units';
+    if (isRepairWork(r)) return 'none';
     const t = `${r.type || ''} ${r.description || ''}`;
     if (!t.trim()) return 'res';   // nothing published about the work: give it the benefit of the doubt
     if (/^(DRAIN|SH)\b|\bSS\b/i.test(String(r.ref || '')) || /site servic|servicing|shoring|excavat/i.test(t)) return 'servicing';
@@ -415,15 +416,30 @@
     // Alterations add units only when they create one (a second suite); otherwise the count is
     // the existing building's ("balcony repairs (205 units)").
     if (isAlteration(r) && !isSuite(r)) return false;
+    // Repair and replacement work in an existing building states the suites it touches, not new
+    // ones ("IN-SUITE KITEC PIPING REPLACEMENT FOR 337 SUITES", "REPLACE FURNACE FOR UNITS 1 2 5 …
+    // - 13 UNITS TOTAL"), unless it names a new dwelling or a second unit.
+    if (isRepairWork(r)) return false;
     // A sign, tent, sales trailer, model home or industrial building is not a home, whatever its
     // units field says (Caledon's "Sign" and "Tent" permits carried units).
     if (NO_HOMES_TYPE.test(r.type || '') && !DWELLING.test(r.description || '')) return false;
     return r.units > 0;
   }
+  // Maintenance of what stands: piping (Kitec), plumbing, furnace / HVAC, balconies, windows, roofs,
+  // fire alarm, sprinklers, elevators, re-cladding, or any repair / replacement.
+  const REPAIR_WORK = /kitec|\bpiping\b|re-?pip(e|ing)\b|plumbing|furnace|\bhvac\b|boiler|air[- ]condition|balcon(y|ies)|window|\broof|fire alarm|sprinkler|elevator|re-?clad|cladding|\brepair|\breplace(ment|s|d)?\b/i;
+  // … but a second unit or a new dwelling is a home, whatever else the permit replaces
+  // ("replacement dwelling", "new SFD — replace existing house", "second unit in basement").
+  const NAMES_NEW_HOME = /second(ary)? (unit|suite|dwelling)|\b(second|third|2nd|3rd)\b.*\bun(it|ti)\b|\b(duplex|triplex|fourplex)\b|\bunit in (the )?(basement|bsmt)|\baru\b|repeat housing|additional (residential |dwelling )?units?|basement (apartment|unit|dwelling)|apartment in (the )?(basement|bsmt)|\b(new|replacement)\b[^—]*\b(dwellings?|house|home|storey|detached|semi|town ?houses?|single|apartments?|building|bldg|sfd|sdd)\b|\bconstruct|\berect/i;
+  const isRepairWork = r => {
+    if (/^SEC\s*UNIT|\bARU\b/i.test(String(r.ref || ''))) return false;
+    const t = `${r.scope || ''} ${r.description || ''}`;
+    return REPAIR_WORK.test(t) && !NAMES_NEW_HOME.test(t);
+  };
   const NO_HOMES_TYPE = /\bsign\b|\btent\b|temporary|sales (office|centre|center|pavilion|trailer)|model home|industrial|agricultur/i;
   const isAlteration = r => /\d?ALT\b|^MECH\b/i.test(String(r.ref || '')) || /alteration to existing|^\s*(interior )?alteration|^\s*(replace|repair)/i.test(`${r.scope || ''} ${r.description || ''}`);
   // A second (or third) unit in an existing house: real new homes, but not a site plan's building.
-  const isSuite = r => /^SEC\s*UNIT/i.test(String(r.ref || '')) || /second(ary)? (unit|suite|dwelling)|\b(2nd|3rd|scnd)\b.*unit|additional (residential |dwelling )?units?|\bsuite\b|basement (apartment|unit|dwelling)|\badu\b|\baru\b|apartment in (the )?(basement|bsmt)/i.test(r.description || '');
+  const isSuite = r => /^SEC\s*UNIT/i.test(String(r.ref || '')) || /second(ary)? (unit|suite|dwelling)|\b(2nd|3rd|scnd)\b.*unit|additional (residential |dwelling )?units?|(?<!in-)\bsuite\b|basement (apartment|unit|dwelling)|\badu\b|\baru\b|apartment in (the )?(basement|bsmt)/i.test(r.description || '');
 
   // ---- Dwellings removed on the site (tear-down rebuilds count net) ---------------------------
   // "NEW (2) STOREY DETACHED DWELLING - DEMOLISH EXISTING DETACHED DWELLING", "Demolish/Construct
