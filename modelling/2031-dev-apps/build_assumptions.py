@@ -140,8 +140,49 @@ def sheet_assumptions(ws, labels):
                    "100% = today's assumption (all application populations are 2031). Replace with Planning's estimate."))
     R.area = f'$A${r1 + 1}:$A${r1 + len(labels)}'
     R.area_share = f'$B${r1 + 1}:$B${r1 + len(labels)}'
+
+    # E. servicing limits by 2031 (applied after the share and the speed limit)
+    r2 = r1 + len(labels) + 2
+    limits = {} if app_mode() else load_limits()
+    X.header(ws, r2, ['E. Servicing limit by 2031 (blank = none)', 'Limit (units)', 'Limit (people)', 'Source',
+                      'Units by 2031 before limit', 'People by 2031 before limit', 'Factor applied'])
+    for col, w in zip('EFG', [13, 13, 10]):
+        ws.column_dimensions[col].width = w
+    for i, lab in enumerate(sorted(labels, key=lambda x: x['map_order'])):
+        rr = r2 + 1 + i
+        lim = limits.get(lab['area_name'], {})
+        X.body(ws.cell(rr, 1, lab['area_name']), X.BOLD)
+        yellow(ws.cell(rr, 2, lim.get('units')), '#,##0')
+        yellow(ws.cell(rr, 3, lim.get('people')), '#,##0')
+        X.body(ws.cell(rr, 4, lim.get('source') or ('Not applied in the app estimate.' if app_mode() else None)),
+               wrap=True)
+    R.svc_first, R.svc_last = r2 + 1, r2 + len(labels)
+    R.svc_area = f'$A${R.svc_first}:$A${R.svc_last}'
+    R.svc_factor = f'$G${R.svc_first}:$G${R.svc_last}'
+    R.ws = ws
     ws.freeze_panes = 'A4'
     return R
+
+
+def load_limits():
+    path = os.path.join(PRIVATE, 'servicing_limits.csv')
+    out = {}
+    if os.path.exists(path):
+        for r in csv.DictReader(open(path, newline='', encoding='utf-8')):
+            out[r['area']] = {'units': int(r['units']) if r['units'] else None,
+                              'people': int(r['people']) if r['people'] else None, 'source': r['source']}
+    return out
+
+
+def fill_limits(R, L, n_apps):
+    """Formulas for table E, once the Applications columns are known."""
+    ws = R.ws
+    rng = lambda k: f'Applications!${L[k]}$2:${L[k]}${n_apps + 1}'   # noqa: E731
+    for r in range(R.svc_first, R.svc_last + 1):
+        X.body(ws.cell(r, 5, f'=SUMIFS({rng("u_pre2")},{rng("area")},$A{r})'), fmt='#,##0')
+        X.body(ws.cell(r, 6, f'=SUMIFS({rng("p_pre")},{rng("area")},$A{r})'), fmt='#,##0')
+        X.body(ws.cell(r, 7, f'=MIN(1,IF(B{r}<>"",IF(E{r}>0,B{r}/E{r},1),1),IF(C{r}<>"",IF(F{r}>0,C{r}/F{r},1),1))'),
+               X.BOLD, '0%')
 
 
 COLS = [  # key, header, width, format
@@ -160,7 +201,11 @@ COLS = [  # key, header, width, format
     ('share', 'Share before limit', 9, '0%'), ('dev', 'Development (for the speed limit)', 14, None),
     ('u_pre', 'Units by 2031 before limit', 9, '#,##0'), ('dev_pre', 'Development units by 2031 before limit', 11, '#,##0'),
     ('limited', 'Speed limit applies?', 9, None),
-    ('final', 'Share built by 2031', 9, '0%'), ('u2031', 'Units by 2031', 9, '#,##0'),
+    ('final', 'Share after speed limit', 9, '0%'),
+    ('p_pre', 'Population by 2031 before servicing limit', 11, '#,##0'),
+    ('u_pre2', 'Units by 2031 before servicing limit', 10, '#,##0'),
+    ('svc', 'Servicing limit factor (Assumptions E)', 10, '0%'),
+    ('share_out', 'Share built by 2031', 9, '0%'), ('u2031', 'Units by 2031', 9, '#,##0'),
     ('p2031', '2031 population', 11, '#,##0'), ('note', 'Note', 50, None), ('rank', 'rank key', 6, None),
 ]
 
@@ -212,8 +257,12 @@ def sheet_applications(ws, apps, match, info, stated, R):
                         if app_mode() else   # the app estimate limits only what the app evidences
                         f'=IF(AND({A}{R.lim_on}="Yes",{c["dev_pre"]}>{A}{R.lim_units}),"Yes","No")'),
             'final': f'=IF({c["limited"]}="Yes",{c["share"]}*{A}{R.lim_units}/{c["dev_pre"]},{c["share"]})',
-            'u2031': f'=IF({c["units"]}="","",{c["units"]}*{c["final"]})',
-            'p2031': f'=IF({c["inc"]}="Yes",{c["pop"]}*{c["final"]},0)',
+            'p_pre': f'=IF({c["inc"]}="Yes",{c["pop"]}*{c["final"]},0)',
+            'u_pre2': f'=IF(OR({c["inc"]}<>"Yes",{c["units"]}=""),0,{c["units"]}*{c["final"]})',
+            'svc': f'=INDEX({A}{R.svc_factor},MATCH({c["area"]},{A}{R.svc_area},0))',
+            'share_out': f'={c["final"]}*{c["svc"]}',
+            'u2031': f'=IF({c["units"]}="","",{c["units"]}*{c["share_out"]})',
+            'p2031': f'=IF({c["inc"]}="Yes",{c["pop"]}*{c["share_out"]},0)',
             'note': '; '.join(notes) or None,
             'rank': f'={c["p2031"]}+ROW()/10000000',
         }
@@ -306,7 +355,7 @@ def sheet_top(ws, L, n_apps):
         X.body(ws.cell(r, 2, '=' + pick('id', r)), X.BOLD)
         X.body(ws.cell(r, 3, '=' + pick('area', r)))
         X.body(ws.cell(r, 4, '=' + pick('pop', r)), fmt='#,##0')
-        X.body(ws.cell(r, 5, '=' + pick('final', r)), fmt='0%')
+        X.body(ws.cell(r, 5, '=' + pick('share_out', r)), fmt='0%')
         X.body(ws.cell(r, 6, '=' + pick('src', r)))
         X.body(ws.cell(r, 7, '=' + pick('limited', r)))
         X.body(ws.cell(r, 8, '=' + pick('p2031', r)), X.BOLD, '#,##0')
@@ -339,6 +388,10 @@ def sheet_readme(ws):
                         'Rows on one app development share one allowance (D24); a row without a trusted app match is '
                         'its own development. When a development is over, each of its rows is scaled down in proportion. '
                         'Employment-equivalent rows have no units, so no limit.'),
+        ('Servicing limits', 'Assumptions E: where a servicing constraint caps an area by 2031 (units or people), '
+                             'every row in the area is scaled down by the same factor so the area fits the limit. '
+                             'Applied after the share and the speed limit. Values come from the servicing meeting '
+                             '(D28, D29).' if not app_mode() else 'Not applied in the app estimate.'),
         ('How to review', 'Change the yellow cells on Assumptions, or type a share in "Planning override share" on a '
                           'row. Area Summary and Top Rows update. Top Rows shows where a change moves the total most.'),
         ('Colours', 'Blue = value from the data. Black = formula. Yellow = Planning fills in or edits.'),
@@ -374,6 +427,7 @@ def main():
     ws_sum = wb.create_sheet()
     ws_top = wb.create_sheet()
     L = sheet_applications(wb.create_sheet(), apps, match, info, stated, R)
+    fill_limits(R, L, len(apps))
     sheet_summary(ws_sum, st['labels'], L, len(apps))
     assert len(st['labels']) == 19   # Top Rows refers to the Area Summary total in row 24
     sheet_top(ws_top, L, len(apps))

@@ -85,6 +85,7 @@ def main():
     ws_sum, ws_top = wb.create_sheet(), wb.create_sheet()
     R = BA.sheet_assumptions(wb.create_sheet(), st['labels'])
     L = BA.sheet_applications(wb.create_sheet(), apps, match, info, stated, R)
+    BA.fill_limits(R, L, len(apps))
     BA.sheet_summary(ws_sum, st['labels'], L, len(apps))
     ws_sum['A1'] = '2031 population by priority area: the app estimate'
     add_comparison(ws_sum)

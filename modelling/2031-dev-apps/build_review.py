@@ -10,6 +10,7 @@ Output: private/Planning_Review_2031.xlsx
 Usage:  python3 build_review.py
 """
 import collections
+import csv
 import datetime as dt
 import os
 import sys
@@ -24,8 +25,8 @@ import xlsx_style as X  # noqa: E402
 from build_app_check import (PPU_HIGH, assess, non_residential, pair_evidence, run_matcher,  # noqa: E402
                              shared_developments)
 from build_areas import PRIVATE, prepare, sheet_decisions  # noqa: E402
-from build_assumptions import (load_stated, sheet_applications, sheet_assumptions, sheet_summary,  # noqa: E402
-                               sheet_top)
+from build_assumptions import (fill_limits, load_limits, load_stated, sheet_applications, sheet_assumptions,  # noqa: E402
+                               sheet_summary, sheet_top)
 from build_map_areas import write_points_by_area  # noqa: E402
 
 SKIP_CHECKS = {'Employment equivalent (D15)'}     # decided at checkpoint 3: information only
@@ -139,6 +140,31 @@ def default_areas(st, info, n=4):
     return [k for k, _ in tot.most_common(n)]
 
 
+def load_notes():
+    path = os.path.join(PRIVATE, 'meeting_notes.csv')
+    return list(csv.DictReader(open(path, newline='', encoding='utf-8'))) if os.path.exists(path) else []
+
+
+def sheet_notes(ws, notes):
+    ws.title = 'Meeting Notes'
+    ws['A1'] = 'From the servicing / budget meeting'
+    ws['A1'].font = X.TITLE
+    ws['A2'] = ('Our reading of the meeting minutes, by priority area. Applied = already in the numbers (servicing '
+                'limits on Assumptions E). Please confirm or correct each in the yellow columns.')
+    ws['A2'].font = X.SUB
+    cols = ['#', 'Topic', 'Priority area', 'What the meeting said (our reading)', 'Effect on the 2031 estimate',
+            'Action', 'Planning confirms? (Y/N)', 'Comment']
+    X.header(ws, 4, cols, [5, 14, 18, 60, 34, 34, 12, 30])
+    for n, d in enumerate(notes, 5):
+        vals = [n - 4, d['topic'], d['area'], d['said'], d['effect'], d['action'], None, None]
+        for c, v in enumerate(vals, 1):
+            cell = X.body(ws.cell(n, c, v), X.BOLD if c == 3 else X.BASE, wrap=c >= 4)
+            if c >= 7:
+                cell.fill = X.REVIEW_FILL
+        ws.row_dimensions[n].height = 15 * max(2, -(-len(d['said']) // 58), -(-len(d['action']) // 32))
+    ws.freeze_panes = 'A5'
+
+
 def sheet_cover(ws, st, L, n_apps, R, n_flags, info):
     ws.title = 'Cover'
     ws.column_dimensions['A'].width = 46
@@ -172,7 +198,8 @@ def sheet_cover(ws, st, L, n_apps, R, n_flags, info):
                  ('What Planning is asked to do', "Give Planning's estimate of the share of each area's population built "
                                                   'by 2031 (Assumptions, table D; today every area is 100%), override '
                                                   'single applications where you know better (Applications), decide '
-                                                  'the open flags (Open Flags), then sign off below.')]:
+                                                  'the open flags (Open Flags), confirm our reading of the meeting '
+                                                  '(Meeting Notes), then sign off below.')]:
         X.body(ws.cell(r, 1, k), X.BOLD)
         ws.merge_cells(start_row=r, start_column=2, end_row=r, end_column=3)
         c = X.body(ws.cell(r, 2, v), wrap=True)
@@ -193,8 +220,12 @@ def sheet_cover(ws, st, L, n_apps, R, n_flags, info):
     r = line(r, 'less: duplicate applications removed', f'=SUMIFS({pop},{inc},"No")',
              'Older or repeated rows of one development (D11, D16).')
     r = line(r, 'Full population of the applications kept', "='Area Summary'!C24", 'Full build-out.', font=X.BOLD)
-    r = line(r, 'less: not built by 2031', "='Area Summary'!C24-'Area Summary'!F24",
+    pp = f'Applications!${L["p_pre"]}$2:${L["p_pre"]}${n_apps + 1}'
+    r = line(r, 'less: not built by 2031', f"='Area Summary'!C24-SUM({pp})",
              "Planning's estimates; today only the withdrawn rows (D21).")
+    r = line(r, 'less: servicing limits from the meeting', f"=SUM({pp})-'Area Summary'!F24",
+             'Assumptions E: ' + '; '.join(f"{a} ({d['source'].split(';')[0].replace('Meeting: ', '')})"
+                                            for a, d in load_limits().items()) + '.')
     r = line(r, '2031 population for Modelling', "='Area Summary'!F24",
              "Today's assumption until Planning enters its estimates.", font=X.BOLD)
     ws.cell(r - 1, 2).fill = X.TOTAL_FILL
@@ -234,6 +265,7 @@ def sheet_cover(ws, st, L, n_apps, R, n_flags, info):
     for k, v in [('Area Summary', 'Full and 2031 population by priority area.'),
                  ('Top Rows', 'The applications adding the most 2031 population (live).'),
                  ('Open Flags', 'Every open question from the inventory, area and app checks.'),
+                 ('Meeting Notes', 'What the servicing / budget meeting said, by area, to confirm.'),
                  ('Assumptions', 'All the assumptions (yellow).'),
                  ('Applications', 'One row per application: units, density, share built by 2031, 2031 population.'),
                  ('Points by Area', 'The applications in each priority area, one block of columns per area.'),
@@ -260,10 +292,14 @@ def main():
     ws_sum, ws_top, ws_flags = wb.create_sheet(), wb.create_sheet(), wb.create_sheet()
     R = sheet_assumptions(wb.create_sheet(), st['labels'])
     L = sheet_applications(wb.create_sheet(), apps, match, info, stated, R)
+    fill_limits(R, L, len(apps))
     sheet_summary(ws_sum, st['labels'], L, len(apps))
     sheet_top(ws_top, L, len(apps))
     n_flags = sheet_flags(ws_flags, flags, L, len(apps))
     write_points_by_area(wb.create_sheet(), st['labels'])
+    notes = load_notes()
+    if notes:
+        sheet_notes(wb.create_sheet(), notes)
     sheet_decisions(wb.create_sheet(), st['decisions'])
     sheet_cover(ws_cover, st, L, len(apps), R, n_flags, info)
     for ws in wb.worksheets:
