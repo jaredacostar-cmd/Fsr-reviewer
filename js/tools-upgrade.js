@@ -1,7 +1,7 @@
 /* Peel Growth Pipeline (unofficial) – Phase 3b tool 6: Upgrade a pipe (what-if).
  *
  * "Upgrade this pipe" (wired by another worker into pipe pop-ups) calls
- * open(pipeIndex). A small form in the Tool result pane takes a new diameter
+ * open(pipeIndex). A small form in the result pane (#scope-body) takes a new diameter
  * and slope; Apply recomputes the Manning full-pipe capacity for that pipe,
  * stores an override on the live pipe record, and recolors the downstream
  * route with an overlay. Everything is labelled "screening · what-if".

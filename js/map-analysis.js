@@ -297,7 +297,7 @@
     const el = L.DomUtil.create('div', 'ww-loads'); L.DomEvent.disableClickPropagation(el); L.DomEvent.disableScrollPropagation(el);
     el.innerHTML = `<div class="wl-h"><span data-info="ww-layers">Wastewater loads</span><span class="wl-sum"></span></div>
       <div class="wl-chips"><label class="mo-chip" title="Census (existing) flows"><input type="checkbox" id="ww-census"${MM().getWwLay().existing !== false ? ' checked' : ''}><span>Include census (existing)</span></label></div>
-      <p class="wl-note small muted">The loads follow the stages selected in the sidebar</p>`;
+      <p class="wl-note small muted">The loads follow the stages selected in Find</p>`;
     el.querySelector('#ww-census').onchange = e => MM().setWwLay('existing', e.target.checked);
     el.hidden = !MM().isWW();
     return el;

@@ -701,7 +701,10 @@ test('phase 6a: the area pages are Home’s tabs; old links open the page’s ow
   assert.match(ws, /if \(e\.target\.closest\('\[data-ws-backpage\]'\)\) \{ const h = cur && hostAt\(cur\); openPage\(cur \|\| page \|\| 'home', \{ keep: !!h && !scopeOverview\(h\.page\) \}\); return; \}/);
   assert.match(ws, /const hostAt = id => hostOf\(id, \{ site: devOpen\(\) \}\);/, '(6b: the site’s map views too, with a development open)');
   assert.match(ws, /data-ws-back>← Back to \$\{esc\(backTo\.ws \? `\$\{pageName\(backTo\.ws\)\} \(map\)` : hostPage\(backTo\.page\) \? `\$\{pageName\(backTo\.page\)\} › \$\{viewName\(backView\(\)\)\}` : pageName\(backTo\.page\)\)\}/, '“← Back to Home › Servicing › Network”');
-  assert.match(ws, /if \(mode === 'full' && backTo && backTo\.page && hostPage\(backTo\.page\)\) renderBack\(true\);/, 'the label follows a pick on the full map');
+  // (… and, navigation phase 9's review, from the site's page or a Find step's map view, a development picked or closed
+  // on the full map: Check a site with one, Find without, as the click lands)
+  assert.match(ws, /const findStep = id => id === 'site' \|\| id === 'fsr';\n {4}if \(mode === 'full' && backTo && \(backTo\.ws \? findStep\(backTo\.ws\) : backTo\.page && \(hostPage\(backTo\.page\) \|\| findStep\(backTo\.page\)\)\)\) renderBack\(true\);/, 'the label follows a pick on the full map');
+  assert.match(ws, /const pageName = id => \(id === 'home' \? 'Home' : id === 'site' \|\| id === 'fsr' \? \(devOpen\(\) \? BY_ID\.site\.label : BY_ID\[id\]\.find\)/, '(the name a Find step goes by, with and without a development)');
   // A development picked while Home is open (any of its views) opens its page (§5 row 25).
   assert.match(ws, /mode === 'home' && \(page === 'home' \|\| page === 'study'\)\) \{ exploreDev = sc; setTimeout\(\(\) => openPage\('site'\), 0\); \}/);
   // Start over and Home's buttons land on its Overview.
@@ -1146,4 +1149,29 @@ test('phase 8b: a file’s and a card’s scope; old links with any t land on th
   for (const f of ['index.html', 'css/app.css', 'js/ws-pages.js', 'js/analysis-tabs.js', 'js/records-tab.js']) assert.doesNotMatch(src(f), /f-tab-trail|page-tab-trail|has no files of its own/, f);
   assert.match(src('index.html'), /<button type="button" role="tab" class="f-tab" id="ftab-records" data-tab="records" data-info="tab-records" aria-controls="pane-records" aria-selected="false">Records<\/button>\n {6}<\/div>/, 'Records last');
   assert.match(src('js/ws-pages.js'), /m\.tabs = tabsHTML\(\{ tabs: \(\(A && A\.TAB_KEYS\) \|\| Object\.keys\(TAB_INFO\)\)\.map\(t => \(\{ key: t, label: name\(t\), info: TAB_INFO\[t\], busy: busy\(t\) \}\)\)/, 'the page host: the same five, no trailing flag');
+});
+
+// Navigation phase 9 (the words sweep, design §3.9): words only. Every page id, its alias and its host view are as
+// before, so old links, buttons, the start screen's lastWs / lastPlace and the role shortcuts open what they did
+// (§7.1); the names the reader sees are the views' (an area page by the view of Home it opens), Find for the Find
+// step (the FSR reviewer's, Find › Files with an FSR posted, as its shortcut says), Draw an area for the drawn area's page.
+test('phase 9: words only; every page id resolves as before; the pages by their one name (the back bar, usage)', () => {
+  assert.deepEqual(W.WS.map(w => w.id), ['site', 'tight', 'growth', 'fsr', 'outlook', 'study', 'projects', 'eaflow', 'outlets', 'pipes', 'coming', 'week']);
+  for (const id of W.WS.map(w => w.id)) assert.ok(isPage(id), id);
+  assert.deepEqual(plain(W.hostOf('fsr', { site: true })), { page: 'site', tab: 'svc', sub: 'fsr', fold: null });
+  const ROWS = { tight: 'Servicing › Capacity', growth: 'Growth › Areas', outlook: 'Growth › Forecast', coming: 'Growth › Forecast', pipes: 'Servicing › Old pipes', projects: 'Capital › DC timing', eaflow: 'Capital › EAs', data: 'Records › Sources', site: 'Check a site', fsr: 'Servicing › FSR review', study: 'Draw an area', outlets: 'Review outlets', week: 'This week' };
+  for (const [id, name] of Object.entries(ROWS)) assert.equal(W.pageLabel(id), name, id);
+  assert.equal(W.pageLabel('coming', true), 'Growth › Forecast › By period');
+  assert.equal(W.pageLabel('eaflow', true), 'Capital › EAs › EA to construction');
+  assert.equal(W.pageLabel('nonsense'), 'nonsense');
+  // The back bar's words (pageName): the Find step Find; with a development open the site's page, either id, Check a
+  // site (its view named after it: "← Back to Check a site › Servicing › FSR review"); a map view of an area page by its
+  // view ("← Back to Servicing › Capacity (map)"); the others as before.
+  const L = loadWs();
+  assert.deepEqual(['home', 'site', 'fsr', 'study', 'tight', 'outlets', 'week', 'help', 'guides', 'find'].map(L.B.pageName), ['Home', 'Find', 'Find › Files with an FSR posted', 'Draw an area', 'Servicing › Capacity', 'Review outlets', 'This week', 'Help', 'How it works', 'Find']);
+  // (critic) the Find steps' names: the FSR reviewer's shortcut and its step, one name (ROLES, owner decision 6)
+  assert.deepEqual([W.BY_ID.site.find, W.BY_ID.fsr.find], ['Find', 'Find › Files with an FSR posted']);
+  assert.equal(W.ROLES.find(r => r.key === 'fsr').links[0].label, W.BY_ID.fsr.find, 'the FSR reviewer’s shortcut names its step');
+  L.open({ key: 'k' });
+  assert.deepEqual(['site', 'fsr', 'tight'].map(L.B.pageName), ['Check a site', 'Check a site', 'Servicing › Capacity']);
 });

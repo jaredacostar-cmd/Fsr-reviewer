@@ -335,7 +335,7 @@
   function clearSelection() { selection.clear(); selAreas = []; drawSelection(); if (typeof syncClearBtn === 'function') syncClearBtn(); }
 
   // The selection summary as a standalone HTML block: rendered into #detail by the legacy
-  // showSelection(), or into the Tool result pane by openSelectionResult() (Phase 3b).
+  // showSelection(), or into the result pane (#scope-body) by openSelectionResult() (Phase 3b).
   function selectionSummaryHTML(sel, added) {
     if (!sel.length) return `<div class="head"><h3>No developments in that area</h3></div>
         <p class="small muted">Only the developments shown on the map (current phase, focus and filters) can be selected. Draw a larger area, or change the filters.</p>
@@ -416,7 +416,7 @@
           ${row('Peak wet weather', e => fmt1(e.combined.wastewater.wetPeak))}
         </tbody></table>
         <details class="sel-split"><summary>Residential / employment split (total)</summary><div class="sel-flows">${WTab().flowTablesHTML(es[0])}</div></details>
-        <p class="small muted">Peaks for the selection as one area (Harmon on its combined population). Completed = units on finished permits; remaining = the rest. Criteria as in the bottom panel.</p>
+        <p class="small muted">Peaks for the selection as one area (Harmon on its combined population). Completed = units on finished permits; remaining = the rest. Criteria as in the Scenario control.</p>
       </details>
       ${growth}
       <details class="sect"><summary><h2 class="section-title">Developments</h2><span class="muted small sect-sum">${fmtNum(sel.length)} · largest first</span></summary>

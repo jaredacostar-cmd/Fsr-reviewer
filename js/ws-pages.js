@@ -651,10 +651,10 @@
         { title: 'Uncommitted reserve at the treatment plants', rows: res.map(resRow), total: res.length },
         { title: 'No relief in time', rows: late.map(lateRow), total: late.length, see: { 'data-ws-page': 'projects' } },
       ],
-      map: { svg: capacityMap(rows), attrs: { 'data-ws-go': 'tight' }, label: 'Open Servicing capacity on the map', caption: '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out' },
+      map: { svg: capacityMap(rows), attrs: { 'data-ws-go': 'tight' }, label: 'Open Servicing › Capacity on the map', caption: '<span class="hm-key hm-over"></span> over capacity <span class="hm-key hm-tight"></span> past the 90% trigger at build-out' },
       // (the panel's folds: the overflows reported and, navigation phase 2, the allocations recorded)
       folds: s.folds || [],
-      method: `${s.method} Uncommitted reserve (Ontario MECP Procedure D-5-1, treatment plants only): rated capacity less existing, built and committed flow, in ML/d and in people at Peel criteria (${fmtNum(crit.wastewater.avg)} L/person/day for wastewater; ${fmtNum(crit.water.avg)} L × ${crit.water.maxDay} maximum day for water). D-5-1 asks that collection and pumping limits be checked first: a pumping station (wastewater) or storage and zone pumping (South Peel water) over its limit is named beside the plant it limits. No relief in time: the facility reaches its limit and the 2020 Master Plan either lists no relief for it or plans the relief after that year (the same test as Capital › Timing).`,
+      method: `${s.method} Uncommitted reserve (Ontario MECP Procedure D-5-1, treatment plants only): rated capacity less existing, built and committed flow, in ML/d and in people at Peel criteria (${fmtNum(crit.wastewater.avg)} L/person/day for wastewater; ${fmtNum(crit.water.avg)} L × ${crit.water.maxDay} maximum day for water). D-5-1 asks that collection and pumping limits be checked first: a pumping station (wastewater) or storage and zone pumping (South Peel water) over its limit is named beside the plant it limits. No relief in time: the facility reaches its limit and the 2020 Master Plan either lists no relief for it or plans the relief after that year (the same test as Capital › DC timing).`,
       sources: s.sources,
       actions: [{ label: 'Open the map', attrs: { 'data-ws-go': 'tight' }, primary: true }, { label: 'Full table', attrs: { 'data-ws-go': 'tight', 'data-ws-fulltable': 'svc:capacity' } }, { label: 'Briefing PDF', attrs: { 'data-pnl-brief': '' } }] };
   }
@@ -692,8 +692,9 @@
     const fsrList = { title: 'Files with an FSR posted', rows: fsrRows || [{ kv: true, html: '<span class="muted small">Looking for posted servicing reports…</span>' }], total: fsrRows ? fsrRows.length : 0 };
     const recentList = { title: 'Recently active', rows: recent.map(devRow), total: recent.length };
     const lists = id === 'fsr' ? [fsrList, recentList] : [recentList, { title: 'Large files under review', rows: big.map(devRow), total: big.length }, fsrList];
-    // (the eyebrow: Find, the step's one name, §3.9; "Check a site" with no site is retired)
-    return { id, eyebrow: `${id === 'site' ? 'Find' : esc(label(id))} · step 1 of 3`, name: id === 'fsr' ? 'Do the consultant’s figures match Peel’s criteria?' : 'Can this development be serviced, and when?',
+    // (the eyebrow: the step's one name, §3.9, js/workspaces.js WS find: Find; the FSR reviewer's, its first list, Find ›
+    // Files with an FSR posted, as its role shortcut says. "Check a site" with no site is retired: navigation phase 9)
+    return { id, eyebrow: `${esc((W() && W().BY_ID[id] && W().BY_ID[id].find) || label(id))} · step 1 of 3`, name: id === 'fsr' ? 'Do the consultant’s figures match Peel’s criteria?' : 'Can this development be serviced, and when?',
       top: stepper,
       answer: id === 'fsr' ? `Find the development: search an address or file number, or pick one with an FSR posted${fsrRows ? ` (${fmtNum(fsrRows.length)} in Mississauga and Caledon; Brampton’s are on BramPlanOnline, searched by file number)` : ''}.` : 'Find the development: search an address or file number, or pick one below.',
       lists,
@@ -1023,7 +1024,7 @@
     const t = one || specOf('dca:timing', areaScope); if (!t) return loading('projects', 'Loading the DC program…');
     const m = { id: 'projects', eyebrow: eyebrow('projects'), name: 'Is the capital program arriving in time for growth?', status: t.head.status, identity: t.head.identity, scen: scen(), answer: t.answer,
       figures: t.figures, chart: t.chart, lists: (t.lists || []).map(l => ({ ...l, rows: l.rows.map(r => toMap('projects', r)) })), folds: t.folds,
-      map: dcProjMap() || { svg: worksMap(), attrs: { 'data-ws-go': 'projects' }, label: 'Open Projects on the map', caption: '2026 DC works (draft): <span class="hm-key hm-dc-wastewater"></span> wastewater <span class="hm-key hm-dc-water"></span> water' },
+      map: dcProjMap() || { svg: worksMap(), attrs: { 'data-ws-go': 'projects' }, label: 'Open Capital › DC timing on the map', caption: '2026 DC works (draft): <span class="hm-key hm-dc-wastewater"></span> wastewater <span class="hm-key hm-dc-water"></span> water' },
       method: t.method, sources: t.sources,
       actions: [{ label: 'Open the map', attrs: one ? { 'data-ws-go': 'projects', 'data-ws-dcwork': DP.state.sel } : { 'data-ws-go': 'projects' }, primary: true }, { label: 'Full table', attrs: { 'data-ws-go': 'projects', 'data-ws-fulltable': 'dca:timing' } }] };
     return t.head && t.head.back ? asSection(m, t) : m;

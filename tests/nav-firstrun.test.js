@@ -49,8 +49,16 @@ test('a tour never leaves a development, a selection or the Watch tab open', () 
 
 test('the map tour\'s text matches the app: stages, the legend, Servicing, Capital, Records, Watch, Forecast', () => {
   const t = src('js/tips.js'), tour = t.slice(t.indexOf('const TOUR = ['), t.indexOf('const HELP = ['));
-  for (const stale of ["t: 'Phases'", 'Water and Wastewater for capacity', 'DC for timing', "t: 'Wastewater'", "t: 'Timing forecast'", "t: 'This week: watchlist", 'Files & history', 'The Demand year', 'How developments are coloured', '#ov-dev', "tourShow('overview', 'files')", '#site-bar']) assert.ok(!tour.includes(stale), `stale: ${stale}`);
-  for (const now of ["t: 'Stages'", 'Servicing for capacity', 'Capital for DC timing', 'Records for the files', "t: 'Watch: your watchlist", "t: 'Forecast'", 'History and source records']) assert.ok(tour.includes(now), `missing: ${now}`);
+  for (const stale of ["t: 'Phases'", 'Water and Wastewater for capacity', 'DC for timing', "t: 'Wastewater'", "t: 'Timing forecast'", "t: 'This week: watchlist", 'Files & history', 'The Demand year', 'How developments are coloured', '#ov-dev', "tourShow('overview', 'files')", '#site-bar', 'Tool result tab', 'posts alerts', "ch: 'This week'"]) assert.ok(!tour.includes(stale), `stale: ${stale}`);
+  for (const now of ["t: 'Stages'", 'Servicing for capacity', 'Capital for DC timing', 'Records for the files', "t: 'Watch: your watchlist", "t: 'Forecast'", 'History and source records', "ch: 'Watch'", 'opens on Overview, a scope of its own']) assert.ok(tour.includes(now), `missing: ${now}`);
+  // (navigation phase 9's review: each step points at what shows. The Forecast draws in Growth's panel, not its pane,
+  // which has no box; on a phone the timeline is behind Filters and Present and Help are in ⋯, as HOME_TOUR's fallbacks.)
+  assert.ok(!tour.includes("$('#pane-growth-timing')"), 'the Forecast step points at a pane with no box');
+  assert.match(tour, /el: \(\) => vis\('#pnl-growth', '#analysis'\), t: 'Forecast'/);
+  assert.match(tour, /el: \(\) => vis\('#timebar', '#toggle-sidebar'\), t: 'Timeline'/);
+  assert.match(tour, /el: \(\) => vis\('#tb-present', '#tb-more'\), t: 'Present and time-lapse'/);
+  assert.match(tour, /el: \(\) => vis\('#tb-help', '#tb-more'\), t: 'Help any time'/);
+  assert.match(src('index.html'), /id="pnl-growth"/);
 });
 
 test('phone: Home\'s menu is ☰ in the top bar; page actions in a bar at the bottom; scenario and years in the panel', () => {

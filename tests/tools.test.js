@@ -155,7 +155,7 @@ test('openResult goes through PeelSvcScope (SPEC §3): one scope host, its trail
   assert.equal(T.closeResult(), true);
   assert.equal(T.hasResult(), false);
   assert.deepEqual(calls, [['open', 'Lasso selection', 'sel:selection'], ['reopen'], ['close']]);
-  assert.deepEqual(bridgeCalls, [], 'no Tool result tab to show');
+  assert.deepEqual(bridgeCalls, [], 'a result opens on Overview: no tab to show');
   delete global.window.PeelSvcScope;
 });
 

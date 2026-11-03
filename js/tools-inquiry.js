@@ -12,7 +12,7 @@
  *   }
  * buildDraft(fields) is PURE (plain object → string) and unit-tested; it never
  * touches the app bridge. The draftFor* wrappers gather fields lazily through
- * window.PeelApp and render the result into the Tool result pane via
+ * window.PeelApp and render the result into the result pane (#scope-body) via
  * PeelTools.openResult. Export ▾ › Inquiry response draft and a development's
  * Inquiry draft action ([data-inquiry]) both call draftForDevelopment, through
  * js/topbar.js draftInquiryResponse: one function, one result.

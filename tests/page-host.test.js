@@ -745,7 +745,7 @@ test('Find lists the recently active, the large files under review and the files
   L = load({ dev: null, devs: { k: DEV }, devPanels: DEV_PANELS, state: { projects }, extra: { PeelPhases: Ph, PeelFsr: Fsr } });
   m = L.WP.build('fsr');
   assert.deepEqual(titles(m), ['Files with an FSR posted', 'Recently active']);
-  assert.equal(m.eyebrow, 'Review an FSR · step 1 of 3');
+  assert.equal(m.eyebrow, 'Find › Files with an FSR posted · step 1 of 3', 'a Find step, named by its first list as the FSR reviewer’s shortcut names it (§3.9, §5 row 29; navigation phase 9)');
   assert.match(m.top, /<button type="button" class="btn small link pnl-step-other" data-ws-page="find">Any development → Find<\/button><\/p>$/);
   // Until data/fsr.json is in, the FSR list says it is looking (on both steps), loaded once, the page drawn again after.
   const loads = [];

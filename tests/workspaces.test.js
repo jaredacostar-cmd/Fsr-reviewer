@@ -16,7 +16,7 @@ const plain = o => JSON.parse(JSON.stringify(o));
 const W = (() => { const ctx = { module: { exports: {} }, URLSearchParams }; ctx.globalThis = ctx; vm.runInNewContext(src('js/workspaces.js'), ctx); return ctx.module.exports; })();
 
 test('1. the chips, in the brief\'s order, Home\'s groups (alias data since navigation phase 7) and its sidebar', () => {
-  assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Servicing capacity', 'Growth in an area', 'Review an FSR', 'Forecast', 'Study area', 'DC projects', 'EA to construction', 'Review outlets', 'Old pipes', 'What’s coming', 'This week']);
+  assert.deepEqual(plain(W.WS.map(w => w.label)), ['Check a site', 'Servicing capacity', 'Growth in an area', 'Servicing › FSR review', 'Forecast', 'Draw an area', 'DC projects', 'EA to construction', 'Review outlets', 'Old pipes', 'What’s coming', 'This week']);
   // Home's sidebar: This week under Home (bundle 6), then Planning (Servicing capacity with it),
   // Capital, QA/QC (Review outlets), Asset Management; then Full map.
   // Explore (step 3): Growth in an area, Check a site, Review an FSR, Forecast and Study area are one entry.
@@ -212,11 +212,14 @@ test('2. workspace figures equal full-map figures (Home and This week read the P
   // Check a site before a site is picked: the Find step; once a site is open, the site's own panel.
   B.go('site');
   const find = B.override('overview:', 'area');
-  assert.equal(find.head.name, 'Check a site');
+  assert.equal(find.head.name, 'Find', 'the Find step’s one name (§3.9; navigation phase 9)');
   // The steps as a numbered list, Find marked as the current step.
   assert.deepEqual(plain(find.lists[0].rows.map(r => r.html.match(/<span class="pnl-step-n" aria-hidden="true">(\d)<\/span><span><strong>(\w+)<\/strong>/).slice(1))), [['1', 'Find'], ['2', 'Result'], ['3', 'Output']]);
   assert.match(find.lists[0].rows[0].html, /^<div class="pnl-step on">/);
   assert.equal(B.override('overview:', 'dev:x'), null);
+  // (the FSR reviewer's Find step on the map before a site is picked: Find too, its identity line saying which; §3.9,
+  // §5 row 19; navigation phase 9)
+  B.go('fsr'); const ff = B.override('svc:network', 'area'); assert.equal(ff.head.name, 'Find'); assert.equal(ff.head.identity, W.BY_ID.fsr.what);
 });
 
 // Navigation phase 5 (owner decision 4): FSR review is a development's Servicing view, the one host of the
@@ -320,7 +323,7 @@ test('the map view names no workspace: no source line on its panels; the Find st
   B.go('site');
   assert.equal(B.srcLine, undefined); assert.equal(B.renderChips, undefined);
   const find = B.override('overview:', 'area'), h = PN.html({ key: 'overview:', ...find });
-  assert.match(h, /<h2 class="pnl-name">Check a site<\/h2><span class="pnl-chip t-stage">Step 1 of 3<\/span>/);
+  assert.match(h, /<h2 class="pnl-name">Find<\/h2><span class="pnl-chip t-stage">Step 1 of 3<\/span>/);
   assert.doesNotMatch(h, /pnl-src|pnl-steps"| · from /);
   window.DevScope = { current: () => ({ key: 'x' }), close() {} };
   assert.equal(B.override('overview:', 'dev:x'), null, 'the site open: its own panel, as on the full map');

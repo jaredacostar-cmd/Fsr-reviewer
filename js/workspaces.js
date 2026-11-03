@@ -20,15 +20,17 @@
   // ---- Pure: the workspaces, what each opens, the Old pipes list, the start screen -----------------
   // tab / sub: the sub-view it opens; scope: 'area' (Peel or the municipality filter: a development or
   // servicing scope closes), 'site' (the open development, or the Find step until one is picked) or
-  // 'drawn' (the area the user draws); view: the map's layer preset (js/map-markers.js MAP_VIEWS).
+  // 'drawn' (the area the user draws); view: the map's layer preset (js/map-markers.js MAP_VIEWS); find: a 'site'
+  // scope's Find step's name, before a site is picked (one name per thing, §3.9: Find; the FSR reviewer's, its first
+  // list, Find › Files with an FSR posted, as its role shortcut says).
   const WS = [
-    { id: 'site', label: 'Check a site', group: 'Planning', tab: 'overview', sub: '', scope: 'site', view: 'planning', what: 'One development: servicing, timing, the memo' },
+    { id: 'site', label: 'Check a site', find: 'Find', group: 'Planning', tab: 'overview', sub: '', scope: 'site', view: 'planning', what: 'One development: servicing, timing, the memo' },
     { id: 'tight', label: 'Servicing capacity', group: 'Planning', tab: 'svc', sub: 'capacity', scope: 'area', view: 'wastewater', what: 'Plants, pumping and storage near their limit' },
     { id: 'growth', label: 'Growth in an area', group: 'Planning', tab: 'growth', sub: 'areas', scope: 'area', view: 'planning', what: 'Planned homes and people, by area' },
     // (at a site, Servicing › FSR review, a development's view: siteSub; without one, the Find step on Network)
-    { id: 'fsr', label: 'Review an FSR', group: 'Planning', tab: 'svc', sub: 'network', siteSub: 'fsr', scope: 'site', view: 'wastewater', what: 'A consultant’s FSR against the app’s figures' },
+    { id: 'fsr', label: 'Servicing › FSR review', find: 'Find › Files with an FSR posted', group: 'Planning', tab: 'svc', sub: 'network', siteSub: 'fsr', scope: 'site', view: 'wastewater', what: 'A consultant’s FSR against the app’s figures' },
     { id: 'outlook', label: 'Forecast', group: 'Planning', tab: 'growth', sub: 'timing', scope: 'area', view: 'planning', what: 'When homes and people arrive, by year' },
-    { id: 'study', label: 'Study area', group: 'Planning', tab: 'overview', sub: '', scope: 'drawn', view: 'planning', what: 'Draw an area: its growth and servicing' },
+    { id: 'study', label: 'Draw an area', group: 'Planning', tab: 'overview', sub: '', scope: 'drawn', view: 'planning', what: 'Draw an area: its growth and servicing' },
     { id: 'projects', label: 'DC projects', group: 'Capital', tab: 'dca', sub: 'timing', scope: 'area', view: 'dc', what: 'Is each DC project in time?' },
     // EA to construction (navigation phase 4): Capital › EAs with its EA to construction fold open; its page is
     // the Capital workspace's EAs (js/ws-pages.js eaflow).
@@ -122,8 +124,9 @@
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Records › Data checks (Servicing has none since
   // navigation phase 2), Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.
-  const SUB_NAME = { capacity: 'Capacity', network: 'Network', pipes: 'Old pipes', fsr: 'FSR review', 'records:checks': 'Data checks', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', 'dca:timing': 'DC timing', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
-  const tabPath = (tab, sub) => [TAB_NAME[tab] || tab, sub ? SUB_NAME[`${tab}:${sub}`] || SUB_NAME[sub] || sub : ''].filter(Boolean).join(' › ');
+  const SUB_NAME = { capacity: 'Capacity', network: 'Network', pipes: 'Old pipes', fsr: 'FSR review', 'records:checks': 'Data checks', 'records:files': '', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', 'dca:timing': 'DC timing', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
+  // (a 'tab:sub' entry, even an empty one, wins: Records › Files is "Records", a development's one view of it)
+  const tabPath = (tab, sub) => [TAB_NAME[tab] || tab, !sub ? '' : `${tab}:${sub}` in SUB_NAME ? SUB_NAME[`${tab}:${sub}`] : SUB_NAME[sub] || sub].filter(Boolean).join(' › ');
   // A chip's own word (the page host's views row, js/ws-pages.js tabsHTML: the map's chips' words).
   const chipName = (tab, sub) => SUB_NAME[`${tab}:${sub}`] || SUB_NAME[sub] || sub;
   // What a workspace's map view does: the tab, sub-view, scope and preset; closeScopes = an area's leaves a site;
@@ -198,6 +201,11 @@
     const [tab, sub] = at.split(':');
     return { page: own(HOST, id) ? 'home' : 'site', tab, sub, fold: (own(BY_ID, id) && BY_ID[id].fold) || null };
   }
+  // A page id as the reader names it (one name per thing, design §3.9; the ids stay what links name): an area page by
+  // the view of Home it opens ("Servicing › Capacity"; fold: with the fold it opens, "Growth › Forecast › By period"),
+  // any other by its label.
+  const FOLD_NAME = { period: 'By period', eaflow: 'EA to construction' };
+  const pageLabel = (id, fold) => (own(HOST, id) ? [tabPath(...HOST[id].split(':')), fold && own(BY_ID, id) && FOLD_NAME[BY_ID[id].fold]].filter(Boolean).join(' › ') : own(BY_ID, id) ? BY_ID[id].label : id);
   // The site page's old section ids (phase 1's search routes, pageRoute's sec; phase 5's sections): the views of the
   // host at a development they name now.
   const SITE_SEC = { summary: 'overview:', growth: 'growth:pipeline', servicing: 'svc:network', capital: 'dca:timing', files: 'records:files' };
@@ -247,7 +255,7 @@
   }
 
   // ---- Browser ----------------------------------------------------------------------------------
-  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SIDEBAR, ROLES, SITE_MAP, LAB_PAGES, BY_ID, LAYERS, OLD, START, PAGE_ALIAS, REF, TAB_NAME, HOST, SITE_HOST, SITE_SEC, plan, tabPath, chipName, oldPipes, pipeRuns, resolvePage, hostOf, startScreen, lastPlaceOf, roleAttrs, pageRoute };
+  const api = { WS, GROUPS, EXPLORE, CAPITAL, SIDE, SIDEBAR, ROLES, SITE_MAP, LAB_PAGES, BY_ID, LAYERS, OLD, START, PAGE_ALIAS, REF, TAB_NAME, HOST, SITE_HOST, SITE_SEC, plan, tabPath, chipName, oldPipes, pipeRuns, resolvePage, hostOf, pageLabel, startScreen, lastPlaceOf, roleAttrs, pageRoute };
   if (typeof document === 'undefined' || typeof module !== 'undefined' && module.exports) {
     if (typeof module !== 'undefined' && module.exports) module.exports = api;
     return;
@@ -263,7 +271,7 @@
   // home: a page is open (Home or a workspace's page, js/ws-pages.js); ws: a workspace's map view (← Page ·
   // search · Full map over the map); full: the map with every tool.
   // Back from the full map: arriving there from a page or a workspace's map view, a bar over the map
-  // offers the way back ("← Back to Check a site"); it goes when you leave the full map or close it.
+  // offers the way back ("← Back to Find"); it goes when you leave the full map or close it.
   // (back to a page host, it names the view it lands on: the map's tab and view as they are then, "← Back to
   // Home › Servicing › Network"; the label follows a pick made on the full map meanwhile, the pnl:set hook. At the
   // Overview of a development or facility opened on the full map, which the host closes on the way back, the view
@@ -440,14 +448,15 @@
     if (cur === 'week' && key === 'overview:' && scope === 'area') { const WP = root.PeelWsPages, w = WP && WP.weekSpec ? WP.weekSpec() : null; return w || { head: { name: 'What changed since the last update?', status: null, identity: esc((App() && App().state.muni) || 'Peel') }, answer: '<span class="muted">Loading the changes…</span>' }; }
     return null;
   }
-  // Check a site / Review an FSR before a site is picked: Find → Result → Output.
+  // The Find steps (the site's, and the FSR reviewer's) before a site is picked: Find → Result → Output. On the map
+  // both are Find (§3.9: "Check a site" with no site is retired; the identity line says which)
   function findSpec(id) {
     const w = BY_ID[id], P = root.PeelPhases;
     const last = p => (P && P.lastActivityOf ? P.lastActivityOf(p) || 0 : 0);
     const recent = ((App() && App().state.projects) || []).filter(p => p.phase !== 'cancelled' && p.phase !== 'completed' && (p.units || 0) > 0).map(p => [p, last(p)]).filter(x => x[1]).sort((a, b) => b[1] - a[1]).slice(0, 5).map(x => x[0]);
     const steps = [['Find', 'Search an address or file number above, or click a development on the map.'], ['Result', id === 'fsr' ? 'Servicing › FSR review at the site: the consultant’s figures against this app’s.' : 'Its servicing, timing and what to confirm (Overview at the site).'], ['Output', id === 'fsr' ? 'The cross-check notes to compare with the report.' : 'The one-page servicing memo.']];
     return {
-      head: { name: w.label, status: { tone: 'stage', text: 'Step 1 of 3' }, identity: esc(w.what) },
+      head: { name: 'Find', status: { tone: 'stage', text: 'Step 1 of 3' }, identity: esc(w.what) },
       answer: 'Find the development: search an address or file number above, or click it on the map.',
       lists: [
         { title: 'Steps', rows: steps.map(([t, d], i) => ({ kv: true, html: `<div class="pnl-step${i === 0 ? ' on' : ''}"><span class="pnl-step-n" aria-hidden="true">${i + 1}</span><span><strong>${t}</strong> ${esc(d)}</span></div>` })), total: 3 },
@@ -598,7 +607,9 @@
   }
   // (the page's search has the focus, on the page it is on: typing, or about to, on a phone)
   const typing = el => { const s = $('#f-search'); return !!s && document.activeElement === s && el.contains(s); };
-  const pageName = id => (id === 'home' ? 'Home' : SIDE[id] ? SIDE[id].label : BY_ID[id] ? BY_ID[id].label : REF[id] ? REF[id].label : LAB_PAGES[id] ? LAB_PAGES[id].label : id);
+  // (one name per thing, design §3.9: an area page by the view it opens, pageLabel; a Find step by its name, find;
+  // the site's page with a development, either id, Check a site, FSR review its view)
+  const pageName = id => (id === 'home' ? 'Home' : id === 'site' || id === 'fsr' ? (devOpen() ? BY_ID.site.label : BY_ID[id].find) : SIDE[id] ? SIDE[id].label : BY_ID[id] ? pageLabel(id) : REF[id] ? REF[id].label : LAB_PAGES[id] ? LAB_PAGES[id].label : id);
   // A page that hosts the map's tabs (navigation phase 6: Home, at an area; the site's page at a development, 6b:
   // Check a site and Review an FSR with one open), and the view the map's tab state names, in words ("Servicing ›
   // Network").
@@ -843,8 +854,10 @@
     else if (sc && !sc.startsWith('dev:')) exploreDev = null;
     // (Servicing › Old pipes drawn: its pipes on the map, once the sewer records are in)
     if (e.detail && e.detail.key === 'svc:pipes') syncPipes();
-    // (the back bar names the view it goes back to: a tab or view picked on the full map meanwhile)
-    if (mode === 'full' && backTo && backTo.page && hostPage(backTo.page)) renderBack(true);
+    // (the back bar names the view it goes back to: a tab or view picked on the full map meanwhile; and, from the
+    // site's page or a Find step's map view, a development picked or closed there: Check a site with one, Find without)
+    const findStep = id => id === 'site' || id === 'fsr';
+    if (mode === 'full' && backTo && (backTo.ws ? findStep(backTo.ws) : backTo.page && (hostPage(backTo.page) || findStep(backTo.page)))) renderBack(true);
     schedule();
   });
   // A site picked in a workspace's map view (Check a site / Review an FSR): on to its result.
@@ -863,6 +876,6 @@
       openPage(s.page || 'home', s.at ? { at: s.at } : {});
     } else setMode(s.mode);
   }
-  Object.assign(api, { REF, bootRestore, go, openPage, setMode, mode: () => mode, current: () => cur, page: () => page, view, override, renderPage, settingsHTML, oldList, pipesSpec, syncPipes, routePick, init });
+  Object.assign(api, { REF, bootRestore, go, openPage, pageName, setMode, mode: () => mode, current: () => cur, page: () => page, view, override, renderPage, settingsHTML, oldList, pipesSpec, syncPipes, routePick, init });
   root.PeelWorkspaces = api;
 })(typeof window !== 'undefined' ? window : globalThis);

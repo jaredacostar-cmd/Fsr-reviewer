@@ -507,4 +507,4 @@ design-level and decided there.
 | **4. One system** (4+ weeks) | The network method (infrastructure-dependencies.md): stable network ids, link columns in the developments table, one `infra-links.json`; facility ids from GIS; `scripts/lib/` as scripts are touched; README split; screenshots out of the repo | Phase 8's scope rows; phases 6 and the sidebar cut only if usage counts support them |
 
 Each wave keeps the README's "one set of numbers" rule, guarded by the browser paths
-(`npm run browser`, 23 paths, all passing on this branch) and the unit suite.
+(`npm run browser`, every path in `tests/browser/run.js`) and the unit suite.

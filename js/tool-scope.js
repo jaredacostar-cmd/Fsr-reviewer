@@ -25,7 +25,7 @@
   const EP = () => window.PeelExistPipes;
 
   let loadsOf = null;
-  // ---- Phase 3b: pop-up results as a Tool result scope ----------------------------------
+  // ---- Phase 3b: pop-up results as a result scope on Overview --------------------------
   // Feature taps (catchment / zone / plant / pipe / DC line / facility) open their
   // result as a scope in the right panel (SPEC §3; trail: Peel › title) via
   // PeelTools.openResult → PeelSvcScope.openResult. Each show* builds {title, html}.

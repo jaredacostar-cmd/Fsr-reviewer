@@ -73,7 +73,7 @@
       <div class="ag-scroll"><div class="ag-grid" role="table" aria-label="An Ontario development as a tree, against the app's stages">${head}${rows}</div></div>
       <p class="ag-key small"><span class="ag-step ag-ok">${MARK.ok}</span><span class="ag-step ag-part">${MARK.part}: a rule to settle</span><span class="ag-step ag-no">${MARK.no}</span></p>
       <div class="ag-notes">
-        <div><strong>How the tree is made.</strong> Municipalities rarely publish which file belongs to which, so the app links files by overlapping land and file type, with a confidence on each link. Old files on the same land (a 1980s site plan) are the site’s history: kept apart, not counted. A development’s tree: Records › Files › Open full table.</div>
+        <div><strong>How the tree is made.</strong> Municipalities rarely publish which file belongs to which, so the app links files by overlapping land and file type, with a confidence on each link. Old files on the same land (a 1980s site plan) are the site’s history: kept apart, not counted. A development’s tree: Records › Open full table.</div>
         <div><strong>What counts as committed.</strong> A draft-approved or registered plan of subdivision, or a site plan approval, through permit and construction (MECP Procedure D-5-1). Zoning or an official plan amendment alone is not committed; it stays In review with “zoning approved”.</div>
         <div><strong>Who approves.</strong> Brampton, Mississauga and Caledon. The Region of Peel has had no planning approvals since July 1, 2024: its part is servicing (allocation, the functional servicing report review, development charges), which is what this app screens.</div>
       </div>

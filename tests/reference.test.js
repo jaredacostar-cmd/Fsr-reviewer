@@ -93,6 +93,14 @@ test('What an FSR should cover: the sections, and Review an FSR’s own coverage
   assert.match(t, /Fire flow By an engineer Not modelled here/);
   for (const [s] of R.FSR_PARTS) assert.ok(t.includes(s), s);
   assert.match(m.method, /Functional Servicing Report Requirements \(November 2009\)/);
+  // (navigation phase 9's review: the button names where the `fsr` id lands: the Find step with no development open,
+  // as the role shortcut says; the development's Servicing › FSR review with one)
+  const W = require('../js/workspaces.js');
+  assert.equal(R.fsrguide([]).actions[0].label, 'Find › Files with an FSR posted');
+  assert.equal(R.fsrguide([]).actions[0].label, W.BY_ID.fsr.find);
+  assert.equal(R.fsrguide([], true).actions[0].label, 'Servicing › FSR review');
+  assert.ok(R.fsrguide([], true).actions[0].attrs['data-ws-page'] === 'fsr' && R.fsrguide([]).actions[0].attrs['data-ws-page'] === 'fsr');
+  assert.match(src('js/reference.js'), /fsrguide\(root\.PeelWsPages \? root\.PeelWsPages\.COVERAGE : null, !!\(root\.DevScope && root\.DevScope\.current && root\.DevScope\.current\(\)\)\)/);
 });
 
 test('How a capital project gets built: the steps against the app’s status words, the EA schedules counted from the data', () => {

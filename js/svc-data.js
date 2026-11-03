@@ -181,7 +181,7 @@
     if (k !== 'existing') return;   // the growth layers follow the selected stages (syncWwLayers)
     MM().setWwLay({ ...MM().getWwLay(), [k]: on }); store.set('wwLay', MM().getWwLay());
     RL().renderMarkers(); MM().scheduleSites(); MA().renderCapLayer(); MA().renderLegend(); MA().syncMapOpts();
-    // Phase 3b: pipe loads live in the Tool result tab now — re-run while that result is open.
+    // Phase 3b: pipe loads are a result on Overview now — re-run while that result is open.
     if (TS().loadsOf && TS().loadsOf.pipe != null && TS().toolScope && TS().toolScope.kind === 'pipe' && typeof window !== 'undefined' && window.PeelTools && window.PeelTools.hasResult() && window.PeelTools.resultTitle() === TS().toolScope.title) SC().showPipeLoads(TS().loadsOf.pipe);
   }
   // Wastewater growth layers from the stage selector; recomputed whenever the filters apply.

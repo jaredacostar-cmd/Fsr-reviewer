@@ -1,6 +1,6 @@
 'use strict';
 // One meaning per term: "left to build", "committed" and persons per unit say what the code counts,
-// on every surface that names them (README "Definitions (one table, used everywhere)").
+// on every surface that names them (docs/method/README.md "Definitions (one table, used everywhere)").
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -22,8 +22,10 @@ test('"left to build" is planned minus completed wherever it is named; planned m
   assert.match(src('js/reports.js'), /\$\{fmtNum\(P\.unbuiltOf\(p\)\)\} left to build<\/td>/, 'the servicing memo');
   assert.doesNotMatch(src('js/area-select.js'), /'Left to build', [^\n]*no permit yet/, 'the selection tile of units with no permit is "Left to permit"');
   const I = info();
-  for (const k of ['buildout', 'definitions', 'focus-left', 'demand-selection']) assert.doesNotMatch(I[k].body, /Left to build[^.]*no (building )?permit yet/i, k);
-  assert.doesNotMatch(src('README.md'), /Left to\s+build\*\* counting basis \(planned units with no permit yet\)/);
+  for (const k of ['buildout', 'definitions']) assert.doesNotMatch(I[k].body, /Left to build[^.]*no (building )?permit yet/i, k);
+  // (the Focus chip's and the selection's cards went: nothing showed them, navigation phase 9, design §5 row 167)
+  for (const k of ['focus-left', 'demand-selection']) assert.equal(I[k], undefined, k);
+  for (const f of ['README.md', 'docs/guide/README.md', 'docs/method/README.md', 'docs/data/README.md']) assert.doesNotMatch(src(f), /Left to\s+build\*\* counting basis \(planned units with no permit yet\)/, f);   // (README split, navigation phase 9, D-G3)
 });
 
 test('"committed" is the Peel rule (a site servicing or building permit), the treatment plants alone MECP D-5-1', () => {
@@ -38,7 +40,7 @@ test('"committed" is the Peel rule (a site servicing or building permit), the tr
 
 test('info cards: persons per unit and flows are the values js/demand.js uses', () => {
   const I = info(), c = D.DEFAULT_CRITERIA;
-  const ppu = I['demand-pop'].source;
+  const ppu = I['project-demand'].source;   // (the same PPU text; the Population card went, nothing showed it: navigation phase 9)
   for (const s of [`single / semi ${c.ppu.single}`, `townhouse ${c.ppu.town}`, `apartment ${c.ppu.apartment}, or ${c.ppu.apartmentHigh} above ${D.APT_DENSITY} persons/ha`, `type not stated ${c.ppu.unknown}`]) assert.ok(ppu.includes(s), `persons per unit: ${s}`);
   const w = I['demand-water'].body;
   for (const s of [`${c.water.avg} L/cap/d`, `×${c.water.maxDay}`, `×${c.water.peakHour.toFixed(1)}`]) assert.ok(w.includes(s), `water: ${s}`);

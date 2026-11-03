@@ -3,7 +3,7 @@
  * Tap points along a centreline, pick a width (50–1,000 m), then Finish: the
  * tool buffers the polyline by half the width and lists the developments,
  * existing sanitary sewers and planned DC works whose geometry falls inside.
- * Results open in the Tool result tab with a CSV export.
+ * Results open on Overview as a result (a scope of its own, #scope-body) with a CSV export.
  *
  * Pure geometry (distToSegM, distToPolylineM, corridorContains, bufferRects) is
  * exported for node --test. The centreline, point markers and corridor swathe

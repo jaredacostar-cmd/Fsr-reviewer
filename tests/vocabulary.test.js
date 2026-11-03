@@ -47,6 +47,7 @@ test('no two sub-views share a name; the chips, the trails and the source lines 
   assert.equal(W.tabPath('svc', 'fsr'), 'Servicing › FSR review');
   assert.equal(W.tabPath('svc', 'pipes'), 'Servicing › Old pipes', '(navigation phase 6c: the workspace’s name, one name)');
   assert.equal(W.tabPath('records', 'checks'), 'Records › Data checks');
+  assert.equal(W.tabPath('records', 'files'), 'Records', 'a development’s files and history: Records, one view (§3.9: no Files page section)'); assert.equal(W.chipName('records', 'files'), 'Files');
   assert.doesNotMatch(src('js/workspaces.js'), /'svc:checks'|alloc: 'Allocations'/, 'no name for a sub-view that is gone');
   assert.doesNotMatch(src('js/workspaces.js'), /ledger: 'Ledger'/, 'no name for a sub-view that is gone');
   assert.equal(W.tabPath('growth', 'timing'), 'Growth › Forecast');
@@ -71,5 +72,59 @@ test('Help names only places that exist (tab › sub-view), and none of the old 
   for (const [, tab, sub] of names) assert.ok(chips(TAB[tab]).some(c => sub.startsWith(c)), `"${tab} › ${sub}" is not a sub-view (${chips(TAB[tab]).join(', ')})`);
   for (const old of ['DC needs:', 'Development tab', 'Layers & style', 'Data tab:', 'DC map view', 'This week tab', 'Definitions (Overview', 'Inception', 'Under review', 'Draft / site plan approved', 'More settings → Existing']) assert.ok(!HELP.includes(old), `Help still says "${old}"`);
   // (the help strings outside Help: info, the tool rail, the scenario control)
-  for (const [f, old] of [['js/info.js', 'Settings (gear menu) → Records'], ['js/info.js', 'The Development tab lists the nearest'], ['js/info.js', 'screen button under the map tools'], ['js/area-select.js', 'select developments within a radius'], ['js/svc-tab.js', 'Wastewater → Plants & capacity'], ['js/tools-upgrade.js', 'Open the Wastewater tab'], ['js/tips.js', 'grouped: Planning, Capital, Asset Management'], ['js/tips.js', 'grouped: Planning'], ['js/tips.js', 'Explore, in the menu']]) assert.ok(!src(f).includes(old), `${f} still says "${old}"`);
+  for (const [f, old] of [['js/info.js', 'Settings (gear menu) → Records'], ['js/info.js', 'The Development tab lists the nearest'], ['js/info.js', 'screen button under the map tools'], ['js/area-select.js', 'select developments within a radius'], ['js/svc-tab.js', 'Wastewater → Plants & capacity'], ['js/tools-upgrade.js', 'Open the Wastewater tab'], ['js/tips.js', 'grouped: Planning, Capital, Asset Management'], ['js/tips.js', 'grouped: Planning'], ['js/tips.js', 'Explore, in the menu'], ['js/reference.js', "label: 'Servicing capacity'"], ['js/reference.js', "label: 'Growth in an area'"], ['js/reference.js', "label: 'Review an FSR'"], ['js/reference.js', "label: 'Check a site'"], ['js/reference.js', "label: 'DC projects'"], ['js/ws-pages.js', 'Open Servicing capacity on the map'], ['js/ledger-ui.js', 'Explore › Growth in an area'], ['js/growth-ui.js', 'see Census & 2051'], ['js/records-tab.js', 'was the Data tab'], ['js/reference.js', 'The <strong>DC projects</strong> page'], ['js/reference.js', '(Servicing capacity)'], ['js/usage.js', 'workspace map'], ['js/usage.js', 'How often each workspace'], ['js/tips.js', 'year slider in the legend'], ['js/tips.js', 'Scenario line'], ['js/tips.js', 'Scenario bar'], ['js/tips.js', 'in the sidebar)'], ['js/tips.js', 'Flags (sidebar)'], ['js/timing.js', 'on the Wastewater tab'], ['js/svc-plants.js', 'the Plants tab chart'], ['js/svc-tab.js', 'in the Plants tab'], ['js/area-select.js', 'the bottom panel'], ['js/ws-pages.js', 'the same test as Capital › Timing'], ['js/usage.js', '(sidebar)'], ['js/map-analysis.js', 'selected in the sidebar'], ['index.html', 'aria-label="Sidebar"'], ['js/approvals-guide.js', 'Records › Files › Open full table'], ['js/reference.js', '(Records › Files)'], ['js/dev-detail.js', 'check them in Records › Files'], ['js/dev-detail.js', 'editable under Breakdown'], ['js/info.js', 'per zone in Breakdown & criteria'], ['js/info.js', 'definitions table (README)'], ['js/ws-pages.js', 'Open Projects on the map']]) assert.ok(!src(f).includes(old), `${f} still says "${old}"`);
+});
+
+// Navigation phase 9 (design §5 row 167): every "What is this?" card is shown somewhere: its key is in index.html or a
+// module (a data-info, or the arrays and helpers that write one), or it is a stage's or a municipality's card, written
+// from the key (data-info="phase-${key}", "muni-${m}"). The cards nothing showed went.
+test('every info card has a producer; the orphans are gone', () => {
+  const ctx = { window: {}, self: {} }; ctx.globalThis = ctx;
+  require('node:vm').runInNewContext(src('js/info.js'), ctx);
+  const I = (ctx.window.PeelInfo || ctx.PeelInfo).INFO;
+  const code = ['index.html', ...fs.readdirSync(path.join(ROOT, 'js')).filter(x => x.endsWith('.js') && x !== 'info.js').map(x => `js/${x}`)].map(src).join('\n');
+  const DYN = { phase: P.ALL_PHASES.map(p => p.key), muni: ['all', 'Mississauga', 'Brampton', 'Caledon'] };
+  for (const k of Object.keys(I)) {
+    const [fam, ...rest] = k.split('-');
+    assert.ok(new RegExp(`['"\`]${k}['"\`]`).test(code) || (DYN[fam] || []).includes(rest.join('-')), `info card "${k}": nothing shows it`);
+  }
+  for (const k of ['tab-water', 'tab-ww', 'tab-dev', 'tab-log', 'tab-demand', 'tab-criteria', 'tab-developments', 'record-settings', 'map-tools', 'focus', 'legend']) assert.equal(I[k], undefined, `${k}: an orphan, removed`);
+  for (const k of ['tab-overview', 'tab-growth', 'tab-servicing', 'tab-dca', 'tab-records', 'definitions', 'phase-review', 'muni-all']) assert.ok(I[k], k);
+});
+
+// Navigation phase 9 (design §3.7, §3.9): a tool's output is a result, a scope of its own on Overview; the words
+// "Tool result tab" (and its pane) name nothing. The old name lives only in What moved where's first column (§3.1 rule 4).
+test('no "Tool result tab" anywhere: a result is a scope on Overview', () => {
+  const OLD = /Tool result (tab|pane)/i;
+  const files = ['README.md', 'docs/guide/README.md', 'docs/method/README.md', 'docs/data/README.md', ...fs.readdirSync(path.join(ROOT, 'js')).filter(x => x.endsWith('.js') && x !== 'tips.js').map(x => `js/${x}`)];
+  for (const x of files) assert.doesNotMatch(src(x), OLD, x);
+  const t = src('js/tips.js'), block = t.match(/const MOVED = \[[\s\S]*?\n {2}\];/)[0];
+  const MOVED = new Function(`${block}; return MOVED;`)();
+  assert.doesNotMatch(t.replace(block, '') + MOVED.flatMap(g => g.rows.map(r => r[1])).join(' '), OLD, 'js/tips.js (outside What moved where’s first column)');
+});
+
+// Navigation phase 9's review: the README's phone paragraph and the guide's Find entry say what the app shows. The
+// sheet's grip is hidden (css/app.css: the top-level .analysis .sheet-grip rule wins over the narrow block's), so the
+// sheet rises from its summary line; the Stage bar's names are js/phases.js's; a view is saved from Export ▾.
+test('the README’s phone paragraph and the guide’s Find entry name what the app shows', () => {
+  const css = src('css/app.css'), narrow = css.indexOf('.analysis .sheet-grip { display: flex; }'), hide = css.indexOf('.analysis .sheet-grip { display: none; }');
+  assert.ok(narrow > 0 && hide > narrow, 'the grip is hidden at every width (the later rule wins)');
+  const readme = src('README.md');
+  assert.doesNotMatch(readme, /grip/, 'the README names no grip');
+  assert.match(readme, /are a sheet at the bottom: tap its summary line to raise it, and Esc folds it back\./);
+  const g = src('docs/guide/README.md'), find = g.slice(g.indexOf('**Find** — one filter panel'), g.indexOf('**Watch:**'));
+  assert.ok(find.length > 500, 'the Find entry');
+  for (const old of ['Inception', 'Under review', 'Permit issued', 'Completed,', 'More settings → Saved views', '**Scenario** bar']) assert.ok(!find.includes(old), `the Find entry still says "${old}"`);
+  for (const ph of P.ALL_PHASES) assert.ok(find.replace(/\s+/g, ' ').includes(ph.label), `the Find entry names the stage ${ph.label}`);
+  assert.match(find, /save a view from Export ▾ › Save this view…/);
+  assert.match(src('js/topbar.js'), /data-tbx="saveview">Save this view…</);
+  assert.doesNotMatch(g, /drag the info sheet's grip/, 'the guide names no grip either');
+  // (the split docs' present-tense lines: the by-type totals are Growth › Pipeline's, the m²/job in the Scenario control,
+  // Brampton's pre-consultations Pre-application)
+  const m = src('docs/method/README.md'), d = src('docs/data/README.md');
+  assert.doesNotMatch(m, /Breakdown & criteria/, 'docs/method: no Breakdown & criteria tab');
+  assert.match(m, /\*\*Growth › Pipeline\*\*'s full\ntable \(\*Build-out by dwelling type\*\) totals them/);
+  assert.match(src('js/growth-ui.js'), /<caption>Build-out by dwelling type<\/caption>/);
+  assert.doesNotMatch(d, /shown as Inception/); assert.match(d, /always shown as Pre-application/);
+  assert.equal(P.PHASE_BY_KEY.inception.label, 'Pre-application');
 });

@@ -38,11 +38,11 @@ test('usage: counts per day and name; only the fixed names (no developments, sea
 // sidebar entries that went. Fixed names only, as every other count.
 const W7 = require('../js/workspaces.js');
 // usage.js's browser part in a vm: the stored role, a click (window capture) and the start count (after load).
-function usageBrowser(role) {
+function usageBrowser(role, ws = { WS: [] }) {
   const kept = { role }, wl = {}, timers = [];
   const store = { get: (k, v) => (kept[k] == null ? v : kept[k]), set: (k, v) => { kept[k] = v; } };
   const document = { readyState: 'complete', getElementById: () => null, querySelectorAll: () => [], addEventListener: () => {} };
-  const window = { PeelUtil: { store, esc: String, fmtNum: String }, PeelWorkspaces: { mode: () => 'home', ROLES: W7.ROLES, WS: [] }, addEventListener: (t, f) => { wl[t] = f; } };
+  const window = { PeelUtil: { store, esc: String, fmtNum: String }, PeelWorkspaces: { mode: () => 'home', ROLES: W7.ROLES, ...ws }, addEventListener: (t, f) => { wl[t] = f; } };
   vm.runInNewContext(src('js/usage.js'), { window, document, location: { hash: '' }, performance: { getEntriesByType: () => [] }, setTimeout: f => timers.push(f), Date });
   timers.splice(0).forEach(f => f());
   const counts = () => Object.assign({}, ...Object.values((kept.usage && kept.usage.days) || {}));
@@ -74,6 +74,13 @@ test('usage: the role counts once per visit, a ROLES key or none (never free tex
   assert.equal(L['role:none'], 'Role: none picked');
   assert.equal(L['page:find'], 'Find (page)');
   assert.equal(L['page:help'], 'Help (page)');
+  // (navigation phase 9, §3.9: each page by the name the reader knows, an area page by the view of Home it opens; the
+  // kind:id keys unchanged, so the CSVs stay comparable)
+  const L9 = usageBrowser('qa', { WS: W7.WS, pageLabel: W7.pageLabel }).U.labels();
+  assert.deepEqual(['page:tight', 'map:tight', 'page:coming', 'page:eaflow', 'page:fsr', 'map:study', 'page:site', 'page:outlets', 'start:ws'].map(k => L9[k]),
+    ['Servicing › Capacity (page)', 'Servicing › Capacity (map view)', 'Growth › Forecast › By period (page)', 'Capital › EAs › EA to construction (page)', 'Servicing › FSR review (page)', 'Draw an area (map view)', 'Check a site (page)', 'Review outlets (page)', 'Opened on a page’s map view']);
+  assert.doesNotMatch(Object.values(L9).join('|'), /workspace|Study area|Review an FSR|Servicing capacity|Growth in an area|sidebar/);
+  assert.deepEqual([L9['side:explore'], L9['side:week']], ['Find (left panel)', 'Watch (left panel)']);   // (the map’s left panel: Find · Watch, design §3.4)
   assert.doesNotMatch(b.U.settingsHTML(), /Role:/);
   assert.match(b.U.settingsHTML(), /No developments, search text or names are counted: a search counts only what kind of place it found\./);
 });
@@ -207,6 +214,15 @@ test('What moved where: every old tab and sub-view says where it is now', () => 
   // Navigation phase 3: the Ledger is the Forecast's By period; What's coming opens it there.
   assert.match(now('Growth › Ledger'), /Growth › Forecast/);
   assert.match(now('Home › What’s coming'), /Growth › Forecast/);
+  // Navigation phase 9 (the MOVED audit): the old names that pointed at a name, not a place; the Tool result tab.
+  assert.match(now('The Projects workspace'), /Capital › DC timing/);
+  assert.match(now('Capital › Timing'), /Capital › DC timing/);
+  assert.match(now('The Tool result tab'), /on Overview/);
+  // (the review: only the Inquiry draft keeps the development; every other tool's result closes it, js/svc-scope.js)
+  assert.match(now('The Tool result tab'), /The Inquiry draft, started at a development, keeps it \(Peel › the site › the draft\); any other result closes the development first\./);
+  assert.match(src('js/svc-scope.js'), /if \(window\.DevScope && window\.DevScope\.current\(\) && !o\.keepDev\) window\.DevScope\.close\(\);/);
+  assert.deepEqual(fs.readdirSync(path.join(ROOT, 'js')).filter(f => f !== 'svc-scope.js' && f !== 'overview-tab.js' && /\bkeepDev\b/.test(src(`js/${f}`))), ['tools-inquiry.js'], 'only the Inquiry draft passes keepDev (svc-scope.js keeps it, overview-tab.js reads it)');
+  assert.doesNotMatch(MOVED.flatMap(g => g.rows.map(r => r[1])).join(' '), /Tool result tab|last workspace|Review an FSR’s own step|\(your watch list and alerts\)/);
   const at = src('js/analysis-tabs.js');
   assert.match(at, /ww: \{ plants: 'capacity', catchments: 'network', alloc: 'capacity', pumpstations: 'network' \}/);
   assert.match(at, /water: \{ capacity: 'capacity', zones: 'network', facilities: 'network', hydro: 'network' \}/);
