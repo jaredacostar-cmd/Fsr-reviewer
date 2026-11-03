@@ -21,11 +21,11 @@
   const SvcTab = () => root.PeelSvcTab;
 
 /* ---- app.js lines 2014-2122 ---- */
-  // ---- Growth tab (Phase 4): pipeline and census sub-views ---------------------------------
-  // Worker A owns the tab markup: buttons data-gsub, #pane-growth-pipeline >
-  // #growth-pipeline-body and #pane-growth-census > #growth-census-body. These render
-  // functions fill the two body divs. renderGrowth refreshes both when the filters
-  // change; the sub-view buttons only toggle which pane is shown.
+  // ---- Growth tab: Pipeline · Areas · Forecast · 2021 existing -------------------------------
+  // index.html holds the tab markup: buttons data-gsub, #pane-growth-pipeline > #growth-pipeline-body
+  // (Pipeline's) and #pane-growth-census > #growth-census-body (2021 existing's: the census block,
+  // js/census-view.js, owner 2026-11-03; it was part of Areas). renderGrowth refreshes every view
+  // when the filters change; the sub-view buttons only toggle which pane is shown.
   const growthDeps = () => ({
     aggregate: { typeBuildout: p => D.typeBuildout(p), unitTypes: D.UNIT_TYPES, empOf: App().empOf, permittedPhases: App().EMP_DONE.permitted, completedPhases: App().EMP_DONE.completed },
     completions: { completedAt: PeelAreas.completedAt, permitUnits: rs => P.permitUnits(rs), nowYear: (root.PeelMapMarkers && root.PeelMapMarkers.THIS_YEAR) || new Date().getFullYear() },
@@ -41,7 +41,7 @@
     run('growth:timing', 'timing', () => TL().renderTiming());
     run('growth:ledger', 'timing', () => { if (root.PeelLedgerUI) root.PeelLedgerUI.render(); });   // (By period: the Forecast's full table)
     run('growth:plans', 'areas', () => { if (root.PeelPlanTables) root.PeelPlanTables.render(); });
-    run('growth:census', 'areas', () => CV().renderGrowthCensus());
+    run('growth:census', 'existing', () => CV().renderGrowthCensus());
     const set = DU().demandSet(), basis = DU().demandBasis();
     // The footer summary line (was filled by the old Demand tab).
     const fs = $('#f-sum');
@@ -122,7 +122,7 @@
       // Jobs by layer as well (built / approved / proposed), as the census sub-view does.
       const gr = PeelAreas.growthSince(set, {}, bc.date, App().state.criteria), j = SvcTab().svcJobs(set.filter(p => p.phase !== 'cancelled'), bc.date);
       gr.built.jobs = j.jbuilt; gr.approved.jobs = j.japproved; gr.proposed.jobs = j.jproposed;
-      CV().renderGrowthChart({ population: 0, dwellings: 0 }, gr, bc.year, $('#gp-chart'), { builtLabel: `Completed since ${bc.year} on the developments shown (not every permit: see Growth › Areas)` });
+      CV().renderGrowthChart({ population: 0, dwellings: 0 }, gr, bc.year, $('#gp-chart'), { builtLabel: `Completed since ${bc.year} on the developments shown (not every permit: see Growth › 2021 existing)` });
     }
   }
   // ---- Growth at a development (Stage 2): its units, then how this site compares --------------

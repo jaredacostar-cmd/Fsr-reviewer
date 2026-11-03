@@ -12,7 +12,8 @@
   // most four per tab, one chip row under the tab bar (TABSUBS). Overview has none. What each scope kind shows:
   // HIDDEN (a drawn area has no Records tab, a file is Overview, Servicing (its flows) and Records, a card or a tool's
   // result Overview alone; navigation phase 8).
-  //   Growth:    Pipeline · Areas · Forecast (its By period fold: the pipeline ledger, js/ledger-ui.js)
+  //   Growth:    Pipeline · Areas · Forecast · 2021 existing (the census block, js/census-view.js); Forecast's By period
+  //              fold: the pipeline ledger, js/ledger-ui.js
   //   Servicing: Capacity · Network · Old pipes (water and wastewater together; Allocations is a fold of Capacity;
   //              Old pipes the old sewers carrying growth, js/workspaces.js pipesSpec), and at a development
   //              Network · FSR review (the FSR cross-check, js/fsr-check.js)
@@ -32,11 +33,12 @@
   // facilities and the hydraulic check are Network's. Phase 3: the Ledger is Forecast's By period fold.
   // Phase 4: DC projects is DC timing (one list, both verdicts); the funding screen is its fold. Phase 5: FSR
   // review is a development's Servicing view. Phase 6c: Old pipes is an area's Servicing view (the page id 'pipes'
-  // an alias of it, js/workspaces.js HOST).
+  // an alias of it, js/workspaces.js HOST). 2026-11-03: Growth › 2021 existing, the census block from Areas;
+  // census2051 and t=census land there, areas and byplan stay Areas.
   const SUB_MAP = {
     ww: { plants: 'capacity', catchments: 'network', alloc: 'capacity', pumpstations: 'network' },
     water: { capacity: 'capacity', zones: 'network', facilities: 'network', hydro: 'network' },
-    growth: { pipeline: 'pipeline', census2051: 'areas', byplan: 'areas', timing: 'timing', areas: 'areas', ledger: 'timing' },
+    growth: { pipeline: 'pipeline', census2051: 'existing', byplan: 'areas', timing: 'timing', areas: 'areas', ledger: 'timing', existing: 'existing' },
     dca: { timing: 'timing', build: 'projects', dcproj: 'timing', projects: 'projects', eas: 'eas', recommendations: 'timing', funding: 'timing' },
     svc: { capacity: 'capacity', network: 'network', alloc: 'capacity', checks: 'records:checks', fsr: 'fsr', pipes: 'pipes' },
     records: { sources: 'sources', checks: 'checks', files: 'files' },
@@ -63,7 +65,7 @@
   // A tab key from a link or a stored pref (with its sub-view, when the link or the old key named one).
   const migrateTabKey = (t, sub) => {
     if (t === 'demand') return { tab: 'growth' };
-    if (t === 'census') return { tab: 'growth', gSub: 'areas' };
+    if (t === 'census') return { tab: 'growth', gSub: 'existing' };
     if (t === 'criteria' || t === 'log') return { tab: 'overview' };
     if (t === 'developments' || t === 'tool' || t === 'dev') return { tab: 'overview' };
     if (t === 'plants') return { tab: 'svc', svcSub: 'capacity' };
@@ -99,7 +101,7 @@
   // (Labs add no sub-view: the Funding lab's screen is a fold of Capital › DC timing, js/dc-projects.js.)
   // Sub-view state per tab: the chip data-attribute, the store key, the valid values, get / set.
   const TABSUBS = {
-    growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'areas', 'timing'], get: () => gSub, set: v => { gSub = v; } },
+    growth: { attr: 'gsub', store: 'gSub', valid: ['pipeline', 'areas', 'timing', 'existing'], get: () => gSub, set: v => { gSub = v; } },
     svc: { attr: 'svcsub', store: 'svcSub', valid: ['capacity', 'network', 'pipes', 'fsr'], get: () => svcSub, set: v => { svcSub = v; } },
     dca: { attr: 'dcasub', store: 'dcSub', valid: ['timing', 'eas', 'projects'], get: () => dcSub, set: v => { dcSub = v; } },
     records: { attr: 'rsub', store: 'rSub', valid: ['sources', 'checks', 'files'], get: () => rSub, set: v => { rSub = v; } },
@@ -130,11 +132,13 @@
   // (navigation phase 5: Capital has no chip row at a site). FSR review is a development's: an area, a servicing
   // scope or a result never shows it, and Servicing opens on its own first view there. Old pipes is Peel's sewers
   // (navigation phase 6c): a development shows Network in its place, and the pick comes back at an area.
+  // Growth › 2021 existing is an area's view: it counts the area's census and the applications in its geography (other
+  // filters ignored), so it is never shown at a development, a servicing scope or a selection (owner 2026-11-03).
   const HIDDEN = {
-    site: { growth: ['areas', 'timing'], svc: ['capacity', 'pipes'], dca: ['eas', 'projects'], records: ['sources', 'checks'] },
+    site: { growth: ['areas', 'timing', 'existing'], svc: ['capacity', 'pipes'], dca: ['eas', 'projects'], records: ['sources', 'checks'] },
     area: { svc: ['fsr'], records: ['files'] },
-    svc: { growth: ['areas'], svc: ['fsr'], dca: ['eas', 'projects'], records: ['files'] },
-    drawn: { growth: ['areas'], svc: ['pipes', 'fsr'], dca: ['eas', 'projects'], records: '*' },
+    svc: { growth: ['areas', 'existing'], svc: ['fsr'], dca: ['eas', 'projects'], records: ['files'] },
+    drawn: { growth: ['areas', 'existing'], svc: ['pipes', 'fsr'], dca: ['eas', 'projects'], records: '*' },
     file: { growth: '*', svc: ['capacity', 'network', 'pipes', 'fsr'], dca: '*', records: ['sources', 'checks'] },   // (Servicing: its flows only)
     object: { growth: '*', svc: '*', dca: '*', records: '*' },
   };
@@ -270,7 +274,7 @@
   // the open one; and its view, 'tab:sub' (Overview 'overview:'), the key of js/sections.js VIEWS.
   const wantedTab = () => heldTab || footTab;
   const viewKey = () => { const t = wantedTab(), s = TABSUBS[t]; return `${t}:${s ? s.get() : ''}`; };
-  // A view re-rendering the open tab (its pane came or went: census-view.js, a Labs switch): the tab on
+  // A view re-rendering the open tab (its pane came or went: a Labs switch): the tab on
   // screen again, or the one still held; never the remembered one, which a pick since may have left.
   const refreshFootTab = () => showFootTab(heldTab || footTab);
   // The scope changed under the open tab (a servicing scope or a result closed, js/svc-scope.js; a link's block,

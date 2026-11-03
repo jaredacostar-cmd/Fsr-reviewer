@@ -35,6 +35,7 @@
     'overview:result': [...DEV, ...SVC],
     'growth:pipeline': GROWTH,
     'growth:areas': [...GROWTH, 'svc-census.json'],
+    'growth:existing': [...GROWTH, 'das-2016.json', 'peel-reports.json'],   // (2021 existing: the census years' DAs and the 2051 forecast)
     'growth:timing': [...GROWTH, 'site-audit.json', 'dc-gate.json', 'servicing.json'],   // (navigation phase 3: By period, the pipeline ledger, too)
     'svc:capacity': [...SVC, 'snapshot.json', 'tree-counts.json'],
     'svc:network': [...SVC, 'sewers.json', 'watermains.json', 'water-supply.json', 'blocks.json', 'idf.json'],

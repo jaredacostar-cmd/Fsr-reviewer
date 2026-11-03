@@ -124,7 +124,7 @@
   const TAB_NAME = { overview: 'Overview', growth: 'Growth', svc: 'Servicing', dca: 'Capital', records: 'Records' };
   // Sub-view names (design bundle 2: no two alike): Records › Data checks (Servicing has none since
   // navigation phase 2), Growth › Forecast / Capital › DC timing. The chips in index.html carry the same words.
-  const SUB_NAME = { capacity: 'Capacity', network: 'Network', pipes: 'Old pipes', fsr: 'FSR review', 'records:checks': 'Data checks', 'records:files': '', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', 'dca:timing': 'DC timing', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
+  const SUB_NAME = { capacity: 'Capacity', network: 'Network', pipes: 'Old pipes', fsr: 'FSR review', 'records:checks': 'Data checks', 'records:files': '', checks: 'Checks', pipeline: 'Pipeline', areas: 'Areas', 'growth:timing': 'Forecast', 'growth:existing': '2021 existing', 'dca:timing': 'DC timing', timing: 'Timing', projects: 'Projects', eas: 'EAs', funding: 'Funding', sources: 'Sources', files: 'Files' };
   // (a 'tab:sub' entry, even an empty one, wins: Records › Files is "Records", a development's one view of it)
   const tabPath = (tab, sub) => [TAB_NAME[tab] || tab, !sub ? '' : `${tab}:${sub}` in SUB_NAME ? SUB_NAME[`${tab}:${sub}`] : SUB_NAME[sub] || sub].filter(Boolean).join(' › ');
   // A chip's own word (the page host's views row, js/ws-pages.js tabsHTML: the map's chips' words).

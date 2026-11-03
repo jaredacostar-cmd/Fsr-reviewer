@@ -197,7 +197,7 @@ test('growth tab (Phase 4): renderGrowth fills both sub-view bodies, old Demand 
   assert.match(c[0], /\$\('#growth-census-body'\)/, 'census sub-view fills #growth-census-body');
   assert.doesNotMatch(c[0], /housingCardHTML/, 'Ontario 2031 housing targets removed');
   assert.match(c[0], /outlookCardHTML\(true\)/, 'the population outlook is reused');
-  assert.match(c[0], /forecastTableHTML\(bc\)/, 'the 2051 allocation table is rendered');
+  assert.match(c[0], /forecastTableHTML\(bc, fc\)/, 'the 2051 allocation table is rendered');
   for (const gone of ['function renderDemand(', 'function renderDemandScoped(', "stampHTML('demand')"]) {
     assert.ok(!APP.includes(gone), `still present: ${gone}`);
   }

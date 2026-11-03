@@ -1,6 +1,6 @@
 'use strict';
 // Stage 1, item 2 (Stage 2 tabs): at a development's scope a sub-view with nothing to show is hidden,
-// never blank, and area-only content (pace, Areas, Timing, the capacity table, allocations, checks,
+// never blank, and area-only content (pace, Areas, Timing, the census block, the capacity table, allocations, checks,
 // DC funding, the Region-wide projects list, Peel's sources) never renders there.
 const test = require('node:test');
 const assert = require('node:assert/strict');
@@ -23,7 +23,7 @@ function loadTabs() {
 // (Capital is one view at a site: its EAs are in DC timing's site panel; FSR review is a development's
 // Servicing view, navigation phase 5; Old pipes is Peel's sewers, an area's Servicing view, navigation phase 6c.)
 const AT_SITE = {
-  growth: { pipeline: 'show', areas: 'hide', timing: 'hide' },
+  growth: { pipeline: 'show', areas: 'hide', timing: 'hide', existing: 'hide' },
   svc: { capacity: 'hide', network: 'show', pipes: 'hide', fsr: 'show' },
   dca: { timing: 'show', eas: 'hide', projects: 'hide' },
   records: { sources: 'hide', checks: 'hide', files: 'show' },
@@ -46,6 +46,7 @@ test('site scope: a hidden sub-view falls back to the first one with site conten
   assert.equal(AT.subFor('records', AT.migrateSub('svc', 'checks').sub, true), 'files');
   assert.equal(AT.subFor('growth', AT.migrateSub('growth', 'ledger').sub, true), 'pipeline');   // (a stored Ledger pick is Forecast now, hidden at a site)
   assert.equal(AT.subFor('growth', 'areas', true), 'pipeline');
+  assert.equal(AT.subFor('growth', 'existing', true), 'pipeline');   // (2021 existing is an area's view: owner 2026-11-03)
   assert.equal(AT.subFor('dca', 'projects', true), 'timing');
   assert.equal(AT.subFor('dca', 'eas', true), 'timing', 'a stored EAs pick lands on the one Capital view');
   assert.equal(AT.subFor('records', 'sources', true), 'files');

@@ -354,7 +354,9 @@
         + sec('read', 'How to read them', '<ul class="rf-ul"><li>A <strong>target</strong> counts homes started (and some beds); a <strong>forecast</strong> is where the Region plans the people to live; the <strong>pipeline</strong> is applications, many of which take years or change.</li><li>Servicing is planned to the <strong>forecast</strong>; DC projects are timed to it. Growth slower than forecast delays the need, not the works already committed.</li></ul>'),
       method: `Targets and progress: Ontario’s housing supply progress (as of ${esc(H && H.targets ? H.targets.asOf : '–')}). The 2051 allocation: the Region’s Land Needs Assessment update (draft, August 2024). The projection: Ministry of Finance, summer 2026 (reference scenario). The pipeline: the app’s developments, homes planned and not built. ${NOTE_TAIL}`,
       sources: 'Ontario Data Catalogue, Ontario’s housing supply progress; Region of Peel, Land Needs Assessment Report Update, appendices (August 2024, draft); Ontario Ministry of Finance population projections 2025–2051.',
-      actions: [{ label: 'Growth › Areas', attrs: { 'data-ws-page': 'growth' }, primary: true }],
+      // (the pipeline against 2051 and the population outlook are Growth › 2021 existing; the plans against their
+      // targets, Growth › Areas)
+      actions: [{ label: 'Growth › 2021 existing', attrs: { 'data-ws-page': 'home', 'data-ws-at': 'growth:existing' }, primary: true }, { label: 'Growth › Areas', attrs: { 'data-ws-page': 'growth' } }],
     });
   }
 

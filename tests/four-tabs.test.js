@@ -34,7 +34,7 @@ function loadTabs({ labs = [], site = false, publicView = false, siteEas = 3 } =
 // navigation phase 8b: a file is Overview, Servicing (its flows, no chip: its own view) and Records, a card or a tool's
 // result Overview alone)
 const SPEC = {
-  area: { overview: [], growth: ['pipeline', 'areas', 'timing'], svc: ['capacity', 'network', 'pipes'], dca: ['timing', 'eas', 'projects'], records: ['sources', 'checks'] },
+  area: { overview: [], growth: ['pipeline', 'areas', 'timing', 'existing'], svc: ['capacity', 'network', 'pipes'], dca: ['timing', 'eas', 'projects'], records: ['sources', 'checks'] },
   site: { overview: [], growth: ['pipeline'], svc: ['network', 'fsr'], dca: ['timing'], records: ['files'] },
   svc: { overview: [], growth: ['pipeline', 'timing'], svc: ['capacity', 'network', 'pipes'], dca: ['timing'], records: ['sources', 'checks'] },
   drawn: { overview: [], growth: ['pipeline', 'timing'], svc: ['capacity', 'network'], dca: ['timing'], records: [] },
@@ -74,7 +74,7 @@ test('1. sub-views per scope match the spec (Peel / area, a development, a servi
   // The chip rows in index.html: one per tab, in the spec's order and words.
   const row = tab => { const i = HTML.indexOf(`f-subtabs`, HTML.indexOf(`data-pane="${tab}" hidden role="group"`) - 80); const s = HTML.slice(i, HTML.indexOf('</div>', i)); return [...s.matchAll(/data-(?:gsub|svcsub|dcasub|rsub)="(\w+)">([^<]+)</g)].map(m => m[2].trim()); };
   // (no two sub-views share a name: design bundle 2)
-  assert.deepEqual(row('growth'), ['Pipeline', 'Areas', 'Forecast']);
+  assert.deepEqual(row('growth'), ['Pipeline', 'Areas', 'Forecast', '2021 existing']);
   assert.deepEqual(row('svc'), ['Capacity', 'Network', 'Old pipes', 'FSR review']);
   assert.deepEqual(row('dca'), ['DC timing', 'EAs', 'Projects']);
   assert.deepEqual(row('records'), ['Sources', 'Data checks', 'Files']);
@@ -92,7 +92,7 @@ function loadStrip({ stored = {}, busy = [], extra = {} } = {}) {
     ['pane-svc-pipes', { pane: 'svc', sub: 'pipes' }], ['pane-svc-file', { pane: 'svc', kind: 'file' }], ['pane-records', { pane: 'records' }]].map(([id, d]) => [id, el(d)]));
   panes['svc-chips'].classList.add('f-subtabs');
   const timers = [];
-  const CHIPS = { gsub: ['pipeline', 'areas', 'timing'], svcsub: ['capacity', 'network', 'pipes', 'fsr'], dcasub: ['timing', 'eas', 'projects'], rsub: ['sources', 'checks', 'files'] };
+  const CHIPS = { gsub: ['pipeline', 'areas', 'timing', 'existing'], svcsub: ['capacity', 'network', 'pipes', 'fsr'], dcasub: ['timing', 'eas', 'projects'], rsub: ['sources', 'checks', 'files'] };
   const chips = Object.fromEntries(Object.entries(CHIPS).map(([a, vs]) => [a, vs.map(v => el({ [a]: v }))]));
   const an = el({}), scope = { dev: null, ss: null, ref: null }, on = {};
   const document = {
@@ -184,7 +184,8 @@ test('1. every scope kind (navigation phase 8a, design §3.5): one kind for ever
   assert.doesNotMatch(at, /\bt\.hidden =/);
   assert.match(src('css/app.css'), /\n\.f-tab\.f-tab-off \{ display: none; \}\n/);
   const ss = src('js/svc-scope.js');
-  assert.match(ss, /function clear\(\) \{ if \(App\(\)\) App\(\)\.state\.ss = null; result = null; lower\(\); if \(AT\(\) && AT\(\)\.rescope\) AT\(\)\.rescope\(\); \}/);
+  // (g21 review: a file's sheet cleared drops its census DA too, unless a development is opening over it)
+  assert.match(ss, /function clear\(\) \{\n {4}const was = result; if \(App\(\)\) App\(\)\.state\.ss = null; result = null; lower\(\);\n {4}if \(!\(window\.DevScope && window\.DevScope\.current\(\)\)\) dropFileDa\(was\);\n {4}if \(AT\(\) && AT\(\)\.rescope\) AT\(\)\.rescope\(\);\n {2}\}/);
   assert.match(ss, /function closeResult\(\) \{[^]*?Sh\(\)\.viewLink\.write\(\);\n\s+if \(AT\(\) && AT\(\)\.rescope\) AT\(\)\.rescope\(\);[^\n]*\n\s+return true;\n\s+\}/);
   assert.match(src('js/svc-data.js'), /SvcTab\(\)\.renderSvcTab\(\);\n\s+App\(\)\.applyFilters\(\);\n\s+if \(AT\(\)\.rescope\) AT\(\)\.rescope\(\);/);
 });
@@ -314,7 +315,8 @@ test('1. a file’s Servicing: its flows, by the record sheet’s own renderer; 
 test('1. the panes behind each sub-view: Areas is one drill-down; Network holds blocks, stations, zones and the water facilities', () => {
   const pane = id => (HTML.match(new RegExp(`id="${id}" data-pane="(\\w+)" data-sub="([\\w ]+)"`)) || []).slice(1).join('/');
   assert.equal(pane('pane-growth-byplan'), 'growth/areas');
-  assert.equal(pane('pane-growth-census'), 'growth/areas');
+  // (owner 2026-11-03: the census block is Growth › 2021 existing; Areas the plan areas only)
+  assert.equal(pane('pane-growth-census'), 'growth/existing');
   assert.equal(pane('pane-svc-capacity'), 'svc/capacity');
   for (const id of ['pane-ww', 'pane-pumpstations', 'pane-water']) assert.equal(pane(id), 'svc/network', id);
   // Navigation phase 2: Allocations is a fold of Capacity (its tables in Capacity's full table); the
@@ -419,7 +421,8 @@ test('4. old links and stored views map to the new tabs', () => {
   const cases = [
     [['ww', 'plants'], { tab: 'svc', svcSub: 'capacity' }], [['ww', 'catchments'], { tab: 'svc', svcSub: 'network' }], [['ww', 'alloc'], { tab: 'svc', svcSub: 'capacity' }], [['ww', 'pumpstations'], { tab: 'svc', svcSub: 'network' }],
     [['water', 'capacity'], { tab: 'svc', svcSub: 'capacity' }], [['water', 'zones'], { tab: 'svc', svcSub: 'network' }], [['water', 'facilities'], { tab: 'svc', svcSub: 'network' }], [['water', 'hydro'], { tab: 'svc', svcSub: 'network' }],
-    [['growth', 'census2051'], { tab: 'growth', gSub: 'areas' }], [['growth', 'byplan'], { tab: 'growth', gSub: 'areas' }], [['growth', 'timing'], { tab: 'growth', gSub: 'timing' }], [['growth', 'ledger'], { tab: 'growth', gSub: 'timing' }], [['census'], { tab: 'growth', gSub: 'areas' }],
+    [['growth', 'census2051'], { tab: 'growth', gSub: 'existing' }], [['growth', 'byplan'], { tab: 'growth', gSub: 'areas' }], [['growth', 'timing'], { tab: 'growth', gSub: 'timing' }], [['growth', 'ledger'], { tab: 'growth', gSub: 'timing' }], [['census'], { tab: 'growth', gSub: 'existing' }],
+    [['growth', 'existing'], { tab: 'growth', gSub: 'existing' }], [['growth', 'areas'], { tab: 'growth', gSub: 'areas' }],
     [['dca', 'build'], { tab: 'dca', dcSub: 'projects' }], [['dca', 'dcproj'], { tab: 'dca', dcSub: 'timing' }], [['dca', 'recommendations'], { tab: 'dca', dcSub: 'timing' }], [['dca', 'funding'], { tab: 'dca', dcSub: 'timing' }], [['dca', 'eas'], { tab: 'dca', dcSub: 'eas' }],
     [['plants'], { tab: 'svc', svcSub: 'capacity' }], [['demand'], { tab: 'growth' }], [['criteria'], { tab: 'overview' }], [['developments'], { tab: 'overview' }], [['records'], { tab: 'records' }],
   ];

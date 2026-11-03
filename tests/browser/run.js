@@ -262,8 +262,8 @@ async function pickView(page, ev, key, tap = false) {
     const t = await ev(() => new Promise(done => { const lt = []; const o = new PerformanceObserver(l => { for (const e of l.getEntries()) lt.push(e.duration); }); o.observe({ type: 'longtask' }); PeelApp.state.muni = 'Brampton'; PeelApp.applyFilters(); setTimeout(() => { o.disconnect(); done(Math.max(0, ...lt)); }, 4000); }));
     expect(t < 2500, `the longest freeze ${Math.round(t)} ms`);
     expect(await ev(() => PeelUtil.laterPending()) === 0, 'nothing left waiting once the page is free');
-    await ev(() => PeelAnalysisTabs.showFootTab('growth', 'areas')); await wait(800);
-    expect(await ev(() => /Since the 2021 Census, Brampton has added/.test(document.querySelector('#growth-census-body').innerText)), 'Growth › Areas is for the new filter');
+    await ev(() => PeelAnalysisTabs.showFootTab('growth', 'existing')); await wait(800);
+    expect(await ev(() => /Since the 2021 Census, Brampton has added/.test(document.querySelector('#growth-census-body').innerText)), 'Growth › 2021 existing is for the new filter');
     await ev(() => { PeelApp.state.muni = ''; PeelApp.applyFilters(); });
   });
 
@@ -956,7 +956,7 @@ async function pickView(page, ev, key, tap = false) {
     expect(a.page === 'home' && a.view === 'growth:areas', `Home › Growth › Areas (${a.page}, ${a.view})`);
     expect(a.search, 'the search box is at the top of the page');
     expect(a.on && a.on.wsPage === 'home', 'Home is lit in the sidebar');
-    expect(a.tabs.join() === 'Overview,Growth,Servicing,Capital,Records' && a.views.join() === 'Pipeline,Areas,Forecast', `the strip and Growth's views: ${a.tabs.join()} | ${a.views.join()}`);
+    expect(a.tabs.join() === 'Overview,Growth,Servicing,Capital,Records' && a.views.join() === 'Pipeline,Areas,Forecast,2021 existing', `the strip and Growth's views: ${a.tabs.join()} | ${a.views.join()}`);
     // Home's Servicing: the map's own Servicing › Capacity answer; back to Growth, Areas kept.
     await page.click('#home .page-tabs [data-pg-tab="svc"]'); await wait(2000);
     const sv = await ev(() => { const st = h => String(h || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(); return { view: PeelWorkspaces.view(), on: (((document.querySelector('#home .page-tabs .page-sec.on') || {}).childNodes || [])[0] || { textContent: '' }).textContent.trim(), page: st(document.querySelector('#home .home-answer').innerHTML), map: st(PeelPanel.get('svc:capacity').spec.answer) }; });
@@ -1412,7 +1412,7 @@ async function pickView(page, ev, key, tap = false) {
       const r = await ev(k => { const [t] = k.split(':'); return { page: PeelWorkspaces.page(), view: PeelWorkspaces.view(), lit: (document.querySelector('#home .home-ws.on') || {}).dataset, views: [...document.querySelectorAll('#home .page-subsecs .page-sec')].map(b => b.textContent.trim()), want: PeelAnalysisTabs.chipsAt(t, 'area').map(c => PeelWorkspaces.tabPath(t, c).split(' › ')[1]) }; }, key);
       expect(r.page === 'home' && r.view === key && r.lit && r.lit.wsPage === 'home' && r.views.join() === r.want.join(), `${entry}: Home at ${key}, Home lit, its views ${r.views.join()} (${r.want.join()})`);
     }
-    for (const key of ['growth:pipeline', 'svc:network', 'dca:projects', 'records:checks', 'svc:capacity', 'dca:timing', 'dca:eas', 'records:sources']) {
+    for (const key of ['growth:pipeline', 'growth:existing', 'svc:network', 'dca:projects', 'records:checks', 'svc:capacity', 'dca:timing', 'dca:eas', 'records:sources']) {
       const [t, c] = key.split(':');
       await page.click(`#home .page-tabs [data-pg-tab="${t}"]`); await wait(800);
       await page.click(`#home .page-subsecs [data-pg-sub="${c}"]`);
@@ -1673,7 +1673,7 @@ async function pickView(page, ev, key, tap = false) {
     await page.waitForFunction(() => document.querySelector('#analysis[data-scope="svc"]'), null, { timeout: 120000 }).catch(() => {});
     await wait(1000);
     const cb = { ...(await vis()), sub: await ev(() => PeelAnalysisTabs.getGSub()), tab: await ev(() => PeelAnalysisTabs.getFootTab()) };
-    expect(cb.scope === 'svc' && cb.tab === 'growth' && cb.sub === 'pipeline' && !cb.chips.split(',').includes('Areas'), `the block's Growth, Pipeline, no Areas (${JSON.stringify(cb)})`);
+    expect(cb.scope === 'svc' && cb.tab === 'growth' && cb.sub === 'pipeline' && !cb.chips.split(',').includes('Areas') && !cb.chips.split(',').includes('2021 existing'), `the block's Growth, Pipeline, no Areas or 2021 existing (${JSON.stringify(cb)})`);
     // (7) The phone: the plant's Records › Data checks and the block's fold fit at 390 px.
     await page.setViewportSize({ width: 390, height: 844 }); await wait(1500);
     await ev(() => { PeelApp.setAnalysisSnap('full'); PeelSvcScope.open('plant:Clarkson'); PeelAnalysisTabs.openTab('records', 'checks'); }); await wait(2500);
@@ -1701,7 +1701,7 @@ async function pickView(page, ev, key, tap = false) {
     await page.waitForFunction(() => PeelApp.state.svcModel && PeelSvcData.svcById.size > 0, null, { timeout: 120000 });
     // 1. Peel: Growth has its Areas chip, Records Sources and Data checks; the stored FSR review and Files picks wait.
     const pg = await tab('growth'), ps = await tab('svc'), pr = await tab('records');
-    expect(pg.scope === 'area' && pg.tabs === FIVE && pg.chips === 'Pipeline,Areas,Forecast', `Peel: five tabs, Growth's three views (${JSON.stringify(pg)})`);
+    expect(pg.scope === 'area' && pg.tabs === FIVE && pg.chips === 'Pipeline,Areas,Forecast,2021 existing', `Peel: five tabs, Growth's four views (${JSON.stringify(pg)})`);
     expect(ps.chips === 'Capacity,Network,Old pipes' && pr.chips === 'Sources,Data checks' && pr.picks === 'areas,capacity,sources', `Peel: Servicing at Capacity, Records at Sources, the stored FSR review and Files picks waiting (${JSON.stringify({ s: ps.chips, r: pr.chips, picks: pr.picks })})`);
     // 2. A plant, then the trail's Peel step: Growth without Areas, then Areas again, the tab kept.
     await tab('growth');
@@ -1710,7 +1710,7 @@ async function pickView(page, ev, key, tap = false) {
     expect(pl.scope === 'svc' && pl.chips === 'Pipeline,Forecast' && pl.picks.startsWith('pipeline,'), `a plant: Growth is Pipeline · Forecast, never Areas (${JSON.stringify(pl)})`);
     await page.locator('#trail .tb-step').first().click(); await wait(2000);
     const back = await at();
-    expect(back.scope === 'area' && back.tabs === FIVE && back.tab === 'growth' && back.chips === 'Pipeline,Areas,Forecast' && back.picks.startsWith('areas,'), `the trail's Peel step: Growth's Areas pick is back, the tab kept (${JSON.stringify(back)})`);
+    expect(back.scope === 'area' && back.tabs === FIVE && back.tab === 'growth' && back.chips === 'Pipeline,Areas,Forecast,2021 existing' && back.picks.startsWith('areas,'), `the trail's Peel step: Growth's Areas pick is back, Growth's four views, the tab kept (${JSON.stringify(back)})`);
     // 3. A development: FSR review and Files are its views, Areas is not; closed, Peel's picks are back.
     const key = await ev(() => PeelApp.state.projects.find(q => q.phase === 'approved' && q.units > 300 && q.lat != null).key);
     await ev(k => { PeelDevNav.showDetail(PeelDevNav.projectByKey(k)); }, key); await wait(2500);
@@ -1753,7 +1753,7 @@ async function pickView(page, ev, key, tap = false) {
     await file(); await wait(2000);
     await ev(() => PeelAnalysisTabs.openTab('growth')); await wait(1500);
     const fg = { ...(await at()), result: await ev(() => PeelSvcScope.hasResult()) };
-    expect(!fg.result && fg.scope === 'area' && fg.tabs === FIVE && fg.tab === 'growth' && fg.chips === 'Pipeline,Areas,Forecast', `Growth asked at a file: the file closed, Peel's Growth with Areas (${JSON.stringify(fg)})`);
+    expect(!fg.result && fg.scope === 'area' && fg.tabs === FIVE && fg.tab === 'growth' && fg.chips === 'Pipeline,Areas,Forecast,2021 existing', `Growth asked at a file: the file closed, Peel's Growth with Areas, Growth's four views (${JSON.stringify(fg)})`);
   });
 
   // Navigation phase 2, kept from before it (navigation-design §7.2–7.3): what an earlier release stored in this
@@ -2181,7 +2181,7 @@ async function pickView(page, ev, key, tap = false) {
     await page.waitForSelector(`${F}[open] .ldg-table`, { timeout: 30000 }); await wait(1500);
     const c1 = await ev(() => ({ sub: PeelAnalysisTabs.getGSub(), chips: [...document.querySelectorAll('[data-gsub]')].filter(b => b.getClientRects().length).map(b => b.textContent.trim()).join('|') }));
     expect(c1.sub === 'timing', `the Ledger opens the Forecast (${c1.sub})`);
-    expect(c1.chips === 'Pipeline|Areas|Forecast', `Growth's chips: ${c1.chips}`);
+    expect(c1.chips === 'Pipeline|Areas|Forecast|2021 existing', `Growth's chips: ${c1.chips}`);
     // 2. Everything, units, nothing hidden: Peel = left to build; the disclaimer; the check column.
     if (await ev(() => PeelLedgerUI.settings.hideLapsed)) { await page.click(`${F} [data-ledger-lapse]`); await wait(800); }
     await page.click(`${F} [data-ledger-cut="all"]`); await wait(800); await page.click(`${F} [data-ledger-measure="units"]`); await wait(800);
@@ -3179,7 +3179,7 @@ async function pickView(page, ev, key, tap = false) {
     await page.click('#home .home-side ul [data-ws-page="help"]'); await wait(1500);
     await page.click('#home .page-sec >> text=How it works'); await wait(1500);
     await page.click('#home [data-ws-page="capacity"]'); await wait(1500);
-    const g = [['capacity', ['Servicing › Capacity', 'Capital › DC timing'], 'home', 'svc:capacity'], ['fsrguide', ['Find › Files with an FSR posted'], 'fsr', null], ['capguide', ['Capital › DC timing'], 'home', 'dca:timing'], ['forecast', ['Growth › Areas'], 'home', 'growth:areas'], ['network', ['Servicing › Capacity'], 'home', 'svc:capacity']];
+    const g = [['capacity', ['Servicing › Capacity', 'Capital › DC timing'], 'home', 'svc:capacity'], ['fsrguide', ['Find › Files with an FSR posted'], 'fsr', null], ['capguide', ['Capital › DC timing'], 'home', 'dca:timing'], ['forecast', ['Growth › Areas'], 'home', 'growth:areas'], ['targets', ['Growth › 2021 existing', 'Growth › Areas'], 'home', 'growth:existing'], ['network', ['Servicing › Capacity'], 'home', 'svc:capacity']];
     for (const [id, labels, pg, view] of g) {
       if ((await at()).page !== id) { await ev(i => PeelWorkspaces.openPage(i), id); await wait(1500); }
       const f = await foot();
@@ -3216,7 +3216,7 @@ async function pickView(page, ev, key, tap = false) {
     // No ⓘ on Home's five tabs, a development's page or the full map names a card that is not there.
     const keys = new Set();
     const sweep = async () => { for (const k of await ev(() => [...document.querySelectorAll('[data-info]')].map(x => x.dataset.info))) keys.add(k); };
-    for (const k of ['overview:', 'growth:pipeline', 'growth:areas', 'growth:timing', 'svc:capacity', 'svc:network', 'dca:timing', 'dca:projects', 'dca:eas', 'records:files', 'records:sources', 'records:checks']) {
+    for (const k of ['overview:', 'growth:pipeline', 'growth:areas', 'growth:timing', 'growth:existing', 'svc:capacity', 'svc:network', 'dca:timing', 'dca:projects', 'dca:eas', 'records:files', 'records:sources', 'records:checks']) {
       await ev(v => { PeelWorkspaces.openPage('home', { at: v }); }, k); await wait(900); await sweep();
     }
     await ev(() => PeelWorkspaces.setMode('full')); await wait(1500);
@@ -3235,6 +3235,92 @@ async function pickView(page, ev, key, tap = false) {
     await ev(() => PeelTips.startTour('map')); await wait(1200);
     for (const t of ['Timeline', 'Present and time-lapse', 'Forecast', 'Help any time']) { const f = await tourAt(t); expect(f.t === t && f.hole, `390 px: the map tour’s ${t} step highlights what shows (${JSON.stringify(f)})`); }
     await page.keyboard.press('Escape'); await wait(500);
+  });
+
+  // Growth › 2021 existing (owner 2026-11-03): the census block is Growth's fourth view, on the map and Home; Areas is the
+  // plan areas only; a stored Census & 2051 pick and old links land there, gs=areas on Areas; the phone fits four chips.
+  await check('Growth › 2021 existing: the census block on the map and Home, Areas the plan areas only; a stored pick and old links land; the phone', browser, { prefs: { startScreen: 'full', footTab4: 'growth', gSub: 'census2051' } }, async ({ page, ev }, expect) => {
+    const CARDS = '2021 Census|+ Built since (estimate today)|+ Committed, not yet built|+ Not committed yet: full build-out of applications';
+    const shown = s => `(e => !!e && e.getClientRects().length > 0)(document.querySelector('${s}'))`;
+    await page.waitForFunction(() => window.PeelPanel && PeelPanel.get('growth:existing'), null, { timeout: 120000 }); await wait(1500);
+    // 1. A stored Census & 2051 pick: the full map at Growth › 2021 existing; its panel: the headline, four cards, the chart, the lists.
+    const m = await ev(() => ({ sub: PeelAnalysisTabs.getGSub(), chips: [...document.querySelectorAll('[data-gsub]')].filter(b => b.getClientRects().length).map(b => b.textContent.trim()).join(), answer: (document.querySelector('#pnl-growth .pnl-answer') || {}).textContent || '',
+      figs: [...document.querySelectorAll('#pnl-growth .pnl-fig .pnl-l')].map(x => x.textContent.trim()).join('|'), bars: document.querySelectorAll('#pnl-growth .growth-chart .grow-bar').length, ids: document.querySelectorAll('#gc-chart').length,
+      lists: [...document.querySelectorAll('#pnl-growth .pnl-list h3')].map(x => x.textContent).join('|'), folds: [...document.querySelectorAll('#pnl-growth details.pnl-fold > summary')].map(x => x.textContent.trim()) }));
+    expect(m.sub === 'existing' && m.chips === 'Pipeline,Areas,Forecast,2021 existing', `a stored Census & 2051 pick opens 2021 existing (${JSON.stringify(m)})`);
+    expect(/^Since the 2021 Census, Peel Region has added ≈[\d,]+ people in [\d,]+ dwellings; [\d,]+ more people are committed or not committed yet/.test(m.answer.trim()), `its headline (${m.answer.slice(0, 90)})`);
+    expect(m.figs === CARDS && m.bars >= 2 && m.ids === 1, `the four cards and the chart, one #gc-chart (${m.figs} · ${m.bars} bars · ${m.ids})`);
+    expect(/2051/.test(m.lists) && /Housing activity/.test(m.lists) && m.folds.includes('Population outlook'), `the 2051 forecast, housing activity, the outlook (${m.lists} · ${m.folds})`);
+    // (critic) A bar's tooltip, shown at the people bar's right end, stays inside the chart: no sideways scroll (it was a
+    // 676 px nowrap tip, css/app.css .grow-tip). The mouse fires the pointermove a tap's pointerdown does. (g21 review)
+    // Wrapped (3 or 4 lines) it is placed from its own height: it never covers the segment it describes.
+    const tipIn = async (chart, box) => {
+      const at = await ev(c => { const bar = [...document.querySelectorAll(`${c} .grow-bar`)].find(x => x.getClientRects().length), s = bar && [...bar.querySelectorAll('.gseg')].pop(); if (!s) return null; s.scrollIntoView({ block: 'center' }); const b = s.getBoundingClientRect(); return { x: b.right - 2, y: b.top + b.height / 2 }; }, chart);
+      if (!at) return { found: false };
+      await page.mouse.move(at.x, at.y); await wait(300);
+      return ev(([c, bx]) => {
+        const t = document.querySelector(`${c} .grow-tip`), p = document.querySelector(bx), bar = [...document.querySelectorAll(`${c} .grow-bar`)].find(x => x.getClientRects().length), sg = [...bar.querySelectorAll('.gseg')].pop().getBoundingClientRect(), tr = t.getBoundingClientRect();
+        return { found: true, shown: !!t && !t.hidden, fits: p.scrollWidth <= p.clientWidth, sw: p.scrollWidth, cw: p.clientWidth, h: Math.round(tr.height), covers: !t.hidden && !(tr.bottom <= sg.top || tr.top >= sg.bottom || tr.right <= sg.left || tr.left >= sg.right) };
+      }, [chart, box]);
+    };
+    { const t0 = await tipIn('#pnl-growth .growth-chart', '#analysis-panes'); expect(t0.found && t0.shown && t0.h > 30 && !t0.covers, `1440 px: the people bar's tooltip, wrapped, is clear of the bar it describes (${JSON.stringify(t0)})`); }
+    await page.mouse.move(5, 5); await wait(200);
+    // 1b. (g21 review) A file's record sheet sets its census DA; closed (× or Escape), Growth › 2021 existing at Peel is
+    // Peel's again: it headlined that one DA (the answer, the first card, no lists), on the map and on Home.
+    for (const how of ['×', 'Escape']) {
+      await ev(() => { const has = r => r.kind === 'application' && r.uid && r.units > 0, p = PeelApp.state.projects.find(q => q.lat != null && q.records && q.records.some(has)); PeelAerialCheck.showRecordDetail(p.records.find(has), p); });
+      await page.waitForFunction(() => PeelApp.state.daCtx, null, { timeout: 30000 }).catch(() => {}); await wait(800);
+      const set = await ev(() => !!PeelApp.state.daCtx && /^file:/.test(PeelApp.state.ss || ''));
+      if (how === '×') await page.click('#scope-body .pnl-x[data-scope-result-close]'); else await page.keyboard.press('Escape');
+      await wait(1500);
+      await ev(() => PeelAnalysisTabs.openTab('growth', 'existing')); await wait(1500);
+      const d = await ev(() => ({ da: !!PeelApp.state.daCtx, ss: PeelApp.state.ss || '', answer: ((document.querySelector('#pnl-growth .pnl-answer') || {}).textContent || '').trim(), fig: ((document.querySelector('#pnl-growth .pnl-fig .pnl-l') || {}).textContent || '').trim(), pill: !!document.querySelector('#growth-census-body [data-clear-da]') }));
+      expect(set && !d.da && !d.ss && /^Since the 2021 Census, Peel Region has added/.test(d.answer) && d.fig === '2021 Census' && !d.pill, `a file's sheet closed (${how}): 2021 existing is Peel's again, not the file's DA (${JSON.stringify({ set, ...d, answer: d.answer.slice(0, 90) })})`);
+    }
+    // 2. Its full table: the whole block; Areas' full table: the plan areas only.
+    await page.click('#pnl-growth [data-sec="footer"] [data-full-table]'); await wait(1500);
+    const f = await ev(s => ({ census: eval(s[0]), byplan: eval(s[1]), chart: document.querySelectorAll('#gc-chart .grow-bar').length, cap: [...document.querySelectorAll('#pane-growth-census caption')].some(c => /Applications against the 2051 forecast/.test(c.textContent)), act: eval(s[2]), out: eval(s[3]) }), [shown('#pane-growth-census'), shown('#pane-growth-byplan'), shown('#pane-growth-census .ov-activity'), shown('#pane-growth-census .ov-outlook')]);
+    expect(f.census && !f.byplan && f.chart >= 2 && f.cap && f.act && f.out, `2021 existing's full table is the census block (${JSON.stringify(f)})`);
+    await page.keyboard.press('Escape'); await wait(800);
+    await page.click('[data-gsub="areas"]'); await wait(1500);
+    await page.click('#pnl-growth [data-sec="footer"] [data-full-table]'); await wait(1500);
+    const a = await ev(s => ({ byplan: eval(s[0]), census: eval(s[1]), since: /Since the \d{4} Census/.test(document.getElementById('analysis-panes').innerText) }), [shown('#pane-growth-byplan'), shown('#pane-growth-census')]);
+    expect(a.byplan && !a.census && !a.since, `Areas: the plan areas only (${JSON.stringify(a)})`);
+    await page.keyboard.press('Escape'); await wait(800);
+    // 3. Old links: gs=census2051 and t=census open 2021 existing, gs=areas Areas; the link written says gs=existing.
+    for (const [l, want] of [['t=growth&gs=census2051', 'existing'], ['t=census', 'existing'], ['t=growth&gs=areas', 'areas']]) { await ev(x => PeelShare.viewLink.apply(x), l); await wait(1500); const g = await ev(() => PeelAnalysisTabs.getGSub()); expect(g === want, `${l} → ${want} (${g})`); }
+    await ev(() => PeelAnalysisTabs.openTab('growth', 'existing')); await wait(800);
+    expect(/(^|&)gs=existing(&|$)/.test(await ev(() => location.hash.slice(1))), 'the link says gs=existing');
+    // 4. A plant: no 2021 existing (an area's view); the trail's Peel step brings the pick back. (A servicing scope opens
+    // on Overview: Growth picked as a person does.)
+    await page.waitForFunction(() => PeelApp.state.svcModel && PeelSvcData.svcById.size > 0, null, { timeout: 120000 });
+    await ev(() => PeelSvcScope.open('plant:Clarkson')); await wait(2000);
+    await page.click('.f-tab[data-tab="growth"]'); await wait(1200);
+    const chips = () => ev(() => ({ sub: PeelAnalysisTabs.getGSub(), chips: [...document.querySelectorAll('[data-gsub]')].filter(b => b.getClientRects().length).map(b => b.textContent.trim()).join() }));
+    const pl = await chips(); expect(pl.sub === 'pipeline' && pl.chips === 'Pipeline,Forecast', `a plant: Pipeline · Forecast (${JSON.stringify(pl)})`);
+    await page.locator('#trail .tb-step').first().click(); await wait(2000);
+    const bk = await chips(); expect(bk.sub === 'existing' && bk.chips === 'Pipeline,Areas,Forecast,2021 existing', `back at Peel: 2021 existing again (${JSON.stringify(bk)})`);
+    // 5. Home: the strip's Growth › 2021 existing is the map's panel; Open the map keeps it.
+    await ev(() => PeelWorkspaces.openPage('home')); await wait(2500);
+    await pickView(page, ev, 'growth:existing');
+    await page.waitForFunction(() => !/^Loading/.test(((document.querySelector('#home .home-answer') || {}).textContent || '').trim()), null, { timeout: 60000 }).catch(() => {});
+    const h = await ev(() => { const st = x => String(x || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim(); return { view: PeelWorkspaces.view(), views: [...document.querySelectorAll('#home .page-subsecs .page-sec')].map(b => b.textContent.trim()).join(), page: st(document.querySelector('#home .home-answer').innerHTML), map: st(PeelPanel.get('growth:existing').spec.answer), figs: [...document.querySelectorAll('#home .pnl-figs .pnl-fig .pnl-l')].map(x => x.textContent.trim()).join('|'), chart: !!document.querySelector('#home .page-chart .growth-chart .grow-bar') }; });
+    expect(h.view === 'growth:existing' && h.views === 'Pipeline,Areas,Forecast,2021 existing' && h.page === h.map && /^Since the 2021 Census, Peel Region/.test(h.page) && h.figs === CARDS && h.chart, `Home › Growth › 2021 existing is the map's, Peel's (${JSON.stringify({ ...h, page: h.page.slice(0, 60), map: h.map.slice(0, 60) })})`);
+    await page.locator('#home .page-foot [data-ws-go][data-ws-keep]', { hasText: 'Open the map' }).first().click(); await wait(2500);
+    const o = await ev(() => ({ mode: PeelWorkspaces.mode(), tab: PeelAnalysisTabs.getFootTab(), sub: PeelAnalysisTabs.getGSub() }));
+    expect(o.mode === 'ws' && o.tab === 'growth' && o.sub === 'existing', `Open the map keeps 2021 existing (${JSON.stringify(o)})`);
+    // 6. The phone (390 px, at its own density: js/design.js densityDefault, comfortable at ≤ 700 px; compact hides the overflow).
+    await page.setViewportSize({ width: 390, height: 844 }); await ev(() => PeelDesign.applyDensity('comfortable')); await wait(1200);
+    await ev(() => PeelWorkspaces.openPage('home')); await wait(2000); await pickView(page, ev, 'growth:existing');
+    const p1 = await ev(() => { const r = document.querySelector('#home .page-subsecs'), hm = document.getElementById('home'); return { fits: !!r && r.scrollWidth <= r.clientWidth, tall: !!r && [...r.querySelectorAll('.page-sec')].every(b => b.getBoundingClientRect().height >= 44), home: hm.scrollWidth <= hm.clientWidth, doc: document.documentElement.scrollWidth }; });
+    expect(p1.fits && p1.tall && p1.home && p1.doc <= 390, `phone: Home's four views fit, 44 px, no sideways scroll (${JSON.stringify(p1)})`);
+    const t1 = await tipIn('#home .page-chart .growth-chart', '#home');
+    expect(t1.found && t1.shown && t1.fits && !t1.covers, `phone: Home's chart tooltip stays inside, clear of its bar (${JSON.stringify(t1)})`);
+    await ev(() => { PeelWorkspaces.setMode('full'); PeelApp.setAnalysisSnap('half'); PeelAnalysisTabs.openTab('growth', 'existing'); }); await wait(2000);
+    const p2 = await ev(() => { const r = document.querySelector('.f-subtabs[data-pane="growth"]'), p = document.getElementById('analysis-panes'); return { fits: r.scrollWidth <= r.clientWidth, panes: p.scrollWidth <= p.clientWidth, figs: document.querySelectorAll('#pnl-growth .pnl-fig').length, doc: document.documentElement.scrollWidth }; });
+    expect(p2.fits && p2.panes && p2.figs === 4 && p2.doc <= 390, `phone: the map's four chips fit, the four cards, no sideways scroll (${JSON.stringify(p2)})`);
+    const t2 = await tipIn('#pnl-growth .growth-chart', '#analysis-panes');
+    expect(t2.found && t2.shown && t2.fits && !t2.covers, `phone: the panel's chart tooltip stays inside, clear of its bar (${JSON.stringify(t2)})`);
   });
 
   await browser.close(); srv.close();

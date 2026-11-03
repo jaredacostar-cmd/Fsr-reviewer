@@ -91,8 +91,8 @@ shift-click to extend the range.
 **Census baseline follows the timeline:** the Growth tab, an area selection and the census-area
 outlines use the latest census held in or before the timeline's first year: **2021–2026 → 2021
 Census** (11 May 2021), **2016–2020 starts → 2016 Census** (10 May 2016). Planning application
-data starts in 2016, so 2016 is the earliest baseline; an earlier start (or All years) also uses
-2016. "Built since" then counts permits completed since that census day. The 2016 counts come
+data starts in 2016, so 2016 is the earliest baseline; an earlier start also uses 2016; All years
+uses the latest, 2021. "Built since" then counts permits completed since that census day. The 2016 counts come
 from the *Immigration in Peel by DA as of 2016* layer (2016 dissemination areas, total population
 and private dwellings) and match the published totals (Peel 1,381,739; Mississauga 721,599;
 Brampton 593,638; Caledon 66,502). Statistics Canada's own download site blocks automated
@@ -105,16 +105,15 @@ proposed growth from every development application located in the same DA. (The 
 demand** tab, which added up the shown projects in that DA, is gone.) The DA pill (×), or
 closing the project, goes back to all of Peel (or the selected municipality / plan / MTSA).
 
-**Growth since the census (Growth › Areas):** for Peel, the selected municipality,
+**Growth since the census (Growth › 2021 existing):** for Peel, the selected municipality,
 secondary plan or MTSA:
 
 | Tile | Meaning |
 |---|---|
 | 2021 Census | Population and private dwellings (Statistics Canada, by dissemination area). For a secondary plan or MTSA, each DA counts by the share of its land inside the area. |
 | + Built since | Plus units on building permits completed since census day (11 May 2021), at Peel persons-per-unit. Brampton and Caledon publish no completion date, so it is estimated as issue date + 12 months (houses) or + 30 months (20+ units). |
-| + Approved or permitted, not yet built | Plus committed growth (site plan approved, building permit issued or under construction, not yet completed). |
-
-| + Proposed (full build-out) | Plus growth on applications still in pre-consultation or review: the full build-out of the planning applications. |
+| + Committed, not yet built | Plus committed growth: the units left to build that a site servicing or building permit commits (the Peel rule), not yet completed. |
+| + Not committed yet: full build-out of applications | Plus the rest of build-out, not committed yet (plan approved without a permit, zoning approved, in review, pre-application): the full build-out of the planning applications. |
 
 Each growth tile also gives the jobs added on development sites (from the floor area the
 applications state; existing jobs are not in the census), and a third bar shows jobs.
@@ -650,7 +649,7 @@ from street zoom (14), up to 3,000 in view.
 and Caledon eSCRIBE portals (planning committees, council, general committee, since 2019; only
 meetings in the last 120 days are fetched again), and loaded only when a development is opened.
 
-**Applications against the 2051 forecast** (Growth › Areas, below the growth chart): for each
+**Applications against the 2051 forecast** (Growth › 2021 existing, below the growth chart): for each
 municipality, the 2051 population, unit and job growth allocated by the Region (Land Needs
 Assessment Report Update, draft municipal allocation, appendix pp. 5.2-109 / 5.2-119; Peel 2.28
 million people and 1.07 million jobs by 2051) beside the growth already in the pipeline since the
@@ -893,9 +892,10 @@ The bottom panel's tabs ran Overview · Growth · Demand · Water · Wastewater 
 
 ## Growth tab and the 2020 Master Plan comparison
 
-**Growth tab.** *Growth since the census* (census population and dwellings, built since, approved,
-proposed, the growth chart and the 2051 forecast check) is in Growth › Areas (it had its own bottom-panel tab, **Growth**,
-next to **Demand**, which kept the servicing demand of the shown developments).
+**Growth tab.** *Growth since the census* (census population and dwellings, built since, committed,
+not committed yet, the growth chart and the 2051 forecast check) is Growth › 2021 existing (Growth › Areas' until
+2026-11-03; before that its own bottom-panel tab, **Growth**, next to **Demand**, which kept the servicing demand of
+the shown developments).
 
 **2020 Master Plan vs this tracker.** Servicing › Network's existing water facilities and Records › Data
 checks' Servicing model group (the wastewater plants) open with a table
@@ -1616,6 +1616,7 @@ map's (`js/analysis-tabs.js` `viewKey`), so a pick on either is the other's, sto
 | Growth › Pipeline | The map's panel |
 | Growth › Areas | Growth in an area's builder: the drill-down, its table and treemap |
 | Growth › Forecast | The Forecast page's builder, By period first |
+| Growth › 2021 existing | The map's panel (`js/census-view.js` `existingPanelSpec`); its full table the census block |
 | Servicing › Capacity | Servicing capacity's builder: the limits, the reserve, the allocations fold |
 | Servicing › Network | The map's panel |
 | Servicing › Old pipes | The Old pipes page's builder: the map's panel (one spec), its small map (navigation phase 6c) |
@@ -1954,7 +1955,7 @@ parts (NP-8 with change): **8a**, servicing scopes and drawn areas, and **8b**, 
   | Kind | Growth | Servicing | Capital | Records |
   |---|---|---|---|---|
   | Development (`site`) | its one view (its units) | Network · FSR review | its one view (the DC projects it relies on) | its one view (its files) |
-  | Area (`area`) | Pipeline · Areas · Forecast | Capacity · Network · Old pipes | DC timing · EAs · Projects | Sources · Data checks |
+  | Area (`area`) | Pipeline · Areas · Forecast · 2021 existing | Capacity · Network · Old pipes | DC timing · EAs · Projects | Sources · Data checks |
   | Servicing scope (`svc`) | Pipeline · Forecast | Capacity · Network · Old pipes | DC timing | its own Sources · Data checks |
   | Drawn area (`drawn`) | Pipeline · Forecast | Capacity · Network | DC timing | (no Records tab) |
   | File (`file`, 8b) | (left out) | its one view (its flows) | (left out) | the file (Files) |
@@ -2118,6 +2119,70 @@ info key or stored preference was renamed, so every link, saved view and stored 
   result closes it); the map tour's Forecast step points at Growth's panel, and on a phone its Timeline, Present and
   Help steps at Filters and ⋯; the phone sheet rises from its summary line (its grip is hidden; the README said
   otherwise).
+
+## Growth › 2021 existing (owner, 2026-11-03)
+
+The owner's request of 2026-11-03: the census block at the top of Growth › Areas is Growth's fourth view, **2021
+existing**, so Growth is **Pipeline · Areas · Forecast · 2021 existing** on Home and on the full map (one registry:
+`js/analysis-tabs.js` `TABSUBS`, `js/sections.js` `VIEWS`). The whole block moved: the headline (*Since the 2021
+Census, Peel Region has added ≈… people in … dwellings; … more people are committed or not committed yet*), the four
+cards (*2021 Census*, *+ Built since (estimate today)*, *+ Committed, not yet built*, *+ Not committed yet: full
+build-out of applications*, each with people, dwellings, units and jobs), the growth chart, *Applications against the
+2051 forecast*, *Housing activity* and the *Population outlook*. Growth › Areas keeps the plan areas only: the
+drill-down, the plans against their targets (each municipality against the Region's 2051 allocation) and the plans by
+plant or pressure zone; its method says where the census went.
+
+- **A view with a panel of its own** (`js/census-view.js` `existingPanelSpec`, set by `renderGrowthCensus` as
+  `growth:existing`): its question *What has been built since the census, and what is still to come?*, the headline as
+  its answer, the four cards as its figures, the chart, two lists (*Against the 2051 forecast*, one row per
+  municipality and Peel; *Housing activity* for the latest full year), the outlook as a fold, then the method (the ⓘ
+  line, one copy) and the sources. Its full table is the census block itself (`#pane-growth-census`, now
+  `data-sub="existing"`). It has no footer action of its own: the area report counts the developments shown with every
+  filter, while this block counts the area's applications with the other filters ignored. On the map the footer is
+  *Open full table*; on Home, *Open the map · Full table · Growth targets and forecasts ›*, and *Open the map* keeps the
+  tab and view. The targets guide's first button is *Growth › 2021 existing* (*Growth › Areas* the second); Growth ›
+  Pipeline's chart says *not every permit: see Growth › 2021 existing* for the census view's every-permit *Built since*.
+- **An area's view** (`HIDDEN`): shown at Peel, a municipality and a plan; left out at a development, a servicing scope
+  and a drawn area (it counts the area's census and the applications in its geography, so it would show Peel's census
+  as the scope's), as Areas is. At those scopes the block still fills its hidden pane but does not replace the area's
+  panel, which Home reads.
+- **The year**: the chip stays *2021 existing* (one name); the panel names the census it uses. With a timeline that
+  starts 2016 to 2020, or before 2016, the first card is *2016 Census*, the answer *Since the 2016 Census, …* and the
+  identity line *… · 2016 Census baseline (timeline starts …)*. All years uses the latest, 2021 (`js/map-census.js`
+  `baselineCensus`): the ⓘ line said *all years: earliest census with data (2016)* while it used 2021, and now says *all
+  years: the latest census (2021)*, as *Census baseline follows the timeline* (above) does. The baseline reads the
+  timeline's start alone, and so does the reason: with only its end set, *timeline with no start year: the latest
+  census (2021)* (it named the first year with data and the earliest census while it used 2021; review).
+- **A file's census area**: a file's record sheet narrows the block to the file's dissemination area (its hidden pane:
+  Growth is off at a file). That DA goes as the sheet closes (×, its trail step, Escape, the trail's Peel, Start over) or
+  another result replaces it; it stayed set before, so 2021 existing at Peel headlined that one DA, on the map and on
+  Home (review). At an area the block never reads a DA.
+- **Loading**: the block used to hide itself (and switch the tab) while the census loaded, which inside Areas left the
+  plan tables. As a view of its own it says *Census data is still loading.* in place, and Home's view *Loading Growth ›
+  2021 existing…* until the panel is set: a view is never blank.
+- **Phones**: Home's views row has lighter side padding at 700 px and under, so all four views show without a swipe
+  (the row already scrolls inside itself), and a bar's tooltip in the growth chart (`.grow-tip`) wraps at 220 px: it
+  was one line (676 px wide at the people bar's end), so a tap there made `#analysis-panes` scroll sideways at 390 px.
+  It now stays inside the chart, on the map, on Home and in Growth › Pipeline's and the capacity charts' full tables.
+  Wrapped, it is 3 or 4 lines, so it is placed from its own height (`js/census-view.js` `placeTip`): above the bar it
+  describes, or below it where the chart has no room above (the first bar); placed for one line, it covered the bar.
+- **Help**: *What moved where* has the rows (*Growth › Census & 2051* → 2021 existing; *Growth › By plan* → Areas; the
+  census part of Areas → 2021 existing); the map tour's Tabs step and Growth's ⓘ name the four views.
+
+Old links and stored picks still land (`js/analysis-tabs.js` `SUB_MAP` / `migrateTabKey`; tests/growth-existing.test.js):
+
+| Old | Where it opens now |
+|---|---|
+| `gs=census2051`, `t=census`, a stored `gSub: 'census2051'` or `footTab4: 'census'` | Growth › 2021 existing (those names were the census block) |
+| `gs=existing`, a stored 2021 existing pick, at a development, a servicing scope or a drawn area | Growth › Pipeline there; 2021 existing again at an area |
+| `gs=areas`, `gs=byplan`, a stored Areas pick, Last place `growth:areas`, `#w=p:growth` | Still Growth › Areas, the plan areas only |
+
+No page id, tab key or pane id is renamed; a link written at the view says `gs=existing` (browser path *Growth › 2021
+existing*: the map and Home, Areas' full table, the stored pick and the old links, a plant and back, the phone).
+
+- **Left for later** (named, not forgotten): a development's own 2021 existing (its dissemination area's census and the
+  growth in it) would be a new view, offered to the owner; *Selected project → its census area* (above) has been stale
+  since navigation phase 5 (a development never shows the block).
 
 ## Help and This week
 
@@ -2306,7 +2371,7 @@ From design audit, Group 6:
   - It then links the plants or zones the scoped developments load, with counts. For example,
     "G.E. Booth (750) · Clarkson (122)" opens each one as a servicing scope.
   - At development scope these tabs show the site's own figures instead, so no note is needed.
-- **Area-only content at development scope.** Growth's *Areas* and *Forecast* views (and Servicing's
+- **Area-only content at development scope.** Growth's *Areas*, *Forecast* and *2021 existing* views (and Servicing's
   Capacity and Old pipes, Capital's EAs and Projects) describe an area, not one development: at a
   development they are left out and each tab shows the site's own view (navigation phases 5 and 8: the
   scope × tab rows, `HIDDEN` in `js/analysis-tabs.js`); the trail's steps go back to an area.

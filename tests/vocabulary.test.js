@@ -40,7 +40,7 @@ test('no two sub-views share a name; the chips, the trails and the source lines 
   const chips = tab => { const i = html.indexOf('f-subtabs', html.indexOf(`data-pane="${tab}" hidden role="group"`) - 80); return [...html.slice(i, html.indexOf('</div>', i)).matchAll(/data-(?:gsub|svcsub|dcasub|rsub)="\w+">([^<]+)</g)].map(m => m[1].trim()); };
   const all = ['growth', 'svc', 'dca', 'records'].flatMap(chips);
   assert.equal(new Set(all).size, all.length, `duplicate sub-view names: ${all.join(', ')}`);
-  assert.deepEqual(chips('growth'), ['Pipeline', 'Areas', 'Forecast']);
+  assert.deepEqual(chips('growth'), ['Pipeline', 'Areas', 'Forecast', '2021 existing']);
   assert.deepEqual(chips('svc'), ['Capacity', 'Network', 'Old pipes', 'FSR review']); assert.ok(chips('records').includes('Data checks') && chips('dca').includes('DC timing'));
   const W = require('../js/workspaces.js');
   assert.equal(W.tabPath('svc', 'network'), 'Servicing › Network');
@@ -51,9 +51,10 @@ test('no two sub-views share a name; the chips, the trails and the source lines 
   assert.doesNotMatch(src('js/workspaces.js'), /'svc:checks'|alloc: 'Allocations'/, 'no name for a sub-view that is gone');
   assert.doesNotMatch(src('js/workspaces.js'), /ledger: 'Ledger'/, 'no name for a sub-view that is gone');
   assert.equal(W.tabPath('growth', 'timing'), 'Growth › Forecast');
+  assert.equal(W.tabPath('growth', 'existing'), 'Growth › 2021 existing', '(owner 2026-11-03: the census block, one name)');
   assert.equal(W.tabPath('dca', 'timing'), 'Capital › DC timing');
   assert.ok(W.WS.some(w => w.id === 'projects' && w.label === 'DC projects'));
-  for (const [f, re] of [['js/timing.js', /areaHead\('Growth › Forecast'/], ['js/dc-projects.js', /areaHead\('Capital › DC timing', 'Is each DC project in time\?'/], ['js/svc-capacity.js', /areaHead\('Servicing › Network'/], ['js/records-tab.js', /areaHead\('Records › Data checks'/]]) assert.match(src(f), re, f);
+  for (const [f, re] of [['js/timing.js', /areaHead\('Growth › Forecast'/], ['js/dc-projects.js', /areaHead\('Capital › DC timing', 'Is each DC project in time\?'/], ['js/svc-capacity.js', /areaHead\('Servicing › Network'/], ['js/records-tab.js', /areaHead\('Records › Data checks'/], ['js/census-view.js', /areaHead\('Growth › 2021 existing', 'What has been built since the census, and what is still to come\?'/]]) assert.match(src(f), re, f);
   assert.doesNotMatch(src('js/svc-capacity.js') + src('js/demand-ui.js'), /areaHead\('Servicing › (Model checks|Allocations)'/);
   // (navigation phase 4: DC projects is DC timing, the funding screen its fold)
   assert.doesNotMatch(src('js/dc-projects.js') + src('js/dca-tab.js'), /areaHead\('Capital › (DC projects|Funding)'/, 'no head names a gone sub-view');
@@ -67,7 +68,8 @@ test('Help names only places that exist (tab › sub-view), and none of the old 
   const now = MOVED.flatMap(g => g.rows.map(r => r[1])).join(' ');
   const TAB = { Growth: 'growth', Servicing: 'svc', Capital: 'dca', Records: 'records' };
   const chips = tab => { const i = html.indexOf('f-subtabs', html.indexOf(`data-pane="${tab}" hidden role="group"`) - 80); return [...html.slice(i, html.indexOf('</div>', i)).matchAll(/data-(?:gsub|svcsub|dcasub|rsub)="\w+">([^<]+)</g)].map(m => m[1].replace(/<[^>]+>/g, '').replace(/\s*Labs$/, '').trim()); };
-  const names = [...`${HELP} ${now}`.matchAll(/\b(Growth|Servicing|Capital|Records) › ([A-Z][A-Za-z&]*(?: [a-z&][a-z]*)*)/g)];
+  // (a name may start with a digit: Growth › 2021 existing, owner 2026-11-03)
+  const names = [...`${HELP} ${now}`.matchAll(/\b(Growth|Servicing|Capital|Records) › ([A-Z0-9][A-Za-z0-9&]*(?: [a-z&][a-z]*)*)/g)];
   assert.ok(names.length > 8, 'Help names its places');
   for (const [, tab, sub] of names) assert.ok(chips(TAB[tab]).some(c => sub.startsWith(c)), `"${tab} › ${sub}" is not a sub-view (${chips(TAB[tab]).join(', ')})`);
   for (const old of ['DC needs:', 'Development tab', 'Layers & style', 'Data tab:', 'DC map view', 'This week tab', 'Definitions (Overview', 'Inception', 'Under review', 'Draft / site plan approved', 'More settings → Existing']) assert.ok(!HELP.includes(old), `Help still says "${old}"`);

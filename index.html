@@ -234,16 +234,18 @@
         <div id="scope-body" class="scope-body" hidden aria-live="polite"></div>
       </section>
 
-      <div class="f-pane f-subtabs" data-pane="growth" hidden role="group" aria-label="Growth view"><button type="button" class="btn small" data-gsub="pipeline">Pipeline</button><button type="button" class="btn small" data-gsub="areas">Areas</button><button type="button" class="btn small" data-gsub="timing">Forecast</button></div>
+      <div class="f-pane f-subtabs" data-pane="growth" hidden role="group" aria-label="Growth view"><button type="button" class="btn small" data-gsub="pipeline">Pipeline</button><button type="button" class="btn small" data-gsub="areas">Areas</button><button type="button" class="btn small" data-gsub="timing">Forecast</button><button type="button" class="btn small" data-gsub="existing">2021 existing</button></div>
       <section class="f-pane pnl-host" id="pnl-growth" data-pane="growth" aria-labelledby="ftab-growth" hidden></section>
       <section class="f-pane" id="pane-growth-pipeline" data-pane="growth" data-sub="pipeline" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="growth-pipeline-body"></div></section>
-      <!-- Areas: one drill-down, Peel → municipality → plan (the plan tables), then the 2051 comparison,
-           housing activity and the population outlook. -->
+      <!-- Areas: one drill-down, Peel → municipality → plan (the plan tables), the plans against their
+           targets and the plans by plant or zone. -->
       <section class="f-pane" id="pane-growth-byplan" data-pane="growth" data-sub="areas" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="byplan-body"></div></section>
-      <section class="f-pane" id="pane-growth-census" data-pane="growth" data-sub="areas" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="growth-census-body"></div></section>
       <section class="f-pane" id="pane-growth-timing" data-pane="growth" data-sub="timing" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="timing-body"></div></section>
       <!-- Forecast's full table: the forecast, then By period (the pipeline ledger, js/ledger-ui.js): its table, the tiers, the developments list. -->
       <section class="f-pane" id="pane-growth-ledger" data-pane="growth" data-sub="timing" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="ledger-body"></div></section>
+      <!-- 2021 existing (owner 2026-11-03): the census block, js/census-view.js renderGrowthCensus; the full table of its
+           panel growth:existing. -->
+      <section class="f-pane" id="pane-growth-census" data-pane="growth" data-sub="existing" role="tabpanel" aria-labelledby="ftab-growth" hidden><div id="growth-census-body"></div></section>
 
       <div class="f-pane f-subtabs svc-subtabs" data-pane="svc" hidden role="group" aria-label="Servicing view">
         <button type="button" class="btn small" data-svcsub="capacity">Capacity</button>

@@ -147,6 +147,7 @@ The rest of this documentation is in three files, each section in the order it h
   - [Home's sidebar, Help and Settings (navigation phase 7)](docs/guide/README.md#homes-sidebar-help-and-settings-navigation-phase-7)
   - [Every scope kind (navigation phase 8)](docs/guide/README.md#every-scope-kind-navigation-phase-8)
   - [One name per thing, and the README split (navigation phase 9)](docs/guide/README.md#one-name-per-thing-and-the-readme-split-navigation-phase-9)
+  - [Growth › 2021 existing (owner, 2026-11-03)](docs/guide/README.md#growth--2021-existing-owner-2026-11-03)
   - [Help and This week](docs/guide/README.md#help-and-this-week)
   - [Home: the briefing](docs/guide/README.md#home-the-briefing)
   - [Tokens and accessibility](docs/guide/README.md#tokens-and-accessibility)
