@@ -30,6 +30,8 @@ private/
   Bucket4_Assumptions.xlsx                  built by build_assumptions.py
   Planning_Review_2031.xlsx                 built by build_review.py: the workbook Planning reviews
   App_Estimate_2031.xlsx                    built by build_app_estimate.py: the app's own estimate (side, proof of concept)
+  servicing_limits.csv, meeting_notes.csv   from the servicing meeting
+  Modelling_Handoff_2031.xlsx / .csv        built by build_handoff.py: the file for Modelling
 ```
 
 ## Buckets
@@ -41,8 +43,8 @@ private/
 | 2 | Area assignment (by location) | `extract_map_boxes.py`, `build_areas.py` | reviewed |
 | 3 | Cross-validation against the app | `app_match.js`, `build_app_check.py` | reviewed |
 | 4 | Assumptions (units, density, share built by 2031) | `build_assumptions.py` | reviewed |
-| 5 | Planning review workbook | `build_review.py` | built, in review |
-| 6 | Modelling handoff | | not started |
+| 5 | Planning review workbook | `build_review.py` | round 1 with Planning |
+| 6 | Modelling handoff | `build_handoff.py` | round 1 draft built |
 
 ## Running
 
@@ -58,6 +60,7 @@ python3 build_app_check.py      # needs Node 18+; reads the app's data/ read-onl
 python3 build_assumptions.py
 python3 build_review.py          # the single workbook for Planning
 python3 build_app_estimate.py    # side workbook: the app's own 2031 estimate
+python3 build_handoff.py         # the file for Modelling; --from <Planning's returned workbook>
 ```
 
 **How the area assignment works.** The map PDF is vector: each priority area is a dark-red
