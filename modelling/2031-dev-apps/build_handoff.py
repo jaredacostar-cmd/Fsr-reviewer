@@ -70,7 +70,6 @@ def read_flag_decisions(wb):
 
 COLS = [('Row ID', 9, None), ('Shapefile record (FID)', 10, '0'), ('Priority area', 22, None),
         ('Municipality', 13, None), ('File number', 18, None), ('Address', 28, None), ('Version', 12, None),
-        ('Rounding', '2031 population and units are rounded to whole numbers per application.'),
         ('Employment equivalent', 11, None), ('Full population', 12, '#,##0'), ('Area (ha)', 9, '#,##0.00'),
         ('Share built by 2031', 10, '0%'), ('2031 population', 12, '#,##0'), ('Units by 2031', 10, '#,##0'),
         ('Basis of 2031 share', 18, None), ('Servicing limit applied', 11, None), ('Longitude', 11, '0.000000'),
